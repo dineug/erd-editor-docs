@@ -1,0 +1,55 @@
+.DS_Store
+node_modules
+dist
+coverage
+docs
+storybook-static
+docker/**/data
+types
+.turbo
+*.vsix
+build
+.docusaurus
+.cache-loader
+
+packages/erd-editor-vscode/public
+packages/erd-editor-vscode/public-legacy
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editor directories and files
+.idea
+
+.vscode/*
+!.vscode/launch.json
+!.vscode/tasks.json
+
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
+# Swap the comments on the following lines if you don't wish to use zero-installs
+# Documentation here: https://yarnpkg.com/features/zero-installs
+!.yarn/cache
+#.pnp.*
+
+
+# Misc
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+!docs
