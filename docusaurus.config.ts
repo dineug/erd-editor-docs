@@ -37,8 +37,7 @@ const config: Config = {
           sidebarPath: './sidebars.ts',
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
-          editUrl:
-            'https://github.com/dineug/erd-editor/tree/main/packages/erd-editor-docs/',
+          editUrl: 'https://github.com/dineug/erd-editor-docs/blob/main/',
         },
         theme: {
           customCss: './src/css/custom.css',
