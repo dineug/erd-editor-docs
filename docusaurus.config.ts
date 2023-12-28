@@ -72,6 +72,18 @@ const config: Config = {
         //   label: 'API',
         // },
         {
+          href: 'https://erd-editor.io',
+          position: 'left',
+          label: 'Web App',
+          target: '_blank',
+        },
+        {
+          href: 'https://marketplace.visualstudio.com/items?itemName=dineug.vuerd-vscode',
+          position: 'left',
+          label: 'VSCode Extension',
+          target: '_blank',
+        },
+        {
           type: 'localeDropdown',
           position: 'right',
         },
