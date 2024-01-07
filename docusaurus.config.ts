@@ -65,12 +65,12 @@ const config: Config = {
           sidebarId: 'docs',
           label: 'Guide',
         },
-        // {
-        //   type: 'docSidebar',
-        //   position: 'left',
-        //   sidebarId: 'api',
-        //   label: 'API',
-        // },
+        {
+          type: 'docSidebar',
+          position: 'left',
+          sidebarId: 'api',
+          label: 'API',
+        },
         {
           href: 'https://erd-editor.io',
           position: 'left',
