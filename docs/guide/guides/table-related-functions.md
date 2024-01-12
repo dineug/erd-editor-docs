@@ -23,7 +23,7 @@ Shortcuts: `Ctrl + Backspace` or `Ctrl + Delete`
 
 ## Zoom In/Out
 
-Primarily functions with the mouse wheel.  
+Primarily functions with the mouse wheel. `Ctrl + Wheel`  
 Shortcuts: `Ctrl + Plus`, `Ctrl + Minus`
 
 ![demo-zoom](/img/demo-zoom.webp)

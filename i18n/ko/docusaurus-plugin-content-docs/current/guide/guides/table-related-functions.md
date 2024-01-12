@@ -23,7 +23,7 @@ sidebar_position: 4
 
 ## 줌 축소/확대
 
-기본적으로 마우스 휠로 동작합니다.  
+기본적으로 마우스 휠로 동작합니다. `Ctrl + Wheel`  
 단축키 `Ctrl + Plus`, `Ctrl + Minus`
 
 ![demo-zoom](/img/demo-zoom.webp)
