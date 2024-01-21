@@ -5,7 +5,7 @@ import { themes as prismThemes } from 'prism-react-renderer';
 const config: Config = {
   title: 'erd-editor',
   tagline: 'Entity-Relationship Diagram Editor',
-  favicon: 'img/vuerd.png',
+  favicon: 'img/favicon.ico',
 
   // Set the production url of your site here
   url: 'https://docs.erd-editor.io',
@@ -56,7 +56,7 @@ const config: Config = {
       title: 'erd-editor',
       logo: {
         alt: 'erd-editor Logo',
-        src: 'img/vuerd.png',
+        src: 'img/logo.svg',
       },
       items: [
         {
