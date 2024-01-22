@@ -158,19 +158,19 @@ type ShortcutOption = {
 };
 
 const defaultKeyBindingMap: KeyBindingMap = {
-  addTable: [{ shortcut: 'Alt+KeyN' }];
-  addColumn: [{ shortcut: 'Alt+Enter' }];
-  addMemo: [{ shortcut: 'Alt+KeyM' }];
-  removeTable: [{ shortcut: '$mod+Backspace' }, { shortcut: '$mod+Delete' }];
-  removeColumn: [{ shortcut: 'Alt+Backspace' }, { shortcut: 'Alt+Delete' }];
-  primaryKey: [{ shortcut: 'Alt+KeyK' }];
-  selectAllTable: [{ shortcut: '$mod+Alt+KeyA' }];
-  selectAllColumn: [{ shortcut: 'Alt+KeyA' }];
-  relationshipZeroOne: [{ shortcut: '$mod+Alt+Digit1' }];
-  relationshipZeroN: [{ shortcut: '$mod+Alt+Digit2' }];
-  relationshipOneOnly: [{ shortcut: '$mod+Alt+Digit3' }];
-  relationshipOneN: [{ shortcut: '$mod+Alt+Digit4' }];
-  tableProperties: [{ shortcut: 'Alt+Space' }];
+  addTable: [{ shortcut: 'Alt+KeyN' }],
+  addColumn: [{ shortcut: 'Alt+Enter' }],
+  addMemo: [{ shortcut: 'Alt+KeyM' }],
+  removeTable: [{ shortcut: '$mod+Backspace' }, { shortcut: '$mod+Delete' }],
+  removeColumn: [{ shortcut: 'Alt+Backspace' }, { shortcut: 'Alt+Delete' }],
+  primaryKey: [{ shortcut: 'Alt+KeyK' }],
+  selectAllTable: [{ shortcut: '$mod+Alt+KeyA' }],
+  selectAllColumn: [{ shortcut: 'Alt+KeyA' }],
+  relationshipZeroOne: [{ shortcut: '$mod+Alt+Digit1' }],
+  relationshipZeroN: [{ shortcut: '$mod+Alt+Digit2' }],
+  relationshipOneOnly: [{ shortcut: '$mod+Alt+Digit3' }],
+  relationshipOneN: [{ shortcut: '$mod+Alt+Digit4' }],
+  tableProperties: [{ shortcut: 'Alt+Space' }],
 };
 
 // example
