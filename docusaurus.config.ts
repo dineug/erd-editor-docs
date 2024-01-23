@@ -84,6 +84,12 @@ const config: Config = {
           target: '_blank',
         },
         {
+          href: 'https://plugins.jetbrains.com/plugin/23594-erd-editor',
+          position: 'left',
+          label: 'IntelliJ Plugin',
+          target: '_blank',
+        },
+        {
           type: 'localeDropdown',
           position: 'right',
         },
