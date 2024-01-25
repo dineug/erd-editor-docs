@@ -11,7 +11,7 @@ const config: Config = {
   url: 'https://docs.erd-editor.io',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
-  baseUrl: '',
+  baseUrl: '/',
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
@@ -109,11 +109,11 @@ const config: Config = {
       theme: prismThemes.github,
       darkTheme: prismThemes.dracula,
     },
-    algolia: {
-      appId: 'OCAVZ00HZS',
-      apiKey: '574dd362836e83f52fb6011a7b7361aa',
-      indexName: 'erd-editor',
-    },
+    // algolia: {
+    //   appId: 'OCAVZ00HZS',
+    //   apiKey: '574dd362836e83f52fb6011a7b7361aa',
+    //   indexName: 'erd-editor',
+    // },
   } satisfies Preset.ThemeConfig,
 };
 
