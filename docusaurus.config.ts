@@ -111,7 +111,7 @@ const config: Config = {
     },
     algolia: {
       appId: 'OCAVZ00HZS',
-      apiKey: '574dd362836e83f52fb6011a7b7361aa',
+      apiKey: 'ff86c19945a7e7e36b22b12080a20490',
       indexName: 'erd-editor',
     },
   } satisfies Preset.ThemeConfig,
