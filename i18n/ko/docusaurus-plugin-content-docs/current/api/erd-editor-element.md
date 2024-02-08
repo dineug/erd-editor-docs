@@ -24,6 +24,7 @@ interface ErdEditorElement extends HTMLElement {
   setSchemaSQL: (value: string) => void;
   getSchemaSQL: (databaseVendor?: DatabaseVendor) => string;
   getSharedStore: (config?: SharedStoreConfig) => SharedStore;
+  setDiffValue: (value: string) => void;
 }
 ```
 
@@ -337,6 +338,13 @@ type Theme = {
   keyPK: string;
   keyFK: string;
   keyPFK: string;
+
+  diffInsertBackground: string;
+  diffDeleteBackground: string;
+  diffCrossBackground: string;
+  diffInsertForeground: string;
+  diffDeleteForeground: string;
+  diffCrossForeground: string;
 };
 
 // example
@@ -406,6 +414,12 @@ editor.setTheme({...});
   --erd-editor-key-pk: #ffc53d;
   --erd-editor-key-fk: #e54666;
   --erd-editor-key-pfk: #00a2c7;
+  --erd-editor-diff-insert-background: #113b29;
+  --erd-editor-diff-delete-background: #500f1c;
+  --erd-editor-diff-cross-background: #003362;
+  --erd-editor-diff-insert-foreground: #3dd68c;
+  --erd-editor-diff-delete-foreground: #ff9592;
+  --erd-editor-diff-cross-foreground: #70b8ff;
 }
 ```
 
@@ -432,4 +446,12 @@ type DatabaseVendor =
   | 'SQLite';
 
 const schemaSQL = editor.getSchemaSQL();
+```
+
+## setDiffValue
+
+현재 에디터 상태와 이전 에디터 상태를 비교합니다.
+
+```js
+editor.setDiffValue('prev json...');
 ```

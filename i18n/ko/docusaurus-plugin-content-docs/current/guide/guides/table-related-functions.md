@@ -72,3 +72,11 @@ Force Simulation으로 동작합니다.
 <img src="/img/database-menu.png" width="400" />
 
 ![demo-data-type-autocomplete](/img/demo-data-type-autocomplete.webp)
+
+## Diff Viewer
+
+이전에 저장했던 문서와 현재 문서를 비교할 수 있습니다.
+
+<img src="/img/context-menu-diff-viewer.png" width="400" />
+
+![diff-viewer](/img/diff-viewer.png)

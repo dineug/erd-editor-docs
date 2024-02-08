@@ -72,3 +72,11 @@ These options determine the Schema SQL syntax for exporting and DataType autocom
 <img src="/img/database-menu.png" width="400" />
 
 ![demo-data-type-autocomplete](/img/demo-data-type-autocomplete.webp)
+
+## Diff Viewer
+
+You can compare previously saved documents with the current document.
+
+<img src="/img/context-menu-diff-viewer.png" width="400" />
+
+![diff-viewer](/img/diff-viewer.png)
