@@ -49,6 +49,7 @@ type Settings = {
   relationshipOptimization: boolean;
   columnOrder: number[]; // Constants: ColumnType
   maxWidthComment: number;
+  ignoreSaveSettings: number; // Constants: SaveSettingType
 };
 
 // Constants
@@ -114,6 +115,11 @@ const BracketType = {
   singleQuote: /* */ 0b0000000000000000000000000000100,
   backtick: /*    */ 0b0000000000000000000000000001000,
 } as const;
+
+const SaveSettingType = {
+  scroll: /*    */ 0b0000000000000000000000000000001,
+  zoomLevel: /* */ 0b0000000000000000000000000000010,
+};
 ```
 
 ### Doc
@@ -429,6 +435,10 @@ type MemoUI = {
           "maxItems": 7
         },
         "maxWidthComment": {
+          "type": "integer"
+        },
+        "ignoreSaveSettings": {
+          "description": "bit value (scroll: 1) | (zoomLevel: 2)",
           "type": "integer"
         }
       },
