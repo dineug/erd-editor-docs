@@ -16,7 +16,7 @@ sidebar_position: 2
 
 SQL로 정의한 스키마 파일도 가져올 수 있습니다.  
 데이터베이스 벤더에 상관없이 최대한 유연하게 파서를 작성했지만 일부 지원하지 않는 문법이 있을 수 있습니다.  
-[지원하는 문법은 여기에서 확인 가능합니다.](https://github.com/dineug/erd-editor/blob/main/packages/schema-sql-parser/src/schema_sql_test_case.md)
+[지원하는 문법은 여기에서 확인 가능합니다.](https://github.com/dineug/erd-editor/tree/main/packages/schema-sql-parser)
 
 <img src="/img/import-sql.png" width="400" />
 
