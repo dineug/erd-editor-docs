@@ -17,6 +17,6 @@ sidebar_position: 1
 
 ## 관계 생성
 
-컨텍스트 메뉴 또는 단축키 `Ctrl + Alt + 1`에서 시작합니다.
+컨텍스트 메뉴 또는 단축키 `Ctrl + Alt + 1` (Windows/Linux) or `⌘ + Alt + 1` (Mac)에서 시작합니다.
 
 ![demo-relationship](/img/demo-relationship.webp)

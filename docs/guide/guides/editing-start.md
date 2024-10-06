@@ -17,6 +17,6 @@ Can be created from the context menu or by using the shortcut `Alt + M`.
 
 ## Relationship Creation
 
-Initiates from the context menu or by using the shortcut `Ctrl + Alt + 1`.
+Initiates from the context menu or by using the shortcut `Ctrl + Alt + 1` (Windows/Linux) or `⌘ + Alt + 1` (Mac).
 
 ![demo-relationship](/img/demo-relationship.webp)

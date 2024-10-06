@@ -8,23 +8,23 @@ sidebar_position: 4
 
 3가지 방법을 지원하고 있습니다.
 
-- `Ctrl + drag`
-- `Ctrl + click`
-- `Ctrl + Alt + A`
+- `Ctrl + drag` (Windows/Linux) or `⌘ + drag` (Mac)
+- `Ctrl + click` (Windows/Linux) or `⌘ + click` (Mac)
+- `Ctrl + Alt + A` (Windows/Linux) or `⌘ + Alt + A` (Mac)
 
 ![demo-table-select](/img/demo-table-select.webp)
 
 ## 테이블, 메모 삭제
 
 현재 선택된 테이블, 메모를 삭제합니다.  
-단축키 `Ctrl + Backspace` or `Ctrl + Delete`
+단축키 `Ctrl + Backspace` (Windows/Linux) or `Ctrl + Delete` (Windows/Linux) or `⌘ + Backspace` (Mac) or `⌘ + Delete` (Mac)
 
 ![demo-table-remove](/img/demo-table-remove.webp)
 
 ## 줌 축소/확대
 
-기본적으로 마우스 휠로 동작합니다. `Ctrl + Wheel`  
-단축키 `Ctrl + Plus`, `Ctrl + Minus`
+기본적으로 마우스 휠로 동작합니다. `Ctrl + Wheel` (Windows/Linux) or `⌘ + Wheel` (Mac)
+단축키 `Ctrl + Plus` (Windows/Linux) or `⌘ + Plus` (Mac), `Ctrl + Minus` (Windows/Linux) or `⌘ + Minus` (Mac)
 
 ![demo-zoom](/img/demo-zoom.webp)
 

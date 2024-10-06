@@ -26,7 +26,7 @@ Use `Shift + Tab` to navigate to the previous cell's editing mode.
 Supports four methods:
 
 - `Shift + Arrow Up/Down`
-- `Ctrl + Click`
+- `Ctrl + Click` (Windows/Linux) or `⌘ + Click` (Mac)
 - `Shift + Click`
 - `Alt + A`: Select All
 
@@ -38,7 +38,7 @@ Functions when `dragging`, enabling movement to other tables.
 
 ![demo-column-move](/img/demo-column-move.webp)
 
-Supports moving multiple columns with `Ctrl + drag`.
+Supports moving multiple columns with `Ctrl + drag` (Windows/Linux) or `⌘ + drag` (Mac).
 
 ![demo-column-multi-move](/img/demo-column-multi-move.webp)
 
@@ -52,7 +52,7 @@ Shortcut: `Alt + Backspace` or `Alt + Delete`
 ## Copying/Pasting Columns
 
 Operates like a table-based clipboard.  
-Shortcuts: `Ctrl + C`, `Ctrl + V`
+Shortcuts: `Ctrl + C` (Windows/Linux) or `⌘ + C` (Mac), `Ctrl + V` (Windows/Linux) or `⌘ + V` (Mac)
 
 Can paste from the editor to Excel or vice versa.  
 However, for specific columns, true/false are supported as follows (case insensitive):

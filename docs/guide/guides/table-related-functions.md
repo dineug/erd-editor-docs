@@ -8,23 +8,23 @@ sidebar_position: 4
 
 Supports three methods:
 
-- `Ctrl + drag`
-- `Ctrl + click`
-- `Ctrl + Alt + A`
+- `Ctrl + drag` (Windows/Linux) or `⌘ + drag` (Mac)
+- `Ctrl + click` (Windows/Linux) or `⌘ + click` (Mac)
+- `Ctrl + Alt + A` (Windows/Linux) or `⌘ + Alt + A` (Mac)
 
 ![demo-table-select](/img/demo-table-select.webp)
 
 ## Table, Memo Deletion
 
 Deletes the currently selected table or memo.  
-Shortcuts: `Ctrl + Backspace` or `Ctrl + Delete`
+Shortcuts: `Ctrl + Backspace` (Windows/Linux) or `Ctrl + Delete` (Windows/Linux) or `⌘ + Backspace` (Mac) or `⌘ + Delete` (Mac)
 
 ![demo-table-remove](/img/demo-table-remove.webp)
 
 ## Zoom In/Out
 
-Primarily functions with the mouse wheel. `Ctrl + Wheel`  
-Shortcuts: `Ctrl + Plus`, `Ctrl + Minus`
+Primarily functions with the mouse wheel. `Ctrl + Wheel` (Windows/Linux) or `⌘ + Wheel` (Mac)
+Shortcuts: `Ctrl + Plus` (Windows/Linux) or `⌘ + Plus` (Mac), `Ctrl + Minus` (Windows/Linux) or `⌘ + Minus` (Mac)
 
 ![demo-zoom](/img/demo-zoom.webp)
 

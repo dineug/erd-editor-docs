@@ -26,7 +26,7 @@ sidebar_position: 3
 4가지 방법을 지원하고 있습니다.
 
 - `Shift + Arrow Up/Down`
-- `Ctrl + Click`
+- `Ctrl + Click` (Windows/Linux) or `⌘ + Click` (Mac)
 - `Shift + Click`
 - `Alt + A`: 전체 선택
 
@@ -38,7 +38,7 @@ sidebar_position: 3
 
 ![demo-column-move](/img/demo-column-move.webp)
 
-`Ctrl + drag`로 다중 컬럼 이동도 지원합니다.
+`Ctrl + drag` (Windows/Linux) or `⌘ + drag` (Mac)로 다중 컬럼 이동도 지원합니다.
 
 ![demo-column-multi-move](/img/demo-column-multi-move.webp)
 
@@ -52,7 +52,7 @@ sidebar_position: 3
 ## Column 복사/붙여넣기
 
 테이블 형식의 클립보드로 동작합니다.  
-단축키 `Ctrl + C`, `Ctrl + V`
+단축키 `Ctrl + C` (Windows/Linux) or `⌘ + C` (Mac), `Ctrl + V` (Windows/Linux) or `⌘ + V` (Mac)
 
 에디터에서 엑셀로 붙여넣거나  
 엑셀에서 에디터로 붙여넣기 가능합니다.  
