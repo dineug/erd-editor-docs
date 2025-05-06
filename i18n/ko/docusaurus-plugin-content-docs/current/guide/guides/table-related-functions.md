@@ -14,6 +14,13 @@ sidebar_position: 4
 
 ![demo-table-select](/img/demo-table-select.webp)
 
+## 여러 테이블 이동
+
+- Ctrl를 누른 상태에서 drag
+- `Ctrl + drag` (Windows/Linux) or `⌘ + drag` (Mac)
+
+![demo-table-multiple-move](/img/demo-table-multiple-move.webp)
+
 ## 테이블, 메모 삭제
 
 현재 선택된 테이블, 메모를 삭제합니다.  

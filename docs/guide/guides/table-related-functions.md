@@ -14,6 +14,13 @@ Supports three methods:
 
 ![demo-table-select](/img/demo-table-select.webp)
 
+## Moving Multiple Tables
+
+- Drag while holding down the Ctrl key
+- `Ctrl + drag` (Windows/Linux) or `⌘ + drag` (Mac)
+
+![demo-table-multiple-move](/img/demo-table-multiple-move.webp)
+
 ## Table, Memo Deletion
 
 Deletes the currently selected table or memo.  

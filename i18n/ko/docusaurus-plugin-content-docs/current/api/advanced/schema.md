@@ -24,7 +24,6 @@ type ERDEditorSchemaV3 = {
     indexColumnEntities: Record<string, IndexColumn>;
     memoEntities: Record<string, Memo>;
   };
-  lww: LWW;
 };
 ```
 
@@ -131,18 +130,6 @@ type Doc = {
   indexIds: string[];
   memoIds: string[];
 };
-```
-
-### LWW
-
-```ts
-/**
- * Last write wins
- * @example
- * Record<uuid, [tag, add, remove, Record<path, timestamp>]>
- */
-type LWW = Record<string, LWWTuple>;
-type LWWTuple = [string, number, number, Record<string, number>];
 ```
 
 ### Collection: tableEntities
@@ -297,7 +284,7 @@ type MemoUI = {
 
 ```json
 {
-  "$schema": "https://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://raw.githubusercontent.com/dineug/erd-editor/main/json-schema/schema.json",
   "title": "erd-editor schema",
   "description": "Entity-Relationship Diagram Editor Schema",
@@ -311,34 +298,31 @@ type MemoUI = {
       "const": "3.0.0"
     },
     "settings": {
-      "$ref": "#/definitions/settings"
+      "$ref": "#/$defs/settings"
     },
     "doc": {
-      "$ref": "#/definitions/doc"
-    },
-    "lww": {
-      "$ref": "#/definitions/lww"
+      "$ref": "#/$defs/doc"
     },
     "collections": {
       "type": "object",
       "properties": {
         "tableEntities": {
-          "$ref": "#/definitions/tableEntities"
+          "$ref": "#/$defs/tableEntities"
         },
         "tableColumnEntities": {
-          "$ref": "#/definitions/tableColumnEntities"
+          "$ref": "#/$defs/tableColumnEntities"
         },
         "relationshipEntities": {
-          "$ref": "#/definitions/relationshipEntities"
+          "$ref": "#/$defs/relationshipEntities"
         },
         "indexEntities": {
-          "$ref": "#/definitions/indexEntities"
+          "$ref": "#/$defs/indexEntities"
         },
         "indexColumnEntities": {
-          "$ref": "#/definitions/indexColumnEntities"
+          "$ref": "#/$defs/indexColumnEntities"
         },
         "memoEntities": {
-          "$ref": "#/definitions/memoEntities"
+          "$ref": "#/$defs/memoEntities"
         }
       },
       "required": [
@@ -351,8 +335,8 @@ type MemoUI = {
       ]
     }
   },
-  "required": ["version", "settings", "doc", "lww", "collections"],
-  "definitions": {
+  "required": ["version", "settings", "doc", "collections"],
+  "$defs": {
     "settings": {
       "type": "object",
       "properties": {
@@ -431,8 +415,7 @@ type MemoUI = {
             { "type": "integer" },
             { "type": "integer" }
           ],
-          "minItems": 7,
-          "maxItems": 7
+          "unevaluatedItems": false
         },
         "maxWidthComment": {
           "type": "integer"
@@ -487,23 +470,6 @@ type MemoUI = {
             "type": "string"
           }
         }
-      }
-    },
-    "lww": {
-      "type": "object",
-      "additionalProperties": {
-        "type": "array",
-        "prefixItems": [
-          { "type": "string" },
-          { "type": "integer" },
-          { "type": "integer" },
-          {
-            "type": "object",
-            "additionalProperties": {
-              "type": "integer"
-            }
-          }
-        ]
       }
     },
     "tableEntities": {
@@ -564,7 +530,7 @@ type MemoUI = {
             ]
           },
           "meta": {
-            "$ref": "#/definitions/EntityMeta"
+            "$ref": "#/$defs/EntityMeta"
           }
         },
         "required": [
@@ -634,7 +600,7 @@ type MemoUI = {
             ]
           },
           "meta": {
-            "$ref": "#/definitions/EntityMeta"
+            "$ref": "#/$defs/EntityMeta"
           }
         },
         "required": [
@@ -670,13 +636,13 @@ type MemoUI = {
             "type": "integer"
           },
           "start": {
-            "$ref": "#/definitions/RelationshipPoint"
+            "$ref": "#/$defs/RelationshipPoint"
           },
           "end": {
-            "$ref": "#/definitions/RelationshipPoint"
+            "$ref": "#/$defs/RelationshipPoint"
           },
           "meta": {
-            "$ref": "#/definitions/EntityMeta"
+            "$ref": "#/$defs/EntityMeta"
           }
         },
         "required": [
@@ -720,7 +686,7 @@ type MemoUI = {
             "type": "boolean"
           },
           "meta": {
-            "$ref": "#/definitions/EntityMeta"
+            "$ref": "#/$defs/EntityMeta"
           }
         },
         "required": [
@@ -753,7 +719,7 @@ type MemoUI = {
             "type": "integer"
           },
           "meta": {
-            "$ref": "#/definitions/EntityMeta"
+            "$ref": "#/$defs/EntityMeta"
           }
         },
         "required": ["id", "indexId", "columnId", "orderType", "meta"]
@@ -795,7 +761,7 @@ type MemoUI = {
             "required": ["x", "y", "zIndex", "width", "height", "color"]
           },
           "meta": {
-            "$ref": "#/definitions/EntityMeta"
+            "$ref": "#/$defs/EntityMeta"
           }
         },
         "required": ["id", "value", "ui", "meta"]
