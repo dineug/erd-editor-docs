@@ -1,11 +1,13 @@
 .features {
   display: flex;
-  align-items: center;
-  padding: 2rem 0;
+  padding: 3rem 0;
   width: 100%;
 }
 
-.featureSvg {
-  height: 200px;
-  width: 200px;
+/*
+ * These are h2 for document outline reasons (the hero is the only h1), but
+ * they are card titles, so keep them at the visual weight of an h3.
+ */
+.featureTitle {
+  font-size: 1.25rem;
 }

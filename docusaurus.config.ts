@@ -156,6 +156,47 @@ const config: Config = {
       theme: prismThemes.github,
       darkTheme: prismThemes.dracula,
     },
+    footer: {
+      style: 'dark',
+      links: [
+        {
+          title: 'Docs',
+          items: [
+            { label: 'Guide', to: '/docs/guide/introduction' },
+            { label: 'API', to: '/docs/api/installation' },
+          ],
+        },
+        {
+          title: 'Editors',
+          items: [
+            { label: 'Web App', href: 'https://erd-editor.io' },
+            {
+              label: 'VSCode Extension',
+              href: 'https://marketplace.visualstudio.com/items?itemName=dineug.vuerd-vscode',
+            },
+            {
+              label: 'IntelliJ Plugin',
+              href: 'https://plugins.jetbrains.com/plugin/23594-erd-editor',
+            },
+          ],
+        },
+        {
+          title: 'More',
+          items: [
+            { label: 'GitHub', href: 'https://github.com/dineug/erd-editor' },
+            {
+              label: 'npm',
+              href: 'https://www.npmjs.com/package/@dineug/erd-editor',
+            },
+            {
+              label: 'Issues',
+              href: 'https://github.com/dineug/erd-editor/issues',
+            },
+          ],
+        },
+      ],
+      copyright: `Copyright © ${new Date().getFullYear()} SeungHwan-Lee. MIT Licensed.`,
+    },
   } satisfies Preset.ThemeConfig,
 };
 

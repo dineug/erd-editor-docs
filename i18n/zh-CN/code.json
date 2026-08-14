@@ -1,0 +1,36 @@
+{
+  "homepage.tagline": {
+    "message": "实体关系图编辑器",
+    "description": "The hero subtitle and the browser tab title of the homepage"
+  },
+  "homepage.heroImageAlt": {
+    "message": "在 VS Code 中运行的 erd-editor",
+    "description": "Alt text for the homepage screenshot"
+  },
+  "homepage.cta": {
+    "message": "编辑指南 — 5 分钟 ⏱️",
+    "description": "Label of the call-to-action button on the homepage"
+  },
+  "homepage.metaDescription": {
+    "message": "erd-editor 是一款实体关系图编辑器，提供 Web 应用、VSCode 扩展、IntelliJ 插件，以及可嵌入的 Web 组件。",
+    "description": "The meta description of the homepage"
+  },
+  "homepage.feature.easy.title": {
+    "message": "简单易用"
+  },
+  "homepage.feature.easy.description": {
+    "message": "专注于简洁与核心功能。"
+  },
+  "homepage.feature.editing.title": {
+    "message": "编辑体验"
+  },
+  "homepage.feature.editing.description": {
+    "message": "本项目的首要目标是用户的编辑体验。"
+  },
+  "homepage.feature.portability.title": {
+    "message": "可移植性"
+  },
+  "homepage.feature.portability.description": {
+    "message": "基于标准 Web 组件开发，不受框架限制，随处可用。"
+  }
+}

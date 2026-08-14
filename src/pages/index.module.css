@@ -4,7 +4,7 @@
  */
 
 .heroBanner {
-  padding: 4rem 0;
+  padding: 3rem 0 4rem;
   text-align: center;
   position: relative;
   overflow: hidden;
@@ -16,8 +16,25 @@
   }
 }
 
+/*
+ * The screenshot is 1279x881. Left unconstrained it fills the viewport and
+ * pushes the call to action below the fold, so cap it on both axes. The width
+ * and height attributes on the <img> keep the aspect ratio reserved during
+ * load, which is what prevents the layout shift.
+ */
+.heroImage {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: min(100%, 800px);
+  max-height: 46vh;
+  margin: 2rem auto 0;
+  border-radius: 8px;
+}
+
 .buttons {
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-top: 2rem;
 }

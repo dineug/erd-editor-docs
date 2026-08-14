@@ -1,0 +1,38 @@
+{
+  "link.title.Docs": {
+    "message": "文档",
+    "description": "The title of the footer links column with title=Docs in the footer"
+  },
+  "link.title.Editors": {
+    "message": "编辑器",
+    "description": "The title of the footer links column with title=Editors in the footer"
+  },
+  "link.title.More": {
+    "message": "更多",
+    "description": "The title of the footer links column with title=More in the footer"
+  },
+  "link.item.label.Guide": {
+    "message": "指南",
+    "description": "The label of footer link with label=Guide linking to /docs/guide/introduction"
+  },
+  "link.item.label.Web App": {
+    "message": "网页版",
+    "description": "The label of footer link with label=Web App linking to https://erd-editor.io"
+  },
+  "link.item.label.VSCode Extension": {
+    "message": "VSCode 扩展",
+    "description": "The label of footer link with label=VSCode Extension linking to https://marketplace.visualstudio.com/items?itemName=dineug.vuerd-vscode"
+  },
+  "link.item.label.IntelliJ Plugin": {
+    "message": "IntelliJ 插件",
+    "description": "The label of footer link with label=IntelliJ Plugin linking to https://plugins.jetbrains.com/plugin/23594-erd-editor"
+  },
+  "link.item.label.Issues": {
+    "message": "问题",
+    "description": "The label of footer link with label=Issues linking to https://github.com/dineug/erd-editor/issues"
+  },
+  "copyright": {
+    "message": "Copyright © 2026 SeungHwan-Lee. MIT 许可证",
+    "description": "The footer copyright"
+  }
+}

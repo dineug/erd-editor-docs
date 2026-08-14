@@ -38,5 +38,39 @@
   "theme.SearchPage.searchContext.everywhere": {
     "message": "전체",
     "description": "The label for search context: everywhere"
+  },
+  "homepage.tagline": {
+    "message": "엔티티 관계 다이어그램 편집기",
+    "description": "The hero subtitle and the browser tab title of the homepage"
+  },
+  "homepage.heroImageAlt": {
+    "message": "VS Code에서 실행 중인 erd-editor",
+    "description": "Alt text for the homepage screenshot"
+  },
+  "homepage.cta": {
+    "message": "편집 가이드 — 5분 ⏱️",
+    "description": "Label of the call-to-action button on the homepage"
+  },
+  "homepage.metaDescription": {
+    "message": "erd-editor는 웹 앱, VSCode 확장, IntelliJ 플러그인, 그리고 직접 삽입할 수 있는 웹 컴포넌트로 제공되는 ERD 편집기입니다.",
+    "description": "The meta description of the homepage"
+  },
+  "homepage.feature.easy.title": {
+    "message": "쉬운 사용"
+  },
+  "homepage.feature.easy.description": {
+    "message": "단순함과 핵심 기능에 집중합니다."
+  },
+  "homepage.feature.editing.title": {
+    "message": "편집 경험"
+  },
+  "homepage.feature.editing.description": {
+    "message": "이 프로젝트의 최우선순위는 사용자의 편집 경험입니다."
+  },
+  "homepage.feature.portability.title": {
+    "message": "이식성"
+  },
+  "homepage.feature.portability.description": {
+    "message": "표준 웹 컴포넌트로 개발되어 프레임워크에 상관없이 어디서나 사용할 수 있습니다."
   }
 }

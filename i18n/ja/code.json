@@ -1,0 +1,36 @@
+{
+  "homepage.tagline": {
+    "message": "ER 図エディタ",
+    "description": "The hero subtitle and the browser tab title of the homepage"
+  },
+  "homepage.heroImageAlt": {
+    "message": "VS Code 上で動作している erd-editor",
+    "description": "Alt text for the homepage screenshot"
+  },
+  "homepage.cta": {
+    "message": "編集ガイド — 5 分 ⏱️",
+    "description": "Label of the call-to-action button on the homepage"
+  },
+  "homepage.metaDescription": {
+    "message": "erd-editor は、Web アプリ、VSCode 拡張機能、IntelliJ プラグイン、そして埋め込み可能な Web コンポーネントとして提供される ER 図エディタです。",
+    "description": "The meta description of the homepage"
+  },
+  "homepage.feature.easy.title": {
+    "message": "使いやすさ"
+  },
+  "homepage.feature.easy.description": {
+    "message": "シンプルさと中核機能に集中しています。"
+  },
+  "homepage.feature.editing.title": {
+    "message": "編集体験"
+  },
+  "homepage.feature.editing.description": {
+    "message": "このプロジェクトの最優先事項は、ユーザーの編集体験です。"
+  },
+  "homepage.feature.portability.title": {
+    "message": "ポータビリティ"
+  },
+  "homepage.feature.portability.description": {
+    "message": "標準の Web コンポーネントで開発されており、フレームワークを問わずどこでも使用できます。"
+  }
+}

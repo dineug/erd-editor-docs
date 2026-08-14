@@ -1,0 +1,18 @@
+{
+  "item.label.Guide": {
+    "message": "가이드",
+    "description": "Navbar item with label Guide"
+  },
+  "item.label.Web App": {
+    "message": "웹 앱",
+    "description": "Navbar item with label Web App"
+  },
+  "item.label.VSCode Extension": {
+    "message": "VSCode 확장",
+    "description": "Navbar item with label VSCode Extension"
+  },
+  "item.label.IntelliJ Plugin": {
+    "message": "IntelliJ 플러그인",
+    "description": "Navbar item with label IntelliJ Plugin"
+  }
+}

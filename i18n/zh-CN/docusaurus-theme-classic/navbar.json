@@ -1,0 +1,18 @@
+{
+  "item.label.Guide": {
+    "message": "指南",
+    "description": "Navbar item with label Guide"
+  },
+  "item.label.Web App": {
+    "message": "网页版",
+    "description": "Navbar item with label Web App"
+  },
+  "item.label.VSCode Extension": {
+    "message": "VSCode 扩展",
+    "description": "Navbar item with label VSCode Extension"
+  },
+  "item.label.IntelliJ Plugin": {
+    "message": "IntelliJ 插件",
+    "description": "Navbar item with label IntelliJ Plugin"
+  }
+}
