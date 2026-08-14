@@ -3,3 +3,6 @@
 User-agent: *
 Allow: /
 Sitemap: https://docs.erd-editor.io/sitemap.xml
+Sitemap: https://docs.erd-editor.io/ko/sitemap.xml
+Sitemap: https://docs.erd-editor.io/ja/sitemap.xml
+Sitemap: https://docs.erd-editor.io/zh-CN/sitemap.xml

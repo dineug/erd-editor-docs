@@ -1,0 +1,14 @@
+{
+  "sidebar.docs.category.Guides": {
+    "message": "指南",
+    "description": "The label for category 'Guides' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Guides.link.generated-index.description": {
+    "message": "绘制和编辑图的方法：创建表与关系、导入和导出文件，以及编辑器的显示选项。",
+    "description": "The generated-index page description for category 'Guides' in sidebar 'docs'"
+  },
+  "sidebar.api.category.Advanced": {
+    "message": "进阶",
+    "description": "The label for category 'Advanced' in sidebar 'api'"
+  }
+}

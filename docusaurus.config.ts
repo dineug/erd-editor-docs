@@ -2,6 +2,24 @@ import type * as Preset from '@docusaurus/preset-classic';
 import type { Config } from '@docusaurus/types';
 import { themes as prismThemes } from 'prism-react-renderer';
 
+// Search language must be chosen per locale, because @easyops-cn/docusaurus-search-local
+// cannot serve CJK locales from one shared index:
+//   - any `language` containing `zh` forces `lunr.zh.tokenizer` on every index, and that
+//     tokenizer only matches /\w+|\p{Unified_Ideograph}+/u — it silently drops kana AND
+//     hangul, breaking both Japanese and Korean search.
+//   - Japanese only gets its TinySegmenter tokenizer when `language` is exactly ['ja']
+//     (see the plugin's buildIndex/tokenize: a multi-language list falls back to the
+//     whitespace tokenizer, which cannot split Japanese).
+// Docusaurus sets DOCUSAURUS_CURRENT_LOCALE when it loads this config for a locale.
+// The plugin caches its lunr setup in module state, so each locale must be built in its
+// own process — that is why `pnpm build` runs one `docusaurus build --locale ...` per locale.
+const currentLocale = process.env.DOCUSAURUS_CURRENT_LOCALE ?? 'en';
+const searchLanguage = {
+  ko: ['en', 'ko'],
+  ja: ['ja'],
+  'zh-CN': ['en', 'zh'],
+}[currentLocale] ?? ['en'];
+
 const config: Config = {
   title: 'erd-editor',
   tagline: 'Entity-Relationship Diagram Editor',
@@ -28,7 +46,16 @@ const config: Config = {
 
   i18n: {
     defaultLocale: 'en',
-    locales: ['en', 'ko'],
+    locales: ['en', 'ko', 'ja', 'zh-CN'],
+    // baseUrl is set explicitly so that a single-locale build
+    // (`docusaurus build --locale ko`) still emits /ko/ and writes to build/ko.
+    // Docusaurus otherwise flattens a single-locale build to baseUrl '/'.
+    localeConfigs: {
+      en: { label: 'English', baseUrl: '/' },
+      ko: { label: '한국어', baseUrl: '/ko/' },
+      ja: { label: '日本語', baseUrl: '/ja/' },
+      'zh-CN': { label: '简体中文', baseUrl: '/zh-CN/' },
+    },
   },
 
   presets: [
@@ -57,7 +84,7 @@ const config: Config = {
       require.resolve('@easyops-cn/docusaurus-search-local'),
       {
         hashed: true,
-        language: ['en', 'ko'],
+        language: searchLanguage,
         indexDocs: true,
         indexBlog: false,
         indexPages: false,

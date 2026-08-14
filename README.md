@@ -16,6 +16,9 @@ nvm use
 pnpm install
 pnpm dev        # English, http://localhost:3000
 pnpm dev:ko     # Korean
+
+# any other locale
+pnpm docusaurus start --locale ja
 ```
 
 The dev server hot-reloads, so most edits appear without a restart.
@@ -32,14 +35,18 @@ pnpm serve      # preview the production build, http://localhost:3000
 pnpm typecheck  # tsc, no emit
 ```
 
+`build` runs one `docusaurus build --locale <locale>` per locale instead of a single
+all-locale build. This is required by the search plugin — see
+[Search index](#search-index) — so it is roughly four times slower than a single build.
+
 ## Project structure
 
 | Path | Contents |
 | --- | --- |
 | `docs/guide`, `docs/api` | Documentation source (English, the default locale) |
-| `i18n/ko/docusaurus-plugin-content-docs/current` | Korean translations, mirroring the layout of `docs/` |
+| `i18n/<locale>/docusaurus-plugin-content-docs/current` | Translations, mirroring the layout of `docs/` |
+| `i18n/<locale>/docusaurus-plugin-content-docs/current.json` | Sidebar category labels (`_category_.json` under `i18n/` is **not** read) |
 | `i18n/ko/code.json` | Korean strings for React components under `src/` and the search UI |
-| `i18n/ko/docusaurus-plugin-content-docs/current.json` | Korean sidebar category labels (`_category_.json` under `i18n/` is **not** read) |
 | `sidebars.ts` | Sidebar structure for the Guide and API sections |
 | `src/pages`, `src/components` | Landing page and its components |
 | `src/css/custom.css` | Global theme overrides |
@@ -48,16 +55,43 @@ pnpm typecheck  # tsc, no emit
 
 ## Translations
 
-`en` is the default locale and `ko` is a translation of it. To translate a page, copy the
-English file to the matching path under `i18n/ko/docusaurus-plugin-content-docs/current/` —
-for example `docs/guide/introduction.md` becomes
-`i18n/ko/docusaurus-plugin-content-docs/current/guide/introduction.md`.
+`en` is the default locale. `ko`, `ja`, and `zh-CN` are translations of it. To translate a
+page, copy the English file to the matching path under
+`i18n/<locale>/docusaurus-plugin-content-docs/current/` — for example
+`docs/guide/introduction.md` becomes
+`i18n/ja/docusaurus-plugin-content-docs/current/guide/introduction.md`.
+
+Keep the structure identical to the English source: same headings, same code blocks, same
+images. The translated files are diffed against English when the docs change, and a
+structural drift is what makes that diff unreadable.
 
 After adding new UI strings in `src/`, regenerate the translation scaffolding:
 
 ```bash
 pnpm write-translations --locale ko
 ```
+
+### Search index
+
+Search is per-locale, and each locale needs a different `language` value for
+`@easyops-cn/docusaurus-search-local`:
+
+| Locale | `language` | Why |
+| --- | --- | --- |
+| `en` | `['en']` | default |
+| `ko` | `['en', 'ko']` | Korean is space-separated, so the default tokenizer is fine |
+| `ja` | `['ja']` | the plugin only enables its Japanese tokenizer when `language` is **exactly** `['ja']` |
+| `zh-CN` | `['en', 'zh']` | `zh` switches the plugin to jieba segmentation |
+
+These cannot be merged into one list. Any `language` containing `zh` forces
+`lunr.zh.tokenizer` onto *every* index, and that tokenizer matches only
+`/\w+|\p{Unified_Ideograph}+/u` — it silently drops kana and hangul, which breaks Japanese
+and Korean search.
+
+The plugin caches its lunr setup in module state, so a locale's `language` is fixed by
+whichever locale is built first in a process. That is why `pnpm build` runs one
+`docusaurus build --locale <locale>` per locale, and why `localeConfigs` sets an explicit
+`baseUrl` — a single-locale build otherwise flattens the site to `/`.
 
 ## Other scripts
 
