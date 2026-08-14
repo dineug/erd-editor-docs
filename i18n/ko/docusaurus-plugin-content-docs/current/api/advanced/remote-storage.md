@@ -4,8 +4,8 @@ sidebar_position: 2
 
 # 원격 저장
 
-에디터의 변경사항이 있을때 마다 전체 상태를 전송하는건 비효율적입니다.  
-실시간 데이터 복제 API를 지원합니다.
+에디터에 변경사항이 있을 때마다 전체 상태를 전송하는 건 비효율적입니다.  
+이런 경우를 위해 실시간 데이터 복제 API를 제공합니다.
 
 ## 설치
 
@@ -18,7 +18,7 @@ npm install @dineug/erd-editor
 ```ts
 type ReplicationStore = {
   readonly value: string;
-  on: (reducers: Partial<{ change: () => void }>) => Unsubscribe;
+  on: (listeners: Partial<{ change: () => void }>) => Unsubscribe;
   setInitialValue: (value: string) => void;
   dispatch: (actions: Array<AnyAction> | AnyAction) => void;
   dispatchSync: (actions: Array<AnyAction> | AnyAction) => void;
@@ -86,8 +86,8 @@ const unsubscribe = replicationStore.on({
 원격 에디터 변경사항을 replicationStore에 반영합니다.
 
 ```js
-replicationStore.dispatch(actions...); // async
-replicationStore.dispatchSync(actions...); // sync
+replicationStore.dispatch(actions); // async
+replicationStore.dispatchSync(actions); // sync
 ```
 
 ### destroy

@@ -1,5 +1,6 @@
 ---
 sidebar_position: 4
+description: 테이블 다중 선택과 이동, 확대/축소, 색상과 표출 옵션, 데이터베이스 선택, 문서 비교.
 ---
 
 # 테이블 관련 기능
@@ -16,8 +17,8 @@ sidebar_position: 4
 
 ## 여러 테이블 이동
 
-- Ctrl를 누른 상태에서 drag
-- `Ctrl + drag` (Windows/Linux) or `⌘ + drag` (Mac)
+mod 키를 누른 채 드래그합니다. `Ctrl + drag` (Windows/Linux) or `⌘ + drag` (Mac)  
+mod 키 없이 드래그하면 선택이 해제되고 드래그한 테이블만 이동합니다.
 
 ![demo-table-multiple-move](/img/demo-table-multiple-move.webp)
 
@@ -28,16 +29,16 @@ sidebar_position: 4
 
 ![demo-table-remove](/img/demo-table-remove.webp)
 
-## 줌 축소/확대
+## 줌 확대/축소
 
-기본적으로 마우스 휠로 동작합니다. `Ctrl + Wheel` (Windows/Linux) or `⌘ + Wheel` (Mac)
+mod 키를 누른 채 마우스 휠로 확대/축소합니다. `Ctrl + Wheel` (Windows/Linux) or `⌘ + Wheel` (Mac). 휠만 사용하면 캔버스가 스크롤됩니다.  
 단축키 `Ctrl + Plus` (Windows/Linux) or `⌘ + Plus` (Mac), `Ctrl + Minus` (Windows/Linux) or `⌘ + Minus` (Mac)
 
 ![demo-zoom](/img/demo-zoom.webp)
 
 ## 테이블, 메모 컬러 지정
 
-카테고리별로 구분하기위해 컬러를 지정할 수 있습니다.
+카테고리별로 구분하기 위해 컬러를 지정할 수 있습니다.
 
 ![demo-table-color](/img/demo-table-color.webp)
 
@@ -56,10 +57,17 @@ sidebar_position: 4
 
 ![demo-view-options](/img/demo-view-options.webp)
 
+## 테이블 속성
+
+선택한 테이블의 속성 패널을 엽니다.
+테이블 컨텍스트 메뉴 또는 단축키 `Alt + Space`로 시작합니다.
+Indexes, Schema SQL, Code Generator 3개의 탭을 제공합니다.
+인덱스는 여기서 정의하며 내보내는 Schema SQL에 포함됩니다.
+
 ## 테이블 위치 자동 정렬
 
 Force Simulation으로 동작합니다.  
-외부 Schema SQL 가져오고 테이블 위치 시작지점으로 활용할 수 있습니다.
+외부 Schema SQL을 가져와 테이블 위치의 시작 지점으로 활용할 수 있습니다.
 
 ![demo-automatic-table-placement](/img/demo-automatic-table-placement.webp)
 
@@ -76,7 +84,7 @@ Force Simulation으로 동작합니다.
 
 해당 옵션은 내보내기 Schema SQL 문법과 DataType 자동완성을 결정합니다.
 
-<img src="/img/database-menu.png" width="400" />
+<img src="/img/database-menu.png" width="400" alt="데이터베이스 선택 메뉴" loading="lazy" />
 
 ![demo-data-type-autocomplete](/img/demo-data-type-autocomplete.webp)
 
@@ -84,6 +92,6 @@ Force Simulation으로 동작합니다.
 
 이전에 저장했던 문서와 현재 문서를 비교할 수 있습니다.
 
-<img src="/img/context-menu-diff-viewer.png" width="400" />
+<img src="/img/context-menu-diff-viewer.png" width="400" alt="Diff Viewer 컨텍스트 메뉴" loading="lazy" />
 
 ![diff-viewer](/img/diff-viewer.png)

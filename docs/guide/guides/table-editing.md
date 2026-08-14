@@ -4,19 +4,20 @@ sidebar_position: 3
 
 # Table Editing
 
-It fundamentally offers a user editing experience similar to Excel.  
+Table editing basically offers an editing experience similar to Excel.  
 Editing mode starts with `Enter`.
 
 ![demo-table-edit](/img/demo-table-edit.webp)
 
 ## Adding Columns
 
-Created using the shortcut `Alt + Enter`.
+Created using the shortcut `Alt + Enter`.  
+A column is added to every selected table.
 
 ## Tab Key
 
-Allows direct entry into the next cell's editing mode using `Tab`.  
-Creates a new column in the last cell.  
+Press `Tab` to move straight into the next cell's editing mode.  
+Pressing `Tab` in the last cell creates a new column.  
 Use `Shift + Tab` to navigate to the previous cell's editing mode.
 
 ![demo-table-tab](/img/demo-table-tab.webp)
@@ -26,8 +27,8 @@ Use `Shift + Tab` to navigate to the previous cell's editing mode.
 Supports four methods:
 
 - `Shift + Arrow Up/Down`
-- `Ctrl + Click` (Windows/Linux) or `⌘ + Click` (Mac)
-- `Shift + Click`
+- `Ctrl + click` (Windows/Linux) or `⌘ + click` (Mac)
+- `Shift + click`
 - `Alt + A`: Select All
 
 ![demo-column-select](/img/demo-column-select.webp)
@@ -54,8 +55,8 @@ Shortcut: `Alt + Backspace` or `Alt + Delete`
 Operates like a table-based clipboard.  
 Shortcuts: `Ctrl + C` (Windows/Linux) or `⌘ + C` (Mac), `Ctrl + V` (Windows/Linux) or `⌘ + V` (Mac)
 
-Can paste from the editor to Excel or vice versa.  
-However, for specific columns, true/false are supported as follows (case insensitive):
+You can paste from the editor into Excel and from Excel back into the editor.  
+For the columns below, any of these values is read as true (case insensitive):
 
 - AutoIncrement: `TRUE`, `1`, `YES`, `Y`
 - Unique: `TRUE`, `1`, `YES`, `Y`
@@ -70,6 +71,6 @@ Supports actions when selecting multiple tables.
 
 ## Column Primary Key
 
-Possible through the table context menu or shortcut `Alt + K`.
+Set the selected column as a primary key from the table context menu or with the shortcut `Alt + K`.
 
 ![demo-column-pk](/img/demo-column-pk.webp)

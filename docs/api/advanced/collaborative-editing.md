@@ -9,7 +9,9 @@ It supports a real-time collaborative editing API.
 ```ts
 interface ErdEditorElement extends HTMLElement {
   // ...
-  getSharedStore: (config?: SharedStoreConfig) => SharedStore;
+  getSharedStore: (
+    config?: SharedStoreConfig & { mouseTracker?: boolean }
+  ) => SharedStore;
 }
 
 type SharedStoreConfig = {
@@ -63,14 +65,22 @@ editor.getSharedStore({
 });
 ```
 
+### mouseTracker
+
+Shows the mouse cursors of other users. Default is `true`.
+
+```js
+editor.getSharedStore({ mouseTracker: false });
+```
+
 ## SharedStore
 
 ### connection, disconnect
 
-Indicates the current connection status.  
-Upon disconnection, it saves the changes internally in a buffer.  
-Emits an event when it becomes ready for transmission.  
-The default state is `connection`.
+These methods set the current connection state.  
+While disconnected, changes are buffered internally.  
+The buffered changes are emitted to subscribers once transmission is possible again.  
+The default state is connected (`connection`).
 
 ```js
 sharedStore.connection();
@@ -82,8 +92,8 @@ sharedStore.disconnect();
 Applies changes from other editor instances to the current editor instance.
 
 ```js
-sharedStore.dispatch(actions...); // async
-sharedStore.dispatchSync(actions...); // sync
+sharedStore.dispatch(actions); // async
+sharedStore.dispatchSync(actions); // sync
 ```
 
 ### subscribe

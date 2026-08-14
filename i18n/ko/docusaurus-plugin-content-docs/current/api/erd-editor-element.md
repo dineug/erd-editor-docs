@@ -23,7 +23,9 @@ interface ErdEditorElement extends HTMLElement {
   setKeyBindingMap: (keyBindingMap: Partial<KeyBindingMap>) => void;
   setSchemaSQL: (value: string) => void;
   getSchemaSQL: (databaseVendor?: DatabaseVendor) => string;
-  getSharedStore: (config?: SharedStoreConfig) => SharedStore;
+  getSharedStore: (
+    config?: SharedStoreConfig & { mouseTracker?: boolean }
+  ) => SharedStore;
   setDiffValue: (value: string) => void;
 }
 ```
@@ -44,12 +46,12 @@ editor.setAttribute('readonly', 'true');
 
 ## systemDarkMode
 
-시스템에 다크/라이트 모드를 자동으로 동기화할지 설정합니다.
+시스템의 다크/라이트 모드를 자동으로 동기화할지 설정합니다.
 
 ```js
 editor.systemDarkMode = true;
 // or
-editor.setAttribute('systemDarkMode', 'true');
+editor.setAttribute('system-dark-mode', 'true');
 ```
 
 ```html
@@ -60,12 +62,12 @@ editor.setAttribute('systemDarkMode', 'true');
 
 preset 테마를 쉽게 사용자 설정할 수 있는 UI를 제공할지 여부입니다.
 
-<img src="/img/theme-builder.png" width="400" />
+<img src="/img/theme-builder.png" width="400" alt="테마 빌더 UI" loading="lazy" />
 
 ```js
 editor.enableThemeBuilder = true;
 // or
-editor.setAttribute('enableThemeBuilder', 'true');
+editor.setAttribute('enable-theme-builder', 'true');
 ```
 
 ```html
@@ -112,7 +114,9 @@ editor.setInitialValue('json...');
 
 ### change
 
-에디터에 변경이 있을때 이벤트를 발행합니다.
+에디터에 변경이 있을 때 이벤트를 발행합니다.  
+200ms 디바운스되며, `readonly`가 `true`인 동안에는 발행되지 않습니다.  
+`value` 설정은 이벤트를 발행하지만 `setInitialValue`는 발행하지 않습니다.
 
 ```js
 editor.addEventListener('change', event => {
@@ -130,7 +134,7 @@ editor.focus();
 
 ## blur
 
-에디터에 포커스를 제거합니다.
+에디터의 포커스를 제거합니다.
 
 ```js
 editor.blur();
@@ -154,7 +158,8 @@ editor.destroy();
 
 ## setKeyBindingMap
 
-단축키를 재정의합니다.
+단축키를 재정의합니다.  
+`edit`, `stop`, `search`, `undo`, `redo`, `zoomIn`, `zoomOut`은 고정이며 재정의할 수 없습니다.
 
 ```ts
 type ShortcutOption = {
@@ -164,24 +169,30 @@ type ShortcutOption = {
 };
 
 const defaultKeyBindingMap: KeyBindingMap = {
-  addTable: [{ shortcut: 'Alt+KeyN' }],
-  addColumn: [{ shortcut: 'Alt+Enter' }],
-  addMemo: [{ shortcut: 'Alt+KeyM' }],
-  removeTable: [{ shortcut: '$mod+Backspace' }, { shortcut: '$mod+Delete' }],
-  removeColumn: [{ shortcut: 'Alt+Backspace' }, { shortcut: 'Alt+Delete' }],
-  primaryKey: [{ shortcut: 'Alt+KeyK' }],
-  selectAllTable: [{ shortcut: '$mod+Alt+KeyA' }],
-  selectAllColumn: [{ shortcut: 'Alt+KeyA' }],
-  relationshipZeroOne: [{ shortcut: '$mod+Alt+Digit1' }],
-  relationshipZeroN: [{ shortcut: '$mod+Alt+Digit2' }],
-  relationshipOneOnly: [{ shortcut: '$mod+Alt+Digit3' }],
-  relationshipOneN: [{ shortcut: '$mod+Alt+Digit4' }],
-  tableProperties: [{ shortcut: 'Alt+Space' }],
+  addTable: [{ shortcut: 'Alt+KeyN', preventDefault: true }],
+  addColumn: [{ shortcut: 'Alt+Enter', preventDefault: true }],
+  addMemo: [{ shortcut: 'Alt+KeyM', preventDefault: true }],
+  removeTable: [
+    { shortcut: '$mod+Backspace', preventDefault: true },
+    { shortcut: '$mod+Delete', preventDefault: true },
+  ],
+  removeColumn: [
+    { shortcut: 'Alt+Backspace', preventDefault: true },
+    { shortcut: 'Alt+Delete', preventDefault: true },
+  ],
+  primaryKey: [{ shortcut: 'Alt+KeyK', preventDefault: true }],
+  selectAllTable: [{ shortcut: '$mod+Alt+KeyA', preventDefault: true }],
+  selectAllColumn: [{ shortcut: 'Alt+KeyA', preventDefault: true }],
+  relationshipZeroOne: [{ shortcut: '$mod+Alt+Digit1', preventDefault: true }],
+  relationshipZeroN: [{ shortcut: '$mod+Alt+Digit2', preventDefault: true }],
+  relationshipOneOnly: [{ shortcut: '$mod+Alt+Digit3', preventDefault: true }],
+  relationshipOneN: [{ shortcut: '$mod+Alt+Digit4', preventDefault: true }],
+  tableProperties: [{ shortcut: 'Alt+Space', preventDefault: true }],
 };
 
 // example
 editor.setKeyBindingMap({
-  addTable: [{ shortcut: '$mod+KeyN', preventDefault: true }];
+  addTable: [{ shortcut: '$mod+KeyN', preventDefault: true }],
 });
 ```
 
@@ -211,7 +222,7 @@ Control키를 환경에 따라 분기합니다.
 | `a`, `b`, etc | `a`, `b`, etc   | `a`, `b`, etc | `KeyA`, `KeyB`, etc            |
 | `-`           | `-`             | `-`           | `Minus`                        |
 | `=`           | `=`             | `=`           | `Equal`                        |
-| `+`           | `+`             | `+`           | `Equal`\*                      |
+| `+`           | `+`             | `+`           | `Equal`                        |
 
 ## Theme
 
@@ -260,7 +271,7 @@ editor.setPresetTheme({ appearance: 'light' });
 
 테마 사용자 정의가 가능합니다.
 
-#### javascript
+#### JavaScript
 
 ```ts
 type Theme = {
@@ -447,6 +458,11 @@ type DatabaseVendor =
 
 const schemaSQL = editor.getSchemaSQL();
 ```
+
+## getSharedStore
+
+실시간 협업 편집을 위한 store를 반환합니다.  
+[협업 편집](./advanced/collaborative-editing.md) 문서를 참고하세요.
 
 ## setDiffValue
 

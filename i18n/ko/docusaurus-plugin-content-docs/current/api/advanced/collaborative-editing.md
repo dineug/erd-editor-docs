@@ -9,7 +9,9 @@ sidebar_position: 1
 ```ts
 interface ErdEditorElement extends HTMLElement {
   // ...
-  getSharedStore: (config?: SharedStoreConfig) => SharedStore;
+  getSharedStore: (
+    config?: SharedStoreConfig & { mouseTracker?: boolean }
+  ) => SharedStore;
 }
 
 type SharedStoreConfig = {
@@ -63,14 +65,22 @@ editor.getSharedStore({
 });
 ```
 
+### mouseTracker
+
+다른 사용자의 마우스 커서를 표시합니다. 기본값은 `true` 입니다.
+
+```js
+editor.getSharedStore({ mouseTracker: false });
+```
+
 ## SharedStore
 
 ### connection, disconnect
 
-현재 연결 상태를 알려줍니다.  
-`disconnect`가 되었을때 내부에서 발생한 변경사항을 버퍼링에 저장합니다.  
-전송 가능한 상태가 되었을때 이벤트를 발행합니다.  
-기본 상태는 `connection`입니다.
+연결 상태를 설정하는 메서드입니다.  
+`disconnect` 상태에서는 내부에서 발생한 변경사항을 버퍼에 저장합니다.  
+전송 가능한 상태가 되면 버퍼에 쌓인 변경사항을 구독자에게 발행합니다.  
+기본 상태는 연결됨(`connection`)입니다.
 
 ```js
 sharedStore.connection();
@@ -82,8 +92,8 @@ sharedStore.disconnect();
 다른 에디터 변경사항을 현재 에디터 인스턴스에 반영합니다.
 
 ```js
-sharedStore.dispatch(actions...); // async
-sharedStore.dispatchSync(actions...); // sync
+sharedStore.dispatch(actions); // async
+sharedStore.dispatchSync(actions); // sync
 ```
 
 ### subscribe

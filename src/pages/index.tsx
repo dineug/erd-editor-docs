@@ -4,6 +4,7 @@ import HomepageFeatures from '@site/src/components/HomepageFeatures';
 import Heading from '@theme/Heading';
 import Layout from '@theme/Layout';
 import clsx from 'clsx';
+import type { ReactNode } from 'react';
 
 import styles from './index.module.css';
 
@@ -16,7 +17,10 @@ function HomepageHeader() {
           {siteConfig.title}
         </Heading>
         <p className="hero__subtitle">{siteConfig.tagline}</p>
-        <img src={require('@site/static/img/erd-editor-vscode.png').default} />
+        <img
+          src={require('@site/static/img/erd-editor-vscode.png').default}
+          alt="erd-editor running inside VS Code"
+        />
         <div className={styles.buttons}>
           <Link
             className="button button--secondary button--lg"
@@ -30,12 +34,12 @@ function HomepageHeader() {
   );
 }
 
-export default function Home(): JSX.Element {
+export default function Home(): ReactNode {
   const { siteConfig } = useDocusaurusContext();
   return (
     <Layout
       title={`${siteConfig.tagline}`}
-      description="Description will go into a meta tag in <head />"
+      description="erd-editor is an Entity-Relationship Diagram editor available as a web app, a VSCode extension, an IntelliJ plugin, and an embeddable web component."
     >
       <HomepageHeader />
       <main>

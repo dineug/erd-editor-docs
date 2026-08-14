@@ -8,14 +8,17 @@ sidebar_position: 1
 npm install @dineug/erd-editor
 ```
 
-## Usage
+## 사용
 
 ```js
 import '@dineug/erd-editor';
 
 const editor = document.createElement('erd-editor');
+editor.style.cssText = 'display: block; width: 100%; height: 100vh;';
 document.body.appendChild(editor);
 ```
+
+`<erd-editor>`는 자체 크기를 갖지 않습니다. 요소나 컨테이너에 width, height를 지정해야 합니다.
 
 ### CDN
 
@@ -24,13 +27,14 @@ document.body.appendChild(editor);
   import 'https://esm.run/@dineug/erd-editor';
 
   const editor = document.createElement('erd-editor');
+  editor.style.cssText = 'display: block; width: 100%; height: 100vh;';
   document.body.appendChild(editor);
 </script>
 <!-- or -->
 <script type="module" src="https://esm.run/@dineug/erd-editor"></script>
 ```
 
-### html
+### HTML
 
 ```html
 <erd-editor readonly system-dark-mode enable-theme-builder></erd-editor>

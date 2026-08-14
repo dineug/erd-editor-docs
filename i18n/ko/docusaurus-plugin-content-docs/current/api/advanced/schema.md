@@ -6,7 +6,7 @@ sidebar_position: 3
 
 에디터의 스키마 정의는 다음과 같습니다.
 
-## Typescript
+## TypeScript
 
 ### ERDEditorSchemaV3
 
@@ -280,7 +280,9 @@ type MemoUI = {
 };
 ```
 
-## [json-schema](https://raw.githubusercontent.com/dineug/erd-editor/main/json-schema/schema.json)
+## JSON Schema
+
+정식 스키마는 [json-schema/schema.json](https://raw.githubusercontent.com/dineug/erd-editor/main/json-schema/schema.json)에 게시되어 있으며 `$schema`로 직접 참조할 수 있습니다.
 
 ```json
 {

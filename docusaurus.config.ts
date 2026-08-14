@@ -19,11 +19,13 @@ const config: Config = {
   projectName: 'erd-editor', // Usually your repo name.
 
   onBrokenLinks: 'throw',
-  onBrokenMarkdownLinks: 'warn',
 
-  // Even if you don't use internationalization, you can use this field to set
-  // useful metadata like html lang. For example, if your site is Chinese, you
-  // may want to replace "en" with "zh-Hans".
+  markdown: {
+    hooks: {
+      onBrokenMarkdownLinks: 'warn',
+    },
+  },
+
   i18n: {
     defaultLocale: 'en',
     locales: ['en', 'ko'],
@@ -39,6 +41,7 @@ const config: Config = {
           // Remove this to remove the "edit this page" links.
           editUrl: 'https://github.com/dineug/erd-editor-docs/blob/main/',
         },
+        blog: false,
         theme: {
           customCss: './src/css/custom.css',
         },
@@ -46,6 +49,23 @@ const config: Config = {
           trackingID: ['G-T2T7XQTWW2'],
         },
       } satisfies Preset.Options,
+    ],
+  ],
+
+  themes: [
+    [
+      require.resolve('@easyops-cn/docusaurus-search-local'),
+      {
+        hashed: true,
+        language: ['en', 'ko'],
+        indexDocs: true,
+        indexBlog: false,
+        indexPages: false,
+        docsRouteBasePath: '/docs',
+        highlightSearchTermsOnTargetPage: true,
+        searchResultContextMaxLength: 80,
+        explicitSearchResultPath: true,
+      },
     ],
   ],
 
@@ -108,11 +128,6 @@ const config: Config = {
       additionalLanguages: ['bash', 'typescript', 'json', 'javascript'],
       theme: prismThemes.github,
       darkTheme: prismThemes.dracula,
-    },
-    algolia: {
-      appId: 'OCAVZ00HZS',
-      apiKey: '574dd362836e83f52fb6011a7b7361aa',
-      indexName: 'erd-editor',
     },
   } satisfies Preset.ThemeConfig,
 };

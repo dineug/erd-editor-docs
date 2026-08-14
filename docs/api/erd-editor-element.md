@@ -4,6 +4,9 @@ sidebar_position: 2
 
 # ErdEditorElement
 
+The editor is a plain `HTMLElement`.  
+Its type definition is as follows.
+
 ```ts
 interface ErdEditorElement extends HTMLElement {
   readonly: boolean;
@@ -20,7 +23,9 @@ interface ErdEditorElement extends HTMLElement {
   setKeyBindingMap: (keyBindingMap: Partial<KeyBindingMap>) => void;
   setSchemaSQL: (value: string) => void;
   getSchemaSQL: (databaseVendor?: DatabaseVendor) => string;
-  getSharedStore: (config?: SharedStoreConfig) => SharedStore;
+  getSharedStore: (
+    config?: SharedStoreConfig & { mouseTracker?: boolean }
+  ) => SharedStore;
   setDiffValue: (value: string) => void;
 }
 ```
@@ -46,7 +51,7 @@ Determines whether to automatically synchronize with the system's dark/light mod
 ```js
 editor.systemDarkMode = true;
 // or
-editor.setAttribute('systemDarkMode', 'true');
+editor.setAttribute('system-dark-mode', 'true');
 ```
 
 ```html
@@ -57,12 +62,12 @@ editor.setAttribute('systemDarkMode', 'true');
 
 Determines if a UI for easily setting preset themes is provided.
 
-<img src="/img/theme-builder.png" width="400" />
+<img src="/img/theme-builder.png" width="400" alt="Theme builder UI" loading="lazy" />
 
 ```js
 editor.enableThemeBuilder = true;
 // or
-editor.setAttribute('enableThemeBuilder', 'true');
+editor.setAttribute('enable-theme-builder', 'true');
 ```
 
 ```html
@@ -107,7 +112,9 @@ editor.setInitialValue('json...');
 
 ### change
 
-When there are changes in the editor, it emits an event.
+When there are changes in the editor, it emits an event.  
+The event is debounced by 200ms, and it is not emitted while `readonly` is `true`.  
+Assigning to `value` emits it, but `setInitialValue` does not.
 
 ```js
 editor.addEventListener('change', event => {
@@ -141,7 +148,7 @@ editor.clear();
 
 ## destroy
 
-Completely disables reusing the editor instance.
+Completely destroys the editor instance so that it can no longer be reused.
 
 ```js
 editor.destroy();
@@ -149,7 +156,8 @@ editor.destroy();
 
 ## setKeyBindingMap
 
-Redefines keyboard shortcuts.
+Redefines keyboard shortcuts.  
+`edit`, `stop`, `search`, `undo`, `redo`, `zoomIn` and `zoomOut` are fixed and cannot be redefined.
 
 ```ts
 type ShortcutOption = {
@@ -159,24 +167,30 @@ type ShortcutOption = {
 };
 
 const defaultKeyBindingMap: KeyBindingMap = {
-  addTable: [{ shortcut: 'Alt+KeyN' }],
-  addColumn: [{ shortcut: 'Alt+Enter' }],
-  addMemo: [{ shortcut: 'Alt+KeyM' }],
-  removeTable: [{ shortcut: '$mod+Backspace' }, { shortcut: '$mod+Delete' }],
-  removeColumn: [{ shortcut: 'Alt+Backspace' }, { shortcut: 'Alt+Delete' }],
-  primaryKey: [{ shortcut: 'Alt+KeyK' }],
-  selectAllTable: [{ shortcut: '$mod+Alt+KeyA' }],
-  selectAllColumn: [{ shortcut: 'Alt+KeyA' }],
-  relationshipZeroOne: [{ shortcut: '$mod+Alt+Digit1' }],
-  relationshipZeroN: [{ shortcut: '$mod+Alt+Digit2' }],
-  relationshipOneOnly: [{ shortcut: '$mod+Alt+Digit3' }],
-  relationshipOneN: [{ shortcut: '$mod+Alt+Digit4' }],
-  tableProperties: [{ shortcut: 'Alt+Space' }],
+  addTable: [{ shortcut: 'Alt+KeyN', preventDefault: true }],
+  addColumn: [{ shortcut: 'Alt+Enter', preventDefault: true }],
+  addMemo: [{ shortcut: 'Alt+KeyM', preventDefault: true }],
+  removeTable: [
+    { shortcut: '$mod+Backspace', preventDefault: true },
+    { shortcut: '$mod+Delete', preventDefault: true },
+  ],
+  removeColumn: [
+    { shortcut: 'Alt+Backspace', preventDefault: true },
+    { shortcut: 'Alt+Delete', preventDefault: true },
+  ],
+  primaryKey: [{ shortcut: 'Alt+KeyK', preventDefault: true }],
+  selectAllTable: [{ shortcut: '$mod+Alt+KeyA', preventDefault: true }],
+  selectAllColumn: [{ shortcut: 'Alt+KeyA', preventDefault: true }],
+  relationshipZeroOne: [{ shortcut: '$mod+Alt+Digit1', preventDefault: true }],
+  relationshipZeroN: [{ shortcut: '$mod+Alt+Digit2', preventDefault: true }],
+  relationshipOneOnly: [{ shortcut: '$mod+Alt+Digit3', preventDefault: true }],
+  relationshipOneN: [{ shortcut: '$mod+Alt+Digit4', preventDefault: true }],
+  tableProperties: [{ shortcut: 'Alt+Space', preventDefault: true }],
 };
 
 // example
 editor.setKeyBindingMap({
-  addTable: [{ shortcut: '$mod+KeyN', preventDefault: true }];
+  addTable: [{ shortcut: '$mod+KeyN', preventDefault: true }],
 });
 ```
 
@@ -205,7 +219,7 @@ Use `code` for absolute positions and `key` for input values.
 | `a`, `b`, etc | `a`, `b`, etc   | `a`, `b`, etc | `KeyA`, `KeyB`, etc            |
 | `-`           | `-`             | `-`           | `Minus`                        |
 | `=`           | `=`             | `=`           | `Equal`                        |
-| `+`           | `+`             | `+`           | `Equal`\*                      |
+| `+`           | `+`             | `+`           | `Equal`                        |
 
 ## Theme
 
@@ -341,7 +355,6 @@ type Theme = {
   diffCrossForeground: string;
 };
 
-
 // example
 editor.setTheme({...});
 ```
@@ -420,7 +433,7 @@ editor.setTheme({...});
 
 ## setSchemaSQL
 
-Loads a schema SQL file.
+Loads a Schema SQL file.
 
 ```js
 editor.setSchemaSQL('Schema SQL...');
@@ -428,7 +441,7 @@ editor.setSchemaSQL('Schema SQL...');
 
 ## getSchemaSQL
 
-Extracts the current editor state into a schema SQL.  
+Exports the current editor state as Schema SQL.  
 If `databaseVendor` is not specified, it operates based on the currently set vendor.
 
 ```ts
@@ -442,6 +455,11 @@ type DatabaseVendor =
 
 const schemaSQL = editor.getSchemaSQL();
 ```
+
+## getSharedStore
+
+Returns a store for real-time collaborative editing.  
+See [Collaborative Editing](./advanced/collaborative-editing.md).
 
 ## setDiffValue
 

@@ -6,7 +6,7 @@ sidebar_position: 3
 
 The definition of the editor's schema is as follows.
 
-## Typescript
+## TypeScript
 
 ### ERDEditorSchemaV3
 
@@ -280,7 +280,9 @@ type MemoUI = {
 };
 ```
 
-## [json-schema](https://raw.githubusercontent.com/dineug/erd-editor/main/json-schema/schema.json)
+## JSON Schema
+
+The canonical schema file is published at [json-schema/schema.json](https://raw.githubusercontent.com/dineug/erd-editor/main/json-schema/schema.json) and can be referenced directly with `$schema`.
 
 ```json
 {

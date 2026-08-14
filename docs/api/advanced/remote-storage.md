@@ -4,8 +4,8 @@ sidebar_position: 2
 
 # Remote Storage
 
-Sending the entire state every time there's a change in the editor is inefficient.  
-It supports a real-time data replication API.
+Sending the entire editor state on every change is inefficient.  
+For that case, the editor provides an API for real-time data replication.
 
 ## Installation
 
@@ -18,7 +18,7 @@ npm install @dineug/erd-editor
 ```ts
 type ReplicationStore = {
   readonly value: string;
-  on: (reducers: Partial<{ change: () => void }>) => Unsubscribe;
+  on: (listeners: Partial<{ change: () => void }>) => Unsubscribe;
   setInitialValue: (value: string) => void;
   dispatch: (actions: Array<AnyAction> | AnyAction) => void;
   dispatchSync: (actions: Array<AnyAction> | AnyAction) => void;
@@ -86,8 +86,8 @@ const unsubscribe = replicationStore.on({
 Applies remote editor changes to the replicationStore.
 
 ```js
-replicationStore.dispatch(actions...); // async
-replicationStore.dispatchSync(actions...); // sync
+replicationStore.dispatch(actions); // async
+replicationStore.dispatchSync(actions); // sync
 ```
 
 ### destroy

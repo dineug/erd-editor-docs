@@ -1,0 +1,42 @@
+{
+  "theme.SearchBar.label": {
+    "message": "검색",
+    "description": "The ARIA label and placeholder for search button"
+  },
+  "theme.SearchBar.seeAll": {
+    "message": "전체 검색 결과 보기",
+    "description": "See all search results"
+  },
+  "theme.SearchBar.noResultsText": {
+    "message": "검색 결과가 없습니다.",
+    "description": "The text when no results are found for the search bar"
+  },
+  "theme.SearchBar.searchInContext": {
+    "message": "\"{context}\"의 전체 검색 결과 보기",
+    "description": "See all search results within a specific context"
+  },
+  "theme.SearchBar.seeAllOutsideContext": {
+    "message": "\"{context}\" 이외의 전체 검색 결과 보기",
+    "description": "See all search results outside a specific context"
+  },
+  "theme.SearchPage.existingResultsTitle": {
+    "message": "\"{query}\" 검색 결과",
+    "description": "The search page title for non-empty query"
+  },
+  "theme.SearchPage.emptyResultsTitle": {
+    "message": "검색어를 입력하세요.",
+    "description": "The search page title for empty query"
+  },
+  "theme.SearchPage.documentsFound.plurals": {
+    "message": "{count}개의 문서를 찾았습니다",
+    "description": "Pluralized label for \"{count} documents found\". Korean has a single plural form."
+  },
+  "theme.SearchPage.noResultsText": {
+    "message": "검색 결과가 없습니다.",
+    "description": "The paragraph for empty search result"
+  },
+  "theme.SearchPage.searchContext.everywhere": {
+    "message": "전체",
+    "description": "The label for search context: everywhere"
+  }
+}

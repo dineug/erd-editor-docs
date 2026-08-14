@@ -2,7 +2,6 @@
 node_modules
 dist
 coverage
-docs
 storybook-static
 docker/**/data
 types
@@ -52,4 +51,5 @@ yarn-error.log*
 .env.test.local
 .env.production.local
 
-!docs
+.omc
+.playwright-mcp

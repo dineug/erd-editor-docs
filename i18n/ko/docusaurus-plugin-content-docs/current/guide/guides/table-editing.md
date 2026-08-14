@@ -11,7 +11,8 @@ sidebar_position: 3
 
 ## Column 추가
 
-단축키 `Alt + Enter`로 생성합니다.
+단축키 `Alt + Enter`로 생성합니다.  
+선택된 모든 테이블에 컬럼이 추가됩니다.
 
 ## Tab 키
 
@@ -26,8 +27,8 @@ sidebar_position: 3
 4가지 방법을 지원하고 있습니다.
 
 - `Shift + Arrow Up/Down`
-- `Ctrl + Click` (Windows/Linux) or `⌘ + Click` (Mac)
-- `Shift + Click`
+- `Ctrl + click` (Windows/Linux) or `⌘ + click` (Mac)
+- `Shift + click`
 - `Alt + A`: 전체 선택
 
 ![demo-column-select](/img/demo-column-select.webp)
@@ -44,7 +45,7 @@ sidebar_position: 3
 
 ## Column 삭제
 
-현재 선택된 column를 삭제합니다.  
+현재 선택된 컬럼을 삭제합니다.  
 단축키 `Alt + Backspace` or `Alt + Delete`
 
 ![demo-column-remove](/img/demo-column-remove.webp)
@@ -66,7 +67,7 @@ sidebar_position: 3
 ![demo-copy-column-to-sheet](/img/demo-copy-column-to-sheet.webp)
 ![demo-copy-sheet-column](/img/demo-copy-sheet-column.webp)
 
-테이블 다중선택시 동작도 지원합니다.
+테이블 다중 선택 시 동작도 지원합니다.
 
 ![demo-copy-column-multi](/img/demo-copy-column-multi.webp)
 
