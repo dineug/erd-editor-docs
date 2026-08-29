@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+description: The erd-editor element API — attributes, value, events, theming, key bindings, and schema import and export.
 ---
 
 # ErdEditorElement
@@ -20,19 +21,40 @@ interface ErdEditorElement extends HTMLElement {
   setInitialValue: (value: string) => void;
   setPresetTheme: (themeOptions: Partial<ThemeOptions>) => void;
   setTheme: (theme: Partial<Theme>) => void;
-  setKeyBindingMap: (keyBindingMap: Partial<KeyBindingMap>) => void;
+  setKeyBindingMap: (
+    keyBindingMap: Partial<
+      Omit<
+        KeyBindingMap,
+        'edit' | 'stop' | 'search' | 'undo' | 'redo' | 'zoomIn' | 'zoomOut'
+      >
+    >
+  ) => void;
   setSchemaSQL: (value: string) => void;
+  setSchemaGraphQL: (value: string) => void;
+  setSchemaDBML: (value: string) => void;
+  setSchemaAML: (value: string) => void;
   getSchemaSQL: (databaseVendor?: DatabaseVendor) => string;
   getSharedStore: (
-    config?: SharedStoreConfig & { mouseTracker?: boolean }
+    config?: SharedStoreConfig & {
+      mouseTracker?: boolean;
+      focusTracker?: boolean;
+    }
   ) => SharedStore;
   setDiffValue: (value: string) => void;
 }
 ```
 
+The editor renders into a closed shadow root, so `editor.shadowRoot` is `null` and page styles do not leak in or out.  
+Nothing inside can be reached with a selector — style it through [setTheme](#settheme) and the `--erd-editor-*` custom properties instead.
+
+`readonly`, `system-dark-mode`, and `enable-theme-builder` are the only attributes, and all three default to `false`.
+
 ## readonly
 
-Sets the editing capability of the editor.
+Sets the editing capability of the editor.  
+While it is set, assigning `value`, `clear()`, `setSchemaSQL()`, `setSchemaGraphQL()`, `setSchemaDBML()`, `setSchemaAML()`, undo, and redo are all ignored, and the `change` event is never emitted. Load a document with [setInitialValue](#setinitialvalue) instead.  
+Viewing still works: zoom, scroll, the canvas tab, the database vendor, and the SQL and code generator output settings all still apply, so a read-only viewer can still export SQL for another vendor or read generated code.  
+A bare attribute, `=""`, and `="true"` all read as `true`. `="false"` reads as `false`, and so does any other string — including the HTML idiom `readonly="readonly"`.
 
 ```js
 editor.readonly = true;
@@ -46,7 +68,8 @@ editor.setAttribute('readonly', 'true');
 
 ## systemDarkMode
 
-Determines whether to automatically synchronize with the system's dark/light mode.
+Determines whether to automatically synchronize with the system's dark/light mode.  
+Turning it on sets the theme's `appearance` from the operating system, overriding whatever [setPresetTheme](#setpresettheme) had written, and the OS switching mode overwrites it again. A `setPresetTheme` call made in between still applies, until the next OS change. Turning it off freezes the last value.
 
 ```js
 editor.systemDarkMode = true;
@@ -74,19 +97,14 @@ editor.setAttribute('enable-theme-builder', 'true');
 <erd-editor enable-theme-builder></erd-editor>
 ```
 
-Triggers the `changePresetTheme` event upon changing the preset theme.
-
-```js
-editor.addEventListener('changePresetTheme', event => {
-  const themeOptions = event.detail;
-});
-```
+Changing the preset theme from this panel emits the [changePresetTheme](#changepresettheme) event.
 
 ## value
 
 ### getter
 
-Retrieves the current editor state as JSON data.
+Retrieves the current editor state as a JSON string, in the [schema](./advanced/schema.md) the editor defines.  
+The document's own `ignoreSaveSettings` is applied while serializing: with the scroll bit set the scroll position is written as `0`, and with the zoom bit set the zoom level is written as `1`.
 
 ```js
 const data = editor.value;
@@ -94,7 +112,10 @@ const data = editor.value;
 
 ### setter
 
-Loads a previously saved editor state. It is recorded in the history list, enabling `Undo, Redo`.
+Loads a previously saved editor state. It replaces the whole document — the current one is cleared first.  
+It is recorded in the history list, enabling `Undo, Redo`, and it emits `change`.  
+A blank string, or anything that is not a string, loads an empty document rather than raising an error, so guard the value before assigning it.  
+It is ignored while `readonly` is set; use [setInitialValue](#setinitialvalue) to load into a read-only editor.
 
 ```js
 editor.value = 'json...';
@@ -102,23 +123,50 @@ editor.value = 'json...';
 
 ## setInitialValue
 
-Loads a previously saved editor state. It is not recorded in the history list, so `Undo, Redo` is not possible.
+Loads a previously saved editor state. It is not recorded in the history list, so `Undo, Redo` is not possible, and no `change` event is emitted.  
+A blank string, or anything that is not a string, loads an empty document rather than raising an error, so `setInitialValue('')` starts a blank diagram.  
+Unlike assigning `value`, it is not blocked by `readonly`, so it is how you load a document into a read-only viewer.
 
 ```js
 editor.setInitialValue('json...');
 ```
 
+Load on start, save on change.
+
+```js
+editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
+editor.addEventListener('change', () => {
+  localStorage.setItem('my-diagram', editor.value);
+});
+```
+
 ## Event
+
+`change` and `changePresetTheme` are the only two public events.  
+The element also dispatches internal `@dineug/erd-editor/internal-*` events on itself for its own wiring; those are not part of the API.
 
 ### change
 
 When there are changes in the editor, it emits an event.  
 The event is debounced by 200ms, and it is not emitted while `readonly` is `true`.  
-Assigning to `value` emits it, but `setInitialValue` does not.
+It fires for any document change — an edit in the UI, assigning `value`, `clear()`, and each of the `setSchema*` methods. `setInitialValue` does not emit it.  
+The event carries no `detail` and neither bubbles nor crosses the shadow boundary, so listen on the element itself and read `editor.value` in the handler.
 
 ```js
 editor.addEventListener('change', event => {
   const data = event.target.value;
+});
+```
+
+### changePresetTheme
+
+Emitted when the preset theme is changed from the built-in theme builder.  
+Calling [setPresetTheme](#setpresettheme) yourself does not emit it.  
+`event.detail` is the fully resolved `ThemeOptions` — `{ appearance, grayColor, accentColor }` — not the partial that was requested.
+
+```js
+editor.addEventListener('changePresetTheme', event => {
+  const themeOptions = event.detail;
 });
 ```
 
@@ -140,7 +188,8 @@ editor.blur();
 
 ## clear
 
-Resets the editor state.
+Resets the editor state.  
+It is recorded in the history list, so it can be undone, and it emits `change`. It is ignored while `readonly` is set.
 
 ```js
 editor.clear();
@@ -148,7 +197,8 @@ editor.clear();
 
 ## destroy
 
-Completely destroys the editor instance so that it can no longer be reused.
+Completely destroys the editor instance so that it can no longer be reused.  
+It releases the editor's listeners and subscriptions, and destroys every shared store returned by [getSharedStore](#getsharedstore).
 
 ```js
 editor.destroy();
@@ -157,7 +207,10 @@ editor.destroy();
 ## setKeyBindingMap
 
 Redefines keyboard shortcuts.  
-`edit`, `stop`, `search`, `undo`, `redo`, `zoomIn` and `zoomOut` are fixed and cannot be redefined.
+`edit`, `stop`, `search`, `undo`, `redo`, `zoomIn` and `zoomOut` are fixed and cannot be redefined.  
+Only the thirteen names below are written; anything else in the object is ignored, including the fixed names.  
+A binding value must be a `ShortcutOption[]`. A bare string is ignored, so write `{ addTable: [{ shortcut: 'Alt+KeyN' }] }` rather than `{ addTable: 'Alt+KeyN' }`.  
+The call is a partial merge: names you leave out keep their defaults, and calling it twice keeps the earlier changes. There is no getter for the current bindings.
 
 ```ts
 type ShortcutOption = {
@@ -166,7 +219,10 @@ type ShortcutOption = {
   stopPropagation?: boolean;
 };
 
-const defaultKeyBindingMap: KeyBindingMap = {
+const defaultKeyBindingMap: Omit<
+  KeyBindingMap,
+  'edit' | 'stop' | 'search' | 'undo' | 'redo' | 'zoomIn' | 'zoomOut'
+> = {
   addTable: [{ shortcut: 'Alt+KeyN', preventDefault: true }],
   addColumn: [{ shortcut: 'Alt+Enter', preventDefault: true }],
   addMemo: [{ shortcut: 'Alt+KeyM', preventDefault: true }],
@@ -225,7 +281,9 @@ Use `code` for absolute positions and `key` for input values.
 
 ### setPresetTheme
 
-Sets a preset theme.
+Sets a preset theme.  
+The defaults are `appearance: 'dark'`, `grayColor: 'slate'`, and `accentColor: 'indigo'`.  
+Each field is applied on its own, so a partial call leaves the other two as they are. A value that is not one of the names below is ignored, and the call never throws.
 
 ```ts
 type ThemeOptions = {
@@ -266,7 +324,10 @@ editor.setPresetTheme({ appearance: 'light' });
 
 ### setTheme
 
-Allows customizing the theme.
+Allows customizing the theme.  
+Every call replaces the whole custom overlay, so pass the full object again to change one token on top of an existing override, and pass `{}` to drop back to the preset.  
+Only the token names below, with string values, are kept; anything else is dropped without error.  
+The overlay sits on top of the preset, so a later `setPresetTheme` swaps the preset underneath while your overrides stay.
 
 #### JavaScript
 
@@ -329,8 +390,8 @@ type Theme = {
   toastBackground: string;
   toastBorder: string;
 
-  dargSelectBackground: string;
-  dargSelectBorder: string;
+  dragSelectBackground: string;
+  dragSelectBorder: string;
 
   scrollbarTrack: string;
   scrollbarThumb: string;
@@ -356,10 +417,28 @@ type Theme = {
 };
 
 // example
-editor.setTheme({...});
+editor.setTheme({
+  canvasBackground: '#1b1b1f',
+  tableBackground: '#242429',
+  keyPK: '#ffc53d',
+});
 ```
 
 #### CSS Variables
+
+Every token in `Theme` has a matching CSS hook named `--erd-editor-` plus the kebab-cased key: `grayColor10` is `--erd-editor-gray-color-10`, `keyPK` is `--erd-editor-key-pk`, and `keyPFK` is `--erd-editor-key-pfk`.  
+The hooks are inherited into the editor, so set them wherever you want them to apply. On `:root` they theme every editor on the page; on the element itself they theme just that one.
+
+```css
+erd-editor {
+  --erd-editor-canvas-background: #1b1b1f;
+}
+```
+
+Since `3.4.0` the misspelled `dargSelect` tokens are spelled `dragSelect`, and their hooks changed from `--erd-editor-darg-select-background` and `--erd-editor-darg-select-border` to `--erd-editor-drag-select-background` and `--erd-editor-drag-select-border`. A stylesheet still using the old names is ignored.
+
+<details>
+<summary>Default theme values</summary>
 
 ```css
 :root {
@@ -409,8 +488,8 @@ editor.setTheme({...});
   --erd-editor-minimap-viewport-border-hover: #435db1;
   --erd-editor-toast-background: #18191b;
   --erd-editor-toast-border: #363a3f;
-  --erd-editor-darg-select-background: #253974;
-  --erd-editor-darg-select-border: #435db1;
+  --erd-editor-drag-select-background: #253974;
+  --erd-editor-drag-select-border: #435db1;
   --erd-editor-scrollbar-track: #ddeaf814;
   --erd-editor-scrollbar-thumb: #696e77;
   --erd-editor-scrollbar-thumb-hover: #777b84;
@@ -431,39 +510,85 @@ editor.setTheme({...});
 }
 ```
 
+</details>
+
 ## setSchemaSQL
 
-Loads a Schema SQL file.
+Loads a Schema SQL file.  
+It replaces the current document rather than merging into it. The settings you already have are kept, apart from the canvas size, scroll position, and zoom level, and the tables are placed automatically once the file is read.  
+It is recorded in the history list, enabling `Undo, Redo`, and it emits `change`. An empty string is ignored, and the call does nothing while `readonly` is set.  
+`setSchemaGraphQL`, `setSchemaDBML`, and `setSchemaAML` behave the same way, and their parsers never fail: text they cannot read loads an empty document rather than raising an error.  
+See [Importing or Exporting Files](../guide/guides/file-import-export.md) for the syntax each parser accepts.
 
 ```js
 editor.setSchemaSQL('Schema SQL...');
 ```
 
+## setSchemaGraphQL
+
+Loads a GraphQL SDL document.  
+Object type definitions become tables, and a field whose type is another table becomes a relationship.
+
+```js
+editor.setSchemaGraphQL('GraphQL SDL...');
+```
+
+## setSchemaDBML
+
+Loads a DBML file, the format used by dbdiagram.io and dbdocs.
+
+```js
+editor.setSchemaDBML('DBML...');
+```
+
+## setSchemaAML
+
+Loads an AML (Azimutt Markup Language) file. Both the current spelling and the legacy v1 one are accepted.
+
+```js
+editor.setSchemaAML('AML...');
+```
+
 ## getSchemaSQL
 
 Exports the current editor state as Schema SQL.  
-If `databaseVendor` is not specified, it operates based on the currently set vendor.
+If `databaseVendor` is not specified, it operates based on the currently set vendor. A name that is not in the list below is treated the same way, without raising an error.
 
 ```ts
 type DatabaseVendor =
+  | 'Databricks'
   | 'MariaDB'
   | 'MSSQL'
   | 'MySQL'
   | 'Oracle'
   | 'PostgreSQL'
+  | 'Snowflake'
   | 'SQLite';
 
 const schemaSQL = editor.getSchemaSQL();
+// or
+const postgresSQL = editor.getSchemaSQL('PostgreSQL');
 ```
 
 ## getSharedStore
 
 Returns a store for real-time collaborative editing.  
+`config` is `{ getNickname?, mouseTracker?, focusTracker? }`. Both trackers default to `true`: `mouseTracker` broadcasts this editor's cursor to the others, and `focusTracker` broadcasts its focused cell, selection, and drag box.  
 See [Collaborative Editing](./advanced/collaborative-editing.md).
+
+```js
+const sharedStore = editor.getSharedStore({
+  mouseTracker: false,
+  focusTracker: false,
+});
+```
 
 ## setDiffValue
 
-Compares the current editor state with the previous editor state.
+Opens the Diff Viewer, comparing the document currently open against the one you pass.  
+It returns nothing and does not modify the document, so closing the viewer leaves the editor exactly as it was.  
+A blank value, or anything that is not a string, is compared against an empty document.  
+It is the same overlay as [Diff Viewer](../guide/guides/table-related-functions.md#diff-viewer) in the canvas context menu.
 
 ```js
 editor.setDiffValue('prev json...');

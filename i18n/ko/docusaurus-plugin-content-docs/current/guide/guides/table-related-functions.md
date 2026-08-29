@@ -1,9 +1,12 @@
 ---
 sidebar_position: 4
-description: 테이블 다중 선택과 이동, 확대/축소, 색상과 표출 옵션, 데이터베이스 선택, 문서 비교.
+description: 테이블과 메모의 선택·이동·복사·복제, 색상과 보기 옵션, 인덱스 정의, 데이터베이스 선택, 캔버스 이동과 문서 비교.
 ---
 
 # 테이블 관련 기능
+
+테이블과 메모가 만들어진 뒤에 하는 모든 작업, 즉 선택, 이동, 복사, 색상 지정, 각 테이블에 표출할 내용 설정과 그 주변의 캔버스 조작을 다룹니다.  
+테이블과 메모 명령을 먼저 다루고, 이어서 테이블 속성, 인덱스, 위치 자동 정렬, 데이터베이스 벤더를 다루며, 캔버스 자체는 확대/축소, 화면 이동, Diff Viewer 순으로 마지막에 다룹니다.
 
 ## 다중 선택
 
@@ -11,9 +14,14 @@ description: 테이블 다중 선택과 이동, 확대/축소, 색상과 표출 
 
 - `Ctrl + drag` (Windows/Linux) or `⌘ + drag` (Mac)
 - `Ctrl + click` (Windows/Linux) or `⌘ + click` (Mac)
-- `Ctrl + Alt + A` (Windows/Linux) or `⌘ + Alt + A` (Mac)
+- `Ctrl + Alt + A` (Windows/Linux) or `⌘ + ⌥ + A` (Mac)
+
+메모도 같은 방법으로 선택하며, 해당 단축키는 모든 테이블과 메모를 한 번에 선택합니다.  
+선택 박스는 테이블이나 메모의 가장자리에 닿기만 해서는 선택하지 않고, 중앙을 덮을 때 선택합니다.
 
 ![demo-table-select](/img/demo-table-select.webp)
+
+공동 편집 중에는 각 참여자의 선택, 포커스된 셀, 선택 박스가 해당 참여자의 색상으로 캔버스에 표시됩니다. [공동 편집](../../api/advanced/collaborative-editing.md) 문서를 참고하세요.
 
 ## 여러 테이블 이동
 
@@ -22,23 +30,37 @@ mod 키 없이 드래그하면 선택이 해제되고 드래그한 테이블만 
 
 ![demo-table-multiple-move](/img/demo-table-multiple-move.webp)
 
+## 테이블, 메모 복사/붙여넣기
+
+선택한 테이블과 메모를 복사해 새로운 테이블과 메모로 붙여넣습니다.  
+단축키 `Ctrl + C` (Windows/Linux) or `⌘ + C` (Mac), `Ctrl + V` (Windows/Linux) or `⌘ + V` (Mac)
+
+복사한 테이블은 이름, 코멘트, 컬럼, 색상을 유지하고, 복사한 메모는 텍스트, 크기, 색상을 유지합니다.  
+인덱스와 관계는 복사되지 않으며, 복사본은 원본 이름을 그대로 사용합니다.  
+붙여넣은 복사본이 새로운 선택이 되고, 같은 복사본을 다시 붙여넣을 때마다 `50px`씩 더 이동하므로 반복해서 붙여넣어도 서로 겹치지 않습니다.
+
+포커스된 테이블 안에서 컬럼이 선택되어 있으면 같은 단축키가 해당 컬럼을 복사합니다. [테이블 편집](./table-editing.md) 문서를 참고하세요.
+
+## 테이블, 메모 복제
+
+`Alt`를 누른 채 테이블이나 메모를 마우스 왼쪽 버튼으로 드래그합니다.  
+반투명 미리보기가 포인터를 따라오고, 버튼을 놓으면 미리보기가 있는 위치에 복사본이 생성됩니다.  
+잡은 대상이 이미 선택에 포함되어 있으면 선택 전체가 복제되고, 그렇지 않으면 포인터 아래의 대상으로 선택이 바뀝니다.  
+움직이지 않고 `Alt + click`만 하면 오른쪽 아래로 `50px` 떨어진 위치에 복사본이 생성되고, 그 자리가 이미 차 있으면 한 칸씩 더 이동합니다.
+
+복제는 붙여넣기와 같은 정보를 가져옵니다. 이름, 코멘트, 컬럼, 색상, 메모 크기는 유지되지만 인덱스와 관계는 유지되지 않습니다.
+
 ## 테이블, 메모 삭제
 
-현재 선택된 테이블, 메모를 삭제합니다.  
+현재 선택된 테이블과 메모를 삭제합니다.  
 단축키 `Ctrl + Backspace` (Windows/Linux) or `Ctrl + Delete` (Windows/Linux) or `⌘ + Backspace` (Mac) or `⌘ + Delete` (Mac)
 
 ![demo-table-remove](/img/demo-table-remove.webp)
 
-## 줌 확대/축소
+## 테이블, 메모 색상 지정
 
-mod 키를 누른 채 마우스 휠로 확대/축소합니다. `Ctrl + Wheel` (Windows/Linux) or `⌘ + Wheel` (Mac). 휠만 사용하면 캔버스가 스크롤됩니다.  
-단축키 `Ctrl + Plus` (Windows/Linux) or `⌘ + Plus` (Mac), `Ctrl + Minus` (Windows/Linux) or `⌘ + Minus` (Mac)
-
-![demo-zoom](/img/demo-zoom.webp)
-
-## 테이블, 메모 컬러 지정
-
-카테고리별로 구분하기 위해 컬러를 지정할 수 있습니다.
+카테고리별로 구분하기 위해 색상을 지정할 수 있습니다.  
+테이블이나 메모 상단의 색상 띠를 클릭하면 색상 선택기가 열립니다. 색상은 클릭한 대상뿐 아니라 선택된 모든 테이블과 메모에 적용됩니다.
 
 ![demo-table-color](/img/demo-table-color.webp)
 
@@ -62,12 +84,29 @@ mod 키를 누른 채 마우스 휠로 확대/축소합니다. `Ctrl + Wheel` (W
 선택한 테이블의 속성 패널을 엽니다.
 테이블 컨텍스트 메뉴 또는 단축키 `Alt + Space`로 시작합니다.
 Indexes, Schema SQL, Code Generator 3개의 탭을 제공합니다.
-인덱스는 여기서 정의하며 내보내는 Schema SQL에 포함됩니다.
+최근에 연 테이블 5개를 패널 상단에 유지하므로 패널을 다시 열지 않고도 테이블 사이를 이동할 수 있습니다.
+
+## 인덱스
+
+인덱스는 테이블 속성 패널의 `Indexes` 탭에서 정의하며 내보내는 Schema SQL에 포함됩니다.
+
+왼쪽에는 테이블의 인덱스 목록이 표시됩니다. `+`로 추가합니다.  
+각 인덱스에는 unique로 만드는 `UQ` 토글, 이름 입력란, 삭제하는 `x`가 있습니다.
+
+오른쪽에는 테이블의 컬럼이 체크박스와 함께 나열됩니다. 왼쪽에서 인덱스를 선택하기 전까지는 아무것도 편집할 수 없습니다.  
+컬럼을 체크하면 선택한 인덱스에 추가되고, 체크를 해제하면 제거됩니다.  
+선택한 인덱스의 컬럼은 아래에 나열됩니다. 그립 핸들로 드래그해 순서를 변경하고, 각 행의 `ASC` 또는 `DESC` 칩을 클릭해 정렬 순서를 바꿉니다.
 
 ## 테이블 위치 자동 정렬
 
-Force Simulation으로 동작합니다.  
-외부 Schema SQL을 가져와 테이블 위치의 시작 지점으로 활용할 수 있습니다.
+연결된 테이블끼리 가까이 놓이고 겹친 테이블은 서로 밀어내도록 모든 테이블을 캔버스에 펼쳐 배치합니다.  
+캔버스 컨텍스트 메뉴 또는 빠른 검색에서 실행합니다.
+
+배치가 안정될 때까지 캔버스 전체 미리보기가 열리며, 함께 표시되는 알림에 `Stop`과 `Cancel`이 있습니다.  
+`Stop`은 그 시점의 위치를 그대로 유지하고, 배치가 멈추면 자동으로 적용됩니다. `Cancel` 또는 `Escape`는 다이어그램을 원래 상태로 둡니다.  
+결과는 하나의 히스토리 항목으로 기록되므로 Undo 한 번으로 모든 테이블이 원래 위치로 돌아갑니다.
+
+다이어그램에 Force Simulation을 실행하는 방식으로 동작합니다. 관계는 테이블을 서로 끌어당기고, 이웃한 테이블은 서로 밀어냅니다.
 
 ![demo-automatic-table-placement](/img/demo-automatic-table-placement.webp)
 
@@ -75,23 +114,46 @@ Force Simulation으로 동작합니다.
 
 지원하는 데이터베이스는 다음과 같습니다.
 
+- Databricks
 - MSSQL
 - MariaDB
 - MySQL
 - Oracle
 - PostgreSQL
+- Snowflake
 - SQLite
 
-해당 옵션은 내보내기 Schema SQL 문법과 DataType 자동완성을 결정합니다.
+해당 옵션은 내보내기 Schema SQL 문법, DataType 자동완성, 생성된 코드와 가져온 스키마가 해석하는 타입을 결정합니다.  
+`TIMESTAMP WITH TIME ZONE`, `INTERVAL DAY TO SECOND`처럼 여러 단어로 된 타입 이름은 Schema SQL을 가져올 때 인자 목록까지 그대로 유지됩니다.
 
 <img src="/img/database-menu.png" width="400" alt="데이터베이스 선택 메뉴" loading="lazy" />
 
 ![demo-data-type-autocomplete](/img/demo-data-type-autocomplete.webp)
 
+## 줌 확대/축소
+
+mod 키를 누른 채 마우스 휠로 확대/축소합니다. `Ctrl + Wheel` (Windows/Linux) or `⌘ + Wheel` (Mac). 휠만 사용하면 캔버스가 스크롤됩니다.  
+단축키 `Ctrl + Plus` (Windows/Linux) or `⌘ + Plus` (Mac), `Ctrl + Minus` (Windows/Linux) or `⌘ + Minus` (Mac)
+
+확대/축소 범위는 `10%`부터 `100%`까지입니다.  
+`70%` 이하에서는 테이블이 색상 바와 이름만 남도록 축소되고, 셀 편집과 셀 단축키, 복사/붙여넣기는 다시 확대할 때까지 동작하지 않습니다.
+
+![demo-zoom](/img/demo-zoom.webp)
+
+## 캔버스 이동
+
+캔버스의 빈 영역을 드래그하면 화면이 이동하고, `Space`를 누른 채로는 테이블 위를 포함해 어디서든 드래그할 수 있습니다.  
+오른쪽 위의 미니맵은 항상 캔버스 전체를 보여줍니다. 클릭하면 그 지점으로 화면이 이동하고, 뷰포트 사각형을 드래그하면 화면이 스크롤됩니다.  
+테이블이나 메모가 캔버스 밖으로 나가면 해당 방향의 가장자리에 핀 마커가 나타납니다. 클릭하면 그 대상이 클릭한 지점으로 돌아오고 선택됩니다.
+
 ## Diff Viewer
 
-이전에 저장했던 문서와 현재 문서를 비교할 수 있습니다.
+이전에 저장했던 문서와 현재 문서를 비교할 수 있습니다.  
+캔버스 컨텍스트 메뉴에서 `Diff Viewer`를 선택하고 이전에 내보낸 `.json` 문서를 선택합니다.
 
 <img src="/img/context-menu-diff-viewer.png" width="400" alt="Diff Viewer 컨텍스트 메뉴" loading="lazy" />
+
+비교 화면은 캔버스 위에 열리며, 왼쪽에 변경된 내용이, 이어서 저장된 문서와 현재 문서가 나란히 표시됩니다.  
+양쪽 모두 읽기 전용이므로 문서는 변경되지 않습니다. 함께 열리는 알림의 `Close` 버튼 또는 `Escape`로 화면을 닫습니다.
 
 ![diff-viewer](/img/diff-viewer.png)

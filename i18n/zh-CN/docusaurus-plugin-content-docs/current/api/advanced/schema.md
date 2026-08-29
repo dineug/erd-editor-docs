@@ -1,10 +1,11 @@
 ---
 sidebar_position: 3
+description: .erd.json 文档格式：TypeScript 类型、各数值字段背后的常量，以及发布的 JSON Schema。
 ---
 
 # Schema
 
-编辑器的 schema 定义如下。
+`.erd.json` 是编辑器的文档格式。它是 `editor.value` 返回的内容、`setInitialValue()` 接受的内容，也是 JSON 导出写入的内容。如果需要在编辑器之外生成、校验或迁移文档，可以阅读本页。
 
 ## TypeScript
 
@@ -61,65 +62,80 @@ const CanvasType = {
 } as const;
 
 const Show = {
-  tableComment: /*        */ 0b0000000000000000000000000000001,
-  columnComment: /*       */ 0b0000000000000000000000000000010,
-  columnDataType: /*      */ 0b0000000000000000000000000000100,
-  columnDefault: /*       */ 0b0000000000000000000000000001000,
-  columnAutoIncrement: /* */ 0b0000000000000000000000000010000,
-  columnPrimaryKey: /*    */ 0b0000000000000000000000000100000,
-  columnUnique: /*        */ 0b0000000000000000000000001000000,
-  columnNotNull: /*       */ 0b0000000000000000000000010000000,
-  relationship: /*        */ 0b0000000000000000000000100000000,
+  tableComment: 1,
+  columnComment: 2,
+  columnDataType: 4,
+  columnDefault: 8,
+  columnAutoIncrement: 16,
+  columnPrimaryKey: 32,
+  columnUnique: 64,
+  columnNotNull: 128,
+  relationship: 256,
 } as const;
 
 const ColumnType = {
-  columnName: /*          */ 0b0000000000000000000000000000001,
-  columnDataType: /*      */ 0b0000000000000000000000000000010,
-  columnNotNull: /*       */ 0b0000000000000000000000000000100,
-  columnUnique: /*        */ 0b0000000000000000000000000001000,
-  columnAutoIncrement: /* */ 0b0000000000000000000000000010000,
-  columnDefault: /*       */ 0b0000000000000000000000000100000,
-  columnComment: /*       */ 0b0000000000000000000000001000000,
+  columnName: 1,
+  columnDataType: 2,
+  columnNotNull: 4,
+  columnUnique: 8,
+  columnAutoIncrement: 16,
+  columnDefault: 32,
+  columnComment: 64,
 } as const;
 
 const Database = {
-  MariaDB: /*    */ 0b0000000000000000000000000000001,
-  MSSQL: /*      */ 0b0000000000000000000000000000010,
-  MySQL: /*      */ 0b0000000000000000000000000000100,
-  Oracle: /*     */ 0b0000000000000000000000000001000,
-  PostgreSQL: /* */ 0b0000000000000000000000000010000,
-  SQLite: /*     */ 0b0000000000000000000000000100000,
+  MariaDB: 1,
+  MSSQL: 2,
+  MySQL: 4,
+  Oracle: 8,
+  PostgreSQL: 16,
+  SQLite: 32,
+  Databricks: 64,
+  Snowflake: 128,
 } as const;
 
 const Language = {
-  GraphQL: /*    */ 0b0000000000000000000000000000001,
-  csharp: /*     */ 0b0000000000000000000000000000010,
-  Java: /*       */ 0b0000000000000000000000000000100,
-  Kotlin: /*     */ 0b0000000000000000000000000001000,
-  TypeScript: /* */ 0b0000000000000000000000000010000,
-  JPA: /*        */ 0b0000000000000000000000000100000,
-  Scala: /*      */ 0b0000000000000000000000001000000,
+  GraphQL: 1,
+  csharp: 2,
+  Java: 4,
+  Kotlin: 8,
+  TypeScript: 16,
+  JPA: 32,
+  Scala: 64,
+  Go: 128,
+  SQLAlchemy: 256,
+  TypeORM: 512,
+  Sequelize: 1024,
+  Drizzle: 2048,
+  DBML: 4096,
+  AML: 8192,
 } as const;
 
 const NameCase = {
-  none: /*       */ 0b0000000000000000000000000000001,
-  camelCase: /*  */ 0b0000000000000000000000000000010,
-  pascalCase: /* */ 0b0000000000000000000000000000100,
-  snakeCase: /*  */ 0b0000000000000000000000000001000,
+  none: 1,
+  camelCase: 2,
+  pascalCase: 4,
+  snakeCase: 8,
 } as const;
 
 const BracketType = {
-  none: /*        */ 0b0000000000000000000000000000001,
-  doubleQuote: /* */ 0b0000000000000000000000000000010,
-  singleQuote: /* */ 0b0000000000000000000000000000100,
-  backtick: /*    */ 0b0000000000000000000000000001000,
+  none: 1,
+  doubleQuote: 2,
+  singleQuote: 4,
+  backtick: 8,
 } as const;
 
 const SaveSettingType = {
-  scroll: /*    */ 0b0000000000000000000000000000001,
-  zoomLevel: /* */ 0b0000000000000000000000000000010,
-};
+  scroll: 1,
+  zoomLevel: 2,
+} as const;
 ```
+
+`show` 和 `ignoreSaveSettings` 是位掩码，将各标志位通过 OR 运算组合。  
+`columnOrder` 是一个数组，按显示顺序保存全部七个 `ColumnType` 值。  
+`database`、`language`、`tableNameCase`、`columnNameCase` 和 `bracketType` 各自只保存一个值，JSON Schema 会拒绝组合后的值。
+
+`Database` 和 `Language` 只会追加新值。已保存的文档中存储的是数字，因此新增的数据库厂商或代码生成目标会占用下一个比特位，而不是中间的某个位置。
 
 ### Doc
 
@@ -129,6 +145,21 @@ type Doc = {
   relationshipIds: string[];
   indexIds: string[];
   memoIds: string[];
+};
+```
+
+### EntityType
+
+`collections` 中的每个实体都带有一个 `meta` 对象。
+
+```ts
+type EntityMeta = {
+  updateAt: number;
+  createAt: number;
+};
+
+type EntityType<T> = T & {
+  meta: EntityMeta;
 };
 ```
 
@@ -178,15 +209,15 @@ type ColumnUI = {
 
 // Constants
 const ColumnOption = {
-  autoIncrement: /* */ 0b0000000000000000000000000000001,
-  primaryKey: /*    */ 0b0000000000000000000000000000010,
-  unique: /*        */ 0b0000000000000000000000000000100,
-  notNull: /*       */ 0b0000000000000000000000000001000,
+  autoIncrement: 1,
+  primaryKey: 2,
+  unique: 4,
+  notNull: 8,
 } as const;
 
 const ColumnUIKey = {
-  primaryKey: /* */ 0b0000000000000000000000000000001,
-  foreignKey: /* */ 0b0000000000000000000000000000010,
+  primaryKey: 1,
+  foreignKey: 2,
 } as const;
 ```
 
@@ -212,22 +243,22 @@ type RelationshipPoint = {
 
 // Constants
 const RelationshipType = {
-  ZeroOne: /*  */ 0b0000000000000000000000000000010,
-  ZeroN: /*    */ 0b0000000000000000000000000000100,
-  OneOnly: /*  */ 0b0000000000000000000000000001000,
-  OneN: /*     */ 0b0000000000000000000000000010000,
+  ZeroOne: 2,
+  ZeroN: 4,
+  OneOnly: 8,
+  OneN: 16,
 } as const;
 
 const StartRelationshipType = {
-  ring: /* */ 0b0000000000000000000000000000001,
-  dash: /* */ 0b0000000000000000000000000000010,
+  ring: 1,
+  dash: 2,
 } as const;
 
 const Direction = {
-  left: /*   */ 0b0000000000000000000000000000001,
-  right: /*  */ 0b0000000000000000000000000000010,
-  top: /*    */ 0b0000000000000000000000000000100,
-  bottom: /* */ 0b0000000000000000000000000001000,
+  left: 1,
+  right: 2,
+  top: 4,
+  bottom: 8,
 } as const;
 ```
 
@@ -256,8 +287,8 @@ type IndexColumn = EntityType<{
 
 // Constants
 const OrderType = {
-  ASC: /*  */ 0b0000000000000000000000000000001,
-  DESC: /* */ 0b0000000000000000000000000000010,
+  ASC: 1,
+  DESC: 2,
 } as const;
 ```
 
@@ -283,6 +314,15 @@ type MemoUI = {
 ## JSON Schema
 
 规范的 schema 文件发布在 [json-schema/schema.json](https://raw.githubusercontent.com/dineug/erd-editor/main/json-schema/schema.json)，可通过 `$schema` 直接引用。
+
+```json
+{
+  "$schema": "https://raw.githubusercontent.com/dineug/erd-editor/main/json-schema/schema.json",
+  "version": "3.0.0"
+}
+```
+
+在 `.erd.json` 文件顶部写入 `$schema`，VS Code 等支持 JSON Schema 的编辑器就会校验该文档，并在编辑时自动补全其字段。
 
 ```json
 {
@@ -368,8 +408,9 @@ type MemoUI = {
           "type": "integer"
         },
         "database": {
-          "description": "bit value (MariaDB: 1) | (MSSQL: 2) | (MySQL: 4) | (Oracle: 8) | (PostgreSQL: 16) | (SQLite: 32)",
-          "type": "integer"
+          "description": "bit value (MariaDB: 1) | (MSSQL: 2) | (MySQL: 4) | (Oracle: 8) | (PostgreSQL: 16) | (SQLite: 32) | (Databricks: 64) | (Snowflake: 128)",
+          "type": "integer",
+          "enum": [1, 2, 4, 8, 16, 32, 64, 128]
         },
         "databaseName": {
           "type": "string"
@@ -384,20 +425,24 @@ type MemoUI = {
           ]
         },
         "language": {
-          "description": "bit value (GraphQL: 1) | (csharp: 2) | (Java: 4) | (Kotlin: 8) | (TypeScript: 16) | (JPA: 32) | (Scala: 64)",
-          "type": "integer"
+          "description": "bit value (GraphQL: 1) | (csharp: 2) | (Java: 4) | (Kotlin: 8) | (TypeScript: 16) | (JPA: 32) | (Scala: 64) | (Go: 128) | (SQLAlchemy: 256) | (TypeORM: 512) | (Sequelize: 1024) | (Drizzle: 2048) | (DBML: 4096) | (AML: 8192)",
+          "type": "integer",
+          "enum": [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192]
         },
         "tableNameCase": {
           "description": "bit value (none: 1) | (camelCase: 2) | (pascalCase: 4) | (snakeCase: 8)",
-          "type": "integer"
+          "type": "integer",
+          "enum": [1, 2, 4, 8]
         },
         "columnNameCase": {
           "description": "bit value (none: 1) | (camelCase: 2) | (pascalCase: 4) | (snakeCase: 8)",
-          "type": "integer"
+          "type": "integer",
+          "enum": [1, 2, 4, 8]
         },
         "bracketType": {
           "description": "bit value (none: 1) | (doubleQuote: 2) | (singleQuote: 4) | (backtick: 8)",
-          "type": "integer"
+          "type": "integer",
+          "enum": [1, 2, 4, 8]
         },
         "relationshipDataTypeSync": {
           "type": "boolean"
@@ -417,7 +462,8 @@ type MemoUI = {
             { "type": "integer" },
             { "type": "integer" }
           ],
-          "unevaluatedItems": false
+          "minItems": 7,
+          "maxItems": 7
         },
         "maxWidthComment": {
           "type": "integer"

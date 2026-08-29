@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+description: erd-editor 要素の API。属性、value、イベント、テーマ、キーバインディング、スキーマの読み込みと書き出し。
 ---
 
 # ErdEditorElement
@@ -20,19 +21,40 @@ interface ErdEditorElement extends HTMLElement {
   setInitialValue: (value: string) => void;
   setPresetTheme: (themeOptions: Partial<ThemeOptions>) => void;
   setTheme: (theme: Partial<Theme>) => void;
-  setKeyBindingMap: (keyBindingMap: Partial<KeyBindingMap>) => void;
+  setKeyBindingMap: (
+    keyBindingMap: Partial<
+      Omit<
+        KeyBindingMap,
+        'edit' | 'stop' | 'search' | 'undo' | 'redo' | 'zoomIn' | 'zoomOut'
+      >
+    >
+  ) => void;
   setSchemaSQL: (value: string) => void;
+  setSchemaGraphQL: (value: string) => void;
+  setSchemaDBML: (value: string) => void;
+  setSchemaAML: (value: string) => void;
   getSchemaSQL: (databaseVendor?: DatabaseVendor) => string;
   getSharedStore: (
-    config?: SharedStoreConfig & { mouseTracker?: boolean }
+    config?: SharedStoreConfig & {
+      mouseTracker?: boolean;
+      focusTracker?: boolean;
+    }
   ) => SharedStore;
   setDiffValue: (value: string) => void;
 }
 ```
 
+エディタは closed shadow root にレンダリングされるため、`editor.shadowRoot` は `null` になり、ページのスタイルは内外に漏れません。  
+内部の要素はセレクタでは参照できないため、スタイルは [setTheme](#settheme) と `--erd-editor-*` カスタムプロパティで指定します。
+
+属性は `readonly`、`system-dark-mode`、`enable-theme-builder` の 3 つだけで、いずれも既定値は `false` です。
+
 ## readonly
 
-エディタを編集可能にするかどうかを設定します。
+エディタの編集可否を設定します。  
+設定されている間は、`value` への代入、`clear()`、`setSchemaSQL()`、`setSchemaGraphQL()`、`setSchemaDBML()`、`setSchemaAML()`、undo、redo がすべて無視され、`change` イベントも発行されません。ドキュメントの読み込みには [setInitialValue](#setinitialvalue) を使用します。  
+表示は引き続き動作します。拡大・縮小、スクロール、キャンバスのタブ、データベースベンダー、SQL とコード生成の出力設定はそのまま適用されるため、読み取り専用のビューアーでも別のベンダー向けの SQL を書き出したり、生成されたコードを読んだりできます。  
+属性名のみの指定、`=""`、`="true"` はいずれも `true` として扱われます。`="false"` は `false` として扱われ、HTML の慣用表現である `readonly="readonly"` を含むその他の文字列も同様です。
 
 ```js
 editor.readonly = true;
@@ -46,7 +68,8 @@ editor.setAttribute('readonly', 'true');
 
 ## systemDarkMode
 
-システムのダーク / ライトモードに自動で同期するかどうかを設定します。
+システムのダーク / ライトモードに自動で同期するかどうかを設定します。  
+有効にすると、テーマの `appearance` は OS の設定から決まり、[setPresetTheme](#setpresettheme) で指定した値を上書きします。OS 側でモードが切り替わると、そのたびに再び上書きされます。その間に呼び出した `setPresetTheme` は、次に OS が切り替わるまで有効です。無効にすると、最後の値のまま固定されます。
 
 ```js
 editor.systemDarkMode = true;
@@ -74,19 +97,14 @@ editor.setAttribute('enable-theme-builder', 'true');
 <erd-editor enable-theme-builder></erd-editor>
 ```
 
-プリセットテーマの変更時に `changePresetTheme` イベントを発行します。
-
-```js
-editor.addEventListener('changePresetTheme', event => {
-  const themeOptions = event.detail;
-});
-```
+このパネルからプリセットテーマを変更すると、[changePresetTheme](#changepresettheme) イベントを発行します。
 
 ## value
 
 ### getter
 
-現在のエディタの状態を JSON データとして取得します。
+現在のエディタの状態を、エディタが定義する[スキーマ](./advanced/schema.md)の JSON 文字列として取得します。  
+シリアライズの際にはドキュメントの `ignoreSaveSettings` が適用され、スクロールのビットが設定されている場合はスクロール位置が `0`、拡大・縮小のビットが設定されている場合は拡大・縮小のレベルが `1` として書き出されます。
 
 ```js
 const data = editor.value;
@@ -94,7 +112,10 @@ const data = editor.value;
 
 ### setter
 
-以前に保存したエディタの状態を読み込みます。履歴に記録されるため `Undo, Redo` が可能です。
+以前に保存したエディタの状態を読み込みます。ドキュメント全体を置き換えるため、現在のドキュメントは先に消去されます。  
+履歴に記録されるため `Undo, Redo` が可能で、`change` を発行します。  
+空文字列や文字列以外の値を指定した場合はエラーにならず、空のドキュメントを読み込むため、代入する前に値を確認します。  
+`readonly` が設定されている間は無視されます。読み取り専用のエディタに読み込むには [setInitialValue](#setinitialvalue) を使用します。
 
 ```js
 editor.value = 'json...';
@@ -102,23 +123,50 @@ editor.value = 'json...';
 
 ## setInitialValue
 
-以前に保存したエディタの状態を読み込みます。履歴に記録されないため `Undo, Redo` はできません。
+以前に保存したエディタの状態を読み込みます。履歴に記録されないため `Undo, Redo` はできず、`change` イベントも発行されません。  
+空文字列や文字列以外の値を指定した場合はエラーにならず、空のドキュメントを読み込むため、`setInitialValue('')` は空のダイアグラムから始めます。  
+`value` への代入とは異なり `readonly` の影響を受けないため、読み取り専用のビューアーにドキュメントを読み込む方法になります。
 
 ```js
 editor.setInitialValue('json...');
 ```
 
+起動時に読み込み、変更時に保存します。
+
+```js
+editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
+editor.addEventListener('change', () => {
+  localStorage.setItem('my-diagram', editor.value);
+});
+```
+
 ## Event
+
+公開されているイベントは `change` と `changePresetTheme` の 2 つだけです。  
+要素は内部の処理のために `@dineug/erd-editor/internal-*` イベントも自身に発行しますが、これらは API には含まれません。
 
 ### change
 
 エディタに変更があるとイベントを発行します。  
 200ms のデバウンスがかかり、`readonly` が `true` の間は発行されません。  
-`value` への代入では発行されますが、`setInitialValue` では発行されません。
+UI での編集、`value` への代入、`clear()`、`setSchema*` の各メソッドなど、ドキュメントのあらゆる変更で発行されます。`setInitialValue` では発行されません。  
+イベントは `detail` を持たず、バブリングもシャドウ境界の通過もしないため、要素自身で購読し、ハンドラー内で `editor.value` を読み取ります。
 
 ```js
 editor.addEventListener('change', event => {
   const data = event.target.value;
+});
+```
+
+### changePresetTheme
+
+組み込みのテーマビルダーからプリセットテーマを変更したときに発行されます。  
+[setPresetTheme](#setpresettheme) を自分で呼び出した場合は発行されません。  
+`event.detail` は、指定した一部の値ではなく、完全に解決された `ThemeOptions`（`{ appearance, grayColor, accentColor }`）です。
+
+```js
+editor.addEventListener('changePresetTheme', event => {
+  const themeOptions = event.detail;
 });
 ```
 
@@ -140,7 +188,8 @@ editor.blur();
 
 ## clear
 
-エディタの状態を初期化します。
+エディタの状態を初期化します。  
+履歴に記録されるため元に戻すことができ、`change` を発行します。`readonly` が設定されている間は無視されます。
 
 ```js
 editor.clear();
@@ -148,7 +197,8 @@ editor.clear();
 
 ## destroy
 
-エディタのインスタンスを完全に破棄し、再利用できないようにします。
+エディタのインスタンスを完全に破棄し、再利用できないようにします。  
+エディタのリスナーと購読を解放し、[getSharedStore](#getsharedstore) が返したすべての shared store を破棄します。
 
 ```js
 editor.destroy();
@@ -157,7 +207,10 @@ editor.destroy();
 ## setKeyBindingMap
 
 キーボードショートカットを再定義します。  
-`edit`、`stop`、`search`、`undo`、`redo`、`zoomIn`、`zoomOut` は固定で、再定義できません。
+`edit`、`stop`、`search`、`undo`、`redo`、`zoomIn`、`zoomOut` は固定で、再定義できません。  
+書き込めるのは次の 13 個の名前だけで、固定の名前を含め、オブジェクト内のそれ以外の値は無視されます。  
+バインディングの値は `ShortcutOption[]` である必要があります。文字列だけの指定は無視されるため、`{ addTable: 'Alt+KeyN' }` ではなく `{ addTable: [{ shortcut: 'Alt+KeyN' }] }` と記述します。  
+呼び出しは部分的なマージです。指定しなかった名前は既定値のまま維持され、2 回呼び出しても以前の変更は保持されます。現在のバインディングを取得する getter はありません。
 
 ```ts
 type ShortcutOption = {
@@ -166,7 +219,10 @@ type ShortcutOption = {
   stopPropagation?: boolean;
 };
 
-const defaultKeyBindingMap: KeyBindingMap = {
+const defaultKeyBindingMap: Omit<
+  KeyBindingMap,
+  'edit' | 'stop' | 'search' | 'undo' | 'redo' | 'zoomIn' | 'zoomOut'
+> = {
   addTable: [{ shortcut: 'Alt+KeyN', preventDefault: true }],
   addColumn: [{ shortcut: 'Alt+Enter', preventDefault: true }],
   addMemo: [{ shortcut: 'Alt+KeyM', preventDefault: true }],
@@ -225,7 +281,9 @@ editor.setKeyBindingMap({
 
 ### setPresetTheme
 
-プリセットテーマを設定します。
+プリセットテーマを設定します。  
+既定値は `appearance: 'dark'`、`grayColor: 'slate'`、`accentColor: 'indigo'` です。  
+各フィールドは個別に適用されるため、一部だけを指定した場合、残りの 2 つはそのまま維持されます。次の名前以外の値は無視され、エラーは発生しません。
 
 ```ts
 type ThemeOptions = {
@@ -266,7 +324,10 @@ editor.setPresetTheme({ appearance: 'light' });
 
 ### setTheme
 
-テーマをカスタマイズできます。
+テーマをカスタマイズできます。  
+呼び出すたびにカスタムのオーバーレイ全体が置き換わるため、既存の上書きに 1 つのトークンを追加する場合もオブジェクト全体を渡し直し、プリセットに戻す場合は `{}` を渡します。  
+次のトークン名で値が文字列のものだけが保持され、それ以外はエラーにならずに破棄されます。  
+オーバーレイはプリセットの上に重なるため、後から `setPresetTheme` を呼び出すと、上書きした値はそのままでプリセットだけが入れ替わります。
 
 #### JavaScript
 
@@ -329,8 +390,8 @@ type Theme = {
   toastBackground: string;
   toastBorder: string;
 
-  dargSelectBackground: string;
-  dargSelectBorder: string;
+  dragSelectBackground: string;
+  dragSelectBorder: string;
 
   scrollbarTrack: string;
   scrollbarThumb: string;
@@ -356,10 +417,28 @@ type Theme = {
 };
 
 // example
-editor.setTheme({...});
+editor.setTheme({
+  canvasBackground: '#1b1b1f',
+  tableBackground: '#242429',
+  keyPK: '#ffc53d',
+});
 ```
 
 #### CSS Variables
+
+`Theme` のすべてのトークンには、`--erd-editor-` にキーをケバブケースにしたものをつないだ名前の CSS フックが対応します。`grayColor10` は `--erd-editor-gray-color-10`、`keyPK` は `--erd-editor-key-pk`、`keyPFK` は `--erd-editor-key-pfk` です。  
+フックはエディタに継承されるため、適用したい場所で設定します。`:root` に設定するとページ上のすべてのエディタに、要素自身に設定するとその 1 つだけにテーマが適用されます。
+
+```css
+erd-editor {
+  --erd-editor-canvas-background: #1b1b1f;
+}
+```
+
+`3.4.0` から、綴りが誤っていた `dargSelect` トークンは `dragSelect` になり、フックも `--erd-editor-darg-select-background` と `--erd-editor-darg-select-border` から `--erd-editor-drag-select-background` と `--erd-editor-drag-select-border` に変わりました。古い名前のままのスタイルシートは無視されます。
+
+<details>
+<summary>既定のテーマ値</summary>
 
 ```css
 :root {
@@ -409,8 +488,8 @@ editor.setTheme({...});
   --erd-editor-minimap-viewport-border-hover: #435db1;
   --erd-editor-toast-background: #18191b;
   --erd-editor-toast-border: #363a3f;
-  --erd-editor-darg-select-background: #253974;
-  --erd-editor-darg-select-border: #435db1;
+  --erd-editor-drag-select-background: #253974;
+  --erd-editor-drag-select-border: #435db1;
   --erd-editor-scrollbar-track: #ddeaf814;
   --erd-editor-scrollbar-thumb: #696e77;
   --erd-editor-scrollbar-thumb-hover: #777b84;
@@ -431,39 +510,85 @@ editor.setTheme({...});
 }
 ```
 
+</details>
+
 ## setSchemaSQL
 
-Schema SQL ファイルを読み込みます。
+Schema SQL ファイルを読み込みます。  
+現在のドキュメントにマージするのではなく、置き換えます。キャンバスのサイズ、スクロール位置、拡大・縮小のレベルを除いて既存の設定は維持され、ファイルの読み込み後にテーブルが自動で配置されます。  
+履歴に記録されるため `Undo, Redo` が可能で、`change` を発行します。空文字列は無視され、`readonly` が設定されている間は何も行いません。  
+`setSchemaGraphQL`、`setSchemaDBML`、`setSchemaAML` も同じように動作し、これらのパーサーは失敗しません。解析できないテキストはエラーにならず、空のドキュメントを読み込みます。  
+各パーサーが受け付ける構文については[ファイルの読み込みと書き出し](../guide/guides/file-import-export.md)を参照してください。
 
 ```js
 editor.setSchemaSQL('Schema SQL...');
 ```
 
+## setSchemaGraphQL
+
+GraphQL SDL のドキュメントを読み込みます。  
+オブジェクト型の定義がテーブルになり、型が別のテーブルであるフィールドがリレーションシップになります。
+
+```js
+editor.setSchemaGraphQL('GraphQL SDL...');
+```
+
+## setSchemaDBML
+
+dbdiagram.io と dbdocs で使われている形式である DBML ファイルを読み込みます。
+
+```js
+editor.setSchemaDBML('DBML...');
+```
+
+## setSchemaAML
+
+AML（Azimutt Markup Language）ファイルを読み込みます。現在の表記と従来の v1 の表記の両方に対応しています。
+
+```js
+editor.setSchemaAML('AML...');
+```
+
 ## getSchemaSQL
 
 現在のエディタの状態を Schema SQL として書き出します。  
-`databaseVendor` を指定しない場合は、現在設定されているベンダーに従って動作します。
+`databaseVendor` を指定しない場合は、現在設定されているベンダーに従って動作します。次の一覧にない名前を指定した場合も、エラーにならず同じように動作します。
 
 ```ts
 type DatabaseVendor =
+  | 'Databricks'
   | 'MariaDB'
   | 'MSSQL'
   | 'MySQL'
   | 'Oracle'
   | 'PostgreSQL'
+  | 'Snowflake'
   | 'SQLite';
 
 const schemaSQL = editor.getSchemaSQL();
+// or
+const postgresSQL = editor.getSchemaSQL('PostgreSQL');
 ```
 
 ## getSharedStore
 
 リアルタイム共同編集のための store を返します。  
+`config` は `{ getNickname?, mouseTracker?, focusTracker? }` です。どちらのトラッカーも既定値は `true` で、`mouseTracker` はこのエディタのマウスカーソルを他のエディタに配信し、`focusTracker` はフォーカスしているセル、選択範囲、ドラッグの範囲を配信します。  
 [共同編集](./advanced/collaborative-editing.md)を参照してください。
+
+```js
+const sharedStore = editor.getSharedStore({
+  mouseTracker: false,
+  focusTracker: false,
+});
+```
 
 ## setDiffValue
 
-現在のエディタの状態と以前の状態を比較します。
+現在開いているドキュメントと、渡したドキュメントを比較する Diff Viewer を開きます。  
+戻り値はなく、ドキュメントも変更しないため、ビューアーを閉じてもエディタは元のままです。  
+空の値や文字列以外の値を指定した場合は、空のドキュメントと比較します。  
+キャンバスのコンテキストメニューにある [Diff Viewer](../guide/guides/table-related-functions.md#diff-viewer) と同じオーバーレイです。
 
 ```js
 editor.setDiffValue('prev json...');

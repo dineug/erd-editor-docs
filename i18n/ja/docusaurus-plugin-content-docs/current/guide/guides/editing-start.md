@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: キャンバスのコンテキストメニューからのテーブル、メモ、リレーションシップの作成。
 ---
 
 # 編集を始める
@@ -7,6 +8,8 @@ sidebar_position: 1
 編集は右クリックのコンテキストメニューから始めます。
 
 <img src="/img/context-menu.png" width="400" alt="キャンバスのコンテキストメニュー" loading="lazy" />
+
+テーブルやリレーションシップを右クリックした場合は、その項目専用のメニューが開きます。
 
 ## テーブルの作成
 
@@ -16,13 +19,25 @@ sidebar_position: 1
 
 コンテキストメニュー、またはショートカット `Alt + M` でメモを作成します。
 
+メモはキャンバス上に自由に入力できるノートです。本文をクリックして入力すると、テキストはドキュメントとともに保存されます。  
+枠線をドラッグするとサイズを変更でき、ヘッダーの `x` で削除します。
+
 ## リレーションシップの作成
 
 コンテキストメニュー、またはショートカットでリレーションシップを開始します。種類ごとにショートカットが異なります。
 
-- Zero One: `Ctrl + Alt + 1` (Windows/Linux) or `⌘ + Alt + 1` (Mac)
-- Zero N: `Ctrl + Alt + 2` (Windows/Linux) or `⌘ + Alt + 2` (Mac)
-- One Only: `Ctrl + Alt + 3` (Windows/Linux) or `⌘ + Alt + 3` (Mac)
-- One N: `Ctrl + Alt + 4` (Windows/Linux) or `⌘ + Alt + 4` (Mac)
+- Zero One: `Ctrl + Alt + 1` (Windows/Linux) or `⌘ + ⌥ + 1` (Mac)
+- Zero N: `Ctrl + Alt + 2` (Windows/Linux) or `⌘ + ⌥ + 2` (Mac)
+- One Only: `Ctrl + Alt + 3` (Windows/Linux) or `⌘ + ⌥ + 3` (Mac)
+- One N: `Ctrl + Alt + 4` (Windows/Linux) or `⌘ + ⌥ + 4` (Mac)
+
+種類を選択するとカーソルが変わります。先に親テーブルをクリックし、次に子テーブルをクリックします。  
+親テーブルに主キーがない場合は主キーが作成され、子テーブルには対応する外部キーカラム（名前、データ型、既定値、コメントが同じで `Not Null` を設定したもの）が作成されます。  
+同じテーブルを 2 回クリックすると自己参照のリレーションシップになります。  
+`Escape` を押すか、同じショートカットをもう一度押すとキャンセルします。
 
 ![demo-relationship](/img/demo-relationship.webp)
+
+## テーブルとメモの複製
+
+既存のテーブルとメモは、コピー、貼り付け、`Alt` を押しながらのドラッグで複製できます。[テーブル関連機能](./table-related-functions.md#copyingpasting-tables-and-memos)を参照してください。

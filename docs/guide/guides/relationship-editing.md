@@ -1,9 +1,12 @@
 ---
 sidebar_position: 5
-description: Delete a relationship, change its type, and work with N:M and identifying relationships.
+description: Delete a relationship, change its type, read the connector notation, and work with N:M and identifying relationships.
 ---
 
 # Relationship Editing
+
+Relationships are drawn from the canvas context menu or with a shortcut — see [Editing Start](./editing-start.md).  
+This page covers what you can do with one once it exists.
 
 ## Deletion
 
@@ -11,11 +14,22 @@ Possible to delete via the relationship context menu.
 
 <img src="/img/relationship-remove.png" width="400" alt="Relationship context menu with delete" loading="lazy" />
 
+There is no shortcut for it, because a relationship is not selected the way a table or a memo is.  
+Relationships are also removed together with what they connect: deleting a table removes every relationship touching it, and deleting a column removes every relationship that uses it.
+
 ## Type Change
 
-Change available through the relationship context menu.
+Change available through the relationship context menu.  
+Four types are offered, and the current one is marked with a check:
+
+- Zero One
+- Zero N
+- One Only
+- One N
 
 <img src="/img/relationship-type.png" width="400" alt="Relationship type menu" loading="lazy" />
+
+These are the same four types you start a relationship with, each with its own shortcut — see [Editing Start](./editing-start.md).
 
 ## N:M Relationships
 
@@ -23,8 +37,34 @@ Because the editor is based on the physical model, an N:M relationship is expres
 
 <img src="/img/relationship-n-m.png" width="400" alt="N:M relationship result" loading="lazy" />
 
+Importing GraphQL, DBML, or AML builds the mapping table for you.  
+A many-to-many declaration arrives as a table named `<left>_<right>`, commented `Junction table inferred from <left> <-> <right>`, joined to both sides by identifying relationships.  
+See [Importing or Exporting Files](./file-import-export.md).
+
 ## Identifying Relationships
 
-Assign the primary key to the foreign key.
+Drawing a relationship copies each primary key of the parent table onto the child table as a `NOT NULL` foreign key column, so a new relationship starts out non-identifying.  
+To make it identifying, set those foreign key columns on the child table as primary keys with `Alt + K` or `Primary Key` in the table context menu.
 
 <img src="/img/identifier-relationship.png" width="400" alt="Identifying relationship" loading="lazy" />
+
+The editor keeps this in step on its own.  
+A relationship is identifying while every column on its child side is a primary key, and turns non-identifying as soon as one of them is not.
+
+## Reading a Connector
+
+- An identifying relationship is drawn as a solid line, a non-identifying one as a dashed line.
+- The child end carries the cardinality symbol of the relationship type: a ring and a bar for Zero One, a ring and a crow's foot for Zero N, two bars for One Only, and a bar and a crow's foot for One N.
+- The parent end is a ring when any of the foreign key columns allows `NULL`, and a short dash when they are all `NOT NULL`.
+- Hovering a connector highlights it along with the columns it links in both tables.
+
+Hide connectors entirely with the `Relationship` view option — see [Table-related Functions](./table-related-functions.md).
+
+## Connector Routing
+
+Connectors are routed orthogonally.  
+A route bends around the tables that sit between its two ends instead of crossing them, and its corners are cut at 45 degrees.  
+Routes leaving the same side of a table are spread onto separate corridors so they do not run down one another.
+
+There is nothing to configure.  
+Routes are recalculated automatically whenever anything on the canvas moves or resizes, so they never need touching by hand.

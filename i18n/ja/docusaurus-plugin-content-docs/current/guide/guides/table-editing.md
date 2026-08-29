@@ -1,17 +1,18 @@
 ---
 sidebar_position: 3
+description: カラムの追加、複数選択、並べ替えと削除、カラムオプションの切り替え、コピーと貼り付け。
 ---
 
 # テーブルの編集
 
 テーブルの編集は、基本的に Excel に近い操作感で行えます。  
-編集モードは `Enter` で開始します。
+編集モードは `Enter`、またはセルのダブルクリックで開始します。
 
 ![demo-table-edit](/img/demo-table-edit.webp)
 
 ## カラムの追加
 
-ショートカット `Alt + Enter` で作成します。  
+ショートカット `Alt + Enter` (Windows/Linux) または `⌥ + Enter` (Mac) で作成します。  
 選択しているすべてのテーブルにカラムが追加されます。
 
 ## Tab キー
@@ -22,14 +23,40 @@ sidebar_position: 3
 
 ![demo-table-tab](/img/demo-table-tab.webp)
 
+## DataType の自動補完
+
+`DataType` セルの編集を開始して入力すると、選択しているデータベースに一致する型が候補として表示され、入力した文字列をそのまま含む部分がハイライトされます。  
+一致はあいまい検索のため、`vch` でも `VARCHAR` が見つかります。
+
+- `Arrow Up` or `Arrow Down`: 候補を移動します。
+- `Arrow Right`, `Tab` or `Enter`: ハイライトされている候補を確定します。
+- `Arrow Left`: 入力した文字列に戻ります。
+
+候補はクリックでも選択できます。  
+入力は強制されないため、一覧にない型も自由に入力でき、`VARCHAR(255)` のような引数も指定できます。  
+候補は選択しているデータベースに従います。データベースを変更すると提示される候補が変わり、既存のカラムはそのまま残ります。
+
+![demo-data-type-autocomplete](/img/demo-data-type-autocomplete.webp)
+
+## Not Null, Unique, Auto Increment
+
+この 3 つのセルはテキストではなくトグルです。  
+ダブルクリック、またはフォーカスした状態で `Enter` を押すと切り替わります。
+
+Not Null のセルは、設定されているときは `N-N`、設定されていないときは `NULL` と表示されます。  
+`UQ` と `AI` は、オフのときは薄く表示され、オンのときはハイライトされます。
+
+[テーブルの表示オプション](./table-related-functions.md)で非表示になっているセルは切り替えられません。
+
 ## カラムの複数選択
 
-次の 4 つの方法に対応しています。
+次の 5 つの方法に対応しています。
 
-- `Shift + Arrow Up/Down`
-- `Ctrl + click` (Windows/Linux) or `⌘ + click` (Mac)
-- `Shift + click`
-- `Alt + A`: すべて選択
+- `Shift + Arrow Up/Down`: 1 行ずつ選択範囲を広げます。
+- `Ctrl + click` (Windows/Linux) or `⌘ + click` (Mac): カラムを 1 つ追加します。
+- `Shift + click`: 最後にフォーカスしたカラムからの範囲を選択します。
+- `Ctrl + Shift + click` (Windows/Linux) or `⌘ + Shift + click` (Mac): その範囲を選択に追加します。
+- `Alt + A` (Windows/Linux) or `⌥ + A` (Mac): すべて選択
 
 ![demo-column-select](/img/demo-column-select.webp)
 
@@ -46,14 +73,14 @@ sidebar_position: 3
 ## カラムの削除
 
 現在選択しているカラムを削除します。  
-ショートカット: `Alt + Backspace` または `Alt + Delete`
+ショートカット: `Alt + Backspace` または `Alt + Delete` (Windows/Linux)、`⌥ + ⌫` または `⌥ + Delete` (Mac)
 
 ![demo-column-remove](/img/demo-column-remove.webp)
 
 ## カラムのコピー / 貼り付け
 
 表形式のクリップボードとして動作します。  
-Shortcuts: `Ctrl + C` (Windows/Linux) or `⌘ + C` (Mac), `Ctrl + V` (Windows/Linux) or `⌘ + V` (Mac)
+ショートカット: `Ctrl + C` (Windows/Linux) または `⌘ + C` (Mac)、`Ctrl + V` (Windows/Linux) または `⌘ + V` (Mac)
 
 エディタから Excel へ、Excel からエディタへ貼り付けられます。  
 次のカラムでは、以下の値を true として扱います（大文字小文字は区別しません）。
@@ -62,6 +89,8 @@ Shortcuts: `Ctrl + C` (Windows/Linux) or `⌘ + C` (Mac), `Ctrl + V` (Windows/Li
 - Unique: `TRUE`, `1`, `YES`, `Y`
 - Not Null: `TRUE`, `1`, `YES`, `Y`, `NOT NULL`
 
+書き出すときは、AutoIncrement と Unique は `TRUE` または `FALSE`、Not Null は `NOT NULL` または `NULL` として出力します。
+
 ![demo-copy-column-to-sheet](/img/demo-copy-column-to-sheet.webp)
 ![demo-copy-sheet-column](/img/demo-copy-sheet-column.webp)
 
@@ -69,8 +98,14 @@ Shortcuts: `Ctrl + C` (Windows/Linux) or `⌘ + C` (Mac), `Ctrl + V` (Windows/Li
 
 ![demo-copy-column-multi](/img/demo-copy-column-multi.webp)
 
+## テーブルとメモのコピー / 貼り付け
+
+フォーカスしているテーブル内でカラムを選択していない場合は、同じショートカットで選択中のテーブルとメモ自体をコピーします。[テーブル関連機能](./table-related-functions.md)を参照してください。
+
 ## カラムの主キー
 
-テーブルのコンテキストメニュー、またはショートカット `Alt + K` で、選択したカラムを主キーに設定します。
+フォーカスしているカラムの主キーを切り替えます。対象はフォーカスしているセルが属するカラムであり、選択中のカラム全体ではありません。  
+テーブルのコンテキストメニュー、またはショートカット `Alt + K` (Windows/Linux) または `⌥ + K` (Mac) で操作します。  
+行に表示されるキーのアイコンは表示専用のため、クリックしても主キーは設定されません。
 
 ![demo-column-pk](/img/demo-column-pk.webp)

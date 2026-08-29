@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+description: Create tables, memos, and relationships from the canvas context menu.
 ---
 
 # Editing Start
@@ -7,6 +8,8 @@ sidebar_position: 1
 Editing begins through the context menu by right-clicking.
 
 <img src="/img/context-menu.png" width="400" alt="Canvas context menu" loading="lazy" />
+
+Right-clicking a table or a relationship opens that item's own menu instead.
 
 ## Table Creation
 
@@ -16,13 +19,25 @@ Create a table from the context menu or with the shortcut `Alt + N`.
 
 Create a memo from the context menu or with the shortcut `Alt + M`.
 
+A memo is a free-text note on the canvas. Click into its body and type; the text is saved with the document.  
+Drag its border to resize it, and use the `x` in its header to delete it.
+
 ## Relationship Creation
 
 Start a relationship from the context menu or with a shortcut. Each relationship type has its own:
 
-- Zero One: `Ctrl + Alt + 1` (Windows/Linux) or `⌘ + Alt + 1` (Mac)
-- Zero N: `Ctrl + Alt + 2` (Windows/Linux) or `⌘ + Alt + 2` (Mac)
-- One Only: `Ctrl + Alt + 3` (Windows/Linux) or `⌘ + Alt + 3` (Mac)
-- One N: `Ctrl + Alt + 4` (Windows/Linux) or `⌘ + Alt + 4` (Mac)
+- Zero One: `Ctrl + Alt + 1` (Windows/Linux) or `⌘ + ⌥ + 1` (Mac)
+- Zero N: `Ctrl + Alt + 2` (Windows/Linux) or `⌘ + ⌥ + 2` (Mac)
+- One Only: `Ctrl + Alt + 3` (Windows/Linux) or `⌘ + ⌥ + 3` (Mac)
+- One N: `Ctrl + Alt + 4` (Windows/Linux) or `⌘ + ⌥ + 4` (Mac)
+
+Once a type is armed the cursor changes. Click the parent table first, then the child table.  
+The parent gets a primary key if it does not have one, and a matching foreign key column — same name, data type, default, and comment, set `Not Null` — is created on the child.  
+Clicking one table twice draws a self-referencing relationship.  
+Press `Escape`, or press the same shortcut again, to cancel.
 
 ![demo-relationship](/img/demo-relationship.webp)
+
+## Duplicating Tables and Memos
+
+Existing tables and memos can be copied, pasted, and `Alt`-dragged into duplicates — see [Table-related Functions](./table-related-functions.md#copyingpasting-tables-and-memos).

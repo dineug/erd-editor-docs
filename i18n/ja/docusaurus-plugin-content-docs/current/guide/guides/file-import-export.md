@@ -1,16 +1,30 @@
 ---
 sidebar_position: 2
-description: JSON やスキーマ SQL の読み込みと、JSON・スキーマ SQL・PNG の書き出し。
+description: JSON・スキーマ SQL・GraphQL・DBML・AML の読み込みと、JSON・スキーマ SQL・PNG の書き出し。
 ---
 
 # ファイルの読み込みと書き出し
 
 ## 外部ファイルの読み込み
 
+コンテキストメニューの `Import` サブメニューから、次の 5 つの形式を読み込めます。
+
+- json
+- Schema SQL
+- GraphQL
+- DBML
+- AML
+
+選んだ形式と拡張子が一致しないファイルを選ぶと、読み込みは中止され、通知が表示されます。
+
+読み込みは、現在のドキュメントに統合するのではなく置き換えます。  
+JSON ファイルは自身の設定も一緒に読み込みます。それ以外の形式は、キャンバスのサイズ、スクロール位置、拡大・縮小のレベルを除いて現在の設定を維持し、読み込み後にテーブルを自動配置します。  
+GraphQL、DBML、AML のパーサーは失敗しません。読み取れないファイルは、エラーではなく空のダイアグラムになります。
+
 ### JSON
 
 [エディタで定義したスキーマ形式](../../api/advanced/schema.md)のファイルを読み込めます。
-ファイル名は `.json` で終わる必要があります。`.erd` や `.vuerd` ファイルはここでは読み込めません。
+ファイル名は `.json` で終わる必要があるため、`<データベース名>-<時刻>.erd.json` として書き出したファイルはそのまま読み込めます。`.erd` や `.vuerd` ファイルはここでは読み込めません。
 
 <img src="/img/import-json.png" width="400" alt="JSON 読み込みメニュー" loading="lazy" />
 
@@ -18,16 +32,54 @@ description: JSON やスキーマ SQL の読み込みと、JSON・スキーマ S
 
 SQL で定義したスキーマファイルも読み込めます。  
 データベースベンダーに関係なく、できるだけ柔軟にパースするよう実装していますが、対応していない構文がある場合もあります。  
+ファイル名は `.sql` で終わる必要があります。  
 [対応している構文はこちらで確認できます。](https://github.com/dineug/erd-editor/tree/main/packages/schema-sql-parser)
 
 <img src="/img/import-sql.png" width="400" alt="Schema SQL 読み込みメニュー" loading="lazy" />
 
-## 書き出し
+#### コメント
+
+テーブルとカラムのコメントは、パーサーが読み取る 2 つの構文から読み込みます。MySQL、MariaDB、Snowflake、Databricks が使う `COMMENT` テーブルオプションおよびカラム属性と、PostgreSQL、Oracle が使う `COMMENT ON TABLE` および `COMMENT ON COLUMN` 文です。  
+ファイルに定義されていないテーブルやカラムを指すコメントは無視されます。
+
+SQLite と MSSQL では、書き出してから読み込むとコメントが失われます。SQLite はコメントを単純な `--` 行として、MSSQL は `sp_addextendedproperty` の呼び出しとして書き出しますが、パーサーはどちらも読み取れません。
+
+### GraphQL
+
+GraphQL SDL ドキュメントを読み込めます。  
+オブジェクト型の定義はテーブルになり、`extend type` ブロックは拡張元の型に統合され、インターフェースのフィールドはそれを実装する型に継承されます。  
+型が別のテーブルであるフィールドはカラムではなくリレーションシップになり、両側がリストの場合はマッピングテーブルが作成されます。  
+ルート型（`Query`、`Mutation`、`Subscription`）、イントロスペクション型、`PageInfo`、`*Connection`、`*Edge`、`*_aggregate` のような Relay、フェデレーション、Hasura のラッパーは、ノイズとして扱いスキップします。  
+`@id`、`@primaryKey`、`@unique`、`@autoincrement`、`@default`、`@map`、`@relation`、`@column`、`@table`、`@index`、`@db.*` の各ディレクティブに対応しています。  
+ファイル名は `.graphql`、`.gql`、`.graphqls` のいずれかで終わる必要があります。Prisma の `schema.prisma` ファイルは GraphQL ドキュメントではないため、ここでは読み込めません。
+
+### DBML
+
+dbdiagram.io や dbdocs で使われている形式の DBML ファイルを読み込めます。  
+`Table`、`TablePartial`、`Ref`、`Enum` の各ブロックを読み込みます。`Project`、`TableGroup`、単独の `Note` ブロックは、周囲のテーブルに影響を与えずにスキップします。  
+ref の記法はすべて読み込めます。コロンを使う `Ref:` 形式、名前付きの ref、`Ref { }` のブロック形式、カラム設定にインラインで書く `[ref: > table.column]` に対応しています。  
+`<>` の多対多 ref では、両側の名前を組み合わせたマッピングテーブルが作成されます。  
+ファイル名は `.dbml` で終わる必要があります。
+
+### AML
+
+AML（Azimutt Markup Language）ファイルを読み込めます。現在の記法と、以前の v1 の記法の両方に対応しています。  
+エンティティはテーブルになり、ネストした属性は `settings.slug` のようにドットでつないだカラム名に平坦化されます。  
+属性は `nullable` が指定されていない限り `NOT NULL` になり、`check`、`view`、`type`、`color`、`tags`、`onDelete` のようにエディタに対応する項目がない構文は、エラーにせず破棄します。  
+ファイル名は `.aml` で終わる必要があります。
+
+GraphQL、DBML、AML は往復できる形式です。いずれも[コード生成](./code-generator.md)の出力対象でもあります。
+
+## 書き出し {#exporting}
 
 書き出しは次の 3 つの形式に対応しています。
 
-- JSON: エディタで定義したスキーマファイルです。`<データベース名>-<時刻>.erd.json` として保存されます。
-- Schema SQL: データベースベンダーの構文に合わせて生成したスキーマファイルです。
-- PNG: ダイアグラムを画像として生成します。
+- json: エディタで定義したスキーマファイルです。`.erd.json` として保存されます。
+- Schema SQL: データベースベンダーの構文に合わせて生成したスキーマファイルです。`.sql` として保存されます。
+- png: ダイアグラムを画像として生成します。`.png` として保存されます。
+
+書き出したファイルの名前は、いずれも `<データベース名>-<時刻>` に各拡張子を付けたものになり、時刻は `yyyy-MM-dd'T'HH_mm_ss` の形式です。例えば `my-schema-2026-08-29T04_05_06.erd.json` のようになります。データベース名が空の場合は `unnamed` になります。
 
 <img src="/img/export-menu.png" width="400" alt="書き出しメニュー" loading="lazy" />
+
+読み込みと書き出しは[クイック検索](./quick-search.md)からも実行できます。読み込みは同じ 5 つの形式に対応していますが、書き出しは `json` と `Schema SQL` のみで、PNG はコンテキストメニューからのみ利用できます。
