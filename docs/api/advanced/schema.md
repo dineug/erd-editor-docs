@@ -34,8 +34,10 @@ type ERDEditorSchemaV3 = {
 type Settings = {
   width: number;
   height: number;
-  scrollTop: number;
-  scrollLeft: number;
+  scrollTop: number; // legacy, read once to migrate
+  scrollLeft: number; // legacy, read once to migrate
+  originX: number;
+  originY: number;
   zoomLevel: number;
   show: number; // Constants: Show
   database: number; // Constants: Database
@@ -130,6 +132,11 @@ const SaveSettingType = {
   zoomLevel: 2,
 } as const;
 ```
+
+`originX` and `originY` are the view: the screen point scene `(0, 0)` lands on.  
+`scrollTop` and `scrollLeft` are the legacy pair every editor before `3.6.0` reads. The parser reads them once, and only when a document carries no origin, to derive `originX` and `originY` from them; nothing writes them any more. A document saved here therefore opens in an older editor where that editor last left it, rather than where this one saved it.  
+`width` and `height` are the legacy canvas size. The canvas is unbounded, so nothing sets them any longer; they are still written, at their defaults, for an older editor to read.  
+`zoomLevel` runs from `0.1` to `1.5`. A document saved past `1` opens at `1` in an editor before `3.5.0`.
 
 `show` and `ignoreSaveSettings` are bitmasks — OR the flags together.  
 `columnOrder` is an array holding all seven `ColumnType` values, in display order.  
@@ -398,10 +405,16 @@ Put `$schema` at the top of an `.erd.json` file and editors that understand JSON
         "scrollLeft": {
           "type": "number"
         },
+        "originX": {
+          "type": "number"
+        },
+        "originY": {
+          "type": "number"
+        },
         "zoomLevel": {
           "type": "number",
           "minimum": 0.1,
-          "maximum": 1
+          "maximum": 1.5
         },
         "show": {
           "description": "bit value (tableComment: 1) | (columnComment: 2) | (columnDataType: 4) | (columnDefault: 8) | (columnAutoIncrement: 16) | (columnPrimaryKey: 32) | (columnUnique: 64) | (columnNotNull: 128) | (relationship: 256)",

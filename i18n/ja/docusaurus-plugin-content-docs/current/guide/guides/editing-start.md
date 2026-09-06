@@ -24,7 +24,7 @@ description: キャンバスのコンテキストメニューからのテーブ�
 
 ## リレーションシップの作成
 
-コンテキストメニュー、またはショートカットでリレーションシップを開始します。種類ごとにショートカットが異なります。
+コンテキストメニュー、左上の[キャンバスツールバー](./table-related-functions.md#canvas-toolbar)、またはショートカットでリレーションシップを開始します。種類ごとにショートカットが異なります。
 
 - Zero One: `Ctrl + Alt + 1` (Windows/Linux) or `⌘ + ⌥ + 1` (Mac)
 - Zero N: `Ctrl + Alt + 2` (Windows/Linux) or `⌘ + ⌥ + 2` (Mac)

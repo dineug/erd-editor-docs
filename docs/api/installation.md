@@ -12,6 +12,10 @@ npm install @dineug/erd-editor
 The package is ESM-only (`"type": "module"`) and ships only its `dist` folder.
 There is no CommonJS build, so `require('@dineug/erd-editor')` does not work.
 
+Its runtime dependencies are left external, as bare imports your bundler resolves, dedupes, and tree-shakes.
+Its shared workers are emitted as separate entry files under `dist/workers/` and constructed with `new URL('./…', import.meta.url)`, the spelling Vite, webpack 5, and Rspack bundle as a worker entry. See [Web Workers](#web-workers).
+For a page with no bundler behind it there is a second, self-contained build — see [Script tag](#script-tag).
+
 ## Usage
 
 ```js
@@ -47,7 +51,25 @@ See [ErdEditorElement](./erd-editor-element.md) for the rest of the API.
 <script type="module" src="https://esm.run/@dineug/erd-editor"></script>
 ```
 
-The unversioned URL always serves the latest release. Pin a version — `https://esm.run/@dineug/erd-editor@3.4.0` — if you do not want a major upgrade to reach your page unannounced.
+`esm.run` resolves the package's external dependencies for you, so this works without a bundler.
+The unversioned URL always serves the latest release. Pin a version — `https://esm.run/@dineug/erd-editor@3.6.0` — if you do not want a major upgrade to reach your page unannounced.
+
+### Script tag
+
+Since `3.6.0` the package also ships a UMD build with every dependency and both shared workers inside one file.
+It is what the `unpkg` and `jsdelivr` fields point at, so the bare package URL on either CDN serves it, and it defines `window.ErdEditor`.
+
+```html
+<erd-editor></erd-editor>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@3.6.0"></script>
+<script>
+  const editor = document.querySelector('erd-editor');
+  editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
+</script>
+```
+
+Importing it registers `<erd-editor>` the same way; `window.ErdEditor` carries the callback setters, such as `ErdEditor.setGetShikiServiceCallback`.
+The exports map still points a bundler at the ES modules, so an install from npm never picks this file up.
 
 ### HTML
 
@@ -125,11 +147,36 @@ From a CDN:
 </script>
 ```
 
+From script tags, through the two globals the UMD builds define:
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@3.6.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor-shiki-worker@0.3.0"></script>
+<script>
+  ErdEditor.setGetShikiServiceCallback(ErdEditorShikiWorker.getShikiService);
+</script>
+```
+
 Register it once, before or after the editor mounts. Panels already on screen re-render when the highlighter arrives.
 It covers SQL, TypeScript, GraphQL, C#, Java, Kotlin, Scala, Go, and Python. The `AML` and `DBML` [Code Generator](../guide/guides/code-generator.md) targets have no grammar in the bundle, so those panels stay plain text.
 
-Two things can stop it. A page with a strict CSP needs `worker-src data:`, since the worker is inlined as a `data:` URI.
 Where `SharedWorker` is missing — Chrome on Android, Safari before 16.4 — no highlighter is returned and the panels stay plain text.
+
+## Web Workers
+
+The editor runs three jobs in `SharedWorker`s: syntax highlighting, PNG export, and the document's own garbage collection.
+None of them is something you set up, but each one is something a host can block, so each has a way out.
+
+| Worker | Where it comes from | Without it |
+| --- | --- | --- |
+| Syntax highlighting | `@dineug/erd-editor-shiki-worker`, registered by you | The SQL and Code Generator panels stay plain text |
+| PNG export | `@dineug/erd-editor` | The image is drawn on the main thread, which blocks the page while it draws |
+| Schema garbage collection | `@dineug/erd-editor` | It runs in-process |
+
+The two the editor owns wait ten seconds for a worker to answer and then carry on without it, so a host that blocks workers costs performance rather than function.
+
+In the bundled build the two workers `@dineug/erd-editor` owns are emitted as files beside it, so a strict CSP needs `worker-src 'self'` — plus `blob:` where your bundler inlines a worker.
+In the [script-tag](#script-tag) build both travel inside the file as `data:` URLs, so that page needs `worker-src data:` instead.
 
 ## Entry Points
 

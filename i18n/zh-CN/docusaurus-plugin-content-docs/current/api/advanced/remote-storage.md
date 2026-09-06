@@ -127,7 +127,7 @@ const data = replicationStore.value;
 ```
 
 序列化时会应用文档自身的 `ignoreSaveSettings`。  
-设置了滚动标志位时，滚动位置会写为 `0`，设置了缩放标志位时，缩放级别会写为 `1`。  
+设置了滚动标志位时，视图原点会写为 `0, 0`，设置了缩放标志位时，缩放级别会写为 `1`。  
 关于这些标志位，参见 [Schema](./schema.md)。
 
 ### setInitialValue

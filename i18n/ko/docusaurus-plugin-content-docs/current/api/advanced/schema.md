@@ -34,8 +34,10 @@ type ERDEditorSchemaV3 = {
 type Settings = {
   width: number;
   height: number;
-  scrollTop: number;
-  scrollLeft: number;
+  scrollTop: number; // legacy, read once to migrate
+  scrollLeft: number; // legacy, read once to migrate
+  originX: number;
+  originY: number;
   zoomLevel: number;
   show: number; // Constants: Show
   database: number; // Constants: Database
@@ -130,6 +132,11 @@ const SaveSettingType = {
   zoomLevel: 2,
 } as const;
 ```
+
+`originX`와 `originY`는 화면 위치, 즉 씬 좌표 `(0, 0)`이 화면에서 놓이는 지점입니다.  
+`scrollTop`과 `scrollLeft`는 `3.6.0` 이전의 모든 에디터가 읽는 레거시 값입니다. 파서는 문서에 원점이 없을 때만 이 값을 한 번 읽어 `originX`, `originY`를 계산하며, 더 이상 어디에서도 기록하지 않습니다. 따라서 여기서 저장한 문서는 예전 에디터에서 열면 이 버전이 저장한 위치가 아니라 그 에디터가 마지막으로 보던 위치에서 열립니다.  
+`width`와 `height`는 레거시 캔버스 크기입니다. 캔버스에 경계가 없어져 더 이상 설정하지 않지만, 예전 에디터가 읽을 수 있도록 기본값 그대로 기록됩니다.  
+`zoomLevel`은 `0.1`부터 `1.5`까지입니다. `1`을 넘겨 저장한 문서는 `3.5.0` 이전 에디터에서 `1`로 열립니다.
 
 `show`와 `ignoreSaveSettings`는 비트마스크이므로 플래그를 OR로 결합합니다.  
 `columnOrder`는 7개의 `ColumnType` 값을 모두 담은 배열이며 표출 순서를 나타냅니다.  
@@ -398,10 +405,16 @@ type MemoUI = {
         "scrollLeft": {
           "type": "number"
         },
+        "originX": {
+          "type": "number"
+        },
+        "originY": {
+          "type": "number"
+        },
         "zoomLevel": {
           "type": "number",
           "minimum": 0.1,
-          "maximum": 1
+          "maximum": 1.5
         },
         "show": {
           "description": "bit value (tableComment: 1) | (columnComment: 2) | (columnDataType: 4) | (columnDefault: 8) | (columnAutoIncrement: 16) | (columnPrimaryKey: 32) | (columnUnique: 64) | (columnNotNull: 128) | (relationship: 256)",

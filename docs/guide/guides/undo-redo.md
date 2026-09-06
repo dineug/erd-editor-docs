@@ -27,7 +27,7 @@ Recorded:
 - Columns: add, remove, reorder, and every column option.
 - Relationships: add, remove, and type change.
 - Indexes and their columns.
-- Canvas size, scroll position, zoom level, and the `View Option` toggles.
+- View position, zoom level, and the `View Option` toggles.
 - Importing a file.
 
 Not recorded:

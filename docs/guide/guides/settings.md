@@ -1,6 +1,6 @@
 ---
 sidebar_position: 10
-description: Relationship data type sync, scroll and zoom saving, maximum comment width, table width recalculation, column display order, and the shortcut list.
+description: Relationship data type sync, view and zoom saving, maximum comment width, table width recalculation, column display order, and the shortcut list.
 ---
 
 # Settings
@@ -22,8 +22,8 @@ Changing a column's data type then applies the same type to every column joined 
 
 ## Save Scroll Information
 
-Determines whether the scroll position is saved in the document. It is on by default.
-With it off, the document is written with the scroll position reset, so it opens at the top left.
+Determines whether the view position is saved in the document. It is on by default.
+With it off, the document is written with the view origin reset, so it opens on the diagram rather than where you left it.
 
 ## Save Zoom Information
 
@@ -70,7 +70,7 @@ The `Shortcuts` tab is a read-only table of `Command` and `Keybinding`, listing 
 | Remove Table, Memo | `Ctrl + Backspace`, `Ctrl + Delete` | `⌘ + Backspace`, `⌘ + Delete` |
 | Remove Column | `Alt + Backspace`, `Alt + Delete` | `⌥ + Backspace`, `⌥ + Delete` |
 | Primary Key | `Alt + K` | `⌥ + K` |
-| Select All Table, Memo | `Ctrl + Alt + A` | `⌘ + ⌥ + A` |
+| Select All Table, Memo | `Ctrl + A`, `Ctrl + Alt + A` | `⌘ + A`, `⌘ + ⌥ + A` |
 | Select All Column | `Alt + A` | `⌥ + A` |
 | Relationship Zero One | `Ctrl + Alt + 1` | `⌘ + ⌥ + 1` |
 | Relationship Zero N | `Ctrl + Alt + 2` | `⌘ + ⌥ + 2` |
@@ -79,10 +79,14 @@ The `Shortcuts` tab is a read-only table of `Command` and `Keybinding`, listing 
 | Table Properties | `Alt + Space` | `⌥ + Space` |
 | Zoom In | `Ctrl + Plus` | `⌘ + Plus` |
 | Zoom Out | `Ctrl + Minus` | `⌘ + Minus` |
+| Zoom Reset | `Ctrl + O` | `⌘ + O` |
+| Hand Tool | `Space` | `Space` |
+| Zen Mode | `Alt + Z` | `⌥ + Z` |
 
 Most of these fire on the ERD tab only, and they are held back while quick search, table properties, the diff viewer, automatic table placement, or time travel is open.
 `Search` and `Stop` are the exceptions: `Search` toggles quick search from any tab, and `Stop` is what closes quick search, table properties, the diff viewer, automatic table placement, time travel, and the theme builder.
+`Select All Table, Memo` and `Hand Tool` give way to a caret: while you are editing a cell, `Ctrl + A` selects the text and `Space` types a space.
 Copy and paste are the browser's own `Ctrl + C` and `Ctrl + V` (Windows/Linux) or `⌘ + C` and `⌘ + V` (Mac), so they are not in this list — see [Table Editing](./table-editing.md).
 
 Bindings cannot be changed from this tab.
-A host embedding the editor remaps them with [`setKeyBindingMap`](../../api/erd-editor-element.md#setkeybindingmap), except `Editing`, `Stop`, `Search`, `Undo`, `Redo`, `Zoom In`, and `Zoom Out`, which are fixed.
+A host embedding the editor remaps them with [`setKeyBindingMap`](../../api/erd-editor-element.md#setkeybindingmap), except `Editing`, `Stop`, `Search`, `Undo`, `Redo`, `Zoom In`, `Zoom Out`, and `Zoom Reset`, which are fixed.

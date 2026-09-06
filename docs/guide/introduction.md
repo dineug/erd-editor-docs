@@ -24,12 +24,13 @@ To try it in an IDE, create an empty file with a `.erd.json` extension and open 
 
 ## What It Does
 
-- Draw tables, columns, and memos on a canvas, and connect them with four relationship types: `Zero One`, `Zero N`, `One Only`, `One N`. See [Editing Start](./guides/editing-start.md). Indexes are defined in the table's property panel. See [Indexes](./guides/table-related-functions.md#indexes).
+- Draw tables, columns, and memos on an unbounded canvas, and connect them with four relationship types: `Zero One`, `Zero N`, `One Only`, `One N`. See [Editing Start](./guides/editing-start.md). Indexes are defined in the table's property panel. See [Indexes](./guides/table-related-functions.md#indexes).
 - Import an existing schema from `json`, `Schema SQL`, `GraphQL`, `DBML`, or `AML`. See [Importing or Exporting Files](./guides/file-import-export.md).
 - Export the diagram as `json`, `Schema SQL`, or `png`.
 - Write Schema SQL in the syntax of eight database vendors: Databricks, MSSQL, MariaDB, MySQL, Oracle, PostgreSQL, Snowflake, and SQLite. See [Table-related Functions](./guides/table-related-functions.md#databases).
 - Generate code for fourteen targets: C#, Go, Java, Kotlin, Scala, TypeScript, Drizzle, JPA, Sequelize, SQLAlchemy, TypeORM, AML, DBML, and GraphQL. See [Code Generator](./guides/code-generator.md).
-- Read the schema as a force-directed graph in [Visualization](./guides/visualization.md).
+- Read the schema as a force-directed graph in [Visualization](./guides/visualization.md), where hovering a table lights up everything it touches.
+- Work on a canvas with no edges: pan wherever the diagram goes, zoom from `10%` to `150%`, and clear everything but the diagram with zen mode. See [Getting Around the Canvas](./guides/table-related-functions.md#getting-around-the-canvas).
 - Find a table or run a command from anywhere with [Quick Search](./guides/quick-search.md), and step through the edit history with [Undo, Redo](./guides/undo-redo.md).
 - Edit together in real time (experimental). Sessions are peer-to-peer and end-to-end encrypted, so no server holds your schema, and peers see each other's cursors, focus, and selections. In your own page, [`getSharedStore()`](../api/advanced/collaborative-editing.md) gives you the same action stream over the transport of your choice.
 

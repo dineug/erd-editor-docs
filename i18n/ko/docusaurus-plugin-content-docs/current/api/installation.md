@@ -12,6 +12,10 @@ npm install @dineug/erd-editor
 이 패키지는 ESM 전용(`"type": "module"`)이며 `dist` 폴더만 배포합니다.
 CommonJS 빌드는 없기 때문에 `require('@dineug/erd-editor')`는 동작하지 않습니다.
 
+런타임 의존성은 번들러가 직접 해석하고 중복 제거하고 트리 셰이킹할 수 있도록 bare import 그대로 외부에 남겨 둡니다.
+shared worker는 `dist/workers/` 아래에 별도 진입 파일로 생성되며 `new URL('./…', import.meta.url)` 형태로 만들어집니다. Vite, webpack 5, Rspack이 워커 진입점으로 인식하는 표기입니다. [Web Worker](#web-worker) 항목을 참고하세요.
+번들러가 없는 페이지를 위한 자립형 빌드도 함께 제공합니다. [script 태그](#script-태그) 항목을 참고하세요.
+
 ## 사용
 
 ```js
@@ -47,7 +51,25 @@ editor.addEventListener('change', () => {
 <script type="module" src="https://esm.run/@dineug/erd-editor"></script>
 ```
 
-버전이 없는 URL은 항상 최신 릴리스를 제공합니다. 메이저 업그레이드가 예고 없이 페이지에 반영되는 것을 원하지 않는다면 `https://esm.run/@dineug/erd-editor@3.4.0`처럼 버전을 고정하세요.
+`esm.run`이 패키지의 외부 의존성을 대신 해석해 주므로 번들러 없이도 동작합니다.
+버전이 없는 URL은 항상 최신 릴리스를 제공합니다. 메이저 업그레이드가 예고 없이 페이지에 반영되는 것을 원하지 않는다면 `https://esm.run/@dineug/erd-editor@3.6.0`처럼 버전을 고정하세요.
+
+### script 태그
+
+`3.6.0`부터 모든 의존성과 두 개의 shared worker를 한 파일에 담은 UMD 빌드도 함께 배포합니다.
+`unpkg`와 `jsdelivr` 필드가 이 파일을 가리키므로 두 CDN의 패키지 기본 URL이 이 파일을 제공하며, `window.ErdEditor`를 정의합니다.
+
+```html
+<erd-editor></erd-editor>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@3.6.0"></script>
+<script>
+  const editor = document.querySelector('erd-editor');
+  editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
+</script>
+```
+
+이 파일을 불러오면 `<erd-editor>`가 동일하게 등록되고, `window.ErdEditor`에 `ErdEditor.setGetShikiServiceCallback` 같은 콜백 설정 함수가 들어 있습니다.
+exports 맵은 여전히 ES 모듈을 가리키므로 npm으로 설치하면 번들러가 이 파일을 사용하지 않습니다.
 
 ### HTML
 
@@ -125,11 +147,36 @@ CDN에서 사용하는 경우:
 </script>
 ```
 
+script 태그에서는 두 UMD 빌드가 정의하는 전역을 사용합니다.
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@3.6.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor-shiki-worker@0.3.0"></script>
+<script>
+  ErdEditor.setGetShikiServiceCallback(ErdEditorShikiWorker.getShikiService);
+</script>
+```
+
 에디터가 마운트되기 전이든 후든 한 번만 등록하면 됩니다. 이미 화면에 열려 있는 패널은 하이라이터가 도착하면 다시 렌더링됩니다.
 SQL, TypeScript, GraphQL, C#, Java, Kotlin, Scala, Go, Python을 지원합니다. `AML`과 `DBML` [코드 생성](../guide/guides/code-generator.md) 대상은 번들에 문법 파일이 없어서 해당 패널은 일반 텍스트로 남습니다.
 
-동작하지 않는 경우는 두 가지입니다. 워커가 `data:` URI로 인라인되기 때문에 CSP가 엄격한 페이지에서는 `worker-src data:`가 필요합니다.
-그리고 `SharedWorker`가 없는 환경(안드로이드 Chrome, 16.4 이전 Safari)에서는 하이라이터가 반환되지 않아 패널이 일반 텍스트로 남습니다.
+`SharedWorker`가 없는 환경(안드로이드 Chrome, 16.4 이전 Safari)에서는 하이라이터가 반환되지 않아 패널이 일반 텍스트로 남습니다.
+
+## Web Worker
+
+에디터는 세 가지 작업을 `SharedWorker`에서 실행합니다. 구문 강조, PNG 내보내기, 문서 가비지 컬렉션입니다.
+따로 설정할 것은 없지만 호스트가 막을 수 있는 작업들이므로, 각각 대체 경로를 가지고 있습니다.
+
+| 워커 | 출처 | 없을 때 |
+| --- | --- | --- |
+| 구문 강조 | `@dineug/erd-editor-shiki-worker`, 직접 등록 | Schema SQL과 Code Generator 패널이 일반 텍스트로 남습니다 |
+| PNG 내보내기 | `@dineug/erd-editor` | 메인 스레드에서 그리므로 그리는 동안 페이지가 멈춥니다 |
+| 스키마 가비지 컬렉션 | `@dineug/erd-editor` | 인프로세스로 실행됩니다 |
+
+에디터가 소유한 두 워커는 응답을 10초까지 기다린 뒤 워커 없이 진행하므로, 워커를 막는 호스트에서는 기능이 사라지는 대신 성능만 손해를 봅니다.
+
+번들 빌드에서는 에디터가 소유한 두 워커가 별도 파일로 함께 배포되므로, CSP가 엄격한 페이지에는 `worker-src 'self'`가 필요합니다. 번들러가 워커를 인라인한다면 `blob:`도 함께 필요합니다.
+[script 태그](#script-태그) 빌드에서는 두 워커가 `data:` URL로 파일 안에 함께 들어가므로, 그 페이지에는 `worker-src data:`가 필요합니다.
 
 ## 진입점
 

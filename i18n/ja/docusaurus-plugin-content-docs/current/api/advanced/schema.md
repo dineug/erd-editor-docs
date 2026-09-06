@@ -34,8 +34,10 @@ type ERDEditorSchemaV3 = {
 type Settings = {
   width: number;
   height: number;
-  scrollTop: number;
-  scrollLeft: number;
+  scrollTop: number; // legacy, read once to migrate
+  scrollLeft: number; // legacy, read once to migrate
+  originX: number;
+  originY: number;
   zoomLevel: number;
   show: number; // Constants: Show
   database: number; // Constants: Database
@@ -130,6 +132,11 @@ const SaveSettingType = {
   zoomLevel: 2,
 } as const;
 ```
+
+`originX` と `originY` は表示位置、つまりシーン座標 `(0, 0)` が画面上で置かれる点です。  
+`scrollTop` と `scrollLeft` は `3.6.0` より前のすべてのエディタが読むレガシーな値です。パーサーは、ドキュメントに原点がない場合にだけこの値を一度読んで `originX` と `originY` を導き出します。もうどこからも書き出されません。そのため、ここで保存したドキュメントを古いエディタで開くと、このバージョンが保存した位置ではなく、そのエディタが最後に見ていた位置で開きます。  
+`width` と `height` はレガシーなキャンバスサイズです。キャンバスに端がなくなったため設定されることはありませんが、古いエディタが読めるように既定値のまま書き出されます。  
+`zoomLevel` は `0.1` から `1.5` までです。`1` を超えて保存したドキュメントは、`3.5.0` より前のエディタでは `1` で開きます。
 
 `show` と `ignoreSaveSettings` はビットマスクです。フラグを OR で結合します。  
 `columnOrder` は `ColumnType` の 7 つの値をすべて表示順で保持する配列です。  
@@ -398,10 +405,16 @@ type MemoUI = {
         "scrollLeft": {
           "type": "number"
         },
+        "originX": {
+          "type": "number"
+        },
+        "originY": {
+          "type": "number"
+        },
         "zoomLevel": {
           "type": "number",
           "minimum": 0.1,
-          "maximum": 1
+          "maximum": 1.5
         },
         "show": {
           "description": "bit value (tableComment: 1) | (columnComment: 2) | (columnDataType: 4) | (columnDefault: 8) | (columnAutoIncrement: 16) | (columnPrimaryKey: 32) | (columnUnique: 64) | (columnNotNull: 128) | (relationship: 256)",

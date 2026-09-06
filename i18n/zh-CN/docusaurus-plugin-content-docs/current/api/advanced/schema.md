@@ -34,8 +34,10 @@ type ERDEditorSchemaV3 = {
 type Settings = {
   width: number;
   height: number;
-  scrollTop: number;
-  scrollLeft: number;
+  scrollTop: number; // legacy, read once to migrate
+  scrollLeft: number; // legacy, read once to migrate
+  originX: number;
+  originY: number;
   zoomLevel: number;
   show: number; // Constants: Show
   database: number; // Constants: Database
@@ -130,6 +132,11 @@ const SaveSettingType = {
   zoomLevel: 2,
 } as const;
 ```
+
+`originX` 和 `originY` 表示视图，也就是场景坐标 `(0, 0)` 落在屏幕上的位置。  
+`scrollTop` 和 `scrollLeft` 是 `3.6.0` 之前所有编辑器都会读取的旧字段。解析器只在文档不带原点时读取它们一次，用以推算出 `originX` 和 `originY`，此后不再有任何地方写入它们。因此在这里保存的文档，用旧版编辑器打开时会停在那个编辑器上次离开的位置，而不是此版本保存的位置。  
+`width` 和 `height` 是旧的画布尺寸。画布已经没有边界，因此不再有任何地方设置它们，但仍会以默认值写出，供旧版编辑器读取。  
+`zoomLevel` 的范围是 `0.1` ~ `1.5`。保存时超过 `1` 的文档在 `3.5.0` 之前的编辑器中会以 `1` 打开。
 
 `show` 和 `ignoreSaveSettings` 是位掩码，将各标志位通过 OR 运算组合。  
 `columnOrder` 是一个数组，按显示顺序保存全部七个 `ColumnType` 值。  
@@ -398,10 +405,16 @@ type MemoUI = {
         "scrollLeft": {
           "type": "number"
         },
+        "originX": {
+          "type": "number"
+        },
+        "originY": {
+          "type": "number"
+        },
         "zoomLevel": {
           "type": "number",
           "minimum": 0.1,
-          "maximum": 1
+          "maximum": 1.5
         },
         "show": {
           "description": "bit value (tableComment: 1) | (columnComment: 2) | (columnDataType: 4) | (columnDefault: 8) | (columnAutoIncrement: 16) | (columnPrimaryKey: 32) | (columnUnique: 64) | (columnNotNull: 128) | (relationship: 256)",

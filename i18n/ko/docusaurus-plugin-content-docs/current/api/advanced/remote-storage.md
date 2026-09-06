@@ -127,7 +127,7 @@ const data = replicationStore.value;
 ```
 
 직렬화할 때 문서의 `ignoreSaveSettings`가 적용됩니다.  
-scroll 비트가 설정되어 있으면 스크롤 위치가 `0`으로, zoom 비트가 설정되어 있으면 확대/축소 레벨이 `1`로 기록됩니다.  
+scroll 비트가 설정되어 있으면 화면 원점이 `0, 0`으로, zoom 비트가 설정되어 있으면 확대/축소 레벨이 `1`로 기록됩니다.  
 해당 비트는 [Schema](./schema.md) 문서를 참고하세요.
 
 ### setInitialValue

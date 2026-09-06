@@ -24,12 +24,13 @@ erd-editor 是一款实体关系图（Entity-Relationship Diagram）编辑器。
 
 ## 主要功能
 
-- 在画布上绘制表、列和备注，并用 `Zero One`、`Zero N`、`One Only`、`One N` 四种关系类型将它们连接起来。参见[开始编辑](./guides/editing-start.md)。索引在表的属性面板中定义。参见 [Indexes](./guides/table-related-functions.md#indexes)。
+- 在没有边界的画布上绘制表、列和备注，并用 `Zero One`、`Zero N`、`One Only`、`One N` 四种关系类型将它们连接起来。参见[开始编辑](./guides/editing-start.md)。索引在表的属性面板中定义。参见 [Indexes](./guides/table-related-functions.md#indexes)。
 - 支持从 `JSON`、`Schema SQL`、`GraphQL`、`DBML` 或 `AML` 导入已有的 schema。参见[导入与导出文件](./guides/file-import-export.md)。
 - 将图导出为 `JSON`、`Schema SQL` 或 `PNG`。
 - 按照 Databricks、MSSQL、MariaDB、MySQL、Oracle、PostgreSQL、Snowflake 和 SQLite 八种数据库厂商的语法编写 Schema SQL。参见[表相关功能](./guides/table-related-functions.md#databases)。
 - 为 C#、Go、Java、Kotlin、Scala、TypeScript、Drizzle、JPA、Sequelize、SQLAlchemy、TypeORM、AML、DBML 和 GraphQL 十四种目标生成代码。参见[代码生成](./guides/code-generator.md)。
-- 在[可视化](./guides/visualization.md)中以力导向图的形式查看 schema。
+- 在[可视化](./guides/visualization.md)中以力导向图的形式查看 schema，悬停在某个表上即可点亮它所触及的一切。
+- 在没有边界的画布上工作：图延伸到哪里就能平移到哪里，缩放范围为 `10%` ~ `150%`，禅模式则只留下图本身。参见[浏览画布](./guides/table-related-functions.md#getting-around-the-canvas)。
 - 通过[快速搜索](./guides/quick-search.md)可以在任意位置查找表或执行命令，通过 [Undo, Redo](./guides/undo-redo.md) 可以逐步浏览编辑历史。
 - 支持实时协同编辑（实验性）。会话基于点对点连接并进行端到端加密，因此不会有任何服务器保存 schema，参与者之间可以看到彼此的光标、焦点和选中内容。在自有页面中，[`getSharedStore()`](../api/advanced/collaborative-editing.md) 可以在任意传输方式上提供相同的操作流。
 

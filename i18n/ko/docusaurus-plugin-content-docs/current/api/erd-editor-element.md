@@ -25,7 +25,14 @@ interface ErdEditorElement extends HTMLElement {
     keyBindingMap: Partial<
       Omit<
         KeyBindingMap,
-        'edit' | 'stop' | 'search' | 'undo' | 'redo' | 'zoomIn' | 'zoomOut'
+        | 'edit'
+        | 'stop'
+        | 'search'
+        | 'undo'
+        | 'redo'
+        | 'zoomIn'
+        | 'zoomOut'
+        | 'zoomReset'
       >
     >
   ) => void;
@@ -53,7 +60,7 @@ interface ErdEditorElement extends HTMLElement {
 
 에디터 편집 가능 여부를 설정합니다.  
 설정된 동안에는 `value` 할당, `clear()`, `setSchemaSQL()`, `setSchemaGraphQL()`, `setSchemaDBML()`, `setSchemaAML()`, Undo, Redo가 모두 무시되고 `change` 이벤트도 발행되지 않습니다. 문서를 불러올 때는 [setInitialValue](#setinitialvalue)를 사용하세요.  
-보기는 그대로 동작합니다. 확대/축소, 스크롤, 캔버스 탭, 데이터베이스 벤더, SQL과 코드 생성 출력 설정이 모두 적용되므로, `readonly` 상태에서도 다른 벤더의 SQL을 내보내거나 생성된 코드를 확인할 수 있습니다.  
+보기는 그대로 동작합니다. 확대/축소, 화면 이동, 손 도구, Zen 모드, 캔버스 탭, 데이터베이스 벤더, SQL과 코드 생성 출력 설정이 모두 적용되므로, `readonly` 상태에서도 다른 벤더의 SQL을 내보내거나 생성된 코드를 확인할 수 있습니다.  
 속성만 쓰거나 `=""`, `="true"`는 모두 `true`로 읽힙니다. `="false"`는 `false`로 읽히고, HTML 관용 표기인 `readonly="readonly"`를 포함해 그 밖의 문자열도 마찬가지입니다.
 
 ```js
@@ -104,7 +111,7 @@ editor.setAttribute('enable-theme-builder', 'true');
 ### getter
 
 현재 에디터 상태를 에디터가 정의한 [스키마](./advanced/schema.md) 형식의 JSON 문자열로 받아옵니다.  
-직렬화할 때 해당 문서의 `ignoreSaveSettings`가 적용되어, 스크롤 비트가 설정되어 있으면 스크롤 위치가 `0`으로, 확대/축소 비트가 설정되어 있으면 확대/축소 레벨이 `1`로 기록됩니다.
+직렬화할 때 해당 문서의 `ignoreSaveSettings`가 적용되어, 스크롤 비트가 설정되어 있으면 화면 원점이 `0, 0`으로, 확대/축소 비트가 설정되어 있으면 확대/축소 레벨이 `1`로 기록됩니다.
 
 ```js
 const data = editor.value;
@@ -207,8 +214,8 @@ editor.destroy();
 ## setKeyBindingMap
 
 단축키를 재정의합니다.  
-`edit`, `stop`, `search`, `undo`, `redo`, `zoomIn`, `zoomOut`은 고정이며 재정의할 수 없습니다.  
-아래 13개 이름만 적용되고, 고정된 이름을 포함해 객체의 나머지 값은 무시됩니다.  
+`edit`, `stop`, `search`, `undo`, `redo`, `zoomIn`, `zoomOut`, `zoomReset`은 고정이며 재정의할 수 없습니다.  
+아래 15개 이름만 적용되고, 고정된 이름을 포함해 객체의 나머지 값은 무시됩니다.  
 값은 `ShortcutOption[]`이어야 합니다. 문자열만 전달하면 무시되므로 `{ addTable: 'Alt+KeyN' }`이 아니라 `{ addTable: [{ shortcut: 'Alt+KeyN' }] }`으로 작성하세요.  
 호출은 부분 병합이라 생략한 이름은 기본값을 유지하고, 두 번 호출해도 앞선 변경이 유지됩니다. 현재 설정을 읽는 getter는 없습니다.
 
@@ -221,7 +228,14 @@ type ShortcutOption = {
 
 const defaultKeyBindingMap: Omit<
   KeyBindingMap,
-  'edit' | 'stop' | 'search' | 'undo' | 'redo' | 'zoomIn' | 'zoomOut'
+  | 'edit'
+  | 'stop'
+  | 'search'
+  | 'undo'
+  | 'redo'
+  | 'zoomIn'
+  | 'zoomOut'
+  | 'zoomReset'
 > = {
   addTable: [{ shortcut: 'Alt+KeyN', preventDefault: true }],
   addColumn: [{ shortcut: 'Alt+Enter', preventDefault: true }],
@@ -235,13 +249,18 @@ const defaultKeyBindingMap: Omit<
     { shortcut: 'Alt+Delete', preventDefault: true },
   ],
   primaryKey: [{ shortcut: 'Alt+KeyK', preventDefault: true }],
-  selectAllTable: [{ shortcut: '$mod+Alt+KeyA', preventDefault: true }],
+  selectAllTable: [
+    { shortcut: '$mod+KeyA', preventDefault: true },
+    { shortcut: '$mod+Alt+KeyA', preventDefault: true },
+  ],
   selectAllColumn: [{ shortcut: 'Alt+KeyA', preventDefault: true }],
   relationshipZeroOne: [{ shortcut: '$mod+Alt+Digit1', preventDefault: true }],
   relationshipZeroN: [{ shortcut: '$mod+Alt+Digit2', preventDefault: true }],
   relationshipOneOnly: [{ shortcut: '$mod+Alt+Digit3', preventDefault: true }],
   relationshipOneN: [{ shortcut: '$mod+Alt+Digit4', preventDefault: true }],
   tableProperties: [{ shortcut: 'Alt+Space', preventDefault: true }],
+  handTool: [{ shortcut: 'Space', preventDefault: true }],
+  zenMode: [{ shortcut: 'Alt+KeyZ', preventDefault: true }],
 };
 
 // example
@@ -249,6 +268,8 @@ editor.setKeyBindingMap({
   addTable: [{ shortcut: '$mod+KeyN', preventDefault: true }],
 });
 ```
+
+`selectAllTable`과 `handTool`은 커서에 양보합니다. 포커스가 input, textarea, `contenteditable` 안에 있는 동안에는 `$mod + A`가 텍스트를 선택하고 `Space`는 공백을 입력하며, 캔버스까지 전달되지 않습니다. 다른 단축키로 재정의해도 동작은 같습니다.
 
 ### $mod
 
@@ -515,7 +536,7 @@ erd-editor {
 ## setSchemaSQL
 
 Schema SQL 파일을 불러옵니다.  
-현재 문서에 병합하지 않고 교체합니다. 캔버스 크기, 스크롤 위치, 확대/축소 레벨을 제외한 기존 설정은 유지되며, 파일을 읽고 나면 테이블이 자동으로 배치됩니다.  
+현재 문서에 병합하지 않고 교체합니다. 화면 위치와 확대/축소 레벨을 제외한 기존 설정은 유지되며, 파일을 읽고 나면 테이블이 자동으로 배치됩니다.  
 히스토리 목록에 기록되어 `Undo, Redo`가 가능하고, `change` 이벤트를 발행합니다. 빈 문자열은 무시되고, `readonly`가 설정된 동안에는 아무 동작도 하지 않습니다.  
 `setSchemaGraphQL`, `setSchemaDBML`, `setSchemaAML`도 동일하게 동작하며, 각 파서는 실패하지 않습니다. 읽을 수 없는 텍스트는 에러가 아니라 빈 문서로 불러옵니다.  
 각 파서가 지원하는 문법은 [파일 가져오기와 내보내기](../guide/guides/file-import-export.md) 문서를 참고하세요.

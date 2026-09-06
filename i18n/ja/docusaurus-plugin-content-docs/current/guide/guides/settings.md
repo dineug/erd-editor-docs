@@ -1,6 +1,6 @@
 ---
 sidebar_position: 10
-description: リレーションシップのデータ型同期、スクロールと拡大・縮小の保存、コメントの最大幅、テーブル幅の再計算、カラムの表示順、ショートカット一覧。
+description: リレーションシップのデータ型同期、表示位置と拡大・縮小の保存、コメントの最大幅、テーブル幅の再計算、カラムの表示順、ショートカット一覧。
 ---
 
 # 設定
@@ -22,8 +22,8 @@ description: リレーションシップのデータ型同期、スクロール�
 
 ## スクロール情報の保存
 
-スクロール位置をドキュメントに保存するかどうかを設定します。既定で有効です。
-オフにすると、スクロール位置をリセットした状態でドキュメントに保存されるため、開いたときは左上が表示されます。
+表示位置をドキュメントに保存するかどうかを設定します。既定で有効です。
+オフにすると、表示位置をリセットした状態でドキュメントに保存されるため、最後に見ていた位置ではなくダイアグラムが見える位置で開きます。
 
 ## 拡大・縮小情報の保存
 
@@ -70,7 +70,7 @@ description: リレーションシップのデータ型同期、スクロール�
 | Remove Table, Memo | `Ctrl + Backspace`, `Ctrl + Delete` | `⌘ + Backspace`, `⌘ + Delete` |
 | Remove Column | `Alt + Backspace`, `Alt + Delete` | `⌥ + Backspace`, `⌥ + Delete` |
 | Primary Key | `Alt + K` | `⌥ + K` |
-| Select All Table, Memo | `Ctrl + Alt + A` | `⌘ + ⌥ + A` |
+| Select All Table, Memo | `Ctrl + A`, `Ctrl + Alt + A` | `⌘ + A`, `⌘ + ⌥ + A` |
 | Select All Column | `Alt + A` | `⌥ + A` |
 | Relationship Zero One | `Ctrl + Alt + 1` | `⌘ + ⌥ + 1` |
 | Relationship Zero N | `Ctrl + Alt + 2` | `⌘ + ⌥ + 2` |
@@ -79,10 +79,14 @@ description: リレーションシップのデータ型同期、スクロール�
 | Table Properties | `Alt + Space` | `⌥ + Space` |
 | Zoom In | `Ctrl + Plus` | `⌘ + Plus` |
 | Zoom Out | `Ctrl + Minus` | `⌘ + Minus` |
+| Zoom Reset | `Ctrl + O` | `⌘ + O` |
+| Hand Tool | `Space` | `Space` |
+| Zen Mode | `Alt + Z` | `⌥ + Z` |
 
 これらの多くは ERD タブでのみ動作し、クイック検索、テーブルのプロパティ、Diff Viewer、テーブルの自動配置、Time Travel が開いている間は無効になります。
 `Search` と `Stop` は例外です。`Search` はどのタブからでもクイック検索を開閉し、`Stop` はクイック検索、テーブルのプロパティ、Diff Viewer、テーブルの自動配置、Time Travel、テーマビルダーを閉じます。
+`Select All Table, Memo` と `Hand Tool` はキャレットに譲ります。セルの編集中は `Ctrl + A` がテキストを選択し、`Space` は空白を入力します。
 コピーと貼り付けはブラウザ標準の `Ctrl + C` と `Ctrl + V` (Windows/Linux) または `⌘ + C` と `⌘ + V` (Mac) のため、この一覧には含まれていません。[テーブルの編集](./table-editing.md)を参照してください。
 
 このタブからキー割り当てを変更することはできません。
-エディタを組み込むホストは [`setKeyBindingMap`](../../api/erd-editor-element.md#setkeybindingmap) で変更できますが、`Editing`、`Stop`、`Search`、`Undo`、`Redo`、`Zoom In`、`Zoom Out` は固定です。
+エディタを組み込むホストは [`setKeyBindingMap`](../../api/erd-editor-element.md#setkeybindingmap) で変更できますが、`Editing`、`Stop`、`Search`、`Undo`、`Redo`、`Zoom In`、`Zoom Out`、`Zoom Reset` は固定です。

@@ -25,7 +25,14 @@ interface ErdEditorElement extends HTMLElement {
     keyBindingMap: Partial<
       Omit<
         KeyBindingMap,
-        'edit' | 'stop' | 'search' | 'undo' | 'redo' | 'zoomIn' | 'zoomOut'
+        | 'edit'
+        | 'stop'
+        | 'search'
+        | 'undo'
+        | 'redo'
+        | 'zoomIn'
+        | 'zoomOut'
+        | 'zoomReset'
       >
     >
   ) => void;
@@ -53,7 +60,7 @@ interface ErdEditorElement extends HTMLElement {
 
 エディタの編集可否を設定します。  
 設定されている間は、`value` への代入、`clear()`、`setSchemaSQL()`、`setSchemaGraphQL()`、`setSchemaDBML()`、`setSchemaAML()`、undo、redo がすべて無視され、`change` イベントも発行されません。ドキュメントの読み込みには [setInitialValue](#setinitialvalue) を使用します。  
-表示は引き続き動作します。拡大・縮小、スクロール、キャンバスのタブ、データベースベンダー、SQL とコード生成の出力設定はそのまま適用されるため、読み取り専用のビューアーでも別のベンダー向けの SQL を書き出したり、生成されたコードを読んだりできます。  
+表示は引き続き動作します。拡大・縮小、表示位置の移動、ハンドツール、Zen モード、キャンバスのタブ、データベースベンダー、SQL とコード生成の出力設定はそのまま適用されるため、読み取り専用のビューアーでも別のベンダー向けの SQL を書き出したり、生成されたコードを読んだりできます。  
 属性名のみの指定、`=""`、`="true"` はいずれも `true` として扱われます。`="false"` は `false` として扱われ、HTML の慣用表現である `readonly="readonly"` を含むその他の文字列も同様です。
 
 ```js
@@ -104,7 +111,7 @@ editor.setAttribute('enable-theme-builder', 'true');
 ### getter
 
 現在のエディタの状態を、エディタが定義する[スキーマ](./advanced/schema.md)の JSON 文字列として取得します。  
-シリアライズの際にはドキュメントの `ignoreSaveSettings` が適用され、スクロールのビットが設定されている場合はスクロール位置が `0`、拡大・縮小のビットが設定されている場合は拡大・縮小のレベルが `1` として書き出されます。
+シリアライズの際にはドキュメントの `ignoreSaveSettings` が適用され、スクロールのビットが設定されている場合は表示の原点が `0, 0`、拡大・縮小のビットが設定されている場合は拡大・縮小のレベルが `1` として書き出されます。
 
 ```js
 const data = editor.value;
@@ -207,8 +214,8 @@ editor.destroy();
 ## setKeyBindingMap
 
 キーボードショートカットを再定義します。  
-`edit`、`stop`、`search`、`undo`、`redo`、`zoomIn`、`zoomOut` は固定で、再定義できません。  
-書き込めるのは次の 13 個の名前だけで、固定の名前を含め、オブジェクト内のそれ以外の値は無視されます。  
+`edit`、`stop`、`search`、`undo`、`redo`、`zoomIn`、`zoomOut`、`zoomReset` は固定で、再定義できません。  
+書き込めるのは次の 15 個の名前だけで、固定の名前を含め、オブジェクト内のそれ以外の値は無視されます。  
 バインディングの値は `ShortcutOption[]` である必要があります。文字列だけの指定は無視されるため、`{ addTable: 'Alt+KeyN' }` ではなく `{ addTable: [{ shortcut: 'Alt+KeyN' }] }` と記述します。  
 呼び出しは部分的なマージです。指定しなかった名前は既定値のまま維持され、2 回呼び出しても以前の変更は保持されます。現在のバインディングを取得する getter はありません。
 
@@ -221,7 +228,14 @@ type ShortcutOption = {
 
 const defaultKeyBindingMap: Omit<
   KeyBindingMap,
-  'edit' | 'stop' | 'search' | 'undo' | 'redo' | 'zoomIn' | 'zoomOut'
+  | 'edit'
+  | 'stop'
+  | 'search'
+  | 'undo'
+  | 'redo'
+  | 'zoomIn'
+  | 'zoomOut'
+  | 'zoomReset'
 > = {
   addTable: [{ shortcut: 'Alt+KeyN', preventDefault: true }],
   addColumn: [{ shortcut: 'Alt+Enter', preventDefault: true }],
@@ -235,13 +249,18 @@ const defaultKeyBindingMap: Omit<
     { shortcut: 'Alt+Delete', preventDefault: true },
   ],
   primaryKey: [{ shortcut: 'Alt+KeyK', preventDefault: true }],
-  selectAllTable: [{ shortcut: '$mod+Alt+KeyA', preventDefault: true }],
+  selectAllTable: [
+    { shortcut: '$mod+KeyA', preventDefault: true },
+    { shortcut: '$mod+Alt+KeyA', preventDefault: true },
+  ],
   selectAllColumn: [{ shortcut: 'Alt+KeyA', preventDefault: true }],
   relationshipZeroOne: [{ shortcut: '$mod+Alt+Digit1', preventDefault: true }],
   relationshipZeroN: [{ shortcut: '$mod+Alt+Digit2', preventDefault: true }],
   relationshipOneOnly: [{ shortcut: '$mod+Alt+Digit3', preventDefault: true }],
   relationshipOneN: [{ shortcut: '$mod+Alt+Digit4', preventDefault: true }],
   tableProperties: [{ shortcut: 'Alt+Space', preventDefault: true }],
+  handTool: [{ shortcut: 'Space', preventDefault: true }],
+  zenMode: [{ shortcut: 'Alt+KeyZ', preventDefault: true }],
 };
 
 // example
@@ -249,6 +268,8 @@ editor.setKeyBindingMap({
   addTable: [{ shortcut: '$mod+KeyN', preventDefault: true }],
 });
 ```
+
+`selectAllTable` と `handTool` はキャレットに譲ります。フォーカスが input、textarea、`contenteditable` の中にある間は `$mod + A` がテキストを選択し、`Space` は空白を入力して、キャンバスには届きません。別のショートカットに再定義しても動作は同じです。
 
 ### $mod
 
@@ -515,7 +536,7 @@ erd-editor {
 ## setSchemaSQL
 
 Schema SQL ファイルを読み込みます。  
-現在のドキュメントにマージするのではなく、置き換えます。キャンバスのサイズ、スクロール位置、拡大・縮小のレベルを除いて既存の設定は維持され、ファイルの読み込み後にテーブルが自動で配置されます。  
+現在のドキュメントにマージするのではなく、置き換えます。表示位置と拡大・縮小のレベルを除いて既存の設定は維持され、ファイルの読み込み後にテーブルが自動で配置されます。  
 履歴に記録されるため `Undo, Redo` が可能で、`change` を発行します。空文字列は無視され、`readonly` が設定されている間は何も行いません。  
 `setSchemaGraphQL`、`setSchemaDBML`、`setSchemaAML` も同じように動作し、これらのパーサーは失敗しません。解析できないテキストはエラーにならず、空のドキュメントを読み込みます。  
 各パーサーが受け付ける構文については[ファイルの読み込みと書き出し](../guide/guides/file-import-export.md)を参照してください。

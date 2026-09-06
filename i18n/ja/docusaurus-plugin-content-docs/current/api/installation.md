@@ -12,6 +12,10 @@ npm install @dineug/erd-editor
 このパッケージは ESM 専用（`"type": "module"`）で、`dist` フォルダのみを配布します。
 CommonJS ビルドはないため、`require('@dineug/erd-editor')` は動作しません。
 
+ランタイム依存は、利用側のバンドラーが解決・重複排除・ツリーシェイクできるよう、bare import のまま外部に残しています。
+shared worker は `dist/workers/` 以下に別々のエントリーファイルとして出力され、`new URL('./…', import.meta.url)` の形で生成されます。Vite、webpack 5、Rspack がワーカーのエントリーとして解釈する書き方です。[Web Worker](#web-worker) を参照してください。
+バンドラーのないページ向けには、自己完結したビルドも用意しています。[script タグ](#script-タグ)を参照してください。
+
 ## 使い方
 
 ```js
@@ -47,7 +51,25 @@ editor.addEventListener('change', () => {
 <script type="module" src="https://esm.run/@dineug/erd-editor"></script>
 ```
 
-バージョンを指定しない URL は常に最新のリリースを配信します。メジャーアップグレードが予告なくページに反映されるのを避けたい場合は、`https://esm.run/@dineug/erd-editor@3.4.0` のようにバージョンを固定します。
+`esm.run` がパッケージの外部依存を解決してくれるため、バンドラーなしでも動作します。
+バージョンを指定しない URL は常に最新のリリースを配信します。メジャーアップグレードが予告なくページに反映されるのを避けたい場合は、`https://esm.run/@dineug/erd-editor@3.6.0` のようにバージョンを固定します。
+
+### script タグ
+
+`3.6.0` からは、すべての依存と 2 つの shared worker を 1 つのファイルに収めた UMD ビルドも配布しています。
+`unpkg` と `jsdelivr` のフィールドがこのファイルを指しているため、どちらの CDN でもパッケージのベース URL がこのファイルを配信し、`window.ErdEditor` を定義します。
+
+```html
+<erd-editor></erd-editor>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@3.6.0"></script>
+<script>
+  const editor = document.querySelector('erd-editor');
+  editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
+</script>
+```
+
+読み込むと `<erd-editor>` が同じように登録され、`window.ErdEditor` に `ErdEditor.setGetShikiServiceCallback` などのコールバック設定関数が入っています。
+exports マップは引き続き ES モジュールを指しているため、npm からインストールした場合にこのファイルが使われることはありません。
 
 ### HTML
 
@@ -125,11 +147,36 @@ CDN から読み込む場合は次のとおりです。
 </script>
 ```
 
+script タグからは、2 つの UMD ビルドが定義するグローバルを使います。
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@3.6.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor-shiki-worker@0.3.0"></script>
+<script>
+  ErdEditor.setGetShikiServiceCallback(ErdEditorShikiWorker.getShikiService);
+</script>
+```
+
 登録は一度だけで、エディタの設置前でも設置後でも構いません。すでに表示されているパネルは、ハイライターが届いた時点で再描画されます。
 対応している言語は SQL、TypeScript、GraphQL、C#、Java、Kotlin、Scala、Go、Python です。[コード生成](../guide/guides/code-generator.md)の `AML` と `DBML` はバンドルに文法定義がないため、これらのパネルはプレーンテキストのままです。
 
-動作を妨げる要因が 2 つあります。ワーカーは `data:` URI としてインライン化しているため、CSP が厳しいページでは `worker-src data:` が必要です。
 `SharedWorker` がない環境、つまり Android の Chrome や 16.4 より前の Safari では、ハイライターが返されず、パネルはプレーンテキストのままです。
+
+## Web Worker
+
+エディタは 3 つの処理を `SharedWorker` で実行します。構文ハイライト、PNG の書き出し、ドキュメントのガベージコレクションです。
+どれも設定するものではありませんが、ホスト側で塞げるものでもあるため、それぞれに代替経路があります。
+
+| ワーカー | 提供元 | ない場合 |
+| --- | --- | --- |
+| 構文ハイライト | `@dineug/erd-editor-shiki-worker`、自分で登録します | Schema SQL と Code Generator のパネルがプレーンテキストのままになります |
+| PNG の書き出し | `@dineug/erd-editor` | メインスレッドで描画するため、描画中はページが止まります |
+| スキーマのガベージコレクション | `@dineug/erd-editor` | インプロセスで実行されます |
+
+エディタが持つ 2 つのワーカーは応答を 10 秒待ってからワーカーなしで進むため、ワーカーを塞ぐホストでは機能が失われるのではなく性能だけが落ちます。
+
+バンドル向けのビルドでは、エディタが持つ 2 つのワーカーが別ファイルとして一緒に配布されるため、CSP が厳しいページでは `worker-src 'self'` が必要です。バンドラーがワーカーをインライン化する場合は `blob:` も必要になります。
+[script タグ](#script-タグ)のビルドでは 2 つのワーカーが `data:` URL としてファイルの中に入るため、そのページでは `worker-src data:` が必要です。
 
 ## エントリーポイント
 

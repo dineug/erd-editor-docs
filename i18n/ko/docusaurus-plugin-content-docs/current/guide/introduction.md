@@ -24,12 +24,13 @@ IDE에서 사용해 보려면 `.erd.json` 확장자로 빈 파일을 만들어 �
 
 ## 주요 기능
 
-- 캔버스에 테이블, 컬럼, 메모를 그리고 `Zero One`, `Zero N`, `One Only`, `One N` 4가지 관계 타입으로 연결합니다. [편집 시작하기](./guides/editing-start.md) 문서를 참고하세요. 인덱스는 테이블 속성 패널에서 정의합니다. [Indexes](./guides/table-related-functions.md#인덱스) 문서를 참고하세요.
+- 경계가 없는 캔버스에 테이블, 컬럼, 메모를 그리고 `Zero One`, `Zero N`, `One Only`, `One N` 4가지 관계 타입으로 연결합니다. [편집 시작하기](./guides/editing-start.md) 문서를 참고하세요. 인덱스는 테이블 속성 패널에서 정의합니다. [Indexes](./guides/table-related-functions.md#인덱스) 문서를 참고하세요.
 - 기존 스키마를 `JSON`, `Schema SQL`, `GraphQL`, `DBML`, `AML`에서 가져옵니다. [파일 가져오기와 내보내기](./guides/file-import-export.md) 문서를 참고하세요.
 - 다이어그램을 `JSON`, `Schema SQL`, `PNG`로 내보냅니다.
 - Databricks, MSSQL, MariaDB, MySQL, Oracle, PostgreSQL, Snowflake, SQLite 8가지 데이터베이스 벤더의 문법으로 Schema SQL을 작성합니다. [테이블 관련 기능](./guides/table-related-functions.md#데이터베이스) 문서를 참고하세요.
 - C#, Go, Java, Kotlin, Scala, TypeScript, Drizzle, JPA, Sequelize, SQLAlchemy, TypeORM, AML, DBML, GraphQL 14가지 대상으로 코드를 생성합니다. [코드 생성](./guides/code-generator.md) 문서를 참고하세요.
-- [시각화](./guides/visualization.md)에서 스키마를 force-directed 그래프로 확인합니다.
+- [시각화](./guides/visualization.md)에서 스키마를 force-directed 그래프로 확인하고, 테이블에 마우스를 올려 그 테이블이 닿아 있는 것들을 한눈에 봅니다.
+- 경계 없는 캔버스에서 작업합니다. 다이어그램이 뻗어 나가는 곳이면 어디든 이동하고, `10%`부터 `150%`까지 확대/축소하며, Zen 모드로 다이어그램만 남깁니다. [캔버스 이동](./guides/table-related-functions.md#캔버스-이동) 문서를 참고하세요.
 - [빠른 검색](./guides/quick-search.md)으로 어디서든 테이블을 찾거나 명령을 실행하고, [Undo, Redo](./guides/undo-redo.md)로 편집 히스토리를 하나씩 오갑니다.
 - 실시간으로 함께 편집합니다(실험적). 세션은 peer-to-peer이며 종단간 암호화되어 있어 어떤 서버도 스키마를 보관하지 않고, 참여자끼리 서로의 커서, 포커스, 선택 영역을 볼 수 있습니다. 직접 만든 페이지에서는 [`getSharedStore()`](../api/advanced/collaborative-editing.md)로 원하는 전송 방식 위에서 동일한 액션 스트림을 사용할 수 있습니다.
 

@@ -25,7 +25,14 @@ interface ErdEditorElement extends HTMLElement {
     keyBindingMap: Partial<
       Omit<
         KeyBindingMap,
-        'edit' | 'stop' | 'search' | 'undo' | 'redo' | 'zoomIn' | 'zoomOut'
+        | 'edit'
+        | 'stop'
+        | 'search'
+        | 'undo'
+        | 'redo'
+        | 'zoomIn'
+        | 'zoomOut'
+        | 'zoomReset'
       >
     >
   ) => void;
@@ -53,7 +60,7 @@ Nothing inside can be reached with a selector — style it through [setTheme](#s
 
 Sets the editing capability of the editor.  
 While it is set, assigning `value`, `clear()`, `setSchemaSQL()`, `setSchemaGraphQL()`, `setSchemaDBML()`, `setSchemaAML()`, undo, and redo are all ignored, and the `change` event is never emitted. Load a document with [setInitialValue](#setinitialvalue) instead.  
-Viewing still works: zoom, scroll, the canvas tab, the database vendor, and the SQL and code generator output settings all still apply, so a read-only viewer can still export SQL for another vendor or read generated code.  
+Viewing still works: zoom, panning, the hand tool, zen mode, the canvas tab, the database vendor, and the SQL and code generator output settings all still apply, so a read-only viewer can still export SQL for another vendor or read generated code.  
 A bare attribute, `=""`, and `="true"` all read as `true`. `="false"` reads as `false`, and so does any other string — including the HTML idiom `readonly="readonly"`.
 
 ```js
@@ -104,7 +111,7 @@ Changing the preset theme from this panel emits the [changePresetTheme](#changep
 ### getter
 
 Retrieves the current editor state as a JSON string, in the [schema](./advanced/schema.md) the editor defines.  
-The document's own `ignoreSaveSettings` is applied while serializing: with the scroll bit set the scroll position is written as `0`, and with the zoom bit set the zoom level is written as `1`.
+The document's own `ignoreSaveSettings` is applied while serializing: with the scroll bit set the view origin is written as `0, 0`, and with the zoom bit set the zoom level is written as `1`.
 
 ```js
 const data = editor.value;
@@ -207,8 +214,8 @@ editor.destroy();
 ## setKeyBindingMap
 
 Redefines keyboard shortcuts.  
-`edit`, `stop`, `search`, `undo`, `redo`, `zoomIn` and `zoomOut` are fixed and cannot be redefined.  
-Only the thirteen names below are written; anything else in the object is ignored, including the fixed names.  
+`edit`, `stop`, `search`, `undo`, `redo`, `zoomIn`, `zoomOut` and `zoomReset` are fixed and cannot be redefined.  
+Only the fifteen names below are written; anything else in the object is ignored, including the fixed names.  
 A binding value must be a `ShortcutOption[]`. A bare string is ignored, so write `{ addTable: [{ shortcut: 'Alt+KeyN' }] }` rather than `{ addTable: 'Alt+KeyN' }`.  
 The call is a partial merge: names you leave out keep their defaults, and calling it twice keeps the earlier changes. There is no getter for the current bindings.
 
@@ -221,7 +228,14 @@ type ShortcutOption = {
 
 const defaultKeyBindingMap: Omit<
   KeyBindingMap,
-  'edit' | 'stop' | 'search' | 'undo' | 'redo' | 'zoomIn' | 'zoomOut'
+  | 'edit'
+  | 'stop'
+  | 'search'
+  | 'undo'
+  | 'redo'
+  | 'zoomIn'
+  | 'zoomOut'
+  | 'zoomReset'
 > = {
   addTable: [{ shortcut: 'Alt+KeyN', preventDefault: true }],
   addColumn: [{ shortcut: 'Alt+Enter', preventDefault: true }],
@@ -235,13 +249,18 @@ const defaultKeyBindingMap: Omit<
     { shortcut: 'Alt+Delete', preventDefault: true },
   ],
   primaryKey: [{ shortcut: 'Alt+KeyK', preventDefault: true }],
-  selectAllTable: [{ shortcut: '$mod+Alt+KeyA', preventDefault: true }],
+  selectAllTable: [
+    { shortcut: '$mod+KeyA', preventDefault: true },
+    { shortcut: '$mod+Alt+KeyA', preventDefault: true },
+  ],
   selectAllColumn: [{ shortcut: 'Alt+KeyA', preventDefault: true }],
   relationshipZeroOne: [{ shortcut: '$mod+Alt+Digit1', preventDefault: true }],
   relationshipZeroN: [{ shortcut: '$mod+Alt+Digit2', preventDefault: true }],
   relationshipOneOnly: [{ shortcut: '$mod+Alt+Digit3', preventDefault: true }],
   relationshipOneN: [{ shortcut: '$mod+Alt+Digit4', preventDefault: true }],
   tableProperties: [{ shortcut: 'Alt+Space', preventDefault: true }],
+  handTool: [{ shortcut: 'Space', preventDefault: true }],
+  zenMode: [{ shortcut: 'Alt+KeyZ', preventDefault: true }],
 };
 
 // example
@@ -249,6 +268,8 @@ editor.setKeyBindingMap({
   addTable: [{ shortcut: '$mod+KeyN', preventDefault: true }],
 });
 ```
+
+`selectAllTable` and `handTool` give way to a caret: while the focus is in an input, a textarea, or a `contenteditable`, `$mod + A` selects the text and `Space` types a space instead of reaching the canvas. Whatever you rebind them to behaves the same way.
 
 ### $mod
 
@@ -515,7 +536,7 @@ Since `3.4.0` the misspelled `dargSelect` tokens are spelled `dragSelect`, and t
 ## setSchemaSQL
 
 Loads a Schema SQL file.  
-It replaces the current document rather than merging into it. The settings you already have are kept, apart from the canvas size, scroll position, and zoom level, and the tables are placed automatically once the file is read.  
+It replaces the current document rather than merging into it. The settings you already have are kept, apart from the view position and the zoom level, and the tables are placed automatically once the file is read.  
 It is recorded in the history list, enabling `Undo, Redo`, and it emits `change`. An empty string is ignored, and the call does nothing while `readonly` is set.  
 `setSchemaGraphQL`, `setSchemaDBML`, and `setSchemaAML` behave the same way, and their parsers never fail: text they cannot read loads an empty document rather than raising an error.  
 See [Importing or Exporting Files](../guide/guides/file-import-export.md) for the syntax each parser accepts.

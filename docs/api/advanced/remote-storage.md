@@ -127,7 +127,7 @@ const data = replicationStore.value;
 ```
 
 The document's own `ignoreSaveSettings` is applied while serializing.  
-With the scroll bit set the scroll position is written as `0`, and with the zoom bit set the zoom level is written as `1`.  
+With the scroll bit set the view origin is written as `0, 0`, and with the zoom bit set the zoom level is written as `1`.  
 See [Schema](./schema.md) for those bits.
 
 ### setInitialValue

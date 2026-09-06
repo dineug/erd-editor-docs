@@ -12,6 +12,10 @@ npm install @dineug/erd-editor
 该包仅支持 ESM（`"type": "module"`），并且只发布 `dist` 目录。
 没有 CommonJS 构建，因此 `require('@dineug/erd-editor')` 无法使用。
 
+运行时依赖都以 bare import 的形式留在外部，交由你的打包器解析、去重和 tree-shaking。
+其中的 shared worker 会作为独立的入口文件输出到 `dist/workers/` 下，并通过 `new URL('./…', import.meta.url)` 构造——这正是 Vite、webpack 5 和 Rspack 识别为 worker 入口的写法。参见 [Web Worker](#web-worker)。
+对于没有打包器的页面，还提供了一份自包含的构建，参见 [script 标签](#script-标签)。
+
 ## 使用
 
 ```js
@@ -47,7 +51,25 @@ editor.addEventListener('change', () => {
 <script type="module" src="https://esm.run/@dineug/erd-editor"></script>
 ```
 
-不带版本号的 URL 始终提供最新的发布版本。如果不希望大版本升级在毫无预告的情况下进入页面，可以像 `https://esm.run/@dineug/erd-editor@3.4.0` 这样固定版本。
+`esm.run` 会替你解析该包的外部依赖，因此无需打包器也能工作。
+不带版本号的 URL 始终提供最新的发布版本。如果不希望大版本升级在毫无预告的情况下进入页面，可以像 `https://esm.run/@dineug/erd-editor@3.6.0` 这样固定版本。
+
+### script 标签
+
+从 `3.6.0` 起，该包还会发布一份 UMD 构建，把所有依赖和两个 shared worker 都装进同一个文件。
+`unpkg` 与 `jsdelivr` 字段指向的就是它，因此这两个 CDN 上该包的基础 URL 提供的都是这个文件，它会定义 `window.ErdEditor`。
+
+```html
+<erd-editor></erd-editor>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@3.6.0"></script>
+<script>
+  const editor = document.querySelector('erd-editor');
+  editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
+</script>
+```
+
+引入它同样会注册 `<erd-editor>`，`window.ErdEditor` 上带有各个回调 setter，例如 `ErdEditor.setGetShikiServiceCallback`。
+exports 映射仍然指向 ES 模块，因此从 npm 安装时打包器不会用到这个文件。
 
 ### HTML
 
@@ -125,11 +147,36 @@ import('@dineug/erd-editor-shiki-worker').then(({ getShikiService }) => {
 </script>
 ```
 
+在 script 标签中，则通过两份 UMD 构建定义的全局变量使用：
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@3.6.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor-shiki-worker@0.3.0"></script>
+<script>
+  ErdEditor.setGetShikiServiceCallback(ErdEditorShikiWorker.getShikiService);
+</script>
+```
+
 注册一次即可，在编辑器挂载之前或之后都可以。已经显示在屏幕上的面板会在高亮器就绪后重新渲染。
 支持 SQL、TypeScript、GraphQL、C#、Java、Kotlin、Scala、Go 和 Python。[代码生成](../guide/guides/code-generator.md)的 `AML` 与 `DBML` 目标在包中没有对应的语法文件，因此这些面板仍为纯文本。
 
-有两种情况会让它无法工作。由于 worker 会以 `data:` URI 的形式内联，CSP 严格的页面需要 `worker-src data:`。
 在没有 `SharedWorker` 的环境中（Android 上的 Chrome、16.4 之前的 Safari），不会返回高亮器，面板仍为纯文本。
+
+## Web Worker
+
+编辑器会在 `SharedWorker` 中运行三件事：语法高亮、PNG 导出，以及文档自身的垃圾回收。
+它们都不需要你来配置，但都可能被宿主环境阻止，因此每一项都有退路。
+
+| Worker | 来源 | 缺少时 |
+| --- | --- | --- |
+| 语法高亮 | `@dineug/erd-editor-shiki-worker`，由你注册 | Schema SQL 与 Code Generator 面板保持纯文本 |
+| PNG 导出 | `@dineug/erd-editor` | 改在主线程绘制，绘制期间页面会卡住 |
+| Schema 垃圾回收 | `@dineug/erd-editor` | 改为进程内运行 |
+
+编辑器自带的这两个 worker 最多等待十秒，之后便不再依赖 worker 继续执行，因此阻止 worker 的宿主环境损失的是性能而不是功能。
+
+在打包构建中，编辑器自带的两个 worker 会作为独立文件一同发布，因此 CSP 严格的页面需要 `worker-src 'self'`；如果你的打包器把 worker 内联，还需要加上 `blob:`。
+在 [script 标签](#script-标签)构建中，两个 worker 都以 `data:` URL 的形式装在文件里，因此这类页面需要的是 `worker-src data:`。
 
 ## 入口点
 

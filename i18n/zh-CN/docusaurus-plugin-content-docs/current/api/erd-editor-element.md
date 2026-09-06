@@ -25,7 +25,14 @@ interface ErdEditorElement extends HTMLElement {
     keyBindingMap: Partial<
       Omit<
         KeyBindingMap,
-        'edit' | 'stop' | 'search' | 'undo' | 'redo' | 'zoomIn' | 'zoomOut'
+        | 'edit'
+        | 'stop'
+        | 'search'
+        | 'undo'
+        | 'redo'
+        | 'zoomIn'
+        | 'zoomOut'
+        | 'zoomReset'
       >
     >
   ) => void;
@@ -53,7 +60,7 @@ interface ErdEditorElement extends HTMLElement {
 
 设置编辑器是否可编辑。  
 在其生效期间，为 `value` 赋值、`clear()`、`setSchemaSQL()`、`setSchemaGraphQL()`、`setSchemaDBML()`、`setSchemaAML()`、undo 和 redo 都会被忽略，并且不会发出 `change` 事件。此时改用 [setInitialValue](#setinitialvalue) 加载文档。  
-查看功能仍然可用：缩放、滚动、画布标签页、数据库厂商，以及 SQL 与代码生成的输出设置都仍然生效，因此只读的查看者依然可以导出其他厂商的 SQL 或阅读生成的代码。  
+查看功能仍然可用：缩放、平移、抓手工具、禅模式、画布标签页、数据库厂商，以及 SQL 与代码生成的输出设置都仍然生效，因此只读的查看者依然可以导出其他厂商的 SQL 或阅读生成的代码。  
 仅写属性名、`=""` 和 `="true"` 都会被读作 `true`。`="false"` 会被读作 `false`，其他任何字符串也一样，包括 HTML 惯用写法 `readonly="readonly"`。
 
 ```js
@@ -104,7 +111,7 @@ editor.setAttribute('enable-theme-builder', 'true');
 ### getter
 
 以 JSON 字符串的形式获取当前编辑器状态，采用编辑器定义的 [schema](./advanced/schema.md)。  
-序列化时会应用文档自身的 `ignoreSaveSettings`：设置了 scroll 位时滚动位置写为 `0`，设置了 zoom 位时缩放级别写为 `1`。
+序列化时会应用文档自身的 `ignoreSaveSettings`：设置了 scroll 位时视图原点写为 `0, 0`，设置了 zoom 位时缩放级别写为 `1`。
 
 ```js
 const data = editor.value;
@@ -207,8 +214,8 @@ editor.destroy();
 ## setKeyBindingMap
 
 重新定义键盘快捷键。  
-`edit`、`stop`、`search`、`undo`、`redo`、`zoomIn` 和 `zoomOut` 是固定的，无法重新定义。  
-只有下面这十三个名称会被写入，对象中的其他内容都会被忽略，包括那些固定的名称。  
+`edit`、`stop`、`search`、`undo`、`redo`、`zoomIn`、`zoomOut` 和 `zoomReset` 是固定的，无法重新定义。  
+只有下面这十五个名称会被写入，对象中的其他内容都会被忽略，包括那些固定的名称。  
 绑定的值必须是 `ShortcutOption[]`。单纯的字符串会被忽略，因此要写成 `{ addTable: [{ shortcut: 'Alt+KeyN' }] }`，而不是 `{ addTable: 'Alt+KeyN' }`。  
 该调用是部分合并：未写出的名称保持默认值，调用两次也会保留先前的更改。没有用于读取当前绑定的 getter。
 
@@ -221,7 +228,14 @@ type ShortcutOption = {
 
 const defaultKeyBindingMap: Omit<
   KeyBindingMap,
-  'edit' | 'stop' | 'search' | 'undo' | 'redo' | 'zoomIn' | 'zoomOut'
+  | 'edit'
+  | 'stop'
+  | 'search'
+  | 'undo'
+  | 'redo'
+  | 'zoomIn'
+  | 'zoomOut'
+  | 'zoomReset'
 > = {
   addTable: [{ shortcut: 'Alt+KeyN', preventDefault: true }],
   addColumn: [{ shortcut: 'Alt+Enter', preventDefault: true }],
@@ -235,13 +249,18 @@ const defaultKeyBindingMap: Omit<
     { shortcut: 'Alt+Delete', preventDefault: true },
   ],
   primaryKey: [{ shortcut: 'Alt+KeyK', preventDefault: true }],
-  selectAllTable: [{ shortcut: '$mod+Alt+KeyA', preventDefault: true }],
+  selectAllTable: [
+    { shortcut: '$mod+KeyA', preventDefault: true },
+    { shortcut: '$mod+Alt+KeyA', preventDefault: true },
+  ],
   selectAllColumn: [{ shortcut: 'Alt+KeyA', preventDefault: true }],
   relationshipZeroOne: [{ shortcut: '$mod+Alt+Digit1', preventDefault: true }],
   relationshipZeroN: [{ shortcut: '$mod+Alt+Digit2', preventDefault: true }],
   relationshipOneOnly: [{ shortcut: '$mod+Alt+Digit3', preventDefault: true }],
   relationshipOneN: [{ shortcut: '$mod+Alt+Digit4', preventDefault: true }],
   tableProperties: [{ shortcut: 'Alt+Space', preventDefault: true }],
+  handTool: [{ shortcut: 'Space', preventDefault: true }],
+  zenMode: [{ shortcut: 'Alt+KeyZ', preventDefault: true }],
 };
 
 // example
@@ -249,6 +268,8 @@ editor.setKeyBindingMap({
   addTable: [{ shortcut: '$mod+KeyN', preventDefault: true }],
 });
 ```
+
+`selectAllTable` 与 `handTool` 会让位于光标：只要焦点位于 input、textarea 或 `contenteditable` 中，`$mod + A` 就会选中文本，`Space` 就会输入空格，都不会传到画布上。改绑到其他快捷键后行为同样如此。
 
 ### $mod
 
@@ -515,7 +536,7 @@ erd-editor {
 ## setSchemaSQL
 
 加载 Schema SQL 文件。  
-它会替换当前文档，而不是合并到当前文档中。现有的设置会保留，仅画布大小、滚动位置和缩放级别除外，并且文件读取后会自动排列表。  
+它会替换当前文档，而不是合并到当前文档中。现有的设置会保留，仅视图位置和缩放级别除外，并且文件读取后会自动排列表。  
 会记录到历史列表中，因此可以 `Undo, Redo`，并且会发出 `change`。空字符串会被忽略，在 `readonly` 生效期间调用不会有任何效果。  
 `setSchemaGraphQL`、`setSchemaDBML` 和 `setSchemaAML` 的行为相同，它们的解析器不会失败，无法读取的文本只会加载空白文档，而不会报错。  
 各个解析器支持的语法参见[导入与导出文件](../guide/guides/file-import-export.md)。

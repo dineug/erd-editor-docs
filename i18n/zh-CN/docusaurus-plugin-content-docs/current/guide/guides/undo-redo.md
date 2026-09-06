@@ -27,7 +27,7 @@ Undo 与 Redo 仅在 ERD 标签页生效。在 Visualization、Schema SQL、Code
 - 列：添加、删除、调整顺序，以及所有列选项。
 - 关系：添加、删除与类型修改。
 - 索引及其列。
-- 画布大小、滚动位置、缩放级别，以及 `View Option` 开关。
+- 视图位置、缩放级别，以及 `View Option` 开关。
 - 导入文件。
 
 不会记录以下内容：

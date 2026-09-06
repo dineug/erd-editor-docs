@@ -1,6 +1,6 @@
 ---
 sidebar_position: 10
-description: 关系数据类型同步、滚动与缩放信息保存、注释最大宽度、重新计算表宽度、列显示顺序以及快捷键列表。
+description: 关系数据类型同步、视图位置与缩放信息保存、注释最大宽度、重新计算表宽度、列显示顺序以及快捷键列表。
 ---
 
 # 设置
@@ -22,8 +22,8 @@ description: 关系数据类型同步、滚动与缩放信息保存、注释最�
 
 ## 保存滚动信息
 
-决定是否将滚动位置保存到文档中。默认开启。
-关闭后，文档会以重置的滚动位置保存，因此打开时显示在左上角。
+决定是否将视图位置保存到文档中。默认开启。
+关闭后，文档会以重置的视图原点保存，因此打开时看到的是图本身，而不是你上次停留的位置。
 
 ## 保存缩放信息
 
@@ -70,7 +70,7 @@ description: 关系数据类型同步、滚动与缩放信息保存、注释最�
 | Remove Table, Memo | `Ctrl + Backspace`, `Ctrl + Delete` | `⌘ + Backspace`, `⌘ + Delete` |
 | Remove Column | `Alt + Backspace`, `Alt + Delete` | `⌥ + Backspace`, `⌥ + Delete` |
 | Primary Key | `Alt + K` | `⌥ + K` |
-| Select All Table, Memo | `Ctrl + Alt + A` | `⌘ + ⌥ + A` |
+| Select All Table, Memo | `Ctrl + A`, `Ctrl + Alt + A` | `⌘ + A`, `⌘ + ⌥ + A` |
 | Select All Column | `Alt + A` | `⌥ + A` |
 | Relationship Zero One | `Ctrl + Alt + 1` | `⌘ + ⌥ + 1` |
 | Relationship Zero N | `Ctrl + Alt + 2` | `⌘ + ⌥ + 2` |
@@ -79,10 +79,14 @@ description: 关系数据类型同步、滚动与缩放信息保存、注释最�
 | Table Properties | `Alt + Space` | `⌥ + Space` |
 | Zoom In | `Ctrl + Plus` | `⌘ + Plus` |
 | Zoom Out | `Ctrl + Minus` | `⌘ + Minus` |
+| Zoom Reset | `Ctrl + O` | `⌘ + O` |
+| Hand Tool | `Space` | `Space` |
+| Zen Mode | `Alt + Z` | `⌥ + Z` |
 
 其中大多数仅在 ERD 标签页生效，并且在快速搜索、表属性、Diff Viewer、自动排列表或 Time Travel 打开期间不会触发。
 `Search` 与 `Stop` 是例外。`Search` 可以在任意标签页中开关快速搜索，`Stop` 则用于关闭快速搜索、表属性、Diff Viewer、自动排列表、Time Travel 和主题构建器。
+`Select All Table, Memo` 与 `Hand Tool` 会让位于光标：在编辑单元格时，`Ctrl + A` 选中的是文本，`Space` 输入的是空格。
 复制与粘贴使用浏览器自身的 `Ctrl + C` 与 `Ctrl + V` (Windows/Linux) 或 `⌘ + C` 与 `⌘ + V` (Mac)，因此不在此列表中，参见[编辑表](./table-editing.md)。
 
 在此标签页中无法更改按键绑定。
-嵌入编辑器的宿主可以通过 [`setKeyBindingMap`](../../api/erd-editor-element.md#setkeybindingmap) 重新映射，但 `Editing`、`Stop`、`Search`、`Undo`、`Redo`、`Zoom In` 和 `Zoom Out` 是固定的。
+嵌入编辑器的宿主可以通过 [`setKeyBindingMap`](../../api/erd-editor-element.md#setkeybindingmap) 重新映射，但 `Editing`、`Stop`、`Search`、`Undo`、`Redo`、`Zoom In`、`Zoom Out` 和 `Zoom Reset` 是固定的。

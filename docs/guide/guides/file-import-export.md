@@ -18,7 +18,7 @@ Five formats can be imported, from the `Import` submenu of the context menu:
 Picking a file whose extension does not match the chosen format cancels the import and shows a notice.
 
 Importing replaces the current document rather than merging into it.  
-A JSON file brings its own settings with it. The other formats keep the settings you already have, apart from the canvas size, scroll position, and zoom level, and the tables are placed automatically once the file is read.  
+A JSON file brings its own settings with it. The other formats keep the settings you already have, apart from the view position and the zoom level, and the tables are placed automatically once the file is read.  
 The GraphQL, DBML, and AML parsers never fail: a file they cannot read produces an empty diagram rather than an error.
 
 ### JSON
@@ -77,6 +77,9 @@ Three formats are supported for exporting:
 - json: Schema file defined in the editor. Saved as `.erd.json`.
 - Schema SQL: Schema file generated based on the syntax of the database vendor. Saved as `.sql`.
 - png: Generates the diagram as an image. Saved as `.png`.
+
+The PNG holds the whole diagram however far it is scrolled away, cropped to what the diagram itself draws plus a margin, and drawn at the zoom the editor is showing — zoom in before exporting for a larger image.  
+It is drawn in a background worker, so the editor stays usable while it runs, and a notice says the export is running. A diagram too large for a browser canvas to raster is written at a reduced resolution, with a notice saying so, rather than producing no file.
 
 Every exported file is named `<database name>-<timestamp>` followed by that extension, with the timestamp formatted as `yyyy-MM-dd'T'HH_mm_ss` — for example `my-schema-2026-08-29T04_05_06.erd.json`. A blank database name falls back to `unnamed`.
 
