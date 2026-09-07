@@ -83,8 +83,8 @@ description: 관계 데이터 타입 동기화, 화면 위치와 확대/축소 �
 | Hand Tool | `Space` | `Space` |
 | Zen Mode | `Alt + Z` | `⌥ + Z` |
 
-대부분은 ERD 탭에서만 동작하며, 빠른 검색, 테이블 속성, Diff Viewer, 테이블 위치 자동 정렬, Time Travel이 열려 있는 동안에는 동작하지 않습니다.
-`Search`와 `Stop`은 예외입니다. `Search`는 어느 탭에서나 빠른 검색을 열고 닫으며, `Stop`은 빠른 검색, 테이블 속성, Diff Viewer, 테이블 위치 자동 정렬, Time Travel, 테마 빌더를 닫습니다.
+대부분은 ERD 탭에서만 동작하며, 빠른 검색, 테이블 속성, Diff Viewer, 자동 배치 미리보기, Time Travel이 열려 있는 동안에는 동작하지 않습니다.
+`Search`와 `Stop`은 예외입니다. `Search`는 어느 탭에서나 빠른 검색을 열고 닫으며, `Stop`은 빠른 검색, 테이블 속성, Diff Viewer, 자동 배치 미리보기, Time Travel, 테마 빌더를 닫습니다.
 `Select All Table, Memo`와 `Hand Tool`은 커서에 양보합니다. 셀을 편집하는 중에는 `Ctrl + A`가 텍스트를 선택하고 `Space`는 공백을 입력합니다.
 복사/붙여넣기는 브라우저 자체의 `Ctrl + C`와 `Ctrl + V` (Windows/Linux) or `⌘ + C`와 `⌘ + V` (Mac)를 사용하므로 이 목록에는 없습니다. [테이블 편집](./table-editing.md) 문서를 참고하세요.
 

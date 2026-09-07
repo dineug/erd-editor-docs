@@ -1,6 +1,6 @@
 ---
 sidebar_position: 1
-description: npm이나 CDN으로 @dineug/erd-editor를 설치하고, 커스텀 엘리먼트를 마운트하고, 구문 강조를 추가하고, 파일 다이얼로그를 연결하는 방법.
+description: npm이나 CDN으로 @dineug/erd-editor를 설치하고, 커스텀 엘리먼트를 마운트하고, 파일 다이얼로그를 연결하는 방법.
 ---
 
 # 설치
@@ -52,23 +52,23 @@ editor.addEventListener('change', () => {
 ```
 
 `esm.run`이 패키지의 외부 의존성을 대신 해석해 주므로 번들러 없이도 동작합니다.
-버전이 없는 URL은 항상 최신 릴리스를 제공합니다. 메이저 업그레이드가 예고 없이 페이지에 반영되는 것을 원하지 않는다면 `https://esm.run/@dineug/erd-editor@3.6.0`처럼 버전을 고정하세요.
+버전이 없는 URL은 항상 최신 릴리스를 제공합니다. 메이저 업그레이드가 예고 없이 페이지에 반영되는 것을 원하지 않는다면 `https://esm.run/@dineug/erd-editor@3.7.0`처럼 버전을 고정하세요.
 
 ### script 태그
 
-`3.6.0`부터 모든 의존성과 두 개의 shared worker를 한 파일에 담은 UMD 빌드도 함께 배포합니다.
+`3.6.0`부터 모든 의존성과 네 개의 shared worker를 한 파일에 담은 UMD 빌드도 함께 배포합니다.
 `unpkg`와 `jsdelivr` 필드가 이 파일을 가리키므로 두 CDN의 패키지 기본 URL이 이 파일을 제공하며, `window.ErdEditor`를 정의합니다.
 
 ```html
 <erd-editor></erd-editor>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@3.6.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@3.7.0"></script>
 <script>
   const editor = document.querySelector('erd-editor');
   editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
 </script>
 ```
 
-이 파일을 불러오면 `<erd-editor>`가 동일하게 등록되고, `window.ErdEditor`에 `ErdEditor.setGetShikiServiceCallback` 같은 콜백 설정 함수가 들어 있습니다.
+이 파일을 불러오면 `<erd-editor>`가 동일하게 등록되고, `window.ErdEditor`에 파일 콜백 두 개, `ErdEditor.setExportFileCallback`과 `ErdEditor.setImportFileCallback`이 들어 있습니다.
 exports 맵은 여전히 ES 모듈을 가리키므로 npm으로 설치하면 번들러가 이 파일을 사용하지 않습니다.
 
 ### HTML
@@ -119,73 +119,47 @@ const found = document.querySelector('erd-editor'); // ErdEditorElement | null
 
 ## 구문 강조
 
-Schema SQL과 Code Generator 패널은 하이라이터를 제공하지 않으면 일반 텍스트로 표시됩니다.
-[`@dineug/erd-editor-shiki-worker`](https://www.npmjs.com/package/@dineug/erd-editor-shiki-worker)는 하이라이터를 shared worker에서 실행합니다.
-Shiki와 문법 파일의 빌드 크기가 1MB를 훌쩍 넘기 때문에 별도 패키지로 분리되어 있습니다.
+Schema SQL과 Code Generator 패널은 전용 shared worker에서 동작하는 [Shiki](https://shiki.style)가 강조합니다.
+`3.7.0`부터는 설치할 것도 등록할 것도 없습니다. 워커는 코드 패널이 처음 렌더링될 때 만들어지므로, 코드 패널을 한 번도 열지 않는 페이지는 문법 파일을 내려받지 않습니다.
 
-```sh
-npm install @dineug/erd-editor-shiki-worker
-```
+| | |
+| --- | --- |
+| 언어 | SQL, TypeScript, GraphQL, C#, Java, Kotlin, Scala, Go, Python |
+| 테마 | `github-dark`와 `github-light`. 에디터의 밝은 / 어두운 외형을 따릅니다 |
 
-```js
-import { setGetShikiServiceCallback } from '@dineug/erd-editor';
+패널이 실제로 출력하는 언어와 정확히 일치합니다. `JPA`는 Java, `SQLAlchemy`는 Python, `TypeORM`과 `Sequelize`, `Drizzle`은 TypeScript로 강조되고, `DBML`과 `AML`은 번들에 있는 문법 중 가장 가까운 SQL로 강조됩니다. [코드 생성](../guide/guides/code-generator.md) 문서를 참고하세요.
 
-// 하이라이터가 메인 청크에 포함되지 않도록 지연 로딩합니다
-import('@dineug/erd-editor-shiki-worker').then(({ getShikiService }) => {
-  setGetShikiServiceCallback(getShikiService);
-});
-```
+정규식 엔진이 순수 JavaScript이므로 호스트 정책에 `wasm-unsafe-eval`이 필요하지 않습니다.
+`SharedWorker`가 없는 환경(안드로이드 Chrome, 16.4 이전 Safari)에서는 실패가 로그로 남고 패널이 일반 텍스트로 렌더링됩니다. 그 외에 영향을 받는 것은 없습니다.
 
-CDN에서 사용하는 경우:
-
-```html
-<script type="module">
-  import { setGetShikiServiceCallback } from 'https://esm.run/@dineug/erd-editor';
-  import { getShikiService } from 'https://esm.run/@dineug/erd-editor-shiki-worker';
-
-  setGetShikiServiceCallback(getShikiService);
-</script>
-```
-
-script 태그에서는 두 UMD 빌드가 정의하는 전역을 사용합니다.
-
-```html
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@3.6.0"></script>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor-shiki-worker@0.3.0"></script>
-<script>
-  ErdEditor.setGetShikiServiceCallback(ErdEditorShikiWorker.getShikiService);
-</script>
-```
-
-에디터가 마운트되기 전이든 후든 한 번만 등록하면 됩니다. 이미 화면에 열려 있는 패널은 하이라이터가 도착하면 다시 렌더링됩니다.
-SQL, TypeScript, GraphQL, C#, Java, Kotlin, Scala, Go, Python을 지원합니다. `AML`과 `DBML` [코드 생성](../guide/guides/code-generator.md) 대상은 번들에 문법 파일이 없어서 해당 패널은 일반 텍스트로 남습니다.
-
-`SharedWorker`가 없는 환경(안드로이드 Chrome, 16.4 이전 Safari)에서는 하이라이터가 반환되지 않아 패널이 일반 텍스트로 남습니다.
+`3.6.0` 이하에서 올라온다면, `@dineug/erd-editor-shiki-worker`는 더 이상 배포되지 않고 `setGetShikiServiceCallback`도 함께 사라졌습니다.
+설치와 등록 코드를 지우세요. CDN에서 워커를 불러오던 페이지라면 두 번째 `<script>` 태그도 함께 지웁니다.
 
 ## Web Worker
 
-에디터는 세 가지 작업을 `SharedWorker`에서 실행합니다. 구문 강조, PNG 내보내기, 문서 가비지 컬렉션입니다.
-따로 설정할 것은 없지만 호스트가 막을 수 있는 작업들이므로, 각각 대체 경로를 가지고 있습니다.
+에디터는 네 가지 작업을 `SharedWorker`에서 실행합니다. 구문 강조, PNG 내보내기, [자동 배치](../guide/guides/table-related-functions.md#자동-배치), 문서 가비지 컬렉션입니다.
+넷 모두 `@dineug/erd-editor` 안에 들어 있습니다. 따로 설정할 것은 없지만, 모두 호스트가 막을 수 있는 작업입니다.
 
-| 워커 | 출처 | 없을 때 |
-| --- | --- | --- |
-| 구문 강조 | `@dineug/erd-editor-shiki-worker`, 직접 등록 | Schema SQL과 Code Generator 패널이 일반 텍스트로 남습니다 |
-| PNG 내보내기 | `@dineug/erd-editor` | 메인 스레드에서 그리므로 그리는 동안 페이지가 멈춥니다 |
-| 스키마 가비지 컬렉션 | `@dineug/erd-editor` | 인프로세스로 실행됩니다 |
+| 워커 | 없을 때 |
+| --- | --- |
+| 구문 강조 | Schema SQL과 Code Generator 패널이 일반 텍스트로 남습니다 |
+| PNG 내보내기 | 메인 스레드에서 그리므로 그리는 동안 페이지가 멈춥니다 |
+| 자동 배치 | `Flow`와 `Tree` 배치가 `Could not place tables`로 끝납니다. `Force`는 에디터 안에서 실행되므로 영향을 받지 않습니다 |
+| 스키마 가비지 컬렉션 | 인프로세스로 실행됩니다 |
 
-에디터가 소유한 두 워커는 응답을 10초까지 기다린 뒤 워커 없이 진행하므로, 워커를 막는 호스트에서는 기능이 사라지는 대신 성능만 손해를 봅니다.
+자동 배치를 뺀 나머지 셋은 응답을 10초까지 기다린 뒤 워커 없이 진행하므로, 워커를 막는 호스트에서는 기능이 사라지는 대신 성능만 손해를 봅니다.
+자동 배치만 예외입니다. 배치를 계산하는 엔진이 에디터 자체보다 무거워 인프로세스로는 절대 올리지 않기 때문에, 첫 배치에서 워커를 30초까지 기다린 뒤 응답이 없으면 실패를 알립니다.
 
-번들 빌드에서는 에디터가 소유한 두 워커가 별도 파일로 함께 배포되므로, CSP가 엄격한 페이지에는 `worker-src 'self'`가 필요합니다. 번들러가 워커를 인라인한다면 `blob:`도 함께 필요합니다.
-[script 태그](#script-태그) 빌드에서는 두 워커가 `data:` URL로 파일 안에 함께 들어가므로, 그 페이지에는 `worker-src data:`가 필요합니다.
+번들 빌드에서는 네 워커가 모두 별도 파일로 함께 배포되므로, CSP가 엄격한 페이지에는 `worker-src 'self'`가 필요합니다. 번들러가 워커를 인라인한다면 `blob:`도 함께 필요합니다.
+[script 태그](#script-태그) 빌드에서는 넷 모두 `data:` URL로 파일 안에 들어가므로, 그 페이지에는 `worker-src data:`가 필요합니다.
 
 ## 진입점
 
-`@dineug/erd-editor`를 import하면 부수 효과로 `<erd-editor>`가 등록됩니다. 그 외에는 엘리먼트 타입과 3개의 콜백 setter를 export합니다.
+`@dineug/erd-editor`를 import하면 부수 효과로 `<erd-editor>`가 등록됩니다. 그 외에는 엘리먼트 타입과 2개의 콜백 setter를 export합니다.
 
 | Export | 설명 |
 | --- | --- |
 | `ErdEditorElement` (타입) | 엘리먼트 인터페이스입니다. [ErdEditorElement](./erd-editor-element.md) 문서를 참고하세요. |
-| `setGetShikiServiceCallback(cb)` | 구문 강조기를 주입합니다. `() => ShikiService \| null` |
 | `setExportFileCallback(cb)` | 브라우저 다운로드를 대체합니다. `(blob, { fileName }) => void` |
 | `setImportFileCallback(cb)` | 브라우저 파일 선택창을 대체합니다. `({ type, op, accept }) => void` |
 

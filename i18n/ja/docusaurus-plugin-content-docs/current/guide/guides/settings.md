@@ -83,8 +83,8 @@ description: リレーションシップのデータ型同期、表示位置と�
 | Hand Tool | `Space` | `Space` |
 | Zen Mode | `Alt + Z` | `⌥ + Z` |
 
-これらの多くは ERD タブでのみ動作し、クイック検索、テーブルのプロパティ、Diff Viewer、テーブルの自動配置、Time Travel が開いている間は無効になります。
-`Search` と `Stop` は例外です。`Search` はどのタブからでもクイック検索を開閉し、`Stop` はクイック検索、テーブルのプロパティ、Diff Viewer、テーブルの自動配置、Time Travel、テーマビルダーを閉じます。
+これらの多くは ERD タブでのみ動作し、クイック検索、テーブルのプロパティ、Diff Viewer、自動レイアウトのプレビュー、Time Travel が開いている間は無効になります。
+`Search` と `Stop` は例外です。`Search` はどのタブからでもクイック検索を開閉し、`Stop` はクイック検索、テーブルのプロパティ、Diff Viewer、自動レイアウトのプレビュー、Time Travel、テーマビルダーを閉じます。
 `Select All Table, Memo` と `Hand Tool` はキャレットに譲ります。セルの編集中は `Ctrl + A` がテキストを選択し、`Space` は空白を入力します。
 コピーと貼り付けはブラウザ標準の `Ctrl + C` と `Ctrl + V` (Windows/Linux) または `⌘ + C` と `⌘ + V` (Mac) のため、この一覧には含まれていません。[テーブルの編集](./table-editing.md)を参照してください。
 

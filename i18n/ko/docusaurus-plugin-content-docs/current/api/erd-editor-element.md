@@ -260,7 +260,9 @@ const defaultKeyBindingMap: Omit<
   relationshipOneN: [{ shortcut: '$mod+Alt+Digit4', preventDefault: true }],
   tableProperties: [{ shortcut: 'Alt+Space', preventDefault: true }],
   handTool: [{ shortcut: 'Space', preventDefault: true }],
-  zenMode: [{ shortcut: 'Alt+KeyZ', preventDefault: true }],
+  zenMode: [
+    { shortcut: 'Alt+KeyZ', preventDefault: true, stopPropagation: true },
+  ],
 };
 
 // example

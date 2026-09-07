@@ -14,7 +14,7 @@ sidebar_position: 9
 되돌리거나 다시 실행할 내용이 있을 때만 활성화됩니다. `readonly` 에디터에서는 세 버튼이 모두 숨겨지고 단축키도 동작하지 않습니다.
 
 Undo, Redo는 ERD 탭에서만 동작합니다. Visualization, Schema SQL, Code Generator, 설정 탭에서는 사용할 수 없습니다.  
-빠른 검색, 테이블 속성, Diff Viewer, 테이블 위치 자동 정렬, Time Travel이 열려 있는 동안에도 단축키가 동작하지 않습니다.
+빠른 검색, 테이블 속성, Diff Viewer, 자동 배치 미리보기, Time Travel이 열려 있는 동안에도 단축키가 동작하지 않습니다.
 
 히스토리는 현재 세션의 메모리에만 유지됩니다. 문서에 저장되지 않으므로 다이어그램을 다시 열면 히스토리는 비어 있는 상태로 시작합니다.
 

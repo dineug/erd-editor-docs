@@ -31,6 +31,7 @@ To try it in an IDE, create an empty file with a `.erd.json` extension and open 
 - Generate code for fourteen targets: C#, Go, Java, Kotlin, Scala, TypeScript, Drizzle, JPA, Sequelize, SQLAlchemy, TypeORM, AML, DBML, and GraphQL. See [Code Generator](./guides/code-generator.md).
 - Read the schema as a force-directed graph in [Visualization](./guides/visualization.md), where hovering a table lights up everything it touches.
 - Work on a canvas with no edges: pan wherever the diagram goes, zoom from `10%` to `150%`, and clear everything but the diagram with zen mode. See [Getting Around the Canvas](./guides/table-related-functions.md#getting-around-the-canvas).
+- Arrange a whole diagram in one step with [Auto Layout](./guides/table-related-functions.md#auto-layout): a force simulation, a left-to-right flow, or a tree in either direction.
 - Find a table or run a command from anywhere with [Quick Search](./guides/quick-search.md), and step through the edit history with [Undo, Redo](./guides/undo-redo.md).
 - Edit together in real time (experimental). Sessions are peer-to-peer and end-to-end encrypted, so no server holds your schema, and peers see each other's cursors, focus, and selections. In your own page, [`getSharedStore()`](../api/advanced/collaborative-editing.md) gives you the same action stream over the transport of your choice.
 

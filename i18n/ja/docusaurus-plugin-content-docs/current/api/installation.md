@@ -1,6 +1,6 @@
 ---
 sidebar_position: 1
-description: npm と CDN からの @dineug/erd-editor のインストール、カスタム要素の設置、構文ハイライトの追加、ファイルダイアログの差し替え。
+description: npm と CDN からの @dineug/erd-editor のインストール、カスタム要素の設置、ファイルダイアログの差し替え。
 ---
 
 # インストール
@@ -52,23 +52,23 @@ editor.addEventListener('change', () => {
 ```
 
 `esm.run` がパッケージの外部依存を解決してくれるため、バンドラーなしでも動作します。
-バージョンを指定しない URL は常に最新のリリースを配信します。メジャーアップグレードが予告なくページに反映されるのを避けたい場合は、`https://esm.run/@dineug/erd-editor@3.6.0` のようにバージョンを固定します。
+バージョンを指定しない URL は常に最新のリリースを配信します。メジャーアップグレードが予告なくページに反映されるのを避けたい場合は、`https://esm.run/@dineug/erd-editor@3.7.0` のようにバージョンを固定します。
 
 ### script タグ
 
-`3.6.0` からは、すべての依存と 2 つの shared worker を 1 つのファイルに収めた UMD ビルドも配布しています。
+`3.6.0` からは、すべての依存と 4 つの shared worker を 1 つのファイルに収めた UMD ビルドも配布しています。
 `unpkg` と `jsdelivr` のフィールドがこのファイルを指しているため、どちらの CDN でもパッケージのベース URL がこのファイルを配信し、`window.ErdEditor` を定義します。
 
 ```html
 <erd-editor></erd-editor>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@3.6.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@3.7.0"></script>
 <script>
   const editor = document.querySelector('erd-editor');
   editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
 </script>
 ```
 
-読み込むと `<erd-editor>` が同じように登録され、`window.ErdEditor` に `ErdEditor.setGetShikiServiceCallback` などのコールバック設定関数が入っています。
+読み込むと `<erd-editor>` が同じように登録され、`window.ErdEditor` に 2 つのファイルコールバック `ErdEditor.setExportFileCallback` と `ErdEditor.setImportFileCallback` が入っています。
 exports マップは引き続き ES モジュールを指しているため、npm からインストールした場合にこのファイルが使われることはありません。
 
 ### HTML
@@ -119,73 +119,47 @@ const found = document.querySelector('erd-editor'); // ErdEditorElement | null
 
 ## 構文ハイライト
 
-Schema SQL と Code Generator のパネルは、ハイライターを渡さない限りプレーンテキストとして表示されます。
-[`@dineug/erd-editor-shiki-worker`](https://www.npmjs.com/package/@dineug/erd-editor-shiki-worker) は、それを Shared Worker で実行します。
-Shiki と文法定義は 1 メガバイトを大きく超えるため、別のパッケージとして提供しています。
+Schema SQL と Code Generator のパネルは、専用の Shared Worker で動く [Shiki](https://shiki.style) がハイライトします。
+`3.7.0` からは、インストールするものも登録するものもありません。ワーカーは最初にコードパネルが描画されたときに作られるため、コードパネルを開かないページが文法定義を取得することはありません。
 
-```sh
-npm install @dineug/erd-editor-shiki-worker
-```
+| | |
+| --- | --- |
+| 言語 | SQL、TypeScript、GraphQL、C#、Java、Kotlin、Scala、Go、Python |
+| テーマ | `github-dark` と `github-light`。エディタのライト / ダークの外観に従います |
 
-```js
-import { setGetShikiServiceCallback } from '@dineug/erd-editor';
+これはパネルが実際に出力する言語そのものです。`JPA` は Java、`SQLAlchemy` は Python、`TypeORM` と `Sequelize`、`Drizzle` は TypeScript としてハイライトされ、`DBML` と `AML` はバンドルにある中で最も近い文法である SQL としてハイライトされます。[コード生成](../guide/guides/code-generator.md)を参照してください。
 
-// deferred, so the highlighter never lands in your main chunk
-import('@dineug/erd-editor-shiki-worker').then(({ getShikiService }) => {
-  setGetShikiServiceCallback(getShikiService);
-});
-```
+正規表現エンジンは純粋な JavaScript のため、ホストのポリシーに `wasm-unsafe-eval` は必要ありません。
+`SharedWorker` がない環境、つまり Android の Chrome や 16.4 より前の Safari では、失敗がログに残り、パネルはプレーンテキストとして描画されます。それ以外に影響はありません。
 
-CDN から読み込む場合は次のとおりです。
-
-```html
-<script type="module">
-  import { setGetShikiServiceCallback } from 'https://esm.run/@dineug/erd-editor';
-  import { getShikiService } from 'https://esm.run/@dineug/erd-editor-shiki-worker';
-
-  setGetShikiServiceCallback(getShikiService);
-</script>
-```
-
-script タグからは、2 つの UMD ビルドが定義するグローバルを使います。
-
-```html
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@3.6.0"></script>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor-shiki-worker@0.3.0"></script>
-<script>
-  ErdEditor.setGetShikiServiceCallback(ErdEditorShikiWorker.getShikiService);
-</script>
-```
-
-登録は一度だけで、エディタの設置前でも設置後でも構いません。すでに表示されているパネルは、ハイライターが届いた時点で再描画されます。
-対応している言語は SQL、TypeScript、GraphQL、C#、Java、Kotlin、Scala、Go、Python です。[コード生成](../guide/guides/code-generator.md)の `AML` と `DBML` はバンドルに文法定義がないため、これらのパネルはプレーンテキストのままです。
-
-`SharedWorker` がない環境、つまり Android の Chrome や 16.4 より前の Safari では、ハイライターが返されず、パネルはプレーンテキストのままです。
+`3.6.0` 以前からの移行について。`@dineug/erd-editor-shiki-worker` は公開されなくなり、`setGetShikiServiceCallback` もなくなりました。
+インストールと登録のコードは削除してください。CDN からワーカーを読み込んでいたページは、2 つ目の `<script>` タグも削除します。
 
 ## Web Worker
 
-エディタは 3 つの処理を `SharedWorker` で実行します。構文ハイライト、PNG の書き出し、ドキュメントのガベージコレクションです。
-どれも設定するものではありませんが、ホスト側で塞げるものでもあるため、それぞれに代替経路があります。
+エディタは 4 つの処理を `SharedWorker` で実行します。構文ハイライト、PNG の書き出し、[自動レイアウト](../guide/guides/table-related-functions.md#auto-layout)、ドキュメントのガベージコレクションです。
+4 つとも `@dineug/erd-editor` に入っています。どれも設定するものではありませんが、ホスト側で塞げるものでもあります。
 
-| ワーカー | 提供元 | ない場合 |
-| --- | --- | --- |
-| 構文ハイライト | `@dineug/erd-editor-shiki-worker`、自分で登録します | Schema SQL と Code Generator のパネルがプレーンテキストのままになります |
-| PNG の書き出し | `@dineug/erd-editor` | メインスレッドで描画するため、描画中はページが止まります |
-| スキーマのガベージコレクション | `@dineug/erd-editor` | インプロセスで実行されます |
+| ワーカー | ない場合 |
+| --- | --- |
+| 構文ハイライト | Schema SQL と Code Generator のパネルがプレーンテキストのままになります |
+| PNG の書き出し | メインスレッドで描画するため、描画中はページが止まります |
+| 自動レイアウト | `Flow` と `Tree` の配置が `Could not place tables` で終わります。`Force` はエディタ内で動くため影響を受けません |
+| スキーマのガベージコレクション | インプロセスで実行されます |
 
-エディタが持つ 2 つのワーカーは応答を 10 秒待ってからワーカーなしで進むため、ワーカーを塞ぐホストでは機能が失われるのではなく性能だけが落ちます。
+自動レイアウト以外の 3 つは応答を 10 秒待ってからワーカーなしで進むため、ワーカーを塞ぐホストでは機能が失われるのではなく性能だけが落ちます。
+自動レイアウトだけは例外です。レイアウトを計算するエンジンがエディタ本体より大きく、インプロセスに載せることはないため、最初の配置ではワーカーを 30 秒待ち、応答がなければ失敗として伝えます。
 
-バンドル向けのビルドでは、エディタが持つ 2 つのワーカーが別ファイルとして一緒に配布されるため、CSP が厳しいページでは `worker-src 'self'` が必要です。バンドラーがワーカーをインライン化する場合は `blob:` も必要になります。
-[script タグ](#script-タグ)のビルドでは 2 つのワーカーが `data:` URL としてファイルの中に入るため、そのページでは `worker-src data:` が必要です。
+バンドル向けのビルドでは 4 つとも別ファイルとして一緒に配布されるため、CSP が厳しいページでは `worker-src 'self'` が必要です。バンドラーがワーカーをインライン化する場合は `blob:` も必要になります。
+[script タグ](#script-タグ)のビルドでは 4 つとも `data:` URL としてファイルの中に入るため、そのページでは `worker-src data:` が必要です。
 
 ## エントリーポイント
 
-`@dineug/erd-editor` を読み込むと、副作用として `<erd-editor>` を登録します。それ以外には、要素の型と 3 つのコールバック設定関数をエクスポートしています。
+`@dineug/erd-editor` を読み込むと、副作用として `<erd-editor>` を登録します。それ以外には、要素の型と 2 つのコールバック設定関数をエクスポートしています。
 
 | エクスポート | 説明 |
 | --- | --- |
 | `ErdEditorElement`（型） | 要素のインターフェースです。[ErdEditorElement](./erd-editor-element.md) を参照してください。 |
-| `setGetShikiServiceCallback(cb)` | 構文ハイライターを渡します。`() => ShikiService \| null` です。 |
 | `setExportFileCallback(cb)` | ブラウザのダウンロードを置き換えます。`(blob, { fileName }) => void` です。 |
 | `setImportFileCallback(cb)` | ブラウザのファイル選択を置き換えます。`({ type, op, accept }) => void` です。 |
 

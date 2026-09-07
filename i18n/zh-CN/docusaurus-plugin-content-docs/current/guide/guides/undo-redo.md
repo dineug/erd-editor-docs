@@ -15,7 +15,7 @@ description: Undo 与 Redo、历史记录的内容，以及通过 Time Travel �
 只有在存在可 Undo 或 Redo 的内容时按钮才会亮起。`readonly` 编辑器会隐藏这三个按钮，快捷键也不起作用。
 
 Undo 与 Redo 仅在 ERD 标签页生效。在 Visualization、Schema SQL、Code Generator 和 Settings 标签页中不可用。  
-快速搜索、`Table Properties`、`Diff Viewer`、`Automatic Table Placement` 或 Time Travel 打开时，快捷键同样不生效。
+快速搜索、`Table Properties`、`Diff Viewer`、自动布局预览或 Time Travel 打开时，快捷键同样不生效。
 
 历史记录保存在当前会话的内存中。它不会存入文档，因此重新打开图时历史记录为空。
 

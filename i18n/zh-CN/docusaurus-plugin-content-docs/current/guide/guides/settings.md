@@ -83,8 +83,8 @@ description: 关系数据类型同步、视图位置与缩放信息保存、注�
 | Hand Tool | `Space` | `Space` |
 | Zen Mode | `Alt + Z` | `⌥ + Z` |
 
-其中大多数仅在 ERD 标签页生效，并且在快速搜索、表属性、Diff Viewer、自动排列表或 Time Travel 打开期间不会触发。
-`Search` 与 `Stop` 是例外。`Search` 可以在任意标签页中开关快速搜索，`Stop` 则用于关闭快速搜索、表属性、Diff Viewer、自动排列表、Time Travel 和主题构建器。
+其中大多数仅在 ERD 标签页生效，并且在快速搜索、表属性、Diff Viewer、自动布局预览或 Time Travel 打开期间不会触发。
+`Search` 与 `Stop` 是例外。`Search` 可以在任意标签页中开关快速搜索，`Stop` 则用于关闭快速搜索、表属性、Diff Viewer、自动布局预览、Time Travel 和主题构建器。
 `Select All Table, Memo` 与 `Hand Tool` 会让位于光标：在编辑单元格时，`Ctrl + A` 选中的是文本，`Space` 输入的是空格。
 复制与粘贴使用浏览器自身的 `Ctrl + C` 与 `Ctrl + V` (Windows/Linux) 或 `⌘ + C` 与 `⌘ + V` (Mac)，因此不在此列表中，参见[编辑表](./table-editing.md)。
 

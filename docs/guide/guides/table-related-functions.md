@@ -6,7 +6,7 @@ description: Select, move, copy, and duplicate tables and memos, set colors and 
 # Table-related Functions
 
 Everything you do to tables and memos once they exist — selecting, moving, copying, coloring, and setting what each table shows — plus the canvas controls around them.  
-The table and memo commands come first, then table properties, indexes, automatic placement, and the database vendor, and the canvas itself last: the canvas toolbar, zoom, panning, and the diff viewer.
+The table and memo commands come first, then table properties, indexes, auto layout, and the database vendor, and the canvas itself last: the canvas toolbar, zoom, panning, and the diff viewer.
 
 ## Multiple Selection
 
@@ -98,16 +98,25 @@ The right side lists the table's columns with a checkbox each. Nothing is editab
 Tick a column to add it to the selected index, and untick it to remove it.  
 The columns of the selected index are listed below. Drag them by the grip handle to reorder them, and click the `ASC` or `DESC` chip on a row to flip its sort order.
 
-## Automatic Table Placement
+## Auto Layout
 
-Spreads every table across the canvas so that connected tables sit near each other and overlapping ones are pulled apart.  
-Run it from the canvas context menu or from quick search.
+Arranges every table on the canvas for you.  
+Open `Auto Layout` from the canvas context menu or from quick search, and pick one of four layouts:
 
-A preview of the whole diagram opens while the layout settles, with `Apply` and `Cancel` on the notice it shows.  
-`Apply` keeps the positions as they stand at that moment, and the layout is applied on its own once it comes to rest. `Cancel` or `Escape` leaves the diagram as it was.  
+| Layout | What it draws |
+| --- | --- |
+| `Force` | A simulation: relationships pull tables together, neighbors push each other apart, and overlapping tables come apart. |
+| `Flow` | Left to right along the relationships, with every connector given its own point of contact on a table, so the lines fan out rather than cross. |
+| `Tree - vertical` | Layered downwards: a parent table sits above the tables that carry a foreign key to it. |
+| `Tree - horizontal` | The same layering, running left to right. |
+
+`Force` opens a preview of the whole diagram while the layout settles, with `Apply` and `Cancel` on the notice it shows.  
+`Apply` keeps the positions as they stand at that moment, and the layout is applied on its own once it comes to rest. `Cancel` or `Escape` leaves the diagram as it was.
+
+The other three are worked out in one go, off the main thread, so there is nothing to watch: a notice shows while the layout is computed, and the finished arrangement is centered on what the diagram already covers. `Cancel` or `Escape` drops a layout you are no longer waiting for, and a host that runs no shared worker ends in `Could not place tables` — see [Web Workers](../../api/installation.md#web-workers).
+
+Whichever you pick, only tables are moved; memos stay where they are. A relationship from a table to itself is ignored, and several relationships between the same two tables count once.  
 The result lands as a single history entry, so one undo puts every table back where it was.
-
-It works by running a force simulation over the diagram: relationships pull tables together, and neighbors push each other apart.
 
 ![demo-automatic-table-placement](/img/demo-automatic-table-placement.webp)
 

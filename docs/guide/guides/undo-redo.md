@@ -15,7 +15,7 @@ The toolbar carries the same two commands as `Undo` and `Redo` buttons, next to 
 They light up only when there is something to undo or redo. A `readonly` editor hides all three, and the shortcuts do nothing.
 
 Undo and Redo apply only on the ERD tab. They are unavailable on the Visualization, Schema SQL, Code Generator, and Settings tabs.  
-The shortcuts are also inactive while Quick Search, `Table Properties`, `Diff Viewer`, `Automatic Table Placement`, or Time Travel is open.
+The shortcuts are also inactive while Quick Search, `Table Properties`, `Diff Viewer`, the `Auto Layout` preview, or Time Travel is open.
 
 The history lives in memory for the current session. It is not stored in the document, so reopening a diagram starts with an empty history.
 

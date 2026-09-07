@@ -83,8 +83,8 @@ The `Shortcuts` tab is a read-only table of `Command` and `Keybinding`, listing 
 | Hand Tool | `Space` | `Space` |
 | Zen Mode | `Alt + Z` | `⌥ + Z` |
 
-Most of these fire on the ERD tab only, and they are held back while quick search, table properties, the diff viewer, automatic table placement, or time travel is open.
-`Search` and `Stop` are the exceptions: `Search` toggles quick search from any tab, and `Stop` is what closes quick search, table properties, the diff viewer, automatic table placement, time travel, and the theme builder.
+Most of these fire on the ERD tab only, and they are held back while quick search, table properties, the diff viewer, the Auto Layout preview, or time travel is open.
+`Search` and `Stop` are the exceptions: `Search` toggles quick search from any tab, and `Stop` is what closes quick search, table properties, the diff viewer, the Auto Layout preview, time travel, and the theme builder.
 `Select All Table, Memo` and `Hand Tool` give way to a caret: while you are editing a cell, `Ctrl + A` selects the text and `Space` types a space.
 Copy and paste are the browser's own `Ctrl + C` and `Ctrl + V` (Windows/Linux) or `⌘ + C` and `⌘ + V` (Mac), so they are not in this list — see [Table Editing](./table-editing.md).
 

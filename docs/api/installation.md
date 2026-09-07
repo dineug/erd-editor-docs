@@ -1,6 +1,6 @@
 ---
 sidebar_position: 1
-description: Install @dineug/erd-editor from npm or a CDN, mount the custom element, add syntax highlighting, and wire up the file dialogs.
+description: Install @dineug/erd-editor from npm or a CDN, mount the custom element, and wire up the file dialogs.
 ---
 
 # Install
@@ -52,23 +52,23 @@ See [ErdEditorElement](./erd-editor-element.md) for the rest of the API.
 ```
 
 `esm.run` resolves the package's external dependencies for you, so this works without a bundler.
-The unversioned URL always serves the latest release. Pin a version — `https://esm.run/@dineug/erd-editor@3.6.0` — if you do not want a major upgrade to reach your page unannounced.
+The unversioned URL always serves the latest release. Pin a version — `https://esm.run/@dineug/erd-editor@3.7.0` — if you do not want a major upgrade to reach your page unannounced.
 
 ### Script tag
 
-Since `3.6.0` the package also ships a UMD build with every dependency and both shared workers inside one file.
+Since `3.6.0` the package also ships a UMD build with every dependency and all four shared workers inside one file.
 It is what the `unpkg` and `jsdelivr` fields point at, so the bare package URL on either CDN serves it, and it defines `window.ErdEditor`.
 
 ```html
 <erd-editor></erd-editor>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@3.6.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@3.7.0"></script>
 <script>
   const editor = document.querySelector('erd-editor');
   editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
 </script>
 ```
 
-Importing it registers `<erd-editor>` the same way; `window.ErdEditor` carries the callback setters, such as `ErdEditor.setGetShikiServiceCallback`.
+Importing it registers `<erd-editor>` the same way; `window.ErdEditor` carries the two file callbacks, `ErdEditor.setExportFileCallback` and `ErdEditor.setImportFileCallback`.
 The exports map still points a bundler at the ES modules, so an install from npm never picks this file up.
 
 ### HTML
@@ -119,73 +119,47 @@ const found = document.querySelector('erd-editor'); // ErdEditorElement | null
 
 ## Syntax Highlighting
 
-The Schema SQL and Code Generator panels render as plain text unless you supply a highlighter.
-[`@dineug/erd-editor-shiki-worker`](https://www.npmjs.com/package/@dineug/erd-editor-shiki-worker) runs one in a shared worker.
-It is a separate install, because Shiki and its grammars build out to well over a megabyte.
+The Schema SQL and Code Generator panels are highlighted by [Shiki](https://shiki.style), in a shared worker of its own.
+Since `3.7.0` there is nothing to install and nothing to register: the worker is built the first time a code panel renders, so a page that opens none never fetches the grammars.
 
-```sh
-npm install @dineug/erd-editor-shiki-worker
-```
+| | |
+| --- | --- |
+| Languages | SQL, TypeScript, GraphQL, C#, Java, Kotlin, Scala, Go, Python |
+| Themes | `github-dark` and `github-light`, following the editor's light or dark appearance |
 
-```js
-import { setGetShikiServiceCallback } from '@dineug/erd-editor';
+Those are exactly the languages the panels emit: `JPA` is highlighted as Java, `SQLAlchemy` as Python, `TypeORM`, `Sequelize` and `Drizzle` as TypeScript, and `DBML` and `AML` as SQL, the closest grammar in the bundle — see [Code Generator](../guide/guides/code-generator.md).
 
-// deferred, so the highlighter never lands in your main chunk
-import('@dineug/erd-editor-shiki-worker').then(({ getShikiService }) => {
-  setGetShikiServiceCallback(getShikiService);
-});
-```
+The regex engine is plain JavaScript, so no host policy needs `wasm-unsafe-eval`.
+Where `SharedWorker` is missing — Chrome on Android, Safari before 16.4 — the failure is logged and the panels render as plain text. Nothing else is affected.
 
-From a CDN:
-
-```html
-<script type="module">
-  import { setGetShikiServiceCallback } from 'https://esm.run/@dineug/erd-editor';
-  import { getShikiService } from 'https://esm.run/@dineug/erd-editor-shiki-worker';
-
-  setGetShikiServiceCallback(getShikiService);
-</script>
-```
-
-From script tags, through the two globals the UMD builds define:
-
-```html
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@3.6.0"></script>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor-shiki-worker@0.3.0"></script>
-<script>
-  ErdEditor.setGetShikiServiceCallback(ErdEditorShikiWorker.getShikiService);
-</script>
-```
-
-Register it once, before or after the editor mounts. Panels already on screen re-render when the highlighter arrives.
-It covers SQL, TypeScript, GraphQL, C#, Java, Kotlin, Scala, Go, and Python. The `AML` and `DBML` [Code Generator](../guide/guides/code-generator.md) targets have no grammar in the bundle, so those panels stay plain text.
-
-Where `SharedWorker` is missing — Chrome on Android, Safari before 16.4 — no highlighter is returned and the panels stay plain text.
+Upgrading from `3.6.0` or earlier: `@dineug/erd-editor-shiki-worker` is no longer published, and `setGetShikiServiceCallback` is gone with it.
+Drop the install and the registration; a page that loaded the worker from a CDN drops that second `<script>` tag as well.
 
 ## Web Workers
 
-The editor runs three jobs in `SharedWorker`s: syntax highlighting, PNG export, and the document's own garbage collection.
-None of them is something you set up, but each one is something a host can block, so each has a way out.
+The editor runs four jobs in `SharedWorker`s: syntax highlighting, PNG export, [Auto Layout](../guide/guides/table-related-functions.md#auto-layout), and the document's own garbage collection.
+All four ship inside `@dineug/erd-editor`. None of them is something you set up, but each one is something a host can block.
 
-| Worker | Where it comes from | Without it |
-| --- | --- | --- |
-| Syntax highlighting | `@dineug/erd-editor-shiki-worker`, registered by you | The SQL and Code Generator panels stay plain text |
-| PNG export | `@dineug/erd-editor` | The image is drawn on the main thread, which blocks the page while it draws |
-| Schema garbage collection | `@dineug/erd-editor` | It runs in-process |
+| Worker | Without it |
+| --- | --- |
+| Syntax highlighting | The Schema SQL and Code Generator panels stay plain text |
+| PNG export | The image is drawn on the main thread, which blocks the page while it draws |
+| Auto Layout | The `Flow` and `Tree` layouts end in `Could not place tables`; `Force` is unaffected, since it runs inside the editor |
+| Schema garbage collection | It runs in-process |
 
-The two the editor owns wait ten seconds for a worker to answer and then carry on without it, so a host that blocks workers costs performance rather than function.
+The three other than Auto Layout wait ten seconds for a worker to answer and then carry on without it, so a host that blocks workers costs performance rather than function.
+Auto Layout is the exception: the engine that computes a layout outweighs the editor itself and is never loaded in-process, so it waits thirty seconds for its worker on the first placement and reports a failure if none answers.
 
-In the bundled build the two workers `@dineug/erd-editor` owns are emitted as files beside it, so a strict CSP needs `worker-src 'self'` — plus `blob:` where your bundler inlines a worker.
-In the [script-tag](#script-tag) build both travel inside the file as `data:` URLs, so that page needs `worker-src data:` instead.
+In the bundled build all four are emitted as files beside the package, so a strict CSP needs `worker-src 'self'` — plus `blob:` where your bundler inlines a worker.
+In the [script-tag](#script-tag) build all four travel inside the file as `data:` URLs, so that page needs `worker-src data:` instead.
 
 ## Entry Points
 
-Importing `@dineug/erd-editor` registers `<erd-editor>` as a side effect. Beyond that it exports the element type and three callback setters.
+Importing `@dineug/erd-editor` registers `<erd-editor>` as a side effect. Beyond that it exports the element type and two callback setters.
 
 | Export | Description |
 | --- | --- |
 | `ErdEditorElement` (type) | The element interface — see [ErdEditorElement](./erd-editor-element.md). |
-| `setGetShikiServiceCallback(cb)` | Supplies the syntax highlighter, `() => ShikiService \| null`. |
 | `setExportFileCallback(cb)` | Replaces the browser download, `(blob, { fileName }) => void`. |
 | `setImportFileCallback(cb)` | Replaces the browser file picker, `({ type, op, accept }) => void`. |
 

@@ -1,6 +1,6 @@
 ---
 sidebar_position: 1
-description: 从 npm 或 CDN 安装 @dineug/erd-editor，挂载自定义元素，添加语法高亮，以及接管文件对话框。
+description: 从 npm 或 CDN 安装 @dineug/erd-editor，挂载自定义元素，以及接管文件对话框。
 ---
 
 # 安装
@@ -52,23 +52,23 @@ editor.addEventListener('change', () => {
 ```
 
 `esm.run` 会替你解析该包的外部依赖，因此无需打包器也能工作。
-不带版本号的 URL 始终提供最新的发布版本。如果不希望大版本升级在毫无预告的情况下进入页面，可以像 `https://esm.run/@dineug/erd-editor@3.6.0` 这样固定版本。
+不带版本号的 URL 始终提供最新的发布版本。如果不希望大版本升级在毫无预告的情况下进入页面，可以像 `https://esm.run/@dineug/erd-editor@3.7.0` 这样固定版本。
 
 ### script 标签
 
-从 `3.6.0` 起，该包还会发布一份 UMD 构建，把所有依赖和两个 shared worker 都装进同一个文件。
+从 `3.6.0` 起，该包还会发布一份 UMD 构建，把所有依赖和四个 shared worker 都装进同一个文件。
 `unpkg` 与 `jsdelivr` 字段指向的就是它，因此这两个 CDN 上该包的基础 URL 提供的都是这个文件，它会定义 `window.ErdEditor`。
 
 ```html
 <erd-editor></erd-editor>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@3.6.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@3.7.0"></script>
 <script>
   const editor = document.querySelector('erd-editor');
   editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
 </script>
 ```
 
-引入它同样会注册 `<erd-editor>`，`window.ErdEditor` 上带有各个回调 setter，例如 `ErdEditor.setGetShikiServiceCallback`。
+引入它同样会注册 `<erd-editor>`，`window.ErdEditor` 上带有两个文件回调 `ErdEditor.setExportFileCallback` 与 `ErdEditor.setImportFileCallback`。
 exports 映射仍然指向 ES 模块，因此从 npm 安装时打包器不会用到这个文件。
 
 ### HTML
@@ -119,73 +119,47 @@ const found = document.querySelector('erd-editor'); // ErdEditorElement | null
 
 ## 语法高亮
 
-如果不提供高亮器，Schema SQL 和 Code Generator 面板会以纯文本显示。
-[`@dineug/erd-editor-shiki-worker`](https://www.npmjs.com/package/@dineug/erd-editor-shiki-worker)会在 shared worker 中运行一个高亮器。
-由于 Shiki 及其语法文件的构建体积远超 1MB，它需要单独安装。
+Schema SQL 与 Code Generator 面板由 [Shiki](https://shiki.style) 高亮，它运行在自己的 shared worker 中。
+从 `3.7.0` 起，既不需要安装也不需要注册：worker 会在第一个代码面板渲染时创建，因此从不打开代码面板的页面永远不会去取语法文件。
 
-```sh
-npm install @dineug/erd-editor-shiki-worker
-```
+| | |
+| --- | --- |
+| 语言 | SQL、TypeScript、GraphQL、C#、Java、Kotlin、Scala、Go、Python |
+| 主题 | `github-dark` 与 `github-light`，跟随编辑器的浅色 / 深色外观 |
 
-```js
-import { setGetShikiServiceCallback } from '@dineug/erd-editor';
+这正是面板实际输出的语言：`JPA` 按 Java 高亮，`SQLAlchemy` 按 Python 高亮，`TypeORM`、`Sequelize` 与 `Drizzle` 按 TypeScript 高亮，`DBML` 与 `AML` 则按包中最接近的语法 SQL 高亮。参见[代码生成](../guide/guides/code-generator.md)。
 
-// deferred, so the highlighter never lands in your main chunk
-import('@dineug/erd-editor-shiki-worker').then(({ getShikiService }) => {
-  setGetShikiServiceCallback(getShikiService);
-});
-```
+正则引擎是纯 JavaScript，因此宿主的策略不需要 `wasm-unsafe-eval`。
+在没有 `SharedWorker` 的环境中（Android 上的 Chrome、16.4 之前的 Safari），失败会被记录下来，面板以纯文本渲染，其余一切不受影响。
 
-从 CDN 使用时：
-
-```html
-<script type="module">
-  import { setGetShikiServiceCallback } from 'https://esm.run/@dineug/erd-editor';
-  import { getShikiService } from 'https://esm.run/@dineug/erd-editor-shiki-worker';
-
-  setGetShikiServiceCallback(getShikiService);
-</script>
-```
-
-在 script 标签中，则通过两份 UMD 构建定义的全局变量使用：
-
-```html
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@3.6.0"></script>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor-shiki-worker@0.3.0"></script>
-<script>
-  ErdEditor.setGetShikiServiceCallback(ErdEditorShikiWorker.getShikiService);
-</script>
-```
-
-注册一次即可，在编辑器挂载之前或之后都可以。已经显示在屏幕上的面板会在高亮器就绪后重新渲染。
-支持 SQL、TypeScript、GraphQL、C#、Java、Kotlin、Scala、Go 和 Python。[代码生成](../guide/guides/code-generator.md)的 `AML` 与 `DBML` 目标在包中没有对应的语法文件，因此这些面板仍为纯文本。
-
-在没有 `SharedWorker` 的环境中（Android 上的 Chrome、16.4 之前的 Safari），不会返回高亮器，面板仍为纯文本。
+从 `3.6.0` 及更早版本升级时：`@dineug/erd-editor-shiki-worker` 不再发布，`setGetShikiServiceCallback` 也随之移除。
+删掉那次安装和注册即可；如果页面此前从 CDN 加载该 worker，第二个 `<script>` 标签也一并删除。
 
 ## Web Worker
 
-编辑器会在 `SharedWorker` 中运行三件事：语法高亮、PNG 导出，以及文档自身的垃圾回收。
-它们都不需要你来配置，但都可能被宿主环境阻止，因此每一项都有退路。
+编辑器会在 `SharedWorker` 中运行四件事：语法高亮、PNG 导出、[自动布局](../guide/guides/table-related-functions.md#auto-layout)，以及文档自身的垃圾回收。
+四者都包含在 `@dineug/erd-editor` 中。它们都不需要你来配置，但都可能被宿主环境阻止。
 
-| Worker | 来源 | 缺少时 |
-| --- | --- | --- |
-| 语法高亮 | `@dineug/erd-editor-shiki-worker`，由你注册 | Schema SQL 与 Code Generator 面板保持纯文本 |
-| PNG 导出 | `@dineug/erd-editor` | 改在主线程绘制，绘制期间页面会卡住 |
-| Schema 垃圾回收 | `@dineug/erd-editor` | 改为进程内运行 |
+| Worker | 缺少时 |
+| --- | --- |
+| 语法高亮 | Schema SQL 与 Code Generator 面板保持纯文本 |
+| PNG 导出 | 改在主线程绘制，绘制期间页面会卡住 |
+| 自动布局 | `Flow` 与 `Tree` 布局会以 `Could not place tables` 收场；`Force` 在编辑器内运行，不受影响 |
+| Schema 垃圾回收 | 改为进程内运行 |
 
-编辑器自带的这两个 worker 最多等待十秒，之后便不再依赖 worker 继续执行，因此阻止 worker 的宿主环境损失的是性能而不是功能。
+除自动布局以外的三者最多等待十秒，之后便不再依赖 worker 继续执行，因此阻止 worker 的宿主环境损失的是性能而不是功能。
+自动布局是例外：计算布局的引擎比编辑器本身还大，从不放进进程内运行，因此首次布局时最多等待三十秒，若无响应则报告失败。
 
-在打包构建中，编辑器自带的两个 worker 会作为独立文件一同发布，因此 CSP 严格的页面需要 `worker-src 'self'`；如果你的打包器把 worker 内联，还需要加上 `blob:`。
-在 [script 标签](#script-标签)构建中，两个 worker 都以 `data:` URL 的形式装在文件里，因此这类页面需要的是 `worker-src data:`。
+在打包构建中，四个 worker 都会作为独立文件一同发布，因此 CSP 严格的页面需要 `worker-src 'self'`；如果你的打包器把 worker 内联，还需要加上 `blob:`。
+在 [script 标签](#script-标签)构建中，四个 worker 都以 `data:` URL 的形式装在文件里，因此这类页面需要的是 `worker-src data:`。
 
 ## 入口点
 
-导入 `@dineug/erd-editor` 会作为副作用注册 `<erd-editor>`。除此之外，它还导出元素的类型和三个回调 setter。
+导入 `@dineug/erd-editor` 会作为副作用注册 `<erd-editor>`。除此之外，它还导出元素的类型和两个回调 setter。
 
 | 导出 | 说明 |
 | --- | --- |
 | `ErdEditorElement`（类型） | 元素的接口，参见 [ErdEditorElement](./erd-editor-element.md)。 |
-| `setGetShikiServiceCallback(cb)` | 提供语法高亮器，`() => ShikiService \| null`。 |
 | `setExportFileCallback(cb)` | 替换浏览器的下载行为，`(blob, { fileName }) => void`。 |
 | `setImportFileCallback(cb)` | 替换浏览器的文件选择框，`({ type, op, accept }) => void`。 |
 
