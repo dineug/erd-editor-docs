@@ -24,7 +24,7 @@ Drag its border to resize it, and use the `x` in its header to delete it.
 
 ## Relationship Creation
 
-Start a relationship from the context menu, from the [canvas toolbar](./table-related-functions.md#canvas-toolbar) in the top-left corner, or with a shortcut. Each relationship type has its own:
+Start a relationship from the context menu, from the [canvas toolbar](./table-related-functions.md#canvas-toolbar) at the bottom of the canvas, or with a shortcut. Each relationship type has its own:
 
 - Zero One: `Ctrl + Alt + 1` (Windows/Linux) or `⌘ + ⌥ + 1` (Mac)
 - Zero N: `Ctrl + Alt + 2` (Windows/Linux) or `⌘ + ⌥ + 2` (Mac)

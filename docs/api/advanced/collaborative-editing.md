@@ -41,6 +41,9 @@ An action is a plain serializable object describing one change to the document, 
 They arrive in batches: `subscribe` hands you an array, and that array is one unit — relay it whole and dispatch it whole on the other side.  
 Treat an action as opaque and pass it through verbatim rather than reading or rewriting it, since the bookkeeping it carries is what keeps the editors in sync.
 
+Nothing done in the Visualization tab's [Flow mode](../../guide/guides/visualization.md#flow-never-edits-the-document) is a document change, so an editor in Flow sends the others no changes, and the changes they send keep applying while it is there.  
+The one exception is the external-link card button that takes you back to the ERD tab: its tab switch and scroll are sent like any other.
+
 ## Two Editors on One Page
 
 The subscribe-to-dispatch wiring here stands in for the network, so you can see the shape of a session without a transport in the way.
@@ -81,7 +84,7 @@ editor.getSharedStore({
 ### mouseTracker
 
 Broadcasts this user's mouse cursor to the other editors. Default is `true`.  
-Cursors sent by other users are always shown.
+Cursors sent by other users are always shown on the ERD canvas.
 
 ```js
 editor.getSharedStore({ mouseTracker: false });
@@ -92,7 +95,8 @@ editor.getSharedStore({ mouseTracker: false });
 Broadcasts what this user is working on. Default is `true`.  
 The table and cell you have focused, the tables and memos you have selected, and the box you drag on the canvas are sent to the other editors and drawn there.  
 Each user gets a color of their own, so you can tell them apart: an outline on the focused table, an underline on the focused cell, a ring around the selected tables and memos, and a dashed rectangle for the drag box.  
-Presence arriving from other users is always drawn on your canvas, whether or not this option is on.
+Presence arriving from other users is always drawn on your canvas, whether or not this option is on.  
+In the Visualization tab's Flow mode, other users' focus and selection are drawn on the table cards but their drag boxes are not. The tables you select there are still sent; the box you drag there is not.
 
 ```js
 editor.getSharedStore({ focusTracker: false });

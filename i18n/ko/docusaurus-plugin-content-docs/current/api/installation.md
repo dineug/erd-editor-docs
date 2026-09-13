@@ -52,7 +52,7 @@ editor.addEventListener('change', () => {
 ```
 
 `esm.run`이 패키지의 외부 의존성을 대신 해석해 주므로 번들러 없이도 동작합니다.
-버전이 없는 URL은 항상 최신 릴리스를 제공합니다. 메이저 업그레이드가 예고 없이 페이지에 반영되는 것을 원하지 않는다면 `https://esm.run/@dineug/erd-editor@3.7.0`처럼 버전을 고정하세요.
+버전이 없는 URL은 항상 최신 릴리스를 제공합니다. 메이저 업그레이드가 예고 없이 페이지에 반영되는 것을 원하지 않는다면 `https://esm.run/@dineug/erd-editor@3.8.0`처럼 버전을 고정하세요.
 
 ### script 태그
 
@@ -61,7 +61,7 @@ editor.addEventListener('change', () => {
 
 ```html
 <erd-editor></erd-editor>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@3.7.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@3.8.0"></script>
 <script>
   const editor = document.querySelector('erd-editor');
   editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
@@ -137,18 +137,19 @@ Schema SQL과 Code Generator 패널은 전용 shared worker에서 동작하는 [
 
 ## Web Worker
 
-에디터는 네 가지 작업을 `SharedWorker`에서 실행합니다. 구문 강조, PNG 내보내기, [자동 배치](../guide/guides/table-related-functions.md#자동-배치), 문서 가비지 컬렉션입니다.
+에디터는 네 가지 작업을 `SharedWorker`에서 실행합니다. 구문 강조, PNG 내보내기, [자동 배치](../guide/guides/table-related-functions.md#자동-배치)와 Visualization 탭의 [Flow 모드](../guide/guides/visualization.md#flow-배치-방식)가 사용하는 테이블 배치, 문서 가비지 컬렉션입니다.
 넷 모두 `@dineug/erd-editor` 안에 들어 있습니다. 따로 설정할 것은 없지만, 모두 호스트가 막을 수 있는 작업입니다.
 
 | 워커 | 없을 때 |
 | --- | --- |
 | 구문 강조 | Schema SQL과 Code Generator 패널이 일반 텍스트로 남습니다 |
 | PNG 내보내기 | 메인 스레드에서 그리므로 그리는 동안 페이지가 멈춥니다 |
-| 자동 배치 | `Flow`와 `Tree` 배치가 `Could not place tables`로 끝납니다. `Force`는 에디터 안에서 실행되므로 영향을 받지 않습니다 |
+| 테이블 배치 | 자동 배치의 `Flow`, `Tree - vertical`, `Tree - horizontal` 배치와 Visualization 탭의 Flow 모드가 `Could not place tables`로 끝납니다. `Force`와 Graph 모드는 에디터 안에서 실행되므로 영향을 받지 않습니다 |
 | 스키마 가비지 컬렉션 | 인프로세스로 실행됩니다 |
 
-자동 배치를 뺀 나머지 셋은 응답을 10초까지 기다린 뒤 워커 없이 진행하므로, 워커를 막는 호스트에서는 기능이 사라지는 대신 성능만 손해를 봅니다.
-자동 배치만 예외입니다. 배치를 계산하는 엔진이 에디터 자체보다 무거워 인프로세스로는 절대 올리지 않기 때문에, 첫 배치에서 워커를 30초까지 기다린 뒤 응답이 없으면 실패를 알립니다.
+PNG 내보내기와 스키마 가비지 컬렉션은 응답을 10초까지 기다린 뒤 워커 없이 진행하고, 구문 강조는 워커가 실패하는 즉시 패널을 일반 텍스트로 남기므로, 워커를 막는 호스트에서는 기능이 사라지는 대신 성능만 손해를 봅니다.
+테이블 배치만 예외입니다. 배치를 계산하는 엔진이 에디터 자체보다 무거워 인프로세스로는 절대 올리지 않기 때문에, 첫 배치에서 워커를 30초까지 기다린 뒤 응답이 없으면 실패를 알립니다.
+워커가 응답한 뒤에도 60초 안에 결과가 돌아오지 않는 배치는 마찬가지로 포기하며, 같은 `Could not place tables`로 끝납니다. 자동 배치는 시작하자마자 `Placing tables…`를 표시하지만, Flow 모드는 워커 시작까지 포함한 배치가 6초 동안 이어진 뒤에야 표시합니다.
 
 번들 빌드에서는 네 워커가 모두 별도 파일로 함께 배포되므로, CSP가 엄격한 페이지에는 `worker-src 'self'`가 필요합니다. 번들러가 워커를 인라인한다면 `blob:`도 함께 필요합니다.
 [script 태그](#script-태그) 빌드에서는 넷 모두 `data:` URL로 파일 안에 들어가므로, 그 페이지에는 `worker-src data:`가 필요합니다.

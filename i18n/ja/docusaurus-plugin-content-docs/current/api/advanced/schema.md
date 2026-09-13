@@ -138,6 +138,9 @@ const SaveSettingType = {
 `width` と `height` はレガシーなキャンバスサイズです。キャンバスに端がなくなったため設定されることはありませんが、古いエディタが読めるように既定値のまま書き出されます。  
 `zoomLevel` は `0.1` から `1.5` までです。`1` を超えて保存したドキュメントは、`3.5.0` より前のエディタでは `1` で開きます。
 
+`canvasType` はドキュメントを開いたときに表示するタブです。Visualization タブで保存したドキュメントは `'@dineug/erd-editor/builtin-visualization'` を保持しますが、`Graph` モードと `Flow` モードのどちらを表示していたかは保持せず、新しく作成したエディタはそのタブを `Graph` モードで表示します。  
+`Flow` モード自体の状態は何もシリアライズされず、配置、拡大・縮小、表示位置、行の表示、フォーカスしているテーブルはエディタ内にとどまります。そのため、`originX`、`originY`、`zoomLevel` は常に ERD キャンバスを表します。
+
 `show` と `ignoreSaveSettings` はビットマスクです。フラグを OR で結合します。  
 `columnOrder` は `ColumnType` の 7 つの値をすべて表示順で保持する配列です。  
 `database`、`language`、`tableNameCase`、`columnNameCase`、`bracketType` はそれぞれ 1 つの値だけを保持し、組み合わせた値は JSON Schema で拒否されます。

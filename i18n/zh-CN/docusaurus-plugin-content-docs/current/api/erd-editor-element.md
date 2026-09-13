@@ -60,7 +60,7 @@ interface ErdEditorElement extends HTMLElement {
 
 设置编辑器是否可编辑。  
 在其生效期间，为 `value` 赋值、`clear()`、`setSchemaSQL()`、`setSchemaGraphQL()`、`setSchemaDBML()`、`setSchemaAML()`、undo 和 redo 都会被忽略，并且不会发出 `change` 事件。此时改用 [setInitialValue](#setinitialvalue) 加载文档。  
-查看功能仍然可用：缩放、平移、抓手工具、禅模式、画布标签页、数据库厂商，以及 SQL 与代码生成的输出设置都仍然生效，因此只读的查看者依然可以导出其他厂商的 SQL 或阅读生成的代码。  
+查看功能仍然可用：缩放、平移、抓手工具、禅模式、画布标签页、[Visualization](../guide/guides/visualization.md) 标签页的两种模式（包括聚焦于表）、数据库厂商，以及 SQL 与代码生成的输出设置都仍然生效，因此只读的查看者依然可以导出其他厂商的 SQL 或阅读生成的代码。  
 仅写属性名、`=""` 和 `="true"` 都会被读作 `true`。`="false"` 会被读作 `false`，其他任何字符串也一样，包括 HTML 惯用写法 `readonly="readonly"`。
 
 ```js
@@ -120,6 +120,7 @@ const data = editor.value;
 ### setter
 
 加载此前保存的编辑器状态。它会替换整个文档，先清空当前文档。  
+与 `clear()`、`setInitialValue()` 以及各个 `setSchema*` 方法一样，它也会丢弃 Visualization 标签页的 Flow 视图：包括它的布局、视图范围所缩小到的表、行显示、缩放和平移。  
 会记录到历史列表中，因此可以 `Undo, Redo`，并且会发出 `change`。  
 空字符串或非字符串的值不会报错，而是加载一个空白文档，因此赋值前需要先做好校验。  
 在 `readonly` 生效期间会被忽略，要在只读编辑器中加载文档需使用 [setInitialValue](#setinitialvalue)。
@@ -157,6 +158,7 @@ editor.addEventListener('change', () => {
 编辑器发生变更时会发出事件。  
 该事件有 200ms 的防抖，并且在 `readonly` 为 `true` 期间不会发出。  
 任何文档变更都会触发它：在 UI 中编辑、为 `value` 赋值、`clear()`，以及各个 `setSchema*` 方法。`setInitialValue` 不会触发它。  
+在 Visualization 标签页的 Flow 模式中所做的任何操作都不会触发它，包括缩放、平移、移动卡片、`Tidy Up`、行显示，以及从卡片缩小视图范围，因为这些都不是文档变更。切换标签页则会触发它，因此从 ERD 标签页聚焦于表会发出一次 `change`，把你从 Flow 带回 ERD 标签页的外部链接卡片按钮也同样如此。  
 该事件不携带 `detail`，既不冒泡也不跨越 shadow 边界，因此需要在元素自身上监听，并在处理函数中读取 `editor.value`。
 
 ```js
@@ -215,7 +217,7 @@ editor.destroy();
 
 重新定义键盘快捷键。  
 `edit`、`stop`、`search`、`undo`、`redo`、`zoomIn`、`zoomOut` 和 `zoomReset` 是固定的，无法重新定义。  
-只有下面这十五个名称会被写入，对象中的其他内容都会被忽略，包括那些固定的名称。  
+只有下面这十六个名称会被写入，对象中的其他内容都会被忽略，包括那些固定的名称。  
 绑定的值必须是 `ShortcutOption[]`。单纯的字符串会被忽略，因此要写成 `{ addTable: [{ shortcut: 'Alt+KeyN' }] }`，而不是 `{ addTable: 'Alt+KeyN' }`。  
 该调用是部分合并：未写出的名称保持默认值，调用两次也会保留先前的更改。没有用于读取当前绑定的 getter。
 
@@ -259,6 +261,9 @@ const defaultKeyBindingMap: Omit<
   relationshipOneOnly: [{ shortcut: '$mod+Alt+Digit3', preventDefault: true }],
   relationshipOneN: [{ shortcut: '$mod+Alt+Digit4', preventDefault: true }],
   tableProperties: [{ shortcut: 'Alt+Space', preventDefault: true }],
+  focusView: [
+    { shortcut: 'Alt+KeyF', preventDefault: true, stopPropagation: true },
+  ],
   handTool: [{ shortcut: 'Space', preventDefault: true }],
   zenMode: [
     { shortcut: 'Alt+KeyZ', preventDefault: true, stopPropagation: true },
@@ -272,6 +277,8 @@ editor.setKeyBindingMap({
 ```
 
 `selectAllTable` 与 `handTool` 会让位于光标：只要焦点位于 input、textarea 或 `contenteditable` 中，`$mod + A` 就会选中文本，`Space` 就会输入空格，都不会传到画布上。改绑到其他快捷键后行为同样如此。
+
+`focusView` 仅作用于 ERD 标签页。至少选中一个表时，它会以 Flow 模式打开 Visualization 标签页，范围缩小到这些表以及与它们相隔一条关系的所有表；没有选中任何表时它不起作用。参见[聚焦于表](../guide/guides/visualization.md#focusing-on-tables)。
 
 ### $mod
 

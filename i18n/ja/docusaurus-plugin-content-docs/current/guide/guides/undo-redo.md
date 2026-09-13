@@ -19,7 +19,7 @@ Undo と Redo は ERD タブでのみ動作します。Visualization、Schema SQ
 
 履歴は現在のセッションのあいだメモリ上に保持されます。ドキュメントには保存されないため、ダイアグラムを開き直すと履歴は空の状態から始まります。
 
-## 履歴に記録される内容
+## 履歴に記録される内容 {#what-the-history-records}
 
 記録される項目は次のとおりです。
 
@@ -36,6 +36,7 @@ Undo と Redo は ERD タブでのみ動作します。Visualization、Schema SQ
 - Code Generator の言語、`Table Name Case`、`Column Name Case`。
 - Schema SQL の括弧の種類。
 - 設定タブのすべての項目。
+- Visualization タブでの拡大・縮小と表示位置の移動（どちらのモードでも）、グラフのノードや Flow のカードの移動、`Tidy Up`、行の表示、テーブルへのフォーカス。[Flow はドキュメントを編集しない](./visualization.md#flow-never-edits-the-document)を参照してください。
 
 これらの変更は Undo できません。
 

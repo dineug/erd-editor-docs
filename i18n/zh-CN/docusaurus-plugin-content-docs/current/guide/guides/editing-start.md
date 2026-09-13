@@ -24,7 +24,7 @@ description: 从画布右键菜单创建表、备注与关系。
 
 ## 创建关系
 
-通过右键菜单、左上角的[画布工具栏](./table-related-functions.md#canvas-toolbar)或快捷键创建关系。每种关系类型都有各自的快捷键：
+通过右键菜单、画布底部的[画布工具栏](./table-related-functions.md#canvas-toolbar)或快捷键创建关系。每种关系类型都有各自的快捷键：
 
 - Zero One: `Ctrl + Alt + 1` (Windows/Linux) or `⌘ + ⌥ + 1` (Mac)
 - Zero N: `Ctrl + Alt + 2` (Windows/Linux) or `⌘ + ⌥ + 2` (Mac)

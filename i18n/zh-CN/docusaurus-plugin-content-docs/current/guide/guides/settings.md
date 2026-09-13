@@ -77,14 +77,18 @@ description: 关系数据类型同步、视图位置与缩放信息保存、注�
 | Relationship One Only | `Ctrl + Alt + 3` | `⌘ + ⌥ + 3` |
 | Relationship One N | `Ctrl + Alt + 4` | `⌘ + ⌥ + 4` |
 | Table Properties | `Alt + Space` | `⌥ + Space` |
+| Focus on this table | `Alt + F` | `⌥ + F` |
 | Zoom In | `Ctrl + Plus` | `⌘ + Plus` |
 | Zoom Out | `Ctrl + Minus` | `⌘ + Minus` |
-| Zoom Reset | `Ctrl + O` | `⌘ + O` |
+| Zoom Reset | `Ctrl + 0` | `⌘ + 0` |
 | Hand Tool | `Space` | `Space` |
 | Zen Mode | `Alt + Z` | `⌥ + Z` |
 
 其中大多数仅在 ERD 标签页生效，并且在快速搜索、表属性、Diff Viewer、自动布局预览或 Time Travel 打开期间不会触发。
 `Search` 与 `Stop` 是例外。`Search` 可以在任意标签页中开关快速搜索，`Stop` 则用于关闭快速搜索、表属性、Diff Viewer、自动布局预览、Time Travel 和主题构建器。
+`Zoom In`、`Zoom Out` 与 `Zoom Reset` 同样可以缩放 [Visualization](./visualization.md#toolbar) 标签页，`Graph` 与 `Flow` 均适用，快速搜索打开期间除外。
+在 Visualization 标签页中，`Stop` 还会关闭[行显示](./visualization.md#row-display)菜单，并取消仍在进行中的 [Flow 布局](./visualization.md#how-flow-is-placed)；但它不会扩大通过 `Focus on this table` 缩小的视图范围。
+`Focus on this table` 会以 `Flow` 打开 Visualization 标签页，范围缩小到选中的表以及与它们相隔一条关系的所有表，没有选中任何表时不起作用。参见[聚焦于表](./visualization.md#focusing-on-tables)。
 `Select All Table, Memo` 与 `Hand Tool` 会让位于光标：在编辑单元格时，`Ctrl + A` 选中的是文本，`Space` 输入的是空格。
 复制与粘贴使用浏览器自身的 `Ctrl + C` 与 `Ctrl + V` (Windows/Linux) 或 `⌘ + C` 与 `⌘ + V` (Mac)，因此不在此列表中，参见[编辑表](./table-editing.md)。
 

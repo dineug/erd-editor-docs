@@ -58,7 +58,8 @@ A relationship is identifying while every column on its child side is a primary 
 - The parent end is a ring when any of the foreign key columns allows `NULL`, and a short dash when they are all `NOT NULL`.
 - Hovering a connector highlights it along with the columns it links in both tables.
 
-Hide connectors entirely with the `Relationship` view option — see [Table-related Functions](./table-related-functions.md).
+Hide connectors on the ERD canvas with the `Relationship` view option — see [Table-related Functions](./table-related-functions.md).  
+[Flow mode](./visualization.md#flow-mode) on the Visualization tab draws connectors even with that option off, each as one smooth solid gray curve with the same end marks, so the dashed line and the routing described on this page apply to the ERD canvas only.
 
 ## Connector Routing
 

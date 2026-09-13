@@ -19,7 +19,7 @@ Undo 与 Redo 仅在 ERD 标签页生效。在 Visualization、Schema SQL、Code
 
 历史记录保存在当前会话的内存中。它不会存入文档，因此重新打开图时历史记录为空。
 
-## 历史记录的内容
+## 历史记录的内容 {#what-the-history-records}
 
 会记录以下内容：
 
@@ -36,6 +36,7 @@ Undo 与 Redo 仅在 ERD 标签页生效。在 Visualization、Schema SQL、Code
 - Code Generator 的语言、`Table Name Case` 与 `Column Name Case`。
 - Schema SQL 的括号类型。
 - 设置标签页中的全部内容。
+- Visualization 标签页中两种模式下的缩放与平移、移动图的节点或 Flow 卡片、`Tidy Up`、行显示，以及聚焦于表。参见 [Flow 从不编辑文档](./visualization.md#flow-never-edits-the-document)。
 
 这些内容的变更无法 Undo。
 

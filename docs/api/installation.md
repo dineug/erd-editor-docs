@@ -52,7 +52,7 @@ See [ErdEditorElement](./erd-editor-element.md) for the rest of the API.
 ```
 
 `esm.run` resolves the package's external dependencies for you, so this works without a bundler.
-The unversioned URL always serves the latest release. Pin a version — `https://esm.run/@dineug/erd-editor@3.7.0` — if you do not want a major upgrade to reach your page unannounced.
+The unversioned URL always serves the latest release. Pin a version — `https://esm.run/@dineug/erd-editor@3.8.0` — if you do not want a major upgrade to reach your page unannounced.
 
 ### Script tag
 
@@ -61,7 +61,7 @@ It is what the `unpkg` and `jsdelivr` fields point at, so the bare package URL o
 
 ```html
 <erd-editor></erd-editor>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@3.7.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@3.8.0"></script>
 <script>
   const editor = document.querySelector('erd-editor');
   editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
@@ -137,18 +137,19 @@ Drop the install and the registration; a page that loaded the worker from a CDN 
 
 ## Web Workers
 
-The editor runs four jobs in `SharedWorker`s: syntax highlighting, PNG export, [Auto Layout](../guide/guides/table-related-functions.md#auto-layout), and the document's own garbage collection.
+The editor runs four jobs in `SharedWorker`s: syntax highlighting, PNG export, the table layout behind [Auto Layout](../guide/guides/table-related-functions.md#auto-layout) and the Visualization tab's [Flow mode](../guide/guides/visualization.md#how-flow-is-placed), and the document's own garbage collection.
 All four ship inside `@dineug/erd-editor`. None of them is something you set up, but each one is something a host can block.
 
 | Worker | Without it |
 | --- | --- |
 | Syntax highlighting | The Schema SQL and Code Generator panels stay plain text |
 | PNG export | The image is drawn on the main thread, which blocks the page while it draws |
-| Auto Layout | The `Flow` and `Tree` layouts end in `Could not place tables`; `Force` is unaffected, since it runs inside the editor |
+| Table layout | Auto Layout's `Flow`, `Tree - vertical` and `Tree - horizontal` layouts, and the Visualization tab's Flow mode, end in `Could not place tables`; `Force` and Graph mode are unaffected, since they run inside the editor |
 | Schema garbage collection | It runs in-process |
 
-The three other than Auto Layout wait ten seconds for a worker to answer and then carry on without it, so a host that blocks workers costs performance rather than function.
-Auto Layout is the exception: the engine that computes a layout outweighs the editor itself and is never loaded in-process, so it waits thirty seconds for its worker on the first placement and reports a failure if none answers.
+PNG export and schema garbage collection wait ten seconds for a worker to answer and then carry on without it, and syntax highlighting leaves the panels as plain text as soon as its worker fails, so a host that blocks workers costs performance rather than function.
+Table layout is the exception: the engine that computes a layout outweighs the editor itself and is never loaded in-process, so it waits thirty seconds for its worker on the first placement and reports a failure if none answers.
+Once the worker has answered, a layout that has not come back within sixty seconds is given up on too, with the same `Could not place tables`. Auto Layout shows `Placing tables…` as soon as it starts, while Flow mode shows it only once a placement, its worker's start included, has run for six seconds.
 
 In the bundled build all four are emitted as files beside the package, so a strict CSP needs `worker-src 'self'` — plus `blob:` where your bundler inlines a worker.
 In the [script-tag](#script-tag) build all four travel inside the file as `data:` URLs, so that page needs `worker-src data:` instead.

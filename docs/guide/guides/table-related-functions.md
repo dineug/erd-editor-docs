@@ -6,7 +6,7 @@ description: Select, move, copy, and duplicate tables and memos, set colors and 
 # Table-related Functions
 
 Everything you do to tables and memos once they exist — selecting, moving, copying, coloring, and setting what each table shows — plus the canvas controls around them.  
-The table and memo commands come first, then table properties, indexes, auto layout, and the database vendor, and the canvas itself last: the canvas toolbar, zoom, panning, and the diff viewer.
+The table and memo commands come first, then table properties, focusing on tables, indexes, auto layout, and the database vendor, and the canvas itself last: the canvas toolbar, zoom, panning, and the diff viewer.
 
 ## Multiple Selection
 
@@ -80,12 +80,22 @@ Offers the following view options:
 
 ![demo-view-options](/img/demo-view-options.webp)
 
+Cards in the Visualization tab's `Flow` mode do not follow these options: they use their own [row display](./visualization.md#row-display), and draw their connectors even with `Relationship` off.
+
 ## Table Properties
 
 Opens the property panel of the selected table.
 Start from the table context menu or by using the shortcut `Alt + Space`.
 It provides three tabs: Indexes, Schema SQL, and Code Generator.
 The panel keeps the five most recently opened tables along the top, so you can move between them without reopening it.
+
+## Focusing on Tables
+
+Opens the Visualization tab in `Flow` mode, narrowed to the chosen tables and every table one relationship away from them.  
+Start from the table context menu with `Focus on this table`, or select one or more tables and press `Alt + F`.  
+When the table you right-click is one of several selected tables, the entry reads `Focus on selected tables` and focuses the whole selection. Right-clicking a table outside the selection focuses that table alone.  
+The shortcut takes the selected tables, leaves memos out, and does nothing when no table is selected.  
+What the narrowed view shows, and how to get back to the whole diagram, is covered in [Visualization](./visualization.md#focusing-on-tables).
 
 ## Indexes
 
@@ -113,7 +123,7 @@ Open `Auto Layout` from the canvas context menu or from quick search, and pick o
 `Force` opens a preview of the whole diagram while the layout settles, with `Apply` and `Cancel` on the notice it shows.  
 `Apply` keeps the positions as they stand at that moment, and the layout is applied on its own once it comes to rest. `Cancel` or `Escape` leaves the diagram as it was.
 
-The other three are worked out in one go, off the main thread, so there is nothing to watch: a notice shows while the layout is computed, and the finished arrangement is centered on what the diagram already covers. `Cancel` or `Escape` drops a layout you are no longer waiting for, and a host that runs no shared worker ends in `Could not place tables` — see [Web Workers](../../api/installation.md#web-workers).
+The other three are worked out in one go, off the main thread, so there is nothing to watch: a notice shows while the layout is computed, and the finished arrangement is centered on what the diagram already covers. `Cancel` or `Escape` drops a layout you are no longer waiting for, and a host that runs no shared worker ends in `Could not place tables` — see [Web Workers](../../api/installation.md#web-workers). A layout that has not come back within 60 seconds ends the same way.
 
 Whichever you pick, only tables are moved; memos stay where they are. A relationship from a table to itself is ignored, and several relationships between the same two tables count once.  
 The result lands as a single history entry, so one undo puts every table back where it was.
@@ -142,22 +152,29 @@ Multi-word type names such as `TIMESTAMP WITH TIME ZONE` and `INTERVAL DAY TO SE
 
 ## Canvas Toolbar
 
-A small toolbar floats in the top-left corner of the canvas, holding the tools that act on the canvas itself:
+A small toolbar floats over the middle of the bottom edge of the canvas, holding the tools that act on the canvas itself:
 
 - The hand and the pointer. The pointer is the default; the hand turns every drag into a pan, over tables as well as empty space. `Space` switches between them.
+- The zoom: `Zoom out`, the current zoom as a percentage, and `Zoom in`. The two buttons step the zoom the same way the zoom shortcuts do.
 - The four relationship notations, the same four you start a relationship with — see [Editing Start](./editing-start.md). Picking one switches back to the pointer, since a relationship is drawn by clicking two tables.
 - Zen mode, `Alt + Z`, which clears everything but the canvas and this toolbar. `Alt + Z` again, or the button, brings the rest back.
+- The `Go to content` compass, which joins the end of the toolbar only while no table or memo is on screen — see [Getting Around the Canvas](#getting-around-the-canvas).
 
-Every button names its shortcut in its tooltip.
+Every button with a shortcut names it in its tooltip.  
+The toolbar steps aside while the `Force` Auto Layout preview, table properties, time travel, or the diff viewer is open, and comes back once it closes.
 
 ## Zoom In/Out
 
 Zooms with `Ctrl + Wheel` (Windows/Linux) or `⌘ + Wheel` (Mac). The wheel alone pans the canvas.  
 Shortcuts: `Ctrl + Plus` (Windows/Linux) or `⌘ + Plus` (Mac), `Ctrl + Minus` (Windows/Linux) or `⌘ + Minus` (Mac)  
-`Ctrl + O` (Windows/Linux) or `⌘ + O` (Mac) goes straight back to `100%`, keeping the middle of the screen where it is.
+`Ctrl + 0` (Windows/Linux) or `⌘ + 0` (Mac) goes straight back to `100%`, keeping the middle of the screen where it is.
+
+The `Zoom out` and `Zoom in` buttons on the [canvas toolbar](#canvas-toolbar) step the zoom like the `Minus` and `Plus` shortcuts: each press moves it 4 percentage points, keeping the middle of the screen where it is. The percentage between them shows the current zoom.
 
 Zoom ranges from `10%` to `150%`.  
 At `70%` and below, tables collapse to a color bar and their name, and cell editing, the cell shortcuts, and copy and paste stop working until you zoom back in.
+
+The same three shortcuts also zoom the Visualization tab, in `Graph` and `Flow` mode alike, each mode within its own range — see [Visualization](./visualization.md#toolbar).
 
 ![demo-zoom](/img/demo-zoom.webp)
 
@@ -166,12 +183,13 @@ At `70%` and below, tables collapse to a color bar and their name, and cell edit
 The canvas has no edges and no size to set. Tables and memos sit wherever you put them, and everything below describes the diagram rather than a fixed page.
 
 Drag an empty area of the canvas to pan, or switch to the hand tool with `Space` and drag anywhere, including over a table. The wheel pans too, and `Shift + Wheel` pans sideways.  
-Panning is bounded by the diagram: you can push the tables just off screen on any side, but not into empty space beyond that.
+Panning has no bounds: the wheel, a drag, and the hand tool carry the view as far as you move it, past the tables on any side.
 
 The minimap in the top-right corner maps the diagram's own extent, with a margin around it. Click it to move the view to that point, or drag the viewport rectangle to pan. As you zoom out, the viewport rectangle grows to cover more of the map.  
-The scrollbars along the right and bottom edges describe the same travel. Each one appears only when there is something to scroll on that axis, so an empty document shows neither, and neither a minimap.
+The scrollbars along the right and bottom edges describe the same travel. Each one appears only when there is something to scroll on that axis, so an empty document shows neither, and neither a minimap.  
+Dragging a scrollbar thumb or the minimap's viewport rectangle is the one pan that stops: it goes no further than the tables just off screen, or than where the drag started if that was further out.
 
-If a pan leaves no table or memo on screen, a pill appears at the bottom edge with an arrow at the nearest one and how far away it is. Click it to centre that entity.
+If a pan leaves no table or memo on screen, a `Go to content` compass joins the end of the [canvas toolbar](#canvas-toolbar), with an arrow at the nearest one and how far away it is. Click it to centre that entity without changing the zoom.
 
 ## Diff Viewer
 

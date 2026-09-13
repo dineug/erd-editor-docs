@@ -51,14 +51,15 @@ description: 删除关系、修改关系类型、读懂连接线，以及 N:M �
 编辑器会自动保持该状态同步。  
 子表一侧的所有列都是主键时为识别关系，其中任意一列不再是主键时就会变为非识别关系。
 
-## 读懂连接线
+## 读懂连接线 {#reading-a-connector}
 
 - 识别关系以实线绘制，非识别关系以虚线绘制。
 - 子表一端带有关系类型对应的基数符号：Zero One 为圆环和竖线，Zero N 为圆环和鸦爪，One Only 为两条竖线，One N 为竖线和鸦爪。
 - 当任意外键列允许 `NULL` 时，父表一端为圆环，当所有外键列均为 `NOT NULL` 时则为一条短线。
 - 鼠标悬停在连接线上时，会同时高亮该连接线以及它在两个表中连接的列。
 
-通过 `Relationship` 显示选项可以完全隐藏连接线，参见[表相关功能](./table-related-functions.md)。
+通过 `Relationship` 显示选项可以隐藏 ERD 画布上的连接线，参见[表相关功能](./table-related-functions.md)。  
+Visualization 标签页的 [Flow 模式](./visualization.md#flow-mode)即使在该选项关闭时也会绘制连接线，每条都是一根平滑的灰色实线曲线，端点符号与 ERD 画布相同，因此本页介绍的虚线与连接线路径只适用于 ERD 画布。
 
 ## 连接线路径
 

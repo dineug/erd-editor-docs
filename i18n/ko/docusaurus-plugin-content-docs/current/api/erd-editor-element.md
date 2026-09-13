@@ -60,7 +60,7 @@ interface ErdEditorElement extends HTMLElement {
 
 에디터 편집 가능 여부를 설정합니다.  
 설정된 동안에는 `value` 할당, `clear()`, `setSchemaSQL()`, `setSchemaGraphQL()`, `setSchemaDBML()`, `setSchemaAML()`, Undo, Redo가 모두 무시되고 `change` 이벤트도 발행되지 않습니다. 문서를 불러올 때는 [setInitialValue](#setinitialvalue)를 사용하세요.  
-보기는 그대로 동작합니다. 확대/축소, 화면 이동, 손 도구, Zen 모드, 캔버스 탭, 데이터베이스 벤더, SQL과 코드 생성 출력 설정이 모두 적용되므로, `readonly` 상태에서도 다른 벤더의 SQL을 내보내거나 생성된 코드를 확인할 수 있습니다.  
+보기는 그대로 동작합니다. 확대/축소, 화면 이동, 손 도구, Zen 모드, 캔버스 탭, 두 모드와 테이블 포커스를 포함한 [Visualization](../guide/guides/visualization.md) 탭, 데이터베이스 벤더, SQL과 코드 생성 출력 설정이 모두 적용되므로, `readonly` 상태에서도 다른 벤더의 SQL을 내보내거나 생성된 코드를 확인할 수 있습니다.  
 속성만 쓰거나 `=""`, `="true"`는 모두 `true`로 읽힙니다. `="false"`는 `false`로 읽히고, HTML 관용 표기인 `readonly="readonly"`를 포함해 그 밖의 문자열도 마찬가지입니다.
 
 ```js
@@ -120,6 +120,7 @@ const data = editor.value;
 ### setter
 
 이전에 저장했던 에디터 상태를 불러옵니다. 문서 전체를 교체하며, 현재 문서는 먼저 비워집니다.  
+`clear()`, `setInitialValue()`, `setSchema*` 메서드와 마찬가지로 Visualization 탭의 Flow 뷰도 버립니다. 배치, 범위를 좁혀 둔 테이블, 행 표시, 확대/축소, 화면 이동 상태가 모두 해당합니다.  
 히스토리 목록에 기록되어 `Undo, Redo`가 가능하고, `change` 이벤트를 발행합니다.  
 빈 문자열이나 문자열이 아닌 값은 에러가 아니라 빈 문서로 불러오므로, 할당하기 전에 값을 확인하세요.  
 `readonly`가 설정된 동안에는 무시되며, `readonly` 에디터에 문서를 불러올 때는 [setInitialValue](#setinitialvalue)를 사용하세요.
@@ -157,6 +158,7 @@ editor.addEventListener('change', () => {
 에디터에 변경이 있을 때 이벤트를 발행합니다.  
 200ms 디바운스되며, `readonly`가 `true`인 동안에는 발행되지 않습니다.  
 UI 편집, `value` 할당, `clear()`, 각 `setSchema*` 메서드 등 문서가 변경되는 모든 경우에 발행됩니다. `setInitialValue`는 발행하지 않습니다.  
+Visualization 탭의 Flow 모드 안에서 하는 확대/축소, 화면 이동, 카드 이동, `Tidy Up`, 행 표시 변경, 카드에서 뷰 범위 좁히기는 모두 문서 변경이 아니므로 어느 것도 이벤트를 발행하지 않습니다. 탭 전환은 발행하므로, ERD 탭에서 테이블 포커스를 실행하면 `change`가 한 번 발행되고, Flow에서 ERD 탭으로 돌아가는 외부 링크 카드 버튼도 마찬가지입니다.  
 이벤트에는 `detail`이 없고 버블링되거나 shadow 경계를 넘지도 않으므로, 엘리먼트 자체에서 수신하고 핸들러에서 `editor.value`를 읽으세요.
 
 ```js
@@ -215,7 +217,7 @@ editor.destroy();
 
 단축키를 재정의합니다.  
 `edit`, `stop`, `search`, `undo`, `redo`, `zoomIn`, `zoomOut`, `zoomReset`은 고정이며 재정의할 수 없습니다.  
-아래 15개 이름만 적용되고, 고정된 이름을 포함해 객체의 나머지 값은 무시됩니다.  
+아래 16개 이름만 적용되고, 고정된 이름을 포함해 객체의 나머지 값은 무시됩니다.  
 값은 `ShortcutOption[]`이어야 합니다. 문자열만 전달하면 무시되므로 `{ addTable: 'Alt+KeyN' }`이 아니라 `{ addTable: [{ shortcut: 'Alt+KeyN' }] }`으로 작성하세요.  
 호출은 부분 병합이라 생략한 이름은 기본값을 유지하고, 두 번 호출해도 앞선 변경이 유지됩니다. 현재 설정을 읽는 getter는 없습니다.
 
@@ -259,6 +261,9 @@ const defaultKeyBindingMap: Omit<
   relationshipOneOnly: [{ shortcut: '$mod+Alt+Digit3', preventDefault: true }],
   relationshipOneN: [{ shortcut: '$mod+Alt+Digit4', preventDefault: true }],
   tableProperties: [{ shortcut: 'Alt+Space', preventDefault: true }],
+  focusView: [
+    { shortcut: 'Alt+KeyF', preventDefault: true, stopPropagation: true },
+  ],
   handTool: [{ shortcut: 'Space', preventDefault: true }],
   zenMode: [
     { shortcut: 'Alt+KeyZ', preventDefault: true, stopPropagation: true },
@@ -272,6 +277,8 @@ editor.setKeyBindingMap({
 ```
 
 `selectAllTable`과 `handTool`은 커서에 양보합니다. 포커스가 input, textarea, `contenteditable` 안에 있는 동안에는 `$mod + A`가 텍스트를 선택하고 `Space`는 공백을 입력하며, 캔버스까지 전달되지 않습니다. 다른 단축키로 재정의해도 동작은 같습니다.
+
+`focusView`는 ERD 탭에서만 동작합니다. 테이블이 하나 이상 선택되어 있으면 Visualization 탭을 Flow 모드로 열어, 선택한 테이블과 그 테이블에 관계 하나로 이어진 모든 테이블로 범위를 좁힙니다. 선택한 테이블이 없으면 아무 동작도 하지 않습니다. [테이블 포커스](../guide/guides/visualization.md#테이블-포커스) 문서를 참고하세요.
 
 ### $mod
 

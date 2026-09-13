@@ -60,7 +60,7 @@ interface ErdEditorElement extends HTMLElement {
 
 エディタの編集可否を設定します。  
 設定されている間は、`value` への代入、`clear()`、`setSchemaSQL()`、`setSchemaGraphQL()`、`setSchemaDBML()`、`setSchemaAML()`、undo、redo がすべて無視され、`change` イベントも発行されません。ドキュメントの読み込みには [setInitialValue](#setinitialvalue) を使用します。  
-表示は引き続き動作します。拡大・縮小、表示位置の移動、ハンドツール、Zen モード、キャンバスのタブ、データベースベンダー、SQL とコード生成の出力設定はそのまま適用されるため、読み取り専用のビューアーでも別のベンダー向けの SQL を書き出したり、生成されたコードを読んだりできます。  
+表示は引き続き動作します。拡大・縮小、表示位置の移動、ハンドツール、Zen モード、キャンバスのタブ、テーブルへのフォーカスを含む [Visualization](../guide/guides/visualization.md) タブの両方のモード、データベースベンダー、SQL とコード生成の出力設定はそのまま適用されるため、読み取り専用のビューアーでも別のベンダー向けの SQL を書き出したり、生成されたコードを読んだりできます。  
 属性名のみの指定、`=""`、`="true"` はいずれも `true` として扱われます。`="false"` は `false` として扱われ、HTML の慣用表現である `readonly="readonly"` を含むその他の文字列も同様です。
 
 ```js
@@ -120,6 +120,7 @@ const data = editor.value;
 ### setter
 
 以前に保存したエディタの状態を読み込みます。ドキュメント全体を置き換えるため、現在のドキュメントは先に消去されます。  
+`clear()`、`setInitialValue()`、`setSchema*` の各メソッドと同様に、Visualization タブの Flow の表示状態、つまりレイアウト、絞り込んでいるテーブル、行の表示、拡大・縮小、表示位置も破棄します。  
 履歴に記録されるため `Undo, Redo` が可能で、`change` を発行します。  
 空文字列や文字列以外の値を指定した場合はエラーにならず、空のドキュメントを読み込むため、代入する前に値を確認します。  
 `readonly` が設定されている間は無視されます。読み取り専用のエディタに読み込むには [setInitialValue](#setinitialvalue) を使用します。
@@ -157,6 +158,7 @@ editor.addEventListener('change', () => {
 エディタに変更があるとイベントを発行します。  
 200ms のデバウンスがかかり、`readonly` が `true` の間は発行されません。  
 UI での編集、`value` への代入、`clear()`、`setSchema*` の各メソッドなど、ドキュメントのあらゆる変更で発行されます。`setInitialValue` では発行されません。  
+Visualization タブの Flow モード内の操作、つまり拡大・縮小、表示位置の移動、カードの移動、`Tidy Up`、行の表示の変更、カードからの表示の絞り込みは、どれもドキュメントの変更ではないため発行されません。タブの切り替えでは発行されるため、ERD タブからテーブルにフォーカスすると `change` が 1 回発行され、Flow から ERD タブへ戻るカードの外部リンクボタンでも同様に発行されます。  
 イベントは `detail` を持たず、バブリングもシャドウ境界の通過もしないため、要素自身で購読し、ハンドラー内で `editor.value` を読み取ります。
 
 ```js
@@ -215,7 +217,7 @@ editor.destroy();
 
 キーボードショートカットを再定義します。  
 `edit`、`stop`、`search`、`undo`、`redo`、`zoomIn`、`zoomOut`、`zoomReset` は固定で、再定義できません。  
-書き込めるのは次の 15 個の名前だけで、固定の名前を含め、オブジェクト内のそれ以外の値は無視されます。  
+書き込めるのは次の 16 個の名前だけで、固定の名前を含め、オブジェクト内のそれ以外の値は無視されます。  
 バインディングの値は `ShortcutOption[]` である必要があります。文字列だけの指定は無視されるため、`{ addTable: 'Alt+KeyN' }` ではなく `{ addTable: [{ shortcut: 'Alt+KeyN' }] }` と記述します。  
 呼び出しは部分的なマージです。指定しなかった名前は既定値のまま維持され、2 回呼び出しても以前の変更は保持されます。現在のバインディングを取得する getter はありません。
 
@@ -259,6 +261,9 @@ const defaultKeyBindingMap: Omit<
   relationshipOneOnly: [{ shortcut: '$mod+Alt+Digit3', preventDefault: true }],
   relationshipOneN: [{ shortcut: '$mod+Alt+Digit4', preventDefault: true }],
   tableProperties: [{ shortcut: 'Alt+Space', preventDefault: true }],
+  focusView: [
+    { shortcut: 'Alt+KeyF', preventDefault: true, stopPropagation: true },
+  ],
   handTool: [{ shortcut: 'Space', preventDefault: true }],
   zenMode: [
     { shortcut: 'Alt+KeyZ', preventDefault: true, stopPropagation: true },
@@ -272,6 +277,8 @@ editor.setKeyBindingMap({
 ```
 
 `selectAllTable` と `handTool` はキャレットに譲ります。フォーカスが input、textarea、`contenteditable` の中にある間は `$mod + A` がテキストを選択し、`Space` は空白を入力して、キャンバスには届きません。別のショートカットに再定義しても動作は同じです。
+
+`focusView` は ERD タブでのみ動作します。テーブルを 1 つ以上選択している場合は、Visualization タブを Flow モードで開き、それらのテーブルと、リレーションシップ 1 つでつながるすべてのテーブルに表示を絞り込みます。テーブルを選択していない場合は何もしません。[テーブルへのフォーカス](../guide/guides/visualization.md#focusing-on-tables)を参照してください。
 
 ### $mod
 

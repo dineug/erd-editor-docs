@@ -77,14 +77,18 @@ description: リレーションシップのデータ型同期、表示位置と�
 | Relationship One Only | `Ctrl + Alt + 3` | `⌘ + ⌥ + 3` |
 | Relationship One N | `Ctrl + Alt + 4` | `⌘ + ⌥ + 4` |
 | Table Properties | `Alt + Space` | `⌥ + Space` |
+| Focus on this table | `Alt + F` | `⌥ + F` |
 | Zoom In | `Ctrl + Plus` | `⌘ + Plus` |
 | Zoom Out | `Ctrl + Minus` | `⌘ + Minus` |
-| Zoom Reset | `Ctrl + O` | `⌘ + O` |
+| Zoom Reset | `Ctrl + 0` | `⌘ + 0` |
 | Hand Tool | `Space` | `Space` |
 | Zen Mode | `Alt + Z` | `⌥ + Z` |
 
 これらの多くは ERD タブでのみ動作し、クイック検索、テーブルのプロパティ、Diff Viewer、自動レイアウトのプレビュー、Time Travel が開いている間は無効になります。
 `Search` と `Stop` は例外です。`Search` はどのタブからでもクイック検索を開閉し、`Stop` はクイック検索、テーブルのプロパティ、Diff Viewer、自動レイアウトのプレビュー、Time Travel、テーマビルダーを閉じます。
+`Zoom In`、`Zoom Out`、`Zoom Reset` は、クイック検索が開いていなければ [Visualization](./visualization.md#toolbar) タブでも、`Graph` と `Flow` のどちらでも拡大・縮小します。
+Visualization タブでは、`Stop` は[行の表示](./visualization.md#row-display)のメニューも閉じ、実行中の [Flow のレイアウト](./visualization.md#how-flow-is-placed)をキャンセルします。`Focus on this table` で絞り込んだビューは広げません。
+`Focus on this table` は Visualization タブを `Flow` で開き、選択しているテーブルと、そこからリレーションシップ 1 つでつながるすべてのテーブルに絞り込みます。テーブルを選択していない場合は何もしません。[テーブルへのフォーカス](./visualization.md#focusing-on-tables)を参照してください。
 `Select All Table, Memo` と `Hand Tool` はキャレットに譲ります。セルの編集中は `Ctrl + A` がテキストを選択し、`Space` は空白を入力します。
 コピーと貼り付けはブラウザ標準の `Ctrl + C` と `Ctrl + V` (Windows/Linux) または `⌘ + C` と `⌘ + V` (Mac) のため、この一覧には含まれていません。[テーブルの編集](./table-editing.md)を参照してください。
 

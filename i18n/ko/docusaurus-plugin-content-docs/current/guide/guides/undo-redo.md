@@ -35,6 +35,7 @@ Undo, Redo는 ERD 탭에서만 동작합니다. Visualization, Schema SQL, Code 
 - Code Generator 언어, `Table Name Case`, `Column Name Case`.
 - Schema SQL 괄호 타입.
 - 설정 탭의 모든 항목.
+- Visualization 탭에서 두 모드의 확대/축소와 화면 이동, 그래프 노드나 Flow 카드 이동, `Tidy Up`, 행 표시, 테이블 포커스. [Flow는 문서를 편집하지 않음](./visualization.md#flow는-문서를-편집하지-않음) 문서를 참고하세요.
 
 이 항목들의 변경은 되돌릴 수 없습니다.
 

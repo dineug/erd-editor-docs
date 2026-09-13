@@ -24,7 +24,7 @@ description: 캔버스 컨텍스트 메뉴에서 테이블, 메모와 관계 생
 
 ## 관계 생성
 
-컨텍스트 메뉴, 왼쪽 위의 [캔버스 툴바](./table-related-functions.md#캔버스-툴바), 또는 단축키로 시작합니다. 관계 타입마다 단축키가 다릅니다.
+컨텍스트 메뉴, 캔버스 아래쪽의 [캔버스 툴바](./table-related-functions.md#캔버스-툴바), 또는 단축키로 시작합니다. 관계 타입마다 단축키가 다릅니다.
 
 - Zero One: `Ctrl + Alt + 1` (Windows/Linux) or `⌘ + ⌥ + 1` (Mac)
 - Zero N: `Ctrl + Alt + 2` (Windows/Linux) or `⌘ + ⌥ + 2` (Mac)

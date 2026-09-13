@@ -36,6 +36,7 @@ Not recorded:
 - The Code Generator language, `Table Name Case`, and `Column Name Case`.
 - The Schema SQL bracket type.
 - Everything on the Settings tab.
+- Zoom and pan on the Visualization tab in either mode, moving graph nodes or Flow cards, `Tidy Up`, the row display, and focusing on tables — see [Flow Never Edits the Document](./visualization.md#flow-never-edits-the-document).
 
 Changing any of these cannot be undone.
 

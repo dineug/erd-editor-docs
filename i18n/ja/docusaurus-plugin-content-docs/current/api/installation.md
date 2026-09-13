@@ -13,7 +13,7 @@ npm install @dineug/erd-editor
 CommonJS ビルドはないため、`require('@dineug/erd-editor')` は動作しません。
 
 ランタイム依存は、利用側のバンドラーが解決・重複排除・ツリーシェイクできるよう、bare import のまま外部に残しています。
-shared worker は `dist/workers/` 以下に別々のエントリーファイルとして出力され、`new URL('./…', import.meta.url)` の形で生成されます。Vite、webpack 5、Rspack がワーカーのエントリーとして解釈する書き方です。[Web Worker](#web-worker) を参照してください。
+shared worker は `dist/workers/` 以下に別々のエントリーファイルとして出力され、`new URL('./…', import.meta.url)` の形で生成されます。Vite、webpack 5、Rspack がワーカーのエントリーとして解釈する書き方です。[Web Worker](#web-workers) を参照してください。
 バンドラーのないページ向けには、自己完結したビルドも用意しています。[script タグ](#script-タグ)を参照してください。
 
 ## 使い方
@@ -52,7 +52,7 @@ editor.addEventListener('change', () => {
 ```
 
 `esm.run` がパッケージの外部依存を解決してくれるため、バンドラーなしでも動作します。
-バージョンを指定しない URL は常に最新のリリースを配信します。メジャーアップグレードが予告なくページに反映されるのを避けたい場合は、`https://esm.run/@dineug/erd-editor@3.7.0` のようにバージョンを固定します。
+バージョンを指定しない URL は常に最新のリリースを配信します。メジャーアップグレードが予告なくページに反映されるのを避けたい場合は、`https://esm.run/@dineug/erd-editor@3.8.0` のようにバージョンを固定します。
 
 ### script タグ
 
@@ -61,7 +61,7 @@ editor.addEventListener('change', () => {
 
 ```html
 <erd-editor></erd-editor>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@3.7.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@3.8.0"></script>
 <script>
   const editor = document.querySelector('erd-editor');
   editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
@@ -135,20 +135,21 @@ Schema SQL と Code Generator のパネルは、専用の Shared Worker で動�
 `3.6.0` 以前からの移行について。`@dineug/erd-editor-shiki-worker` は公開されなくなり、`setGetShikiServiceCallback` もなくなりました。
 インストールと登録のコードは削除してください。CDN からワーカーを読み込んでいたページは、2 つ目の `<script>` タグも削除します。
 
-## Web Worker
+## Web Worker {#web-workers}
 
-エディタは 4 つの処理を `SharedWorker` で実行します。構文ハイライト、PNG の書き出し、[自動レイアウト](../guide/guides/table-related-functions.md#auto-layout)、ドキュメントのガベージコレクションです。
+エディタは 4 つの処理を `SharedWorker` で実行します。構文ハイライト、PNG の書き出し、[自動レイアウト](../guide/guides/table-related-functions.md#auto-layout)と Visualization タブの [Flow モード](../guide/guides/visualization.md#how-flow-is-placed)を支えるテーブルのレイアウト、ドキュメントのガベージコレクションです。
 4 つとも `@dineug/erd-editor` に入っています。どれも設定するものではありませんが、ホスト側で塞げるものでもあります。
 
 | ワーカー | ない場合 |
 | --- | --- |
 | 構文ハイライト | Schema SQL と Code Generator のパネルがプレーンテキストのままになります |
 | PNG の書き出し | メインスレッドで描画するため、描画中はページが止まります |
-| 自動レイアウト | `Flow` と `Tree` の配置が `Could not place tables` で終わります。`Force` はエディタ内で動くため影響を受けません |
+| テーブルのレイアウト | 自動レイアウトの `Flow`、`Tree - vertical`、`Tree - horizontal` の配置と、Visualization タブの Flow モードが `Could not place tables` で終わります。`Force` と Graph モードはエディタ内で動くため影響を受けません |
 | スキーマのガベージコレクション | インプロセスで実行されます |
 
-自動レイアウト以外の 3 つは応答を 10 秒待ってからワーカーなしで進むため、ワーカーを塞ぐホストでは機能が失われるのではなく性能だけが落ちます。
-自動レイアウトだけは例外です。レイアウトを計算するエンジンがエディタ本体より大きく、インプロセスに載せることはないため、最初の配置ではワーカーを 30 秒待ち、応答がなければ失敗として伝えます。
+PNG の書き出しとスキーマのガベージコレクションは応答を 10 秒待ってからワーカーなしで進み、構文ハイライトはワーカーが失敗した時点でパネルをプレーンテキストのままにするため、ワーカーを塞ぐホストでは機能が失われるのではなく性能だけが落ちます。
+テーブルのレイアウトだけは例外です。レイアウトを計算するエンジンがエディタ本体より大きく、インプロセスに載せることはないため、最初の配置ではワーカーを 30 秒待ち、応答がなければ失敗として伝えます。
+ワーカーが応答した後も、60 秒以内に戻ってこないレイアウトは同じ `Could not place tables` で打ち切られます。自動レイアウトは開始するとすぐに `Placing tables…` を表示しますが、Flow モードでは、ワーカーの起動を含めて配置が 6 秒続いたときに初めて表示します。
 
 バンドル向けのビルドでは 4 つとも別ファイルとして一緒に配布されるため、CSP が厳しいページでは `worker-src 'self'` が必要です。バンドラーがワーカーをインライン化する場合は `blob:` も必要になります。
 [script タグ](#script-タグ)のビルドでは 4 つとも `data:` URL としてファイルの中に入るため、そのページでは `worker-src data:` が必要です。

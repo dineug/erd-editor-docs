@@ -138,6 +138,9 @@ const SaveSettingType = {
 `width` 和 `height` 是旧的画布尺寸。画布已经没有边界，因此不再有任何地方设置它们，但仍会以默认值写出，供旧版编辑器读取。  
 `zoomLevel` 的范围是 `0.1` ~ `1.5`。保存时超过 `1` 的文档在 `3.5.0` 之前的编辑器中会以 `1` 打开。
 
+`canvasType` 是文档打开时所在的标签页。在 Visualization 标签页中保存的文档会保存 `'@dineug/erd-editor/builtin-visualization'`，但不会记录当时显示的是 `Graph` 模式还是 `Flow` 模式，新创建的编辑器会以 `Graph` 模式显示该标签页。  
+`Flow` 模式自身的状态都不会被序列化，它的布局、缩放、平移、行显示和聚焦的表都只保留在编辑器中，因此 `originX`、`originY` 和 `zoomLevel` 始终描述的是 ERD 画布。
+
 `show` 和 `ignoreSaveSettings` 是位掩码，将各标志位通过 OR 运算组合。  
 `columnOrder` 是一个数组，按显示顺序保存全部七个 `ColumnType` 值。  
 `database`、`language`、`tableNameCase`、`columnNameCase` 和 `bracketType` 各自只保存一个值，JSON Schema 会拒绝组合后的值。

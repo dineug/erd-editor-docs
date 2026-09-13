@@ -58,7 +58,8 @@ GraphQL, DBML, AML을 가져오면 매핑 테이블이 자동으로 생성됩니
 - 부모 쪽 끝은 foreign key 컬럼 중 하나라도 `NULL`을 허용하면 고리로, 모두 `NOT NULL`이면 짧은 선으로 표시됩니다.
 - 연결선에 마우스를 올리면 연결선과 양쪽 테이블에서 연결된 컬럼이 함께 강조됩니다.
 
-`Relationship` 보기 옵션으로 연결선을 모두 숨길 수 있습니다. [테이블 관련 기능](./table-related-functions.md) 문서를 참고하세요.
+`Relationship` 보기 옵션으로 ERD 캔버스의 연결선을 숨길 수 있습니다. [테이블 관련 기능](./table-related-functions.md) 문서를 참고하세요.  
+Visualization 탭의 [Flow 모드](./visualization.md#flow-모드)는 이 옵션이 꺼져 있어도 연결선을 그리며, 각 연결선을 끝 기호가 같은 매끄러운 회색 실선 곡선 하나로 표시합니다. 따라서 이 문서에서 설명하는 점선과 연결선 경로는 ERD 캔버스에만 적용됩니다.
 
 ## 연결선 경로
 

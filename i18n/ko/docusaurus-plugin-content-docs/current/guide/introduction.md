@@ -29,7 +29,7 @@ IDE에서 사용해 보려면 `.erd.json` 확장자로 빈 파일을 만들어 �
 - 다이어그램을 `JSON`, `Schema SQL`, `PNG`로 내보냅니다.
 - Databricks, MSSQL, MariaDB, MySQL, Oracle, PostgreSQL, Snowflake, SQLite 8가지 데이터베이스 벤더의 문법으로 Schema SQL을 작성합니다. [테이블 관련 기능](./guides/table-related-functions.md#데이터베이스) 문서를 참고하세요.
 - C#, Go, Java, Kotlin, Scala, TypeScript, Drizzle, JPA, Sequelize, SQLAlchemy, TypeORM, AML, DBML, GraphQL 14가지 대상으로 코드를 생성합니다. [코드 생성](./guides/code-generator.md) 문서를 참고하세요.
-- [시각화](./guides/visualization.md)에서 스키마를 force-directed 그래프로 확인하고, 테이블에 마우스를 올려 그 테이블이 닿아 있는 것들을 한눈에 봅니다.
+- [시각화](./guides/visualization.md)에서 스키마를 force-directed `Graph` 또는 관계를 따라 배치된 테이블 카드의 `Flow`로 확인하고, 테이블에 마우스를 올려 그 테이블이 닿아 있는 것들을 한눈에 봅니다. ERD 탭에서 `Alt + F`를 누르면 선택한 테이블과 그 테이블에 관계로 이어진 테이블에 [포커스](./guides/visualization.md#테이블-포커스)합니다.
 - 경계 없는 캔버스에서 작업합니다. 다이어그램이 뻗어 나가는 곳이면 어디든 이동하고, `10%`부터 `150%`까지 확대/축소하며, Zen 모드로 다이어그램만 남깁니다. [캔버스 이동](./guides/table-related-functions.md#캔버스-이동) 문서를 참고하세요.
 - [자동 배치](./guides/table-related-functions.md#자동-배치)로 다이어그램 전체를 한 번에 정리합니다. Force 시뮬레이션, 왼쪽에서 오른쪽으로 흐르는 Flow, 두 방향의 Tree 중에서 고릅니다.
 - [빠른 검색](./guides/quick-search.md)으로 어디서든 테이블을 찾거나 명령을 실행하고, [Undo, Redo](./guides/undo-redo.md)로 편집 히스토리를 하나씩 오갑니다.

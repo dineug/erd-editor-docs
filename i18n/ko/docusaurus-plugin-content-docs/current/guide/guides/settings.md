@@ -77,14 +77,18 @@ description: 관계 데이터 타입 동기화, 화면 위치와 확대/축소 �
 | Relationship One Only | `Ctrl + Alt + 3` | `⌘ + ⌥ + 3` |
 | Relationship One N | `Ctrl + Alt + 4` | `⌘ + ⌥ + 4` |
 | Table Properties | `Alt + Space` | `⌥ + Space` |
+| Focus on this table | `Alt + F` | `⌥ + F` |
 | Zoom In | `Ctrl + Plus` | `⌘ + Plus` |
 | Zoom Out | `Ctrl + Minus` | `⌘ + Minus` |
-| Zoom Reset | `Ctrl + O` | `⌘ + O` |
+| Zoom Reset | `Ctrl + 0` | `⌘ + 0` |
 | Hand Tool | `Space` | `Space` |
 | Zen Mode | `Alt + Z` | `⌥ + Z` |
 
 대부분은 ERD 탭에서만 동작하며, 빠른 검색, 테이블 속성, Diff Viewer, 자동 배치 미리보기, Time Travel이 열려 있는 동안에는 동작하지 않습니다.
 `Search`와 `Stop`은 예외입니다. `Search`는 어느 탭에서나 빠른 검색을 열고 닫으며, `Stop`은 빠른 검색, 테이블 속성, Diff Viewer, 자동 배치 미리보기, Time Travel, 테마 빌더를 닫습니다.
+`Zoom In`, `Zoom Out`, `Zoom Reset`은 [Visualization](./visualization.md#툴바) 탭에서도 `Graph`와 `Flow` 모두 확대/축소하며, 빠른 검색이 열려 있을 때는 동작하지 않습니다.
+Visualization 탭에서 `Stop`은 [행 표시](./visualization.md#행-표시) 메뉴도 닫고 아직 진행 중인 [Flow 배치](./visualization.md#flow-배치-방식)를 취소하지만, `Focus on this table`로 좁힌 화면을 넓히지는 않습니다.
+`Focus on this table`은 선택된 테이블과 그 테이블에 관계 하나로 이어진 모든 테이블로 범위를 좁혀 Visualization 탭을 `Flow`로 열며, 선택된 테이블이 없으면 아무 동작도 하지 않습니다. [테이블 포커스](./visualization.md#테이블-포커스) 문서를 참고하세요.
 `Select All Table, Memo`와 `Hand Tool`은 커서에 양보합니다. 셀을 편집하는 중에는 `Ctrl + A`가 텍스트를 선택하고 `Space`는 공백을 입력합니다.
 복사/붙여넣기는 브라우저 자체의 `Ctrl + C`와 `Ctrl + V` (Windows/Linux) or `⌘ + C`와 `⌘ + V` (Mac)를 사용하므로 이 목록에는 없습니다. [테이블 편집](./table-editing.md) 문서를 참고하세요.
 

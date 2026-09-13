@@ -29,7 +29,7 @@ IDE で試すには、拡張子が `.erd.json` の空ファイルを作成して
 - ダイアグラムを `json`、`Schema SQL`、`png` として書き出します。
 - Databricks、MSSQL、MariaDB、MySQL、Oracle、PostgreSQL、Snowflake、SQLite の 8 つのデータベースベンダーの構文で Schema SQL を記述します。[テーブル関連機能](./guides/table-related-functions.md#databases)を参照してください。
 - C#、Go、Java、Kotlin、Scala、TypeScript、Drizzle、JPA、Sequelize、SQLAlchemy、TypeORM、AML、DBML、GraphQL の 14 種類のターゲット向けにコードを生成します。[コード生成](./guides/code-generator.md)を参照してください。
-- [可視化](./guides/visualization.md)では、スキーマを力学モデルのグラフとして読み取れます。テーブルにマウスを重ねると、そのテーブルが接しているものが一目で分かります。
+- [可視化](./guides/visualization.md)では、スキーマを力学モデルの `Graph` として、またはリレーションシップに沿って並べたテーブルのカードの `Flow` として読み取れます。テーブルにマウスを重ねると、そのテーブルが接しているものが一目で分かります。ERD タブで `Alt + F` を押すと、[選択しているテーブルにフォーカス](./guides/visualization.md#focusing-on-tables)し、それに関連するテーブルと合わせて表示できます。
 - 端のないキャンバスで作業します。ダイアグラムが伸びていく先へどこまでも移動でき、`10%` から `150%` まで拡大・縮小し、Zen モードでダイアグラムだけを残せます。[キャンバスの移動](./guides/table-related-functions.md#getting-around-the-canvas)を参照してください。
 - [自動レイアウト](./guides/table-related-functions.md#auto-layout)で、ダイアグラム全体を一度に並べ替えます。Force のシミュレーション、左から右へ流れる Flow、縦横 2 方向の Tree から選べます。
 - [クイック検索](./guides/quick-search.md)を使うと、どこからでもテーブルを探したりコマンドを実行したりでき、[Undo, Redo](./guides/undo-redo.md) では編集履歴をたどれます。

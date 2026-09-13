@@ -41,6 +41,9 @@ const sharedStore = editor.getSharedStore();
 操作会成批到达，`subscribe` 传出的是一个数组，而该数组本身就是一个单位，因此要整体中继，并在另一端整体 dispatch。  
 操作所携带的内部信息正是维持编辑器之间同步的关键，因此不要读取或改写它，而应将其视为不透明的值原样传递。
 
+在 Visualization 标签页的 [Flow 模式](../../guide/guides/visualization.md#flow-never-edits-the-document)中所做的任何操作都不是文档变更，因此处于 Flow 中的编辑器不会向其他编辑器发送任何变更，而其他编辑器发来的变更在此期间仍会继续应用。  
+唯一的例外是带你回到 ERD 标签页的外部链接卡片按钮：它造成的标签页切换与滚动会像其他变更一样发送出去。
+
 ## 一个页面中的两个编辑器
 
 这里从 subscribe 到 dispatch 的连接代替了网络，因此无需传输方式即可了解会话的结构。
@@ -81,7 +84,7 @@ editor.getSharedStore({
 ### mouseTracker
 
 将该用户的鼠标光标发送到其他编辑器。默认值为 `true`。  
-其他用户发来的光标始终会显示。
+其他用户发来的光标始终会显示在 ERD 画布上。
 
 ```js
 editor.getSharedStore({ mouseTracker: false });
@@ -92,7 +95,8 @@ editor.getSharedStore({ mouseTracker: false });
 发送该用户正在处理的内容。默认值为 `true`。  
 获得焦点的表与单元格、选中的表与备注，以及在画布上拖动的选择框，都会发送到其他编辑器并绘制在那里。  
 每位用户都有各自的颜色，因此可以彼此区分：获得焦点的表带有外框线，获得焦点的单元格带有下划线，选中的表与备注带有环形边框，选择框则是虚线矩形。  
-从其他用户到达的状态信息始终会绘制在自己的画布上，无论该选项是否开启。
+从其他用户到达的状态信息始终会绘制在自己的画布上，无论该选项是否开启。  
+在 Visualization 标签页的 Flow 模式中，其他用户的焦点与选中内容会绘制在表卡片上，但他们的选择框不会。你在那里选中的表仍会发送出去，而你在那里拖出的选择框则不会。
 
 ```js
 editor.getSharedStore({ focusTracker: false });

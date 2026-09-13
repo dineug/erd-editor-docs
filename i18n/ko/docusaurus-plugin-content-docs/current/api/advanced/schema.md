@@ -138,6 +138,9 @@ const SaveSettingType = {
 `width`와 `height`는 레거시 캔버스 크기입니다. 캔버스에 경계가 없어져 더 이상 설정하지 않지만, 예전 에디터가 읽을 수 있도록 기본값 그대로 기록됩니다.  
 `zoomLevel`은 `0.1`부터 `1.5`까지입니다. `1`을 넘겨 저장한 문서는 `3.5.0` 이전 에디터에서 `1`로 열립니다.
 
+`canvasType`은 문서가 열릴 때 표시되는 탭입니다. Visualization 탭에서 저장한 문서에는 `'@dineug/erd-editor/builtin-visualization'`이 기록되지만 `Graph`와 `Flow` 중 어느 모드가 표시되고 있었는지는 기록되지 않으며, 새로 만든 에디터는 이 탭을 `Graph` 모드로 표시합니다.  
+`Flow` 모드 자체의 상태는 전혀 직렬화되지 않습니다. 배치, 확대/축소, 화면 이동, 행 표시, 포커스한 테이블은 에디터 안에만 남으므로, `originX`, `originY`, `zoomLevel`은 항상 ERD 캔버스를 나타냅니다.
+
 `show`와 `ignoreSaveSettings`는 비트마스크이므로 플래그를 OR로 결합합니다.  
 `columnOrder`는 7개의 `ColumnType` 값을 모두 담은 배열이며 표출 순서를 나타냅니다.  
 `database`, `language`, `tableNameCase`, `columnNameCase`, `bracketType`은 각각 정확히 하나의 값만 가지며, 결합된 값은 JSON Schema에서 거부됩니다.

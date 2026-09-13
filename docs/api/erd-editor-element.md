@@ -60,7 +60,7 @@ Nothing inside can be reached with a selector — style it through [setTheme](#s
 
 Sets the editing capability of the editor.  
 While it is set, assigning `value`, `clear()`, `setSchemaSQL()`, `setSchemaGraphQL()`, `setSchemaDBML()`, `setSchemaAML()`, undo, and redo are all ignored, and the `change` event is never emitted. Load a document with [setInitialValue](#setinitialvalue) instead.  
-Viewing still works: zoom, panning, the hand tool, zen mode, the canvas tab, the database vendor, and the SQL and code generator output settings all still apply, so a read-only viewer can still export SQL for another vendor or read generated code.  
+Viewing still works: zoom, panning, the hand tool, zen mode, the canvas tab, the [Visualization](../guide/guides/visualization.md) tab in both of its modes with focusing on tables included, the database vendor, and the SQL and code generator output settings all still apply, so a read-only viewer can still export SQL for another vendor or read generated code.  
 A bare attribute, `=""`, and `="true"` all read as `true`. `="false"` reads as `false`, and so does any other string — including the HTML idiom `readonly="readonly"`.
 
 ```js
@@ -120,6 +120,7 @@ const data = editor.value;
 ### setter
 
 Loads a previously saved editor state. It replaces the whole document — the current one is cleared first.  
+Like `clear()`, `setInitialValue()`, and the `setSchema*` methods, it also discards the Visualization tab's Flow view: its layout, the tables it is narrowed to, its row display, zoom, and pan.  
 It is recorded in the history list, enabling `Undo, Redo`, and it emits `change`.  
 A blank string, or anything that is not a string, loads an empty document rather than raising an error, so guard the value before assigning it.  
 It is ignored while `readonly` is set; use [setInitialValue](#setinitialvalue) to load into a read-only editor.
@@ -157,6 +158,7 @@ The element also dispatches internal `@dineug/erd-editor/internal-*` events on i
 When there are changes in the editor, it emits an event.  
 The event is debounced by 200ms, and it is not emitted while `readonly` is `true`.  
 It fires for any document change — an edit in the UI, assigning `value`, `clear()`, and each of the `setSchema*` methods. `setInitialValue` does not emit it.  
+Nothing done inside the Visualization tab's Flow mode emits it — zoom, panning, moving cards, `Tidy Up`, the row display, or narrowing the view from a card — since none of it is a document change. Switching tabs does, so focusing on tables from the ERD tab emits one `change`, and so does the external-link card button that takes you from Flow back to the ERD tab.  
 The event carries no `detail` and neither bubbles nor crosses the shadow boundary, so listen on the element itself and read `editor.value` in the handler.
 
 ```js
@@ -215,7 +217,7 @@ editor.destroy();
 
 Redefines keyboard shortcuts.  
 `edit`, `stop`, `search`, `undo`, `redo`, `zoomIn`, `zoomOut` and `zoomReset` are fixed and cannot be redefined.  
-Only the fifteen names below are written; anything else in the object is ignored, including the fixed names.  
+Only the sixteen names below are written; anything else in the object is ignored, including the fixed names.  
 A binding value must be a `ShortcutOption[]`. A bare string is ignored, so write `{ addTable: [{ shortcut: 'Alt+KeyN' }] }` rather than `{ addTable: 'Alt+KeyN' }`.  
 The call is a partial merge: names you leave out keep their defaults, and calling it twice keeps the earlier changes. There is no getter for the current bindings.
 
@@ -259,6 +261,9 @@ const defaultKeyBindingMap: Omit<
   relationshipOneOnly: [{ shortcut: '$mod+Alt+Digit3', preventDefault: true }],
   relationshipOneN: [{ shortcut: '$mod+Alt+Digit4', preventDefault: true }],
   tableProperties: [{ shortcut: 'Alt+Space', preventDefault: true }],
+  focusView: [
+    { shortcut: 'Alt+KeyF', preventDefault: true, stopPropagation: true },
+  ],
   handTool: [{ shortcut: 'Space', preventDefault: true }],
   zenMode: [
     { shortcut: 'Alt+KeyZ', preventDefault: true, stopPropagation: true },
@@ -272,6 +277,8 @@ editor.setKeyBindingMap({
 ```
 
 `selectAllTable` and `handTool` give way to a caret: while the focus is in an input, a textarea, or a `contenteditable`, `$mod + A` selects the text and `Space` types a space instead of reaching the canvas. Whatever you rebind them to behaves the same way.
+
+`focusView` acts on the ERD tab only. With at least one table selected, it opens the Visualization tab in Flow mode, narrowed to those tables and every table one relationship away; with no table selected it does nothing. See [Focusing on Tables](../guide/guides/visualization.md#focusing-on-tables).
 
 ### $mod
 

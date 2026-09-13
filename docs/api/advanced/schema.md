@@ -138,6 +138,9 @@ const SaveSettingType = {
 `width` and `height` are the legacy canvas size. The canvas is unbounded, so nothing sets them any longer; they are still written, at their defaults, for an older editor to read.  
 `zoomLevel` runs from `0.1` to `1.5`. A document saved past `1` opens at `1` in an editor before `3.5.0`.
 
+`canvasType` is the tab a document opens on. A document saved on the Visualization tab holds `'@dineug/erd-editor/builtin-visualization'` but not whether `Graph` or `Flow` mode was showing, and a newly created editor shows that tab in `Graph` mode.  
+None of `Flow` mode's own state is serialized — its placement, zoom, pan, row display and focused tables stay in the editor — so `originX`, `originY` and `zoomLevel` always describe the ERD canvas.
+
 `show` and `ignoreSaveSettings` are bitmasks — OR the flags together.  
 `columnOrder` is an array holding all seven `ColumnType` values, in display order.  
 `database`, `language`, `tableNameCase`, `columnNameCase` and `bracketType` each hold exactly one value, and the JSON Schema rejects a combined value.

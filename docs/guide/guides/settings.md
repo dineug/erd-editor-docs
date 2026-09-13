@@ -77,14 +77,18 @@ The `Shortcuts` tab is a read-only table of `Command` and `Keybinding`, listing 
 | Relationship One Only | `Ctrl + Alt + 3` | `⌘ + ⌥ + 3` |
 | Relationship One N | `Ctrl + Alt + 4` | `⌘ + ⌥ + 4` |
 | Table Properties | `Alt + Space` | `⌥ + Space` |
+| Focus on this table | `Alt + F` | `⌥ + F` |
 | Zoom In | `Ctrl + Plus` | `⌘ + Plus` |
 | Zoom Out | `Ctrl + Minus` | `⌘ + Minus` |
-| Zoom Reset | `Ctrl + O` | `⌘ + O` |
+| Zoom Reset | `Ctrl + 0` | `⌘ + 0` |
 | Hand Tool | `Space` | `Space` |
 | Zen Mode | `Alt + Z` | `⌥ + Z` |
 
 Most of these fire on the ERD tab only, and they are held back while quick search, table properties, the diff viewer, the Auto Layout preview, or time travel is open.
 `Search` and `Stop` are the exceptions: `Search` toggles quick search from any tab, and `Stop` is what closes quick search, table properties, the diff viewer, the Auto Layout preview, time travel, and the theme builder.
+`Zoom In`, `Zoom Out`, and `Zoom Reset` also zoom the [Visualization](./visualization.md#toolbar) tab, in `Graph` and `Flow` alike, unless quick search is open.
+On the Visualization tab, `Stop` also closes the [row display](./visualization.md#row-display) menu and cancels a [Flow layout](./visualization.md#how-flow-is-placed) that is still running; it does not widen a view narrowed with `Focus on this table`.
+`Focus on this table` opens the Visualization tab in `Flow`, narrowed to the selected tables and every table one relationship away, and does nothing when no table is selected — see [Focusing on Tables](./visualization.md#focusing-on-tables).
 `Select All Table, Memo` and `Hand Tool` give way to a caret: while you are editing a cell, `Ctrl + A` selects the text and `Space` types a space.
 Copy and paste are the browser's own `Ctrl + C` and `Ctrl + V` (Windows/Linux) or `⌘ + C` and `⌘ + V` (Mac), so they are not in this list — see [Table Editing](./table-editing.md).
 

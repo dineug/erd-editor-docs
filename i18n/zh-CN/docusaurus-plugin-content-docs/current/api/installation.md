@@ -13,7 +13,7 @@ npm install @dineug/erd-editor
 没有 CommonJS 构建，因此 `require('@dineug/erd-editor')` 无法使用。
 
 运行时依赖都以 bare import 的形式留在外部，交由你的打包器解析、去重和 tree-shaking。
-其中的 shared worker 会作为独立的入口文件输出到 `dist/workers/` 下，并通过 `new URL('./…', import.meta.url)` 构造——这正是 Vite、webpack 5 和 Rspack 识别为 worker 入口的写法。参见 [Web Worker](#web-worker)。
+其中的 shared worker 会作为独立的入口文件输出到 `dist/workers/` 下，并通过 `new URL('./…', import.meta.url)` 构造——这正是 Vite、webpack 5 和 Rspack 识别为 worker 入口的写法。参见 [Web Worker](#web-workers)。
 对于没有打包器的页面，还提供了一份自包含的构建，参见 [script 标签](#script-标签)。
 
 ## 使用
@@ -52,7 +52,7 @@ editor.addEventListener('change', () => {
 ```
 
 `esm.run` 会替你解析该包的外部依赖，因此无需打包器也能工作。
-不带版本号的 URL 始终提供最新的发布版本。如果不希望大版本升级在毫无预告的情况下进入页面，可以像 `https://esm.run/@dineug/erd-editor@3.7.0` 这样固定版本。
+不带版本号的 URL 始终提供最新的发布版本。如果不希望大版本升级在毫无预告的情况下进入页面，可以像 `https://esm.run/@dineug/erd-editor@3.8.0` 这样固定版本。
 
 ### script 标签
 
@@ -61,7 +61,7 @@ editor.addEventListener('change', () => {
 
 ```html
 <erd-editor></erd-editor>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@3.7.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@3.8.0"></script>
 <script>
   const editor = document.querySelector('erd-editor');
   editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
@@ -135,20 +135,21 @@ Schema SQL 与 Code Generator 面板由 [Shiki](https://shiki.style) 高亮，�
 从 `3.6.0` 及更早版本升级时：`@dineug/erd-editor-shiki-worker` 不再发布，`setGetShikiServiceCallback` 也随之移除。
 删掉那次安装和注册即可；如果页面此前从 CDN 加载该 worker，第二个 `<script>` 标签也一并删除。
 
-## Web Worker
+## Web Worker {#web-workers}
 
-编辑器会在 `SharedWorker` 中运行四件事：语法高亮、PNG 导出、[自动布局](../guide/guides/table-related-functions.md#auto-layout)，以及文档自身的垃圾回收。
+编辑器会在 `SharedWorker` 中运行四件事：语法高亮、PNG 导出、支撑[自动布局](../guide/guides/table-related-functions.md#auto-layout)与 Visualization 标签页 [Flow 模式](../guide/guides/visualization.md#how-flow-is-placed)的表布局，以及文档自身的垃圾回收。
 四者都包含在 `@dineug/erd-editor` 中。它们都不需要你来配置，但都可能被宿主环境阻止。
 
 | Worker | 缺少时 |
 | --- | --- |
 | 语法高亮 | Schema SQL 与 Code Generator 面板保持纯文本 |
 | PNG 导出 | 改在主线程绘制，绘制期间页面会卡住 |
-| 自动布局 | `Flow` 与 `Tree` 布局会以 `Could not place tables` 收场；`Force` 在编辑器内运行，不受影响 |
+| 表布局 | 自动布局的 `Flow`、`Tree - vertical` 与 `Tree - horizontal` 布局，以及 Visualization 标签页的 Flow 模式，都会以 `Could not place tables` 收场；`Force` 与 Graph 模式在编辑器内运行，不受影响 |
 | Schema 垃圾回收 | 改为进程内运行 |
 
-除自动布局以外的三者最多等待十秒，之后便不再依赖 worker 继续执行，因此阻止 worker 的宿主环境损失的是性能而不是功能。
-自动布局是例外：计算布局的引擎比编辑器本身还大，从不放进进程内运行，因此首次布局时最多等待三十秒，若无响应则报告失败。
+PNG 导出与 Schema 垃圾回收最多等待十秒，之后便不再依赖 worker 继续执行，语法高亮则会在其 worker 失败时立即让面板保持纯文本，因此阻止 worker 的宿主环境损失的是性能而不是功能。
+表布局是例外：计算布局的引擎比编辑器本身还大，从不放进进程内运行，因此首次布局时最多等待三十秒，若无响应则报告失败。
+worker 响应之后，六十秒内仍未返回的布局同样会被放弃，并以同样的 `Could not place tables` 收场。自动布局一开始就会显示 `Placing tables…`，而 Flow 模式只有在一次布局（包括其 worker 的启动）持续了六秒之后才会显示。
 
 在打包构建中，四个 worker 都会作为独立文件一同发布，因此 CSP 严格的页面需要 `worker-src 'self'`；如果你的打包器把 worker 内联，还需要加上 `blob:`。
 在 [script 标签](#script-标签)构建中，四个 worker 都以 `data:` URL 的形式装在文件里，因此这类页面需要的是 `worker-src data:`。
