@@ -44,7 +44,7 @@
     "description": "The hero subtitle and the browser tab title of the homepage"
   },
   "homepage.heroImageAlt": {
-    "message": "브라우저에서 쇼핑몰 다이어그램을 편집하고 Flow로 보는 erd-editor",
+    "message": "VS Code에서 실행 중인 erd-editor",
     "description": "Alt text for the homepage screenshot"
   },
   "homepage.cta": {
