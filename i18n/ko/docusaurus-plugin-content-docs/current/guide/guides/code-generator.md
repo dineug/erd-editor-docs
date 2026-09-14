@@ -7,7 +7,7 @@ sidebar_position: 8
 툴바의 `Code Generator` 탭으로 전환한 뒤, 코드 패널 안에서 마우스 오른쪽 클릭으로 컨텍스트 메뉴를 엽니다.  
 메뉴는 `Language`, `Table Name Case`, `Column Name Case`를 제공합니다.
 
-<img src="/img/code-generator.png" width="400" alt="코드 생성 메뉴" loading="lazy" />
+![코드 패널의 컨텍스트 메뉴에서 TypeScript와 테이블 이름 Snake를 고른 뒤 코드 복사하기](/img/demo-code-generator.webp)
 
 같은 패널은 [테이블 속성](./table-related-functions.md#테이블-속성)의 `Code Generator` 탭이기도 하며, 여기서는 문서 전체가 아니라 해당 테이블 하나의 코드를 생성합니다.  
 이 탭이 열려 있는 동안에는 3개의 메뉴를 [빠른 검색](./quick-search.md)에서도 사용할 수 있습니다.

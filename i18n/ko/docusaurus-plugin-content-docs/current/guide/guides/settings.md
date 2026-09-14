@@ -16,9 +16,9 @@ description: 관계 데이터 타입 동기화, 화면 위치와 확대/축소 �
 데이터 타입 동기화 여부를 결정합니다. 기본적으로 켜져 있습니다.
 컬럼의 데이터 타입을 변경하면 관계로 연결된 모든 컬럼에 같은 타입이 적용되며, 양쪽 끝에서 연결을 따라가므로 foreign key가 참조하는 키와 달라지지 않습니다.
 
-<img src="/img/settings-relationship-data-type-sync.png" width="400" alt="관계 데이터 타입 동기화 설정" loading="lazy" />
+<img src="/img/settings-relationship-data-type-sync.png" width="290" alt="관계 데이터 타입 동기화 설정" loading="lazy" />
 
-![demo-relationship-data-type-sync](/img/demo-relationship-data-type-sync.webp)
+![members.id를 BIGINT UNSIGNED로 변경하면 관계로 연결된 모든 member_id도 함께 바뀌는 모습](/img/demo-relationship-data-type-sync.webp)
 
 ## 스크롤 정보 저장
 
@@ -36,8 +36,7 @@ description: 관계 데이터 타입 동기화, 화면 위치와 확대/축소 �
 스위치를 끄면 제한이 없어지고, 꺼져 있는 동안에는 입력이 비활성화됩니다.
 다시 켜면 `60px`부터 시작합니다. 범위를 벗어난 값을 입력하면 가장 가까운 끝값으로 맞춰집니다.
 
-<img src="/img/settings-comment-width.png" width="400" alt="코멘트 최대 너비 설정" loading="lazy" />
-<img src="/img/settings-comment-width-2.png" width="400" alt="다이어그램에 적용된 코멘트 최대 너비" loading="lazy" />
+![코멘트 최대 너비를 켜고 120을 입력한 뒤 ERD 탭에서 그 너비로 잘린 코멘트](/img/demo-settings-comment-width.webp)
 
 ## 테이블 너비 재계산
 
@@ -51,7 +50,7 @@ description: 관계 데이터 타입 동기화, 화면 위치와 확대/축소 �
 행을 드래그해 이동하며, 행 전체를 드래그할 수 있고 그립 아이콘으로 표시됩니다. 기본 순서의 7개 행은 `Name`, `DataType`, `Not Null`, `Unique`, `Auto Increment`, `Default`, `Comment`입니다.
 [테이블 보기 옵션](./table-related-functions.md#테이블-보기-옵션)으로 숨겨진 셀도 목록에서 자리를 유지하므로, 순서는 표출되는 셀에 적용됩니다.
 
-![demo-settings-column-order](/img/demo-settings-column-order.webp)
+![Comment 행을 Name 아래로 드래그해 코멘트가 컬럼 이름 바로 뒤에 표출되는 모습](/img/demo-settings-column-order.webp)
 
 ## 단축키
 

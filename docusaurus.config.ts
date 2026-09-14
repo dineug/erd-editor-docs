@@ -98,7 +98,7 @@ const config: Config = {
 
   themeConfig: {
     // Replace with your project's social card
-    image: 'img/erd-editor-vscode.png',
+    image: 'img/social-card.png',
     navbar: {
       title: 'erd-editor',
       logo: {

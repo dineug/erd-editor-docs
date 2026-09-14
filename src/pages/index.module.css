@@ -17,7 +17,7 @@
 }
 
 /*
- * The screenshot is 1279x881. Left unconstrained it fills the viewport and
+ * The clip is 1920x1080. Left unconstrained it fills the viewport and
  * pushes the call to action below the fold, so cap it on both axes. The width
  * and height attributes on the <img> keep the aspect ratio reserved during
  * load, which is what prevents the layout shift.

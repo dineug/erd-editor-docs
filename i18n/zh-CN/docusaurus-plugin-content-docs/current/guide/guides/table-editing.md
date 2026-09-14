@@ -8,7 +8,7 @@ description: 添加、多选、调整顺序与删除列，切换列选项，以�
 表编辑基本上提供与 Excel 相似的编辑体验。  
 按 `Enter` 或双击单元格进入编辑模式。
 
-![demo-table-edit](/img/demo-table-edit.webp)
+![使用 Alt + N 添加表并填写两列](/img/demo-table-edit.webp)
 
 ## 添加列
 
@@ -21,7 +21,7 @@ description: 添加、多选、调整顺序与删除列，切换列选项，以�
 在最后一个单元格按 `Tab` 会创建新的列。  
 使用 `Shift + Tab` 移动到上一个单元格的编辑模式。
 
-![demo-table-tab](/img/demo-table-tab.webp)
+![用 Tab 在单元格间移动，在最后一个单元格添加列，再用 Shift + Tab 返回](/img/demo-table-tab.webp)
 
 ## DataType 自动补全
 
@@ -36,7 +36,7 @@ description: 添加、多选、调整顺序与删除列，切换列选项，以�
 推荐并非强制，列表之外的类型也可以自由输入，包括 `VARCHAR(255)` 这样带参数的写法。  
 推荐项跟随所选数据库，更换数据库会改变推荐内容，已有的列保持不变。
 
-![demo-data-type-autocomplete](/img/demo-data-type-autocomplete.webp)
+![使用方向键、Tab 和 Enter 从模糊匹配的推荐项中填写 DataType](/img/demo-data-type-autocomplete.webp)
 
 ## Not Null, Unique, Auto Increment
 
@@ -45,6 +45,8 @@ description: 添加、多选、调整顺序与删除列，切换列选项，以�
 
 Not Null 单元格在设置后显示 `N-N`，未设置时显示 `NULL`。  
 `UQ` 和 `AI` 在关闭时为暗色，在开启时高亮。
+
+![双击切换 Not Null，按 Enter 切换 Unique 与 Auto Increment](/img/demo-column-options.webp)
 
 被[表显示选项](./table-related-functions.md)隐藏的单元格无法切换。
 
@@ -58,24 +60,24 @@ Not Null 单元格在设置后显示 `N-N`，未设置时显示 `NULL`。
 - `Ctrl + Shift + click` (Windows/Linux) or `⌘ + Shift + click` (Mac)：将该范围添加到选中范围
 - `Alt + A` (Windows/Linux) or `⌥ + A` (Mac)：全选
 
-![demo-column-select](/img/demo-column-select.webp)
+![使用 Shift + Arrow Down、Ctrl/⌘ + click、Shift + click 和 Alt + A 选择列](/img/demo-column-select.webp)
 
 ## 调整与移动列
 
 通过 `drag` 操作，可以移动到其他表。
 
-![demo-column-move](/img/demo-column-move.webp)
+![拖动列调整顺序，再将其移动到另一个表](/img/demo-column-move.webp)
 
 使用 `Ctrl + drag` (Windows/Linux) 或 `⌘ + drag` (Mac) 也可移动多个列。
 
-![demo-column-multi-move](/img/demo-column-multi-move.webp)
+![选中三列，使用 Ctrl/⌘ + drag 移动到另一个表](/img/demo-column-multi-move.webp)
 
 ## 删除列
 
 删除当前选中的列。  
 快捷键：`Alt + Backspace` 或 `Alt + Delete` (Windows/Linux)，`⌥ + ⌫` 或 `⌥ + Delete` (Mac)
 
-![demo-column-remove](/img/demo-column-remove.webp)
+![使用 Alt + Backspace 删除一列，再删除选中的两列](/img/demo-column-remove.webp)
 
 ## 复制/粘贴列
 
@@ -91,12 +93,13 @@ Not Null 单元格在设置后显示 `N-N`，未设置时显示 `NULL`。
 
 从编辑器复制出去时，AutoIncrement 与 Unique 写为 `TRUE` 或 `FALSE`，Not Null 写为 `NOT NULL` 或 `NULL`。
 
-![demo-copy-column-to-sheet](/img/demo-copy-column-to-sheet.webp)
-![demo-copy-sheet-column](/img/demo-copy-sheet-column.webp)
+![将四列粘贴到电子表格，标志写为 TRUE/FALSE 与 NOT NULL/NULL](/img/demo-copy-column-to-sheet.webp)
+
+![将电子表格中的三行作为列粘贴到表中，YES、1 和 NOT NULL 视为 true](/img/demo-copy-sheet-column.webp)
 
 选中多个表时同样支持该操作。
 
-![demo-copy-column-multi](/img/demo-copy-column-multi.webp)
+![复制两列并一次性粘贴到选中的两个表](/img/demo-copy-column-multi.webp)
 
 ## 复制/粘贴表与备注
 
@@ -108,4 +111,4 @@ Not Null 单元格在设置后显示 `N-N`，未设置时显示 `NULL`。
 通过表的右键菜单或快捷键 `Alt + K` (Windows/Linux) 或 `⌥ + K` (Mac) 进行操作。  
 行中的钥匙图标仅用于显示，点击它不会设置主键。
 
-![demo-column-pk](/img/demo-column-pk.webp)
+![使用 Alt + K 为两列开启主键，再关闭其中一列](/img/demo-column-pk.webp)

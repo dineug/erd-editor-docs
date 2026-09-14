@@ -7,7 +7,7 @@ description: 从画布右键菜单创建表、备注与关系。
 
 编辑从右键菜单开始。
 
-<img src="/img/context-menu.png" width="400" alt="画布右键菜单" loading="lazy" />
+![右键点击画布，浏览 Relationship 子菜单，新建表后再打开该表自身的菜单](/img/demo-context-menu.webp)
 
 在表或关系上右键则会打开该项自身的菜单。
 
@@ -21,6 +21,8 @@ description: 从画布右键菜单创建表、备注与关系。
 
 备注是画布上的自由文本笔记。在其正文区域点击后即可输入，内容会随文档一起保存。  
 拖动边框可调整其大小，通过标题栏中的 `x` 可将其删除。
+
+![按 Alt + M 添加备注，输入内容后拖动边框调整其大小](/img/demo-memo.webp)
 
 ## 创建关系
 
@@ -36,7 +38,7 @@ description: 从画布右键菜单创建表、备注与关系。
 对同一张表点击两次会绘制自引用关系。  
 按 `Escape` 或再次按下相同的快捷键即可取消。
 
-![demo-relationship](/img/demo-relationship.webp)
+![用 ⌘ + ⌥ + 4 创建 One N 关系，再从画布工具栏创建 Zero N 关系](/img/demo-relationship.webp)
 
 ## 创建表与备注的副本
 

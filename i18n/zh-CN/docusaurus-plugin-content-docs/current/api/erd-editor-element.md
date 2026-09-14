@@ -92,7 +92,7 @@ editor.setAttribute('system-dark-mode', 'true');
 
 设置是否提供便于配置预设主题的 UI。
 
-<img src="/img/theme-builder.png" width="400" alt="主题构建器 UI" loading="lazy" />
+![打开主题构建器，切换强调色和灰阶色](/img/demo-theme-builder.webp)
 
 ```js
 editor.enableThemeBuilder = true;

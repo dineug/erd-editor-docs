@@ -26,7 +26,7 @@ GraphQL、DBML 和 AML 解析器不会失败，无法读取的文件只会生成
 可以导入[编辑器定义的 schema 格式](../../api/advanced/schema.md)文件。
 文件名必须以 `.json` 结尾，因此导出的 `<数据库名>-<时间戳>.erd.json` 文件可以原样导入回来，而此处不接受单纯的 `.erd` 或 `.vuerd` 文件。
 
-<img src="/img/import-json.png" width="400" alt="导入 JSON 菜单" loading="lazy" />
+![通过 Import > json 导入已保存的文件，连同设置一起替换草稿文档](/img/demo-import-json.webp)
 
 ### Schema SQL
 
@@ -35,7 +35,7 @@ GraphQL、DBML 和 AML 解析器不会失败，无法读取的文件只会生成
 文件名必须以 `.sql` 结尾。  
 [支持的语法可在此查看。](https://github.com/dineug/erd-editor/tree/main/packages/schema-sql-parser)
 
-<img src="/img/import-sql.png" width="400" alt="导入 Schema SQL 菜单" loading="lazy" />
+![通过 Import > Schema SQL 导入 SQL 文件，再缩小查看自动排列的表](/img/demo-import-sql.webp)
 
 #### 注释
 
@@ -83,6 +83,6 @@ GraphQL、DBML 和 AML 都是可往返的格式，它们同时也是[代码生�
 
 每个导出的文件都以 `<数据库名>-<时间戳>` 加上对应的扩展名命名，其中时间戳的格式为 `yyyy-MM-dd'T'HH_mm_ss`，例如 `my-schema-2026-08-29T04_05_06.erd.json`。数据库名为空时会退回为 `unnamed`。
 
-<img src="/img/export-menu.png" width="400" alt="导出菜单" loading="lazy" />
+![从 Export 子菜单中选择 png，并显示正在导出的提示](/img/demo-export.webp)
 
 `Import` 与 `Export` 也可以从[快速搜索](./quick-search.md)中使用。其中提供相同的五种导入格式，但导出仅支持 `JSON` 和 `Schema SQL`，PNG 仅能从右键菜单导出。

@@ -10,7 +10,7 @@ sidebar_position: 6
 단축키 `Ctrl + K` (Windows/Linux) or `⌘ + K` (Mac)로 열거나, 툴바의 `Search`를 클릭해 엽니다.  
 같은 단축키로 닫히며 `Esc`나 패널 바깥 클릭으로도 닫힙니다. 팔레트를 열면 테이블 속성 패널과 테마 빌더가 닫히고, 테이블 셀을 편집하는 중에는 열리지 않습니다.
 
-![demo-quick-search](/img/demo-quick-search.webp)
+![⌘ + K로 테이블로 이동한 뒤, Import 하위 메뉴에서 sdl을 입력해 GraphQL 찾기](/img/demo-quick-search.webp)
 
 ## 검색과 이동
 

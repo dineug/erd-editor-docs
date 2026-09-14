@@ -8,7 +8,7 @@ description: Add, select, reorder and delete columns, toggle column options, and
 Table editing basically offers an editing experience similar to Excel.  
 Editing mode starts with `Enter`, or by double-clicking a cell.
 
-![demo-table-edit](/img/demo-table-edit.webp)
+![Adding a table with Alt + N and filling in two columns](/img/demo-table-edit.webp)
 
 ## Adding Columns
 
@@ -21,7 +21,7 @@ Press `Tab` to move straight into the next cell's editing mode.
 Pressing `Tab` in the last cell creates a new column.  
 Use `Shift + Tab` to navigate to the previous cell's editing mode.
 
-![demo-table-tab](/img/demo-table-tab.webp)
+![Tab moving through a row's cells, adding a column from the last cell, and Shift + Tab going back](/img/demo-table-tab.webp)
 
 ## DataType Autocomplete
 
@@ -36,7 +36,7 @@ You can also click a suggestion.
 Nothing is forced, so a type that is not in the list can be typed freely, including arguments such as `VARCHAR(255)`.  
 The suggestions follow the selected database. Changing the database changes what is offered and leaves existing columns as they are.
 
-![demo-data-type-autocomplete](/img/demo-data-type-autocomplete.webp)
+![Filling in DataType cells from fuzzy suggestions with the arrow keys, Tab and Enter](/img/demo-data-type-autocomplete.webp)
 
 ## Not Null, Unique, Auto Increment
 
@@ -45,6 +45,8 @@ Double-click one, or press `Enter` while it is focused, to flip it.
 
 The Not Null cell reads `N-N` when it is set and `NULL` when it is not.  
 `UQ` and `AI` are dimmed when off and highlighted when on.
+
+![Flipping Not Null with a double-click, and Unique and Auto Increment with Enter](/img/demo-column-options.webp)
 
 Cells hidden by the [table view options](./table-related-functions.md) cannot be toggled.
 
@@ -58,24 +60,24 @@ Supports five methods:
 - `Ctrl + Shift + click` (Windows/Linux) or `⌘ + Shift + click` (Mac): add that range to the selection
 - `Alt + A` (Windows/Linux) or `⌥ + A` (Mac): Select All
 
-![demo-column-select](/img/demo-column-select.webp)
+![Selecting columns with Shift + Arrow Down, Ctrl/⌘ + click, Shift + click and Alt + A](/img/demo-column-select.webp)
 
 ## Rearranging and Moving Columns
 
 Functions when `dragging`, enabling movement to other tables.
 
-![demo-column-move](/img/demo-column-move.webp)
+![Dragging a column to a new position, then into another table](/img/demo-column-move.webp)
 
 Supports moving multiple columns with `Ctrl + drag` (Windows/Linux) or `⌘ + drag` (Mac).
 
-![demo-column-multi-move](/img/demo-column-multi-move.webp)
+![Selecting three columns and moving them into another table with Ctrl/⌘ + drag](/img/demo-column-multi-move.webp)
 
 ## Column Deletion
 
 Deletes the currently selected column.  
 Shortcut: `Alt + Backspace` or `Alt + Delete` (Windows/Linux), `⌥ + ⌫` or `⌥ + Delete` (Mac)
 
-![demo-column-remove](/img/demo-column-remove.webp)
+![Deleting one column, then two selected columns, with Alt + Backspace](/img/demo-column-remove.webp)
 
 ## Copying/Pasting Columns
 
@@ -91,12 +93,13 @@ For the columns below, any of these values is read as true (case insensitive):
 
 On the way out the editor writes `TRUE` or `FALSE` for AutoIncrement and Unique, and `NOT NULL` or `NULL` for Not Null.
 
-![demo-copy-column-to-sheet](/img/demo-copy-column-to-sheet.webp)
-![demo-copy-sheet-column](/img/demo-copy-sheet-column.webp)
+![Pasting four columns into a spreadsheet, with flags written as TRUE/FALSE and NOT NULL/NULL](/img/demo-copy-column-to-sheet.webp)
+
+![Pasting three spreadsheet rows into a table as columns, with YES, 1 and NOT NULL read as true](/img/demo-copy-sheet-column.webp)
 
 Supports actions when selecting multiple tables.
 
-![demo-copy-column-multi](/img/demo-copy-column-multi.webp)
+![Copying two columns and pasting them into two selected tables at once](/img/demo-copy-column-multi.webp)
 
 ## Copying/Pasting Tables and Memos
 
@@ -108,4 +111,4 @@ Toggles the primary key on the focused column, which is the column the focused c
 Use the table context menu or the shortcut `Alt + K` (Windows/Linux) or `⌥ + K` (Mac).  
 The key icon in the row is display only, so clicking it does not set the key.
 
-![demo-column-pk](/img/demo-column-pk.webp)
+![Turning the primary key on for two columns with Alt + K, then off again for one](/img/demo-column-pk.webp)

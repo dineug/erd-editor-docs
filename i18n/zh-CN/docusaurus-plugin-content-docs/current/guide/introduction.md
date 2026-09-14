@@ -9,7 +9,7 @@ erd-editor 是一款实体关系图（Entity-Relationship Diagram）编辑器。
 提供 Web 应用、VS Code 扩展、IntelliJ 插件，以及可嵌入自有页面的 `<erd-editor>` 自定义元素等多种形式。
 所有形式都是同一个编辑器，并使用相同的文档格式。
 
-<img src="/img/erd-editor-vscode.png" alt="在 VS Code 中运行的 erd-editor" loading="lazy" />
+![在网店关系图中悬停连接线、添加列，并在 Flow 中聚焦 orders 表](/img/demo-overview.webp)
 
 ## 获取方式
 

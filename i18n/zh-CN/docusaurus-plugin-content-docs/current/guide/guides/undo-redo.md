@@ -19,6 +19,8 @@ Undo 与 Redo 仅在 ERD 标签页生效。在 Visualization、Schema SQL、Code
 
 历史记录保存在当前会话的内存中。它不会存入文档，因此重新打开图时历史记录为空。
 
+![移动表并删除列后，用 ⌘ + Z 依次 Undo，再用 ⌘ + Shift + Z Redo](/img/demo-undo-redo.webp)
+
 ## 历史记录的内容 {#what-the-history-records}
 
 会记录以下内容：
@@ -58,3 +60,5 @@ Time Travel 会打开图的一份独立只读副本。
 预览是静止的：它会绘制小地图，但无法平移、滚动或编辑，在应用之前实际文档不会发生任何变化。
 
 按 `Apply` 恢复到所选时间点，或按 `Cancel` 或 `Esc` 保持文档不变。
+
+![打开 Time Travel，拖动滑块回溯编辑历史，并应用较早的时间点](/img/demo-time-travel.webp)

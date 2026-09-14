@@ -8,7 +8,7 @@ description: 컬럼 추가와 다중 선택, 순서 변경, 삭제, 컬럼 옵�
 기본적으로 엑셀과 유사한 편집 경험을 제공합니다.  
 편집모드는 `Enter` 또는 셀 더블 클릭으로 시작합니다.
 
-![demo-table-edit](/img/demo-table-edit.webp)
+![Alt + N으로 테이블을 추가하고 컬럼 두 개 입력](/img/demo-table-edit.webp)
 
 ## Column 추가
 
@@ -21,7 +21,7 @@ description: 컬럼 추가와 다중 선택, 순서 변경, 삭제, 컬럼 옵�
 마지막 셀에서 `Tab`을 누르면 새로운 컬럼을 생성합니다.  
 `Shift + Tab`으로 이전 셀 편집모드로 이동합니다.
 
-![demo-table-tab](/img/demo-table-tab.webp)
+![Tab으로 셀을 이동하고 마지막 셀에서 컬럼을 추가한 뒤 Shift + Tab으로 되돌아가기](/img/demo-table-tab.webp)
 
 ## DataType 자동완성
 
@@ -36,7 +36,7 @@ description: 컬럼 추가와 다중 선택, 순서 변경, 삭제, 컬럼 옵�
 강제되지 않으므로 목록에 없는 타입도 `VARCHAR(255)`처럼 인자를 포함해 자유롭게 입력할 수 있습니다.  
 제안 목록은 선택된 데이터베이스를 따릅니다. 데이터베이스를 변경하면 제안 항목이 바뀌고 기존 컬럼은 그대로 유지됩니다.
 
-![demo-data-type-autocomplete](/img/demo-data-type-autocomplete.webp)
+![방향키, Tab, Enter로 fuzzy 제안을 골라 DataType 셀 채우기](/img/demo-data-type-autocomplete.webp)
 
 ## Not Null, Unique, Auto Increment
 
@@ -45,6 +45,8 @@ description: 컬럼 추가와 다중 선택, 순서 변경, 삭제, 컬럼 옵�
 
 Not Null 셀은 설정되면 `N-N`, 해제되면 `NULL`로 표시됩니다.  
 `UQ`와 `AI`는 꺼져 있으면 흐리게, 켜져 있으면 강조되어 표시됩니다.
+
+![Not Null은 더블 클릭으로, Unique와 Auto Increment는 Enter로 전환](/img/demo-column-options.webp)
 
 [테이블 보기 옵션](./table-related-functions.md)으로 숨겨진 셀은 토글할 수 없습니다.
 
@@ -58,24 +60,24 @@ Not Null 셀은 설정되면 `N-N`, 해제되면 `NULL`로 표시됩니다.
 - `Ctrl + Shift + click` (Windows/Linux) or `⌘ + Shift + click` (Mac): 해당 범위를 선택에 추가
 - `Alt + A` (Windows/Linux) or `⌥ + A` (Mac): 전체 선택
 
-![demo-column-select](/img/demo-column-select.webp)
+![Shift + Arrow Down, Ctrl/⌘ + click, Shift + click, Alt + A로 컬럼 선택](/img/demo-column-select.webp)
 
 ## Column 순서 변경 및 이동
 
 드래그할 때 동작하며 다른 테이블로 이동할 수 있습니다.
 
-![demo-column-move](/img/demo-column-move.webp)
+![컬럼을 드래그해 순서를 바꾸고 다른 테이블로 옮기기](/img/demo-column-move.webp)
 
 `Ctrl + drag` (Windows/Linux) or `⌘ + drag` (Mac)로 다중 컬럼 이동도 지원합니다.
 
-![demo-column-multi-move](/img/demo-column-multi-move.webp)
+![컬럼 세 개를 선택해 Ctrl/⌘ + drag로 다른 테이블에 옮기기](/img/demo-column-multi-move.webp)
 
 ## Column 삭제
 
 현재 선택된 컬럼을 삭제합니다.  
 단축키 `Alt + Backspace` or `Alt + Delete` (Windows/Linux), `⌥ + ⌫` or `⌥ + Delete` (Mac)
 
-![demo-column-remove](/img/demo-column-remove.webp)
+![Alt + Backspace로 컬럼 하나, 이어서 선택한 컬럼 두 개 삭제](/img/demo-column-remove.webp)
 
 ## Column 복사/붙여넣기
 
@@ -91,12 +93,13 @@ Not Null 셀은 설정되면 `N-N`, 해제되면 `NULL`로 표시됩니다.
 
 반대로 에디터에서 복사할 때는 AutoIncrement와 Unique는 `TRUE` 또는 `FALSE`로, Not Null은 `NOT NULL` 또는 `NULL`로 기록합니다.
 
-![demo-copy-column-to-sheet](/img/demo-copy-column-to-sheet.webp)
-![demo-copy-sheet-column](/img/demo-copy-sheet-column.webp)
+![컬럼 네 개를 스프레드시트에 붙여넣기, 플래그는 TRUE/FALSE와 NOT NULL/NULL로 기록](/img/demo-copy-column-to-sheet.webp)
+
+![스프레드시트의 세 행을 테이블에 컬럼으로 붙여넣기, YES, 1, NOT NULL은 true로 읽음](/img/demo-copy-sheet-column.webp)
 
 테이블 다중 선택 시 동작도 지원합니다.
 
-![demo-copy-column-multi](/img/demo-copy-column-multi.webp)
+![컬럼 두 개를 복사해 선택한 테이블 두 개에 한 번에 붙여넣기](/img/demo-copy-column-multi.webp)
 
 ## 테이블과 메모 복사/붙여넣기
 
@@ -108,4 +111,4 @@ Not Null 셀은 설정되면 `N-N`, 해제되면 `NULL`로 표시됩니다.
 테이블 컨텍스트 메뉴 또는 단축키 `Alt + K` (Windows/Linux) or `⌥ + K` (Mac)로 가능합니다.  
 행에 표시되는 키 아이콘은 표시 전용이라 클릭해도 primary key가 설정되지 않습니다.
 
-![demo-column-pk](/img/demo-column-pk.webp)
+![Alt + K로 두 컬럼에 primary key를 켠 뒤 한 컬럼은 다시 끄기](/img/demo-column-pk.webp)

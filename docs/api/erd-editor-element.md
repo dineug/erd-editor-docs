@@ -92,7 +92,7 @@ editor.setAttribute('system-dark-mode', 'true');
 
 Determines if a UI for easily setting preset themes is provided.
 
-<img src="/img/theme-builder.png" width="400" alt="Theme builder UI" loading="lazy" />
+![Opening the theme builder and switching the accent and gray colors](/img/demo-theme-builder.webp)
 
 ```js
 editor.enableThemeBuilder = true;

@@ -26,7 +26,7 @@ GraphQL, DBML, AML 파서는 실패하지 않습니다. 읽을 수 없는 파일
 [에디터에서 정의한 스키마 형식](../../api/advanced/schema.md)의 파일을 가져올 수 있습니다.
 파일 이름은 `.json`으로 끝나야 하므로 `<데이터베이스 이름>-<시간>.erd.json`으로 내보낸 파일은 그대로 다시 가져올 수 있고, `.erd`나 `.vuerd` 파일은 여기서 가져올 수 없습니다.
 
-<img src="/img/import-json.png" width="400" alt="JSON 가져오기 메뉴" loading="lazy" />
+![Import > json으로 저장된 파일을 가져와 초안 문서를 설정과 함께 대체하기](/img/demo-import-json.webp)
 
 ### Schema SQL
 
@@ -35,7 +35,7 @@ SQL로 정의한 스키마 파일도 가져올 수 있습니다.
 파일 이름은 `.sql`로 끝나야 합니다.  
 [지원하는 문법은 여기에서 확인 가능합니다.](https://github.com/dineug/erd-editor/tree/main/packages/schema-sql-parser)
 
-<img src="/img/import-sql.png" width="400" alt="Schema SQL 가져오기 메뉴" loading="lazy" />
+![Import > Schema SQL로 SQL 파일을 가져온 뒤, 자동으로 배치된 테이블을 축소해 보기](/img/demo-import-sql.webp)
 
 #### 코멘트
 
@@ -83,6 +83,6 @@ PNG는 화면이 얼마나 멀리 이동해 있든 다이어그램 전체를 담
 
 내보낸 파일은 모두 `<데이터베이스 이름>-<시간>` 뒤에 해당 확장자가 붙은 이름이며, 시간 형식은 `yyyy-MM-dd'T'HH_mm_ss`입니다. 예를 들면 `my-schema-2026-08-29T04_05_06.erd.json`입니다. 데이터베이스 이름이 비어 있으면 `unnamed`가 사용됩니다.
 
-<img src="/img/export-menu.png" width="400" alt="내보내기 메뉴" loading="lazy" />
+![Export 하위 메뉴에서 png를 고르면 내보내기 진행 알림이 표시되는 모습](/img/demo-export.webp)
 
 가져오기와 내보내기는 [빠른 검색](./quick-search.md)에서도 사용 가능합니다. 가져오기는 동일한 5가지 형식을 제공하지만 내보내기는 `json`과 `Schema SQL`만 제공하며, PNG는 컨텍스트 메뉴에서만 사용 가능합니다.

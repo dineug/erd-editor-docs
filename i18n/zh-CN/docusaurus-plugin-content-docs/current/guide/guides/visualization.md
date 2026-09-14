@@ -36,7 +36,7 @@ description: 以力导向的 Graph 或由表卡片组成的 Flow 浏览 schema�
 
 将整个文档绘制为力导向图，从而一眼看清表与表之间的关系，以及哪些表处于领域的核心位置。
 
-![Graph 模式](/img/demo-visualization.webp)
+![打开 Graph 模式，悬停预览表、拖动节点，再缩小并放大回来](/img/demo-visualization.webp)
 
 ### 图的解读 {#reading-the-graph}
 
@@ -87,6 +87,8 @@ description: 以力导向的 Graph 或由表卡片组成的 Flow 浏览 schema�
 连接线是从表到表的一条平滑曲线，绘制在卡片下方，因此可能从某张卡片背后穿过。无论是否为识别关系，所有连接线都绘制为同样的灰色实线，两端的符号与 ERD 标签页上的相同，参见[读懂连接线](./relationship-editing.md#reading-a-connector)。即使关闭了 `Relationship` [显示选项](./table-related-functions.md#table-view-options)，Flow 也会绘制连接线。
 
 在整张图中，没有通过关系与其他表相连的表会集中到一个区块中，而不会散落在其余表之间。
+
+![切换到 Flow，固定卡片的点亮状态，选择 Keys only，再放大并按下 Fit](/img/demo-visualization-flow.webp)
 
 ### 行显示 {#row-display}
 
@@ -150,6 +152,8 @@ Visualization 标签页会以 `Flow` 打开，范围缩小到这些表以及与�
 
 在 Flow 内部，航点[卡片按钮](#card-buttons)会以同样的方式缩小视图范围，只是针对那一个表。[工具栏](#toolbar)上的 `Show all` 会回到整张图。  
 缩小范围后的视图会单独排布并适应屏幕。离开该标签页或切换到 `Graph` 再回来时，它仍保持缩小后的范围，`Escape` 也不会将其扩大。
+
+![按 ⌥ + F 聚焦于 orders，用卡片按钮缩小到 members，再用 Show all 回到整张图](/img/demo-visualization-focus.webp)
 
 ### Flow 的排布方式 {#how-flow-is-placed}
 

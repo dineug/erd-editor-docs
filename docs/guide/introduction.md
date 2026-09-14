@@ -9,7 +9,7 @@ erd-editor is an Entity-Relationship Diagram editor.
 It is available as a web app, a VS Code extension, an IntelliJ plugin, and as an `<erd-editor>` custom element you can embed in your own page.
 It is one editor and one document format across all of them.
 
-<img src="/img/erd-editor-vscode.png" alt="erd-editor running inside VS Code" loading="lazy" />
+![A shop diagram: hovering a relationship, adding a column, and focusing on orders in Flow](/img/demo-overview.webp)
 
 ## Where to Get It
 

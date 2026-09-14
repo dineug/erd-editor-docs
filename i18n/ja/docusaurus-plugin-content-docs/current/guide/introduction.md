@@ -9,7 +9,7 @@ erd-editor は ER 図（Entity-Relationship Diagram）エディタです。
 Web アプリ、VSCode 拡張機能、IntelliJ プラグイン、そして自分のページに埋め込める `<erd-editor>` カスタム要素として提供しています。
 どれも同じエディタで、ドキュメント形式も共通です。
 
-<img src="/img/erd-editor-vscode.png" alt="VS Code 上で動作している erd-editor" loading="lazy" />
+![ショップのダイアグラムでリレーションシップの強調、カラムの追加、Flow での orders へのフォーカス](/img/demo-overview.webp)
 
 ## 入手方法
 

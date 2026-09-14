@@ -16,9 +16,9 @@ description: 关系数据类型同步、视图位置与缩放信息保存、注�
 决定是否同步数据类型。默认开启。
 修改某一列的数据类型后，会将相同的类型应用到通过关系连接的所有列，并从两端沿着连接链传递，因此外键不会与其引用的键产生偏差。
 
-<img src="/img/settings-relationship-data-type-sync.png" width="400" alt="关系数据类型同步设置" loading="lazy" />
+<img src="/img/settings-relationship-data-type-sync.png" width="290" alt="关系数据类型同步设置" loading="lazy" />
 
-![demo-relationship-data-type-sync](/img/demo-relationship-data-type-sync.webp)
+![将 members.id 改为 BIGINT UNSIGNED 后，通过关系连接的所有 member_id 随之同步](/img/demo-relationship-data-type-sync.webp)
 
 ## 保存滚动信息
 
@@ -36,8 +36,7 @@ description: 关系数据类型同步、视图位置与缩放信息保存、注�
 关闭开关则不再限制，关闭期间输入框不可用。
 重新开启时从 `60px` 开始。输入超出范围的值会被调整为最接近的端值。
 
-<img src="/img/settings-comment-width.png" width="400" alt="注释最大宽度设置" loading="lazy" />
-<img src="/img/settings-comment-width-2.png" width="400" alt="应用到图上的注释最大宽度" loading="lazy" />
+![开启注释最大宽度并输入 120，回到 ERD 标签页后注释按该宽度截断](/img/demo-settings-comment-width.webp)
 
 ## 重新计算表宽度
 
@@ -51,7 +50,7 @@ description: 关系数据类型同步、视图位置与缩放信息保存、注�
 拖动行即可移动，整行都可以拖动，并以拖动手柄图标标识。默认顺序下的七行依次为 `Name`、`DataType`、`Not Null`、`Unique`、`Auto Increment`、`Default` 和 `Comment`。
 被[表显示选项](./table-related-functions.md#table-view-options)隐藏的单元格仍会在列表中保留位置，因此该顺序适用于实际显示的单元格。
 
-![demo-settings-column-order](/img/demo-settings-column-order.webp)
+![将 Comment 行拖到 Name 下方，注释随即显示在列名之后](/img/demo-settings-column-order.webp)
 
 ## 快捷键
 

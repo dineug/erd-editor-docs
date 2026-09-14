@@ -26,7 +26,7 @@ GraphQL、DBML、AML のパーサーは失敗しません。読み取れない�
 [エディタで定義したスキーマ形式](../../api/advanced/schema.md)のファイルを読み込めます。
 ファイル名は `.json` で終わる必要があるため、`<データベース名>-<時刻>.erd.json` として書き出したファイルはそのまま読み込めます。`.erd` や `.vuerd` ファイルはここでは読み込めません。
 
-<img src="/img/import-json.png" width="400" alt="JSON 読み込みメニュー" loading="lazy" />
+![Import > json で保存済みのファイルを読み込み、下書きのドキュメントを設定ごと置き換える](/img/demo-import-json.webp)
 
 ### Schema SQL
 
@@ -35,7 +35,7 @@ SQL で定義したスキーマファイルも読み込めます。
 ファイル名は `.sql` で終わる必要があります。  
 [対応している構文はこちらで確認できます。](https://github.com/dineug/erd-editor/tree/main/packages/schema-sql-parser)
 
-<img src="/img/import-sql.png" width="400" alt="Schema SQL 読み込みメニュー" loading="lazy" />
+![Import > Schema SQL で SQL ファイルを読み込み、自動配置されたテーブルを縮小して見渡す](/img/demo-import-sql.webp)
 
 #### コメント
 
@@ -83,6 +83,6 @@ PNG には、表示位置がどれだけ離れていてもダイアグラム全�
 
 書き出したファイルの名前は、いずれも `<データベース名>-<時刻>` に各拡張子を付けたものになり、時刻は `yyyy-MM-dd'T'HH_mm_ss` の形式です。例えば `my-schema-2026-08-29T04_05_06.erd.json` のようになります。データベース名が空の場合は `unnamed` になります。
 
-<img src="/img/export-menu.png" width="400" alt="書き出しメニュー" loading="lazy" />
+![Export サブメニューで png を選ぶと、書き出し中の通知が表示される](/img/demo-export.webp)
 
 読み込みと書き出しは[クイック検索](./quick-search.md)からも実行できます。読み込みは同じ 5 つの形式に対応していますが、書き出しは `json` と `Schema SQL` のみで、PNG はコンテキストメニューからのみ利用できます。

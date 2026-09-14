@@ -36,7 +36,7 @@ ERD タブで `Alt + F` (Windows/Linux) または `⌥ + F` (Mac) を押すか�
 
 ドキュメント全体を力学モデルのグラフとして描画します。テーブル同士のつながりと、ドメインの中心にあるテーブルを一目で把握できます。
 
-![Graph モード](/img/demo-visualization.webp)
+![Graph モードを開き、テーブルのプレビュー、ノードのドラッグ、縮小と拡大を行う](/img/demo-visualization.webp)
 
 ### グラフの読み方 {#reading-the-graph}
 
@@ -87,6 +87,8 @@ ERD タブで `Alt + F` (Windows/Linux) または `⌥ + F` (Mac) を押すか�
 コネクタはテーブルからテーブルへの 1 本のなめらかな曲線で、カードの下に描画されるため、カードの裏側を通ることがあります。コネクタは識別リレーションシップかどうかにかかわらず、すべて同じ灰色の実線で描画され、端の記号は ERD タブと同じです。[コネクタの読み方](./relationship-editing.md#reading-a-connector)を参照してください。Flow は `Relationship` の[表示オプション](./table-related-functions.md#table-view-options)がオフでもコネクタを描画します。
 
 ダイアグラム全体を表示しているときは、リレーションシップでほかのテーブルとつながっていないテーブルが、ほかのテーブルの間に散らばらず、1 つのブロックにまとめられます。
+
+![Flow に切り替えてカードの強調を固定し、Keys only を選んでから拡大して Fit を押す](/img/demo-visualization-flow.webp)
 
 ### 行の表示 {#row-display}
 
@@ -150,6 +152,8 @@ Visualization タブが `Flow` で開き、それらのテーブルと、その�
 
 Flow の中では、ウェイポイントの[カードのボタン](#card-buttons)が、そのテーブル 1 つを対象に同じようにビューを絞り込みます。[ツールバー](#toolbar)の `Show all` でダイアグラム全体に戻ります。  
 絞り込んだビューは単独でレイアウトされ、画面に収められます。タブを離れるか `Graph` に切り替えてから戻っても絞り込まれたままで、`Escape` でも広がりません。
+
+![⌥ + F で orders にフォーカスし、カードのボタンで members に絞り込んでから Show all で戻す](/img/demo-visualization-focus.webp)
 
 ### Flow の配置 {#how-flow-is-placed}
 

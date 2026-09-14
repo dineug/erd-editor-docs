@@ -20,7 +20,7 @@ Memos are selected the same way, and either select-all shortcut takes every tabl
 `Ctrl + A` gives way to a caret, so it selects the text rather than the diagram while you are editing a cell.  
 A selection box marks an entity when it covers the middle of it, not when it merely touches an edge.
 
-![demo-table-select](/img/demo-table-select.webp)
+![Selecting tables with ⌘ + drag and ⌘ + click, then every table and memo with ⌘ + A](/img/demo-table-select.webp)
 
 In a collaborative session, each participant's selection, focused cell, and selection box are drawn on the canvas in that participant's color — see [Collaborative Editing](../../api/advanced/collaborative-editing.md).
 
@@ -29,7 +29,7 @@ In a collaborative session, each participant's selection, focused cell, and sele
 Drag any table or memo that is already part of the selection and the whole selection moves with it — no modifier needed.  
 Dragging something outside the selection collapses the selection onto it and moves that alone. `Ctrl + drag` (Windows/Linux) or `⌘ + drag` (Mac) keeps the selection either way.
 
-![demo-table-multiple-move](/img/demo-table-multiple-move.webp)
+![Dragging one of two selected tables moves both, and the relationship follows](/img/demo-table-multiple-move.webp)
 
 ## Copying/Pasting Tables and Memos
 
@@ -39,6 +39,8 @@ Shortcuts: `Ctrl + C` (Windows/Linux) or `⌘ + C` (Mac), `Ctrl + V` (Windows/Li
 A copied table keeps its name, comment, columns, and color; a copied memo keeps its text, size, and color. A copy keeps the original name.  
 Indexes and relationships come along too: an index is copied whole onto the copied table, and a relationship is copied when both of the tables it joins are in the copied set. Half a relationship is dropped rather than left pointing back at the original.  
 The pasted copies become the new selection, and pasting the same copy again offsets it by a further `50px` each time, so repeated pastes do not stack on top of one another.
+
+![Copying two related tables and pasting them twice, relationship included](/img/demo-table-copy-paste.webp)
 
 When columns are selected inside a focused table, the same shortcut copies those columns instead — see [Table Editing](./table-editing.md).
 
@@ -51,19 +53,21 @@ If what you grab is already part of a selection, the whole selection is duplicat
 
 A duplicate carries the same things as a paste: names, comments, columns, colors, memo sizes, and the indexes and relationships that belong entirely to what you copied.
 
+![Duplicating a table with Alt + drag, then Alt + click for another copy down and to the right](/img/demo-table-duplicate.webp)
+
 ## Table and Memo Deletion
 
 Deletes the currently selected table or memo.  
 Shortcuts: `Ctrl + Backspace` (Windows/Linux) or `Ctrl + Delete` (Windows/Linux) or `⌘ + Backspace` (Mac) or `⌘ + Delete` (Mac)
 
-![demo-table-remove](/img/demo-table-remove.webp)
+![Deleting a table with its relationships, then a table and a memo together](/img/demo-table-remove.webp)
 
 ## Table and Memo Color Specification
 
 You can designate colors to differentiate by category.  
 Click the color strip along the top of a table or memo to open the picker. The color is applied to every selected table and memo, not only the one you clicked.
 
-![demo-table-color](/img/demo-table-color.webp)
+![Picking a color from a memo's color strip, applied to every selected table and memo](/img/demo-table-color.webp)
 
 ## Table View Options
 
@@ -78,7 +82,7 @@ Offers the following view options:
 - Auto Increment
 - Relationship
 
-![demo-view-options](/img/demo-view-options.webp)
+![Toggling View Option entries in the canvas context menu as the tables reflow](/img/demo-view-options.webp)
 
 Cards in the Visualization tab's `Flow` mode do not follow these options: they use their own [row display](./visualization.md#row-display), and draw their connectors even with `Relationship` off.
 
@@ -108,6 +112,8 @@ The right side lists the table's columns with a checkbox each. Nothing is editab
 Tick a column to add it to the selected index, and untick it to remove it.  
 The columns of the selected index are listed below. Drag them by the grip handle to reorder them, and click the `ASC` or `DESC` chip on a row to flip its sort order.
 
+![Adding an index in the table property panel and reading it back in the Schema SQL tab](/img/demo-table-properties.webp)
+
 ## Auto Layout
 
 Arranges every table on the canvas for you.  
@@ -128,7 +134,7 @@ The other three are worked out in one go, off the main thread, so there is nothi
 Whichever you pick, only tables are moved; memos stay where they are. A relationship from a table to itself is ignored, and several relationships between the same two tables count once.  
 The result lands as a single history entry, so one undo puts every table back where it was.
 
-![demo-automatic-table-placement](/img/demo-automatic-table-placement.webp)
+![Tidying a heap of tables with the Flow auto layout from the canvas context menu](/img/demo-automatic-table-placement.webp)
 
 ## Databases
 
@@ -146,9 +152,9 @@ Supported databases include:
 These options determine the Schema SQL syntax for exporting, the DataType autocomplete, and the types that generated code and imported schemas resolve to.  
 Multi-word type names such as `TIMESTAMP WITH TIME ZONE` and `INTERVAL DAY TO SECOND` are kept intact when Schema SQL is imported, argument list included.
 
-<img src="/img/database-menu.png" width="400" alt="Database selection menu" loading="lazy" />
+![Switching the database to PostgreSQL, then picking a PostgreSQL type in the autocomplete](/img/demo-database.webp)
 
-![demo-data-type-autocomplete](/img/demo-data-type-autocomplete.webp)
+![Fuzzy DataType autocomplete, moved with the arrow keys and accepted with Right, Tab, or Enter](/img/demo-data-type-autocomplete.webp)
 
 ## Canvas Toolbar
 
@@ -163,6 +169,8 @@ A small toolbar floats over the middle of the bottom edge of the canvas, holding
 Every button with a shortcut names it in its tooltip.  
 The toolbar steps aside while the `Force` Auto Layout preview, table properties, time travel, or the diff viewer is open, and comes back once it closes.
 
+![Panning with the hand, stepping the zoom, and toggling zen mode from the canvas toolbar](/img/demo-canvas-toolbar.webp)
+
 ## Zoom In/Out
 
 Zooms with `Ctrl + Wheel` (Windows/Linux) or `⌘ + Wheel` (Mac). The wheel alone pans the canvas.  
@@ -176,7 +184,7 @@ At `70%` and below, tables collapse to a color bar and their name, and cell edit
 
 The same three shortcuts also zoom the Visualization tab, in `Graph` and `Flow` mode alike, each mode within its own range — see [Visualization](./visualization.md#toolbar).
 
-![demo-zoom](/img/demo-zoom.webp)
+![Zooming out with ⌘ + Wheel until tables collapse, then stepping back with the zoom shortcuts](/img/demo-zoom.webp)
 
 ## Getting Around the Canvas
 
@@ -191,14 +199,14 @@ Dragging a scrollbar thumb or the minimap's viewport rectangle is the one pan th
 
 If a pan leaves no table or memo on screen, a `Go to content` compass joins the end of the [canvas toolbar](#canvas-toolbar), with an arrow at the nearest one and how far away it is. Click it to centre that entity without changing the zoom.
 
+![Panning by drag, wheel, and minimap, then following the Go to content compass back](/img/demo-canvas-navigation.webp)
+
 ## Diff Viewer
 
 You can compare previously saved documents with the current document.  
 Choose `Diff Viewer` from the canvas context menu and pick a `.json` document you exported earlier.
 
-<img src="/img/context-menu-diff-viewer.png" width="400" alt="Diff viewer context menu" loading="lazy" />
-
 The view opens over the canvas: what changed on the left, then the saved document and the current one side by side.  
 Both sides are read-only, so nothing in your document is modified. Close the view with the `Close` button on the notice it opens with, or with `Escape`.
 
-![diff-viewer](/img/diff-viewer.png)
+![Opening the Diff Viewer on a saved .json file and running down the listed changes](/img/demo-diff-viewer.webp)

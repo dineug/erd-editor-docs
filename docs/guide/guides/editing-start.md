@@ -7,7 +7,7 @@ description: Create tables, memos, and relationships from the canvas context men
 
 Editing begins through the context menu by right-clicking.
 
-<img src="/img/context-menu.png" width="400" alt="Canvas context menu" loading="lazy" />
+![Right-clicking the canvas, opening the Relationship submenu, adding a table, then its own menu](/img/demo-context-menu.webp)
 
 Right-clicking a table or a relationship opens that item's own menu instead.
 
@@ -21,6 +21,8 @@ Create a memo from the context menu or with the shortcut `Alt + M`.
 
 A memo is a free-text note on the canvas. Click into its body and type; the text is saved with the document.  
 Drag its border to resize it, and use the `x` in its header to delete it.
+
+![Adding a memo with Alt + M, typing a note, and dragging its border to resize it](/img/demo-memo.webp)
 
 ## Relationship Creation
 
@@ -36,7 +38,7 @@ The parent gets a primary key if it does not have one, and a matching foreign ke
 Clicking one table twice draws a self-referencing relationship.  
 Press `Escape`, or press the same shortcut again, to cancel.
 
-![demo-relationship](/img/demo-relationship.webp)
+![Drawing a One N relationship with ⌘ + ⌥ + 4, then a Zero N one from the canvas toolbar](/img/demo-relationship.webp)
 
 ## Duplicating Tables and Memos
 

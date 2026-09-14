@@ -8,7 +8,7 @@ description: 14 種類の対象へのコード生成、テーブル名とカラ�
 ツールバーの `Code Generator` タブに切り替え、コードパネルで右クリックしてコンテキストメニューを開きます。  
 メニューには `Language`、`Table Name Case`、`Column Name Case` があります。
 
-<img src="/img/code-generator.png" width="400" alt="コード生成メニュー" loading="lazy" />
+![コードパネルのコンテキストメニューで TypeScript とテーブル名の Snake を選び、コードをコピーする](/img/demo-code-generator.webp)
 
 同じパネルは[テーブルのプロパティ](./table-related-functions.md#table-properties)の `Code Generator` タブでもあり、そこではドキュメント全体ではなくそのテーブル 1 つ分のコードを生成します。  
 このタブを開いている間は、3 つのメニューを[クイック検索](./quick-search.md)からも利用できます。

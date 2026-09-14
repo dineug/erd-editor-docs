@@ -92,7 +92,7 @@ editor.setAttribute('system-dark-mode', 'true');
 
 preset 테마를 쉽게 사용자 정의할 수 있는 UI를 제공할지 여부입니다.
 
-<img src="/img/theme-builder.png" width="400" alt="테마 빌더 UI" loading="lazy" />
+![테마 빌더를 열어 액센트 색상과 그레이 색상 변경](/img/demo-theme-builder.webp)
 
 ```js
 editor.enableThemeBuilder = true;

@@ -12,7 +12,7 @@ description: リレーションシップの削除、種類の変更、コネク�
 
 リレーションシップのコンテキストメニューから削除できます。
 
-<img src="/img/relationship-remove.png" width="400" alt="削除項目のあるリレーションシップのコンテキストメニュー" loading="lazy" />
+![コンテキストメニューから products と reviews の間のリレーションシップを削除](/img/demo-relationship-remove.webp)
 
 リレーションシップはテーブルやメモのようには選択しないため、ショートカットはありません。  
 リレーションシップは接続している対象とともに削除されます。テーブルを削除するとそのテーブルにつながるリレーションシップがすべて削除され、カラムを削除するとそのカラムを使うリレーションシップがすべて削除されます。
@@ -27,7 +27,7 @@ description: リレーションシップの削除、種類の変更、コネク�
 - One Only
 - One N
 
-<img src="/img/relationship-type.png" width="400" alt="リレーションシップの種類メニュー" loading="lazy" />
+![コンテキストメニューからリレーションシップの種類を Zero N から One Only、One N へ順に変更](/img/demo-relationship-type.webp)
 
 これはリレーションシップの作成時に選ぶ 4 つの種類と同じで、それぞれにショートカットがあります。[編集を始める](./editing-start.md)を参照してください。
 
@@ -35,7 +35,7 @@ description: リレーションシップの削除、種類の変更、コネク�
 
 エディタは物理モデルをベースにしているため、N:M リレーションシップは下図のようにマッピングテーブルで表現します。
 
-<img src="/img/relationship-n-m.png" width="400" alt="N:M リレーションシップの結果" loading="lazy" />
+![products と tags からマッピングテーブル product_tags へそれぞれリレーションシップを作成](/img/demo-relationship-n-m.webp)
 
 GraphQL、DBML、AML を読み込むと、マッピングテーブルは自動で作成されます。  
 多対多の宣言は `<left>_<right>` という名前のテーブルとして読み込まれ、`Junction table inferred from <left> <-> <right>` というコメントが付き、識別リレーションシップで両側に接続されます。  
@@ -46,7 +46,7 @@ GraphQL、DBML、AML を読み込むと、マッピングテーブルは自動�
 リレーションシップを作成すると、親テーブルの主キーが `NOT NULL` の外部キーカラムとして子テーブルにコピーされるため、作成した直後は非識別リレーションシップです。  
 識別リレーションシップにするには、子テーブルのその外部キーカラムを、ショートカット `Alt + K` またはテーブルのコンテキストメニューの `Primary Key` で主キーに設定します。
 
-<img src="/img/identifier-relationship.png" width="400" alt="識別リレーションシップ" loading="lazy" />
+![Alt + K で product_id を主キーに設定・解除し、コネクタが実線と破線に切り替わる様子](/img/demo-identifying-relationship.webp)
 
 この状態はエディタが自動で同期します。  
 子側のカラムがすべて主キーである間は識別リレーションシップとなり、いずれかが主キーでなくなった時点で非識別リレーションシップに変わります。
@@ -57,6 +57,8 @@ GraphQL、DBML、AML を読み込むと、マッピングテーブルは自動�
 - 子側の端には、リレーションシップの種類に応じたカーディナリティ記号が付きます。Zero One は丸と棒、Zero N は丸と鳥の足、One Only は 2 本の棒、One N は棒と鳥の足です。
 - 親側の端は、外部キーカラムのいずれかが `NULL` を許可する場合は丸、すべて `NOT NULL` の場合は短い線になります。
 - コネクタにマウスを重ねると、そのコネクタと、それがつなぐ両方のテーブルのカラムが強調表示されます。
+
+![3 本のコネクタに順にマウスを重ね、それぞれがつなぐカラムとともに強調表示される様子](/img/demo-relationship-hover.webp)
 
 ERD キャンバスのコネクタを非表示にするには `Relationship` の表示オプションを使います。[テーブル関連機能](./table-related-functions.md)を参照してください。  
 Visualization タブの [Flow モード](./visualization.md#flow-mode)は、このオプションがオフでもコネクタを描画します。各コネクタは同じ端の記号を持つ 1 本のなめらかな灰色の実線の曲線として描かれるため、このページで説明する破線と経路は ERD キャンバスにのみ当てはまります。
@@ -69,3 +71,5 @@ Visualization タブの [Flow モード](./visualization.md#flow-mode)は、こ�
 
 設定する項目はありません。  
 キャンバス上の要素が移動したりサイズが変わったりするたびに経路を自動で再計算するため、手作業で調整する必要はありません。
+
+![members テーブルを下へドラッグして戻す間、categories を迂回するように再計算されるコネクタの経路](/img/demo-connector-routing.webp)

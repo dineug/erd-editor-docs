@@ -8,7 +8,7 @@ description: 为十四种目标生成代码，设置表名与列名的大小写�
 切换到工具栏的 `Code Generator` 标签页，然后在代码区域右键打开菜单。  
 菜单中提供 `Language`、`Table Name Case` 和 `Column Name Case`。
 
-<img src="/img/code-generator.png" width="400" alt="代码生成菜单" loading="lazy" />
+![在代码面板的右键菜单中选择 TypeScript 和表名 Snake，然后复制代码](/img/demo-code-generator.webp)
 
 同一个面板也是[表属性](./table-related-functions.md#table-properties)的 `Code Generator` 标签页，在那里生成的是这一张表的代码，而不是整个文档的代码。  
 在此标签页打开期间，这三个菜单也可以从[快速搜索](./quick-search.md)中使用。

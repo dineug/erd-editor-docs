@@ -4,7 +4,7 @@
     "description": "The hero subtitle and the browser tab title of the homepage"
   },
   "homepage.heroImageAlt": {
-    "message": "在 VS Code 中运行的 erd-editor",
+    "message": "在浏览器中编辑网店关系图并以 Flow 查看的 erd-editor",
     "description": "Alt text for the homepage screenshot"
   },
   "homepage.cta": {

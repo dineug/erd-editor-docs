@@ -8,7 +8,7 @@ description: カラムの追加、複数選択、並べ替えと削除、カラ�
 テーブルの編集は、基本的に Excel に近い操作感で行えます。  
 編集モードは `Enter`、またはセルのダブルクリックで開始します。
 
-![demo-table-edit](/img/demo-table-edit.webp)
+![Alt + N でテーブルを追加し、2 つのカラムを入力](/img/demo-table-edit.webp)
 
 ## カラムの追加
 
@@ -21,7 +21,7 @@ description: カラムの追加、複数選択、並べ替えと削除、カラ�
 最後のセルで `Tab` を押すと、新しいカラムを作成します。  
 `Shift + Tab` で前のセルの編集モードに移動します。
 
-![demo-table-tab](/img/demo-table-tab.webp)
+![Tab でセルを移動し、最後のセルでカラムを追加して Shift + Tab で戻る](/img/demo-table-tab.webp)
 
 ## DataType の自動補完
 
@@ -36,7 +36,7 @@ description: カラムの追加、複数選択、並べ替えと削除、カラ�
 入力は強制されないため、一覧にない型も自由に入力でき、`VARCHAR(255)` のような引数も指定できます。  
 候補は選択しているデータベースに従います。データベースを変更すると提示される候補が変わり、既存のカラムはそのまま残ります。
 
-![demo-data-type-autocomplete](/img/demo-data-type-autocomplete.webp)
+![矢印キー、Tab、Enter であいまい検索の候補から DataType を入力](/img/demo-data-type-autocomplete.webp)
 
 ## Not Null, Unique, Auto Increment
 
@@ -45,6 +45,8 @@ description: カラムの追加、複数選択、並べ替えと削除、カラ�
 
 Not Null のセルは、設定されているときは `N-N`、設定されていないときは `NULL` と表示されます。  
 `UQ` と `AI` は、オフのときは薄く表示され、オンのときはハイライトされます。
+
+![Not Null はダブルクリック、Unique と Auto Increment は Enter で切り替え](/img/demo-column-options.webp)
 
 [テーブルの表示オプション](./table-related-functions.md)で非表示になっているセルは切り替えられません。
 
@@ -58,24 +60,24 @@ Not Null のセルは、設定されているときは `N-N`、設定されて�
 - `Ctrl + Shift + click` (Windows/Linux) or `⌘ + Shift + click` (Mac): その範囲を選択に追加します。
 - `Alt + A` (Windows/Linux) or `⌥ + A` (Mac): すべて選択
 
-![demo-column-select](/img/demo-column-select.webp)
+![Shift + Arrow Down、Ctrl/⌘ + click、Shift + click、Alt + A でカラムを選択](/img/demo-column-select.webp)
 
 ## カラムの並べ替えと移動
 
 `drag` で動作し、他のテーブルへ移動できます。
 
-![demo-column-move](/img/demo-column-move.webp)
+![カラムをドラッグして並べ替え、別のテーブルへ移動](/img/demo-column-move.webp)
 
 `Ctrl + drag` (Windows/Linux) または `⌘ + drag` (Mac) で複数カラムの移動にも対応しています。
 
-![demo-column-multi-move](/img/demo-column-multi-move.webp)
+![3 つのカラムを選択し、Ctrl/⌘ + drag で別のテーブルへ移動](/img/demo-column-multi-move.webp)
 
 ## カラムの削除
 
 現在選択しているカラムを削除します。  
 ショートカット: `Alt + Backspace` または `Alt + Delete` (Windows/Linux)、`⌥ + ⌫` または `⌥ + Delete` (Mac)
 
-![demo-column-remove](/img/demo-column-remove.webp)
+![Alt + Backspace でカラムを 1 つ、続けて選択した 2 つのカラムを削除](/img/demo-column-remove.webp)
 
 ## カラムのコピー / 貼り付け
 
@@ -91,12 +93,13 @@ Not Null のセルは、設定されているときは `N-N`、設定されて�
 
 書き出すときは、AutoIncrement と Unique は `TRUE` または `FALSE`、Not Null は `NOT NULL` または `NULL` として出力します。
 
-![demo-copy-column-to-sheet](/img/demo-copy-column-to-sheet.webp)
-![demo-copy-sheet-column](/img/demo-copy-sheet-column.webp)
+![4 つのカラムをスプレッドシートに貼り付け、フラグは TRUE/FALSE と NOT NULL/NULL で出力](/img/demo-copy-column-to-sheet.webp)
+
+![スプレッドシートの 3 行をカラムとしてテーブルに貼り付け、YES、1、NOT NULL は true として扱う](/img/demo-copy-sheet-column.webp)
 
 複数テーブルを選択した場合の操作にも対応しています。
 
-![demo-copy-column-multi](/img/demo-copy-column-multi.webp)
+![2 つのカラムをコピーし、選択した 2 つのテーブルにまとめて貼り付け](/img/demo-copy-column-multi.webp)
 
 ## テーブルとメモのコピー / 貼り付け
 
@@ -108,4 +111,4 @@ Not Null のセルは、設定されているときは `N-N`、設定されて�
 テーブルのコンテキストメニュー、またはショートカット `Alt + K` (Windows/Linux) または `⌥ + K` (Mac) で操作します。  
 行に表示されるキーのアイコンは表示専用のため、クリックしても主キーは設定されません。
 
-![demo-column-pk](/img/demo-column-pk.webp)
+![Alt + K で 2 つのカラムの主キーをオンにし、1 つを再びオフに切り替え](/img/demo-column-pk.webp)

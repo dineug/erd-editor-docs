@@ -26,7 +26,7 @@ The GraphQL, DBML, and AML parsers never fail: a file they cannot read produces 
 You can import files in the [schema format defined in the editor](../../api/advanced/schema.md).
 The file name must end in `.json`, so a file exported as `<database name>-<timestamp>.erd.json` imports back as it is; a bare `.erd` or `.vuerd` file is not accepted here.
 
-<img src="/img/import-json.png" width="400" alt="Import JSON menu" loading="lazy" />
+![Importing a saved file from Import > json, replacing the draft document along with its settings](/img/demo-import-json.webp)
 
 ### Schema SQL
 
@@ -35,7 +35,7 @@ Although parsers have been made as flexible as possible regardless of the databa
 The file name must end in `.sql`.  
 [Supported syntax can be checked here.](https://github.com/dineug/erd-editor/tree/main/packages/schema-sql-parser)
 
-<img src="/img/import-sql.png" width="400" alt="Import Schema SQL menu" loading="lazy" />
+![Importing a SQL file from Import > Schema SQL, then zooming out over the auto-placed tables](/img/demo-import-sql.webp)
 
 #### Comments
 
@@ -83,6 +83,6 @@ It is drawn in a background worker, so the editor stays usable while it runs, an
 
 Every exported file is named `<database name>-<timestamp>` followed by that extension, with the timestamp formatted as `yyyy-MM-dd'T'HH_mm_ss` — for example `my-schema-2026-08-29T04_05_06.erd.json`. A blank database name falls back to `unnamed`.
 
-<img src="/img/export-menu.png" width="400" alt="Export menu" loading="lazy" />
+![Choosing png from the Export submenu, with a notice that the export is running](/img/demo-export.webp)
 
 Import and Export are also available from [Quick Search](./quick-search.md). It offers the same five import formats, but only `json` and `Schema SQL` for export; PNG is available from the context menu only.

@@ -11,7 +11,7 @@ It lists the commands available on the tab you are on, and on the ERD tab it als
 Open it with `Ctrl + K` (Windows/Linux) or `⌘ + K` (Mac), or click `Search` in the toolbar.  
 The same shortcut closes it, as do `Esc` and a click outside the panel. Opening it closes the table properties panel and the theme builder, and it does not open while you are editing a table cell.
 
-![demo-quick-search](/img/demo-quick-search.webp)
+![Jumping to a table with ⌘ + K, then finding GraphQL by typing sdl in the Import submenu](/img/demo-quick-search.webp)
 
 ## Searching and Navigating
 

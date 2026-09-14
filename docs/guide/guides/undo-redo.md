@@ -19,6 +19,8 @@ The shortcuts are also inactive while Quick Search, `Table Properties`, `Diff Vi
 
 The history lives in memory for the current session. It is not stored in the document, so reopening a diagram starts with an empty history.
 
+![Moving a table and removing a column, then undoing both with ⌘ + Z and redoing with ⌘ + Shift + Z](/img/demo-undo-redo.webp)
+
 ## What the History Records
 
 Recorded:
@@ -58,3 +60,5 @@ Drag the slider, or click anywhere on its track, to move through the whole edit 
 The preview is inert: it draws a minimap, but you cannot pan, scroll, or edit it, and the real document stays untouched until you apply.
 
 Press `Apply` to restore the selected point, or `Cancel` or `Esc` to leave the document unchanged.
+
+![Opening Time Travel, dragging the slider back through the session, and applying an earlier point](/img/demo-time-travel.webp)

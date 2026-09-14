@@ -36,7 +36,7 @@ There is no reset button, and the shortcuts do nothing while quick search is ope
 
 Draws the whole document as a force-directed graph, so you can see at a glance how tables relate to one another and which ones sit at the center of a domain.
 
-![Graph mode](/img/demo-visualization.webp)
+![Opening Graph mode, hovering a table for its preview, dragging a node, and zooming out and back in](/img/demo-visualization.webp)
 
 ### Reading the Graph
 
@@ -87,6 +87,8 @@ Each card has the table's color along its top edge, then a header with a table i
 A connector is one smooth curve from table to table, drawn beneath the cards, so it can pass behind one. Every connector is drawn as the same solid gray line, whether the relationship is identifying or not, with the same end marks as on the ERD tab — see [Reading a Connector](./relationship-editing.md#reading-a-connector). Flow draws connectors even when the `Relationship` [view option](./table-related-functions.md#table-view-options) is off.
 
 Over the whole diagram, tables that no relationship joins to another table are gathered into one block rather than scattered among the rest.
+
+![Switching to Flow, pinning a lit card, picking Keys only, then zooming in and pressing Fit](/img/demo-visualization-flow.webp)
 
 ### Row Display
 
@@ -150,6 +152,8 @@ When the table you right-click is one of several selected tables, the entry read
 
 Inside Flow, the waypoints [card button](#card-buttons) narrows the view the same way, to that one table. `Show all` on the [toolbar](#toolbar) goes back to the whole diagram.  
 A narrowed view is laid out on its own and fitted to the screen. It stays narrowed when you leave the tab or switch to `Graph` and come back, and `Escape` does not widen it.
+
+![Focusing on orders with ⌥ + F, narrowing to members with its card button, then Show all](/img/demo-visualization-focus.webp)
 
 ### How Flow Is Placed
 

@@ -16,9 +16,9 @@ description: リレーションシップのデータ型同期、表示位置と�
 データ型を同期するかどうかを設定します。既定で有効です。
 カラムのデータ型を変更すると、リレーションシップでつながっているすべてのカラムに同じ型を適用します。両端から連鎖をたどるため、外部キーが参照先のキーとずれることはありません。
 
-<img src="/img/settings-relationship-data-type-sync.png" width="400" alt="リレーションシップのデータ型同期の設定" loading="lazy" />
+<img src="/img/settings-relationship-data-type-sync.png" width="290" alt="リレーションシップのデータ型同期の設定" loading="lazy" />
 
-![demo-relationship-data-type-sync](/img/demo-relationship-data-type-sync.webp)
+![members.id を BIGINT UNSIGNED に変更すると、つながっているすべての member_id も同じ型に変わる様子](/img/demo-relationship-data-type-sync.webp)
 
 ## スクロール情報の保存
 
@@ -36,8 +36,7 @@ description: リレーションシップのデータ型同期、表示位置と�
 スイッチをオフにすると制限がなくなり、オフの間は入力欄が無効になります。
 オンにすると `60px` から始まります。範囲外の値を入力すると、近い方の端の値に丸められます。
 
-<img src="/img/settings-comment-width.png" width="400" alt="コメントの最大幅の設定" loading="lazy" />
-<img src="/img/settings-comment-width-2.png" width="400" alt="ダイアグラムに適用されたコメントの最大幅" loading="lazy" />
+![コメントの最大幅をオンにして 120 を入力し、ERD タブでコメントがその幅で切り詰められる様子](/img/demo-settings-comment-width.webp)
 
 ## テーブル幅の再計算
 
@@ -51,7 +50,7 @@ description: リレーションシップのデータ型同期、表示位置と�
 行をドラッグして移動します。行全体がドラッグでき、グリップアイコンが目印になります。既定の順序は `Name`、`DataType`、`Not Null`、`Unique`、`Auto Increment`、`Default`、`Comment` の 7 行です。
 [テーブルの表示オプション](./table-related-functions.md#table-view-options)で非表示にしたセルもリスト上の位置は保持されるため、順序は表示されているセルに対して適用されます。
 
-![demo-settings-column-order](/img/demo-settings-column-order.webp)
+![Comment 行を Name の下へドラッグし、コメントがカラム名のすぐ後に表示される様子](/img/demo-settings-column-order.webp)
 
 ## ショートカット
 

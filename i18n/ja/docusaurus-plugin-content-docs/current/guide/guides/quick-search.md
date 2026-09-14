@@ -11,7 +11,7 @@ description: コマンドパレットでのタブ切り替え、現在のタブ�
 `Ctrl + K` (Windows/Linux) または `⌘ + K` (Mac) で開くか、ツールバーの `Search` をクリックして開きます。  
 同じショートカットで閉じ、`Esc` やパネルの外側のクリックでも閉じます。開くとテーブルのプロパティパネルとテーマビルダーが閉じます。テーブルのセルを編集している間は開きません。
 
-![demo-quick-search](/img/demo-quick-search.webp)
+![⌘ + K でテーブルへ移動し、Import サブメニューで sdl と入力して GraphQL を見つける](/img/demo-quick-search.webp)
 
 ## 検索と移動
 

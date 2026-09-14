@@ -35,7 +35,7 @@ ERD 탭에서 `Alt + F` (Windows/Linux) or `⌥ + F` (Mac)를 누르거나 테�
 
 문서 전체를 force-directed 그래프로 그려, 테이블들이 서로 어떻게 연결되어 있는지와 어떤 테이블이 도메인의 중심에 있는지를 한눈에 확인할 수 있습니다.
 
-![Graph 모드](/img/demo-visualization.webp)
+![Graph 모드를 열어 테이블 미리보기를 띄우고 노드를 드래그한 뒤 축소했다가 다시 확대하기](/img/demo-visualization.webp)
 
 ### 그래프 읽기
 
@@ -86,6 +86,8 @@ ERD 탭의 테이블 자체를 옮기는 [자동 배치](./table-related-functio
 연결선은 테이블에서 테이블로 이어지는 매끄러운 곡선 하나이며, 카드 아래에 그려지므로 카드 뒤를 지나갈 수 있습니다. 모든 연결선은 식별 관계인지와 상관없이 같은 회색 실선으로 그려지고, 끝 기호는 ERD 탭과 같습니다. [연결선 읽기](./relationship-editing.md#연결선-읽기) 문서를 참고하세요. Flow는 `Relationship` [보기 옵션](./table-related-functions.md#테이블-보기-옵션)이 꺼져 있어도 연결선을 그립니다.
 
 다이어그램 전체를 볼 때, 다른 테이블과 관계로 이어지지 않은 테이블은 나머지 테이블 사이에 흩어지지 않고 한 블록으로 모입니다.
+
+![Flow로 전환해 카드 강조를 고정하고, Keys only를 고른 뒤 확대했다가 Fit 누르기](/img/demo-visualization-flow.webp)
 
 ### 행 표시
 
@@ -149,6 +151,8 @@ Visualization 탭이 `Flow`로 열리며, 그 테이블들과, 그중 어느 테
 
 Flow 안에서는 웨이포인트 [카드 버튼](#카드-버튼)이 같은 방식으로, 그 테이블 하나를 기준으로 범위를 좁힙니다. [툴바](#툴바)의 `Show all`은 다이어그램 전체로 돌아갑니다.  
 좁혀진 화면은 따로 배치되고 화면에 맞춰집니다. 탭을 떠나거나 `Graph`로 전환했다가 돌아와도 좁혀진 채로 유지되며, `Escape`로는 넓어지지 않습니다.
+
+![⌥ + F로 orders에 포커스하고, 카드 버튼으로 members로 좁힌 뒤 Show all로 되돌리기](/img/demo-visualization-focus.webp)
 
 ### Flow 배치 방식
 

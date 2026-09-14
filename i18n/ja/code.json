@@ -4,7 +4,7 @@
     "description": "The hero subtitle and the browser tab title of the homepage"
   },
   "homepage.heroImageAlt": {
-    "message": "VS Code 上で動作している erd-editor",
+    "message": "ブラウザでショップのダイアグラムを編集し、Flow で表示している erd-editor",
     "description": "Alt text for the homepage screenshot"
   },
   "homepage.cta": {

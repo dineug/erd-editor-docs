@@ -16,9 +16,9 @@ They live in the theme builder, which opens from the `Theme` button in the toolb
 Determines whether to synchronize data types. It is on by default.
 Changing a column's data type then applies the same type to every column joined to it by a relationship, following the chain from both ends, so a foreign key never drifts from the key it references.
 
-<img src="/img/settings-relationship-data-type-sync.png" width="400" alt="Relationship data type sync setting" loading="lazy" />
+<img src="/img/settings-relationship-data-type-sync.png" width="290" alt="Relationship data type sync setting" loading="lazy" />
 
-![demo-relationship-data-type-sync](/img/demo-relationship-data-type-sync.webp)
+![Changing members.id to BIGINT UNSIGNED, which updates every member_id joined to it](/img/demo-relationship-data-type-sync.webp)
 
 ## Save Scroll Information
 
@@ -36,8 +36,7 @@ Specifies the maximum width of the comment column in pixels (`60` ~ `200`).
 Turning the switch off removes the limit, and the input is disabled while it is off.
 Turning it on starts at `60px`. A value typed outside the range is clamped to the nearest end.
 
-<img src="/img/settings-comment-width.png" width="400" alt="Maximum comment width setting" loading="lazy" />
-<img src="/img/settings-comment-width-2.png" width="400" alt="Maximum comment width applied to a diagram" loading="lazy" />
+![Turning on Maximum comment width, entering 120, and the ERD tab showing comments cut to it](/img/demo-settings-comment-width.webp)
 
 ## Recalculation Table Width
 
@@ -51,7 +50,7 @@ Sets the display order of columns in tables.
 Drag a row to move it — the whole row is draggable, and the grip icon marks it. The seven rows, in their default order, are `Name`, `DataType`, `Not Null`, `Unique`, `Auto Increment`, `Default`, and `Comment`.
 A cell hidden by a [table view option](./table-related-functions.md#table-view-options) keeps its place in the list, so the order applies to whichever cells are shown.
 
-![demo-settings-column-order](/img/demo-settings-column-order.webp)
+![Dragging the Comment row up under Name, which puts each comment right after its column name](/img/demo-settings-column-order.webp)
 
 ## Shortcuts
 

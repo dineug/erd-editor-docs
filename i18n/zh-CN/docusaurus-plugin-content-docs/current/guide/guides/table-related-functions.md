@@ -20,7 +20,7 @@ description: 选中、移动、复制表与备注并创建其副本，设置颜�
 `Ctrl + A` 会让位于光标，因此在编辑单元格时它选中的是文本而不是图。  
 选择框覆盖到对象的中心时才会将其选中，仅接触边缘不会选中。
 
-![demo-table-select](/img/demo-table-select.webp)
+![用 ⌘ + drag 和 ⌘ + click 选中表，再用 ⌘ + A 选中所有表与备注](/img/demo-table-select.webp)
 
 在协同编辑的会话中，每位参与者的选中状态、获得焦点的单元格和选择框都会以该参与者的颜色绘制在画布上。参见[协同编辑](../../api/advanced/collaborative-editing.md)。
 
@@ -29,7 +29,7 @@ description: 选中、移动、复制表与备注并创建其副本，设置颜�
 拖动已经处于选中范围内的表或备注时，无需任何修饰键，整个选中范围都会一起移动。  
 拖动选中范围之外的对象时，选中状态会收缩到该对象上，只移动它。无论哪种情况，`Ctrl + drag` (Windows/Linux) 或 `⌘ + drag` (Mac) 都会保留选中状态。
 
-![demo-table-multiple-move](/img/demo-table-multiple-move.webp)
+![拖动两个选中表之一时两者一起移动，关系连线随之调整](/img/demo-table-multiple-move.webp)
 
 ## 复制/粘贴表与备注 {#copyingpasting-tables-and-memos}
 
@@ -39,6 +39,8 @@ description: 选中、移动、复制表与备注并创建其副本，设置颜�
 复制的表会保留名称、注释、列和颜色，复制的备注会保留文本、尺寸和颜色。副本会保留原有的名称。  
 索引和关系也会一并复制：索引会被整条复制到复制出的表上；关系则只有在其连接的两个表都在复制范围内时才会被复制。只有一端在范围内的关系会被丢弃，而不会保留指向原表的连接。  
 粘贴出来的副本会成为新的选中对象，重复粘贴同一份内容时每次都会再偏移 `50px`，因此多次粘贴不会相互重叠。
+
+![复制两个通过关系相连的表并粘贴两次，关系也一并复制](/img/demo-table-copy-paste.webp)
 
 当在获得焦点的表中选中了列时，相同的快捷键会改为复制这些列。参见[编辑表](./table-editing.md)。
 
@@ -51,19 +53,21 @@ description: 选中、移动、复制表与备注并创建其副本，设置颜�
 
 副本携带的内容与粘贴相同：名称、注释、列、颜色和备注尺寸，以及完全落在复制范围内的索引和关系。
 
+![用 Alt + drag 创建表的副本，再用 Alt + click 在右下方再放一个副本](/img/demo-table-duplicate.webp)
+
 ## 删除表与备注
 
 删除当前选中的表或备注。  
 快捷键：`Ctrl + Backspace` (Windows/Linux) 或 `Ctrl + Delete` (Windows/Linux) 或 `⌘ + Backspace` (Mac) 或 `⌘ + Delete` (Mac)
 
-![demo-table-remove](/img/demo-table-remove.webp)
+![删除一个表及其关系，然后一次删除一个表和一个备注](/img/demo-table-remove.webp)
 
 ## 表与备注的颜色设置
 
 可以指定颜色，以便按类别区分。  
 点击表或备注顶部的色条即可打开选色器。颜色会应用到所有选中的表与备注，而不仅仅是被点击的那一个。
 
-![demo-table-color](/img/demo-table-color.webp)
+![从备注的色条中选择颜色，应用到所有选中的表与备注](/img/demo-table-color.webp)
 
 ## 表显示选项 {#table-view-options}
 
@@ -78,7 +82,7 @@ description: 选中、移动、复制表与备注并创建其副本，设置颜�
 - Auto Increment
 - Relationship
 
-![demo-view-options](/img/demo-view-options.webp)
+![在画布右键菜单中切换 View Option，表的显示随之变化](/img/demo-view-options.webp)
 
 Visualization 标签页 `Flow` 模式中的卡片不遵循这些选项：它们使用自己的[行显示](./visualization.md#row-display)，并且即使关闭了 `Relationship` 也会绘制连接线。
 
@@ -108,6 +112,8 @@ Visualization 标签页 `Flow` 模式中的卡片不遵循这些选项：它们�
 勾选某一列会将其添加到选中的索引中，取消勾选则将其移除。  
 选中索引所包含的列显示在下方。通过拖动手柄可以调整它们的顺序，点击某一行的 `ASC` 或 `DESC` 标记可以切换排序方向。
 
+![在表属性面板中添加索引，并在 Schema SQL 标签页中查看](/img/demo-table-properties.webp)
+
 ## 自动布局 {#auto-layout}
 
 替你把所有表排布到画布上。  
@@ -128,7 +134,7 @@ Visualization 标签页 `Flow` 模式中的卡片不遵循这些选项：它们�
 无论选择哪一种，移动的都只有表，备注留在原处。指向自身的关系会被忽略，同两个表之间的多条关系只算一条。  
 结果只会记录为一条历史记录，因此一次 Undo 就能把所有表恢复原位。
 
-![demo-automatic-table-placement](/img/demo-automatic-table-placement.webp)
+![通过画布右键菜单的 Flow 自动布局整理散乱的表](/img/demo-automatic-table-placement.webp)
 
 ## 数据库 {#databases}
 
@@ -146,9 +152,9 @@ Visualization 标签页 `Flow` 模式中的卡片不遵循这些选项：它们�
 该选项决定导出 Schema SQL 的语法、DataType 的自动补全，以及生成的代码和导入的 schema 所解析出的类型。  
 导入 Schema SQL 时，`TIMESTAMP WITH TIME ZONE` 和 `INTERVAL DAY TO SECOND` 这类由多个单词组成的类型名会被完整保留，包括参数列表。
 
-<img src="/img/database-menu.png" width="400" alt="数据库选择菜单" loading="lazy" />
+![将数据库切换为 PostgreSQL，然后从自动补全中选择 PostgreSQL 类型](/img/demo-database.webp)
 
-![demo-data-type-autocomplete](/img/demo-data-type-autocomplete.webp)
+![DataType 自动补全的模糊匹配，用方向键移动候选并用 Right、Tab、Enter 确认](/img/demo-data-type-autocomplete.webp)
 
 ## 画布工具栏 {#canvas-toolbar}
 
@@ -163,6 +169,8 @@ Visualization 标签页 `Flow` 模式中的卡片不遵循这些选项：它们�
 每个带有快捷键的按钮都会在提示中标出该快捷键。  
 在 `Force` 自动布局预览、表属性、Time Travel 或 Diff Viewer 打开期间，工具栏会暂时隐藏，关闭后再重新出现。
 
+![在画布工具栏上用抓手平移、逐级缩放并切换禅模式](/img/demo-canvas-toolbar.webp)
+
 ## 缩放
 
 按住 mod 键并滚动鼠标滚轮进行缩放：`Ctrl + Wheel` (Windows/Linux) 或 `⌘ + Wheel` (Mac)。仅滚动滚轮则是平移画布。  
@@ -176,7 +184,7 @@ Visualization 标签页 `Flow` 模式中的卡片不遵循这些选项：它们�
 
 这三个快捷键同样可以缩放 Visualization 标签页，`Graph` 模式与 `Flow` 模式均适用，各自在自己的范围内缩放。参见[可视化](./visualization.md#toolbar)。
 
-![demo-zoom](/img/demo-zoom.webp)
+![用 ⌘ + Wheel 缩小到表折叠为色条和名称，再用缩放快捷键调回](/img/demo-zoom.webp)
 
 ## 浏览画布 {#getting-around-the-canvas}
 
@@ -191,14 +199,14 @@ Visualization 标签页 `Flow` 模式中的卡片不遵循这些选项：它们�
 
 如果平移之后屏幕上没有留下任何表或备注，[画布工具栏](#canvas-toolbar)末尾会出现一个 `Go to content` 指南针，用箭头指出最近的对象在哪个方向、有多远。点击它即可在不改变缩放的情况下把该对象移到屏幕中央。
 
+![通过拖动、滚轮和小地图平移视图，再跟随 Go to content 指南针返回](/img/demo-canvas-navigation.webp)
+
 ## Diff Viewer
 
 可以将以前保存的文档与当前文档进行比较。  
 在画布的右键菜单中选择 `Diff Viewer`，然后选择之前导出的 `.json` 文档。
 
-<img src="/img/context-menu-diff-viewer.png" width="400" alt="Diff Viewer 右键菜单" loading="lazy" />
-
 该视图会覆盖在画布之上：左侧显示变更内容，右侧并排显示保存的文档与当前文档。  
 两侧都是只读的，不会修改文档中的任何内容。可以通过打开时出现的提示上的 `Close` 按钮或 `Escape` 关闭该视图。
 
-![diff-viewer](/img/diff-viewer.png)
+![用保存的 .json 文件打开 Diff Viewer，并逐项查看变更](/img/demo-diff-viewer.webp)

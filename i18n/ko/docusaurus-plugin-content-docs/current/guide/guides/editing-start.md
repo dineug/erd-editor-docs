@@ -7,7 +7,7 @@ description: 캔버스 컨텍스트 메뉴에서 테이블, 메모와 관계 생
 
 편집은 마우스 오른쪽 클릭으로 컨텍스트 메뉴로 시작합니다.
 
-<img src="/img/context-menu.png" width="400" alt="캔버스 컨텍스트 메뉴" loading="lazy" />
+![캔버스를 마우스 오른쪽 클릭해 Relationship 하위 메뉴를 살펴보고, 테이블을 추가한 뒤 테이블 메뉴 열기](/img/demo-context-menu.webp)
 
 테이블이나 관계에서 마우스 오른쪽 클릭하면 해당 항목의 메뉴가 대신 열립니다.
 
@@ -21,6 +21,8 @@ description: 캔버스 컨텍스트 메뉴에서 테이블, 메모와 관계 생
 
 메모는 캔버스에 자유롭게 작성하는 노트입니다. 본문을 클릭해서 입력하면 텍스트가 문서와 함께 저장됩니다.  
 테두리를 드래그해서 크기를 조절하고, 헤더의 `x`로 삭제합니다.
+
+![Alt + M으로 메모를 추가하고 내용을 입력한 뒤 테두리를 드래그해 크기 조절](/img/demo-memo.webp)
 
 ## 관계 생성
 
@@ -36,7 +38,7 @@ description: 캔버스 컨텍스트 메뉴에서 테이블, 메모와 관계 생
 같은 테이블을 두 번 클릭하면 자기 참조 관계가 그려집니다.  
 `Escape`를 누르거나 같은 단축키를 다시 누르면 취소됩니다.
 
-![demo-relationship](/img/demo-relationship.webp)
+![⌘ + ⌥ + 4로 One N 관계를, 캔버스 툴바에서 Zero N 관계를 그리기](/img/demo-relationship.webp)
 
 ## 테이블과 메모 복제
 

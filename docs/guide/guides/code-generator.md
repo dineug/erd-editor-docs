@@ -8,7 +8,7 @@ description: Generate code for fourteen targets from the diagram, and set the ta
 Switch to the `Code Generator` tab in the toolbar, then right-click inside the code panel to open the context menu.  
 The menu offers `Language`, `Table Name Case`, and `Column Name Case`.
 
-<img src="/img/code-generator.png" width="400" alt="Code generator menu" loading="lazy" />
+![Picking TypeScript and Snake table names from the code panel's context menu, then copying the code](/img/demo-code-generator.webp)
 
 The same panel is also the `Code Generator` tab of [Table Properties](./table-related-functions.md#table-properties), where it generates code for that one table instead of the whole document.  
 The three menus are available from [Quick Search](./quick-search.md) as well, while this tab is open.

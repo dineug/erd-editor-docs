@@ -20,7 +20,7 @@ description: テーブルとメモの選択・移動・コピー・複製、色�
 `Ctrl + A` はキャレットに譲るため、セルの編集中はダイアグラムではなくテキストを選択します。  
 対象は、選択範囲が端に触れただけでは選択されず、中心を覆ったときに選択されます。
 
-![demo-table-select](/img/demo-table-select.webp)
+![⌘ + drag と ⌘ + click でテーブルを選択し、⌘ + A ですべてのテーブルとメモを選択する様子](/img/demo-table-select.webp)
 
 共同編集中は、各参加者の選択、フォーカスしているセル、選択範囲が参加者ごとの色でキャンバスに描画されます。[共同編集](../../api/advanced/collaborative-editing.md)を参照してください。
 
@@ -29,7 +29,7 @@ description: テーブルとメモの選択・移動・コピー・複製、色�
 すでに選択に含まれているテーブルやメモをドラッグすると、修飾キーなしで選択全体が一緒に移動します。  
 選択の外にある対象をドラッグすると、選択がその対象に置き換わり、それだけが移動します。mod キーを押しながらドラッグすれば、どちらの場合も選択は維持されます。`Ctrl + drag` (Windows/Linux) または `⌘ + drag` (Mac)
 
-![demo-table-multiple-move](/img/demo-table-multiple-move.webp)
+![選択した 2 つのテーブルの一方をドラッグすると両方が移動し、リレーションシップが追従する様子](/img/demo-table-multiple-move.webp)
 
 ## テーブルとメモのコピー / 貼り付け {#copyingpasting-tables-and-memos}
 
@@ -39,6 +39,8 @@ description: テーブルとメモの選択・移動・コピー・複製、色�
 コピーしたテーブルは名前、コメント、カラム、色を保持し、コピーしたメモは本文、サイズ、色を保持します。コピーは元の名前をそのまま引き継ぎます。  
 インデックスとリレーションシップも一緒にコピーされます。インデックスはコピーしたテーブルへ丸ごとコピーされ、リレーションシップは両端のテーブルがどちらもコピー対象に含まれているときにコピーされます。片側だけのリレーションシップは、元のテーブルを指したまま残るのではなく破棄されます。  
 貼り付けたコピーが新しい選択になり、同じコピーを繰り返し貼り付けると毎回 `50px` ずつずれるため、重なって積み上がることはありません。
+
+![リレーションシップでつながる 2 つのテーブルをコピーし、リレーションシップごと 2 回貼り付ける様子](/img/demo-table-copy-paste.webp)
 
 フォーカスしているテーブル内でカラムを選択している場合は、同じショートカットでそのカラムがコピーされます。[テーブルの編集](./table-editing.md)を参照してください。
 
@@ -51,19 +53,21 @@ description: テーブルとメモの選択・移動・コピー・複製、色�
 
 複製が引き継ぐ内容は貼り付けと同じで、名前、コメント、カラム、色、メモのサイズに加えて、コピー対象の中で完結するインデックスとリレーションシップも引き継ぎます。
 
+![Alt + drag でテーブルを複製し、Alt + click で右下にもう 1 つコピーを置く様子](/img/demo-table-duplicate.webp)
+
 ## テーブルとメモの削除
 
 現在選択しているテーブルやメモを削除します。  
 ショートカット: `Ctrl + Backspace` (Windows/Linux) または `Ctrl + Delete` (Windows/Linux) または `⌘ + Backspace` (Mac) または `⌘ + Delete` (Mac)
 
-![demo-table-remove](/img/demo-table-remove.webp)
+![テーブルをリレーションシップごと削除し、続いてテーブルとメモをまとめて削除する様子](/img/demo-table-remove.webp)
 
 ## テーブルとメモの色指定
 
 カテゴリごとに区別できるよう、色を指定できます。  
 テーブルやメモの上部にある色帯をクリックすると、カラーピッカーが開きます。色はクリックしたものだけでなく、選択しているすべてのテーブルとメモに適用されます。
 
-![demo-table-color](/img/demo-table-color.webp)
+![メモの色帯から色を選び、選択しているすべてのテーブルとメモに適用する様子](/img/demo-table-color.webp)
 
 ## テーブルの表示オプション {#table-view-options}
 
@@ -78,7 +82,7 @@ description: テーブルとメモの選択・移動・コピー・複製、色�
 - Auto Increment
 - Relationship
 
-![demo-view-options](/img/demo-view-options.webp)
+![キャンバスのコンテキストメニューで View Option を切り替え、テーブルの表示が変わる様子](/img/demo-view-options.webp)
 
 Visualization タブの `Flow` モードのカードは、これらのオプションに従いません。カードは独自の[行の表示](./visualization.md#row-display)を使い、`Relationship` がオフでもコネクタを描画します。
 
@@ -108,6 +112,8 @@ Visualization タブを `Flow` モードで開き、選んだテーブルと、�
 カラムをチェックすると選択中のインデックスに追加され、チェックを外すと削除されます。  
 選択中のインデックスのカラムは下部に一覧表示されます。グリップハンドルでドラッグすると並べ替えられ、行の `ASC` または `DESC` をクリックすると並び順が切り替わります。
 
+![テーブルのプロパティパネルでインデックスを追加し、Schema SQL タブで確認する様子](/img/demo-table-properties.webp)
+
 ## 自動レイアウト {#auto-layout}
 
 すべてのテーブルをキャンバス上に配置します。  
@@ -128,7 +134,7 @@ Visualization タブを `Flow` モードで開き、選んだテーブルと、�
 どれを選んでも動くのはテーブルだけで、メモはその場に残ります。自分自身を指すリレーションシップは無視し、同じ 2 つのテーブルの間に複数あっても 1 つとして数えます。  
 結果は 1 件の履歴として記録されるため、1 回の Undo ですべてのテーブルが元の位置に戻ります。
 
-![demo-automatic-table-placement](/img/demo-automatic-table-placement.webp)
+![散らばったテーブルを、キャンバスのコンテキストメニューの Flow 自動レイアウトで整える様子](/img/demo-automatic-table-placement.webp)
 
 ## データベース {#databases}
 
@@ -146,9 +152,9 @@ Visualization タブを `Flow` モードで開き、選んだテーブルと、�
 この設定は、書き出す Schema SQL の構文、DataType の自動補完、生成されるコードや読み込んだスキーマで解決される型を決定します。  
 `TIMESTAMP WITH TIME ZONE` や `INTERVAL DAY TO SECOND` のような複数語の型名は、Schema SQL の読み込み時に引数リストを含めてそのまま保持されます。
 
-<img src="/img/database-menu.png" width="400" alt="データベース選択メニュー" loading="lazy" />
+![データベースを PostgreSQL に切り替え、自動補完から PostgreSQL の型を選ぶ様子](/img/demo-database.webp)
 
-![demo-data-type-autocomplete](/img/demo-data-type-autocomplete.webp)
+![DataType の自動補完で、あいまい一致の候補を矢印キーで移動し、Right、Tab、Enter で確定する様子](/img/demo-data-type-autocomplete.webp)
 
 ## キャンバスツールバー {#canvas-toolbar}
 
@@ -163,6 +169,8 @@ Visualization タブを `Flow` モードで開き、選んだテーブルと、�
 ショートカットのあるボタンは、ツールチップにそのショートカットを表示します。  
 `Force` の自動レイアウトのプレビュー、テーブルのプロパティ、Time Travel、Diff Viewer のいずれかが開いている間はツールバーが退き、閉じると再び表示されます。
 
+![キャンバスツールバーで、ハンドでの移動、拡大・縮小、Zen モードの切り替えを行う様子](/img/demo-canvas-toolbar.webp)
+
 ## 拡大・縮小
 
 mod キーを押しながらマウスホイールで拡大・縮小します。`Ctrl + Wheel` (Windows/Linux) または `⌘ + Wheel` (Mac)。ホイールだけを回すとキャンバスの表示位置が移動します。  
@@ -176,7 +184,7 @@ mod キーを押しながらマウスホイールで拡大・縮小します。`
 
 同じ 3 つのショートカットは Visualization タブでも、`Graph` モードと `Flow` モードのどちらでも、それぞれのモードの範囲内で拡大・縮小します。[可視化](./visualization.md#toolbar)を参照してください。
 
-![demo-zoom](/img/demo-zoom.webp)
+![⌘ + Wheel でテーブルが色帯と名前だけになるまで縮小し、ショートカットで元に戻す様子](/img/demo-zoom.webp)
 
 ## キャンバスの移動 {#getting-around-the-canvas}
 
@@ -191,14 +199,14 @@ mod キーを押しながらマウスホイールで拡大・縮小します。`
 
 移動した結果、テーブルもメモも画面に残らなくなると、[キャンバスツールバー](#canvas-toolbar)の末尾に `Go to content` コンパスが加わり、最も近い対象を指す矢印とその距離を表示します。クリックすると、拡大・縮小のレベルを変えずにその対象が画面の中央に来ます。
 
+![ドラッグ、ホイール、ミニマップで表示位置を移動し、Go to content コンパスで戻る様子](/img/demo-canvas-navigation.webp)
+
 ## Diff Viewer
 
 以前に保存したドキュメントと現在のドキュメントを比較できます。  
 キャンバスのコンテキストメニューから `Diff Viewer` を選び、以前に書き出した `.json` のドキュメントを選択します。
 
-<img src="/img/context-menu-diff-viewer.png" width="400" alt="Diff Viewer のコンテキストメニュー" loading="lazy" />
-
 ビューはキャンバスの上に開き、左に変更点、その隣に保存したドキュメントと現在のドキュメントが並びます。  
 両側とも読み取り専用のため、ドキュメントが変更されることはありません。ビューは、開くときに表示される通知の `Close` ボタン、または `Escape` で閉じます。
 
-![diff-viewer](/img/diff-viewer.png)
+![保存した .json ファイルで Diff Viewer を開き、変更点を順に確認する様子](/img/demo-diff-viewer.webp)

@@ -20,7 +20,7 @@ description: 테이블과 메모의 선택·이동·복사·복제, 색상과 �
 `Ctrl + A`는 커서에 양보하므로, 셀을 편집하는 중에는 다이어그램이 아니라 텍스트를 선택합니다.  
 선택 박스는 테이블이나 메모의 가장자리에 닿기만 해서는 선택하지 않고, 중앙을 덮을 때 선택합니다.
 
-![demo-table-select](/img/demo-table-select.webp)
+![⌘ + drag와 ⌘ + click으로 테이블을 선택하고 ⌘ + A로 모든 테이블과 메모를 선택하는 모습](/img/demo-table-select.webp)
 
 공동 편집 중에는 각 참여자의 선택, 포커스된 셀, 선택 박스가 해당 참여자의 색상으로 캔버스에 표시됩니다. [공동 편집](../../api/advanced/collaborative-editing.md) 문서를 참고하세요.
 
@@ -29,7 +29,7 @@ description: 테이블과 메모의 선택·이동·복사·복제, 색상과 �
 이미 선택에 포함된 테이블이나 메모를 드래그하면 별도의 보조 키 없이 선택 전체가 함께 이동합니다.  
 선택 밖의 대상을 드래그하면 선택이 그 대상으로 바뀌고 그것만 이동합니다. mod 키를 누른 채 드래그하면 어느 쪽이든 선택이 유지됩니다. `Ctrl + drag` (Windows/Linux) or `⌘ + drag` (Mac)
 
-![demo-table-multiple-move](/img/demo-table-multiple-move.webp)
+![선택한 두 테이블 중 하나를 드래그하면 함께 이동하고 관계선이 따라오는 모습](/img/demo-table-multiple-move.webp)
 
 ## 테이블, 메모 복사/붙여넣기
 
@@ -39,6 +39,8 @@ description: 테이블과 메모의 선택·이동·복사·복제, 색상과 �
 복사한 테이블은 이름, 코멘트, 컬럼, 색상을 유지하고, 복사한 메모는 텍스트, 크기, 색상을 유지합니다. 복사본은 원본 이름을 그대로 사용합니다.  
 인덱스와 관계도 함께 복사됩니다. 인덱스는 복사한 테이블에 통째로 복사되고, 관계는 연결된 두 테이블이 모두 복사 대상에 포함되어 있을 때만 복사됩니다. 한쪽만 포함된 관계는 원본을 가리킨 채 남지 않고 버려집니다.  
 붙여넣은 복사본이 새로운 선택이 되고, 같은 복사본을 다시 붙여넣을 때마다 `50px`씩 더 이동하므로 반복해서 붙여넣어도 서로 겹치지 않습니다.
+
+![관계로 연결된 두 테이블을 복사해 관계와 함께 두 번 붙여넣는 모습](/img/demo-table-copy-paste.webp)
 
 포커스된 테이블 안에서 컬럼이 선택되어 있으면 같은 단축키가 해당 컬럼을 복사합니다. [테이블 편집](./table-editing.md) 문서를 참고하세요.
 
@@ -51,19 +53,21 @@ description: 테이블과 메모의 선택·이동·복사·복제, 색상과 �
 
 복제는 붙여넣기와 같은 정보를 가져옵니다. 이름, 코멘트, 컬럼, 색상, 메모 크기와 함께, 복사 대상 안에서 완결되는 인덱스와 관계도 유지됩니다.
 
+![Alt + drag로 테이블을 복제하고 Alt + click으로 오른쪽 아래에 복사본을 하나 더 만드는 모습](/img/demo-table-duplicate.webp)
+
 ## 테이블, 메모 삭제
 
 현재 선택된 테이블과 메모를 삭제합니다.  
 단축키 `Ctrl + Backspace` (Windows/Linux) or `Ctrl + Delete` (Windows/Linux) or `⌘ + Backspace` (Mac) or `⌘ + Delete` (Mac)
 
-![demo-table-remove](/img/demo-table-remove.webp)
+![테이블을 관계와 함께 삭제한 뒤 테이블과 메모를 한 번에 삭제하는 모습](/img/demo-table-remove.webp)
 
 ## 테이블, 메모 색상 지정
 
 카테고리별로 구분하기 위해 색상을 지정할 수 있습니다.  
 테이블이나 메모 상단의 색상 띠를 클릭하면 색상 선택기가 열립니다. 색상은 클릭한 대상뿐 아니라 선택된 모든 테이블과 메모에 적용됩니다.
 
-![demo-table-color](/img/demo-table-color.webp)
+![메모의 색상 띠에서 색상을 골라 선택된 모든 테이블과 메모에 적용하는 모습](/img/demo-table-color.webp)
 
 ## 테이블 보기 옵션
 
@@ -78,7 +82,7 @@ description: 테이블과 메모의 선택·이동·복사·복제, 색상과 �
 - Auto Increment
 - Relationship
 
-![demo-view-options](/img/demo-view-options.webp)
+![캔버스 컨텍스트 메뉴에서 View Option을 전환하며 테이블 표시가 바뀌는 모습](/img/demo-view-options.webp)
 
 Visualization 탭 `Flow` 모드의 카드는 이 옵션을 따르지 않습니다. 카드는 자체 [행 표시](./visualization.md#행-표시)를 사용하며, `Relationship`이 꺼져 있어도 연결선을 그립니다.
 
@@ -108,6 +112,8 @@ Visualization 탭을 `Flow` 모드로 열고, 고른 테이블과 그 테이블�
 컬럼을 체크하면 선택한 인덱스에 추가되고, 체크를 해제하면 제거됩니다.  
 선택한 인덱스의 컬럼은 아래에 나열됩니다. 그립 핸들로 드래그해 순서를 변경하고, 각 행의 `ASC` 또는 `DESC` 칩을 클릭해 정렬 순서를 바꿉니다.
 
+![테이블 속성 패널에서 인덱스를 추가하고 Schema SQL 탭에서 확인하는 모습](/img/demo-table-properties.webp)
+
 ## 자동 배치
 
 모든 테이블을 캔버스에 대신 배치해 줍니다.  
@@ -128,7 +134,7 @@ Visualization 탭을 `Flow` 모드로 열고, 고른 테이블과 그 테이블�
 어느 쪽을 고르든 움직이는 것은 테이블뿐이고 메모는 제자리에 남습니다. 자기 자신을 가리키는 관계는 무시하며, 같은 두 테이블 사이에 관계가 여러 개 있어도 하나로 셉니다.  
 결과는 하나의 히스토리 항목으로 기록되므로 Undo 한 번으로 모든 테이블이 원래 위치로 돌아갑니다.
 
-![demo-automatic-table-placement](/img/demo-automatic-table-placement.webp)
+![흩어진 테이블을 캔버스 컨텍스트 메뉴의 Flow 자동 배치로 정리하는 모습](/img/demo-automatic-table-placement.webp)
 
 ## 데이터베이스
 
@@ -146,9 +152,9 @@ Visualization 탭을 `Flow` 모드로 열고, 고른 테이블과 그 테이블�
 해당 옵션은 내보내기 Schema SQL 문법, DataType 자동완성, 생성된 코드와 가져온 스키마가 해석하는 타입을 결정합니다.  
 `TIMESTAMP WITH TIME ZONE`, `INTERVAL DAY TO SECOND`처럼 여러 단어로 된 타입 이름은 Schema SQL을 가져올 때 인자 목록까지 그대로 유지됩니다.
 
-<img src="/img/database-menu.png" width="400" alt="데이터베이스 선택 메뉴" loading="lazy" />
+![데이터베이스를 PostgreSQL로 바꾸고 자동완성에서 PostgreSQL 타입을 고르는 모습](/img/demo-database.webp)
 
-![demo-data-type-autocomplete](/img/demo-data-type-autocomplete.webp)
+![DataType 자동완성의 퍼지 매칭 제안을 방향키로 이동하고 Right, Tab, Enter로 선택하는 모습](/img/demo-data-type-autocomplete.webp)
 
 ## 캔버스 툴바
 
@@ -163,6 +169,8 @@ Visualization 탭을 `Flow` 모드로 열고, 고른 테이블과 그 테이블�
 단축키가 있는 버튼은 툴팁에 그 단축키를 표시합니다.  
 `Force` 자동 배치 미리보기, 테이블 속성, Time Travel, Diff Viewer가 열려 있는 동안에는 툴바가 비켜나 있다가, 닫히면 다시 나타납니다.
 
+![캔버스 툴바에서 손 도구로 화면을 이동하고 배율을 조절한 뒤 Zen 모드를 전환하는 모습](/img/demo-canvas-toolbar.webp)
+
 ## 줌 확대/축소
 
 mod 키를 누른 채 마우스 휠로 확대/축소합니다. `Ctrl + Wheel` (Windows/Linux) or `⌘ + Wheel` (Mac). 휠만 사용하면 캔버스 화면이 이동합니다.  
@@ -176,7 +184,7 @@ mod 키를 누른 채 마우스 휠로 확대/축소합니다. `Ctrl + Wheel` (W
 
 같은 세 단축키는 Visualization 탭에서도 `Graph` 모드와 `Flow` 모드 모두에서 확대/축소하며, 각 모드는 자체 범위 안에서 동작합니다. [시각화](./visualization.md#툴바) 문서를 참고하세요.
 
-![demo-zoom](/img/demo-zoom.webp)
+![⌘ + Wheel로 테이블이 접힐 때까지 축소한 뒤 확대/축소 단축키로 되돌리는 모습](/img/demo-zoom.webp)
 
 ## 캔버스 이동
 
@@ -191,14 +199,14 @@ mod 키를 누른 채 마우스 휠로 확대/축소합니다. `Ctrl + Wheel` (W
 
 화면을 이동한 결과 테이블과 메모가 하나도 보이지 않으면, 가장 가까운 대상을 가리키는 화살표와 거리를 표시하는 `Go to content` 나침반이 [캔버스 툴바](#캔버스-툴바) 끝에 나타납니다. 클릭하면 배율은 그대로 둔 채 그 대상이 화면 중앙으로 옵니다.
 
+![드래그, 휠, 미니맵으로 화면을 이동한 뒤 Go to content 나침반을 따라 돌아오는 모습](/img/demo-canvas-navigation.webp)
+
 ## Diff Viewer
 
 이전에 저장했던 문서와 현재 문서를 비교할 수 있습니다.  
 캔버스 컨텍스트 메뉴에서 `Diff Viewer`를 선택하고 이전에 내보낸 `.json` 문서를 선택합니다.
 
-<img src="/img/context-menu-diff-viewer.png" width="400" alt="Diff Viewer 컨텍스트 메뉴" loading="lazy" />
-
 비교 화면은 캔버스 위에 열리며, 왼쪽에 변경된 내용이, 이어서 저장된 문서와 현재 문서가 나란히 표시됩니다.  
 양쪽 모두 읽기 전용이므로 문서는 변경되지 않습니다. 함께 열리는 알림의 `Close` 버튼 또는 `Escape`로 화면을 닫습니다.
 
-![diff-viewer](/img/diff-viewer.png)
+![저장한 .json 파일로 Diff Viewer를 열고 변경 내용을 차례로 살펴보는 모습](/img/demo-diff-viewer.webp)

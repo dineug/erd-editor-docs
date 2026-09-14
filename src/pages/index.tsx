@@ -29,14 +29,14 @@ function HomepageHeader() {
         <p className="hero__subtitle">{tagline()}</p>
         <img
           className={styles.heroImage}
-          src={require('@site/static/img/erd-editor-vscode.png').default}
+          src={require('@site/static/img/demo-overview.webp').default}
           alt={translate({
             id: 'homepage.heroImageAlt',
-            message: 'erd-editor running inside VS Code',
+            message: 'erd-editor in the browser, editing a shop diagram and viewing it in Flow',
             description: 'Alt text for the homepage screenshot',
           })}
-          width={1279}
-          height={881}
+          width={1920}
+          height={1080}
         />
         <div className={styles.buttons}>
           <Link

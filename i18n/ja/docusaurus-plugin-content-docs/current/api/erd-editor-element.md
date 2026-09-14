@@ -92,7 +92,7 @@ editor.setAttribute('system-dark-mode', 'true');
 
 プリセットテーマを簡単に設定できる UI を提供するかどうかを設定します。
 
-<img src="/img/theme-builder.png" width="400" alt="テーマビルダーの UI" loading="lazy" />
+![テーマビルダーを開いてアクセントカラーとグレーカラーを切り替える](/img/demo-theme-builder.webp)
 
 ```js
 editor.enableThemeBuilder = true;

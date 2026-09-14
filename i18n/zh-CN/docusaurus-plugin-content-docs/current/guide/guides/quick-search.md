@@ -11,7 +11,7 @@ description: 打开命令面板，切换标签页、执行当前标签页的命�
 通过 `Ctrl + K` (Windows/Linux) 或 `⌘ + K` (Mac) 打开，也可以点击工具栏的 `Search`。  
 再次按下同一快捷键即可关闭，按 `Esc` 或点击面板外部也可关闭。打开时会关闭表属性面板和主题构建器，在编辑表的单元格时则无法打开。
 
-![demo-quick-search](/img/demo-quick-search.webp)
+![用 ⌘ + K 跳转到表，再在 Import 子菜单中输入 sdl 找到 GraphQL](/img/demo-quick-search.webp)
 
 ## 搜索与导航
 
