@@ -84,20 +84,27 @@ Not Null のセルは、設定されているときは `N-N`、設定されて�
 表形式のクリップボードとして動作します。  
 ショートカット: `Ctrl + C` (Windows/Linux) または `⌘ + C` (Mac)、`Ctrl + V` (Windows/Linux) または `⌘ + V` (Mac)
 
+コピーと貼り付けには、テーブルに表示されているセルが表示されている順序で使われます。[テーブルの表示オプション](./table-related-functions.md#table-view-options)と[カラム順の調整](./settings.md#adjusting-column-order)を参照してください。
+
 エディタから Excel へ、Excel からエディタへ貼り付けられます。  
+スプレッドシートの列は名前ではなく位置でセルに対応するため、シートの列の順序は表示されているセルの順序に合わせる必要があります。  
 次のカラムでは、以下の値を true として扱います（大文字小文字は区別しません）。
 
 - AutoIncrement: `TRUE`, `1`, `YES`, `Y`
 - Unique: `TRUE`, `1`, `YES`, `Y`
 - Not Null: `TRUE`, `1`, `YES`, `Y`, `NOT NULL`
 
-書き出すときは、AutoIncrement と Unique は `TRUE` または `FALSE`、Not Null は `NOT NULL` または `NULL` として出力します。
+書き出すときは、AutoIncrement と Unique は `TRUE` または `FALSE`、Not Null は `NOT NULL` または `NULL` として出力します。  
+Unique と Auto Increment は既定で非表示のため、これらのセルを表示したときにだけ `TRUE` と `FALSE` が出力されます。
 
 ![4 つのカラムをスプレッドシートに貼り付け、フラグは TRUE/FALSE と NOT NULL/NULL で出力](/img/demo-copy-column-to-sheet.webp)
 
 ![スプレッドシートの 3 行をカラムとしてテーブルに貼り付け、YES、1、NOT NULL は true として扱う](/img/demo-copy-sheet-column.webp)
 
-複数テーブルを選択した場合の操作にも対応しています。
+貼り付け先は、フォーカスの位置によって変わります。
+
+- テーブルのヘッダーを選択している場合は、貼り付けた行が、選択しているすべてのテーブルに新しいカラムとして追加されます。
+- カラムのセルにフォーカスしている場合、そのテーブルでは、選択している行と、最後に選択した行より下の行が、貼り付けた行の数だけ順に上書きされます。離れた選択の間にある行は飛ばされます。上書きされた行は表示されているセルに貼り付けた値を受け取り、非表示のセルはそのまま残ります。余った行は新しいカラムとして追加されます。選択しているほかのテーブルには、貼り付けた行が新しいカラムとして追加されます。
 
 ![2 つのカラムをコピーし、選択した 2 つのテーブルにまとめて貼り付け](/img/demo-copy-column-multi.webp)
 

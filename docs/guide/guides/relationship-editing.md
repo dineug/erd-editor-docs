@@ -55,7 +55,7 @@ A relationship is identifying while every column on its child side is a primary 
 
 - An identifying relationship is drawn as a solid line, a non-identifying one as a dashed line.
 - The child end carries the cardinality symbol of the relationship type: a ring and a bar for Zero One, a ring and a crow's foot for Zero N, two bars for One Only, and a bar and a crow's foot for One N.
-- The parent end is a ring when any of the foreign key columns allows `NULL`, and a short dash when they are all `NOT NULL`.
+- The parent end is a ring and a bar, like Zero One, when any of the foreign key columns allows `NULL`, and two bars, like One Only, when they are all `NOT NULL`.
 - Hovering a connector highlights it along with the columns it links in both tables.
 
 ![Hovering three connectors in turn, each lighting up with the columns it links](/img/demo-relationship-hover.webp)

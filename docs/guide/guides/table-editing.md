@@ -84,20 +84,27 @@ Shortcut: `Alt + Backspace` or `Alt + Delete` (Windows/Linux), `⌥ + ⌫` or `�
 Operates like a table-based clipboard.  
 Shortcuts: `Ctrl + C` (Windows/Linux) or `⌘ + C` (Mac), `Ctrl + V` (Windows/Linux) or `⌘ + V` (Mac)
 
+Copy and paste use the cells the tables show, in the order they show them — see [Table View Options](./table-related-functions.md#table-view-options) and [Adjusting Column Order](./settings.md#adjusting-column-order).
+
 You can paste from the editor into Excel and from Excel back into the editor.  
+Spreadsheet columns are matched to those cells by position, not by name, so the sheet's columns must follow the order of the visible cells.  
 For the columns below, any of these values is read as true (case insensitive):
 
 - AutoIncrement: `TRUE`, `1`, `YES`, `Y`
 - Unique: `TRUE`, `1`, `YES`, `Y`
 - Not Null: `TRUE`, `1`, `YES`, `Y`, `NOT NULL`
 
-On the way out the editor writes `TRUE` or `FALSE` for AutoIncrement and Unique, and `NOT NULL` or `NULL` for Not Null.
+On the way out the editor writes `TRUE` or `FALSE` for AutoIncrement and Unique, and `NOT NULL` or `NULL` for Not Null.  
+Unique and Auto Increment are hidden by default, so `TRUE` and `FALSE` appear only once those cells are shown.
 
 ![Pasting four columns into a spreadsheet, with flags written as TRUE/FALSE and NOT NULL/NULL](/img/demo-copy-column-to-sheet.webp)
 
 ![Pasting three spreadsheet rows into a table as columns, with YES, 1 and NOT NULL read as true](/img/demo-copy-sheet-column.webp)
 
-Supports actions when selecting multiple tables.
+Where a paste lands depends on the focus:
+
+- With a table header selected, the pasted rows are added as new columns to every selected table.
+- With a column cell focused, that table's selected rows, and then the rows below the last of them, are overwritten in order, as many as were pasted. Rows between separate selections are skipped. An overwritten row takes the pasted values in its visible cells and keeps its hidden ones, and the rows left over are added as new columns. Every other selected table gets the pasted rows added as new columns.
 
 ![Copying two columns and pasting them into two selected tables at once](/img/demo-copy-column-multi.webp)
 

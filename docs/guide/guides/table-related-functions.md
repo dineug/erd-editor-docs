@@ -122,11 +122,12 @@ Open `Auto Layout` from the canvas context menu or from quick search, and pick o
 | Layout | What it draws |
 | --- | --- |
 | `Force` | A simulation: relationships pull tables together, neighbors push each other apart, and overlapping tables come apart. |
-| `Flow` | Left to right along the relationships, with every connector given its own point of contact on a table, so the lines fan out rather than cross. |
+| `Flow` | Left to right along the relationships, with every connector given its own point of contact on a table and as few crossings as the relationships allow. |
 | `Tree - vertical` | Layered downwards: a parent table sits above the tables that carry a foreign key to it. |
 | `Tree - horizontal` | The same layering, running left to right. |
 
-`Force` opens a preview of the whole diagram while the layout settles, with `Apply` and `Cancel` on the notice it shows.  
+`Force` opens a preview while the layout settles, with `Apply` and `Cancel` on the notice it shows.  
+The preview is framed on the diagram as it stood when the layout started, so tables can move out of the frame as the layout settles. It is drawn at `70%` or less, so its tables show collapsed to a color bar and their name.  
 `Apply` keeps the positions as they stand at that moment, and the layout is applied on its own once it comes to rest. `Cancel` or `Escape` leaves the diagram as it was.
 
 The other three are worked out in one go, off the main thread, so there is nothing to watch: a notice shows while the layout is computed, and the finished arrangement is centered on what the diagram already covers. `Cancel` or `Escape` drops a layout you are no longer waiting for, and a host that runs no shared worker ends in `Could not place tables` — see [Web Workers](../../api/installation.md#web-workers). A layout that has not come back within 60 seconds ends the same way.
@@ -193,8 +194,8 @@ The canvas has no edges and no size to set. Tables and memos sit wherever you pu
 Drag an empty area of the canvas to pan, or switch to the hand tool with `Space` and drag anywhere, including over a table. The wheel pans too, and `Shift + Wheel` pans sideways.  
 Panning has no bounds: the wheel, a drag, and the hand tool carry the view as far as you move it, past the tables on any side.
 
-The minimap in the top-right corner maps the diagram's own extent, with a margin around it. Click it to move the view to that point, or drag the viewport rectangle to pan. As you zoom out, the viewport rectangle grows to cover more of the map.  
-The scrollbars along the right and bottom edges describe the same travel. Each one appears only when there is something to scroll on that axis, so an empty document shows neither, and neither a minimap.  
+The minimap in the top-right corner maps the diagram with a screen's worth of room on every side of it, snapped outward to a coarse grid, so the further you zoom out, the smaller the diagram sits in it. Click it to move the view to that point, or drag the viewport rectangle to pan. As you zoom out, the viewport rectangle grows to cover more of the map.  
+The scrollbars along the right and bottom edges describe the same travel, which runs from the diagram sitting just off one side of the screen to just off the other, so it is at least a screen longer than the diagram as drawn, and longer still while the view stands past it. Outside zen mode, both scrollbars show whenever the document holds a table or memo, even when all of it fits on screen; only an empty document shows neither, and no minimap.  
 Dragging a scrollbar thumb or the minimap's viewport rectangle is the one pan that stops: it goes no further than the tables just off screen, or than where the drag started if that was further out.
 
 If a pan leaves no table or memo on screen, a `Go to content` compass joins the end of the [canvas toolbar](#canvas-toolbar), with an arrow at the nearest one and how far away it is. Click it to centre that entity without changing the zoom.
