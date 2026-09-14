@@ -79,10 +79,10 @@ Three formats are supported for exporting:
 - png: Generates the diagram as an image. Saved as `.png`.
 
 The PNG holds the whole diagram however far it is scrolled away, cropped to what the diagram itself draws plus a margin, and drawn at the zoom the editor is showing — zoom in before exporting for a larger image.  
-It is drawn in a background worker, so the editor stays usable while it runs, and a notice says the export is running. A diagram too large for a browser canvas to raster is written at a reduced resolution, with a notice saying so, rather than producing no file.
+It is drawn in a background worker, so the editor stays usable while it runs, and when the export takes longer than a moment, as it does for a large diagram, a notice says the export is running. A diagram too large for a browser canvas to raster is written at a reduced resolution, with a notice saying so, rather than producing no file.
 
 Every exported file is named `<database name>-<timestamp>` followed by that extension, with the timestamp formatted as `yyyy-MM-dd'T'HH_mm_ss` — for example `my-schema-2026-08-29T04_05_06.erd.json`. A blank database name falls back to `unnamed`.
 
-![Choosing png from the Export submenu, with a notice that the export is running](/img/demo-export.webp)
+![Choosing png from the Export submenu](/img/demo-export.webp)
 
 Import and Export are also available from [Quick Search](./quick-search.md). It offers the same five import formats, but only `json` and `Schema SQL` for export; PNG is available from the context menu only.

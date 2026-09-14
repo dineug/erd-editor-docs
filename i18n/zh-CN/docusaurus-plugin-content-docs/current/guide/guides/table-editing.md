@@ -84,20 +84,27 @@ Not Null 单元格在设置后显示 `N-N`，未设置时显示 `NULL`。
 以表格形式的剪贴板方式工作。  
 快捷键：`Ctrl + C` (Windows/Linux) 或 `⌘ + C` (Mac)，`Ctrl + V` (Windows/Linux) 或 `⌘ + V` (Mac)
 
+复制与粘贴使用表中显示的单元格，并按它们显示的顺序排列，参见[表显示选项](./table-related-functions.md#table-view-options)和[调整列顺序](./settings.md#adjusting-column-order)。
+
 可以从编辑器粘贴到 Excel，也可以从 Excel 粘贴回编辑器。  
+电子表格的列按位置而不是按名称对应到这些单元格，因此电子表格中列的顺序必须与显示的单元格顺序一致。  
 对于下列各项，以下任意值都会被视为 true（不区分大小写）：
 
 - AutoIncrement: `TRUE`, `1`, `YES`, `Y`
 - Unique: `TRUE`, `1`, `YES`, `Y`
 - Not Null: `TRUE`, `1`, `YES`, `Y`, `NOT NULL`
 
-从编辑器复制出去时，AutoIncrement 与 Unique 写为 `TRUE` 或 `FALSE`，Not Null 写为 `NOT NULL` 或 `NULL`。
+从编辑器复制出去时，AutoIncrement 与 Unique 写为 `TRUE` 或 `FALSE`，Not Null 写为 `NOT NULL` 或 `NULL`。  
+Unique 与 Auto Increment 默认隐藏，因此只有显示这两个单元格后才会出现 `TRUE` 与 `FALSE`。
 
 ![将四列粘贴到电子表格，标志写为 TRUE/FALSE 与 NOT NULL/NULL](/img/demo-copy-column-to-sheet.webp)
 
 ![将电子表格中的三行作为列粘贴到表中，YES、1 和 NOT NULL 视为 true](/img/demo-copy-sheet-column.webp)
 
-选中多个表时同样支持该操作。
+粘贴到哪里取决于焦点所在：
+
+- 选中表的标题栏时，粘贴的行会作为新列追加到所有选中的表中。
+- 焦点位于列单元格时，该表中选中的行以及最后一个选中行下方的行，会按粘贴的行数依次被覆盖，分开选中的行之间的行会被跳过。被覆盖的行在显示的单元格中写入粘贴的值，隐藏的单元格保持不变，剩余的行则作为新列追加。其他选中的表会把粘贴的行作为新列追加。
 
 ![复制两列并一次性粘贴到选中的两个表](/img/demo-copy-column-multi.webp)
 

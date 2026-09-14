@@ -84,20 +84,27 @@ Not Null 셀은 설정되면 `N-N`, 해제되면 `NULL`로 표시됩니다.
 테이블 형식의 클립보드로 동작합니다.  
 단축키 `Ctrl + C` (Windows/Linux) or `⌘ + C` (Mac), `Ctrl + V` (Windows/Linux) or `⌘ + V` (Mac)
 
+복사와 붙여넣기는 테이블에 표시되는 셀을 표시되는 순서대로 사용합니다. [테이블 보기 옵션](./table-related-functions.md#테이블-보기-옵션)과 [컬럼 순서 조정](./settings.md#컬럼-순서-조정) 문서를 참고하세요.
+
 에디터에서 엑셀로, 엑셀에서 다시 에디터로 붙여넣기 가능합니다.  
+스프레드시트의 열은 이름이 아니라 위치로 셀에 대응하므로, 시트의 열 순서는 표시되는 셀의 순서와 같아야 합니다.  
 아래 컬럼은 다음 값 중 어느 것이든 true로 읽습니다(대소문자 구분하지 않음).
 
 - AutoIncrement: `TRUE`, `1`, `YES`, `Y`
 - Unique: `TRUE`, `1`, `YES`, `Y`
 - Not Null: `TRUE`, `1`, `YES`, `Y`, `NOT NULL`
 
-반대로 에디터에서 복사할 때는 AutoIncrement와 Unique는 `TRUE` 또는 `FALSE`로, Not Null은 `NOT NULL` 또는 `NULL`로 기록합니다.
+반대로 에디터에서 복사할 때는 AutoIncrement와 Unique는 `TRUE` 또는 `FALSE`로, Not Null은 `NOT NULL` 또는 `NULL`로 기록합니다.  
+Unique와 Auto Increment는 기본적으로 숨겨져 있으므로, 이 셀을 표시해야 `TRUE`와 `FALSE`가 나타납니다.
 
 ![컬럼 네 개를 스프레드시트에 붙여넣기, 플래그는 TRUE/FALSE와 NOT NULL/NULL로 기록](/img/demo-copy-column-to-sheet.webp)
 
 ![스프레드시트의 세 행을 테이블에 컬럼으로 붙여넣기, YES, 1, NOT NULL은 true로 읽음](/img/demo-copy-sheet-column.webp)
 
-테이블 다중 선택 시 동작도 지원합니다.
+붙여넣기가 적용되는 곳은 포커스에 따라 다릅니다.
+
+- 테이블 헤더가 선택되어 있으면 붙여넣은 행이 선택된 모든 테이블에 새 컬럼으로 추가됩니다.
+- 컬럼 셀에 포커스가 있으면 그 테이블에서는 선택된 행과 마지막 선택 행 아래의 행을 붙여넣은 행 수만큼 차례로 덮어씁니다. 떨어져 있는 선택 사이의 행은 건너뜁니다. 덮어쓴 행은 표시되는 셀에 붙여넣은 값을 받고 숨겨진 셀은 그대로 유지하며, 남은 행은 새 컬럼으로 추가됩니다. 선택된 다른 테이블에는 붙여넣은 행이 새 컬럼으로 추가됩니다.
 
 ![컬럼 두 개를 복사해 선택한 테이블 두 개에 한 번에 붙여넣기](/img/demo-copy-column-multi.webp)
 
