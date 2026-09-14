@@ -50,6 +50,8 @@ Pasting several tables and memos at once, or duplicating them with `Alt + drag`,
 A continuous drag, canvas pan, zoom, or color change is buffered for about `200ms` and lands as one entry too.  
 A drag that moves less than `20px` in total is not recorded at all.
 
+Typing in a cell or a memo is recorded per input rather than per gesture: each typed character, each paste, and each step of an IME composition is a step of its own.
+
 ## Time Travel
 
 Opens from the `Time Travel` button in the toolbar, next to Undo and Redo.  

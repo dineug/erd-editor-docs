@@ -131,7 +131,8 @@ editor.value = 'json...';
 
 ## setInitialValue
 
-Loads a previously saved editor state. It is not recorded in the history list, so `Undo, Redo` is not possible, and no `change` event is emitted.  
+Loads a previously saved editor state. The load itself is not recorded in the history list, so it cannot be undone, and no `change` event is emitted.  
+It also clears the undo history, so nothing done before the load can be undone or redone onto the loaded document.  
 A blank string, or anything that is not a string, loads an empty document rather than raising an error, so `setInitialValue('')` starts a blank diagram.  
 Unlike assigning `value`, it is not blocked by `readonly`, so it is how you load a document into a read-only viewer.
 
