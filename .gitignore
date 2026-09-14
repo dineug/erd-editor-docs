@@ -53,3 +53,5 @@ yarn-error.log*
 
 .omc
 .playwright-mcp
+# demo recorder scratch output
+scripts/demos/.out
