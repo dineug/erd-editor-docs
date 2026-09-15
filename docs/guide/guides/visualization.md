@@ -173,7 +173,8 @@ A change that only resizes a card, such as renaming a table or adding a column, 
 A layout that takes longer than 6 seconds shows a `Placing tables…` notice with `Cancel`.  
 `Cancel`, or `Escape` at any point while the layout runs, drops it; `Tidy Up`, or coming back to `Flow`, asks for it again.  
 If a layout fails — the host runs no shared worker, the worker fails to start, or no layout comes back within 60 seconds — Flow shows `Could not place tables`, and `Tidy Up` tries again. See [Web Workers](../../api/installation.md#web-workers).  
-Over the whole diagram, Flow draws only the tables a layout has placed, so until one succeeds there may be no cards at all. A narrowed view draws all of its tables either way, unarranged until a layout lands.
+Flow draws only the tables its last layout placed, over the whole diagram and in a narrowed view alike, so the first time it is shown there may be no cards at all until a layout succeeds.  
+Whenever Flow lays the cards out again, such as when you narrow the view to other tables, the previous arrangement stays on screen until the new layout lands, and it stays there if that layout is cancelled or fails.
 
 When the whole document is replaced, for example by importing a file, Flow's layouts, focus, row display, zoom, and pan are discarded, and the next time you open Flow it starts over as it did the first time: over the whole diagram, or narrowed if you open it by [focusing on tables](#focusing-on-tables).
 
