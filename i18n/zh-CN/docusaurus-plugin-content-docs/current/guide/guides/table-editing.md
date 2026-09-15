@@ -84,7 +84,8 @@ Not Null 单元格在设置后显示 `N-N`，未设置时显示 `NULL`。
 以表格形式的剪贴板方式工作。  
 快捷键：`Ctrl + C` (Windows/Linux) 或 `⌘ + C` (Mac)，`Ctrl + V` (Windows/Linux) 或 `⌘ + V` (Mac)
 
-复制与粘贴使用表中显示的单元格，并按它们显示的顺序排列，参见[表显示选项](./table-related-functions.md#table-view-options)和[调整列顺序](./settings.md#adjusting-column-order)。
+复制到电子表格、从电子表格粘贴，以及粘贴到焦点位于列单元格的表时，使用表中显示的单元格，并按它们显示的顺序排列，参见[表显示选项](./table-related-functions.md#table-view-options)和[调整列顺序](./settings.md#adjusting-column-order)。  
+在编辑器中复制的列，在选中表的标题栏时粘贴，或粘贴到其他选中的表中时，会带上所复制列的全部单元格，包括 Unique 与 Auto Increment 等隐藏的单元格。
 
 可以从编辑器粘贴到 Excel，也可以从 Excel 粘贴回编辑器。  
 电子表格的列按位置而不是按名称对应到这些单元格，因此电子表格中列的顺序必须与显示的单元格顺序一致。  

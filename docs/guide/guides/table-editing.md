@@ -84,7 +84,8 @@ Shortcut: `Alt + Backspace` or `Alt + Delete` (Windows/Linux), `⌥ + ⌫` or `�
 Operates like a table-based clipboard.  
 Shortcuts: `Ctrl + C` (Windows/Linux) or `⌘ + C` (Mac), `Ctrl + V` (Windows/Linux) or `⌘ + V` (Mac)
 
-Copy and paste use the cells the tables show, in the order they show them — see [Table View Options](./table-related-functions.md#table-view-options) and [Adjusting Column Order](./settings.md#adjusting-column-order).
+Copying out to a spreadsheet, pasting in from one, and pasting into the table whose column cell is focused use the cells the tables show, in the order they show them — see [Table View Options](./table-related-functions.md#table-view-options) and [Adjusting Column Order](./settings.md#adjusting-column-order).  
+Columns copied in the editor and pasted with a table header selected, or into the other selected tables, carry every cell of the copied columns, including hidden ones such as Unique and Auto Increment.
 
 You can paste from the editor into Excel and from Excel back into the editor.  
 Spreadsheet columns are matched to those cells by position, not by name, so the sheet's columns must follow the order of the visible cells.  

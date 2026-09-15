@@ -122,7 +122,7 @@ Open `Auto Layout` from the canvas context menu or from quick search, and pick o
 | Layout | What it draws |
 | --- | --- |
 | `Force` | A simulation: relationships pull tables together, neighbors push each other apart, and overlapping tables come apart. |
-| `Flow` | Left to right along the relationships, with every connector given its own point of contact on a table and as few crossings as the relationships allow. |
+| `Flow` | Left to right along the relationships, with every connector given its own point of contact on a table. It tries to keep crossings few, but can leave some that another layout would avoid. |
 | `Tree - vertical` | Layered downwards: a parent table sits above the tables that carry a foreign key to it. |
 | `Tree - horizontal` | The same layering, running left to right. |
 
