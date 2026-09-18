@@ -96,7 +96,7 @@ Not Null 셀은 설정되면 `N-N`, 해제되면 `NULL`로 표시됩니다.
 - Not Null: `TRUE`, `1`, `YES`, `Y`, `NOT NULL`
 
 반대로 에디터에서 복사할 때는 AutoIncrement와 Unique는 `TRUE` 또는 `FALSE`로, Not Null은 `NOT NULL` 또는 `NULL`로 기록합니다.  
-Unique와 Auto Increment는 기본적으로 숨겨져 있으므로, 이 셀을 표시해야 `TRUE`와 `FALSE`가 나타납니다.
+Unique와 Auto Increment는 기본적으로 숨겨져 있으므로, 이 셀을 표시해야 `TRUE`와 `FALSE`를 쓰고 읽습니다.
 
 ![컬럼 네 개를 스프레드시트에 붙여넣기, 플래그는 TRUE/FALSE와 NOT NULL/NULL로 기록](/img/demo-copy-column-to-sheet.webp)
 

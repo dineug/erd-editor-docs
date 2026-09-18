@@ -96,7 +96,7 @@ For the columns below, any of these values is read as true (case insensitive):
 - Not Null: `TRUE`, `1`, `YES`, `Y`, `NOT NULL`
 
 On the way out the editor writes `TRUE` or `FALSE` for AutoIncrement and Unique, and `NOT NULL` or `NULL` for Not Null.  
-Unique and Auto Increment are hidden by default, so `TRUE` and `FALSE` appear only once those cells are shown.
+Unique and Auto Increment are hidden by default, so `TRUE` and `FALSE` are written and read only once those cells are shown.
 
 ![Pasting four columns into a spreadsheet, with flags written as TRUE/FALSE and NOT NULL/NULL](/img/demo-copy-column-to-sheet.webp)
 

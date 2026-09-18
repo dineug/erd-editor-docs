@@ -83,6 +83,6 @@ It is drawn in a background worker, so the editor stays usable while it runs, an
 
 Every exported file is named `<database name>-<timestamp>` followed by that extension, with the timestamp formatted as `yyyy-MM-dd'T'HH_mm_ss` — for example `my-schema-2026-08-29T04_05_06.erd.json`. A blank database name falls back to `unnamed`.
 
-![Choosing png from the Export submenu](/img/demo-export.webp)
+![Choosing png from the Export submenu, with the notice a longer export shows](/img/demo-export.webp)
 
 Import and Export are also available from [Quick Search](./quick-search.md). It offers the same five import formats, but only `json` and `Schema SQL` for export; PNG is available from the context menu only.

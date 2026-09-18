@@ -83,6 +83,6 @@ GraphQL、DBML 和 AML 都是可往返的格式，它们同时也是[代码生�
 
 每个导出的文件都以 `<数据库名>-<时间戳>` 加上对应的扩展名命名，其中时间戳的格式为 `yyyy-MM-dd'T'HH_mm_ss`，例如 `my-schema-2026-08-29T04_05_06.erd.json`。数据库名为空时会退回为 `unnamed`。
 
-![从 Export 子菜单中选择 png](/img/demo-export.webp)
+![从 Export 子菜单中选择 png，以及较久的导出会显示的提示](/img/demo-export.webp)
 
 `Import` 与 `Export` 也可以从[快速搜索](./quick-search.md)中使用。其中提供相同的五种导入格式，但导出仅支持 `JSON` 和 `Schema SQL`，PNG 仅能从右键菜单导出。
