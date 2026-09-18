@@ -96,7 +96,7 @@ Not Null のセルは、設定されているときは `N-N`、設定されて�
 - Not Null: `TRUE`, `1`, `YES`, `Y`, `NOT NULL`
 
 書き出すときは、AutoIncrement と Unique は `TRUE` または `FALSE`、Not Null は `NOT NULL` または `NULL` として出力します。  
-Unique と Auto Increment は既定で非表示のため、これらのセルを表示したときにだけ `TRUE` と `FALSE` が出力されます。
+Unique と Auto Increment は既定で非表示のため、これらのセルを表示したときにだけ `TRUE` と `FALSE` を出力し、読み取ります。
 
 ![4 つのカラムをスプレッドシートに貼り付け、フラグは TRUE/FALSE と NOT NULL/NULL で出力](/img/demo-copy-column-to-sheet.webp)
 

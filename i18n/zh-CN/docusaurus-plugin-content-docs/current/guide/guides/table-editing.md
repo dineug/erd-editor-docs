@@ -96,7 +96,7 @@ Not Null 单元格在设置后显示 `N-N`，未设置时显示 `NULL`。
 - Not Null: `TRUE`, `1`, `YES`, `Y`, `NOT NULL`
 
 从编辑器复制出去时，AutoIncrement 与 Unique 写为 `TRUE` 或 `FALSE`，Not Null 写为 `NOT NULL` 或 `NULL`。  
-Unique 与 Auto Increment 默认隐藏，因此只有显示这两个单元格后才会出现 `TRUE` 与 `FALSE`。
+Unique 与 Auto Increment 默认隐藏，因此只有显示这两个单元格后才会写出并读取 `TRUE` 与 `FALSE`。
 
 ![将四列粘贴到电子表格，标志写为 TRUE/FALSE 与 NOT NULL/NULL](/img/demo-copy-column-to-sheet.webp)
 
