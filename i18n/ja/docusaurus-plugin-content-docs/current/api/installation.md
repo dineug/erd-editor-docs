@@ -52,7 +52,7 @@ editor.addEventListener('change', () => {
 ```
 
 `esm.run` がパッケージの外部依存を解決してくれるため、バンドラーなしでも動作します。
-バージョンを指定しない URL は常に最新のリリースを配信します。メジャーアップグレードが予告なくページに反映されるのを避けたい場合は、`https://esm.run/@dineug/erd-editor@3.8.0` のようにバージョンを固定します。
+バージョンを指定しない URL は常に最新のリリースを配信します。メジャーアップグレードが予告なくページに反映されるのを避けたい場合は、`https://esm.run/@dineug/erd-editor@3.9.0` のようにバージョンを固定します。
 
 ### script タグ
 
@@ -61,7 +61,7 @@ editor.addEventListener('change', () => {
 
 ```html
 <erd-editor></erd-editor>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@3.8.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@3.9.0"></script>
 <script>
   const editor = document.querySelector('erd-editor');
   editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');

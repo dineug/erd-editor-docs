@@ -65,7 +65,7 @@ Shortcuts: `Ctrl + Backspace` (Windows/Linux) or `Ctrl + Delete` (Windows/Linux)
 ## Table and Memo Color Specification
 
 You can designate colors to differentiate by category.  
-Click the color strip along the top of a table or memo to open the picker. The color is applied to every selected table and memo, not only the one you clicked.
+A table wears its color down its left edge, and a memo along its top. Click that edge or strip to open the picker. The color is applied to every selected table and memo, not only the one you clicked.
 
 ![Picking a color from a memo's color strip, applied to every selected table and memo](/img/demo-table-color.webp)
 
@@ -127,7 +127,7 @@ Open `Auto Layout` from the canvas context menu or from quick search, and pick o
 | `Tree - horizontal` | The same layering, running left to right. |
 
 `Force` opens a preview while the layout settles, with `Apply` and `Cancel` on the notice it shows.  
-The preview is framed on the diagram as it stood when the layout started, so tables can move out of the frame as the layout settles. It is drawn at `70%` or less, so its tables show collapsed to a color bar and their name.  
+The preview is framed on the diagram as it stood when the layout started, so tables can move out of the frame as the layout settles. It is drawn at `70%` or less, so its tables show collapsed to their name and their color edge.  
 `Apply` keeps the positions as they stand at that moment, and the layout is applied on its own once it comes to rest. `Cancel` or `Escape` leaves the diagram as it was.
 
 The other three are worked out in one go, off the main thread, so there is nothing to watch: a notice shows while the layout is computed, and the finished arrangement is centered on what the diagram already covers. `Cancel` or `Escape` drops a layout you are no longer waiting for, and a host that runs no shared worker ends in `Could not place tables` — see [Web Workers](../../api/installation.md#web-workers). A layout that has not come back within 60 seconds ends the same way.
@@ -175,13 +175,14 @@ The toolbar steps aside while the `Force` Auto Layout preview, table properties,
 ## Zoom In/Out
 
 Zooms with `Ctrl + Wheel` (Windows/Linux) or `⌘ + Wheel` (Mac). The wheel alone pans the canvas.  
+A trackpad pinch zooms too, about the point you pinch at, and so do two fingers on a touch screen, which also pan as they move.  
 Shortcuts: `Ctrl + Plus` (Windows/Linux) or `⌘ + Plus` (Mac), `Ctrl + Minus` (Windows/Linux) or `⌘ + Minus` (Mac)  
 `Ctrl + 0` (Windows/Linux) or `⌘ + 0` (Mac) goes straight back to `100%`, keeping the middle of the screen where it is.
 
 The `Zoom out` and `Zoom in` buttons on the [canvas toolbar](#canvas-toolbar) step the zoom like the `Minus` and `Plus` shortcuts: each press moves it 4 percentage points, keeping the middle of the screen where it is. The percentage between them shows the current zoom.
 
 Zoom ranges from `10%` to `150%`.  
-At `70%` and below, tables collapse to a color bar and their name, and cell editing, the cell shortcuts, and copy and paste stop working until you zoom back in.
+At `70%` and below, tables collapse to their name and their color edge, and cell editing, the cell shortcuts, and copy and paste stop working until you zoom back in.
 
 The same three shortcuts also zoom the Visualization tab, in `Graph` and `Flow` mode alike, each mode within its own range — see [Visualization](./visualization.md#toolbar).
 
@@ -208,6 +209,8 @@ You can compare previously saved documents with the current document.
 Choose `Diff Viewer` from the canvas context menu and pick a `.json` document you exported earlier.
 
 The view opens over the canvas: what changed on the left, then the saved document and the current one side by side.  
+Tables and columns are matched by name. A cell whose value differs between the two is tinted on both sides, red in the saved document and green in the current one, so a table or column found on one side only is tinted throughout.  
+Each side pans with the wheel or by dragging an empty area, and zooms with `Ctrl + Wheel` (Windows/Linux), `⌘ + Wheel` (Mac), or a pinch. At `70%` and below its tables collapse as they do on the canvas, and the tint is not shown.  
 Both sides are read-only, so nothing in your document is modified. Close the view with the `Close` button on the notice it opens with, or with `Escape`.
 
 ![Opening the Diff Viewer on a saved .json file and running down the listed changes](/img/demo-diff-viewer.webp)

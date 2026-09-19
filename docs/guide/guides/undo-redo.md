@@ -47,7 +47,7 @@ Changing any of these cannot be undone.
 Everything a single gesture dispatches becomes one history entry.  
 Pasting several tables and memos at once, or duplicating them with `Alt + drag`, is undone in a single step.
 
-A continuous drag, canvas pan, zoom, or color change is buffered for about `200ms` and lands as one entry too.  
+A continuous drag, canvas pan, zoom, pinch, or color change is buffered for about `200ms` and lands as one entry too.  
 A drag that moves less than `20px` in total is not recorded at all.
 
 Typing in a cell or a memo is recorded per input rather than per gesture: each typed character, each paste, and each step of an IME composition is a step of its own.

@@ -394,17 +394,25 @@ type Theme = {
   canvasBoundaryBackground: string;
 
   tableBackground: string;
+  tableHeaderBackground: string;
   tableSelect: string;
   tableBorder: string;
+  tableShadow: string;
 
   memoBackground: string;
   memoSelect: string;
   memoBorder: string;
+  memoShadow: string;
 
   columnSelect: string;
+  columnSelectHover: string;
   columnHover: string;
 
   relationshipHover: string;
+
+  visualizationLink: string;
+  visualizationColumn: string;
+  visualizationRelationship: string;
 
   toolbarBackground: string;
 
@@ -455,6 +463,8 @@ editor.setTheme({
 });
 ```
 
+`tableShadow`와 `memoShadow`는 ERD 캔버스에서 테이블과 메모가 드리우는 그림자의 색상입니다. 다크 preset은 이 값을 `transparent`로 두어, `setTheme`에 `none`이나 빈 문자열을 넘겼을 때와 마찬가지로 그림자를 드리우지 않고, 라이트 preset은 `rgba(0, 0, 0, 0.18)`을 사용합니다.
+
 #### CSS Variables
 
 `Theme`의 모든 토큰은 `--erd-editor-`에 케밥 케이스 키를 붙인 CSS 훅을 가집니다. `grayColor10`은 `--erd-editor-gray-color-10`, `keyPK`는 `--erd-editor-key-pk`, `keyPFK`는 `--erd-editor-key-pfk`입니다.  
@@ -500,14 +510,21 @@ erd-editor {
   --erd-editor-canvas-background: #212225;
   --erd-editor-canvas-boundary-background: #111113;
   --erd-editor-table-background: #18191b;
+  --erd-editor-table-header-background: #2e3135;
   --erd-editor-table-select: #435db1;
   --erd-editor-table-border: #363a3f;
+  --erd-editor-table-shadow: transparent;
   --erd-editor-memo-background: #18191b;
   --erd-editor-memo-select: #435db1;
   --erd-editor-memo-border: #363a3f;
-  --erd-editor-column-select: #2e3135;
+  --erd-editor-memo-shadow: transparent;
+  --erd-editor-column-select: #182449;
+  --erd-editor-column-select-hover: #1d2e62;
   --erd-editor-column-hover: #272a2d;
   --erd-editor-relationship-hover: #435db1;
+  --erd-editor-visualization-link: #43484e;
+  --erd-editor-visualization-column: #5a6169;
+  --erd-editor-visualization-relationship: #5a6169;
   --erd-editor-toolbar-background: #111113;
   --erd-editor-context-menu-background: #18191b;
   --erd-editor-context-menu-select: #272a2d;

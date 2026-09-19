@@ -52,7 +52,7 @@ See [ErdEditorElement](./erd-editor-element.md) for the rest of the API.
 ```
 
 `esm.run` resolves the package's external dependencies for you, so this works without a bundler.
-The unversioned URL always serves the latest release. Pin a version — `https://esm.run/@dineug/erd-editor@3.8.0` — if you do not want a major upgrade to reach your page unannounced.
+The unversioned URL always serves the latest release. Pin a version — `https://esm.run/@dineug/erd-editor@3.9.0` — if you do not want a major upgrade to reach your page unannounced.
 
 ### Script tag
 
@@ -61,7 +61,7 @@ It is what the `unpkg` and `jsdelivr` fields point at, so the bare package URL o
 
 ```html
 <erd-editor></erd-editor>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@3.8.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@3.9.0"></script>
 <script>
   const editor = document.querySelector('erd-editor');
   editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');

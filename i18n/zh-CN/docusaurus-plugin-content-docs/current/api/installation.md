@@ -52,7 +52,7 @@ editor.addEventListener('change', () => {
 ```
 
 `esm.run` 会替你解析该包的外部依赖，因此无需打包器也能工作。
-不带版本号的 URL 始终提供最新的发布版本。如果不希望大版本升级在毫无预告的情况下进入页面，可以像 `https://esm.run/@dineug/erd-editor@3.8.0` 这样固定版本。
+不带版本号的 URL 始终提供最新的发布版本。如果不希望大版本升级在毫无预告的情况下进入页面，可以像 `https://esm.run/@dineug/erd-editor@3.9.0` 这样固定版本。
 
 ### script 标签
 
@@ -61,7 +61,7 @@ editor.addEventListener('change', () => {
 
 ```html
 <erd-editor></erd-editor>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@3.8.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@3.9.0"></script>
 <script>
   const editor = document.querySelector('erd-editor');
   editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');

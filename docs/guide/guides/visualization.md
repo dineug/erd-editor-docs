@@ -49,6 +49,7 @@ Table names appear on the graph as you zoom in, fading in between `50%` and `100
 ### Getting Around the Graph
 
 The wheel zooms, about whatever the pointer is over, from `10%` to `400%`.  
+A trackpad pinch zooms the same way, and two fingers on a touch screen zoom about the point between them and pan as they move.  
 Drag the background to pan.
 
 The zoom buttons on the [toolbar](#toolbar) and the zoom shortcuts hold the middle of the screen still instead, within the same range, and `Fit` brings every node into view.
@@ -82,7 +83,7 @@ Switching to `Graph` from `Flow` rebuilds it as well, and every rebuild starts a
 Draws every table as a card and lays the cards out along their relationships. Memos are not drawn.  
 It is not the `Flow` layout of [Auto Layout](./table-related-functions.md#auto-layout), which moves the tables on the ERD tab itself.
 
-Each card has the table's color along its top edge, then a header with a table icon and the table name, then the rows its [row display](#row-display) calls for. Cards keep that look at every zoom, and never collapse to a color bar the way tables on the ERD tab do at `70%` and below. Nothing on a card can be edited.
+Each card is drawn like a table on the ERD tab: the table's color down its left edge, a header band with a table icon and the table name, then the rows its [row display](#row-display) calls for. Unlike a table on the ERD tab, a card also draws a line between its rows. Cards keep that look at every zoom, and never collapse to their name the way tables on the ERD tab do at `70%` and below. Nothing on a card can be edited.
 
 A connector is one smooth curve from table to table, drawn beneath the cards, so it can pass behind one. Every connector is drawn as the same solid gray line, whether the relationship is identifying or not, with the same end marks as on the ERD tab — see [Reading a Connector](./relationship-editing.md#reading-a-connector). Flow draws connectors even when the `Relationship` [view option](./table-related-functions.md#table-view-options) is off.
 
@@ -110,6 +111,7 @@ Changing the row display resizes the cards, so Flow lays them out again and fits
 ### Getting Around the Flow
 
 The wheel pans, and `Shift + Wheel` pans sideways. `Ctrl + Wheel` (Windows/Linux) or `⌘ + Wheel` (Mac) zooms, keeping the middle of the screen where it is.  
+A trackpad pinch zooms about the point you pinch at, and two fingers on a touch screen zoom about the point between them and pan as they move.  
 Drag the background to pan. Panning has no bounds, as on the ERD canvas.  
 Zoom ranges from `10%` to `150%`. Flow keeps a zoom and pan of its own, apart from the ERD tab's, and neither is saved in the document.
 
@@ -133,6 +135,8 @@ While the pointer is over a card, two icon buttons, neither with a tooltip, appe
 
 - The waypoints icon, the same one the `Flow` button shows, narrows Flow to that table and the tables one relationship away — see [Focusing on Tables](#focusing-on-tables).
 - The external-link icon switches to the ERD tab and selects only that table, scrolling it to the middle of the screen if it is not already fully in view.
+
+A press on either button belongs to the button alone: it does not select the card or bring it to the front, so the waypoints button leaves the selection you had.
 
 ### Moving Cards
 

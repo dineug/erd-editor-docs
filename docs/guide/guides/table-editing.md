@@ -33,7 +33,8 @@ The match itself is fuzzy, so `vch` also finds `VARCHAR`.
 - `Arrow Left`: go back to the text you typed
 
 You can also click a suggestion.  
-Nothing is forced, so a type that is not in the list can be typed freely, including arguments such as `VARCHAR(255)`.  
+The list shows up to ten suggestions at a time and scrolls for the rest.  
+Nothing is forced, so a type that is not in the list can be typed freely, including arguments such as `VARCHAR(255)`. The list closes once what you type runs past a whole type name, as `VARCHAR(255)` or `BIGINT UNSIGNED` does.  
 The suggestions follow the selected database. Changing the database changes what is offered and leaves existing columns as they are.
 
 ![Filling in DataType cells from fuzzy suggestions with the arrow keys, Tab and Enter](/img/demo-data-type-autocomplete.webp)
@@ -64,7 +65,9 @@ Supports five methods:
 
 ## Rearranging and Moving Columns
 
-Functions when `dragging`, enabling movement to other tables.
+Functions when `dragging`, enabling movement to other tables.  
+The dragged rows follow the pointer, and the rows around the drop point slide aside to make room.  
+Drop just below a table's last row to move the column to the end of that table. A table with no columns takes the drop anywhere on it.
 
 ![Dragging a column to a new position, then into another table](/img/demo-column-move.webp)
 

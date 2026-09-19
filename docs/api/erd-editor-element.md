@@ -394,17 +394,25 @@ type Theme = {
   canvasBoundaryBackground: string;
 
   tableBackground: string;
+  tableHeaderBackground: string;
   tableSelect: string;
   tableBorder: string;
+  tableShadow: string;
 
   memoBackground: string;
   memoSelect: string;
   memoBorder: string;
+  memoShadow: string;
 
   columnSelect: string;
+  columnSelectHover: string;
   columnHover: string;
 
   relationshipHover: string;
+
+  visualizationLink: string;
+  visualizationColumn: string;
+  visualizationRelationship: string;
 
   toolbarBackground: string;
 
@@ -455,6 +463,8 @@ editor.setTheme({
 });
 ```
 
+`tableShadow` and `memoShadow` are the color of the shadow tables and memos cast on the ERD canvas. The dark preset leaves them `transparent`, which casts none, as passing `none` or an empty string to `setTheme` does; the light preset uses `rgba(0, 0, 0, 0.18)`.
+
 #### CSS Variables
 
 Every token in `Theme` has a matching CSS hook named `--erd-editor-` plus the kebab-cased key: `grayColor10` is `--erd-editor-gray-color-10`, `keyPK` is `--erd-editor-key-pk`, and `keyPFK` is `--erd-editor-key-pfk`.  
@@ -500,14 +510,21 @@ Since `3.4.0` the misspelled `dargSelect` tokens are spelled `dragSelect`, and t
   --erd-editor-canvas-background: #212225;
   --erd-editor-canvas-boundary-background: #111113;
   --erd-editor-table-background: #18191b;
+  --erd-editor-table-header-background: #2e3135;
   --erd-editor-table-select: #435db1;
   --erd-editor-table-border: #363a3f;
+  --erd-editor-table-shadow: transparent;
   --erd-editor-memo-background: #18191b;
   --erd-editor-memo-select: #435db1;
   --erd-editor-memo-border: #363a3f;
-  --erd-editor-column-select: #2e3135;
+  --erd-editor-memo-shadow: transparent;
+  --erd-editor-column-select: #182449;
+  --erd-editor-column-select-hover: #1d2e62;
   --erd-editor-column-hover: #272a2d;
   --erd-editor-relationship-hover: #435db1;
+  --erd-editor-visualization-link: #43484e;
+  --erd-editor-visualization-column: #5a6169;
+  --erd-editor-visualization-relationship: #5a6169;
   --erd-editor-toolbar-background: #111113;
   --erd-editor-context-menu-background: #18191b;
   --erd-editor-context-menu-select: #272a2d;
