@@ -9,7 +9,10 @@ animated WebP at 2x (30fps), or as a PNG still.
 - An erd-editor checkout with dependencies installed and its workspace
   libraries built, next to this repo (`../erd-editor`) or at `ERD_EDITOR_DIR`.
   Playwright and its Chromium come from that checkout.
-- `ffmpeg` with `libwebp` on `PATH` (`brew install ffmpeg`), or `FFMPEG_PATH`.
+- An `ffmpeg` built with the `libwebp_anim` encoder: on `PATH`, at
+  `FFMPEG_PATH`, or linked at `scripts/demos/.out/bin/ffmpeg`. Homebrew's
+  `ffmpeg` may lack it (check `ffmpeg -encoders | grep webp`); the binary the
+  `ffmpeg-static` npm package installs has it.
 
 ## Usage
 

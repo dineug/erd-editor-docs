@@ -1,6 +1,5 @@
 import { center } from '../lib/recorder.mjs';
-import { readSeed } from '../lib/seed.mjs';
-import { seedClean } from './_editing-helpers.mjs';
+import { readSeed, seedSQL } from '../lib/seed.mjs';
 
 /** Editing Start > Memo Creation: Alt+M, type a note into the body, resize it. */
 export default {
@@ -8,7 +7,7 @@ export default {
   width: 800,
   height: 490,
   async setup(d) {
-    await seedClean(d, readSeed('shop.sql'), {
+    await seedSQL(d, readSeed('shop.sql'), {
       only: ['orders'],
       tables: { orders: { x: 450, y: 190 } },
       // Column comments off: the table stays narrow enough to sit beside the memo.

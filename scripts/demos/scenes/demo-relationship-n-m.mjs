@@ -70,7 +70,7 @@ export default {
     await seedSQL(d, SQL, {
       tables: {
         products: { x: 450, y: 30 },
-        tags: { x: 450, y: 276 },
+        tags: { x: 450, y: 261 },
         product_tags: { x: 50, y: 236 },
       },
       settings: { databaseName: 'shop', show: SHOW_COMPACT },
@@ -88,8 +88,8 @@ export default {
   async scenario(d) {
     await d.sleep(600);
 
-    // products first. Picked in the padding under its last row, at the left
-    // end: no row lights up, and nothing covers its names.
+    // products first. Picked on its last row, at the left end, where nothing
+    // covers its names.
     await d.press('ControlOrMeta+Alt+Digit2');
     await d.sleep(450);
     const products = await d.tableBox('products');
@@ -97,9 +97,10 @@ export default {
     await curveTo(d, { x: products.x - 30, y: products.y + products.height + 40 }, productsAt, 850);
     await d.click(productsAt.x, productsAt.y);
 
-    // Into the right end of the empty table, in from the right.
+    // Into the right end of the empty table, in from the right: its header is
+    // all there is of it, and the header buttons keep the last 36px.
     let mapping = await d.tableBox('product_tags');
-    const firstAt = { x: mapping.x + mapping.width - 9, y: mapping.y + 34 };
+    const firstAt = { x: mapping.x + mapping.width - 44, y: mapping.y + mapping.height / 2 };
     await glideTo(d, firstAt, 950, [
       { x: productsAt.x - 110, y: productsAt.y + 70 },
       { x: firstAt.x + 60, y: firstAt.y + 4 },
@@ -124,8 +125,9 @@ export default {
     await curveTo(d, { x: tags.x - 40, y: tags.y + tags.height + 10 }, tagsAt, 650);
     await d.click(tagsAt.x, tagsAt.y);
 
-    // Into the padding under product_id, at the right end.
-    const secondAt = { x: right - 13, y: mapping.y + 75 };
+    // Onto product_id, at the right end, short of the row's remove button.
+    const productId = await d.columnBox('product_tags', 'product_id');
+    const secondAt = { x: right - 44, y: productId.y + productId.height / 2 };
     await glideTo(d, secondAt, 950, [
       { x: tagsAt.x - 90, y: tagsAt.y + 10 },
       { x: secondAt.x + 70, y: secondAt.y + 8 },

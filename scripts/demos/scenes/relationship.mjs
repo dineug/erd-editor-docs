@@ -1,4 +1,4 @@
-import { seedClean } from './_editing-helpers.mjs';
+import { seedSQL } from '../lib/seed.mjs';
 
 // Three shop tables with their foreign keys left out, for the clip to draw them.
 // Each key is named after its table, so the column copied to the child reads as a foreign key.
@@ -54,7 +54,7 @@ export default {
     // members' top to orders' bottom; payments to the right, so the second one
     // leaves orders from its right side, away from the first.
     const at = (x, y) => ({ x: x + OFFSET, y: y + OFFSET });
-    await seedClean(d, SQL, {
+    await seedSQL(d, SQL, {
       tables: {
         orders: at(46, 20),
         members: at(40, 300),

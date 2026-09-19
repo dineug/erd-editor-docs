@@ -18,9 +18,8 @@ const readDoc = page =>
 
 /**
  * Imports Schema SQL the way a user would, waits for the automatic placement
- * to land, then loads the result with setInitialValue. The import stays in
- * the undo history (setInitialValue does not clear it), so a scene about
- * undo or time travel reloads the page and calls seedDoc again. `tables`
+ * to land, then loads the result with setInitialValue, which clears the undo
+ * history, so a scene opens with nothing to undo. `tables`
  * pins positions and colors by table name; `settings` is merged over the
  * document settings.
  */

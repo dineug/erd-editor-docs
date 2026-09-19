@@ -7,11 +7,11 @@ export async function nameCell(d, table, column, dx = 34) {
   return { x: box.x + dx, y: box.y + box.height / 2 };
 }
 
-/** Where a person clicks a table's name to select the table. */
-export async function tableHeader(d, table, dx = 30) {
+/** Where a person clicks a table's name, on the header band's one line, to select the table. */
+export async function tableHeader(d, table, dx = 40) {
   const box = await d.tableBox(table);
   if (!box) throw new Error(`no table box for ${table}`);
-  return { x: box.x + dx, y: box.y + 34 };
+  return { x: box.x + dx, y: box.y + 14 };
 }
 
 /** Column names of a table, in document order. */

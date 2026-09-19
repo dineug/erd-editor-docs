@@ -41,9 +41,8 @@ export default {
     await d.sleep(1000);
     await d.shot('paste-2');
 
-    // The newest copies are the selection: a plain drag takes them down into
-    // the open, relationship and all. They are grabbed by their bottom edge,
-    // the one part the earlier copy does not cover.
+    // The newest copies are the selection and sit on top: a plain drag on the
+    // header takes them down into the open, relationship and all.
     const members = await d.page.evaluate(() => {
       const doc = JSON.parse(document.querySelector('erd-editor').value);
       const ids = doc.doc.tableIds.filter(
@@ -52,7 +51,7 @@ export default {
       return ids[ids.length - 1];
     });
     const copy = await d.nodeBox(`#table-${members}`);
-    const from = { x: copy.x + 110, y: copy.y + copy.height - 4 };
+    const from = { x: copy.x + 110, y: copy.y + 14 };
     await d.moveTo(from.x, from.y, 500);
     await d.sleep(250);
     await d.page.mouse.down();

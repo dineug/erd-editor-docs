@@ -1,5 +1,4 @@
-import { readSeed } from '../lib/seed.mjs';
-import { seedClean } from './_editing-helpers.mjs';
+import { readSeed, seedSQL } from '../lib/seed.mjs';
 
 /** Undo, Redo: two edits, stepped back with ⌘Z and forward again with ⌘⇧Z. */
 export default {
@@ -7,7 +6,7 @@ export default {
   width: 960,
   height: 540,
   async setup(d) {
-    await seedClean(d, readSeed('shop.sql'), {
+    await seedSQL(d, readSeed('shop.sql'), {
       only: ['members', 'orders'],
       // orders sits to the right of members the whole time, so the drag below
       // only bends the connector and never flips it to other sides.

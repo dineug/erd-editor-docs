@@ -1,4 +1,4 @@
-import { seedClean } from './_editing-helpers.mjs';
+import { seedSQL } from '../lib/seed.mjs';
 
 // The shop tables with no foreign keys yet: the recorded session draws them.
 const SQL = `
@@ -52,7 +52,7 @@ export default {
   width: 960,
   height: 540,
   async setup(d) {
-    await seedClean(d, SQL, {
+    await seedSQL(d, SQL, {
       // Placed so no table covers another table or a connector at any point
       // of the session. Column comments are off to leave room for that.
       tables: {

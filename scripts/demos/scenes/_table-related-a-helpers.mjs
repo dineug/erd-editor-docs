@@ -36,8 +36,9 @@ export async function seedShop(d, { tables, memos = [], settings = {}, patch, sq
 export const memoBox = (d, id) => d.nodeBox(`#memo-${id}`);
 
 /**
- * Where a table can be grabbed to drag it: the icon band above the name cell,
- * left of the add/remove icons (the name cell, color strip and rows are blocked).
+ * Where a table can be grabbed to drag it: its header line, whose cells carry
+ * the table once the pointer travels 4px, left of the add/remove icons (the
+ * color edge and the rows are blocked).
  */
 export function grip(box, dx = 70) {
   return { x: box.x + dx, y: box.y + 12 };
