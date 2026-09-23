@@ -21,7 +21,7 @@ description: 以力导向的 Graph 或由表卡片组成的 Flow 浏览 schema�
 标签页底部边缘的中间浮着一个工具栏，从左到右依次为：
 
 - `Graph` 与 `Flow`，当前模式会高亮显示。
-- `Zoom out`、以百分比表示的当前缩放（例如 `100%`）以及 `Zoom in`。每按一次，缩放变化 4 个百分点，并保持屏幕中心不变。百分比是只读的，显示的是当前所在模式的缩放。
+- `Zoom out`、以百分比表示的当前缩放（例如 `100%`）以及 `Zoom in`。每按一次，缩放变化 4 个百分点，并保持屏幕中心不变。百分比显示的是当前所在模式的缩放，点击它会把该缩放恢复为 `100%`。
 - `Fit`，将该模式显示的全部内容纳入视野：在 `Graph` 中是所有节点，在 `Flow` 中是所有卡片。
 - `Tidy Up`，仅在 `Flow` 中出现，用于重新排布卡片，参见 [Flow 的排布方式](#how-flow-is-placed)。
 - 行显示菜单，仅在 `Flow` 中出现，以当前选项作为标签，参见[行显示](#row-display)。
@@ -30,7 +30,7 @@ description: 以力导向的 Graph 或由表卡片组成的 Flow 浏览 schema�
 
 缩放按钮会在提示中标出自己的快捷键，例如 `Zoom in (Ctrl + Plus)` (Windows/Linux) 或 `Zoom in (⌘ + Plus)` (Mac)。  
 在两种模式下，`Ctrl + Plus` 与 `Ctrl + Minus` (Windows/Linux) 或 `⌘ + Plus` 与 `⌘ + Minus` (Mac) 都会像按钮一样逐级缩放，`Ctrl + 0` (Windows/Linux) 或 `⌘ + 0` (Mac) 则直接回到 `100%`。  
-没有重置按钮，并且在快速搜索打开期间这些快捷键不起作用。
+点击百分比的效果与 `Ctrl + 0` (Windows/Linux) 或 `⌘ + 0` (Mac) 相同，它的提示中也会标出该快捷键。在快速搜索打开期间，这些快捷键不起作用。
 
 ## Graph 模式 {#graph-mode}
 

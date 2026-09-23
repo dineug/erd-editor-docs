@@ -42,6 +42,8 @@ Undo 与 Redo 仅在 ERD 标签页生效。在 Visualization、Schema SQL、Code
 
 这些内容的变更无法 Undo。
 
+从其他编辑器到达的变更同样不会被记录，因此 Undo 只会撤回你自己的变更。在[协同编辑会话](../../api/advanced/collaborative-editing.md)中，每个编辑器各自 Undo 自己的变更，而通过 [MCP 服务器](../../mcp/live-and-headless.md#undo)进行编辑的编码智能体则用 `erd_undo` 撤回它自己的变更。
+
 ## 一次操作一条记录
 
 单次操作触发的全部变更会合并为一条历史记录。  

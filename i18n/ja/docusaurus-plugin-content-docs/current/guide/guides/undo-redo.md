@@ -42,6 +42,8 @@ Undo と Redo は ERD タブでのみ動作します。Visualization、Schema SQ
 
 これらの変更は Undo できません。
 
+ほかのエディタから届いた変更も記録されないため、Undo で元に戻せるのは自分の変更だけです。[共同編集のセッション](../../api/advanced/collaborative-editing.md)では各エディタがそれぞれ自分の変更を Undo し、[MCP サーバー](../../mcp/live-and-headless.md#undo)を通じて編集するコーディングエージェントは、自身の変更を `erd_undo` で Undo します。
+
 ## 1 回の操作は 1 ステップ
 
 1 回の操作で発生した変更は、すべてまとめて 1 件の履歴になります。  

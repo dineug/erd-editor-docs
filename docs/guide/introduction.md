@@ -33,6 +33,7 @@ To try it in an IDE, create an empty file with a `.erd.json` extension and open 
 - Work on a canvas with no edges: pan wherever the diagram goes, zoom from `10%` to `150%` with `Ctrl + Wheel` (`⌘ + Wheel` on Mac), the keyboard, or a pinch, and clear everything but the diagram with zen mode. See [Getting Around the Canvas](./guides/table-related-functions.md#getting-around-the-canvas).
 - Arrange a whole diagram in one step with [Auto Layout](./guides/table-related-functions.md#auto-layout): a force simulation, a left-to-right flow, or a tree in either direction.
 - Find a table or run a command from anywhere with [Quick Search](./guides/quick-search.md), and step through the edit history with [Undo, Redo](./guides/undo-redo.md).
+- Let a coding agent such as Claude Code or Codex edit the diagram through the [MCP server](../mcp/introduction.md): live in VS Code, where each change shows up on the canvas as it happens, or in the file itself.
 - Edit together in real time (experimental). Sessions are peer-to-peer and end-to-end encrypted, so no server holds your schema, and peers see each other's cursors, focus, and selections. In your own page, [`getSharedStore()`](../api/advanced/collaborative-editing.md) gives you the same action stream over the transport of your choice.
 
 Start with the [Editing Guide](/docs/category/guides).

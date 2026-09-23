@@ -41,6 +41,8 @@ Undo, Redo는 ERD 탭에서만 동작합니다. Visualization, Schema SQL, Code 
 
 이 항목들의 변경은 되돌릴 수 없습니다.
 
+다른 에디터에서 도착한 변경사항도 기록되지 않으므로, Undo는 자신의 변경만 되돌립니다. [공동 편집](../../api/advanced/collaborative-editing.md) 세션에서는 각 에디터가 자신의 변경을 되돌리며, [MCP 서버](../../mcp/live-and-headless.md#undo)로 편집하는 코딩 에이전트는 `erd_undo`로 자신의 변경을 되돌립니다.
+
 ## 동작 하나가 한 단계
 
 하나의 동작이 발생시킨 모든 변경은 히스토리 항목 하나가 됩니다.  

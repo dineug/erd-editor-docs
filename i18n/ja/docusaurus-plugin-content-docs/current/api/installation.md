@@ -52,7 +52,7 @@ editor.addEventListener('change', () => {
 ```
 
 `esm.run` がパッケージの外部依存を解決してくれるため、バンドラーなしでも動作します。
-バージョンを指定しない URL は常に最新のリリースを配信します。メジャーアップグレードが予告なくページに反映されるのを避けたい場合は、`https://esm.run/@dineug/erd-editor@3.9.0` のようにバージョンを固定します。
+バージョンを指定しない URL は常に最新のリリースを配信します。メジャーアップグレードが予告なくページに反映されるのを避けたい場合は、`https://esm.run/@dineug/erd-editor@3.9.1` のようにバージョンを固定します。
 
 ### script タグ
 
@@ -61,7 +61,7 @@ editor.addEventListener('change', () => {
 
 ```html
 <erd-editor></erd-editor>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@3.9.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@3.9.1"></script>
 <script>
   const editor = document.querySelector('erd-editor');
   editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
@@ -165,6 +165,8 @@ PNG の書き出しとスキーマのガベージコレクションは応答を 
 | `setImportFileCallback(cb)` | ブラウザのファイル選択を置き換えます。`({ type, op, accept }) => void` です。 |
 
 `@dineug/erd-editor/engine.js` は 2 つ目のエントリーポイントです。DOM なしでドキュメントの store を動かすため、Web Worker でも動作します。[リモート保存](./advanced/remote-storage.md)を参照してください。
+
+`3.9.1` からは 3 つ目のエントリーポイント `@dineug/erd-editor/peer.js` があります。[MCP サーバー](../mcp/introduction.md)がドキュメントを編集するときに経由するヘッドレスなピアです。このサーバーのためのもので、これらのページでは説明していません。
 
 ### ファイルダイアログ
 

@@ -21,7 +21,7 @@ A newly opened editor starts on `Graph`. The mode you pick stays while the edito
 A toolbar floats over the middle of the bottom edge of the tab. From left to right:
 
 - `Graph` and `Flow`, with the current mode highlighted.
-- `Zoom out`, the current zoom as a percentage such as `100%`, and `Zoom in`. Each press moves the zoom 4 percentage points, keeping the middle of the screen where it is. The percentage is read-only and shows the zoom of the mode you are in.
+- `Zoom out`, the current zoom as a percentage such as `100%`, and `Zoom in`. Each press moves the zoom 4 percentage points, keeping the middle of the screen where it is. The percentage shows the zoom of the mode you are in, and clicking it puts that zoom back to `100%`.
 - `Fit`, which brings everything the mode shows into view: every node in `Graph`, every card in `Flow`.
 - `Tidy Up`, in `Flow` only, which lays the cards out again — see [How Flow Is Placed](#how-flow-is-placed).
 - The row display menu, in `Flow` only, labelled with the current choice — see [Row Display](#row-display).
@@ -30,7 +30,7 @@ A toolbar floats over the middle of the bottom edge of the tab. From left to rig
 
 The zoom buttons name their shortcuts in their tooltips, for example `Zoom in (Ctrl + Plus)` (Windows/Linux) or `Zoom in (⌘ + Plus)` (Mac).  
 `Ctrl + Plus` and `Ctrl + Minus` (Windows/Linux) or `⌘ + Plus` and `⌘ + Minus` (Mac) step the zoom like the buttons, in either mode, and `Ctrl + 0` (Windows/Linux) or `⌘ + 0` (Mac) goes straight back to `100%`.  
-There is no reset button, and the shortcuts do nothing while quick search is open.
+Clicking the percentage does the same as `Ctrl + 0` (Windows/Linux) or `⌘ + 0` (Mac), and names it in its tooltip. The shortcuts do nothing while quick search is open.
 
 ## Graph Mode
 

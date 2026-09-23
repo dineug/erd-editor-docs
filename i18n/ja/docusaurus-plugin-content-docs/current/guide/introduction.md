@@ -33,6 +33,7 @@ IDE で試すには、拡張子が `.erd.json` の空ファイルを作成して
 - 端のないキャンバスで作業します。ダイアグラムが伸びていく先へどこまでも移動でき、`Ctrl + Wheel`（Mac では `⌘ + Wheel`）、キーボード、ピンチで `10%` から `150%` まで拡大・縮小し、Zen モードでダイアグラムだけを残せます。[キャンバスの移動](./guides/table-related-functions.md#getting-around-the-canvas)を参照してください。
 - [自動レイアウト](./guides/table-related-functions.md#auto-layout)で、ダイアグラム全体を一度に並べ替えます。Force のシミュレーション、左から右へ流れる Flow、縦横 2 方向の Tree から選べます。
 - [クイック検索](./guides/quick-search.md)を使うと、どこからでもテーブルを探したりコマンドを実行したりでき、[Undo, Redo](./guides/undo-redo.md) では編集履歴をたどれます。
+- Claude Code や Codex などのコーディングエージェントに、[MCP サーバー](../mcp/introduction.md)を通じてダイアグラムを編集させられます。VS Code ではライブで編集し、変更がその場でキャンバスに現れます。ファイルそのものを編集させることもできます。
 - リアルタイムで一緒に編集できます（実験的機能）。セッションはピアツーピアかつエンドツーエンドで暗号化されるため、スキーマがサーバーに保持されることはなく、参加者は互いのマウスカーソル、フォーカス、選択範囲を確認できます。自分のページでは、[`getSharedStore()`](../api/advanced/collaborative-editing.md) が同じアクションストリームを任意のトランスポート上で提供します。
 
 まずは[編集ガイド](/docs/category/guides)から始めてください。

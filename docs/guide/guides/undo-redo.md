@@ -42,6 +42,8 @@ Not recorded:
 
 Changing any of these cannot be undone.
 
+Changes that arrive from another editor are not recorded either, so Undo reverts only your own. In a [collaborative session](../../api/advanced/collaborative-editing.md) each editor undoes its own changes, and a coding agent editing through the [MCP server](../../mcp/live-and-headless.md#undo) undoes its own with `erd_undo`.
+
 ## One Gesture, One Step
 
 Everything a single gesture dispatches becomes one history entry.  

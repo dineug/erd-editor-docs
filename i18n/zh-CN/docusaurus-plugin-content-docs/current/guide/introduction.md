@@ -33,6 +33,7 @@ erd-editor 是一款实体关系图（Entity-Relationship Diagram）编辑器。
 - 在没有边界的画布上工作：图延伸到哪里就能平移到哪里，可以用 `Ctrl + Wheel`（Mac 上为 `⌘ + Wheel`）、键盘或捏合手势在 `10%` ~ `150%` 之间缩放，禅模式则只留下图本身。参见[浏览画布](./guides/table-related-functions.md#getting-around-the-canvas)。
 - 用[自动布局](./guides/table-related-functions.md#auto-layout)一步排布整张图：Force 模拟、从左到右的 Flow，或两个方向的 Tree。
 - 通过[快速搜索](./guides/quick-search.md)可以在任意位置查找表或执行命令，通过 [Undo, Redo](./guides/undo-redo.md) 可以逐步浏览编辑历史。
+- 让 Claude Code 或 Codex 等编码智能体通过 [MCP 服务器](../mcp/introduction.md)编辑图：既可以在 VS Code 中实时编辑，每处变更都会在发生的同时出现在画布上，也可以直接编辑文件本身。
 - 支持实时协同编辑（实验性）。会话基于点对点连接并进行端到端加密，因此不会有任何服务器保存 schema，参与者之间可以看到彼此的光标、焦点和选中内容。在自有页面中，[`getSharedStore()`](../api/advanced/collaborative-editing.md) 可以在任意传输方式上提供相同的操作流。
 
 建议从[编辑指南](/docs/category/guides)开始。

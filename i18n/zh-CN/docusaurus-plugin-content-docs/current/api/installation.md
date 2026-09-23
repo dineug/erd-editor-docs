@@ -52,7 +52,7 @@ editor.addEventListener('change', () => {
 ```
 
 `esm.run` 会替你解析该包的外部依赖，因此无需打包器也能工作。
-不带版本号的 URL 始终提供最新的发布版本。如果不希望大版本升级在毫无预告的情况下进入页面，可以像 `https://esm.run/@dineug/erd-editor@3.9.0` 这样固定版本。
+不带版本号的 URL 始终提供最新的发布版本。如果不希望大版本升级在毫无预告的情况下进入页面，可以像 `https://esm.run/@dineug/erd-editor@3.9.1` 这样固定版本。
 
 ### script 标签
 
@@ -61,7 +61,7 @@ editor.addEventListener('change', () => {
 
 ```html
 <erd-editor></erd-editor>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@3.9.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@3.9.1"></script>
 <script>
   const editor = document.querySelector('erd-editor');
   editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
@@ -165,6 +165,8 @@ worker 响应之后，六十秒内仍未返回的布局同样会被放弃，并�
 | `setImportFileCallback(cb)` | 替换浏览器的文件选择框，`({ type, op, accept }) => void`。 |
 
 `@dineug/erd-editor/engine.js` 是第二个入口点。它在没有 DOM 的情况下运行文档 store，因此也可以在 Web Worker 中使用。参见[远程存储](./advanced/remote-storage.md)。
+
+从 `3.9.1` 起还有第三个入口点 `@dineug/erd-editor/peer.js`：它是 [MCP 服务器](../mcp/introduction.md)用来编辑文档的无头节点。它专为该服务器而存在，这里的文档不对它作说明。
 
 ### 文件对话框
 

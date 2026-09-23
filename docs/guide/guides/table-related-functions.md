@@ -162,7 +162,7 @@ Multi-word type names such as `TIMESTAMP WITH TIME ZONE` and `INTERVAL DAY TO SE
 A small toolbar floats over the middle of the bottom edge of the canvas, holding the tools that act on the canvas itself:
 
 - The hand and the pointer. The pointer is the default; the hand turns every drag into a pan, over tables as well as empty space. `Space` switches between them.
-- The zoom: `Zoom out`, the current zoom as a percentage, and `Zoom in`. The two buttons step the zoom the same way the zoom shortcuts do.
+- The zoom: `Zoom out`, the current zoom as a percentage, and `Zoom in`. The two buttons step the zoom the same way the zoom shortcuts do, and clicking the percentage puts it back to `100%`.
 - The four relationship notations, the same four you start a relationship with — see [Editing Start](./editing-start.md). Picking one switches back to the pointer, since a relationship is drawn by clicking two tables.
 - Zen mode, `Alt + Z`, which clears everything but the canvas and this toolbar. `Alt + Z` again, or the button, brings the rest back.
 - The `Go to content` compass, which joins the end of the toolbar only while no table or memo is on screen — see [Getting Around the Canvas](#getting-around-the-canvas).
@@ -179,7 +179,7 @@ A trackpad pinch zooms too, about the point you pinch at, and so do two fingers 
 Shortcuts: `Ctrl + Plus` (Windows/Linux) or `⌘ + Plus` (Mac), `Ctrl + Minus` (Windows/Linux) or `⌘ + Minus` (Mac)  
 `Ctrl + 0` (Windows/Linux) or `⌘ + 0` (Mac) goes straight back to `100%`, keeping the middle of the screen where it is.
 
-The `Zoom out` and `Zoom in` buttons on the [canvas toolbar](#canvas-toolbar) step the zoom like the `Minus` and `Plus` shortcuts: each press moves it 4 percentage points, keeping the middle of the screen where it is. The percentage between them shows the current zoom.
+The `Zoom out` and `Zoom in` buttons on the [canvas toolbar](#canvas-toolbar) step the zoom like the `Minus` and `Plus` shortcuts: each press moves it 4 percentage points, keeping the middle of the screen where it is. The percentage between them shows the current zoom, and clicking it goes straight back to `100%` like `Ctrl + 0` (Windows/Linux) or `⌘ + 0` (Mac).
 
 Zoom ranges from `10%` to `150%`.  
 At `70%` and below, tables collapse to their name and their color edge, and cell editing, the cell shortcuts, and copy and paste stop working until you zoom back in.
