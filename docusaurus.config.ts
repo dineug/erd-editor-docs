@@ -119,6 +119,12 @@ const config: Config = {
           label: 'API',
         },
         {
+          type: 'docSidebar',
+          position: 'left',
+          sidebarId: 'mcp',
+          label: 'MCP',
+        },
+        {
           href: 'https://erd-editor.io',
           position: 'left',
           label: 'Web App',
@@ -164,6 +170,7 @@ const config: Config = {
           items: [
             { label: 'Guide', to: '/docs/guide/introduction' },
             { label: 'API', to: '/docs/api/installation' },
+            { label: 'MCP', to: '/docs/mcp/introduction' },
           ],
         },
         {

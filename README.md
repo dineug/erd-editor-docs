@@ -43,11 +43,11 @@ all-locale build. This is required by the search plugin — see
 
 | Path | Contents |
 | --- | --- |
-| `docs/guide`, `docs/api` | Documentation source (English, the default locale) |
+| `docs/guide`, `docs/api`, `docs/mcp` | Documentation source (English, the default locale) |
 | `i18n/<locale>/docusaurus-plugin-content-docs/current` | Translations, mirroring the layout of `docs/` |
 | `i18n/<locale>/docusaurus-plugin-content-docs/current.json` | Sidebar category labels (`_category_.json` under `i18n/` is **not** read) |
 | `i18n/ko/code.json` | Korean strings for React components under `src/` and the search UI |
-| `sidebars.ts` | Sidebar structure for the Guide and API sections |
+| `sidebars.ts` | Sidebar structure for the Guide, API, and MCP sections |
 | `src/pages`, `src/components` | Landing page and its components |
 | `src/css/custom.css` | Global theme overrides |
 | `static/img` | Images referenced from the docs |
