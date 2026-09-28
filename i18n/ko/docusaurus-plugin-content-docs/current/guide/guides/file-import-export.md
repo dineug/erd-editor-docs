@@ -86,3 +86,7 @@ PNG는 화면이 얼마나 멀리 이동해 있든 다이어그램 전체를 담
 ![Export 하위 메뉴에서 png를 고르는 모습과, 오래 걸리는 내보내기에서 뜨는 안내](/img/demo-export.webp)
 
 가져오기와 내보내기는 [빠른 검색](./quick-search.md)에서도 사용 가능합니다. 가져오기는 동일한 5가지 형식을 제공하지만 내보내기는 `json`과 `Schema SQL`만 제공하며, PNG는 컨텍스트 메뉴에서만 사용 가능합니다.
+
+Obsidian에서는 다운로드나 저장 대화 상자가 나타나지 않습니다. 파일은 볼트 안에서 Obsidian이 해당 다이어그램의 새 첨부 파일을 두는 위치에 저장되며, 알림으로 그 경로를 알려 줍니다.  
+Obsidian이 파일 이름에 허용하지 않는 문자 `\ / : * ? " < > |`는 `-`로 바뀝니다.  
+내보낸 `.erd.json`이나 `.sql` 파일은 Settings → Files and links → Detect all file extensions가 켜져 있을 때만 Obsidian의 파일 탐색기에 표시됩니다.

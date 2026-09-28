@@ -20,6 +20,7 @@ Create a table from the context menu or with the shortcut `Alt + N`.
 Create a memo from the context menu or with the shortcut `Alt + M`.
 
 A memo is a free-text note on the canvas. Click into its body and type; the text is saved with the document.  
+`Escape` closes the memo editor, keeping what you typed and leaving the memo selected, and a second `Escape` clears the selection.  
 Drag its border to resize it, and use the `x` in its header to delete it.
 
 ![Adding a memo with Alt + M, typing a note, and dragging its border to resize it](/img/demo-memo.webp)
@@ -36,7 +37,7 @@ Start a relationship from the context menu, from the [canvas toolbar](./table-re
 Once a type is armed the cursor changes. Click the parent table first, then the child table.  
 The parent gets a primary key if it does not have one, and a matching foreign key column — same name, data type, default, and comment, set `Not Null` — is created on the child.  
 Clicking one table twice draws a self-referencing relationship.  
-Press `Escape`, or press the same shortcut again, to cancel.
+Press `Escape`, or press the same shortcut again, to cancel. Canceling leaves the selection as it is, and the next `Escape` clears it.
 
 ![Drawing a One N relationship with ⌘ + ⌥ + 4, then a Zero N one from the canvas toolbar](/img/demo-relationship.webp)
 

@@ -52,7 +52,7 @@ editor.addEventListener('change', () => {
 ```
 
 `esm.run` 会替你解析该包的外部依赖，因此无需打包器也能工作。
-不带版本号的 URL 始终提供最新的发布版本。如果不希望大版本升级在毫无预告的情况下进入页面，可以像 `https://esm.run/@dineug/erd-editor@3.9.1` 这样固定版本。
+不带版本号的 URL 始终提供最新的发布版本。如果不希望大版本升级在毫无预告的情况下进入页面，可以像 `https://esm.run/@dineug/erd-editor@3.9.2` 这样固定版本。
 
 ### script 标签
 
@@ -61,14 +61,14 @@ editor.addEventListener('change', () => {
 
 ```html
 <erd-editor></erd-editor>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@3.9.1"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@3.9.2"></script>
 <script>
   const editor = document.querySelector('erd-editor');
   editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
 </script>
 ```
 
-引入它同样会注册 `<erd-editor>`，`window.ErdEditor` 上带有两个文件回调 `ErdEditor.setExportFileCallback` 与 `ErdEditor.setImportFileCallback`。
+引入它同样会注册 `<erd-editor>`，`window.ErdEditor` 上带有两个文件回调 `ErdEditor.setExportFileCallback` 与 `ErdEditor.setImportFileCallback`，以及从 `3.9.2` 起提供的 `ErdEditor.createKeyBindingMap`。
 exports 映射仍然指向 ES 模块，因此从 npm 安装时打包器不会用到这个文件。
 
 ### HTML
@@ -156,13 +156,15 @@ worker 响应之后，六十秒内仍未返回的布局同样会被放弃，并�
 
 ## 入口点
 
-导入 `@dineug/erd-editor` 会作为副作用注册 `<erd-editor>`。除此之外，它还导出元素的类型和两个回调 setter。
+导入 `@dineug/erd-editor` 会作为副作用注册 `<erd-editor>`。除此之外，它还导出元素的类型、两个回调 setter，以及从 `3.9.2` 起提供的默认按键绑定及其类型。
 
 | 导出 | 说明 |
 | --- | --- |
 | `ErdEditorElement`（类型） | 元素的接口，参见 [ErdEditorElement](./erd-editor-element.md)。 |
 | `setExportFileCallback(cb)` | 替换浏览器的下载行为，`(blob, { fileName }) => void`。 |
 | `setImportFileCallback(cb)` | 替换浏览器的文件选择框，`({ type, op, accept }) => void`。 |
+| `createKeyBindingMap()` | 每次调用都以一个新的 `KeyBindingMap` 返回默认按键绑定，参见 [createKeyBindingMap](./erd-editor-element.md#createkeybindingmap)。 |
+| `KeyBindingMap`、`KeyBindingName`、`ShortcutOption`（类型） | 绑定映射、由其命令名称组成的联合类型，以及单个绑定。 |
 
 `@dineug/erd-editor/engine.js` 是第二个入口点。它在没有 DOM 的情况下运行文档 store，因此也可以在 Web Worker 中使用。参见[远程存储](./advanced/remote-storage.md)。
 

@@ -30,6 +30,7 @@ type SharedStore = {
   dispatch: (actions: Array<AnyAction> | AnyAction) => void;
   dispatchSync: (actions: Array<AnyAction> | AnyAction) => void;
   subscribe: (fn: (value: AnyAction[]) => void) => Unsubscribe;
+  flushStreamBuffers: () => void;
   destroy: () => void;
 };
 
@@ -104,7 +105,7 @@ editor.getSharedStore({ focusTracker: false });
 
 두 트래커를 모두 끄면 자체 정보는 전혀 발행하지 않는 단순한 중계자로 shared store를 사용할 수 있습니다.  
 다른 에디터가 보낸 정보는 그대로 수신되어 그려집니다.  
-VSCode와 IntelliJ 에디터가 이렇게 동작합니다.
+VS Code, Obsidian, JetBrains IDE, Google Drive의 에디터가 이렇게 동작합니다.
 
 ```js
 editor.getSharedStore({ mouseTracker: false, focusTracker: false });
@@ -148,11 +149,26 @@ const unsubscribe = sharedStore.subscribe(actions => {
 });
 ```
 
+### flushStreamBuffers
+
+이 store가 아직 보류하고 있는 스트림 묶음을 스트림이 잠잠해지기를 기다리지 않고 지금 바로 전송합니다.  
+`3.9.2`부터 `getSharedStore`가 반환한 store에서 동작합니다. `3.9.1`에서는 타입에 메서드가 있지만 아무 동작도 하지 않습니다.  
+테이블이나 메모 이동, 색상 변경, 메모 크기 조절, 화면 스크롤과 확대/축소는 각각 작은 변경사항이 이어지는 스트림으로 도착합니다.  
+store는 각 스트림을 하나의 묶음으로 모아, 스트림이 200ms 동안 잠잠해질 때까지 보류합니다. 이 과정이 두 단계로 이루어지므로 묶음은 마지막 변경 후 약 400ms 뒤에 전송됩니다.  
+호출하면 두 단계의 대기가 모두 끝납니다. store가 연결된 상태라면 구독자는 호출이 반환되기 전에 묶음을 받습니다. 보류 중인 것이 없으면 호출해도 아무것도 전송하지 않습니다.  
+store 자체의 `destroy`든 에디터의 `destroy`든 호출하면 아직 보류 중인 묶음은 버려지므로, 탭이 닫힐 때처럼 store를 정리하면서 다른 에디터에 마지막 변경이 남아야 한다면 이 메서드를 먼저 호출하세요.
+
+```js
+sharedStore.flushStreamBuffers();
+sharedStore.destroy();
+```
+
 ### destroy
 
 sharedStore 인스턴스를 완전히 파괴합니다.  
 에디터 자체는 그대로 두므로 세션에서 나가더라도 문서는 계속 편집할 수 있습니다.  
-에디터가 발급한 마지막 sharedStore가 파괴되면 마우스와 포커스 트래커가 멈춥니다.
+에디터가 발급한 마지막 sharedStore가 파괴되면 마우스와 포커스 트래커가 멈춥니다.  
+store가 아직 보류하고 있는 스트림 묶음은 함께 버려지므로, 전송하려면 먼저 [flushStreamBuffers](#flushstreambuffers)를 호출하세요.
 
 ```js
 sharedStore.destroy();

@@ -11,6 +11,13 @@ description: 关系数据类型同步、视图位置与缩放信息保存、注�
 主题颜色不在此界面中。
 主题颜色在主题构建器中设置，通过工具栏的 `Theme` 按钮打开，并且仅在宿主通过 [`enableThemeBuilder`](../../api/erd-editor-element.md#enablethemebuilder) 启用后才会显示。
 
+在 VS Code、Obsidian 和 JetBrains IDE 中，主题构建器的三个值（外观、灰阶色和强调色）同时也是宿主的设置，在构建器中选择的内容会保存到那里。
+VS Code 将它们保存为 `dineug.erd-editor.theme.appearance`、`dineug.erd-editor.theme.grayColor` 和 `dineug.erd-editor.theme.accentColor`，外观默认为 `dark`。
+Obsidian 将它们按仓库分别保存在 Settings → ERD Editor 下，JetBrains IDE 则保存在 Settings | Tools | ERD Editor 下，对整个 IDE 生效。两者的默认值均为 `Auto`，它会跟随宿主的浅色或深色主题，并随之切换。
+构建器本身只提供 `Light` 和 `Dark`。
+在 Obsidian 和 JetBrains IDE 中，除非选择 `Auto` 当前未显示的那种外观，否则设置会一直保持为 `Auto`。
+在 VS Code 中，每次选择都会保存全部三个值，因此在外观为 `auto` 时，即使只选择一种颜色，外观也会被替换为 `light` 或 `dark`。
+
 ## 关系数据类型同步
 
 决定是否同步数据类型。默认开启。
@@ -85,6 +92,7 @@ description: 关系数据类型同步、视图位置与缩放信息保存、注�
 
 其中大多数仅在 ERD 标签页生效，并且在快速搜索、表属性、Diff Viewer、自动布局预览或 Time Travel 打开期间不会触发。
 `Search` 与 `Stop` 是例外。`Search` 可以在任意标签页中开关快速搜索，`Stop` 则用于关闭快速搜索、表属性、Diff Viewer、自动布局预览、Time Travel 和主题构建器。
+在 ERD 标签页中，`Stop` 会关闭已打开的单元格或备注编辑器，或取消正在绘制的关系，并保持选中状态不变。以上情况都不存在时，它会清除选中状态和单元格焦点。
 `Zoom In`、`Zoom Out` 与 `Zoom Reset` 同样可以缩放 [Visualization](./visualization.md#toolbar) 标签页，`Graph` 与 `Flow` 均适用，快速搜索打开期间除外。
 在 Visualization 标签页中，`Stop` 还会关闭[行显示](./visualization.md#row-display)菜单，并取消仍在进行中的 [Flow 布局](./visualization.md#how-flow-is-placed)；但它不会扩大通过 `Focus on this table` 缩小的视图范围。
 `Focus on this table` 会以 `Flow` 打开 Visualization 标签页，范围缩小到选中的表以及与它们相隔一条关系的所有表，没有选中任何表时不起作用。参见[聚焦于表](./visualization.md#focusing-on-tables)。
@@ -93,3 +101,5 @@ description: 关系数据类型同步、视图位置与缩放信息保存、注�
 
 在此标签页中无法更改按键绑定。
 嵌入编辑器的宿主可以通过 [`setKeyBindingMap`](../../api/erd-editor-element.md#setkeybindingmap) 重新映射，但 `Editing`、`Stop`、`Search`、`Undo`、`Redo`、`Zoom In`、`Zoom Out` 和 `Zoom Reset` 是固定的。
+
+在 Obsidian 中，只要该图所在的 Obsidian 标签页处于活动状态，这些按键就会传给编辑器，即使某个 Obsidian 快捷键使用了相同的按键也是如此，例如 `Alt + Enter` 与 `Ctrl + K` (Windows/Linux) 或 `⌥ + Enter` 与 `⌘ + K` (Mac)。在该标签页中，其他所有 Obsidian 快捷键仍然有效。

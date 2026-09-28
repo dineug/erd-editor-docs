@@ -52,7 +52,7 @@ editor.addEventListener('change', () => {
 ```
 
 `esm.run` がパッケージの外部依存を解決してくれるため、バンドラーなしでも動作します。
-バージョンを指定しない URL は常に最新のリリースを配信します。メジャーアップグレードが予告なくページに反映されるのを避けたい場合は、`https://esm.run/@dineug/erd-editor@3.9.1` のようにバージョンを固定します。
+バージョンを指定しない URL は常に最新のリリースを配信します。メジャーアップグレードが予告なくページに反映されるのを避けたい場合は、`https://esm.run/@dineug/erd-editor@3.9.2` のようにバージョンを固定します。
 
 ### script タグ
 
@@ -61,14 +61,14 @@ editor.addEventListener('change', () => {
 
 ```html
 <erd-editor></erd-editor>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@3.9.1"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@3.9.2"></script>
 <script>
   const editor = document.querySelector('erd-editor');
   editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
 </script>
 ```
 
-読み込むと `<erd-editor>` が同じように登録され、`window.ErdEditor` に 2 つのファイルコールバック `ErdEditor.setExportFileCallback` と `ErdEditor.setImportFileCallback` が入っています。
+読み込むと `<erd-editor>` が同じように登録され、`window.ErdEditor` に 2 つのファイルコールバック `ErdEditor.setExportFileCallback` と `ErdEditor.setImportFileCallback`、そして `3.9.2` からは `ErdEditor.createKeyBindingMap` が入っています。
 exports マップは引き続き ES モジュールを指しているため、npm からインストールした場合にこのファイルが使われることはありません。
 
 ### HTML
@@ -156,13 +156,15 @@ PNG の書き出しとスキーマのガベージコレクションは応答を 
 
 ## エントリーポイント
 
-`@dineug/erd-editor` を読み込むと、副作用として `<erd-editor>` を登録します。それ以外には、要素の型と 2 つのコールバック設定関数をエクスポートしています。
+`@dineug/erd-editor` を読み込むと、副作用として `<erd-editor>` を登録します。それ以外には、要素の型、2 つのコールバック設定関数、そして `3.9.2` からは既定のキーバインディングとその型をエクスポートしています。
 
 | エクスポート | 説明 |
 | --- | --- |
 | `ErdEditorElement`（型） | 要素のインターフェースです。[ErdEditorElement](./erd-editor-element.md) を参照してください。 |
 | `setExportFileCallback(cb)` | ブラウザのダウンロードを置き換えます。`(blob, { fileName }) => void` です。 |
 | `setImportFileCallback(cb)` | ブラウザのファイル選択を置き換えます。`({ type, op, accept }) => void` です。 |
+| `createKeyBindingMap()` | 既定のキーバインディングを、呼び出すたびに新しい `KeyBindingMap` として返します。[createKeyBindingMap](./erd-editor-element.md#createkeybindingmap) を参照してください。 |
+| `KeyBindingMap`、`KeyBindingName`、`ShortcutOption`（型） | バインディングのマップ、そのコマンド名のユニオン、1 つのバインディングです。 |
 
 `@dineug/erd-editor/engine.js` は 2 つ目のエントリーポイントです。DOM なしでドキュメントの store を動かすため、Web Worker でも動作します。[リモート保存](./advanced/remote-storage.md)を参照してください。
 

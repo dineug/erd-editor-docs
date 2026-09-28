@@ -11,6 +11,13 @@ The Settings screen has two tabs: `Preferences` and `Shortcuts`. `Preferences` o
 Theme colors are not on this screen.
 They live in the theme builder, which opens from the `Theme` button in the toolbar and is only there when the host turns it on with [`enableThemeBuilder`](../../api/erd-editor-element.md#enablethemebuilder).
 
+In VS Code, Obsidian, and a JetBrains IDE, the builder's three values (appearance, gray color, and accent color) are also settings of the host, and what you pick in the builder is saved there.
+VS Code keeps them as `dineug.erd-editor.theme.appearance`, `dineug.erd-editor.theme.grayColor`, and `dineug.erd-editor.theme.accentColor`, with `dark` as the default appearance.
+Obsidian keeps them under Settings → ERD Editor, per vault, and a JetBrains IDE under Settings | Tools | ERD Editor, for the whole IDE. Both default to `Auto`, which follows the host's light or dark theme and switches with it.
+The builder itself offers only `Light` and `Dark`.
+In Obsidian and a JetBrains IDE, `Auto` stays set unless you pick the appearance it is not showing.
+In VS Code, every pick saves all three values, so while the appearance is `auto`, picking even a color replaces it with `light` or `dark`.
+
 ## Relationship DataType Sync
 
 Determines whether to synchronize data types. It is on by default.
@@ -85,6 +92,7 @@ The `Shortcuts` tab is a read-only table of `Command` and `Keybinding`, listing 
 
 Most of these fire on the ERD tab only, and they are held back while quick search, table properties, the diff viewer, the Auto Layout preview, or time travel is open.
 `Search` and `Stop` are the exceptions: `Search` toggles quick search from any tab, and `Stop` is what closes quick search, table properties, the diff viewer, the Auto Layout preview, time travel, and the theme builder.
+On the ERD tab, `Stop` ends an open cell or memo editor, or cancels a relationship being drawn, and leaves the selection as it is. With none of those open, it clears the selection and the focused cell.
 `Zoom In`, `Zoom Out`, and `Zoom Reset` also zoom the [Visualization](./visualization.md#toolbar) tab, in `Graph` and `Flow` alike, unless quick search is open.
 On the Visualization tab, `Stop` also closes the [row display](./visualization.md#row-display) menu and cancels a [Flow layout](./visualization.md#how-flow-is-placed) that is still running; it does not widen a view narrowed with `Focus on this table`.
 `Focus on this table` opens the Visualization tab in `Flow`, narrowed to the selected tables and every table one relationship away, and does nothing when no table is selected — see [Focusing on Tables](./visualization.md#focusing-on-tables).
@@ -93,3 +101,5 @@ Copy and paste are the browser's own `Ctrl + C` and `Ctrl + V` (Windows/Linux) o
 
 Bindings cannot be changed from this tab.
 A host embedding the editor remaps them with [`setKeyBindingMap`](../../api/erd-editor-element.md#setkeybindingmap), except `Editing`, `Stop`, `Search`, `Undo`, `Redo`, `Zoom In`, `Zoom Out`, and `Zoom Reset`, which are fixed.
+
+In Obsidian these keys reach the editor whenever the diagram's Obsidian tab is active, even where an Obsidian hotkey uses the same key, such as `Alt + Enter` and `Ctrl + K` (Windows/Linux) or `⌥ + Enter` and `⌘ + K` (Mac). Every other Obsidian hotkey still works there.

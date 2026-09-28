@@ -12,7 +12,7 @@
     "description": "Label of the call-to-action button on the homepage"
   },
   "homepage.metaDescription": {
-    "message": "erd-editor は、Web アプリ、VSCode 拡張機能、IntelliJ プラグイン、そして埋め込み可能な Web コンポーネントとして提供される ER 図エディタです。",
+    "message": "erd-editor は、Web アプリ、Google Drive アプリ、VSCode 拡張機能、IntelliJ プラグイン、Obsidian プラグイン、そして埋め込み可能な Web コンポーネントとして提供される ER 図エディタです。",
     "description": "The meta description of the homepage"
   },
   "homepage.feature.easy.title": {

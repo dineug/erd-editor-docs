@@ -18,7 +18,8 @@ Supports three methods:
 
 Memos are selected the same way, and either select-all shortcut takes every table and memo at once.  
 `Ctrl + A` gives way to a caret, so it selects the text rather than the diagram while you are editing a cell.  
-A selection box marks an entity when it covers the middle of it, not when it merely touches an edge.
+A selection box marks an entity when it covers the middle of it, not when it merely touches an edge.  
+`Escape` clears the selection. While a cell or memo editor is open, or a relationship is being drawn, the first `Escape` ends that and a second one clears the selection.
 
 ![Selecting tables with ⌘ + drag and ⌘ + click, then every table and memo with ⌘ + A](/img/demo-table-select.webp)
 

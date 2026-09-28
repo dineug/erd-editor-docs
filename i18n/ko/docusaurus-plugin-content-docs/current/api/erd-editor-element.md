@@ -208,7 +208,8 @@ editor.clear();
 ## destroy
 
 에디터 인스턴스를 재사용 불가능하게 완전히 파괴합니다.  
-에디터의 리스너와 구독을 해제하고, [getSharedStore](#getsharedstore)로 반환된 모든 shared store를 파괴합니다.
+에디터의 리스너와 구독을 해제하고, [getSharedStore](#getsharedstore)로 반환된 모든 shared store를 파괴합니다.  
+shared store가 아직 보류하고 있는 스트림 묶음은 함께 버려지므로, 전송하려면 먼저 해당 store의 [flushStreamBuffers](./advanced/collaborative-editing.md#flushstreambuffers)를 호출하세요.
 
 ```js
 editor.destroy();
@@ -220,7 +221,7 @@ editor.destroy();
 `edit`, `stop`, `search`, `undo`, `redo`, `zoomIn`, `zoomOut`, `zoomReset`은 고정이며 재정의할 수 없습니다.  
 아래 16개 이름만 적용되고, 고정된 이름을 포함해 객체의 나머지 값은 무시됩니다.  
 값은 `ShortcutOption[]`이어야 합니다. 문자열만 전달하면 무시되므로 `{ addTable: 'Alt+KeyN' }`이 아니라 `{ addTable: [{ shortcut: 'Alt+KeyN' }] }`으로 작성하세요.  
-호출은 부분 병합이라 생략한 이름은 기본값을 유지하고, 두 번 호출해도 앞선 변경이 유지됩니다. 현재 설정을 읽는 getter는 없습니다.
+호출은 부분 병합이라 생략한 이름은 기본값을 유지하고, 두 번 호출해도 앞선 변경이 유지됩니다. 현재 설정을 읽는 getter는 없습니다. [createKeyBindingMap](#createkeybindingmap)은 `setKeyBindingMap`으로 변경한 내용이 아니라 기본값을 반환합니다.
 
 ```ts
 type ShortcutOption = {
@@ -280,6 +281,65 @@ editor.setKeyBindingMap({
 `selectAllTable`과 `handTool`은 커서에 양보합니다. 포커스가 input, textarea, `contenteditable` 안에 있는 동안에는 `$mod + A`가 텍스트를 선택하고 `Space`는 공백을 입력하며, 캔버스까지 전달되지 않습니다. 다른 단축키로 재정의해도 동작은 같습니다.
 
 `focusView`는 ERD 탭에서만 동작합니다. 테이블이 하나 이상 선택되어 있으면 Visualization 탭을 Flow 모드로 열어, 선택한 테이블과 그 테이블에 관계 하나로 이어진 모든 테이블로 범위를 좁힙니다. 선택한 테이블이 없으면 아무 동작도 하지 않습니다. [테이블 포커스](../guide/guides/visualization.md#테이블-포커스) 문서를 참고하세요.
+
+ERD 탭에서 `stop` (`Escape`)은 셀이나 메모의 편집모드, 또는 그리는 중인 관계를 끝내고 선택은 그대로 둡니다. 에디터는 이 키 입력에 `preventDefault()`를 호출합니다.  
+그중 아무것도 열려 있지 않으면 `Escape`는 선택과 포커스한 셀을 해제하며, 이때는 `preventDefault()`를 호출하지 않습니다. 따라서 편집을 끝내고 선택까지 해제하려면 두 번 눌러야 합니다.  
+에디터는 `Escape`의 전파를 막지 않으므로, 예를 들어 자체 다이얼로그를 닫기 위해 직접 `Escape`를 수신하는 페이지는 두 키 입력을 모두 받으며, `defaultPrevented`가 `true`인 입력은 건너뛸 수 있습니다.  
+빠른 검색, 테이블 속성, Diff Viewer, 자동 배치 미리보기, Time Travel이 열려 있는 동안에는 `Escape`가 대신 그것을 닫고 선택은 그대로 둡니다. 이 키 입력에도 `preventDefault()`를 호출하지 않습니다.  
+IME가 아직 조합 중일 때 누른 `Escape`는 조합에 속합니다. 열려 있는 편집모드는 그대로 두고 `preventDefault()`도 호출하지 않으므로, 페이지는 `isComposing`이 `true`이거나 `keyCode`가 `229`인 입력도 건너뛸 수 있습니다.  
+`3.9.2` 이전에는 `Escape` 한 번으로 편집이나 관계 그리기를 끝내는 동시에 선택까지 해제했고, 에디터는 `preventDefault()`를 호출하지 않았습니다.
+
+### createKeyBindingMap
+
+`3.9.2`부터 패키지는 `createKeyBindingMap()`과 함께 `KeyBindingMap`, `KeyBindingName`, `ShortcutOption` 타입을 export합니다.  
+고정된 이름을 포함한 24개 이름 전체의 기본 키 바인딩을 호출할 때마다 새 맵으로 반환하므로, 반환된 맵을 변경해도 다른 곳에는 영향이 없습니다.  
+모든 에디터가 시작할 때 사용하는 값이며, `setKeyBindingMap` 호출은 여기에 반영되지 않습니다.  
+런타임 export는 `createKeyBindingMap`뿐이며, 나머지 셋은 타입입니다.
+
+```ts
+type KeyBindingName =
+  | 'edit'
+  | 'stop'
+  | 'search'
+  | 'undo'
+  | 'redo'
+  | 'addTable'
+  | 'addColumn'
+  | 'addMemo'
+  | 'removeTable'
+  | 'removeColumn'
+  | 'primaryKey'
+  | 'selectAllTable'
+  | 'selectAllColumn'
+  | 'relationshipZeroOne'
+  | 'relationshipZeroN'
+  | 'relationshipOneOnly'
+  | 'relationshipOneN'
+  | 'tableProperties'
+  | 'focusView'
+  | 'zoomIn'
+  | 'zoomOut'
+  | 'zoomReset'
+  | 'handTool'
+  | 'zenMode';
+
+type KeyBindingMap = Record<KeyBindingName, ShortcutOption[]>;
+
+declare function createKeyBindingMap(): KeyBindingMap;
+
+// example
+import { createKeyBindingMap } from '@dineug/erd-editor';
+
+const shortcuts = Object.values(createKeyBindingMap())
+  .flat()
+  .map(({ shortcut }) => shortcut); // 'Enter', 'Escape', '$mod+KeyK', ...
+```
+
+각 `shortcut`은 키를 `KeyboardEvent.code`로 지정하는 [tinykeys](https://github.com/jamiebuilds/tinykeys) 키 조합이며, [`$mod`](#mod)는 macOS에서는 `⌘`, 그 외 환경에서는 `Control`입니다.  
+고정된 이름은 `Enter` (`edit`), `Escape` (`stop`), `$mod+KeyK` (`search`), `$mod+KeyZ` (`undo`), `$mod+Shift+KeyZ` (`redo`), `$mod+Equal` (`zoomIn`), `$mod+Minus` (`zoomOut`), `$mod+Digit0` (`zoomReset`)에 바인딩되어 있습니다. `edit`과 `stop`에는 플래그가 없고, 나머지 여섯은 `preventDefault`와 `stopPropagation`을 가집니다. 그 외 이름은 위의 기본값과 같습니다.
+
+에디터는 자신의 엘리먼트에서 이 키들을 수신하므로, 전역 단축키나 캡처 단계의 `keydown` 리스너로 에디터보다 먼저 키를 받는 호스트는 에디터에 포커스가 있는 동안 이 키들을 통과시켜야 합니다.  
+통과시킬 목록은 `createKeyBindingMap()`으로 만들되, `setKeyBindingMap`에 전달한 바인딩으로 해당 기본값을 대체하세요.
 
 ### $mod
 

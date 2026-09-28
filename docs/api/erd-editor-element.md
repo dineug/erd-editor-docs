@@ -208,7 +208,8 @@ editor.clear();
 ## destroy
 
 Completely destroys the editor instance so that it can no longer be reused.  
-It releases the editor's listeners and subscriptions, and destroys every shared store returned by [getSharedStore](#getsharedstore).
+It releases the editor's listeners and subscriptions, and destroys every shared store returned by [getSharedStore](#getsharedstore).  
+A stream batch a shared store is still holding back is dropped with it; call that store's [flushStreamBuffers](./advanced/collaborative-editing.md#flushstreambuffers) first to send it.
 
 ```js
 editor.destroy();
@@ -220,7 +221,7 @@ Redefines keyboard shortcuts.
 `edit`, `stop`, `search`, `undo`, `redo`, `zoomIn`, `zoomOut` and `zoomReset` are fixed and cannot be redefined.  
 Only the sixteen names below are written; anything else in the object is ignored, including the fixed names.  
 A binding value must be a `ShortcutOption[]`. A bare string is ignored, so write `{ addTable: [{ shortcut: 'Alt+KeyN' }] }` rather than `{ addTable: 'Alt+KeyN' }`.  
-The call is a partial merge: names you leave out keep their defaults, and calling it twice keeps the earlier changes. There is no getter for the current bindings.
+The call is a partial merge: names you leave out keep their defaults, and calling it twice keeps the earlier changes. There is no getter for the current bindings: [createKeyBindingMap](#createkeybindingmap) returns the defaults, not what `setKeyBindingMap` changed.
 
 ```ts
 type ShortcutOption = {
@@ -280,6 +281,65 @@ editor.setKeyBindingMap({
 `selectAllTable` and `handTool` give way to a caret: while the focus is in an input, a textarea, or a `contenteditable`, `$mod + A` selects the text and `Space` types a space instead of reaching the canvas. Whatever you rebind them to behaves the same way.
 
 `focusView` acts on the ERD tab only. With at least one table selected, it opens the Visualization tab in Flow mode, narrowed to those tables and every table one relationship away; with no table selected it does nothing. See [Focusing on Tables](../guide/guides/visualization.md#focusing-on-tables).
+
+`stop` (`Escape`) on the ERD tab ends an open cell or memo editor, or a relationship being drawn, and leaves the selection as it is. The editor calls `preventDefault()` on that press.  
+With none of those open, `Escape` clears the selection and the focused cell, and is not prevented. Leaving an edit and clearing the selection therefore takes two presses.  
+The editor never stops `Escape` from propagating, so a page that listens for it itself, to close a dialog of its own for example, hears both presses and can skip the one whose `defaultPrevented` is `true`.  
+While quick search, table properties, the diff viewer, the Auto Layout preview, or time travel is open, `Escape` closes that instead and leaves the selection as it is. That press is not prevented either.  
+An `Escape` pressed while an IME is still composing belongs to the composition. It leaves an open editor as it is and is not prevented, so a page can skip a press whose `isComposing` is `true`, or whose `keyCode` is `229`, as well.  
+Before `3.9.2` a single `Escape` both ended an edit or draw and cleared the selection, and the editor never prevented it.
+
+### createKeyBindingMap
+
+Since `3.9.2` the package exports `createKeyBindingMap()`, and the `KeyBindingMap`, `KeyBindingName`, and `ShortcutOption` types with it.  
+It returns the default key bindings, all 24 names with the fixed ones included, as a new map on every call, so changing the map it returns changes nothing else.  
+It is what every editor starts from, and a `setKeyBindingMap` call does not show in it.  
+Only `createKeyBindingMap` is a runtime export; the other three are types.
+
+```ts
+type KeyBindingName =
+  | 'edit'
+  | 'stop'
+  | 'search'
+  | 'undo'
+  | 'redo'
+  | 'addTable'
+  | 'addColumn'
+  | 'addMemo'
+  | 'removeTable'
+  | 'removeColumn'
+  | 'primaryKey'
+  | 'selectAllTable'
+  | 'selectAllColumn'
+  | 'relationshipZeroOne'
+  | 'relationshipZeroN'
+  | 'relationshipOneOnly'
+  | 'relationshipOneN'
+  | 'tableProperties'
+  | 'focusView'
+  | 'zoomIn'
+  | 'zoomOut'
+  | 'zoomReset'
+  | 'handTool'
+  | 'zenMode';
+
+type KeyBindingMap = Record<KeyBindingName, ShortcutOption[]>;
+
+declare function createKeyBindingMap(): KeyBindingMap;
+
+// example
+import { createKeyBindingMap } from '@dineug/erd-editor';
+
+const shortcuts = Object.values(createKeyBindingMap())
+  .flat()
+  .map(({ shortcut }) => shortcut); // 'Enter', 'Escape', '$mod+KeyK', ...
+```
+
+Each `shortcut` is a [tinykeys](https://github.com/jamiebuilds/tinykeys) chord that names its key by `KeyboardEvent.code`, where [`$mod`](#mod) is `⌘` on macOS and `Control` elsewhere.  
+The fixed names are bound to `Enter` (`edit`), `Escape` (`stop`), `$mod+KeyK` (`search`), `$mod+KeyZ` (`undo`), `$mod+Shift+KeyZ` (`redo`), `$mod+Equal` (`zoomIn`), `$mod+Minus` (`zoomOut`), and `$mod+Digit0` (`zoomReset`). `edit` and `stop` carry no flags; the other six carry `preventDefault` and `stopPropagation`. The rest are the defaults above.
+
+The editor listens for these on its own element, so a host that takes keys before the editor does, with global hotkeys or a capture-phase `keydown` listener, has to let them through while the editor is focused.  
+Build the list to let through from `createKeyBindingMap()`, with the bindings you passed to `setKeyBindingMap` in place of the defaults.
 
 ### $mod
 

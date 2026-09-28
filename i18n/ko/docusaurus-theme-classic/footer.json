@@ -19,6 +19,10 @@
     "message": "웹 앱",
     "description": "The label of footer link with label=Web App linking to https://erd-editor.io"
   },
+  "link.item.label.Google Drive": {
+    "message": "Google Drive",
+    "description": "The label of footer link with label=Google Drive linking to https://workspace.google.com/marketplace/app/erd_editor/428467403360"
+  },
   "link.item.label.VSCode Extension": {
     "message": "VSCode 확장",
     "description": "The label of footer link with label=VSCode Extension linking to https://marketplace.visualstudio.com/items?itemName=dineug.vuerd-vscode"
@@ -26,6 +30,10 @@
   "link.item.label.IntelliJ Plugin": {
     "message": "IntelliJ 플러그인",
     "description": "The label of footer link with label=IntelliJ Plugin linking to https://plugins.jetbrains.com/plugin/23594-erd-editor"
+  },
+  "link.item.label.Obsidian Plugin": {
+    "message": "Obsidian 플러그인",
+    "description": "The label of footer link with label=Obsidian Plugin linking to https://community.obsidian.md/plugins/erd-editor"
   },
   "link.item.label.Issues": {
     "message": "이슈",

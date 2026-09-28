@@ -52,7 +52,7 @@
     "description": "Label of the call-to-action button on the homepage"
   },
   "homepage.metaDescription": {
-    "message": "erd-editor는 웹 앱, VSCode 확장, IntelliJ 플러그인, 그리고 직접 삽입할 수 있는 웹 컴포넌트로 제공되는 ERD 편집기입니다.",
+    "message": "erd-editor는 웹 앱, Google Drive 앱, VSCode 확장, IntelliJ 플러그인, Obsidian 플러그인, 그리고 직접 삽입할 수 있는 웹 컴포넌트로 제공되는 ERD 편집기입니다.",
     "description": "The meta description of the homepage"
   },
   "homepage.feature.easy.title": {

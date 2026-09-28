@@ -14,9 +14,9 @@ An argument marked `?` is optional.
 
 | Tool | Arguments | What it does |
 | --- | --- | --- |
-| `erd_list_documents` | | Lists ERD documents with `path`, `open`, `active`, `dirty`, and `readonly`: a VS Code window's documents when one serves the working directory, otherwise the ERD files under the working directory. |
-| `erd_open_document` | `create?` | Opens a document for editing, in the ERD Editor when a window serves it. With `create` it makes the file first if it is missing, and a name with no extension gets `.erd.json`. |
-| `erd_save` | | Saves a document the editor holds. Headless, every edit is already written and this does nothing. |
+| `erd_list_documents` | | Lists ERD documents with `path`, `open`, `active`, `dirty`, and `readonly`: those of the editor that serves the working directory, which in a JetBrains IDE covers every open project, otherwise the ERD files under the working directory. |
+| `erd_open_document` | `create?` | Opens a document for editing, in the ERD Editor of the editor that serves it, if one does. With `create` it makes the file first if it is missing, and a name with no extension gets `.erd.json`. |
+| `erd_save` | | Saves a document an editor holds. VS Code keeps the agent's edits unsaved until this is called; Obsidian and a JetBrains IDE save them as they save yours, and this writes them at once. Headless, every edit is already written and this does nothing. |
 | `erd_undo` | | Reverts the last edit this agent made, never yours. Calls that made no undo entry are passed over and named. |
 | `erd_redo` | | Applies again the edit `erd_undo` last reverted. |
 
@@ -205,7 +205,7 @@ An edit answers one line of JSON:
 | `batches`, `historyEntries` | How many change batches the call sent and how many editor history entries it made. |
 | `undoable`, `undoNote` | `undoable` is `false` when `erd_undo` will pass over the call, and `undoNote` says why: the tool makes no undo entry, or the document already held the value. An `erd_batch` result always carries an `undoNote`, which says that one `erd_undo` reverts the whole batch. |
 | `mismatch` | Present when the call made a different number of batches or history entries than the tool declares. |
-| `notes` | Present when something about the session changed, such as a window that exited or a file that changed on disk. |
+| `notes` | Present when something about the session changed, such as an editor that exited or stopped serving the document, or a file that changed on disk. |
 
 A refusal is an error result carrying a code and a message that says what to do:
 
@@ -217,16 +217,17 @@ A refusal is an error result carrying a code and a message that says what to do:
 | --- | --- |
 | `notFound` | An id names nothing live, or the file does not exist. |
 | `invalidArgs` | An argument is missing or has the wrong value. |
-| `invalidPath` | The path is not an ERD document. |
+| `invalidPath` | The path is not an ERD document. On Windows, also a path with a name Windows does not store as written, or one that reaches a document an editor holds under another path, which the message names. |
 | `invalidDocument` | The file is not a document the editor can read. |
 | `tooLarge` | A read does not fit in one answer. |
-| `blocked` | A VS Code window with its hub off holds the document. |
+| `blocked` | An editor with its hub off holds the document. The message says how to turn it on: in VS Code, trust the workspace and turn on `dineug.erd-editor.agentHub.enabled`, or reload the window; in Obsidian, turn on Coding agents, or reload Obsidian; in a JetBrains IDE, turn on Coding agents, or restart the IDE if it is on. |
+| `hubDisabled` | A JetBrains IDE holds the document only in a project it does not trust. Reads still work; trust the project to let the agent edit. |
 | `conflict` | The file changed on disk during the call. Nothing was written. |
-| `hubAppeared`, `hubGone` | A window started or stopped serving the document during the edit. Nothing was written. |
+| `hubAppeared`, `hubGone` | An editor started serving a document the agent was editing on disk, or the editor that served it still runs but its lock file and connection are gone. Nothing was written. |
 | `notSaved` | `erd_save` could not save the editor's document. |
-| `readonly` | The document is open read-only. |
-| `protocolMismatch` | The extension and the server speak different protocol versions. |
-| `hubUnreachable`, `timeout`, `disconnected` | A window's hub did not accept the connection, did not answer within 30 seconds, or hung up during the call. |
+| `readonly` | The editor holds the document read-only, such as a file it cannot write or cannot read as a diagram. With no editor, the file itself is read-only, such as a Perforce or TFVC file that is not checked out. Nothing was written. |
+| `protocolMismatch` | The editor's ERD Editor extension or plugin and the server speak different protocol versions. |
+| `hubUnreachable`, `timeout`, `disconnected` | An editor's hub did not accept the connection, did not answer within 30 seconds, or hung up during the call. On Windows, `hubUnreachable` also means Windows kept the agent out of the hub: the editor runs with more rights than the agent, as when it was started as administrator and the agent was not, or the agent runs in a sandbox. |
 
 Other codes are rarer, and every refusal carries a message saying what happened.
 

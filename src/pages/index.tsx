@@ -63,7 +63,7 @@ export default function Home(): ReactNode {
       description={translate({
         id: 'homepage.metaDescription',
         message:
-          'erd-editor is an Entity-Relationship Diagram editor available as a web app, a VSCode extension, an IntelliJ plugin, and an embeddable web component.',
+          'erd-editor is an Entity-Relationship Diagram editor available as a web app, a Google Drive app, a VSCode extension, an IntelliJ plugin, an Obsidian plugin, and an embeddable web component.',
         description: 'The meta description of the homepage',
       })}
     >

@@ -1,12 +1,12 @@
 ---
 sidebar_position: 1
-description: ブラウザ、VS Code、IntelliJ、自分のページで動作する ER 図エディタ。
+description: ブラウザ、Google Drive、VS Code、IntelliJ、Obsidian、自分のページで動作する ER 図エディタ。
 ---
 
 # はじめに
 
 erd-editor は ER 図（Entity-Relationship Diagram）エディタです。
-Web アプリ、VSCode 拡張機能、IntelliJ プラグイン、そして自分のページに埋め込める `<erd-editor>` カスタム要素として提供しています。
+Web アプリ、Google Drive アプリ、VSCode 拡張機能、IntelliJ プラグイン、Obsidian プラグイン、そして自分のページに埋め込める `<erd-editor>` カスタム要素として提供しています。
 どれも同じエディタで、ドキュメント形式も共通です。
 
 ![ショップのダイアグラムでリレーションシップの強調、カラムの追加、Flow での orders へのフォーカス](/img/demo-overview.webp)
@@ -16,11 +16,15 @@ Web アプリ、VSCode 拡張機能、IntelliJ プラグイン、そして自分
 | プラットフォーム | インストール | 提供内容 |
 | --- | --- | --- |
 | Web アプリ | [erd-editor.io](https://erd-editor.io) | インストール可能な PWA、オフライン動作、リアルタイム共同編集 |
+| Google Drive | [Google Workspace Marketplace](https://workspace.google.com/marketplace/app/erd_editor/428467403360) | Drive の Open with と New のメニューに ERD Editor を追加し、同じファイルに保存し直す |
 | VS Code | [Marketplace](https://marketplace.visualstudio.com/items?itemName=dineug.vuerd-vscode) | `.erd.json` ファイルを開く専用エディタ |
 | IntelliJ | [JetBrains Marketplace](https://plugins.jetbrains.com/plugin/23594-erd-editor) | IntelliJ ベースの IDE で使える同じエディタ |
+| Obsidian | [Community plugins](https://community.obsidian.md/plugins/erd-editor) | `.erd` と `.erd.json` ファイルを保管庫のタブで開く（デスクトップ版のみ） |
 | 自分のページ | `npm install @dineug/erd-editor` | フレームワークに依存しない `<erd-editor>` カスタム要素 — [インストール](../api/installation.md)を参照 |
 
 IDE で試すには、拡張子が `.erd.json` の空ファイルを作成して開きます。
+Obsidian では、コマンドパレットから `ERD Editor: Create new diagram` を実行するか、ファイルエクスプローラーでフォルダのコンテキストメニューから `New ERD` を選びます。どちらも空の `.erd` ファイルを作成して開きます。
+Google Drive では、New → More → ERD Editor を選び、Google でサインインします。ERD Editor がアクセスできるのは、ERD Editor で作成したり開いたりしたファイルだけです。
 
 ## できること
 
@@ -33,8 +37,8 @@ IDE で試すには、拡張子が `.erd.json` の空ファイルを作成して
 - 端のないキャンバスで作業します。ダイアグラムが伸びていく先へどこまでも移動でき、`Ctrl + Wheel`（Mac では `⌘ + Wheel`）、キーボード、ピンチで `10%` から `150%` まで拡大・縮小し、Zen モードでダイアグラムだけを残せます。[キャンバスの移動](./guides/table-related-functions.md#getting-around-the-canvas)を参照してください。
 - [自動レイアウト](./guides/table-related-functions.md#auto-layout)で、ダイアグラム全体を一度に並べ替えます。Force のシミュレーション、左から右へ流れる Flow、縦横 2 方向の Tree から選べます。
 - [クイック検索](./guides/quick-search.md)を使うと、どこからでもテーブルを探したりコマンドを実行したりでき、[Undo, Redo](./guides/undo-redo.md) では編集履歴をたどれます。
-- Claude Code や Codex などのコーディングエージェントに、[MCP サーバー](../mcp/introduction.md)を通じてダイアグラムを編集させられます。VS Code ではライブで編集し、変更がその場でキャンバスに現れます。ファイルそのものを編集させることもできます。
-- リアルタイムで一緒に編集できます（実験的機能）。セッションはピアツーピアかつエンドツーエンドで暗号化されるため、スキーマがサーバーに保持されることはなく、参加者は互いのマウスカーソル、フォーカス、選択範囲を確認できます。自分のページでは、[`getSharedStore()`](../api/advanced/collaborative-editing.md) が同じアクションストリームを任意のトランスポート上で提供します。
+- Claude Code や Codex などのコーディングエージェントに、[MCP サーバー](../mcp/introduction.md)を通じてダイアグラムを編集させられます。VS Code、Obsidian、JetBrains IDE ではライブで編集し、変更がその場でキャンバスに現れます。ファイルそのものを編集させることもできます。
+- Web アプリでは、リアルタイムで一緒に編集できます（実験的機能）。セッションはピアツーピアかつエンドツーエンドで暗号化されるため、スキーマがサーバーに保持されることはなく、参加者は互いのマウスカーソル、フォーカス、選択範囲を確認できます。自分のページでは、[`getSharedStore()`](../api/advanced/collaborative-editing.md) が同じアクションストリームを任意のトランスポート上で提供します。
 
 まずは[編集ガイド](/docs/category/guides)から始めてください。
 

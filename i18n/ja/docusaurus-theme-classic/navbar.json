@@ -3,9 +3,17 @@
     "message": "ガイド",
     "description": "Navbar item with label Guide"
   },
+  "item.label.Editors": {
+    "message": "エディタ",
+    "description": "Navbar item with label Editors"
+  },
   "item.label.Web App": {
     "message": "Web アプリ",
     "description": "Navbar item with label Web App"
+  },
+  "item.label.Google Drive": {
+    "message": "Google Drive",
+    "description": "Navbar item with label Google Drive"
   },
   "item.label.VSCode Extension": {
     "message": "VSCode 拡張機能",
@@ -14,5 +22,9 @@
   "item.label.IntelliJ Plugin": {
     "message": "IntelliJ プラグイン",
     "description": "Navbar item with label IntelliJ Plugin"
+  },
+  "item.label.Obsidian Plugin": {
+    "message": "Obsidian プラグイン",
+    "description": "Navbar item with label Obsidian Plugin"
   }
 }

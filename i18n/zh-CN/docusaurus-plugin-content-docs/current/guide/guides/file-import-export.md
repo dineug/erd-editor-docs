@@ -86,3 +86,7 @@ GraphQL、DBML 和 AML 都是可往返的格式，它们同时也是[代码生�
 ![从 Export 子菜单中选择 png，以及较久的导出会显示的提示](/img/demo-export.webp)
 
 `Import` 与 `Export` 也可以从[快速搜索](./quick-search.md)中使用。其中提供相同的五种导入格式，但导出仅支持 `JSON` 和 `Schema SQL`，PNG 仅能从右键菜单导出。
+
+在 Obsidian 中不会出现下载或保存对话框：文件会写入仓库中 Obsidian 为该图存放新附件的位置，并显示一条提示告知其路径。  
+Obsidian 不允许在文件名中使用的字符 `\ / : * ? " < > |` 会被替换为 `-`。  
+只有在 Settings → Files and links → Detect all file extensions 开启时，Obsidian 的文件列表才会列出导出的 `.erd.json` 或 `.sql` 文件。

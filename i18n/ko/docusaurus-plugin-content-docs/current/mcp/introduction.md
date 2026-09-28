@@ -1,6 +1,6 @@
 ---
 sidebar_position: 1
-description: Claude Code, Codex 같은 코딩 에이전트가 @dineug/erd-editor-mcp MCP 서버로 erd-editor 다이어그램을 VS Code에서 라이브로, 또는 디스크에서 직접 편집하는 방법.
+description: Claude Code, Codex 같은 코딩 에이전트가 @dineug/erd-editor-mcp MCP 서버로 erd-editor 다이어그램을 VS Code, Obsidian, JetBrains IDE에서 라이브로, 또는 디스크에서 직접 편집하는 방법.
 ---
 
 # 소개
@@ -8,9 +8,10 @@ description: Claude Code, Codex 같은 코딩 에이전트가 @dineug/erd-editor
 `@dineug/erd-editor-mcp`는 코딩 에이전트가 erd-editor 다이어그램을 편집할 수 있게 해 주는 MCP 서버입니다.
 Claude Code, Codex를 비롯한 모든 [Model Context Protocol](https://modelcontextprotocol.io) 클라이언트는 문서를 다루는 작업마다 도구를 하나씩 사용할 수 있습니다. 테이블 추가, 컬럼 이름 변경, 두 테이블 사이의 관계 생성, DDL 덤프 가져오기, 스키마를 SQL로 다시 읽기 같은 작업입니다.
 
-문서가 [VS Code 확장](https://marketplace.visualstudio.com/items?itemName=dineug.vuerd-vscode)에서 열려 있으면 에이전트는 참여자처럼 에디터에 합류합니다.
-모든 변경은 일어나는 즉시 캔버스에 나타나고 에이전트나 사용자가 저장할 때까지 저장되지 않은 상태로 남으며, 에이전트의 Undo는 에이전트 자신의 편집만 되돌립니다.
-문서를 담고 있는 VS Code 창이 없으면 같은 도구가 파일 자체를 편집합니다.
+문서가 [VS Code](https://marketplace.visualstudio.com/items?itemName=dineug.vuerd-vscode), [Obsidian](https://community.obsidian.md/plugins/erd-editor), [JetBrains IDE](https://plugins.jetbrains.com/plugin/23594-erd-editor)의 ERD Editor에서 열려 있으면 에이전트는 참여자처럼 에디터에 합류합니다.
+모든 변경은 일어나는 즉시 캔버스에 나타나며, 에이전트의 Undo는 에이전트 자신의 편집만 되돌립니다.
+VS Code는 에이전트나 사용자가 저장할 때까지 에이전트의 변경을 저장되지 않은 상태로 두고, Obsidian과 JetBrains IDE는 사용자의 편집을 저장하듯 에이전트의 변경도 저장합니다.
+문서를 담고 있는 에디터가 없으면 같은 도구가 파일 자체를 편집합니다.
 
 ![VS Code에서 열린 다이어그램에 코딩 에이전트가 테이블과 관계를 추가하는 모습](/img/coding-agents.webp)
 
@@ -27,16 +28,15 @@ Claude Code, Codex를 비롯한 모든 [Model Context Protocol](https://modelcon
 
 - 확대/축소, 스크롤, 탭 전환. 이것들은 문서가 아니라 보는 사람 각자에게 속하므로, 이를 바꾸는 도구는 없습니다.
 - Code Generator 실행. `erd_read`가 DDL이나 JSON을 돌려주면, 에이전트가 그것을 바탕으로 직접 코드를 작성합니다.
-- IntelliJ에서의 라이브 편집. IntelliJ 플러그인은 서버가 찾을 수 있는 잠금 파일을 남기지 않으므로, IntelliJ에서 열린 문서는 닫힌 것으로 간주되고 에이전트는 디스크의 파일을 편집합니다. 플러그인은 파일을 열 때만 읽고, 그 뒤 IntelliJ에서 편집하면 다이어그램 전체를 다시 써서 에이전트의 변경을 덮어쓰므로, 에이전트가 편집하는 동안에는 IntelliJ에서 다이어그램을 닫아 두세요.
 
 ## 동작 방식
 
 서버는 MCP 클라이언트가 실행하는 stdio 프로세스입니다.
-서버는 호출마다 문서를 담고 있는 VS Code 창을 찾습니다.
+서버는 호출마다 문서를 담고 있는 에디터를 찾습니다. ERD Editor 확장이나 플러그인이 설치된 VS Code 창, Obsidian 볼트 창, JetBrains IDE입니다.
 
-- **라이브** — 워크스페이스에 문서가 포함되어 있거나 문서를 열어 둔 창이 있습니다. 서버가 그 창의 편집 세션에 참여하고, 편집은 저장되지 않은 상태로 에디터에 반영됩니다.
-- **헤드리스** — 창이 없습니다. 서버가 파일을 불러와 편집을 적용하고, 파일에 다시 씁니다.
-- **거부** — 문서를 담고 있는 창이 있지만 허브가 꺼져 있습니다. 열려 있는 에디터가 다음 저장 때 파일을 덮어쓰므로, 서버는 디스크에서 읽기만 하고 아무것도 쓰지 않습니다.
+- **라이브** — 워크스페이스, 볼트, 열려 있는 프로젝트 중 하나에 문서가 포함되어 있거나 문서를 열어 둔 에디터가 있습니다. 서버가 그 에디터의 편집 세션에 참여하고, 편집이 에디터에 반영됩니다. VS Code에서는 저장되지 않은 상태로 남고, Obsidian과 JetBrains IDE에서는 사용자의 편집처럼 저장됩니다.
+- **헤드리스** — 에디터가 없습니다. 서버가 파일을 불러와 편집을 적용하고, 파일에 다시 씁니다.
+- **거부** — 문서를 담고 있는 에디터가 있지만 허브가 꺼져 있습니다. 열려 있는 에디터가 다음 저장 때 파일을 덮어쓸 수 있으므로, 서버는 디스크에서 읽기만 하고 아무것도 쓰지 않습니다.
 
 자세한 내용은 [라이브와 헤드리스](./live-and-headless.md) 문서를 참고하세요.
 
@@ -46,6 +46,8 @@ Claude Code, Codex를 비롯한 모든 [Model Context Protocol](https://modelcon
 | --- | --- |
 | Node.js | 서버 실행에 `22.12` 이상 |
 | MCP 클라이언트 | Claude Code, Codex, 또는 stdio 서버를 실행할 수 있는 모든 클라이언트 |
-| 라이브 편집용 VS Code | `1.101.0` 이상, ERD Editor 확장 `3.0.0` 이상 |
+| 라이브 편집용 VS Code | `1.101.0` 이상, ERD Editor 확장 `3.0.0` 이상, `3.0.1` 권장 |
+| 라이브 편집용 Obsidian | 데스크톱 앱, ERD Editor 플러그인 `0.1.0` 이상 |
+| 라이브 편집용 JetBrains IDE | IntelliJ 기반 IDE `2025.2` 이상, ERD Editor 플러그인 `0.9.0` 이상 |
 
 다음: [설치](./installation.md).

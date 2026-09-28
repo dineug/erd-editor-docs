@@ -11,6 +11,13 @@ description: リレーションシップのデータ型同期、表示位置と�
 テーマの色はこの画面にはありません。
 テーマビルダーで扱い、ツールバーの Theme ボタンから開きます。テーマビルダーは、ホストが [`enableThemeBuilder`](../../api/erd-editor-element.md#enablethemebuilder) で有効にした場合にのみ表示されます。
 
+VS Code、Obsidian、JetBrains IDE では、テーマビルダーの 3 つの値（外観、グレーカラー、アクセントカラー）はホストの設定でもあり、テーマビルダーで選んだ値はそこに保存されます。
+VS Code では `dineug.erd-editor.theme.appearance`、`dineug.erd-editor.theme.grayColor`、`dineug.erd-editor.theme.accentColor` として保持し、外観の既定値は `dark` です。
+Obsidian では Settings → ERD Editor に保管庫ごとに、JetBrains IDE では Settings | Tools | ERD Editor に IDE 全体で保持します。どちらも既定値は `Auto` で、ホストのライト / ダークのテーマに従い、テーマが切り替わるとそれに合わせて変わります。
+テーマビルダー自体には `Light` と `Dark` しかありません。
+Obsidian と JetBrains IDE では、`Auto` がいま表示していない方の外観を選ばない限り、`Auto` のまま変わりません。
+VS Code では、選ぶたびに 3 つの値がすべて保存されるため、外観が `auto` の間に色を選んだだけでも、外観は `light` または `dark` に置き換わります。
+
 ## リレーションシップのデータ型同期
 
 データ型を同期するかどうかを設定します。既定で有効です。
@@ -85,6 +92,7 @@ description: リレーションシップのデータ型同期、表示位置と�
 
 これらの多くは ERD タブでのみ動作し、クイック検索、テーブルのプロパティ、Diff Viewer、自動レイアウトのプレビュー、Time Travel が開いている間は無効になります。
 `Search` と `Stop` は例外です。`Search` はどのタブからでもクイック検索を開閉し、`Stop` はクイック検索、テーブルのプロパティ、Diff Viewer、自動レイアウトのプレビュー、Time Travel、テーマビルダーを閉じます。
+ERD タブでは、`Stop` は開いているセルやメモの編集を終了するか、作成中のリレーションシップをキャンセルし、選択はそのまま残します。いずれも開いていない場合は、選択とフォーカスしているセルを解除します。
 `Zoom In`、`Zoom Out`、`Zoom Reset` は、クイック検索が開いていなければ [Visualization](./visualization.md#toolbar) タブでも、`Graph` と `Flow` のどちらでも拡大・縮小します。
 Visualization タブでは、`Stop` は[行の表示](./visualization.md#row-display)のメニューも閉じ、実行中の [Flow のレイアウト](./visualization.md#how-flow-is-placed)をキャンセルします。`Focus on this table` で絞り込んだビューは広げません。
 `Focus on this table` は Visualization タブを `Flow` で開き、選択しているテーブルと、そこからリレーションシップ 1 つでつながるすべてのテーブルに絞り込みます。テーブルを選択していない場合は何もしません。[テーブルへのフォーカス](./visualization.md#focusing-on-tables)を参照してください。
@@ -93,3 +101,5 @@ Visualization タブでは、`Stop` は[行の表示](./visualization.md#row-dis
 
 このタブからキー割り当てを変更することはできません。
 エディタを組み込むホストは [`setKeyBindingMap`](../../api/erd-editor-element.md#setkeybindingmap) で変更できますが、`Editing`、`Stop`、`Search`、`Undo`、`Redo`、`Zoom In`、`Zoom Out`、`Zoom Reset` は固定です。
+
+Obsidian では、ダイアグラムの Obsidian タブがアクティブな間、`Alt + Enter` と `Ctrl + K` (Windows/Linux) または `⌥ + Enter` と `⌘ + K` (Mac) のように Obsidian のホットキーが同じキーを使っている場合でも、これらのキーはエディタに届きます。それ以外の Obsidian のホットキーは、そのタブでも引き続き使えます。

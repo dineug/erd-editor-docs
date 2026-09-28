@@ -30,6 +30,7 @@ type SharedStore = {
   dispatch: (actions: Array<AnyAction> | AnyAction) => void;
   dispatchSync: (actions: Array<AnyAction> | AnyAction) => void;
   subscribe: (fn: (value: AnyAction[]) => void) => Unsubscribe;
+  flushStreamBuffers: () => void;
   destroy: () => void;
 };
 
@@ -104,7 +105,7 @@ editor.getSharedStore({ focusTracker: false });
 
 同时关闭两个 tracker，即可把 shared store 当作不发布自身状态信息的纯中继使用。  
 其他编辑器发来的状态信息仍会接收并绘制。  
-VS Code 与 IntelliJ 编辑器就是这样工作的。
+VS Code、Obsidian、JetBrains IDE 与 Google Drive 中的编辑器就是这样工作的。
 
 ```js
 editor.getSharedStore({ mouseTracker: false, focusTracker: false });
@@ -148,11 +149,26 @@ const unsubscribe = sharedStore.subscribe(actions => {
 });
 ```
 
+### flushStreamBuffers
+
+立即发送该 store 仍在暂存的流批次，而不是等到它们的静默期结束之后。  
+从 `3.9.2` 起，它对 `getSharedStore` 返回的 store 生效；在 `3.9.1` 中，该方法虽然存在于类型上，但不起任何作用。  
+移动表或备注、更改其颜色、调整备注大小，以及滚动或缩放视图，都会以由细小变更组成的流的形式到达。  
+store 会把每个流合并为一个批次并暂存起来，直到该流静默 200ms 为止。这一过程分为两个阶段，因此批次会在最后一次变更之后约 400ms 发出。  
+调用它会同时结束两个阶段中的这段等待。store 处于连接状态时，订阅者会在调用返回之前收到该批次。没有任何暂存内容时，调用不会发送任何内容。  
+`destroy`（无论是 store 自身的还是编辑器的）会丢弃仍在暂存的批次，因此在放弃某个 store、而其他编辑器仍应保留最后一次变更时（例如关闭标签页时），需先调用此方法。
+
+```js
+sharedStore.flushStreamBuffers();
+sharedStore.destroy();
+```
+
 ### destroy
 
 彻底销毁 sharedStore 实例。  
 编辑器本身不受影响，因此退出会话后文档仍可继续编辑。  
-当编辑器发出的最后一个 sharedStore 被销毁时，鼠标与焦点 tracker 会停止。
+当编辑器发出的最后一个 sharedStore 被销毁时，鼠标与焦点 tracker 会停止。  
+该 store 仍在暂存的流批次会随之一并丢弃；要将其发送出去，需先调用 [flushStreamBuffers](#flushstreambuffers)。
 
 ```js
 sharedStore.destroy();

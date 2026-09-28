@@ -14,9 +14,9 @@ description: erd-editor MCP 服务器提供的所有工具：一次一页地读�
 
 | 工具 | 参数 | 作用 |
 | --- | --- | --- |
-| `erd_list_documents` | | 列出 ERD 文档及其 `path`、`open`、`active`、`dirty` 和 `readonly`：有 VS Code 窗口为工作目录提供服务时列出该窗口的文档，否则列出工作目录下的 ERD 文件。 |
-| `erd_open_document` | `create?` | 打开文档以便编辑，有窗口为其提供服务时在 ERD Editor 中打开。带 `create` 时，如果文件不存在会先创建它，没有扩展名的名称会加上 `.erd.json`。 |
-| `erd_save` | | 保存编辑器持有的文档。在无头模式下，每次编辑都已写入，因此它什么也不做。 |
+| `erd_list_documents` | | 列出 ERD 文档及其 `path`、`open`、`active`、`dirty` 和 `readonly`：有编辑器为工作目录提供服务时列出该编辑器的文档（在 JetBrains IDE 中涵盖每个已打开的项目），否则列出工作目录下的 ERD 文件。 |
+| `erd_open_document` | `create?` | 打开文档以便编辑，如果有编辑器为其提供服务，则在该编辑器的 ERD Editor 中打开。带 `create` 时，如果文件不存在会先创建它，没有扩展名的名称会加上 `.erd.json`。 |
+| `erd_save` | | 保存编辑器持有的文档。VS Code 会让智能体的编辑在调用它之前一直保持未保存状态；Obsidian 和 JetBrains IDE 会像保存你的编辑一样保存它们，而它会立即写入这些编辑。在无头模式下，每次编辑都已写入，因此它什么也不做。 |
 | `erd_undo` | | 撤回该智能体所做的最后一次编辑，而绝不会撤回你的编辑。没有产生 Undo 记录的调用会被跳过并列出。 |
 | `erd_redo` | | 重新应用 `erd_undo` 最近撤回的编辑。 |
 
@@ -205,7 +205,7 @@ id 来自 `erd_list` 和 `erd_get`，或者来自创建该实体的那次调用�
 | `batches`, `historyEntries` | 该调用发送了多少批变更，以及产生了多少条编辑器历史记录。 |
 | `undoable`, `undoNote` | 当 `erd_undo` 会跳过该调用时，`undoable` 为 `false`，`undoNote` 则说明原因：该工具不产生 Undo 记录，或者文档已持有该值。`erd_batch` 的结果始终带有 `undoNote`，说明一次 `erd_undo` 即可撤回整个批处理。 |
 | `mismatch` | 当该调用产生的变更批数或历史记录条数与工具声明的不一致时出现。 |
-| `notes` | 会话发生某些变化时出现，例如窗口已退出，或者文件在磁盘上发生了变化。 |
+| `notes` | 会话发生某些变化时出现，例如编辑器已退出或已停止为该文档提供服务，或者文件在磁盘上发生了变化。 |
 
 拒绝是一个错误结果，带有代码和一条说明该怎么做的消息：
 
@@ -217,16 +217,17 @@ id 来自 `erd_list` 和 `erd_get`，或者来自创建该实体的那次调用�
 | --- | --- |
 | `notFound` | 某个 id 没有对应任何现存的实体，或者文件不存在。 |
 | `invalidArgs` | 缺少某个参数，或者参数的值不正确。 |
-| `invalidPath` | 该路径不是 ERD 文档。 |
+| `invalidPath` | 该路径不是 ERD 文档。在 Windows 上，还包括含有 Windows 无法按原样存储的名称的路径，或者指向某个编辑器以另一条路径持有的文档的路径，消息会指出那条路径。 |
 | `invalidDocument` | 该文件不是编辑器可以读取的文档。 |
 | `tooLarge` | 一次读取无法放入一次返回中。 |
-| `blocked` | 持有该文档的 VS Code 窗口的 hub 已关闭。 |
+| `blocked` | 持有该文档的编辑器的 hub 已关闭。消息会说明如何开启它：在 VS Code 中，信任该工作区并开启 `dineug.erd-editor.agentHub.enabled`，或者重新加载窗口；在 Obsidian 中，开启 Coding agents，或者重新加载 Obsidian；在 JetBrains IDE 中，开启 Coding agents，如果它已开启，则重启 IDE。 |
+| `hubDisabled` | JetBrains IDE 仅在其不信任的项目中持有该文档。读取仍然有效；信任该项目即可让智能体编辑。 |
 | `conflict` | 文件在调用期间在磁盘上发生了变化。未写入任何内容。 |
-| `hubAppeared`, `hubGone` | 在编辑期间，有窗口开始或停止为该文档提供服务。未写入任何内容。 |
+| `hubAppeared`, `hubGone` | 有编辑器开始为智能体正在磁盘上编辑的文档提供服务，或者为该文档提供服务的编辑器仍在运行，但其锁文件和连接已消失。未写入任何内容。 |
 | `notSaved` | `erd_save` 无法保存编辑器中的文档。 |
-| `readonly` | 该文档以只读方式打开。 |
-| `protocolMismatch` | 扩展与服务器所用的协议版本不同。 |
-| `hubUnreachable`, `timeout`, `disconnected` | 窗口的 hub 没有接受连接、没有在 30 秒内应答，或者在调用期间断开了连接。 |
+| `readonly` | 编辑器以只读方式持有该文档，例如它无法写入或无法作为图读取的文件。没有编辑器时，则是文件本身为只读，例如尚未签出的 Perforce 或 TFVC 文件。未写入任何内容。 |
+| `protocolMismatch` | 编辑器的 ERD Editor 扩展或插件与服务器所用的协议版本不同。 |
+| `hubUnreachable`, `timeout`, `disconnected` | 编辑器的 hub 没有接受连接、没有在 30 秒内应答，或者在调用期间断开了连接。在 Windows 上，`hubUnreachable` 还表示 Windows 不允许智能体访问该 hub：编辑器以高于智能体的权限运行（例如编辑器以管理员身份启动而智能体没有），或者智能体在沙箱中运行。 |
 
 其他代码较为少见，而且每次拒绝都会附带一条说明发生了什么的消息。
 

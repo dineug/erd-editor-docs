@@ -208,7 +208,8 @@ editor.clear();
 ## destroy
 
 彻底销毁编辑器实例，使其无法再被复用。  
-它会释放编辑器的监听器和订阅，并彻底销毁 [getSharedStore](#getsharedstore) 返回的所有 shared store。
+它会释放编辑器的监听器和订阅，并彻底销毁 [getSharedStore](#getsharedstore) 返回的所有 shared store。  
+shared store 仍在暂存的流批次会随之一并丢弃；要将其发送出去，需先调用该 store 的 [flushStreamBuffers](./advanced/collaborative-editing.md#flushstreambuffers)。
 
 ```js
 editor.destroy();
@@ -220,7 +221,7 @@ editor.destroy();
 `edit`、`stop`、`search`、`undo`、`redo`、`zoomIn`、`zoomOut` 和 `zoomReset` 是固定的，无法重新定义。  
 只有下面这十六个名称会被写入，对象中的其他内容都会被忽略，包括那些固定的名称。  
 绑定的值必须是 `ShortcutOption[]`。单纯的字符串会被忽略，因此要写成 `{ addTable: [{ shortcut: 'Alt+KeyN' }] }`，而不是 `{ addTable: 'Alt+KeyN' }`。  
-该调用是部分合并：未写出的名称保持默认值，调用两次也会保留先前的更改。没有用于读取当前绑定的 getter。
+该调用是部分合并：未写出的名称保持默认值，调用两次也会保留先前的更改。没有用于读取当前绑定的 getter：[createKeyBindingMap](#createkeybindingmap) 返回的是默认值，而不是经 `setKeyBindingMap` 更改后的内容。
 
 ```ts
 type ShortcutOption = {
@@ -280,6 +281,65 @@ editor.setKeyBindingMap({
 `selectAllTable` 与 `handTool` 会让位于光标：只要焦点位于 input、textarea 或 `contenteditable` 中，`$mod + A` 就会选中文本，`Space` 就会输入空格，都不会传到画布上。改绑到其他快捷键后行为同样如此。
 
 `focusView` 仅作用于 ERD 标签页。至少选中一个表时，它会以 Flow 模式打开 Visualization 标签页，范围缩小到这些表以及与它们相隔一条关系的所有表；没有选中任何表时它不起作用。参见[聚焦于表](../guide/guides/visualization.md#focusing-on-tables)。
+
+在 ERD 标签页上，`stop`（`Escape`）会关闭已打开的单元格或备注编辑器，或取消正在绘制的关系，并保持选中状态不变。编辑器会对这次按键调用 `preventDefault()`。  
+没有上述任何一项处于打开状态时，`Escape` 会清除选中状态和单元格焦点，并且其默认行为不会被阻止。因此，结束编辑并清除选中状态需要按两次。  
+编辑器从不阻止 `Escape` 继续传播，因此自行监听它的页面（例如用来关闭自己的对话框）会收到这两次按键，并可以跳过 `defaultPrevented` 为 `true` 的那一次。  
+快速搜索、表属性、Diff Viewer、自动布局预览或 Time Travel 打开期间，`Escape` 会改为关闭它们，并保持选中状态不变。这次按键的默认行为同样不会被阻止。  
+在输入法仍在组字时按下的 `Escape` 属于组字过程。它会让打开的编辑器保持原样，并且其默认行为不会被阻止，因此页面同样可以跳过 `isComposing` 为 `true` 或 `keyCode` 为 `229` 的按键。  
+在 `3.9.2` 之前，按一次 `Escape` 既会结束编辑或绘制，又会清除选中状态，并且编辑器从不阻止其默认行为。
+
+### createKeyBindingMap
+
+从 `3.9.2` 起，该包导出 `createKeyBindingMap()`，并一同导出 `KeyBindingMap`、`KeyBindingName` 和 `ShortcutOption` 类型。  
+它返回默认的按键绑定，包含全部 24 个名称（固定名称也在其中），并且每次调用都返回一个新的映射，因此修改它返回的映射不会影响其他任何内容。  
+每个编辑器都以它为起点，而 `setKeyBindingMap` 的调用不会反映在其中。  
+只有 `createKeyBindingMap` 是运行时导出，其余三个都是类型。
+
+```ts
+type KeyBindingName =
+  | 'edit'
+  | 'stop'
+  | 'search'
+  | 'undo'
+  | 'redo'
+  | 'addTable'
+  | 'addColumn'
+  | 'addMemo'
+  | 'removeTable'
+  | 'removeColumn'
+  | 'primaryKey'
+  | 'selectAllTable'
+  | 'selectAllColumn'
+  | 'relationshipZeroOne'
+  | 'relationshipZeroN'
+  | 'relationshipOneOnly'
+  | 'relationshipOneN'
+  | 'tableProperties'
+  | 'focusView'
+  | 'zoomIn'
+  | 'zoomOut'
+  | 'zoomReset'
+  | 'handTool'
+  | 'zenMode';
+
+type KeyBindingMap = Record<KeyBindingName, ShortcutOption[]>;
+
+declare function createKeyBindingMap(): KeyBindingMap;
+
+// example
+import { createKeyBindingMap } from '@dineug/erd-editor';
+
+const shortcuts = Object.values(createKeyBindingMap())
+  .flat()
+  .map(({ shortcut }) => shortcut); // 'Enter', 'Escape', '$mod+KeyK', ...
+```
+
+每个 `shortcut` 都是一个 [tinykeys](https://github.com/jamiebuilds/tinykeys) 组合键，以 `KeyboardEvent.code` 指定按键，其中 [`$mod`](#mod) 在 macOS 上为 `⌘`，在其他环境中为 `Control`。  
+固定名称分别绑定到 `Enter`（`edit`）、`Escape`（`stop`）、`$mod+KeyK`（`search`）、`$mod+KeyZ`（`undo`）、`$mod+Shift+KeyZ`（`redo`）、`$mod+Equal`（`zoomIn`）、`$mod+Minus`（`zoomOut`）和 `$mod+Digit0`（`zoomReset`）。`edit` 和 `stop` 不带任何标志，其余六个带有 `preventDefault` 和 `stopPropagation`。其余名称的绑定即上面的默认值。
+
+编辑器在自身元素上监听这些按键，因此通过全局热键或捕获阶段的 `keydown` 监听器先于编辑器截获按键的宿主，需要在编辑器获得焦点期间放行这些按键。  
+要放行的按键列表可以基于 `createKeyBindingMap()` 构建，并用传给 `setKeyBindingMap` 的绑定替换相应的默认值。
 
 ### $mod
 

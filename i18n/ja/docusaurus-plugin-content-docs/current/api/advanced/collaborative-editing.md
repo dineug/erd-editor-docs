@@ -30,6 +30,7 @@ type SharedStore = {
   dispatch: (actions: Array<AnyAction> | AnyAction) => void;
   dispatchSync: (actions: Array<AnyAction> | AnyAction) => void;
   subscribe: (fn: (value: AnyAction[]) => void) => Unsubscribe;
+  flushStreamBuffers: () => void;
   destroy: () => void;
 };
 
@@ -104,7 +105,7 @@ editor.getSharedStore({ focusTracker: false });
 
 両方のトラッカーを無効にすると、自身の操作状況を一切送信しない単純な中継として shared store を使えます。  
 他のエディタから送られてくる操作状況は、引き続き受信して描画します。  
-VSCode と IntelliJ のエディタはこの方式で動作しています。
+VS Code、Obsidian、JetBrains IDE、Google Drive のエディタはこの方式で動作しています。
 
 ```js
 editor.getSharedStore({ mouseTracker: false, focusTracker: false });
@@ -148,11 +149,26 @@ const unsubscribe = sharedStore.subscribe(actions => {
 });
 ```
 
+### flushStreamBuffers
+
+この store がまだ送信せずに保持しているストリームのバッチを、変更が途切れるのを待たずに今すぐ送信します。  
+`3.9.2` からは `getSharedStore` が返す store で動作します。`3.9.1` では型にメソッドはありますが、何もしません。  
+テーブルやメモの移動、色の変更、メモのサイズ変更、ビューのスクロールや拡大・縮小は、それぞれ小さな変更のストリームとして届きます。  
+store は各ストリームを 1 つのバッチにまとめ、ストリームの変更が 200ms 途切れるまで保持します。これを 2 段階で行うため、バッチが送信されるのは最後の変更から約 400ms 後です。  
+呼び出すと、両方の段階でその待機が終わります。store が接続済みの状態であれば、購読者は呼び出しが戻る前にバッチを受け取ります。保持しているものがない場合は、呼び出しても何も送信されません。  
+store 自身の `destroy` もエディタの `destroy` も、まだ保持しているバッチを破棄します。そのため、タブを閉じるときのように、store を手放しても他のエディタに最後の変更を残したい場合は、先にこれを呼び出します。
+
+```js
+sharedStore.flushStreamBuffers();
+sharedStore.destroy();
+```
+
 ### destroy
 
 sharedStore のインスタンスを完全に破棄します。  
 エディタ自体はそのまま残るため、セッションから抜けてもドキュメントの編集を続けられます。  
-エディタが返した最後の sharedStore が破棄されると、マウスとフォーカスのトラッカーは停止します。
+エディタが返した最後の sharedStore が破棄されると、マウスとフォーカスのトラッカーは停止します。  
+store がまだ保持しているストリームのバッチも一緒に破棄されます。送信するには、先に [flushStreamBuffers](#flushstreambuffers) を呼び出します。
 
 ```js
 sharedStore.destroy();

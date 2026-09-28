@@ -3,9 +3,17 @@
     "message": "指南",
     "description": "Navbar item with label Guide"
   },
+  "item.label.Editors": {
+    "message": "编辑器",
+    "description": "Navbar item with label Editors"
+  },
   "item.label.Web App": {
     "message": "网页版",
     "description": "Navbar item with label Web App"
+  },
+  "item.label.Google Drive": {
+    "message": "Google Drive",
+    "description": "Navbar item with label Google Drive"
   },
   "item.label.VSCode Extension": {
     "message": "VSCode 扩展",
@@ -14,5 +22,9 @@
   "item.label.IntelliJ Plugin": {
     "message": "IntelliJ 插件",
     "description": "Navbar item with label IntelliJ Plugin"
+  },
+  "item.label.Obsidian Plugin": {
+    "message": "Obsidian 插件",
+    "description": "Navbar item with label Obsidian Plugin"
   }
 }

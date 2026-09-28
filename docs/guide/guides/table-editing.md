@@ -6,7 +6,10 @@ description: Add, select, reorder and delete columns, toggle column options, and
 # Table Editing
 
 Table editing basically offers an editing experience similar to Excel.  
-Editing mode starts with `Enter`, or by double-clicking a cell.
+Editing mode starts with `Enter`, or by double-clicking a cell.  
+`Enter` or `Escape` ends it. What you type is applied as you type it, so `Escape` keeps the text rather than reverting it.  
+`Escape` leaves the cell focused and the table selected, and a second `Escape` clears both.  
+While an input method is still composing, `Escape` leaves editing mode open.
 
 ![Adding a table with Alt + N and filling in two columns](/img/demo-table-edit.webp)
 

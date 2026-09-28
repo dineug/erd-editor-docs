@@ -52,7 +52,7 @@ editor.addEventListener('change', () => {
 ```
 
 `esm.run`이 패키지의 외부 의존성을 대신 해석해 주므로 번들러 없이도 동작합니다.
-버전이 없는 URL은 항상 최신 릴리스를 제공합니다. 메이저 업그레이드가 예고 없이 페이지에 반영되는 것을 원하지 않는다면 `https://esm.run/@dineug/erd-editor@3.9.1`처럼 버전을 고정하세요.
+버전이 없는 URL은 항상 최신 릴리스를 제공합니다. 메이저 업그레이드가 예고 없이 페이지에 반영되는 것을 원하지 않는다면 `https://esm.run/@dineug/erd-editor@3.9.2`처럼 버전을 고정하세요.
 
 ### script 태그
 
@@ -61,14 +61,14 @@ editor.addEventListener('change', () => {
 
 ```html
 <erd-editor></erd-editor>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@3.9.1"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@3.9.2"></script>
 <script>
   const editor = document.querySelector('erd-editor');
   editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
 </script>
 ```
 
-이 파일을 불러오면 `<erd-editor>`가 동일하게 등록되고, `window.ErdEditor`에 파일 콜백 두 개, `ErdEditor.setExportFileCallback`과 `ErdEditor.setImportFileCallback`이 들어 있습니다.
+이 파일을 불러오면 `<erd-editor>`가 동일하게 등록되고, `window.ErdEditor`에 파일 콜백 두 개, `ErdEditor.setExportFileCallback`과 `ErdEditor.setImportFileCallback`, 그리고 `3.9.2`부터는 `ErdEditor.createKeyBindingMap`이 들어 있습니다.
 exports 맵은 여전히 ES 모듈을 가리키므로 npm으로 설치하면 번들러가 이 파일을 사용하지 않습니다.
 
 ### HTML
@@ -156,13 +156,15 @@ PNG 내보내기와 스키마 가비지 컬렉션은 응답을 10초까지 기�
 
 ## 진입점
 
-`@dineug/erd-editor`를 import하면 부수 효과로 `<erd-editor>`가 등록됩니다. 그 외에는 엘리먼트 타입과 2개의 콜백 setter를 export합니다.
+`@dineug/erd-editor`를 import하면 부수 효과로 `<erd-editor>`가 등록됩니다. 그 외에는 엘리먼트 타입과 2개의 콜백 setter, 그리고 `3.9.2`부터는 기본 키 바인딩과 그 타입을 export합니다.
 
 | Export | 설명 |
 | --- | --- |
 | `ErdEditorElement` (타입) | 엘리먼트 인터페이스입니다. [ErdEditorElement](./erd-editor-element.md) 문서를 참고하세요. |
 | `setExportFileCallback(cb)` | 브라우저 다운로드를 대체합니다. `(blob, { fileName }) => void` |
 | `setImportFileCallback(cb)` | 브라우저 파일 선택창을 대체합니다. `({ type, op, accept }) => void` |
+| `createKeyBindingMap()` | 기본 키 바인딩을 호출할 때마다 새 `KeyBindingMap`으로 반환합니다. [createKeyBindingMap](./erd-editor-element.md#createkeybindingmap) 문서를 참고하세요. |
+| `KeyBindingMap`, `KeyBindingName`, `ShortcutOption` (타입) | 바인딩 맵, 그 명령 이름의 유니언, 바인딩 하나의 타입입니다. |
 
 `@dineug/erd-editor/engine.js`는 두 번째 진입점입니다. DOM 없이 문서 store를 실행하므로 Web Worker에서도 동작합니다. [원격 저장](./advanced/remote-storage.md) 문서를 참고하세요.
 

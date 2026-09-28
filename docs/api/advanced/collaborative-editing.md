@@ -30,6 +30,7 @@ type SharedStore = {
   dispatch: (actions: Array<AnyAction> | AnyAction) => void;
   dispatchSync: (actions: Array<AnyAction> | AnyAction) => void;
   subscribe: (fn: (value: AnyAction[]) => void) => Unsubscribe;
+  flushStreamBuffers: () => void;
   destroy: () => void;
 };
 
@@ -104,7 +105,7 @@ editor.getSharedStore({ focusTracker: false });
 
 Turn off both trackers to use the shared store as a plain relay that publishes no presence of its own.  
 Presence sent by other editors is still received and drawn.  
-This is what the VS Code and IntelliJ editors do.
+This is what the editors in VS Code, Obsidian, a JetBrains IDE, and Google Drive do.
 
 ```js
 editor.getSharedStore({ mouseTracker: false, focusTracker: false });
@@ -148,11 +149,26 @@ const unsubscribe = sharedStore.subscribe(actions => {
 });
 ```
 
+### flushStreamBuffers
+
+Sends the stream batches this store is still holding back, now, instead of after their quiet period.  
+Since `3.9.2` it works on a store from `getSharedStore`; in `3.9.1` the method is on the type but does nothing.  
+Moving a table or memo, changing its color, resizing a memo, and scrolling or zooming the view each arrive as a stream of small changes.  
+The store gathers each stream into one batch and holds it until the stream has been quiet for 200ms. It does this in two stages, so the batch goes out about 400ms after the last change.  
+A call ends that wait in both stages. While the store is connected, a subscriber receives the batch before the call returns. A call with nothing held back sends nothing.  
+`destroy`, the store's own or the editor's, drops a batch that is still held back, so call this first when you let a store go and the others should keep the last change, as when a tab closes.
+
+```js
+sharedStore.flushStreamBuffers();
+sharedStore.destroy();
+```
+
 ### destroy
 
 Completely destroys the sharedStore instance.  
 The editor itself is left alone, so leaving a session keeps the document editable.  
-The mouse and focus trackers stop once the last sharedStore the editor handed out is destroyed.
+The mouse and focus trackers stop once the last sharedStore the editor handed out is destroyed.  
+A stream batch the store is still holding back is dropped with it; call [flushStreamBuffers](#flushstreambuffers) first to send it.
 
 ```js
 sharedStore.destroy();

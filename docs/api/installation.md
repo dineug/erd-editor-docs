@@ -52,7 +52,7 @@ See [ErdEditorElement](./erd-editor-element.md) for the rest of the API.
 ```
 
 `esm.run` resolves the package's external dependencies for you, so this works without a bundler.
-The unversioned URL always serves the latest release. Pin a version — `https://esm.run/@dineug/erd-editor@3.9.1` — if you do not want a major upgrade to reach your page unannounced.
+The unversioned URL always serves the latest release. Pin a version — `https://esm.run/@dineug/erd-editor@3.9.2` — if you do not want a major upgrade to reach your page unannounced.
 
 ### Script tag
 
@@ -61,14 +61,14 @@ It is what the `unpkg` and `jsdelivr` fields point at, so the bare package URL o
 
 ```html
 <erd-editor></erd-editor>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@3.9.1"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@3.9.2"></script>
 <script>
   const editor = document.querySelector('erd-editor');
   editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
 </script>
 ```
 
-Importing it registers `<erd-editor>` the same way; `window.ErdEditor` carries the two file callbacks, `ErdEditor.setExportFileCallback` and `ErdEditor.setImportFileCallback`.
+Importing it registers `<erd-editor>` the same way; `window.ErdEditor` carries the two file callbacks, `ErdEditor.setExportFileCallback` and `ErdEditor.setImportFileCallback`, and, since `3.9.2`, `ErdEditor.createKeyBindingMap`.
 The exports map still points a bundler at the ES modules, so an install from npm never picks this file up.
 
 ### HTML
@@ -156,13 +156,15 @@ In the [script-tag](#script-tag) build all four travel inside the file as `data:
 
 ## Entry Points
 
-Importing `@dineug/erd-editor` registers `<erd-editor>` as a side effect. Beyond that it exports the element type and two callback setters.
+Importing `@dineug/erd-editor` registers `<erd-editor>` as a side effect. Beyond that it exports the element type, two callback setters, and, since `3.9.2`, the default key bindings with their types.
 
 | Export | Description |
 | --- | --- |
 | `ErdEditorElement` (type) | The element interface — see [ErdEditorElement](./erd-editor-element.md). |
 | `setExportFileCallback(cb)` | Replaces the browser download, `(blob, { fileName }) => void`. |
 | `setImportFileCallback(cb)` | Replaces the browser file picker, `({ type, op, accept }) => void`. |
+| `createKeyBindingMap()` | Returns the default key bindings as a new `KeyBindingMap` on every call — see [createKeyBindingMap](./erd-editor-element.md#createkeybindingmap). |
+| `KeyBindingMap`, `KeyBindingName`, `ShortcutOption` (types) | A binding map, the union of its command names, and one binding. |
 
 `@dineug/erd-editor/engine.js` is a second entry point. It runs the document store with no DOM, so it works in a Web Worker — see [Remote Storage](./advanced/remote-storage.md).
 

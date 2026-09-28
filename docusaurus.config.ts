@@ -125,22 +125,36 @@ const config: Config = {
           label: 'MCP',
         },
         {
-          href: 'https://erd-editor.io',
+          type: 'dropdown',
           position: 'left',
-          label: 'Web App',
-          target: '_blank',
-        },
-        {
-          href: 'https://marketplace.visualstudio.com/items?itemName=dineug.vuerd-vscode',
-          position: 'left',
-          label: 'VSCode Extension',
-          target: '_blank',
-        },
-        {
-          href: 'https://plugins.jetbrains.com/plugin/23594-erd-editor',
-          position: 'left',
-          label: 'IntelliJ Plugin',
-          target: '_blank',
+          label: 'Editors',
+          items: [
+            {
+              href: 'https://erd-editor.io',
+              label: 'Web App',
+              target: '_blank',
+            },
+            {
+              href: 'https://workspace.google.com/marketplace/app/erd_editor/428467403360',
+              label: 'Google Drive',
+              target: '_blank',
+            },
+            {
+              href: 'https://marketplace.visualstudio.com/items?itemName=dineug.vuerd-vscode',
+              label: 'VSCode Extension',
+              target: '_blank',
+            },
+            {
+              href: 'https://plugins.jetbrains.com/plugin/23594-erd-editor',
+              label: 'IntelliJ Plugin',
+              target: '_blank',
+            },
+            {
+              href: 'https://community.obsidian.md/plugins/erd-editor',
+              label: 'Obsidian Plugin',
+              target: '_blank',
+            },
+          ],
         },
         {
           type: 'localeDropdown',
@@ -178,12 +192,20 @@ const config: Config = {
           items: [
             { label: 'Web App', href: 'https://erd-editor.io' },
             {
+              label: 'Google Drive',
+              href: 'https://workspace.google.com/marketplace/app/erd_editor/428467403360',
+            },
+            {
               label: 'VSCode Extension',
               href: 'https://marketplace.visualstudio.com/items?itemName=dineug.vuerd-vscode',
             },
             {
               label: 'IntelliJ Plugin',
               href: 'https://plugins.jetbrains.com/plugin/23594-erd-editor',
+            },
+            {
+              label: 'Obsidian Plugin',
+              href: 'https://community.obsidian.md/plugins/erd-editor',
             },
           ],
         },

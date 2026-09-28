@@ -11,6 +11,13 @@ description: 관계 데이터 타입 동기화, 화면 위치와 확대/축소 �
 테마 색상은 이 화면에 없습니다.
 테마 색상은 테마 빌더에서 다루며, 툴바의 `Theme` 버튼으로 열리고 호스트가 [`enableThemeBuilder`](../../api/erd-editor-element.md#enablethemebuilder)로 켠 경우에만 표시됩니다.
 
+VS Code, Obsidian, JetBrains IDE에서는 빌더의 세 가지 값(appearance, gray color, accent color)이 호스트의 설정이기도 하며, 빌더에서 고른 값이 그 설정에 저장됩니다.
+VS Code는 이 값들을 `dineug.erd-editor.theme.appearance`, `dineug.erd-editor.theme.grayColor`, `dineug.erd-editor.theme.accentColor`로 저장하며, 기본 appearance는 `dark`입니다.
+Obsidian은 Settings → ERD Editor에 볼트별로 저장하고, JetBrains IDE는 Settings | Tools | ERD Editor에 IDE 전체 설정으로 저장합니다. 둘 다 기본값은 `Auto`이며, 호스트의 라이트 또는 다크 테마를 따르고 테마가 바뀌면 함께 전환됩니다.
+빌더 자체에서는 `Light`와 `Dark`만 고를 수 있습니다.
+Obsidian과 JetBrains IDE에서는 현재 화면에 보이는 것과 다른 appearance를 고르지 않는 한 `Auto`가 그대로 유지됩니다.
+VS Code에서는 무엇을 고르든 세 값을 모두 저장하므로, appearance가 `auto`인 동안에는 색상 하나만 골라도 `light` 또는 `dark`로 바뀝니다.
+
 ## 관계 데이터 타입 동기화
 
 데이터 타입 동기화 여부를 결정합니다. 기본적으로 켜져 있습니다.
@@ -85,6 +92,7 @@ description: 관계 데이터 타입 동기화, 화면 위치와 확대/축소 �
 
 대부분은 ERD 탭에서만 동작하며, 빠른 검색, 테이블 속성, Diff Viewer, 자동 배치 미리보기, Time Travel이 열려 있는 동안에는 동작하지 않습니다.
 `Search`와 `Stop`은 예외입니다. `Search`는 어느 탭에서나 빠른 검색을 열고 닫으며, `Stop`은 빠른 검색, 테이블 속성, Diff Viewer, 자동 배치 미리보기, Time Travel, 테마 빌더를 닫습니다.
+ERD 탭에서 `Stop`은 열려 있는 셀이나 메모의 편집모드를 끝내거나 그리고 있는 관계를 취소하며, 이때 선택은 그대로 둡니다. 그중 어느 것도 열려 있지 않으면 선택과 포커스된 셀을 해제합니다.
 `Zoom In`, `Zoom Out`, `Zoom Reset`은 [Visualization](./visualization.md#툴바) 탭에서도 `Graph`와 `Flow` 모두 확대/축소하며, 빠른 검색이 열려 있을 때는 동작하지 않습니다.
 Visualization 탭에서 `Stop`은 [행 표시](./visualization.md#행-표시) 메뉴도 닫고 아직 진행 중인 [Flow 배치](./visualization.md#flow-배치-방식)를 취소하지만, `Focus on this table`로 좁힌 화면을 넓히지는 않습니다.
 `Focus on this table`은 선택된 테이블과 그 테이블에 관계 하나로 이어진 모든 테이블로 범위를 좁혀 Visualization 탭을 `Flow`로 열며, 선택된 테이블이 없으면 아무 동작도 하지 않습니다. [테이블 포커스](./visualization.md#테이블-포커스) 문서를 참고하세요.
@@ -93,3 +101,5 @@ Visualization 탭에서 `Stop`은 [행 표시](./visualization.md#행-표시) �
 
 이 탭에서는 단축키를 변경할 수 없습니다.
 에디터를 임베드한 호스트는 [`setKeyBindingMap`](../../api/erd-editor-element.md#setkeybindingmap)으로 단축키를 다시 지정할 수 있으며, `Editing`, `Stop`, `Search`, `Undo`, `Redo`, `Zoom In`, `Zoom Out`, `Zoom Reset`은 고정되어 있습니다.
+
+Obsidian에서는 다이어그램의 Obsidian 탭이 활성화되어 있으면 `Alt + Enter`와 `Ctrl + K` (Windows/Linux) or `⌥ + Enter`와 `⌘ + K` (Mac)처럼 Obsidian 단축키가 같은 키를 쓰는 경우에도 위 표의 단축키가 에디터로 전달됩니다. 그 밖의 Obsidian 단축키는 그 탭에서도 그대로 동작합니다.

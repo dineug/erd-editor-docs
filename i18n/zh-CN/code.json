@@ -12,7 +12,7 @@
     "description": "Label of the call-to-action button on the homepage"
   },
   "homepage.metaDescription": {
-    "message": "erd-editor 是一款实体关系图编辑器，提供 Web 应用、VSCode 扩展、IntelliJ 插件，以及可嵌入的 Web 组件。",
+    "message": "erd-editor 是一款实体关系图编辑器，提供 Web 应用、Google Drive 应用、VSCode 扩展、IntelliJ 插件、Obsidian 插件，以及可嵌入的 Web 组件。",
     "description": "The meta description of the homepage"
   },
   "homepage.feature.easy.title": {

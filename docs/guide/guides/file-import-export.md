@@ -86,3 +86,7 @@ Every exported file is named `<database name>-<timestamp>` followed by that exte
 ![Choosing png from the Export submenu, with the notice a longer export shows](/img/demo-export.webp)
 
 Import and Export are also available from [Quick Search](./quick-search.md). It offers the same five import formats, but only `json` and `Schema SQL` for export; PNG is available from the context menu only.
+
+In Obsidian no download or save dialog appears: the file is written into the vault, where Obsidian puts new attachments for that diagram, and a notice names its path.  
+Characters Obsidian does not allow in a file name, `\ / : * ? " < > |`, are replaced with `-`.  
+Obsidian's file explorer lists an exported `.erd.json` or `.sql` file only while Settings → Files and links → Detect all file extensions is on.
