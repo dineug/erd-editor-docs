@@ -34,7 +34,8 @@ editor.addEventListener('change', () => {
 
 `<erd-editor>` has no intrinsic size. Give it (or its container) an explicit width and height.
 
-`setInitialValue('')` starts an empty document. Assigning `value` loads one as an edit instead, so it lands in the undo history.
+`setInitialValue('')` starts a new, empty document. Assigning `value` loads one as an edit instead, so it lands in the undo history.
+Since `3.10.0` a new document saves neither the scroll position nor the zoom level (`Save Scroll Information` and `Save Zoom Information` are off), so scrolling or zooming it leaves `editor.value` as it was. A document loaded from text keeps the switches it names, and one that names none saves both — see [setInitialValue](./erd-editor-element.md#setinitialvalue).
 See [ErdEditorElement](./erd-editor-element.md) for the rest of the API.
 
 ### CDN
@@ -52,7 +53,7 @@ See [ErdEditorElement](./erd-editor-element.md) for the rest of the API.
 ```
 
 `esm.run` resolves the package's external dependencies for you, so this works without a bundler.
-The unversioned URL always serves the latest release. Pin a version — `https://esm.run/@dineug/erd-editor@3.9.2` — if you do not want a major upgrade to reach your page unannounced.
+The unversioned URL always serves the latest release. Pin a version — `https://esm.run/@dineug/erd-editor@3.10.0` — if you do not want a major upgrade to reach your page unannounced.
 
 ### Script tag
 
@@ -61,7 +62,7 @@ It is what the `unpkg` and `jsdelivr` fields point at, so the bare package URL o
 
 ```html
 <erd-editor></erd-editor>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@3.9.2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@3.10.0"></script>
 <script>
   const editor = document.querySelector('erd-editor');
   editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
@@ -167,6 +168,7 @@ Importing `@dineug/erd-editor` registers `<erd-editor>` as a side effect. Beyond
 | `KeyBindingMap`, `KeyBindingName`, `ShortcutOption` (types) | A binding map, the union of its command names, and one binding. |
 
 `@dineug/erd-editor/engine.js` is a second entry point. It runs the document store with no DOM, so it works in a Web Worker — see [Remote Storage](./advanced/remote-storage.md).
+It exports `createReplicationStore` and the `ReplicationStore` type. Since `3.10.0` it also exports the `ReplicationChange` type, `{ value: string; changed: boolean }`, which a replica's `change` listener receives — see [on@change](./advanced/remote-storage.md#onchange).
 
 Since `3.9.1` there is a third, `@dineug/erd-editor/peer.js`: the headless peer the [MCP server](../mcp/introduction.md) edits a document through. It exists for that server, and these pages do not document it.
 

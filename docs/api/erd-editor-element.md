@@ -27,7 +27,6 @@ interface ErdEditorElement extends HTMLElement {
         KeyBindingMap,
         | 'edit'
         | 'stop'
-        | 'search'
         | 'undo'
         | 'redo'
         | 'zoomIn'
@@ -61,6 +60,8 @@ Nothing inside can be reached with a selector — style it through [setTheme](#s
 Sets the editing capability of the editor.  
 While it is set, assigning `value`, `clear()`, `setSchemaSQL()`, `setSchemaGraphQL()`, `setSchemaDBML()`, `setSchemaAML()`, undo, and redo are all ignored, and the `change` event is never emitted. Load a document with [setInitialValue](#setinitialvalue) instead.  
 Viewing still works: zoom, panning, the hand tool, zen mode, the canvas tab, the [Visualization](../guide/guides/visualization.md) tab in both of its modes with focusing on tables included, the database vendor, and the SQL and code generator output settings all still apply, so a read-only viewer can still export SQL for another vendor or read generated code.  
+Since `3.10.0` [Find and Replace](../guide/guides/find-and-replace.md#read-only-editors) opens too, as a find-only panel titled `Find` with no Replace field or buttons. Going to a match still brings it into view and selects it.  
+Table Properties still opens, and since `3.10.0` it shows a `Read only` badge beside its title and its `Indexes` tab offers no edits — see [Table Properties](../guide/guides/table-related-functions.md#table-properties).  
 A bare attribute, `=""`, and `="true"` all read as `true`. `="false"` reads as `false`, and so does any other string — including the HTML idiom `readonly="readonly"`.
 
 ```js
@@ -111,7 +112,8 @@ Changing the preset theme from this panel emits the [changePresetTheme](#changep
 ### getter
 
 Retrieves the current editor state as a JSON string, in the [schema](./advanced/schema.md) the editor defines.  
-The document's own `ignoreSaveSettings` is applied while serializing: with the scroll bit set the view origin is written as `0, 0`, and with the zoom bit set the zoom level is written as `1`.
+The document's own `ignoreSaveSettings` is applied while serializing: with the scroll bit set the view origin is written as `0, 0`, and with the zoom bit set the zoom level is written as `1`.  
+Since `3.10.0` a new document has both bits set, whether it is the one an element shows before it is given a value or one loaded from a blank value. Its `value` keeps writing the origin as `0, 0` until [Save Scroll Information](../guide/guides/settings.md#save-scroll-information) is turned on, and the zoom level as `1` until [Save Zoom Information](../guide/guides/settings.md#save-zoom-information) is. See [Settings](./advanced/schema.md#settings) for the bits.
 
 ```js
 const data = editor.value;
@@ -122,7 +124,10 @@ const data = editor.value;
 Loads a previously saved editor state. It replaces the whole document — the current one is cleared first.  
 Like `clear()`, `setInitialValue()`, and the `setSchema*` methods, it also discards the Visualization tab's Flow view: its layout, the tables it is narrowed to, its row display, zoom, and pan.  
 It is recorded in the history list, enabling `Undo, Redo`, and it emits `change`.  
-A blank string, or anything that is not a string, loads an empty document rather than raising an error, so guard the value before assigning it.  
+A blank string, or anything that is not a string, loads a new document rather than raising an error, so guard the value before assigning it.  
+Since `3.10.0` that new document is the one `setInitialValue('')` starts: empty, with default settings, and saving neither the scroll position nor the zoom level. Before, it was an empty document that saved both.  
+A shared store relays this load to collaborators with the new document's full JSON, so every peer, an older release included, loads the same document.  
+Text that is not JSON, such as a file left with merge-conflict markers, does not raise an error either: the document is emptied, its settings stay as they were, and the parse error is logged to the console.  
 It is ignored while `readonly` is set; use [setInitialValue](#setinitialvalue) to load into a read-only editor.
 
 ```js
@@ -133,7 +138,10 @@ editor.value = 'json...';
 
 Loads a previously saved editor state. The load itself is not recorded in the history list, so it cannot be undone, and no `change` event is emitted.  
 It also clears the undo history, so nothing done before the load can be undone or redone onto the loaded document.  
-A blank string, or anything that is not a string, loads an empty document rather than raising an error, so `setInitialValue('')` starts a blank diagram.  
+A blank string, or anything that is not a string, loads a new document rather than raising an error, so `setInitialValue('')` starts a blank diagram.  
+Since `3.10.0` that new document, which is also what an element shows before it is given any value, saves neither the scroll position nor the zoom level, so scrolling and zooming it leave `value` as it was. Before, it saved both.  
+A document loaded from text keeps the switches it names, and one that names none, such as a file saved before `3.2.3` or a v2 `.vuerd` file, saves both.  
+Text that is not JSON does not raise an error either: the document is emptied, its settings stay as they were, and the parse error is logged to the console.  
 Unlike assigning `value`, it is not blocked by `readonly`, so it is how you load a document into a read-only viewer.
 
 ```js
@@ -159,7 +167,9 @@ The element also dispatches internal `@dineug/erd-editor/internal-*` events on i
 When there are changes in the editor, it emits an event.  
 The event is debounced by 200ms, and it is not emitted while `readonly` is `true`.  
 It fires for any document change — an edit in the UI, assigning `value`, `clear()`, and each of the `setSchema*` methods. `setInitialValue` does not emit it.  
-Nothing done inside the Visualization tab's Flow mode emits it — zoom, panning, moving cards, `Tidy Up`, the row display, or narrowing the view from a card — since none of it is a document change. Switching tabs does, so focusing on tables from the ERD tab emits one `change`, and so does the external-link card button that takes you from Flow back to the ERD tab.  
+Nothing done inside the Visualization tab's Flow mode emits it — zoom, panning, moving cards, `Tidy Up`, the row display, or narrowing the view from a card — since none of it is a document change. Switching tabs does, so focusing on tables from the ERD tab emits one `change`, and so does the external-link card button that takes you from Flow back to the ERD tab. Opening Find and Replace, or going to a quick search result, from another tab brings the ERD tab up and emits one as well.  
+Scrolling and zooming the ERD canvas emit it too, whether or not `editor.value` comes out different. A scroll leaves `value` as it was while `Save Scroll Information` is off. A zoom also moves the view position, so it leaves `value` as it was only while `Save Scroll Information` and `Save Zoom Information` are both off. Since `3.10.0` a new document has both off, so on a new diagram a scroll or a zoom emits `change` with `value` unchanged.  
+To skip such writes, compare `editor.value` with the value you last stored, not with the file you loaded: a file another release or another machine wrote can come out different in `value` as soon as it loads. A host that writes files can instead tell an edit from a view change with a replication store's `changed` — see [on@change](./advanced/remote-storage.md#onchange).  
 The event carries no `detail` and neither bubbles nor crosses the shadow boundary, so listen on the element itself and read `editor.value` in the handler.
 
 ```js
@@ -198,7 +208,8 @@ editor.blur();
 
 ## clear
 
-Resets the editor state.  
+Empties the document, removing every table, column, relationship, index, and memo.  
+Every setting stays, including the database, the view position, the zoom level, the table view options, and the `Save Scroll Information` and `Save Zoom Information` switches, so a cleared file keeps saving what it saved. To start a new document instead, assign `''` to `value` or call `setInitialValue('')`.  
 It is recorded in the history list, so it can be undone, and it emits `change`. It is ignored while `readonly` is set.
 
 ```js
@@ -218,9 +229,11 @@ editor.destroy();
 ## setKeyBindingMap
 
 Redefines keyboard shortcuts.  
-`edit`, `stop`, `search`, `undo`, `redo`, `zoomIn`, `zoomOut` and `zoomReset` are fixed and cannot be redefined.  
-Only the sixteen names below are written; anything else in the object is ignored, including the fixed names.  
+`edit`, `stop`, `undo`, `redo`, `zoomIn`, `zoomOut` and `zoomReset` are fixed and cannot be redefined.  
+Only the eighteen names below are written; anything else in the object is ignored, including the fixed names.  
+Since `3.10.0`, `search` can be redefined, and `findReplace` is new. Before, `search` was fixed.  
 A binding value must be a `ShortcutOption[]`. A bare string is ignored, so write `{ addTable: [{ shortcut: 'Alt+KeyN' }] }` rather than `{ addTable: 'Alt+KeyN' }`.  
+An empty array is accepted and binds nothing: `setKeyBindingMap({ findReplace: [] })` leaves `Ctrl + F` (Windows/Linux) or `⌘ + F` (Mac) to the page, and `{ search: [] }` does the same for `Ctrl + K` (Windows/Linux) or `⌘ + K` (Mac). The toolbar's `Search` button still opens quick search, and Find and Replace still opens from its toolbar button, its quick search row, and the canvas context menu; none of these shows a shortcut for a name left empty.  
 The call is a partial merge: names you leave out keep their defaults, and calling it twice keeps the earlier changes. There is no getter for the current bindings: [createKeyBindingMap](#createkeybindingmap) returns the defaults, not what `setKeyBindingMap` changed.
 
 ```ts
@@ -234,13 +247,18 @@ const defaultKeyBindingMap: Omit<
   KeyBindingMap,
   | 'edit'
   | 'stop'
-  | 'search'
   | 'undo'
   | 'redo'
   | 'zoomIn'
   | 'zoomOut'
   | 'zoomReset'
 > = {
+  search: [
+    { shortcut: '$mod+KeyK', preventDefault: true, stopPropagation: true },
+  ],
+  findReplace: [
+    { shortcut: '$mod+KeyF', preventDefault: true, stopPropagation: true },
+  ],
   addTable: [{ shortcut: 'Alt+KeyN', preventDefault: true }],
   addColumn: [{ shortcut: 'Alt+Enter', preventDefault: true }],
   addMemo: [{ shortcut: 'Alt+KeyM', preventDefault: true }],
@@ -280,19 +298,25 @@ editor.setKeyBindingMap({
 
 `selectAllTable` and `handTool` give way to a caret: while the focus is in an input, a textarea, or a `contenteditable`, `$mod + A` selects the text and `Space` types a space instead of reaching the canvas. Whatever you rebind them to behaves the same way.
 
+Since `3.10.0`, `findReplace` (`$mod+KeyF`) opens [Find and Replace](../guide/guides/find-and-replace.md), bringing the ERD tab up from any other tab.  
+It does not give way to a caret: while the editor is focused it is taken on every tab, from the canvas or from an input inside the editor. The press is prevented, so the browser opens no find bar, and stopped, so no bubbling `keydown` listener on the page hears it. With a cell or memo editor open it is still prevented and stopped, but opens nothing.  
+While the diff viewer, time travel, or the Auto Layout preview is open, on whichever tab, or while an IME is still composing, it is neither prevented nor stopped, so the browser's or the host's own find gets it. Inside the Find and Replace panel, a press still composing is stopped there, though not prevented. Whatever you rebind `findReplace` to behaves the same way.
+
 `focusView` acts on the ERD tab only. With at least one table selected, it opens the Visualization tab in Flow mode, narrowed to those tables and every table one relationship away; with no table selected it does nothing. See [Focusing on Tables](../guide/guides/visualization.md#focusing-on-tables).
 
 `stop` (`Escape`) on the ERD tab ends an open cell or memo editor, or a relationship being drawn, and leaves the selection as it is. The editor calls `preventDefault()` on that press.  
 With none of those open, `Escape` clears the selection and the focused cell, and is not prevented. Leaving an edit and clearing the selection therefore takes two presses.  
-The editor never stops `Escape` from propagating, so a page that listens for it itself, to close a dialog of its own for example, hears both presses and can skip the one whose `defaultPrevented` is `true`.  
+Outside the Find and Replace panel the editor never stops `Escape` from propagating, so a page that listens for it itself, to close a dialog of its own for example, hears both presses and can skip the one whose `defaultPrevented` is `true`.  
 While quick search, table properties, the diff viewer, the Auto Layout preview, or time travel is open, `Escape` closes that instead and leaves the selection as it is. That press is not prevented either.  
-An `Escape` pressed while an IME is still composing belongs to the composition. It leaves an open editor as it is and is not prevented, so a page can skip a press whose `isComposing` is `true`, or whose `keyCode` is `229`, as well.  
+Since `3.10.0` an `Escape` pressed with the focus inside the Find and Replace panel closes the panel and leaves the selection as it is. The editor calls both `preventDefault()` and `stopPropagation()` on it, so it never reaches a page's bubbling `keydown` listener.  
+An `Escape` pressed on the canvas while the panel is open, with none of the above taking it, closes the panel in the same press that clears the selection. That press is neither prevented nor stopped.  
+An `Escape` pressed while an IME is still composing belongs to the composition. It leaves an open editor as it is and is not prevented, so a page can skip a press whose `isComposing` is `true`, or whose `keyCode` is `229`, as well. Inside the Find and Replace panel such a press, like any key pressed there mid-composition, is also stopped.  
 Before `3.9.2` a single `Escape` both ended an edit or draw and cleared the selection, and the editor never prevented it.
 
 ### createKeyBindingMap
 
 Since `3.9.2` the package exports `createKeyBindingMap()`, and the `KeyBindingMap`, `KeyBindingName`, and `ShortcutOption` types with it.  
-It returns the default key bindings, all 24 names with the fixed ones included, as a new map on every call, so changing the map it returns changes nothing else.  
+It returns the default key bindings, all 25 names with the fixed ones included, as a new map on every call, so changing the map it returns changes nothing else.  
 It is what every editor starts from, and a `setKeyBindingMap` call does not show in it.  
 Only `createKeyBindingMap` is a runtime export; the other three are types.
 
@@ -301,6 +325,7 @@ type KeyBindingName =
   | 'edit'
   | 'stop'
   | 'search'
+  | 'findReplace'
   | 'undo'
   | 'redo'
   | 'addTable'
@@ -336,10 +361,14 @@ const shortcuts = Object.values(createKeyBindingMap())
 ```
 
 Each `shortcut` is a [tinykeys](https://github.com/jamiebuilds/tinykeys) chord that names its key by `KeyboardEvent.code`, where [`$mod`](#mod) is `⌘` on macOS and `Control` elsewhere.  
-The fixed names are bound to `Enter` (`edit`), `Escape` (`stop`), `$mod+KeyK` (`search`), `$mod+KeyZ` (`undo`), `$mod+Shift+KeyZ` (`redo`), `$mod+Equal` (`zoomIn`), `$mod+Minus` (`zoomOut`), and `$mod+Digit0` (`zoomReset`). `edit` and `stop` carry no flags; the other six carry `preventDefault` and `stopPropagation`. The rest are the defaults above.
+The fixed names are bound to `Enter` (`edit`), `Escape` (`stop`), `$mod+KeyZ` (`undo`), `$mod+Shift+KeyZ` (`redo`), `$mod+Equal` (`zoomIn`), `$mod+Minus` (`zoomOut`), and `$mod+Digit0` (`zoomReset`). `edit` and `stop` carry no flags; the other five carry `preventDefault` and `stopPropagation`. The rest are the defaults above, `search` and `findReplace` among them.
 
 The editor listens for these on its own element, so a host that takes keys before the editor does, with global hotkeys or a capture-phase `keydown` listener, has to let them through while the editor is focused.  
-Build the list to let through from `createKeyBindingMap()`, with the bindings you passed to `setKeyBindingMap` in place of the defaults.
+Build the list to let through from `createKeyBindingMap()`, with the bindings you passed to `setKeyBindingMap` in place of the defaults.  
+Since `3.10.0` that list includes `$mod+KeyF`, the browser's own find chord. A host that wants to keep its own find on that chord passes `setKeyBindingMap({ findReplace: [] })`.
+
+While the focus is inside the Find and Replace panel, `findReplace`, `search`, `undo`, `redo`, `zoomIn`, `zoomOut`, and `zoomReset` pass through to the editor. Every other binding, as currently set, stops at the panel, and so do the arrow keys and `Tab`. Apart from `Escape`, which closes the panel, and `Enter` in its Find or Replace field, which moves through the matches or replaces, they are stopped without being prevented, so they act as ordinary keys in the panel's fields and buttons and reach neither the canvas nor a page's bubbling `keydown` listener.  
+Any other key, such as a host's save or command palette chord, goes on to the page as usual. See [Keys in the Panel](../guide/guides/find-and-replace.md#keys-in-the-panel).
 
 ### $mod
 
@@ -623,9 +652,12 @@ Since `3.4.0` the misspelled `dargSelect` tokens are spelled `dragSelect`, and t
 ## setSchemaSQL
 
 Loads a Schema SQL file.  
-It replaces the current document rather than merging into it. The settings you already have are kept, apart from the view position and the zoom level, and the tables are placed automatically once the file is read.  
+It replaces the current document rather than merging into it. The settings you already have are kept, the save switches included, apart from the view position and the zoom level, and the tables are placed automatically once the file is read. Since `3.10.0` a document imported into an element never given a value therefore saves neither the scroll position nor the zoom level, as a new document does.  
 It is recorded in the history list, enabling `Undo, Redo`, and it emits `change`. An empty string is ignored, and the call does nothing while `readonly` is set.  
 `setSchemaGraphQL`, `setSchemaDBML`, and `setSchemaAML` behave the same way, and their parsers never fail: text they cannot read loads an empty document rather than raising an error.  
+Since `3.10.0`, `setSchemaSQL` reads the file for the document's current database: with Databricks selected, single-quoted strings follow Spark's backslash escapes. See [Comments](../guide/guides/file-import-export.md#comments).  
+Since `3.10.0`, `setSchemaSQL` reads a `UNIQUE` over two or more columns as one unique index rather than a Unique flag on each column. See [Unique Keys and Indexes](../guide/guides/file-import-export.md#unique-keys-and-indexes).  
+Since `3.10.0` SQL, DBML, and AML imports keep the `ON DELETE` and `ON UPDATE` actions of the foreign keys they read.  
 See [Importing or Exporting Files](../guide/guides/file-import-export.md) for the syntax each parser accepts.
 
 ```js
@@ -660,7 +692,9 @@ editor.setSchemaAML('AML...');
 ## getSchemaSQL
 
 Exports the current editor state as Schema SQL.  
-If `databaseVendor` is not specified, it operates based on the currently set vendor. A name that is not in the list below is treated the same way, without raising an error.
+If `databaseVendor` is not specified, it operates based on the currently set vendor. A name that is not in the list below is treated the same way, without raising an error.  
+Since `3.10.0` each foreign key carries the relationship's `ON DELETE` and `ON UPDATE` clauses. A clause is written only when its action is set and the vendor accepts it, so an action that vendor does not take is left out and its default applies. See [ON DELETE and ON UPDATE](../guide/guides/relationship-editing.md#on-delete-and-on-update) for what each database writes.  
+Since `3.10.0` a single quote inside a table or column comment is escaped, so a comment such as `it's` no longer breaks the statement. Every vendor that writes comments as string literals doubles it, except Databricks, which puts a backslash before each quote and each backslash. SQLite still writes comments as `--` lines.
 
 ```ts
 type DatabaseVendor =

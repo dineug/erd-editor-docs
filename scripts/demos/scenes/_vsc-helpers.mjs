@@ -151,10 +151,12 @@ export async function graphSafeMoveTo(d, to, duration = 500) {
 }
 
 /**
- * Schema SQL import of sakila.sql leaves stray columns behind: one named "ON"
- * per `ON DELETE` / `ON UPDATE` of an inline foreign key (data type empty, or
- * "SET" for `ON DELETE SET NULL`), and one per inline `UNIQUE INDEX name` or
- * `FULLTEXT` index, with no data type. Real sakila columns all have one.
+ * Schema SQL import of sakila.sql before erd-editor 3.10.0 left stray columns
+ * behind: one named "ON" per `ON DELETE` / `ON UPDATE` of an inline foreign key
+ * (data type empty, or "SET" for `ON DELETE SET NULL`), and one per inline
+ * `UNIQUE INDEX name` or `FULLTEXT` index, with no data type. Real sakila
+ * columns all have one. 3.10.0 keeps the actions and leaves no stray column,
+ * so this removes nothing there; it stays for older checkouts.
  */
 export function dropStrayColumns(doc) {
   for (const id of doc.doc.tableIds) {

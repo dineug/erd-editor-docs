@@ -1,12 +1,12 @@
 ---
 sidebar_position: 4
-description: 选中、移动、复制表与备注并创建其副本，设置颜色与显示选项、定义索引、选择数据库、浏览无限画布以及比较文档。
+description: 选中、移动、复制表与备注并创建其副本，设置颜色与显示选项、定义索引与备用键、选择数据库、浏览无限画布以及比较文档。
 ---
 
 # 表相关功能
 
 表与备注创建之后的所有操作，包括选中、移动、复制、着色，以及设置每个表显示哪些内容，还包括围绕它们的画布控制。  
-先是表与备注的相关命令，然后是表属性、聚焦于表、索引、自动布局和数据库厂商，最后是画布本身：画布工具栏、缩放、平移和 Diff Viewer。
+先是表与备注的相关命令；然后是表属性、聚焦于表、索引与备用键、自动布局和数据库厂商；最后是画布本身：画布工具栏、缩放、平移和 Diff Viewer。
 
 ## 多选
 
@@ -38,7 +38,7 @@ description: 选中、移动、复制表与备注并创建其副本，设置颜�
 快捷键：`Ctrl + C` (Windows/Linux) 或 `⌘ + C` (Mac)，`Ctrl + V` (Windows/Linux) 或 `⌘ + V` (Mac)
 
 复制的表会保留名称、注释、列和颜色，复制的备注会保留文本、尺寸和颜色。副本会保留原有的名称。  
-索引和关系也会一并复制：索引会被整条复制到复制出的表上；关系则只有在其连接的两个表都在复制范围内时才会被复制。只有一端在范围内的关系会被丢弃，而不会保留指向原表的连接。  
+索引和关系也会一并复制：索引会被整条复制到复制出的表上；关系则只有在其连接的两个表都在复制范围内时才会被复制，并会带上其类型以及 ON DELETE 与 ON UPDATE 操作。只有一端在范围内的关系会被丢弃，而不会保留指向原表的连接。  
 粘贴出来的副本会成为新的选中对象，重复粘贴同一份内容时每次都会再偏移 `50px`，因此多次粘贴不会相互重叠。
 
 ![复制两个通过关系相连的表并粘贴两次，关系也一并复制](/img/demo-table-copy-paste.webp)
@@ -80,19 +80,33 @@ description: 选中、移动、复制表与备注并创建其副本，设置颜�
 - Default
 - Not Null
 - Unique
+- Alternate Key
 - Auto Increment
 - Relationship
+- Referential Actions
 
-![在画布右键菜单中切换 View Option，表的显示随之变化](/img/demo-view-options.webp)
+`Unique`、`Alternate Key` 和 `Auto Increment` 默认关闭，其余选项默认开启。  
+`Alternate Key` 会标记每个备用键的列，例如 `AK1.1`，参见[备用键](#alternate-keys)。  
+`Referential Actions` 显示关系的 ON DELETE 与 ON UPDATE 操作在其连接线子表一端添加的 `D:` 和 `U:` 标签，参见[读懂连接线](./relationship-editing.md#reading-a-connector)。关闭它只会隐藏这些标签，不会移动任何表或连接线。  
+在 `readonly` 编辑器中，切换这些选项不起作用。
+
+![在画布右键菜单中切换 View Option，表的显示随之变化，然后开启 Alternate Key，复合唯一索引的两列被标记为 AK1.1 和 AK1.2](/img/demo-view-options.webp)
 
 Visualization 标签页 `Flow` 模式中的卡片不遵循这些选项：它们使用自己的[行显示](./visualization.md#row-display)，并且即使关闭了 `Relationship` 也会绘制连接线。
 
 ## 表属性 {#table-properties}
 
-打开选中表的属性面板。
-通过表的右键菜单或快捷键 `Alt + Space` 打开。
-包含 Indexes、Schema SQL、Code Generator 三个标签页。
-面板顶部会保留最近打开的五个表，因此无需重新打开即可在它们之间切换。
+打开表的属性面板。  
+可以通过表的右键菜单中的 `Table Properties` 打开，此时打开的是你右键点击的表；也可以选中一个表后按 `Alt + Space`。  
+面板会在变暗的画布上方打开。面板顶部包含 `Table Properties` 标题、以标签形式列出的最近打开的五个表（当前表会高亮显示），以及一个关闭按钮。点击某个表的标签即可切换到该表，无需重新打开面板。  
+顶部下方有三个标签页：`Indexes`、`Schema SQL` 和 `Code Generator`。三个标签页共用同一尺寸的面板，因此切换标签页时面板不会移动，也不会改变大小。  
+可以通过关闭按钮、`Escape` 或点击面板外部将其关闭。
+
+`Indexes` 标签页的介绍参见[索引](#indexes)。  
+`Schema SQL` 标签页按所选[数据库](#databases)显示该表的 DDL：它的 `CREATE TABLE`、部分数据库为其 Unique 列单独写出的约束，以及它的索引。  
+`Code Generator` 标签页只为这一张表生成代码，参见[代码生成](./code-generator.md)。
+
+在 `readonly` 编辑器中，面板仍然可以打开，标题旁会显示 `Read only` 徽标，但其 `Indexes` 标签页不提供任何编辑功能。
 
 ## 聚焦于表 {#focusing-on-tables}
 
@@ -106,14 +120,37 @@ Visualization 标签页 `Flow` 模式中的卡片不遵循这些选项：它们�
 
 索引在表属性面板的 `Indexes` 标签页中定义，并会包含在导出的 Schema SQL 中。
 
-左侧列出表上的索引，通过 `+` 添加。  
-每个索引都有一个用于设为唯一的 `UQ` 开关、一个名称输入框，以及一个用于删除的 `x`。
+左侧分两组列出表的键和索引。  
+`Keys` 仅在表中有键时显示，列出由表的列所声明的键：先是覆盖标记为 PK 的列的 `PK_<table name>`，然后按列的顺序，为每个标记为 Unique 的列列出 `UQ_<table name>_<column name>`。每个键都带有 `PK` 或 `UQ` 标记和一个锁形图标。它们在这里是只读的，只会随列的 [PK](./table-editing.md#列主键) 与 [Unique](./table-editing.md#not-null-unique-auto-increment) 标志而变化。  
+`Indexes` 按添加的顺序列出表的索引。每个索引都有一个用于设为唯一的 `UQ` 开关、一个名称输入框，以及一个用于删除的 `x`。作为[备用键](#alternate-keys)的索引还会显示其编号，例如 `AK1`。通过列表底部的 `Add Index` 添加索引。
 
-右侧列出表的列，每列各有一个复选框。在左侧选中索引之前，右侧不可编辑。  
-勾选某一列会将其添加到选中的索引中，取消勾选则将其移除。  
-选中索引所包含的列显示在下方。通过拖动手柄可以调整它们的顺序，点击某一行的 `ASC` 或 `DESC` 标记可以切换排序方向。
+右侧在 `Columns` 下列出表的列，每列各有一个复选框。在左侧选中索引之前，右侧不可编辑。  
+勾选某一列会将其添加到选中的索引中，取消勾选则将其移除。选中键时，其列会显示为已勾选，但复选框保持禁用。  
+选中索引所包含的列显示在下方的 `Index order` 下。通过拖动手柄可以调整它们的顺序，点击某一行的 `ASC` 或 `DESC` 标记可以切换排序方向。在备用键中，每一行的末尾都带有其 `AK<n>.<m>` 标记。该列表一次显示三行，其余的可以滚动查看。
 
-![在表属性面板中添加索引，并在 Schema SQL 标签页中查看](/img/demo-table-properties.webp)
+在 `readonly` 编辑器中，选中键或索引时仍会显示其列，但没有 `Add Index` 和 `x`，标签页中的其他内容也都无法更改。
+
+![为 orders 打开表属性，Indexes 标签页在索引上方列出 PK 和 UQ 键，然后添加一个覆盖 member_id 和 ordered_at DESC 的索引，并在 Schema SQL 标签页中查看](/img/demo-table-properties.webp)
+
+## 备用键 {#alternate-keys}
+
+备用键是由两列或更多列组成的唯一索引，即 `Indexes` 标签页中开启了 `UQ` 开关、并且勾选了表中至少两列的索引。  
+只有一列的唯一索引所表达的内容与该列的 Unique 标志并无不同，因此它不是备用键；普通索引、主键以及标记为 Unique 的列也都不是备用键。
+
+在[显示选项](#table-view-options)中开启 `Alternate Key` 后，图会按照 erwin 和 IDEF1X 的写法标记每个备用键的列：`AK1.1`、`AK1.2` 等。该选项默认关闭。
+
+键的编号取决于其列在表中的位置，而不是索引添加的顺序。`Index order` 中第一列在表中位置最靠上的键为 `AK1`。位置相同时，由各键的下一列决定；如果一个键是另一个更长的键的前导部分，则排在后者之前。  
+在表中移动列，或调整某个键的 `Index order`，都可能使键重新编号。通过 Undo 恢复被删除的键时，它会取回原来的编号，并且所有协作者看到的编号都相同。
+
+键的每一列都标记为 `AK<n>.<m>`，其中 `n` 是键的编号，`m` 是该列在键的 `Index order` 中的位置。属于多个键的列会带有所有标记，以逗号连接。  
+例如，在包含 `a`、`b`、`c` 三列的表中，覆盖 (`c`, `a`) 和 (`b`, `a`) 的两个唯一索引会成为 `AK1` = (`b`, `a`) 和 `AK2` = (`c`, `a`)，因为 `b` 位于 `c` 之上。因此 `b` 显示为 `AK1.1`，`c` 显示为 `AK2.1`，`a` 显示为 `AK1.2,AK2.2`。
+
+该标记绘制在行的最后，位于[列顺序](./settings.md#adjusting-column-order)排在最后的单元格之后。它不是单元格，因此永远不会获得焦点、进入编辑模式或被复制，参见[编辑表](./table-editing.md)。  
+主键列或外键列同样可以带有 AK 标记，因为该标记不会取代任何内容：行首的钥匙图标仍然显示 PK 和 FK，Unique 单元格也保留自己的 `UQ`。  
+带有备用键的表会在每一行最后一个单元格之后留出足以容纳其最长标记的空间；没有备用键的表则保持原有宽度。  
+这些标记显示在 ERD 画布上，但在 `70%` 及以下，表会折叠为名称，此时不显示任何标记；导出 PNG 时，标记的绘制方式与画布相同。Visualization 标签页 `Graph` 模式中的[悬停预览](./visualization.md#hover-preview)同样会显示这些标记；`Flow` 卡片则从不显示。
+
+无论该选项是否开启，`Indexes` 标签页都会显示编号，参见[索引](#indexes)。
 
 ## 自动布局 {#auto-layout}
 
@@ -152,7 +189,8 @@ Visualization 标签页 `Flow` 模式中的卡片不遵循这些选项：它们�
 - SQLite
 
 该选项决定导出 Schema SQL 的语法、DataType 的自动补全，以及生成的代码和导入的 schema 所解析出的类型。  
-导入 Schema SQL 时，`TIMESTAMP WITH TIME ZONE` 和 `INTERVAL DAY TO SECOND` 这类由多个单词组成的类型名会被完整保留，包括参数列表。
+该选项还决定 Schema SQL 和代码生成中的 ORM 目标会写出哪些 ON DELETE 与 ON UPDATE 操作，以及关系菜单会为哪些操作标注 `not in <database>`，参见 [ON DELETE 与 ON UPDATE](./relationship-editing.md#on-delete-and-on-update) 和[代码生成](./code-generator.md#database)。  
+导入 Schema SQL 时，无论编辑器是否列出该类型，列的数据类型都会连同参数列表一起被保留，例如 `TIMESTAMP WITH TIME ZONE`、`public.mood` 或 `integer[]`，参见[数据类型](./file-import-export.md#data-types)。DataType 自动补全只推荐所选数据库列出的类型。
 
 ![将数据库切换为 PostgreSQL，然后从自动补全中选择 PostgreSQL 类型](/img/demo-database.webp)
 
@@ -165,7 +203,7 @@ Visualization 标签页 `Flow` 模式中的卡片不遵循这些选项：它们�
 - 抓手与指针。默认是指针；切换到抓手后，无论在空白处还是在表的上方，拖动都会变成平移视图。用 `Space` 在两者之间切换。
 - 缩放：`Zoom out`、以百分比显示的当前缩放级别，以及 `Zoom in`。这两个按钮与缩放快捷键一样逐级调整缩放，点击百分比则会把缩放恢复为 `100%`。
 - 四种关系表示法，与开始绘制关系时使用的相同。参见[开始编辑](./editing-start.md)。绘制关系需要依次点击两个表，因此选择一种表示法后工具会切回指针。
-- 禅模式 `Alt + Z`，只保留画布和这个工具栏，隐藏其余界面。再次按 `Alt + Z` 或点击按钮即可恢复。
+- 禅模式 `Alt + Z`，只保留画布和这个工具栏，隐藏其余界面。再次按 `Alt + Z` 或点击按钮即可恢复。已打开的[查找与替换](./find-and-replace.md)面板会保留，并上移到顶部工具栏让出的空间中。
 - `Go to content` 指南针，仅在屏幕上没有任何表或备注时才会出现在工具栏末尾。参见[浏览画布](#getting-around-the-canvas)。
 
 每个带有快捷键的按钮都会在提示中标出该快捷键。  

@@ -1,11 +1,11 @@
 ---
 sidebar_position: 4
-description: Every tool the erd-editor MCP server offers — reading a document a page at a time, the 54 edit tools, erd_batch, and what a result and a refusal look like.
+description: Every tool the erd-editor MCP server offers — reading a document a page at a time, the 56 edit tools, erd_batch, and what a result and a refusal look like.
 ---
 
 # Tools
 
-The server offers 63 tools: five session tools, three read tools, 54 edit tools, one per editing operation, and `erd_batch`, which runs several edit tools as one edit.
+The server offers 65 tools: five session tools, three read tools, 56 edit tools, one per editing operation, and `erd_batch`, which runs several edit tools as one edit.
 
 Every tool but `erd_list_documents` takes the document's `path` as its first argument, and the tables below leave it out.
 An argument marked `?` is optional.
@@ -27,7 +27,7 @@ See [Live and Headless](./live-and-headless.md) for what saving and undo do in e
 | Tool | Arguments | What it does |
 | --- | --- | --- |
 | `erd_list` | `query?`, `offset?`, `limit?`, `namesOnly?` | The settings and counts, then a page of tables, each with its id, position and size on the canvas, and column count, with their indexes and relationships, and after the tables, unless it searches, the memos. |
-| `erd_get` | `tableIds?`, `tableNames?`, `relationshipIds?`, `indexIds?`, `memoIds?` | The entities named, in full: tables with their columns, relationships and indexes with their columns, memos with their text. |
+| `erd_get` | `tableIds?`, `tableNames?`, `relationshipIds?`, `indexIds?`, `memoIds?` | The entities named, in full: tables with their columns, relationships with their columns and their `onDelete` and `onUpdate`, indexes with their columns, memos with their text. |
 | `erd_read` | `format`, `vendor?`, `tableIds?`, `tableNames?` | The whole document at once in one of three formats, or the DDL of just some tables. |
 
 An agent finds ids with `erd_list`, reads columns and other details with `erd_get`, and passes those ids to the edit tools.
@@ -39,7 +39,7 @@ Each relationship is listed once, with one of its two tables.
 | `format` | What it answers |
 | --- | --- |
 | `snapshot` | Compact JSON with every entity and its id. Large on a big schema. |
-| `sql` | DDL for one of the eight databases, `Databricks`, `MariaDB`, `MSSQL`, `MySQL`, `Oracle`, `PostgreSQL`, `Snowflake`, or `SQLite`. `vendor` defaults to the database the document is set to. With `tableIds` or `tableNames`, only those tables, with the foreign keys they hold. |
+| `sql` | DDL for one of the eight databases, `Databricks`, `MariaDB`, `MSSQL`, `MySQL`, `Oracle`, `PostgreSQL`, `Snowflake`, or `SQLite`. `vendor` defaults to the database the document is set to. With `tableIds` or `tableNames`, only those tables, with the foreign keys they hold. Foreign keys carry their ON DELETE and ON UPDATE actions, except those the target database leaves out — see [ON DELETE and ON UPDATE](../guide/guides/relationship-editing.md#on-delete-and-on-update). |
 | `json` | The raw `.erd.json` document. |
 
 ### Large Schemas
@@ -92,13 +92,24 @@ Ids come from `erd_list` and `erd_get`, or from the `createdIds` of the call tha
 
 `relationshipType` is the cardinality at the child end: `ZeroOne`, `ZeroN`, `OneOnly`, or `OneN`.
 The start table is the parent, the referenced side that holds the primary key, and the end table is the child.
+`onDelete` and `onUpdate` are the foreign key's ON DELETE and ON UPDATE actions: `none`, `noAction`, `cascade`, `setNull`, `setDefault`, or `restrict`.
+`none` writes no clause, so the database's default applies — see [ON DELETE and ON UPDATE](../guide/guides/relationship-editing.md#on-delete-and-on-update).
+An action left out of `erd_add_relationship` or `erd_link_columns` is `none`.
 
 | Tool | Arguments | What it does |
 | --- | --- | --- |
-| `erd_add_relationship` | `startTableId`, `endTableId`, `relationshipType` | Relates two tables. It copies the parent's primary key into the child as foreign key columns, creating a primary key column first if the parent has none. `createdIds` holds that new key column if one was made, the foreign key columns, and the relationship id last. |
-| `erd_link_columns` | `startTableId`, `startColumnIds`, `endTableId`, `endColumnIds`, `relationshipType` | Draws a relationship between columns that already exist, pairing start and end columns by position. |
+| `erd_add_relationship` | `startTableId`, `endTableId`, `relationshipType`, `onDelete?`, `onUpdate?` | Relates two tables. It copies the parent's primary key into the child as foreign key columns, creating a primary key column first if the parent has none. Each foreign key column is named the way drawing a relationship in the editor names it: the key `id` of `users` gives `users_id`, and a key such as `member_id` keeps its name — see [Foreign Key Column Names](../guide/guides/relationship-editing.md#foreign-key-column-names). `createdIds` holds that new key column if one was made, the foreign key columns, and the relationship id last. |
+| `erd_link_columns` | `startTableId`, `startColumnIds`, `endTableId`, `endColumnIds`, `relationshipType`, `onDelete?`, `onUpdate?` | Draws a relationship between columns that already exist, pairing start and end columns by position. |
 | `erd_remove_relationship` | `relationshipId` | Removes a relationship line. Its foreign key columns stay in the table. |
 | `erd_change_relationship_type` | `relationshipId`, `relationshipType` | Changes the cardinality of a relationship. |
+| `erd_change_relationship_on_delete` | `relationshipId`, `onDelete` | Sets the ON DELETE action of a relationship: what deleting a parent row does to its child rows. |
+| `erd_change_relationship_on_update` | `relationshipId`, `onUpdate` | Sets the ON UPDATE action of a relationship: what changing a parent key does to its child rows. |
+
+`erd_add_relationship` names the foreign key columns when it runs, so name the parent table and its primary key first.
+
+An older ERD Editor extension or plugin — the VS Code extension before `3.1.0`, the Obsidian plugin before `0.2.0`, or the JetBrains plugin before `0.10.0` — ignores ON DELETE and ON UPDATE when it serves the document.
+The tools that set them still succeed, but the diagram and the file that editor saves never hold them, so update the extension or plugin — see [Updating](./installation.md#updating).
+With no editor serving the document, the actions are written to the file like any other edit.
 
 ### Indexes
 
@@ -143,8 +154,8 @@ None of them but `erd_set_show` makes an undo entry, so `erd_undo` cannot revert
 | `erd_set_relationship_optimization` | `value` | The relationship optimization flag stored in the document. |
 | `erd_set_column_order` | `columnType`, `targetColumnType` | Moves one part of a table row to the place of another: `columnName`, `columnDataType`, `columnNotNull`, `columnUnique`, `columnAutoIncrement`, `columnDefault`, `columnComment`. |
 | `erd_set_max_width_comment` | `value` | The widest a comment is drawn in a table, in pixels, or `-1` for no limit. |
-| `erd_set_ignore_save_settings` | `saveSettingType`, `value` | `true` leaves `scroll` or `zoomLevel` out of the saved file. |
-| `erd_set_show` | `show`, `value` | Shows or hides one part of the diagram: `tableComment`, `columnComment`, `columnDataType`, `columnDefault`, `columnAutoIncrement`, `columnPrimaryKey`, `columnUnique`, `columnNotNull`, `relationship`. |
+| `erd_set_ignore_save_settings` | `saveSettingType`, `value` | `true` leaves `scroll` or `zoomLevel` out of the saved file. A new document starts with both `true`, as a new diagram in the editor does — see [Save Scroll Information](../guide/guides/settings.md#save-scroll-information). |
+| `erd_set_show` | `show`, `value` | Shows or hides one part of the diagram: `tableComment`, `columnComment`, `columnDataType`, `columnDefault`, `columnAutoIncrement`, `columnPrimaryKey`, `columnUnique`, `columnNotNull`, `relationship`, `columnAlternateKey`, `hideReferentialAction`. With `columnAlternateKey` shown, the columns of each [alternate key](../guide/guides/table-related-functions.md#alternate-keys) carry marks such as `AK1.1`. `hideReferentialAction` reads the other way round: `true` hides the ON DELETE and ON UPDATE labels on relationship lines, which show by default — see [Reading a Connector](../guide/guides/relationship-editing.md#reading-a-connector). |
 
 ### Import
 
@@ -157,7 +168,7 @@ They read a schema the way the editor's Import menu does — see [Importing or E
 | `erd_import_graphql` | `value` | Loads a GraphQL SDL. |
 | `erd_import_dbml` | `value` | Loads DBML. |
 | `erd_import_aml` | `value` | Loads AML. |
-| `erd_import_json` | `value` | Loads an erd-editor JSON document, such as another `.erd.json` file. An empty text gives an empty document. |
+| `erd_import_json` | `value` | Loads an erd-editor JSON document, such as another `.erd.json` file. An empty text gives a new document, like the one `erd_open_document` makes with `create`. |
 
 ## erd_batch
 
@@ -169,6 +180,7 @@ They read a schema the way the editor's Import menu does — see [Importing or E
 - In a live session the editor takes the whole batch or none of it.
 
 An agent cannot know the ids a batch creates before it calls, so an operation named with `as` lets a later one refer to them: `$name` or `$name.0` for its first created id, `$name.1` for its second, and `$name.last` for its last.
+A name holds ASCII letters, digits, and underscores, does not start with a digit, and names one operation only.
 A reference resolves only where an argument takes an entity id, so a name or comment that reads `$x` stays text.
 
 A table with its columns and a relationship, in one call:
@@ -185,10 +197,12 @@ A table with its columns and a relationship, in one call:
     { "tool": "erd_set_column_primary_key", "args": { "tableId": "$users", "columnId": "$uid", "value": true } },
     { "tool": "erd_add_table", "as": "orders" },
     { "tool": "erd_change_table_name", "args": { "tableId": "$orders", "value": "orders" } },
-    { "tool": "erd_add_relationship", "args": { "startTableId": "$users", "endTableId": "$orders", "relationshipType": "ZeroN" } }
+    { "tool": "erd_add_relationship", "args": { "startTableId": "$users", "endTableId": "$orders", "relationshipType": "ZeroN", "onDelete": "cascade" } }
   ]
 }
 ```
+
+`users` and its key `id` are named before the relationship, so the foreign key column it adds to `orders` is `users_id`.
 
 ## Results
 

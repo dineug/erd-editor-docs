@@ -4,16 +4,35 @@ import { glide, textBox, timer, waitFor } from './_table-related-b-helpers.mjs';
 const mid = box => ({ x: box.x + box.width / 2, y: box.y + box.height / 2 });
 
 /**
- * Table Properties + Indexes: open the property panel of a table, add an
+ * The shop seed with an order number on orders, flagged Unique in setup, so
+ * the Indexes tab lists both kinds of key above the indexes (PK_orders and
+ * UQ_orders_order_no) and the Schema SQL tab writes the unique constraint.
+ */
+const SQL = readSeed('shop.sql').replace(
+  `CREATE TABLE orders (
+  id BIGINT NOT NULL AUTO_INCREMENT,
+  member_id BIGINT NOT NULL,`,
+  `CREATE TABLE orders (
+  id BIGINT NOT NULL AUTO_INCREMENT,
+  order_no VARCHAR(20) NOT NULL,
+  member_id BIGINT NOT NULL,`
+);
+
+/**
+ * Table Properties + Indexes: open the property panel of a table, whose
+ * Indexes tab lists the keys its columns declare above the indexes, add an
  * index, tick two columns, reorder them, flip one to DESC, and read the index
  * back in the Schema SQL tab.
  */
 export default {
   name: 'demo-table-properties',
   width: 960,
-  height: 530,
+  height: 570,
   async setup(d) {
-    await seedSQL(d, readSeed('shop.sql'), {
+    if (!SQL.includes('order_no')) {
+      throw new Error('table-properties: the shop seed no longer matches the patch');
+    }
+    await seedSQL(d, SQL, {
       only: ['members', 'orders', 'payments'],
       tables: {
         // Clear of the minimap and the canvas toolbar, with room for each
@@ -25,9 +44,10 @@ export default {
       },
       settings: { databaseName: 'shop' },
       patch(doc) {
-        // The import keeps the bare word; show the literal as SQL writes it.
         for (const column of Object.values(doc.collections.tableColumnEntities)) {
+          // The import keeps the bare word; show the literal as SQL writes it.
           if (column.default === 'PENDING') column.default = "'PENDING'";
+          if (column.name === 'order_no') column.options |= 4; // ColumnOption.unique
         }
       },
     });
@@ -62,6 +82,7 @@ export default {
     await waitFor(d, () => d.domBox('[title="Add Index"]'));
     await d.sleep(550);
 
+    await d.shot('add');
     mark('add');
     // Add an index and name it.
     const add = await d.domBox('[title="Add Index"]');
@@ -77,16 +98,25 @@ export default {
     await d.type('IX_member_ordered_at', 40);
     await d.sleep(250);
 
+    await d.shot('tick');
     mark('tick');
-    // Tick the columns: ordered_at first, then member_id.
-    const checkbox = async i => mid(await d.domBox('input[type="checkbox"]', i));
-    let c = await checkbox(3);
+    // Tick the columns: ordered_at first, then member_id. The column rows
+    // follow the table's column order.
+    const doc = await d.value();
+    const ordersId = await d.tableId('orders');
+    const columnNames = doc.collections.tableEntities[ordersId].columnIds.map(
+      id => doc.collections.tableColumnEntities[id].name
+    );
+    const checkbox = async name =>
+      mid(await d.domBox('input[type="checkbox"]', columnNames.indexOf(name)));
+    let c = await checkbox('ordered_at');
     await d.click(c.x, c.y, { duration: 450 });
     await d.sleep(350);
-    c = await checkbox(1);
+    c = await checkbox('member_id');
     await d.click(c.x, c.y, { duration: 300 });
     await d.sleep(450);
 
+    await d.shot('reorder');
     mark('reorder');
     // Drag member_id above ordered_at by its grip.
     const grip = mid(await d.domBox('[draggable="true"] .icon', 1));
@@ -100,6 +130,7 @@ export default {
     await d.page.mouse.up();
     await d.sleep(500);
 
+    await d.shot('order');
     mark('order');
     // Flip ordered_at to DESC.
     const asc = mid(await d.domBox('[draggable="true"] [title="Ascending"]', 1));
@@ -111,6 +142,7 @@ export default {
     await d.moveTo(asc.x, below, 200);
     await d.sleep(500);
 
+    await d.shot('sql');
     mark('sql');
     // The index in the Schema SQL tab. The way there keeps off every hover
     // target: left under the list, up the gap between the index list and the
@@ -144,6 +176,7 @@ export default {
       550
     );
     await d.sleep(150);
+    await d.shot('hold');
     mark('hold');
     await d.sleep(1300);
   },

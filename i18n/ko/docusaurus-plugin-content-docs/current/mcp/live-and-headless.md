@@ -49,6 +49,12 @@ JetBrains IDE는 편집이 멈추고 1초도 지나지 않아 파일에 쓰며, 
 `erd_save`는 먼저 에이전트가 한 모든 편집이 에디터에 도착하기를 최대 2초 동안 기다립니다.
 에디터가 이를 확인하지 못했거나 파일을 쓰지 않았을 때 `notSaved`로 거부됩니다. 디스크의 파일이 바뀌어 VS Code가 탭을 저장되지 않은 상태로 유지했을 때나, 대화 상자가 열려 있는 동안이거나 쓸 수 없는 파일이어서 JetBrains IDE가 파일을 쓰지 못했을 때입니다.
 
+VS Code와 JetBrains IDE에서는 더 저장할 것이 없는 문서에 `erd_save`를 호출하면 성공하며, 파일은 그대로 남습니다.
+모든 편집이 저장된 뒤(JetBrains IDE는 이를 스스로 합니다), 그리고 그 뒤로 `Save Scroll Information`과 `Save Zoom Information`이 모두 꺼진 상태에서 스크롤하거나 확대/축소만 했을 때가 그렇습니다.
+JetBrains IDE가 쓸 수 없는 파일은 이때에도 거부됩니다.
+`3.1.0` 이전의 VS Code 확장은 이런 스크롤이나 확대/축소에도 탭을 수정됨으로 표시하므로, `erd_save`가 파일을 씁니다.
+`0.10.0` 이전의 JetBrains 플러그인은 IDE가 파일을 연 뒤로 한 번도 쓰지 않았으면 `erd_save` 때 파일을 다시 쓰며, 그러면 파일 맨 앞에 있던 바이트 순서 표시(BOM)가 사라집니다.
+
 에이전트의 마지막 편집 뒤에 에디터가 문서를 닫으면, 에이전트의 다음 호출에는 에디터가 닫히기 전에 저장된 경우에만 그 편집이 파일에 들어 있다는 안내가 함께 전달됩니다.
 
 ### Undo
@@ -56,8 +62,10 @@ JetBrains IDE는 편집이 멈추고 1초도 지나지 않아 파일에 쓰며, 
 `erd_undo`는 에이전트가 마지막으로 한 편집을 되돌리며 사용자의 편집은 절대 되돌리지 않고, `erd_redo`는 그 편집을 다시 적용합니다.
 에디터 자체의 [Undo](../guide/guides/undo-redo.md)는 반대로 동작합니다. 다른 에디터에서 도착한 변경은 사용자의 히스토리에 기록되지 않으므로, 사용자의 편집을 되돌리고 에이전트의 편집은 절대 되돌리지 않습니다.
 
-일부 편집은 에디터에 Undo 항목을 만들지 않습니다. `erd_set_show`를 제외한 [설정 도구](./tools.md#설정)와 `erd_resize_memo`입니다. 문서가 이미 가진 값으로 설정하는 편집은 아무것도 바꾸지 않으므로 역시 Undo 항목을 만들지 않습니다.
+일부 편집은 에디터에 Undo 항목을 만들지 않습니다. `erd_set_show`를 제외한 [설정 도구](./tools.md#설정)와 `erd_resize_memo`입니다.
+`erd_set_column_primary_key`, `erd_set_column_unique`, `erd_set_column_not_null`, `erd_set_column_auto_increment`, `erd_set_index_unique`, `erd_set_index_column_order`, `erd_set_show`도 문서가 이미 가진 값으로 설정할 때는 Undo 항목을 만들지 않으며, 이미 인덱스에 있는 컬럼으로 호출한 `erd_add_index_column`도 마찬가지입니다. 이런 호출은 아무것도 바꾸지 않습니다.
 `erd_undo`는 이런 편집을 건너뛰고 결과에 그 이름을 알려 줍니다.
+`erd_change_relationship_type`, `erd_change_relationship_on_delete`, `erd_change_relationship_on_update` 같은 그 밖의 편집은 문서가 이미 가진 값으로 설정할 때에도 Undo 항목을 만듭니다.
 
 에이전트의 Undo 히스토리는 다음과 같은 경우 결과에 안내를 남기고 끊깁니다.
 
@@ -121,7 +129,7 @@ Linux에서 Flatpak으로 설치한 Obsidian이나 JetBrains IDE, JCEF가 없는
 
 문서는 절대 경로 또는 서버의 작업 디렉터리 기준 상대 경로인 `path`로 지정합니다.
 
-- 새 문서는 `.erd.json`입니다. `erd_open_document`에 `create`를 주면 파일을 만들며, 확장자가 없는 이름에는 `.erd.json`을 붙입니다.
+- 새 문서는 `.erd.json`입니다. `erd_open_document`에 `create`를 주면 파일을 만들며, 확장자가 없는 이름에는 `.erd.json`을 붙입니다. 에디터에서 만든 새 다이어그램과 마찬가지로 새 문서는 화면 위치도 확대/축소 레벨도 저장하지 않습니다. [`Save Scroll Information`](../guide/guides/settings.md#스크롤-정보-저장)과 [`Save Zoom Information`](../guide/guides/settings.md#확대축소-정보-저장)이 꺼진 상태로 시작하므로, 에디터에서 스크롤하거나 확대/축소해도 파일은 바뀌지 않습니다. `saveSettingType`을 `scroll` 또는 `zoomLevel`로, `value`를 `false`로 주어 `erd_set_ignore_save_settings`를 호출하면 해당 스위치가 켜집니다.
 - 기존 `.erd`, `.vuerd`, `.vuerd.json` 파일도 열립니다. 그 밖의 확장자를 가진 경로는 `invalidPath`로 거부됩니다.
 - Windows에서는 Windows가 적힌 그대로 저장하지 않는 이름이 들어간 경로는 문서를 읽거나 쓰기 전에 `invalidPath`로 거부되며, 읽기도 마찬가지입니다. `orders:v2.erd`처럼 콜론이나 Windows가 허용하지 않는 다른 문자가 들어간 이름, 대소문자와 상관없이 `NUL.erd`나 `CON.erd` 같은 장치 이름, 점이나 공백으로 끝나는 이름입니다. 예를 들어 `:` 대신 `-`를 써서 이름을 바꾸세요.
 - 병합 충돌 표시가 남은 파일처럼 에디터가 읽을 수 없는 파일은 `invalidDocument`로 거부되고 그대로 남습니다. 빈 다이어그램으로 불러와 다시 쓰는 일은 절대 없습니다.

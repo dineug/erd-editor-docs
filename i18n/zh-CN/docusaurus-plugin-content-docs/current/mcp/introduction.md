@@ -17,10 +17,10 @@ VS Code 会让智能体的变更在智能体或你保存之前一直保持未保
 
 ## 智能体能做什么
 
-- 在对话中构建或修改 schema：表、列及所有列选项、关系、索引、备注、颜色，以及在画布上的位置。
+- 在对话中构建或修改 schema：表、列及所有列选项、关系及其基数和 ON DELETE 与 ON UPDATE 操作、索引、备注、颜色，以及在画布上的位置。参见[关系](./tools.md#关系)。
 - 用从 SQL DDL、GraphQL SDL、DBML 或 AML 解析出的 schema，或者用另一个 `.erd.json` 文档替换当前文档。
 - 以 id 列表、完整实体、八种数据库中任意一种的 DDL，或原始 JSON 的形式读回图。在包含数千个表的 schema 上，它每次只读取一页或几个表。参见[读取文档](./tools.md#reading-a-document)。
-- 修改文档中存储的设置：数据库、Code Generator 的语言与名称大小写、括号类型，以及显示表的哪些部分。
+- 修改文档中存储的设置：数据库、Code Generator 的语言与名称大小写、括号类型，以及显示图的哪些部分，例如备用键标记，或关系连接线上的 ON DELETE 与 ON UPDATE 标签。参见[设置](./tools.md#settings)。
 - 把多次编辑作为一次编辑执行，要么全部生效，要么全部不生效，一次 Undo 即可撤回。参见 [erd_batch](./tools.md#erd_batch)。
 - Undo 与 Redo 它自己的编辑，而绝不会动你的编辑。
 
@@ -46,8 +46,11 @@ VS Code 会让智能体的变更在智能体或你保存之前一直保持未保
 | --- | --- |
 | Node.js | `22.12` 或更高版本，用于运行服务器 |
 | MCP 客户端 | Claude Code、Codex，或任何能够启动 stdio 服务器的客户端 |
-| VS Code（用于实时编辑） | `1.101.0` 或更高版本，并安装 `3.0.0` 或更高版本的 ERD Editor 扩展，推荐 `3.0.1` |
-| Obsidian（用于实时编辑） | 桌面应用，并安装 `0.1.0` 或更高版本的 ERD Editor 插件 |
-| JetBrains IDE（用于实时编辑） | `2025.2` 或更高版本的基于 IntelliJ 的 IDE，并安装 `0.9.0` 或更高版本的 ERD Editor 插件 |
+| VS Code（用于实时编辑） | `1.101.0` 或更高版本，并安装 `3.0.0` 或更高版本的 ERD Editor 扩展，推荐 `3.1.0` |
+| Obsidian（用于实时编辑） | `1.5.7` 或更高版本的桌面应用，并安装 `0.1.0` 或更高版本的 ERD Editor 插件，推荐 `0.2.0` |
+| JetBrains IDE（用于实时编辑） | `2025.2` 或更高版本的基于 IntelliJ 的 IDE，并安装 `0.9.0` 或更高版本的 ERD Editor 插件，推荐 `0.10.0` |
+
+满足最低版本但低于推荐版本的扩展或插件，仍然可以让智能体进行实时编辑。
+但它会忽略关系的 ON DELETE 与 ON UPDATE 操作，无论这些操作是由智能体设置的，还是随 schema 一起导入的，参见[更新](./installation.md#更新)。
 
 下一步：[安装](./installation.md)。

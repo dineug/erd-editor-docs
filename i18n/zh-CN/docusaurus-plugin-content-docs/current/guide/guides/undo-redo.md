@@ -1,5 +1,5 @@
 ---
-sidebar_position: 9
+sidebar_position: 10
 description: Undo 与 Redo、历史记录的内容，以及通过 Time Travel 浏览编辑历史。
 ---
 
@@ -15,7 +15,8 @@ description: Undo 与 Redo、历史记录的内容，以及通过 Time Travel �
 只有在存在可 Undo 或 Redo 的内容时按钮才会亮起。`readonly` 编辑器会隐藏这三个按钮，快捷键也不起作用。
 
 Undo 与 Redo 仅在 ERD 标签页生效。在 Visualization、Schema SQL、Code Generator 和 Settings 标签页中不可用。  
-快速搜索、`Table Properties`、`Diff Viewer`、自动布局预览或 Time Travel 打开时，快捷键同样不生效。
+快速搜索、`Table Properties`、`Diff Viewer`、自动布局预览或 Time Travel 打开时，快捷键同样不生效。  
+[查找与替换](./find-and-replace.md#keys-in-the-panel)打开时，快捷键仍然有效。即使光标位于其查找输入框或替换输入框中，快捷键 Undo 与 Redo 的对象也是图，而不是输入框中的文本。
 
 历史记录保存在当前会话的内存中。它不会存入文档，因此重新打开图时历史记录为空。
 
@@ -27,7 +28,7 @@ Undo 与 Redo 仅在 ERD 标签页生效。在 Visualization、Schema SQL、Code
 
 - 表与备注：添加、删除、移动、颜色、名称与注释、备注文本与大小。
 - 列：添加、删除、调整顺序，以及所有列选项。
-- 关系：添加、删除与类型修改。
+- 关系：添加、删除、类型修改，以及在 `On Delete` 或 `On Update` 中的每一次选择。参见 [ON DELETE 与 ON UPDATE](./relationship-editing.md#on-delete-and-on-update)。对删除执行 Undo 时，关系会连同其 ON DELETE 与 ON UPDATE 操作一起恢复。
 - 索引及其列。
 - 视图位置、缩放级别，以及 `View Option` 开关。
 - 导入文件。
@@ -44,10 +45,18 @@ Undo 与 Redo 仅在 ERD 标签页生效。在 Visualization、Schema SQL、Code
 
 从其他编辑器到达的变更同样不会被记录，因此 Undo 只会撤回你自己的变更。在[协同编辑会话](../../api/advanced/collaborative-editing.md)中，每个编辑器各自 Undo 自己的变更，而通过 [MCP 服务器](../../mcp/live-and-headless.md#undo)进行编辑的编码智能体则用 `erd_undo` 撤回它自己的变更。
 
+对导入执行 Undo 时，之前的图会以其文件所能保存的形式恢复。  
+如果该图关闭了 [`Save Scroll Information`](./settings.md#保存滚动信息)，视图会回到打开该图时显示的位置，而不是你原先所在的位置。如果关闭了 [`Save Zoom Information`](./settings.md#保存缩放信息)，缩放会回到 `100%`。无论哪种情况，编辑内容本身都会恢复。  
+新建的图中两个开关默认均为关闭。将它们开启，即可在这类 Undo 之后保留当前视图。
+
 ## 一次操作一条记录
 
 单次操作触发的全部变更会合并为一条历史记录。  
 一次性粘贴多个表与备注，或通过 `Alt + drag` 复制它们，都只需一步即可 Undo。
+
+[查找与替换](./find-and-replace.md#replacing)中的 `Replace All` 同样只算一步，无论它修改了多少表名、注释、列名和备注。没有修改任何内容时，它不会记录任何一步。  
+单次 `Replace` 算一步，跳转到下一个匹配项时如果需要滚动，该滚动也包含在这一步中。  
+跳转到尚未完全显示在面板旁视野中的匹配项时，画布会滚动，该滚动会像其他视图位置变更一样被记录，参见[跳转到匹配项](./find-and-replace.md#going-to-a-match)。在匹配项之间移动之后，Undo 会先撤回这些滚动，每一步撤回一次。
 
 连续的拖动、画布平移、缩放、捏合或颜色修改会经过约 `200ms` 的缓冲，同样只记录为一条。  
 总移动距离不足 `20px` 的拖动完全不会被记录。
@@ -59,7 +68,7 @@ Undo 与 Redo 仅在 ERD 标签页生效。在 Visualization、Schema SQL、Code
 从工具栏中 Undo 与 Redo 旁边的 `Time Travel` 按钮打开。  
 在当前会话至少记录一条变更之前，该按钮不会有任何反应。
 
-Time Travel 会打开图的一份独立只读副本。  
+Time Travel 会以画布当前显示的滚动位置和缩放级别打开图的一份独立只读副本，无论该图是否保存这两项信息。  
 拖动滑块，或在滑轨上任意位置点击，即可浏览完整的编辑历史并预览每个时间点。滑块的最左端是第一条记录变更之前的状态，打开时滑块位于当前状态。  
 预览是静止的：它会绘制小地图，但无法平移、滚动或编辑，在应用之前实际文档不会发生任何变化。
 

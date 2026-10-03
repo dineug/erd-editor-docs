@@ -42,8 +42,16 @@ An action is a plain serializable object describing one change to the document, 
 They arrive in batches: `subscribe` hands you an array, and that array is one unit — relay it whole and dispatch it whole on the other side.  
 Treat an action as opaque and pass it through verbatim rather than reading or rewriting it, since the bookkeeping it carries is what keeps the editors in sync.
 
+Since `3.10.0` a change to a relationship's [ON DELETE or ON UPDATE](../../guide/guides/relationship-editing.md#on-delete-and-on-update) travels as one of two new action types, `relationship.changeOnDelete` and `relationship.changeOnUpdate`, and `relationship.add` can carry both. A relay that passes actions through verbatim needs nothing new for them.  
+An editor from before `3.10.0` ignores those action types and fields. In a session that mixes releases, the older editors never learn a relationship's ON DELETE or ON UPDATE, and a document saved from one of them has neither. A relationship an older editor adds arrives without them, so both start at `Not set`.  
+Keep every editor in a session, and any [replicationStore](./remote-storage.md#dispatch-dispatchsync) that stores its document, on `3.10.0` or later.
+
+Every other change a `3.10.0` editor sends travels on action types older editors already know.  
+`Replace All` in [Find and Replace](../../guide/guides/find-and-replace.md#replacing) sends its edits as one batch of the same rename, comment, and memo actions an edit by hand sends. The `Alternate Key` and `Referential Actions` [view options](../../guide/guides/table-related-functions.md#table-view-options) travel on the existing `settings.changeShow` action.
+
 Nothing done in the Visualization tab's [Flow mode](../../guide/guides/visualization.md#flow-never-edits-the-document) is a document change, so an editor in Flow sends the others no changes, and the changes they send keep applying while it is there.  
-The one exception is the external-link card button that takes you back to the ERD tab: its tab switch and scroll are sent like any other.
+The one exception is leaving Flow for another tab: that tab switch is sent like any other.  
+The external-link card button, a [quick search](../../guide/guides/quick-search.md#searching-the-diagram) result chosen after `#`, `@`, or `:`, and opening [Find and Replace](../../guide/guides/find-and-replace.md#opening-and-closing) all leave Flow for the ERD tab. A scroll the card button or a quick search result makes there is sent too.
 
 ## Two Editors on One Page
 

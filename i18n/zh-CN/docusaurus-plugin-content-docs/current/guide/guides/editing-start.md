@@ -35,8 +35,10 @@ description: 从画布右键菜单创建表、备注与关系。
 - One N: `Ctrl + Alt + 4` (Windows/Linux) or `⌘ + ⌥ + 4` (Mac)
 
 选定某种类型后光标会随之变化。先点击父表，再点击子表。  
-若父表没有主键，则会为其添加主键，并在子表上创建与之匹配的外键列（名称、数据类型、默认值和注释均相同，并设为 `Not Null`）。  
+若父表没有主键，则会为其添加主键；父表的每个主键列都会在子表上对应生成一个 `Not Null` 外键列，其数据类型、默认值和注释均与该主键列相同。  
+每个外键列都以其对应的键命名：像 `id` 这样由一个单词组成的名称会在前面加上父表的名称（`user_id`），像 `member_id` 这样由多个单词组成的名称保持不变，子表中已有的名称则会加上编号（`user_id_2`），参见[外键列名](./relationship-editing.md#foreign-key-column-names)。  
 对同一张表点击两次会绘制自引用关系。  
+新建关系的 `On Delete` 与 `On Update` 起初均为 `Not set`，可通过该关系的右键菜单修改，参见 [ON DELETE 与 ON UPDATE](./relationship-editing.md#on-delete-and-on-update)。  
 按 `Escape` 或再次按下相同的快捷键即可取消。取消后选中状态保持不变，再按一次 `Escape` 才会将其清除。
 
 ![用 ⌘ + ⌥ + 4 创建 One N 关系，再从画布工具栏创建 Zero N 关系](/img/demo-relationship.webp)

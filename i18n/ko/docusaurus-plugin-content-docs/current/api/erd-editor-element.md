@@ -27,7 +27,6 @@ interface ErdEditorElement extends HTMLElement {
         KeyBindingMap,
         | 'edit'
         | 'stop'
-        | 'search'
         | 'undo'
         | 'redo'
         | 'zoomIn'
@@ -61,6 +60,8 @@ interface ErdEditorElement extends HTMLElement {
 에디터 편집 가능 여부를 설정합니다.  
 설정된 동안에는 `value` 할당, `clear()`, `setSchemaSQL()`, `setSchemaGraphQL()`, `setSchemaDBML()`, `setSchemaAML()`, Undo, Redo가 모두 무시되고 `change` 이벤트도 발행되지 않습니다. 문서를 불러올 때는 [setInitialValue](#setinitialvalue)를 사용하세요.  
 보기는 그대로 동작합니다. 확대/축소, 화면 이동, 손 도구, Zen 모드, 캔버스 탭, 두 모드와 테이블 포커스를 포함한 [Visualization](../guide/guides/visualization.md) 탭, 데이터베이스 벤더, SQL과 코드 생성 출력 설정이 모두 적용되므로, `readonly` 상태에서도 다른 벤더의 SQL을 내보내거나 생성된 코드를 확인할 수 있습니다.  
+`3.10.0`부터는 [찾기와 바꾸기](../guide/guides/find-and-replace.md#읽기-전용-에디터)도 열리며, 제목이 `Find`이고 Replace 입력란과 버튼이 없는 찾기 전용 패널로 표시됩니다. 일치 항목으로 이동하면 여전히 그 항목을 화면에 표시하고 선택합니다.  
+테이블 속성도 그대로 열리며, `3.10.0`부터는 제목 옆에 `Read only` 배지가 표시되고 `Indexes` 탭에서는 아무것도 편집할 수 없습니다. [테이블 속성](../guide/guides/table-related-functions.md#테이블-속성) 문서를 참고하세요.  
 속성만 쓰거나 `=""`, `="true"`는 모두 `true`로 읽힙니다. `="false"`는 `false`로 읽히고, HTML 관용 표기인 `readonly="readonly"`를 포함해 그 밖의 문자열도 마찬가지입니다.
 
 ```js
@@ -111,7 +112,8 @@ editor.setAttribute('enable-theme-builder', 'true');
 ### getter
 
 현재 에디터 상태를 에디터가 정의한 [스키마](./advanced/schema.md) 형식의 JSON 문자열로 받아옵니다.  
-직렬화할 때 해당 문서의 `ignoreSaveSettings`가 적용되어, 스크롤 비트가 설정되어 있으면 화면 원점이 `0, 0`으로, 확대/축소 비트가 설정되어 있으면 확대/축소 레벨이 `1`로 기록됩니다.
+직렬화할 때 해당 문서의 `ignoreSaveSettings`가 적용되어, 스크롤 비트가 설정되어 있으면 화면 원점이 `0, 0`으로, 확대/축소 비트가 설정되어 있으면 확대/축소 레벨이 `1`로 기록됩니다.  
+`3.10.0`부터 새 문서는 두 비트가 모두 설정되어 있으며, 값을 전달받기 전에 엘리먼트가 표시하는 문서와 빈 값으로 불러온 문서 모두 해당합니다. 이런 문서의 `value`는 [`Save Scroll Information`](../guide/guides/settings.md#스크롤-정보-저장)을 켜기 전까지 화면 원점을 `0, 0`으로, [`Save Zoom Information`](../guide/guides/settings.md#확대축소-정보-저장)을 켜기 전까지 확대/축소 레벨을 `1`로 계속 기록합니다. 각 비트는 [Settings](./advanced/schema.md#settings) 문서를 참고하세요.
 
 ```js
 const data = editor.value;
@@ -122,7 +124,10 @@ const data = editor.value;
 이전에 저장했던 에디터 상태를 불러옵니다. 문서 전체를 교체하며, 현재 문서는 먼저 비워집니다.  
 `clear()`, `setInitialValue()`, `setSchema*` 메서드와 마찬가지로 Visualization 탭의 Flow 뷰도 버립니다. 배치, 범위를 좁혀 둔 테이블, 행 표시, 확대/축소, 화면 이동 상태가 모두 해당합니다.  
 히스토리 목록에 기록되어 `Undo, Redo`가 가능하고, `change` 이벤트를 발행합니다.  
-빈 문자열이나 문자열이 아닌 값은 에러가 아니라 빈 문서로 불러오므로, 할당하기 전에 값을 확인하세요.  
+빈 문자열이나 문자열이 아닌 값은 에러가 아니라 새 문서로 불러오므로, 할당하기 전에 값을 확인하세요.  
+`3.10.0`부터 이 새 문서는 `setInitialValue('')`로 시작하는 문서와 같습니다. 비어 있고 기본 설정을 사용하며, 스크롤 위치와 확대/축소 레벨을 모두 저장하지 않습니다. 이전에는 둘 다 저장하는 빈 문서였습니다.  
+shared store는 이 불러오기를 새 문서의 전체 JSON과 함께 공동 편집자에게 전달하므로, 이전 릴리스를 사용하는 참여자를 포함해 모든 참여자가 같은 문서를 불러옵니다.  
+병합 충돌 표시가 남은 파일처럼 JSON이 아닌 텍스트도 에러를 발생시키지 않습니다. 문서는 비워지고 설정은 그대로 유지되며, 파싱 에러는 콘솔에 기록됩니다.  
 `readonly`가 설정된 동안에는 무시되며, `readonly` 에디터에 문서를 불러올 때는 [setInitialValue](#setinitialvalue)를 사용하세요.
 
 ```js
@@ -133,7 +138,10 @@ editor.value = 'json...';
 
 이전에 저장했던 에디터 상태를 불러옵니다. 불러오기 자체는 히스토리 목록에 기록되지 않아 되돌릴 수 없고, `change` 이벤트도 발행되지 않습니다.  
 불러올 때 Undo 기록도 비우므로, 불러오기 전에 한 작업을 불러온 문서 위에서 `Undo, Redo`할 수 없습니다.  
-빈 문자열이나 문자열이 아닌 값은 에러가 아니라 빈 문서로 불러오므로, `setInitialValue('')`는 빈 다이어그램으로 시작합니다.  
+빈 문자열이나 문자열이 아닌 값은 에러가 아니라 새 문서로 불러오므로, `setInitialValue('')`는 빈 다이어그램으로 시작합니다.  
+`3.10.0`부터 이 새 문서는 값을 전달받기 전에 엘리먼트가 표시하는 문서이기도 하며, 스크롤 위치와 확대/축소 레벨을 모두 저장하지 않으므로 스크롤하거나 확대/축소해도 `value`는 그대로 유지됩니다. 이전에는 둘 다 저장했습니다.  
+텍스트에서 불러온 문서는 그 안에 기록된 스위치 값을 유지하며, `3.2.3` 이전에 저장한 파일이나 v2 `.vuerd` 파일처럼 스위치가 기록되지 않은 문서는 둘 다 저장합니다.  
+JSON이 아닌 텍스트도 에러를 발생시키지 않습니다. 문서는 비워지고 설정은 그대로 유지되며, 파싱 에러는 콘솔에 기록됩니다.  
 `value` 할당과 달리 `readonly`에 막히지 않기 때문에, `readonly` 에디터에 문서를 불러오는 방법입니다.
 
 ```js
@@ -159,7 +167,9 @@ editor.addEventListener('change', () => {
 에디터에 변경이 있을 때 이벤트를 발행합니다.  
 200ms 디바운스되며, `readonly`가 `true`인 동안에는 발행되지 않습니다.  
 UI 편집, `value` 할당, `clear()`, 각 `setSchema*` 메서드 등 문서가 변경되는 모든 경우에 발행됩니다. `setInitialValue`는 발행하지 않습니다.  
-Visualization 탭의 Flow 모드 안에서 하는 확대/축소, 화면 이동, 카드 이동, `Tidy Up`, 행 표시 변경, 카드에서 뷰 범위 좁히기는 모두 문서 변경이 아니므로 어느 것도 이벤트를 발행하지 않습니다. 탭 전환은 발행하므로, ERD 탭에서 테이블 포커스를 실행하면 `change`가 한 번 발행되고, Flow에서 ERD 탭으로 돌아가는 외부 링크 카드 버튼도 마찬가지입니다.  
+Visualization 탭의 Flow 모드 안에서 하는 확대/축소, 화면 이동, 카드 이동, `Tidy Up`, 행 표시 변경, 카드에서 뷰 범위 좁히기는 모두 문서 변경이 아니므로 어느 것도 이벤트를 발행하지 않습니다. 탭 전환은 발행하므로, ERD 탭에서 테이블 포커스를 실행하면 `change`가 한 번 발행되고, Flow에서 ERD 탭으로 돌아가는 외부 링크 카드 버튼도 마찬가지입니다. 다른 탭에서 찾기와 바꾸기를 열거나 빠른 검색 결과로 이동해도 ERD 탭으로 전환되므로 마찬가지로 한 번 발행됩니다.  
+ERD 캔버스의 스크롤과 확대/축소도 `editor.value`가 달라지는지와 관계없이 이벤트를 발행합니다. `Save Scroll Information`이 꺼져 있는 동안 스크롤은 `value`를 그대로 둡니다. 확대/축소는 화면 위치도 함께 이동시키므로, `Save Scroll Information`과 `Save Zoom Information`이 모두 꺼져 있을 때만 `value`를 그대로 둡니다. `3.10.0`부터 새 문서는 둘 다 꺼져 있으므로, 새 다이어그램에서는 스크롤이나 확대/축소가 `value`를 바꾸지 않은 채 `change`를 발행합니다.  
+이런 쓰기를 건너뛰려면 불러온 파일이 아니라 마지막으로 저장한 값과 `editor.value`를 비교하세요. 다른 릴리스나 다른 기기에서 저장한 파일은 불러오자마자 `value`가 달라질 수 있습니다. 파일을 저장하는 호스트는 대신 복제 store의 `changed`로 편집과 화면 변경을 구분할 수 있습니다. [on@change](./advanced/remote-storage.md#onchange) 문서를 참고하세요.  
 이벤트에는 `detail`이 없고 버블링되거나 shadow 경계를 넘지도 않으므로, 엘리먼트 자체에서 수신하고 핸들러에서 `editor.value`를 읽으세요.
 
 ```js
@@ -198,7 +208,8 @@ editor.blur();
 
 ## clear
 
-에디터 상태를 초기화합니다.  
+모든 테이블, 컬럼, 관계, 인덱스, 메모를 제거해 문서를 비웁니다.  
+데이터베이스, 화면 위치, 확대/축소 레벨, 테이블 보기 옵션, `Save Scroll Information`과 `Save Zoom Information` 스위치를 포함해 모든 설정이 유지되므로, 비운 파일은 이전에 저장하던 것을 계속 저장합니다. 대신 새 문서로 시작하려면 `value`에 `''`를 할당하거나 `setInitialValue('')`를 호출하세요.  
 히스토리 목록에 기록되어 Undo가 가능하고, `change` 이벤트를 발행합니다. `readonly`가 설정된 동안에는 무시됩니다.
 
 ```js
@@ -218,9 +229,11 @@ editor.destroy();
 ## setKeyBindingMap
 
 단축키를 재정의합니다.  
-`edit`, `stop`, `search`, `undo`, `redo`, `zoomIn`, `zoomOut`, `zoomReset`은 고정이며 재정의할 수 없습니다.  
-아래 16개 이름만 적용되고, 고정된 이름을 포함해 객체의 나머지 값은 무시됩니다.  
+`edit`, `stop`, `undo`, `redo`, `zoomIn`, `zoomOut`, `zoomReset`은 고정이며 재정의할 수 없습니다.  
+아래 18개 이름만 적용되고, 고정된 이름을 포함해 객체의 나머지 값은 무시됩니다.  
+`3.10.0`부터 `search`를 재정의할 수 있으며, `findReplace`가 새로 추가되었습니다. 이전에는 `search`가 고정이었습니다.  
 값은 `ShortcutOption[]`이어야 합니다. 문자열만 전달하면 무시되므로 `{ addTable: 'Alt+KeyN' }`이 아니라 `{ addTable: [{ shortcut: 'Alt+KeyN' }] }`으로 작성하세요.  
+빈 배열도 허용되며 아무 키도 지정하지 않습니다. `setKeyBindingMap({ findReplace: [] })`는 `Ctrl + F` (Windows/Linux) or `⌘ + F` (Mac)를 페이지에 맡기고, `{ search: [] }`는 `Ctrl + K` (Windows/Linux) or `⌘ + K` (Mac)를 마찬가지로 페이지에 맡깁니다. 툴바의 `Search` 버튼으로는 여전히 빠른 검색이 열리고, 찾기와 바꾸기도 툴바 버튼, 빠른 검색의 항목, 캔버스 컨텍스트 메뉴로 여전히 열립니다. 비워 둔 이름의 단축키는 이 중 어디에도 표시되지 않습니다.  
 호출은 부분 병합이라 생략한 이름은 기본값을 유지하고, 두 번 호출해도 앞선 변경이 유지됩니다. 현재 설정을 읽는 getter는 없습니다. [createKeyBindingMap](#createkeybindingmap)은 `setKeyBindingMap`으로 변경한 내용이 아니라 기본값을 반환합니다.
 
 ```ts
@@ -234,13 +247,18 @@ const defaultKeyBindingMap: Omit<
   KeyBindingMap,
   | 'edit'
   | 'stop'
-  | 'search'
   | 'undo'
   | 'redo'
   | 'zoomIn'
   | 'zoomOut'
   | 'zoomReset'
 > = {
+  search: [
+    { shortcut: '$mod+KeyK', preventDefault: true, stopPropagation: true },
+  ],
+  findReplace: [
+    { shortcut: '$mod+KeyF', preventDefault: true, stopPropagation: true },
+  ],
   addTable: [{ shortcut: 'Alt+KeyN', preventDefault: true }],
   addColumn: [{ shortcut: 'Alt+Enter', preventDefault: true }],
   addMemo: [{ shortcut: 'Alt+KeyM', preventDefault: true }],
@@ -280,19 +298,25 @@ editor.setKeyBindingMap({
 
 `selectAllTable`과 `handTool`은 커서에 양보합니다. 포커스가 input, textarea, `contenteditable` 안에 있는 동안에는 `$mod + A`가 텍스트를 선택하고 `Space`는 공백을 입력하며, 캔버스까지 전달되지 않습니다. 다른 단축키로 재정의해도 동작은 같습니다.
 
+`3.10.0`부터 `findReplace` (`$mod+KeyF`)는 [찾기와 바꾸기](../guide/guides/find-and-replace.md)를 열며, 다른 탭에서는 ERD 탭으로 전환합니다.  
+이 키는 커서에 양보하지 않습니다. 에디터에 포커스가 있는 동안에는 캔버스에서든 에디터 안의 입력란에서든 모든 탭에서 이 키를 에디터가 처리합니다. 이 키 입력에 `preventDefault()`를 호출하므로 브라우저의 찾기 막대가 열리지 않고, `stopPropagation()`도 호출하므로 페이지의 버블링 `keydown` 리스너는 이 입력을 받지 않습니다. 셀이나 메모의 편집모드가 열려 있을 때도 `preventDefault()`와 `stopPropagation()`을 호출하지만 아무것도 열지 않습니다.  
+어느 탭에서든 Diff Viewer, Time Travel, 자동 배치 미리보기가 열려 있는 동안이나 IME가 아직 조합 중일 때는 `preventDefault()`도 `stopPropagation()`도 호출하지 않으므로, 브라우저나 호스트 자체의 찾기 기능이 이 입력을 받습니다. 찾기와 바꾸기 패널 안에서는 조합 중인 입력에 `stopPropagation()`만 호출하고 `preventDefault()`는 호출하지 않습니다. `findReplace`를 다른 단축키로 재정의해도 동작은 같습니다.
+
 `focusView`는 ERD 탭에서만 동작합니다. 테이블이 하나 이상 선택되어 있으면 Visualization 탭을 Flow 모드로 열어, 선택한 테이블과 그 테이블에 관계 하나로 이어진 모든 테이블로 범위를 좁힙니다. 선택한 테이블이 없으면 아무 동작도 하지 않습니다. [테이블 포커스](../guide/guides/visualization.md#테이블-포커스) 문서를 참고하세요.
 
 ERD 탭에서 `stop` (`Escape`)은 셀이나 메모의 편집모드, 또는 그리는 중인 관계를 끝내고 선택은 그대로 둡니다. 에디터는 이 키 입력에 `preventDefault()`를 호출합니다.  
 그중 아무것도 열려 있지 않으면 `Escape`는 선택과 포커스한 셀을 해제하며, 이때는 `preventDefault()`를 호출하지 않습니다. 따라서 편집을 끝내고 선택까지 해제하려면 두 번 눌러야 합니다.  
-에디터는 `Escape`의 전파를 막지 않으므로, 예를 들어 자체 다이얼로그를 닫기 위해 직접 `Escape`를 수신하는 페이지는 두 키 입력을 모두 받으며, `defaultPrevented`가 `true`인 입력은 건너뛸 수 있습니다.  
+찾기와 바꾸기 패널 밖에서는 에디터가 `Escape`의 전파를 막지 않으므로, 예를 들어 자체 다이얼로그를 닫기 위해 직접 `Escape`를 수신하는 페이지는 두 키 입력을 모두 받으며, `defaultPrevented`가 `true`인 입력은 건너뛸 수 있습니다.  
 빠른 검색, 테이블 속성, Diff Viewer, 자동 배치 미리보기, Time Travel이 열려 있는 동안에는 `Escape`가 대신 그것을 닫고 선택은 그대로 둡니다. 이 키 입력에도 `preventDefault()`를 호출하지 않습니다.  
-IME가 아직 조합 중일 때 누른 `Escape`는 조합에 속합니다. 열려 있는 편집모드는 그대로 두고 `preventDefault()`도 호출하지 않으므로, 페이지는 `isComposing`이 `true`이거나 `keyCode`가 `229`인 입력도 건너뛸 수 있습니다.  
+`3.10.0`부터 포커스가 찾기와 바꾸기 패널 안에 있을 때 누른 `Escape`는 패널을 닫고 선택은 그대로 둡니다. 에디터는 이 키 입력에 `preventDefault()`와 `stopPropagation()`을 모두 호출하므로, 페이지의 버블링 `keydown` 리스너에는 전달되지 않습니다.  
+패널이 열려 있을 때 캔버스에서 누른 `Escape`는 위의 어느 것도 이 입력을 처리하지 않으면, 선택을 해제하는 바로 그 입력으로 패널도 닫습니다. 이 키 입력에는 `preventDefault()`도 `stopPropagation()`도 호출하지 않습니다.  
+IME가 아직 조합 중일 때 누른 `Escape`는 조합에 속합니다. 열려 있는 편집모드는 그대로 두고 `preventDefault()`도 호출하지 않으므로, 페이지는 `isComposing`이 `true`이거나 `keyCode`가 `229`인 입력도 건너뛸 수 있습니다. 찾기와 바꾸기 패널 안에서는 조합 중에 누른 다른 키와 마찬가지로 이 입력에도 `stopPropagation()`을 호출합니다.  
 `3.9.2` 이전에는 `Escape` 한 번으로 편집이나 관계 그리기를 끝내는 동시에 선택까지 해제했고, 에디터는 `preventDefault()`를 호출하지 않았습니다.
 
 ### createKeyBindingMap
 
 `3.9.2`부터 패키지는 `createKeyBindingMap()`과 함께 `KeyBindingMap`, `KeyBindingName`, `ShortcutOption` 타입을 export합니다.  
-고정된 이름을 포함한 24개 이름 전체의 기본 키 바인딩을 호출할 때마다 새 맵으로 반환하므로, 반환된 맵을 변경해도 다른 곳에는 영향이 없습니다.  
+고정된 이름을 포함한 25개 이름 전체의 기본 키 바인딩을 호출할 때마다 새 맵으로 반환하므로, 반환된 맵을 변경해도 다른 곳에는 영향이 없습니다.  
 모든 에디터가 시작할 때 사용하는 값이며, `setKeyBindingMap` 호출은 여기에 반영되지 않습니다.  
 런타임 export는 `createKeyBindingMap`뿐이며, 나머지 셋은 타입입니다.
 
@@ -301,6 +325,7 @@ type KeyBindingName =
   | 'edit'
   | 'stop'
   | 'search'
+  | 'findReplace'
   | 'undo'
   | 'redo'
   | 'addTable'
@@ -336,14 +361,18 @@ const shortcuts = Object.values(createKeyBindingMap())
 ```
 
 각 `shortcut`은 키를 `KeyboardEvent.code`로 지정하는 [tinykeys](https://github.com/jamiebuilds/tinykeys) 키 조합이며, [`$mod`](#mod)는 macOS에서는 `⌘`, 그 외 환경에서는 `Control`입니다.  
-고정된 이름은 `Enter` (`edit`), `Escape` (`stop`), `$mod+KeyK` (`search`), `$mod+KeyZ` (`undo`), `$mod+Shift+KeyZ` (`redo`), `$mod+Equal` (`zoomIn`), `$mod+Minus` (`zoomOut`), `$mod+Digit0` (`zoomReset`)에 바인딩되어 있습니다. `edit`과 `stop`에는 플래그가 없고, 나머지 여섯은 `preventDefault`와 `stopPropagation`을 가집니다. 그 외 이름은 위의 기본값과 같습니다.
+고정된 이름은 `Enter` (`edit`), `Escape` (`stop`), `$mod+KeyZ` (`undo`), `$mod+Shift+KeyZ` (`redo`), `$mod+Equal` (`zoomIn`), `$mod+Minus` (`zoomOut`), `$mod+Digit0` (`zoomReset`)에 바인딩되어 있습니다. `edit`과 `stop`에는 플래그가 없고, 나머지 다섯은 `preventDefault`와 `stopPropagation`을 가집니다. `search`와 `findReplace`를 포함한 그 외 이름은 위의 기본값과 같습니다.
 
 에디터는 자신의 엘리먼트에서 이 키들을 수신하므로, 전역 단축키나 캡처 단계의 `keydown` 리스너로 에디터보다 먼저 키를 받는 호스트는 에디터에 포커스가 있는 동안 이 키들을 통과시켜야 합니다.  
-통과시킬 목록은 `createKeyBindingMap()`으로 만들되, `setKeyBindingMap`에 전달한 바인딩으로 해당 기본값을 대체하세요.
+통과시킬 목록은 `createKeyBindingMap()`으로 만들되, `setKeyBindingMap`에 전달한 바인딩으로 해당 기본값을 대체하세요.  
+`3.10.0`부터 이 목록에는 브라우저 자체의 찾기 키 조합인 `$mod+KeyF`가 포함됩니다. 이 키 조합에서 호스트 자체의 찾기 기능을 유지하려면 `setKeyBindingMap({ findReplace: [] })`를 전달하세요.
+
+포커스가 찾기와 바꾸기 패널 안에 있는 동안에는 `findReplace`, `search`, `undo`, `redo`, `zoomIn`, `zoomOut`, `zoomReset`이 에디터로 전달됩니다. 현재 설정된 그 밖의 모든 바인딩은 방향키, `Tab`과 함께 패널에서 멈춥니다. 패널을 닫는 `Escape`와, Find 또는 Replace 입력란에서 일치 항목 사이를 이동하거나 바꾸기를 실행하는 `Enter`를 제외하면, 이 키들에는 `preventDefault()` 없이 `stopPropagation()`만 호출하므로 패널의 입력란과 버튼에서 일반 키로 동작하며, 캔버스에도 페이지의 버블링 `keydown` 리스너에도 전달되지 않습니다.  
+호스트의 저장이나 명령 팔레트 키 조합처럼 그 밖의 키는 평소대로 페이지에 전달됩니다. [패널의 키](../guide/guides/find-and-replace.md#패널의-키) 문서를 참고하세요.
 
 ### $mod
 
-Control키를 환경에 따라 분기합니다.
+`Control` 키를 환경에 따라 분기합니다.
 
 - Mac: $mod = Meta (⌘)
 - Windows/Linux: $mod = Control
@@ -623,9 +652,12 @@ erd-editor {
 ## setSchemaSQL
 
 Schema SQL 파일을 불러옵니다.  
-현재 문서에 병합하지 않고 교체합니다. 화면 위치와 확대/축소 레벨을 제외한 기존 설정은 유지되며, 파일을 읽고 나면 테이블이 자동으로 배치됩니다.  
+현재 문서에 병합하지 않고 교체합니다. 화면 위치와 확대/축소 레벨을 제외한 기존 설정은 저장 스위치를 포함해 유지되며, 파일을 읽고 나면 테이블이 자동으로 배치됩니다. 따라서 `3.10.0`부터 값을 한 번도 전달받지 않은 엘리먼트로 가져온 문서는 새 문서와 마찬가지로 스크롤 위치와 확대/축소 레벨을 저장하지 않습니다.  
 히스토리 목록에 기록되어 `Undo, Redo`가 가능하고, `change` 이벤트를 발행합니다. 빈 문자열은 무시되고, `readonly`가 설정된 동안에는 아무 동작도 하지 않습니다.  
 `setSchemaGraphQL`, `setSchemaDBML`, `setSchemaAML`도 동일하게 동작하며, 각 파서는 실패하지 않습니다. 읽을 수 없는 텍스트는 에러가 아니라 빈 문서로 불러옵니다.  
+`3.10.0`부터 `setSchemaSQL`은 문서에 현재 선택된 데이터베이스에 맞춰 파일을 읽습니다. Databricks가 선택되어 있으면 작은따옴표로 감싼 문자열은 Spark의 백슬래시 이스케이프를 따릅니다. [코멘트](../guide/guides/file-import-export.md#코멘트) 문서를 참고하세요.  
+`3.10.0`부터 `setSchemaSQL`은 두 개 이상의 컬럼에 걸친 `UNIQUE`를 각 컬럼의 Unique 플래그가 아니라 하나의 unique 인덱스로 읽습니다. [Unique 키와 인덱스](../guide/guides/file-import-export.md#unique-키와-인덱스) 문서를 참고하세요.  
+`3.10.0`부터 SQL, DBML, AML 가져오기는 읽어 들인 foreign key의 `ON DELETE`와 `ON UPDATE` 동작을 유지합니다.  
 각 파서가 지원하는 문법은 [파일 가져오기와 내보내기](../guide/guides/file-import-export.md) 문서를 참고하세요.
 
 ```js
@@ -660,7 +692,9 @@ editor.setSchemaAML('AML...');
 ## getSchemaSQL
 
 현재 에디터 상태를 Schema SQL로 추출합니다.  
-`databaseVendor`가 없으면 현재 에디터에 설정된 벤더로 동작합니다. 아래 목록에 없는 이름도 에러 없이 동일하게 처리됩니다.
+`databaseVendor`가 없으면 현재 에디터에 설정된 벤더로 동작합니다. 아래 목록에 없는 이름도 에러 없이 동일하게 처리됩니다.  
+`3.10.0`부터 각 foreign key에는 관계의 `ON DELETE`와 `ON UPDATE` 절이 포함됩니다. 절은 동작이 설정되어 있고 해당 벤더가 지원할 때만 작성되므로, 그 벤더가 지원하지 않는 동작은 생략되고 기본 동작이 적용됩니다. 데이터베이스별로 작성되는 내용은 [ON DELETE와 ON UPDATE](../guide/guides/relationship-editing.md#on-delete와-on-update) 문서를 참고하세요.  
+`3.10.0`부터 테이블이나 컬럼 코멘트 안의 작은따옴표를 이스케이프하므로, `it's` 같은 코멘트가 더 이상 구문을 깨뜨리지 않습니다. 코멘트를 문자열 리터럴로 작성하는 모든 벤더는 따옴표를 두 번 겹쳐 쓰며, Databricks만 각 따옴표와 각 백슬래시 앞에 백슬래시를 붙입니다. SQLite는 여전히 코멘트를 `--` 줄로 작성합니다.
 
 ```ts
 type DatabaseVendor =

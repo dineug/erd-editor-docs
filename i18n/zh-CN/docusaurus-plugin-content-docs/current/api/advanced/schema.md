@@ -73,6 +73,8 @@ const Show = {
   columnUnique: 64,
   columnNotNull: 128,
   relationship: 256,
+  columnAlternateKey: 512,
+  hideReferentialAction: 1024,
 } as const;
 
 const ColumnType = {
@@ -145,7 +147,16 @@ const SaveSettingType = {
 `columnOrder` 是一个数组，按显示顺序保存全部七个 `ColumnType` 值。  
 `database`、`language`、`tableNameCase`、`columnNameCase` 和 `bracketType` 各自只保存一个值，JSON Schema 会拒绝组合后的值。
 
-`Database` 和 `Language` 只会追加新值。已保存的文档中存储的是数字，因此新增的数据库厂商或代码生成目标会占用下一个比特位，而不是中间的某个位置。
+新文档的 `show` 为 `431`：`tableComment`、`columnComment`、`columnDataType`、`columnDefault`、`columnPrimaryKey`、`columnNotNull` 和 `relationship`。  
+从 `3.10.0` 起新增了两个 `show` 标志位，在新文档以及 `3.10.0` 之前保存的所有文档中都处于关闭状态。  
+`columnAlternateKey`（`512`）对应 [`Alternate Key`](../../guide/guides/table-related-functions.md#alternate-keys) 显示选项。设置后，每个由两列或更多列组成的唯一索引，其列都会被标记为 `AK1.1`、`AK1.2` 等。它默认关闭，因此现有的图都不会改变宽度。  
+`hideReferentialAction`（`1024`）是唯一一个用于隐藏其所指内容的标志位：设置后，它会隐藏连接线上的 [ON DELETE 与 ON UPDATE 标签](../../guide/guides/relationship-editing.md#reading-a-connector)，因此这些标签默认显示。该标志位关闭时，`Referential Actions` 显示选项处于勾选状态。它不会改变任何表的尺寸。  
+`3.10.0` 之前的编辑器会原样保留整个 `show` 数值，因此在其中保存后，这两个标志位依然存在。
+
+`ignoreSaveSettings` 会让写出的文档不包含视图信息。设置 `scroll` 时，`originX` 和 `originY` 写为 `0`；设置 `zoomLevel` 时，`zoomLevel` 写为 `1`。它们对应 [`Save Scroll Information`](../../guide/guides/settings.md#保存滚动信息) 和 [`Save Zoom Information`](../../guide/guides/settings.md#保存缩放信息) 两项设置，各自在对应的比特位未设置时处于开启状态。缩放同样会移动原点，因此只设置了 `zoomLevel` 时，缩放仍会改变写出的文档。  
+从 `3.10.0` 起，从零开始创建的文档（新的编辑器或用于数据复制的 store，或者赋给 `value` 或 `setInitialValue()` 的空白值）的 `ignoreSaveSettings` 为 `3`，因此两者都不保存。`settings` 中不带 `ignoreSaveSettings` 的文档（例如 `3.2.3` 之前保存的文档）仍会读作 `0`，两者都保存，与写出它的版本一致。
+
+`Database`、`Language`、`Show` 和 `ReferentialAction` 只会追加新值。已保存的文档中存储的是数字，因此新增的数据库厂商、代码生成目标、标志位或操作会占用下一个比特位，而不是中间的某个位置。
 
 ### Doc
 
@@ -239,6 +250,8 @@ type Relationship = EntityType<{
   identification: boolean;
   relationshipType: number; // Constants: RelationshipType
   startRelationshipType: number; // Constants: StartRelationshipType
+  onDelete: number; // Constants: ReferentialAction
+  onUpdate: number; // Constants: ReferentialAction
   start: RelationshipPoint;
   end: RelationshipPoint;
 }>;
@@ -264,6 +277,15 @@ const StartRelationshipType = {
   dash: 2,
 } as const;
 
+const ReferentialAction = {
+  none: 1,
+  noAction: 2,
+  cascade: 4,
+  setNull: 8,
+  setDefault: 16,
+  restrict: 32,
+} as const;
+
 const Direction = {
   left: 1,
   right: 2,
@@ -271,6 +293,10 @@ const Direction = {
   bottom: 8,
 } as const;
 ```
+
+从 `3.10.0` 起，关系带有 `onDelete` 和 `onUpdate`，即它的 [ON DELETE 与 ON UPDATE 操作](../../guide/guides/relationship-editing.md#on-delete-and-on-update)。两者各自只保存一个 `ReferentialAction` 值。默认值 `none` 不会写出任何子句，因此由数据库自身的默认行为决定。其余五个值分别对应 `NO ACTION`、`CASCADE`、`SET NULL`、`SET DEFAULT` 和 `RESTRICT`。Schema SQL 只会为支持该操作的数据库写出对应的子句。  
+两个字段都是可选的。缺少该字段时（`3.10.0` 之前保存的所有文档都是如此）读作 `none`，不在列表中的值同样读作 `none`；JSON Schema 只检查两者是否为整数。  
+`3.10.0` 之前的编辑器不认识这两个字段，会在加载文档时将其丢弃，因此在其中保存会丢失所有操作。
 
 ### Collection: indexEntities
 
@@ -420,7 +446,7 @@ type MemoUI = {
           "maximum": 1.5
         },
         "show": {
-          "description": "bit value (tableComment: 1) | (columnComment: 2) | (columnDataType: 4) | (columnDefault: 8) | (columnAutoIncrement: 16) | (columnPrimaryKey: 32) | (columnUnique: 64) | (columnNotNull: 128) | (relationship: 256)",
+          "description": "bit value (tableComment: 1) | (columnComment: 2) | (columnDataType: 4) | (columnDefault: 8) | (columnAutoIncrement: 16) | (columnPrimaryKey: 32) | (columnUnique: 64) | (columnNotNull: 128) | (relationship: 256) | (columnAlternateKey: 512) | (hideReferentialAction: 1024)",
           "type": "integer"
         },
         "database": {
@@ -697,6 +723,14 @@ type MemoUI = {
           },
           "startRelationshipType": {
             "description": "bit value (ring: 1) | (dash: 2)",
+            "type": "integer"
+          },
+          "onDelete": {
+            "description": "bit value (none: 1) | (noAction: 2) | (cascade: 4) | (setNull: 8) | (setDefault: 16) | (restrict: 32); none, the default, writes no ON DELETE clause",
+            "type": "integer"
+          },
+          "onUpdate": {
+            "description": "bit value (none: 1) | (noAction: 2) | (cascade: 4) | (setNull: 8) | (setDefault: 16) | (restrict: 32); none, the default, writes no ON UPDATE clause",
             "type": "integer"
           },
           "start": {

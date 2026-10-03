@@ -49,6 +49,12 @@ In both, `erd_save` writes them at once.
 `erd_save` first waits up to two seconds for the editor to hold every edit the agent made.
 It is refused with `notSaved` when the editor could not confirm that, or did not write the file: VS Code keeps a tab unsaved when the file changed on disk, and a JetBrains IDE could not write it, such as while a dialog was open or when the file cannot be written.
 
+In VS Code and a JetBrains IDE, `erd_save` on a document with nothing left to save succeeds and leaves the file as it is.
+That is the case once every edit is saved, which a JetBrains IDE does on its own, and when you have only scrolled or zoomed since, with `Save Scroll Information` and `Save Zoom Information` both off.
+A file a JetBrains IDE cannot write is refused even then.
+The VS Code extension before `3.1.0` marks the tab modified on such a scroll or zoom, so `erd_save` writes the file.
+The JetBrains plugin before `0.10.0` rewrites the file on `erd_save` when the IDE has not written it since opening it, dropping a byte order mark the file began with.
+
 When the editor closes the document after the agent's last edit, the agent's next call carries a note that those edits are in the file only if they were saved before the editor closed.
 
 ### Undo
@@ -56,8 +62,10 @@ When the editor closes the document after the agent's last edit, the agent's nex
 `erd_undo` reverts the last edit the agent made, never yours, and `erd_redo` applies it again.
 The editor's own [Undo](../guide/guides/undo-redo.md) works the other way round: it reverts your edits and never the agent's, since changes that arrive from another editor are not recorded in your history.
 
-A few edits make no undo entry in the editor: the [settings tools](./tools.md#settings) other than `erd_set_show`, and `erd_resize_memo`. An edit that sets a value the document already held changes nothing and makes none either.
+A few edits make no undo entry in the editor: the [settings tools](./tools.md#settings) other than `erd_set_show`, and `erd_resize_memo`.
+`erd_set_column_primary_key`, `erd_set_column_unique`, `erd_set_column_not_null`, `erd_set_column_auto_increment`, `erd_set_index_unique`, `erd_set_index_column_order`, and `erd_set_show` make none either when they set a value the document already holds, and neither does `erd_add_index_column` with a column already in the index: such a call changes nothing.
 `erd_undo` passes over these and names them in its result.
+Other edits, such as `erd_change_relationship_type`, `erd_change_relationship_on_delete`, and `erd_change_relationship_on_update`, make an entry even when they set a value the document already holds.
 
 The agent's undo history ends, with a note in the result, when:
 
@@ -121,7 +129,7 @@ That is the case for Obsidian or a JetBrains IDE installed as a Flatpak on Linux
 
 A document is named by `path`, absolute or relative to the server's working directory.
 
-- New documents are `.erd.json`. `erd_open_document` with `create` makes the file, adding `.erd.json` to a name that has no extension.
+- New documents are `.erd.json`. `erd_open_document` with `create` makes the file, adding `.erd.json` to a name that has no extension. Like a new diagram in the editor, the new document saves neither the view position nor the zoom level: [`Save Scroll Information`](../guide/guides/settings.md#save-scroll-information) and [`Save Zoom Information`](../guide/guides/settings.md#save-zoom-information) start off, so scrolling or zooming it in an editor never changes the file. `erd_set_ignore_save_settings` with `saveSettingType` `scroll` or `zoomLevel` and `value` `false` turns that switch on.
 - Existing `.erd`, `.vuerd`, and `.vuerd.json` files open too. A path with any other extension is refused with `invalidPath`.
 - On Windows, a path that holds a name Windows does not store as written is refused with `invalidPath` before the document is read or written, reads included: a name with a colon or another character Windows refuses, such as `orders:v2.erd`; a device name such as `NUL.erd` or `CON.erd`, in any case; or a name ending in a dot or a space. Rename it, for example with `-` in place of `:`.
 - A file that is not a document the editor can read, such as one left with merge conflict markers, is refused with `invalidDocument` and left as it is. It is never loaded as an empty diagram and written back.

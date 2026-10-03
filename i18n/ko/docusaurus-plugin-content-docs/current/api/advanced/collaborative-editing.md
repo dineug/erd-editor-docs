@@ -42,8 +42,16 @@ const sharedStore = editor.getSharedStore();
 액션은 묶음으로 도착합니다. `subscribe`는 배열을 넘겨주고 그 배열이 하나의 단위이므로, 통째로 중계하고 반대쪽에서도 통째로 dispatch합니다.  
 액션이 담고 있는 내부 정보가 에디터 사이의 동기화를 유지하므로, 액션을 읽거나 고치지 말고 불투명한 값으로 두고 그대로 전달합니다.
 
+`3.10.0`부터 관계의 [ON DELETE나 ON UPDATE](../../guide/guides/relationship-editing.md#on-delete와-on-update) 변경은 새로 추가된 두 액션 타입 `relationship.changeOnDelete`와 `relationship.changeOnUpdate` 중 하나로 전달되며, `relationship.add`에도 둘 다 담길 수 있습니다. 액션을 그대로 전달하는 중계자라면 이를 위해 새로 할 일이 없습니다.  
+`3.10.0` 이전 버전의 에디터는 이 액션 타입과 필드를 무시합니다. 여러 버전이 섞인 세션에서는 이전 버전의 에디터가 관계의 ON DELETE나 ON UPDATE를 전혀 알지 못하며, 그 에디터에서 저장한 문서에는 둘 다 없습니다. 이전 버전의 에디터가 추가한 관계는 두 동작 없이 도착하므로 둘 다 `Not set`으로 시작합니다.  
+세션의 모든 에디터와, 그 문서를 저장하는 [replicationStore](./remote-storage.md#dispatch-dispatchsync)는 모두 `3.10.0` 이상으로 유지하세요.
+
+`3.10.0` 에디터가 보내는 그 밖의 모든 변경사항은 이전 버전의 에디터도 이미 알고 있는 액션 타입으로 전달됩니다.  
+[찾기와 바꾸기](../../guide/guides/find-and-replace.md#바꾸기)의 `Replace All`은 바꾼 내용을, 직접 편집할 때 보내는 것과 같은 이름 변경, 코멘트, 메모 액션의 한 묶음으로 보냅니다. `Alternate Key`와 `Referential Actions` [보기 옵션](../../guide/guides/table-related-functions.md#테이블-보기-옵션)은 기존의 `settings.changeShow` 액션으로 전달됩니다.
+
 Visualization 탭의 [Flow 모드](../../guide/guides/visualization.md#flow는-문서를-편집하지-않음)에서 하는 어떤 동작도 문서 변경이 아니므로, Flow에 있는 에디터는 다른 에디터에 변경사항을 보내지 않고, 그동안에도 다른 에디터가 보낸 변경사항은 계속 반영됩니다.  
-유일한 예외는 ERD 탭으로 돌아가는 외부 링크 카드 버튼입니다. 이 버튼의 탭 전환과 스크롤은 다른 변경사항과 똑같이 전송됩니다.
+유일한 예외는 Flow를 떠나 다른 탭으로 이동하는 경우입니다. 이 탭 전환은 다른 변경사항과 똑같이 전송됩니다.  
+외부 링크 카드 버튼, `#`, `@`, `:` 접두사로 검색해 고른 [빠른 검색](../../guide/guides/quick-search.md#다이어그램-검색) 결과, [찾기와 바꾸기](../../guide/guides/find-and-replace.md#열기와-닫기) 열기는 모두 Flow를 떠나 ERD 탭으로 이동합니다. 카드 버튼이나 빠른 검색 결과가 그곳에서 일으키는 스크롤도 전송됩니다.
 
 ## 한 페이지의 두 에디터
 

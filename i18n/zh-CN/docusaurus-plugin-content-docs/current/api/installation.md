@@ -34,7 +34,8 @@ editor.addEventListener('change', () => {
 
 `<erd-editor>` 没有固有尺寸。请为该元素或其容器显式指定 width 和 height。
 
-`setInitialValue('')` 会以空文档开始。为 `value` 赋值则会把加载当作一次编辑，因此会记录到历史列表中。
+`setInitialValue('')` 会以一个新的空文档开始。为 `value` 赋值则会把加载当作一次编辑，因此会记录到历史列表中。
+从 `3.10.0` 起，新文档既不保存滚动位置也不保存缩放级别（`Save Scroll Information` 与 `Save Zoom Information` 均为关闭），因此对它滚动或缩放不会改变 `editor.value`。从文本加载的文档会沿用其中写明的开关，一个开关都没有写明的文档则两者都保存。参见 [setInitialValue](./erd-editor-element.md#setinitialvalue)。
 其余 API 参见 [ErdEditorElement](./erd-editor-element.md)。
 
 ### CDN
@@ -52,7 +53,7 @@ editor.addEventListener('change', () => {
 ```
 
 `esm.run` 会替你解析该包的外部依赖，因此无需打包器也能工作。
-不带版本号的 URL 始终提供最新的发布版本。如果不希望大版本升级在毫无预告的情况下进入页面，可以像 `https://esm.run/@dineug/erd-editor@3.9.2` 这样固定版本。
+不带版本号的 URL 始终提供最新的发布版本。如果不希望大版本升级在毫无预告的情况下进入页面，可以像 `https://esm.run/@dineug/erd-editor@3.10.0` 这样固定版本。
 
 ### script 标签
 
@@ -61,7 +62,7 @@ editor.addEventListener('change', () => {
 
 ```html
 <erd-editor></erd-editor>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@3.9.2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@3.10.0"></script>
 <script>
   const editor = document.querySelector('erd-editor');
   editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
@@ -167,6 +168,7 @@ worker 响应之后，六十秒内仍未返回的布局同样会被放弃，并�
 | `KeyBindingMap`、`KeyBindingName`、`ShortcutOption`（类型） | 绑定映射、由其命令名称组成的联合类型，以及单个绑定。 |
 
 `@dineug/erd-editor/engine.js` 是第二个入口点。它在没有 DOM 的情况下运行文档 store，因此也可以在 Web Worker 中使用。参见[远程存储](./advanced/remote-storage.md)。
+它导出 `createReplicationStore` 与 `ReplicationStore` 类型。从 `3.10.0` 起还导出 `ReplicationChange` 类型 `{ value: string; changed: boolean }`，即副本的 `change` 监听器接收到的参数。参见 [on@change](./advanced/remote-storage.md#onchange)。
 
 从 `3.9.1` 起还有第三个入口点 `@dineug/erd-editor/peer.js`：它是 [MCP 服务器](../mcp/introduction.md)用来编辑文档的无头节点。它专为该服务器而存在，这里的文档不对它作说明。
 

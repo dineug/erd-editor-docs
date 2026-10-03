@@ -1,11 +1,11 @@
 ---
 sidebar_position: 4
-description: erd-editor MCP 服务器提供的所有工具：一次一页地读取文档、54 个编辑工具、erd_batch，以及结果与拒绝的格式。
+description: erd-editor MCP 服务器提供的所有工具：一次一页地读取文档、56 个编辑工具、erd_batch，以及结果与拒绝的格式。
 ---
 
 # 工具
 
-服务器提供 63 个工具：五个会话工具、三个读取工具、54 个编辑工具（每种编辑操作一个），以及把多个编辑工具作为一次编辑执行的 `erd_batch`。
+服务器提供 65 个工具：五个会话工具、三个读取工具、56 个编辑工具（每种编辑操作一个），以及把多个编辑工具作为一次编辑执行的 `erd_batch`。
 
 除 `erd_list_documents` 外，每个工具都以文档的 `path` 作为第一个参数，下面的表格中省略了它。
 标有 `?` 的参数是可选的。
@@ -27,7 +27,7 @@ description: erd-editor MCP 服务器提供的所有工具：一次一页地读�
 | 工具 | 参数 | 作用 |
 | --- | --- | --- |
 | `erd_list` | `query?`, `offset?`, `limit?`, `namesOnly?` | 先是设置与数量统计，然后是一页表，每个表附带其 id、在画布上的位置和大小以及列数，并带有它们的索引与关系；在表之后是备注，搜索时除外。 |
-| `erd_get` | `tableIds?`, `tableNames?`, `relationshipIds?`, `indexIds?`, `memoIds?` | 完整返回所指定的实体：表附带其列，关系与索引附带其列，备注附带其文本。 |
+| `erd_get` | `tableIds?`, `tableNames?`, `relationshipIds?`, `indexIds?`, `memoIds?` | 完整返回所指定的实体：表附带其列，关系附带其列及其 `onDelete` 和 `onUpdate`，索引附带其列，备注附带其文本。 |
 | `erd_read` | `format`, `vendor?`, `tableIds?`, `tableNames?` | 以三种格式之一一次性返回整个文档，或者只返回部分表的 DDL。 |
 
 智能体用 `erd_list` 查找 id，用 `erd_get` 读取列及其他详细信息，再把这些 id 传给编辑工具。
@@ -39,7 +39,7 @@ description: erd-editor MCP 服务器提供的所有工具：一次一页地读�
 | `format` | 返回内容 |
 | --- | --- |
 | `snapshot` | 包含每个实体及其 id 的紧凑 JSON。schema 较大时体积也较大。 |
-| `sql` | 八种数据库之一的 DDL：`Databricks`、`MariaDB`、`MSSQL`、`MySQL`、`Oracle`、`PostgreSQL`、`Snowflake` 或 `SQLite`。`vendor` 默认为文档所设置的数据库。指定 `tableIds` 或 `tableNames` 时，只返回这些表，以及它们持有的外键。 |
+| `sql` | 八种数据库之一的 DDL：`Databricks`、`MariaDB`、`MSSQL`、`MySQL`、`Oracle`、`PostgreSQL`、`Snowflake` 或 `SQLite`。`vendor` 默认为文档所设置的数据库。指定 `tableIds` 或 `tableNames` 时，只返回这些表，以及它们持有的外键。外键会带有其 ON DELETE 与 ON UPDATE 操作，目标数据库省略的操作除外，参见 [ON DELETE 与 ON UPDATE](../guide/guides/relationship-editing.md#on-delete-and-on-update)。 |
 | `json` | 原始的 `.erd.json` 文档。 |
 
 ### 大型 schema
@@ -92,13 +92,24 @@ id 来自 `erd_list` 和 `erd_get`，或者来自创建该实体的那次调用�
 
 `relationshipType` 是子表一端的基数：`ZeroOne`、`ZeroN`、`OneOnly` 或 `OneN`。
 起始表是父表，即持有主键的被引用一方，结束表是子表。
+`onDelete` 和 `onUpdate` 是外键的 ON DELETE 与 ON UPDATE 操作：`none`、`noAction`、`cascade`、`setNull`、`setDefault` 或 `restrict`。
+`none` 不写出任何子句，因此由数据库的默认行为决定，参见 [ON DELETE 与 ON UPDATE](../guide/guides/relationship-editing.md#on-delete-and-on-update)。
+`erd_add_relationship` 或 `erd_link_columns` 中省略的操作为 `none`。
 
 | 工具 | 参数 | 作用 |
 | --- | --- | --- |
-| `erd_add_relationship` | `startTableId`, `endTableId`, `relationshipType` | 关联两个表。它会把父表的主键作为外键列复制到子表中，如果父表没有主键，则先创建一个主键列。`createdIds` 依次包含新建的主键列（如果创建了的话）、外键列，最后是关系 id。 |
-| `erd_link_columns` | `startTableId`, `startColumnIds`, `endTableId`, `endColumnIds`, `relationshipType` | 在已存在的列之间绘制关系，按位置将起始列与结束列配对。 |
+| `erd_add_relationship` | `startTableId`, `endTableId`, `relationshipType`, `onDelete?`, `onUpdate?` | 关联两个表。它会把父表的主键作为外键列复制到子表中，如果父表没有主键，则先创建一个主键列。每个外键列的命名方式与在编辑器中绘制关系时相同：`users` 的键 `id` 会变为 `users_id`，像 `member_id` 这样的键则保持原名，参见[外键列名](../guide/guides/relationship-editing.md#foreign-key-column-names)。`createdIds` 依次包含新建的主键列（如果创建了的话）、外键列，最后是关系 id。 |
+| `erd_link_columns` | `startTableId`, `startColumnIds`, `endTableId`, `endColumnIds`, `relationshipType`, `onDelete?`, `onUpdate?` | 在已存在的列之间绘制关系，按位置将起始列与结束列配对。 |
 | `erd_remove_relationship` | `relationshipId` | 删除关系连接线。其外键列会保留在表中。 |
 | `erd_change_relationship_type` | `relationshipId`, `relationshipType` | 修改关系的基数。 |
+| `erd_change_relationship_on_delete` | `relationshipId`, `onDelete` | 设置关系的 ON DELETE 操作：删除父表中的一行时，如何处理子表中引用它的行。 |
+| `erd_change_relationship_on_update` | `relationshipId`, `onUpdate` | 设置关系的 ON UPDATE 操作：修改父表中某一行的键时，如何处理子表中引用它的行。 |
+
+`erd_add_relationship` 在运行时为外键列命名，因此请先为父表及其主键命名。
+
+较旧的 ERD Editor 扩展或插件，即 `3.1.0` 之前的 VS Code 扩展、`0.2.0` 之前的 Obsidian 插件或 `0.10.0` 之前的 JetBrains 插件，在为文档提供服务时会忽略 ON DELETE 与 ON UPDATE。
+设置它们的工具仍会成功，但图以及该编辑器保存的文件中都不会包含它们，因此请更新扩展或插件，参见[更新](./installation.md#更新)。
+没有编辑器为文档提供服务时，这些操作会像其他编辑一样写入文件。
 
 ### 索引
 
@@ -143,8 +154,8 @@ id 来自 `erd_list` 和 `erd_get`，或者来自创建该实体的那次调用�
 | `erd_set_relationship_optimization` | `value` | 存储在文档中的关系优化标志。 |
 | `erd_set_column_order` | `columnType`, `targetColumnType` | 将表中一行的某一部分移动到另一部分的位置：`columnName`、`columnDataType`、`columnNotNull`、`columnUnique`、`columnAutoIncrement`、`columnDefault`、`columnComment`。 |
 | `erd_set_max_width_comment` | `value` | 注释在表中绘制的最大宽度，以像素为单位，`-1` 表示不限制。 |
-| `erd_set_ignore_save_settings` | `saveSettingType`, `value` | `true` 使保存的文件中不包含 `scroll` 或 `zoomLevel`。 |
-| `erd_set_show` | `show`, `value` | 显示或隐藏图的某一部分：`tableComment`、`columnComment`、`columnDataType`、`columnDefault`、`columnAutoIncrement`、`columnPrimaryKey`、`columnUnique`、`columnNotNull`、`relationship`。 |
+| `erd_set_ignore_save_settings` | `saveSettingType`, `value` | `true` 使保存的文件中不包含 `scroll` 或 `zoomLevel`。新文档开始时两者均为 `true`，与编辑器中新建的图相同，参见[保存滚动信息](../guide/guides/settings.md#保存滚动信息)。 |
+| `erd_set_show` | `show`, `value` | 显示或隐藏图的某一部分：`tableComment`、`columnComment`、`columnDataType`、`columnDefault`、`columnAutoIncrement`、`columnPrimaryKey`、`columnUnique`、`columnNotNull`、`relationship`、`columnAlternateKey`、`hideReferentialAction`。显示 `columnAlternateKey` 时，每个[备用键](../guide/guides/table-related-functions.md#alternate-keys)的列会带有 `AK1.1` 这样的标记。`hideReferentialAction` 的含义正好相反：`true` 会隐藏关系连接线上的 ON DELETE 与 ON UPDATE 标签，这些标签默认显示，参见[读懂连接线](../guide/guides/relationship-editing.md#reading-a-connector)。 |
 
 ### 导入
 
@@ -157,7 +168,7 @@ id 来自 `erd_list` 和 `erd_get`，或者来自创建该实体的那次调用�
 | `erd_import_graphql` | `value` | 加载 GraphQL SDL。 |
 | `erd_import_dbml` | `value` | 加载 DBML。 |
 | `erd_import_aml` | `value` | 加载 AML。 |
-| `erd_import_json` | `value` | 加载 erd-editor 的 JSON 文档，例如另一个 `.erd.json` 文件。空文本会得到一个空文档。 |
+| `erd_import_json` | `value` | 加载 erd-editor 的 JSON 文档，例如另一个 `.erd.json` 文件。空文本会得到一个新文档，与 `erd_open_document` 带 `create` 时创建的文档相同。 |
 
 ## erd_batch
 
@@ -169,6 +180,7 @@ id 来自 `erd_list` 和 `erd_get`，或者来自创建该实体的那次调用�
 - 在实时会话中，编辑器要么接受整个批处理，要么完全不接受。
 
 智能体在调用之前无法知道批处理会创建哪些 id，因此用 `as` 命名的操作可以让后续操作引用它们：`$name` 或 `$name.0` 表示它创建的第一个 id，`$name.1` 表示第二个，`$name.last` 表示最后一个。
+名称由 ASCII 字母、数字和下划线组成，不能以数字开头，并且同一个名称只能用于一个操作。
 引用只在接受实体 id 的参数中才会解析，因此内容为 `$x` 的名称或注释仍然是文本。
 
 在一次调用中创建一个带列的表以及一条关系：
@@ -185,10 +197,12 @@ id 来自 `erd_list` 和 `erd_get`，或者来自创建该实体的那次调用�
     { "tool": "erd_set_column_primary_key", "args": { "tableId": "$users", "columnId": "$uid", "value": true } },
     { "tool": "erd_add_table", "as": "orders" },
     { "tool": "erd_change_table_name", "args": { "tableId": "$orders", "value": "orders" } },
-    { "tool": "erd_add_relationship", "args": { "startTableId": "$users", "endTableId": "$orders", "relationshipType": "ZeroN" } }
+    { "tool": "erd_add_relationship", "args": { "startTableId": "$users", "endTableId": "$orders", "relationshipType": "ZeroN", "onDelete": "cascade" } }
   ]
 }
 ```
+
+`users` 及其键 `id` 在关系之前就已命名，因此关系添加到 `orders` 中的外键列为 `users_id`。
 
 ## 结果
 

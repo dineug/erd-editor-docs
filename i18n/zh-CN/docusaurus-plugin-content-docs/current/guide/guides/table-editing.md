@@ -22,7 +22,8 @@ description: 添加、多选、调整顺序与删除列，切换列选项，以�
 
 按 `Tab` 可直接进入下一个单元格的编辑模式。  
 在最后一个单元格按 `Tab` 会创建新的列。  
-使用 `Shift + Tab` 移动到上一个单元格的编辑模式。
+使用 `Shift + Tab` 移动到上一个单元格的编辑模式。  
+绘制在行的最后一个单元格之后的[备用键](./table-related-functions.md#alternate-keys)标记不是单元格，因此键盘焦点会跳过它们，它们也不会进入编辑模式。
 
 ![用 Tab 在单元格间移动，在最后一个单元格添加列，再用 Shift + Tab 返回](/img/demo-table-tab.webp)
 
@@ -91,7 +92,8 @@ Not Null 单元格在设置后显示 `N-N`，未设置时显示 `NULL`。
 快捷键：`Ctrl + C` (Windows/Linux) 或 `⌘ + C` (Mac)，`Ctrl + V` (Windows/Linux) 或 `⌘ + V` (Mac)
 
 复制到电子表格、从电子表格粘贴，以及粘贴到焦点位于列单元格的表时，使用表中显示的单元格，并按它们显示的顺序排列，参见[表显示选项](./table-related-functions.md#table-view-options)和[调整列顺序](./settings.md#adjusting-column-order)。  
-在编辑器中复制的列，在选中表的标题栏时粘贴，或粘贴到其他选中的表中时，会带上所复制列的全部单元格，包括 Unique 与 Auto Increment 等隐藏的单元格。
+在编辑器中复制的列，在选中表的标题栏时粘贴，或粘贴到其他选中的表中时，会带上所复制列的全部单元格，包括 Unique 与 Auto Increment 等隐藏的单元格。  
+像 `AK1.1` 这样的[备用键](./table-related-functions.md#alternate-keys)标记不是单元格，因此即使它们处于显示状态，复制与粘贴也不会包含它们。
 
 可以从编辑器粘贴到 Excel，也可以从 Excel 粘贴回编辑器。  
 电子表格的列按位置而不是按名称对应到这些单元格，因此电子表格中列的顺序必须与显示的单元格顺序一致。  

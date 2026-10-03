@@ -27,7 +27,6 @@ interface ErdEditorElement extends HTMLElement {
         KeyBindingMap,
         | 'edit'
         | 'stop'
-        | 'search'
         | 'undo'
         | 'redo'
         | 'zoomIn'
@@ -61,6 +60,8 @@ interface ErdEditorElement extends HTMLElement {
 エディタの編集可否を設定します。  
 設定されている間は、`value` への代入、`clear()`、`setSchemaSQL()`、`setSchemaGraphQL()`、`setSchemaDBML()`、`setSchemaAML()`、undo、redo がすべて無視され、`change` イベントも発行されません。ドキュメントの読み込みには [setInitialValue](#setinitialvalue) を使用します。  
 表示は引き続き動作します。拡大・縮小、表示位置の移動、ハンドツール、Zen モード、キャンバスのタブ、テーブルへのフォーカスを含む [Visualization](../guide/guides/visualization.md) タブの両方のモード、データベースベンダー、SQL とコード生成の出力設定はそのまま適用されるため、読み取り専用のビューアーでも別のベンダー向けの SQL を書き出したり、生成されたコードを読んだりできます。  
+`3.10.0` からは[検索と置換](../guide/guides/find-and-replace.md#read-only-editors)も開きます。ヘッダーに `Find` と表示され、置換フィールドとそのボタンのない、検索専用のパネルです。一致箇所へ移動すると、引き続きその一致箇所が表示され、選択されます。  
+テーブルのプロパティも引き続き開きます。`3.10.0` からは、タイトルの横に `Read only` のバッジが表示され、`Indexes` タブでは何も編集できません。[テーブルのプロパティ](../guide/guides/table-related-functions.md#table-properties)を参照してください。  
 属性名のみの指定、`=""`、`="true"` はいずれも `true` として扱われます。`="false"` は `false` として扱われ、HTML の慣用表現である `readonly="readonly"` を含むその他の文字列も同様です。
 
 ```js
@@ -111,7 +112,8 @@ editor.setAttribute('enable-theme-builder', 'true');
 ### getter
 
 現在のエディタの状態を、エディタが定義する[スキーマ](./advanced/schema.md)の JSON 文字列として取得します。  
-シリアライズの際にはドキュメントの `ignoreSaveSettings` が適用され、スクロールのビットが設定されている場合は表示の原点が `0, 0`、拡大・縮小のビットが設定されている場合は拡大・縮小のレベルが `1` として書き出されます。
+シリアライズの際にはドキュメントの `ignoreSaveSettings` が適用され、スクロールのビットが設定されている場合は表示の原点が `0, 0`、拡大・縮小のビットが設定されている場合は拡大・縮小のレベルが `1` として書き出されます。  
+`3.10.0` からは、要素に値を渡す前に表示されるドキュメントでも、空の値から読み込んだドキュメントでも、新しいドキュメントでは両方のビットが設定されています。その `value` は、[スクロール情報の保存](../guide/guides/settings.md#スクロール情報の保存)をオンにするまでは表示の原点を `0, 0` として、[拡大・縮小情報の保存](../guide/guides/settings.md#拡大縮小情報の保存)をオンにするまでは拡大・縮小のレベルを `1` として書き出し続けます。ビットについては [Settings](./advanced/schema.md#settings) を参照してください。
 
 ```js
 const data = editor.value;
@@ -122,7 +124,10 @@ const data = editor.value;
 以前に保存したエディタの状態を読み込みます。ドキュメント全体を置き換えるため、現在のドキュメントは先に消去されます。  
 `clear()`、`setInitialValue()`、`setSchema*` の各メソッドと同様に、Visualization タブの Flow の表示状態、つまりレイアウト、絞り込んでいるテーブル、行の表示、拡大・縮小、表示位置も破棄します。  
 履歴に記録されるため `Undo, Redo` が可能で、`change` を発行します。  
-空文字列や文字列以外の値を指定した場合はエラーにならず、空のドキュメントを読み込むため、代入する前に値を確認します。  
+空文字列や文字列以外の値を指定した場合はエラーにならず、新しいドキュメントを読み込むため、代入する前に値を確認します。  
+`3.10.0` からは、この新しいドキュメントは `setInitialValue('')` で始まるものと同じで、空で、設定は既定値のまま、表示位置も拡大・縮小のレベルも保存しません。以前は、両方を保存する空のドキュメントでした。  
+shared store はこの読み込みを、新しいドキュメントの JSON 全体を付けて共同編集の参加者へ中継するため、古いリリースのエディタも含め、すべての参加者が同じドキュメントを読み込みます。  
+マージコンフリクトのマーカーが残ったファイルなど、JSON でないテキストもエラーにはなりません。ドキュメントは空になり、設定はそのまま保たれ、パースエラーがコンソールに出力されます。  
 `readonly` が設定されている間は無視されます。読み取り専用のエディタに読み込むには [setInitialValue](#setinitialvalue) を使用します。
 
 ```js
@@ -133,7 +138,10 @@ editor.value = 'json...';
 
 以前に保存したエディタの状態を読み込みます。読み込み自体は履歴に記録されないため Undo できず、`change` イベントも発行されません。  
 読み込むときに履歴も消去されるため、読み込む前に行った操作を、読み込んだドキュメントに対して `Undo, Redo` することはできません。  
-空文字列や文字列以外の値を指定した場合はエラーにならず、空のドキュメントを読み込むため、`setInitialValue('')` は空のダイアグラムから始めます。  
+空文字列や文字列以外の値を指定した場合はエラーにならず、新しいドキュメントを読み込むため、`setInitialValue('')` は空のダイアグラムから始めます。  
+`3.10.0` からは、この新しいドキュメントは、要素に値を一度も渡していないときに表示されるドキュメントでもあり、表示位置も拡大・縮小のレベルも保存しないため、スクロールや拡大・縮小をしても `value` は変わりません。以前は両方を保存していました。  
+テキストから読み込んだドキュメントはそこに指定されているスイッチの設定を保ち、`3.2.3` より前に保存したファイルや v2 の `.vuerd` ファイルのように何も指定されていないドキュメントは、両方を保存します。  
+JSON でないテキストもエラーにはなりません。ドキュメントは空になり、設定はそのまま保たれ、パースエラーがコンソールに出力されます。  
 `value` への代入とは異なり `readonly` の影響を受けないため、読み取り専用のビューアーにドキュメントを読み込む方法になります。
 
 ```js
@@ -159,7 +167,9 @@ editor.addEventListener('change', () => {
 エディタに変更があるとイベントを発行します。  
 200ms のデバウンスがかかり、`readonly` が `true` の間は発行されません。  
 UI での編集、`value` への代入、`clear()`、`setSchema*` の各メソッドなど、ドキュメントのあらゆる変更で発行されます。`setInitialValue` では発行されません。  
-Visualization タブの Flow モード内の操作、つまり拡大・縮小、表示位置の移動、カードの移動、`Tidy Up`、行の表示の変更、カードからの表示の絞り込みは、どれもドキュメントの変更ではないため発行されません。タブの切り替えでは発行されるため、ERD タブからテーブルにフォーカスすると `change` が 1 回発行され、Flow から ERD タブへ戻るカードの外部リンクボタンでも同様に発行されます。  
+Visualization タブの Flow モード内の操作、つまり拡大・縮小、表示位置の移動、カードの移動、`Tidy Up`、行の表示の変更、カードからの表示の絞り込みは、どれもドキュメントの変更ではないため発行されません。タブの切り替えでは発行されるため、ERD タブからテーブルにフォーカスすると `change` が 1 回発行され、Flow から ERD タブへ戻るカードの外部リンクボタンでも同様に発行されます。別のタブから検索と置換を開いたり、クイック検索の結果へ移動したりした場合も、ERD タブが表示され、同じように 1 回発行されます。  
+ERD キャンバスのスクロールと拡大・縮小でも、`editor.value` が変わるかどうかにかかわらず発行されます。`Save Scroll Information` がオフの間は、スクロールしても `value` は変わりません。拡大・縮小は表示位置も動かすため、`value` が変わらないのは `Save Scroll Information` と `Save Zoom Information` が両方オフの間だけです。`3.10.0` からは新しいドキュメントでは両方がオフのため、新しいダイアグラムではスクロールや拡大・縮小によって、`value` が変わらないまま `change` が発行されます。  
+このような書き込みを省くには、読み込んだファイルではなく、最後に保存した値と `editor.value` を比較します。別のリリースや別のマシンが書き出したファイルは、読み込んだ時点で `value` が異なることがあるためです。ファイルを書き出すホストは、代わりにレプリケーション用の store の `changed` で、編集と表示の変更を区別することもできます。[on@change](./advanced/remote-storage.md#onchange) を参照してください。  
 イベントは `detail` を持たず、バブリングもシャドウ境界の通過もしないため、要素自身で購読し、ハンドラー内で `editor.value` を読み取ります。
 
 ```js
@@ -198,7 +208,8 @@ editor.blur();
 
 ## clear
 
-エディタの状態を初期化します。  
+ドキュメントを空にし、すべてのテーブル、カラム、リレーションシップ、インデックス、メモを削除します。  
+データベース、表示位置、拡大・縮小のレベル、テーブルの表示オプション、`Save Scroll Information` と `Save Zoom Information` のスイッチを含め、設定はすべてそのまま残るため、消去したファイルはそれまでと同じものを保存し続けます。代わりに新しいドキュメントから始めるには、`value` に `''` を代入するか、`setInitialValue('')` を呼び出します。  
 履歴に記録されるため元に戻すことができ、`change` を発行します。`readonly` が設定されている間は無視されます。
 
 ```js
@@ -218,9 +229,11 @@ editor.destroy();
 ## setKeyBindingMap
 
 キーボードショートカットを再定義します。  
-`edit`、`stop`、`search`、`undo`、`redo`、`zoomIn`、`zoomOut`、`zoomReset` は固定で、再定義できません。  
-書き込めるのは次の 16 個の名前だけで、固定の名前を含め、オブジェクト内のそれ以外の値は無視されます。  
+`edit`、`stop`、`undo`、`redo`、`zoomIn`、`zoomOut`、`zoomReset` は固定で、再定義できません。  
+書き込めるのは次の 18 個の名前だけで、固定の名前を含め、オブジェクト内のそれ以外の値は無視されます。  
+`3.10.0` から `search` を再定義できるようになり、`findReplace` が追加されました。以前は `search` は固定でした。  
 バインディングの値は `ShortcutOption[]` である必要があります。文字列だけの指定は無視されるため、`{ addTable: 'Alt+KeyN' }` ではなく `{ addTable: [{ shortcut: 'Alt+KeyN' }] }` と記述します。  
+空の配列も受け付けられ、何も割り当てません。`setKeyBindingMap({ findReplace: [] })` は `Ctrl + F` (Windows/Linux) または `⌘ + F` (Mac) をページに任せ、`{ search: [] }` は `Ctrl + K` (Windows/Linux) または `⌘ + K` (Mac) を同じようにページに任せます。ツールバーの `Search` ボタンからは引き続きクイック検索を開け、検索と置換もツールバーのボタン、クイック検索の行、キャンバスのコンテキストメニューから引き続き開けます。空にした名前のショートカットは、これらのどこにも表示されません。  
 呼び出しは部分的なマージです。指定しなかった名前は既定値のまま維持され、2 回呼び出しても以前の変更は保持されます。現在のバインディングを取得する getter はありません。[createKeyBindingMap](#createkeybindingmap) が返すのは既定値であり、`setKeyBindingMap` で変更した内容ではありません。
 
 ```ts
@@ -234,13 +247,18 @@ const defaultKeyBindingMap: Omit<
   KeyBindingMap,
   | 'edit'
   | 'stop'
-  | 'search'
   | 'undo'
   | 'redo'
   | 'zoomIn'
   | 'zoomOut'
   | 'zoomReset'
 > = {
+  search: [
+    { shortcut: '$mod+KeyK', preventDefault: true, stopPropagation: true },
+  ],
+  findReplace: [
+    { shortcut: '$mod+KeyF', preventDefault: true, stopPropagation: true },
+  ],
   addTable: [{ shortcut: 'Alt+KeyN', preventDefault: true }],
   addColumn: [{ shortcut: 'Alt+Enter', preventDefault: true }],
   addMemo: [{ shortcut: 'Alt+KeyM', preventDefault: true }],
@@ -280,19 +298,25 @@ editor.setKeyBindingMap({
 
 `selectAllTable` と `handTool` はキャレットに譲ります。フォーカスが input、textarea、`contenteditable` の中にある間は `$mod + A` がテキストを選択し、`Space` は空白を入力して、キャンバスには届きません。別のショートカットに再定義しても動作は同じです。
 
+`3.10.0` から、`findReplace`（`$mod+KeyF`）は[検索と置換](../guide/guides/find-and-replace.md)を開き、ほかのどのタブからでも ERD タブを表示します。  
+キャレットには譲りません。エディタにフォーカスがある間は、どのタブでも、キャンバスからでもエディタ内の入力欄からでもこのキーを受け取ります。`preventDefault()` が呼び出されるためブラウザの検索バーは開かず、伝播も止められるため、ページのバブリングフェーズの `keydown` リスナーには届きません。セルやメモの編集中も `preventDefault()` が呼び出されて伝播も止められますが、何も開きません。  
+Diff Viewer、Time Travel、自動レイアウトのプレビューのいずれかが開いている間は、どのタブであっても、また IME の変換中も、`preventDefault()` は呼び出されず伝播も止められないため、ブラウザやホスト自身の検索がこのキーを受け取ります。検索と置換のパネル内では、変換中の入力はそこで伝播が止められますが、`preventDefault()` は呼び出されません。`findReplace` を別のショートカットに再定義しても動作は同じです。
+
 `focusView` は ERD タブでのみ動作します。テーブルを 1 つ以上選択している場合は、Visualization タブを Flow モードで開き、それらのテーブルと、リレーションシップ 1 つでつながるすべてのテーブルに表示を絞り込みます。テーブルを選択していない場合は何もしません。[テーブルへのフォーカス](../guide/guides/visualization.md#focusing-on-tables)を参照してください。
 
 `stop`（`Escape`）は ERD タブで、セルやメモの編集、またはリレーションシップの作成を終了し、選択はそのまま残します。このときエディタは `preventDefault()` を呼び出します。  
 そのいずれでもない場合、`Escape` は選択とフォーカスしているセルを解除し、`preventDefault()` は呼び出されません。そのため、編集を抜けて選択も解除するには 2 回押す必要があります。  
-エディタが `Escape` の伝播を止めることはないため、独自のダイアログを閉じるためなど、自分で `Escape` を監視しているページには両方の入力が届き、`defaultPrevented` が `true` のほうを無視できます。  
+検索と置換のパネルの外では、エディタが `Escape` の伝播を止めることはないため、独自のダイアログを閉じるためなど、自分で `Escape` を監視しているページには両方の入力が届き、`defaultPrevented` が `true` のほうを無視できます。  
 クイック検索、テーブルのプロパティ、Diff Viewer、自動レイアウトのプレビュー、Time Travel のいずれかが開いている間は、`Escape` は代わりにそれを閉じ、選択はそのまま残します。このときも `preventDefault()` は呼び出されません。  
-IME の変換中に押した `Escape` は変換のためのものです。編集は終了せず、`preventDefault()` も呼び出されないため、ページでは `isComposing` が `true`、または `keyCode` が `229` の入力も同じように無視できます。  
+`3.10.0` からは、検索と置換のパネル内にフォーカスがある状態で押した `Escape` はパネルを閉じ、選択はそのまま残します。エディタはこの入力に対して `preventDefault()` と `stopPropagation()` の両方を呼び出すため、ページのバブリングフェーズの `keydown` リスナーには届きません。  
+パネルが開いている間にキャンバスで押した `Escape` は、上記のいずれにも該当しない場合、選択を解除するのと同じ 1 回の入力でパネルも閉じます。この入力では `preventDefault()` は呼び出されず、伝播も止められません。  
+IME の変換中に押した `Escape` は変換のためのものです。編集は終了せず、`preventDefault()` も呼び出されないため、ページでは `isComposing` が `true`、または `keyCode` が `229` の入力も同じように無視できます。検索と置換のパネル内では、変換中に押したほかのキーと同じく、この入力の伝播も止められます。  
 `3.9.2` より前は、1 回の `Escape` で編集や作成の終了と選択の解除が同時に行われ、エディタが `preventDefault()` を呼び出すこともありませんでした。
 
 ### createKeyBindingMap
 
 `3.9.2` から、パッケージは `createKeyBindingMap()` と、あわせて `KeyBindingMap`、`KeyBindingName`、`ShortcutOption` の型をエクスポートしています。  
-固定の名前を含む 24 個すべての名前の既定のキーバインディングを、呼び出すたびに新しいマップとして返すため、返されたマップを変更してもほかには何も影響しません。  
+固定の名前を含む 25 個すべての名前の既定のキーバインディングを、呼び出すたびに新しいマップとして返すため、返されたマップを変更してもほかには何も影響しません。  
 すべてのエディタはこの状態から始まり、`setKeyBindingMap` の呼び出しはここには反映されません。  
 ランタイムのエクスポートは `createKeyBindingMap` だけで、残りの 3 つは型です。
 
@@ -301,6 +325,7 @@ type KeyBindingName =
   | 'edit'
   | 'stop'
   | 'search'
+  | 'findReplace'
   | 'undo'
   | 'redo'
   | 'addTable'
@@ -336,10 +361,14 @@ const shortcuts = Object.values(createKeyBindingMap())
 ```
 
 各 `shortcut` は、キーを `KeyboardEvent.code` で指定する [tinykeys](https://github.com/jamiebuilds/tinykeys) のキーの組み合わせで、[`$mod`](#mod) は macOS では `⌘`、それ以外では `Control` です。  
-固定の名前は `Enter`（`edit`）、`Escape`（`stop`）、`$mod+KeyK`（`search`）、`$mod+KeyZ`（`undo`）、`$mod+Shift+KeyZ`（`redo`）、`$mod+Equal`（`zoomIn`）、`$mod+Minus`（`zoomOut`）、`$mod+Digit0`（`zoomReset`）に割り当てられています。`edit` と `stop` にはフラグがなく、残りの 6 つには `preventDefault` と `stopPropagation` が付いています。それ以外は上記の既定値です。
+固定の名前は `Enter`（`edit`）、`Escape`（`stop`）、`$mod+KeyZ`（`undo`）、`$mod+Shift+KeyZ`（`redo`）、`$mod+Equal`（`zoomIn`）、`$mod+Minus`（`zoomOut`）、`$mod+Digit0`（`zoomReset`）に割り当てられています。`edit` と `stop` にはフラグがなく、残りの 5 つには `preventDefault` と `stopPropagation` が付いています。それ以外は上記の既定値で、`search` と `findReplace` もそこに含まれます。
 
 エディタはこれらを自身の要素で受け取るため、グローバルなホットキーやキャプチャフェーズの `keydown` リスナーでエディタより先にキーを受け取るホストは、エディタにフォーカスがある間はこれらを通す必要があります。  
-通すキーの一覧は `createKeyBindingMap()` から作成し、既定値の代わりに `setKeyBindingMap` に渡したバインディングを使います。
+通すキーの一覧は `createKeyBindingMap()` から作成し、既定値の代わりに `setKeyBindingMap` に渡したバインディングを使います。  
+`3.10.0` からは、この一覧にブラウザ自身の検索のキーである `$mod+KeyF` が含まれます。このキーで自身の検索を使い続けたいホストは、`setKeyBindingMap({ findReplace: [] })` を渡します。
+
+検索と置換のパネル内にフォーカスがある間は、`findReplace`、`search`、`undo`、`redo`、`zoomIn`、`zoomOut`、`zoomReset` はエディタに届きます。それ以外のバインディングに現在割り当てられているキーはパネルで止まり、矢印キーと `Tab` も同様です。パネルを閉じる `Escape` と、検索フィールドや置換フィールドで一致箇所を移動したり置換したりする `Enter` を除き、これらは `preventDefault()` を呼び出されずに伝播だけが止められるため、パネルのフィールドやボタンでは通常のキーとして動作し、キャンバスにもページのバブリングフェーズの `keydown` リスナーにも届きません。  
+ホストの保存やコマンドパレットのキーなど、それ以外のキーは通常どおりページに届きます。[パネル内のキー](../guide/guides/find-and-replace.md#keys-in-the-panel)を参照してください。
 
 ### $mod
 
@@ -623,9 +652,12 @@ erd-editor {
 ## setSchemaSQL
 
 Schema SQL ファイルを読み込みます。  
-現在のドキュメントにマージするのではなく、置き換えます。表示位置と拡大・縮小のレベルを除いて既存の設定は維持され、ファイルの読み込み後にテーブルが自動で配置されます。  
+現在のドキュメントにマージするのではなく、置き換えます。表示位置と拡大・縮小のレベルを除いて、保存スイッチを含む既存の設定は維持され、ファイルの読み込み後にテーブルが自動で配置されます。そのため `3.10.0` からは、値を一度も渡していない要素に読み込んだドキュメントは、新しいドキュメントと同じく表示位置も拡大・縮小のレベルも保存しません。  
 履歴に記録されるため `Undo, Redo` が可能で、`change` を発行します。空文字列は無視され、`readonly` が設定されている間は何も行いません。  
 `setSchemaGraphQL`、`setSchemaDBML`、`setSchemaAML` も同じように動作し、これらのパーサーは失敗しません。解析できないテキストはエラーにならず、空のドキュメントを読み込みます。  
+`3.10.0` から、`setSchemaSQL` はドキュメントで現在選択しているデータベースに合わせてファイルを読み取ります。Databricks を選択している場合、一重引用符で囲んだ文字列は Spark のバックスラッシュによるエスケープに従います。[コメント](../guide/guides/file-import-export.md#comments)を参照してください。  
+`3.10.0` から、`setSchemaSQL` は 2 つ以上のカラムにまたがる `UNIQUE` を、各カラムの Unique フラグではなく 1 つのユニークインデックスとして読み取ります。[ユニークキーとインデックス](../guide/guides/file-import-export.md#unique-keys-and-indexes)を参照してください。  
+`3.10.0` から、SQL、DBML、AML の読み込みでは、読み取った外部キーの `ON DELETE` と `ON UPDATE` のアクションが保持されます。  
 各パーサーが受け付ける構文については[ファイルの読み込みと書き出し](../guide/guides/file-import-export.md)を参照してください。
 
 ```js
@@ -660,7 +692,9 @@ editor.setSchemaAML('AML...');
 ## getSchemaSQL
 
 現在のエディタの状態を Schema SQL として書き出します。  
-`databaseVendor` を指定しない場合は、現在設定されているベンダーに従って動作します。次の一覧にない名前を指定した場合も、エラーにならず同じように動作します。
+`databaseVendor` を指定しない場合は、現在設定されているベンダーに従って動作します。次の一覧にない名前を指定した場合も、エラーにならず同じように動作します。  
+`3.10.0` からは、各外部キーにリレーションシップの `ON DELETE` 句と `ON UPDATE` 句が付きます。句が書き出されるのは、アクションが設定されていて、そのベンダーが受け付ける場合だけのため、そのベンダーが受け付けないアクションは省かれ、既定の動作が適用されます。各データベースが何を書き出すかは、[ON DELETE と ON UPDATE](../guide/guides/relationship-editing.md#on-delete-and-on-update)を参照してください。  
+`3.10.0` からは、テーブルやカラムのコメントの中の一重引用符がエスケープされるため、`it's` のようなコメントで文が壊れることはなくなりました。コメントを文字列リテラルとして書き出すベンダーはいずれも引用符を 2 つ重ねますが、Databricks は例外で、各引用符と各バックスラッシュの前にバックスラッシュを付けます。SQLite は引き続きコメントを `--` 行として書き出します。
 
 ```ts
 type DatabaseVendor =

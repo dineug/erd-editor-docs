@@ -22,7 +22,8 @@ A column is added to every selected table.
 
 Press `Tab` to move straight into the next cell's editing mode.  
 Pressing `Tab` in the last cell creates a new column.  
-Use `Shift + Tab` to navigate to the previous cell's editing mode.
+Use `Shift + Tab` to navigate to the previous cell's editing mode.  
+The [alternate key](./table-related-functions.md#alternate-keys) marks drawn after a row's last cell are not cells, so keyboard focus passes over them and they never open for editing.
 
 ![Tab moving through a row's cells, adding a column from the last cell, and Shift + Tab going back](/img/demo-table-tab.webp)
 
@@ -91,7 +92,8 @@ Operates like a table-based clipboard.
 Shortcuts: `Ctrl + C` (Windows/Linux) or `⌘ + C` (Mac), `Ctrl + V` (Windows/Linux) or `⌘ + V` (Mac)
 
 Copying out to a spreadsheet, pasting in from one, and pasting into the table whose column cell is focused use the cells the tables show, in the order they show them — see [Table View Options](./table-related-functions.md#table-view-options) and [Adjusting Column Order](./settings.md#adjusting-column-order).  
-Columns copied in the editor and pasted with a table header selected, or into the other selected tables, carry every cell of the copied columns, including hidden ones such as Unique and Auto Increment.
+Columns copied in the editor and pasted with a table header selected, or into the other selected tables, carry every cell of the copied columns, including hidden ones such as Unique and Auto Increment.  
+[Alternate key](./table-related-functions.md#alternate-keys) marks such as `AK1.1` are not cells, so copying and pasting leave them out even while they are shown.
 
 You can paste from the editor into Excel and from Excel back into the editor.  
 Spreadsheet columns are matched to those cells by position, not by name, so the sheet's columns must follow the order of the visible cells.  

@@ -1,10 +1,16 @@
 /** Editing Start: the canvas context menu, New Table, then a table's own menu. */
 
-/** Viewport box of a context menu entry by its visible name. */
+/**
+ * Viewport box of a context menu entry by its visible name. A submenu's own
+ * container carries a data-id too, and its first child is its first entry, so
+ * containers are left out: 'Zero One' must be the row, not the whole submenu.
+ */
 const menuItem = (d, name) =>
   d.page.evaluate(name => {
     const root = window.__erdShadowRoot;
-    const rows = [...root.querySelectorAll('.context-menu-content [data-id]')];
+    const rows = [
+      ...root.querySelectorAll('.context-menu-content [data-id]:not(.context-menu-content)'),
+    ];
     const el = rows.find(
       row => row.firstElementChild?.textContent.trim().startsWith(name)
     );

@@ -1,11 +1,11 @@
 ---
 sidebar_position: 4
-description: erd-editor MCP サーバーが提供するすべてのツール。ドキュメントの 1 ページずつの読み取り、54 個の編集ツール、erd_batch、結果と拒否の形式。
+description: erd-editor MCP サーバーが提供するすべてのツール。ドキュメントの 1 ページずつの読み取り、56 個の編集ツール、erd_batch、結果と拒否の形式。
 ---
 
 # ツール
 
-サーバーは 63 個のツールを提供します。5 個のセッションのツール、3 個の読み取りツール、編集操作ごとに 1 つずつある 54 個の編集ツール、そして複数の編集ツールを 1 つの編集として実行する `erd_batch` です。
+サーバーは 65 個のツールを提供します。5 個のセッションのツール、3 個の読み取りツール、編集操作ごとに 1 つずつある 56 個の編集ツール、そして複数の編集ツールを 1 つの編集として実行する `erd_batch` です。
 
 `erd_list_documents` 以外のすべてのツールは、最初の引数としてドキュメントの `path` を受け取ります。以下の表では省略しています。
 `?` の付いた引数は省略可能です。
@@ -27,7 +27,7 @@ description: erd-editor MCP サーバーが提供するすべてのツール。�
 | ツール | 引数 | 動作 |
 | --- | --- | --- |
 | `erd_list` | `query?`、`offset?`、`limit?`、`namesOnly?` | 設定と件数、続いて 1 ページ分のテーブルを返します。各テーブルには ID、キャンバス上の位置とサイズ、カラム数が付き、そのインデックスとリレーションシップも含まれます。検索でない場合は、テーブルの後にメモが続きます。 |
-| `erd_get` | `tableIds?`、`tableNames?`、`relationshipIds?`、`indexIds?`、`memoIds?` | 指定したエンティティの全体を返します。テーブルはカラムとともに、リレーションシップとインデックスはそのカラムとともに、メモは本文とともに返します。 |
+| `erd_get` | `tableIds?`、`tableNames?`、`relationshipIds?`、`indexIds?`、`memoIds?` | 指定したエンティティの全体を返します。テーブルはカラムとともに、リレーションシップはそのカラムと `onDelete`、`onUpdate` とともに、インデックスはそのカラムとともに、メモは本文とともに返します。 |
 | `erd_read` | `format`、`vendor?`、`tableIds?`、`tableNames?` | ドキュメント全体を 3 つの形式のいずれかで一度に返すか、一部のテーブルだけの DDL を返します。 |
 
 エージェントは `erd_list` で ID を見つけ、`erd_get` でカラムなどの詳細を読み取り、それらの ID を編集ツールに渡します。
@@ -39,7 +39,7 @@ description: erd-editor MCP サーバーが提供するすべてのツール。�
 | `format` | 返す内容 |
 | --- | --- |
 | `snapshot` | すべてのエンティティとその ID を含むコンパクトな JSON です。大きなスキーマでは大きくなります。 |
-| `sql` | 8 つのデータベース `Databricks`、`MariaDB`、`MSSQL`、`MySQL`、`Oracle`、`PostgreSQL`、`Snowflake`、`SQLite` のいずれかの DDL です。`vendor` の既定値は、ドキュメントに設定されているデータベースです。`tableIds` または `tableNames` を指定すると、それらのテーブルだけを、それらが持つ外部キーとともに返します。 |
+| `sql` | 8 つのデータベース `Databricks`、`MariaDB`、`MSSQL`、`MySQL`、`Oracle`、`PostgreSQL`、`Snowflake`、`SQLite` のいずれかの DDL です。`vendor` の既定値は、ドキュメントに設定されているデータベースです。`tableIds` または `tableNames` を指定すると、それらのテーブルだけを、それらが持つ外部キーとともに返します。外部キーには ON DELETE と ON UPDATE のアクションが付きますが、対象のデータベースが省くアクションは除きます。[ON DELETE と ON UPDATE](../guide/guides/relationship-editing.md#on-delete-and-on-update)を参照してください。 |
 | `json` | 生の `.erd.json` ドキュメントです。 |
 
 ### 大きなスキーマ
@@ -92,13 +92,24 @@ ID は `erd_list` と `erd_get`、またはそのエンティティを作った�
 
 `relationshipType` は子側の端のカーディナリティで、`ZeroOne`、`ZeroN`、`OneOnly`、`OneN` のいずれかです。
 開始テーブルは親、つまり主キーを持つ参照される側で、終了テーブルは子です。
+`onDelete` と `onUpdate` は外部キーの ON DELETE と ON UPDATE のアクションで、`none`、`noAction`、`cascade`、`setNull`、`setDefault`、`restrict` のいずれかです。
+`none` は句を書き出さないため、データベースの既定の動作が適用されます。[ON DELETE と ON UPDATE](../guide/guides/relationship-editing.md#on-delete-and-on-update)を参照してください。
+`erd_add_relationship` または `erd_link_columns` で省略したアクションは `none` になります。
 
 | ツール | 引数 | 動作 |
 | --- | --- | --- |
-| `erd_add_relationship` | `startTableId`、`endTableId`、`relationshipType` | 2 つのテーブルをリレーションシップでつなぎます。親の主キーを外部キーカラムとして子にコピーし、親に主キーがない場合は先に主キーカラムを作成します。`createdIds` には、作成された場合はその新しいキーカラム、外部キーカラム、そして最後にリレーションシップの ID が入ります。 |
-| `erd_link_columns` | `startTableId`、`startColumnIds`、`endTableId`、`endColumnIds`、`relationshipType` | すでにあるカラムの間にリレーションシップを描き、開始側と終了側のカラムを位置の順に対応付けます。 |
+| `erd_add_relationship` | `startTableId`、`endTableId`、`relationshipType`、`onDelete?`、`onUpdate?` | 2 つのテーブルをリレーションシップでつなぎます。親の主キーを外部キーカラムとして子にコピーし、親に主キーがない場合は先に主キーカラムを作成します。各外部キーカラムには、エディタでリレーションシップを描いたときと同じように名前が付けられます。キーが `id` の `users` からは `users_id` ができ、`member_id` のようなキーは名前がそのまま使われます。[外部キーカラムの名前](../guide/guides/relationship-editing.md#foreign-key-column-names)を参照してください。`createdIds` には、作成された場合はその新しいキーカラム、外部キーカラム、そして最後にリレーションシップの ID が入ります。 |
+| `erd_link_columns` | `startTableId`、`startColumnIds`、`endTableId`、`endColumnIds`、`relationshipType`、`onDelete?`、`onUpdate?` | すでにあるカラムの間にリレーションシップを描き、開始側と終了側のカラムを位置の順に対応付けます。 |
 | `erd_remove_relationship` | `relationshipId` | リレーションシップの線を削除します。その外部キーカラムはテーブルに残ります。 |
 | `erd_change_relationship_type` | `relationshipId`、`relationshipType` | リレーションシップのカーディナリティを変更します。 |
+| `erd_change_relationship_on_delete` | `relationshipId`、`onDelete` | リレーションシップの ON DELETE のアクション、つまり親の行を削除したときにその子の行がどうなるかを設定します。 |
+| `erd_change_relationship_on_update` | `relationshipId`、`onUpdate` | リレーションシップの ON UPDATE のアクション、つまり親のキーを変更したときにその子の行がどうなるかを設定します。 |
+
+`erd_add_relationship` は実行した時点で外部キーカラムの名前を決めるため、親テーブルとその主キーには先に名前を付けてください。
+
+古い ERD Editor の拡張機能やプラグイン、つまり VS Code の拡張機能の `3.1.0` より前のバージョン、Obsidian のプラグインの `0.2.0` より前のバージョン、JetBrains のプラグインの `0.10.0` より前のバージョンは、ドキュメントを扱うときに ON DELETE と ON UPDATE を無視します。
+それらを設定するツールは成功しますが、ダイアグラムにも、そのエディタが保存するファイルにも、それらは残りません。拡張機能やプラグインを更新してください。[アップデート](./installation.md#アップデート)を参照してください。
+そのドキュメントを扱うエディタがない場合、アクションはほかの編集と同じようにファイルに書き込まれます。
 
 ### インデックス
 
@@ -143,8 +154,8 @@ ID は `erd_list` と `erd_get`、またはそのエンティティを作った�
 | `erd_set_relationship_optimization` | `value` | ドキュメントに保存される、リレーションシップ最適化のフラグ。 |
 | `erd_set_column_order` | `columnType`、`targetColumnType` | テーブルの行の 1 つの要素を、別の要素の位置へ移動します。`columnName`、`columnDataType`、`columnNotNull`、`columnUnique`、`columnAutoIncrement`、`columnDefault`、`columnComment`。 |
 | `erd_set_max_width_comment` | `value` | テーブル内でコメントを描画する最大幅（ピクセル単位）。`-1` で制限なし。 |
-| `erd_set_ignore_save_settings` | `saveSettingType`、`value` | `true` にすると、保存するファイルから `scroll` または `zoomLevel` を除きます。 |
-| `erd_set_show` | `show`、`value` | ダイアグラムの 1 つの要素を表示または非表示にします。`tableComment`、`columnComment`、`columnDataType`、`columnDefault`、`columnAutoIncrement`、`columnPrimaryKey`、`columnUnique`、`columnNotNull`、`relationship`。 |
+| `erd_set_ignore_save_settings` | `saveSettingType`、`value` | `true` にすると、保存するファイルから `scroll` または `zoomLevel` を除きます。新しいドキュメントは、エディタの新しいダイアグラムと同じように、どちらも `true` で始まります。[スクロール情報の保存](../guide/guides/settings.md#スクロール情報の保存)を参照してください。 |
+| `erd_set_show` | `show`、`value` | ダイアグラムの 1 つの要素を表示または非表示にします。`tableComment`、`columnComment`、`columnDataType`、`columnDefault`、`columnAutoIncrement`、`columnPrimaryKey`、`columnUnique`、`columnNotNull`、`relationship`、`columnAlternateKey`、`hideReferentialAction`。`columnAlternateKey` を表示すると、各[代替キー](../guide/guides/table-related-functions.md#alternate-keys)のカラムに `AK1.1` のようなマークが付きます。`hideReferentialAction` は意味が逆で、`true` にすると、リレーションシップの線に付く ON DELETE と ON UPDATE のラベルを非表示にします。ラベルは既定で表示されます。[コネクタの読み方](../guide/guides/relationship-editing.md#reading-a-connector)を参照してください。 |
 
 ### 読み込み
 
@@ -157,7 +168,7 @@ ID は `erd_list` と `erd_get`、またはそのエンティティを作った�
 | `erd_import_graphql` | `value` | GraphQL SDL を読み込みます。 |
 | `erd_import_dbml` | `value` | DBML を読み込みます。 |
 | `erd_import_aml` | `value` | AML を読み込みます。 |
-| `erd_import_json` | `value` | 別の `.erd.json` ファイルなど、erd-editor の JSON ドキュメントを読み込みます。空のテキストでは空のドキュメントになります。 |
+| `erd_import_json` | `value` | 別の `.erd.json` ファイルなど、erd-editor の JSON ドキュメントを読み込みます。空のテキストでは、`erd_open_document` が `create` で作成するものと同じ、新しいドキュメントになります。 |
 
 ## erd_batch
 
@@ -169,6 +180,7 @@ ID は `erd_list` と `erd_get`、またはそのエンティティを作った�
 - ライブのセッションでは、エディタはバッチ全体を受け入れるか、まったく受け入れないかのどちらかです。
 
 エージェントは、バッチが作成する ID を呼び出す前に知ることができません。そこで `as` で名前を付けた操作の ID は、後の操作から参照できます。最初に作成された ID は `$name` または `$name.0`、2 番目は `$name.1`、最後は `$name.last` です。
+名前に使えるのは ASCII の英字、数字、アンダースコアで、数字で始めることはできず、1 つの名前は 1 つの操作にしか付けられません。
 参照が解決されるのはエンティティの ID を受け取る引数だけなので、`$x` と書かれた名前やコメントはテキストのままです。
 
 テーブルとそのカラム、リレーションシップを 1 回の呼び出しで作成する例です。
@@ -185,10 +197,12 @@ ID は `erd_list` と `erd_get`、またはそのエンティティを作った�
     { "tool": "erd_set_column_primary_key", "args": { "tableId": "$users", "columnId": "$uid", "value": true } },
     { "tool": "erd_add_table", "as": "orders" },
     { "tool": "erd_change_table_name", "args": { "tableId": "$orders", "value": "orders" } },
-    { "tool": "erd_add_relationship", "args": { "startTableId": "$users", "endTableId": "$orders", "relationshipType": "ZeroN" } }
+    { "tool": "erd_add_relationship", "args": { "startTableId": "$users", "endTableId": "$orders", "relationshipType": "ZeroN", "onDelete": "cascade" } }
   ]
 }
 ```
+
+`users` とそのキー `id` にはリレーションシップより前に名前が付いているため、リレーションシップが `orders` に追加する外部キーカラムは `users_id` になります。
 
 ## 結果
 

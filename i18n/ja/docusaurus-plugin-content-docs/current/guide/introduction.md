@@ -6,7 +6,7 @@ description: ブラウザ、Google Drive、VS Code、IntelliJ、Obsidian、自�
 # はじめに
 
 erd-editor は ER 図（Entity-Relationship Diagram）エディタです。
-Web アプリ、Google Drive アプリ、VSCode 拡張機能、IntelliJ プラグイン、Obsidian プラグイン、そして自分のページに埋め込める `<erd-editor>` カスタム要素として提供しています。
+Web アプリ、Google Drive アプリ、VS Code 拡張機能、IntelliJ プラグイン、Obsidian プラグイン、そして自分のページに埋め込める `<erd-editor>` カスタム要素として提供しています。
 どれも同じエディタで、ドキュメント形式も共通です。
 
 ![ショップのダイアグラムでリレーションシップの強調、カラムの追加、Flow での orders へのフォーカス](/img/demo-overview.webp)
@@ -24,11 +24,13 @@ Web アプリ、Google Drive アプリ、VSCode 拡張機能、IntelliJ プラ�
 
 IDE で試すには、拡張子が `.erd.json` の空ファイルを作成して開きます。
 Obsidian では、コマンドパレットから `ERD Editor: Create new diagram` を実行するか、ファイルエクスプローラーでフォルダのコンテキストメニューから `New ERD` を選びます。どちらも空の `.erd` ファイルを作成して開きます。
+新しいダイアグラムは表示位置も拡大・縮小のレベルも保存しないため、スクロールしたり拡大・縮小したりしても、新しいダイアグラムの空のファイルはそのまま変わりません。[スクロール情報の保存](./guides/settings.md#スクロール情報の保存)を参照してください。
 Google Drive では、New → More → ERD Editor を選び、Google でサインインします。ERD Editor がアクセスできるのは、ERD Editor で作成したり開いたりしたファイルだけです。
+Obsidian プラグインを更新したら、Obsidian を再起動してください。再起動するまでは、以前のバージョンが読み込んだエディタがウィンドウに残ります。
 
 ## できること
 
-- 端のないキャンバスにテーブル、カラム、メモを描き、`Zero One`、`Zero N`、`One Only`、`One N` の 4 種類のリレーションシップでつなぎます。[編集を始める](./guides/editing-start.md)を参照してください。インデックスはテーブルのプロパティパネルで定義します。[インデックス](./guides/table-related-functions.md#indexes)を参照してください。
+- 端のないキャンバスにテーブル、カラム、メモを描き、`Zero One`、`Zero N`、`One Only`、`One N` の 4 種類のリレーションシップでつなぎます。[編集を始める](./guides/editing-start.md)を参照してください。リレーションシップには ON DELETE と ON UPDATE のアクションも設定できます。[ON DELETE と ON UPDATE](./guides/relationship-editing.md#on-delete-and-on-update)を参照してください。インデックスはテーブルのプロパティパネルで定義します。2 つ以上のカラムにまたがるユニークインデックスは代替キーで、`Alternate Key` の表示オプションがオンのとき、ダイアグラムはそのカラムに `AK1.1`、`AK1.2` などのマークを付けます。[インデックス](./guides/table-related-functions.md#indexes)と[代替キー](./guides/table-related-functions.md#alternate-keys)を参照してください。
 - 既存のスキーマを `json`、`Schema SQL`、`GraphQL`、`DBML`、`AML` から読み込めます。[ファイルの読み込みと書き出し](./guides/file-import-export.md)を参照してください。
 - ダイアグラムを `json`、`Schema SQL`、`png` として書き出します。
 - Databricks、MSSQL、MariaDB、MySQL、Oracle、PostgreSQL、Snowflake、SQLite の 8 つのデータベースベンダーの構文で Schema SQL を記述します。[テーブル関連機能](./guides/table-related-functions.md#databases)を参照してください。
@@ -36,7 +38,8 @@ Google Drive では、New → More → ERD Editor を選び、Google でサイ�
 - [可視化](./guides/visualization.md)では、スキーマを力学モデルの `Graph` として、またはリレーションシップに沿って並べたテーブルのカードの `Flow` として読み取れます。テーブルにマウスを重ねると、そのテーブルが接しているものが一目で分かります。ERD タブで `Alt + F` を押すと、[選択しているテーブルにフォーカス](./guides/visualization.md#focusing-on-tables)し、それに関連するテーブルと合わせて表示できます。
 - 端のないキャンバスで作業します。ダイアグラムが伸びていく先へどこまでも移動でき、`Ctrl + Wheel`（Mac では `⌘ + Wheel`）、キーボード、ピンチで `10%` から `150%` まで拡大・縮小し、Zen モードでダイアグラムだけを残せます。[キャンバスの移動](./guides/table-related-functions.md#getting-around-the-canvas)を参照してください。
 - [自動レイアウト](./guides/table-related-functions.md#auto-layout)で、ダイアグラム全体を一度に並べ替えます。Force のシミュレーション、左から右へ流れる Flow、縦横 2 方向の Tree から選べます。
-- [クイック検索](./guides/quick-search.md)を使うと、どこからでもテーブルを探したりコマンドを実行したりでき、[Undo, Redo](./guides/undo-redo.md) では編集履歴をたどれます。
+- [クイック検索](./guides/quick-search.md)を使うと、どこからでもコマンドを実行できます。検索を `#`、`@`、`:` で始めると、それぞれテーブル、カラム、コメントまたはメモへ移動できます。[Undo, Redo](./guides/undo-redo.md) では編集履歴をたどれます。
+- [検索と置換](./guides/find-and-replace.md)では、テーブル名、カラム名、コメント、メモの中のテキストを検索し、一致した箇所を 1 つだけ、またはすべてまとめて置換できます。`Ctrl + F`（Mac では `⌘ + F`）か、ツールバーの `Search` の隣にあるボタンで開きます。
 - Claude Code や Codex などのコーディングエージェントに、[MCP サーバー](../mcp/introduction.md)を通じてダイアグラムを編集させられます。VS Code、Obsidian、JetBrains IDE ではライブで編集し、変更がその場でキャンバスに現れます。ファイルそのものを編集させることもできます。
 - Web アプリでは、リアルタイムで一緒に編集できます（実験的機能）。セッションはピアツーピアかつエンドツーエンドで暗号化されるため、スキーマがサーバーに保持されることはなく、参加者は互いのマウスカーソル、フォーカス、選択範囲を確認できます。自分のページでは、[`getSharedStore()`](../api/advanced/collaborative-editing.md) が同じアクションストリームを任意のトランスポート上で提供します。
 

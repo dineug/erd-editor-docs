@@ -34,7 +34,8 @@ editor.addEventListener('change', () => {
 
 `<erd-editor>` は固有のサイズを持ちません。要素またはコンテナに width と height を明示的に指定してください。
 
-`setInitialValue('')` は空のドキュメントから始めます。`value` への代入は読み込みを編集として扱うため、履歴に記録されます。
+`setInitialValue('')` は新しい空のドキュメントから始めます。`value` への代入は読み込みを編集として扱うため、履歴に記録されます。
+`3.10.0` からは、新しいドキュメントは表示位置も拡大・縮小のレベルも保存しない（`Save Scroll Information` と `Save Zoom Information` がオフ）ため、スクロールや拡大・縮小をしても `editor.value` は変わりません。テキストから読み込んだドキュメントはそこに指定されているスイッチの設定を保ち、何も指定されていないドキュメントは両方を保存します。[setInitialValue](./erd-editor-element.md#setinitialvalue) を参照してください。
 残りの API については [ErdEditorElement](./erd-editor-element.md) を参照してください。
 
 ### CDN
@@ -52,7 +53,7 @@ editor.addEventListener('change', () => {
 ```
 
 `esm.run` がパッケージの外部依存を解決してくれるため、バンドラーなしでも動作します。
-バージョンを指定しない URL は常に最新のリリースを配信します。メジャーアップグレードが予告なくページに反映されるのを避けたい場合は、`https://esm.run/@dineug/erd-editor@3.9.2` のようにバージョンを固定します。
+バージョンを指定しない URL は常に最新のリリースを配信します。メジャーアップグレードが予告なくページに反映されるのを避けたい場合は、`https://esm.run/@dineug/erd-editor@3.10.0` のようにバージョンを固定します。
 
 ### script タグ
 
@@ -61,7 +62,7 @@ editor.addEventListener('change', () => {
 
 ```html
 <erd-editor></erd-editor>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@3.9.2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@3.10.0"></script>
 <script>
   const editor = document.querySelector('erd-editor');
   editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
@@ -167,6 +168,7 @@ PNG の書き出しとスキーマのガベージコレクションは応答を 
 | `KeyBindingMap`、`KeyBindingName`、`ShortcutOption`（型） | バインディングのマップ、そのコマンド名のユニオン、1 つのバインディングです。 |
 
 `@dineug/erd-editor/engine.js` は 2 つ目のエントリーポイントです。DOM なしでドキュメントの store を動かすため、Web Worker でも動作します。[リモート保存](./advanced/remote-storage.md)を参照してください。
+`createReplicationStore` と `ReplicationStore` 型をエクスポートしています。`3.10.0` からは、レプリカの `change` リスナーが受け取る `ReplicationChange` 型 `{ value: string; changed: boolean }` もエクスポートしています。[on@change](./advanced/remote-storage.md#onchange) を参照してください。
 
 `3.9.1` からは 3 つ目のエントリーポイント `@dineug/erd-editor/peer.js` があります。[MCP サーバー](../mcp/introduction.md)がドキュメントを編集するときに経由するヘッドレスなピアです。このサーバーのためのもので、これらのページでは説明していません。
 

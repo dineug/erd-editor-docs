@@ -42,8 +42,16 @@ const sharedStore = editor.getSharedStore();
 アクションはバッチで届き、`subscribe` が渡す配列が 1 つの単位となるため、配列全体をそのまま中継し、受け取り側でも配列全体をそのまま dispatch します。  
 アクションが持つ管理情報がエディタ間の同期を支えているため、内容を読んだり書き換えたりせず、不透明な値としてそのまま受け渡します。
 
+`3.10.0` からは、リレーションシップの [ON DELETE または ON UPDATE](../../guide/guides/relationship-editing.md#on-delete-and-on-update) の変更は、2 つの新しいアクションの種類 `relationship.changeOnDelete` と `relationship.changeOnUpdate` のいずれかとして送られ、`relationship.add` は両方を持つことができます。アクションをそのまま受け渡す中継であれば、これらのために新たに対応する必要はありません。  
+`3.10.0` より前のエディタは、これらのアクションの種類とフィールドを無視します。リリースが混在するセッションでは、古いエディタにはリレーションシップの ON DELETE も ON UPDATE も伝わらず、古いエディタで保存したドキュメントにはどちらも含まれません。古いエディタが追加したリレーションシップはこれらを持たずに届くため、どちらも `Not set` で始まります。  
+セッション内のすべてのエディタと、そのドキュメントを保存する [replicationStore](./remote-storage.md#dispatch-dispatchsync) には、`3.10.0` 以降を使います。
+
+`3.10.0` のエディタが送るそれ以外の変更は、どれも古いエディタがすでに知っているアクションの種類で送られます。  
+[検索と置換](../../guide/guides/find-and-replace.md#replacing)の `Replace All` は、手で編集したときと同じ名前の変更、コメント、メモのアクションを 1 つのバッチにまとめて送ります。`Alternate Key` と `Referential Actions` の[表示オプション](../../guide/guides/table-related-functions.md#table-view-options)は、既存の `settings.changeShow` アクションで送られます。
+
 Visualization タブの [Flow モード](../../guide/guides/visualization.md#flow-never-edits-the-document)で行う操作はどれもドキュメントの変更ではないため、Flow を表示しているエディタは他のエディタに変更を送らず、その間も他のエディタから送られてくる変更は引き続き適用されます。  
-唯一の例外は ERD タブへ戻るカードの外部リンクボタンで、そのタブの切り替えとスクロールは他の変更と同じように送信されます。
+唯一の例外は Flow から別のタブへ移ることで、そのタブの切り替えは他の変更と同じように送信されます。  
+カードの外部リンクボタン、`#`、`@`、`:` の後に選んだ[クイック検索](../../guide/guides/quick-search.md#searching-the-diagram)の結果、[検索と置換](../../guide/guides/find-and-replace.md#opening-and-closing)を開く操作は、どれも Flow から ERD タブへ移ります。カードのボタンやクイック検索の結果がそこで行うスクロールも送信されます。
 
 ## 1 つのページに 2 つのエディタ
 

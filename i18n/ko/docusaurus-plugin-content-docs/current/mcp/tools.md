@@ -1,11 +1,11 @@
 ---
 sidebar_position: 4
-description: erd-editor MCP 서버가 제공하는 모든 도구. 문서를 한 페이지씩 읽는 방법, 54개의 편집 도구, erd_batch, 결과와 거부의 형태.
+description: erd-editor MCP 서버가 제공하는 모든 도구. 문서를 한 페이지씩 읽는 방법, 56개의 편집 도구, erd_batch, 결과와 거부의 형태.
 ---
 
 # 도구
 
-서버는 63개의 도구를 제공합니다. 세션 도구 5개, 읽기 도구 3개, 편집 작업마다 하나씩인 편집 도구 54개, 그리고 여러 편집 도구를 하나의 편집으로 실행하는 `erd_batch`입니다.
+서버는 65개의 도구를 제공합니다. 세션 도구 5개, 읽기 도구 3개, 편집 작업마다 하나씩인 편집 도구 56개, 그리고 여러 편집 도구를 하나의 편집으로 실행하는 `erd_batch`입니다.
 
 `erd_list_documents`를 제외한 모든 도구는 첫 번째 인자로 문서의 `path`를 받으며, 아래 표에서는 생략합니다.
 `?`가 붙은 인자는 선택 사항입니다.
@@ -27,7 +27,7 @@ description: erd-editor MCP 서버가 제공하는 모든 도구. 문서를 한 
 | 도구 | 인자 | 동작 |
 | --- | --- | --- |
 | `erd_list` | `query?`, `offset?`, `limit?`, `namesOnly?` | 설정과 개수, 그다음 테이블 한 페이지를 돌려줍니다. 각 테이블에는 id, 캔버스 위의 위치와 크기, 컬럼 수, 그리고 인덱스와 관계가 함께 나오며, 테이블 뒤에는 검색 중이 아니라면 메모가 나옵니다. |
-| `erd_get` | `tableIds?`, `tableNames?`, `relationshipIds?`, `indexIds?`, `memoIds?` | 지정한 엔티티를 빠짐없이 돌려줍니다. 테이블은 컬럼과 함께, 관계와 인덱스는 그 컬럼과 함께, 메모는 텍스트와 함께 나옵니다. |
+| `erd_get` | `tableIds?`, `tableNames?`, `relationshipIds?`, `indexIds?`, `memoIds?` | 지정한 엔티티를 빠짐없이 돌려줍니다. 테이블은 컬럼과 함께, 관계는 그 컬럼과 `onDelete`, `onUpdate`와 함께, 인덱스는 그 컬럼과 함께, 메모는 텍스트와 함께 나옵니다. |
 | `erd_read` | `format`, `vendor?`, `tableIds?`, `tableNames?` | 문서 전체를 세 가지 형식 중 하나로 한 번에 돌려주거나, 일부 테이블의 DDL만 돌려줍니다. |
 
 에이전트는 `erd_list`로 id를 찾고, `erd_get`으로 컬럼과 그 밖의 세부 내용을 읽은 뒤, 그 id를 편집 도구에 넘깁니다.
@@ -39,7 +39,7 @@ description: erd-editor MCP 서버가 제공하는 모든 도구. 문서를 한 
 | `format` | 응답 내용 |
 | --- | --- |
 | `snapshot` | 모든 엔티티와 그 id를 담은 간결한 JSON입니다. 스키마가 크면 커집니다. |
-| `sql` | 8가지 데이터베이스 `Databricks`, `MariaDB`, `MSSQL`, `MySQL`, `Oracle`, `PostgreSQL`, `Snowflake`, `SQLite` 중 하나의 DDL입니다. `vendor`의 기본값은 문서에 설정된 데이터베이스입니다. `tableIds`나 `tableNames`를 주면 해당 테이블만, 그 테이블이 가진 foreign key와 함께 돌려줍니다. |
+| `sql` | 8가지 데이터베이스 `Databricks`, `MariaDB`, `MSSQL`, `MySQL`, `Oracle`, `PostgreSQL`, `Snowflake`, `SQLite` 중 하나의 DDL입니다. `vendor`의 기본값은 문서에 설정된 데이터베이스입니다. `tableIds`나 `tableNames`를 주면 해당 테이블만, 그 테이블이 가진 foreign key와 함께 돌려줍니다. foreign key에는 ON DELETE와 ON UPDATE 동작이 함께 작성되며, 대상 데이터베이스가 생략하는 동작은 빠집니다. [ON DELETE와 ON UPDATE](../guide/guides/relationship-editing.md#on-delete와-on-update) 문서를 참고하세요. |
 | `json` | 원본 `.erd.json` 문서입니다. |
 
 ### 대규모 스키마
@@ -92,13 +92,24 @@ id는 `erd_list`와 `erd_get`에서, 또는 엔티티를 만든 호출의 `creat
 
 `relationshipType`은 자식 쪽 끝의 카디널리티이며, `ZeroOne`, `ZeroN`, `OneOnly`, `OneN` 중 하나입니다.
 시작 테이블은 부모, 즉 primary key를 가진 참조되는 쪽이고, 끝 테이블은 자식입니다.
+`onDelete`와 `onUpdate`는 foreign key의 ON DELETE와 ON UPDATE 동작이며, `none`, `noAction`, `cascade`, `setNull`, `setDefault`, `restrict` 중 하나입니다.
+`none`은 절을 작성하지 않으므로 데이터베이스의 기본 동작이 적용됩니다. [ON DELETE와 ON UPDATE](../guide/guides/relationship-editing.md#on-delete와-on-update) 문서를 참고하세요.
+`erd_add_relationship`이나 `erd_link_columns`에서 생략한 동작은 `none`입니다.
 
 | 도구 | 인자 | 동작 |
 | --- | --- | --- |
-| `erd_add_relationship` | `startTableId`, `endTableId`, `relationshipType` | 두 테이블을 관계로 연결합니다. 부모의 primary key를 자식에 foreign key 컬럼으로 복사하며, 부모에 primary key가 없으면 primary key 컬럼을 먼저 만듭니다. `createdIds`에는 새로 만든 키 컬럼이 있으면 그 컬럼, foreign key 컬럼, 그리고 마지막으로 관계 id가 담깁니다. |
-| `erd_link_columns` | `startTableId`, `startColumnIds`, `endTableId`, `endColumnIds`, `relationshipType` | 이미 있는 컬럼 사이에 관계를 그리며, 시작 컬럼과 끝 컬럼을 위치 순서대로 짝짓습니다. |
+| `erd_add_relationship` | `startTableId`, `endTableId`, `relationshipType`, `onDelete?`, `onUpdate?` | 두 테이블을 관계로 연결합니다. 부모의 primary key를 자식에 foreign key 컬럼으로 복사하며, 부모에 primary key가 없으면 primary key 컬럼을 먼저 만듭니다. 각 foreign key 컬럼의 이름은 에디터에서 관계를 그릴 때와 같은 방식으로 정해집니다. `users`의 키 `id`는 `users_id`가 되고, `member_id` 같은 키는 이름이 그대로 유지됩니다. [Foreign Key 컬럼 이름](../guide/guides/relationship-editing.md#foreign-key-컬럼-이름) 문서를 참고하세요. `createdIds`에는 새로 만든 키 컬럼이 있으면 그 컬럼, foreign key 컬럼, 그리고 마지막으로 관계 id가 담깁니다. |
+| `erd_link_columns` | `startTableId`, `startColumnIds`, `endTableId`, `endColumnIds`, `relationshipType`, `onDelete?`, `onUpdate?` | 이미 있는 컬럼 사이에 관계를 그리며, 시작 컬럼과 끝 컬럼을 위치 순서대로 짝짓습니다. |
 | `erd_remove_relationship` | `relationshipId` | 관계 연결선을 삭제합니다. foreign key 컬럼은 테이블에 그대로 남습니다. |
 | `erd_change_relationship_type` | `relationshipId`, `relationshipType` | 관계의 카디널리티를 바꿉니다. |
+| `erd_change_relationship_on_delete` | `relationshipId`, `onDelete` | 관계의 ON DELETE 동작, 즉 부모 행을 삭제했을 때 자식 행에 일어나는 일을 설정합니다. |
+| `erd_change_relationship_on_update` | `relationshipId`, `onUpdate` | 관계의 ON UPDATE 동작, 즉 부모 키를 변경했을 때 자식 행에 일어나는 일을 설정합니다. |
+
+`erd_add_relationship`은 실행될 때 foreign key 컬럼의 이름을 정하므로, 부모 테이블과 그 primary key의 이름을 먼저 지정하세요.
+
+오래된 ERD Editor 확장이나 플러그인, 즉 `3.1.0` 이전의 VS Code 확장, `0.2.0` 이전의 Obsidian 플러그인, `0.10.0` 이전의 JetBrains 플러그인은 문서를 담당할 때 ON DELETE와 ON UPDATE를 무시합니다.
+이를 설정하는 도구는 그래도 성공하지만, 다이어그램에도 그 에디터가 저장하는 파일에도 그 동작은 남지 않으므로 확장이나 플러그인을 업데이트하세요. [업데이트](./installation.md#업데이트) 문서를 참고하세요.
+문서를 담당하는 에디터가 없으면 그 동작은 다른 편집과 마찬가지로 파일에 쓰입니다.
 
 ### 인덱스
 
@@ -143,8 +154,8 @@ id는 `erd_list`와 `erd_get`에서, 또는 엔티티를 만든 호출의 `creat
 | `erd_set_relationship_optimization` | `value` | 문서에 저장되는 관계 최적화 플래그입니다. |
 | `erd_set_column_order` | `columnType`, `targetColumnType` | 테이블 행의 한 부분을 다른 부분의 자리로 옮깁니다. `columnName`, `columnDataType`, `columnNotNull`, `columnUnique`, `columnAutoIncrement`, `columnDefault`, `columnComment`. |
 | `erd_set_max_width_comment` | `value` | 테이블에서 코멘트가 그려지는 최대 너비를 픽셀 단위로 지정하며, `-1`이면 제한이 없습니다. |
-| `erd_set_ignore_save_settings` | `saveSettingType`, `value` | `true`면 저장되는 파일에서 `scroll` 또는 `zoomLevel`을 제외합니다. |
-| `erd_set_show` | `show`, `value` | 다이어그램의 한 부분을 표시하거나 숨깁니다. `tableComment`, `columnComment`, `columnDataType`, `columnDefault`, `columnAutoIncrement`, `columnPrimaryKey`, `columnUnique`, `columnNotNull`, `relationship`. |
+| `erd_set_ignore_save_settings` | `saveSettingType`, `value` | `true`면 저장되는 파일에서 `scroll` 또는 `zoomLevel`을 제외합니다. 새 문서는 에디터에서 만든 새 다이어그램과 마찬가지로 둘 다 `true`인 상태로 시작합니다. [스크롤 정보 저장](../guide/guides/settings.md#스크롤-정보-저장) 문서를 참고하세요. |
+| `erd_set_show` | `show`, `value` | 다이어그램의 한 부분을 표시하거나 숨깁니다. `tableComment`, `columnComment`, `columnDataType`, `columnDefault`, `columnAutoIncrement`, `columnPrimaryKey`, `columnUnique`, `columnNotNull`, `relationship`, `columnAlternateKey`, `hideReferentialAction`. `columnAlternateKey`를 표시하면 각 [대체 키](../guide/guides/table-related-functions.md#대체-키)의 컬럼에 `AK1.1`과 같은 표시가 붙습니다. `hideReferentialAction`은 의미가 반대입니다. `true`면 관계 연결선의 ON DELETE와 ON UPDATE 라벨을 숨기며, 이 라벨은 기본적으로 표시됩니다. [연결선 읽기](../guide/guides/relationship-editing.md#연결선-읽기) 문서를 참고하세요. |
 
 ### 가져오기
 
@@ -157,7 +168,7 @@ id는 `erd_list`와 `erd_get`에서, 또는 엔티티를 만든 호출의 `creat
 | `erd_import_graphql` | `value` | GraphQL SDL을 불러옵니다. |
 | `erd_import_dbml` | `value` | DBML을 불러옵니다. |
 | `erd_import_aml` | `value` | AML을 불러옵니다. |
-| `erd_import_json` | `value` | 다른 `.erd.json` 파일 같은 erd-editor JSON 문서를 불러옵니다. 빈 텍스트를 주면 빈 문서가 됩니다. |
+| `erd_import_json` | `value` | 다른 `.erd.json` 파일 같은 erd-editor JSON 문서를 불러옵니다. 빈 텍스트를 주면 `erd_open_document`가 `create`로 만드는 문서와 같은 새 문서가 됩니다. |
 
 ## erd_batch
 
@@ -169,6 +180,7 @@ id는 `erd_list`와 `erd_get`에서, 또는 엔티티를 만든 호출의 `creat
 - 라이브 세션에서는 에디터가 배치 전체를 받아들이거나 전혀 받아들이지 않습니다.
 
 에이전트는 호출하기 전에는 배치가 만들 id를 알 수 없으므로, `as`로 이름을 붙인 작업은 뒤의 작업이 그 id를 참조할 수 있게 합니다. 첫 번째로 만든 id는 `$name` 또는 `$name.0`, 두 번째는 `$name.1`, 마지막은 `$name.last`입니다.
+이름은 ASCII 영문자, 숫자, 밑줄로 이루어지고, 숫자로 시작할 수 없으며, 한 작업에만 붙일 수 있습니다.
 참조는 엔티티 id를 받는 인자에서만 해석되므로, `$x`라고 쓴 이름이나 코멘트는 텍스트로 남습니다.
 
 한 번의 호출로 테이블과 컬럼, 관계를 만드는 예입니다.
@@ -185,10 +197,12 @@ id는 `erd_list`와 `erd_get`에서, 또는 엔티티를 만든 호출의 `creat
     { "tool": "erd_set_column_primary_key", "args": { "tableId": "$users", "columnId": "$uid", "value": true } },
     { "tool": "erd_add_table", "as": "orders" },
     { "tool": "erd_change_table_name", "args": { "tableId": "$orders", "value": "orders" } },
-    { "tool": "erd_add_relationship", "args": { "startTableId": "$users", "endTableId": "$orders", "relationshipType": "ZeroN" } }
+    { "tool": "erd_add_relationship", "args": { "startTableId": "$users", "endTableId": "$orders", "relationshipType": "ZeroN", "onDelete": "cascade" } }
   ]
 }
 ```
+
+관계보다 먼저 `users`와 그 키 `id`의 이름을 지정하므로, 관계가 `orders`에 추가하는 foreign key 컬럼은 `users_id`가 됩니다.
 
 ## 결과
 

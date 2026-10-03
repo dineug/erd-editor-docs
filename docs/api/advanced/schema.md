@@ -73,6 +73,8 @@ const Show = {
   columnUnique: 64,
   columnNotNull: 128,
   relationship: 256,
+  columnAlternateKey: 512,
+  hideReferentialAction: 1024,
 } as const;
 
 const ColumnType = {
@@ -145,7 +147,16 @@ None of `Flow` mode's own state is serialized — its placement, zoom, pan, row 
 `columnOrder` is an array holding all seven `ColumnType` values, in display order.  
 `database`, `language`, `tableNameCase`, `columnNameCase` and `bracketType` each hold exactly one value, and the JSON Schema rejects a combined value.
 
-`Database` and `Language` are append-only. A saved document stores the number, so a new vendor or code-generation target takes the next bit instead of a slot in the middle.
+A new document's `show` is `431`: `tableComment`, `columnComment`, `columnDataType`, `columnDefault`, `columnPrimaryKey`, `columnNotNull` and `relationship`.  
+Since `3.10.0` there are two more `show` flags, both off in a new document and in every document saved before `3.10.0`.  
+`columnAlternateKey` (`512`) is the [`Alternate Key`](../../guide/guides/table-related-functions.md#alternate-keys) view option. Set, it marks the columns of each unique index over two or more columns as `AK1.1`, `AK1.2` and so on. It starts off, so no existing diagram changes width.  
+`hideReferentialAction` (`1024`) is the one flag that hides what it names: set, it hides the [ON DELETE and ON UPDATE labels](../../guide/guides/relationship-editing.md#reading-a-connector) on connectors, so they show by default. The `Referential Actions` view option is checked while the flag is off. It changes no table's size.  
+An editor before `3.10.0` keeps `show` as a whole number, so both flags survive a save there.
+
+`ignoreSaveSettings` leaves the view out of the written document. With `scroll` set, `originX` and `originY` are written as `0`; with `zoomLevel` set, `zoomLevel` is written as `1`. These are the [`Save Scroll Information`](../../guide/guides/settings.md#save-scroll-information) and [`Save Zoom Information`](../../guide/guides/settings.md#save-zoom-information) settings, each on while its bit is clear. A zoom moves the origin as well, so with only `zoomLevel` set a zoom still changes the written document.  
+Since `3.10.0` a document started from nothing — a new editor or replication store, or a blank value given to `value` or `setInitialValue()` — has `ignoreSaveSettings` set to `3`, so it saves neither. A document whose `settings` carries no `ignoreSaveSettings`, such as one saved before `3.2.3`, still reads as `0` and saves both, as the release that wrote it did.
+
+`Database`, `Language`, `Show` and `ReferentialAction` are append-only. A saved document stores the number, so a new vendor, code-generation target, flag or action takes the next bit instead of a slot in the middle.
 
 ### Doc
 
@@ -239,6 +250,8 @@ type Relationship = EntityType<{
   identification: boolean;
   relationshipType: number; // Constants: RelationshipType
   startRelationshipType: number; // Constants: StartRelationshipType
+  onDelete: number; // Constants: ReferentialAction
+  onUpdate: number; // Constants: ReferentialAction
   start: RelationshipPoint;
   end: RelationshipPoint;
 }>;
@@ -264,6 +277,15 @@ const StartRelationshipType = {
   dash: 2,
 } as const;
 
+const ReferentialAction = {
+  none: 1,
+  noAction: 2,
+  cascade: 4,
+  setNull: 8,
+  setDefault: 16,
+  restrict: 32,
+} as const;
+
 const Direction = {
   left: 1,
   right: 2,
@@ -271,6 +293,10 @@ const Direction = {
   bottom: 8,
 } as const;
 ```
+
+Since `3.10.0` a relationship carries `onDelete` and `onUpdate`, its [ON DELETE and ON UPDATE actions](../../guide/guides/relationship-editing.md#on-delete-and-on-update). Each holds exactly one `ReferentialAction` value. `none`, the default, writes no clause, so the database's own default applies. The other five stand for `NO ACTION`, `CASCADE`, `SET NULL`, `SET DEFAULT` and `RESTRICT`. Schema SQL writes a clause only for a database that accepts its action.  
+Both fields are optional. A missing field, as in every document saved before `3.10.0`, reads as `none`, and so does a value outside the list; the JSON Schema checks only that each is an integer.  
+An editor before `3.10.0` does not know the fields and drops them when it loads a document, so saving there loses every action.
 
 ### Collection: indexEntities
 
@@ -420,7 +446,7 @@ Put `$schema` at the top of an `.erd.json` file and editors that understand JSON
           "maximum": 1.5
         },
         "show": {
-          "description": "bit value (tableComment: 1) | (columnComment: 2) | (columnDataType: 4) | (columnDefault: 8) | (columnAutoIncrement: 16) | (columnPrimaryKey: 32) | (columnUnique: 64) | (columnNotNull: 128) | (relationship: 256)",
+          "description": "bit value (tableComment: 1) | (columnComment: 2) | (columnDataType: 4) | (columnDefault: 8) | (columnAutoIncrement: 16) | (columnPrimaryKey: 32) | (columnUnique: 64) | (columnNotNull: 128) | (relationship: 256) | (columnAlternateKey: 512) | (hideReferentialAction: 1024)",
           "type": "integer"
         },
         "database": {
@@ -697,6 +723,14 @@ Put `$schema` at the top of an `.erd.json` file and editors that understand JSON
           },
           "startRelationshipType": {
             "description": "bit value (ring: 1) | (dash: 2)",
+            "type": "integer"
+          },
+          "onDelete": {
+            "description": "bit value (none: 1) | (noAction: 2) | (cascade: 4) | (setNull: 8) | (setDefault: 16) | (restrict: 32); none, the default, writes no ON DELETE clause",
+            "type": "integer"
+          },
+          "onUpdate": {
+            "description": "bit value (none: 1) | (noAction: 2) | (cascade: 4) | (setNull: 8) | (setDefault: 16) | (restrict: 32); none, the default, writes no ON UPDATE clause",
             "type": "integer"
           },
           "start": {

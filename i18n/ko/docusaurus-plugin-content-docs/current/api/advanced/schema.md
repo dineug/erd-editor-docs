@@ -73,6 +73,8 @@ const Show = {
   columnUnique: 64,
   columnNotNull: 128,
   relationship: 256,
+  columnAlternateKey: 512,
+  hideReferentialAction: 1024,
 } as const;
 
 const ColumnType = {
@@ -145,7 +147,16 @@ const SaveSettingType = {
 `columnOrder`는 7개의 `ColumnType` 값을 모두 담은 배열이며 표출 순서를 나타냅니다.  
 `database`, `language`, `tableNameCase`, `columnNameCase`, `bracketType`은 각각 정확히 하나의 값만 가지며, 결합된 값은 JSON Schema에서 거부됩니다.
 
-`Database`와 `Language`는 추가만 가능합니다. 저장된 문서에는 숫자가 기록되므로, 새로운 데이터베이스 벤더나 코드 생성 대상은 중간 자리를 차지하지 않고 다음 비트를 사용합니다.
+새 문서의 `show`는 `431`로, `tableComment`, `columnComment`, `columnDataType`, `columnDefault`, `columnPrimaryKey`, `columnNotNull`, `relationship`을 합한 값입니다.  
+`3.10.0`부터 `show` 플래그가 2개 더 있으며, 새 문서와 `3.10.0` 이전에 저장된 모든 문서에서 둘 다 꺼져 있습니다.  
+`columnAlternateKey`(`512`)는 [`Alternate Key`](../../guide/guides/table-related-functions.md#대체-키) 보기 옵션입니다. 설정하면 두 개 이상의 컬럼으로 이루어진 각 unique 인덱스의 컬럼에 `AK1.1`, `AK1.2`와 같은 표시를 붙입니다. 처음에는 꺼져 있으므로 기존 다이어그램의 너비는 바뀌지 않습니다.  
+`hideReferentialAction`(`1024`)는 이름이 가리키는 것을 숨기는 유일한 플래그입니다. 설정하면 연결선의 [ON DELETE와 ON UPDATE 라벨](../../guide/guides/relationship-editing.md#연결선-읽기)을 숨기므로, 기본적으로는 라벨이 표시됩니다. `Referential Actions` 보기 옵션은 이 플래그가 꺼져 있는 동안 체크되어 있습니다. 이 플래그는 테이블 크기를 바꾸지 않습니다.  
+`3.10.0` 이전 에디터는 `show`를 숫자 그대로 유지하므로, 그 에디터에서 저장해도 두 플래그가 남아 있습니다.
+
+`ignoreSaveSettings`는 기록되는 문서에서 화면 상태를 제외합니다. `scroll`이 설정되면 `originX`와 `originY`가 `0`으로 기록되고, `zoomLevel`이 설정되면 `zoomLevel`이 `1`로 기록됩니다. 각각 [`Save Scroll Information`](../../guide/guides/settings.md#스크롤-정보-저장)과 [`Save Zoom Information`](../../guide/guides/settings.md#확대축소-정보-저장) 설정이며, 각 설정은 해당 비트가 꺼져 있는 동안 켜져 있습니다. 확대/축소하면 원점도 함께 움직이므로, `zoomLevel`만 설정된 경우에도 확대/축소하면 기록되는 문서가 바뀝니다.  
+`3.10.0`부터 새 에디터나 복제 store, 또는 `value`에 할당하거나 `setInitialValue()`에 넘긴 빈 값처럼 아무것도 없는 상태에서 시작한 문서는 `ignoreSaveSettings`가 `3`으로 설정되어 둘 다 저장하지 않습니다. `3.2.3` 이전에 저장된 문서처럼 `settings`에 `ignoreSaveSettings`가 없는 문서는 여전히 `0`으로 읽혀, 그 문서를 기록한 릴리스와 마찬가지로 둘 다 저장합니다.
+
+`Database`, `Language`, `Show`, `ReferentialAction`은 추가만 가능합니다. 저장된 문서에는 숫자가 기록되므로, 새로운 데이터베이스 벤더, 코드 생성 대상, 플래그, 동작은 중간 자리를 차지하지 않고 다음 비트를 사용합니다.
 
 ### Doc
 
@@ -239,6 +250,8 @@ type Relationship = EntityType<{
   identification: boolean;
   relationshipType: number; // Constants: RelationshipType
   startRelationshipType: number; // Constants: StartRelationshipType
+  onDelete: number; // Constants: ReferentialAction
+  onUpdate: number; // Constants: ReferentialAction
   start: RelationshipPoint;
   end: RelationshipPoint;
 }>;
@@ -264,6 +277,15 @@ const StartRelationshipType = {
   dash: 2,
 } as const;
 
+const ReferentialAction = {
+  none: 1,
+  noAction: 2,
+  cascade: 4,
+  setNull: 8,
+  setDefault: 16,
+  restrict: 32,
+} as const;
+
 const Direction = {
   left: 1,
   right: 2,
@@ -271,6 +293,10 @@ const Direction = {
   bottom: 8,
 } as const;
 ```
+
+`3.10.0`부터 관계는 [ON DELETE와 ON UPDATE 동작](../../guide/guides/relationship-editing.md#on-delete와-on-update)을 나타내는 `onDelete`와 `onUpdate`를 가집니다. 각각 정확히 하나의 `ReferentialAction` 값을 가집니다. 기본값인 `none`은 절을 작성하지 않으므로 데이터베이스 자체의 기본 동작이 적용됩니다. 나머지 5가지는 각각 `NO ACTION`, `CASCADE`, `SET NULL`, `SET DEFAULT`, `RESTRICT`를 나타냅니다. Schema SQL은 해당 동작을 받아들이는 데이터베이스에서만 절을 작성합니다.  
+두 필드는 모두 선택 사항입니다. `3.10.0` 이전에 저장된 모든 문서처럼 필드가 없으면 `none`으로 읽히며, 목록에 없는 값도 마찬가지입니다. JSON Schema는 각 값이 정수인지만 검사합니다.  
+`3.10.0` 이전 에디터는 이 필드를 알지 못해 문서를 불러올 때 버리므로, 그 에디터에서 저장하면 모든 동작이 사라집니다.
 
 ### Collection: indexEntities
 
@@ -420,7 +446,7 @@ type MemoUI = {
           "maximum": 1.5
         },
         "show": {
-          "description": "bit value (tableComment: 1) | (columnComment: 2) | (columnDataType: 4) | (columnDefault: 8) | (columnAutoIncrement: 16) | (columnPrimaryKey: 32) | (columnUnique: 64) | (columnNotNull: 128) | (relationship: 256)",
+          "description": "bit value (tableComment: 1) | (columnComment: 2) | (columnDataType: 4) | (columnDefault: 8) | (columnAutoIncrement: 16) | (columnPrimaryKey: 32) | (columnUnique: 64) | (columnNotNull: 128) | (relationship: 256) | (columnAlternateKey: 512) | (hideReferentialAction: 1024)",
           "type": "integer"
         },
         "database": {
@@ -697,6 +723,14 @@ type MemoUI = {
           },
           "startRelationshipType": {
             "description": "bit value (ring: 1) | (dash: 2)",
+            "type": "integer"
+          },
+          "onDelete": {
+            "description": "bit value (none: 1) | (noAction: 2) | (cascade: 4) | (setNull: 8) | (setDefault: 16) | (restrict: 32); none, the default, writes no ON DELETE clause",
+            "type": "integer"
+          },
+          "onUpdate": {
+            "description": "bit value (none: 1) | (noAction: 2) | (cascade: 4) | (setNull: 8) | (setDefault: 16) | (restrict: 32); none, the default, writes no ON UPDATE clause",
             "type": "integer"
           },
           "start": {

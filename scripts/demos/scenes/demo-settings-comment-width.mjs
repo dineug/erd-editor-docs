@@ -1,5 +1,6 @@
 import { seedSQL } from '../lib/seed.mjs';
 import { SHOP_SHOW } from './_io-settings-helpers.mjs';
+import { glide } from './_misc-helpers.mjs';
 
 /**
  * Maximum Comment Width: long comments stretch the tables; on the Settings
@@ -47,8 +48,18 @@ export default {
     await d.sleep(600);
 
     const settings = await d.domBox('[title="Settings"]');
+    // Along the gap above members, then up into the toolbar under Settings,
+    // so Search and Find and Replace do not light up on the way.
+    await glide(
+      d,
+      [
+        { x: 420, y: 42 },
+        { x: settings.x + settings.width / 2 + 14, y: 42 },
+      ],
+      520
+    );
     await d.click(settings.x + settings.width / 2, settings.y + settings.height / 2, {
-      duration: 420,
+      duration: 200,
     });
     await d.sleep(600);
     await d.shot('settings');
@@ -86,7 +97,20 @@ export default {
     const erd = await d.domBox('[title="Entity Relationship Diagram"]');
     await d.click(erd.x + erd.width / 2, erd.y + erd.height / 2, { duration: 420 });
     await d.sleep(300);
-    await d.moveTo(640, 330, 380);
+    // Down out of the toolbar under the ERD icon, along the gap above members
+    // and round its right edge, so neither the other toolbar icons nor the
+    // table light up while the cut comments come into view.
+    await glide(
+      d,
+      [
+        { x: 205, y: 40 },
+        { x: 300, y: 42 },
+        { x: 420, y: 42 },
+        { x: 480, y: 60 },
+        { x: 640, y: 330 },
+      ],
+      750
+    );
     await d.whenDrawn();
     await d.shot('erd');
     await d.sleep(1400);

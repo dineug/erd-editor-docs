@@ -47,7 +47,8 @@ A VS Code window serves the diagrams in its workspace folders and any diagram op
 2. Open the project folder and trust the workspace. The extension serves agents only in a trusted workspace.
 3. Leave the `dineug.erd-editor.agentHub.enabled` setting on. It is on by default.
 
-`3.0.1` or later is recommended.
+`3.1.0` or later is recommended.
+An earlier extension ignores the ON DELETE and ON UPDATE actions an agent sets — see [Updating](#updating).
 In a folder opened through a symbolic link, a junction, or a mapped drive, `3.0.0` can open a second tab of a diagram for the agent, whose save can undo the agent's edits.
 On Windows, `3.0.0` can leave the agent editing the file on disk behind an open editor: in a window run as administrator, and now and then in a diagram you just opened.
 
@@ -62,8 +63,11 @@ In a workspace with none of them it starts when you open a diagram, and until th
 
 An Obsidian vault window serves the diagrams in its vault.
 
-1. Install the [ERD Editor plugin](https://community.obsidian.md/plugins/erd-editor) `0.1.0` or later from Community plugins, and turn it on. It runs in the desktop app only.
+1. Install the [ERD Editor plugin](https://community.obsidian.md/plugins/erd-editor) `0.1.0` or later from Community plugins, and turn it on. It runs in the desktop app only, and needs Obsidian `1.5.7` or later.
 2. Leave Settings → ERD Editor → Coding agents on. It is on by default, and each vault keeps its own setting.
+
+`0.2.0` or later is recommended.
+An earlier plugin ignores the ON DELETE and ON UPDATE actions an agent sets — see [Updating](#updating).
 
 A vault window serves agents from the moment the plugin loads, so an agent reaches the vault's diagrams before you open one.
 There is no trust step.
@@ -88,6 +92,10 @@ A JetBrains IDE serves the diagrams of every project open in it, and any diagram
 1. Install the [ERD Editor plugin](https://plugins.jetbrains.com/plugin/23594-erd-editor) `0.9.0` or later. It needs an IntelliJ-based IDE `2025.2` or later, running on the JetBrains Runtime.
 2. Open the project and trust it. In a project the IDE does not trust, such as one opened in safe mode, agents read the diagrams but never change them.
 3. Leave Settings | Tools | ERD Editor → Coding agents ticked. It is on by default and applies to the whole IDE.
+
+`0.10.0` or later is recommended.
+An earlier plugin ignores the ON DELETE and ON UPDATE actions an agent sets — see [Updating](#updating).
+`0.9.0` can also write the file again when the agent asks to save a diagram that has nothing unsaved, which drops a byte order mark the file began with — see [Saving](./live-and-headless.md#saving).
 
 The IDE serves agents from the moment the first project opens, so an agent reaches a project's diagrams before you open one.
 
@@ -114,3 +122,10 @@ The commands above name no version, so `npx` checks npm for a newer release of t
 
 The server checks the protocol version the editor speaks before it connects.
 When the two differ, the call is refused with `protocolMismatch` and a message that names the side to update: the server, or the ERD Editor in the editor, which is the extension in VS Code and the plugin in Obsidian and a JetBrains IDE.
+
+Server `0.2.0` speaks the same protocol as the extension and plugins released before it, so an older editor connects without `protocolMismatch`.
+The VS Code extension before `3.1.0`, the Obsidian plugin before `0.2.0`, and the JetBrains plugin before `0.10.0` ignore the ON DELETE and ON UPDATE actions an agent sets, whether with the [relationship tools](./tools.md#relationships) or in a schema it imports.
+The call reports success, but neither the diagram nor the file the editor saves carries them.
+Such an editor also drops the actions a file already holds when it opens the file, so its next save writes the file without them.
+Update the extension or plugin too, not only the server.
+In Obsidian, restart the app after updating the plugin: until then, a vault window keeps running the ERD Editor of the plugin version it loaded first.

@@ -9,20 +9,23 @@ import { curveTo, seedShop } from './_table-related-a-helpers.mjs';
 /**
  * The shop seed with real comments and a default on every orders column that
  * would have one, so switching Column Comment and Default off removes real
- * text rather than empty placeholders.
+ * text rather than empty placeholders, and a unique index over two orders
+ * columns, so Alternate Key marks them AK1.1 and AK1.2 when it is switched on.
  */
-const SQL = readSeed('shop.sql').replace(
-  `CREATE TABLE orders (
+const SQL =
+  readSeed('shop.sql').replace(
+    `CREATE TABLE orders (
   id BIGINT NOT NULL AUTO_INCREMENT,
   member_id BIGINT NOT NULL,
   status VARCHAR(20) NOT NULL DEFAULT 'PENDING',
   ordered_at DATETIME NOT NULL,`,
-  `CREATE TABLE orders (
+    `CREATE TABLE orders (
   id BIGINT NOT NULL AUTO_INCREMENT COMMENT 'Order ID',
   member_id BIGINT NOT NULL COMMENT 'Buyer',
   status VARCHAR(20) NOT NULL DEFAULT 'PENDING' COMMENT 'Order status',
   ordered_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Placed at',`
-);
+  ) +
+  '\nCREATE UNIQUE INDEX UQ_member_ordered_at ON orders (member_id, ordered_at);\n';
 
 export default {
   name: 'demo-view-options',
@@ -48,6 +51,13 @@ export default {
         tableColumnEntities[email].options |= 4; // ColumnOption.unique
       },
     });
+    const doc = await d.value();
+    const alternateKey = Object.values(doc.collections.indexEntities).find(
+      index => index.unique && index.indexColumnIds.length === 2
+    );
+    if (!alternateKey) {
+      throw new Error('view-options: the unique index on orders was not imported');
+    }
     await d.moveTo(650, 300, 0);
   },
   async scenario(d) {
@@ -80,6 +90,8 @@ export default {
     await d.shot('default-off');
     await toggle('Unique', 800);
     await d.shot('unique-on');
+    await toggle('Alternate Key', 900);
+    await d.shot('alternate-key-on');
     await toggle('Auto Increment', 800);
     await d.shot('unique-ai-on');
 

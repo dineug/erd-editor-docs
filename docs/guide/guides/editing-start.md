@@ -35,8 +35,10 @@ Start a relationship from the context menu, from the [canvas toolbar](./table-re
 - One N: `Ctrl + Alt + 4` (Windows/Linux) or `⌘ + ⌥ + 4` (Mac)
 
 Once a type is armed the cursor changes. Click the parent table first, then the child table.  
-The parent gets a primary key if it does not have one, and a matching foreign key column — same name, data type, default, and comment, set `Not Null` — is created on the child.  
+The parent gets a primary key if it does not have one, and for each of the parent's primary key columns the child gets a `Not Null` foreign key column with the same data type, default, and comment.  
+Each is named after its key: a one-word name such as `id` gets the parent table's name in front (`user_id`), a name of several words such as `member_id` is kept, and a name the child already has is numbered (`user_id_2`) — see [Foreign Key Column Names](./relationship-editing.md#foreign-key-column-names).  
 Clicking one table twice draws a self-referencing relationship.  
+A new relationship starts with `On Delete` and `On Update` both `Not set`; change them from its context menu — see [ON DELETE and ON UPDATE](./relationship-editing.md#on-delete-and-on-update).  
 Press `Escape`, or press the same shortcut again, to cancel. Canceling leaves the selection as it is, and the next `Escape` clears it.
 
 ![Drawing a One N relationship with ⌘ + ⌥ + 4, then a Zero N one from the canvas toolbar](/img/demo-relationship.webp)

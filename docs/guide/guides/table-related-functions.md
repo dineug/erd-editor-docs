@@ -1,12 +1,12 @@
 ---
 sidebar_position: 4
-description: Select, move, copy, and duplicate tables and memos, set colors and view options, define indexes, choose a database, get around the infinite canvas, and compare documents.
+description: Select, move, copy, and duplicate tables and memos, set colors and view options, define indexes and alternate keys, choose a database, get around the infinite canvas, and compare documents.
 ---
 
 # Table-related Functions
 
 Everything you do to tables and memos once they exist — selecting, moving, copying, coloring, and setting what each table shows — plus the canvas controls around them.  
-The table and memo commands come first, then table properties, focusing on tables, indexes, auto layout, and the database vendor, and the canvas itself last: the canvas toolbar, zoom, panning, and the diff viewer.
+The table and memo commands come first; then table properties, focusing on tables, indexes and alternate keys, auto layout, and the database vendor; and last the canvas itself: the canvas toolbar, zoom, panning, and the diff viewer.
 
 ## Multiple Selection
 
@@ -38,7 +38,7 @@ Copies the selected tables and memos and pastes them back as new ones.
 Shortcuts: `Ctrl + C` (Windows/Linux) or `⌘ + C` (Mac), `Ctrl + V` (Windows/Linux) or `⌘ + V` (Mac)
 
 A copied table keeps its name, comment, columns, and color; a copied memo keeps its text, size, and color. A copy keeps the original name.  
-Indexes and relationships come along too: an index is copied whole onto the copied table, and a relationship is copied when both of the tables it joins are in the copied set. Half a relationship is dropped rather than left pointing back at the original.  
+Indexes and relationships come along too: an index is copied whole onto the copied table, and a relationship is copied with its type and its ON DELETE and ON UPDATE actions when both of the tables it joins are in the copied set. Half a relationship is dropped rather than left pointing back at the original.  
 The pasted copies become the new selection, and pasting the same copy again offsets it by a further `50px` each time, so repeated pastes do not stack on top of one another.
 
 ![Copying two related tables and pasting them twice, relationship included](/img/demo-table-copy-paste.webp)
@@ -80,19 +80,33 @@ Offers the following view options:
 - Default
 - Not Null
 - Unique
+- Alternate Key
 - Auto Increment
 - Relationship
+- Referential Actions
 
-![Toggling View Option entries in the canvas context menu as the tables reflow](/img/demo-view-options.webp)
+`Unique`, `Alternate Key`, and `Auto Increment` are off by default, and the rest are on.  
+`Alternate Key` marks the columns of each alternate key, such as `AK1.1` — see [Alternate Keys](#alternate-keys).  
+`Referential Actions` shows the `D:` and `U:` labels that a relationship's ON DELETE and ON UPDATE actions put at the child end of its connector — see [Reading a Connector](./relationship-editing.md#reading-a-connector). Turning it off hides only those labels and moves no table or connector.  
+In a `readonly` editor the toggles change nothing.
+
+![Toggling View Option entries in the canvas context menu as the tables reflow, then turning on Alternate Key, which marks the two columns of a composite unique index AK1.1 and AK1.2](/img/demo-view-options.webp)
 
 Cards in the Visualization tab's `Flow` mode do not follow these options: they use their own [row display](./visualization.md#row-display), and draw their connectors even with `Relationship` off.
 
 ## Table Properties
 
-Opens the property panel of the selected table.
-Start from the table context menu or by using the shortcut `Alt + Space`.
-It provides three tabs: Indexes, Schema SQL, and Code Generator.
-The panel keeps the five most recently opened tables along the top, so you can move between them without reopening it.
+Opens the property panel of a table.  
+Start from `Table Properties` in the table context menu, which opens it for the table you right-clicked, or select a table and press `Alt + Space`.  
+The panel opens over a dimmed canvas. Its header holds the `Table Properties` title, the five most recently opened tables as chips with the current one highlighted, and a close button. Click a chip to move to that table without reopening the panel.  
+Below the header are three tabs: `Indexes`, `Schema SQL`, and `Code Generator`. The panel keeps one size for all three, so switching tabs does not move or resize it.  
+Close it with the close button, with `Escape`, or by clicking outside it.
+
+The `Indexes` tab is covered in [Indexes](#indexes).  
+The `Schema SQL` tab shows the table's DDL for the selected [database](#databases): its `CREATE TABLE`, the separate constraints some databases write for its Unique columns, and its indexes.  
+The `Code Generator` tab generates code for this table alone — see [Code Generator](./code-generator.md).
+
+In a `readonly` editor the panel still opens, with a `Read only` badge beside its title, but its `Indexes` tab offers no edits.
 
 ## Focusing on Tables
 
@@ -106,14 +120,37 @@ What the narrowed view shows, and how to get back to the whole diagram, is cover
 
 Indexes are defined in the `Indexes` tab of the table property panel and are included in the exported Schema SQL.
 
-The left side lists the indexes on the table. Add one with `+`.  
-Each index has a `UQ` toggle that makes it unique, a name field, and an `x` that removes it.
+The left side lists the table's keys and indexes in two groups.  
+`Keys`, shown when the table has any, lists the keys its columns declare: `PK_<table name>` over the columns marked PK, then `UQ_<table name>_<column name>` for each column marked Unique, in column order. Each is tagged `PK` or `UQ` and marked with a lock. They are read-only here and change only with the columns' [PK](./table-editing.md#column-primary-key) and [Unique](./table-editing.md#not-null-unique-auto-increment) flags.  
+`Indexes` lists the table's indexes in the order they were added. Each index has a `UQ` toggle that makes it unique, a name field, and an `x` that removes it. An index that is an [alternate key](#alternate-keys) also shows its number, such as `AK1`. Add an index with `Add Index` at the bottom of the list.
 
-The right side lists the table's columns with a checkbox each. Nothing is editable until an index is selected on the left.  
-Tick a column to add it to the selected index, and untick it to remove it.  
-The columns of the selected index are listed below. Drag them by the grip handle to reorder them, and click the `ASC` or `DESC` chip on a row to flip its sort order.
+The right side lists the table's columns under `Columns`, with a checkbox each. Nothing is editable until an index is selected on the left.  
+Tick a column to add it to the selected index, and untick it to remove it. Selecting a key shows its columns ticked, but the boxes stay disabled.  
+The columns of the selected index are listed below under `Index order`. Drag them by the grip handle to reorder them, and click the `ASC` or `DESC` chip on a row to flip its sort order. In an alternate key, each row ends in its `AK<n>.<m>` mark. The list shows three rows at a time and scrolls the rest.
 
-![Adding an index in the table property panel and reading it back in the Schema SQL tab](/img/demo-table-properties.webp)
+In a `readonly` editor, selecting a key or an index still shows its columns, but there is no `Add Index` and no `x`, and nothing else in the tab can be changed.
+
+![Opening Table Properties on orders, where the Indexes tab lists the PK and UQ keys above the indexes, then adding an index over member_id and ordered_at DESC and reading it back in the Schema SQL tab](/img/demo-table-properties.webp)
+
+## Alternate Keys
+
+An alternate key is a unique index over two or more columns: an index in the `Indexes` tab with its `UQ` toggle on and at least two of the table's columns ticked.  
+A unique index over one column says no more than that column's Unique flag, so it is not an alternate key, and neither is a plain index, the primary key, or a column marked Unique.
+
+With `Alternate Key` turned on in the [view options](#table-view-options), the diagram marks the columns of each alternate key as erwin and IDEF1X write them: `AK1.1`, `AK1.2`, and so on. The option is off by default.
+
+Keys are numbered by where their columns stand in the table, not by the order the indexes were added. The key whose first column in its `Index order` stands highest in the table is `AK1`. On a tie, the next column of each key decides, and a key that is the leading part of a longer one comes before it.  
+Moving a column within the table, or reordering a key's `Index order`, can renumber the keys. Undoing the removal of a key gives it back its number, and every collaborator sees the same numbers.
+
+Each column of a key is marked `AK<n>.<m>`, where `n` is the key's number and `m` the column's place in the key's `Index order`. A column in several keys carries every mark, joined by a comma.  
+For example, in a table with columns `a`, `b`, and `c`, unique indexes over (`c`, `a`) and (`b`, `a`) become `AK1` = (`b`, `a`) and `AK2` = (`c`, `a`), because `b` stands above `c`. So `b` reads `AK1.1`, `c` reads `AK2.1`, and `a` reads `AK1.2,AK2.2`.
+
+The mark is drawn last in the row, past whichever cell the [column order](./settings.md#adjusting-column-order) puts last. It is not a cell, so it is never focused, edited, or copied — see [Table Editing](./table-editing.md).  
+A primary key or foreign key column can carry an AK mark too, since the mark replaces nothing: the key icon at the start of the row still shows PK and FK, and the Unique cell keeps its own `UQ`.  
+A table that has an alternate key keeps room after the last cell of every row for its longest mark; a table without one keeps its width.  
+The marks show on the ERD canvas, where a table collapsed to its name at `70%` and below shows none, and a PNG export draws them as the canvas does. The Visualization tab's [hover preview](./visualization.md#hover-preview) in `Graph` mode shows them too; `Flow` cards never show them.
+
+The `Indexes` tab shows the numbers whether or not the option is on — see [Indexes](#indexes).
 
 ## Auto Layout
 
@@ -152,7 +189,8 @@ Supported databases include:
 - SQLite
 
 These options determine the Schema SQL syntax for exporting, the DataType autocomplete, and the types that generated code and imported schemas resolve to.  
-Multi-word type names such as `TIMESTAMP WITH TIME ZONE` and `INTERVAL DAY TO SECOND` are kept intact when Schema SQL is imported, argument list included.
+They also decide which ON DELETE and ON UPDATE actions Schema SQL and the Code Generator's ORM targets write, and which ones the relationship menus mark `not in <database>` — see [ON DELETE and ON UPDATE](./relationship-editing.md#on-delete-and-on-update) and [Code Generator](./code-generator.md#database).  
+Schema SQL import keeps a column's data type, argument list included, whether or not the editor lists it, such as `TIMESTAMP WITH TIME ZONE`, `public.mood`, or `integer[]` — see [Data Types](./file-import-export.md#data-types). The DataType autocomplete suggests only the types the selected database lists.
 
 ![Switching the database to PostgreSQL, then picking a PostgreSQL type in the autocomplete](/img/demo-database.webp)
 
@@ -165,7 +203,7 @@ A small toolbar floats over the middle of the bottom edge of the canvas, holding
 - The hand and the pointer. The pointer is the default; the hand turns every drag into a pan, over tables as well as empty space. `Space` switches between them.
 - The zoom: `Zoom out`, the current zoom as a percentage, and `Zoom in`. The two buttons step the zoom the same way the zoom shortcuts do, and clicking the percentage puts it back to `100%`.
 - The four relationship notations, the same four you start a relationship with — see [Editing Start](./editing-start.md). Picking one switches back to the pointer, since a relationship is drawn by clicking two tables.
-- Zen mode, `Alt + Z`, which clears everything but the canvas and this toolbar. `Alt + Z` again, or the button, brings the rest back.
+- Zen mode, `Alt + Z`, which clears everything but the canvas and this toolbar. `Alt + Z` again, or the button, brings the rest back. An open [Find and Replace](./find-and-replace.md) panel stays, moving up into the room the top toolbar leaves.
 - The `Go to content` compass, which joins the end of the toolbar only while no table or memo is on screen — see [Getting Around the Canvas](#getting-around-the-canvas).
 
 Every button with a shortcut names it in its tooltip.  

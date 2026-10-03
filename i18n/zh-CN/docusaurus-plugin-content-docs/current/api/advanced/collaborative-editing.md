@@ -42,8 +42,16 @@ const sharedStore = editor.getSharedStore();
 操作会成批到达，`subscribe` 传出的是一个数组，而该数组本身就是一个单位，因此要整体中继，并在另一端整体 dispatch。  
 操作所携带的内部信息正是维持编辑器之间同步的关键，因此不要读取或改写它，而应将其视为不透明的值原样传递。
 
+从 `3.10.0` 起，对关系的 [ON DELETE 或 ON UPDATE](../../guide/guides/relationship-editing.md#on-delete-and-on-update) 所做的修改，会以 `relationship.changeOnDelete` 和 `relationship.changeOnUpdate` 这两种新操作类型之一传递，`relationship.add` 也可以同时携带这两项。原样传递操作的中继无需为此做任何额外处理。  
+`3.10.0` 之前的编辑器会忽略这些操作类型与字段。在混用不同版本的会话中，较旧的编辑器永远无法得知关系的 ON DELETE 或 ON UPDATE，由其中任何一个保存的文档也不会包含这两项。较旧的编辑器添加的关系到达时不带这两项，因此两者都从 `Not set` 开始。  
+会话中的每个编辑器，以及存储该会话文档的任何 [replicationStore](./remote-storage.md#dispatch-dispatchsync)，都应使用 `3.10.0` 或更高版本。
+
+`3.10.0` 编辑器发送的其他所有变更，都通过较旧的编辑器已经认识的操作类型传递。  
+[查找与替换](../../guide/guides/find-and-replace.md#replacing)中的 `Replace All` 会把它所做的修改作为一个批次发送，其中的重命名、注释和备注操作与手动编辑时发送的操作相同。`Alternate Key` 和 `Referential Actions` [显示选项](../../guide/guides/table-related-functions.md#table-view-options)通过已有的 `settings.changeShow` 操作传递。
+
 在 Visualization 标签页的 [Flow 模式](../../guide/guides/visualization.md#flow-never-edits-the-document)中所做的任何操作都不是文档变更，因此处于 Flow 中的编辑器不会向其他编辑器发送任何变更，而其他编辑器发来的变更在此期间仍会继续应用。  
-唯一的例外是带你回到 ERD 标签页的外部链接卡片按钮：它造成的标签页切换与滚动会像其他变更一样发送出去。
+唯一的例外是离开 Flow 切换到其他标签页：这次标签页切换会像其他变更一样发送出去。  
+外部链接卡片按钮、在 `#`、`@` 或 `:` 之后选中的[快速搜索](../../guide/guides/quick-search.md#searching-the-diagram)结果，以及打开[查找与替换](../../guide/guides/find-and-replace.md#opening-and-closing)，都会离开 Flow 并切换到 ERD 标签页。卡片按钮或快速搜索结果在那里造成的滚动也会发送出去。
 
 ## 一个页面中的两个编辑器
 

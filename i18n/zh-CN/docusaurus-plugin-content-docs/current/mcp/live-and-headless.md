@@ -49,6 +49,12 @@ JetBrains IDE 会在编辑停止后不到一秒写入它们，关闭标签页时
 `erd_save` 会先等待最多两秒，直到编辑器持有智能体所做的每一次编辑。
 当编辑器无法确认这一点，或者没有写入文件时，它会以 `notSaved` 被拒绝：VS Code 会在文件于磁盘上发生变化时让标签页保持未保存状态，而 JetBrains IDE 未能写入文件，例如在有对话框打开期间，或者文件无法写入时。
 
+在 VS Code 和 JetBrains IDE 中，对没有任何待保存内容的文档调用 `erd_save` 会成功，并让文件保持原样。
+这种情况包括：每次编辑都已保存时（JetBrains IDE 会自行做到这一点），以及在那之后你只进行了滚动或缩放、并且 `Save Scroll Information` 和 `Save Zoom Information` 都已关闭时。
+即便如此，JetBrains IDE 无法写入的文件仍会被拒绝。
+`3.1.0` 之前的 VS Code 扩展会在这样的滚动或缩放后把标签页标记为已修改，因此 `erd_save` 会写入文件。
+`0.10.0` 之前的 JetBrains 插件在 IDE 自打开文件以来尚未写入过它时，会在 `erd_save` 时重新写入该文件，从而丢掉文件开头的字节顺序标记。
+
 当编辑器在智能体最后一次编辑之后关闭了该文档时，智能体的下一次调用会附带一条说明：只有在编辑器关闭之前已经保存，这些编辑才会存在于文件中。
 
 ### Undo
@@ -56,8 +62,10 @@ JetBrains IDE 会在编辑停止后不到一秒写入它们，关闭标签页时
 `erd_undo` 会撤回智能体所做的最后一次编辑，而绝不会撤回你的编辑，`erd_redo` 则会重新应用它。
 编辑器自身的 [Undo](../guide/guides/undo-redo.md) 恰好相反：它撤回你的编辑，而绝不会撤回智能体的编辑，因为从其他编辑器到达的变更不会记录在你的历史记录中。
 
-有几种编辑不会在编辑器中产生 Undo 记录：除 `erd_set_show` 以外的[设置工具](./tools.md#settings)，以及 `erd_resize_memo`。所设置的值与文档已有的值相同的编辑不会改变任何内容，同样不会产生 Undo 记录。
+有几种编辑不会在编辑器中产生 Undo 记录：除 `erd_set_show` 以外的[设置工具](./tools.md#settings)，以及 `erd_resize_memo`。
+`erd_set_column_primary_key`、`erd_set_column_unique`、`erd_set_column_not_null`、`erd_set_column_auto_increment`、`erd_set_index_unique`、`erd_set_index_column_order` 和 `erd_set_show` 在所设置的值与文档已有的值相同时，同样不会产生 Undo 记录；`erd_add_index_column` 添加索引中已有的列时也是如此：这样的调用不会改变任何内容。
 `erd_undo` 会跳过这些编辑，并在结果中列出它们。
+其他编辑，例如 `erd_change_relationship_type`、`erd_change_relationship_on_delete` 和 `erd_change_relationship_on_update`，即使所设置的值与文档已有的值相同，也会产生 Undo 记录。
 
 出现以下情况时，智能体的 Undo 历史记录会结束，并在结果中附带一条说明：
 
@@ -121,7 +129,7 @@ JetBrains IDE 还会以 `hubDisabled` 拒绝修改仅由其不信任的项目持
 
 文档由 `path` 指定，可以是绝对路径，也可以是相对于服务器工作目录的路径。
 
-- 新文档为 `.erd.json`。带 `create` 的 `erd_open_document` 会创建文件，并为没有扩展名的名称加上 `.erd.json`。
+- 新文档为 `.erd.json`。带 `create` 的 `erd_open_document` 会创建文件，并为没有扩展名的名称加上 `.erd.json`。与编辑器中新建的图一样，新文档既不保存视图位置，也不保存缩放级别：[`Save Scroll Information`](../guide/guides/settings.md#保存滚动信息) 和 [`Save Zoom Information`](../guide/guides/settings.md#保存缩放信息) 一开始处于关闭状态，因此在编辑器中滚动或缩放它永远不会改动文件。以 `saveSettingType` 为 `scroll` 或 `zoomLevel`、`value` 为 `false` 调用 `erd_set_ignore_save_settings`，即可开启对应的开关。
 - 已有的 `.erd`、`.vuerd` 和 `.vuerd.json` 文件同样可以打开。其他扩展名的路径会以 `invalidPath` 被拒绝。
 - 在 Windows 上，包含 Windows 无法按原样存储的名称的路径，会在读取或写入文档之前以 `invalidPath` 被拒绝，读取也不例外：包含冒号或其他 Windows 拒绝的字符的名称，例如 `orders:v2.erd`；设备名称，例如 `NUL.erd` 或 `CON.erd`，不区分大小写；或者以点或空格结尾的名称。请重命名，例如用 `-` 代替 `:`。
 - 编辑器无法读取的文件，例如残留合并冲突标记的文件，会以 `invalidDocument` 被拒绝并保持原样。它绝不会被当作空图加载后再写回。

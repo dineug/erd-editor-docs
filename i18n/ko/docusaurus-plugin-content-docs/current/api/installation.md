@@ -34,7 +34,8 @@ editor.addEventListener('change', () => {
 
 `<erd-editor>`는 자체 크기를 갖지 않습니다. 요소나 컨테이너에 width, height를 지정해야 합니다.
 
-`setInitialValue('')`는 빈 문서로 시작합니다. `value`에 할당하면 편집으로 처리되어 Undo 기록에 남습니다.
+`setInitialValue('')`는 비어 있는 새 문서로 시작합니다. `value`에 할당하면 편집으로 처리되어 Undo 기록에 남습니다.
+`3.10.0`부터 새 문서는 스크롤 위치와 확대/축소 레벨을 저장하지 않으므로(`Save Scroll Information`과 `Save Zoom Information`이 꺼져 있음), 스크롤하거나 확대/축소해도 `editor.value`는 그대로 유지됩니다. 텍스트에서 불러온 문서는 그 안에 기록된 스위치 값을 유지하고, 스위치가 기록되지 않은 문서는 둘 다 저장합니다. [setInitialValue](./erd-editor-element.md#setinitialvalue) 문서를 참고하세요.
 나머지 API는 [ErdEditorElement](./erd-editor-element.md) 문서를 참고하세요.
 
 ### CDN
@@ -52,7 +53,7 @@ editor.addEventListener('change', () => {
 ```
 
 `esm.run`이 패키지의 외부 의존성을 대신 해석해 주므로 번들러 없이도 동작합니다.
-버전이 없는 URL은 항상 최신 릴리스를 제공합니다. 메이저 업그레이드가 예고 없이 페이지에 반영되는 것을 원하지 않는다면 `https://esm.run/@dineug/erd-editor@3.9.2`처럼 버전을 고정하세요.
+버전이 없는 URL은 항상 최신 릴리스를 제공합니다. 메이저 업그레이드가 예고 없이 페이지에 반영되는 것을 원하지 않는다면 `https://esm.run/@dineug/erd-editor@3.10.0`처럼 버전을 고정하세요.
 
 ### script 태그
 
@@ -61,7 +62,7 @@ editor.addEventListener('change', () => {
 
 ```html
 <erd-editor></erd-editor>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@3.9.2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@3.10.0"></script>
 <script>
   const editor = document.querySelector('erd-editor');
   editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
@@ -167,6 +168,7 @@ PNG 내보내기와 스키마 가비지 컬렉션은 응답을 10초까지 기�
 | `KeyBindingMap`, `KeyBindingName`, `ShortcutOption` (타입) | 바인딩 맵, 그 명령 이름의 유니언, 바인딩 하나의 타입입니다. |
 
 `@dineug/erd-editor/engine.js`는 두 번째 진입점입니다. DOM 없이 문서 store를 실행하므로 Web Worker에서도 동작합니다. [원격 저장](./advanced/remote-storage.md) 문서를 참고하세요.
+이 진입점은 `createReplicationStore`와 `ReplicationStore` 타입을 export합니다. `3.10.0`부터는 복제본의 `change` 리스너가 받는 `ReplicationChange` 타입(`{ value: string; changed: boolean }`)도 export합니다. [on@change](./advanced/remote-storage.md#onchange) 문서를 참고하세요.
 
 `3.9.1`부터는 세 번째 진입점 `@dineug/erd-editor/peer.js`가 있습니다. [MCP 서버](../mcp/introduction.md)가 문서를 편집할 때 거치는 헤드리스 피어입니다. 이 서버를 위한 진입점이며, 이 문서에서는 다루지 않습니다.
 

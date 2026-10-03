@@ -20,8 +20,11 @@ import {
 } from './_vsc-helpers.mjs';
 
 // Name, data type and NOT NULL, with the relationship lines: sakila carries no
-// comments or defaults worth a column, so the preview stays narrow.
-const SHOW = 4 | 32 | 128 | 256;
+// comments or defaults worth a column, so the preview stays narrow. The
+// connectors' D:/U: referential action labels are hidden (1024): sakila sets
+// ON DELETE and ON UPDATE on every foreign key, and in the tight ERD layout the
+// clip opens on the tables would cover half of each label.
+const SHOW = 4 | 32 | 128 | 256 | 1024;
 
 /**
  * Eleven sakila tables (film_text, actor, film_actor, language and payment are

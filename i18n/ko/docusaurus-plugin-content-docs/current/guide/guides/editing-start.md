@@ -35,8 +35,10 @@ description: 캔버스 컨텍스트 메뉴에서 테이블, 메모와 관계 생
 - One N: `Ctrl + Alt + 4` (Windows/Linux) or `⌘ + ⌥ + 4` (Mac)
 
 관계 타입을 선택하면 커서가 바뀝니다. 부모 테이블을 먼저 클릭하고, 그다음 자식 테이블을 클릭합니다.  
-부모 테이블에 primary key가 없으면 생성되고, 이름, 데이터 타입, 기본값, 코멘트가 같고 `Not Null`이 설정된 foreign key 컬럼이 자식 테이블에 생성됩니다.  
+부모 테이블에 primary key가 없으면 생성되고, 부모 테이블의 primary key 컬럼마다 데이터 타입, 기본값, 코멘트가 같고 `Not Null`이 설정된 foreign key 컬럼이 자식 테이블에 생성됩니다.  
+각 컬럼의 이름은 해당 키의 이름을 따릅니다. `id`처럼 한 단어로 된 이름은 앞에 부모 테이블 이름이 붙고(`user_id`), `member_id`처럼 여러 단어로 된 이름은 그대로 유지되며, 자식 테이블에 이미 있는 이름에는 번호가 붙습니다(`user_id_2`). [Foreign Key 컬럼 이름](./relationship-editing.md#foreign-key-컬럼-이름) 문서를 참고하세요.  
 같은 테이블을 두 번 클릭하면 자기 참조 관계가 그려집니다.  
+새 관계는 `On Delete`와 `On Update`가 모두 `Not set`인 상태로 시작하며, 관계 컨텍스트 메뉴에서 변경합니다. [ON DELETE와 ON UPDATE](./relationship-editing.md#on-delete와-on-update) 문서를 참고하세요.  
 `Escape`를 누르거나 같은 단축키를 다시 누르면 취소됩니다. 취소해도 선택은 그대로 유지되며, 다음 `Escape`가 선택을 해제합니다.
 
 ![⌘ + ⌥ + 4로 One N 관계를, 캔버스 툴바에서 Zero N 관계를 그리기](/img/demo-relationship.webp)

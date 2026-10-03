@@ -17,10 +17,10 @@ With no editor on the document, the same tools edit the file itself.
 
 ## What an Agent Can Do
 
-- Build or change a schema in conversation: tables, columns and every column option, relationships, indexes, memos, colors, and positions on the canvas.
+- Build or change a schema in conversation: tables, columns and every column option, relationships with their cardinality and their ON DELETE and ON UPDATE actions, indexes, memos, colors, and positions on the canvas. See [Relationships](./tools.md#relationships).
 - Replace the document with a schema parsed from SQL DDL, GraphQL SDL, DBML, or AML, or with another `.erd.json` document.
 - Read the diagram back as a list of ids, as whole entities, as DDL for any of the eight databases, or as the raw JSON. On a schema of thousands of tables it reads a page or a few tables at a time. See [Reading a Document](./tools.md#reading-a-document).
-- Change the settings the document stores: the database, the Code Generator language and name cases, the bracket type, and which parts of a table are shown.
+- Change the settings the document stores: the database, the Code Generator language and name cases, the bracket type, and which parts of the diagram are shown, such as alternate key marks or the ON DELETE and ON UPDATE labels on relationship lines. See [Settings](./tools.md#settings).
 - Run several edits as one, all or none, which one undo reverts. See [erd_batch](./tools.md#erd_batch).
 - Undo and redo its own edits, never yours.
 
@@ -46,8 +46,11 @@ See [Live and Headless](./live-and-headless.md) for the details.
 | --- | --- |
 | Node.js | `22.12` or later, to run the server |
 | An MCP client | Claude Code, Codex, or any client that can start a stdio server |
-| VS Code, for live editing | `1.101.0` or later, with the ERD Editor extension `3.0.0` or later, `3.0.1` recommended |
-| Obsidian, for live editing | The desktop app, with the ERD Editor plugin `0.1.0` or later |
-| A JetBrains IDE, for live editing | An IntelliJ-based IDE `2025.2` or later, with the ERD Editor plugin `0.9.0` or later |
+| VS Code, for live editing | `1.101.0` or later, with the ERD Editor extension `3.0.0` or later, `3.1.0` recommended |
+| Obsidian, for live editing | The desktop app `1.5.7` or later, with the ERD Editor plugin `0.1.0` or later, `0.2.0` recommended |
+| A JetBrains IDE, for live editing | An IntelliJ-based IDE `2025.2` or later, with the ERD Editor plugin `0.9.0` or later, `0.10.0` recommended |
+
+An extension or plugin that meets the minimum but is older than the recommended version still lets the agent edit live.
+It ignores the ON DELETE and ON UPDATE actions of a relationship, whether the agent sets them or imports them with a schema — see [Updating](./installation.md#updating).
 
 Next: [Install](./installation.md).

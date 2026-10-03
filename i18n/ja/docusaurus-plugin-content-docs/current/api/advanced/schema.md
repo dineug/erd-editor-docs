@@ -73,6 +73,8 @@ const Show = {
   columnUnique: 64,
   columnNotNull: 128,
   relationship: 256,
+  columnAlternateKey: 512,
+  hideReferentialAction: 1024,
 } as const;
 
 const ColumnType = {
@@ -145,7 +147,16 @@ const SaveSettingType = {
 `columnOrder` は `ColumnType` の 7 つの値をすべて表示順で保持する配列です。  
 `database`、`language`、`tableNameCase`、`columnNameCase`、`bracketType` はそれぞれ 1 つの値だけを保持し、組み合わせた値は JSON Schema で拒否されます。
 
-`Database` と `Language` は追加専用です。保存したドキュメントには数値が格納されるため、新しいベンダーやコード生成のターゲットは中間の位置ではなく次のビットを使用します。
+新しいドキュメントの `show` は `431` で、`tableComment`、`columnComment`、`columnDataType`、`columnDefault`、`columnPrimaryKey`、`columnNotNull`、`relationship` が設定されています。  
+`3.10.0` からは `show` のフラグが 2 つ増えました。どちらも、新しいドキュメントと、`3.10.0` より前に保存したすべてのドキュメントではオフです。  
+`columnAlternateKey`（`512`）は [`Alternate Key`](../../guide/guides/table-related-functions.md#alternate-keys) の表示オプションです。設定すると、2 つ以上のカラムにまたがる各ユニークインデックスのカラムに `AK1.1`、`AK1.2` などのマークが付きます。最初はオフのため、既存のダイアグラムの幅が変わることはありません。  
+`hideReferentialAction`（`1024`）は、名前が示すものを非表示にする唯一のフラグです。設定するとコネクタの [ON DELETE と ON UPDATE のラベル](../../guide/guides/relationship-editing.md#reading-a-connector)が非表示になるため、ラベルは既定で表示されます。`Referential Actions` の表示オプションは、このフラグがオフの間チェックが付いた状態になります。このフラグでテーブルのサイズが変わることはありません。  
+`3.10.0` より前のエディタは `show` を 1 つの整数のまま保持するため、そのエディタで保存しても両方のフラグは失われません。
+
+`ignoreSaveSettings` は、書き出すドキュメントから表示状態を除外します。`scroll` が設定されている場合は `originX` と `originY` が `0` として、`zoomLevel` が設定されている場合は `zoomLevel` が `1` として書き出されます。これらは [`Save Scroll Information`](../../guide/guides/settings.md#スクロール情報の保存) と [`Save Zoom Information`](../../guide/guides/settings.md#拡大縮小情報の保存) の設定で、それぞれ対応するビットが設定されていない間はオンです。拡大・縮小すると原点も移動するため、`zoomLevel` だけが設定されている場合でも、拡大・縮小によって書き出されるドキュメントは変わります。  
+`3.10.0` からは、何もないところから始めたドキュメント、つまり新しいエディタやレプリケーション用の store、あるいは `value` や `setInitialValue()` に空の値を渡したドキュメントでは、`ignoreSaveSettings` が `3` になるため、どちらも保存されません。`3.2.3` より前に保存したドキュメントのように `settings` に `ignoreSaveSettings` がないドキュメントは、引き続き `0` として読み込まれ、そのドキュメントを書き出したリリースと同じように両方を保存します。
+
+`Database`、`Language`、`Show`、`ReferentialAction` は追加専用です。保存したドキュメントには数値が格納されるため、新しいベンダー、コード生成のターゲット、フラグ、アクションは中間の位置ではなく次のビットを使用します。
 
 ### Doc
 
@@ -239,6 +250,8 @@ type Relationship = EntityType<{
   identification: boolean;
   relationshipType: number; // Constants: RelationshipType
   startRelationshipType: number; // Constants: StartRelationshipType
+  onDelete: number; // Constants: ReferentialAction
+  onUpdate: number; // Constants: ReferentialAction
   start: RelationshipPoint;
   end: RelationshipPoint;
 }>;
@@ -264,6 +277,15 @@ const StartRelationshipType = {
   dash: 2,
 } as const;
 
+const ReferentialAction = {
+  none: 1,
+  noAction: 2,
+  cascade: 4,
+  setNull: 8,
+  setDefault: 16,
+  restrict: 32,
+} as const;
+
 const Direction = {
   left: 1,
   right: 2,
@@ -271,6 +293,10 @@ const Direction = {
   bottom: 8,
 } as const;
 ```
+
+`3.10.0` からは、リレーションシップは [ON DELETE と ON UPDATE のアクション](../../guide/guides/relationship-editing.md#on-delete-and-on-update)である `onDelete` と `onUpdate` を持ちます。それぞれ `ReferentialAction` の値を 1 つだけ保持します。既定値の `none` は句を書き出さないため、データベース自体の既定の動作が適用されます。残りの 5 つは `NO ACTION`、`CASCADE`、`SET NULL`、`SET DEFAULT`、`RESTRICT` を表します。Schema SQL は、そのアクションを受け付けるデータベースの場合にだけ句を書き出します。  
+どちらのフィールドも省略できます。`3.10.0` より前に保存したすべてのドキュメントのようにフィールドがない場合は `none` として読み込まれ、一覧にない値も同様です。JSON Schema が確認するのは、それぞれが整数であることだけです。  
+`3.10.0` より前のエディタはこれらのフィールドを認識せず、ドキュメントを読み込むときに取り除くため、そのエディタで保存するとすべてのアクションが失われます。
 
 ### Collection: indexEntities
 
@@ -420,7 +446,7 @@ type MemoUI = {
           "maximum": 1.5
         },
         "show": {
-          "description": "bit value (tableComment: 1) | (columnComment: 2) | (columnDataType: 4) | (columnDefault: 8) | (columnAutoIncrement: 16) | (columnPrimaryKey: 32) | (columnUnique: 64) | (columnNotNull: 128) | (relationship: 256)",
+          "description": "bit value (tableComment: 1) | (columnComment: 2) | (columnDataType: 4) | (columnDefault: 8) | (columnAutoIncrement: 16) | (columnPrimaryKey: 32) | (columnUnique: 64) | (columnNotNull: 128) | (relationship: 256) | (columnAlternateKey: 512) | (hideReferentialAction: 1024)",
           "type": "integer"
         },
         "database": {
@@ -697,6 +723,14 @@ type MemoUI = {
           },
           "startRelationshipType": {
             "description": "bit value (ring: 1) | (dash: 2)",
+            "type": "integer"
+          },
+          "onDelete": {
+            "description": "bit value (none: 1) | (noAction: 2) | (cascade: 4) | (setNull: 8) | (setDefault: 16) | (restrict: 32); none, the default, writes no ON DELETE clause",
+            "type": "integer"
+          },
+          "onUpdate": {
+            "description": "bit value (none: 1) | (noAction: 2) | (cascade: 4) | (setNull: 8) | (setDefault: 16) | (restrict: 32); none, the default, writes no ON UPDATE clause",
             "type": "integer"
           },
           "start": {

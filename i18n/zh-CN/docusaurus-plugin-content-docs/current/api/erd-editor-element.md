@@ -27,7 +27,6 @@ interface ErdEditorElement extends HTMLElement {
         KeyBindingMap,
         | 'edit'
         | 'stop'
-        | 'search'
         | 'undo'
         | 'redo'
         | 'zoomIn'
@@ -61,6 +60,8 @@ interface ErdEditorElement extends HTMLElement {
 设置编辑器是否可编辑。  
 在其生效期间，为 `value` 赋值、`clear()`、`setSchemaSQL()`、`setSchemaGraphQL()`、`setSchemaDBML()`、`setSchemaAML()`、undo 和 redo 都会被忽略，并且不会发出 `change` 事件。此时改用 [setInitialValue](#setinitialvalue) 加载文档。  
 查看功能仍然可用：缩放、平移、抓手工具、禅模式、画布标签页、[Visualization](../guide/guides/visualization.md) 标签页的两种模式（包括聚焦于表）、数据库厂商，以及 SQL 与代码生成的输出设置都仍然生效，因此只读的查看者依然可以导出其他厂商的 SQL 或阅读生成的代码。  
+从 `3.10.0` 起，[查找与替换](../guide/guides/find-and-replace.md#read-only-editors)也可以打开，此时它是一个标题为 `Find`、只能查找的面板，没有替换输入框和按钮。跳转到匹配项时，仍会将其带入视野并选中它。  
+表属性仍然可以打开，并且从 `3.10.0` 起，其标题旁会显示 `Read only` 徽标，其 `Indexes` 标签页也不提供任何编辑功能，参见[表属性](../guide/guides/table-related-functions.md#table-properties)。  
 仅写属性名、`=""` 和 `="true"` 都会被读作 `true`。`="false"` 会被读作 `false`，其他任何字符串也一样，包括 HTML 惯用写法 `readonly="readonly"`。
 
 ```js
@@ -111,7 +112,8 @@ editor.setAttribute('enable-theme-builder', 'true');
 ### getter
 
 以 JSON 字符串的形式获取当前编辑器状态，采用编辑器定义的 [schema](./advanced/schema.md)。  
-序列化时会应用文档自身的 `ignoreSaveSettings`：设置了 scroll 位时视图原点写为 `0, 0`，设置了 zoom 位时缩放级别写为 `1`。
+序列化时会应用文档自身的 `ignoreSaveSettings`：设置了 scroll 位时视图原点写为 `0, 0`，设置了 zoom 位时缩放级别写为 `1`。  
+从 `3.10.0` 起，新文档的这两个位都已设置，无论是元素在被赋予值之前显示的文档，还是从空白值加载的文档。在开启[保存滚动信息](../guide/guides/settings.md#保存滚动信息)之前，其 `value` 会一直把原点写为 `0, 0`；在开启[保存缩放信息](../guide/guides/settings.md#保存缩放信息)之前，会一直把缩放级别写为 `1`。各个位的说明参见 [Settings](./advanced/schema.md#settings)。
 
 ```js
 const data = editor.value;
@@ -122,7 +124,10 @@ const data = editor.value;
 加载此前保存的编辑器状态。它会替换整个文档，先清空当前文档。  
 与 `clear()`、`setInitialValue()` 以及各个 `setSchema*` 方法一样，它也会丢弃 Visualization 标签页的 Flow 视图：包括它的布局、视图范围所缩小到的表、行显示、缩放和平移。  
 会记录到历史列表中，因此可以 `Undo, Redo`，并且会发出 `change`。  
-空字符串或非字符串的值不会报错，而是加载一个空白文档，因此赋值前需要先做好校验。  
+空字符串或非字符串的值不会报错，而是加载一个新文档，因此赋值前需要先做好校验。  
+从 `3.10.0` 起，该新文档就是 `setInitialValue('')` 所开始的文档：内容为空、采用默认设置，并且既不保存滚动位置也不保存缩放级别。在此之前，它是一个两者都保存的空白文档。  
+shared store 会把这次加载连同新文档的完整 JSON 一起中继给协作者，因此每个协作者（包括使用较旧发布版本的协作者）都会加载同一个文档。  
+不是 JSON 的文本（例如残留合并冲突标记的文件）同样不会报错：文档会被清空，设置保持原样，解析错误则会输出到控制台。  
 在 `readonly` 生效期间会被忽略，要在只读编辑器中加载文档需使用 [setInitialValue](#setinitialvalue)。
 
 ```js
@@ -133,7 +138,10 @@ editor.value = 'json...';
 
 加载此前保存的编辑器状态。加载本身不会记录到历史列表中，因此无法 Undo，也不会发出 `change` 事件。  
 加载时还会清空历史记录，因此加载之前所做的操作无法在加载后的文档上 `Undo, Redo`。  
-空字符串或非字符串的值不会报错，而是加载一个空白文档，因此 `setInitialValue('')` 会以空白的图开始。  
+空字符串或非字符串的值不会报错，而是加载一个新文档，因此 `setInitialValue('')` 会以空白的图开始。  
+从 `3.10.0` 起，该新文档（也就是元素在被赋予任何值之前显示的文档）既不保存滚动位置也不保存缩放级别，因此对它滚动和缩放不会改变 `value`。在此之前，两者都会保存。  
+从文本加载的文档会沿用其中写明的开关，一个开关都没有写明的文档（例如 `3.2.3` 之前保存的文件或 v2 的 `.vuerd` 文件）则两者都保存。  
+不是 JSON 的文本同样不会报错：文档会被清空，设置保持原样，解析错误则会输出到控制台。  
 与为 `value` 赋值不同，它不受 `readonly` 限制，因此可以用它把文档加载到只读的查看器中。
 
 ```js
@@ -159,7 +167,9 @@ editor.addEventListener('change', () => {
 编辑器发生变更时会发出事件。  
 该事件有 200ms 的防抖，并且在 `readonly` 为 `true` 期间不会发出。  
 任何文档变更都会触发它：在 UI 中编辑、为 `value` 赋值、`clear()`，以及各个 `setSchema*` 方法。`setInitialValue` 不会触发它。  
-在 Visualization 标签页的 Flow 模式中所做的任何操作都不会触发它，包括缩放、平移、移动卡片、`Tidy Up`、行显示，以及从卡片缩小视图范围，因为这些都不是文档变更。切换标签页则会触发它，因此从 ERD 标签页聚焦于表会发出一次 `change`，把你从 Flow 带回 ERD 标签页的外部链接卡片按钮也同样如此。  
+在 Visualization 标签页的 Flow 模式中所做的任何操作都不会触发它，包括缩放、平移、移动卡片、`Tidy Up`、行显示，以及从卡片缩小视图范围，因为这些都不是文档变更。切换标签页则会触发它，因此从 ERD 标签页聚焦于表会发出一次 `change`，把你从 Flow 带回 ERD 标签页的外部链接卡片按钮也同样如此。从其他标签页打开查找与替换，或跳转到快速搜索的结果时，会切换到 ERD 标签页，同样也会发出一次 `change`。  
+滚动和缩放 ERD 画布同样会触发它，无论 `editor.value` 是否因此改变。`Save Scroll Information` 关闭时，滚动不会改变 `value`。缩放同样会移动视图位置，因此只有在 `Save Scroll Information` 和 `Save Zoom Information` 都关闭时，它才不会改变 `value`。从 `3.10.0` 起，新文档的两者均为关闭，因此在新建的图上，滚动或缩放会发出 `change`，而 `value` 保持不变。  
+要跳过这类写入，应将 `editor.value` 与你上一次存储的值进行比较，而不是与你加载的文件比较：由其他发布版本或其他机器写出的文件，一经加载，其 `value` 就可能与文件不同。写入文件的宿主也可以改为借助用于数据复制的 store 提供的 `changed` 来区分编辑与视图变化，参见 [on@change](./advanced/remote-storage.md#onchange)。  
 该事件不携带 `detail`，既不冒泡也不跨越 shadow 边界，因此需要在元素自身上监听，并在处理函数中读取 `editor.value`。
 
 ```js
@@ -198,7 +208,8 @@ editor.blur();
 
 ## clear
 
-重置编辑器状态。  
+清空文档，移除所有表、列、关系、索引和备注。  
+所有设置都会保留，包括数据库、视图位置、缩放级别、表显示选项，以及 `Save Scroll Information` 和 `Save Zoom Information` 开关，因此清空后的文件仍会保存它原先保存的那些信息。如果想改为开始一个新文档，请为 `value` 赋值 `''`，或调用 `setInitialValue('')`。  
 会记录到历史列表中，因此可以 Undo，并且会发出 `change`。在 `readonly` 生效期间会被忽略。
 
 ```js
@@ -218,9 +229,11 @@ editor.destroy();
 ## setKeyBindingMap
 
 重新定义键盘快捷键。  
-`edit`、`stop`、`search`、`undo`、`redo`、`zoomIn`、`zoomOut` 和 `zoomReset` 是固定的，无法重新定义。  
-只有下面这十六个名称会被写入，对象中的其他内容都会被忽略，包括那些固定的名称。  
+`edit`、`stop`、`undo`、`redo`、`zoomIn`、`zoomOut` 和 `zoomReset` 是固定的，无法重新定义。  
+只有下面这十八个名称会被写入，对象中的其他内容都会被忽略，包括那些固定的名称。  
+从 `3.10.0` 起，`search` 可以重新定义，并新增了 `findReplace`。在此之前，`search` 是固定的。  
 绑定的值必须是 `ShortcutOption[]`。单纯的字符串会被忽略，因此要写成 `{ addTable: [{ shortcut: 'Alt+KeyN' }] }`，而不是 `{ addTable: 'Alt+KeyN' }`。  
+空数组也会被接受，并且不绑定任何按键：`setKeyBindingMap({ findReplace: [] })` 会把 `Ctrl + F` (Windows/Linux) 或 `⌘ + F` (Mac) 留给页面处理，`{ search: [] }` 对 `Ctrl + K` (Windows/Linux) 或 `⌘ + K` (Mac) 也是如此。工具栏的 `Search` 按钮仍可打开快速搜索，查找与替换也仍可通过其工具栏按钮、快速搜索中的对应行和画布右键菜单打开；对于留空的名称，这些位置都不会显示快捷键。  
 该调用是部分合并：未写出的名称保持默认值，调用两次也会保留先前的更改。没有用于读取当前绑定的 getter：[createKeyBindingMap](#createkeybindingmap) 返回的是默认值，而不是经 `setKeyBindingMap` 更改后的内容。
 
 ```ts
@@ -234,13 +247,18 @@ const defaultKeyBindingMap: Omit<
   KeyBindingMap,
   | 'edit'
   | 'stop'
-  | 'search'
   | 'undo'
   | 'redo'
   | 'zoomIn'
   | 'zoomOut'
   | 'zoomReset'
 > = {
+  search: [
+    { shortcut: '$mod+KeyK', preventDefault: true, stopPropagation: true },
+  ],
+  findReplace: [
+    { shortcut: '$mod+KeyF', preventDefault: true, stopPropagation: true },
+  ],
   addTable: [{ shortcut: 'Alt+KeyN', preventDefault: true }],
   addColumn: [{ shortcut: 'Alt+Enter', preventDefault: true }],
   addMemo: [{ shortcut: 'Alt+KeyM', preventDefault: true }],
@@ -280,19 +298,25 @@ editor.setKeyBindingMap({
 
 `selectAllTable` 与 `handTool` 会让位于光标：只要焦点位于 input、textarea 或 `contenteditable` 中，`$mod + A` 就会选中文本，`Space` 就会输入空格，都不会传到画布上。改绑到其他快捷键后行为同样如此。
 
+从 `3.10.0` 起，`findReplace`（`$mod+KeyF`）会打开[查找与替换](../guide/guides/find-and-replace.md)，在其他任何标签页中按下时都会先切换到 ERD 标签页。  
+它不会让位于光标：只要编辑器获得焦点，无论在哪个标签页，也无论焦点位于画布上还是编辑器内部的输入框中，该按键都会被它截获。这次按键的默认行为会被阻止，因此浏览器不会打开查找栏；它也会被停止传播，因此页面上冒泡阶段的 `keydown` 监听器都收不到它。单元格或备注编辑器处于打开状态时，它仍会被阻止默认行为并停止传播，但不会打开任何内容。  
+Diff Viewer、Time Travel 或自动布局预览打开期间（无论在哪个标签页），或输入法仍在组字时，它既不会被阻止默认行为，也不会被停止传播，因此会交给浏览器或宿主自己的查找功能。在查找与替换面板中，仍在组字的按键会在面板处被停止传播，但其默认行为不会被阻止。把 `findReplace` 改绑到其他快捷键后行为同样如此。
+
 `focusView` 仅作用于 ERD 标签页。至少选中一个表时，它会以 Flow 模式打开 Visualization 标签页，范围缩小到这些表以及与它们相隔一条关系的所有表；没有选中任何表时它不起作用。参见[聚焦于表](../guide/guides/visualization.md#focusing-on-tables)。
 
 在 ERD 标签页上，`stop`（`Escape`）会关闭已打开的单元格或备注编辑器，或取消正在绘制的关系，并保持选中状态不变。编辑器会对这次按键调用 `preventDefault()`。  
 没有上述任何一项处于打开状态时，`Escape` 会清除选中状态和单元格焦点，并且其默认行为不会被阻止。因此，结束编辑并清除选中状态需要按两次。  
-编辑器从不阻止 `Escape` 继续传播，因此自行监听它的页面（例如用来关闭自己的对话框）会收到这两次按键，并可以跳过 `defaultPrevented` 为 `true` 的那一次。  
+在查找与替换面板之外，编辑器从不阻止 `Escape` 继续传播，因此自行监听它的页面（例如用来关闭自己的对话框）会收到这两次按键，并可以跳过 `defaultPrevented` 为 `true` 的那一次。  
 快速搜索、表属性、Diff Viewer、自动布局预览或 Time Travel 打开期间，`Escape` 会改为关闭它们，并保持选中状态不变。这次按键的默认行为同样不会被阻止。  
-在输入法仍在组字时按下的 `Escape` 属于组字过程。它会让打开的编辑器保持原样，并且其默认行为不会被阻止，因此页面同样可以跳过 `isComposing` 为 `true` 或 `keyCode` 为 `229` 的按键。  
+从 `3.10.0` 起，焦点位于查找与替换面板中时按下的 `Escape` 会关闭面板，并保持选中状态不变。编辑器会对这次按键同时调用 `preventDefault()` 和 `stopPropagation()`，因此它永远不会到达页面中冒泡阶段的 `keydown` 监听器。  
+面板打开期间在画布上按下的 `Escape`，如果没有被上述任何一项处理，会在清除选中状态的同一次按键中关闭面板。这次按键既不会被阻止默认行为，也不会被停止传播。  
+在输入法仍在组字时按下的 `Escape` 属于组字过程。它会让打开的编辑器保持原样，并且其默认行为不会被阻止，因此页面同样可以跳过 `isComposing` 为 `true` 或 `keyCode` 为 `229` 的按键。在查找与替换面板中，这样的按键与组字过程中在面板里按下的任何按键一样，还会被停止传播。  
 在 `3.9.2` 之前，按一次 `Escape` 既会结束编辑或绘制，又会清除选中状态，并且编辑器从不阻止其默认行为。
 
 ### createKeyBindingMap
 
 从 `3.9.2` 起，该包导出 `createKeyBindingMap()`，并一同导出 `KeyBindingMap`、`KeyBindingName` 和 `ShortcutOption` 类型。  
-它返回默认的按键绑定，包含全部 24 个名称（固定名称也在其中），并且每次调用都返回一个新的映射，因此修改它返回的映射不会影响其他任何内容。  
+它返回默认的按键绑定，包含全部 25 个名称（固定名称也在其中），并且每次调用都返回一个新的映射，因此修改它返回的映射不会影响其他任何内容。  
 每个编辑器都以它为起点，而 `setKeyBindingMap` 的调用不会反映在其中。  
 只有 `createKeyBindingMap` 是运行时导出，其余三个都是类型。
 
@@ -301,6 +325,7 @@ type KeyBindingName =
   | 'edit'
   | 'stop'
   | 'search'
+  | 'findReplace'
   | 'undo'
   | 'redo'
   | 'addTable'
@@ -336,10 +361,14 @@ const shortcuts = Object.values(createKeyBindingMap())
 ```
 
 每个 `shortcut` 都是一个 [tinykeys](https://github.com/jamiebuilds/tinykeys) 组合键，以 `KeyboardEvent.code` 指定按键，其中 [`$mod`](#mod) 在 macOS 上为 `⌘`，在其他环境中为 `Control`。  
-固定名称分别绑定到 `Enter`（`edit`）、`Escape`（`stop`）、`$mod+KeyK`（`search`）、`$mod+KeyZ`（`undo`）、`$mod+Shift+KeyZ`（`redo`）、`$mod+Equal`（`zoomIn`）、`$mod+Minus`（`zoomOut`）和 `$mod+Digit0`（`zoomReset`）。`edit` 和 `stop` 不带任何标志，其余六个带有 `preventDefault` 和 `stopPropagation`。其余名称的绑定即上面的默认值。
+固定名称分别绑定到 `Enter`（`edit`）、`Escape`（`stop`）、`$mod+KeyZ`（`undo`）、`$mod+Shift+KeyZ`（`redo`）、`$mod+Equal`（`zoomIn`）、`$mod+Minus`（`zoomOut`）和 `$mod+Digit0`（`zoomReset`）。`edit` 和 `stop` 不带任何标志，其余五个带有 `preventDefault` 和 `stopPropagation`。其余名称的绑定即上面的默认值，`search` 和 `findReplace` 也在其中。
 
 编辑器在自身元素上监听这些按键，因此通过全局热键或捕获阶段的 `keydown` 监听器先于编辑器截获按键的宿主，需要在编辑器获得焦点期间放行这些按键。  
-要放行的按键列表可以基于 `createKeyBindingMap()` 构建，并用传给 `setKeyBindingMap` 的绑定替换相应的默认值。
+要放行的按键列表可以基于 `createKeyBindingMap()` 构建，并用传给 `setKeyBindingMap` 的绑定替换相应的默认值。  
+从 `3.10.0` 起，该列表包含浏览器自身的查找组合键 `$mod+KeyF`。希望在该组合键上保留自己的查找功能的宿主，可以传入 `setKeyBindingMap({ findReplace: [] })`。
+
+焦点位于查找与替换面板中时，`findReplace`、`search`、`undo`、`redo`、`zoomIn`、`zoomOut` 和 `zoomReset` 会传给编辑器。其他所有绑定（以当前的设置为准）都止于面板，方向键和 `Tab` 也是如此。除了关闭面板的 `Escape`，以及在查找或替换输入框中用于在匹配项之间移动或执行替换的 `Enter` 之外，这些按键只会被停止传播而不会被阻止默认行为，因此它们在面板的输入框和按钮中作为普通按键使用，既不会到达画布，也不会到达页面中冒泡阶段的 `keydown` 监听器。  
+其他任何按键，例如宿主的保存或命令面板组合键，都会照常传给页面。参见[面板中的按键](../guide/guides/find-and-replace.md#keys-in-the-panel)。
 
 ### $mod
 
@@ -623,9 +652,12 @@ erd-editor {
 ## setSchemaSQL
 
 加载 Schema SQL 文件。  
-它会替换当前文档，而不是合并到当前文档中。现有的设置会保留，仅视图位置和缩放级别除外，并且文件读取后会自动排列表。  
+它会替换当前文档，而不是合并到当前文档中。现有的设置（包括保存开关）会保留，仅视图位置和缩放级别除外，并且文件读取后会自动排列表。因此从 `3.10.0` 起，导入到从未被赋予过值的元素中的文档，会像新文档一样既不保存滚动位置也不保存缩放级别。  
 会记录到历史列表中，因此可以 `Undo, Redo`，并且会发出 `change`。空字符串会被忽略，在 `readonly` 生效期间调用不会有任何效果。  
 `setSchemaGraphQL`、`setSchemaDBML` 和 `setSchemaAML` 的行为相同，它们的解析器不会失败，无法读取的文本只会加载空白文档，而不会报错。  
+从 `3.10.0` 起，`setSchemaSQL` 会按文档当前的数据库读取文件：选择 Databricks 时，单引号字符串遵循 Spark 的反斜杠转义规则。参见[注释](../guide/guides/file-import-export.md#comments)。  
+从 `3.10.0` 起，`setSchemaSQL` 会把覆盖两列或更多列的 `UNIQUE` 读作一个唯一索引，而不是在每一列上设置 Unique 标志。参见[唯一键与索引](../guide/guides/file-import-export.md#unique-keys-and-indexes)。  
+从 `3.10.0` 起，SQL、DBML 和 AML 导入会保留所读取外键的 `ON DELETE` 和 `ON UPDATE` 操作。  
 各个解析器支持的语法参见[导入与导出文件](../guide/guides/file-import-export.md)。
 
 ```js
@@ -660,7 +692,9 @@ editor.setSchemaAML('AML...');
 ## getSchemaSQL
 
 将当前编辑器状态导出为 Schema SQL。  
-若未指定 `databaseVendor`，则按当前已设置的厂商执行。不在下面列表中的名称也按相同方式处理，不会报错。
+若未指定 `databaseVendor`，则按当前已设置的厂商执行。不在下面列表中的名称也按相同方式处理，不会报错。  
+从 `3.10.0` 起，每个外键都会带上关系的 `ON DELETE` 和 `ON UPDATE` 子句。只有在设置了操作且该厂商支持时才会写出子句，因此该厂商不支持的操作会被省略，并由其默认行为决定。各数据库写出的内容参见 [ON DELETE 与 ON UPDATE](../guide/guides/relationship-editing.md#on-delete-and-on-update)。  
+从 `3.10.0` 起，表注释或列注释中的单引号会被转义，因此 `it's` 这样的注释不会再破坏语句。所有以字符串字面量写出注释的厂商都会将单引号双写，Databricks 除外，它会在每个单引号和每个反斜杠前加上反斜杠。SQLite 仍以 `--` 行写出注释。
 
 ```ts
 type DatabaseVendor =
