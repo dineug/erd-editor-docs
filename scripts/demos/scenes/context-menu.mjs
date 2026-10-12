@@ -1,4 +1,8 @@
-/** Editing Start: the canvas context menu, New Table, then a table's own menu. */
+/**
+ * Editing Start: the canvas context menu, New Table, then a table's own menu.
+ * The canvas menu has twelve rows (about 400px), so the frame is 480 tall and
+ * the menu opens high enough to clear its bottom edge.
+ */
 
 /**
  * Viewport box of a context menu entry by its visible name. A submenu's own
@@ -22,7 +26,7 @@ const menuItem = (d, name) =>
 export default {
   name: 'demo-context-menu',
   width: 800,
-  height: 450,
+  height: 480,
   async setup(d) {
     await d.page.evaluate(() => {
       const editor = document.querySelector('erd-editor');
@@ -30,11 +34,11 @@ export default {
       doc.settings.databaseName = 'shop';
       editor.setInitialValue(JSON.stringify(doc));
     });
-    await d.moveTo(600, 250, 0);
+    await d.moveTo(600, 270, 0);
   },
   async scenario(d) {
     await d.sleep(500);
-    await d.rightClick(330, 64, { duration: 450 });
+    await d.rightClick(330, 50, { duration: 450 });
     await d.sleep(550);
     await d.shot('menu');
 
@@ -70,15 +74,16 @@ export default {
     await d.sleep(800);
     await d.shot('table');
 
-    // A table opens its own menu.
+    // A table opens its own menu: down from Primary Key to Delete, past Color
+    // (which opens its picker only on a click) and Group selected tables.
     const table = await d.nodeBox('.table-header');
     await d.rightClick(table.x + table.width * 0.6, table.y + 12, { duration: 420 });
     await d.sleep(400);
     const primaryKey = await menuItem(d, 'Primary Key');
-    const color = await menuItem(d, 'Color');
+    const remove = await menuItem(d, 'Delete');
     await d.moveTo(primaryKey.x + 150, primaryKey.y + primaryKey.height / 2, 240);
-    await d.moveTo(color.x + 150, color.y + color.height / 2, 520);
-    await d.sleep(550);
+    await d.moveTo(remove.x + 110, remove.y + remove.height / 2, 900);
+    await d.sleep(650);
     await d.shot('table-menu');
     await d.press('Escape');
     await d.sleep(1400);

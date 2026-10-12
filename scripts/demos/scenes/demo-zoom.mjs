@@ -24,7 +24,10 @@ export default {
       },
       settings: { databaseName: 'shop', show: 4 | 32 | 256 },
     });
-    await d.moveTo(590, 310, 0);
+    // Under orders and left of its connector to order_items: the 4.0.0
+    // connectors pass close to the middle lower down, so the pointer rests
+    // above them, where no table or connector reaches at any zoom below.
+    await d.moveTo(500, 245, 0);
   },
   async scenario(d) {
     const mark = timer();
@@ -46,7 +49,7 @@ export default {
     await d.sleep(250);
     // Back to where it started, a gap no table or connector reaches at any
     // zoom below.
-    await d.moveTo(590, 310, 450);
+    await d.moveTo(500, 245, 450);
     await d.sleep(550);
 
     // ⌘ + Plus twice: 72%, full tables again. The recorder labels Equal as

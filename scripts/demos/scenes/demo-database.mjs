@@ -1,5 +1,5 @@
 import { readSeed, seedSQL } from '../lib/seed.mjs';
-import { menuItemBox, timer, waitFor } from './_table-related-b-helpers.mjs';
+import { glide, menuItemBox, timer, waitFor } from './_table-related-b-helpers.mjs';
 
 const mid = box => ({ x: box.x + box.width / 2, y: box.y + box.height / 2 });
 
@@ -19,10 +19,11 @@ export default {
       settings: { databaseName: 'shop' },
       patch(doc, byName) {
         // Its DATETIME is MySQL's; leave it out of a table turned PostgreSQL.
+        // The value is the storage form, which keeps no seqColumnIds: the
+        // load rebuilds the column order from columnIds.
         const table = doc.collections.tableEntities[byName.get('payments')];
         const keep = id => doc.collections.tableColumnEntities[id].name !== 'paid_at';
         table.columnIds = table.columnIds.filter(keep);
-        table.seqColumnIds = table.seqColumnIds.filter(keep);
       },
     });
     await d.moveTo(600, 200, 0);
@@ -42,8 +43,18 @@ export default {
     await d.moveTo(menu.x + menu.width - 40, db.y, 350);
     await d.sleep(450);
     const pg = mid(await waitFor(d, () => menuItemBox(d, 'PostgreSQL')));
-    await d.moveTo(pg.x - 30, db.y, 200);
-    await d.moveTo(pg.x - 20, pg.y, 400);
+    // Into the submenu's left padding, down it and along the row, so no
+    // database between lights up on the way.
+    const lane = (await d.domBox('.context-menu-content', 1)).x + 4;
+    await glide(
+      d,
+      [
+        { x: lane, y: db.y },
+        { x: lane, y: pg.y },
+        { x: pg.x - 20, y: pg.y },
+      ],
+      650
+    );
     await d.sleep(200);
     mark('pick');
     await d.click(pg.x - 20, pg.y, { duration: 100 });

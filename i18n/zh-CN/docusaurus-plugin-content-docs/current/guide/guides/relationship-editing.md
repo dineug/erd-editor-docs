@@ -1,12 +1,12 @@
 ---
-sidebar_position: 5
-description: 删除关系、修改关系类型、设置 ON DELETE 与 ON UPDATE 操作、读懂连接线、处理 N:M 关系与识别关系，以及了解新外键列的命名方式。
+sidebar_position: 6
+description: 删除关系、修改关系类型、设置 ON DELETE 与 ON UPDATE 操作、通过映射列将关系映射到已有的列上、读懂连接线、处理 N:M 关系与识别关系，以及了解新外键列的命名方式。
 ---
 
 # 编辑关系
 
 关系通过画布右键菜单、画布工具栏、[快速搜索](./quick-search.md#what-the-palette-lists)或快捷键创建，参见[开始编辑](./editing-start.md)。  
-本页介绍关系创建之后可以进行的操作，以及关系所添加的外键列如何命名。
+本页介绍关系创建之后可以进行的操作、如何通过[映射列](#map-columns)让关系连接到子表中已有的列上，以及关系所添加的外键列如何命名。
 
 ## 删除
 
@@ -14,7 +14,7 @@ description: 删除关系、修改关系类型、设置 ON DELETE 与 ON UPDATE 
 
 ![通过关系的右键菜单删除 products 与 reviews 之间的关系](/img/demo-relationship-remove.webp)
 
-由于关系不像表或备注那样会被选中，因此没有对应的快捷键。  
+由于关系不像表或备注那样会被选中，因此没有对应的快捷键：用于删除选中内容的 `Delete` 和 `Backspace` 永远不会单独删除关系，参见[删除表与备注](./table-related-functions.md#删除表与备注)。  
 关系还会随它连接的对象一起被删除：删除表会删除与该表相连的所有关系，删除列会删除使用该列的所有关系。
 
 ## 修改类型
@@ -33,7 +33,7 @@ description: 删除关系、修改关系类型、设置 ON DELETE 与 ON UPDATE 
 
 ## ON DELETE 与 ON UPDATE {#on-delete-and-on-update}
 
-通过关系右键菜单中的 `On Delete` 与 `On Update` 设置，这两项位于 `Relationship Type` 与 `Delete` 之间。  
+通过关系右键菜单中的 `On Delete` 与 `On Update` 设置，这两项位于 `Relationship Type` 与 `Map Columns` 之间。  
 两者提供相同的六个选项，当前选项会带有勾选标记：
 
 - Not set
@@ -43,18 +43,18 @@ description: 删除关系、修改关系类型、设置 ON DELETE 与 ON UPDATE 
 - SET DEFAULT
 - RESTRICT
 
-`Not set` 不会写出任何子句，因此由数据库自身的默认行为决定。新绘制的关系两项均为 `Not set`，之后选择 `Not set` 即可清除已设置的操作。  
+`Not set` 不会写出任何子句，因此由数据库自身的默认行为决定。新建的关系，无论是绘制的还是在[映射列](#map-columns)中创建的，两项均为 `Not set`，之后选择 `Not set` 即可清除已设置的操作。  
 两者互相独立：修改其中一项不会影响另一项。  
 连接线会显示已设置的内容，参见[读懂连接线](#reading-a-connector)。  
 关系随其连接的表一起被复制粘贴或创建副本时，会保留这两项操作；导入 Schema SQL、DBML 或 AML 时，会带入文件中声明的操作，参见[导入与导出文件](./file-import-export.md)。
 
-![通过关系的右键菜单为 orders 与 order_items 之间的关系设置 ON DELETE CASCADE 和 ON UPDATE RESTRICT，再悬停在连接线上查看这两项设置](/img/demo-referential-actions.webp)
+![通过关系的右键菜单为 orders 与 order_items 之间的关系设置 ON DELETE CASCADE 和 ON UPDATE RESTRICT，其标签显示为 D:C U:R，再悬停查看这两项设置](/img/demo-referential-actions.webp)
 
 无论使用哪种数据库，所有操作都可以选择。  
 所选[数据库](./table-related-functions.md#databases)的 Schema SQL 不会写出的操作，旁边会带有一条淡色的说明，例如 `not in MySQL`。`Not set` 从不带有说明，切换数据库时说明会随之更新。  
 带有说明的操作仍会保存在关系上：连接线会显示它，JSON、DBML 和 AML 也会保留它，但该数据库的 Schema SQL 会省略这条子句，因此由数据库的默认行为决定。
 
-Schema SQL 会写出以下操作，其余操作则会省略：
+[Schema SQL](./schema-sql.md) 会写出以下操作，其余操作则会省略：
 
 | 数据库 | ON DELETE | ON UPDATE |
 | --- | --- | --- |
@@ -64,16 +64,88 @@ Schema SQL 会写出以下操作，其余操作则会省略：
 | MySQL | `NO ACTION`, `CASCADE`, `SET NULL`, `RESTRICT` | `NO ACTION`, `CASCADE`, `SET NULL`, `RESTRICT` |
 | Oracle | `CASCADE`, `SET NULL` | 无 |
 | PostgreSQL | 全部五种 | 全部五种 |
-| Snowflake | 全部五种 | 全部五种 |
+| Snowflake | `NO ACTION` | `NO ACTION` |
 | SQLite | 全部五种 | 全部五种 |
 
-代码生成中的 ORM 目标会写出哪些操作，不仅取决于所选的数据库，还取决于目标本身，参见[代码生成](./code-generator.md#on-delete-and-on-update)。
+Snowflake 的 Schema SQL 还会写出一条注释，列出它省略的每个操作，参见[参照操作](./schema-sql.md#referential-actions)。
+
+Code Generator 的 ORM 目标会写出哪些操作，不仅取决于所选的数据库，还取决于目标本身，参见[代码生成](./code-generator.md#on-delete-and-on-update)。
+
+## 映射列 {#map-columns}
+
+映射列会将父表的键与子表的列配对，键的每一列对应一行。  
+每一行要么使用子表中已有的列，要么添加一个新的外键列，因此关系可以连接到已经存在的列上。
+
+![从 members 向 orders 绘制 Zero N 关系，选择 Map to existing columns，并将 id 映射到已有的 member_id 列](/img/demo-map-columns.webp)
+
+有两种打开方式：
+
+- 绘制关系时，通过子表旁边的 `Map to existing columns` 打开，参见[创建关系](./editing-start.md#创建关系)。此时 `Map` 会添加一条所绘制类型的关系。
+- 通过关系右键菜单中的 `Map Columns` 打开，用于修改已有关系的列。此时 `Save` 会写入修改。只读编辑器的菜单中没有这一项。
+
+对话框的副标题会写出两个表和关系类型，例如 `users → posts · One N`。类型在这里只显示而不能修改，要修改请参见[修改类型](#修改类型)。
+
+`References` 用于选择关系所指向的键：先是 `Primary Key`，其列按表中的顺序排列，然后是每个标记为 `Unique` 的列对应的 `Unique: <column>`。只有在可选项多于一个时才会显示。  
+唯一索引在这里不算作键，本身就是整个主键的 `Unique` 列也不会重复列出。  
+选择另一个键会重建各行。一行所选的列只要仍在子表中，该行就会保留这一选择。
+
+在 `Referenced column` 与 `Foreign key column` 两个标题下，每一行显示键的一列及其数据类型，以及一个可与之配对的子表列的列表：
+
+- `Pick a column` 会让该行保持为空。
+- `New column: <name>` 会添加一个新的外键列。显示的名称就是该列将得到的名称，命名方式参见[外键列名](#foreign-key-column-names)，编号时会将子表的列以及其他添加新列的行一并考虑在内。名称为空时不提供这一项，例如键没有名称时。
+- 子表的每一列，显示为 `<name> (<data type>)`。已被另一行选中的列显示为 `<name> (<data type>) · in use`，并且无法选择，因此不会有两行共用同一列。已被另一条关系使用的列仍然可以选择，因此像共用的 `tenant_id` 这样的列可以服务于多条关系。
+
+使用 `Map` 时，只有当子表中恰好有一列的名称（不区分大小写）与为该行新建的外键列在加上 `_2` 等编号之前的名称相同时，该行一开始才会被填好，例如 `users` 上的 `id` 对应 `users_id`，`member_id` 对应 `member_id`。当 [`Bracket`](./schema-sql.md#database-and-bracket) 为默认的 `None` 时，由带 schema 限定的表名中的表名部分构成的名称也计算在内，因此 `public.users` 上的 `id` 会与 `public.users_id` 或 `users_id` 配对。对于 `Unique` 键，键列自身的名称也计算在内，因此 `vin` 会与 `vin` 配对。其他各行一开始都为 `Pick a column`。  
+使用 `Save` 时，每一行一开始都是关系当前使用的列。无论哪种情况，在 `References` 中选择另一个键时，都会按相同的名称填充该键的空行。
+
+当所选列的数据类型与父列赋予外键的数据类型不同时，该行下方会有一条说明指出这一点。  
+在[关系数据类型同步](./settings.md#关系数据类型同步)开启且父列设有数据类型时，说明为 `<column> becomes <type>`，即映射将写入的类型。否则说明为 `Types differ: <parent type> and <child type>`，该列保留其原有类型。
+
+存在阻碍时，`Map` 或 `Save` 会保持禁用，各行下方会有一行文字说明原因：
+
+- `Pick a foreign key column for every referenced column`：仍有某一行为空。
+- `At least one column must reference a different column`：自引用关系中，每一行选择的都是其自身对应的父列。
+- `These columns are already linked by another relationship`：同样这两个表之间的另一条关系连接的恰好就是这些列。
+- `<parent> has no key to reference`：使用 `Map` 时，父表既没有主键，也没有 `Unique` 列。
+
+在映射与关系当前的映射不同之前，`Save` 也会保持禁用。  
+使用 `Save` 时，某一行的列已离开其所在的表时，该行显示为 `(removed)`。此时请选择子表中的其他列；如果消失的是父列，则在 `References` 中选择一个键。使用 `Map` 时，所选列被删除的行会恢复为 `Pick a column`。
+
+如果关系的父列并不恰好是父表的某个键，打开时会选中 `References` 末尾的一个额外选项 `Current columns (not a key)`，它会保持这些列不变。父表完全没有键时，这是唯一的选项，`References` 不会显示。  
+此时出现的 `The referenced columns are not a key of <parent>` 这一行（父表完全没有键时为 `<parent> has no key to reference`）只是一条说明，而不是错误：`Save` 仍然可用，因此可以修改子表的列并保留原有的引用。  
+如果关系的两组列无法配对，例如两者长度不同，则会显示 `(invalid)` 行，并且 `Save` 会保持禁用，直到在 `References` 中选择一个键；如果父表没有主键或 `Unique` 列，则需先为其添加一个。
+
+对话框打开期间会跟随图的变化，包括协作者或编码智能体所做的编辑，同时保留已做的选择。  
+如果在此期间关系的列或打开时所用的键发生变化，对话框会添加一行 `This relationship changed while the dialog was open`。
+
+`Map` 与 `Save` 写入的内容：
+
+- `Map` 添加的关系的 `On Delete` 与 `On Update` 均为 `Not set`。`Save` 只修改关系的列，使其父表一侧指向在 `References` 中选择的键，并保留其类型以及 ON DELETE 与 ON UPDATE。
+- `New column` 行会像绘制关系时一样，在子表末尾添加一列：该列为 `NOT NULL`，以其对应的键命名，并沿用该键的数据类型、默认值和注释，参见[识别关系](#识别关系)。
+- 所选的列永远不会被重命名，其 `Not Null`、主键、`Unique`、默认值和注释也都保持不变。只有在 `Relationship DataType Sync` 开启且父列设有数据类型时，其数据类型才会改变：它会采用父列赋予外键的类型，serial 类型的键与新列一样对应其整数类型，并且该修改会像同步时一样沿着关系继续传递。
+- 映射不再使用的列会保留在子表中，除非仍有另一条关系连接到它，否则它不再被标记为外键。
+- 一次 `Map` 或 `Save` 写入的所有内容，包括新列和类型修改，都只算一步 Undo。
+
+与其他关系一样，关系是否为识别关系、其父表一端如何绘制，都由映射到的子表列决定。映射到子表的主键列会使其立即成为识别关系，映射到允许 `NULL` 的列则会在父表一端绘制圆环，参见[读懂连接线](#reading-a-connector)。  
+Schema SQL 中的外键会引用所选择的键，例如 `Unique` 键对应 `REFERENCES vehicle (vin)`。
+
+如果按下 `Map` 或 `Save` 时图中已经存在该映射，例如协作者或编码智能体已抢先完成，则不会写入任何内容。  
+如果图已发生变化，导致该映射不再适用，则不会写入任何内容，并会显示 `Couldn't map columns: the diagram changed` 提示。
+
+按 `Cancel`、点击 `x` 按钮、按 `Escape` 或点击对话框外变暗的区域，都会关闭对话框而不写入任何内容。  
+打开查找与替换或快速搜索同样会将其关闭，离开 ERD 标签页或编辑器变为只读时也是如此。  
+如果在对话框打开期间其中某个表或该关系被删除，对话框会关闭并显示一条提示，例如 `Map Columns closed: the relationship was removed`。  
+对话框打开期间，画布快捷键、Undo 与 Redo 以及复制和粘贴都不起作用。
+
+编码智能体没有与映射列对应的工具。它会在一个 `erd_batch` 中先用 `erd_remove_relationship` 删除关系（该工具会保留其外键列），再用 `erd_link_columns` 在已有的列上重新绘制该关系，以此重新映射关系，参见[工具](../../mcp/tools.md#关系)。
 
 ## N:M 关系
 
 由于编辑器基于物理模型，N:M 关系会如下图所示，用一张映射表来表达。
 
-![从 products 和 tags 分别向映射表 product_tags 创建关系](/img/demo-relationship-n-m.webp)
+![用 ⌘ + ⌥ + 2 先后从 products 和 tags 向空的 product_tags 表创建关系，依次添加 product_id 和 tag_id](/img/demo-relationship-n-m.webp)
+
+如果映射表中已经有了键列，例如 `product_tags` 上的 `product_id` 和 `tag_id`，请使用 `Map to existing columns` 绘制每条关系并选择这些列，而不是添加新列，参见[映射列](#map-columns)。如果这些列是映射表的主键，每条关系都会立即成为识别关系。
 
 导入 GraphQL、DBML 或 AML 时会自动生成映射表。  
 多对多声明会生成名为 `<left>_<right>` 的表，并带有 `Junction table inferred from <left> <-> <right>` 注释，通过识别关系与两侧相连。  
@@ -81,9 +153,11 @@ Schema SQL 会写出以下操作，其余操作则会省略：
 
 ## 识别关系
 
-创建关系时，父表的每个主键都会以 `NOT NULL` 外键列的形式复制到子表上，因此新建的关系起初是非识别关系。  
+通过点击子表或使用 `Create new columns` 创建关系时，父表的每个主键都会以 `NOT NULL` 外键列的形式复制到子表上，因此新建的关系起初是非识别关系。  
 复制出的列会沿用该键的数据类型、默认值和注释，但不会沿用 `Unique` 或 `Auto Increment`，其命名方式参见[外键列名](#foreign-key-column-names)。  
-若要使其成为识别关系，可通过 `Alt + K` 或表右键菜单中的 `Primary Key`，将子表上的这些外键列设为主键。
+serial 类型的键在数据类型上是例外：复制出的列会采用该 serial 所存储的整数类型。在任何数据库下，`smallserial` 和 `serial2` 都对应 `smallint`，`serial4` 对应 `integer`，`bigserial` 和 `serial8` 对应 `bigint`。单独的 `serial` 在 PostgreSQL 下对应 `integer`，在 MySQL 和 MariaDB 下对应 `bigint unsigned`，在其他任何数据库下则仍为 `serial`。  
+只有完整的类型名称才算数（不区分大小写），因此 `serial(4)` 会按原样复制。以大写字母写成的类型会得到大写的结果：在 PostgreSQL 下，`SERIAL` 对应 `INTEGER`。已保存的图中类型已为 `serial` 的外键列会保留该类型。  
+若要使关系成为识别关系，可将子表上的这些外键列设为主键：选中所有这些列后按一次 `Alt + K` (Windows/Linux) 或 `⌥ + K` (Mac)，或者在表右键菜单中选择 `Primary Key`，选中两列或更多列时该条目会显示为 `Primary Key on selected columns`，参见[列主键](./table-editing.md#列主键)。
 
 ![用 Alt + K 将 product_id 设为主键再取消，连接线随之在实线与虚线之间切换](/img/demo-identifying-relationship.webp)
 
@@ -103,7 +177,7 @@ Schema SQL 会写出以下操作，其余操作则会省略：
 大小写的切换同样会将其拆分，判断方式与 camelCase 相同：小写字母后跟大写字母（`userId`），两个大写字母后跟小写字母（`IDCard`、`IDs`），或者韩文、假名、汉字等没有大小写之分的文字与有大小写之分的字母相邻（`회원ID`）。  
 数字不会拆分单词，因此 `id2` 和 `SHA256` 都是一个单词。以同一种大小写写成的复合词也是一个单词：`members` 上的 `memberid` 会变为 `members_memberid`。
 
-表名除去首尾空格外按原样使用：保留其大小写、中间的空格和点，不会转为单数形式，代码生成的 `Table Name Case` 与 `Column Name Case` 也不起作用。键为 `ID` 的 `Users` 会得到 `Users_ID`。  
+表名除去首尾空格外按原样使用：保留其大小写、中间的空格和点，不会转为单数形式，Code Generator 的 `Table Name Case` 与 `Column Name Case` 也不起作用。键为 `ID` 的 `Users` 会得到 `Users_ID`。  
 复合键的每一列都单独命名：键为 (`tenant_id`, `id`) 的 `orders` 会添加 `tenant_id` 和 `orders_id`。
 
 子表中已有的名称（不区分大小写）会加上 `_2`、`_3` 等编号，取第一个未被占用的编号。  
@@ -115,8 +189,9 @@ Schema SQL 会写出以下操作，其余操作则会省略：
 这也包括编辑器为没有主键的父表添加的主键，除非在点击子表之前为其命名。
 
 这些名称在创建关系时确定。之后重命名父表或其键，不会随之重命名这些列。  
-通过导入、粘贴或创建副本得到的关系，其列已经存在，因此会保留这些列原有的名称。  
-编码智能体通过 `erd_add_relationship` 添加关系时，得到的名称与此相同，参见[工具](../../mcp/tools.md#关系)。
+[映射列](#map-columns)中的 `New column` 行也按相同的规则命名，列表会在选择之前显示每个名称。  
+通过导入、粘贴、创建副本或在映射列中与已有的列配对得到的关系，其列已经存在，因此会保留这些列原有的名称。  
+编码智能体通过 `erd_add_relationship` 添加关系时，得到的名称和数据类型与此相同，参见[工具](../../mcp/tools.md#关系)。
 
 ## 读懂连接线 {#reading-a-connector}
 
@@ -137,16 +212,22 @@ Schema SQL 会写出以下操作，其余操作则会省略：
 即使标签被隐藏，该提示也会出现。
 
 通过 `Relationship` 显示选项可以隐藏 ERD 画布上的连接线，通过默认开启的 `Referential Actions` 显示选项则可以只隐藏其标签，参见[表显示选项](./table-related-functions.md#table-view-options)。  
-在 `70%` 及以下，表会折叠为名称，此时不绘制标签。导出 PNG 时，标签的绘制方式与画布相同。  
-Visualization 标签页的 [Flow 模式](./visualization.md#flow-mode)即使在 `Relationship` 关闭时也会绘制连接线，每条都是一根平滑的灰色实线曲线，端点符号与 ERD 画布相同，因此本页介绍的虚线、标签、提示与连接线路径只适用于 ERD 画布。
+在 `70%` 及以下，表会折叠为名称，此时不绘制标签。  
+[导出图片](./file-import-export.md#image)时始终以 100% 绘制，因此无论画布的缩放级别如何都会绘制标签，除非显示选项将其隐藏。关闭 `Background` 时，每个标签背后的方框也是透明的。  
+Visualization 标签页的 [Flow 模式](./visualization.md#flow-mode)即使在 `Relationship` 关闭时也会绘制连接线，每条都是一根平滑的灰色实线曲线，端点符号与 ERD 画布相同，因此本页介绍的虚线、标签、提示与正交路径只适用于 ERD 画布。在 Flow 中，从表连接到其自身的关系同样会以曲线绕过右上角，参见[连接线路径](#连接线路径)。
 
 ## 连接线路径
 
 连接线按正交方式布置。  
-路径会绕开位于两端之间的表，而不是从表上穿过，拐角以 45 度切除。  
-从表的同一侧引出的路径会被分到各自独立的通道上，以免相互重叠。
+路径会绕开位于两端之间的表，而不是从表上穿过，拐角为圆角。  
+每一端都会先从其所在的表笔直引出一小段，然后才转弯，因此相距不远、连接线两端对齐的两个表会以一条直线相连，而不会绕行。  
+从表的同一侧引出的路径会被分到各自独立的通道上，以免相互重叠。  
+只会绕开表：连接线可以穿过备注或表分组的框，并且绘制在表分组之上、表和备注之下。
+
+从表连接到其自身的关系会绘制为一条绕过该表右上角的曲线，在父表一端从顶部引出，在子表一端从右侧进入。  
+同一张表上的其他自引用关系会依次嵌套在第一条的外侧，因此它们的曲线既不会相互交叉，也不会穿过该表。
 
 没有可配置的项目。  
 画布上有任何元素移动或改变大小时，路径都会自动重新计算，因此无需手动调整。
 
-![将 members 表向下拖动再拖回时，连接线路径随之重新计算并绕开 categories](/img/demo-connector-routing.webp)
+![将 members 表向下拖动再拖回时，来自 orders 的连接线在从 categories 右侧经过与绕过其左侧之间切换，每个拐角都是圆角](/img/demo-connector-routing.webp)

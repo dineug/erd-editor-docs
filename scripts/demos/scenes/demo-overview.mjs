@@ -28,22 +28,22 @@ const HALF_ROW = 9.6;
 /** A table placed by where its top-left corner lands on screen. */
 const at = (x, y, color) => ({ x: x / ZOOM, y: (y - 30) / ZOOM, color });
 
-// Every connector runs straight. The table that gains a column, categories,
-// meets only products, directly under it: a side connector would pick up a
-// jog as the table grows, since it leaves from the middle of the side.
+// Every connector runs straight. A connector leaves from the middle of a
+// side, so tables joined top to bottom share a centre line, or the run picks
+// up a jog on two rounded corners: members sits exactly over orders (both
+// 191.2px wide here), and categories, 24px wider than products, 12px left of
+// it. The table that gains a column, categories, meets only products,
+// directly under it: a side connector would pick up a jog as the table grows.
 // Catalog on the left, orders in the middle, members over orders.
 //
 // Categories (two columns) is centred on the four-column tables beside it,
-// which also brings it closer to products. A non-identifying route is dashed
-// (10 on, 10 off), and a vertical one longer than about 88px at this zoom
-// shows a dash gap mid-line that reads as a broken connector; from its top
-// row, categories' route would be 99px. Centred, it is 80px before the new
-// row and 61px after, solid both times.
+// which also brings it closer to products: its dashed route is 80px before
+// the new row and 61px after.
 const TABLES = {
-  categories: at(31.6, ROW1 + 2 * HALF_ROW, GREEN),
+  categories: at(24, ROW1 + 2 * HALF_ROW, GREEN),
   addresses: at(264, ROW1, BLUE),
-  members: at(502.8, ROW1, BLUE),
-  products: at(28, ROW2 - HALF_ROW, GREEN),
+  members: at(504.8, ROW1, BLUE),
+  products: at(36, ROW2 - HALF_ROW, GREEN),
   order_items: at(269.2, ROW2, AMBER),
   orders: at(504.8, ROW2, AMBER),
   payments: at(738, ROW2 - HALF_ROW, PURPLE),

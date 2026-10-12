@@ -8,10 +8,18 @@ export default {
   height: 450,
   stillOnly: true,
   async setup(d) {
+    // No canvasType in the seed: a new document has its tab locked, and a tab
+    // locked at Settings opens on the ERD. The toolbar's tab is clicked instead.
     await seedSQL(d, readSeed('shop.sql'), {
       only: ['members', 'orders'],
-      settings: { databaseName: 'shop', canvasType: 'settings' },
+      settings: { databaseName: 'shop' },
     });
+    const tab = await d.domBox('.toolbar [title="Settings"]');
+    await d.page.mouse.click(tab.x + tab.width / 2, tab.y + tab.height / 2);
+    for (let tries = 0; !(await settingsRowBox(d, 'Relationship DataType Sync')); tries++) {
+      if (tries > 40) throw new Error('the Settings tab did not open');
+      await d.sleep(50);
+    }
     await d.moveTo(700, 420, 0);
   },
   async scenario(d) {

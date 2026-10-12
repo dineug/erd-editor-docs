@@ -1,5 +1,5 @@
 ---
-sidebar_position: 7
+sidebar_position: 8
 description: Find text in table and column names, comments, and memos, step through every match on the canvas, and replace one match or all of them.
 ---
 
@@ -19,25 +19,26 @@ Open it with `Ctrl + F` (Windows/Linux) or `⌘ + F` (Mac), or with any of these
 
 - The toolbar button right after `Search`, with a text-search icon. Its tooltip reads `Find and Replace (Ctrl + F)` (Windows/Linux) or `Find and Replace (⌘ + F)` (Mac).
 - `Find and Replace` in [Quick Search](./quick-search.md), listed on every tab. Typing `find`, `replace`, or `rename` brings it up.
-- `Find and Replace` in the canvas context menu: right-click an empty spot on the ERD canvas. It sits after `New Table` and `New Memo`, before `Relationship`.
+- `Find and Replace` in the canvas context menu: right-click an empty spot on the ERD canvas, outside any [table group](./table-groups.md). It sits after `New Table`, `New Memo`, and `New Table Group`, before `Relationship`.
 
 The quick search and context menu entries show the shortcut on the right.
 
 The shortcut and the toolbar button work from every tab. Opening from the Visualization, Schema SQL, Code Generator, or Settings tab switches to the ERD tab first, since the matches are shown and edited there.  
-Pressed while quick search is open, the shortcut closes the palette and opens the panel. It does nothing while a table cell or memo is being edited.  
-Opening the panel closes Table Properties and the theme builder.
+Pressed while quick search is open, the shortcut closes the palette and opens the panel. It does nothing while a table cell, a memo, or a table group's name is being edited.  
+Opening the panel closes Table Properties, the [theme builder](./language-and-theme.md#theme), the [`Display Language`](./language-and-theme.md#display-language) picker, the [`Export image`](./file-import-export.md#image) dialog, and [Map Columns](./relationship-editing.md#map-columns), so pressing the shortcut in one of them swaps that dialog for the panel. Map Columns closes without mapping anything.  
+Opening one of those dialogs closes the panel in turn, and closing the dialog does not bring it back.
 
 With the panel showing, the shortcut, the toolbar button, and the two entries do not close it. They put the caret back in the Find field with its text selected, and the current match stays current.
 
-Opening Table Properties or the theme builder hides an open panel without closing it, and so does switching to another tab. The panel comes back as you left it once the dialog closes or you return to the ERD tab.  
-The shortcut, the toolbar button, and the two entries bring a hidden panel back too, but with its query searched again and no match current.  
+Switching to another tab only hides the panel, which comes back as you left it when you return to the ERD tab.  
+The shortcut, the toolbar button, and the quick search entry bring it back too, but with its query searched again and no match current.  
 While the diff viewer, time travel, or the Auto Layout preview is open, the panel cannot open: the toolbar button is dimmed and does nothing, quick search leaves out `Find and Replace`, and the shortcut is left to the browser or host — see [The Browser's Find Bar](#the-browsers-find-bar). A panel that was already open is hidden until they close.
 
 Close it with `Escape`, or with the `x` button in its header, whose tooltip reads `Close (ESC)`. Closing gives the keyboard back to the editor.
 
 - `Escape` pressed in the panel closes it and leaves the selection as it is, so the table or memo of the last match you went to stays selected.
 - `Escape` pressed on the canvas closes it too, and in the same press clears the selection and the focused cell, as it does with no panel open — see [Shortcuts](./settings.md#shortcuts).
-- An open cell or memo editor, a relationship being drawn, or an open quick search takes the press first, and the panel stays open.
+- An open cell, memo, or table group name editor, a relationship or a [table group](./table-groups.md#drawing-a-group) being drawn, or an open quick search takes the press first, and the panel stays open.
 
 Reopening keeps the last query, selected and searched again, along with the Replace text, the [options](#options), and the [kinds of text](#what-it-searches) that were on.  
 They are kept while the editor stays open and are not saved in the document. A newly loaded editor starts with every option off and only `Table names` and `Column names` on.
@@ -61,8 +62,8 @@ A highlighted button is on. Click one to turn it on or off, and the panel search
 
 The panel first opens on `Table names` and `Column names` alone, so a rename does not reach comments and memos unless you turn them on.
 
-Nothing else is searched: not data types, default values, index names, the database name, or the Schema SQL and generated code.  
-A comment hidden by a [table view option](./table-related-functions.md#table-view-options) is still searched.
+Nothing else is searched: not data types, default values, index names, [table group](./table-groups.md) names, the database name, the [Schema SQL](./schema-sql.md) with its `Before tables` and `After tables` scripts, or generated code.  
+A comment hidden by a [table view option](./table-related-functions.md#table-view-options) is still searched. Memos hidden with View Option → `Memos` are not, even with the `Memos` button on, so `Replace All` never rewrites a memo you cannot see.
 
 ## Options
 
@@ -104,7 +105,7 @@ Each row shows:
 The current match's row is highlighted and scrolled into view.  
 With more than 200 matches, the list draws 200 rows around the current match and says which part it shows, for example `Showing 1–200 of 523`. The window moves as you move through the matches.
 
-The list follows the document while the panel is open. Any change to a searched text, whether an edit on the canvas, an undo or redo, an import, or an edit by a collaborator or a coding agent, searches again, and the current match stays current if it is still there. Selecting, scrolling, and hovering do not.  
+The list follows the document while the panel is open. Any change to a searched text, whether an edit on the canvas, an undo or redo, an import, or an edit by a collaborator or a coding agent, searches again, and the current match stays current if it is still there. So does hiding or showing the memos with View Option → `Memos`, which takes their matches out of the list or brings them back. Selecting, scrolling, and hovering do not.  
 Edits made while the panel is hidden are searched as soon as it shows again.
 
 ## Going to a Match
@@ -162,7 +163,7 @@ While the caret is in the panel:
 
 - `Enter` and `Shift + Enter` in the Find field move through the matches, `Enter` and `Ctrl + Enter` (Windows/Linux) or `⌘ + Enter` (Mac) in the Replace field replace, and `Escape` closes the panel.
 - A few editor shortcuts still work: `Ctrl + F` (Windows/Linux) or `⌘ + F` (Mac) puts the caret back in the Find field with its text selected, `Ctrl + K` (Windows/Linux) or `⌘ + K` (Mac) toggles quick search, `Undo` and `Redo` undo and redo the diagram rather than the text in the field, and `Zoom In`, `Zoom Out`, and `Zoom Reset` zoom the canvas — see [Shortcuts](./settings.md#shortcuts).
-- Every other editor shortcut, the arrow keys, and `Tab` stay in the panel and act as ordinary text-field keys: `Ctrl + A` (Windows/Linux) or `⌘ + A` (Mac) selects the field's text, `Space` types a space, and `Tab` moves the focus between the panel's controls.
+- Every other editor shortcut, the arrow keys, and `Tab` stay in the panel and act as ordinary text-field keys: `Ctrl + A` (Windows/Linux) or `⌘ + A` (Mac) selects the field's text, `Delete` and `Backspace` erase text and never delete the selection on the canvas, `Space` types a space, and `Tab` moves the focus between the panel's controls.
 - Keys the editor does not bind, such as the host's own save, reach the host as usual.
 
 ## Read-only Editors
@@ -171,7 +172,7 @@ In a [`readonly`](../../api/erd-editor-element.md#readonly) editor the panel onl
 Searching, the options, the kinds of text, the list, and going to a match all work.  
 The toolbar button's tooltip reads `Find (Ctrl + F)` (Windows/Linux) or `Find (⌘ + F)` (Mac), while the quick search and context menu entries keep the name `Find and Replace`.
 
-A diagram VS Code opens read-only, such as a git revision or a merge preview, gets this find-only panel.
+In VS Code, a revision of a diagram, such as a Git revision or a Local History entry, opens as JSON text. Reopened as a diagram with `Reopen Editor With...`, it is read-only and gets this find-only panel.
 
 ## From Quick Search
 

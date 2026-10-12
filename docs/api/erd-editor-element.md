@@ -1,6 +1,6 @@
 ---
 sidebar_position: 2
-description: The erd-editor element API — attributes, value, events, theming, key bindings, and schema import and export.
+description: The erd-editor element API — attributes, value and runtimeValue, events, theming, display language, the welcome screen, key bindings, and schema import and export.
 ---
 
 # ErdEditorElement
@@ -13,14 +13,20 @@ interface ErdEditorElement extends HTMLElement {
   readonly: boolean;
   systemDarkMode: boolean; // system dark/light auto
   enableThemeBuilder: boolean;
+  enableLocalePicker: boolean;
+  enableWelcomeScreen: boolean;
   value: string;
+  readonly runtimeValue: string;
   focus: () => void;
   blur: () => void;
   clear: () => void;
   destroy: () => void;
   setInitialValue: (value: string) => void;
   setPresetTheme: (themeOptions: Partial<ThemeOptions>) => void;
+  setSystemAppearance: (appearance: 'dark' | 'light' | null) => void;
   setTheme: (theme: Partial<Theme>) => void;
+  setLocale: (locale: LocaleOption) => void;
+  setSystemLocale: (locale: string | null) => void;
   setKeyBindingMap: (
     keyBindingMap: Partial<
       Omit<
@@ -35,11 +41,18 @@ interface ErdEditorElement extends HTMLElement {
       >
     >
   ) => void;
-  setSchemaSQL: (value: string) => void;
-  setSchemaGraphQL: (value: string) => void;
-  setSchemaDBML: (value: string) => void;
-  setSchemaAML: (value: string) => void;
-  getSchemaSQL: (databaseVendor?: DatabaseVendor) => string;
+  setSchemaSQL: SetSchema;
+  setSchemaGraphQL: SetSchema;
+  setSchemaDBML: SetSchema;
+  setSchemaAML: SetSchema;
+  setSchemaJSON: (
+    value: string,
+    options?: { mode?: 'replace' | 'append' }
+  ) => void;
+  getSchemaSQL: (
+    databaseVendor?: DatabaseVendor,
+    options?: SchemaSQLOptions
+  ) => string;
   getSharedStore: (
     config?: SharedStoreConfig & {
       mouseTracker?: boolean;
@@ -53,15 +66,17 @@ interface ErdEditorElement extends HTMLElement {
 The editor renders into a closed shadow root, so `editor.shadowRoot` is `null` and page styles do not leak in or out.  
 Nothing inside can be reached with a selector — style it through [setTheme](#settheme) and the `--erd-editor-*` custom properties instead.
 
-`readonly`, `system-dark-mode`, and `enable-theme-builder` are the only attributes, and all three default to `false`.
+`readonly`, `system-dark-mode`, `enable-theme-builder`, `enable-locale-picker`, and `enable-welcome-screen` are the only attributes, and all five default to `false`. The last two are new in `4.0.0`. Each one reads its value as [readonly](#readonly) describes.
 
 ## readonly
 
 Sets the editing capability of the editor.  
-While it is set, assigning `value`, `clear()`, `setSchemaSQL()`, `setSchemaGraphQL()`, `setSchemaDBML()`, `setSchemaAML()`, undo, and redo are all ignored, and the `change` event is never emitted. Load a document with [setInitialValue](#setinitialvalue) instead.  
+While it is set, assigning `value`, `clear()`, `setSchemaSQL()`, `setSchemaGraphQL()`, `setSchemaDBML()`, `setSchemaAML()`, `setSchemaJSON()`, undo, and redo are all ignored, and the `change` event is never emitted. Load a document with [setInitialValue](#setinitialvalue) instead.  
 Viewing still works: zoom, panning, the hand tool, zen mode, the canvas tab, the [Visualization](../guide/guides/visualization.md) tab in both of its modes with focusing on tables included, the database vendor, and the SQL and code generator output settings all still apply, so a read-only viewer can still export SQL for another vendor or read generated code.  
 Since `3.10.0` [Find and Replace](../guide/guides/find-and-replace.md#read-only-editors) opens too, as a find-only panel titled `Find` with no Replace field or buttons. Going to a match still brings it into view and selects it.  
 Table Properties still opens, and since `3.10.0` it shows a `Read only` badge beside its title and its `Indexes` tab offers no edits — see [Table Properties](../guide/guides/table-related-functions.md#table-properties).  
+Since `4.0.0` a read-only editor offers no [`Import and Add`](../guide/guides/file-import-export.md#import-and-add), `New Table Group`, `Group selected tables`, `Remove from group` (see [Table Groups](../guide/guides/table-groups.md#read-only-editors)), or [`Map Columns`](../guide/guides/relationship-editing.md#map-columns), and shows no [welcome screen](#enablewelcomescreen). The lock buttons on the Settings tab change nothing, and the Schema SQL tab's `Before tables` and `After tables` scripts cannot be edited.  
+The Schema SQL tab's `This window only` choices, `Statements`, `Header`, and `Tables`, are never saved and still apply, and so do the [`Export image`](../guide/guides/file-import-export.md#image) dialog, the theme builder, and the Display Language picker. A pick in the theme builder or the Display Language picker still emits [changePresetTheme](#changepresettheme) or [changeLocale](#changelocale).  
 A bare attribute, `=""`, and `="true"` all read as `true`. `="false"` reads as `false`, and so does any other string — including the HTML idiom `readonly="readonly"`.
 
 ```js
@@ -77,7 +92,10 @@ editor.setAttribute('readonly', 'true');
 ## systemDarkMode
 
 Determines whether to automatically synchronize with the system's dark/light mode.  
-Turning it on sets the theme's `appearance` from the operating system, overriding whatever [setPresetTheme](#setpresettheme) had written, and the OS switching mode overwrites it again. A `setPresetTheme` call made in between still applies, until the next OS change. Turning it off freezes the last value.
+Since `4.0.0` turning it on sets the theme's `appearance` to `'system'`, as `setPresetTheme({ appearance: 'system' })` does. The editor then shows the light or dark the operating system reports, or the one [setSystemAppearance](#setsystemappearance) names, and switches when that changes.  
+A later [setPresetTheme](#setpresettheme) with `'light'` or `'dark'`, or a `Light` or `Dark` pick in the theme builder or quick search, replaces `'system'` and stays: the next OS change no longer overwrites it, even though `systemDarkMode` is still `true`. Before `4.0.0` the next OS change overwrote it.  
+Turning it off while the appearance is `'system'` keeps the light or dark shown at that moment. Turning it off after the appearance has been changed away from `'system'` leaves it as it is.  
+Changing it emits no event.
 
 ```js
 editor.systemDarkMode = true;
@@ -91,9 +109,10 @@ editor.setAttribute('system-dark-mode', 'true');
 
 ## enableThemeBuilder
 
-Determines if a UI for easily setting preset themes is provided.
+Determines if a UI for easily setting preset themes is provided.  
+It shows the toolbar's `Theme` button, which opens the theme builder with `Accent color`, `Gray color`, and `Appearance`. Since `4.0.0` `Appearance` offers `System` beside `Light` and `Dark`, and while this is on, quick search lists `Theme` with `System`, `Light`, and `Dark`. See [Language and Theme](../guide/guides/language-and-theme.md).
 
-![Opening the theme builder and switching the accent and gray colors](/img/demo-theme-builder.webp)
+![Opening the theme builder from the toolbar, picking accent and gray colors, and switching the appearance to Light and then to System](/img/demo-theme-builder.webp)
 
 ```js
 editor.enableThemeBuilder = true;
@@ -105,15 +124,54 @@ editor.setAttribute('enable-theme-builder', 'true');
 <erd-editor enable-theme-builder></erd-editor>
 ```
 
-Changing the preset theme from this panel emits the [changePresetTheme](#changepresettheme) event.
+Changing the preset theme from this panel, or from quick search, emits the [changePresetTheme](#changepresettheme) event.
+
+## enableLocalePicker
+
+Since `4.0.0`, determines if a UI for picking the editor's display language is provided.  
+It shows the toolbar's `Display Language` button, after `Theme` when both are shown. The button opens the Display Language picker, and quick search lists `Display Language`. Both offer `System` and the 25 languages — see [Language and Theme](../guide/guides/language-and-theme.md).  
+It also decides what an editor shows before [setLocale](#setlocale) is called or a language is picked: `'system'` while it is on, English while it is off, so an element that configures nothing keeps the English it always showed. Turning it on or off switches between the two at once. Once a language has been set or picked, that choice stays whichever way it is turned.  
+Set it before the element is appended for the first frame to follow `'system'`.  
+A pick emits [changeLocale](#changelocale).
+
+```js
+editor.enableLocalePicker = true;
+// or
+editor.setAttribute('enable-locale-picker', 'true');
+```
+
+```html
+<erd-editor enable-locale-picker></erd-editor>
+```
+
+## enableWelcomeScreen
+
+Since `4.0.0`, determines if an empty diagram greets the reader with the [welcome screen](../guide/guides/editing-start.md#welcome-screen).  
+It stands over the ERD tab while the document has no table, no shown memo, and no shown table group. It is not shown while `readonly` is set, in zen mode, or while Table Properties, the diff viewer, time travel, or the Auto Layout preview is open. The first table, shown memo, or shown table group takes it away, and an undo back to an empty diagram brings it back.  
+Its `New Table`, `New Memo`, and `Command Palette` rows show the first chord of `addTable`, `addMemo`, and `search` as [setKeyBindingMap](#setkeybindingmap) left them, and none for a name left empty. Its arrows point at the `Theme` and `Display Language` buttons only where `enableThemeBuilder` and `enableLocalePicker` show them.  
+In its menu, `↑`, `↓`, `Home`, and `End` move between the rows and are prevented and stopped. `Enter` and `Space` are stopped, not prevented, so the focused row takes them, and `Escape` among the `Import` formats goes back, prevented and stopped. Every other key reaches the editor and the page as usual.  
+It changes nothing in the document, so it leaves `value` as it was and emits no `change`.  
+Turn it on once [setInitialValue](#setinitialvalue) has loaded the document, as the official hosts do, so the screen never flashes over a file that is still loading.
+
+```js
+editor.enableWelcomeScreen = true;
+// or
+editor.setAttribute('enable-welcome-screen', 'true');
+```
+
+```html
+<erd-editor enable-welcome-screen></erd-editor>
+```
 
 ## value
 
 ### getter
 
-Retrieves the current editor state as a JSON string, in the [schema](./advanced/schema.md) the editor defines.  
-The document's own `ignoreSaveSettings` is applied while serializing: with the scroll bit set the view origin is written as `0, 0`, and with the zoom bit set the zoom level is written as `1`.  
-Since `3.10.0` a new document has both bits set, whether it is the one an element shows before it is given a value or one loaded from a blank value. Its `value` keeps writing the origin as `0, 0` until [Save Scroll Information](../guide/guides/settings.md#save-scroll-information) is turned on, and the zoom level as `1` until [Save Zoom Information](../guide/guides/settings.md#save-zoom-information) is. See [Settings](./advanced/schema.md#settings) for the bits.
+Retrieves the current document as a JSON string, in the [schema](./advanced/schema.md) the editor defines.  
+Since `4.0.0` it is the storage form, the document as a file holds it, which is also what the `json` export writes and the official hosts save. It holds the live entities alone, without the removed ones, the stacking order, or what the editor works out for itself, such as measured widths, key marks, and relationship anchors. Its entities are keyed in a fixed order, it is indented two spaces, and it ends with a newline, so the same document always gives the same bytes.  
+Each setting whose [lock](../guide/guides/settings.md#lock) is on is written at the value it is locked at, not as the screen shows it. The `Viewport` lock holds `originX`, `originY`, and `zoomLevel`, and `Canvas Type`, `Language`, `Table Name Case`, `Column Name Case`, and `Bracket Type` each hold their own setting. Every other setting is written as it stands, and `lockSettings` is always written. See [Settings](./advanced/schema.md#settings) for the bits.  
+A new document has every lock on, whether it is the one an element shows before it is given a value or one loaded from a blank value. Its `value` keeps the origin at `0, 0`, the zoom level at `1`, the ERD tab, and the default Code Generator language, name cases, and bracket type until the matching lock is turned off.  
+Before `4.0.0` it returned the whole document as the editor held it, with `ignoreSaveSettings` applied. The document as the editor holds it is now [runtimeValue](#runtimevalue), and `ignoreSaveSettings` is no longer read or written.
 
 ```js
 const data = editor.value;
@@ -122,11 +180,13 @@ const data = editor.value;
 ### setter
 
 Loads a previously saved editor state. It replaces the whole document — the current one is cleared first.  
-Like `clear()`, `setInitialValue()`, and the `setSchema*` methods, it also discards the Visualization tab's Flow view: its layout, the tables it is narrowed to, its row display, zoom, and pan.  
+Like `clear()`, `setInitialValue()`, and the `setSchema*` methods in their default `mode: 'replace'`, it also discards the Visualization tab's Flow view: its layout, the tables it is narrowed to, its row display, zoom, and pan. An append (`mode: 'append'`) does not discard it.  
 It is recorded in the history list, enabling `Undo, Redo`, and it emits `change`.  
+It takes the storage form, a [runtimeValue](#runtimevalue), or a file an earlier release saved.  
 A blank string, or anything that is not a string, loads a new document rather than raising an error, so guard the value before assigning it.  
-Since `3.10.0` that new document is the one `setInitialValue('')` starts: empty, with default settings, and saving neither the scroll position nor the zoom level. Before, it was an empty document that saved both.  
-A shared store relays this load to collaborators with the new document's full JSON, so every peer, an older release included, loads the same document.  
+That new document is the one `setInitialValue('')` starts: empty, with default settings, and since `4.0.0` with every lock on. In `3.10.x` it saved neither the scroll position nor the zoom level, and before that it saved both.  
+A shared store relays that load to collaborators with the new document's full JSON, so every peer, an older release included, loads the same document.  
+Since `4.0.0` the loaded document's locks, and the locked values `value` then writes, come from the text, and the view lands where the text puts it, or on the diagram when none of it is drawn there. For each other setting the text locks — the tab, the Code Generator language, the name cases, and the bracket type — the editor keeps showing what it showed before the load. A setting the text leaves unlocked takes the text's value. [setInitialValue](#setinitialvalue) instead takes every value the text holds; see it also for a text that names no locks.  
 Text that is not JSON, such as a file left with merge-conflict markers, does not raise an error either: the document is emptied, its settings stay as they were, and the parse error is logged to the console.  
 It is ignored while `readonly` is set; use [setInitialValue](#setinitialvalue) to load into a read-only editor.
 
@@ -134,13 +194,28 @@ It is ignored while `readonly` is set; use [setInitialValue](#setinitialvalue) t
 editor.value = 'json...';
 ```
 
+## runtimeValue
+
+Since `4.0.0`, retrieves the document as this editor holds it, as a JSON string. It has no setter, so assigning it throws in strict-mode code.  
+It carries what [value](#value) leaves out: removed entities and their order, stacking order, measured widths, key marks, relationship anchors, and sequences. Locked settings are written at their locked values here too.  
+Use it to seed another editor that joins a session already running, such as a collaborator or a second view of the same document, through its [setInitialValue](#setinitialvalue). An undo of a removal that the session sends later then restores the entity whole there, while an editor seeded from `value` holds no removed entity and restores an empty, nameless table instead. See [Collaborative Editing](./advanced/collaborative-editing.md).  
+Nothing collects removed entities any more, so they stay in it until the document is next opened from its file.  
+Never write it to a file: save `value`, which the [JSON Schema](./advanced/schema.md#json-schema) accepts and this does not.
+
+```js
+otherEditor.setInitialValue(editor.runtimeValue);
+```
+
 ## setInitialValue
 
 Loads a previously saved editor state. The load itself is not recorded in the history list, so it cannot be undone, and no `change` event is emitted.  
 It also clears the undo history, so nothing done before the load can be undone or redone onto the loaded document.  
+It takes the storage form, a [runtimeValue](#runtimevalue), or a file an earlier release saved, and unlike assigning `value` it takes every setting the text holds, the tab and the code settings included.  
 A blank string, or anything that is not a string, loads a new document rather than raising an error, so `setInitialValue('')` starts a blank diagram.  
-Since `3.10.0` that new document, which is also what an element shows before it is given any value, saves neither the scroll position nor the zoom level, so scrolling and zooming it leave `value` as it was. Before, it saved both.  
-A document loaded from text keeps the switches it names, and one that names none, such as a file saved before `3.2.3` or a v2 `.vuerd` file, saves both.  
+Since `4.0.0` that new document, which is also what an element shows before it is given any value, has every lock on. Scrolling, zooming, switching tabs, and changing the Code Generator language, the name cases, or the bracket type leave `value` as it was and emit no `change`. In `3.10.x` it saved neither the scroll position nor the zoom level, and before that it saved both.  
+A document loaded from text keeps the locks it names. One that names none — any file saved before `4.0.0`, whatever its `ignoreSaveSettings` said, and a v2 `.vuerd` file — opens with every lock on, its `Viewport` locked at origin `0, 0` and zoom level `1`, on the ERD tab, with its language, name cases, and bracket type as it saved them.  
+Either way the view opens at the document's view — the one the text saved when it names its locks, origin `0, 0` at zoom level `1` when it names none — or on the diagram when none of it is drawn there. A locked `Viewport` still keeps its locked values in `value`.  
+Since `4.0.0` it also drops the collaboration state of the document held before, and a [shared store](#getsharedstore) of this editor that is already subscribed asks the other editors for theirs again, so an editor reloaded in a running session catches up. Seed such an editor with another editor's [runtimeValue](#runtimevalue).  
 Text that is not JSON does not raise an error either: the document is emptied, its settings stay as they were, and the parse error is logged to the console.  
 Unlike assigning `value`, it is not blocked by `readonly`, so it is how you load a document into a read-only viewer.
 
@@ -159,17 +234,18 @@ editor.addEventListener('change', () => {
 
 ## Event
 
-`change` and `changePresetTheme` are the only two public events.  
+`change`, `changePresetTheme`, and `changeLocale` are the only three public events; `changeLocale` is new in `4.0.0`.  
 The element also dispatches internal `@dineug/erd-editor/internal-*` events on itself for its own wiring; those are not part of the API.
 
 ### change
 
 When there are changes in the editor, it emits an event.  
 The event is debounced by 200ms, and it is not emitted while `readonly` is `true`.  
-It fires for any document change — an edit in the UI, assigning `value`, `clear()`, and each of the `setSchema*` methods. `setInitialValue` does not emit it.  
-Nothing done inside the Visualization tab's Flow mode emits it — zoom, panning, moving cards, `Tidy Up`, the row display, or narrowing the view from a card — since none of it is a document change. Switching tabs does, so focusing on tables from the ERD tab emits one `change`, and so does the external-link card button that takes you from Flow back to the ERD tab. Opening Find and Replace, or going to a quick search result, from another tab brings the ERD tab up and emits one as well.  
-Scrolling and zooming the ERD canvas emit it too, whether or not `editor.value` comes out different. A scroll leaves `value` as it was while `Save Scroll Information` is off. A zoom also moves the view position, so it leaves `value` as it was only while `Save Scroll Information` and `Save Zoom Information` are both off. Since `3.10.0` a new document has both off, so on a new diagram a scroll or a zoom emits `change` with `value` unchanged.  
-To skip such writes, compare `editor.value` with the value you last stored, not with the file you loaded: a file another release or another machine wrote can come out different in `value` as soon as it loads. A host that writes files can instead tell an edit from a view change with a replication store's `changed` — see [on@change](./advanced/remote-storage.md#onchange).  
+It fires for any document change — an edit in the UI, assigning `value`, `clear()`, each of the `setSchema*` methods, and since `4.0.0` `setSchemaJSON()` and `Import and Add`. `setInitialValue` does not emit it.  
+Nothing done inside the Visualization tab's Flow mode emits it — zoom, panning, moving cards, `Tidy Up`, the row display, or narrowing the view from a card — since none of it is a document change.  
+Since `4.0.0` a change to a setting whose [lock](../guide/guides/settings.md#lock) is on does not emit it either, because it moves only the screen and never `value`: a scroll or a zoom of the ERD canvas while `Viewport` is locked, a tab switch while `Canvas Type` is locked, and a change of the Code Generator language, the table name case, the column name case, or the bracket type while its own lock is on. Only those changes are left out, so a batch that also edits the document still emits it. Locking or unlocking a setting emits it.  
+Every lock is on in a new document and in any file saved before `4.0.0`, so by default scrolling, zooming, and switching tabs emit nothing. That covers focusing on tables from the ERD tab, the external-link card button that takes you from Flow back to the ERD tab, and opening Find and Replace or going to a quick search result from another tab. Each of those emits one `change` only while a lock that covers it is off: `Canvas Type` for the tab switch, and `Viewport` for the scroll a card button or a quick search result also makes. Before `4.0.0` scrolling, zooming, and switching tabs always emitted it, even when `editor.value` came out the same.  
+To skip writes that change nothing, compare `editor.value` with the value you last stored, not with the file you loaded: a file an earlier release wrote, a v2 file, or a hand-edited one can come out different in `value` as soon as it loads, because `value` writes it in the storage form. So can a file whose `Viewport` lock is off and whose origin draws none of the diagram on this screen: the load moves the view onto the diagram, and `value` writes where it lands. Since `4.0.0` measured widths no longer cause this, because `value` holds none. A host that writes files can instead tell an edit from a view change with a replication store's `changed` — see [on@change](./advanced/remote-storage.md#onchange).  
 The event carries no `detail` and neither bubbles nor crosses the shadow boundary, so listen on the element itself and read `editor.value` in the handler.
 
 ```js
@@ -180,13 +256,26 @@ editor.addEventListener('change', event => {
 
 ### changePresetTheme
 
-Emitted when the preset theme is changed from the built-in theme builder.  
-Calling [setPresetTheme](#setpresettheme) yourself does not emit it.  
-`event.detail` is the fully resolved `ThemeOptions` — `{ appearance, grayColor, accentColor }` — not the partial that was requested.
+Emitted when the preset theme is changed from the built-in theme builder, or since `4.0.0` from `Theme` in quick search. Every pick emits it, a pick of the option already in force included.  
+Calling [setPresetTheme](#setpresettheme) or [setSystemAppearance](#setsystemappearance) yourself, or turning [systemDarkMode](#systemdarkmode) on or off, does not emit it.  
+`event.detail` is the complete `ThemeOptions` after the pick — `{ appearance, grayColor, accentColor }` — not the partial that was requested. Since `4.0.0` its `appearance` is `'system'` while `System` is picked, not the light or dark it shows, so store it as it is and hand it back to `setPresetTheme`.
 
 ```js
 editor.addEventListener('changePresetTheme', event => {
   const themeOptions = event.detail;
+});
+```
+
+### changeLocale
+
+Since `4.0.0`, emitted when a language is picked in the editor, from the Display Language picker or from `Display Language` in quick search, both of which [enableLocalePicker](#enablelocalepicker) turns on.  
+It fires after the language has been applied, on every pick, a pick of the option already in force included. [setLocale](#setlocale) and [setSystemLocale](#setsystemlocale) never emit it, and neither does a change of the browser's languages. A switch of language emits no `change`.  
+`event.detail` is `{ locale }`, a `LocaleOption`: `'system'` when `System` was picked, otherwise the language's code. The element does not remember the pick, so store it and pass it to `setLocale` on the next load.  
+Like `change`, it does not bubble, so listen on the element itself.
+
+```js
+editor.addEventListener('changeLocale', event => {
+  const { locale } = event.detail; // 'system' | 'ko-KR' | ...
 });
 ```
 
@@ -208,9 +297,9 @@ editor.blur();
 
 ## clear
 
-Empties the document, removing every table, column, relationship, index, and memo.  
-Every setting stays, including the database, the view position, the zoom level, the table view options, and the `Save Scroll Information` and `Save Zoom Information` switches, so a cleared file keeps saving what it saved. To start a new document instead, assign `''` to `value` or call `setInitialValue('')`.  
-It is recorded in the history list, so it can be undone, and it emits `change`. It is ignored while `readonly` is set.
+Empties the document, removing every table, column, relationship, index, and memo, and since `4.0.0` every table group.  
+Every setting stays, including the database, the view position, the zoom level, the table view options, each lock with the value it holds, and the Schema SQL tab's `Before tables` and `After tables` scripts, so a cleared file keeps saving what it saved. To start a new document instead, assign `''` to `value` or call `setInitialValue('')`.  
+It is recorded in the history list, so it can be undone, and it emits `change`. An undo brings the document back as the editor held it, each locked setting at its locked value. It is ignored while `readonly` is set.
 
 ```js
 editor.clear();
@@ -230,10 +319,10 @@ editor.destroy();
 
 Redefines keyboard shortcuts.  
 `edit`, `stop`, `undo`, `redo`, `zoomIn`, `zoomOut` and `zoomReset` are fixed and cannot be redefined.  
-Only the eighteen names below are written; anything else in the object is ignored, including the fixed names.  
-Since `3.10.0`, `search` can be redefined, and `findReplace` is new. Before, `search` was fixed.  
+Only the nineteen names below are written; anything else in the object is ignored, including the fixed names.  
+Since `3.10.0`, `search` can be redefined, and `findReplace` is new. Before, `search` was fixed. Since `4.0.0`, `removeSelection` is new.  
 A binding value must be a `ShortcutOption[]`. A bare string is ignored, so write `{ addTable: [{ shortcut: 'Alt+KeyN' }] }` rather than `{ addTable: 'Alt+KeyN' }`.  
-An empty array is accepted and binds nothing: `setKeyBindingMap({ findReplace: [] })` leaves `Ctrl + F` (Windows/Linux) or `⌘ + F` (Mac) to the page, and `{ search: [] }` does the same for `Ctrl + K` (Windows/Linux) or `⌘ + K` (Mac). The toolbar's `Search` button still opens quick search, and Find and Replace still opens from its toolbar button, its quick search row, and the canvas context menu; none of these shows a shortcut for a name left empty.  
+An empty array is accepted and binds nothing: `setKeyBindingMap({ findReplace: [] })` leaves `Ctrl + F` (Windows/Linux) or `⌘ + F` (Mac) to the page, and `{ search: [] }` does the same for `Ctrl + K` (Windows/Linux) or `⌘ + K` (Mac). The toolbar's `Search` button still opens quick search, and Find and Replace still opens from its toolbar button, its quick search row, and the canvas context menu; none of these shows a shortcut for a name left empty. `{ removeSelection: [] }` leaves `Delete` and `Backspace` to the page, and the delete rows of the table, memo, and table group menus (`Delete`, `Delete selected`, `Delete column`, `Delete columns`) then show no shortcut.  
 The call is a partial merge: names you leave out keep their defaults, and calling it twice keeps the earlier changes. There is no getter for the current bindings: [createKeyBindingMap](#createkeybindingmap) returns the defaults, not what `setKeyBindingMap` changed.
 
 ```ts
@@ -270,6 +359,10 @@ const defaultKeyBindingMap: Omit<
     { shortcut: 'Alt+Backspace', preventDefault: true },
     { shortcut: 'Alt+Delete', preventDefault: true },
   ],
+  removeSelection: [
+    { shortcut: 'Delete', preventDefault: true },
+    { shortcut: 'Backspace', preventDefault: true },
+  ],
   primaryKey: [{ shortcut: 'Alt+KeyK', preventDefault: true }],
   selectAllTable: [
     { shortcut: '$mod+KeyA', preventDefault: true },
@@ -296,27 +389,32 @@ editor.setKeyBindingMap({
 });
 ```
 
-`selectAllTable` and `handTool` give way to a caret: while the focus is in an input, a textarea, or a `contenteditable`, `$mod + A` selects the text and `Space` types a space instead of reaching the canvas. Whatever you rebind them to behaves the same way.
+`selectAllTable`, `handTool`, and `removeSelection` give way to a caret: while the focus is in an input, a textarea, or a `contenteditable`, `$mod + A` selects the text, `Space` types a space, and `Delete` and `Backspace` erase text instead of reaching the canvas. Whatever you rebind them to behaves the same way.
+
+Since `4.0.0`, `removeSelection` (`Delete` or `Backspace`) removes the selection on the ERD tab as one undo step, without asking. When the focused table is the only thing selected, one or more of its columns are selected, and the zoom draws its rows, it removes those columns; otherwise it removes every selected table, memo, and table group, a group's tables kept. See [Table and Memo Deletion](../guide/guides/table-related-functions.md#table-and-memo-deletion).  
+A held key removes once, and nothing is removed while a cell, memo, or table group name editor is open. Outside a text field the press is prevented on every tab while the editor has focus, on a focused toolbar button too, and in a read-only editor, where it removes nothing.
 
 Since `3.10.0`, `findReplace` (`$mod+KeyF`) opens [Find and Replace](../guide/guides/find-and-replace.md), bringing the ERD tab up from any other tab.  
-It does not give way to a caret: while the editor is focused it is taken on every tab, from the canvas or from an input inside the editor. The press is prevented, so the browser opens no find bar, and stopped, so no bubbling `keydown` listener on the page hears it. With a cell or memo editor open it is still prevented and stopped, but opens nothing.  
+It does not give way to a caret: while the editor is focused it is taken on every tab, from the canvas or from an input inside the editor. The press is prevented, so the browser opens no find bar, and stopped, so no bubbling `keydown` listener on the page hears it. With a cell or memo editor open, or since `4.0.0` a table group name editor, it is still prevented and stopped, but opens nothing.  
 While the diff viewer, time travel, or the Auto Layout preview is open, on whichever tab, or while an IME is still composing, it is neither prevented nor stopped, so the browser's or the host's own find gets it. Inside the Find and Replace panel, a press still composing is stopped there, though not prevented. Whatever you rebind `findReplace` to behaves the same way.
 
-`focusView` acts on the ERD tab only. With at least one table selected, it opens the Visualization tab in Flow mode, narrowed to those tables and every table one relationship away; with no table selected it does nothing. See [Focusing on Tables](../guide/guides/visualization.md#focusing-on-tables).
+`focusView` acts on the ERD tab only. With at least one table selected, it opens the Visualization tab in Flow mode, narrowed to those tables and every table one relationship away; a selected memo or table group does not count, and with no table selected it does nothing. See [Focusing on Tables](../guide/guides/visualization.md#focusing-on-tables).
 
-`stop` (`Escape`) on the ERD tab ends an open cell or memo editor, or a relationship being drawn, and leaves the selection as it is. The editor calls `preventDefault()` on that press.  
+`stop` (`Escape`) on the ERD tab ends an open cell or memo editor, or a relationship being drawn, and leaves the selection as it is. Since `4.0.0` it also ends a table group name editor, writing no name, and a `New Table Group` draw. The editor calls `preventDefault()` on that press.  
 With none of those open, `Escape` clears the selection and the focused cell, and is not prevented. Leaving an edit and clearing the selection therefore takes two presses.  
 Outside the Find and Replace panel the editor never stops `Escape` from propagating, so a page that listens for it itself, to close a dialog of its own for example, hears both presses and can skip the one whose `defaultPrevented` is `true`.  
 While quick search, table properties, the diff viewer, the Auto Layout preview, or time travel is open, `Escape` closes that instead and leaves the selection as it is. That press is not prevented either.  
+Since `4.0.0` an open [`Export image`](../guide/guides/file-import-export.md#image) or [`Map Columns`](../guide/guides/relationship-editing.md#map-columns) dialog also takes `Escape`, closing itself and leaving the selection as it is. Each takes the keyboard when it opens, and that `Escape` is both prevented and stopped.  
 Since `3.10.0` an `Escape` pressed with the focus inside the Find and Replace panel closes the panel and leaves the selection as it is. The editor calls both `preventDefault()` and `stopPropagation()` on it, so it never reaches a page's bubbling `keydown` listener.  
 An `Escape` pressed on the canvas while the panel is open, with none of the above taking it, closes the panel in the same press that clears the selection. That press is neither prevented nor stopped.  
+Since `4.0.0` the Display Language picker and the color picker close the same way as the Find and Replace panel: inside them `Escape` is prevented and stopped, and on the canvas it closes them in the same press that clears the selection.  
 An `Escape` pressed while an IME is still composing belongs to the composition. It leaves an open editor as it is and is not prevented, so a page can skip a press whose `isComposing` is `true`, or whose `keyCode` is `229`, as well. Inside the Find and Replace panel such a press, like any key pressed there mid-composition, is also stopped.  
 Before `3.9.2` a single `Escape` both ended an edit or draw and cleared the selection, and the editor never prevented it.
 
 ### createKeyBindingMap
 
 Since `3.9.2` the package exports `createKeyBindingMap()`, and the `KeyBindingMap`, `KeyBindingName`, and `ShortcutOption` types with it.  
-It returns the default key bindings, all 25 names with the fixed ones included, as a new map on every call, so changing the map it returns changes nothing else.  
+It returns the default key bindings, all 26 names with the fixed ones included, as a new map on every call, so changing the map it returns changes nothing else.  
 It is what every editor starts from, and a `setKeyBindingMap` call does not show in it.  
 Only `createKeyBindingMap` is a runtime export; the other three are types.
 
@@ -333,6 +431,7 @@ type KeyBindingName =
   | 'addMemo'
   | 'removeTable'
   | 'removeColumn'
+  | 'removeSelection'
   | 'primaryKey'
   | 'selectAllTable'
   | 'selectAllColumn'
@@ -360,15 +459,18 @@ const shortcuts = Object.values(createKeyBindingMap())
   .map(({ shortcut }) => shortcut); // 'Enter', 'Escape', '$mod+KeyK', ...
 ```
 
-Each `shortcut` is a [tinykeys](https://github.com/jamiebuilds/tinykeys) chord that names its key by `KeyboardEvent.code`, where [`$mod`](#mod) is `⌘` on macOS and `Control` elsewhere.  
+Each `shortcut` is a chord in [tinykeys](https://github.com/jamiebuilds/tinykeys) syntax that names its key by `KeyboardEvent.code`, where [`$mod`](#mod) is `⌘` on macOS and `Control` elsewhere.  
+Since `4.0.0` the editor reads these chords itself rather than through tinykeys, in the same syntax. A key matches by its `code`, or by its `key` in any letter case, and a press matches only with exactly the modifiers it names held. `AltGraph` counts as `Control` and `Alt` on Windows and as `Alt` on macOS. Presses separated by a space form a sequence, which starts over after a second without a keydown.  
 The fixed names are bound to `Enter` (`edit`), `Escape` (`stop`), `$mod+KeyZ` (`undo`), `$mod+Shift+KeyZ` (`redo`), `$mod+Equal` (`zoomIn`), `$mod+Minus` (`zoomOut`), and `$mod+Digit0` (`zoomReset`). `edit` and `stop` carry no flags; the other five carry `preventDefault` and `stopPropagation`. The rest are the defaults above, `search` and `findReplace` among them.
 
 The editor listens for these on its own element, so a host that takes keys before the editor does, with global hotkeys or a capture-phase `keydown` listener, has to let them through while the editor is focused.  
 Build the list to let through from `createKeyBindingMap()`, with the bindings you passed to `setKeyBindingMap` in place of the defaults.  
-Since `3.10.0` that list includes `$mod+KeyF`, the browser's own find chord. A host that wants to keep its own find on that chord passes `setKeyBindingMap({ findReplace: [] })`.
+Since `3.10.0` that list includes `$mod+KeyF`, the browser's own find chord. A host that wants to keep its own find on that chord passes `setKeyBindingMap({ findReplace: [] })`.  
+Since `4.0.0` it also includes bare `Delete` and `Backspace`. A host that wants to keep those keys passes `setKeyBindingMap({ removeSelection: [] })`.
 
 While the focus is inside the Find and Replace panel, `findReplace`, `search`, `undo`, `redo`, `zoomIn`, `zoomOut`, and `zoomReset` pass through to the editor. Every other binding, as currently set, stops at the panel, and so do the arrow keys and `Tab`. Apart from `Escape`, which closes the panel, and `Enter` in its Find or Replace field, which moves through the matches or replaces, they are stopped without being prevented, so they act as ordinary keys in the panel's fields and buttons and reach neither the canvas nor a page's bubbling `keydown` listener.  
-Any other key, such as a host's save or command palette chord, goes on to the page as usual. See [Keys in the Panel](../guide/guides/find-and-replace.md#keys-in-the-panel).
+Any other key, such as a host's save or command palette chord, goes on to the page as usual. See [Keys in the Panel](../guide/guides/find-and-replace.md#keys-in-the-panel).  
+Since `4.0.0` the Display Language picker holds keys the same way: the same seven bindings pass through, and every other binding, the arrow keys, and `Tab` are stopped there without being prevented, as is any key pressed while an IME is still composing. `↑`, `↓`, `Home`, `End`, `Enter`, and `Space` on one of its rows move through the rows or pick one, and are prevented as well.
 
 ### $mod
 
@@ -391,6 +493,8 @@ Use `code` for absolute positions and `key` for input values.
 | `Space`       | `Space`         | N/A           | `Space`                        |
 | `Enter`       | `Return`        | `Enter`       | `Enter`                        |
 | `Esc`         | `Esc`           | `Escape`      | `Escape`                       |
+| `Backspace`   | `Delete` / `⌫`  | `Backspace`   | `Backspace`                    |
+| `Delete`      | `fn` + `Delete` | `Delete`      | `Delete`                       |
 | `1`, `2`, etc | `1`, `2`, etc   | `1`, `2`, etc | `Digit1`, `Digit2`, etc        |
 | `a`, `b`, etc | `a`, `b`, etc   | `a`, `b`, etc | `KeyA`, `KeyB`, etc            |
 | `-`           | `-`             | `-`           | `Minus`                        |
@@ -403,11 +507,12 @@ Use `code` for absolute positions and `key` for input values.
 
 Sets a preset theme.  
 The defaults are `appearance: 'dark'`, `grayColor: 'slate'`, and `accentColor: 'indigo'`.  
-Each field is applied on its own, so a partial call leaves the other two as they are. A value that is not one of the names below is ignored, and the call never throws.
+Each field is applied on its own, so a partial call leaves the other two as they are. A value that is not one of the names below is ignored, and the call never throws.  
+Since `4.0.0` `appearance` also takes `'system'`, the theme builder's `System`. It shows the light or dark the operating system reports, or the one [setSystemAppearance](#setsystemappearance) names, and switches when that changes.
 
 ```ts
 type ThemeOptions = {
-  appearance: 'dark' | 'light';
+  appearance: 'dark' | 'light' | 'system';
   grayColor: 'gray' | 'mauve' | 'slate' | 'sage' | 'olive' | 'sand';
   accentColor:
     | 'gray'
@@ -440,6 +545,18 @@ type ThemeOptions = {
 
 // example
 editor.setPresetTheme({ appearance: 'light' });
+```
+
+### setSystemAppearance
+
+Since `4.0.0`, names the light or dark that the `'system'` appearance shows, for a host with a light and dark of its own, such as an IDE theme. While one is named, the operating system's changes are ignored.  
+`null`, or any value other than `'dark'` or `'light'`, goes back to following the operating system.  
+While the appearance is `'light'` or `'dark'` it changes nothing on screen, but the value is kept and applies as soon as the appearance becomes `'system'`. Otherwise it applies at once. It emits nothing, and `changePresetTheme` keeps reporting `'system'`.  
+The VS Code, JetBrains, and Obsidian hosts call it with their own light or dark, and again whenever that changes.
+
+```js
+editor.setPresetTheme({ appearance: 'system' });
+editor.setSystemAppearance('light'); // null follows the OS again
 ```
 
 ### setTheme
@@ -488,6 +605,10 @@ type Theme = {
   tableBorder: string;
   tableShadow: string;
 
+  tableGroupHeaderBackground: string;
+  tableGroupBackground: string;
+  tableGroupBorder: string;
+
   memoBackground: string;
   memoSelect: string;
   memoBorder: string;
@@ -517,6 +638,15 @@ type Theme = {
 
   toastBackground: string;
   toastBorder: string;
+  toastSuccess: string;
+  toastError: string;
+
+  findReplaceError: string;
+
+  mapColumnsError: string;
+
+  schemaSqlWarningBackground: string;
+  schemaSqlWarningForeground: string;
 
   dragSelectBackground: string;
   dragSelectBorder: string;
@@ -553,6 +683,13 @@ editor.setTheme({
 ```
 
 `tableShadow` and `memoShadow` are the color of the shadow tables and memos cast on the ERD canvas. The dark preset leaves them `transparent`, which casts none, as passing `none` or an empty string to `setTheme` does; the light preset uses `rgba(0, 0, 0, 0.18)`.
+
+Since `4.0.0` there are nine more tokens:
+
+- `tableGroupHeaderBackground`, `tableGroupBackground`, and `tableGroupBorder` color the title bar, the body, and the outline of a [table group](../guide/guides/table-groups.md) that has no color of its own.
+- `toastSuccess` and `toastError` color the mark of a toast that reports how something ended.
+- `findReplaceError` and `mapColumnsError` color the errors Find and Replace and the Map Columns dialog show. Find and Replace used `diffDeleteForeground` before, so overriding that no longer recolors it.
+- `schemaSqlWarningBackground` and `schemaSqlWarningForeground` color the warnings in the Schema SQL tab's options.
 
 #### CSS Variables
 
@@ -603,6 +740,9 @@ Since `3.4.0` the misspelled `dargSelect` tokens are spelled `dragSelect`, and t
   --erd-editor-table-select: #435db1;
   --erd-editor-table-border: #363a3f;
   --erd-editor-table-shadow: transparent;
+  --erd-editor-table-group-header-background: #43484e;
+  --erd-editor-table-group-background: #d3edf81d;
+  --erd-editor-table-group-border: #43484e;
   --erd-editor-memo-background: #18191b;
   --erd-editor-memo-select: #435db1;
   --erd-editor-memo-border: #363a3f;
@@ -625,6 +765,12 @@ Since `3.4.0` the misspelled `dargSelect` tokens are spelled `dragSelect`, and t
   --erd-editor-minimap-viewport-border-hover: #435db1;
   --erd-editor-toast-background: #18191b;
   --erd-editor-toast-border: #363a3f;
+  --erd-editor-toast-success: #3dd68c;
+  --erd-editor-toast-error: #ff9592;
+  --erd-editor-find-replace-error: #ff9592;
+  --erd-editor-map-columns-error: #ff9592;
+  --erd-editor-schema-sql-warning-background: #500f1c;
+  --erd-editor-schema-sql-warning-foreground: #ff9592;
   --erd-editor-drag-select-background: #253974;
   --erd-editor-drag-select-border: #435db1;
   --erd-editor-scrollbar-track: #ddeaf814;
@@ -649,19 +795,110 @@ Since `3.4.0` the misspelled `dargSelect` tokens are spelled `dragSelect`, and t
 
 </details>
 
+## Display Language
+
+Since `4.0.0` the editor's own text — its menus, panels, dialogs, quick search, toasts, and the words it draws on the diagram such as `unnamed`, image exports included — comes in 25 languages. Table and column names, SQL, data types, and generated code are never translated. See [Language and Theme](../guide/guides/language-and-theme.md).  
+Before [setLocale](#setlocale) is called or a language is picked, the editor shows English, or follows `'system'` while [enableLocalePicker](#enablelocalepicker) is on.  
+The editor sets `lang` and `dir` on its own root inside the closed shadow root, never on the host element or the page, so a right-to-left page does not flip the editor and a right-to-left language does not flip the page. Hebrew, Arabic, and Persian lay the editor's interface out right to left; the diagram itself is never mirrored.  
+The package exports the types `LocaleCode` (one of the codes below) and `LocaleOption`.
+
+```ts
+type LocaleOption = LocaleCode | 'system';
+```
+
+| Code    | Shown as             | Language             |
+| ------- | -------------------- | -------------------- |
+| `id-ID` | Bahasa Indonesia     | Indonesian           |
+| `de-DE` | Deutsch              | German               |
+| `en`    | English              | English              |
+| `es-ES` | Español              | Spanish              |
+| `eu-ES` | Euskara              | Basque               |
+| `fr-FR` | Français             | French               |
+| `it-IT` | Italiano             | Italian              |
+| `nl-NL` | Nederlands           | Dutch                |
+| `pl-PL` | Polski               | Polish               |
+| `pt-PT` | Português            | Portuguese           |
+| `pt-BR` | Português Brasileiro | Brazilian Portuguese |
+| `ro-RO` | Română               | Romanian             |
+| `sk-SK` | Slovenčina           | Slovak               |
+| `sl-SI` | Slovenščina          | Slovenian            |
+| `sv-SE` | Svenska              | Swedish              |
+| `tr-TR` | Türkçe               | Turkish              |
+| `ru-RU` | Русский              | Russian              |
+| `uk-UA` | Українська           | Ukrainian            |
+| `he-IL` | עברית                | Hebrew               |
+| `ar-SA` | العربية              | Arabic               |
+| `fa-IR` | فارسی                | Persian              |
+| `ja-JP` | 日本語               | Japanese             |
+| `zh-CN` | 简体中文             | Simplified Chinese   |
+| `zh-TW` | 繁體中文             | Traditional Chinese  |
+| `ko-KR` | 한국어               | Korean               |
+
+### setLocale
+
+Sets the display language: `'system'`, or one of the codes above. Anything else, such as a bare `'ko'`, an unknown code, or a value that is not a string, is ignored without an error.  
+It applies before it returns, so a language set before the element is appended is in its first frame.  
+It emits nothing, neither `changeLocale` nor `change`, and touches none of `value`, the undo history, or a shared store.  
+The choice stays whichever way `enableLocalePicker` is turned, and `setLocale('system')` follows the system with the picker off too.  
+The editor stores nothing. To keep a reader's choice, listen for [changeLocale](#changelocale) and pass it back on the next load.
+
+```js
+editor.enableLocalePicker = true;
+editor.setLocale(localStorage.getItem('locale') ?? 'system');
+editor.addEventListener('changeLocale', event => {
+  localStorage.setItem('locale', event.detail.locale);
+});
+```
+
+### setSystemLocale
+
+Names the language `'system'` stands for, as a BCP 47 tag, for a host with a display language of its own. The VS Code, JetBrains, and Obsidian hosts call it with their own display language.  
+The tag is trimmed. `null`, a blank string, or a value that is not a string goes back to the browser's `navigator.languages`, which the editor follows as it changes.  
+It matters only while the option in force is `'system'`, and it applies at once. The picker's `System` row names the language it resolves to.  
+The tag, or each of the browser's languages in order, resolves to the first language the editor has, by its language subtag, with letter case and underscores ignored: `de-AT` gives `de-DE` and `en-GB` gives `en`. Chinese goes by its script, `Hant` giving `zh-TW` and `Hans` giving `zh-CN`, and without one by region, `TW`, `HK`, and `MO` giving `zh-TW` and any other `zh-CN`. `pt` gives `pt-BR` unless a region other than `BR` is named. When nothing matches, the editor shows English.
+
+```js
+editor.setLocale('system');
+editor.setSystemLocale('pt-PT'); // null follows the browser again
+```
+
 ## setSchemaSQL
 
 Loads a Schema SQL file.  
-It replaces the current document rather than merging into it. The settings you already have are kept, the save switches included, apart from the view position and the zoom level, and the tables are placed automatically once the file is read. Since `3.10.0` a document imported into an element never given a value therefore saves neither the scroll position nor the zoom level, as a new document does.  
+By default it replaces the current document rather than merging into it; see `mode` below. The settings you already have are kept, each lock and its locked value included, apart from the view position and the zoom level, and the tables are placed once the file is read, in rows unless `placement` below asks otherwise. With `Viewport` locked, `value` then writes the view the import starts on, origin `0, 0` at zoom level `1`. A document imported into an element never given a value therefore has every lock on, as a new document does.  
 It is recorded in the history list, enabling `Undo, Redo`, and it emits `change`. An empty string is ignored, and the call does nothing while `readonly` is set.  
 `setSchemaGraphQL`, `setSchemaDBML`, and `setSchemaAML` behave the same way, and their parsers never fail: text they cannot read loads an empty document rather than raising an error.  
+Since `4.0.0` all four take an optional second argument, `{ placement, mode }`:
+
+- `placement: 'grid'`, the default, lands the tables in rows at once, as before, and the call returns nothing.
+- `placement: 'auto'` first lays the tables out by their relationships, as `Import` in the editor does, and returns a `Promise` that resolves once the import has landed as one undo step. Fewer than two tables, no relationship, a layout that fails, a page without `SharedWorker`, or `Cancel` on the `Placing tables` toast lands them in rows instead. A load in the meantime — another replacing import, assigning `value`, `setInitialValue()`, `clear()`, a collaborator's load, or an undo or redo of a load or of `clear()` — supersedes it, and the `Promise` resolves with nothing loaded. Imports placed this way land in the order they started.
+- `mode: 'replace'`, the default, replaces the document. `mode: 'append'` adds the file below the diagram as [Import and Add](../guide/guides/file-import-export.md#import-and-add) does, leaving every table already there as it is, and every setting apart from the tab and the view position. From another tab the ERD tab comes up first. The new tables, and the table groups a DBML file brings while table groups are shown, become the selection, and the view scrolls to show them. One undo removes the whole addition. Text it cannot read adds nothing and leaves the document as it is.
+
+While `readonly` is set, a replace is ignored, an append adds nothing, and a `placement: 'auto'` call resolves at once.  
 Since `3.10.0`, `setSchemaSQL` reads the file for the document's current database: with Databricks selected, single-quoted strings follow Spark's backslash escapes. See [Comments](../guide/guides/file-import-export.md#comments).  
 Since `3.10.0`, `setSchemaSQL` reads a `UNIQUE` over two or more columns as one unique index rather than a Unique flag on each column. See [Unique Keys and Indexes](../guide/guides/file-import-export.md#unique-keys-and-indexes).  
 Since `3.10.0` SQL, DBML, and AML imports keep the `ON DELETE` and `ON UPDATE` actions of the foreign keys they read.  
+Since `4.0.0`, `setSchemaSQL` keeps a column's whole `DEFAULT` expression, reads SQL Server's `ADD DEFAULT … FOR` and its `MS_Description` comments, turns PostgreSQL serial and identity columns into Auto Increment, keeps `UNSIGNED` and `ZEROFILL` in a data type, and reads a primary key that `ALTER TABLE … ADD PRIMARY KEY` marks `CLUSTERED`, `NONCLUSTERED`, or `USING BTREE`. See [Schema SQL](../guide/guides/file-import-export.md#schema-sql).  
 See [Importing or Exporting Files](../guide/guides/file-import-export.md) for the syntax each parser accepts.
 
-```js
+```ts
+type SetSchema = {
+  (
+    value: string,
+    options: { placement: 'auto'; mode?: 'replace' | 'append' }
+  ): Promise<void>;
+  (
+    value: string,
+    options?: { placement?: 'grid'; mode?: 'replace' | 'append' }
+  ): void;
+};
+
+// example
 editor.setSchemaSQL('Schema SQL...');
+// or
+await editor.setSchemaSQL('Schema SQL...', { placement: 'auto' });
+// or
+editor.setSchemaSQL('Schema SQL...', { mode: 'append' });
 ```
 
 ## setSchemaGraphQL
@@ -675,7 +912,8 @@ editor.setSchemaGraphQL('GraphQL SDL...');
 
 ## setSchemaDBML
 
-Loads a DBML file, the format used by dbdiagram.io and dbdocs.
+Loads a DBML file, the format used by dbdiagram.io and dbdocs.  
+Since `4.0.0` each `TableGroup` becomes a [table group](../guide/guides/table-groups.md), and a table's `headercolor` becomes its color. See [DBML](../guide/guides/file-import-export.md#dbml).
 
 ```js
 editor.setSchemaDBML('DBML...');
@@ -683,18 +921,41 @@ editor.setSchemaDBML('DBML...');
 
 ## setSchemaAML
 
-Loads an AML (Azimutt Markup Language) file. Both the current spelling and the legacy v1 one are accepted.
+Loads an AML (Azimutt Markup Language) file. Both the current spelling and the legacy v1 one are accepted.  
+Since `4.0.0` an entity's color, one of Azimutt's color names or a quoted hex value, becomes its table's color. See [AML](../guide/guides/file-import-export.md#aml).
 
 ```js
 editor.setSchemaAML('AML...');
+```
+
+## setSchemaJSON
+
+Since `4.0.0`, loads an `.erd.json` document, such as the text [value](#value) returns.  
+In its default `mode: 'replace'` it loads the document as assigning `value` does: it is recorded in the history list, emits `change`, and takes the document's locks the same way. Unlike `value`, an empty string or a value that is not a string is ignored rather than starting a new document. Text that is not JSON empties the document, as it does with `value`.  
+`mode: 'append'` adds the document's tables, relationships, indexes, memos, and table groups below the diagram under new ids, keeping their places relative to each other and leaving out the document's settings, as [Import and Add](../guide/guides/file-import-export.md#import-and-add) does with a `json` file. Text it cannot read, or a document with no table and no memo, adds nothing. Otherwise it lands as a [setSchemaSQL](#setschemasql) append does, its new memos and table groups selected with its tables, each kind while it is shown.  
+It returns once the document has landed, and it is ignored while `readonly` is set.
+
+```js
+editor.setSchemaJSON('json...');
+// or
+editor.setSchemaJSON('json...', { mode: 'append' });
 ```
 
 ## getSchemaSQL
 
 Exports the current editor state as Schema SQL.  
 If `databaseVendor` is not specified, it operates based on the currently set vendor. A name that is not in the list below is treated the same way, without raising an error.  
-Since `3.10.0` each foreign key carries the relationship's `ON DELETE` and `ON UPDATE` clauses. A clause is written only when its action is set and the vendor accepts it, so an action that vendor does not take is left out and its default applies. See [ON DELETE and ON UPDATE](../guide/guides/relationship-editing.md#on-delete-and-on-update) for what each database writes.  
-Since `3.10.0` a single quote inside a table or column comment is escaped, so a comment such as `it's` no longer breaks the statement. Every vendor that writes comments as string literals doubles it, except Databricks, which puts a backslash before each quote and each backslash. SQLite still writes comments as `--` lines.
+Names are quoted with the bracket type the editor shows. While `Bracket Type` is [locked](../guide/guides/settings.md#lock), that can differ from the one `value` saves, which is the one a coding agent's [`erd_read`](../mcp/tools.md#reading-a-document) quotes with.  
+Since `4.0.0` an optional `options` argument chooses the statements and the header, as the options of the [Schema SQL](../guide/guides/schema-sql.md) tab do. `SchemaSQLOptions` is exported as a type.
+
+- `statements`: `'create'`, the default; `'ifNotExists'`, which writes `IF NOT EXISTS` on MySQL, MariaDB, PostgreSQL, SQLite, and Databricks and falls back to `'create'` elsewhere; or `'recreate'`, which drops the tables before creating them, Snowflake writing `CREATE OR REPLACE TABLE` instead.
+- `header`: `'none'`, the default; `'use'`, which switches to the document's database or schema; or `'createAndUse'`, which first creates it if it does not exist and then switches to it. A database that lacks the one asked for falls back as the tab does: Oracle writes `'use'` for `'createAndUse'`, PostgreSQL writes no header for `'use'`, and SQLite writes none. A header is written only while the document's database name is a plain identifier — ASCII letters, digits, and `_`, not starting with a digit.
+
+An option left out, or one with an unknown value, reads as its default, so a call without options writes plain `CREATE` statements with no header, as before.  
+Since `4.0.0` the output always includes the document's `Before tables` and `After tables` scripts, in the order header, before script, drop statements, tables, after script. The Schema SQL tab's own `Statements`, `Header`, and `Tables` choices never affect this call, which always writes the whole document.  
+Since `3.10.0` each foreign key carries the relationship's `ON DELETE` and `ON UPDATE` clauses. A clause is written only when its action is set and the vendor accepts it, so an action that vendor does not take is left out and its default applies. Since `4.0.0` Snowflake accepts only `NO ACTION`. See [ON DELETE and ON UPDATE](../guide/guides/relationship-editing.md#on-delete-and-on-update) for what each database writes.  
+Since `3.10.0` a single quote inside a table or column comment is escaped, so a comment such as `it's` no longer breaks the statement. Every vendor that writes comments as string literals doubles it, except Databricks, which puts a backslash before each quote and each backslash. SQLite still writes comments as `--` lines.  
+Since `4.0.0` several databases also write key names, defaults, and auto increment differently. See [What the DDL Writes](../guide/guides/schema-sql.md#what-the-ddl-writes).
 
 ```ts
 type DatabaseVendor =
@@ -707,9 +968,19 @@ type DatabaseVendor =
   | 'Snowflake'
   | 'SQLite';
 
+type SchemaSQLOptions = {
+  statements?: 'create' | 'ifNotExists' | 'recreate';
+  header?: 'none' | 'use' | 'createAndUse';
+};
+
 const schemaSQL = editor.getSchemaSQL();
 // or
 const postgresSQL = editor.getSchemaSQL('PostgreSQL');
+// or
+const mysqlSQL = editor.getSchemaSQL('MySQL', {
+  statements: 'ifNotExists',
+  header: 'createAndUse',
+});
 ```
 
 ## getSharedStore

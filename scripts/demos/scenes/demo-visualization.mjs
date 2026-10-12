@@ -48,19 +48,22 @@ const ORDER = [
 ];
 
 // The ERD tab the clip opens on, at 80%: two tidy rows in view with the
-// minimap over empty canvas, and the rest of the tables out of frame.
+// minimap over empty canvas, and the rest of the tables out of frame. Schema
+// SQL import keeps sakila's UNSIGNED in the data types, so the tables run
+// about 310 wide: three fit side by side only below the minimap, and the top
+// row keeps two.
 const ERD = {
   customer: { x: 24, y: 24 },
-  rental: { x: 324, y: 24 },
-  inventory: { x: 612, y: 24 },
+  rental: { x: 370, y: 24 },
   address: { x: 24, y: 330 },
-  store: { x: 324, y: 330 },
-  city: { x: 640, y: 330 },
-  staff: { x: 324, y: 660 },
+  store: { x: 370, y: 330 },
+  inventory: { x: 744, y: 330 },
+  city: { x: 24, y: 620 },
+  country: { x: 24, y: 820 },
+  staff: { x: 370, y: 660 },
   film: { x: 1140, y: 24 },
-  country: { x: 1140, y: 440 },
-  film_category: { x: 1460, y: 24 },
-  category: { x: 1460, y: 220 },
+  film_category: { x: 1140, y: 440 },
+  category: { x: 1500, y: 440 },
 };
 
 // Eight notches of 50px each way: out to 45%, where no name shows, and back

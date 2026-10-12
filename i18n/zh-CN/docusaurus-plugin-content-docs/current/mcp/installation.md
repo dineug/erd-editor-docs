@@ -43,14 +43,11 @@ args = ["-y", "@dineug/erd-editor-mcp"]
 
 VS Code 窗口会为其工作区文件夹中的图，以及在其中打开的任何图提供服务。
 
-1. 安装 `3.0.0` 或更高版本的 [ERD Editor 扩展](https://marketplace.visualstudio.com/items?itemName=dineug.vuerd-vscode)。它需要 VS Code `1.101.0` 或更高版本。
+1. 安装 `4.0.0` 或更高版本的 [ERD Editor 扩展](https://marketplace.visualstudio.com/items?itemName=dineug.vuerd-vscode)。它需要 VS Code `1.101.0` 或更高版本。
 2. 打开项目文件夹并信任该工作区。扩展只在受信任的工作区中为智能体提供服务。
 3. 保持 `dineug.erd-editor.agentHub.enabled` 设置开启。该设置默认开启。
 
-推荐使用 `3.1.0` 或更高版本。
-更早版本的扩展会忽略智能体设置的 ON DELETE 与 ON UPDATE 操作，参见[更新](#更新)。
-在通过符号链接、目录联接（junction）或映射驱动器打开的文件夹中，`3.0.0` 可能会为智能体再打开某个图的第二个标签页，而在该标签页中保存可能会撤回智能体的编辑。
-在 Windows 上，`3.0.0` 可能会让智能体绕过打开的编辑器去编辑磁盘上的文件：在以管理员身份运行的窗口中，以及偶尔在你刚刚打开的图中。
+`3.0.0` 至 `3.1.0` 版本的扩展与服务器 `1.0.0` 会互相拒绝，而 `3.0.0` 之前的扩展不为任何智能体提供服务，参见[更新](#更新)。
 
 扩展会在包含 `.erd`、`.erd.json`、`.vuerd` 或 `.vuerd.json` 文件的工作区中启动，因此在你打开任何一个图之前，智能体就能访问这些图。
 在不包含这些文件的工作区中，扩展会在你打开图时启动，在此之前智能体会编辑磁盘上的文件。
@@ -63,11 +60,10 @@ VS Code 窗口会为其工作区文件夹中的图，以及在其中打开的任
 
 Obsidian 仓库窗口会为其仓库中的图提供服务。
 
-1. 从 Community plugins 安装 `0.1.0` 或更高版本的 [ERD Editor 插件](https://community.obsidian.md/plugins/erd-editor)，并将其开启。它只在桌面应用中运行，并且需要 Obsidian `1.5.7` 或更高版本。
+1. 从 Community plugins 安装 `1.0.0` 或更高版本的 [ERD Editor 插件](https://community.obsidian.md/plugins/erd-editor)，并将其开启。它只在桌面应用中运行，并且需要 Obsidian `1.5.7` 或更高版本。
 2. 保持 Settings → ERD Editor → Coding agents 开启。该设置默认开启，并且每个仓库各自保存自己的设置。
 
-推荐使用 `0.2.0` 或更高版本。
-更早版本的插件会忽略智能体设置的 ON DELETE 与 ON UPDATE 操作，参见[更新](#更新)。
+更早版本的插件与服务器 `1.0.0` 会互相拒绝，参见[更新](#更新)。
 
 仓库窗口从插件加载的那一刻起就为智能体提供服务，因此在你打开任何一个图之前，智能体就能访问该仓库的图。
 没有信任这一步骤。
@@ -89,13 +85,11 @@ Obsidian 会像在其外部发生任何变更之后那样重新加载该图，�
 
 JetBrains IDE 会为在其中打开的每个项目中的图，以及在其 ERD Editor 中打开的任何图提供服务。
 
-1. 安装 `0.9.0` 或更高版本的 [ERD Editor 插件](https://plugins.jetbrains.com/plugin/23594-erd-editor)。它需要运行在 JetBrains Runtime 上的 `2025.2` 或更高版本的基于 IntelliJ 的 IDE。
+1. 安装 `1.0.0` 或更高版本的 [ERD Editor 插件](https://plugins.jetbrains.com/plugin/23594-erd-editor)。它需要运行在 JetBrains Runtime 上的 `2025.2` 或更高版本的基于 IntelliJ 的 IDE。
 2. 打开项目并信任它。在 IDE 不信任的项目中（例如以安全模式打开的项目），智能体可以读取图，但绝不会修改它们。
 3. 保持 Settings | Tools | ERD Editor → Coding agents 处于勾选状态。该设置默认开启，并作用于整个 IDE。
 
-推荐使用 `0.10.0` 或更高版本。
-更早版本的插件会忽略智能体设置的 ON DELETE 与 ON UPDATE 操作，参见[更新](#更新)。
-此外，当智能体要求保存一个没有任何未保存内容的图时，`0.9.0` 可能会再次写入该文件，从而丢掉文件开头的字节顺序标记，参见[保存](./live-and-headless.md#saving)。
+`0.9.0` 或 `0.10.0` 版本的插件与服务器 `1.0.0` 会互相拒绝，而 `0.9.0` 之前的插件不为任何智能体提供服务，参见[更新](#更新)。
 
 IDE 从第一个项目打开的那一刻起就为智能体提供服务，因此在你打开任何一个图之前，智能体就能访问项目中的图。
 
@@ -119,13 +113,24 @@ ERD Editor 在打开某个图期间不会重新加载在磁盘上发生变化的
 ## 更新
 
 上面的命令都没有指定版本，因此智能体每次启动服务器时，`npx` 都会到 npm 检查是否有更新的发布版本。
+已在运行的服务器会保持其发布版本，直到智能体再次启动它。
 
 服务器在连接之前会检查编辑器所用的协议版本。
-两者不一致时，调用会以 `protocolMismatch` 被拒绝，并附带一条指出需要更新哪一方的消息：服务器，或者编辑器中的 ERD Editor，即 VS Code 中的扩展，以及 Obsidian 和 JetBrains IDE 中的插件。
+两者不一致时，到达该编辑器的每次调用都会以 `protocolMismatch` 被拒绝，读取和 `erd_list_documents` 也不例外，并且不会写入任何内容。
+消息会指出需要更新哪一方：服务器，或者编辑器中的 ERD Editor，即 VS Code 中的扩展，以及 Obsidian 和 JetBrains IDE 中的插件。
 
-服务器 `0.2.0` 与在它之前发布的扩展和插件使用相同的协议，因此较旧的编辑器也能连接，不会出现 `protocolMismatch`。
-`3.1.0` 之前的 VS Code 扩展、`0.2.0` 之前的 Obsidian 插件以及 `0.10.0` 之前的 JetBrains 插件会忽略智能体设置的 ON DELETE 与 ON UPDATE 操作，无论是通过[关系工具](./tools.md#关系)设置的，还是在它导入的 schema 中设置的。
-调用会报告成功，但图和编辑器保存的文件中都不会包含这些操作。
-这类编辑器在打开文件时还会丢掉文件中已有的这些操作，因此它下一次保存时写入的文件中便不再包含它们。
-请同时更新扩展或插件，而不只是更新服务器。
+服务器 `1.0.0`、VS Code 扩展 `4.0.0`、Obsidian 插件 `1.0.0` 以及 JetBrains 插件 `1.0.0` 使用协议 2。
+所有更早的服务器都使用协议 1，为智能体提供服务的所有更早的编辑器发布版本也是如此：VS Code 扩展 `3.0.0` 至 `3.1.0`、Obsidian 插件 `0.1.0` 和 `0.2.0`，以及 JetBrains 插件 `0.9.0` 和 `0.10.0`。
+这类编辑器与服务器 `1.0.0` 会互相拒绝，更早的服务器与使用协议 2 的编辑器同样会互相拒绝。
+`3.0.0` 之前的 VS Code 扩展或 `0.9.0` 之前的 JetBrains 插件完全不为智能体提供服务，因此智能体会编辑磁盘上的文件，即使是在其中打开的图也一样。
+
+| 组合 | 消息的结尾 |
+| --- | --- |
+| 服务器 `1.0.0` 搭配使用协议 1 的扩展或插件 | `Update the ERD Editor extension or plugin in the editor until its hub speaks protocol 2.` |
+| 更早的服务器搭配使用协议 2 的扩展或插件 | `Update the MCP server (npx -y @dineug/erd-editor-mcp@latest) until it speaks protocol 2.` |
+
+请将服务器与扩展或插件一起更新。
+此外，请在所有打开这些图的地方都更新 ERD Editor。
+对于当前版本保存的图，无论是在编辑器中保存的，还是作为智能体在磁盘上的编辑写入的，较早的版本显示时都不带主键图标，并且在保存该文件时会丢掉其中的表分组和 Schema SQL 脚本。
+`3.1.0` 之前的 VS Code 扩展、`0.2.0` 之前的 Obsidian 插件以及 `0.10.0` 之前的 JetBrains 插件在保存文件时还会丢掉图中的 ON DELETE 与 ON UPDATE 操作。
 在 Obsidian 中，更新插件后请重启应用：在此之前，仓库窗口会继续运行它最先加载的那个插件版本中的 ERD Editor。

@@ -15,6 +15,7 @@ description: MCP 服务器如何在编辑器（VS Code、Obsidian 或 JetBrains 
 | 某个编辑器的工作区、仓库或已打开的项目包含该文档，或者该编辑器已打开该文档 | **实时模式。** 必要时在 ERD Editor 中打开文档，加入编辑会话，并在那里应用变更。编辑会立即显示，并像编辑器保存你自己的编辑那样被保存，参见[保存](#saving)。 |
 | 没有编辑器 | **无头模式。** 加载文件、应用变更，然后替换该文件。`erd_save` 无事可做。 |
 | hub 已关闭的编辑器 | **拒绝编辑。** 读取仍然有效，从磁盘读取。在打开的编辑器底下写入文件的变更可能会在其下次保存时被覆盖，因此服务器不写入任何内容。 |
+| hub 已开启、但所用协议与服务器不同的编辑器：对于服务器 `1.0.0`，即 VS Code 扩展 `3.x`、Obsidian 插件 `0.x`，或者 JetBrains 插件 `0.9.0` 或 `0.10.0`；对于 `1.0.0` 之前的服务器，即扩展 `4.0.0` 或更高版本，或者插件 `1.0.0` 或更高版本 | **拒绝编辑**，读取也不例外，以 `protocolMismatch` 被拒绝。消息会指出需要更新的一方：扩展或插件，或者服务器，参见[更新](./installation.md#更新)。 |
 | 在 Windows 上，以同一文件的另一条路径持有该文档的编辑器：智能体通过本机的网络共享或映射驱动器指定该文档（例如 `\\localhost\C$\…`），而编辑器以其驱动器路径持有它，或者反过来 | **拒绝编辑**，读取也不例外，以 `invalidPath` 被拒绝。消息会指出编辑器持有该文档所用的路径；请用该路径再次调用。 |
 | 在 Windows 上，Windows 不允许智能体访问的编辑器：智能体未以管理员身份运行时以管理员身份启动的编辑器，或者智能体在沙箱中运行时的任何编辑器 | **拒绝编辑**，读取也不例外，以 `hubUnreachable` 被拒绝，并附带一条说明原因的消息。请以相同的权限运行编辑器和智能体，例如不使用管理员权限重新启动编辑器。 |
 
@@ -50,10 +51,8 @@ JetBrains IDE 会在编辑停止后不到一秒写入它们，关闭标签页时
 当编辑器无法确认这一点，或者没有写入文件时，它会以 `notSaved` 被拒绝：VS Code 会在文件于磁盘上发生变化时让标签页保持未保存状态，而 JetBrains IDE 未能写入文件，例如在有对话框打开期间，或者文件无法写入时。
 
 在 VS Code 和 JetBrains IDE 中，对没有任何待保存内容的文档调用 `erd_save` 会成功，并让文件保持原样。
-这种情况包括：每次编辑都已保存时（JetBrains IDE 会自行做到这一点），以及在那之后你只进行了滚动或缩放、并且 `Save Scroll Information` 和 `Save Zoom Information` 都已关闭时。
+每次编辑都已保存时（JetBrains IDE 会自行做到这一点）就属于这种情况；只要此后的每次变更都是被[锁定](../guide/guides/settings.md#锁定)挡在文件之外的变更，例如在 `Viewport` 锁定时滚动或缩放，或者在 `Canvas Type` 锁定时切换标签页，情况就一直如此。所有锁定默认都处于开启状态。
 即便如此，JetBrains IDE 无法写入的文件仍会被拒绝。
-`3.1.0` 之前的 VS Code 扩展会在这样的滚动或缩放后把标签页标记为已修改，因此 `erd_save` 会写入文件。
-`0.10.0` 之前的 JetBrains 插件在 IDE 自打开文件以来尚未写入过它时，会在 `erd_save` 时重新写入该文件，从而丢掉文件开头的字节顺序标记。
 
 当编辑器在智能体最后一次编辑之后关闭了该文档时，智能体的下一次调用会附带一条说明：只有在编辑器关闭之前已经保存，这些编辑才会存在于文件中。
 
@@ -62,10 +61,11 @@ JetBrains IDE 会在编辑停止后不到一秒写入它们，关闭标签页时
 `erd_undo` 会撤回智能体所做的最后一次编辑，而绝不会撤回你的编辑，`erd_redo` 则会重新应用它。
 编辑器自身的 [Undo](../guide/guides/undo-redo.md) 恰好相反：它撤回你的编辑，而绝不会撤回智能体的编辑，因为从其他编辑器到达的变更不会记录在你的历史记录中。
 
-有几种编辑不会在编辑器中产生 Undo 记录：除 `erd_set_show` 以外的[设置工具](./tools.md#settings)，以及 `erd_resize_memo`。
-`erd_set_column_primary_key`、`erd_set_column_unique`、`erd_set_column_not_null`、`erd_set_column_auto_increment`、`erd_set_index_unique`、`erd_set_index_column_order` 和 `erd_set_show` 在所设置的值与文档已有的值相同时，同样不会产生 Undo 记录；`erd_add_index_column` 添加索引中已有的列时也是如此：这样的调用不会改变任何内容。
+有几种编辑不会在编辑器中产生 Undo 记录：[设置工具](./tools.md#settings)中的 `erd_set_database` 和 `erd_set_database_name`，以及 `erd_resize_memo`。
+将分组移动总计不足 20 像素（横向与纵向的距离相加）的 `erd_move_table_group` 也不会产生 Undo 记录，不过分组会停留在移动后的位置。
+不改变任何内容的调用同样不会产生 Undo 记录：`erd_set_column_primary_key`、`erd_set_column_unique`、`erd_set_column_not_null`、`erd_set_column_auto_increment`、`erd_set_index_unique` 或 `erd_set_index_column_order` 所设置的值与文档已有的值相同；`erd_add_index_column` 添加索引中已有的列；`erd_set_table_group` 指定的表已在该分组中（或者 `groupId` 为 `null` 时，表已不在任何分组中）；`erd_move_table_group` 移动到分组已在的位置；`erd_resize_table_group` 设置的矩形与分组已有的矩形相同；在没有任何表的文档上调用 `erd_sort_tables`；或者 `mode` 为 `append`、却没有带来任何表的导入（对于 `erd_import_json`，则是既没有带来表，也没有带来备注）。
 `erd_undo` 会跳过这些编辑，并在结果中列出它们。
-其他编辑，例如 `erd_change_relationship_type`、`erd_change_relationship_on_delete` 和 `erd_change_relationship_on_update`，即使所设置的值与文档已有的值相同，也会产生 Undo 记录。
+其他编辑，例如 `erd_change_relationship_type`、`erd_change_relationship_on_delete`、`erd_change_relationship_on_update`、`erd_change_table_group_name`、`erd_change_table_group_color` 和 `erd_set_ddl_script`，即使所设置的值与文档已有的值相同，也会产生 Undo 记录。
 
 出现以下情况时，智能体的 Undo 历史记录会结束，并在结果中附带一条说明：
 
@@ -124,12 +124,13 @@ JetBrains IDE 还会以 `hubDisabled` 拒绝修改仅由其不信任的项目持
 
 不保留锁文件的编辑器不提供任何保护，即使图在那里处于打开状态，智能体也会编辑磁盘上的文件。
 在 Linux 上以 Flatpak 形式安装的 Obsidian 或 JetBrains IDE、没有 JCEF 的 JetBrains IDE，以及 hub 无法启动的 JetBrains IDE 都属于这种情况，参见[配置 Obsidian](./installation.md#set-up-obsidian) 和[配置 JetBrains IDE](./installation.md#set-up-a-jetbrains-ide)。
+`3.0.0` 之前的 VS Code 扩展和 `0.9.0` 之前的 JetBrains 插件同样不保留锁文件，因为它们没有 hub。
 
 ## 文档
 
 文档由 `path` 指定，可以是绝对路径，也可以是相对于服务器工作目录的路径。
 
-- 新文档为 `.erd.json`。带 `create` 的 `erd_open_document` 会创建文件，并为没有扩展名的名称加上 `.erd.json`。与编辑器中新建的图一样，新文档既不保存视图位置，也不保存缩放级别：[`Save Scroll Information`](../guide/guides/settings.md#保存滚动信息) 和 [`Save Zoom Information`](../guide/guides/settings.md#保存缩放信息) 一开始处于关闭状态，因此在编辑器中滚动或缩放它永远不会改动文件。以 `saveSettingType` 为 `scroll` 或 `zoomLevel`、`value` 为 `false` 调用 `erd_set_ignore_save_settings`，即可开启对应的开关。
+- 新文档为 `.erd.json`。带 `create` 的 `erd_open_document` 会创建文件，并为没有扩展名的名称加上 `.erd.json`。与编辑器中新建的图一样，新文档的所有[锁定](../guide/guides/settings.md#锁定)都处于开启状态，因此在编辑器中滚动、缩放、切换标签页，或者选择其他 Code Generator 语言、名称大小写或括号类型，永远不会改动文件。没有任何工具能单独开启或关闭某个锁定：这需要你在编辑器的 Settings 标签页中进行。以 `replace` 模式调用的 `erd_import_json` 会把所有锁定替换为它所加载的文档中的锁定，参见[导入](./tools.md#导入)。
 - 已有的 `.erd`、`.vuerd` 和 `.vuerd.json` 文件同样可以打开。其他扩展名的路径会以 `invalidPath` 被拒绝。
 - 在 Windows 上，包含 Windows 无法按原样存储的名称的路径，会在读取或写入文档之前以 `invalidPath` 被拒绝，读取也不例外：包含冒号或其他 Windows 拒绝的字符的名称，例如 `orders:v2.erd`；设备名称，例如 `NUL.erd` 或 `CON.erd`，不区分大小写；或者以点或空格结尾的名称。请重命名，例如用 `-` 代替 `:`。
 - 编辑器无法读取的文件，例如残留合并冲突标记的文件，会以 `invalidDocument` 被拒绝并保持原样。它绝不会被当作空图加载后再写回。

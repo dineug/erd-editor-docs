@@ -43,6 +43,12 @@ function moveOnPress(d) {
 }
 
 /**
+ * How long the pointer rests on the table a draw is about to end on: the
+ * outline and the Map / New buttons appear beside it as it arrives.
+ */
+const PILL_HOLD = 450;
+
+/**
  * A two-event flick straight to `to`. The one event in between lands halfway,
  * so both ends and the midpoint are picked clear of rows and connectors.
  */
@@ -55,12 +61,17 @@ function flick(d, to) {
  * relationship into the empty product_tags table, which ends up holding a
  * foreign key to both sides.
  *
- * The mapping table sits on the left so its right end, past the comment and
- * below the + and x buttons, faces both parents: each preview reaches it
- * without crossing any header text. products is on top and tags level with
+ * The mapping table sits on the left so its right end, short of the + and x
+ * buttons, faces both parents: each preview reaches it from below without
+ * crossing any header text or button. products is on top and tags level with
  * product_tags, so product_id (the first column) takes the upper connector
  * and tag_id the lower one, and tags lines up with that lower anchor for a
  * straight connector.
+ *
+ * Over product_tags each draw outlines it and shows the Map / New buttons on
+ * its right, the side the pointer comes in from: there is no room on its left.
+ * The pointer reaches the table before they appear, so it never hovers them,
+ * and presses the table itself, which adds new columns as the + button would.
  */
 export default {
   name: 'demo-relationship-n-m',
@@ -97,23 +108,30 @@ export default {
     await curveTo(d, { x: products.x - 30, y: products.y + products.height + 40 }, productsAt, 850);
     await d.click(productsAt.x, productsAt.y);
 
-    // Into the right end of the empty table, in from the right: its header is
-    // all there is of it, and the header buttons keep the last 36px.
+    // Into the right end of the empty table, its header all there is of it,
+    // short of the + and x buttons in its last 36px. Up from below, so the
+    // pointer never crosses those buttons, which would flash a hand cursor.
     let mapping = await d.tableBox('product_tags');
     const firstAt = { x: mapping.x + mapping.width - 44, y: mapping.y + mapping.height / 2 };
-    await glideTo(d, firstAt, 950, [
-      { x: productsAt.x - 110, y: productsAt.y + 70 },
-      { x: firstAt.x + 60, y: firstAt.y + 4 },
+    // Down past the table's right end first, then under it and up, so the
+    // way in passes neither its buttons nor tags.
+    await glideTo(d, firstAt, 1000, [
+      { x: productsAt.x - 40, y: firstAt.y + 90 },
+      { x: firstAt.x - 6, y: firstAt.y + 80 },
     ]);
+    // The table under the pointer gets its outline and the Map / New buttons
+    // beside it; a moment on it lets them read before the press draws to it.
+    await d.sleep(PILL_HOLD);
+    await d.shot('first-target');
     await d.click(firstAt.x, firstAt.y);
     await d.shot('first');
 
     // Out below the new connector's end, clear of it and of the new row:
-    // halfway lands just past the table's right border, under the crow's foot.
+    // halfway lands 8px past the table's right border, under the crow's foot.
     await d.sleep(60);
     mapping = await d.tableBox('product_tags');
     const right = mapping.x + mapping.width;
-    await flick(d, { x: right + 27, y: mapping.y + 80 });
+    await flick(d, { x: right + 60, y: mapping.y + 80 });
     await glideTo(d, { x: 340, y: 432 }, 750);
     await d.sleep(450);
 
@@ -125,25 +143,28 @@ export default {
     await curveTo(d, { x: tags.x - 40, y: tags.y + tags.height + 10 }, tagsAt, 650);
     await d.click(tagsAt.x, tagsAt.y);
 
-    // Onto product_id, at the right end, short of the row's remove button.
+    // Onto product_id, at the right end, short of the row's remove button,
+    // again up from below.
     const productId = await d.columnBox('product_tags', 'product_id');
     const secondAt = { x: right - 44, y: productId.y + productId.height / 2 };
     await glideTo(d, secondAt, 950, [
       { x: tagsAt.x - 90, y: tagsAt.y + 10 },
-      { x: secondAt.x + 70, y: secondAt.y + 8 },
+      { x: secondAt.x - 6, y: secondAt.y + 60 },
     ]);
+    await d.sleep(PILL_HOLD);
+    await d.shot('second-target');
     await d.click(secondAt.x, secondAt.y);
     await d.shot('second');
 
-    // Out between the two connectors: halfway is already past the border.
+    // Straight down out of the table: halfway is already below its border,
+    // so the tag_id row and the new connector beside it are never hovered.
+    // Then along under tags, clear of it, to the lower right.
     await d.sleep(60);
-    await flick(d, { x: right + 17, y: mapping.y + 59 });
-    // Up through the middle of the gap between products and tags, well clear
-    // of both, and down past the right side of tags.
-    await glideTo(d, { x: 810, y: 450 }, 1100, [
-      { x: 390, y: 220 },
-      { x: 900, y: 190 },
-    ]);
+    await d.whenDrawn();
+    mapping = await d.tableBox('product_tags');
+    const below = mapping.y + mapping.height;
+    await flick(d, { x: secondAt.x - 8, y: 2 * (below + 8) - secondAt.y });
+    await glideTo(d, { x: 810, y: 450 }, 1100);
     await d.sleep(1400);
   },
 };

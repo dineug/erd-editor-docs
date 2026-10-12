@@ -1,53 +1,26 @@
 ---
-sidebar_position: 11
-description: 관계 데이터 타입 동기화, 화면 위치와 확대/축소 정보 저장, 코멘트 최대 너비, 테이블 너비 재계산, 컬럼 순서와 단축키 목록.
+sidebar_position: 13
+description: 관계 데이터 타입 동기화, 코멘트 최대 너비, 테이블 너비 재계산, 설정 잠금(화면, 탭, 코드 설정), 컬럼 순서와 단축키 목록.
 ---
 
 # 설정
 
 툴바의 `Settings` 버튼으로 열거나, [빠른 검색](./quick-search.md)의 `Tab`에서 열 수 있습니다.
-설정 화면은 `Preferences`와 `Shortcuts` 2개의 탭으로 구성되며, `Preferences`가 먼저 열립니다.
+설정 화면은 `Preferences`와 `Shortcuts` 2개의 탭으로 구성되며, `Preferences`가 먼저 열립니다. 단, [시작 화면](./editing-start.md#시작-화면)의 `Shortcuts` 행에서 열면 `Shortcuts`가 열립니다.
 
-테마 색상은 이 화면에 없습니다.
-테마 색상은 테마 빌더에서 다루며, 툴바의 `Theme` 버튼으로 열리고 호스트가 [`enableThemeBuilder`](../../api/erd-editor-element.md#enablethemebuilder)로 켠 경우에만 표시됩니다.
-
-VS Code, Obsidian, JetBrains IDE에서는 빌더의 세 가지 값(appearance, gray color, accent color)이 호스트의 설정이기도 하며, 빌더에서 고른 값이 그 설정에 저장됩니다.
-VS Code는 이 값들을 `dineug.erd-editor.theme.appearance`, `dineug.erd-editor.theme.grayColor`, `dineug.erd-editor.theme.accentColor`로 저장하며, 기본 appearance는 `dark`입니다.
-Obsidian은 Settings → ERD Editor에 볼트별로 저장하고, JetBrains IDE는 Settings | Tools | ERD Editor에 IDE 전체 설정으로 저장합니다. 둘 다 기본값은 `Auto`이며, 호스트의 라이트 또는 다크 테마를 따르고 테마가 바뀌면 함께 전환됩니다.
-빌더 자체에서는 `Light`와 `Dark`만 고를 수 있습니다.
-Obsidian과 JetBrains IDE에서는 현재 화면에 보이는 것과 다른 appearance를 고르지 않는 한 `Auto`가 그대로 유지됩니다.
-VS Code에서는 무엇을 고르든 세 값을 모두 저장하므로, appearance가 `auto`인 동안에는 색상 하나만 골라도 `light` 또는 `dark`로 바뀝니다.
+테마와 표시 언어는 이 화면에 없습니다. 툴바의 `Theme`과 `Display Language` 버튼으로 엽니다. [언어와 테마](./language-and-theme.md) 문서를 참고하세요.
 
 ## 관계 데이터 타입 동기화
 
 데이터 타입 동기화 여부를 결정합니다. 기본적으로 켜져 있습니다.
-컬럼의 데이터 타입을 변경하면 관계로 연결된 모든 컬럼에 같은 타입이 적용되며, 양쪽 끝에서 연결을 따라가므로 foreign key가 참조하는 키와 달라지지 않습니다.
+컬럼의 데이터 타입을 변경하면 관계로 연결된 모든 컬럼에 그 타입이 적용되며, 양쪽 끝에서 연결을 따라가므로 foreign key가 참조하는 키와 달라지지 않습니다.
+키에서 foreign key로 갈 때는 관계를 그릴 때와 마찬가지로 serial 타입이 그 serial이 저장하는 정수 타입으로 전달됩니다. [식별 관계](./relationship-editing.md#식별-관계) 문서를 참고하세요. 따라서 PostgreSQL에서 키를 `serial`로 바꾸면 그 foreign key는 `integer`가 되며, 변경은 거기서부터 연결을 따라 계속 이어집니다.
+foreign key에서 그 키로 거슬러 갈 때는 타입이 작성된 그대로 전달되지만, serial 키는 자신의 타입을 유지하며 변경도 거기서 멈춥니다.
+[컬럼 매핑](./relationship-editing.md#컬럼-매핑)도 이 설정을 따릅니다. 켜져 있는 동안에는 매핑하는 기존 컬럼이 각각 부모 키가 foreign key에 주는 타입을 받으며, 변경은 위와 같이 관계를 따라 이어집니다. 꺼져 있거나 키에 데이터 타입이 없으면 컬럼은 자신의 타입을 유지합니다.
 
 <img src="/img/settings-relationship-data-type-sync.png" width="290" alt="관계 데이터 타입 동기화 설정" loading="lazy" />
 
 ![members.id를 BIGINT UNSIGNED로 변경하면 관계로 연결된 모든 member_id도 함께 바뀌는 모습](/img/demo-relationship-data-type-sync.webp)
-
-## 스크롤 정보 저장
-
-화면 위치를 문서에 저장할지 결정합니다. 이 스위치 자체도 문서에 저장됩니다. 새 다이어그램은 이 스위치가 꺼진 상태로 시작하며, 여는 파일은 저장될 당시의 설정을 유지합니다.
-끄면 화면 위치가 초기화된 상태로 문서가 저장되므로, 마지막으로 보던 위치가 아니라 다이어그램이 보이는 위치에서 열리고, 스크롤해도 파일은 바뀌지 않습니다.
-
-새 다이어그램은 아무것도 없는 상태에서 시작한 다이어그램입니다. VS Code, Obsidian, JetBrains IDE에서 연 빈 파일(Obsidian의 `ERD Editor: Create new diagram`과 `New ERD`가 이런 파일을 만듭니다), 웹 앱의 새 스키마, Google Drive의 New 메뉴로 만든 파일, 값을 지정하지 않은 `<erd-editor>`가 여기에 해당합니다. 새 다이어그램에서는 `Save Zoom Information`도 꺼진 상태로 시작합니다.
-웹 앱이 SQL, DBML, AML, GraphQL 파일을 가져와 만드는 스키마나 Google Drive 파일도 두 스위치가 모두 꺼진 상태로 시작합니다. JSON 파일로 만든 경우에는 그 파일의 스위치 값을 유지합니다.
-초기 릴리스에서 저장했거나 직접 작성한 파일처럼 이 스위치가 기록되지 않은 파일은 두 스위치가 모두 켜진 상태로 열립니다.
-
-## 확대/축소 정보 저장
-
-확대/축소 레벨을 문서에 저장할지 결정합니다. `Save Scroll Information`과 마찬가지로 새 다이어그램에서는 꺼진 상태로 시작하며, 여는 파일은 저장될 당시의 설정을 유지합니다.
-끄면 `100%`로 문서가 저장되어, 확대/축소가 적용되지 않은 상태로 열립니다.
-확대/축소는 그 중심이 되는 지점이 제자리에 머물도록 화면 위치도 함께 이동시킵니다. 따라서 이 스위치만 끄면 확대/축소는 화면 위치를 통해 여전히 파일을 바꿉니다. 두 스위치를 모두 꺼야만 파일이 그대로 유지됩니다.
-
-문서에 저장되지 않는 스크롤이나 확대/축소는 변경으로 간주되지 않습니다. VS Code는 탭을 수정됨으로 표시하지 않으며, Obsidian과 JetBrains IDE는 자동으로 저장할 때와 탭이 닫힐 때 모두 파일을 그대로 둡니다.
-따라서 두 스위치를 모두 끄면 다이어그램을 둘러보기만 한 것은 `git diff`에 나타나지 않으며, 다른 릴리스나 다른 컴퓨터에서 작성되어 저장하면 바이트가 바뀌는 파일에서도 마찬가지입니다.
-에디터의 어느 탭이 열려 있는지는 어느 스위치에도 해당하지 않습니다. 문서에는 ERD, Visualization, Schema SQL, Code Generator, 설정 탭 중 어느 탭에서 마지막으로 머물렀는지가 기록되므로, VS Code, Obsidian, JetBrains IDE에서는 이 탭 사이를 전환하면 여전히 파일이 바뀝니다.
-새 다이어그램의 빈 파일은 첫 편집이나, 이 탭 중 다른 탭으로의 첫 전환이 있을 때까지 비어 있습니다.
-git 리비전이나 병합 미리보기처럼 VS Code가 읽기 전용으로 여는 다이어그램은 수정됨으로 표시되지 않습니다.
-Google Drive에서는 스위치 설정과 상관없이 스크롤, 확대/축소, 다른 탭으로의 전환만으로는 저장되지 않습니다. 화면 상태는 다른 변경과 함께일 때만 기록되므로, `Save Scroll Information`이 켜져 있으면 Drive 파일은 마지막으로 저장했을 때의 화면 위치에서 열립니다.
 
 ## 코멘트 최대 너비
 
@@ -62,6 +35,55 @@ Google Drive에서는 스위치 설정과 상관없이 스크롤, 확대/축소,
 `Sync`를 누르면 모든 테이블과 컬럼 셀의 너비를 현재 텍스트에 맞게 다시 계산하고, 새로운 크기에 맞춰 관계 연결선을 다시 그립니다.
 완료되면 `Recalculated table width` 토스트로 알려줍니다.
 문서를 불러올 때마다 너비는 자동으로 다시 계산되므로, 폰트나 렌더링이 바뀌어 너비가 어긋난 경우에만 필요합니다.
+너비는 파일에 저장되지 않으므로 `Sync`는 파일을 바꾸지 않습니다.
+
+## 잠금
+
+`Lock` 목록에는 6개의 설정이 있습니다. 설정의 잠금이 켜져 있는 동안 파일은 잠글 때의 값을 유지하므로, 화면에서 그 설정을 바꿔도 파일은 그대로 유지됩니다.
+
+| 행 | 파일이 유지하는 값 | 새 다이어그램의 값 |
+| --- | --- | --- |
+| `Viewport` | ERD 캔버스의 확대/축소 레벨과 화면 위치(하나의 잠금) | `100% · 0, 0` |
+| `Canvas Type` | 다이어그램이 열리는 탭(`ERD`, `Visualization`, `Schema SQL`, `Code Generator` 중 하나) | `ERD` |
+| `Language` | [Code Generator](./code-generator.md#language) 언어 | `GraphQL` |
+| `Table Name Case` | Code Generator의 [테이블 이름 케이스](./code-generator.md#name-case) | `Pascal` |
+| `Column Name Case` | Code Generator의 [컬럼 이름 케이스](./code-generator.md#name-case) | `Camel` |
+| `Bracket Type` | [Schema SQL](./schema-sql.md#데이터베이스와-bracket) 탭과, 이 옵션을 제공하는 [Code Generator](./code-generator.md#bracket) 대상의 `Bracket` | `None` |
+
+각 행에는 값과 잠금 버튼이 표시되며, 버튼을 클릭하면 그 행의 잠금 하나가 켜지거나 꺼집니다.
+잠금이 켜져 있는 동안 버튼은 `Unlock Viewport`(다른 행도 같은 방식입니다) 툴팁과 함께 닫힌 자물쇠를 표시하며, `Locked value` 툴팁이 붙은 값은 파일이 유지하는 값입니다.
+잠금이 꺼져 있는 동안 버튼은 `Lock Viewport` 툴팁과 함께 열린 자물쇠를 표시하며, `Current value` 툴팁이 붙은 흐린 값은 지금의 설정입니다.
+`Viewport`는 `75% · -40, 91`처럼 확대/축소 다음에 화면 위치를 표시합니다. 화면 위치는 다이어그램의 `0, 0`이 놓인 화면상의 지점을 픽셀로 나타낸 것이며, 천 단위 이상인 좌표는 `1.2k`나 `-24k`처럼 줄여 표시됩니다.
+
+잠그면 그 순간의 설정이 잠깁니다.
+잠금이 켜져 있는 동안에도 설정은 화면에서 그대로 동작합니다. 스크롤하거나 확대/축소하고, 탭을 전환하고, 메뉴, 옵션 패널, 빠른 검색에서 다른 언어, 이름 케이스, 괄호를 고를 수 있습니다.
+하지만 파일은 잠긴 값을 유지하고 행에도 계속 그 값이 표시되므로, 다이어그램은 잠긴 화면과 잠긴 탭에서, 잠긴 언어, 이름 케이스, 괄호로 다시 열립니다. JSON으로 내보낼 때도 잠긴 값이 기록됩니다.
+화면에 보이는 것을 저장하려면 잠금을 끄세요. 그때부터 파일이 설정을 따르므로, `Viewport`를 끄면 다이어그램은 마지막으로 보던 위치에서 열립니다. 대신 새 시작 화면처럼 새 값을 잠그려면 잠금을 껐다가 다시 켜세요.
+파일을 열 때 잠긴 화면에 다이어그램이 전혀 보이지 않으면 그래도 화면은 다이어그램으로 이동하며, 잠긴 값은 그대로 유지됩니다.
+`Canvas Type`은 설정 탭을 유지하지 않습니다. 잠금을 켜면 마지막으로 머물렀던 다른 탭이 잠기며, 꺼져 있는 동안에는 행에 그 탭이 표시됩니다.
+
+![Viewport 잠금을 해제하고 다이어그램을 스크롤하고 확대/축소한 뒤, 행에 표시된 새 화면으로 다시 잠그는 모습](/img/demo-settings-locks.webp)
+
+파일에는 어떤 잠금이 켜져 있는지가 저장되므로 잠금을 켜거나 끄면 파일이 바뀌지만, 설정 탭의 다른 항목과 마찬가지로 [Undo 히스토리](./undo-redo.md#히스토리에-기록되는-내용)에는 기록되지 않습니다. 읽기 전용 에디터에서는 잠금 버튼이 아무 동작도 하지 않습니다.
+그 밖의 설정은 모두 현재 상태 그대로 저장됩니다. 데이터베이스, [`View Option`](./table-related-functions.md#테이블-보기-옵션) 토글, `Preferences` 탭의 나머지 항목이 여기에 해당합니다.
+
+새 다이어그램, 즉 아무것도 없는 상태에서 시작한 다이어그램에서는 모든 잠금이 켜져 있습니다. VS Code, Obsidian, JetBrains IDE에서 연 빈 파일(Obsidian의 `ERD Editor: Create new diagram`과 `New ERD`가 이런 파일을 만듭니다), 웹 앱의 새 스키마, Google Drive의 New 메뉴로 만든 파일, 값을 지정하지 않은 `<erd-editor>`가 여기에 해당합니다.
+웹 앱이 SQL, DBML, AML, GraphQL 파일을 가져와 만드는 스키마나 Google Drive 파일도 모든 잠금이 켜진 상태로 시작합니다. JSON 파일로 만든 경우에는 그 파일에 기록된 잠금을 유지합니다.
+여는 파일은 저장될 당시의 잠금을 각각의 잠긴 값과 함께 유지합니다.
+이전 릴리스에서 저장했거나 직접 작성한 파일처럼 잠금이 기록되지 않은 파일은 모든 잠금이 켜진 상태로 열립니다. 저장된 화면과 탭에 상관없이 화면은 `100% · 0, 0`, 탭은 `ERD`로 잠기며, 언어, 이름 케이스, 괄호 타입은 저장된 값으로 잠깁니다.
+다이어그램을 대체하는 `Import`도 잠금을 정합니다. JSON 파일은 파일에 기록된 잠금과 그 값을 가져오고, SQL, DBML, AML, GraphQL 파일은 기존 잠금을 유지하되 잠겨 있든 아니든 화면을 `100% · 0, 0`으로 되돌립니다. [외부 파일 가져오기](./file-import-export.md#외부-파일-가져오기) 문서를 참고하세요. 가져오기를 되돌리면 가져오기가 대체한 잠금과 잠긴 값이 돌아옵니다.
+
+잠금 때문에 파일에 기록되지 않는 변경은 변경으로 간주되지 않습니다. VS Code는 탭을 수정됨으로 표시하지 않으며, Obsidian과 JetBrains IDE는 자동으로 저장할 때와 탭이 닫힐 때 모두 파일을 그대로 둡니다.
+따라서 모든 잠금이 켜져 있으면 다이어그램을 둘러보거나, 탭을 전환하거나, 다른 언어, 이름 케이스, 괄호를 시험해 봐도 `git diff`에 나타나지 않습니다.
+`Viewport`가 꺼져 있으면 스크롤과 확대/축소가 파일을 바꾸며, `Canvas Type`이 꺼져 있으면 설정 탭으로의 전환을 포함해 탭 전환도 파일을 바꿉니다.
+새 다이어그램의 빈 파일은 파일에 기록되는 첫 변경(편집, 잠금이 걸리지 않은 설정의 변경, 잠금 켜기나 끄기)이 있을 때까지 비어 있습니다.
+이런 변경 없이 다이어그램을 열었다가 닫으면, 어느 릴리스나 컴퓨터에서 작성한 파일이든 그대로 유지됩니다. 파일에는 다이어그램의 내용만 고정된 순서로 담기며, 이전 릴리스가 저장한 파일은 이런 변경이 처음 일어날 때 한 번 이 형식으로 다시 작성됩니다. [저장 형태와 런타임 값](../../api/advanced/schema.md#저장-형태와-런타임-값) 문서를 참고하세요.
+VS Code에서 Git 리비전이나 Local History 항목처럼 `Reopen Editor With...`로 다이어그램으로 다시 연 리비전은 읽기 전용이며 수정됨으로 표시되지 않습니다.
+Google Drive에서는 잠겨 있든 아니든 스크롤, 확대/축소, 다른 탭으로의 전환만으로는 저장되지 않습니다. `Viewport`가 꺼져 있으면 화면 상태는 다른 변경과 함께일 때만 기록되므로 Drive 파일은 마지막으로 저장했을 때의 화면 위치에서 열리며, `Canvas Type`이 꺼져 있을 때의 탭도 마찬가지입니다.
+
+[공동 편집](../../api/advanced/collaborative-editing.md) 세션에서는 잠금을 켜거나 끄면 모든 에디터에 전달되며, 잠금은 그 잠금을 켠 에디터의 값을 유지합니다.
+`Language`, 이름 케이스, `Bracket Type`의 잠금을 끄면 잠금을 끈 에디터에 표시된 값이 모든 에디터에 적용되므로, 모든 에디터가 같은 값을 저장합니다. `Viewport`나 `Canvas Type`의 잠금을 꺼도 어느 에디터의 화면이나 탭도 바뀌지 않습니다.
+MCP 서버로 작업하는 코딩 에이전트에는 잠금이나 잠금이 담는 설정을 다루는 도구가 없으며, 잠긴 언어, 이름 케이스, 괄호 타입은 파일이 유지하는 값으로 읽습니다. 이 값들에 닿는 것은 `Import`와 마찬가지로 `replace` 모드의 가져오기뿐입니다. [설정](../../mcp/tools.md#설정)과 [가져오기](../../mcp/tools.md#가져오기) 문서를 참고하세요.
 
 ## 컬럼 순서 조정
 
@@ -70,7 +92,7 @@ Google Drive에서는 스위치 설정과 상관없이 스크롤, 확대/축소,
 [테이블 보기 옵션](./table-related-functions.md#테이블-보기-옵션)으로 숨겨진 셀도 목록에서 자리를 유지하므로, 순서는 표출되는 셀에 적용됩니다.
 [대체 키](./table-related-functions.md#대체-키) 표시(`AK1.1` 등)는 이 목록의 행이 아닙니다. 표시는 항상 행의 맨 끝, 이 순서가 마지막에 두는 셀보다 뒤에 놓입니다.
 
-![Comment 행을 Name 아래로 드래그해 코멘트가 컬럼 이름 바로 뒤에 표출되는 모습](/img/demo-settings-column-order.webp)
+![Column Order까지 스크롤한 뒤 Comment 행을 Name 아래로 드래그해 코멘트가 컬럼 이름 바로 뒤에 표출되는 모습](/img/demo-settings-column-order.webp)
 
 ## 단축키
 
@@ -89,6 +111,7 @@ Google Drive에서는 스위치 설정과 상관없이 스크롤, 확대/축소,
 | Add Memo | `Alt + M` | `⌥ + M` |
 | Remove Table, Memo | `Ctrl + Backspace`, `Ctrl + Delete` | `⌘ + Backspace`, `⌘ + Delete` |
 | Remove Column | `Alt + Backspace`, `Alt + Delete` | `⌥ + Backspace`, `⌥ + Delete` |
+| Delete Selection | `Delete`, `Backspace` | `Delete`, `Backspace` |
 | Primary Key | `Alt + K` | `⌥ + K` |
 | Select All Table, Memo | `Ctrl + A`, `Ctrl + Alt + A` | `⌘ + A`, `⌘ + ⌥ + A` |
 | Select All Column | `Alt + A` | `⌥ + A` |
@@ -104,15 +127,16 @@ Google Drive에서는 스위치 설정과 상관없이 스크롤, 확대/축소,
 | Hand Tool | `Space` | `Space` |
 | Zen Mode | `Alt + Z` | `⌥ + Z` |
 
-대부분은 ERD 탭에서만 동작하며, 빠른 검색, 테이블 속성, Diff Viewer, 자동 배치 미리보기, Time Travel이 열려 있는 동안에는 동작하지 않습니다.
-`Search`, `Find and Replace`, `Stop`은 예외입니다. `Search`는 어느 탭에서나 빠른 검색을 열고 닫고, `Find and Replace`는 어느 탭에서나 [찾기와 바꾸기 패널](./find-and-replace.md#열기와-닫기)을 열면서 ERD 탭으로 전환하며, `Stop`은 빠른 검색, 테이블 속성, Diff Viewer, 자동 배치 미리보기, Time Travel, 테마 빌더, 찾기와 바꾸기 패널을 닫습니다.
+대부분은 ERD 탭에서만 동작하며, 빠른 검색, 테이블 속성, Diff Viewer, 자동 배치 미리보기, Time Travel, [`Export image`](./file-import-export.md#이미지) 대화 상자, [`Map Columns`](./relationship-editing.md#컬럼-매핑)가 열려 있는 동안에는 동작하지 않습니다.
+`Search`, `Find and Replace`, `Stop`은 예외입니다. `Search`는 어느 탭에서나 빠른 검색을 열고 닫고, `Find and Replace`는 어느 탭에서나 [찾기와 바꾸기 패널](./find-and-replace.md#열기와-닫기)을 열면서 ERD 탭으로 전환하며, `Stop`은 빠른 검색, 테이블 속성, Diff Viewer, 자동 배치 미리보기, Time Travel, `Export image` 대화 상자, `Map Columns`, 테마 빌더, `Display Language` 선택기, 찾기와 바꾸기 패널, 색상 선택기, 열려 있는 컨텍스트 메뉴를 닫습니다.
 Diff Viewer, 자동 배치 미리보기, Time Travel이 열려 있는 동안에는 `Find and Replace`가 키를 브라우저나 호스트에 넘깁니다. [브라우저의 찾기 막대](./find-and-replace.md#브라우저의-찾기-막대) 문서를 참고하세요.
-ERD 탭에서 `Stop`은 열려 있는 셀이나 메모의 편집모드를 끝내거나 그리고 있는 관계를 취소하며, 이때 선택은 그대로 둡니다. 그중 어느 것도 열려 있지 않으면 선택과 포커스된 셀을 해제하고, 같은 입력으로 열려 있는 찾기와 바꾸기 패널도 닫습니다.
-찾기와 바꾸기 패널이 열려 있어도 캔버스의 단축키는 모두 그대로 동작합니다. 패널 안에서 누르는 키는 [패널의 키](./find-and-replace.md#패널의-키) 문서를 참고하세요.
+ERD 탭에서 `Stop`은 열려 있는 셀이나 메모의 편집모드를 끝내거나, [테이블 그룹](./table-groups.md)의 이름 입력란을 그룹 이름을 바꾸지 않고 닫거나, 그리고 있는 관계나 `New Table Group`을 취소하며, 이때 선택은 그대로 둡니다. 그중 어느 것도 열려 있지 않으면 선택과 포커스된 셀을 해제하고, 같은 입력으로 열려 있는 찾기와 바꾸기 패널이나 색상 선택기도 닫습니다.
+찾기와 바꾸기 패널, 테마 빌더, `Display Language` 선택기가 열려 있어도 캔버스의 단축키는 모두 그대로 동작합니다. 패널 안에서 누르는 키는 [패널의 키](./find-and-replace.md#패널의-키) 문서를, 선택기 안에서 누르는 키는 [언어 선택](./language-and-theme.md#언어-선택) 문서를 참고하세요.
+`Delete Selection`은 선택된 테이블, 메모, 테이블 그룹을 모두 삭제하며, 일부 컬럼이 선택된 테이블 하나만 선택되어 있고 배율이 `70%`보다 크면 대신 그 컬럼을 삭제합니다. [테이블, 메모 삭제](./table-related-functions.md#테이블-메모-삭제) 문서를 참고하세요. `Remove Table, Memo`도 선택된 테이블 그룹을 함께 삭제합니다.
 `Zoom In`, `Zoom Out`, `Zoom Reset`은 [Visualization](./visualization.md#툴바) 탭에서도 `Graph`와 `Flow` 모두 확대/축소하며, 빠른 검색이 열려 있을 때는 동작하지 않습니다.
 Visualization 탭에서 `Stop`은 [행 표시](./visualization.md#행-표시) 메뉴도 닫고 아직 진행 중인 [Flow 배치](./visualization.md#flow-배치-방식)를 취소하지만, `Focus on this table`로 좁힌 화면을 넓히지는 않습니다.
 `Focus on this table`은 선택된 테이블과 그 테이블에 관계 하나로 이어진 모든 테이블로 범위를 좁혀 Visualization 탭을 `Flow`로 열며, 선택된 테이블이 없으면 아무 동작도 하지 않습니다. [테이블 포커스](./visualization.md#테이블-포커스) 문서를 참고하세요.
-`Select All Table, Memo`와 `Hand Tool`은 커서에 양보합니다. 셀을 편집하거나 찾기와 바꾸기 패널에 입력하는 중에는 `Ctrl + A` (Windows/Linux) or `⌘ + A` (Mac)가 텍스트를 선택하고 `Space`는 공백을 입력합니다.
+`Select All Table, Memo`, `Hand Tool`, `Delete Selection`은 커서에 양보합니다. 셀이나 메모를 편집하거나 찾기와 바꾸기 패널의 입력란 같은 텍스트 입력란에 입력하는 중에는 `Ctrl + A` (Windows/Linux) or `⌘ + A` (Mac)가 텍스트를 선택하고, `Space`는 공백을 입력하며, `Delete`와 `Backspace`는 텍스트를 지웁니다.
 복사/붙여넣기는 브라우저 자체의 `Ctrl + C`와 `Ctrl + V` (Windows/Linux) or `⌘ + C`와 `⌘ + V` (Mac)를 사용하므로 이 목록에는 없습니다. [테이블 편집](./table-editing.md) 문서를 참고하세요.
 
 이 탭에서는 단축키를 변경할 수 없습니다.

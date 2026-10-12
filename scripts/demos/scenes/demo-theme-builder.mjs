@@ -1,11 +1,24 @@
 /**
- * enableThemeBuilder: the Theme button on the toolbar opens the preset panel.
+ * enableThemeBuilder: the Theme button on the toolbar opens the Theme panel.
  * With the tables selected so the accent shows on their outlines, the accent
  * and gray palettes are changed and the editor restyles as each swatch is
- * picked; the appearance stays dark.
+ * picked. Light then turns the editor light, and System takes it back to
+ * the operating system's appearance, dark here. The panel's x closes it.
  */
 import { readSeed, seedSQL } from '../lib/seed.mjs';
 import { themeSwatch, timeline, toolbarButtonBox, waitDom } from './_misc-helpers.mjs';
+
+/** Viewport box of the panel's appearance button labelled `label` ('System', 'Light', 'Dark'). */
+function appearanceBox(d, label) {
+  return d.page.evaluate(label => {
+    const button = [...window.__erdShadowRoot.querySelectorAll('.theme-builder div')].find(
+      el => el.children.length === 3 && el.lastElementChild.textContent.trim() === label
+    );
+    if (!button) throw new Error(`no appearance button ${label}`);
+    const r = button.getBoundingClientRect();
+    return { x: r.left, y: r.top, width: r.width, height: r.height };
+  }, label);
+}
 
 // Table comment, data type, primary key and relationships.
 const SHOW = 1 | 4 | 32 | 256;
@@ -61,19 +74,29 @@ export default {
       await d.shot(`${group}-${name}`);
     };
     await pick('accent', 'orange', 750);
-    await pick('gray', 'sand', 900);
-    await pick('accent', 'jade', 750);
-    await pick('gray', 'sage', 700);
+    await pick('gray', 'sand', 800);
 
-    // Off the panel and onto a relationship: its hover takes the accent too.
-    const members = await d.tableBox('members');
-    const orders = await d.tableBox('orders');
-    const x = members.x + members.width / 2;
-    const y = (members.y + members.height + orders.y) / 2;
-    // Beside the line rather than on it, so the arrow does not hide it.
-    await d.moveTo(x + 4, y, 650);
-    mark('hover link');
-    await d.sleep(1400);
+    // Light, then System, which follows the operating system: dark here.
+    const appearance = async (label, pause) => {
+      const box = await appearanceBox(d, label);
+      // Near the button's end, so the pointer leaves its label readable.
+      await d.click(box.x + box.width - 12, box.y + box.height / 2, { duration: 380 });
+      mark(label);
+      await d.sleep(pause);
+      await d.shot(label);
+    };
+    await appearance('Light', 1000);
+    await appearance('System', 1000);
+
+    // The x at the end of the title closes the panel.
+    const close = await d.domBox('.theme-builder-close');
+    await d.click(close.x + close.width / 2, close.y + close.height / 2, {
+      duration: 520,
+    });
+    mark('closed');
+    // Down off the toolbar onto empty canvas, left of the diagram.
+    await d.moveTo(250, 330, 500);
+    await d.sleep(1100);
     mark('end');
   },
 };

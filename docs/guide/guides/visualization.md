@@ -1,5 +1,5 @@
 ---
-sidebar_position: 8
+sidebar_position: 9
 description: Explore the schema as a force-directed Graph or as a Flow of table cards — zoom and pan, light up a table's related tables, and focus on a few tables at a time.
 ---
 
@@ -40,7 +40,7 @@ Draws the whole document as a force-directed graph, so you can see at a glance h
 
 ### Reading the Graph
 
-Every table and every column is a node, and the two kinds are drawn in different colors.  
+Every table and every column is a node, and the two kinds are drawn in different colors. Memos and [table groups](./table-groups.md) are not drawn.  
 Each column node is linked to the table it belongs to, and two tables joined by a relationship are linked to each other.  
 Tables joined by more than one relationship in the same direction are linked only once, and a relationship that starts and ends on the same table draws no link.
 
@@ -50,7 +50,7 @@ Table names appear on the graph as you zoom in, fading in between `50%` and `100
 
 The wheel zooms, about whatever the pointer is over, from `10%` to `400%`.  
 A trackpad pinch zooms the same way, and two fingers on a touch screen zoom about the point between them and pan as they move.  
-Drag the background to pan.
+Drag the background to pan, or drag with the middle mouse button from anywhere, a node included, as on the [ERD canvas](./table-related-functions.md#getting-around-the-canvas). A middle-button drag only pans: it never pulls a node.
 
 The zoom buttons on the [toolbar](#toolbar) and the zoom shortcuts hold the middle of the screen still instead, within the same range, and `Fit` brings every node into view.
 
@@ -61,7 +61,8 @@ Hovering a column node only draws a ring around it; no preview opens.
 
 The preview shows the same columns as the ERD canvas, in the same order — see [Table View Options](./table-related-functions.md#table-view-options) and [Adjusting Column Order](./settings.md#adjusting-column-order).  
 With the `Alternate Key` view option on, each column of an [alternate key](./table-related-functions.md#alternate-keys) carries its mark, such as `AK1.1`, last in its row, and the preview widens for it as the table on the ERD canvas does.  
-It is display-only, and it is hidden while you drag a node or the background.
+Unlike a table on the ERD canvas, its header never takes the color of the table's [group](./table-groups.md#coloring-a-group).  
+It is display-only, and it is hidden while you drag a node or pan.
 
 ### Highlighting a Neighbourhood
 
@@ -70,9 +71,10 @@ Everything else on the graph fades, so what the table touches reads on its own.
 
 ### Moving Nodes
 
-Drag a node to pull it, and everything linked to it, into a new position.  
+Drag a node with the left mouse button to pull it, and everything linked to it, into a new position.  
 The node is pinned under the pointer for as long as you hold it and the layout reheats around it.  
-It settles again when you let go — nothing stays pinned where you dropped it.
+It settles again when you let go — nothing stays pinned where you dropped it.  
+A right press or right drag on a node neither pulls it nor pans.
 
 ### The Graph Is a Snapshot
 
@@ -81,16 +83,16 @@ Switching to `Graph` from `Flow` rebuilds it as well, and every rebuild starts a
 
 ## Flow Mode
 
-Draws every table as a card and lays the cards out along their relationships. Memos are not drawn.  
+Draws every table as a card and lays the cards out along their relationships. Memos and [table groups](./table-groups.md) are not drawn.  
 It is not the `Flow` layout of [Auto Layout](./table-related-functions.md#auto-layout), which moves the tables on the ERD tab itself.
 
-Each card is drawn like a table on the ERD tab: the table's color down its left edge, a header band with a table icon and the table name, then the rows its [row display](#row-display) calls for. Unlike a table on the ERD tab, a card also draws a line between its rows. Cards keep that look at every zoom, and never collapse to their name the way tables on the ERD tab do at `70%` and below. Nothing on a card can be edited.
+Each card is drawn like a table on the ERD tab: the table's color down its left edge, a header band with a table icon and the table name, then the rows its [row display](#row-display) calls for. Unlike a table on the ERD tab, a card also draws a line between its rows, and its header never takes the color of the table's [group](./table-groups.md#coloring-a-group). Cards keep that look at every zoom, and never collapse to their name the way tables on the ERD tab do at `70%` and below. Nothing on a card can be edited.
 
-A connector is one smooth curve from table to table, drawn beneath the cards, so it can pass behind one. Every connector is drawn as the same solid gray line, whether the relationship is identifying or not, with the same end marks as on the ERD tab — see [Reading a Connector](./relationship-editing.md#reading-a-connector). Flow draws connectors even when the `Relationship` [view option](./table-related-functions.md#table-view-options) is off. It never draws the `D:` and `U:` labels of a relationship's ON DELETE and ON UPDATE actions or shows the tooltip that spells them out, whatever the `Referential Actions` view option says.
+A connector is one smooth curve from table to table, drawn beneath the cards, so it can pass behind one. A relationship from a table to itself curves round the card's top-right corner, as on the ERD tab — see [Connector Routing](./relationship-editing.md#connector-routing). Every connector is drawn as the same solid gray line, whether the relationship is identifying or not, with the same end marks as on the ERD tab — see [Reading a Connector](./relationship-editing.md#reading-a-connector). Flow draws connectors even when the `Relationship` [view option](./table-related-functions.md#table-view-options) is off. It never draws the `D:` and `U:` labels of a relationship's ON DELETE and ON UPDATE actions or shows the tooltip that spells them out, whatever the `Referential Actions` view option says.
 
 Over the whole diagram, tables that no relationship joins to another table are gathered into one block rather than scattered among the rest.
 
-![Switching to Flow, pinning a lit card, picking Keys only, then zooming in and pressing Fit](/img/demo-visualization-flow.webp)
+![Switching to Flow, hovering orders to light it and its neighbours, pinning the light, picking Keys only, then zooming in with ⌘ + Wheel and pressing Fit](/img/demo-visualization-flow.webp)
 
 ### Row Display
 
@@ -113,7 +115,7 @@ Changing the row display resizes the cards, so Flow lays them out again and fits
 
 The wheel pans, and `Shift + Wheel` pans sideways. `Ctrl + Wheel` (Windows/Linux) or `⌘ + Wheel` (Mac) zooms, keeping the middle of the screen where it is.  
 A trackpad pinch zooms about the point you pinch at, and two fingers on a touch screen zoom about the point between them and pan as they move.  
-Drag the background to pan. Panning has no bounds, as on the ERD canvas.  
+Drag the background to pan, or drag with the middle mouse button from anywhere, a card included. A middle-button drag only pans and leaves the selection as it is. Panning has no bounds, as on the [ERD canvas](./table-related-functions.md#getting-around-the-canvas).  
 Zoom ranges from `10%` to `150%`. Flow keeps a zoom and pan of its own, apart from the ERD tab's, and neither is saved in the document.
 
 Pressing the background clears the selection, and `Ctrl + drag` (Windows/Linux) or `⌘ + drag` (Mac) on the background draws a selection box.  
@@ -137,11 +139,11 @@ While the pointer is over a card, two icon buttons, neither with a tooltip, appe
 - The waypoints icon, the same one the `Flow` button shows, narrows Flow to that table and the tables one relationship away — see [Focusing on Tables](#focusing-on-tables).
 - The external-link icon switches to the ERD tab, selects only that table, brings it to the front, and puts the focused cell on its name unless a cell of that table already has it. If the table is not already fully in view, the canvas scrolls to center it. While the Find and Replace panel is open, only the part of the canvas beside the panel counts, as when [going to a match](./find-and-replace.md#going-to-a-match). It never starts or finishes a relationship being drawn.
 
-A press on either button belongs to the button alone: unlike a press elsewhere on the card, it does not select the card or bring it to the front. The waypoints button therefore leaves the selection you had; the external-link button selects the table only as part of its switch to the ERD tab.
+A press on either button belongs to the button alone: unlike a press elsewhere on the card, it does not select the card or bring it to the front. The waypoints button therefore leaves the selection you had; the external-link button selects the table only as part of its switch to the ERD tab. Only a left click works either button.
 
 ### Moving Cards
 
-Drag a card by any part of it except the two card buttons.  
+Drag a card with the left mouse button by any part of it except the two card buttons; a right drag moves nothing.  
 Pressing a card selects it, `Ctrl + click` (Windows/Linux) or `⌘ + click` (Mac) adds it to the selection, and dragging a selected card moves every selected card. The selection is the one the ERD tab uses, so what you select here is still selected when you go back.
 
 A card moves only in Flow: its table stays where it is on the ERD tab.  
@@ -153,12 +155,13 @@ On the ERD tab, select one or more tables and press `Alt + F` (Windows/Linux) or
 The Visualization tab opens in `Flow`, narrowed to those tables and every table one relationship away from any of them, in either direction. Only the connectors between the tables it shows are drawn.
 
 When the table you right-click is one of several selected tables, the entry reads `Focus on selected tables` and focuses the whole selection. Right-clicking a table outside the selection focuses that table alone.  
-`Alt + F` takes the selected tables and leaves memos out. With no table selected it does nothing, and it is ignored while a cell or memo is being edited, while the caret is in the [Find and Replace](./find-and-replace.md#keys-in-the-panel) panel, or while quick search, table properties, the diff viewer, the Auto Layout preview, or time travel is open.
+`Alt + F` takes the selected tables and leaves memos and [table groups](./table-groups.md) out. With no table selected it does nothing, even with a group selected: choose `Select tables` in the group's context menu first — see [Selecting Groups](./table-groups.md#selecting-groups).  
+It is ignored while a cell, a memo, or a group's name is being edited, while the caret is in the [Find and Replace](./find-and-replace.md#keys-in-the-panel) panel, or while quick search, table properties, the diff viewer, the Auto Layout preview, time travel, the [`Export image`](./file-import-export.md#image) dialog, or [`Map Columns`](./relationship-editing.md#map-columns) is open.
 
 Inside Flow, the waypoints [card button](#card-buttons) narrows the view the same way, to that one table. `Show all` on the [toolbar](#toolbar) goes back to the whole diagram.  
 A narrowed view is laid out on its own and fitted to the screen. It stays narrowed when you leave the tab or switch to `Graph` and come back, and `Escape` does not widen it.
 
-![Focusing on orders with ⌥ + F, narrowing to members with its card button, then Show all](/img/demo-visualization-focus.webp)
+![Focusing on orders with ⌥ + F, narrowing to members with its card's waypoints button, then Show all](/img/demo-visualization-focus.webp)
 
 ### How Flow Is Placed
 
@@ -175,9 +178,9 @@ Flow lays the cards out again when:
 Each layout takes into account where the cards currently stand, so `Tidy Up` does not necessarily restore an earlier arrangement.  
 A change that only resizes a card, such as renaming a table or adding a column, does not lay the cards out again. Press `Tidy Up` if cards end up overlapping.
 
-A layout that takes longer than 6 seconds shows a `Placing tables…` notice with `Cancel`.  
+A layout that takes longer than 6 seconds shows a `Placing tables` notice, with a spinning loader and `Cancel`.  
 `Cancel`, or `Escape` at any point while the layout runs, drops it; `Tidy Up`, or coming back to `Flow`, asks for it again.  
-If a layout fails — the host runs no shared worker, the worker fails to start, or no layout comes back within 60 seconds — Flow shows `Could not place tables`, and `Tidy Up` tries again. See [Web Workers](../../api/installation.md#web-workers).  
+If a layout fails — the host runs no shared worker, the worker fails to start, or no layout comes back within 60 seconds — Flow shows a `Could not place tables` notice with a warning sign, and `Tidy Up` tries again. See [Web Workers](../../api/installation.md#web-workers).  
 Flow draws only the tables its last layout placed, over the whole diagram and in a narrowed view alike, so the first time it is shown there may be no cards at all until a layout succeeds.  
 Whenever Flow lays the cards out again, such as when you narrow the view to other tables, the previous arrangement stays on screen until the new layout lands, and it stays there if that layout is cancelled or fails.
 
@@ -186,7 +189,7 @@ When the whole document is replaced, for example by importing a file, Flow's lay
 ### Flow Never Edits the Document
 
 Flow only reads the diagram. Zooming, panning, moving cards, `Tidy Up`, the row display, pins, and focusing add nothing to the [undo history](./undo-redo.md#what-the-history-records).  
-They change nothing in the diagram either, except that pressing a card brings its table to the front, just as clicking a table on the ERD tab does, so it is in front there too. `Graph` leaves the diagram alone in the same way.  
+They change nothing in the diagram either. Pressing a card does bring its table to the front, just as clicking a table on the ERD tab does, so it is in front there too, but the stacking order is not saved — see [Moving Multiple Tables](./table-related-functions.md#moving-multiple-tables). `Graph` leaves the diagram alone in the same way.  
 Pressing a card never adds a relationship. If you left the ERD tab while drawing one, a press on a card picks its table to start from when none has been picked yet, and otherwise ends the draw.  
 The external-link [card button](#card-buttons) goes further, because it takes you out of Flow: the scroll it makes on the ERD tab is recorded like any other change of view position.
 

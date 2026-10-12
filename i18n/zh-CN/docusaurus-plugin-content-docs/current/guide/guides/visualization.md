@@ -1,5 +1,5 @@
 ---
-sidebar_position: 8
+sidebar_position: 9
 description: 以力导向的 Graph 或由表卡片组成的 Flow 浏览 schema，可缩放、可平移，能点亮一个表的相关表，并能一次只聚焦于少数几个表。
 ---
 
@@ -40,7 +40,7 @@ description: 以力导向的 Graph 或由表卡片组成的 Flow 浏览 schema�
 
 ### 图的解读 {#reading-the-graph}
 
-每个表和每个列都是一个节点，两类节点以不同颜色绘制。  
+每个表和每个列都是一个节点，两类节点以不同颜色绘制。备注与[表分组](./table-groups.md)不会被绘制。  
 每个列节点与其所属的表相连，通过关系连接的两个表之间也会相连。  
 在同一方向上存在多条关系的表之间只连接一次，起点和终点为同一个表的关系不会绘制连线。
 
@@ -50,7 +50,7 @@ description: 以力导向的 Graph 或由表卡片组成的 Flow 浏览 schema�
 
 滚轮以指针所指的位置为中心缩放，范围为 `10%` ~ `400%`。  
 触控板上的捏合手势也以同样的方式缩放；触摸屏上的两根手指则以两指之间的位置为中心缩放，并随手指的移动平移。  
-拖动背景即可平移。
+拖动背景即可平移，也可以按住鼠标中键从任意位置拖动（包括节点上），与 [ERD 画布](./table-related-functions.md#getting-around-the-canvas)上相同。中键拖动只会平移：它永远不会拉动节点。
 
 [工具栏](#toolbar)上的缩放按钮和缩放快捷键则会保持屏幕中心不动，缩放范围相同，`Fit` 会将所有节点纳入视野。
 
@@ -61,7 +61,8 @@ description: 以力导向的 Graph 或由表卡片组成的 Flow 浏览 schema�
 
 预览中显示的列与 ERD 画布相同，顺序也相同，参见[表显示选项](./table-related-functions.md#table-view-options)和[调整列顺序](./settings.md#adjusting-column-order)。  
 开启 `Alternate Key` 显示选项后，[备用键](./table-related-functions.md#alternate-keys)的每一列都会在行的最后带上其标记，例如 `AK1.1`，预览也会像 ERD 画布上的表那样为此加宽。  
-预览仅用于显示，并且在拖动节点或背景时会隐藏。
+与 ERD 画布上的表不同，它的表头永远不会显示该表所属[分组](./table-groups.md#coloring-a-group)的颜色。  
+预览仅用于显示，并且在拖动节点或平移时会隐藏。
 
 ### 点亮邻域 {#highlighting-a-neighbourhood}
 
@@ -70,9 +71,10 @@ description: 以力导向的 Graph 或由表卡片组成的 Flow 浏览 schema�
 
 ### 移动节点 {#moving-nodes}
 
-拖动节点可以将它以及与之相连的所有节点带到新的位置。  
+用鼠标左键拖动节点，可以将它以及与之相连的所有节点带到新的位置。  
 按住期间节点会被固定在指针上，周围的布局也会重新活跃起来。  
-松开后布局会重新稳定下来，节点不会固定在放开的位置。
+松开后布局会重新稳定下来，节点不会固定在放开的位置。  
+在节点上用右键按下或右键拖动，既不会拉动它，也不会平移。
 
 ### 图是快照 {#the-graph-is-a-snapshot}
 
@@ -81,16 +83,16 @@ description: 以力导向的 Graph 或由表卡片组成的 Flow 浏览 schema�
 
 ## Flow 模式 {#flow-mode}
 
-将每个表绘制为一张卡片，并沿着关系排布这些卡片。备注不会被绘制。  
+将每个表绘制为一张卡片，并沿着关系排布这些卡片。备注与[表分组](./table-groups.md)不会被绘制。  
 它不是[自动布局](./table-related-functions.md#auto-layout)中的 `Flow` 布局，后者移动的是 ERD 标签页上的表本身。
 
-每张卡片的绘制方式与 ERD 标签页上的表相同：左侧边缘是表的颜色，顶部是带有表图标和表名的标题栏，下方是其[行显示](#row-display)所要求的行。与 ERD 标签页上的表不同，卡片还会在行与行之间画线分隔。卡片在任何缩放级别下都保持这一外观，不会像 ERD 标签页上的表那样在 `70%` 及以下折叠为名称。卡片上的任何内容都无法编辑。
+每张卡片的绘制方式与 ERD 标签页上的表相同：左侧边缘是表的颜色，顶部是带有表图标和表名的标题栏，下方是其[行显示](#row-display)所要求的行。与 ERD 标签页上的表不同，卡片还会在行与行之间画线分隔，其标题栏也永远不会显示该表所属[分组](./table-groups.md#coloring-a-group)的颜色。卡片在任何缩放级别下都保持这一外观，不会像 ERD 标签页上的表那样在 `70%` 及以下折叠为名称。卡片上的任何内容都无法编辑。
 
-连接线是从表到表的一条平滑曲线，绘制在卡片下方，因此可能从某张卡片背后穿过。无论是否为识别关系，所有连接线都绘制为同样的灰色实线，两端的符号与 ERD 标签页上的相同，参见[读懂连接线](./relationship-editing.md#reading-a-connector)。即使关闭了 `Relationship` [显示选项](./table-related-functions.md#table-view-options)，Flow 也会绘制连接线。无论 `Referential Actions` 显示选项如何设置，它都不会绘制关系的 ON DELETE 与 ON UPDATE 操作的 `D:` 和 `U:` 标签，也不会显示将这些操作完整写出的提示。
+连接线是从表到表的一条平滑曲线，绘制在卡片下方，因此可能从某张卡片背后穿过。指向自身的关系会以曲线绕过卡片的右上角，与 ERD 标签页上相同，参见[连接线路径](./relationship-editing.md#连接线路径)。无论是否为识别关系，所有连接线都绘制为同样的灰色实线，两端的符号与 ERD 标签页上的相同，参见[读懂连接线](./relationship-editing.md#reading-a-connector)。即使关闭了 `Relationship` [显示选项](./table-related-functions.md#table-view-options)，Flow 也会绘制连接线。无论 `Referential Actions` 显示选项如何设置，它都不会绘制关系的 ON DELETE 与 ON UPDATE 操作的 `D:` 和 `U:` 标签，也不会显示将这些操作完整写出的提示。
 
 在整张图中，没有通过关系与其他表相连的表会集中到一个区块中，而不会散落在其余表之间。
 
-![切换到 Flow，固定卡片的点亮状态，选择 Keys only，再放大并按下 Fit](/img/demo-visualization-flow.webp)
+![切换到 Flow，悬停在 orders 上点亮它及其相邻的表，固定点亮状态，选择 Keys only，再用 ⌘ + Wheel 放大并按下 Fit](/img/demo-visualization-flow.webp)
 
 ### 行显示 {#row-display}
 
@@ -113,7 +115,7 @@ Flow 首次打开时从 `Name only` 开始，如果是通过[聚焦于表](#focu
 
 滚轮用于平移，`Shift + Wheel` 则是左右平移。`Ctrl + Wheel` (Windows/Linux) 或 `⌘ + Wheel` (Mac) 用于缩放，并保持屏幕中心不变。  
 触控板上的捏合手势以捏合的位置为中心缩放；触摸屏上的两根手指则以两指之间的位置为中心缩放，并随手指的移动平移。  
-拖动背景即可平移。与 ERD 画布一样，平移没有边界。  
+拖动背景即可平移，也可以按住鼠标中键从任意位置拖动（包括卡片上）。中键拖动只会平移，并保持选中状态不变。与 [ERD 画布](./table-related-functions.md#getting-around-the-canvas)一样，平移没有边界。  
 缩放范围为 `10%` ~ `150%`。Flow 拥有独立于 ERD 标签页的缩放与平移，两者都不会保存到文档中。
 
 在背景上按下会清除选中状态，在背景上 `Ctrl + drag` (Windows/Linux) 或 `⌘ + drag` (Mac) 则会绘制选择框。  
@@ -137,11 +139,11 @@ Flow 没有小地图，也没有滚动条。如果平移之后屏幕上没有留
 - 航点图标（与 `Flow` 按钮上的图标相同）会将 Flow 的范围缩小到该表以及与它相隔一条关系的表，参见[聚焦于表](#focusing-on-tables)。
 - 外部链接图标会切换到 ERD 标签页，只选中该表并将其移到最前面，表名会获得焦点，除非焦点原本就在该表的某个单元格中。如果该表尚未完全显示在视野中，画布会滚动使其居中。查找与替换面板打开期间，只有面板旁边的那部分画布才算在内，与[跳转到匹配项](./find-and-replace.md#going-to-a-match)时相同。它永远不会开始或完成正在绘制的关系。
 
-按下任一按钮都只作用于按钮本身：与按下卡片的其他部位不同，它不会选中卡片，也不会把它移到最前面。因此航点按钮会保留你原有的选中状态；外部链接按钮只是在切换到 ERD 标签页的过程中选中该表。
+按下任一按钮都只作用于按钮本身：与按下卡片的其他部位不同，它不会选中卡片，也不会把它移到最前面。因此航点按钮会保留你原有的选中状态；外部链接按钮只是在切换到 ERD 标签页的过程中选中该表。两个按钮都只响应鼠标左键点击。
 
 ### 移动卡片 {#moving-cards}
 
-除两个卡片按钮之外，拖动卡片的任意部位都可以移动它。  
+除两个卡片按钮之外，用鼠标左键拖动卡片的任意部位都可以移动它；右键拖动不会移动任何内容。  
 按下卡片会将其选中，`Ctrl + click` (Windows/Linux) 或 `⌘ + click` (Mac) 会将其加入选中范围，拖动已选中的卡片会移动所有选中的卡片。这里的选中状态与 ERD 标签页共用，因此在这里选中的内容回到 ERD 标签页后仍处于选中状态。
 
 卡片只在 Flow 中移动：它对应的表在 ERD 标签页上仍留在原处。  
@@ -153,12 +155,13 @@ Flow 没有小地图，也没有滚动条。如果平移之后屏幕上没有留
 Visualization 标签页会以 `Flow` 打开，范围缩小到这些表以及与其中任意一个表相隔一条关系的所有表（两个方向都算）。只会绘制所显示的表之间的连接线。
 
 当右键点击的表是多个选中表之一时，该条目显示为 `Focus on selected tables`，并聚焦于整个选中范围。右键点击选中范围之外的表时，只聚焦于该表。  
-`Alt + F` 取用选中的表，不包括备注。没有选中任何表时它不起作用；在编辑单元格或备注期间、光标位于[查找与替换](./find-and-replace.md#keys-in-the-panel)面板中时，或者快速搜索、表属性、Diff Viewer、自动布局预览或 Time Travel 打开期间，它也会被忽略。
+`Alt + F` 取用选中的表，不包括备注和[表分组](./table-groups.md)。没有选中任何表时它不起作用，即使选中了分组也是如此：请先在分组的右键菜单中选择 `Select tables`，参见[选中分组](./table-groups.md#selecting-groups)。  
+在编辑单元格、备注或表分组的名称期间，光标位于[查找与替换](./find-and-replace.md#keys-in-the-panel)面板中时，或者快速搜索、表属性、Diff Viewer、自动布局预览、Time Travel、[`Export image`](./file-import-export.md#image) 对话框或 [`Map Columns`](./relationship-editing.md#map-columns) 打开期间，它都会被忽略。
 
 在 Flow 内部，航点[卡片按钮](#card-buttons)会以同样的方式缩小视图范围，只是针对那一个表。[工具栏](#toolbar)上的 `Show all` 会回到整张图。  
 缩小范围后的视图会单独排布并适应屏幕。离开该标签页或切换到 `Graph` 再回来时，它仍保持缩小后的范围，`Escape` 也不会将其扩大。
 
-![按 ⌥ + F 聚焦于 orders，用卡片按钮缩小到 members，再用 Show all 回到整张图](/img/demo-visualization-focus.webp)
+![按 ⌥ + F 聚焦于 orders，用 members 卡片上的航点按钮缩小到 members，再用 Show all 回到整张图](/img/demo-visualization-focus.webp)
 
 ### Flow 的排布方式 {#how-flow-is-placed}
 
@@ -175,9 +178,9 @@ Flow 为整张图和缩小范围后的视图各保留一份布局，因此只要
 每次排布都会考虑卡片当前所在的位置，因此 `Tidy Up` 不一定能恢复之前的排列。  
 仅改变卡片尺寸的变更（例如重命名表或添加列）不会重新排布卡片。如果卡片最终相互重叠，请按 `Tidy Up`。
 
-排布耗时超过 6 秒时，会显示带有 `Cancel` 的 `Placing tables…` 提示。  
+排布耗时超过 6 秒时，会显示 `Placing tables` 提示，并带有旋转的加载图标和 `Cancel`。  
 `Cancel`，或在排布进行期间随时按 `Escape`，都会丢弃这次排布；按 `Tidy Up` 或回到 `Flow` 时会再次请求排布。  
-如果排布失败（宿主环境不运行 shared worker、worker 启动失败，或 60 秒内没有返回布局），Flow 会显示 `Could not place tables`，按 `Tidy Up` 可以重试。参见 [Web Worker](../../api/installation.md#web-workers)。  
+如果排布失败（宿主环境不运行 shared worker、worker 启动失败，或 60 秒内没有返回布局），Flow 会显示带有警告标志的 `Could not place tables` 提示，按 `Tidy Up` 可以重试。参见 [Web Worker](../../api/installation.md#web-workers)。  
 无论是整张图还是缩小范围后的视图，Flow 都只绘制最近一次布局所放置的表，因此首次显示时，在排布成功之前可能一张卡片都没有。  
 每当 Flow 重新排布卡片（例如将视图范围缩小到其他表）时，之前的排列会一直留在屏幕上，直到新的布局完成；如果这次排布被取消或失败，之前的排列也会保持不变。
 
@@ -186,7 +189,7 @@ Flow 为整张图和缩小范围后的视图各保留一份布局，因此只要
 ### Flow 从不编辑文档 {#flow-never-edits-the-document}
 
 Flow 只读取图。缩放、平移、移动卡片、`Tidy Up`、行显示、固定和聚焦都不会向 [Undo 历史记录](./undo-redo.md#what-the-history-records)中添加任何内容。  
-它们也不会改变图中的任何内容，唯一的例外是按下卡片会把对应的表移到最前面，就像在 ERD 标签页上点击表一样，因此该表在 ERD 标签页上也会位于最前面。`Graph` 同样不会改动图。  
+它们也不会改变图中的任何内容。按下卡片确实会把对应的表移到最前面，就像在 ERD 标签页上点击表一样，因此该表在 ERD 标签页上也会位于最前面，但堆叠顺序不会被保存，参见[移动多个表](./table-related-functions.md#移动多个表)。`Graph` 同样不会改动图。  
 按下卡片永远不会添加关系。如果你在绘制关系的过程中离开了 ERD 标签页，那么在尚未选取起点表时，按下卡片会将其表选为起点，否则会结束这次绘制。  
 外部链接[卡片按钮](#card-buttons)则更进一步，因为它会把你带出 Flow：它在 ERD 标签页上造成的滚动会像其他任何视图位置变化一样被记录。
 

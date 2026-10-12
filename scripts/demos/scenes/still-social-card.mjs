@@ -22,15 +22,17 @@ const at = (x, y, color) => ({ x: x / ZOOM, y: (y - TOP) / ZOOM, color });
 
 // Customers over orders, with reviews and products closing the ring on the
 // right; the block sits midway between the toolbar and the canvas toolbar.
-// Taller tables are raised by half the difference so connectors run straight.
+// Taller tables are raised by half the difference so connectors run straight;
+// orders sits exactly under members (both 227px wide), or the dashed
+// members→orders connector picks up a 2px jog on two rounded corners.
 const TABLES = {
   addresses: at(40, 106, BLUE),
   members: at(340, 106, BLUE),
-  reviews: at(800, 94.5, PINK),
-  payments: at(40, 344.5, AMBER),
-  orders: at(342, 356, AMBER),
+  reviews: at(800, 94.6, PINK),
+  payments: at(40, 344.6, AMBER),
+  orders: at(340, 356, AMBER),
   order_items: at(640, 356, AMBER),
-  products: at(940, 344.5, GREEN),
+  products: at(940, 344.6, GREEN),
 };
 
 export default {

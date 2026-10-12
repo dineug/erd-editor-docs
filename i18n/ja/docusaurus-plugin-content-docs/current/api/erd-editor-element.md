@@ -1,6 +1,6 @@
 ---
 sidebar_position: 2
-description: erd-editor 要素の API。属性、value、イベント、テーマ、キーバインディング、スキーマの読み込みと書き出し。
+description: erd-editor 要素の API。属性、value と runtimeValue、イベント、テーマ、表示言語、ウェルカム画面、キーバインディング、スキーマの読み込みと書き出し。
 ---
 
 # ErdEditorElement
@@ -13,14 +13,20 @@ interface ErdEditorElement extends HTMLElement {
   readonly: boolean;
   systemDarkMode: boolean; // system dark/light auto
   enableThemeBuilder: boolean;
+  enableLocalePicker: boolean;
+  enableWelcomeScreen: boolean;
   value: string;
+  readonly runtimeValue: string;
   focus: () => void;
   blur: () => void;
   clear: () => void;
   destroy: () => void;
   setInitialValue: (value: string) => void;
   setPresetTheme: (themeOptions: Partial<ThemeOptions>) => void;
+  setSystemAppearance: (appearance: 'dark' | 'light' | null) => void;
   setTheme: (theme: Partial<Theme>) => void;
+  setLocale: (locale: LocaleOption) => void;
+  setSystemLocale: (locale: string | null) => void;
   setKeyBindingMap: (
     keyBindingMap: Partial<
       Omit<
@@ -35,11 +41,18 @@ interface ErdEditorElement extends HTMLElement {
       >
     >
   ) => void;
-  setSchemaSQL: (value: string) => void;
-  setSchemaGraphQL: (value: string) => void;
-  setSchemaDBML: (value: string) => void;
-  setSchemaAML: (value: string) => void;
-  getSchemaSQL: (databaseVendor?: DatabaseVendor) => string;
+  setSchemaSQL: SetSchema;
+  setSchemaGraphQL: SetSchema;
+  setSchemaDBML: SetSchema;
+  setSchemaAML: SetSchema;
+  setSchemaJSON: (
+    value: string,
+    options?: { mode?: 'replace' | 'append' }
+  ) => void;
+  getSchemaSQL: (
+    databaseVendor?: DatabaseVendor,
+    options?: SchemaSQLOptions
+  ) => string;
   getSharedStore: (
     config?: SharedStoreConfig & {
       mouseTracker?: boolean;
@@ -53,15 +66,17 @@ interface ErdEditorElement extends HTMLElement {
 エディタは closed shadow root にレンダリングされるため、`editor.shadowRoot` は `null` になり、ページのスタイルは内外に漏れません。  
 内部の要素はセレクタでは参照できないため、スタイルは [setTheme](#settheme) と `--erd-editor-*` カスタムプロパティで指定します。
 
-属性は `readonly`、`system-dark-mode`、`enable-theme-builder` の 3 つだけで、いずれも既定値は `false` です。
+属性は `readonly`、`system-dark-mode`、`enable-theme-builder`、`enable-locale-picker`、`enable-welcome-screen` の 5 つだけで、いずれも既定値は `false` です。最後の 2 つは `4.0.0` で追加されました。どの属性も、[readonly](#readonly) で説明するとおりに値を読み取ります。
 
 ## readonly
 
 エディタの編集可否を設定します。  
-設定されている間は、`value` への代入、`clear()`、`setSchemaSQL()`、`setSchemaGraphQL()`、`setSchemaDBML()`、`setSchemaAML()`、undo、redo がすべて無視され、`change` イベントも発行されません。ドキュメントの読み込みには [setInitialValue](#setinitialvalue) を使用します。  
+設定されている間は、`value` への代入、`clear()`、`setSchemaSQL()`、`setSchemaGraphQL()`、`setSchemaDBML()`、`setSchemaAML()`、`setSchemaJSON()`、undo、redo がすべて無視され、`change` イベントも発行されません。ドキュメントの読み込みには [setInitialValue](#setinitialvalue) を使用します。  
 表示は引き続き動作します。拡大・縮小、表示位置の移動、ハンドツール、Zen モード、キャンバスのタブ、テーブルへのフォーカスを含む [Visualization](../guide/guides/visualization.md) タブの両方のモード、データベースベンダー、SQL とコード生成の出力設定はそのまま適用されるため、読み取り専用のビューアーでも別のベンダー向けの SQL を書き出したり、生成されたコードを読んだりできます。  
 `3.10.0` からは[検索と置換](../guide/guides/find-and-replace.md#read-only-editors)も開きます。ヘッダーに `Find` と表示され、置換フィールドとそのボタンのない、検索専用のパネルです。一致箇所へ移動すると、引き続きその一致箇所が表示され、選択されます。  
 テーブルのプロパティも引き続き開きます。`3.10.0` からは、タイトルの横に `Read only` のバッジが表示され、`Indexes` タブでは何も編集できません。[テーブルのプロパティ](../guide/guides/table-related-functions.md#table-properties)を参照してください。  
+`4.0.0` からは、読み取り専用のエディタには [`Import and Add`](../guide/guides/file-import-export.md#import-and-add)、`New Table Group`、`Group selected tables`、`Remove from group`（[テーブルグループ](../guide/guides/table-groups.md#読み取り専用のエディタ)を参照してください）、[`Map Columns`](../guide/guides/relationship-editing.md#map-columns) がなく、[ウェルカム画面](#enablewelcomescreen)も表示されません。設定タブのロックのボタンを押しても何も変わらず、Schema SQL タブの `Before tables` と `After tables` のスクリプトは編集できません。  
+Schema SQL タブの `This window only` の選択、つまり `Statements`、`Header`、`Tables` は保存されることがなく、引き続き適用されます。[`Export image`](../guide/guides/file-import-export.md#画像) ダイアログ、テーマビルダー、Display Language のピッカーも同様です。テーマビルダーや Display Language のピッカーで選ぶと、引き続き [changePresetTheme](#changepresettheme) または [changeLocale](#changelocale) が発行されます。  
 属性名のみの指定、`=""`、`="true"` はいずれも `true` として扱われます。`="false"` は `false` として扱われ、HTML の慣用表現である `readonly="readonly"` を含むその他の文字列も同様です。
 
 ```js
@@ -77,7 +92,10 @@ editor.setAttribute('readonly', 'true');
 ## systemDarkMode
 
 システムのダーク / ライトモードに自動で同期するかどうかを設定します。  
-有効にすると、テーマの `appearance` は OS の設定から決まり、[setPresetTheme](#setpresettheme) で指定した値を上書きします。OS 側でモードが切り替わると、そのたびに再び上書きされます。その間に呼び出した `setPresetTheme` は、次に OS が切り替わるまで有効です。無効にすると、最後の値のまま固定されます。
+`4.0.0` からは、有効にするとテーマの `appearance` が `'system'` になり、`setPresetTheme({ appearance: 'system' })` と同じ結果になります。エディタは OS が報告するライトまたはダーク、あるいは [setSystemAppearance](#setsystemappearance) で指定したほうで表示し、それが変わると切り替わります。  
+その後に `'light'` または `'dark'` を指定して [setPresetTheme](#setpresettheme) を呼び出すか、テーマビルダーやクイック検索で `Light` または `Dark` を選ぶと、`'system'` は置き換えられ、そのまま保たれます。`systemDarkMode` が `true` のままでも、次の OS の切り替えで上書きされることはありません。`4.0.0` より前は、次の OS の切り替えで上書きされていました。  
+外観が `'system'` の間に無効にすると、その時点で表示しているライトまたはダークのまま保たれます。外観を `'system'` から変更した後に無効にした場合は、そのまま変わりません。  
+変更してもイベントは発行されません。
 
 ```js
 editor.systemDarkMode = true;
@@ -91,9 +109,10 @@ editor.setAttribute('system-dark-mode', 'true');
 
 ## enableThemeBuilder
 
-プリセットテーマを簡単に設定できる UI を提供するかどうかを設定します。
+プリセットテーマを簡単に設定できる UI を提供するかどうかを設定します。  
+ツールバーに `Theme` ボタンを表示し、このボタンで `Accent color`、`Gray color`、`Appearance` を持つテーマビルダーが開きます。`4.0.0` からは、`Appearance` に `Light` と `Dark` に加えて `System` があり、これが有効な間は、クイック検索に `System`、`Light`、`Dark` を持つ `Theme` が表示されます。[言語とテーマ](../guide/guides/language-and-theme.md)を参照してください。
 
-![テーマビルダーを開いてアクセントカラーとグレーカラーを切り替える](/img/demo-theme-builder.webp)
+![ツールバーからテーマビルダーを開き、アクセントカラーとグレーカラーを選んで、外観を Light、続いて System に切り替える様子](/img/demo-theme-builder.webp)
 
 ```js
 editor.enableThemeBuilder = true;
@@ -105,15 +124,54 @@ editor.setAttribute('enable-theme-builder', 'true');
 <erd-editor enable-theme-builder></erd-editor>
 ```
 
-このパネルからプリセットテーマを変更すると、[changePresetTheme](#changepresettheme) イベントを発行します。
+このパネルまたはクイック検索からプリセットテーマを変更すると、[changePresetTheme](#changepresettheme) イベントを発行します。
+
+## enableLocalePicker
+
+`4.0.0` からは、エディタの表示言語を選ぶ UI を提供するかどうかを設定します。  
+ツールバーに `Display Language` ボタンを表示し、両方が表示される場合は `Theme` の後に並びます。このボタンで Display Language のピッカーが開き、クイック検索には `Display Language` が表示されます。どちらも `System` と 25 の言語を提供します。[言語とテーマ](../guide/guides/language-and-theme.md)を参照してください。  
+また、[setLocale](#setlocale) を呼び出すか言語を選ぶまでにエディタが何を表示するかも決めます。有効な間は `'system'`、無効な間は英語のため、何も設定しない要素はこれまでどおり英語で表示されます。有効と無効を切り替えると、すぐに両者が切り替わります。言語を一度設定するか選ぶと、どちらに切り替えてもその選択が保たれます。  
+要素を追加する前に設定すると、最初のフレームから `'system'` に従います。  
+言語を選ぶと [changeLocale](#changelocale) が発行されます。
+
+```js
+editor.enableLocalePicker = true;
+// or
+editor.setAttribute('enable-locale-picker', 'true');
+```
+
+```html
+<erd-editor enable-locale-picker></erd-editor>
+```
+
+## enableWelcomeScreen
+
+`4.0.0` からは、空のダイアグラムで[ウェルカム画面](../guide/guides/editing-start.md#ウェルカム画面)を表示するかどうかを設定します。  
+ドキュメントにテーブルが 1 つもなく、表示されているメモもテーブルグループもない間、ERD タブの上に表示されます。`readonly` が設定されている間、Zen モードの間、テーブルのプロパティ、Diff Viewer、Time Travel、自動レイアウトのプレビューのいずれかが開いている間は表示されません。最初のテーブル、表示されているメモ、表示されているテーブルグループが加わると消え、Undo でダイアグラムが空に戻ると再び表示されます。  
+`New Table`、`New Memo`、`Command Palette` の行には、[setKeyBindingMap](#setkeybindingmap) で設定された状態の `addTable`、`addMemo`、`search` の最初のキーの組み合わせが表示され、空にした名前については何も表示されません。矢印が `Theme` と `Display Language` のボタンを指すのは、`enableThemeBuilder` と `enableLocalePicker` によってそれらが表示されている場合だけです。  
+メニューでは、`↑`、`↓`、`Home`、`End` で行の間を移動し、これらの入力では `preventDefault()` が呼び出されて伝播も止められます。`Enter` と `Space` は伝播が止められますが `preventDefault()` は呼び出されないため、フォーカスしている行がそれを受け取ります。`Import` の形式の一覧で押した `Escape` は前に戻り、`preventDefault()` が呼び出されて伝播も止められます。それ以外のキーは、通常どおりエディタとページに届きます。  
+ドキュメントは何も変更しないため、`value` はそのままで、`change` も発行されません。  
+公式のホストと同じように、[setInitialValue](#setinitialvalue) でドキュメントを読み込んでから有効にすると、読み込み中のファイルの上に画面が一瞬表示されることはありません。
+
+```js
+editor.enableWelcomeScreen = true;
+// or
+editor.setAttribute('enable-welcome-screen', 'true');
+```
+
+```html
+<erd-editor enable-welcome-screen></erd-editor>
+```
 
 ## value
 
 ### getter
 
-現在のエディタの状態を、エディタが定義する[スキーマ](./advanced/schema.md)の JSON 文字列として取得します。  
-シリアライズの際にはドキュメントの `ignoreSaveSettings` が適用され、スクロールのビットが設定されている場合は表示の原点が `0, 0`、拡大・縮小のビットが設定されている場合は拡大・縮小のレベルが `1` として書き出されます。  
-`3.10.0` からは、要素に値を渡す前に表示されるドキュメントでも、空の値から読み込んだドキュメントでも、新しいドキュメントでは両方のビットが設定されています。その `value` は、[スクロール情報の保存](../guide/guides/settings.md#スクロール情報の保存)をオンにするまでは表示の原点を `0, 0` として、[拡大・縮小情報の保存](../guide/guides/settings.md#拡大縮小情報の保存)をオンにするまでは拡大・縮小のレベルを `1` として書き出し続けます。ビットについては [Settings](./advanced/schema.md#settings) を参照してください。
+現在のドキュメントを、エディタが定義する[スキーマ](./advanced/schema.md)の JSON 文字列として取得します。  
+`4.0.0` からは、ファイルが保持する形式のドキュメントです。これは `json` の書き出しが書き込む内容であり、公式のホストが保存する内容でもあります。含まれるのは現存するエンティティだけで、削除したエンティティ、重なり順、そして計測した幅、キーのマーク、リレーションシップの接続位置のようにエディタが自分で求めるものは含まれません。エンティティは決まった順序のキーで並び、2 つのスペースでインデントされ、改行で終わるため、同じドキュメントからは常に同じバイト列が得られます。  
+[ロック](../guide/guides/settings.md#ロック)がオンの設定は、画面の表示ではなく、ロックされた値で書き出されます。`Viewport` のロックは `originX`、`originY`、`zoomLevel` を保持し、`Canvas Type`、`Language`、`Table Name Case`、`Column Name Case`、`Bracket Type` はそれぞれ自身の設定を保持します。それ以外の設定は現在の値のまま書き出され、`lockSettings` は常に書き出されます。ビットについては [Settings](./advanced/schema.md#settings) を参照してください。  
+要素に値を渡す前に表示されるドキュメントでも、空の値から読み込んだドキュメントでも、新しいドキュメントではすべてのロックがオンです。その `value` は、対応するロックをオフにするまで、表示の原点を `0, 0`、拡大・縮小のレベルを `1`、タブを ERD タブ、Code Generator の言語、名前のケース、括弧の種類を既定値のまま保ちます。  
+`4.0.0` より前は、`ignoreSaveSettings` を適用した、エディタが保持しているとおりのドキュメント全体を返していました。エディタが保持しているとおりのドキュメントは [runtimeValue](#runtimevalue) になり、`ignoreSaveSettings` は読み取りも書き込みもされなくなりました。
 
 ```js
 const data = editor.value;
@@ -122,11 +180,13 @@ const data = editor.value;
 ### setter
 
 以前に保存したエディタの状態を読み込みます。ドキュメント全体を置き換えるため、現在のドキュメントは先に消去されます。  
-`clear()`、`setInitialValue()`、`setSchema*` の各メソッドと同様に、Visualization タブの Flow の表示状態、つまりレイアウト、絞り込んでいるテーブル、行の表示、拡大・縮小、表示位置も破棄します。  
+`clear()`、`setInitialValue()`、既定の `mode: 'replace'` での `setSchema*` の各メソッドと同様に、Visualization タブの Flow の表示状態、つまりレイアウト、絞り込んでいるテーブル、行の表示、拡大・縮小、表示位置も破棄します。追加（`mode: 'append'`）では破棄しません。  
 履歴に記録されるため `Undo, Redo` が可能で、`change` を発行します。  
+ファイルが保持する形式、[runtimeValue](#runtimevalue)、以前のリリースで保存したファイルのいずれも受け付けます。  
 空文字列や文字列以外の値を指定した場合はエラーにならず、新しいドキュメントを読み込むため、代入する前に値を確認します。  
-`3.10.0` からは、この新しいドキュメントは `setInitialValue('')` で始まるものと同じで、空で、設定は既定値のまま、表示位置も拡大・縮小のレベルも保存しません。以前は、両方を保存する空のドキュメントでした。  
+この新しいドキュメントは `setInitialValue('')` で始まるものと同じで、空で、設定は既定値のまま、`4.0.0` からはすべてのロックがオンです。`3.10.x` では表示位置も拡大・縮小のレベルも保存せず、それより前は両方を保存していました。  
 shared store はこの読み込みを、新しいドキュメントの JSON 全体を付けて共同編集の参加者へ中継するため、古いリリースのエディタも含め、すべての参加者が同じドキュメントを読み込みます。  
+`4.0.0` からは、読み込んだドキュメントのロックと、その後 `value` が書き出すロックされた値はテキストから取られ、表示はテキストが指定する位置になります。そこにダイアグラムが何も描かれていない場合は、ダイアグラムの上になります。テキストがロックしているそれ以外の設定、つまりタブ、Code Generator の言語、名前のケース、括弧の種類については、エディタは読み込む前に表示していたものを表示し続けます。テキストがロックしていない設定は、テキストの値になります。[setInitialValue](#setinitialvalue) は代わりにテキストが持つすべての値を取ります。ロックを何も指定していないテキストについても、そちらを参照してください。  
 マージコンフリクトのマーカーが残ったファイルなど、JSON でないテキストもエラーにはなりません。ドキュメントは空になり、設定はそのまま保たれ、パースエラーがコンソールに出力されます。  
 `readonly` が設定されている間は無視されます。読み取り専用のエディタに読み込むには [setInitialValue](#setinitialvalue) を使用します。
 
@@ -134,13 +194,28 @@ shared store はこの読み込みを、新しいドキュメントの JSON 全�
 editor.value = 'json...';
 ```
 
+## runtimeValue
+
+`4.0.0` からは、このエディタが保持しているとおりのドキュメントを JSON 文字列として取得します。setter はないため、strict モードのコードで代入すると例外が発生します。  
+[value](#value) が含まないもの、つまり削除したエンティティとその順序、重なり順、計測した幅、キーのマーク、リレーションシップの接続位置、シーケンスを含みます。ここでも、ロックされた設定はロックされた値で書き出されます。  
+共同編集の参加者や同じドキュメントの 2 つ目のビューのように、すでに進行中のセッションに参加する別のエディタに、その [setInitialValue](#setinitialvalue) で初期値を設定するために使います。後でセッションから削除の Undo が送られてくると、そのエディタではエンティティが元のとおりに戻ります。一方、`value` から初期値を設定したエディタは削除したエンティティを持たないため、代わりに名前のない空のテーブルが戻ります。[共同編集](./advanced/collaborative-editing.md)を参照してください。  
+削除したエンティティを回収するものはもうないため、次にドキュメントをファイルから開くまで、それらはここに残ります。  
+ファイルには決して書き込まないでください。保存するのは `value` です。[JSON Schema](./advanced/schema.md#json-schema) は `value` を受け付けますが、こちらは受け付けません。
+
+```js
+otherEditor.setInitialValue(editor.runtimeValue);
+```
+
 ## setInitialValue
 
 以前に保存したエディタの状態を読み込みます。読み込み自体は履歴に記録されないため Undo できず、`change` イベントも発行されません。  
 読み込むときに履歴も消去されるため、読み込む前に行った操作を、読み込んだドキュメントに対して `Undo, Redo` することはできません。  
+ファイルが保持する形式、[runtimeValue](#runtimevalue)、以前のリリースで保存したファイルのいずれも受け付け、`value` への代入とは異なり、タブとコードの設定を含め、テキストが持つすべての設定を取ります。  
 空文字列や文字列以外の値を指定した場合はエラーにならず、新しいドキュメントを読み込むため、`setInitialValue('')` は空のダイアグラムから始めます。  
-`3.10.0` からは、この新しいドキュメントは、要素に値を一度も渡していないときに表示されるドキュメントでもあり、表示位置も拡大・縮小のレベルも保存しないため、スクロールや拡大・縮小をしても `value` は変わりません。以前は両方を保存していました。  
-テキストから読み込んだドキュメントはそこに指定されているスイッチの設定を保ち、`3.2.3` より前に保存したファイルや v2 の `.vuerd` ファイルのように何も指定されていないドキュメントは、両方を保存します。  
+`4.0.0` からは、この新しいドキュメントは、要素に値を一度も渡していないときに表示されるドキュメントでもあり、すべてのロックがオンです。スクロール、拡大・縮小、タブの切り替え、Code Generator の言語、名前のケース、括弧の種類の変更をしても、`value` は変わらず、`change` も発行されません。`3.10.x` では表示位置も拡大・縮小のレベルも保存せず、それより前は両方を保存していました。  
+テキストから読み込んだドキュメントは、そこに指定されているロックを保ちます。何も指定されていないドキュメント、つまり `ignoreSaveSettings` の内容にかかわらず `4.0.0` より前に保存したすべてのファイルと v2 の `.vuerd` ファイルは、すべてのロックがオンの状態で開きます。`Viewport` は原点 `0, 0`、拡大・縮小のレベル `1` でロックされ、タブは ERD タブで、言語、名前のケース、括弧の種類は保存されたときのままです。  
+どちらの場合も、表示はドキュメントの表示位置で開きます。テキストがロックを指定している場合はテキストが保存した表示位置、指定していない場合は拡大・縮小のレベル `1` の原点 `0, 0` です。そこにダイアグラムが何も描かれていない場合は、ダイアグラムの上で開きます。ロックされた `Viewport` は、引き続きロックされた値を `value` に保ちます。  
+`4.0.0` からは、それまで保持していたドキュメントの共同編集の状態も破棄し、このエディタの [shared store](#getsharedstore) がすでに購読されている場合は、ほかのエディタにそれぞれの状態を改めて要求するため、進行中のセッションで読み込み直したエディタも追いつきます。そのようなエディタには、別のエディタの [runtimeValue](#runtimevalue) で初期値を設定します。  
 JSON でないテキストもエラーにはなりません。ドキュメントは空になり、設定はそのまま保たれ、パースエラーがコンソールに出力されます。  
 `value` への代入とは異なり `readonly` の影響を受けないため、読み取り専用のビューアーにドキュメントを読み込む方法になります。
 
@@ -159,17 +234,18 @@ editor.addEventListener('change', () => {
 
 ## Event
 
-公開されているイベントは `change` と `changePresetTheme` の 2 つだけです。  
+公開されているイベントは `change`、`changePresetTheme`、`changeLocale` の 3 つだけで、`changeLocale` は `4.0.0` で追加されました。  
 要素は内部の処理のために `@dineug/erd-editor/internal-*` イベントも自身に発行しますが、これらは API には含まれません。
 
 ### change
 
 エディタに変更があるとイベントを発行します。  
 200ms のデバウンスがかかり、`readonly` が `true` の間は発行されません。  
-UI での編集、`value` への代入、`clear()`、`setSchema*` の各メソッドなど、ドキュメントのあらゆる変更で発行されます。`setInitialValue` では発行されません。  
-Visualization タブの Flow モード内の操作、つまり拡大・縮小、表示位置の移動、カードの移動、`Tidy Up`、行の表示の変更、カードからの表示の絞り込みは、どれもドキュメントの変更ではないため発行されません。タブの切り替えでは発行されるため、ERD タブからテーブルにフォーカスすると `change` が 1 回発行され、Flow から ERD タブへ戻るカードの外部リンクボタンでも同様に発行されます。別のタブから検索と置換を開いたり、クイック検索の結果へ移動したりした場合も、ERD タブが表示され、同じように 1 回発行されます。  
-ERD キャンバスのスクロールと拡大・縮小でも、`editor.value` が変わるかどうかにかかわらず発行されます。`Save Scroll Information` がオフの間は、スクロールしても `value` は変わりません。拡大・縮小は表示位置も動かすため、`value` が変わらないのは `Save Scroll Information` と `Save Zoom Information` が両方オフの間だけです。`3.10.0` からは新しいドキュメントでは両方がオフのため、新しいダイアグラムではスクロールや拡大・縮小によって、`value` が変わらないまま `change` が発行されます。  
-このような書き込みを省くには、読み込んだファイルではなく、最後に保存した値と `editor.value` を比較します。別のリリースや別のマシンが書き出したファイルは、読み込んだ時点で `value` が異なることがあるためです。ファイルを書き出すホストは、代わりにレプリケーション用の store の `changed` で、編集と表示の変更を区別することもできます。[on@change](./advanced/remote-storage.md#onchange) を参照してください。  
+UI での編集、`value` への代入、`clear()`、`setSchema*` の各メソッド、`4.0.0` からは `setSchemaJSON()` と `Import and Add` など、ドキュメントのあらゆる変更で発行されます。`setInitialValue` では発行されません。  
+Visualization タブの Flow モード内の操作、つまり拡大・縮小、表示位置の移動、カードの移動、`Tidy Up`、行の表示の変更、カードからの表示の絞り込みは、どれもドキュメントの変更ではないため発行されません。  
+`4.0.0` からは、[ロック](../guide/guides/settings.md#ロック)がオンの設定の変更も、画面を動かすだけで `value` を変えることはないため、発行されません。`Viewport` がロックされている間の ERD キャンバスのスクロールや拡大・縮小、`Canvas Type` がロックされている間のタブの切り替え、それぞれのロックがオンの間の Code Generator の言語、テーブル名のケース、カラム名のケース、括弧の種類の変更がこれにあたります。除外されるのはこれらの変更だけのため、ドキュメントの編集も含むバッチでは引き続き発行されます。設定をロックしたりロックを解除したりすると発行されます。  
+新しいドキュメントと `4.0.0` より前に保存したすべてのファイルではすべてのロックがオンのため、既定ではスクロール、拡大・縮小、タブの切り替えでは何も発行されません。ERD タブからテーブルにフォーカスする操作、Flow から ERD タブへ戻るカードの外部リンクボタン、別のタブから検索と置換を開く操作やクイック検索の結果へ移動する操作も同様です。これらがそれぞれ `change` を 1 回発行するのは、対象となるロックがオフの間だけです。タブの切り替えには `Canvas Type`、カードのボタンやクイック検索の結果があわせて行うスクロールには `Viewport` が対象になります。`4.0.0` より前は、スクロール、拡大・縮小、タブの切り替えでは、`editor.value` が変わらない場合でも常に発行されていました。  
+何も変えない書き込みを省くには、読み込んだファイルではなく、最後に保存した値と `editor.value` を比較します。以前のリリースが書き出したファイル、v2 のファイル、手で編集したファイルは、`value` がファイルが保持する形式で書き出すため、読み込んだ時点で `value` が異なることがあります。`Viewport` のロックがオフで、その原点ではこの画面にダイアグラムが何も描かれないファイルも同様です。読み込みによって表示がダイアグラムの上に移動し、`value` は移動した先を書き出すためです。`4.0.0` からは、`value` が計測した幅を持たないため、計測した幅がこの原因になることはなくなりました。ファイルを書き出すホストは、代わりにレプリケーション用の store の `changed` で、編集と表示の変更を区別することもできます。[on@change](./advanced/remote-storage.md#onchange) を参照してください。  
 イベントは `detail` を持たず、バブリングもシャドウ境界の通過もしないため、要素自身で購読し、ハンドラー内で `editor.value` を読み取ります。
 
 ```js
@@ -180,13 +256,26 @@ editor.addEventListener('change', event => {
 
 ### changePresetTheme
 
-組み込みのテーマビルダーからプリセットテーマを変更したときに発行されます。  
-[setPresetTheme](#setpresettheme) を自分で呼び出した場合は発行されません。  
-`event.detail` は、指定した一部の値ではなく、完全に解決された `ThemeOptions`（`{ appearance, grayColor, accentColor }`）です。
+組み込みのテーマビルダー、または `4.0.0` からはクイック検索の `Theme` でプリセットテーマを変更したときに発行されます。すでに適用されている選択肢を選んだ場合も含め、選ぶたびに発行されます。  
+[setPresetTheme](#setpresettheme) や [setSystemAppearance](#setsystemappearance) を自分で呼び出した場合や、[systemDarkMode](#systemdarkmode) を有効または無効にした場合は発行されません。  
+`event.detail` は、指定した一部の値ではなく、選んだ後の完全な `ThemeOptions`（`{ appearance, grayColor, accentColor }`）です。`4.0.0` からは、`System` を選んでいる間、その `appearance` は表示しているライトやダークではなく `'system'` になるため、そのまま保存して、そのまま `setPresetTheme` に渡します。
 
 ```js
 editor.addEventListener('changePresetTheme', event => {
   const themeOptions = event.detail;
+});
+```
+
+### changeLocale
+
+`4.0.0` からは、エディタで言語を選んだときに発行されます。Display Language のピッカーとクイック検索の `Display Language` のどちらで選んだ場合も発行され、どちらも [enableLocalePicker](#enablelocalepicker) で有効になります。  
+言語が適用された後に、すでに適用されている選択肢を選んだ場合も含め、選ぶたびに発行されます。[setLocale](#setlocale) と [setSystemLocale](#setsystemlocale) では決して発行されず、ブラウザの言語が変わった場合も発行されません。言語を切り替えても `change` は発行されません。  
+`event.detail` は `{ locale }` で、`locale` は `LocaleOption` です。`System` を選んだ場合は `'system'`、それ以外の場合はその言語のコードになります。要素は選んだ内容を記憶しないため、保存して、次に読み込むときに `setLocale` に渡します。  
+`change` と同じくバブリングしないため、要素自身で購読します。
+
+```js
+editor.addEventListener('changeLocale', event => {
+  const { locale } = event.detail; // 'system' | 'ko-KR' | ...
 });
 ```
 
@@ -208,9 +297,9 @@ editor.blur();
 
 ## clear
 
-ドキュメントを空にし、すべてのテーブル、カラム、リレーションシップ、インデックス、メモを削除します。  
-データベース、表示位置、拡大・縮小のレベル、テーブルの表示オプション、`Save Scroll Information` と `Save Zoom Information` のスイッチを含め、設定はすべてそのまま残るため、消去したファイルはそれまでと同じものを保存し続けます。代わりに新しいドキュメントから始めるには、`value` に `''` を代入するか、`setInitialValue('')` を呼び出します。  
-履歴に記録されるため元に戻すことができ、`change` を発行します。`readonly` が設定されている間は無視されます。
+ドキュメントを空にし、すべてのテーブル、カラム、リレーションシップ、インデックス、メモ、そして `4.0.0` からはすべてのテーブルグループを削除します。  
+データベース、表示位置、拡大・縮小のレベル、テーブルの表示オプション、保持している値を含む各ロック、Schema SQL タブの `Before tables` と `After tables` のスクリプトを含め、設定はすべてそのまま残るため、消去したファイルはそれまでと同じものを保存し続けます。代わりに新しいドキュメントから始めるには、`value` に `''` を代入するか、`setInitialValue('')` を呼び出します。  
+履歴に記録されるため元に戻すことができ、`change` を発行します。Undo すると、ドキュメントはエディタが保持していたとおりに、ロックされた各設定はロックされた値で戻ります。`readonly` が設定されている間は無視されます。
 
 ```js
 editor.clear();
@@ -230,10 +319,10 @@ editor.destroy();
 
 キーボードショートカットを再定義します。  
 `edit`、`stop`、`undo`、`redo`、`zoomIn`、`zoomOut`、`zoomReset` は固定で、再定義できません。  
-書き込めるのは次の 18 個の名前だけで、固定の名前を含め、オブジェクト内のそれ以外の値は無視されます。  
-`3.10.0` から `search` を再定義できるようになり、`findReplace` が追加されました。以前は `search` は固定でした。  
+書き込めるのは次の 19 個の名前だけで、固定の名前を含め、オブジェクト内のそれ以外の値は無視されます。  
+`3.10.0` から `search` を再定義できるようになり、`findReplace` が追加されました。以前は `search` は固定でした。`4.0.0` から `removeSelection` が追加されました。  
 バインディングの値は `ShortcutOption[]` である必要があります。文字列だけの指定は無視されるため、`{ addTable: 'Alt+KeyN' }` ではなく `{ addTable: [{ shortcut: 'Alt+KeyN' }] }` と記述します。  
-空の配列も受け付けられ、何も割り当てません。`setKeyBindingMap({ findReplace: [] })` は `Ctrl + F` (Windows/Linux) または `⌘ + F` (Mac) をページに任せ、`{ search: [] }` は `Ctrl + K` (Windows/Linux) または `⌘ + K` (Mac) を同じようにページに任せます。ツールバーの `Search` ボタンからは引き続きクイック検索を開け、検索と置換もツールバーのボタン、クイック検索の行、キャンバスのコンテキストメニューから引き続き開けます。空にした名前のショートカットは、これらのどこにも表示されません。  
+空の配列も受け付けられ、何も割り当てません。`setKeyBindingMap({ findReplace: [] })` は `Ctrl + F` (Windows/Linux) または `⌘ + F` (Mac) をページに任せ、`{ search: [] }` は `Ctrl + K` (Windows/Linux) または `⌘ + K` (Mac) を同じようにページに任せます。ツールバーの `Search` ボタンからは引き続きクイック検索を開け、検索と置換もツールバーのボタン、クイック検索の行、キャンバスのコンテキストメニューから引き続き開けます。空にした名前のショートカットは、これらのどこにも表示されません。`{ removeSelection: [] }` は `Delete` と `Backspace` をページに任せ、このときテーブル、メモ、テーブルグループのメニューの削除の項目（`Delete`、`Delete selected`、`Delete column`、`Delete columns`）にはショートカットが表示されません。  
 呼び出しは部分的なマージです。指定しなかった名前は既定値のまま維持され、2 回呼び出しても以前の変更は保持されます。現在のバインディングを取得する getter はありません。[createKeyBindingMap](#createkeybindingmap) が返すのは既定値であり、`setKeyBindingMap` で変更した内容ではありません。
 
 ```ts
@@ -270,6 +359,10 @@ const defaultKeyBindingMap: Omit<
     { shortcut: 'Alt+Backspace', preventDefault: true },
     { shortcut: 'Alt+Delete', preventDefault: true },
   ],
+  removeSelection: [
+    { shortcut: 'Delete', preventDefault: true },
+    { shortcut: 'Backspace', preventDefault: true },
+  ],
   primaryKey: [{ shortcut: 'Alt+KeyK', preventDefault: true }],
   selectAllTable: [
     { shortcut: '$mod+KeyA', preventDefault: true },
@@ -296,27 +389,32 @@ editor.setKeyBindingMap({
 });
 ```
 
-`selectAllTable` と `handTool` はキャレットに譲ります。フォーカスが input、textarea、`contenteditable` の中にある間は `$mod + A` がテキストを選択し、`Space` は空白を入力して、キャンバスには届きません。別のショートカットに再定義しても動作は同じです。
+`selectAllTable`、`handTool`、`removeSelection` はキャレットに譲ります。フォーカスが input、textarea、`contenteditable` の中にある間は `$mod + A` がテキストを選択し、`Space` は空白を入力し、`Delete` と `Backspace` はテキストを消去して、キャンバスには届きません。別のショートカットに再定義しても動作は同じです。
+
+`4.0.0` から、`removeSelection`（`Delete` または `Backspace`）は、ERD タブで選択しているものを確認なしに Undo の 1 ステップとして削除します。選択しているのがフォーカスしているテーブルだけで、そのカラムを 1 つ以上選択していて、拡大・縮小のレベルでその行が描画されている場合は、それらのカラムを削除します。それ以外の場合は、選択しているすべてのテーブル、メモ、テーブルグループを削除し、グループのテーブルは残します。[テーブルとメモの削除](../guide/guides/table-related-functions.md#テーブルとメモの削除)を参照してください。  
+キーを押し続けても削除は 1 回だけで、セル、メモ、テーブルグループの名前の編集中は何も削除されません。テキストフィールドの外では、エディタにフォーカスがある間はどのタブでも、フォーカスしているツールバーのボタンの上でも、何も削除しない読み取り専用のエディタでも、この入力に対して `preventDefault()` が呼び出されます。
 
 `3.10.0` から、`findReplace`（`$mod+KeyF`）は[検索と置換](../guide/guides/find-and-replace.md)を開き、ほかのどのタブからでも ERD タブを表示します。  
-キャレットには譲りません。エディタにフォーカスがある間は、どのタブでも、キャンバスからでもエディタ内の入力欄からでもこのキーを受け取ります。`preventDefault()` が呼び出されるためブラウザの検索バーは開かず、伝播も止められるため、ページのバブリングフェーズの `keydown` リスナーには届きません。セルやメモの編集中も `preventDefault()` が呼び出されて伝播も止められますが、何も開きません。  
+キャレットには譲りません。エディタにフォーカスがある間は、どのタブでも、キャンバスからでもエディタ内の入力欄からでもこのキーを受け取ります。`preventDefault()` が呼び出されるためブラウザの検索バーは開かず、伝播も止められるため、ページのバブリングフェーズの `keydown` リスナーには届きません。セルやメモの編集中、または `4.0.0` からはテーブルグループの名前の編集中も、`preventDefault()` が呼び出されて伝播も止められますが、何も開きません。  
 Diff Viewer、Time Travel、自動レイアウトのプレビューのいずれかが開いている間は、どのタブであっても、また IME の変換中も、`preventDefault()` は呼び出されず伝播も止められないため、ブラウザやホスト自身の検索がこのキーを受け取ります。検索と置換のパネル内では、変換中の入力はそこで伝播が止められますが、`preventDefault()` は呼び出されません。`findReplace` を別のショートカットに再定義しても動作は同じです。
 
-`focusView` は ERD タブでのみ動作します。テーブルを 1 つ以上選択している場合は、Visualization タブを Flow モードで開き、それらのテーブルと、リレーションシップ 1 つでつながるすべてのテーブルに表示を絞り込みます。テーブルを選択していない場合は何もしません。[テーブルへのフォーカス](../guide/guides/visualization.md#focusing-on-tables)を参照してください。
+`focusView` は ERD タブでのみ動作します。テーブルを 1 つ以上選択している場合は、Visualization タブを Flow モードで開き、それらのテーブルと、リレーションシップ 1 つでつながるすべてのテーブルに表示を絞り込みます。選択しているメモやテーブルグループは数に入らず、テーブルを選択していない場合は何もしません。[テーブルへのフォーカス](../guide/guides/visualization.md#focusing-on-tables)を参照してください。
 
-`stop`（`Escape`）は ERD タブで、セルやメモの編集、またはリレーションシップの作成を終了し、選択はそのまま残します。このときエディタは `preventDefault()` を呼び出します。  
+`stop`（`Escape`）は ERD タブで、セルやメモの編集、またはリレーションシップの作成を終了し、選択はそのまま残します。`4.0.0` からは、テーブルグループの名前の編集も名前を書き込まずに終了し、`New Table Group` の描画も終了します。このときエディタは `preventDefault()` を呼び出します。  
 そのいずれでもない場合、`Escape` は選択とフォーカスしているセルを解除し、`preventDefault()` は呼び出されません。そのため、編集を抜けて選択も解除するには 2 回押す必要があります。  
 検索と置換のパネルの外では、エディタが `Escape` の伝播を止めることはないため、独自のダイアログを閉じるためなど、自分で `Escape` を監視しているページには両方の入力が届き、`defaultPrevented` が `true` のほうを無視できます。  
 クイック検索、テーブルのプロパティ、Diff Viewer、自動レイアウトのプレビュー、Time Travel のいずれかが開いている間は、`Escape` は代わりにそれを閉じ、選択はそのまま残します。このときも `preventDefault()` は呼び出されません。  
+`4.0.0` からは、開いている [`Export image`](../guide/guides/file-import-export.md#画像) ダイアログや [`Map Columns`](../guide/guides/relationship-editing.md#map-columns) ダイアログも `Escape` を受け取り、自身を閉じて、選択はそのまま残します。どちらも開いたときにキーボード操作を受け取り、この `Escape` では `preventDefault()` が呼び出されて伝播も止められます。  
 `3.10.0` からは、検索と置換のパネル内にフォーカスがある状態で押した `Escape` はパネルを閉じ、選択はそのまま残します。エディタはこの入力に対して `preventDefault()` と `stopPropagation()` の両方を呼び出すため、ページのバブリングフェーズの `keydown` リスナーには届きません。  
 パネルが開いている間にキャンバスで押した `Escape` は、上記のいずれにも該当しない場合、選択を解除するのと同じ 1 回の入力でパネルも閉じます。この入力では `preventDefault()` は呼び出されず、伝播も止められません。  
+`4.0.0` からは、Display Language のピッカーとカラーピッカーも検索と置換のパネルと同じように閉じます。それらの中で押した `Escape` は `preventDefault()` が呼び出されて伝播も止められ、キャンバスで押した `Escape` は、選択を解除するのと同じ 1 回の入力でそれらを閉じます。  
 IME の変換中に押した `Escape` は変換のためのものです。編集は終了せず、`preventDefault()` も呼び出されないため、ページでは `isComposing` が `true`、または `keyCode` が `229` の入力も同じように無視できます。検索と置換のパネル内では、変換中に押したほかのキーと同じく、この入力の伝播も止められます。  
 `3.9.2` より前は、1 回の `Escape` で編集や作成の終了と選択の解除が同時に行われ、エディタが `preventDefault()` を呼び出すこともありませんでした。
 
 ### createKeyBindingMap
 
 `3.9.2` から、パッケージは `createKeyBindingMap()` と、あわせて `KeyBindingMap`、`KeyBindingName`、`ShortcutOption` の型をエクスポートしています。  
-固定の名前を含む 25 個すべての名前の既定のキーバインディングを、呼び出すたびに新しいマップとして返すため、返されたマップを変更してもほかには何も影響しません。  
+固定の名前を含む 26 個すべての名前の既定のキーバインディングを、呼び出すたびに新しいマップとして返すため、返されたマップを変更してもほかには何も影響しません。  
 すべてのエディタはこの状態から始まり、`setKeyBindingMap` の呼び出しはここには反映されません。  
 ランタイムのエクスポートは `createKeyBindingMap` だけで、残りの 3 つは型です。
 
@@ -333,6 +431,7 @@ type KeyBindingName =
   | 'addMemo'
   | 'removeTable'
   | 'removeColumn'
+  | 'removeSelection'
   | 'primaryKey'
   | 'selectAllTable'
   | 'selectAllColumn'
@@ -360,15 +459,18 @@ const shortcuts = Object.values(createKeyBindingMap())
   .map(({ shortcut }) => shortcut); // 'Enter', 'Escape', '$mod+KeyK', ...
 ```
 
-各 `shortcut` は、キーを `KeyboardEvent.code` で指定する [tinykeys](https://github.com/jamiebuilds/tinykeys) のキーの組み合わせで、[`$mod`](#mod) は macOS では `⌘`、それ以外では `Control` です。  
+各 `shortcut` は、キーを `KeyboardEvent.code` で指定する、[tinykeys](https://github.com/jamiebuilds/tinykeys) の構文によるキーの組み合わせで、[`$mod`](#mod) は macOS では `⌘`、それ以外では `Control` です。  
+`4.0.0` からは、エディタはこれらのキーの組み合わせを tinykeys を通さずに、同じ構文で自身で読み取ります。キーは `code`、または大文字・小文字を問わない `key` で一致し、入力が一致するのは、指定された修飾キーをちょうどそのとおりに押している場合だけです。`AltGraph` は、Windows では `Control` と `Alt`、macOS では `Alt` として扱われます。スペースで区切った入力はシーケンスになり、1 秒間 keydown がないと最初からやり直しになります。  
 固定の名前は `Enter`（`edit`）、`Escape`（`stop`）、`$mod+KeyZ`（`undo`）、`$mod+Shift+KeyZ`（`redo`）、`$mod+Equal`（`zoomIn`）、`$mod+Minus`（`zoomOut`）、`$mod+Digit0`（`zoomReset`）に割り当てられています。`edit` と `stop` にはフラグがなく、残りの 5 つには `preventDefault` と `stopPropagation` が付いています。それ以外は上記の既定値で、`search` と `findReplace` もそこに含まれます。
 
 エディタはこれらを自身の要素で受け取るため、グローバルなホットキーやキャプチャフェーズの `keydown` リスナーでエディタより先にキーを受け取るホストは、エディタにフォーカスがある間はこれらを通す必要があります。  
 通すキーの一覧は `createKeyBindingMap()` から作成し、既定値の代わりに `setKeyBindingMap` に渡したバインディングを使います。  
-`3.10.0` からは、この一覧にブラウザ自身の検索のキーである `$mod+KeyF` が含まれます。このキーで自身の検索を使い続けたいホストは、`setKeyBindingMap({ findReplace: [] })` を渡します。
+`3.10.0` からは、この一覧にブラウザ自身の検索のキーである `$mod+KeyF` が含まれます。このキーで自身の検索を使い続けたいホストは、`setKeyBindingMap({ findReplace: [] })` を渡します。  
+`4.0.0` からは、この一覧には修飾キーなしの `Delete` と `Backspace` も含まれます。これらのキーを使い続けたいホストは、`setKeyBindingMap({ removeSelection: [] })` を渡します。
 
 検索と置換のパネル内にフォーカスがある間は、`findReplace`、`search`、`undo`、`redo`、`zoomIn`、`zoomOut`、`zoomReset` はエディタに届きます。それ以外のバインディングに現在割り当てられているキーはパネルで止まり、矢印キーと `Tab` も同様です。パネルを閉じる `Escape` と、検索フィールドや置換フィールドで一致箇所を移動したり置換したりする `Enter` を除き、これらは `preventDefault()` を呼び出されずに伝播だけが止められるため、パネルのフィールドやボタンでは通常のキーとして動作し、キャンバスにもページのバブリングフェーズの `keydown` リスナーにも届きません。  
-ホストの保存やコマンドパレットのキーなど、それ以外のキーは通常どおりページに届きます。[パネル内のキー](../guide/guides/find-and-replace.md#keys-in-the-panel)を参照してください。
+ホストの保存やコマンドパレットのキーなど、それ以外のキーは通常どおりページに届きます。[パネル内のキー](../guide/guides/find-and-replace.md#keys-in-the-panel)を参照してください。  
+`4.0.0` からは、Display Language のピッカーも同じようにキーを扱います。同じ 7 つのバインディングはエディタに届き、それ以外のバインディング、矢印キー、`Tab` は、IME の変換中に押したキーと同じく、`preventDefault()` を呼び出されずにそこで伝播だけが止められます。行の上で押した `↑`、`↓`、`Home`、`End`、`Enter`、`Space` は行を移動するか行を選び、`preventDefault()` も呼び出されます。
 
 ### $mod
 
@@ -391,6 +493,8 @@ const shortcuts = Object.values(createKeyBindingMap())
 | `Space`       | `Space`         | N/A           | `Space`                        |
 | `Enter`       | `Return`        | `Enter`       | `Enter`                        |
 | `Esc`         | `Esc`           | `Escape`      | `Escape`                       |
+| `Backspace`   | `Delete` / `⌫`  | `Backspace`   | `Backspace`                    |
+| `Delete`      | `fn` + `Delete` | `Delete`      | `Delete`                       |
 | `1`, `2`, etc | `1`, `2`, etc   | `1`, `2`, etc | `Digit1`, `Digit2`, etc        |
 | `a`, `b`, etc | `a`, `b`, etc   | `a`, `b`, etc | `KeyA`, `KeyB`, etc            |
 | `-`           | `-`             | `-`           | `Minus`                        |
@@ -403,11 +507,12 @@ const shortcuts = Object.values(createKeyBindingMap())
 
 プリセットテーマを設定します。  
 既定値は `appearance: 'dark'`、`grayColor: 'slate'`、`accentColor: 'indigo'` です。  
-各フィールドは個別に適用されるため、一部だけを指定した場合、残りの 2 つはそのまま維持されます。次の名前以外の値は無視され、エラーは発生しません。
+各フィールドは個別に適用されるため、一部だけを指定した場合、残りの 2 つはそのまま維持されます。次の名前以外の値は無視され、エラーは発生しません。  
+`4.0.0` からは、`appearance` にテーマビルダーの `System` にあたる `'system'` も指定できます。OS が報告するライトまたはダーク、あるいは [setSystemAppearance](#setsystemappearance) で指定したほうで表示し、それが変わると切り替わります。
 
 ```ts
 type ThemeOptions = {
-  appearance: 'dark' | 'light';
+  appearance: 'dark' | 'light' | 'system';
   grayColor: 'gray' | 'mauve' | 'slate' | 'sage' | 'olive' | 'sand';
   accentColor:
     | 'gray'
@@ -440,6 +545,18 @@ type ThemeOptions = {
 
 // example
 editor.setPresetTheme({ appearance: 'light' });
+```
+
+### setSystemAppearance
+
+`4.0.0` からは、IDE のテーマのように独自のライトとダークを持つホストのために、外観 `'system'` が表示するライトまたはダークを指定します。指定している間は、OS の切り替えは無視されます。  
+`null`、または `'dark'` と `'light'` 以外の値を指定すると、再び OS に従います。  
+外観が `'light'` または `'dark'` の間は画面上で何も変わりませんが、値は保持され、外観が `'system'` になるとすぐに適用されます。それ以外の場合はすぐに適用されます。何も発行せず、`changePresetTheme` は引き続き `'system'` を報告します。  
+VS Code、JetBrains、Obsidian のホストは、それぞれ自身のライトまたはダークを指定してこれを呼び出し、それが変わるたびに再び呼び出します。
+
+```js
+editor.setPresetTheme({ appearance: 'system' });
+editor.setSystemAppearance('light'); // null follows the OS again
 ```
 
 ### setTheme
@@ -488,6 +605,10 @@ type Theme = {
   tableBorder: string;
   tableShadow: string;
 
+  tableGroupHeaderBackground: string;
+  tableGroupBackground: string;
+  tableGroupBorder: string;
+
   memoBackground: string;
   memoSelect: string;
   memoBorder: string;
@@ -517,6 +638,15 @@ type Theme = {
 
   toastBackground: string;
   toastBorder: string;
+  toastSuccess: string;
+  toastError: string;
+
+  findReplaceError: string;
+
+  mapColumnsError: string;
+
+  schemaSqlWarningBackground: string;
+  schemaSqlWarningForeground: string;
 
   dragSelectBackground: string;
   dragSelectBorder: string;
@@ -553,6 +683,13 @@ editor.setTheme({
 ```
 
 `tableShadow` と `memoShadow` は、ERD キャンバス上でテーブルとメモが落とす影の色です。ダークプリセットではどちらも `transparent` で、`setTheme` に `none` や空文字列を渡したときと同じく影は描画されません。ライトプリセットでは `rgba(0, 0, 0, 0.18)` を使います。
+
+`4.0.0` からは、トークンが 9 つ増えました。
+
+- `tableGroupHeaderBackground`、`tableGroupBackground`、`tableGroupBorder` は、独自の色を持たない[テーブルグループ](../guide/guides/table-groups.md)のタイトルバー、本体、枠線の色です。
+- `toastSuccess` と `toastError` は、処理がどう終わったかを伝えるトーストのマークの色です。
+- `findReplaceError` と `mapColumnsError` は、検索と置換、および Map Columns のダイアログが表示するエラーの色です。検索と置換では以前は `diffDeleteForeground` を使っていたため、それを上書きしても検索と置換の色は変わらなくなりました。
+- `schemaSqlWarningBackground` と `schemaSqlWarningForeground` は、Schema SQL タブのオプションにある警告の色です。
 
 #### CSS Variables
 
@@ -603,6 +740,9 @@ erd-editor {
   --erd-editor-table-select: #435db1;
   --erd-editor-table-border: #363a3f;
   --erd-editor-table-shadow: transparent;
+  --erd-editor-table-group-header-background: #43484e;
+  --erd-editor-table-group-background: #d3edf81d;
+  --erd-editor-table-group-border: #43484e;
   --erd-editor-memo-background: #18191b;
   --erd-editor-memo-select: #435db1;
   --erd-editor-memo-border: #363a3f;
@@ -625,6 +765,12 @@ erd-editor {
   --erd-editor-minimap-viewport-border-hover: #435db1;
   --erd-editor-toast-background: #18191b;
   --erd-editor-toast-border: #363a3f;
+  --erd-editor-toast-success: #3dd68c;
+  --erd-editor-toast-error: #ff9592;
+  --erd-editor-find-replace-error: #ff9592;
+  --erd-editor-map-columns-error: #ff9592;
+  --erd-editor-schema-sql-warning-background: #500f1c;
+  --erd-editor-schema-sql-warning-foreground: #ff9592;
   --erd-editor-drag-select-background: #253974;
   --erd-editor-drag-select-border: #435db1;
   --erd-editor-scrollbar-track: #ddeaf814;
@@ -649,19 +795,110 @@ erd-editor {
 
 </details>
 
+## Display Language
+
+`4.0.0` からは、エディタ自身のテキスト、つまりメニュー、パネル、ダイアログ、クイック検索、トースト、そして書き出した画像を含めてダイアグラム上に描画する `unnamed` のような語が、25 の言語で表示されます。テーブル名とカラム名、SQL、データ型、生成されたコードが翻訳されることはありません。[言語とテーマ](../guide/guides/language-and-theme.md)を参照してください。  
+[setLocale](#setlocale) を呼び出すか言語を選ぶまで、エディタは英語で表示され、[enableLocalePicker](#enablelocalepicker) が有効な間は `'system'` に従います。  
+エディタは `lang` と `dir` を、ホスト要素やページではなく、closed shadow root 内の自身のルートに設定するため、右から左に書くページでエディタが左右反転することも、右から左に書く言語でページが左右反転することもありません。ヘブライ語、アラビア語、ペルシア語では、エディタのインターフェースは右から左に配置されますが、ダイアグラム自体が左右反転することはありません。  
+パッケージは `LocaleCode`（次のいずれかのコード）と `LocaleOption` の型をエクスポートしています。
+
+```ts
+type LocaleOption = LocaleCode | 'system';
+```
+
+| コード  | 表示名               | 言語                 |
+| ------- | -------------------- | -------------------- |
+| `id-ID` | Bahasa Indonesia     | インドネシア語       |
+| `de-DE` | Deutsch              | ドイツ語             |
+| `en`    | English              | 英語                 |
+| `es-ES` | Español              | スペイン語           |
+| `eu-ES` | Euskara              | バスク語             |
+| `fr-FR` | Français             | フランス語           |
+| `it-IT` | Italiano             | イタリア語           |
+| `nl-NL` | Nederlands           | オランダ語           |
+| `pl-PL` | Polski               | ポーランド語         |
+| `pt-PT` | Português            | ポルトガル語         |
+| `pt-BR` | Português Brasileiro | ブラジルポルトガル語 |
+| `ro-RO` | Română               | ルーマニア語         |
+| `sk-SK` | Slovenčina           | スロバキア語         |
+| `sl-SI` | Slovenščina          | スロベニア語         |
+| `sv-SE` | Svenska              | スウェーデン語       |
+| `tr-TR` | Türkçe               | トルコ語             |
+| `ru-RU` | Русский              | ロシア語             |
+| `uk-UA` | Українська           | ウクライナ語         |
+| `he-IL` | עברית                | ヘブライ語           |
+| `ar-SA` | العربية              | アラビア語           |
+| `fa-IR` | فارسی                | ペルシア語           |
+| `ja-JP` | 日本語               | 日本語               |
+| `zh-CN` | 简体中文             | 簡体字中国語         |
+| `zh-TW` | 繁體中文             | 繁体字中国語         |
+| `ko-KR` | 한국어               | 韓国語               |
+
+### setLocale
+
+表示言語を、`'system'` または上記のいずれかのコードで設定します。`'ko'` だけの指定、未知のコード、文字列以外の値など、それ以外の値はエラーにならずに無視されます。  
+呼び出しから戻る前に適用されるため、要素を追加する前に設定した言語は、最初のフレームから表示されます。  
+`changeLocale` も `change` も発行せず、`value`、Undo の履歴、shared store のいずれにも影響しません。  
+`enableLocalePicker` をどちらに切り替えてもこの選択は保たれ、`setLocale('system')` はピッカーが無効でもシステムに従います。  
+エディタは何も保存しません。閲覧者の選択を保持するには、[changeLocale](#changelocale) を購読し、次に読み込むときにその値を渡し直します。
+
+```js
+editor.enableLocalePicker = true;
+editor.setLocale(localStorage.getItem('locale') ?? 'system');
+editor.addEventListener('changeLocale', event => {
+  localStorage.setItem('locale', event.detail.locale);
+});
+```
+
+### setSystemLocale
+
+独自の表示言語を持つホストのために、`'system'` が表す言語を BCP 47 のタグで指定します。VS Code、JetBrains、Obsidian のホストは、それぞれ自身の表示言語を指定してこれを呼び出します。  
+タグの前後の空白は取り除かれます。`null`、空文字列、文字列以外の値を指定するとブラウザの `navigator.languages` に戻り、エディタはその変化に従います。  
+意味を持つのは適用されている選択肢が `'system'` の間だけで、すぐに適用されます。ピッカーの `System` の行には、それが解決された言語が表示されます。  
+タグ、またはブラウザの各言語を順に、言語サブタグで、大文字・小文字とアンダースコアを無視して照合し、エディタが持つ最初の言語に解決します。`de-AT` は `de-DE` に、`en-GB` は `en` になります。中国語は文字体系で決まり、`Hant` は `zh-TW` に、`Hans` は `zh-CN` になります。文字体系の指定がない場合は地域で決まり、`TW`、`HK`、`MO` は `zh-TW` に、それ以外は `zh-CN` になります。`pt` は、`BR` 以外の地域が指定されていない限り `pt-BR` になります。どれにも一致しない場合、エディタは英語で表示されます。
+
+```js
+editor.setLocale('system');
+editor.setSystemLocale('pt-PT'); // null follows the browser again
+```
+
 ## setSchemaSQL
 
 Schema SQL ファイルを読み込みます。  
-現在のドキュメントにマージするのではなく、置き換えます。表示位置と拡大・縮小のレベルを除いて、保存スイッチを含む既存の設定は維持され、ファイルの読み込み後にテーブルが自動で配置されます。そのため `3.10.0` からは、値を一度も渡していない要素に読み込んだドキュメントは、新しいドキュメントと同じく表示位置も拡大・縮小のレベルも保存しません。  
+既定では、現在のドキュメントにマージするのではなく、置き換えます。後述の `mode` を参照してください。表示位置と拡大・縮小のレベルを除いて、各ロックとそのロックされた値を含む既存の設定は維持され、ファイルの読み込み後にテーブルが配置されます。後述の `placement` で別の指定をしない限り、複数の行に並べて配置されます。`Viewport` がロックされている場合、その後 `value` は読み込みの開始時の表示、つまり拡大・縮小のレベル `1` の原点 `0, 0` を書き出します。そのため、値を一度も渡していない要素に読み込んだドキュメントは、新しいドキュメントと同じくすべてのロックがオンです。  
 履歴に記録されるため `Undo, Redo` が可能で、`change` を発行します。空文字列は無視され、`readonly` が設定されている間は何も行いません。  
 `setSchemaGraphQL`、`setSchemaDBML`、`setSchemaAML` も同じように動作し、これらのパーサーは失敗しません。解析できないテキストはエラーにならず、空のドキュメントを読み込みます。  
+`4.0.0` からは、4 つとも省略可能な 2 番目の引数 `{ placement, mode }` を受け取ります。
+
+- `placement: 'grid'` は既定値で、これまでどおりテーブルをすぐに複数の行に並べて配置し、呼び出しは何も返しません。
+- `placement: 'auto'` は、エディタの `Import` と同じように、まずリレーションシップに沿ってテーブルをレイアウトし、読み込みが Undo の 1 ステップとして反映されると解決される `Promise` を返します。テーブルが 2 つ未満の場合、リレーションシップがない場合、レイアウトが失敗した場合、`SharedWorker` のないページの場合、`Placing tables` の通知で `Cancel` を押した場合は、代わりに複数の行に並べます。その間に別の読み込み、つまり置き換える別の読み込み、`value` への代入、`setInitialValue()`、`clear()`、共同編集の参加者による読み込み、読み込みや `clear()` の Undo または Redo が行われると、この読み込みはそれに取って代わられ、`Promise` は何も読み込まずに解決されます。この方法で配置する読み込みは、始めた順に反映されます。
+- `mode: 'replace'` は既定値で、ドキュメントを置き換えます。`mode: 'append'` は、[Import and Add](../guide/guides/file-import-export.md#import-and-add) と同じようにファイルをダイアグラムの下に追加し、すでにあるテーブルと、タブと表示位置以外のすべての設定をそのまま残します。別のタブにいる場合は、先に ERD タブが表示されます。新しいテーブルと、テーブルグループが表示されている間は DBML ファイルが持ち込むテーブルグループが選択され、それらが見えるように表示がスクロールします。1 回の Undo で追加全体を取り消せます。読み取れないテキストは何も追加せず、ドキュメントはそのまま残ります。
+
+`readonly` が設定されている間は、置き換えは無視され、追加では何も追加されず、`placement: 'auto'` の呼び出しはすぐに解決されます。  
 `3.10.0` から、`setSchemaSQL` はドキュメントで現在選択しているデータベースに合わせてファイルを読み取ります。Databricks を選択している場合、一重引用符で囲んだ文字列は Spark のバックスラッシュによるエスケープに従います。[コメント](../guide/guides/file-import-export.md#comments)を参照してください。  
 `3.10.0` から、`setSchemaSQL` は 2 つ以上のカラムにまたがる `UNIQUE` を、各カラムの Unique フラグではなく 1 つのユニークインデックスとして読み取ります。[ユニークキーとインデックス](../guide/guides/file-import-export.md#unique-keys-and-indexes)を参照してください。  
 `3.10.0` から、SQL、DBML、AML の読み込みでは、読み取った外部キーの `ON DELETE` と `ON UPDATE` のアクションが保持されます。  
+`4.0.0` から、`setSchemaSQL` はカラムの `DEFAULT` の式全体を保持し、SQL Server の `ADD DEFAULT … FOR` とその `MS_Description` のコメントを読み取り、PostgreSQL の serial と identity のカラムを Auto Increment にし、データ型の `UNSIGNED` と `ZEROFILL` を保持し、`ALTER TABLE … ADD PRIMARY KEY` が `CLUSTERED`、`NONCLUSTERED`、`USING BTREE` を付けた主キーも読み取ります。[Schema SQL](../guide/guides/file-import-export.md#schema-sql) を参照してください。  
 各パーサーが受け付ける構文については[ファイルの読み込みと書き出し](../guide/guides/file-import-export.md)を参照してください。
 
-```js
+```ts
+type SetSchema = {
+  (
+    value: string,
+    options: { placement: 'auto'; mode?: 'replace' | 'append' }
+  ): Promise<void>;
+  (
+    value: string,
+    options?: { placement?: 'grid'; mode?: 'replace' | 'append' }
+  ): void;
+};
+
+// example
 editor.setSchemaSQL('Schema SQL...');
+// or
+await editor.setSchemaSQL('Schema SQL...', { placement: 'auto' });
+// or
+editor.setSchemaSQL('Schema SQL...', { mode: 'append' });
 ```
 
 ## setSchemaGraphQL
@@ -675,7 +912,8 @@ editor.setSchemaGraphQL('GraphQL SDL...');
 
 ## setSchemaDBML
 
-dbdiagram.io と dbdocs で使われている形式である DBML ファイルを読み込みます。
+dbdiagram.io と dbdocs で使われている形式である DBML ファイルを読み込みます。  
+`4.0.0` からは、各 `TableGroup` は[テーブルグループ](../guide/guides/table-groups.md)になり、テーブルの `headercolor` はそのテーブルの色になります。[DBML](../guide/guides/file-import-export.md#dbml) を参照してください。
 
 ```js
 editor.setSchemaDBML('DBML...');
@@ -683,18 +921,41 @@ editor.setSchemaDBML('DBML...');
 
 ## setSchemaAML
 
-AML（Azimutt Markup Language）ファイルを読み込みます。現在の表記と従来の v1 の表記の両方に対応しています。
+AML（Azimutt Markup Language）ファイルを読み込みます。現在の表記と従来の v1 の表記の両方に対応しています。  
+`4.0.0` からは、Azimutt の色名または引用符で囲んだ 16 進数の値で指定したエンティティの色が、そのテーブルの色になります。[AML](../guide/guides/file-import-export.md#aml) を参照してください。
 
 ```js
 editor.setSchemaAML('AML...');
+```
+
+## setSchemaJSON
+
+`4.0.0` からは、[value](#value) が返すテキストのような `.erd.json` ドキュメントを読み込みます。  
+既定の `mode: 'replace'` では、`value` への代入と同じようにドキュメントを読み込みます。履歴に記録され、`change` を発行し、ドキュメントのロックも同じように取り込みます。`value` とは異なり、空文字列や文字列以外の値は、新しいドキュメントを始めるのではなく無視されます。JSON でないテキストは、`value` と同じくドキュメントを空にします。  
+`mode: 'append'` は、[Import and Add](../guide/guides/file-import-export.md#import-and-add) が `json` ファイルで行うのと同じように、ドキュメントのテーブル、リレーションシップ、インデックス、メモ、テーブルグループを新しい ID でダイアグラムの下に追加し、互いの相対的な位置を保ち、ドキュメントの設定は取り込みません。読み取れないテキストや、テーブルもメモもないドキュメントは何も追加しません。それ以外の場合は [setSchemaSQL](#setschemasql) の追加と同じように反映され、新しいメモとテーブルグループも、それぞれ表示されている間はテーブルとともに選択されます。  
+ドキュメントが反映されてから戻り、`readonly` が設定されている間は無視されます。
+
+```js
+editor.setSchemaJSON('json...');
+// or
+editor.setSchemaJSON('json...', { mode: 'append' });
 ```
 
 ## getSchemaSQL
 
 現在のエディタの状態を Schema SQL として書き出します。  
 `databaseVendor` を指定しない場合は、現在設定されているベンダーに従って動作します。次の一覧にない名前を指定した場合も、エラーにならず同じように動作します。  
-`3.10.0` からは、各外部キーにリレーションシップの `ON DELETE` 句と `ON UPDATE` 句が付きます。句が書き出されるのは、アクションが設定されていて、そのベンダーが受け付ける場合だけのため、そのベンダーが受け付けないアクションは省かれ、既定の動作が適用されます。各データベースが何を書き出すかは、[ON DELETE と ON UPDATE](../guide/guides/relationship-editing.md#on-delete-and-on-update)を参照してください。  
-`3.10.0` からは、テーブルやカラムのコメントの中の一重引用符がエスケープされるため、`it's` のようなコメントで文が壊れることはなくなりました。コメントを文字列リテラルとして書き出すベンダーはいずれも引用符を 2 つ重ねますが、Databricks は例外で、各引用符と各バックスラッシュの前にバックスラッシュを付けます。SQLite は引き続きコメントを `--` 行として書き出します。
+名前は、エディタが表示している括弧の種類で囲まれます。`Bracket Type` が[ロック](../guide/guides/settings.md#ロック)されている間は、これが `value` に保存される括弧の種類と異なることがあります。コーディングエージェントの [`erd_read`](../mcp/tools.md#reading-a-document) が名前を囲むのは、`value` に保存されるほうです。  
+`4.0.0` からは、省略可能な `options` 引数で、[Schema SQL](../guide/guides/schema-sql.md) タブのオプションと同じようにステートメントとヘッダーを選べます。`SchemaSQLOptions` は型としてエクスポートされています。
+
+- `statements`: 既定値の `'create'`、MySQL、MariaDB、PostgreSQL、SQLite、Databricks では `IF NOT EXISTS` を書き出し、それ以外では `'create'` として扱われる `'ifNotExists'`、テーブルを作成する前に削除する `'recreate'` のいずれかです。`'recreate'` では、Snowflake は代わりに `CREATE OR REPLACE TABLE` を書き出します。
+- `header`: 既定値の `'none'`、ドキュメントのデータベースまたはスキーマに切り替える `'use'`、それが存在しない場合は先に作成してから切り替える `'createAndUse'` のいずれかです。指定したものがないデータベースは、タブと同じように別の形式で書き出します。Oracle は `'createAndUse'` に対して `'use'` を書き出し、PostgreSQL は `'use'` に対してヘッダーを書き出さず、SQLite はヘッダーを書き出しません。ヘッダーが書き出されるのは、ドキュメントのデータベース名が単純な識別子、つまり ASCII の英字、数字、`_` からなり、数字で始まらない名前である間だけです。
+
+省略したオプションや未知の値を指定したオプションは既定値として扱われるため、オプションなしで呼び出すと、これまでどおりヘッダーのない通常の `CREATE` 文が書き出されます。  
+`4.0.0` からは、出力には常にドキュメントの `Before tables` と `After tables` のスクリプトが含まれ、ヘッダー、前のスクリプト、DROP 文、テーブル、後のスクリプトの順に並びます。Schema SQL タブ自身の `Statements`、`Header`、`Tables` の選択がこの呼び出しに影響することはなく、常にドキュメント全体が書き出されます。  
+`3.10.0` からは、各外部キーにリレーションシップの `ON DELETE` 句と `ON UPDATE` 句が付きます。句が書き出されるのは、アクションが設定されていて、そのベンダーが受け付ける場合だけのため、そのベンダーが受け付けないアクションは省かれ、既定の動作が適用されます。`4.0.0` からは、Snowflake が受け付けるのは `NO ACTION` だけです。各データベースが何を書き出すかは、[ON DELETE と ON UPDATE](../guide/guides/relationship-editing.md#on-delete-and-on-update)を参照してください。  
+`3.10.0` からは、テーブルやカラムのコメントの中の一重引用符がエスケープされるため、`it's` のようなコメントで文が壊れることはなくなりました。コメントを文字列リテラルとして書き出すベンダーはいずれも引用符を 2 つ重ねますが、Databricks は例外で、各引用符と各バックスラッシュの前にバックスラッシュを付けます。SQLite は引き続きコメントを `--` 行として書き出します。  
+`4.0.0` からは、いくつかのデータベースで、キーの名前、既定値、Auto Increment の書き出し方も変わりました。[DDL が書き出す内容](../guide/guides/schema-sql.md#ddl-が書き出す内容)を参照してください。
 
 ```ts
 type DatabaseVendor =
@@ -707,9 +968,19 @@ type DatabaseVendor =
   | 'Snowflake'
   | 'SQLite';
 
+type SchemaSQLOptions = {
+  statements?: 'create' | 'ifNotExists' | 'recreate';
+  header?: 'none' | 'use' | 'createAndUse';
+};
+
 const schemaSQL = editor.getSchemaSQL();
 // or
 const postgresSQL = editor.getSchemaSQL('PostgreSQL');
+// or
+const mysqlSQL = editor.getSchemaSQL('MySQL', {
+  statements: 'ifNotExists',
+  header: 'createAndUse',
+});
 ```
 
 ## getSharedStore

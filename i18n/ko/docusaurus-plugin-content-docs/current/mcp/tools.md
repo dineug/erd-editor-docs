@@ -1,11 +1,11 @@
 ---
 sidebar_position: 4
-description: erd-editor MCP 서버가 제공하는 모든 도구. 문서를 한 페이지씩 읽는 방법, 56개의 편집 도구, erd_batch, 결과와 거부의 형태.
+description: erd-editor MCP 서버가 제공하는 모든 도구. 문서를 한 페이지씩 읽는 방법, 54개의 편집 도구, erd_batch, 결과와 거부의 형태.
 ---
 
 # 도구
 
-서버는 65개의 도구를 제공합니다. 세션 도구 5개, 읽기 도구 3개, 편집 작업마다 하나씩인 편집 도구 56개, 그리고 여러 편집 도구를 하나의 편집으로 실행하는 `erd_batch`입니다.
+서버는 63개의 도구를 제공합니다. 세션 도구 5개, 읽기 도구 3개, 편집 작업마다 하나씩인 편집 도구 54개, 그리고 여러 편집 도구를 하나의 편집으로 실행하는 `erd_batch`입니다.
 
 `erd_list_documents`를 제외한 모든 도구는 첫 번째 인자로 문서의 `path`를 받으며, 아래 표에서는 생략합니다.
 `?`가 붙은 인자는 선택 사항입니다.
@@ -26,38 +26,51 @@ description: erd-editor MCP 서버가 제공하는 모든 도구. 문서를 한 
 
 | 도구 | 인자 | 동작 |
 | --- | --- | --- |
-| `erd_list` | `query?`, `offset?`, `limit?`, `namesOnly?` | 설정과 개수, 그다음 테이블 한 페이지를 돌려줍니다. 각 테이블에는 id, 캔버스 위의 위치와 크기, 컬럼 수, 그리고 인덱스와 관계가 함께 나오며, 테이블 뒤에는 검색 중이 아니라면 메모가 나옵니다. |
-| `erd_get` | `tableIds?`, `tableNames?`, `relationshipIds?`, `indexIds?`, `memoIds?` | 지정한 엔티티를 빠짐없이 돌려줍니다. 테이블은 컬럼과 함께, 관계는 그 컬럼과 `onDelete`, `onUpdate`와 함께, 인덱스는 그 컬럼과 함께, 메모는 텍스트와 함께 나옵니다. |
-| `erd_read` | `format`, `vendor?`, `tableIds?`, `tableNames?` | 문서 전체를 세 가지 형식 중 하나로 한 번에 돌려주거나, 일부 테이블의 DDL만 돌려줍니다. |
+| `erd_list` | `query?`, `offset?`, `limit?`, `namesOnly?` | 설정과 개수, 그다음 테이블 한 페이지를 인덱스, 관계와 함께 돌려줍니다. 각 테이블에는 id, 캔버스 위의 위치와 크기, 컬럼 수, 그리고 그룹에 속해 있다면 그 테이블 그룹이 함께 나옵니다. 검색 중이 아니라면 테이블 뒤에 테이블 그룹이, 그다음 메모가 나옵니다. |
+| `erd_get` | `tableIds?`, `tableNames?`, `relationshipIds?`, `indexIds?`, `memoIds?`, `tableGroupIds?` | 지정한 엔티티를 빠짐없이 돌려줍니다. 테이블은 컬럼, 테이블 그룹과 함께, 관계는 그 컬럼과 `onDelete`, `onUpdate`와 함께, 인덱스는 그 컬럼과 함께, 메모는 텍스트와 함께, 테이블 그룹은 그 테이블과 함께 나옵니다. |
+| `erd_read` | `format`, `vendor?`, `statements?`, `header?`, `tableIds?`, `tableNames?`, `groupNames?` | 문서 전체를 네 가지 형식 중 하나로 한 번에 돌려주거나, 일부 테이블이나 테이블 그룹의 DDL만 돌려줍니다. |
 
 에이전트는 `erd_list`로 id를 찾고, `erd_get`으로 컬럼과 그 밖의 세부 내용을 읽은 뒤, 그 id를 편집 도구에 넘깁니다.
 `erd_list`의 테이블 크기는 캔버스에서 차지하는 상자의 크기입니다. 높이는 정확하고 너비는 근삿값입니다.
+테이블 그룹은 그룹이 저장하는 영역으로 나열되며, 이름, 색상, 담고 있는 테이블 수가 함께 나옵니다.
 각 관계는 두 테이블 중 한쪽에 한 번만 나열됩니다.
+`erd_list`와 `erd_read`가 알려 주는 설정은 파일이 저장하는 설정입니다. [설정](#설정) 항목을 참고하세요.
 
-`erd_read`는 세 가지 형식 중 하나를 받습니다.
+`erd_read`는 네 가지 형식 중 하나를 받습니다.
 
 | `format` | 응답 내용 |
 | --- | --- |
-| `snapshot` | 모든 엔티티와 그 id를 담은 간결한 JSON입니다. 스키마가 크면 커집니다. |
-| `sql` | 8가지 데이터베이스 `Databricks`, `MariaDB`, `MSSQL`, `MySQL`, `Oracle`, `PostgreSQL`, `Snowflake`, `SQLite` 중 하나의 DDL입니다. `vendor`의 기본값은 문서에 설정된 데이터베이스입니다. `tableIds`나 `tableNames`를 주면 해당 테이블만, 그 테이블이 가진 foreign key와 함께 돌려줍니다. foreign key에는 ON DELETE와 ON UPDATE 동작이 함께 작성되며, 대상 데이터베이스가 생략하는 동작은 빠집니다. [ON DELETE와 ON UPDATE](../guide/guides/relationship-editing.md#on-delete와-on-update) 문서를 참고하세요. |
-| `json` | 원본 `.erd.json` 문서입니다. |
+| `snapshot` | 테이블 그룹을 포함한 모든 엔티티와 그 id, 그리고 Schema SQL 스크립트를 포함한 설정을 담은 간결한 JSON입니다. 측정된 너비, 쌓임 순서, 화면, 탭처럼 보는 사람마다 달라지는 것은 빠집니다. 스키마가 크면 커집니다. |
+| `sql` | 8가지 데이터베이스 `Databricks`, `MariaDB`, `MSSQL`, `MySQL`, `Oracle`, `PostgreSQL`, `Snowflake`, `SQLite` 중 하나의 DDL입니다. `vendor`의 기본값은 문서에 설정된 데이터베이스입니다. 문서 전체의 DDL에는 문서의 앞뒤 스크립트가 포함됩니다. `tableIds`, `tableNames`, `groupNames`를 주면 해당 테이블만, 그 테이블이 가진 foreign key와 함께, 스크립트 없이 돌려줍니다. foreign key에는 ON DELETE와 ON UPDATE 동작이 함께 작성되며, 대상 데이터베이스가 생략하는 동작은 빠집니다. [ON DELETE와 ON UPDATE](../guide/guides/relationship-editing.md#on-delete와-on-update) 문서를 참고하세요. |
+| `json` | 저장할 때 파일에 쓰이는 그대로의 문서 전체이며, 에디터가 아직 저장하지 않은 편집도 포함됩니다. [저장 형태와 런타임 값](../api/advanced/schema.md#저장-형태와-런타임-값) 문서를 참고하세요. |
+| `scripts` | 스키마의 크기와 상관없이 문서의 앞뒤 스크립트만 `{"before":"…","after":"…"}` 형태로 돌려주며, 설정되지 않은 스크립트는 비어 있습니다. |
+
+`vendor`, `statements`, `header`, `tableIds`, `tableNames`, `groupNames`는 `sql` 형식만 받으며, 다른 형식은 이 인자를 거부합니다.
+
+- `statements`: 기본값인 `create`, MySQL, MariaDB, PostgreSQL, SQLite, Databricks에서는 `CREATE TABLE IF NOT EXISTS`를, 그 밖의 데이터베이스에서는 일반 `CREATE TABLE`을 작성하는 `ifNotExists`, 또는 테이블을 생성하기 전에 삭제하는 `recreate` 중 하나입니다. `recreate`에서 Snowflake는 대신 `CREATE OR REPLACE TABLE`을 작성합니다.
+- `header`: 기본값인 `none`, 문서의 데이터베이스 이름이 가리키는 데이터베이스나 스키마를 선택하는 `use`, 또는 그것을 먼저 생성하는 `createAndUse` 중 하나입니다. Oracle에는 `use`만 있으므로 Oracle에서 `createAndUse`는 `use`를 작성하고, PostgreSQL에는 `createAndUse`만 있으므로 PostgreSQL에서 `use`는 헤더를 작성하지 않습니다. SQLite는 헤더를 작성하지 않으며, 데이터베이스 이름이 비어 있거나 단순한 식별자가 아닌 동안에는 어느 데이터베이스도 헤더를 작성하지 않습니다.
+- `groupNames`: 이름을 지정한 테이블 그룹의 테이블입니다. 이름은 대소문자를 구분하지 않으며, `tableIds`와 `tableNames`의 테이블과 합쳐집니다. 어느 그룹과도 일치하지 않는 이름은 `notFound`로 거부됩니다. 테이블이 없는 그룹은 아무 테이블도 더하지 않으며, 지정한 그룹이 모두 비어 있고 테이블을 지정하지 않은 경우처럼 남는 테이블이 하나도 없는 읽기는 `invalidArgs`로 거부됩니다.
+
+`statements`와 `header`는 일부 테이블의 DDL에도 적용됩니다. 에디터의 [Schema SQL](../guide/guides/schema-sql.md#옵션-패널) 탭의 `Statements`, `Header` 옵션과 같이 동작하지만, 탭은 `If not exists`와 `CREATE + USE`에서 시작합니다.
+이름은 파일이 저장하는 괄호 타입으로 감싸며, `Bracket Type`이 잠겨 있는 동안에는 잠긴 괄호 타입을 사용합니다. [잠금](../guide/guides/settings.md#잠금) 문서를 참고하세요.
 
 ### 대규모 스키마
 
 테이블이 수백, 수천 개인 스키마에서도 동작합니다.
 한 번의 읽기는 최대 40,000자까지 응답하며, 이는 Claude Code가 도구 결과를 파일로 따로 빼 두는 기준보다 작습니다.
 
-- `erd_list`는 기본적으로 테이블 100개를 한 페이지로 응답하고, 다음 페이지가 시작하는 위치를 `nextOffset`과 `note`로 알려 줍니다. 그 `nextOffset`을 같은 `query`와 함께 `offset`으로 넘기세요.
-- `query`는 테이블이나 컬럼의 이름 또는 코멘트에 들어 있는 단어로, 대소문자를 구분하지 않고 테이블을 찾습니다. 이름에 단어가 더 많이 들어 있는 테이블이 먼저 나옵니다.
+- `erd_list`는 기본적으로 테이블, 테이블 그룹, 메모 순으로 100개를 한 페이지로 응답하고, 다음 페이지가 시작하는 위치를 `nextOffset`과 `note`로 알려 줍니다. 그 `nextOffset`을 같은 `query`와 함께 `offset`으로 넘기세요.
+- `query`는 테이블이나 컬럼의 이름 또는 코멘트에 들어 있는 단어로, 대소문자를 구분하지 않고 테이블을 찾습니다. 이름에 단어가 더 많이 들어 있는 테이블이 먼저 나옵니다. 검색하면 테이블 그룹과 메모는 나열되지 않습니다.
 - `namesOnly`는 테이블 이름만 나열하며, 짧은 이름이라면 한 번의 응답에 약 2,000개를 담습니다.
-- `erd_get`과 `erd_read`는 id뿐 아니라 `tableNames`도 받으므로, 큰 스키마에서 SQL 쿼리를 요청받은 에이전트는 필요한 테이블의 DDL만 읽을 수 있습니다.
+- `erd_get`과 `erd_read`는 id뿐 아니라 `tableNames`도 받고 `erd_read`는 `groupNames`도 받으므로, 큰 스키마에서 SQL 쿼리를 요청받은 에이전트는 필요한 테이블의 DDL만 읽을 수 있습니다.
 - `erd_get`은 아무것도 가리키지 않는 id와 이름을 `missing`에, 한 번의 응답에 담지 못한 id를 `notReturned`에 나열하므로 다시 요청할 수 있습니다.
 - 한 번의 응답에 담기에 너무 큰 읽기는 범위를 좁히는 방법과 함께 `tooLarge`로 거부됩니다.
 
 ## 편집 도구
 
 id는 `erd_list`와 `erd_get`에서, 또는 엔티티를 만든 호출의 `createdIds`에서 얻습니다.
-`x`와 `y`는 캔버스 위의 왼쪽 가장자리와 위쪽 가장자리를 픽셀 단위로 나타내며, 색상은 `#3b82f6`과 같은 CSS hex 색상입니다.
+새 id는 `03h17be2plxpj5n59tqag7ogj`처럼 영문 소문자와 숫자 25자로 이루어지지만, 문서에 이미 있는 id는 원래 형태를 유지하므로 id의 모양으로 아무것도 판단하지 마세요.
+`x`와 `y`는 캔버스 위의 왼쪽 가장자리와 위쪽 가장자리를 픽셀 단위로 나타내며, 색상은 `#3b82f6`과 같은 CSS hex 색상이거나, 색상을 지우는 빈 문자열입니다.
 
 ### 테이블
 
@@ -70,7 +83,7 @@ id는 `erd_list`와 `erd_get`에서, 또는 엔티티를 만든 호출의 `creat
 | `erd_change_table_color` | `tableId`, `color` | 테이블 색상을 설정합니다. |
 | `erd_move_table` | `tableId`, `x`, `y` | 테이블을 캔버스의 한 위치로 옮깁니다. |
 | `erd_move_tables` | `positions` | 여러 테이블을 한 번의 편집으로 옮기며, `erd_undo` 한 번으로 되돌립니다. `positions`에는 테이블마다 `{ tableId, x, y }`를 담으며, 각 테이블은 한 번만 올 수 있습니다. |
-| `erd_sort_tables` | | 가져오기가 테이블을 배치하는 방식대로, 컬럼이 적은 테이블부터 모든 테이블을 캔버스에 여러 줄로 배치합니다. |
+| `erd_sort_tables` | | `erd_import_sql`, `erd_import_graphql`, `erd_import_dbml`, `erd_import_aml`이 테이블을 배치하는 방식대로, 컬럼이 적은 테이블부터 모든 테이블을 캔버스에 여러 줄로 배치합니다. 테이블 그룹의 테이블은 한데 모이고, 각 그룹의 박스는 그 테이블에 맞춰집니다. |
 
 ### 컬럼
 
@@ -79,7 +92,7 @@ id는 `erd_list`와 `erd_get`에서, 또는 엔티티를 만든 호출의 `creat
 | `erd_add_column` | `tableId` | 테이블에 빈 컬럼을 추가하고 그 id를 `createdIds`로 돌려줍니다. |
 | `erd_remove_columns` | `tableId`, `columnIds` | 한 테이블에서 컬럼을 삭제하며, 그 컬럼을 사용하는 관계와 인덱스 항목도 함께 삭제합니다. |
 | `erd_change_column_name` | `tableId`, `columnId`, `value` | 컬럼 이름을 바꿉니다. |
-| `erd_change_column_data_type` | `tableId`, `columnId`, `value` | `INT`나 `VARCHAR(255)` 같은 데이터 타입을 설정합니다. [관계 데이터 타입 동기화](../guide/guides/settings.md)가 켜져 있으면 이 타입을 복사한 foreign key도 따라 바뀝니다. |
+| `erd_change_column_data_type` | `tableId`, `columnId`, `value` | `INT`나 `VARCHAR(255)` 같은 데이터 타입을 설정합니다. [관계 데이터 타입 동기화](../guide/guides/settings.md#관계-데이터-타입-동기화)가 켜져 있는 동안에는 에디터에서와 마찬가지로 변경이 관계를 따라 양방향으로 이어집니다. serial 타입은 `erd_add_relationship`이 복사할 때처럼 그 serial이 저장하는 정수 타입으로 foreign key에 전달되며, serial 키는 그 foreign key 중 하나가 바뀌어도 자신의 타입을 유지하고 변경도 거기서 멈춥니다. 동기화를 켜고 끄는 것은 사용자의 몫이며, `erd_list`는 이 설정을 `relationshipDataTypeSync`로 알려 줍니다. |
 | `erd_change_column_default` | `tableId`, `columnId`, `value` | 기본값을 SQL 텍스트로 설정합니다. 빈 문자열을 주면 지웁니다. |
 | `erd_change_column_comment` | `tableId`, `columnId`, `value` | 코멘트를 설정합니다. 빈 문자열을 주면 지웁니다. |
 | `erd_set_column_primary_key` | `tableId`, `columnId`, `value` | `true`는 컬럼을 primary key에 포함하고, `false`는 제외합니다. |
@@ -98,8 +111,8 @@ id는 `erd_list`와 `erd_get`에서, 또는 엔티티를 만든 호출의 `creat
 
 | 도구 | 인자 | 동작 |
 | --- | --- | --- |
-| `erd_add_relationship` | `startTableId`, `endTableId`, `relationshipType`, `onDelete?`, `onUpdate?` | 두 테이블을 관계로 연결합니다. 부모의 primary key를 자식에 foreign key 컬럼으로 복사하며, 부모에 primary key가 없으면 primary key 컬럼을 먼저 만듭니다. 각 foreign key 컬럼의 이름은 에디터에서 관계를 그릴 때와 같은 방식으로 정해집니다. `users`의 키 `id`는 `users_id`가 되고, `member_id` 같은 키는 이름이 그대로 유지됩니다. [Foreign Key 컬럼 이름](../guide/guides/relationship-editing.md#foreign-key-컬럼-이름) 문서를 참고하세요. `createdIds`에는 새로 만든 키 컬럼이 있으면 그 컬럼, foreign key 컬럼, 그리고 마지막으로 관계 id가 담깁니다. |
-| `erd_link_columns` | `startTableId`, `startColumnIds`, `endTableId`, `endColumnIds`, `relationshipType`, `onDelete?`, `onUpdate?` | 이미 있는 컬럼 사이에 관계를 그리며, 시작 컬럼과 끝 컬럼을 위치 순서대로 짝짓습니다. |
+| `erd_add_relationship` | `startTableId`, `endTableId`, `relationshipType`, `onDelete?`, `onUpdate?` | 두 테이블을 관계로 연결합니다. 부모의 primary key를 자식에 foreign key 컬럼으로 복사하며, 부모에 primary key가 없으면 primary key 컬럼을 먼저 만듭니다. 각 foreign key 컬럼의 이름은 에디터에서 관계를 그릴 때와 같은 방식으로 정해집니다. `users`의 키 `id`는 `users_id`가 되고, `member_id` 같은 키는 이름이 그대로 유지됩니다. [Foreign Key 컬럼 이름](../guide/guides/relationship-editing.md#foreign-key-컬럼-이름) 문서를 참고하세요. 각 foreign key 컬럼은 키의 데이터 타입을 복사하지만, serial 키는 `serial4`이면 `integer`처럼 그 serial이 저장하는 정수 타입을 주며, 단독 `serial`은 PostgreSQL, MySQL, MariaDB가 아닌 데이터베이스에서는 `serial` 그대로입니다. [식별 관계](../guide/guides/relationship-editing.md#식별-관계) 문서를 참고하세요. `createdIds`에는 새로 만든 키 컬럼이 있으면 그 컬럼, foreign key 컬럼, 그리고 마지막으로 관계 id가 담깁니다. |
+| `erd_link_columns` | `startTableId`, `startColumnIds`, `endTableId`, `endColumnIds`, `relationshipType`, `onDelete?`, `onUpdate?` | 이미 있는 컬럼 사이에 관계를 그리며, 시작 컬럼과 끝 컬럼을 위치 순서대로 짝짓습니다. 컬럼 이름도 데이터 타입도 바꾸지 않습니다. |
 | `erd_remove_relationship` | `relationshipId` | 관계 연결선을 삭제합니다. foreign key 컬럼은 테이블에 그대로 남습니다. |
 | `erd_change_relationship_type` | `relationshipId`, `relationshipType` | 관계의 카디널리티를 바꿉니다. |
 | `erd_change_relationship_on_delete` | `relationshipId`, `onDelete` | 관계의 ON DELETE 동작, 즉 부모 행을 삭제했을 때 자식 행에 일어나는 일을 설정합니다. |
@@ -107,9 +120,8 @@ id는 `erd_list`와 `erd_get`에서, 또는 엔티티를 만든 호출의 `creat
 
 `erd_add_relationship`은 실행될 때 foreign key 컬럼의 이름을 정하므로, 부모 테이블과 그 primary key의 이름을 먼저 지정하세요.
 
-오래된 ERD Editor 확장이나 플러그인, 즉 `3.1.0` 이전의 VS Code 확장, `0.2.0` 이전의 Obsidian 플러그인, `0.10.0` 이전의 JetBrains 플러그인은 문서를 담당할 때 ON DELETE와 ON UPDATE를 무시합니다.
-이를 설정하는 도구는 그래도 성공하지만, 다이어그램에도 그 에디터가 저장하는 파일에도 그 동작은 남지 않으므로 확장이나 플러그인을 업데이트하세요. [업데이트](./installation.md#업데이트) 문서를 참고하세요.
-문서를 담당하는 에디터가 없으면 그 동작은 다른 편집과 마찬가지로 파일에 쓰입니다.
+에디터의 [컬럼 매핑](../guide/guides/relationship-editing.md#컬럼-매핑)처럼 기존 관계의 컬럼을 바꾸는 도구는 없습니다.
+관계를 다른 컬럼에 매핑하려면 foreign key 컬럼을 테이블에 남겨 두는 `erd_remove_relationship`과 원하는 컬럼을 준 `erd_link_columns`를 하나의 `erd_batch`로 실행하세요. 이 배치는 `erd_undo` 한 번으로 되돌립니다.
 
 ### 인덱스
 
@@ -137,38 +149,76 @@ id는 `erd_list`와 `erd_get`에서, 또는 엔티티를 만든 호출의 `creat
 | `erd_move_memo` | `memoId`, `x`, `y` | 메모를 캔버스의 한 위치로 옮깁니다. |
 | `erd_resize_memo` | `memoId`, `width`, `height` | 메모 크기를 바꿉니다. 너비는 약 `116`픽셀 이상, 높이는 `100` 이상이어야 합니다. 에디터는 드래그로 바꾼 메모 크기만 기록하므로, Undo 항목을 만들지 않습니다. |
 
-### 설정
+[View Option](../guide/guides/table-related-functions.md#테이블-보기-옵션) → `Memos`로 메모를 숨긴 동안에도 `erd_add_memo`는 메모를 추가하며, 추가된 메모는 메모를 다시 표시할 때까지 숨겨져 있습니다.
+`erd_list`와 `erd_get`은 숨겨진 메모도 나열합니다.
 
-데이터베이스, Code Generator 옵션, [설정](../guide/guides/settings.md) 탭의 항목처럼 문서에 저장되는 설정입니다.
-`erd_set_show`를 제외하면 어느 것도 Undo 항목을 만들지 않으므로, `erd_undo`로 되돌릴 수 없습니다.
+### 테이블 그룹
 
-| 도구 | 인자 | 값 |
-| --- | --- | --- |
-| `erd_set_database` | `value` | `MariaDB`, `MSSQL`, `MySQL`, `Oracle`, `PostgreSQL`, `SQLite`, `Databricks`, `Snowflake`. 그 데이터베이스의 데이터 타입과, `vendor`를 주지 않았을 때 `erd_read`가 쓰는 DDL을 정합니다. |
-| `erd_set_database_name` | `value` | 데이터베이스 이름입니다. |
-| `erd_set_language` | `value` | Code Generator 언어입니다. `GraphQL`, `csharp`, `Java`, `Kotlin`, `TypeScript`, `JPA`, `Scala`, `Go`, `SQLAlchemy`, `TypeORM`, `Sequelize`, `Drizzle`, `DBML`, `AML`. |
-| `erd_set_table_name_case` | `value` | 생성되는 테이블 이름의 Name Case입니다. `none`, `camelCase`, `pascalCase`, `snakeCase`. |
-| `erd_set_column_name_case` | `value` | 컬럼 이름에 대한 같은 설정입니다. |
-| `erd_set_bracket_type` | `value` | 생성되는 SQL에서 이름을 감싸는 방식입니다. `none`, `doubleQuote`, `singleQuote`, `backtick`. |
-| `erd_set_relationship_data_type_sync` | `value` | `true`면 foreign key 컬럼을 참조하는 컬럼의 데이터 타입에 맞춰 유지합니다. |
-| `erd_set_relationship_optimization` | `value` | 문서에 저장되는 관계 최적화 플래그입니다. |
-| `erd_set_column_order` | `columnType`, `targetColumnType` | 테이블 행의 한 부분을 다른 부분의 자리로 옮깁니다. `columnName`, `columnDataType`, `columnNotNull`, `columnUnique`, `columnAutoIncrement`, `columnDefault`, `columnComment`. |
-| `erd_set_max_width_comment` | `value` | 테이블에서 코멘트가 그려지는 최대 너비를 픽셀 단위로 지정하며, `-1`이면 제한이 없습니다. |
-| `erd_set_ignore_save_settings` | `saveSettingType`, `value` | `true`면 저장되는 파일에서 `scroll` 또는 `zoomLevel`을 제외합니다. 새 문서는 에디터에서 만든 새 다이어그램과 마찬가지로 둘 다 `true`인 상태로 시작합니다. [스크롤 정보 저장](../guide/guides/settings.md#스크롤-정보-저장) 문서를 참고하세요. |
-| `erd_set_show` | `show`, `value` | 다이어그램의 한 부분을 표시하거나 숨깁니다. `tableComment`, `columnComment`, `columnDataType`, `columnDefault`, `columnAutoIncrement`, `columnPrimaryKey`, `columnUnique`, `columnNotNull`, `relationship`, `columnAlternateKey`, `hideReferentialAction`. `columnAlternateKey`를 표시하면 각 [대체 키](../guide/guides/table-related-functions.md#대체-키)의 컬럼에 `AK1.1`과 같은 표시가 붙습니다. `hideReferentialAction`은 의미가 반대입니다. `true`면 관계 연결선의 ON DELETE와 ON UPDATE 라벨을 숨기며, 이 라벨은 기본적으로 표시됩니다. [연결선 읽기](../guide/guides/relationship-editing.md#연결선-읽기) 문서를 참고하세요. |
-
-### 가져오기
-
-이 도구들은 모두 문서 전체를 대체하며, `erd_undo`는 그 전의 문서를 복원합니다.
-에디터의 Import 메뉴와 같은 방식으로 스키마를 읽습니다. [파일 가져오기와 내보내기](../guide/guides/file-import-export.md) 문서를 참고하세요.
+테이블 그룹은 그 테이블 뒤에 그려지는 이름이 있는 박스이며, 그룹의 색상은 박스와 그 테이블들의 헤더 전체에 표시됩니다. [테이블 그룹](../guide/guides/table-groups.md) 문서를 참고하세요.
+테이블은 최대 하나의 그룹에만 속합니다. 에디터에서는 테이블을 놓는 위치에 따라 테이블이 그룹에 들어가거나 빠지지만, `erd_move_table`, `erd_move_tables`, `erd_move_table_group`은 테이블을 어디에 놓든 그룹이 담는 테이블을 절대 바꾸지 않습니다. [테이블 추가와 제거](../guide/guides/table-groups.md#테이블-추가와-제거) 문서를 참고하세요. 테이블을 그룹에 넣는 것은 `erd_add_table_group`과 `erd_set_table_group`이며, `erd_remove_table_group`은 그 테이블을 어느 그룹에도 속하지 않게 둡니다.
+그룹은 제목 표시줄을 포함해 너비 `160`픽셀 이상, 높이 `100`픽셀 이상인 영역을 저장하며, 에디터는 그 박스를 각 테이블을 담도록 늘려서 그립니다.
 
 | 도구 | 인자 | 동작 |
 | --- | --- | --- |
-| `erd_import_sql` | `value` | `CREATE TABLE` 문 같은 SQL DDL을 불러옵니다. |
-| `erd_import_graphql` | `value` | GraphQL SDL을 불러옵니다. |
-| `erd_import_dbml` | `value` | DBML을 불러옵니다. |
-| `erd_import_aml` | `value` | AML을 불러옵니다. |
-| `erd_import_json` | `value` | 다른 `.erd.json` 파일 같은 erd-editor JSON 문서를 불러옵니다. 빈 텍스트를 주면 `erd_open_document`가 `create`로 만드는 문서와 같은 새 문서가 됩니다. |
+| `erd_add_table_group` | `name`, `color?`, `x?`, `y?`, `width?`, `height?`, `tableIds?` | 그룹을 추가하고 그 id를 `createdIds`로 돌려줍니다. `tableIds`와 영역 중 하나를 주며, 영역은 `x`, `y`, `width`, `height`를 함께 줍니다. `tableIds`를 주면 각 테이블은 원래 속해 있던 그룹에서 빠지고, 영역은 [선택한 테이블 그룹화](../guide/guides/table-groups.md#선택한-테이블-그룹화)에서처럼 그 테이블에 맞춰집니다. 영역을 주면 [그룹 그리기](../guide/guides/table-groups.md#그룹-그리기)에서처럼 어느 그룹에도 속하지 않은 테이블 중 중앙이 영역 안에 있는 테이블을 모두 담습니다. `name`이 빈 문자열이면 이름이 없는 그룹이 됩니다. `erd_undo` 한 번으로 그룹을 삭제하고 각 테이블을 원래 속해 있던 그룹으로 되돌립니다. |
+| `erd_remove_table_group` | `groupId` | 그룹을 삭제합니다. 그 테이블은 어느 그룹에도 속하지 않은 채 제자리에 남습니다. |
+| `erd_change_table_group_name` | `groupId`, `value` | 그룹 이름을 바꿉니다. 빈 문자열을 주면 이름이 없는 그룹이 됩니다. |
+| `erd_change_table_group_color` | `groupId`, `color` | 그룹 색상을 설정합니다. |
+| `erd_move_table_group` | `groupId`, `x`, `y` | 제목 표시줄을 드래그할 때처럼, 그룹의 영역이 그 지점에서 시작하도록 그룹을 옮기며 그 테이블도 같은 거리만큼 옮깁니다. 가로와 세로로 움직인 거리를 합해 20픽셀이 안 되는 이동은 Undo 항목을 만들지 않습니다. |
+| `erd_resize_table_group` | `groupId`, `x?`, `y?`, `width`, `height` | 그룹의 영역을 설정하며, 그 테이블은 제자리에 남습니다. `x`와 `y`를 생략하면 그룹의 모서리가 유지됩니다. 그룹의 테이블을 여유 공간과 함께 담지 못하는 영역은 거부되며, 메시지에 영역이 담아야 하는 박스가 표시됩니다. |
+| `erd_set_table_group` | `tableIds`, `groupId` | 테이블을 그룹에 넣으며, 각 테이블은 원래 속해 있던 그룹에서 빠집니다. `groupId`를 `null`이나 빈 문자열로 주면 테이블을 모든 그룹에서 뺍니다. |
+
+`View Option` → `Table Groups`로 그룹을 숨긴 동안에도 이 도구들은 그룹을 추가하고 변경하며, 그룹은 다시 표시할 때까지 숨겨져 있습니다. [그룹 숨기기](../guide/guides/table-groups.md#그룹-숨기기) 문서를 참고하세요.
+`erd_sort_tables`는 각 그룹의 테이블을 한데 모아 두고, `erd_import_dbml`과 `erd_import_json`은 그룹을 가져옵니다. [가져오기](#가져오기) 항목을 참고하세요. `erd_read`는 `groupNames`로 고른 그룹의 DDL을 작성합니다.
+에이전트가 디스크에 쓴 파일을 이전 릴리스의 ERD Editor가 저장하면 그룹이 사라질 수 있습니다. [업데이트](./installation.md#업데이트) 문서를 참고하세요.
+
+### 설정
+
+에이전트는 스키마 자체의 설정, 즉 데이터베이스, 데이터베이스 이름, [Schema SQL](../guide/guides/schema-sql.md) 스크립트를 설정합니다.
+문서에 저장되는 그 밖의 모든 설정은 사용자가 에디터에서 설정합니다. [View Option](../guide/guides/table-related-functions.md#테이블-보기-옵션) 토글, [설정](../guide/guides/settings.md) 탭의 옵션, Code Generator의 언어와 이름 케이스, 괄호 타입, [잠금](../guide/guides/settings.md#잠금)이 여기에 해당합니다.
+`replace` 모드의 가져오기를 제외하면 어떤 도구도 이 설정을 바꾸지 않습니다. `erd_import_json`은 불러오는 문서의 설정과 잠금을 가져오고, 나머지 네 도구는 화면을 캔버스의 시작 위치로 되돌립니다. [가져오기](#가져오기) 항목을 참고하세요.
+서버 `1.0.0`에서 이 설정을 바꾸던 도구가 제거되었습니다. `erd_set_language`, `erd_set_table_name_case`, `erd_set_column_name_case`, `erd_set_bracket_type`, `erd_set_relationship_data_type_sync`, `erd_set_relationship_optimization`, `erd_set_column_order`, `erd_set_max_width_comment`, `erd_set_ignore_save_settings`, `erd_set_show`입니다.
+
+`erd_list`와 `erd_read`의 `snapshot` 형식은 설정을 파일이 저장하는 대로 알려 주며, `lockSettings`는 잠금마다 하나씩 `viewport`, `canvasType`, `language`, `tableNameCase`, `columnNameCase`, `bracketType` 플래그를 담습니다.
+잠긴 언어, 이름 케이스, 괄호 타입은 에디터 화면에 무엇이 보이든 잠긴 값, 즉 파일이 유지하고 모든 에디터가 열 때 사용하는 값으로 알려 줍니다. 화면과 탭은 알려 주지 않습니다.
+
+`erd_set_ddl_script`는 Undo 항목을 만듭니다. `erd_set_database`와 `erd_set_database_name`은 Undo 항목을 만들지 않으므로, `erd_undo`로 되돌릴 수 없습니다.
+
+| 도구 | 인자 | 동작 |
+| --- | --- | --- |
+| `erd_set_database` | `value` | 데이터베이스를 설정합니다. `MariaDB`, `MSSQL`, `MySQL`, `Oracle`, `PostgreSQL`, `SQLite`, `Databricks`, `Snowflake` 중 하나입니다. 그 데이터베이스의 데이터 타입과, `vendor`를 주지 않았을 때 `erd_read`가 쓰는 DDL을 정합니다. |
+| `erd_set_database_name` | `value` | 데이터베이스 이름을 설정합니다. `erd_read`의 `use`와 `createAndUse` 헤더가 이 이름을 사용합니다. |
+| `erd_set_ddl_script` | `position`, `sql` | 테이블 앞뒤에 작성되는 두 스크립트 중 하나를 설정합니다. [앞뒤 스크립트](../guide/guides/schema-sql.md#앞뒤-스크립트) 문서를 참고하세요. `position`은 `CREATE EXTENSION`이나 `CREATE SCHEMA`처럼 테이블 앞에 작성되는 `before`, 또는 `GRANT`나 `CREATE VIEW`처럼 테이블 뒤에 작성되는 `after`입니다. `sql`은 최대 10,000자로 스크립트 전체를 대체하며, 빈 문자열을 주면 스크립트를 지웁니다. 먼저 `erd_read`의 `scripts` 형식으로 현재 스크립트를 읽으세요. |
+
+스크립트는 어느 데이터베이스의 DDL에든 그대로 들어가므로, 문서의 데이터베이스에 맞게 작성하세요. MSSQL에서는 마지막 줄이 `GO`가 아닌 스크립트 뒤에 `GO` 줄이 추가됩니다.
+에이전트가 디스크에 쓴 파일을 이전 릴리스의 ERD Editor가 저장하면 스크립트가 사라질 수 있습니다. [업데이트](./installation.md#업데이트) 문서를 참고하세요.
+
+### 가져오기
+
+이 도구들은 에디터의 Import 메뉴와 같은 방식으로 스키마를 읽습니다. [파일 가져오기와 내보내기](../guide/guides/file-import-export.md) 문서를 참고하세요.
+각 도구는 텍스트를 `value`로 받고, `mode`로 기본값인 `replace` 또는 `append`를 받습니다.
+
+| 도구 | 인자 | 동작 |
+| --- | --- | --- |
+| `erd_import_sql` | `value`, `mode?` | `CREATE TABLE` 문 같은 SQL DDL을 불러옵니다. |
+| `erd_import_graphql` | `value`, `mode?` | GraphQL SDL을 불러옵니다. |
+| `erd_import_dbml` | `value`, `mode?` | DBML을 불러옵니다. 각 `TableGroup`은 그 블록이 이름을 나열한 테이블을 담는 테이블 그룹이 됩니다. [DBML](../guide/guides/file-import-export.md#dbml) 문서를 참고하세요. |
+| `erd_import_aml` | `value`, `mode?` | AML을 불러옵니다. |
+| `erd_import_json` | `value`, `mode?` | 다른 `.erd.json` 파일 같은 erd-editor JSON 문서를 불러옵니다. |
+
+`replace`는 문서를 대체하며, `erd_undo`는 그 전의 문서를 복원합니다.
+
+- `erd_import_sql`, `erd_import_graphql`, `erd_import_dbml`, `erd_import_aml`은 모든 테이블, 관계, 인덱스, 메모, 테이블 그룹을 대체합니다. 잠금을 포함한 문서의 설정은 유지하지만, 화면은 확대/축소 100%로 캔버스의 시작 위치로 돌아갑니다.
+- `erd_import_json`은 설정을 포함해 문서 전체를 대체합니다. JSON의 설정과 잠금이 이 문서의 설정과 잠금을 대신하며, 잠금이 기록되지 않은 JSON은 모든 잠금을 켜고 화면을 캔버스의 시작 위치에 둡니다. 이 문서의 설정을 유지하려면 `erd_read`의 `json` 형식이 돌려주는 텍스트에서 시작하세요. 빈 텍스트를 주면 `erd_open_document`가 `create`로 만드는 문서와 같은 새 문서가 됩니다.
+
+`append`는 에디터의 [가져와서 추가](../guide/guides/file-import-export.md#가져와서-추가)처럼 가져온 내용을 문서에 추가하며, `erd_undo` 한 번으로 추가한 내용 전체를 되돌립니다.
+
+- 텍스트에 담긴 것은 새 id를 가진 새 엔티티로, 숨겨진 메모와 테이블 그룹을 포함해 문서에 있는 모든 것의 아래에 그 왼쪽 가장자리에 맞춘 블록으로 들어옵니다. 같은 이름의 테이블을 포함해 이미 있던 모든 테이블과 설정은 그대로 남으며, 이름으로 병합되는 것은 없습니다.
+- 관계와 인덱스는 가져온 테이블 사이의 것만 들어오므로, 텍스트가 선언하지 않은 테이블을 가리키는 foreign key는 버려집니다.
+- `erd_import_sql`, `erd_import_graphql`, `erd_import_aml`은 테이블을 관계, 인덱스와 함께 추가하고, `erd_import_dbml`은 테이블 그룹도 추가합니다. `erd_import_json`은 테이블, 관계, 인덱스, 메모, 테이블 그룹을 추가하지만 설정은 절대 추가하지 않으며, 빈 텍스트는 거부합니다.
+
+JSON 문서는 테이블 그룹을 포함해 자체 배치를 유지합니다. `replace`에서는 JSON이 테이블을 놓은 자리 그대로, `append`에서는 추가된 블록 안에서 그 배치를 유지합니다.
+SQL, GraphQL, DBML, AML의 테이블은 `erd_sort_tables`가 배치하는 방식대로 컬럼이 적은 테이블부터, 각 그룹의 테이블을 한데 모아 여러 줄로 배치되며, 에디터 자체의 Import가 가능할 때 하는 것처럼 `Flow`로 배치되는 일은 없습니다. 이 네 도구는 어느 모드에서든 빈 텍스트를 거부합니다.
 
 ## erd_batch
 
@@ -176,7 +226,7 @@ id는 `erd_list`와 `erd_get`에서, 또는 엔티티를 만든 호출의 `creat
 
 - `operations`에는 최대 100개의 항목을 담으며, 각 항목은 `{ tool, as?, args? }`이고 `args`는 `path`를 뺀 도구의 인자입니다.
 - 작업은 먼저 문서의 복사본에서 시도됩니다. 거부된 작업은 `operations[1] erd_remove_table: …`처럼 이름이 표시되며, 아무것도 적용되지 않습니다.
-- `erd_undo` 한 번으로 배치 전체를 되돌립니다. 결과의 `historyEntries`는 `erd_undo` 호출 횟수가 아니라 배치 안의 에디터 히스토리 항목 수를 셉니다.
+- `erd_undo` 한 번으로 배치 전체를 되돌리지만, 되돌릴 수 없는 작업은 예외이며 결과의 `undoNote`가 그 작업의 이름을 알려 줍니다. `erd_set_database`처럼 Undo 항목을 만들지 않는 도구의 작업과, 짧은 `erd_move_table_group`처럼 Undo 항목을 만들지 않고 문서를 바꾼 작업입니다. Undo 항목을 하나도 만들지 않은 배치는 `erd_undo`가 건너뜁니다. 결과의 `historyEntries`는 `erd_undo` 호출 횟수가 아니라 배치 안의 에디터 히스토리 항목 수를 셉니다.
 - 라이브 세션에서는 에디터가 배치 전체를 받아들이거나 전혀 받아들이지 않습니다.
 
 에이전트는 호출하기 전에는 배치가 만들 id를 알 수 없으므로, `as`로 이름을 붙인 작업은 뒤의 작업이 그 id를 참조할 수 있게 합니다. 첫 번째로 만든 id는 `$name` 또는 `$name.0`, 두 번째는 `$name.1`, 마지막은 `$name.last`입니다.
@@ -209,7 +259,7 @@ id는 `erd_list`와 `erd_get`에서, 또는 엔티티를 만든 호출의 `creat
 편집은 한 줄의 JSON으로 응답합니다.
 
 ```json
-{"tool":"erd_add_table","mode":"live","createdIds":["b7u59tHkuXTA1hhtWh_bD"],"batches":1,"historyEntries":1}
+{"tool":"erd_add_table","mode":"live","createdIds":["03h17be2plxpj5n59tqag7ogj"],"batches":1,"historyEntries":1}
 ```
 
 | 필드 | 의미 |
@@ -217,7 +267,7 @@ id는 `erd_list`와 `erd_get`에서, 또는 엔티티를 만든 호출의 `creat
 | `mode` | `live` 또는 `headless`입니다. [라이브와 헤드리스](./live-and-headless.md) 문서를 참고하세요. |
 | `createdIds` | 호출이 만든 것의 id를 순서대로 담습니다. |
 | `batches`, `historyEntries` | 호출이 보낸 변경 배치 수와, 만든 에디터 히스토리 항목 수입니다. |
-| `undoable`, `undoNote` | `erd_undo`가 이 호출을 건너뛸 때 `undoable`은 `false`이고, `undoNote`가 그 이유를 알려 줍니다. 도구가 Undo 항목을 만들지 않거나, 문서가 이미 그 값을 가지고 있던 경우입니다. `erd_batch` 결과에는 항상 `undoNote`가 있으며, `erd_undo` 한 번으로 배치 전체를 되돌린다고 알려 줍니다. |
+| `undoable`, `undoNote` | `erd_undo`가 이 호출을 건너뛸 때 `undoable`은 `false`이고, `undoNote`가 그 이유를 알려 줍니다. 도구가 Undo 항목을 만들지 않거나, 20픽셀이 안 되는 `erd_move_table_group`처럼 호출이 Undo 항목을 만들지 않고 문서를 바꿨거나, 문서가 이미 그 값을 가지고 있던 경우입니다. `erd_batch` 결과에는 항상 `undoNote`가 있습니다. 배치가 Undo 항목을 만들었다면 `erd_undo` 한 번으로 배치를 되돌린다고 알려 주고 되돌리지 않는 작업이 있으면 그 이름을 알려 주며, 만들지 않았다면 결과에 `undoable: false`가 담기고 `erd_undo`가 이 배치를 건너뛴다고 알려 줍니다. |
 | `mismatch` | 호출이 만든 배치 수나 히스토리 항목 수가 도구가 선언한 수와 다를 때 들어 있습니다. |
 | `notes` | 에디터가 종료되거나 문서를 더 이상 담당하지 않게 되거나, 디스크의 파일이 바뀌는 등 세션에 변화가 있었을 때 들어 있습니다. |
 
@@ -240,7 +290,7 @@ id는 `erd_list`와 `erd_get`에서, 또는 엔티티를 만든 호출의 `creat
 | `hubAppeared`, `hubGone` | 에이전트가 디스크에서 편집하던 문서를 에디터가 맡기 시작했거나, 문서를 맡던 에디터가 아직 실행 중이지만 잠금 파일과 연결이 사라졌습니다. 아무것도 쓰지 않았습니다. |
 | `notSaved` | `erd_save`가 에디터의 문서를 저장하지 못했습니다. |
 | `readonly` | 쓸 수 없거나 다이어그램으로 읽을 수 없는 파일처럼, 에디터가 문서를 읽기 전용으로 담고 있습니다. 에디터가 없으면 체크아웃하지 않은 Perforce 또는 TFVC 파일처럼 파일 자체가 읽기 전용입니다. 아무것도 쓰지 않았습니다. |
-| `protocolMismatch` | 에디터의 ERD Editor 확장이나 플러그인과 서버가 서로 다른 프로토콜 버전을 사용합니다. |
+| `protocolMismatch` | 서버 `1.0.0`과 이전 확장이나 플러그인처럼, 에디터의 ERD Editor 확장이나 플러그인과 서버가 서로 다른 프로토콜 버전을 사용합니다. 읽기도 거부되며, 메시지에 업데이트할 쪽이 표시됩니다. [업데이트](./installation.md#업데이트) 문서를 참고하세요. |
 | `hubUnreachable`, `timeout`, `disconnected` | 에디터의 허브가 연결을 받아들이지 않았거나, 30초 안에 응답하지 않았거나, 호출 중에 연결을 끊었습니다. Windows에서 `hubUnreachable`은 Windows가 에이전트의 허브 접근을 막았다는 뜻이기도 합니다. 에디터를 관리자 권한으로 실행했는데 에이전트는 그렇지 않은 경우처럼 에디터가 에이전트보다 높은 권한으로 실행되거나, 에이전트가 샌드박스에서 실행되는 경우입니다. |
 
 그 밖의 코드는 드물게 나오며, 모든 거부에는 무슨 일이 있었는지 알려 주는 메시지가 담깁니다.

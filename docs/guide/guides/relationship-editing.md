@@ -1,12 +1,12 @@
 ---
-sidebar_position: 5
-description: Delete a relationship, change its type, set its ON DELETE and ON UPDATE actions, read the connector notation, work with N:M and identifying relationships, and see how new foreign key columns are named.
+sidebar_position: 6
+description: Delete a relationship, change its type, set its ON DELETE and ON UPDATE actions, map it onto existing columns with Map Columns, read the connector notation, work with N:M and identifying relationships, and see how new foreign key columns are named.
 ---
 
 # Relationship Editing
 
 Relationships are drawn from the canvas context menu, the canvas toolbar, [Quick Search](./quick-search.md#what-the-palette-lists), or with a shortcut — see [Editing Start](./editing-start.md).  
-This page covers what you can do with one once it exists, and how the foreign key columns it adds are named.
+This page covers what you can do with one once it exists, how [Map Columns](#map-columns) ends one on columns the child table already has, and how the foreign key columns it adds are named.
 
 ## Deletion
 
@@ -14,7 +14,7 @@ Possible to delete via the relationship context menu.
 
 ![Deleting the products-to-reviews relationship from its context menu](/img/demo-relationship-remove.webp)
 
-There is no shortcut for it, because a relationship is not selected the way a table or a memo is.  
+There is no shortcut for it, because a relationship is not selected the way a table or a memo is: `Delete` and `Backspace`, which remove what is selected, never remove a relationship on its own — see [Table and Memo Deletion](./table-related-functions.md#table-and-memo-deletion).  
 Relationships are also removed together with what they connect: deleting a table removes every relationship touching it, and deleting a column removes every relationship that uses it.
 
 ## Type Change
@@ -33,7 +33,7 @@ These are the same four types you start a relationship with, each with its own s
 
 ## ON DELETE and ON UPDATE
 
-Set through `On Delete` and `On Update` in the relationship context menu, between `Relationship Type` and `Delete`.  
+Set through `On Delete` and `On Update` in the relationship context menu, between `Relationship Type` and `Map Columns`.  
 Each offers the same six items, and the current one is marked with a check:
 
 - Not set
@@ -43,18 +43,18 @@ Each offers the same six items, and the current one is marked with a check:
 - SET DEFAULT
 - RESTRICT
 
-`Not set` writes no clause, so the database's own default applies. A newly drawn relationship starts with both at `Not set`, and choosing `Not set` later clears an action.  
+`Not set` writes no clause, so the database's own default applies. A new relationship, drawn or made in [Map Columns](#map-columns), starts with both at `Not set`, and choosing `Not set` later clears an action.  
 The two are independent: changing one leaves the other as it is.  
 The connector shows what is set — see [Reading a Connector](#reading-a-connector).  
 A relationship copied and pasted, or duplicated, along with its tables keeps both actions, and importing Schema SQL, DBML, or AML brings in the actions the file declares — see [Importing or Exporting Files](./file-import-export.md).
 
-![Setting ON DELETE CASCADE and ON UPDATE RESTRICT on the orders-to-order_items relationship from its context menu, then hovering the connector to read them back](/img/demo-referential-actions.webp)
+![Setting ON DELETE CASCADE and ON UPDATE RESTRICT on the orders-to-order_items relationship from its context menu, its label reading D:C U:R, then hovering to read both back](/img/demo-referential-actions.webp)
 
 Every action can be chosen whatever the database is.  
 An action that the selected [database](./table-related-functions.md#databases) leaves out of its Schema SQL carries a muted note beside it, such as `not in MySQL`. `Not set` never carries one, and switching the database updates the notes.  
 A noted action is still stored on the relationship: the connector shows it, and JSON, DBML, and AML keep it, but that database's Schema SQL leaves the clause out, so the database's default applies.
 
-Schema SQL writes these actions and leaves out the rest:
+[Schema SQL](./schema-sql.md) writes these actions and leaves out the rest:
 
 | Database | ON DELETE | ON UPDATE |
 | --- | --- | --- |
@@ -64,16 +64,88 @@ Schema SQL writes these actions and leaves out the rest:
 | MySQL | `NO ACTION`, `CASCADE`, `SET NULL`, `RESTRICT` | `NO ACTION`, `CASCADE`, `SET NULL`, `RESTRICT` |
 | Oracle | `CASCADE`, `SET NULL` | none |
 | PostgreSQL | all five | all five |
-| Snowflake | all five | all five |
+| Snowflake | `NO ACTION` | `NO ACTION` |
 | SQLite | all five | all five |
 
+Snowflake's Schema SQL also writes a comment naming each action it leaves out — see [Referential Actions](./schema-sql.md#referential-actions).
+
 Which actions the Code Generator's ORM targets write depends on the target as well as the selected database — see [Code Generator](./code-generator.md#on-delete-and-on-update).
+
+## Map Columns
+
+Map Columns pairs the parent table's key with columns of the child table, one row per key column.  
+Each row either uses a column the child already has or adds a new foreign key column, so a relationship can end on columns that are already in place.
+
+![Drawing a Zero N relationship from members onto orders, choosing Map to existing columns, and mapping id onto the existing member_id column](/img/demo-map-columns.webp)
+
+It opens in two ways:
+
+- While drawing a relationship, from `Map to existing columns` beside the child table — see [Relationship Creation](./editing-start.md#relationship-creation). `Map` then adds a relationship of the type being drawn.
+- From `Map Columns` in the relationship context menu, to change the columns of a relationship that exists. `Save` then writes the change. A read-only editor leaves this item out.
+
+The dialog's subtitle names the two tables and the relationship type, such as `users → posts · One N`. The type is shown here but not changed — use [Type Change](#type-change).
+
+`References` chooses the key the relationship points at: `Primary Key`, with its columns in table order, then `Unique: <column>` for each column marked `Unique`. It shows only when there is more than one choice.  
+A unique index does not count as a key here, and a `Unique` column that is the whole primary key is not listed twice.  
+Choosing another key rebuilds the rows. A row keeps its pick while that column is still in the child table.
+
+Under the headings `Referenced column` and `Foreign key column`, each row shows a column of the key with its data type, and a list of the child's columns to pair it with:
+
+- `Pick a column` leaves the row empty.
+- `New column: <name>` adds a new foreign key column. The name shown is the one it will get, as described in [Foreign Key Column Names](#foreign-key-column-names), numbered against the child's columns and the other rows that add a new column. It is not offered when the name would be blank, as for a key without a name.
+- Every column of the child table, as `<name> (<data type>)`. A column another row has picked reads `<name> (<data type>) · in use` and cannot be picked, so no two rows share one. A column another relationship already uses can still be picked, so a column such as a shared `tenant_id` can serve several relationships.
+
+With `Map`, a row starts filled only when exactly one child column, ignoring case, has the name a new foreign key column for it would get before any `_2` numbering, such as `users_id` for `id` on `users` and `member_id` for `member_id`. While [`Bracket`](./schema-sql.md#database-and-bracket) is `None`, the default, the name built from the table part of a schema-qualified table name also counts, so `id` on `public.users` is paired with `public.users_id` or `users_id`. For a `Unique` key, the key column's own name counts too, so `vin` is paired with `vin`. Every other row starts at `Pick a column`.  
+With `Save`, each row starts on the column the relationship uses now. With either, choosing another key in `References` fills that key's empty rows by the same names.
+
+When a picked column's data type differs from the one the parent column gives a foreign key, a note under the row says so.  
+With [Relationship DataType Sync](./settings.md#relationship-datatype-sync) on and a data type on the parent column, it reads `<column> becomes <type>`, the type the mapping will write. Otherwise it reads `Types differ: <parent type> and <child type>`, and the column keeps its type.
+
+`Map` or `Save` stays disabled while something stands in the way, and a line under the rows says what:
+
+- `Pick a foreign key column for every referenced column`: a row is still empty.
+- `At least one column must reference a different column`: a self-referencing relationship in which every row picks its own parent column.
+- `These columns are already linked by another relationship`: another relationship between the same two tables links exactly these columns.
+- `<parent> has no key to reference`: with `Map`, the parent has neither a primary key nor a `Unique` column.
+
+`Save` also stays disabled until the mapping differs from the relationship's current one.  
+With `Save`, a row reads `(removed)` when its column has left its table. Pick another child column, or, for a parent column that is gone, choose a key in `References`. With `Map`, a row whose picked column is removed goes back to `Pick a column`.
+
+A relationship whose parent columns are not exactly one of the parent's keys opens on an extra choice at the end of `References`, `Current columns (not a key)`, which keeps those columns as they are. When the parent has no key at all, that is the only choice and `References` is not shown.  
+There the line `The referenced columns are not a key of <parent>`, or `<parent> has no key to reference` when the parent has no key at all, is a notice, not an error: `Save` still works, so you can change the child columns and keep the reference.  
+A relationship whose two column lists cannot be paired, for example because they differ in length, shows `(invalid)` rows and keeps `Save` disabled until you choose a key in `References`, or add a primary key or `Unique` column to the parent if it has none.
+
+The dialog follows the diagram while it is open, a collaborator's or a coding agent's edits included, and keeps what you picked.  
+If the relationship's columns or the key it opened on change meanwhile, it adds the line `This relationship changed while the dialog was open`.
+
+What `Map` and `Save` write:
+
+- `Map` adds the relationship with `On Delete` and `On Update` at `Not set`. `Save` changes only the relationship's columns, pointing its parent side at the key chosen in `References`, and keeps its type and its ON DELETE and ON UPDATE.
+- A `New column` row adds a column at the end of the child table, as drawing does: `NOT NULL`, named after its key, with the key's data type, default, and comment — see [Identifying Relationships](#identifying-relationships).
+- A picked column is never renamed, and its `Not Null`, primary key, `Unique`, default, and comment stay as they are. Its data type changes only while `Relationship DataType Sync` is on and the parent column has a data type: it takes the type the parent column gives a foreign key, the integer type for a serial key as for a new column, and the change carries on along the relationships the way the sync does.
+- A column the mapping stops using stays in the child table, and is no longer marked as a foreign key unless another relationship still ends on it.
+- Everything one `Map` or `Save` writes, new columns and type changes included, is one undo step.
+
+Whether the relationship is identifying, and how its parent end is drawn, are read off the mapped child columns as for any relationship. Mapping onto the child's primary key columns makes it identifying at once, and mapping onto a column that allows `NULL` puts a ring at the parent end — see [Reading a Connector](#reading-a-connector).  
+Schema SQL's foreign key references the key you chose, such as `REFERENCES vehicle (vin)` for a `Unique` key.
+
+If the diagram already holds the mapping when you press `Map` or `Save`, because a collaborator or a coding agent got there first, nothing is written.  
+If it has changed so that the mapping no longer fits, nothing is written and a toast says `Couldn't map columns: the diagram changed`.
+
+`Cancel`, the `x` button, `Escape`, or a click on the dimmed area outside the dialog closes it without writing anything.  
+Opening Find and Replace or Quick Search closes it too, and so does leaving the ERD tab or the editor turning read-only.  
+If one of its tables or the relationship is removed while it is open, it closes with a toast such as `Map Columns closed: the relationship was removed`.  
+While it is open, the canvas shortcuts, undo and redo, and copy and paste do nothing.
+
+A coding agent has no Map Columns tool. It re-maps a relationship by removing it with `erd_remove_relationship`, which keeps its foreign key columns, and drawing it again on existing columns with `erd_link_columns`, both in one `erd_batch` — see [Tools](../../mcp/tools.md#relationships).
 
 ## N:M Relationships
 
 Because the editor is based on the physical model, an N:M relationship is expressed with a mapping table, as shown below.
 
-![Drawing relationships from products and tags into the product_tags mapping table](/img/demo-relationship-n-m.webp)
+![Drawing relationships from products and then tags into the empty product_tags table with ⌘ + ⌥ + 2, adding product_id and then tag_id](/img/demo-relationship-n-m.webp)
+
+When the mapping table already has its key columns, such as `product_id` and `tag_id` on `product_tags`, draw each relationship with `Map to existing columns` and pick those columns instead of adding new ones — see [Map Columns](#map-columns). If they are the mapping table's primary key, each relationship is identifying at once.
 
 Importing GraphQL, DBML, or AML builds the mapping table for you.  
 A many-to-many declaration arrives as a table named `<left>_<right>`, commented `Junction table inferred from <left> <-> <right>`, joined to both sides by identifying relationships.  
@@ -81,9 +153,11 @@ See [Importing or Exporting Files](./file-import-export.md).
 
 ## Identifying Relationships
 
-Drawing a relationship copies each primary key of the parent table onto the child table as a `NOT NULL` foreign key column, so a new relationship starts out non-identifying.  
+Drawing a relationship by clicking the child table, or with `Create new columns`, copies each primary key of the parent table onto the child table as a `NOT NULL` foreign key column, so a new relationship starts out non-identifying.  
 The copy takes the key's data type, default, and comment, but not `Unique` or `Auto Increment`, and is named as described in [Foreign Key Column Names](#foreign-key-column-names).  
-To make it identifying, set those foreign key columns on the child table as primary keys with `Alt + K` or `Primary Key` in the table context menu.
+A serial key is the exception to the data type: its copy takes the integer type the serial stores. Under any database, `smallserial` and `serial2` give `smallint`, `serial4` gives `integer`, and `bigserial` and `serial8` give `bigint`. A bare `serial` gives `integer` under PostgreSQL and `bigint unsigned` under MySQL and MariaDB, and stays `serial` under any other database.  
+Only the whole type name counts, ignoring case, so `serial(4)` is copied as written. A type written in capitals gives capitals: `SERIAL` gives `INTEGER` under PostgreSQL. A foreign key column already typed `serial` in a saved diagram keeps that type.  
+To make the relationship identifying, set those foreign key columns on the child table as primary keys: select them all and press `Alt + K` (Windows/Linux) or `⌥ + K` (Mac) once, or choose `Primary Key` in the table context menu, which reads `Primary Key on selected columns` while two or more are selected — see [Column Primary Key](./table-editing.md#column-primary-key).
 
 ![Toggling product_id as a primary key with Alt + K, turning its connector solid, then dashed](/img/demo-identifying-relationship.webp)
 
@@ -115,8 +189,9 @@ A key without a name gives a foreign key column without a name.
 That includes the primary key the editor adds to a parent that has none, unless you name it before clicking the child table.
 
 The names are set when the relationship is drawn. Renaming the parent table or its key later does not rename them.  
-Relationships that arrive with their columns already in place — from an import, a paste, or a duplicate — keep the names those columns have.  
-A coding agent adding a relationship with `erd_add_relationship` gets the same names — see [Tools](../../mcp/tools.md#relationships).
+The `New column` rows of [Map Columns](#map-columns) are named by the same rules, and the list shows each name before you choose it.  
+Relationships that arrive with their columns already in place — from an import, a paste, a duplicate, or Map Columns pairing existing columns — keep the names those columns have.  
+A coding agent adding a relationship with `erd_add_relationship` gets the same names and data types — see [Tools](../../mcp/tools.md#relationships).
 
 ## Reading a Connector
 
@@ -137,16 +212,22 @@ Hovering a connector that sets either action also shows a tooltip spelling the c
 The tooltip appears even while the label is hidden.
 
 Hide connectors on the ERD canvas with the `Relationship` view option, or only their labels with the `Referential Actions` view option, which is on by default — see [Table View Options](./table-related-functions.md#table-view-options).  
-Labels are not drawn at `70%` and below, where tables collapse to their name. A PNG export draws them as the canvas does.  
-[Flow mode](./visualization.md#flow-mode) on the Visualization tab draws connectors even with `Relationship` off, each as one smooth solid gray curve with the same end marks, so the dashed line, the labels, the tooltip, and the routing described on this page apply to the ERD canvas only.
+Labels are not drawn at `70%` and below, where tables collapse to their name.  
+An [image export](./file-import-export.md#image) is always drawn at 100%, so it draws the labels whatever the canvas zoom, unless a view option hides them. With `Background` off, the box behind each label is transparent too.  
+[Flow mode](./visualization.md#flow-mode) on the Visualization tab draws connectors even with `Relationship` off, each as one smooth solid gray curve with the same end marks, so the dashed line, the labels, the tooltip, and the orthogonal routing described on this page apply to the ERD canvas only. A relationship from a table to itself curves round the top-right corner in Flow too — see [Connector Routing](#connector-routing).
 
 ## Connector Routing
 
 Connectors are routed orthogonally.  
-A route bends around the tables that sit between its two ends instead of crossing them, and its corners are cut at 45 degrees.  
-Routes leaving the same side of a table are spread onto separate corridors so they do not run down one another.
+A route bends around the tables that sit between its two ends instead of crossing them, and its corners are rounded.  
+Each end leaves its table in a short straight run before it turns, so two tables a short way apart whose connector ends line up are joined by one straight line rather than a detour.  
+Routes leaving the same side of a table are spread onto separate corridors so they do not run down one another.  
+Only tables are avoided: a connector may cross a memo or a table group's box, and is drawn above table groups and below tables and memos.
+
+A relationship from a table to itself is drawn as one curve round the table's top-right corner, leaving the top side at the parent end and entering the right side at the child end.  
+Further self-references on the same table nest outside the first, so their curves do not cross one another or the table.
 
 There is nothing to configure.  
 Routes are recalculated automatically whenever anything on the canvas moves or resizes, so they never need touching by hand.
 
-![Dragging the members table down and back while its connectors re-route around categories](/img/demo-connector-routing.webp)
+![Dragging the members table down and back while the connector from orders swaps between passing right of categories and round its left, every corner rounded](/img/demo-connector-routing.webp)

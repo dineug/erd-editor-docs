@@ -67,6 +67,11 @@ Supports five methods:
 
 ![Selecting columns with Shift + Arrow Down, Ctrl/⌘ + click, Shift + click and Alt + A](/img/demo-column-select.webp)
 
+A right-click on a column's row decides which columns the table context menu acts on, whatever modifier key is held.  
+On a row that is already selected, the selection stays and the focus moves to that row. On any other row, that row alone is selected. This holds anywhere on the row, including the key icon and an [alternate key](./table-related-functions.md#alternate-keys) mark.  
+So to act on several columns from the menu, as in [Column Primary Key](#column-primary-key) or [Column Deletion](#column-deletion), right-click one of the selected rows.  
+On a Mac, `Ctrl + click` opens the menu too, but it counts as a plain click, so on a cell it selects that row alone before the menu opens.
+
 ## Rearranging and Moving Columns
 
 Functions when `dragging`, enabling movement to other tables.  
@@ -81,10 +86,19 @@ Supports moving multiple columns with `Ctrl + drag` (Windows/Linux) or `⌘ + dr
 
 ## Column Deletion
 
-Deletes the currently selected column.  
-Shortcut: `Alt + Backspace` or `Alt + Delete` (Windows/Linux), `⌥ + ⌫` or `⌥ + Delete` (Mac)
+Deletes the selected columns of the focused table. Clicking a cell selects its column, so clicking a cell and pressing `Delete` removes that one column.  
+Shortcuts:
+
+- `Delete` or `Backspace` (`⌫` on a Mac). These remove the selected columns while their table is the only thing selected. With no column selected (the focus on the table name or comment), with anything else selected too, or at `70%` zoom and below, where tables show only their names, they remove the whole selection instead — see [Table and Memo Deletion](./table-related-functions.md#table-and-memo-deletion).
+- `Alt + Backspace` or `Alt + Delete` (Windows/Linux), `⌥ + ⌫` or `⌥ + Delete` (Mac). These remove the focused table's selected columns even while other tables or memos are selected too. They remove nothing while a cell is being edited or at `70%` and below.
 
 ![Deleting one column, then two selected columns, with Alt + Backspace](/img/demo-column-remove.webp)
+
+The table context menu does the same. With the table the only thing selected, right-click a column's row: the menu's last row reads `Delete column`, or `Delete columns` when that row is one of two or more selected columns.
+
+While a cell is being edited, `Delete` and `Backspace` only erase text. Held down outside the cell editor, they remove only once.  
+After a removal, the focus moves to the nearest remaining column above the focused one. When none is left above it, the focus moves to the table name even if columns remain below, so the next `Delete` or `Backspace` removes the table rather than a column.  
+Relationships and indexes that use a removed column are removed with it. There is no confirmation, and the whole removal is one undo step.
 
 ## Copying/Pasting Columns
 
@@ -96,7 +110,8 @@ Columns copied in the editor and pasted with a table header selected, or into th
 [Alternate key](./table-related-functions.md#alternate-keys) marks such as `AK1.1` are not cells, so copying and pasting leave them out even while they are shown.
 
 You can paste from the editor into Excel and from Excel back into the editor.  
-Spreadsheet columns are matched to those cells by position, not by name, so the sheet's columns must follow the order of the visible cells.  
+Cell values go out exactly as typed, so a value such as `<label>` or `a &amp; b` reaches a spreadsheet or a document unchanged.  
+Spreadsheet columns are matched to the visible cells by position, not by name, so the sheet's columns must follow their order.  
 For the columns below, any of these values is read as true (case insensitive):
 
 - AutoIncrement: `TRUE`, `1`, `YES`, `Y`
@@ -123,8 +138,11 @@ When no column is selected inside a focused table, the same shortcuts copy the s
 
 ## Column Primary Key
 
-Toggles the primary key on the focused column, which is the column the focused cell belongs to, not the whole column selection.  
-Use the table context menu or the shortcut `Alt + K` (Windows/Linux) or `⌥ + K` (Mac).  
+Toggles the primary key on the focused column, which is the column the focused cell belongs to.  
+When the focused column is one of two or more selected columns, the toggle applies to all of the selected columns: if any of them is not a key, all of them become keys, and if all of them already are, all of them are cleared. Columns outside the selection are left alone.  
+Use the table context menu or the shortcut `Alt + K` (Windows/Linux) or `⌥ + K` (Mac). When the toggle reaches two or more columns, the menu row reads `Primary Key on selected columns` instead of `Primary Key`.  
 The key icon in the row is display only, so clicking it does not set the key.
 
-![Turning the primary key on for two columns with Alt + K, then off again for one](/img/demo-column-pk.webp)
+To make several columns one composite key, [select them](#selecting-multiple-columns), then press `Alt + K` (Windows/Linux) or `⌥ + K` (Mac), or right-click one of the selected rows and choose `Primary Key on selected columns`. Each toggle is one undo step.
+
+![Selecting two columns with Shift + Arrow Down, then making both the primary key with ⌥ + K and clearing both with a second press](/img/demo-column-pk.webp)

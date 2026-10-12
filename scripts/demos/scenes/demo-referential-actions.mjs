@@ -7,6 +7,22 @@ import {
 } from './_relationship-editing-helpers.mjs';
 
 /**
+ * Where the menu opens from. The menu is 214px wide and a submenu 262px; a
+ * menu that opens right of x = 330 leaves its submenus no room on the right of
+ * an 800px window, so they open to the left.
+ */
+const MENU_AT_X = 360;
+
+/** The first point along a connector's route at or past viewport x. */
+async function pointAtX(d, parentName, childName, x) {
+  for (let f = 0; f <= 0.5; f += 0.005) {
+    const p = await routePoint(d, parentName, childName, f);
+    if (p.x >= x) return p;
+  }
+  throw new Error(`no point on ${parentName} -> ${childName} at x ${x}`);
+}
+
+/**
  * Headless Chromium draws no native tooltips, so the one a connector gives the
  * canvas (the `title` its container carries while the pointer rests on a
  * connector that sets an action) is painted here: its own text, below the
@@ -103,16 +119,17 @@ async function pick(d, name) {
 export default {
   name: 'demo-referential-actions',
   width: 800,
-  height: 450,
+  height: 500,
   async setup(d) {
     await seedShop(d, {
       only: ['orders', 'order_items'],
       tables: {
-        // The parent at the top left and the child below on the right: the
-        // menus open from the parent end, the submenus flip left over the
-        // parent, and the child end and its label stay clear of all of them.
-        orders: { x: 40, y: 30 },
-        order_items: { x: 480, y: 200 },
+        // The parent at the top left and the child low on the right: the
+        // menu opens from the parent end and ends above the child, the
+        // submenus flip left over the parent, and the child end and its label
+        // stay clear of all of them.
+        orders: { x: 40, y: 20 },
+        order_items: { x: 500, y: 270 },
       },
     });
     await paintNativeTooltip(d);
@@ -120,7 +137,9 @@ export default {
   },
   async scenario(d) {
     await d.sleep(500);
-    const route = await routePoint(d, 'orders', 'order_items', 0.02);
+    // Far enough along the run leaving orders that a submenu has no room on
+    // the right of the menu and opens to its left, over orders.
+    const route = await pointAtX(d, 'orders', 'order_items', MENU_AT_X);
     await d.moveTo(route.x, route.y, 600);
     await d.sleep(400);
     await d.rightClick(route.x, route.y, { duration: 100 });

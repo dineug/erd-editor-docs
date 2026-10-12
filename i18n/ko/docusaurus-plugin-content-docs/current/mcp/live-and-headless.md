@@ -15,6 +15,7 @@ ERD Editor가 있는 VS Code 창과 Obsidian 볼트 창은 각각 잠금 파일�
 | 워크스페이스, 볼트, 열려 있는 프로젝트에 문서가 포함되어 있거나 문서를 열어 둔 에디터 | **라이브.** 필요하면 문서를 ERD Editor에서 열고, 편집 세션에 참여해 그곳에 변경을 적용합니다. 편집은 곧바로 나타나며, 에디터가 사용자의 편집을 저장하는 방식대로 저장됩니다. [저장](#저장)을 참고하세요. |
 | 에디터 없음 | **헤드리스.** 파일을 불러와 변경을 적용하고, 파일을 교체합니다. `erd_save`는 할 일이 없습니다. |
 | 허브가 꺼진 에디터 | **거부.** 읽기는 디스크에서 그대로 동작합니다. 열린 에디터 아래에서 파일에 쓴 변경은 그 에디터의 다음 저장이 덮어쓸 수 있으므로, 서버는 아무것도 쓰지 않습니다. |
+| 허브는 켜져 있지만 서버와 다른 프로토콜을 사용하는 에디터. 서버가 `1.0.0`이면 VS Code 확장 `3.x`, Obsidian 플러그인 `0.x`, JetBrains 플러그인 `0.9.0` 또는 `0.10.0`이고, 서버가 `1.0.0` 이전이면 `4.0.0` 이상의 확장 또는 `1.0.0` 이상의 플러그인인 경우 | **거부.** 읽기를 포함해 `protocolMismatch`로 거부됩니다. 메시지에 업데이트할 쪽, 즉 확장이나 플러그인 또는 서버가 표시됩니다. [업데이트](./installation.md#업데이트) 문서를 참고하세요. |
 | Windows에서, 같은 파일을 다른 경로로 담고 있는 에디터. 에이전트는 `\\localhost\C$\…`처럼 이 컴퓨터의 네트워크 공유나 매핑된 드라이브를 통해 경로를 지정했는데 에디터는 드라이브 경로로 문서를 담고 있거나, 그 반대인 경우 | **거부.** 읽기를 포함해 `invalidPath`로 거부됩니다. 메시지에 에디터가 문서를 담고 있는 경로가 표시되므로, 그 경로로 다시 호출하세요. |
 | Windows에서, Windows가 에이전트의 접근을 막는 에디터. 에이전트는 관리자 권한이 아닌데 관리자 권한으로 실행된 에디터, 또는 에이전트가 샌드박스에서 실행될 때의 모든 에디터 | **거부.** 읽기를 포함해 `hubUnreachable`로 거부되며, 메시지가 그 이유를 알려 줍니다. 예를 들어 에디터를 관리자 권한 없이 다시 실행해서, 에디터와 에이전트를 같은 권한으로 실행하세요. |
 
@@ -50,10 +51,8 @@ JetBrains IDE는 편집이 멈추고 1초도 지나지 않아 파일에 쓰며, 
 에디터가 이를 확인하지 못했거나 파일을 쓰지 않았을 때 `notSaved`로 거부됩니다. 디스크의 파일이 바뀌어 VS Code가 탭을 저장되지 않은 상태로 유지했을 때나, 대화 상자가 열려 있는 동안이거나 쓸 수 없는 파일이어서 JetBrains IDE가 파일을 쓰지 못했을 때입니다.
 
 VS Code와 JetBrains IDE에서는 더 저장할 것이 없는 문서에 `erd_save`를 호출하면 성공하며, 파일은 그대로 남습니다.
-모든 편집이 저장된 뒤(JetBrains IDE는 이를 스스로 합니다), 그리고 그 뒤로 `Save Scroll Information`과 `Save Zoom Information`이 모두 꺼진 상태에서 스크롤하거나 확대/축소만 했을 때가 그렇습니다.
+모든 편집이 저장된 뒤(JetBrains IDE는 이를 스스로 합니다)에 그렇고, 그 뒤의 모든 변경이 `Viewport`가 잠긴 상태에서 스크롤하거나 확대/축소하는 것, `Canvas Type`이 잠긴 상태에서 탭을 전환하는 것처럼 [잠금](../guide/guides/settings.md#잠금) 때문에 파일에 기록되지 않는 변경인 동안에는 그 상태가 유지됩니다. 모든 잠금은 기본적으로 켜져 있습니다.
 JetBrains IDE가 쓸 수 없는 파일은 이때에도 거부됩니다.
-`3.1.0` 이전의 VS Code 확장은 이런 스크롤이나 확대/축소에도 탭을 수정됨으로 표시하므로, `erd_save`가 파일을 씁니다.
-`0.10.0` 이전의 JetBrains 플러그인은 IDE가 파일을 연 뒤로 한 번도 쓰지 않았으면 `erd_save` 때 파일을 다시 쓰며, 그러면 파일 맨 앞에 있던 바이트 순서 표시(BOM)가 사라집니다.
 
 에이전트의 마지막 편집 뒤에 에디터가 문서를 닫으면, 에이전트의 다음 호출에는 에디터가 닫히기 전에 저장된 경우에만 그 편집이 파일에 들어 있다는 안내가 함께 전달됩니다.
 
@@ -62,10 +61,11 @@ JetBrains IDE가 쓸 수 없는 파일은 이때에도 거부됩니다.
 `erd_undo`는 에이전트가 마지막으로 한 편집을 되돌리며 사용자의 편집은 절대 되돌리지 않고, `erd_redo`는 그 편집을 다시 적용합니다.
 에디터 자체의 [Undo](../guide/guides/undo-redo.md)는 반대로 동작합니다. 다른 에디터에서 도착한 변경은 사용자의 히스토리에 기록되지 않으므로, 사용자의 편집을 되돌리고 에이전트의 편집은 절대 되돌리지 않습니다.
 
-일부 편집은 에디터에 Undo 항목을 만들지 않습니다. `erd_set_show`를 제외한 [설정 도구](./tools.md#설정)와 `erd_resize_memo`입니다.
-`erd_set_column_primary_key`, `erd_set_column_unique`, `erd_set_column_not_null`, `erd_set_column_auto_increment`, `erd_set_index_unique`, `erd_set_index_column_order`, `erd_set_show`도 문서가 이미 가진 값으로 설정할 때는 Undo 항목을 만들지 않으며, 이미 인덱스에 있는 컬럼으로 호출한 `erd_add_index_column`도 마찬가지입니다. 이런 호출은 아무것도 바꾸지 않습니다.
+일부 편집은 에디터에 Undo 항목을 만들지 않습니다. [설정 도구](./tools.md#설정) 중 `erd_set_database`와 `erd_set_database_name`, 그리고 `erd_resize_memo`입니다.
+가로와 세로로 움직인 거리를 합해 20픽셀이 안 되게 그룹을 옮기는 `erd_move_table_group`도 Undo 항목을 만들지 않으며, 그래도 그룹은 옮겨진 자리에 그대로 있습니다.
+아무것도 바꾸지 않는 호출도 Undo 항목을 만들지 않습니다. 문서가 이미 가진 값으로 설정하는 `erd_set_column_primary_key`, `erd_set_column_unique`, `erd_set_column_not_null`, `erd_set_column_auto_increment`, `erd_set_index_unique`, `erd_set_index_column_order`, 이미 인덱스에 있는 컬럼으로 호출한 `erd_add_index_column`, 이미 그 그룹에 속한 테이블로(또는 `groupId`를 `null`로 주어 이미 어느 그룹에도 속하지 않은 테이블로) 호출한 `erd_set_table_group`, 그룹이 이미 있는 지점으로 옮기는 `erd_move_table_group`, 그룹이 이미 가진 영역을 그대로 지정한 `erd_resize_table_group`, 테이블이 없는 문서에 호출한 `erd_sort_tables`, 테이블을 하나도 가져오지 않는(`erd_import_json`은 테이블도 메모도 가져오지 않는) `mode`가 `append`인 가져오기입니다.
 `erd_undo`는 이런 편집을 건너뛰고 결과에 그 이름을 알려 줍니다.
-`erd_change_relationship_type`, `erd_change_relationship_on_delete`, `erd_change_relationship_on_update` 같은 그 밖의 편집은 문서가 이미 가진 값으로 설정할 때에도 Undo 항목을 만듭니다.
+`erd_change_relationship_type`, `erd_change_relationship_on_delete`, `erd_change_relationship_on_update`, `erd_change_table_group_name`, `erd_change_table_group_color`, `erd_set_ddl_script` 같은 그 밖의 편집은 문서가 이미 가진 값으로 설정할 때에도 Undo 항목을 만듭니다.
 
 에이전트의 Undo 히스토리는 다음과 같은 경우 결과에 안내를 남기고 끊깁니다.
 
@@ -124,12 +124,13 @@ JetBrains IDE는 신뢰하지 않는 프로젝트에서만 담고 있는 문서�
 
 잠금 파일을 남기지 않는 에디터는 아무것도 지키지 못하므로, 다이어그램이 그 에디터에서 열려 있어도 에이전트는 디스크의 파일을 편집합니다.
 Linux에서 Flatpak으로 설치한 Obsidian이나 JetBrains IDE, JCEF가 없는 JetBrains IDE, 허브가 시작하지 못한 JetBrains IDE가 그렇습니다. [Obsidian 설정](./installation.md#obsidian-설정)과 [JetBrains IDE 설정](./installation.md#jetbrains-ide-설정) 문서를 참고하세요.
+`3.0.0` 이전의 VS Code 확장과 `0.9.0` 이전의 JetBrains 플러그인도 허브가 없으므로 잠금 파일을 남기지 않습니다.
 
 ## 문서
 
 문서는 절대 경로 또는 서버의 작업 디렉터리 기준 상대 경로인 `path`로 지정합니다.
 
-- 새 문서는 `.erd.json`입니다. `erd_open_document`에 `create`를 주면 파일을 만들며, 확장자가 없는 이름에는 `.erd.json`을 붙입니다. 에디터에서 만든 새 다이어그램과 마찬가지로 새 문서는 화면 위치도 확대/축소 레벨도 저장하지 않습니다. [`Save Scroll Information`](../guide/guides/settings.md#스크롤-정보-저장)과 [`Save Zoom Information`](../guide/guides/settings.md#확대축소-정보-저장)이 꺼진 상태로 시작하므로, 에디터에서 스크롤하거나 확대/축소해도 파일은 바뀌지 않습니다. `saveSettingType`을 `scroll` 또는 `zoomLevel`로, `value`를 `false`로 주어 `erd_set_ignore_save_settings`를 호출하면 해당 스위치가 켜집니다.
+- 새 문서는 `.erd.json`입니다. `erd_open_document`에 `create`를 주면 파일을 만들며, 확장자가 없는 이름에는 `.erd.json`을 붙입니다. 에디터에서 만든 새 다이어그램과 마찬가지로 새 문서는 모든 [잠금](../guide/guides/settings.md#잠금)이 켜져 있으므로, 에디터에서 스크롤하거나, 확대/축소하거나, 탭을 전환하거나, 다른 Code Generator 언어, 이름 케이스, 괄호 타입을 골라도 파일은 바뀌지 않습니다. 잠금을 하나라도 켜거나 끄는 도구는 없으며, 잠금은 에디터의 설정 탭에서 켜고 끕니다. `replace` 모드의 `erd_import_json`은 모든 잠금을 불러오는 문서의 잠금으로 대체합니다. [가져오기](./tools.md#가져오기) 문서를 참고하세요.
 - 기존 `.erd`, `.vuerd`, `.vuerd.json` 파일도 열립니다. 그 밖의 확장자를 가진 경로는 `invalidPath`로 거부됩니다.
 - Windows에서는 Windows가 적힌 그대로 저장하지 않는 이름이 들어간 경로는 문서를 읽거나 쓰기 전에 `invalidPath`로 거부되며, 읽기도 마찬가지입니다. `orders:v2.erd`처럼 콜론이나 Windows가 허용하지 않는 다른 문자가 들어간 이름, 대소문자와 상관없이 `NUL.erd`나 `CON.erd` 같은 장치 이름, 점이나 공백으로 끝나는 이름입니다. 예를 들어 `:` 대신 `-`를 써서 이름을 바꾸세요.
 - 병합 충돌 표시가 남은 파일처럼 에디터가 읽을 수 없는 파일은 `invalidDocument`로 거부되고 그대로 남습니다. 빈 다이어그램으로 불러와 다시 쓰는 일은 절대 없습니다.

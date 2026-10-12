@@ -1,10 +1,12 @@
 /**
  * Table View Options: the canvas context menu's View Option submenu toggles
- * what every table shows, and the tables reflow as each option changes.
+ * what every table shows, and the tables reflow as each option changes; the
+ * last entry, Memos, hides the memos and shows them again.
  */
 import { center } from '../lib/recorder.mjs';
 import { readSeed } from '../lib/seed.mjs';
-import { curveTo, seedShop } from './_table-related-a-helpers.mjs';
+import { memo, seedShop } from './_table-related-a-helpers.mjs';
+import { glide } from './_table-related-b-helpers.mjs';
 
 /**
  * The shop seed with real comments and a default on every orders column that
@@ -41,6 +43,16 @@ export default {
         members: { x: 30, y: 280 },
         orders: { x: 30, y: 30 },
       },
+      // A memo between the tables, left of the open menus, for the Memos
+      // entry to hide and show.
+      memos: [
+        memo('memo-checkout', 'One order per checkout; payments follow it.', {
+          x: 310,
+          y: 172,
+          width: 180,
+          height: 56,
+        }),
+      ],
       // A unique email, so Unique lights up a real UQ when it is switched on.
       // Set on the document: an inline UNIQUE in the SQL drops the comment.
       patch(doc, byName) {
@@ -75,7 +87,18 @@ export default {
 
     const option = async name => center(await itemBox(d, 1, name));
     const columnComment = await option('Column Comment');
-    await curveTo(d, { x: columnComment.x - 50, y: view.y }, columnComment, 650);
+    // Into the submenu's left padding, up it and along the row, so the
+    // entries level with View Option do not light up on the way.
+    const lane = (await d.domBox('.context-menu-content', 1)).x + 4;
+    await glide(
+      d,
+      [
+        { x: lane, y: view.y },
+        { x: lane, y: columnComment.y },
+        columnComment,
+      ],
+      700
+    );
     await d.sleep(150);
     await d.click(columnComment.x, columnComment.y, { duration: 0 });
     await d.sleep(900);
@@ -94,10 +117,14 @@ export default {
     await d.shot('alternate-key-on');
     await toggle('Auto Increment', 800);
     await d.shot('unique-ai-on');
+    // Memos, the last entry, takes the memo off the canvas and puts it back.
+    await toggle('Memos', 800);
+    await d.shot('memos-off');
+    await toggle('Memos', 900);
+    await d.shot('memos-on');
 
-    // Out to the left under the main menu, then a click on empty canvas closes it.
-    await curveTo(d, { x: 680, y: d.mouse.y }, { x: 640, y: 440 }, 650);
-    await d.click(640, 440, { duration: 0 });
+    // Escape closes both menus and leaves the pointer where it is.
+    await d.press('Escape');
     await d.sleep(1300);
     await d.shot('closed');
   },

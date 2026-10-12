@@ -1,53 +1,26 @@
 ---
-sidebar_position: 11
-description: Relationship data type sync, view and zoom saving, maximum comment width, table width recalculation, column display order, and the shortcut list.
+sidebar_position: 13
+description: Relationship data type sync, maximum comment width, table width recalculation, setting locks (view, tab, and code settings), column display order, and the shortcut list.
 ---
 
 # Settings
 
 Open it with the `Settings` button in the toolbar, or from [quick search](./quick-search.md) under `Tab`.
-The Settings screen has two tabs: `Preferences` and `Shortcuts`. `Preferences` opens first.
+The Settings screen has two tabs: `Preferences` and `Shortcuts`. `Preferences` opens first, except from the [welcome screen](./editing-start.md#welcome-screen)'s `Shortcuts` row, which opens `Shortcuts`.
 
-Theme colors are not on this screen.
-They live in the theme builder, which opens from the `Theme` button in the toolbar and is only there when the host turns it on with [`enableThemeBuilder`](../../api/erd-editor-element.md#enablethemebuilder).
-
-In VS Code, Obsidian, and a JetBrains IDE, the builder's three values (appearance, gray color, and accent color) are also settings of the host, and what you pick in the builder is saved there.
-VS Code keeps them as `dineug.erd-editor.theme.appearance`, `dineug.erd-editor.theme.grayColor`, and `dineug.erd-editor.theme.accentColor`, with `dark` as the default appearance.
-Obsidian keeps them under Settings → ERD Editor, per vault, and a JetBrains IDE under Settings | Tools | ERD Editor, for the whole IDE. Both default to `Auto`, which follows the host's light or dark theme and switches with it.
-The builder itself offers only `Light` and `Dark`.
-In Obsidian and a JetBrains IDE, `Auto` stays set unless you pick the appearance it is not showing.
-In VS Code, every pick saves all three values, so while the appearance is `auto`, picking even a color replaces it with `light` or `dark`.
+The theme and the display language are not on this screen. The toolbar's `Theme` and `Display Language` buttons open them — see [Language and Theme](./language-and-theme.md).
 
 ## Relationship DataType Sync
 
 Determines whether to synchronize data types. It is on by default.
-Changing a column's data type then applies the same type to every column joined to it by a relationship, following the chain from both ends, so a foreign key never drifts from the key it references.
+Changing a column's data type then applies it to every column joined to it by a relationship, following the chain from both ends, so a foreign key never drifts from the key it references.
+From a key to its foreign keys, a serial type goes as the integer type it stores, as it does when a relationship is drawn — see [Identifying Relationships](./relationship-editing.md#identifying-relationships). So changing a key to `serial` gives its foreign keys `integer` under PostgreSQL, and the change goes on down the chain from there.
+From a foreign key back to its key, the type goes as written, except that a serial key keeps its type and the change stops there.
+[Map Columns](./relationship-editing.md#map-columns) follows this setting too: while it is on, each existing column it maps takes the type its parent key gives a foreign key, and the change goes on along the relationships as above. While it is off, or when the key has no data type, the column keeps its own.
 
 <img src="/img/settings-relationship-data-type-sync.png" width="290" alt="Relationship data type sync setting" loading="lazy" />
 
 ![Changing members.id to BIGINT UNSIGNED, which updates every member_id joined to it](/img/demo-relationship-data-type-sync.webp)
-
-## Save Scroll Information
-
-Determines whether the view position is saved in the document. The switch itself is stored in the document: a new diagram starts with it off, and a file you open keeps the setting it was saved with.
-With it off, the document is written with the view origin reset, so it opens on the diagram rather than where you left it, and scrolling never changes the file.
-
-A new diagram is one started from nothing: an empty file opened in VS Code, Obsidian, or a JetBrains IDE (Obsidian's `ERD Editor: Create new diagram` and `New ERD` make one), a new schema in the web app, a file made from Google Drive's New menu, or an `<erd-editor>` given no value. `Save Zoom Information` starts off there too.
-A schema or Google Drive file that the web app makes by importing a SQL, DBML, AML, or GraphQL file starts with both switches off as well. One made from a JSON file keeps that file's switches.
-A file that does not record these switches, such as one saved by an early release or written by hand, opens with both on.
-
-## Save Zoom Information
-
-Determines whether the zoom level is saved in the document. Like `Save Scroll Information`, it starts off in a new diagram, and a file you open keeps the setting it was saved with.
-With it off, the document is written at `100%`, so it opens unzoomed.
-A zoom also moves the view position, so that the point it zooms around stays in place. With only this switch off, zooming therefore still changes the file through the view position. Only with both switches off does it leave the file as it was.
-
-A scroll or a zoom that the document does not keep is not counted as a change. VS Code does not mark the tab modified, and Obsidian and a JetBrains IDE leave the file as it was, both when they save on their own and when the tab closes.
-So with both switches off, looking around a diagram never shows up in `git diff`, even in a file written by another release or on another machine, whose bytes a save would change.
-Neither switch covers which of the editor's tabs is open. The document records whether it was left on the ERD, Visualization, Schema SQL, Code Generator, or Settings tab, so in VS Code, Obsidian, and a JetBrains IDE, switching between these tabs still changes the file.
-A new diagram's empty file stays empty until the first edit, or the first switch to another of those tabs.
-A diagram VS Code opens read-only, such as a git revision or a merge preview, is never marked modified.
-In Google Drive, a scroll, a zoom, or a switch to another tab is never saved on its own, whatever the switches say. The view is written only along with another change, so with `Save Scroll Information` on, a Drive file opens where the view was at its last save.
 
 ## Maximum Comment Width
 
@@ -62,6 +35,55 @@ Turning it on starts at `60px`. A value typed outside the range is clamped to th
 Press `Sync` to recalculate the width of every table and column cell to fit its current text, and to redraw the relationship connectors around the new sizes.
 A `Recalculated table width` toast confirms it.
 Widths are recalculated on their own whenever a document is loaded, so this is only needed when a font or rendering change has left them stale.
+Widths are not saved in the file, so `Sync` never changes it.
+
+## Lock
+
+The `Lock` list holds six settings. While a setting's lock is on, the file keeps the value it had when locked, so changing it on screen leaves the file as it was.
+
+| Row | What the file keeps | In a new diagram |
+| --- | --- | --- |
+| `Viewport` | The ERD canvas's zoom level and view position, as one lock | `100% · 0, 0` |
+| `Canvas Type` | The tab the diagram opens on: `ERD`, `Visualization`, `Schema SQL`, or `Code Generator` | `ERD` |
+| `Language` | The [Code Generator](./code-generator.md#language) language | `GraphQL` |
+| `Table Name Case` | The Code Generator's [table name case](./code-generator.md#name-case) | `Pascal` |
+| `Column Name Case` | The Code Generator's [column name case](./code-generator.md#name-case) | `Camel` |
+| `Bracket Type` | The `Bracket` of the [Schema SQL](./schema-sql.md#database-and-bracket) tab and of the [Code Generator](./code-generator.md#bracket) targets that offer it | `None` |
+
+Each row shows a value and a lock button, and a click on the button turns that one lock on or off.
+While a lock is on, the button shows a closed lock with the tooltip `Unlock Viewport` (and so on for each row), and the value, with the tooltip `Locked value`, is the one the file keeps.
+While it is off, the button shows an open lock with the tooltip `Lock Viewport`, and the value, dimmed, with the tooltip `Current value`, is the setting as it stands now.
+`Viewport` reads as the zoom and then the view position, such as `75% · -40, 91`. The view position is the point on screen, in pixels, where the diagram's `0, 0` lies, and a coordinate of a thousand or more is shortened, as in `1.2k` or `-24k`.
+
+Locking takes the setting as it stands at that moment.
+While a lock is on, the setting still works on screen: you can scroll and zoom, switch tabs, and pick another language, name case, or bracket from the menus, the options panels, or quick search.
+The file keeps the locked value, though, and the row keeps showing it, so the diagram reopens at the locked view, on the locked tab, with the locked language, name cases, and bracket. A JSON export writes the locked values too.
+To save what the screen shows, turn the lock off, and the file follows the setting from then on: with `Viewport` off, the diagram opens where you left it. To lock a new value instead, such as a new starting view, turn the lock off and on again.
+If the locked view shows none of the diagram when the file opens, the screen still moves onto the diagram, and the locked value stays as it is.
+`Canvas Type` never keeps the Settings tab. Turning it on locks the last other tab you were on, and while it is off, its row names that tab.
+
+![Unlocking Viewport, scrolling and zooming the diagram, and locking it again at the new view its row shows](/img/demo-settings-locks.webp)
+
+Turning a lock on or off changes the file, since the file stores which locks are on, but like the rest of the Settings tab it is not recorded in the [undo history](./undo-redo.md#what-the-history-records). In a read-only editor the lock buttons do nothing.
+Every other setting is saved as it stands: the database, the [`View Option`](./table-related-functions.md#table-view-options) toggles, and the rest of the `Preferences` tab.
+
+Every lock is on in a new diagram, one started from nothing: an empty file opened in VS Code, Obsidian, or a JetBrains IDE (Obsidian's `ERD Editor: Create new diagram` and `New ERD` make one), a new schema in the web app, a file made from Google Drive's New menu, or an `<erd-editor>` given no value.
+A schema or Google Drive file that the web app makes by importing a SQL, DBML, AML, or GraphQL file starts with every lock on as well. One made from a JSON file keeps the locks that file records.
+A file you open keeps the locks it was saved with, each at its locked value.
+A file that records no locks, such as one saved by an earlier release or written by hand, opens with every lock on: the view at `100% · 0, 0` and the tab at `ERD`, whatever view and tab it saved, and its language, name cases, and bracket type locked as it saved them.
+An `Import` that replaces the diagram sets the locks too: a JSON file brings the locks it records and the values they hold, and a SQL, DBML, AML, or GraphQL file keeps your locks but puts the view back at `100% · 0, 0`, locked or not — see [Importing External Files](./file-import-export.md#importing-external-files). Undoing the import brings back the locks and locked values it replaced.
+
+A change a lock keeps out of the file is not counted as a change. VS Code does not mark the tab modified, and Obsidian and a JetBrains IDE leave the file as it was, both when they save on their own and when the tab closes.
+So with every lock on, looking around a diagram, switching tabs, and trying another language, name case, or bracket never show up in `git diff`.
+With `Viewport` off, scrolling and zooming change the file, and with `Canvas Type` off, so does switching tabs, including to the Settings tab.
+A new diagram's empty file stays empty until the first change the file keeps: an edit, a change to a setting no lock holds, or a lock turned on or off.
+Opening a diagram and closing it with no such change leaves the file as it was, whichever release or machine wrote it. The file holds only what the diagram is, in a fixed order, and a file an earlier release saved is rewritten in this form once, on its first such change — see [Storage Form and Runtime Value](../../api/advanced/schema.md#storage-form-and-runtime-value).
+In VS Code, a revision reopened as a diagram with `Reopen Editor With...`, such as a Git revision or a Local History entry, is read-only and never marked modified.
+In Google Drive, a scroll, a zoom, or a switch to another tab is never saved on its own, locked or not. With `Viewport` off, the view is written only along with another change, so a Drive file opens where the view was at its last save, and the same goes for the tab with `Canvas Type` off.
+
+In a [collaborative session](../../api/advanced/collaborative-editing.md), turning a lock on or off reaches every editor, and a lock keeps the value of the editor that turned it on.
+Turning off `Language`, a name case, or `Bracket Type` gives every editor the value shown in the editor that turned it off, so all of them save one value. Turning off `Viewport` or `Canvas Type` moves no one's view or tab.
+A coding agent working through the MCP server has no tool for the locks or for the settings they hold, and it reads a locked language, name case, or bracket type at the value the file keeps. Only its imports in `replace` mode reach them, as an `Import` does — see [Settings](../../mcp/tools.md#settings) and [Import](../../mcp/tools.md#import).
 
 ## Adjusting Column Order
 
@@ -70,7 +92,7 @@ Drag a row to move it — the whole row is draggable, and the grip icon marks it
 A cell hidden by a [table view option](./table-related-functions.md#table-view-options) keeps its place in the list, so the order applies to whichever cells are shown.
 The [alternate key](./table-related-functions.md#alternate-keys) mark (`AK1.1` and so on) is not one of these rows. It always stands last in a row, after whichever cell this order puts last.
 
-![Dragging the Comment row up under Name, which puts each comment right after its column name](/img/demo-settings-column-order.webp)
+![Scrolling down to Column Order and dragging the Comment row up under Name, which puts each comment right after its column name](/img/demo-settings-column-order.webp)
 
 ## Shortcuts
 
@@ -89,6 +111,7 @@ The `Shortcuts` tab is a read-only table of `Command` and `Keybinding`, listing 
 | Add Memo | `Alt + M` | `⌥ + M` |
 | Remove Table, Memo | `Ctrl + Backspace`, `Ctrl + Delete` | `⌘ + Backspace`, `⌘ + Delete` |
 | Remove Column | `Alt + Backspace`, `Alt + Delete` | `⌥ + Backspace`, `⌥ + Delete` |
+| Delete Selection | `Delete`, `Backspace` | `Delete`, `Backspace` |
 | Primary Key | `Alt + K` | `⌥ + K` |
 | Select All Table, Memo | `Ctrl + A`, `Ctrl + Alt + A` | `⌘ + A`, `⌘ + ⌥ + A` |
 | Select All Column | `Alt + A` | `⌥ + A` |
@@ -104,15 +127,16 @@ The `Shortcuts` tab is a read-only table of `Command` and `Keybinding`, listing 
 | Hand Tool | `Space` | `Space` |
 | Zen Mode | `Alt + Z` | `⌥ + Z` |
 
-Most of these fire on the ERD tab only, and they are held back while quick search, table properties, the diff viewer, the Auto Layout preview, or time travel is open.
-`Search`, `Find and Replace`, and `Stop` are the exceptions: `Search` toggles quick search from any tab, `Find and Replace` opens the [Find and Replace panel](./find-and-replace.md#opening-and-closing) from any tab and brings up the ERD tab, and `Stop` is what closes quick search, table properties, the diff viewer, the Auto Layout preview, time travel, the theme builder, and the Find and Replace panel.
+Most of these fire on the ERD tab only, and they are held back while quick search, table properties, the diff viewer, the Auto Layout preview, time travel, the [`Export image`](./file-import-export.md#image) dialog, or [`Map Columns`](./relationship-editing.md#map-columns) is open.
+`Search`, `Find and Replace`, and `Stop` are the exceptions: `Search` toggles quick search from any tab, `Find and Replace` opens the [Find and Replace panel](./find-and-replace.md#opening-and-closing) from any tab and brings up the ERD tab, and `Stop` is what closes quick search, table properties, the diff viewer, the Auto Layout preview, time travel, the `Export image` dialog, `Map Columns`, the theme builder, the `Display Language` picker, the Find and Replace panel, the color picker, and an open context menu.
 While the diff viewer, the Auto Layout preview, or time travel is open, `Find and Replace` leaves its key to the browser or host — see [The Browser's Find Bar](./find-and-replace.md#the-browsers-find-bar).
-On the ERD tab, `Stop` ends an open cell or memo editor, or cancels a relationship being drawn, and leaves the selection as it is. With none of those open, it clears the selection and the focused cell and, in the same press, closes an open Find and Replace panel.
-An open Find and Replace panel holds none of the shortcuts back on the canvas. For keys pressed inside the panel, see [Keys in the Panel](./find-and-replace.md#keys-in-the-panel).
+On the ERD tab, `Stop` ends an open cell or memo editor, closes a [table group](./table-groups.md)'s name editor without renaming the group, or cancels a relationship or a `New Table Group` being drawn, and leaves the selection as it is. With none of those open, it clears the selection and the focused cell and, in the same press, closes an open Find and Replace panel or color picker.
+An open Find and Replace panel, theme builder, or `Display Language` picker holds none of the shortcuts back on the canvas. For keys pressed inside the panel, see [Keys in the Panel](./find-and-replace.md#keys-in-the-panel), and inside the picker, see [Picking a Language](./language-and-theme.md#picking-a-language).
+`Delete Selection` removes every selected table, memo, and table group, or, when a single table is selected with some of its columns and the zoom is above `70%`, those columns — see [Table and Memo Deletion](./table-related-functions.md#table-and-memo-deletion). `Remove Table, Memo` removes selected table groups too.
 `Zoom In`, `Zoom Out`, and `Zoom Reset` also zoom the [Visualization](./visualization.md#toolbar) tab, in `Graph` and `Flow` alike, unless quick search is open.
 On the Visualization tab, `Stop` also closes the [row display](./visualization.md#row-display) menu and cancels a [Flow layout](./visualization.md#how-flow-is-placed) that is still running; it does not widen a view narrowed with `Focus on this table`.
 `Focus on this table` opens the Visualization tab in `Flow`, narrowed to the selected tables and every table one relationship away, and does nothing when no table is selected — see [Focusing on Tables](./visualization.md#focusing-on-tables).
-`Select All Table, Memo` and `Hand Tool` give way to a caret: while you are editing a cell or typing in the Find and Replace panel, `Ctrl + A` (Windows/Linux) or `⌘ + A` (Mac) selects the text and `Space` types a space.
+`Select All Table, Memo`, `Hand Tool`, and `Delete Selection` give way to a caret: while you are editing a cell or a memo or typing in a text field such as the Find and Replace panel's, `Ctrl + A` (Windows/Linux) or `⌘ + A` (Mac) selects the text, `Space` types a space, and `Delete` and `Backspace` erase text.
 Copy and paste are the browser's own `Ctrl + C` and `Ctrl + V` (Windows/Linux) or `⌘ + C` and `⌘ + V` (Mac), so they are not in this list — see [Table Editing](./table-editing.md).
 
 Bindings cannot be changed from this tab.

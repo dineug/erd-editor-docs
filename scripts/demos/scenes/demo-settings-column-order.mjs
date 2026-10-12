@@ -1,4 +1,31 @@
 import { readSeed, seedSQL } from '../lib/seed.mjs';
+import { glide } from './_misc-helpers.mjs';
+
+/** Viewport boxes of the Column Order rows, by label. */
+const columnOrderRows = d =>
+  d.page.evaluate(() =>
+    Object.fromEntries(
+      [...window.__erdShadowRoot.querySelectorAll('[draggable="true"]')].map(el => {
+        const r = el.getBoundingClientRect();
+        return [el.innerText.trim(), { x: r.left, y: r.top, width: r.width, height: r.height }];
+      })
+    )
+  );
+
+/**
+ * How far the Preferences page must scroll for the whole Column Order list,
+ * and the bottom of its scroll box: the Lock list above it pushes the list
+ * below the fold of a 640px frame.
+ */
+const columnOrderOverflow = d =>
+  d.page.evaluate(() => {
+    const items = window.__erdShadowRoot.querySelectorAll('[draggable="true"]');
+    const last = items[items.length - 1];
+    let box = last.parentElement;
+    while (box && getComputedStyle(box).overflowY !== 'auto') box = box.parentElement;
+    const bottom = box.getBoundingClientRect().bottom;
+    return { need: last.getBoundingClientRect().bottom - bottom, bottom };
+  });
 
 /**
  * Adjusting Column Order: on the Settings tab the Comment row is dragged up
@@ -9,7 +36,6 @@ export default {
   name: 'demo-settings-column-order',
   lossless: true,
   width: 800,
-  // Tall enough for the whole Column Order list without scrolling.
   height: 640,
   async setup(d) {
     await seedSQL(d, readSeed('shop.sql'), {
@@ -64,23 +90,46 @@ export default {
     await d.sleep(500);
     await d.shot('settings');
 
-    const rows = await d.page.evaluate(() =>
-      Object.fromEntries(
-        [...window.__erdShadowRoot.querySelectorAll('[draggable="true"]')].map(el => {
-          const r = el.getBoundingClientRect();
-          return [el.innerText.trim(), { x: r.left, y: r.top, width: r.width, height: r.height }];
-        })
-      )
+    // Down the page to the Column Order list, under the Lock rows. The wheel
+    // turns right of the lists, where no row lights up; the pointer gets
+    // there round the right of the Preferences rows, clear of their switches.
+    await glide(
+      d,
+      [
+        { x: settings.x + settings.width / 2 + 8, y: 52 },
+        { x: 600, y: 96 },
+        { x: 640, y: 430 },
+      ],
+      800
     );
+    await d.sleep(200);
+    const { need } = await columnOrderOverflow(d);
+    if (need > -12) {
+      const step = 30;
+      await d.wheel(step, { steps: Math.ceil((need + 12) / step), gap: 45 });
+    }
+    await d.sleep(450);
+    const after = await columnOrderOverflow(d);
+    if (after.need > 0) throw new Error(`the Column Order list is ${after.need}px below the fold`);
+    await d.shot('scrolled');
+
+    const rows = await columnOrderRows(d);
     const from = rows.Comment;
     const to = rows.DataType;
     const gripX = from.x + 22;
     const midY = box => box.y + box.height / 2;
     const pitch = rows.DataType.y - rows.Name.y;
-    // Take the row by its grip, coming in from the left edge of the list so
-    // the rows above it do not light up on the way.
-    await d.moveTo(from.x - 8, rows.Name.y, 420);
-    await d.moveTo(from.x - 8, midY(from), 300);
+    // Take the row by its grip, coming in along the gap above the list and
+    // down its left edge, so the rows on the way do not light up.
+    await glide(
+      d,
+      [
+        { x: 560, y: rows.Name.y - 10 },
+        { x: from.x - 8, y: rows.Name.y - 4 },
+        { x: from.x - 8, y: midY(from) },
+      ],
+      900
+    );
     await d.moveTo(gripX, midY(from), 180);
     await d.sleep(350);
 
@@ -109,5 +158,12 @@ export default {
     await d.whenDrawn();
     await d.shot('erd');
     await d.sleep(1300);
+
+    // A drag that never started records a clip where nothing moves.
+    const { columnOrder } = (await d.value()).settings;
+    const name = columnOrder.indexOf(1);
+    if (columnOrder[name + 1] !== 64) {
+      throw new Error(`Comment is not under Name: ${columnOrder.join(', ')}`);
+    }
   },
 };

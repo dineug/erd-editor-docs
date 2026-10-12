@@ -354,6 +354,9 @@ export async function record(scene, { debug = false } = {}) {
         viewport: { width, height },
         deviceScaleFactor: scale,
         colorScheme: 'dark',
+        // The editor follows navigator.languages once a scene enables its
+        // locale picker; pin English so clips match the docs' labels.
+        locale: 'en-US',
         permissions: ['clipboard-read', 'clipboard-write'],
       });
       const page = await context.newPage();

@@ -1,5 +1,5 @@
 ---
-sidebar_position: 7
+sidebar_position: 8
 description: 在表名、列名、注释和备注中查找文本，在画布上逐一跳转到每个匹配项，并替换其中一处或全部匹配。
 ---
 
@@ -19,25 +19,26 @@ description: 在表名、列名、注释和备注中查找文本，在画布上�
 
 - 工具栏中紧跟在 `Search` 之后、带有文本搜索图标的按钮。其提示为 `Find and Replace (Ctrl + F)` (Windows/Linux) 或 `Find and Replace (⌘ + F)` (Mac)。
 - [快速搜索](./quick-search.md)中的 `Find and Replace`，每个标签页的列表中都有。输入 `find`、`replace` 或 `rename` 即可找到它。
-- 画布右键菜单中的 `Find and Replace`：在 ERD 画布的空白处点击右键。它位于 `New Table` 和 `New Memo` 之后、`Relationship` 之前。
+- 画布右键菜单中的 `Find and Replace`：在 ERD 画布上任何[表分组](./table-groups.md)之外的空白处点击右键。它位于 `New Table`、`New Memo` 和 `New Table Group` 之后、`Relationship` 之前。
 
 快速搜索和右键菜单中的条目会在右侧显示快捷键。
 
 快捷键和工具栏按钮在每个标签页中都有效。在 Visualization、Schema SQL、Code Generator 或 Settings 标签页中打开时，会先切换到 ERD 标签页，因为匹配项是在那里显示和编辑的。  
-在快速搜索打开时按下快捷键，会关闭命令面板并打开查找与替换面板。在编辑表的单元格或备注时，快捷键不起作用。  
-打开面板会关闭表属性和主题构建器。
+在快速搜索打开时按下快捷键，会关闭命令面板并打开查找与替换面板。在编辑表的单元格、备注或表分组的名称时，快捷键不起作用。  
+打开面板会关闭表属性、[主题构建器](./language-and-theme.md#theme)、[`Display Language`](./language-and-theme.md#display-language) 选择器、[`Export image`](./file-import-export.md#image) 对话框以及[映射列](./relationship-editing.md#map-columns)，因此在其中任何一个中按下快捷键，都会用面板替换该对话框。映射列会直接关闭，不会映射任何列。  
+反过来，打开其中任何一个对话框也会关闭面板，并且关闭该对话框后面板不会重新出现。
 
 面板显示期间，快捷键、工具栏按钮和这两个条目都不会关闭它，而是把光标放回查找输入框并选中其中的文本，当前匹配项保持不变。
 
-打开表属性或主题构建器会隐藏已打开的面板，但不会关闭它，切换到其他标签页时也是如此。对话框关闭或回到 ERD 标签页后，面板会以离开时的状态重新出现。  
-快捷键、工具栏按钮和这两个条目同样可以让隐藏的面板重新出现，但此时会重新搜索其查询内容，并且没有当前匹配项。  
+切换到其他标签页只会隐藏面板，回到 ERD 标签页后，面板会以离开时的状态重新出现。  
+快捷键、工具栏按钮和快速搜索中的条目同样可以让面板重新出现，但此时会重新搜索其查询内容，并且没有当前匹配项。  
 Diff Viewer、Time Travel 或自动布局预览打开期间，面板无法打开：工具栏按钮会变暗且不起作用，快速搜索中不会列出 `Find and Replace`，快捷键则交给浏览器或宿主处理，参见[浏览器的查找栏](#the-browsers-find-bar)。已经打开的面板会被隐藏，直到它们关闭为止。
 
 按 `Escape`，或点击面板标题栏中提示为 `Close (ESC)` 的 `x` 按钮即可关闭。关闭后，键盘焦点会交还给编辑器。
 
 - 在面板中按 `Escape` 会关闭面板并保持选中状态不变，因此最后跳转到的匹配项所在的表或备注仍处于选中状态。
 - 在画布上按 `Escape` 同样会关闭面板，并且与未打开面板时一样，同一次按键还会清除选中状态和单元格焦点，参见[快捷键](./settings.md#快捷键)。
-- 如果单元格或备注编辑器处于打开状态、正在绘制关系，或快速搜索已打开，这次按键会先由它们处理，面板保持打开。
+- 如果单元格、备注或表分组名称的编辑器处于打开状态、正在绘制关系或[表分组](./table-groups.md#drawing-a-group)，或快速搜索已打开，这次按键会先由它们处理，面板保持打开。
 
 重新打开时会保留上一次的查询内容（处于选中状态并重新搜索），以及替换文本、[选项](#options)和之前开启的[文本类型](#what-it-searches)。  
 这些内容在编辑器保持打开期间一直保留，但不会保存到文档中。新加载的编辑器所有选项均为关闭，只开启 `Table names` 和 `Column names`。
@@ -61,8 +62,8 @@ Diff Viewer、Time Travel 或自动布局预览打开期间，以及焦点位于
 
 面板首次打开时只开启 `Table names` 和 `Column names`，因此除非你开启注释和备注，否则重命名不会波及它们。
 
-除此之外的内容都不会被搜索：数据类型、默认值、索引名、数据库名称，以及 Schema SQL 和生成的代码都不在搜索范围内。  
-被[表显示选项](./table-related-functions.md#table-view-options)隐藏的注释仍会被搜索。
+除此之外的内容都不会被搜索：数据类型、默认值、索引名、[表分组](./table-groups.md)的名称、数据库名称、包括 `Before tables` 和 `After tables` 脚本在内的 [Schema SQL](./schema-sql.md)，以及生成的代码都不在搜索范围内。  
+被[表显示选项](./table-related-functions.md#table-view-options)隐藏的注释仍会被搜索。通过 View Option → `Memos` 隐藏的备注则不会被搜索，即使 `Memos` 按钮已开启也是如此，因此 `Replace All` 永远不会改写你看不到的备注。
 
 ## 选项 {#options}
 
@@ -104,7 +105,7 @@ Diff Viewer、Time Travel 或自动布局预览打开期间，以及焦点位于
 当前匹配项所在的行会高亮显示，并滚动到可见位置。  
 匹配项超过 200 个时，列表只绘制当前匹配项周围的 200 行，并注明显示的是哪一部分，例如 `Showing 1–200 of 523`。在匹配项之间移动时，这一范围会随之移动。
 
-面板打开期间，列表会跟随文档变化。被搜索文本的任何变更，无论是画布上的编辑、Undo 或 Redo、导入，还是协作者或编码智能体的编辑，都会触发重新搜索；如果当前匹配项仍然存在，它会保持为当前匹配项。选中、滚动和悬停则不会触发重新搜索。  
+面板打开期间，列表会跟随文档变化。被搜索文本的任何变更，无论是画布上的编辑、Undo 或 Redo、导入，还是协作者或编码智能体的编辑，都会触发重新搜索；如果当前匹配项仍然存在，它会保持为当前匹配项。通过 View Option → `Memos` 隐藏或显示备注时也是如此，备注的匹配项会随之从列表中移除或重新出现。选中、滚动和悬停则不会触发重新搜索。  
 面板隐藏期间所做的编辑，会在面板重新显示时立即搜索。
 
 ## 跳转到匹配项 {#going-to-a-match}
@@ -162,7 +163,7 @@ Diff Viewer、Time Travel 或自动布局预览打开期间，以及焦点位于
 
 - 在查找输入框中，`Enter` 和 `Shift + Enter` 用于在匹配项之间移动；在替换输入框中，`Enter` 和 `Ctrl + Enter` (Windows/Linux) 或 `⌘ + Enter` (Mac) 用于替换；`Escape` 关闭面板。
 - 少数编辑器快捷键仍然有效：`Ctrl + F` (Windows/Linux) 或 `⌘ + F` (Mac) 会把光标放回查找输入框并选中其中的文本，`Ctrl + K` (Windows/Linux) 或 `⌘ + K` (Mac) 用于开关快速搜索，`Undo` 和 `Redo` 撤销与重做的是图而不是输入框中的文本，`Zoom In`、`Zoom Out` 和 `Zoom Reset` 用于缩放画布，参见[快捷键](./settings.md#快捷键)。
-- 其他所有编辑器快捷键、方向键和 `Tab` 都留在面板中，作为普通文本输入框的按键使用：`Ctrl + A` (Windows/Linux) 或 `⌘ + A` (Mac) 选中输入框中的文本，`Space` 输入空格，`Tab` 在面板的各个控件之间移动焦点。
+- 其他所有编辑器快捷键、方向键和 `Tab` 都留在面板中，作为普通文本输入框的按键使用：`Ctrl + A` (Windows/Linux) 或 `⌘ + A` (Mac) 选中输入框中的文本，`Delete` 和 `Backspace` 删除文本，而永远不会删除画布上选中的对象，`Space` 输入空格，`Tab` 在面板的各个控件之间移动焦点。
 - 编辑器未绑定的按键，例如宿主自己的保存快捷键，照常传给宿主。
 
 ## 只读编辑器 {#read-only-editors}
@@ -171,7 +172,7 @@ Diff Viewer、Time Travel 或自动布局预览打开期间，以及焦点位于
 搜索、选项、文本类型、列表以及跳转到匹配项均可正常使用。  
 工具栏按钮的提示为 `Find (Ctrl + F)` (Windows/Linux) 或 `Find (⌘ + F)` (Mac)，而快速搜索和右键菜单中的条目仍沿用 `Find and Replace` 这一名称。
 
-VS Code 以只读方式打开的图，例如 git 修订版本或合并预览，使用的就是这种只能查找的面板。
+在 VS Code 中，图的修订版本，例如 Git 修订版本或 Local History 条目，会以 JSON 文本打开。通过 `Reopen Editor With...` 重新以图的形式打开后，它是只读的，使用的就是这种只能查找的面板。
 
 ## 从快速搜索打开 {#from-quick-search}
 

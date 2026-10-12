@@ -1,5 +1,5 @@
 import { readSeed, seedSQL } from '../lib/seed.mjs';
-import { menuItemBox, timer, waitFor } from './_table-related-b-helpers.mjs';
+import { glide, menuItemBox, timer, waitFor } from './_table-related-b-helpers.mjs';
 
 const mid = box => ({ x: box.x + box.width / 2, y: box.y + box.height / 2 });
 
@@ -14,7 +14,14 @@ export default {
   width: 960,
   height: 540,
   async setup(d) {
-    await seedSQL(d, readSeed('shop.sql'), {
+    const sql = readSeed('shop.sql');
+    // Warms the layout worker, so the recorded Flow lands at once and its
+    // Placing toast is up as briefly as it can be.
+    await d.page.evaluate(
+      sql => document.querySelector('erd-editor').setSchemaSQL(sql, { placement: 'auto' }),
+      sql
+    );
+    await seedSQL(d, sql, {
       // Two chains that meet at order_items: Flow draws them with no crossing.
       only: ['members', 'orders', 'order_items', 'products', 'categories'],
       tables: {
@@ -43,16 +50,32 @@ export default {
     await d.rightClick(470, 62, { duration: 450 });
     await d.sleep(350);
     const auto = mid(await waitFor(d, () => menuItemBox(d, 'Auto Layout')));
+    // Down the menu's left padding, clear of its rows (no other submenu opens
+    // on the way) and of the canvas (no table or connector lights up).
     const menu = await d.domBox('.context-menu-content');
-    // Down the outside edge of the menu, so no other submenu opens on the way.
-    await d.moveTo(menu.x - 6, auto.y, 450);
-    await d.moveTo(auto.x - 20, auto.y, 300);
+    await glide(
+      d,
+      [
+        { x: menu.x + 4, y: auto.y },
+        { x: auto.x - 20, y: auto.y },
+      ],
+      750
+    );
     await d.sleep(450);
     await d.shot('submenu');
     const flow = mid(await waitFor(d, () => menuItemBox(d, 'Flow')));
-    // Along the row first, so the pointer does not cross Force on the way.
-    await d.moveTo(flow.x - 70, auto.y, 250);
-    await d.moveTo(flow.x - 20, flow.y, 250);
+    // Force sits level with Auto Layout: into the submenu's left padding,
+    // down it and along the Flow row, so Force does not light up on the way.
+    const lane = (await d.domBox('.context-menu-content', 1)).x + 4;
+    await glide(
+      d,
+      [
+        { x: lane, y: auto.y },
+        { x: lane, y: flow.y },
+        { x: flow.x - 20, y: flow.y },
+      ],
+      550
+    );
     await d.sleep(350);
     mark('click');
     const before = await membersX();

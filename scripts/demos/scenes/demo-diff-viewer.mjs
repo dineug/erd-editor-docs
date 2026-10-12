@@ -50,7 +50,8 @@ const POSITIONS = {
   coupons: { x: 30, y: 236 },
   products: { x: 28, y: 468 },
 };
-const pick = names => Object.fromEntries(names.map(name => [name, POSITIONS[name]]));
+const pick = (names, positions = POSITIONS) =>
+  Object.fromEntries(names.map(name => [name, positions[name]]));
 
 // 76% keeps all three tables inside the pane height.
 const settings = { databaseName: 'shop', show: SHOW, zoomLevel: 0.76 };
@@ -61,9 +62,23 @@ export default {
   height: HEIGHT,
   async setup(d) {
     const savedTables = ['members', 'reviews', 'products'];
-    const saved = await seedSQL(d, SAVED_SQL, {
+    await seedSQL(d, SAVED_SQL, {
       only: savedTables,
       tables: pick(savedTables),
+      settings,
+    });
+    // The connectors leave and reach the middle of a table's side and turn
+    // with rounded corners, so a jog of a few pixels between two tables reads
+    // as a kink: centre the saved column on members so both run straight.
+    const width = async name => (await d.tableBox(name)).width / settings.zoomLevel;
+    const middle = POSITIONS.members.x + (await width('members')) / 2;
+    const positions = { ...POSITIONS };
+    for (const name of ['reviews', 'products']) {
+      positions[name] = { ...POSITIONS[name], x: Math.round(middle - (await width(name)) / 2) };
+    }
+    const saved = await seedSQL(d, SAVED_SQL, {
+      only: savedTables,
+      tables: pick(savedTables, positions),
       settings,
     });
     // What the editor's json export would have written.
@@ -72,7 +87,7 @@ export default {
     const currentTables = ['members', 'coupons', 'products'];
     await seedSQL(d, CURRENT_SQL, {
       only: currentTables,
-      tables: pick(currentTables),
+      tables: pick(currentTables, positions),
       settings,
     });
     await d.moveTo(700, 300, 0);

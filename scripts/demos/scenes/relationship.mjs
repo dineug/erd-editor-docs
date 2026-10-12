@@ -1,4 +1,5 @@
 import { seedSQL } from '../lib/seed.mjs';
+import { glide } from './_misc-helpers.mjs';
 
 // Three shop tables with their foreign keys left out, for the clip to draw them.
 // Each key is named after its table, so the column copied to the child reads as a foreign key.
@@ -42,6 +43,31 @@ const OFFSET = 400;
 const headerPoint = async (d, name, dx = 0.5, dy = 14) => {
   const box = await d.tableBox(name);
   return { x: box.x + box.width * dx, y: box.y + dy };
+};
+
+/**
+ * A point on a table's bottom border, below its last row: the lowest point
+ * along x where a press lands on the table's own body rather than on a row.
+ * A row lights up its remove × on hover and a press on any of its cells
+ * focuses the row; the border does neither.
+ */
+const bottomEdgePoint = async (d, name, dx) => {
+  const box = await d.tableBox(name);
+  const x = box.x + box.width * dx;
+  const y = await d.page.evaluate(
+    ({ x, top, bottom }) => {
+      const stage = window.__erdStages.canvas;
+      const c = stage.container().getBoundingClientRect();
+      for (let y = Math.floor(bottom); y > top; y -= 0.5) {
+        const hit = stage.getIntersection({ x: x - c.left, y: y - c.top });
+        if (hit?.name() === 'table-body') return y;
+      }
+      return null;
+    },
+    { x, top: box.y + box.height - 6, bottom: box.y + box.height }
+  );
+  if (y === null) throw new Error(`no border under the rows of ${name}`);
+  return { x, y };
 };
 
 /** Editing Start > Relationship Creation: ⌘⌥4 then parent, child; then from the canvas toolbar. */
@@ -143,8 +169,11 @@ export default {
     const orders = await headerPoint(d, 'orders', 0.5, 14);
     await d.click(members.x, members.y, { duration: 500 });
     await d.moveTo(orders.x, orders.y, 600);
+    // The child is outlined and the Map to existing columns / Create new
+    // columns pill stands beside it; a press on the table itself creates new
+    // columns. Hold so the buttons read before the click.
+    await d.sleep(450);
     await d.shot('drawing');
-    await d.sleep(150);
     await d.click(orders.x, orders.y);
     await d.whenDrawn();
     await d.sleep(900);
@@ -156,24 +185,49 @@ export default {
     const zeroN = await d.domBox('.floating-toolbar > [title^="Zero N"]');
     const zx = zeroN.x + zeroN.width / 2 + 2;
     const zy = zeroN.y + zeroN.height - 3;
-    await d.moveTo(zx, zy, 650);
+    // Out over orders' top edge and down the gap right of it, so no column
+    // row lights up on the way, then onto the button from straight above.
+    // The run along the top edge stays 1px above the table: the spline would
+    // bulge up into the header toolbar (y < 30) ahead of a sharper bend, so
+    // the turn down is eased in over two points.
+    const ordersBox = await d.tableBox('orders');
+    const right = ordersBox.x + ordersBox.width;
+    await glide(
+      d,
+      [
+        { x: orders.x + 35, y: ordersBox.y - 1 },
+        { x: right - 23, y: ordersBox.y - 3 },
+        { x: right + 17, y: ordersBox.y + 2 },
+        { x: right + 35, y: ordersBox.y + 40 },
+        { x: right + 62, y: 260 },
+        { x: zx, y: zeroN.y - 40 },
+        { x: zx, y: zy },
+      ],
+      1000
+    );
     await d.sleep(250);
     await d.shot('toolbar-hover');
     await d.click(zx, zy, { duration: 0 });
     await d.sleep(450);
     await d.shot('toolbar-armed');
-    // The right end of orders' name row, below the header's add/remove
-    // buttons: its right side faces payments.
-    const orders2 = await headerPoint(d, 'orders', 0.9, 34);
+    // On orders' bottom border under its comment column, reached from below:
+    // the pointer leaves orders at once, long before the start table would
+    // offer its own (self reference) pill 24px from the press; no row is
+    // hovered or focused, so no remove × shows and no row stays lit through
+    // the draw. Far enough right that orders' right side, which faces
+    // payments, is the nearest one the preview starts from.
+    const orders2 = await bottomEdgePoint(d, 'orders', 0.84);
     const payments = await headerPoint(d, 'payments', 0.35, 14);
     await d.click(orders2.x, orders2.y, { duration: 600 });
     await d.moveTo(payments.x, payments.y, 600);
+    await d.sleep(450);
     await d.shot('drawing-2');
-    await d.sleep(150);
     await d.click(payments.x, payments.y);
     await d.whenDrawn();
     await d.sleep(400);
-    await d.moveTo(720, 480, 500);
+    // Off payments through its header's top edge, to rest in the empty canvas
+    // above it, clear of both connectors.
+    await d.moveTo(payments.x + 40, payments.y - 72, 500);
     await d.sleep(1300);
   },
 };

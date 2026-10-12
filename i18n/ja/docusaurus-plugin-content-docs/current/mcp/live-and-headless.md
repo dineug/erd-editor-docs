@@ -15,6 +15,7 @@ ERD Editor を入れた VS Code のウィンドウと Obsidian の保管庫の�
 | ワークスペース、保管庫、開いているプロジェクトのいずれかにドキュメントを含むか、ドキュメントを開いているエディタ | **ライブ。** 必要に応じて ERD Editor でドキュメントを開き、編集セッションに参加して、そこで変更を適用します。編集はすぐに表示され、エディタがユーザー自身の編集を保存するのと同じように保存されます。[保存](#saving)を参照してください。 |
 | エディタなし | **ヘッドレス。** ファイルを読み込み、変更を適用して、ファイルを置き換えます。`erd_save` ですることはありません。 |
 | ハブがオフのエディタ | **拒否。** 読み取りはディスクから引き続き行えます。開いているエディタの下でファイルに書き込んだ変更は次の保存で上書きされるおそれがあるため、サーバーは何も書き込みません。 |
+| ハブはオンでも、サーバーとは異なるプロトコルを使うエディタ。サーバー `1.0.0` に対しては VS Code の拡張機能 `3.x`、Obsidian のプラグイン `0.x`、JetBrains のプラグイン `0.9.0` または `0.10.0`、`1.0.0` より前のサーバーに対しては拡張機能 `4.0.0` 以降またはプラグイン `1.0.0` 以降です | **拒否。** 読み取りも含めて `protocolMismatch` で拒否されます。メッセージには、更新が必要な側として、拡張機能またはプラグインか、サーバーが示されます。[アップデート](./installation.md#アップデート)を参照してください。 |
 | Windows で、同じファイルを別のパスで保持しているエディタ。エージェントがこのコンピューターのネットワーク共有や割り当てたネットワークドライブ（`\\localhost\C$\…` など）を通じて指定し、エディタはドライブのパスで保持している場合、またはその逆の場合です | **拒否。** 読み取りも含めて `invalidPath` で拒否されます。メッセージには、エディタがドキュメントを保持しているパスが示されます。そのパスでもう一度呼び出してください。 |
 | Windows で、Windows がエージェントを接続させないエディタ。エージェントが管理者として起動されていないときに管理者として起動したエディタ、またはエージェントがサンドボックス内で動作しているときのすべてのエディタです | **拒否。** 読み取りも含めて `hubUnreachable` で拒否され、メッセージにその理由が示されます。エディタとエージェントを同じ権限で実行してください。例えば、エディタを管理者権限なしで起動し直します。 |
 
@@ -50,10 +51,8 @@ JetBrains IDE は、編集が止まってから 1 秒足らずでそれらを書
 エディタがそれを確認できなかった場合や、ファイルを書き込まなかった場合は、`notSaved` で拒否されます。ディスク上のファイルが変更されたために VS Code がタブを未保存のままにした場合や、ダイアログが開いていたときやファイルが書き込み不可のときなどに JetBrains IDE が書き込めなかった場合です。
 
 VS Code と JetBrains IDE では、保存するものが残っていないドキュメントへの `erd_save` は成功し、ファイルはそのまま残ります。
-すべての編集が保存された後（JetBrains IDE は自動で保存します）がこれに当たり、`Save Scroll Information` と `Save Zoom Information` がどちらもオフなら、保存後にスクロールや拡大・縮小しかしていない場合も同じです。
+すべての編集が保存された後（JetBrains IDE は自動で保存します）がこれに当たり、その後の変更がすべて、`Viewport` をロックした状態でのスクロールや拡大・縮小、`Canvas Type` をロックした状態でのタブの切り替えのように、[ロック](../guide/guides/settings.md#ロック)によってファイルに反映されない変更である間は、その状態が続きます。ロックは既定ですべてオンです。
 JetBrains IDE が書き込めないファイルは、その場合でも拒否されます。
-VS Code の拡張機能の `3.1.0` より前のバージョンは、そのようなスクロールや拡大・縮小でタブを未保存の状態にするため、`erd_save` はファイルを書き込みます。
-JetBrains のプラグインの `0.10.0` より前のバージョンは、IDE がファイルを開いてから一度も書き込んでいない場合に `erd_save` でファイルを書き直し、その際にファイルの先頭にあったバイトオーダーマークが失われます。
 
 エージェントの最後の編集の後にエディタがドキュメントを閉じると、エージェントの次の呼び出しには、エディタが閉じる前に保存された場合に限りそれらの編集がファイルに入っている、という注記が付きます。
 
@@ -62,10 +61,11 @@ JetBrains のプラグインの `0.10.0` より前のバージョンは、IDE �
 `erd_undo` はエージェントが行った最後の編集を元に戻し、ユーザーの編集は元に戻しません。`erd_redo` はそれを再び適用します。
 エディタ自身の [Undo](../guide/guides/undo-redo.md) は逆に働きます。ほかのエディタから届いた変更は自分の履歴に記録されないため、ユーザーの編集を元に戻し、エージェントの編集は元に戻しません。
 
-いくつかの編集は、エディタに Undo の項目を作りません。`erd_set_show` 以外の[設定のツール](./tools.md#settings)と `erd_resize_memo` です。
-`erd_set_column_primary_key`、`erd_set_column_unique`、`erd_set_column_not_null`、`erd_set_column_auto_increment`、`erd_set_index_unique`、`erd_set_index_column_order`、`erd_set_show` も、ドキュメントがすでに持っている値を設定するときは項目を作らず、すでにインデックスにあるカラムを指定した `erd_add_index_column` も作りません。そのような呼び出しは何も変えないためです。
+いくつかの編集は、エディタに Undo の項目を作りません。[設定のツール](./tools.md#settings)のうちの `erd_set_database` と `erd_set_database_name`、そして `erd_resize_memo` です。
+横方向と縦方向の移動量の合計が 20 ピクセル未満となる `erd_move_table_group` も項目を作りませんが、グループは移動した位置のままです。
+何も変えない呼び出しも項目を作りません。ドキュメントがすでに持っている値を設定する `erd_set_column_primary_key`、`erd_set_column_unique`、`erd_set_column_not_null`、`erd_set_column_auto_increment`、`erd_set_index_unique`、`erd_set_index_column_order`、すでにインデックスにあるカラムを指定した `erd_add_index_column`、すでにそのグループに属しているテーブルを指定した（`groupId` が `null` の場合は、すでにどのグループにも属していないテーブルを指定した）`erd_set_table_group`、グループがすでにある位置への `erd_move_table_group`、グループがすでに持っている矩形への `erd_resize_table_group`、テーブルのないドキュメントへの `erd_sort_tables`、テーブルを 1 つも持ち込まない、`mode` が `append` の読み込み（`erd_import_json` の場合は、テーブルもメモも持ち込まないもの）です。
 `erd_undo` はこれらを飛ばし、結果にその名前を示します。
-`erd_change_relationship_type`、`erd_change_relationship_on_delete`、`erd_change_relationship_on_update` など、ほかの編集は、ドキュメントがすでに持っている値を設定するときでも項目を作ります。
+`erd_change_relationship_type`、`erd_change_relationship_on_delete`、`erd_change_relationship_on_update`、`erd_change_table_group_name`、`erd_change_table_group_color`、`erd_set_ddl_script` など、ほかの編集は、ドキュメントがすでに持っている値を設定するときでも項目を作ります。
 
 エージェントの Undo の履歴は、次の場合に終わり、結果に注記が付きます。
 
@@ -124,12 +124,13 @@ JetBrains IDE は、信頼していないプロジェクトだけが保持して
 
 ロックファイルを置かないエディタは何も保護しないため、ダイアグラムがそこで開いていても、エージェントはディスク上のファイルを編集します。
 Linux で Flatpak としてインストールした Obsidian や JetBrains IDE、JCEF のない JetBrains IDE、ハブを起動できなかった JetBrains IDE がこれに当たります。[Obsidian の設定](./installation.md#set-up-obsidian)と[JetBrains IDE の設定](./installation.md#set-up-a-jetbrains-ide)を参照してください。
+`3.0.0` より前の VS Code の拡張機能と `0.9.0` より前の JetBrains のプラグインも、ハブを持たないため、ロックファイルを置きません。
 
 ## ドキュメント
 
 ドキュメントは `path` で指定します。絶対パス、またはサーバーの作業ディレクトリからの相対パスです。
 
-- 新しいドキュメントは `.erd.json` です。`erd_open_document` に `create` を付けるとファイルを作成し、拡張子のない名前には `.erd.json` を付けます。エディタの新しいダイアグラムと同じように、新しいドキュメントは表示位置も拡大・縮小のレベルも保存しません。[`Save Scroll Information`](../guide/guides/settings.md#スクロール情報の保存) と [`Save Zoom Information`](../guide/guides/settings.md#拡大縮小情報の保存) がオフで始まるため、エディタでスクロールしたり拡大・縮小したりしても、ファイルが変わることはありません。`saveSettingType` を `scroll` または `zoomLevel`、`value` を `false` にした `erd_set_ignore_save_settings` は、そのスイッチをオンにします。
+- 新しいドキュメントは `.erd.json` です。`erd_open_document` に `create` を付けるとファイルを作成し、拡張子のない名前には `.erd.json` を付けます。エディタの新しいダイアグラムと同じように、新しいドキュメントではすべての[ロック](../guide/guides/settings.md#ロック)がオンになっているため、エディタでスクロール、拡大・縮小、タブの切り替えをしたり、Code Generator の別の言語、名前のケース、括弧の種類を選んだりしても、ファイルが変わることはありません。ロックを個別にオンまたはオフにするツールはなく、それはエディタの設定タブで行います。`replace` モードの `erd_import_json` は、すべてのロックを読み込むドキュメントのロックに置き換えます。[読み込み](./tools.md#読み込み)を参照してください。
 - 既存の `.erd`、`.vuerd`、`.vuerd.json` ファイルも開けます。それ以外の拡張子のパスは `invalidPath` で拒否されます。
 - Windows では、Windows が指定どおりに保存しない名前を含むパスは、読み取りも含め、ドキュメントを読み書きする前に `invalidPath` で拒否されます。`orders:v2.erd` のようにコロンなど Windows が受け付けない文字を含む名前、大文字・小文字を問わず `NUL.erd` や `CON.erd` のようなデバイス名、ドットやスペースで終わる名前です。例えば `:` の代わりに `-` を使うなどして、名前を変更してください。
 - マージコンフリクトのマーカーが残ったファイルなど、エディタが読めるドキュメントではないファイルは `invalidDocument` で拒否され、そのまま残されます。空のダイアグラムとして読み込まれて書き戻されることはありません。
