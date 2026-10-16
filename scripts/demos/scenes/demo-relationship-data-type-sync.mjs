@@ -37,10 +37,17 @@ export default {
         relationshipDataTypeSync: true,
       },
     });
-    // Keycaps over the floating toolbar rather than over the reviews table.
-    await d.page.evaluate(() =>
-      document.documentElement.style.setProperty('--demo-keys-bottom', '18px')
-    );
+    // Keycaps over the floating toolbar rather than over the reviews table,
+    // and over its four notation buttons, between zoom in and zen mode, so
+    // the zoom readout in the middle of the bar stays readable.
+    await d.page.evaluate(() => {
+      const root = window.__erdShadowRoot;
+      const zoomIn = root.querySelector('.floating-toolbar .zoom-level').nextElementSibling;
+      const zen = root.querySelector('.floating-toolbar .zen-mode');
+      const x = (zoomIn.getBoundingClientRect().right + zen.getBoundingClientRect().left) / 2;
+      document.documentElement.style.setProperty('--demo-keys-bottom', '18px');
+      document.getElementById('demo-keys').style.left = `${x}px`;
+    });
     await d.moveTo(PARK.x, PARK.y, 0);
   },
   async scenario(d) {

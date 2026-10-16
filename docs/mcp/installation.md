@@ -24,7 +24,13 @@ Add `--scope project` before `--transport` to write the server to the project's 
 
 ## Codex
 
-Add to `~/.codex/config.toml`, or to `.codex/config.toml` in a trusted project:
+Run once. The Codex CLI, app, and IDE extension share the setting:
+
+```sh
+codex mcp add erd-editor -- npx -y @dineug/erd-editor-mcp
+```
+
+Or add the server to `~/.codex/config.toml`, or to `.codex/config.toml` in a trusted project:
 
 ```toml
 [mcp_servers.erd-editor]
@@ -119,7 +125,7 @@ The server checks the protocol version the editor speaks before it connects.
 When the two differ, every call that reaches that editor is refused with `protocolMismatch`, reads and `erd_list_documents` included, and nothing is written.
 The message names the side to update: the server, or the ERD Editor in the editor, which is the extension in VS Code and the plugin in Obsidian and a JetBrains IDE.
 
-Server `1.0.0`, the VS Code extension `4.0.0`, the Obsidian plugin `1.0.0`, and the JetBrains plugin `1.0.0` speak protocol 2.
+Server `1.0.0`, the VS Code extension `4.0.0` or later, the Obsidian plugin `1.0.0` or later, and the JetBrains plugin `1.0.0` or later speak protocol 2.
 Every earlier server speaks protocol 1, and so does every earlier editor release that serves agents: the VS Code extension `3.0.0` to `3.1.0`, the Obsidian plugin `0.1.0` and `0.2.0`, and the JetBrains plugin `0.9.0` and `0.10.0`.
 Such an editor and server `1.0.0` refuse each other, and so do an earlier server and an editor that speaks protocol 2.
 A VS Code extension before `3.0.0` or a JetBrains plugin before `0.9.0` serves no agents at all, so the agent edits the files on disk, even a diagram open in it.
@@ -131,6 +137,7 @@ A VS Code extension before `3.0.0` or a JetBrains plugin before `0.9.0` serves n
 
 Update the server and the extension or plugin together.
 Update ERD Editor wherever the diagrams are opened, too.
-An earlier release shows a diagram that a current release saved, in an editor or as the agent's edit on disk, without its primary key icons, and drops its table groups and Schema SQL scripts when it saves the file.
+The VS Code extension before `4.0.0`, the Obsidian plugin before `1.0.0`, and the JetBrains plugin before `1.0.0` show a diagram that a later release saved, or that the agent edited on disk, without its primary key icons.
+When they save the file, they drop its table groups and Schema SQL scripts.
 The VS Code extension before `3.1.0`, the Obsidian plugin before `0.2.0`, and the JetBrains plugin before `0.10.0` also drop a diagram's ON DELETE and ON UPDATE actions when they save the file.
 In Obsidian, restart the app after updating the plugin: until then, a vault window keeps running the ERD Editor of the plugin version it loaded first.

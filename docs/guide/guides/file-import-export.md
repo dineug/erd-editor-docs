@@ -47,7 +47,7 @@ A table whose name the diagram already has is added as a second table with that 
 The added block lands just below everything the diagram holds, lined up with its left edge, or at the top left of an empty diagram. Memos and table groups hidden with [View Option](./table-related-functions.md#table-view-options) count as well, since they still stand there.  
 Inside the block, a JSON file keeps its own arrangement, its table groups included. The other formats are placed as `Import` places them, by `Flow` or in rows under the same rules, and each table group's box is fitted round its tables. The added tables and memos stack above everything already there.
 
-Once the block lands, only what was added is selected: the new tables, plus the new memos and table groups while they are shown. If the block is not already in view, the view scrolls to it at the current zoom, and if you have moved to another tab meanwhile, the editor switches back to the ERD tab first. One undo takes back the whole addition.  
+Once the block lands, only what was added is selected: the new tables, plus the new memos and table groups while they are shown. If you have moved to another tab meanwhile, the editor switches back to the ERD tab before the block lands. The view then scrolls to the block at the current zoom, unless it already shows well — see [Where a Jump Lands](./table-related-functions.md#where-a-jump-lands). One undo takes back the whole addition.  
 A file the parser cannot read, or one with no table and no memo, adds nothing.
 
 Several Schema SQL, GraphQL, DBML, or AML files added while one is still being placed all land, in the order they were started. A JSON file added meanwhile lands as soon as it is read, ahead of them. An `Import`, or loading another document, drops any that are still being placed.
@@ -217,7 +217,7 @@ Schema SQL writes each relationship's ON DELETE and ON UPDATE after its `REFEREN
 Every exported file is named `<database name>-<timestamp>` followed by its extension, with the timestamp in local time formatted as `yyyy-MM-dd'T'HH_mm_ss` — for example `my-schema-2026-08-29T04_05_06.erd.json`. A blank database name falls back to `unnamed`.  
 The Schema SQL tab's and the [Code Generator](./code-generator.md)'s `Save file` name their files the same way. An image takes the database name as it was when the dialog opened.
 
-`Import`, `Import and Add`, and `Export` are also available from [Quick Search](./quick-search.md) on the ERD tab, with the same entries as the canvas context menu. On every tab, Quick Search also has `Export: Schema SQL`, which opens the Schema SQL tab ready to save, as `Export` ▸ `Schema SQL` does — see [Saving or Copying the SQL](./schema-sql.md#saving-or-copying-the-sql).
+`Import`, `Import and Add`, and `Export` are also available from [Quick Search](./quick-search.md) on the ERD tab, with the same entries as the canvas context menu.
 
 In Obsidian no download or save dialog appears: the file is written into the vault, where Obsidian puts new attachments for that diagram, and a notice names its path.  
 Characters Obsidian does not allow in a file name, `\ / : * ? " < > |`, are replaced with `-`.  
@@ -225,7 +225,7 @@ Obsidian's file explorer lists an exported `.erd.json` or `.sql` file only while
 
 ### Image
 
-`Export` ▸ `Image`, from the canvas context menu or from Quick Search, opens the `Export image` dialog: a preview of the image beside its options. Opening it closes Find and Replace.
+`Export` ▸ `Image`, from the canvas context menu or from Quick Search, opens the `Export image` dialog: a preview of the image beside its options. An open [Explorer](./explorer.md#dialogs-beside-it) stays open under the dimmed area.
 
 ![Opening Export > Image, turning off dark mode and the background, picking 3x, and copying the image to the clipboard](/img/demo-export.webp)
 
@@ -246,4 +246,4 @@ Three buttons write the image, and each leaves the dialog open:
 The image is drawn in a background worker where the host runs one, so the editor stays usable meanwhile. A notice reading `Exporting PNG`, `Exporting SVG`, or `Copying image` shows when it takes longer than a moment, and a failure is reported as `Couldn't export the PNG` or `Couldn't export the SVG`. Closing the dialog while a file is still being drawn does not stop that file being saved.
 
 `PNG` has the focus when the dialog opens, and `Tab` stays inside the dialog. `Escape`, the `x` button, or a click on the dimmed area around it closes it.  
-While it is open, the canvas shortcuts, undo and redo included, and copy and paste do nothing. `Ctrl + K` (Windows/Linux) or `⌘ + K` (Mac) closes it and opens Quick Search, and `Ctrl + F` (Windows/Linux) or `⌘ + F` (Mac) closes it and opens Find and Replace.
+While it is open, the canvas shortcuts, undo and redo included, and copy and paste do nothing. `Ctrl + K` (Windows/Linux) or `⌘ + K` (Mac) closes it and opens Quick Search. `Ctrl + F` (Windows/Linux) or `⌘ + F` (Mac) closes it and puts the caret in the Find field of the [Explorer](./explorer.md#opening-and-closing), opening the Explorer if it is closed, never closing it. In an editor too narrow to show the Explorer, it still closes the dialog but shows a toast instead of moving the caret.

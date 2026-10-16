@@ -22,9 +22,11 @@ export default {
       tables: {
         // Gaps wide enough that a dashed route shows its dashes between the
         // solid end marks, and each child on its parent's centre line.
+        // reviews ends 14px above the canvas toolbar, which since 4.1.0
+        // reaches under its right end.
         members: { x: 34, y: 30 },
         orders: { x: 454, y: 30 },
-        reviews: { x: 48, y: 322 },
+        reviews: { x: 48, y: 306 },
         order_items: { x: 452, y: 300 },
       },
       settings: { databaseName: 'shop', show: SHOW_COMPACT },

@@ -1,5 +1,5 @@
 ---
-sidebar_position: 9
+sidebar_position: 10
 description: Explore the schema as a force-directed Graph or as a Flow of table cards — zoom and pan, light up a table's related tables, and focus on a few tables at a time.
 ---
 
@@ -26,7 +26,7 @@ A toolbar floats over the middle of the bottom edge of the tab. From left to rig
 - `Tidy Up`, in `Flow` only, which lays the cards out again — see [How Flow Is Placed](#how-flow-is-placed).
 - The row display menu, in `Flow` only, labelled with the current choice — see [Row Display](#row-display).
 - `Show all`, in `Flow` only and only while the view is narrowed, which goes back to the whole diagram — see [Focusing on Tables](#focusing-on-tables).
-- The `Go to content` compass, which joins the end of the toolbar only while no node or card is on screen. It shows an arrow pointing at the nearest node or card and how far away it is, such as `1.2k`. Click it to centre that node or card without changing the zoom.
+- The `Go to content` compass, which joins the end of the toolbar only while no node or card is on screen. It shows an arrow pointing at the nearest node or card and how far away it is, such as `1.2k`. Click it to center that node or card without changing the zoom.
 
 The zoom buttons name their shortcuts in their tooltips, for example `Zoom in (Ctrl + Plus)` (Windows/Linux) or `Zoom in (⌘ + Plus)` (Mac).  
 `Ctrl + Plus` and `Ctrl + Minus` (Windows/Linux) or `⌘ + Plus` and `⌘ + Minus` (Mac) step the zoom like the buttons, in either mode, and `Ctrl + 0` (Windows/Linux) or `⌘ + 0` (Mac) goes straight back to `100%`.  
@@ -137,7 +137,7 @@ Particles run along every lit connector, from the parent table's end, where the 
 While the pointer is over a card, two icon buttons, neither with a tooltip, appear at the right end of its header:
 
 - The waypoints icon, the same one the `Flow` button shows, narrows Flow to that table and the tables one relationship away — see [Focusing on Tables](#focusing-on-tables).
-- The external-link icon switches to the ERD tab, selects only that table, brings it to the front, and puts the focused cell on its name unless a cell of that table already has it. If the table is not already fully in view, the canvas scrolls to center it. While the Find and Replace panel is open, only the part of the canvas beside the panel counts, as when [going to a match](./find-and-replace.md#going-to-a-match). It never starts or finishes a relationship being drawn.
+- The external-link icon switches to the ERD tab, selects only that table, brings it to the front, and puts the focused cell on its name unless a cell of that table already has it. The canvas scrolls to the table only if it does not already show well — see [Where a Jump Lands](./table-related-functions.md#where-a-jump-lands). It never starts or finishes a relationship being drawn.
 
 A press on either button belongs to the button alone: unlike a press elsewhere on the card, it does not select the card or bring it to the front. The waypoints button therefore leaves the selection you had; the external-link button selects the table only as part of its switch to the ERD tab. Only a left click works either button.
 
@@ -156,7 +156,7 @@ The Visualization tab opens in `Flow`, narrowed to those tables and every table 
 
 When the table you right-click is one of several selected tables, the entry reads `Focus on selected tables` and focuses the whole selection. Right-clicking a table outside the selection focuses that table alone.  
 `Alt + F` takes the selected tables and leaves memos and [table groups](./table-groups.md) out. With no table selected it does nothing, even with a group selected: choose `Select tables` in the group's context menu first — see [Selecting Groups](./table-groups.md#selecting-groups).  
-It is ignored while a cell, a memo, or a group's name is being edited, while the caret is in the [Find and Replace](./find-and-replace.md#keys-in-the-panel) panel, or while quick search, table properties, the diff viewer, the Auto Layout preview, time travel, the [`Export image`](./file-import-export.md#image) dialog, or [`Map Columns`](./relationship-editing.md#map-columns) is open.
+It is ignored while a cell, a memo, or a group's name is being edited, while the keyboard is in the [Explorer](./explorer.md#keys-in-the-explorer), or while quick search, table properties, the diff viewer, the Auto Layout preview, time travel, the [`Export image`](./file-import-export.md#image) dialog, or [`Map Columns`](./relationship-editing.md#map-columns) is open.
 
 Inside Flow, the waypoints [card button](#card-buttons) narrows the view the same way, to that one table. `Show all` on the [toolbar](#toolbar) goes back to the whole diagram.  
 A narrowed view is laid out on its own and fitted to the screen. It stays narrowed when you leave the tab or switch to `Graph` and come back, and `Escape` does not widen it.
@@ -191,7 +191,7 @@ When the whole document is replaced, for example by importing a file, Flow's lay
 Flow only reads the diagram. Zooming, panning, moving cards, `Tidy Up`, the row display, pins, and focusing add nothing to the [undo history](./undo-redo.md#what-the-history-records).  
 They change nothing in the diagram either. Pressing a card does bring its table to the front, just as clicking a table on the ERD tab does, so it is in front there too, but the stacking order is not saved — see [Moving Multiple Tables](./table-related-functions.md#moving-multiple-tables). `Graph` leaves the diagram alone in the same way.  
 Pressing a card never adds a relationship. If you left the ERD tab while drawing one, a press on a card picks its table to start from when none has been picked yet, and otherwise ends the draw.  
-The external-link [card button](#card-buttons) goes further, because it takes you out of Flow: the scroll it makes on the ERD tab is recorded like any other change of view position.
+The external-link [card button](#card-buttons) goes further, because it takes you out of Flow: when the ERD tab has to scroll to the table, that scroll is recorded like any other change of view position.
 
 Collaborators' edits still reach the diagram while you are in Flow, and cards follow the tables and relationships they add or remove — see [How Flow Is Placed](#how-flow-is-placed).  
 Their selection and focus rings are drawn on the cards, but their cursors and drag boxes are not — see [Collaborative Editing](../../api/advanced/collaborative-editing.md).

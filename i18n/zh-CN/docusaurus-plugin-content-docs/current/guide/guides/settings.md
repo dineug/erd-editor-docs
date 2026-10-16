@@ -1,5 +1,5 @@
 ---
-sidebar_position: 13
+sidebar_position: 14
 description: 关系数据类型同步、注释最大宽度、重新计算表宽度、设置锁定（视图、标签页与代码设置）、列显示顺序以及快捷键列表。
 ---
 
@@ -70,14 +70,14 @@ description: 关系数据类型同步、注释最大宽度、重新计算表宽�
 新建的图（即从零开始的图）中所有锁定都处于开启状态：在 VS Code、Obsidian 或 JetBrains IDE 中打开的空文件（Obsidian 的 `ERD Editor: Create new diagram` 和 `New ERD` 会创建这样的文件）、Web 应用中新建的 schema、通过 Google Drive 的 New 菜单创建的文件，或未赋值的 `<erd-editor>`。
 Web 应用通过导入 SQL、DBML、AML 或 GraphQL 文件创建的 schema 或 Google Drive 文件，所有锁定同样处于开启状态。由 JSON 文件创建的则沿用该文件中记录的锁定。
 打开的文件会沿用保存时的锁定，每个锁定都保持其锁定的值。
-未记录任何锁定的文件，例如由较早版本保存或手工编写的文件，打开时所有锁定均为开启：无论保存的视图和标签页是什么，视图都为 `100% · 0, 0`，标签页都为 `ERD`，其语言、名称大小写和括号类型则按保存时的值锁定。
+未记录任何锁定的文件，例如由锁定功能出现之前的版本保存或手工编写的文件，打开时所有锁定均为开启：无论保存的视图和标签页是什么，视图都为 `100% · 0, 0`，标签页都为 `ERD`，其语言、名称大小写和括号类型则按保存时的值锁定。
 替换整张图的 `Import` 同样会设置锁定：JSON 文件会带来其中记录的锁定及其所保存的值；SQL、DBML、AML 或 GraphQL 文件则保留你的锁定，但无论是否锁定，都会把视图恢复为 `100% · 0, 0`，参见[导入外部文件](./file-import-export.md#导入外部文件)。对该导入执行 Undo 时，会恢复被它替换的锁定和锁定的值。
 
 被锁定挡在文件之外的变更不算作变更。VS Code 不会将标签页标记为已修改，Obsidian 和 JetBrains IDE 也会让文件保持原样，无论是它们自行保存时还是关闭标签页时。
 因此，所有锁定都开启时，在图中四处浏览、切换标签页，以及尝试其他语言、名称大小写或括号，都永远不会出现在 `git diff` 中。
 `Viewport` 关闭时，滚动和缩放会改动文件；`Canvas Type` 关闭时，切换标签页（包括切换到 Settings 标签页）也会改动文件。
 新建的图所对应的空文件会一直保持为空，直到出现第一个文件会保留的变更：一次编辑、对不受任何锁定约束的设置的更改，或开启或关闭某个锁定。
-打开图后不做此类变更就关闭，文件会保持原样，无论它是由哪个版本或在哪台机器上写入的。文件只按固定顺序保存图本身的内容，较早版本保存的文件会在第一次出现此类变更时以这种形式重写一次，参见[存储形式与运行时值](../../api/advanced/schema.md#存储形式与运行时值)。
+打开图后不做此类变更就关闭，文件会保持原样，无论它是由哪个版本或在哪台机器上写入的。文件只按固定顺序保存图本身的内容，以较旧形式保存的文件会在第一次出现此类变更时以这种形式重写一次，参见[存储形式与运行时值](../../api/advanced/schema.md#存储形式与运行时值)。
 在 VS Code 中，通过 `Reopen Editor With...` 以图的形式重新打开的修订版本，例如 Git 修订版本或 Local History 条目，是只读的，永远不会被标记为已修改。
 在 Google Drive 中，无论是否锁定，滚动、缩放或切换到其他标签页都不会单独保存。`Viewport` 关闭时，视图只会随其他变更一起写入，因此 Drive 文件打开时的视图位于其上次保存时的位置；`Canvas Type` 关闭时，标签页也是如此。
 
@@ -103,12 +103,14 @@ Web 应用通过导入 SQL、DBML、AML 或 GraphQL 文件创建的 schema 或 G
 | Editing | `Enter` | `Enter` |
 | Stop | `ESC` | `ESC` |
 | Search | `Ctrl + K` | `⌘ + K` |
-| [Find and Replace](./find-and-replace.md) | `Ctrl + F` | `⌘ + F` |
+| [Toggle Explorer](./explorer.md) | `Ctrl + F` | `⌘ + F` |
 | Undo | `Ctrl + Z` | `⌘ + Z` |
 | Redo | `Ctrl + Shift + Z` | `⌘ + Shift + Z` |
 | Add Table | `Alt + N` | `⌥ + N` |
 | Add Column | `Alt + Enter` | `⌥ + Enter` |
 | Add Memo | `Alt + M` | `⌥ + M` |
+| Add Table Group | `Alt + G` | `⌥ + G` |
+| Group Selected Tables | 先按 `T` 再按 `G` | 先按 `T` 再按 `G` |
 | Remove Table, Memo | `Ctrl + Backspace`, `Ctrl + Delete` | `⌘ + Backspace`, `⌘ + Delete` |
 | Remove Column | `Alt + Backspace`, `Alt + Delete` | `⌥ + Backspace`, `⌥ + Delete` |
 | Delete Selection | `Delete`, `Backspace` | `Delete`, `Backspace` |
@@ -128,15 +130,17 @@ Web 应用通过导入 SQL、DBML、AML 或 GraphQL 文件创建的 schema 或 G
 | Zen Mode | `Alt + Z` | `⌥ + Z` |
 
 其中大多数仅在 ERD 标签页生效，并且在快速搜索、表属性、Diff Viewer、自动布局预览、Time Travel、[`Export image`](./file-import-export.md#image) 对话框或 [`Map Columns`](./relationship-editing.md#map-columns) 打开期间不会触发。
-`Search`、`Find and Replace` 与 `Stop` 是例外。`Search` 可以在任意标签页中开关快速搜索，`Find and Replace` 可以在任意标签页中打开[查找与替换面板](./find-and-replace.md#opening-and-closing)并切换到 ERD 标签页，`Stop` 则用于关闭快速搜索、表属性、Diff Viewer、自动布局预览、Time Travel、`Export image` 对话框、`Map Columns`、主题构建器、`Display Language` 选择器、查找与替换面板、选色器以及已打开的右键菜单。
-Diff Viewer、自动布局预览或 Time Travel 打开期间，`Find and Replace` 会把它的按键交给浏览器或宿主处理，参见[浏览器的查找栏](./find-and-replace.md#the-browsers-find-bar)。
-在 ERD 标签页中，`Stop` 会关闭已打开的单元格或备注编辑器、关闭[表分组](./table-groups.md)的名称编辑器而不重命名该分组，或取消正在绘制的关系或 `New Table Group`，并保持选中状态不变。以上情况都不存在时，它会清除选中状态和单元格焦点，并在同一次按键中关闭已打开的查找与替换面板或选色器。
-查找与替换面板、主题构建器或 `Display Language` 选择器打开期间，画布上的快捷键仍会照常触发。关于在面板中按下的按键，参见[面板中的按键](./find-and-replace.md#keys-in-the-panel)；关于在选择器中按下的按键，参见[选择语言](./language-and-theme.md#picking-a-language)。
+`Search`、`Toggle Explorer` 与 `Stop` 是例外。`Search` 可以在任意标签页中开关快速搜索，`Toggle Explorer` 可以在任意标签页中打开[资源管理器](./explorer.md#opening-and-closing)并定位到其搜索，同时切换到 ERD 标签页，`Stop` 则用于关闭快速搜索、表属性、Diff Viewer、自动布局预览、Time Travel、`Export image` 对话框、`Map Columns`、主题构建器、`Display Language` 选择器、选色器以及已打开的右键菜单。
+资源管理器在 ERD 标签页中处于打开状态且未被禅模式隐藏时，`Toggle Explorer` 会再次将其关闭，与工具栏中的 `Explorer` 按钮相同。快速搜索、表属性、主题构建器、`Display Language` 选择器、`Export image` 对话框或 `Map Columns` 打开期间，它会改为关闭打开的那一个，并将键盘焦点移到资源管理器的搜索中。
+正在编辑单元格、备注或表分组的名称时，`Toggle Explorer` 不起作用。Diff Viewer、自动布局预览或 Time Travel 打开期间，它会把自己的按键交给浏览器或宿主处理，参见[浏览器的查找栏](./find-and-replace.md#the-browsers-find-bar)。
+在 ERD 标签页中，`Stop` 会关闭已打开的单元格或备注编辑器、关闭[表分组](./table-groups.md)的名称编辑器而不重命名该分组，或取消正在绘制的关系或 `New Table Group`，并保持选中状态不变。以上情况都不存在时，它会清除选中状态和单元格焦点，并在同一次按键中关闭已打开的选色器。无论哪种情况，已打开的主题构建器或 `Display Language` 选择器都会在同一次按键中关闭。
+资源管理器、主题构建器或 `Display Language` 选择器打开期间，画布上的快捷键仍会照常触发。`Stop` 永远不会关闭资源管理器。关于 `Stop` 和其他按键在资源管理器中的作用，参见[资源管理器中的按键](./explorer.md#keys-in-the-explorer)；关于在选择器中按下的按键，参见[选择语言](./language-and-theme.md#picking-a-language)。
 `Delete Selection` 会删除所有选中的表、备注和表分组；当单独选中一个表及其中的部分列，并且缩放级别高于 `70%` 时，则会删除这些列，参见[删除表与备注](./table-related-functions.md#删除表与备注)。`Remove Table, Memo` 同样会删除选中的表分组。
+`Add Table Group` 会开始绘制 [`New Table Group`](./table-groups.md#drawing-a-group)，与[画布工具栏](./table-related-functions.md#canvas-toolbar)中的 `New Table Group` 按钮相同，再按一次则会取消绘制。`Group Selected Tables` 是不带修饰键的两次按键：在一秒内先按 `T` 再按 `G`。它会把选中的表放入一个新分组并打开该分组的名称编辑器，与表的右键菜单中的 `Group selected tables` 相同；没有选中任何表时不起作用，参见[为选中的表分组](./table-groups.md#grouping-selected-tables)。在只读编辑器中，以及分组被[隐藏](./table-groups.md#hiding-groups)期间，两者都不起作用。
 `Zoom In`、`Zoom Out` 与 `Zoom Reset` 同样可以缩放 [Visualization](./visualization.md#toolbar) 标签页，`Graph` 与 `Flow` 均适用，快速搜索打开期间除外。
 在 Visualization 标签页中，`Stop` 还会关闭[行显示](./visualization.md#row-display)菜单，并取消仍在进行中的 [Flow 布局](./visualization.md#how-flow-is-placed)；但它不会扩大通过 `Focus on this table` 缩小的视图范围。
 `Focus on this table` 会以 `Flow` 打开 Visualization 标签页，范围缩小到选中的表以及与它们相隔一条关系的所有表，没有选中任何表时不起作用。参见[聚焦于表](./visualization.md#focusing-on-tables)。
-`Select All Table, Memo`、`Hand Tool` 与 `Delete Selection` 会让位于光标：在编辑单元格或备注，或在文本框（例如查找与替换面板中的文本框）中输入时，`Ctrl + A` (Windows/Linux) 或 `⌘ + A` (Mac) 选中的是文本，`Space` 输入的是空格，`Delete` 和 `Backspace` 删除的是文本。
+`Select All Table, Memo`、`Hand Tool`、`Delete Selection` 与 `Group Selected Tables` 会让位于光标：在编辑单元格或备注，或在文本框（例如资源管理器的查找输入框）中输入时，`Ctrl + A` (Windows/Linux) 或 `⌘ + A` (Mac) 选中的是文本，`Space` 输入的是空格，`Delete` 和 `Backspace` 删除的是文本，先按 `T` 再按 `G` 输入的则是这两个字母。
 复制与粘贴使用浏览器自身的 `Ctrl + C` 与 `Ctrl + V` (Windows/Linux) 或 `⌘ + C` 与 `⌘ + V` (Mac)，因此不在此列表中，参见[编辑表](./table-editing.md)。
 
 在此标签页中无法更改按键绑定。

@@ -189,9 +189,12 @@ export default {
     // row lights up on the way, then onto the button from straight above.
     // The run along the top edge stays 1px above the table: the spline would
     // bulge up into the header toolbar (y < 30) ahead of a sharper bend, so
-    // the turn down is eased in over two points.
+    // the turn down is eased in over two points. The bar's New Table, New
+    // Memo and New Table Group buttons put Zero N right of payments' left
+    // edge, so the way down keeps left of payments until below it.
     const ordersBox = await d.tableBox('orders');
     const right = ordersBox.x + ordersBox.width;
+    const paymentsBox = await d.tableBox('payments');
     await glide(
       d,
       [
@@ -200,6 +203,7 @@ export default {
         { x: right + 17, y: ordersBox.y + 2 },
         { x: right + 35, y: ordersBox.y + 40 },
         { x: right + 62, y: 260 },
+        { x: right + 78, y: paymentsBox.y + paymentsBox.height + 24 },
         { x: zx, y: zeroN.y - 40 },
         { x: zx, y: zy },
       ],

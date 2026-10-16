@@ -1,108 +1,166 @@
 import { center } from '../lib/recorder.mjs';
 import { readSeed, seedSQL } from '../lib/seed.mjs';
-import { SHOW_COMPACT } from './_relationship-editing-helpers.mjs';
-import { glide } from './_table-related-b-helpers.mjs';
-import { timer, waitDom } from './_vsc-helpers.mjs';
+import { glide, timer } from './_table-related-b-helpers.mjs';
+import { waitDom } from './_vsc-helpers.mjs';
 
 /**
- * Find and Replace: ⌘ + F opens the panel, `member` finds the members table
- * and the three member_id columns, Enter and the Next button go to each match
- * in turn (the canvas scrolls each one clear of the panel and selects it, and
- * the last brings back the starting view), then `user` in the Replace field
- * and Replace All (⌘ + Enter) rename all four in one edit, and Esc closes the
- * panel on the renamed diagram.
+ * Find and Replace in the Explorer: ⌘ + F opens the Explorer docked left of
+ * the canvas with the caret in its Find field, and `member` turns the tree
+ * into the six matches (addresses.member_id, members, the UQ_MEMBER_EMAIL
+ * index, orders.member_id, reviews.member_id and the Member area group).
+ * Enter goes to the first two, which already show well, so the view stays
+ * put and only the selection moves; a click on the reviews › member_id row
+ * scrolls the canvas to it. Toggle Replace unfolds the Replace row, Preserve
+ * Case goes on, and `user` with Replace All (⌘ + Enter) renames all six in
+ * one edit, ending on users, three user_id and the User area group.
  */
+
+const GROUP_ID = 'member-area';
+// Data type, primary key and relationships: no table comments or N-N, so the
+// tables stay narrow enough for the diagram and its one scroll to fit beside
+// the 260px Explorer.
+const SHOW = 4 | 32 | 256;
+
+/** Viewport box of the Explorer's tree row for a node id such as `c:<columnId>`. */
+const rowBox = (d, nodeId) => d.domBox(`.explorer [role="treeitem"][id$=":${nodeId}"]`);
+
+/** Waits for the count line under the Find field to read `text`. */
+async function waitCount(d, text) {
+  const until = Date.now() + 4000;
+  for (;;) {
+    const count = await d.page.evaluate(
+      () => window.__erdShadowRoot.querySelector('.explorer .find-count')?.textContent ?? ''
+    );
+    if (count === text) return;
+    if (Date.now() > until) throw new Error(`waitCount: "${count}", wanted "${text}"`);
+    await d.sleep(30);
+  }
+}
+
 export default {
   name: 'demo-find-and-replace',
   width: 960,
   height: 540,
   async setup(d) {
-    // At 80% with the compact view, every jump lands its match beside a whole
-    // neighbour, clear of the minimap and the canvas toolbar. reviews sits
-    // where its member_id lands, so the fourth jump comes back to this view.
-    await seedSQL(d, readSeed('shop.sql'), {
-      only: ['members', 'addresses', 'orders', 'reviews'],
-      tables: {
-        members: { x: 85, y: 44 },
-        orders: { x: 172, y: 268 },
-        reviews: { x: 740, y: 230 },
-        addresses: { x: 866, y: 445 },
-      },
-      settings: {
-        databaseName: 'shop',
-        show: SHOW_COMPACT,
-        zoomLevel: 0.8,
-      },
-    });
-    // Right of reviews, under the minimap: empty in every view the jumps
-    // pass through, and level with the way into the panel.
-    await d.moveTo(905, 212, 1);
+    // At 80%, laid out for the 700px canvas the Explorer leaves: opening it
+    // keeps the origin, so the diagram slides 260px right. The Member area
+    // group (members over addresses) has its row middles in the middle half
+    // of that canvas, so the first two jumps leave the view alone. orders and
+    // reviews stand right of it, below the minimap, where the
+    // reviews.member_id row is past the middle half: its jump centres it
+    // across, which leaves the whole diagram in view beside the Explorer.
+    await seedSQL(
+      d,
+      readSeed('shop.sql') + '\nCREATE UNIQUE INDEX UQ_MEMBER_EMAIL ON members (email);\n',
+      {
+        only: ['members', 'addresses', 'orders', 'reviews'],
+        tables: {
+          members: { x: 315, y: 112 },
+          addresses: { x: 315, y: 280 },
+          orders: { x: 601, y: 225 },
+          reviews: { x: 601, y: 375 },
+        },
+        settings: {
+          databaseName: 'shop',
+          show: SHOW,
+          zoomLevel: 0.8,
+        },
+        patch(doc, byName) {
+          // The storage form leaves both out while there is no group.
+          doc.collections.tableGroupEntities ??= {};
+          doc.doc.tableGroupIds ??= [];
+          doc.collections.tableGroupEntities[GROUP_ID] = {
+            id: GROUP_ID,
+            name: 'Member area',
+            color: '#0d9488',
+            ui: { x: 291, y: 60, width: 270, height: 372, zIndex: 1 },
+          };
+          doc.doc.tableGroupIds.push(GROUP_ID);
+          for (const name of ['members', 'addresses']) {
+            doc.collections.tableEntities[byName.get(name)].groupId = GROUP_ID;
+          }
+        },
+      }
+    );
+    // Bottom left: empty canvas now, and below the last tree row once the
+    // Explorer is open, the Replace row unfolded too.
+    await d.moveTo(40, 520, 1);
   },
   async scenario(d) {
     const mark = timer();
     await d.sleep(600);
 
     await d.press('ControlOrMeta+KeyF');
-    await waitDom(d, '.find-replace');
+    await waitDom(d, '.explorer .find-input');
     mark('open');
     await d.sleep(500);
     await d.type('member', 120);
-    await d.sleep(900);
+    await waitCount(d, '6 matches');
+    await d.sleep(1000);
     await d.shot('typed');
 
-    // Enter in the Find field: members (scrolled out from under the panel),
-    // then addresses.member_id.
+    // Enter in the Find field: addresses.member_id, then members. Both
+    // already show well, so the canvas only selects them.
     mark('enter');
     await d.press('Enter', { hold: 700 });
-    await d.sleep(1000);
+    await waitCount(d, '1 of 6');
+    await d.sleep(900);
     await d.shot('match-1');
     await d.press('Enter', { hold: 700 });
+    await waitCount(d, '2 of 6');
     await d.sleep(900);
     await d.shot('match-2');
 
-    // The Next button for the other two: left between reviews and addresses,
-    // into the empty strip right of the Memos toggle, and down onto it.
-    mark('next');
-    const next = center(await d.domBox('.find-next'));
-    const strip = (await d.domBox('.find-scope[data-field="memo"]')).y + 11;
-    await glide(d, [{ x: 430, y: strip - 4 }, { x: next.x, y: strip }, next], 950);
-    await d.sleep(150);
-    await d.click(next.x, next.y, { duration: 1 });
+    // A click on the reviews › member_id row, reached through the empty
+    // canvas strip beside the Explorer so no other row lights on the way:
+    // the canvas scrolls to centre the row across.
+    mark('row');
+    const strip = (await d.domBox('.explorer')).width + 12;
+    const row = await rowBox(d, `c:${await d.columnId('reviews', 'member_id')}`);
+    const onRow = { x: 100, y: row.y + row.height / 2 };
+    await glide(d, [{ x: strip, y: 505 }, { x: strip, y: onRow.y }, onRow], 1000);
+    await d.click(onRow.x, onRow.y, { duration: 1 });
+    await waitCount(d, '5 of 6');
     await d.sleep(1100);
-    await d.shot('match-3');
-    await d.click(next.x, next.y, { duration: 1 });
-    await d.sleep(1100);
-    await d.shot('match-4');
+    await d.shot('match-5');
 
-    // Up beside the Previous/Next buttons, left along the gap under the
-    // Replace row, and up into the field at its right end: once the panel
-    // closes, that spot is empty canvas beside members.
+    // Up the same strip, which the scrolled group leaves clear, and in along
+    // the gap above the Find field to the Toggle Replace chevron.
     mark('replace');
-    const field = await d.domBox('.replace-input');
-    const gap = field.y + field.height + 4;
-    const into = { x: field.x + field.width - 8, y: field.y + field.height / 2 - 2 };
-    await glide(d, [{ x: next.x, y: gap }, { x: into.x, y: gap }, into], 600);
-    await d.click(into.x, into.y, { duration: 1 });
-    await d.sleep(300);
+    const toggle = center(await d.domBox('.explorer-replace-toggle'));
+    const above = (await d.domBox('.explorer-search')).y + 1;
+    await glide(
+      d,
+      [
+        { x: strip, y: onRow.y },
+        { x: strip, y: above },
+        { x: toggle.x, y: above },
+        toggle,
+      ],
+      1000
+    );
+    await d.click(toggle.x, toggle.y, { duration: 1 });
+    await waitDom(d, '.explorer .replace-input');
+    await d.sleep(450);
+
+    // Preserve Case, then into the Replace field.
+    const preserve = center(await d.domBox('.explorer .find-preserve-case'));
+    await d.click(preserve.x, preserve.y, { duration: 450 });
+    await d.sleep(450);
+    const field = await d.domBox('.explorer .replace-input');
+    await d.click(field.x + field.width - 30, field.y + field.height / 2, { duration: 350 });
+    await d.sleep(250);
     await d.type('user', 120);
-    await d.sleep(500);
+    await d.sleep(450);
+    await d.shot('typed-user');
 
-    // Replace All from the Replace field, which keeps the caret there for Esc.
+    // Replace All from the Replace field: six renames in one edit, with
+    // Preserve Case writing User area and UQ_USER_EMAIL. Nothing matches
+    // member any more, so the tree empties.
     await d.press('ControlOrMeta+Enter');
+    await waitCount(d, 'Replaced 6 matches');
     mark('replaced');
-    await d.sleep(1000);
+    await d.sleep(1700);
     await d.shot('replaced');
-
-    // Off the field before closing, where the pointer would sit on the users
-    // connector: along the gap, down past the scope toggles on their right, to
-    // a spot that is empty canvas once the panel is gone.
-    const park = { x: next.x - 10, y: strip + 2 };
-    await glide(d, [{ x: into.x, y: gap }, { x: park.x, y: gap }, park], 500);
-    await d.sleep(350);
-
-    await d.press('Escape', { hold: 700 });
-    mark('closed');
-    await d.sleep(1600);
-    await d.shot('closed');
   },
 };

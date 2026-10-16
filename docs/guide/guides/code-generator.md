@@ -1,5 +1,5 @@
 ---
-sidebar_position: 11
+sidebar_position: 12
 description: Generate code for twenty-two targets from the diagram, pick the language, database, name case and bracket in the options panel, see which targets write a relationship's ON DELETE and ON UPDATE actions, and save or copy the result.
 ---
 
@@ -8,12 +8,12 @@ description: Generate code for twenty-two targets from the diagram, pick the lan
 Switch to the `Code Generator` tab in the toolbar. The tab shows the code for the whole document on the left and, on its right, an options panel headed `Code Generator`, where you pick the language, the database, the name cases and, for some targets, the bracket.  
 The panel opens on its own unless the editor is narrower than 640 px when the tab first opens. `Hide options` at the top of the panel folds it away, and `Show options` at the top right of the code brings it back. It stays open or folded across tab switches for as long as the editor is open, independently of the Schema SQL tab's panel, and is never saved in the file.
 
-Right-click the code to open its context menu: `Language`, `Database`, `Table Name Case`, `Column Name Case`, `Bracket` (only for `Doctrine`, `JPA`, and `SeaORM`), each with a submenu that checks the current value, then `Options panel`, which folds or opens the panel and is checked while it shows, and `Save file…`.  
+Right-click the code to open its context menu: `Language`, `Database`, `Table Name Case`, `Column Name Case`, `Bracket` (only for `Doctrine`, `JPA`, and `SeaORM`), each with a submenu that checks the current value, then `Options panel`, which folds or opens the panel and is checked while it shows, and `Save file`.  
 While this tab is open, [Quick Search](./quick-search.md) offers `Database`, `Bracket` (only for `Doctrine`, `JPA`, and `SeaORM`), `Language`, `Table Name Case`, `Column Name Case`, and `Code Generator: Options panel`, which folds or opens the panel.
 
 ![Picking TypeScript, then Rust, from the code's context menu, switching column names to Snake in the options panel, and copying the code](/img/demo-code-generator.webp)
 
-The same code view is also the `Code Generator` tab of [Table Properties](./table-related-functions.md#table-properties), where it generates code for that one table instead of the whole document. It has no options panel there, and its context menu changes the same settings but has no `Options panel` or `Save file…`.  
+The same code view is also the `Code Generator` tab of [Table Properties](./table-related-functions.md#table-properties), where it generates code for that one table instead of the whole document. It has no options panel there, and its context menu changes the same settings but has no `Options panel` or `Save file`.  
 Where the code for the whole document opens with imports or a header, the one table's code opens with those that table needs, such as `<?php` for `PHP`, `import Foundation` for `Swift`, or `$schema` for `JSON Schema`.
 
 The code is written when the tab opens and again whenever the language, the database, a name case, or the bracket changes. An edit made to the diagram while the tab is open, such as a collaborator's or a coding agent's, shows once you leave the tab and come back, or once one of those settings changes.
@@ -127,7 +127,7 @@ It is the same setting as the Schema SQL tab's bracket — see [Schema SQL](./sc
 
 ## Saving or Copying the Result
 
-`Save file` at the foot of the options panel, or `Save file…` in the context menu, saves the code shown as a file.  
+`Save file`, at the foot of the options panel or in the context menu, saves the code shown as a file.  
 It is named like every export, `<database name>-<timestamp>`, followed by the extension in the [Language](#language) table, such as `shop-2026-10-12T04_05_06.ts`, and goes where every export goes in your host — see [Exporting](./file-import-export.md#exporting). `Java` and `JPA` put every class in one `.java` file, as the tab shows them.  
 The Export menu has no Code Generator entry, and the `Code Generator` tab of Table Properties cannot save a file.
 

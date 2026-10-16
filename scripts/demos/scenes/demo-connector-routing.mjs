@@ -24,7 +24,9 @@ export default {
       only: ['members', 'orders', 'addresses', 'categories'],
       tables: {
         orders: { x: 20, y: 20 },
-        addresses: { x: 20, y: 370 },
+        // High enough to end above the canvas toolbar, which since 4.1.0
+        // reaches under its right end.
+        addresses: { x: 20, y: 310 },
         categories: { x: 360, y: 190 },
         members: { x: 680, y: 200 },
       },
@@ -48,8 +50,9 @@ export default {
     await d.sleep(200);
 
     // Each step re-routes, which slows the page down, so the durations here
-    // come out about twice as long on screen.
-    let p = at(-10, 120);
+    // come out about twice as long on screen. No lower than 110: members'
+    // lower left corner then stays clear of the canvas toolbar.
+    let p = at(-10, 110);
     await d.moveTo(p.x, p.y, 750);
     await d.sleep(700);
     await d.shot('down');
@@ -61,9 +64,9 @@ export default {
 
     // Back down the way the first drag went: a path slanted further, to
     // (-20, 95), grazed a spot where the two routes tie, and the connector
-    // flickered between them for a frame on the way. 10px short of the first
-    // drop, the dashes (10 on, 10 off, counted from members) land on both of
-    // the route's corners rather than leaving the upper one in a gap.
+    // flickered between them for a frame on the way. Dropped here, the dashes
+    // (10 on, 10 off, counted from members) land on both of the route's
+    // corners rather than leaving the upper one in a gap.
     p = at(-10, 110);
     await d.moveTo(p.x, p.y, 650);
     await d.sleep(300);

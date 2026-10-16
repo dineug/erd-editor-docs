@@ -170,7 +170,7 @@ id는 `erd_list`와 `erd_get`에서, 또는 엔티티를 만든 호출의 `creat
 
 `View Option` → `Table Groups`로 그룹을 숨긴 동안에도 이 도구들은 그룹을 추가하고 변경하며, 그룹은 다시 표시할 때까지 숨겨져 있습니다. [그룹 숨기기](../guide/guides/table-groups.md#그룹-숨기기) 문서를 참고하세요.
 `erd_sort_tables`는 각 그룹의 테이블을 한데 모아 두고, `erd_import_dbml`과 `erd_import_json`은 그룹을 가져옵니다. [가져오기](#가져오기) 항목을 참고하세요. `erd_read`는 `groupNames`로 고른 그룹의 DDL을 작성합니다.
-에이전트가 디스크에 쓴 파일을 이전 릴리스의 ERD Editor가 저장하면 그룹이 사라질 수 있습니다. [업데이트](./installation.md#업데이트) 문서를 참고하세요.
+`4.0.0` 이전의 VS Code 확장과 `1.0.0` 이전의 Obsidian, JetBrains 플러그인처럼 테이블 그룹이 도입되기 전의 ERD Editor 릴리스는 파일을 저장할 때 그 파일의 그룹을 버립니다. [업데이트](./installation.md#업데이트) 문서를 참고하세요.
 
 ### 설정
 
@@ -191,7 +191,7 @@ id는 `erd_list`와 `erd_get`에서, 또는 엔티티를 만든 호출의 `creat
 | `erd_set_ddl_script` | `position`, `sql` | 테이블 앞뒤에 작성되는 두 스크립트 중 하나를 설정합니다. [앞뒤 스크립트](../guide/guides/schema-sql.md#앞뒤-스크립트) 문서를 참고하세요. `position`은 `CREATE EXTENSION`이나 `CREATE SCHEMA`처럼 테이블 앞에 작성되는 `before`, 또는 `GRANT`나 `CREATE VIEW`처럼 테이블 뒤에 작성되는 `after`입니다. `sql`은 최대 10,000자로 스크립트 전체를 대체하며, 빈 문자열을 주면 스크립트를 지웁니다. 먼저 `erd_read`의 `scripts` 형식으로 현재 스크립트를 읽으세요. |
 
 스크립트는 어느 데이터베이스의 DDL에든 그대로 들어가므로, 문서의 데이터베이스에 맞게 작성하세요. MSSQL에서는 마지막 줄이 `GO`가 아닌 스크립트 뒤에 `GO` 줄이 추가됩니다.
-에이전트가 디스크에 쓴 파일을 이전 릴리스의 ERD Editor가 저장하면 스크립트가 사라질 수 있습니다. [업데이트](./installation.md#업데이트) 문서를 참고하세요.
+`4.0.0` 이전의 VS Code 확장과 `1.0.0` 이전의 Obsidian, JetBrains 플러그인처럼 이 스크립트가 도입되기 전의 ERD Editor 릴리스는 파일을 저장할 때 그 파일의 스크립트를 버립니다. [업데이트](./installation.md#업데이트) 문서를 참고하세요.
 
 ### 가져오기
 
@@ -290,7 +290,7 @@ SQL, GraphQL, DBML, AML의 테이블은 `erd_sort_tables`가 배치하는 방식
 | `hubAppeared`, `hubGone` | 에이전트가 디스크에서 편집하던 문서를 에디터가 맡기 시작했거나, 문서를 맡던 에디터가 아직 실행 중이지만 잠금 파일과 연결이 사라졌습니다. 아무것도 쓰지 않았습니다. |
 | `notSaved` | `erd_save`가 에디터의 문서를 저장하지 못했습니다. |
 | `readonly` | 쓸 수 없거나 다이어그램으로 읽을 수 없는 파일처럼, 에디터가 문서를 읽기 전용으로 담고 있습니다. 에디터가 없으면 체크아웃하지 않은 Perforce 또는 TFVC 파일처럼 파일 자체가 읽기 전용입니다. 아무것도 쓰지 않았습니다. |
-| `protocolMismatch` | 서버 `1.0.0`과 이전 확장이나 플러그인처럼, 에디터의 ERD Editor 확장이나 플러그인과 서버가 서로 다른 프로토콜 버전을 사용합니다. 읽기도 거부되며, 메시지에 업데이트할 쪽이 표시됩니다. [업데이트](./installation.md#업데이트) 문서를 참고하세요. |
+| `protocolMismatch` | 서버 `1.0.0`과 `3.x` VS Code 확장처럼, 에디터의 ERD Editor 확장이나 플러그인과 서버가 서로 다른 프로토콜 버전을 사용합니다. 읽기도 거부되며, 메시지에 업데이트할 쪽이 표시됩니다. [업데이트](./installation.md#업데이트) 문서를 참고하세요. |
 | `hubUnreachable`, `timeout`, `disconnected` | 에디터의 허브가 연결을 받아들이지 않았거나, 30초 안에 응답하지 않았거나, 호출 중에 연결을 끊었습니다. Windows에서 `hubUnreachable`은 Windows가 에이전트의 허브 접근을 막았다는 뜻이기도 합니다. 에디터를 관리자 권한으로 실행했는데 에이전트는 그렇지 않은 경우처럼 에디터가 에이전트보다 높은 권한으로 실행되거나, 에이전트가 샌드박스에서 실행되는 경우입니다. |
 
 그 밖의 코드는 드물게 나오며, 모든 거부에는 무슨 일이 있었는지 알려 주는 메시지가 담깁니다.

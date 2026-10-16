@@ -1,6 +1,6 @@
 ---
 sidebar_position: 1
-description: Start from the welcome screen, and create tables, memos, table groups, and relationships from the canvas context menu.
+description: Start from the welcome screen, and create tables, memos, table groups, and relationships from the canvas context menu, the canvas toolbar, or a shortcut.
 ---
 
 # Editing Start
@@ -38,13 +38,17 @@ Where the canvas has room, hand-drawn arrows point at:
 - the `Theme` and `Display Language` buttons: `Pick a theme and a language`, or `Pick a theme` or `Pick a language` when the toolbar shows only one of them — see [Language and Theme](./language-and-theme.md)
 - the [canvas toolbar](./table-related-functions.md#canvas-toolbar) at the bottom: `Pan, zoom and draw relationships`
 
+While the [Explorer](./explorer.md) is shown, the welcome screen covers only the canvas beside it.  
+An arrow whose toolbar button stands above the Explorer is left out. The `Theme` and `Display Language` arrow is left out only when both of its buttons stand above the Explorer; until then it points at the one still over the canvas.  
+A label with no room beside its arrow hangs under the arrow instead.
+
 ## Table Creation
 
-Create a table from the context menu or with the shortcut `Alt + N`.
+Create a table from the context menu, with the `New Table` button on the [canvas toolbar](./table-related-functions.md#canvas-toolbar), or with the shortcut `Alt + N`.
 
 ## Memo Creation
 
-Create a memo from the context menu or with the shortcut `Alt + M`.  
+Create a memo from the context menu, with the canvas toolbar's `New Memo` button, or with the shortcut `Alt + M`.  
 While View Option → `Memos` is off, memos are hidden, nothing offers `New Memo`, and `Alt + M` adds none — see [Table View Options](./table-related-functions.md#table-view-options).
 
 A memo is a free-text note on the canvas. Click into its body and type; the text is saved with the document.  
@@ -58,10 +62,10 @@ Right-clicking a memo opens its menu rather than the editor: `Color`, `Remove co
 
 A table group is a box that holds tables, and you can give it a name and a color. Create one in either of two ways:
 
-- Choose `New Table Group` from the context menu or Quick Search, then drag a box over the canvas. Each table whose center lies inside the box joins the new group, unless it is already in another group.
-- Select tables and choose `Group selected tables` from a table's context menu, or `Group Selected Tables` from Quick Search.
+- Choose `New Table Group` from the context menu or Quick Search, click the `New Table Group` button on the [canvas toolbar](./table-related-functions.md#canvas-toolbar), or press `Alt + G` (Windows/Linux) or `⌥ + G` (Mac), then drag a box over the canvas. Each table whose center lies inside the box joins the new group, unless it is already in another group — see [Drawing a Group](./table-groups.md#drawing-a-group).
+- Select tables and choose `Group selected tables` from a table's context menu or `Group Selected Tables` from Quick Search, or press `T` then `G` — see [Grouping Selected Tables](./table-groups.md#grouping-selected-tables).
 
-Neither has a shortcut. Naming, coloring, moving, resizing, and the rest are covered in [Table Groups](./table-groups.md).
+Naming, coloring, moving, resizing, and the rest are covered in [Table Groups](./table-groups.md).
 
 ## Relationship Creation
 

@@ -47,7 +47,7 @@ JSON 文件会保留其中已有的位置。Schema SQL、GraphQL、DBML 或 AML 
 添加的内容块会落在图中所有内容的正下方，与其左边缘对齐；图为空白时则落在左上角。通过 [View Option](./table-related-functions.md#table-view-options) 隐藏的备注和表分组同样计算在内，因为它们仍然占据着那里的位置。  
 在内容块内部，JSON 文件会保留自身的排列，表分组也包括在内。其他格式则按 `Import` 的方式排布，即按相同的规则用 `Flow` 排布或逐行排列，每个表分组的框都会调整为恰好围住其中的表。添加的表和备注会堆叠在所有已有内容之上。
 
-内容块落下后，只有添加的内容处于选中状态：新的表，以及处于显示状态的新备注和新表分组。如果内容块不在视野中，视图会以当前的缩放滚动到它；如果你在此期间切换到了其他标签页，编辑器会先切换回 ERD 标签页。一次 Undo 即可撤回整个添加。  
+内容块落下后，只有添加的内容处于选中状态：新的表，以及处于显示状态的新备注和新表分组。如果你在此期间切换到了其他标签页，编辑器会在内容块落下之前切换回 ERD 标签页。随后，除非内容块已经显示得足够清楚，否则视图会以当前的缩放滚动到它，参见[跳转的落点](./table-related-functions.md#where-a-jump-lands)。一次 Undo 即可撤回整个添加。  
 解析器无法读取的文件，或者既没有表也没有备注的文件，不会添加任何内容。
 
 在某个文件仍在排布期间添加的多个 Schema SQL、GraphQL、DBML 或 AML 文件都会落下，顺序与开始添加的顺序相同。在此期间添加的 JSON 文件一读取完毕就会落下，排在它们之前。执行 `Import` 或载入另一个文档时，仍在排布中的文件都会被丢弃。
@@ -217,7 +217,7 @@ Schema SQL 会在每个关系的 `REFERENCES` 之后写出其 ON DELETE 与 ON U
 每个导出的文件都以 `<数据库名>-<时间戳>` 加上其扩展名命名，其中时间戳采用本地时间，格式为 `yyyy-MM-dd'T'HH_mm_ss`，例如 `my-schema-2026-08-29T04_05_06.erd.json`。数据库名为空时会退回为 `unnamed`。  
 Schema SQL 标签页和[代码生成](./code-generator.md)的 `Save file` 也以同样的方式为文件命名。图片使用的是打开对话框时的数据库名。
 
-`Import`、`Import and Add` 与 `Export` 也可以从 ERD 标签页的[快速搜索](./quick-search.md)中使用，其中的条目与画布右键菜单相同。在每个标签页中，快速搜索还提供 `Export: Schema SQL`，它与 `Export` ▸ `Schema SQL` 一样，会打开 Schema SQL 标签页以便保存，参见[保存或复制 SQL](./schema-sql.md#saving-or-copying-the-sql)。
+`Import`、`Import and Add` 与 `Export` 也可以从 ERD 标签页的[快速搜索](./quick-search.md)中使用，其中的条目与画布右键菜单相同。
 
 在 Obsidian 中不会出现下载或保存对话框：文件会写入仓库中 Obsidian 为该图存放新附件的位置，并显示一条提示告知其路径。  
 Obsidian 不允许在文件名中使用的字符 `\ / : * ? " < > |` 会被替换为 `-`。  
@@ -225,7 +225,7 @@ Obsidian 不允许在文件名中使用的字符 `\ / : * ? " < > |` 会被替�
 
 ### 图片 {#image}
 
-从画布右键菜单或快速搜索中选择 `Export` ▸ `Image`，会打开 `Export image` 对话框：图片的预览位于其选项旁边。打开该对话框会关闭查找与替换。
+从画布右键菜单或快速搜索中选择 `Export` ▸ `Image`，会打开 `Export image` 对话框：图片的预览位于其选项旁边。已打开的[资源管理器](./explorer.md#dialogs-beside-it)会在变暗区域下方保持打开。
 
 ![打开 Export > Image，关闭深色模式和背景，选择 3x，再将图片复制到剪贴板](/img/demo-export.webp)
 
@@ -246,4 +246,4 @@ Obsidian 不允许在文件名中使用的字符 `\ / : * ? " < > |` 会被替�
 宿主环境运行后台 worker 时，图片会在其中绘制，因此期间编辑器仍可继续使用。当绘制无法在片刻内完成时，会显示 `Exporting PNG`、`Exporting SVG` 或 `Copying image` 提示；失败时会报告 `Couldn't export the PNG` 或 `Couldn't export the SVG`。在文件仍在绘制时关闭对话框，不会阻止该文件被保存。
 
 对话框打开时 `PNG` 获得焦点，`Tab` 会停留在对话框内。按 `Escape`、点击 `x` 按钮或点击对话框周围变暗的区域即可将其关闭。  
-对话框打开期间，画布快捷键（包括 Undo 与 Redo）以及复制和粘贴都不起作用。`Ctrl + K` (Windows/Linux) 或 `⌘ + K` (Mac) 会关闭对话框并打开快速搜索，`Ctrl + F` (Windows/Linux) 或 `⌘ + F` (Mac) 会关闭对话框并打开查找与替换。
+对话框打开期间，画布快捷键（包括 Undo 与 Redo）以及复制和粘贴都不起作用。`Ctrl + K` (Windows/Linux) 或 `⌘ + K` (Mac) 会关闭对话框并打开快速搜索。`Ctrl + F` (Windows/Linux) 或 `⌘ + F` (Mac) 会关闭对话框，并把光标放到[资源管理器](./explorer.md#opening-and-closing)的查找输入框中；资源管理器处于关闭状态时会将其打开，但永远不会将其关闭。在过窄、容不下资源管理器的编辑器中，该按键仍会关闭对话框，但会显示一条提示，而不是移动光标。

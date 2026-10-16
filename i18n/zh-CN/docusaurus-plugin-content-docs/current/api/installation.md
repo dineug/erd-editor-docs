@@ -33,6 +33,8 @@ editor.addEventListener('change', () => {
 ```
 
 `<erd-editor>` 没有固有尺寸。请为该元素或其容器显式指定 width 和 height。
+从 `4.1.0` 起，已打开的[资源管理器](../guide/guides/explorer.md)会停靠在该元素内部、ERD 画布的左侧，让画布变窄，而不是覆盖在画布上。新打开的编辑器中，资源管理器初始为关闭状态。
+面板最窄绘制为 `200px`，并为画布保留至少 `320px` 的宽度，因此在宽度小于 `520px` 的元素中，已打开的资源管理器在元素变宽之前不会绘制。参见[画布旁边](../guide/guides/explorer.md#beside-the-canvas)。
 
 `setInitialValue('')` 会以一个新的空文档开始。为 `value` 赋值则会把加载当作一次编辑，因此会记录到历史列表中。
 从 `4.0.0` 起，`editor.value` 是文件所保存形式的文档，也就是应当存储的内容。`editor.runtimeValue` 是编辑器所持有形式的文档，其中包括已删除的实体：它用作协作者的初始文档，从不写入文件。参见 [runtimeValue](./erd-editor-element.md#runtimevalue)。
@@ -54,7 +56,7 @@ editor.addEventListener('change', () => {
 ```
 
 `esm.run` 会替你解析该包的外部依赖，因此无需打包器也能工作。
-不带版本号的 URL 始终提供最新的发布版本。如果不希望大版本升级在毫无预告的情况下进入页面，可以像 `https://esm.run/@dineug/erd-editor@4.0.0` 这样固定版本。
+不带版本号的 URL 始终提供最新的发布版本。如果不希望大版本升级在毫无预告的情况下进入页面，可以像 `https://esm.run/@dineug/erd-editor@4.1.0` 这样固定版本。
 `4.0.0` 本身就是一次大版本升级：需要停留在 3.x 的页面应固定为 `@3.10.0`，参见[从 3.x 升级](#从-3x-升级)。
 
 ### script 标签
@@ -64,7 +66,7 @@ editor.addEventListener('change', () => {
 
 ```html
 <erd-editor></erd-editor>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@4.0.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@4.1.0"></script>
 <script>
   const editor = document.querySelector('erd-editor');
   editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
@@ -252,12 +254,12 @@ setImportFileCallback(async ({ type, op, accept, mode }) => {
 
 - `editor.value`、副本的 `value` 以及其 `change` 交出的 `value` 都是文件所保存的存储形式：不包含已删除的实体、测量得到的宽度、叠放顺序和关系的连接线锚点。请继续保存 `value`，需要这些信息时从 `runtimeValue` 读取；实体的时间戳（`meta`）则已完全移除。为加入正在进行的会话的协作者或副本提供初始文档时，应使用会话中正在运行的节点的 `runtimeValue`，而不是 `value` 或文件，并且永远不要保存 `runtimeValue`。参见 [value](./erd-editor-element.md#value) 和 [runtimeValue](./erd-editor-element.md#runtimevalue)。
 - 设置锁定取代了 `Save Scroll Information` 与 `Save Zoom Information`。新文档以及 `4.0.0` 之前保存的任何文档的所有锁定都处于开启状态，因此滚动、缩放、切换标签页，或者更改 Code Generator 的语言、某种名称大小写或括号类型，都不会改变 `value`，也不会发出 `change`。通过 `change` 保存视图的页面，需要在 Settings 标签页上解除 `Viewport` 的锁定（要保存标签页还需解除 `Canvas Type` 的锁定），或者使用 `settings.lockSettings` 中这些位未设置的文档。参见[锁定](../guide/guides/settings.md#锁定)。
-- `settings` 不再包含 `width`、`height`、`scrollTop`、`scrollLeft`、`relationshipOptimization` 或 `ignoreSaveSettings`，`SaveSettingType` 常量也已移除。`settings.lockSettings` 及其 `LockSettingType` 位取代了 `ignoreSaveSettings`，`4.0.0` 既不读取也不写入后者。参见 [Settings](./advanced/schema.md#settings)。
-- 每个文件在 `$schema` 中指定的 [JSON Schema](./advanced/schema.md#json-schema) 现在只描述存储形式，并且是封闭的：较早版本保存的文件会被它拒绝，直到 `4.0.0` 保存时将其重写为止。
+- `settings` 不再包含 `width`、`height`、`scrollTop`、`scrollLeft`、`relationshipOptimization` 或 `ignoreSaveSettings`，`SaveSettingType` 常量也已移除。`settings.lockSettings` 及其 `LockSettingType` 位取代了 `ignoreSaveSettings`，`4.0.0` 或更高版本既不读取也不写入后者。参见 [Settings](./advanced/schema.md#settings)。
+- 每个文件在 `$schema` 中指定的 [JSON Schema](./advanced/schema.md#json-schema) 现在只描述存储形式，并且是封闭的：较早版本保存的文件会被它拒绝，直到由 `4.0.0` 或更高版本保存时将其重写为止。
 - 文档的垃圾回收已随其 worker 一并移除，因此已删除的实体会一直留在 `runtimeValue` 中，直到下次从文件打开该文档。剩下三个 shared worker，参见 [Web Worker](#web-workers)。
-- 共享会话中的每个编辑器和副本都应使用 `4.0.0`。较早的版本会忽略新的操作类型，即表分组、映射列、锁定和 Schema SQL 脚本的操作类型。参见[混用不同版本](./advanced/collaborative-editing.md#mixing-releases)。
+- 共享会话中的每个编辑器和副本都应使用 `4.0.0` 或更高版本。较早的版本会忽略新的操作类型，即表分组、映射列、锁定和 Schema SQL 脚本的操作类型。参见[混用不同版本](./advanced/collaborative-editing.md#mixing-releases)。
 - 导入回调会在 Import and Add 时收到 `mode: 'append'`，回调必须将其传递下去。导出回调现在还会收到 `.svg` 和 Code Generator 的文件，并且 `Export` ▸ `Schema SQL` 会打开 Schema SQL 标签页而不是直接保存，因此 `.sql` 只会来自该标签页的 `Save file`。参见[文件对话框](#文件对话框)。
 - `Delete` 与 `Backspace` 绑定到新增的 `removeSelection`。编辑器获得焦点且焦点不在文本输入框中时，每个标签页都会阻止该按键的默认行为，在 ERD 标签页中还会删除选中的对象。`KeyBindingName` 与 `KeyBindingMap` 中都加入了它，`setKeyBindingMap({ removeSelection: [] })` 会把这两个按键都交给页面处理。参见 [setKeyBindingMap](./erd-editor-element.md#setkeybindingmap)。
 - `ThemeOptions.appearance` 还接受 `'system'`，即主题构建器中的 `System`，开启 `systemDarkMode` 时会设为该值。选中它期间，`changePresetTheme` 报告的是 `'system'`，因此请原样存储，并原样传回给 `setPresetTheme`。开启 `systemDarkMode` 时，以 `'light'` 或 `'dark'` 调用的 `setPresetTheme()` 现在会保持生效，而不会被操作系统的下一次变更覆盖。参见 [systemDarkMode](./erd-editor-element.md#systemdarkmode) 和 [changePresetTheme](./erd-editor-element.md#changepresettheme)。
-- `@dineug/erd-editor-mcp` `1.0.0`、VS Code 扩展 `4.0.0` 以及 Obsidian 和 JetBrains 插件 `1.0.0` 使用 hub 协议 2。服务器 `1.0.0` 与为智能体提供服务的较早编辑器版本之间，或者较早的服务器与上述某个编辑器之间，会以 `protocolMismatch` 互相拒绝，并指出需要更新的一方。参见[更新](../mcp/installation.md#更新)。
-- 不带版本号的 CDN URL 现在提供的是 `4.0.0`。要停留在 3.x，请固定为 `@3.10.0`。参见 [CDN](#cdn)。
+- `@dineug/erd-editor-mcp` `1.0.0`、VS Code 扩展 `4.0.0` 或更高版本以及 Obsidian 和 JetBrains 插件 `1.0.0` 或更高版本使用 hub 协议 2。服务器 `1.0.0` 与为智能体提供服务的较早编辑器版本之间，或者较早的服务器与上述某个编辑器之间，会以 `protocolMismatch` 互相拒绝，并指出需要更新的一方。参见[更新](../mcp/installation.md#更新)。
+- 不带版本号的 CDN URL 现在提供的是最新的 4.x 版本。要停留在 3.x，请固定为 `@3.10.0`。参见 [CDN](#cdn)。

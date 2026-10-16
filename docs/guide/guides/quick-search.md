@@ -1,6 +1,6 @@
 ---
 sidebar_position: 7
-description: Open the command palette to switch tabs, run a command for the current tab, open Find and Replace, change the theme or display language, or jump to a table, column, comment, or memo by typing a prefix.
+description: Open the command palette to switch tabs, run a command for the current tab, open or close the Explorer, change the theme or display language, or jump to a table, column, comment, or memo by typing a prefix.
 ---
 
 # Quick Search
@@ -11,8 +11,8 @@ It lists the commands available on the tab you are on. Start the search with `#`
 Open it with `Ctrl + K` (Windows/Linux) or `⌘ + K` (Mac), or click `Search` in the toolbar.  
 The same shortcut closes it, as do `Esc` and a click outside the panel. Opening it closes Table Properties, the [theme builder](./language-and-theme.md#theme), the [`Display Language`](./language-and-theme.md#picking-a-language) picker, the [`Export image`](./file-import-export.md#image) dialog, and [Map Columns](./relationship-editing.md#map-columns), which drops what you had picked in it. It does not open while you are editing a table cell, a memo, or a table group's name.
 
-The toolbar button right after `Search` opens the [Find and Replace](./find-and-replace.md) panel rather than the palette.  
-Opening the palette leaves that panel open, and `Esc` then closes only the palette. `Ctrl + F` (Windows/Linux) or `⌘ + F` (Mac) pressed in the palette closes it and opens the panel — see [Opening and Closing](./find-and-replace.md#opening-and-closing).  
+The toolbar button right after `Search` is `Explorer`. It opens or closes the [Explorer](./explorer.md), a tree of the diagram docked at the left of the canvas, with Find and Replace at its top.  
+Opening the palette leaves the Explorer open, and `Esc` then closes only the palette. `Ctrl + F` (Windows/Linux) or `⌘ + F` (Mac) pressed in the palette closes it and takes the keyboard to the Explorer's Find field, opening the Explorer on its search if it is not showing. Unlike the `Toggle Explorer` entry, the key never closes the Explorer from the palette — see [Opening and Closing](./explorer.md#opening-and-closing). While the diff viewer, time travel, or the Auto Layout preview is open, the editor leaves the key alone: the palette stays open and the key goes on to the browser or host — see [The Browser's Find Bar](./find-and-replace.md#the-browsers-find-bar).  
 A host embedding the editor can bind Quick Search to another key, which the `Search` tooltip then shows — see [Shortcuts](./settings.md#shortcuts).
 
 ![Opening the palette with ⌘ + K, then jumping to a table with #pay, to a column with @price, and to a table comment with :address](/img/demo-quick-search.webp)
@@ -32,7 +32,7 @@ Filtering only ever applies to the list in front of you, and there is no way bac
 The list depends on the tab you are on. Every tab starts with `Tab`, which switches to `Entity Relationship Diagram`, `Visualization`, `Schema SQL`, `Code Generator`, or `Settings`, leaving out the tab you are already on.
 
 On the ERD tab: `Database`, `Import`, `Import and Add`, and `Export`, then `New Table`, `New Memo`, `New Table Group`, and `Group Selected Tables`, the four relationship types, and `Auto Layout`. Tables are not listed here; type `#` to [go to one](#searching-the-diagram).  
-`Import and Add` is left out in a read-only editor, and `New Memo` while [View Option](./table-related-functions.md#table-view-options) → `Memos` hides the memos. `New Table Group` starts drawing a [table group](./table-groups.md) on the canvas, and `Group Selected Tables` puts the selected tables in a new group and opens its name for typing. Both are left out in a read-only editor and while View Option → `Table Groups` hides the groups, and `Group Selected Tables` also needs at least one table selected.  
+`Import and Add` is left out in a read-only editor, and `New Memo` while [View Option](./table-related-functions.md#table-view-options) → `Memos` hides the memos. `New Table Group` starts drawing a [table group](./table-groups.md) on the canvas, and `Group Selected Tables` puts the selected tables in a new group and opens its name for typing. Both are left out in a read-only editor and while View Option → `Table Groups` hides the groups, and `Group Selected Tables` also needs at least one table selected. Their rows show the keys: `Alt + G` (Windows/Linux) or `⌥ + G` (Mac) for [drawing a group](./table-groups.md#drawing-a-group), and `T` then `G` for [grouping the selected tables](./table-groups.md#grouping-selected-tables).  
 These run the same commands as the canvas context menu, apart from `Group Selected Tables`, which is the table menu's `Group selected tables`; `View Option` and `Diff Viewer` are in the context menu only. `Export` offers the same `json`, `Schema SQL`, and `Image` as the context menu, and typing `png` or `svg` inside it finds `Image`.  
 See [Importing or Exporting Files](./file-import-export.md) for what each format, [Import and Add](./file-import-export.md#import-and-add), and the [image export](./file-import-export.md#image) do, and [Table-related Functions](./table-related-functions.md#databases) for what the database choice affects.
 
@@ -42,14 +42,12 @@ On the Code Generator tab: `Database`, `Bracket` while the language is `Doctrine
 
 The Visualization and Settings tabs have no commands of their own, only `Tab` and the commands below that every tab lists.
 
-Every tab also lists `Export: Schema SQL`, which switches to the Schema SQL tab with its options panel open and `Save file` focused, as `Export` ▸ `Schema SQL` does — see [Saving or Copying the SQL](./schema-sql.md#saving-or-copying-the-sql). It saves nothing by itself.
-
-Near the end of every tab's list is `Find and Replace`, which shows its shortcut, `Ctrl + F` (Windows/Linux) or `⌘ + F` (Mac). Typing `find`, `replace`, or `rename` finds it.  
-Running it closes the palette, switches to the ERD tab, and opens [Find and Replace](./find-and-replace.md#opening-and-closing), or puts the caret back in its Find field if the panel is already open. It is left out while the diff viewer, time travel, or the Auto Layout preview is open.
+Near the end of every tab's list, in a read-only editor as well, is `Toggle Explorer`, which shows its shortcut, `Ctrl + F` (Windows/Linux) or `⌘ + F` (Mac). Typing `find`, `replace`, `rename`, `tree`, `outline`, or `objects` also finds it.  
+Running it closes the palette and does what the shortcut does on the canvas. While the toolbar's `Explorer` button shows pressed, that is, while the Explorer is open on the ERD tab and not hidden by zen mode, it closes the Explorer. Otherwise it switches to the ERD tab and opens the Explorer on its search, with the caret in the Find field — see [Opening and Closing](./explorer.md#opening-and-closing). It is left out while the diff viewer, time travel, or the Auto Layout preview is open.
 
 ### Theme and Display Language
 
-After `Find and Replace`, every tab lists `Theme` and `Display Language`, in a read-only editor as well. Each is listed only where the editor offers its picker, as the toolbar's `Theme` and `Display Language` buttons show. The web app, Google Drive, VS Code, JetBrains IDEs, and Obsidian offer both — see [In Each Host](./language-and-theme.md#in-each-host).
+After `Toggle Explorer`, every tab lists `Theme` and `Display Language`, in a read-only editor as well. Each is listed only where the editor offers its picker, as the toolbar's `Theme` and `Display Language` buttons show. The web app, Google Drive, VS Code, JetBrains IDEs, and Obsidian offer both — see [In Each Host](./language-and-theme.md#in-each-host).
 
 `Theme` opens `System`, `Light`, and `Dark`, with the current appearance checked. Choosing one changes the appearance alone and keeps the gray and accent colors, as the theme builder's `Appearance` buttons do.  
 `Display Language` opens `System`, then the 25 languages, each in its own name and in the picker's order, with the current option checked. Here a language is also found by its English name or its code: `german` or `de-DE` finds `Deutsch`, and `korean` finds `한국어`.  
@@ -60,7 +58,7 @@ A choice in either takes effect at once, closes the palette, and is kept just as
 Start the search with a prefix to search the diagram rather than the commands: `#` for tables, `@` for columns, `:` for comments and memos, or `?` to list the prefixes. A prefix works from any tab. It counts only as the first character, ignoring spaces before it. A space after it is optional, so `#users` and `# users` are the same search, and the full-width `＃`, `＠`, `：`, and `？` that a Japanese or Chinese input method types count as well.  
 While the input is empty at the top level, a line under it shows the four prefixes; click one to type it. While a prefix is in effect, the end of the input names its scope: `Tables`, `Columns`, `Comments & memos`, or `Help`. Delete the prefix to get the commands back.
 
-`#` lists the tables, each with `Table` beside it, and a table with a blank name is listed as `unnamed`. With nothing after `#`, they are sorted by name. Text after `#` is matched against table names alone, fuzzily as above, and tables whose name contains it come first. Table group names are not searched under any prefix.
+`#` lists the tables, each with `Table` beside it, and a table with a blank name is listed as `unnamed`. With nothing after `#`, they are sorted by name. Text after `#` is matched against table names alone, fuzzily as above, and tables whose name contains it come first. Table group names and index names are not searched under any prefix; [Find and Replace](./find-and-replace.md#what-it-searches) searches both.
 
 `@` lists columns by name, each with where it is beside it, such as `users.email · Column`. Text after `@` has to appear in the column name, ignoring case; this match is not fuzzy. Text before the first `.` narrows the search to the tables whose name contains it: `@users.em` lists the columns containing `em` in tables whose name contains `users`, `@users.` lists the columns of those tables, and `@.em` searches every table. With nothing after `@`, the columns are listed unfiltered.
 
@@ -70,16 +68,14 @@ While the input is empty at the top level, a line under it shows the four prefix
 
 `?` lists `Tables`, `Columns`, and `Comments & memos`, and text after `?` filters them. Choosing one replaces the input with its prefix and leaves the palette open.
 
-A prefix whose search finds nothing leaves the list empty, with no message.
+A prefixed list holds every match, however many there are. A prefix whose search finds nothing leaves the list empty, with no message.
 
 Choosing a table, column, comment, or memo closes the palette and switches to the ERD tab if you are on another one.  
-A table is scrolled near the top-left corner of the canvas, or just right of an open Find and Replace panel, then selected alone and brought to the front, with its name focused unless the focus was already in that table.  
-A column, comment, or memo is shown the way Find and Replace [goes to a match](./find-and-replace.md#going-to-a-match): the canvas scrolls only when the table, the column's row, or the memo is not already wholly in view. Then a memo is selected alone and brought to the front, and a table is selected alone, brought to the front, and focused on the cell that holds the text, or on the name beside a comment that a [table view option](./table-related-functions.md#table-view-options) hides.  
+The canvas scrolls to it unless it already shows well — see [Where a Jump Lands](./table-related-functions.md#where-a-jump-lands). A table is then selected alone and brought to the front, with its name focused unless the focus was already in that table.  
+A memo is selected alone and brought to the front. For a column or a comment, its table is selected alone, brought to the front, and focused on the cell that holds the text, or on the name beside a comment that a [table view option](./table-related-functions.md#table-view-options) hides.  
 No jump starts or finishes a relationship being drawn.
 
-A prefixed list shows at most 100 rows. When that limit leaves out a match that contains your text as typed, one more row follows those 100: `Show all N matches in Find and Replace`, or `Show 1 match in Find and Replace`. Choosing it opens Find and Replace on the same text, with only that prefix's kinds of text turned on. `@table.column` hands over the column part alone, so the panel, and N, cover the columns of every table — see [From Quick Search](./find-and-replace.md#from-quick-search).  
-With nothing typed after the prefix, or after the `.` of `@table.`, the list stops at 100 rows and offers no such row.  
-For `Match Case`, `Match Whole Word`, or `Use Regular Expression`, or to replace text, use [Find and Replace](./find-and-replace.md) directly.
+For `Match Case`, `Match Whole Word`, or `Use Regular Expression`, or to replace text, use [Find and Replace](./find-and-replace.md) at the top of the Explorer.
 
 ## When No Command Matches
 
@@ -91,5 +87,4 @@ Inside a submenu, a search that finds nothing leaves the list empty, with no mes
 
 A search that contains Hangul also matches by its letters, in the commands, in submenus, and under every prefix.  
 Each step a Korean input method passes through keeps finding the row you are typing toward, so `ㅅ`, `사`, `상`, `사요`, and `사용` all find `사용자`. A search made only of initial consonants matches the initial consonants of the syllables, with spaces skipped: `ㅅㅇㅈ` finds `사용자`, and `ㅈㅁ` finds `주문 내역`. A consonant cluster that a Windows input method composes from two initials typed in a row, such as `ㅄ`, counts as the two (`ㅂㅅ`), while a double consonant such as `ㄲ` stays one letter. Text stored decomposed, as macOS file names are, matches as if it were composed.  
-Rows whose whole text spells the search, letter by letter or initial by initial, come first, then rows starting with it, then rows containing it. Under `@` and `:`, rows that contain the search as typed come before all of these, in document order. The highlight covers whole syllables, so `상` lights `사용` in `사용자`.  
-Find and Replace matches text only as typed, so rows found by their letters alone, as `ㅅㅇㅈ` and `사요` find `사용자`, never bring up a `Show all … in Find and Replace` row.
+Rows whose whole text spells the search, letter by letter or initial by initial, come first, then rows starting with it, then rows containing it. Under `@` and `:`, rows that contain the search as typed come before all of these, in document order. The highlight covers whole syllables, so `상` lights `사용` in `사용자`.

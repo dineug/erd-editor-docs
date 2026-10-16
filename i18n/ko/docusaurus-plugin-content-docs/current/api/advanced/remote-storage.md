@@ -257,6 +257,10 @@ shared store의 스트림을 필터링 없이 그대로 전달해도 됩니다.
 이전 릴리스의 store는 새 액션을 버리므로 [테이블 그룹](../../guide/guides/table-groups.md), [잠금](../../guide/guides/settings.md#잠금), [Schema SQL](../../guide/guides/schema-sql.md) 스크립트, 그리고 [컬럼 매핑](../../guide/guides/relationship-editing.md#컬럼-매핑)이 이미 있는 관계에 지정하는 컬럼을 잃습니다.  
 복제본은 에디터와 같은 릴리스나 그보다 새로운 릴리스에서 실행하세요.
 
+`4.1.0`은 새 액션 타입을 추가하지 않고 `@dineug/erd-editor/engine.js`도 그대로 두므로, `4.0.0` 복제본도 `4.1.0` 복제본과 마찬가지로 `4.1.0` 에디터가 보내는 변경사항을 모두 남깁니다.  
+`4.1.0`부터 [찾기와 바꾸기](../../guide/guides/find-and-replace.md#바꾸기)의 `Replace`와 `Replace All`은 `4.0.0` 복제본이 이미 남기는 `index.changeName`과 `tableGroup.changeName` 액션으로 인덱스와 테이블 그룹의 이름도 바꿉니다.  
+[탐색기](../../guide/guides/explorer.md) 자체의 상태는 전송되지 않으며, 탐색기가 일으키는 탭 전환이나 스크롤은 다른 탭 전환이나 스크롤과 똑같이 전달됩니다. [공동 편집](./collaborative-editing.md) 문서를 참고하세요.
+
 `4.0.0`부터 두 메서드는 `editor.mergeLWW`도 반영합니다. 이 액션은 다른 에디터가 세션에 참여할 때 에디터가 응답으로 보내는 협업 레지스터를 담고 있으므로, 복제본도 에디터와 같은 방식으로 동시 편집의 결과를 결정합니다.  
 `value`의 바이트를 하나도 바꾸지 않으며 `change`도 발생시키지 않습니다.  
 `4.0.0` 이전에 릴리스된 에디터가 아직 보낼 수 있는 `settings.changeIgnoreSaveSettings`는 남기지만 아무것도 바꾸지 않습니다. 이 액션은 `changed`가 `false`인 `change`를 발생시킵니다.

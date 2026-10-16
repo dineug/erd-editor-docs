@@ -1,5 +1,5 @@
 ---
-sidebar_position: 11
+sidebar_position: 12
 description: 22 種類の対象へのコード生成、オプションパネルでの言語、データベース、名前のケース、括弧の種類の選択、リレーションシップの ON DELETE と ON UPDATE のアクションを出力する対象、結果の保存とコピー。
 ---
 
@@ -8,12 +8,12 @@ description: 22 種類の対象へのコード生成、オプションパネル�
 ツールバーの `Code Generator` タブに切り替えます。タブの左側にはドキュメント全体のコードが、その右側には `Code Generator` という見出しのオプションパネルが表示され、そこで言語、データベース、名前のケース、一部の対象では括弧の種類を選びます。  
 タブを最初に開いたときにエディタの幅が 640 px 未満でなければ、パネルは自動的に開きます。パネル上部の `Hide options` で折りたたみ、コードの右上の `Show options` で再び表示します。開いているか折りたたんでいるかは、エディタを開いている間はタブを切り替えても保たれ、Schema SQL タブのパネルとは別に扱われ、ファイルに保存されることはありません。
 
-コードを右クリックすると、コンテキストメニューが開きます。`Language`、`Database`、`Table Name Case`、`Column Name Case`、`Bracket`（`Doctrine`、`JPA`、`SeaORM` のみ）があり、それぞれ現在の値にチェックが付いたサブメニューを開きます。続いて、パネルを折りたたむか開き、パネルが表示されている間はチェックが付く `Options panel` と、`Save file…` があります。  
+コードを右クリックすると、コンテキストメニューが開きます。`Language`、`Database`、`Table Name Case`、`Column Name Case`、`Bracket`（`Doctrine`、`JPA`、`SeaORM` のみ）があり、それぞれ現在の値にチェックが付いたサブメニューを開きます。続いて、パネルを折りたたむか開き、パネルが表示されている間はチェックが付く `Options panel` と、`Save file` があります。  
 このタブを開いている間は、[クイック検索](./quick-search.md)に `Database`、`Bracket`（`Doctrine`、`JPA`、`SeaORM` のみ）、`Language`、`Table Name Case`、`Column Name Case`、そしてパネルを折りたたむか開く `Code Generator: Options panel` が表示されます。
 
 ![コードのコンテキストメニューで TypeScript、続いて Rust を選び、オプションパネルでカラム名を Snake に切り替えて、コードをコピーする](/img/demo-code-generator.webp)
 
-同じコード表示は[テーブルのプロパティ](./table-related-functions.md#table-properties)の `Code Generator` タブにもあり、そこではドキュメント全体ではなくそのテーブル 1 つ分のコードを生成します。そこにはオプションパネルがなく、コンテキストメニューは同じ設定を変更しますが、`Options panel` と `Save file…` はありません。  
+同じコード表示は[テーブルのプロパティ](./table-related-functions.md#table-properties)の `Code Generator` タブにもあり、そこではドキュメント全体ではなくそのテーブル 1 つ分のコードを生成します。そこにはオプションパネルがなく、コンテキストメニューは同じ設定を変更しますが、`Options panel` と `Save file` はありません。  
 ドキュメント全体のコードがインポートやヘッダーで始まる場合、テーブル 1 つ分のコードは、`PHP` の `<?php`、`Swift` の `import Foundation`、`JSON Schema` の `$schema` のように、そのテーブルに必要なものから始まります。
 
 コードはタブを開いたときに生成され、言語、データベース、名前のケース、括弧の種類のいずれかが変わるたびに書き直されます。タブを開いている間に共同編集者やコーディングエージェントなどがダイアグラムに加えた編集は、タブを離れて戻ったとき、またはこれらの設定のいずれかが変わったときに反映されます。
@@ -127,7 +127,7 @@ Schema SQL タブの括弧の種類と同じ設定のため、ここで変更す
 
 ## 結果の保存とコピー
 
-オプションパネルの下部の `Save file`、またはコンテキストメニューの `Save file…` は、表示されているコードをファイルとして保存します。  
+オプションパネルの下部またはコンテキストメニューにある `Save file` は、表示されているコードをファイルとして保存します。  
 ファイルの名前はほかの書き出しと同じく `<データベース名>-<時刻>` に[言語](#言語)の表の拡張子を付けたもので、例えば `shop-2026-10-12T04_05_06.ts` のようになり、使っているホストでほかの書き出しと同じ場所に保存されます。[書き出し](./file-import-export.md#exporting)を参照してください。`Java` と `JPA` は、タブに表示されているとおり、すべてのクラスを 1 つの `.java` ファイルに入れます。  
 Export メニューには Code Generator の項目はなく、テーブルのプロパティの `Code Generator` タブではファイルを保存できません。
 

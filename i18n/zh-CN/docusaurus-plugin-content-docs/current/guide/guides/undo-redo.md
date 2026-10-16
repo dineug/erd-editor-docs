@@ -1,5 +1,5 @@
 ---
-sidebar_position: 12
+sidebar_position: 13
 description: Undo 与 Redo、历史记录的内容，以及通过 Time Travel 浏览编辑历史。
 ---
 
@@ -16,7 +16,7 @@ description: Undo 与 Redo、历史记录的内容，以及通过 Time Travel �
 
 Undo 与 Redo 仅在 ERD 标签页生效。在 Visualization、Schema SQL、Code Generator 和 Settings 标签页中不可用。在 Schema SQL 标签页的 `Before tables` 和 `After tables` 输入框中，同样的按键会改为对你在输入框中输入的内容执行 Undo 与 Redo。  
 快速搜索、`Table Properties`、`Diff Viewer`、自动布局预览、[`Export image`](./file-import-export.md#image) 对话框、[映射列](./relationship-editing.md#map-columns)或 Time Travel 打开时，快捷键同样不生效。  
-[查找与替换](./find-and-replace.md#keys-in-the-panel)或[选色器](./table-related-functions.md#表与备注的颜色设置)打开时，快捷键仍然有效。即使光标位于它们的某个输入框中，例如查找输入框、替换输入框或 `Hex` 输入框，快捷键 Undo 与 Redo 的对象也是图，而不是输入框中的文本。
+键盘焦点位于[资源管理器](./explorer.md#keys-in-the-explorer)中的任何位置（包括其树）时，以及[选色器](./table-related-functions.md#表与备注的颜色设置)打开时，快捷键仍然有效。即使光标位于它们的某个输入框中，例如查找输入框、替换输入框或 `Hex` 输入框，快捷键 Undo 与 Redo 的对象也是图，而不是输入框中的文本。
 
 历史记录保存在当前会话的内存中。它不会存入文档，因此重新打开图时历史记录为空。
 
@@ -44,6 +44,7 @@ Undo 与 Redo 仅在 ERD 标签页生效。在 Visualization、Schema SQL、Code
 - Settings 标签页中的全部内容，包括 [`Lock`](./settings.md#锁定) 中的各行。
 - 主题与显示语言。参见[语言与主题](./language-and-theme.md)。
 - 哪个表、备注或分组绘制在其他对象的前面。
+- [资源管理器](./explorer.md)：打开、关闭资源管理器或调整其宽度，折叠其树，以及搜索文本与选项。不过，`Replace` 与 `Replace All` 所做的修改会被记录，跳转产生的滚动也会被记录。参见[一次操作一条记录](#一次操作一条记录)。
 - Visualization 标签页中两种模式下的缩放与平移、移动图的节点或 Flow 卡片、`Tidy Up`、行显示，以及聚焦于表。参见 [Flow 从不编辑文档](./visualization.md#flow-never-edits-the-document)。
 
 这些内容的变更无法 Undo。
@@ -63,16 +64,17 @@ Undo 与 Redo 仅在 ERD 标签页生效。在 Visualization、Schema SQL、Code
 在多个选中的列上切换主键算一步，无论是通过 `Alt + K` (Windows/Linux) 或 `⌥ + K` (Mac)，还是通过表的右键菜单中的 `Primary Key on selected columns`。  
 为选中范围设置颜色，或用 `No color` 或 `Remove color` 清除颜色，都只算一步，无论选中了多少表、备注和分组。选择所有选中对象都已具有的颜色不会记录任何一步，在没有任何选中对象带有颜色时使用 `No color` 也是如此。  
 [映射列](./relationship-editing.md#map-columns)中的 `Map` 或 `Save` 算一步，它添加的外键列和修改的数据类型也包含在这一步中。  
-`Import and Add` 算一步，把添加的内容块带入视野的滚动也包含在这一步中。
+`Import and Add` 算一步，如果需要滚动才能把添加的内容块带入视野，该滚动也包含在这一步中。
 
-创建[表分组](./table-groups.md)（无论是绘制分组还是使用 `Group selected tables`）连同其纳入的每个表算一步。删除分组算一步，对其执行 Undo 时，分组会连同其中的表一起恢复。  
+创建[表分组](./table-groups.md)（无论是绘制分组，还是通过 `Group selected tables` 或先按 `T` 再按 `G` 为选中的表分组）连同其纳入的每个表算一步。删除分组算一步，对其执行 Undo 时，分组会连同其中的表一起恢复。  
 拖动分组的标题栏会在一步中移动该分组及其中所有的表。如果在最后一次移动后约 `200ms` 内松开，被拖入或拖出分组的表会在其拖动的同一步中改变所属分组，因此一次 Undo 就能让它们回到原来的位置和原来所在的分组。如果松开前停顿得更久，分组的变化会单独算一步，第一次 Undo 只会撤回这一变化。  
 通过边缘或角调整分组大小时，只在松开时记录一次。  
 应用[自动布局](./table-related-functions.md#auto-layout)算一步，它为贴合各自的表而调整的分组也包含在内。
 
-[查找与替换](./find-and-replace.md#replacing)中的 `Replace All` 同样只算一步，无论它修改了多少表名、注释、列名和备注。没有修改任何内容时，它不会记录任何一步。  
-单次 `Replace` 算一步，跳转到下一个匹配项时如果需要滚动，该滚动也包含在这一步中。  
-跳转到尚未完全显示在面板旁视野中的匹配项时，画布会滚动，该滚动会像其他视图位置变更一样被记录，参见[跳转到匹配项](./find-and-replace.md#going-to-a-match)。在匹配项之间移动之后，Undo 会先撤回这些滚动，每一步撤回一次。
+[查找与替换](./find-and-replace.md#replacing)中的 `Replace All` 同样只算一步，无论它修改了多少表名、列名、索引名、表分组名称、注释和备注。没有修改任何内容时（例如 `Preserve Case` 把每个匹配项都按原样写回时），它不会记录任何一步。  
+单次 `Replace` 算一步，跳转到下一个匹配项时如果需要滚动，该滚动也包含在这一步中。如果它把匹配项按原样写回，则只记录这次滚动；没有滚动时，则不记录任何内容。  
+只有当匹配项没有显示得足够清楚时，跳转到该匹配项才会滚动画布，参见[跳转的落点](./table-related-functions.md#where-a-jump-lands)。该滚动会像其他视图位置变更一样被记录，因此在匹配项之间移动之后，Undo 会先撤回这些滚动，每一步撤回一次。  
+其他落在画布上的跳转也以同样的方式记录其滚动：在资源管理器中选择某一行、选择快速搜索中的结果，或点击 Flow 中的外部链接[卡片按钮](./visualization.md#card-buttons)。让视图保持原位的跳转不会记录任何内容。在 `Diff Viewer` 的列表中选择某一行同样不会记录任何内容，因为它只会移动 Diff Viewer 自身的只读两侧。
 
 连续的拖动、画布平移、缩放、捏合或颜色修改会经过约 `200ms` 的缓冲，同样只记录为一条。  
 总移动距离不足 `20px` 的拖动不会记录任何移动。只有它造成的分组变化（如果有）会被记录。

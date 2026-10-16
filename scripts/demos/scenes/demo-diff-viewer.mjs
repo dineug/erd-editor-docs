@@ -1,24 +1,24 @@
 /**
- * Diff Viewer: the shop document is saved as a .json file, then reworked
- * (a column renamed and one added, a data type changed, reviews dropped and
- * coupons added). The canvas context menu opens Diff Viewer, the saved file
- * is picked, and the view lists the changes beside the saved and the current
- * document. The pointer runs down the changes, then Close ends it.
+ * Diff Viewer: the shop document is saved as a .json file, then reworked in
+ * place, so every entity keeps its id: nickname renamed to display_name, a
+ * phone column added, price widened to DECIMAL(12,2), reviews dropped and
+ * coupons added. The canvas context menu opens Diff Viewer on the saved file,
+ * and the tree lists each change with its letter, A, M, D or R, beside the
+ * saved and the current document marked to match. A click on a row takes each
+ * pane holding it there, Filter by name narrows the tree, and Close ends it.
  */
-import { readSeed, seedSQL } from '../lib/seed.mjs';
-import {
-  closeButtonBox,
-  diffTreeRows,
-  timeline,
-  waitDom,
-  waitMenuItem,
-} from './_misc-helpers.mjs';
+import { readSeed, seedDoc, seedSQL } from '../lib/seed.mjs';
+import { closeButtonBox, timeline, waitDom, waitMenuItem } from './_misc-helpers.mjs';
 
-const WIDTH = 960;
-const HEIGHT = 540;
+// Wider than most clips, so each pane keeps (1040 - 260) / 2 - 1 = 389 px
+// beside the 260 px tree, about what a pane had beside 4.0.0's narrower list.
+const WIDTH = 1040;
+const HEIGHT = 585;
 
 const SAVED_SQL = readSeed('shop.sql');
 
+// Imported here only off camera, to borrow the entities the rework adds; the
+// current document is the saved one edited, so the ids carry over.
 const CURRENT_SQL = `${SAVED_SQL
   .replace(
     "nickname VARCHAR(50) NOT NULL COMMENT 'Display name',",
@@ -42,19 +42,43 @@ CREATE TABLE coupons (
 // that a table fits the left half of a diff pane, clear of its minimap.
 const SHOW = 1 | 4 | 32 | 256;
 
-// One column of tables, so each pane shows the same three side by side:
-// reviews in the saved document and coupons in the current one share a spot.
+// One column of tables, so each pane shows the same ones: reviews in the
+// saved document and coupons in the current one share a spot. members sits
+// in the middle half of a pane, where a jump to it leaves the view alone, and
+// products low, its price below the edge, so going there scrolls both panes.
 const POSITIONS = {
-  members: { x: 30, y: 28 },
-  reviews: { x: 44, y: 236 },
-  coupons: { x: 30, y: 236 },
-  products: { x: 28, y: 468 },
+  members: { x: 30, y: 150 },
+  reviews: { x: 44, y: 360 },
+  coupons: { x: 30, y: 360 },
+  products: { x: 28, y: 640 },
 };
 const pick = (names, positions = POSITIONS) =>
   Object.fromEntries(names.map(name => [name, positions[name]]));
 
-// 76% keeps all three tables inside the pane height.
 const settings = { databaseName: 'shop', show: SHOW, zoomLevel: 0.76 };
+
+const byName = (doc, name) =>
+  doc.doc.tableIds.find(id => doc.collections.tableEntities[id].name === name);
+const columnOf = (doc, tableId, name) =>
+  doc.collections.tableEntities[tableId].columnIds.find(
+    id => doc.collections.tableColumnEntities[id].name === name
+  );
+
+/**
+ * The diff tree's row for a node id: `t:<id>` for a table, `t:prev-<id>` for
+ * one only the saved document has, `c:<id>` for a column, `<row>/f:columns`
+ * for a table's Columns folder. Polled until drawn; the tree is virtualized.
+ */
+async function rowBox(d, nodeId) {
+  const selector = `.diff-viewer-tree [role="treeitem"][id$=":${nodeId}"]`;
+  const box = await waitDom(d, selector);
+  const level = await d.page.evaluate(
+    selector => Number(window.__erdShadowRoot.querySelector(selector).getAttribute('aria-level')),
+    selector
+  );
+  // Past the twisty and the icon, 12 px in per level below the first.
+  return { ...box, name: { x: box.x + 12 * (level - 1) + 56, y: box.y + box.height / 2 } };
+}
 
 export default {
   name: 'demo-diff-viewer',
@@ -76,29 +100,74 @@ export default {
     for (const name of ['reviews', 'products']) {
       positions[name] = { ...POSITIONS[name], x: Math.round(middle - (await width(name)) / 2) };
     }
-    const saved = await seedSQL(d, SAVED_SQL, {
+    await seedSQL(d, SAVED_SQL, {
       only: savedTables,
       tables: pick(savedTables, positions),
       settings,
     });
-    // What the editor's json export would have written.
+    // What the editor's json export writes.
+    const saved = await d.value();
     d.savedJson = JSON.stringify(saved);
 
-    const currentTables = ['members', 'coupons', 'products'];
+    // Borrow what the rework adds from an import of the result. The value
+    // is the storage form, which holds no measured widths: a load measures.
     await seedSQL(d, CURRENT_SQL, {
-      only: currentTables,
-      tables: pick(currentTables, positions),
+      only: ['members', 'coupons'],
+      tables: pick(['members', 'coupons'], positions),
       settings,
     });
-    await d.moveTo(700, 300, 0);
+    const measured = await d.value();
+    const m = measured.collections;
+    const mMembers = byName(measured, 'members');
+    const mColumn = (table, name) => m.tableColumnEntities[columnOf(measured, table, name)];
+
+    const current = structuredClone(saved);
+    const { tableEntities, tableColumnEntities } = current.collections;
+    const members = byName(current, 'members');
+    const products = byName(current, 'products');
+    const reviews = byName(current, 'reviews');
+
+    // R: the same column, renamed.
+    const nickname = tableColumnEntities[columnOf(current, members, 'nickname')];
+    nickname.name = 'display_name';
+
+    // M: the same column, a wider type.
+    const price = tableColumnEntities[columnOf(current, products, 'price')];
+    price.dataType = 'DECIMAL(12,2)';
+
+    // A: a column on members.
+    const phone = structuredClone(mColumn(mMembers, 'phone'));
+    phone.tableId = members;
+    tableColumnEntities[phone.id] = phone;
+    tableEntities[members].columnIds.push(phone.id);
+
+    // D: reviews, with its relationships.
+    current.doc.tableIds = current.doc.tableIds.filter(id => id !== reviews);
+    current.doc.relationshipIds = current.doc.relationshipIds.filter(id => {
+      const { start, end } = current.collections.relationshipEntities[id];
+      return start.tableId !== reviews && end.tableId !== reviews;
+    });
+
+    // A: coupons where reviews stood.
+    const coupons = byName(measured, 'coupons');
+    tableEntities[coupons] = structuredClone(m.tableEntities[coupons]);
+    for (const id of m.tableEntities[coupons].columnIds) {
+      tableColumnEntities[id] = structuredClone(m.tableColumnEntities[id]);
+    }
+    current.doc.tableIds.push(coupons);
+
+    await seedDoc(d, current);
+    d.ids = { members, products, reviews, coupons, nickname: nickname.id, phone: phone.id, price: price.id };
+    await d.moveTo(760, 330, 0);
   },
   async scenario(d) {
     const mark = timeline();
+    const { ids } = d;
     await d.sleep(450);
 
-    // Empty canvas to the right of the diagram, high enough that the menu
-    // stays clear of the floating toolbar.
-    await d.rightClick(640, 64, { duration: 380 });
+    // Empty canvas right of the diagram, high enough that the menu stays
+    // clear of the floating toolbar.
+    await d.rightClick(700, 64, { duration: 380 });
     mark('menu');
     await d.sleep(350);
     const item = await waitMenuItem(d, 'Diff Viewer');
@@ -115,46 +184,58 @@ export default {
       d.click(item.x + 120, itemY, { duration: 0 }),
     ]);
     // The moment spent picking the file, pointer drifting off the menu.
-    await d.moveTo(820, 330, 200);
+    await d.moveTo(880, 330, 200);
     await chooser.setFiles({
       name: 'shop-2026-09-01T18_20_00.erd.json',
       mimeType: 'application/json',
       buffer: Buffer.from(d.savedJson),
     });
-    await waitDom(d, '.diff-viewer-insert');
+    await waitDom(d, '.diff-viewer-tree [role="treeitem"]');
     mark('diff open');
     await d.shot('diff');
-    const rows = await diffTreeRows(d);
-    await d.sleep(1100);
+    // Tables 4: coupons A, members with display_name R and phone A, products
+    // with price M, and reviews D, beside panes marked to match.
+    await d.sleep(1150);
 
-    // Down the list of changes, past the labels so the pointer hides none.
-    const row = (name, after) => {
-      const from = after ? rows.findIndex(r => r.name === after) : 0;
-      const found = rows.slice(from).find(r => r.name === name);
-      if (!found) throw new Error(`diff row not found: ${name}`);
-      return { x: 168, y: found.y + found.height / 2 };
-    };
-    const hover = async (p, duration, pause) => {
-      await d.moveTo(p.x, p.y, duration);
+    // A click takes each pane holding the row to it and selects it there.
+    const click = async (nodeId, duration, pause) => {
+      const { name } = await rowBox(d, nodeId);
+      await d.click(name.x, name.y, { duration });
       await d.sleep(pause);
     };
-    await hover(row('coupons'), 420, 650);
-    mark('coupons');
-    await hover(row('members'), 300, 250);
-    await hover(row('phone', 'members'), 300, 400);
-    mark('phone');
-    await hover(row('price'), 220, 500);
-    await hover(row('reviews'), 200, 700);
+    // members is already in view: both panes select it and stay put.
+    await click(`c:${ids.nickname}`, 520, 750);
+    mark('display_name');
+    await d.shot('display-name');
+    // Both panes scroll down to products: its price was below the edge.
+    await click(`c:${ids.price}`, 360, 900);
+    mark('price');
+    await d.shot('price');
+    // Removed: the saved pane alone goes back up to it.
+    await click(`t:prev-${ids.reviews}`, 300, 900);
     mark('reviews');
-    await d.shot('hover-reviews');
+    await d.shot('reviews');
+    // Added: the current pane alone.
+    await click(`t:${ids.coupons}`, 420, 900);
+    mark('coupons');
+    await d.shot('coupons');
+
+    // Filter by name keeps members and the changes under it.
+    const filter = await waitDom(d, '.diff-tree-filter');
+    await d.click(filter.x + 60, filter.y + filter.height / 2, { duration: 420 });
+    await d.sleep(200);
+    await d.type('mem', 110);
+    mark('filtered');
+    await d.sleep(1000);
+    await d.shot('filtered');
 
     // Close on the notice the view opened with (measured now: it slides in).
     const close = await closeButtonBox(d);
-    await d.click(close.x, close.y, { duration: 420 });
+    await d.click(close.x, close.y, { duration: 520 });
     mark('closed');
     await d.sleep(200);
     await d.moveTo(close.x - 150, close.y - 170, 260);
-    await d.sleep(1150);
+    await d.sleep(1100);
     mark('end');
   },
 };

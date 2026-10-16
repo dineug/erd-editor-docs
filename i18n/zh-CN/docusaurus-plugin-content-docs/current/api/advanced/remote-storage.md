@@ -257,6 +257,10 @@ replicationStore.dispatchSync(actions); // sync
 更早版本的 store 会丢弃这些新操作，因此会丢失[表分组](../../guide/guides/table-groups.md)、[锁定](../../guide/guides/settings.md#锁定)、[Schema SQL](../../guide/guides/schema-sql.md) 脚本，以及[映射列](../../guide/guides/relationship-editing.md#map-columns)为已有关系设置的列。  
 请让副本运行在与编辑器相同或更新的版本上。
 
+`4.1.0` 没有新增任何操作类型，也没有改动 `@dineug/erd-editor/engine.js`，因此 `4.0.0` 副本与 `4.1.0` 副本一样，会保留 `4.1.0` 编辑器发送的每一项变更。  
+从 `4.1.0` 起，[查找与替换](../../guide/guides/find-and-replace.md#replacing)中的 `Replace` 和 `Replace All` 还会重命名索引和表分组，所用的是 `4.0.0` 副本本来就会保留的 `index.changeName` 和 `tableGroup.changeName` 操作。  
+[资源管理器](../../guide/guides/explorer.md)自身的状态从不发送，它造成的标签页切换或滚动，会像其他任何标签页切换或滚动一样到达；参见[协同编辑](./collaborative-editing.md)。
+
 从 `4.0.0` 起，两个方法还会应用 `editor.mergeLWW`，它携带的是另一个编辑器加入会话时，某个编辑器作为回应发送的协同寄存器，因此副本裁定并发编辑结果的方式与编辑器相同。  
 它不会改变 `value` 的任何字节，也不会触发 `change`。  
 `4.0.0` 之前发布的编辑器可能仍会发送的 `settings.changeIgnoreSaveSettings` 会被保留，但不会改变任何内容：它会触发 `change`，且 `changed` 为 `false`。

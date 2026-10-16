@@ -33,6 +33,8 @@ editor.addEventListener('change', () => {
 ```
 
 `<erd-editor>` has no intrinsic size. Give it (or its container) an explicit width and height.
+Since `4.1.0` an open [Explorer](../guide/guides/explorer.md) docks inside the element at the left of the ERD canvas and narrows the canvas rather than covering it. A new editor starts with it closed.
+The panel draws no narrower than `200px` and leaves the canvas at least `320px`, so in an element narrower than `520px` an open Explorer is not drawn until the element widens — see [Beside the Canvas](../guide/guides/explorer.md#beside-the-canvas).
 
 `setInitialValue('')` starts a new, empty document. Assigning `value` loads one as an edit instead, so it lands in the undo history.
 Since `4.0.0` `editor.value` is the document in the form a file holds, which is what to store. `editor.runtimeValue` is the document as the editor holds it, removed entities included: it seeds a collaborator and never goes to a file — see [runtimeValue](./erd-editor-element.md#runtimevalue).
@@ -54,7 +56,7 @@ See [ErdEditorElement](./erd-editor-element.md) for the rest of the API.
 ```
 
 `esm.run` resolves the package's external dependencies for you, so this works without a bundler.
-The unversioned URL always serves the latest release. Pin a version — `https://esm.run/@dineug/erd-editor@4.0.0` — if you do not want a major upgrade to reach your page unannounced.
+The unversioned URL always serves the latest release. Pin a version — `https://esm.run/@dineug/erd-editor@4.1.0` — if you do not want a major upgrade to reach your page unannounced.
 `4.0.0` is itself one: a page that has to stay on 3.x pins `@3.10.0` — see [Upgrading from 3.x](#upgrading-from-3x).
 
 ### Script tag
@@ -64,7 +66,7 @@ It is what the `unpkg` and `jsdelivr` fields point at, so the bare package URL o
 
 ```html
 <erd-editor></erd-editor>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@4.0.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@4.1.0"></script>
 <script>
   const editor = document.querySelector('erd-editor');
   editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
@@ -252,12 +254,12 @@ No polyfills are bundled. Add your own if you need to reach older browsers.
 
 - `editor.value`, a replica's `value` and the `value` its `change` hands over are the storage form a file holds: no removed entities, measured widths, stacking order or relationship anchors. Keep saving `value`, and read those from `runtimeValue`; entity timestamps (`meta`) are gone altogether. Seed a collaborator or a replica that joins a running session from a running peer's `runtimeValue`, not from `value` or the file, and never save `runtimeValue` — see [value](./erd-editor-element.md#value) and [runtimeValue](./erd-editor-element.md#runtimevalue).
 - Setting locks replace `Save Scroll Information` and `Save Zoom Information`. A new document, and any document saved before `4.0.0`, has every lock on, so a scroll, a zoom, a tab switch, or a change of the Code Generator language, a name case or the bracket type leaves `value` as it was and fires no `change`. A page that kept the view through `change` needs `Viewport` (and `Canvas Type` for the tab) unlocked on the Settings tab, or a document whose `settings.lockSettings` leaves those bits clear — see [Lock](../guide/guides/settings.md#lock).
-- `settings` no longer has `width`, `height`, `scrollTop`, `scrollLeft`, `relationshipOptimization` or `ignoreSaveSettings`, and the `SaveSettingType` constants are gone. `settings.lockSettings`, with the `LockSettingType` bits, takes the place of `ignoreSaveSettings`, which `4.0.0` neither reads nor writes — see [Settings](./advanced/schema.md#settings).
-- The [JSON Schema](./advanced/schema.md#json-schema) every file names in `$schema` now describes the storage form alone and is closed: it rejects a file an earlier release saved until a `4.0.0` save rewrites it.
+- `settings` no longer has `width`, `height`, `scrollTop`, `scrollLeft`, `relationshipOptimization` or `ignoreSaveSettings`, and the `SaveSettingType` constants are gone. `settings.lockSettings`, with the `LockSettingType` bits, takes the place of `ignoreSaveSettings`, which `4.0.0` or later neither reads nor writes — see [Settings](./advanced/schema.md#settings).
+- The [JSON Schema](./advanced/schema.md#json-schema) every file names in `$schema` now describes the storage form alone and is closed: it rejects a file an earlier release saved until a save by `4.0.0` or later rewrites it.
 - The document's garbage collection is gone with its worker, so a removed entity stays in `runtimeValue` until the document is next opened from its file. Three shared workers remain — see [Web Workers](#web-workers).
-- Keep every editor and replica in a shared session on `4.0.0`. An earlier release ignores the new action types: those of table groups, Map Columns, the locks and the Schema SQL scripts — see [Mixing Releases](./advanced/collaborative-editing.md#mixing-releases).
+- Keep every editor and replica in a shared session on `4.0.0` or later. An earlier release ignores the new action types: those of table groups, Map Columns, the locks and the Schema SQL scripts — see [Mixing Releases](./advanced/collaborative-editing.md#mixing-releases).
 - The import callback gets `mode: 'append'` for Import and Add, which a callback has to pass on. The export callback now also gets `.svg` and Code Generator files, and `Export` ▸ `Schema SQL` opens the Schema SQL tab instead of saving, so the `.sql` arrives only from that tab's `Save file` — see [File Dialogs](#file-dialogs).
 - `Delete` and `Backspace` are bound to the new `removeSelection`. While the editor has focus outside a text field, the key's default is prevented on every tab, and on the ERD tab the selection is removed. `KeyBindingName` and `KeyBindingMap` gain it, and `setKeyBindingMap({ removeSelection: [] })` leaves both keys to the page — see [setKeyBindingMap](./erd-editor-element.md#setkeybindingmap).
 - `ThemeOptions.appearance` also takes `'system'`, the theme builder's `System`, which turning `systemDarkMode` on sets. `changePresetTheme` reports `'system'` while it is picked, so store it as it is and hand it back to `setPresetTheme`. With `systemDarkMode` on, a `setPresetTheme()` with `'light'` or `'dark'` now stays instead of being overwritten by the next OS change — see [systemDarkMode](./erd-editor-element.md#systemdarkmode) and [changePresetTheme](./erd-editor-element.md#changepresettheme).
-- `@dineug/erd-editor-mcp` `1.0.0`, the VS Code extension `4.0.0` and the Obsidian and JetBrains plugins `1.0.0` speak hub protocol 2. Server `1.0.0` and an earlier editor release that serves agents, or an earlier server and one of these editors, refuse each other with `protocolMismatch`, naming the side to update — see [Updating](../mcp/installation.md#updating).
-- An unversioned CDN URL now serves `4.0.0`. Pin `@3.10.0` to stay on 3.x — see [CDN](#cdn).
+- `@dineug/erd-editor-mcp` `1.0.0`, the VS Code extension `4.0.0` or later and the Obsidian and JetBrains plugins `1.0.0` or later speak hub protocol 2. Server `1.0.0` and an earlier editor release that serves agents, or an earlier server and one of these editors, refuse each other with `protocolMismatch`, naming the side to update — see [Updating](../mcp/installation.md#updating).
+- An unversioned CDN URL now serves the latest 4.x release. Pin `@3.10.0` to stay on 3.x — see [CDN](#cdn).

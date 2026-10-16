@@ -13,7 +13,8 @@ export default {
       tables: {
         members: { x: 30, y: 30 },
         addresses: { x: 340, y: 30 },
-        orders: { x: 40, y: 300 },
+        // Clear of the floating toolbar's left end.
+        orders: { x: 40, y: 280 },
       },
       // Table comment, data type, PK and relationships only: narrower tables
       // keep the moving area, and so the clip, small.

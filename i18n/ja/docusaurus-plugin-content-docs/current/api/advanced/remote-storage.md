@@ -257,6 +257,10 @@ shared store のストリームは、フィルタリングせずにそのまま�
 それより前のリリースの store は新しいアクションを破棄するため、[テーブルグループ](../../guide/guides/table-groups.md)、[ロック](../../guide/guides/settings.md#ロック)、[Schema SQL](../../guide/guides/schema-sql.md) のスクリプト、そして [Map Columns](../../guide/guides/relationship-editing.md#map-columns) が既存のリレーションシップに設定するカラムが失われます。  
 レプリカは、エディタと同じリリースか、それより新しいリリースで実行します。
 
+`4.1.0` は新しい種類のアクションを追加せず、`@dineug/erd-editor/engine.js` もそのままにしているため、`4.0.0` のレプリカも、`4.1.0` のレプリカと同じように、`4.1.0` のエディタが送るすべての変更を残します。  
+`4.1.0` から、[検索と置換](../../guide/guides/find-and-replace.md#replacing)の `Replace` と `Replace All` は、`4.0.0` のレプリカがすでに残している `index.changeName` と `tableGroup.changeName` のアクションで、インデックスとテーブルグループの名前も変更します。  
+[エクスプローラー](../../guide/guides/explorer.md)自体の状態は送信されることがなく、エクスプローラーが行うタブの切り替えやスクロールは、他のタブの切り替えやスクロールと同じように届きます。[共同編集](./collaborative-editing.md)を参照してください。
+
 `4.0.0` からは、両方のメソッドが `editor.mergeLWW` も適用します。これは、別のエディタがセッションに参加したときにエディタが応答として送る共同編集用のレジスタを運ぶアクションで、これによりレプリカはエディタと同じように、同時に行われた編集を調停します。  
 `value` を 1 バイトも変えず、`change` も発行しません。  
 `4.0.0` より前にリリースされたエディタが送ってくることのある `settings.changeIgnoreSaveSettings` は、残されますが何も変えません。`changed` が `false` の `change` を発行します。

@@ -133,7 +133,9 @@ If the diagram already holds the mapping when you press `Map` or `Save`, because
 If it has changed so that the mapping no longer fits, nothing is written and a toast says `Couldn't map columns: the diagram changed`.
 
 `Cancel`, the `x` button, `Escape`, or a click on the dimmed area outside the dialog closes it without writing anything.  
-Opening Find and Replace or Quick Search closes it too, and so does leaving the ERD tab or the editor turning read-only.  
+The dimmed area covers the whole editor, the toolbar included, and an open [Explorer](./explorer.md#dialogs-beside-it) stays open under it.  
+Opening Quick Search closes the dialog too, and so does leaving the ERD tab or the editor turning read-only.  
+`Ctrl + F` (Windows/Linux) or `⌘ + F` (Mac) closes it as well and puts the caret in the Find field of the Explorer's [search](./find-and-replace.md#opening-and-closing), opening the Explorer if it is closed. In an editor too narrow to show the Explorer, it still closes the dialog but shows a toast instead of moving the caret — see [Opening and Closing](./explorer.md#opening-and-closing).  
 If one of its tables or the relationship is removed while it is open, it closes with a toast such as `Map Columns closed: the relationship was removed`.  
 While it is open, the canvas shortcuts, undo and redo, and copy and paste do nothing.
 
@@ -211,10 +213,16 @@ It shows the action stored on the relationship whatever the selected database wr
 Hovering a connector that sets either action also shows a tooltip spelling the clauses out, one per line, such as `ON DELETE CASCADE` and `ON UPDATE RESTRICT`.  
 The tooltip appears even while the label is hidden.
 
+Going to a relationship lights it: choosing a row under a table's `Foreign Keys` folder in the [Explorer](./explorer.md#going-to-a-row), or a foreign key row in the [Diff Viewer](./table-related-functions.md#going-to-a-change), draws its connector and its label in the hover color. In the Diff Viewer it lights the connector on each side that holds the relationship, so an added foreign key lights the current side only and a removed one the saved side only.  
+The jump selects the child table alone with its foreign key columns, the focused cell on the first of them; the relationship itself is still never selected. For where the view goes, see [Where a Jump Lands](./table-related-functions.md#where-a-jump-lands).  
+The light goes out at the next left or right press on the canvas, whether on an empty spot, a table, a memo, a table group, or a connector, even a press that leaves the selection as it was. Going to another row or search match in the Explorer puts it out too, and so does going to another row in the Diff Viewer, on each side that row goes to.  
+Panning with the middle button or the hand tool leaves it lit, and so do folding or unfolding a row in the Explorer or the Diff Viewer, clearing the selection with `Escape`, and a jump from [Quick Search](./quick-search.md) or Flow's external-link [card button](./visualization.md#card-buttons).  
+The light is not saved and is not in the undo history, and collaborators do not see it.
+
 Hide connectors on the ERD canvas with the `Relationship` view option, or only their labels with the `Referential Actions` view option, which is on by default — see [Table View Options](./table-related-functions.md#table-view-options).  
 Labels are not drawn at `70%` and below, where tables collapse to their name.  
 An [image export](./file-import-export.md#image) is always drawn at 100%, so it draws the labels whatever the canvas zoom, unless a view option hides them. With `Background` off, the box behind each label is transparent too.  
-[Flow mode](./visualization.md#flow-mode) on the Visualization tab draws connectors even with `Relationship` off, each as one smooth solid gray curve with the same end marks, so the dashed line, the labels, the tooltip, and the orthogonal routing described on this page apply to the ERD canvas only. A relationship from a table to itself curves round the top-right corner in Flow too — see [Connector Routing](#connector-routing).
+[Flow mode](./visualization.md#flow-mode) on the Visualization tab draws connectors even with `Relationship` off, each as one smooth solid gray curve with the same end marks, so the dashed line, the labels, the tooltip, the light after a jump, and the orthogonal routing described on this page apply to the ERD canvas only. A relationship from a table to itself curves round the top-right corner in Flow too — see [Connector Routing](#connector-routing).
 
 ## Connector Routing
 

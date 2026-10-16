@@ -1,6 +1,6 @@
 ---
 sidebar_position: 5
-description: 把相关的表归入位于它们后面、带有名称和颜色的框中；创建、命名、着色、移动、调整大小和删除分组，更改分组容纳的表，隐藏分组，并在自动布局、Schema SQL 和 DBML 中保留分组。
+description: 把相关的表归入位于它们后面、带有名称和颜色的框中；创建、命名、着色、移动、调整大小和删除分组，从资源管理器跳转到分组，更改分组容纳的表，隐藏分组，并在自动布局、Schema SQL 和 DBML 中保留分组。
 ---
 
 # 表分组
@@ -13,37 +13,41 @@ description: 把相关的表归入位于它们后面、带有名称和颜色的�
 
 分组绘制在画布上其他所有内容的后面，包括表、备注和关系连接线。  
 分组相互重叠时，最后按下或最后添加的分组绘制在前面，并且任何分组的主体都不会遮住其他分组的标题栏。该顺序不会被保存，因此重新打开的图会按分组添加的顺序堆叠它们。  
-分组显示在 ERD 画布、小地图和导出的图片中。[Visualization](./visualization.md) 标签页在两种模式下都不绘制分组，也不显示分组颜色。
+分组显示在 ERD 画布、小地图和导出的图片中，[资源管理器](./explorer.md)也会列出它们，参见[跳转到分组](#going-to-a-group)。[Visualization](./visualization.md) 标签页在两种模式下都不绘制分组，也不显示分组颜色。
 
 编码智能体同样可以创建和修改分组，并读取所选分组的 DDL，参见 MCP 工具中的[表分组](../../mcp/tools.md#表分组)。
 
-![用 New Table Group 在 orders 和 payments 上绘制分组，将其命名为 Billing，把 order_items 放入其中，然后移动分组并调整其大小](/img/demo-table-group.webp)
+![用 ⌥ + G 进入分组绘制状态，在 orders 和 payments 上绘制分组，将其命名为 Billing，把 order_items 放入其中，然后移动分组并调整其大小](/img/demo-table-group.webp)
 
 ## 创建分组 {#creating-a-group}
 
-创建分组有两种方式。两者都没有快捷键，也没有画布工具栏按钮；在只读编辑器中，以及分组被[隐藏](#hiding-groups)期间，两者都不会提供。
+创建分组有两种方式，每种都有快捷键。在只读编辑器中，以及分组被[隐藏](#hiding-groups)期间，两者都不会提供，其快捷键也不起作用。  
+与其他画布快捷键一样，它们仅在 ERD 标签页生效，并且在编辑单元格、备注或分组名称期间会暂停生效，参见[快捷键](./settings.md#快捷键)。
 
 ### 绘制分组 {#drawing-a-group}
 
-在画布右键菜单中选择 `New Table Group`（它位于 `New Table` 和 `New Memo` 之后），或在 ERD 标签页的[快速搜索](./quick-search.md)中选择它，然后在画布上拖出一个框。  
-进入绘制状态后，光标会变为十字形，无论在哪里按下都会从该处开始画框，即使按在表上也是如此，而不会选中或移动下方的对象。此时画布工具栏中的抓手和指针都不会显示为选中状态。
+点击[画布工具栏](./table-related-functions.md#canvas-toolbar)上的 `New Table Group` 按钮，按 `Alt + G` (Windows/Linux) 或 `⌥ + G` (Mac)，或者在画布右键菜单中选择 `New Table Group`（它位于 `New Table` 和 `New Memo` 之后），或在 ERD 标签页的[快速搜索](./quick-search.md)中选择它，然后在画布上拖出一个框。  
+按钮和快捷键用于开关绘制状态，因此在绘制状态下按下其中任意一个都会结束绘制，无论绘制是如何开始的；右键菜单中的条目和快速搜索只能开始绘制。开始绘制会关闭抓手工具，并取消正在绘制的关系。  
+进入绘制状态后，光标会变为十字形，无论在哪里按下都会从该处开始画框，即使按在表上也是如此，而不会选中或移动下方的对象。此时画布工具栏会将其 `New Table Group` 按钮显示为选中状态，抓手和指针则都不会显示为选中状态。
 
 松开后会在该框中添加一个分组，无论拖动距离多短，分组都不会小于宽 `160px`、高 `100px`（含标题栏）。只点击而不拖动时，会添加一个宽 `480px`、高 `320px` 的分组，其左上角位于点击处。  
 中心位于新框内、且不属于任何分组的每个表都会加入该分组。已经属于其他分组的表则保留在原分组中。
 
 鼠标中键仍然可以平移画布，并且不会结束绘制状态。以下操作会结束绘制而不添加分组：
 
-- 在按下之前或拖动过程中按 `Escape`。在按下之前按时，选中状态保持不变；开始画框的那次按下已经清除了选中状态。
+- 在按下之前或拖动过程中按 `Escape`、`Alt + G` (Windows/Linux) 或 `⌥ + G` (Mac)。在按下之前按时，选中状态保持不变；开始画框的那次按下已经清除了选中状态。
 - 右键点击，这会清除选中状态，并且不会打开右键菜单。
-- 用 `Space` 或画布工具栏切换到抓手工具、点击工具栏中的指针，或者开始绘制关系。
+- 用 `Space` 或画布工具栏切换到抓手工具、点击工具栏中的指针或其 `New Table Group` 按钮，或者开始绘制关系。
 - 切换到其他标签页、隐藏分组，或者编辑器变为只读。
 
 ### 为选中的表分组 {#grouping-selected-tables}
 
-选中一个或多个表，然后在表的右键菜单中选择 `Group selected tables`，或在快速搜索中选择 `Group Selected Tables`（选中了表时才会列出）。  
+选中一个或多个表，然后先按 `T` 再按 `G`，或者在表的右键菜单中选择 `Group selected tables`，或在快速搜索中选择 `Group Selected Tables`（选中了表时才会列出）。  
 新分组会围绕选中的表绘制，四周各留出 `24px` 的空间，上方留出标题栏。每个选中的表都会加入新分组并离开原来所在的分组，而被离开的分组仍会保留，即使它已经变空。选中范围中的备注会被忽略。
 
-![用 Group selected tables 将 categories 和 products 编为分组，将分组命名为 Catalog，再从分组菜单中将其着色为紫色，两个表头都随之显示该颜色](/img/demo-table-group-selected.webp)
+先按 `T` 再按 `G` 是不带修饰键的两次按键，`G` 须在 `T` 之后一秒内按下。没有选中任何表时它不起作用；在文本框（例如资源管理器的查找输入框）中，它会输入这两个字母。
+
+![先按 T 再按 G，将 categories 和 products 编为分组，将分组命名为 Catalog，再从分组菜单中将其着色为紫色，两个表头都随之显示该颜色](/img/demo-table-group-selected.webp)
 
 无论使用哪种方式，新分组都没有名称和颜色。它会被单独选中，其名称编辑器会在标题栏上打开，以便你立即输入名称，参见[为分组命名](#naming-a-group)。  
 添加分组及其纳入的表算一步 Undo，输入的名称则另算一步。
@@ -53,9 +57,9 @@ description: 把相关的表归入位于它们后面、带有名称和颜色的�
 分组的名称在其标题栏上打开的输入框中编辑。创建分组后输入框会自动打开；双击标题栏，或在分组的右键菜单中选择 `Rename`，也会将其打开。  
 按 `Enter` 或点击其他位置即可保存名称。`Escape` 会关闭输入框而不更改名称，并让该分组保持选中状态，再按一次 `Escape` 则会清除选中状态。  
 更改名称算一步 Undo；名称未改变就保存时不会记录任何内容。名称为空或只有空白时显示为 `unnamed`。  
-输入框打开期间，画布快捷键会暂停生效，快速搜索和查找与替换的快捷键也不会打开任何内容，与编辑表的单元格时相同。
+输入框打开期间，画布快捷键会暂停生效，快速搜索和 `Toggle Explorer` 的快捷键也不起作用，与编辑表的单元格时相同。
 
-[快速搜索](./quick-search.md#searching-the-diagram)和[查找与替换](./find-and-replace.md#what-it-searches)都不会搜索分组名称。
+分组显示期间，[查找与替换](./find-and-replace.md#what-it-searches)会在 `Table group names` 下搜索分组名称，其 `Replace` 和 `Replace All` 也会重命名分组，参见[替换](./find-and-replace.md#replacing)。[快速搜索](./quick-search.md#searching-the-diagram)不会搜索分组名称。
 
 ## 为分组着色 {#coloring-a-group}
 
@@ -84,6 +88,15 @@ description: 把相关的表归入位于它们后面、带有名称和颜色的�
 在复制或[聚焦于表](./table-related-functions.md#focusing-on-tables)等只作用于表的命令之前使用它，因为这些命令会忽略选中的分组。
 
 选中的分组的轮廓会变为选中颜色。在[协同编辑的会话](../../api/advanced/collaborative-editing.md)中，其他参与者选中的分组会以该参与者的颜色围出轮廓。
+
+## 跳转到分组 {#going-to-a-group}
+
+[资源管理器](./explorer.md#the-tree)会在其 `Table Groups` 文件夹中按名称列出各个分组，每个分组下方列出其中的表。快速搜索不会列出任何分组。
+
+在资源管理器中选择分组行、选择[查找与替换](./find-and-replace.md#going-to-a-match)中位于分组名称内的匹配项，或在 [Diff Viewer](./table-related-functions.md#the-change-tree) 的列表中选择分组行，都会跳转到该分组。  
+这会把该分组的框带入视野，框高于画布时则以其标题栏为准，参见[跳转的落点](./table-related-functions.md#where-a-jump-lands)。随后会单独选中该分组，并把它连同其中的表一起移到最前面，与按下其标题栏时相同。  
+分组被[隐藏](#hiding-groups)期间，或者该分组已被删除后，跳转到它不会产生任何效果。  
+在 Diff Viewer 中，每一侧只有在其自身的文档包含并显示该分组时才会跳转到它，参见[跳转到变更](./table-related-functions.md#going-to-a-change)。
 
 ## 移动分组与调整分组大小 {#moving-and-resizing-a-group}
 
@@ -137,7 +150,8 @@ description: 把相关的表归入位于它们后面、带有名称和颜色的�
 - `Remove color`：有选中的对象带有颜色时显示。
 - `Delete`，该分组是多个选中对象之一时显示为 `Delete selected`，右侧会显示 `Delete` 键，参见[删除分组](#removing-a-group)。
 
-表的右键菜单会在 `Color` 和 `Remove color` 之后、删除条目之前加入 `Group selected tables` 和 `Remove from group`，画布右键菜单则会加入 `New Table Group`。
+表的右键菜单会在 `Color` 和 `Remove color` 之后、删除条目之前加入 `Group selected tables` 和 `Remove from group`，画布右键菜单则会加入 `New Table Group`。  
+`Group selected tables` 会在右侧显示其按键，即先按 `T` 再按 `G`，`New Table Group` 则显示 `Alt + G` (Windows/Linux) 或 `⌥ + G` (Mac)。
 
 ## 隐藏分组 {#hiding-groups}
 
@@ -147,8 +161,10 @@ description: 把相关的表归入位于它们后面、带有名称和颜色的�
 
 分组隐藏期间：
 
-- 菜单中不再提供 `New Table Group` 和 `Group selected tables`，快速搜索中也不再提供 `New Table Group` 和 `Group Selected Tables`。`Remove from group` 仍会提供。
+- 菜单中不再提供 `New Table Group` 和 `Group selected tables`，快速搜索中也不再提供 `New Table Group` 和 `Group Selected Tables`，画布工具栏也不再显示其 `New Table Group` 按钮。`Remove from group` 仍会提供。
+- `Alt + G` (Windows/Linux) 或 `⌥ + G` (Mac) 以及先按 `T` 再按 `G` 都不起作用。
 - 拖动表不会改变任何分组，选择框也不会选中任何分组。
+- 资源管理器不再显示其 `Table Groups` 文件夹，查找与替换也不会查找或替换分组名称，即使开启了 `Table group names` 也是如此。
 - [自动布局](#auto-layout)仍会让每个分组中的表聚在一起，Schema SQL 标签页仍会提供[可供选择的分组](#schema-sql-by-group)，DBML 仍会写出分组，[Import and Add](./file-import-export.md#import-and-add) 添加的内容仍会落在这些隐藏的框下方。
 
 与其他 View Option 开关一样，该选择会保存在文档中，并记录到 [Undo 历史记录](./undo-redo.md#what-the-history-records)中。
@@ -181,10 +197,11 @@ DBML 导入同样会让每个分组围住其中的表，无论这些表被放在
 
 ## 只读编辑器 {#read-only-editors}
 
-在 [`readonly`](../../api/erd-editor-element.md#readonly) 编辑器中，分组照常绘制，也可以被选中，但无法修改：
+在 [`readonly`](../../api/erd-editor-element.md#readonly) 编辑器中，分组照常绘制，也照常在资源管理器中列出，可以被选中，也可以跳转到它们，但无法修改：
 
 - 在标题栏上按下会选中分组，但不会移动任何内容。没有调整大小的手柄，也没有 `x`。
 - 双击标题栏不会打开名称编辑器，分组菜单中只有 `Select tables`。
 - 画布菜单中没有 `New Table Group`，表的菜单中没有 `Group selected tables` 和 `Remove from group`，快速搜索也不会列出这两个分组命令。编辑器变为只读时，正在进行的 `New Table Group` 绘制会结束。
+- [画布工具栏](./table-related-functions.md#canvas-toolbar)不显示任何添加按钮，包括 `New Table Group`，`Alt + G` (Windows/Linux) 或 `⌥ + G` (Mac) 以及先按 `T` 再按 `G` 也都不起作用。
 - 与所有 View Option 一样，`Table Groups` 显示选项不起作用。
 - Schema SQL 标签页的 `Tables` 选择仍然有效。

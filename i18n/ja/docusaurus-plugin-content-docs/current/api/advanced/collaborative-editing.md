@@ -45,7 +45,9 @@ const sharedStore = editor.getSharedStore();
 エディタで行う操作の中には、そのエディタだけにとどまるものがあります。  
 選択したときのようにテーブル、メモ、テーブルグループを前面に移しても、それは送信されません。  
 [Schema SQL](../../guide/guides/schema-sql.md) タブの `Statements`、`Header`、`Tables` の選択も、それを選んだウィンドウに属するため、送信されません。  
-スクロール、拡大・縮小、タブの切り替えは送信されますが、他のユーザーのビューやタブを動かすことはありません。
+`4.1.0` からは、[エクスプローラー](../../guide/guides/explorer.md)もそのエディタだけにとどまります。開いているかどうか、幅、折りたたんだ行、キーボードの行、ツリーのスクロールの位置、検索とオプションは送信されません。  
+外部キーへ移動したときにそのリレーションシップのコネクタに付く[強調表示](../../guide/guides/relationship-editing.md#reading-a-connector)も送信されません。  
+スクロール、拡大・縮小、タブの切り替えは送信されますが、他のユーザーのビューやタブを動かすことはありません。エクスプローラーからの移動で行われるスクロールや、別のタブからエクスプローラーを開いたときの ERD タブへの切り替えも同じです。
 
 [ロック](../../guide/guides/settings.md#ロック)は共有されます。設定ごとに最後に行われたロックまたはロックの解除がすべてのエディタで有効になり、ロックはそれをオンにしたエディタの値を運ぶため、すべてのエディタとレプリカが同じ値を保存します。  
 そのため、`Viewport` のロックはそれをオンにしたエディタのビューを保存し、`Canvas Type` のロックは、ロックをオンにする設定タブを開く前にそのエディタが最後に開いていたタブを保存します。  
@@ -55,7 +57,7 @@ const sharedStore = editor.getSharedStore();
 
 Visualization タブの [Flow モード](../../guide/guides/visualization.md#flow-never-edits-the-document)で行う操作はどれもドキュメントの変更ではないため、Flow を表示しているエディタは他のエディタに変更を送らず、その間も他のエディタから送られてくる変更は引き続き適用されます。  
 唯一の例外は Flow から別のタブへ移ることで、そのタブの切り替えは他の変更と同じように送信されます。  
-カードの外部リンクボタン、`#`、`@`、`:` の後に選んだ[クイック検索](../../guide/guides/quick-search.md#searching-the-diagram)の結果、[検索と置換](../../guide/guides/find-and-replace.md#opening-and-closing)を開く操作は、どれも Flow から ERD タブへ移ります。カードのボタンやクイック検索の結果がそこで行うスクロールも送信されます。
+カードの外部リンクボタン、`#`、`@`、`:` の後に選んだ[クイック検索](../../guide/guides/quick-search.md#searching-the-diagram)の結果、[エクスプローラー](../../guide/guides/explorer.md#opening-and-closing)を開く操作は、どれも Flow から ERD タブへ移ります。カードのボタンやクイック検索の結果がそこで行うスクロールも送信されます。
 
 ## 1 つのページに 2 つのエディタ
 
@@ -128,6 +130,9 @@ VS Code、Obsidian、JetBrains IDE、Web アプリのエディタは、開いて
 Map Columns の `Save` の後もリレーションシップの古いカラムを保持し、その古い対応付けのカラムがそのエディタで削除されると、リレーションシップはすべてのエディタから消えます。ロックもスクリプトもありません。  
 そのようなエディタで保存したドキュメントにはこれらのどれも含まれず、`4.0.0` のエディタはそのドキュメントをすべてのロックがオンの状態で開きます。  
 セッション内のすべてのエディタと、そのドキュメントを保存する [replicationStore](./remote-storage.md#dispatch-dispatchsync) には、`4.0.0` 以降を使います。
+
+`4.1.0` のエディタは新しい種類のアクションを送らないため、`4.0.0` と `4.1.0` のエディタとレプリカは、何も取りこぼすことなく 1 つのセッションを共有できます。  
+そのエディタの[検索と置換](../../guide/guides/find-and-replace.md#replacing)はインデックス名とテーブルグループ名も検索し、`Replace` と `Replace All` は、`4.0.0` のエディタがすでに適用している `index.changeName` と `tableGroup.changeName` のアクションでそれらの名前を変更します。
 
 ## SharedStoreConfig
 

@@ -68,14 +68,18 @@ interface ErdEditorElement extends HTMLElement {
 
 属性は `readonly`、`system-dark-mode`、`enable-theme-builder`、`enable-locale-picker`、`enable-welcome-screen` の 5 つだけで、いずれも既定値は `false` です。最後の 2 つは `4.0.0` で追加されました。どの属性も、[readonly](#readonly) で説明するとおりに値を読み取ります。
 
+`4.1.0` からは、ERD タブに[エクスプローラー](../guide/guides/explorer.md)があります。キャンバスの左にドッキングされたダイアグラムのツリーで、上部に検索と置換があります。エクスプローラーを開いたり、閉じたり、その状態を知らせたりする属性、プロパティ、メソッド、イベントはありません。エクスプローラーは、ツールバーの `Explorer` ボタン、クイック検索またはキャンバスのコンテキストメニューの `Toggle Explorer`、または [`findReplace`](#setkeybindingmap) のバインディングで開きます。  
+どの要素でも、エクスプローラーは閉じた状態で始まります。開いているかどうか、幅、折りたたみの状態、検索は、要素が存在する間、タブを切り替えても、`setInitialValue` を含むどの読み込みを行っても保たれ、`value`、`runtimeValue`、Undo の履歴、shared store のいずれにも含まれません。
+
 ## readonly
 
 エディタの編集可否を設定します。  
 設定されている間は、`value` への代入、`clear()`、`setSchemaSQL()`、`setSchemaGraphQL()`、`setSchemaDBML()`、`setSchemaAML()`、`setSchemaJSON()`、undo、redo がすべて無視され、`change` イベントも発行されません。ドキュメントの読み込みには [setInitialValue](#setinitialvalue) を使用します。  
 表示は引き続き動作します。拡大・縮小、表示位置の移動、ハンドツール、Zen モード、キャンバスのタブ、テーブルへのフォーカスを含む [Visualization](../guide/guides/visualization.md) タブの両方のモード、データベースベンダー、SQL とコード生成の出力設定はそのまま適用されるため、読み取り専用のビューアーでも別のベンダー向けの SQL を書き出したり、生成されたコードを読んだりできます。  
-`3.10.0` からは[検索と置換](../guide/guides/find-and-replace.md#read-only-editors)も開きます。ヘッダーに `Find` と表示され、置換フィールドとそのボタンのない、検索専用のパネルです。一致箇所へ移動すると、引き続きその一致箇所が表示され、選択されます。  
+`4.1.0` からは[エクスプローラー](../guide/guides/explorer.md#read-only-editors)も開き、その行を選ぶと、編集できるエディタと同じように、その行が表す対象へ移動します。上部の[検索と置換](../guide/guides/find-and-replace.md#read-only-editors)は検索だけを行い、`Toggle Replace` の矢印も Replace の行もありません。一致箇所へ移動すると、引き続きその一致箇所が表示され、選択されます。パネルのタイトルは `Explorer` で、ツールバーのボタンのツールチップは、どのエディタでも `Explorer (Ctrl + F)` (Windows/Linux) または `Explorer (⌘ + F)` (Mac) です。`3.10.0` から `4.0.0` までは、検索と置換は、ヘッダーに `Find` と表示される検索専用のフローティングパネルとして開きました。  
 テーブルのプロパティも引き続き開きます。`3.10.0` からは、タイトルの横に `Read only` のバッジが表示され、`Indexes` タブでは何も編集できません。[テーブルのプロパティ](../guide/guides/table-related-functions.md#table-properties)を参照してください。  
 `4.0.0` からは、読み取り専用のエディタには [`Import and Add`](../guide/guides/file-import-export.md#import-and-add)、`New Table Group`、`Group selected tables`、`Remove from group`（[テーブルグループ](../guide/guides/table-groups.md#読み取り専用のエディタ)を参照してください）、[`Map Columns`](../guide/guides/relationship-editing.md#map-columns) がなく、[ウェルカム画面](#enablewelcomescreen)も表示されません。設定タブのロックのボタンを押しても何も変わらず、Schema SQL タブの `Before tables` と `After tables` のスクリプトは編集できません。  
+`4.1.0` からは、[キャンバスツールバー](../guide/guides/table-related-functions.md#canvas-toolbar)にも `New Table`、`New Memo`、`New Table Group` のボタンが表示されず、`addTableGroup` と `groupSelectedTables` のバインディングは何もしません。  
 Schema SQL タブの `This window only` の選択、つまり `Statements`、`Header`、`Tables` は保存されることがなく、引き続き適用されます。[`Export image`](../guide/guides/file-import-export.md#画像) ダイアログ、テーマビルダー、Display Language のピッカーも同様です。テーマビルダーや Display Language のピッカーで選ぶと、引き続き [changePresetTheme](#changepresettheme) または [changeLocale](#changelocale) が発行されます。  
 属性名のみの指定、`=""`、`="true"` はいずれも `true` として扱われます。`="false"` は `false` として扱われ、HTML の慣用表現である `readonly="readonly"` を含むその他の文字列も同様です。
 
@@ -244,7 +248,7 @@ editor.addEventListener('change', () => {
 UI での編集、`value` への代入、`clear()`、`setSchema*` の各メソッド、`4.0.0` からは `setSchemaJSON()` と `Import and Add` など、ドキュメントのあらゆる変更で発行されます。`setInitialValue` では発行されません。  
 Visualization タブの Flow モード内の操作、つまり拡大・縮小、表示位置の移動、カードの移動、`Tidy Up`、行の表示の変更、カードからの表示の絞り込みは、どれもドキュメントの変更ではないため発行されません。  
 `4.0.0` からは、[ロック](../guide/guides/settings.md#ロック)がオンの設定の変更も、画面を動かすだけで `value` を変えることはないため、発行されません。`Viewport` がロックされている間の ERD キャンバスのスクロールや拡大・縮小、`Canvas Type` がロックされている間のタブの切り替え、それぞれのロックがオンの間の Code Generator の言語、テーブル名のケース、カラム名のケース、括弧の種類の変更がこれにあたります。除外されるのはこれらの変更だけのため、ドキュメントの編集も含むバッチでは引き続き発行されます。設定をロックしたりロックを解除したりすると発行されます。  
-新しいドキュメントと `4.0.0` より前に保存したすべてのファイルではすべてのロックがオンのため、既定ではスクロール、拡大・縮小、タブの切り替えでは何も発行されません。ERD タブからテーブルにフォーカスする操作、Flow から ERD タブへ戻るカードの外部リンクボタン、別のタブから検索と置換を開く操作やクイック検索の結果へ移動する操作も同様です。これらがそれぞれ `change` を 1 回発行するのは、対象となるロックがオフの間だけです。タブの切り替えには `Canvas Type`、カードのボタンやクイック検索の結果があわせて行うスクロールには `Viewport` が対象になります。`4.0.0` より前は、スクロール、拡大・縮小、タブの切り替えでは、`editor.value` が変わらない場合でも常に発行されていました。  
+新しいドキュメントと `4.0.0` より前に保存したすべてのファイルではすべてのロックがオンのため、既定ではスクロール、拡大・縮小、タブの切り替えでは何も発行されません。ERD タブからテーブルにフォーカスする操作、Flow から ERD タブへ戻るカードの外部リンクボタン、エクスプローラーの行や検索の一致箇所への移動、別のタブからエクスプローラーを開く操作やクイック検索の結果へ移動する操作も同様です。これらがそれぞれ `change` を 1 回発行するのは、対象となるロックがオフの間だけです。タブの切り替えには `Canvas Type`、カードのボタン、クイック検索の結果、エクスプローラーの行、検索の一致箇所があわせて行うスクロールには `Viewport` が対象になります。`4.1.0` からは、これらのスクロールはすべて 1 つの規則、[移動先の表示位置](../guide/guides/table-related-functions.md#where-a-jump-lands)に従うため、クイック検索のテーブルの結果で毎回スクロールすることはなくなり、規則によって表示位置が動かない移動ではスクロールが起きないため、発行するものもありません。エクスプローラーを開いたり、閉じたり、サイズを変えたりすると、キャンバスの幅は狭まったり広がったりしますが、その原点は動かないため、これも何も発行しません。`4.0.0` より前は、スクロール、拡大・縮小、タブの切り替えでは、`editor.value` が変わらない場合でも常に発行されていました。  
 何も変えない書き込みを省くには、読み込んだファイルではなく、最後に保存した値と `editor.value` を比較します。以前のリリースが書き出したファイル、v2 のファイル、手で編集したファイルは、`value` がファイルが保持する形式で書き出すため、読み込んだ時点で `value` が異なることがあります。`Viewport` のロックがオフで、その原点ではこの画面にダイアグラムが何も描かれないファイルも同様です。読み込みによって表示がダイアグラムの上に移動し、`value` は移動した先を書き出すためです。`4.0.0` からは、`value` が計測した幅を持たないため、計測した幅がこの原因になることはなくなりました。ファイルを書き出すホストは、代わりにレプリケーション用の store の `changed` で、編集と表示の変更を区別することもできます。[on@change](./advanced/remote-storage.md#onchange) を参照してください。  
 イベントは `detail` を持たず、バブリングもシャドウ境界の通過もしないため、要素自身で購読し、ハンドラー内で `editor.value` を読み取ります。
 
@@ -319,10 +323,11 @@ editor.destroy();
 
 キーボードショートカットを再定義します。  
 `edit`、`stop`、`undo`、`redo`、`zoomIn`、`zoomOut`、`zoomReset` は固定で、再定義できません。  
-書き込めるのは次の 19 個の名前だけで、固定の名前を含め、オブジェクト内のそれ以外の値は無視されます。  
-`3.10.0` から `search` を再定義できるようになり、`findReplace` が追加されました。以前は `search` は固定でした。`4.0.0` から `removeSelection` が追加されました。  
+書き込めるのは次の 21 個の名前だけで、固定の名前を含め、オブジェクト内のそれ以外の値は無視されます。  
+`3.10.0` から `search` を再定義できるようになり、`findReplace` が追加されました。以前は `search` は固定でした。`4.0.0` から `removeSelection` が追加されました。`4.1.0` から `addTableGroup` と `groupSelectedTables` が追加されました。  
 バインディングの値は `ShortcutOption[]` である必要があります。文字列だけの指定は無視されるため、`{ addTable: 'Alt+KeyN' }` ではなく `{ addTable: [{ shortcut: 'Alt+KeyN' }] }` と記述します。  
-空の配列も受け付けられ、何も割り当てません。`setKeyBindingMap({ findReplace: [] })` は `Ctrl + F` (Windows/Linux) または `⌘ + F` (Mac) をページに任せ、`{ search: [] }` は `Ctrl + K` (Windows/Linux) または `⌘ + K` (Mac) を同じようにページに任せます。ツールバーの `Search` ボタンからは引き続きクイック検索を開け、検索と置換もツールバーのボタン、クイック検索の行、キャンバスのコンテキストメニューから引き続き開けます。空にした名前のショートカットは、これらのどこにも表示されません。`{ removeSelection: [] }` は `Delete` と `Backspace` をページに任せ、このときテーブル、メモ、テーブルグループのメニューの削除の項目（`Delete`、`Delete selected`、`Delete column`、`Delete columns`）にはショートカットが表示されません。  
+空の配列も受け付けられ、何も割り当てません。`setKeyBindingMap({ findReplace: [] })` は `Ctrl + F` (Windows/Linux) または `⌘ + F` (Mac) をページに任せ、`{ search: [] }` は `Ctrl + K` (Windows/Linux) または `⌘ + K` (Mac) を同じようにページに任せます。ツールバーの `Search` ボタンからは引き続きクイック検索を開け、ツールバーの `Explorer` ボタンでは引き続きエクスプローラーを開閉でき、クイック検索とキャンバスのコンテキストメニューの `Toggle Explorer` では引き続きエクスプローラーを検索の状態で開くか、閉じることができます。空にした名前のショートカットは、これらのどこにも表示されません。`{ removeSelection: [] }` は `Delete` と `Backspace` をページに任せ、このときテーブル、メモ、テーブルグループのメニューの削除の項目（`Delete`、`Delete selected`、`Delete column`、`Delete columns`）にはショートカットが表示されません。  
+`4.1.0` からは、`{ addTableGroup: [] }` は `Alt + G` (Windows/Linux) または `⌥ + G` (Mac) を、`{ groupSelectedTables: [] }` は `T` に続けて `G` をページに任せます。キャンバスツールバー、キャンバスのコンテキストメニュー、クイック検索の `New Table Group`、テーブルのメニューの `Group selected tables`、クイック検索の `Group Selected Tables` は引き続き動作し、ショートカットは表示されません。キャンバスツールバーの `New Table`、`New Memo`、`New Table Group` のボタンのツールチップには、`addTable`、`addMemo`、`addTableGroup` の最初のキーの組み合わせが表示され、空にしたバインディングについてはボタンの名前だけが表示されます。  
 呼び出しは部分的なマージです。指定しなかった名前は既定値のまま維持され、2 回呼び出しても以前の変更は保持されます。現在のバインディングを取得する getter はありません。[createKeyBindingMap](#createkeybindingmap) が返すのは既定値であり、`setKeyBindingMap` で変更した内容ではありません。
 
 ```ts
@@ -351,6 +356,10 @@ const defaultKeyBindingMap: Omit<
   addTable: [{ shortcut: 'Alt+KeyN', preventDefault: true }],
   addColumn: [{ shortcut: 'Alt+Enter', preventDefault: true }],
   addMemo: [{ shortcut: 'Alt+KeyM', preventDefault: true }],
+  addTableGroup: [
+    { shortcut: 'Alt+KeyG', preventDefault: true, stopPropagation: true },
+  ],
+  groupSelectedTables: [{ shortcut: 'KeyT KeyG', preventDefault: true }],
   removeTable: [
     { shortcut: '$mod+Backspace', preventDefault: true },
     { shortcut: '$mod+Delete', preventDefault: true },
@@ -389,32 +398,36 @@ editor.setKeyBindingMap({
 });
 ```
 
-`selectAllTable`、`handTool`、`removeSelection` はキャレットに譲ります。フォーカスが input、textarea、`contenteditable` の中にある間は `$mod + A` がテキストを選択し、`Space` は空白を入力し、`Delete` と `Backspace` はテキストを消去して、キャンバスには届きません。別のショートカットに再定義しても動作は同じです。
+`selectAllTable`、`handTool`、`removeSelection`、そして `4.1.0` からは `groupSelectedTables` はキャレットに譲ります。フォーカスが input、textarea、`contenteditable` の中にある間は `$mod + A` がテキストを選択し、`Space` は空白を入力し、`Delete` と `Backspace` はテキストを消去し、`T` に続けて `G` はその 2 文字を入力して、キャンバスには届きません。これらの入力では `preventDefault()` は呼び出されません。別のショートカットに再定義しても動作は同じです。
 
 `4.0.0` から、`removeSelection`（`Delete` または `Backspace`）は、ERD タブで選択しているものを確認なしに Undo の 1 ステップとして削除します。選択しているのがフォーカスしているテーブルだけで、そのカラムを 1 つ以上選択していて、拡大・縮小のレベルでその行が描画されている場合は、それらのカラムを削除します。それ以外の場合は、選択しているすべてのテーブル、メモ、テーブルグループを削除し、グループのテーブルは残します。[テーブルとメモの削除](../guide/guides/table-related-functions.md#テーブルとメモの削除)を参照してください。  
-キーを押し続けても削除は 1 回だけで、セル、メモ、テーブルグループの名前の編集中は何も削除されません。テキストフィールドの外では、エディタにフォーカスがある間はどのタブでも、フォーカスしているツールバーのボタンの上でも、何も削除しない読み取り専用のエディタでも、この入力に対して `preventDefault()` が呼び出されます。
+キーを押し続けても削除は 1 回だけで、セル、メモ、テーブルグループの名前の編集中は何も削除されません。テキストフィールドと、バインディングをそこで止めるパネル（[createKeyBindingMap](#createkeybindingmap) を参照してください）の外では、エディタにフォーカスがある間はどのタブでも、フォーカスしているツールバーのボタンの上でも、何も削除しない読み取り専用のエディタでも、この入力に対して `preventDefault()` が呼び出されます。
 
-`3.10.0` から、`findReplace`（`$mod+KeyF`）は[検索と置換](../guide/guides/find-and-replace.md)を開き、ほかのどのタブからでも ERD タブを表示します。  
-キャレットには譲りません。エディタにフォーカスがある間は、どのタブでも、キャンバスからでもエディタ内の入力欄からでもこのキーを受け取ります。`preventDefault()` が呼び出されるためブラウザの検索バーは開かず、伝播も止められるため、ページのバブリングフェーズの `keydown` リスナーには届きません。セルやメモの編集中、または `4.0.0` からはテーブルグループの名前の編集中も、`preventDefault()` が呼び出されて伝播も止められますが、何も開きません。  
-Diff Viewer、Time Travel、自動レイアウトのプレビューのいずれかが開いている間は、どのタブであっても、また IME の変換中も、`preventDefault()` は呼び出されず伝播も止められないため、ブラウザやホスト自身の検索がこのキーを受け取ります。検索と置換のパネル内では、変換中の入力はそこで伝播が止められますが、`preventDefault()` は呼び出されません。`findReplace` を別のショートカットに再定義しても動作は同じです。
+`4.1.0` から、`addTableGroup`（`Alt+KeyG`）は ERD タブで `New Table Group` の描画を準備し、次にキャンバスでマウスの主ボタンを押すと、そこからグループを描きます。キャンバスツールバーの `New Table Group` ボタンと同じように、もう一度押すと描画の準備が解除されます。`groupSelectedTables`（`KeyT KeyG`、`T` に続けて `G`）は、テーブルのコンテキストメニューの `Group selected tables` と同じように、選択しているテーブルを新しいグループに入れて、その名前の入力欄を開きます。テーブルを選択していない場合は何も追加せず、選択しているメモやテーブルグループは数に入りません。[グループの描画](../guide/guides/table-groups.md#グループの描画)と[選択したテーブルのグループ化](../guide/guides/table-groups.md#選択したテーブルのグループ化)を参照してください。  
+どちらも、メニューがグループの項目を表示する場合にだけ動作します。`readonly` が設定されている間、`Table Groups` の View Option でグループを非表示にしている間、セル、メモ、テーブルグループの名前の編集中は動作しません。ほかのキャンバスのバインディングと同じように ERD タブでのみ動作し、クイック検索、テーブルのプロパティ、Diff Viewer、Time Travel、自動レイアウトのプレビュー、`Export image`、`Map Columns` のいずれかが開いている間も動作しません。何もしない場合でも、`groupSelectedTables` がキャレットに譲る場合を除き、この入力では `preventDefault()` が呼び出されます。`addTableGroup` は、`focusView` や `zenMode` と同じく伝播も止められるため、ページのバブリングフェーズの `keydown` リスナーには届きません。
+
+`3.10.0` から、`findReplace`（`$mod+KeyF`）は[検索と置換](../guide/guides/find-and-replace.md)を開きます。`4.1.0` からは、検索と置換を収める[エクスプローラー](../guide/guides/explorer.md#opening-and-closing)を開閉し、設定のショートカットタブでは `Toggle Explorer` として表示されます。  
+ツールバーの `Explorer` ボタンが押された状態で表示されている間（エクスプローラーが ERD タブで開いていて、Zen モードで隠れていない間）は、クイック検索、テーブルのプロパティ、テーマビルダー、Display Language のピッカー、`Export image` ダイアログ、`Map Columns` のいずれかが開いている場合を除き、エクスプローラーを閉じます。それ以外の場合は、それらのうち開いているものを閉じ、ほかのどのタブからでも ERD タブを表示して、`Find` フィールドにキャレットを置き、検索語を選択した状態でエクスプローラーを開きます。エクスプローラーをキャンバスの横に表示するには幅が足りないエディタでは、エクスプローラーは開いたまま退き、`Widen the window to show the Explorer` のトーストが表示されます。`4.1.0` より前は、フローティングの検索と置換のパネルを開くか、そのフィールドにキーボード操作を戻すだけで、パネルを閉じることはありませんでした。  
+キャレットには譲りません。エディタにフォーカスがある間は、どのタブでも、キャンバスからでもエディタ内の入力欄からでもこのキーを受け取ります。`preventDefault()` が呼び出されるためブラウザの検索バーは開かず、伝播も止められるため、ページのバブリングフェーズの `keydown` リスナーには届きません。セルやメモの編集中、または `4.0.0` からはテーブルグループの名前の編集中も、`preventDefault()` が呼び出されて伝播も止められますが、何もしません。  
+Diff Viewer、Time Travel、自動レイアウトのプレビューのいずれかが開いている間は、どのタブであっても、また IME の変換中も、`preventDefault()` は呼び出されず伝播も止められないため、ブラウザやホスト自身の検索がこのキーを受け取ります。エクスプローラー内では、変換中の入力はそこで伝播が止められますが、`preventDefault()` は呼び出されません。`findReplace` を別のショートカットに再定義しても動作は同じです。
 
 `focusView` は ERD タブでのみ動作します。テーブルを 1 つ以上選択している場合は、Visualization タブを Flow モードで開き、それらのテーブルと、リレーションシップ 1 つでつながるすべてのテーブルに表示を絞り込みます。選択しているメモやテーブルグループは数に入らず、テーブルを選択していない場合は何もしません。[テーブルへのフォーカス](../guide/guides/visualization.md#focusing-on-tables)を参照してください。
 
 `stop`（`Escape`）は ERD タブで、セルやメモの編集、またはリレーションシップの作成を終了し、選択はそのまま残します。`4.0.0` からは、テーブルグループの名前の編集も名前を書き込まずに終了し、`New Table Group` の描画も終了します。このときエディタは `preventDefault()` を呼び出します。  
 そのいずれでもない場合、`Escape` は選択とフォーカスしているセルを解除し、`preventDefault()` は呼び出されません。そのため、編集を抜けて選択も解除するには 2 回押す必要があります。  
-検索と置換のパネルの外では、エディタが `Escape` の伝播を止めることはないため、独自のダイアログを閉じるためなど、自分で `Escape` を監視しているページには両方の入力が届き、`defaultPrevented` が `true` のほうを無視できます。  
+エクスプローラー、[ウェルカム画面](#enablewelcomescreen)の `Import` の形式の一覧、後述のピッカーとダイアログを除き、エディタが `Escape` の伝播を止めることはないため、独自のダイアログを閉じるためなど、自分で `Escape` を監視しているページには両方の入力が届き、`defaultPrevented` が `true` のほうを無視できます。  
 クイック検索、テーブルのプロパティ、Diff Viewer、自動レイアウトのプレビュー、Time Travel のいずれかが開いている間は、`Escape` は代わりにそれを閉じ、選択はそのまま残します。このときも `preventDefault()` は呼び出されません。  
 `4.0.0` からは、開いている [`Export image`](../guide/guides/file-import-export.md#画像) ダイアログや [`Map Columns`](../guide/guides/relationship-editing.md#map-columns) ダイアログも `Escape` を受け取り、自身を閉じて、選択はそのまま残します。どちらも開いたときにキーボード操作を受け取り、この `Escape` では `preventDefault()` が呼び出されて伝播も止められます。  
-`3.10.0` からは、検索と置換のパネル内にフォーカスがある状態で押した `Escape` はパネルを閉じ、選択はそのまま残します。エディタはこの入力に対して `preventDefault()` と `stopPropagation()` の両方を呼び出すため、ページのバブリングフェーズの `keydown` リスナーには届きません。  
-パネルが開いている間にキャンバスで押した `Escape` は、上記のいずれにも該当しない場合、選択を解除するのと同じ 1 回の入力でパネルも閉じます。この入力では `preventDefault()` は呼び出されず、伝播も止められません。  
-`4.0.0` からは、Display Language のピッカーとカラーピッカーも検索と置換のパネルと同じように閉じます。それらの中で押した `Escape` は `preventDefault()` が呼び出されて伝播も止められ、キャンバスで押した `Escape` は、選択を解除するのと同じ 1 回の入力でそれらを閉じます。  
-IME の変換中に押した `Escape` は変換のためのものです。編集は終了せず、`preventDefault()` も呼び出されないため、ページでは `isComposing` が `true`、または `keyCode` が `229` の入力も同じように無視できます。検索と置換のパネル内では、変換中に押したほかのキーと同じく、この入力の伝播も止められます。  
+`4.1.0` からは、[エクスプローラー](../guide/guides/explorer.md#keys-in-the-explorer)内、つまりそのツリー、フィールド、ボタンにフォーカスがある状態で押した `Escape` は、キーボード操作をキャンバスに戻し、エクスプローラーは開いたまま、選択もそのまま残します。エディタはこの入力に対して `preventDefault()` と `stopPropagation()` の両方を呼び出すため、ページのバブリングフェーズの `keydown` リスナーには届きません。  
+キャンバスで押した `Escape` でエクスプローラーが閉じることはありません。`4.1.0` より前は、検索と置換のパネル内で押した `Escape` はパネルを閉じ、キャンバスで押した `Escape` は選択を解除するのと同じ 1 回の入力でパネルを閉じていました。  
+`4.0.0` からは、Display Language のピッカーとカラーピッカーは `Escape` で閉じます。それらの中で押した `Escape` は `preventDefault()` が呼び出されて伝播も止められ、キャンバスで押した `Escape` は、選択を解除するのと同じ 1 回の入力でそれらを閉じ、`preventDefault()` は呼び出されず、伝播も止められません。  
+IME の変換中に押した `Escape` は変換のためのものです。編集は終了せず、`preventDefault()` も呼び出されないため、ページでは `isComposing` が `true`、または `keyCode` が `229` の入力も同じように無視できます。エクスプローラー内では、変換中に押したほかのキーと同じく、この入力の伝播も止められ、キーボード操作はフィールドに残ります。  
 `3.9.2` より前は、1 回の `Escape` で編集や作成の終了と選択の解除が同時に行われ、エディタが `preventDefault()` を呼び出すこともありませんでした。
 
 ### createKeyBindingMap
 
 `3.9.2` から、パッケージは `createKeyBindingMap()` と、あわせて `KeyBindingMap`、`KeyBindingName`、`ShortcutOption` の型をエクスポートしています。  
-固定の名前を含む 26 個すべての名前の既定のキーバインディングを、呼び出すたびに新しいマップとして返すため、返されたマップを変更してもほかには何も影響しません。  
+固定の名前を含む 28 個すべての名前の既定のキーバインディングを、呼び出すたびに新しいマップとして返すため、返されたマップを変更してもほかには何も影響しません。  
 すべてのエディタはこの状態から始まり、`setKeyBindingMap` の呼び出しはここには反映されません。  
 ランタイムのエクスポートは `createKeyBindingMap` だけで、残りの 3 つは型です。
 
@@ -429,6 +442,8 @@ type KeyBindingName =
   | 'addTable'
   | 'addColumn'
   | 'addMemo'
+  | 'addTableGroup'
+  | 'groupSelectedTables'
   | 'removeTable'
   | 'removeColumn'
   | 'removeSelection'
@@ -461,16 +476,18 @@ const shortcuts = Object.values(createKeyBindingMap())
 
 各 `shortcut` は、キーを `KeyboardEvent.code` で指定する、[tinykeys](https://github.com/jamiebuilds/tinykeys) の構文によるキーの組み合わせで、[`$mod`](#mod) は macOS では `⌘`、それ以外では `Control` です。  
 `4.0.0` からは、エディタはこれらのキーの組み合わせを tinykeys を通さずに、同じ構文で自身で読み取ります。キーは `code`、または大文字・小文字を問わない `key` で一致し、入力が一致するのは、指定された修飾キーをちょうどそのとおりに押している場合だけです。`AltGraph` は、Windows では `Control` と `Alt`、macOS では `Alt` として扱われます。スペースで区切った入力はシーケンスになり、1 秒間 keydown がないと最初からやり直しになります。  
+`4.1.0` からは、既定値の 1 つがシーケンスです。`groupSelectedTables` は `KeyT KeyG`、つまり `T` に続けて `G` です。シーケンスはそれを完了する入力で実行され、その `preventDefault` と `stopPropagation` が適用されるのもその入力だけのため、既定値では `T` はページに届き、`preventDefault()` が呼び出されるのは `G` だけです。メニュー、クイック検索、ショートカットタブでは、シーケンスは入力ごとに 1 つずつのキーで表示されます。  
 固定の名前は `Enter`（`edit`）、`Escape`（`stop`）、`$mod+KeyZ`（`undo`）、`$mod+Shift+KeyZ`（`redo`）、`$mod+Equal`（`zoomIn`）、`$mod+Minus`（`zoomOut`）、`$mod+Digit0`（`zoomReset`）に割り当てられています。`edit` と `stop` にはフラグがなく、残りの 5 つには `preventDefault` と `stopPropagation` が付いています。それ以外は上記の既定値で、`search` と `findReplace` もそこに含まれます。
 
 エディタはこれらを自身の要素で受け取るため、グローバルなホットキーやキャプチャフェーズの `keydown` リスナーでエディタより先にキーを受け取るホストは、エディタにフォーカスがある間はこれらを通す必要があります。  
 通すキーの一覧は `createKeyBindingMap()` から作成し、既定値の代わりに `setKeyBindingMap` に渡したバインディングを使います。  
 `3.10.0` からは、この一覧にブラウザ自身の検索のキーである `$mod+KeyF` が含まれます。このキーで自身の検索を使い続けたいホストは、`setKeyBindingMap({ findReplace: [] })` を渡します。  
-`4.0.0` からは、この一覧には修飾キーなしの `Delete` と `Backspace` も含まれます。これらのキーを使い続けたいホストは、`setKeyBindingMap({ removeSelection: [] })` を渡します。
+`4.0.0` からは、この一覧には修飾キーなしの `Delete` と `Backspace` も含まれます。これらのキーを使い続けたいホストは、`setKeyBindingMap({ removeSelection: [] })` を渡します。  
+`4.1.0` からは、`Alt+KeyG` とシーケンス `KeyT KeyG` も含まれます。シーケンスは 1 つの文字列として含まれるため、スペースで分割し、修飾キーなしの `T` と `G` も含めて、それぞれの入力を通します。入力が 1 つでも欠けたシーケンスは完了しないためです。これらのキーを使い続けたいホストは、`setKeyBindingMap({ addTableGroup: [] })` または `setKeyBindingMap({ groupSelectedTables: [] })` を渡します。
 
-検索と置換のパネル内にフォーカスがある間は、`findReplace`、`search`、`undo`、`redo`、`zoomIn`、`zoomOut`、`zoomReset` はエディタに届きます。それ以外のバインディングに現在割り当てられているキーはパネルで止まり、矢印キーと `Tab` も同様です。パネルを閉じる `Escape` と、検索フィールドや置換フィールドで一致箇所を移動したり置換したりする `Enter` を除き、これらは `preventDefault()` を呼び出されずに伝播だけが止められるため、パネルのフィールドやボタンでは通常のキーとして動作し、キャンバスにもページのバブリングフェーズの `keydown` リスナーにも届きません。  
-ホストの保存やコマンドパレットのキーなど、それ以外のキーは通常どおりページに届きます。[パネル内のキー](../guide/guides/find-and-replace.md#keys-in-the-panel)を参照してください。  
-`4.0.0` からは、Display Language のピッカーも同じようにキーを扱います。同じ 7 つのバインディングはエディタに届き、それ以外のバインディング、矢印キー、`Tab` は、IME の変換中に押したキーと同じく、`preventDefault()` を呼び出されずにそこで伝播だけが止められます。行の上で押した `↑`、`↓`、`Home`、`End`、`Enter`、`Space` は行を移動するか行を選び、`preventDefault()` も呼び出されます。
+エクスプローラー内、つまりそのツリー、`Find` と `Replace` のフィールド、ボタンにフォーカスがある間は、`findReplace`、`search`、`undo`、`redo`、`zoomIn`、`zoomOut`、`zoomReset` はエディタに届くため、`findReplace` はそこでもキャンバスと同じように動作します。それ以外のバインディングに現在割り当てられているキーはエクスプローラーで止まり、シーケンスはその最後の入力（既定値では修飾キーなしの `G`）で止まります。矢印キー、`Tab`、`Enter`、`Space`、`Home`、`End`、IME の変換中に押したキーも同様です。キーボード操作をキャンバスに戻す `Escape` を除き、これらは `preventDefault()` を呼び出されずに伝播だけが止められるため、エクスプローラーのフィールド、ボタン、ツリーでは通常のキーとして動作し、キャンバスにもページのバブリングフェーズの `keydown` リスナーにも届きません。そこで `Alt + N` を押してもテーブルは追加されず、`Delete` を押しても何も削除されません。ツリーで行の間を移動したり、行を折りたたんだり、行へ移動したりするキーと、`Find` フィールドや `Replace` フィールドで一致箇所を移動したり置換したりする `Enter` では、`preventDefault()` も呼び出されます。  
+ホストの保存やコマンドパレットのキーなど、それ以外のキーは通常どおりページに届きます。[エクスプローラー内のキー](../guide/guides/explorer.md#keys-in-the-explorer)を参照してください。`4.1.0` より前は、フローティングの検索と置換のパネルも同じようにキーを扱っていましたが、`Home`、`End`、シーケンスの最後の入力、`handTool` が別のキーに割り当てられている間の `Space` は例外でした。  
+`4.0.0` からは、Display Language のピッカーも同じようにキーを扱います。同じ 7 つのバインディングはエディタに届き、それ以外のバインディング（`4.1.0` からは、シーケンスはその最後の入力で止まります）、矢印キー、`Tab` は、IME の変換中に押したキーと同じく、`preventDefault()` を呼び出されずにそこで伝播だけが止められます。行の上で押した `↑`、`↓`、`Home`、`End`、`Enter`、`Space` は行を移動するか行を選び、`preventDefault()` も呼び出されます。
 
 ### $mod
 
@@ -666,12 +683,19 @@ type Theme = {
   keyFK: string;
   keyPFK: string;
 
-  diffInsertBackground: string;
-  diffDeleteBackground: string;
-  diffCrossBackground: string;
+  treeBackground: string;
+  treeRowHover: string;
+  treeRowCurrent: string;
+  treeMuted: string;
+  treeMatch: string;
+
+  explorerBackground: string;
+  explorerBorder: string;
+
   diffInsertForeground: string;
   diffDeleteForeground: string;
-  diffCrossForeground: string;
+  diffModifyForeground: string;
+  diffRenameForeground: string;
 };
 
 // example
@@ -690,6 +714,14 @@ editor.setTheme({
 - `toastSuccess` と `toastError` は、処理がどう終わったかを伝えるトーストのマークの色です。
 - `findReplaceError` と `mapColumnsError` は、検索と置換、および Map Columns のダイアログが表示するエラーの色です。検索と置換では以前は `diffDeleteForeground` を使っていたため、それを上書きしても検索と置換の色は変わらなくなりました。
 - `schemaSqlWarningBackground` と `schemaSqlWarningForeground` は、Schema SQL タブのオプションにある警告の色です。
+
+`4.1.0` からは、トークンがさらに 9 つ増えました。
+
+- `treeBackground`、`treeRowHover`、`treeRowCurrent`、`treeMuted`、`treeMatch` は、[エクスプローラー](../guide/guides/explorer.md#the-tree)と [Diff Viewer](../guide/guides/table-related-functions.md#diff-viewer) が共有するツリーの色です。`treeBackground` はツリーの背景で、エクスプローラーの `Find` と `Replace` のフィールドも塗ります。`treeRowHover` はポインタを重ねた行、ツリーにフォーカスがある間のキーボードの行、エクスプローラーのヘッダーと検索でポインタを重ねたボタン、`treeRowCurrent` は現在の検索の一致箇所の行、`treeMuted` は件数、データ型、折りたたみの矢印のような淡い色のテキスト、`treeMatch` は検索で見つかったテキストの背後のマークの色です。
+- `explorerBackground` と `explorerBorder` は、エクスプローラーのパネルとその線の色です。線とは、キャンバスに接する端、検索の下の線、そしてフィールドと `Search In` で展開するボタンの枠線です。`explorerBorder` は、Diff Viewer のツリーの端、その `Filter by name` フィールドの下の線、そのフィールドの枠線も描きます。エクスプローラーのキーのアイコンには `keyPK`、`keyFK`、`keyPFK` が使われます。
+- `diffModifyForeground` と `diffRenameForeground` は、Diff Viewer が変更、名前の変更として示すものの、ツリーと両方のドキュメントでの色です。`diffModifyForeground` は、ほかに何が変わったかにかかわらず、移動、サイズの変更、色の変更、グループの変更があったテーブル、メモ、テーブルグループの枠線も描き、変更された外部キーのコネクタも描きます。
+
+`diffInsertForeground` と `diffDeleteForeground` は現在、Diff Viewer が追加、削除として示すものの色で、テキスト、枠線、コネクタのいずれでも、ツリーと、それを持つ側のドキュメントで使われます。`diffInsertBackground`、`diffDeleteBackground`、`diffCrossBackground`、`diffCrossForeground` は、Diff Viewer がセルを塗りつぶさなくなったため、`4.1.0` で削除されました。`setTheme` は `Theme` にないほかの名前と同じようにこれらを破棄し、そのフックである `--erd-editor-diff-insert-background`、`--erd-editor-diff-delete-background`、`--erd-editor-diff-cross-background`、`--erd-editor-diff-cross-foreground` も読み取られなくなりました。
 
 #### CSS Variables
 
@@ -784,12 +816,17 @@ erd-editor {
   --erd-editor-key-pk: #ffc53d;
   --erd-editor-key-fk: #e54666;
   --erd-editor-key-pfk: #00a2c7;
-  --erd-editor-diff-insert-background: #113b29;
-  --erd-editor-diff-delete-background: #500f1c;
-  --erd-editor-diff-cross-background: #003362;
+  --erd-editor-tree-background: #111113;
+  --erd-editor-tree-row-hover: #212225;
+  --erd-editor-tree-row-current: #1d2e62;
+  --erd-editor-tree-muted: #b0b4ba;
+  --erd-editor-tree-match: #253974;
+  --erd-editor-explorer-background: #111113;
+  --erd-editor-explorer-border: #363a3f;
   --erd-editor-diff-insert-foreground: #3dd68c;
   --erd-editor-diff-delete-foreground: #ff9592;
-  --erd-editor-diff-cross-foreground: #70b8ff;
+  --erd-editor-diff-modify-foreground: #ffca16;
+  --erd-editor-diff-rename-foreground: #70b8ff;
 }
 ```
 
@@ -799,7 +836,7 @@ erd-editor {
 
 `4.0.0` からは、エディタ自身のテキスト、つまりメニュー、パネル、ダイアログ、クイック検索、トースト、そして書き出した画像を含めてダイアグラム上に描画する `unnamed` のような語が、25 の言語で表示されます。テーブル名とカラム名、SQL、データ型、生成されたコードが翻訳されることはありません。[言語とテーマ](../guide/guides/language-and-theme.md)を参照してください。  
 [setLocale](#setlocale) を呼び出すか言語を選ぶまで、エディタは英語で表示され、[enableLocalePicker](#enablelocalepicker) が有効な間は `'system'` に従います。  
-エディタは `lang` と `dir` を、ホスト要素やページではなく、closed shadow root 内の自身のルートに設定するため、右から左に書くページでエディタが左右反転することも、右から左に書く言語でページが左右反転することもありません。ヘブライ語、アラビア語、ペルシア語では、エディタのインターフェースは右から左に配置されますが、ダイアグラム自体が左右反転することはありません。  
+エディタは `lang` と `dir` を、ホスト要素やページではなく、closed shadow root 内の自身のルートに設定するため、右から左に書くページでエディタが左右反転することも、右から左に書く言語でページが左右反転することもありません。ヘブライ語、アラビア語、ペルシア語では、エディタのインターフェースは右から左に配置されますが、ダイアグラム自体が左右反転することはありません。`4.1.0` からは、[エクスプローラー](../guide/guides/explorer.md)はどの言語でもキャンバスの左にとどまり、これら 3 つの言語では、その行が右から左に読む向きになります。  
 パッケージは `LocaleCode`（次のいずれかのコード）と `LocaleOption` の型をエクスポートしています。
 
 ```ts
@@ -872,7 +909,7 @@ Schema SQL ファイルを読み込みます。
 
 - `placement: 'grid'` は既定値で、これまでどおりテーブルをすぐに複数の行に並べて配置し、呼び出しは何も返しません。
 - `placement: 'auto'` は、エディタの `Import` と同じように、まずリレーションシップに沿ってテーブルをレイアウトし、読み込みが Undo の 1 ステップとして反映されると解決される `Promise` を返します。テーブルが 2 つ未満の場合、リレーションシップがない場合、レイアウトが失敗した場合、`SharedWorker` のないページの場合、`Placing tables` の通知で `Cancel` を押した場合は、代わりに複数の行に並べます。その間に別の読み込み、つまり置き換える別の読み込み、`value` への代入、`setInitialValue()`、`clear()`、共同編集の参加者による読み込み、読み込みや `clear()` の Undo または Redo が行われると、この読み込みはそれに取って代わられ、`Promise` は何も読み込まずに解決されます。この方法で配置する読み込みは、始めた順に反映されます。
-- `mode: 'replace'` は既定値で、ドキュメントを置き換えます。`mode: 'append'` は、[Import and Add](../guide/guides/file-import-export.md#import-and-add) と同じようにファイルをダイアグラムの下に追加し、すでにあるテーブルと、タブと表示位置以外のすべての設定をそのまま残します。別のタブにいる場合は、先に ERD タブが表示されます。新しいテーブルと、テーブルグループが表示されている間は DBML ファイルが持ち込むテーブルグループが選択され、それらが見えるように表示がスクロールします。1 回の Undo で追加全体を取り消せます。読み取れないテキストは何も追加せず、ドキュメントはそのまま残ります。
+- `mode: 'replace'` は既定値で、ドキュメントを置き換えます。`mode: 'append'` は、[Import and Add](../guide/guides/file-import-export.md#import-and-add) と同じようにファイルをダイアグラムの下に追加し、すでにあるテーブルと、タブと表示位置以外のすべての設定をそのまま残します。別のタブにいる場合は、先に ERD タブが表示されます。新しいテーブルと、テーブルグループが表示されている間は DBML ファイルが持ち込むテーブルグループが選択され、それらがすでに十分に見えている場合を除き、`4.1.0` からすべての移動が従う規則で、表示がそれらへスクロールします。[移動先の表示位置](../guide/guides/table-related-functions.md#where-a-jump-lands)を参照してください。1 回の Undo で追加全体を取り消せます。読み取れないテキストは何も追加せず、ドキュメントはそのまま残ります。
 
 `readonly` が設定されている間は、置き換えは無視され、追加では何も追加されず、`placement: 'auto'` の呼び出しはすぐに解決されます。  
 `3.10.0` から、`setSchemaSQL` はドキュメントで現在選択しているデータベースに合わせてファイルを読み取ります。Databricks を選択している場合、一重引用符で囲んだ文字列は Spark のバックスラッシュによるエスケープに従います。[コメント](../guide/guides/file-import-export.md#comments)を参照してください。  
@@ -1001,7 +1038,8 @@ const sharedStore = editor.getSharedStore({
 現在開いているドキュメントと、渡したドキュメントを比較する Diff Viewer を開きます。  
 戻り値はなく、ドキュメントも変更しないため、ビューアーを閉じてもエディタは元のままです。  
 空の値や文字列以外の値を指定した場合は、空のドキュメントと比較します。  
-キャンバスのコンテキストメニューにある [Diff Viewer](../guide/guides/table-related-functions.md#diff-viewer) と同じオーバーレイです。
+キャンバスのコンテキストメニューにある [Diff Viewer](../guide/guides/table-related-functions.md#diff-viewer) と同じオーバーレイです。  
+`4.1.0` からは、2 つのドキュメントが持つ項目をまず ID で対応付け、その後で、テーブルの名前やメモの本文のように、それぞれが変わらずに保っているもので対応付けます。[比較対象](../guide/guides/table-related-functions.md#what-is-compared)を参照してください。そのため、ファイルの Git のリビジョンのような同じドキュメントの以前のバージョンと比較すると、名前の変更は名前を変更した 1 つの項目として表示され、ID が異なるドキュメントと比較すると、1 つの削除と 1 つの追加として表示されます。ビューアーは変更点を 2 つのドキュメントの横のツリーに一覧表示し、セルを塗りつぶす代わりに色で変更を示します。
 
 ```js
 editor.setDiffValue('prev json...');

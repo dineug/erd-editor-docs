@@ -68,14 +68,18 @@ Nothing inside can be reached with a selector — style it through [setTheme](#s
 
 `readonly`, `system-dark-mode`, `enable-theme-builder`, `enable-locale-picker`, and `enable-welcome-screen` are the only attributes, and all five default to `false`. The last two are new in `4.0.0`. Each one reads its value as [readonly](#readonly) describes.
 
+Since `4.1.0` the ERD tab has an [Explorer](../guide/guides/explorer.md), a tree of the diagram docked left of the canvas with Find and Replace at its top. No attribute, property, method, or event opens, closes, or reports it: it opens from the toolbar's `Explorer` button, from `Toggle Explorer` in quick search or the canvas context menu, or with the [`findReplace`](#setkeybindingmap) binding.  
+Every element starts with it closed. Whether it is open, its width, its folding, and its search last as long as the element does, through tab switches and every load, `setInitialValue` included, and are never in `value`, `runtimeValue`, the undo history, or a shared store.
+
 ## readonly
 
 Sets the editing capability of the editor.  
 While it is set, assigning `value`, `clear()`, `setSchemaSQL()`, `setSchemaGraphQL()`, `setSchemaDBML()`, `setSchemaAML()`, `setSchemaJSON()`, undo, and redo are all ignored, and the `change` event is never emitted. Load a document with [setInitialValue](#setinitialvalue) instead.  
 Viewing still works: zoom, panning, the hand tool, zen mode, the canvas tab, the [Visualization](../guide/guides/visualization.md) tab in both of its modes with focusing on tables included, the database vendor, and the SQL and code generator output settings all still apply, so a read-only viewer can still export SQL for another vendor or read generated code.  
-Since `3.10.0` [Find and Replace](../guide/guides/find-and-replace.md#read-only-editors) opens too, as a find-only panel titled `Find` with no Replace field or buttons. Going to a match still brings it into view and selects it.  
+Since `4.1.0` the [Explorer](../guide/guides/explorer.md#read-only-editors) opens too, and choosing one of its rows goes to what the row stands for, as it does in an editable editor. [Find and Replace](../guide/guides/find-and-replace.md#read-only-editors) at its top finds only, with no `Toggle Replace` arrow and no Replace row, and going to a match still brings it into view and selects it. The panel is titled `Explorer`, and the toolbar button's tooltip is `Explorer (Ctrl + F)` (Windows/Linux) or `Explorer (⌘ + F)` (Mac) in every editor. From `3.10.0` to `4.0.0` Find and Replace opened as a find-only floating panel titled `Find`.  
 Table Properties still opens, and since `3.10.0` it shows a `Read only` badge beside its title and its `Indexes` tab offers no edits — see [Table Properties](../guide/guides/table-related-functions.md#table-properties).  
 Since `4.0.0` a read-only editor offers no [`Import and Add`](../guide/guides/file-import-export.md#import-and-add), `New Table Group`, `Group selected tables`, `Remove from group` (see [Table Groups](../guide/guides/table-groups.md#read-only-editors)), or [`Map Columns`](../guide/guides/relationship-editing.md#map-columns), and shows no [welcome screen](#enablewelcomescreen). The lock buttons on the Settings tab change nothing, and the Schema SQL tab's `Before tables` and `After tables` scripts cannot be edited.  
+Since `4.1.0` it also shows no `New Table`, `New Memo`, or `New Table Group` button on the [canvas toolbar](../guide/guides/table-related-functions.md#canvas-toolbar), and the `addTableGroup` and `groupSelectedTables` bindings do nothing.  
 The Schema SQL tab's `This window only` choices, `Statements`, `Header`, and `Tables`, are never saved and still apply, and so do the [`Export image`](../guide/guides/file-import-export.md#image) dialog, the theme builder, and the Display Language picker. A pick in the theme builder or the Display Language picker still emits [changePresetTheme](#changepresettheme) or [changeLocale](#changelocale).  
 A bare attribute, `=""`, and `="true"` all read as `true`. `="false"` reads as `false`, and so does any other string — including the HTML idiom `readonly="readonly"`.
 
@@ -244,7 +248,7 @@ The event is debounced by 200ms, and it is not emitted while `readonly` is `true
 It fires for any document change — an edit in the UI, assigning `value`, `clear()`, each of the `setSchema*` methods, and since `4.0.0` `setSchemaJSON()` and `Import and Add`. `setInitialValue` does not emit it.  
 Nothing done inside the Visualization tab's Flow mode emits it — zoom, panning, moving cards, `Tidy Up`, the row display, or narrowing the view from a card — since none of it is a document change.  
 Since `4.0.0` a change to a setting whose [lock](../guide/guides/settings.md#lock) is on does not emit it either, because it moves only the screen and never `value`: a scroll or a zoom of the ERD canvas while `Viewport` is locked, a tab switch while `Canvas Type` is locked, and a change of the Code Generator language, the table name case, the column name case, or the bracket type while its own lock is on. Only those changes are left out, so a batch that also edits the document still emits it. Locking or unlocking a setting emits it.  
-Every lock is on in a new document and in any file saved before `4.0.0`, so by default scrolling, zooming, and switching tabs emit nothing. That covers focusing on tables from the ERD tab, the external-link card button that takes you from Flow back to the ERD tab, and opening Find and Replace or going to a quick search result from another tab. Each of those emits one `change` only while a lock that covers it is off: `Canvas Type` for the tab switch, and `Viewport` for the scroll a card button or a quick search result also makes. Before `4.0.0` scrolling, zooming, and switching tabs always emitted it, even when `editor.value` came out the same.  
+Every lock is on in a new document and in any file saved before `4.0.0`, so by default scrolling, zooming, and switching tabs emit nothing. That covers focusing on tables from the ERD tab, the external-link card button that takes you from Flow back to the ERD tab, going to an Explorer row or a search match, and opening the Explorer or going to a quick search result from another tab. Each of those emits one `change` only while a lock that covers it is off: `Canvas Type` for the tab switch, and `Viewport` for the scroll a card button, a quick search result, an Explorer row, or a search match also makes. Since `4.1.0` every one of those scrolls follows one rule, [Where a Jump Lands](../guide/guides/table-related-functions.md#where-a-jump-lands), so a quick search table result no longer scrolls every time, and a jump the rule leaves in place makes no scroll to emit. Opening, closing, or resizing the Explorer narrows or widens the canvas without moving its origin, and emits nothing either. Before `4.0.0` scrolling, zooming, and switching tabs always emitted it, even when `editor.value` came out the same.  
 To skip writes that change nothing, compare `editor.value` with the value you last stored, not with the file you loaded: a file an earlier release wrote, a v2 file, or a hand-edited one can come out different in `value` as soon as it loads, because `value` writes it in the storage form. So can a file whose `Viewport` lock is off and whose origin draws none of the diagram on this screen: the load moves the view onto the diagram, and `value` writes where it lands. Since `4.0.0` measured widths no longer cause this, because `value` holds none. A host that writes files can instead tell an edit from a view change with a replication store's `changed` — see [on@change](./advanced/remote-storage.md#onchange).  
 The event carries no `detail` and neither bubbles nor crosses the shadow boundary, so listen on the element itself and read `editor.value` in the handler.
 
@@ -319,10 +323,11 @@ editor.destroy();
 
 Redefines keyboard shortcuts.  
 `edit`, `stop`, `undo`, `redo`, `zoomIn`, `zoomOut` and `zoomReset` are fixed and cannot be redefined.  
-Only the nineteen names below are written; anything else in the object is ignored, including the fixed names.  
-Since `3.10.0`, `search` can be redefined, and `findReplace` is new. Before, `search` was fixed. Since `4.0.0`, `removeSelection` is new.  
+Only the twenty-one names below are written; anything else in the object is ignored, including the fixed names.  
+Since `3.10.0`, `search` can be redefined, and `findReplace` is new. Before, `search` was fixed. Since `4.0.0`, `removeSelection` is new. Since `4.1.0`, `addTableGroup` and `groupSelectedTables` are new.  
 A binding value must be a `ShortcutOption[]`. A bare string is ignored, so write `{ addTable: [{ shortcut: 'Alt+KeyN' }] }` rather than `{ addTable: 'Alt+KeyN' }`.  
-An empty array is accepted and binds nothing: `setKeyBindingMap({ findReplace: [] })` leaves `Ctrl + F` (Windows/Linux) or `⌘ + F` (Mac) to the page, and `{ search: [] }` does the same for `Ctrl + K` (Windows/Linux) or `⌘ + K` (Mac). The toolbar's `Search` button still opens quick search, and Find and Replace still opens from its toolbar button, its quick search row, and the canvas context menu; none of these shows a shortcut for a name left empty. `{ removeSelection: [] }` leaves `Delete` and `Backspace` to the page, and the delete rows of the table, memo, and table group menus (`Delete`, `Delete selected`, `Delete column`, `Delete columns`) then show no shortcut.  
+An empty array is accepted and binds nothing: `setKeyBindingMap({ findReplace: [] })` leaves `Ctrl + F` (Windows/Linux) or `⌘ + F` (Mac) to the page, and `{ search: [] }` does the same for `Ctrl + K` (Windows/Linux) or `⌘ + K` (Mac). The toolbar's `Search` button still opens quick search, the toolbar's `Explorer` button still opens and closes the Explorer, and `Toggle Explorer` in quick search and in the canvas context menu still opens its search or closes it; none of these shows a shortcut for a name left empty. `{ removeSelection: [] }` leaves `Delete` and `Backspace` to the page, and the delete rows of the table, memo, and table group menus (`Delete`, `Delete selected`, `Delete column`, `Delete columns`) then show no shortcut.  
+Since `4.1.0`, `{ addTableGroup: [] }` leaves `Alt + G` (Windows/Linux) or `⌥ + G` (Mac) to the page, and `{ groupSelectedTables: [] }` leaves `T` then `G`. `New Table Group` on the canvas toolbar, in the canvas context menu, and in quick search, `Group selected tables` in the table menu, and `Group Selected Tables` in quick search still work, with no shortcut shown. The tooltips of the canvas toolbar's `New Table`, `New Memo`, and `New Table Group` buttons name the first chord of `addTable`, `addMemo`, and `addTableGroup`, or only the button for a binding left empty.  
 The call is a partial merge: names you leave out keep their defaults, and calling it twice keeps the earlier changes. There is no getter for the current bindings: [createKeyBindingMap](#createkeybindingmap) returns the defaults, not what `setKeyBindingMap` changed.
 
 ```ts
@@ -351,6 +356,10 @@ const defaultKeyBindingMap: Omit<
   addTable: [{ shortcut: 'Alt+KeyN', preventDefault: true }],
   addColumn: [{ shortcut: 'Alt+Enter', preventDefault: true }],
   addMemo: [{ shortcut: 'Alt+KeyM', preventDefault: true }],
+  addTableGroup: [
+    { shortcut: 'Alt+KeyG', preventDefault: true, stopPropagation: true },
+  ],
+  groupSelectedTables: [{ shortcut: 'KeyT KeyG', preventDefault: true }],
   removeTable: [
     { shortcut: '$mod+Backspace', preventDefault: true },
     { shortcut: '$mod+Delete', preventDefault: true },
@@ -389,32 +398,36 @@ editor.setKeyBindingMap({
 });
 ```
 
-`selectAllTable`, `handTool`, and `removeSelection` give way to a caret: while the focus is in an input, a textarea, or a `contenteditable`, `$mod + A` selects the text, `Space` types a space, and `Delete` and `Backspace` erase text instead of reaching the canvas. Whatever you rebind them to behaves the same way.
+`selectAllTable`, `handTool`, `removeSelection`, and since `4.1.0` `groupSelectedTables` give way to a caret: while the focus is in an input, a textarea, or a `contenteditable`, `$mod + A` selects the text, `Space` types a space, `Delete` and `Backspace` erase text, and `T` then `G` types the two letters, instead of reaching the canvas. None of those presses is prevented. Whatever you rebind them to behaves the same way.
 
 Since `4.0.0`, `removeSelection` (`Delete` or `Backspace`) removes the selection on the ERD tab as one undo step, without asking. When the focused table is the only thing selected, one or more of its columns are selected, and the zoom draws its rows, it removes those columns; otherwise it removes every selected table, memo, and table group, a group's tables kept. See [Table and Memo Deletion](../guide/guides/table-related-functions.md#table-and-memo-deletion).  
-A held key removes once, and nothing is removed while a cell, memo, or table group name editor is open. Outside a text field the press is prevented on every tab while the editor has focus, on a focused toolbar button too, and in a read-only editor, where it removes nothing.
+A held key removes once, and nothing is removed while a cell, memo, or table group name editor is open. Outside a text field and the panels that hold bindings back (see [createKeyBindingMap](#createkeybindingmap)), the press is prevented on every tab while the editor has focus, on a focused toolbar button too, and in a read-only editor, where it removes nothing.
 
-Since `3.10.0`, `findReplace` (`$mod+KeyF`) opens [Find and Replace](../guide/guides/find-and-replace.md), bringing the ERD tab up from any other tab.  
-It does not give way to a caret: while the editor is focused it is taken on every tab, from the canvas or from an input inside the editor. The press is prevented, so the browser opens no find bar, and stopped, so no bubbling `keydown` listener on the page hears it. With a cell or memo editor open, or since `4.0.0` a table group name editor, it is still prevented and stopped, but opens nothing.  
-While the diff viewer, time travel, or the Auto Layout preview is open, on whichever tab, or while an IME is still composing, it is neither prevented nor stopped, so the browser's or the host's own find gets it. Inside the Find and Replace panel, a press still composing is stopped there, though not prevented. Whatever you rebind `findReplace` to behaves the same way.
+Since `4.1.0`, `addTableGroup` (`Alt+KeyG`) arms the `New Table Group` draw on the ERD tab, whose next main-button press on the canvas draws the group, and pressing it again disarms the draw, as the canvas toolbar's `New Table Group` button does. `groupSelectedTables` (`KeyT KeyG`, `T` then `G`) puts the selected tables in a new group and opens its name editor, as `Group selected tables` in a table's context menu does. With no table selected it adds nothing; a selected memo or table group does not count. See [Drawing a Group](../guide/guides/table-groups.md#drawing-a-group) and [Grouping Selected Tables](../guide/guides/table-groups.md#grouping-selected-tables).  
+Both act only where the menus offer a group: not while `readonly` is set, while the `Table Groups` view option hides the groups, or while a cell, memo, or table group name editor is open. Like the other canvas bindings, they act only on the ERD tab, and not while quick search, Table Properties, the diff viewer, time travel, the Auto Layout preview, `Export image`, or `Map Columns` is open. Where they do nothing, the press is still prevented, unless `groupSelectedTables` gives way to a caret. `addTableGroup` is also stopped, as `focusView` and `zenMode` are, so a page's bubbling `keydown` listener never hears it.
+
+Since `3.10.0`, `findReplace` (`$mod+KeyF`) opens [Find and Replace](../guide/guides/find-and-replace.md). Since `4.1.0` it toggles the [Explorer](../guide/guides/explorer.md#opening-and-closing) that holds it, and the Shortcuts tab lists it as `Toggle Explorer`.  
+While the toolbar's `Explorer` button shows pressed (the Explorer open on the ERD tab and not hidden by zen mode), it closes the Explorer, unless quick search, Table Properties, the theme builder, the Display Language picker, the `Export image` dialog, or `Map Columns` is open. Otherwise it closes whichever of those is open, brings the ERD tab up from any other tab, and opens the Explorer with the caret in its `Find` field and the query selected. An editor too narrow to show the Explorer beside the canvas keeps it open but aside, and shows the toast `Widen the window to show the Explorer`. Before `4.1.0` it opened the floating Find and Replace panel, or gave its field the keyboard back, and never closed it.  
+It does not give way to a caret: while the editor is focused it is taken on every tab, from the canvas or from an input inside the editor. The press is prevented, so the browser opens no find bar, and stopped, so no bubbling `keydown` listener on the page hears it. With a cell or memo editor open, or since `4.0.0` a table group name editor, it is still prevented and stopped, but does nothing.  
+While the diff viewer, time travel, or the Auto Layout preview is open, on whichever tab, or while an IME is still composing, it is neither prevented nor stopped, so the browser's or the host's own find gets it. Inside the Explorer, a press still composing is stopped there, though not prevented. Whatever you rebind `findReplace` to behaves the same way.
 
 `focusView` acts on the ERD tab only. With at least one table selected, it opens the Visualization tab in Flow mode, narrowed to those tables and every table one relationship away; a selected memo or table group does not count, and with no table selected it does nothing. See [Focusing on Tables](../guide/guides/visualization.md#focusing-on-tables).
 
 `stop` (`Escape`) on the ERD tab ends an open cell or memo editor, or a relationship being drawn, and leaves the selection as it is. Since `4.0.0` it also ends a table group name editor, writing no name, and a `New Table Group` draw. The editor calls `preventDefault()` on that press.  
 With none of those open, `Escape` clears the selection and the focused cell, and is not prevented. Leaving an edit and clearing the selection therefore takes two presses.  
-Outside the Find and Replace panel the editor never stops `Escape` from propagating, so a page that listens for it itself, to close a dialog of its own for example, hears both presses and can skip the one whose `defaultPrevented` is `true`.  
+Apart from the Explorer, the [welcome screen](#enablewelcomescreen)'s `Import` formats, and the pickers and dialogs below, the editor never stops `Escape` from propagating, so a page that listens for it itself, to close a dialog of its own for example, hears both presses and can skip the one whose `defaultPrevented` is `true`.  
 While quick search, table properties, the diff viewer, the Auto Layout preview, or time travel is open, `Escape` closes that instead and leaves the selection as it is. That press is not prevented either.  
 Since `4.0.0` an open [`Export image`](../guide/guides/file-import-export.md#image) or [`Map Columns`](../guide/guides/relationship-editing.md#map-columns) dialog also takes `Escape`, closing itself and leaving the selection as it is. Each takes the keyboard when it opens, and that `Escape` is both prevented and stopped.  
-Since `3.10.0` an `Escape` pressed with the focus inside the Find and Replace panel closes the panel and leaves the selection as it is. The editor calls both `preventDefault()` and `stopPropagation()` on it, so it never reaches a page's bubbling `keydown` listener.  
-An `Escape` pressed on the canvas while the panel is open, with none of the above taking it, closes the panel in the same press that clears the selection. That press is neither prevented nor stopped.  
-Since `4.0.0` the Display Language picker and the color picker close the same way as the Find and Replace panel: inside them `Escape` is prevented and stopped, and on the canvas it closes them in the same press that clears the selection.  
-An `Escape` pressed while an IME is still composing belongs to the composition. It leaves an open editor as it is and is not prevented, so a page can skip a press whose `isComposing` is `true`, or whose `keyCode` is `229`, as well. Inside the Find and Replace panel such a press, like any key pressed there mid-composition, is also stopped.  
+Since `4.1.0` an `Escape` pressed with the focus inside the [Explorer](../guide/guides/explorer.md#keys-in-the-explorer), in its tree, its fields, or its buttons, gives the keyboard back to the canvas and leaves the Explorer open and the selection as it is. The editor calls both `preventDefault()` and `stopPropagation()` on it, so it never reaches a page's bubbling `keydown` listener.  
+An `Escape` on the canvas never closes the Explorer. Before `4.1.0` an `Escape` inside the Find and Replace panel closed it, and one on the canvas closed it in the same press that cleared the selection.  
+Since `4.0.0` the Display Language picker and the color picker close on `Escape`: inside them it is prevented and stopped, and on the canvas it closes them in the same press that clears the selection, neither prevented nor stopped.  
+An `Escape` pressed while an IME is still composing belongs to the composition. It leaves an open editor as it is and is not prevented, so a page can skip a press whose `isComposing` is `true`, or whose `keyCode` is `229`, as well. Inside the Explorer such a press, like any key pressed there mid-composition, is also stopped, and the keyboard stays in the field.  
 Before `3.9.2` a single `Escape` both ended an edit or draw and cleared the selection, and the editor never prevented it.
 
 ### createKeyBindingMap
 
 Since `3.9.2` the package exports `createKeyBindingMap()`, and the `KeyBindingMap`, `KeyBindingName`, and `ShortcutOption` types with it.  
-It returns the default key bindings, all 26 names with the fixed ones included, as a new map on every call, so changing the map it returns changes nothing else.  
+It returns the default key bindings, all 28 names with the fixed ones included, as a new map on every call, so changing the map it returns changes nothing else.  
 It is what every editor starts from, and a `setKeyBindingMap` call does not show in it.  
 Only `createKeyBindingMap` is a runtime export; the other three are types.
 
@@ -429,6 +442,8 @@ type KeyBindingName =
   | 'addTable'
   | 'addColumn'
   | 'addMemo'
+  | 'addTableGroup'
+  | 'groupSelectedTables'
   | 'removeTable'
   | 'removeColumn'
   | 'removeSelection'
@@ -461,16 +476,18 @@ const shortcuts = Object.values(createKeyBindingMap())
 
 Each `shortcut` is a chord in [tinykeys](https://github.com/jamiebuilds/tinykeys) syntax that names its key by `KeyboardEvent.code`, where [`$mod`](#mod) is `⌘` on macOS and `Control` elsewhere.  
 Since `4.0.0` the editor reads these chords itself rather than through tinykeys, in the same syntax. A key matches by its `code`, or by its `key` in any letter case, and a press matches only with exactly the modifiers it names held. `AltGraph` counts as `Control` and `Alt` on Windows and as `Alt` on macOS. Presses separated by a space form a sequence, which starts over after a second without a keydown.  
+Since `4.1.0` one default is a sequence: `groupSelectedTables` is `KeyT KeyG`, `T` then `G`. A sequence runs on the press that completes it, and only that press takes its `preventDefault` and `stopPropagation`, so with the defaults `T` reaches the page and only `G` is prevented. Menus, quick search, and the Shortcuts tab show a sequence as one key per press.  
 The fixed names are bound to `Enter` (`edit`), `Escape` (`stop`), `$mod+KeyZ` (`undo`), `$mod+Shift+KeyZ` (`redo`), `$mod+Equal` (`zoomIn`), `$mod+Minus` (`zoomOut`), and `$mod+Digit0` (`zoomReset`). `edit` and `stop` carry no flags; the other five carry `preventDefault` and `stopPropagation`. The rest are the defaults above, `search` and `findReplace` among them.
 
 The editor listens for these on its own element, so a host that takes keys before the editor does, with global hotkeys or a capture-phase `keydown` listener, has to let them through while the editor is focused.  
 Build the list to let through from `createKeyBindingMap()`, with the bindings you passed to `setKeyBindingMap` in place of the defaults.  
 Since `3.10.0` that list includes `$mod+KeyF`, the browser's own find chord. A host that wants to keep its own find on that chord passes `setKeyBindingMap({ findReplace: [] })`.  
-Since `4.0.0` it also includes bare `Delete` and `Backspace`. A host that wants to keep those keys passes `setKeyBindingMap({ removeSelection: [] })`.
+Since `4.0.0` it also includes bare `Delete` and `Backspace`. A host that wants to keep those keys passes `setKeyBindingMap({ removeSelection: [] })`.  
+Since `4.1.0` it also includes `Alt+KeyG` and the sequence `KeyT KeyG`, which comes as one string: split it at the space and let each press through, bare `T` and `G` included, since a sequence missing a press never completes. A host that wants to keep those keys passes `setKeyBindingMap({ addTableGroup: [] })` or `setKeyBindingMap({ groupSelectedTables: [] })`.
 
-While the focus is inside the Find and Replace panel, `findReplace`, `search`, `undo`, `redo`, `zoomIn`, `zoomOut`, and `zoomReset` pass through to the editor. Every other binding, as currently set, stops at the panel, and so do the arrow keys and `Tab`. Apart from `Escape`, which closes the panel, and `Enter` in its Find or Replace field, which moves through the matches or replaces, they are stopped without being prevented, so they act as ordinary keys in the panel's fields and buttons and reach neither the canvas nor a page's bubbling `keydown` listener.  
-Any other key, such as a host's save or command palette chord, goes on to the page as usual. See [Keys in the Panel](../guide/guides/find-and-replace.md#keys-in-the-panel).  
-Since `4.0.0` the Display Language picker holds keys the same way: the same seven bindings pass through, and every other binding, the arrow keys, and `Tab` are stopped there without being prevented, as is any key pressed while an IME is still composing. `↑`, `↓`, `Home`, `End`, `Enter`, and `Space` on one of its rows move through the rows or pick one, and are prevented as well.
+While the focus is inside the Explorer, in its tree, its `Find` and `Replace` fields, or its buttons, `findReplace`, `search`, `undo`, `redo`, `zoomIn`, `zoomOut`, and `zoomReset` pass through to the editor, so `findReplace` acts there as it does on the canvas. Every other binding, as currently set, stops at the Explorer, a sequence by its last press (a bare `G` with the defaults), and so do the arrow keys, `Tab`, `Enter`, `Space`, `Home`, `End`, and any key pressed while an IME is still composing. Apart from `Escape`, which gives the keyboard back to the canvas, they are stopped without being prevented, so they act as ordinary keys in the Explorer's fields, buttons, and tree and reach neither the canvas nor a page's bubbling `keydown` listener: `Alt + N` there adds no table, and `Delete` removes nothing. The keys that move, fold, or go to a tree row, and `Enter` in the `Find` or `Replace` field, which moves through the matches or replaces, are prevented as well.  
+Any other key, such as a host's save or command palette chord, goes on to the page as usual. See [Keys in the Explorer](../guide/guides/explorer.md#keys-in-the-explorer). Before `4.1.0` the floating Find and Replace panel held keys the same way, apart from `Home`, `End`, the last press of a sequence, and `Space` while `handTool` was bound to another key.  
+Since `4.0.0` the Display Language picker holds keys the same way: the same seven bindings pass through, and every other binding (since `4.1.0` a sequence by its last press), the arrow keys, and `Tab` are stopped there without being prevented, as is any key pressed while an IME is still composing. `↑`, `↓`, `Home`, `End`, `Enter`, and `Space` on one of its rows move through the rows or pick one, and are prevented as well.
 
 ### $mod
 
@@ -666,12 +683,19 @@ type Theme = {
   keyFK: string;
   keyPFK: string;
 
-  diffInsertBackground: string;
-  diffDeleteBackground: string;
-  diffCrossBackground: string;
+  treeBackground: string;
+  treeRowHover: string;
+  treeRowCurrent: string;
+  treeMuted: string;
+  treeMatch: string;
+
+  explorerBackground: string;
+  explorerBorder: string;
+
   diffInsertForeground: string;
   diffDeleteForeground: string;
-  diffCrossForeground: string;
+  diffModifyForeground: string;
+  diffRenameForeground: string;
 };
 
 // example
@@ -690,6 +714,14 @@ Since `4.0.0` there are nine more tokens:
 - `toastSuccess` and `toastError` color the mark of a toast that reports how something ended.
 - `findReplaceError` and `mapColumnsError` color the errors Find and Replace and the Map Columns dialog show. Find and Replace used `diffDeleteForeground` before, so overriding that no longer recolors it.
 - `schemaSqlWarningBackground` and `schemaSqlWarningForeground` color the warnings in the Schema SQL tab's options.
+
+Since `4.1.0` there are nine more tokens:
+
+- `treeBackground`, `treeRowHover`, `treeRowCurrent`, `treeMuted`, and `treeMatch` color the tree the [Explorer](../guide/guides/explorer.md#the-tree) and the [Diff Viewer](../guide/guides/table-related-functions.md#diff-viewer) share: its background, which also fills the Explorer's `Find` and `Replace` fields; a row under the pointer, the keyboard's row while the tree has focus, and a button under the pointer in the Explorer's header and search; the row of the current search match; muted text such as counts, data types, and the folding arrows; and the mark behind the text a search found.
+- `explorerBackground` and `explorerBorder` color the Explorer panel and its lines: its edge beside the canvas, the line under its search, and the borders of its fields and of the buttons `Search In` unfolds. `explorerBorder` also draws the Diff Viewer tree's edge, the line under its `Filter by name` field, and that field's border. The Explorer's key icons take `keyPK`, `keyFK`, and `keyPFK`.
+- `diffModifyForeground` and `diffRenameForeground` color what the Diff Viewer marks changed and renamed, in its tree and on both documents. `diffModifyForeground` also outlines a table, memo, or table group that was moved, resized, recolored, or regrouped, whatever else changed in it, and draws the connector of a foreign key that changed.
+
+`diffInsertForeground` and `diffDeleteForeground` now color what the Diff Viewer marks added and removed, in its tree and on the document that holds it, in text, outlines, and connectors alike. `diffInsertBackground`, `diffDeleteBackground`, `diffCrossBackground`, and `diffCrossForeground` were removed in `4.1.0`, as the Diff Viewer no longer fills cells. `setTheme` drops them like any other name not in `Theme`, and their hooks, `--erd-editor-diff-insert-background`, `--erd-editor-diff-delete-background`, `--erd-editor-diff-cross-background`, and `--erd-editor-diff-cross-foreground`, are no longer read.
 
 #### CSS Variables
 
@@ -784,12 +816,17 @@ Since `3.4.0` the misspelled `dargSelect` tokens are spelled `dragSelect`, and t
   --erd-editor-key-pk: #ffc53d;
   --erd-editor-key-fk: #e54666;
   --erd-editor-key-pfk: #00a2c7;
-  --erd-editor-diff-insert-background: #113b29;
-  --erd-editor-diff-delete-background: #500f1c;
-  --erd-editor-diff-cross-background: #003362;
+  --erd-editor-tree-background: #111113;
+  --erd-editor-tree-row-hover: #212225;
+  --erd-editor-tree-row-current: #1d2e62;
+  --erd-editor-tree-muted: #b0b4ba;
+  --erd-editor-tree-match: #253974;
+  --erd-editor-explorer-background: #111113;
+  --erd-editor-explorer-border: #363a3f;
   --erd-editor-diff-insert-foreground: #3dd68c;
   --erd-editor-diff-delete-foreground: #ff9592;
-  --erd-editor-diff-cross-foreground: #70b8ff;
+  --erd-editor-diff-modify-foreground: #ffca16;
+  --erd-editor-diff-rename-foreground: #70b8ff;
 }
 ```
 
@@ -799,7 +836,7 @@ Since `3.4.0` the misspelled `dargSelect` tokens are spelled `dragSelect`, and t
 
 Since `4.0.0` the editor's own text — its menus, panels, dialogs, quick search, toasts, and the words it draws on the diagram such as `unnamed`, image exports included — comes in 25 languages. Table and column names, SQL, data types, and generated code are never translated. See [Language and Theme](../guide/guides/language-and-theme.md).  
 Before [setLocale](#setlocale) is called or a language is picked, the editor shows English, or follows `'system'` while [enableLocalePicker](#enablelocalepicker) is on.  
-The editor sets `lang` and `dir` on its own root inside the closed shadow root, never on the host element or the page, so a right-to-left page does not flip the editor and a right-to-left language does not flip the page. Hebrew, Arabic, and Persian lay the editor's interface out right to left; the diagram itself is never mirrored.  
+The editor sets `lang` and `dir` on its own root inside the closed shadow root, never on the host element or the page, so a right-to-left page does not flip the editor and a right-to-left language does not flip the page. Hebrew, Arabic, and Persian lay the editor's interface out right to left; the diagram itself is never mirrored. Since `4.1.0` the [Explorer](../guide/guides/explorer.md) stays at the left of the canvas in every language, its own rows reading right to left in those three.  
 The package exports the types `LocaleCode` (one of the codes below) and `LocaleOption`.
 
 ```ts
@@ -872,7 +909,7 @@ Since `4.0.0` all four take an optional second argument, `{ placement, mode }`:
 
 - `placement: 'grid'`, the default, lands the tables in rows at once, as before, and the call returns nothing.
 - `placement: 'auto'` first lays the tables out by their relationships, as `Import` in the editor does, and returns a `Promise` that resolves once the import has landed as one undo step. Fewer than two tables, no relationship, a layout that fails, a page without `SharedWorker`, or `Cancel` on the `Placing tables` toast lands them in rows instead. A load in the meantime — another replacing import, assigning `value`, `setInitialValue()`, `clear()`, a collaborator's load, or an undo or redo of a load or of `clear()` — supersedes it, and the `Promise` resolves with nothing loaded. Imports placed this way land in the order they started.
-- `mode: 'replace'`, the default, replaces the document. `mode: 'append'` adds the file below the diagram as [Import and Add](../guide/guides/file-import-export.md#import-and-add) does, leaving every table already there as it is, and every setting apart from the tab and the view position. From another tab the ERD tab comes up first. The new tables, and the table groups a DBML file brings while table groups are shown, become the selection, and the view scrolls to show them. One undo removes the whole addition. Text it cannot read adds nothing and leaves the document as it is.
+- `mode: 'replace'`, the default, replaces the document. `mode: 'append'` adds the file below the diagram as [Import and Add](../guide/guides/file-import-export.md#import-and-add) does, leaving every table already there as it is, and every setting apart from the tab and the view position. From another tab the ERD tab comes up first. The new tables, and the table groups a DBML file brings while table groups are shown, become the selection, and the view scrolls to them unless they already show well, by the rule every jump follows since `4.1.0` — see [Where a Jump Lands](../guide/guides/table-related-functions.md#where-a-jump-lands). One undo removes the whole addition. Text it cannot read adds nothing and leaves the document as it is.
 
 While `readonly` is set, a replace is ignored, an append adds nothing, and a `placement: 'auto'` call resolves at once.  
 Since `3.10.0`, `setSchemaSQL` reads the file for the document's current database: with Databricks selected, single-quoted strings follow Spark's backslash escapes. See [Comments](../guide/guides/file-import-export.md#comments).  
@@ -1001,7 +1038,8 @@ const sharedStore = editor.getSharedStore({
 Opens the Diff Viewer, comparing the document currently open against the one you pass.  
 It returns nothing and does not modify the document, so closing the viewer leaves the editor exactly as it was.  
 A blank value, or anything that is not a string, is compared against an empty document.  
-It is the same overlay as [Diff Viewer](../guide/guides/table-related-functions.md#diff-viewer) in the canvas context menu.
+It is the same overlay as [Diff Viewer](../guide/guides/table-related-functions.md#diff-viewer) in the canvas context menu.  
+Since `4.1.0` it pairs what the two documents hold by id first and only then by what each keeps, such as a table's name or a memo's text — see [What Is Compared](../guide/guides/table-related-functions.md#what-is-compared). Against an earlier version of the same document, such as a Git revision of its file, a rename therefore shows as one renamed item; against a document whose ids differ, it shows as a removal and an addition. The viewer lists what changed in a tree beside the two documents and marks the changes in color instead of filling cells.
 
 ```js
 editor.setDiffValue('prev json...');

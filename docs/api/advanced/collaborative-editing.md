@@ -45,7 +45,9 @@ Treat an action as opaque and pass it through verbatim rather than reading or re
 Some of what an editor does stays on that editor.  
 Bringing a table, memo, or table group to the front, as selecting one does, is not sent.  
 Neither are the [Schema SQL](../../guide/guides/schema-sql.md) tab's `Statements`, `Header`, and `Tables` choices, which belong to the window they are made in.  
-A scroll, a zoom, or a tab switch is sent, but it never moves another user's view or tab.
+Since `4.1.0` the [Explorer](../../guide/guides/explorer.md) stays on its editor too: whether it is open, its width, its folded rows, the row the keyboard is on, where its tree is scrolled, and its search and options are not sent.  
+Nor is the [light](../../guide/guides/relationship-editing.md#reading-a-connector) that going to a foreign key puts on its relationship's connector.  
+A scroll, a zoom, or a tab switch is sent, but it never moves another user's view or tab. That includes the scroll a jump from the Explorer makes and the switch to the ERD tab when the Explorer opens from another tab.
 
 [Locks](../../guide/guides/settings.md#lock) are shared: the latest lock or unlock of a setting wins on every editor, and a lock carries the values of the editor that turned it on, so every editor and replica saves the same value.  
 A `Viewport` lock therefore saves the view of the editor that turned it on, and a `Canvas Type` lock the last tab that editor was on before the Settings tab, where locks are turned on.  
@@ -55,7 +57,7 @@ An edit to the `Before tables` or `After tables` script is sent whole when its f
 
 Nothing done in the Visualization tab's [Flow mode](../../guide/guides/visualization.md#flow-never-edits-the-document) is a document change, so an editor in Flow sends the others no changes, and the changes they send keep applying while it is there.  
 The one exception is leaving Flow for another tab: that tab switch is sent like any other.  
-The external-link card button, a [quick search](../../guide/guides/quick-search.md#searching-the-diagram) result chosen after `#`, `@`, or `:`, and opening [Find and Replace](../../guide/guides/find-and-replace.md#opening-and-closing) all leave Flow for the ERD tab. A scroll the card button or a quick search result makes there is sent too.
+The external-link card button, a [quick search](../../guide/guides/quick-search.md#searching-the-diagram) result chosen after `#`, `@`, or `:`, and opening the [Explorer](../../guide/guides/explorer.md#opening-and-closing) all leave Flow for the ERD tab. A scroll the card button or a quick search result makes there is sent too.
 
 ## Two Editors on One Page
 
@@ -128,6 +130,9 @@ An editor from before `4.0.0` ignores the new action types: it never sees a tabl
 It keeps a relationship's old columns after a Map Columns `Save`, and when a column of that old mapping is removed on it, the relationship goes away on every editor. It has no locks and no scripts.  
 A document saved from one has none of these, and a `4.0.0` editor opens it with every lock on.  
 Keep every editor in a session, and any [replicationStore](./remote-storage.md#dispatch-dispatchsync) that stores its document, on `4.0.0` or later.
+
+A `4.1.0` editor sends no new action type, so `4.0.0` and `4.1.0` editors and replicas share a session with nothing missed.  
+Its [Find and Replace](../../guide/guides/find-and-replace.md#replacing) also searches index names and table group names, and `Replace` and `Replace All` rename them on the `index.changeName` and `tableGroup.changeName` actions a `4.0.0` editor already applies.
 
 ## SharedStoreConfig
 

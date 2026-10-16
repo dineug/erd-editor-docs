@@ -1,5 +1,5 @@
 ---
-sidebar_position: 13
+sidebar_position: 14
 description: Relationship data type sync, maximum comment width, table width recalculation, setting locks (view, tab, and code settings), column display order, and the shortcut list.
 ---
 
@@ -70,14 +70,14 @@ Every other setting is saved as it stands: the database, the [`View Option`](./t
 Every lock is on in a new diagram, one started from nothing: an empty file opened in VS Code, Obsidian, or a JetBrains IDE (Obsidian's `ERD Editor: Create new diagram` and `New ERD` make one), a new schema in the web app, a file made from Google Drive's New menu, or an `<erd-editor>` given no value.
 A schema or Google Drive file that the web app makes by importing a SQL, DBML, AML, or GraphQL file starts with every lock on as well. One made from a JSON file keeps the locks that file records.
 A file you open keeps the locks it was saved with, each at its locked value.
-A file that records no locks, such as one saved by an earlier release or written by hand, opens with every lock on: the view at `100% · 0, 0` and the tab at `ERD`, whatever view and tab it saved, and its language, name cases, and bracket type locked as it saved them.
+A file that records no locks, such as one saved by a release from before the locks or written by hand, opens with every lock on: the view at `100% · 0, 0` and the tab at `ERD`, whatever view and tab it saved, and its language, name cases, and bracket type locked as it saved them.
 An `Import` that replaces the diagram sets the locks too: a JSON file brings the locks it records and the values they hold, and a SQL, DBML, AML, or GraphQL file keeps your locks but puts the view back at `100% · 0, 0`, locked or not — see [Importing External Files](./file-import-export.md#importing-external-files). Undoing the import brings back the locks and locked values it replaced.
 
 A change a lock keeps out of the file is not counted as a change. VS Code does not mark the tab modified, and Obsidian and a JetBrains IDE leave the file as it was, both when they save on their own and when the tab closes.
 So with every lock on, looking around a diagram, switching tabs, and trying another language, name case, or bracket never show up in `git diff`.
 With `Viewport` off, scrolling and zooming change the file, and with `Canvas Type` off, so does switching tabs, including to the Settings tab.
 A new diagram's empty file stays empty until the first change the file keeps: an edit, a change to a setting no lock holds, or a lock turned on or off.
-Opening a diagram and closing it with no such change leaves the file as it was, whichever release or machine wrote it. The file holds only what the diagram is, in a fixed order, and a file an earlier release saved is rewritten in this form once, on its first such change — see [Storage Form and Runtime Value](../../api/advanced/schema.md#storage-form-and-runtime-value).
+Opening a diagram and closing it with no such change leaves the file as it was, whichever release or machine wrote it. The file holds only what the diagram is, in a fixed order, and a file saved in an older form is rewritten in this form once, on its first such change — see [Storage Form and Runtime Value](../../api/advanced/schema.md#storage-form-and-runtime-value).
 In VS Code, a revision reopened as a diagram with `Reopen Editor With...`, such as a Git revision or a Local History entry, is read-only and never marked modified.
 In Google Drive, a scroll, a zoom, or a switch to another tab is never saved on its own, locked or not. With `Viewport` off, the view is written only along with another change, so a Drive file opens where the view was at its last save, and the same goes for the tab with `Canvas Type` off.
 
@@ -103,12 +103,14 @@ The `Shortcuts` tab is a read-only table of `Command` and `Keybinding`, listing 
 | Editing | `Enter` | `Enter` |
 | Stop | `ESC` | `ESC` |
 | Search | `Ctrl + K` | `⌘ + K` |
-| [Find and Replace](./find-and-replace.md) | `Ctrl + F` | `⌘ + F` |
+| [Toggle Explorer](./explorer.md) | `Ctrl + F` | `⌘ + F` |
 | Undo | `Ctrl + Z` | `⌘ + Z` |
 | Redo | `Ctrl + Shift + Z` | `⌘ + Shift + Z` |
 | Add Table | `Alt + N` | `⌥ + N` |
 | Add Column | `Alt + Enter` | `⌥ + Enter` |
 | Add Memo | `Alt + M` | `⌥ + M` |
+| Add Table Group | `Alt + G` | `⌥ + G` |
+| Group Selected Tables | `T` then `G` | `T` then `G` |
 | Remove Table, Memo | `Ctrl + Backspace`, `Ctrl + Delete` | `⌘ + Backspace`, `⌘ + Delete` |
 | Remove Column | `Alt + Backspace`, `Alt + Delete` | `⌥ + Backspace`, `⌥ + Delete` |
 | Delete Selection | `Delete`, `Backspace` | `Delete`, `Backspace` |
@@ -128,15 +130,17 @@ The `Shortcuts` tab is a read-only table of `Command` and `Keybinding`, listing 
 | Zen Mode | `Alt + Z` | `⌥ + Z` |
 
 Most of these fire on the ERD tab only, and they are held back while quick search, table properties, the diff viewer, the Auto Layout preview, time travel, the [`Export image`](./file-import-export.md#image) dialog, or [`Map Columns`](./relationship-editing.md#map-columns) is open.
-`Search`, `Find and Replace`, and `Stop` are the exceptions: `Search` toggles quick search from any tab, `Find and Replace` opens the [Find and Replace panel](./find-and-replace.md#opening-and-closing) from any tab and brings up the ERD tab, and `Stop` is what closes quick search, table properties, the diff viewer, the Auto Layout preview, time travel, the `Export image` dialog, `Map Columns`, the theme builder, the `Display Language` picker, the Find and Replace panel, the color picker, and an open context menu.
-While the diff viewer, the Auto Layout preview, or time travel is open, `Find and Replace` leaves its key to the browser or host — see [The Browser's Find Bar](./find-and-replace.md#the-browsers-find-bar).
-On the ERD tab, `Stop` ends an open cell or memo editor, closes a [table group](./table-groups.md)'s name editor without renaming the group, or cancels a relationship or a `New Table Group` being drawn, and leaves the selection as it is. With none of those open, it clears the selection and the focused cell and, in the same press, closes an open Find and Replace panel or color picker.
-An open Find and Replace panel, theme builder, or `Display Language` picker holds none of the shortcuts back on the canvas. For keys pressed inside the panel, see [Keys in the Panel](./find-and-replace.md#keys-in-the-panel), and inside the picker, see [Picking a Language](./language-and-theme.md#picking-a-language).
+`Search`, `Toggle Explorer`, and `Stop` are the exceptions: `Search` toggles quick search from any tab, `Toggle Explorer` opens the [Explorer](./explorer.md#opening-and-closing) on its search from any tab and brings up the ERD tab, and `Stop` is what closes quick search, table properties, the diff viewer, the Auto Layout preview, time travel, the `Export image` dialog, `Map Columns`, the theme builder, the `Display Language` picker, the color picker, and an open context menu.
+`Toggle Explorer` closes the Explorer again while it is open on the ERD tab and not hidden by zen mode, as the toolbar's `Explorer` button does. With quick search, table properties, the theme builder, the `Display Language` picker, the `Export image` dialog, or `Map Columns` open, it closes that instead and takes the keyboard to the Explorer's search.
+`Toggle Explorer` does nothing while a cell, a memo, or a table group's name is being edited. While the diff viewer, the Auto Layout preview, or time travel is open, it leaves its key to the browser or host — see [The Browser's Find Bar](./find-and-replace.md#the-browsers-find-bar).
+On the ERD tab, `Stop` ends an open cell or memo editor, closes a [table group](./table-groups.md)'s name editor without renaming the group, or cancels a relationship or a `New Table Group` being drawn, and leaves the selection as it is. With none of those open, it clears the selection and the focused cell and, in the same press, closes an open color picker. An open theme builder or `Display Language` picker closes in the same press either way.
+An open Explorer, theme builder, or `Display Language` picker holds none of the shortcuts back on the canvas. `Stop` never closes the Explorer. For what `Stop` and the other keys do inside the Explorer, see [Keys in the Explorer](./explorer.md#keys-in-the-explorer), and inside the picker, see [Picking a Language](./language-and-theme.md#picking-a-language).
 `Delete Selection` removes every selected table, memo, and table group, or, when a single table is selected with some of its columns and the zoom is above `70%`, those columns — see [Table and Memo Deletion](./table-related-functions.md#table-and-memo-deletion). `Remove Table, Memo` removes selected table groups too.
+`Add Table Group` starts drawing a [`New Table Group`](./table-groups.md#drawing-a-group), as the [canvas toolbar](./table-related-functions.md#canvas-toolbar)'s `New Table Group` button does, and a second press cancels the draw. `Group Selected Tables` is two presses with no modifier, `T` then `G` within a second. It puts the selected tables in a new group and opens its name editor, as `Group selected tables` in a table's context menu does, and does nothing when no table is selected — see [Grouping Selected Tables](./table-groups.md#grouping-selected-tables). Neither does anything in a read-only editor or while the groups are [hidden](./table-groups.md#hiding-groups).
 `Zoom In`, `Zoom Out`, and `Zoom Reset` also zoom the [Visualization](./visualization.md#toolbar) tab, in `Graph` and `Flow` alike, unless quick search is open.
 On the Visualization tab, `Stop` also closes the [row display](./visualization.md#row-display) menu and cancels a [Flow layout](./visualization.md#how-flow-is-placed) that is still running; it does not widen a view narrowed with `Focus on this table`.
 `Focus on this table` opens the Visualization tab in `Flow`, narrowed to the selected tables and every table one relationship away, and does nothing when no table is selected — see [Focusing on Tables](./visualization.md#focusing-on-tables).
-`Select All Table, Memo`, `Hand Tool`, and `Delete Selection` give way to a caret: while you are editing a cell or a memo or typing in a text field such as the Find and Replace panel's, `Ctrl + A` (Windows/Linux) or `⌘ + A` (Mac) selects the text, `Space` types a space, and `Delete` and `Backspace` erase text.
+`Select All Table, Memo`, `Hand Tool`, `Delete Selection`, and `Group Selected Tables` give way to a caret: while you are editing a cell or a memo or typing in a text field such as the Explorer's Find field, `Ctrl + A` (Windows/Linux) or `⌘ + A` (Mac) selects the text, `Space` types a space, `Delete` and `Backspace` erase text, and `T` then `G` types the two letters.
 Copy and paste are the browser's own `Ctrl + C` and `Ctrl + V` (Windows/Linux) or `⌘ + C` and `⌘ + V` (Mac), so they are not in this list — see [Table Editing](./table-editing.md).
 
 Bindings cannot be changed from this tab.

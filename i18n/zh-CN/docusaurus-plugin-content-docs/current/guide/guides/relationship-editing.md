@@ -133,7 +133,9 @@ Schema SQL 中的外键会引用所选择的键，例如 `Unique` 键对应 `REF
 如果图已发生变化，导致该映射不再适用，则不会写入任何内容，并会显示 `Couldn't map columns: the diagram changed` 提示。
 
 按 `Cancel`、点击 `x` 按钮、按 `Escape` 或点击对话框外变暗的区域，都会关闭对话框而不写入任何内容。  
-打开查找与替换或快速搜索同样会将其关闭，离开 ERD 标签页或编辑器变为只读时也是如此。  
+变暗的区域覆盖整个编辑器，包括工具栏，已打开的[资源管理器](./explorer.md#dialogs-beside-it)会在其下方保持打开。  
+打开快速搜索同样会关闭对话框，离开 ERD 标签页或编辑器变为只读时也是如此。  
+`Ctrl + F` (Windows/Linux) 或 `⌘ + F` (Mac) 也会关闭对话框，并把光标放到资源管理器[搜索](./find-and-replace.md#opening-and-closing)的查找输入框中；资源管理器处于关闭状态时会将其打开。在过窄、容不下资源管理器的编辑器中，该按键仍会关闭对话框，但会显示一条提示，而不是移动光标，参见[打开与关闭](./explorer.md#opening-and-closing)。  
 如果在对话框打开期间其中某个表或该关系被删除，对话框会关闭并显示一条提示，例如 `Map Columns closed: the relationship was removed`。  
 对话框打开期间，画布快捷键、Undo 与 Redo 以及复制和粘贴都不起作用。
 
@@ -211,10 +213,16 @@ serial 类型的键在数据类型上是例外：复制出的列会采用该 ser
 悬停在设置了任一操作的连接线上时，还会显示一个提示，逐行写出完整的子句，例如 `ON DELETE CASCADE` 和 `ON UPDATE RESTRICT`。  
 即使标签被隐藏，该提示也会出现。
 
+跳转到关系时会将其点亮：在[资源管理器](./explorer.md#going-to-a-row)中选择表的 `Foreign Keys` 文件夹下的行，或在 [Diff Viewer](./table-related-functions.md#going-to-a-change) 中选择外键行，都会以悬停颜色绘制其连接线及其标签。在 Diff Viewer 中，它会在包含该关系的每一侧点亮连接线，因此已添加的外键只点亮当前文档一侧，已删除的外键只点亮保存的文档一侧。  
+跳转会单独选中子表及其外键列，单元格焦点位于其中第一列上；关系本身仍然永远不会被选中。视图会移到哪里，参见[跳转的落点](./table-related-functions.md#where-a-jump-lands)。  
+下一次在画布上按下鼠标左键或右键时，点亮状态就会解除，无论按下的位置是空白处、表、备注、表分组还是连接线，即使这次按下没有改变选中状态也是如此。在资源管理器中跳转到其他行或搜索匹配项同样会解除点亮；在 Diff Viewer 中跳转到其他行时，该行所跳转到的每一侧上的点亮也会解除。  
+用鼠标中键或抓手工具平移不会解除点亮，在资源管理器或 Diff Viewer 中折叠或展开某一行、用 `Escape` 清除选中状态，以及从[快速搜索](./quick-search.md)或 Flow 中的外部链接[卡片按钮](./visualization.md#card-buttons)跳转，也都不会解除点亮。  
+点亮状态不会被保存，也不会记录到 Undo 历史记录中，协作者也看不到它。
+
 通过 `Relationship` 显示选项可以隐藏 ERD 画布上的连接线，通过默认开启的 `Referential Actions` 显示选项则可以只隐藏其标签，参见[表显示选项](./table-related-functions.md#table-view-options)。  
 在 `70%` 及以下，表会折叠为名称，此时不绘制标签。  
 [导出图片](./file-import-export.md#image)时始终以 100% 绘制，因此无论画布的缩放级别如何都会绘制标签，除非显示选项将其隐藏。关闭 `Background` 时，每个标签背后的方框也是透明的。  
-Visualization 标签页的 [Flow 模式](./visualization.md#flow-mode)即使在 `Relationship` 关闭时也会绘制连接线，每条都是一根平滑的灰色实线曲线，端点符号与 ERD 画布相同，因此本页介绍的虚线、标签、提示与正交路径只适用于 ERD 画布。在 Flow 中，从表连接到其自身的关系同样会以曲线绕过右上角，参见[连接线路径](#连接线路径)。
+Visualization 标签页的 [Flow 模式](./visualization.md#flow-mode)即使在 `Relationship` 关闭时也会绘制连接线，每条都是一根平滑的灰色实线曲线，端点符号与 ERD 画布相同，因此本页介绍的虚线、标签、提示、跳转后的点亮与正交路径只适用于 ERD 画布。在 Flow 中，从表连接到其自身的关系同样会以曲线绕过右上角，参见[连接线路径](#连接线路径)。
 
 ## 连接线路径
 

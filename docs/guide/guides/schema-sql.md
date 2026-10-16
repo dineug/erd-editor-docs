@@ -1,5 +1,5 @@
 ---
-sidebar_position: 10
+sidebar_position: 11
 description: Read the diagram's DDL on the Schema SQL tab, pick the database, quoting, statements, header, and tables in its options panel, add your own scripts before and after the tables, and save or copy the SQL.
 ---
 
@@ -18,9 +18,9 @@ Right-click the SQL to open its context menu:
 - `Database` and `Bracket`, each a submenu that checks the current value.
 - `Statements` and `Header`, each a submenu that checks the choice in effect. A choice the database does not have carries a muted note such as `not in Oracle` and does nothing.
 - `Options panel`, checked while the panel shows, which folds or opens it.
-- `Save file…`
+- `Save file`
 
-While this tab is open, Quick Search offers `Database` and `Bracket`; `Schema SQL: Statements` and `Schema SQL: Header`, which list only the choices the database has; `Schema SQL: Options panel`, which folds or opens the panel; and `Export: Schema SQL`.
+While this tab is open, Quick Search offers `Database` and `Bracket`; `Schema SQL: Statements` and `Schema SQL: Header`, which list only the choices the database has; and `Schema SQL: Options panel`, which folds or opens the panel.
 
 The SQL is written when the tab opens, and again whenever one of the panel's choices, the database name, or a script changes. An edit made to the tables while the tab is open, such as a collaborator's or a coding agent's, shows once you leave the tab and come back, or once one of those changes.
 
@@ -119,15 +119,16 @@ On MSSQL, a `GO` line is added after a script whose last line is not `GO` (or `G
 The fields highlight SQL and grow with their text.  
 An edit is applied when you leave the field, by clicking elsewhere or switching tabs, and only then do the SQL beside it and the document change. A field you only clicked into changes nothing.  
 A script edit changes the diagram like any other edit: it is saved in the file, collaborators see it, and each applied edit is one step in the [undo history](./undo-redo.md), which you undo from the ERD tab.  
-While you type in a field, the editor's own shortcuts are left to it, so `Ctrl + Z` (Windows/Linux) or `⌘ + Z` (Mac) undoes your typing there, and copy, cut, and paste act on the text rather than on the diagram. Quick Search and Find and Replace still open from their shortcuts.  
+While you type in a field, the editor's own shortcuts are left to it, so `Ctrl + Z` (Windows/Linux) or `⌘ + Z` (Mac) undoes your typing there, and copy, cut, and paste act on the text rather than on the diagram.  
+Quick Search and the [Explorer's search](./find-and-replace.md) still open from their shortcuts, `Ctrl + K` and `Ctrl + F` (Windows/Linux) or `⌘ + K` and `⌘ + F` (Mac). Because `Ctrl + F` or `⌘ + F` switches to the ERD tab, it applies your edit, as any tab switch does.  
 A field without the keyboard focus follows a change a collaborator or a [coding agent](../../mcp/tools.md#settings) makes to its script. A field you are in shows that change when you leave it without having typed. If you typed, your text is applied when you leave and replaces theirs.
 
 ## Saving or Copying the SQL
 
-`Save file` at the foot of the panel, or `Save file…` in the context menu, saves exactly the SQL the tab shows, with its current database, bracket, statements, header, tables, and scripts, as `<database name>-<timestamp>.sql`. It is named and saved like every other export — see [Exporting](./file-import-export.md#exporting).
+`Save file`, at the foot of the panel or in the context menu, saves exactly the SQL the tab shows, with its current database, bracket, statements, header, tables, and scripts, as `<database name>-<timestamp>.sql`. It is named and saved like every other export — see [Exporting](./file-import-export.md#exporting).
 
-`Export` ▸ `Schema SQL`, in the canvas context menu or in Quick Search, saves nothing by itself, and neither does the Quick Search command `Export: Schema SQL`, which is listed on every tab.  
-Each switches to this tab, opens the options panel even if it was folded, and puts the keyboard focus on `Save file`, so pressing `Enter` saves the file.
+`Export` ▸ `Schema SQL`, in the canvas context menu or in Quick Search, saves nothing by itself.  
+It switches to this tab, opens the options panel even if it was folded, and puts the keyboard focus on `Save file`, so pressing `Enter` saves the file.
 
 `Copy` at the foot of the panel, or the copy button that appears at the top right of the code while you hover it, copies the SQL.  
 A `Copied!` toast with a check mark confirms for two seconds. If the browser or host refuses the clipboard, a `Couldn't copy to the clipboard` toast with a warning sign says so instead. Copying again replaces the toast rather than adding another.  

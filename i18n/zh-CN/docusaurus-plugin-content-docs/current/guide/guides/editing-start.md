@@ -1,13 +1,13 @@
 ---
 sidebar_position: 1
-description: 从欢迎界面开始，并通过画布右键菜单创建表、备注、表分组与关系。
+description: 从欢迎界面开始，并通过画布右键菜单、画布工具栏或快捷键创建表、备注、表分组与关系。
 ---
 
 # 开始编辑
 
 编辑从右键菜单开始。
 
-![右键点击画布，浏览 Relationship 子菜单，新建表后再打开该表自身的菜单](/img/demo-context-menu.webp)
+![右键点击画布，打开 Relationship 子菜单，新建表后再打开该表自身的菜单](/img/demo-context-menu.webp)
 
 在表、备注、表分组或关系上右键则会打开该项自身的菜单。  
 在已经选中的表、备注或表分组上右键点击时，整个选中范围都会保留，因此 `Color` 和 `Delete selected` 等条目会作用于所有选中的对象，参见[多选](./table-related-functions.md#多选)。
@@ -38,13 +38,17 @@ description: 从欢迎界面开始，并通过画布右键菜单创建表、备�
 - `Theme` 和 `Display Language` 按钮：`Pick a theme and a language`；工具栏只显示其中一个按钮时，则为 `Pick a theme` 或 `Pick a language`，参见[语言与主题](./language-and-theme.md)
 - 底部的[画布工具栏](./table-related-functions.md#canvas-toolbar)：`Pan, zoom and draw relationships`
 
+[资源管理器](./explorer.md)显示期间，欢迎界面只覆盖其旁边的画布。  
+如果箭头所指的工具栏按钮位于资源管理器上方，该箭头不会显示。`Theme` 和 `Display Language` 的箭头只有在这两个按钮都位于资源管理器上方时才不会显示；在此之前，它会指向仍位于画布上方的那一个按钮。  
+箭头旁没有空间容纳其文字时，文字会改为显示在箭头下方。
+
 ## 创建表
 
-通过右键菜单或快捷键 `Alt + N` 创建表。
+通过右键菜单、[画布工具栏](./table-related-functions.md#canvas-toolbar)中的 `New Table` 按钮或快捷键 `Alt + N` 创建表。
 
 ## 创建备注
 
-通过右键菜单或快捷键 `Alt + M` 创建备注。  
+通过右键菜单、画布工具栏中的 `New Memo` 按钮或快捷键 `Alt + M` 创建备注。  
 View Option → `Memos` 关闭期间，备注会被隐藏，任何地方都不会提供 `New Memo`，`Alt + M` 也不会添加备注，参见[表显示选项](./table-related-functions.md#table-view-options)。
 
 备注是画布上的自由文本笔记。在其正文区域点击后即可输入，内容会随文档一起保存。  
@@ -58,10 +62,10 @@ View Option → `Memos` 关闭期间，备注会被隐藏，任何地方都不�
 
 表分组是一个容纳表的框，可以为它设置名称和颜色。可以通过以下两种方式之一创建：
 
-- 从右键菜单或快速搜索中选择 `New Table Group`，然后在画布上拖出一个框。中心位于框内的每个表都会加入新的分组，已属于其他分组的表除外。
-- 选中若干表，然后在表的右键菜单中选择 `Group selected tables`，或在快速搜索中选择 `Group Selected Tables`。
+- 从右键菜单或快速搜索中选择 `New Table Group`、点击[画布工具栏](./table-related-functions.md#canvas-toolbar)中的 `New Table Group` 按钮，或者按 `Alt + G` (Windows/Linux) 或 `⌥ + G` (Mac)，然后在画布上拖出一个框。中心位于框内的每个表都会加入新的分组，已属于其他分组的表除外，参见[绘制分组](./table-groups.md#drawing-a-group)。
+- 选中若干表，然后在表的右键菜单中选择 `Group selected tables` 或在快速搜索中选择 `Group Selected Tables`，也可以先按 `T` 再按 `G`，参见[为选中的表分组](./table-groups.md#grouping-selected-tables)。
 
-两种方式都没有快捷键。命名、着色、移动、调整大小等其他操作，参见[表分组](./table-groups.md)。
+命名、着色、移动、调整大小等其他操作，参见[表分组](./table-groups.md)。
 
 ## 创建关系
 

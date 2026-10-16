@@ -1,5 +1,5 @@
 ---
-sidebar_position: 13
+sidebar_position: 14
 description: リレーションシップのデータ型同期、コメントの最大幅、テーブル幅の再計算、設定のロック（表示、タブ、コードの設定）、カラムの表示順、ショートカット一覧。
 ---
 
@@ -70,14 +70,14 @@ description: リレーションシップのデータ型同期、コメントの�
 新しいダイアグラム、つまり何もない状態から始めたダイアグラムでは、すべてのロックがオンです。VS Code、Obsidian、JetBrains IDE で開いた空のファイル（Obsidian の `ERD Editor: Create new diagram` と `New ERD` はこれを作成します）、Web アプリの新しいスキーマ、Google Drive の New メニューから作成したファイル、値を渡していない `<erd-editor>` がこれにあたります。
 Web アプリが SQL、DBML、AML、GraphQL のファイルを読み込んで作成するスキーマや Google Drive のファイルも、すべてのロックがオンで始まります。JSON ファイルから作成したものは、そのファイルが記録しているロックを保ちます。
 開いたファイルでは、保存されたときのロックが、それぞれロックした値のまま保たれます。
-以前のリリースで保存したファイルや手で書いたファイルのように、ロックを記録していないファイルは、すべてのロックがオンの状態で開きます。保存されていた表示位置とタブにかかわらず、表示位置は `100% · 0, 0`、タブは `ERD` になり、言語、名前のケース、括弧の種類は保存されていたとおりの値でロックされます。
+ロックが導入される前のリリースで保存したファイルや手で書いたファイルのように、ロックを記録していないファイルは、すべてのロックがオンの状態で開きます。保存されていた表示位置とタブにかかわらず、表示位置は `100% · 0, 0`、タブは `ERD` になり、言語、名前のケース、括弧の種類は保存されていたとおりの値でロックされます。
 ダイアグラムを置き換える `Import` もロックを設定します。JSON ファイルは、記録しているロックとそのロックした値を持ち込みます。SQL、DBML、AML、GraphQL のファイルは現在のロックを保ちますが、ロックの有無にかかわらず、表示位置を `100% · 0, 0` に戻します。[外部ファイルの読み込み](./file-import-export.md#外部ファイルの読み込み)を参照してください。読み込みを Undo すると、置き換えられたロックとロックした値が戻ります。
 
 ロックによってファイルに反映されない変更は、変更として扱われません。VS Code はタブを未保存の状態にせず、Obsidian と JetBrains IDE は、自動で保存するときもタブを閉じるときも、ファイルをそのまま残します。
 そのため、すべてのロックがオンであれば、ダイアグラムを見て回っても、タブを切り替えても、別の言語、名前のケース、括弧を試しても、`git diff` に表れることはありません。
 `Viewport` がオフの場合はスクロールと拡大・縮小でファイルが変わり、`Canvas Type` がオフの場合は、設定タブへの切り替えも含め、タブの切り替えでもファイルが変わります。
 新しいダイアグラムの空のファイルは、ファイルに反映される最初の変更まで空のままです。編集、どのロックも保持していない設定の変更、ロックのオンとオフの切り替えがこれにあたります。
-そのような変更をせずにダイアグラムを開いて閉じた場合、どのリリースやマシンで書き込まれたファイルでも、ファイルはそのまま変わりません。ファイルにはダイアグラムの内容だけが決まった順序で保持され、以前のリリースで保存したファイルは、最初のそのような変更の時点で一度だけこの形式に書き直されます。[保存形式とランタイム値](../../api/advanced/schema.md#保存形式とランタイム値)を参照してください。
+そのような変更をせずにダイアグラムを開いて閉じた場合、どのリリースやマシンで書き込まれたファイルでも、ファイルはそのまま変わりません。ファイルにはダイアグラムの内容だけが決まった順序で保持され、古い形式で保存されたファイルは、最初のそのような変更の時点で一度だけこの形式に書き直されます。[保存形式とランタイム値](../../api/advanced/schema.md#保存形式とランタイム値)を参照してください。
 VS Code で、Git のリビジョンや Local History のエントリのように、`Reopen Editor With...` でダイアグラムとして開き直したリビジョンは読み取り専用で、未保存の状態になることはありません。
 Google Drive では、ロックの有無にかかわらず、スクロール、拡大・縮小、別のタブへの切り替えだけで保存されることはありません。`Viewport` がオフの場合、表示位置はほかの変更と一緒にだけ書き込まれるため、Drive のファイルは最後に保存されたときの表示位置で開きます。`Canvas Type` がオフの場合のタブも同様です。
 
@@ -103,12 +103,14 @@ MCP サーバーを通じて編集するコーディングエージェントに�
 | Editing | `Enter` | `Enter` |
 | Stop | `ESC` | `ESC` |
 | Search | `Ctrl + K` | `⌘ + K` |
-| [Find and Replace](./find-and-replace.md) | `Ctrl + F` | `⌘ + F` |
+| [Toggle Explorer](./explorer.md) | `Ctrl + F` | `⌘ + F` |
 | Undo | `Ctrl + Z` | `⌘ + Z` |
 | Redo | `Ctrl + Shift + Z` | `⌘ + Shift + Z` |
 | Add Table | `Alt + N` | `⌥ + N` |
 | Add Column | `Alt + Enter` | `⌥ + Enter` |
 | Add Memo | `Alt + M` | `⌥ + M` |
+| Add Table Group | `Alt + G` | `⌥ + G` |
+| Group Selected Tables | `T` に続けて `G` | `T` に続けて `G` |
 | Remove Table, Memo | `Ctrl + Backspace`, `Ctrl + Delete` | `⌘ + Backspace`, `⌘ + Delete` |
 | Remove Column | `Alt + Backspace`, `Alt + Delete` | `⌥ + Backspace`, `⌥ + Delete` |
 | Delete Selection | `Delete`, `Backspace` | `Delete`, `Backspace` |
@@ -128,15 +130,17 @@ MCP サーバーを通じて編集するコーディングエージェントに�
 | Zen Mode | `Alt + Z` | `⌥ + Z` |
 
 これらの多くは ERD タブでのみ動作し、クイック検索、テーブルのプロパティ、Diff Viewer、自動レイアウトのプレビュー、Time Travel、[`Export image`](./file-import-export.md#画像) ダイアログ、[`Map Columns`](./relationship-editing.md#map-columns) が開いている間は無効になります。
-`Search`、`Find and Replace`、`Stop` は例外です。`Search` はどのタブからでもクイック検索を開閉し、`Find and Replace` はどのタブからでも[検索と置換のパネル](./find-and-replace.md#opening-and-closing)を開いて ERD タブを表示し、`Stop` はクイック検索、テーブルのプロパティ、Diff Viewer、自動レイアウトのプレビュー、Time Travel、`Export image` ダイアログ、`Map Columns`、テーマビルダー、`Display Language` のピッカー、検索と置換のパネル、カラーピッカー、開いているコンテキストメニューを閉じます。
-Diff Viewer、自動レイアウトのプレビュー、Time Travel のいずれかが開いている間は、`Find and Replace` はそのキーをブラウザまたはホストに渡します。[ブラウザの検索バー](./find-and-replace.md#the-browsers-find-bar)を参照してください。
-ERD タブでは、`Stop` は開いているセルやメモの編集を終了するか、[テーブルグループ](./table-groups.md)の名前の編集をグループの名前を変えずに閉じるか、作成中のリレーションシップや描画中の `New Table Group` をキャンセルし、選択はそのまま残します。いずれも開いていない場合は、選択とフォーカスしているセルを解除し、同じ 1 回の押下で、開いている検索と置換のパネルやカラーピッカーも閉じます。
-検索と置換のパネル、テーマビルダー、`Display Language` のピッカーが開いていても、キャンバス上のショートカットが無効になることはありません。パネル内で押したキーについては[パネル内のキー](./find-and-replace.md#keys-in-the-panel)を、ピッカー内で押したキーについては[言語の選択](./language-and-theme.md#言語の選択)を参照してください。
+`Search`、`Toggle Explorer`、`Stop` は例外です。`Search` はどのタブからでもクイック検索を開閉し、`Toggle Explorer` はどのタブからでも[エクスプローラー](./explorer.md#opening-and-closing)を検索の状態で開いて ERD タブを表示し、`Stop` はクイック検索、テーブルのプロパティ、Diff Viewer、自動レイアウトのプレビュー、Time Travel、`Export image` ダイアログ、`Map Columns`、テーマビルダー、`Display Language` のピッカー、カラーピッカー、開いているコンテキストメニューを閉じます。
+エクスプローラーが ERD タブで開いていて Zen モードで隠れていない間は、ツールバーの `Explorer` ボタンと同じように、`Toggle Explorer` はエクスプローラーを再び閉じます。クイック検索、テーブルのプロパティ、テーマビルダー、`Display Language` のピッカー、`Export image` ダイアログ、`Map Columns` のいずれかが開いている場合は、代わりにそれを閉じて、キーボード操作をエクスプローラーの検索に移します。
+セル、メモ、テーブルグループの名前を編集している間は、`Toggle Explorer` は何もしません。Diff Viewer、自動レイアウトのプレビュー、Time Travel のいずれかが開いている間は、そのキーをブラウザまたはホストに渡します。[ブラウザの検索バー](./find-and-replace.md#the-browsers-find-bar)を参照してください。
+ERD タブでは、`Stop` は開いているセルやメモの編集を終了するか、[テーブルグループ](./table-groups.md)の名前の編集をグループの名前を変えずに閉じるか、作成中のリレーションシップや描画中の `New Table Group` をキャンセルし、選択はそのまま残します。いずれも開いていない場合は、選択とフォーカスしているセルを解除し、同じ 1 回の押下で、開いているカラーピッカーも閉じます。開いているテーマビルダーや `Display Language` のピッカーは、どちらの場合も同じ 1 回の押下で閉じます。
+エクスプローラー、テーマビルダー、`Display Language` のピッカーが開いていても、キャンバス上のショートカットが無効になることはありません。`Stop` がエクスプローラーを閉じることはありません。エクスプローラー内で `Stop` やほかのキーが何をするかについては[エクスプローラー内のキー](./explorer.md#keys-in-the-explorer)を、ピッカー内で押したキーについては[言語の選択](./language-and-theme.md#言語の選択)を参照してください。
 `Delete Selection` は、選択しているすべてのテーブル、メモ、テーブルグループを削除します。ただし、選択しているのがテーブル 1 つだけで、そのテーブルのカラムをいくつか選択していて、拡大・縮小のレベルが `70%` より大きい場合は、そのカラムを削除します。[テーブルとメモの削除](./table-related-functions.md#テーブルとメモの削除)を参照してください。`Remove Table, Memo` も、選択しているテーブルグループを削除します。
+`Add Table Group` は、[キャンバスツールバー](./table-related-functions.md#canvas-toolbar)の `New Table Group` ボタンと同じように [`New Table Group`](./table-groups.md#グループの描画) の描画を始め、もう一度押すと描画をキャンセルします。`Group Selected Tables` は修飾キーを使わずに 2 回押すキーで、`T` に続けて 1 秒以内に `G` を押します。テーブルのコンテキストメニューの `Group selected tables` と同じように、選択しているテーブルを新しいグループに入れてその名前の入力欄を開き、テーブルを選択していない場合は何もしません。[選択したテーブルのグループ化](./table-groups.md#選択したテーブルのグループ化)を参照してください。どちらも、読み取り専用のエディタや、グループを[非表示](./table-groups.md#グループの非表示)にしている間は何もしません。
 `Zoom In`、`Zoom Out`、`Zoom Reset` は、クイック検索が開いていなければ [Visualization](./visualization.md#toolbar) タブでも、`Graph` と `Flow` のどちらでも拡大・縮小します。
 Visualization タブでは、`Stop` は[行の表示](./visualization.md#row-display)のメニューも閉じ、実行中の [Flow のレイアウト](./visualization.md#how-flow-is-placed)をキャンセルします。`Focus on this table` で絞り込んだビューは広げません。
 `Focus on this table` は Visualization タブを `Flow` で開き、選択しているテーブルと、そこからリレーションシップ 1 つでつながるすべてのテーブルに絞り込みます。テーブルを選択していない場合は何もしません。[テーブルへのフォーカス](./visualization.md#focusing-on-tables)を参照してください。
-`Select All Table, Memo`、`Hand Tool`、`Delete Selection` はキャレットに譲ります。セルやメモの編集中や、検索と置換のパネルのようなテキスト入力欄で入力している間は、`Ctrl + A` (Windows/Linux) または `⌘ + A` (Mac) がテキストを選択し、`Space` は空白を入力し、`Delete` と `Backspace` はテキストを消去します。
+`Select All Table, Memo`、`Hand Tool`、`Delete Selection`、`Group Selected Tables` はキャレットに譲ります。セルやメモの編集中や、エクスプローラーの検索フィールドのようなテキスト入力欄で入力している間は、`Ctrl + A` (Windows/Linux) または `⌘ + A` (Mac) がテキストを選択し、`Space` は空白を入力し、`Delete` と `Backspace` はテキストを消去し、`T` に続けて `G` を押すとその 2 文字が入力されます。
 コピーと貼り付けはブラウザ標準の `Ctrl + C` と `Ctrl + V` (Windows/Linux) または `⌘ + C` と `⌘ + V` (Mac) のため、この一覧には含まれていません。[テーブルの編集](./table-editing.md)を参照してください。
 
 このタブからキー割り当てを変更することはできません。

@@ -1,5 +1,5 @@
 ---
-sidebar_position: 9
+sidebar_position: 10
 description: 以力导向的 Graph 或由表卡片组成的 Flow 浏览 schema，可缩放、可平移，能点亮一个表的相关表，并能一次只聚焦于少数几个表。
 ---
 
@@ -137,7 +137,7 @@ Flow 没有小地图，也没有滚动条。如果平移之后屏幕上没有留
 指针位于卡片上方时，其标题栏右端会出现两个图标按钮，两者都没有提示：
 
 - 航点图标（与 `Flow` 按钮上的图标相同）会将 Flow 的范围缩小到该表以及与它相隔一条关系的表，参见[聚焦于表](#focusing-on-tables)。
-- 外部链接图标会切换到 ERD 标签页，只选中该表并将其移到最前面，表名会获得焦点，除非焦点原本就在该表的某个单元格中。如果该表尚未完全显示在视野中，画布会滚动使其居中。查找与替换面板打开期间，只有面板旁边的那部分画布才算在内，与[跳转到匹配项](./find-and-replace.md#going-to-a-match)时相同。它永远不会开始或完成正在绘制的关系。
+- 外部链接图标会切换到 ERD 标签页，只选中该表并将其移到最前面，表名会获得焦点，除非焦点原本就在该表的某个单元格中。只有当该表没有显示得足够清楚时，画布才会滚动到它，参见[跳转的落点](./table-related-functions.md#where-a-jump-lands)。它永远不会开始或完成正在绘制的关系。
 
 按下任一按钮都只作用于按钮本身：与按下卡片的其他部位不同，它不会选中卡片，也不会把它移到最前面。因此航点按钮会保留你原有的选中状态；外部链接按钮只是在切换到 ERD 标签页的过程中选中该表。两个按钮都只响应鼠标左键点击。
 
@@ -156,7 +156,7 @@ Visualization 标签页会以 `Flow` 打开，范围缩小到这些表以及与�
 
 当右键点击的表是多个选中表之一时，该条目显示为 `Focus on selected tables`，并聚焦于整个选中范围。右键点击选中范围之外的表时，只聚焦于该表。  
 `Alt + F` 取用选中的表，不包括备注和[表分组](./table-groups.md)。没有选中任何表时它不起作用，即使选中了分组也是如此：请先在分组的右键菜单中选择 `Select tables`，参见[选中分组](./table-groups.md#selecting-groups)。  
-在编辑单元格、备注或表分组的名称期间，光标位于[查找与替换](./find-and-replace.md#keys-in-the-panel)面板中时，或者快速搜索、表属性、Diff Viewer、自动布局预览、Time Travel、[`Export image`](./file-import-export.md#image) 对话框或 [`Map Columns`](./relationship-editing.md#map-columns) 打开期间，它都会被忽略。
+在编辑单元格、备注或表分组的名称期间，键盘焦点位于[资源管理器](./explorer.md#keys-in-the-explorer)中时，或者快速搜索、表属性、Diff Viewer、自动布局预览、Time Travel、[`Export image`](./file-import-export.md#image) 对话框或 [`Map Columns`](./relationship-editing.md#map-columns) 打开期间，它都会被忽略。
 
 在 Flow 内部，航点[卡片按钮](#card-buttons)会以同样的方式缩小视图范围，只是针对那一个表。[工具栏](#toolbar)上的 `Show all` 会回到整张图。  
 缩小范围后的视图会单独排布并适应屏幕。离开该标签页或切换到 `Graph` 再回来时，它仍保持缩小后的范围，`Escape` 也不会将其扩大。
@@ -191,7 +191,7 @@ Flow 为整张图和缩小范围后的视图各保留一份布局，因此只要
 Flow 只读取图。缩放、平移、移动卡片、`Tidy Up`、行显示、固定和聚焦都不会向 [Undo 历史记录](./undo-redo.md#what-the-history-records)中添加任何内容。  
 它们也不会改变图中的任何内容。按下卡片确实会把对应的表移到最前面，就像在 ERD 标签页上点击表一样，因此该表在 ERD 标签页上也会位于最前面，但堆叠顺序不会被保存，参见[移动多个表](./table-related-functions.md#移动多个表)。`Graph` 同样不会改动图。  
 按下卡片永远不会添加关系。如果你在绘制关系的过程中离开了 ERD 标签页，那么在尚未选取起点表时，按下卡片会将其表选为起点，否则会结束这次绘制。  
-外部链接[卡片按钮](#card-buttons)则更进一步，因为它会把你带出 Flow：它在 ERD 标签页上造成的滚动会像其他任何视图位置变化一样被记录。
+外部链接[卡片按钮](#card-buttons)则更进一步，因为它会把你带出 Flow：当 ERD 标签页需要滚动到该表时，这次滚动会像其他任何视图位置变化一样被记录。
 
 你在 Flow 中时，协作者的编辑仍会反映到图上，卡片也会随他们添加或删除的表与关系而变化，参见 [Flow 的排布方式](#how-flow-is-placed)。  
 他们的选中与焦点环形边框会绘制在卡片上，但他们的光标和选择框不会，参见[协同编辑](../../api/advanced/collaborative-editing.md)。

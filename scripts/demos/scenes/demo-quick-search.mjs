@@ -7,12 +7,16 @@
 import { readSeed, seedSQL } from '../lib/seed.mjs';
 import { timer, waitDom } from './_vsc-helpers.mjs';
 
-/** Waits for the palette to list `count` rows. */
+/**
+ * Waits for the palette to list `count` rows. The list is virtual: it draws
+ * only the rows in view, each a .quick-search-row, which a list this short
+ * holds all of.
+ */
 async function waitRows(d, count) {
   const until = Date.now() + 4000;
   for (;;) {
     const rows = await d.page.evaluate(
-      () => window.__erdShadowRoot.querySelectorAll('.quick-search .scrollbar > div').length
+      () => window.__erdShadowRoot.querySelectorAll('.quick-search .quick-search-row').length
     );
     if (rows === count) return;
     if (Date.now() > until) throw new Error(`waitRows: ${rows} rows, wanted ${count}`);
@@ -32,7 +36,8 @@ async function waitClosed(d) {
 export default {
   name: 'demo-quick-search',
   width: 960,
-  // Tall enough for the whole palette: the command list runs to 542px.
+  // Tall enough for the whole palette: its list stands at most 400px, which
+  // ends the command list at about 541px.
   height: 560,
   async setup(d) {
     // Four tables on screen; payments and the rest sit off to the right.

@@ -257,6 +257,10 @@ Since `4.0.0` the kept actions also include `table.changeGroup`, seven of the ei
 A store from an earlier release drops the new actions, so it loses [table groups](../../guide/guides/table-groups.md), the [locks](../../guide/guides/settings.md#lock), the [Schema SQL](../../guide/guides/schema-sql.md) scripts, and the columns [Map Columns](../../guide/guides/relationship-editing.md#map-columns) gives an existing relationship.  
 Run the replica on the same release as the editors, or a newer one.
 
+`4.1.0` adds no action type and leaves `@dineug/erd-editor/engine.js` as it was, so a `4.0.0` replica keeps every change a `4.1.0` editor sends, just as a `4.1.0` replica does.  
+Since `4.1.0`, `Replace` and `Replace All` in [Find and Replace](../../guide/guides/find-and-replace.md#replacing) also rename indexes and table groups, through the `index.changeName` and `tableGroup.changeName` actions a `4.0.0` replica already keeps.  
+The [Explorer](../../guide/guides/explorer.md)'s own state is never sent, and a tab switch or a scroll it makes arrives as any other tab switch or scroll does; see [Collaborative Editing](./collaborative-editing.md).
+
 Since `4.0.0` both methods also apply `editor.mergeLWW`, which carries the collaboration registers an editor answers with when another one joins the session, so the replica settles concurrent edits the way the editors do.  
 It changes no byte of `value` and fires no `change`.  
 `settings.changeIgnoreSaveSettings`, which an editor released before `4.0.0` may still send, is kept but changes nothing: it fires `change` with `changed` set to `false`.

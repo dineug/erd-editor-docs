@@ -1,5 +1,5 @@
 ---
-sidebar_position: 11
+sidebar_position: 12
 description: 다이어그램에서 22가지 대상의 코드 생성, 옵션 패널에서 언어·데이터베이스·이름 케이스·Bracket 선택, 관계의 ON DELETE와 ON UPDATE 동작을 작성하는 대상, 결과 저장과 복사.
 ---
 
@@ -8,12 +8,12 @@ description: 다이어그램에서 22가지 대상의 코드 생성, 옵션 패�
 툴바의 `Code Generator` 탭으로 전환합니다. 탭은 왼쪽에 문서 전체의 코드를, 그 오른쪽에 `Code Generator`라는 제목의 옵션 패널을 보여 주며, 이 패널에서 언어, 데이터베이스, 이름 케이스, 그리고 일부 대상에서는 `Bracket`을 고릅니다.  
 탭을 처음 열 때 에디터의 너비가 640 px보다 좁지 않으면 패널이 자동으로 열립니다. 패널 위쪽의 `Hide options`는 패널을 접고, 코드 오른쪽 위의 `Show options`는 패널을 다시 엽니다. 패널이 열려 있거나 접혀 있는 상태는 에디터가 열려 있는 동안 탭을 전환해도 유지되며, Schema SQL 탭의 패널과는 따로 유지되고, 파일에는 저장되지 않습니다.
 
-코드에서 마우스 오른쪽 클릭으로 컨텍스트 메뉴를 엽니다. 메뉴에는 `Language`, `Database`, `Table Name Case`, `Column Name Case`, `Bracket`(`Doctrine`, `JPA`, `SeaORM`에서만)이 있으며, 각각 현재 값에 체크 표시가 된 하위 메뉴를 엽니다. 그 뒤로 패널을 접거나 열며 패널이 표시되는 동안 체크 표시가 되는 `Options panel`, 그리고 `Save file…`이 이어집니다.  
+코드에서 마우스 오른쪽 클릭으로 컨텍스트 메뉴를 엽니다. 메뉴에는 `Language`, `Database`, `Table Name Case`, `Column Name Case`, `Bracket`(`Doctrine`, `JPA`, `SeaORM`에서만)이 있으며, 각각 현재 값에 체크 표시가 된 하위 메뉴를 엽니다. 그 뒤로 패널을 접거나 열며 패널이 표시되는 동안 체크 표시가 되는 `Options panel`, 그리고 `Save file`이 이어집니다.  
 이 탭이 열려 있는 동안 [빠른 검색](./quick-search.md)에는 `Database`, `Bracket`(`Doctrine`, `JPA`, `SeaORM`에서만), `Language`, `Table Name Case`, `Column Name Case`, 그리고 패널을 접거나 여는 `Code Generator: Options panel`이 표시됩니다.
 
 ![코드의 컨텍스트 메뉴에서 TypeScript에 이어 Rust를 고르고, 옵션 패널에서 컬럼 이름을 Snake로 바꾼 뒤 코드 복사하기](/img/demo-code-generator.webp)
 
-같은 코드 보기는 [테이블 속성](./table-related-functions.md#테이블-속성)의 `Code Generator` 탭이기도 하며, 여기서는 문서 전체가 아니라 해당 테이블 하나의 코드를 생성합니다. 그곳에는 옵션 패널이 없으며, 컨텍스트 메뉴는 같은 설정을 변경하지만 `Options panel`과 `Save file…`은 없습니다.  
+같은 코드 보기는 [테이블 속성](./table-related-functions.md#테이블-속성)의 `Code Generator` 탭이기도 하며, 여기서는 문서 전체가 아니라 해당 테이블 하나의 코드를 생성합니다. 그곳에는 옵션 패널이 없으며, 컨텍스트 메뉴는 같은 설정을 변경하지만 `Options panel`과 `Save file`은 없습니다.  
 문서 전체의 코드가 import나 헤더로 시작하는 대상에서는 테이블 하나의 코드도 그 테이블에 필요한 것으로 시작합니다. 예를 들어 `PHP`는 `<?php`, `Swift`는 `import Foundation`, `JSON Schema`는 `$schema`로 시작합니다.
 
 코드는 탭을 열 때 작성되고, 언어, 데이터베이스, 이름 케이스, `Bracket` 중 하나가 바뀔 때마다 다시 작성됩니다. 공동 편집자나 코딩 에이전트의 편집처럼 탭이 열려 있는 동안 다이어그램에 일어난 편집은 탭을 떠났다가 돌아오거나 그 설정 중 하나가 바뀌면 표시됩니다.
@@ -127,7 +127,7 @@ Schema SQL 탭의 `Bracket`과 같은 설정이므로, 여기서 바꾸면 Schem
 
 ## 결과 저장과 복사
 
-옵션 패널 아래쪽의 `Save file`이나 컨텍스트 메뉴의 `Save file…`은 표시된 코드를 파일로 저장합니다.  
+옵션 패널 아래쪽이나 컨텍스트 메뉴에 있는 `Save file`은 표시된 코드를 파일로 저장합니다.  
 파일 이름은 다른 모든 내보내기와 마찬가지로 `<데이터베이스 이름>-<시간>` 뒤에 [Language](#language) 표의 확장자가 붙으며, 예를 들면 `shop-2026-10-12T04_05_06.ts`입니다. 파일은 호스트에서 모든 내보내기 파일이 저장되는 곳에 저장됩니다. [내보내기](./file-import-export.md#내보내기) 문서를 참고하세요. `Java`와 `JPA`는 탭에 표시되는 그대로 모든 클래스를 `.java` 파일 하나에 담습니다.  
 Export 메뉴에는 Code Generator 항목이 없으며, 테이블 속성의 `Code Generator` 탭에서는 파일을 저장할 수 없습니다.
 

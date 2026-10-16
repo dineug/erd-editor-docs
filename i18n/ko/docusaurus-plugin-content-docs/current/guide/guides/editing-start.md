@@ -1,6 +1,6 @@
 ---
 sidebar_position: 1
-description: 시작 화면에서 편집 시작, 캔버스 컨텍스트 메뉴에서 테이블, 메모, 테이블 그룹과 관계 생성.
+description: 시작 화면에서 편집 시작, 캔버스 컨텍스트 메뉴, 캔버스 툴바, 단축키로 테이블, 메모, 테이블 그룹과 관계 생성.
 ---
 
 # 편집 시작하기
@@ -38,13 +38,17 @@ description: 시작 화면에서 편집 시작, 캔버스 컨텍스트 메뉴에
 - `Theme` 버튼과 `Display Language` 버튼: `Pick a theme and a language`, 툴바에 둘 중 하나만 표시되면 `Pick a theme` 또는 `Pick a language`. [언어와 테마](./language-and-theme.md) 문서를 참고하세요.
 - 아래쪽의 [캔버스 툴바](./table-related-functions.md#캔버스-툴바): `Pan, zoom and draw relationships`
 
+[탐색기](./explorer.md)가 표시되어 있는 동안에는 시작 화면이 탐색기 옆의 캔버스만 덮습니다.  
+툴바 버튼이 탐색기 위쪽에 있는 화살표는 표시되지 않습니다. `Theme`과 `Display Language` 화살표는 두 버튼이 모두 탐색기 위쪽에 있을 때만 표시되지 않으며, 그 전까지는 아직 캔버스 위쪽에 있는 버튼을 가리킵니다.  
+화살표 옆에 공간이 없는 라벨은 대신 화살표 아래에 표시됩니다.
+
 ## 테이블 생성
 
-컨텍스트 메뉴 또는 단축키 `Alt + N`으로 생성 가능합니다.
+컨텍스트 메뉴, [캔버스 툴바](./table-related-functions.md#캔버스-툴바)의 `New Table` 버튼, 또는 단축키 `Alt + N`으로 테이블을 생성할 수 있습니다.
 
 ## 메모 생성
 
-컨텍스트 메뉴 또는 단축키 `Alt + M`으로 생성 가능합니다.  
+컨텍스트 메뉴, 캔버스 툴바의 `New Memo` 버튼, 또는 단축키 `Alt + M`으로 메모를 생성할 수 있습니다.  
 View Option → `Memos`가 꺼져 있는 동안에는 메모가 숨겨지고, 어디에도 `New Memo`가 표시되지 않으며, `Alt + M`으로도 메모가 추가되지 않습니다. [테이블 보기 옵션](./table-related-functions.md#테이블-보기-옵션) 문서를 참고하세요.
 
 메모는 캔버스에 자유롭게 작성하는 노트입니다. 본문을 클릭해서 입력하면 텍스트가 문서와 함께 저장됩니다.  
@@ -58,10 +62,10 @@ View Option → `Memos`가 꺼져 있는 동안에는 메모가 숨겨지고, �
 
 테이블 그룹은 테이블을 담는 박스이며, 이름과 색상을 지정할 수 있습니다. 다음 두 가지 방법으로 생성합니다.
 
-- 컨텍스트 메뉴 또는 빠른 검색에서 `New Table Group`을 선택한 뒤 캔버스 위에 박스를 드래그합니다. 중앙이 박스 안에 있는 테이블은 이미 다른 그룹에 속해 있지 않은 한 새 그룹에 들어갑니다.
-- 테이블을 선택하고 테이블 컨텍스트 메뉴에서 `Group selected tables`를, 또는 빠른 검색에서 `Group Selected Tables`를 선택합니다.
+- 컨텍스트 메뉴 또는 빠른 검색에서 `New Table Group`을 선택하거나, [캔버스 툴바](./table-related-functions.md#캔버스-툴바)의 `New Table Group` 버튼을 클릭하거나, `Alt + G` (Windows/Linux) or `⌥ + G` (Mac)를 누른 뒤 캔버스 위에 박스를 드래그합니다. 중앙이 박스 안에 있는 테이블은 이미 다른 그룹에 속해 있지 않은 한 새 그룹에 들어갑니다. [그룹 그리기](./table-groups.md#그룹-그리기) 문서를 참고하세요.
+- 테이블을 선택하고 테이블 컨텍스트 메뉴에서 `Group selected tables`를, 또는 빠른 검색에서 `Group Selected Tables`를 선택하거나, `T` 다음 `G`를 누릅니다. [선택한 테이블 그룹화](./table-groups.md#선택한-테이블-그룹화) 문서를 참고하세요.
 
-두 방법 모두 단축키는 없습니다. 이름 지정, 색상 지정, 이동, 크기 조절 등은 [테이블 그룹](./table-groups.md) 문서에서 다룹니다.
+이름 지정, 색상 지정, 이동, 크기 조절 등은 [테이블 그룹](./table-groups.md) 문서에서 다룹니다.
 
 ## 관계 생성
 

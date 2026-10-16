@@ -49,7 +49,7 @@ export default {
 
     const settings = await d.domBox('[title="Settings"]');
     // Along the gap above members, then up into the toolbar under Settings,
-    // so Search and Find and Replace do not light up on the way.
+    // so Search and Explorer do not light up on the way.
     await glide(
       d,
       [

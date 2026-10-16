@@ -24,7 +24,13 @@ claude mcp add --transport stdio erd-editor -- npx -y @dineug/erd-editor-mcp
 
 ## Codex
 
-添加到 `~/.codex/config.toml`，或者受信任项目中的 `.codex/config.toml`：
+运行一次即可。Codex 的 CLI、应用和 IDE 扩展共用该设置：
+
+```sh
+codex mcp add erd-editor -- npx -y @dineug/erd-editor-mcp
+```
+
+也可以把服务器添加到 `~/.codex/config.toml`，或者受信任项目中的 `.codex/config.toml`：
 
 ```toml
 [mcp_servers.erd-editor]
@@ -119,7 +125,7 @@ ERD Editor 在打开某个图期间不会重新加载在磁盘上发生变化的
 两者不一致时，到达该编辑器的每次调用都会以 `protocolMismatch` 被拒绝，读取和 `erd_list_documents` 也不例外，并且不会写入任何内容。
 消息会指出需要更新哪一方：服务器，或者编辑器中的 ERD Editor，即 VS Code 中的扩展，以及 Obsidian 和 JetBrains IDE 中的插件。
 
-服务器 `1.0.0`、VS Code 扩展 `4.0.0`、Obsidian 插件 `1.0.0` 以及 JetBrains 插件 `1.0.0` 使用协议 2。
+服务器 `1.0.0`、VS Code 扩展 `4.0.0` 或更高版本、Obsidian 插件 `1.0.0` 或更高版本以及 JetBrains 插件 `1.0.0` 或更高版本使用协议 2。
 所有更早的服务器都使用协议 1，为智能体提供服务的所有更早的编辑器发布版本也是如此：VS Code 扩展 `3.0.0` 至 `3.1.0`、Obsidian 插件 `0.1.0` 和 `0.2.0`，以及 JetBrains 插件 `0.9.0` 和 `0.10.0`。
 这类编辑器与服务器 `1.0.0` 会互相拒绝，更早的服务器与使用协议 2 的编辑器同样会互相拒绝。
 `3.0.0` 之前的 VS Code 扩展或 `0.9.0` 之前的 JetBrains 插件完全不为智能体提供服务，因此智能体会编辑磁盘上的文件，即使是在其中打开的图也一样。
@@ -131,6 +137,7 @@ ERD Editor 在打开某个图期间不会重新加载在磁盘上发生变化的
 
 请将服务器与扩展或插件一起更新。
 此外，请在所有打开这些图的地方都更新 ERD Editor。
-对于当前版本保存的图，无论是在编辑器中保存的，还是作为智能体在磁盘上的编辑写入的，较早的版本显示时都不带主键图标，并且在保存该文件时会丢掉其中的表分组和 Schema SQL 脚本。
+对于较新版本保存的图，或者智能体在磁盘上编辑过的图，`4.0.0` 之前的 VS Code 扩展、`1.0.0` 之前的 Obsidian 插件以及 `1.0.0` 之前的 JetBrains 插件显示时都不带主键图标。
+它们在保存该文件时会丢掉其中的表分组和 Schema SQL 脚本。
 `3.1.0` 之前的 VS Code 扩展、`0.2.0` 之前的 Obsidian 插件以及 `0.10.0` 之前的 JetBrains 插件在保存文件时还会丢掉图中的 ON DELETE 与 ON UPDATE 操作。
 在 Obsidian 中，更新插件后请重启应用：在此之前，仓库窗口会继续运行它最先加载的那个插件版本中的 ERD Editor。

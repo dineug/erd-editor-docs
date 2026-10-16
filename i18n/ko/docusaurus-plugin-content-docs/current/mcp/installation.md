@@ -24,7 +24,13 @@ claude mcp add --transport stdio erd-editor -- npx -y @dineug/erd-editor-mcp
 
 ## Codex
 
-`~/.codex/config.toml`이나, 신뢰하는 프로젝트의 `.codex/config.toml`에 추가합니다.
+한 번 실행합니다. Codex CLI, 앱, IDE 확장이 이 설정을 공유합니다.
+
+```sh
+codex mcp add erd-editor -- npx -y @dineug/erd-editor-mcp
+```
+
+또는 `~/.codex/config.toml`이나, 신뢰하는 프로젝트의 `.codex/config.toml`에 서버를 추가합니다.
 
 ```toml
 [mcp_servers.erd-editor]
@@ -119,7 +125,7 @@ ERD Editor는 열려 있는 동안 디스크에서 바뀐 다이어그램을 다
 둘이 다르면 그 에디터에 닿는 모든 호출이 읽기와 `erd_list_documents`를 포함해 `protocolMismatch`로 거부되며, 아무것도 쓰이지 않습니다.
 메시지에는 업데이트할 쪽이 표시됩니다. 서버이거나 에디터의 ERD Editor이며, ERD Editor는 VS Code에서는 확장, Obsidian과 JetBrains IDE에서는 플러그인입니다.
 
-서버 `1.0.0`, VS Code 확장 `4.0.0`, Obsidian 플러그인 `1.0.0`, JetBrains 플러그인 `1.0.0`은 프로토콜 2를 사용합니다.
+서버 `1.0.0`, VS Code 확장 `4.0.0` 이상, Obsidian 플러그인 `1.0.0` 이상, JetBrains 플러그인 `1.0.0` 이상은 프로토콜 2를 사용합니다.
 그보다 이전의 모든 서버는 프로토콜 1을 사용하며, 에이전트를 지원하는 그보다 이전의 모든 에디터 릴리스도 마찬가지입니다. VS Code 확장 `3.0.0`부터 `3.1.0`까지, Obsidian 플러그인 `0.1.0`과 `0.2.0`, JetBrains 플러그인 `0.9.0`과 `0.10.0`입니다.
 이런 에디터와 서버 `1.0.0`은 서로를 거부하며, 이전 서버와 프로토콜 2를 사용하는 에디터도 서로를 거부합니다.
 `3.0.0` 이전의 VS Code 확장이나 `0.9.0` 이전의 JetBrains 플러그인은 에이전트를 전혀 지원하지 않으므로, 에이전트는 그 안에서 열린 다이어그램이라도 디스크의 파일을 편집합니다.
@@ -131,6 +137,7 @@ ERD Editor는 열려 있는 동안 디스크에서 바뀐 다이어그램을 다
 
 서버와 확장 또는 플러그인을 함께 업데이트하세요.
 다이어그램을 여는 모든 곳의 ERD Editor도 업데이트하세요.
-이전 릴리스는 현재 릴리스가 에디터에서, 또는 디스크에서의 에이전트 편집으로 저장한 다이어그램을 primary key 아이콘 없이 표시하며, 파일을 저장할 때 그 다이어그램의 테이블 그룹과 Schema SQL 스크립트를 버립니다.
+`4.0.0` 이전의 VS Code 확장, `1.0.0` 이전의 Obsidian 플러그인, `1.0.0` 이전의 JetBrains 플러그인은 그 이후의 릴리스가 저장했거나 에이전트가 디스크에서 편집한 다이어그램을 primary key 아이콘 없이 표시합니다.
+이 릴리스들은 파일을 저장할 때 그 다이어그램의 테이블 그룹과 Schema SQL 스크립트를 버립니다.
 `3.1.0` 이전의 VS Code 확장, `0.2.0` 이전의 Obsidian 플러그인, `0.10.0` 이전의 JetBrains 플러그인은 파일을 저장할 때 다이어그램의 ON DELETE와 ON UPDATE 동작도 버립니다.
 Obsidian에서는 플러그인을 업데이트한 뒤 앱을 다시 시작하세요. 그때까지 볼트 창은 처음 불러온 플러그인 버전의 ERD Editor를 계속 실행합니다.

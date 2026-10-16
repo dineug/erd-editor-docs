@@ -68,14 +68,18 @@ interface ErdEditorElement extends HTMLElement {
 
 속성은 `readonly`, `system-dark-mode`, `enable-theme-builder`, `enable-locale-picker`, `enable-welcome-screen` 5개뿐이며, 다섯 모두 기본값은 `false`입니다. 마지막 두 개는 `4.0.0`에서 새로 추가되었습니다. 각 속성은 [readonly](#readonly)에서 설명하는 방식으로 값을 읽습니다.
 
+`4.1.0`부터 ERD 탭에는 [탐색기](../guide/guides/explorer.md)가 있습니다. 탐색기는 캔버스 왼쪽에 도킹되어 다이어그램을 트리로 보여 주며, 맨 위에 찾기와 바꾸기가 있습니다. 탐색기를 열거나 닫거나 그 상태를 알려 주는 속성, 프로퍼티, 메서드, 이벤트는 없습니다. 탐색기는 툴바의 `Explorer` 버튼, 빠른 검색이나 캔버스 컨텍스트 메뉴의 `Toggle Explorer`, 또는 [`findReplace`](#setkeybindingmap) 바인딩으로 엽니다.  
+모든 엘리먼트는 탐색기가 닫힌 상태로 시작합니다. 탐색기가 열려 있는지 여부, 너비, 접힌 상태, 검색은 탭 전환과 `setInitialValue`를 포함한 모든 불러오기를 거쳐 엘리먼트가 있는 동안 유지되며, `value`, `runtimeValue`, Undo 기록, shared store 어디에도 담기지 않습니다.
+
 ## readonly
 
 에디터 편집 가능 여부를 설정합니다.  
 설정된 동안에는 `value` 할당, `clear()`, `setSchemaSQL()`, `setSchemaGraphQL()`, `setSchemaDBML()`, `setSchemaAML()`, `setSchemaJSON()`, Undo, Redo가 모두 무시되고 `change` 이벤트도 발행되지 않습니다. 문서를 불러올 때는 [setInitialValue](#setinitialvalue)를 사용하세요.  
 보기는 그대로 동작합니다. 확대/축소, 화면 이동, 손 도구, Zen 모드, 캔버스 탭, 두 모드와 테이블 포커스를 포함한 [Visualization](../guide/guides/visualization.md) 탭, 데이터베이스 벤더, SQL과 코드 생성 출력 설정이 모두 적용되므로, `readonly` 상태에서도 다른 벤더의 SQL을 내보내거나 생성된 코드를 확인할 수 있습니다.  
-`3.10.0`부터는 [찾기와 바꾸기](../guide/guides/find-and-replace.md#읽기-전용-에디터)도 열리며, 제목이 `Find`이고 Replace 입력란과 버튼이 없는 찾기 전용 패널로 표시됩니다. 일치 항목으로 이동하면 여전히 그 항목을 화면에 표시하고 선택합니다.  
+`4.1.0`부터는 [탐색기](../guide/guides/explorer.md#읽기-전용-에디터)도 열리며, 탐색기의 행을 고르면 편집 가능한 에디터에서와 마찬가지로 그 행이 나타내는 대상으로 이동합니다. 탐색기 맨 위의 [찾기와 바꾸기](../guide/guides/find-and-replace.md#읽기-전용-에디터)는 `Toggle Replace` 화살표와 Replace 줄 없이 찾기만 하며, 일치 항목으로 이동하면 여전히 그 항목을 화면에 표시하고 선택합니다. 패널의 제목은 `Explorer`이고, 툴바 버튼의 툴팁은 모든 에디터에서 `Explorer (Ctrl + F)` (Windows/Linux) or `Explorer (⌘ + F)` (Mac)입니다. `3.10.0`부터 `4.0.0`까지는 찾기와 바꾸기가 제목이 `Find`인 찾기 전용의 떠 있는 패널로 열렸습니다.  
 테이블 속성도 그대로 열리며, `3.10.0`부터는 제목 옆에 `Read only` 배지가 표시되고 `Indexes` 탭에서는 아무것도 편집할 수 없습니다. [테이블 속성](../guide/guides/table-related-functions.md#테이블-속성) 문서를 참고하세요.  
 `4.0.0`부터 `readonly` 에디터는 [`Import and Add`](../guide/guides/file-import-export.md#가져와서-추가), `New Table Group`, `Group selected tables`, `Remove from group`([테이블 그룹](../guide/guides/table-groups.md#읽기-전용-에디터) 문서 참고), [`Map Columns`](../guide/guides/relationship-editing.md#컬럼-매핑)를 제공하지 않으며, [시작 화면](#enablewelcomescreen)도 표시하지 않습니다. Settings 탭의 잠금 버튼은 아무것도 바꾸지 않으며, Schema SQL 탭의 `Before tables`와 `After tables` 스크립트는 편집할 수 없습니다.  
+`4.1.0`부터는 [캔버스 툴바](../guide/guides/table-related-functions.md#캔버스-툴바)에 `New Table`, `New Memo`, `New Table Group` 버튼도 표시하지 않으며, `addTableGroup`과 `groupSelectedTables` 바인딩은 아무 동작도 하지 않습니다.  
 저장되지 않는 Schema SQL 탭의 `This window only` 선택인 `Statements`, `Header`, `Tables`는 그대로 적용되며, [`Export image`](../guide/guides/file-import-export.md#이미지) 대화 상자, 테마 빌더, Display Language 선택기도 마찬가지입니다. 테마 빌더나 Display Language 선택기에서 고르면 여전히 [changePresetTheme](#changepresettheme)이나 [changeLocale](#changelocale)을 발행합니다.  
 속성만 쓰거나 `=""`, `="true"`는 모두 `true`로 읽힙니다. `="false"`는 `false`로 읽히고, HTML 관용 표기인 `readonly="readonly"`를 포함해 그 밖의 문자열도 마찬가지입니다.
 
@@ -244,7 +248,7 @@ editor.addEventListener('change', () => {
 UI 편집, `value` 할당, `clear()`, 각 `setSchema*` 메서드, 그리고 `4.0.0`부터는 `setSchemaJSON()`과 `Import and Add` 등 문서가 변경되는 모든 경우에 발행됩니다. `setInitialValue`는 발행하지 않습니다.  
 Visualization 탭의 Flow 모드 안에서 하는 확대/축소, 화면 이동, 카드 이동, `Tidy Up`, 행 표시 변경, 카드에서 뷰 범위 좁히기는 모두 문서 변경이 아니므로 어느 것도 이벤트를 발행하지 않습니다.  
 `4.0.0`부터 [잠금](../guide/guides/settings.md#잠금)이 켜진 설정의 변경도 화면만 바꾸고 `value`는 바꾸지 않으므로 이벤트를 발행하지 않습니다. `Viewport`가 잠겨 있는 동안의 ERD 캔버스 스크롤이나 확대/축소, `Canvas Type`이 잠겨 있는 동안의 탭 전환, 그리고 각자의 잠금이 켜져 있는 동안의 Code Generator 언어, 테이블 이름 케이스, 컬럼 이름 케이스, 괄호 타입 변경이 해당합니다. 제외되는 것은 이런 변경뿐이므로, 문서도 함께 편집하는 묶음은 여전히 이벤트를 발행합니다. 설정을 잠그거나 잠금을 해제하면 이벤트를 발행합니다.  
-새 문서와 `4.0.0` 이전에 저장한 모든 파일은 모든 잠금이 켜져 있으므로, 기본적으로 스크롤, 확대/축소, 탭 전환은 아무것도 발행하지 않습니다. ERD 탭에서 실행하는 테이블 포커스, Flow에서 ERD 탭으로 돌아가는 외부 링크 카드 버튼, 다른 탭에서 찾기와 바꾸기를 열거나 빠른 검색 결과로 이동하는 것도 여기에 해당합니다. 이들은 각각을 다루는 잠금이 꺼져 있는 동안에만 `change`를 한 번 발행합니다. 탭 전환은 `Canvas Type`, 카드 버튼이나 빠른 검색 결과가 함께 일으키는 스크롤은 `Viewport`입니다. `4.0.0` 이전에는 스크롤, 확대/축소, 탭 전환이 `editor.value`가 같게 나오더라도 항상 이벤트를 발행했습니다.  
+새 문서와 `4.0.0` 이전에 저장한 모든 파일은 모든 잠금이 켜져 있으므로, 기본적으로 스크롤, 확대/축소, 탭 전환은 아무것도 발행하지 않습니다. ERD 탭에서 실행하는 테이블 포커스, Flow에서 ERD 탭으로 돌아가는 외부 링크 카드 버튼, 탐색기의 행이나 검색의 일치 항목으로 이동하는 것, 그리고 다른 탭에서 탐색기를 열거나 빠른 검색 결과로 이동하는 것도 여기에 해당합니다. 이들은 각각을 다루는 잠금이 꺼져 있는 동안에만 `change`를 한 번 발행합니다. 탭 전환은 `Canvas Type`, 카드 버튼, 빠른 검색 결과, 탐색기의 행, 검색의 일치 항목이 함께 일으키는 스크롤은 `Viewport`입니다. `4.1.0`부터 이 스크롤은 모두 [이동 후 화면 위치](../guide/guides/table-related-functions.md#이동-후-화면-위치)라는 하나의 규칙을 따르므로, 빠른 검색의 테이블 결과가 더 이상 매번 스크롤하지 않으며, 규칙에 따라 화면을 그대로 두는 이동에는 발행할 스크롤이 없습니다. 탐색기를 열거나 닫거나 크기를 조절하면 캔버스는 원점을 옮기지 않은 채 좁아지거나 넓어지며, 이 역시 아무것도 발행하지 않습니다. `4.0.0` 이전에는 스크롤, 확대/축소, 탭 전환이 `editor.value`가 같게 나오더라도 항상 이벤트를 발행했습니다.  
 아무것도 바꾸지 않는 쓰기를 건너뛰려면 불러온 파일이 아니라 마지막으로 저장한 값과 `editor.value`를 비교하세요. `value`는 파일에 담기는 형태로 기록하므로, 이전 릴리스가 저장한 파일, v2 파일, 직접 편집한 파일은 불러오자마자 `value`가 달라질 수 있습니다. `Viewport` 잠금이 꺼져 있고 원점이 이 화면에 다이어그램을 전혀 그리지 않는 파일도 마찬가지입니다. 불러오기가 화면을 다이어그램이 있는 곳으로 옮기고, `value`는 옮겨 간 위치를 기록합니다. `4.0.0`부터는 `value`에 측정된 너비가 담기지 않으므로 측정된 너비 때문에 이런 일이 생기지는 않습니다. 파일을 저장하는 호스트는 대신 복제 store의 `changed`로 편집과 화면 변경을 구분할 수 있습니다. [on@change](./advanced/remote-storage.md#onchange) 문서를 참고하세요.  
 이벤트에는 `detail`이 없고 버블링되거나 shadow 경계를 넘지도 않으므로, 엘리먼트 자체에서 수신하고 핸들러에서 `editor.value`를 읽으세요.
 
@@ -319,10 +323,11 @@ editor.destroy();
 
 단축키를 재정의합니다.  
 `edit`, `stop`, `undo`, `redo`, `zoomIn`, `zoomOut`, `zoomReset`은 고정이며 재정의할 수 없습니다.  
-아래 19개 이름만 적용되고, 고정된 이름을 포함해 객체의 나머지 값은 무시됩니다.  
-`3.10.0`부터 `search`를 재정의할 수 있으며, `findReplace`가 새로 추가되었습니다. 이전에는 `search`가 고정이었습니다. `4.0.0`부터 `removeSelection`이 새로 추가되었습니다.  
+아래 21개 이름만 적용되고, 고정된 이름을 포함해 객체의 나머지 값은 무시됩니다.  
+`3.10.0`부터 `search`를 재정의할 수 있으며, `findReplace`가 새로 추가되었습니다. 이전에는 `search`가 고정이었습니다. `4.0.0`부터 `removeSelection`이 새로 추가되었습니다. `4.1.0`부터 `addTableGroup`과 `groupSelectedTables`가 새로 추가되었습니다.  
 값은 `ShortcutOption[]`이어야 합니다. 문자열만 전달하면 무시되므로 `{ addTable: 'Alt+KeyN' }`이 아니라 `{ addTable: [{ shortcut: 'Alt+KeyN' }] }`으로 작성하세요.  
-빈 배열도 허용되며 아무 키도 지정하지 않습니다. `setKeyBindingMap({ findReplace: [] })`는 `Ctrl + F` (Windows/Linux) or `⌘ + F` (Mac)를 페이지에 맡기고, `{ search: [] }`는 `Ctrl + K` (Windows/Linux) or `⌘ + K` (Mac)를 마찬가지로 페이지에 맡깁니다. 툴바의 `Search` 버튼으로는 여전히 빠른 검색이 열리고, 찾기와 바꾸기도 툴바 버튼, 빠른 검색의 항목, 캔버스 컨텍스트 메뉴로 여전히 열립니다. 비워 둔 이름의 단축키는 이 중 어디에도 표시되지 않습니다. `{ removeSelection: [] }`는 `Delete`와 `Backspace`를 페이지에 맡기며, 이때 테이블, 메모, 테이블 그룹 메뉴의 삭제 항목(`Delete`, `Delete selected`, `Delete column`, `Delete columns`)에는 단축키가 표시되지 않습니다.  
+빈 배열도 허용되며 아무 키도 지정하지 않습니다. `setKeyBindingMap({ findReplace: [] })`는 `Ctrl + F` (Windows/Linux) or `⌘ + F` (Mac)를 페이지에 맡기고, `{ search: [] }`는 `Ctrl + K` (Windows/Linux) or `⌘ + K` (Mac)를 마찬가지로 페이지에 맡깁니다. 툴바의 `Search` 버튼으로는 여전히 빠른 검색이 열리고, 툴바의 `Explorer` 버튼으로는 여전히 탐색기가 열리고 닫히며, 빠른 검색과 캔버스 컨텍스트 메뉴의 `Toggle Explorer`는 여전히 탐색기의 검색을 열거나 탐색기를 닫습니다. 비워 둔 이름의 단축키는 이 중 어디에도 표시되지 않습니다. `{ removeSelection: [] }`는 `Delete`와 `Backspace`를 페이지에 맡기며, 이때 테이블, 메모, 테이블 그룹 메뉴의 삭제 항목(`Delete`, `Delete selected`, `Delete column`, `Delete columns`)에는 단축키가 표시되지 않습니다.  
+`4.1.0`부터 `{ addTableGroup: [] }`는 `Alt + G` (Windows/Linux) or `⌥ + G` (Mac)를, `{ groupSelectedTables: [] }`는 `T` 다음 `G`를 페이지에 맡깁니다. 캔버스 툴바, 캔버스 컨텍스트 메뉴, 빠른 검색의 `New Table Group`, 테이블 메뉴의 `Group selected tables`, 빠른 검색의 `Group Selected Tables`는 단축키가 표시되지 않을 뿐 그대로 동작합니다. 캔버스 툴바의 `New Table`, `New Memo`, `New Table Group` 버튼의 툴팁은 `addTable`, `addMemo`, `addTableGroup`의 첫 번째 키 조합을 표시하며, 비워 둔 바인딩이라면 버튼 이름만 표시합니다.  
 호출은 부분 병합이라 생략한 이름은 기본값을 유지하고, 두 번 호출해도 앞선 변경이 유지됩니다. 현재 설정을 읽는 getter는 없습니다. [createKeyBindingMap](#createkeybindingmap)은 `setKeyBindingMap`으로 변경한 내용이 아니라 기본값을 반환합니다.
 
 ```ts
@@ -351,6 +356,10 @@ const defaultKeyBindingMap: Omit<
   addTable: [{ shortcut: 'Alt+KeyN', preventDefault: true }],
   addColumn: [{ shortcut: 'Alt+Enter', preventDefault: true }],
   addMemo: [{ shortcut: 'Alt+KeyM', preventDefault: true }],
+  addTableGroup: [
+    { shortcut: 'Alt+KeyG', preventDefault: true, stopPropagation: true },
+  ],
+  groupSelectedTables: [{ shortcut: 'KeyT KeyG', preventDefault: true }],
   removeTable: [
     { shortcut: '$mod+Backspace', preventDefault: true },
     { shortcut: '$mod+Delete', preventDefault: true },
@@ -389,32 +398,36 @@ editor.setKeyBindingMap({
 });
 ```
 
-`selectAllTable`, `handTool`, `removeSelection`은 커서에 양보합니다. 포커스가 input, textarea, `contenteditable` 안에 있는 동안에는 `$mod + A`가 텍스트를 선택하고, `Space`는 공백을 입력하며, `Delete`와 `Backspace`는 텍스트를 지우고, 캔버스까지 전달되지 않습니다. 다른 단축키로 재정의해도 동작은 같습니다.
+`selectAllTable`, `handTool`, `removeSelection`, 그리고 `4.1.0`부터는 `groupSelectedTables`도 커서에 양보합니다. 포커스가 input, textarea, `contenteditable` 안에 있는 동안에는 `$mod + A`가 텍스트를 선택하고, `Space`는 공백을 입력하며, `Delete`와 `Backspace`는 텍스트를 지우고, `T` 다음 `G`는 두 글자를 입력하며, 캔버스까지 전달되지 않습니다. 이 키 입력 중 어느 것에도 `preventDefault()`를 호출하지 않습니다. 다른 단축키로 재정의해도 동작은 같습니다.
 
 `4.0.0`부터 `removeSelection` (`Delete` 또는 `Backspace`)은 ERD 탭에서 확인 없이 선택한 항목을 Undo 한 단계로 삭제합니다. 포커스한 테이블만 선택되어 있고, 그 테이블의 컬럼이 하나 이상 선택되어 있으며, 확대/축소 배율이 그 행을 그리는 경우에는 그 컬럼을 삭제합니다. 그렇지 않으면 선택된 모든 테이블, 메모, 테이블 그룹을 삭제하며, 그룹의 테이블은 남겨 둡니다. [테이블, 메모 삭제](../guide/guides/table-related-functions.md#테이블-메모-삭제) 문서를 참고하세요.  
-키를 누르고 있어도 한 번만 삭제하며, 셀, 메모, 테이블 그룹 이름의 편집모드가 열려 있는 동안에는 아무것도 삭제하지 않습니다. 텍스트 입력란 밖에서는 에디터에 포커스가 있는 동안 모든 탭에서 이 키 입력에 `preventDefault()`를 호출하며, 포커스된 툴바 버튼에서도, 아무것도 삭제하지 않는 `readonly` 에디터에서도 마찬가지입니다.
+키를 누르고 있어도 한 번만 삭제하며, 셀, 메모, 테이블 그룹 이름의 편집모드가 열려 있는 동안에는 아무것도 삭제하지 않습니다. 텍스트 입력란과 바인딩을 붙잡아 두는 패널([createKeyBindingMap](#createkeybindingmap) 참고) 밖에서는 에디터에 포커스가 있는 동안 모든 탭에서 이 키 입력에 `preventDefault()`를 호출하며, 포커스된 툴바 버튼에서도, 아무것도 삭제하지 않는 `readonly` 에디터에서도 마찬가지입니다.
 
-`3.10.0`부터 `findReplace` (`$mod+KeyF`)는 [찾기와 바꾸기](../guide/guides/find-and-replace.md)를 열며, 다른 탭에서는 ERD 탭으로 전환합니다.  
-이 키는 커서에 양보하지 않습니다. 에디터에 포커스가 있는 동안에는 캔버스에서든 에디터 안의 입력란에서든 모든 탭에서 이 키를 에디터가 처리합니다. 이 키 입력에 `preventDefault()`를 호출하므로 브라우저의 찾기 막대가 열리지 않고, `stopPropagation()`도 호출하므로 페이지의 버블링 `keydown` 리스너는 이 입력을 받지 않습니다. 셀이나 메모의 편집모드, 또는 `4.0.0`부터는 테이블 그룹 이름의 편집모드가 열려 있을 때도 `preventDefault()`와 `stopPropagation()`을 호출하지만 아무것도 열지 않습니다.  
-어느 탭에서든 Diff Viewer, Time Travel, 자동 배치 미리보기가 열려 있는 동안이나 IME가 아직 조합 중일 때는 `preventDefault()`도 `stopPropagation()`도 호출하지 않으므로, 브라우저나 호스트 자체의 찾기 기능이 이 입력을 받습니다. 찾기와 바꾸기 패널 안에서는 조합 중인 입력에 `stopPropagation()`만 호출하고 `preventDefault()`는 호출하지 않습니다. `findReplace`를 다른 단축키로 재정의해도 동작은 같습니다.
+`4.1.0`부터 `addTableGroup` (`Alt+KeyG`)은 캔버스 툴바의 `New Table Group` 버튼처럼 ERD 탭에서 `New Table Group` 그리기를 준비하며, 그다음 캔버스를 마우스 왼쪽 버튼으로 누르면 그룹이 그려집니다. 이 키를 다시 누르면 그리기 준비가 해제됩니다. `groupSelectedTables` (`KeyT KeyG`, `T` 다음 `G`)는 테이블 컨텍스트 메뉴의 `Group selected tables`처럼 선택한 테이블을 새 그룹에 넣고 그 그룹의 이름 편집모드를 엽니다. 선택한 테이블이 없으면 아무것도 추가하지 않으며, 선택한 메모나 테이블 그룹은 포함되지 않습니다. [그룹 그리기](../guide/guides/table-groups.md#그룹-그리기)와 [선택한 테이블 그룹화](../guide/guides/table-groups.md#선택한-테이블-그룹화) 문서를 참고하세요.  
+두 바인딩은 메뉴가 그룹을 제공하는 곳에서만 동작하므로, `readonly`가 설정된 동안, View Option → `Table Groups`로 그룹을 숨긴 동안, 셀, 메모, 테이블 그룹 이름의 편집모드가 열려 있는 동안에는 동작하지 않습니다. 다른 캔버스 바인딩과 마찬가지로 ERD 탭에서만 동작하며, 빠른 검색, 테이블 속성, Diff Viewer, Time Travel, 자동 배치 미리보기, `Export image`, `Map Columns`가 열려 있는 동안에는 동작하지 않습니다. 아무 동작도 하지 않는 경우에도 `groupSelectedTables`가 커서에 양보할 때가 아니면 이 키 입력에 여전히 `preventDefault()`를 호출합니다. `addTableGroup`에는 `focusView`, `zenMode`와 마찬가지로 `stopPropagation()`도 호출하므로, 페이지의 버블링 `keydown` 리스너는 이 입력을 받지 않습니다.
+
+`3.10.0`부터 `findReplace` (`$mod+KeyF`)는 [찾기와 바꾸기](../guide/guides/find-and-replace.md)를 엽니다. `4.1.0`부터는 찾기와 바꾸기를 담고 있는 [탐색기](../guide/guides/explorer.md#열기와-닫기)를 열고 닫으며, Shortcuts 탭에는 `Toggle Explorer`로 표시됩니다.  
+툴바의 `Explorer` 버튼이 눌린 상태로 표시되는 동안(ERD 탭에서 탐색기가 열려 있고 Zen 모드로 숨겨져 있지 않은 동안)에는 탐색기를 닫습니다. 단, 빠른 검색, 테이블 속성, 테마 빌더, Display Language 선택기, `Export image` 대화 상자, `Map Columns`가 열려 있으면 탐색기를 닫지 않습니다. 그 밖의 경우에는 그중 열려 있는 것을 닫고, 다른 탭에서는 ERD 탭으로 전환한 뒤, 커서를 `Find` 입력란에 두고 검색어를 선택한 채 탐색기를 엽니다. 캔버스 옆에 탐색기를 표시하기에는 에디터가 너무 좁으면 탐색기를 열린 채로 비켜나게 두고 `Widen the window to show the Explorer` 토스트를 표시합니다. `4.1.0` 이전에는 떠 있는 찾기와 바꾸기 패널을 열거나 그 입력란에 키보드 포커스를 돌려주었으며, 패널을 닫지는 않았습니다.  
+이 키는 커서에 양보하지 않습니다. 에디터에 포커스가 있는 동안에는 캔버스에서든 에디터 안의 입력란에서든 모든 탭에서 이 키를 에디터가 처리합니다. 이 키 입력에 `preventDefault()`를 호출하므로 브라우저의 찾기 막대가 열리지 않고, `stopPropagation()`도 호출하므로 페이지의 버블링 `keydown` 리스너는 이 입력을 받지 않습니다. 셀이나 메모의 편집모드, 또는 `4.0.0`부터는 테이블 그룹 이름의 편집모드가 열려 있을 때도 `preventDefault()`와 `stopPropagation()`을 호출하지만 아무 동작도 하지 않습니다.  
+어느 탭에서든 Diff Viewer, Time Travel, 자동 배치 미리보기가 열려 있는 동안이나 IME가 아직 조합 중일 때는 `preventDefault()`도 `stopPropagation()`도 호출하지 않으므로, 브라우저나 호스트 자체의 찾기 기능이 이 입력을 받습니다. 탐색기 안에서는 조합 중인 입력에 `stopPropagation()`만 호출하고 `preventDefault()`는 호출하지 않습니다. `findReplace`를 다른 단축키로 재정의해도 동작은 같습니다.
 
 `focusView`는 ERD 탭에서만 동작합니다. 테이블이 하나 이상 선택되어 있으면 Visualization 탭을 Flow 모드로 열어, 선택한 테이블과 그 테이블에 관계 하나로 이어진 모든 테이블로 범위를 좁힙니다. 선택한 메모나 테이블 그룹은 포함되지 않으며, 선택한 테이블이 없으면 아무 동작도 하지 않습니다. [테이블 포커스](../guide/guides/visualization.md#테이블-포커스) 문서를 참고하세요.
 
 ERD 탭에서 `stop` (`Escape`)은 셀이나 메모의 편집모드, 또는 그리는 중인 관계를 끝내고 선택은 그대로 둡니다. `4.0.0`부터는 이름을 기록하지 않고 테이블 그룹 이름의 편집모드를 끝내며, `New Table Group` 그리기도 끝냅니다. 에디터는 이 키 입력에 `preventDefault()`를 호출합니다.  
 그중 아무것도 열려 있지 않으면 `Escape`는 선택과 포커스한 셀을 해제하며, 이때는 `preventDefault()`를 호출하지 않습니다. 따라서 편집을 끝내고 선택까지 해제하려면 두 번 눌러야 합니다.  
-찾기와 바꾸기 패널 밖에서는 에디터가 `Escape`의 전파를 막지 않으므로, 예를 들어 자체 다이얼로그를 닫기 위해 직접 `Escape`를 수신하는 페이지는 두 키 입력을 모두 받으며, `defaultPrevented`가 `true`인 입력은 건너뛸 수 있습니다.  
+탐색기, [시작 화면](#enablewelcomescreen)의 `Import` 형식 목록, 아래의 선택기와 대화 상자를 제외하면 에디터는 `Escape`의 전파를 막지 않으므로, 예를 들어 자체 다이얼로그를 닫기 위해 직접 `Escape`를 수신하는 페이지는 두 키 입력을 모두 받으며, `defaultPrevented`가 `true`인 입력은 건너뛸 수 있습니다.  
 빠른 검색, 테이블 속성, Diff Viewer, 자동 배치 미리보기, Time Travel이 열려 있는 동안에는 `Escape`가 대신 그것을 닫고 선택은 그대로 둡니다. 이 키 입력에도 `preventDefault()`를 호출하지 않습니다.  
 `4.0.0`부터는 열려 있는 [`Export image`](../guide/guides/file-import-export.md#이미지)나 [`Map Columns`](../guide/guides/relationship-editing.md#컬럼-매핑) 대화 상자도 `Escape`를 받아 스스로 닫히고 선택은 그대로 둡니다. 각 대화 상자는 열릴 때 키보드 포커스를 가져가며, 이 `Escape`에는 `preventDefault()`와 `stopPropagation()`을 모두 호출합니다.  
-`3.10.0`부터 포커스가 찾기와 바꾸기 패널 안에 있을 때 누른 `Escape`는 패널을 닫고 선택은 그대로 둡니다. 에디터는 이 키 입력에 `preventDefault()`와 `stopPropagation()`을 모두 호출하므로, 페이지의 버블링 `keydown` 리스너에는 전달되지 않습니다.  
-패널이 열려 있을 때 캔버스에서 누른 `Escape`는 위의 어느 것도 이 입력을 처리하지 않으면, 선택을 해제하는 바로 그 입력으로 패널도 닫습니다. 이 키 입력에는 `preventDefault()`도 `stopPropagation()`도 호출하지 않습니다.  
-`4.0.0`부터 Display Language 선택기와 색상 선택기도 찾기와 바꾸기 패널과 같은 방식으로 닫힙니다. 그 안에서 누른 `Escape`에는 `preventDefault()`와 `stopPropagation()`을 모두 호출하며, 캔버스에서 누른 `Escape`는 선택을 해제하는 바로 그 입력으로 이들을 닫습니다.  
-IME가 아직 조합 중일 때 누른 `Escape`는 조합에 속합니다. 열려 있는 편집모드는 그대로 두고 `preventDefault()`도 호출하지 않으므로, 페이지는 `isComposing`이 `true`이거나 `keyCode`가 `229`인 입력도 건너뛸 수 있습니다. 찾기와 바꾸기 패널 안에서는 조합 중에 누른 다른 키와 마찬가지로 이 입력에도 `stopPropagation()`을 호출합니다.  
+`4.1.0`부터 포커스가 [탐색기](../guide/guides/explorer.md#탐색기의-키) 안, 즉 트리, 입력란, 버튼에 있을 때 누른 `Escape`는 키보드 포커스를 캔버스로 돌려주며, 탐색기는 열린 채로, 선택은 그대로 둡니다. 에디터는 이 키 입력에 `preventDefault()`와 `stopPropagation()`을 모두 호출하므로, 페이지의 버블링 `keydown` 리스너에는 전달되지 않습니다.  
+캔버스에서 누른 `Escape`는 탐색기를 닫지 않습니다. `4.1.0` 이전에는 찾기와 바꾸기 패널 안에서 누른 `Escape`가 패널을 닫았고, 캔버스에서 누른 `Escape`는 선택을 해제하는 바로 그 입력으로 패널도 닫았습니다.  
+`4.0.0`부터 Display Language 선택기와 색상 선택기는 `Escape`로 닫힙니다. 그 안에서 누른 `Escape`에는 `preventDefault()`와 `stopPropagation()`을 모두 호출하며, 캔버스에서 누른 `Escape`는 선택을 해제하는 바로 그 입력으로 이들을 닫고 `preventDefault()`도 `stopPropagation()`도 호출하지 않습니다.  
+IME가 아직 조합 중일 때 누른 `Escape`는 조합에 속합니다. 열려 있는 편집모드는 그대로 두고 `preventDefault()`도 호출하지 않으므로, 페이지는 `isComposing`이 `true`이거나 `keyCode`가 `229`인 입력도 건너뛸 수 있습니다. 탐색기 안에서는 조합 중에 누른 다른 키와 마찬가지로 이 입력에도 `stopPropagation()`을 호출하며, 키보드 포커스는 입력란에 그대로 남습니다.  
 `3.9.2` 이전에는 `Escape` 한 번으로 편집이나 관계 그리기를 끝내는 동시에 선택까지 해제했고, 에디터는 `preventDefault()`를 호출하지 않았습니다.
 
 ### createKeyBindingMap
 
 `3.9.2`부터 패키지는 `createKeyBindingMap()`과 함께 `KeyBindingMap`, `KeyBindingName`, `ShortcutOption` 타입을 export합니다.  
-고정된 이름을 포함한 26개 이름 전체의 기본 키 바인딩을 호출할 때마다 새 맵으로 반환하므로, 반환된 맵을 변경해도 다른 곳에는 영향이 없습니다.  
+고정된 이름을 포함한 28개 이름 전체의 기본 키 바인딩을 호출할 때마다 새 맵으로 반환하므로, 반환된 맵을 변경해도 다른 곳에는 영향이 없습니다.  
 모든 에디터가 시작할 때 사용하는 값이며, `setKeyBindingMap` 호출은 여기에 반영되지 않습니다.  
 런타임 export는 `createKeyBindingMap`뿐이며, 나머지 셋은 타입입니다.
 
@@ -429,6 +442,8 @@ type KeyBindingName =
   | 'addTable'
   | 'addColumn'
   | 'addMemo'
+  | 'addTableGroup'
+  | 'groupSelectedTables'
   | 'removeTable'
   | 'removeColumn'
   | 'removeSelection'
@@ -461,16 +476,18 @@ const shortcuts = Object.values(createKeyBindingMap())
 
 각 `shortcut`은 키를 `KeyboardEvent.code`로 지정하는 [tinykeys](https://github.com/jamiebuilds/tinykeys) 문법의 키 조합이며, [`$mod`](#mod)는 macOS에서는 `⌘`, 그 외 환경에서는 `Control`입니다.  
 `4.0.0`부터 에디터는 이 키 조합을 tinykeys를 거치지 않고 같은 문법으로 직접 읽습니다. 키는 `code`로, 또는 대소문자와 상관없이 `key`로 일치하며, 키 입력은 지정된 수정자 키를 정확히 그대로 누르고 있을 때만 일치합니다. `AltGraph`는 Windows에서는 `Control`과 `Alt`로, macOS에서는 `Alt`로 취급됩니다. 공백으로 구분한 키 입력은 시퀀스가 되며, 1초 동안 keydown이 없으면 처음부터 다시 시작합니다.  
+`4.1.0`부터 기본값 하나가 시퀀스입니다. `groupSelectedTables`는 `KeyT KeyG`, 즉 `T` 다음 `G`입니다. 시퀀스는 그것을 완성하는 키 입력에서 실행되며, `preventDefault`와 `stopPropagation`도 그 입력에만 적용되므로, 기본값에서는 `T`가 페이지에 전달되고 `G`에만 `preventDefault()`를 호출합니다. 메뉴, 빠른 검색, Shortcuts 탭은 시퀀스를 키 입력 하나마다 키 하나씩 표시합니다.  
 고정된 이름은 `Enter` (`edit`), `Escape` (`stop`), `$mod+KeyZ` (`undo`), `$mod+Shift+KeyZ` (`redo`), `$mod+Equal` (`zoomIn`), `$mod+Minus` (`zoomOut`), `$mod+Digit0` (`zoomReset`)에 바인딩되어 있습니다. `edit`과 `stop`에는 플래그가 없고, 나머지 다섯은 `preventDefault`와 `stopPropagation`을 가집니다. `search`와 `findReplace`를 포함한 그 외 이름은 위의 기본값과 같습니다.
 
 에디터는 자신의 엘리먼트에서 이 키들을 수신하므로, 전역 단축키나 캡처 단계의 `keydown` 리스너로 에디터보다 먼저 키를 받는 호스트는 에디터에 포커스가 있는 동안 이 키들을 통과시켜야 합니다.  
 통과시킬 목록은 `createKeyBindingMap()`으로 만들되, `setKeyBindingMap`에 전달한 바인딩으로 해당 기본값을 대체하세요.  
 `3.10.0`부터 이 목록에는 브라우저 자체의 찾기 키 조합인 `$mod+KeyF`가 포함됩니다. 이 키 조합에서 호스트 자체의 찾기 기능을 유지하려면 `setKeyBindingMap({ findReplace: [] })`를 전달하세요.  
-`4.0.0`부터는 수정자 키 없는 `Delete`와 `Backspace`도 포함됩니다. 호스트가 이 키를 유지하려면 `setKeyBindingMap({ removeSelection: [] })`를 전달하세요.
+`4.0.0`부터는 수정자 키 없는 `Delete`와 `Backspace`도 포함됩니다. 호스트가 이 키를 유지하려면 `setKeyBindingMap({ removeSelection: [] })`를 전달하세요.  
+`4.1.0`부터는 `Alt+KeyG`와 시퀀스 `KeyT KeyG`도 포함됩니다. 시퀀스는 하나의 문자열로 들어 있으므로, 공백에서 나누어 수정자 키 없는 `T`와 `G`를 포함한 각 키 입력을 통과시키세요. 키 입력이 하나라도 빠진 시퀀스는 완성되지 않기 때문입니다. 호스트가 이 키를 유지하려면 `setKeyBindingMap({ addTableGroup: [] })`나 `setKeyBindingMap({ groupSelectedTables: [] })`를 전달하세요.
 
-포커스가 찾기와 바꾸기 패널 안에 있는 동안에는 `findReplace`, `search`, `undo`, `redo`, `zoomIn`, `zoomOut`, `zoomReset`이 에디터로 전달됩니다. 현재 설정된 그 밖의 모든 바인딩은 방향키, `Tab`과 함께 패널에서 멈춥니다. 패널을 닫는 `Escape`와, Find 또는 Replace 입력란에서 일치 항목 사이를 이동하거나 바꾸기를 실행하는 `Enter`를 제외하면, 이 키들에는 `preventDefault()` 없이 `stopPropagation()`만 호출하므로 패널의 입력란과 버튼에서 일반 키로 동작하며, 캔버스에도 페이지의 버블링 `keydown` 리스너에도 전달되지 않습니다.  
-호스트의 저장이나 명령 팔레트 키 조합처럼 그 밖의 키는 평소대로 페이지에 전달됩니다. [패널의 키](../guide/guides/find-and-replace.md#패널의-키) 문서를 참고하세요.  
-`4.0.0`부터 Display Language 선택기도 같은 방식으로 키를 붙잡습니다. 같은 일곱 바인딩은 에디터로 전달되고, 그 밖의 모든 바인딩, 방향키, `Tab`에는 IME가 아직 조합 중일 때 누른 모든 키와 마찬가지로 `preventDefault()` 없이 `stopPropagation()`만 호출하므로 선택기에서 멈춥니다. 행에서 누른 `↑`, `↓`, `Home`, `End`, `Enter`, `Space`는 행 사이를 이동하거나 행을 고르며, 여기에는 `preventDefault()`도 호출합니다.
+포커스가 탐색기 안, 즉 트리, `Find`와 `Replace` 입력란, 버튼에 있는 동안에는 `findReplace`, `search`, `undo`, `redo`, `zoomIn`, `zoomOut`, `zoomReset`이 에디터로 전달되므로, `findReplace`는 탐색기 안에서도 캔버스에서와 같이 동작합니다. 현재 설정된 그 밖의 모든 바인딩은 탐색기에서 멈추며, 시퀀스는 마지막 키 입력(기본값에서는 수정자 키 없는 `G`)에서 멈춥니다. 방향키, `Tab`, `Enter`, `Space`, `Home`, `End`, 그리고 IME가 아직 조합 중일 때 누른 모든 키도 마찬가지입니다. 키보드 포커스를 캔버스로 돌려주는 `Escape`를 제외하면, 이 키들에는 `preventDefault()` 없이 `stopPropagation()`만 호출하므로 탐색기의 입력란, 버튼, 트리에서 일반 키로 동작하며, 캔버스에도 페이지의 버블링 `keydown` 리스너에도 전달되지 않습니다. 따라서 탐색기에서 `Alt + N`은 테이블을 추가하지 않고, `Delete`는 아무것도 삭제하지 않습니다. 트리의 행 사이를 이동하거나, 행을 접고 펼치거나, 행으로 이동하는 키와, `Find` 또는 `Replace` 입력란에서 일치 항목 사이를 이동하거나 바꾸기를 실행하는 `Enter`에는 `preventDefault()`도 호출합니다.  
+호스트의 저장이나 명령 팔레트 키 조합처럼 그 밖의 키는 평소대로 페이지에 전달됩니다. [탐색기의 키](../guide/guides/explorer.md#탐색기의-키) 문서를 참고하세요. `4.1.0` 이전에는 떠 있는 찾기와 바꾸기 패널이 같은 방식으로 키를 붙잡았으며, `Home`, `End`, 시퀀스의 마지막 키 입력, 그리고 `handTool`이 다른 키에 지정된 동안의 `Space`만 예외였습니다.  
+`4.0.0`부터 Display Language 선택기도 같은 방식으로 키를 붙잡습니다. 같은 일곱 바인딩은 에디터로 전달되고, 그 밖의 모든 바인딩(`4.1.0`부터 시퀀스는 마지막 키 입력에서), 방향키, `Tab`에는 IME가 아직 조합 중일 때 누른 모든 키와 마찬가지로 `preventDefault()` 없이 `stopPropagation()`만 호출하므로 선택기에서 멈춥니다. 행에서 누른 `↑`, `↓`, `Home`, `End`, `Enter`, `Space`는 행 사이를 이동하거나 행을 고르며, 여기에는 `preventDefault()`도 호출합니다.
 
 ### $mod
 
@@ -666,12 +683,19 @@ type Theme = {
   keyFK: string;
   keyPFK: string;
 
-  diffInsertBackground: string;
-  diffDeleteBackground: string;
-  diffCrossBackground: string;
+  treeBackground: string;
+  treeRowHover: string;
+  treeRowCurrent: string;
+  treeMuted: string;
+  treeMatch: string;
+
+  explorerBackground: string;
+  explorerBorder: string;
+
   diffInsertForeground: string;
   diffDeleteForeground: string;
-  diffCrossForeground: string;
+  diffModifyForeground: string;
+  diffRenameForeground: string;
 };
 
 // example
@@ -690,6 +714,14 @@ editor.setTheme({
 - `toastSuccess`와 `toastError`는 작업이 어떻게 끝났는지 알리는 토스트의 표시 기호 색상입니다.
 - `findReplaceError`와 `mapColumnsError`는 찾기와 바꾸기와 Map Columns 대화 상자가 표시하는 에러의 색상입니다. 찾기와 바꾸기는 이전에 `diffDeleteForeground`를 사용했으므로, 이 값을 재정의해도 더 이상 찾기와 바꾸기의 색상이 바뀌지 않습니다.
 - `schemaSqlWarningBackground`와 `schemaSqlWarningForeground`는 Schema SQL 탭 옵션의 경고 색상입니다.
+
+`4.1.0`부터 토큰 9개가 추가되었습니다.
+
+- `treeBackground`, `treeRowHover`, `treeRowCurrent`, `treeMuted`, `treeMatch`는 [탐색기](../guide/guides/explorer.md#트리)와 [Diff Viewer](../guide/guides/table-related-functions.md#diff-viewer)가 함께 쓰는 트리의 색상으로, 차례로 다음을 칠합니다. 탐색기의 `Find`와 `Replace` 입력란도 채우는 트리의 배경, 포인터가 올라간 행·트리에 포커스가 있는 동안 키보드 포커스가 있는 행·탐색기의 제목 표시줄과 검색에서 포인터가 올라간 버튼, 현재 검색 일치 항목의 행, 개수·데이터 타입·접기 화살표 같은 흐린 텍스트, 그리고 검색이 찾은 텍스트 뒤의 표시입니다.
+- `explorerBackground`와 `explorerBorder`는 탐색기 패널과 그 선의 색상입니다. 캔버스와 맞닿은 가장자리, 검색 아래의 선, 입력란과 `Search In`이 펼치는 버튼의 테두리가 해당합니다. `explorerBorder`는 Diff Viewer 트리의 가장자리, `Filter by name` 입력란 아래의 선과 그 입력란의 테두리도 그립니다. 탐색기의 키 아이콘은 `keyPK`, `keyFK`, `keyPFK`를 사용합니다.
+- `diffModifyForeground`와 `diffRenameForeground`는 Diff Viewer가 트리와 양쪽 문서에서 변경과 이름 변경으로 표시하는 항목의 색상입니다. `diffModifyForeground`는 이동, 크기 조절, 색상 변경, 소속 그룹 변경이 있었던 테이블, 메모, 테이블 그룹도 다른 변경과 상관없이 외곽선으로 둘러싸며, 변경된 foreign key의 연결선도 그립니다.
+
+`diffInsertForeground`와 `diffDeleteForeground`는 이제 Diff Viewer가 추가와 삭제로 표시하는 항목을 트리와 그 항목이 있는 문서에서 텍스트, 외곽선, 연결선을 가리지 않고 칠합니다. Diff Viewer가 더 이상 셀을 채우지 않으므로 `diffInsertBackground`, `diffDeleteBackground`, `diffCrossBackground`, `diffCrossForeground`는 `4.1.0`에서 제거되었습니다. `setTheme`은 이 이름들을 `Theme`에 없는 다른 이름과 마찬가지로 버리며, 그 훅인 `--erd-editor-diff-insert-background`, `--erd-editor-diff-delete-background`, `--erd-editor-diff-cross-background`, `--erd-editor-diff-cross-foreground`도 더 이상 읽지 않습니다.
 
 #### CSS Variables
 
@@ -784,12 +816,17 @@ erd-editor {
   --erd-editor-key-pk: #ffc53d;
   --erd-editor-key-fk: #e54666;
   --erd-editor-key-pfk: #00a2c7;
-  --erd-editor-diff-insert-background: #113b29;
-  --erd-editor-diff-delete-background: #500f1c;
-  --erd-editor-diff-cross-background: #003362;
+  --erd-editor-tree-background: #111113;
+  --erd-editor-tree-row-hover: #212225;
+  --erd-editor-tree-row-current: #1d2e62;
+  --erd-editor-tree-muted: #b0b4ba;
+  --erd-editor-tree-match: #253974;
+  --erd-editor-explorer-background: #111113;
+  --erd-editor-explorer-border: #363a3f;
   --erd-editor-diff-insert-foreground: #3dd68c;
   --erd-editor-diff-delete-foreground: #ff9592;
-  --erd-editor-diff-cross-foreground: #70b8ff;
+  --erd-editor-diff-modify-foreground: #ffca16;
+  --erd-editor-diff-rename-foreground: #70b8ff;
 }
 ```
 
@@ -799,7 +836,7 @@ erd-editor {
 
 `4.0.0`부터 메뉴, 패널, 대화 상자, 빠른 검색, 토스트, 그리고 내보낸 이미지를 포함해 다이어그램에 그려지는 `unnamed` 같은 단어까지, 에디터 자체의 텍스트가 25개 언어로 제공됩니다. 테이블과 컬럼 이름, SQL, 데이터 타입, 생성된 코드는 번역되지 않습니다. [언어와 테마](../guide/guides/language-and-theme.md) 문서를 참고하세요.  
 [setLocale](#setlocale)을 호출하거나 언어를 고르기 전에는 에디터가 영어로 표시되며, [enableLocalePicker](#enablelocalepicker)가 켜져 있는 동안에는 `'system'`을 따릅니다.  
-에디터는 호스트 엘리먼트나 페이지가 아니라 closed shadow root 안의 자체 루트에 `lang`과 `dir`을 설정하므로, 오른쪽에서 왼쪽으로 쓰는 페이지가 에디터를 뒤집지 않고, 오른쪽에서 왼쪽으로 쓰는 언어가 페이지를 뒤집지도 않습니다. 히브리어, 아랍어, 페르시아어에서는 에디터 인터페이스가 오른쪽에서 왼쪽으로 배치되며, 다이어그램 자체는 좌우로 뒤집히지 않습니다.  
+에디터는 호스트 엘리먼트나 페이지가 아니라 closed shadow root 안의 자체 루트에 `lang`과 `dir`을 설정하므로, 오른쪽에서 왼쪽으로 쓰는 페이지가 에디터를 뒤집지 않고, 오른쪽에서 왼쪽으로 쓰는 언어가 페이지를 뒤집지도 않습니다. 히브리어, 아랍어, 페르시아어에서는 에디터 인터페이스가 오른쪽에서 왼쪽으로 배치되며, 다이어그램 자체는 좌우로 뒤집히지 않습니다. `4.1.0`부터 [탐색기](../guide/guides/explorer.md)는 모든 언어에서 캔버스 왼쪽에 그대로 있으며, 이 세 언어에서는 탐색기 자체의 행이 오른쪽에서 왼쪽으로 읽힙니다.  
 패키지는 `LocaleCode`(아래 코드 중 하나)와 `LocaleOption` 타입을 export합니다.
 
 ```ts
@@ -872,7 +909,7 @@ Schema SQL 파일을 불러옵니다.
 
 - `placement: 'grid'`(기본값)는 이전과 마찬가지로 테이블을 바로 여러 행으로 배치하며, 호출은 아무것도 반환하지 않습니다.
 - `placement: 'auto'`는 에디터의 `Import`처럼 먼저 테이블을 관계에 따라 배치하며, 가져오기가 Undo 한 단계로 반영되면 resolve되는 `Promise`를 반환합니다. 테이블이 두 개 미만이거나, 관계가 없거나, 배치에 실패하거나, `SharedWorker`가 없는 페이지이거나, `Placing tables` 토스트에서 `Cancel`을 누르면 대신 여러 행으로 배치합니다. 그 사이에 다른 교체 가져오기, `value` 할당, `setInitialValue()`, `clear()`, 공동 편집자의 불러오기, 불러오기나 `clear()`의 Undo 또는 Redo 같은 불러오기가 일어나면 이 호출은 무효가 되며, `Promise`는 아무것도 불러오지 않은 채 resolve됩니다. 이 방식으로 배치한 가져오기는 시작한 순서대로 반영됩니다.
-- `mode: 'replace'`(기본값)는 문서를 교체합니다. `mode: 'append'`는 [가져와서 추가](../guide/guides/file-import-export.md#가져와서-추가)처럼 파일을 다이어그램 아래에 추가하며, 이미 있던 모든 테이블과, 탭과 화면 위치를 제외한 모든 설정을 그대로 둡니다. 다른 탭에서는 먼저 ERD 탭으로 전환합니다. 새 테이블과, 테이블 그룹이 표시되는 동안 DBML 파일이 가져온 테이블 그룹이 선택되며, 화면이 스크롤되어 이를 보여 줍니다. Undo 한 번으로 추가 전체가 제거됩니다. 읽을 수 없는 텍스트는 아무것도 추가하지 않고 문서를 그대로 둡니다.
+- `mode: 'replace'`(기본값)는 문서를 교체합니다. `mode: 'append'`는 [가져와서 추가](../guide/guides/file-import-export.md#가져와서-추가)처럼 파일을 다이어그램 아래에 추가하며, 이미 있던 모든 테이블과, 탭과 화면 위치를 제외한 모든 설정을 그대로 둡니다. 다른 탭에서는 먼저 ERD 탭으로 전환합니다. 새 테이블과, 테이블 그룹이 표시되는 동안 DBML 파일이 가져온 테이블 그룹이 선택되며, `4.1.0`부터 모든 이동이 따르는 규칙에 따라 이들이 이미 잘 보이는 상태가 아니면 화면이 그곳으로 스크롤됩니다. [이동 후 화면 위치](../guide/guides/table-related-functions.md#이동-후-화면-위치) 문서를 참고하세요. Undo 한 번으로 추가 전체가 제거됩니다. 읽을 수 없는 텍스트는 아무것도 추가하지 않고 문서를 그대로 둡니다.
 
 `readonly`가 설정된 동안에는 교체는 무시되고, 추가는 아무것도 추가하지 않으며, `placement: 'auto'` 호출은 바로 resolve됩니다.  
 `3.10.0`부터 `setSchemaSQL`은 문서에 현재 선택된 데이터베이스에 맞춰 파일을 읽습니다. Databricks가 선택되어 있으면 작은따옴표로 감싼 문자열은 Spark의 백슬래시 이스케이프를 따릅니다. [코멘트](../guide/guides/file-import-export.md#코멘트) 문서를 참고하세요.  
@@ -1001,7 +1038,8 @@ const sharedStore = editor.getSharedStore({
 전달한 문서와 현재 열려 있는 문서를 비교하는 Diff Viewer를 엽니다.  
 반환값이 없고 문서를 변경하지 않기 때문에, 뷰어를 닫으면 에디터는 그대로 유지됩니다.  
 빈 값이나 문자열이 아닌 값은 빈 문서와 비교합니다.  
-캔버스 컨텍스트 메뉴의 [Diff Viewer](../guide/guides/table-related-functions.md#diff-viewer)와 동일한 화면입니다.
+캔버스 컨텍스트 메뉴의 [Diff Viewer](../guide/guides/table-related-functions.md#diff-viewer)와 동일한 화면입니다.  
+`4.1.0`부터는 두 문서의 항목을 먼저 id로 짝짓고, 그다음에야 테이블의 이름이나 메모의 텍스트처럼 각 항목이 유지하고 있는 정보로 짝짓습니다. [비교 대상](../guide/guides/table-related-functions.md#비교-대상) 문서를 참고하세요. 따라서 파일의 Git 리비전처럼 같은 문서의 이전 버전과 비교하면 이름 변경은 이름이 바뀐 항목 하나로 표시되고, id가 다른 문서와 비교하면 삭제 하나와 추가 하나로 표시됩니다. 뷰어는 변경된 내용을 두 문서 옆의 트리에 나열하며, 셀을 채우는 대신 색으로 변경을 표시합니다.
 
 ```js
 editor.setDiffValue('prev json...');

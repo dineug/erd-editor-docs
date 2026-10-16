@@ -45,7 +45,9 @@ const sharedStore = editor.getSharedStore();
 编辑器中的有些操作只留在该编辑器上。  
 把表、备注或表分组移到最前面（选中它们时就会这样）不会发送出去。  
 [Schema SQL](../../guide/guides/schema-sql.md) 标签页中 `Statements`、`Header` 和 `Tables` 的选择同样不会发送，它们属于做出这些选择的那个窗口。  
-滚动、缩放或标签页切换会发送出去，但永远不会移动其他用户的视图或标签页。
+从 `4.1.0` 起，[资源管理器](../../guide/guides/explorer.md)同样只留在其所在的编辑器上：它是否打开、宽度、折叠的行、键盘焦点所在的行、树的滚动位置，以及其搜索与选项，都不会发送出去。  
+跳转到外键时会[点亮](../../guide/guides/relationship-editing.md#reading-a-connector)其关系的连接线，这种点亮也不会发送出去。  
+滚动、缩放或标签页切换会发送出去，但永远不会移动其他用户的视图或标签页。这也包括从资源管理器跳转时造成的滚动，以及从其他标签页打开资源管理器时切换到 ERD 标签页。
 
 [锁定](../../guide/guides/settings.md#锁定)是共享的：每个编辑器上都以对某项设置最后一次的锁定或解锁为准，而锁定会携带开启它的那个编辑器上的值，因此每个编辑器和副本保存的都是同一个值。  
 因此，`Viewport` 锁定保存的是开启它的那个编辑器的视图，`Canvas Type` 锁定保存的则是该编辑器在进入 Settings 标签页（锁定就在这里开启）之前所在的最后一个标签页。  
@@ -55,7 +57,7 @@ const sharedStore = editor.getSharedStore();
 
 在 Visualization 标签页的 [Flow 模式](../../guide/guides/visualization.md#flow-never-edits-the-document)中所做的任何操作都不是文档变更，因此处于 Flow 中的编辑器不会向其他编辑器发送任何变更，而其他编辑器发来的变更在此期间仍会继续应用。  
 唯一的例外是离开 Flow 切换到其他标签页：这次标签页切换会像其他变更一样发送出去。  
-外部链接卡片按钮、在 `#`、`@` 或 `:` 之后选中的[快速搜索](../../guide/guides/quick-search.md#searching-the-diagram)结果，以及打开[查找与替换](../../guide/guides/find-and-replace.md#opening-and-closing)，都会离开 Flow 并切换到 ERD 标签页。卡片按钮或快速搜索结果在那里造成的滚动也会发送出去。
+外部链接卡片按钮、在 `#`、`@` 或 `:` 之后选中的[快速搜索](../../guide/guides/quick-search.md#searching-the-diagram)结果，以及打开[资源管理器](../../guide/guides/explorer.md#opening-and-closing)，都会离开 Flow 并切换到 ERD 标签页。卡片按钮或快速搜索结果在那里造成的滚动也会发送出去。
 
 ## 一个页面中的两个编辑器
 
@@ -128,6 +130,9 @@ VS Code、Obsidian、JetBrains IDE 与 Web 应用中的编辑器，就是这样�
 在映射列中执行 `Save` 后，它仍保留关系原来的列，而当原有映射中的某一列在它那里被删除时，该关系会在每个编辑器上消失。它没有锁定，也没有脚本。  
 由它保存的文档不包含上述任何内容，`4.0.0` 编辑器打开这样的文档时，所有锁定都处于开启状态。  
 会话中的每个编辑器，以及存储该会话文档的任何 [replicationStore](./remote-storage.md#dispatch-dispatchsync)，都应使用 `4.0.0` 或更高版本。
+
+`4.1.0` 编辑器不会发送任何新的操作类型，因此 `4.0.0` 和 `4.1.0` 的编辑器与副本可以共处同一会话，不会错过任何内容。  
+它的[查找与替换](../../guide/guides/find-and-replace.md#replacing)还会搜索索引名和表分组名称，`Replace` 和 `Replace All` 会通过 `4.0.0` 编辑器已经能够应用的 `index.changeName` 和 `tableGroup.changeName` 操作重命名它们。
 
 ## SharedStoreConfig
 

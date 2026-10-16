@@ -1,5 +1,5 @@
 ---
-sidebar_position: 14
+sidebar_position: 15
 description: The editor's 25 display languages, right-to-left layout, the theme builder's System, Light, and Dark appearances and its colors, and where each host keeps them.
 ---
 
@@ -8,13 +8,13 @@ description: The editor's 25 display languages, right-to-left layout, the theme 
 The editor's own text comes in 25 languages, and its look is a theme: an appearance (`System`, `Light`, or `Dark`), a gray color, and an accent color.  
 Both belong to the person using the editor, not to the diagram. Neither is saved in the file, recorded in the [undo history](./undo-redo.md), or shared with collaborators, so each person sees their own, and changing either never marks a file modified.
 
-Neither is on the [Settings](./settings.md) tab. The toolbar has a `Theme` button and, right after it, a `Display Language` button, both after the [Find and Replace](./find-and-replace.md) button. [Quick Search](./quick-search.md) lists `Theme` and `Display Language` on every tab.  
+Neither is on the [Settings](./settings.md) tab. The toolbar has a `Theme` button and, right after it, a `Display Language` button, both after the [`Explorer`](./explorer.md) button. [Quick Search](./quick-search.md) lists `Theme` and `Display Language` on every tab.  
 The web app, Google Drive, VS Code, JetBrains IDEs, and Obsidian all offer both and remember your picks — see [In Each Host](#in-each-host). Both work in a read-only editor too.
 
 ## Display Language
 
 The language covers the editor's own text: toolbar tooltips, context menus, Quick Search, panels and dialogs, the Settings tab, the [welcome screen](./editing-start.md#welcome-screen), toasts and messages, and the placeholder an empty name, data type, default, or comment shows on the canvas and in an exported image.  
-It leaves these as written in every language: your table and column names, comments, and memos; database vendors, Code Generator languages, and file formats; data types, SQL keywords, and the `ON DELETE` and `ON UPDATE` actions; the Schema SQL options `Create`, `If not exists`, `Drop & re-create`, `USE`, and `CREATE + USE`; the marks `PK`, `UQ`, `AI`, `N-N`, `NULL`, and `AK1.1`; the name case and `Bracket` choices other than `None`; the names of keyboard keys; the theme builder's color names; generated SQL and code; and exported file names.
+It leaves these as written in every language: your table and column names, comments, and memos; database vendors, Code Generator languages, and file formats; data types, SQL keywords, and the `ON DELETE` and `ON UPDATE` actions; the Schema SQL options `Create`, `If not exists`, `Drop & re-create`, `USE`, and `CREATE + USE`; the marks `PK`, `FK`, `UQ`, `AI`, `NN`, `N-N`, `NULL`, and `AK1.1`; the [diff viewer](./table-related-functions.md#diff-viewer)'s status letters `A`, `M`, `D`, `R`, and `~`; the name case and `Bracket` choices other than `None`; the names of keyboard keys; the theme builder's color names; generated SQL and code; and exported file names.
 
 The languages, in the order the picker lists them:
 
@@ -63,9 +63,10 @@ The panel opens with the keyboard on the checked row:
 A pick applies at once, closes the panel, and gives the keyboard back to the editor.
 
 Close it without a pick with `Escape`, with the `x` button beside the title, whose tooltip reads `Close (ESC)`, with a press anywhere in the editor outside the panel except on the toolbar, or with the `Display Language` button again.  
-Opening it closes the theme builder, Table Properties, and the Find and Replace panel. Opening Quick Search, the Find and Replace panel, or the theme builder closes it.
+Opening it closes the theme builder and Table Properties. An open [Explorer](./explorer.md#dialogs-beside-it) stays open, and in a left-to-right language the picker stands just past it instead of over it.  
+Opening Quick Search or the theme builder closes it, and so does `Ctrl + F` (Windows/Linux) or `⌘ + F` (Mac). That key opens the [Explorer](./explorer.md#opening-and-closing) on its search, or, if the Explorer is already open, keeps it open and takes the keyboard to its Find field. The toolbar's `Explorer` button leaves the picker open.
 
-While the panel has the keyboard, a few editor shortcuts still work: `Search`, `Find and Replace`, `Undo`, `Redo`, `Zoom In`, `Zoom Out`, and `Zoom Reset` — see [Shortcuts](./settings.md#shortcuts). Every other editor shortcut, the arrow keys, and `Tab` go no further than the panel, so the editor does not act on them. Keys the editor does not bind, such as the host's own save, reach the host as usual.
+While the panel has the keyboard, a few editor shortcuts still work: `Search`, `Toggle Explorer`, `Undo`, `Redo`, `Zoom In`, `Zoom Out`, and `Zoom Reset` — see [Shortcuts](./settings.md#shortcuts). Every other editor shortcut, the arrow keys, and `Tab` go no further than the panel, so the editor does not act on them. Keys the editor does not bind, such as the host's own save, reach the host as usual.
 
 In [Quick Search](./quick-search.md), `Display Language` lists `System` and the 25 languages, with a check on the option in force. A language is also found there by its English name or its code, so `german` or `de-DE` finds `Deutsch`.
 
@@ -85,8 +86,8 @@ A regional variant counts as its language, so `de-AT` gives Deutsch and `fr-CA` 
 
 עברית (Hebrew), العربية (Arabic), and فارسی (Persian) lay the editor out right to left: the toolbar, the menus, the panels and dialogs, Quick Search, and the Settings tab are mirrored. A context menu's submenus open to the left, and the toolbar's Undo and Redo icons swap, so that Undo points back the way a right-to-left reader goes.
 
-The diagram itself is never mirrored. The canvas with its tables, columns, relationships, and memos stays left to right, and so do the minimap, the scrollbars, the [canvas toolbar](./table-related-functions.md#canvas-toolbar), [Visualization](./visualization.md) and its toolbar, the data type cells, the code on the Schema SQL and Code Generator tabs, the color picker, the diff viewer, time travel, and the Auto Layout preview.  
-The Find and Replace panel stays at the left edge of the canvas.  
+The diagram itself is never mirrored. The canvas with its tables, columns, relationships, and memos stays left to right, and so do the minimap, the scrollbars, the [canvas toolbar](./table-related-functions.md#canvas-toolbar), [Visualization](./visualization.md) and its toolbar, the data type cells, the code on the Schema SQL and Code Generator tabs, the color picker, the diff viewer's two sides, time travel, and the Auto Layout preview.  
+The [Explorer](./explorer.md#beside-the-canvas) stays at the left of the canvas, and the diff viewer's change tree at the left of the viewer, each with its drag edge on its right. Inside, both read right to left: their fields and rows are mirrored, rows indent from the right, and in either tree `←` unfolds a row or steps to its first child while `→` folds it or steps out to its parent — see [Keys in the Explorer](./explorer.md#keys-in-the-explorer).  
 Names, comments, and other text you typed keep their own direction, so a Hebrew, Arabic, or Persian name reads right to left on the canvas as well.
 
 ## Theme
@@ -110,7 +111,8 @@ Picking a color leaves the appearance as it is, so a color picked under `System`
 - In Obsidian: Obsidian's light or dark theme.
 
 Close the builder with `Escape`, with the `x` button beside the title, whose tooltip reads `Close (ESC)`, with a press anywhere in the editor outside the panel except on the toolbar, or with the `Theme` button again.  
-Opening it closes Table Properties, the `Display Language` picker, and the Find and Replace panel. Opening Quick Search, the Find and Replace panel, or the `Display Language` picker closes it.  
+Opening it closes Table Properties and the `Display Language` picker. An open [Explorer](./explorer.md#dialogs-beside-it) stays open, and in a left-to-right language the builder stands just past it instead of over it.  
+Opening Quick Search or the `Display Language` picker closes it, and so does `Ctrl + F` (Windows/Linux) or `⌘ + F` (Mac). That key opens the [Explorer](./explorer.md#opening-and-closing) on its search, or, if the Explorer is already open, keeps it open and takes the keyboard to its Find field. The toolbar's `Explorer` button leaves the builder open.  
 The builder holds no keys back, so the editor's shortcuts work while it is open.
 
 In [Quick Search](./quick-search.md), `Theme` lists `System`, `Light`, and `Dark`, with a check on the appearance in force. Picking one changes the appearance alone and leaves the gray and accent colors as they are.

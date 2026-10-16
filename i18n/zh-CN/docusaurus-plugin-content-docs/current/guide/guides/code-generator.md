@@ -1,5 +1,5 @@
 ---
-sidebar_position: 11
+sidebar_position: 12
 description: 根据图为二十二种目标生成代码，在选项面板中选择语言、数据库、名称大小写与括号，了解哪些目标会写出关系的 ON DELETE 与 ON UPDATE 操作，并保存或复制结果。
 ---
 
@@ -8,12 +8,12 @@ description: 根据图为二十二种目标生成代码，在选项面板中选�
 切换到工具栏的 `Code Generator` 标签页。该标签页左侧显示整个文档的代码，右侧是标题为 `Code Generator` 的选项面板，可在其中选择语言、数据库、名称大小写，以及部分目标所用的括号。  
 除非标签页首次打开时编辑器的宽度小于 640 px，否则面板会自动展开。面板顶部的 `Hide options` 可将其收起，代码右上角的 `Show options` 可将其重新展开。只要编辑器保持打开，面板在切换标签页后仍会保持展开或收起的状态，这与 Schema SQL 标签页的面板相互独立，并且永远不会保存到文件中。
 
-右键点击代码即可打开其右键菜单：`Language`、`Database`、`Table Name Case`、`Column Name Case`、`Bracket`（仅用于 `Doctrine`、`JPA` 和 `SeaORM`），每一项都带有一个勾选当前值的子菜单；然后是 `Options panel`，用于收起或展开面板，面板显示期间处于勾选状态；最后是 `Save file…`。  
+右键点击代码即可打开其右键菜单：`Language`、`Database`、`Table Name Case`、`Column Name Case`、`Bracket`（仅用于 `Doctrine`、`JPA` 和 `SeaORM`），每一项都带有一个勾选当前值的子菜单；然后是 `Options panel`，用于收起或展开面板，面板显示期间处于勾选状态；最后是 `Save file`。  
 在此标签页打开期间，[快速搜索](./quick-search.md)提供 `Database`、`Bracket`（仅用于 `Doctrine`、`JPA` 和 `SeaORM`）、`Language`、`Table Name Case`、`Column Name Case` 以及 `Code Generator: Options panel`，后者用于收起或展开面板。
 
 ![在代码的右键菜单中先选择 TypeScript 再选择 Rust，在选项面板中将列名切换为 Snake，然后复制代码](/img/demo-code-generator.webp)
 
-同一个代码视图也是[表属性](./table-related-functions.md#table-properties)的 `Code Generator` 标签页，在那里生成的是这一张表的代码，而不是整个文档的代码。它在那里没有选项面板，其右键菜单修改的是同样的设置，但没有 `Options panel` 和 `Save file…`。  
+同一个代码视图也是[表属性](./table-related-functions.md#table-properties)的 `Code Generator` 标签页，在那里生成的是这一张表的代码，而不是整个文档的代码。它在那里没有选项面板，其右键菜单修改的是同样的设置，但没有 `Options panel` 和 `Save file`。  
 对于整个文档的代码以导入语句或文件头开头的目标，这一张表的代码会以该表所需的导入语句或文件头开头，例如 `PHP` 的 `<?php`、`Swift` 的 `import Foundation` 或 `JSON Schema` 的 `$schema`。
 
 代码在标签页打开时生成，之后每当语言、数据库、某种名称大小写或括号改变时都会重新生成。在标签页打开期间对图所做的编辑，例如协作者或编码智能体的编辑，要等你离开该标签页再回来，或者上述某项设置改变后才会显示。
@@ -127,7 +127,7 @@ ORM 目标会保留哪些操作取决于所选的数据库，而 `AML` 和 `DBML
 
 ## 保存或复制结果 {#saving-or-copying-the-result}
 
-选项面板底部的 `Save file` 或右键菜单中的 `Save file…` 会将显示的代码保存为文件。  
+选项面板底部或右键菜单中的 `Save file` 会将显示的代码保存为文件。  
 文件与所有导出一样以 `<数据库名>-<时间戳>` 命名，后接[语言](#语言)表格中的扩展名，例如 `shop-2026-10-12T04_05_06.ts`，并保存到宿主中所有导出文件的保存位置，参见[导出](./file-import-export.md#exporting)。`Java` 和 `JPA` 会像标签页中显示的那样，将所有类放在一个 `.java` 文件中。  
 Export 菜单中没有 Code Generator 条目，表属性的 `Code Generator` 标签页也无法保存文件。
 

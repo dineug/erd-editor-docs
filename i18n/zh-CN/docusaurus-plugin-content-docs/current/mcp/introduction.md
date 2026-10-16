@@ -29,7 +29,7 @@ VS Code 会让智能体的变更在智能体或你保存之前一直保持未保
 
 - 缩放、滚动或切换标签页。这些属于每位查看者，因此没有任何工具会这样做。不过，替换文档的导入仍会移动视图，即使 `Viewport` 已锁定也是如此，与编辑器的 `Import` 相同：视图回到画布的起点并恢复为 100%；使用 `erd_import_json` 时，则移到它所加载文档的视图，并且除非该文档锁定了 `Canvas Type`，还会切换到该文档的标签页。参见[导入](./tools.md#导入)。
 - 更改 [`View Option`](../guide/guides/table-related-functions.md#table-view-options)、Code Generator 的语言与名称大小写、括号类型，或者 [Settings](../guide/guides/settings.md) 标签页中的 `Relationship DataType Sync`、`Maximum comment width` 和 `Column Order`。这些由你在编辑器中设置，智能体读取到的是文件所保存的值。
-- 开启或关闭[锁定](../guide/guides/settings.md#锁定)。只有替换整个文档的 `erd_import_json` 会改变锁定或上述设置，使其变为所加载文档中的值。没有 `lockSettings` 字段的文档（例如较早版本保存的文件）会开启所有锁定。对任何替换了文档的导入执行 Undo，都会恢复文档之前的设置和锁定。
+- 开启或关闭[锁定](../guide/guides/settings.md#锁定)。只有替换整个文档的 `erd_import_json` 会改变锁定或上述设置，使其变为所加载文档中的值。没有 `lockSettings` 字段的文档（例如由 `4.0.0` 之前的 VS Code 扩展，或由 `1.0.0` 之前的 Obsidian 或 JetBrains 插件保存的文件）会开启所有锁定。对任何替换了文档的导入执行 Undo，都会恢复文档之前的设置和锁定。
 - 像 [`Map Columns`](../guide/guides/relationship-editing.md#map-columns) 那样把关系重新映射到其他列上。智能体的做法是删除该关系（其外键列会保留在原处），再用 `erd_link_columns` 关联它想要的列，这些都在一次 `erd_batch` 中完成，一次 Undo 即可撤回。
 - 运行 Code Generator。`erd_read` 返回 DDL 或 JSON，智能体会据此自行编写代码。
 
@@ -40,7 +40,7 @@ VS Code 会让智能体的变更在智能体或你保存之前一直保持未保
 
 - **实时模式**：某个编辑器的工作区、仓库或某个已打开的项目包含该文档，或者该编辑器已打开该文档。服务器加入该编辑器的编辑会话，编辑落在编辑器中：在 VS Code 中处于未保存状态，在 Obsidian 和 JetBrains IDE 中则像你自己的编辑一样被保存。
 - **无头模式**：没有编辑器。服务器加载文件、应用编辑，然后把文件写回。
-- **拒绝编辑**：有编辑器持有该文档，但其 hub 已关闭。服务器会从磁盘读取，但不写入任何内容，因为打开的编辑器下次保存时可能会覆盖该文件。如果编辑器的 hub 已开启，但其 ERD Editor 扩展或插件所用的 hub 协议与服务器不同，则针对该文档的每次调用都会以 `protocolMismatch` 被拒绝，读取也不例外，并附带一条指出需要更新哪一方的消息，参见[更新](./installation.md#更新)。
+- **拒绝编辑**：有编辑器持有该文档，但其 hub 已关闭。服务器会从磁盘读取，但不写入任何内容，因为打开的编辑器下次保存时可能会覆盖该文件。hub 已开启的 JetBrains IDE 也会拒绝修改仅由其不信任的项目持有的文档，不过智能体仍然可以读取该文档。如果编辑器的 hub 已开启，但其 ERD Editor 扩展或插件所用的 hub 协议与服务器不同，则针对该文档的每次调用都会以 `protocolMismatch` 被拒绝，读取也不例外，并附带一条指出需要更新哪一方的消息，参见[更新](./installation.md#更新)。
 
 详情参见[实时与无头模式](./live-and-headless.md)。
 

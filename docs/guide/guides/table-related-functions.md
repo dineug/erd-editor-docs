@@ -6,7 +6,7 @@ description: Select, move, copy, duplicate, and delete tables and memos, set col
 # Table-related Functions
 
 Everything you do to tables and memos once they exist — selecting, moving, copying, deleting, coloring, and setting what the canvas shows — plus the canvas controls around them.  
-The table and memo commands come first; then table properties, focusing on tables, indexes and alternate keys, auto layout, and the database vendor; and last the canvas itself: the canvas toolbar, zoom, panning, and the diff viewer.  
+The table and memo commands come first; then table properties, focusing on tables, indexes and alternate keys, auto layout, and the database vendor; and last the canvas itself: the canvas toolbar, zoom, panning and where a jump lands, and the diff viewer.  
 Table groups, the boxes that gather tables, have a page of their own — see [Table Groups](./table-groups.md).
 
 ## Multiple Selection
@@ -108,8 +108,9 @@ Opening the picker changes nothing, and picking the color the selection already 
 `No color` clears the color of every selected table, memo, and table group in one undo step, and closes the picker. `Remove color`, right under `Color` in the table, memo, and table group context menus while any selected item has a color, does the same without opening the picker.
 
 The picker takes the keyboard when it opens, and `Tab` and `Shift + Tab` go round its controls. The arrow keys move the area and the hue slider by 1, or by 10 with `Shift`, and move from swatch to swatch, applying each as they go.  
-While the picker has the keyboard, undo and redo, the zoom shortcuts, Search, and Find and Replace still reach the editor, and the other editor shortcuts do not: the [deletion](#table-and-memo-deletion) shortcuts remove nothing, and `Delete` and `Backspace` only edit the text of the `Hex`, `R`, `G`, and `B` fields.  
-`Escape` closes the picker, and so does a press on the canvas outside it.
+While the picker has the keyboard, undo and redo, the zoom shortcuts, `Search`, and `Toggle Explorer` still reach the editor, and the other editor shortcuts do not: the [deletion](#table-and-memo-deletion) shortcuts remove nothing, and `Delete` and `Backspace` only edit the text of the `Hex`, `R`, `G`, and `B` fields.  
+`Escape` closes the picker, and so does a press on the canvas outside it.  
+A press in the [Explorer](./explorer.md) is not a press on the canvas, so it leaves the picker open. A row chosen there changes the selection, and the next pick colors the new selection.
 
 ## Table View Options
 
@@ -131,9 +132,9 @@ Offers the following view options:
 `Unique`, `Alternate Key`, and `Auto Increment` are off by default, and the rest are on.  
 `Alternate Key` marks the columns of each alternate key, such as `AK1.1` — see [Alternate Keys](#alternate-keys).  
 `Referential Actions` shows the `D:` and `U:` labels that a relationship's ON DELETE and ON UPDATE actions put at the child end of its connector — see [Reading a Connector](./relationship-editing.md#reading-a-connector). Turning it off hides only those labels and moves no table or connector.  
-`Table Groups` shows the [table groups](./table-groups.md) and the group colors on their tables' headers. Turning it off hides them on the canvas, the minimap, and image exports, moves no table, and keeps every table in its group — see [Hiding Groups](./table-groups.md#hiding-groups).  
+`Table Groups` shows the [table groups](./table-groups.md) and the group colors on their tables' headers. Turning it off hides them on the canvas, the minimap, and image exports, moves no table, and keeps every table in its group — see [Hiding Groups](./table-groups.md#hiding-groups). It also takes the `Table Groups` folder out of the [Explorer](./explorer.md#the-tree) and `New Table Group` off the [canvas toolbar](#canvas-toolbar), and the Explorer's search stops finding group names.  
 `Memos` shows the memos. Turning it off hides every memo on the canvas, the minimap, and image exports, and moves no table or connector. Hidden memos take up no room, so the scrollbars, the minimap, and the `Go to content` compass leave them out.  
-Hiding the memos deselects them and closes an open memo editor. [Find and Replace](./find-and-replace.md) and quick search's `:` do not search them. While they are hidden, `New Memo` leaves the context menu, quick search, and the [welcome screen](./editing-start.md#welcome-screen), and `Alt + M` adds no memo. A paste or [Import and Add](./file-import-export.md#import-and-add) still adds the memos it carries, hidden and unselected.  
+Hiding the memos deselects them and closes an open memo editor. The [Explorer](./explorer.md#the-tree) drops its `Memos` folder, and its [Find and Replace](./find-and-replace.md) search and quick search's `:` do not search them. While they are hidden, `New Memo` leaves the context menu, the [canvas toolbar](#canvas-toolbar), quick search, and the [welcome screen](./editing-start.md#welcome-screen), and `Alt + M` adds no memo. A paste or [Import and Add](./file-import-export.md#import-and-add) still adds the memos it carries, hidden and unselected.  
 In a `readonly` editor the toggles change nothing.
 
 ![Toggling View Option entries as the tables reflow, marking a composite unique index AK1.1 and AK1.2 with Alternate Key, then turning Memos off and on](/img/demo-view-options.webp)
@@ -144,9 +145,10 @@ Cards in the Visualization tab's `Flow` mode do not follow these options: they u
 
 Opens the property panel of a table.  
 Start from `Table Properties` in the table context menu, which opens it for the table you right-clicked, or select a table and press `Alt + Space`.  
-The panel opens in the middle of a dimmed canvas, and opening it closes an open [Find and Replace](./find-and-replace.md) panel. Its header holds the `Table Properties` title, the five most recently opened tables as chips with the current one highlighted, and a close button. Click a chip to move to that table without reopening the panel.  
+The panel opens in the middle of a dimmed canvas. Only the canvas is dimmed, so an open [Explorer](./explorer.md#dialogs-beside-it) stays open and usable beside it. Its header holds the `Table Properties` title, the five most recently opened tables as chips with the current one highlighted, and a close button. Click a chip to move to that table without reopening the panel.  
 Below the header are three tabs: `Indexes`, `Schema SQL`, and `Code Generator`. The panel keeps one size for all three, so switching tabs does not move or resize it.  
-Close it with the close button, with `Escape`, or by clicking outside it.
+Close it with the close button, with `Escape`, or by clicking outside it on the canvas.  
+Choosing a row other than a folder in the Explorer, or going to a match of its search, closes Table Properties before the jump. So does `Ctrl + F` (Windows/Linux) or `⌘ + F` (Mac), which opens the Explorer's search, or puts the caret in its Find field when the Explorer is already open. Any other click in the Explorer, a folder row included, or on the toolbar's `Explorer` button, leaves Table Properties open. An `Escape` pressed while the keyboard is in the Explorer only gives the keyboard back to the canvas, so it takes a second `Escape` to close Table Properties.
 
 The `Indexes` tab is covered in [Indexes](#indexes).  
 The `Schema SQL` tab shows the table's DDL for the selected [database](#databases): its `CREATE TABLE`, the separate constraints some databases write for its Unique columns, and its indexes. It always writes plain `CREATE` statements, with no header and no before or after script, whatever the toolbar's [Schema SQL](./schema-sql.md) tab is set to. It has no options panel, and its context menu offers only `Database` and `Bracket`.  
@@ -176,6 +178,8 @@ Tick a column to add it to the selected index, and untick it to remove it. Selec
 The columns of the selected index are listed below under `Index order`. Drag them by the grip handle to reorder them, and click the `ASC` or `DESC` chip on a row to flip its sort order. In an alternate key, each row ends in its `AK<n>.<m>` mark. The list shows three rows at a time and scrolls the rest.
 
 In a `readonly` editor, selecting a key or an index still shows its columns, but there is no `Add Index` and no `x`, and nothing else in the tab can be changed.
+
+The [Explorer](./explorer.md#the-tree) lists each table's indexes in the table's `Indexes` folder, and choosing one there goes to its table. Its search finds index names too, and can rename them — see [What It Searches](./find-and-replace.md#what-it-searches).
 
 ![Opening Table Properties on orders, where the Indexes tab lists the PK and UQ keys above the indexes, then adding an index over member_id and ordered_at DESC and reading it back in the Schema SQL tab](/img/demo-table-properties.webp)
 
@@ -249,18 +253,19 @@ Schema SQL import keeps a column's data type, argument list included, whether or
 
 ## Canvas Toolbar
 
-A small toolbar floats over the middle of the bottom edge of the canvas, holding the tools that act on the canvas itself:
+A small toolbar floats over the middle of the bottom edge of the canvas, holding, from left to right, the tools that act on the canvas itself and the commands that add to it:
 
-- The hand and the pointer. The pointer is the default; the hand turns every drag into a pan, over tables as well as empty space. `Space` switches between them. While a [`New Table Group`](./table-groups.md#drawing-a-group) is being drawn neither is marked, and clicking either, pressing `Space`, or picking a relationship notation ends the draw without adding a group.
+- The hand and the pointer. The pointer is the default; the hand turns every drag into a pan, over tables as well as empty space. `Space` switches between them. While a [`New Table Group`](./table-groups.md#drawing-a-group) draw is armed, the `New Table Group` button is marked instead of either, and clicking either, pressing `Space`, or picking a relationship notation ends the draw without adding a group.
+- `New Table`, `New Memo`, and `New Table Group`. `New Table` adds a table as `Alt + N` does, and `New Memo` adds a memo as `Alt + M` does. `New Table Group` arms the [group draw](./table-groups.md#drawing-a-group) as `Alt + G` does and turns the hand off; a second click, like a second `Alt + G`, ends the draw without adding a group. `New Memo` is left out while View Option → `Memos` hides the memos, and `New Table Group` while View Option → `Table Groups` hides the groups. A `readonly` editor shows none of the three.
 - The zoom: `Zoom out`, the current zoom as a percentage, and `Zoom in`. The two buttons step the zoom the same way the zoom shortcuts do, and clicking the percentage puts it back to `100%`.
 - The four relationship notations, the same four you start a relationship with — see [Editing Start](./editing-start.md). Picking one switches back to the pointer, since a relationship is drawn by clicking two tables.
-- Zen mode, `Alt + Z`, which clears everything but the canvas and this toolbar. `Alt + Z` again, or the button, brings the rest back. An open [Find and Replace](./find-and-replace.md) panel stays, moving up into the room the top toolbar leaves.
+- Zen mode, `Alt + Z`, which clears everything but the canvas and this toolbar. `Alt + Z` again, or the button, brings the rest back. An open Explorer is hidden with the rest, without being closed, and comes back with it. It can still be opened during zen mode — see [When It Stands Aside](./explorer.md#when-it-stands-aside).
 - The `Go to content` compass, which joins the end of the toolbar only while no table, shown memo, or shown table group is on screen — see [Getting Around the Canvas](#getting-around-the-canvas).
 
-Every button with a shortcut names it in its tooltip.  
+Every button with a shortcut names it in its tooltip, such as `New Table (Alt + N)` (Windows/Linux) or `New Table (⌥ + N)` (Mac).  
 The toolbar steps aside while the `Force` Auto Layout preview, table properties, time travel, or the diff viewer is open, and comes back once it closes.
 
-![Panning over a table with the hand, switching back to the pointer with Space, stepping the zoom out and in, and toggling zen mode with ⌥ + Z and its button](/img/demo-canvas-toolbar.webp)
+![Adding a table and a memo from the toolbar, arming and disarming New Table Group, panning with the hand, stepping the zoom, and toggling zen mode with ⌥ + Z](/img/demo-canvas-toolbar.webp)
 
 ## Zoom In/Out
 
@@ -295,9 +300,36 @@ It draws each table in the table's color, and each shown table group as a box in
 The scrollbars along the right and bottom edges describe the same travel, which runs from the diagram sitting just off one side of the screen to just off the other, so it is at least a screen longer than the diagram as drawn, and longer still while the view stands past it. Outside zen mode, both scrollbars show whenever the document holds a table, a shown memo, or a shown table group, even when all of it fits on screen. A document with none of these, such as one whose only memos are hidden with View Option → `Memos`, shows neither, and no minimap.  
 Dragging a scrollbar thumb or the minimap's viewport rectangle is the one pan that stops: it goes no further than the tables just off screen, or than where the drag started if that was further out.
 
-If a pan leaves no table, shown memo, or shown table group on screen, a `Go to content` compass joins the end of the [canvas toolbar](#canvas-toolbar), with an arrow at the nearest one and how far away it is. Click it to centre that one without changing the zoom.
+If a pan leaves no table, shown memo, or shown table group on screen, a `Go to content` compass joins the end of the [canvas toolbar](#canvas-toolbar), with an arrow at the nearest one and how far away it is. Click it to center that one without changing the zoom.
 
 ![Panning by dragging empty canvas, a middle-button drag over a table, the minimap, and the wheel, then following the Go to content compass back](/img/demo-canvas-navigation.webp)
+
+### Where a Jump Lands
+
+Every go-to that takes you to something on the canvas moves the view by one rule: the `#`, `@`, and `:` results of [Quick Search](./quick-search.md#searching-the-diagram), the rows of the [Explorer](./explorer.md#going-to-a-row) and the matches of its [Find and Replace](./find-and-replace.md#going-to-a-match) search, the rows of the [Diff Viewer](#going-to-a-change)'s list, the external-link [card button](./visualization.md#card-buttons) in Flow, and the landing of an [Import and Add](./file-import-export.md#import-and-add). Each of those sections says what the go-to selects; this one says where the view goes.
+
+A jump never changes the zoom, and makes one scroll at most. From another tab it switches to the ERD tab first.  
+It measures the canvas as it shows: below the top toolbar, or the whole height in zen mode, and right of an open Explorer, which narrows the canvas rather than covering it.
+
+Across and down are judged separately, and a direction in which the target already shows well is left exactly as it is:
+
+- A target no longer than half the canvas in that direction stays put while its middle lies in the middle half of the canvas, between a quarter and three quarters of the way across, or down. Otherwise its middle is brought to the middle of the canvas.
+- A longer target that still fits with `40px` to spare at each end stays put while it is wholly in view. Otherwise, across, it is centered; down, its top is brought to `40px` below the top of the canvas.
+- A target longer than that stays put while it is wholly in view, or, when it is longer than the canvas, while its key part, listed below, is. Otherwise it is centered if it fits, or else placed as near the middle as keeps both ends of its key part at least `40px` inside the canvas; a key part too long for that has its start kept `40px` in.
+
+So a small table near the left edge of the canvas, halfway down, moves across only.
+
+What a jump brings into view, and the key part that has to show when the whole does not fit:
+
+- A table: the whole table, by the name band across its top, or by its comment cell for a table comment match while View Option → `Table Comment` shows the comments. At `70%` and below, where tables collapse to their name, by the name in the middle of the box.
+- A column: its row, by the cell the jump goes to: its name, or the comment a match is in while View Option → `Column Comment` shows the comments. At `70%` and below, a column brings its table into view by the table's rule.
+- A cell too wide to show whole, such as a long comment: by the matched text in it.
+- A relationship: the box spanning its two tables, by the child table.
+- A table group: its box, by its title bar.
+- A memo, or the block an Import and Add lands: the whole of it.
+
+When neither direction would move, there is no scroll, so going to the same place twice in a row moves nothing the second time. A jump that scrolls the canvas records the scroll in the [undo history](./undo-redo.md#what-the-history-records) like any other change of view position, and one that moves nothing leaves nothing to undo. For an Import and Add, the scroll is part of the same step as the addition. A row of the Diff Viewer's list moves only the view's read-only sides, so it records nothing.  
+No jump starts or finishes a relationship being drawn. The `Go to content` compass is not a jump: it centers what it points at.
 
 ## Diff Viewer
 
@@ -305,9 +337,75 @@ You can compare previously saved documents with the current document.
 Choose `Diff Viewer` from the canvas context menu and pick a `.json` document you exported earlier.
 
 The view opens over the canvas: what changed on the left, then the saved document and the current one side by side.  
-Tables and columns are matched by name. A cell whose value differs between the two is tinted on both sides, red in the saved document and green in the current one, so a table or column found on one side only is tinted throughout.  
-Memos and table groups are drawn on each side as that document holds them, but they are not compared: they are never tinted, and the list on the left names only tables and columns.  
-Each side pans with the wheel, by dragging an empty area or a table group's body, or by dragging with the middle button anywhere over it, and zooms with `Ctrl + Wheel` (Windows/Linux), `⌘ + Wheel` (Mac), or a pinch. At `70%` and below its tables collapse as they do on the canvas, and the tint is not shown.  
-Both sides are read-only, so nothing in your document is modified. Close the view with the `Close` button on the `Diff Viewer` notice it opens with, or with `Escape`.
+The current document is compared as it stands when the view opens; changes made after that, a collaborator's included, do not reach the view. An open [Explorer](./explorer.md#when-it-stands-aside) is hidden while the view is open, so the view takes the editor's whole width.  
+Each side pans with the wheel, by dragging an empty area or a table group's body, or by dragging with the middle button anywhere over it, and zooms with `Ctrl + Wheel` (Windows/Linux), `⌘ + Wheel` (Mac), or a pinch. At `70%` and below its tables collapse as they do on the canvas — see [Marks on the Two Sides](#marks-on-the-two-sides).  
+Both sides are read-only, so nothing in your document is modified. Each keeps its own selection, and a click on a table there selects it on that side alone.  
+Close the view with the `Close` button on the `Diff Viewer` notice it opens with, or with `Escape`.
 
-![Opening the Diff Viewer from the canvas menu on a saved .json file, running down the listed changes, and closing it](/img/demo-diff-viewer.webp)
+![Opening the Diff Viewer on a saved .json file, clicking rows marked A, M, D, and R in its tree, filtering by name, and closing it](/img/demo-diff-viewer.webp)
+
+### What Is Compared
+
+Tables, columns, indexes, foreign keys, memos, and table groups are all compared.  
+Each item is paired first by its id, so against an earlier version of the same file, which keeps the ids, a renamed table, column, index, or table group is still one item, listed as renamed.  
+What is left pairs one to one by what it keeps: a table or a table group by its name, case included; a column or an index by its table and its name; a foreign key by its two tables and its column pairs; and a memo by its text, then its position. An index with no name pairs by its columns, their order and direction, and whether it is unique, and a table group with no name by the most tables it shares.  
+So against a file from elsewhere, such as a diagram rebuilt by SQL import, a renamed table shows as one removed and one added.
+
+What counts as a change:
+
+- A table: its name, comment, table group, position, and color.
+- A column: its name, comment, data type, default, Auto Increment, primary key, Unique, Not Null, and its place in the table. Only the columns outside the order both documents share count as moved, so adding, removing, or moving one column does not mark the others.
+- An index: its name, UNIQUE, and its columns, with their order and direction.
+- A foreign key: its column pairs, relationship type, and ON DELETE and ON UPDATE actions.
+- A memo: its text, position, size, and color.
+- A table group: its name, the tables it holds, color, position, and size.
+
+So a table, memo, or group that was only moved, resized, or recolored counts as changed. Positions and sizes are compared in whole pixels, and stacking order and where a connector meets a table never count.
+
+### The Change Tree
+
+The list on the left is drawn as the [Explorer's tree](./explorer.md#the-tree) and holds only what changed: `Tables`, `Table Groups`, and `Memos`, each shown only when it holds a row, and under a table its own `Columns`, `Indexes`, and `Foreign Keys`. A foreign key is listed under its child table, and a table added or removed lists nothing inside it.  
+Every folder shows how many rows it holds, and every folder and table starts unfolded.  
+Tables and table groups are listed by name, ignoring case. Memos, and a table's columns, indexes, and foreign keys, keep the current document's order, with a removed one put back where it stood. A memo row reads the memo's first line, and a foreign key row reads its child columns, then `→` with the parent table and its columns, such as `user_id → users(id)`. A blank name reads `unnamed` in italics.
+
+Each row ends on a letter, and a row marked `A`, `D`, `M`, or `R` has its name in the letter's color:
+
+- `A`, added, in green: only in the current document.
+- `D`, removed, in red and struck through: only in the saved document.
+- `M`, modified, in amber: in both, changed.
+- `R`, renamed, in blue: in both, with a new name. A rename outranks any other change, which the tooltip still lists.
+- `~`, in amber, ends every folder and a table listed only for what changed inside it; their names keep the usual color.
+
+Hover a row's name for its tooltip: the status, `Added`, `Deleted`, `Modified`, `Renamed`, or `Changed inside`, then one line per change, such as `Name: users → members` or `NN: ✗ → ✓`. A text is quoted by its first line, cut after 40 characters, and an empty value reads `—`. An added or removed item's tooltip is its status alone.
+
+`Filter by name`, above the tree, keeps the rows whose current or saved name contains what you type, ignoring case. A table whose name matches keeps all its rows, and one that does not stays with only the rows that match. A filter that matches nothing leaves the tree empty.  
+When the two documents do not differ at all, the tree reads `No changes`.
+
+Drag the tree's right edge to make it wider or narrower, from `200px` to `480px`, and double-click the edge to put it back to `260px`. Every diff opens at `260px`, and the two sides share the rest of the width equally.  
+The keyboard moves through the tree as through the Explorer's — see [Keys in the Explorer](./explorer.md#keys-in-the-explorer) — but here `Escape`, in the tree or in `Filter by name`, closes the view.
+
+### Going to a Change
+
+Click a row, or press `Enter` or `Space` with the keyboard on it, to go to its item on each side that holds it: an added item on the current side only, a removed one on the saved side only, and anything both hold on both sides. A folder row only folds or unfolds, and so does the arrow at the start of a table row.
+
+- A table, column, or index row selects the table alone.
+- A foreign key row brings its two tables into view, or the child table when the two are too far apart to show together, selects the child table with its foreign key columns, and lights the connector — see [Reading a Connector](./relationship-editing.md#reading-a-connector).
+- A memo row selects the memo, and a table group row selects the group. A memo or a group that a side's document hides goes nowhere on that side.
+
+Each side moves by the rule in [Where a Jump Lands](#where-a-jump-lands), measured on that side, so clicking the same row again moves nothing.
+
+### Marks on the Two Sides
+
+The two sides color text, outlines, and connectors, and fill nothing. Added is green and shows on the current side only, removed is red and shows on the saved side only, and changed, in amber, and renamed, in blue, show on both sides. Anything unchanged is drawn as usual.
+
+- A table or table group added or removed is outlined in its color, and its name takes the color. A memo added or removed is outlined.
+- A column added or removed in a table both documents hold colors its whole row, and a column that moved turns its whole row amber. Nothing inside an added or removed table is marked on its own.
+- A changed cell's text turns amber: a table's comment, a column's comment, data type, default, Auto Increment, Unique, or Not Null, or a memo's text. A primary key change turns the column's key icon amber.
+- A renamed table, column, or table group has its name in blue.
+- A table, memo, or table group with a change that has no cell of its own, such as a move, a new size or color, or a change of group or of a group's tables, is outlined in amber.
+- A foreign key added, removed, or changed draws its connector in that color. Hovering it, or a row's light, draws it in the usual hover color instead.
+- An index change marks nothing on either side; it shows in the tree only.
+
+Each side follows its own document's View Options. A change in a cell that side does not draw shows on the name instead. A column change in a cell a View Option hides, such as `Unique` or `Auto Increment`, both off by default, turns the column's name amber, and so does a primary key change on a row that shows no key icon. A table comment change while `Table Comment` is off turns the table's name amber. A rename's blue wins over this amber. A memo or table group its document hides is listed in the tree but not drawn on that side.
+
+At `70%` and below, collapsed tables keep their outline. The name keeps the green or red of an added or removed table, or a rename's blue, and otherwise takes the amber of a comment change. Column changes are not drawn until you zoom back in; the tree still lists them.

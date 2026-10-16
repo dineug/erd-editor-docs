@@ -430,7 +430,7 @@ The canonical schema file is published at [json-schema/schema.json](https://raw.
 
 Put `$schema` at the top of an `.erd.json` file and editors that understand JSON Schema, such as VS Code, validate the document and autocomplete its fields as you edit.
 
-Since `4.0.0` the schema describes the storage form alone. Every object with named fields is closed (`additionalProperties: false`), every field the storage form always writes is required, and no field it leaves out is named. It therefore refuses the runtime value. It also refuses a file an earlier release saved, with its `meta`, widths, `zIndex`, `ignoreSaveSettings` and the rest, until a `4.0.0` editor saves that file again. A file `3.2.0` or later saved already names this schema's URL, which points at the `main` branch, so an editor that validates against it flags the file now. A file saved by `3.0.0` or `3.1.0`, or a v2 document, names no `$schema`.
+Since `4.0.0` the schema describes the storage form alone. Every object with named fields is closed (`additionalProperties: false`), every field the storage form always writes is required, and no field it leaves out is named. It therefore refuses the runtime value. It also refuses a file saved before `4.0.0`, with its `meta`, widths, `zIndex`, `ignoreSaveSettings` and the rest, until an editor of `4.0.0` or later saves that file again. A file saved by `3.2.0` or later already names this schema's URL, which points at the `main` branch, so an editor that validates against it flags the file now. A file saved by `3.0.0` or `3.1.0`, or a v2 document, names no `$schema`.
 
 ```json
 {

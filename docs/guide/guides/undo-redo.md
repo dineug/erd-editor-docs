@@ -1,5 +1,5 @@
 ---
-sidebar_position: 12
+sidebar_position: 13
 description: Undo and redo edits, what the history records, and stepping through it with Time Travel.
 ---
 
@@ -16,7 +16,7 @@ They light up only when there is something to undo or redo. A `readonly` editor 
 
 Undo and Redo apply only on the ERD tab. They are unavailable on the Visualization, Schema SQL, Code Generator, and Settings tabs. In the Schema SQL tab's `Before tables` and `After tables` fields, the same keys undo and redo your typing in the field instead.  
 The shortcuts are also inactive while Quick Search, `Table Properties`, `Diff Viewer`, the `Auto Layout` preview, the [`Export image`](./file-import-export.md#image) dialog, [Map Columns](./relationship-editing.md#map-columns), or Time Travel is open.  
-They keep working while [Find and Replace](./find-and-replace.md#keys-in-the-panel) or the [color picker](./table-related-functions.md#table-and-memo-color-specification) is open. Even with the caret in one of their fields, such as Find, Replace, or `Hex`, they undo and redo the diagram rather than the text in the field.
+They keep working while the keyboard is anywhere in the [Explorer](./explorer.md#keys-in-the-explorer), its tree included, and while the [color picker](./table-related-functions.md#table-and-memo-color-specification) is open. Even with the caret in one of their fields, such as Find, Replace, or `Hex`, they undo and redo the diagram rather than the text in the field.
 
 The history lives in memory for the current session. It is not stored in the document, so reopening a diagram starts with an empty history.
 
@@ -44,6 +44,7 @@ Not recorded:
 - Everything on the Settings tab, the [`Lock`](./settings.md#lock) rows included.
 - The theme and the display language — see [Language and Theme](./language-and-theme.md).
 - Which table, memo, or group is drawn in front of the others.
+- The [Explorer](./explorer.md): opening, closing, or resizing it, folding its tree, and the search text and options. What `Replace` and `Replace All` change is recorded, though, and so is the scroll a go-to makes — see [One Gesture, One Step](#one-gesture-one-step).
 - Zoom and pan on the Visualization tab in either mode, moving graph nodes or Flow cards, `Tidy Up`, the row display, and focusing on tables — see [Flow Never Edits the Document](./visualization.md#flow-never-edits-the-document).
 
 Changing any of these cannot be undone.
@@ -63,16 +64,17 @@ A press of `Delete` or `Backspace`, or `Delete selected` or `Delete columns` in 
 Toggling the primary key on several selected columns is one step, whether with `Alt + K` (Windows/Linux) or `⌥ + K` (Mac) or with `Primary Key on selected columns` in a table's context menu.  
 Setting the color of the selection, or clearing it with `No color` or `Remove color`, is one step, however many tables, memos, and groups are selected. Picking a color that everything selected already has records no step, and neither does `No color` when nothing selected has a color.  
 `Map` or `Save` in [Map Columns](./relationship-editing.md#map-columns) is one step, together with the foreign key columns it adds and the data types it changes.  
-`Import and Add` is one step, together with the scroll that brings the added block into view.
+`Import and Add` is one step, together with the scroll that brings the added block into view when it needs one.
 
-Creating a [table group](./table-groups.md), by drawing it or with `Group selected tables`, is one step together with every table it takes in. Removing a group is one step, and undoing it brings the group back with its tables in it.  
+Creating a [table group](./table-groups.md), by drawing it or by grouping the selected tables with `Group selected tables` or `T` then `G`, is one step together with every table it takes in. Removing a group is one step, and undoing it brings the group back with its tables in it.  
 Dragging a group by its title bar moves the group and all its tables in one step. Tables dropped into or out of a group change group in the same step as their drag when you let go within about `200ms` of the last movement, so one undo puts them back where they were and in the groups they were in. After a longer pause before letting go, the change of group is a step of its own, and the first undo takes back only that.  
 Resizing a group by an edge or a corner is recorded once, when you let go.  
 Applying [Auto Layout](./table-related-functions.md#auto-layout) is one step, the groups it fits round their tables included.
 
-`Replace All` in [Find and Replace](./find-and-replace.md#replacing) is one step too, however many table names, comments, column names, and memos it changes. When it changes nothing, it records no step.  
-A single `Replace` is one step, including the scroll to the next match when that match needs one.  
-Going to a match that is not already fully in view beside the panel scrolls the canvas, and that scroll is recorded like any other change of view position — see [Going to a Match](./find-and-replace.md#going-to-a-match). After moving through matches, Undo first takes back those scrolls, one per step.
+`Replace All` in [Find and Replace](./find-and-replace.md#replacing) is one step too, however many table names, column names, index names, table group names, comments, and memos it changes. When it changes nothing, as when `Preserve Case` writes every match back as it was, it records no step.  
+A single `Replace` is one step, including the scroll to the next match when that match needs one. When it writes its match back as it was, it records only that scroll, or nothing when there is none.  
+Going to a match scrolls the canvas only when the match does not already show well — see [Where a Jump Lands](./table-related-functions.md#where-a-jump-lands). That scroll is recorded like any other change of view position, so after moving through matches, Undo first takes back those scrolls, one per step.  
+The other go-tos that land on the canvas record their scrolls the same way: choosing a row in the Explorer, a Quick Search result, or the external-link [card button](./visualization.md#card-buttons) in Flow. A go-to that leaves the view where it is records nothing. Choosing a row in the `Diff Viewer`'s list records nothing either, since it moves only the Diff Viewer's own read-only sides.
 
 A continuous drag, canvas pan, zoom, pinch, or color change is buffered for about `200ms` and lands as one entry too.  
 A drag that moves less than `20px` in total records no move. Only a change of group it makes, if any, is recorded.

@@ -170,7 +170,7 @@ id 来自 `erd_list` 和 `erd_get`，或者来自创建该实体的那次调用�
 
 通过 `View Option` → `Table Groups` 隐藏分组期间，这些工具仍会添加和修改分组，这些分组会保持隐藏，直到分组再次显示，参见[隐藏分组](../guide/guides/table-groups.md#hiding-groups)。
 `erd_sort_tables` 会让每个分组中的表聚在一起，`erd_import_dbml` 和 `erd_import_json` 会带入分组（参见[导入](#导入)），`erd_read` 则可以通过 `groupNames` 写出所选分组的 DDL。
-智能体在磁盘上写入的文件，如果由更早发布版本的 ERD Editor 保存，可能会丢掉其中的分组，参见[更新](./installation.md#更新)。
+支持表分组之前的 ERD Editor 发布版本在保存文件时会丢掉文件中的分组，`4.0.0` 之前的 VS Code 扩展以及 `1.0.0` 之前的 Obsidian 和 JetBrains 插件都是如此，参见[更新](./installation.md#更新)。
 
 ### 设置 {#settings}
 
@@ -191,7 +191,7 @@ id 来自 `erd_list` 和 `erd_get`，或者来自创建该实体的那次调用�
 | `erd_set_ddl_script` | `position`, `sql` | 设置写在各表前后的两段脚本之一，参见[前置与后置脚本](../guide/guides/schema-sql.md#before-and-after-scripts)。`position` 为 `before` 时，脚本写在各表之前，例如 `CREATE EXTENSION` 或 `CREATE SCHEMA`；为 `after` 时，脚本写在各表之后，例如 `GRANT` 或 `CREATE VIEW`。`sql` 会替换整段脚本，最多 10,000 个字符，空字符串会删除该脚本。请先用 `erd_read` 的 `scripts` 格式读取当前的脚本。 |
 
 脚本会按原样写入每种数据库的 DDL，因此请按文档的数据库编写脚本。在 MSSQL 上，如果脚本的最后一行不是 `GO`，会在其后添加一行 `GO`。
-智能体在磁盘上写入的文件，如果由更早发布版本的 ERD Editor 保存，可能会丢掉其中的脚本，参见[更新](./installation.md#更新)。
+支持这些脚本之前的 ERD Editor 发布版本在保存文件时会丢掉文件中的脚本，`4.0.0` 之前的 VS Code 扩展以及 `1.0.0` 之前的 Obsidian 和 JetBrains 插件都是如此，参见[更新](./installation.md#更新)。
 
 ### 导入
 
@@ -290,7 +290,7 @@ SQL、GraphQL、DBML 和 AML 中的表会按行排列，列数最少的在前，
 | `hubAppeared`, `hubGone` | 有编辑器开始为智能体正在磁盘上编辑的文档提供服务，或者为该文档提供服务的编辑器仍在运行，但其锁文件和连接已消失。未写入任何内容。 |
 | `notSaved` | `erd_save` 无法保存编辑器中的文档。 |
 | `readonly` | 编辑器以只读方式持有该文档，例如它无法写入或无法作为图读取的文件。没有编辑器时，则是文件本身为只读，例如尚未签出的 Perforce 或 TFVC 文件。未写入任何内容。 |
-| `protocolMismatch` | 编辑器的 ERD Editor 扩展或插件与服务器所用的协议版本不同，例如服务器 `1.0.0` 搭配更早的扩展或插件。读取同样会被拒绝，消息会指出需要更新的一方，参见[更新](./installation.md#更新)。 |
+| `protocolMismatch` | 编辑器的 ERD Editor 扩展或插件与服务器所用的协议版本不同，例如服务器 `1.0.0` 搭配 VS Code 扩展 `3.x`。读取同样会被拒绝，消息会指出需要更新的一方，参见[更新](./installation.md#更新)。 |
 | `hubUnreachable`, `timeout`, `disconnected` | 编辑器的 hub 没有接受连接、没有在 30 秒内应答，或者在调用期间断开了连接。在 Windows 上，`hubUnreachable` 还表示 Windows 不允许智能体访问该 hub：编辑器以高于智能体的权限运行（例如编辑器以管理员身份启动而智能体没有），或者智能体在沙箱中运行。 |
 
 其他代码较为少见，而且每次拒绝都会附带一条说明发生了什么的消息。

@@ -33,6 +33,8 @@ editor.addEventListener('change', () => {
 ```
 
 `<erd-editor>` は固有のサイズを持ちません。要素またはコンテナに width と height を明示的に指定してください。
+`4.1.0` からは、開いている[エクスプローラー](../guide/guides/explorer.md)は要素の内側で ERD キャンバスの左端にドッキングされ、キャンバスを覆うのではなく、キャンバスの幅を狭めます。新しく開いたエディタでは、エクスプローラーは閉じた状態で始まります。
+パネルは `200px` より狭くは描画されず、キャンバスには `320px` 以上の幅を残すため、幅が `520px` より狭い要素では、開いているエクスプローラーは要素の幅が広がるまで描画されません。[キャンバスの横](../guide/guides/explorer.md#beside-the-canvas)を参照してください。
 
 `setInitialValue('')` は新しい空のドキュメントから始めます。`value` への代入は読み込みを編集として扱うため、履歴に記録されます。
 `4.0.0` からは、`editor.value` はファイルが保持する形式のドキュメントで、保存するのはこちらです。`editor.runtimeValue` は、削除したエンティティも含めた、エディタが保持しているとおりのドキュメントです。共同編集の参加者に初期値を設定するためのもので、ファイルに書き込むことはありません。[runtimeValue](./erd-editor-element.md#runtimevalue) を参照してください。
@@ -54,7 +56,7 @@ editor.addEventListener('change', () => {
 ```
 
 `esm.run` がパッケージの外部依存を解決してくれるため、バンドラーなしでも動作します。
-バージョンを指定しない URL は常に最新のリリースを配信します。メジャーアップグレードが予告なくページに反映されるのを避けたい場合は、`https://esm.run/@dineug/erd-editor@4.0.0` のようにバージョンを固定します。
+バージョンを指定しない URL は常に最新のリリースを配信します。メジャーアップグレードが予告なくページに反映されるのを避けたい場合は、`https://esm.run/@dineug/erd-editor@4.1.0` のようにバージョンを固定します。
 `4.0.0` 自体がメジャーアップグレードです。3.x にとどまる必要があるページは `@3.10.0` に固定します。[3.x からのアップグレード](#3x-からのアップグレード)を参照してください。
 
 ### script タグ
@@ -64,7 +66,7 @@ editor.addEventListener('change', () => {
 
 ```html
 <erd-editor></erd-editor>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@4.0.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@4.1.0"></script>
 <script>
   const editor = document.querySelector('erd-editor');
   editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
@@ -252,12 +254,12 @@ Chrome 91+、Edge 94+、Firefox 93+、Safari 16.4+ に対応しています。�
 
 - `editor.value`、レプリカの `value`、その `change` が渡す `value` は、ファイルが保持する形式です。削除したエンティティ、計測した幅、重なり順、リレーションシップの接続位置は含まれません。引き続き `value` を保存し、これらは `runtimeValue` から読み取ります。エンティティのタイムスタンプ（`meta`）は完全になくなりました。共同編集の参加者や、進行中のセッションに参加するレプリカには、`value` やファイルではなく、すでにセッションにいるピアの `runtimeValue` で初期値を設定し、`runtimeValue` は決して保存しないでください。[value](./erd-editor-element.md#value) と [runtimeValue](./erd-editor-element.md#runtimevalue) を参照してください。
 - `Save Scroll Information` と `Save Zoom Information` は設定のロックに置き換わりました。新しいドキュメントと、`4.0.0` より前に保存したすべてのドキュメントではすべてのロックがオンのため、スクロール、拡大・縮小、タブの切り替え、Code Generator の言語、名前のケース、括弧の種類の変更をしても、`value` は変わらず、`change` も発行されません。`change` を通じて表示を保存していたページでは、設定タブで `Viewport`（タブも保存する場合は `Canvas Type` も）のロックをオフにするか、`settings.lockSettings` でそれらのビットが立っていないドキュメントを使う必要があります。[ロック](../guide/guides/settings.md#ロック)を参照してください。
-- `settings` から `width`、`height`、`scrollTop`、`scrollLeft`、`relationshipOptimization`、`ignoreSaveSettings` がなくなり、`SaveSettingType` の定数も削除されました。`ignoreSaveSettings` の代わりに、`LockSettingType` のビットを持つ `settings.lockSettings` を使います。`4.0.0` は `ignoreSaveSettings` を読み取りも書き込みもしません。[Settings](./advanced/schema.md#settings) を参照してください。
-- 各ファイルが `$schema` で指定する [JSON Schema](./advanced/schema.md#json-schema) は、ファイルが保持する形式だけを記述し、それ以外を認めない閉じたスキーマになりました。以前のリリースで保存したファイルは、`4.0.0` で保存して書き直されるまで、このスキーマで拒否されます。
+- `settings` から `width`、`height`、`scrollTop`、`scrollLeft`、`relationshipOptimization`、`ignoreSaveSettings` がなくなり、`SaveSettingType` の定数も削除されました。`ignoreSaveSettings` の代わりに、`LockSettingType` のビットを持つ `settings.lockSettings` を使います。`4.0.0` 以降は `ignoreSaveSettings` を読み取りも書き込みもしません。[Settings](./advanced/schema.md#settings) を参照してください。
+- 各ファイルが `$schema` で指定する [JSON Schema](./advanced/schema.md#json-schema) は、ファイルが保持する形式だけを記述し、それ以外を認めない閉じたスキーマになりました。以前のリリースで保存したファイルは、`4.0.0` 以降で保存して書き直されるまで、このスキーマで拒否されます。
 - ドキュメントのガベージコレクションはそのワーカーとともになくなったため、削除したエンティティは、次にドキュメントをファイルから開くまで `runtimeValue` に残ります。残る Shared Worker は 3 つです。[Web Worker](#web-workers) を参照してください。
-- 共有セッション内のすべてのエディタとレプリカは `4.0.0` にそろえてください。以前のリリースは、テーブルグループ、Map Columns、ロック、Schema SQL のスクリプトの新しいアクションの種類を無視します。[リリースの混在](./advanced/collaborative-editing.md#リリースの混在)を参照してください。
+- 共有セッション内のすべてのエディタとレプリカは `4.0.0` 以降にそろえてください。以前のリリースは、テーブルグループ、Map Columns、ロック、Schema SQL のスクリプトの新しいアクションの種類を無視します。[リリースの混在](./advanced/collaborative-editing.md#リリースの混在)を参照してください。
 - 読み込みのコールバックは Import and Add で `mode: 'append'` を受け取るため、コールバックはそれをそのまま渡す必要があります。書き出しのコールバックは `.svg` と Code Generator のファイルも受け取るようになり、`Export` ▸ `Schema SQL` は保存せずに Schema SQL タブを開くため、`.sql` はそのタブの `Save file` からのみ届きます。[ファイルダイアログ](#ファイルダイアログ)を参照してください。
 - `Delete` と `Backspace` は新しい `removeSelection` に割り当てられています。エディタにフォーカスがあり、テキストフィールドの外にある間は、どのタブでもキーの既定の動作が抑止され、ERD タブでは選択しているものが削除されます。`KeyBindingName` と `KeyBindingMap` にはこれが加わり、`setKeyBindingMap({ removeSelection: [] })` で両方のキーをページに任せられます。[setKeyBindingMap](./erd-editor-element.md#setkeybindingmap) を参照してください。
 - `ThemeOptions.appearance` は `'system'` も受け取ります。テーマビルダーの `System` にあたり、`systemDarkMode` をオンにするとこの値になります。`changePresetTheme` は `System` を選んでいる間 `'system'` を報告するため、そのまま保存し、そのまま `setPresetTheme` に渡します。`systemDarkMode` がオンの間に `'light'` または `'dark'` を指定した `setPresetTheme()` は、次の OS の切り替えで上書きされず、そのまま保たれるようになりました。[systemDarkMode](./erd-editor-element.md#systemdarkmode) と [changePresetTheme](./erd-editor-element.md#changepresettheme) を参照してください。
-- `@dineug/erd-editor-mcp` `1.0.0`、VS Code の拡張機能 `4.0.0`、Obsidian と JetBrains のプラグイン `1.0.0` は、ハブのプロトコル 2 を使います。サーバー `1.0.0` とエージェントに対応する以前のエディタのリリース、または以前のサーバーとこれらのエディタは、`protocolMismatch` で互いを拒否し、更新が必要な側を示します。[アップデート](../mcp/installation.md#アップデート)を参照してください。
-- バージョンを指定しない CDN の URL は `4.0.0` を配信するようになりました。3.x にとどまるには `@3.10.0` に固定します。[CDN](#cdn) を参照してください。
+- `@dineug/erd-editor-mcp` `1.0.0`、VS Code の拡張機能 `4.0.0` 以降、Obsidian と JetBrains のプラグイン `1.0.0` 以降は、ハブのプロトコル 2 を使います。サーバー `1.0.0` とエージェントに対応する以前のエディタのリリース、または以前のサーバーとこれらのエディタは、`protocolMismatch` で互いを拒否し、更新が必要な側を示します。[アップデート](../mcp/installation.md#アップデート)を参照してください。
+- バージョンを指定しない CDN の URL は最新の 4.x リリースを配信するようになりました。3.x にとどまるには `@3.10.0` に固定します。[CDN](#cdn) を参照してください。

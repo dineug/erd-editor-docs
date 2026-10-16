@@ -170,7 +170,7 @@ A group stores a rect, at least `160` pixels wide and `100` high, title bar incl
 
 While groups are hidden with `View Option` → `Table Groups`, these tools still add and change groups, which stay hidden until groups are shown — see [Hiding Groups](../guide/guides/table-groups.md#hiding-groups).
 `erd_sort_tables` keeps each group's tables together, `erd_import_dbml` and `erd_import_json` bring groups — see [Import](#import) — and `erd_read` writes the DDL of chosen groups with `groupNames`.
-A file the agent writes on disk may lose its groups if an earlier release of ERD Editor saves it — see [Updating](./installation.md#updating).
+A release of ERD Editor that predates table groups drops a file's groups when it saves the file, as the VS Code extension before `4.0.0` and the Obsidian and JetBrains plugins before `1.0.0` do — see [Updating](./installation.md#updating).
 
 ### Settings
 
@@ -191,7 +191,7 @@ A locked language, name case, or bracket type is reported at its locked value, t
 | `erd_set_ddl_script` | `position`, `sql` | Sets one of the two scripts written around the tables — see [Before and After Scripts](../guide/guides/schema-sql.md#before-and-after-scripts). `position` is `before`, written ahead of the tables, such as `CREATE EXTENSION` or `CREATE SCHEMA`, or `after`, written past them, such as `GRANT` or `CREATE VIEW`. `sql` replaces the whole script, at most 10,000 characters, and an empty string removes it. Read the current one first with the `scripts` format of `erd_read`. |
 
 A script goes as is into the DDL of every database, so write it for the document's database. On MSSQL, a `GO` line is added after a script whose last line is not `GO`.
-A file the agent writes on disk may lose its scripts if an earlier release of ERD Editor saves it — see [Updating](./installation.md#updating).
+A release of ERD Editor that predates these scripts drops a file's scripts when it saves the file, as the VS Code extension before `4.0.0` and the Obsidian and JetBrains plugins before `1.0.0` do — see [Updating](./installation.md#updating).
 
 ### Import
 
@@ -290,7 +290,7 @@ A refusal is an error result carrying a code and a message that says what to do:
 | `hubAppeared`, `hubGone` | An editor started serving a document the agent was editing on disk, or the editor that served it still runs but its lock file and connection are gone. Nothing was written. |
 | `notSaved` | `erd_save` could not save the editor's document. |
 | `readonly` | The editor holds the document read-only, such as a file it cannot write or cannot read as a diagram. With no editor, the file itself is read-only, such as a Perforce or TFVC file that is not checked out. Nothing was written. |
-| `protocolMismatch` | The editor's ERD Editor extension or plugin and the server speak different protocol versions, such as server `1.0.0` with an earlier extension or plugin. Reads are refused too, and the message names the side to update — see [Updating](./installation.md#updating). |
+| `protocolMismatch` | The editor's ERD Editor extension or plugin and the server speak different protocol versions, such as server `1.0.0` with a `3.x` VS Code extension. Reads are refused too, and the message names the side to update — see [Updating](./installation.md#updating). |
 | `hubUnreachable`, `timeout`, `disconnected` | An editor's hub did not accept the connection, did not answer within 30 seconds, or hung up during the call. On Windows, `hubUnreachable` also means Windows kept the agent out of the hub: the editor runs with more rights than the agent, as when it was started as administrator and the agent was not, or the agent runs in a sandbox. |
 
 Other codes are rarer, and every refusal carries a message saying what happened.

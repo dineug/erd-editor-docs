@@ -47,23 +47,28 @@ const ORDER = [
   'film_category',
 ];
 
-// The ERD tab the clip opens on, at 80%: two tidy rows in view with the
+// The ERD tab the clip opens on, at 72%: two tidy rows in view with the
 // minimap over empty canvas, and the rest of the tables out of frame. Schema
 // SQL import keeps sakila's UNSIGNED in the data types, so the tables run
 // about 310 wide: three fit side by side only below the minimap, and the top
-// row keeps two.
+// row keeps two. The floating toolbar (about 418px wide since 4.1.0) spans
+// the middle of the bottom edge, and address, eight rows tall and too wide
+// to sit left of it, ends above it only below 75%; at 70% and under, the
+// tables would draw as bare names. city and staff start just below the
+// frame, so no sliver of them shows under the bar.
+const ERD_ZOOM = 0.72;
 const ERD = {
   customer: { x: 24, y: 24 },
   rental: { x: 370, y: 24 },
-  address: { x: 24, y: 330 },
-  store: { x: 370, y: 330 },
-  inventory: { x: 744, y: 330 },
-  city: { x: 24, y: 620 },
-  country: { x: 24, y: 820 },
-  staff: { x: 370, y: 660 },
-  film: { x: 1140, y: 24 },
-  film_category: { x: 1140, y: 440 },
-  category: { x: 1500, y: 440 },
+  address: { x: 24, y: 320 },
+  store: { x: 370, y: 320 },
+  inventory: { x: 744, y: 320 },
+  city: { x: 24, y: 700 },
+  country: { x: 24, y: 880 },
+  staff: { x: 370, y: 700 },
+  film: { x: 1300, y: 24 },
+  film_category: { x: 1300, y: 440 },
+  category: { x: 1660, y: 440 },
 };
 
 // Eight notches of 50px each way: out to 45%, where no name shows, and back
@@ -132,18 +137,36 @@ export default {
     await seedSQL(d, readSeed('sakila.sql'), {
       only: ORDER,
       tables: ERD,
-      settings: { databaseName: 'sakila', show: SHOW, zoomLevel: 0.8 },
+      settings: { databaseName: 'sakila', show: SHOW, zoomLevel: ERD_ZOOM },
       patch(doc) {
         dropStrayColumns(doc);
         const name = id => doc.collections.tableEntities[id].name;
         doc.doc.tableIds.sort((a, b) => ORDER.indexOf(name(a)) - ORDER.indexOf(name(b)));
       },
     });
+    // The pointer waits in the gap between customer and rental, under the
+    // Visualization tab: from the middle of the frame its way up would cross
+    // rental and light it, and any other way in runs over a connector or
+    // along the neighbouring tabs.
+    const customer = await d.tableBox('customer');
+    const rental = await d.tableBox('rental');
+    await d.moveTo((customer.x + customer.width + rental.x) / 2, customer.y + 24, 0);
   },
   async scenario(d) {
     const mark = timer();
+    if (process.env.DEMO_TIMING) {
+      const r = b => [b.x, b.y, b.x + b.width, b.y + b.height].map(Math.round).join(',');
+      const bar = await d.domBox('.floating-toolbar');
+      const tab = await d.domBox(tabSelector('Visualization'));
+      console.log(`  bar ${r(bar)}, tab ${r(tab)}, pointer ${Math.round(d.mouse.x)},${Math.round(d.mouse.y)}`);
+      for (const name of ['customer', 'rental', 'address', 'store', 'inventory']) {
+        console.log(`  ${name} ${r(await d.tableBox(name))}`);
+      }
+    }
     await d.sleep(500);
-    await clickDom(d, tabSelector('Visualization'), { duration: 550 });
+    // Into the tab right of its middle, so the way up stays clear of
+    // customer's corner and of the next tab.
+    await clickDom(d, tabSelector('Visualization'), { duration: 450, dx: 4 });
     mark('tab clicked');
     await watchGraphHovers(d);
     // The forces lay the graph out while the pointer drifts clear of it.

@@ -1,7 +1,7 @@
 /**
- * Grouping selected tables: categories and products are selected, and Group
- * selected tables on a table's menu wraps them in a group, its name editor
- * open for Catalog. The group's own menu then gives it a color, and both
+ * Grouping selected tables: categories and products are selected, and T then
+ * G, Group selected tables' key sequence, wraps them in a group, its name
+ * editor open for Catalog. The group's own menu then gives it a color, and both
  * member tables' header bands take it, while members and orders, outside the
  * group, keep theirs.
  */
@@ -86,12 +86,19 @@ export default {
     await d.sleep(200);
     await d.shot('selected');
 
-    // A table's menu: Group selected tables.
-    await d.rightClick(prodGrip.x, prodGrip.y, { duration: 0 });
-    await pickMenuItem(d, 'Group selected tables');
+    // T, then G: the second press within a second of the first. Pressed
+    // straight to the page, so the T keycap stays up while G joins it.
+    await d.keys(['T'], 1600);
+    await d.sleep(130);
+    await d.page.keyboard.press('KeyT');
+    await d.sleep(380);
+    await d.keys(['T', 'G'], 900);
+    await d.sleep(130);
+    await d.page.keyboard.press('KeyG');
     await waitDom(d, '.table-group-name-input');
     mark('grouped');
-    await d.sleep(350);
+    // The keycaps go down before the name is typed.
+    await d.sleep(650);
     await d.shot('grouped');
 
     await d.type('Catalog', 90);

@@ -1,6 +1,6 @@
 ---
 sidebar_position: 5
-description: Gather related tables in a named, colored box behind them; create, name, color, move, resize, and remove groups, change which tables they hold, hide them, and carry them through Auto Layout, Schema SQL, and DBML.
+description: Gather related tables in a named, colored box behind them; create, name, color, move, resize, and remove groups, go to them from the Explorer, change which tables they hold, hide them, and carry them through Auto Layout, Schema SQL, and DBML.
 ---
 
 # Table Groups
@@ -13,37 +13,41 @@ The box always holds its tables: it keeps the size it was given, but stretches t
 
 Groups are drawn behind everything else on the canvas: tables, memos, and relationship lines.  
 Where groups overlap, the one pressed or added last is drawn in front, and no group's body ever covers another group's title bar. The order is not saved, so a reopened diagram stacks its groups in the order they were added.  
-Groups show on the ERD canvas, in the minimap, and in an exported image. The [Visualization](./visualization.md) tab draws no groups and no group colors in either mode.
+Groups show on the ERD canvas, in the minimap, and in an exported image, and the [Explorer](./explorer.md) lists them — see [Going to a Group](#going-to-a-group). The [Visualization](./visualization.md) tab draws no groups and no group colors in either mode.
 
 A coding agent can create and change groups too, and read the DDL of chosen groups — see [Table Groups](../../mcp/tools.md#table-groups) in the MCP tools.
 
-![Drawing a group over orders and payments with New Table Group, naming it Billing, dropping order_items into it, then moving and resizing the group](/img/demo-table-group.webp)
+![Arming a group draw with ⌥ + G, drawing it over orders and payments, naming it Billing, dropping order_items into it, then moving and resizing the group](/img/demo-table-group.webp)
 
 ## Creating a Group
 
-There are two ways to create a group. Neither has a shortcut or a canvas toolbar button, and neither is offered in a read-only editor or while groups are [hidden](#hiding-groups).
+There are two ways to create a group, each with a shortcut. Neither is offered in a read-only editor or while groups are [hidden](#hiding-groups), and their shortcuts then do nothing.  
+Like the other canvas shortcuts, they work on the ERD tab only and are held back while a cell, a memo, or a group's name is being edited — see [Shortcuts](./settings.md#shortcuts).
 
 ### Drawing a Group
 
-Choose `New Table Group` from the canvas context menu, where it follows `New Table` and `New Memo`, or from [Quick Search](./quick-search.md) on the ERD tab. Then drag a box over the canvas.  
-While the draw is armed, the cursor is a crosshair, and a press starts the box wherever it lands, even over a table, rather than selecting or moving what is under it. The canvas toolbar then marks neither the hand nor the pointer.
+Click the `New Table Group` button on the [canvas toolbar](./table-related-functions.md#canvas-toolbar), press `Alt + G` (Windows/Linux) or `⌥ + G` (Mac), or choose `New Table Group` from the canvas context menu, where it follows `New Table` and `New Memo`, or from [Quick Search](./quick-search.md) on the ERD tab. Then drag a box over the canvas.  
+The button and the shortcut toggle the draw, so pressing either while it is armed ends it, however it was started; the context menu row and Quick Search only start it. Starting it switches off the hand tool and cancels a relationship being drawn.  
+While the draw is armed, the cursor is a crosshair, and a press starts the box wherever it lands, even over a table, rather than selecting or moving what is under it. The canvas toolbar then marks its `New Table Group` button, and neither the hand nor the pointer.
 
 Releasing adds a group in that box, never smaller than `160px` wide and `100px` tall, title bar included, however short the drag. A click without dragging adds a group `480px` wide and `320px` tall with its top-left corner at the click.  
 Every table in no group whose center lies inside the new box joins the group. A table already in another group stays there.
 
 The middle mouse button still pans the canvas and leaves the draw armed. These end the draw without adding a group:
 
-- `Escape`, before the press or during the drag. Before the press it leaves the selection as it is; the press that starts the box has already cleared it.
+- `Escape`, or `Alt + G` (Windows/Linux) or `⌥ + G` (Mac), before the press or during the drag. Before the press they leave the selection as it is; the press that starts the box has already cleared it.
 - A right-click, which clears the selection. No context menu opens.
-- Switching to the hand tool with `Space` or the canvas toolbar, clicking the toolbar's pointer, or starting a relationship.
+- Switching to the hand tool with `Space` or the canvas toolbar, clicking the toolbar's pointer or its `New Table Group` button, or starting a relationship.
 - Switching to another tab, hiding the groups, or the editor turning read-only.
 
 ### Grouping Selected Tables
 
-Select one or more tables, then choose `Group selected tables` from a table's context menu, or `Group Selected Tables` from Quick Search, which lists it while a table is selected.  
+Select one or more tables and press `T` then `G`, or choose `Group selected tables` from a table's context menu or `Group Selected Tables` from Quick Search, which lists it while a table is selected.  
 The new group is drawn round the selected tables with `24px` of room on every side and the title bar above. Every selected table joins it, leaving any group it was in, and the group it left stays, even if it is now empty. Memos in the selection are passed over.
 
-![Grouping categories and products with Group selected tables, naming the group Catalog, then coloring it violet from its menu so both headers take the color](/img/demo-table-group-selected.webp)
+`T` then `G` is two presses with no modifier, `G` within a second of `T`. With no table selected it does nothing, and in a text field, such as the Explorer's Find field, it types the two letters.
+
+![Grouping categories and products with T then G, naming the group Catalog, then coloring it violet from its menu so both headers take the color](/img/demo-table-group-selected.webp)
 
 Either way, the new group has no name and no color. It is selected on its own, and its name editor opens over the title bar so you can type a name at once — see [Naming a Group](#naming-a-group).  
 The group and the tables it takes in are one undo step, and the name you type is another.
@@ -53,9 +57,9 @@ The group and the tables it takes in are one undo step, and the name you type is
 A group's name is edited in a field that opens over its title bar. It opens on its own once a group is created, on a double-click on the title bar, and from `Rename` in the group's context menu.  
 `Enter`, or clicking elsewhere, saves the name. `Escape` closes the field without changing the name and leaves the group selected, and a second `Escape` clears the selection.  
 A changed name is one undo step; saving the name unchanged records nothing. An empty or blank name shows as `unnamed`.  
-While the field is open, the canvas shortcuts are held back, and the Quick Search and Find and Replace shortcuts open nothing, as while a table cell is edited.
+While the field is open, the canvas shortcuts are held back, and the Quick Search and `Toggle Explorer` shortcuts do nothing, as while a table cell is edited.
 
-Group names are not searched by [Quick Search](./quick-search.md#searching-the-diagram) or [Find and Replace](./find-and-replace.md#what-it-searches).
+[Find and Replace](./find-and-replace.md#what-it-searches) searches group names under `Table group names` while groups are shown, and its `Replace` and `Replace All` rename groups — see [Replacing](./find-and-replace.md#replacing). [Quick Search](./quick-search.md#searching-the-diagram) does not search group names.
 
 ## Coloring a Group
 
@@ -84,6 +88,15 @@ A selection box takes a group only when it encloses the group's whole box, so a 
 Use it before commands that act on tables alone, such as copying or [focusing on tables](./table-related-functions.md#focusing-on-tables), which pass over a selected group.
 
 A selected group's outline turns the selection color. In a [collaborative session](../../api/advanced/collaborative-editing.md), a group another participant selects is ringed in that participant's color.
+
+## Going to a Group
+
+The [Explorer](./explorer.md#the-tree) lists the groups in its `Table Groups` folder, by name, each with its tables under it. Quick Search lists no groups.
+
+Choosing a group row in the Explorer, a [Find and Replace](./find-and-replace.md#going-to-a-match) match in a group's name, or a group row in the [Diff Viewer](./table-related-functions.md#the-change-tree)'s list goes to that group.  
+It brings the group's box into view, going by its title bar when the box is taller than the canvas — see [Where a Jump Lands](./table-related-functions.md#where-a-jump-lands). It then selects the group alone and brings it to the front with its tables, as pressing its title bar does.  
+While groups are [hidden](#hiding-groups), or once the group has been removed, going to it does nothing.  
+In the Diff Viewer each side goes to the group only where its own document holds and shows it — see [Going to a Change](./table-related-functions.md#going-to-a-change).
 
 ## Moving and Resizing a Group
 
@@ -137,7 +150,8 @@ The right-click selects the group first, alone unless it is already part of the 
 - `Remove color`: shown while something selected has a color.
 - `Delete`, or `Delete selected` when the group is one of several selected items, with the `Delete` key shown on the right — see [Removing a Group](#removing-a-group).
 
-A table's context menu adds `Group selected tables` and `Remove from group` after `Color` and `Remove color`, before its Delete row, and the canvas context menu adds `New Table Group`.
+A table's context menu adds `Group selected tables` and `Remove from group` after `Color` and `Remove color`, before its Delete row, and the canvas context menu adds `New Table Group`.  
+`Group selected tables` shows its keys, `T` then `G`, on the right, and `New Table Group` shows `Alt + G` (Windows/Linux) or `⌥ + G` (Mac).
 
 ## Hiding Groups
 
@@ -147,8 +161,10 @@ Hiding the groups deselects them, ends a `New Table Group` draw, and closes an o
 
 While groups are hidden:
 
-- `New Table Group` and `Group selected tables` are not offered in the menus, nor `New Table Group` and `Group Selected Tables` in Quick Search. `Remove from group` still is.
+- `New Table Group` and `Group selected tables` are not offered in the menus, nor `New Table Group` and `Group Selected Tables` in Quick Search, and the canvas toolbar leaves out its `New Table Group` button. `Remove from group` is still offered.
+- `Alt + G` (Windows/Linux) or `⌥ + G` (Mac) and `T` then `G` do nothing.
 - Dragging tables changes no group, and a selection box takes no group.
+- The Explorer leaves out its `Table Groups` folder, and Find and Replace neither finds nor replaces group names, even with `Table group names` on.
 - [Auto Layout](#auto-layout) still keeps each group's tables together, the Schema SQL tab still offers the [groups to choose from](#schema-sql-by-group), DBML still writes them, and [Import and Add](./file-import-export.md#import-and-add) still lands below the hidden boxes.
 
 The choice is saved in the document and recorded in the [undo history](./undo-redo.md#what-the-history-records), like the other View Option toggles.
@@ -181,10 +197,11 @@ The choice belongs to the editor window and is not saved in the document.
 
 ## Read-only Editors
 
-In a [`readonly`](../../api/erd-editor-element.md#readonly) editor, groups are drawn as usual and can be selected, but not changed:
+In a [`readonly`](../../api/erd-editor-element.md#readonly) editor, groups are drawn and listed in the Explorer as usual and can be selected and gone to, but not changed:
 
 - A press on a title bar selects the group and moves nothing. There are no resize handles and no `x`.
 - A double-click on the title bar opens no name editor, and the group menu holds `Select tables` alone.
 - The canvas menu has no `New Table Group`, the table menu has no `Group selected tables` or `Remove from group`, and Quick Search lists neither group command. A `New Table Group` draw ends when the editor turns read-only.
+- The [canvas toolbar](./table-related-functions.md#canvas-toolbar) shows none of its add buttons, `New Table Group` included, and `Alt + G` (Windows/Linux) or `⌥ + G` (Mac) and `T` then `G` do nothing.
 - The `Table Groups` view option changes nothing, as with every View Option.
 - The Schema SQL tab's `Tables` choice still works.

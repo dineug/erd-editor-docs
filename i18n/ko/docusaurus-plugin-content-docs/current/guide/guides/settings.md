@@ -1,5 +1,5 @@
 ---
-sidebar_position: 13
+sidebar_position: 14
 description: 관계 데이터 타입 동기화, 코멘트 최대 너비, 테이블 너비 재계산, 설정 잠금(화면, 탭, 코드 설정), 컬럼 순서와 단축키 목록.
 ---
 
@@ -70,14 +70,14 @@ foreign key에서 그 키로 거슬러 갈 때는 타입이 작성된 그대로 
 새 다이어그램, 즉 아무것도 없는 상태에서 시작한 다이어그램에서는 모든 잠금이 켜져 있습니다. VS Code, Obsidian, JetBrains IDE에서 연 빈 파일(Obsidian의 `ERD Editor: Create new diagram`과 `New ERD`가 이런 파일을 만듭니다), 웹 앱의 새 스키마, Google Drive의 New 메뉴로 만든 파일, 값을 지정하지 않은 `<erd-editor>`가 여기에 해당합니다.
 웹 앱이 SQL, DBML, AML, GraphQL 파일을 가져와 만드는 스키마나 Google Drive 파일도 모든 잠금이 켜진 상태로 시작합니다. JSON 파일로 만든 경우에는 그 파일에 기록된 잠금을 유지합니다.
 여는 파일은 저장될 당시의 잠금을 각각의 잠긴 값과 함께 유지합니다.
-이전 릴리스에서 저장했거나 직접 작성한 파일처럼 잠금이 기록되지 않은 파일은 모든 잠금이 켜진 상태로 열립니다. 저장된 화면과 탭에 상관없이 화면은 `100% · 0, 0`, 탭은 `ERD`로 잠기며, 언어, 이름 케이스, 괄호 타입은 저장된 값으로 잠깁니다.
+잠금이 도입되기 전의 릴리스에서 저장했거나 직접 작성한 파일처럼 잠금이 기록되지 않은 파일은 모든 잠금이 켜진 상태로 열립니다. 저장된 화면과 탭에 상관없이 화면은 `100% · 0, 0`, 탭은 `ERD`로 잠기며, 언어, 이름 케이스, 괄호 타입은 저장된 값으로 잠깁니다.
 다이어그램을 대체하는 `Import`도 잠금을 정합니다. JSON 파일은 파일에 기록된 잠금과 그 값을 가져오고, SQL, DBML, AML, GraphQL 파일은 기존 잠금을 유지하되 잠겨 있든 아니든 화면을 `100% · 0, 0`으로 되돌립니다. [외부 파일 가져오기](./file-import-export.md#외부-파일-가져오기) 문서를 참고하세요. 가져오기를 되돌리면 가져오기가 대체한 잠금과 잠긴 값이 돌아옵니다.
 
 잠금 때문에 파일에 기록되지 않는 변경은 변경으로 간주되지 않습니다. VS Code는 탭을 수정됨으로 표시하지 않으며, Obsidian과 JetBrains IDE는 자동으로 저장할 때와 탭이 닫힐 때 모두 파일을 그대로 둡니다.
 따라서 모든 잠금이 켜져 있으면 다이어그램을 둘러보거나, 탭을 전환하거나, 다른 언어, 이름 케이스, 괄호를 시험해 봐도 `git diff`에 나타나지 않습니다.
 `Viewport`가 꺼져 있으면 스크롤과 확대/축소가 파일을 바꾸며, `Canvas Type`이 꺼져 있으면 설정 탭으로의 전환을 포함해 탭 전환도 파일을 바꿉니다.
 새 다이어그램의 빈 파일은 파일에 기록되는 첫 변경(편집, 잠금이 걸리지 않은 설정의 변경, 잠금 켜기나 끄기)이 있을 때까지 비어 있습니다.
-이런 변경 없이 다이어그램을 열었다가 닫으면, 어느 릴리스나 컴퓨터에서 작성한 파일이든 그대로 유지됩니다. 파일에는 다이어그램의 내용만 고정된 순서로 담기며, 이전 릴리스가 저장한 파일은 이런 변경이 처음 일어날 때 한 번 이 형식으로 다시 작성됩니다. [저장 형태와 런타임 값](../../api/advanced/schema.md#저장-형태와-런타임-값) 문서를 참고하세요.
+이런 변경 없이 다이어그램을 열었다가 닫으면, 어느 릴리스나 컴퓨터에서 작성한 파일이든 그대로 유지됩니다. 파일에는 다이어그램의 내용만 고정된 순서로 담기며, 이전 형식으로 저장된 파일은 이런 변경이 처음 일어날 때 한 번 이 형식으로 다시 작성됩니다. [저장 형태와 런타임 값](../../api/advanced/schema.md#저장-형태와-런타임-값) 문서를 참고하세요.
 VS Code에서 Git 리비전이나 Local History 항목처럼 `Reopen Editor With...`로 다이어그램으로 다시 연 리비전은 읽기 전용이며 수정됨으로 표시되지 않습니다.
 Google Drive에서는 잠겨 있든 아니든 스크롤, 확대/축소, 다른 탭으로의 전환만으로는 저장되지 않습니다. `Viewport`가 꺼져 있으면 화면 상태는 다른 변경과 함께일 때만 기록되므로 Drive 파일은 마지막으로 저장했을 때의 화면 위치에서 열리며, `Canvas Type`이 꺼져 있을 때의 탭도 마찬가지입니다.
 
@@ -103,12 +103,14 @@ MCP 서버로 작업하는 코딩 에이전트에는 잠금이나 잠금이 담�
 | Editing | `Enter` | `Enter` |
 | Stop | `ESC` | `ESC` |
 | Search | `Ctrl + K` | `⌘ + K` |
-| [Find and Replace](./find-and-replace.md) | `Ctrl + F` | `⌘ + F` |
+| [Toggle Explorer](./explorer.md) | `Ctrl + F` | `⌘ + F` |
 | Undo | `Ctrl + Z` | `⌘ + Z` |
 | Redo | `Ctrl + Shift + Z` | `⌘ + Shift + Z` |
 | Add Table | `Alt + N` | `⌥ + N` |
 | Add Column | `Alt + Enter` | `⌥ + Enter` |
 | Add Memo | `Alt + M` | `⌥ + M` |
+| Add Table Group | `Alt + G` | `⌥ + G` |
+| Group Selected Tables | `T` 다음 `G` | `T` 다음 `G` |
 | Remove Table, Memo | `Ctrl + Backspace`, `Ctrl + Delete` | `⌘ + Backspace`, `⌘ + Delete` |
 | Remove Column | `Alt + Backspace`, `Alt + Delete` | `⌥ + Backspace`, `⌥ + Delete` |
 | Delete Selection | `Delete`, `Backspace` | `Delete`, `Backspace` |
@@ -128,15 +130,17 @@ MCP 서버로 작업하는 코딩 에이전트에는 잠금이나 잠금이 담�
 | Zen Mode | `Alt + Z` | `⌥ + Z` |
 
 대부분은 ERD 탭에서만 동작하며, 빠른 검색, 테이블 속성, Diff Viewer, 자동 배치 미리보기, Time Travel, [`Export image`](./file-import-export.md#이미지) 대화 상자, [`Map Columns`](./relationship-editing.md#컬럼-매핑)가 열려 있는 동안에는 동작하지 않습니다.
-`Search`, `Find and Replace`, `Stop`은 예외입니다. `Search`는 어느 탭에서나 빠른 검색을 열고 닫고, `Find and Replace`는 어느 탭에서나 [찾기와 바꾸기 패널](./find-and-replace.md#열기와-닫기)을 열면서 ERD 탭으로 전환하며, `Stop`은 빠른 검색, 테이블 속성, Diff Viewer, 자동 배치 미리보기, Time Travel, `Export image` 대화 상자, `Map Columns`, 테마 빌더, `Display Language` 선택기, 찾기와 바꾸기 패널, 색상 선택기, 열려 있는 컨텍스트 메뉴를 닫습니다.
-Diff Viewer, 자동 배치 미리보기, Time Travel이 열려 있는 동안에는 `Find and Replace`가 키를 브라우저나 호스트에 넘깁니다. [브라우저의 찾기 막대](./find-and-replace.md#브라우저의-찾기-막대) 문서를 참고하세요.
-ERD 탭에서 `Stop`은 열려 있는 셀이나 메모의 편집모드를 끝내거나, [테이블 그룹](./table-groups.md)의 이름 입력란을 그룹 이름을 바꾸지 않고 닫거나, 그리고 있는 관계나 `New Table Group`을 취소하며, 이때 선택은 그대로 둡니다. 그중 어느 것도 열려 있지 않으면 선택과 포커스된 셀을 해제하고, 같은 입력으로 열려 있는 찾기와 바꾸기 패널이나 색상 선택기도 닫습니다.
-찾기와 바꾸기 패널, 테마 빌더, `Display Language` 선택기가 열려 있어도 캔버스의 단축키는 모두 그대로 동작합니다. 패널 안에서 누르는 키는 [패널의 키](./find-and-replace.md#패널의-키) 문서를, 선택기 안에서 누르는 키는 [언어 선택](./language-and-theme.md#언어-선택) 문서를 참고하세요.
+`Search`, `Toggle Explorer`, `Stop`은 예외입니다. `Search`는 어느 탭에서나 빠른 검색을 열고 닫고, `Toggle Explorer`는 어느 탭에서나 [탐색기](./explorer.md#열기와-닫기)를 검색 상태로 열면서 ERD 탭으로 전환하며, `Stop`은 빠른 검색, 테이블 속성, Diff Viewer, 자동 배치 미리보기, Time Travel, `Export image` 대화 상자, `Map Columns`, 테마 빌더, `Display Language` 선택기, 색상 선택기, 열려 있는 컨텍스트 메뉴를 닫습니다.
+탐색기가 ERD 탭에서 열려 있고 Zen 모드로 감춰져 있지 않은 동안에는 `Toggle Explorer`가 툴바의 `Explorer` 버튼처럼 탐색기를 다시 닫습니다. 빠른 검색, 테이블 속성, 테마 빌더, `Display Language` 선택기, `Export image` 대화 상자, `Map Columns`가 열려 있으면 탐색기 대신 그것을 닫고 키보드 포커스를 탐색기의 검색으로 옮깁니다.
+셀이나 메모를 편집하거나 테이블 그룹의 이름을 편집하는 동안에는 `Toggle Explorer`가 아무 동작도 하지 않습니다. Diff Viewer, 자동 배치 미리보기, Time Travel이 열려 있는 동안에는 키를 브라우저나 호스트에 넘깁니다. [브라우저의 찾기 막대](./find-and-replace.md#브라우저의-찾기-막대) 문서를 참고하세요.
+ERD 탭에서 `Stop`은 열려 있는 셀이나 메모의 편집모드를 끝내거나, [테이블 그룹](./table-groups.md)의 이름 입력란을 그룹 이름을 바꾸지 않고 닫거나, 그리고 있는 관계나 `New Table Group`을 취소하며, 이때 선택은 그대로 둡니다. 그중 어느 것도 열려 있지 않으면 선택과 포커스된 셀을 해제하고, 같은 입력으로 열려 있는 색상 선택기도 닫습니다. 열려 있는 테마 빌더나 `Display Language` 선택기는 어느 경우든 같은 입력으로 닫힙니다.
+탐색기, 테마 빌더, `Display Language` 선택기가 열려 있어도 캔버스의 단축키는 모두 그대로 동작합니다. `Stop`은 탐색기를 닫지 않습니다. 탐색기 안에서 `Stop`과 다른 키가 하는 일은 [탐색기의 키](./explorer.md#탐색기의-키) 문서를, 선택기 안에서 누르는 키는 [언어 선택](./language-and-theme.md#언어-선택) 문서를 참고하세요.
 `Delete Selection`은 선택된 테이블, 메모, 테이블 그룹을 모두 삭제하며, 일부 컬럼이 선택된 테이블 하나만 선택되어 있고 배율이 `70%`보다 크면 대신 그 컬럼을 삭제합니다. [테이블, 메모 삭제](./table-related-functions.md#테이블-메모-삭제) 문서를 참고하세요. `Remove Table, Memo`도 선택된 테이블 그룹을 함께 삭제합니다.
+`Add Table Group`은 [캔버스 툴바](./table-related-functions.md#캔버스-툴바)의 `New Table Group` 버튼처럼 [`New Table Group`](./table-groups.md#그룹-그리기) 그리기를 시작하며, 한 번 더 누르면 그리기가 취소됩니다. `Group Selected Tables`는 보조 키 없이 두 번 누르는 단축키로, `T` 다음 `G`를 1초 안에 누릅니다. 테이블 컨텍스트 메뉴의 `Group selected tables`처럼 선택된 테이블을 새 그룹에 넣고 그 그룹의 이름 입력란을 열며, 선택된 테이블이 없으면 아무 동작도 하지 않습니다. [선택한 테이블 그룹화](./table-groups.md#선택한-테이블-그룹화) 문서를 참고하세요. 둘 다 읽기 전용 에디터에서나 그룹이 [숨겨진](./table-groups.md#그룹-숨기기) 동안에는 아무 동작도 하지 않습니다.
 `Zoom In`, `Zoom Out`, `Zoom Reset`은 [Visualization](./visualization.md#툴바) 탭에서도 `Graph`와 `Flow` 모두 확대/축소하며, 빠른 검색이 열려 있을 때는 동작하지 않습니다.
 Visualization 탭에서 `Stop`은 [행 표시](./visualization.md#행-표시) 메뉴도 닫고 아직 진행 중인 [Flow 배치](./visualization.md#flow-배치-방식)를 취소하지만, `Focus on this table`로 좁힌 화면을 넓히지는 않습니다.
 `Focus on this table`은 선택된 테이블과 그 테이블에 관계 하나로 이어진 모든 테이블로 범위를 좁혀 Visualization 탭을 `Flow`로 열며, 선택된 테이블이 없으면 아무 동작도 하지 않습니다. [테이블 포커스](./visualization.md#테이블-포커스) 문서를 참고하세요.
-`Select All Table, Memo`, `Hand Tool`, `Delete Selection`은 커서에 양보합니다. 셀이나 메모를 편집하거나 찾기와 바꾸기 패널의 입력란 같은 텍스트 입력란에 입력하는 중에는 `Ctrl + A` (Windows/Linux) or `⌘ + A` (Mac)가 텍스트를 선택하고, `Space`는 공백을 입력하며, `Delete`와 `Backspace`는 텍스트를 지웁니다.
+`Select All Table, Memo`, `Hand Tool`, `Delete Selection`, `Group Selected Tables`는 커서에 양보합니다. 셀이나 메모를 편집하거나 탐색기의 Find 입력란 같은 텍스트 입력란에 입력하는 중에는 `Ctrl + A` (Windows/Linux) or `⌘ + A` (Mac)가 텍스트를 선택하고, `Space`는 공백을 입력하며, `Delete`와 `Backspace`는 텍스트를 지우고, `T` 다음 `G`는 두 글자를 그대로 입력합니다.
 복사/붙여넣기는 브라우저 자체의 `Ctrl + C`와 `Ctrl + V` (Windows/Linux) or `⌘ + C`와 `⌘ + V` (Mac)를 사용하므로 이 목록에는 없습니다. [테이블 편집](./table-editing.md) 문서를 참고하세요.
 
 이 탭에서는 단축키를 변경할 수 없습니다.

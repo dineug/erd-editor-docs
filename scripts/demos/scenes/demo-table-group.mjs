@@ -1,13 +1,12 @@
 /**
- * Table Groups: New Table Group on the canvas menu arms a draw, and the box
- * dragged over orders and payments becomes a group they join, its name
- * editor open for Billing. order_items dragged onto the group joins it too,
- * the group outlined while it would; the title bar then carries the group
- * and its three tables, and a corner sash resizes it.
+ * Table Groups: ⌥ + G arms a draw, lighting the canvas toolbar's New Table
+ * Group button, and the box dragged over orders and payments becomes a group
+ * they join, its name editor open for Billing. order_items dragged onto the
+ * group joins it too, the group outlined while it would; the title bar then
+ * carries the group and its three tables, and a corner sash resizes it.
  */
 import { center } from '../lib/recorder.mjs';
 import { readSeed, seedSQL } from '../lib/seed.mjs';
-import { waitMenuItem } from './_io-settings-helpers.mjs';
 import { timeline, waitDom } from './_misc-helpers.mjs';
 import { curveTo, glideTo } from './_table-related-a-helpers.mjs';
 
@@ -87,22 +86,21 @@ export default {
       },
       settings: { databaseName: 'shop', show: SHOW, zoomLevel: ZOOM },
     });
+    // A click on empty canvas gives the editor the keyboard for ⌥ + G.
+    await d.page.mouse.click(560, 150);
     await d.moveTo(560, 150, 0);
   },
   async scenario(d) {
     const mark = timeline();
     await d.sleep(400);
 
-    // The canvas menu, then New Table Group: the pointer becomes a crosshair.
-    await d.rightClick(540, 64, { duration: 450 });
-    const item = await waitMenuItem(d, 'New Table Group');
-    // Down the menu's left padding, then in along the row.
-    await d.moveTo(item.x - 4, item.y + item.height / 2, 260);
-    const at = { x: item.x + item.width * 0.55, y: item.y + item.height / 2 };
-    await d.moveTo(at.x, at.y, 260);
-    await d.sleep(320);
-    await d.click(at.x, at.y, { duration: 0 });
+    // ⌥ + G arms the draw: the canvas toolbar's New Table Group shows
+    // pressed, Select lets go, and the pointer becomes a crosshair.
+    await d.press('Alt+KeyG', { hold: 1300 });
+    await d.whenDrawn();
     mark('armed');
+    await d.sleep(750);
+    await d.shot('armed');
 
     // Draw a box over orders and payments, with room to their right.
     const orders = await d.tableBox('orders');

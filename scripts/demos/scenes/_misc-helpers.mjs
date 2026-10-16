@@ -44,23 +44,19 @@ export async function waitMenuItem(d, label, timeout = 3000) {
 }
 
 /**
- * Viewport boxes of the diff viewer's change list, top to bottom, as
- * { name, x, y, width, height }. Rows are the direct children of the tree root
- * (the first flex column inside the viewer) that carry an icon and a label.
+ * Viewport boxes of the diff viewer's tree rows drawn now, top to bottom, as
+ * { name, x, y, width, height }. Since 4.1.0 the tree is virtualized, and a
+ * row holds a twisty, an icon, the name, then counts and the status letter.
  */
 export function diffTreeRows(d) {
   return d.page.evaluate(() => {
-    const rows = [...window.__erdShadowRoot.querySelectorAll('div')].filter(
-      el =>
-        el.children.length === 2 &&
-        el.lastElementChild?.tagName === 'SPAN' &&
-        el.getBoundingClientRect().left === 0 &&
-        getComputedStyle(el).cursor === 'pointer'
-    );
+    const rows = [
+      ...window.__erdShadowRoot.querySelectorAll('.diff-viewer-tree [role="treeitem"]'),
+    ].sort((a, b) => a.getBoundingClientRect().top - b.getBoundingClientRect().top);
     return rows.map(el => {
       const r = el.getBoundingClientRect();
       return {
-        name: el.innerText.trim(),
+        name: el.children[2]?.textContent.trim() ?? '',
         x: r.left,
         y: r.top,
         width: r.width,

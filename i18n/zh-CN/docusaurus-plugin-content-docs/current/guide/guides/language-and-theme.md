@@ -1,5 +1,5 @@
 ---
-sidebar_position: 14
+sidebar_position: 15
 description: 编辑器的 25 种显示语言、从右到左排布，主题构建器的 System、Light 和 Dark 外观及其颜色，以及各宿主保存它们的位置。
 ---
 
@@ -8,13 +8,13 @@ description: 编辑器的 25 种显示语言、从右到左排布，主题构建
 编辑器自身的文本提供 25 种语言，其样式则是一个主题：由外观（`System`、`Light` 或 `Dark`）、灰阶色和强调色组成。  
 两者都属于使用编辑器的人，而不属于图。它们既不会保存到文件中，也不会记录到 [Undo 历史记录](./undo-redo.md)中，也不会与协作者共享，因此每个人看到的都是自己的选择，更改其中任何一项也永远不会将文件标记为已修改。
 
-两者都不在 [Settings](./settings.md) 标签页中。工具栏中有一个 `Theme` 按钮，紧随其后是 `Display Language` 按钮，两者都位于[查找与替换](./find-and-replace.md)按钮之后。[快速搜索](./quick-search.md)在每个标签页中都会列出 `Theme` 和 `Display Language`。  
+两者都不在 [Settings](./settings.md) 标签页中。工具栏中有一个 `Theme` 按钮，紧随其后是 `Display Language` 按钮，两者都位于 [`Explorer`](./explorer.md) 按钮之后。[快速搜索](./quick-search.md)在每个标签页中都会列出 `Theme` 和 `Display Language`。  
 Web 应用、Google Drive、VS Code、JetBrains IDE 和 Obsidian 都提供这两者，并会记住你的选择，参见[在各宿主中](#in-each-host)。在只读编辑器中两者同样可用。
 
 ## 显示语言 {#display-language}
 
 语言涵盖编辑器自身的文本：工具栏的提示、右键菜单、快速搜索、面板和对话框、Settings 标签页、[欢迎界面](./editing-start.md#欢迎界面)、弹出提示和消息，以及空的名称、数据类型、默认值或注释在画布上和导出的图片中显示的占位文字。  
-在任何语言下，以下内容都保持原样：你的表名和列名、注释和备注；数据库厂商、Code Generator 的语言和文件格式；数据类型、SQL 关键字，以及 `ON DELETE` 与 `ON UPDATE` 操作；Schema SQL 的选项 `Create`、`If not exists`、`Drop & re-create`、`USE` 和 `CREATE + USE`；标记 `PK`、`UQ`、`AI`、`N-N`、`NULL` 和 `AK1.1`；名称大小写与 `Bracket` 中除 `None` 以外的选项；键盘按键的名称；主题构建器中的颜色名称；生成的 SQL 和代码；以及导出的文件名。
+在任何语言下，以下内容都保持原样：你的表名和列名、注释和备注；数据库厂商、Code Generator 的语言和文件格式；数据类型、SQL 关键字，以及 `ON DELETE` 与 `ON UPDATE` 操作；Schema SQL 的选项 `Create`、`If not exists`、`Drop & re-create`、`USE` 和 `CREATE + USE`；标记 `PK`、`FK`、`UQ`、`AI`、`NN`、`N-N`、`NULL` 和 `AK1.1`；[Diff Viewer](./table-related-functions.md#diff-viewer) 的状态字母 `A`、`M`、`D`、`R` 和 `~`；名称大小写与 `Bracket` 中除 `None` 以外的选项；键盘按键的名称；主题构建器中的颜色名称；生成的 SQL 和代码；以及导出的文件名。
 
 各语言按选择器中的排列顺序如下：
 
@@ -63,9 +63,10 @@ Web 应用、Google Drive、VS Code、JetBrains IDE 和 Obsidian 都提供这两
 选择会立即生效，同时关闭面板，并将键盘焦点交还给编辑器。
 
 若不做选择就关闭面板，可以按 `Escape`、点击标题旁边提示为 `Close (ESC)` 的 `x` 按钮、在编辑器中除面板和工具栏以外的任意位置按下，或再次点击 `Display Language` 按钮。  
-打开它会关闭主题构建器、表属性和查找与替换面板。打开快速搜索、查找与替换面板或主题构建器则会关闭它。
+打开它会关闭主题构建器和表属性。已打开的[资源管理器](./explorer.md#dialogs-beside-it)保持打开；在从左到右书写的语言中，选择器会紧挨着它显示，而不会覆盖在它上面。  
+打开快速搜索或主题构建器则会关闭它，按下 `Ctrl + F` (Windows/Linux) 或 `⌘ + F` (Mac) 也是如此。该按键会打开[资源管理器](./explorer.md#opening-and-closing)并定位到其搜索；如果资源管理器已经打开，则保持打开，并将键盘焦点移到其查找输入框。工具栏中的 `Explorer` 按钮则不会关闭选择器。
 
-面板持有键盘焦点期间，仍有几个编辑器快捷键有效：`Search`、`Find and Replace`、`Undo`、`Redo`、`Zoom In`、`Zoom Out` 和 `Zoom Reset`，参见[快捷键](./settings.md#快捷键)。其他所有编辑器快捷键、方向键和 `Tab` 都只停留在面板中，因此编辑器不会对它们作出响应。编辑器未绑定的按键，例如宿主自身的保存，会照常传给宿主。
+面板持有键盘焦点期间，仍有几个编辑器快捷键有效：`Search`、`Toggle Explorer`、`Undo`、`Redo`、`Zoom In`、`Zoom Out` 和 `Zoom Reset`，参见[快捷键](./settings.md#快捷键)。其他所有编辑器快捷键、方向键和 `Tab` 都只停留在面板中，因此编辑器不会对它们作出响应。编辑器未绑定的按键，例如宿主自身的保存，会照常传给宿主。
 
 在[快速搜索](./quick-search.md)中，`Display Language` 列出 `System` 和 25 种语言，当前选项处于勾选状态。在这里还可以通过语言的英文名称或代码找到它，因此 `german` 或 `de-DE` 可以找到 `Deutsch`。
 
@@ -85,8 +86,8 @@ Web 应用、Google Drive、VS Code、JetBrains IDE 和 Obsidian 都提供这两
 
 עברית（希伯来语）、العربية（阿拉伯语）和 فارسی（波斯语）会让编辑器从右到左排布：工具栏、各菜单、面板和对话框、快速搜索以及 Settings 标签页都会镜像显示。右键菜单的子菜单向左展开，工具栏的 Undo 和 Redo 图标也会互换，使 Undo 按照从右到左的阅读方向指向后方。
 
-图本身永远不会镜像。画布及其中的表、列、关系和备注保持从左到右，小地图、滚动条、[画布工具栏](./table-related-functions.md#canvas-toolbar)、[Visualization](./visualization.md) 及其工具栏、数据类型单元格、Schema SQL 与 Code Generator 标签页中的代码、选色器、Diff Viewer、Time Travel 以及自动布局预览也是如此。  
-查找与替换面板仍位于画布的左边缘。  
+图本身永远不会镜像。画布及其中的表、列、关系和备注保持从左到右，小地图、滚动条、[画布工具栏](./table-related-functions.md#canvas-toolbar)、[Visualization](./visualization.md) 及其工具栏、数据类型单元格、Schema SQL 与 Code Generator 标签页中的代码、选色器、Diff Viewer 的两侧、Time Travel 以及自动布局预览也是如此。  
+[资源管理器](./explorer.md#beside-the-canvas)仍位于画布左侧，Diff Viewer 的变更树也仍位于查看器左侧，两者的拖动边缘都在其右侧。两者内部则从右到左阅读：输入框和各行都会镜像显示，各行从右侧缩进；在这两棵树中，`←` 会展开一行或移到其第一个子项，而 `→` 会折叠该行或退回到其父项，参见[资源管理器中的按键](./explorer.md#keys-in-the-explorer)。  
 名称、注释以及你输入的其他文本保持其自身的书写方向，因此希伯来语、阿拉伯语或波斯语的名称在画布上同样从右到左阅读。
 
 ## 主题 {#theme}
@@ -110,7 +111,8 @@ Web 应用、Google Drive、VS Code、JetBrains IDE 和 Obsidian 都提供这两
 - 在 Obsidian 中：Obsidian 的浅色或深色主题。
 
 关闭构建器可以按 `Escape`、点击标题旁边提示为 `Close (ESC)` 的 `x` 按钮、在编辑器中除面板和工具栏以外的任意位置按下，或再次点击 `Theme` 按钮。  
-打开它会关闭表属性、`Display Language` 选择器和查找与替换面板。打开快速搜索、查找与替换面板或 `Display Language` 选择器则会关闭它。  
+打开它会关闭表属性和 `Display Language` 选择器。已打开的[资源管理器](./explorer.md#dialogs-beside-it)保持打开；在从左到右书写的语言中，构建器会紧挨着它显示，而不会覆盖在它上面。  
+打开快速搜索或 `Display Language` 选择器则会关闭它，按下 `Ctrl + F` (Windows/Linux) 或 `⌘ + F` (Mac) 也是如此。该按键会打开[资源管理器](./explorer.md#opening-and-closing)并定位到其搜索；如果资源管理器已经打开，则保持打开，并将键盘焦点移到其查找输入框。工具栏中的 `Explorer` 按钮则不会关闭构建器。  
 构建器不会拦截任何按键，因此它打开期间编辑器的快捷键照常有效。
 
 在[快速搜索](./quick-search.md)中，`Theme` 列出 `System`、`Light` 和 `Dark`，当前的外观处于勾选状态。选择其中一项只会改变外观，灰阶色和强调色保持不变。
