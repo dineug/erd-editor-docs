@@ -12,7 +12,7 @@
     "description": "Label of the call-to-action button on the homepage"
   },
   "homepage.metaDescription": {
-    "message": "erd-editor は、Web アプリ、Google Drive アプリ、VSCode 拡張機能、IntelliJ プラグイン、Obsidian プラグイン、そして埋め込み可能な Web コンポーネントとして提供される ER 図エディタです。",
+    "message": "erd-editor は、Web アプリ、Google Drive アプリ、VSCode 拡張機能、IntelliJ プラグイン、Obsidian プラグイン、そして組み込み可能な Web コンポーネントとして提供される ER 図エディタです。",
     "description": "The meta description of the homepage"
   },
   "homepage.feature.easy.title": {
@@ -32,5 +32,17 @@
   },
   "homepage.feature.portability.description": {
     "message": "標準の Web コンポーネントで開発されており、フレームワークを問わずどこでも使用できます。"
+  },
+  "theme.IconExternalLink.ariaLabel": {
+    "message": "（新しいタブで開きます）",
+    "description": "The ARIA label for the external link icon"
+  },
+  "theme.navbar.mobileDropdown.collapseButton.expandAriaLabel": {
+    "message": "ドロップダウンを開く",
+    "description": "The ARIA label of the button to expand the mobile dropdown navbar item"
+  },
+  "theme.navbar.mobileDropdown.collapseButton.collapseAriaLabel": {
+    "message": "ドロップダウンを閉じる",
+    "description": "The ARIA label of the button to collapse the mobile dropdown navbar item"
   }
 }

@@ -1,0 +1,18 @@
+{
+  "version.label": {
+    "message": "Следующая",
+    "description": "The label for version current"
+  },
+  "sidebar.docs.category.Guides": {
+    "message": "Руководства",
+    "description": "The label for category 'Guides' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Guides.link.generated-index.description": {
+    "message": "Как рисовать и редактировать диаграмму: создание таблиц и связей, импорт и экспорт файлов, а также параметры вида редактора.",
+    "description": "The generated-index page description for category 'Guides' in sidebar 'docs'"
+  },
+  "sidebar.api.category.Advanced": {
+    "message": "Расширенные возможности",
+    "description": "The label for category 'Advanced' in sidebar 'api'"
+  }
+}

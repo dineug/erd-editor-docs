@@ -1,0 +1,1046 @@
+---
+sidebar_position: 2
+description: واجهة برمجة التطبيقات لعنصر erd-editor — السمات وvalue وruntimeValue والأحداث وتخصيص النسق ولغة العرض وشاشة الترحيب واختصارات لوحة المفاتيح واستيراد المخطط وتصديره.
+---
+
+# ErdEditorElement
+
+المحرر عنصر `HTMLElement` عادي.  
+تعريف نوعه كما يلي.
+
+```ts
+interface ErdEditorElement extends HTMLElement {
+  readonly: boolean;
+  systemDarkMode: boolean; // system dark/light auto
+  enableThemeBuilder: boolean;
+  enableLocalePicker: boolean;
+  enableWelcomeScreen: boolean;
+  value: string;
+  readonly runtimeValue: string;
+  focus: () => void;
+  blur: () => void;
+  clear: () => void;
+  destroy: () => void;
+  setInitialValue: (value: string) => void;
+  setPresetTheme: (themeOptions: Partial<ThemeOptions>) => void;
+  setSystemAppearance: (appearance: 'dark' | 'light' | null) => void;
+  setTheme: (theme: Partial<Theme>) => void;
+  setLocale: (locale: LocaleOption) => void;
+  setSystemLocale: (locale: string | null) => void;
+  setKeyBindingMap: (
+    keyBindingMap: Partial<
+      Omit<
+        KeyBindingMap,
+        | 'edit'
+        | 'stop'
+        | 'undo'
+        | 'redo'
+        | 'zoomIn'
+        | 'zoomOut'
+        | 'zoomReset'
+      >
+    >
+  ) => void;
+  setSchemaSQL: SetSchema;
+  setSchemaGraphQL: SetSchema;
+  setSchemaDBML: SetSchema;
+  setSchemaAML: SetSchema;
+  setSchemaJSON: (
+    value: string,
+    options?: { mode?: 'replace' | 'append' }
+  ) => void;
+  getSchemaSQL: (
+    databaseVendor?: DatabaseVendor,
+    options?: SchemaSQLOptions
+  ) => string;
+  getSharedStore: (
+    config?: SharedStoreConfig & {
+      mouseTracker?: boolean;
+      focusTracker?: boolean;
+    }
+  ) => SharedStore;
+  setDiffValue: (value: string) => void;
+}
+```
+
+يُعرَض المحرر داخل shadow root مغلق، لذا تكون قيمة `editor.shadowRoot` هي `null`، ولا تتسرب أنماط الصفحة إلى داخله ولا أنماطه إلى خارجه.  
+ولا يمكن الوصول إلى أي شيء بداخله بمُحدِّد CSS — بل نسّق مظهره عبر [setTheme](#settheme) وخصائص CSS المخصصة `--erd-editor-*`.
+
+السمات الوحيدة هي `readonly` و`system-dark-mode` و`enable-theme-builder` و`enable-locale-picker` و`enable-welcome-screen`، والقيمة الافتراضية للخمس كلها `false`. السمتان الأخيرتان جديدتان في الإصدار `4.0.0`. وتقرأ كل منها قيمتها كما يصف قسم [readonly](#readonly).
+
+منذ الإصدار `4.1.0`، تحتوي علامة تبويب ERD على [المستكشف](../guide/guides/explorer.md)، وهو شجرة للمخطط مثبتة على يسار لوحة الرسم، وفي أعلاها البحث والاستبدال. لا توجد سمة أو خاصية أو دالة أو حدث يفتحه أو يغلقه أو يُبلغ عن حالته: فهو يُفتح من الزر `Explorer` في شريط الأدوات، أو من `Toggle Explorer` في البحث السريع أو في قائمة السياق للوحة الرسم، أو باستخدام الاختصار [`findReplace`](#setkeybindingmap).  
+يبدأ كل عنصر والمستكشف مغلق. وتبقى حالة فتحه وعرضه وحالة الطي فيه وبحثه ما دام العنصر موجودًا، عبر تبديل علامات التبويب وكل عملية تحميل، بما فيها `setInitialValue`، ولا تدخل أبدًا في `value` أو `runtimeValue` أو سجل التراجع أو أي مخزن مشترك.
+
+## readonly {#readonly}
+
+يضبط إمكانية التحرير في المحرر.  
+أثناء ضبطه، يُتجاهل كل من إسناد قيمة إلى `value` و`clear()` و`setSchemaSQL()` و`setSchemaGraphQL()` و`setSchemaDBML()` و`setSchemaAML()` و`setSchemaJSON()` والتراجع والإعادة، ولا يُطلَق الحدث `change` أبدًا. حمّل المستند باستخدام [setInitialValue](#setinitialvalue) بدلًا من ذلك.  
+تظل وظائف العرض تعمل: التكبير والتصغير، وتحريك العرض، وأداة اليد، ووضع الزن، وعلامة تبويب لوحة الرسم، وعلامة تبويب [التصور المرئي](../guide/guides/visualization.md) بوضعيها كليهما بما في ذلك التركيز على الجداول، ونظام قاعدة البيانات، وإعدادات مخرجات SQL ومنشئ التعليمات البرمجية، كلها تظل سارية، لذا يظل بإمكان العارض للقراءة فقط تصدير SQL لنظام قاعدة بيانات آخر أو قراءة التعليمات البرمجية المُنشأة.  
+منذ الإصدار `4.1.0`، يُفتح [المستكشف](../guide/guides/explorer.md#read-only-editors) أيضًا، واختيار أحد صفوفه ينتقل إلى ما يمثله الصف، كما يحدث في المحرر القابل للتحرير. أما [البحث والاستبدال](../guide/guides/find-and-replace.md#read-only-editors) في أعلاه فيبحث فقط، دون سهم `Toggle Replace` ودون صف الاستبدال، ولا يزال الانتقال إلى تطابق يُظهره في العرض ويحدده. عنوان اللوحة `Explorer`، ونص تلميح زر شريط الأدوات `Explorer (Ctrl + F)` (Windows/Linux) أو `Explorer (⌘ + F)` (Mac) في كل محرر. من الإصدار `3.10.0` حتى `4.0.0` كان البحث والاستبدال يُفتح كلوحة عائمة للبحث فقط عنوانها `Find`.  
+ولا تزال لوحة خصائص الجدول تُفتح، ومنذ الإصدار `3.10.0` تعرض شارة `Read only` بجانب عنوانها، ولا تتيح علامة التبويب `Indexes` فيها أي تعديل، راجع [خصائص الجدول](../guide/guides/table-related-functions.md#table-properties).  
+منذ الإصدار `4.0.0`، لا يوفر المحرر للقراءة فقط [`Import and Add`](../guide/guides/file-import-export.md#import-and-add) ولا `New Table Group` ولا `Group selected tables` ولا `Remove from group` (راجع [مجموعات الجداول](../guide/guides/table-groups.md#read-only-editors)) ولا [`Map Columns`](../guide/guides/relationship-editing.md#map-columns)، ولا يعرض [شاشة الترحيب](#enablewelcomescreen). ولا تغيّر أزرار القفل في علامة تبويب الإعدادات شيئًا، ولا يمكن تحرير السكربتين `Before tables` و`After tables` في علامة تبويب مخطط SQL.  
+ومنذ الإصدار `4.1.0`، لا يعرض أيضًا الأزرار `New Table` و`New Memo` و`New Table Group` في [شريط أدوات لوحة الرسم](../guide/guides/table-related-functions.md#canvas-toolbar)، ولا يفعل الاختصاران `addTableGroup` و`groupSelectedTables` شيئًا.  
+أما خيارات `This window only` في علامة تبويب مخطط SQL، وهي `Statements` و`Header` و`Tables`، فلا تُحفظ أبدًا وتظل سارية، وكذلك مربع الحوار [`Export image`](../guide/guides/file-import-export.md#image) ومنشئ النسق ومنتقي لغة العرض. ولا يزال الاختيار في منشئ النسق أو منتقي لغة العرض يُطلِق [changePresetTheme](#changepresettheme) أو [changeLocale](#changelocale).  
+تُقرأ السمة بلا قيمة و`=""` و`="true"` كلها على أنها `true`. وتُقرأ `="false"` على أنها `false`، وكذلك أي سلسلة نصية أخرى — بما في ذلك الصيغة المألوفة في HTML `readonly="readonly"`.
+
+```js
+editor.readonly = true;
+// or
+editor.setAttribute('readonly', 'true');
+```
+
+```html
+<erd-editor readonly></erd-editor>
+```
+
+## systemDarkMode {#systemdarkmode}
+
+يحدد ما إذا كان المحرر يتزامن تلقائيًا مع الوضع الداكن/الفاتح في النظام.  
+منذ الإصدار `4.0.0`، يضبط تفعيله قيمة `appearance` في النسق على `'system'`، كما يفعل `setPresetTheme({ appearance: 'system' })`. فيعرض المحرر عندئذ الوضع الفاتح أو الداكن الذي يُبلغ عنه نظام التشغيل، أو الذي يحدده [setSystemAppearance](#setsystemappearance)، ويتبدل عندما يتغير ذلك.  
+وأي استدعاء لاحق للدالة [setPresetTheme](#setpresettheme) بالقيمة `'light'` أو `'dark'`، أو اختيار `Light` أو `Dark` في منشئ النسق أو البحث السريع، يحل محل `'system'` ويبقى: فلا يعود التغيير التالي في نظام التشغيل يستبدله، رغم أن `systemDarkMode` لا يزال `true`. قبل الإصدار `4.0.0` كان التغيير التالي في نظام التشغيل يستبدله.  
+وتعطيله والمظهر `'system'` يُبقي على الوضع الفاتح أو الداكن المعروض في تلك اللحظة. أما تعطيله بعد تغيير المظهر عن `'system'` فيتركه كما هو.  
+ولا يُطلِق تغييره أي حدث.
+
+```js
+editor.systemDarkMode = true;
+// or
+editor.setAttribute('system-dark-mode', 'true');
+```
+
+```html
+<erd-editor system-dark-mode></erd-editor>
+```
+
+## enableThemeBuilder {#enablethemebuilder}
+
+يحدد ما إذا كان المحرر يوفر واجهة لضبط الأنساق المعدّة مسبقًا بسهولة.  
+يُظهر الزر `Theme` في شريط الأدوات، الذي يفتح منشئ النسق بخيارات `Accent color` و`Gray color` و`Appearance`. منذ الإصدار `4.0.0`، يقدّم `Appearance` الخيار `System` إلى جانب `Light` و`Dark`، وما دام مفعّلًا، يعرض البحث السريع `Theme` مع `System` و`Light` و`Dark`. راجع [اللغة والنسق](../guide/guides/language-and-theme.md).
+
+![فتح منشئ النسق من شريط الأدوات، واختيار لون التمييز ودرجة الرمادي، وتبديل المظهر إلى Light ثم إلى System](/img/demo-theme-builder.webp)
+
+```js
+editor.enableThemeBuilder = true;
+// or
+editor.setAttribute('enable-theme-builder', 'true');
+```
+
+```html
+<erd-editor enable-theme-builder></erd-editor>
+```
+
+يُطلِق تغيير النسق المعدّ مسبقًا من هذه اللوحة، أو من البحث السريع، الحدث [changePresetTheme](#changepresettheme).
+
+## enableLocalePicker {#enablelocalepicker}
+
+منذ الإصدار `4.0.0`، يحدد ما إذا كان المحرر يوفر واجهة لاختيار لغة العرض فيه.  
+يُظهر الزر `Display Language` في شريط الأدوات، بعد `Theme` عند ظهور الاثنين. يفتح الزر منتقي لغة العرض، ويعرض البحث السريع `Display Language`. ويقدّم كلاهما `System` و25 لغة، راجع [اللغة والنسق](../guide/guides/language-and-theme.md).  
+ويحدد أيضًا ما يعرضه المحرر قبل استدعاء [setLocale](#setlocale) أو اختيار لغة: `'system'` ما دام مفعّلًا، والإنجليزية ما دام معطّلًا، لذا يحتفظ العنصر الذي لا يضبط شيئًا بالإنجليزية التي عرضها دائمًا. ويؤدي تفعيله أو تعطيله إلى التبديل بين الاثنين فورًا. وبمجرد ضبط لغة أو اختيارها، يبقى ذلك الاختيار أيًّا كانت حالة التفعيل.  
+اضبطه قبل إلحاق العنصر بالصفحة كي يتبع الإطار الأول `'system'`.  
+ويُطلِق الاختيار [changeLocale](#changelocale).
+
+```js
+editor.enableLocalePicker = true;
+// or
+editor.setAttribute('enable-locale-picker', 'true');
+```
+
+```html
+<erd-editor enable-locale-picker></erd-editor>
+```
+
+## enableWelcomeScreen {#enablewelcomescreen}
+
+منذ الإصدار `4.0.0`، يحدد ما إذا كان المخطط الفارغ يرحّب بالقارئ عبر [شاشة الترحيب](../guide/guides/editing-start.md#welcome-screen).  
+تظهر فوق علامة تبويب ERD ما دام المستند لا يحتوي على أي جدول ولا ملاحظة معروضة ولا مجموعة جداول معروضة. ولا تظهر أثناء ضبط `readonly`، أو في وضع الزن، أو أثناء فتح خصائص الجدول أو عارض الفروق أو السفر عبر الزمن أو معاينة التخطيط التلقائي. وأول جدول أو ملاحظة معروضة أو مجموعة جداول معروضة يُخفيها، والتراجع إلى مخطط فارغ يعيدها.  
+تعرض عناصرها `New Table` و`New Memo` و`Command Palette` أول تركيبة مفاتيح من اختصارات `addTable` و`addMemo` و`search` كما تركها [setKeyBindingMap](#setkeybindingmap)، ولا تعرض شيئًا لاسم تُرك فارغًا. وتشير أسهمها إلى الزرين `Theme` و`Display Language` فقط حيث يُظهرهما `enableThemeBuilder` و`enableLocalePicker`.  
+في قائمتها، يتنقل `↑` و`↓` و`Home` و`End` بين العناصر، ويُمنع سلوكها الافتراضي ويُوقف انتشارها. أما `Enter` و`Space` فيُوقف انتشارهما دون منع سلوكهما الافتراضي، فيتلقاهما العنصر الذي عليه التركيز، و`Escape` بين تنسيقات `Import` يعود إلى الخلف، مع منع سلوكه الافتراضي وإيقاف انتشاره. ويصل كل مفتاح آخر إلى المحرر والصفحة كالمعتاد.  
+ولا تغيّر شيئًا في المستند، لذا تترك `value` كما كان ولا تُطلِق أي `change`.  
+فعّله بعد أن يحمّل [setInitialValue](#setinitialvalue) المستند، كما تفعل التطبيقات المضيفة الرسمية، حتى لا تومض الشاشة أبدًا فوق ملف لا يزال قيد التحميل.
+
+```js
+editor.enableWelcomeScreen = true;
+// or
+editor.setAttribute('enable-welcome-screen', 'true');
+```
+
+```html
+<erd-editor enable-welcome-screen></erd-editor>
+```
+
+## value {#value}
+
+### getter {#getter}
+
+يسترجع المستند الحالي كسلسلة نصية بصيغة JSON، وفق [المخطط](./advanced/schema.md) الذي يحدده المحرر.  
+منذ الإصدار `4.0.0`، يمثل صيغة التخزين، أي المستند كما يحفظه الملف، وهو أيضًا ما يكتبه تصدير `json` وما تحفظه التطبيقات المضيفة الرسمية. ويحتوي على الكيانات القائمة وحدها، دون الكيانات المُزالة أو ترتيب التراص أو ما يستنتجه المحرر بنفسه، مثل العروض المقيسة وعلامات المفاتيح ونقاط ارتكاز العلاقات. وتُرتَّب مفاتيح كياناته وفق ترتيب ثابت، وتُزاح أسطره بمسافتين، وينتهي بسطر جديد، لذا يعطي المستند نفسه دائمًا البايتات نفسها.  
+كل إعداد يكون [القفل](../guide/guides/settings.md#lock) الخاص به مفعّلًا يُكتب بقيمته المقفلة، لا كما تعرضه الشاشة. يشمل قفل `Viewport` القيم `originX` و`originY` و`zoomLevel`، ويحمل كل من `Canvas Type` و`Language` و`Table Name Case` و`Column Name Case` و`Bracket Type` إعداده الخاص. ويُكتب كل إعداد آخر كما هو، ويُكتب `lockSettings` دائمًا. لمعرفة البتات، راجع [Settings](./advanced/schema.md#settings).  
+في المستند الجديد تكون كل الأقفال مفعّلة، سواء أكان المستند الذي يعرضه العنصر قبل إعطائه قيمة أم مستندًا محمّلًا من قيمة فارغة. ويحتفظ `value` الخاص به بنقطة الأصل عند `0, 0`، ومستوى التكبير عند `1`، وعلامة تبويب ERD، ولغة منشئ التعليمات البرمجية وأنماط التسمية ونوع علامات الاقتباس الافتراضية، إلى أن يُعطَّل القفل المقابل.  
+قبل الإصدار `4.0.0`، كان يُرجع المستند كاملًا كما يحتفظ به المحرر، مع تطبيق `ignoreSaveSettings`. أما المستند كما يحتفظ به المحرر فهو الآن [runtimeValue](#runtimevalue)، ولم يعد `ignoreSaveSettings` يُقرأ أو يُكتب.
+
+```js
+const data = editor.value;
+```
+
+### setter {#setter}
+
+يحمّل حالة محرر محفوظة سابقًا. ويستبدل المستند كاملًا — إذ يُمسح المستند الحالي أولًا.  
+ومثل `clear()` و`setInitialValue()` ودوال `setSchema*` في وضعها الافتراضي `mode: 'replace'`، يتخلص أيضًا من عرض التدفق في علامة تبويب التصور المرئي: تخطيطه، والجداول التي يقتصر عليها، وعرض الصفوف فيه، ومستوى تكبيره، وموضع تحريكه. أما الإلحاق (`mode: 'append'`) فلا يتخلص منه.  
+ويُسجَّل في قائمة السجل، ما يتيح `Undo, Redo`، ويُطلِق `change`.  
+ويقبل صيغة التخزين، أو قيمة [runtimeValue](#runtimevalue)، أو ملفًا حفظه إصدار سابق.  
+والسلسلة النصية الفارغة، أو أي شيء ليس سلسلة نصية، يحمّل مستندًا جديدًا بدلًا من رمي خطأ، لذا تحقق من القيمة قبل إسنادها.  
+وهذا المستند الجديد هو نفسه الذي يبدأ به `setInitialValue('')`: فارغ، بالإعدادات الافتراضية، ومنذ الإصدار `4.0.0` بكل الأقفال مفعّلة. في الإصدار `3.10.x` لم يكن يحفظ موضع التمرير ولا مستوى التكبير، وقبل ذلك كان يحفظ كليهما.  
+ويمرر المخزن المشترك عملية التحميل هذه إلى المتعاونين مع نص JSON الكامل للمستند الجديد، لذا يحمّل كل نظير، بما في ذلك النظير الذي يعمل بإصدار أقدم، المستند نفسه.  
+منذ الإصدار `4.0.0`، تأتي أقفال المستند المحمّل، والقيم المقفلة التي يكتبها `value` بعد ذلك، من النص، ويستقر العرض حيث يضعه النص، أو على المخطط إذا لم يُرسم أي جزء منه هناك. ولكل إعداد آخر يقفله النص — علامة التبويب ولغة منشئ التعليمات البرمجية وأنماط التسمية ونوع علامات الاقتباس — يواصل المحرر عرض ما كان يعرضه قبل التحميل. والإعداد الذي يتركه النص غير مقفل يأخذ قيمته من النص. أما [setInitialValue](#setinitialvalue) فيأخذ كل قيمة يحملها النص؛ وراجعه أيضًا لمعرفة حالة النص الذي لا يذكر أي أقفال.  
+والنص الذي ليس JSON، مثل ملف بقيت فيه علامات تعارض الدمج، لا يرمي خطأً أيضًا: إذ يُفرَّغ المستند، وتبقى إعداداته كما كانت، ويُسجَّل خطأ التحليل في وحدة التحكم.  
+ويُتجاهل أثناء ضبط `readonly`؛ استخدم [setInitialValue](#setinitialvalue) للتحميل في محرر للقراءة فقط.
+
+```js
+editor.value = 'json...';
+```
+
+## runtimeValue {#runtimevalue}
+
+منذ الإصدار `4.0.0`، يسترجع المستند كما يحتفظ به هذا المحرر، كسلسلة نصية بصيغة JSON. ليس له setter، لذا يرمي إسناد قيمة إليه خطأً في التعليمات البرمجية العاملة في الوضع الصارم.  
+ويحمل ما يستبعده [value](#value): الكيانات المُزالة وترتيبها، وترتيب التراص، والعروض المقيسة، وعلامات المفاتيح، ونقاط ارتكاز العلاقات، والتسلسلات. وتُكتب الإعدادات المقفلة بقيمها المقفلة هنا أيضًا.  
+استخدمه لتهيئة محرر آخر ينضم إلى جلسة جارية بالفعل، مثل محرر متعاون أو عرض ثانٍ للمستند نفسه، عبر [setInitialValue](#setinitialvalue) الخاص به. وعندئذ يستعيد التراجع عن إزالة، ترسله الجلسة لاحقًا، الكيانَ كاملًا هناك، في حين أن المحرر المُهيّأ من `value` لا يحمل أي كيان مُزال، فيستعيد بدلًا من ذلك جدولًا فارغًا بلا اسم. راجع [التحرير التعاوني](./advanced/collaborative-editing.md).  
+لم يعد هناك ما يجمع الكيانات المُزالة، لذا تبقى فيه إلى أن يُفتح المستند من ملفه في المرة التالية.  
+لا تكتبه في ملف أبدًا: احفظ `value`، الذي يقبله [JSON Schema](./advanced/schema.md#json-schema) ولا يقبل هذا.
+
+```js
+otherEditor.setInitialValue(editor.runtimeValue);
+```
+
+## setInitialValue {#setinitialvalue}
+
+يحمّل حالة محرر محفوظة سابقًا. لا يُسجَّل التحميل نفسه في قائمة السجل، لذا لا يمكن التراجع عنه، ولا يُطلَق الحدث `change`.  
+ويمسح أيضًا سجل التراجع، فلا يمكن التراجع عن أي شيء جرى قبل التحميل أو إعادته على المستند المحمّل.  
+ويقبل صيغة التخزين، أو قيمة [runtimeValue](#runtimevalue)، أو ملفًا حفظه إصدار سابق، وعلى عكس إسناد قيمة إلى `value`، يأخذ كل إعداد يحمله النص، بما في ذلك علامة التبويب وإعدادات التعليمات البرمجية.  
+والسلسلة النصية الفارغة، أو أي شيء ليس سلسلة نصية، يحمّل مستندًا جديدًا بدلًا من رمي خطأ، لذا يبدأ `setInitialValue('')` مخططًا فارغًا.  
+منذ الإصدار `4.0.0`، تكون كل الأقفال مفعّلة في هذا المستند الجديد، وهو أيضًا ما يعرضه العنصر قبل إعطائه أي قيمة. والتمرير والتكبير والتصغير وتبديل علامات التبويب وتغيير لغة منشئ التعليمات البرمجية أو أنماط التسمية أو نوع علامات الاقتباس، كلها تترك `value` كما كان ولا تُطلِق أي `change`. في الإصدار `3.10.x` لم يكن يحفظ موضع التمرير ولا مستوى التكبير، وقبل ذلك كان يحفظ كليهما.  
+يحتفظ المستند المحمّل من نص بالأقفال التي يذكرها. أما المستند الذي لا يذكر أيًّا منها — أي ملف حُفظ قبل الإصدار `4.0.0`، أيًّا كانت قيمة `ignoreSaveSettings` فيه، وملف `.vuerd` بصيغة v2 — فيُفتح بكل الأقفال مفعّلة، و`Viewport` مقفل عند نقطة الأصل `0, 0` ومستوى التكبير `1`، في علامة تبويب ERD، مع لغته وأنماط التسمية ونوع علامات الاقتباس كما حفظها.  
+وفي الحالتين يُفتح العرض عند عرض المستند — الذي حفظه النص إذا كان يذكر أقفاله، أو نقطة الأصل `0, 0` عند مستوى التكبير `1` إذا لم يذكر أيًّا منها — أو على المخطط إذا لم يُرسم أي جزء منه هناك. ويظل `Viewport` المقفل محتفظًا بقيمه المقفلة في `value`.  
+منذ الإصدار `4.0.0`، يتخلص أيضًا من حالة التعاون الخاصة بالمستند الذي كان محمّلًا من قبل، ويطلب [المخزن المشترك](#getsharedstore) لهذا المحرر، إذا كان قد اشترك بالفعل، من المحررات الأخرى حالتها من جديد، فيلحق المحرر المُعاد تحميله في جلسة جارية بما فاته. هيّئ مثل هذا المحرر بقيمة [runtimeValue](#runtimevalue) من محرر آخر.  
+والنص الذي ليس JSON لا يرمي خطأً أيضًا: إذ يُفرَّغ المستند، وتبقى إعداداته كما كانت، ويُسجَّل خطأ التحليل في وحدة التحكم.  
+وعلى عكس إسناد قيمة إلى `value`، لا يمنعه `readonly`، لذا فهو الطريقة لتحميل مستند في عارض للقراءة فقط.
+
+```js
+editor.setInitialValue('json...');
+```
+
+حمّل عند البدء، واحفظ عند التغيير.
+
+```js
+editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
+editor.addEventListener('change', () => {
+  localStorage.setItem('my-diagram', editor.value);
+});
+```
+
+## الأحداث {#event}
+
+الأحداث العامة الوحيدة ثلاثة: `change` و`changePresetTheme` و`changeLocale`؛ والحدث `changeLocale` جديد في الإصدار `4.0.0`.  
+ويُرسل العنصر أيضًا أحداثًا داخلية `@dineug/erd-editor/internal-*` على نفسه لتوصيلاته الداخلية؛ وهذه ليست جزءًا من واجهة برمجة التطبيقات.
+
+### change {#change}
+
+عند حدوث تغييرات في المحرر، يُطلِق حدثًا.  
+يُؤخَّر إطلاق الحدث بمقدار 200 مللي ثانية، ولا يُطلَق ما دام `readonly` يساوي `true`.  
+يُطلَق عند أي تغيير في المستند — تعديل في الواجهة، أو إسناد قيمة إلى `value`، أو `clear()`، أو أي من دوال `setSchema*`، ومنذ الإصدار `4.0.0` أيضًا `setSchemaJSON()` و`Import and Add`. ولا يُطلِقه `setInitialValue`.  
+ولا يُطلِقه أي شيء يجري داخل وضع التدفق في علامة تبويب التصور المرئي — التكبير والتصغير، وتحريك العرض، ونقل البطاقات، و`Tidy Up`، وعرض الصفوف، وتضييق العرض من بطاقة — لأن أيًّا من ذلك ليس تغييرًا في المستند.  
+منذ الإصدار `4.0.0`، لا يُطلِقه أيضًا تغيير إعداد يكون [القفل](../guide/guides/settings.md#lock) الخاص به مفعّلًا، لأنه لا يحرك سوى الشاشة ولا يمس `value` أبدًا: التمرير أو التكبير والتصغير في لوحة رسم ERD أثناء قفل `Viewport`، وتبديل علامة التبويب أثناء قفل `Canvas Type`، وتغيير لغة منشئ التعليمات البرمجية أو نمط تسمية الجداول أو نمط تسمية الأعمدة أو نوع علامات الاقتباس أثناء تفعيل القفل الخاص به. تُستبعد هذه التغييرات وحدها، لذا فإن الدفعة التي تعدّل المستند أيضًا لا تزال تُطلِقه. ويُطلِقه قفل الإعداد أو إلغاء قفله.  
+تكون كل الأقفال مفعّلة في المستند الجديد وفي أي ملف حُفظ قبل الإصدار `4.0.0`، لذا لا يُطلِق التمرير والتكبير والتصغير وتبديل علامات التبويب شيئًا افتراضيًا. ويشمل ذلك التركيز على الجداول من علامة تبويب ERD، وزر البطاقة للرابط الخارجي الذي يعيدك من التدفق إلى علامة تبويب ERD، والانتقال إلى صف في المستكشف أو إلى تطابق في البحث، وفتح المستكشف أو الانتقال إلى نتيجة في البحث السريع من علامة تبويب أخرى. ولا يُطلِق كل منها `change` واحدًا إلا أثناء تعطيل القفل الذي يشمله: `Canvas Type` لتبديل علامة التبويب، و`Viewport` للتمرير الذي يُحدثه أيضًا زر البطاقة أو نتيجة البحث السريع أو صف المستكشف أو تطابق البحث. منذ الإصدار `4.1.0`، تتبع كل عمليات التمرير هذه قاعدة واحدة، [أين يستقر الانتقال](../guide/guides/table-related-functions.md#where-a-jump-lands)، لذا لم تعد نتيجة جدول في البحث السريع تُمرِّر العرض في كل مرة، والانتقال الذي تتركه القاعدة في مكانه لا يُحدث تمريرًا يستدعي إطلاق الحدث. وفتح المستكشف أو إغلاقه أو تغيير حجمه يضيّق لوحة الرسم أو يوسّعها دون تحريك نقطة أصلها، ولا يُطلِق شيئًا أيضًا. قبل الإصدار `4.0.0`، كانت عمليات التمرير والتكبير والتصغير وتبديل علامات التبويب تُطلِقه دائمًا، حتى عندما كان `editor.value` يخرج بالقيمة نفسها.  
+لتخطي عمليات الكتابة التي لا تغيّر شيئًا، قارن `editor.value` بالقيمة التي خزّنتها آخر مرة، لا بالملف الذي حمّلته: فالملف الذي كتبه إصدار سابق، أو ملف v2، أو ملف عُدِّل يدويًا، قد يخرج مختلفًا في `value` فور تحميله، لأن `value` يكتبه بصيغة التخزين. وكذلك الملف الذي يكون قفل `Viewport` فيه معطّلًا ولا تُظهر نقطة أصله أي جزء من المخطط على هذه الشاشة: إذ ينقل التحميل العرض إلى المخطط، ويكتب `value` الموضع الذي يستقر فيه. منذ الإصدار `4.0.0`، لم تعد العروض المقيسة تسبب ذلك، لأن `value` لا يحمل أيًّا منها. ويمكن للتطبيق المضيف الذي يكتب الملفات أن يميّز بدلًا من ذلك بين التعديل وتغيير العرض باستخدام `changed` في مخزن النسخ المتماثل، راجع [on@change](./advanced/remote-storage.md#onchange).  
+لا يحمل الحدث أي `detail`، ولا ينتشر صعودًا ولا يعبر حدود shadow root، لذا استمع إليه على العنصر نفسه واقرأ `editor.value` في دالة المعالجة.
+
+```js
+editor.addEventListener('change', event => {
+  const data = event.target.value;
+});
+```
+
+### changePresetTheme {#changepresettheme}
+
+يُطلَق عند تغيير النسق المعدّ مسبقًا من منشئ النسق المدمج، أو منذ الإصدار `4.0.0` من `Theme` في البحث السريع. ويُطلِقه كل اختيار، بما في ذلك اختيار الخيار المطبَّق حاليًا.  
+ولا يُطلِقه استدعاؤك [setPresetTheme](#setpresettheme) أو [setSystemAppearance](#setsystemappearance) بنفسك، ولا تفعيل [systemDarkMode](#systemdarkmode) أو تعطيله.  
+قيمة `event.detail` هي كائن `ThemeOptions` الكامل بعد الاختيار — `{ appearance, grayColor, accentColor }` — لا القيم الجزئية التي طُلبت. منذ الإصدار `4.0.0`، تكون قيمة `appearance` فيه `'system'` ما دام `System` مختارًا، لا الوضع الفاتح أو الداكن الذي يعرضه، لذا خزّنه كما هو وأعده إلى `setPresetTheme`.
+
+```js
+editor.addEventListener('changePresetTheme', event => {
+  const themeOptions = event.detail;
+});
+```
+
+### changeLocale {#changelocale}
+
+منذ الإصدار `4.0.0`، يُطلَق عند اختيار لغة في المحرر، من منتقي لغة العرض أو من `Display Language` في البحث السريع، وكلاهما يفعّله [enableLocalePicker](#enablelocalepicker).  
+يُطلَق بعد تطبيق اللغة، عند كل اختيار، بما في ذلك اختيار الخيار المطبَّق حاليًا. لا يُطلِقه [setLocale](#setlocale) ولا [setSystemLocale](#setsystemlocale) أبدًا، ولا تغيير لغات المتصفح. ولا يُطلِق تبديل اللغة أي `change`.  
+قيمة `event.detail` هي `{ locale }`، وهي من النوع `LocaleOption`: `'system'` عند اختيار `System`، وإلا فرمز اللغة. لا يتذكر العنصر الاختيار، لذا خزّنه ومرّره إلى `setLocale` في التحميل التالي.  
+ومثل `change`، لا ينتشر صعودًا، لذا استمع إليه على العنصر نفسه.
+
+```js
+editor.addEventListener('changeLocale', event => {
+  const { locale } = event.detail; // 'system' | 'ko-KR' | ...
+});
+```
+
+## focus {#focus}
+
+ينقل التركيز إلى المحرر.
+
+```js
+editor.focus();
+```
+
+## blur {#blur}
+
+يزيل التركيز عن المحرر.
+
+```js
+editor.blur();
+```
+
+## clear {#clear}
+
+يُفرّغ المستند، فيزيل كل جدول وعمود وعلاقة وفهرس وملاحظة، ومنذ الإصدار `4.0.0` كل مجموعة جداول.  
+ويبقى كل إعداد، بما في ذلك قاعدة البيانات وموضع العرض ومستوى التكبير وخيارات عرض الجداول وكل قفل مع القيمة التي يحملها، والسكربتان `Before tables` و`After tables` في علامة تبويب مخطط SQL، لذا يواصل الملف المُفرَّغ حفظ ما كان يحفظه. ولبدء مستند جديد بدلًا من ذلك، أسند `''` إلى `value` أو استدعِ `setInitialValue('')`.  
+ويُسجَّل في قائمة السجل، لذا يمكن التراجع عنه، ويُطلِق `change`. ويعيد التراجع المستند كما كان المحرر يحتفظ به، وكل إعداد مقفل بقيمته المقفلة. ويُتجاهل أثناء ضبط `readonly`.
+
+```js
+editor.clear();
+```
+
+## destroy {#destroy}
+
+يدمّر مثيل المحرر تمامًا فلا يمكن إعادة استخدامه بعد ذلك.  
+ويحرّر مستمعي الأحداث والاشتراكات الخاصة بالمحرر، ويدمّر كل مخزن مشترك أرجعه [getSharedStore](#getsharedstore).  
+وتُسقَط معه أي دفعة دفق لا يزال المخزن المشترك يحتجزها؛ استدعِ [flushStreamBuffers](./advanced/collaborative-editing.md#flushstreambuffers) لذلك المخزن أولًا لإرسالها.
+
+```js
+editor.destroy();
+```
+
+## setKeyBindingMap {#setkeybindingmap}
+
+يعيد تعريف اختصارات لوحة المفاتيح.  
+الأسماء `edit` و`stop` و`undo` و`redo` و`zoomIn` و`zoomOut` و`zoomReset` ثابتة ولا يمكن إعادة تعريفها.  
+لا تُكتب إلا الأسماء أدناه، وعددها 21 اسمًا؛ ويُتجاهل أي شيء آخر في الكائن، بما في ذلك الأسماء الثابتة.  
+منذ الإصدار `3.10.0`، يمكن إعادة تعريف `search`، وأُضيف `findReplace`. وقبل ذلك كان `search` ثابتًا. أُضيف `removeSelection` في الإصدار `4.0.0`. أُضيف `addTableGroup` و`groupSelectedTables` في الإصدار `4.1.0`.  
+يجب أن تكون قيمة الاختصار من النوع `ShortcutOption[]`. وتُتجاهل السلسلة النصية المجردة، لذا اكتب `{ addTable: [{ shortcut: 'Alt+KeyN' }] }` بدلًا من `{ addTable: 'Alt+KeyN' }`.  
+تُقبل المصفوفة الفارغة ولا تربط أي مفتاح: يترك `setKeyBindingMap({ findReplace: [] })` الاختصار `Ctrl + F` (Windows/Linux) أو `⌘ + F` (Mac) للصفحة، ويفعل `{ search: [] }` الشيء نفسه مع `Ctrl + K` (Windows/Linux) أو `⌘ + K` (Mac). ولا يزال الزر `Search` في شريط الأدوات يفتح البحث السريع، والزر `Explorer` في شريط الأدوات يفتح المستكشف ويغلقه، و`Toggle Explorer` في البحث السريع وفي قائمة السياق للوحة الرسم يفتح بحث المستكشف أو يغلقه؛ ولا يعرض أي منها اختصارًا لاسم تُرك فارغًا. ويترك `{ removeSelection: [] }` المفتاحين `Delete` و`Backspace` للصفحة، وعندئذ لا تعرض عناصر الحذف في قوائم الجدول والملاحظة ومجموعة الجداول (`Delete` و`Delete selected` و`Delete column` و`Delete columns`) أي اختصار.  
+منذ الإصدار `4.1.0`، يترك `{ addTableGroup: [] }` الاختصار `Alt + G` (Windows/Linux) أو `⌥ + G` (Mac) للصفحة، ويترك `{ groupSelectedTables: [] }` التسلسل `T` ثم `G`. ويظل كل من `New Table Group` في شريط أدوات لوحة الرسم وفي قائمة السياق للوحة الرسم وفي البحث السريع، و`Group selected tables` في قائمة الجدول، و`Group Selected Tables` في البحث السريع يعمل، دون عرض أي اختصار. وتذكر تلميحات الأزرار `New Table` و`New Memo` و`New Table Group` في شريط أدوات لوحة الرسم أول تركيبة مفاتيح من `addTable` و`addMemo` و`addTableGroup`، أو اسم الزر وحده إذا تُرك الاختصار فارغًا.  
+الاستدعاء دمج جزئي: تحتفظ الأسماء التي لا تذكرها بقيمها الافتراضية، واستدعاؤه مرتين يُبقي على التغييرات السابقة. لا يوجد getter للاختصارات الحالية: يُرجع [createKeyBindingMap](#createkeybindingmap) القيم الافتراضية، لا ما غيّره `setKeyBindingMap`.
+
+```ts
+type ShortcutOption = {
+  shortcut: string;
+  preventDefault?: boolean;
+  stopPropagation?: boolean;
+};
+
+const defaultKeyBindingMap: Omit<
+  KeyBindingMap,
+  | 'edit'
+  | 'stop'
+  | 'undo'
+  | 'redo'
+  | 'zoomIn'
+  | 'zoomOut'
+  | 'zoomReset'
+> = {
+  search: [
+    { shortcut: '$mod+KeyK', preventDefault: true, stopPropagation: true },
+  ],
+  findReplace: [
+    { shortcut: '$mod+KeyF', preventDefault: true, stopPropagation: true },
+  ],
+  addTable: [{ shortcut: 'Alt+KeyN', preventDefault: true }],
+  addColumn: [{ shortcut: 'Alt+Enter', preventDefault: true }],
+  addMemo: [{ shortcut: 'Alt+KeyM', preventDefault: true }],
+  addTableGroup: [
+    { shortcut: 'Alt+KeyG', preventDefault: true, stopPropagation: true },
+  ],
+  groupSelectedTables: [{ shortcut: 'KeyT KeyG', preventDefault: true }],
+  removeTable: [
+    { shortcut: '$mod+Backspace', preventDefault: true },
+    { shortcut: '$mod+Delete', preventDefault: true },
+  ],
+  removeColumn: [
+    { shortcut: 'Alt+Backspace', preventDefault: true },
+    { shortcut: 'Alt+Delete', preventDefault: true },
+  ],
+  removeSelection: [
+    { shortcut: 'Delete', preventDefault: true },
+    { shortcut: 'Backspace', preventDefault: true },
+  ],
+  primaryKey: [{ shortcut: 'Alt+KeyK', preventDefault: true }],
+  selectAllTable: [
+    { shortcut: '$mod+KeyA', preventDefault: true },
+    { shortcut: '$mod+Alt+KeyA', preventDefault: true },
+  ],
+  selectAllColumn: [{ shortcut: 'Alt+KeyA', preventDefault: true }],
+  relationshipZeroOne: [{ shortcut: '$mod+Alt+Digit1', preventDefault: true }],
+  relationshipZeroN: [{ shortcut: '$mod+Alt+Digit2', preventDefault: true }],
+  relationshipOneOnly: [{ shortcut: '$mod+Alt+Digit3', preventDefault: true }],
+  relationshipOneN: [{ shortcut: '$mod+Alt+Digit4', preventDefault: true }],
+  tableProperties: [{ shortcut: 'Alt+Space', preventDefault: true }],
+  focusView: [
+    { shortcut: 'Alt+KeyF', preventDefault: true, stopPropagation: true },
+  ],
+  handTool: [{ shortcut: 'Space', preventDefault: true }],
+  zenMode: [
+    { shortcut: 'Alt+KeyZ', preventDefault: true, stopPropagation: true },
+  ],
+};
+
+// example
+editor.setKeyBindingMap({
+  addTable: [{ shortcut: '$mod+KeyN', preventDefault: true }],
+});
+```
+
+يُفسح كل من `selectAllTable` و`handTool` و`removeSelection`، ومنذ الإصدار `4.1.0` `groupSelectedTables` أيضًا، المجال لمؤشر الكتابة: أثناء وجود التركيز في عنصر input أو textarea أو `contenteditable`، يحدد `$mod + A` النص، ويكتب `Space` مسافة، ويمحو `Delete` و`Backspace` النص، ويكتب `T` ثم `G` الحرفين، بدلًا من أن تصل إلى لوحة الرسم. ولا يُمنع السلوك الافتراضي لأي من هذه الضغطات. وأيًّا كانت المفاتيح التي تعيد ربطها بها، فإنها تتصرف بالطريقة نفسها.
+
+منذ الإصدار `4.0.0`، يزيل `removeSelection` (`Delete` أو `Backspace`) التحديد في علامة تبويب ERD كخطوة تراجع واحدة، دون أن يطلب تأكيدًا. فإذا كان الجدول الذي عليه التركيز هو الشيء الوحيد المحدد، وكان عمود أو أكثر من أعمدته محددًا، وكان مستوى التكبير يرسم صفوفه، أزال تلك الأعمدة؛ وإلا أزال كل جدول وملاحظة ومجموعة جداول محددة، مع الإبقاء على جداول المجموعة. راجع [حذف الجداول والملاحظات](../guide/guides/table-related-functions.md#table-and-memo-deletion).  
+والمفتاح المضغوط باستمرار يزيل مرة واحدة، ولا يُزال شيء أثناء فتح محرر خلية أو ملاحظة أو اسم مجموعة جداول. وخارج الحقول النصية واللوحات التي تحتجز الاختصارات (راجع [createKeyBindingMap](#createkeybindingmap))، يُمنع السلوك الافتراضي للضغطة في كل علامة تبويب ما دام التركيز على المحرر، وعلى زر شريط أدوات عليه التركيز أيضًا، وفي المحرر للقراءة فقط، حيث لا تزيل شيئًا.
+
+منذ الإصدار `4.1.0`، يُجهّز `addTableGroup` (`Alt+KeyG`) رسم `New Table Group` في علامة تبويب ERD، فترسم الضغطة التالية بالزر الرئيسي على لوحة الرسم المجموعة، والضغط عليه مرة أخرى يلغي تجهيز الرسم، كما يفعل الزر `New Table Group` في شريط أدوات لوحة الرسم. ويضع `groupSelectedTables` (`KeyT KeyG`، `T` ثم `G`) الجداول المحددة في مجموعة جديدة ويفتح محرر اسمها، كما يفعل `Group selected tables` في قائمة السياق للجدول. وإذا لم يكن أي جدول محددًا فلا يضيف شيئًا؛ ولا تُحتسب الملاحظة أو مجموعة الجداول المحددة. راجع [رسم مجموعة](../guide/guides/table-groups.md#drawing-a-group) و[تجميع الجداول المحددة](../guide/guides/table-groups.md#grouping-selected-tables).  
+ولا يعمل الاثنان إلا حيث تتيح القوائم المجموعات: لا أثناء ضبط `readonly`، ولا عندما يُخفي خيار العرض `Table Groups` المجموعات، ولا أثناء فتح محرر خلية أو ملاحظة أو اسم مجموعة جداول. ومثل اختصارات لوحة الرسم الأخرى، لا يعملان إلا في علامة تبويب ERD، ولا يعملان أثناء فتح البحث السريع أو خصائص الجدول أو عارض الفروق أو السفر عبر الزمن أو معاينة التخطيط التلقائي أو `Export image` أو `Map Columns`. وحيث لا يفعلان شيئًا، يظل السلوك الافتراضي للضغطة ممنوعًا، ما لم يُفسح `groupSelectedTables` المجال لمؤشر الكتابة. ويُوقف أيضًا انتشار `addTableGroup`، كما هو الحال مع `focusView` و`zenMode`، لذا لا يسمعه أبدًا مستمع `keydown` في مرحلة الصعود في الصفحة.
+
+منذ الإصدار `3.10.0`، يفتح `findReplace` (`$mod+KeyF`) [البحث والاستبدال](../guide/guides/find-and-replace.md). ومنذ الإصدار `4.1.0`، يفتح [المستكشف](../guide/guides/explorer.md#opening-and-closing) الذي يضمه أو يغلقه، وتعرضه علامة تبويب الاختصارات باسم `Toggle Explorer`.  
+ما دام الزر `Explorer` في شريط الأدوات يظهر مضغوطًا (المستكشف مفتوح في علامة تبويب ERD وغير مخفي بوضع الزن)، يغلق المستكشف، ما لم يكن البحث السريع أو خصائص الجدول أو منشئ النسق أو منتقي لغة العرض أو مربع الحوار `Export image` أو `Map Columns` مفتوحًا. وإلا فإنه يغلق أيًّا من هذه كان مفتوحًا، ويُظهر علامة تبويب ERD من أي علامة تبويب أخرى، ويفتح المستكشف مع وجود مؤشر الكتابة في حقل `Find` وتحديد نص البحث. والمحرر الأضيق من أن يعرض المستكشف بجانب لوحة الرسم يبقيه مفتوحًا لكن مُنحّى جانبًا، ويعرض الإشعار المنبثق `Widen the window to show the Explorer`. قبل الإصدار `4.1.0`، كان يفتح لوحة البحث والاستبدال العائمة، أو يعيد لوحة المفاتيح إلى حقلها، ولم يكن يغلقها أبدًا.  
+ولا يُفسح المجال لمؤشر الكتابة: ما دام التركيز على المحرر، يلتقطه المحرر في كل علامة تبويب، من لوحة الرسم أو من حقل إدخال داخل المحرر. ويُمنع السلوك الافتراضي للضغطة، فلا يفتح المتصفح شريط البحث، ويُوقف انتشارها، فلا يسمعها أي مستمع `keydown` في مرحلة الصعود في الصفحة. وعند فتح محرر خلية أو ملاحظة، أو منذ الإصدار `4.0.0` محرر اسم مجموعة جداول، يظل سلوكه الافتراضي ممنوعًا وانتشاره موقوفًا، لكنه لا يفعل شيئًا.  
+أثناء فتح عارض الفروق أو السفر عبر الزمن أو معاينة التخطيط التلقائي، في أي علامة تبويب، أو بينما لا يزال أسلوب الإدخال (IME) في طور التركيب، لا يُمنع سلوكه الافتراضي ولا يُوقف انتشاره، فيتلقاه البحث الخاص بالمتصفح أو بالتطبيق المضيف. وداخل المستكشف، يُوقف هناك انتشار الضغطة التي لا تزال في طور التركيب، وإن لم يُمنع سلوكها الافتراضي. وأيًّا كان المفتاح الذي تعيد ربط `findReplace` به، فإنه يتصرف بالطريقة نفسها.
+
+لا يعمل `focusView` إلا في علامة تبويب ERD. فإذا كان جدول واحد على الأقل محددًا، يفتح علامة تبويب التصور المرئي في وضع التدفق، مقتصرًا على تلك الجداول وكل جدول يبعد عنها علاقة واحدة؛ ولا تُحتسب الملاحظة أو مجموعة الجداول المحددة، وإذا لم يكن أي جدول محددًا فلا يفعل شيئًا. راجع [التركيز على الجداول](../guide/guides/visualization.md#focusing-on-tables).
+
+في علامة تبويب ERD، يُنهي `stop` (`Escape`) محرر الخلية أو الملاحظة المفتوح، أو العلاقة الجاري رسمها، ويترك التحديد كما هو. ومنذ الإصدار `4.0.0`، يُنهي أيضًا محرر اسم مجموعة الجداول دون كتابة أي اسم، ورسم `New Table Group`. ويستدعي المحرر `preventDefault()` على تلك الضغطة.  
+وإذا لم يكن أي منها مفتوحًا، يمسح `Escape` التحديد والخلية التي عليها التركيز، ولا يُمنع سلوكه الافتراضي. لذا يتطلب الخروج من التعديل ومسح التحديد ضغطتين.  
+وباستثناء المستكشف، وتنسيقات `Import` في [شاشة الترحيب](#enablewelcomescreen)، والمنتقيات ومربعات الحوار المذكورة أدناه، لا يوقف المحرر انتشار `Escape` أبدًا، لذا فإن الصفحة التي تستمع إليه بنفسها، لإغلاق مربع حوار خاص بها مثلًا، تسمع الضغطتين ويمكنها تخطي الضغطة التي تكون قيمة `defaultPrevented` فيها `true`.  
+أثناء فتح البحث السريع أو خصائص الجدول أو عارض الفروق أو معاينة التخطيط التلقائي أو السفر عبر الزمن، يغلق `Escape` المفتوح منها بدلًا من ذلك ويترك التحديد كما هو. ولا يُمنع السلوك الافتراضي لتلك الضغطة أيضًا.  
+منذ الإصدار `4.0.0`، يتلقى مربع الحوار [`Export image`](../guide/guides/file-import-export.md#image) أو [`Map Columns`](../guide/guides/relationship-editing.md#map-columns) المفتوح أيضًا `Escape`، فيُغلق نفسه ويترك التحديد كما هو. ويستحوذ كل منهما على لوحة المفاتيح عند فتحه، ويُمنع السلوك الافتراضي لضغطة `Escape` هذه ويُوقف انتشارها.  
+منذ الإصدار `4.1.0`، تعيد ضغطة `Escape` والتركيز داخل [المستكشف](../guide/guides/explorer.md#keys-in-the-explorer)، في شجرته أو حقوله أو أزراره، لوحة المفاتيح إلى لوحة الرسم، وتترك المستكشف مفتوحًا والتحديد كما هو. ويستدعي المحرر عليها `preventDefault()` و`stopPropagation()` كليهما، لذا لا تصل أبدًا إلى مستمع `keydown` في مرحلة الصعود في الصفحة.  
+ولا تغلق ضغطة `Escape` على لوحة الرسم المستكشف أبدًا. قبل الإصدار `4.1.0`، كانت ضغطة `Escape` داخل لوحة البحث والاستبدال تغلقها، وكانت الضغطة على لوحة الرسم تغلقها بالضغطة نفسها التي تمسح التحديد.  
+منذ الإصدار `4.0.0`، يُغلق منتقي لغة العرض ومنتقي الألوان عند `Escape`: داخلهما يُمنع سلوكه الافتراضي ويُوقف انتشاره، وعلى لوحة الرسم يغلقهما بالضغطة نفسها التي تمسح التحديد، دون منع سلوكه الافتراضي أو إيقاف انتشاره.  
+ضغطة `Escape` أثناء استمرار التركيب في أسلوب الإدخال (IME) تخص التركيب. فهي تترك المحرر المفتوح كما هو ولا يُمنع سلوكها الافتراضي، لذا يمكن للصفحة كذلك تخطي الضغطة التي تكون قيمة `isComposing` فيها `true`، أو قيمة `keyCode` فيها `229`. وداخل المستكشف، يُوقف أيضًا انتشار مثل هذه الضغطة، مثل أي مفتاح يُضغط هناك في أثناء التركيب، وتبقى لوحة المفاتيح في الحقل.  
+قبل الإصدار `3.9.2`، كانت ضغطة `Escape` واحدة تُنهي التعديل أو الرسم وتمسح التحديد معًا، ولم يكن المحرر يمنع سلوكها الافتراضي أبدًا.
+
+### createKeyBindingMap {#createkeybindingmap}
+
+منذ الإصدار `3.9.2`، تُصدِّر الحزمة `createKeyBindingMap()`، ومعها الأنواع `KeyBindingMap` و`KeyBindingName` و`ShortcutOption`.  
+يُرجع اختصارات لوحة المفاتيح الافتراضية، وهي 28 اسمًا بما فيها الأسماء الثابتة، في خريطة جديدة عند كل استدعاء، لذا لا يغيّر تعديل الخريطة التي يُرجعها أي شيء آخر.  
+وهي ما يبدأ منه كل محرر، ولا يظهر فيها أثر استدعاء `setKeyBindingMap`.  
+و`createKeyBindingMap` وحده تصدير في وقت التشغيل؛ والثلاثة الأخرى أنواع.
+
+```ts
+type KeyBindingName =
+  | 'edit'
+  | 'stop'
+  | 'search'
+  | 'findReplace'
+  | 'undo'
+  | 'redo'
+  | 'addTable'
+  | 'addColumn'
+  | 'addMemo'
+  | 'addTableGroup'
+  | 'groupSelectedTables'
+  | 'removeTable'
+  | 'removeColumn'
+  | 'removeSelection'
+  | 'primaryKey'
+  | 'selectAllTable'
+  | 'selectAllColumn'
+  | 'relationshipZeroOne'
+  | 'relationshipZeroN'
+  | 'relationshipOneOnly'
+  | 'relationshipOneN'
+  | 'tableProperties'
+  | 'focusView'
+  | 'zoomIn'
+  | 'zoomOut'
+  | 'zoomReset'
+  | 'handTool'
+  | 'zenMode';
+
+type KeyBindingMap = Record<KeyBindingName, ShortcutOption[]>;
+
+declare function createKeyBindingMap(): KeyBindingMap;
+
+// example
+import { createKeyBindingMap } from '@dineug/erd-editor';
+
+const shortcuts = Object.values(createKeyBindingMap())
+  .flat()
+  .map(({ shortcut }) => shortcut); // 'Enter', 'Escape', '$mod+KeyK', ...
+```
+
+كل `shortcut` تركيبة مفاتيح بصيغة [tinykeys](https://github.com/jamiebuilds/tinykeys) تسمّي مفتاحها بحسب `KeyboardEvent.code`، حيث يكون [`$mod`](#mod) هو `⌘` على macOS و`Control` في غيره.  
+منذ الإصدار `4.0.0`، يقرأ المحرر هذه التركيبات بنفسه بدلًا من tinykeys، بالصيغة نفسها. يتطابق المفتاح بقيمة `code` الخاصة به، أو بقيمة `key` بأي حالة أحرف، ولا تتطابق الضغطة إلا مع الضغط على مفاتيح التعديل التي تذكرها بالضبط. ويُحتسب `AltGraph` على أنه `Control` و`Alt` على Windows، و`Alt` على macOS. والضغطات التي تفصل بينها مسافة تشكّل تسلسل مفاتيح، يبدأ من جديد بعد مرور ثانية دون أي keydown.  
+منذ الإصدار `4.1.0`، أحد الاختصارات الافتراضية تسلسل مفاتيح: `groupSelectedTables` هو `KeyT KeyG`، أي `T` ثم `G`. ويُنفَّذ التسلسل عند الضغطة التي تكمله، وتلك الضغطة وحدها تأخذ `preventDefault` و`stopPropagation` الخاصين به، لذا مع القيم الافتراضية يصل `T` إلى الصفحة ولا يُمنع السلوك الافتراضي إلا للمفتاح `G`. وتعرض القوائم والبحث السريع وعلامة تبويب الاختصارات التسلسل بمفتاح واحد لكل ضغطة.  
+تُربط الأسماء الثابتة على النحو التالي: `Enter` (`edit`) و`Escape` (`stop`) و`$mod+KeyZ` (`undo`) و`$mod+Shift+KeyZ` (`redo`) و`$mod+Equal` (`zoomIn`) و`$mod+Minus` (`zoomOut`) و`$mod+Digit0` (`zoomReset`). لا يحمل `edit` و`stop` أي علامات؛ وتحمل الخمسة الأخرى `preventDefault` و`stopPropagation`. والبقية هي القيم الافتراضية أعلاه، ومنها `search` و`findReplace`.
+
+يستمع المحرر إلى هذه الاختصارات على عنصره الخاص، لذا يجب على التطبيق المضيف الذي يلتقط المفاتيح قبل المحرر، باختصارات عامة أو بمستمع `keydown` في مرحلة الالتقاط، أن يسمح بمرورها ما دام التركيز على المحرر.  
+أنشئ قائمة ما يُسمح بمروره من `createKeyBindingMap()`، مع وضع الاختصارات التي مررتها إلى `setKeyBindingMap` مكان القيم الافتراضية.  
+منذ الإصدار `3.10.0`، تتضمن تلك القائمة `$mod+KeyF`، وهي تركيبة البحث الخاصة بالمتصفح. والتطبيق المضيف الذي يريد الإبقاء على بحثه الخاص على تلك التركيبة يستدعي `setKeyBindingMap({ findReplace: [] })`.  
+منذ الإصدار `4.0.0`، تتضمن أيضًا `Delete` و`Backspace` دون مفاتيح تعديل. والتطبيق المضيف الذي يريد الإبقاء على هذين المفتاحين يستدعي `setKeyBindingMap({ removeSelection: [] })`.  
+منذ الإصدار `4.1.0`، تتضمن أيضًا `Alt+KeyG` والتسلسل `KeyT KeyG`، الذي يأتي كسلسلة نصية واحدة: قسّمه عند المسافة واسمح بمرور كل ضغطة، بما في ذلك `T` و`G` دون مفاتيح تعديل، لأن التسلسل الذي تنقصه ضغطة لا يكتمل أبدًا. والتطبيق المضيف الذي يريد الإبقاء على هذه المفاتيح يستدعي `setKeyBindingMap({ addTableGroup: [] })` أو `setKeyBindingMap({ groupSelectedTables: [] })`.
+
+ما دام التركيز داخل المستكشف، في شجرته أو حقلي `Find` و`Replace` أو أزراره، يمر `findReplace` و`search` و`undo` و`redo` و`zoomIn` و`zoomOut` و`zoomReset` إلى المحرر، لذا يعمل `findReplace` هناك كما يعمل على لوحة الرسم. وكل اختصار آخر، بحسب ضبطه الحالي، يتوقف عند المستكشف، والتسلسل بضغطته الأخيرة (`G` وحده مع القيم الافتراضية)، وكذلك مفاتيح الأسهم و`Tab` و`Enter` و`Space` و`Home` و`End` وأي مفتاح يُضغط بينما لا يزال أسلوب الإدخال (IME) في طور التركيب. وباستثناء `Escape`، الذي يعيد لوحة المفاتيح إلى لوحة الرسم، يُوقف انتشارها دون منع سلوكها الافتراضي، لذا تعمل كمفاتيح عادية في حقول المستكشف وأزراره وشجرته، ولا تصل إلى لوحة الرسم ولا إلى مستمع `keydown` في مرحلة الصعود في الصفحة: فلا يضيف `Alt + N` هناك أي جدول، ولا يزيل `Delete` شيئًا. أما المفاتيح التي تتنقل بين صفوف الشجرة أو تطويها أو تنتقل إلى صف منها، و`Enter` في حقل `Find` أو `Replace`، الذي يتنقل بين التطابقات أو يستبدل، فيُمنع سلوكها الافتراضي أيضًا.  
+وأي مفتاح آخر، مثل تركيبة الحفظ أو لوحة الأوامر في التطبيق المضيف، يواصل طريقه إلى الصفحة كالمعتاد. راجع [لوحة المفاتيح في المستكشف](../guide/guides/explorer.md#keys-in-the-explorer). قبل الإصدار `4.1.0`، كانت لوحة البحث والاستبدال العائمة تحتجز المفاتيح بالطريقة نفسها، باستثناء `Home` و`End` والضغطة الأخيرة في التسلسل، و`Space` عندما كان `handTool` مرتبطًا بمفتاح آخر.  
+منذ الإصدار `4.0.0`، يحتجز منتقي لغة العرض المفاتيح بالطريقة نفسها: تمر الاختصارات السبعة نفسها، ويُوقف هناك انتشار كل اختصار آخر (ومنذ الإصدار `4.1.0` التسلسل بضغطته الأخيرة) ومفاتيح الأسهم و`Tab` دون منع سلوكها الافتراضي، وكذلك أي مفتاح يُضغط بينما لا يزال أسلوب الإدخال (IME) في طور التركيب. ويتنقل `↑` و`↓` و`Home` و`End` و`Enter` و`Space` على أحد صفوفه بين الصفوف أو يختار أحدها، ويُمنع سلوكها الافتراضي أيضًا.
+
+### $mod {#mod}
+
+يبدّل مفتاح `Control` بحسب البيئة.
+
+- Mac: $mod = Meta (⌘)
+- Windows/Linux: $mod = Control
+
+### جدول الاختصارات {#shortcut-table}
+
+يستخدم الخاصيتين `key, code` في حدث لوحة المفاتيح.  
+استخدم `code` للمواضع المطلقة و`key` لقيم الإدخال.
+
+| Windows       | macOS           | `key`         | `code`                         |
+| ------------- | --------------- | ------------- | ------------------------------ |
+| N/A           | `Command` / `⌘` | `Meta`        | `MetaLeft` / `MetaRight`       |
+| `Alt`         | `Option` / `⌥`  | `Alt`         | `AltLeft` / `AltRight`         |
+| `Control`     | `Control` / `^` | `Control`     | `ControlLeft` / `ControlRight` |
+| `Shift`       | `Shift`         | `Shift`       | `ShiftLeft` / `ShiftRight`     |
+| `Space`       | `Space`         | N/A           | `Space`                        |
+| `Enter`       | `Return`        | `Enter`       | `Enter`                        |
+| `Esc`         | `Esc`           | `Escape`      | `Escape`                       |
+| `Backspace`   | `Delete` / `⌫`  | `Backspace`   | `Backspace`                    |
+| `Delete`      | `fn` + `Delete` | `Delete`      | `Delete`                       |
+| `1`، `2`، وهكذا | `1`، `2`، وهكذا | `1`، `2`، وهكذا | `Digit1`، `Digit2`، وهكذا |
+| `a`، `b`، وهكذا | `a`، `b`، وهكذا | `a`، `b`، وهكذا | `KeyA`، `KeyB`، وهكذا |
+| `-`           | `-`             | `-`           | `Minus`                        |
+| `=`           | `=`             | `=`           | `Equal`                        |
+| `+`           | `+`             | `+`           | `Equal`                        |
+
+## النسق {#theme}
+
+### setPresetTheme {#setpresettheme}
+
+يضبط نسقًا معدًّا مسبقًا.  
+القيم الافتراضية هي `appearance: 'dark'` و`grayColor: 'slate'` و`accentColor: 'indigo'`.  
+يُطبَّق كل حقل على حدة، لذا يترك الاستدعاء الجزئي الحقلين الآخرين كما هما. وتُتجاهل القيمة التي ليست أحد الأسماء أدناه، ولا يرمي الاستدعاء خطأً أبدًا.  
+منذ الإصدار `4.0.0`، يقبل `appearance` أيضًا `'system'`، أي الخيار `System` في منشئ النسق. ويعرض الوضع الفاتح أو الداكن الذي يُبلغ عنه نظام التشغيل، أو الذي يحدده [setSystemAppearance](#setsystemappearance)، ويتبدل عندما يتغير ذلك.
+
+```ts
+type ThemeOptions = {
+  appearance: 'dark' | 'light' | 'system';
+  grayColor: 'gray' | 'mauve' | 'slate' | 'sage' | 'olive' | 'sand';
+  accentColor:
+    | 'gray'
+    | 'gold'
+    | 'bronze'
+    | 'brown'
+    | 'yellow'
+    | 'amber'
+    | 'orange'
+    | 'tomato'
+    | 'red'
+    | 'ruby'
+    | 'crimson'
+    | 'pink'
+    | 'plum'
+    | 'purple'
+    | 'violet'
+    | 'iris'
+    | 'indigo'
+    | 'blue'
+    | 'cyan'
+    | 'teal'
+    | 'jade'
+    | 'green'
+    | 'grass'
+    | 'lime'
+    | 'mint'
+    | 'sky';
+};
+
+// example
+editor.setPresetTheme({ appearance: 'light' });
+```
+
+### setSystemAppearance {#setsystemappearance}
+
+منذ الإصدار `4.0.0`، يحدد الوضع الفاتح أو الداكن الذي يعرضه المظهر `'system'`، للتطبيق المضيف الذي له وضعان فاتح وداكن خاصان به، مثل نسق بيئة التطوير. وما دام أحدهما محددًا، تُتجاهل تغييرات نظام التشغيل.  
+ويؤدي `null`، أو أي قيمة غير `'dark'` أو `'light'`، إلى العودة إلى اتباع نظام التشغيل.  
+ما دام المظهر `'light'` أو `'dark'`، لا يغيّر شيئًا على الشاشة، لكن القيمة يُحتفظ بها وتُطبَّق فور أن يصبح المظهر `'system'`. وإلا فإنها تُطبَّق فورًا. ولا يُطلِق شيئًا، ويواصل `changePresetTheme` الإبلاغ عن `'system'`.  
+تستدعيه التطبيقات المضيفة VS Code وJetBrains وObsidian بوضعها الفاتح أو الداكن الخاص، ثم مرة أخرى كلما تغيّر ذلك.
+
+```js
+editor.setPresetTheme({ appearance: 'system' });
+editor.setSystemAppearance('light'); // null follows the OS again
+```
+
+### setTheme {#settheme}
+
+يتيح تخصيص النسق.  
+يستبدل كل استدعاء الطبقة المخصصة بأكملها، لذا مرّر الكائن الكامل مجددًا لتغيير رمز واحد فوق تخصيص قائم، ومرّر `{}` للعودة إلى النسق المعدّ مسبقًا.  
+لا يُحتفظ إلا بأسماء الرموز أدناه ذات القيم من نوع السلسلة النصية؛ ويُسقَط أي شيء آخر دون خطأ.  
+تقع الطبقة المخصصة فوق النسق المعدّ مسبقًا، لذا فإن استدعاء `setPresetTheme` لاحقًا يبدّل النسق المعدّ مسبقًا الذي تحتها بينما تبقى تخصيصاتك.
+
+#### JavaScript {#javascript}
+
+```ts
+type Theme = {
+  grayColor1: string;
+  grayColor2: string;
+  grayColor3: string;
+  grayColor4: string;
+  grayColor5: string;
+  grayColor6: string;
+  grayColor7: string;
+  grayColor8: string;
+  grayColor9: string;
+  grayColor10: string;
+  grayColor11: string;
+  grayColor12: string;
+
+  accentColor1: string;
+  accentColor2: string;
+  accentColor3: string;
+  accentColor4: string;
+  accentColor5: string;
+  accentColor6: string;
+  accentColor7: string;
+  accentColor8: string;
+  accentColor9: string;
+  accentColor10: string;
+  accentColor11: string;
+  accentColor12: string;
+
+  canvasBackground: string;
+  canvasBoundaryBackground: string;
+
+  tableBackground: string;
+  tableHeaderBackground: string;
+  tableSelect: string;
+  tableBorder: string;
+  tableShadow: string;
+
+  tableGroupHeaderBackground: string;
+  tableGroupBackground: string;
+  tableGroupBorder: string;
+
+  memoBackground: string;
+  memoSelect: string;
+  memoBorder: string;
+  memoShadow: string;
+
+  columnSelect: string;
+  columnSelectHover: string;
+  columnHover: string;
+
+  relationshipHover: string;
+
+  visualizationLink: string;
+  visualizationColumn: string;
+  visualizationRelationship: string;
+
+  toolbarBackground: string;
+
+  contextMenuBackground: string;
+  contextMenuSelect: string;
+  contextMenuHover: string;
+  contextMenuBorder: string;
+
+  minimapBorder: string;
+  minimapShadow: string;
+  minimapViewportBorder: string;
+  minimapViewportBorderHover: string;
+
+  toastBackground: string;
+  toastBorder: string;
+  toastSuccess: string;
+  toastError: string;
+
+  findReplaceError: string;
+
+  mapColumnsError: string;
+
+  schemaSqlWarningBackground: string;
+  schemaSqlWarningForeground: string;
+
+  dragSelectBackground: string;
+  dragSelectBorder: string;
+
+  scrollbarTrack: string;
+  scrollbarThumb: string;
+  scrollbarThumbHover: string;
+
+  foreground: string;
+  active: string;
+  placeholder: string;
+
+  focus: string;
+  inputActive: string;
+
+  keyPK: string;
+  keyFK: string;
+  keyPFK: string;
+
+  treeBackground: string;
+  treeRowHover: string;
+  treeRowCurrent: string;
+  treeMuted: string;
+  treeMatch: string;
+
+  explorerBackground: string;
+  explorerBorder: string;
+
+  diffInsertForeground: string;
+  diffDeleteForeground: string;
+  diffModifyForeground: string;
+  diffRenameForeground: string;
+};
+
+// example
+editor.setTheme({
+  canvasBackground: '#1b1b1f',
+  tableBackground: '#242429',
+  keyPK: '#ffc53d',
+});
+```
+
+يمثل `tableShadow` و`memoShadow` لون الظل الذي تلقيه الجداول والملاحظات على لوحة رسم ERD. ويتركهما النسق الداكن المعدّ مسبقًا `transparent`، فلا يُلقى أي ظل، كما يحدث عند تمرير `none` أو سلسلة نصية فارغة إلى `setTheme`؛ أما النسق الفاتح المعدّ مسبقًا فيستخدم `rgba(0, 0, 0, 0.18)`.
+
+منذ الإصدار `4.0.0`، توجد تسعة رموز إضافية:
+
+- يلوّن `tableGroupHeaderBackground` و`tableGroupBackground` و`tableGroupBorder` شريط العنوان والجسم والإطار في [مجموعة الجداول](../guide/guides/table-groups.md) التي ليس لها لون خاص بها.
+- يلوّن `toastSuccess` و`toastError` علامة الإشعار المنبثق الذي يُبلغ عن نتيجة انتهاء أمر ما.
+- يلوّن `findReplaceError` و`mapColumnsError` الأخطاء التي يعرضها البحث والاستبدال ومربع حوار تعيين الأعمدة. وكان البحث والاستبدال يستخدم `diffDeleteForeground` من قبل، لذا لم يعد تخصيص ذلك الرمز يغيّر لونه.
+- يلوّن `schemaSqlWarningBackground` و`schemaSqlWarningForeground` التحذيرات في خيارات علامة تبويب مخطط SQL.
+
+منذ الإصدار `4.1.0`، توجد تسعة رموز إضافية أخرى:
+
+- يلوّن `treeBackground` و`treeRowHover` و`treeRowCurrent` و`treeMuted` و`treeMatch` الشجرة التي يتشاركها [المستكشف](../guide/guides/explorer.md#the-tree) و[عارض الفروق](../guide/guides/table-related-functions.md#diff-viewer): خلفيتها، التي تملأ أيضًا حقلي `Find` و`Replace` في المستكشف؛ والصف الذي يقع تحت المؤشر، وصف لوحة المفاتيح عندما يكون التركيز على الشجرة، والزر الذي يقع تحت المؤشر في شريط عنوان المستكشف وبحثه؛ وصف تطابق البحث الحالي؛ والنص الخافت مثل الأعداد وأنواع البيانات وأسهم الطي؛ والعلامة خلف النص الذي عثر عليه البحث.
+- يلوّن `explorerBackground` و`explorerBorder` لوحة المستكشف وخطوطها: حافتها بجانب لوحة الرسم، والخط أسفل بحثها، وحدود حقولها والأزرار التي يُظهرها توسيع `Search In`. ويرسم `explorerBorder` أيضًا حافة شجرة عارض الفروق، والخط أسفل حقل `Filter by name` فيها، وحدود ذلك الحقل. وتأخذ أيقونات المفاتيح في المستكشف `keyPK` و`keyFK` و`keyPFK`.
+- يلوّن `diffModifyForeground` و`diffRenameForeground` ما يعلّمه عارض الفروق على أنه معدّل أو معاد تسميته، في شجرته وعلى المستندين كليهما. ويرسم `diffModifyForeground` أيضًا إطار الجدول أو الملاحظة أو مجموعة الجداول التي نُقلت أو تغيّر حجمها أو لونها أو مجموعتها، بصرف النظر عما تغيّر فيها غير ذلك، ويرسم خط ربط المفتاح الخارجي الذي تغيّر.
+
+أصبح `diffInsertForeground` و`diffDeleteForeground` يلوّنان الآن ما يعلّمه عارض الفروق على أنه مضاف أو مُزال، في شجرته وعلى المستند الذي يحتويه، في النصوص والأطر وخطوط الربط على حد سواء. وأُزيل `diffInsertBackground` و`diffDeleteBackground` و`diffCrossBackground` و`diffCrossForeground` في الإصدار `4.1.0`، لأن عارض الفروق لم يعد يملأ الخلايا. ويُسقطها `setTheme` مثل أي اسم آخر ليس في `Theme`، ولم تعد متغيراتها `--erd-editor-diff-insert-background` و`--erd-editor-diff-delete-background` و`--erd-editor-diff-cross-background` و`--erd-editor-diff-cross-foreground` تُقرأ.
+
+#### متغيرات CSS {#css-variables}
+
+لكل رمز في `Theme` متغير CSS مقابل اسمه `--erd-editor-` متبوعًا بالمفتاح بصيغة kebab-case: `grayColor10` يقابله `--erd-editor-gray-color-10`، و`keyPK` يقابله `--erd-editor-key-pk`، و`keyPFK` يقابله `--erd-editor-key-pfk`.  
+تُورَّث هذه المتغيرات إلى داخل المحرر، لذا اضبطها حيثما تريد أن تُطبَّق. فعلى `:root` تُطبِّق النسق على كل محرر في الصفحة؛ وعلى العنصر نفسه تُطبِّقه على ذلك المحرر وحده.
+
+```css
+erd-editor {
+  --erd-editor-canvas-background: #1b1b1f;
+}
+```
+
+منذ الإصدار `3.4.0`، أصبحت الرموز `dargSelect` ذات الإملاء الخاطئ تُكتب `dragSelect`، وتغيّرت متغيراتها من `--erd-editor-darg-select-background` و`--erd-editor-darg-select-border` إلى `--erd-editor-drag-select-background` و`--erd-editor-drag-select-border`. وتُتجاهل ورقة الأنماط التي لا تزال تستخدم الأسماء القديمة.
+
+<details>
+<summary>قيم النسق الافتراضية</summary>
+
+```css
+:root {
+  --erd-editor-gray-color-1: #111113;
+  --erd-editor-gray-color-2: #18191b;
+  --erd-editor-gray-color-3: #212225;
+  --erd-editor-gray-color-4: #272a2d;
+  --erd-editor-gray-color-5: #2e3135;
+  --erd-editor-gray-color-6: #363a3f;
+  --erd-editor-gray-color-7: #43484e;
+  --erd-editor-gray-color-8: #5a6169;
+  --erd-editor-gray-color-9: #696e77;
+  --erd-editor-gray-color-10: #777b84;
+  --erd-editor-gray-color-11: #b0b4ba;
+  --erd-editor-gray-color-12: #edeef0;
+  --erd-editor-accent-color-1: #11131f;
+  --erd-editor-accent-color-2: #141726;
+  --erd-editor-accent-color-3: #182449;
+  --erd-editor-accent-color-4: #1d2e62;
+  --erd-editor-accent-color-5: #253974;
+  --erd-editor-accent-color-6: #304384;
+  --erd-editor-accent-color-7: #3a4f97;
+  --erd-editor-accent-color-8: #435db1;
+  --erd-editor-accent-color-9: #3e63dd;
+  --erd-editor-accent-color-10: #5472e4;
+  --erd-editor-accent-color-11: #9eb1ff;
+  --erd-editor-accent-color-12: #d6e1ff;
+  --erd-editor-canvas-background: #212225;
+  --erd-editor-canvas-boundary-background: #111113;
+  --erd-editor-table-background: #18191b;
+  --erd-editor-table-header-background: #2e3135;
+  --erd-editor-table-select: #435db1;
+  --erd-editor-table-border: #363a3f;
+  --erd-editor-table-shadow: transparent;
+  --erd-editor-table-group-header-background: #43484e;
+  --erd-editor-table-group-background: #d3edf81d;
+  --erd-editor-table-group-border: #43484e;
+  --erd-editor-memo-background: #18191b;
+  --erd-editor-memo-select: #435db1;
+  --erd-editor-memo-border: #363a3f;
+  --erd-editor-memo-shadow: transparent;
+  --erd-editor-column-select: #182449;
+  --erd-editor-column-select-hover: #1d2e62;
+  --erd-editor-column-hover: #272a2d;
+  --erd-editor-relationship-hover: #435db1;
+  --erd-editor-visualization-link: #43484e;
+  --erd-editor-visualization-column: #5a6169;
+  --erd-editor-visualization-relationship: #5a6169;
+  --erd-editor-toolbar-background: #111113;
+  --erd-editor-context-menu-background: #18191b;
+  --erd-editor-context-menu-select: #272a2d;
+  --erd-editor-context-menu-hover: #3a4f97;
+  --erd-editor-context-menu-border: #363a3f;
+  --erd-editor-minimap-border: black;
+  --erd-editor-minimap-shadow: black;
+  --erd-editor-minimap-viewport-border: #3a4f97;
+  --erd-editor-minimap-viewport-border-hover: #435db1;
+  --erd-editor-toast-background: #18191b;
+  --erd-editor-toast-border: #363a3f;
+  --erd-editor-toast-success: #3dd68c;
+  --erd-editor-toast-error: #ff9592;
+  --erd-editor-find-replace-error: #ff9592;
+  --erd-editor-map-columns-error: #ff9592;
+  --erd-editor-schema-sql-warning-background: #500f1c;
+  --erd-editor-schema-sql-warning-foreground: #ff9592;
+  --erd-editor-drag-select-background: #253974;
+  --erd-editor-drag-select-border: #435db1;
+  --erd-editor-scrollbar-track: #ddeaf814;
+  --erd-editor-scrollbar-thumb: #696e77;
+  --erd-editor-scrollbar-thumb-hover: #777b84;
+  --erd-editor-foreground: #b0b4ba;
+  --erd-editor-active: #edeef0;
+  --erd-editor-placeholder: #e5edfd7b;
+  --erd-editor-focus: #435db1;
+  --erd-editor-input-active: #5472e4;
+  --erd-editor-key-pk: #ffc53d;
+  --erd-editor-key-fk: #e54666;
+  --erd-editor-key-pfk: #00a2c7;
+  --erd-editor-tree-background: #111113;
+  --erd-editor-tree-row-hover: #212225;
+  --erd-editor-tree-row-current: #1d2e62;
+  --erd-editor-tree-muted: #b0b4ba;
+  --erd-editor-tree-match: #253974;
+  --erd-editor-explorer-background: #111113;
+  --erd-editor-explorer-border: #363a3f;
+  --erd-editor-diff-insert-foreground: #3dd68c;
+  --erd-editor-diff-delete-foreground: #ff9592;
+  --erd-editor-diff-modify-foreground: #ffca16;
+  --erd-editor-diff-rename-foreground: #70b8ff;
+}
+```
+
+</details>
+
+## لغة العرض {#display-language}
+
+منذ الإصدار `4.0.0`، تتوفر نصوص المحرر الخاصة — قوائمه ولوحاته ومربعات الحوار فيه والبحث السريع والإشعارات المنبثقة والكلمات التي يرسمها على المخطط مثل `unnamed`، بما في ذلك الصور المُصدَّرة — في 25 لغة. ولا تُترجم أبدًا أسماء الجداول والأعمدة ولا SQL ولا أنواع البيانات ولا التعليمات البرمجية المُنشأة. راجع [اللغة والنسق](../guide/guides/language-and-theme.md).  
+قبل استدعاء [setLocale](#setlocale) أو اختيار لغة، يعرض المحرر الإنجليزية، أو يتبع `'system'` ما دام [enableLocalePicker](#enablelocalepicker) مفعّلًا.  
+يضبط المحرر `lang` و`dir` على جذره الخاص داخل shadow root المغلق، ولا يضبطهما أبدًا على العنصر المضيف أو الصفحة، لذا لا تقلب الصفحة المكتوبة من اليمين إلى اليسار اتجاه المحرر، ولا تقلب اللغة المكتوبة من اليمين إلى اليسار اتجاه الصفحة. وتعرض العبرية والعربية والفارسية واجهة المحرر من اليمين إلى اليسار؛ أما المخطط نفسه فلا يُعكس أبدًا. منذ الإصدار `4.1.0`، يبقى [المستكشف](../guide/guides/explorer.md) على يسار لوحة الرسم في كل اللغات، وتُقرأ صفوفه من اليمين إلى اليسار في هذه اللغات الثلاث.  
+تُصدِّر الحزمة النوعين `LocaleCode` (أحد الرموز أدناه) و`LocaleOption`.
+
+```ts
+type LocaleOption = LocaleCode | 'system';
+```
+
+| الرمز | الاسم المعروض | اللغة |
+| ------- | -------------------- | -------------------- |
+| `id-ID` | Bahasa Indonesia | الإندونيسية |
+| `de-DE` | Deutsch | الألمانية |
+| `en` | English | الإنجليزية |
+| `es-ES` | Español | الإسبانية |
+| `eu-ES` | Euskara | الباسكية |
+| `fr-FR` | Français | الفرنسية |
+| `it-IT` | Italiano | الإيطالية |
+| `nl-NL` | Nederlands | الهولندية |
+| `pl-PL` | Polski | البولندية |
+| `pt-PT` | Português | البرتغالية |
+| `pt-BR` | Português Brasileiro | البرتغالية البرازيلية |
+| `ro-RO` | Română | الرومانية |
+| `sk-SK` | Slovenčina | السلوفاكية |
+| `sl-SI` | Slovenščina | السلوفينية |
+| `sv-SE` | Svenska | السويدية |
+| `tr-TR` | Türkçe | التركية |
+| `ru-RU` | Русский | الروسية |
+| `uk-UA` | Українська | الأوكرانية |
+| `he-IL` | עברית | العبرية |
+| `ar-SA` | العربية | العربية |
+| `fa-IR` | فارسی | الفارسية |
+| `ja-JP` | 日本語 | اليابانية |
+| `zh-CN` | 简体中文 | الصينية المبسطة |
+| `zh-TW` | 繁體中文 | الصينية التقليدية |
+| `ko-KR` | 한국어 | الكورية |
+
+### setLocale {#setlocale}
+
+يضبط لغة العرض: `'system'`، أو أحد الرموز أعلاه. ويُتجاهل أي شيء آخر دون خطأ، مثل `'ko'` وحده أو رمز غير معروف أو قيمة ليست سلسلة نصية.  
+ويُطبَّق قبل أن يُرجع، لذا تظهر اللغة المضبوطة قبل إلحاق العنصر بالصفحة في إطاره الأول.  
+ولا يُطلِق شيئًا، لا `changeLocale` ولا `change`، ولا يمس `value` ولا سجل التراجع ولا أي مخزن مشترك.  
+ويبقى الاختيار أيًّا كانت حالة `enableLocalePicker`، ويتبع `setLocale('system')` النظام حتى مع تعطيل المنتقي.  
+لا يخزّن المحرر شيئًا. وللاحتفاظ باختيار القارئ، استمع إلى [changeLocale](#changelocale) ومرّره مجددًا في التحميل التالي.
+
+```js
+editor.enableLocalePicker = true;
+editor.setLocale(localStorage.getItem('locale') ?? 'system');
+editor.addEventListener('changeLocale', event => {
+  localStorage.setItem('locale', event.detail.locale);
+});
+```
+
+### setSystemLocale {#setsystemlocale}
+
+يحدد اللغة التي يمثلها `'system'`، كوسم BCP 47، للتطبيق المضيف الذي له لغة عرض خاصة به. وتستدعيه التطبيقات المضيفة VS Code وJetBrains وObsidian بلغة العرض الخاصة بها.  
+تُزال المسافات من طرفي الوسم. ويؤدي `null` أو سلسلة نصية فارغة أو قيمة ليست سلسلة نصية إلى العودة إلى `navigator.languages` في المتصفح، الذي يتبعه المحرر كلما تغيّر.  
+ولا يكون له أثر إلا ما دام الخيار المطبَّق حاليًا هو `'system'`، ويُطبَّق فورًا. ويذكر الصف `System` في المنتقي اللغة التي يؤول إليها.  
+يؤول الوسم، أو كل لغة من لغات المتصفح بالترتيب، إلى أول لغة يملكها المحرر، بحسب الوسم الفرعي للغة، مع تجاهل حالة الأحرف والشرطات السفلية: `de-AT` يعطي `de-DE` و`en-GB` يعطي `en`. وتُحدَّد الصينية بحسب نظام الكتابة، فيعطي `Hant` القيمة `zh-TW` ويعطي `Hans` القيمة `zh-CN`، وعند غيابه بحسب المنطقة، فيعطي `TW` و`HK` و`MO` القيمة `zh-TW` وتعطي أي منطقة أخرى `zh-CN`. ويعطي `pt` القيمة `pt-BR` ما لم تُذكر منطقة غير `BR`. وعندما لا يتطابق شيء، يعرض المحرر الإنجليزية.
+
+```js
+editor.setLocale('system');
+editor.setSystemLocale('pt-PT'); // null follows the browser again
+```
+
+## setSchemaSQL {#setschemasql}
+
+يحمّل ملف مخطط SQL.  
+افتراضيًا، يستبدل المستند الحالي بدلًا من الدمج فيه؛ راجع `mode` أدناه. ويُحتفظ بالإعدادات الموجودة لديك، بما في ذلك كل قفل وقيمته المقفلة، باستثناء موضع العرض ومستوى التكبير، وتُوضع الجداول بعد قراءة الملف، في صفوف ما لم يطلب `placement` أدناه غير ذلك. ومع قفل `Viewport`، يكتب `value` بعد ذلك العرض الذي يبدأ عليه الاستيراد، أي نقطة الأصل `0, 0` عند مستوى التكبير `1`. لذا فإن المستند المستورد إلى عنصر لم يُعطَ قيمة قط تكون فيه كل الأقفال مفعّلة، كما هو الحال في المستند الجديد.  
+ويُسجَّل في قائمة السجل، ما يتيح `Undo, Redo`، ويُطلِق `change`. وتُتجاهل السلسلة النصية الفارغة، ولا يفعل الاستدعاء شيئًا أثناء ضبط `readonly`.  
+ويتصرف `setSchemaGraphQL` و`setSchemaDBML` و`setSchemaAML` بالطريقة نفسها، ولا تفشل محللاتها أبدًا: فالنص الذي لا تستطيع قراءته يحمّل مستندًا فارغًا بدلًا من رمي خطأ.  
+منذ الإصدار `4.0.0`، تقبل الدوال الأربع كلها وسيطة ثانية اختيارية، `{ placement, mode }`:
+
+- `placement: 'grid'`، وهو الافتراضي، يضع الجداول في صفوف فورًا، كما في السابق، ولا يُرجع الاستدعاء شيئًا.
+- `placement: 'auto'` يرتّب الجداول أولًا بحسب علاقاتها، كما يفعل `Import` في المحرر، ويُرجع `Promise` يكتمل بعد أن يستقر الاستيراد كخطوة تراجع واحدة. ووجود أقل من جدولين، أو عدم وجود أي علاقة، أو فشل التخطيط، أو صفحة دون `SharedWorker`، أو `Cancel` في الإشعار المنبثق `Placing tables`، يضع الجداول في صفوف بدلًا من ذلك. وأي تحميل في هذه الأثناء — استيراد آخر بالاستبدال، أو إسناد قيمة إلى `value`، أو `setInitialValue()`، أو `clear()`، أو تحميل من متعاون، أو تراجع عن تحميل أو عن `clear()` أو إعادتهما — يحل محله، ويكتمل `Promise` دون تحميل أي شيء. وتستقر عمليات الاستيراد الموضوعة بهذه الطريقة بالترتيب الذي بدأت به.
+- `mode: 'replace'`، وهو الافتراضي، يستبدل المستند. أما `mode: 'append'` فيضيف الملف أسفل المخطط كما يفعل [استيراد وإضافة](../guide/guides/file-import-export.md#import-and-add)، تاركًا كل جدول موجود كما هو، وكل إعداد باستثناء علامة التبويب وموضع العرض. ومن علامة تبويب أخرى، تظهر علامة تبويب ERD أولًا. وتصبح الجداول الجديدة، ومجموعات الجداول التي يجلبها ملف DBML ما دامت مجموعات الجداول معروضة، هي التحديد، ويُمرَّر العرض إليها ما لم تكن ظاهرة جيدًا بالفعل، وفق القاعدة التي يتبعها كل انتقال منذ الإصدار `4.1.0`، راجع [أين يستقر الانتقال](../guide/guides/table-related-functions.md#where-a-jump-lands). ويزيل تراجع واحد الإضافة كلها. والنص الذي لا يستطيع قراءته لا يضيف شيئًا ويترك المستند كما هو.
+
+أثناء ضبط `readonly`، يُتجاهل الاستبدال، ولا يضيف الإلحاق شيئًا، ويكتمل استدعاء `placement: 'auto'` فورًا.  
+منذ الإصدار `3.10.0`، يقرأ `setSchemaSQL` الملف وفق قاعدة البيانات الحالية للمستند: فعند اختيار Databricks، تتبع السلاسل النصية المحاطة بعلامات اقتباس مفردة قواعد التهريب بالشرطة المائلة العكسية في Spark. راجع [التعليقات](../guide/guides/file-import-export.md#comments).  
+منذ الإصدار `3.10.0`، يقرأ `setSchemaSQL` قيد `UNIQUE` على عمودين أو أكثر كفهرس فريد واحد بدلًا من علامة فريد على كل عمود. راجع [المفاتيح الفريدة والفهارس](../guide/guides/file-import-export.md#unique-keys-and-indexes).  
+منذ الإصدار `3.10.0`، تحتفظ عمليات استيراد SQL وDBML وAML بإجراءات `ON DELETE` و`ON UPDATE` للمفاتيح الخارجية التي تقرؤها.  
+منذ الإصدار `4.0.0`، يحتفظ `setSchemaSQL` بتعبير `DEFAULT` الكامل للعمود، ويقرأ `ADD DEFAULT … FOR` وتعليقات `MS_Description` في SQL Server، ويحوّل أعمدة serial وidentity في PostgreSQL إلى تزايد تلقائي، ويُبقي على `UNSIGNED` و`ZEROFILL` في نوع البيانات، ويقرأ المفتاح الأساسي الذي يصفه `ALTER TABLE … ADD PRIMARY KEY` على أنه `CLUSTERED` أو `NONCLUSTERED` أو `USING BTREE`. راجع [مخطط SQL](../guide/guides/file-import-export.md#schema-sql).  
+لمعرفة الصيغة التي يقبلها كل محلل، راجع [استيراد الملفات وتصديرها](../guide/guides/file-import-export.md).
+
+```ts
+type SetSchema = {
+  (
+    value: string,
+    options: { placement: 'auto'; mode?: 'replace' | 'append' }
+  ): Promise<void>;
+  (
+    value: string,
+    options?: { placement?: 'grid'; mode?: 'replace' | 'append' }
+  ): void;
+};
+
+// example
+editor.setSchemaSQL('Schema SQL...');
+// or
+await editor.setSchemaSQL('Schema SQL...', { placement: 'auto' });
+// or
+editor.setSchemaSQL('Schema SQL...', { mode: 'append' });
+```
+
+## setSchemaGraphQL {#setschemagraphql}
+
+يحمّل مستند GraphQL SDL.  
+تصبح تعريفات أنواع الكائنات جداول، ويصبح الحقل الذي يكون نوعه جدولًا آخر علاقة.
+
+```js
+editor.setSchemaGraphQL('GraphQL SDL...');
+```
+
+## setSchemaDBML {#setschemadbml}
+
+يحمّل ملف DBML، وهو التنسيق الذي يستخدمه dbdiagram.io وdbdocs.  
+منذ الإصدار `4.0.0`، يصبح كل `TableGroup` [مجموعة جداول](../guide/guides/table-groups.md)، ويصبح `headercolor` الخاص بالجدول لونَه. راجع [DBML](../guide/guides/file-import-export.md#dbml).
+
+```js
+editor.setSchemaDBML('DBML...');
+```
+
+## setSchemaAML {#setschemaaml}
+
+يحمّل ملف AML (Azimutt Markup Language). وتُقبل الصيغة الحالية والصيغة القديمة v1 كلتاهما.  
+منذ الإصدار `4.0.0`، يصبح لون الكيان، وهو أحد أسماء الألوان في Azimutt أو قيمة ست عشرية بين علامتي اقتباس، لونَ جدوله. راجع [AML](../guide/guides/file-import-export.md#aml).
+
+```js
+editor.setSchemaAML('AML...');
+```
+
+## setSchemaJSON {#setschemajson}
+
+منذ الإصدار `4.0.0`، يحمّل مستند `.erd.json`، مثل النص الذي يُرجعه [value](#value).  
+في وضعه الافتراضي `mode: 'replace'`، يحمّل المستند كما يفعل إسناد قيمة إلى `value`: يُسجَّل في قائمة السجل، ويُطلِق `change`، ويأخذ أقفال المستند بالطريقة نفسها. وعلى عكس `value`، تُتجاهل السلسلة النصية الفارغة أو القيمة التي ليست سلسلة نصية بدلًا من بدء مستند جديد. والنص الذي ليس JSON يُفرّغ المستند، كما يحدث مع `value`.  
+أما `mode: 'append'` فيضيف جداول المستند وعلاقاته وفهارسه وملاحظاته ومجموعات جداوله أسفل المخطط بمعرّفات جديدة، مع الحفاظ على مواضعها بعضها بالنسبة إلى بعض واستبعاد إعدادات المستند، كما يفعل [استيراد وإضافة](../guide/guides/file-import-export.md#import-and-add) مع ملف `json`. والنص الذي لا يستطيع قراءته، أو المستند الذي لا يحتوي على أي جدول ولا ملاحظة، لا يضيف شيئًا. وفيما عدا ذلك، يستقر كما يستقر الإلحاق في [setSchemaSQL](#setschemasql)، مع تحديد ملاحظاته ومجموعات جداوله الجديدة مع جداوله، كل نوع ما دام معروضًا.  
+ويعود بعد أن يستقر المستند، ويُتجاهل أثناء ضبط `readonly`.
+
+```js
+editor.setSchemaJSON('json...');
+// or
+editor.setSchemaJSON('json...', { mode: 'append' });
+```
+
+## getSchemaSQL {#getschemasql}
+
+يصدّر حالة المحرر الحالية كمخطط SQL.  
+إذا لم يُحدَّد `databaseVendor`، يعمل وفق نظام قاعدة البيانات المضبوط حاليًا. ويُعامل الاسم غير الموجود في القائمة أدناه بالطريقة نفسها، دون رمي خطأ.  
+تُحاط الأسماء بنوع علامات الاقتباس الذي يعرضه المحرر. وما دام `Bracket Type` [مقفلًا](../guide/guides/settings.md#lock)، قد يختلف ذلك عن النوع الذي يحفظه `value`، وهو النوع الذي تستخدمه الأداة [`erd_read`](../mcp/tools.md#reading-a-document) لدى وكيل البرمجة لإحاطة الأسماء.  
+منذ الإصدار `4.0.0`، تختار وسيطة `options` الاختيارية العبارات والترويسة، كما تفعل خيارات علامة تبويب [مخطط SQL](../guide/guides/schema-sql.md). ويُصدَّر `SchemaSQLOptions` كنوع.
+
+- `statements`: `'create'`، وهو الافتراضي؛ أو `'ifNotExists'`، الذي يكتب `IF NOT EXISTS` في MySQL وMariaDB وPostgreSQL وSQLite وDatabricks ويعود إلى `'create'` في غيرها؛ أو `'recreate'`، الذي يحذف الجداول قبل إنشائها، بينما يكتب Snowflake `CREATE OR REPLACE TABLE` بدلًا من ذلك.
+- `header`: `'none'`، وهو الافتراضي؛ أو `'use'`، الذي ينتقل إلى قاعدة بيانات المستند أو مخطط قاعدة البيانات الخاص به؛ أو `'createAndUse'`، الذي ينشئها أولًا إن لم تكن موجودة ثم ينتقل إليها. وقاعدة البيانات التي لا تدعم الخيار المطلوب تعود إلى بديل كما تفعل علامة التبويب: يكتب Oracle `'use'` بدلًا من `'createAndUse'`، ولا يكتب PostgreSQL أي ترويسة مع `'use'`، ولا يكتب SQLite أي ترويسة. ولا تُكتب الترويسة إلا ما دام اسم قاعدة بيانات المستند معرّفًا بسيطًا — أحرف ASCII وأرقام و`_`، ولا يبدأ برقم.
+
+والخيار غير المذكور، أو الخيار ذو القيمة غير المعروفة، يُقرأ بقيمته الافتراضية، لذا يكتب الاستدعاء دون خيارات عبارات `CREATE` عادية دون ترويسة، كما في السابق.  
+منذ الإصدار `4.0.0`، تتضمن المخرجات دائمًا سكربتي `Before tables` و`After tables` للمستند، بالترتيب التالي: الترويسة، والسكربت السابق، وعبارات الحذف، والجداول، والسكربت اللاحق. ولا تؤثر خيارات `Statements` و`Header` و`Tables` الخاصة بعلامة تبويب مخطط SQL أبدًا في هذا الاستدعاء، الذي يكتب المستند كاملًا دائمًا.  
+منذ الإصدار `3.10.0`، يحمل كل مفتاح خارجي بندَي `ON DELETE` و`ON UPDATE` الخاصين بالعلاقة. ولا يُكتب البند إلا عندما يكون إجراؤه مضبوطًا ويقبله نظام قاعدة البيانات، لذا يُستبعد الإجراء الذي لا يقبله ذلك النظام وتُطبَّق قيمته الافتراضية. منذ الإصدار `4.0.0`، لا يقبل Snowflake إلا `NO ACTION`. لمعرفة ما تكتبه كل قاعدة بيانات، راجع [ON DELETE وON UPDATE](../guide/guides/relationship-editing.md#on-delete-and-on-update).  
+منذ الإصدار `3.10.0`، تُهرَّب علامة الاقتباس المفردة داخل تعليق الجدول أو العمود، لذا لم يعد تعليق مثل `it's` يكسر العبارة. وكل نظام قاعدة بيانات يكتب التعليقات كسلاسل نصية حرفية يضاعفها، باستثناء Databricks، الذي يضع شرطة مائلة عكسية قبل كل علامة اقتباس وكل شرطة مائلة عكسية. ولا يزال SQLite يكتب التعليقات كأسطر `--`.  
+منذ الإصدار `4.0.0`، تكتب عدة قواعد بيانات أيضًا أسماء المفاتيح والقيم الافتراضية والتزايد التلقائي بشكل مختلف. راجع [ما يُكتب في DDL](../guide/guides/schema-sql.md#what-the-ddl-writes).
+
+```ts
+type DatabaseVendor =
+  | 'Databricks'
+  | 'MariaDB'
+  | 'MSSQL'
+  | 'MySQL'
+  | 'Oracle'
+  | 'PostgreSQL'
+  | 'Snowflake'
+  | 'SQLite';
+
+type SchemaSQLOptions = {
+  statements?: 'create' | 'ifNotExists' | 'recreate';
+  header?: 'none' | 'use' | 'createAndUse';
+};
+
+const schemaSQL = editor.getSchemaSQL();
+// or
+const postgresSQL = editor.getSchemaSQL('PostgreSQL');
+// or
+const mysqlSQL = editor.getSchemaSQL('MySQL', {
+  statements: 'ifNotExists',
+  header: 'createAndUse',
+});
+```
+
+## getSharedStore {#getsharedstore}
+
+يُرجع مخزنًا للتحرير التعاوني في الوقت الفعلي.  
+قيمة `config` هي `{ getNickname?, mouseTracker?, focusTracker? }`. القيمة الافتراضية للمتتبعين كليهما `true`: يبث `mouseTracker` مؤشر الماوس في هذا المحرر إلى الآخرين، ويبث `focusTracker` الخلية التي عليها التركيز والتحديد ومربع التحديد بالسحب.  
+راجع [التحرير التعاوني](./advanced/collaborative-editing.md).
+
+```js
+const sharedStore = editor.getSharedStore({
+  mouseTracker: false,
+  focusTracker: false,
+});
+```
+
+## setDiffValue {#setdiffvalue}
+
+يفتح عارض الفروق، مقارنًا المستند المفتوح حاليًا بالمستند الذي تمرره.  
+لا يُرجع شيئًا ولا يعدّل المستند، لذا يترك إغلاق العارض المحرر كما كان تمامًا.  
+وتُقارن القيمة الفارغة، أو أي شيء ليس سلسلة نصية، بمستند فارغ.  
+وهو الطبقة نفسها التي يفتحها عنصر [عارض الفروق](../guide/guides/table-related-functions.md#diff-viewer) في قائمة السياق للوحة الرسم.  
+منذ الإصدار `4.1.0`، يطابق بين محتويات المستندين بحسب المعرّف أولًا، ثم بحسب ما يحتفظ به كل منهما فقط بعد ذلك، مثل اسم الجدول أو نص الملاحظة، راجع [ما تجري مقارنته](../guide/guides/table-related-functions.md#what-is-compared). لذا عند المقارنة بنسخة سابقة من المستند نفسه، مثل مراجعة Git لملفه، تظهر إعادة التسمية كعنصر واحد معاد تسميته؛ وعند المقارنة بمستند معرّفاته مختلفة، تظهر كإزالة وإضافة. ويعرض العارض ما تغيّر في شجرة بجانب المستندين، ويعلّم التغييرات بالألوان بدلًا من ملء الخلايا.
+
+```js
+editor.setDiffValue('prev json...');
+```

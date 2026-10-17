@@ -8,7 +8,7 @@ description: Claude Code, Codex 같은 코딩 에이전트가 @dineug/erd-editor
 `@dineug/erd-editor-mcp`는 코딩 에이전트가 erd-editor 다이어그램을 편집할 수 있게 해 주는 MCP 서버입니다.
 Claude Code, Codex를 비롯한 모든 [Model Context Protocol](https://modelcontextprotocol.io) 클라이언트는 문서를 다루는 작업마다 도구를 하나씩 사용할 수 있습니다. 테이블 추가, 컬럼 이름 변경, 두 테이블 사이의 관계 생성, DDL 덤프 가져오기, 스키마를 SQL로 다시 읽기 같은 작업입니다.
 
-문서가 [VS Code](https://marketplace.visualstudio.com/items?itemName=dineug.vuerd-vscode), [Obsidian](https://community.obsidian.md/plugins/erd-editor), [JetBrains IDE](https://plugins.jetbrains.com/plugin/23594-erd-editor)의 ERD Editor에서 열려 있으면 에이전트는 참여자처럼 에디터에 합류합니다.
+문서가 [VS Code](https://marketplace.visualstudio.com/items?itemName=dineug.vuerd-vscode), [Obsidian](https://community.obsidian.md/plugins/erd-editor), [JetBrains IDE](https://plugins.jetbrains.com/plugin/23594-erd-editor)의 ERD Editor에서 열려 있으면 에이전트는 공동 편집자처럼 에디터에 합류합니다.
 모든 변경은 일어나는 즉시 캔버스에 나타나며, 에이전트의 Undo는 에이전트 자신의 편집만 되돌립니다.
 VS Code는 에이전트나 사용자가 저장할 때까지 에이전트의 변경을 저장되지 않은 상태로 두고, Obsidian과 JetBrains IDE는 사용자의 편집을 저장하듯 에이전트의 변경도 저장합니다.
 문서를 담고 있는 에디터가 없으면 같은 도구가 파일 자체를 편집합니다.
@@ -23,7 +23,7 @@ VS Code는 에이전트나 사용자가 저장할 때까지 에이전트의 변�
 - 다이어그램을 id 목록, 엔티티 전체, 저장할 때 기록되는 `.erd.json` 텍스트, 또는 8가지 데이터베이스 중 어느 것의 DDL로 다시 읽으며, DDL에는 [Schema SQL](../guide/guides/schema-sql.md) 탭의 `Statements`와 `Header` 선택지를 적용할 수 있습니다. 테이블이 수천 개인 스키마에서는 한 페이지, 테이블 몇 개, 또는 테이블 그룹 몇 개의 테이블씩 나눠 읽습니다. [문서 읽기](./tools.md#문서-읽기) 문서를 참고하세요.
 - 데이터베이스, 데이터베이스 이름, 그리고 테이블 앞의 `CREATE EXTENSION`이나 테이블 뒤의 `GRANT`처럼 Schema SQL에서 테이블 앞뒤에 작성되는 [스크립트](../guide/guides/schema-sql.md#앞뒤-스크립트)를 설정합니다. `erd_read`는 스크립트만 따로 돌려주거나, 문서 전체의 DDL 안에 담아 돌려줍니다. [설정](./tools.md#설정) 문서를 참고하세요.
 - 여러 편집을 전부 적용하거나 전혀 적용하지 않는 하나의 편집으로 실행하며, Undo 한 번으로 되돌립니다. [erd_batch](./tools.md#erd_batch) 문서를 참고하세요.
-- 자신의 편집을 Undo, Redo하며, 사용자의 편집은 절대 건드리지 않습니다.
+- 자신의 편집을 Undo, Redo하며, 사용자의 편집은 절대 되돌리지 않습니다.
 
 하지 않는 일:
 
@@ -40,7 +40,7 @@ VS Code는 에이전트나 사용자가 저장할 때까지 에이전트의 변�
 
 - **라이브** — 워크스페이스, 볼트, 열려 있는 프로젝트 중 하나에 문서가 포함되어 있거나 문서를 열어 둔 에디터가 있습니다. 서버가 그 에디터의 편집 세션에 참여하고, 편집이 에디터에 반영됩니다. VS Code에서는 저장되지 않은 상태로 남고, Obsidian과 JetBrains IDE에서는 사용자의 편집처럼 저장됩니다.
 - **헤드리스** — 에디터가 없습니다. 서버가 파일을 불러와 편집을 적용하고, 파일에 다시 씁니다.
-- **거부** — 문서를 담고 있는 에디터가 있지만 허브가 꺼져 있습니다. 열려 있는 에디터가 다음 저장 때 파일을 덮어쓸 수 있으므로, 서버는 디스크에서 읽기만 하고 아무것도 쓰지 않습니다. 허브가 켜져 있는 JetBrains IDE도 신뢰하지 않는 프로젝트에서만 담고 있는 문서를 바꾸는 것은 거부하지만, 에이전트는 그 문서를 여전히 읽을 수 있습니다. 에디터의 허브가 켜져 있더라도 그 ERD Editor 확장이나 플러그인이 서버와 다른 허브 프로토콜을 사용하면, 문서에 대한 모든 호출이 읽기를 포함해 `protocolMismatch`로 거부되며, 메시지에 업데이트할 쪽이 표시됩니다. [업데이트](./installation.md#업데이트) 문서를 참고하세요.
+- **거부** — 문서를 담고 있는 에디터가 있지만 허브가 꺼져 있습니다. 열려 있는 에디터가 다음 저장 때 파일을 덮어쓸 수 있으므로, 서버는 디스크에서 읽기만 하고 아무것도 쓰지 않습니다. 허브가 켜져 있는 JetBrains IDE도 신뢰하지 않는 프로젝트만 담고 있는 문서를 바꾸는 것은 거부하지만, 에이전트는 그 문서를 여전히 읽을 수 있습니다. 에디터의 허브가 켜져 있더라도 그 ERD Editor 확장이나 플러그인이 서버와 다른 허브 프로토콜을 사용하면, 문서에 대한 모든 호출이 읽기를 포함해 `protocolMismatch`로 거부되며, 메시지에 업데이트할 쪽이 표시됩니다. [업데이트](./installation.md#업데이트) 문서를 참고하세요.
 
 자세한 내용은 [라이브와 헤드리스](./live-and-headless.md) 문서를 참고하세요.
 

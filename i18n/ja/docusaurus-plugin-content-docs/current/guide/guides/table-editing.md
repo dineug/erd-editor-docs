@@ -29,11 +29,11 @@ IME の変換中は、`Escape` を押しても編集モードは終了しませ�
 
 ## DataType の自動補完
 
-`DataType` セルの編集を開始して入力すると、選択しているデータベースに一致する型が候補として表示され、入力した文字列をそのまま含む部分がハイライトされます。  
+`DataType` セルの編集を開始して入力すると、選択しているデータベースの型のうち、入力に一致するものが候補として表示され、入力した文字列をそのまま含む部分がハイライトされます。  
 一致はあいまい検索のため、`vch` でも `VARCHAR` が見つかります。
 
-- `Arrow Up` or `Arrow Down`: 候補を移動します。
-- `Arrow Right`, `Tab` or `Enter`: ハイライトされている候補を確定します。
+- `Arrow Up` または `Arrow Down`: 候補を移動します。
+- `Arrow Right`、`Tab` または `Enter`: ハイライトされている候補を確定します。
 - `Arrow Left`: 入力した文字列に戻ります。
 
 候補はクリックでも選択できます。  
@@ -60,10 +60,10 @@ Not Null のセルは、設定されているときは `N-N`、設定されて�
 次の 5 つの方法に対応しています。
 
 - `Shift + Arrow Up/Down`: 1 行ずつ選択範囲を広げます。
-- `Ctrl + click` (Windows/Linux) or `⌘ + click` (Mac): カラムを 1 つ追加します。
+- `Ctrl + click` (Windows/Linux) または `⌘ + click` (Mac): カラムを 1 つ追加します。
 - `Shift + click`: 最後にフォーカスしたカラムからの範囲を選択します。
-- `Ctrl + Shift + click` (Windows/Linux) or `⌘ + Shift + click` (Mac): その範囲を選択に追加します。
-- `Alt + A` (Windows/Linux) or `⌥ + A` (Mac): すべて選択
+- `Ctrl + Shift + click` (Windows/Linux) または `⌘ + Shift + click` (Mac): その範囲を選択に追加します。
+- `Alt + A` (Windows/Linux) または `⌥ + A` (Mac): すべて選択
 
 ![Shift + Arrow Down、Ctrl/⌘ + click、Shift + click、Alt + A でカラムを選択](/img/demo-column-select.webp)
 
@@ -74,8 +74,8 @@ Mac では `Ctrl + click` でもメニューが開きますが、通常のクリ
 
 ## カラムの並べ替えと移動
 
-`drag` で動作し、他のテーブルへ移動できます。  
-ドラッグした行はポインタに追従し、ドロップ位置の周りの行は横にずれて場所を空けます。  
+`dragging` で動作し、他のテーブルへ移動できます。  
+ドラッグした行はポインタに追従し、ドロップ位置の周りの行はずれて場所を空けます。  
 テーブルの最後の行のすぐ下にドロップすると、カラムはそのテーブルの末尾に移動します。カラムのないテーブルでは、テーブル上のどこにドロップしても受け付けます。
 
 ![カラムをドラッグして並べ替え、別のテーブルへ移動](/img/demo-column-move.webp)

@@ -151,7 +151,7 @@ Settings 编辑器将语言设置列为 `Auto`，然后是以各自名称显示�
 
 ### JetBrains IDE {#jetbrains-ides}
 
-Settings | Tools | ERD Editor 中有 `Appearance:`（`Auto`、`Light`、`Dark`）、`Gray color:`、`Accent color:` 和 `Display language:`（`Auto`，然后是以各自名称显示的每种语言），对整个 IDE 生效。  
+Settings | Tools | ERD Editor 中有 `Appearance:`（`Auto`、`Light`、`Dark`）、`Gray color:`、`Accent color:` 和 `Display language:`（`Auto`，然后是以各自名称显示的每种语言），在整个 IDE 范围内统一保存。  
 它们的初始值依次为 `Auto`、`Slate`、`Indigo` 和 `Auto`。
 
 ### Obsidian

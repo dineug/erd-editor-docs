@@ -139,7 +139,7 @@ Web 应用通过导入 SQL、DBML、AML 或 GraphQL 文件创建的 schema 或 G
 `Add Table Group` 会开始绘制 [`New Table Group`](./table-groups.md#drawing-a-group)，与[画布工具栏](./table-related-functions.md#canvas-toolbar)中的 `New Table Group` 按钮相同，再按一次则会取消绘制。`Group Selected Tables` 是不带修饰键的两次按键：在一秒内先按 `T` 再按 `G`。它会把选中的表放入一个新分组并打开该分组的名称编辑器，与表的右键菜单中的 `Group selected tables` 相同；没有选中任何表时不起作用，参见[为选中的表分组](./table-groups.md#grouping-selected-tables)。在只读编辑器中，以及分组被[隐藏](./table-groups.md#hiding-groups)期间，两者都不起作用。
 `Zoom In`、`Zoom Out` 与 `Zoom Reset` 同样可以缩放 [Visualization](./visualization.md#toolbar) 标签页，`Graph` 与 `Flow` 均适用，快速搜索打开期间除外。
 在 Visualization 标签页中，`Stop` 还会关闭[行显示](./visualization.md#row-display)菜单，并取消仍在进行中的 [Flow 布局](./visualization.md#how-flow-is-placed)；但它不会扩大通过 `Focus on this table` 缩小的视图范围。
-`Focus on this table` 会以 `Flow` 打开 Visualization 标签页，范围缩小到选中的表以及与它们相隔一条关系的所有表，没有选中任何表时不起作用。参见[聚焦于表](./visualization.md#focusing-on-tables)。
+`Focus on this table` 会以 `Flow` 打开 Visualization 标签页，范围缩小到选中的表以及与它们相隔一条关系的所有表，没有选中任何表时不起作用，参见[聚焦于表](./visualization.md#focusing-on-tables)。
 `Select All Table, Memo`、`Hand Tool`、`Delete Selection` 与 `Group Selected Tables` 会让位于光标：在编辑单元格或备注，或在文本框（例如资源管理器的查找输入框）中输入时，`Ctrl + A` (Windows/Linux) 或 `⌘ + A` (Mac) 选中的是文本，`Space` 输入的是空格，`Delete` 和 `Backspace` 删除的是文本，先按 `T` 再按 `G` 输入的则是这两个字母。
 复制与粘贴使用浏览器自身的 `Ctrl + C` 与 `Ctrl + V` (Windows/Linux) 或 `⌘ + C` 与 `⌘ + V` (Mac)，因此不在此列表中，参见[编辑表](./table-editing.md)。
 

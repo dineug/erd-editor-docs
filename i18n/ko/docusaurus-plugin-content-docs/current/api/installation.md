@@ -1,6 +1,6 @@
 ---
 sidebar_position: 1
-description: npm이나 CDN으로 @dineug/erd-editor를 설치하고, 커스텀 엘리먼트를 마운트하고, 파일 다이얼로그를 연결하고, 3.x에서 업그레이드하는 방법.
+description: npm이나 CDN으로 @dineug/erd-editor를 설치하고, 커스텀 엘리먼트를 마운트하고, 파일 대화 상자를 연결하고, 3.x에서 업그레이드하는 방법.
 ---
 
 # 설치
@@ -13,7 +13,7 @@ npm install @dineug/erd-editor
 CommonJS 빌드는 없기 때문에 `require('@dineug/erd-editor')`는 동작하지 않습니다.
 
 런타임 의존성은 번들러가 직접 해석하고 중복 제거하고 트리 셰이킹할 수 있도록 bare import 그대로 외부에 남겨 둡니다.
-shared worker는 `dist/workers/` 아래에 별도 진입 파일로 생성되며 `new URL('./…', import.meta.url)` 형태로 만들어집니다. Vite, webpack 5, Rspack이 워커 진입점으로 인식하는 표기입니다. [Web Worker](#web-worker) 항목을 참고하세요.
+shared worker는 `dist/workers/` 아래에 별도 진입 파일로 생성되며 `new URL('./…', import.meta.url)` 형태로 만들어집니다. Vite, webpack 5, Rspack이 워커 진입점으로 번들링하는 표기입니다. [Web Worker](#web-worker) 항목을 참고하세요.
 번들러가 없는 페이지를 위한 자립형 빌드도 함께 제공합니다. [script 태그](#script-태그) 항목을 참고하세요.
 
 ## 사용
@@ -32,11 +32,11 @@ editor.addEventListener('change', () => {
 });
 ```
 
-`<erd-editor>`는 자체 크기를 갖지 않습니다. 요소나 컨테이너에 width, height를 지정해야 합니다.
+`<erd-editor>`는 자체 크기를 갖지 않습니다. 엘리먼트나 그 컨테이너에 너비와 높이를 명시적으로 지정해야 합니다.
 `4.1.0`부터 열려 있는 [탐색기](../guide/guides/explorer.md)는 엘리먼트 안에서 ERD 캔버스의 왼쪽에 도킹되며, 캔버스를 덮지 않고 캔버스의 너비를 줄입니다. 새로 연 에디터는 탐색기가 닫힌 상태로 시작합니다.
 패널은 `200px`보다 좁게 그려지지 않고 캔버스에 `320px` 이상의 너비를 남기므로, 엘리먼트가 `520px`보다 좁으면 열려 있는 탐색기는 엘리먼트가 넓어질 때까지 그려지지 않습니다. [캔버스 옆](../guide/guides/explorer.md#캔버스-옆) 문서를 참고하세요.
 
-`setInitialValue('')`는 비어 있는 새 문서로 시작합니다. `value`에 할당하면 편집으로 처리되어 Undo 기록에 남습니다.
+`setInitialValue('')`는 비어 있는 새 문서로 시작합니다. 반면 `value`에 할당하면 문서를 편집으로 불러오므로 Undo 히스토리에 남습니다.
 `4.0.0`부터 `editor.value`는 파일에 담기는 형태의 문서이며, 저장할 것은 이 값입니다. `editor.runtimeValue`는 삭제된 엔티티까지 포함해 에디터가 가지고 있는 그대로의 문서입니다. 공동 편집자를 초기화하는 데 쓰며 파일에는 절대 저장하지 않습니다. [runtimeValue](./erd-editor-element.md#runtimevalue) 문서를 참고하세요.
 `4.0.0`부터 새 문서는 모든 [설정 잠금](../guide/guides/settings.md#잠금)도 켜진 상태입니다. 화면, 탭, Code Generator 언어, 두 이름 케이스, 괄호 타입이 잠깁니다. 스크롤하거나 확대/축소하거나 탭을 전환하거나 이 설정 중 하나를 바꿔도 `editor.value`는 그대로 유지되며 `change`도 발생하지 않습니다. 텍스트에서 불러온 문서는 그 안에 기록된 잠금을 유지합니다. `4.0.0` 이전에 저장한 모든 파일처럼 잠금이 기록되지 않은 문서는 저장된 화면과 탭에 상관없이 모든 잠금이 켜진 상태로, 확대/축소 100%와 ERD 탭에서 열립니다. 화면은 원점 `0, 0`으로 잠기며, 그 위치에 다이어그램이 전혀 그려져 있지 않으면 대신 다이어그램이 있는 곳에서 열립니다. [setInitialValue](./erd-editor-element.md#setinitialvalue) 문서를 참고하세요.
 나머지 API는 [ErdEditorElement](./erd-editor-element.md) 문서를 참고하세요.
@@ -62,7 +62,7 @@ editor.addEventListener('change', () => {
 ### script 태그
 
 `3.6.0`부터 모든 의존성과 모든 shared worker를 한 파일에 담은 UMD 빌드도 함께 배포합니다.
-`unpkg`와 `jsdelivr` 필드가 이 파일을 가리키므로 두 CDN의 패키지 기본 URL이 이 파일을 제공하며, `window.ErdEditor`를 정의합니다.
+`unpkg`와 `jsdelivr` 필드가 이 파일을 가리키므로 두 CDN의 패키지 기본 URL이 이 파일을 제공합니다. 이 파일은 `window.ErdEditor`를 정의합니다.
 
 ```html
 <erd-editor></erd-editor>
@@ -99,7 +99,7 @@ erd-editor {
 [사용](#사용)의 예제처럼 문서를 불러오는 페이지는 마크업에서 켜지 말고 `setInitialValue()`로 문서를 불러온 뒤에 `enableWelcomeScreen`을 켜세요. 그래야 아직 불러오는 중인 파일 위로 시작 화면이 잠깐 나타나는 일이 없습니다.
 25개 표시 언어는 ES 빌드와 script 태그 빌드 모두 패키지 안에 들어 있으므로, 따로 제공할 로케일 파일도 등록할 것도 없습니다. 선택기도 없고 `setLocale()`도 호출하지 않으면 에디터는 영어로 표시됩니다.
 
-여기에 `readonly`를 추가하면 편집이 차단됩니다. `value` 할당, `clear()` 호출, `setSchemaJSON()`과 추가 모드 호출을 포함한 모든 `setSchema*()` 호출이 무시되고 `change` 이벤트도 발생하지 않습니다. `editor.value`와 `editor.runtimeValue`로 읽는 것은 그대로 동작합니다. 불러올 때는 `setInitialValue()`를 사용하세요.
+여기에 `readonly`를 추가하면 편집이 차단됩니다. `value` 할당, `clear()` 호출, `setSchemaJSON()`과 추가 모드 호출을 포함한 모든 `setSchema*()` 호출이 무시되고 `change` 이벤트도 발생하지 않습니다. `editor.value`와 `editor.runtimeValue`를 읽는 것은 그대로 동작합니다. 불러올 때는 `setInitialValue()`를 사용하세요.
 
 ### 서버 사이드 렌더링
 
@@ -135,14 +135,14 @@ Schema SQL과 Code Generator 패널은 전용 shared worker에서 동작하는 [
 | | |
 | --- | --- |
 | 언어 | SQL, TypeScript, GraphQL, C#, Java, Kotlin, Scala, Go, Python, PHP, Rust, Swift, JSON, Mermaid |
-| 테마 | `github-dark`와 `github-light`. 에디터의 밝은 / 어두운 외형을 따릅니다 |
+| 테마 | `github-dark`와 `github-light`. 에디터의 라이트 또는 다크 외관을 따릅니다 |
 
 패널이 실제로 출력하는 언어와 정확히 일치합니다. `JPA`는 Java, `SQLAlchemy`는 Python, `TypeORM`, `Sequelize`, `Drizzle`, `Zod`는 TypeScript, `Doctrine`은 PHP, `SeaORM`은 Rust, `JSON Schema`는 JSON으로 강조되고, `DBML`과 `AML`은 번들에 있는 문법 중 가장 가까운 SQL로 강조됩니다. [코드 생성](../guide/guides/code-generator.md) 문서를 참고하세요.
 
-정규식 엔진이 순수 JavaScript이므로 호스트 정책에 `wasm-unsafe-eval`이 필요하지 않습니다.
+정규 표현식 엔진이 순수 JavaScript이므로 호스트 정책에 `wasm-unsafe-eval`이 필요하지 않습니다.
 `SharedWorker`가 없는 환경(안드로이드 Chrome, 16.4 이전 Safari)에서는 실패가 로그로 남고 코드가 일반 텍스트로 표시됩니다. 스크립트는 그대로 편집할 수 있습니다.
 
-`3.6.0` 이하에서 올라온다면, `@dineug/erd-editor-shiki-worker`는 더 이상 배포되지 않고 `setGetShikiServiceCallback`도 함께 사라졌습니다.
+`3.6.0` 이하에서 업그레이드한다면, `@dineug/erd-editor-shiki-worker`는 더 이상 배포되지 않고 `setGetShikiServiceCallback`도 함께 사라졌습니다.
 설치와 등록 코드를 지우세요. CDN에서 워커를 불러오던 페이지라면 두 번째 `<script>` 태그도 함께 지웁니다.
 
 ## Web Worker
@@ -162,7 +162,7 @@ Schema SQL과 Code Generator 패널은 전용 shared worker에서 동작하는 [
 어느 쪽이든 기다리는 시간이 끝나면 배치는 워커가 없을 때와 같이 끝납니다. 자동 배치는 시작하자마자 `Placing tables`를 표시하지만, Flow 모드와 Flow로 배치되는 가져오기는 워커 시작까지 포함한 배치가 6초 동안 이어진 뒤에야 표시합니다.
 
 번들 빌드에서는 세 워커가 모두 별도 파일로 함께 배포되므로, CSP가 엄격한 페이지에는 `worker-src 'self'`가 필요합니다. 번들러가 워커를 인라인한다면 `blob:`도 함께 필요합니다.
-[script 태그](#script-태그) 빌드에서는 셋 모두 `data:` URL로 파일 안에 들어가므로, 그 페이지에는 `worker-src data:`가 필요합니다.
+[script 태그](#script-태그) 빌드에서는 셋 모두 `data:` URL로 파일 안에 들어가므로, 그 페이지에는 대신 `worker-src data:`가 필요합니다.
 
 ## 진입점
 
@@ -186,10 +186,10 @@ Schema SQL과 Code Generator 패널은 전용 shared worker에서 동작하는 [
 
 ### 파일 다이얼로그
 
-가져오기와 내보내기는 주입 가능한 콜백을 거치기 때문에, 브라우저 파일 다이얼로그가 없는 호스트(예: IDE 웹뷰)도 자체 구현을 제공할 수 있습니다.
+가져오기와 내보내기는 주입 가능한 콜백을 거치기 때문에, 브라우저 파일 대화 상자가 없는 호스트(예: IDE 웹뷰)도 자체 구현을 제공할 수 있습니다.
 둘은 대칭이 아닙니다. 내보내기는 완성된 파일을 넘겨주지만, 가져오기는 파일을 요청하기만 하고 그 내용을 다시 에디터에 넣는 것은 직접 처리해야 합니다.
 
-`op`는 `set` 또는 `diff`입니다. `diff`이면 `type`과 관계없이 `setDiffValue()`로 전달됩니다. 그 외에는 `type`이 메서드를 결정하며, `accept`에는 해당 타입의 확장자가 담겨 있어 호스트의 파일 다이얼로그에 그대로 넘길 수 있습니다.
+`op`는 `set` 또는 `diff`입니다. `diff`이면 `type`과 관계없이 `setDiffValue()`로 전달됩니다. 그 외에는 `type`이 메서드를 결정하며, `accept`에는 해당 타입의 확장자가 담겨 있어 호스트의 파일 대화 상자에 그대로 넘길 수 있습니다.
 `4.0.0`부터 사용자가 [Import and Add](../guide/guides/file-import-export.md#가져와서-추가)를 고르면 `set`에 `mode: 'append'`가 함께 전달되며, 일반 Import에는 `mode`가 없습니다. 이 값을 그대로 넘기세요. `mode`를 버리는 콜백은 사용자가 추가하려던 다이어그램을 대체해 버립니다.
 
 | `type` | `accept` | 메서드 |
@@ -245,20 +245,20 @@ setImportFileCallback(async ({ type, op, accept, mode }) => {
 
 ## 브라우저 지원
 
-Chrome 91+, Edge 94+, Firefox 93+, Safari 16.4+ — 배포되는 번들이 빌드되는 ES2022 기준입니다.
+Chrome 91+, Edge 94+, Firefox 93+, Safari 16.4+ — 배포되는 번들이 빌드 대상으로 삼는 ES2022 기준입니다.
 폴리필은 포함되어 있지 않습니다. 더 낮은 버전의 브라우저까지 지원하려면 직접 추가하세요.
 
 ## 3.x에서 업그레이드
 
 `4.0.0`은 메이저 릴리스입니다. 페이지를 3.x에서 옮길 때 다음 항목을 하나씩 확인하세요.
 
-- `editor.value`, 복제본의 `value`, 그 `change`가 넘겨주는 `value`는 파일에 담기는 형태입니다. 삭제된 엔티티, 측정된 너비, 쌓임 순서, 관계 앵커는 들어 있지 않습니다. `value`는 계속 저장하고, 이 정보는 `runtimeValue`에서 읽으세요. 엔티티 타임스탬프(`meta`)는 완전히 사라졌습니다. 실행 중인 세션에 참여하는 공동 편집자나 복제본은 `value`나 파일이 아니라 실행 중인 피어의 `runtimeValue`로 초기화하고, `runtimeValue`는 절대 저장하지 마세요. [value](./erd-editor-element.md#value)와 [runtimeValue](./erd-editor-element.md#runtimevalue) 문서를 참고하세요.
-- 설정 잠금이 `Save Scroll Information`과 `Save Zoom Information`을 대체합니다. 새 문서와 `4.0.0` 이전에 저장한 모든 문서는 모든 잠금이 켜져 있으므로, 스크롤, 확대/축소, 탭 전환, 또는 Code Generator 언어나 이름 케이스, 괄호 타입을 바꿔도 `value`는 그대로 유지되며 `change`도 발생하지 않습니다. `change`로 화면을 저장해 오던 페이지라면 Settings 탭에서 `Viewport`(탭은 `Canvas Type`)의 잠금을 해제하거나, `settings.lockSettings`에서 해당 비트가 꺼져 있는 문서를 사용해야 합니다. [잠금](../guide/guides/settings.md#잠금) 문서를 참고하세요.
+- `editor.value`, 복제본의 `value`, 그 `change`가 넘겨주는 `value`는 파일에 담기는 형태입니다. 삭제된 엔티티, 측정된 너비, 쌓임 순서, 관계 앵커는 들어 있지 않습니다. `value`는 계속 저장하고, 이 정보는 `runtimeValue`에서 읽으세요. 엔티티 타임스탬프(`meta`)는 완전히 사라졌습니다. 실행 중인 세션에 참여하는 공동 편집자나 복제본은 `value`나 파일이 아니라 실행 중인 참여자의 `runtimeValue`로 초기화하고, `runtimeValue`는 절대 저장하지 마세요. [value](./erd-editor-element.md#value)와 [runtimeValue](./erd-editor-element.md#runtimevalue) 문서를 참고하세요.
+- 설정 잠금이 `Save Scroll Information`과 `Save Zoom Information`을 대체합니다. 새 문서와 `4.0.0` 이전에 저장한 모든 문서는 모든 잠금이 켜져 있으므로, 스크롤, 확대/축소, 탭 전환, 또는 Code Generator 언어나 이름 케이스, 괄호 타입을 바꿔도 `value`는 그대로 유지되며 `change`도 발생하지 않습니다. `change`로 화면을 저장해 오던 페이지라면 설정 탭에서 `Viewport`(탭은 `Canvas Type`)의 잠금을 해제하거나, `settings.lockSettings`에서 해당 비트가 꺼져 있는 문서를 사용해야 합니다. [잠금](../guide/guides/settings.md#잠금) 문서를 참고하세요.
 - `settings`에는 더 이상 `width`, `height`, `scrollTop`, `scrollLeft`, `relationshipOptimization`, `ignoreSaveSettings`가 없으며, `SaveSettingType` 상수도 사라졌습니다. `LockSettingType` 비트를 사용하는 `settings.lockSettings`가 `ignoreSaveSettings`를 대신하며, `4.0.0` 이상은 `ignoreSaveSettings`를 읽지도 쓰지도 않습니다. [Settings](./advanced/schema.md#settings) 문서를 참고하세요.
 - 모든 파일이 `$schema`에 지정하는 [JSON Schema](./advanced/schema.md#json-schema)는 이제 파일에 담기는 형태만 기술하는 닫힌 스키마입니다. 이전 릴리스가 저장한 파일은 `4.0.0` 이상에서 저장해 다시 작성되기 전까지 이 스키마를 통과하지 못합니다.
 - 문서 가비지 컬렉션은 그 워커와 함께 사라졌으므로, 삭제된 엔티티는 다음에 파일에서 문서를 열 때까지 `runtimeValue`에 남아 있습니다. 남은 shared worker는 세 개입니다. [Web Worker](#web-worker) 항목을 참고하세요.
-- 공유 세션의 모든 에디터와 복제본을 `4.0.0` 이상으로 맞추세요. 이전 릴리스는 새 액션 타입, 즉 테이블 그룹, Map Columns, 잠금, Schema SQL 스크립트의 액션 타입을 무시합니다. [릴리스 혼용](./advanced/collaborative-editing.md#릴리스-혼용) 문서를 참고하세요.
-- 가져오기 콜백은 Import and Add에서 `mode: 'append'`를 받으며, 콜백은 이 값을 그대로 넘겨야 합니다. 내보내기 콜백은 이제 `.svg`와 Code Generator 파일도 받으며, `Export` ▸ `Schema SQL`은 저장하는 대신 Schema SQL 탭을 열므로 `.sql`은 그 탭의 `Save file`에서만 옵니다. [파일 다이얼로그](#파일-다이얼로그) 항목을 참고하세요.
+- 공유 세션의 모든 에디터와 복제본을 `4.0.0` 이상으로 맞추세요. 이전 릴리스는 새 액션 타입, 즉 테이블 그룹, 컬럼 매핑, 잠금, Schema SQL 스크립트의 액션 타입을 무시합니다. [릴리스 혼용](./advanced/collaborative-editing.md#릴리스-혼용) 문서를 참고하세요.
+- 가져오기 콜백은 가져와서 추가에서 `mode: 'append'`를 받으며, 콜백은 이 값을 그대로 넘겨야 합니다. 내보내기 콜백은 이제 `.svg`와 Code Generator 파일도 받으며, `Export` ▸ `Schema SQL`은 저장하는 대신 Schema SQL 탭을 열므로 `.sql`은 그 탭의 `Save file`에서만 옵니다. [파일 다이얼로그](#파일-다이얼로그) 항목을 참고하세요.
 - `Delete`와 `Backspace`는 새 `removeSelection`에 지정됩니다. 에디터가 텍스트 입력란 밖에서 포커스를 가지고 있는 동안에는 모든 탭에서 키의 기본 동작이 막히며, ERD 탭에서는 선택한 항목이 삭제됩니다. `KeyBindingName`과 `KeyBindingMap`에 이 항목이 추가되었으며, `setKeyBindingMap({ removeSelection: [] })`을 호출하면 두 키를 페이지에 맡깁니다. [setKeyBindingMap](./erd-editor-element.md#setkeybindingmap) 문서를 참고하세요.
 - `ThemeOptions.appearance`는 테마 빌더의 `System`에 해당하는 `'system'`도 받으며, `systemDarkMode`를 켜면 이 값이 설정됩니다. `changePresetTheme`은 `System`이 선택된 동안 `'system'`을 보고하므로, 그대로 저장했다가 `setPresetTheme`에 다시 넘기세요. `systemDarkMode`가 켜져 있을 때 `'light'`나 `'dark'`로 호출한 `setPresetTheme()`은 이제 다음 운영체제 변경에 덮어쓰이지 않고 그대로 유지됩니다. [systemDarkMode](./erd-editor-element.md#systemdarkmode)와 [changePresetTheme](./erd-editor-element.md#changepresettheme) 문서를 참고하세요.
 - `@dineug/erd-editor-mcp` `1.0.0`, VS Code 확장 `4.0.0` 이상, Obsidian과 JetBrains 플러그인 `1.0.0` 이상은 허브 프로토콜 2를 사용합니다. 서버 `1.0.0`과 에이전트를 지원하는 이전 에디터 릴리스, 또는 이전 서버와 이 에디터들은 `protocolMismatch`로 서로를 거부하며, 업데이트해야 할 쪽을 알려 줍니다. [업데이트](../mcp/installation.md#업데이트) 문서를 참고하세요.

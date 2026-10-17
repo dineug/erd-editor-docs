@@ -7,7 +7,7 @@ description: ウェルカム画面からの開始と、キャンバスのコン�
 
 編集は右クリックのコンテキストメニューから始めます。
 
-![キャンバスを右クリックして Relationship のサブメニューを確認し、テーブルを追加してその専用メニューを開く](/img/demo-context-menu.webp)
+![キャンバスを右クリックして Relationship のサブメニューを開き、テーブルを追加してその専用メニューを開く](/img/demo-context-menu.webp)
 
 テーブル、メモ、テーブルグループ、リレーションシップを右クリックした場合は、その項目専用のメニューが開きます。  
 すでに選択しているテーブル、メモ、テーブルグループを右クリックすると選択全体が維持されるため、`Color` や `Delete selected` などの項目は選択全体に適用されます。[複数選択](./table-related-functions.md#複数選択)を参照してください。
@@ -71,18 +71,18 @@ View Option → `Memos` がオフの間はメモが非表示になり、`New Mem
 
 コンテキストメニュー、キャンバス下部の[キャンバスツールバー](./table-related-functions.md#canvas-toolbar)、またはショートカットでリレーションシップを開始します。種類ごとにショートカットが異なります。
 
-- Zero One: `Ctrl + Alt + 1` (Windows/Linux) or `⌘ + ⌥ + 1` (Mac)
-- Zero N: `Ctrl + Alt + 2` (Windows/Linux) or `⌘ + ⌥ + 2` (Mac)
-- One Only: `Ctrl + Alt + 3` (Windows/Linux) or `⌘ + ⌥ + 3` (Mac)
-- One N: `Ctrl + Alt + 4` (Windows/Linux) or `⌘ + ⌥ + 4` (Mac)
+- Zero One: `Ctrl + Alt + 1` (Windows/Linux) または `⌘ + ⌥ + 1` (Mac)
+- Zero N: `Ctrl + Alt + 2` (Windows/Linux) または `⌘ + ⌥ + 2` (Mac)
+- One Only: `Ctrl + Alt + 3` (Windows/Linux) または `⌘ + ⌥ + 3` (Mac)
+- One N: `Ctrl + Alt + 4` (Windows/Linux) または `⌘ + ⌥ + 4` (Mac)
 
 種類を選択するとカーソルが変わります。先に親テーブルをクリックし、次に子テーブルをクリックします。  
 親テーブルに主キーがない場合は主キーが作成され、子テーブルには親テーブルの主キーカラムごとに、データ型、既定値、コメントが同じで `Not Null` を設定した外部キーカラムが作成されます。  
 ただし serial のキーは例外で、その外部キーには、`serial4` に対する `integer` のように serial が格納する整数型が使われます。[識別リレーションシップ](./relationship-editing.md#識別リレーションシップ)を参照してください。  
 各外部キーカラムの名前は元のキーに基づいて付けられます。`id` のような 1 語の名前には親テーブルの名前が前に付き（`user_id`）、`member_id` のような複数語の名前はそのまま使われ、子テーブルにすでにある名前には番号が付きます（`user_id_2`）。[外部キーカラムの名前](./relationship-editing.md#foreign-key-column-names)を参照してください。  
 同じテーブルを 2 回クリックすると自己参照のリレーションシップになります。  
-新しく作成したリレーションシップの `On Delete` と `On Update` は、どちらも `Not set` です。リレーションシップのコンテキストメニューから変更できます。[ON DELETE と ON UPDATE](./relationship-editing.md#on-delete-and-on-update)を参照してください。  
-`Escape` を押すか、同じショートカットをもう一度押すとキャンセルします。キャンセルしても選択はそのまま残り、次の `Escape` で選択が解除されます。
+新しく作成したリレーションシップの `On Delete` と `On Update` は、どちらも `Not set` です。リレーションシップのコンテキストメニューから変更できます。[ON DELETE と ON UPDATE](./relationship-editing.md#on-delete-and-on-update) を参照してください。  
+`Escape` を押すか、同じショートカットをもう一度押すとキャンセルできます。キャンセルしても選択はそのまま残り、次の `Escape` で選択が解除されます。
 
 親テーブルを選んだ後、リレーションシップの終点にできるテーブルにポインタを重ねると、そのテーブルが枠線で囲まれ、その横に 2 つのボタンが表示されます。
 

@@ -29,7 +29,7 @@ VS Code はエージェントかユーザーが保存するまでエージェン
 
 - 拡大・縮小、スクロール、タブの切り替え。これらは各閲覧者に属するため、それを行うツールはありません。ただし、ドキュメントを置き換える読み込みは、エディタの `Import` と同じように、`Viewport` がロックされていても表示を動かします。キャンバスの開始位置に 100% で戻るか、`erd_import_json` の場合は読み込むドキュメントの表示に移り、そのドキュメントが `Canvas Type` をロックしていなければ、そのタブにも切り替わります。[読み込み](./tools.md#読み込み)を参照してください。
 - [`View Option`](../guide/guides/table-related-functions.md#table-view-options)、Code Generator の言語と名前のケース、括弧の種類、[設定](../guide/guides/settings.md)タブの `Relationship DataType Sync`、`Maximum comment width`、`Column Order` の変更。これらはユーザーがエディタで設定するもので、エージェントはファイルに保存されているとおりに読み取ります。
-- [ロック](../guide/guides/settings.md#ロック)のオンとオフの切り替え。ロックや上記の設定を変えるのは、ドキュメント全体を置き換える `erd_import_json` だけで、読み込むドキュメントのロックと設定に変わります。`4.0.0` より前の VS Code の拡張機能や、`1.0.0` より前の Obsidian または JetBrains のプラグインで保存したファイルのように `lockSettings` フィールドのないドキュメントでは、すべてのロックがオンになります。ドキュメントを置き換えた読み込みを Undo すると、どの読み込みでも、ドキュメントが読み込み前に持っていた設定とロックが戻ります。
+- [ロック](../guide/guides/settings.md#ロック)のオンとオフの切り替え。ロックや上記の設定を変えるのは、ドキュメント全体を置き換える `erd_import_json` だけで、読み込むドキュメントのロックと設定に変わります。`4.0.0` より前の VS Code の拡張機能や、`1.0.0` より前の Obsidian または JetBrains のプラグインで保存したファイルのように `lockSettings` フィールドのないドキュメントでは、すべてのロックがオンになります。ドキュメントを置き換えた読み込みは、どれを Undo しても、ドキュメントが読み込み前に持っていた設定とロックが戻ります。
 - [`Map Columns`](../guide/guides/relationship-editing.md#map-columns) のような、リレーションシップの別のカラムへの対応付け直し。代わりにエージェントは、リレーションシップを削除して（外部キーカラムはその場に残ります）、`erd_link_columns` で目的のカラムを関連付けます。これを、1 回の Undo で元に戻せる 1 つの `erd_batch` の中で行います。
 - Code Generator の実行。`erd_read` は DDL か JSON を返し、エージェントはそこから自分でコードを書きます。
 

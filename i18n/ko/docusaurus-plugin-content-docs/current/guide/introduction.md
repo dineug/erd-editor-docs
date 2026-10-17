@@ -1,15 +1,15 @@
 ---
 sidebar_position: 1
-description: 브라우저, Google Drive, VS Code, IntelliJ, Obsidian, 직접 만든 페이지에서 동작하는 ERD 편집기.
+description: erd-editor는 브라우저, Google Drive, VS Code, IntelliJ, Obsidian, 직접 만든 페이지에서 동작하는 ERD 에디터입니다.
 ---
 
 # 소개
 
-erd-editor는 ERD(Entity-Relationship Diagram) 편집기입니다.
+erd-editor는 ERD(Entity-Relationship Diagram) 에디터입니다.
 웹 앱, Google Drive 앱, VS Code 확장, IntelliJ 플러그인, Obsidian 플러그인, 그리고 직접 만든 페이지에 삽입할 수 있는 `<erd-editor>` 커스텀 엘리먼트로 제공됩니다.
 모두 동일한 에디터이며 동일한 문서 형식을 사용합니다.
 
-![쇼핑몰 다이어그램에서 관계 강조, 컬럼 추가, Flow에서 orders 테이블 포커스](/img/demo-overview.webp)
+![쇼핑몰 다이어그램에서 관계에 마우스 올리기, 컬럼 추가, Flow에서 orders 테이블 포커스](/img/demo-overview.webp)
 
 ## 받을 수 있는 곳
 
@@ -24,7 +24,7 @@ erd-editor는 ERD(Entity-Relationship Diagram) 편집기입니다.
 | 코딩 에이전트 | [`@dineug/erd-editor-mcp`](../mcp/installation.md) | Claude Code, Codex 등의 클라이언트가 VS Code, JetBrains IDE, Obsidian에서 라이브로, 또는 파일 자체에서 다이어그램을 편집하게 하는 MCP 서버 |
 
 IDE에서 사용해 보려면 `.erd.json` 확장자로 빈 파일을 만들어 여세요.
-Obsidian에서는 커맨드 팔레트에서 `ERD Editor: Create new diagram`을 실행하거나, 파일 탐색기에서 폴더의 컨텍스트 메뉴에 있는 `New ERD`를 고르세요. 어느 쪽이든 빈 `.erd` 파일을 만들어 엽니다.
+Obsidian에서는 명령 팔레트에서 `ERD Editor: Create new diagram`을 실행하거나, 파일 탐색기에서 폴더의 컨텍스트 메뉴에 있는 `New ERD`를 고르세요. 어느 쪽이든 빈 `.erd` 파일을 만들어 엽니다.
 Google Drive에서는 New → More → ERD Editor를 고른 뒤 Google 계정으로 로그인하세요. ERD Editor는 이 앱으로 만들거나 연 파일에만 접근합니다.
 웹 앱, Google Drive, VS Code, JetBrains IDE, Obsidian에서는 새로 만든 빈 다이어그램이 [시작 화면](./guides/editing-start.md#시작-화면)으로 열립니다. 시작 화면은 `New Table`, `New Memo`, `Import`, `Command Palette`, `Shortcuts`로 첫 단계를 고르는 메뉴입니다.
 새 다이어그램에서는 모든 잠금이 켜져 있으므로, 스크롤하거나 확대/축소하거나 탭을 전환해도 새 다이어그램의 빈 파일은 그대로 유지됩니다. [잠금](./guides/settings.md#잠금) 문서를 참고하세요.
@@ -45,7 +45,7 @@ Obsidian 플러그인을 업데이트한 뒤에는 Obsidian을 다시 시작하�
 - 다이어그램을 `json`으로 내보내고, [Schema SQL](./guides/schema-sql.md#sql-저장과-복사) 탭에서 Schema SQL을 `.sql` 파일로 저장하거나 복사하며, [`Export image`](./guides/file-import-export.md#이미지) 대화 상자에서 PNG나 SVG 이미지로 내보내거나 PNG를 클립보드에 복사합니다.
 - Databricks, MSSQL, MariaDB, MySQL, Oracle, PostgreSQL, Snowflake, SQLite 8가지 데이터베이스 벤더의 문법으로 Schema SQL을 작성합니다. [테이블 관련 기능](./guides/table-related-functions.md#데이터베이스) 문서를 참고하세요. [Schema SQL](./guides/schema-sql.md) 탭의 옵션 패널에서는 작성할 구문, 헤더, 테이블 그룹을 고르고, 직접 작성한 SQL을 다이어그램에 저장해 두었다가 테이블 앞뒤에 작성합니다.
 - 22가지 대상으로 코드를 생성합니다. 언어로는 C#, Go, Java, Kotlin, PHP, Rust, Scala, Swift, TypeScript, ORM으로는 Doctrine, Drizzle, JPA, SeaORM, Sequelize, SQLAlchemy, TypeORM, 그리고 AML, DBML, GraphQL, JSON Schema, Mermaid, Zod를 지원합니다. Code Generator 탭의 옵션 패널에서 언어, 데이터베이스, 이름 케이스를 고르며, 코드는 언어에 맞는 확장자의 파일로 저장하거나 복사합니다. [코드 생성](./guides/code-generator.md) 문서를 참고하세요.
-- [시각화](./guides/visualization.md)에서 스키마를 force-directed `Graph` 또는 관계를 따라 배치된 테이블 카드의 `Flow`로 확인하고, 테이블에 마우스를 올려 그 테이블이 닿아 있는 것들을 한눈에 봅니다. ERD 탭에서 `Alt + F`를 누르면 선택한 테이블과 그 테이블에 관계로 이어진 테이블에 [포커스](./guides/visualization.md#테이블-포커스)합니다.
+- [시각화](./guides/visualization.md)에서 스키마를 force-directed `Graph` 또는 관계를 따라 배치된 테이블 카드의 `Flow`로 확인합니다. 테이블에 마우스를 올리면 그 테이블과 닿아 있는 모든 것이 강조됩니다. ERD 탭에서 `Alt + F`를 누르면 선택한 테이블과 그 테이블에 관계로 이어진 테이블에 [포커스](./guides/visualization.md#테이블-포커스)합니다.
 - 경계 없는 캔버스에서 작업합니다. 다이어그램이 뻗어 나가는 곳이면 어디든 이동하고, `Ctrl + Wheel`(Mac에서는 `⌘ + Wheel`), 키보드, 핀치로 `10%`부터 `150%`까지 확대/축소하며, Zen 모드로 다이어그램만 남깁니다. 마우스 가운데 버튼으로 드래그하면 테이블 위를 포함해 캔버스 어디서든 화면이 이동합니다. [캔버스 이동](./guides/table-related-functions.md#캔버스-이동) 문서를 참고하세요.
 - [자동 배치](./guides/table-related-functions.md#자동-배치)로 다이어그램 전체를 한 번에 정리합니다. Force 시뮬레이션, 왼쪽에서 오른쪽으로 흐르는 Flow, 두 방향의 Tree 중에서 고르며, 테이블 그룹은 각각 하나로 모여 유지됩니다.
 - [빠른 검색](./guides/quick-search.md)으로 어디서든 명령을 실행하거나, 검색어를 `#`, `@`, `:`로 시작해 각각 테이블, 컬럼, 코멘트나 메모로 바로 이동합니다. [Undo, Redo](./guides/undo-redo.md)로 편집 히스토리를 하나씩 오가고, [Time Travel](./guides/undo-redo.md#time-travel)로 이번 세션의 히스토리를 캔버스에서 재생하거나, [Diff Viewer](./guides/table-related-functions.md#diff-viewer)에서 다이어그램을 다른 `.json` 파일과 비교합니다. Diff Viewer의 트리는 두 버전 옆에서 추가, 수정, 삭제되거나 이름이 바뀐 테이블, 컬럼, 인덱스, foreign key, 메모, 테이블 그룹을 나열합니다.
@@ -54,13 +54,13 @@ Obsidian 플러그인을 업데이트한 뒤에는 Obsidian을 다시 시작하�
 - 툴바의 `Display Language` 버튼이나 빠른 검색에서 고르는 25개 언어로 에디터를 사용합니다. `System`은 브라우저나 호스트 앱의 언어를 따르며, 아랍어, 히브리어, 페르시아어에서는 에디터가 오른쪽에서 왼쪽으로 배치되고 다이어그램은 왼쪽에서 오른쪽 그대로 유지됩니다. 바뀌는 것은 에디터 자체의 텍스트뿐이며, 이름, SQL, 생성된 코드는 작성한 그대로 유지됩니다. 툴바의 테마 빌더에서 외관(`System`, `Light`, `Dark`), 회색 색상, 강조 색상을 고릅니다. [언어와 테마](./guides/language-and-theme.md) 문서를 참고하세요.
 - diff를 깔끔하게 유지합니다. 스크롤 위치와 확대/축소, 열린 탭, Code Generator의 언어와 이름 케이스, 괄호 타입은 기본적으로 [잠겨](./guides/settings.md#잠금) 있으므로, 파일은 잠글 때의 값을 유지하며 스크롤하거나 확대/축소하거나 탭을 전환해도 바뀌지 않습니다. 파일은 고정된 순서로 작성되며 측정된 너비, 쌓임 순서, 연결선 앵커, 삭제된 항목을 기록하지 않으므로, 다이어그램을 열었다가 편집하지 않고 닫으면 파일은 그대로 유지됩니다.
 - Claude Code나 Codex 같은 코딩 에이전트가 [MCP 서버](../mcp/introduction.md)를 통해 다이어그램을 편집하게 합니다. VS Code, Obsidian, JetBrains IDE에서 라이브로 편집하면 모든 변경이 일어나는 즉시 캔버스에 나타나며, 파일 자체를 편집할 수도 있습니다.
-- 웹 앱에서 실시간으로 함께 편집합니다(실험적). 세션은 peer-to-peer이며 종단간 암호화되어 있어 어떤 서버도 스키마를 보관하지 않고, 참여자끼리 서로의 커서, 포커스, 선택 영역을 볼 수 있습니다. 직접 만든 페이지에서는 [`getSharedStore()`](../api/advanced/collaborative-editing.md)로 원하는 전송 방식 위에서 동일한 액션 스트림을 사용할 수 있습니다.
+- 웹 앱에서 실시간으로 함께 편집합니다(실험적). 세션은 peer-to-peer이며 종단 간 암호화되어 있어 어떤 서버도 스키마를 보관하지 않고, 참여자끼리 서로의 커서, 포커스, 선택 영역을 볼 수 있습니다. 직접 만든 페이지에서는 [`getSharedStore()`](../api/advanced/collaborative-editing.md)로 원하는 전송 수단을 통해 동일한 액션 스트림을 사용할 수 있습니다.
 
 [편집 가이드](/docs/category/guides)부터 시작하세요.
 
 ## 이 프로젝트가 탄생한 이유
 
-기존에 있던 모델링툴들은 제가 원하는 수준의 사용자 경험을 제공해주지 못했습니다.  
+기존에 있던 모델링 툴들은 제가 원하는 수준의 사용자 경험을 제공해 주지 못했습니다.  
 그래서 최고의 사용자 경험을 위해 프로젝트를 시작했습니다.  
 프로젝트의 최우선순위는 사용자 편집 경험입니다.  
-편집에 대해 당신에게 놀라운 경험을 제공해 줄 겁니다.
+놀라운 편집 경험을 제공할 것입니다.

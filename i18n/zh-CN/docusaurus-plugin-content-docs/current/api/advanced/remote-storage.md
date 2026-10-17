@@ -15,7 +15,7 @@ npm install @dineug/erd-editor
 ```
 
 用于数据复制的 store 位于 `@dineug/erd-editor/engine.js` 子路径，而不是包的根路径。  
-该入口不接触 DOM，因此可以在 Web Worker 或主线程之外的任何地方运行。  
+该入口点不接触 DOM，因此可以在 Web Worker 或主线程之外的任何地方运行。  
 若改为导入包的根路径，则会注册 `<erd-editor>` 自定义元素，而它需要 DOM。
 
 ## 使用
@@ -247,7 +247,7 @@ replicationStore.dispatchSync(actions); // sync
 `dispatch` 会延迟到微任务中执行，`dispatchSync` 则会立即应用这批变更。
 
 可以不做过滤，直接把 shared store 的操作流交给它们。  
-两个方法都只保留可能改变文档的那类操作，以及本节末尾介绍的两种操作，并丢弃其余部分，因此协同会话所携带的状态信息（每位用户的鼠标光标、焦点、选中内容与选择框）传入后不会产生任何效果。
+两个方法都只保留可能改变文档的那类操作，以及本节末尾介绍的两种操作，并丢弃其余部分，因此协同编辑会话所携带的状态信息（每位用户的鼠标光标、焦点、选中内容与选择框）传入后不会产生任何效果。
 
 从 `3.10.0` 起，被保留的操作包括 `relationship.changeOnDelete` 和 `relationship.changeOnUpdate`，并且 `relationship.add` 带有 `onDelete` 和 `onUpdate`。  
 更早版本的 store 会丢弃这些操作并忽略这些字段，因此会丢失关系的 [ON DELETE 与 ON UPDATE](../../guide/guides/relationship-editing.md#on-delete-and-on-update) 操作。

@@ -1,0 +1,66 @@
+---
+sidebar_position: 1
+description: erd-editor je urejevalnik entitetno-relacijskih diagramov za brskalnik, Google Drive, VS Code, IntelliJ, Obsidian in vašo lastno stran.
+---
+
+# Uvod
+
+erd-editor je urejevalnik entitetno-relacijskih diagramov.
+Na voljo je kot spletna aplikacija, aplikacija za Google Drive, razširitev za VS Code, vtičnik za IntelliJ, vtičnik za Obsidian in kot element po meri `<erd-editor>`, ki ga lahko vdelate v svojo lastno stran.
+Povsod gre za isti urejevalnik in isto obliko dokumenta.
+
+![Diagram trgovine: premik kazalca nad relacijo, dodajanje stolpca in osredotočanje na orders v načinu Tok](/img/demo-overview.webp)
+
+## Kje ga dobite {#where-to-get-it}
+
+| Platforma | Namestitev | Kaj dobite |
+| --- | --- | --- |
+| Spletna aplikacija | [erd-editor.io](https://erd-editor.io) | Namestljiva aplikacija PWA, delovanje brez povezave, sodelovanje v realnem času |
+| Google Drive | [Google Workspace Marketplace](https://workspace.google.com/marketplace/app/erd_editor/428467403360) | Doda ERD Editor v menija Open with in New v storitvi Drive ter shranjuje nazaj v isto datoteko |
+| VS Code | [Marketplace](https://marketplace.visualstudio.com/items?itemName=dineug.vuerd-vscode) | Odpira datoteke `.erd.json` v urejevalniku po meri |
+| IntelliJ | [JetBrains Marketplace](https://plugins.jetbrains.com/plugin/23594-erd-editor) | Isti urejevalnik za razvojna okolja, ki temeljijo na platformi IntelliJ |
+| Obsidian | [Community plugins](https://community.obsidian.md/plugins/erd-editor) | Odpira datoteke `.erd` in `.erd.json` v zavihku trezorja, samo v namizni različici |
+| Vaša stran | `npm install @dineug/erd-editor` | Element po meri `<erd-editor>`, neodvisen od ogrodij – glejte stran [Namestitev](../api/installation.md) |
+| Agenti za kodiranje | [`@dineug/erd-editor-mcp`](../mcp/installation.md) | Strežnik MCP, s katerim lahko Claude Code, Codex ali drug odjemalec ureja diagram v živo v VS Code, v razvojnem okolju JetBrains ali v aplikaciji Obsidian ali pa v sami datoteki |
+
+Če ga želite preizkusiti v razvojnem okolju, ustvarite prazno datoteko s končnico `.erd.json` in jo odprite.
+V aplikaciji Obsidian v paleti ukazov zaženite ukaz `ERD Editor: Create new diagram` ali pa v priročnem meniju mape v raziskovalcu datotek izberite `New ERD`. Oboje ustvari prazno datoteko `.erd` in jo odpre.
+V storitvi Google Drive izberite New → More → ERD Editor in se nato prijavite z računom Google. ERD Editor dostopa samo do datotek, ki jih z njim ustvarite ali odprete.
+V spletni aplikaciji, v storitvi Google Drive, v VS Code, v razvojnem okolju JetBrains in v aplikaciji Obsidian se nov, prazen diagram odpre na [pozdravnem zaslonu](./guides/editing-start.md#welcome-screen), ki je meni prvih korakov: `New Table`, `New Memo`, `Import`, `Command Palette` in `Shortcuts`.
+Pomikanje, povečevanje in preklapljanje zavihkov pustijo prazno datoteko novega diagrama nespremenjeno, saj so v novem diagramu vklopljeni vsi zaklepi. Glejte razdelek [Zaklepanje](./guides/settings.md#lock).
+VS Code odpre datoteko ERD kot besedilo JSON v pogledih Source Control, Local History in Compare with Saved, v pregledih sprememb klepeta VS Code in agentov za kodiranje, kot sta GitHub Copilot in Claude Code, ter v pogledih revizij razširitev, kot so GitLens, GitHub Pull Requests in Git Graph, zato se sprememba prikaže kot razlika po vrsticah. Ukaz `Reopen Editor With...` prikaže revizijo Git kot diagram samo za branje.
+
+Po posodobitvi vtičnika za Obsidian znova zaženite aplikacijo Obsidian: do takrat okno ohrani urejevalnik, ki ga je naložila prejšnja različica.
+ERD Editor posodobite povsod, kjer delite diagrame: izdaja iz časa pred skupinami tabel v datoteki, ki jo je shranila trenutna izdaja, ne prikaže ikon primarnih ključev, shranjevanje datoteke v njej pa zavrže njene skupine tabel in skripte Sheme SQL.
+Datoteka, ki jo je shranila takšna izdaja, se ob prvi spremembi, ki jo datoteka ohrani, znova zapiše v trenutni obliki – glejte razdelek [Zaklepanje](./guides/settings.md#lock). Do takrat jo urejevalnik JSON, ki jo preverja glede na njeno shemo `$schema`, označi kot neveljavno.
+
+## Kaj zmore {#what-it-does}
+
+- Na neomejenem platnu rišite tabele, stolpce in beležke ter jih povežite s štirimi vrstami relacij: `Zero One`, `Zero N`, `One Only`, `One N`. Glejte stran [Začetek urejanja](./guides/editing-start.md). Indeksi se določijo v oknu Lastnosti tabele. Enoličen indeks na dveh ali več stolpcih je alternativni ključ, diagram pa ob vklopljeni možnosti pogleda `Alternate Key` njegove stolpce označi z `AK1.1`, `AK1.2` in tako naprej. Glejte razdelka [Indeksi](./guides/table-related-functions.md#indexes) in [Alternativni ključi](./guides/table-related-functions.md#alternate-keys).
+- Relacijo končajte na stolpcih, ki jih tabela že ima: medtem ko jo rišete z miško ali pisalom, gumb `Map to existing columns` ob tabeli, pri kateri se konča, poveže ključ nadrejene tabele s stolpci te tabele, gumb `Create new columns` pa doda nove. Postavka `Map Columns` v priročnem meniju relacije pozneje spremeni njene stolpce. Glejte razdelek [Preslikaj stolpce](./guides/relationship-editing.md#map-columns). Relacija ima lahko tudi dejanji ON DELETE in ON UPDATE. Glejte razdelek [ON DELETE in ON UPDATE](./guides/relationship-editing.md#on-delete-and-on-update).
+- Urejajte hitro: `Alt + N` doda tabelo; `Alt + Enter` doda stolpec; `Alt + K` preklopi primarni ključ na stolpcu s fokusom ali na vseh izbranih stolpcih, kadar je ta med njimi; `Delete` ali `Backspace` pa izbriše izbor. Vsaka od teh bližnjic je en korak razveljavitve. Glejte razdelek [Bližnjice](./guides/settings.md#shortcuts). Tudi [orodna vrstica platna](./guides/table-related-functions.md#canvas-toolbar) na dnu platna z enim klikom doda tabelo ali beležko.
+- Tabelo, beležko ali skupino tabel obarvajte v izbirniku barv s prednastavljenimi barvami in barvami, ki jih diagram že uporablja, barvo pa odstranite z možnostjo `No color` ali postavko `Remove color`. Glejte razdelek [Določanje barve tabel in beležk](./guides/table-related-functions.md#table-and-memo-color-specification).
+- Sorodne tabele združite v [skupine tabel](./guides/table-groups.md): okvir za njimi, ki ga lahko poimenujete in obarvate. Skupino narišite z `Alt + G` ali z ukazom `New Table Group` v priročnem meniju platna, v orodni vrstici platna ali v hitrem iskanju, lahko pa jo ustvarite tudi iz izbranih tabel z bližnjico `T` in nato `G` ali s postavko `Group selected tables` v njihovem priročnem meniju. Tabela se pridruži skupini, ko jo spustite vanjo, in jo zapusti, ko jo spustite zunaj nje, vlečenje skupine za naslovno vrstico pa premakne tudi njene tabele. DBML prenaša skupine v obe smeri, in sicer kot bloke `TableGroup`.
+- Uvozite obstoječo shemo iz formata `json`, `Schema SQL`, `GraphQL`, `DBML` ali `AML`. Glejte stran [Uvoz in izvoz datotek](./guides/file-import-export.md). Datoteka Sheme SQL, GraphQL, DBML ali AML se uvozi s tabelami, razporejenimi vzdolž njihovih relacij, ali v vrsticah, če relacij nima. Ukaz [`Import and Add`](./guides/file-import-export.md#import-and-add) doda datoteko pod diagram, namesto da bi ga zamenjal.
+- Diagram izvozite kot `json`; kot Shemo SQL z zavihka [Shema SQL](./guides/schema-sql.md#saving-or-copying-the-sql), ki jo shranite kot datoteko `.sql` ali kopirate; ali pa iz pogovornega okna [`Export image`](./guides/file-import-export.md#image) kot sliko PNG ali SVG ali kot sliko PNG v odložišču.
+- Shemo SQL zapišite v sintaksi osmih vrst zbirk podatkov: Databricks, MSSQL, MariaDB, MySQL, Oracle, PostgreSQL, Snowflake in SQLite. Glejte stran [Funkcije za tabele](./guides/table-related-functions.md#databases). Plošča z možnostmi zavihka [Shema SQL](./guides/schema-sql.md) izbere stavke, glavo in skupine tabel, ki se zapišejo, ter hrani vašo lastno kodo SQL, ki se shrani v diagramu in zapiše pred tabelami in za njimi.
+- Ustvarite kodo za dvaindvajset ciljev: jezike C#, Go, Java, Kotlin, PHP, Rust, Scala, Swift in TypeScript; knjižnice ORM Doctrine, Drizzle, JPA, SeaORM, Sequelize, SQLAlchemy in TypeORM; ter AML, DBML, GraphQL, JSON Schema, Mermaid in Zod. Plošča z možnostmi zavihka Generator kode izbere jezik, zbirko podatkov in zapis imen, koda pa se shrani kot datoteka s končnico jezika ali kopira. Glejte stran [Generator kode](./guides/code-generator.md).
+- Shemo preberite v [vizualizaciji](./guides/visualization.md), in sicer v načinu `Graph` kot graf, razporejen na osnovi sil, ali v načinu `Flow` kot kartice tabel, razporejene vzdolž relacij, kjer premik kazalca nad tabelo osvetli vse, s čimer je povezana. Na zavihku ERD pritisnite `Alt + F`, da se [osredotočite na izbrane tabele](./guides/visualization.md#focusing-on-tables) in tabele, povezane z njimi.
+- Delajte na platnu brez robov: pogled premikajte, kamor koli seže diagram, povečavo spreminjajte od `10%` do `150%` z bližnjico `Ctrl + Wheel` (`⌘ + Wheel` na računalniku Mac), s tipkovnico ali s stiskom prstov, z načinom zen pa skrijte vse razen diagrama. Vlečenje s srednjim gumbom miške premika pogled s katerega koli mesta na platnu, celo nad tabelo. Glejte razdelek [Premikanje po platnu](./guides/table-related-functions.md#getting-around-the-canvas).
+- Celoten diagram razporedite v enem koraku s [samodejno postavitvijo](./guides/table-related-functions.md#auto-layout): s simulacijo sil, tokom od leve proti desni ali drevesom v eni ali drugi smeri, pri čemer vsaka skupina tabel ostane skupaj.
+- S [hitrim iskanjem](./guides/quick-search.md) zaženite ukaz od koder koli ali pa iskanje začnite z znakom `#`, `@` ali `:`, da skočite na tabelo, stolpec ali komentar oziroma beležko. Po zgodovini sprememb se premikajte z [razveljavitvijo in uveljavitvijo](./guides/undo-redo.md), zgodovino te seje znova predvajajte na platnu s [potovanjem skozi čas](./guides/undo-redo.md#time-travel) ali pa diagram primerjajte z drugo datoteko `.json` v [pregledovalniku razlik](./guides/table-related-functions.md#diff-viewer). Njegovo drevo ob obeh različicah navaja tabele, stolpce, indekse, tuje ključe, beležke in skupine tabel, ki so bili dodani, spremenjeni, izbrisani ali preimenovani.
+- Po diagramu brskajte v [raziskovalcu](./guides/explorer.md), drevesu, zasidranem ob levem robu platna: tabele, vsaka s svojimi stolpci, indeksi in tujimi ključi, nato skupine tabel in beležke. Kliknite vrstico, da se na platnu premaknete na to, kar predstavlja; vrstica tujega ključa osvetli tudi njegovo relacijo. Gumb `Explorer` v orodni vrstici ob gumbu `Search` ga odpre in zapre.
+- Besedilo poiščite z [iskanjem in zamenjavo](./guides/find-and-replace.md) na vrhu raziskovalca. Preiskuje imena tabel, stolpcev, indeksov in skupin tabel ter, ko jih vklopite, tudi komentarje in beležke, zadetke pa prikaže v drevesu raziskovalca. Zamenjajte en zadetek ali vse; stikalo `Preserve Case` da vsaki zamenjavi velikost črk besedila, ki ga zamenja. `Ctrl + F` (`⌘ + F` na računalniku Mac) odpre raziskovalca s kazalko v iskalnem polju, ponoven pritisk pa raziskovalca zapre.
+- Urejevalnik uporabljajte v 25 jezikih, ki jih izberete z gumbom `Display Language` v orodni vrstici ali v hitrem iskanju. Možnost `System` sledi jeziku brskalnika ali gostiteljske aplikacije, arabščina, hebrejščina in perzijščina pa urejevalnik prikažejo od desne proti levi, medtem ko diagram ostane od leve proti desni. Spremeni se samo lastno besedilo urejevalnika: imena, koda SQL in ustvarjena koda ostanejo nespremenjeni. Izbirnik teme v orodni vrstici izbere videz (`System`, `Light` ali `Dark`), sive tone in barvo poudarka. Glejte stran [Jezik in tema](./guides/language-and-theme.md).
+- Ohranite čiste razlike: položaj pomika in povečava, odprti zavihek, jezik in zapis imen generatorja kode ter vrsta narekovajev so privzeto [zaklenjeni](./guides/settings.md#lock), zato datoteka ohrani vrednosti, ki so jih imeli ob zaklepu, pomikanje, povečevanje ali preklapljanje zavihkov pa je nikoli ne spremeni. Datoteka se zapiše v stalnem vrstnem redu in izpusti izmerjene širine, vrstni red prekrivanja, sidrne točke povezovalnih črt in odstranjene elemente, zato ostane takšna, kot je bila, če diagram odprete in ga zaprete brez spremembe.
+- Agentu za kodiranje, kot sta Claude Code ali Codex, omogočite, da diagram ureja prek [strežnika MCP](../mcp/introduction.md): v živo v VS Code, v aplikaciji Obsidian ali v razvojnem okolju JetBrains, kjer se vsaka sprememba prikaže na platnu, ko se zgodi, ali pa v sami datoteki.
+- V spletni aplikaciji urejajte skupaj v realnem času (poskusno). Seje potekajo neposredno med udeleženci in so šifrirane od konca do konca, zato vaše sheme ne hrani noben strežnik, udeleženci pa vidijo kazalce, fokus in izbore drug drugega. Na vaši lastni strani vam metoda [`getSharedStore()`](../api/advanced/collaborative-editing.md) ponuja isti tok dejanj prek prenosa po vaši izbiri.
+
+Začnite z [vodnikom za urejanje](/docs/category/guides).
+
+## Razlog za ta projekt {#reason-behind-this-project}
+
+Obstoječa orodja za modeliranje niso ponujala takšne uporabniške izkušnje, kakršno si želim.  
+Zato je nastal ta projekt, da bi ponudil vrhunsko uporabniško izkušnjo.  
+Najvišja prednostna naloga projekta je uporabnikova izkušnja pri urejanju.  
+Ponudil vam bo osupljivo izkušnjo pri urejanju.

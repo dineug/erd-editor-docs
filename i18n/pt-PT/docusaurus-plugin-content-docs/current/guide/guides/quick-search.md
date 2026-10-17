@@ -1,0 +1,90 @@
+---
+sidebar_position: 7
+description: Abrir a paleta de comandos para mudar de separador, executar um comando do separador atual, abrir ou fechar o explorador, alterar o tema ou o idioma de apresentação ou ir para uma tabela, coluna, comentário ou nota escrevendo um prefixo.
+---
+
+# Pesquisa rápida
+
+A pesquisa rápida é a paleta de comandos do editor.  
+Apresenta os comandos disponíveis no separador em que se encontra. Comece a pesquisa com `#`, `@` ou `:` para, em vez disso, pesquisar no diagrama e ir para uma tabela, uma coluna ou um comentário ou nota.
+
+Abra-a com `Ctrl + K` (Windows/Linux) ou `⌘ + K` (Mac), ou clique no botão `Search` da barra de ferramentas.  
+O mesmo atalho fecha-a, tal como `Esc` e um clique fora do painel. Abri-la fecha o painel Propriedades da tabela, o [criador de temas](./language-and-theme.md#theme), o seletor [`Display Language`](./language-and-theme.md#picking-a-language), a caixa de diálogo [`Export image`](./file-import-export.md#image) e a caixa de diálogo [Mapear colunas](./relationship-editing.md#map-columns), o que descarta o que tinha escolhido nela. Não se abre enquanto está a editar uma célula de tabela, uma nota ou o nome de um grupo de tabelas.
+
+Na barra de ferramentas, o botão logo a seguir ao botão `Search` é o botão `Explorer`. Abre ou fecha o [explorador](./explorer.md), uma árvore do diagrama ancorada à esquerda da tela, com Localizar e substituir no topo.  
+Abrir a paleta deixa o explorador aberto, e `Esc` fecha então apenas a paleta. Premir `Ctrl + F` (Windows/Linux) ou `⌘ + F` (Mac) na paleta fecha-a e leva o foco do teclado para o campo Localizar do explorador, abrindo o explorador na respetiva pesquisa se este não estiver visível. Ao contrário da entrada `Toggle Explorer`, a tecla nunca fecha o explorador a partir da paleta — consulte [Abrir e fechar](./explorer.md#opening-and-closing). Enquanto o visualizador de diferenças, a viagem no tempo ou a pré-visualização da disposição automática está aberta, o editor deixa passar a tecla: a paleta mantém-se aberta e a tecla segue para o navegador ou para o host — consulte [A barra de localização do navegador](./find-and-replace.md#the-browsers-find-bar).  
+Um host que incorpora o editor pode associar a pesquisa rápida a outra tecla, que a dica do botão `Search` passa então a mostrar — consulte [Atalhos](./settings.md#shortcuts).
+
+![Abrir a paleta com ⌘ + K e depois ir para uma tabela com #pay, para uma coluna com @price e para um comentário de tabela com :address](/img/demo-quick-search.webp)
+
+## Pesquisar e navegar {#searching-and-navigating}
+
+Escreva para filtrar a lista. Cada tecla premida volta a pesquisar desde o início toda a lista que tem à frente, pelo que apagar caracteres, ou escrever uma nova palavra por cima de uma que não encontrou nada, faz regressar as entradas correspondentes.  
+A correspondência é aproximada e abrange tanto o nome de uma entrada como as palavras-chave apresentadas ao seu lado. No submenu `Import`, por exemplo, `sdl` encontra `GraphQL`, `dbdiagram` encontra `DBML` e `azimutt` encontra `AML`. Uma pequena gralha continua a encontrar a respetiva entrada, tal como `tabel` encontra `New Table` e `imprt` encontra `Import`, mas uma entrada que apenas se assemelha vagamente ao que escreveu fica de fora: `memo` apresenta apenas `New Memo`. Uma entrada cujo nome ou palavras-chave contenham o que escreveu, sem distinguir maiúsculas de minúsculas, é sempre apresentada, e uma que escape à correspondência aproximada surge depois das correspondências aproximadas. O que escreveu é realçado onde quer que uma entrada o contenha, sem distinguir maiúsculas de minúsculas.  
+Num idioma de apresentação que não seja o inglês, os comandos e as entradas dos submenus também se encontram pelos seus nomes e palavras-chave em inglês, que a lista não mostra, pelo que `new table` encontra `New Table` seja qual for o idioma em que é apresentado.  
+Percorra a lista com `↑` e `↓` — a lista dá a volta em ambas as extremidades — e execute a entrada realçada com `Enter`. Um comando que tenha um atalho próprio mostra-o no fim da sua linha: à direita, ou à esquerda num idioma de apresentação da direita para a esquerda. Enquanto um método de introdução ainda está a compor, como a meio de uma sílaba coreana, `↑`, `↓` e `Enter` pertencem-lhe e não movem o realce nem executam nenhuma entrada.
+
+Uma entrada como `Database`, `Import` ou `Auto Layout` abre um submenu: as respetivas entradas substituem a lista e a caixa de pesquisa é limpa. Os submenus de `Database`, `Bracket`, `Language`, dos dois formatos dos nomes, de `Schema SQL: Statements`, `Schema SQL: Header`, `Theme` e `Display Language` marcam a escolha atual e abrem-se com o realce sobre ela, pelo que `Enter` a mantém; os outros submenus abrem-se sem nada realçado.  
+A filtragem só se aplica à lista que tem à frente, e não há forma de voltar a um nível acima, pelo que, para recomeçar, feche e volte a abrir a paleta. Num submenu, `#`, `@`, `:` e `?` são texto simples, e não [prefixos](#searching-the-diagram).
+
+## O que a paleta apresenta {#what-the-palette-lists}
+
+A lista depende do separador em que se encontra. Em todos os separadores, a lista começa pela entrada `Tab`, que muda para o separador `Entity Relationship Diagram`, `Visualization`, `Schema SQL`, `Code Generator` ou `Settings`, omitindo aquele em que já se encontra.
+
+No separador ERD: `Database`, `Import`, `Import and Add` e `Export`, depois `New Table`, `New Memo`, `New Table Group` e `Group Selected Tables`, os quatro tipos de relação e `Auto Layout`. As tabelas não são apresentadas aqui; escreva `#` para [ir para uma delas](#searching-the-diagram).  
+A entrada `Import and Add` fica de fora num editor só de leitura, e a entrada `New Memo` enquanto [Opções de vista](./table-related-functions.md#table-view-options) → `Memos` oculta as notas. A entrada `New Table Group` começa a desenhar um [grupo de tabelas](./table-groups.md) na tela, e a entrada `Group Selected Tables` coloca as tabelas selecionadas num novo grupo e abre o nome do grupo para que o possa escrever. Ambas ficam de fora num editor só de leitura e enquanto Opções de vista → `Table Groups` oculta os grupos, e `Group Selected Tables` também precisa de pelo menos uma tabela selecionada. As respetivas linhas mostram as teclas: `Alt + G` (Windows/Linux) ou `⌥ + G` (Mac) para [desenhar um grupo](./table-groups.md#drawing-a-group) e `T` e depois `G` para [agrupar as tabelas selecionadas](./table-groups.md#grouping-selected-tables).  
+Estas entradas executam os mesmos comandos que o menu de contexto da tela, à exceção de `Group Selected Tables`, que corresponde à opção `Group selected tables` do menu da tabela; `View Option` e `Diff Viewer` existem apenas no menu de contexto. A entrada `Export` oferece as mesmas opções `json`, `Schema SQL` e `Image` que o menu de contexto, e escrever `png` ou `svg` dentro dela encontra `Image`.  
+Consulte [Importar ou exportar ficheiros](./file-import-export.md) para saber o que fazem cada formato, [Importar e adicionar](./file-import-export.md#import-and-add) e a [exportação de imagem](./file-import-export.md#image), e [Funções relacionadas com tabelas](./table-related-functions.md#databases) para saber o que a escolha da base de dados afeta.
+
+No separador Esquema SQL: de novo `Database` e `Bracket`, que define o carácter delimitador colocado à volta dos nomes de tabelas, colunas, restrições e índices no SQL gerado — `SingleQuote`, `DoubleQuote`, `Backtick` ou `None`, para não delimitar de todo. Depois, `Schema SQL: Statements` e `Schema SQL: Header`, que fazem as mesmas escolhas que o painel de opções do separador, mas apresentam apenas as que a base de dados selecionada escreve, e `Schema SQL: Options panel`, que mostra ou oculta esse painel. Consulte [Esquema SQL](./schema-sql.md) para saber o que cada escolha escreve.
+
+No separador Gerador de código: `Database`, `Bracket` enquanto a linguagem é `Doctrine`, `JPA` ou `SeaORM`, depois `Language`, `Table Name Case`, `Column Name Case` e `Code Generator: Options panel`, que mostra ou oculta o painel de opções do separador. Consulte [Gerador de código](./code-generator.md) para saber o que cada destino produz.
+
+Os separadores Visualização e Definições não têm comandos próprios, apenas a entrada `Tab` e os comandos abaixo que todos os separadores apresentam.
+
+Perto do fim da lista de cada separador, também num editor só de leitura, está a entrada `Toggle Explorer`, que mostra o seu atalho, `Ctrl + F` (Windows/Linux) ou `⌘ + F` (Mac). Escrever `find`, `replace`, `rename`, `tree`, `outline` ou `objects` também a encontra.  
+Executá-la fecha a paleta e faz o mesmo que o atalho faz na tela. Enquanto o botão `Explorer` da barra de ferramentas aparece premido, ou seja, enquanto o explorador está aberto no separador ERD e não está oculto pelo modo zen, fecha o explorador. Caso contrário, muda para o separador ERD e abre o explorador na respetiva pesquisa, com o cursor de texto no campo Localizar — consulte [Abrir e fechar](./explorer.md#opening-and-closing). Fica de fora enquanto o visualizador de diferenças, a viagem no tempo ou a pré-visualização da disposição automática está aberta.
+
+### Tema e idioma de apresentação {#theme-and-display-language}
+
+A seguir à entrada `Toggle Explorer`, todos os separadores apresentam as entradas `Theme` e `Display Language`, também num editor só de leitura. Cada uma só é apresentada onde o editor oferece o respetivo seletor, como mostram os botões `Theme` e `Display Language` da barra de ferramentas. A aplicação web, o Google Drive, o VS Code, os IDE da JetBrains e o Obsidian oferecem ambos — consulte [Em cada host](./language-and-theme.md#in-each-host).
+
+A entrada `Theme` abre `System`, `Light` e `Dark`, com o aspeto atual marcado. Escolher um deles altera apenas o aspeto e mantém o tom de cinzento e a cor de destaque, tal como os botões `Appearance` do criador de temas.  
+A entrada `Display Language` abre `System` e depois os 25 idiomas, cada um com o seu próprio nome e pela ordem do seletor, com a opção atual marcada. Aqui, um idioma também se encontra pelo seu nome em inglês ou pelo seu código: `german` ou `de-DE` encontra `Deutsch`, e `korean` encontra `한국어`.  
+Uma escolha em qualquer uma delas aplica-se de imediato, fecha a paleta e é guardada tal como uma escolha feita no criador de temas ou no seletor `Display Language`. Se o idioma de apresentação mudar enquanto a paleta está aberta, a lista passa para esse idioma, mantendo o que escreveu e o submenu em que se encontra.
+
+## Pesquisar no diagrama {#searching-the-diagram}
+
+Comece a pesquisa com um prefixo para pesquisar no diagrama em vez de nos comandos: `#` para tabelas, `@` para colunas, `:` para comentários e notas ou `?` para listar os prefixos. Um prefixo funciona a partir de qualquer separador. Só conta como primeiro carácter, sem ter em conta os espaços antes dele. Um espaço a seguir ao prefixo é opcional, pelo que `#users` e `# users` são a mesma pesquisa, e também contam os caracteres de largura total `＃`, `＠`, `：` e `？` que um método de introdução japonês ou chinês escreve.  
+Enquanto o campo de pesquisa está vazio no nível superior, uma linha por baixo dele mostra os quatro prefixos; clique num para o escrever. Enquanto um prefixo está em vigor, o fim do campo de pesquisa indica o respetivo âmbito: `Tables`, `Columns`, `Comments & memos` ou `Help`. Apague o prefixo para recuperar os comandos.
+
+O prefixo `#` apresenta as tabelas, cada uma com `Table` ao lado, e uma tabela com o nome em branco é apresentada como `unnamed`. Sem nada a seguir a `#`, são ordenadas pelo nome. O texto a seguir a `#` é comparado apenas com os nomes das tabelas, de forma aproximada como acima, e as tabelas cujo nome o contém surgem primeiro. Os nomes dos grupos de tabelas e os nomes dos índices não são pesquisados com nenhum prefixo; [Localizar e substituir](./find-and-replace.md#what-it-searches) pesquisa ambos.
+
+O prefixo `@` apresenta as colunas pelo nome, cada uma com a respetiva localização ao lado, como `users.email · Column`. O texto a seguir a `@` tem de aparecer no nome da coluna, sem distinguir maiúsculas de minúsculas; esta correspondência não é aproximada. O texto antes do primeiro `.` restringe a pesquisa às tabelas cujo nome o contém: `@users.em` apresenta as colunas que contêm `em` nas tabelas cujo nome contém `users`, `@users.` apresenta as colunas dessas tabelas e `@.em` pesquisa todas as tabelas. Sem nada a seguir a `@`, as colunas são apresentadas sem filtro.
+
+O prefixo `:` apresenta comentários de tabelas, comentários de colunas e notas, nunca nomes. Cada linha mostra um excerto do texto em torno da correspondência, com `users · Table comment`, `users.email · Column comment` ou `Memo` ao lado. O texto a seguir a `:` tem de aparecer no comentário ou na nota, sem distinguir maiúsculas de minúsculas, tal como com `@`. Sem nada a seguir a `:`, são apresentados os comentários e as notas que não estão vazios. Enquanto Opções de vista → `Memos` oculta as notas, `:` não apresenta nenhuma nota.
+
+Os prefixos `@` e `:` apresentam as suas linhas pela ordem em que o documento as guarda: tabela a tabela, o comentário de cada tabela antes das respetivas colunas, pela ordem das colunas, e as notas no fim.
+
+O prefixo `?` apresenta `Tables`, `Columns` e `Comments & memos`, e o texto a seguir a `?` filtra-os. Escolher um deles substitui o conteúdo do campo de pesquisa pelo respetivo prefixo e deixa a paleta aberta.
+
+Uma lista com prefixo contém todas as correspondências, sejam quantas forem. Um prefixo cuja pesquisa não encontre nada deixa a lista vazia, sem qualquer mensagem.
+
+Escolher uma tabela, coluna, comentário ou nota fecha a paleta e muda para o separador ERD se estiver noutro separador.  
+A tela desloca-se até ao elemento, a menos que este já esteja bem visível — consulte [Onde termina um salto](./table-related-functions.md#where-a-jump-lands). Uma tabela fica então selecionada sozinha e é trazida para a frente, com o foco no seu nome, a menos que o foco já estivesse nessa tabela.  
+Uma nota fica selecionada sozinha e é trazida para a frente. No caso de uma coluna ou de um comentário, a respetiva tabela fica selecionada sozinha, é trazida para a frente e recebe o foco na célula que contém o texto, ou no nome ao lado de um comentário que uma [opção de vista das tabelas](./table-related-functions.md#table-view-options) oculta.  
+Nenhum salto inicia nem conclui uma relação que esteja a ser desenhada.
+
+Para as opções `Match Case`, `Match Whole Word` ou `Use Regular Expression`, ou para substituir texto, recorra a [Localizar e substituir](./find-and-replace.md), no topo do explorador.
+
+## Quando nenhum comando corresponde {#when-no-command-matches}
+
+No nível superior, sem prefixo, se nenhum comando apresentado contiver o que escreveu, sem distinguir maiúsculas de minúsculas, surgem três linhas a seguir aos comandos: `Search tables for "…"`, `Search columns for "…"` e `Search comments & memos for "…"`, cada uma com o respetivo prefixo como ícone. Escolher uma delas escreve esse prefixo antes do seu texto, pelo que `users` passa a `#users`, e a paleta mantém-se aberta com esses resultados.  
+Se a pesquisa não encontrar comando nenhum, aparece `No commands match` por cima da lista, que passa então a conter apenas as três linhas. Se encontrar apenas comandos que não contêm o texto, estes surgem primeiro: no separador ERD sem nenhuma tabela selecionada, `tables` apresenta `New Table`, `Database` e, onde for oferecida, a entrada `New Table Group` antes das três linhas. Com uma tabela selecionada, a entrada `Group Selected Tables`, onde for oferecida, contém `tables`, pelo que as três linhas não aparecem.  
+Num submenu, uma pesquisa que não encontre nada deixa a lista vazia, sem qualquer mensagem.
+
+## Pesquisar em coreano {#searching-in-korean}
+
+Uma pesquisa que contenha hangul também corresponde pelas suas letras, nos comandos, nos submenus e com qualquer prefixo.  
+Cada etapa por que passa um método de introdução coreano continua a encontrar a linha cujo texto está a escrever, pelo que `ㅅ`, `사`, `상`, `사요` e `사용` encontram todos `사용자`. Uma pesquisa feita apenas de consoantes iniciais corresponde às consoantes iniciais das sílabas, ignorando os espaços: `ㅅㅇㅈ` encontra `사용자`, e `ㅈㅁ` encontra `주문 내역`. Um grupo consonântico que um método de introdução do Windows compõe a partir de duas iniciais escritas seguidas, como `ㅄ`, conta como as duas (`ㅂㅅ`), enquanto uma consoante dupla como `ㄲ` continua a ser uma só letra. O texto guardado em forma decomposta, como acontece com os nomes de ficheiros do macOS, corresponde como se estivesse composto.  
+As linhas cujo texto completo corresponde à pesquisa, letra a letra ou inicial a inicial, surgem primeiro, depois as linhas que começam por ela e depois as linhas que a contêm. Com `@` e `:`, as linhas que contêm a pesquisa tal como foi escrita surgem antes de todas estas, pela ordem do documento. O realce abrange sílabas inteiras, pelo que `상` realça `사용` em `사용자`.

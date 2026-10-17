@@ -1,0 +1,90 @@
+---
+sidebar_position: 7
+description: Membuka palet perintah untuk berpindah tab, menjalankan perintah untuk tab saat ini, membuka atau menutup Penjelajah, mengubah tema atau bahasa tampilan, atau melompat ke tabel, kolom, komentar, atau memo dengan mengetik awalan.
+---
+
+# Pencarian Cepat
+
+Pencarian Cepat adalah palet perintah editor.  
+Palet ini mencantumkan perintah yang tersedia di tab tempat Anda berada. Mulai pencarian dengan `#`, `@`, atau `:` untuk mencari di diagram sebagai gantinya dan melompat ke tabel, ke kolom, atau ke komentar atau memo.
+
+Buka palet dengan `Ctrl + K` (Windows/Linux) atau `⌘ + K` (Mac), atau klik `Search` di bilah alat.  
+Pintasan yang sama menutupnya, begitu pula `Esc` dan klik di luar panel. Membukanya menutup Properti Tabel, [pembuat tema](./language-and-theme.md#theme), pemilih [`Display Language`](./language-and-theme.md#picking-a-language), dialog [`Export image`](./file-import-export.md#image), dan [Petakan Kolom](./relationship-editing.md#map-columns), sehingga apa yang telah Anda pilih di dalamnya dibuang. Palet tidak terbuka selama Anda sedang mengedit sel tabel, memo, atau nama grup tabel.
+
+Tombol bilah alat tepat setelah `Search` adalah `Explorer`. Tombol ini membuka atau menutup [Penjelajah](./explorer.md), pohon diagram yang tertambat di sebelah kiri kanvas, dengan Temukan dan Ganti di bagian atasnya.  
+Membuka palet membiarkan Penjelajah tetap terbuka, dan `Esc` kemudian hanya menutup palet. `Ctrl + F` (Windows/Linux) atau `⌘ + F` (Mac) yang ditekan di palet menutup palet dan memindahkan fokus keyboard ke kotak Temukan di Penjelajah, sambil membuka Penjelajah pada pencariannya jika Penjelajah belum tampil. Tidak seperti item `Toggle Explorer`, tombol ini tidak pernah menutup Penjelajah dari palet — lihat [Membuka dan menutup](./explorer.md#opening-and-closing). Selama Penampil Perbedaan, Perjalanan Waktu, atau pratinjau Tata Letak Otomatis terbuka, editor tidak menangani tombol ini: palet tetap terbuka dan tombol diteruskan ke browser atau host — lihat [Bilah pencarian browser](./find-and-replace.md#the-browsers-find-bar).  
+Host yang menyematkan editor dapat mengikat Pencarian Cepat ke tombol lain, yang kemudian ditampilkan oleh tooltip `Search` — lihat [Pintasan](./settings.md#shortcuts).
+
+![Membuka palet dengan ⌘ + K, lalu melompat ke tabel dengan #pay, ke kolom dengan @price, dan ke komentar tabel dengan :address](/img/demo-quick-search.webp)
+
+## Mencari dan bernavigasi {#searching-and-navigating}
+
+Ketik untuk menyaring daftar. Setiap ketukan tombol mencari ulang seluruh daftar yang ada di hadapan Anda, sehingga menghapus karakter, atau mengetik kata baru menggantikan kata yang tidak menemukan apa pun, memunculkan kembali item yang cocok.  
+Pencocokannya bersifat fuzzy dan mencakup nama item maupun kata kunci yang ditampilkan di sampingnya. Di dalam submenu `Import`, misalnya, `sdl` menemukan `GraphQL`, `dbdiagram` menemukan `DBML`, dan `azimutt` menemukan `AML`. Salah ketik yang mendekati tetap menemukan itemnya, seperti `tabel` menemukan `New Table` dan `imprt` menemukan `Import`, tetapi item yang hanya sedikit mirip dengan apa yang Anda ketik tidak dicantumkan: `memo` hanya mencantumkan `New Memo`. Item yang nama atau kata kuncinya mengandung apa yang Anda ketik, tanpa membedakan huruf besar dan kecil, selalu dicantumkan, dan item yang terlewat oleh pencocokan fuzzy muncul setelah kecocokan fuzzy. Apa yang Anda ketik disorot di mana pun item mengandungnya, tanpa membedakan huruf besar dan kecil.  
+Dalam bahasa tampilan selain bahasa Inggris, perintah dan item submenu juga ditemukan berdasarkan nama dan kata kunci bahasa Inggrisnya, yang tidak ditampilkan di daftar, sehingga `new table` menemukan `New Table` dalam bahasa apa pun item itu ditampilkan.  
+Telusuri daftar dengan `↑` dan `↓` — daftar berputar kembali di kedua ujungnya — dan jalankan item yang disorot dengan `Enter`. Perintah yang memiliki pintasan sendiri menampilkannya di ujung barisnya: di sebelah kanan, atau di sebelah kiri dalam bahasa tampilan kanan ke kiri. Selama metode input masih menyusun teks, seperti di tengah suku kata bahasa Korea, `↑`, `↓`, dan `Enter` ditangani oleh penyusunan tersebut dan tidak memindahkan sorotan maupun menjalankan item.
+
+Item seperti `Database`, `Import`, atau `Auto Layout` membuka submenu: item di dalamnya menggantikan daftar dan kotak pencarian dikosongkan. Submenu `Database`, `Bracket`, `Language`, kedua konvensi penamaan, `Schema SQL: Statements`, `Schema SQL: Header`, `Theme`, dan `Display Language` mencentang pilihan saat ini dan terbuka dengan sorotan padanya, sehingga `Enter` mempertahankannya; submenu lainnya terbuka tanpa ada yang disorot.  
+Penyaringan hanya berlaku untuk daftar yang ada di hadapan Anda, dan tidak ada cara untuk kembali naik satu tingkat, sehingga untuk memulai dari awal, tutup lalu buka kembali palet. Di dalam submenu, `#`, `@`, `:`, dan `?` adalah teks biasa, bukan [awalan](#searching-the-diagram).
+
+## Apa yang dicantumkan palet {#what-the-palette-lists}
+
+Daftarnya bergantung pada tab tempat Anda berada. Di setiap tab, daftar diawali dengan `Tab`, yang beralih ke `Entity Relationship Diagram`, `Visualization`, `Schema SQL`, `Code Generator`, atau `Settings`, tanpa mencantumkan tab tempat Anda sudah berada.
+
+Di tab ERD: `Database`, `Import`, `Import and Add`, dan `Export`, lalu `New Table`, `New Memo`, `New Table Group`, dan `Group Selected Tables`, keempat tipe hubungan, dan `Auto Layout`. Tabel tidak dicantumkan di sini; ketik `#` untuk [menuju salah satunya](#searching-the-diagram).  
+`Import and Add` tidak dicantumkan di editor hanya baca, begitu pula `New Memo` selama [View Option](./table-related-functions.md#table-view-options) → `Memos` menyembunyikan memo. `New Table Group` mulai menggambar [grup tabel](./table-groups.md) di kanvas, dan `Group Selected Tables` memasukkan tabel yang dipilih ke grup baru dan membuka namanya untuk diketik. Keduanya tidak dicantumkan di editor hanya baca dan selama View Option → `Table Groups` menyembunyikan grup, dan `Group Selected Tables` juga memerlukan setidaknya satu tabel yang dipilih. Barisnya menampilkan tombolnya: `Alt + G` (Windows/Linux) atau `⌥ + G` (Mac) untuk [menggambar grup](./table-groups.md#drawing-a-group), dan `T` lalu `G` untuk [mengelompokkan tabel yang dipilih](./table-groups.md#grouping-selected-tables).  
+Item-item ini menjalankan perintah yang sama dengan menu konteks kanvas, kecuali `Group Selected Tables`, yang merupakan `Group selected tables` di menu tabel; `View Option` dan `Diff Viewer` hanya ada di menu konteks. `Export` menawarkan `json`, `Schema SQL`, dan `Image` yang sama dengan menu konteks, dan mengetik `png` atau `svg` di dalamnya menemukan `Image`.  
+Lihat [Mengimpor atau mengekspor file](./file-import-export.md) untuk apa yang dilakukan setiap format, [Impor dan Tambahkan](./file-import-export.md#import-and-add), dan [ekspor gambar](./file-import-export.md#image), serta [Fungsi terkait tabel](./table-related-functions.md#databases) untuk apa yang dipengaruhi pilihan database.
+
+Di tab Skema SQL: `Database` lagi, dan `Bracket`, yang mengatur karakter tanda kutip yang mengapit nama tabel, kolom, constraint, dan indeks di SQL yang dihasilkan — `SingleQuote`, `DoubleQuote`, `Backtick`, atau `None` untuk tanpa tanda kutip sama sekali. Lalu `Schema SQL: Statements` dan `Schema SQL: Header`, yang membuat pilihan yang sama dengan panel opsi tab tersebut tetapi hanya mencantumkan pilihan yang ditulis oleh database yang dipilih, dan `Schema SQL: Options panel`, yang menampilkan atau menyembunyikan panel tersebut. Lihat [Skema SQL](./schema-sql.md) untuk apa yang ditulis setiap pilihan.
+
+Di tab Generator Kode: `Database`, `Bracket` selama bahasanya `Doctrine`, `JPA`, atau `SeaORM`, lalu `Language`, `Table Name Case`, `Column Name Case`, dan `Code Generator: Options panel`, yang menampilkan atau menyembunyikan panel opsi tab tersebut. Lihat [Generator Kode](./code-generator.md) untuk apa yang dihasilkan setiap target.
+
+Tab Visualisasi dan Pengaturan tidak memiliki perintah sendiri, hanya `Tab` dan perintah di bawah ini yang dicantumkan setiap tab.
+
+Di dekat akhir daftar setiap tab, juga di editor hanya baca, terdapat `Toggle Explorer`, yang menampilkan pintasannya, `Ctrl + F` (Windows/Linux) atau `⌘ + F` (Mac). Mengetik `find`, `replace`, `rename`, `tree`, `outline`, atau `objects` juga menemukannya.  
+Menjalankannya menutup palet dan melakukan apa yang dilakukan pintasan di kanvas. Selama tombol `Explorer` di bilah alat tampak tertekan, yaitu selama Penjelajah terbuka di tab ERD dan tidak disembunyikan oleh mode Zen, item ini menutup Penjelajah. Jika tidak, item ini beralih ke tab ERD dan membuka Penjelajah pada pencariannya, dengan kursor teks di kotak Temukan — lihat [Membuka dan menutup](./explorer.md#opening-and-closing). Item ini tidak dicantumkan selama Penampil Perbedaan, Perjalanan Waktu, atau pratinjau Tata Letak Otomatis terbuka.
+
+### Tema dan bahasa tampilan {#theme-and-display-language}
+
+Setelah `Toggle Explorer`, setiap tab mencantumkan `Theme` dan `Display Language`, juga di editor hanya baca. Masing-masing hanya dicantumkan jika editor menyediakan pemilihnya, seperti yang ditunjukkan oleh tombol `Theme` dan `Display Language` di bilah alat. Aplikasi web, Google Drive, VS Code, IDE JetBrains, dan Obsidian menyediakan keduanya — lihat [Di setiap host](./language-and-theme.md#in-each-host).
+
+`Theme` membuka `System`, `Light`, dan `Dark`, dengan tampilan saat ini dicentang. Memilih salah satunya hanya mengubah tampilan dan mempertahankan warna abu-abu dan warna aksen, seperti yang dilakukan tombol `Appearance` di pembuat tema.  
+`Display Language` membuka `System`, lalu 25 bahasa, masing-masing dengan nama dalam bahasanya sendiri dan dalam urutan pemilih, dengan opsi saat ini dicentang. Di sini bahasa juga ditemukan berdasarkan nama bahasa Inggrisnya atau kodenya: `german` atau `de-DE` menemukan `Deutsch`, dan `korean` menemukan `한국어`.  
+Pilihan di salah satunya langsung berlaku, menutup palet, dan disimpan sama seperti pilihan yang dibuat di pembuat tema atau pemilih `Display Language`. Jika bahasa tampilan berubah selama palet terbuka, daftar beralih ke bahasa tersebut, dengan mempertahankan apa yang Anda ketik dan submenu tempat Anda berada.
+
+## Mencari di diagram {#searching-the-diagram}
+
+Mulai pencarian dengan awalan untuk mencari di diagram, bukan di perintah: `#` untuk tabel, `@` untuk kolom, `:` untuk komentar dan memo, atau `?` untuk mencantumkan awalan. Awalan berfungsi dari tab mana pun. Awalan hanya berlaku sebagai karakter pertama, dengan mengabaikan spasi sebelumnya. Spasi setelahnya bersifat opsional, sehingga `#users` dan `# users` merupakan pencarian yang sama, dan `＃`, `＠`, `：`, dan `？` lebar penuh yang diketik oleh metode input bahasa Jepang atau Tionghoa juga berlaku.  
+Selama kotak input kosong di tingkat teratas, sebuah baris di bawahnya menampilkan keempat awalan; klik salah satunya untuk mengetikkannya. Selama awalan berlaku, ujung kotak input menyebutkan cakupannya: `Tables`, `Columns`, `Comments & memos`, atau `Help`. Hapus awalan untuk menampilkan kembali perintah.
+
+`#` mencantumkan tabel, masing-masing dengan `Table` di sampingnya, dan tabel dengan nama kosong dicantumkan sebagai `unnamed`. Jika tidak ada apa pun setelah `#`, tabel diurutkan menurut nama. Teks setelah `#` hanya dicocokkan dengan nama tabel, secara fuzzy seperti di atas, dan tabel yang namanya mengandung teks tersebut muncul lebih dulu. Nama grup tabel dan nama indeks tidak dicari di bawah awalan mana pun; [Temukan dan Ganti](./find-and-replace.md#what-it-searches) mencari keduanya.
+
+`@` mencantumkan kolom menurut nama, masing-masing dengan lokasinya di sampingnya, seperti `users.email · Column`. Teks setelah `@` harus muncul di nama kolom, tanpa membedakan huruf besar dan kecil; pencocokan ini tidak fuzzy. Teks sebelum `.` pertama mempersempit pencarian ke tabel yang namanya mengandung teks tersebut: `@users.em` mencantumkan kolom yang mengandung `em` di tabel yang namanya mengandung `users`, `@users.` mencantumkan kolom tabel-tabel tersebut, dan `@.em` mencari di setiap tabel. Jika tidak ada apa pun setelah `@`, kolom dicantumkan tanpa disaring.
+
+`:` mencantumkan komentar tabel, komentar kolom, dan memo, tidak pernah nama. Setiap baris menampilkan kutipan teks di sekitar kecocokan, dengan `users · Table comment`, `users.email · Column comment`, atau `Memo` di sampingnya. Teks setelah `:` harus muncul di komentar atau memo, tanpa membedakan huruf besar dan kecil, seperti pada `@`. Jika tidak ada apa pun setelah `:`, komentar dan memo yang tidak kosong dicantumkan. Selama View Option → `Memos` menyembunyikan memo, `:` tidak mencantumkan memo apa pun.
+
+`@` dan `:` mencantumkan barisnya sesuai urutan di dokumen: tabel demi tabel, komentar setiap tabel sebelum kolom-kolomnya dalam urutan kolom, dan memo di akhir.
+
+`?` mencantumkan `Tables`, `Columns`, dan `Comments & memos`, dan teks setelah `?` menyaringnya. Memilih salah satunya mengganti isi kotak input dengan awalannya dan membiarkan palet tetap terbuka.
+
+Daftar berawalan memuat setiap kecocokan, berapa pun jumlahnya. Awalan yang pencariannya tidak menemukan apa pun membiarkan daftar kosong, tanpa pesan.
+
+Memilih tabel, kolom, komentar, atau memo menutup palet dan beralih ke tab ERD jika Anda berada di tab lain.  
+Kanvas menggulir ke sana kecuali jika apa yang dituju sudah tampil dengan baik — lihat [Tempat lompatan berakhir](./table-related-functions.md#where-a-jump-lands). Tabel kemudian menjadi satu-satunya yang dipilih dan dibawa ke depan, dengan namanya difokuskan kecuali jika fokus sudah berada di tabel tersebut.  
+Memo menjadi satu-satunya yang dipilih dan dibawa ke depan. Untuk kolom atau komentar, tabelnya menjadi satu-satunya yang dipilih, dibawa ke depan, dan difokuskan pada sel yang memuat teks tersebut, atau pada nama di samping komentar yang disembunyikan oleh [opsi tampilan tabel](./table-related-functions.md#table-view-options).  
+Tidak ada lompatan yang memulai atau menyelesaikan hubungan yang sedang digambar.
+
+Untuk `Match Case`, `Match Whole Word`, atau `Use Regular Expression`, atau untuk mengganti teks, gunakan [Temukan dan Ganti](./find-and-replace.md) di bagian atas Penjelajah.
+
+## Saat tidak ada perintah yang cocok {#when-no-command-matches}
+
+Di tingkat teratas, tanpa awalan, jika tidak ada perintah tercantum yang mengandung apa yang Anda ketik, tanpa membedakan huruf besar dan kecil, tiga baris muncul setelah perintah: `Search tables for "…"`, `Search columns for "…"`, dan `Search comments & memos for "…"`, masing-masing dengan awalannya sebagai ikon. Memilih salah satunya mengetikkan awalan tersebut sebelum teks Anda, sehingga `users` menjadi `#users`, dan palet tetap terbuka pada hasil tersebut.  
+Jika pencarian sama sekali tidak menemukan perintah, `No commands match` muncul di atas daftar, yang kemudian hanya memuat ketiga baris tersebut. Jika pencarian hanya menemukan perintah yang tidak mengandung teks tersebut, perintah itu muncul lebih dulu: di tab ERD tanpa tabel yang dipilih, `tables` mencantumkan `New Table`, `Database`, dan, jika tersedia, `New Table Group` sebelum ketiga baris tersebut. Dengan tabel yang dipilih, `Group Selected Tables`, jika tersedia, mengandung `tables`, sehingga ketiga baris tersebut tidak muncul.  
+Di dalam submenu, pencarian yang tidak menemukan apa pun membiarkan daftar kosong, tanpa pesan.
+
+## Mencari dalam bahasa Korea {#searching-in-korean}
+
+Pencarian yang mengandung Hangul juga dicocokkan berdasarkan hurufnya, di perintah, di submenu, dan di bawah setiap awalan.  
+Setiap tahap yang dilalui metode input bahasa Korea tetap menemukan baris yang hendak Anda ketik, sehingga `ㅅ`, `사`, `상`, `사요`, dan `사용` semuanya menemukan `사용자`. Pencarian yang hanya terdiri atas konsonan awal mencocokkan konsonan awal suku kata, dengan spasi dilewati: `ㅅㅇㅈ` menemukan `사용자`, dan `ㅈㅁ` menemukan `주문 내역`. Gugus konsonan yang disusun oleh metode input Windows dari dua konsonan awal yang diketik berturut-turut, seperti `ㅄ`, dihitung sebagai keduanya (`ㅂㅅ`), sedangkan konsonan ganda seperti `ㄲ` tetap satu huruf. Teks yang disimpan dalam bentuk terurai, seperti nama file macOS, dicocokkan seolah-olah dalam bentuk tersusun.  
+Baris yang seluruh teksnya mengeja pencarian, huruf demi huruf atau konsonan awal demi konsonan awal, muncul lebih dulu, lalu baris yang diawali dengannya, lalu baris yang mengandungnya. Di bawah `@` dan `:`, baris yang mengandung pencarian persis seperti yang diketik muncul sebelum semua baris tersebut, dalam urutan dokumen. Sorotan mencakup suku kata utuh, sehingga `상` menyorot `사용` di `사용자`.

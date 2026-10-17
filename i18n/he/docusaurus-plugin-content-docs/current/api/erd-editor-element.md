@@ -1,0 +1,1046 @@
+---
+sidebar_position: 2
+description: ה-API של האלמנט erd-editor – תכונות, value ו-runtimeValue, אירועים, ערכות נושא, שפת תצוגה, מסך הפתיחה, צירופי מקשים, וכן ייבוא וייצוא של סכמות.
+---
+
+# ErdEditorElement
+
+העורך הוא `HTMLElement` רגיל.  
+הגדרת הטיפוס שלו היא כדלקמן.
+
+```ts
+interface ErdEditorElement extends HTMLElement {
+  readonly: boolean;
+  systemDarkMode: boolean; // system dark/light auto
+  enableThemeBuilder: boolean;
+  enableLocalePicker: boolean;
+  enableWelcomeScreen: boolean;
+  value: string;
+  readonly runtimeValue: string;
+  focus: () => void;
+  blur: () => void;
+  clear: () => void;
+  destroy: () => void;
+  setInitialValue: (value: string) => void;
+  setPresetTheme: (themeOptions: Partial<ThemeOptions>) => void;
+  setSystemAppearance: (appearance: 'dark' | 'light' | null) => void;
+  setTheme: (theme: Partial<Theme>) => void;
+  setLocale: (locale: LocaleOption) => void;
+  setSystemLocale: (locale: string | null) => void;
+  setKeyBindingMap: (
+    keyBindingMap: Partial<
+      Omit<
+        KeyBindingMap,
+        | 'edit'
+        | 'stop'
+        | 'undo'
+        | 'redo'
+        | 'zoomIn'
+        | 'zoomOut'
+        | 'zoomReset'
+      >
+    >
+  ) => void;
+  setSchemaSQL: SetSchema;
+  setSchemaGraphQL: SetSchema;
+  setSchemaDBML: SetSchema;
+  setSchemaAML: SetSchema;
+  setSchemaJSON: (
+    value: string,
+    options?: { mode?: 'replace' | 'append' }
+  ) => void;
+  getSchemaSQL: (
+    databaseVendor?: DatabaseVendor,
+    options?: SchemaSQLOptions
+  ) => string;
+  getSharedStore: (
+    config?: SharedStoreConfig & {
+      mouseTracker?: boolean;
+      focusTracker?: boolean;
+    }
+  ) => SharedStore;
+  setDiffValue: (value: string) => void;
+}
+```
+
+העורך מוצג בתוך shadow root סגור, ולכן `editor.shadowRoot` הוא `null`, וסגנונות הדף אינם דולפים פנימה או החוצה.  
+לא ניתן להגיע לשום דבר בפנים באמצעות סלקטור – במקום זאת, יש לעצב אותו באמצעות [setTheme](#settheme) ובאמצעות המאפיינים המותאמים אישית `--erd-editor-*`.
+
+`readonly`, `system-dark-mode`, `enable-theme-builder`, `enable-locale-picker` ו-`enable-welcome-screen` הן התכונות היחידות, וברירת המחדל של כל החמש היא `false`. שתי האחרונות חדשות בגרסה `4.0.0`. כל אחת מהן מפרשת את הערך שלה כפי שמתואר ב-[readonly](#readonly).
+
+החל מגרסה `4.1.0`, בכרטיסיית ERD יש [סייר](../guide/guides/explorer.md), עץ של התרשים, המעוגן משמאל לבד הציור, ובראשו איתור והחלפה. אף תכונה, מאפיין, מתודה או אירוע אינם פותחים אותו, סוגרים אותו או מדווחים עליו: הוא נפתח מהלחצן `Explorer` בסרגל הכלים, מהפריט `Toggle Explorer` בחיפוש המהיר או בתפריט ההקשר של בד הציור, או באמצעות צירוף המקשים [`findReplace`](#setkeybindingmap).  
+בכל אלמנט הסייר סגור בהתחלה. היותו פתוח, הרוחב שלו, מצב הכיווץ שלו והחיפוש שלו נשמרים כל עוד האלמנט קיים, גם במעברים בין כרטיסיות ובכל טעינה, כולל `setInitialValue`, ולעולם אינם נכללים ב-`value`, ב-`runtimeValue`, בהיסטוריית הפעולות או במאגר משותף.
+
+## readonly {#readonly}
+
+קובע את יכולת העריכה של העורך.  
+כל עוד הוא מוגדר, העורך מתעלם מהשמה ל-`value`, מ-`clear()`, מ-`setSchemaSQL()`, מ-`setSchemaGraphQL()`, מ-`setSchemaDBML()`, מ-`setSchemaAML()`, מ-`setSchemaJSON()`, מביטול פעולה ומביצוע חוזר, והאירוע `change` לעולם אינו משוגר. במקום זאת, יש לטעון מסמך באמצעות [setInitialValue](#setinitialvalue).  
+הצפייה עדיין פועלת: זום, הזזת התצוגה, כלי היד, מצב זן, כרטיסיית בד הציור, כרטיסיית [ויזואליזציה](../guide/guides/visualization.md) בשני המצבים שלה, כולל התמקדות בטבלאות, מסד הנתונים והגדרות הפלט של SQL ושל מחולל הקוד ממשיכים כולם לחול, כך שגם בעורך לקריאה בלבד ניתן לייצא SQL למסד נתונים אחר או לקרוא קוד שנוצר.  
+החל מגרסה `4.1.0`, גם ה[סייר](../guide/guides/explorer.md#read-only-editors) נפתח, ובחירה באחת מהשורות שלו מובילה אל מה שהשורה מייצגת, כמו בעורך שניתן לערוך בו. [איתור והחלפה](../guide/guides/find-and-replace.md#read-only-editors) שבראשו מאתר בלבד, ללא החץ `Toggle Replace` וללא שורת ההחלפה, ומעבר אל התאמה עדיין מביא אותה לתצוגה ובוחר בה. כותרת החלונית היא `Explorer`, ותיאור הכלי של הלחצן בסרגל הכלים הוא `Explorer (Ctrl + F)` (Windows/Linux) או `Explorer (⌘ + F)` (Mac) בכל עורך. מגרסה `3.10.0` ועד גרסה `4.0.0`, איתור והחלפה נפתח כחלונית צפה לאיתור בלבד שכותרתה `Find`.  
+חלון מאפייני הטבלה עדיין נפתח, והחל מגרסה `3.10.0` הוא מציג את התג `Read only` לצד הכותרת שלו, והכרטיסייה `Indexes` שלו אינה מאפשרת עריכה – ראו [מאפייני טבלה](../guide/guides/table-related-functions.md#table-properties).  
+החל מגרסה `4.0.0`, עורך לקריאה בלבד אינו מציע את [`Import and Add`](../guide/guides/file-import-export.md#import-and-add), `New Table Group`, `Group selected tables`, `Remove from group` (ראו [קבוצות טבלאות](../guide/guides/table-groups.md#read-only-editors)) או [`Map Columns`](../guide/guides/relationship-editing.md#map-columns), ואינו מציג את [מסך הפתיחה](#enablewelcomescreen). לחצני הנעילה בכרטיסיית הגדרות אינם משנים דבר, ולא ניתן לערוך את הסקריפטים `Before tables` ו-`After tables` של כרטיסיית סכמת SQL.  
+החל מגרסה `4.1.0`, הוא גם אינו מציג את הלחצנים `New Table`, `New Memo` או `New Table Group` ב[סרגל הכלים של בד הציור](../guide/guides/table-related-functions.md#canvas-toolbar), וצירופי המקשים `addTableGroup` ו-`groupSelectedTables` אינם עושים דבר.  
+הבחירות של `This window only` בכרטיסיית סכמת SQL, `Statements`, `Header` ו-`Tables`, לעולם אינן נשמרות ועדיין חלות, וכך גם תיבת הדו-שיח [`Export image`](../guide/guides/file-import-export.md#image), בונה ערכת הנושא ובורר שפת התצוגה. בחירה בבונה ערכת הנושא או בבורר שפת התצוגה עדיין משגרת את [changePresetTheme](#changepresettheme) או את [changeLocale](#changelocale).  
+תכונה ללא ערך, `=""` ו-`="true"` מתפרשים כולם כ-`true`. `="false"` מתפרש כ-`false`, וכך גם כל מחרוזת אחרת – כולל הצורה `readonly="readonly"` המקובלת ב-HTML.
+
+```js
+editor.readonly = true;
+// or
+editor.setAttribute('readonly', 'true');
+```
+
+```html
+<erd-editor readonly></erd-editor>
+```
+
+## systemDarkMode {#systemdarkmode}
+
+קובע אם לסנכרן אוטומטית עם המצב הכהה או הבהיר של המערכת.  
+החל מגרסה `4.0.0`, הפעלתו מגדירה את `appearance` של ערכת הנושא ל-`'system'`, כפי ש-`setPresetTheme({ appearance: 'system' })` עושה. לאחר מכן העורך מציג את המראה הבהיר או הכהה שמערכת ההפעלה מדווחת עליו, או את המראה ש-[setSystemAppearance](#setsystemappearance) מציינת, ומתחלף כשהוא משתנה.  
+קריאה מאוחרת יותר ל-[setPresetTheme](#setpresettheme) עם `'light'` או `'dark'`, או בחירה ב-`Light` או ב-`Dark` בבונה ערכת הנושא או בחיפוש המהיר, מחליפה את `'system'` ונשארת: השינוי הבא ב-OS כבר אינו דורס אותה, אף ש-`systemDarkMode` עדיין `true`. לפני גרסה `4.0.0`, השינוי הבא ב-OS דרס אותה.  
+כיבויו כשהמראה הוא `'system'` שומר על המראה הבהיר או הכהה שמוצג באותו רגע. כיבויו אחרי שהמראה שונה מ-`'system'` לערך אחר משאיר אותו כפי שהוא.  
+שינויו אינו משגר שום אירוע.
+
+```js
+editor.systemDarkMode = true;
+// or
+editor.setAttribute('system-dark-mode', 'true');
+```
+
+```html
+<erd-editor system-dark-mode></erd-editor>
+```
+
+## enableThemeBuilder {#enablethemebuilder}
+
+קובע אם מסופק ממשק להגדרה נוחה של ערכות נושא מוגדרות מראש.  
+הוא מציג את הלחצן `Theme` בסרגל הכלים, שפותח את בונה ערכת הנושא עם האפשרויות `Accent color`, `Gray color` ו-`Appearance`. החל מגרסה `4.0.0`, האפשרות `Appearance` מציעה את `System` לצד `Light` ו-`Dark`, וכל עוד מאפיין זה מופעל, החיפוש המהיר מציג את הפקודה `Theme` עם `System`, `Light` ו-`Dark`. ראו [שפה וערכת נושא](../guide/guides/language-and-theme.md).
+
+![פתיחת בונה ערכת הנושא מסרגל הכלים, בחירת צבע הדגשה וגוון אפור, והחלפת המראה ל-Light ולאחר מכן ל-System](/img/demo-theme-builder.webp)
+
+```js
+editor.enableThemeBuilder = true;
+// or
+editor.setAttribute('enable-theme-builder', 'true');
+```
+
+```html
+<erd-editor enable-theme-builder></erd-editor>
+```
+
+שינוי ערכת הנושא המוגדרת מראש מחלונית זו, או מהחיפוש המהיר, משגר את האירוע [changePresetTheme](#changepresettheme).
+
+## enableLocalePicker {#enablelocalepicker}
+
+החל מגרסה `4.0.0`, קובע אם מסופק ממשק לבחירת שפת התצוגה של העורך.  
+הוא מציג את הלחצן `Display Language` בסרגל הכלים, אחרי `Theme` כששניהם מוצגים. הלחצן פותח את בורר שפת התצוגה, והחיפוש המהיר מציג את הפקודה `Display Language`. שניהם מציעים את `System` ואת 25 השפות – ראו [שפה וערכת נושא](../guide/guides/language-and-theme.md).  
+הוא גם קובע מה העורך מציג לפני ש-[setLocale](#setlocale) נקראת או לפני שנבחרת שפה: `'system'` כשהוא מופעל, ואנגלית כשהוא כבוי, כך שאלמנט שלא הוגדר בו דבר ממשיך להציג את האנגלית שהציג תמיד. הפעלתו או כיבויו מחליפים מיד בין השניים. לאחר שהוגדרה או נבחרה שפה, הבחירה הזאת נשארת בין שהוא מופעל ובין שהוא כבוי.  
+כדי שהפריים הראשון יפעל לפי `'system'`, יש להגדיר אותו לפני שהאלמנט מצורף לדף.  
+בחירה משגרת את [changeLocale](#changelocale).
+
+```js
+editor.enableLocalePicker = true;
+// or
+editor.setAttribute('enable-locale-picker', 'true');
+```
+
+```html
+<erd-editor enable-locale-picker></erd-editor>
+```
+
+## enableWelcomeScreen {#enablewelcomescreen}
+
+החל מגרסה `4.0.0`, קובע אם תרשים ריק מקבל את פני המשתמש ב[מסך הפתיחה](../guide/guides/editing-start.md#welcome-screen).  
+הוא מוצג מעל כרטיסיית ERD כל עוד אין במסמך טבלה, פתק מוצג או קבוצת טבלאות מוצגת. הוא אינו מוצג כש-`readonly` מוגדר, במצב זן, או כשחלון מאפייני הטבלה, מציג ההבדלים, מסע בזמן או התצוגה המקדימה של הפריסה האוטומטית פתוחים. הטבלה הראשונה, הפתק המוצג הראשון או קבוצת הטבלאות המוצגת הראשונה מעלימים אותו, וביטול פעולה שמחזיר לתרשים ריק מחזיר אותו.  
+השורות `New Table`, `New Memo` ו-`Command Palette` שלו מציגות את הצירוף הראשון של `addTable`, `addMemo` ו-`search` כפי ש-[setKeyBindingMap](#setkeybindingmap) השאירה אותם, ואינן מציגות צירוף עבור שם שהושאר ריק. החצים שלו מצביעים על הלחצנים `Theme` ו-`Display Language` רק במקום ש-`enableThemeBuilder` ו-`enableLocalePicker` מציגים אותם.  
+בתפריט שלו, `↑`, `↓`, `Home` ו-`End` עוברים בין השורות, ונמנעים ונעצרים. `Enter` ו-`Space` נעצרים אך אינם נמנעים, כך שהשורה שבפוקוס מקבלת אותם, ו-`Escape` בין הפורמטים של `Import` חוזר אחורה, ונמנע ונעצר. כל מקש אחר מגיע לעורך ולדף כרגיל.  
+הוא אינו משנה דבר במסמך, ולכן משאיר את `value` כפי שהיה ואינו משגר `change`.  
+יש להפעיל אותו לאחר ש-[setInitialValue](#setinitialvalue) סיימה לטעון את המסמך, כפי שהסביבות המארחות הרשמיות עושות, כדי שהמסך לעולם לא יהבהב מעל קובץ שעדיין נטען.
+
+```js
+editor.enableWelcomeScreen = true;
+// or
+editor.setAttribute('enable-welcome-screen', 'true');
+```
+
+```html
+<erd-editor enable-welcome-screen></erd-editor>
+```
+
+## value {#value}
+
+### getter {#getter}
+
+מאחזר את המסמך הנוכחי כמחרוזת JSON, לפי ה[סכמה](./advanced/schema.md) שהעורך מגדיר.  
+החל מגרסה `4.0.0`, זוהי צורת האחסון, המסמך כפי שהוא שמור בקובץ, שהיא גם מה שייצוא ה-`json` כותב ומה שהסביבות המארחות הרשמיות שומרות. היא מכילה את הישויות הקיימות בלבד, ללא אלה שהוסרו, ללא סדר השכבות וללא מה שהעורך מחשב בעצמו, כגון רוחבים מדודים, סימוני מפתחות ועוגני קשרים. המפתחות של הישויות שלה מסודרים בסדר קבוע, היא מוזחת בשני רווחים ומסתיימת בתו שורה חדשה, כך שאותו מסמך תמיד מפיק את אותם בתים.  
+כל הגדרה שה[נעילה](../guide/guides/settings.md#lock) שלה מופעלת נכתבת בערך שבו היא נעולה, ולא כפי שהמסך מציג אותה. הנעילה `Viewport` מחזיקה את `originX`, `originY` ו-`zoomLevel`, והנעילות `Canvas Type`, `Language`, `Table Name Case`, `Column Name Case` ו-`Bracket Type` מחזיקות כל אחת את ההגדרה שלה. כל הגדרה אחרת נכתבת כפי שהיא, ו-`lockSettings` נכתב תמיד. לגבי הסיביות, ראו [Settings](./advanced/schema.md#settings).  
+במסמך חדש כל הנעילות מופעלות, בין שזה המסמך שאלמנט מציג לפני שניתן לו ערך ובין שזה מסמך שנטען מערך ריק. ה-`value` שלו שומר את נקודת הראשית על `0, 0`, את רמת הזום על `1`, את כרטיסיית ERD, ואת ברירות המחדל של שפת הקוד במחולל הקוד, של סגנונות השמות ושל סוג המירכאות, עד שמבטלים את הנעילה המתאימה.  
+לפני גרסה `4.0.0`, הוא החזיר את המסמך כולו כפי שהעורך החזיק אותו, לאחר החלת `ignoreSaveSettings`. המסמך כפי שהעורך מחזיק אותו הוא כעת [runtimeValue](#runtimevalue), ו-`ignoreSaveSettings` כבר אינו נקרא ואינו נכתב.
+
+```js
+const data = editor.value;
+```
+
+### setter {#setter}
+
+טוען מצב עורך שנשמר קודם לכן. הוא מחליף את המסמך כולו – המסמך הנוכחי מתרוקן תחילה.  
+כמו `clear()`, `setInitialValue()` והמתודות `setSchema*` במצב ברירת המחדל שלהן, `mode: 'replace'`, הוא גם מאפס את תצוגת הזרימה של כרטיסיית ויזואליזציה: הפריסה שלה, הטבלאות שהיא ממוקדת בהן, תצוגת השורות שלה, הזום והזזת התצוגה. הוספה (`mode: 'append'`) אינה מאפסת אותה.  
+הוא נרשם ברשימת ההיסטוריה, מה שמאפשר `Undo, Redo`, והוא משגר `change`.  
+הוא מקבל את צורת האחסון, [runtimeValue](#runtimevalue), או קובץ שנשמר בגרסה קודמת.  
+מחרוזת ריקה, או כל דבר שאינו מחרוזת, טוענים מסמך חדש במקום לזרוק שגיאה, ולכן יש לבדוק את הערך לפני השמתו.  
+המסמך החדש הזה הוא זה ש-`setInitialValue('')` פותחת: ריק, עם הגדרות ברירת מחדל, והחל מגרסה `4.0.0` עם כל הנעילות מופעלות. בגרסה `3.10.x` הוא לא שמר את מיקום הגלילה ולא את רמת הזום, ולפני כן שמר את שניהם.  
+מאגר משותף מעביר הלאה את הטעינה הזאת לשותפים לעריכה עם ה-JSON המלא של המסמך החדש, כך שכל עמית, כולל עמית בגרסה ישנה יותר, טוען את אותו מסמך.  
+החל מגרסה `4.0.0`, הנעילות של המסמך הנטען, והערכים הנעולים ש-`value` כותב לאחר מכן, נלקחים מהטקסט, והתצוגה נוחתת במקום שהטקסט קובע, או על התרשים כשאף חלק ממנו אינו מוצג שם. בכל הגדרה אחרת שהטקסט נועל – הכרטיסייה, שפת הקוד במחולל הקוד, סגנונות השמות וסוג המירכאות – העורך ממשיך להציג את מה שהציג לפני הטעינה. הגדרה שהטקסט משאיר לא נעולה מקבלת את הערך מהטקסט. [setInitialValue](#setinitialvalue), לעומת זאת, מקבלת כל ערך שהטקסט מכיל; ראו אותה גם לגבי טקסט שאינו מציין נעילות.  
+גם טקסט שאינו JSON, כגון קובץ שנותרו בו סימוני התנגשות מיזוג, אינו גורם לזריקת שגיאה: המסמך מתרוקן, ההגדרות שלו נשארות כפי שהיו, ושגיאת הניתוח נרשמת במסוף הדפדפן.  
+אין לו השפעה כל עוד `readonly` מוגדר; לטעינה לעורך לקריאה בלבד יש להשתמש ב-[setInitialValue](#setinitialvalue).
+
+```js
+editor.value = 'json...';
+```
+
+## runtimeValue {#runtimevalue}
+
+החל מגרסה `4.0.0`, מאחזר את המסמך כפי שהעורך הזה מחזיק אותו, כמחרוזת JSON. אין לו setter, ולכן השמה אליו זורקת שגיאה בקוד ב-strict mode.  
+הוא כולל את מה ש-[value](#value) משמיט: ישויות שהוסרו והסדר שלהן, סדר השכבות, רוחבים מדודים, סימוני מפתחות, עוגני קשרים ורצפים. גם כאן הגדרות נעולות נכתבות בערכים הנעולים שלהן.  
+יש להשתמש בו כדי לאתחל עורך נוסף שמצטרף לסשן שכבר פועל, כגון שותף לעריכה או תצוגה שנייה של אותו מסמך, באמצעות ה-[setInitialValue](#setinitialvalue) שלו. ביטול של הסרה שהסשן שולח מאוחר יותר משחזר אז שם את הישות במלואה, ואילו עורך שאותחל מ-`value` אינו מחזיק אף ישות שהוסרה, ובמקום זאת משחזר טבלה ריקה וללא שם. ראו [עריכה שיתופית](./advanced/collaborative-editing.md).  
+ישויות שהוסרו כבר אינן נאספות, ולכן הן נשארות בו עד הפעם הבאה שבה המסמך נפתח מהקובץ שלו.  
+לעולם אין לכתוב אותו לקובץ: יש לשמור את `value`, שה-[JSON Schema](./advanced/schema.md#json-schema) מקבל, בעוד שאת זה הוא אינו מקבל.
+
+```js
+otherEditor.setInitialValue(editor.runtimeValue);
+```
+
+## setInitialValue {#setinitialvalue}
+
+טוענת מצב עורך שנשמר קודם לכן. הטעינה עצמה אינה נרשמת ברשימת ההיסטוריה, ולכן לא ניתן לבטל אותה, ואף אירוע `change` אינו משוגר.  
+היא גם מנקה את היסטוריית הפעולות, כך שלא ניתן לבטל או לבצע שוב על המסמך הנטען שום פעולה שבוצעה לפני הטעינה.  
+היא מקבלת את צורת האחסון, [runtimeValue](#runtimevalue), או קובץ שנשמר בגרסה קודמת, ובניגוד להשמה ל-`value` היא מקבלת כל הגדרה שהטקסט מכיל, כולל הכרטיסייה והגדרות הקוד.  
+מחרוזת ריקה, או כל דבר שאינו מחרוזת, טוענים מסמך חדש במקום לזרוק שגיאה, כך ש-`setInitialValue('')` פותחת תרשים ריק.  
+החל מגרסה `4.0.0`, במסמך החדש הזה, שהוא גם מה שאלמנט מציג לפני שניתן לו ערך כלשהו, כל הנעילות מופעלות. גלילה, זום, מעבר בין כרטיסיות ושינוי של שפת הקוד במחולל הקוד, של סגנונות השמות או של סוג המירכאות משאירים את `value` כפי שהיה ואינם משגרים `change`. בגרסה `3.10.x` הוא לא שמר את מיקום הגלילה ולא את רמת הזום, ולפני כן שמר את שניהם.  
+מסמך שנטען מטקסט שומר על הנעילות שהוא מציין. מסמך שאינו מציין אף נעילה – כל קובץ שנשמר לפני גרסה `4.0.0`, יהיה ערך ה-`ignoreSaveSettings` שלו אשר יהיה, וקובץ `.vuerd` של גרסה 2 – נפתח עם כל הנעילות מופעלות, כשההגדרה `Viewport` שלו נעולה על נקודת הראשית `0, 0` ועל רמת הזום `1`, בכרטיסיית ERD, ועם שפת הקוד, סגנונות השמות וסוג המירכאות כפי שנשמרו בו.  
+בכל מקרה, התצוגה נפתחת בתצוגה של המסמך – זו שהטקסט שמר כשהוא מציין את הנעילות שלו, ונקודת הראשית `0, 0` ברמת הזום `1` כשהוא אינו מציין אף נעילה – או על התרשים כשאף חלק ממנו אינו מוצג שם. הגדרת `Viewport` נעולה עדיין שומרת ב-`value` על הערכים הנעולים שלה.  
+החל מגרסה `4.0.0`, היא גם משליכה את מצב שיתוף הפעולה של המסמך שהוחזק קודם לכן, ו[מאגר משותף](#getsharedstore) של העורך הזה שכבר רשום מבקש שוב מהעורכים האחרים את המצב שלהם, כך שעורך שנטען מחדש בסשן פועל מתעדכן. יש לאתחל עורך כזה באמצעות ה-[runtimeValue](#runtimevalue) של עורך אחר.  
+גם טקסט שאינו JSON אינו גורם לזריקת שגיאה: המסמך מתרוקן, ההגדרות שלו נשארות כפי שהיו, ושגיאת הניתוח נרשמת במסוף הדפדפן.  
+בניגוד להשמה ל-`value`, היא אינה נחסמת על ידי `readonly`, ולכן זו הדרך לטעון מסמך לעורך לקריאה בלבד.
+
+```js
+editor.setInitialValue('json...');
+```
+
+טעינה בהתחלה, שמירה בכל שינוי.
+
+```js
+editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
+editor.addEventListener('change', () => {
+  localStorage.setItem('my-diagram', editor.value);
+});
+```
+
+## אירועים {#event}
+
+`change`, `changePresetTheme` ו-`changeLocale` הם שלושת האירועים הציבוריים היחידים; `changeLocale` חדש בגרסה `4.0.0`.  
+האלמנט גם משגר על עצמו אירועים פנימיים `@dineug/erd-editor/internal-*` לצורך החיווט הפנימי שלו; הם אינם חלק מה-API.
+
+### change {#change}
+
+כשיש שינויים בעורך, העורך משגר אירוע.  
+האירוע מושהה (debounce) ב-200ms, והוא אינו משוגר כל עוד `readonly` הוא `true`.  
+הוא משוגר בכל שינוי במסמך – עריכה בממשק, השמה ל-`value`, `clear()`, כל אחת מהמתודות `setSchema*`, והחל מגרסה `4.0.0` גם `setSchemaJSON()` ו-`Import and Add`. `setInitialValue` אינה משגרת אותו.  
+שום פעולה בתוך מצב הזרימה של כרטיסיית ויזואליזציה אינה משגרת אותו – זום, הזזת התצוגה, הזזת כרטיסים, `Tidy Up`, תצוגת השורות או מיקוד התצוגה מכרטיס – מכיוון שאף אחת מהן אינה שינוי במסמך.  
+החל מגרסה `4.0.0`, גם שינוי בהגדרה שה[נעילה](../guide/guides/settings.md#lock) שלה מופעלת אינו משגר אותו, מכיוון שהוא משנה רק את המסך ולעולם לא את `value`: גלילה או זום של בד הציור של ERD כש-`Viewport` נעול, מעבר בין כרטיסיות כש-`Canvas Type` נעול, ושינוי של שפת הקוד במחולל הקוד, של סגנון שמות הטבלאות, של סגנון שמות העמודות או של סוג המירכאות כשהנעילה של אותה הגדרה מופעלת. רק השינויים האלה אינם נכללים, כך שאצווה שגם עורכת את המסמך עדיין משגרת אותו. נעילה של הגדרה או ביטול הנעילה שלה משגרים אותו.  
+במסמך חדש ובכל קובץ שנשמר לפני גרסה `4.0.0` כל הנעילות מופעלות, ולכן כברירת מחדל גלילה, זום ומעבר בין כרטיסיות אינם משגרים דבר. הדבר חל על התמקדות בטבלאות מכרטיסיית ERD, על לחצן הקישור החיצוני בכרטיס שמחזיר ממצב זרימה לכרטיסיית ERD, על מעבר אל שורה בסייר או אל התאמת חיפוש, ועל פתיחת הסייר או מעבר אל תוצאה של החיפוש המהיר מכרטיסייה אחרת. כל אחת מהפעולות האלה משגרת `change` אחד רק כשנעילה שחלה עליה כבויה: `Canvas Type` למעבר בין הכרטיסיות, ו-`Viewport` לגלילה שגם לחצן בכרטיס, תוצאה של החיפוש המהיר, שורה בסייר או התאמת חיפוש מבצעים. החל מגרסה `4.1.0`, כל הגלילות האלה פועלות לפי כלל אחד, [היכן נוחתת קפיצה](../guide/guides/table-related-functions.md#where-a-jump-lands), כך שתוצאת טבלה בחיפוש המהיר כבר אינה גוללת בכל פעם, וקפיצה שהכלל משאיר במקומה אינה יוצרת גלילה שתגרום לשיגור. פתיחה, סגירה או שינוי גודל של הסייר מצרים או מרחיבים את בד הציור בלי להזיז את נקודת הראשית שלו, וגם הם אינם משגרים דבר. לפני גרסה `4.0.0`, גלילה, זום ומעבר בין כרטיסיות תמיד שיגרו אותו, גם כש-`editor.value` יצא זהה.  
+כדי לדלג על כתיבות שאינן משנות דבר, יש להשוות את `editor.value` לערך שנשמר לאחרונה, ולא לקובץ שנטען: קובץ שגרסה קודמת כתבה, קובץ מגרסה 2 או קובץ שנערך ידנית עשויים לצאת שונים ב-`value` מיד עם טעינתם, מכיוון ש-`value` כותב אותם בצורת האחסון. כך גם קובץ שהנעילה `Viewport` שלו כבויה ושנקודת הראשית שלו אינה מציגה אף חלק מהתרשים במסך הזה: הטעינה מזיזה את התצוגה אל התרשים, ו-`value` כותב את המקום שבו היא נוחתת. החל מגרסה `4.0.0`, רוחבים מדודים כבר אינם גורמים לכך, מכיוון ש-`value` אינו מכיל אותם. סביבה מארחת שכותבת קבצים יכולה, במקום זאת, להבחין בין עריכה לבין שינוי תצוגה באמצעות `changed` של מאגר שכפול – ראו [on@change](./advanced/remote-storage.md#onchange).  
+האירוע אינו נושא `detail`, אינו מבעבע ואינו חוצה את גבול ה-shadow, ולכן יש להאזין על האלמנט עצמו ולקרוא את `editor.value` בפונקציית הטיפול.
+
+```js
+editor.addEventListener('change', event => {
+  const data = event.target.value;
+});
+```
+
+### changePresetTheme {#changepresettheme}
+
+משוגר כשערכת הנושא המוגדרת מראש משתנה מבונה ערכת הנושא המובנה, או, החל מגרסה `4.0.0`, מהפקודה `Theme` בחיפוש המהיר. כל בחירה משגרת אותו, כולל בחירה באפשרות שכבר בתוקף.  
+קריאה ישירה ל-[setPresetTheme](#setpresettheme) או ל-[setSystemAppearance](#setsystemappearance), או הפעלה או כיבוי של [systemDarkMode](#systemdarkmode), אינן משגרות אותו.  
+`event.detail` הוא ה-`ThemeOptions` המלא לאחר הבחירה – `{ appearance, grayColor, accentColor }` – ולא האובייקט החלקי שהתבקש. החל מגרסה `4.0.0`, ה-`appearance` שלו הוא `'system'` כשנבחר `System`, ולא המראה הבהיר או הכהה שמוצג, ולכן יש לשמור אותו כמות שהוא ולהעביר אותו בחזרה ל-`setPresetTheme`.
+
+```js
+editor.addEventListener('changePresetTheme', event => {
+  const themeOptions = event.detail;
+});
+```
+
+### changeLocale {#changelocale}
+
+החל מגרסה `4.0.0`, משוגר כשנבחרת שפה בעורך, מבורר שפת התצוגה או מהפקודה `Display Language` בחיפוש המהיר, ששניהם מופעלים על ידי [enableLocalePicker](#enablelocalepicker).  
+הוא משוגר לאחר שהשפה הוחלה, בכל בחירה, כולל בחירה באפשרות שכבר בתוקף. [setLocale](#setlocale) ו-[setSystemLocale](#setsystemlocale) לעולם אינן משגרות אותו, וגם לא שינוי בשפות הדפדפן. החלפת שפה אינה משגרת `change`.  
+`event.detail` הוא `{ locale }`, מסוג `LocaleOption`: `'system'` כשנבחר `System`, ואחרת הקוד של השפה. האלמנט אינו זוכר את הבחירה, ולכן יש לשמור אותה ולהעביר אותה ל-`setLocale` בטעינה הבאה.  
+כמו `change`, הוא אינו מבעבע, ולכן יש להאזין על האלמנט עצמו.
+
+```js
+editor.addEventListener('changeLocale', event => {
+  const { locale } = event.detail; // 'system' | 'ko-KR' | ...
+});
+```
+
+## focus {#focus}
+
+מעבירה את הפוקוס לעורך.
+
+```js
+editor.focus();
+```
+
+## blur {#blur}
+
+מסירה את הפוקוס מהעורך.
+
+```js
+editor.blur();
+```
+
+## clear {#clear}
+
+מרוקנת את המסמך ומסירה כל טבלה, עמודה, קשר, אינדקס ופתק, והחל מגרסה `4.0.0` גם כל קבוצת טבלאות.  
+כל ההגדרות נשארות, כולל מסד הנתונים, מיקום התצוגה, רמת הזום, אפשרויות התצוגה של הטבלאות, כל נעילה עם הערך שהיא מחזיקה, והסקריפטים `Before tables` ו-`After tables` של כרטיסיית סכמת SQL, כך שקובץ שרוקן ממשיך לשמור את מה ששמר. כדי להתחיל מסמך חדש במקום זאת, יש להשים `''` ל-`value` או לקרוא ל-`setInitialValue('')`.  
+היא נרשמת ברשימת ההיסטוריה, כך שניתן לבטל אותה, והיא משגרת `change`. ביטול הפעולה מחזיר את המסמך כפי שהעורך החזיק אותו, כשכל הגדרה נעולה בערך הנעול שלה. אין לה השפעה כל עוד `readonly` מוגדר.
+
+```js
+editor.clear();
+```
+
+## destroy {#destroy}
+
+משמידה לחלוטין את מופע העורך, כך שלא ניתן עוד לעשות בו שימוש חוזר.  
+היא משחררת את המאזינים ואת ההרשמות של העורך, ומשמידה כל מאגר משותף ש-[getSharedStore](#getsharedstore) החזירה.  
+אצוות זרם שמאגר משותף עדיין מעכב אובדת יחד איתו; כדי לשלוח אותה, יש לקרוא תחילה ל-[flushStreamBuffers](./advanced/collaborative-editing.md#flushstreambuffers) של אותו מאגר.
+
+```js
+editor.destroy();
+```
+
+## setKeyBindingMap {#setkeybindingmap}
+
+מגדירה מחדש את קיצורי המקשים.  
+`edit`, `stop`, `undo`, `redo`, `zoomIn`, `zoomOut` ו-`zoomReset` קבועים ולא ניתן להגדיר אותם מחדש.  
+רק עשרים ואחד השמות שלהלן נכתבים; כל דבר אחר באובייקט אינו נלקח בחשבון, כולל השמות הקבועים.  
+החל מגרסה `3.10.0`, ניתן להגדיר מחדש את `search`, ו-`findReplace` חדש. לפני כן, `search` היה קבוע. החל מגרסה `4.0.0`, `removeSelection` חדש. החל מגרסה `4.1.0`, `addTableGroup` ו-`groupSelectedTables` חדשים.  
+ערך של צירוף מקשים חייב להיות `ShortcutOption[]`. מחרוזת בודדת אינה נלקחת בחשבון, ולכן יש לכתוב `{ addTable: [{ shortcut: 'Alt+KeyN' }] }` ולא `{ addTable: 'Alt+KeyN' }`.  
+מערך ריק מתקבל ואינו משייך דבר: `setKeyBindingMap({ findReplace: [] })` משאיר את `Ctrl + F` (Windows/Linux) או `⌘ + F` (Mac) לדף, ו-`{ search: [] }` עושה אותו דבר עבור `Ctrl + K` (Windows/Linux) או `⌘ + K` (Mac). הלחצן `Search` בסרגל הכלים עדיין פותח את החיפוש המהיר, הלחצן `Explorer` בסרגל הכלים עדיין פותח וסוגר את הסייר, והפריט `Toggle Explorer` בחיפוש המהיר ובתפריט ההקשר של בד הציור עדיין פותח את החיפוש שלו או סוגר אותו; אף אחד מאלה אינו מציג קיצור מקשים עבור שם שהושאר ריק. `{ removeSelection: [] }` משאיר את `Delete` ו-`Backspace` לדף, ושורות המחיקה בתפריטים של הטבלה, הפתק וקבוצת הטבלאות (`Delete`, `Delete selected`, `Delete column`, `Delete columns`) אינן מציגות אז קיצור מקשים.  
+החל מגרסה `4.1.0`, `{ addTableGroup: [] }` משאיר את `Alt + G` (Windows/Linux) או `⌥ + G` (Mac) לדף, ו-`{ groupSelectedTables: [] }` משאיר את `T` ואז `G`. הפקודה `New Table Group` בסרגל הכלים של בד הציור, בתפריט ההקשר של בד הציור ובחיפוש המהיר, הפריט `Group selected tables` בתפריט הטבלה והפקודה `Group Selected Tables` בחיפוש המהיר ממשיכים לפעול, ללא הצגת קיצור מקשים. תיאורי הכלי של הלחצנים `New Table`, `New Memo` ו-`New Table Group` בסרגל הכלים של בד הציור מציינים את הצירוף הראשון של `addTable`, `addMemo` ו-`addTableGroup`, או רק את שם הלחצן עבור צירוף מקשים שהושאר ריק.  
+הקריאה היא מיזוג חלקי: שמות שאינם נכללים בה שומרים על ברירות המחדל שלהם, וקריאה כפולה שומרת על השינויים הקודמים. אין getter לצירופי המקשים הנוכחיים: [createKeyBindingMap](#createkeybindingmap) מחזירה את ברירות המחדל, ולא את מה ש-`setKeyBindingMap` שינתה.
+
+```ts
+type ShortcutOption = {
+  shortcut: string;
+  preventDefault?: boolean;
+  stopPropagation?: boolean;
+};
+
+const defaultKeyBindingMap: Omit<
+  KeyBindingMap,
+  | 'edit'
+  | 'stop'
+  | 'undo'
+  | 'redo'
+  | 'zoomIn'
+  | 'zoomOut'
+  | 'zoomReset'
+> = {
+  search: [
+    { shortcut: '$mod+KeyK', preventDefault: true, stopPropagation: true },
+  ],
+  findReplace: [
+    { shortcut: '$mod+KeyF', preventDefault: true, stopPropagation: true },
+  ],
+  addTable: [{ shortcut: 'Alt+KeyN', preventDefault: true }],
+  addColumn: [{ shortcut: 'Alt+Enter', preventDefault: true }],
+  addMemo: [{ shortcut: 'Alt+KeyM', preventDefault: true }],
+  addTableGroup: [
+    { shortcut: 'Alt+KeyG', preventDefault: true, stopPropagation: true },
+  ],
+  groupSelectedTables: [{ shortcut: 'KeyT KeyG', preventDefault: true }],
+  removeTable: [
+    { shortcut: '$mod+Backspace', preventDefault: true },
+    { shortcut: '$mod+Delete', preventDefault: true },
+  ],
+  removeColumn: [
+    { shortcut: 'Alt+Backspace', preventDefault: true },
+    { shortcut: 'Alt+Delete', preventDefault: true },
+  ],
+  removeSelection: [
+    { shortcut: 'Delete', preventDefault: true },
+    { shortcut: 'Backspace', preventDefault: true },
+  ],
+  primaryKey: [{ shortcut: 'Alt+KeyK', preventDefault: true }],
+  selectAllTable: [
+    { shortcut: '$mod+KeyA', preventDefault: true },
+    { shortcut: '$mod+Alt+KeyA', preventDefault: true },
+  ],
+  selectAllColumn: [{ shortcut: 'Alt+KeyA', preventDefault: true }],
+  relationshipZeroOne: [{ shortcut: '$mod+Alt+Digit1', preventDefault: true }],
+  relationshipZeroN: [{ shortcut: '$mod+Alt+Digit2', preventDefault: true }],
+  relationshipOneOnly: [{ shortcut: '$mod+Alt+Digit3', preventDefault: true }],
+  relationshipOneN: [{ shortcut: '$mod+Alt+Digit4', preventDefault: true }],
+  tableProperties: [{ shortcut: 'Alt+Space', preventDefault: true }],
+  focusView: [
+    { shortcut: 'Alt+KeyF', preventDefault: true, stopPropagation: true },
+  ],
+  handTool: [{ shortcut: 'Space', preventDefault: true }],
+  zenMode: [
+    { shortcut: 'Alt+KeyZ', preventDefault: true, stopPropagation: true },
+  ],
+};
+
+// example
+editor.setKeyBindingMap({
+  addTable: [{ shortcut: '$mod+KeyN', preventDefault: true }],
+});
+```
+
+`selectAllTable`, `handTool`, `removeSelection`, והחל מגרסה `4.1.0` גם `groupSelectedTables`, מפנים את מקומם לסמן הטקסט: כשהפוקוס נמצא בשדה קלט, ב-textarea או ב-`contenteditable`, `$mod + A` בוחר את הטקסט, `Space` מקליד רווח, `Delete` ו-`Backspace` מוחקים טקסט, ו-`T` ואז `G` מקלידים את שתי האותיות, במקום להגיע לבד הציור. אף אחת מההקשות האלה אינה נמנעת. כל צירוף שאליו משייכים אותם מחדש מתנהג באותו אופן.
+
+החל מגרסה `4.0.0`, `removeSelection` (`Delete` או `Backspace`) מסיר את הבחירה בכרטיסיית ERD כצעד ביטול אחד, בלי לבקש אישור. כשהטבלה שבפוקוס היא הדבר היחיד שנבחר, אחת או יותר מהעמודות שלה נבחרו, ורמת הזום מציגה את השורות שלה, הוא מסיר את העמודות האלה; אחרת הוא מסיר כל טבלה, פתק וקבוצת טבלאות שנבחרו, והטבלאות של קבוצה נשמרות. ראו [מחיקת טבלאות ופתקים](../guide/guides/table-related-functions.md#table-and-memo-deletion).  
+מקש לחוץ ממושכות מסיר פעם אחת, ושום דבר אינו מוסר כשעורך של תא, של פתק או של שם קבוצת טבלאות פתוח. מחוץ לשדה טקסט ולחלוניות שמעכבות צירופי מקשים (ראו [createKeyBindingMap](#createkeybindingmap)), ההקשה נמנעת בכל כרטיסייה כל עוד לעורך יש פוקוס, גם על לחצן בסרגל הכלים שבפוקוס, וגם בעורך לקריאה בלבד, שבו היא אינה מסירה דבר.
+
+החל מגרסה `4.1.0`, `addTableGroup` (`Alt+KeyG`) מפעיל את השרטוט `New Table Group` בכרטיסיית ERD, שבו הלחיצה הבאה בלחצן הראשי על בד הציור משרטטת את הקבוצה, והקשה נוספת מסיימת את השרטוט, כפי שעושה הלחצן `New Table Group` בסרגל הכלים של בד הציור. `groupSelectedTables` (`KeyT KeyG`, `T` ואז `G`) מכניס את הטבלאות שנבחרו לקבוצה חדשה ופותח את עורך השם שלה, כפי שעושה הפריט `Group selected tables` בתפריט ההקשר של טבלה. כשלא נבחרה אף טבלה הוא אינו מוסיף דבר; פתק או קבוצת טבלאות שנבחרו אינם נספרים. ראו [שרטוט קבוצה](../guide/guides/table-groups.md#drawing-a-group) ו[קיבוץ הטבלאות שנבחרו](../guide/guides/table-groups.md#grouping-selected-tables).  
+שניהם פועלים רק במקום שבו התפריטים מציעים קבוצה: לא כש-`readonly` מוגדר, לא כשאפשרות התצוגה `Table Groups` מסתירה את הקבוצות, ולא כשעורך של תא, של פתק או של שם קבוצת טבלאות פתוח. כמו שאר צירופי המקשים של בד הציור, הם פועלים רק בכרטיסיית ERD, ולא כשהחיפוש המהיר, חלון מאפייני הטבלה, מציג ההבדלים, מסע בזמן, התצוגה המקדימה של הפריסה האוטומטית, תיבת הדו-שיח `Export image` או `Map Columns` פתוחים. במקום שבו הם אינם עושים דבר, ההקשה עדיין נמנעת, אלא אם `groupSelectedTables` מפנה את מקומו לסמן הטקסט. `addTableGroup` גם נעצר, כמו `focusView` ו-`zenMode`, כך שמאזין `keydown` של הדף בשלב הבעבוע לעולם אינו קולט אותו.
+
+החל מגרסה `3.10.0`, `findReplace` (`$mod+KeyF`) פותח את [איתור והחלפה](../guide/guides/find-and-replace.md). החל מגרסה `4.1.0`, הוא מציג או מסתיר את ה[סייר](../guide/guides/explorer.md#opening-and-closing) שמכיל אותו, וכרטיסיית קיצורי מקשים מציגה אותו בשם `Toggle Explorer`.  
+כל עוד הלחצן `Explorer` בסרגל הכלים נראה לחוץ (הסייר פתוח בכרטיסיית ERD ואינו מוסתר על ידי מצב זן), הוא סוגר את הסייר, אלא אם החיפוש המהיר, חלון מאפייני הטבלה, בונה ערכת הנושא, בורר שפת התצוגה, תיבת הדו-שיח `Export image` או `Map Columns` פתוחים. אחרת הוא סוגר את מה שפתוח מביניהם, עובר לכרטיסיית ERD מכל כרטיסייה אחרת, ופותח את הסייר עם סמן הטקסט בשדה `Find` שלו, כשמחרוזת החיפוש נבחרת. עורך צר מכדי להציג את הסייר לצד בד הציור משאיר אותו פתוח אך מפנה אותו הצידה, ומציג את ההודעה הקופצת `Widen the window to show the Explorer`. לפני גרסה `4.1.0`, הוא פתח את חלונית איתור והחלפה הצפה, או החזיר את המקלדת לשדה שלה, ולעולם לא סגר אותה.  
+הוא אינו מפנה את מקומו לסמן הטקסט: כל עוד העורך בפוקוס, הוא נקלט בכל כרטיסייה, מבד הציור או משדה קלט בתוך העורך. ההקשה נמנעת, כך שהדפדפן אינו פותח את סרגל האיתור שלו, ונעצרת, כך ששום מאזין `keydown` של הדף בשלב הבעבוע אינו קולט אותה. כשעורך של תא או של פתק פתוח, או, החל מגרסה `4.0.0`, עורך של שם קבוצת טבלאות, הוא עדיין נמנע ונעצר, אך אינו עושה דבר.  
+כשמציג ההבדלים, מסע בזמן או התצוגה המקדימה של הפריסה האוטומטית פתוחים, בכל כרטיסייה שהיא, או כשההרכבה בשיטת הקלט (IME) עדיין מתבצעת, הוא אינו נמנע ואינו נעצר, כך שהאיתור של הדפדפן או של הסביבה המארחת מקבל אותו. בתוך הסייר, הקשה במהלך הרכבה נעצרת שם, אך אינה נמנעת. כל צירוף שאליו משייכים מחדש את `findReplace` מתנהג באותו אופן.
+
+`focusView` פועל בכרטיסיית ERD בלבד. כשנבחרה לפחות טבלה אחת, הוא פותח את כרטיסיית ויזואליזציה במצב זרימה, ממוקדת בטבלאות האלה ובכל טבלה שמרוחקת מהן קשר אחד; פתק או קבוצת טבלאות שנבחרו אינם נספרים, וכשלא נבחרה אף טבלה הוא אינו עושה דבר. ראו [התמקדות בטבלאות](../guide/guides/visualization.md#focusing-on-tables).
+
+`stop` (`Escape`) בכרטיסיית ERD מסיים עורך פתוח של תא או של פתק, או קשר שנמצא בשרטוט, ומשאיר את הבחירה כפי שהיא. החל מגרסה `4.0.0`, הוא גם מסיים עורך של שם קבוצת טבלאות, בלי לכתוב שם, ושרטוט `New Table Group`. העורך קורא ל-`preventDefault()` על ההקשה הזאת.  
+כשאף אחד מאלה אינו פתוח, `Escape` מנקה את הבחירה ואת התא הפעיל, ואינו נמנע. לכן, יציאה מעריכה וניקוי הבחירה דורשים שתי הקשות.  
+מלבד הסייר, הפורמטים של `Import` ב[מסך הפתיחה](#enablewelcomescreen), והבוררים ותיבות הדו-שיח שלהלן, העורך לעולם אינו עוצר את ההתפשטות של `Escape`, כך שדף שמאזין לו בעצמו, לדוגמה כדי לסגור תיבת דו-שיח משלו, קולט את שתי ההקשות ויכול לדלג על זו שה-`defaultPrevented` שלה הוא `true`.  
+כשהחיפוש המהיר, חלון מאפייני הטבלה, מציג ההבדלים, התצוגה המקדימה של הפריסה האוטומטית או מסע בזמן פתוחים, `Escape` סוגר את מה שפתוח במקום זאת ומשאיר את הבחירה כפי שהיא. גם הקשה זו אינה נמנעת.  
+החל מגרסה `4.0.0`, גם תיבת הדו-שיח [`Export image`](../guide/guides/file-import-export.md#image) או [`Map Columns`](../guide/guides/relationship-editing.md#map-columns), כשהיא פתוחה, קולטת את `Escape`, נסגרת ומשאירה את הבחירה כפי שהיא. כל אחת מהן לוקחת את המקלדת כשהיא נפתחת, וה-`Escape` הזה גם נמנע וגם נעצר.  
+החל מגרסה `4.1.0`, הקשה על `Escape` כשהפוקוס נמצא בתוך ה[סייר](../guide/guides/explorer.md#keys-in-the-explorer), בעץ שלו, בשדות שלו או בלחצנים שלו, מחזירה את המקלדת לבד הציור ומשאירה את הסייר פתוח ואת הבחירה כפי שהיא. העורך קורא עליה גם ל-`preventDefault()` וגם ל-`stopPropagation()`, כך שהיא לעולם אינה מגיעה למאזין `keydown` של הדף בשלב הבעבוע.  
+הקשה על `Escape` בבד הציור לעולם אינה סוגרת את הסייר. לפני גרסה `4.1.0`, הקשה על `Escape` בתוך חלונית איתור והחלפה סגרה אותה, והקשה כזו בבד הציור סגרה אותה ובאותה הקשה גם ניקתה את הבחירה.  
+החל מגרסה `4.0.0`, בורר שפת התצוגה ובורר הצבעים נסגרים בהקשה על `Escape`: בתוכם ההקשה נמנעת ונעצרת, ובבד הציור היא סוגרת אותם ובאותה הקשה גם מנקה את הבחירה, והיא אינה נמנעת ואינה נעצרת.  
+הקשה על `Escape` כשההרכבה בשיטת הקלט (IME) עדיין מתבצעת שייכת להרכבה. היא משאירה עורך פתוח כפי שהוא ואינה נמנעת, כך שגם דף יכול לדלג על הקשה שה-`isComposing` שלה הוא `true`, או שה-`keyCode` שלה הוא `229`. בתוך הסייר, הקשה כזו, כמו כל מקש שמוקש שם באמצע הרכבה, גם נעצרת, והמקלדת נשארת בשדה.  
+לפני גרסה `3.9.2`, הקשה אחת על `Escape` גם סיימה עריכה או שרטוט וגם ניקתה את הבחירה, והעורך לעולם לא מנע אותה.
+
+### createKeyBindingMap {#createkeybindingmap}
+
+החל מגרסה `3.9.2`, החבילה מייצאת את `createKeyBindingMap()`, ויחד איתה את הטיפוסים `KeyBindingMap`, `KeyBindingName` ו-`ShortcutOption`.  
+היא מחזירה את צירופי המקשים של ברירת המחדל, כל 28 השמות כולל הקבועים, כמפה חדשה בכל קריאה, כך ששינוי המפה שהיא מחזירה אינו משנה שום דבר אחר.  
+ממנה מתחיל כל עורך, וקריאה ל-`setKeyBindingMap` אינה משתקפת בה.  
+רק `createKeyBindingMap` הוא ייצוא בזמן ריצה; שלושת האחרים הם טיפוסים.
+
+```ts
+type KeyBindingName =
+  | 'edit'
+  | 'stop'
+  | 'search'
+  | 'findReplace'
+  | 'undo'
+  | 'redo'
+  | 'addTable'
+  | 'addColumn'
+  | 'addMemo'
+  | 'addTableGroup'
+  | 'groupSelectedTables'
+  | 'removeTable'
+  | 'removeColumn'
+  | 'removeSelection'
+  | 'primaryKey'
+  | 'selectAllTable'
+  | 'selectAllColumn'
+  | 'relationshipZeroOne'
+  | 'relationshipZeroN'
+  | 'relationshipOneOnly'
+  | 'relationshipOneN'
+  | 'tableProperties'
+  | 'focusView'
+  | 'zoomIn'
+  | 'zoomOut'
+  | 'zoomReset'
+  | 'handTool'
+  | 'zenMode';
+
+type KeyBindingMap = Record<KeyBindingName, ShortcutOption[]>;
+
+declare function createKeyBindingMap(): KeyBindingMap;
+
+// example
+import { createKeyBindingMap } from '@dineug/erd-editor';
+
+const shortcuts = Object.values(createKeyBindingMap())
+  .flat()
+  .map(({ shortcut }) => shortcut); // 'Enter', 'Escape', '$mod+KeyK', ...
+```
+
+כל `shortcut` הוא צירוף בתחביר של [tinykeys](https://github.com/jamiebuilds/tinykeys) שמציין את המקש שלו לפי `KeyboardEvent.code`, כאשר [`$mod`](#mod) הוא `⌘` ב-macOS ו-`Control` בכל מקום אחר.  
+החל מגרסה `4.0.0`, העורך מפענח את הצירופים האלה בעצמו ולא באמצעות tinykeys, באותו תחביר. מקש מתאים לפי ה-`code` שלו, או לפי ה-`key` שלו בכל רישיות, והקשה מתאימה רק כשלחוצים בדיוק מקשי הצירוף שהיא מציינת. `AltGraph` נחשב ל-`Control` ול-`Alt` ב-Windows ול-`Alt` ב-macOS. הקשות המופרדות ברווח יוצרות רצף, שמתחיל מחדש אחרי שנייה ללא keydown.  
+החל מגרסה `4.1.0`, אחת מברירות המחדל היא רצף: `groupSelectedTables` הוא `KeyT KeyG`, `T` ואז `G`. רצף מופעל בהקשה שמשלימה אותו, ורק הקשה זו מקבלת את ה-`preventDefault` וה-`stopPropagation` שלו, כך שעם ברירות המחדל `T` מגיע לדף ורק `G` נמנע. התפריטים, החיפוש המהיר וכרטיסיית קיצורי מקשים מציגים רצף כמקש אחד לכל הקשה.  
+השמות הקבועים משויכים ל-`Enter` (`edit`), `Escape` (`stop`), `$mod+KeyZ` (`undo`), `$mod+Shift+KeyZ` (`redo`), `$mod+Equal` (`zoomIn`), `$mod+Minus` (`zoomOut`) ו-`$mod+Digit0` (`zoomReset`). `edit` ו-`stop` אינם נושאים דגלים; חמשת האחרים נושאים את `preventDefault` ואת `stopPropagation`. השאר הם ברירות המחדל שלמעלה, ובהם `search` ו-`findReplace`.
+
+העורך מאזין להם על האלמנט שלו עצמו, ולכן סביבה מארחת שקולטת מקשים לפני העורך, באמצעות קיצורי מקשים גלובליים או מאזין `keydown` בשלב הלכידה, צריכה להעביר אותם הלאה כל עוד העורך בפוקוס.  
+את רשימת המקשים שיש להעביר הלאה יש לבנות מתוך `createKeyBindingMap()`, כשצירופי המקשים שהועברו ל-`setKeyBindingMap` באים במקום ברירות המחדל.  
+החל מגרסה `3.10.0`, הרשימה הזאת כוללת את `$mod+KeyF`, צירוף האיתור של הדפדפן עצמו. סביבה מארחת שרוצה לשמור את האיתור שלה על הצירוף הזה קוראת ל-`setKeyBindingMap({ findReplace: [] })`.  
+החל מגרסה `4.0.0`, היא כוללת גם את `Delete` ואת `Backspace` בלי מקשי צירוף. סביבה מארחת שרוצה לשמור את המקשים האלה קוראת ל-`setKeyBindingMap({ removeSelection: [] })`.  
+החל מגרסה `4.1.0`, היא כוללת גם את `Alt+KeyG` ואת הרצף `KeyT KeyG`, שמגיע כמחרוזת אחת: יש לפצל אותה ברווח ולהעביר הלאה כל הקשה, כולל `T` ו-`G` בלי מקשי צירוף, מכיוון שרצף שחסרה בו הקשה לעולם אינו מושלם. סביבה מארחת שרוצה לשמור את המקשים האלה קוראת ל-`setKeyBindingMap({ addTableGroup: [] })` או ל-`setKeyBindingMap({ groupSelectedTables: [] })`.
+
+כשהפוקוס נמצא בתוך הסייר, בעץ שלו, בשדות `Find` ו-`Replace` שלו או בלחצנים שלו, `findReplace`, `search`, `undo`, `redo`, `zoomIn`, `zoomOut` ו-`zoomReset` עוברים אל העורך, כך ש-`findReplace` פועל שם כפי שהוא פועל בבד הציור. כל צירוף מקשים אחר, כפי שהוא מוגדר כעת, נעצר בסייר, רצף נעצר בהקשה האחרונה שלו (`G` בלי מקשי צירוף, עם ברירות המחדל), וכך גם מקשי החיצים, `Tab`, `Enter`, `Space`, `Home`, `End` וכל מקש שמוקש כשההרכבה בשיטת הקלט (IME) עדיין מתבצעת. מלבד `Escape`, שמחזיר את המקלדת לבד הציור, הם נעצרים אך אינם נמנעים, כך שהם פועלים כמקשים רגילים בשדות, בלחצנים ובעץ של הסייר, ואינם מגיעים לא לבד הציור ולא למאזין `keydown` של הדף בשלב הבעבוע: בסייר, `Alt + N` אינו מוסיף טבלה, ו-`Delete` אינו מסיר דבר. המקשים שמשמשים לתנועה בין שורות העץ, לכיווץ שורה או למעבר אליה, ו-`Enter` בשדה `Find` או `Replace`, שעובר בין ההתאמות או מחליף, גם נמנעים.  
+כל מקש אחר, כגון צירוף השמירה או צירוף לוח הפקודות של הסביבה המארחת, ממשיך אל הדף כרגיל. ראו [מקשים בסייר](../guide/guides/explorer.md#keys-in-the-explorer). לפני גרסה `4.1.0`, חלונית איתור והחלפה הצפה עיכבה מקשים באותו אופן, מלבד `Home`, `End`, ההקשה האחרונה של רצף, ו-`Space` כש-`handTool` היה משויך למקש אחר.  
+החל מגרסה `4.0.0`, בורר שפת התצוגה מעכב מקשים באותו אופן: אותם שבעה צירופי מקשים עוברים, וכל צירוף מקשים אחר (החל מגרסה `4.1.0`, רצף לפי ההקשה האחרונה שלו), מקשי החיצים ו-`Tab` נעצרים שם אך אינם נמנעים, וכך גם כל מקש שמוקש כשההרכבה בשיטת הקלט (IME) עדיין מתבצעת. `↑`, `↓`, `Home`, `End`, `Enter` ו-`Space` על אחת מהשורות שלו עוברים בין השורות או בוחרים אחת מהן, וגם נמנעים.
+
+### `$mod` {#mod}
+
+מחליף את המקש `Control` בהתאם לסביבה.
+
+- Mac: $mod = Meta (⌘)
+- Windows/Linux: $mod = Control
+
+### טבלת מקשים {#shortcut-table}
+
+משתמש במאפיינים `key, code` של אירוע המקלדת.  
+יש להשתמש ב-`code` למיקומים מוחלטים וב-`key` לערכי קלט.
+
+| Windows       | macOS           | `key`         | `code`                         |
+| ------------- | --------------- | ------------- | ------------------------------ |
+| N/A           | `Command` / `⌘` | `Meta`        | `MetaLeft` / `MetaRight`       |
+| `Alt`         | `Option` / `⌥`  | `Alt`         | `AltLeft` / `AltRight`         |
+| `Control`     | `Control` / `^` | `Control`     | `ControlLeft` / `ControlRight` |
+| `Shift`       | `Shift`         | `Shift`       | `ShiftLeft` / `ShiftRight`     |
+| `Space`       | `Space`         | N/A           | `Space`                        |
+| `Enter`       | `Return`        | `Enter`       | `Enter`                        |
+| `Esc`         | `Esc`           | `Escape`      | `Escape`                       |
+| `Backspace`   | `Delete` / `⌫`  | `Backspace`   | `Backspace`                    |
+| `Delete`      | `fn` + `Delete` | `Delete`      | `Delete`                       |
+| `1`, `2` וכן הלאה | `1`, `2` וכן הלאה | `1`, `2` וכן הלאה | `Digit1`, `Digit2` וכן הלאה |
+| `a`, `b` וכן הלאה | `a`, `b` וכן הלאה | `a`, `b` וכן הלאה | `KeyA`, `KeyB` וכן הלאה |
+| `-`           | `-`             | `-`           | `Minus`                        |
+| `=`           | `=`             | `=`           | `Equal`                        |
+| `+`           | `+`             | `+`           | `Equal`                        |
+
+## ערכת נושא {#theme}
+
+### setPresetTheme {#setpresettheme}
+
+קובעת ערכת נושא מוגדרת מראש.  
+ברירות המחדל הן `appearance: 'dark'`, `grayColor: 'slate'` ו-`accentColor: 'indigo'`.  
+כל שדה מוחל בנפרד, כך שקריאה חלקית משאירה את שני השדות האחרים כפי שהם. ערך שאינו אחד מהשמות שלהלן אינו נלקח בחשבון, והקריאה לעולם אינה זורקת שגיאה.  
+החל מגרסה `4.0.0`, השדה `appearance` מקבל גם את `'system'`, האפשרות `System` של בונה ערכת הנושא. ערך זה מציג את המראה הבהיר או הכהה שמערכת ההפעלה מדווחת עליו, או את המראה ש-[setSystemAppearance](#setsystemappearance) מציינת, ומתחלף כשהוא משתנה.
+
+```ts
+type ThemeOptions = {
+  appearance: 'dark' | 'light' | 'system';
+  grayColor: 'gray' | 'mauve' | 'slate' | 'sage' | 'olive' | 'sand';
+  accentColor:
+    | 'gray'
+    | 'gold'
+    | 'bronze'
+    | 'brown'
+    | 'yellow'
+    | 'amber'
+    | 'orange'
+    | 'tomato'
+    | 'red'
+    | 'ruby'
+    | 'crimson'
+    | 'pink'
+    | 'plum'
+    | 'purple'
+    | 'violet'
+    | 'iris'
+    | 'indigo'
+    | 'blue'
+    | 'cyan'
+    | 'teal'
+    | 'jade'
+    | 'green'
+    | 'grass'
+    | 'lime'
+    | 'mint'
+    | 'sky';
+};
+
+// example
+editor.setPresetTheme({ appearance: 'light' });
+```
+
+### setSystemAppearance {#setsystemappearance}
+
+החל מגרסה `4.0.0`, מציינת את המראה הבהיר או הכהה שהמראה `'system'` מציג, עבור סביבה מארחת שיש לה מראה בהיר וכהה משלה, כגון ערכת נושא של IDE. כל עוד צוין מראה כזה, שינויים במערכת ההפעלה אינם נלקחים בחשבון.  
+`null`, או כל ערך אחר מלבד `'dark'` או `'light'`, מחזיר למעקב אחר מערכת ההפעלה.  
+כשהמראה הוא `'light'` או `'dark'`, היא אינה משנה דבר על המסך, אבל הערך נשמר וחל ברגע שהמראה הופך ל-`'system'`. אחרת הוא חל מיד. היא אינה משגרת דבר, ו-`changePresetTheme` ממשיך לדווח על `'system'`.  
+הסביבות המארחות VS Code, JetBrains ו-Obsidian קוראות לה עם המראה הבהיר או הכהה שלהן, ושוב בכל פעם שהוא משתנה.
+
+```js
+editor.setPresetTheme({ appearance: 'system' });
+editor.setSystemAppearance('light'); // null follows the OS again
+```
+
+### setTheme {#settheme}
+
+מאפשרת התאמה אישית של ערכת הנושא.  
+כל קריאה מחליפה את כל שכבת ההתאמה האישית, ולכן כדי לשנות טוקן אחד מעל דריסה קיימת יש להעביר שוב את האובייקט המלא, וכדי לחזור לערכת הנושא המוגדרת מראש יש להעביר `{}`.  
+רק שמות הטוקנים שלהלן, עם ערכי מחרוזת, נשמרים; כל דבר אחר מושמט ללא שגיאה.  
+השכבה יושבת מעל ערכת הנושא המוגדרת מראש, כך שקריאה מאוחרת יותר ל-`setPresetTheme` מחליפה את ערכת הנושא שמתחתיה, בעוד שהדריסות נשארות.
+
+#### JavaScript {#javascript}
+
+```ts
+type Theme = {
+  grayColor1: string;
+  grayColor2: string;
+  grayColor3: string;
+  grayColor4: string;
+  grayColor5: string;
+  grayColor6: string;
+  grayColor7: string;
+  grayColor8: string;
+  grayColor9: string;
+  grayColor10: string;
+  grayColor11: string;
+  grayColor12: string;
+
+  accentColor1: string;
+  accentColor2: string;
+  accentColor3: string;
+  accentColor4: string;
+  accentColor5: string;
+  accentColor6: string;
+  accentColor7: string;
+  accentColor8: string;
+  accentColor9: string;
+  accentColor10: string;
+  accentColor11: string;
+  accentColor12: string;
+
+  canvasBackground: string;
+  canvasBoundaryBackground: string;
+
+  tableBackground: string;
+  tableHeaderBackground: string;
+  tableSelect: string;
+  tableBorder: string;
+  tableShadow: string;
+
+  tableGroupHeaderBackground: string;
+  tableGroupBackground: string;
+  tableGroupBorder: string;
+
+  memoBackground: string;
+  memoSelect: string;
+  memoBorder: string;
+  memoShadow: string;
+
+  columnSelect: string;
+  columnSelectHover: string;
+  columnHover: string;
+
+  relationshipHover: string;
+
+  visualizationLink: string;
+  visualizationColumn: string;
+  visualizationRelationship: string;
+
+  toolbarBackground: string;
+
+  contextMenuBackground: string;
+  contextMenuSelect: string;
+  contextMenuHover: string;
+  contextMenuBorder: string;
+
+  minimapBorder: string;
+  minimapShadow: string;
+  minimapViewportBorder: string;
+  minimapViewportBorderHover: string;
+
+  toastBackground: string;
+  toastBorder: string;
+  toastSuccess: string;
+  toastError: string;
+
+  findReplaceError: string;
+
+  mapColumnsError: string;
+
+  schemaSqlWarningBackground: string;
+  schemaSqlWarningForeground: string;
+
+  dragSelectBackground: string;
+  dragSelectBorder: string;
+
+  scrollbarTrack: string;
+  scrollbarThumb: string;
+  scrollbarThumbHover: string;
+
+  foreground: string;
+  active: string;
+  placeholder: string;
+
+  focus: string;
+  inputActive: string;
+
+  keyPK: string;
+  keyFK: string;
+  keyPFK: string;
+
+  treeBackground: string;
+  treeRowHover: string;
+  treeRowCurrent: string;
+  treeMuted: string;
+  treeMatch: string;
+
+  explorerBackground: string;
+  explorerBorder: string;
+
+  diffInsertForeground: string;
+  diffDeleteForeground: string;
+  diffModifyForeground: string;
+  diffRenameForeground: string;
+};
+
+// example
+editor.setTheme({
+  canvasBackground: '#1b1b1f',
+  tableBackground: '#242429',
+  keyPK: '#ffc53d',
+});
+```
+
+`tableShadow` ו-`memoShadow` הם צבע הצל שטבלאות ופתקים מטילים על בד הציור של ERD. ערכת הנושא הכהה המוגדרת מראש משאירה אותם `transparent`, שאינו מטיל צל, כמו העברת `none` או מחרוזת ריקה ל-`setTheme`; ערכת הנושא הבהירה המוגדרת מראש משתמשת ב-`rgba(0, 0, 0, 0.18)`.
+
+החל מגרסה `4.0.0`, יש תשעה טוקנים נוספים:
+
+- `tableGroupHeaderBackground`, `tableGroupBackground` ו-`tableGroupBorder` צובעים את שורת הכותרת, את הגוף ואת המסגרת של [קבוצת טבלאות](../guide/guides/table-groups.md) שאין לה צבע משלה.
+- `toastSuccess` ו-`toastError` צובעים את הסימן של הודעה קופצת שמדווחת כיצד משהו הסתיים.
+- `findReplaceError` ו-`mapColumnsError` צובעים את השגיאות שאיתור והחלפה ותיבת הדו-שיח של מיפוי עמודות מציגים. קודם לכן איתור והחלפה השתמש ב-`diffDeleteForeground`, ולכן דריסה של הטוקן הזה כבר אינה משנה את צבעו של איתור והחלפה.
+- `schemaSqlWarningBackground` ו-`schemaSqlWarningForeground` צובעים את האזהרות באפשרויות של כרטיסיית סכמת SQL.
+
+החל מגרסה `4.1.0`, יש תשעה טוקנים נוספים:
+
+- `treeBackground`, `treeRowHover`, `treeRowCurrent`, `treeMuted` ו-`treeMatch` צובעים את העץ המשותף ל[סייר](../guide/guides/explorer.md#the-tree) ול[מציג ההבדלים](../guide/guides/table-related-functions.md#diff-viewer): את הרקע שלו, שממלא גם את השדות `Find` ו-`Replace` של הסייר; שורה שסמן העכבר נמצא מעליה, שורת המקלדת כשהפוקוס בעץ, ולחצן שסמן העכבר נמצא מעליו בשורת הכותרת ובחיפוש של הסייר; את השורה של התאמת החיפוש הנוכחית; טקסט עמום כגון מונים, סוגי נתונים וחיצי הכיווץ; ואת הסימון שמאחורי הטקסט שהחיפוש מצא.
+- `explorerBackground` ו-`explorerBorder` צובעים את חלונית הסייר ואת הקווים שלה: הקצה שלה לצד בד הציור, הקו שמתחת לחיפוש שלה, והמסגרות של השדות שלה ושל הלחצנים שמוצגים בהרחבת `Search In`. `explorerBorder` צובע גם את הקצה של העץ במציג ההבדלים, את הקו שמתחת לשדה `Filter by name` שלו ואת המסגרת של השדה הזה. סמלי המפתחות של הסייר מקבלים את `keyPK`, `keyFK` ו-`keyPFK`.
+- `diffModifyForeground` ו-`diffRenameForeground` צובעים את השינויים ואת שינויי השם שמציג ההבדלים מסמן, בעץ שלו ובשני המסמכים. `diffModifyForeground` גם מקיף במסגרת טבלה, פתק או קבוצת טבלאות שהוזזו, ששונה גודלם, ששונה צבעם או ששויכו מחדש לקבוצה, בלי קשר למה עוד השתנה בהם, ומציג את קו הקשר של מפתח זר שהשתנה.
+
+`diffInsertForeground` ו-`diffDeleteForeground` צובעים כעת את התוספות ואת ההסרות שמציג ההבדלים מסמן, בעץ שלו ובמסמך שמכיל אותן, בטקסט, במסגרות ובקווי הקשר כאחד. `diffInsertBackground`, `diffDeleteBackground`, `diffCrossBackground` ו-`diffCrossForeground` הוסרו בגרסה `4.1.0`, מכיוון שמציג ההבדלים כבר אינו ממלא תאים. `setTheme` משמיטה אותם כמו כל שם אחר שאינו ב-`Theme`, וה-hooks שלהם, `--erd-editor-diff-insert-background`, `--erd-editor-diff-delete-background`, `--erd-editor-diff-cross-background` ו-`--erd-editor-diff-cross-foreground`, כבר אינם נקראים.
+
+#### משתני CSS {#css-variables}
+
+לכל טוקן ב-`Theme` יש hook תואם של CSS ששמו `--erd-editor-` ואחריו המפתח בכתיב kebab-case: `grayColor10` הוא `--erd-editor-gray-color-10`, `keyPK` הוא `--erd-editor-key-pk`, ו-`keyPFK` הוא `--erd-editor-key-pfk`.  
+ה-hooks עוברים בירושה אל תוך העורך, ולכן יש להגדיר אותם בכל מקום שבו הם אמורים לחול. ב-`:root` הם קובעים את ערכת הנושא של כל עורך בדף; על האלמנט עצמו הם קובעים את ערכת הנושא של אותו עורך בלבד.
+
+```css
+erd-editor {
+  --erd-editor-canvas-background: #1b1b1f;
+}
+```
+
+החל מגרסה `3.4.0`, הטוקנים `dargSelect` עם שגיאת הכתיב נכתבים `dragSelect`, וה-hooks שלהם השתנו מ-`--erd-editor-darg-select-background` ו-`--erd-editor-darg-select-border` ל-`--erd-editor-drag-select-background` ו-`--erd-editor-drag-select-border`. גיליון סגנונות שעדיין משתמש בשמות הישנים אינו נלקח בחשבון.
+
+<details>
+<summary>ערכי ברירת המחדל של ערכת הנושא</summary>
+
+```css
+:root {
+  --erd-editor-gray-color-1: #111113;
+  --erd-editor-gray-color-2: #18191b;
+  --erd-editor-gray-color-3: #212225;
+  --erd-editor-gray-color-4: #272a2d;
+  --erd-editor-gray-color-5: #2e3135;
+  --erd-editor-gray-color-6: #363a3f;
+  --erd-editor-gray-color-7: #43484e;
+  --erd-editor-gray-color-8: #5a6169;
+  --erd-editor-gray-color-9: #696e77;
+  --erd-editor-gray-color-10: #777b84;
+  --erd-editor-gray-color-11: #b0b4ba;
+  --erd-editor-gray-color-12: #edeef0;
+  --erd-editor-accent-color-1: #11131f;
+  --erd-editor-accent-color-2: #141726;
+  --erd-editor-accent-color-3: #182449;
+  --erd-editor-accent-color-4: #1d2e62;
+  --erd-editor-accent-color-5: #253974;
+  --erd-editor-accent-color-6: #304384;
+  --erd-editor-accent-color-7: #3a4f97;
+  --erd-editor-accent-color-8: #435db1;
+  --erd-editor-accent-color-9: #3e63dd;
+  --erd-editor-accent-color-10: #5472e4;
+  --erd-editor-accent-color-11: #9eb1ff;
+  --erd-editor-accent-color-12: #d6e1ff;
+  --erd-editor-canvas-background: #212225;
+  --erd-editor-canvas-boundary-background: #111113;
+  --erd-editor-table-background: #18191b;
+  --erd-editor-table-header-background: #2e3135;
+  --erd-editor-table-select: #435db1;
+  --erd-editor-table-border: #363a3f;
+  --erd-editor-table-shadow: transparent;
+  --erd-editor-table-group-header-background: #43484e;
+  --erd-editor-table-group-background: #d3edf81d;
+  --erd-editor-table-group-border: #43484e;
+  --erd-editor-memo-background: #18191b;
+  --erd-editor-memo-select: #435db1;
+  --erd-editor-memo-border: #363a3f;
+  --erd-editor-memo-shadow: transparent;
+  --erd-editor-column-select: #182449;
+  --erd-editor-column-select-hover: #1d2e62;
+  --erd-editor-column-hover: #272a2d;
+  --erd-editor-relationship-hover: #435db1;
+  --erd-editor-visualization-link: #43484e;
+  --erd-editor-visualization-column: #5a6169;
+  --erd-editor-visualization-relationship: #5a6169;
+  --erd-editor-toolbar-background: #111113;
+  --erd-editor-context-menu-background: #18191b;
+  --erd-editor-context-menu-select: #272a2d;
+  --erd-editor-context-menu-hover: #3a4f97;
+  --erd-editor-context-menu-border: #363a3f;
+  --erd-editor-minimap-border: black;
+  --erd-editor-minimap-shadow: black;
+  --erd-editor-minimap-viewport-border: #3a4f97;
+  --erd-editor-minimap-viewport-border-hover: #435db1;
+  --erd-editor-toast-background: #18191b;
+  --erd-editor-toast-border: #363a3f;
+  --erd-editor-toast-success: #3dd68c;
+  --erd-editor-toast-error: #ff9592;
+  --erd-editor-find-replace-error: #ff9592;
+  --erd-editor-map-columns-error: #ff9592;
+  --erd-editor-schema-sql-warning-background: #500f1c;
+  --erd-editor-schema-sql-warning-foreground: #ff9592;
+  --erd-editor-drag-select-background: #253974;
+  --erd-editor-drag-select-border: #435db1;
+  --erd-editor-scrollbar-track: #ddeaf814;
+  --erd-editor-scrollbar-thumb: #696e77;
+  --erd-editor-scrollbar-thumb-hover: #777b84;
+  --erd-editor-foreground: #b0b4ba;
+  --erd-editor-active: #edeef0;
+  --erd-editor-placeholder: #e5edfd7b;
+  --erd-editor-focus: #435db1;
+  --erd-editor-input-active: #5472e4;
+  --erd-editor-key-pk: #ffc53d;
+  --erd-editor-key-fk: #e54666;
+  --erd-editor-key-pfk: #00a2c7;
+  --erd-editor-tree-background: #111113;
+  --erd-editor-tree-row-hover: #212225;
+  --erd-editor-tree-row-current: #1d2e62;
+  --erd-editor-tree-muted: #b0b4ba;
+  --erd-editor-tree-match: #253974;
+  --erd-editor-explorer-background: #111113;
+  --erd-editor-explorer-border: #363a3f;
+  --erd-editor-diff-insert-foreground: #3dd68c;
+  --erd-editor-diff-delete-foreground: #ff9592;
+  --erd-editor-diff-modify-foreground: #ffca16;
+  --erd-editor-diff-rename-foreground: #70b8ff;
+}
+```
+
+</details>
+
+## שפת תצוגה {#display-language}
+
+החל מגרסה `4.0.0`, הטקסט של העורך עצמו – התפריטים, החלוניות, תיבות הדו-שיח, החיפוש המהיר, ההודעות הקופצות והמילים שהוא מציג בתרשים כגון `unnamed`, כולל בייצוא תמונות – זמין ב-25 שפות. שמות של טבלאות ועמודות, SQL, סוגי נתונים וקוד שנוצר לעולם אינם מתורגמים. ראו [שפה וערכת נושא](../guide/guides/language-and-theme.md).  
+לפני ש-[setLocale](#setlocale) נקראת או שנבחרת שפה, העורך מציג אנגלית, או פועל לפי `'system'` כל עוד [enableLocalePicker](#enablelocalepicker) מופעל.  
+העורך מגדיר את `lang` ואת `dir` על השורש שלו עצמו בתוך ה-shadow root הסגור, ולעולם לא על האלמנט המארח או על הדף, כך שדף מימין לשמאל אינו הופך את העורך, ושפה מימין לשמאל אינה הופכת את הדף. בעברית, בערבית ובפרסית ממשק העורך נפרס מימין לשמאל; התרשים עצמו לעולם אינו מוצג בהיפוך מראה. החל מגרסה `4.1.0`, ה[סייר](../guide/guides/explorer.md) נשאר משמאל לבד הציור בכל שפה, והשורות שלו עצמו נקראות מימין לשמאל בשלוש השפות האלה.  
+החבילה מייצאת את הטיפוסים `LocaleCode` (אחד מהקודים שלהלן) ו-`LocaleOption`.
+
+```ts
+type LocaleOption = LocaleCode | 'system';
+```
+
+| קוד    | שם מוצג             | שפה             |
+| ------- | -------------------- | -------------------- |
+| `id-ID` | Bahasa Indonesia     | אינדונזית           |
+| `de-DE` | Deutsch              | גרמנית              |
+| `en`    | English              | אנגלית             |
+| `es-ES` | Español              | ספרדית             |
+| `eu-ES` | Euskara              | בסקית               |
+| `fr-FR` | Français             | צרפתית              |
+| `it-IT` | Italiano             | איטלקית             |
+| `nl-NL` | Nederlands           | הולנדית               |
+| `pl-PL` | Polski               | פולנית               |
+| `pt-PT` | Português            | פורטוגזית           |
+| `pt-BR` | Português Brasileiro | פורטוגזית ברזילאית |
+| `ro-RO` | Română               | רומנית             |
+| `sk-SK` | Slovenčina           | סלובקית               |
+| `sl-SI` | Slovenščina          | סלובנית            |
+| `sv-SE` | Svenska              | שוודית              |
+| `tr-TR` | Türkçe               | טורקית              |
+| `ru-RU` | Русский              | רוסית              |
+| `uk-UA` | Українська           | אוקראינית            |
+| `he-IL` | עברית                | עברית               |
+| `ar-SA` | العربية              | ערבית               |
+| `fa-IR` | فارسی                | פרסית              |
+| `ja-JP` | 日本語               | יפנית             |
+| `zh-CN` | 简体中文             | סינית פשוטה   |
+| `zh-TW` | 繁體中文             | סינית מסורתית  |
+| `ko-KR` | 한국어               | קוריאנית               |
+
+### setLocale {#setlocale}
+
+קובעת את שפת התצוגה: `'system'`, או אחד מהקודים שלמעלה. כל ערך אחר, כגון `'ko'` לבדו, קוד לא מוכר או ערך שאינו מחרוזת, אינו נלקח בחשבון, ללא שגיאה.  
+היא חלה לפני שהיא חוזרת, כך ששפה שהוגדרה לפני שהאלמנט מצורף מופיעה כבר בפריים הראשון שלו.  
+היא אינה משגרת דבר, לא `changeLocale` ולא `change`, ואינה נוגעת ב-`value`, בהיסטוריית הפעולות או במאגר משותף.  
+הבחירה נשארת בין ש-`enableLocalePicker` מופעל ובין שהוא כבוי, ו-`setLocale('system')` פועלת לפי המערכת גם כשהבורר כבוי.  
+העורך אינו שומר דבר. כדי לשמור את הבחירה של המשתמש, יש להאזין ל-[changeLocale](#changelocale) ולהעביר אותה בחזרה בטעינה הבאה.
+
+```js
+editor.enableLocalePicker = true;
+editor.setLocale(localStorage.getItem('locale') ?? 'system');
+editor.addEventListener('changeLocale', event => {
+  localStorage.setItem('locale', event.detail.locale);
+});
+```
+
+### setSystemLocale {#setsystemlocale}
+
+מציינת את השפה ש-`'system'` מייצג, כתג BCP 47, עבור סביבה מארחת שיש לה שפת תצוגה משלה. הסביבות המארחות VS Code, JetBrains ו-Obsidian קוראות לה עם שפת התצוגה שלהן.  
+הרווחים בקצות התג מוסרים. `null`, מחרוזת ריקה או ערך שאינו מחרוזת מחזירים ל-`navigator.languages` של הדפדפן, שהעורך עוקב אחריו כשהוא משתנה.  
+יש לה משמעות רק כל עוד האפשרות שבתוקף היא `'system'`, והיא חלה מיד. השורה `System` בבורר מציינת את השפה שאליה האפשרות הזאת מתפרשת.  
+התג, או כל אחת משפות הדפדפן לפי הסדר, מתפרשים לשפה הראשונה שיש בעורך, לפי תת-התג של השפה, תוך התעלמות מרישיות ומקווים תחתונים: `de-AT` נותן `de-DE`, ו-`en-GB` נותן `en`. סינית נקבעת לפי הכתב שלה, כאשר `Hant` נותן `zh-TW` ו-`Hans` נותן `zh-CN`, וכשאין כתב – לפי האזור, כאשר `TW`, `HK` ו-`MO` נותנים `zh-TW` וכל אזור אחר נותן `zh-CN`. `pt` נותן `pt-BR`, אלא אם צוין אזור שאינו `BR`. כשאין התאמה, העורך מציג אנגלית.
+
+```js
+editor.setLocale('system');
+editor.setSystemLocale('pt-PT'); // null follows the browser again
+```
+
+## setSchemaSQL {#setschemasql}
+
+טוענת קובץ סכמת SQL.  
+כברירת מחדל היא מחליפה את המסמך הנוכחי ואינה ממזגת לתוכו; ראו את `mode` בהמשך. ההגדרות הקיימות נשמרות, כולל כל נעילה והערך הנעול שלה, מלבד מיקום התצוגה ורמת הזום, והטבלאות ממוקמות לאחר קריאת הקובץ, בשורות, אלא אם `placement` שבהמשך מבקש אחרת. כש-`Viewport` נעול, `value` כותב לאחר מכן את התצוגה שבה הייבוא מתחיל, נקודת הראשית `0, 0` ברמת הזום `1`. לכן, במסמך שיובא לאלמנט שמעולם לא ניתן לו ערך כל הנעילות מופעלות, כמו במסמך חדש.  
+היא נרשמת ברשימת ההיסטוריה, מה שמאפשר `Undo, Redo`, והיא משגרת `change`. מחרוזת ריקה אינה נלקחת בחשבון, והקריאה אינה עושה דבר כל עוד `readonly` מוגדר.  
+`setSchemaGraphQL`, `setSchemaDBML` ו-`setSchemaAML` מתנהגות באותו אופן, והמנתחים שלהן לעולם אינם נכשלים: טקסט שהם אינם מצליחים לקרוא טוען מסמך ריק במקום לזרוק שגיאה.  
+החל מגרסה `4.0.0`, כל הארבע מקבלות ארגומנט שני אופציונלי, `{ placement, mode }`:
+
+- `placement: 'grid'`, ברירת המחדל, ממקם את הטבלאות בשורות מיד, כמו קודם, והקריאה אינה מחזירה דבר.
+- `placement: 'auto'` פורס תחילה את הטבלאות לפי הקשרים שלהן, כפי ש-`Import` בעורך עושה, ומחזיר `Promise` שמתממש לאחר שהייבוא נחת כצעד ביטול אחד. פחות משתי טבלאות, היעדר קשרים, פריסה שנכשלת, דף ללא `SharedWorker`, או `Cancel` בהודעה הקופצת `Placing tables` ממקמים אותן בשורות במקום זאת. טעינה בינתיים – ייבוא מחליף אחר, השמה ל-`value`, `setInitialValue()`, `clear()`, טעינה של שותף לעריכה, או ביטול או ביצוע חוזר של טעינה או של `clear()` – גוברת עליו, וה-`Promise` מתממש בלי שדבר נטען. ייבואים שממוקמים כך נוחתים לפי הסדר שבו התחילו.
+- `mode: 'replace'`, ברירת המחדל, מחליף את המסמך. `mode: 'append'` מוסיף את הקובץ מתחת לתרשים כפי ש[ייבוא והוספה](../guide/guides/file-import-export.md#import-and-add) עושה, ומשאיר כפי שהן כל טבלה שכבר קיימת וכל הגדרה מלבד הכרטיסייה ומיקום התצוגה. מכרטיסייה אחרת, כרטיסיית ERD מוצגת תחילה. הטבלאות החדשות, וקבוצות הטבלאות שקובץ DBML מביא כל עוד קבוצות טבלאות מוצגות, הופכות לבחירה, והתצוגה נגללת אליהן אלא אם הן כבר נראות היטב, לפי הכלל שכל קפיצה פועלת לפיו החל מגרסה `4.1.0` – ראו [היכן נוחתת קפיצה](../guide/guides/table-related-functions.md#where-a-jump-lands). ביטול פעולה אחד מסיר את כל התוספת. טקסט שאינו ניתן לקריאה אינו מוסיף דבר ומשאיר את המסמך כפי שהוא.
+
+כל עוד `readonly` מוגדר, להחלפה אין השפעה, הוספה אינה מוסיפה דבר, וקריאה עם `placement: 'auto'` מתממשת מיד.  
+החל מגרסה `3.10.0`, `setSchemaSQL` קוראת את הקובץ בהתאם למסד הנתונים הנוכחי של המסמך: כש-Databricks נבחר, מחרוזות שתחומות בגרשים פועלות לפי כללי ה-escape בלוכסן הפוך של Spark. ראו [הערות](../guide/guides/file-import-export.md#comments).  
+החל מגרסה `3.10.0`, `setSchemaSQL` מפרשת `UNIQUE` על שתי עמודות או יותר כאינדקס ייחודי אחד ולא כדגל ייחודי בכל עמודה. ראו [מפתחות ייחודיים ואינדקסים](../guide/guides/file-import-export.md#unique-keys-and-indexes).  
+החל מגרסה `3.10.0`, ייבוא של SQL, של DBML ושל AML שומר על פעולות ה-`ON DELETE` וה-`ON UPDATE` של המפתחות הזרים שהוא קורא.  
+החל מגרסה `4.0.0`, `setSchemaSQL` שומרת את ביטוי ה-`DEFAULT` המלא של עמודה, קוראת את `ADD DEFAULT … FOR` ואת הערות ה-`MS_Description` של SQL Server, הופכת עמודות serial ו-identity של PostgreSQL למספור אוטומטי, שומרת `UNSIGNED` ו-`ZEROFILL` בסוג נתונים, וקוראת מפתח ראשי ש-`ALTER TABLE … ADD PRIMARY KEY` מסמן כ-`CLUSTERED`, `NONCLUSTERED` או `USING BTREE`. ראו [סכמת SQL](../guide/guides/file-import-export.md#schema-sql).  
+לגבי התחביר שכל מנתח מקבל, ראו [ייבוא וייצוא של קבצים](../guide/guides/file-import-export.md).
+
+```ts
+type SetSchema = {
+  (
+    value: string,
+    options: { placement: 'auto'; mode?: 'replace' | 'append' }
+  ): Promise<void>;
+  (
+    value: string,
+    options?: { placement?: 'grid'; mode?: 'replace' | 'append' }
+  ): void;
+};
+
+// example
+editor.setSchemaSQL('Schema SQL...');
+// or
+await editor.setSchemaSQL('Schema SQL...', { placement: 'auto' });
+// or
+editor.setSchemaSQL('Schema SQL...', { mode: 'append' });
+```
+
+## setSchemaGraphQL {#setschemagraphql}
+
+טוענת מסמך GraphQL SDL.  
+הגדרות של טיפוסי אובייקט הופכות לטבלאות, ושדה שהטיפוס שלו הוא טבלה אחרת הופך לקשר.
+
+```js
+editor.setSchemaGraphQL('GraphQL SDL...');
+```
+
+## setSchemaDBML {#setschemadbml}
+
+טוענת קובץ DBML, הפורמט שבו משתמשים dbdiagram.io ו-dbdocs.  
+החל מגרסה `4.0.0`, כל `TableGroup` הופך ל[קבוצת טבלאות](../guide/guides/table-groups.md), וה-`headercolor` של טבלה הופך לצבע שלה. ראו [DBML](../guide/guides/file-import-export.md#dbml).
+
+```js
+editor.setSchemaDBML('DBML...');
+```
+
+## setSchemaAML {#setschemaaml}
+
+טוענת קובץ AML (Azimutt Markup Language). גם הכתיב הנוכחי וגם הכתיב הישן של גרסה 1 מתקבלים.  
+החל מגרסה `4.0.0`, הצבע של ישות, אחד משמות הצבעים של Azimutt או ערך הקסדצימלי בין מירכאות, הופך לצבע של הטבלה שלה. ראו [AML](../guide/guides/file-import-export.md#aml).
+
+```js
+editor.setSchemaAML('AML...');
+```
+
+## setSchemaJSON {#setschemajson}
+
+החל מגרסה `4.0.0`, טוענת מסמך `.erd.json`, כגון הטקסט ש-[value](#value) מחזיר.  
+במצב ברירת המחדל שלה, `mode: 'replace'`, היא טוענת את המסמך כפי שהשמה ל-`value` עושה: היא נרשמת ברשימת ההיסטוריה, משגרת `change`, ומקבלת את הנעילות של המסמך באותו אופן. בניגוד ל-`value`, מחרוזת ריקה או ערך שאינו מחרוזת אינם נלקחים בחשבון ואינם פותחים מסמך חדש. טקסט שאינו JSON מרוקן את המסמך, כמו ב-`value`.  
+`mode: 'append'` מוסיף את הטבלאות, הקשרים, האינדקסים, הפתקים וקבוצות הטבלאות של המסמך מתחת לתרשים עם מזהים חדשים, שומר על המיקומים היחסיים שלהם ומשמיט את ההגדרות של המסמך, כפי ש[ייבוא והוספה](../guide/guides/file-import-export.md#import-and-add) עושה עם קובץ `json`. טקסט שאינו ניתן לקריאה, או מסמך ללא טבלה וללא פתק, אינו מוסיף דבר. אחרת, הוא נוחת כפי שהוספה של [setSchemaSQL](#setschemasql) נוחתת, והפתקים וקבוצות הטבלאות החדשים שלו נבחרים יחד עם הטבלאות שלו, כל סוג כל עוד הוא מוצג.  
+היא חוזרת לאחר שהמסמך נחת, ואין לה השפעה כל עוד `readonly` מוגדר.
+
+```js
+editor.setSchemaJSON('json...');
+// or
+editor.setSchemaJSON('json...', { mode: 'append' });
+```
+
+## getSchemaSQL {#getschemasql}
+
+מייצאת את המצב הנוכחי של העורך כסכמת SQL.  
+אם `databaseVendor` לא צוין, היא פועלת לפי מסד הנתונים שמוגדר כעת. שם שאינו ברשימה שלהלן מטופל באותו אופן, בלי לזרוק שגיאה.  
+השמות נתחמים במירכאות לפי סוג המירכאות שהעורך מציג. כל עוד `Bracket Type` [נעול](../guide/guides/settings.md#lock), הוא עשוי להיות שונה מזה ש-`value` שומר, שהוא זה שבו [`erd_read`](../mcp/tools.md#reading-a-document) של סוכן קוד תוחם במירכאות.  
+החל מגרסה `4.0.0`, ארגומנט `options` אופציונלי בוחר את המשפטים ואת הכותרת, כפי שעושות האפשרויות של כרטיסיית [סכמת SQL](../guide/guides/schema-sql.md). `SchemaSQLOptions` מיוצא כטיפוס.
+
+- `statements`: `'create'`, ברירת המחדל; `'ifNotExists'`, שכותב `IF NOT EXISTS` ב-MySQL, ב-MariaDB, ב-PostgreSQL, ב-SQLite וב-Databricks, וחוזר ל-`'create'` בשאר מסדי הנתונים; או `'recreate'`, שמוחק את הטבלאות לפני יצירתן, כאשר ב-Snowflake נכתב במקום זאת `CREATE OR REPLACE TABLE`.
+- `header`: `'none'`, ברירת המחדל; `'use'`, שעובר למסד הנתונים או לסכמה של המסמך; או `'createAndUse'`, שיוצר אותו תחילה אם אינו קיים ולאחר מכן עובר אליו. מסד נתונים שאין בו את האפשרות המבוקשת חוזר לחלופה כפי שהכרטיסייה עושה: Oracle כותב `'use'` עבור `'createAndUse'`, PostgreSQL אינו כותב כותרת עבור `'use'`, ו-SQLite אינו כותב כותרת כלל. כותרת נכתבת רק כל עוד שם מסד הנתונים של המסמך הוא מזהה פשוט – אותיות ASCII, ספרות ו-`_`, שאינו מתחיל בספרה.
+
+אפשרות שהושמטה, או אפשרות עם ערך לא מוכר, מתפרשת כברירת המחדל שלה, כך שקריאה ללא אפשרויות כותבת משפטי `CREATE` פשוטים ללא כותרת, כמו קודם.  
+החל מגרסה `4.0.0`, הפלט כולל תמיד את הסקריפטים `Before tables` ו-`After tables` של המסמך, לפי הסדר: כותרת, הסקריפט שלפני הטבלאות, משפטי DROP, טבלאות, הסקריפט שאחרי הטבלאות. הבחירות `Statements`, `Header` ו-`Tables` של כרטיסיית סכמת SQL עצמה לעולם אינן משפיעות על הקריאה הזאת, שתמיד כותבת את המסמך כולו.  
+החל מגרסה `3.10.0`, כל מפתח זר נושא את פסוקיות ה-`ON DELETE` וה-`ON UPDATE` של הקשר. פסוקית נכתבת רק כשהפעולה שלה מוגדרת ומסד הנתונים מקבל אותה, כך שפעולה שמסד הנתונים הזה אינו מקבל מושמטת, וברירת המחדל שלה חלה. החל מגרסה `4.0.0`, Snowflake מקבל רק `NO ACTION`. לגבי מה שכל מסד נתונים כותב, ראו [ON DELETE ו-ON UPDATE](../guide/guides/relationship-editing.md#on-delete-and-on-update).  
+החל מגרסה `3.10.0`, גרש בתוך הערה של טבלה או של עמודה עובר escape, כך שהערה כגון `it's` כבר אינה שוברת את המשפט. כל מסד נתונים שכותב הערות כליטרלים של מחרוזת מכפיל אותו, מלבד Databricks, שמוסיף לוכסן הפוך לפני כל גרש ולפני כל לוכסן הפוך. SQLite עדיין כותב הערות כשורות `--`.  
+החל מגרסה `4.0.0`, כמה מסדי נתונים גם כותבים שמות מפתחות, ערכי ברירת מחדל ומספור אוטומטי באופן שונה. ראו [מה ה-DDL כותב](../guide/guides/schema-sql.md#what-the-ddl-writes).
+
+```ts
+type DatabaseVendor =
+  | 'Databricks'
+  | 'MariaDB'
+  | 'MSSQL'
+  | 'MySQL'
+  | 'Oracle'
+  | 'PostgreSQL'
+  | 'Snowflake'
+  | 'SQLite';
+
+type SchemaSQLOptions = {
+  statements?: 'create' | 'ifNotExists' | 'recreate';
+  header?: 'none' | 'use' | 'createAndUse';
+};
+
+const schemaSQL = editor.getSchemaSQL();
+// or
+const postgresSQL = editor.getSchemaSQL('PostgreSQL');
+// or
+const mysqlSQL = editor.getSchemaSQL('MySQL', {
+  statements: 'ifNotExists',
+  header: 'createAndUse',
+});
+```
+
+## getSharedStore {#getsharedstore}
+
+מחזירה מאגר לעריכה שיתופית בזמן אמת.  
+`config` הוא `{ getNickname?, mouseTracker?, focusTracker? }`. ברירת המחדל של שני מנגנוני המעקב היא `true`: `mouseTracker` משדר לאחרים את סמן העכבר של העורך הזה, ו-`focusTracker` משדר את התא הפעיל שלו, את הבחירה שלו ואת מלבן הבחירה שלו.  
+ראו [עריכה שיתופית](./advanced/collaborative-editing.md).
+
+```js
+const sharedStore = editor.getSharedStore({
+  mouseTracker: false,
+  focusTracker: false,
+});
+```
+
+## setDiffValue {#setdiffvalue}
+
+פותחת את מציג ההבדלים ומשווה בין המסמך הפתוח כעת לבין המסמך שמועבר אליה.  
+היא אינה מחזירה דבר ואינה משנה את המסמך, כך שסגירת המציג משאירה את העורך בדיוק כפי שהיה.  
+ערך ריק, או כל דבר שאינו מחרוזת, מושווה למסמך ריק.  
+זוהי אותה שכבת תצוגה כמו [מציג הבדלים](../guide/guides/table-related-functions.md#diff-viewer) בתפריט ההקשר של בד הציור.  
+החל מגרסה `4.1.0`, היא מתאימה בין מה ששני המסמכים מכילים, תחילה לפי מזהה ורק לאחר מכן לפי מה שכל פריט מחזיק, כגון שם של טבלה או טקסט של פתק – ראו [מה מושווה](../guide/guides/table-related-functions.md#what-is-compared). לכן, מול גרסה קודמת של אותו מסמך, כגון גרסת Git של הקובץ שלו, שינוי שם מוצג כפריט אחד ששמו שונה; מול מסמך שהמזהים שלו שונים, הוא מוצג כהסרה וכהוספה. המציג מפרט את מה שהשתנה בעץ לצד שני המסמכים, ומסמן את השינויים בצבע במקום למלא תאים.
+
+```js
+editor.setDiffValue('prev json...');
+```

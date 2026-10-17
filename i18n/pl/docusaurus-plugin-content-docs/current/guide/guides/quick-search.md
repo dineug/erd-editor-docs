@@ -1,0 +1,90 @@
+---
+sidebar_position: 7
+description: Otwieranie palety poleceń, aby przełączać karty, uruchamiać polecenia bieżącej karty, otwierać lub zamykać Eksplorator, zmieniać motyw lub język wyświetlania albo przechodzić do tabeli, kolumny, komentarza lub notatki po wpisaniu prefiksu.
+---
+
+# Szybkie wyszukiwanie
+
+Szybkie wyszukiwanie to paleta poleceń edytora.  
+Wyświetla polecenia dostępne na bieżącej karcie. Rozpocznij wyszukiwanie znakiem `#`, `@` lub `:`, aby zamiast tego przeszukać diagram i przejść do tabeli, kolumny albo komentarza lub notatki.
+
+Otwórz je skrótem `Ctrl + K` (Windows/Linux) lub `⌘ + K` (Mac) albo kliknij przycisk `Search` na pasku narzędzi.  
+Ten sam skrót je zamyka, podobnie jak klawisz `Esc` i kliknięcie poza panelem. Jego otwarcie zamyka Właściwości tabeli, [kreator motywu](./language-and-theme.md#theme), selektor [`Display Language`](./language-and-theme.md#picking-a-language), okno dialogowe [`Export image`](./file-import-export.md#image) oraz okno dialogowe [Mapuj kolumny](./relationship-editing.md#map-columns), a dokonane w nim wybory przepadają. Nie otwiera się podczas edycji komórki tabeli, notatki lub nazwy grupy tabel.
+
+Przycisk na pasku narzędzi tuż za przyciskiem `Search` to `Explorer`. Otwiera on lub zamyka [Eksplorator](./explorer.md), drzewo diagramu zadokowane przy lewej krawędzi kanwy, z funkcją Znajdź i zamień na górze.  
+Otwarcie palety pozostawia Eksplorator otwarty, a klawisz `Esc` zamyka wtedy tylko paletę. Skrót `Ctrl + F` (Windows/Linux) lub `⌘ + F` (Mac) naciśnięty w palecie zamyka ją i przenosi fokus klawiatury do pola wyszukiwania Eksploratora, a jeśli Eksplorator nie jest widoczny, otwiera go z aktywnym wyszukiwaniem. W przeciwieństwie do pozycji `Toggle Explorer` ten skrót nigdy nie zamyka Eksploratora z poziomu palety – zobacz sekcję [Otwieranie i zamykanie](./explorer.md#opening-and-closing). Gdy otwarty jest podgląd różnic, podróż w czasie lub podgląd Automatycznego układu, edytor nie obsługuje tego skrótu: paleta pozostaje otwarta, a skrót trafia dalej do przeglądarki lub hosta – zobacz sekcję [Pasek wyszukiwania przeglądarki](./find-and-replace.md#the-browsers-find-bar).  
+Host osadzający edytor może przypisać Szybkie wyszukiwanie do innego klawisza, a podpowiedź przycisku `Search` pokazuje wtedy ten klawisz – zobacz sekcję [Skróty klawiaturowe](./settings.md#shortcuts).
+
+![Otwieranie palety skrótem ⌘ + K, a następnie przechodzenie do tabeli za pomocą #pay, do kolumny za pomocą @price i do komentarza tabeli za pomocą :address](/img/demo-quick-search.webp)
+
+## Wyszukiwanie i nawigacja {#searching-and-navigating}
+
+Wpisuj tekst, aby filtrować listę. Każde naciśnięcie klawisza przeszukuje od nowa całą widoczną listę, więc usunięcie znaków lub wpisanie nowego słowa w miejsce takiego, które niczego nie znalazło, przywraca pasujące pozycje.  
+Dopasowanie jest rozmyte i obejmuje zarówno nazwę pozycji, jak i słowa kluczowe wyświetlane obok niej. Na przykład w podmenu `Import` tekst `sdl` znajduje `GraphQL`, `dbdiagram` znajduje `DBML`, a `azimutt` znajduje `AML`. Drobna literówka nadal znajduje swoją pozycję, tak jak `tabel` znajduje `New Table`, a `imprt` znajduje `Import`, ale pozycja, która tylko luźno przypomina wpisany tekst, jest pomijana: `memo` wyświetla wyłącznie `New Memo`. Pozycja, której nazwa lub słowa kluczowe zawierają wpisany tekst, bez uwzględniania wielkości liter, jest zawsze wyświetlana, a taka, którą pominie dopasowanie rozmyte, pojawia się po dopasowaniach rozmytych. Wpisany tekst jest wyróżniany wszędzie, gdzie zawiera go pozycja, bez uwzględniania wielkości liter.  
+W języku wyświetlania innym niż angielski polecenia i pozycje podmenu można znaleźć również po ich angielskich nazwach i słowach kluczowych, których lista nie pokazuje, więc `new table` znajduje polecenie `New Table` niezależnie od języka, w którym jest ono wyświetlane.  
+Poruszaj się po liście klawiszami `↑` i `↓` – lista jest zapętlona na obu końcach – i uruchom wyróżnioną pozycję klawiszem `Enter`. Polecenie, które ma własny skrót klawiaturowy, pokazuje go na końcu swojego wiersza: po prawej stronie albo po lewej w języku wyświetlania pisanym od prawej do lewej. Gdy edytor metody wprowadzania nadal składa znaki, na przykład w środku sylaby koreańskiej, klawisze `↑`, `↓` i `Enter` należą do niego i ani nie przesuwają wyróżnienia, ani nie uruchamiają pozycji.
+
+Pozycja taka jak `Database`, `Import` lub `Auto Layout` otwiera podmenu: jego pozycje zastępują listę, a pole wyszukiwania zostaje wyczyszczone. Podmenu pozycji `Database`, `Bracket`, `Language`, obu stylów nazw, `Schema SQL: Statements`, `Schema SQL: Header`, `Theme` i `Display Language` mają zaznaczony bieżący wybór i otwierają się z wyróżnieniem na nim, więc klawisz `Enter` go zachowuje; pozostałe podmenu otwierają się bez wyróżnionej pozycji.  
+Filtrowanie dotyczy zawsze tylko widocznej listy i nie ma sposobu na powrót o poziom wyżej, więc aby zacząć od nowa, zamknij paletę i otwórz ją ponownie. W podmenu znaki `#`, `@`, `:` i `?` są zwykłym tekstem, a nie [prefiksami](#searching-the-diagram).
+
+## Co zawiera paleta {#what-the-palette-lists}
+
+Lista zależy od bieżącej karty. Na każdej karcie zaczyna się od pozycji `Tab`, która przełącza na kartę `Entity Relationship Diagram`, `Visualization`, `Schema SQL`, `Code Generator` lub `Settings`, z pominięciem karty, na której już jesteś.
+
+Na karcie ERD: `Database`, `Import`, `Import and Add` i `Export`, następnie `New Table`, `New Memo`, `New Table Group` i `Group Selected Tables`, cztery typy relacji oraz `Auto Layout`. Tabele nie są tu wyświetlane; wpisz `#`, aby [przejść do jednej z nich](#searching-the-diagram).  
+Pozycja `Import and Add` jest pomijana w edytorze tylko do odczytu, a pozycja `New Memo` – gdy [View Option](./table-related-functions.md#table-view-options) → `Memos` ukrywa notatki. Pozycja `New Table Group` rozpoczyna rysowanie [grupy tabel](./table-groups.md) na kanwie, a `Group Selected Tables` umieszcza zaznaczone tabele w nowej grupie i otwiera jej nazwę do edycji. Obie są pomijane w edytorze tylko do odczytu oraz gdy View Option → `Table Groups` ukrywa grupy, a `Group Selected Tables` wymaga ponadto zaznaczenia co najmniej jednej tabeli. Ich wiersze pokazują klawisze: `Alt + G` (Windows/Linux) lub `⌥ + G` (Mac) do [rysowania grupy](./table-groups.md#drawing-a-group) oraz `T`, a potem `G` do [grupowania zaznaczonych tabel](./table-groups.md#grouping-selected-tables).  
+Uruchamiają one te same polecenia co menu kontekstowe kanwy, z wyjątkiem polecenia `Group Selected Tables`, które odpowiada pozycji `Group selected tables` w menu tabeli; pozycje `View Option` i `Diff Viewer` są dostępne tylko w menu kontekstowym. Pozycja `Export` oferuje te same opcje `json`, `Schema SQL` i `Image` co menu kontekstowe, a wpisanie `png` lub `svg` w jej podmenu znajduje `Image`.  
+Informacje o tym, jak działają poszczególne formaty, operacja [Importuj i dodaj](./file-import-export.md#import-and-add) i [eksport obrazu](./file-import-export.md#image), znajdziesz na stronie [Importowanie i eksportowanie plików](./file-import-export.md), a o tym, na co wpływa wybór bazy danych – na stronie [Operacje na tabelach](./table-related-functions.md#databases).
+
+Na karcie Schemat SQL: ponownie pozycja `Database` oraz pozycja `Bracket`, która ustawia znak cudzysłowu otaczający nazwy tabel, kolumn, ograniczeń i indeksów w wygenerowanym kodzie SQL – `SingleQuote`, `DoubleQuote`, `Backtick` lub `None`, aby w ogóle nie ujmować nazw w cudzysłów. Następnie `Schema SQL: Statements` i `Schema SQL: Header`, które pozwalają dokonać tych samych wyborów co panel opcji karty, ale wyświetlają tylko te, które zapisuje wybrana baza danych, oraz pozycja `Schema SQL: Options panel`, która pokazuje lub ukrywa ten panel. Informacje o tym, co zapisuje każdy wybór, znajdziesz na stronie [Schemat SQL](./schema-sql.md).
+
+Na karcie Generator kodu: `Database`, `Bracket`, gdy językiem jest `Doctrine`, `JPA` lub `SeaORM`, następnie `Language`, `Table Name Case`, `Column Name Case` oraz pozycja `Code Generator: Options panel`, która pokazuje lub ukrywa panel opcji karty. Informacje o tym, co generuje każdy format docelowy, znajdziesz na stronie [Generator kodu](./code-generator.md).
+
+Karty Wizualizacja i Ustawienia nie mają własnych poleceń, mają tylko pozycję `Tab` oraz opisane poniżej polecenia, które wyświetla każda karta.
+
+Pod koniec listy na każdej karcie, również w edytorze tylko do odczytu, znajduje się polecenie `Toggle Explorer`, które pokazuje swój skrót: `Ctrl + F` (Windows/Linux) lub `⌘ + F` (Mac). Można je też znaleźć, wpisując `find`, `replace`, `rename`, `tree`, `outline` lub `objects`.  
+Jego uruchomienie zamyka paletę i daje taki sam efekt jak skrót na kanwie. Gdy przycisk `Explorer` na pasku narzędzi wygląda na wciśnięty, czyli gdy Eksplorator jest otwarty na karcie ERD i nie jest ukryty przez tryb zen, polecenie zamyka Eksplorator. W przeciwnym razie przełącza na kartę ERD i otwiera Eksplorator z aktywnym wyszukiwaniem, z kursorem tekstowym w jego polu wyszukiwania – zobacz sekcję [Otwieranie i zamykanie](./explorer.md#opening-and-closing). Polecenie jest pomijane, gdy otwarty jest podgląd różnic, podróż w czasie lub podgląd Automatycznego układu.
+
+### Motyw i język wyświetlania {#theme-and-display-language}
+
+Za poleceniem `Toggle Explorer` każda karta wyświetla polecenia `Theme` i `Display Language`, również w edytorze tylko do odczytu. Każde z nich pojawia się tylko tam, gdzie edytor oferuje odpowiedni selektor, co pokazują przyciski `Theme` i `Display Language` na pasku narzędzi. Aplikacja internetowa, Google Drive, VS Code, IDE JetBrains i aplikacja Obsidian oferują oba – zobacz sekcję [W poszczególnych hostach](./language-and-theme.md#in-each-host).
+
+Polecenie `Theme` otwiera pozycje `System`, `Light` i `Dark` z zaznaczonym bieżącym wyglądem. Wybranie jednej z nich zmienia tylko wygląd i zachowuje odcień szarości oraz kolor akcentu, tak jak przyciski `Appearance` w kreatorze motywu.  
+Polecenie `Display Language` otwiera pozycję `System`, a po niej 25 języków, każdy pod nazwą w tym języku i w kolejności z selektora, z zaznaczoną bieżącą opcją. Tutaj język można znaleźć również po jego angielskiej nazwie lub kodzie: `german` lub `de-DE` znajduje `Deutsch`, a `korean` znajduje `한국어`.  
+Wybór w którymkolwiek z nich działa od razu, zamyka paletę i jest zachowywany tak samo jak wybór dokonany w kreatorze motywu lub w selektorze `Display Language`. Jeśli język wyświetlania zmieni się, gdy paleta jest otwarta, lista przełącza się na ten język, zachowując wpisany tekst i bieżące podmenu.
+
+## Przeszukiwanie diagramu {#searching-the-diagram}
+
+Rozpocznij wyszukiwanie prefiksem, aby przeszukać diagram zamiast poleceń: `#` dla tabel, `@` dla kolumn, `:` dla komentarzy i notatek lub `?`, aby wyświetlić listę prefiksów. Prefiks działa na każdej karcie. Liczy się tylko jako pierwszy znak, przy czym spacje przed nim są pomijane. Spacja po nim jest opcjonalna, więc `#users` i `# users` oznaczają to samo wyszukiwanie, a znaki pełnej szerokości `＃`, `＠`, `：` i `？`, które wpisuje japoński lub chiński edytor metody wprowadzania, również się liczą.  
+Gdy na najwyższym poziomie pole wyszukiwania jest puste, wiersz pod nim pokazuje cztery prefiksy; kliknij jeden z nich, aby go wpisać. Gdy prefiks jest aktywny, na końcu pola wyszukiwania widać nazwę jego zakresu: `Tables`, `Columns`, `Comments & memos` lub `Help`. Usuń prefiks, aby wrócić do poleceń.
+
+Prefiks `#` wyświetla tabele, każdą z napisem `Table` obok, a tabela z pustą nazwą jest wyświetlana jako `unnamed`. Gdy po `#` nic nie ma, tabele są posortowane według nazwy. Tekst po `#` jest dopasowywany wyłącznie do nazw tabel, w sposób rozmyty jak powyżej, a tabele, których nazwa go zawiera, pojawiają się jako pierwsze. Nazwy grup tabel i nazwy indeksów nie są przeszukiwane z żadnym prefiksem; funkcja [Znajdź i zamień](./find-and-replace.md#what-it-searches) przeszukuje jedne i drugie.
+
+Prefiks `@` wyświetla kolumny z ich nazwami, a obok każdej z nich – jej położenie, na przykład `users.email · Column`. Tekst po `@` musi występować w nazwie kolumny, bez uwzględniania wielkości liter; to dopasowanie nie jest rozmyte. Tekst przed pierwszym znakiem `.` zawęża wyszukiwanie do tabel, których nazwa go zawiera: `@users.em` wyświetla kolumny zawierające `em` w tabelach, których nazwa zawiera `users`, `@users.` wyświetla kolumny tych tabel, a `@.em` przeszukuje wszystkie tabele. Gdy po `@` nic nie ma, kolumny są wyświetlane bez filtrowania.
+
+Prefiks `:` wyświetla komentarze tabel, komentarze kolumn i notatki, nigdy nazwy. Każdy wiersz pokazuje fragment tekstu wokół dopasowania z napisem `users · Table comment`, `users.email · Column comment` lub `Memo` obok. Tekst po `:` musi występować w komentarzu lub notatce, bez uwzględniania wielkości liter, tak jak w przypadku `@`. Gdy po `:` nic nie ma, wyświetlane są niepuste komentarze i notatki. Gdy View Option → `Memos` ukrywa notatki, prefiks `:` nie wyświetla żadnej notatki.
+
+Prefiksy `@` i `:` wyświetlają swoje wiersze w kolejności, w jakiej przechowuje je dokument: tabela po tabeli, komentarz każdej tabeli przed jej kolumnami w kolejności kolumn, a notatki na końcu.
+
+Prefiks `?` wyświetla pozycje `Tables`, `Columns` i `Comments & memos`, a tekst po `?` je filtruje. Wybranie jednej z nich zastępuje zawartość pola wyszukiwania jej prefiksem i pozostawia paletę otwartą.
+
+Lista z prefiksem zawiera wszystkie dopasowania, niezależnie od ich liczby. Prefiks, którego wyszukiwanie nic nie znajduje, pozostawia listę pustą, bez żadnego komunikatu.
+
+Wybranie tabeli, kolumny, komentarza lub notatki zamyka paletę i przełącza na kartę ERD, jeśli jesteś na innej karcie.  
+Kanwa przewija się do wybranego elementu, chyba że jest on już dobrze widoczny – zobacz sekcję [Dokąd prowadzi przejście](./table-related-functions.md#where-a-jump-lands). Następnie tabela jest zaznaczana jako jedyna i przenoszona na wierzch, a fokus trafia na jej nazwę, chyba że znajdował się już w tej tabeli.  
+Notatka jest zaznaczana jako jedyna i przenoszona na wierzch. W przypadku kolumny lub komentarza tabela, do której należy, jest zaznaczana jako jedyna i przenoszona na wierzch, a fokus trafia na komórkę zawierającą tekst albo na nazwę obok komentarza ukrytego przez [opcję widoku tabeli](./table-related-functions.md#table-view-options).  
+Żadne przejście nie rozpoczyna ani nie kończy rysowania relacji.
+
+Aby użyć opcji `Match Case`, `Match Whole Word` lub `Use Regular Expression` albo zamienić tekst, skorzystaj z funkcji [Znajdź i zamień](./find-and-replace.md) na górze Eksploratora.
+
+## Gdy żadne polecenie nie pasuje {#when-no-command-matches}
+
+Jeśli na najwyższym poziomie, bez prefiksu, żadne wyświetlone polecenie nie zawiera wpisanego tekstu, bez uwzględniania wielkości liter, za poleceniami pojawiają się trzy wiersze: `Search tables for "…"`, `Search columns for "…"` i `Search comments & memos for "…"`, każdy z odpowiednim prefiksem w roli ikony. Wybranie jednego z nich wstawia ten prefiks przed wpisanym tekstem, więc `users` zmienia się w `#users`, a paleta pozostaje otwarta z tymi wynikami.  
+Jeśli wyszukiwanie nie znajdzie żadnego polecenia, nad listą pojawia się komunikat `No commands match`, a lista zawiera wtedy tylko te trzy wiersze. Jeśli znajdzie tylko polecenia, które nie zawierają tego tekstu, pojawiają się one jako pierwsze: na karcie ERD bez zaznaczonej tabeli tekst `tables` wyświetla przed trzema wierszami polecenia `New Table`, `Database` oraz, jeśli jest dostępne, `New Table Group`. Gdy zaznaczona jest tabela, polecenie `Group Selected Tables`, jeśli jest dostępne, zawiera `tables`, więc te trzy wiersze się nie pojawiają.  
+W podmenu wyszukiwanie, które nic nie znajduje, pozostawia listę pustą, bez żadnego komunikatu.
+
+## Wyszukiwanie po koreańsku {#searching-in-korean}
+
+Wyszukiwany tekst zawierający znaki hangul jest dopasowywany także na poziomie liter, w poleceniach, w podmenu i przy każdym prefiksie.  
+Na każdym etapie, przez który przechodzi koreański edytor metody wprowadzania, nadal znajdowany jest wiersz, do którego zmierza wpisywany tekst, więc `ㅅ`, `사`, `상`, `사요` i `사용` znajdują `사용자`. Wyszukiwany tekst złożony wyłącznie ze spółgłosek początkowych jest dopasowywany do spółgłosek początkowych sylab, z pominięciem spacji: `ㅅㅇㅈ` znajduje `사용자`, a `ㅈㅁ` znajduje `주문 내역`. Zbitka spółgłoskowa, którą edytor metody wprowadzania w systemie Windows składa z dwóch spółgłosek początkowych wpisanych jedna po drugiej, taka jak `ㅄ`, liczy się jako dwie spółgłoski (`ㅂㅅ`), natomiast spółgłoska podwojona, taka jak `ㄲ`, pozostaje jedną literą. Tekst zapisany w postaci rozłożonej, tak jak nazwy plików w systemie macOS, jest dopasowywany tak, jakby był złożony.  
+Najpierw pojawiają się wiersze, których cały tekst odpowiada wyszukiwanemu tekstowi litera po literze lub spółgłoska początkowa po spółgłosce początkowej, potem wiersze, które się od niego zaczynają, a następnie wiersze, które go zawierają. Przy prefiksach `@` i `:` wiersze zawierające wyszukiwany tekst w postaci, w jakiej go wpisano, pojawiają się przed wszystkimi tymi wierszami, w kolejności dokumentu. Wyróżnienie obejmuje całe sylaby, więc `상` podświetla `사용` w `사용자`.

@@ -6,10 +6,10 @@ description: ブラウザ、Google Drive、VS Code、IntelliJ、Obsidian、自�
 # はじめに
 
 erd-editor は ER 図（Entity-Relationship Diagram）エディタです。
-Web アプリ、Google Drive アプリ、VS Code 拡張機能、IntelliJ プラグイン、Obsidian プラグイン、そして自分のページに埋め込める `<erd-editor>` カスタム要素として提供しています。
+Web アプリ、Google Drive アプリ、VS Code 拡張機能、IntelliJ プラグイン、Obsidian プラグイン、そして自分のページに組み込める `<erd-editor>` カスタム要素として提供しています。
 どれも同じエディタで、ドキュメント形式も共通です。
 
-![ショップのダイアグラムでリレーションシップの強調、カラムの追加、Flow での orders へのフォーカス](/img/demo-overview.webp)
+![ショップのダイアグラムで、リレーションシップにマウスを重ね、カラムを追加し、Flow で orders にフォーカスする様子](/img/demo-overview.webp)
 
 ## 入手方法
 
@@ -37,7 +37,7 @@ Obsidian プラグインを更新したら、Obsidian を再起動してくだ�
 ## できること
 
 - 端のないキャンバスにテーブル、カラム、メモを描き、`Zero One`、`Zero N`、`One Only`、`One N` の 4 種類のリレーションシップでつなぎます。[編集を始める](./guides/editing-start.md)を参照してください。インデックスはテーブルのプロパティパネルで定義します。2 つ以上のカラムにまたがるユニークインデックスは代替キーで、`Alternate Key` の表示オプションがオンのとき、ダイアグラムはそのカラムに `AK1.1`、`AK1.2` などのマークを付けます。[インデックス](./guides/table-related-functions.md#indexes)と[代替キー](./guides/table-related-functions.md#alternate-keys)を参照してください。
-- リレーションシップの終点を、テーブルにすでにあるカラムにできます。マウスやペンでリレーションシップを作成している間、終点のテーブルの横にある `Map to existing columns` は親テーブルのキーをそのテーブルのカラムに対応付け、`Create new columns` は新しいカラムを追加します。リレーションシップのコンテキストメニューの `Map Columns` で、後からカラムを変更できます。[Map Columns](./guides/relationship-editing.md#map-columns)を参照してください。リレーションシップには ON DELETE と ON UPDATE のアクションも設定できます。[ON DELETE と ON UPDATE](./guides/relationship-editing.md#on-delete-and-on-update)を参照してください。
+- リレーションシップの終点を、テーブルにすでにあるカラムにできます。マウスやペンでリレーションシップを作成している間、終点のテーブルの横にある `Map to existing columns` は親テーブルのキーをそのテーブルのカラムに対応付け、`Create new columns` は新しいカラムを追加します。リレーションシップのコンテキストメニューの `Map Columns` で、後からカラムを変更できます。[Map Columns](./guides/relationship-editing.md#map-columns) を参照してください。リレーションシップには ON DELETE と ON UPDATE のアクションも設定できます。[ON DELETE と ON UPDATE](./guides/relationship-editing.md#on-delete-and-on-update) を参照してください。
 - すばやく編集できます。`Alt + N` はテーブルを追加し、`Alt + Enter` はカラムを追加し、`Alt + K` はフォーカスしているカラムの主キーを切り替え（そのカラムが選択しているカラムの 1 つであれば、選択しているすべてのカラムが対象です）、`Delete` または `Backspace` は選択しているものを削除します。どれも Undo の 1 ステップです。[ショートカット](./guides/settings.md#ショートカット)を参照してください。キャンバスの下端にある[キャンバスツールバー](./guides/table-related-functions.md#canvas-toolbar)でも、1 回のクリックでテーブルやメモを追加できます。
 - テーブル、メモ、テーブルグループに、プリセットとダイアグラムですでに使われている色が並ぶカラーピッカーから色を付け、`No color` または `Remove color` で色を外せます。[テーブルとメモの色指定](./guides/table-related-functions.md#テーブルとメモの色指定)を参照してください。
 - 関連するテーブルを[テーブルグループ](./guides/table-groups.md)にまとめられます。テーブルグループはテーブルの背後に置かれる枠で、名前と色を付けられます。`Alt + G` を押すか、キャンバスのコンテキストメニュー、キャンバスツールバー、クイック検索の `New Table Group` を使って描くか、選択しているテーブルから、`T` に続けて `G` を押すか、テーブルのコンテキストメニューの `Group selected tables` を選んで作成します。テーブルは枠の内側にドロップするとグループに加わり、外側にドロップするとグループから外れます。グループをタイトルバーでドラッグすると、そのテーブルも一緒に移動します。DBML は `TableGroup` ブロックとして、読み込みと書き出しの両方向でグループを保持します。
@@ -45,7 +45,7 @@ Obsidian プラグインを更新したら、Obsidian を再起動してくだ�
 - ダイアグラムを `json` として書き出せるほか、[Schema SQL](./guides/schema-sql.md#sql-の保存とコピー) タブから Schema SQL を `.sql` ファイルとして保存またはコピーでき、[`Export image`](./guides/file-import-export.md#画像) ダイアログから PNG または SVG の画像として、あるいはクリップボードへの PNG として書き出せます。
 - Databricks、MSSQL、MariaDB、MySQL、Oracle、PostgreSQL、Snowflake、SQLite の 8 つのデータベースベンダーの構文で Schema SQL を記述します。[テーブル関連機能](./guides/table-related-functions.md#databases)を参照してください。[Schema SQL](./guides/schema-sql.md) タブのオプションパネルでは、書き出すステートメント、ヘッダー、テーブルグループを選べるほか、テーブルの前後に書き出す独自の SQL をダイアグラムに保存しておけます。
 - 22 種類のターゲット向けにコードを生成します。言語は C#、Go、Java、Kotlin、PHP、Rust、Scala、Swift、TypeScript、ORM は Doctrine、Drizzle、JPA、SeaORM、Sequelize、SQLAlchemy、TypeORM、そのほかに AML、DBML、GraphQL、JSON Schema、Mermaid、Zod があります。Code Generator タブのオプションパネルでは言語、データベース、名前のケースを選び、コードはその言語の拡張子を付けたファイルとして保存するか、コピーします。[コード生成](./guides/code-generator.md)を参照してください。
-- [可視化](./guides/visualization.md)では、スキーマを力学モデルの `Graph` として、またはリレーションシップに沿って並べたテーブルのカードの `Flow` として読み取れます。テーブルにマウスを重ねると、そのテーブルが接しているものが一目で分かります。ERD タブで `Alt + F` を押すと、[選択しているテーブルにフォーカス](./guides/visualization.md#focusing-on-tables)し、それに関連するテーブルと合わせて表示できます。
+- [可視化](./guides/visualization.md)では、スキーマを力学モデルの `Graph` として、またはリレーションシップに沿って並べたテーブルのカードの `Flow` として読み取れます。テーブルにマウスを重ねると、そのテーブルにつながっているものがすべて強調表示されます。ERD タブで `Alt + F` を押すと、[選択しているテーブルにフォーカス](./guides/visualization.md#focusing-on-tables)し、それに関連するテーブルと合わせて表示できます。
 - 端のないキャンバスで作業します。ダイアグラムが伸びていく先へどこまでも移動でき、`Ctrl + Wheel`（Mac では `⌘ + Wheel`）、キーボード、ピンチで `10%` から `150%` まで拡大・縮小し、Zen モードでダイアグラムだけを残せます。マウスの中ボタンでドラッグすると、テーブルの上を含めてキャンバスのどこからでも表示位置を移動できます。[キャンバスの移動](./guides/table-related-functions.md#getting-around-the-canvas)を参照してください。
 - [自動レイアウト](./guides/table-related-functions.md#auto-layout)で、ダイアグラム全体を一度に並べ替えます。Force のシミュレーション、左から右へ流れる Flow、縦横 2 方向の Tree から選べ、どれでも各テーブルグループはまとまったまま配置されます。
 - [クイック検索](./guides/quick-search.md)を使うと、どこからでもコマンドを実行できます。検索を `#`、`@`、`:` で始めると、それぞれテーブル、カラム、コメントまたはメモへ移動できます。[Undo, Redo](./guides/undo-redo.md) では編集履歴をたどれ、[Time Travel](./guides/undo-redo.md#time-travel) ではこのセッションの履歴をキャンバス上で再生でき、[Diff Viewer](./guides/table-related-functions.md#diff-viewer) ではダイアグラムを別の `.json` ファイルと比較できます。Diff Viewer のツリーは 2 つのバージョンの横にあり、追加、変更、削除、名前の変更があったテーブル、カラム、インデックス、外部キー、メモ、テーブルグループを一覧表示します。

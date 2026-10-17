@@ -23,7 +23,7 @@ VS Code 会让智能体的变更在智能体或你保存之前一直保持未保
 - 以 id 列表、完整实体、保存时写出的 `.erd.json` 文本，或八种数据库中任意一种的 DDL 的形式读回图，DDL 可使用 [Schema SQL](../guide/guides/schema-sql.md) 标签页中的 `Statements` 与 `Header` 选项。在包含数千个表的 schema 上，它每次只读取一页、几个表，或几个表分组中的表。参见[读取文档](./tools.md#reading-a-document)。
 - 设置数据库、数据库名称，以及 Schema SQL 中写在各表之前和之后的[脚本](../guide/guides/schema-sql.md#before-and-after-scripts)，例如写在表之前的 `CREATE EXTENSION` 或写在表之后的 `GRANT`。`erd_read` 可以单独给出这些脚本，也可以在整个文档的 DDL 中一并给出。参见[设置](./tools.md#settings)。
 - 把多次编辑作为一次编辑执行，要么全部生效，要么全部不生效，一次 Undo 即可撤回。参见 [erd_batch](./tools.md#erd_batch)。
-- Undo 与 Redo 它自己的编辑，而绝不会动你的编辑。
+- 对它自己的编辑执行 Undo 与 Redo，而绝不会动你的编辑。
 
 它不做的事：
 

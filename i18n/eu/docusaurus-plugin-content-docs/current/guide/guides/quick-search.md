@@ -1,0 +1,90 @@
+---
+sidebar_position: 7
+description: Ireki komando-paleta fitxaz aldatzeko, uneko fitxako komando bat exekutatzeko, Arakatzailea ireki edo ixteko, gaia edo bistaratze-hizkuntza aldatzeko, edo aurrizki bat idatzita taula, zutabe, iruzkin edo ohar batera joateko.
+---
+
+# Bilaketa azkarra
+
+Bilaketa azkarra editorearen komando-paleta da.  
+Zauden fitxan erabilgarri dauden komandoak zerrendatzen ditu. Hasi bilaketa `#`, `@` edo `:` ikurrarekin, horren ordez diagraman bilatzeko eta taula, zutabe, edo iruzkin edo ohar batera joateko.
+
+Ireki `Ctrl + K` (Windows/Linux) edo `⌘ + K` (Mac) lasterbidearekin, edo egin klik tresna-barrako `Search` botoian.  
+Lasterbide berak ixten du, eta baita `Esc` teklak eta paneletik kanpo egindako klik batek ere. Irekitzeak Taularen propietateak, [gai-sortzailea](./language-and-theme.md#theme), [`Display Language`](./language-and-theme.md#picking-a-language) hautatzailea, [`Export image`](./file-import-export.md#image) elkarrizketa-koadroa eta [Mapatu zutabeak](./relationship-editing.md#map-columns) ixten ditu, eta azken horretan aukeratutakoa baztertu egiten da. Ez da irekitzen taula-gelaxka bat, ohar bat edo taula-talde baten izena editatzen ari zaren bitartean.
+
+Tresna-barran `Search` botoiaren jarraian dagoen botoia `Explorer` da. [Arakatzailea](./explorer.md) irekitzen edo ixten du: oihalaren ezkerrean ainguratutako diagramaren zuhaitz bat, goiko aldean Bilatu eta ordeztu duena.  
+Paleta irekitzeak Arakatzailea irekita uzten du, eta orduan `Esc` teklak paleta bakarrik ixten du. Paletan sakatutako `Ctrl + F` (Windows/Linux) edo `⌘ + F` (Mac) lasterbideak paleta ixten du eta teklatua Arakatzailearen Bilatu eremura eramaten du, eta Arakatzailea ikusgai ez badago, bilaketan fokua duela irekitzen du. `Toggle Explorer` aukerak ez bezala, lasterbide horrek ez du inoiz Arakatzailea ixten paletatik. Ikus [Irekitzea eta ixtea](./explorer.md#opening-and-closing). Diferentzia-ikustailea, Denbora-bidaia edo Antolaketa automatikoaren aurrebista irekita dagoen bitartean, editoreak ez du lasterbidea kudeatzen: paleta irekita geratzen da eta tekla nabigatzailera edo ostalarira iristen da. Ikus [Nabigatzailearen bilaketa-barra](./find-and-replace.md#the-browsers-find-bar).  
+Editorea txertatzen duen ostalari batek Bilaketa azkarra beste tekla bati eslei diezaioke, eta orduan `Search` argibideak tekla hori erakusten du. Ikus [Lasterbideak](./settings.md#shortcuts).
+
+![Paleta ⌘ + K lasterbidearekin irekitzea, eta ondoren #pay testuarekin taula batera, @price testuarekin zutabe batera eta :address testuarekin taula-iruzkin batera joatea](/img/demo-quick-search.webp)
+
+## Bilatzea eta nabigatzea {#searching-and-navigating}
+
+Idatzi zerrenda iragazteko. Tekla-sakatze bakoitzak aurrean duzun zerrenda osoan bilatzen du berriro, hasieratik; beraz, karaktereak ezabatzeak, edo ezer aurkitu ez zuen hitz baten gainean hitz berri bat idazteak, bat datozen aukerak itzultzen ditu.  
+Bat-etortzea lausoa da, eta aukeraren izena zein haren ondoan erakusten diren gako-hitzak hartzen ditu barne. `Import` azpimenuan, adibidez, `sdl` testuak `GraphQL` aurkitzen du, `dbdiagram` testuak `DBML` eta `azimutt` testuak `AML`. Idazketa-akats txiki batekin ere aurkitzen da aukera, adibidez, `tabel` testuarekin `New Table` eta `imprt` testuarekin `Import`, baina idatzitakoaren antz urria baino ez duen aukera kanpoan geratzen da: `memo` testuak `New Memo` bakarrik zerrendatzen du. Izenean edo gako-hitzetan idatzitakoa duen aukera beti zerrendatzen da, maiuskulak eta minuskulak bereizi gabe, eta bat-etortze lausoak harrapatzen ez duena bat-etortze lausoen ondoren agertzen da. Idatzitakoa nabarmendu egiten da aukera batek hura duen leku guztietan, maiuskulak eta minuskulak bereizi gabe.  
+Ingelesa ez den bistaratze-hizkuntza batean, komandoak eta azpimenuetako aukerak beren ingelesezko izen eta gako-hitzen bidez ere aurkitzen dira, zerrendak horiek erakusten ez dituen arren; beraz, `new table` testuak `New Table` aurkitzen du, edozein hizkuntzatan erakusten dela ere.  
+Mugitu zerrendan `↑` eta `↓` teklekin — bi muturretan buelta ematen du — eta exekutatu nabarmendutako aukera `Enter` teklarekin. Bere lasterbidea duen komando batek errenkadaren amaieran erakusten du: eskuinean, edo ezkerrean, eskuinetik ezkerrera idazten den bistaratze-hizkuntza batean. Idazketa-metodo bat oraindik konposatzen ari den bitartean, adibidez koreerazko silaba baten erdian, `↑`, `↓` eta `Enter` teklak hari dagozkio, eta ez dute nabarmendutako aukera mugitzen, ezta aukerarik exekutatzen ere.
+
+`Database`, `Import` edo `Auto Layout` bezalako aukera batek azpimenu bat irekitzen du: haren aukerek zerrenda ordezten dute, eta bilaketa-koadroa hustu egiten da. `Database`, `Bracket`, `Language`, izenen bi idazkerak, `Schema SQL: Statements`, `Schema SQL: Header`, `Theme` eta `Display Language` aukeren azpimenuek uneko hautua markatzen dute eta hura nabarmenduta irekitzen dira, eta, beraz, `Enter` teklak hura mantentzen du; gainerako azpimenuak ezer nabarmendu gabe irekitzen dira.  
+Iragazketa aurrean duzun zerrendari bakarrik aplikatzen zaio beti, eta ez dago maila bat gora itzultzeko modurik; beraz, berriro hasteko, itxi paleta eta ireki berriro. Azpimenu baten barruan, `#`, `@`, `:` eta `?` testu arrunta dira, ez [aurrizkiak](#searching-the-diagram).
+
+## Paletak zer zerrendatzen duen {#what-the-palette-lists}
+
+Zerrenda zauden fitxaren araberakoa da. Fitxa guztietan, zerrenda `Tab` aukerarekin hasten da, eta aukera horrek `Entity Relationship Diagram`, `Visualization`, `Schema SQL`, `Code Generator` edo `Settings` fitxara aldatzen du, lehendik zauden fitxa kanpoan utzita.
+
+ERD fitxan: `Database`, `Import`, `Import and Add` eta `Export`; ondoren, `New Table`, `New Memo`, `New Table Group` eta `Group Selected Tables`, lau erlazio motak eta `Auto Layout`. Taulak ez dira hemen zerrendatzen; idatzi `#` [taula batera joateko](#searching-the-diagram).  
+`Import and Add` aukera kanpoan geratzen da irakurtzeko soilik dagoen editore batean, eta `New Memo` aukera, [View Option](./table-related-functions.md#table-view-options) → `Memos` aukerak oharrak ezkutatzen dituen bitartean. `New Table Group` aukerarekin oihalean [taula-talde bat](./table-groups.md) marrazten hasten da, eta `Group Selected Tables` aukerak hautatutako taulak talde berri batean jartzen ditu eta haren izena idazteko irekitzen du. Biak kanpoan geratzen dira irakurtzeko soilik dagoen editore batean eta View Option → `Table Groups` aukerak taldeak ezkutatzen dituen bitartean, eta `Group Selected Tables` aukerak gutxienez taula bat hautatuta egotea ere behar du. Haien errenkadek teklak erakusten dituzte: `Alt + G` (Windows/Linux) edo `⌥ + G` (Mac) [talde bat marrazteko](./table-groups.md#drawing-a-group), eta `T` eta ondoren `G` [hautatutako taulak taldekatzeko](./table-groups.md#grouping-selected-tables).  
+Hauek oihalaren laster-menuaren komando berberak exekutatzen dituzte, `Group Selected Tables` izan ezik, taularen menuko `Group selected tables` aukera baita; `View Option` eta `Diff Viewer` laster-menuan bakarrik daude. `Export` aukerak laster-menuaren `json`, `Schema SQL` eta `Image` aukera berberak eskaintzen ditu, eta barruan `png` edo `svg` idazteak `Image` aurkitzen du.  
+Formatu bakoitzak, [Inportatu eta gehitu](./file-import-export.md#import-and-add) aukerak eta [irudi-esportazioak](./file-import-export.md#image) zer egiten duten jakiteko, ikus [Fitxategiak inportatzea edo esportatzea](./file-import-export.md), eta datu-basearen hautuak zeri eragiten dion jakiteko, ikus [Taulekin lotutako funtzioak](./table-related-functions.md#databases).
+
+SQL eskema fitxan: berriro `Database`, eta `Bracket`, sortutako SQLan taula, zutabe, murriztapen eta indizeen izenen inguruan jartzen den komatxo-karakterea ezartzen duena: `SingleQuote`, `DoubleQuote`, `Backtick` edo `None`, izenak inolako komatxorik gabe uzteko. Ondoren, `Schema SQL: Statements` eta `Schema SQL: Header` aukerak, fitxaren aukeren panelaren hautu berberak egiten dituztenak, baina hautatutako datu-baseak idazten dituen hautuak soilik zerrendatuta, eta `Schema SQL: Options panel` aukera, panel hori erakutsi edo ezkutatzen duena. Hautu bakoitzak zer idazten duen jakiteko, ikus [SQL eskema](./schema-sql.md).
+
+Kode-sortzailea fitxan: `Database`; `Bracket`, lengoaia `Doctrine`, `JPA` edo `SeaORM` den bitartean; ondoren, `Language`, `Table Name Case`, `Column Name Case` eta `Code Generator: Options panel`, fitxaren aukeren panela erakutsi edo ezkutatzen duena. Helburu bakoitzak zer sortzen duen jakiteko, ikus [Kode-sortzailea](./code-generator.md).
+
+Bisualizazioa eta Ezarpenak fitxek ez dute komando propiorik: `Tab` eta fitxa guztiek zerrendatzen dituzten beheko komandoak baino ez dituzte.
+
+Fitxa guztien zerrendaren amaieratik gertu, irakurtzeko soilik dagoen editore batean ere, `Toggle Explorer` aukera dago, bere lasterbidea erakusten duena: `Ctrl + F` (Windows/Linux) edo `⌘ + F` (Mac). `find`, `replace`, `rename`, `tree`, `outline` edo `objects` idazteak ere aurkitzen du.  
+Exekutatzean, paleta ixten du eta lasterbideak oihalean egiten duena egiten du. Tresna-barrako `Explorer` botoia sakatuta ageri den bitartean, hau da, Arakatzailea ERD fitxan irekita dagoen eta zen moduak ezkutatzen ez duen bitartean, Arakatzailea ixten du. Bestela, ERD fitxara aldatzen da eta Arakatzailea bilaketan fokua duela irekitzen du, testu-kurtsorea Bilatu eremuan dagoela. Ikus [Irekitzea eta ixtea](./explorer.md#opening-and-closing). Kanpoan geratzen da Diferentzia-ikustailea, Denbora-bidaia edo Antolaketa automatikoaren aurrebista irekita dagoen bitartean.
+
+### Gaia eta bistaratze-hizkuntza {#theme-and-display-language}
+
+`Toggle Explorer` aukeraren ondoren, fitxa guztiek `Theme` eta `Display Language` zerrendatzen dituzte, irakurtzeko soilik dagoen editore batean ere. Bakoitza editoreak bere hautatzailea eskaintzen duen lekuetan bakarrik zerrendatzen da, tresna-barrako `Theme` eta `Display Language` botoiek erakusten duten bezala. Web aplikazioak, Google Drive zerbitzuak, VS Code editoreak, JetBrains IDEek eta Obsidian aplikazioak biak eskaintzen dituzte. Ikus [Ostalari bakoitzean](./language-and-theme.md#in-each-host).
+
+`Theme` aukerak `System`, `Light` eta `Dark` irekitzen ditu, uneko itxura markatuta. Bat aukeratzeak itxura bakarrik aldatzen du, eta gris-tonua eta nabarmentze-kolorea mantentzen ditu, gai-sortzailearen `Appearance` botoiek egiten duten bezala.  
+`Display Language` aukerak `System` irekitzen du, eta ondoren 25 hizkuntzak, bakoitza bere hizkuntzan idatzitako izenarekin eta hautatzailearen ordenan, uneko aukera markatuta. Hemen hizkuntza bat bere ingelesezko izenarekin edo kodearekin ere aurkitzen da: `german` edo `de-DE` testuak `Deutsch` aurkitzen du, eta `korean` testuak `한국어`.  
+Bietako edozeinetan egindako hautuak berehala du eragina, paleta ixten du, eta gai-sortzailean edo `Display Language` hautatzailean egindako hautu bat bezala gordetzen da. Paleta irekita dagoen bitartean bistaratze-hizkuntza aldatzen bada, zerrenda hizkuntza horretara aldatzen da, idatzitakoa eta zauden azpimenua mantenduta.
+
+## Diagraman bilatzea {#searching-the-diagram}
+
+Hasi bilaketa aurrizki batekin, komandoetan bilatu beharrean diagraman bilatzeko: `#` tauletarako, `@` zutabeetarako, `:` iruzkin eta oharretarako, edo `?` aurrizkiak zerrendatzeko. Aurrizkiak edozein fitxatatik funtzionatzen du. Lehen karakterea denean bakarrik hartzen da kontuan, aurreko zuriuneak alde batera utzita. Ondorengo zuriunea aukerakoa da; beraz, `#users` eta `# users` bilaketa bera dira, eta japonierazko edo txinerazko idazketa-metodo batek idazten dituen zabalera osoko `＃`, `＠`, `：` eta `？` ikurrak ere kontuan hartzen dira.  
+Goiko mailan sarrera-eremua hutsik dagoen bitartean, haren azpiko lerro batek lau aurrizkiak erakusten ditu; egin klik horietako batean hura idazteko. Aurrizki bat indarrean dagoen bitartean, sarrera-eremuaren amaierak haren esparrua izendatzen du: `Tables`, `Columns`, `Comments & memos` edo `Help`. Ezabatu aurrizkia komandoak berreskuratzeko.
+
+`#` aurrizkiak taulak zerrendatzen ditu, bakoitza ondoan `Table` duela, eta izen hutsa duen taula bat `unnamed` gisa zerrendatzen da. `#` ikurraren ondoren ezer ez dagoenean, izenaren arabera ordenatzen dira. `#` ikurraren ondorengo testua taula-izenekin soilik alderatzen da, goian bezala modu lausoan, eta izenean testu hori duten taulak agertzen dira lehenengo. Taula-taldeen izenak eta indize-izenak ez dira bilatzen inongo aurrizkirekin; [Bilatu eta ordeztu](./find-and-replace.md#what-it-searches) funtzioak biak bilatzen ditu.
+
+`@` aurrizkiak zutabeak izenaren arabera zerrendatzen ditu, bakoitza ondoan non dagoen adierazita, adibidez `users.email · Column`. `@` ikurraren ondorengo testuak zutabearen izenean agertu behar du, maiuskulak eta minuskulak bereizi gabe; bat-etortze hau ez da lausoa. Lehen `.` ikurraren aurreko testuak bilaketa izenean testu hori duten tauletara mugatzen du: `@users.em` bilaketak izenean `users` duten tauletako `em` duten zutabeak zerrendatzen ditu, `@users.` bilaketak taula horien zutabeak zerrendatzen ditu, eta `@.em` bilaketak taula guztietan bilatzen du. `@` ikurraren ondoren ezer ez dagoenean, zutabeak iragazi gabe zerrendatzen dira.
+
+`:` aurrizkiak taula-iruzkinak, zutabe-iruzkinak eta oharrak zerrendatzen ditu, inoiz ez izenak. Errenkada bakoitzak bat-etortzearen inguruko testu-zati bat erakusten du, ondoan `users · Table comment`, `users.email · Column comment` edo `Memo` duela. `:` ikurraren ondorengo testuak iruzkinean edo oharrean agertu behar du, maiuskulak eta minuskulak bereizi gabe, `@` aurrizkiarekin bezala. `:` ikurraren ondoren ezer ez dagoenean, hutsik ez dauden iruzkinak eta oharrak zerrendatzen dira. View Option → `Memos` aukerak oharrak ezkutatzen dituen bitartean, `:` aurrizkiak ez du oharrik zerrendatzen.
+
+`@` eta `:` aurrizkiek beren errenkadak dokumentuak gordetzen dituen ordenan zerrendatzen dituzte: taulaz taula, taula bakoitzaren iruzkina zutabe-ordenan dauden haren zutabeen aurretik, eta oharrak azkenik.
+
+`?` aurrizkiak `Tables`, `Columns` eta `Comments & memos` zerrendatzen ditu, eta `?` ikurraren ondorengo testuak iragazten ditu. Bat aukeratzeak sarrera-eremuko testua haren aurrizkiarekin ordezten du eta paleta irekita uzten du.
+
+Aurrizkidun zerrenda batek bat-etortze guztiak ditu, zenbat diren gorabehera. Bilaketak ezer aurkitzen ez duen aurrizki batek zerrenda hutsik uzten du, mezurik gabe.
+
+Taula, zutabe, iruzkin edo ohar bat aukeratzeak paleta ixten du, eta ERD fitxara aldatzen da beste batean bazaude.  
+Oihala harantz korritzen da, lehendik ondo ikusgai ez badago behintzat. Ikus [Jauziaren helmuga](./table-related-functions.md#where-a-jump-lands). Ondoren, taula bakarrik geratzen da hautatuta eta aurrera ekartzen da, eta haren izenak hartzen du fokua, fokua lehendik taula horretan ez bazegoen.  
+Oharra bakarrik geratzen da hautatuta eta aurrera ekartzen da. Zutabe edo iruzkin baten kasuan, haren taula bakarrik geratzen da hautatuta, aurrera ekartzen da, eta fokua testua duen gelaxkan jartzen da, edo, [taulen ikuspegi-aukera](./table-related-functions.md#table-view-options) batek ezkutatzen duen iruzkin baten kasuan, haren ondoko izenean.  
+Ezein jauzik ez du marrazten ari den erlaziorik hasten edo amaitzen.
+
+`Match Case`, `Match Whole Word` edo `Use Regular Expression` aukeretarako, edo testua ordezteko, erabili Arakatzailearen goiko aldeko [Bilatu eta ordeztu](./find-and-replace.md).
+
+## Bat datorren komandorik ez dagoenean {#when-no-command-matches}
+
+Goiko mailan, aurrizkirik gabe, zerrendatutako komandoetako batek ere idatzitakoa ez badu, maiuskulak eta minuskulak bereizi gabe, hiru errenkada agertzen dira komandoen ondoren: `Search tables for "…"`, `Search columns for "…"` eta `Search comments & memos for "…"`, bakoitza bere aurrizkia ikono gisa duela. Bat aukeratzeak aurrizki hori idazten du zure testuaren aurrean; beraz, `users` `#users` bihurtzen da, eta paleta irekita geratzen da emaitza horiekin.  
+Bilaketak komandorik batere aurkitzen ez badu, `No commands match` agertzen da zerrendaren gainean, eta orduan zerrendak hiru errenkadak baino ez ditu. Testua ez duten komandoak soilik aurkitzen baditu, horiek agertzen dira lehenengo: ERD fitxan, taularik hautatu gabe, `tables` testuak `New Table`, `Database` eta, eskaintzen den lekuan, `New Table Group` zerrendatzen ditu hiru errenkaden aurretik. Taula bat hautatuta dagoela, `Group Selected Tables` aukerak, eskaintzen den lekuan, `tables` dauka; beraz, hiru errenkadak ez dira agertzen.  
+Azpimenu baten barruan, ezer aurkitzen ez duen bilaketa batek zerrenda hutsik uzten du, mezurik gabe.
+
+## Koreeraz bilatzea {#searching-in-korean}
+
+Hangula duen bilaketa bat bere letren arabera ere etortzen da bat, komandoetan, azpimenuetan eta aurrizki guztiekin.  
+Koreerazko idazketa-metodo batek igarotzen duen urrats bakoitzak idazten ari zarenari dagokion errenkada aurkitzen jarraitzen du; beraz, `ㅅ`, `사`, `상`, `사요` eta `사용` testu guztiek `사용자` aurkitzen dute. Hasierako kontsonanteez soilik osatutako bilaketa bat silaben hasierako kontsonanteekin etortzen da bat, zuriuneak saltatuta: `ㅅㅇㅈ` testuak `사용자` aurkitzen du, eta `ㅈㅁ` testuak `주문 내역`. Windows sistemako idazketa-metodo batek jarraian idatzitako bi hasierako kontsonantez osatzen duen kontsonante-multzo bat, `ㅄ` adibidez, bi letratzat hartzen da (`ㅂㅅ`), eta `ㄲ` bezalako kontsonante bikoitz batek letra bakarra izaten jarraitzen du. Deskonposatuta gordetako testua, macOS sistemako fitxategi-izenak bezala, konposatuta balego bezala etortzen da bat.  
+Testu osoa bilaketarekin bat datorren errenkadak agertzen dira lehenengo, letraz letra edo hasierako kontsonantez kontsonante, ondoren harekin hasten direnak, eta ondoren hura dutenak. `@` eta `:` aurrizkiekin, bilaketa idatzi bezala duten errenkadak horien guztien aurretik agertzen dira, dokumentuaren ordenan. Nabarmentzeak silaba osoak hartzen ditu; beraz, `상` testuak `사용` argiztatzen du `사용자` hitzean.

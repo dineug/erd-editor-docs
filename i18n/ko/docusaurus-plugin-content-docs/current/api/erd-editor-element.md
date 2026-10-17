@@ -69,19 +69,19 @@ interface ErdEditorElement extends HTMLElement {
 속성은 `readonly`, `system-dark-mode`, `enable-theme-builder`, `enable-locale-picker`, `enable-welcome-screen` 5개뿐이며, 다섯 모두 기본값은 `false`입니다. 마지막 두 개는 `4.0.0`에서 새로 추가되었습니다. 각 속성은 [readonly](#readonly)에서 설명하는 방식으로 값을 읽습니다.
 
 `4.1.0`부터 ERD 탭에는 [탐색기](../guide/guides/explorer.md)가 있습니다. 탐색기는 캔버스 왼쪽에 도킹되어 다이어그램을 트리로 보여 주며, 맨 위에 찾기와 바꾸기가 있습니다. 탐색기를 열거나 닫거나 그 상태를 알려 주는 속성, 프로퍼티, 메서드, 이벤트는 없습니다. 탐색기는 툴바의 `Explorer` 버튼, 빠른 검색이나 캔버스 컨텍스트 메뉴의 `Toggle Explorer`, 또는 [`findReplace`](#setkeybindingmap) 바인딩으로 엽니다.  
-모든 엘리먼트는 탐색기가 닫힌 상태로 시작합니다. 탐색기가 열려 있는지 여부, 너비, 접힌 상태, 검색은 탭 전환과 `setInitialValue`를 포함한 모든 불러오기를 거쳐 엘리먼트가 있는 동안 유지되며, `value`, `runtimeValue`, Undo 기록, shared store 어디에도 담기지 않습니다.
+모든 엘리먼트는 탐색기가 닫힌 상태로 시작합니다. 탐색기가 열려 있는지 여부, 너비, 접힌 상태, 검색은 탭 전환과 `setInitialValue`를 포함한 모든 불러오기를 거쳐 엘리먼트가 있는 동안 유지되며, `value`, `runtimeValue`, Undo 히스토리, shared store 어디에도 담기지 않습니다.
 
 ## readonly
 
 에디터 편집 가능 여부를 설정합니다.  
 설정된 동안에는 `value` 할당, `clear()`, `setSchemaSQL()`, `setSchemaGraphQL()`, `setSchemaDBML()`, `setSchemaAML()`, `setSchemaJSON()`, Undo, Redo가 모두 무시되고 `change` 이벤트도 발행되지 않습니다. 문서를 불러올 때는 [setInitialValue](#setinitialvalue)를 사용하세요.  
-보기는 그대로 동작합니다. 확대/축소, 화면 이동, 손 도구, Zen 모드, 캔버스 탭, 두 모드와 테이블 포커스를 포함한 [Visualization](../guide/guides/visualization.md) 탭, 데이터베이스 벤더, SQL과 코드 생성 출력 설정이 모두 적용되므로, `readonly` 상태에서도 다른 벤더의 SQL을 내보내거나 생성된 코드를 확인할 수 있습니다.  
+보기는 그대로 동작합니다. 확대/축소, 화면 이동, 손 도구, Zen 모드, 캔버스 탭, 두 모드와 테이블 포커스를 포함한 [Visualization](../guide/guides/visualization.md) 탭, 데이터베이스 벤더, SQL과 코드 생성 출력 설정이 모두 적용되므로, 읽기 전용 뷰어에서도 다른 벤더의 SQL을 내보내거나 생성된 코드를 확인할 수 있습니다.  
 `4.1.0`부터는 [탐색기](../guide/guides/explorer.md#읽기-전용-에디터)도 열리며, 탐색기의 행을 고르면 편집 가능한 에디터에서와 마찬가지로 그 행이 나타내는 대상으로 이동합니다. 탐색기 맨 위의 [찾기와 바꾸기](../guide/guides/find-and-replace.md#읽기-전용-에디터)는 `Toggle Replace` 화살표와 Replace 줄 없이 찾기만 하며, 일치 항목으로 이동하면 여전히 그 항목을 화면에 표시하고 선택합니다. 패널의 제목은 `Explorer`이고, 툴바 버튼의 툴팁은 모든 에디터에서 `Explorer (Ctrl + F)` (Windows/Linux) or `Explorer (⌘ + F)` (Mac)입니다. `3.10.0`부터 `4.0.0`까지는 찾기와 바꾸기가 제목이 `Find`인 찾기 전용의 떠 있는 패널로 열렸습니다.  
 테이블 속성도 그대로 열리며, `3.10.0`부터는 제목 옆에 `Read only` 배지가 표시되고 `Indexes` 탭에서는 아무것도 편집할 수 없습니다. [테이블 속성](../guide/guides/table-related-functions.md#테이블-속성) 문서를 참고하세요.  
-`4.0.0`부터 `readonly` 에디터는 [`Import and Add`](../guide/guides/file-import-export.md#가져와서-추가), `New Table Group`, `Group selected tables`, `Remove from group`([테이블 그룹](../guide/guides/table-groups.md#읽기-전용-에디터) 문서 참고), [`Map Columns`](../guide/guides/relationship-editing.md#컬럼-매핑)를 제공하지 않으며, [시작 화면](#enablewelcomescreen)도 표시하지 않습니다. Settings 탭의 잠금 버튼은 아무것도 바꾸지 않으며, Schema SQL 탭의 `Before tables`와 `After tables` 스크립트는 편집할 수 없습니다.  
+`4.0.0`부터 읽기 전용 에디터는 [`Import and Add`](../guide/guides/file-import-export.md#가져와서-추가), `New Table Group`, `Group selected tables`, `Remove from group`([테이블 그룹](../guide/guides/table-groups.md#읽기-전용-에디터) 문서 참고), [`Map Columns`](../guide/guides/relationship-editing.md#컬럼-매핑)를 제공하지 않으며, [시작 화면](#enablewelcomescreen)도 표시하지 않습니다. 설정 탭의 잠금 버튼은 아무것도 바꾸지 않으며, Schema SQL 탭의 `Before tables`와 `After tables` 스크립트는 편집할 수 없습니다.  
 `4.1.0`부터는 [캔버스 툴바](../guide/guides/table-related-functions.md#캔버스-툴바)에 `New Table`, `New Memo`, `New Table Group` 버튼도 표시하지 않으며, `addTableGroup`과 `groupSelectedTables` 바인딩은 아무 동작도 하지 않습니다.  
 저장되지 않는 Schema SQL 탭의 `This window only` 선택인 `Statements`, `Header`, `Tables`는 그대로 적용되며, [`Export image`](../guide/guides/file-import-export.md#이미지) 대화 상자, 테마 빌더, Display Language 선택기도 마찬가지입니다. 테마 빌더나 Display Language 선택기에서 고르면 여전히 [changePresetTheme](#changepresettheme)이나 [changeLocale](#changelocale)을 발행합니다.  
-속성만 쓰거나 `=""`, `="true"`는 모두 `true`로 읽힙니다. `="false"`는 `false`로 읽히고, HTML 관용 표기인 `readonly="readonly"`를 포함해 그 밖의 문자열도 마찬가지입니다.
+값 없이 쓴 속성, `=""`, `="true"`는 모두 `true`로 읽힙니다. `="false"`는 `false`로 읽히고, HTML 관용 표기인 `readonly="readonly"`를 포함해 그 밖의 문자열도 마찬가지입니다.
 
 ```js
 editor.readonly = true;
@@ -113,7 +113,7 @@ editor.setAttribute('system-dark-mode', 'true');
 
 ## enableThemeBuilder
 
-preset 테마를 쉽게 사용자 정의할 수 있는 UI를 제공할지 여부입니다.  
+프리셋 테마를 쉽게 고를 수 있는 UI를 제공할지 설정합니다.  
 툴바에 `Theme` 버튼을 표시하며, 이 버튼은 `Accent color`, `Gray color`, `Appearance`가 있는 테마 빌더를 엽니다. `4.0.0`부터 `Appearance`는 `Light`, `Dark`와 함께 `System`을 제공하며, 이 값이 켜져 있는 동안 빠른 검색에는 `System`, `Light`, `Dark`를 담은 `Theme`이 나열됩니다. [언어와 테마](../guide/guides/language-and-theme.md) 문서를 참고하세요.
 
 ![툴바에서 테마 빌더를 열고 강조 색상과 회색 색상을 고른 뒤, 외관을 Light로, 이어서 System으로 바꾸기](/img/demo-theme-builder.webp)
@@ -128,7 +128,7 @@ editor.setAttribute('enable-theme-builder', 'true');
 <erd-editor enable-theme-builder></erd-editor>
 ```
 
-이 패널이나 빠른 검색에서 preset 테마를 변경하면 [changePresetTheme](#changepresettheme) 이벤트를 발행합니다.
+이 패널이나 빠른 검색에서 프리셋 테마를 변경하면 [changePresetTheme](#changepresettheme) 이벤트를 발행합니다.
 
 ## enableLocalePicker
 
@@ -155,7 +155,7 @@ editor.setAttribute('enable-locale-picker', 'true');
 `New Table`, `New Memo`, `Command Palette` 항목은 [setKeyBindingMap](#setkeybindingmap)이 설정한 대로 `addTable`, `addMemo`, `search`의 첫 번째 키 조합을 표시하며, 비워 둔 이름에는 아무것도 표시하지 않습니다. 화살표는 `enableThemeBuilder`와 `enableLocalePicker`가 `Theme`과 `Display Language` 버튼을 표시하는 경우에만 그 버튼을 가리킵니다.  
 메뉴에서 `↑`, `↓`, `Home`, `End`는 항목 사이를 이동하며, 이 키 입력에는 `preventDefault()`와 `stopPropagation()`을 모두 호출합니다. `Enter`와 `Space`에는 `preventDefault()` 없이 `stopPropagation()`만 호출하므로 포커스된 항목이 이 입력을 받으며, `Import` 형식 목록에서 누른 `Escape`는 처음 메뉴로 돌아가고 `preventDefault()`와 `stopPropagation()`을 모두 호출합니다. 그 밖의 모든 키는 평소대로 에디터와 페이지에 전달됩니다.  
 문서를 전혀 바꾸지 않으므로 `value`는 그대로 유지되고 `change`도 발행하지 않습니다.  
-공식 호스트처럼 [setInitialValue](#setinitialvalue)로 문서를 불러온 뒤에 켜세요. 그래야 아직 불러오는 중인 파일 위로 화면이 잠깐 나타나는 일이 없습니다.
+공식 호스트처럼 [setInitialValue](#setinitialvalue)로 문서를 불러온 뒤에 켜세요. 그래야 아직 불러오는 중인 파일 위로 시작 화면이 잠깐 나타나는 일이 없습니다.
 
 ```js
 editor.enableWelcomeScreen = true;
@@ -192,7 +192,7 @@ const data = editor.value;
 shared store는 이 불러오기를 새 문서의 전체 JSON과 함께 공동 편집자에게 전달하므로, 이전 릴리스를 사용하는 참여자를 포함해 모든 참여자가 같은 문서를 불러옵니다.  
 `4.0.0`부터 불러온 문서의 잠금과, 이후 `value`가 기록하는 잠긴 값은 텍스트에서 가져오며, 화면은 텍스트가 지정한 위치로 이동하고, 그 위치에 다이어그램이 전혀 그려져 있지 않으면 다이어그램이 있는 곳으로 이동합니다. 텍스트가 잠근 그 밖의 설정, 즉 탭, Code Generator 언어, 이름 케이스, 괄호 타입은 에디터가 불러오기 전에 표시하던 것을 계속 표시합니다. 텍스트가 잠그지 않은 설정은 텍스트의 값을 따릅니다. [setInitialValue](#setinitialvalue)는 대신 텍스트에 담긴 모든 값을 따르며, 잠금이 기록되지 않은 텍스트에 대해서도 해당 문서를 참고하세요.  
 병합 충돌 표시가 남은 파일처럼 JSON이 아닌 텍스트도 에러를 발생시키지 않습니다. 문서는 비워지고 설정은 그대로 유지되며, 파싱 에러는 콘솔에 기록됩니다.  
-`readonly`가 설정된 동안에는 무시되며, `readonly` 에디터에 문서를 불러올 때는 [setInitialValue](#setinitialvalue)를 사용하세요.
+`readonly`가 설정된 동안에는 무시되며, 읽기 전용 에디터에 문서를 불러올 때는 [setInitialValue](#setinitialvalue)를 사용하세요.
 
 ```js
 editor.value = 'json...';
@@ -213,7 +213,7 @@ otherEditor.setInitialValue(editor.runtimeValue);
 ## setInitialValue
 
 이전에 저장했던 에디터 상태를 불러옵니다. 불러오기 자체는 히스토리 목록에 기록되지 않아 되돌릴 수 없고, `change` 이벤트도 발행되지 않습니다.  
-불러올 때 Undo 기록도 비우므로, 불러오기 전에 한 작업을 불러온 문서 위에서 `Undo, Redo`할 수 없습니다.  
+불러올 때 Undo 히스토리도 비우므로, 불러오기 전에 한 작업을 불러온 문서 위에서 `Undo, Redo`할 수 없습니다.  
 파일에 담기는 형태, [runtimeValue](#runtimevalue), 이전 릴리스가 저장한 파일을 모두 받으며, `value` 할당과 달리 탭과 코드 설정을 포함해 텍스트에 담긴 모든 설정을 따릅니다.  
 빈 문자열이나 문자열이 아닌 값은 에러가 아니라 새 문서로 불러오므로, `setInitialValue('')`는 빈 다이어그램으로 시작합니다.  
 `4.0.0`부터 이 새 문서는 값을 전달받기 전에 엘리먼트가 표시하는 문서이기도 하며, 모든 잠금이 켜져 있습니다. 스크롤, 확대/축소, 탭 전환, Code Generator 언어나 이름 케이스, 괄호 타입 변경은 `value`를 그대로 두며 `change`도 발행하지 않습니다. `3.10.x`에서는 스크롤 위치와 확대/축소 레벨을 모두 저장하지 않았고, 그 이전에는 둘 다 저장했습니다.  
@@ -221,7 +221,7 @@ otherEditor.setInitialValue(editor.runtimeValue);
 어느 쪽이든 화면은 문서의 화면, 즉 잠금이 기록된 텍스트는 텍스트에 저장된 화면, 잠금이 기록되지 않은 텍스트는 확대/축소 레벨 `1`의 원점 `0, 0`에서 열리며, 그 위치에 다이어그램이 전혀 그려져 있지 않으면 다이어그램이 있는 곳에서 열립니다. 잠긴 `Viewport`는 그래도 `value`에 잠긴 값을 유지합니다.  
 `4.0.0`부터는 이전에 가지고 있던 문서의 공동 편집 상태도 버리며, 이미 구독 중인 이 에디터의 [shared store](#getsharedstore)는 다른 에디터에게 그 상태를 다시 요청하므로, 실행 중인 세션에서 다시 불러온 에디터도 따라잡습니다. 이런 에디터는 다른 에디터의 [runtimeValue](#runtimevalue)로 초기화하세요.  
 JSON이 아닌 텍스트도 에러를 발생시키지 않습니다. 문서는 비워지고 설정은 그대로 유지되며, 파싱 에러는 콘솔에 기록됩니다.  
-`value` 할당과 달리 `readonly`에 막히지 않기 때문에, `readonly` 에디터에 문서를 불러오는 방법입니다.
+`value` 할당과 달리 `readonly`에 막히지 않기 때문에, 읽기 전용 뷰어에 문서를 불러오는 방법입니다.
 
 ```js
 editor.setInitialValue('json...');
@@ -260,7 +260,7 @@ editor.addEventListener('change', event => {
 
 ### changePresetTheme
 
-내장 테마 빌더에서, 또는 `4.0.0`부터는 빠른 검색의 `Theme`에서 preset 테마를 변경할 때 발행합니다. 이미 적용 중인 옵션을 다시 고른 경우를 포함해 고를 때마다 발행합니다.  
+내장 테마 빌더에서, 또는 `4.0.0`부터는 빠른 검색의 `Theme`에서 프리셋 테마를 변경할 때 발행합니다. 이미 적용 중인 옵션을 다시 고른 경우를 포함해 고를 때마다 발행합니다.  
 직접 [setPresetTheme](#setpresettheme)이나 [setSystemAppearance](#setsystemappearance)를 호출하거나, [systemDarkMode](#systemdarkmode)를 켜거나 끈 경우에는 발행되지 않습니다.  
 `event.detail`은 요청한 일부 값이 아니라 고른 뒤의 전체 `ThemeOptions`(`{ appearance, grayColor, accentColor }`)입니다. `4.0.0`부터 `System`이 선택된 동안에는 `appearance`가 표시 중인 라이트나 다크가 아니라 `'system'`이므로, 그대로 저장했다가 `setPresetTheme`에 다시 넘기세요.
 
@@ -401,7 +401,7 @@ editor.setKeyBindingMap({
 `selectAllTable`, `handTool`, `removeSelection`, 그리고 `4.1.0`부터는 `groupSelectedTables`도 커서에 양보합니다. 포커스가 input, textarea, `contenteditable` 안에 있는 동안에는 `$mod + A`가 텍스트를 선택하고, `Space`는 공백을 입력하며, `Delete`와 `Backspace`는 텍스트를 지우고, `T` 다음 `G`는 두 글자를 입력하며, 캔버스까지 전달되지 않습니다. 이 키 입력 중 어느 것에도 `preventDefault()`를 호출하지 않습니다. 다른 단축키로 재정의해도 동작은 같습니다.
 
 `4.0.0`부터 `removeSelection` (`Delete` 또는 `Backspace`)은 ERD 탭에서 확인 없이 선택한 항목을 Undo 한 단계로 삭제합니다. 포커스한 테이블만 선택되어 있고, 그 테이블의 컬럼이 하나 이상 선택되어 있으며, 확대/축소 배율이 그 행을 그리는 경우에는 그 컬럼을 삭제합니다. 그렇지 않으면 선택된 모든 테이블, 메모, 테이블 그룹을 삭제하며, 그룹의 테이블은 남겨 둡니다. [테이블, 메모 삭제](../guide/guides/table-related-functions.md#테이블-메모-삭제) 문서를 참고하세요.  
-키를 누르고 있어도 한 번만 삭제하며, 셀, 메모, 테이블 그룹 이름의 편집모드가 열려 있는 동안에는 아무것도 삭제하지 않습니다. 텍스트 입력란과 바인딩을 붙잡아 두는 패널([createKeyBindingMap](#createkeybindingmap) 참고) 밖에서는 에디터에 포커스가 있는 동안 모든 탭에서 이 키 입력에 `preventDefault()`를 호출하며, 포커스된 툴바 버튼에서도, 아무것도 삭제하지 않는 `readonly` 에디터에서도 마찬가지입니다.
+키를 누르고 있어도 한 번만 삭제하며, 셀, 메모, 테이블 그룹 이름의 편집모드가 열려 있는 동안에는 아무것도 삭제하지 않습니다. 텍스트 입력란과 바인딩을 붙잡아 두는 패널([createKeyBindingMap](#createkeybindingmap) 참고) 밖에서는 에디터에 포커스가 있는 동안 모든 탭에서 이 키 입력에 `preventDefault()`를 호출하며, 포커스된 툴바 버튼에서도, 아무것도 삭제하지 않는 읽기 전용 에디터에서도 마찬가지입니다.
 
 `4.1.0`부터 `addTableGroup` (`Alt+KeyG`)은 캔버스 툴바의 `New Table Group` 버튼처럼 ERD 탭에서 `New Table Group` 그리기를 준비하며, 그다음 캔버스를 마우스 왼쪽 버튼으로 누르면 그룹이 그려집니다. 이 키를 다시 누르면 그리기 준비가 해제됩니다. `groupSelectedTables` (`KeyT KeyG`, `T` 다음 `G`)는 테이블 컨텍스트 메뉴의 `Group selected tables`처럼 선택한 테이블을 새 그룹에 넣고 그 그룹의 이름 편집모드를 엽니다. 선택한 테이블이 없으면 아무것도 추가하지 않으며, 선택한 메모나 테이블 그룹은 포함되지 않습니다. [그룹 그리기](../guide/guides/table-groups.md#그룹-그리기)와 [선택한 테이블 그룹화](../guide/guides/table-groups.md#선택한-테이블-그룹화) 문서를 참고하세요.  
 두 바인딩은 메뉴가 그룹을 제공하는 곳에서만 동작하므로, `readonly`가 설정된 동안, View Option → `Table Groups`로 그룹을 숨긴 동안, 셀, 메모, 테이블 그룹 이름의 편집모드가 열려 있는 동안에는 동작하지 않습니다. 다른 캔버스 바인딩과 마찬가지로 ERD 탭에서만 동작하며, 빠른 검색, 테이블 속성, Diff Viewer, Time Travel, 자동 배치 미리보기, `Export image`, `Map Columns`가 열려 있는 동안에는 동작하지 않습니다. 아무 동작도 하지 않는 경우에도 `groupSelectedTables`가 커서에 양보할 때가 아니면 이 키 입력에 여전히 `preventDefault()`를 호출합니다. `addTableGroup`에는 `focusView`, `zenMode`와 마찬가지로 `stopPropagation()`도 호출하므로, 페이지의 버블링 `keydown` 리스너는 이 입력을 받지 않습니다.
@@ -415,7 +415,7 @@ editor.setKeyBindingMap({
 
 ERD 탭에서 `stop` (`Escape`)은 셀이나 메모의 편집모드, 또는 그리는 중인 관계를 끝내고 선택은 그대로 둡니다. `4.0.0`부터는 이름을 기록하지 않고 테이블 그룹 이름의 편집모드를 끝내며, `New Table Group` 그리기도 끝냅니다. 에디터는 이 키 입력에 `preventDefault()`를 호출합니다.  
 그중 아무것도 열려 있지 않으면 `Escape`는 선택과 포커스한 셀을 해제하며, 이때는 `preventDefault()`를 호출하지 않습니다. 따라서 편집을 끝내고 선택까지 해제하려면 두 번 눌러야 합니다.  
-탐색기, [시작 화면](#enablewelcomescreen)의 `Import` 형식 목록, 아래의 선택기와 대화 상자를 제외하면 에디터는 `Escape`의 전파를 막지 않으므로, 예를 들어 자체 다이얼로그를 닫기 위해 직접 `Escape`를 수신하는 페이지는 두 키 입력을 모두 받으며, `defaultPrevented`가 `true`인 입력은 건너뛸 수 있습니다.  
+탐색기, [시작 화면](#enablewelcomescreen)의 `Import` 형식 목록, 아래의 선택기와 대화 상자를 제외하면 에디터는 `Escape`의 전파를 막지 않으므로, 예를 들어 자체 대화 상자를 닫기 위해 직접 `Escape`를 수신하는 페이지는 두 키 입력을 모두 받으며, `defaultPrevented`가 `true`인 입력은 건너뛸 수 있습니다.  
 빠른 검색, 테이블 속성, Diff Viewer, 자동 배치 미리보기, Time Travel이 열려 있는 동안에는 `Escape`가 대신 그것을 닫고 선택은 그대로 둡니다. 이 키 입력에도 `preventDefault()`를 호출하지 않습니다.  
 `4.0.0`부터는 열려 있는 [`Export image`](../guide/guides/file-import-export.md#이미지)나 [`Map Columns`](../guide/guides/relationship-editing.md#컬럼-매핑) 대화 상자도 `Escape`를 받아 스스로 닫히고 선택은 그대로 둡니다. 각 대화 상자는 열릴 때 키보드 포커스를 가져가며, 이 `Escape`에는 `preventDefault()`와 `stopPropagation()`을 모두 호출합니다.  
 `4.1.0`부터 포커스가 [탐색기](../guide/guides/explorer.md#탐색기의-키) 안, 즉 트리, 입력란, 버튼에 있을 때 누른 `Escape`는 키보드 포커스를 캔버스로 돌려주며, 탐색기는 열린 채로, 선택은 그대로 둡니다. 에디터는 이 키 입력에 `preventDefault()`와 `stopPropagation()`을 모두 호출하므로, 페이지의 버블링 `keydown` 리스너에는 전달되지 않습니다.  
@@ -475,17 +475,17 @@ const shortcuts = Object.values(createKeyBindingMap())
 ```
 
 각 `shortcut`은 키를 `KeyboardEvent.code`로 지정하는 [tinykeys](https://github.com/jamiebuilds/tinykeys) 문법의 키 조합이며, [`$mod`](#mod)는 macOS에서는 `⌘`, 그 외 환경에서는 `Control`입니다.  
-`4.0.0`부터 에디터는 이 키 조합을 tinykeys를 거치지 않고 같은 문법으로 직접 읽습니다. 키는 `code`로, 또는 대소문자와 상관없이 `key`로 일치하며, 키 입력은 지정된 수정자 키를 정확히 그대로 누르고 있을 때만 일치합니다. `AltGraph`는 Windows에서는 `Control`과 `Alt`로, macOS에서는 `Alt`로 취급됩니다. 공백으로 구분한 키 입력은 시퀀스가 되며, 1초 동안 keydown이 없으면 처음부터 다시 시작합니다.  
+`4.0.0`부터 에디터는 이 키 조합을 tinykeys를 거치지 않고 같은 문법으로 직접 읽습니다. 키는 `code`로, 또는 대소문자와 상관없이 `key`로 일치하며, 키 입력은 지정된 보조 키를 정확히 그대로 누르고 있을 때만 일치합니다. `AltGraph`는 Windows에서는 `Control`과 `Alt`로, macOS에서는 `Alt`로 취급됩니다. 공백으로 구분한 키 입력은 시퀀스가 되며, 1초 동안 keydown이 없으면 처음부터 다시 시작합니다.  
 `4.1.0`부터 기본값 하나가 시퀀스입니다. `groupSelectedTables`는 `KeyT KeyG`, 즉 `T` 다음 `G`입니다. 시퀀스는 그것을 완성하는 키 입력에서 실행되며, `preventDefault`와 `stopPropagation`도 그 입력에만 적용되므로, 기본값에서는 `T`가 페이지에 전달되고 `G`에만 `preventDefault()`를 호출합니다. 메뉴, 빠른 검색, Shortcuts 탭은 시퀀스를 키 입력 하나마다 키 하나씩 표시합니다.  
 고정된 이름은 `Enter` (`edit`), `Escape` (`stop`), `$mod+KeyZ` (`undo`), `$mod+Shift+KeyZ` (`redo`), `$mod+Equal` (`zoomIn`), `$mod+Minus` (`zoomOut`), `$mod+Digit0` (`zoomReset`)에 바인딩되어 있습니다. `edit`과 `stop`에는 플래그가 없고, 나머지 다섯은 `preventDefault`와 `stopPropagation`을 가집니다. `search`와 `findReplace`를 포함한 그 외 이름은 위의 기본값과 같습니다.
 
 에디터는 자신의 엘리먼트에서 이 키들을 수신하므로, 전역 단축키나 캡처 단계의 `keydown` 리스너로 에디터보다 먼저 키를 받는 호스트는 에디터에 포커스가 있는 동안 이 키들을 통과시켜야 합니다.  
 통과시킬 목록은 `createKeyBindingMap()`으로 만들되, `setKeyBindingMap`에 전달한 바인딩으로 해당 기본값을 대체하세요.  
 `3.10.0`부터 이 목록에는 브라우저 자체의 찾기 키 조합인 `$mod+KeyF`가 포함됩니다. 이 키 조합에서 호스트 자체의 찾기 기능을 유지하려면 `setKeyBindingMap({ findReplace: [] })`를 전달하세요.  
-`4.0.0`부터는 수정자 키 없는 `Delete`와 `Backspace`도 포함됩니다. 호스트가 이 키를 유지하려면 `setKeyBindingMap({ removeSelection: [] })`를 전달하세요.  
-`4.1.0`부터는 `Alt+KeyG`와 시퀀스 `KeyT KeyG`도 포함됩니다. 시퀀스는 하나의 문자열로 들어 있으므로, 공백에서 나누어 수정자 키 없는 `T`와 `G`를 포함한 각 키 입력을 통과시키세요. 키 입력이 하나라도 빠진 시퀀스는 완성되지 않기 때문입니다. 호스트가 이 키를 유지하려면 `setKeyBindingMap({ addTableGroup: [] })`나 `setKeyBindingMap({ groupSelectedTables: [] })`를 전달하세요.
+`4.0.0`부터는 보조 키 없는 `Delete`와 `Backspace`도 포함됩니다. 호스트가 이 키를 유지하려면 `setKeyBindingMap({ removeSelection: [] })`를 전달하세요.  
+`4.1.0`부터는 `Alt+KeyG`와 시퀀스 `KeyT KeyG`도 포함됩니다. 시퀀스는 하나의 문자열로 들어 있으므로, 공백에서 나누어 보조 키 없는 `T`와 `G`를 포함한 각 키 입력을 통과시키세요. 키 입력이 하나라도 빠진 시퀀스는 완성되지 않기 때문입니다. 호스트가 이 키를 유지하려면 `setKeyBindingMap({ addTableGroup: [] })`나 `setKeyBindingMap({ groupSelectedTables: [] })`를 전달하세요.
 
-포커스가 탐색기 안, 즉 트리, `Find`와 `Replace` 입력란, 버튼에 있는 동안에는 `findReplace`, `search`, `undo`, `redo`, `zoomIn`, `zoomOut`, `zoomReset`이 에디터로 전달되므로, `findReplace`는 탐색기 안에서도 캔버스에서와 같이 동작합니다. 현재 설정된 그 밖의 모든 바인딩은 탐색기에서 멈추며, 시퀀스는 마지막 키 입력(기본값에서는 수정자 키 없는 `G`)에서 멈춥니다. 방향키, `Tab`, `Enter`, `Space`, `Home`, `End`, 그리고 IME가 아직 조합 중일 때 누른 모든 키도 마찬가지입니다. 키보드 포커스를 캔버스로 돌려주는 `Escape`를 제외하면, 이 키들에는 `preventDefault()` 없이 `stopPropagation()`만 호출하므로 탐색기의 입력란, 버튼, 트리에서 일반 키로 동작하며, 캔버스에도 페이지의 버블링 `keydown` 리스너에도 전달되지 않습니다. 따라서 탐색기에서 `Alt + N`은 테이블을 추가하지 않고, `Delete`는 아무것도 삭제하지 않습니다. 트리의 행 사이를 이동하거나, 행을 접고 펼치거나, 행으로 이동하는 키와, `Find` 또는 `Replace` 입력란에서 일치 항목 사이를 이동하거나 바꾸기를 실행하는 `Enter`에는 `preventDefault()`도 호출합니다.  
+포커스가 탐색기 안, 즉 트리, `Find`와 `Replace` 입력란, 버튼에 있는 동안에는 `findReplace`, `search`, `undo`, `redo`, `zoomIn`, `zoomOut`, `zoomReset`이 에디터로 전달되므로, `findReplace`는 탐색기 안에서도 캔버스에서와 같이 동작합니다. 현재 설정된 그 밖의 모든 바인딩은 탐색기에서 멈추며, 시퀀스는 마지막 키 입력(기본값에서는 보조 키 없는 `G`)에서 멈춥니다. 방향키, `Tab`, `Enter`, `Space`, `Home`, `End`, 그리고 IME가 아직 조합 중일 때 누른 모든 키도 마찬가지입니다. 키보드 포커스를 캔버스로 돌려주는 `Escape`를 제외하면, 이 키들에는 `preventDefault()` 없이 `stopPropagation()`만 호출하므로 탐색기의 입력란, 버튼, 트리에서 일반 키로 동작하며, 캔버스에도 페이지의 버블링 `keydown` 리스너에도 전달되지 않습니다. 따라서 탐색기에서 `Alt + N`은 테이블을 추가하지 않고, `Delete`는 아무것도 삭제하지 않습니다. 트리의 행 사이를 이동하거나, 행을 접고 펼치거나, 행으로 이동하는 키와, `Find` 또는 `Replace` 입력란에서 일치 항목 사이를 이동하거나 바꾸기를 실행하는 `Enter`에는 `preventDefault()`도 호출합니다.  
 호스트의 저장이나 명령 팔레트 키 조합처럼 그 밖의 키는 평소대로 페이지에 전달됩니다. [탐색기의 키](../guide/guides/explorer.md#탐색기의-키) 문서를 참고하세요. `4.1.0` 이전에는 떠 있는 찾기와 바꾸기 패널이 같은 방식으로 키를 붙잡았으며, `Home`, `End`, 시퀀스의 마지막 키 입력, 그리고 `handTool`이 다른 키에 지정된 동안의 `Space`만 예외였습니다.  
 `4.0.0`부터 Display Language 선택기도 같은 방식으로 키를 붙잡습니다. 같은 일곱 바인딩은 에디터로 전달되고, 그 밖의 모든 바인딩(`4.1.0`부터 시퀀스는 마지막 키 입력에서), 방향키, `Tab`에는 IME가 아직 조합 중일 때 누른 모든 키와 마찬가지로 `preventDefault()` 없이 `stopPropagation()`만 호출하므로 선택기에서 멈춥니다. 행에서 누른 `↑`, `↓`, `Home`, `End`, `Enter`, `Space`는 행 사이를 이동하거나 행을 고르며, 여기에는 `preventDefault()`도 호출합니다.
 
@@ -522,7 +522,7 @@ const shortcuts = Object.values(createKeyBindingMap())
 
 ### setPresetTheme
 
-preset 테마를 설정합니다.  
+프리셋 테마를 설정합니다.  
 기본값은 `appearance: 'dark'`, `grayColor: 'slate'`, `accentColor: 'indigo'`입니다.  
 각 필드는 개별로 적용되므로 일부만 전달하면 나머지 두 개는 그대로 유지됩니다. 아래 목록에 없는 값은 무시되며, 호출이 에러를 발생시키지 않습니다.  
 `4.0.0`부터 `appearance`는 테마 빌더의 `System`에 해당하는 `'system'`도 받습니다. 운영체제가 알려 주는 라이트 또는 다크, 또는 [setSystemAppearance](#setsystemappearance)로 지정한 값으로 표시되며, 그 값이 바뀌면 함께 전환됩니다.
@@ -579,9 +579,9 @@ editor.setSystemAppearance('light'); // null follows the OS again
 ### setTheme
 
 테마 사용자 정의가 가능합니다.  
-호출할 때마다 사용자 정의 오버레이 전체가 교체되므로, 이미 재정의한 값 위에 토큰 하나만 바꾸려면 전체 객체를 다시 전달하고, preset으로 되돌리려면 `{}`를 전달하세요.  
+호출할 때마다 사용자 정의 오버레이 전체가 교체되므로, 이미 재정의한 값 위에 토큰 하나만 바꾸려면 전체 객체를 다시 전달하고, 프리셋으로 되돌리려면 `{}`를 전달하세요.  
 아래 토큰 이름에 문자열 값을 지정한 것만 유지되고, 그 밖의 값은 에러 없이 버려집니다.  
-오버레이는 preset 위에 놓이기 때문에, 이후에 `setPresetTheme`을 호출하면 아래쪽 preset만 바뀌고 재정의한 값은 그대로 유지됩니다.
+오버레이는 프리셋 위에 놓이기 때문에, 이후에 `setPresetTheme`을 호출하면 아래쪽 프리셋만 바뀌고 재정의한 값은 그대로 유지됩니다.
 
 #### JavaScript
 
@@ -706,13 +706,13 @@ editor.setTheme({
 });
 ```
 
-`tableShadow`와 `memoShadow`는 ERD 캔버스에서 테이블과 메모가 드리우는 그림자의 색상입니다. 다크 preset은 이 값을 `transparent`로 두어, `setTheme`에 `none`이나 빈 문자열을 넘겼을 때와 마찬가지로 그림자를 드리우지 않고, 라이트 preset은 `rgba(0, 0, 0, 0.18)`을 사용합니다.
+`tableShadow`와 `memoShadow`는 ERD 캔버스에서 테이블과 메모가 드리우는 그림자의 색상입니다. 다크 프리셋은 이 값을 `transparent`로 두어, `setTheme`에 `none`이나 빈 문자열을 넘겼을 때와 마찬가지로 그림자를 드리우지 않고, 라이트 프리셋은 `rgba(0, 0, 0, 0.18)`을 사용합니다.
 
 `4.0.0`부터 토큰 9개가 추가되었습니다.
 
 - `tableGroupHeaderBackground`, `tableGroupBackground`, `tableGroupBorder`는 자체 색상이 없는 [테이블 그룹](../guide/guides/table-groups.md)의 제목 표시줄, 본문, 테두리 색상입니다.
 - `toastSuccess`와 `toastError`는 작업이 어떻게 끝났는지 알리는 토스트의 표시 기호 색상입니다.
-- `findReplaceError`와 `mapColumnsError`는 찾기와 바꾸기와 Map Columns 대화 상자가 표시하는 에러의 색상입니다. 찾기와 바꾸기는 이전에 `diffDeleteForeground`를 사용했으므로, 이 값을 재정의해도 더 이상 찾기와 바꾸기의 색상이 바뀌지 않습니다.
+- `findReplaceError`와 `mapColumnsError`는 찾기와 바꾸기, 그리고 컬럼 매핑 대화 상자가 표시하는 에러의 색상입니다. 찾기와 바꾸기는 이전에 `diffDeleteForeground`를 사용했으므로, 이 값을 재정의해도 더 이상 찾기와 바꾸기의 색상이 바뀌지 않습니다.
 - `schemaSqlWarningBackground`와 `schemaSqlWarningForeground`는 Schema SQL 탭 옵션의 경고 색상입니다.
 
 `4.1.0`부터 토큰 9개가 추가되었습니다.
@@ -875,7 +875,7 @@ type LocaleOption = LocaleCode | 'system';
 
 표시 언어를 `'system'` 또는 위의 코드 중 하나로 설정합니다. 지역 없는 `'ko'`, 알 수 없는 코드, 문자열이 아닌 값처럼 그 밖의 값은 에러 없이 무시됩니다.  
 반환되기 전에 적용되므로, 엘리먼트를 페이지에 추가하기 전에 설정한 언어는 첫 프레임부터 표시됩니다.  
-`changeLocale`도 `change`도 발행하지 않으며, `value`, Undo 기록, shared store 중 어느 것도 건드리지 않습니다.  
+`changeLocale`도 `change`도 발행하지 않으며, `value`, Undo 히스토리, shared store 중 어느 것도 건드리지 않습니다.  
 선택은 `enableLocalePicker`를 어느 쪽으로 바꾸든 유지되며, `setLocale('system')`은 선택기가 꺼져 있어도 시스템을 따릅니다.  
 에디터는 아무것도 저장하지 않습니다. 사용자의 선택을 유지하려면 [changeLocale](#changelocale)을 수신했다가 다음에 불러올 때 다시 전달하세요.
 

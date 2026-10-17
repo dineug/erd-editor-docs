@@ -16,7 +16,7 @@ description: erd-editor MCP 서버가 제공하는 모든 도구. 문서를 한 
 | --- | --- | --- |
 | `erd_list_documents` | | ERD 문서를 `path`, `open`, `active`, `dirty`, `readonly`와 함께 나열합니다. 작업 디렉터리를 담당하는 에디터가 있으면 그 에디터의 문서를(JetBrains IDE에서는 열린 모든 프로젝트의 문서를), 없으면 작업 디렉터리 아래의 ERD 파일을 나열합니다. |
 | `erd_open_document` | `create?` | 편집할 문서를 엽니다. 문서를 담당하는 에디터가 있으면 그 에디터의 ERD Editor에서 엽니다. `create`를 주면 파일이 없을 때 먼저 만들며, 확장자가 없는 이름에는 `.erd.json`이 붙습니다. |
-| `erd_save` | | 에디터가 가진 문서를 저장합니다. VS Code는 이 도구가 호출될 때까지 에이전트의 편집을 저장되지 않은 상태로 두고, Obsidian과 JetBrains IDE는 사용자의 편집을 저장하듯 저장하며 이 도구는 곧바로 파일에 씁니다. 헤드리스에서는 모든 편집이 이미 파일에 쓰여 있으므로 아무것도 하지 않습니다. |
+| `erd_save` | | 에디터가 담고 있는 문서를 저장합니다. VS Code는 이 도구가 호출될 때까지 에이전트의 편집을 저장되지 않은 상태로 두고, Obsidian과 JetBrains IDE는 사용자의 편집을 저장하듯 저장하며 이 도구는 곧바로 파일에 씁니다. 헤드리스에서는 모든 편집이 이미 파일에 쓰여 있으므로 아무것도 하지 않습니다. |
 | `erd_undo` | | 이 에이전트가 마지막으로 한 편집을 되돌리며, 사용자의 편집은 절대 되돌리지 않습니다. Undo 항목을 만들지 않은 호출은 건너뛰고 그 이름을 알려 줍니다. |
 | `erd_redo` | | `erd_undo`가 마지막으로 되돌린 편집을 다시 적용합니다. |
 
@@ -27,7 +27,7 @@ description: erd-editor MCP 서버가 제공하는 모든 도구. 문서를 한 
 | 도구 | 인자 | 동작 |
 | --- | --- | --- |
 | `erd_list` | `query?`, `offset?`, `limit?`, `namesOnly?` | 설정과 개수, 그다음 테이블 한 페이지를 인덱스, 관계와 함께 돌려줍니다. 각 테이블에는 id, 캔버스 위의 위치와 크기, 컬럼 수, 그리고 그룹에 속해 있다면 그 테이블 그룹이 함께 나옵니다. 검색 중이 아니라면 테이블 뒤에 테이블 그룹이, 그다음 메모가 나옵니다. |
-| `erd_get` | `tableIds?`, `tableNames?`, `relationshipIds?`, `indexIds?`, `memoIds?`, `tableGroupIds?` | 지정한 엔티티를 빠짐없이 돌려줍니다. 테이블은 컬럼, 테이블 그룹과 함께, 관계는 그 컬럼과 `onDelete`, `onUpdate`와 함께, 인덱스는 그 컬럼과 함께, 메모는 텍스트와 함께, 테이블 그룹은 그 테이블과 함께 나옵니다. |
+| `erd_get` | `tableIds?`, `tableNames?`, `relationshipIds?`, `indexIds?`, `memoIds?`, `tableGroupIds?` | 지정한 엔티티 전체를 돌려줍니다. 테이블은 컬럼, 테이블 그룹과 함께, 관계는 그 컬럼과 `onDelete`, `onUpdate`와 함께, 인덱스는 그 컬럼과 함께, 메모는 텍스트와 함께, 테이블 그룹은 그 테이블과 함께 나옵니다. |
 | `erd_read` | `format`, `vendor?`, `statements?`, `header?`, `tableIds?`, `tableNames?`, `groupNames?` | 문서 전체를 네 가지 형식 중 하나로 한 번에 돌려주거나, 일부 테이블이나 테이블 그룹의 DDL만 돌려줍니다. |
 
 에이전트는 `erd_list`로 id를 찾고, `erd_get`으로 컬럼과 그 밖의 세부 내용을 읽은 뒤, 그 id를 편집 도구에 넘깁니다.
@@ -77,7 +77,7 @@ id는 `erd_list`와 `erd_get`에서, 또는 엔티티를 만든 호출의 `creat
 | 도구 | 인자 | 동작 |
 | --- | --- | --- |
 | `erd_add_table` | | 빈 테이블을 비어 있는 자리에 추가하고 그 id를 `createdIds`로 돌려줍니다. |
-| `erd_remove_table` | `tableId` | 테이블을 그 컬럼, 인덱스, 그리고 테이블에 닿는 모든 관계와 함께 삭제합니다. |
+| `erd_remove_table` | `tableId` | 테이블을 그 컬럼, 인덱스, 그리고 테이블에 연결된 모든 관계와 함께 삭제합니다. |
 | `erd_change_table_name` | `tableId`, `value` | 테이블 이름을 바꿉니다. |
 | `erd_change_table_comment` | `tableId`, `value` | 테이블 코멘트를 설정합니다. 빈 문자열을 주면 지웁니다. |
 | `erd_change_table_color` | `tableId`, `color` | 테이블 색상을 설정합니다. |
@@ -226,10 +226,10 @@ SQL, GraphQL, DBML, AML의 테이블은 `erd_sort_tables`가 배치하는 방식
 
 - `operations`에는 최대 100개의 항목을 담으며, 각 항목은 `{ tool, as?, args? }`이고 `args`는 `path`를 뺀 도구의 인자입니다.
 - 작업은 먼저 문서의 복사본에서 시도됩니다. 거부된 작업은 `operations[1] erd_remove_table: …`처럼 이름이 표시되며, 아무것도 적용되지 않습니다.
-- `erd_undo` 한 번으로 배치 전체를 되돌리지만, 되돌릴 수 없는 작업은 예외이며 결과의 `undoNote`가 그 작업의 이름을 알려 줍니다. `erd_set_database`처럼 Undo 항목을 만들지 않는 도구의 작업과, 짧은 `erd_move_table_group`처럼 Undo 항목을 만들지 않고 문서를 바꾼 작업입니다. Undo 항목을 하나도 만들지 않은 배치는 `erd_undo`가 건너뜁니다. 결과의 `historyEntries`는 `erd_undo` 호출 횟수가 아니라 배치 안의 에디터 히스토리 항목 수를 셉니다.
-- 라이브 세션에서는 에디터가 배치 전체를 받아들이거나 전혀 받아들이지 않습니다.
+- `erd_undo` 한 번으로 묶음 전체를 되돌리지만, 되돌릴 수 없는 작업은 예외이며 결과의 `undoNote`가 그 작업의 이름을 알려 줍니다. `erd_set_database`처럼 Undo 항목을 만들지 않는 도구의 작업과, 짧은 `erd_move_table_group`처럼 Undo 항목을 만들지 않고 문서를 바꾼 작업입니다. Undo 항목을 하나도 만들지 않은 묶음은 `erd_undo`가 건너뜁니다. 결과의 `historyEntries`는 `erd_undo` 호출 횟수가 아니라 묶음 안의 에디터 히스토리 항목 수를 셉니다.
+- 라이브 세션에서는 에디터가 묶음 전체를 받아들이거나 전혀 받아들이지 않습니다.
 
-에이전트는 호출하기 전에는 배치가 만들 id를 알 수 없으므로, `as`로 이름을 붙인 작업은 뒤의 작업이 그 id를 참조할 수 있게 합니다. 첫 번째로 만든 id는 `$name` 또는 `$name.0`, 두 번째는 `$name.1`, 마지막은 `$name.last`입니다.
+에이전트는 호출하기 전에는 묶음이 만들 id를 알 수 없으므로, `as`로 이름을 붙인 작업은 뒤의 작업이 그 id를 참조할 수 있게 합니다. 첫 번째로 만든 id는 `$name` 또는 `$name.0`, 두 번째는 `$name.1`, 마지막은 `$name.last`입니다.
 이름은 ASCII 영문자, 숫자, 밑줄로 이루어지고, 숫자로 시작할 수 없으며, 한 작업에만 붙일 수 있습니다.
 참조는 엔티티 id를 받는 인자에서만 해석되므로, `$x`라고 쓴 이름이나 코멘트는 텍스트로 남습니다.
 
@@ -266,9 +266,9 @@ SQL, GraphQL, DBML, AML의 테이블은 `erd_sort_tables`가 배치하는 방식
 | --- | --- |
 | `mode` | `live` 또는 `headless`입니다. [라이브와 헤드리스](./live-and-headless.md) 문서를 참고하세요. |
 | `createdIds` | 호출이 만든 것의 id를 순서대로 담습니다. |
-| `batches`, `historyEntries` | 호출이 보낸 변경 배치 수와, 만든 에디터 히스토리 항목 수입니다. |
-| `undoable`, `undoNote` | `erd_undo`가 이 호출을 건너뛸 때 `undoable`은 `false`이고, `undoNote`가 그 이유를 알려 줍니다. 도구가 Undo 항목을 만들지 않거나, 20픽셀이 안 되는 `erd_move_table_group`처럼 호출이 Undo 항목을 만들지 않고 문서를 바꿨거나, 문서가 이미 그 값을 가지고 있던 경우입니다. `erd_batch` 결과에는 항상 `undoNote`가 있습니다. 배치가 Undo 항목을 만들었다면 `erd_undo` 한 번으로 배치를 되돌린다고 알려 주고 되돌리지 않는 작업이 있으면 그 이름을 알려 주며, 만들지 않았다면 결과에 `undoable: false`가 담기고 `erd_undo`가 이 배치를 건너뛴다고 알려 줍니다. |
-| `mismatch` | 호출이 만든 배치 수나 히스토리 항목 수가 도구가 선언한 수와 다를 때 들어 있습니다. |
+| `batches`, `historyEntries` | 호출이 보낸 변경 묶음 수와, 만든 에디터 히스토리 항목 수입니다. |
+| `undoable`, `undoNote` | `erd_undo`가 이 호출을 건너뛸 때 `undoable`은 `false`이고, `undoNote`가 그 이유를 알려 줍니다. 도구가 Undo 항목을 만들지 않거나, 20픽셀이 안 되는 `erd_move_table_group`처럼 호출이 Undo 항목을 만들지 않고 문서를 바꿨거나, 문서가 이미 그 값을 가지고 있던 경우입니다. `erd_batch` 결과에는 항상 `undoNote`가 있습니다. 묶음이 Undo 항목을 만들었다면 `erd_undo` 한 번으로 묶음을 되돌린다고 알려 주고 되돌리지 않는 작업이 있으면 그 이름을 알려 주며, 만들지 않았다면 결과에 `undoable: false`가 담기고 `erd_undo`가 이 묶음을 건너뛴다고 알려 줍니다. |
+| `mismatch` | 호출이 만든 묶음 수나 히스토리 항목 수가 도구가 선언한 수와 다를 때 들어 있습니다. |
 | `notes` | 에디터가 종료되거나 문서를 더 이상 담당하지 않게 되거나, 디스크의 파일이 바뀌는 등 세션에 변화가 있었을 때 들어 있습니다. |
 
 거부는 코드와, 무엇을 해야 하는지 알려 주는 메시지를 담은 오류 결과입니다.
@@ -281,13 +281,13 @@ SQL, GraphQL, DBML, AML의 테이블은 `erd_sort_tables`가 배치하는 방식
 | --- | --- |
 | `notFound` | id가 가리키는 대상이 현재 문서에 없거나, 파일이 존재하지 않습니다. |
 | `invalidArgs` | 인자가 빠졌거나 값이 잘못되었습니다. |
-| `invalidPath` | 경로가 ERD 문서가 아닙니다. Windows에서는 Windows가 적힌 그대로 저장하지 않는 이름이 들어간 경로이거나, 에디터가 다른 경로로 담고 있는 문서에 닿는 경로일 때도 해당하며, 메시지에 그 다른 경로가 표시됩니다. |
+| `invalidPath` | 경로가 ERD 문서가 아닙니다. Windows에서는 Windows가 적힌 그대로 저장하지 않는 이름이 들어간 경로이거나, 에디터가 다른 경로로 담고 있는 문서를 가리키는 경로일 때도 해당하며, 메시지에 그 다른 경로가 표시됩니다. |
 | `invalidDocument` | 파일이 에디터가 읽을 수 있는 문서가 아닙니다. |
 | `tooLarge` | 읽기 결과가 한 번의 응답에 담기지 않습니다. |
 | `blocked` | 허브가 꺼진 에디터가 문서를 담고 있습니다. 메시지에 허브를 켜는 방법이 나옵니다. VS Code에서는 워크스페이스를 신뢰하고 `dineug.erd-editor.agentHub.enabled`를 켜거나 창을 다시 로드하고, Obsidian에서는 Coding agents를 켜거나 Obsidian을 다시 로드하고, JetBrains IDE에서는 Coding agents를 켜거나, 켜져 있다면 IDE를 다시 시작합니다. |
 | `hubDisabled` | JetBrains IDE가 신뢰하지 않는 프로젝트에서만 문서를 담고 있습니다. 읽기는 그대로 동작하며, 에이전트가 편집하게 하려면 프로젝트를 신뢰하세요. |
 | `conflict` | 호출 중에 디스크의 파일이 바뀌었습니다. 아무것도 쓰지 않았습니다. |
-| `hubAppeared`, `hubGone` | 에이전트가 디스크에서 편집하던 문서를 에디터가 맡기 시작했거나, 문서를 맡던 에디터가 아직 실행 중이지만 잠금 파일과 연결이 사라졌습니다. 아무것도 쓰지 않았습니다. |
+| `hubAppeared`, `hubGone` | 에이전트가 디스크에서 편집하던 문서를 에디터가 담당하기 시작했거나, 문서를 담당하던 에디터가 아직 실행 중이지만 잠금 파일과 연결이 사라졌습니다. 아무것도 쓰지 않았습니다. |
 | `notSaved` | `erd_save`가 에디터의 문서를 저장하지 못했습니다. |
 | `readonly` | 쓸 수 없거나 다이어그램으로 읽을 수 없는 파일처럼, 에디터가 문서를 읽기 전용으로 담고 있습니다. 에디터가 없으면 체크아웃하지 않은 Perforce 또는 TFVC 파일처럼 파일 자체가 읽기 전용입니다. 아무것도 쓰지 않았습니다. |
 | `protocolMismatch` | 서버 `1.0.0`과 `3.x` VS Code 확장처럼, 에디터의 ERD Editor 확장이나 플러그인과 서버가 서로 다른 프로토콜 버전을 사용합니다. 읽기도 거부되며, 메시지에 업데이트할 쪽이 표시됩니다. [업데이트](./installation.md#업데이트) 문서를 참고하세요. |

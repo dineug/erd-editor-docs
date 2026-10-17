@@ -1,6 +1,6 @@
 ---
 sidebar_position: 12
-description: 다이어그램에서 22가지 대상의 코드 생성, 옵션 패널에서 언어·데이터베이스·이름 케이스·Bracket 선택, 관계의 ON DELETE와 ON UPDATE 동작을 작성하는 대상, 결과 저장과 복사.
+description: 다이어그램에서 22가지 대상의 코드 생성, 옵션 패널에서 언어·데이터베이스·이름 케이스·Bracket 선택, 관계의 ON DELETE와 ON UPDATE 동작을 작성하는 대상 확인, 결과 저장과 복사.
 ---
 
 # 코드 생성
@@ -29,19 +29,19 @@ description: 다이어그램에서 22가지 대상의 코드 생성, 옵션 패�
 
 ## Language
 
-22가지 대상을 지원합니다. 언어, ORM, 스키마 3개의 묶음 순으로 나열되며, 각 묶음 안에서는 알파벳 순서입니다. 패널의 목록과 컨텍스트 메뉴는 묶음 사이에 구분선을 두지만 묶음의 이름은 표시하지 않습니다:
+22가지 대상을 지원합니다. 언어, ORM, 스키마 3개의 묶음 순으로 나열되며, 각 묶음 안에서는 알파벳 순서입니다. 패널의 목록과 컨텍스트 메뉴는 묶음 사이에 구분선을 두지만 묶음의 이름은 표시하지 않습니다.
 
 | 대상 | 분류 | 관계 | 인덱스 | ON DELETE / ON UPDATE | 저장 확장자 |
 | --- | --- | --- | --- | --- | --- |
-| `C#` | Language | — | — | — | `.cs` |
-| `Go` | Language | — | — | — | `.go` |
-| `Java` | Language | — | — | — | `.java` |
-| `Kotlin` | Language | — | — | — | `.kt` |
-| `PHP` | Language | — | — | — | `.php` |
-| `Rust` | Language | — | — | — | `.rs` |
-| `Scala` | Language | — | — | — | `.scala` |
-| `Swift` | Language | — | — | — | `.swift` |
-| `TypeScript` | Language | — | — | — | `.ts` |
+| `C#` | 언어 | — | — | — | `.cs` |
+| `Go` | 언어 | — | — | — | `.go` |
+| `Java` | 언어 | — | — | — | `.java` |
+| `Kotlin` | 언어 | — | — | — | `.kt` |
+| `PHP` | 언어 | — | — | — | `.php` |
+| `Rust` | 언어 | — | — | — | `.rs` |
+| `Scala` | 언어 | — | — | — | `.scala` |
+| `Swift` | 언어 | — | — | — | `.swift` |
+| `TypeScript` | 언어 | — | — | — | `.ts` |
 | `Doctrine` | ORM | ✓ | ✓ | ON DELETE만 | `.php` |
 | `Drizzle` | ORM | ✓ | ✓ | ✓ | `.ts` |
 | `JPA` | ORM | ✓ | — | — | `.java` |
@@ -49,18 +49,18 @@ description: 다이어그램에서 22가지 대상의 코드 생성, 옵션 패�
 | `Sequelize` | ORM | ✓ | ✓ | ✓ | `.ts` |
 | `SQLAlchemy` | ORM | ✓ | ✓ | ✓ | `.py` |
 | `TypeORM` | ORM | ✓ | ✓ | ✓ | `.ts` |
-| `AML` | Schema | ✓ | ✓ | ✓ | `.aml` |
-| `DBML` | Schema | ✓ | ✓ | ✓ | `.dbml` |
-| `GraphQL` | Schema | ✓ | — | — | `.graphql` |
-| `JSON Schema` | Schema | — | — | — | `.json` |
-| `Mermaid` | Schema | ✓ | — | — | `.mmd` |
-| `Zod` | Schema | — | — | — | `.ts` |
+| `AML` | 스키마 | ✓ | ✓ | ✓ | `.aml` |
+| `DBML` | 스키마 | ✓ | ✓ | ✓ | `.dbml` |
+| `GraphQL` | 스키마 | ✓ | — | — | `.graphql` |
+| `JSON Schema` | 스키마 | — | — | — | `.json` |
+| `Mermaid` | 스키마 | ✓ | — | — | `.mmd` |
+| `Zod` | 스키마 | — | — | — | `.ts` |
 
 기본값은 `GraphQL`입니다. 모든 대상이 컬럼을 생성하며, ✓ 표시는 그 밖에 무엇을 함께 생성하는지 나타냅니다.  
 테이블은 캔버스에 놓인 순서가 아니라 이름순으로 생성되며, 인덱스는 [테이블 속성](./table-related-functions.md#인덱스)의 `Indexes` 아래에 나열된 것을 사용하고 그 위의 `Keys` 행은 사용하지 않습니다. `SeaORM`은 그중 Unique 인덱스만 작성하며, `Mermaid`는 Unique 컬럼에 `UK`를 표시하지만 인덱스는 작성하지 않습니다.  
 `Java`, `AML`, `DBML`, `Mermaid`를 제외한 모든 대상은 primary key 컬럼을 `Not Null` 설정 여부와 상관없이 not null로 작성합니다. `Java`는 어떤 컬럼에도 nullable 여부를 표시하지 않으며, `AML`, `DBML`, `Mermaid`는 다이어그램에 설정된 그대로 유지합니다.
 
-일부 대상이 작성하는 내용은 다음과 같습니다:
+일부 대상이 작성하는 내용은 다음과 같습니다.
 
 - `PHP`: 타입이 지정된 public 속성으로 이루어진 일반 클래스이며, `<?php`와 `declare(strict_types=1);`로 시작합니다.
 - `Doctrine`: DBAL 4.2 이상을 위한, attribute를 사용하는 Doctrine ORM 3 엔티티이며, 각 컬럼에는 선택한 데이터베이스에 맞는 DBAL 타입과 옵션이 붙습니다.

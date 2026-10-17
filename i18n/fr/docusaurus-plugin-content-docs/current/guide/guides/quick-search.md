@@ -1,0 +1,90 @@
+---
+sidebar_position: 7
+description: Ouvrir la palette de commandes pour changer d’onglet, exécuter une commande de l’onglet actuel, ouvrir ou fermer l’explorateur, changer le thème ou la langue d’affichage, ou aller directement à une table, une colonne, un commentaire ou un mémo en saisissant un préfixe.
+---
+
+# Recherche rapide
+
+La recherche rapide est la palette de commandes de l’éditeur.  
+Elle liste les commandes disponibles dans l’onglet où vous vous trouvez. Commencez la recherche par `#`, `@` ou `:` pour rechercher plutôt dans le diagramme et aller directement à une table, une colonne, ou un commentaire ou un mémo.
+
+Ouvrez-la avec `Ctrl + K` (Windows/Linux) ou `⌘ + K` (Mac), ou cliquez sur `Search` dans la barre d’outils.  
+Le même raccourci la ferme, tout comme `Esc` et un clic en dehors du panneau. Son ouverture ferme la boîte de dialogue Propriétés de la table, le [configurateur de thème](./language-and-theme.md#theme), le sélecteur [`Display Language`](./language-and-theme.md#picking-a-language), la boîte de dialogue [`Export image`](./file-import-export.md#image) et [Associer les colonnes](./relationship-editing.md#map-columns), qui perd alors ce que vous y aviez choisi. Elle ne s’ouvre pas pendant la modification d’une cellule de table, d’un mémo ou du nom d’un groupe de tables.
+
+Le bouton de la barre d’outils situé juste après `Search` est `Explorer`. Il ouvre ou ferme l’[explorateur](./explorer.md), une arborescence du diagramme ancrée à gauche du canevas, avec la fonction Rechercher et remplacer en haut.  
+Ouvrir la palette laisse l’explorateur ouvert, et `Esc` ne ferme alors que la palette. Un appui sur `Ctrl + F` (Windows/Linux) ou `⌘ + F` (Mac) dans la palette la ferme et place le focus clavier dans le champ Rechercher de l’explorateur, en ouvrant l’explorateur sur sa recherche s’il n’est pas affiché. Contrairement à l’entrée `Toggle Explorer`, la touche ne ferme jamais l’explorateur depuis la palette (voir [Ouvrir et fermer](./explorer.md#opening-and-closing)). Tant que la visionneuse de différences, le voyage dans le temps ou l’aperçu de la disposition automatique est ouvert, l’éditeur ignore la touche : la palette reste ouverte et la touche parvient au navigateur ou à l’hôte (voir [La barre de recherche du navigateur](./find-and-replace.md#the-browsers-find-bar)).  
+Un hôte qui intègre l’éditeur peut attribuer la recherche rapide à une autre touche, que l’info-bulle de `Search` affiche alors (voir [Raccourcis](./settings.md#shortcuts)).
+
+![Ouverture de la palette avec ⌘ + K, puis accès direct à une table avec #pay, à une colonne avec @price et à un commentaire de table avec :address](/img/demo-quick-search.webp)
+
+## Rechercher et naviguer {#searching-and-navigating}
+
+Saisissez du texte pour filtrer la liste. Chaque frappe relance la recherche dans toute la liste affichée, si bien que supprimer des caractères, ou saisir un nouveau mot à la place d’un mot qui n’a rien trouvé, fait réapparaître les entrées correspondantes.  
+La correspondance est approximative et porte à la fois sur le nom d’une entrée et sur les mots-clés affichés à côté. Dans le sous-menu `Import`, par exemple, `sdl` trouve `GraphQL`, `dbdiagram` trouve `DBML` et `azimutt` trouve `AML`. Une légère faute de frappe trouve quand même son entrée, comme `tabel` qui trouve `New Table` et `imprt` qui trouve `Import`, mais une entrée qui ne ressemble que vaguement à ce que vous avez saisi est écartée : `memo` ne liste que `New Memo`. Une entrée dont le nom ou les mots-clés contiennent ce que vous avez saisi, sans tenir compte de la casse, est toujours listée, et si la correspondance approximative la manque, elle vient après les correspondances approximatives. Ce que vous avez saisi est mis en évidence partout où une entrée le contient, sans tenir compte de la casse.  
+Dans une langue d’affichage autre que l’anglais, les commandes et les entrées des sous-menus se trouvent aussi par leurs noms et mots-clés anglais, que la liste n’affiche pas, si bien que `new table` trouve `New Table` quelle que soit la langue dans laquelle cette entrée est affichée.  
+Parcourez la liste avec `↑` et `↓` (elle reboucle aux deux extrémités) et exécutez l’entrée en surbrillance avec `Enter`. Une commande qui a son propre raccourci l’affiche au bout de sa ligne : à droite, ou à gauche dans une langue d’affichage de droite à gauche. Tant qu’une méthode de saisie est encore en cours de composition, comme au milieu d’une syllabe coréenne, `↑`, `↓` et `Enter` lui reviennent et ne servent ni à déplacer la surbrillance ni à exécuter une entrée.
+
+Une entrée comme `Database`, `Import` ou `Auto Layout` ouvre un sous-menu : ses entrées remplacent la liste et le champ de recherche est vidé. Les sous-menus de `Database`, `Bracket`, `Language`, des deux casses des noms, de `Schema SQL: Statements`, `Schema SQL: Header`, `Theme` et `Display Language` cochent le choix actuel et s’ouvrent avec la surbrillance sur celui-ci, si bien que `Enter` le conserve ; les autres sous-menus s’ouvrent sans rien en surbrillance.  
+Le filtrage ne s’applique jamais qu’à la liste affichée, et il est impossible de remonter d’un niveau : fermez puis rouvrez la palette pour recommencer. Dans un sous-menu, `#`, `@`, `:` et `?` sont du texte ordinaire, et non des [préfixes](#searching-the-diagram).
+
+## Ce que liste la palette {#what-the-palette-lists}
+
+La liste dépend de l’onglet où vous vous trouvez. Dans chaque onglet, elle commence par `Tab`, qui passe à `Entity Relationship Diagram`, `Visualization`, `Schema SQL`, `Code Generator` ou `Settings`, en omettant l’onglet où vous êtes déjà.
+
+Dans l’onglet ERD : `Database`, `Import`, `Import and Add` et `Export`, puis `New Table`, `New Memo`, `New Table Group` et `Group Selected Tables`, les quatre types de relation et `Auto Layout`. Les tables n’y sont pas listées ; saisissez `#` pour [aller à l’une d’elles](#searching-the-diagram).  
+`Import and Add` est omis dans un éditeur en lecture seule, et `New Memo` tant que [View Option](./table-related-functions.md#table-view-options) → `Memos` masque les mémos. `New Table Group` commence le tracé d’un [groupe de tables](./table-groups.md) sur le canevas, et `Group Selected Tables` place les tables sélectionnées dans un nouveau groupe et ouvre la saisie de son nom. Les deux sont omis dans un éditeur en lecture seule et tant que View Option → `Table Groups` masque les groupes, et `Group Selected Tables` nécessite en outre qu’au moins une table soit sélectionnée. Leurs lignes affichent les touches : `Alt + G` (Windows/Linux) ou `⌥ + G` (Mac) pour [tracer un groupe](./table-groups.md#drawing-a-group), et `T` puis `G` pour [grouper les tables sélectionnées](./table-groups.md#grouping-selected-tables).  
+Ces entrées exécutent les mêmes commandes que le menu contextuel du canevas, à l’exception de `Group Selected Tables`, qui correspond à `Group selected tables` du menu de la table ; `View Option` et `Diff Viewer` ne figurent que dans le menu contextuel. `Export` propose les mêmes `json`, `Schema SQL` et `Image` que le menu contextuel, et saisir `png` ou `svg` dans ce sous-menu trouve `Image`.  
+Voir [Importer ou exporter des fichiers](./file-import-export.md) pour ce que font chaque format, [Importer et ajouter](./file-import-export.md#import-and-add) et l’[exportation d’image](./file-import-export.md#image), et [Fonctions liées aux tables](./table-related-functions.md#databases) pour ce sur quoi influe le choix de la base de données.
+
+Dans l’onglet Schéma SQL : de nouveau `Database`, et `Bracket`, qui définit le délimiteur placé autour des noms de table, de colonne, de contrainte et d’index dans le SQL généré (`SingleQuote`, `DoubleQuote`, `Backtick`, ou `None` pour n’en placer aucun). Puis `Schema SQL: Statements` et `Schema SQL: Header`, qui font les mêmes choix que le panneau des options de l’onglet mais ne listent que ceux que la base de données sélectionnée écrit, et `Schema SQL: Options panel`, qui affiche ou masque ce panneau. Voir [Schéma SQL](./schema-sql.md) pour ce qu’écrit chaque choix.
+
+Dans l’onglet Générateur de code : `Database`, `Bracket` tant que le langage est `Doctrine`, `JPA` ou `SeaORM`, puis `Language`, `Table Name Case`, `Column Name Case` et `Code Generator: Options panel`, qui affiche ou masque le panneau des options de l’onglet. Voir [Générateur de code](./code-generator.md) pour ce que produit chaque cible.
+
+Les onglets Visualisation et Paramètres n’ont pas de commandes propres, seulement `Tab` et les commandes ci-dessous, que tous les onglets listent.
+
+Vers la fin de la liste de chaque onglet, y compris dans un éditeur en lecture seule, se trouve la commande `Toggle Explorer`, qui affiche son raccourci, `Ctrl + F` (Windows/Linux) ou `⌘ + F` (Mac). Saisir `find`, `replace`, `rename`, `tree`, `outline` ou `objects` la trouve aussi.  
+L’exécuter ferme la palette et fait ce que fait le raccourci sur le canevas. Tant que le bouton `Explorer` de la barre d’outils apparaît enfoncé, c’est-à-dire tant que l’explorateur est ouvert dans l’onglet ERD et n’est pas masqué par le mode zen, elle ferme l’explorateur. Sinon, elle passe à l’onglet ERD et ouvre l’explorateur sur sa recherche, avec le point d’insertion dans le champ Rechercher (voir [Ouvrir et fermer](./explorer.md#opening-and-closing)). Elle est omise tant que la visionneuse de différences, le voyage dans le temps ou l’aperçu de la disposition automatique est ouvert.
+
+### Thème et langue d’affichage {#theme-and-display-language}
+
+Après `Toggle Explorer`, chaque onglet liste `Theme` et `Display Language`, y compris dans un éditeur en lecture seule. Chaque entrée n’est listée que là où l’éditeur propose son sélecteur, comme le montrent les boutons `Theme` et `Display Language` de la barre d’outils. L’application web, Google Drive, VS Code, les IDE JetBrains et Obsidian proposent les deux (voir [Dans chaque hôte](./language-and-theme.md#in-each-host)).
+
+`Theme` ouvre `System`, `Light` et `Dark`, avec l’apparence actuelle cochée. Choisir l’une de ces options ne modifie que l’apparence et conserve la nuance de gris et la couleur d’accentuation, comme le font les boutons `Appearance` du configurateur de thème.  
+`Display Language` ouvre `System`, puis les 25 langues, chacune nommée dans sa propre langue et dans l’ordre du sélecteur, avec l’option actuelle cochée. Ici, une langue se trouve aussi par son nom anglais ou par son code : `german` ou `de-DE` trouve `Deutsch`, et `korean` trouve `한국어`.  
+Un choix dans l’un ou l’autre prend effet immédiatement, ferme la palette et est conservé exactement comme un choix fait dans le configurateur de thème ou le sélecteur `Display Language`. Si la langue d’affichage change pendant que la palette est ouverte, la liste passe à cette langue, en conservant ce que vous avez saisi et le sous-menu où vous vous trouvez.
+
+## Rechercher dans le diagramme {#searching-the-diagram}
+
+Commencez la recherche par un préfixe pour rechercher dans le diagramme plutôt que dans les commandes : `#` pour les tables, `@` pour les colonnes, `:` pour les commentaires et les mémos, ou `?` pour lister les préfixes. Un préfixe fonctionne depuis n’importe quel onglet. Il ne compte que s’il est le premier caractère, sans tenir compte des espaces qui le précèdent. Un espace après lui est facultatif, si bien que `#users` et `# users` sont la même recherche, et les caractères pleine chasse `＃`, `＠`, `：` et `？` que saisit une méthode de saisie japonaise ou chinoise comptent aussi.  
+Tant que le champ de saisie est vide au niveau supérieur, une ligne en dessous affiche les quatre préfixes ; cliquez sur l’un d’eux pour le saisir. Tant qu’un préfixe est en vigueur, la fin du champ indique sa portée : `Tables`, `Columns`, `Comments & memos` ou `Help`. Supprimez le préfixe pour retrouver les commandes.
+
+`#` liste les tables, chacune avec `Table` à côté, et une table au nom vide est listée sous `unnamed`. Sans rien après `#`, elles sont triées par nom. Le texte après `#` est comparé aux seuls noms de table, de façon approximative comme ci-dessus, et les tables dont le nom le contient viennent en premier. Les noms de groupe de tables et les noms d’index ne sont recherchés sous aucun préfixe ; la fonction [Rechercher et remplacer](./find-and-replace.md#what-it-searches) recherche dans les deux.
+
+`@` liste les colonnes par nom, chacune avec son emplacement à côté, comme `users.email · Column`. Le texte après `@` doit figurer dans le nom de la colonne, sans tenir compte de la casse ; cette correspondance n’est pas approximative. Le texte avant le premier `.` restreint la recherche aux tables dont le nom le contient : `@users.em` liste les colonnes contenant `em` dans les tables dont le nom contient `users`, `@users.` liste les colonnes de ces tables, et `@.em` recherche dans toutes les tables. Sans rien après `@`, les colonnes sont listées sans filtre.
+
+`:` liste les commentaires de table, les commentaires de colonne et les mémos, jamais les noms. Chaque ligne affiche un extrait du texte autour de la correspondance, avec `users · Table comment`, `users.email · Column comment` ou `Memo` à côté. Le texte après `:` doit figurer dans le commentaire ou le mémo, sans tenir compte de la casse, comme avec `@`. Sans rien après `:`, les commentaires et les mémos non vides sont listés. Tant que View Option → `Memos` masque les mémos, `:` ne liste aucun mémo.
+
+`@` et `:` listent leurs lignes dans l’ordre où le document les contient : table par table, le commentaire de chaque table avant ses colonnes dans l’ordre des colonnes, et les mémos en dernier.
+
+`?` liste `Tables`, `Columns` et `Comments & memos`, et le texte après `?` les filtre. Choisir l’un d’eux remplace la saisie par son préfixe et laisse la palette ouverte.
+
+Une liste avec préfixe contient toutes les correspondances, quel que soit leur nombre. Un préfixe dont la recherche ne trouve rien laisse la liste vide, sans message.
+
+Choisir une table, une colonne, un commentaire ou un mémo ferme la palette et passe à l’onglet ERD si vous êtes dans un autre onglet.  
+Le canevas défile jusqu’à l’élément, sauf s’il est déjà bien visible (voir [Où aboutit un saut](./table-related-functions.md#where-a-jump-lands)). Une table est alors sélectionnée seule et mise au premier plan, et son nom reçoit le focus, sauf si le focus se trouvait déjà dans cette table.  
+Un mémo est sélectionné seul et mis au premier plan. Pour une colonne ou un commentaire, sa table est sélectionnée seule et mise au premier plan, et le focus va sur la cellule qui contient le texte, ou sur le nom à côté d’un commentaire que masque une [option d’affichage des tables](./table-related-functions.md#table-view-options).  
+Aucun saut ne démarre ni n’achève le tracé d’une relation.
+
+Pour `Match Case`, `Match Whole Word` ou `Use Regular Expression`, ou pour remplacer du texte, utilisez la fonction [Rechercher et remplacer](./find-and-replace.md) en haut de l’explorateur.
+
+## Quand aucune commande ne correspond {#when-no-command-matches}
+
+Au niveau supérieur, sans préfixe, si aucune commande listée ne contient ce que vous avez saisi, sans tenir compte de la casse, trois lignes suivent les commandes : `Search tables for "…"`, `Search columns for "…"` et `Search comments & memos for "…"`, chacune avec son préfixe pour icône. En choisir une saisit ce préfixe avant votre texte, si bien que `users` devient `#users`, et la palette reste ouverte sur ces résultats.  
+Si la recherche ne trouve aucune commande, `No commands match` apparaît au-dessus de la liste, qui ne contient alors que les trois lignes. Si elle ne trouve que des commandes qui ne contiennent pas le texte, celles-ci viennent en premier : dans l’onglet ERD sans table sélectionnée, `tables` liste `New Table`, `Database` et, là où elle est proposée, `New Table Group` avant les trois lignes. Avec une table sélectionnée, `Group Selected Tables`, là où elle est proposée, contient `tables`, si bien que les trois lignes n’apparaissent pas.  
+Dans un sous-menu, une recherche qui ne trouve rien laisse la liste vide, sans message.
+
+## Rechercher en coréen {#searching-in-korean}
+
+Une recherche qui contient du hangeul trouve aussi des correspondances par ses lettres, dans les commandes, dans les sous-menus et sous chaque préfixe.  
+Chaque étape par laquelle passe une méthode de saisie coréenne continue de trouver la ligne vers laquelle tend votre saisie, si bien que `ㅅ`, `사`, `상`, `사요` et `사용` trouvent tous `사용자`. Une recherche composée uniquement de consonnes initiales correspond aux consonnes initiales des syllabes, en ignorant les espaces : `ㅅㅇㅈ` trouve `사용자`, et `ㅈㅁ` trouve `주문 내역`. Un groupe de consonnes qu’une méthode de saisie Windows compose à partir de deux initiales saisies à la suite, comme `ㅄ`, compte pour les deux (`ㅂㅅ`), tandis qu’une consonne double comme `ㄲ` reste une seule lettre. Un texte stocké sous forme décomposée, comme le sont les noms de fichiers macOS, correspond comme s’il était composé.  
+Les lignes dont le texte entier correspond à la recherche, lettre par lettre ou initiale par initiale, viennent en premier, puis les lignes qui commencent par elle, puis les lignes qui la contiennent. Sous `@` et `:`, les lignes qui contiennent la recherche telle que saisie passent avant toutes celles-ci, dans l’ordre du document. La surbrillance couvre des syllabes entières, si bien que `상` met en surbrillance `사용` dans `사용자`.

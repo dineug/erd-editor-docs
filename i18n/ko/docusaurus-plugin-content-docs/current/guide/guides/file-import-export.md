@@ -1,6 +1,6 @@
 ---
 sidebar_position: 2
-description: JSON·스키마 SQL·GraphQL·DBML·AML을 다이어그램 대신 가져오거나 다이어그램 아래에 추가하기와, JSON·스키마 SQL·다이어그램의 PNG나 SVG 이미지 내보내기.
+description: JSON·Schema SQL·GraphQL·DBML·AML을 다이어그램 대신 가져오거나 다이어그램 아래에 추가하기와, JSON·Schema SQL·다이어그램의 PNG나 SVG 이미지 내보내기.
 ---
 
 # 파일 가져오기와 내보내기
@@ -52,12 +52,12 @@ JSON 파일은 파일에 있는 위치를 그대로 유지합니다. Schema SQL,
 
 파일 하나가 아직 배치되는 동안 추가한 여러 Schema SQL, GraphQL, DBML, AML 파일은 모두 시작한 순서대로 놓입니다. 그사이에 추가한 JSON 파일은 읽히는 즉시 그보다 먼저 놓입니다. `Import`를 실행하거나 다른 문서를 불러오면 아직 배치 중인 파일은 버려집니다.
 
-코딩 에이전트는 MCP 가져오기 도구의 `append` 모드로 같은 방식으로 파일을 추가합니다. 이 모드는 JSON 파일의 배치는 유지하지만, 그 외 형식의 테이블은 `Flow`를 쓰지 않고 항상 여러 행으로 배치합니다. [가져오기](../../mcp/tools.md#가져오기) 문서를 참고하세요.
+코딩 에이전트는 MCP 가져오기 도구의 `append` 모드를 사용해 같은 방식으로 파일을 추가합니다. 이 모드는 JSON 파일의 배치는 유지하지만, 그 외 형식의 테이블은 `Flow`를 쓰지 않고 항상 여러 행으로 배치합니다. [가져오기](../../mcp/tools.md#가져오기) 문서를 참고하세요.
 
 ### JSON
 
 [에디터에서 정의한 스키마 형식](../../api/advanced/schema.md)의 파일을 가져올 수 있습니다.
-파일 이름은 `.json`으로 끝나야 하므로 `<데이터베이스 이름>-<시간>.erd.json`으로 내보낸 파일은 그대로 다시 가져올 수 있고, `.erd`나 `.vuerd` 파일은 여기서 가져올 수 없습니다. 이전 릴리스가 저장한 파일도 읽습니다.
+파일 이름은 `.json`으로 끝나야 하므로 `<데이터베이스 이름>-<시간>.erd.json`으로 내보낸 파일은 그대로 다시 가져올 수 있고, `.erd`나 `.vuerd`로 끝나는 파일은 여기서 가져올 수 없습니다. 이전 릴리스가 저장한 파일도 읽습니다.
 
 ![Import > json으로 저장된 파일을 가져와 초안 문서를 설정과 함께 대체하기](/img/demo-import-json.webp)
 
@@ -169,10 +169,10 @@ SQLite는 내보내기와 가져오기를 왕복하면 코멘트가 유지되지
 ### GraphQL
 
 GraphQL SDL 문서를 가져올 수 있습니다.  
-object type 정의는 테이블이 되고, `extend type` 블록은 확장 대상 타입에 병합되며, interface 필드는 이를 구현하는 타입에 상속됩니다.  
+오브젝트 타입 정의는 테이블이 되고, `extend type` 블록은 확장 대상 타입에 병합되며, 인터페이스 필드는 이를 구현하는 타입에 상속됩니다.  
 타입이 다른 테이블인 필드는 컬럼 대신 관계가 되고, 양쪽이 모두 목록이면 매핑 테이블이 생성됩니다.  
 `buyer: User` 같은 단수 필드는 먼저 상대 타입에서 `orderListByBuyer`처럼 이름이 `By`와 그 필드 이름으로 끝나는 필드 하나와 짝지어지며, 이때 대소문자와 밑줄은 무시합니다. `buyer2`처럼 번호가 붙은 필드는 번호를 뺀 이름으로 같은 방식으로 짝지어집니다. 두 테이블 사이에 관계가 둘 이상 있거나 테이블이 자기 자신을 참조할 때 Code Generator의 GraphQL 출력이 필드 이름을 이렇게 지으므로, 그런 출력은 모든 관계를 유지한 채 다시 가져옵니다.  
-루트 타입(`Query`, `Mutation`, `Subscription`), introspection 타입, 그리고 `PageInfo`, `*Connection`, `*Edge`, `*_aggregate` 같은 Relay, federation, Hasura 래퍼는 노이즈로 보고 건너뜁니다.  
+루트 타입(`Query`, `Mutation`, `Subscription`), 인트로스펙션 타입, 그리고 `PageInfo`, `*Connection`, `*Edge`, `*_aggregate` 같은 Relay, 페더레이션, Hasura 래퍼는 노이즈로 보고 건너뜁니다.  
 `@id`, `@primaryKey`, `@unique`, `@autoincrement`, `@default`, `@map`, `@relation`, `@column`, `@table`, `@index`, `@db.*` 디렉티브를 인식합니다.  
 파일 이름은 `.graphql`, `.gql`, `.graphqls`로 끝나야 합니다. Prisma의 `schema.prisma` 파일은 GraphQL 문서가 아니므로 여기서 가져올 수 없습니다.
 
@@ -240,7 +240,7 @@ Obsidian이 파일 이름에 허용하지 않는 문자 `\ / : * ? " < > |`는 `
 세 버튼이 이미지를 작성하며, 어느 버튼도 대화 상자를 닫지 않습니다.
 
 - `PNG`: 100%에서의 다이어그램 크기에 `Scale`을 곱한 크기의 `.png`를 저장합니다. 브라우저 캔버스가 감당할 수 없을 만큼 큰 PNG는 실패하는 대신 해상도를 낮춰 저장됩니다. 대화 상자가 미리 `Reduced from <width> × <height> px, past what a browser canvas can hold`로 경고하고, 저장한 뒤에는 `Exported at a reduced resolution` 알림이 그 사실을 알려 줍니다.
-- `SVG`: `Scale`과 상관없이 100%에서의 다이어그램 크기로 `.svg`를 저장하며, 해상도를 낮추는 일은 없습니다. 텍스트는 텍스트로 남고 글꼴은 포함하지 않고 이름만 지정하므로, 에디터의 글꼴이 없는 뷰어에서는 다른 글꼴로 그려집니다. 그림자는 제외됩니다.
+- `SVG`: `Scale`과 상관없이 100%에서의 다이어그램 크기로 `.svg`를 저장하며, 해상도를 낮추는 일은 없습니다. 텍스트는 텍스트로 남고 폰트는 포함하지 않고 이름만 지정하므로, 에디터의 폰트가 없는 뷰어에서는 다른 폰트로 그려집니다. 그림자는 제외됩니다.
 - `Copy to clipboard`: 선택한 `Scale`로 PNG를 클립보드에 넣으며, 브라우저 캔버스가 감당할 수 없으면 저장하는 PNG와 마찬가지로 해상도를 낮춥니다. 복사되면 `Copied the image to the clipboard`를, 해상도를 낮췄다면 `Copied at a reduced resolution`을 표시합니다. 브라우저나 호스트가 클립보드 사용을 거부하거나 이미지를 그리지 못해 복사에 실패하면, `Couldn't copy the image`가 대신 PNG로 저장하도록 안내합니다.
 
 호스트가 백그라운드 워커를 실행하면 이미지는 그 워커에서 그려지므로, 그동안에도 에디터를 계속 사용할 수 있습니다. 잠깐 사이에 끝나지 않으면 `Exporting PNG`, `Exporting SVG`, `Copying image` 중 하나의 알림이 표시되며, 실패하면 `Couldn't export the PNG` 또는 `Couldn't export the SVG`로 알려 줍니다. 파일을 그리는 중에 대화 상자를 닫아도 그 파일은 그대로 저장됩니다.

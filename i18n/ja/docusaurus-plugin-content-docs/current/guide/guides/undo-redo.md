@@ -8,14 +8,14 @@ description: 編集の Undo と Redo、履歴に記録される内容、Time Tra
 編集の前の状態に戻したり、後の状態に進めたりできます。  
 履歴は最大 `2048` 件の変更を保持します。
 
-- Undo: `Ctrl + Z` (Windows/Linux) or `⌘ + Z` (Mac)
-- Redo: `Ctrl + Shift + Z` (Windows/Linux) or `⌘ + Shift + Z` (Mac)
+- Undo: `Ctrl + Z` (Windows/Linux) または `⌘ + Z` (Mac)
+- Redo: `Ctrl + Shift + Z` (Windows/Linux) または `⌘ + Shift + Z` (Mac)
 
 ツールバーには同じ 2 つのコマンドが `Undo` と `Redo` のボタンとして、`Time Travel` の隣に並んでいます。  
 これらは Undo または Redo できる変更があるときにのみ有効になります。`readonly` のエディタでは 3 つとも表示されず、ショートカットも動作しません。
 
 Undo と Redo は ERD タブでのみ動作します。Visualization、Schema SQL、Code Generator、設定の各タブでは使用できません。Schema SQL タブの `Before tables` と `After tables` のフィールドでは、同じキーが代わりにフィールドへの入力を Undo、Redo します。  
-クイック検索、テーブルのプロパティ、Diff Viewer、自動レイアウトのプレビュー、[`Export image`](./file-import-export.md#画像) ダイアログ、[Map Columns](./relationship-editing.md#map-columns)、Time Travel のいずれかが開いている間も、ショートカットは動作しません。  
+クイック検索、`Table Properties`、`Diff Viewer`、`Auto Layout` のプレビュー、[`Export image`](./file-import-export.md#画像) ダイアログ、[Map Columns](./relationship-editing.md#map-columns)、Time Travel のいずれかが開いている間も、ショートカットは動作しません。  
 キーボード操作がツリーを含む[エクスプローラー](./explorer.md#keys-in-the-explorer)内のどこにある間も、[カラーピッカー](./table-related-functions.md#テーブルとメモの色指定)が開いている間も、ショートカットは引き続き動作します。キャレットが検索フィールド、置換フィールド、`Hex` の入力欄など、それらのいずれかのフィールドにあっても、フィールドのテキストではなくダイアグラムを Undo、Redo します。
 
 履歴は現在のセッションのあいだメモリ上に保持されます。ドキュメントには保存されないため、ダイアグラムを開き直すと履歴は空の状態から始まります。
@@ -29,7 +29,7 @@ Undo と Redo は ERD タブでのみ動作します。Visualization、Schema SQ
 - テーブルとメモ: 追加、削除、移動、色、名前とコメント、メモの本文とサイズ。
 - テーブルグループ: 追加、削除、移動、サイズ変更、名前、色、各テーブルが属するグループ。[テーブルグループ](./table-groups.md)を参照してください。
 - カラム: 追加、削除、並べ替え、すべてのカラムオプション。
-- リレーションシップ: 追加、削除、種類の変更、[Map Columns](./relationship-editing.md#map-columns) で設定したカラム、`On Delete` または `On Update` での各項目の選択。[ON DELETE と ON UPDATE](./relationship-editing.md#on-delete-and-on-update)を参照してください。削除を Undo すると、リレーションシップは ON DELETE と ON UPDATE のアクションも含めて元に戻ります。
+- リレーションシップ: 追加、削除、種類の変更、[Map Columns](./relationship-editing.md#map-columns) で設定したカラム、`On Delete` または `On Update` での各項目の選択。[ON DELETE と ON UPDATE](./relationship-editing.md#on-delete-and-on-update) を参照してください。削除を Undo すると、リレーションシップは ON DELETE と ON UPDATE のアクションも含めて元に戻ります。
 - インデックスとそのカラム。
 - 表示位置、拡大・縮小のレベル、`View Option` の切り替え。
 - Schema SQL タブの `Before tables` と `After tables` のスクリプト。フィールドを離れて適用した編集ごとに 1 ステップです。[前後のスクリプト](./schema-sql.md#前後のスクリプト)を参照してください。

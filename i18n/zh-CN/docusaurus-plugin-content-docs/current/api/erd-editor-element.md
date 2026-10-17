@@ -74,7 +74,7 @@ interface ErdEditorElement extends HTMLElement {
 ## readonly
 
 设置编辑器是否可编辑。  
-在其生效期间，为 `value` 赋值、`clear()`、`setSchemaSQL()`、`setSchemaGraphQL()`、`setSchemaDBML()`、`setSchemaAML()`、`setSchemaJSON()`、undo 和 redo 都会被忽略，并且不会发出 `change` 事件。此时改用 [setInitialValue](#setinitialvalue) 加载文档。  
+在其生效期间，为 `value` 赋值、`clear()`、`setSchemaSQL()`、`setSchemaGraphQL()`、`setSchemaDBML()`、`setSchemaAML()`、`setSchemaJSON()`、Undo 和 Redo 都会被忽略，并且不会发出 `change` 事件。此时改用 [setInitialValue](#setinitialvalue) 加载文档。  
 查看功能仍然可用：缩放、平移、抓手工具、禅模式、画布标签页、[Visualization](../guide/guides/visualization.md) 标签页的两种模式（包括聚焦于表）、数据库厂商，以及 SQL 与代码生成的输出设置都仍然生效，因此只读的查看者依然可以导出其他厂商的 SQL 或阅读生成的代码。  
 从 `4.1.0` 起，[资源管理器](../guide/guides/explorer.md#read-only-editors)也可以打开，选择其中的某一行会跳转到该行所代表的对象，与在可编辑的编辑器中相同。其顶部的[查找与替换](../guide/guides/find-and-replace.md#read-only-editors)只能查找，没有 `Toggle Replace` 箭头，也没有 Replace 行；跳转到匹配项时，仍会将其带入视野并选中它。在任何编辑器中，该面板的标题都是 `Explorer`，工具栏按钮的提示都是 `Explorer (Ctrl + F)` (Windows/Linux) 或 `Explorer (⌘ + F)` (Mac)。从 `3.10.0` 到 `4.0.0`，查找与替换以标题为 `Find`、只能查找的浮动面板形式打开。  
 表属性仍然可以打开，并且从 `3.10.0` 起，其标题旁会显示 `Read only` 徽标，其 `Indexes` 标签页也不提供任何编辑功能，参见[表属性](../guide/guides/table-related-functions.md#table-properties)。  
@@ -185,7 +185,7 @@ const data = editor.value;
 
 加载此前保存的编辑器状态。它会替换整个文档，先清空当前文档。  
 与 `clear()`、`setInitialValue()` 以及处于默认 `mode: 'replace'` 的各个 `setSchema*` 方法一样，它也会丢弃 Visualization 标签页的 Flow 视图：包括它的布局、视图范围所缩小到的表、行显示、缩放和平移。追加（`mode: 'append'`）则不会丢弃它。  
-会记录到历史列表中，因此可以 `Undo, Redo`，并且会发出 `change`。  
+会记录到 Undo 历史记录中，因此可以 `Undo, Redo`，并且会发出 `change`。  
 它接受存储形式、[runtimeValue](#runtimevalue)，或较早发布版本保存的文件。  
 空字符串或非字符串的值不会报错，而是加载一个新文档，因此赋值前需要先做好校验。  
 该新文档就是 `setInitialValue('')` 所开始的文档：内容为空、采用默认设置，并且从 `4.0.0` 起所有锁定都处于开启状态。在 `3.10.x` 中，它既不保存滚动位置也不保存缩放级别；在此之前，两者都会保存。  
@@ -212,8 +212,8 @@ otherEditor.setInitialValue(editor.runtimeValue);
 
 ## setInitialValue
 
-加载此前保存的编辑器状态。加载本身不会记录到历史列表中，因此无法 Undo，也不会发出 `change` 事件。  
-加载时还会清空 Undo 历史记录，因此加载之前所做的操作无法在加载后的文档上撤销或重做。  
+加载此前保存的编辑器状态。加载本身不会记录到 Undo 历史记录中，因此无法 Undo，也不会发出 `change` 事件。  
+加载时还会清空 Undo 历史记录，因此加载之前所做的操作无法在加载后的文档上撤回或重做。  
 它接受存储形式、[runtimeValue](#runtimevalue)，或较早发布版本保存的文件，并且与为 `value` 赋值不同，它会采用文本中的每一项设置，包括标签页和代码相关的设置。  
 空字符串或非字符串的值不会报错，而是加载一个新文档，因此 `setInitialValue('')` 会以空白的图开始。  
 从 `4.0.0` 起，该新文档（也就是元素在被赋予任何值之前显示的文档）的所有锁定都处于开启状态。滚动、缩放、切换标签页，以及更改 Code Generator 的语言、名称大小写或括号类型，都会让 `value` 保持原样，也不会发出 `change`。在 `3.10.x` 中，它既不保存滚动位置也不保存缩放级别；在此之前，两者都会保存。  
@@ -303,7 +303,7 @@ editor.blur();
 
 清空文档，移除所有表、列、关系、索引和备注，并且从 `4.0.0` 起还会移除所有表分组。  
 所有设置都会保留，包括数据库、视图位置、缩放级别、表显示选项、每个锁定及其持有的值，以及 Schema SQL 标签页的 `Before tables` 和 `After tables` 脚本，因此清空后的文件仍会保存它原先保存的那些信息。如果想改为开始一个新文档，请为 `value` 赋值 `''`，或调用 `setInitialValue('')`。  
-会记录到历史列表中，因此可以 Undo，并且会发出 `change`。Undo 会按编辑器所持有的形式恢复文档，每项锁定的设置都处于其锁定的值。在 `readonly` 生效期间会被忽略。
+会记录到 Undo 历史记录中，因此可以 Undo，并且会发出 `change`。Undo 会按编辑器所持有的形式恢复文档，每项锁定的设置都处于其锁定的值。在 `readonly` 生效期间会被忽略。
 
 ```js
 editor.clear();
@@ -734,7 +734,7 @@ erd-editor {
 }
 ```
 
-自 `3.4.0` 起，拼写有误的 `dargSelect` token 更正为 `dragSelect`，其钩子也从 `--erd-editor-darg-select-background` 和 `--erd-editor-darg-select-border` 变为 `--erd-editor-drag-select-background` 和 `--erd-editor-drag-select-border`。仍在使用旧名称的样式表会被忽略。
+从 `3.4.0` 起，拼写有误的 `dargSelect` token 更正为 `dragSelect`，其钩子也从 `--erd-editor-darg-select-background` 和 `--erd-editor-darg-select-border` 变为 `--erd-editor-drag-select-background` 和 `--erd-editor-drag-select-border`。仍在使用旧名称的样式表会被忽略。
 
 <details>
 <summary>默认主题值</summary>
@@ -903,7 +903,7 @@ editor.setSystemLocale('pt-PT'); // null follows the browser again
 
 加载 Schema SQL 文件。  
 默认情况下，它会替换当前文档，而不是合并到当前文档中，参见下文的 `mode`。现有的设置（包括每个锁定及其锁定的值）会保留，仅视图位置和缩放级别除外，并且文件读取后会排布表：除非下文的 `placement` 另有要求，否则逐行排列。`Viewport` 锁定时，`value` 随后会写出导入开始时的视图，即原点 `0, 0`、缩放级别 `1`。因此，导入到从未被赋予过值的元素中的文档，会像新文档一样所有锁定都处于开启状态。  
-会记录到历史列表中，因此可以 `Undo, Redo`，并且会发出 `change`。空字符串会被忽略，在 `readonly` 生效期间调用不会有任何效果。  
+会记录到 Undo 历史记录中，因此可以 `Undo, Redo`，并且会发出 `change`。空字符串会被忽略，在 `readonly` 生效期间调用不会有任何效果。  
 `setSchemaGraphQL`、`setSchemaDBML` 和 `setSchemaAML` 的行为相同，它们的解析器不会失败，无法读取的文本只会加载空白文档，而不会报错。  
 从 `4.0.0` 起，这四个方法都接受可选的第二个参数 `{ placement, mode }`：
 
@@ -968,7 +968,7 @@ editor.setSchemaAML('AML...');
 ## setSchemaJSON
 
 从 `4.0.0` 起，加载 `.erd.json` 文档，例如 [value](#value) 返回的文本。  
-在默认的 `mode: 'replace'` 下，它会像为 `value` 赋值那样加载文档：记录到历史列表中，发出 `change`，并以相同的方式采用文档的锁定。与 `value` 不同，空字符串或非字符串的值会被忽略，而不是开始一个新文档。不是 JSON 的文本会清空文档，与 `value` 相同。  
+在默认的 `mode: 'replace'` 下，它会像为 `value` 赋值那样加载文档：记录到 Undo 历史记录中，发出 `change`，并以相同的方式采用文档的锁定。与 `value` 不同，空字符串或非字符串的值会被忽略，而不是开始一个新文档。不是 JSON 的文本会清空文档，与 `value` 相同。  
 `mode: 'append'` 会以新的 id 把文档中的表、关系、索引、备注和表分组添加到图的下方，保持它们彼此之间的相对位置，并略去文档的设置，与 [Import and Add](../guide/guides/file-import-export.md#import-and-add) 对 `json` 文件的处理相同。无法读取的文本，或既没有表也没有备注的文档，不会添加任何内容。否则，它会像 [setSchemaSQL](#setschemasql) 的追加那样落下，其中新的备注和表分组会与表一同成为选中对象，二者各自仅在处于显示状态时才会被选中。  
 它会在文档落下之后返回，并且在 `readonly` 生效期间会被忽略。
 
@@ -1036,10 +1036,10 @@ const sharedStore = editor.getSharedStore({
 ## setDiffValue
 
 打开 Diff Viewer，将当前打开的文档与传入的文档进行比较。  
-它没有返回值，也不会修改文档，因此关闭该视图后编辑器与之前完全相同。  
+它没有返回值，也不会修改文档，因此关闭该查看器后编辑器与之前完全相同。  
 空值或非字符串的值会与空白文档进行比较。  
 它与画布右键菜单中的 [Diff Viewer](../guide/guides/table-related-functions.md#diff-viewer) 是同一个视图。  
-从 `4.1.0` 起，它首先按 id 为两个文档中的内容配对，然后才按各自保留下来的内容配对，例如表的名称或备注的文本，参见[比较的内容](../guide/guides/table-related-functions.md#what-is-compared)。因此，与同一文档的较早版本（例如其文件的某个 Git 修订版本）比较时，重命名会显示为一个已重命名的项；与 id 不同的文档比较时，则会显示为一次删除和一次添加。该视图会在两个文档旁边以树的形式列出变更内容，并以颜色标记变更，而不是填充单元格。
+从 `4.1.0` 起，它首先按 id 为两个文档中的内容配对，然后才按各自保留下来的内容配对，例如表的名称或备注的文本，参见[比较的内容](../guide/guides/table-related-functions.md#what-is-compared)。因此，与同一文档的较早版本（例如其文件的某个 Git 修订版本）比较时，重命名会显示为一个已重命名的项；与 id 不同的文档比较时，则会显示为一次删除和一次添加。该查看器会在两个文档旁边以树的形式列出变更内容，并以颜色标记变更，而不是填充单元格。
 
 ```js
 editor.setDiffValue('prev json...');

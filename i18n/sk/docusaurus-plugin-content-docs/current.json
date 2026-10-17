@@ -1,0 +1,18 @@
+{
+  "version.label": {
+    "message": "Ďalšia",
+    "description": "The label for version current"
+  },
+  "sidebar.docs.category.Guides": {
+    "message": "Príručky",
+    "description": "The label for category 'Guides' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Guides.link.generated-index.description": {
+    "message": "Ako nakresliť a upraviť diagram: vytváranie tabuliek a vzťahov, import a export súborov a možnosti zobrazenia editora.",
+    "description": "The generated-index page description for category 'Guides' in sidebar 'docs'"
+  },
+  "sidebar.api.category.Advanced": {
+    "message": "Pokročilé",
+    "description": "The label for category 'Advanced' in sidebar 'api'"
+  }
+}

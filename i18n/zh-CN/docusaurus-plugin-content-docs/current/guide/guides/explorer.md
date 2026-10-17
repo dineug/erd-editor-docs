@@ -29,7 +29,7 @@ description: 在停靠于 ERD 画布旁的树中浏览图中的表及其列、�
 工具栏按钮、快捷键和快速搜索中的条目在每个标签页中都有效。在 Visualization、Schema SQL、Code Generator 或 Settings 标签页中使用时，会先切换到 ERD 标签页，因为资源管理器只在那里显示。
 
 工具栏按钮只负责打开和关闭面板。它不会把光标放到查找输入框中，也不会关闭表属性、主题构建器和 `Display Language` 选择器。  
-快捷键和这两个 `Toggle Explorer` 条目会打开资源管理器并定位到其搜索：光标移到查找输入框并选中其中的文本，[资源管理器旁的对话框](#dialogs-beside-it)中所列的五个对话框中已打开的那个会关闭。搜索在两次打开之间保留哪些内容，参见查找与替换中的[打开与关闭](./find-and-replace.md#opening-and-closing)。  
+快捷键和这两个 `Toggle Explorer` 条目会打开资源管理器并定位到其搜索：光标移到查找输入框并选中其中的文本，[资源管理器旁的对话框](#dialogs-beside-it)中所列的五个对话框无论打开的是哪一个，都会关闭。搜索在两次打开之间保留哪些内容，参见查找与替换中的[打开与关闭](./find-and-replace.md#opening-and-closing)。  
 在编辑表的单元格、备注或表分组的名称时，快捷键不起作用。
 
 资源管理器在 ERD 标签页中处于打开状态且未被[禅模式](#when-it-stands-aside)隐藏时，工具栏按钮显示为按下状态。此时，该按钮、快捷键和任一 `Toggle Explorer` 条目都会关闭资源管理器，原本位于面板中的键盘焦点会回到编辑器。  
@@ -57,7 +57,7 @@ description: 在停靠于 ERD 画布旁的树中浏览图中的表及其列、�
 这里计算的是编辑器本身的宽度，而不是浏览器窗口的宽度，尽管[打开与关闭](#opening-and-closing)中的提示说的是窗口。
 
 在[从右到左书写的显示语言](./language-and-theme.md#right-to-left-languages)中，资源管理器仍位于画布左侧，因为画布永远不会镜像。  
-其内部从右到左阅读：标题栏、搜索和各行都会镜像显示，各行从右侧缩进。可拖动的边缘仍在其右侧，紧贴画布。数据类型、索引列和外键文本保持从左到右的顺序。
+其内容从右到左排列：标题栏、搜索和各行都会镜像显示，各行从右侧缩进。可拖动的边缘仍在其右侧，紧贴画布。数据类型、索引列和外键文本保持从左到右的顺序。
 
 ## 何时让位 {#when-it-stands-aside}
 
@@ -142,11 +142,11 @@ Diff Viewer 也以同一类树列出其变更，参见 [Diff Viewer](./table-rel
 
 - `Ctrl + F` (Windows/Linux) 或 `⌘ + F` (Mac) 的作用与在画布上相同：关闭资源管理器；如果表属性在其旁边打开，则关闭表属性并把光标放到查找输入框中，参见[打开与关闭](#opening-and-closing)。
 - `Ctrl + K` (Windows/Linux) 或 `⌘ + K` (Mac) 用于开关快速搜索。
-- `Undo` 和 `Redo` 撤销与重做的是图，而不是输入框中的文本。
+- `Undo` 和 `Redo` 撤回与重做的是图，而不是输入框中的文本。
 - `Zoom In`、`Zoom Out` 和 `Zoom Reset` 用于缩放画布。
 
 其他所有编辑器快捷键都留在资源管理器中，方向键、`Tab`、`Enter`、`Space`、`Home`、`End` 以及输入法组字期间按下的任何按键也是如此。  
-它们都不会传到画布：`Delete` 和 `Backspace` 永远不会删除选中的对象，`Alt + N` (Windows/Linux) 或 `⌥ + N` (Mac) 不会添加表，先按 `T` 再按 `G` 也不会创建分组。在输入框中，它们作为普通文本输入框的按键使用：`Ctrl + A` (Windows/Linux) 或 `⌘ + A` (Mac) 选中输入框中的文本，`Delete` 和 `Backspace` 删除文本，`Space` 输入空格。`Tab` 在资源管理器的按钮、输入框和树之间移动焦点。  
+它们都不会传到画布：`Delete` 和 `Backspace` 永远不会删除选中的对象，`Alt + N` (Windows/Linux) 或 `⌥ + N` (Mac) 不会添加表，先按 `T` 再按 `G` 也不会创建分组。在输入框中，它们作为普通的文本编辑按键使用：`Ctrl + A` (Windows/Linux) 或 `⌘ + A` (Mac) 选中输入框中的文本，`Delete` 和 `Backspace` 删除文本，`Space` 输入空格。`Tab` 在资源管理器的按钮、输入框和树之间移动焦点。  
 查找输入框和替换输入框自身的按键，参见[搜索输入框中的按键](./find-and-replace.md#keys-in-the-search-fields)。  
 编辑器未绑定的按键，例如宿主自己的保存或命令面板快捷键，照常传给宿主。
 

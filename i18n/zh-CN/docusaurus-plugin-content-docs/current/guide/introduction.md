@@ -1,6 +1,6 @@
 ---
 sidebar_position: 1
-description: 面向浏览器、Google Drive、VS Code、IntelliJ、Obsidian 以及自有页面的实体关系图编辑器。
+description: erd-editor 是一款面向浏览器、Google Drive、VS Code、IntelliJ、Obsidian 以及自有页面的实体关系图编辑器。
 ---
 
 # 简介
@@ -9,7 +9,7 @@ erd-editor 是一款实体关系图（Entity-Relationship Diagram）编辑器。
 提供 Web 应用、Google Drive 应用、VS Code 扩展、IntelliJ 插件、Obsidian 插件，以及可嵌入自有页面的 `<erd-editor>` 自定义元素等多种形式。
 所有形式都是同一个编辑器，并使用相同的文档格式。
 
-![在网店关系图中悬停连接线、添加列，并在 Flow 中聚焦 orders 表](/img/demo-overview.webp)
+![在网店关系图中悬停在关系上、添加列，并在 Flow 中聚焦 orders 表](/img/demo-overview.webp)
 
 ## 获取方式
 
@@ -47,7 +47,7 @@ VS Code 在 Source Control、Local History、Compare with Saved 中，在 VS Cod
 - 为二十二种目标生成代码：语言 C#、Go、Java、Kotlin、PHP、Rust、Scala、Swift 和 TypeScript；ORM Doctrine、Drizzle、JPA、SeaORM、Sequelize、SQLAlchemy 和 TypeORM；以及 AML、DBML、GraphQL、JSON Schema、Mermaid 和 Zod。Code Generator 标签页的选项面板可以选择语言、数据库和名称大小写，生成的代码可以保存为带有该语言扩展名的文件，也可以复制。参见[代码生成](./guides/code-generator.md)。
 - 在[可视化](./guides/visualization.md)中查看 schema，既可以是力导向的 `Graph`，也可以是沿着关系排布表卡片的 `Flow`，悬停在某个表上即可点亮它所触及的一切。在 ERD 标签页中按 `Alt + F`，即可[聚焦选中的表](./guides/visualization.md#focusing-on-tables)以及与它们相关的表。
 - 在没有边界的画布上工作：图延伸到哪里就能平移到哪里，可以用 `Ctrl + Wheel`（Mac 上为 `⌘ + Wheel`）、键盘或捏合手势在 `10%` ~ `150%` 之间缩放，禅模式则只留下图本身。按住鼠标中键拖动可以从画布上的任意位置平移，即使在表的上方也可以。参见[浏览画布](./guides/table-related-functions.md#getting-around-the-canvas)。
-- 用[自动布局](./guides/table-related-functions.md#auto-layout)一步排布整张图：Force 模拟、从左到右的 Flow，或两个方向的 Tree，每个表分组都会保持在一起。
+- 用[自动布局](./guides/table-related-functions.md#auto-layout)一步排布整张图：Force 模拟、从左到右的 Flow，或任一方向的 Tree，每个表分组都会保持在一起。
 - 通过[快速搜索](./guides/quick-search.md)可以在任意位置执行命令，也可以在搜索开头输入 `#`、`@` 或 `:`，分别跳转到表、列，或者注释或备注。通过 [Undo, Redo](./guides/undo-redo.md) 可以逐步浏览编辑历史，通过 [Time Travel](./guides/undo-redo.md#time-travel) 可以在画布上重放本次会话的历史，也可以在 [Diff Viewer](./guides/table-related-functions.md#diff-viewer) 中将图与另一个 `.json` 文件进行比较。Diff Viewer 的树位于两个版本旁边，列出新增、修改、删除或重命名的表、列、索引、外键、备注和表分组。
 - 在[资源管理器](./guides/explorer.md)中浏览图，这是一棵停靠在画布左侧的树：先列出各个表，每个表下有其列、索引和外键，然后是表分组和备注。点击某一行即可跳转到该行在画布上所代表的对象；外键行还会点亮其关系。工具栏中位于 `Search` 旁边的 `Explorer` 按钮用于打开和关闭资源管理器。
 - 通过资源管理器顶部的[查找与替换](./guides/find-and-replace.md)查找文本。它会搜索表名、列名、索引名和表分组名称，开启相应选项后还会搜索注释和备注，并在资源管理器的树中显示匹配项。可以替换其中一处匹配或全部匹配；`Preserve Case` 会让每处替换沿用被替换文本的大小写形式。`Ctrl + F`（Mac 上为 `⌘ + F`）会打开资源管理器，并将光标置于查找输入框中，再按一次则会关闭资源管理器。

@@ -1,0 +1,18 @@
+{
+  "version.label": {
+    "message": "下一版",
+    "description": "The label for version current"
+  },
+  "sidebar.docs.category.Guides": {
+    "message": "指南",
+    "description": "The label for category 'Guides' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Guides.link.generated-index.description": {
+    "message": "繪製與編輯圖表的方法：建立資料表和關聯、匯入和匯出檔案，以及編輯器的檢視選項。",
+    "description": "The generated-index page description for category 'Guides' in sidebar 'docs'"
+  },
+  "sidebar.api.category.Advanced": {
+    "message": "進階",
+    "description": "The label for category 'Advanced' in sidebar 'api'"
+  }
+}

@@ -41,7 +41,7 @@ description: erd-editor MCP サーバーが提供するすべてのツール。�
 | `format` | 返す内容 |
 | --- | --- |
 | `snapshot` | すべてのエンティティとその ID を含むコンパクトな JSON です。テーブルグループも含まれ、設定も Schema SQL のスクリプトとともに含まれます。閲覧者ごとに異なるもの、つまり計測した幅、重なり順、表示、タブは含まれません。大きなスキーマでは大きくなります。 |
-| `sql` | 8 つのデータベース `Databricks`、`MariaDB`、`MSSQL`、`MySQL`、`Oracle`、`PostgreSQL`、`Snowflake`、`SQLite` のいずれかの DDL です。`vendor` の既定値は、ドキュメントに設定されているデータベースです。ドキュメント全体の DDL には、その前後のスクリプトが含まれます。`tableIds`、`tableNames`、`groupNames` のいずれかを指定すると、それらのテーブルだけを、それらが持つ外部キーとともに、スクリプトなしで返します。外部キーには ON DELETE と ON UPDATE のアクションが付きますが、対象のデータベースが省くアクションは除きます。[ON DELETE と ON UPDATE](../guide/guides/relationship-editing.md#on-delete-and-on-update)を参照してください。 |
+| `sql` | 8 つのデータベース `Databricks`、`MariaDB`、`MSSQL`、`MySQL`、`Oracle`、`PostgreSQL`、`Snowflake`、`SQLite` のいずれかの DDL です。`vendor` の既定値は、ドキュメントに設定されているデータベースです。ドキュメント全体の DDL には、その前後のスクリプトが含まれます。`tableIds`、`tableNames`、`groupNames` のいずれかを指定すると、それらのテーブルだけを、それらが持つ外部キーとともに、スクリプトなしで返します。外部キーには ON DELETE と ON UPDATE のアクションが付きますが、対象のデータベースが省くアクションは除きます。[ON DELETE と ON UPDATE](../guide/guides/relationship-editing.md#on-delete-and-on-update) を参照してください。 |
 | `json` | 保存でファイルに書き込まれるとおりのドキュメント全体です。エディタがまだ保存していない編集も含まれます。[保存形式とランタイム値](../api/advanced/schema.md#保存形式とランタイム値)を参照してください。 |
 | `scripts` | ドキュメントの前後のスクリプトだけを、`{"before":"…","after":"…"}` の形で返します。設定されていないスクリプトは空になり、スキーマがどれほど大きくても返すのはスクリプトだけです。 |
 
@@ -106,7 +106,7 @@ ID は `erd_list` と `erd_get`、またはそのエンティティを作った�
 `relationshipType` は子側の端のカーディナリティで、`ZeroOne`、`ZeroN`、`OneOnly`、`OneN` のいずれかです。
 開始テーブルは親、つまり主キーを持つ参照される側で、終了テーブルは子です。
 `onDelete` と `onUpdate` は外部キーの ON DELETE と ON UPDATE のアクションで、`none`、`noAction`、`cascade`、`setNull`、`setDefault`、`restrict` のいずれかです。
-`none` は句を書き出さないため、データベースの既定の動作が適用されます。[ON DELETE と ON UPDATE](../guide/guides/relationship-editing.md#on-delete-and-on-update)を参照してください。
+`none` は句を書き出さないため、データベースの既定の動作が適用されます。[ON DELETE と ON UPDATE](../guide/guides/relationship-editing.md#on-delete-and-on-update) を参照してください。
 `erd_add_relationship` または `erd_link_columns` で省略したアクションは `none` になります。
 
 | ツール | 引数 | 動作 |
@@ -180,7 +180,7 @@ ID は `erd_list` と `erd_get`、またはそのエンティティを作った�
 サーバー `1.0.0` では、これらを設定するツールが削除されました。`erd_set_language`、`erd_set_table_name_case`、`erd_set_column_name_case`、`erd_set_bracket_type`、`erd_set_relationship_data_type_sync`、`erd_set_relationship_optimization`、`erd_set_column_order`、`erd_set_max_width_comment`、`erd_set_ignore_save_settings`、`erd_set_show` です。
 
 `erd_list` と `erd_read` の `snapshot` 形式は、設定をファイルに保存されるとおりに返します。`lockSettings` には、ロックごとに 1 つずつ、`viewport`、`canvasType`、`language`、`tableNameCase`、`columnNameCase`、`bracketType` のフラグが入ります。
-ロックされた言語、名前のケース、括弧の種類は、エディタの画面に何が表示されていても、ロックされた値、つまりファイルが保持し、どのエディタもその値で開く値として返されます。表示とタブは返されません。
+ロックされた言語、名前のケース、括弧の種類は、エディタの画面に何が表示されていても、ロックされた値、つまりファイルが保持し、どのエディタも開くときに使う値として返されます。表示とタブは返されません。
 
 `erd_set_ddl_script` は Undo の項目を作ります。`erd_set_database` と `erd_set_database_name` は作らないため、`erd_undo` では元に戻せません。
 
@@ -202,7 +202,7 @@ ID は `erd_list` と `erd_get`、またはそのエンティティを作った�
 | --- | --- | --- |
 | `erd_import_sql` | `value`、`mode?` | `CREATE TABLE` 文などの SQL DDL を読み込みます。 |
 | `erd_import_graphql` | `value`、`mode?` | GraphQL SDL を読み込みます。 |
-| `erd_import_dbml` | `value`、`mode?` | DBML を読み込みます。各 `TableGroup` は、それが挙げるテーブルを含むテーブルグループになります。[DBML](../guide/guides/file-import-export.md#dbml)を参照してください。 |
+| `erd_import_dbml` | `value`、`mode?` | DBML を読み込みます。各 `TableGroup` は、それが挙げるテーブルを含むテーブルグループになります。[DBML](../guide/guides/file-import-export.md#dbml) を参照してください。 |
 | `erd_import_aml` | `value`、`mode?` | AML を読み込みます。 |
 | `erd_import_json` | `value`、`mode?` | 別の `.erd.json` ファイルなど、erd-editor の JSON ドキュメントを読み込みます。 |
 

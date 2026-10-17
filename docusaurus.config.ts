@@ -2,6 +2,8 @@ import type * as Preset from '@docusaurus/preset-classic';
 import type { Config } from '@docusaurus/types';
 import { themes as prismThemes } from 'prism-react-renderer';
 
+import { locales } from './locales.mjs';
+
 // Search language must be chosen per locale, because @easyops-cn/docusaurus-search-local
 // cannot serve CJK locales from one shared index:
 //   - any `language` containing `zh` forces `lunr.zh.tokenizer` on every index, and that
@@ -13,12 +15,10 @@ import { themes as prismThemes } from 'prism-react-renderer';
 // Docusaurus sets DOCUSAURUS_CURRENT_LOCALE when it loads this config for a locale.
 // The plugin caches its lunr setup in module state, so each locale must be built in its
 // own process — that is why `pnpm build` runs one `docusaurus build --locale ...` per locale.
+// The other locales' choices are explained beside the list in locales.mjs.
 const currentLocale = process.env.DOCUSAURUS_CURRENT_LOCALE ?? 'en';
-const searchLanguage = {
-  ko: ['en', 'ko'],
-  ja: ['ja'],
-  'zh-CN': ['en', 'zh'],
-}[currentLocale] ?? ['en'];
+const searchLanguage =
+  locales.find(locale => locale.code === currentLocale)?.search ?? ['en'];
 
 const config: Config = {
   title: 'erd-editor',
@@ -46,16 +46,20 @@ const config: Config = {
 
   i18n: {
     defaultLocale: 'en',
-    locales: ['en', 'ko', 'ja', 'zh-CN'],
+    locales: locales.map(locale => locale.code),
     // baseUrl is set explicitly so that a single-locale build
     // (`docusaurus build --locale ko`) still emits /ko/ and writes to build/ko.
     // Docusaurus otherwise flattens a single-locale build to baseUrl '/'.
-    localeConfigs: {
-      en: { label: 'English', baseUrl: '/' },
-      ko: { label: '한국어', baseUrl: '/ko/' },
-      ja: { label: '日本語', baseUrl: '/ja/' },
-      'zh-CN': { label: '简体中文', baseUrl: '/zh-CN/' },
-    },
+    localeConfigs: Object.fromEntries(
+      locales.map(({ code, label, direction }) => [
+        code,
+        {
+          label,
+          baseUrl: code === 'en' ? '/' : `/${code}/`,
+          ...(direction ? { direction } : {}),
+        },
+      ])
+    ),
   },
 
   presets: [

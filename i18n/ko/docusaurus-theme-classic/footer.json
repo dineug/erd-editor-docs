@@ -15,6 +15,14 @@
     "message": "가이드",
     "description": "The label of footer link with label=Guide linking to /docs/guide/introduction"
   },
+  "link.item.label.API": {
+    "message": "API",
+    "description": "The label of footer link with label=API linking to /docs/api/installation"
+  },
+  "link.item.label.MCP": {
+    "message": "MCP",
+    "description": "The label of footer link with label=MCP linking to /docs/mcp/introduction"
+  },
   "link.item.label.Web App": {
     "message": "웹 앱",
     "description": "The label of footer link with label=Web App linking to https://erd-editor.io"
@@ -34,6 +42,14 @@
   "link.item.label.Obsidian Plugin": {
     "message": "Obsidian 플러그인",
     "description": "The label of footer link with label=Obsidian Plugin linking to https://community.obsidian.md/plugins/erd-editor"
+  },
+  "link.item.label.GitHub": {
+    "message": "GitHub",
+    "description": "The label of footer link with label=GitHub linking to https://github.com/dineug/erd-editor"
+  },
+  "link.item.label.npm": {
+    "message": "npm",
+    "description": "The label of footer link with label=npm linking to https://www.npmjs.com/package/@dineug/erd-editor"
   },
   "link.item.label.Issues": {
     "message": "이슈",

@@ -1,0 +1,46 @@
+{
+  "title": {
+    "message": "erd-editor",
+    "description": "The title in the navbar"
+  },
+  "logo.alt": {
+    "message": "Logo erd-editor",
+    "description": "The alt text of navbar logo"
+  },
+  "item.label.Guide": {
+    "message": "Príručka",
+    "description": "Navbar item with label Guide"
+  },
+  "item.label.API": {
+    "message": "API",
+    "description": "Navbar item with label API"
+  },
+  "item.label.MCP": {
+    "message": "MCP",
+    "description": "Navbar item with label MCP"
+  },
+  "item.label.Editors": {
+    "message": "Editory",
+    "description": "Navbar item with label Editors"
+  },
+  "item.label.Web App": {
+    "message": "Webová aplikácia",
+    "description": "Navbar item with label Web App"
+  },
+  "item.label.Google Drive": {
+    "message": "Google Drive",
+    "description": "Navbar item with label Google Drive"
+  },
+  "item.label.VSCode Extension": {
+    "message": "Rozšírenie pre VSCode",
+    "description": "Navbar item with label VSCode Extension"
+  },
+  "item.label.IntelliJ Plugin": {
+    "message": "Doplnok pre IntelliJ",
+    "description": "Navbar item with label IntelliJ Plugin"
+  },
+  "item.label.Obsidian Plugin": {
+    "message": "Doplnok pre Obsidian",
+    "description": "Navbar item with label Obsidian Plugin"
+  }
+}

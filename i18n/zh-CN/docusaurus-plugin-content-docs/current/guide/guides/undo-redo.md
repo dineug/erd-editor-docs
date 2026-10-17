@@ -15,7 +15,7 @@ description: Undo 与 Redo、历史记录的内容，以及通过 Time Travel �
 只有在存在可 Undo 或 Redo 的内容时按钮才会亮起。`readonly` 编辑器会隐藏这三个按钮，快捷键也不起作用。
 
 Undo 与 Redo 仅在 ERD 标签页生效。在 Visualization、Schema SQL、Code Generator 和 Settings 标签页中不可用。在 Schema SQL 标签页的 `Before tables` 和 `After tables` 输入框中，同样的按键会改为对你在输入框中输入的内容执行 Undo 与 Redo。  
-快速搜索、`Table Properties`、`Diff Viewer`、自动布局预览、[`Export image`](./file-import-export.md#image) 对话框、[映射列](./relationship-editing.md#map-columns)或 Time Travel 打开时，快捷键同样不生效。  
+快速搜索、`Table Properties`、`Diff Viewer`、`Auto Layout` 预览、[`Export image`](./file-import-export.md#image) 对话框、[映射列](./relationship-editing.md#map-columns)或 Time Travel 打开时，快捷键同样不生效。  
 键盘焦点位于[资源管理器](./explorer.md#keys-in-the-explorer)中的任何位置（包括其树）时，以及[选色器](./table-related-functions.md#表与备注的颜色设置)打开时，快捷键仍然有效。即使光标位于它们的某个输入框中，例如查找输入框、替换输入框或 `Hex` 输入框，快捷键 Undo 与 Redo 的对象也是图，而不是输入框中的文本。
 
 历史记录保存在当前会话的内存中。它不会存入文档，因此重新打开图时历史记录为空。
@@ -89,7 +89,7 @@ Undo 与 Redo 仅在 ERD 标签页生效。在 Visualization、Schema SQL、Code
 
 Time Travel 会以画布当前显示的滚动位置和缩放级别打开图的一份独立只读副本，无论 `Viewport` 锁定是否开启。  
 拖动滑块，或在滑轨上任意位置点击，即可浏览完整的编辑历史并预览每个时间点。滑块的最左端是第一条记录变更之前的状态，打开时滑块位于当前状态。  
-预览是静止的：它会绘制小地图，但无法平移、滚动或编辑，在应用之前实际文档不会发生任何变化。
+预览不可交互：它会绘制小地图，但无法平移、滚动或编辑，在应用之前实际文档不会发生任何变化。
 
 按 `Apply` 恢复到所选时间点，或按 `Cancel` 或 `Esc` 保持文档不变。
 

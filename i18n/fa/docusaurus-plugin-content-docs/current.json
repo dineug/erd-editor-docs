@@ -1,0 +1,18 @@
+{
+  "version.label": {
+    "message": "بعدی",
+    "description": "The label for version current"
+  },
+  "sidebar.docs.category.Guides": {
+    "message": "راهنماها",
+    "description": "The label for category 'Guides' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Guides.link.generated-index.description": {
+    "message": "نحوهٔ رسم و ویرایش یک نمودار: ایجاد جدول‌ها و رابطه‌ها، وارد کردن و صادر کردن فایل‌ها و گزینه‌های نمایش ویرایشگر.",
+    "description": "The generated-index page description for category 'Guides' in sidebar 'docs'"
+  },
+  "sidebar.api.category.Advanced": {
+    "message": "پیشرفته",
+    "description": "The label for category 'Advanced' in sidebar 'api'"
+  }
+}

@@ -5,9 +5,9 @@ description: 시작 화면에서 편집 시작, 캔버스 컨텍스트 메뉴, �
 
 # 편집 시작하기
 
-편집은 마우스 오른쪽 클릭으로 컨텍스트 메뉴로 시작합니다.
+편집은 마우스 오른쪽 클릭으로 여는 컨텍스트 메뉴에서 시작합니다.
 
-![캔버스를 마우스 오른쪽 클릭해 Relationship 하위 메뉴를 살펴보고, 테이블을 추가한 뒤 테이블 메뉴 열기](/img/demo-context-menu.webp)
+![캔버스를 마우스 오른쪽 클릭해 Relationship 하위 메뉴를 열고, 테이블을 추가한 뒤 그 테이블의 메뉴 열기](/img/demo-context-menu.webp)
 
 테이블, 메모, 테이블 그룹이나 관계에서 마우스 오른쪽 클릭하면 해당 항목의 메뉴가 대신 열립니다.  
 이미 선택된 테이블, 메모, 테이블 그룹에서 마우스 오른쪽 클릭하면 선택 전체가 유지되므로, `Color`나 `Delete selected` 같은 항목이 선택 전체에 적용됩니다. [다중 선택](./table-related-functions.md#다중-선택) 문서를 참고하세요.
@@ -69,7 +69,7 @@ View Option → `Memos`가 꺼져 있는 동안에는 메모가 숨겨지고, �
 
 ## 관계 생성
 
-컨텍스트 메뉴, 캔버스 아래쪽의 [캔버스 툴바](./table-related-functions.md#캔버스-툴바), 또는 단축키로 시작합니다. 관계 타입마다 단축키가 다릅니다.
+관계 그리기는 컨텍스트 메뉴, 캔버스 아래쪽의 [캔버스 툴바](./table-related-functions.md#캔버스-툴바), 또는 단축키로 시작합니다. 관계 타입마다 단축키가 다릅니다.
 
 - Zero One: `Ctrl + Alt + 1` (Windows/Linux) or `⌘ + ⌥ + 1` (Mac)
 - Zero N: `Ctrl + Alt + 2` (Windows/Linux) or `⌘ + ⌥ + 2` (Mac)
@@ -91,7 +91,7 @@ serial 키는 예외로, 그 foreign key는 `serial4`에 대한 `integer`처럼 
 
 포인터가 부모 테이블을 클릭한 지점에서 조금 벗어나면 부모 테이블에도 버튼이 표시되므로, 자기 참조 관계도 기존 컬럼에 매핑할 수 있습니다.  
 손가락에는 호버가 없으므로, 손가락으로 그릴 때는 버튼이 표시되지 않고 자식 테이블을 탭하면 곧바로 관계가 그려집니다. 펜은 마우스처럼 버튼을 표시합니다.  
-Undo나 공동 편집 참여자의 편집 등으로 자식 테이블에 닿기 전에 부모 테이블의 primary key가 사라지면, `Create new columns`가 `<parent> has no primary key to copy` 툴팁과 함께 흐리게 표시되고, 자식 테이블을 클릭하면 아무것도 그리지 않고 관계 그리기가 끝납니다.
+Undo나 공동 편집자의 편집 등으로 자식 테이블에 닿기 전에 부모 테이블의 primary key가 사라지면, `Create new columns`가 `<parent> has no primary key to copy` 툴팁과 함께 흐리게 표시되고, 자식 테이블을 클릭하면 아무것도 그리지 않고 관계 그리기가 끝납니다.
 
 ![⌘ + ⌥ + 4로 One N 관계를, 캔버스 툴바에서 Zero N 관계를 그리며 외곽선이 표시된 자식 테이블 옆에 Map to existing columns와 Create new columns 버튼이 나타나는 모습](/img/demo-relationship.webp)
 

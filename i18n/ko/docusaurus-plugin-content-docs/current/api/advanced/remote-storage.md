@@ -1,11 +1,11 @@
 ---
 sidebar_position: 2
-description: 메인 스레드 밖 복제 store로 실행 중인 에디터 복제, 저장을 위한 문서 직렬화.
+description: 메인 스레드 밖의 헤드리스 복제 store로 실행 중인 에디터 복제, 저장을 위한 문서 직렬화.
 ---
 
 # 원격 저장
 
-에디터에 변경사항이 있을 때마다 전체 상태를 전송하는 건 비효율적입니다.  
+에디터에 변경 사항이 있을 때마다 전체 상태를 전송하는 건 비효율적입니다.  
 이런 경우를 위해 실시간 데이터 복제 API를 제공합니다.
 
 ## 설치
@@ -77,8 +77,8 @@ sharedStore.subscribe(actions => {
 });
 ```
 
-경계를 넘어가는 것은 변경사항뿐이며 문서 전체는 전송되지 않습니다.  
-복제본이 변경사항을 반영하고 결과를 자체적으로 직렬화합니다.  
+경계를 넘어가는 것은 변경 사항뿐이며 문서 전체는 전송되지 않습니다.  
+복제본이 변경 사항을 반영하고 결과를 자체적으로 직렬화합니다.  
 `change`는 그 결과를 `value`로 전달하며, `changed`로 저장할 시점을 알 수 있습니다.
 
 `4.0.0`부터는 위 예시처럼 저장된 파일이나 에디터의 `value`가 아니라 에디터의 `runtimeValue`로 복제본을 초기화하세요.  
@@ -146,13 +146,13 @@ const data = replicationStore.value;
 
 `4.0.0`부터 `value`는 저장 형태, 즉 파일에 담기는 형태의 문서이며, 엘리먼트의 [value](../erd-editor-element.md#value)가 반환하는 것과 같은 텍스트입니다.  
 현재 있는 엔티티만 고정된 순서로 담으며, 삭제된 엔티티, 쌓임 순서, 그리고 [toWidth](#towidth)가 측정하는 너비처럼 불러올 때 다시 계산되는 정보는 담지 않습니다.  
-두 칸으로 들여쓰고 줄바꿈으로 끝나므로, 같은 문서는 항상 같은 바이트가 됩니다.  
+공백 두 칸으로 들여쓰고 줄바꿈으로 끝나므로, 같은 문서는 항상 같은 바이트가 됩니다.  
 담기는 내용은 [저장 형태와 런타임 값](./schema.md#저장-형태와-런타임-값) 문서를 참고하세요.
 
 [잠금](../../guide/guides/settings.md#잠금)이 켜진 설정은 잠근 시점의 값으로, 나머지 설정은 현재 상태 그대로 기록됩니다.  
 `Viewport` 잠금은 화면 원점과 확대/축소 레벨을 함께 다루며, 탭, Code Generator 언어, 두 이름 케이스, 괄호 타입에는 각각 별도의 잠금이 있습니다.  
 잠금은 문서의 `ignoreSaveSettings`를 대체하며, `4.0.0`부터 이 필드는 읽지도 쓰지도 않습니다.  
-`4.0.0` 이전의 `value`는 store가 가지고 있는 문서 전체였으며, 이 필드의 scroll 비트와 zoom 비트가 적용되었습니다.
+`4.0.0` 이전의 `value`는 store가 가지고 있는 문서 전체였으며, 이 필드의 스크롤 비트와 확대/축소 비트가 적용되었습니다.
 
 ### runtimeValue getter
 
@@ -197,7 +197,7 @@ v2 문서를 포함해 `4.0.0` 이전에 저장된 모든 문서처럼 잠금이
 
 ### on@change
 
-에디터의 상태변경 이벤트를 구독합니다.
+에디터의 상태 변경 이벤트를 구독합니다.
 
 ```js
 const unsubscribe = replicationStore.on({
@@ -209,7 +209,7 @@ const unsubscribe = replicationStore.on({
 });
 ```
 
-`change`는 200ms 디바운스되며, 연속된 액션은 하나의 알림으로 전달됩니다.  
+`change`는 200ms 디바운스되므로, 연속된 액션은 하나의 알림으로 전달됩니다.  
 문서를 변경할 수 있는 종류의 액션과, 이전 에디터가 아직 보낼 수 있는 `settings.changeIgnoreSaveSettings`에만 발생합니다([dispatch, dispatchSync](#dispatch-dispatchsync) 항목 참고).  
 중계된 presence 액션이나 `editor.mergeLWW`는 이벤트를 발생시키지 않습니다.  
 구독을 해제하려면 반환된 함수를 호출하세요.
@@ -237,14 +237,14 @@ const unsubscribe = replicationStore.on({
 
 ### dispatch, dispatchSync
 
-원격 에디터 변경사항을 replicationStore에 반영합니다.
+원격 에디터 변경 사항을 replicationStore에 반영합니다.
 
 ```js
 replicationStore.dispatch(actions); // async
 replicationStore.dispatchSync(actions); // sync
 ```
 
-`dispatch`는 마이크로태스크로 지연 실행하고, `dispatchSync`는 배치를 즉시 반영합니다.
+`dispatch`는 마이크로태스크로 지연 실행하고, `dispatchSync`는 묶음을 즉시 반영합니다.
 
 shared store의 스트림을 필터링 없이 그대로 전달해도 됩니다.  
 두 메서드 모두 문서를 변경할 수 있는 종류의 액션과 이 항목 끝에서 설명하는 두 액션만 남기고 나머지는 버리므로, 공동 편집 세션이 전달하는 presence 정보(각 사용자의 마우스 커서, 포커스, 선택 영역, 드래그 박스)는 아무 동작 없이 통과합니다.
@@ -257,7 +257,7 @@ shared store의 스트림을 필터링 없이 그대로 전달해도 됩니다.
 이전 릴리스의 store는 새 액션을 버리므로 [테이블 그룹](../../guide/guides/table-groups.md), [잠금](../../guide/guides/settings.md#잠금), [Schema SQL](../../guide/guides/schema-sql.md) 스크립트, 그리고 [컬럼 매핑](../../guide/guides/relationship-editing.md#컬럼-매핑)이 이미 있는 관계에 지정하는 컬럼을 잃습니다.  
 복제본은 에디터와 같은 릴리스나 그보다 새로운 릴리스에서 실행하세요.
 
-`4.1.0`은 새 액션 타입을 추가하지 않고 `@dineug/erd-editor/engine.js`도 그대로 두므로, `4.0.0` 복제본도 `4.1.0` 복제본과 마찬가지로 `4.1.0` 에디터가 보내는 변경사항을 모두 남깁니다.  
+`4.1.0`은 새 액션 타입을 추가하지 않고 `@dineug/erd-editor/engine.js`도 그대로 두므로, `4.0.0` 복제본도 `4.1.0` 복제본과 마찬가지로 `4.1.0` 에디터가 보내는 변경 사항을 모두 남깁니다.  
 `4.1.0`부터 [찾기와 바꾸기](../../guide/guides/find-and-replace.md#바꾸기)의 `Replace`와 `Replace All`은 `4.0.0` 복제본이 이미 남기는 `index.changeName`과 `tableGroup.changeName` 액션으로 인덱스와 테이블 그룹의 이름도 바꿉니다.  
 [탐색기](../../guide/guides/explorer.md) 자체의 상태는 전송되지 않으며, 탐색기가 일으키는 탭 전환이나 스크롤은 다른 탭 전환이나 스크롤과 똑같이 전달됩니다. [공동 편집](./collaborative-editing.md) 문서를 참고하세요.
 

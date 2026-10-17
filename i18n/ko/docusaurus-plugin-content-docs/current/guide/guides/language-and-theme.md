@@ -14,7 +14,7 @@ description: 에디터의 25개 표시 언어, 오른쪽에서 왼쪽 레이아�
 ## 표시 언어
 
 표시 언어는 에디터 자체의 텍스트에 적용됩니다. 툴바 툴팁, 컨텍스트 메뉴, 빠른 검색, 패널과 대화 상자, 설정 탭, [시작 화면](./editing-start.md#시작-화면), 토스트와 메시지, 그리고 비어 있는 이름, 데이터 타입, 기본값, 코멘트가 캔버스와 내보낸 이미지에 표시하는 플레이스홀더가 여기에 해당합니다.  
-다음은 어느 언어에서나 작성된 그대로 유지됩니다. 직접 작성한 테이블과 컬럼 이름, 코멘트, 메모, 데이터베이스 벤더, Code Generator의 언어, 파일 형식, 데이터 타입, SQL 키워드, `ON DELETE`와 `ON UPDATE` 동작, Schema SQL 옵션 `Create`, `If not exists`, `Drop & re-create`, `USE`, `CREATE + USE`, `PK`, `FK`, `UQ`, `AI`, `NN`, `N-N`, `NULL`, `AK1.1` 표시, [Diff Viewer](./table-related-functions.md#diff-viewer)의 상태 문자 `A`, `M`, `D`, `R`, `~`, `None`을 제외한 이름 케이스와 `Bracket` 선택 항목, 키보드 키 이름, 테마 빌더의 색상 이름, 생성된 SQL과 코드, 내보낸 파일 이름입니다.
+다음은 어느 언어에서나 작성된 그대로 유지됩니다. 직접 작성한 테이블과 컬럼 이름, 코멘트, 메모, 데이터베이스 벤더, Code Generator의 언어, 파일 형식, 데이터 타입, SQL 키워드, `ON DELETE`와 `ON UPDATE` 동작, Schema SQL 옵션 `Create`, `If not exists`, `Drop & re-create`, `USE`, `CREATE + USE`, 표시 기호 `PK`, `FK`, `UQ`, `AI`, `NN`, `N-N`, `NULL`, `AK1.1`, [Diff Viewer](./table-related-functions.md#diff-viewer)의 상태 문자 `A`, `M`, `D`, `R`, `~`, `None`을 제외한 이름 케이스와 `Bracket` 선택 항목, 키보드 키 이름, 테마 빌더의 색상 이름, 생성된 SQL과 코드, 내보낸 파일 이름입니다.
 
 선택기가 나열하는 순서대로 정리한 언어는 다음과 같습니다.
 
@@ -147,7 +147,7 @@ erd-editor.io(공동 편집 세션 포함)와 Google Drive에서는 하나의 �
 | `dineug.erd-editor.theme.accentColor` | 26가지 강조 색상 | `indigo` |
 
 Settings 편집기는 언어 설정의 값으로 `Auto`를 먼저, 이어서 각 언어를 그 언어로 쓴 이름으로 나열합니다. `settings.json`에서 어떤 언어도 가리키지 않는 값은 `auto`로 읽힙니다.  
-에디터에서 테마를 고르면 세 가지 테마 설정이 모두 기록됩니다. 고른 값은 그 설정이 이미 지정된 곳에 기록되며, 작업 영역 폴더, 없으면 작업 영역, 없으면 사용자 설정 순입니다.
+에디터에서 테마를 고르면 세 가지 테마 설정이 모두 기록됩니다. 고른 값은 그 설정이 이미 지정된 곳에 기록되며, 워크스페이스 폴더, 없으면 워크스페이스, 없으면 사용자 설정 순입니다.
 
 ### JetBrains IDE
 
@@ -165,4 +165,4 @@ Settings → ERD Editor에는 `Appearance`(`Auto`, `Light`, `Dark`), `Gray color
 직접 만든 페이지의 `<erd-editor>`는 페이지가 [`enableThemeBuilder`](../../api/erd-editor-element.md#enablethemebuilder)와 [`enableLocalePicker`](../../api/erd-editor-element.md#enablelocalepicker)로 켜기 전까지 `Theme`과 `Display Language` 버튼을 표시하지 않으며, 빠른 검색도 둘 다 나열하지 않습니다.  
 페이지가 언어를 지정하거나 사용자가 언어를 고르기 전까지 에디터는 영어로 표시되며, `enableLocalePicker`가 켜져 있는 동안에는 `System`을 따릅니다.  
 테마는 페이지가 다른 값을 지정하거나 [`systemDarkMode`](../../api/erd-editor-element.md#systemdarkmode)를 켜지 않는 한 `Dark`, 회색 색상 `slate`, 강조 색상 `indigo`로 시작합니다.  
-사용자가 고른 값은 바로 적용되지만 요소는 어느 쪽도 저장하지 않습니다. 시작 값은 페이지가 지정하고, 사용자가 고른 값도 페이지가 직접 저장합니다. API의 [Theme](../../api/erd-editor-element.md#theme)과 [Display Language](../../api/erd-editor-element.md#display-language) 문서를 참고하세요.
+사용자가 고른 값은 바로 적용되지만 엘리먼트는 어느 쪽도 저장하지 않습니다. 시작 값은 페이지가 지정하고, 사용자가 고른 값도 페이지가 직접 저장합니다. API의 [Theme](../../api/erd-editor-element.md#theme)과 [Display Language](../../api/erd-editor-element.md#display-language) 문서를 참고하세요.

@@ -16,7 +16,7 @@
     "description": "The label of footer link with label=Guide linking to /docs/guide/introduction"
   },
   "link.item.label.Web App": {
-    "message": "网页版",
+    "message": "Web 应用",
     "description": "The label of footer link with label=Web App linking to https://erd-editor.io"
   },
   "link.item.label.Google Drive": {
@@ -40,7 +40,7 @@
     "description": "The label of footer link with label=Issues linking to https://github.com/dineug/erd-editor/issues"
   },
   "copyright": {
-    "message": "Copyright © 2026 SeungHwan-Lee. MIT 许可证",
+    "message": "Copyright © 2026 SeungHwan-Lee. MIT 许可证。",
     "description": "The footer copyright"
   }
 }

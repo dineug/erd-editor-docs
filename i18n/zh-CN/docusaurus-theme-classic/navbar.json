@@ -1,4 +1,8 @@
 {
+  "logo.alt": {
+    "message": "erd-editor 标志",
+    "description": "The alt text of navbar logo"
+  },
   "item.label.Guide": {
     "message": "指南",
     "description": "Navbar item with label Guide"
@@ -8,7 +12,7 @@
     "description": "Navbar item with label Editors"
   },
   "item.label.Web App": {
-    "message": "网页版",
+    "message": "Web 应用",
     "description": "Navbar item with label Web App"
   },
   "item.label.Google Drive": {

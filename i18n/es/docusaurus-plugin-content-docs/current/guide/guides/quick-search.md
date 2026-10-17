@@ -1,0 +1,90 @@
+---
+sidebar_position: 7
+description: Abre la paleta de comandos para cambiar de pestaña, ejecutar un comando de la pestaña actual, abrir o cerrar el explorador, cambiar el tema o el idioma de la interfaz, o ir a una tabla, una columna, un comentario o una nota escribiendo un prefijo.
+---
+
+# Búsqueda rápida
+
+La búsqueda rápida es la paleta de comandos del editor.  
+Muestra los comandos disponibles en la pestaña en la que estás. Empieza la búsqueda con `#`, `@` o `:` para buscar, en cambio, en el diagrama e ir a una tabla, a una columna o a un comentario o nota.
+
+Ábrela con `Ctrl + K` (Windows/Linux) o `⌘ + K` (Mac), o haz clic en `Search` en la barra de herramientas.  
+El mismo atajo de teclado la cierra, igual que `Esc` y un clic fuera del panel. Al abrirla se cierran el panel Propiedades de la tabla, el [generador de temas](./language-and-theme.md#theme), el selector [`Display Language`](./language-and-theme.md#picking-a-language), el cuadro de diálogo [`Export image`](./file-import-export.md#image) y el de [Asignar columnas](./relationship-editing.md#map-columns), que descarta lo que hubieras elegido en él. No se abre mientras editas una celda de una tabla, una nota o el nombre de un grupo de tablas.
+
+El botón de la barra de herramientas que va justo después de `Search` es `Explorer`. Abre o cierra el [explorador](./explorer.md), un árbol del diagrama acoplado a la izquierda del lienzo, con Buscar y reemplazar en su parte superior.  
+Abrir la paleta deja abierto el explorador, y `Esc` cierra entonces solo la paleta. `Ctrl + F` (Windows/Linux) o `⌘ + F` (Mac), pulsado en la paleta, la cierra y lleva el teclado al campo Buscar del explorador, y abre el explorador en su búsqueda si no se está mostrando. A diferencia de la entrada `Toggle Explorer`, la tecla nunca cierra el explorador desde la paleta; consulta [Abrir y cerrar](./explorer.md#opening-and-closing). Mientras está abierto el visor de diferencias, el viaje en el tiempo o la vista previa de la disposición automática, el editor deja pasar la tecla: la paleta sigue abierta y la tecla llega al navegador o al host; consulta [La barra de búsqueda del navegador](./find-and-replace.md#the-browsers-find-bar).  
+Un host que integra el editor puede asignar la búsqueda rápida a otra tecla, que la descripción emergente de `Search` muestra entonces; consulta [Atajos de teclado](./settings.md#shortcuts).
+
+![Abrir la paleta con ⌘ + K y luego ir a una tabla con #pay, a una columna con @price y a un comentario de tabla con :address](/img/demo-quick-search.webp)
+
+## Buscar y navegar {#searching-and-navigating}
+
+Escribe para filtrar la lista. Cada pulsación de tecla vuelve a buscar en toda la lista que tienes delante, así que borrar caracteres, o escribir una palabra nueva sobre una que no encontró nada, hace volver las entradas que coinciden.  
+La coincidencia es aproximada y abarca tanto el nombre de una entrada como las palabras clave que se muestran a su lado. Dentro del submenú `Import`, por ejemplo, `sdl` encuentra `GraphQL`, `dbdiagram` encuentra `DBML` y `azimutt` encuentra `AML`. Una errata leve sigue encontrando su entrada, igual que `tabel` encuentra `New Table` e `imprt` encuentra `Import`, pero se omite una entrada que solo se parece vagamente a lo que has escrito: `memo` muestra únicamente `New Memo`. Una entrada cuyo nombre o cuyas palabras clave contienen lo que has escrito, sin distinguir mayúsculas y minúsculas, siempre se muestra, y si la coincidencia aproximada no la encuentra, aparece después de las coincidencias aproximadas. Lo que has escrito se resalta allí donde una entrada lo contiene, sin distinguir mayúsculas y minúsculas.  
+Con un idioma de la interfaz distinto del inglés, los comandos y las entradas de los submenús también se encuentran por sus nombres y palabras clave en inglés, que la lista no muestra, así que `new table` encuentra `New Table` sea cual sea el idioma en que se muestre.  
+Recorre la lista con `↑` y `↓` —al llegar a un extremo, se pasa al otro— y ejecuta la entrada resaltada con `Enter`. Un comando que tiene su propio atajo lo muestra al final de su fila: a la derecha o, con un idioma de la interfaz de derecha a izquierda, a la izquierda. Mientras un método de entrada sigue componiendo, como a mitad de una sílaba coreana, `↑`, `↓` y `Enter` le pertenecen y ni mueven el resaltado ni ejecutan ninguna entrada.
+
+Una entrada como `Database`, `Import` o `Auto Layout` abre un submenú: sus entradas sustituyen a la lista y el cuadro de búsqueda se vacía. Los submenús de `Database`, `Bracket`, `Language`, los dos estilos de nombres, `Schema SQL: Statements`, `Schema SQL: Header`, `Theme` y `Display Language` marcan la opción actual y se abren con el resaltado sobre ella, así que `Enter` la mantiene; los demás submenús se abren sin nada resaltado.  
+El filtro solo se aplica a la lista que tienes delante y no hay forma de volver a un nivel superior, así que cierra y vuelve a abrir la paleta para empezar de nuevo. Dentro de un submenú, `#`, `@`, `:` y `?` son texto normal, no [prefijos](#searching-the-diagram).
+
+## Qué muestra la paleta {#what-the-palette-lists}
+
+La lista depende de la pestaña en la que estés. La lista de cada pestaña empieza con `Tab`, que cambia a `Entity Relationship Diagram`, `Visualization`, `Schema SQL`, `Code Generator` o `Settings`, sin incluir la pestaña en la que ya estás.
+
+En la pestaña ERD: `Database`, `Import`, `Import and Add` y `Export`, luego `New Table`, `New Memo`, `New Table Group` y `Group Selected Tables`, los cuatro tipos de relación y `Auto Layout`. Las tablas no aparecen aquí; escribe `#` para [ir a una](#searching-the-diagram).  
+`Import and Add` se omite en un editor de solo lectura, y `New Memo`, mientras [Opciones de vista](./table-related-functions.md#table-view-options) → `Memos` oculta las notas. `New Table Group` empieza a dibujar un [grupo de tablas](./table-groups.md) en el lienzo, y `Group Selected Tables` pone las tablas seleccionadas en un grupo nuevo y abre su nombre para escribirlo. Ambos se omiten en un editor de solo lectura y mientras Opciones de vista → `Table Groups` oculta los grupos, y `Group Selected Tables` además necesita al menos una tabla seleccionada. Sus filas muestran las teclas: `Alt + G` (Windows/Linux) o `⌥ + G` (Mac) para [dibujar un grupo](./table-groups.md#drawing-a-group), y `T` y luego `G` para [agrupar las tablas seleccionadas](./table-groups.md#grouping-selected-tables).  
+Ejecutan los mismos comandos que el menú contextual del lienzo, salvo `Group Selected Tables`, que es la opción `Group selected tables` del menú de la tabla; `View Option` y `Diff Viewer` solo están en el menú contextual. `Export` ofrece las mismas opciones `json`, `Schema SQL` e `Image` que el menú contextual, y escribir `png` o `svg` dentro de él encuentra `Image`.  
+Consulta [Importar o exportar archivos](./file-import-export.md) para saber qué hacen cada formato, [Importar y añadir](./file-import-export.md#import-and-add) y la [exportación de imagen](./file-import-export.md#image), y [Funciones relacionadas con las tablas](./table-related-functions.md#databases) para saber a qué afecta la elección de la base de datos.
+
+En la pestaña Esquema SQL: de nuevo `Database`, y `Bracket`, que establece el carácter de entrecomillado que rodea los nombres de tablas, columnas, restricciones e índices en el SQL generado (`SingleQuote`, `DoubleQuote`, `Backtick` o `None`, para no entrecomillar nada). Después, `Schema SQL: Statements` y `Schema SQL: Header`, que ofrecen las mismas opciones que el panel de opciones de la pestaña, pero solo muestran las que escribe la base de datos seleccionada, y `Schema SQL: Options panel`, que muestra u oculta ese panel. Consulta [Esquema SQL](./schema-sql.md) para saber qué escribe cada opción.
+
+En la pestaña Generador de código: `Database`, `Bracket` mientras el lenguaje es `Doctrine`, `JPA` o `SeaORM`, luego `Language`, `Table Name Case`, `Column Name Case` y `Code Generator: Options panel`, que muestra u oculta el panel de opciones de la pestaña. Consulta [Generador de código](./code-generator.md) para saber qué genera cada destino.
+
+Las pestañas Visualización y Configuración no tienen comandos propios, solo `Tab` y los comandos siguientes, que aparecen en todas las pestañas.
+
+Cerca del final de la lista de cada pestaña, también en un editor de solo lectura, está la entrada `Toggle Explorer`, que muestra su atajo: `Ctrl + F` (Windows/Linux) o `⌘ + F` (Mac). Escribir `find`, `replace`, `rename`, `tree`, `outline` u `objects` también la encuentra.  
+Ejecutarla cierra la paleta y hace lo mismo que el atajo en el lienzo. Mientras el botón `Explorer` de la barra de herramientas aparece pulsado, es decir, mientras el explorador está abierto en la pestaña ERD y no lo oculta el modo zen, cierra el explorador. En caso contrario, cambia a la pestaña ERD y abre el explorador en su búsqueda, con el cursor de texto en el campo Buscar; consulta [Abrir y cerrar](./explorer.md#opening-and-closing). Se omite mientras está abierto el visor de diferencias, el viaje en el tiempo o la vista previa de la disposición automática.
+
+### Tema e idioma de la interfaz {#theme-and-display-language}
+
+Después de `Toggle Explorer`, todas las pestañas muestran `Theme` y `Display Language`, también en un editor de solo lectura. Cada entrada aparece solo donde el editor ofrece su selector, como indican los botones `Theme` y `Display Language` de la barra de herramientas. La aplicación web, Google Drive, VS Code, los IDE de JetBrains y Obsidian ofrecen ambos; consulta [En cada host](./language-and-theme.md#in-each-host).
+
+`Theme` abre `System`, `Light` y `Dark`, con la apariencia actual marcada. Elegir una opción cambia solo la apariencia y conserva el tono de gris y el color de énfasis, como hacen los botones `Appearance` del generador de temas.  
+`Display Language` abre `System` y después los 25 idiomas, cada uno con su nombre en su propio idioma y en el orden del selector, con la opción actual marcada. Aquí un idioma también se encuentra por su nombre en inglés o por su código: `german` o `de-DE` encuentra `Deutsch`, y `korean` encuentra `한국어`.  
+Una elección en cualquiera de los dos se aplica de inmediato, cierra la paleta y se conserva igual que una hecha en el generador de temas o en el selector `Display Language`. Si el idioma de la interfaz cambia mientras la paleta está abierta, la lista pasa a ese idioma y conserva lo que has escrito y el submenú en el que estás.
+
+## Buscar en el diagrama {#searching-the-diagram}
+
+Empieza la búsqueda con un prefijo para buscar en el diagrama en lugar de en los comandos: `#` para tablas, `@` para columnas, `:` para comentarios y notas, o `?` para mostrar los prefijos. Un prefijo funciona desde cualquier pestaña. Solo cuenta como primer carácter, sin tener en cuenta los espacios anteriores. El espacio después del prefijo es opcional, así que `#users` y `# users` son la misma búsqueda, y también cuentan los `＃`, `＠`, `：` y `？` de ancho completo que escribe un método de entrada japonés o chino.  
+Mientras el cuadro de búsqueda está vacío en el nivel superior, una línea debajo de él muestra los cuatro prefijos; haz clic en uno para escribirlo. Mientras un prefijo está en vigor, el final del cuadro de búsqueda indica su ámbito: `Tables`, `Columns`, `Comments & memos` o `Help`. Borra el prefijo para recuperar los comandos.
+
+`#` muestra las tablas, cada una con `Table` a su lado, y una tabla con el nombre en blanco aparece como `unnamed`. Sin nada después de `#`, se ordenan por nombre. El texto después de `#` se compara solo con los nombres de las tablas, de forma aproximada como se ha descrito antes, y las tablas cuyo nombre lo contiene aparecen primero. Los nombres de los grupos de tablas y de los índices no se buscan con ningún prefijo; [Buscar y reemplazar](./find-and-replace.md#what-it-searches) busca en ambos.
+
+`@` muestra las columnas por nombre, cada una con su ubicación al lado, como `users.email · Column`. El texto después de `@` tiene que aparecer en el nombre de la columna, sin distinguir mayúsculas y minúsculas; esta coincidencia no es aproximada. El texto antes del primer `.` acota la búsqueda a las tablas cuyo nombre lo contiene: `@users.em` muestra las columnas que contienen `em` en las tablas cuyo nombre contiene `users`, `@users.` muestra las columnas de esas tablas y `@.em` busca en todas las tablas. Sin nada después de `@`, se muestran las columnas sin filtrar.
+
+`:` muestra los comentarios de tabla, los comentarios de columna y las notas, nunca nombres. Cada fila muestra un fragmento del texto alrededor de la coincidencia, con `users · Table comment`, `users.email · Column comment` o `Memo` a su lado. El texto después de `:` tiene que aparecer en el comentario o la nota, sin distinguir mayúsculas y minúsculas, como con `@`. Sin nada después de `:`, se muestran los comentarios y las notas que no están vacíos. Mientras Opciones de vista → `Memos` oculta las notas, `:` no muestra ninguna nota.
+
+`@` y `:` muestran sus filas en el orden en que las guarda el documento: tabla por tabla, el comentario de cada tabla antes de sus columnas en el orden de las columnas y, por último, las notas.
+
+`?` muestra `Tables`, `Columns` y `Comments & memos`, y el texto después de `?` los filtra. Elegir uno sustituye el contenido del cuadro de búsqueda por su prefijo y deja abierta la paleta.
+
+Una lista con prefijo contiene todas las coincidencias, por muchas que haya. Un prefijo cuya búsqueda no encuentra nada deja la lista vacía, sin ningún mensaje.
+
+Elegir una tabla, una columna, un comentario o una nota cierra la paleta y cambia a la pestaña ERD si estás en otra.  
+El lienzo se desplaza hasta el elemento, salvo que ya se vea bien; consulta [Dónde termina un salto](./table-related-functions.md#where-a-jump-lands). Con una tabla, se selecciona solo esa tabla y se trae al frente, con el foco en su nombre, salvo que el foco ya estuviera en esa tabla.  
+Con una nota, se selecciona solo esa nota y se trae al frente. Con una columna o un comentario, se selecciona solo su tabla, se trae al frente y el foco va a la celda que contiene el texto o, si una [opción de vista de tabla](./table-related-functions.md#table-view-options) oculta el comentario, al nombre que tiene al lado.  
+Ningún salto inicia ni termina una relación que se esté dibujando.
+
+Para `Match Case`, `Match Whole Word` o `Use Regular Expression`, o para reemplazar texto, usa [Buscar y reemplazar](./find-and-replace.md), en la parte superior del explorador.
+
+## Cuando ningún comando coincide {#when-no-command-matches}
+
+En el nivel superior, sin prefijo, si ningún comando de la lista contiene lo que has escrito, sin distinguir mayúsculas y minúsculas, aparecen tres filas después de los comandos: `Search tables for "…"`, `Search columns for "…"` y `Search comments & memos for "…"`, cada una con su prefijo como icono. Elegir una escribe ese prefijo delante de tu texto, así que `users` pasa a ser `#users`, y la paleta sigue abierta con esos resultados.  
+Si la búsqueda no encuentra ningún comando, `No commands match` aparece encima de la lista, que entonces solo contiene las tres filas. Si solo encuentra comandos que no contienen el texto, estos aparecen primero: en la pestaña ERD sin ninguna tabla seleccionada, `tables` muestra `New Table`, `Database` y, donde se ofrece, `New Table Group` antes de las tres filas. Con una tabla seleccionada, `Group Selected Tables`, donde se ofrece, contiene `tables`, así que las tres filas no aparecen.  
+Dentro de un submenú, una búsqueda que no encuentra nada deja la lista vacía, sin ningún mensaje.
+
+## Buscar en coreano {#searching-in-korean}
+
+Una búsqueda que contiene hangul también coincide por sus letras, en los comandos, en los submenús y con cualquier prefijo.  
+Cada estado por el que pasa un método de entrada coreano sigue encontrando la fila que pretendes escribir, así que `ㅅ`, `사`, `상`, `사요` y `사용` encuentran todos `사용자`. Una búsqueda formada solo por consonantes iniciales coincide con las consonantes iniciales de las sílabas, sin tener en cuenta los espacios: `ㅅㅇㅈ` encuentra `사용자`, y `ㅈㅁ` encuentra `주문 내역`. Un grupo consonántico que un método de entrada de Windows compone a partir de dos iniciales escritas seguidas, como `ㅄ`, cuenta como las dos (`ㅂㅅ`), mientras que una consonante doble como `ㄲ` sigue siendo una sola letra. El texto almacenado descompuesto, como los nombres de archivo de macOS, coincide como si estuviera compuesto.  
+Primero aparecen las filas cuyo texto completo coincide con la búsqueda, letra por letra o inicial por inicial; después, las filas que empiezan por ella, y luego, las que la contienen. Con `@` y `:`, las filas que contienen la búsqueda tal como se ha escrito aparecen antes que todas estas, en el orden del documento. El resaltado abarca sílabas completas, así que `상` resalta `사용` en `사용자`.

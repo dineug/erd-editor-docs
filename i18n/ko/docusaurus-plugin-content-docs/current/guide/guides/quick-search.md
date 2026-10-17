@@ -1,11 +1,11 @@
 ---
 sidebar_position: 7
-description: 커맨드 팔레트에서 탭 전환, 현재 탭의 명령 실행, 탐색기 열기와 닫기, 테마나 표시 언어 변경, 접두사를 입력해 테이블·컬럼·코멘트·메모로 이동.
+description: 명령 팔레트에서 탭 전환, 현재 탭의 명령 실행, 탐색기 열기와 닫기, 테마나 표시 언어 변경, 접두사를 입력해 테이블·컬럼·코멘트·메모로 이동.
 ---
 
 # 빠른 검색
 
-빠른 검색은 에디터의 커맨드 팔레트입니다.  
+빠른 검색은 에디터의 명령 팔레트입니다.  
 현재 탭에서 사용 가능한 명령을 나열합니다. 검색어를 `#`, `@`, `:`로 시작하면 명령 대신 다이어그램을 검색해 테이블, 컬럼, 코멘트나 메모로 바로 이동합니다.
 
 단축키 `Ctrl + K` (Windows/Linux) or `⌘ + K` (Mac)로 열거나, 툴바의 `Search`를 클릭해 엽니다.  
@@ -40,7 +40,7 @@ Schema SQL 탭에서는 `Database`가 다시 표시되고, `Bracket`도 표시�
 
 Code Generator 탭에서는 `Database`, 언어가 `Doctrine`, `JPA`, `SeaORM`일 때의 `Bracket`, 이어서 `Language`, `Table Name Case`, `Column Name Case`, 그리고 탭의 옵션 패널을 표시하거나 숨기는 `Code Generator: Options panel`이 표시됩니다. 각 대상이 생성하는 코드는 [코드 생성](./code-generator.md) 문서를 참고하세요.
 
-Visualization과 Settings 탭에는 자체 명령이 없으며, `Tab`과 아래에서 설명하는 모든 탭에 표시되는 명령만 표시됩니다.
+Visualization과 설정 탭에는 자체 명령이 없으며, `Tab`과 아래에서 설명하는 모든 탭에 표시되는 명령만 표시됩니다.
 
 모든 탭에서, 읽기 전용 에디터에서도 목록의 끝 가까이에는 `Toggle Explorer`가 있으며, 단축키 `Ctrl + F` (Windows/Linux) or `⌘ + F` (Mac)가 표시됩니다. `find`, `replace`, `rename`, `tree`, `outline`, `objects`를 입력해도 찾을 수 있습니다.  
 실행하면 팔레트가 닫히고 캔버스에서 단축키를 눌렀을 때와 같은 동작을 합니다. 툴바의 `Explorer` 버튼이 눌린 상태로 표시되는 동안, 즉 ERD 탭에서 탐색기가 열려 있고 Zen 모드로 숨겨져 있지 않은 동안에는 탐색기를 닫습니다. 그 밖의 경우에는 ERD 탭으로 전환하고 탐색기를 검색 상태로 열며, 커서는 Find 입력란에 놓입니다. [열기와 닫기](./explorer.md#열기와-닫기) 문서를 참고하세요. Diff Viewer, Time Travel, 자동 배치 미리보기가 열려 있는 동안에는 이 항목이 표시되지 않습니다.

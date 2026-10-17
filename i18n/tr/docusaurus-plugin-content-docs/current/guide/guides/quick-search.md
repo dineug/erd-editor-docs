@@ -1,0 +1,90 @@
+---
+sidebar_position: 7
+description: Komut paletini açarak sekmeler arasında geçiş yapma, geçerli sekme için bir komut çalıştırma, Gezgini açma veya kapatma, temayı ya da görüntüleme dilini değiştirme veya bir önek yazarak bir tabloya, sütuna, açıklamaya ya da nota atlama.
+---
+
+# Hızlı arama
+
+Hızlı arama, düzenleyicinin komut paletidir.  
+Bulunduğunuz sekmede kullanılabilen komutları listeler. Bunun yerine diyagramda arama yapıp bir tabloya, bir sütuna ya da bir açıklamaya veya nota atlamak için aramaya `#`, `@` veya `:` ile başlayın.
+
+`Ctrl + K` (Windows/Linux) veya `⌘ + K` (Mac) tuşlarıyla açın ya da araç çubuğundaki `Search` düğmesine tıklayın.  
+Aynı kısayol onu kapatır; `Esc` tuşu ve panelin dışına yapılan bir tıklama da öyle. Hızlı aramayı açmak Tablo özelliklerini, [tema oluşturucuyu](./language-and-theme.md#theme), [`Display Language`](./language-and-theme.md#picking-a-language) seçicisini, [`Export image`](./file-import-export.md#image) iletişim kutusunu ve [Sütunları eşle](./relationship-editing.md#map-columns) iletişim kutusunu kapatır; “Sütunları eşle” iletişim kutusunda seçtikleriniz de atılır. Bir tablo hücresini, bir notu veya bir tablo grubunun adını düzenlerken açılmaz.
+
+Araç çubuğunda `Search` düğmesinin hemen ardından gelen düğme `Explorer` düğmesidir. Diyagramı tuvalin sol kenarına yerleşik bir ağaçta gösteren ve en üstünde Bul ve değiştir bulunan [Gezgini](./explorer.md) açar veya kapatır.  
+Paleti açmak Gezgini açık bırakır; bu durumda `Esc` tuşu yalnızca paleti kapatır. Palette basılan `Ctrl + F` (Windows/Linux) veya `⌘ + F` (Mac) paleti kapatır ve klavye odağını Gezginin Bul alanına götürür; Gezgin görünmüyorsa onu aramasıyla açar. `Toggle Explorer` öğesinin aksine bu tuş, paletten Gezgini hiçbir zaman kapatmaz. [Açma ve kapatma](./explorer.md#opening-and-closing) bölümüne bakın. Fark görüntüleyici, Zaman yolculuğu veya Otomatik düzenin önizlemesi açıkken düzenleyici bu tuşu işlemez: Palet açık kalır ve tuş tarayıcıya veya ana uygulamaya geçer. [Tarayıcının bulma çubuğu](./find-and-replace.md#the-browsers-find-bar) bölümüne bakın.  
+Düzenleyiciyi gömen bir ana uygulama Hızlı aramayı başka bir tuşa bağlayabilir; bu durumda `Search` düğmesinin araç ipucu o tuşu gösterir. [Kısayollar](./settings.md#shortcuts) bölümüne bakın.
+
+![Paleti ⌘ + K ile açma, ardından #pay ile bir tabloya, @price ile bir sütuna ve :address ile bir tablo açıklamasına atlama](/img/demo-quick-search.webp)
+
+## Arama ve gezinme {#searching-and-navigating}
+
+Listeyi filtrelemek için yazın. Her tuş vuruşu önünüzdeki listenin tamamında aramayı baştan yapar; bu nedenle karakter silmek veya hiçbir şey bulamayan bir sözcüğün üzerine yeni bir sözcük yazmak eşleşen öğeleri geri getirir.  
+Eşleşme bulanıktır ve hem öğenin adını hem de yanında gösterilen anahtar sözcükleri kapsar. Örneğin, `Import` alt menüsünde `sdl` araması `GraphQL` öğesini, `dbdiagram` araması `DBML` öğesini, `azimutt` araması da `AML` öğesini bulur. Küçük bir yazım hatasıyla da öğe yine bulunur; `tabel` araması `New Table` öğesini, `imprt` araması da `Import` öğesini bulur. Ancak yazdığınıza yalnızca uzaktan benzeyen bir öğe yer almaz: `memo` araması yalnızca `New Memo` öğesini listeler. Adı veya anahtar sözcükleri yazdığınızı büyük/küçük harf ayrımı yapmadan içeren bir öğe her zaman listelenir; bulanık eşleşmenin kaçırdığı böyle bir öğe bulanık eşleşmelerden sonra gelir. Yazdığınız metin, bir öğede geçtiği her yerde büyük/küçük harf ayrımı yapmadan vurgulanır.  
+İngilizce dışındaki bir görüntüleme dilinde komutlar ve alt menü öğeleri, listenin göstermediği İngilizce adları ve anahtar sözcükleriyle de bulunur; bu nedenle `new table` araması, hangi dilde gösterilirse gösterilsin `New Table` öğesini bulur.  
+Listede `↑` ve `↓` tuşlarıyla ilerleyin – liste iki uçta da başa ya da sona sarar – ve vurgulu öğeyi `Enter` tuşuyla çalıştırın. Kendine ait bir kısayolu olan komut, bu kısayolu satırının sonunda gösterir: sağda ya da sağdan sola yazılan bir görüntüleme dilinde solda. Bir giriş yöntemiyle birleştirme hâlâ sürerken, örneğin bir Korece hecenin ortasındayken, `↑`, `↓` ve `Enter` tuşları giriş yöntemine aittir; ne vurguyu taşır ne de bir öğeyi çalıştırır.
+
+`Database`, `Import` veya `Auto Layout` gibi bir öğe bir alt menü açar: Alt menünün öğeleri listenin yerini alır ve arama kutusu temizlenir. `Database`, `Bracket`, `Language`, iki ad biçimi öğesi, `Schema SQL: Statements`, `Schema SQL: Header`, `Theme` ve `Display Language` öğelerinin alt menüleri geçerli seçimi işaretler ve vurgu bu seçimin üzerindeyken açılır, böylece `Enter` tuşu seçimi korur; diğer alt menüler hiçbir şey vurgulanmadan açılır.  
+Filtreleme her zaman yalnızca önünüzdeki listeye uygulanır ve bir üst düzeye geri dönmenin bir yolu yoktur; bu nedenle baştan başlamak için paleti kapatıp yeniden açın. Bir alt menüde `#`, `@`, `:` ve `?` [önek](#searching-the-diagram) değil, düz metindir.
+
+## Paletin listeledikleri {#what-the-palette-lists}
+
+Liste bulunduğunuz sekmeye bağlıdır. Her sekmenin listesi, `Entity Relationship Diagram`, `Visualization`, `Schema SQL`, `Code Generator` veya `Settings` sekmesine geçen `Tab` öğesiyle başlar; zaten bulunduğunuz sekme bunlar arasında yer almaz.
+
+ERD sekmesinde: `Database`, `Import`, `Import and Add` ve `Export`, ardından `New Table`, `New Memo`, `New Table Group` ve `Group Selected Tables`, dört ilişki türü ve `Auto Layout`. Tablolar burada listelenmez; [birine gitmek](#searching-the-diagram) için `#` yazın.  
+Salt okunur bir düzenleyicide `Import and Add` yer almaz; [View Option](./table-related-functions.md#table-view-options) → `Memos` notları gizlerken de `New Memo` yer almaz. `New Table Group` tuvalde bir [tablo grubu](./table-groups.md) çizmeye başlar, `Group Selected Tables` ise seçili tabloları yeni bir gruba koyar ve grubun ad alanını açar. İkisi de salt okunur bir düzenleyicide ve View Option → `Table Groups` grupları gizlerken yer almaz; `Group Selected Tables` ayrıca en az bir tablonun seçili olmasını gerektirir. Satırlarında tuşlar gösterilir: [grup çizmek](./table-groups.md#drawing-a-group) için `Alt + G` (Windows/Linux) veya `⌥ + G` (Mac), [seçili tabloları gruplamak](./table-groups.md#grouping-selected-tables) için `T`, ardından `G`.  
+Bunlar, tablo menüsündeki `Group selected tables` öğesine karşılık gelen `Group Selected Tables` dışında, tuvalin bağlam menüsüyle aynı komutları çalıştırır; `View Option` ve `Diff Viewer` yalnızca bağlam menüsünde bulunur. `Export` öğesi bağlam menüsündekiyle aynı `json`, `Schema SQL` ve `Image` öğelerini sunar ve içinde `png` veya `svg` yazmak `Image` öğesini bulur.  
+Her biçimin, [İçe aktar ve ekle](./file-import-export.md#import-and-add) işleminin ve [görüntü dışa aktarmanın](./file-import-export.md#image) ne yaptığı için [Dosyaları içe veya dışa aktarma](./file-import-export.md) sayfasına, veritabanı seçiminin neyi etkilediği için de [Tabloyla ilgili işlevler](./table-related-functions.md#databases) sayfasına bakın.
+
+Şema SQL sekmesinde: yine `Database` ve oluşturulan SQL'de tablo, sütun, kısıtlama ve dizin adlarını saran tırnak karakterini ayarlayan `Bracket` – `SingleQuote`, `DoubleQuote`, `Backtick` ya da hiç tırnak kullanmamak için `None`. Ardından sekmenin seçenekler paneliyle aynı seçimleri yapan ancak yalnızca seçili veritabanının yazdıklarını listeleyen `Schema SQL: Statements` ve `Schema SQL: Header` ile o paneli gösteren veya gizleyen `Schema SQL: Options panel`. Her seçimin ne yazdığı için [Şema SQL](./schema-sql.md) sayfasına bakın.
+
+Kod oluşturucu sekmesinde: `Database`, dil `Doctrine`, `JPA` veya `SeaORM` iken `Bracket`, ardından `Language`, `Table Name Case`, `Column Name Case` ve sekmenin seçenekler panelini gösteren veya gizleyen `Code Generator: Options panel`. Her hedefin ne ürettiği için [Kod oluşturucu](./code-generator.md) sayfasına bakın.
+
+Görselleştirme ve Ayarlar sekmelerinin kendine ait komutu yoktur; yalnızca `Tab` öğesi ve her sekmenin listelediği aşağıdaki komutlar bulunur.
+
+Salt okunur bir düzenleyicide de her sekmenin listesinin sonlarına doğru `Toggle Explorer` öğesi yer alır ve kısayolunu, yani `Ctrl + F` (Windows/Linux) veya `⌘ + F` (Mac) tuşlarını gösterir. `find`, `replace`, `rename`, `tree`, `outline` veya `objects` yazmak da onu bulur.  
+Onu çalıştırmak paleti kapatır ve kısayolun tuvalde yaptığını yapar. Araç çubuğundaki `Explorer` düğmesi basılı göründüğü sürece, yani Gezgin ERD sekmesinde açıkken ve Zen modu ile gizlenmemişken, Gezgini kapatır. Aksi hâlde ERD sekmesine geçer ve Gezgini, metin imleci Bul alanında olacak şekilde aramasıyla açar. [Açma ve kapatma](./explorer.md#opening-and-closing) bölümüne bakın. Fark görüntüleyici, Zaman yolculuğu veya Otomatik düzenin önizlemesi açıkken yer almaz.
+
+### Tema ve görüntüleme dili {#theme-and-display-language}
+
+Her sekme, salt okunur bir düzenleyicide de, `Toggle Explorer` öğesinden sonra `Theme` ve `Display Language` öğelerini listeler. Her biri yalnızca düzenleyicinin ilgili seçiciyi sunduğu yerde listelenir; bunu araç çubuğundaki `Theme` ve `Display Language` düğmeleri gösterir. Web uygulaması, Google Drive, VS Code, JetBrains IDE'leri ve Obsidian ikisini de sunar. [Her ana uygulamada](./language-and-theme.md#in-each-host) bölümüne bakın.
+
+`Theme` öğesi, geçerli görünüş işaretli olarak `System`, `Light` ve `Dark` seçeneklerini açar. Birini seçmek, tema oluşturucudaki `Appearance` düğmelerinin yaptığı gibi yalnızca görünüşü değiştirir ve gri tonu ile vurgu rengini korur.  
+`Display Language` öğesi, geçerli seçenek işaretli olarak önce `System` seçeneğini, ardından her biri kendi adıyla ve seçicideki sırayla 25 dili açar. Burada bir dil İngilizce adıyla veya koduyla da bulunur: `german` veya `de-DE` araması `Deutsch` seçeneğini, `korean` araması da `한국어` seçeneğini bulur.  
+İkisinden birinde yapılan seçim hemen etkili olur, paleti kapatır ve tema oluşturucuda veya `Display Language` seçicisinde yapılan bir seçim gibi saklanır. Palet açıkken görüntüleme dili değişirse liste, yazdığınızı ve bulunduğunuz alt menüyü koruyarak yeni dile geçer.
+
+## Diyagramda arama {#searching-the-diagram}
+
+Komutlar yerine diyagramda arama yapmak için aramaya bir önekle başlayın: tablolar için `#`, sütunlar için `@`, açıklamalar ve notlar için `:` ya da önekleri listelemek için `?`. Bir önek her sekmeden çalışır. Önek yalnızca ilk karakter olduğunda sayılır; önündeki boşluklar yok sayılır. Önekten sonra boşluk bırakmak isteğe bağlıdır, bu nedenle `#users` ve `# users` aynı aramadır; bir Japonca veya Çince giriş yönteminin yazdığı tam genişlikli `＃`, `＠`, `：` ve `？` karakterleri de önek sayılır.  
+En üst düzeyde giriş alanı boşken altındaki bir satır dört öneki gösterir; birini yazmak için ona tıklayın. Bir önek etkin olduğu sürece giriş alanının sonunda önekin kapsamı yazar: `Tables`, `Columns`, `Comments & memos` veya `Help`. Komutları geri getirmek için öneki silin.
+
+`#` öneki tabloları, her birinin yanında `Table` yazacak şekilde listeler; adı boş olan bir tablo `unnamed` olarak listelenir. `#` önekinden sonra hiçbir şey yoksa tablolar ada göre sıralanır. `#` önekinden sonraki metin, yukarıdaki gibi bulanık olarak yalnızca tablo adlarıyla eşleştirilir ve adı bu metni içeren tablolar önce gelir. Tablo grubu adları ve dizin adları hiçbir önekle aranmaz; [Bul ve değiştir](./find-and-replace.md#what-it-searches) ikisinde de arama yapar.
+
+`@` öneki sütunları adlarıyla listeler; her birinin yanında `users.email · Column` gibi bulunduğu yer yazar. `@` önekinden sonraki metin, büyük/küçük harf ayrımı yapmadan sütun adında geçmelidir; bu eşleşme bulanık değildir. İlk `.` karakterinden önceki metin, aramayı adında bu metin geçen tablolarla sınırlar: `@users.em` araması adında `users` geçen tablolarda `em` içeren sütunları, `@users.` araması bu tabloların sütunlarını listeler, `@.em` araması da her tabloda arama yapar. `@` önekinden sonra hiçbir şey yoksa sütunlar filtrelenmeden listelenir.
+
+`:` öneki tablo açıklamalarını, sütun açıklamalarını ve notları listeler, adları asla listelemez. Her satır, eşleşmenin çevresindeki metinden bir parça gösterir ve yanında `users · Table comment`, `users.email · Column comment` veya `Memo` yazar. `:` önekinden sonraki metin, `@` önekinde olduğu gibi büyük/küçük harf ayrımı yapmadan açıklamada veya notta geçmelidir. `:` önekinden sonra hiçbir şey yoksa boş olmayan açıklamalar ve notlar listelenir. View Option → `Memos` notları gizlerken `:` öneki hiçbir not listelemez.
+
+`@` ve `:` önekleri satırlarını belgedeki sıralarıyla listeler: tablo tablo, her tablonun açıklaması sütun sırasıyla gelen sütunlarından önce, notlar ise en sonda.
+
+`?` öneki `Tables`, `Columns` ve `Comments & memos` öğelerini listeler; `?` önekinden sonraki metin bunları filtreler. Birini seçmek giriş alanının içeriğini o öğenin önekiyle değiştirir ve paleti açık bırakır.
+
+Önekli bir liste, kaç tane olursa olsun her eşleşmeyi içerir. Araması hiçbir şey bulamayan bir önek listeyi hiçbir ileti göstermeden boş bırakır.
+
+Bir tablo, sütun, açıklama veya not seçmek paleti kapatır ve başka bir sekmedeyseniz ERD sekmesine geçer.  
+Seçilen öğe zaten iyi görünmüyorsa tuval ona kaydırılır. [Atlamanın varış noktası](./table-related-functions.md#where-a-jump-lands) bölümüne bakın. Ardından bir tablo tek başına seçilir ve öne getirilir; odak zaten o tablonun içinde değilse tablonun adı odağa alınır.  
+Bir not tek başına seçilir ve öne getirilir. Bir sütun veya açıklama için ise tablosu tek başına seçilir, öne getirilir ve metni tutan hücre ya da açıklamayı bir [tablo görünüm seçeneği](./table-related-functions.md#table-view-options) gizliyorsa yanındaki ad odağa alınır.  
+Hiçbir atlama çizilmekte olan bir ilişkiyi başlatmaz veya tamamlamaz.
+
+`Match Case`, `Match Whole Word` veya `Use Regular Expression` seçenekleri için ya da metin değiştirmek için Gezginin en üstündeki [Bul ve değiştir](./find-and-replace.md) özelliğini kullanın.
+
+## Hiçbir komut eşleşmediğinde {#when-no-command-matches}
+
+En üst düzeyde ve önek olmadan, listelenen hiçbir komut yazdığınızı büyük/küçük harf ayrımı yapmadan içermiyorsa, komutların ardından her biri simge olarak kendi önekini gösteren üç satır gelir: `Search tables for "…"`, `Search columns for "…"` ve `Search comments & memos for "…"`. Birini seçmek metninizin önüne o öneki yazar, böylece `users` metni `#users` olur ve palet bu sonuçlarla açık kalır.  
+Arama hiç komut bulamazsa listenin üstünde `No commands match` görünür ve liste bu durumda yalnızca üç satırı içerir. Arama yalnızca metni içermeyen komutlar bulursa önce bu komutlar gelir: ERD sekmesinde hiçbir tablo seçili değilken `tables` araması üç satırdan önce `New Table`, `Database` ve sunulduğu yerde `New Table Group` öğelerini listeler. Bir tablo seçiliyken, sunulduğu yerde `Group Selected Tables` öğesi `tables` metnini içerir, bu nedenle üç satır görünmez.  
+Bir alt menüde, hiçbir şey bulamayan bir arama listeyi hiçbir ileti göstermeden boş bırakır.
+
+## Korece arama {#searching-in-korean}
+
+Hangul içeren bir arama komutlarda, alt menülerde ve her önekin altında harf düzeyinde de eşleşir.  
+Korece bir giriş yönteminin geçtiği her ara adım, yazmakta olduğunuz satırı bulmaya devam eder; bu nedenle `ㅅ`, `사`, `상`, `사요` ve `사용` aramalarının hepsi `사용자` metnini bulur. Yalnızca ilk ünsüzlerden oluşan bir arama, boşluklar atlanarak hecelerin ilk ünsüzleriyle eşleşir: `ㅅㅇㅈ` araması `사용자` metnini, `ㅈㅁ` araması da `주문 내역` metnini bulur. Bir Windows giriş yönteminin art arda yazılan iki ilk ünsüzden birleştirdiği `ㅄ` gibi bir ünsüz kümesi iki ünsüz (`ㅂㅅ`) sayılır; `ㄲ` gibi bir çift ünsüz ise tek harf olarak kalır. macOS dosya adlarında olduğu gibi ayrışık biçimde saklanan metin, birleşik biçimdeymiş gibi eşleşir.  
+Önce, metninin tamamı harf harf ya da ilk ünsüz ilk ünsüz arama metnine denk gelen satırlar gelir; ardından arama metniyle başlayan satırlar, ardından da arama metnini içeren satırlar. `@` ve `:` öneklerinde, arama metnini yazıldığı gibi içeren satırlar belge sırasıyla bunların hepsinden önce gelir. Vurgu hecelerin tamamını kapsar, bu nedenle `상` araması `사용자` içindeki `사용` kısmını vurgular.

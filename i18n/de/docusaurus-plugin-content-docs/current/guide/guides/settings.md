@@ -1,0 +1,150 @@
+---
+sidebar_position: 14
+description: Datentyp-Synchronisierung für Beziehungen, maximale Kommentarbreite, Neuberechnung der Tabellenbreite, Sperren von Einstellungen (Ansicht, Registerkarte und Codeeinstellungen), Anzeigereihenfolge der Spalten und die Liste der Tastenkombinationen.
+---
+
+# Einstellungen
+
+Öffnen Sie die Einstellungen mit der Schaltfläche `Settings` in der Symbolleiste oder über die [Schnellsuche](./quick-search.md) unter `Tab`.
+Der Einstellungsbildschirm hat zwei Registerkarten: `Preferences` und `Shortcuts`. Zuerst öffnet sich `Preferences`, außer beim Öffnen über den Eintrag `Shortcuts` des [Willkommensbildschirms](./editing-start.md#welcome-screen), der `Shortcuts` öffnet.
+
+Das Design und die Anzeigesprache befinden sich nicht auf diesem Bildschirm. Die Schaltflächen `Theme` und `Display Language` der Symbolleiste öffnen sie – siehe [Sprache und Design](./language-and-theme.md).
+
+## Datentyp-Synchronisierung für Beziehungen {#relationship-datatype-sync}
+
+Legt fest, ob Datentypen synchronisiert werden. Die Einstellung ist standardmäßig eingeschaltet.
+Wenn Sie dann den Datentyp einer Spalte ändern, wird er auf jede Spalte übertragen, die über eine Beziehung mit ihr verbunden ist, und zwar entlang der Kette von beiden Enden aus, sodass ein Fremdschlüssel nie von dem Schlüssel abweicht, den er referenziert.
+Von einem Schlüssel zu seinen Fremdschlüsseln wird ein Serial-Typ als der Ganzzahltyp weitergegeben, den er speichert, wie beim Zeichnen einer Beziehung – siehe [Identifizierende Beziehungen](./relationship-editing.md#identifying-relationships). Wenn Sie also unter PostgreSQL einen Schlüssel auf `serial` ändern, erhalten seine Fremdschlüssel `integer`, und die Änderung setzt sich von dort aus die Kette hinunter fort.
+Von einem Fremdschlüssel zurück zu seinem Schlüssel wird der Typ so weitergegeben, wie er geschrieben ist, nur dass ein Serial-Schlüssel seinen Typ behält und die Änderung dort endet.
+Auch der Dialog [Spalten zuordnen](./relationship-editing.md#map-columns) folgt dieser Einstellung: Solange sie eingeschaltet ist, erhält jede vorhandene Spalte, die der Dialog zuordnet, den Typ, den ihr Elternschlüssel einem Fremdschlüssel gibt, und die Änderung setzt sich wie oben entlang der Beziehungen fort. Solange sie ausgeschaltet ist oder wenn der Schlüssel keinen Datentyp hat, behält die Spalte ihren eigenen.
+
+<img src="/img/settings-relationship-data-type-sync.png" width="290" alt="Einstellung zur Datentyp-Synchronisierung für Beziehungen" loading="lazy" />
+
+![members.id auf BIGINT UNSIGNED ändern, wodurch jede damit verbundene member_id aktualisiert wird](/img/demo-relationship-data-type-sync.webp)
+
+## Maximale Kommentarbreite {#maximum-comment-width}
+
+Legt die maximale Breite der Kommentarspalte in Pixeln fest (`60` ~ `200`).
+Das Ausschalten des Schalters hebt die Begrenzung auf, und das Eingabefeld ist deaktiviert, solange er ausgeschaltet ist.
+Beim Einschalten beginnt der Wert bei `60px`. Ein außerhalb des Bereichs eingegebener Wert wird auf die nächstgelegene Bereichsgrenze gesetzt.
+
+![Maximum comment width einschalten, 120 eingeben und die Registerkarte ERD mit den auf diese Breite gekürzten Kommentaren](/img/demo-settings-comment-width.webp)
+
+## Tabellenbreite neu berechnen {#recalculation-table-width}
+
+Drücken Sie `Sync`, um die Breite jeder Tabelle und jeder Spaltenzelle passend zu ihrem aktuellen Text neu zu berechnen und die Verbindungslinien der Beziehungen um die neuen Größen herum neu zu zeichnen.
+Eine Meldung `Recalculated table width` bestätigt dies.
+Die Breiten werden bei jedem Laden eines Dokuments von selbst neu berechnet, daher ist dies nur nötig, wenn sie nach einer Änderung der Schriftart oder der Darstellung nicht mehr stimmen.
+Die Breiten werden nicht in der Datei gespeichert, daher ändert `Sync` die Datei nie.
+
+## Sperren {#lock}
+
+Die Liste `Lock` enthält sechs Einstellungen. Solange die Sperre einer Einstellung eingeschaltet ist, behält die Datei den Wert, den die Einstellung beim Sperren hatte, sodass eine Änderung auf dem Bildschirm die Datei unverändert lässt.
+
+| Zeile | Was die Datei behält | In einem neuen Diagramm |
+| --- | --- | --- |
+| `Viewport` | Die Zoomstufe und die Ansichtsposition der ERD-Zeichenfläche, unter einer einzigen Sperre | `100% · 0, 0` |
+| `Canvas Type` | Die Registerkarte, auf der sich das Diagramm öffnet: `ERD`, `Visualization`, `Schema SQL` oder `Code Generator` | `ERD` |
+| `Language` | Die Sprache des [Codegenerators](./code-generator.md#language) | `GraphQL` |
+| `Table Name Case` | Die [Schreibweise der Tabellennamen](./code-generator.md#name-case) des Codegenerators | `Pascal` |
+| `Column Name Case` | Die [Schreibweise der Spaltennamen](./code-generator.md#name-case) des Codegenerators | `Camel` |
+| `Bracket Type` | Die Option `Bracket` der Registerkarte [Schema SQL](./schema-sql.md#database-and-bracket) und der Ziele des [Codegenerators](./code-generator.md#bracket), die sie anbieten | `None` |
+
+Jede Zeile zeigt einen Wert und eine Sperrschaltfläche, und ein Klick auf die Schaltfläche schaltet genau diese eine Sperre ein oder aus.
+Solange eine Sperre eingeschaltet ist, zeigt die Schaltfläche ein geschlossenes Schloss mit dem Tooltip `Unlock Viewport` (entsprechend für jede Zeile), und der Wert mit dem Tooltip `Locked value` ist der, den die Datei behält.
+Solange sie ausgeschaltet ist, zeigt die Schaltfläche ein offenes Schloss mit dem Tooltip `Lock Viewport`, und der abgeblendete Wert mit dem Tooltip `Current value` ist die Einstellung in ihrem aktuellen Zustand.
+`Viewport` zeigt zuerst den Zoom und dann die Ansichtsposition, etwa `75% · -40, 91`. Die Ansichtsposition ist der Punkt auf dem Bildschirm in Pixeln, an dem die Koordinate `0, 0` des Diagramms liegt, und eine Koordinate ab tausend wird abgekürzt, wie in `1.2k` oder `-24k`.
+
+Beim Sperren wird die Einstellung so übernommen, wie sie in diesem Moment ist.
+Solange eine Sperre eingeschaltet ist, funktioniert die Einstellung auf dem Bildschirm weiterhin: Sie können scrollen und zoomen, die Registerkarte wechseln und in den Menüs, den Optionsbereichen oder der Schnellsuche eine andere Sprache, Schreibweise oder einen anderen Begrenzer wählen.
+Die Datei behält jedoch den gesperrten Wert, und die Zeile zeigt ihn weiterhin an, sodass sich das Diagramm wieder in der gesperrten Ansicht, auf der gesperrten Registerkarte und mit der gesperrten Sprache, den gesperrten Schreibweisen und dem gesperrten Begrenzer öffnet. Auch ein JSON-Export schreibt die gesperrten Werte.
+Um zu speichern, was der Bildschirm zeigt, schalten Sie die Sperre aus, und die Datei folgt von da an der Einstellung: Ist `Viewport` ausgeschaltet, öffnet sich das Diagramm dort, wo Sie es verlassen haben. Um stattdessen einen neuen Wert zu sperren, etwa eine neue Startansicht, schalten Sie die Sperre aus und wieder ein.
+Zeigt die gesperrte Ansicht beim Öffnen der Datei nichts vom Diagramm, bewegt sich die Anzeige trotzdem zum Diagramm, und der gesperrte Wert bleibt unverändert.
+`Canvas Type` behält nie die Registerkarte Einstellungen. Beim Einschalten wird die letzte andere Registerkarte gesperrt, auf der Sie waren, und solange die Sperre ausgeschaltet ist, nennt die Zeile diese Registerkarte.
+
+![Viewport entsperren, das Diagramm scrollen und zoomen und Viewport in der neuen Ansicht, die seine Zeile zeigt, wieder sperren](/img/demo-settings-locks.webp)
+
+Das Ein- oder Ausschalten einer Sperre ändert die Datei, da die Datei speichert, welche Sperren eingeschaltet sind, wird aber wie der Rest der Registerkarte Einstellungen nicht im [Verlauf](./undo-redo.md#what-the-history-records) aufgezeichnet. In einem schreibgeschützten Editor bewirken die Sperrschaltflächen nichts.
+Jede andere Einstellung wird so gespeichert, wie sie ist: die Datenbank, die Schalter in [`View Option`](./table-related-functions.md#table-view-options) und der Rest der Registerkarte `Preferences`.
+
+In einem neuen Diagramm, also einem von Grund auf neu begonnenen, sind alle Sperren eingeschaltet: eine leere Datei, die in VS Code, Obsidian oder einer JetBrains-IDE geöffnet wird (`ERD Editor: Create new diagram` und `New ERD` in Obsidian erstellen eine solche), ein neues Schema in der Web-App, eine Datei, die über das Menü New von Google Drive erstellt wird, oder ein Element `<erd-editor>`, dem kein Wert übergeben wird.
+Auch ein Schema oder eine Datei in Google Drive, die die Web-App durch das Importieren einer SQL-, DBML-, AML- oder GraphQL-Datei erstellt, beginnt mit allen eingeschalteten Sperren. Was aus einer JSON-Datei erstellt wird, behält die Sperren, die diese Datei verzeichnet.
+Eine Datei, die Sie öffnen, behält die Sperren, mit denen sie gespeichert wurde, jeweils mit ihrem gesperrten Wert.
+Eine Datei, die keine Sperren verzeichnet, etwa eine, die von einer Version vor Einführung der Sperren gespeichert oder von Hand geschrieben wurde, öffnet sich mit allen eingeschalteten Sperren: die Ansicht auf `100% · 0, 0` und die Registerkarte auf `ERD`, gleich welche Ansicht und Registerkarte sie gespeichert hat, und ihre Sprache, ihre Schreibweisen und ihr Begrenzertyp so gesperrt, wie sie sie gespeichert hat.
+Auch ein `Import`, der das Diagramm ersetzt, setzt die Sperren: Eine JSON-Datei bringt die Sperren mit, die sie verzeichnet, samt den Werten, die diese halten, und eine SQL-, DBML-, AML- oder GraphQL-Datei behält Ihre Sperren bei, setzt die Ansicht aber auf `100% · 0, 0` zurück, ob gesperrt oder nicht – siehe [Externe Dateien importieren](./file-import-export.md#importing-external-files). Wird der Import rückgängig gemacht, kehren die Sperren und gesperrten Werte zurück, die er ersetzt hat.
+
+Eine Änderung, die eine Sperre aus der Datei heraushält, zählt nicht als Änderung. VS Code markiert die Registerkarte nicht als geändert, und Obsidian und eine JetBrains-IDE lassen die Datei unverändert, sowohl wenn sie von selbst speichern als auch wenn die Registerkarte geschlossen wird.
+Sind alle Sperren eingeschaltet, erscheinen das Umsehen in einem Diagramm, das Wechseln der Registerkarte und das Ausprobieren einer anderen Sprache, Schreibweise oder eines anderen Begrenzers daher nie in `git diff`.
+Ist `Viewport` ausgeschaltet, ändern Scrollen und Zoomen die Datei, und ist `Canvas Type` ausgeschaltet, gilt das auch für das Wechseln der Registerkarte, einschließlich des Wechsels zur Registerkarte Einstellungen.
+Die leere Datei eines neuen Diagramms bleibt leer bis zur ersten Änderung, die die Datei übernimmt: eine Bearbeitung, eine Änderung an einer Einstellung, die keine Sperre hält, oder das Ein- oder Ausschalten einer Sperre.
+Wird ein Diagramm ohne eine solche Änderung geöffnet und wieder geschlossen, bleibt die Datei unverändert, gleich welche Version oder welcher Rechner sie geschrieben hat. Die Datei enthält nur, was das Diagramm ausmacht, in einer festen Reihenfolge, und eine in einer älteren Form gespeicherte Datei wird einmalig, bei ihrer ersten solchen Änderung, in diese Form umgeschrieben – siehe [Speicherform und Laufzeitwert](../../api/advanced/schema.md#storage-form-and-runtime-value).
+In VS Code ist eine Revision, die mit `Reopen Editor With...` als Diagramm wieder geöffnet wird, etwa eine Git-Revision oder ein Eintrag aus Local History, schreibgeschützt und wird nie als geändert markiert.
+In Google Drive wird ein Scrollen, ein Zoomen oder ein Wechsel zu einer anderen Registerkarte nie für sich allein gespeichert, ob gesperrt oder nicht. Ist `Viewport` ausgeschaltet, wird die Ansicht nur zusammen mit einer anderen Änderung geschrieben, sodass sich eine Drive-Datei dort öffnet, wo die Ansicht beim letzten Speichern war, und dasselbe gilt für die Registerkarte, wenn `Canvas Type` ausgeschaltet ist.
+
+In einer [gemeinsamen Sitzung](../../api/advanced/collaborative-editing.md) erreicht das Ein- oder Ausschalten einer Sperre jeden Editor, und eine Sperre behält den Wert des Editors, der sie eingeschaltet hat.
+Das Ausschalten von `Language`, einer Schreibweise oder `Bracket Type` gibt jedem Editor den Wert, der in dem Editor angezeigt wird, der die Sperre ausgeschaltet hat, sodass alle denselben Wert speichern. Das Ausschalten von `Viewport` oder `Canvas Type` verändert bei niemandem die Ansicht oder die Registerkarte.
+Ein Coding-Agent, der über den MCP-Server arbeitet, hat kein Tool für die Sperren oder für die Einstellungen, die sie halten, und er liest eine gesperrte Sprache, Schreibweise oder einen gesperrten Begrenzertyp mit dem Wert, den die Datei behält. Nur seine Importe im Modus `replace` erreichen sie, wie ein `Import` – siehe [Einstellungen](../../mcp/tools.md#settings) und [Import](../../mcp/tools.md#import).
+
+## Spaltenreihenfolge anpassen {#adjusting-column-order}
+
+Legt die Anzeigereihenfolge der Spalten in Tabellen fest.
+Ziehen Sie eine Zeile, um sie zu verschieben – die ganze Zeile lässt sich ziehen, und das Griffsymbol kennzeichnet sie. Die sieben Zeilen sind in ihrer Standardreihenfolge `Name`, `DataType`, `Not Null`, `Unique`, `Auto Increment`, `Default` und `Comment`.
+Eine Zelle, die durch eine [Ansichtsoption für Tabellen](./table-related-functions.md#table-view-options) ausgeblendet ist, behält ihren Platz in der Liste, sodass die Reihenfolge für die jeweils angezeigten Zellen gilt.
+Die Markierung für [Alternativschlüssel](./table-related-functions.md#alternate-keys) (`AK1.1` usw.) gehört nicht zu diesen Zeilen. Sie steht in einer Zeile immer ganz hinten, nach der Zelle, die diese Reihenfolge an die letzte Stelle setzt.
+
+![Zu Column Order hinunterscrollen und die Zeile Comment nach oben unter Name ziehen, wodurch jeder Kommentar direkt hinter seinem Spaltennamen steht](/img/demo-settings-column-order.webp)
+
+## Tastenkombinationen {#shortcuts}
+
+Die Registerkarte `Shortcuts` ist eine schreibgeschützte Tabelle mit `Command` und `Keybinding`, die die Belegungen für die Plattform auflistet, die Sie verwenden.
+
+| Command | Windows/Linux | Mac |
+| --- | --- | --- |
+| Editing | `Enter` | `Enter` |
+| Stop | `ESC` | `ESC` |
+| Search | `Ctrl + K` | `⌘ + K` |
+| [Toggle Explorer](./explorer.md) | `Ctrl + F` | `⌘ + F` |
+| Undo | `Ctrl + Z` | `⌘ + Z` |
+| Redo | `Ctrl + Shift + Z` | `⌘ + Shift + Z` |
+| Add Table | `Alt + N` | `⌥ + N` |
+| Add Column | `Alt + Enter` | `⌥ + Enter` |
+| Add Memo | `Alt + M` | `⌥ + M` |
+| Add Table Group | `Alt + G` | `⌥ + G` |
+| Group Selected Tables | `T` und dann `G` | `T` und dann `G` |
+| Remove Table, Memo | `Ctrl + Backspace`, `Ctrl + Delete` | `⌘ + Backspace`, `⌘ + Delete` |
+| Remove Column | `Alt + Backspace`, `Alt + Delete` | `⌥ + Backspace`, `⌥ + Delete` |
+| Delete Selection | `Delete`, `Backspace` | `Delete`, `Backspace` |
+| Primary Key | `Alt + K` | `⌥ + K` |
+| Select All Table, Memo | `Ctrl + A`, `Ctrl + Alt + A` | `⌘ + A`, `⌘ + ⌥ + A` |
+| Select All Column | `Alt + A` | `⌥ + A` |
+| Relationship Zero One | `Ctrl + Alt + 1` | `⌘ + ⌥ + 1` |
+| Relationship Zero N | `Ctrl + Alt + 2` | `⌘ + ⌥ + 2` |
+| Relationship One Only | `Ctrl + Alt + 3` | `⌘ + ⌥ + 3` |
+| Relationship One N | `Ctrl + Alt + 4` | `⌘ + ⌥ + 4` |
+| Table Properties | `Alt + Space` | `⌥ + Space` |
+| Focus on this table | `Alt + F` | `⌥ + F` |
+| Zoom In | `Ctrl + Plus` | `⌘ + Plus` |
+| Zoom Out | `Ctrl + Minus` | `⌘ + Minus` |
+| Zoom Reset | `Ctrl + 0` | `⌘ + 0` |
+| Hand Tool | `Space` | `Space` |
+| Zen Mode | `Alt + Z` | `⌥ + Z` |
+
+Die meisten davon funktionieren nur auf der Registerkarte ERD und sind unterdrückt, solange die Schnellsuche, die Tabelleneigenschaften, die Diff-Ansicht, die Vorschau des Automatischen Layouts, die Zeitreise, der Dialog [`Export image`](./file-import-export.md#image) oder [`Map Columns`](./relationship-editing.md#map-columns) geöffnet ist.
+`Search`, `Toggle Explorer` und `Stop` sind die Ausnahmen: `Search` blendet die Schnellsuche auf jeder Registerkarte ein und aus, `Toggle Explorer` öffnet den [Explorer](./explorer.md#opening-and-closing) von jeder Registerkarte aus mit seiner Suche und holt die Registerkarte ERD nach vorn, und `Stop` ist die Taste, die die Schnellsuche, die Tabelleneigenschaften, die Diff-Ansicht, die Vorschau des Automatischen Layouts, die Zeitreise, den Dialog `Export image`, `Map Columns`, die Designauswahl, die Sprachauswahl `Display Language`, die Farbauswahl und ein geöffnetes Kontextmenü schließt.
+`Toggle Explorer` schließt den Explorer wieder, solange er auf der Registerkarte ERD geöffnet und nicht durch den Zen-Modus ausgeblendet ist, wie die Schaltfläche `Explorer` der Symbolleiste. Wenn die Schnellsuche, die Tabelleneigenschaften, die Designauswahl, die Sprachauswahl `Display Language`, der Dialog `Export image` oder `Map Columns` geöffnet ist, schließt die Tastenkombination stattdessen das Geöffnete und setzt den Tastaturfokus in die Suche des Explorers.
+`Toggle Explorer` bewirkt nichts, solange eine Zelle, eine Notiz oder der Name einer Tabellengruppe bearbeitet wird. Solange die Diff-Ansicht, die Vorschau des Automatischen Layouts oder die Zeitreise geöffnet ist, überlässt die Tastenkombination ihre Taste dem Browser oder dem Host – siehe [Die Suchleiste des Browsers](./find-and-replace.md#the-browsers-find-bar).
+Auf der Registerkarte ERD beendet `Stop` einen geöffneten Editor für eine Zelle oder Notiz, schließt das Namensfeld einer [Tabellengruppe](./table-groups.md), ohne die Gruppe umzubenennen, oder bricht das Zeichnen einer Beziehung oder einer Gruppe mit `New Table Group` ab und lässt die Auswahl, wie sie ist. Ist nichts davon geöffnet, hebt `Stop` die Auswahl auf, entfernt den Fokus von der fokussierten Zelle und schließt mit demselben Tastendruck eine geöffnete Farbauswahl. Eine geöffnete Designauswahl oder Sprachauswahl `Display Language` schließt sich in jedem Fall mit demselben Tastendruck.
+Ein geöffneter Explorer, eine geöffnete Designauswahl oder Sprachauswahl `Display Language` unterdrückt keine der Tastenkombinationen auf der Zeichenfläche. `Stop` schließt den Explorer nie. Zur Wirkung von `Stop` und den anderen Tasten im Explorer siehe [Tasten im Explorer](./explorer.md#keys-in-the-explorer), zu ihrer Wirkung in der Sprachauswahl siehe [Sprache auswählen](./language-and-theme.md#picking-a-language).
+`Delete Selection` entfernt alle ausgewählten Tabellen, Notizen und Tabellengruppen oder, wenn eine einzelne Tabelle mit einigen ihrer Spalten ausgewählt ist und der Zoom über `70%` liegt, diese Spalten – siehe [Tabellen und Notizen löschen](./table-related-functions.md#table-and-memo-deletion). `Remove Table, Memo` entfernt auch ausgewählte Tabellengruppen.
+`Add Table Group` beginnt das Zeichnen einer Gruppe mit [`New Table Group`](./table-groups.md#drawing-a-group), wie die Schaltfläche `New Table Group` der [Symbolleiste der Zeichenfläche](./table-related-functions.md#canvas-toolbar), und ein zweiter Druck bricht das Zeichnen ab. `Group Selected Tables` besteht aus zwei Tastendrücken ohne Zusatztaste, `T` und dann `G` innerhalb einer Sekunde. Die Tastenkombination legt die ausgewählten Tabellen in eine neue Gruppe und öffnet deren Namensfeld, wie `Group selected tables` im Kontextmenü einer Tabelle, und bewirkt nichts, wenn keine Tabelle ausgewählt ist – siehe [Ausgewählte Tabellen gruppieren](./table-groups.md#grouping-selected-tables). Beide bewirken nichts in einem schreibgeschützten Editor oder solange die Gruppen [ausgeblendet](./table-groups.md#hiding-groups) sind.
+`Zoom In`, `Zoom Out` und `Zoom Reset` zoomen auch die Registerkarte [Visualisierung](./visualization.md#toolbar), in `Graph` wie in `Flow`, sofern die Schnellsuche nicht geöffnet ist.
+Auf der Registerkarte Visualisierung schließt `Stop` außerdem das Menü der [Zeilenanzeige](./visualization.md#row-display) und bricht ein noch laufendes [Flow-Layout](./visualization.md#how-flow-is-placed) ab; eine mit `Focus on this table` eingeschränkte Ansicht erweitert `Stop` nicht.
+`Focus on this table` öffnet die Registerkarte Visualisierung in `Flow`, eingeschränkt auf die ausgewählten Tabellen und alle Tabellen, die direkt über eine Beziehung mit ihnen verbunden sind, und bewirkt nichts, wenn keine Tabelle ausgewählt ist – siehe [Auf Tabellen fokussieren](./visualization.md#focusing-on-tables).
+`Select All Table, Memo`, `Hand Tool`, `Delete Selection` und `Group Selected Tables` lassen einem Textcursor den Vortritt: Während Sie eine Zelle oder eine Notiz bearbeiten oder in ein Textfeld wie das Suchfeld des Explorers tippen, wählt `Ctrl + A` (Windows/Linux) oder `⌘ + A` (Mac) den Text aus, `Space` gibt ein Leerzeichen ein, `Delete` und `Backspace` löschen Text, und `T` und dann `G` gibt die beiden Buchstaben ein.
+Kopieren und Einfügen sind die browsereigenen Tastenkombinationen `Ctrl + C` und `Ctrl + V` (Windows/Linux) oder `⌘ + C` und `⌘ + V` (Mac), daher stehen sie nicht in dieser Liste – siehe [Tabellen bearbeiten](./table-editing.md).
+
+Die Belegungen lassen sich auf dieser Registerkarte nicht ändern.
+Ein Host, der den Editor einbettet, belegt sie mit [`setKeyBindingMap`](../../api/erd-editor-element.md#setkeybindingmap) neu, außer `Editing`, `Stop`, `Undo`, `Redo`, `Zoom In`, `Zoom Out` und `Zoom Reset`, die fest vorgegeben sind.
+Die Registerkarte `Shortcuts` listet dann die Belegungen des Hosts auf: Ein Befehl, den der Host nicht neu belegt, behält seine Standardbelegung, und ein Befehl, den der Host an keine Taste bindet, zeigt keine an.
+
+In Obsidian erreichen diese Tasten den Editor, solange die Obsidian-Registerkarte des Diagramms aktiv ist, auch dort, wo ein Obsidian-Hotkey dieselbe Taste verwendet, etwa `Alt + Enter`, `Ctrl + K` und `Ctrl + F` (Windows/Linux) oder `⌥ + Enter`, `⌘ + K` und `⌘ + F` (Mac). Alle anderen Obsidian-Hotkeys funktionieren dort weiterhin. Zu `Ctrl + F` oder `⌘ + F` siehe [Die Suchleiste des Browsers](./find-and-replace.md#the-browsers-find-bar).

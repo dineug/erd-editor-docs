@@ -45,7 +45,7 @@ JSON 文件会保留其中已有的位置。Schema SQL、GraphQL、DBML 或 AML 
 名称与图中已有的表相同的表会作为同名的第二个表添加，而不会与其合并。关系和索引只来自该文件，因此指向文件中未定义的表的外键，不会与图中已有的表相连。
 
 添加的内容块会落在图中所有内容的正下方，与其左边缘对齐；图为空白时则落在左上角。通过 [View Option](./table-related-functions.md#table-view-options) 隐藏的备注和表分组同样计算在内，因为它们仍然占据着那里的位置。  
-在内容块内部，JSON 文件会保留自身的排列，表分组也包括在内。其他格式则按 `Import` 的方式排布，即按相同的规则用 `Flow` 排布或逐行排列，每个表分组的框都会调整为恰好围住其中的表。添加的表和备注会堆叠在所有已有内容之上。
+在内容块内部，JSON 文件会保留自身的排列，表分组也包括在内。其他格式则按 `Import` 的方式排布，即按相同的规则用 `Flow` 排布或逐行排列，每个表分组的框都会调整为恰好围住其中的表。添加的表和备注会叠放在所有已有内容之上。
 
 内容块落下后，只有添加的内容处于选中状态：新的表，以及处于显示状态的新备注和新表分组。如果你在此期间切换到了其他标签页，编辑器会在内容块落下之前切换回 ERD 标签页。随后，除非内容块已经显示得足够清楚，否则视图会以当前的缩放滚动到它，参见[跳转的落点](./table-related-functions.md#where-a-jump-lands)。一次 Undo 即可撤回整个添加。  
 解析器无法读取的文件，或者既没有表也没有备注的文件，不会添加任何内容。
@@ -57,7 +57,7 @@ JSON 文件会保留其中已有的位置。Schema SQL、GraphQL、DBML 或 AML 
 ### JSON
 
 可以导入[编辑器定义的 schema 格式](../../api/advanced/schema.md)文件。
-文件名必须以 `.json` 结尾，因此导出的 `<数据库名>-<时间戳>.erd.json` 文件可以原样导入回来，而此处不接受单纯的 `.erd` 或 `.vuerd` 文件。早期版本保存的文件同样可以读取。
+文件名必须以 `.json` 结尾，因此导出的 `<database name>-<timestamp>.erd.json` 文件可以原样导入回来，而此处不接受单纯的 `.erd` 或 `.vuerd` 文件。早期版本保存的文件同样可以读取。
 
 ![通过 Import > json 导入已保存的文件，连同设置一起替换草稿文档](/img/demo-import-json.webp)
 
@@ -214,7 +214,7 @@ DBML 还会在两个方向上保留表的颜色（透明度除外）以及每个
 
 Schema SQL 会在每个关系的 `REFERENCES` 之后写出其 ON DELETE 与 ON UPDATE，ON DELETE 在前。`Not set` 不会写出任何内容，所选数据库不接受的操作会被省略。各数据库接受哪些操作参见[编辑关系](./relationship-editing.md#on-delete-and-on-update)。
 
-每个导出的文件都以 `<数据库名>-<时间戳>` 加上其扩展名命名，其中时间戳采用本地时间，格式为 `yyyy-MM-dd'T'HH_mm_ss`，例如 `my-schema-2026-08-29T04_05_06.erd.json`。数据库名为空时会退回为 `unnamed`。  
+每个导出的文件都以 `<database name>-<timestamp>` 加上其扩展名命名，其中时间戳采用本地时间，格式为 `yyyy-MM-dd'T'HH_mm_ss`，例如 `my-schema-2026-08-29T04_05_06.erd.json`。数据库名为空时会退回为 `unnamed`。  
 Schema SQL 标签页和[代码生成](./code-generator.md)的 `Save file` 也以同样的方式为文件命名。图片使用的是打开对话框时的数据库名。
 
 `Import`、`Import and Add` 与 `Export` 也可以从 ERD 标签页的[快速搜索](./quick-search.md)中使用，其中的条目与画布右键菜单相同。

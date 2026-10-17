@@ -22,7 +22,7 @@ SQL을 마우스 오른쪽 클릭하면 컨텍스트 메뉴가 열립니다.
 
 이 탭이 열려 있는 동안 빠른 검색에는 `Database`와 `Bracket`, 데이터베이스에 있는 선택지만 나열하는 `Schema SQL: Statements`와 `Schema SQL: Header`, 그리고 패널을 접거나 여는 `Schema SQL: Options panel`이 표시됩니다.
 
-SQL은 탭이 열릴 때 작성되며, 패널의 선택, 데이터베이스 이름, 스크립트 중 하나가 바뀔 때마다 다시 작성됩니다. 탭이 열려 있는 동안 테이블에 가해진 편집은 공동 편집자나 코딩 에이전트의 편집이라도, 탭을 벗어났다가 다시 돌아오거나 위의 항목 중 하나가 바뀌어야 표시됩니다.
+SQL은 탭이 열릴 때 작성되며, 패널의 선택, 데이터베이스 이름, 스크립트 중 하나가 바뀔 때마다 다시 작성됩니다. 공동 편집자나 코딩 에이전트의 편집처럼 탭이 열려 있는 동안 테이블에 가해진 편집은 탭을 벗어났다가 다시 돌아오거나 위의 항목 중 하나가 바뀌어야 표시됩니다.
 
 [테이블 속성](./table-related-functions.md#테이블-속성)에는 테이블 하나의 DDL을 보여 주는 자체 `Schema SQL` 탭이 있습니다. 이 탭은 항상 헤더나 스크립트 없이 일반 `CREATE` 문을 작성하고, 옵션 패널이 없으며, 컨텍스트 메뉴에는 `Database`와 `Bracket`만 있습니다.
 
@@ -119,7 +119,7 @@ MSSQL에서는 마지막 줄이 `GO`(또는 개수가 붙은 `GO`)가 아닌 스
 입력란은 SQL을 강조 표시하며 텍스트에 맞춰 늘어납니다.  
 편집은 다른 곳을 클릭하거나 탭을 전환해 입력란을 벗어날 때 적용되며, 그때 비로소 옆의 SQL과 문서가 바뀝니다. 클릭만 하고 벗어난 입력란은 아무것도 바꾸지 않습니다.  
 스크립트 편집은 다른 편집과 마찬가지로 다이어그램을 바꿉니다. 파일에 저장되고, 공동 편집자에게 보이며, 적용된 각 편집은 [Undo 히스토리](./undo-redo.md)의 한 단계가 되고, Undo는 ERD 탭에서 합니다.  
-입력란에 입력하는 동안에는 에디터 자체의 단축키가 입력란에 양보하므로, `Ctrl + Z` (Windows/Linux) or `⌘ + Z` (Mac)는 입력란에서의 입력을 되돌리고, 복사, 잘라내기, 붙여넣기는 다이어그램이 아니라 텍스트에 동작합니다.  
+입력란에 입력하는 동안에는 에디터 자체의 단축키를 입력란이 대신 처리하므로, `Ctrl + Z` (Windows/Linux) or `⌘ + Z` (Mac)는 입력란에서의 입력을 되돌리고, 복사, 잘라내기, 붙여넣기는 다이어그램이 아니라 텍스트에 동작합니다.  
 빠른 검색과 [탐색기의 검색](./find-and-replace.md)은 여전히 각각의 단축키인 `Ctrl + K`와 `Ctrl + F` (Windows/Linux) or `⌘ + K`와 `⌘ + F` (Mac)로 열립니다. `Ctrl + F` 또는 `⌘ + F`는 ERD 탭으로 전환하므로, 다른 탭 전환과 마찬가지로 입력란의 편집을 적용합니다.  
 키보드 포커스가 없는 입력란은 공동 편집자나 [코딩 에이전트](../../mcp/tools.md#설정)가 스크립트에 가한 변경을 따라갑니다. 포커스가 있는 입력란은 입력하지 않고 벗어날 때 그 변경을 표시합니다. 입력했다면 벗어날 때 입력한 텍스트가 적용되어 그 변경을 대체합니다.
 
@@ -162,7 +162,7 @@ Snowflake가 동작을 생략하면, 그 foreign key의 `ALTER TABLE` 위에 `--
 
 `Bracket`이 `None`이면 `sales.users`처럼 점이 있는 테이블 이름은 스키마와 테이블로 읽히며, 대괄호나 큰따옴표 밖에 있는 마지막 점에서 나뉩니다.
 
-- MySQL, MariaDB, MSSQL, Oracle, PostgreSQL은 작성하는 자동 이름을 테이블 부분만으로 만듭니다. 다섯 데이터베이스 모두 `FK_users_TO_orders`와 `IDX_users`, PostgreSQL을 제외한 모두 `UQ_users_email`, 그리고 이 중 primary key에 이름을 붙이는 MSSQL과 Oracle은 `PK_users`입니다. 이 두 데이터베이스에서는 `[sales].[users]`와 `"sales"."users"`도 `PK_users`가 되고, `[Order]`는 `PK_Order`가 됩니다.
+- MySQL, MariaDB, MSSQL, Oracle, PostgreSQL은 작성하는 자동 이름을 테이블 부분만으로 만듭니다. 다섯 데이터베이스 모두에서 `FK_users_TO_orders`와 `IDX_users`가, PostgreSQL을 제외한 네 데이터베이스에서 `UQ_users_email`이, 그리고 이 중 primary key에 이름을 붙이는 두 데이터베이스인 MSSQL과 Oracle에서 `PK_users`가 됩니다. 이 두 데이터베이스에서는 `[sales].[users]`와 `"sales"."users"`도 `PK_users`가 되고, `[Order]`는 `PK_Order`가 됩니다.
 - SQLite는 제약 조건에 이름을 붙이지 않으므로, 만드는 자동 이름은 `CREATE INDEX sales.IDX_users ON users`처럼 인덱스 이름뿐입니다.
 - Oracle은 테이블의 인덱스와 auto-increment 컬럼의 시퀀스와 트리거를 테이블의 스키마에 생성하므로, `sales.IDX_users`, `sales.SEQ_users`, `sales.SEQ_TRG_users`가 됩니다.
 - Oracle과 SQLite에서는 직접 스키마를 붙인 인덱스 이름이 그 스키마를 유지합니다.

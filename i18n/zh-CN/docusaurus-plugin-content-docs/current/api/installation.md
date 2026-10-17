@@ -12,7 +12,7 @@ npm install @dineug/erd-editor
 该包仅支持 ESM（`"type": "module"`），并且只发布 `dist` 目录。
 没有 CommonJS 构建，因此 `require('@dineug/erd-editor')` 无法使用。
 
-运行时依赖都以 bare import 的形式留在外部，交由你的打包器解析、去重和 tree-shaking。
+运行时依赖都以裸模块导入的形式留在外部，交由你的打包器解析、去重和 tree-shaking。
 其中的 shared worker 会作为独立的入口文件输出到 `dist/workers/` 下，并通过 `new URL('./…', import.meta.url)` 构造——这正是 Vite、webpack 5 和 Rspack 识别为 worker 入口的写法。参见 [Web Worker](#web-workers)。
 对于没有打包器的页面，还提供了一份自包含的构建，参见 [script 标签](#script-标签)。
 
@@ -32,11 +32,11 @@ editor.addEventListener('change', () => {
 });
 ```
 
-`<erd-editor>` 没有固有尺寸。请为该元素或其容器显式指定 width 和 height。
+`<erd-editor>` 没有固有尺寸。请为该元素或其容器显式指定宽度和高度。
 从 `4.1.0` 起，已打开的[资源管理器](../guide/guides/explorer.md)会停靠在该元素内部、ERD 画布的左侧，让画布变窄，而不是覆盖在画布上。新打开的编辑器中，资源管理器初始为关闭状态。
 面板最窄绘制为 `200px`，并为画布保留至少 `320px` 的宽度，因此在宽度小于 `520px` 的元素中，已打开的资源管理器在元素变宽之前不会绘制。参见[画布旁边](../guide/guides/explorer.md#beside-the-canvas)。
 
-`setInitialValue('')` 会以一个新的空文档开始。为 `value` 赋值则会把加载当作一次编辑，因此会记录到历史列表中。
+`setInitialValue('')` 会以一个新的空文档开始。为 `value` 赋值则会把加载当作一次编辑，因此会记录到 Undo 历史记录中。
 从 `4.0.0` 起，`editor.value` 是文件所保存形式的文档，也就是应当存储的内容。`editor.runtimeValue` 是编辑器所持有形式的文档，其中包括已删除的实体：它用作协作者的初始文档，从不写入文件。参见 [runtimeValue](./erd-editor-element.md#runtimevalue)。
 从 `4.0.0` 起，新文档的所有[设置锁定](../guide/guides/settings.md#锁定)也都处于开启状态：包括视图、标签页、Code Generator 的语言、两种名称大小写以及括号类型。滚动、缩放、切换标签页或更改其中任何一项设置都不会改变 `editor.value`，也不会发出 `change`。从文本加载的文档会沿用其中写明的锁定。一个锁定都没有写明的文档（例如 `4.0.0` 之前保存的任何文件）打开时所有锁定都处于开启状态，缩放为 100%，并停留在 ERD 标签页，无论它保存的是怎样的视图和标签页。其视图锁定在原点 `0, 0`；如果图的任何部分都没有绘制在那里，则改为在图所在的位置打开。参见 [setInitialValue](./erd-editor-element.md#setinitialvalue)。
 其余 API 参见 [ErdEditorElement](./erd-editor-element.md)。
@@ -62,7 +62,7 @@ editor.addEventListener('change', () => {
 ### script 标签
 
 从 `3.6.0` 起，该包还会发布一份 UMD 构建，把所有依赖和所有 shared worker 都装进同一个文件。
-`unpkg` 与 `jsdelivr` 字段指向的就是它，因此这两个 CDN 上该包的基础 URL 提供的都是这个文件，它会定义 `window.ErdEditor`。
+`unpkg` 与 `jsdelivr` 字段指向的就是它，因此这两个 CDN 上仅含包名的 URL 提供的都是这个文件，它会定义 `window.ErdEditor`。
 
 ```html
 <erd-editor></erd-editor>
@@ -130,7 +130,7 @@ const found = document.querySelector('erd-editor'); // ErdEditorElement | null
 ## 语法高亮
 
 Schema SQL 与 Code Generator 面板由 [Shiki](https://shiki.style) 高亮，它运行在自己的 shared worker 中；从 `4.0.0` 起，Schema SQL 标签页的 `Before tables` 与 `After tables` 脚本同样由它高亮。
-从 `3.7.0` 起，既不需要安装也不需要注册：worker 会在第一个代码面板渲染时创建，因此从不打开代码面板的页面永远不会去取语法文件。
+从 `3.7.0` 起，既不需要安装也不需要注册：worker 会在第一个代码面板渲染时创建，因此从不打开代码面板的页面永远不会获取语法文件。
 
 | | |
 | --- | --- |
@@ -229,7 +229,7 @@ setImportFileCallback(async ({ type, op, accept, mode }) => {
 对需要处理的每个 `type` 分别分支，其余的忽略即可。
 以替换方式调用的 `setSchemaJSON()` 与为 `value` 赋值一样，会在解析之前先清空文档，因此把并非 `.erd.json` 文档的内容送到那里（例如写了兜底的 `else`，或者后来新增的 `type` 漏掉了处理），结果不是导入任何内容，而是把图清空。
 
-编辑器生成的 `fileName` 为 `<数据库名>-<时间戳>` 加上文件的扩展名，其中时间戳采用本地时间，格式为 `yyyy-MM-dd'T'HH_mm_ss`。数据库名为空时会退回为 `unnamed`。
+编辑器生成的 `fileName` 为 `<database name>-<timestamp>` 加上文件的扩展名，其中时间戳采用本地时间，格式为 `yyyy-MM-dd'T'HH_mm_ss`。数据库名为空时会退回为 `unnamed`。
 导出回调接收的就是这些文件。从 `4.0.0` 起，其中还包括 SVG 和 Code Generator 的文件，而 `.sql` 来自 Schema SQL 标签页的 `Save file`，不再直接来自 `Export`。
 
 | 文件 | 扩展名 | Blob 的 `type` |

@@ -1,6 +1,6 @@
 ---
 sidebar_position: 6
-description: 删除关系、修改关系类型、设置 ON DELETE 与 ON UPDATE 操作、通过映射列将关系映射到已有的列上、读懂连接线、处理 N:M 关系与识别关系，以及了解新外键列的命名方式。
+description: 删除关系、修改关系类型、设置 ON DELETE 与 ON UPDATE 操作、通过映射列将关系映射到已有的列上、读懂连接线的表示法、处理 N:M 关系与识别关系，以及了解新外键列的命名方式。
 ---
 
 # 编辑关系
@@ -43,7 +43,7 @@ description: 删除关系、修改关系类型、设置 ON DELETE 与 ON UPDATE 
 - SET DEFAULT
 - RESTRICT
 
-`Not set` 不会写出任何子句，因此由数据库自身的默认行为决定。新建的关系，无论是绘制的还是在[映射列](#map-columns)中创建的，两项均为 `Not set`，之后选择 `Not set` 即可清除已设置的操作。  
+`Not set` 不会写出任何子句，因此由数据库自身的默认行为决定。新建的关系，无论是绘制的还是在[映射列](#map-columns)中创建的，两项初始均为 `Not set`，之后选择 `Not set` 即可清除已设置的操作。  
 两者互相独立：修改其中一项不会影响另一项。  
 连接线会显示已设置的内容，参见[读懂连接线](#reading-a-connector)。  
 关系随其连接的表一起被复制粘贴或创建副本时，会保留这两项操作；导入 Schema SQL、DBML 或 AML 时，会带入文件中声明的操作，参见[导入与导出文件](./file-import-export.md)。
@@ -69,7 +69,7 @@ description: 删除关系、修改关系类型、设置 ON DELETE 与 ON UPDATE 
 
 Snowflake 的 Schema SQL 还会写出一条注释，列出它省略的每个操作，参见[参照操作](./schema-sql.md#referential-actions)。
 
-Code Generator 的 ORM 目标会写出哪些操作，不仅取决于所选的数据库，还取决于目标本身，参见[代码生成](./code-generator.md#on-delete-and-on-update)。
+Code Generator 的 ORM 目标会写出哪些操作，不仅取决于所选数据库，还取决于目标本身，参见[代码生成](./code-generator.md#on-delete-and-on-update)。
 
 ## 映射列 {#map-columns}
 
@@ -129,7 +129,7 @@ Code Generator 的 ORM 目标会写出哪些操作，不仅取决于所选的数
 与其他关系一样，关系是否为识别关系、其父表一端如何绘制，都由映射到的子表列决定。映射到子表的主键列会使其立即成为识别关系，映射到允许 `NULL` 的列则会在父表一端绘制圆环，参见[读懂连接线](#reading-a-connector)。  
 Schema SQL 中的外键会引用所选择的键，例如 `Unique` 键对应 `REFERENCES vehicle (vin)`。
 
-如果按下 `Map` 或 `Save` 时图中已经存在该映射，例如协作者或编码智能体已抢先完成，则不会写入任何内容。  
+如果按下 `Map` 或 `Save` 时图中已经存在该映射（因为协作者或编码智能体已抢先完成），则不会写入任何内容。  
 如果图已发生变化，导致该映射不再适用，则不会写入任何内容，并会显示 `Couldn't map columns: the diagram changed` 提示。
 
 按 `Cancel`、点击 `x` 按钮、按 `Escape` 或点击对话框外变暗的区域，都会关闭对话框而不写入任何内容。  
@@ -161,7 +161,7 @@ serial 类型的键在数据类型上是例外：复制出的列会采用该 ser
 只有完整的类型名称才算数（不区分大小写），因此 `serial(4)` 会按原样复制。以大写字母写成的类型会得到大写的结果：在 PostgreSQL 下，`SERIAL` 对应 `INTEGER`。已保存的图中类型已为 `serial` 的外键列会保留该类型。  
 若要使关系成为识别关系，可将子表上的这些外键列设为主键：选中所有这些列后按一次 `Alt + K` (Windows/Linux) 或 `⌥ + K` (Mac)，或者在表右键菜单中选择 `Primary Key`，选中两列或更多列时该条目会显示为 `Primary Key on selected columns`，参见[列主键](./table-editing.md#列主键)。
 
-![用 Alt + K 将 product_id 设为主键再取消，连接线随之在实线与虚线之间切换](/img/demo-identifying-relationship.webp)
+![用 Alt + K 将 product_id 设为主键再取消，连接线随之先变为实线、再变为虚线](/img/demo-identifying-relationship.webp)
 
 编辑器会自动保持该状态同步。  
 子表一侧的所有列都是主键时为识别关系，其中任意一列不再是主键时就会变为非识别关系。
@@ -202,12 +202,12 @@ serial 类型的键在数据类型上是例外：复制出的列会采用该 ser
 - 当任意外键列允许 `NULL` 时，父表一端与 Zero One 相同，为圆环和竖线；当所有外键列均为 `NOT NULL` 时则与 One Only 相同，为两条竖线。
 - 鼠标悬停在连接线上时，会同时高亮该连接线以及它在两个表中连接的列。
 
-![依次悬停在三条连接线上，每条都与它连接的列一起高亮](/img/demo-relationship-hover.webp)
+![依次悬停在三条连接线上，每条都与它连接的列一起点亮](/img/demo-relationship-hover.webp)
 
 设置了 [ON DELETE 或 ON UPDATE](#on-delete-and-on-update) 的关系，会在其子表一端旁边带有一个标签，例如 `D:C U:R`：先是 `D:` 和 ON DELETE 操作，然后是 `U:` 和 ON UPDATE 操作，每一项都只在已设置时显示。  
 操作的缩写沿用 erwin 的表示法：`C` 表示 CASCADE，`R` 表示 RESTRICT，`SN` 表示 SET NULL，`SD` 表示 SET DEFAULT，`NA` 表示 NO ACTION。两项都未设置的关系没有标签。  
 标签位于远离子表的一侧：连接线从该表的左侧或右侧引出时，标签在线的上方；从顶部或底部引出时，标签在线的右侧，并且不会与基数符号重叠。  
-标签以连接线的颜色绘制在一个画布背景色的小方框上，并与其连接线一起高亮。标签绘制在所有连接线之上，因此穿过标签的线会从其下方经过。  
+标签以连接线的颜色绘制在一个画布背景色的小方框上，并与其连接线一起点亮。标签绘制在所有连接线之上，因此穿过标签的线会从其下方经过。  
 无论所选数据库会写出什么，标签显示的都是保存在关系上的操作，因此在 MySQL 下，ON DELETE SET DEFAULT 仍然显示为 `D:SD`。
 
 悬停在设置了任一操作的连接线上时，还会显示一个提示，逐行写出完整的子句，例如 `ON DELETE CASCADE` 和 `ON UPDATE RESTRICT`。  
@@ -220,13 +220,13 @@ serial 类型的键在数据类型上是例外：复制出的列会采用该 ser
 点亮状态不会被保存，也不会记录到 Undo 历史记录中，协作者也看不到它。
 
 通过 `Relationship` 显示选项可以隐藏 ERD 画布上的连接线，通过默认开启的 `Referential Actions` 显示选项则可以只隐藏其标签，参见[表显示选项](./table-related-functions.md#table-view-options)。  
-在 `70%` 及以下，表会折叠为名称，此时不绘制标签。  
+缩放级别在 `70%` 及以下时，表会折叠为名称，此时不绘制标签。  
 [导出图片](./file-import-export.md#image)时始终以 100% 绘制，因此无论画布的缩放级别如何都会绘制标签，除非显示选项将其隐藏。关闭 `Background` 时，每个标签背后的方框也是透明的。  
 Visualization 标签页的 [Flow 模式](./visualization.md#flow-mode)即使在 `Relationship` 关闭时也会绘制连接线，每条都是一根平滑的灰色实线曲线，端点符号与 ERD 画布相同，因此本页介绍的虚线、标签、提示、跳转后的点亮与正交路径只适用于 ERD 画布。在 Flow 中，从表连接到其自身的关系同样会以曲线绕过右上角，参见[连接线路径](#连接线路径)。
 
 ## 连接线路径
 
-连接线按正交方式布置。  
+连接线按正交方式走线。  
 路径会绕开位于两端之间的表，而不是从表上穿过，拐角为圆角。  
 每一端都会先从其所在的表笔直引出一小段，然后才转弯，因此相距不远、连接线两端对齐的两个表会以一条直线相连，而不会绕行。  
 从表的同一侧引出的路径会被分到各自独立的通道上，以免相互重叠。  

@@ -1,6 +1,6 @@
 ---
 sidebar_position: 2
-description: ダイアグラムを置き換える、またはその下に追加する JSON・スキーマ SQL・GraphQL・DBML・AML の読み込みと、JSON・スキーマ SQL の書き出し、および PNG または SVG 画像としてのダイアグラムの書き出し。
+description: ダイアグラムを置き換える、またはその下に追加する JSON・Schema SQL・GraphQL・DBML・AML の読み込みと、JSON・Schema SQL の書き出し、および PNG または SVG 画像としてのダイアグラムの書き出し。
 ---
 
 # ファイルの読み込みと書き出し
@@ -240,7 +240,7 @@ Obsidian のファイルエクスプローラーに、書き出した `.erd.json
 画像を書き出すボタンは 3 つあり、どれを押してもダイアログは開いたままです。
 
 - `PNG`: 100% のダイアグラムのサイズに `Scale` を掛けたサイズの `.png` を保存します。ブラウザのキャンバスで扱えないほど大きな PNG は、失敗する代わりに解像度を落として書き出されます。ダイアログは事前に `Reduced from <width> × <height> px, past what a browser canvas can hold` と警告し、書き出した後には `Exported at a reduced resolution` という通知でその旨を伝えます。
-- `SVG`: `Scale` にかかわらず、100% のダイアグラムのサイズの `.svg` を保存し、解像度が落とされることはありません。テキストはテキストのまま残り、フォントは埋め込まずに名前で指定されるため、エディタのフォントがないビューアでは別のフォントで描画されます。影は含まれません。
+- `SVG`: `Scale` にかかわらず、100% のダイアグラムのサイズの `.svg` を保存し、解像度が落とされることはありません。テキストはテキストのまま残り、フォントは埋め込まずに名前で指定されるため、エディタのフォントがないビューアーでは別のフォントで描画されます。影は含まれません。
 - `Copy to clipboard`: 選んだ `Scale` の PNG をクリップボードに置きます。ブラウザのキャンバスで扱えない場合は、保存する PNG と同じように解像度が落とされます。完了すると `Copied the image to the clipboard` と表示され、解像度を落とした場合は `Copied at a reduced resolution` と表示されます。ブラウザやホストがクリップボードを拒否した場合や、画像を描画できなかった場合のようにコピーに失敗すると、`Couldn't copy the image` と表示され、代わりに PNG を保存するよう案内します。
 
 ホストがバックグラウンドのワーカーを動かしている場合、画像はそのワーカーで描画されるため、その間もエディタは操作できます。一瞬で終わらない場合は `Exporting PNG`、`Exporting SVG`、`Copying image` のいずれかの通知が表示され、失敗した場合は `Couldn't export the PNG` または `Couldn't export the SVG` と通知されます。ファイルの描画中にダイアログを閉じても、そのファイルの保存は止まりません。

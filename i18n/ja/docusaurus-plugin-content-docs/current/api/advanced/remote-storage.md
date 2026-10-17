@@ -16,7 +16,7 @@ npm install @dineug/erd-editor
 
 レプリケーション用の store は、パッケージのルートではなく `@dineug/erd-editor/engine.js` のサブパスにあります。  
 このエントリーポイントは DOM に触れないため、Web Worker をはじめとするメインスレッド外のどこでも動作します。  
-パッケージのルートを読み込んだ場合は `<erd-editor>` カスタム要素が登録され、こちらは document を必要とします。
+パッケージのルートを読み込んだ場合は `<erd-editor>` カスタム要素が登録され、こちらは DOM のドキュメントを必要とします。
 
 ## 使い方
 
@@ -81,7 +81,7 @@ sharedStore.subscribe(actions => {
 レプリカ側で変更を適用して結果をシリアライズします。  
 `change` はその結果を `value` として渡し、`changed` が書き込むべきタイミングを知らせます。
 
-`4.0.0` から、上の例のように、保存されたファイルやエディタの `value` ではなく、エディタの `runtimeValue` でレプリカに初期値を設定します。  
+`4.0.0` からは、上の例のように、保存されたファイルやエディタの `value` ではなく、エディタの `runtimeValue` でレプリカに初期値を設定します。  
 ファイルには保存したあとに行った編集が含まれず、`value` にはセッション中に削除したエンティティが含まれません。  
 削除したテーブルを持たないまま初期値を設定したレプリカでは、エディタがその削除を Undo すると、テーブルは名前もカラムもない状態で戻り、そのまま保存されます。
 
@@ -92,7 +92,7 @@ sharedStore.subscribe(actions => {
 文字列の幅をピクセル単位で計測します。  
 store には DOM がないためテキストを自身で計測できず、名前、データ型、既定値、コメントが変わるたびに、この関数でカラム幅を再計算します。  
 また、[setInitialValue](#setinitialvalue) がドキュメントを読み込むたびに、すべてのテーブルとカラムを計測し直します。  
-`4.0.0` から、幅は [runtimeValue](#runtimevalue-getter) にだけ保持され、`value` に含まれることはありません。  
+`4.0.0` からは、幅は [runtimeValue](#runtimevalue-getter) にだけ保持され、`value` に含まれることはありません。  
 そのため、このリリースで保存したドキュメントは、どこで保存され、そこでテキストがどのように計測されたかにかかわらず、1 バイトも違わない同じ `value` として読み込まれます。
 
 エディタと同じ方法で計測します。エディタのフォントスタックの `400 12px` で計測し、四捨五入した値に 2px のパディングを加えます。  
@@ -144,7 +144,7 @@ const replicationStore = createReplicationStore({ toWidth });
 const data = replicationStore.value;
 ```
 
-`4.0.0` から、`value` は保存形式、つまりファイルが保持する形式のドキュメントで、要素の [value](../erd-editor-element.md#value) が返すものと同じテキストです。  
+`4.0.0` からは、`value` は保存形式、つまりファイルが保持する形式のドキュメントで、要素の [value](../erd-editor-element.md#value) が返すものと同じテキストです。  
 含まれるのは現存するエンティティだけで、決まった順序で並び、削除したエンティティ、重なり順、そして [toWidth](#towidth) が計測する幅のように読み込み時に改めて求めるものは含まれません。  
 2 つのスペースでインデントされ、改行で終わるため、同じドキュメントからは常に同じバイト列が得られます。  
 含まれる内容については[保存形式とランタイム値](./schema.md#保存形式とランタイム値)を参照してください。
@@ -156,7 +156,7 @@ const data = replicationStore.value;
 
 ### runtimeValue getter
 
-`4.0.0` から、レプリカが保持しているとおりのドキュメントを、削除したエンティティと読み込み時に求めるすべてのものを含めてシリアライズします。  
+`4.0.0` からは、レプリカが保持しているとおりのドキュメントを、削除したエンティティと読み込み時に求めるすべてのものを含めてシリアライズします。  
 ここでも、ロックされた設定はロックされた値で書き出されます。
 
 ```js
@@ -179,13 +179,13 @@ replicationStore.setInitialValue('json...');
 保存形式、ランタイム値、v2 のドキュメントを含む以前のリリースで保存したドキュメントのいずれも受け付けます。  
 空文字列や文字列でない値を渡した場合は、エラーにはならず新しい空のドキュメントを読み込みます。  
 一度も値を渡していない store も、同じ新しいドキュメントから始まります。  
-`4.0.0` から、このドキュメントはすべての[ロック](../../guide/guides/settings.md#ロック)がオンのため、レプリケーション元のエディタがスクロール、拡大・縮小、タブの切り替え、これらの設定の変更を行っても、その `value` は開始時の表示、タブ、Code Generator の言語、名前のケース、括弧の種類を保ちます。`3.10.0` では表示位置も拡大・縮小のレベルも保存せず、それより前は両方を保存していました。  
+`4.0.0` からは、このドキュメントはすべての[ロック](../../guide/guides/settings.md#ロック)がオンのため、レプリケーション元のエディタがスクロール、拡大・縮小、タブの切り替え、これらの設定の変更を行っても、その `value` は開始時の表示、タブ、Code Generator の言語、名前のケース、括弧の種類を保ちます。`3.10.0` では表示位置も拡大・縮小のレベルも保存せず、それより前は両方を保存していました。  
 保存されたドキュメントは、そこに指定されているロックを保ちます。  
 何も指定されていないドキュメント、つまり v2 のドキュメントを含め `4.0.0` より前に保存したすべてのドキュメントは、すべてのロックがオンの状態で読み込まれます。保存されていた内容にかかわらず、表示の原点は `0, 0`、拡大・縮小のレベルは `1`、タブは ERD になり、Code Generator の言語、名前のケース、括弧の種類は保存されたときのままです。  
-`4.0.0` から、`setInitialValue` は、要素の [setInitialValue](../erd-editor-element.md#setinitialvalue) と同じように、それまでのドキュメントのために保持していた共同編集用のレジスタも破棄します。  
+`4.0.0` からは、`setInitialValue` は、要素の [setInitialValue](../erd-editor-element.md#setinitialvalue) と同じように、それまでのドキュメントのために保持していた共同編集用のレジスタも破棄します。  
 マージコンフリクトのマーカーが残ったファイルなど、JSON でないテキストもエラーにはなりません。パースエラーがコンソールに出力されるだけで、ドキュメントは空になり、設定はそのまま保たれます。
 
-`4.0.0` から、読み込み時にガベージコレクションは実行されないため、削除したエンティティは [runtimeValue](#runtimevalue-getter) に残ります。  
+`4.0.0` からは、読み込み時にガベージコレクションは実行されないため、削除したエンティティは [runtimeValue](#runtimevalue-getter) に残ります。  
 それより前は、`doc` に現れなくなり、かつ 4 日以上変更されていないエンティティを削除していました。
 
 読み込みに伴う書き換えは、`setInitialValue` が戻る前に完了します。対象は、各カラムのオプションとリレーションシップから読み直すカラムのキーのマーク、`toWidth` で計測し直すすべてのテーブルとカラムの幅、各コネクタがテーブルに接する位置、そして各リレーションシップの識別リレーションシップかどうかのフラグと親側の端の記号です。  
@@ -211,10 +211,10 @@ const unsubscribe = replicationStore.on({
 
 `change` には 200ms のデバウンスが掛かるため、連続したアクションは 1 回の通知としてまとまります。  
 ドキュメントを変更しうる種類のアクションと、古いエディタが送ってくることのある `settings.changeIgnoreSaveSettings` に対してのみ発行されます（[dispatch, dispatchSync](#dispatch-dispatchsync) を参照してください）。  
-中継されたプレゼンスのアクションや `editor.mergeLWW` で発火することはありません。  
+中継された操作状況のアクションや `editor.mergeLWW` で発火することはありません。  
 購読を解除するには、返された関数を呼び出します。
 
-`3.10.0` から、リスナーは `ReplicationChange` を受け取ります。`@dineug/erd-editor/engine.js` が `ReplicationStore` と並べてエクスポートしている型です。  
+`3.10.0` からは、リスナーは `ReplicationChange` を受け取ります。`@dineug/erd-editor/engine.js` が `ReplicationStore` と並べてエクスポートしている型です。  
 `3.10.0` より前は何も受け取りませんでした。引数を無視するリスナーも、引き続き動作します。  
 `value` は保存形式でシリアライズされたドキュメントで、その時点で `replicationStore.value` が返すものと同じ文字列のため、改めてシリアライズする必要はありません。  
 `changed` は、前回の `change` 以降、または読み込み以降のアクションによって `value` が 1 バイトも変わらなかった場合に `false` になります。
@@ -226,7 +226,7 @@ const unsubscribe = replicationStore.on({
 `Viewport` のロックがオフの場合はスクロールや拡大・縮小で `value` が変わり、`Canvas Type` のロックがオフの場合はエディタの別のタブを開いても `value` が変わります。  
 ロックをオンまたはオフにした場合も、`value` は変わります。
 
-`4.0.0` から、`changed` は保存形式を比較します。保存形式には、削除したエンティティも重なり順も含まれません。  
+`4.0.0` からは、`changed` は保存形式を比較します。保存形式には、削除したエンティティも重なり順も含まれません。  
 そのため、1 回の `change` の間に追加されて再び削除されたテーブル、別の共同編集者が削除したエンティティに対する編集、重なり順だけが変わる中継された読み込みも、すべて `changed` が `false` になります。
 
 `changed` が保存済みのファイルと比較されることはありません。ファイルは読み込んだ時点で、すでに `value` と異なっていることがあるからです。v2 のファイルを含め、以前のリリースで保存したファイルがそうであり、バイトオーダーマークで始まるファイルや手で編集したファイルも同様です。  
@@ -244,21 +244,21 @@ replicationStore.dispatch(actions); // async
 replicationStore.dispatchSync(actions); // sync
 ```
 
-`dispatch` はマイクロタスクに遅延させ、`dispatchSync` はバッチをその場で適用します。
+`dispatch` は適用をマイクロタスクまで遅らせ、`dispatchSync` はバッチをその場で適用します。
 
 shared store のストリームは、フィルタリングせずにそのまま渡せます。  
-どちらのメソッドも、ドキュメントを変更しうる種類のアクションと、この節の最後で説明する 2 つのアクションだけを残して他は破棄するため、共同編集セッションが運ぶプレゼンス（各ユーザーのマウスカーソル、フォーカス、選択、ドラッグボックス）は何もしない処理として通過します。
+どちらのメソッドも、ドキュメントを変更しうる種類のアクションと、この節の最後で説明する 2 つのアクションだけを残して他は破棄するため、共同編集セッションが運ぶ操作状況（各ユーザーのマウスカーソル、フォーカス、選択、ドラッグボックス）は何もしない処理として通過します。
 
-`3.10.0` から、残されるアクションに `relationship.changeOnDelete` と `relationship.changeOnUpdate` が加わり、`relationship.add` は `onDelete` と `onUpdate` を運びます。  
+`3.10.0` からは、残されるアクションに `relationship.changeOnDelete` と `relationship.changeOnUpdate` が加わり、`relationship.add` は `onDelete` と `onUpdate` を運びます。  
 それより前のリリースの store はこれらのアクションを破棄し、これらのフィールドを無視するため、リレーションシップの [ON DELETE と ON UPDATE](../../guide/guides/relationship-editing.md#on-delete-and-on-update) のアクションが失われます。
 
-`4.0.0` から、残されるアクションに `table.changeGroup`、8 つの `tableGroup` のアクションのうち 7 つ（重なり順を変える `tableGroup.changeZIndex` を除く `tableGroup.add`、`tableGroup.move`、`tableGroup.moveTo`、`tableGroup.remove`、`tableGroup.resize`、`tableGroup.changeName`、`tableGroup.changeColor`）、`relationship.changeColumns`、`settings.changeLockSettings`、`settings.changeDDLScript` も加わります。  
+`4.0.0` からは、残されるアクションに `table.changeGroup`、8 つの `tableGroup` のアクションのうち 7 つ（重なり順を変える `tableGroup.changeZIndex` を除く `tableGroup.add`、`tableGroup.move`、`tableGroup.moveTo`、`tableGroup.remove`、`tableGroup.resize`、`tableGroup.changeName`、`tableGroup.changeColor`）、`relationship.changeColumns`、`settings.changeLockSettings`、`settings.changeDDLScript` も加わります。  
 `settings.changeRelationshipOptimization` はなくなったため、どちらのメソッドも破棄します。  
 それより前のリリースの store は新しいアクションを破棄するため、[テーブルグループ](../../guide/guides/table-groups.md)、[ロック](../../guide/guides/settings.md#ロック)、[Schema SQL](../../guide/guides/schema-sql.md) のスクリプト、そして [Map Columns](../../guide/guides/relationship-editing.md#map-columns) が既存のリレーションシップに設定するカラムが失われます。  
 レプリカは、エディタと同じリリースか、それより新しいリリースで実行します。
 
 `4.1.0` は新しい種類のアクションを追加せず、`@dineug/erd-editor/engine.js` もそのままにしているため、`4.0.0` のレプリカも、`4.1.0` のレプリカと同じように、`4.1.0` のエディタが送るすべての変更を残します。  
-`4.1.0` から、[検索と置換](../../guide/guides/find-and-replace.md#replacing)の `Replace` と `Replace All` は、`4.0.0` のレプリカがすでに残している `index.changeName` と `tableGroup.changeName` のアクションで、インデックスとテーブルグループの名前も変更します。  
+`4.1.0` からは、[検索と置換](../../guide/guides/find-and-replace.md#replacing)の `Replace` と `Replace All` は、`4.0.0` のレプリカがすでに残している `index.changeName` と `tableGroup.changeName` のアクションで、インデックスとテーブルグループの名前も変更します。  
 [エクスプローラー](../../guide/guides/explorer.md)自体の状態は送信されることがなく、エクスプローラーが行うタブの切り替えやスクロールは、他のタブの切り替えやスクロールと同じように届きます。[共同編集](./collaborative-editing.md)を参照してください。
 
 `4.0.0` からは、両方のメソッドが `editor.mergeLWW` も適用します。これは、別のエディタがセッションに参加したときにエディタが応答として送る共同編集用のレジスタを運ぶアクションで、これによりレプリカはエディタと同じように、同時に行われた編集を調停します。  

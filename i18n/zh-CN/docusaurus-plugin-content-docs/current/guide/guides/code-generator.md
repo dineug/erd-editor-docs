@@ -20,7 +20,7 @@ description: 根据图为二十二种目标生成代码，在选项面板中选�
 
 ## 选项面板 {#options-panel}
 
-面板在说明文字 `Saved in the document` 下列出 `Language`、`Database`、`Table Name Case` 和 `Column Name Case`，当语言为 `Doctrine`、`JPA` 或 `SeaORM` 时，其后还有 `Bracket`。每一项都是一个下拉列表，更改后会立即重写代码。  
+面板在标题 `Saved in the document` 下列出 `Language`、`Database`、`Table Name Case` 和 `Column Name Case`，当语言为 `Doctrine`、`JPA` 或 `SeaORM` 时，其后还有 `Bracket`。每一项都是一个下拉列表，更改后会立即重写代码。  
 当所选语言不使用 `Database` 或名称大小写时，它们仍会留在面板中，但会变暗显示，下方带有 `Not used by DBML` 之类的说明，并且仍然可以更改。  
 `Save file` 和 `Copy` 位于面板底部，参见[保存或复制结果](#saving-or-copying-the-result)。
 
@@ -63,7 +63,7 @@ description: 根据图为二十二种目标生成代码，在选项面板中选�
 部分目标写出的内容：
 
 - `PHP`：由带类型的公共属性构成的普通类，以 `<?php` 和 `declare(strict_types=1);` 开头。
-- `Doctrine`：使用 attribute 的 Doctrine ORM 3 实体，适用于 DBAL 4.2 或更高版本，每列都带有其 DBAL 类型以及适用于所选数据库的选项。
+- `Doctrine`：使用注解（attribute）的 Doctrine ORM 3 实体，适用于 DBAL 4.2 或更高版本，每列都带有其 DBAL 类型以及适用于所选数据库的选项。
 - `Rust`：每张表一个 `pub struct`，其类型以完整路径书写，例如 `chrono::NaiveDateTime` 或 `rust_decimal::Decimal`，不含 `use` 行。
 - `SeaORM`：采用 dense 格式的 SeaORM 2.0 实体，每张表是一个 `pub mod`，因此整段文本可以作为一个文件编译。
 - `Swift`：每张表一个遵循 `Codable`、`Hashable`、`Sendable` 的 struct，需要 Swift 6.1 或更高版本。
@@ -79,7 +79,7 @@ description: 根据图为二十二种目标生成代码，在选项面板中选�
 
 关系的 ON DELETE 与 ON UPDATE 操作通过该关系的右键菜单设置，参见 [ON DELETE 与 ON UPDATE](./relationship-editing.md#on-delete-and-on-update)。  
 在[语言](#语言)表格的 `ON DELETE / ON UPDATE` 列中带有 ✓ 的目标会写出关系所设置的操作；保持为 `Not set` 的操作不会写出任何内容。  
-ORM 目标会保留哪些操作取决于所选的数据库，而 `AML` 和 `DBML` 会全部保留，参见[数据库](#database)。
+ORM 目标会保留哪些操作取决于所选数据库，而 `AML` 和 `DBML` 会全部保留，参见[数据库](#database)。
 
 - `Doctrine` 只写出 ON DELETE，因为 Doctrine 没有 ON UPDATE。它会在关系拥有方的 `ManyToOne` 或 `OneToOne` 的每个 `#[ORM\JoinColumn]` 上添加 `onDelete: 'CASCADE'`，例如 `#[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]`，而在反向一方的 `OneToMany` 或 `OneToOne` 上不写任何内容。指向非主键的唯一列的关系仍保持为普通列，Doctrine 会在不建立关联的情况下映射它们，因此不会写出任何操作。
 - `Drizzle` 以小写写出这些操作。在 `.references()` 上，它们以选项的形式写出，例如 `{ onDelete: "cascade", onUpdate: "set null" }`；在多列键所使用的 `foreignKey()` 上，它们以链式调用写出，例如 `.onDelete("restrict").onUpdate("no action")`。
@@ -105,12 +105,12 @@ ORM 目标会保留哪些操作取决于所选的数据库，而 `AML` 和 `DBML
 
 ## 数据库 {#database}
 
-数据类型根据所选的数据库解析，参见[数据库](./table-related-functions.md#databases)。  
+数据类型根据所选数据库解析，参见[数据库](./table-related-functions.md#databases)。  
 在此标签页中，可以通过面板的 `Database` 列表、右键菜单的 `Database` 或快速搜索选择数据库，代码会立即重写。这是图唯一的数据库设置，与画布右键菜单和 [Schema SQL](./schema-sql.md) 标签页所设置的是同一个，因此在这里所做的更改也会反映到那里。  
 `Drizzle` 会根据同一项设置决定方言：PostgreSQL 为 `pgTable`，MySQL 和 MariaDB 为 `mysqlTable`，SQLite 为 `sqliteTable`，其他数据库均为 `pgTable`。  
 在 PostgreSQL、MySQL、MariaDB 或 SQLite 上，凡是 SeaORM 原本会创建出不同列类型的地方，`SeaORM` 都会写出 `column_type`；在 MSSQL、Oracle、Snowflake 或 Databricks 上则不写出，因为 SeaORM 没有这些数据库的后端。
 
-所选的数据库还决定 ORM 目标会写出哪些 ON DELETE 与 ON UPDATE 操作。  
+所选数据库还决定 ORM 目标会写出哪些 ON DELETE 与 ON UPDATE 操作。  
 `Doctrine`、`SeaORM`、`Sequelize`、`SQLAlchemy` 和 `TypeORM` 会省略该数据库的 Schema SQL 所省略的操作，例如 MySQL 和 MariaDB 的 `SET DEFAULT`、MSSQL 的 `RESTRICT`，或 Snowflake 和 Databricks 上除 `NO ACTION` 以外的所有操作，因此由数据库的默认行为决定。完整列表参见 [ON DELETE 与 ON UPDATE](./relationship-editing.md#on-delete-and-on-update)。  
 `Drizzle` 则遵循它所写出的方言：`mysqlTable` 代码会省略 `SET DEFAULT`，而 `pgTable` 和 `sqliteTable` 代码会保留所有操作，包括它为 MSSQL、Oracle、Snowflake 和 Databricks 写出的 `pgTable` 代码。
 
@@ -128,7 +128,7 @@ ORM 目标会保留哪些操作取决于所选的数据库，而 `AML` 和 `DBML
 ## 保存或复制结果 {#saving-or-copying-the-result}
 
 选项面板底部或右键菜单中的 `Save file` 会将显示的代码保存为文件。  
-文件与所有导出一样以 `<数据库名>-<时间戳>` 命名，后接[语言](#语言)表格中的扩展名，例如 `shop-2026-10-12T04_05_06.ts`，并保存到宿主中所有导出文件的保存位置，参见[导出](./file-import-export.md#exporting)。`Java` 和 `JPA` 会像标签页中显示的那样，将所有类放在一个 `.java` 文件中。  
+文件与所有导出一样以 `<database name>-<timestamp>` 命名，后接[语言](#语言)表格中的扩展名，例如 `shop-2026-10-12T04_05_06.ts`，并保存到宿主中所有导出文件的保存位置，参见[导出](./file-import-export.md#exporting)。`Java` 和 `JPA` 会像标签页中显示的那样，将所有类放在一个 `.java` 文件中。  
 Export 菜单中没有 Code Generator 条目，表属性的 `Code Generator` 标签页也无法保存文件。
 
 要复制代码，可以点击面板底部的 `Copy`，也可以将鼠标悬停在代码上并点击右上角的复制按钮，后者是表属性中唯一的复制方式。  

@@ -1,0 +1,90 @@
+---
+sidebar_position: 7
+description: Deschideți paleta de comenzi pentru a comuta între file, a rula o comandă pentru fila curentă, a deschide sau a închide exploratorul, a schimba tema sau limba de afișare ori a sări la un tabel, o coloană, un comentariu sau o notă tastând un prefix.
+---
+
+# Căutare rapidă
+
+Căutarea rapidă este paleta de comenzi a editorului.  
+Listează comenzile disponibile în fila în care vă aflați. Începeți căutarea cu `#`, `@` sau `:` pentru a căuta în schimb în diagramă și a sări la un tabel, la o coloană sau la un comentariu ori o notă.
+
+Deschideți-o cu `Ctrl + K` (Windows/Linux) sau `⌘ + K` (Mac) ori faceți clic pe butonul `Search` din bara de instrumente.  
+Aceeași comandă rapidă o închide, la fel ca tasta `Esc` și un clic în afara panoului. Deschiderea ei închide panoul Proprietăți tabel, [configuratorul de teme](./language-and-theme.md#theme), selectorul [`Display Language`](./language-and-theme.md#picking-a-language), caseta de dialog [`Export image`](./file-import-export.md#image) și caseta de dialog [Mapare coloane](./relationship-editing.md#map-columns), care renunță la ce ați ales în ea. Nu se deschide cât timp editați o celulă de tabel, o notă sau numele unui grup de tabele.
+
+Butonul din bara de instrumente aflat imediat după `Search` este `Explorer`. Acesta deschide sau închide [exploratorul](./explorer.md), un arbore al diagramei andocat în stânga pânzei, cu funcția Găsire și înlocuire în partea de sus.  
+Deschiderea paletei lasă exploratorul deschis, iar tasta `Esc` închide apoi doar paleta. Apăsarea `Ctrl + F` (Windows/Linux) sau `⌘ + F` (Mac) în paletă o închide și mută focusul tastaturii în câmpul Găsire al exploratorului, deschizând exploratorul cu focusul pe căutare dacă nu este afișat. Spre deosebire de elementul `Toggle Explorer`, tasta nu închide niciodată exploratorul din paletă (consultați [Deschiderea și închiderea](./explorer.md#opening-and-closing)). Cât timp este deschis vizualizatorul de diferențe, călătoria în timp sau previzualizarea aranjării automate, editorul ignoră tasta: paleta rămâne deschisă, iar tasta ajunge la browser sau la aplicația gazdă (consultați [Bara de căutare a browserului](./find-and-replace.md#the-browsers-find-bar)).  
+O aplicație gazdă care încorporează editorul poate asocia căutarea rapidă altei taste, pe care o afișează apoi sfatul ecran al butonului `Search` (consultați [Comenzi rapide](./settings.md#shortcuts)).
+
+![Deschiderea paletei cu ⌘ + K, apoi saltul la un tabel cu #pay, la o coloană cu @price și la un comentariu de tabel cu :address](/img/demo-quick-search.webp)
+
+## Căutarea și navigarea {#searching-and-navigating}
+
+Tastați pentru a filtra lista. Fiecare apăsare de tastă caută din nou în întreaga listă afișată, așa că ștergerea unor caractere sau tastarea unui cuvânt nou peste unul care nu a găsit nimic readuce elementele care se potrivesc.  
+Potrivirea este aproximativă și acoperă atât numele unui element, cât și cuvintele cheie afișate lângă el. În submeniul `Import`, de exemplu, `sdl` găsește `GraphQL`, `dbdiagram` găsește `DBML`, iar `azimutt` găsește `AML`. O greșeală de tastare minoră găsește totuși elementul vizat, așa cum `tabel` găsește `New Table` și `imprt` găsește `Import`, dar un element care seamănă doar vag cu ce ați tastat este omis: `memo` listează doar `New Memo`. Un element care conține ce ați tastat în nume sau în cuvintele cheie, indiferent de majuscule, este listat întotdeauna, iar unul pe care potrivirea aproximativă îl ratează apare după potrivirile aproximative. Textul tastat este evidențiat oriunde apare într-un element, indiferent de majuscule.  
+Într-o altă limbă de afișare decât engleza, comenzile și elementele submeniurilor se găsesc și după numele și cuvintele cheie în engleză, pe care lista nu le afișează, așa că `new table` găsește `New Table` indiferent de limba în care este afișat.  
+Deplasați-vă prin listă cu `↑` și `↓` – lista se reia de la capăt în ambele sensuri – și rulați elementul evidențiat cu `Enter`. O comandă care are propria comandă rapidă o afișează la capătul rândului său: în dreapta sau, într-o limbă de afișare scrisă de la dreapta la stânga, în stânga. Cât timp o metodă de introducere încă compune, de exemplu la mijlocul unei silabe coreene, tastele `↑`, `↓` și `Enter` sunt preluate de aceasta și nici nu mută evidențierea, nici nu rulează vreun element.
+
+Un element, de exemplu `Database`, `Import` sau `Auto Layout`, deschide un submeniu: elementele acestuia înlocuiesc lista, iar câmpul de căutare se golește. Submeniurile comenzilor `Database`, `Bracket`, `Language`, ale celor două stiluri de denumire, `Schema SQL: Statements`, `Schema SQL: Header`, `Theme` și `Display Language` bifează alegerea curentă și se deschid cu evidențierea pe aceasta, așa că `Enter` o păstrează; celelalte submeniuri se deschid fără niciun element evidențiat.  
+Filtrarea se aplică întotdeauna doar listei afișate și nu există o modalitate de a reveni cu un nivel mai sus, așa că închideți și redeschideți paleta pentru a o lua de la capăt. Într-un submeniu, `#`, `@`, `:` și `?` sunt text simplu, nu [prefixe](#searching-the-diagram).
+
+## Ce listează paleta {#what-the-palette-lists}
+
+Lista depinde de fila în care vă aflați. Lista fiecărei file începe cu comanda `Tab`, care comută la `Entity Relationship Diagram`, `Visualization`, `Schema SQL`, `Code Generator` sau `Settings`, omițând fila în care vă aflați deja.
+
+În fila ERD: `Database`, `Import`, `Import and Add` și `Export`, apoi `New Table`, `New Memo`, `New Table Group` și `Group Selected Tables`, cele patru tipuri de relații și `Auto Layout`. Tabelele nu sunt listate aici; tastați `#` pentru a [merge la unul dintre ele](#searching-the-diagram).  
+Comanda `Import and Add` este omisă într-un editor doar în citire, iar `New Memo`, cât timp [View Option](./table-related-functions.md#table-view-options) → `Memos` ascunde notele. `New Table Group` începe trasarea unui [grup de tabele](./table-groups.md) pe pânză, iar `Group Selected Tables` pune tabelele selectate într-un grup nou și deschide numele acestuia pentru tastare. Ambele sunt omise într-un editor doar în citire și cât timp View Option → `Table Groups` ascunde grupurile, iar `Group Selected Tables` necesită în plus cel puțin un tabel selectat. Rândurile lor afișează tastele: `Alt + G` (Windows/Linux) sau `⌥ + G` (Mac) pentru [trasarea unui grup](./table-groups.md#drawing-a-group) și `T` apoi `G` pentru [gruparea tabelelor selectate](./table-groups.md#grouping-selected-tables).  
+Acestea rulează aceleași comenzi ca meniul contextual al pânzei, cu excepția comenzii `Group Selected Tables`, care corespunde elementului `Group selected tables` din meniul tabelului; elementele `View Option` și `Diff Viewer` se află doar în meniul contextual. Comanda `Export` oferă aceleași elemente `json`, `Schema SQL` și `Image` ca meniul contextual, iar tastarea `png` sau `svg` în submeniul ei găsește `Image`.  
+Consultați [Importarea sau exportarea fișierelor](./file-import-export.md) pentru a afla ce fac fiecare format, operația [Import și adăugare](./file-import-export.md#import-and-add) și [exportul de imagini](./file-import-export.md#image), precum și [Funcții pentru tabele](./table-related-functions.md#databases) pentru a afla ce influențează alegerea bazei de date.
+
+În fila Schemă SQL: din nou `Database` și `Bracket`, care setează caracterul de delimitare plasat în jurul numelor de tabele, coloane, constrângeri și indexuri în codul SQL generat: `SingleQuote`, `DoubleQuote`, `Backtick` sau `None`, pentru a nu folosi niciun delimitator. Apoi `Schema SQL: Statements` și `Schema SQL: Header`, care oferă aceleași alegeri ca panoul de opțiuni al filei, dar le listează doar pe cele pe care le scrie baza de date selectată, și `Schema SQL: Options panel`, care afișează sau ascunde acel panou. Consultați [Schemă SQL](./schema-sql.md) pentru a afla ce scrie fiecare alegere.
+
+În fila Generator de cod: `Database`, `Bracket` cât timp limbajul este `Doctrine`, `JPA` sau `SeaORM`, apoi `Language`, `Table Name Case`, `Column Name Case` și `Code Generator: Options panel`, care afișează sau ascunde panoul de opțiuni al filei. Consultați [Generator de cod](./code-generator.md) pentru a afla ce produce fiecare țintă.
+
+Filele Vizualizare și Setări nu au comenzi proprii, ci doar `Tab` și comenzile de mai jos, pe care le listează fiecare filă.
+
+Spre finalul listei fiecărei file, inclusiv într-un editor doar în citire, se află comanda `Toggle Explorer`, care își afișează comanda rapidă, `Ctrl + F` (Windows/Linux) sau `⌘ + F` (Mac). Tastarea cuvintelor `find`, `replace`, `rename`, `tree`, `outline` sau `objects` o găsește de asemenea.  
+Rularea ei închide paleta și face ce face comanda rapidă pe pânză. Cât timp butonul `Explorer` din bara de instrumente apare apăsat, adică cât timp exploratorul este deschis în fila ERD și nu este ascuns de modul Zen, comanda închide exploratorul. Altfel, comanda trece la fila ERD și deschide exploratorul cu focusul pe căutare, cu cursorul de text în câmpul Găsire (consultați [Deschiderea și închiderea](./explorer.md#opening-and-closing)). Comanda este omisă cât timp este deschis vizualizatorul de diferențe, călătoria în timp sau previzualizarea aranjării automate.
+
+### Temă și limbă de afișare {#theme-and-display-language}
+
+După comanda `Toggle Explorer`, fiecare filă listează comenzile `Theme` și `Display Language`, inclusiv într-un editor doar în citire. Fiecare comandă este listată doar acolo unde editorul oferă selectorul corespunzător, așa cum arată butoanele `Theme` și `Display Language` din bara de instrumente. Aplicația web, Google Drive, VS Code, IDE-urile JetBrains și Obsidian le oferă pe amândouă (consultați [În fiecare aplicație gazdă](./language-and-theme.md#in-each-host)).
+
+Comanda `Theme` deschide `System`, `Light` și `Dark`, cu aspectul curent bifat. Alegerea uneia dintre ele schimbă doar aspectul și păstrează tonul de gri și culoarea de accent, la fel ca butoanele `Appearance` ale configuratorului de teme.  
+Comanda `Display Language` deschide `System`, apoi cele 25 de limbi, fiecare cu numele în propria limbă și în ordinea din selector, cu opțiunea curentă bifată. Aici, o limbă se găsește și după numele său în engleză sau după cod: `german` sau `de-DE` găsește `Deutsch`, iar `korean` găsește `한국어`.  
+O alegere făcută în oricare dintre ele se aplică imediat, închide paleta și se păstrează la fel ca una făcută în configuratorul de teme sau în selectorul `Display Language`. Dacă limba de afișare se schimbă cât timp paleta este deschisă, lista trece la noua limbă, păstrând ce ați tastat și submeniul în care vă aflați.
+
+## Căutarea în diagramă {#searching-the-diagram}
+
+Începeți căutarea cu un prefix pentru a căuta în diagramă, nu în comenzi: `#` pentru tabele, `@` pentru coloane, `:` pentru comentarii și note sau `?` pentru a lista prefixele. Un prefix funcționează din orice filă. Prefixul contează doar ca prim caracter, fără a lua în calcul spațiile dinaintea lui. Un spațiu după el este opțional, așa că `#users` și `# users` sunt aceeași căutare, iar caracterele de lățime completă `＃`, `＠`, `：` și `？` pe care le tastează o metodă de introducere japoneză sau chineză contează de asemenea.  
+Cât timp câmpul de căutare este gol la nivelul superior, un rând de sub el afișează cele patru prefixe; faceți clic pe unul pentru a-l tasta. Cât timp un prefix este activ, la capătul câmpului de căutare apare numele domeniului său: `Tables`, `Columns`, `Comments & memos` sau `Help`. Ștergeți prefixul pentru a readuce comenzile.
+
+Prefixul `#` listează tabelele, fiecare cu `Table` alături, iar un tabel fără nume este listat ca `unnamed`. Fără nimic după `#`, tabelele sunt sortate după nume. Textul de după `#` este comparat doar cu numele tabelelor, prin potrivire aproximativă, ca mai sus, iar tabelele al căror nume îl conține apar primele. Numele grupurilor de tabele și numele indexurilor nu sunt căutate sub niciun prefix; funcția [Găsire și înlocuire](./find-and-replace.md#what-it-searches) caută în ambele.
+
+Prefixul `@` listează coloanele după nume, fiecare având alături locul în care se află, de exemplu `users.email · Column`. Textul de după `@` trebuie să apară în numele coloanei, indiferent de majuscule; această potrivire nu este aproximativă. Textul dinaintea primului `.` restrânge căutarea la tabelele al căror nume îl conține: `@users.em` listează coloanele care conțin `em` din tabelele al căror nume conține `users`, `@users.` listează coloanele acelor tabele, iar `@.em` caută în toate tabelele. Fără nimic după `@`, coloanele sunt listate fără filtrare.
+
+Prefixul `:` listează comentariile de tabel, comentariile de coloană și notele, niciodată numele. Fiecare rând afișează un fragment din textul din jurul potrivirii, având alături `users · Table comment`, `users.email · Column comment` sau `Memo`. Textul de după `:` trebuie să apară în comentariu sau în notă, indiferent de majuscule, ca în cazul prefixului `@`. Fără nimic după `:`, sunt listate comentariile și notele care nu sunt goale. Cât timp View Option → `Memos` ascunde notele, prefixul `:` nu listează nicio notă.
+
+Prefixele `@` și `:` își listează rândurile în ordinea în care le conține documentul: tabel cu tabel, comentariul fiecărui tabel înaintea coloanelor sale, în ordinea coloanelor, iar notele la final.
+
+Prefixul `?` listează `Tables`, `Columns` și `Comments & memos`, iar textul de după `?` le filtrează. Alegerea unuia dintre ele înlocuiește conținutul câmpului de căutare cu prefixul său și lasă paleta deschisă.
+
+O listă cu prefix conține toate potrivirile, oricâte ar fi. Un prefix a cărui căutare nu găsește nimic lasă lista goală, fără niciun mesaj.
+
+Alegerea unui tabel, a unei coloane, a unui comentariu sau a unei note închide paleta și trece la fila ERD dacă vă aflați în altă filă.  
+Pânza se derulează până la elementul ales, dacă acesta nu este deja bine vizibil (consultați [Unde ajunge un salt](./table-related-functions.md#where-a-jump-lands)). Un tabel este apoi selectat singur și adus în prim-plan, cu focusul pe numele său, dacă focusul nu se afla deja în acel tabel.  
+O notă este selectată singură și adusă în prim-plan. Pentru o coloană sau un comentariu, tabelul său este selectat singur, adus în prim-plan și primește focusul pe celula care conține textul sau pe numele de lângă un comentariu pe care îl ascunde o [opțiune de afișare a tabelelor](./table-related-functions.md#table-view-options).  
+Niciun salt nu pornește și nu finalizează o relație în curs de trasare.
+
+Pentru opțiunile `Match Case`, `Match Whole Word` sau `Use Regular Expression` ori pentru a înlocui text, folosiți funcția [Găsire și înlocuire](./find-and-replace.md) din partea de sus a exploratorului.
+
+## Când nicio comandă nu corespunde {#when-no-command-matches}
+
+La nivelul superior, fără prefix, dacă nicio comandă listată nu conține ce ați tastat, indiferent de majuscule, după comenzi urmează trei rânduri: `Search tables for "…"`, `Search columns for "…"` și `Search comments & memos for "…"`, fiecare având drept pictogramă prefixul său. Alegerea unuia dintre ele tastează acel prefix înaintea textului dumneavoastră, așa că `users` devine `#users`, iar paleta rămâne deschisă pe acele rezultate.  
+Dacă această căutare nu găsește nicio comandă, deasupra listei apare mesajul `No commands match`, iar lista conține atunci doar cele trei rânduri. Dacă găsește doar comenzi care nu conțin textul, acestea apar primele: în fila ERD, fără niciun tabel selectat, textul `tables` listează `New Table`, `Database` și, acolo unde este oferită, `New Table Group` înaintea celor trei rânduri. Cu un tabel selectat, comanda `Group Selected Tables`, acolo unde este oferită, conține `tables`, așa că cele trei rânduri nu apar.  
+Într-un submeniu, o căutare care nu găsește nimic lasă lista goală, fără niciun mesaj.
+
+## Căutarea în coreeană {#searching-in-korean}
+
+O căutare care conține caractere Hangul se potrivește și după literele lor, în comenzi, în submeniuri și sub fiecare prefix.  
+Fiecare etapă prin care trece o metodă de introducere coreeană găsește în continuare rândul al cărui text îl tastați, așa că `ㅅ`, `사`, `상`, `사요` și `사용` găsesc toate `사용자`. O căutare formată doar din consoane inițiale se potrivește cu consoanele inițiale ale silabelor, ignorând spațiile: `ㅅㅇㅈ` găsește `사용자`, iar `ㅈㅁ` găsește `주문 내역`. Un grup de consoane pe care o metodă de introducere din Windows îl compune din două inițiale tastate succesiv, de exemplu `ㅄ`, este tratat ca cele două inițiale (`ㅂㅅ`), în timp ce o consoană dublă, de exemplu `ㄲ`, rămâne o singură literă. Textul stocat în formă descompusă, cum sunt numele de fișiere din macOS, se potrivește ca și cum ar fi compus.  
+Primele apar rândurile al căror text întreg corespunde căutării, literă cu literă sau inițială cu inițială, apoi rândurile care încep cu ea, apoi rândurile care o conțin. Sub prefixele `@` și `:`, rândurile care conțin căutarea exact cum a fost tastată apar înaintea tuturor acestora, în ordinea din document. Evidențierea acoperă silabe întregi, așa că `상` evidențiază `사용` în `사용자`.

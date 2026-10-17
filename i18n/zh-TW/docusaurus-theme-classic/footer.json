@@ -1,0 +1,62 @@
+{
+  "link.title.Docs": {
+    "message": "文件",
+    "description": "The title of the footer links column with title=Docs in the footer"
+  },
+  "link.title.Editors": {
+    "message": "編輯器",
+    "description": "The title of the footer links column with title=Editors in the footer"
+  },
+  "link.title.More": {
+    "message": "更多",
+    "description": "The title of the footer links column with title=More in the footer"
+  },
+  "link.item.label.Guide": {
+    "message": "指南",
+    "description": "The label of footer link with label=Guide linking to /docs/guide/introduction"
+  },
+  "link.item.label.API": {
+    "message": "API",
+    "description": "The label of footer link with label=API linking to /docs/api/installation"
+  },
+  "link.item.label.MCP": {
+    "message": "MCP",
+    "description": "The label of footer link with label=MCP linking to /docs/mcp/introduction"
+  },
+  "link.item.label.Web App": {
+    "message": "網頁應用程式",
+    "description": "The label of footer link with label=Web App linking to https://erd-editor.io"
+  },
+  "link.item.label.Google Drive": {
+    "message": "Google Drive",
+    "description": "The label of footer link with label=Google Drive linking to https://workspace.google.com/marketplace/app/erd_editor/428467403360"
+  },
+  "link.item.label.VSCode Extension": {
+    "message": "VSCode 擴充功能",
+    "description": "The label of footer link with label=VSCode Extension linking to https://marketplace.visualstudio.com/items?itemName=dineug.vuerd-vscode"
+  },
+  "link.item.label.IntelliJ Plugin": {
+    "message": "IntelliJ 外掛程式",
+    "description": "The label of footer link with label=IntelliJ Plugin linking to https://plugins.jetbrains.com/plugin/23594-erd-editor"
+  },
+  "link.item.label.Obsidian Plugin": {
+    "message": "Obsidian 外掛程式",
+    "description": "The label of footer link with label=Obsidian Plugin linking to https://community.obsidian.md/plugins/erd-editor"
+  },
+  "link.item.label.GitHub": {
+    "message": "GitHub",
+    "description": "The label of footer link with label=GitHub linking to https://github.com/dineug/erd-editor"
+  },
+  "link.item.label.npm": {
+    "message": "npm",
+    "description": "The label of footer link with label=npm linking to https://www.npmjs.com/package/@dineug/erd-editor"
+  },
+  "link.item.label.Issues": {
+    "message": "問題回報",
+    "description": "The label of footer link with label=Issues linking to https://github.com/dineug/erd-editor/issues"
+  },
+  "copyright": {
+    "message": "Copyright © 2026 SeungHwan-Lee. MIT 授權。",
+    "description": "The footer copyright"
+  }
+}

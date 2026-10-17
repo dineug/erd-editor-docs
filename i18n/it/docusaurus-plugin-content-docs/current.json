@@ -1,0 +1,18 @@
+{
+  "version.label": {
+    "message": "Successiva",
+    "description": "The label for version current"
+  },
+  "sidebar.docs.category.Guides": {
+    "message": "Guide",
+    "description": "The label for category 'Guides' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Guides.link.generated-index.description": {
+    "message": "Come disegnare e modificare un diagramma: creare tabelle e relazioni, importare ed esportare file e usare le opzioni di visualizzazione dell’editor.",
+    "description": "The generated-index page description for category 'Guides' in sidebar 'docs'"
+  },
+  "sidebar.api.category.Advanced": {
+    "message": "Avanzate",
+    "description": "The label for category 'Advanced' in sidebar 'api'"
+  }
+}

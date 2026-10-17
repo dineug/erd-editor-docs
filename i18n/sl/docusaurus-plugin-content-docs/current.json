@@ -1,0 +1,18 @@
+{
+  "version.label": {
+    "message": "Naslednja",
+    "description": "The label for version current"
+  },
+  "sidebar.docs.category.Guides": {
+    "message": "Vodniki",
+    "description": "The label for category 'Guides' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Guides.link.generated-index.description": {
+    "message": "Kako narisati in urediti diagram: ustvarjanje tabel in relacij, uvoz in izvoz datotek ter možnosti pogleda urejevalnika.",
+    "description": "The generated-index page description for category 'Guides' in sidebar 'docs'"
+  },
+  "sidebar.api.category.Advanced": {
+    "message": "Napredno",
+    "description": "The label for category 'Advanced' in sidebar 'api'"
+  }
+}

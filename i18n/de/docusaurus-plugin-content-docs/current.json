@@ -1,0 +1,18 @@
+{
+  "version.label": {
+    "message": "Nächste",
+    "description": "The label for version current"
+  },
+  "sidebar.docs.category.Guides": {
+    "message": "Anleitungen",
+    "description": "The label for category 'Guides' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Guides.link.generated-index.description": {
+    "message": "So zeichnen und bearbeiten Sie ein Diagramm: Tabellen und Beziehungen erstellen, Dateien importieren und exportieren sowie die Ansichtsoptionen des Editors.",
+    "description": "The generated-index page description for category 'Guides' in sidebar 'docs'"
+  },
+  "sidebar.api.category.Advanced": {
+    "message": "Erweitert",
+    "description": "The label for category 'Advanced' in sidebar 'api'"
+  }
+}

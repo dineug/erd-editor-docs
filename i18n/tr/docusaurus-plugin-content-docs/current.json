@@ -1,0 +1,18 @@
+{
+  "version.label": {
+    "message": "Sonraki",
+    "description": "The label for version current"
+  },
+  "sidebar.docs.category.Guides": {
+    "message": "Kılavuzlar",
+    "description": "The label for category 'Guides' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Guides.link.generated-index.description": {
+    "message": "Bir diyagramı nasıl çizip düzenleyeceğiniz: tablo ve ilişki oluşturma, dosyaları içe ve dışa aktarma ile düzenleyicinin görünüm seçenekleri.",
+    "description": "The generated-index page description for category 'Guides' in sidebar 'docs'"
+  },
+  "sidebar.api.category.Advanced": {
+    "message": "Gelişmiş",
+    "description": "The label for category 'Advanced' in sidebar 'api'"
+  }
+}

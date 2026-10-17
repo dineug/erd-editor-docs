@@ -21,7 +21,7 @@ description: 22 種類の対象へのコード生成、オプションパネル�
 ## オプションパネル
 
 パネルには、`Saved in the document` の見出しの下に `Language`、`Database`、`Table Name Case`、`Column Name Case` が並び、言語が `Doctrine`、`JPA`、`SeaORM` のいずれかの間は、その後に `Bracket` が続きます。どれもドロップダウンリストで、変更するとすぐにコードが書き直されます。  
-選択している言語が `Database` や名前のケースを使わない場合、それらは `Not used by DBML` のような注記を下に付けて淡い色でパネルに残り、変更することもできます。  
+選択している言語が `Database` や名前のケースを使わない場合、それらは `Not used by DBML` のような注記を下に付けて淡い色でパネルに残り、それでも変更できます。  
 パネルの下部には `Save file` と `Copy` があります。[結果の保存とコピー](#結果の保存とコピー)を参照してください。
 
 これらはダイアグラム自身の設定で、コンテキストメニューとクイック検索が変更するのも同じ設定です。`Database` は、ほかの編集と同じようにファイルに保存されます。  
@@ -111,7 +111,7 @@ ORM の対象がどのアクションを残すかは選択しているデータ�
 `SeaORM` は、PostgreSQL、MySQL、MariaDB、SQLite では、SeaORM がそのままでは別のカラムの型を作成する場合に `column_type` を出力し、SeaORM にバックエンドがない MSSQL、Oracle、Snowflake、Databricks では出力しません。
 
 選択しているデータベースは、ORM の対象がどの ON DELETE と ON UPDATE のアクションを出力するかも決定します。  
-`Doctrine`、`SeaORM`、`Sequelize`、`SQLAlchemy`、`TypeORM` は、MySQL と MariaDB の `SET DEFAULT`、MSSQL の `RESTRICT`、Snowflake と Databricks の `NO ACTION` 以外のすべてのアクションのように、そのデータベースの Schema SQL が省くアクションを省くため、データベースの既定の動作が適用されます。すべての一覧は [ON DELETE と ON UPDATE](./relationship-editing.md#on-delete-and-on-update) にあります。  
+`Doctrine`、`SeaORM`、`Sequelize`、`SQLAlchemy`、`TypeORM` は、そのデータベースの Schema SQL が省くアクション（例えば MySQL と MariaDB では `SET DEFAULT`、MSSQL では `RESTRICT`、Snowflake と Databricks では `NO ACTION` 以外のすべてのアクション）を省くため、データベースの既定の動作が適用されます。すべての一覧は [ON DELETE と ON UPDATE](./relationship-editing.md#on-delete-and-on-update) にあります。  
 `Drizzle` は代わりに、出力する方言に従います。`mysqlTable` のコードは `SET DEFAULT` を省き、`pgTable` と `sqliteTable` のコードはすべてのアクションを残します。MSSQL、Oracle、Snowflake、Databricks 向けに出力する `pgTable` のコードも同様です。
 
 `AML`、`DBML`、`Mermaid` は例外です。データ型をダイアグラムに書かれているとおりに出力するため、データベースの設定は出力を変えず、パネルではこれらの対象の `Database` が淡い色で表示されます。`AML` と `DBML` はリレーションシップに設定したアクションをすべて出力し、`Mermaid` は何も出力しません。
@@ -132,5 +132,5 @@ Schema SQL タブの括弧の種類と同じ設定のため、ここで変更す
 Export メニューには Code Generator の項目はなく、テーブルのプロパティの `Code Generator` タブではファイルを保存できません。
 
 コードをコピーするには、パネルの下部の `Copy` をクリックするか、コードにマウスを重ねて右上のコピーボタンをクリックします。テーブルのプロパティでは、コピーボタンが唯一の方法です。  
-チェックマークの付いた `Copied!` のトーストが 2 秒間表示されます。ブラウザやホストがクリップボードを拒否した場合は、代わりに警告マークの付いた `Couldn't copy to the clipboard` のトーストが表示されます。もう一度コピーすると、トーストが増えるのではなく置き換わります。  
+チェックマークの付いた `Copied!` のトーストが 2 秒間表示され、コピーされたことを伝えます。ブラウザやホストがクリップボードを拒否した場合は、代わりに警告マークの付いた `Couldn't copy to the clipboard` のトーストでそのことを伝えます。もう一度コピーすると、トーストが増えるのではなく置き換わります。  
 テキストは選択もできるため、必要な部分だけを取り出せます。

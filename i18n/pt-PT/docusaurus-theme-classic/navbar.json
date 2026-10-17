@@ -1,0 +1,46 @@
+{
+  "title": {
+    "message": "erd-editor",
+    "description": "The title in the navbar"
+  },
+  "logo.alt": {
+    "message": "Logótipo do erd-editor",
+    "description": "The alt text of navbar logo"
+  },
+  "item.label.Guide": {
+    "message": "Guia",
+    "description": "Navbar item with label Guide"
+  },
+  "item.label.API": {
+    "message": "API",
+    "description": "Navbar item with label API"
+  },
+  "item.label.MCP": {
+    "message": "MCP",
+    "description": "Navbar item with label MCP"
+  },
+  "item.label.Editors": {
+    "message": "Editores",
+    "description": "Navbar item with label Editors"
+  },
+  "item.label.Web App": {
+    "message": "Aplicação web",
+    "description": "Navbar item with label Web App"
+  },
+  "item.label.Google Drive": {
+    "message": "Google Drive",
+    "description": "Navbar item with label Google Drive"
+  },
+  "item.label.VSCode Extension": {
+    "message": "Extensão do VSCode",
+    "description": "Navbar item with label VSCode Extension"
+  },
+  "item.label.IntelliJ Plugin": {
+    "message": "Plugin do IntelliJ",
+    "description": "Navbar item with label IntelliJ Plugin"
+  },
+  "item.label.Obsidian Plugin": {
+    "message": "Plugin do Obsidian",
+    "description": "Navbar item with label Obsidian Plugin"
+  }
+}

@@ -118,14 +118,14 @@ Snowflake 只用双引号为名称加引号，因此在 `None` 以外的任何�
 
 这两个输入框会对 SQL 进行语法高亮，并随文本增多而变高。  
 编辑会在你离开输入框时（点击其他位置或切换标签页）生效，旁边的 SQL 和文档也直到此时才会改变。只是点进输入框而没有修改时，不会改变任何内容。  
-对脚本的编辑与其他任何编辑一样会改变图：它会保存到文件中，协作者可以看到它，每次生效的编辑都是 [Undo 历史记录](./undo-redo.md)中的一步，可以在 ERD 标签页中将其撤销。  
-在输入框中输入时，编辑器自身的快捷键会交给输入框处理，因此 `Ctrl + Z` (Windows/Linux) 或 `⌘ + Z` (Mac) 撤销的是你在其中输入的内容，复制、剪切和粘贴作用于文本而不是图。  
+对脚本的编辑与其他任何编辑一样会改变图：它会保存到文件中，协作者可以看到它，每次生效的编辑都是 [Undo 历史记录](./undo-redo.md)中的一步，可以在 ERD 标签页中将其撤回。  
+在输入框中输入时，编辑器自身的快捷键会交给输入框处理，因此 `Ctrl + Z` (Windows/Linux) 或 `⌘ + Z` (Mac) 撤回的是你在其中输入的内容，复制、剪切和粘贴作用于文本而不是图。  
 快速搜索和[资源管理器的搜索](./find-and-replace.md)仍可通过各自的快捷键打开，即 `Ctrl + K` 和 `Ctrl + F` (Windows/Linux) 或 `⌘ + K` 和 `⌘ + F` (Mac)。由于 `Ctrl + F` 或 `⌘ + F` 会切换到 ERD 标签页，它也会像任何标签页切换一样让你的编辑生效。  
 没有键盘焦点的输入框会跟随协作者或[编码智能体](../../mcp/tools.md#settings)对其脚本所做的更改。对于你正在其中的输入框，如果你没有输入任何内容，离开时会显示该更改；如果你输入了内容，离开时会应用你的文本并替换对方的文本。
 
 ## 保存或复制 SQL {#saving-or-copying-the-sql}
 
-面板底部或右键菜单中的 `Save file` 会将该标签页显示的 SQL 原样保存为 `<数据库名>-<时间戳>.sql`，包括其当前的数据库、引号、语句、头部、表和脚本。它的命名和保存方式与其他所有导出相同，参见[导出](./file-import-export.md#exporting)。
+面板底部或右键菜单中的 `Save file` 会将该标签页显示的 SQL 原样保存为 `<database name>-<timestamp>.sql`，包括其当前的数据库、引号、语句、头部、表和脚本。它的命名和保存方式与其他所有导出相同，参见[导出](./file-import-export.md#exporting)。
 
 画布右键菜单或快速搜索中的 `Export` ▸ `Schema SQL` 本身不会保存任何内容。  
 它会切换到此标签页，即使选项面板已收起也会将其打开，并把键盘焦点放在 `Save file` 上，因此按 `Enter` 即可保存文件。
@@ -162,7 +162,7 @@ Snowflake 省略某个操作时，会在该外键的 `ALTER TABLE` 上方写一�
 
 当 `Bracket` 为 `None` 时，带点的表名（例如 `sales.users`）会被读作 schema 和表，在方括号或双引号之外的最后一个点处拆分。
 
-- MySQL、MariaDB、MSSQL、Oracle 和 PostgreSQL 只用表的部分来构建它们写出的自动名称：五者都有 `FK_users_TO_orders` 和 `IDX_users`，除 PostgreSQL 外都有 `UQ_users_email`，MSSQL 和 Oracle 这两个为主键命名的数据库还有 `PK_users`。在这两者上，`[sales].[users]` 和 `"sales"."users"` 同样得到 `PK_users`，`[Order]` 则得到 `PK_Order`。
+- MySQL、MariaDB、MSSQL、Oracle 和 PostgreSQL 只用名称中的表部分来构建它们写出的自动名称：五者都有 `FK_users_TO_orders` 和 `IDX_users`，除 PostgreSQL 外都有 `UQ_users_email`，MSSQL 和 Oracle 这两个为主键命名的数据库还有 `PK_users`。在这两者上，`[sales].[users]` 和 `"sales"."users"` 同样得到 `PK_users`，`[Order]` 则得到 `PK_Order`。
 - SQLite 不为约束命名，因此它构建的唯一自动名称是索引的名称：`CREATE INDEX sales.IDX_users ON users`。
 - Oracle 会在表所在的 schema 中创建表的索引，以及自动递增列的序列和触发器：`sales.IDX_users`、`sales.SEQ_users` 和 `sales.SEQ_TRG_users`。
 - 在 Oracle 和 SQLite 中，你自己为索引名指定的 schema 会被保留。

@@ -1,0 +1,18 @@
+{
+  "version.label": {
+    "message": "Volgende",
+    "description": "The label for version current"
+  },
+  "sidebar.docs.category.Guides": {
+    "message": "Handleidingen",
+    "description": "The label for category 'Guides' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Guides.link.generated-index.description": {
+    "message": "Hoe je een diagram tekent en bewerkt: tabellen en relaties maken, bestanden importeren en exporteren en de weergaveopties van de editor instellen.",
+    "description": "The generated-index page description for category 'Guides' in sidebar 'docs'"
+  },
+  "sidebar.api.category.Advanced": {
+    "message": "Geavanceerd",
+    "description": "The label for category 'Advanced' in sidebar 'api'"
+  }
+}

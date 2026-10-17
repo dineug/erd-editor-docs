@@ -40,7 +40,7 @@ description: erd-editor MCP 服务器提供的所有工具：一次一页地读�
 
 | `format` | 返回内容 |
 | --- | --- |
-| `snapshot` | 包含每个实体及其 id 的紧凑 JSON，其中包括表分组，以及设置和 Schema SQL 脚本。它省略因查看者而异的内容：测量出的宽度、堆叠顺序、视图和标签页。schema 较大时体积也较大。 |
+| `snapshot` | 包含每个实体及其 id 的紧凑 JSON，其中包括表分组，以及设置和 Schema SQL 脚本。它省略因查看者而异的内容：测量出的宽度、叠放顺序、视图和标签页。schema 较大时体积也较大。 |
 | `sql` | 八种数据库之一的 DDL：`Databricks`、`MariaDB`、`MSSQL`、`MySQL`、`Oracle`、`PostgreSQL`、`Snowflake` 或 `SQLite`。`vendor` 默认为文档所设置的数据库。整个文档的 DDL 包含其前置脚本和后置脚本。指定 `tableIds`、`tableNames` 或 `groupNames` 时，只返回这些表，以及它们持有的外键，不包含脚本。外键会带有其 ON DELETE 与 ON UPDATE 操作，目标数据库省略的操作除外，参见 [ON DELETE 与 ON UPDATE](../guide/guides/relationship-editing.md#on-delete-and-on-update)。 |
 | `json` | 与保存时写出的文件完全相同的整个文档，包括编辑器尚未保存的编辑，参见[存储形式与运行时值](../api/advanced/schema.md#存储形式与运行时值)。 |
 | `scripts` | 只返回文档的前置脚本和后置脚本，形式为 `{"before":"…","after":"…"}`，未设置的脚本为空，无论 schema 有多大。 |
@@ -147,7 +147,7 @@ id 来自 `erd_list` 和 `erd_get`，或者来自创建该实体的那次调用�
 | `erd_change_memo_value` | `memoId`, `value` | 替换备注的文本。 |
 | `erd_change_memo_color` | `memoId`, `color` | 设置备注的颜色。 |
 | `erd_move_memo` | `memoId`, `x`, `y` | 将备注移动到画布上的某个位置。 |
-| `erd_resize_memo` | `memoId`, `width`, `height` | 调整备注的大小。宽度至少约为 `116` 像素，高度至少为 `100` 像素。它不产生 Undo 记录，因为编辑器只在拖动调整备注大小时才会记录。 |
+| `erd_resize_memo` | `memoId`, `width`, `height` | 调整备注的大小。宽度必须至少约为 `116` 像素，高度必须至少为 `100` 像素。它不产生 Undo 记录，因为编辑器只在拖动调整备注大小时才会记录。 |
 
 通过 [View Option](../guide/guides/table-related-functions.md#table-view-options) → `Memos` 隐藏备注期间，`erd_add_memo` 仍会添加备注，该备注会保持隐藏，直到备注再次显示。
 `erd_list` 和 `erd_get` 同样会列出隐藏的备注。

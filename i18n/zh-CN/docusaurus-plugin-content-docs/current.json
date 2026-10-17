@@ -1,4 +1,8 @@
 {
+  "version.label": {
+    "message": "下一版",
+    "description": "The label for version current"
+  },
   "sidebar.docs.category.Guides": {
     "message": "指南",
     "description": "The label for category 'Guides' in sidebar 'docs'"
