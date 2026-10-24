@@ -53,7 +53,8 @@ Ett VS Code-fönster betjänar diagrammen i sina arbetsområdesmappar och alla d
 2. Öppna projektmappen och lita på arbetsområdet. Tillägget betjänar agenter bara i ett betrott arbetsområde.
 3. Låt inställningen `dineug.erd-editor.agentHub.enabled` vara på. Den är på som standard.
 
-Ett tillägg från `3.0.0` till `3.1.0` och servern i version `1.0.0` nekar varandra, och ett tillägg före `3.0.0` betjänar inga agenter – se [Uppdatera](#updating).
+Ett tillägg från `3.0.0` till `3.1.0` och servern i version `1.0.0` eller senare nekar varandra, och ett tillägg före `3.0.0` betjänar inga agenter.
+Ett tillägg i version `4.0.0` eller `4.1.0` ansluter, men varken visar eller behåller de logiska namn, domänkopplingar och rader i ordlistorna som agenten skriver – se [Uppdatera](#updating).
 
 Tillägget startar i ett arbetsområde som innehåller filer med filändelsen `.erd`, `.erd.json`, `.vuerd` eller `.vuerd.json`, så en agent når de diagrammen innan du öppnar något av dem.
 I ett arbetsområde utan sådana filer startar det när du öppnar ett diagram, och fram till dess redigerar agenten på disken.
@@ -69,7 +70,8 @@ Ett valvfönster i Obsidian betjänar diagrammen i sitt valv.
 1. Installera [pluginet ERD Editor](https://community.obsidian.md/plugins/erd-editor) `1.0.0` eller senare från Community plugins och slå på det. Det körs bara i skrivbordsappen och kräver Obsidian `1.5.7` eller senare.
 2. Låt Settings → ERD Editor → Coding agents vara på. Den är på som standard, och varje valv har sin egen inställning.
 
-En tidigare version av pluginet och servern i version `1.0.0` nekar varandra – se [Uppdatera](#updating).
+Ett plugin före `1.0.0` och servern i version `1.0.0` eller senare nekar varandra.
+Ett plugin i version `1.0.0` eller `1.1.0` ansluter, men varken visar eller behåller de logiska namn, domänkopplingar och rader i ordlistorna som agenten skriver – se [Uppdatera](#updating).
 
 Ett valvfönster betjänar agenter från det ögonblick pluginet läses in, så en agent når valvets diagram innan du öppnar något av dem.
 Det finns inget förtroendesteg.
@@ -95,7 +97,8 @@ En JetBrains-IDE betjänar diagrammen i alla projekt som är öppna i den och al
 2. Öppna projektet och lita på det. I ett projekt som IDE:n inte litar på, till exempel ett som har öppnats i säkert läge, läser agenter diagrammen men ändrar dem aldrig.
 3. Låt Settings | Tools | ERD Editor → Coding agents vara ikryssad. Den är på som standard och gäller för hela IDE:n.
 
-Ett plugin i version `0.9.0` eller `0.10.0` och servern i version `1.0.0` nekar varandra, och ett plugin före `0.9.0` betjänar inga agenter – se [Uppdatera](#updating).
+Ett plugin i version `0.9.0` eller `0.10.0` och servern i version `1.0.0` eller senare nekar varandra, och ett plugin före `0.9.0` betjänar inga agenter.
+Ett plugin i version `1.0.0` eller `1.1.0` ansluter, men varken visar eller behåller de logiska namn, domänkopplingar och rader i ordlistorna som agenten skriver – se [Uppdatera](#updating).
 
 IDE:n betjänar agenter från det ögonblick det första projektet öppnas, så en agent når ett projekts diagram innan du öppnar något av dem.
 
@@ -125,19 +128,26 @@ Servern kontrollerar vilken protokollversion editorn använder innan den anslute
 När de två skiljer sig åt nekas varje anrop som når den editorn med `protocolMismatch`, även läsningar och `erd_list_documents`, och ingenting skrivs.
 Meddelandet anger vilken sida som ska uppdateras: servern eller ERD Editor i editorn, vilket är tillägget i VS Code och pluginet i Obsidian och en JetBrains-IDE.
 
-Servern i version `1.0.0`, VS Code-tillägget `4.0.0` eller senare, Obsidian-pluginet `1.0.0` eller senare och JetBrains-pluginet `1.0.0` eller senare använder protokoll 2.
+Servern i version `1.0.0` eller senare, VS Code-tillägget `4.0.0` eller senare, Obsidian-pluginet `1.0.0` eller senare och JetBrains-pluginet `1.0.0` eller senare använder protokoll 2.
 Alla tidigare servrar använder protokoll 1, och det gör även alla tidigare editorversioner som betjänar agenter: VS Code-tillägget `3.0.0` till `3.1.0`, Obsidian-pluginet `0.1.0` och `0.2.0` samt JetBrains-pluginet `0.9.0` och `0.10.0`.
-En sådan editor och servern i version `1.0.0` nekar varandra, och det gör även en tidigare server och en editor som använder protokoll 2.
+En sådan editor och servern i version `1.0.0` eller senare nekar varandra, och det gör även en tidigare server och en editor som använder protokoll 2.
 Ett VS Code-tillägg före `3.0.0` eller ett JetBrains-plugin före `0.9.0` betjänar inga agenter alls, så agenten redigerar filerna på disken, även ett diagram som är öppet i det.
 
 | Kombination | Meddelandet slutar med |
 | --- | --- |
-| Servern i version `1.0.0` med ett tillägg eller plugin som använder protokoll 1 | `Update the ERD Editor extension or plugin in the editor until its hub speaks protocol 2.` |
+| Servern i version `1.0.0` eller senare med ett tillägg eller plugin som använder protokoll 1 | `Update the ERD Editor extension or plugin in the editor until its hub speaks protocol 2.` |
 | En tidigare server med ett tillägg eller plugin som använder protokoll 2 | `Update the MCP server (npx -y @dineug/erd-editor-mcp@latest) until it speaks protocol 2.` |
 
 Uppdatera servern och tillägget eller pluginet samtidigt.
+En server och en editor som använder samma protokoll ansluter, oavsett vilken av de två som är äldre, men bara servern i version `1.1.0` eller senare har verktyg för logiska namn, domäner och ordlistorna – se [Ordlistor](./tools.md#dictionaries).
+Bara VS Code-tillägget `4.2.0` eller senare och Obsidian- och JetBrains-pluginen `1.2.0` eller senare visar och behåller de logiska namn, domänkopplingar och rader i ordlistorna som de verktygen skriver.
+Ett tidigare tillägg eller plugin som ansluter ignorerar dem, även om agentens anrop lyckas.
+Det tillämpar ändå de fysiska namn som ordlistorna härleder och de datatyper som domänerna ger.
+En server före `1.1.0` läser en fil utan dess logiska namn, domänkopplingar och rader i ordlistorna och utelämnar dem när den redigerar filen på disken – se [Headless](./live-and-headless.md#headless).
+
 Uppdatera också ERD Editor överallt där diagrammen öppnas.
-VS Code-tillägget före `4.0.0`, Obsidian-pluginet före `1.0.0` och JetBrains-pluginet före `1.0.0` visar ett diagram som en senare version har sparat, eller som agenten har redigerat på disken, utan dess primärnyckelikoner.
-När de sparar filen tar de bort dess tabellgrupper och Schema SQL-skript.
+VS Code-tillägget före `4.2.0`, Obsidian-pluginet före `1.2.0` och JetBrains-pluginet före `1.2.0` öppnar ett diagram som en senare version har sparat, eller som agenten har redigerat på disken, utan tabellernas och kolumnernas logiska namn, kolumnernas domänkopplingar och diagrammets ord, termer och domäner.
+När de sparar filen utelämnar de dem.
+VS Code-tillägget före `4.0.0`, Obsidian-pluginet före `1.0.0` och JetBrains-pluginet före `1.0.0` visar också ett sådant diagram utan dess primärnyckelikoner och tar bort dess tabellgrupper och Schema SQL-skript när de sparar filen.
 VS Code-tillägget före `3.1.0`, Obsidian-pluginet före `0.2.0` och JetBrains-pluginet före `0.10.0` tar också bort ett diagrams åtgärder för ON DELETE och ON UPDATE när de sparar filen.
 I Obsidian startar du om appen efter att ha uppdaterat pluginet: fram till dess fortsätter ett valvfönster att köra ERD Editor från den pluginversion som det läste in först.

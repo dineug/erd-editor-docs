@@ -1,5 +1,5 @@
 ---
-sidebar_position: 4
+sidebar_position: 5
 description: Selezionare, spostare, copiare, duplicare ed eliminare tabelle e memo, impostare colori e opzioni di visualizzazione, definire indici e chiavi alternative, scegliere un database, muoversi nell’area di disegno infinita e confrontare documenti.
 ---
 
@@ -7,7 +7,8 @@ description: Selezionare, spostare, copiare, duplicare ed eliminare tabelle e me
 
 Tutto ciò che si fa con tabelle e memo una volta creati — selezionarli, spostarli, copiarli, eliminarli, assegnare loro un colore e impostare ciò che mostra l’area di disegno — più i controlli dell’area di disegno che li circondano.  
 Vengono prima i comandi per tabelle e memo; poi le proprietà della tabella, la focalizzazione delle tabelle, gli indici e le chiavi alternative, il Layout automatico e il fornitore di database; infine l’area di disegno stessa: la barra degli strumenti dell’area di disegno, lo zoom, lo spostamento della vista e dove porta un salto, e il Visualizzatore differenze.  
-I gruppi di tabelle, i riquadri che raccolgono le tabelle, hanno una pagina dedicata — vedere [Gruppi di tabelle](./table-groups.md).
+I gruppi di tabelle, i riquadri che raccolgono le tabelle, hanno una pagina dedicata — vedere [Gruppi di tabelle](./table-groups.md).  
+Lo stesso vale per i nomi logici e la Visualizzazione nomi, che decide i nomi mostrati dalle tabelle — vedere [Nomi logici](./logical-names.md).
 
 ## Selezione multipla {#multiple-selection}
 
@@ -26,11 +27,14 @@ Un clic con il pulsante destro su un elemento già selezionato mantiene l’inte
 
 ![Selezione delle tabelle con ⌘ + drag e ⌘ + click, poi di tutte le tabelle e i memo con ⌘ + A](/img/demo-table-select.webp)
 
-In una sessione collaborativa, la selezione, la cella con il focus e il riquadro di selezione di ogni partecipante vengono disegnati sull’area di disegno nel colore di quel partecipante — vedere [Modifica collaborativa](../../api/advanced/collaborative-editing.md).
+In una sessione collaborativa, la selezione, la cella con il focus e il riquadro di selezione di ogni partecipante vengono disegnati sull’area di disegno nel colore di quel partecipante — vedere [Modifica collaborativa](../../api/advanced/collaborative-editing.md).  
+La cella con il focus di un partecipante che guarda un’altra vista viene disegnata sulla cella che la vista in uso disegna al suo posto, ad esempio la sua cella del nome sulla cella del nome logico — vedere [Collaboratori](./logical-names.md#collaborators).
 
 ## Spostare più tabelle {#moving-multiple-tables}
 
 Trascinando una tabella o un memo che fa già parte della selezione, si sposta insieme l’intera selezione — non serve alcun tasto modificatore.  
+Una tabella si trascina dalla sua intestazione o da una qualsiasi delle righe delle sue colonne, quindi un trascinamento che parte dalla riga di una colonna sposta la tabella, non la colonna. Le colonne si spostano invece con la maniglia di trascinamento accanto alla riga con il focus — vedere [Riordinare e spostare le colonne](./table-editing.md#rearranging-and-moving-columns).  
+Su una cella dell’intestazione o sulla riga di una colonna, la tabella inizia a spostarsi solo dopo che il puntatore ha percorso un breve tratto, quindi un clic lì porta comunque il focus sulla cella e un doppio clic ne apre comunque l’editor. Un trascinamento non parte mai dal bordo colorato di una tabella, che apre il selettore colori, dai pulsanti `+` e `x` della sua intestazione o dalla `x` della riga di una colonna.  
 Trascinando un elemento esterno alla selezione, la selezione si riduce a quell’elemento, che viene spostato da solo. `Ctrl + drag` (Windows/Linux) o `⌘ + drag` (Mac) mantiene la selezione in entrambi i casi.  
 Solo il pulsante sinistro del mouse sposta tabelle e memo. Un clic con il pulsante destro sceglie l’elemento su cui agisce il menu contestuale e non sposta nulla, mentre un trascinamento con il pulsante centrale sposta invece la vista dell’area di disegno — vedere [Muoversi nell’area di disegno](#getting-around-the-canvas).
 
@@ -47,7 +51,9 @@ L’ordine non viene salvato: un diagramma riaperto sovrappone le tabelle nell�
 Copia le tabelle e i memo selezionati e li incolla come nuovi elementi.  
 Tasti di scelta rapida: `Ctrl + C` (Windows/Linux) o `⌘ + C` (Mac), `Ctrl + V` (Windows/Linux) o `⌘ + V` (Mac)
 
-Una tabella copiata mantiene nome, commento, colonne e colore; un memo copiato mantiene testo, dimensione e colore.  
+Una tabella copiata mantiene nome, nome logico, commento, colonne e colore; un memo copiato mantiene testo, dimensione e colore.  
+Ogni colonna copiata mantiene il suo nome logico, e ogni nome di tabella e di colonna mantiene l’informazione se sia stato derivato o meno dai dizionari — vedere [Derivare i nomi fisici](./dictionary.md#deriving-physical-names).  
+Una colonna incollata mantiene il suo collegamento a un dominio solo a due condizioni: il diagramma in cui arriva elenca proprio quel dominio, non solo uno con lo stesso nome, e il dominio ha ancora il tipo di dati con cui la colonna è stata copiata. Altrimenti la colonna arriva senza dominio e mantiene il tipo con cui è stata copiata — vedere [Collegare una colonna](./dictionary.md#linking-a-column).  
 Vengono copiati anche indici e relazioni: un indice viene copiato per intero sulla tabella copiata, e una relazione viene copiata con il suo tipo e le sue azioni ON DELETE e ON UPDATE quando entrambe le tabelle che collega fanno parte dell’insieme copiato. Una relazione a metà viene scartata anziché lasciata puntare all’originale.  
 Le copie incollate diventano la nuova selezione, e incollando di nuovo la stessa copia, la nuova copia viene spostata ogni volta di altri `50px`, così le copie incollate più volte non si impilano l’una sull’altra.  
 Una copia non mantiene il suo [gruppo di tabelle](./table-groups.md): la tabella incollata non appartiene ad alcun gruppo, anche quando finisce all’interno del riquadro di un gruppo, e un gruppo selezionato non viene copiato.  
@@ -60,11 +66,12 @@ Quando sono selezionate delle colonne all’interno di una tabella con il focus,
 ## Duplicare tabelle e memo {#duplicating-tables-and-memos}
 
 Tenere premuto `Alt` e trascinare una tabella o un memo con il pulsante sinistro del mouse.  
+Una tabella si afferra dalla sua intestazione o da una qualsiasi riga di colonna, quindi `Alt + drag` sulla riga di una colonna duplica la tabella e lascia invariato l’ordine delle colonne. Tenere premuto `Alt` sulla maniglia di trascinamento della colonna non duplica nulla: la colonna si sposta come con un semplice trascinamento della maniglia — vedere [Riordinare e spostare le colonne](./table-editing.md#rearranging-and-moving-columns).  
 Un’anteprima semitrasparente segue il puntatore, e rilasciando il pulsante la copia viene collocata dove si trova l’anteprima.  
 Se l’elemento afferrato fa già parte di una selezione, viene duplicata l’intera selezione. Altrimenti la selezione viene sostituita dall’entità sotto il puntatore.  
 `Alt + click` senza spostare il mouse colloca la copia `50px` più in basso e a destra, spostandola ulteriormente ogni volta che quel punto è già occupato.
 
-Un duplicato porta con sé le stesse cose di un elemento incollato: nomi, commenti, colonne, colori, dimensioni dei memo e gli indici e le relazioni che appartengono interamente a ciò che è stato copiato. Come un elemento incollato, non finisce in alcun gruppo di tabelle.  
+Un duplicato porta con sé le stesse cose di un [elemento incollato](#copyingpasting-tables-and-memos): nomi e nomi logici, commenti, colonne, colori, dimensioni dei memo e gli indici e le relazioni che appartengono interamente a ciò che è stato copiato. Poiché resta nello stesso diagramma, mantiene così com’è il collegamento a un dominio di ogni colonna. Come un elemento incollato, non finisce in alcun gruppo di tabelle.  
 `Alt + drag` sulla barra del titolo di un gruppo di tabelle sposta il gruppo come un normale trascinamento; un gruppo non viene mai duplicato.
 
 ![Duplicazione di una tabella con Alt + drag, poi Alt + click per un’altra copia in basso a destra](/img/demo-table-duplicate.webp)
@@ -119,6 +126,7 @@ Offre le seguenti opzioni di visualizzazione:
 - Table Comment
 - Column Comment
 - DataType
+- Domain
 - Default
 - Not Null
 - Unique
@@ -129,7 +137,9 @@ Offre le seguenti opzioni di visualizzazione:
 - Table Groups
 - Memos
 
-`Unique`, `Alternate Key` e `Auto Increment` sono disattivate per impostazione predefinita, le altre sono attive.  
+`Domain`, `Unique`, `Alternate Key` e `Auto Increment` sono disattivate per impostazione predefinita, le altre sono attive.  
+Quali nomi mostrano le tabelle non è un’opzione di visualizzazione: `Name View`, subito dopo `View Option` nel menu contestuale dell’area di disegno, sceglie i nomi fisici, i nomi logici o entrambi — vedere [Cambiare vista](./logical-names.md#switching-the-view).  
+`Domain` dà a ogni colonna una cella, collocata secondo l’[ordine delle colonne](./settings.md#adjusting-column-order), con il nome del dominio a cui la colonna è collegata. Una colonna non collegata ad alcun dominio elencato nel foglio `Domains` mostra lì il testo segnaposto `domain`, attenuato. La cella compare in ogni vista. Mentre `Domain` è disattivata, la vista `Logical Names` mostra invece il nome di un dominio collegato nella cella del tipo — vedere [La cella Dominio](./logical-names.md#the-domain-cell).  
 `Alternate Key` contrassegna le colonne di ogni chiave alternativa con indicatori come `AK1.1` — vedere [Chiavi alternative](#alternate-keys).  
 `Referential Actions` mostra le etichette `D:` e `U:` che le azioni ON DELETE e ON UPDATE di una relazione pongono all’estremità del suo connettore dal lato della tabella figlia — vedere [Leggere un connettore](./relationship-editing.md#reading-a-connector). Disattivandola si nascondono solo quelle etichette e non si sposta alcuna tabella né alcun connettore.  
 `Table Groups` mostra i [gruppi di tabelle](./table-groups.md) e i colori dei gruppi sulle intestazioni delle loro tabelle. Disattivandola, i gruppi vengono nascosti nell’area di disegno, nella minimappa e nelle esportazioni di immagini, nessuna tabella viene spostata e ogni tabella resta nel suo gruppo — vedere [Nascondere i gruppi](./table-groups.md#hiding-groups). Inoltre, la cartella `Table Groups` scompare dal pannello [Esplora](./explorer.md#the-tree) e `New Table Group` dalla [barra degli strumenti dell’area di disegno](#canvas-toolbar), e la ricerca del pannello Esplora smette di trovare i nomi dei gruppi.  
@@ -139,19 +149,19 @@ In un editor `readonly` attivare o disattivare queste opzioni non modifica nulla
 
 ![Attivazione e disattivazione delle voci delle Opzioni di visualizzazione mentre le tabelle si ridispongono, contrassegno di un indice univoco composto come AK1.1 e AK1.2 con Alternate Key, poi disattivazione e riattivazione di Memos](/img/demo-view-options.webp)
 
-Le card della modalità `Flow` della scheda Visualizzazione non seguono queste opzioni: usano una propria [visualizzazione righe](./visualization.md#row-display) e disegnano i loro connettori anche con `Relationship` disattivata.
+Le card della modalità `Flow` della scheda Visualizzazione non seguono queste opzioni, `Domain` compresa: usano una propria [visualizzazione righe](./visualization.md#row-display) e disegnano i loro connettori anche con `Relationship` disattivata. Le celle che una card dispone dipendono solo dalla Visualizzazione nomi — vedere [Nomi sulle card](./visualization.md#names-on-the-cards).
 
 ## Proprietà tabella {#table-properties}
 
 Apre il pannello delle proprietà di una tabella.  
 Per aprirlo, scegliere `Table Properties` nel menu contestuale della tabella, che lo apre per la tabella su cui si è fatto clic con il pulsante destro, oppure selezionare una tabella e premere `Alt + Space`.  
-Il pannello si apre al centro dell’area di disegno oscurata. Viene oscurata solo l’area di disegno, quindi un pannello [Esplora](./explorer.md#dialogs-beside-it) aperto resta aperto e utilizzabile accanto al pannello. La sua intestazione contiene il titolo `Table Properties`, le cinque tabelle aperte più di recente sotto forma di chip, con quella corrente evidenziata, e un pulsante di chiusura. Fare clic su un chip per passare a quella tabella senza riaprire il pannello.  
+Il pannello si apre al centro dell’area di disegno oscurata. Viene oscurata solo l’area di disegno, quindi un pannello [Esplora](./explorer.md#dialogs-beside-it) aperto resta aperto e utilizzabile accanto al pannello. La sua intestazione contiene il titolo `Table Properties`, le cinque tabelle aperte più di recente sotto forma di chip, con quella corrente evidenziata, e un pulsante di chiusura. Ogni chip nomina la sua tabella come fa la [Visualizzazione nomi](./logical-names.md#beyond-the-canvas). Fare clic su un chip per passare a quella tabella senza riaprire il pannello.  
 Sotto l’intestazione ci sono tre schede: `Indexes`, `Schema SQL` e `Code Generator`. Il pannello mantiene la stessa dimensione per tutte e tre, quindi cambiare scheda non lo sposta né lo ridimensiona.  
 Si chiude con il pulsante di chiusura, con `Escape` o con un clic sull’area di disegno al di fuori del pannello.  
 Scegliere nel pannello Esplora una riga che non sia una cartella, o andare a una corrispondenza della sua ricerca, chiude il pannello Proprietà tabella prima del salto. Lo stesso fa `Ctrl + F` (Windows/Linux) o `⌘ + F` (Mac), che apre la ricerca del pannello Esplora, o porta il punto di inserimento nel suo campo Trova quando il pannello Esplora è già aperto. Qualsiasi altro clic nel pannello Esplora, compresa una riga di cartella, o sul pulsante `Explorer` della barra degli strumenti, lascia aperto il pannello Proprietà tabella. Un `Escape` premuto mentre il focus è nel pannello Esplora restituisce soltanto il focus all’area di disegno, quindi serve un secondo `Escape` per chiudere il pannello Proprietà tabella.
 
 La scheda `Indexes` è descritta in [Indici](#indexes).  
-La scheda `Schema SQL` mostra il DDL della tabella per il [database](#databases) selezionato: il suo `CREATE TABLE`, i vincoli separati che alcuni database scrivono per le sue colonne univoche, e i suoi indici. Scrive sempre semplici istruzioni `CREATE`, senza intestazione e senza script prima o dopo, qualunque sia l’impostazione della scheda [Schema SQL](./schema-sql.md) della barra degli strumenti. Non ha un pannello opzioni, e il suo menu contestuale offre solo `Database` e `Bracket`.  
+La scheda `Schema SQL` mostra il DDL della tabella per il [database](#databases) selezionato: il suo `CREATE TABLE`, i vincoli separati che alcuni database scrivono per le sue colonne univoche, e i suoi indici. Scrive sempre semplici istruzioni `CREATE`, senza intestazione, senza script prima o dopo e senza nomi logici nei commenti vuoti, qualunque sia l’impostazione della scheda [Schema SQL](./schema-sql.md) della barra degli strumenti — vedere [Nomi logici come commenti](./schema-sql.md#logical-names-as-comments). Non ha un pannello opzioni, e il suo menu contestuale offre solo `Database` e `Bracket`.  
 La scheda `Code Generator` genera il codice solo per questa tabella — vedere [Generatore di codice](./code-generator.md).
 
 In un editor `readonly` il pannello si apre comunque, con un badge `Read only` accanto al titolo, ma la sua scheda `Indexes` non consente modifiche.
@@ -163,19 +173,19 @@ Per avviare la focalizzazione, scegliere `Focus on this table` dal menu contestu
 Quando la tabella su cui si fa clic con il pulsante destro è una di più tabelle selezionate, la voce diventa `Focus on selected tables` e focalizza l’intera selezione. Un clic con il pulsante destro su una tabella esterna alla selezione focalizza solo quella tabella.  
 Il tasto di scelta rapida prende le tabelle selezionate, esclude i memo e non fa nulla quando nessuna tabella è selezionata.  
 Qui un [gruppo di tabelle](./table-groups.md) selezionato non conta, sia per il tasto di scelta rapida sia per la voce di menu: le sue tabelle vengono prese solo quando sono selezionate esse stesse, cosa che fa `Select tables` nel menu del gruppo.  
-Cosa mostra la vista limitata, e come tornare all’intero diagramma, è descritto in [Visualizzazione](./visualization.md#focusing-on-tables).
+Cosa mostra la vista limitata, e come tornare all’intero diagramma, è descritto in [Visualizzazione](./visualization.md#focusing-on-tables), e come tornare indietro e andare avanti tra ciò che la modalità Flusso ha mostrato in precedenza in [Tabella precedente e tabella successiva](./visualization.md#previous-table-and-next-table).
 
 ## Indici {#indexes}
 
 Gli indici si definiscono nella scheda `Indexes` del pannello delle proprietà della tabella e sono inclusi nello Schema SQL esportato.
 
 Il lato sinistro elenca le chiavi e gli indici della tabella in due gruppi.  
-`Keys`, mostrato quando la tabella ha delle chiavi, elenca le chiavi dichiarate dalle sue colonne: `PK_<table name>` sulle colonne contrassegnate come PK, poi `UQ_<table name>_<column name>` per ogni colonna contrassegnata come Univoco, nell’ordine delle colonne. I nomi seguono lo Schema SQL del database selezionato, quindi con `Bracket` impostato su `None` una tabella qualificata con lo schema come `sales.users` elenca `PK_users` con ogni database tranne Databricks e Snowflake — vedere [Nomi di tabella qualificati con lo schema](./schema-sql.md#schema-qualified-table-names). Ciascuna ha l’etichetta `PK` o `UQ` ed è contrassegnata con un lucchetto. Qui sono di sola lettura e cambiano solo con i flag [PK](./table-editing.md#column-primary-key) e [Univoco](./table-editing.md#not-null-unique-auto-increment) delle colonne.  
+`Keys`, mostrato quando la tabella ha delle chiavi, elenca le chiavi dichiarate dalle sue colonne: `PK_<table name>` sulle colonne contrassegnate come PK, poi `UQ_<table name>_<column name>` per ogni colonna contrassegnata come Univoco, nell’ordine delle colonne. I nomi sono quelli fisici che scrive lo Schema SQL del database selezionato, qualunque sia la Visualizzazione nomi, quindi con `Bracket` impostato su `None` una tabella qualificata con lo schema come `sales.users` elenca `PK_users` con ogni database tranne Databricks e Snowflake — vedere [Nomi di tabella qualificati con lo schema](./schema-sql.md#schema-qualified-table-names). Ciascuna ha l’etichetta `PK` o `UQ` ed è contrassegnata con un lucchetto. Qui sono di sola lettura e cambiano solo con i flag [PK](./table-editing.md#column-primary-key) e [Univoco](./table-editing.md#not-null-unique-auto-increment) delle colonne.  
 `Indexes` elenca gli indici della tabella nell’ordine in cui sono stati aggiunti. Ogni indice ha un interruttore `UQ` che lo rende univoco, un campo per il nome e una `x` che lo rimuove. Un indice che è una [chiave alternativa](#alternate-keys) mostra anche il suo numero, ad esempio `AK1`. Per aggiungere un indice, usare `Add Index` in fondo all’elenco.
 
-Il lato destro elenca le colonne della tabella sotto `Columns`, ciascuna con una casella di controllo. Nulla è modificabile finché non si seleziona un indice a sinistra.  
+Il lato destro elenca le colonne della tabella sotto `Columns`, ciascuna con una casella di controllo. Ogni riga mostra le stesse celle della riga della colonna nell’area di disegno, seguendo l’ordine delle colonne, le Opzioni di visualizzazione e la [Visualizzazione nomi](./logical-names.md#beyond-the-canvas). Nulla è modificabile finché non si seleziona un indice a sinistra.  
 Selezionare la casella di una colonna per aggiungerla all’indice selezionato, e deselezionarla per rimuoverla. Quando si seleziona una chiave, le caselle delle sue colonne appaiono selezionate, ma restano disabilitate.  
-Le colonne dell’indice selezionato sono elencate più in basso sotto `Index order`. Trascinarle dalla maniglia di trascinamento per riordinarle, e fare clic sul chip `ASC` o `DESC` di una riga per invertirne l’ordinamento. In una chiave alternativa, ogni riga termina con il suo indicatore `AK<n>.<m>`. L’elenco mostra tre righe alla volta e si può scorrere per vedere le altre.
+Le colonne dell’indice selezionato sono elencate più in basso sotto `Index order`, ciascuna nominata come la nomina la Visualizzazione nomi, con il nome tra parentesi dopo il nome logico nella vista `Both Names`, ad esempio `Member Number (member_no)`. Trascinarle dalla maniglia di trascinamento per riordinarle, e fare clic sul chip `ASC` o `DESC` di una riga per invertirne l’ordinamento. In una chiave alternativa, ogni riga termina con il suo indicatore `AK<n>.<m>`. L’elenco mostra tre righe alla volta e si può scorrere per vedere le altre.
 
 In un editor `readonly`, selezionando una chiave o un indice se ne mostrano comunque le colonne, ma non ci sono né `Add Index` né `x`, e nient’altro nella scheda può essere modificato.
 
@@ -216,12 +226,12 @@ Aprire `Auto Layout` dal menu contestuale dell’area di disegno o dalla Ricerca
 | `Tree - horizontal` | La stessa disposizione a livelli, da sinistra a destra. |
 
 `Force` apre un’anteprima mentre il layout si assesta, con `Apply` e `Cancel` sull’avviso che mostra.  
-L’anteprima è inquadrata sul diagramma com’era all’avvio del layout, quindi le tabelle possono uscire dall’inquadratura mentre il layout si assesta. Viene disegnata al `70%` o meno, quindi le sue tabelle appaiono ridotte al nome e al bordo colorato.  
+L’anteprima è inquadrata sul diagramma com’era all’avvio del layout, quindi le tabelle possono uscire dall’inquadratura mentre il layout si assesta. Viene disegnata al `70%` o meno, quindi le sue tabelle appaiono ridotte al nome e al bordo colorato. Si apre nella vista che si sta guardando, qualunque sia la vista conservata dal file — vedere [Oltre l’area di disegno](./logical-names.md#beyond-the-canvas).  
 `Apply` mantiene le posizioni così come sono in quel momento, e il layout viene applicato da solo quando si stabilizza. `Cancel` o `Escape` lascia il diagramma com’era.
 
 Gli altri tre vengono calcolati in un’unica passata, fuori dal thread principale, quindi non c’è nulla da osservare: un avviso compare mentre il layout viene calcolato, e la disposizione finale viene centrata sull’area già occupata dal diagramma. `Cancel` o `Escape` scarta un layout che non si vuole più attendere, e un host che non esegue alcun worker condiviso termina con `Could not place tables` — vedere [Web Worker](../../api/installation.md#web-workers). Un layout che non restituisce un risultato entro 60 secondi termina allo stesso modo.
 
-Qualunque layout si scelga, vengono spostati tabelle e gruppi di tabelle, mentre i memo restano dove sono. Una relazione da una tabella verso sé stessa viene ignorata, e più relazioni tra le stesse due tabelle contano una sola volta.  
+Qualunque layout si scelga, vengono spostati tabelle e gruppi di tabelle, mentre i memo restano dove sono. Le tabelle vengono collocate con le larghezze che assumono nella vista che si sta guardando. Una relazione da una tabella verso sé stessa viene ignorata, e più relazioni tra le stesse due tabelle contano una sola volta.  
 Ogni layout mantiene unite le tabelle di ciascun gruppo, che i gruppi siano visibili o meno, e adatta attorno a esse ogni gruppo che contiene tabelle — vedere [Gruppi di tabelle](./table-groups.md#auto-layout).  
 Il risultato viene registrato come un’unica voce della cronologia, quindi un solo annullamento riporta ogni tabella e ogni gruppo dov’era.
 
@@ -259,6 +269,7 @@ Una piccola barra degli strumenti fluttua al centro del bordo inferiore dell’a
 - `New Table`, `New Memo` e `New Table Group`. `New Table` aggiunge una tabella come fa `Alt + N`, e `New Memo` aggiunge un memo come fa `Alt + M`. `New Table Group` prepara il [disegno del gruppo](./table-groups.md#drawing-a-group) come fa `Alt + G` e disattiva la mano; un secondo clic, come un secondo `Alt + G`, termina il disegno senza aggiungere alcun gruppo. `New Memo` non compare mentre View Option → `Memos` nasconde i memo, e `New Table Group` mentre View Option → `Table Groups` nasconde i gruppi. Un editor `readonly` non mostra nessuno dei tre.
 - Lo zoom: `Zoom out`, lo zoom corrente in percentuale e `Zoom in`. I due pulsanti modificano lo zoom a scatti come i tasti di scelta rapida dello zoom, e un clic sulla percentuale lo riporta al `100%`.
 - Le quattro notazioni di relazione, le stesse quattro con cui si inizia una relazione — vedere [Iniziare a modificare](./editing-start.md). Sceglierne una riporta al puntatore, poiché una relazione si disegna facendo clic su due tabelle.
+- `Name View`, un pulsante con una freccia verso il basso che indica la vista attiva: `Physical Names`, `Logical Names` o `Both Names`. Mantiene la stessa larghezza qualunque vista indichi, quindi un cambio di vista non sposta mai la barra degli strumenti. Un clic apre sopra la barra degli strumenti un elenco delle tre viste, con un segno di spunta sulla vista attiva. Sceglierne una passa a quella vista e chiude l’elenco; un secondo clic sul pulsante, una pressione in qualsiasi altro punto o `Escape` chiude l’elenco senza cambiare vista. Lo mostra anche un editor `readonly`. Cosa disegna ciascuna vista è descritto in [Visualizzazione nomi](./logical-names.md#name-view), e se un cambio viene salvato in [Cambiare vista](./logical-names.md#switching-the-view).
 - La modalità Zen, `Alt + Z`, che nasconde tutto tranne l’area di disegno e questa barra degli strumenti. Premendo di nuovo `Alt + Z`, o il pulsante, ricompare il resto. Un pannello Esplora aperto viene nascosto con il resto, senza essere chiuso, e ricompare insieme a esso. Può comunque essere aperto durante la modalità Zen — vedere [Quando si nasconde](./explorer.md#when-it-stands-aside).
 - La bussola `Go to content`, che si aggiunge alla fine della barra degli strumenti solo quando sullo schermo non ci sono tabelle, memo visibili né gruppi di tabelle visibili — vedere [Muoversi nell’area di disegno](#getting-around-the-canvas).
 
@@ -277,7 +288,7 @@ Tasti di scelta rapida: `Ctrl + Plus` (Windows/Linux) o `⌘ + Plus` (Mac), `Ctr
 I pulsanti `Zoom out` e `Zoom in` della [barra degli strumenti dell’area di disegno](#canvas-toolbar) modificano lo zoom a scatti come i tasti di scelta rapida `Minus` e `Plus`: ogni pressione lo sposta di 4 punti percentuali, mantenendo fermo il centro dello schermo. La percentuale tra i due mostra lo zoom corrente, e un clic su di essa torna direttamente al `100%` come `Ctrl + 0` (Windows/Linux) o `⌘ + 0` (Mac).
 
 Lo zoom va dal `10%` al `150%`.  
-A `70%` o meno, le tabelle si riducono al nome e al bordo colorato, e la modifica delle celle, i tasti di scelta rapida delle celle e il copia e incolla smettono di funzionare finché non si esegue di nuovo lo zoom avanti.
+A `70%` o meno, le tabelle si riducono al nome e al bordo colorato, e la modifica delle celle, i tasti di scelta rapida delle celle e il copia e incolla smettono di funzionare finché non si esegue di nuovo lo zoom avanti. Il nome mostrato da una tabella ridotta segue la Visualizzazione nomi — vedere [Visualizzazione nomi](./logical-names.md#name-view).
 
 Gli stessi tre tasti di scelta rapida eseguono lo zoom anche nella scheda Visualizzazione, sia in modalità `Graph` sia in modalità `Flow`, ciascuna entro il proprio intervallo — vedere [Visualizzazione](./visualization.md#toolbar).
 
@@ -302,11 +313,11 @@ Trascinare la casella di scorrimento di una barra di scorrimento o il rettangolo
 
 Se dopo uno spostamento della vista sullo schermo non rimangono tabelle, memo visibili né gruppi di tabelle visibili, alla fine della [barra degli strumenti dell’area di disegno](#canvas-toolbar) si aggiunge una bussola `Go to content`, con una freccia che punta all’elemento più vicino e la sua distanza. Fare clic su di essa per centrare quell’elemento senza modificare lo zoom.
 
-![Spostamento della vista trascinando una zona vuota dell’area di disegno, con un trascinamento del pulsante centrale sopra una tabella, con la minimappa e con la rotellina, poi ritorno indietro seguendo la bussola Go to content](/img/demo-canvas-navigation.webp)
+![Spostamento della vista trascinando una zona vuota dell’area di disegno, con la rotellina, con un trascinamento del pulsante centrale sopra una tabella e dalla minimappa, poi Shift + wheel oltre il contenuto e ritorno indietro seguendo la bussola Go to content](/img/demo-canvas-navigation.webp)
 
 ### Dove porta un salto {#where-a-jump-lands}
 
-Ogni navigazione che porta a un elemento dell’area di disegno sposta la vista secondo un’unica regola: i risultati `#`, `@` e `:` della [Ricerca rapida](./quick-search.md#searching-the-diagram), le righe del pannello [Esplora](./explorer.md#going-to-a-row) e le corrispondenze della sua ricerca [Trova e sostituisci](./find-and-replace.md#going-to-a-match), le righe dell’elenco del [Visualizzatore differenze](#going-to-a-change), il [pulsante della card](./visualization.md#card-buttons) per il collegamento esterno in modalità Flusso e l’arrivo di un [Importa e aggiungi](./file-import-export.md#import-and-add). Ognuna di queste sezioni indica cosa seleziona la navigazione; questa indica dove va la vista.
+Ogni navigazione che porta a un elemento dell’area di disegno sposta la vista secondo un’unica regola: i risultati `#`, `@` e `:` della [Ricerca rapida](./quick-search.md#searching-the-diagram), le righe del pannello [Esplora](./explorer.md#going-to-a-row) e le corrispondenze della sua ricerca [Trova e sostituisci](./find-and-replace.md#going-to-a-match), le righe dell’elenco del [Visualizzatore differenze](#going-to-a-change), il [pulsante della card](./visualization.md#card-buttons) per il collegamento esterno in modalità Flusso, un controllo che nomina una tabella o una colonna nel [foglio Controlli](./dictionary.md#the-checks-sheet) della scheda Dizionario e l’arrivo di un [Importa e aggiungi](./file-import-export.md#import-and-add). Ognuna di queste sezioni indica cosa seleziona la navigazione; questa indica dove va la vista.
 
 Un salto non modifica mai lo zoom ed esegue al massimo uno scorrimento. Da un’altra scheda passa prima alla scheda ERD.  
 Misura l’area di disegno così come appare: sotto la barra degli strumenti superiore, o a tutta altezza in modalità Zen, e a destra di un pannello Esplora aperto, che restringe l’area di disegno anziché coprirla.
@@ -322,8 +333,8 @@ Quindi una piccola tabella vicina al bordo sinistro dell’area di disegno, a me
 Cosa rende visibile un salto, e la parte essenziale che deve essere visibile quando l’insieme non entra:
 
 - Una tabella: l’intera tabella, in base alla fascia del nome in alto, o in base alla cella del commento per una corrispondenza nel commento della tabella mentre View Option → `Table Comment` mostra i commenti. Al `70%` o meno, dove le tabelle si riducono al nome, in base al nome al centro del riquadro.
-- Una colonna: la sua riga, in base alla cella a cui porta il salto: il nome, o il commento in cui si trova una corrispondenza mentre View Option → `Column Comment` mostra i commenti. Al `70%` o meno, una colonna rende visibile la sua tabella secondo la regola della tabella.
-- Una cella troppo larga per essere mostrata per intero, come un commento lungo: in base al testo corrispondente al suo interno.
+- Una colonna: la sua riga, in base alla cella a cui porta il salto: il nome, il nome logico per una corrispondenza nel nome logico o un controllo sul nome logico, la cella Dominio per un controllo sul dominio, o il commento in cui si trova una corrispondenza mentre View Option → `Column Comment` mostra i commenti. Dove la riga non disegna una cella di questo tipo, il salto porta alla cella disegnata al suo posto: il nome logico per il nome nella vista `Logical Names`, il nome per il nome logico nella vista `Physical Names`, e la cella del tipo per la cella Dominio mentre View Option → `Domain` è disattivata, o la riga nel suo insieme quando è disattivata anche `DataType`. Al `70%` o meno, una colonna rende visibile la sua tabella secondo la regola della tabella.
+- Una cella troppo larga per essere mostrata per intero, come un commento lungo: in base al testo corrispondente al suo interno. Un salto alla cella disegnata al posto di quella in cui si trova la corrispondenza, come il nome per una corrispondenza nel nome logico nella vista `Physical Names`, non si basa sul testo.
 - Una relazione: il riquadro che comprende le sue due tabelle, in base alla tabella figlia.
 - Un gruppo di tabelle: il suo riquadro, in base alla barra del titolo.
 - Un memo, o il blocco collocato da un Importa e aggiungi: l’intero elemento.
@@ -337,7 +348,7 @@ Nessun salto avvia o completa una relazione in fase di disegno. La bussola `Go t
 Scegliere `Diff Viewer` dal menu contestuale dell’area di disegno e selezionare un documento `.json` esportato in precedenza.
 
 La vista si apre sopra l’area di disegno: a sinistra ciò che è cambiato, poi il documento salvato e quello corrente affiancati.  
-Il documento corrente viene confrontato così com’è al momento dell’apertura della vista; le modifiche fatte in seguito, comprese quelle di un collaboratore, non arrivano nella vista. Un pannello [Esplora](./explorer.md#when-it-stands-aside) aperto viene nascosto finché la vista è aperta, quindi la vista occupa l’intera larghezza dell’editor.  
+Il documento corrente viene confrontato così com’è al momento dell’apertura della vista; le modifiche fatte in seguito, comprese quelle di un collaboratore, non arrivano nella vista. Entrambi i lati si aprono, e restano, nella vista che si sta guardando, qualunque sia la vista conservata da ciascun file — vedere [Oltre l’area di disegno](./logical-names.md#beyond-the-canvas). Un pannello [Esplora](./explorer.md#when-it-stands-aside) aperto viene nascosto finché la vista è aperta, quindi la vista occupa l’intera larghezza dell’editor.  
 Su ciascun lato si sposta la vista con la rotellina, trascinando una zona vuota o il corpo di un gruppo di tabelle, o trascinando con il pulsante centrale in qualsiasi punto del lato, e si esegue lo zoom con `Ctrl + Wheel` (Windows/Linux), `⌘ + Wheel` (Mac) o un gesto di pinch. Al `70%` o meno le tabelle di ciascun lato si riducono come nell’area di disegno — vedere [Indicatori sui due lati](#marks-on-the-two-sides).  
 Entrambi i lati sono di sola lettura, quindi nel documento non viene modificato nulla. Ciascuno mantiene la propria selezione, e un clic su una tabella in un lato la seleziona solo su quel lato.  
 La vista si chiude con il pulsante `Close` dell’avviso `Diff Viewer` che compare alla sua apertura, o con `Escape`.
@@ -360,13 +371,14 @@ Cosa conta come modifica:
 - Un memo: testo, posizione, dimensione e colore.
 - Un gruppo di tabelle: nome, tabelle contenute, colore, posizione e dimensione.
 
-Quindi una tabella, un memo o un gruppo che è stato solo spostato, ridimensionato o ricolorato conta come modificato. Posizioni e dimensioni vengono confrontate in pixel interi, mentre l’ordine di sovrapposizione e il punto in cui un connettore incontra una tabella non contano mai.
+Quindi una tabella, un memo o un gruppo che è stato solo spostato, ridimensionato o ricolorato conta come modificato. Posizioni e dimensioni vengono confrontate in pixel interi, mentre l’ordine di sovrapposizione e il punto in cui un connettore incontra una tabella non contano mai.  
+I nomi logici, i collegamenti ai domini e le parole, i termini e i domini della scheda [Dizionario](./dictionary.md) non vengono confrontati, quindi una modifica che riguarda solo questi elementi non viene né elencata né contrassegnata. Conta invece un tipo di dati modificato da un dominio, come modifica del tipo di dati della colonna.
 
 ### L’albero delle modifiche {#the-change-tree}
 
 L’elenco a sinistra è disegnato come l’[albero del pannello Esplora](./explorer.md#the-tree) e contiene solo ciò che è cambiato: `Tables`, `Table Groups` e `Memos`, ciascuno mostrato solo quando contiene una riga, e, sotto una tabella, i suoi `Columns`, `Indexes` e `Foreign Keys`. Una chiave esterna è elencata sotto la sua tabella figlia, e una tabella aggiunta o rimossa non elenca nulla al suo interno.  
 Ogni cartella mostra quante righe contiene, e ogni cartella e ogni tabella parte espansa.  
-Tabelle e gruppi di tabelle sono elencati per nome, senza distinzione tra maiuscole e minuscole. I memo, e le colonne, gli indici e le chiavi esterne di una tabella, mantengono l’ordine del documento corrente, e un elemento rimosso torna al posto in cui si trovava. Una riga di memo mostra la prima riga del memo, e una riga di chiave esterna mostra le sue colonne figlie, poi `→` con la tabella padre e le sue colonne, ad esempio `user_id → users(id)`. Un nome vuoto appare come `unnamed` in corsivo.
+Una riga di tabella o di colonna viene nominata nella vista in cui si sono aperti i lati. Nella vista `Both Names` mostra il nome logico seguito dal nome, attenuato, e su una riga rimossa il nome attenuato è barrato insieme al resto. Tabelle e gruppi di tabelle sono elencati per nome, senza distinzione tra maiuscole e minuscole, qualunque sia la vista. I memo, e le colonne, gli indici e le chiavi esterne di una tabella, mantengono l’ordine del documento corrente, e un elemento rimosso torna al posto in cui si trovava. Una riga di memo mostra la prima riga del memo, e una riga di chiave esterna mostra le sue colonne figlie, poi `→` con la tabella padre e le sue colonne, ad esempio `user_id → users(id)`. Un nome vuoto appare come `unnamed` in corsivo.
 
 Ogni riga termina con una lettera, e una riga contrassegnata con `A`, `D`, `M` o `R` ha il nome nel colore della lettera:
 
@@ -378,7 +390,7 @@ Ogni riga termina con una lettera, e una riga contrassegnata con `A`, `D`, `M` o
 
 Passare il puntatore sul nome di una riga per vederne il tooltip: lo stato, `Added`, `Deleted`, `Modified`, `Renamed` o `Changed inside`, poi una riga per ogni modifica, ad esempio `Name: users → members` o `NN: ✗ → ✓`. Un testo viene citato con la sua prima riga, troncata dopo 40 caratteri, e un valore vuoto appare come `—`. Il tooltip di un elemento aggiunto o rimosso contiene solo il suo stato.
 
-`Filter by name`, sopra l’albero, mantiene le righe il cui nome corrente o salvato contiene il testo digitato, senza distinzione tra maiuscole e minuscole. Una tabella il cui nome corrisponde mantiene tutte le sue righe, e una il cui nome non corrisponde resta solo con le righe che corrispondono. Un filtro che non corrisponde a nulla lascia l’albero vuoto.  
+`Filter by name`, sopra l’albero, mantiene le righe il cui nome corrente o salvato, o il cui nome logico corrente o salvato, contiene il testo digitato, senza distinzione tra maiuscole e minuscole, in ogni vista. Una tabella il cui nome corrisponde mantiene tutte le sue righe, e una il cui nome non corrisponde resta solo con le righe che corrispondono. Un filtro che non corrisponde a nulla lascia l’albero vuoto.  
 Quando i due documenti non differiscono affatto, l’albero mostra `No changes`.
 
 Trascinare il bordo destro dell’albero per allargarlo o restringerlo, da `200px` a `480px`, e fare doppio clic sul bordo per riportarlo a `260px`. Ogni confronto si apre a `260px`, e i due lati si dividono equamente il resto della larghezza.  
@@ -407,5 +419,7 @@ I due lati colorano testo, contorni e connettori, e non riempiono nulla. Aggiunt
 - Una modifica di un indice non contrassegna nulla su nessuno dei due lati; compare solo nell’albero.
 
 Ciascun lato segue le Opzioni di visualizzazione del proprio documento. Una modifica in una cella che quel lato non disegna compare invece sul nome. Una modifica di colonna in una cella nascosta da una delle Opzioni di visualizzazione, come `Unique` o `Auto Increment`, entrambe disattivate per impostazione predefinita, colora di ambra il nome della colonna, e lo stesso fa una modifica della chiave primaria su una riga che non mostra l’icona della chiave. Una modifica del commento della tabella mentre `Table Comment` è disattivata colora di ambra il nome della tabella. Il blu di una ridenominazione prevale su questo color ambra. Un memo o un gruppo di tabelle nascosto dal suo documento è elencato nell’albero ma non viene disegnato su quel lato.
+
+Nella vista `Logical Names`, che non disegna alcuna cella del nome, il blu di una ridenominazione e l’ambra di una modifica in una cella che il lato non disegna vanno sul nome logico disegnato al posto del nome. Una modifica del tipo di dati colora di ambra la cella del tipo in ogni vista, anche dove la cella mostra il nome di un dominio. Nessuno dei due lati disegna i colori che i controlli dei dizionari danno ai nomi nell’area di disegno — vedere [Indicatori nell’area di disegno](./dictionary.md#marks-on-the-canvas).
 
 A `70%` o meno, le tabelle ridotte mantengono il contorno. Il nome mantiene il verde o il rosso di una tabella aggiunta o rimossa, o il blu di una ridenominazione, e altrimenti assume il color ambra di una modifica del commento. Le modifiche delle colonne non vengono disegnate finché non si esegue di nuovo lo zoom avanti; l’albero le elenca comunque.

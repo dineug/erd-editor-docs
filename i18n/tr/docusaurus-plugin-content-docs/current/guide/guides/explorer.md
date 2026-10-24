@@ -1,5 +1,5 @@
 ---
-sidebar_position: 8
+sidebar_position: 9
 description: Diyagramın tablolarına sütunları, dizinleri ve yabancı anahtarlarıyla birlikte, tablo gruplarına ve notlarına ERD tuvalinin yanına yerleşik bir ağaçta göz atma ve herhangi birine tek tıklamayla gitme.
 ---
 
@@ -26,11 +26,11 @@ Gezgini şunlardan herhangi biriyle açın:
 - Tuvalin bağlam menüsündeki `Toggle Explorer` öğesi: ERD tuvalinde herhangi bir [tablo grubunun](./table-groups.md) dışındaki boş bir noktaya sağ tıklayın. `New Table`, `New Memo` ve `New Table Group` öğelerinden sonra, `Relationship` öğesinden önce yer alır.
 
 İki `Toggle Explorer` öğesi de kısayolu sağ tarafta gösterir.  
-Araç çubuğu düğmesi, kısayol ve Hızlı aramadaki öğe her sekmeden çalışır. Gezgin yalnızca ERD sekmesinde göründüğü için Görselleştirme, Şema SQL, Kod oluşturucu veya Ayarlar sekmesinden kullanıldıklarında önce ERD sekmesine geçerler.
+Araç çubuğu düğmesi, kısayol ve Hızlı aramadaki öğe her sekmeden çalışır. Gezgin yalnızca ERD sekmesinde göründüğü için Görselleştirme, Şema SQL, Kod oluşturucu, Sözlük veya Ayarlar sekmesinden kullanıldıklarında önce ERD sekmesine geçerler.
 
 Araç çubuğu düğmesi yalnızca paneli açar ve kapatır. Metin imlecini Bul alanına yerleştirmez; Tablo özelliklerini, tema oluşturucuyu ve `Display Language` seçicisini de açık bırakır.  
 Kısayol ve iki `Toggle Explorer` öğesi Gezgini aramasıyla açar: Metin imleci Bul alanına gider ve alanın metni seçilir; [Yanında açılan iletişim kutuları](#dialogs-beside-it) bölümündeki beş iletişim kutusundan hangisi açıksa kapanır. Aramanın açılışlar arasında neleri koruduğu Bul ve değiştir sayfasındaki [Açma ve kapatma](./find-and-replace.md#opening-and-closing) bölümünde anlatılır.  
-Bir tablo hücresi, bir not veya bir tablo grubunun adı düzenlenirken kısayol hiçbir şey yapmaz.
+Bir tablo hücresi, bir not veya bir tablo grubunun adı düzenlenirken ya da [Sözlük](./dictionary.md#keys-on-the-tab) sekmesinde, bir terimin değer alanı listesi dahil, bir hücre düzenlemesi açıkken kısayol hiçbir şey yapmaz.
 
 Gezgin ERD sekmesinde açıkken ve [Zen modu](#when-it-stands-aside) ile gizlenmemişken araç çubuğu düğmesi basılı görünür. Bu durumda düğme, kısayol ve `Toggle Explorer` öğelerinden herhangi biri Gezgini kapatır; klavye odağı paneldeyse düzenleyiciye geri döner.  
 Hızlı arama veya beş iletişim kutusundan biri açıkken kısayol Gezgini hiçbir zaman kapatmaz. Bunun yerine paleti veya iletişim kutusunu kapatır ve klavye odağını Bul alanına götürür; alanın metni seçili olur ve Gezgin zaten görünüyorsa geçerli eşleşme korunur. Hızlı aramadaki `Toggle Explorer` öğesi böyle bir istisna yapmaz: Onu çalıştırmak paleti, ardından da açık bir Gezgini kapatır.
@@ -84,22 +84,27 @@ Başlık çubuğunda `Explorer` yazar ve iki düğme bulunur: `Collapse All` ve 
 
 En üst düzeyde şu sırayla üç klasör bulunur: `Tables`, `Table Groups` ve `Memos`. Her tablonun altında o tablonun kendi `Columns`, `Indexes` ve `Foreign Keys` klasörleri yer alır.  
 İçi boş bir klasör gösterilmez; bu yüzden boş bir diyagramda hiç satır görünmez. [View Option](./table-related-functions.md#table-view-options) → `Table Groups` grupları gizlerken `Table Groups` klasörü, View Option → `Memos` notları gizlerken de `Memos` klasörü yer almaz.  
-Bir klasör satırında bir klasör simgesi, klasörün adı ve en uçta doğrudan altındaki satırların sayısı gösterilir; bu yüzden `Tables` klasörünün yanındaki sayı diyagramdaki tablo sayısıdır.
+Bir klasör satırında bir klasör simgesi, klasörün adı ve en uçta doğrudan altındaki satırların sayısı gösterilir; bu yüzden `Tables` klasörünün yanındaki sayı diyagramdaki tablo sayısıdır. Sayı, binlikleri görüntüleme dilinin yaptığı gibi gruplar ve her zaman 0 ile 9 arasındaki rakamlarla yazılır, örneğin İngilizcede `1,234`, Almancada `1.234`.
 
 Tablolar büyük/küçük harf ayrımı yapmadan ada göre listelenir; aynı adı taşıyan tablolar belgedeki sıralarını korur. Tablo grupları da, her grubun altındaki tablolar da aynı şekilde listelenir. Bir tablonun sütunları tablonun kendi sırasını, dizinleri, yabancı anahtarları ve notlar ise belgedeki sırayı korur.  
-Ağaç, diyagram değiştikçe onu izler; değişiklik tuvaldeki bir düzenlemeden, bir geri alma veya yinelemeden, bir içe aktarmadan ya da bir ortak çalışandan veya kodlama ajanından gelebilir. Bu yüzden bir tabloyu yeniden adlandırmak satırının yerini değiştirir.
+Ağaç, diyagram değiştikçe onu izler; değişiklik tuvaldeki bir düzenlemeden, bir geri alma veya yinelemeden, bir içe aktarmadan ya da bir ortak çalışandan veya kodlama ajanından gelebilir. Bu yüzden bir tabloyu yeniden adlandırmak satırının yerini değiştirir.  
+Sıralama her [Ad görünümünde](./logical-names.md#name-view) ada göre yapılır, hiçbir zaman mantıksal ada göre yapılmaz. Görünümü değiştirmek tablo ve sütun satırlarının etiketlerini, hiçbirinin yerini değiştirmeden yeniler; `Logical Names` veya `Both Names` görünümünde bir tabloya ya da sütuna mantıksal ad vermek de öyle. Ancak yeni bir mantıksal addan [türetilen](./dictionary.md#deriving-physical-names) fiziksel ad, diğerleri gibi bir yeniden adlandırmadır, bu yüzden bir tablonun satırının yerini değiştirebilir.
 
 Her satır türü şunları gösterir:
 
 - Tablo: bir tablo simgesi ve tablonun adı.
-- Sütun: birincil anahtar veya yabancı anahtar sütunu için, tablonun kendi anahtar hücresinin birincil anahtarı, yabancı anahtarı ya da ikisini birden renklendirdiği gibi renklendirilmiş bir anahtar simgesi, diğer her sütun için bir liste simgesi. Ardından sütunun adı ve soluk renkte, arkasından `PK`, `FK` ya da ikisi birden gelen veri türü; örneğin `id` `BIGINT PK` veya `user_id` `BIGINT FK`.
+- Sütun: birincil anahtar veya yabancı anahtar sütunu için, tablonun kendi anahtar hücresinin birincil anahtarı, yabancı anahtarı ya da ikisini birden renklendirdiği gibi renklendirilmiş bir anahtar simgesi, diğer her sütun için bir liste simgesi. Ardından sütunun adı ve soluk renkte, arkasından `PK`, `FK` ya da ikisi birden gelen veri türü; örneğin `id` `BIGINT PK` veya `user_id` `BIGINT FK`. Gösterdiği tür, Ad görünümü ne olursa olsun her zaman sütunun veri türüdür, hiçbir zaman [değer alanı](./logical-names.md#the-domain-cell) değildir.
 - Dizin: bir dizin simgesi ve dizinin adı. Ardından soluk renkte, benzersiz bir dizin için `UNIQUE` ve dizinin sütunları dizin sırasıyla parantez içinde, azalan sıralı bir sütundan sonra `DESC` gelecek şekilde; örneğin `orders_user_idx` `UNIQUE (user_id DESC, total)` ya da yalnızca `(total)`.
 - Yabancı anahtar: Yalnızca alt tablonun, yani yabancı anahtar sütunlarını tutan tablonun altında ve yalnızca üst tablo diyagramda olduğu sürece listelenir. Anahtar simgesi bağlantı çizgisinin rengini alır: [tanımlayıcı bir ilişki](./relationship-editing.md#identifying-relationships) için birincil anahtar ve yabancı anahtar rengini, aksi hâlde yabancı anahtar rengini. Alt tablonun anahtar sütunlarını virgülle ayrılmış olarak, ardından soluk renkte `→` ile birlikte üst tabloyu ve onun sütunlarını gösterir; örneğin `user_id` `→ users(id)`.
 - Tablo grubu: grubun renginde, rengi olmayan bir grup için gri bir nokta ve grubun adı. Grubun tabloları altında ada göre listelenir ve her biri kendi tablosuna gider. Tablosu olmayan bir grubun genişletilecek bir şeyi yoktur.
 - Not: bir yapışkan not simgesi ve notun ilk satırı.
 
-Boş bir adın ya da ilk satırı boş olan bir notun yerinde italik olarak `unnamed` yazar.  
-Dar bir panelde önce soluk metin `…` ile kısaltılır, ad ancak ondan sonra kısaltılır. Tamamını görmek için bir adın veya soluk metninin üzerine gelin.
+Tablo satırları, bir grubun altında listelenen tablolar ve sütun satırları Ad görünümünü izler. [Tuvalin ötesinde](./logical-names.md#beyond-the-canvas) bölümüne bakın. Örneğin `Both Names` görünümünde bir sütun satırında `Total Amount` `total` `NUMERIC` yazar: mantıksal ad, ardından ikisi de soluk olan ad ve veri türü.  
+Her görünümde dizin ve yabancı anahtar satırları sütunlarını adlarıyla gösterir, bir yabancı anahtar satırı da üst tablosunu adıyla gösterir.  
+Bul alanında metin olduğu sürece, yalnızca görünümünün dışarıda bıraktığı adda bulunan bir satır o adı da soluk olarak gösterir. [Sonuçlar](./find-and-replace.md#the-results) bölümüne bakın.
+
+Boş bir adın ya da ilk satırı boş olan bir notun yerinde italik olarak `unnamed` yazar. `Logical Names` ve `Both Names` görünümlerinde bir tabloda veya sütunda ancak mantıksal adı da boş olduğunda `unnamed` yazar.  
+Dar bir panelde önce soluk metin `…` ile kısaltılır, satırın başta gösterdiği ad ancak ondan sonra kısaltılır. Tamamını görmek için bir adın veya soluk metninin üzerine gelin.
 
 Başlangıçta yalnızca `Tables` klasörü genişletilmiştir. Bir klasör satırını daraltmak veya genişletmek için ona tıklayın ya da üzerindeyken `Enter` veya `Space` tuşuna basın.  
 Satırın başındaki ok, hiçbir yere gitmeden o satırı daraltır veya genişletir. Altında hiçbir şey olmayan bir tablonunki dahil, her tablo satırında bu ok bulunur. `→` ve `←` tuşları da daraltır ve genişletir. [Gezgindeki tuşlar](#keys-in-the-explorer) bölümüne bakın.  
@@ -110,8 +115,8 @@ Düzenlemeler, geri alma ve yineleme ile ortak çalışanlardan veya bir kodlama
 
 Bir satırın ERD tuvalinde temsil ettiği öğeye gitmek için satıra tıklayın ya da klavye odağı üzerindeyken `Enter` veya `Space` tuşuna basın. Bir klasör satırı yalnızca daralır veya genişler; ok tuşları da yalnızca ağacın içinde hareket eder.
 
-- Bir tablo satırı veya bir grubun altında listelenen bir tablo, o tabloyu tek başına seçer ve öne getirir. Odaktaki hücre, zaten o tabloda değilse, tablonun adına gider.
-- Bir sütun satırı, sütunun tablosunu tek başına seçer ve odaktaki hücreyi sütunun adına yerleştirir.
+- Bir tablo satırı veya bir grubun altında listelenen bir tablo, o tabloyu tek başına seçer ve öne getirir. Odaktaki hücre zaten o tabloda değilse tablonun başlığının ilk hücresine gider: ada ya da `Logical Names` ve `Both Names` görünümlerinde mantıksal ada.
+- Bir sütun satırı, sütunun tablosunu tek başına seçer ve odaktaki hücreyi sütunun adına ya da `Logical Names` görünümünde onun yerine gösterilen mantıksal ada yerleştirir.
 - Bir dizin satırı, tablo satırının yaptığı gibi dizinin tablosunu seçer. Dizinin kendisi ayrıca işaretlenmez; dizinler [Tablo özelliklerinde](./table-related-functions.md#indexes) düzenlenir.
 - Bir yabancı anahtar satırı, ilişkinin iki tablosunu birlikte görünüme getirir; iki tablo birlikte gösterilemeyecek kadar uzaksa alt tabloyu getirir. Alt tabloyu yabancı anahtar sütunlarıyla birlikte tek başına seçer, odaktaki hücreyi bu sütunların ilkine yerleştirir ve ilişkinin bağlantı çizgisini vurgular. [Bağlantı çizgisini okuma](./relationship-editing.md#reading-a-connector) bölümüne bakın.
 - Bir tablo grubu satırı, grubun kutusunu başlık çubuğunu esas alarak görünüme getirir, grubu tek başına seçer ve tablolarıyla birlikte öne getirir.
@@ -119,7 +124,7 @@ Bir satırın ERD tuvalinde temsil ettiği öğeye gitmek için satıra tıklay�
 
 Görünüm, her atlamanın uyduğu ortak kurala göre hareket eder: Yakınlaştırma hiçbir zaman değişmez ve tuval yalnızca gittiğiniz öğe zaten iyi görünmüyorsa kaydırılır. [Atlamanın varış noktası](./table-related-functions.md#where-a-jump-lands) bölümüne bakın.  
 Bir satıra gitmek, Tablo özellikleri açıksa önce onu kapatır; hiçbir zaman bir ilişki çizimini başlatmaz ya da çizilmekte olan bir ilişkiyi tamamlamaz.  
-Bul alanında metin olduğu sürece kendi adında bir eşleşme bulunan ya da bir açıklamanın veya notun metin parçasını gösteren bir satır, bunun yerine o eşleşmeye gider. [Eşleşmeye gitme](./find-and-replace.md#going-to-a-match) bölümüne bakın.
+Bul alanında metin olduğu sürece adında veya mantıksal adında bir eşleşme bulunan ya da bir açıklamanın veya notun metin parçasını gösteren bir satır, bunun yerine ilk eşleşmesine gider. [Eşleşmeye gitme](./find-and-replace.md#going-to-a-match) bölümüne bakın.
 
 Bir tıklamadan sonra klavye odağı ağaçta kalır; bu yüzden `Escape` tuşuna basana veya tuvale tıklayana kadar `Delete`, `Backspace` ve diğer düzenleme tuşları yeni seçime ulaşmaz. [Gezgindeki tuşlar](#keys-in-the-explorer) bölümüne bakın.
 

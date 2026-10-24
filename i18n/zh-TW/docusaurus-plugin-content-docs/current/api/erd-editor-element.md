@@ -71,16 +71,23 @@ interface ErdEditorElement extends HTMLElement {
 自 `4.1.0` 起，ERD 索引標籤中有[物件總管](../guide/guides/explorer.md)，這是停駐在畫布左側的圖表樹狀結構，頂端為尋找與取代。沒有任何 HTML 屬性、JavaScript 屬性、方法或事件能開啟、關閉或回報它：它可從工具列的 `Explorer` 按鈕、快速搜尋或畫布的右鍵選單中的 `Toggle Explorer`，或使用 [`findReplace`](#setkeybindingmap) 按鍵繫結開啟。  
 每個元素一開始時物件總管都是關閉的。它是否開啟、寬度、摺疊狀態和搜尋，會在元素存在期間一直保留，不受索引標籤切換和每次載入（包括 `setInitialValue`）影響，而且絕不會出現在 `value`、`runtimeValue`、復原歷程記錄或共用存放區中。
 
+自 `4.2.0` 起，資料表和欄位除了名稱之外，還可以有[邏輯名稱](../guide/guides/logical-names.md)，而「名稱顯示」（與索引標籤一樣是文件設定）會決定畫布要繪製它們的名稱、邏輯名稱，還是兩者都繪製。  
+工具列也有[字典](../guide/guides/dictionary.md)索引標籤，位於 `Code Generator` 和 `Settings` 之間，其中保存文件的詞彙、術語和定義域，以及 `Checks` 工作表。它與其他索引標籤相同：其 `canvasType` 為 `'@dineug/erd-editor/builtin-dictionary'`，由 `Canvas Type` 鎖定保存，因此在該索引標籤上儲存的文字，透過 [setInitialValue](#setinitialvalue) 載入時也會在該索引標籤上開啟，而切換到該索引標籤只有在該鎖定關閉期間，才會寫入 `value` 並觸發 [change](#change)。沒有任何專屬於它的 HTML 屬性、JavaScript 屬性、方法或事件能開啟它或回報其狀態。在其中所做的編輯都是文件變更：它們會出現在 `value` 中、觸發 [change](#change)，並傳到協作者，但其復原和重做是在各工作表自己的歷程記錄上執行，而不是在文件的歷程記錄上。  
+該索引標籤自身的狀態，也就是顯示哪個工作表（一開始為 `Domains`），以及各工作表的搜尋、選取範圍、捲動位置和欄寬，會在元素存在期間一直保留，不受索引標籤切換和每次載入影響，而且絕不會出現在 `value`、`runtimeValue`、任何復原歷程記錄或共用存放區中。  
+`ErdEditorElement` 介面沒有新增任何成員。API 新增的是 [getSchemaSQL](#getschemasql) 選項中的 `logicalNameAsComment`、十二個[佈景主題 token](#settheme)，以及匯出的 [dictionaryRowChords](#dictionaryrowchords)。
+
 ## readonly {#readonly}
 
 設定編輯器是否可編輯。  
-設定此屬性期間，指派 `value`、`clear()`、`setSchemaSQL()`、`setSchemaGraphQL()`、`setSchemaDBML()`、`setSchemaAML()`、`setSchemaJSON()`、復原和重做都會被忽略，也絕不會觸發 `change` 事件。請改用 [setInitialValue](#setinitialvalue) 載入文件。  
+設定此屬性期間，指派 `value`、`clear()`、`setSchemaSQL()`、`setSchemaGraphQL()`、`setSchemaDBML()`、`setSchemaAML()`、`setSchemaJSON()`、復原和重做（自 `4.2.0` 起也包括字典工作表的復原和重做）都會被忽略，也絕不會觸發 `change` 事件。請改用 [setInitialValue](#setinitialvalue) 載入文件。  
 檢視功能仍可使用：縮放、平移、手形工具、禪模式、畫布索引標籤、[視覺化](../guide/guides/visualization.md)索引標籤的兩種模式（包括聚焦資料表）、資料庫廠商，以及 SQL 與程式碼產生器的輸出設定都仍然有效，因此唯讀檢視器仍可匯出其他廠商的 SQL，或閱讀產生的程式碼。  
 自 `4.1.0` 起，[物件總管](../guide/guides/explorer.md#read-only-editors)也能開啟，選擇其中一列會前往該列所代表的項目，與在可編輯的編輯器中相同。其頂端的[尋找與取代](../guide/guides/find-and-replace.md#read-only-editors)只能尋找，沒有 `Toggle Replace` 箭頭，也沒有「取代」列，前往相符項目時仍會將其捲動到可見範圍內並加以選取。在所有編輯器中，此面板的標題都是 `Explorer`，工具列按鈕的工具提示則是 `Explorer (Ctrl + F)` (Windows/Linux) 或 `Explorer (⌘ + F)` (Mac)。從 `3.10.0` 到 `4.0.0`，尋找與取代會以標題為 `Find`、僅供尋找的浮動面板形式開啟。  
 「資料表屬性」仍可開啟，且自 `3.10.0` 起，其標題旁會顯示 `Read only` 徽章，其 `Indexes` 索引標籤也不提供任何編輯，請參閱[資料表屬性](../guide/guides/table-related-functions.md#table-properties)。  
 自 `4.0.0` 起，唯讀編輯器不提供 [`Import and Add`](../guide/guides/file-import-export.md#import-and-add)、`New Table Group`、`Group selected tables`、`Remove from group`（請參閱[資料表群組](../guide/guides/table-groups.md#read-only-editors)）或 [`Map Columns`](../guide/guides/relationship-editing.md#map-columns)，也不會顯示[歡迎畫面](#enablewelcomescreen)。「設定」索引標籤上的鎖定按鈕不會改變任何內容，「結構描述 SQL」索引標籤的 `Before tables` 和 `After tables` 指令碼也無法編輯。  
 自 `4.1.0` 起，它的[畫布工具列](../guide/guides/table-related-functions.md#canvas-toolbar)上也不會顯示 `New Table`、`New Memo` 或 `New Table Group` 按鈕，`addTableGroup` 和 `groupSelectedTables` 按鍵繫結也不會有任何作用。  
-「結構描述 SQL」索引標籤中標示為 `This window only` 的選項（`Statements`、`Header` 和 `Tables`）從不儲存，且仍然有效；[`Export image`](../guide/guides/file-import-export.md#image) 對話方塊、佈景主題建立器和顯示語言選擇器也同樣仍可使用。在佈景主題建立器或顯示語言選擇器中進行選擇，仍會觸發 [changePresetTheme](#changepresettheme) 或 [changeLocale](#changelocale)。  
+自 `4.2.0` 起，[名稱顯示](../guide/guides/logical-names.md#read-only-editors)仍可從其每個選擇器切換，但只會作用於該編輯器自己的畫面：無論其鎖定為何，切換都絕不會傳到協作者。流程模式的 `Previous table` 和 `Next table` 仍可透過其按鈕或復原和重做按鍵逐步移動。  
+[字典](../guide/guides/dictionary.md#read-only-editors)索引標籤仍可開啟：其工作表仍可切換、搜尋、選取、捲動和複製，`Checks` 工作表的列也仍會前往其所指的項目。任何儲存格都不接受編輯、貼上或清除，該索引標籤不會顯示 `Add Row`、`Delete Rows`、`Import CSV` 或 `Export CSV` 工具，網格上也沒有選單，其列按鍵組合也不會插入或刪除任何列。資料表選單、畫布選單和快速搜尋都不提供 [`Derive Physical Names Again`](../guide/guides/dictionary.md#derive-physical-names-again) 或 `Derive Physical Name Again`。  
+「結構描述 SQL」索引標籤中標示為 `This window only` 的選項（`Statements`、`Header`、自 `4.2.0` 起的 `Write logical names into empty comments` 和 `Tables`）從不儲存，且仍然有效；[`Export image`](../guide/guides/file-import-export.md#image) 對話方塊、佈景主題建立器和顯示語言選擇器也同樣仍可使用。在佈景主題建立器或顯示語言選擇器中進行選擇，仍會觸發 [changePresetTheme](#changepresettheme) 或 [changeLocale](#changelocale)。  
 只寫屬性名稱、`=""` 和 `="true"` 都會讀取為 `true`。`="false"` 會讀取為 `false`，其他任何字串也一樣，包括 HTML 慣用寫法 `readonly="readonly"`。
 
 ```js
@@ -173,8 +180,9 @@ editor.setAttribute('enable-welcome-screen', 'true');
 
 以 JSON 字串取得目前的文件，格式為編輯器所定義的[結構描述](./advanced/schema.md)。  
 自 `4.0.0` 起，它是儲存形式，也就是檔案所保存的文件形式，這也是 `json` 匯出所寫出和官方主應用程式所儲存的內容。它只保存現存的實體，不含已移除的實體、堆疊順序，以及編輯器自行計算出的資訊，例如測得的寬度、鍵標記和關聯錨點。其實體的鍵依固定順序排列，以兩個空格縮排，並以換行字元結尾，因此同一份文件一律會產生相同的位元組。  
-[鎖定](../guide/guides/settings.md#lock)為開啟的每項設定，都會以其鎖定的值寫出，而非畫面上顯示的值。`Viewport` 鎖定保存 `originX`、`originY` 和 `zoomLevel`，`Canvas Type`、`Language`、`Table Name Case`、`Column Name Case` 和 `Bracket Type` 則各自保存其對應的設定。其他所有設定都會依目前狀態寫出，且一律會寫出 `lockSettings`。關於各個位元，請參閱 [Settings](./advanced/schema.md#settings)。  
-新文件的所有鎖定都是開啟的，不論是元素在被賦予值之前顯示的文件，或是從空白值載入的文件。在關閉對應的鎖定之前，其 `value` 會將原點保持在 `0, 0`、縮放比例保持在 `1`，並維持 ERD 索引標籤，以及預設的程式碼產生器語言、名稱大小寫和引號類型。  
+自 `4.2.0` 起，它也會省略空的內容：空的 `doc` 清單、空的集合、不含任何內容的字典列，以及實體中空的文字屬性，例如名稱、註解、資料類型、預設值或顏色。實體內的清單（例如資料表的 `columnIds`）即使為空也仍會寫出。新文件的 `doc` 為 `{}`，且沒有 `collections`，因此請將缺少的屬性、清單或集合視為空的。它保存資料表和欄位的邏輯名稱與標示名稱是否由字典產生的旗標、欄位的定義域連結，以及詞彙、術語和定義域；每個字典都寫成一個由屬性名稱組成的標頭，後接其各列，每列佔一行，依工作表中的順序排列。請參閱[儲存形式與執行階段值](./advanced/schema.md#storage-form-and-runtime-value)。  
+[鎖定](../guide/guides/settings.md#lock)為開啟的每項設定，都會以其鎖定的值寫出，而非畫面上顯示的值。`Viewport` 鎖定保存 `originX`、`originY` 和 `zoomLevel`，`Canvas Type`、`Language`、`Table Name Case`、`Column Name Case`、`Bracket Type`，以及自 `4.2.0` 起的 `Name View`，則各自保存其對應的設定。「名稱顯示」會寫成 `nameViewMode`，且只在其值不是 `'physical'` 時寫出。其他所有設定都會依目前狀態寫出，且一律會寫出 `lockSettings`。關於各個位元，請參閱 [Settings](./advanced/schema.md#settings)；`Name View` 鎖定的位元含義正好相反。  
+新文件的所有鎖定都是開啟的，不論是元素在被賦予值之前顯示的文件，或是從空白值載入的文件。在關閉對應的鎖定之前，其 `value` 會將原點保持在 `0, 0`、縮放比例保持在 `1`，並維持 ERD 索引標籤、預設的程式碼產生器語言、名稱大小寫和引號類型，以及自 `4.2.0` 起的 `Physical Names`。  
 在 `4.0.0` 之前，它會傳回編輯器所保存的完整文件，並套用 `ignoreSaveSettings`。編輯器所保存的文件現在是 [runtimeValue](#runtimevalue)，且不再讀取或寫入 `ignoreSaveSettings`。
 
 ```js
@@ -183,14 +191,14 @@ const data = editor.value;
 
 ### setter {#setter}
 
-載入先前儲存的編輯器狀態。它會取代整份文件：會先清除目前的文件。  
-與 `clear()`、`setInitialValue()`，以及採用預設 `mode: 'replace'` 的 `setSchema*` 方法相同，它也會捨棄「視覺化」索引標籤的流程模式檢視：其版面配置、縮小範圍後的資料表、列顯示、縮放和平移。附加（`mode: 'append'`）則不會捨棄它。  
+載入先前儲存的編輯器狀態。它會取代整份文件：會先清除目前的文件。自 `4.2.0` 起，這也包括詞彙、術語和定義域：文件會採用文字所保存的詞彙、術語和定義域，文字中沒有時則一個也沒有，且每個字典工作表自己的復原歷程記錄都會被清空。  
+與 `clear()`、`setInitialValue()`，以及採用預設 `mode: 'replace'` 的 `setSchema*` 方法相同，它也會捨棄「視覺化」索引標籤的流程模式檢視：其版面配置、縮小範圍後的資料表、列顯示、縮放和平移，以及自 `4.2.0` 起其 `Previous table` 和 `Next table` 所逐一經過的資料表。附加（`mode: 'append'`）則不會捨棄它。  
 它會記錄在歷程記錄清單中，因此可以 `Undo, Redo`，並會觸發 `change`。  
 它接受儲存形式、[runtimeValue](#runtimevalue)，或舊版本儲存的檔案。  
 空白字串或任何非字串的值，都會載入新文件，而不會引發錯誤，因此請在指派前先檢查該值。  
 該新文件與 `setInitialValue('')` 建立的文件相同：內容為空、使用預設設定，且自 `4.0.0` 起所有鎖定皆為開啟。在 `3.10.x` 中，它既不儲存捲動位置也不儲存縮放比例，更早的版本則兩者都會儲存。  
-共用存放區會以新文件的完整 JSON 將這次載入轉送給協作者，因此每個對等端（包括舊版本）都會載入相同的文件。  
-自 `4.0.0` 起，所載入文件的鎖定，以及 `value` 之後寫出的鎖定的值，都來自該文字，檢視會落在文字所指定的位置，若該處未繪製任何圖表內容，則落在圖表上。對於文字所鎖定的其他各項設定（索引標籤、程式碼產生器語言、名稱大小寫和引號類型），編輯器會持續顯示載入前所顯示的內容。文字未鎖定的設定則採用文字中的值。[setInitialValue](#setinitialvalue) 則會採用文字所保存的所有值；關於未指定任何鎖定的文字，也請參閱該節。  
+共用存放區會以新文件的完整 JSON 將這次載入轉送給協作者，因此每個對等端（包括舊版本）都會載入它，不過 `4.2.0` 之前的編輯器會捨棄其無法辨識的內容，例如邏輯名稱、定義域連結和字典，請參閱[混用不同版本](./advanced/collaborative-editing.md#mixing-releases)。  
+自 `4.0.0` 起，所載入文件的鎖定，以及 `value` 之後寫出的鎖定的值，都來自該文字，檢視會落在文字所指定的位置，若該處未繪製任何圖表內容，則落在圖表上。對於文字所鎖定的其他各項設定（索引標籤、程式碼產生器語言、名稱大小寫、引號類型，以及自 `4.2.0` 起的「名稱顯示」），編輯器會持續顯示載入前所顯示的內容。文字未鎖定的設定則採用文字中的值。在 `4.2.0` 之前儲存的檔案不會指定 `Name View` 鎖定，除非有 `4.2.0` 的編輯器在其中關閉了該鎖定，因此這類檔案載入時，「名稱顯示」會鎖定在 `Physical Names`，而編輯器會維持其原先顯示的「名稱顯示」。[setInitialValue](#setinitialvalue) 則會採用文字所保存的所有值；關於未指定任何鎖定的文字，也請參閱該節。  
 非 JSON 的文字（例如殘留合併衝突標記的檔案）也不會引發錯誤：文件會被清空，其設定維持原樣，剖析錯誤則會記錄到主控台。  
 設定 `readonly` 期間它會被忽略；若要載入到唯讀編輯器，請使用 [setInitialValue](#setinitialvalue)。
 
@@ -201,8 +209,8 @@ editor.value = 'json...';
 ## runtimeValue {#runtimevalue}
 
 自 `4.0.0` 起，以 JSON 字串取得此編輯器所保存的文件。它沒有 setter，因此在嚴格模式的程式碼中指派它會擲回錯誤。  
-它包含 [value](#value) 所省略的內容：已移除的實體及其順序、堆疊順序、測得的寬度、鍵標記、關聯錨點和序列。鎖定的設定在這裡也會以其鎖定的值寫出。  
-透過 [setInitialValue](#setinitialvalue)，以它初始化要加入已在執行中工作階段的另一個編輯器，例如協作者或同一份文件的第二個檢視。如此一來，當工作階段之後傳來某次移除的復原時，就能在該處完整還原該實體，而以 `value` 初始化的編輯器不保存任何已移除的實體，只會改為還原一個空白、未命名的資料表。請參閱[協作編輯](./advanced/collaborative-editing.md)。  
+它包含 [value](#value) 所省略的內容：已移除的實體及其順序、堆疊順序、測得的寬度、鍵標記、關聯錨點和序列，自 `4.2.0` 起還包括空的文字屬性、`doc` 清單和集合；從字典工作表中移除的列，以及不含任何內容的列；每個字典列的排序鍵；詞彙、術語和定義域的 `doc` 清單；以及指向已移除定義域的連結。鎖定的設定在這裡也會以其鎖定的值寫出。  
+透過 [setInitialValue](#setinitialvalue)，以它初始化要加入已在執行中工作階段的另一個編輯器，例如協作者或同一份文件的第二個檢視。如此一來，當工作階段之後傳來某次移除的復原時，就能在該處完整還原該實體，而以 `value` 初始化的編輯器不保存任何已移除的實體，只會改為還原一個空白、未命名的資料表，或自 `4.2.0` 起還原一個空的字典列。請參閱[協作編輯](./advanced/collaborative-editing.md)。  
 已移除的實體不再被任何機制回收，因此會一直留在其中，直到下次從檔案開啟該文件為止。  
 切勿將它寫入檔案：請儲存 `value`，因為 [JSON Schema](./advanced/schema.md#json-schema) 接受 `value`，而不接受它。
 
@@ -213,11 +221,12 @@ otherEditor.setInitialValue(editor.runtimeValue);
 ## setInitialValue {#setinitialvalue}
 
 載入先前儲存的編輯器狀態。載入本身不會記錄在歷程記錄清單中，因此無法復原，也不會觸發 `change` 事件。  
-它也會清除復原歷程記錄，因此載入之前所做的任何操作，都無法在載入的文件上復原或重做。  
+它也會清除復原歷程記錄，因此載入之前所做的任何操作，都無法在載入的文件上復原或重做；自 `4.2.0` 起，每個字典工作表自己的歷程記錄也會一併清除。  
 它接受儲存形式、[runtimeValue](#runtimevalue)，或舊版本儲存的檔案，而且與指派 `value` 不同，它會採用文字所保存的所有設定，包括索引標籤和程式碼設定。  
 空白字串或任何非字串的值，都會載入新文件，而不會引發錯誤，因此 `setInitialValue('')` 會建立空白圖表。  
-自 `4.0.0` 起，該新文件（也就是元素在被賦予任何值之前顯示的文件）的所有鎖定皆為開啟。捲動、縮放、切換索引標籤，以及變更程式碼產生器語言、名稱大小寫或引號類型，都會讓 `value` 維持原樣，也不會觸發 `change`。在 `3.10.x` 中，它既不儲存捲動位置也不儲存縮放比例，更早的版本則兩者都會儲存。  
+自 `4.0.0` 起，該新文件（也就是元素在被賦予任何值之前顯示的文件）的所有鎖定皆為開啟。捲動、縮放、切換索引標籤，以及變更程式碼產生器語言、名稱大小寫、引號類型或（自 `4.2.0` 起）「名稱顯示」，都會讓 `value` 維持原樣，也不會觸發 `change`。在 `3.10.x` 中，它既不儲存捲動位置也不儲存縮放比例，更早的版本則兩者都會儲存。  
 從文字載入的文件會保留其中指定的鎖定。未指定任何鎖定的文件（任何在 `4.0.0` 之前儲存的檔案，不論其 `ignoreSaveSettings` 為何，以及 v2 `.vuerd` 檔案）開啟時所有鎖定皆為開啟，其 `Viewport` 鎖定在原點 `0, 0` 和縮放比例 `1`，位於 ERD 索引標籤，語言、名稱大小寫和引號類型則維持儲存時的設定。  
+自 `4.2.0` 起，指定了鎖定但未指定 `Name View` 鎖定的文字，開啟時該鎖定同樣為開啟，即使其他所有鎖定都是關閉的。在 `4.2.0` 之前儲存的檔案就是這類文字，除非有 `4.2.0` 的編輯器在其中關閉了該鎖定（請參閱 [Settings](./advanced/schema.md#settings)）。它會以 `Physical Names` 開啟，與完全未指定任何鎖定的文字相同。  
 不論哪種情況，檢視都會開啟在文件的檢視位置（文字指定了鎖定時為文字所儲存的檢視位置，未指定時為原點 `0, 0`、縮放比例 `1`），若該處未繪製任何圖表內容，則開啟在圖表上。鎖定的 `Viewport` 仍會在 `value` 中保留其鎖定的值。  
 自 `4.0.0` 起，它也會捨棄先前所保存文件的協作狀態，而此編輯器中已訂閱的[共用存放區](#getsharedstore)會再次向其他編輯器要求它們的狀態，因此在執行中工作階段裡重新載入的編輯器能夠跟上進度。以另一個編輯器的 [runtimeValue](#runtimevalue) 初始化這類編輯器。  
 非 JSON 的文字也不會引發錯誤：文件會被清空，其設定維持原樣，剖析錯誤則會記錄到主控台。  
@@ -246,10 +255,11 @@ editor.addEventListener('change', () => {
 編輯器中發生變更時，會觸發此事件。  
 此事件會以 200ms 防彈跳，且在 `readonly` 為 `true` 期間不會觸發。  
 任何文件變更都會觸發它：在 UI 中編輯、指派 `value`、`clear()`、每個 `setSchema*` 方法，以及 `setSchemaJSON()` 和 `Import and Add`（自 `4.0.0` 起）。`setInitialValue` 不會觸發它。  
-在「視覺化」索引標籤的流程模式中所做的任何操作（縮放、平移、移動卡片、`Tidy Up`、列顯示，或從卡片縮小檢視範圍）都不會觸發它，因為這些都不是文件變更。  
-自 `4.0.0` 起，變更[鎖定](../guide/guides/settings.md#lock)為開啟的設定也不會觸發它，因為這只會改變畫面，絕不會改變 `value`：在 `Viewport` 鎖定期間捲動或縮放 ERD 畫布、在 `Canvas Type` 鎖定期間切換索引標籤，以及在各自的鎖定開啟期間變更程式碼產生器語言、資料表名稱大小寫、欄位名稱大小寫或引號類型。只有這些變更會被排除，因此同時也編輯文件的批次仍會觸發它。鎖定或解除鎖定設定則會觸發它。  
-新文件和任何在 `4.0.0` 之前儲存的檔案中，所有鎖定都是開啟的，因此預設情況下，捲動、縮放和切換索引標籤都不會觸發任何事件。這包括從 ERD 索引標籤聚焦資料表、可從流程模式返回 ERD 索引標籤的外部連結卡片按鈕、前往物件總管的某一列或某個搜尋相符項目，以及從其他索引標籤開啟物件總管或前往快速搜尋結果。只有在涵蓋該操作的鎖定關閉時，上述每項操作才會觸發一次 `change`：切換索引標籤對應 `Canvas Type`，而卡片按鈕、快速搜尋結果、物件總管的列或搜尋相符項目同時造成的捲動則對應 `Viewport`。自 `4.1.0` 起，這些捲動全都依循同一條規則，也就是[跳至目標時的落點](../guide/guides/table-related-functions.md#where-a-jump-lands)，因此快速搜尋的資料表結果不再每次都捲動，而規則判定維持原位的跳至目標也不會產生需要觸發事件的捲動。開啟、關閉物件總管或調整其大小，會讓畫布變窄或變寬而不移動其原點，同樣不會觸發任何事件。在 `4.0.0` 之前，即使 `editor.value` 的結果相同，捲動、縮放和切換索引標籤也一律會觸發它。  
-若要略過未改變任何內容的寫入，請將 `editor.value` 與您上次儲存的值比較，而不是與載入的檔案比較：舊版本寫出的檔案、v2 檔案或手動編輯過的檔案，一載入，其 `value` 就可能與檔案不同，因為 `value` 會以儲存形式寫出。`Viewport` 鎖定為關閉、且其原點在此畫面上未顯示任何圖表內容的檔案也是如此：載入會將檢視移到圖表上，而 `value` 會寫出其落點。自 `4.0.0` 起，測得的寬度不再造成這種情況，因為 `value` 不保存任何寬度。寫入檔案的主應用程式也可以改用複寫存放區的 `changed` 區分編輯與檢視變更，請參閱 [on@change](./advanced/remote-storage.md#onchange)。  
+自 `4.2.0` 起，這也包括[字典](../guide/guides/dictionary.md)索引標籤上的每次編輯及其每次復原或重做、邏輯名稱或定義域連結的變更、`Derive Physical Names Again`，以及 `Name View` 鎖定關閉期間的「名稱顯示」切換。  
+在「視覺化」索引標籤的流程模式中所做的任何操作（縮放、平移、移動卡片、`Tidy Up`、列顯示、從卡片縮小檢視範圍，或自 `4.2.0` 起透過 `Previous table` 和 `Next table` 或復原和重做按鍵逐步移動）都不會觸發它，因為這些都不是文件變更。其 `Name View` 清單是例外：`Name View` 鎖定關閉期間，在該處切換會觸發它，與在 ERD 索引標籤上切換相同。  
+自 `4.0.0` 起，變更[鎖定](../guide/guides/settings.md#lock)為開啟的設定也不會觸發它，因為這只會改變畫面，絕不會改變 `value`：在 `Viewport` 鎖定期間捲動或縮放 ERD 畫布、在 `Canvas Type` 鎖定期間切換索引標籤、在各自的鎖定開啟期間變更程式碼產生器語言、資料表名稱大小寫、欄位名稱大小寫或引號類型，以及自 `4.2.0` 起在 `Name View` 鎖定期間切換「名稱顯示」。只有這些變更會被排除，因此同時也編輯文件的批次仍會觸發它。鎖定或解除鎖定設定則會觸發它。  
+新文件和任何在 `4.0.0` 之前儲存的檔案中，所有鎖定都是開啟的，而任何在 `4.2.0` 之前儲存的檔案中，`Name View` 鎖定也是開啟的，除非有 `4.2.0` 的編輯器在其中將其關閉，因此預設情況下，捲動、縮放、切換索引標籤和切換「名稱顯示」都不會觸發任何事件。這包括從 ERD 索引標籤聚焦資料表、可從流程模式返回 ERD 索引標籤的外部連結卡片按鈕、前往物件總管的某一列或某個搜尋相符項目、從其他索引標籤開啟物件總管或前往快速搜尋結果，以及自 `4.2.0` 起從「字典」索引標籤 `Checks` 工作表的某一列前往資料表或欄位。只有在涵蓋該操作的鎖定關閉時，上述每項操作才會觸發一次 `change`：切換索引標籤對應 `Canvas Type`，而卡片按鈕、快速搜尋結果、物件總管的列、搜尋相符項目或 `Checks` 工作表的列同時造成的捲動則對應 `Viewport`。自 `4.1.0` 起，這些捲動全都依循同一條規則，也就是[跳至目標時的落點](../guide/guides/table-related-functions.md#where-a-jump-lands)，因此快速搜尋的資料表結果不再每次都捲動，而規則判定維持原位的跳至目標也不會產生需要觸發事件的捲動。開啟、關閉物件總管或調整其大小，會讓畫布變窄或變寬而不移動其原點，同樣不會觸發任何事件。在 `4.0.0` 之前，即使 `editor.value` 的結果相同，捲動、縮放和切換索引標籤也一律會觸發它。  
+若要略過未改變任何內容的寫入，請將 `editor.value` 與您上次儲存的值比較，而不是與載入的檔案比較：舊版本寫出的檔案、v2 檔案或手動編輯過的檔案，一載入，其 `value` 就可能與檔案不同，因為 `value` 會以儲存形式寫出。`Viewport` 鎖定為關閉、且其原點在此畫面上未顯示任何圖表內容的檔案也是如此：載入會將檢視移到圖表上，而 `value` 會寫出其落點。自 `4.0.0` 起，測得的寬度不再造成這種情況，因為 `value` 不保存任何寬度。自 `4.2.0` 起，`4.0.0` 或 `4.1.0` 儲存的檔案也可能不同，因為 `value` 現在會省略其中空的文字屬性、清單和集合，所以這類檔案會在下次儲存時被重寫一次。寫入檔案的主應用程式也可以改用複寫存放區的 `changed` 區分編輯與檢視變更，請參閱 [on@change](./advanced/remote-storage.md#onchange)。  
 此事件不攜帶 `detail`，既不會冒泡，也不會跨越 shadow 邊界，因此請在元素本身上監聽，並在處理常式中讀取 `editor.value`。
 
 ```js
@@ -301,9 +311,9 @@ editor.blur();
 
 ## clear {#clear}
 
-清空文件，移除所有資料表、欄位、關聯、索引和備忘錄，自 `4.0.0` 起也會移除所有資料表群組。  
+清空文件，移除所有資料表、欄位、關聯、索引和備忘錄，自 `4.0.0` 起也會移除所有資料表群組，自 `4.2.0` 起還會移除「字典」索引標籤的詞彙、術語和定義域，並清空每個工作表自己的復原歷程記錄。  
 所有設定都會保留，包括資料庫、檢視位置、縮放比例、資料表檢視選項、每個鎖定及其保存的值，以及「結構描述 SQL」索引標籤的 `Before tables` 和 `After tables` 指令碼，因此清空後的檔案仍會繼續儲存原先所儲存的設定。若要改為建立新文件，請將 `''` 指派給 `value`，或呼叫 `setInitialValue('')`。  
-它會記錄在歷程記錄清單中，因此可以復原，並會觸發 `change`。復原會將文件還原為編輯器先前所保存的狀態，每項鎖定的設定都維持其鎖定的值。設定 `readonly` 期間它會被忽略。
+它會記錄在歷程記錄清單中，因此可以復原，並會觸發 `change`。復原會將文件（包括其詞彙、術語和定義域）還原為編輯器先前所保存的狀態，每項鎖定的設定都維持其鎖定的值。設定 `readonly` 期間它會被忽略。
 
 ```js
 editor.clear();
@@ -328,6 +338,7 @@ editor.destroy();
 按鍵繫結的值必須是 `ShortcutOption[]`。單純的字串會被忽略，因此請寫成 `{ addTable: [{ shortcut: 'Alt+KeyN' }] }`，而不是 `{ addTable: 'Alt+KeyN' }`。  
 空陣列也會被接受，且不會繫結任何按鍵：`setKeyBindingMap({ findReplace: [] })` 會將 `Ctrl + F` (Windows/Linux) 或 `⌘ + F` (Mac) 留給頁面，`{ search: [] }` 對 `Ctrl + K` (Windows/Linux) 或 `⌘ + K` (Mac) 也是如此。工具列的 `Search` 按鈕仍會開啟快速搜尋，工具列的 `Explorer` 按鈕仍會開啟和關閉物件總管，快速搜尋和畫布的右鍵選單中的 `Toggle Explorer` 也仍會開啟其搜尋或將其關閉；對於留空的名稱，這些位置都不會顯示快速鍵。`{ removeSelection: [] }` 會將 `Delete` 和 `Backspace` 留給頁面，此時資料表、備忘錄和資料表群組選單中的刪除項目（`Delete`、`Delete selected`、`Delete column`、`Delete columns`）都不會顯示快速鍵。  
 自 `4.1.0` 起，`{ addTableGroup: [] }` 會將 `Alt + G` (Windows/Linux) 或 `⌥ + G` (Mac) 留給頁面，`{ groupSelectedTables: [] }` 則會將先按 `T` 再按 `G` 留給頁面。畫布工具列、畫布的右鍵選單和快速搜尋中的 `New Table Group`、資料表選單中的 `Group selected tables`，以及快速搜尋中的 `Group Selected Tables` 仍可使用，只是不會顯示快速鍵。畫布工具列的 `New Table`、`New Memo` 和 `New Table Group` 按鈕的工具提示，會列出 `addTable`、`addMemo` 和 `addTableGroup` 的第一個按鍵組合，按鍵繫結留空時則只列出按鈕名稱。  
+自 `4.2.0` 起，`addColumn` 和 `removeColumn` 也會為「字典」索引標籤的網格提供其列按鍵組合（如下所述），因此重新對應其中任一個，這些按鍵組合也會隨之改變。`{ addColumn: [] }` 會讓網格沒有插入列的按鍵組合，此時網格選單的兩個插入項目都不會顯示快速鍵；`{ removeColumn: [] }` 會讓網格沒有刪除列的按鍵組合，此時選單的刪除項目和 `Delete Rows` 的工具提示都不會顯示快速鍵。  
 此呼叫是部分合併：未指定的名稱會保留預設值，呼叫兩次也會保留先前的變更。目前的按鍵繫結沒有 getter：[createKeyBindingMap](#createkeybindingmap) 傳回的是預設值，而不是 `setKeyBindingMap` 變更後的內容。
 
 ```ts
@@ -401,21 +412,27 @@ editor.setKeyBindingMap({
 `selectAllTable`、`handTool`、`removeSelection` 和 `groupSelectedTables`（自 `4.1.0` 起）都會讓位給插入點：焦點位於輸入框、文字區域或 `contenteditable` 元素中時，`$mod + A` 會選取文字，`Space` 會輸入空格，`Delete` 和 `Backspace` 會清除文字，先按 `T` 再按 `G` 會輸入這兩個字母，而不會傳到畫布。這些按鍵都不會被阻止預設動作。無論將它們重新對應到哪個按鍵，行為都相同。
 
 自 `4.0.0` 起，`removeSelection`（`Delete` 或 `Backspace`）會在 ERD 索引標籤上移除選取範圍，算作一個復原步驟，且不會詢問確認。當只有焦點資料表被選取、其一或多個欄位被選取，且目前的縮放比例會繪製其列時，它會移除這些欄位；否則會移除所有選取的資料表、備忘錄和資料表群組，但保留群組中的資料表。請參閱[刪除資料表與備忘錄](../guide/guides/table-related-functions.md#table-and-memo-deletion)。  
-按住不放的按鍵只會移除一次，且儲存格、備忘錄或資料表群組名稱編輯器開啟期間不會移除任何內容。在輸入框和會攔下按鍵繫結的面板（請參閱 [createKeyBindingMap](#createkeybindingmap)）之外，只要編輯器擁有焦點，無論在哪個索引標籤，此按鍵都會被阻止預設動作，焦點位於工具列按鈕上時也是如此，唯讀編輯器中亦然，只是不會移除任何內容。
+按住不放的按鍵只會移除一次，且儲存格、備忘錄或資料表群組名稱編輯器開啟期間不會移除任何內容。在輸入框和會攔下按鍵繫結的面板與索引標籤（請參閱 [createKeyBindingMap](#createkeybindingmap)）之外，只要編輯器擁有焦點，無論在哪個索引標籤，此按鍵都會被阻止預設動作，焦點位於工具列按鈕上時也是如此，唯讀編輯器中亦然，只是不會移除任何內容。
 
 自 `4.1.0` 起，`addTableGroup`（`Alt+KeyG`）會在 ERD 索引標籤上進入 `New Table Group` 的繪製狀態，之後在畫布上按下滑鼠主要按鍵即可繪製群組，再按一次則會結束繪製狀態，與畫布工具列的 `New Table Group` 按鈕相同。`groupSelectedTables`（`KeyT KeyG`，也就是先按 `T` 再按 `G`）會將選取的資料表放入新群組並開啟其名稱編輯器，與資料表右鍵選單中的 `Group selected tables` 相同。未選取任何資料表時，它不會加入任何內容；選取的備忘錄或資料表群組不列入計算。請參閱[繪製群組](../guide/guides/table-groups.md#drawing-a-group)和[將所選資料表組成群組](../guide/guides/table-groups.md#grouping-selected-tables)。  
 兩者只在選單提供群組功能時才會作用：設定 `readonly` 期間、`Table Groups` 檢視選項隱藏群組期間，或儲存格、備忘錄或資料表群組名稱編輯器開啟期間都不會作用。與其他畫布按鍵繫結相同，它們只在 ERD 索引標籤上作用，且在快速搜尋、「資料表屬性」、差異檢視器、時光旅行、自動版面配置預覽、`Export image` 或 `Map Columns` 開啟期間不會作用。在它們不會作用的情況下，按鍵仍會被阻止預設動作，除非 `groupSelectedTables` 讓位給插入點。`addTableGroup` 也會停止傳播（`focusView` 和 `zenMode` 也是如此），因此頁面上冒泡階段的 `keydown` 監聽器絕不會收到它。
 
+自 `4.2.0` 起，在[字典](../guide/guides/dictionary.md#adding-and-deleting-rows)索引標籤上，`addColumn` 的每個單次按鍵組合都會在選取範圍下方插入與選取範圍所涵蓋列數相同的列，同時再按住 `Shift` 的同一按鍵組合會改為在上方插入這些列，而 `removeColumn` 的每個單次按鍵組合會刪除選取範圍所涵蓋的列：預設設定下分別為 `Alt+Enter`、`Alt+Shift+Enter`，以及 `Alt+Backspace` 或 `Alt+Delete`。它們會在 `Domains`、`Words` 和 `Terms` 工作表的網格中、沒有開啟任何儲存格編輯時作用。本身已包含 `Shift` 的 `addColumn` 按鍵組合不會產生在上方插入的按鍵組合，而繫結到這兩個名稱之一的按鍵序列不會為網格提供任何按鍵組合。  
+每次這類按鍵都會依其選項的設定被阻止預設動作，且一律會停止傳播，因此不會在 ERD 索引標籤上新增或移除任何欄位。在 `Checks` 工作表上和唯讀編輯器中，它不會有任何作用，但仍會被阻止預設動作並停止傳播。在開啟中的儲存格編輯或該索引標籤的搜尋輸入框中，這些按鍵組合會留給文字處理：它們在該處會停止傳播，但不會被阻止預設動作，因此輸入框會像在其他任何地方一樣回應它們（在 Mac 上，`⌥ + Backspace` 會刪除一個字詞）。[dictionaryRowChords](#dictionaryrowchords) 會列出這些按鍵組合。
+
 自 `3.10.0` 起，`findReplace`（`$mod+KeyF`）會開啟[尋找與取代](../guide/guides/find-and-replace.md)。自 `4.1.0` 起，它會切換包含尋找與取代的[物件總管](../guide/guides/explorer.md#opening-and-closing)，且「快速鍵」索引標籤會將其列為 `Toggle Explorer`。  
 當工具列的 `Explorer` 按鈕呈現按下狀態時（物件總管在 ERD 索引標籤上開啟且未被禪模式隱藏），它會關閉物件總管，除非快速搜尋、「資料表屬性」、佈景主題建立器、顯示語言選擇器、`Export image` 對話方塊或 `Map Columns` 已開啟。否則，它會關閉上述任何已開啟的項目，從任何其他索引標籤切換到 ERD 索引標籤，並開啟物件總管，將插入點置於其 `Find` 輸入框中並選取搜尋字串。編輯器太窄而無法在畫布旁顯示物件總管時，會讓物件總管保持開啟但暫時隱藏，並顯示 `Widen the window to show the Explorer` 快顯通知。在 `4.1.0` 之前，它會開啟浮動的尋找與取代面板，或將鍵盤焦點交還給其輸入框，且從不關閉該面板。  
-它不會讓位給插入點：只要編輯器擁有焦點，無論在哪個索引標籤，也無論焦點位於畫布或編輯器內的輸入框，此按鍵都會被它接收。此按鍵會被阻止預設動作，所以瀏覽器不會開啟尋找列；也會停止傳播，所以頁面上冒泡階段的 `keydown` 監聽器都不會收到它。儲存格或備忘錄編輯器開啟時，或自 `4.0.0` 起資料表群組名稱編輯器開啟時，它仍會被阻止預設動作並停止傳播，但不會有任何作用。  
+它不會讓位給插入點：只要編輯器擁有焦點，無論在哪個索引標籤，也無論焦點位於畫布或編輯器內的輸入框，此按鍵都會被它接收。此按鍵會被阻止預設動作，所以瀏覽器不會開啟尋找列；也會停止傳播，所以頁面上冒泡階段的 `keydown` 監聽器都不會收到它。儲存格或備忘錄編輯器開啟時、自 `4.0.0` 起資料表群組名稱編輯器開啟時，或自 `4.2.0` 起「字典」索引標籤的網格中有儲存格編輯開啟時，它仍會被阻止預設動作並停止傳播，但不會有任何作用。在最後這種情況下，`search` 也不會有任何作用，因此已輸入的文字會保留下來。  
 差異檢視器、時光旅行或自動版面配置預覽開啟期間（無論在哪個索引標籤），或輸入法仍在組字時，它既不會被阻止預設動作，也不會停止傳播，因此會由瀏覽器或主應用程式自己的尋找功能接收。在物件總管內，仍在組字中的按鍵會在該處停止傳播，但不會被阻止預設動作。無論將 `findReplace` 重新對應到哪個按鍵，行為都相同。
 
 `focusView` 只在 ERD 索引標籤上作用。至少選取一個資料表時，它會以流程模式開啟「視覺化」索引標籤，並將範圍縮小到這些資料表，以及與其相隔一個關聯的所有資料表；選取的備忘錄或資料表群組不列入計算，未選取任何資料表時則不會有任何作用。請參閱[聚焦資料表](../guide/guides/visualization.md#focusing-on-tables)。
 
+`undo` 和 `redo` 的作用依索引標籤而定。在 ERD 索引標籤上，它們會復原和重做文件的歷程記錄。自 `4.2.0` 起，在「字典」索引標籤上，它們會復原和重做目前顯示的工作表自己的歷程記錄，在 `Checks` 工作表上則不會有任何作用，請參閱[字典工作表](../guide/guides/undo-redo.md#dictionary-sheets)。在「視覺化」索引標籤的流程模式中，它們會像 [`Previous table` 和 `Next table`](../guide/guides/visualization.md#previous-table-and-next-table) 一樣返回上一步和前進到下一步，不會影響文件的歷程記錄。在其他索引標籤上，以及在關係圖模式中，它們不會復原任何內容。
+
 在 ERD 索引標籤上，`stop`（`Escape`）會結束開啟中的儲存格或備忘錄編輯器，或正在繪製的關聯，並讓選取範圍維持原樣。自 `4.0.0` 起，它也會結束資料表群組名稱編輯器（不寫入任何名稱）和 `New Table Group` 的繪製。編輯器會對該次按鍵呼叫 `preventDefault()`。  
 上述項目都未開啟時，`Escape` 會清除選取範圍和焦點儲存格，且不會被阻止預設動作。因此，離開編輯並清除選取範圍需要按兩次。  
-除了物件總管、[歡迎畫面](#enablewelcomescreen)的 `Import` 格式，以及下方所述的選擇器和對話方塊之外，編輯器絕不會阻止 `Escape` 傳播，因此自行監聽它的頁面（例如用來關閉自己的對話方塊）會收到這兩次按鍵，並可略過 `defaultPrevented` 為 `true` 的那一次。  
+自 `4.2.0` 起，邏輯名稱儲存格的術語清單顯示期間（請參閱[術語名稱自動完成](../guide/guides/logical-names.md#completing-term-names)），第一次按 `Escape` 只會關閉該清單，並讓編輯器保持開啟。該次按鍵會在儲存格處被阻止預設動作並停止傳播，因此 `stop` 和頁面上冒泡階段的 `keydown` 監聽器都不會收到它。  
+除了物件總管、[歡迎畫面](#enablewelcomescreen)的 `Import` 格式、邏輯名稱儲存格的術語清單、[字典](../guide/guides/dictionary.md#keys-on-the-tab)索引標籤，以及下方所述的選擇器和對話方塊之外，編輯器絕不會阻止 `Escape` 傳播，因此自行監聽它的頁面（例如用來關閉自己的對話方塊）會收到這兩次按鍵，並可略過 `defaultPrevented` 為 `true` 的那一次。  
 快速搜尋、「資料表屬性」、差異檢視器、自動版面配置預覽或時光旅行開啟期間，`Escape` 會改為關閉該項目，並讓選取範圍維持原樣。該次按鍵同樣不會被阻止預設動作。  
 自 `4.0.0` 起，開啟中的 [`Export image`](../guide/guides/file-import-export.md#image) 或 [`Map Columns`](../guide/guides/relationship-editing.md#map-columns) 對話方塊也會接收 `Escape`，關閉自身並讓選取範圍維持原樣。兩者開啟時都會取得鍵盤焦點，而該次 `Escape` 會被阻止預設動作並停止傳播。  
 自 `4.1.0` 起，焦點位於[物件總管](../guide/guides/explorer.md#keys-in-the-explorer)內（其樹狀結構、輸入框或按鈕）時按下的 `Escape`，會將鍵盤焦點交還給畫布，並讓物件總管保持開啟、選取範圍維持原樣。編輯器會對它同時呼叫 `preventDefault()` 和 `stopPropagation()`，因此它絕不會傳到頁面上冒泡階段的 `keydown` 監聽器。  
@@ -429,7 +446,7 @@ editor.setKeyBindingMap({
 自 `3.9.2` 起，套件會匯出 `createKeyBindingMap()`，並一併匯出 `KeyBindingMap`、`KeyBindingName` 和 `ShortcutOption` 型別。  
 它會傳回預設的按鍵繫結，共 28 個名稱（包括固定的名稱），且每次呼叫都會傳回新的對應表，因此變更它所傳回的對應表不會影響其他任何內容。  
 這是每個編輯器的起始設定，且 `setKeyBindingMap` 呼叫的結果不會反映在其中。  
-只有 `createKeyBindingMap` 是執行階段匯出；其他三者都是型別。
+這四者中只有 `createKeyBindingMap` 是執行階段匯出；其他三者都是型別。自 `4.2.0` 起，[dictionaryRowChords](#dictionaryrowchords) 也會與它一併匯出。
 
 ```ts
 type KeyBindingName =
@@ -483,11 +500,38 @@ const shortcuts = Object.values(createKeyBindingMap())
 以 `createKeyBindingMap()` 建立要放行的清單，並以傳給 `setKeyBindingMap` 的按鍵繫結取代對應的預設值。  
 自 `3.10.0` 起，該清單包含 `$mod+KeyF`，也就是瀏覽器本身的尋找按鍵組合。想在該按鍵組合上保留自身尋找功能的主應用程式，可傳入 `setKeyBindingMap({ findReplace: [] })`。  
 自 `4.0.0` 起，它也包含不帶輔助按鍵的 `Delete` 和 `Backspace`。想保留這些按鍵的主應用程式，可傳入 `setKeyBindingMap({ removeSelection: [] })`。  
-自 `4.1.0` 起，它也包含 `Alt+KeyG` 和按鍵序列 `KeyT KeyG`，後者是一個字串：請在空格處將其分開，並讓每次按鍵（包括不帶輔助按鍵的 `T` 和 `G`）通過，因為缺少任何一次按鍵的序列永遠無法完成。想保留這些按鍵的主應用程式，可傳入 `setKeyBindingMap({ addTableGroup: [] })` 或 `setKeyBindingMap({ groupSelectedTables: [] })`。
+自 `4.1.0` 起，它也包含 `Alt+KeyG` 和按鍵序列 `KeyT KeyG`，後者是一個字串：請在空格處將其分開，並讓每次按鍵（包括不帶輔助按鍵的 `T` 和 `G`）通過，因為缺少任何一次按鍵的序列永遠無法完成。想保留這些按鍵的主應用程式，可傳入 `setKeyBindingMap({ addTableGroup: [] })` 或 `setKeyBindingMap({ groupSelectedTables: [] })`。  
+自 `4.2.0` 起，請再將 [dictionaryRowChords](#dictionaryrowchords) 針對同一個對應表傳回的按鍵組合加入該清單，其中包括 `Alt+Shift+Enter`。想保留這些按鍵的主應用程式，可傳入 `setKeyBindingMap({ addColumn: [] })` 或 `setKeyBindingMap({ removeColumn: [] })`，這也會讓這些按鍵不再用於在 ERD 索引標籤上新增和移除欄位。
 
 焦點位於物件總管內（其樹狀結構、`Find` 和 `Replace` 輸入框或按鈕）時，`findReplace`、`search`、`undo`、`redo`、`zoomIn`、`zoomOut` 和 `zoomReset` 會傳到編輯器，因此 `findReplace` 在該處的作用與在畫布上相同。其他所有按鍵繫結（依目前的設定）都會停在物件總管，按鍵序列則停在其最後一次按鍵（預設設定下為不帶輔助按鍵的 `G`），方向鍵、`Tab`、`Enter`、`Space`、`Home`、`End`，以及輸入法仍在組字時按下的任何按鍵也是如此。除了會將鍵盤焦點交還給畫布的 `Escape` 之外，這些按鍵都會停止傳播，但不會被阻止預設動作，因此它們在物件總管的輸入框、按鈕和樹狀結構中會作為一般按鍵運作，既不會傳到畫布，也不會傳到頁面上冒泡階段的 `keydown` 監聽器：在該處按 `Alt + N` 不會新增資料表，按 `Delete` 也不會移除任何內容。用於移動、摺疊或前往樹狀結構中某一列的按鍵，以及在 `Find` 或 `Replace` 輸入框中用於在相符項目之間移動或執行取代的 `Enter`，也會被阻止預設動作。  
 其他任何按鍵（例如主應用程式的儲存或命令選擇區按鍵組合）都會照常傳到頁面。請參閱[物件總管中的按鍵](../guide/guides/explorer.md#keys-in-the-explorer)。在 `4.1.0` 之前，浮動的尋找與取代面板也以相同方式攔下按鍵，但 `Home`、`End`、按鍵序列的最後一次按鍵，以及 `handTool` 繫結到其他按鍵時的 `Space` 除外。  
 自 `4.0.0` 起，顯示語言選擇器也以相同方式攔下按鍵：同樣的七個按鍵繫結會通過，其他所有按鍵繫結（自 `4.1.0` 起，按鍵序列依其最後一次按鍵）、方向鍵和 `Tab` 都會在該處停止傳播，但不會被阻止預設動作，輸入法仍在組字時按下的任何按鍵也是如此。在其中某一列上按 `↑`、`↓`、`Home`、`End`、`Enter` 和 `Space`，會在各列之間移動或選擇其中一列，且也會被阻止預設動作。
+
+自 `4.2.0` 起，[字典](../guide/guides/dictionary.md#keys-on-the-tab)索引標籤也會攔下按鍵，只有 `search`、`findReplace`、`undo` 和 `redo` 會傳到編輯器。`undo` 和 `redo` 會作用於目前顯示的工作表自己的歷程記錄；儲存格編輯開啟時或焦點位於該索引標籤的搜尋輸入框中時，它們會留給文字處理，在該處會停止傳播，但不會被阻止預設動作。如上所述，儲存格編輯開啟期間，`search` 和 `findReplace` 不會有任何作用。列按鍵組合會在網格中作用，如上方 `addColumn` 和 `removeColumn` 的說明所述。  
+其他所有按鍵繫結（依目前的設定）都會停在該索引標籤，按鍵序列則停在其最後一次按鍵，方向鍵、`Tab`、`Enter`、`Space`、`Home`、`End`，以及輸入法仍在組字時按下的任何按鍵也是如此。它們都不會傳到畫布或頁面上冒泡階段的 `keydown` 監聽器：在該處按 `Alt + N` 不會新增資料表，按 `Delete` 也不會從圖表中移除任何內容。該索引標籤中的複製、剪下和貼上事件也會停在該處，因此圖表絕不會將其當成自己的事件讀取。其他任何按鍵都會照常傳到頁面。
+
+### dictionaryRowChords {#dictionaryrowchords}
+
+自 `4.2.0` 起，套件會匯出 `dictionaryRowChords()`。它會依您傳入的按鍵繫結對應表，傳回「字典」索引標籤的網格用於插入或刪除列的所有按鍵組合，且每次呼叫都會傳回新的 `ShortcutOption[]`。  
+其順序依次為：`addColumn` 的單次按鍵組合，用於在選取範圍下方插入列；上述每個按鍵組合再同時按住 `Shift` 的形式，用於在上方插入列，本身已包含 `Shift` 的按鍵組合則沒有對應項目；以及 `removeColumn` 的單次按鍵組合，用於刪除列。每個按鍵組合都會保留其來源按鍵繫結的 `preventDefault` 和 `stopPropagation`，按鍵序列則會被省略。請參閱[新增與刪除列](../guide/guides/dictionary.md#adding-and-deleting-rows)。  
+在上方插入列的按鍵組合（預設設定下為 `Alt+Shift+Enter`）不屬於任何按鍵繫結，因此若主應用程式會精確比對輔助按鍵，且只以 [createKeyBindingMap](#createkeybindingmap) 建立要放行的按鍵清單，就永遠不會讓它通過。請像 Obsidian 外掛程式一樣，讓兩份清單都通過。  
+它只會讀取傳給它的對應表，而不會讀取元素的按鍵繫結，因此請傳入您建立按鍵清單時所依據的對應表。
+
+```ts
+declare function dictionaryRowChords(
+  keyBindingMap: KeyBindingMap
+): ShortcutOption[];
+
+// example
+import { createKeyBindingMap, dictionaryRowChords } from '@dineug/erd-editor';
+
+const map = createKeyBindingMap();
+const shortcuts = [
+  ...Object.values(map).flat(),
+  ...dictionaryRowChords(map),
+].map(({ shortcut }) => shortcut);
+// dictionaryRowChords(map): 'Alt+Enter', 'Alt+Shift+Enter', 'Alt+Backspace', 'Alt+Delete'
+```
 
 ### $mod {#mod}
 
@@ -635,6 +679,11 @@ type Theme = {
   columnSelectHover: string;
   columnHover: string;
 
+  columnHandleBackground: string;
+  columnHandleBorder: string;
+  columnHandleHoverBackground: string;
+  columnHandleHoverBorder: string;
+
   relationshipHover: string;
 
   visualizationLink: string;
@@ -692,6 +741,15 @@ type Theme = {
   explorerBackground: string;
   explorerBorder: string;
 
+  dictionaryErrorForeground: string;
+  dictionaryErrorBackground: string;
+  dictionaryWarningForeground: string;
+  dictionaryWarningBackground: string;
+  dictionaryBackground: string;
+  dictionaryHeaderBackground: string;
+  dictionaryGridLine: string;
+  dictionaryHeaderSelect: string;
+
   diffInsertForeground: string;
   diffDeleteForeground: string;
   diffModifyForeground: string;
@@ -722,6 +780,12 @@ editor.setTheme({
 - `diffModifyForeground` 和 `diffRenameForeground` 用於為差異檢視器在其樹狀結構及兩份文件上標示為已修改和已重新命名的項目著色。`diffModifyForeground` 也會以外框標示已移動、已調整大小、已變更顏色或已變更群組的資料表、備忘錄或資料表群組（不論其中還有哪些其他變更），並繪製已變更之外鍵的連接線。
 
 `diffInsertForeground` 和 `diffDeleteForeground` 現在用於為差異檢視器在其樹狀結構及包含該項目的文件上標示為已新增和已移除的項目著色，文字、外框和連接線皆然。`diffInsertBackground`、`diffDeleteBackground`、`diffCrossBackground` 和 `diffCrossForeground` 已在 `4.1.0` 中移除，因為差異檢視器不再填滿儲存格。`setTheme` 會像對待任何不在 `Theme` 中的名稱一樣捨棄它們，而它們的掛鉤 `--erd-editor-diff-insert-background`、`--erd-editor-diff-delete-background`、`--erd-editor-diff-cross-background` 和 `--erd-editor-diff-cross-foreground` 也不再被讀取。
+
+自 `4.2.0` 起，又新增了十二個 token：
+
+- `columnHandleBackground` 和 `columnHandleBorder` 用於填滿[欄位拖曳控點](../guide/guides/table-editing.md#rearranging-and-moving-columns)並繪製其外框，該控點繪製在資料表左側邊緣外側、焦點欄位列旁；指標停留在控點上時，則改用 `columnHandleHoverBackground` 和 `columnHandleHoverBorder`。其拖曳控點圖示採用 `foreground`，指標停留在其上時則採用 `active`。
+- `dictionaryErrorForeground` 和 `dictionaryWarningForeground` 用於為[字典檢查](../guide/guides/dictionary.md#what-each-check-finds)找出的錯誤或警告著色：ERD 畫布上被標出的名稱（請參閱[畫布上的標示](../guide/guides/dictionary.md#marks-on-the-canvas)）、`Domains`、`Words` 和 `Terms` 工作表上被標出的儲存格文字，以及 `Checks` 的計數。`dictionaryErrorBackground` 和 `dictionaryWarningBackground` 用於填滿這類儲存格。指標停留在 `Delete Rows` 工具上時，`dictionaryErrorForeground` 也會為其著色。
+- `dictionaryBackground`、`dictionaryHeaderBackground`、`dictionaryGridLine` 和 `dictionaryHeaderSelect` 用於為[字典](../guide/guides/dictionary.md#the-sheets)索引標籤的工作表著色：其儲存格（也會填滿該索引標籤的搜尋輸入框和術語的定義域清單）；其欄標題和列號；儲存格之間的線條（也用於繪製該索引標籤的功能列和其輸入框的邊框）；以及所在列或欄與選取範圍相交的標題。工作表的其他部分則採用共用的 token：標題文字採用 `foreground`，儲存格文字採用 `active`，將欄標題和列號與儲存格區隔開來的線條採用 `grayColor7`，作用中儲存格的邊緣採用 `focus`，選取範圍的邊緣採用 `accentColor9`，其填色則採用不透明度 20% 的 `accentColor9`，整列或整欄被選取時的標題採用 `accentColor6`，唯讀儲存格採用 `grayColor3`，捲軸則採用捲軸的各個 token。若 `accentColor9` 不是以 `#rgb` 或 `#rrggbb` 寫成，選取範圍就不會有填色。
 
 #### CSS 變數 {#css-variables}
 
@@ -782,6 +846,10 @@ erd-editor {
   --erd-editor-column-select: #182449;
   --erd-editor-column-select-hover: #1d2e62;
   --erd-editor-column-hover: #272a2d;
+  --erd-editor-column-handle-background: #18191b;
+  --erd-editor-column-handle-border: #363a3f;
+  --erd-editor-column-handle-hover-background: #2e3135;
+  --erd-editor-column-handle-hover-border: #43484e;
   --erd-editor-relationship-hover: #435db1;
   --erd-editor-visualization-link: #43484e;
   --erd-editor-visualization-column: #5a6169;
@@ -823,6 +891,14 @@ erd-editor {
   --erd-editor-tree-match: #253974;
   --erd-editor-explorer-background: #111113;
   --erd-editor-explorer-border: #363a3f;
+  --erd-editor-dictionary-error-foreground: #ff9592;
+  --erd-editor-dictionary-error-background: #500f1c;
+  --erd-editor-dictionary-warning-foreground: #ffca16;
+  --erd-editor-dictionary-warning-background: #3f2700;
+  --erd-editor-dictionary-background: #18191b;
+  --erd-editor-dictionary-header-background: #2e3135;
+  --erd-editor-dictionary-grid-line: #363a3f;
+  --erd-editor-dictionary-header-select: #182449;
   --erd-editor-diff-insert-foreground: #3dd68c;
   --erd-editor-diff-delete-foreground: #ff9592;
   --erd-editor-diff-modify-foreground: #ffca16;
@@ -903,6 +979,7 @@ editor.setSystemLocale('pt-PT'); // null follows the browser again
 
 載入結構描述 SQL 檔案。  
 根據預設，它會取代目前的文件，而不是合併到其中；請參閱下方的 `mode`。除了檢視位置和縮放比例之外，現有的設定都會保留，包括每個鎖定及其鎖定的值，而讀取檔案後會排列資料表，除非下方的 `placement` 另有指定，否則會逐列排列。`Viewport` 鎖定時，`value` 接著會寫出匯入開始時的檢視，也就是原點 `0, 0`、縮放比例 `1`。因此，匯入到從未被賦予值之元素中的文件，會與新文件一樣所有鎖定皆為開啟。  
+自 `4.2.0` 起，取代也會保留文件的詞彙、術語和定義域（文字無法保存這些內容），以及每個字典工作表的復原歷程記錄，而匯入的復原或重做也同樣會保留它們。進行取代的 [setSchemaJSON](#setschemajson) 和指派 `value` 則會改為採用其文件所保存的詞彙、術語和定義域。  
 它會記錄在歷程記錄清單中，因此可以 `Undo, Redo`，並會觸發 `change`。空字串會被忽略，且設定 `readonly` 期間此呼叫不會有任何作用。  
 `setSchemaGraphQL`、`setSchemaDBML` 和 `setSchemaAML` 的行為相同，且其剖析器絕不會失敗：無法讀取的文字會載入空白文件，而不會引發錯誤。  
 自 `4.0.0` 起，這四個方法都接受選用的第二個引數 `{ placement, mode }`：
@@ -968,8 +1045,8 @@ editor.setSchemaAML('AML...');
 ## setSchemaJSON {#setschemajson}
 
 自 `4.0.0` 起，載入 `.erd.json` 文件，例如 [value](#value) 傳回的文字。  
-在預設的 `mode: 'replace'` 下，它會以與指派 `value` 相同的方式載入文件：會記錄在歷程記錄清單中、觸發 `change`，並以相同方式採用文件的鎖定。與 `value` 不同，空字串或非字串的值會被忽略，而不會建立新文件。非 JSON 的文字會清空文件，與 `value` 相同。  
-`mode: 'append'` 會以新的 id 將文件的資料表、關聯、索引、備忘錄和資料表群組加到圖表下方，保留它們彼此之間的相對位置，並省略文件的設定，與[匯入並加入](../guide/guides/file-import-export.md#import-and-add)處理 `json` 檔案的方式相同。無法讀取的文字，或沒有任何資料表和備忘錄的文件，都不會加入任何內容。否則，它會以與 [setSchemaSQL](#setschemasql) 附加相同的方式完成放置，新的備忘錄和資料表群組會與其資料表一起被選取，各類型僅在顯示時才會被選取。  
+在預設的 `mode: 'replace'` 下，它會以與指派 `value` 相同的方式載入文件：會記錄在歷程記錄清單中、觸發 `change`，並以相同方式採用文件的鎖定，且自 `4.2.0` 起，文件的詞彙、術語和定義域會取代編輯器原有的詞彙、術語和定義域。與 `value` 不同，空字串或非字串的值會被忽略，而不會建立新文件。非 JSON 的文字會清空文件，與 `value` 相同。  
+`mode: 'append'` 會以新的 id 將文件的資料表、關聯、索引、備忘錄和資料表群組加到圖表下方，保留它們彼此之間的相對位置，並省略文件的設定，與[匯入並加入](../guide/guides/file-import-export.md#import-and-add)處理 `json` 檔案的方式相同。自 `4.2.0` 起，它會保留資料表和欄位的邏輯名稱與標示名稱是否由字典產生的旗標，但不會帶入文件的詞彙、術語和定義域，因此其欄位都不會連結到定義域。無法讀取的文字，或沒有任何資料表和備忘錄的文件，都不會加入任何內容。否則，它會以與 [setSchemaSQL](#setschemasql) 附加相同的方式完成放置，新的備忘錄和資料表群組會與其資料表一起被選取，各類型僅在顯示時才會被選取。  
 它會在文件完成放置後傳回，且設定 `readonly` 期間會被忽略。
 
 ```js
@@ -982,16 +1059,18 @@ editor.setSchemaJSON('json...', { mode: 'append' });
 
 將目前的編輯器狀態匯出為結構描述 SQL。  
 若未指定 `databaseVendor`，則會依目前設定的廠商運作。不在下方清單中的名稱也會以相同方式處理，且不會引發錯誤。  
-名稱會以編輯器顯示的引號類型加上引號。`Bracket Type` [鎖定](../guide/guides/settings.md#lock)期間，這可能與 `value` 儲存的引號類型不同，而程式碼代理程式的 [`erd_read`](../mcp/tools.md#reading-a-document) 使用的是後者。  
-自 `4.0.0` 起，選用的 `options` 引數可選擇陳述式和標頭，與[結構描述 SQL](../guide/guides/schema-sql.md) 索引標籤的選項相同。`SchemaSQLOptions` 以型別形式匯出。
+名稱會以編輯器顯示的引號類型加上引號。`Bracket Type` [鎖定](../guide/guides/settings.md#lock)期間，這可能與 `value` 儲存的引號類型不同，而程式碼代理程式的 [`erd_read`](../mcp/tools.md#reading-a-document) 使用的是後者。無論「名稱顯示」為何，寫出的名稱一律是物理名稱。  
+自 `4.0.0` 起，選用的 `options` 引數可選擇陳述式和標頭，與[結構描述 SQL](../guide/guides/schema-sql.md) 索引標籤的選項相同，自 `4.2.0` 起還可選擇是否以邏輯名稱填入空白註解。`SchemaSQLOptions` 以型別形式匯出。
 
 - `statements`：`'create'` 為預設值；`'ifNotExists'` 會在 MySQL、MariaDB、PostgreSQL、SQLite 和 Databricks 上寫出 `IF NOT EXISTS`，在其他資料庫上則退回為 `'create'`；或 `'recreate'`，會在建立資料表之前先刪除資料表，Snowflake 則改為寫出 `CREATE OR REPLACE TABLE`。
 - `header`：`'none'` 為預設值；`'use'` 會切換到文件的資料庫或結構描述；或 `'createAndUse'`，會先在其不存在時建立，再切換到它。不支援所要求選項的資料庫，會以與該索引標籤相同的方式退回：Oracle 會針對 `'createAndUse'` 寫出 `'use'`，PostgreSQL 針對 `'use'` 不會寫出標頭，SQLite 則都不會寫出標頭。只有在文件的資料庫名稱為一般識別碼（ASCII 字母、數字和 `_`，且不以數字開頭）時，才會寫出標頭。
+- `logicalNameAsComment`（自 `4.2.0` 起）：`true` 會在資料表或欄位本身的註解為空的或只有空白字元、而邏輯名稱不是如此時，將其邏輯名稱寫成註解，並採用該資料庫寫出註解的形式。有文字的註解則與以往一樣寫出。只有 `true` 會開啟此選項：省略、`false` 或任何其他值（例如 `'true'` 或 `1`）都不會寫出邏輯名稱。其作用與該索引標籤的 [`Write logical names into empty comments`](../guide/guides/schema-sql.md#logical-names-as-comments) 開關相同。
 
 省略的選項或值無法辨識的選項，都會視為其預設值，因此不帶選項的呼叫會與以往一樣，寫出不含標頭的一般 `CREATE` 陳述式。  
-自 `4.0.0` 起，輸出一律包含文件的 `Before tables` 和 `After tables` 指令碼，順序為標頭、前置指令碼、DROP 陳述式、資料表、後置指令碼。「結構描述 SQL」索引標籤本身的 `Statements`、`Header` 和 `Tables` 選項絕不會影響此呼叫，此呼叫一律寫出整份文件。  
+自 `4.0.0` 起，輸出一律包含文件的 `Before tables` 和 `After tables` 指令碼，順序為標頭、前置指令碼、DROP 陳述式、資料表、後置指令碼。「結構描述 SQL」索引標籤本身的 `Statements`、`Header`、`Write logical names into empty comments` 和 `Tables` 選項絕不會影響此呼叫，此呼叫一律寫出整份文件。  
 自 `3.10.0` 起，每個外鍵都會帶有該關聯的 `ON DELETE` 和 `ON UPDATE` 子句。只有在設定了動作且廠商接受該動作時，才會寫出子句，因此該廠商不接受的動作會被省略，並套用其預設值。自 `4.0.0` 起，Snowflake 只接受 `NO ACTION`。關於各資料庫寫出的內容，請參閱 [ON DELETE 與 ON UPDATE](../guide/guides/relationship-editing.md#on-delete-and-on-update)。  
 自 `3.10.0` 起，資料表或欄位註解中的單引號會被跳脫，因此 `it's` 之類的註解不再會破壞陳述式。所有以字串常值寫出註解的廠商都會將其重複一次，但 Databricks 除外，它會在每個引號和每個反斜線前加上反斜線。SQLite 仍以 `--` 行寫出註解。  
+自 `4.2.0` 起，SQL Server 會將每個註解寫成國家字元常值 `N'…'`，因此資料庫字碼頁以外的文字（例如韓文）會被保留。Oracle 會將註解中每段連續的空白行寫成一個換行，而 SQLite 會將註解中的換行寫成空格，讓註解維持在其 `--` 行上。請參閱[註解](../guide/guides/schema-sql.md#comments)。  
 自 `4.0.0` 起，有幾種資料庫寫出鍵名稱、預設值和自動遞增的方式也有所不同。請參閱 [DDL 寫出的內容](../guide/guides/schema-sql.md#what-the-ddl-writes)。
 
 ```ts
@@ -1008,6 +1087,7 @@ type DatabaseVendor =
 type SchemaSQLOptions = {
   statements?: 'create' | 'ifNotExists' | 'recreate';
   header?: 'none' | 'use' | 'createAndUse';
+  logicalNameAsComment?: boolean;
 };
 
 const schemaSQL = editor.getSchemaSQL();
@@ -1017,6 +1097,10 @@ const postgresSQL = editor.getSchemaSQL('PostgreSQL');
 const mysqlSQL = editor.getSchemaSQL('MySQL', {
   statements: 'ifNotExists',
   header: 'createAndUse',
+});
+// or
+const commentedSQL = editor.getSchemaSQL('PostgreSQL', {
+  logicalNameAsComment: true,
 });
 ```
 
@@ -1039,7 +1123,8 @@ const sharedStore = editor.getSharedStore({
 它不會傳回任何內容，也不會修改文件，因此關閉檢視器後，編輯器會完全維持原樣。  
 空白值或任何非字串的值，都會與空白文件進行比較。  
 它與畫布右鍵選單中的[差異檢視器](../guide/guides/table-related-functions.md#diff-viewer)是相同的覆疊畫面。  
-自 `4.1.0` 起，它會先依 id 配對兩份文件中的內容，之後才依各自保存的內容配對，例如資料表名稱或備忘錄文字，請參閱[比較的內容](../guide/guides/table-related-functions.md#what-is-compared)。因此，與同一份文件的較早版本（例如其檔案的 Git 修訂版本）比較時，重新命名會顯示為一個已重新命名的項目；與 id 不同的文件比較時，則會顯示為一項移除和一項新增。檢視器會在兩份文件旁以樹狀結構列出變更的內容，並以顏色標示變更，而不是填滿儲存格。
+自 `4.1.0` 起，它會先依 id 配對兩份文件中的內容，之後才依各自保存的內容配對，例如資料表名稱或備忘錄文字，請參閱[比較的內容](../guide/guides/table-related-functions.md#what-is-compared)。因此，與同一份文件的較早版本（例如其檔案的 Git 修訂版本）比較時，重新命名會顯示為一個已重新命名的項目；與 id 不同的文件比較時，則會顯示為一項移除和一項新增。檢視器會在兩份文件旁以樹狀結構列出變更的內容，並以顏色標示變更，而不是填滿儲存格。  
+自 `4.2.0` 起，無論傳入的文件儲存的是哪種顯示方式，兩份文件都會以此編輯器所顯示的「名稱顯示」開啟，樹狀結構也會依此顯示資料表和欄位的名稱，請參閱[畫布以外的地方](../guide/guides/logical-names.md#beyond-the-canvas)。邏輯名稱、定義域連結和字典都不會被比較，因此只變更這些內容時，不會顯示任何變更。
 
 ```js
 editor.setDiffValue('prev json...');

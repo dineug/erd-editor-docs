@@ -1,5 +1,5 @@
 ---
-sidebar_position: 5
+sidebar_position: 6
 description: Raccogliere tabelle correlate in un riquadro con nome e colore disegnato dietro di esse; creare i gruppi, assegnare loro un nome e un colore, spostarli, ridimensionarli e rimuoverli, raggiungerli dal pannello Esplora, cambiare le tabelle che contengono, nasconderli e conservarli nel Layout automatico, nello Schema SQL e in DBML.
 ---
 

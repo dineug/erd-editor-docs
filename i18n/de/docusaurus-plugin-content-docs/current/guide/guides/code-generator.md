@@ -1,5 +1,5 @@
 ---
-sidebar_position: 12
+sidebar_position: 13
 description: Code für zweiundzwanzig Ziele aus dem Diagramm generieren, im Optionsbereich Sprache, Datenbank, Schreibweise und Begrenzer wählen, sehen, welche Ziele die Aktionen ON DELETE und ON UPDATE einer Beziehung schreiben, und das Ergebnis speichern oder kopieren.
 ---
 
@@ -103,6 +103,10 @@ Bei jeder Schreibweise wird ein Name, den die Sprache des Ziels reserviert, mask
 Auch `SeaORM` ignoriert sie: Es benennt Felder und Module in Snake Case, der Form, die SeaORM zurückliest, und gibt die gespeicherten Namen in `table_name` und, wo sie abweichen, in `column_name` an.  
 Bei diesen vier Zielen blendet der Bereich beide Listen ab, mit dem Hinweis `Not used by` darunter.
 
+Jedes Ziel schreibt die physischen Namen, unabhängig davon, was die [Namensansicht](./logical-names.md#name-view) zeigt.  
+Keines schreibt einen logischen Namen, auch nicht in einen leeren Kommentar: Diese Registerkarte hat kein Gegenstück zur Option [`Write logical names into empty comments`](./schema-sql.md#logical-names-as-comments) der Registerkarte Schema SQL.  
+Ebenso schreibt keines eine Domäne: Eine mit einer Domäne verknüpfte Spalte wird wie jede andere Spalte mit ihrem Datentyp geschrieben.
+
 ## Datenbank {#database}
 
 Datentypen werden anhand der ausgewählten Datenbank aufgelöst – siehe [Datenbanken](./table-related-functions.md#databases).  
@@ -132,5 +136,5 @@ Die Datei wird wie jeder Export benannt, `<database name>-<timestamp>`, gefolgt 
 Das Menü Export hat keinen Eintrag für den Codegenerator, und die Registerkarte `Code Generator` der Tabelleneigenschaften kann keine Datei speichern.
 
 Um den Code zu kopieren, klicken Sie am unteren Rand des Bereichs auf `Copy` oder zeigen Sie mit dem Zeiger auf den Code und klicken Sie oben rechts auf die Schaltfläche zum Kopieren, was in den Tabelleneigenschaften der einzige Weg ist.  
-Eine Meldung `Copied!` mit einem Häkchen bestätigt das Kopieren zwei Sekunden lang. Verweigert der Browser oder Host den Zugriff auf die Zwischenablage, weist stattdessen eine Meldung `Couldn't copy to the clipboard` mit einem Warnsymbol darauf hin. Erneutes Kopieren ersetzt die Meldung, statt eine weitere hinzuzufügen.  
+Eine Meldung `Copied!` mit einem Häkchen bestätigt das Kopieren zwei Sekunden lang. Verweigert der Browser oder Host den Zugriff auf die Zwischenablage, weist stattdessen fünf Sekunden lang eine Meldung `Couldn't copy to the clipboard` mit einem Warnsymbol darauf hin. Erneutes Kopieren ersetzt die Meldung, statt eine weitere hinzuzufügen.  
 Der Text lässt sich auch auswählen, sodass Sie nur den Teil übernehmen können, den Sie benötigen.

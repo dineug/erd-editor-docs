@@ -77,8 +77,8 @@ Inicia una relación desde el menú contextual, desde la [barra de herramientas 
 - One N: `Ctrl + Alt + 4` (Windows/Linux) o `⌘ + ⌥ + 4` (Mac)
 
 Cuando un tipo está preparado, el cursor cambia. Haz clic primero en la tabla padre y después en la tabla hija.  
-La tabla padre recibe una clave principal si no tiene ninguna, y por cada columna de clave principal de la tabla padre, la tabla hija recibe una columna de clave externa `Not Null` con el mismo tipo de datos, valor predeterminado y comentario.  
-Una clave serial es la excepción: su clave externa toma el tipo entero que almacena el serial, como `integer` para `serial4`; consulta [Relaciones identificadoras](./relationship-editing.md#identifying-relationships).  
+La tabla padre recibe una clave principal si no tiene ninguna, y por cada columna de clave principal de la tabla padre, la tabla hija recibe una columna de clave externa `Not Null` con el mismo tipo de datos, valor predeterminado, comentario, [nombre lógico](./logical-names.md) y [dominio](./dictionary.md#domains-and-data-types).  
+Una clave serial es la excepción: su clave externa toma el tipo entero que almacena el serial, como `integer` para `serial4`, y entonces no vincula ningún dominio; consulta [Relaciones identificadoras](./relationship-editing.md#identifying-relationships).  
 Cada columna de clave externa recibe su nombre a partir de su clave: a un nombre de una sola palabra, como `id`, se le antepone el nombre de la tabla padre (`user_id`), un nombre de varias palabras, como `member_id`, se conserva, y un nombre que la tabla hija ya tiene se numera (`user_id_2`); consulta [Nombres de las columnas de clave externa](./relationship-editing.md#foreign-key-column-names).  
 Al hacer clic dos veces en la misma tabla se dibuja una relación autorreferencial.  
 Una relación nueva empieza con `On Delete` y `On Update`, ambos en `Not set`: cámbialos desde su menú contextual; consulta [ON DELETE y ON UPDATE](./relationship-editing.md#on-delete-and-on-update).  
@@ -91,7 +91,8 @@ Una vez elegida la tabla padre, al señalar con el puntero una tabla en la que p
 
 La tabla padre también muestra los botones en cuanto el puntero se ha alejado un poco del punto donde hiciste clic en ella, así que una relación autorreferencial también se puede asignar a columnas existentes.  
 Con un dedo no se puede pasar el puntero por encima, así que, al dibujar con él, los botones nunca aparecen y tocar la tabla hija dibuja la relación de inmediato; un lápiz los muestra igual que un ratón.  
-Si la tabla padre ha perdido su clave principal cuando llegas a la tabla hija, por ejemplo por una acción de deshacer o por la edición de un colaborador, `Create new columns` aparece atenuado con la descripción emergente `<parent> has no primary key to copy`, y al hacer clic en la tabla hija se termina el dibujo sin dibujar nada.
+Si la tabla padre ha perdido su clave principal cuando llegas a la tabla hija, por ejemplo por una acción de deshacer o por la edición de un colaborador, `Create new columns` aparece atenuado con la descripción emergente `<parent> has no primary key to copy`, y al hacer clic en la tabla hija se termina el dibujo sin dibujar nada.  
+La descripción emergente nombra la tabla padre como lo hace la [vista de nombres](./logical-names.md#beyond-the-canvas).
 
 ![Dibujar una relación One N con ⌘ + ⌥ + 4 y después una Zero N desde la barra de herramientas del lienzo, con la tabla hija marcada con un contorno y sus botones Map to existing columns y Create new columns](/img/demo-relationship.webp)
 

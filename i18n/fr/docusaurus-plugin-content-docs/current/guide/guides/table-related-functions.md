@@ -1,5 +1,5 @@
 ---
-sidebar_position: 4
+sidebar_position: 5
 description: Sélectionner, déplacer, copier, dupliquer et supprimer des tables et des mémos, régler les couleurs et les options d’affichage, définir des index et des clés alternatives, choisir une base de données, se déplacer sur le canevas infini et comparer des documents.
 ---
 
@@ -7,7 +7,8 @@ description: Sélectionner, déplacer, copier, dupliquer et supprimer des tables
 
 Tout ce que vous faites sur les tables et les mémos une fois créés (sélection, déplacement, copie, suppression, couleur et choix de ce qu’affiche le canevas), ainsi que les commandes du canevas qui les entourent.  
 Les commandes des tables et des mémos viennent d’abord ; puis les propriétés de la table, la fonction Se concentrer sur des tables, les index et les clés alternatives, la disposition automatique et le SGBD ; et enfin le canevas lui-même : la barre d’outils du canevas, le zoom, le déplacement de la vue et l’endroit où aboutit un saut, et la visionneuse de différences.  
-Les groupes de tables, ces cadres qui rassemblent des tables, ont leur propre page (voir [Groupes de tables](./table-groups.md)).
+Les groupes de tables, ces cadres qui rassemblent des tables, ont leur propre page (voir [Groupes de tables](./table-groups.md)).  
+Il en va de même des noms logiques et de l’affichage des noms, qui détermine les noms que montrent les tables (voir [Noms logiques](./logical-names.md)).
 
 ## Sélection multiple {#multiple-selection}
 
@@ -26,11 +27,14 @@ Un clic droit sur un élément déjà sélectionné conserve toute la sélection
 
 ![Sélection de tables avec ⌘ + drag et ⌘ + click, puis de toutes les tables et de tous les mémos avec ⌘ + A](/img/demo-table-select.webp)
 
-Dans une session collaborative, la sélection, la cellule active et le rectangle de sélection de chaque participant sont dessinés sur le canevas dans la couleur de ce participant (voir [Édition collaborative](../../api/advanced/collaborative-editing.md)).
+Dans une session collaborative, la sélection, la cellule active et le rectangle de sélection de chaque participant sont dessinés sur le canevas dans la couleur de ce participant (voir [Édition collaborative](../../api/advanced/collaborative-editing.md)).  
+La cellule active d’un participant qui se trouve dans une autre vue de l’affichage des noms est dessinée sur la cellule que votre vue dessine à sa place, par exemple sa cellule du nom sur votre cellule du nom logique (voir [Collaborateurs](./logical-names.md#collaborators)).
 
 ## Déplacer plusieurs tables {#moving-multiple-tables}
 
 Faites glisser une table ou un mémo qui fait déjà partie de la sélection, et toute la sélection se déplace en même temps, sans touche de modification.  
+Une table se fait glisser par son en-tête ou par n’importe laquelle de ses lignes de colonne, si bien qu’un glissement qui commence sur une ligne de colonne déplace la table, et non la colonne. Les colonnes se déplacent plutôt avec la poignée de déplacement située à côté de la ligne active (voir [Réorganiser et déplacer des colonnes](./table-editing.md#rearranging-and-moving-columns)).  
+Sur une cellule d’en-tête ou une ligne de colonne, la table ne commence à se déplacer qu’une fois que le pointeur a parcouru une courte distance, si bien qu’un clic à cet endroit donne toujours le focus à la cellule et qu’un double-clic ouvre toujours son éditeur. Un glissement ne commence jamais depuis le bord coloré d’une table, qui ouvre le sélecteur de couleur, depuis les boutons `+` et `x` de son en-tête, ni depuis le `x` d’une ligne de colonne.  
 Faire glisser un élément hors de la sélection réduit la sélection à cet élément et ne déplace que lui. `Ctrl + drag` (Windows/Linux) ou `⌘ + drag` (Mac) conserve la sélection dans les deux cas.  
 Seul le bouton gauche de la souris déplace les tables et les mémos. Un clic droit choisit ce sur quoi agit le menu contextuel et ne déplace rien, et un glissement avec le bouton central déplace plutôt la vue du canevas (voir [Se déplacer sur le canevas](#getting-around-the-canvas)).
 
@@ -47,7 +51,9 @@ L’ordre n’est pas enregistré : un diagramme rouvert empile ses tables dans
 Copie les tables et les mémos sélectionnés et les colle comme de nouveaux éléments.  
 Raccourcis : `Ctrl + C` (Windows/Linux) ou `⌘ + C` (Mac), `Ctrl + V` (Windows/Linux) ou `⌘ + V` (Mac)
 
-Une table copiée conserve son nom, son commentaire, ses colonnes et sa couleur ; un mémo copié conserve son texte, sa taille et sa couleur.  
+Une table copiée conserve son nom, son nom logique, son commentaire, ses colonnes et sa couleur ; un mémo copié conserve son texte, sa taille et sa couleur.  
+Chaque colonne copiée conserve son nom logique, et chaque nom de table et de colonne garde l’indication qu’il a été dérivé ou non des dictionnaires (voir [Dériver les noms physiques](./dictionary.md#deriving-physical-names)).  
+Une colonne collée ne conserve son lien de domaine que si deux conditions sont réunies : le diagramme où elle arrive répertorie ce domaine précis, et pas seulement un domaine du même nom, et le domaine a toujours le type de données avec lequel la colonne a été copiée. Sinon, la colonne arrive sans domaine et conserve le type avec lequel elle a été copiée (voir [Lier une colonne](./dictionary.md#linking-a-column)).  
 Les index et les relations suivent aussi : un index est copié en entier sur la table copiée, et une relation est copiée avec son type et ses actions ON DELETE et ON UPDATE lorsque les deux tables qu’elle relie font partie de l’ensemble copié. Une relation à moitié copiée est abandonnée plutôt que de continuer à pointer vers l’original.  
 Les copies collées deviennent la nouvelle sélection, et coller à nouveau la même copie la décale chaque fois de `50px` supplémentaires, si bien que des collages répétés ne s’empilent pas les uns sur les autres.  
 Une copie ne conserve pas son [groupe de tables](./table-groups.md) : la table collée n’appartient à aucun groupe, même lorsqu’elle arrive à l’intérieur du cadre d’un groupe, et un groupe sélectionné n’est pas copié.  
@@ -60,11 +66,12 @@ Lorsque des colonnes sont sélectionnées dans une table qui a le focus, le mêm
 ## Dupliquer des tables et des mémos {#duplicating-tables-and-memos}
 
 Maintenez `Alt` enfoncé et faites glisser une table ou un mémo avec le bouton gauche de la souris.  
+Une table se saisit par son en-tête ou par n’importe quelle ligne de colonne, si bien qu’un `Alt + drag` sur une ligne de colonne duplique la table et laisse l’ordre des colonnes intact. `Alt` maintenu sur la poignée de déplacement de la colonne ne duplique rien : la colonne se déplace comme avec un simple glissement de la poignée (voir [Réorganiser et déplacer des colonnes](./table-editing.md#rearranging-and-moving-columns)).  
 Un aperçu translucide suit le pointeur, et relâcher le bouton dépose la copie à l’emplacement de l’aperçu.  
 Si ce que vous saisissez fait déjà partie d’une sélection, toute la sélection est dupliquée. Sinon, la sélection est remplacée par l’entité sous le pointeur.  
 `Alt + click` sans déplacement dépose la copie `50px` plus bas et plus à droite, en se décalant encore chaque fois que cet emplacement est déjà occupé.
 
-Un doublon emporte les mêmes éléments qu’un collage : noms, commentaires, colonnes, couleurs, tailles des mémos, ainsi que les index et les relations qui appartiennent entièrement à ce que vous avez copié. Comme un collage, il n’arrive dans aucun groupe de tables.  
+Un doublon emporte les mêmes éléments qu’un [collage](#copyingpasting-tables-and-memos) : noms et noms logiques, commentaires, colonnes, couleurs, tailles des mémos, ainsi que les index et les relations qui appartiennent entièrement à ce que vous avez copié. Puisqu’il reste dans le même diagramme, il conserve tel quel le lien de domaine de chaque colonne. Comme un collage, il n’arrive dans aucun groupe de tables.  
 `Alt + drag` sur la barre de titre d’un groupe de tables déplace le groupe comme un glissement ordinaire ; un groupe n’est jamais dupliqué.
 
 ![Duplication d’une table avec Alt + drag, puis Alt + click pour une autre copie plus bas et à droite](/img/demo-table-duplicate.webp)
@@ -119,6 +126,7 @@ Les options d’affichage suivantes sont proposées :
 - Table Comment
 - Column Comment
 - DataType
+- Domain
 - Default
 - Not Null
 - Unique
@@ -129,7 +137,9 @@ Les options d’affichage suivantes sont proposées :
 - Table Groups
 - Memos
 
-`Unique`, `Alternate Key` et `Auto Increment` sont désactivées par défaut, et les autres sont activées.  
+`Domain`, `Unique`, `Alternate Key` et `Auto Increment` sont désactivées par défaut, et les autres sont activées.  
+Les noms que montrent les tables ne relèvent pas d’une option d’affichage : `Name View`, juste après `View Option` dans le menu contextuel du canevas, choisit les noms physiques, les noms logiques ou les deux (voir [Changer de vue](./logical-names.md#switching-the-view)).  
+`Domain` donne à chaque colonne une cellule, placée selon l’[ordre des colonnes](./settings.md#adjusting-column-order), qui contient le nom du domaine auquel la colonne est liée. Une colonne liée à aucun domaine que liste la feuille `Domains` y affiche le texte indicatif `domain`, grisé. La cellule s’affiche dans toutes les vues de l’affichage des noms. Tant que `Domain` est désactivée, la vue `Logical Names` affiche plutôt le nom d’un domaine lié dans la cellule du type (voir [La cellule Domaine](./logical-names.md#the-domain-cell)).  
 `Alternate Key` marque les colonnes de chaque clé alternative, par exemple avec `AK1.1` (voir [Clés alternatives](#alternate-keys)).  
 `Referential Actions` affiche les étiquettes `D:` et `U:` que les actions ON DELETE et ON UPDATE d’une relation placent à l’extrémité enfant de son connecteur (voir [Lire un connecteur](./relationship-editing.md#reading-a-connector)). La désactiver masque uniquement ces étiquettes et ne déplace ni table ni connecteur.  
 `Table Groups` affiche les [groupes de tables](./table-groups.md) et les couleurs des groupes sur les en-têtes de leurs tables. La désactiver les masque sur le canevas, la minicarte et les exportations d’images, ne déplace aucune table et laisse chaque table dans son groupe (voir [Masquer les groupes](./table-groups.md#hiding-groups)). Cela retire aussi le dossier `Table Groups` de l’[explorateur](./explorer.md#the-tree) et `New Table Group` de la [barre d’outils du canevas](#canvas-toolbar), et la recherche de l’explorateur cesse de trouver les noms de groupe.  
@@ -139,19 +149,19 @@ Dans un éditeur `readonly`, activer ou désactiver ces options ne change rien.
 
 ![Activation et désactivation d’entrées de View Option pendant que les tables se réorganisent, marquage d’un index unique composite AK1.1 et AK1.2 avec Alternate Key, puis désactivation et réactivation de Memos](/img/demo-view-options.webp)
 
-Les cartes du mode `Flow` de l’onglet Visualisation ne suivent pas ces options : elles utilisent leur propre [affichage des lignes](./visualization.md#row-display) et tracent leurs connecteurs même lorsque l’option `Relationship` est désactivée.
+Les cartes du mode `Flow` de l’onglet Visualisation ne suivent pas ces options, `Domain` compris : elles utilisent leur propre [affichage des lignes](./visualization.md#row-display) et tracent leurs connecteurs même lorsque l’option `Relationship` est désactivée. Les cellules que dispose une carte ne dépendent que de l’affichage des noms (voir [Noms sur les cartes](./visualization.md#names-on-the-cards)).
 
 ## Propriétés de la table {#table-properties}
 
 Ouvre le panneau des propriétés d’une table.  
 Choisissez `Table Properties` dans le menu contextuel de la table, qui l’ouvre pour la table sur laquelle vous avez cliqué avec le bouton droit, ou sélectionnez une table et appuyez sur `Alt + Space`.  
-Le panneau s’ouvre au milieu du canevas assombri. Seul le canevas est assombri, si bien qu’un [explorateur](./explorer.md#dialogs-beside-it) ouvert reste ouvert et utilisable à côté. Son en-tête contient le titre `Table Properties`, les cinq tables ouvertes le plus récemment sous forme de puces, la table actuelle étant mise en évidence, et un bouton de fermeture. Cliquez sur une puce pour passer à cette table sans rouvrir le panneau.  
+Le panneau s’ouvre au milieu du canevas assombri. Seul le canevas est assombri, si bien qu’un [explorateur](./explorer.md#dialogs-beside-it) ouvert reste ouvert et utilisable à côté. Son en-tête contient le titre `Table Properties`, les cinq tables ouvertes le plus récemment sous forme de puces, la table actuelle étant mise en évidence, et un bouton de fermeture. Chaque puce nomme sa table comme le fait l’[affichage des noms](./logical-names.md#beyond-the-canvas). Cliquez sur une puce pour passer à cette table sans rouvrir le panneau.  
 Sous l’en-tête se trouvent trois onglets : `Indexes`, `Schema SQL` et `Code Generator`. Le panneau garde la même taille pour les trois, si bien que changer d’onglet ne le déplace ni ne le redimensionne.  
 Fermez-le avec le bouton de fermeture, avec `Escape` ou en cliquant en dehors de celui-ci sur le canevas.  
 Choisir dans l’explorateur une ligne autre qu’un dossier, ou aller à une correspondance de sa recherche, ferme la boîte de dialogue Propriétés de la table avant le saut. Il en va de même pour `Ctrl + F` (Windows/Linux) ou `⌘ + F` (Mac), qui ouvre la recherche de l’explorateur, ou place le point d’insertion dans son champ Rechercher lorsque l’explorateur est déjà ouvert. Tout autre clic dans l’explorateur, y compris sur une ligne de dossier, ou sur le bouton `Explorer` de la barre d’outils, laisse la boîte de dialogue Propriétés de la table ouverte. Un appui sur `Escape` alors que le focus est dans l’explorateur ne fait que rendre le focus au canevas, si bien qu’il faut un second `Escape` pour fermer la boîte de dialogue Propriétés de la table.
 
 L’onglet `Indexes` est décrit dans [Index](#indexes).  
-L’onglet `Schema SQL` affiche le DDL de la table pour la [base de données](#databases) sélectionnée : son `CREATE TABLE`, les contraintes distinctes que certaines bases de données écrivent pour ses colonnes uniques, et ses index. Il écrit toujours de simples instructions `CREATE`, sans en-tête ni script avant ou après les tables, quel que soit le réglage de l’onglet [Schéma SQL](./schema-sql.md) de la barre d’outils. Il n’a pas de panneau des options, et son menu contextuel ne propose que `Database` et `Bracket`.  
+L’onglet `Schema SQL` affiche le DDL de la table pour la [base de données](#databases) sélectionnée : son `CREATE TABLE`, les contraintes distinctes que certaines bases de données écrivent pour ses colonnes uniques, et ses index. Il écrit toujours de simples instructions `CREATE`, sans en-tête, sans script avant ou après les tables et sans noms logiques dans les commentaires vides, quel que soit le réglage de l’onglet [Schéma SQL](./schema-sql.md) de la barre d’outils (voir [Noms logiques en commentaire](./schema-sql.md#logical-names-as-comments)). Il n’a pas de panneau des options, et son menu contextuel ne propose que `Database` et `Bracket`.  
 L’onglet `Code Generator` génère du code pour cette seule table (voir [Générateur de code](./code-generator.md)).
 
 Dans un éditeur `readonly`, le panneau s’ouvre toujours, avec un badge `Read only` à côté de son titre, mais son onglet `Indexes` ne permet aucune modification.
@@ -163,19 +173,19 @@ Choisissez `Focus on this table` dans le menu contextuel de la table, ou sélect
 Lorsque la table sur laquelle vous cliquez avec le bouton droit fait partie de plusieurs tables sélectionnées, l’entrée indique `Focus on selected tables` et concentre la vue sur toute la sélection. Un clic droit sur une table hors de la sélection concentre la vue sur cette seule table.  
 Le raccourci prend les tables sélectionnées, laisse de côté les mémos et ne fait rien lorsqu’aucune table n’est sélectionnée.  
 Un [groupe de tables](./table-groups.md) sélectionné ne compte pas ici, pour le raccourci comme pour l’entrée de menu : ses tables ne sont prises que si elles sont elles-mêmes sélectionnées, ce que fait `Select tables` dans le menu du groupe.  
-Ce qu’affiche la vue restreinte, et comment revenir au diagramme entier, est décrit dans [Visualisation](./visualization.md#focusing-on-tables).
+Ce qu’affiche la vue restreinte, et comment revenir au diagramme entier, est décrit dans [Visualisation](./visualization.md#focusing-on-tables), et comment revenir en arrière et avancer parmi ce que le mode Flux a affiché auparavant, dans [Table précédente et table suivante](./visualization.md#previous-table-and-next-table).
 
 ## Index {#indexes}
 
 Les index se définissent dans l’onglet `Indexes` du panneau des propriétés de la table et sont inclus dans le Schéma SQL exporté.
 
 La partie gauche liste les clés et les index de la table en deux groupes.  
-Le groupe `Keys`, affiché lorsque la table en a, liste les clés que déclarent ses colonnes : `PK_<table name>` sur les colonnes marquées PK, puis `UQ_<table name>_<column name>` pour chaque colonne marquée unique, dans l’ordre des colonnes. Les noms suivent le Schéma SQL de la base de données sélectionnée, si bien qu’avec `Bracket` à `None`, une table qualifiée par le schéma comme `sales.users` liste `PK_users` pour toutes les bases de données sauf Databricks et Snowflake (voir [Noms de table qualifiés par le schéma](./schema-sql.md#schema-qualified-table-names)). Chacune porte l’étiquette `PK` ou `UQ` et est marquée d’un verrou. Elles sont ici en lecture seule et ne changent qu’avec les indicateurs [PK](./table-editing.md#column-primary-key) et [Unique](./table-editing.md#not-null-unique-auto-increment) des colonnes.  
+Le groupe `Keys`, affiché lorsque la table en a, liste les clés que déclarent ses colonnes : `PK_<table name>` sur les colonnes marquées PK, puis `UQ_<table name>_<column name>` pour chaque colonne marquée unique, dans l’ordre des colonnes. Les noms sont les noms physiques qu’écrit le Schéma SQL de la base de données sélectionnée, quel que soit l’affichage des noms, si bien qu’avec `Bracket` à `None`, une table qualifiée par le schéma comme `sales.users` liste `PK_users` pour toutes les bases de données sauf Databricks et Snowflake (voir [Noms de table qualifiés par le schéma](./schema-sql.md#schema-qualified-table-names)). Chacune porte l’étiquette `PK` ou `UQ` et est marquée d’un verrou. Elles sont ici en lecture seule et ne changent qu’avec les indicateurs [PK](./table-editing.md#column-primary-key) et [Unique](./table-editing.md#not-null-unique-auto-increment) des colonnes.  
 Le groupe `Indexes` liste les index de la table dans l’ordre où ils ont été ajoutés. Chaque index a un interrupteur `UQ` qui le rend unique, un champ de nom et un `x` qui le supprime. Un index qui est une [clé alternative](#alternate-keys) affiche aussi son numéro, par exemple `AK1`. Ajoutez un index avec `Add Index` en bas de la liste.
 
-La partie droite liste les colonnes de la table sous `Columns`, chacune avec une case à cocher. Rien n’est modifiable tant qu’aucun index n’est sélectionné à gauche.  
+La partie droite liste les colonnes de la table sous `Columns`, chacune avec une case à cocher. Chaque ligne affiche les mêmes cellules que la ligne de la colonne sur le canevas, selon l’ordre des colonnes, les options d’affichage et l’[affichage des noms](./logical-names.md#beyond-the-canvas). Rien n’est modifiable tant qu’aucun index n’est sélectionné à gauche.  
 Cochez une colonne pour l’ajouter à l’index sélectionné, et décochez-la pour l’en retirer. Sélectionner une clé affiche ses colonnes cochées, mais les cases restent désactivées.  
-Les colonnes de l’index sélectionné sont listées en dessous, sous `Index order`. Faites-les glisser par leur poignée pour les réorganiser, et cliquez sur la puce `ASC` ou `DESC` d’une ligne pour inverser son ordre de tri. Dans une clé alternative, chaque ligne se termine par sa marque `AK<n>.<m>`. La liste affiche trois lignes à la fois et fait défiler le reste.
+Les colonnes de l’index sélectionné sont listées en dessous, sous `Index order`, chacune nommée comme la nomme l’affichage des noms, avec le nom entre parenthèses après le nom logique dans la vue `Both Names`, par exemple `Member Number (member_no)`. Faites-les glisser par leur poignée pour les réorganiser, et cliquez sur la puce `ASC` ou `DESC` d’une ligne pour inverser son ordre de tri. Dans une clé alternative, chaque ligne se termine par sa marque `AK<n>.<m>`. La liste affiche trois lignes à la fois et fait défiler le reste.
 
 Dans un éditeur `readonly`, sélectionner une clé ou un index affiche toujours ses colonnes, mais il n’y a ni `Add Index` ni `x`, et rien d’autre dans l’onglet ne peut être modifié.
 
@@ -216,12 +226,12 @@ Ouvrez `Auto Layout` depuis le menu contextuel du canevas ou depuis la recherche
 | `Tree - horizontal` | La même disposition en couches, de gauche à droite. |
 
 `Force` ouvre un aperçu pendant que la disposition se stabilise, avec `Apply` et `Cancel` dans la notification qu’elle affiche.  
-L’aperçu est cadré sur le diagramme tel qu’il était au lancement de la disposition, si bien que des tables peuvent sortir du cadre pendant que la disposition se stabilise. Il est dessiné à `70%` ou moins, si bien que ses tables apparaissent réduites à leur nom et à leur bord coloré.  
+L’aperçu est cadré sur le diagramme tel qu’il était au lancement de la disposition, si bien que des tables peuvent sortir du cadre pendant que la disposition se stabilise. Il est dessiné à `70%` ou moins, si bien que ses tables apparaissent réduites à leur nom et à leur bord coloré. Il s’ouvre dans la vue de l’affichage des noms que vous regardez, quelle que soit celle que conserve le fichier (voir [Au-delà du canevas](./logical-names.md#beyond-the-canvas)).  
 `Apply` conserve les positions telles qu’elles sont à ce moment-là, et la disposition s’applique d’elle-même une fois stabilisée. `Cancel` ou `Escape` laisse le diagramme tel qu’il était.
 
 Les trois autres sont calculées en une seule fois, hors du thread principal, si bien qu’il n’y a rien à regarder : une notification s’affiche pendant le calcul de la disposition, et la disposition finale est centrée sur la zone que le diagramme occupe déjà. `Cancel` ou `Escape` abandonne une disposition que vous n’attendez plus, et un hôte qui n’exécute aucun worker partagé aboutit à `Could not place tables` (voir [Web Workers](../../api/installation.md#web-workers)). Une disposition qui n’a pas abouti dans les 60 secondes se termine de la même façon.
 
-Quelle que soit la disposition choisie, les tables et les groupes de tables sont déplacés, et les mémos restent où ils sont. Une relation d’une table vers elle-même est ignorée, et plusieurs relations entre les deux mêmes tables comptent pour une.  
+Quelle que soit la disposition choisie, les tables et les groupes de tables sont déplacés, et les mémos restent où ils sont. Les tables sont placées avec les largeurs qu’elles prennent dans la vue de l’affichage des noms que vous regardez. Une relation d’une table vers elle-même est ignorée, et plusieurs relations entre les deux mêmes tables comptent pour une.  
 Chaque disposition garde ensemble les tables de chaque groupe, que les groupes soient affichés ou non, et ajuste chaque groupe contenant des tables autour de celles-ci (voir [Groupes de tables](./table-groups.md#auto-layout)).  
 Le résultat constitue une seule entrée d’historique, si bien qu’une seule annulation remet chaque table et chaque groupe à sa place d’origine.
 
@@ -259,6 +269,7 @@ Une petite barre d’outils flotte au milieu du bord inférieur du canevas et co
 - `New Table`, `New Memo` et `New Table Group`. `New Table` ajoute une table comme le fait `Alt + N`, et `New Memo` ajoute un mémo comme le fait `Alt + M`. `New Table Group` active le [tracé de groupe](./table-groups.md#drawing-a-group) comme le fait `Alt + G` et désactive la main ; un second clic, comme un second `Alt + G`, met fin au tracé sans ajouter de groupe. `New Memo` est absent tant que View Option → `Memos` masque les mémos, et `New Table Group` tant que View Option → `Table Groups` masque les groupes. Un éditeur `readonly` n’affiche aucun des trois.
 - Le zoom : `Zoom out`, le zoom actuel en pourcentage, et `Zoom in`. Les deux boutons modifient le zoom par paliers de la même manière que les raccourcis de zoom, et cliquer sur le pourcentage le ramène à `100%`.
 - Les quatre notations de relation, les mêmes que celles qui servent à commencer une relation (voir [Commencer l’édition](./editing-start.md)). Choisir l’une d’elles ramène au pointeur, puisqu’une relation se trace en cliquant sur deux tables.
+- `Name View`, un bouton avec une flèche vers le bas qui indique la vue active : `Physical Names`, `Logical Names` ou `Both Names`. Il garde la même largeur quelle que soit la vue qu’il indique, si bien qu’un changement de vue ne décale jamais la barre d’outils. Un clic ouvre au-dessus de la barre d’outils une liste des trois vues, la vue active étant cochée. En choisir une passe à cette vue et ferme la liste ; un second clic sur le bouton, un appui n’importe où ailleurs ou `Escape` ferme la liste sans changer de vue. Un éditeur `readonly` l’affiche aussi. Ce que dessine chaque vue est décrit dans [Affichage des noms](./logical-names.md#name-view), et si un changement de vue est enregistré, dans [Changer de vue](./logical-names.md#switching-the-view).
 - Le mode zen, `Alt + Z`, qui masque tout sauf le canevas et cette barre d’outils. Un nouvel `Alt + Z`, ou le bouton, fait réapparaître le reste. Un explorateur ouvert est masqué avec le reste, sans être fermé, et réapparaît avec lui. Il peut quand même être ouvert pendant le mode zen (voir [Quand l’explorateur s’efface](./explorer.md#when-it-stands-aside)).
 - La boussole `Go to content`, qui rejoint l’extrémité de la barre d’outils uniquement lorsqu’aucune table, aucun mémo affiché ni aucun groupe de tables affiché n’est à l’écran (voir [Se déplacer sur le canevas](#getting-around-the-canvas)).
 
@@ -277,7 +288,7 @@ Raccourcis : `Ctrl + Plus` (Windows/Linux) ou `⌘ + Plus` (Mac), `Ctrl + Minus
 Les boutons `Zoom out` et `Zoom in` de la [barre d’outils du canevas](#canvas-toolbar) modifient le zoom par paliers comme les raccourcis `Minus` et `Plus` : chaque appui le fait varier de 4 points de pourcentage, en gardant le milieu de l’écran à sa place. Le pourcentage entre les deux indique le zoom actuel, et cliquer dessus revient directement à `100%` comme `Ctrl + 0` (Windows/Linux) ou `⌘ + 0` (Mac).
 
 Le zoom va de `10%` à `150%`.  
-À `70%` et en dessous, les tables se réduisent à leur nom et à leur bord coloré, et la modification des cellules, les raccourcis des cellules ainsi que le copier-coller cessent de fonctionner jusqu’à ce que vous refassiez un zoom avant.
+À `70%` et en dessous, les tables se réduisent à leur nom et à leur bord coloré, et la modification des cellules, les raccourcis des cellules ainsi que le copier-coller cessent de fonctionner jusqu’à ce que vous refassiez un zoom avant. Le nom qu’affiche une table réduite suit l’affichage des noms (voir [Affichage des noms](./logical-names.md#name-view)).
 
 Les trois mêmes raccourcis zooment aussi l’onglet Visualisation, en mode `Graph` comme en mode `Flow`, chaque mode dans sa propre plage (voir [Visualisation](./visualization.md#toolbar)).
 
@@ -302,11 +313,11 @@ Faire glisser le curseur d’une barre de défilement ou le rectangle de la fen�
 
 Si un déplacement de la vue ne laisse à l’écran aucune table, aucun mémo affiché ni aucun groupe de tables affiché, une boussole `Go to content` rejoint l’extrémité de la [barre d’outils du canevas](#canvas-toolbar), avec une flèche vers l’élément le plus proche et la distance à laquelle il se trouve. Cliquez dessus pour centrer cet élément sans changer le zoom.
 
-![Déplacement de la vue en faisant glisser le canevas vide, par un glissement avec le bouton central sur une table, avec la minicarte et avec la molette, puis retour en suivant la boussole Go to content](/img/demo-canvas-navigation.webp)
+![Déplacement de la vue en faisant glisser le canevas vide, avec la molette, par un glissement avec le bouton central sur une table et depuis la minicarte, puis Shift + wheel au-delà du contenu et retour en suivant la boussole Go to content](/img/demo-canvas-navigation.webp)
 
 ### Où aboutit un saut {#where-a-jump-lands}
 
-Chaque « aller à » qui vous mène à un élément du canevas déplace la vue selon une même règle : les résultats `#`, `@` et `:` de la [recherche rapide](./quick-search.md#searching-the-diagram), les lignes de l’[explorateur](./explorer.md#going-to-a-row) et les correspondances de sa fonction [Rechercher et remplacer](./find-and-replace.md#going-to-a-match), les lignes de la liste de la [visionneuse de différences](#going-to-a-change), le [bouton de carte](./visualization.md#card-buttons) de lien externe en mode Flux, et l’arrivée d’une opération [Importer et ajouter](./file-import-export.md#import-and-add). Chacune de ces sections indique ce que sélectionne l’« aller à » ; celle-ci indique où va la vue.
+Chaque « aller à » qui vous mène à un élément du canevas déplace la vue selon une même règle : les résultats `#`, `@` et `:` de la [recherche rapide](./quick-search.md#searching-the-diagram), les lignes de l’[explorateur](./explorer.md#going-to-a-row) et les correspondances de sa fonction [Rechercher et remplacer](./find-and-replace.md#going-to-a-match), les lignes de la liste de la [visionneuse de différences](#going-to-a-change), le [bouton de carte](./visualization.md#card-buttons) de lien externe en mode Flux, une vérification de la [feuille Vérifications](./dictionary.md#the-checks-sheet) de l’onglet Dictionnaire qui désigne une table ou une colonne, et l’arrivée d’une opération [Importer et ajouter](./file-import-export.md#import-and-add). Chacune de ces sections indique ce que sélectionne l’« aller à » ; celle-ci indique où va la vue.
 
 Un saut ne change jamais le zoom et effectue au plus un défilement. Depuis un autre onglet, il passe d’abord à l’onglet ERD.  
 Il mesure le canevas tel qu’il s’affiche : sous la barre d’outils supérieure, ou sur toute la hauteur en mode zen, et à droite d’un explorateur ouvert, qui rétrécit le canevas plutôt que de le recouvrir.
@@ -322,8 +333,8 @@ Ainsi, une petite table proche du bord gauche du canevas, à mi-hauteur, ne se d
 Ce qu’un saut rend visible, et la partie clé qui doit s’afficher lorsque l’ensemble ne tient pas :
 
 - Une table : la table entière, repérée par la bande du nom en haut de la table, ou par sa cellule de commentaire pour une correspondance dans un commentaire de table lorsque View Option → `Table Comment` affiche les commentaires. À `70%` et en dessous, où les tables se réduisent à leur nom, repérée par le nom au milieu du cadre.
-- Une colonne : sa ligne, repérée par la cellule visée par le saut : son nom, ou le commentaire où se trouve une correspondance lorsque View Option → `Column Comment` affiche les commentaires. À `70%` et en dessous, une colonne rend sa table visible selon la règle des tables.
-- Une cellule trop large pour s’afficher en entier, comme un long commentaire : repérée par le texte correspondant qu’elle contient.
+- Une colonne : sa ligne, repérée par la cellule visée par le saut : son nom, son nom logique pour une correspondance dans le nom logique ou une vérification portant sur le nom logique, sa cellule Domaine pour une vérification portant sur son domaine, ou le commentaire où se trouve une correspondance lorsque View Option → `Column Comment` affiche les commentaires. Lorsque la ligne ne dessine pas cette cellule, le saut va à la cellule dessinée à sa place : le nom logique pour le nom dans la vue `Logical Names`, le nom pour le nom logique dans la vue `Physical Names`, et la cellule du type pour la cellule Domaine tant que View Option → `Domain` est désactivée, ou la ligne entière tant que `DataType` est également désactivée. À `70%` et en dessous, une colonne rend sa table visible selon la règle des tables.
+- Une cellule trop large pour s’afficher en entier, comme un long commentaire : repérée par le texte correspondant qu’elle contient. Un saut vers la cellule dessinée à la place de celle où se trouve la correspondance, comme le nom pour une correspondance dans le nom logique dans la vue `Physical Names`, ne se repère pas au texte.
 - Une relation : le rectangle englobant ses deux tables, repéré par la table enfant.
 - Un groupe de tables : son cadre, repéré par sa barre de titre.
 - Un mémo, ou le bloc que dépose une opération Importer et ajouter : en entier.
@@ -337,7 +348,7 @@ Vous pouvez comparer des documents enregistrés précédemment avec le document 
 Choisissez `Diff Viewer` dans le menu contextuel du canevas et sélectionnez un document `.json` que vous avez exporté auparavant.
 
 La visionneuse s’ouvre par-dessus le canevas : ce qui a changé à gauche, puis le document enregistré et le document actuel côte à côte.  
-Le document actuel est comparé tel qu’il est à l’ouverture de la visionneuse ; les modifications faites ensuite, y compris celles d’un collaborateur, n’atteignent pas la visionneuse. Un [explorateur](./explorer.md#when-it-stands-aside) ouvert est masqué tant que la visionneuse est ouverte, si bien que celle-ci occupe toute la largeur de l’éditeur.  
+Le document actuel est comparé tel qu’il est à l’ouverture de la visionneuse ; les modifications faites ensuite, y compris celles d’un collaborateur, n’atteignent pas la visionneuse. Les deux côtés s’ouvrent, et restent, dans la vue de l’affichage des noms que vous regardez, quelle que soit celle que conserve chaque fichier (voir [Au-delà du canevas](./logical-names.md#beyond-the-canvas)). Un [explorateur](./explorer.md#when-it-stands-aside) ouvert est masqué tant que la visionneuse est ouverte, si bien que celle-ci occupe toute la largeur de l’éditeur.  
 Sur chaque côté, la vue se déplace avec la molette, en faisant glisser une zone vide ou le corps d’un groupe de tables, ou en faisant glisser avec le bouton central n’importe où sur ce côté, et le zoom s’effectue avec `Ctrl + Wheel` (Windows/Linux), `⌘ + Wheel` (Mac) ou un pincement. À `70%` et en dessous, les tables d’un côté se réduisent comme sur le canevas (voir [Marques des deux côtés](#marks-on-the-two-sides)).  
 Les deux côtés sont en lecture seule, si bien que rien n’est modifié dans votre document. Chacun garde sa propre sélection, et un clic sur une table y sélectionne celle-ci de ce seul côté.  
 Fermez la visionneuse avec le bouton `Close` de la notification `Diff Viewer` qui s’affiche à son ouverture, ou avec `Escape`.
@@ -360,13 +371,14 @@ Ce qui compte comme une modification :
 - Un mémo : son texte, sa position, sa taille et sa couleur.
 - Un groupe de tables : son nom, les tables qu’il contient, sa couleur, sa position et sa taille.
 
-Ainsi, une table, un mémo ou un groupe qui a seulement été déplacé, redimensionné ou recoloré compte comme modifié. Les positions et les tailles sont comparées en pixels entiers, et l’ordre d’empilement ainsi que le point où un connecteur rejoint une table ne comptent jamais.
+Ainsi, une table, un mémo ou un groupe qui a seulement été déplacé, redimensionné ou recoloré compte comme modifié. Les positions et les tailles sont comparées en pixels entiers, et l’ordre d’empilement ainsi que le point où un connecteur rejoint une table ne comptent jamais.  
+Les noms logiques, les liens de domaine ainsi que les mots, les termes et les domaines de l’onglet [Dictionnaire](./dictionary.md) ne sont pas comparés, si bien qu’une modification portant uniquement sur eux n’est ni listée ni marquée. Un type de données qu’un domaine a modifié compte bien, comme une modification du type de données de la colonne.
 
 ### L’arborescence des modifications {#the-change-tree}
 
 La liste de gauche est dessinée comme l’[arborescence de l’explorateur](./explorer.md#the-tree) et ne contient que ce qui a changé : `Tables`, `Table Groups` et `Memos`, chacun affiché seulement s’il contient une ligne, et sous une table ses propres `Columns`, `Indexes` et `Foreign Keys`. Une clé étrangère est listée sous sa table enfant, et une table ajoutée ou supprimée ne liste rien à l’intérieur.  
 Chaque dossier indique combien de lignes il contient, et chaque dossier et chaque table sont développés au départ.  
-Les tables et les groupes de tables sont listés par nom, sans tenir compte de la casse. Les mémos, ainsi que les colonnes, les index et les clés étrangères d’une table, suivent l’ordre du document actuel, un élément supprimé étant remis à sa place d’origine. Une ligne de mémo affiche la première ligne du mémo, et une ligne de clé étrangère affiche ses colonnes enfants, puis `→` avec la table parente et ses colonnes, par exemple `user_id → users(id)`. Un nom vide s’affiche sous la forme `unnamed`, en italique.
+Une ligne de table ou de colonne est nommée selon la vue de l’affichage des noms dans laquelle les côtés se sont ouverts. Dans la vue `Both Names`, elle affiche le nom logique suivi du nom, atténué, et sur une ligne supprimée, le nom atténué est barré avec le reste. Les tables et les groupes de tables sont listés par nom, sans tenir compte de la casse, quelle que soit la vue. Les mémos, ainsi que les colonnes, les index et les clés étrangères d’une table, suivent l’ordre du document actuel, un élément supprimé étant remis à sa place d’origine. Une ligne de mémo affiche la première ligne du mémo, et une ligne de clé étrangère affiche ses colonnes enfants, puis `→` avec la table parente et ses colonnes, par exemple `user_id → users(id)`. Un nom vide s’affiche sous la forme `unnamed`, en italique.
 
 Chaque ligne se termine par une lettre, et une ligne marquée `A`, `D`, `M` ou `R` a son nom dans la couleur de la lettre :
 
@@ -378,7 +390,7 @@ Chaque ligne se termine par une lettre, et une ligne marquée `A`, `D`, `M` ou `
 
 Survolez le nom d’une ligne pour afficher son info-bulle : le statut, `Added`, `Deleted`, `Modified`, `Renamed` ou `Changed inside`, puis une ligne par modification, comme `Name: users → members` ou `NN: ✗ → ✓`. Un texte est cité par sa première ligne, coupée après 40 caractères, et une valeur vide s’affiche sous la forme `—`. L’info-bulle d’un élément ajouté ou supprimé ne contient que son statut.
 
-`Filter by name`, au-dessus de l’arborescence, garde les lignes dont le nom actuel ou enregistré contient ce que vous saisissez, sans tenir compte de la casse. Une table dont le nom correspond garde toutes ses lignes, et une table dont le nom ne correspond pas ne garde que les lignes qui correspondent. Un filtre qui ne correspond à rien laisse l’arborescence vide.  
+`Filter by name`, au-dessus de l’arborescence, garde les lignes dont le nom actuel ou enregistré, ou le nom logique actuel ou enregistré, contient ce que vous saisissez, sans tenir compte de la casse, dans toutes les vues de l’affichage des noms. Une table dont le nom correspond garde toutes ses lignes, et une table dont le nom ne correspond pas ne garde que les lignes qui correspondent. Un filtre qui ne correspond à rien laisse l’arborescence vide.  
 Lorsque les deux documents ne diffèrent en rien, l’arborescence affiche `No changes`.
 
 Faites glisser le bord droit de l’arborescence pour l’élargir ou la rétrécir, de `200px` à `480px`, et double-cliquez sur ce bord pour la ramener à `260px`. Chaque comparaison s’ouvre à `260px`, et les deux côtés se partagent équitablement le reste de la largeur.  
@@ -407,5 +419,7 @@ Les deux côtés colorent le texte, les contours et les connecteurs, et ne rempl
 - Une modification d’index ne marque rien d’aucun côté ; elle n’apparaît que dans l’arborescence.
 
 Chaque côté suit les options d’affichage de son propre document. Une modification dans une cellule que ce côté ne dessine pas apparaît plutôt sur le nom. Une modification de colonne dans une cellule qu’une option d’affichage masque, comme `Unique` ou `Auto Increment`, toutes deux désactivées par défaut, fait passer le nom de la colonne en ambre, tout comme une modification de la clé primaire sur une ligne qui n’affiche pas d’icône de clé. Une modification du commentaire de table lorsque `Table Comment` est désactivée fait passer le nom de la table en ambre. Le bleu d’un renommage l’emporte sur cet ambre. Un mémo ou un groupe de tables que son document masque est listé dans l’arborescence mais n’est pas dessiné de ce côté.
+
+Dans la vue `Logical Names`, qui ne dessine pas de cellule du nom, le bleu d’un renommage et l’ambre d’une modification dans une cellule que le côté ne dessine pas se placent sur le nom logique dessiné à la place du nom. Une modification du type de données fait passer la cellule du type en ambre dans toutes les vues, même là où la cellule affiche le nom d’un domaine. Aucun des deux côtés ne dessine les couleurs que les vérifications du dictionnaire donnent aux noms sur le canevas (voir [Marques sur le canevas](./dictionary.md#marks-on-the-canvas)).
 
 À `70%` et en dessous, les tables réduites gardent leur contour. Le nom garde le vert ou le rouge d’une table ajoutée ou supprimée, ou le bleu d’un renommage, et prend sinon l’ambre d’une modification de commentaire. Les modifications de colonnes ne sont pas dessinées tant que vous ne refaites pas un zoom avant ; l’arborescence les liste quand même.

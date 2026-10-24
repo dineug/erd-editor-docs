@@ -11,7 +11,9 @@ const mid = box => ({ x: box.x + box.width / 2, y: box.y + box.height / 2 });
 export default {
   name: 'demo-database',
   width: 900,
-  height: 480,
+  // Tall enough for the 4.2.0 canvas menu (14 rows) to open below the
+  // pointer rather than shifted up over the top toolbar.
+  height: 540,
   async setup(d) {
     await seedSQL(d, readSeed('shop.sql'), {
       only: ['payments'],

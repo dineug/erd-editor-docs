@@ -1,5 +1,5 @@
 ---
-sidebar_position: 4
+sidebar_position: 5
 description: Select, move, copy, duplicate, and delete tables and memos, set colors and view options, define indexes and alternate keys, choose a database, get around the infinite canvas, and compare documents.
 ---
 
@@ -7,7 +7,8 @@ description: Select, move, copy, duplicate, and delete tables and memos, set col
 
 Everything you do to tables and memos once they exist — selecting, moving, copying, deleting, coloring, and setting what the canvas shows — plus the canvas controls around them.  
 The table and memo commands come first; then table properties, focusing on tables, indexes and alternate keys, auto layout, and the database vendor; and last the canvas itself: the canvas toolbar, zoom, panning and where a jump lands, and the diff viewer.  
-Table groups, the boxes that gather tables, have a page of their own — see [Table Groups](./table-groups.md).
+Table groups, the boxes that gather tables, have a page of their own — see [Table Groups](./table-groups.md).  
+So do logical names and the Name View, which decides the names the tables show — see [Logical Names](./logical-names.md).
 
 ## Multiple Selection
 
@@ -26,11 +27,14 @@ A right-click on something already selected keeps the whole selection, so menu r
 
 ![Selecting tables with ⌘ + drag and ⌘ + click, then every table and memo with ⌘ + A](/img/demo-table-select.webp)
 
-In a collaborative session, each participant's selection, focused cell, and selection box are drawn on the canvas in that participant's color — see [Collaborative Editing](../../api/advanced/collaborative-editing.md).
+In a collaborative session, each participant's selection, focused cell, and selection box are drawn on the canvas in that participant's color — see [Collaborative Editing](../../api/advanced/collaborative-editing.md).  
+A participant looking at another Name View has their focused cell drawn on the cell your view draws in its place, such as their name cell on your logical name cell — see [Collaborators](./logical-names.md#collaborators).
 
 ## Moving Multiple Tables
 
 Drag any table or memo that is already part of the selection and the whole selection moves with it — no modifier needed.  
+A table is dragged by its header or by any of its column rows, so a drag that starts on a column row moves the table, not the column. Columns move by the drag handle beside the focused row instead — see [Rearranging and Moving Columns](./table-editing.md#rearranging-and-moving-columns).  
+On a header cell or a column row, the table starts to move only once the pointer has travelled a short way, so a click there still focuses the cell and a double-click still opens its editor. A drag never starts from a table's color edge, which opens the color picker, from the `+` and `x` buttons on its header, or from a column row's `x`.  
 Dragging something outside the selection collapses the selection onto it and moves that alone. `Ctrl + drag` (Windows/Linux) or `⌘ + drag` (Mac) keeps the selection either way.  
 Only the left mouse button moves tables and memos. A right-click picks what the context menu acts on and moves nothing, and a middle drag pans the canvas instead — see [Getting Around the Canvas](#getting-around-the-canvas).
 
@@ -47,7 +51,9 @@ The order is not saved: a reopened diagram stacks its tables in the order the fi
 Copies the selected tables and memos and pastes them back as new ones.  
 Shortcuts: `Ctrl + C` (Windows/Linux) or `⌘ + C` (Mac), `Ctrl + V` (Windows/Linux) or `⌘ + V` (Mac)
 
-A copied table keeps its name, comment, columns, and color; a copied memo keeps its text, size, and color.  
+A copied table keeps its name, logical name, comment, columns, and color; a copied memo keeps its text, size, and color.  
+Each copied column keeps its logical name, and each table and column name keeps whether it was derived from the dictionaries — see [Deriving Physical Names](./dictionary.md#deriving-physical-names).  
+A pasted column keeps its domain link only when two things hold: the diagram it lands in lists that very domain, not just one of the same name, and the domain still has the data type the column was copied with. Otherwise the column lands with no domain and keeps the type it was copied with — see [Linking a Column](./dictionary.md#linking-a-column).  
 Indexes and relationships come along too: an index is copied whole onto the copied table, and a relationship is copied with its type and its ON DELETE and ON UPDATE actions when both of the tables it joins are in the copied set. Half a relationship is dropped rather than left pointing back at the original.  
 The pasted copies become the new selection, and pasting the same copy again offsets it by a further `50px` each time, so repeated pastes do not stack on top of one another.  
 A copy does not keep its [table group](./table-groups.md): the pasted table is in no group, even when it lands inside a group's box, and a selected group is not copied.  
@@ -60,11 +66,12 @@ When columns are selected inside a focused table, the same shortcut copies those
 ## Duplicating Tables and Memos
 
 Hold `Alt` and drag a table or memo with the left mouse button.  
+A table is taken by its header or by any column row, so `Alt + drag` on a column row duplicates the table and leaves the column order alone. `Alt` held on the column drag handle duplicates nothing: the column moves as a plain handle drag moves it — see [Rearranging and Moving Columns](./table-editing.md#rearranging-and-moving-columns).  
 A translucent preview follows the pointer, and releasing the button drops the copy where the preview sits.  
 If what you grab is already part of a selection, the whole selection is duplicated. Otherwise the selection is replaced by the entity under the pointer.  
 `Alt + click` without moving drops the copy `50px` down and to the right, stepping further whenever that spot is already taken.
 
-A duplicate carries the same things as a paste: names, comments, columns, colors, memo sizes, and the indexes and relationships that belong entirely to what you copied. Like a paste, it lands in no table group.  
+A duplicate carries the same things as a [paste](#copyingpasting-tables-and-memos): names and logical names, comments, columns, colors, memo sizes, and the indexes and relationships that belong entirely to what you copied. Since it stays in the same diagram, it keeps every column's domain link as it is. Like a paste, it lands in no table group.  
 `Alt + drag` on a table group's title bar moves the group as a plain drag does; a group is never duplicated.
 
 ![Duplicating a table with Alt + drag, then Alt + click for another copy down and to the right](/img/demo-table-duplicate.webp)
@@ -119,6 +126,7 @@ Offers the following view options:
 - Table Comment
 - Column Comment
 - DataType
+- Domain
 - Default
 - Not Null
 - Unique
@@ -129,7 +137,9 @@ Offers the following view options:
 - Table Groups
 - Memos
 
-`Unique`, `Alternate Key`, and `Auto Increment` are off by default, and the rest are on.  
+`Domain`, `Unique`, `Alternate Key`, and `Auto Increment` are off by default, and the rest are on.  
+Which names the tables show is not a view option: `Name View`, right after `View Option` in the canvas context menu, picks physical names, logical names, or both — see [Switching the View](./logical-names.md#switching-the-view).  
+`Domain` gives each column a cell, placed by the [column order](./settings.md#adjusting-column-order), with the name of the domain the column links. A column that links no domain the `Domains` sheet lists shows the `domain` placeholder there, dimmed. The cell shows in every Name View. While `Domain` is off, `Logical Names` shows a linked domain's name in the type cell instead — see [The Domain Cell](./logical-names.md#the-domain-cell).  
 `Alternate Key` marks the columns of each alternate key, such as `AK1.1` — see [Alternate Keys](#alternate-keys).  
 `Referential Actions` shows the `D:` and `U:` labels that a relationship's ON DELETE and ON UPDATE actions put at the child end of its connector — see [Reading a Connector](./relationship-editing.md#reading-a-connector). Turning it off hides only those labels and moves no table or connector.  
 `Table Groups` shows the [table groups](./table-groups.md) and the group colors on their tables' headers. Turning it off hides them on the canvas, the minimap, and image exports, moves no table, and keeps every table in its group — see [Hiding Groups](./table-groups.md#hiding-groups). It also takes the `Table Groups` folder out of the [Explorer](./explorer.md#the-tree) and `New Table Group` off the [canvas toolbar](#canvas-toolbar), and the Explorer's search stops finding group names.  
@@ -139,19 +149,19 @@ In a `readonly` editor the toggles change nothing.
 
 ![Toggling View Option entries as the tables reflow, marking a composite unique index AK1.1 and AK1.2 with Alternate Key, then turning Memos off and on](/img/demo-view-options.webp)
 
-Cards in the Visualization tab's `Flow` mode do not follow these options: they use their own [row display](./visualization.md#row-display), and draw their connectors even with `Relationship` off.
+Cards in the Visualization tab's `Flow` mode do not follow these options, `Domain` included: they use their own [row display](./visualization.md#row-display) and draw their connectors even with `Relationship` off. Which cells a card lays out depends on the Name View alone — see [Names on the Cards](./visualization.md#names-on-the-cards).
 
 ## Table Properties
 
 Opens the property panel of a table.  
 Start from `Table Properties` in the table context menu, which opens it for the table you right-clicked, or select a table and press `Alt + Space`.  
-The panel opens in the middle of a dimmed canvas. Only the canvas is dimmed, so an open [Explorer](./explorer.md#dialogs-beside-it) stays open and usable beside it. Its header holds the `Table Properties` title, the five most recently opened tables as chips with the current one highlighted, and a close button. Click a chip to move to that table without reopening the panel.  
+The panel opens in the middle of a dimmed canvas. Only the canvas is dimmed, so an open [Explorer](./explorer.md#dialogs-beside-it) stays open and usable beside it. Its header holds the `Table Properties` title, the five most recently opened tables as chips with the current one highlighted, and a close button. Each chip names its table as the [Name View](./logical-names.md#beyond-the-canvas) does. Click a chip to move to that table without reopening the panel.  
 Below the header are three tabs: `Indexes`, `Schema SQL`, and `Code Generator`. The panel keeps one size for all three, so switching tabs does not move or resize it.  
 Close it with the close button, with `Escape`, or by clicking outside it on the canvas.  
 Choosing a row other than a folder in the Explorer, or going to a match of its search, closes Table Properties before the jump. So does `Ctrl + F` (Windows/Linux) or `⌘ + F` (Mac), which opens the Explorer's search, or puts the caret in its Find field when the Explorer is already open. Any other click in the Explorer, a folder row included, or on the toolbar's `Explorer` button, leaves Table Properties open. An `Escape` pressed while the keyboard is in the Explorer only gives the keyboard back to the canvas, so it takes a second `Escape` to close Table Properties.
 
 The `Indexes` tab is covered in [Indexes](#indexes).  
-The `Schema SQL` tab shows the table's DDL for the selected [database](#databases): its `CREATE TABLE`, the separate constraints some databases write for its Unique columns, and its indexes. It always writes plain `CREATE` statements, with no header and no before or after script, whatever the toolbar's [Schema SQL](./schema-sql.md) tab is set to. It has no options panel, and its context menu offers only `Database` and `Bracket`.  
+The `Schema SQL` tab shows the table's DDL for the selected [database](#databases): its `CREATE TABLE`, the separate constraints some databases write for its Unique columns, and its indexes. It always writes plain `CREATE` statements, with no header, no before or after script, and no logical names in empty comments, whatever the toolbar's [Schema SQL](./schema-sql.md) tab is set to — see [Logical Names as Comments](./schema-sql.md#logical-names-as-comments). It has no options panel, and its context menu offers only `Database` and `Bracket`.  
 The `Code Generator` tab generates code for this table alone — see [Code Generator](./code-generator.md).
 
 In a `readonly` editor the panel still opens, with a `Read only` badge beside its title, but its `Indexes` tab offers no edits.
@@ -163,19 +173,19 @@ Start from the table context menu with `Focus on this table`, or select one or m
 When the table you right-click is one of several selected tables, the entry reads `Focus on selected tables` and focuses the whole selection. Right-clicking a table outside the selection focuses that table alone.  
 The shortcut takes the selected tables, leaves memos out, and does nothing when no table is selected.  
 A selected [table group](./table-groups.md) counts for nothing here, in the shortcut and the menu entry alike: its tables are taken only when they are selected themselves, which `Select tables` in the group's menu does.  
-What the narrowed view shows, and how to get back to the whole diagram, is covered in [Visualization](./visualization.md#focusing-on-tables).
+What the narrowed view shows, and how to get back to the whole diagram, is covered in [Visualization](./visualization.md#focusing-on-tables), and how to step back and forward through what Flow has shown before in [Previous Table and Next Table](./visualization.md#previous-table-and-next-table).
 
 ## Indexes
 
 Indexes are defined in the `Indexes` tab of the table property panel and are included in the exported Schema SQL.
 
 The left side lists the table's keys and indexes in two groups.  
-`Keys`, shown when the table has any, lists the keys its columns declare: `PK_<table name>` over the columns marked PK, then `UQ_<table name>_<column name>` for each column marked Unique, in column order. The names follow the selected database's Schema SQL, so with `Bracket` at `None` a schema-qualified table such as `sales.users` lists `PK_users` under every database but Databricks and Snowflake — see [Schema-qualified Table Names](./schema-sql.md#schema-qualified-table-names). Each is tagged `PK` or `UQ` and marked with a lock. They are read-only here and change only with the columns' [PK](./table-editing.md#column-primary-key) and [Unique](./table-editing.md#not-null-unique-auto-increment) flags.  
+`Keys`, shown when the table has any, lists the keys its columns declare: `PK_<table name>` over the columns marked PK, then `UQ_<table name>_<column name>` for each column marked Unique, in column order. The names are the physical ones the selected database's Schema SQL writes, whatever the Name View, so with `Bracket` at `None` a schema-qualified table such as `sales.users` lists `PK_users` under every database but Databricks and Snowflake — see [Schema-qualified Table Names](./schema-sql.md#schema-qualified-table-names). Each is tagged `PK` or `UQ` and marked with a lock. They are read-only here and change only with the columns' [PK](./table-editing.md#column-primary-key) and [Unique](./table-editing.md#not-null-unique-auto-increment) flags.  
 `Indexes` lists the table's indexes in the order they were added. Each index has a `UQ` toggle that makes it unique, a name field, and an `x` that removes it. An index that is an [alternate key](#alternate-keys) also shows its number, such as `AK1`. Add an index with `Add Index` at the bottom of the list.
 
-The right side lists the table's columns under `Columns`, with a checkbox each. Nothing is editable until an index is selected on the left.  
+The right side lists the table's columns under `Columns`, with a checkbox each. Each row shows the same cells as the column's row on the canvas, following the column order, the View Options, and the [Name View](./logical-names.md#beyond-the-canvas). Nothing is editable until an index is selected on the left.  
 Tick a column to add it to the selected index, and untick it to remove it. Selecting a key shows its columns ticked, but the boxes stay disabled.  
-The columns of the selected index are listed below under `Index order`. Drag them by the grip handle to reorder them, and click the `ASC` or `DESC` chip on a row to flip its sort order. In an alternate key, each row ends in its `AK<n>.<m>` mark. The list shows three rows at a time and scrolls the rest.
+The columns of the selected index are listed below under `Index order`, each named as the Name View names it, with the name in brackets after the logical name in `Both Names`, such as `Member Number (member_no)`. Drag them by the grip handle to reorder them, and click the `ASC` or `DESC` chip on a row to flip its sort order. In an alternate key, each row ends in its `AK<n>.<m>` mark. The list shows three rows at a time and scrolls the rest.
 
 In a `readonly` editor, selecting a key or an index still shows its columns, but there is no `Add Index` and no `x`, and nothing else in the tab can be changed.
 
@@ -216,12 +226,12 @@ Open `Auto Layout` from the canvas context menu or from quick search, and pick o
 | `Tree - horizontal` | The same layering, running left to right. |
 
 `Force` opens a preview while the layout settles, with `Apply` and `Cancel` on the notice it shows.  
-The preview is framed on the diagram as it stood when the layout started, so tables can move out of the frame as the layout settles. It is drawn at `70%` or less, so its tables show collapsed to their name and their color edge.  
+The preview is framed on the diagram as it stood when the layout started, so tables can move out of the frame as the layout settles. It is drawn at `70%` or less, so its tables show collapsed to their name and their color edge. It opens in the Name View you are looking at, whatever view the file keeps — see [Beyond the Canvas](./logical-names.md#beyond-the-canvas).  
 `Apply` keeps the positions as they stand at that moment, and the layout is applied on its own once it comes to rest. `Cancel` or `Escape` leaves the diagram as it was.
 
 The other three are worked out in one go, off the main thread, so there is nothing to watch: a notice shows while the layout is computed, and the finished arrangement is centered on what the diagram already covers. `Cancel` or `Escape` drops a layout you are no longer waiting for, and a host that runs no shared worker ends in `Could not place tables` — see [Web Workers](../../api/installation.md#web-workers). A layout that has not come back within 60 seconds ends the same way.
 
-Whichever you pick, tables and table groups are moved, and memos stay where they are. A relationship from a table to itself is ignored, and several relationships between the same two tables count once.  
+Whichever you pick, tables and table groups are moved, and memos stay where they are. The tables are placed at the widths they take in the Name View you are looking at. A relationship from a table to itself is ignored, and several relationships between the same two tables count once.  
 Every layout keeps each group's tables together, whether or not the groups are shown, and fits each group that holds tables around them — see [Table Groups](./table-groups.md#auto-layout).  
 The result lands as a single history entry, so one undo puts every table and group back where it was.
 
@@ -259,6 +269,7 @@ A small toolbar floats over the middle of the bottom edge of the canvas, holding
 - `New Table`, `New Memo`, and `New Table Group`. `New Table` adds a table as `Alt + N` does, and `New Memo` adds a memo as `Alt + M` does. `New Table Group` arms the [group draw](./table-groups.md#drawing-a-group) as `Alt + G` does and turns the hand off; a second click, like a second `Alt + G`, ends the draw without adding a group. `New Memo` is left out while View Option → `Memos` hides the memos, and `New Table Group` while View Option → `Table Groups` hides the groups. A `readonly` editor shows none of the three.
 - The zoom: `Zoom out`, the current zoom as a percentage, and `Zoom in`. The two buttons step the zoom the same way the zoom shortcuts do, and clicking the percentage puts it back to `100%`.
 - The four relationship notations, the same four you start a relationship with — see [Editing Start](./editing-start.md). Picking one switches back to the pointer, since a relationship is drawn by clicking two tables.
+- `Name View`, a button with a down arrow that names the view in force: `Physical Names`, `Logical Names`, or `Both Names`. It keeps one width whichever view it names, so a switch never shifts the toolbar. A click opens a list of the three above the toolbar, the one in force checked. Picking one switches to it and closes the list; a second click on the button, a press anywhere else, or `Escape` closes the list without switching. A `readonly` editor shows it too. What each view draws is covered in [Name View](./logical-names.md#name-view), and whether a switch is saved in [Switching the View](./logical-names.md#switching-the-view).
 - Zen mode, `Alt + Z`, which clears everything but the canvas and this toolbar. `Alt + Z` again, or the button, brings the rest back. An open Explorer is hidden with the rest, without being closed, and comes back with it. It can still be opened during zen mode — see [When It Stands Aside](./explorer.md#when-it-stands-aside).
 - The `Go to content` compass, which joins the end of the toolbar only while no table, shown memo, or shown table group is on screen — see [Getting Around the Canvas](#getting-around-the-canvas).
 
@@ -277,7 +288,7 @@ Shortcuts: `Ctrl + Plus` (Windows/Linux) or `⌘ + Plus` (Mac), `Ctrl + Minus` (
 The `Zoom out` and `Zoom in` buttons on the [canvas toolbar](#canvas-toolbar) step the zoom like the `Minus` and `Plus` shortcuts: each press moves it 4 percentage points, keeping the middle of the screen where it is. The percentage between them shows the current zoom, and clicking it goes straight back to `100%` like `Ctrl + 0` (Windows/Linux) or `⌘ + 0` (Mac).
 
 Zoom ranges from `10%` to `150%`.  
-At `70%` and below, tables collapse to their name and their color edge, and cell editing, the cell shortcuts, and copy and paste stop working until you zoom back in.
+At `70%` and below, tables collapse to their name and their color edge, and cell editing, the cell shortcuts, and copy and paste stop working until you zoom back in. The name a collapsed table shows follows the Name View — see [Name View](./logical-names.md#name-view).
 
 The same three shortcuts also zoom the Visualization tab, in `Graph` and `Flow` mode alike, each mode within its own range — see [Visualization](./visualization.md#toolbar).
 
@@ -302,11 +313,11 @@ Dragging a scrollbar thumb or the minimap's viewport rectangle is the one pan th
 
 If a pan leaves no table, shown memo, or shown table group on screen, a `Go to content` compass joins the end of the [canvas toolbar](#canvas-toolbar), with an arrow at the nearest one and how far away it is. Click it to center that one without changing the zoom.
 
-![Panning by dragging empty canvas, a middle-button drag over a table, the minimap, and the wheel, then following the Go to content compass back](/img/demo-canvas-navigation.webp)
+![Panning by dragging empty canvas, with the wheel, with a middle-button drag over a table, and from the minimap, then Shift + wheel past the content and following the Go to content compass back](/img/demo-canvas-navigation.webp)
 
 ### Where a Jump Lands
 
-Every go-to that takes you to something on the canvas moves the view by one rule: the `#`, `@`, and `:` results of [Quick Search](./quick-search.md#searching-the-diagram), the rows of the [Explorer](./explorer.md#going-to-a-row) and the matches of its [Find and Replace](./find-and-replace.md#going-to-a-match) search, the rows of the [Diff Viewer](#going-to-a-change)'s list, the external-link [card button](./visualization.md#card-buttons) in Flow, and the landing of an [Import and Add](./file-import-export.md#import-and-add). Each of those sections says what the go-to selects; this one says where the view goes.
+Every go-to that takes you to something on the canvas moves the view by one rule: the `#`, `@`, and `:` results of [Quick Search](./quick-search.md#searching-the-diagram), the rows of the [Explorer](./explorer.md#going-to-a-row) and the matches of its [Find and Replace](./find-and-replace.md#going-to-a-match) search, the rows of the [Diff Viewer](#going-to-a-change)'s list, the external-link [card button](./visualization.md#card-buttons) in Flow, a check that names a table or a column on the Dictionary tab's [Checks sheet](./dictionary.md#the-checks-sheet), and the landing of an [Import and Add](./file-import-export.md#import-and-add). Each of those sections says what the go-to selects; this one says where the view goes.
 
 A jump never changes the zoom, and makes one scroll at most. From another tab it switches to the ERD tab first.  
 It measures the canvas as it shows: below the top toolbar, or the whole height in zen mode, and right of an open Explorer, which narrows the canvas rather than covering it.
@@ -322,8 +333,8 @@ So a small table near the left edge of the canvas, halfway down, moves across on
 What a jump brings into view, and the key part that has to show when the whole does not fit:
 
 - A table: the whole table, by the name band across its top, or by its comment cell for a table comment match while View Option → `Table Comment` shows the comments. At `70%` and below, where tables collapse to their name, by the name in the middle of the box.
-- A column: its row, by the cell the jump goes to: its name, or the comment a match is in while View Option → `Column Comment` shows the comments. At `70%` and below, a column brings its table into view by the table's rule.
-- A cell too wide to show whole, such as a long comment: by the matched text in it.
+- A column: its row, by the cell the jump goes to: its name, its logical name for a logical name match or a check on the logical name, its Domain cell for a check on its domain, or the comment a match is in while View Option → `Column Comment` shows the comments. Where the row draws no such cell, the jump goes to the cell drawn in its place: the logical name for the name in `Logical Names`, the name for the logical name in `Physical Names`, and the type cell for the Domain cell while View Option → `Domain` is off, or the row as a whole while `DataType` is off as well. At `70%` and below, a column brings its table into view by the table's rule.
+- A cell too wide to show whole, such as a long comment: by the matched text in it. A jump to the cell drawn in place of the one the match is in, such as the name for a logical name match in `Physical Names`, does not go by the text.
 - A relationship: the box spanning its two tables, by the child table.
 - A table group: its box, by its title bar.
 - A memo, or the block an Import and Add lands: the whole of it.
@@ -337,7 +348,7 @@ You can compare previously saved documents with the current document.
 Choose `Diff Viewer` from the canvas context menu and pick a `.json` document you exported earlier.
 
 The view opens over the canvas: what changed on the left, then the saved document and the current one side by side.  
-The current document is compared as it stands when the view opens; changes made after that, a collaborator's included, do not reach the view. An open [Explorer](./explorer.md#when-it-stands-aside) is hidden while the view is open, so the view takes the editor's whole width.  
+The current document is compared as it stands when the view opens; changes made after that, a collaborator's included, do not reach the view. Both sides open, and stay, in the Name View you are looking at, whatever view either file keeps — see [Beyond the Canvas](./logical-names.md#beyond-the-canvas). An open [Explorer](./explorer.md#when-it-stands-aside) is hidden while the view is open, so the view takes the editor's whole width.  
 Each side pans with the wheel, by dragging an empty area or a table group's body, or by dragging with the middle button anywhere over it, and zooms with `Ctrl + Wheel` (Windows/Linux), `⌘ + Wheel` (Mac), or a pinch. At `70%` and below its tables collapse as they do on the canvas — see [Marks on the Two Sides](#marks-on-the-two-sides).  
 Both sides are read-only, so nothing in your document is modified. Each keeps its own selection, and a click on a table there selects it on that side alone.  
 Close the view with the `Close` button on the `Diff Viewer` notice it opens with, or with `Escape`.
@@ -360,13 +371,14 @@ What counts as a change:
 - A memo: its text, position, size, and color.
 - A table group: its name, the tables it holds, color, position, and size.
 
-So a table, memo, or group that was only moved, resized, or recolored counts as changed. Positions and sizes are compared in whole pixels, and stacking order and where a connector meets a table never count.
+So a table, memo, or group that was only moved, resized, or recolored counts as changed. Positions and sizes are compared in whole pixels, and stacking order and where a connector meets a table never count.  
+Logical names, domain links, and the [Dictionary](./dictionary.md) tab's words, terms, and domains are not compared, so a change to them alone is neither listed nor marked. A data type that a domain changed does count, as a change of the column's data type.
 
 ### The Change Tree
 
 The list on the left is drawn as the [Explorer's tree](./explorer.md#the-tree) and holds only what changed: `Tables`, `Table Groups`, and `Memos`, each shown only when it holds a row, and under a table its own `Columns`, `Indexes`, and `Foreign Keys`. A foreign key is listed under its child table, and a table added or removed lists nothing inside it.  
 Every folder shows how many rows it holds, and every folder and table starts unfolded.  
-Tables and table groups are listed by name, ignoring case. Memos, and a table's columns, indexes, and foreign keys, keep the current document's order, with a removed one put back where it stood. A memo row reads the memo's first line, and a foreign key row reads its child columns, then `→` with the parent table and its columns, such as `user_id → users(id)`. A blank name reads `unnamed` in italics.
+A table or column row is named in the Name View the sides opened in. In `Both Names` it reads the logical name with the name after it, muted, and on a removed row the muted name is struck through with the rest. Tables and table groups are listed by name, ignoring case, whatever the view. Memos, and a table's columns, indexes, and foreign keys, keep the current document's order, with a removed one put back where it stood. A memo row reads the memo's first line, and a foreign key row reads its child columns, then `→` with the parent table and its columns, such as `user_id → users(id)`. A blank name reads `unnamed` in italics.
 
 Each row ends on a letter, and a row marked `A`, `D`, `M`, or `R` has its name in the letter's color:
 
@@ -378,7 +390,7 @@ Each row ends on a letter, and a row marked `A`, `D`, `M`, or `R` has its name i
 
 Hover a row's name for its tooltip: the status, `Added`, `Deleted`, `Modified`, `Renamed`, or `Changed inside`, then one line per change, such as `Name: users → members` or `NN: ✗ → ✓`. A text is quoted by its first line, cut after 40 characters, and an empty value reads `—`. An added or removed item's tooltip is its status alone.
 
-`Filter by name`, above the tree, keeps the rows whose current or saved name contains what you type, ignoring case. A table whose name matches keeps all its rows, and one that does not stays with only the rows that match. A filter that matches nothing leaves the tree empty.  
+`Filter by name`, above the tree, keeps the rows whose current or saved name, or current or saved logical name, contains what you type, ignoring case, in every Name View. A table whose name matches keeps all its rows, and one that does not stays with only the rows that match. A filter that matches nothing leaves the tree empty.  
 When the two documents do not differ at all, the tree reads `No changes`.
 
 Drag the tree's right edge to make it wider or narrower, from `200px` to `480px`, and double-click the edge to put it back to `260px`. Every diff opens at `260px`, and the two sides share the rest of the width equally.  
@@ -407,5 +419,7 @@ The two sides color text, outlines, and connectors, and fill nothing. Added is g
 - An index change marks nothing on either side; it shows in the tree only.
 
 Each side follows its own document's View Options. A change in a cell that side does not draw shows on the name instead. A column change in a cell a View Option hides, such as `Unique` or `Auto Increment`, both off by default, turns the column's name amber, and so does a primary key change on a row that shows no key icon. A table comment change while `Table Comment` is off turns the table's name amber. A rename's blue wins over this amber. A memo or table group its document hides is listed in the tree but not drawn on that side.
+
+In `Logical Names`, which draws no name cell, a rename's blue and the amber of a change in a cell the side does not draw go on the logical name drawn in the name's place. A data type change turns the type cell amber in every Name View, even where the cell shows a domain's name. Neither side draws the colors the Dictionary's checks give names on the canvas — see [Marks on the Canvas](./dictionary.md#marks-on-the-canvas).
 
 At `70%` and below, collapsed tables keep their outline. The name keeps the green or red of an added or removed table, or a rename's blue, and otherwise takes the amber of a comment change. Column changes are not drawn until you zoom back in; the tree still lists them.

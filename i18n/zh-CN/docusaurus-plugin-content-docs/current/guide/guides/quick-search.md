@@ -1,6 +1,6 @@
 ---
-sidebar_position: 7
-description: 打开命令面板，切换标签页、执行当前标签页的命令、打开或关闭资源管理器、更改主题或显示语言，或输入前缀跳转到表、列、注释或备注。
+sidebar_position: 8
+description: 打开命令面板，切换标签页或名称显示、执行当前标签页的命令、打开或关闭资源管理器、更改主题或显示语言，或输入前缀跳转到表、列、注释或备注。
 ---
 
 # 快速搜索
@@ -9,7 +9,7 @@ description: 打开命令面板，切换标签页、执行当前标签页的命�
 它会列出当前标签页可用的命令。在搜索开头输入 `#`、`@` 或 `:`，则会改为搜索图，并跳转到表、列，或者注释或备注。
 
 通过 `Ctrl + K` (Windows/Linux) 或 `⌘ + K` (Mac) 打开，也可以点击工具栏的 `Search`。  
-再次按下同一快捷键即可关闭，按 `Esc` 或点击面板外部也可关闭。打开时会关闭表属性、[主题构建器](./language-and-theme.md#theme)、[`Display Language`](./language-and-theme.md#picking-a-language) 选择器、[`Export image`](./file-import-export.md#image) 对话框以及[映射列](./relationship-editing.md#map-columns)，在映射列中已做的选择会被丢弃。在编辑表的单元格、备注或表分组的名称时则无法打开。
+再次按下同一快捷键即可关闭，按 `Esc` 或点击面板外部也可关闭。打开时会关闭表属性、[主题构建器](./language-and-theme.md#theme)、[`Display Language`](./language-and-theme.md#picking-a-language) 选择器、[`Export image`](./file-import-export.md#image) 对话框以及[映射列](./relationship-editing.md#map-columns)，在映射列中已做的选择会被丢弃。在编辑表的单元格、备注、表分组的名称或 [Dictionary](./dictionary.md) 标签页上的单元格时则无法打开。
 
 工具栏中紧跟在 `Search` 之后的按钮是 `Explorer`。它会打开或关闭[资源管理器](./explorer.md)，这是一个停靠在画布左侧、以树形展示整张图的面板，顶部是查找与替换。  
 打开命令面板时，资源管理器会保持打开，此时按 `Esc` 只会关闭命令面板。在命令面板中按 `Ctrl + F` (Windows/Linux) 或 `⌘ + F` (Mac) 会关闭命令面板，并把键盘焦点移到资源管理器的查找输入框；资源管理器未显示时，会将其打开并定位到其搜索。与 `Toggle Explorer` 条目不同，在命令面板中按该键永远不会关闭资源管理器，参见[打开与关闭](./explorer.md#opening-and-closing)。Diff Viewer、Time Travel 或自动布局预览打开期间，编辑器不处理该按键：命令面板保持打开，按键会传给浏览器或宿主，参见[浏览器的查找栏](./find-and-replace.md#the-browsers-find-bar)。  
@@ -24,23 +24,25 @@ description: 打开命令面板，切换标签页、执行当前标签页的命�
 当显示语言不是英语时，命令和子菜单条目也可以通过其英文名称和关键字找到，列表中不会显示这些英文名称和关键字，因此无论 `New Table` 以哪种语言显示，`new table` 都能找到它。  
 使用 `↑` 和 `↓` 在列表中移动，到达两端时会循环，按 `Enter` 执行高亮的条目。带有独立快捷键的命令会在其所在行的末端显示该快捷键：位于右侧；在从右到左书写的显示语言中则位于左侧。输入法仍在组字时（例如正在输入一个韩文音节），`↑`、`↓` 和 `Enter` 归输入法处理，既不会移动高亮，也不会执行条目。
 
-`Database`、`Import` 或 `Auto Layout` 之类的条目会打开子菜单，其条目会替换当前列表，搜索框也会被清空。`Database`、`Bracket`、`Language`、两种名称大小写、`Schema SQL: Statements`、`Schema SQL: Header`、`Theme` 和 `Display Language` 的子菜单会勾选当前的选择，并在打开时将高亮置于该项上，因此直接按 `Enter` 会保留当前选择；其他子菜单打开时没有任何条目处于高亮状态。  
+`Database`、`Import` 或 `Auto Layout` 之类的条目会打开子菜单，其条目会替换当前列表，搜索框也会被清空。`Name View`、`Database`、`Bracket`、`Language`、两种名称大小写、`Schema SQL: Statements`、`Schema SQL: Header`、`Theme` 和 `Display Language` 的子菜单会勾选当前的选择，并在打开时将高亮置于该项上，因此直接按 `Enter` 会保留当前选择；其他子菜单打开时没有任何条目处于高亮状态。  
 过滤始终只作用于当前显示的列表，并且无法返回上一级，因此需要关闭并重新打开命令面板才能重新开始。在子菜单中，`#`、`@`、`:` 和 `?` 只是普通文本，而不是[前缀](#searching-the-diagram)。
 
 ## 命令面板列出的内容 {#what-the-palette-lists}
 
-列表内容取决于当前所在的标签页。每个标签页的列表都以 `Tab` 开头，用于切换到 `Entity Relationship Diagram`、`Visualization`、`Schema SQL`、`Code Generator` 或 `Settings`，当前所在的标签页不会出现在其中。
+列表内容取决于当前所在的标签页。每个标签页的列表都以 `Tab` 开头，用于切换到 `Entity Relationship Diagram`、`Visualization`、`Schema SQL`、`Code Generator`、`Dictionary` 或 `Settings`，当前所在的标签页不会出现在其中。
 
-在 ERD 标签页中，列表依次包含 `Database`、`Import`、`Import and Add` 与 `Export`，然后是 `New Table`、`New Memo`、`New Table Group` 与 `Group Selected Tables`，以及四种关系类型和 `Auto Layout`。这里不会列出表，输入 `#` 即可[跳转到表](#searching-the-diagram)。  
+在 ERD 标签页中，列表先是 `Name View` 和最多四个用于[重新生成物理名](./dictionary.md#derive-physical-names-again)的行，然后依次是 `Database`、`Import`、`Import and Add` 与 `Export`，接着是 `New Table`、`New Memo`、`New Table Group` 与 `Group Selected Tables`，以及四种关系类型和 `Auto Layout`。这里不会列出表，输入 `#` 即可[跳转到表](#searching-the-diagram)。  
+`Name View` 会打开 `Physical Names`、`Logical Names` 和 `Both Names`，并勾选当前的显示方式，选择其中一项会像画布右键菜单中的 `Name View` 一样切换显示方式，参见[切换显示方式](./logical-names.md#switching-the-view)。它只在 ERD 标签页的列表中出现，在只读编辑器中也是如此。  
+这些重新生成的行通过其旁边的关键字区分。`Derive Physical Name Again` 旁边显示 `column`，用于重新生成焦点所在列的物理名。`Derive Physical Names Again` 有三行：旁边显示 `table` 的一行作用于焦点所在的表，包括其名称和每一列；旁边显示 `selected tables` 的一行在选中两个或更多表时作用于选中的表；旁边显示 `whole document` 的一行作用于图中的每个表。每一行只在有可作用的对象时才会列出，在只读编辑器中则都不会列出。  
 在只读编辑器中不会列出 `Import and Add`；当 [View Option](./table-related-functions.md#table-view-options) → `Memos` 隐藏了备注时，不会列出 `New Memo`。`New Table Group` 会开始在画布上绘制一个[表分组](./table-groups.md)，`Group Selected Tables` 会把选中的表放入一个新分组，并打开该分组的名称编辑器以便输入名称。在只读编辑器中，以及当 View Option → `Table Groups` 隐藏了表分组时，这两项都不会列出；此外，`Group Selected Tables` 还要求至少选中一个表。这两行会显示各自的按键：[绘制分组](./table-groups.md#drawing-a-group)为 `Alt + G` (Windows/Linux) 或 `⌥ + G` (Mac)，[为选中的表分组](./table-groups.md#grouping-selected-tables)为先按 `T` 再按 `G`。  
-除 `Group Selected Tables` 对应的是表的右键菜单中的 `Group selected tables` 外，这些条目执行的命令与画布右键菜单相同；`View Option` 和 `Diff Viewer` 仅存在于右键菜单中。此处的 `Export` 提供与右键菜单相同的 `json`、`Schema SQL` 和 `Image`，在其中输入 `png` 或 `svg` 即可找到 `Image`。  
+这些条目执行的命令与画布右键菜单相同，但以下条目执行的是表的右键菜单中的命令：`Group Selected Tables` 执行其中的 `Group selected tables`，旁边显示 `column`、`table` 和 `selected tables` 的重新生成行执行其中的 `Derive Physical Name Again` 或 `Derive Physical Names Again`，作用于焦点或选中范围，而不是右键点击的位置。`View Option` 和 `Diff Viewer` 仅存在于右键菜单中。此处的 `Export` 提供与右键菜单相同的 `json`、`Schema SQL` 和 `Image`，在其中输入 `png` 或 `svg` 即可找到 `Image`。  
 各格式、[Import and Add](./file-import-export.md#import-and-add) 以及[图片导出](./file-import-export.md#image)的作用参见[导入与导出文件](./file-import-export.md)，数据库选择的影响参见[表相关功能](./table-related-functions.md#databases)。
 
 在 Schema SQL 标签页中，列表同样包含 `Database`，以及 `Bracket`。`Bracket` 用于设置生成的 SQL 中包裹表名、列名、约束名和索引名的引号字符，可选 `SingleQuote`、`DoubleQuote`、`Backtick`，或选择 `None` 表示不加任何引号。接着是 `Schema SQL: Statements` 和 `Schema SQL: Header`，它们提供与该标签页选项面板相同的选择，但只列出所选数据库会写出的选项；然后是 `Schema SQL: Options panel`，用于显示或隐藏该面板。各选项会写出什么参见 [Schema SQL](./schema-sql.md)。
 
 在 Code Generator 标签页中，列表包含 `Database`，语言为 `Doctrine`、`JPA` 或 `SeaORM` 时还包含 `Bracket`，然后是 `Language`、`Table Name Case`、`Column Name Case` 以及 `Code Generator: Options panel`，后者用于显示或隐藏该标签页的选项面板。各目标生成的内容参见[代码生成](./code-generator.md)。
 
-Visualization 和 Settings 标签页没有自己专属的命令，只有 `Tab` 以及下文所述每个标签页都会列出的命令。
+Visualization、Dictionary 和 Settings 标签页没有自己专属的命令，只有 `Tab` 以及下文所述每个标签页都会列出的命令。
 
 每个标签页的列表末尾附近都有 `Toggle Explorer`，在只读编辑器中也是如此，它会显示自己的快捷键 `Ctrl + F` (Windows/Linux) 或 `⌘ + F` (Mac)。输入 `find`、`replace`、`rename`、`tree`、`outline` 或 `objects` 也可以找到它。  
 执行该条目会关闭命令面板，效果与在画布上按该快捷键相同。当工具栏的 `Explorer` 按钮显示为按下状态时，也就是资源管理器在 ERD 标签页中处于打开状态且未被禅模式隐藏时，它会关闭资源管理器；否则，它会切换到 ERD 标签页，打开资源管理器并定位到其搜索，光标位于查找输入框中，参见[打开与关闭](./explorer.md#opening-and-closing)。Diff Viewer、Time Travel 或自动布局预览打开期间，列表中不会出现该条目。
@@ -58,21 +60,22 @@ Visualization 和 Settings 标签页没有自己专属的命令，只有 `Tab` �
 在搜索开头输入前缀，即可搜索图而不是命令：`#` 搜索表，`@` 搜索列，`:` 搜索注释和备注，`?` 列出所有前缀。前缀在任意标签页中都有效。只有作为第一个字符时它才算作前缀，其前面的空格会被忽略。前缀后面的空格可有可无，因此 `#users` 和 `# users` 是同一个搜索，日文或中文输入法输入的全角 `＃`、`＠`、`：` 和 `？` 同样有效。  
 在顶层且输入框为空时，输入框下方会有一行显示这四个前缀，点击其中一个即可输入它。前缀生效期间，输入框的末端会显示其搜索范围：`Tables`、`Columns`、`Comments & memos` 或 `Help`。删除前缀即可回到命令列表。
 
-`#` 列出所有表，每个表旁边显示 `Table`，名称为空的表会显示为 `unnamed`。`#` 后面没有内容时，表按名称排序。`#` 后面的文本只与表名匹配，与上文一样是模糊匹配，名称中包含该文本的表排在前面。任何前缀都不会搜索表分组的名称和索引的名称；[查找与替换](./find-and-replace.md#what-it-searches)则两者都会搜索。
+`#` 列出所有表，每个表旁边显示 `Table`。每一行按[名称显示](./logical-names.md#beyond-the-canvas)的方式命名其表，例如在 `Both Names` 中显示为 `Accounts (users)`，没有可显示名称的表会显示为 `unnamed`。`#` 后面没有内容时，在每种显示方式下表都按名称排序，永远不会按逻辑名排序。`#` 后面的文本会与每个表的名称及其逻辑名进行模糊匹配（与上文相同），无论当前显示的是什么，因此即使在 `Physical Names` 中，`#accounts` 也会列出 `users`。名称或逻辑名中包含该文本的表排在前面。任何前缀都不会搜索表分组的名称和索引的名称；[查找与替换](./find-and-replace.md#what-it-searches)则两者都会搜索。
 
-`@` 列出列名，每一列旁边显示它所在的位置，例如 `users.email · Column`。`@` 后面的文本必须出现在列名中，不区分大小写；这种匹配不是模糊匹配。第一个 `.` 之前的文本会把搜索范围缩小到名称中包含该文本的表：`@users.em` 会在名称包含 `users` 的表中列出包含 `em` 的列，`@users.` 会列出这些表的列，`@.em` 则搜索所有表。`@` 后面没有内容时，会列出所有列，不做过滤。
+`@` 列出列，每一列旁边显示它所在的位置，例如 `users.email · Column`。`@` 后面的文本必须出现在列的名称或其逻辑名中，不区分大小写，也与名称显示所显示的内容无关；这种匹配不是模糊匹配。包含该文本的每个名称各占一行：逻辑名匹配的行显示逻辑名，旁边显示 `users.email · Logical name`，因此名称和逻辑名都包含该文本的列会被列出两次。第一个 `.` 之前的文本会把搜索范围缩小到名称或逻辑名中包含该文本的表：`@users.em` 会在名称或逻辑名包含 `users` 的表中列出包含 `em` 的列，`@users.` 会列出这些表的列，`@.em` 则搜索所有表。表自身的逻辑名在 `@` 下不会生成任何行；`#` 可以找到它。`@` 后面没有内容时，每一列按其名称列出一次。
 
-`:` 列出表注释、列注释和备注，从不列出名称。每一行显示匹配处前后的文本摘录，旁边显示 `users · Table comment`、`users.email · Column comment` 或 `Memo`。`:` 后面的文本必须出现在注释或备注中，与 `@` 一样不区分大小写。`:` 后面没有内容时，会列出所有非空的注释和备注。当 View Option → `Memos` 隐藏了备注时，`:` 不会列出任何备注。
+`:` 列出表注释、列注释和备注，从不列出名称或逻辑名。每一行显示匹配处前后的文本摘录，旁边显示 `users · Table comment`、`users.email · Column comment` 或 `Memo`。`:` 后面的文本必须出现在注释或备注中，与 `@` 一样不区分大小写。`:` 后面没有内容时，会列出所有非空的注释和备注。当 View Option → `Memos` 隐藏了备注时，`:` 不会列出任何备注。
 
-`@` 和 `:` 按文档中保存的顺序列出各行：逐个表列出，每个表的注释排在其各列之前，各列按列的顺序排列，备注排在最后。
+`@` 和 `:` 按文档中保存的顺序列出各行：逐个表列出，每个表的注释排在其各列之前，各列按列的顺序排列，备注排在最后。在 `@` 下，列的逻辑名行排在其名称行之前。  
+无论哪种显示方式，`@` 或 `:` 行旁边显示的位置都给出表和列的名称，永远不会给出其逻辑名。
 
 `?` 列出 `Tables`、`Columns` 和 `Comments & memos`，`?` 后面的文本会对它们进行过滤。选择其中一项会把输入内容替换为对应的前缀，并保持命令面板打开。
 
 带前缀的列表包含所有匹配项，不论数量多少。带前缀的搜索没有找到任何结果时，列表为空，也不会显示任何提示信息。
 
 选择表、列、注释或备注会关闭命令面板，如果当前位于其他标签页，还会切换到 ERD 标签页。  
-除非该对象已经显示得足够清楚，否则画布会滚动到它，参见[跳转的落点](./table-related-functions.md#where-a-jump-lands)。随后，表会被单独选中并移到最前面，表名会获得焦点，除非焦点原本就在该表中。  
-备注会被单独选中并移到最前面。对于列或注释，其所在的表会被单独选中并移到最前面，焦点落在包含该文本的单元格上，如果注释被[表显示选项](./table-related-functions.md#table-view-options)隐藏，则焦点落在其旁边的名称上。  
+除非该对象已经显示得足够清楚，否则画布会滚动到它，参见[跳转的落点](./table-related-functions.md#where-a-jump-lands)。随后，表会被单独选中并移到最前面。除非焦点原本就在该表中，否则其表头的第一个单元格会获得焦点：即其名称，在 `Logical Names` 和 `Both Names` 中则为其逻辑名。  
+备注会被单独选中并移到最前面。对于列或注释，其所在的表会被单独选中并移到最前面，焦点落在包含该文本的单元格上。如果当前显示方式不绘制该单元格，焦点会落在在其位置绘制的单元格上：在 `Physical Names` 中找到的逻辑名会落在名称上，在 `Logical Names` 中找到的名称会落在逻辑名上。被[表显示选项](./table-related-functions.md#table-view-options)隐藏的注释会落在其旁边的名称上，在 `Logical Names` 中则落在逻辑名上。  
 任何跳转都不会开始或完成正在绘制的关系。
 
 如需使用 `Match Case`、`Match Whole Word` 或 `Use Regular Expression`，或者要替换文本，请使用资源管理器顶部的[查找与替换](./find-and-replace.md)。

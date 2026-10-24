@@ -1,12 +1,12 @@
 ---
-sidebar_position: 9
-description: Gezginin en üstünden tablo, sütun, dizin ve tablo grubu adlarını, açıklamaları ve notları arama, eşleşmeler arasında Gezginin ağacında ve tuvalde sırayla ilerleme, tek bir eşleşmeyi ya da tümünü değiştirme.
+sidebar_position: 10
+description: Gezginin en üstünden tablo, sütun, dizin ve tablo grubu adlarını, mantıksal adları, açıklamaları ve notları arama, eşleşmeler arasında Gezginin ağacında ve tuvalde sırayla ilerleme, tek bir eşleşmeyi ya da tümünü değiştirme.
 ---
 
 # Bul ve değiştir
 
 Tüm diyagramda metin bulur, ERD tuvalinde her eşleşmeye gitmenizi sağlar ve tek bir eşleşmeyi ya da tümünü değiştirir.  
-Yedi metin türünde arama yapar: tablo adları, tablo açıklamaları, sütun adları, sütun açıklamaları, notlar, dizin adları ve tablo grubu adları. [Neleri arar](#what-it-searches) bölümüne bakın.
+Sekiz metin türünde arama yapar: tablo adları, tablo açıklamaları, sütun adları, sütun açıklamaları, notlar, dizin adları, tablo grubu adları ve tablolar ile sütunların [mantıksal adları](./logical-names.md). [Neleri arar](#what-it-searches) bölümüne bakın.
 
 ERD tuvalinin soluna yerleşik panel olan [Gezginin](./explorer.md) en üstünde, Gezginin başlık çubuğu ile ağacı arasında yer alır. Kendine ait bir başlığı yoktur. Yukarıdan aşağıya şunları içerir:
 
@@ -30,7 +30,7 @@ Gezginin nasıl kapatıldığı, Gezgin açıkken tuşun ve iki `Toggle Explorer
 Başka bir sekmenin ve Zen modunun Gezgini nasıl gizlediği ile Fark görüntüleyicinin, Zaman yolculuğunun ve Otomatik düzenin önizlemesinin onu nasıl gizleyip açılmasını engellediği [Kenara çekildiğinde](./explorer.md#when-it-stands-aside) bölümünde anlatılır. Gezgin için fazla dar bir düzenleyicinin durumu [Tuvalin yanında](./explorer.md#beside-the-canvas) bölümünde anlatılır.
 
 Yeniden açıldığında son arama metni, Değiştir alanındaki metin, [seçenekler](#options), açık olan [metin türleri](#what-it-searches) ve `Replace` satırı ile metin türlerinin genişletilmiş olup olmadığı korunur.  
-Bunlar düzenleyici açık kaldığı sürece korunur ve belgeye kaydedilmez. Yeni açılan bir düzenleyici tüm seçenekler kapalı, `Replace` satırı ile metin türleri daraltılmış ve yalnızca dört ad türü açık olarak başlar. [Neleri arar](#what-it-searches) bölümüne bakın.
+Bunlar düzenleyici açık kaldığı sürece korunur ve belgeye kaydedilmez. Yeni açılan bir düzenleyici tüm seçenekler kapalı, `Replace` satırı ile metin türleri daraltılmış ve yalnızca dört ad türü ile `Logical names` açık olarak başlar. [Neleri arar](#what-it-searches) bölümüne bakın.
 
 ## Tarayıcının bulma çubuğu {#the-browsers-find-bar}
 
@@ -46,15 +46,16 @@ Düzenleyiciyi gömen bir sayfa bu tuşu değiştirebilir veya kaldırabilir. [K
 
 ## Neleri arar {#what-it-searches}
 
-Aranan metin türlerini şu sırayla yedi düğme belirler: `Table names`, `Table comments`, `Column names`, `Column comments`, `Memos`, `Index names` ve `Table group names`.  
+Aranan metin türlerini şu sırayla sekiz düğme belirler: `Table names`, `Table comments`, `Column names`, `Column comments`, `Memos`, `Index names`, `Table group names` ve `Logical names`.  
 Bu düğmeler başta daraltılmıştır. Sayacın bulunduğu satırın sonundaki `Search In` düğmesi onları o satırın altında genişletir ve yeniden daraltır, düğmeler göründüğü sürece de vurgulu olur.  
-Vurgulu bir tür düğmesi açıktır. Bir düğmeyi açmak veya kapatmak için ona tıklayın, arama yeniden çalışır. Yedisi de kapalıyken hiçbir şey bulunmaz.
+Vurgulu bir tür düğmesi açıktır. Bir düğmeyi açmak veya kapatmak için ona tıklayın, arama yeniden çalışır. Sekizi de kapalıyken hiçbir şey bulunmaz.
 
-Arama ilk açıldığında dört ad türü, yani `Table names`, `Column names`, `Index names` ve `Table group names` açıktır, bu yüzden açıklamaları ve notları açmadığınız sürece bir yeniden adlandırma onlara ulaşmaz.  
+Arama ilk açıldığında dört ad türü, yani `Table names`, `Column names`, `Index names` ve `Table group names`, bir de `Logical names` açıktır, bu yüzden açıklamaları ve notları açmadığınız sürece bir yeniden adlandırma onlara ulaşmaz.  
+`Logical names`, tabloların ve sütunların mantıksal adları için aynı şekilde tek bir türdür.  
 Dizin adları, [Tablo özelliklerinin](./table-related-functions.md#indexes) `Indexes` sekmesindeki dizinlerin adlarıdır, bunların üstünde listelenen `PK_` ve `UQ_` anahtarları değildir.
 
-Başka hiçbir şey aranmaz. Veri türleri, varsayılan değerler, bir dizinin sütunları, veritabanı adı, `Before tables` ve `After tables` betikleriyle birlikte [Şema SQL](./schema-sql.md) ve oluşturulan kod aramaya dahil değildir.  
-Bir [tablo görünüm seçeneğiyle](./table-related-functions.md#table-view-options) gizlenen açıklama yine de aranır. View Option → `Memos` ile gizlenen notlar ve View Option → `Table Groups` ile gizlenen [tablo grupları](./table-groups.md#hiding-groups) ise düğmeleri açık olsa bile aranmaz, bu yüzden `Replace All` göremediğiniz bir notu hiçbir zaman yeniden yazmaz, göremediğiniz bir grubu da yeniden adlandırmaz.
+Başka hiçbir şey aranmaz. Veri türleri, bir sütunun değer alanı, varsayılan değerler, bir dizinin sütunları, veritabanı adı, `Before tables` ve `After tables` betikleriyle birlikte [Şema SQL](./schema-sql.md), oluşturulan kod ve [kendi araması](./dictionary.md#searching) olan [Sözlük](./dictionary.md) sekmesinin sayfaları aramaya dahil değildir.  
+Mantıksal adlar, tuvalin hiçbirini göstermediği `Physical Names` dahil, [Ad görünümü](./logical-names.md#name-view) ne gösterirse göstersin aranır. Bir [tablo görünüm seçeneğiyle](./table-related-functions.md#table-view-options) gizlenen açıklama da yine aranır. View Option → `Memos` ile gizlenen notlar ve View Option → `Table Groups` ile gizlenen [tablo grupları](./table-groups.md#hiding-groups) ise düğmeleri açık olsa bile aranmaz, bu yüzden `Replace All` göremediğiniz bir notu hiçbir zaman yeniden yazmaz, göremediğiniz bir grubu da yeniden adlandırmaz.
 
 ## Seçenekler {#options}
 
@@ -91,19 +92,21 @@ Alanların altındaki satırın başında bulunan sayaç, nerede olduğunuzu gö
 Bul alanında metin olduğu sürece Gezginin [ağacı](./explorer.md#the-tree) tüm diyagram yerine sonuçları gösterir: yalnızca eşleşme içeren satırları ve onların üstündeki satırları. Hiçbir şey eşleşmediğinde veya normal ifade ayrıştırılamadığında ağaç boştur. Arama metnini silmek, tüm ağacı daha önceki daraltma durumuyla geri getirir.
 
 - `Tables`, `Table Groups` ve `Memos` klasörleri yalnızca eşleşme içerdiklerinde görünür ve her klasörün gösterdiği sayı, sonuçlarda doğrudan altındaki satırların sayısıdır.
-- `Tables` klasörünün altında eşleşme içeren tablolar ada göre sıralanır. Her tablonun altında açıklamasındaki her eşleşme için bir satır, ardından eşleşme içeren sütunların sütun sırasıyla yer aldığı ve her sütunun altında açıklamasındaki her eşleşme için bir satır bulunan bir `Columns` klasörü, ardından adı eşleşen dizinlerin yer aldığı bir `Indexes` klasörü gelir. `Foreign Keys` klasörü yoktur.
+- `Tables` klasörünün altında eşleşme içeren tablolar, hiçbir zaman mantıksal ada göre değil, ada göre sıralanır. Her tablonun altında açıklamasındaki her eşleşme için bir satır, ardından eşleşme içeren sütunların sütun sırasıyla yer aldığı ve her sütunun altında açıklamasındaki her eşleşme için bir satır bulunan bir `Columns` klasörü, ardından adı eşleşen dizinlerin yer aldığı bir `Indexes` klasörü gelir. `Foreign Keys` klasörü yoktur.
 - `Table Groups` klasörünün altında adı eşleşen gruplar, tabloları olmadan, ada göre sıralanır. Bulunan bir tablo `Tables` klasörünün altında görünür.
 - `Memos` klasörünün altında eşleşme içeren notlar belge sırasıyla yer alır. Her not ilk satırıyla gösterilir ve içindeki her eşleşme için bir satırı vardır.
 
-Bir addaki eşleşme o adın kendi satırında vurgulanır, bu yüzden arama metnini iki kez içeren bir ad, iki vurgusu olan tek bir satırdır.  
+Bir addaki eşleşme o adın kendi satırında vurgulanır, bu yüzden arama metnini iki kez içeren bir ad, iki vurgusu olan tek bir satırdır. Bir tablonun veya sütunun mantıksal adındaki eşleşme de o tablonun veya sütunun satırında yer alır, hiçbir zaman kendine ait bir satırda değil.  
+Bu satırlar tabloyu veya sütunu [Ad görünümünün](./logical-names.md#beyond-the-canvas) gösterdiği gibi adlandırır ve bir satırın gösterebileceği iki addan her biri yalnızca kendi eşleşmelerini vurgular. Yalnızca görünümünün dışarıda bıraktığı adda (`Physical Names` görünümünde mantıksal ad, `Logical Names` görünümünde ad) bulunan bir satır, bu adı gösterdiği adın ardından `Both Names` görünümündeki gibi soluk olarak ve eşleşmesi vurgulanmış hâlde ekler. Gösterdiği ad da bir eşleşme içerdiğinde satır yalnızca o adı gösterir, bu yüzden görünümünün dışarıda bıraktığı addaki eşleşmeler sayılır ve aralarında ilerlenir, ancak vurgulanmaz.  
 Bir açıklamadaki veya nottaki eşleşmenin kendine ait bir satırı vardır: tablo ya da sütun açıklaması için bir konuşma balonu simgesi, not için bir yapışkan not simgesi, ardından eşleşmesi vurgulanmış bir metin parçası. Uzun bir metin `…` ile kesilir ve satır sonları boşluk olarak görünür. Metnin tamamını görmek için satırın üzerine gelin.  
 Diğer tüm satırlar arama dışındaki gibi görünür: Sütun veri türünü, dizin sütunlarını gösterir ve boş bir adın yerinde `unnamed` yazar.
 
 Arama başladığında altında satır bulunan her satır genişletilmiş görünür. Daralttığınız ya da `Collapse All` düğmesinin daralttığı bir satır, altındaki bir eşleşme geçerli olana kadar veya arama metni, `Match Case`, `Match Whole Word`, `Use Regular Expression` ya da bir metin türü değişene kadar veya arama tuşla ya da bir `Toggle Explorer` öğesiyle yeniden açılana kadar daraltılmış kalır.  
 Geçerli eşleşmenin satırı vurgulanır ve görünür olacak şekilde kaydırılır. Ağaç, kaç tane olursa olsun her eşleşmeyi listeler.  
-Eşleşmeler arasında ağacın sırasıyla ilerlenir: tablo tablo, tablonun adı, açıklaması, sütun sırasıyla her sütununun adı ile açıklaması ve dizin adları; ardından tablo grubu adları; ardından notlar.
+Eşleşmeler arasında ağacın sırasıyla ilerlenir: tablo tablo, tablonun mantıksal adı, adı ve açıklaması, ardından sütun sırasıyla her sütununun mantıksal adı, adı ve açıklaması, ardından dizin adları; ardından tablo grubu adları; ardından notlar.
 
-Gezgin göründüğü sürece sonuçlar belgeyi izler. Düzenlemelere ara verildiğinde aranan metinlerdeki her değişiklik yeniden arama yapar ve geçerli eşleşme hâlâ oradaysa geçerli kalır. Buna bir adın, açıklamanın veya not metninin düzenlenmesi, bir tablonun, sütunun, dizinin, notun veya tablo grubunun eklenmesi ya da kaldırılması, bir sütunun taşınması ve notların veya tablo gruplarının Görünüm seçenekleriyle gizlenmesi ya da gösterilmesi dahildir. Sonuncusu bunların eşleşmelerini ağaçtan çıkarır veya geri getirir. Tuvaldeki bir düzenleme, geri alma veya yineleme, içe aktarma ve bir ortak çalışanın ya da kodlama ajanının yaptığı düzenleme, bunların hepsi sayılır. Seçim yapmak, tuvalde tabloları, notları veya grupları taşımak, kaydırmak, yakınlaştırmak ve üzerine gelmek sayılmaz.  
+Gezgin göründüğü sürece sonuçlar belgeyi izler. Düzenlemelere ara verildiğinde aranan metinlerdeki her değişiklik yeniden arama yapar ve geçerli eşleşme hâlâ oradaysa geçerli kalır. Buna bir adın, mantıksal adın, açıklamanın veya not metninin düzenlenmesi, bir tablonun, sütunun, dizinin, notun veya tablo grubunun eklenmesi ya da kaldırılması, bir sütunun taşınması ve notların veya tablo gruplarının Görünüm seçenekleriyle gizlenmesi ya da gösterilmesi dahildir. Sonuncusu bunların eşleşmelerini ağaçtan çıkarır veya geri getirir. Tuvaldeki bir düzenleme, geri alma veya yineleme, içe aktarma ve bir ortak çalışanın ya da kodlama ajanının yaptığı düzenleme, bunların hepsi sayılır. Seçim yapmak, tuvalde tabloları, notları veya grupları taşımak, kaydırmak, yakınlaştırmak ve üzerine gelmek sayılmaz.  
+Aramanın okuduğu hiçbir metni değiştirmeyen Ad görünümü değişikliği de sayılmaz: Aynı eşleşmeler kalır ve satırlar yeni görünümün gösterdiği adları alır.  
 Gezgin kapalıyken ya da görünmezken yapılan düzenlemeler, Gezgin yeniden göründüğü anda aranır.
 
 ## Eşleşmeye gitme {#going-to-a-match}
@@ -113,17 +116,17 @@ Hareket iki uçta da öbür uca döner. İlk kez bir eşleşmeye geçene kadar h
 
 Sonuçlardaki bir satıra tıklamak ya da klavye o satırdayken `Enter` veya `Space` tuşuna basmak şunlardan birini yapar:
 
-- Kendi adı eşleşme içeren bir satır, o addaki ilk eşleşmeye gider.
+- Kendi adı veya mantıksal adı eşleşme içeren bir satır, mantıksal addakiler addakilerden önce gelmek üzere ilk eşleşmesine gider.
 - Bir açıklamanın veya notun metin parçasını gösteren satır, o eşleşmeye gider.
-- Adı eşleşmeyen bir tablo ya da bir notun kendi satırı gibi diğer herhangi bir satır, satırın temsil ettiği öğeye gider ve geçerli eşleşmeyi olduğu gibi bırakır. [Bir satıra gitme](./explorer.md#going-to-a-row) bölümüne bakın.
+- Adı ve mantıksal adı eşleşmeyen bir tablo ya da bir notun kendi satırı gibi diğer herhangi bir satır, satırın temsil ettiği öğeye gider ve geçerli eşleşmeyi olduğu gibi bırakır. [Bir satıra gitme](./explorer.md#going-to-a-row) bölümüne bakın.
 - Bir klasör daraltılır veya genişletilir.
 
 Bir eşleşme her geçerli olduğunda ağaç, onun üstündeki daraltılmış satırları genişletir ve klavye odağını oraya taşır, böylece ağaçtaki ok tuşları oradan devam eder.
 
 Bir eşleşmeye gitmek, açıksa Tablo özelliklerini kapatır, ardından:
 
-- Tablo adı veya açıklaması ya da sütun adı veya açıklaması için tabloyu tek başına seçer, öne getirir ve odaktaki hücreyi eşleşmeyi içeren hücreye taşır. Bir [tablo görünüm seçeneğiyle](./table-related-functions.md#table-view-options) gizlenmiş bir açıklamadaki eşleşme, odaktaki hücreyi bunun yerine yanındaki ada taşır.
-- Dizin adı için dizinin tablosunu tek başına seçer ve öne getirir, odaktaki hücre zaten o tabloda değilse tablonun adına gelir. Dizin adları tuvalde çizilmez.
+- Bir tablonun veya sütunun adı, mantıksal adı ya da açıklaması için tabloyu tek başına seçer, öne getirir ve odaktaki hücreyi eşleşmeyi içeren hücreye taşır. Bir [tablo görünüm seçeneğiyle](./table-related-functions.md#table-view-options) gizlenmiş bir açıklamadaki eşleşme, odaktaki hücreyi bunun yerine yanındaki ada taşır. [Ad görünümü](./logical-names.md#name-view) ad veya mantıksal ad için hücre göstermediğinde odaktaki hücre onun yerine gösterilen hücreye gelir: `Physical Names` görünümünde ad, `Logical Names` görünümünde mantıksal ad.
+- Dizin adı için dizinin tablosunu tek başına seçer ve öne getirir, odaktaki hücre zaten o tabloda değilse tablonun adına, `Logical Names` ve `Both Names` görünümlerinde ise mantıksal adına gelir. Dizin adları tuvalde çizilmez.
 - Tablo grubu adı için grubu tek başına seçer ve tablolarıyla birlikte öne getirir.
 - Not için notu tek başına seçer ve öne getirir.
 
@@ -151,7 +154,7 @@ Bir tur sürerken, turun yeniden adlandırdığı bir tablo ya da tablo grubu a�
 
 `Replace All`, Değiştir alanında `Ctrl + Enter` (Windows/Linux) veya `⌘ + Enter` (Mac) tuşlarıyla ya da kendi düğmesiyle çalışır:
 
-- Açık olan metin türlerindeki her eşleşmeyi değiştirir ve diğer türlere dokunmaz. Varsayılan türlerle tabloları, sütunları, dizinleri ve tablo gruplarını yeniden adlandırır, açıklamalar ve notlar ise değişmeden kalır.
+- Açık olan metin türlerindeki her eşleşmeyi değiştirir ve diğer türlere dokunmaz. Bunun tek istisnası, değiştirilen bir mantıksal adın türettiği fiziksel adlardır: Bunları `Table names` ve `Column names` kapalıyken bile yazar, aşağıya bakın. Varsayılan türlerle tabloları, sütunları, dizinleri ve tablo gruplarını yeniden adlandırır, tabloların ve sütunların mantıksal adlarını da yeniden yazar, açıklamalar ve notlar ise değişmeden kalır.
 - Değiştirdiği her şey tek bir geri alma adımıdır. [Tek hareket, tek adım](./undo-redo.md#one-gesture-one-step) bölümüne bakın.
 - Sayaçta `Replaced N matches` yazar ve yalnızca metni gerçekten değişen eşleşmeler sayılır. Hiçbiri değişmediğinde, örneğin `(user)` normal ifadesi `$1` ile değiştirildiğinde, sayaçta `No changes` yazar ve geçmişe hiçbir şey kaydedilmez.
 - Ardından sonuçlar hiçbir eşleşme geçerli olmadan yeniden aranır, bu yüzden yeni metnin içerdiği eşleşmeler de listelenebilir.
@@ -171,8 +174,12 @@ Değiştir alanındaki metnin nasıl kullanıldığı:
   - Önceki hâliyle geri yazılan bir eşleşme hiç sayılmaz: `Match Case` kapalıyken `customer` metnini `Customer` ile değiştirmek `customer`, `Customer` ve `CUSTOMER` metinlerini oldukları gibi geri yazar ve hiçbiri sayılmaz.
 - Boş bir Değiştir alanı eşleşmeyi siler.
 
-Bir değiştirme, yeni tablo adını, açıklamayı, sütun adını veya not metnini kendiniz yazmak, dizini Tablo özelliklerinde yeniden adlandırmak ya da tablo grubunu yeniden adlandırmakla aynı olan sıradan bir düzenlemedir.  
+Bir değiştirme, yeni tablo adını, sütun adını, mantıksal adı, açıklamayı veya not metnini kendiniz yazmak, dizini Tablo özelliklerinde yeniden adlandırmak ya da tablo grubunu yeniden adlandırmakla aynı olan sıradan bir düzenlemedir.  
 Diğer her düzenleme gibi geçmişe kaydedilir, ortak çalışanlara ve kodlama ajanına ulaşır.
+
+Bu yüzden bir değiştirmenin yazdığı tablo veya sütun adı kendi yazdığınız bir ad olur ve daha sonra yazılan bir mantıksal ad, [Fiziksel adları yeniden türetme](./dictionary.md#derive-physical-names-again) işlemi adı yeniden sözlüklere bırakana kadar bu adı olduğu gibi bırakır. Bir değiştirmenin boş bıraktığı ad ise, temizlenen her ad gibi, sözlüklere geri döner. [Kendi yazdığınız adlar](./dictionary.md#names-of-your-own) bölümüne bakın.  
+Bir tablonun veya sütunun fiziksel adı boşken ya da kendisi türetilmişken, değiştirilen bir mantıksal ad, mantıksal ad hücresini yeni bir mantıksal adla kapatmanın yaptığı gibi fiziksel adı sözlüklerden türetir. [Fiziksel adları türetme](./dictionary.md#deriving-physical-names) bölümüne bakın. Bu durumda yeni mantıksal adı bir terim olan sütun, terimin değer alanını ve onunla birlikte değer alanının veri türünü de alır. Türettikleri, değiştirmenin geri alma adımına dahildir ve `Replaced N matches` içinde sayılmaz.  
+Tek bir `Replace All` aynı tablonun veya sütunun hem mantıksal adını hem de adını yeniden yazdığında, yazdığı ad yeni mantıksal adın türeteceği ada üstün gelir.
 
 ## Arama alanlarındaki tuşlar {#keys-in-the-search-fields}
 

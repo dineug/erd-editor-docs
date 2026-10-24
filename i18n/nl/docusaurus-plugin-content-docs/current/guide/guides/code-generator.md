@@ -1,5 +1,5 @@
 ---
-sidebar_position: 12
+sidebar_position: 13
 description: Genereer vanuit het diagram code voor tweeëntwintig doelen, kies in het optiepaneel de taal, de database, de naamnotatie en de aanhalingstekens, bekijk welke doelen de acties voor ON DELETE en ON UPDATE van een relatie schrijven en sla het resultaat op of kopieer het.
 ---
 
@@ -103,6 +103,10 @@ Bij elke notatie krijgt een naam die in de taal van het doel gereserveerd is, ee
 Ook `SeaORM` negeert ze: het geeft velden en modules namen in snake case, de vorm die SeaORM terugleest, en vermeldt de opgeslagen namen in `table_name` en, waar die afwijken, in `column_name`.  
 Voor deze vier doelen dimt het paneel beide lijsten, met de notitie `Not used by` eronder.
 
+Elk doel schrijft de fysieke namen, wat de [naamweergave](./logical-names.md#name-view) ook toont.  
+Geen enkel doel schrijft een logische naam, ook niet in een lege opmerking: dit tabblad heeft geen tegenhanger van [`Write logical names into empty comments`](./schema-sql.md#logical-names-as-comments) op het tabblad Schema SQL.  
+Evenmin schrijft een doel een domein: een kolom die aan een domein is gekoppeld, wordt geschreven met haar gegevenstype, zoals elke andere kolom.
+
 ## Database {#database}
 
 Gegevenstypen worden bepaald aan de hand van de geselecteerde database — zie [Databases](./table-related-functions.md#databases).  
@@ -132,5 +136,5 @@ Het bestand krijgt een naam zoals elke export, `<database name>-<timestamp>`, ge
 Het exportmenu heeft geen item voor de Codegenerator, en het tabblad `Code Generator` van Tabeleigenschappen kan geen bestand opslaan.
 
 Om de code te kopiëren, klik je op `Copy` onder aan het paneel, of houd je de aanwijzer boven de code en klik je rechtsboven op de kopieerknop, de enige manier in Tabeleigenschappen.  
-De melding `Copied!` met een vinkje bevestigt dit twee seconden lang. Als de browser of host het klembord weigert, verschijnt in plaats daarvan de melding `Couldn't copy to the clipboard` met een waarschuwingsteken. Opnieuw kopiëren vervangt de melding in plaats van er nog een toe te voegen.  
+De melding `Copied!` met een vinkje bevestigt dit twee seconden lang. Als de browser of host het klembord weigert, verschijnt in plaats daarvan de melding `Couldn't copy to the clipboard` met een waarschuwingsteken, vijf seconden lang. Opnieuw kopiëren vervangt de melding in plaats van er nog een toe te voegen.  
 De tekst is ook selecteerbaar, zodat je alleen het deel kunt overnemen dat je nodig hebt.

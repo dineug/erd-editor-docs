@@ -44,19 +44,26 @@ const sharedStore = editor.getSharedStore();
 
 编辑器所做的有些事情只留在该编辑器上。  
 把表、备注或表分组移到最前面（选中它们时就会这样）不会发送出去。  
-[Schema SQL](../../guide/guides/schema-sql.md) 标签页中 `Statements`、`Header` 和 `Tables` 的选择同样不会发送，它们属于做出这些选择的那个窗口。  
+[Schema SQL](../../guide/guides/schema-sql.md) 标签页中 `Statements`、`Header`、`Write logical names into empty comments`（从 `4.2.0` 起）和 `Tables` 的选择同样不会发送，它们属于做出这些选择的那个窗口。  
 从 `4.1.0` 起，[资源管理器](../../guide/guides/explorer.md)同样只留在其所在的编辑器上：它是否打开、宽度、折叠的行、键盘焦点所在的行、树的滚动位置，以及其搜索与选项，都不会发送出去。  
 跳转到外键时会[点亮](../../guide/guides/relationship-editing.md#reading-a-connector)其关系的连接线，这种点亮也不会发送出去。  
-滚动、缩放或标签页切换会发送出去，但永远不会移动其他用户的视图或标签页。这也包括从资源管理器跳转时造成的滚动，以及从其他标签页打开资源管理器时切换到 ERD 标签页。
+从 `4.2.0` 起，[Dictionary](../../guide/guides/dictionary.md) 标签页同样只留在其所在的编辑器上：显示的是哪个工作表，以及每个工作表的搜索、选中范围、滚动位置和列宽，都不会发送出去。它的编辑、排序和导入 CSV 则会发送出去。  
+滚动、缩放或标签页切换会发送出去，但永远不会移动其他用户的视图或标签页。这也包括从资源管理器跳转时造成的滚动、从其他标签页打开资源管理器时切换到 ERD 标签页，以及从 Dictionary 标签页的 [`Checks`](../../guide/guides/dictionary.md#the-checks-sheet) 工作表跳转到表或列时造成的标签页切换和滚动。从该工作表跳转到词根、术语或域时会停留在 Dictionary 标签页，因此不会发送任何内容。
+
+从 `4.2.0` 起，[名称显示](../../guide/guides/logical-names.md#switching-the-view)的切换也会发送出去，由其[锁定](../../guide/guides/settings.md#锁定)决定其他编辑器如何处理它。在新的图以及 `4.2.0` 之前的任何文档中，`Name View` 锁定都处于开启状态。  
+该锁定开启期间，切换只会显示在执行切换的编辑器上：它仍会发送出去，但其他每个编辑器和每个副本都会丢弃它，因此每位用户可以查看不同的显示方式，而 `value` 保留锁定的显示方式。语言、名称大小写或括号类型的更改则不同：无论其锁定是否开启，它都会到达每个编辑器。  
+该锁定关闭期间，在可编辑的编辑器中进行的切换会改变每个编辑器和副本上的名称显示，以最后一次切换为准，并且它们都会保存这一显示方式。  
+只读编辑器自身的切换始终只留在该编辑器上，而该编辑器仍会跟随其他编辑器共享的切换。
 
 [锁定](../../guide/guides/settings.md#锁定)是共享的：每个编辑器上都以对某项设置最后一次的锁定或解锁为准，而锁定会携带开启它的那个编辑器上的值，因此每个编辑器和副本保存的都是同一个值。  
 因此，`Viewport` 锁定保存的是开启它的那个编辑器的视图，`Canvas Type` 锁定保存的则是该编辑器在进入 Settings 标签页（锁定就在这里开启）之前所在的最后一个标签页。  
-关闭 `Language`、`Table Name Case`、`Column Name Case` 或 `Bracket Type` 锁定时，还会把每个编辑器上的该设置改为关闭它的那个编辑器上显示的值，因此它们保存的仍是同一个值。关闭 `Viewport` 或 `Canvas Type` 不会移动任何人的视图或标签页。
+关闭 `Language`、`Table Name Case`、`Column Name Case`、`Bracket Type` 或（从 `4.2.0` 起）`Name View` 锁定时，还会把每个编辑器上的该设置改为关闭它的那个编辑器上显示的值，因此它们保存的仍是同一个值。关闭 `Viewport` 或 `Canvas Type` 不会移动任何人的视图或标签页。
 
 对 `Before tables` 或 `After tables` 脚本的编辑，会在其输入框失去焦点时整体发送出去。两个脚本各自独立裁定结果，因此协作者对其中一个的编辑永远不会覆盖另一个。
 
 在 Visualization 标签页的 [Flow 模式](../../guide/guides/visualization.md#flow-never-edits-the-document)中所做的任何操作都不是文档变更，因此处于 Flow 中的编辑器不会向其他编辑器发送任何变更，而其他编辑器发来的变更在此期间仍会继续应用。  
-唯一的例外是离开 Flow 切换到其他标签页：这次标签页切换会像其他变更一样发送出去。  
+有两个例外。离开 Flow 切换到其他标签页是一次标签页切换，会像其他切换一样发送出去。从 `4.2.0` 起，在 Flow 工具栏的名称显示列表中做出的选择是一次名称显示切换，会像在画布上进行的切换一样发送和应用。  
+在 Flow 中用于[逐个切换视图](../../guide/guides/visualization.md#previous-table-and-next-table)的 `Previous table`、`Next table` 以及撤回与重做的快捷键不会发送出去。  
 外部链接卡片按钮、在 `#`、`@` 或 `:` 之后选中的[快速搜索](../../guide/guides/quick-search.md#searching-the-diagram)结果，以及打开[资源管理器](../../guide/guides/explorer.md#opening-and-closing)，都会离开 Flow 并切换到 ERD 标签页。卡片按钮或快速搜索结果在那里造成的滚动也会发送出去。
 
 ## 一个页面中的两个编辑器
@@ -99,6 +106,7 @@ const sharedStore2 = editor2.getSharedStore();
 
 运行时值仍保留着自文档打开以来被删除的内容，因此当另一个编辑器之后对一次删除执行 Undo 时，加入者会连同名称和列一起恢复该表。  
 [`value`](../erd-editor-element.md#value) 是文件所保存的形式，不含已删除的实体，因此用它或用文件载入初始文档的加入者，恢复出来的会是一个空的、没有名称的表。  
+从 `4.2.0` 起，从 [Dictionary](../../guide/guides/dictionary.md) 标签页的工作表中删除的词根、术语或域也是如此：当另一个编辑器对该删除执行 Undo 时，用 `runtimeValue` 载入初始文档的加入者会完整地重新列出该行，而用 `value` 载入初始文档的加入者则会列出一个空行，随后其自身的 `value` 会省略该行。  
 写入存储的仍应是 `value`：`runtimeValue` 只用于为另一个编辑器、第二个视图或 [replicationStore](./remote-storage.md) 载入初始文档。  
 VS Code、Obsidian、JetBrains IDE 与 Web 应用中的编辑器，就是这样为已打开文档的第二个视图载入初始文档的。
 
@@ -134,6 +142,31 @@ VS Code、Obsidian、JetBrains IDE 与 Web 应用中的编辑器，就是这样�
 `4.1.0` 编辑器不会发送任何新的操作类型，因此 `4.0.0` 和 `4.1.0` 的编辑器与副本可以共处同一会话，不会错过任何内容。  
 它的[查找与替换](../../guide/guides/find-and-replace.md#replacing)还会搜索索引名和表分组名称，`Replace` 和 `Replace All` 会通过 `4.0.0` 编辑器已经能够应用的 `index.changeName` 和 `tableGroup.changeName` 操作重命名它们。
 
+从 `4.2.0` 起，以下变更通过新的操作类型传递，原样传递操作的中继无需为此做任何额外处理：
+
+- 表或列的[逻辑名](../../guide/guides/logical-names.md)：`table.changeLogicalName` 和 `column.changeLogicalName`；其名称是否[由词典生成](../../guide/guides/dictionary.md#deriving-physical-names)：`table.changeNameDerived` 和 `column.changeNameDerived`；
+- 列关联到[域](../../guide/guides/dictionary.md#domains-and-data-types)或取消关联：`column.changeDomain`；
+- 在 [Dictionary](../../guide/guides/dictionary.md) 标签页中添加、更改（包括排序所设置的它在工作表中的位置）或删除词根、术语或域：`dictionary.add`、`dictionary.update` 和 `dictionary.remove`；
+- [名称显示](../../guide/guides/logical-names.md#switching-the-view)的切换：`settings.changeNameViewMode`。
+
+`Name View` 锁定通过已有的 `settings.changeLockSettings` 操作传递，`Domain` 显示选项通过 `settings.changeShow` 传递，在[列顺序](../../guide/guides/settings.md#adjusting-column-order)中移动 `Logical Name` 或 `Domain` 则通过 `settings.changeColumnOrder` 传递。  
+通过 `Import` 进行的 Schema SQL、GraphQL、DBML 或 AML 导入所发送的 `editor.clear` 和 `editor.loadJson` 带有 `keepDictionaries: true`，它会在每个编辑器上保留词根、术语和域。以替换方式调用的 [setSchemaSQL](../erd-editor-element.md#setschemasql)、`setSchemaGraphQL`、`setSchemaDBML` 或 `setSchemaAML` 所发送的这两个操作也是如此。  
+词典生成的物理名通过 `table.changeName` 或 `column.changeName` 传递，域赋予其列的数据类型则通过 `column.changeDataType` 传递，这些都是手动编辑时发送的操作。
+
+`4.2.0` 之前的编辑器会忽略这些新的操作类型：它没有逻辑名、域关联、词典或名称显示。开启或关闭 `Name View` 锁定在它那里不会产生任何效果，在列顺序中移动 `Logical Name` 或 `Domain`，或者把其他项移到这两者之一的位置上，也都不会产生任何效果。从 Dictionary 标签页进入 Settings 标签页的编辑器所开启的 `Canvas Type` 锁定同样如此：较旧的编辑器不认识该标签页，因此它会让 `Canvas Type` 保持未锁定状态。它仍会显示词典生成的物理名以及域所赋予的数据类型。  
+它自身的编辑对逻辑名、域和词典一无所知，并会对较新的编辑器产生以下影响：
+
+- 它手动重命名的表或列，其名称仍标记为由词典生成，因此之后在较新的编辑器上为其输入的逻辑名，可能会重新生成名称，覆盖它所输入的名称。
+- 它为关联到域的列设置数据类型时会保留该关联，因此 `Checks` 工作表会列出 `Domain type mismatch`，而该域下一次更改类型时，会再次让该列采用域的类型。
+- 它添加的关系的外键列不会从其对应的键获得逻辑名或域。
+- 它粘贴或创建副本的表到达时不带逻辑名或域关联。
+- 在它上面进行的 Schema SQL、GraphQL、DBML 或 AML 导入不会发送 `keepDictionaries`，因此会清空每个编辑器上的词根、术语和域。
+- 它对加载、导入或 `clear()` 执行的 Undo 会在每个编辑器上加载它自己持有的那份文档，而这份文档不含逻辑名、域关联或词典。
+- 这份文档，以及在它上面进行的 Schema SQL、GraphQL、DBML 或 AML 导入所加载的文档，还会把每个编辑器上的 `Name View` 锁定恢复为那个较旧的编辑器当初所见的状态。随后每个编辑器都会将 `Physical Names` 保存为名称显示，如果该锁定处于关闭状态，还会显示它。
+
+由它保存的文档不含逻辑名、域关联、词典或名称显示，因此 `4.2.0` 编辑器会以 `Physical Names` 打开它。不过，较旧的编辑器会按其所见的状态保存 `Name View` 锁定，因此在 `4.2.0` 编辑器中解锁的文档会保持解锁状态。  
+会话中的每个编辑器，以及存储该会话文档的任何 [replicationStore](./remote-storage.md#dispatch-dispatchsync)，都应使用 `4.2.0` 或更高版本。
+
 ## SharedStoreConfig
 
 ### getNickname
@@ -161,6 +194,7 @@ editor.getSharedStore({ mouseTracker: false });
 发送该用户正在处理的内容。默认值为 `true`。  
 获得焦点的表与单元格、选中的表、备注与表分组，以及在画布上拖动的选择框，都会发送到其他编辑器并绘制在那里。  
 每位用户都有各自的颜色，因此可以彼此区分：获得焦点的表带有外框线，获得焦点的单元格带有下划线，选中的表、备注与表分组带有环形边框，选择框则是虚线矩形。  
+从 `4.2.0` 起，在名称显示的锁定开启期间，或者在只读编辑器自行切换之后，每位用户看到的[名称显示](../../guide/guides/logical-names.md#collaborators)可能各不相同。如果获得焦点的单元格在你的显示方式中没有绘制，下划线会画在代替它绘制的单元格上：名称与逻辑名彼此替代，数据类型与域也是如此。  
 其他用户发来的状态信息始终会绘制在你的画布上，无论该选项是否开启。  
 在 Visualization 标签页的 Flow 模式中，其他用户的焦点与选中内容会绘制在表卡片上，但他们的选择框不会。你在那里选中的表仍会发送出去，而你在那里拖出的选择框则不会。
 

@@ -1,6 +1,6 @@
 ---
-sidebar_position: 6
-description: 관계 삭제, 관계 타입 변경, ON DELETE와 ON UPDATE 동작 설정, 컬럼 매핑으로 기존 컬럼에 관계 매핑, 연결선 읽기, N:M 관계와 식별 관계, 새 foreign key 컬럼의 이름이 정해지는 방식.
+sidebar_position: 7
+description: 관계 삭제, 관계 타입 변경, ON DELETE와 ON UPDATE 동작 설정, 컬럼 매핑으로 기존 컬럼에 관계 매핑, 연결선 읽기, N:M 관계와 식별 관계, 새 foreign key 컬럼이 키에서 복사하는 내용과 이름이 정해지는 방식.
 ---
 
 # 관계 편집
@@ -85,6 +85,9 @@ Code Generator의 ORM 대상이 어떤 동작을 작성하는지는 선택한 �
 
 대화 상자의 부제목에는 `users → posts · One N`처럼 두 테이블과 관계 타입이 표시됩니다. 타입은 여기에 표시만 되고 바뀌지 않으므로, [타입 변경](#타입-변경)을 사용하세요.
 
+대화 상자 전체에서 행 아래의 안내와 줄, 대화 상자가 닫힐 때 표시하는 토스트를 포함해, 테이블과 컬럼은 [이름 표시](./logical-names.md#beyond-the-canvas)가 정하는 대로 표시됩니다.  
+다음 세 가지는 물리적인 값 그대로 표시됩니다. 도메인의 이름이 아니라 항상 컬럼 자신의 것인 각 데이터 타입, 새 컬럼이 받을 이름을 보여 주는 `New column: <name>`, 그리고 `Map`이 논리명이 아닌 이름으로 짝지어 처음부터 채워 두는 행입니다.
+
 `References`는 관계가 가리킬 키를 고릅니다. 컬럼이 테이블 순서대로 놓인 `Primary Key`가 먼저 오고, 이어서 `Unique`로 지정된 컬럼마다 `Unique: <column>`이 옵니다. 선택지가 두 개 이상일 때만 표시됩니다.  
 여기서 unique 인덱스는 키로 치지 않으며, 그 자체로 primary key 전체인 `Unique` 컬럼은 두 번 나열되지 않습니다.  
 다른 키를 고르면 행이 다시 만들어집니다. 행에서 고른 컬럼은 그 컬럼이 자식 테이블에 남아 있는 동안 유지됩니다.
@@ -121,10 +124,10 @@ Code Generator의 ORM 대상이 어떤 동작을 작성하는지는 선택한 �
 `Map`과 `Save`가 기록하는 내용은 다음과 같습니다.
 
 - `Map`은 `On Delete`와 `On Update`가 `Not set`인 관계를 추가합니다. `Save`는 관계의 컬럼만 바꾸어 부모 쪽이 `References`에서 고른 키를 가리키게 하며, 타입과 ON DELETE, ON UPDATE는 그대로 유지합니다.
-- `New column` 행은 관계를 그릴 때처럼 자식 테이블 끝에 컬럼을 추가합니다. 이 컬럼은 `NOT NULL`이고, 키의 이름을 따라 이름이 정해지며, 키의 데이터 타입, 기본값, 코멘트를 가져옵니다. [식별 관계](#식별-관계) 항목을 참고하세요.
-- 고른 컬럼은 이름이 바뀌지 않으며, `Not Null`, primary key, `Unique`, 기본값, 코멘트도 그대로 유지됩니다. 데이터 타입은 `Relationship DataType Sync`가 켜져 있고 부모 컬럼에 데이터 타입이 있을 때만 바뀝니다. 이때 컬럼은 부모 컬럼이 foreign key에 주는 타입을 받으며, serial 키라면 새 컬럼과 마찬가지로 정수 타입을 받고, 변경은 동기화와 같은 방식으로 관계를 따라 이어집니다.
+- `New column` 행은 관계를 그릴 때처럼 자식 테이블 끝에 컬럼을 추가합니다. 이 컬럼은 `NOT NULL`이고, 키의 이름을 따라 이름이 정해지며, 키의 데이터 타입, 기본값, 코멘트, 논리명, 도메인을 가져옵니다. [식별 관계](#식별-관계) 항목을 참고하세요.
+- 고른 컬럼은 이름이 바뀌지 않고 키의 도메인에 연결되지도 않으며, `Not Null`, primary key, `Unique`, 기본값, 코멘트, 논리명도 그대로 유지됩니다. 데이터 타입은 `Relationship DataType Sync`가 켜져 있고 부모 컬럼에 데이터 타입이 있을 때만 바뀝니다. 이때 컬럼은 부모 컬럼이 foreign key에 주는 타입을 받으며, serial 키라면 새 컬럼과 마찬가지로 정수 타입을 받고, 변경은 동기화와 같은 방식으로 관계를 따라 이어집니다. 고른 컬럼이든 관계를 따라 이어진 컬럼이든, 변경으로 타입이 바뀌는 모든 컬럼은 새 타입이 도메인의 타입과 다르면 [도메인](./dictionary.md#domains-and-data-types)과의 연결이 해제됩니다.
 - 매핑이 더 이상 사용하지 않는 컬럼은 자식 테이블에 남으며, 다른 관계가 여전히 그 컬럼에서 끝나지 않는 한 foreign key 표시가 사라집니다.
-- `Map`이나 `Save` 한 번이 기록하는 모든 내용은 새 컬럼과 타입 변경을 포함해 Undo 한 단계입니다.
+- `Map`이나 `Save` 한 번이 기록하는 모든 내용은 새 컬럼, 타입 변경, 도메인 연결 해제를 포함해 Undo 한 단계입니다.
 
 관계가 식별 관계인지, 부모 쪽 끝이 어떻게 그려지는지는 다른 관계와 마찬가지로 매핑된 자식 컬럼으로 정해집니다. 자식 테이블의 primary key 컬럼에 매핑하면 곧바로 식별 관계가 되고, `NULL`을 허용하는 컬럼에 매핑하면 부모 쪽 끝에 고리가 표시됩니다. [연결선 읽기](#연결선-읽기) 항목을 참고하세요.  
 Schema SQL의 foreign key는 고른 키를 참조하며, `Unique` 키라면 `REFERENCES vehicle (vin)`과 같이 작성됩니다.
@@ -156,9 +159,10 @@ GraphQL, DBML, AML을 가져오면 매핑 테이블이 자동으로 생성됩니
 ## 식별 관계
 
 자식 테이블을 클릭하거나 `Create new columns`로 관계를 그리면 부모 테이블의 primary key가 각각 자식 테이블에 `NOT NULL` foreign key 컬럼으로 복사되므로, 새로 만든 관계는 비식별 관계로 시작합니다.  
-복사된 컬럼은 키의 데이터 타입, 기본값, 코멘트를 가져오지만 `Unique`와 `Auto Increment`는 가져오지 않으며, 이름은 [Foreign Key 컬럼 이름](#foreign-key-컬럼-이름) 항목에서 설명하는 대로 정해집니다.  
+복사된 컬럼은 키의 데이터 타입, 기본값, 코멘트, 논리명을 가져오지만 `Unique`와 `Auto Increment`는 가져오지 않으며, 이름은 [Foreign Key 컬럼 이름](#foreign-key-컬럼-이름) 항목에서 설명하는 대로 정해집니다.  
 serial 키는 데이터 타입의 예외로, 복사된 컬럼은 serial이 저장하는 정수 타입을 가져옵니다. 어느 데이터베이스에서든 `smallserial`과 `serial2`는 `smallint`, `serial4`는 `integer`, `bigserial`과 `serial8`은 `bigint`가 됩니다. 단독 `serial`은 PostgreSQL에서 `integer`, MySQL과 MariaDB에서 `bigint unsigned`가 되며, 그 밖의 데이터베이스에서는 `serial` 그대로입니다.  
 대소문자를 무시하고 타입 이름 전체가 일치할 때만 해당하므로 `serial(4)`는 작성된 그대로 복사됩니다. 대문자로 쓴 타입은 대문자가 되므로, PostgreSQL에서 `SERIAL`은 `INTEGER`가 됩니다. 저장된 다이어그램에서 이미 `serial` 타입인 foreign key 컬럼은 그 타입을 유지합니다.  
+복사된 컬럼은 키의 [도메인](./dictionary.md#domains-and-data-types)에도 연결됩니다. 단, 복사할 때 `Domains` 시트에 그 도메인이 있고 복사된 컬럼이 키의 데이터 타입을 유지해야 합니다. 따라서 정수 타입을 받는 serial 키의 복사본은 도메인을 연결하지 않지만, `serial` 그대로 유지되는 단독 `serial`의 복사본은 도메인을 연결합니다.  
 관계를 식별 관계로 만들려면 자식 테이블의 해당 foreign key 컬럼을 primary key로 지정합니다. 컬럼을 모두 선택하고 `Alt + K` (Windows/Linux) or `⌥ + K` (Mac)를 한 번 누르거나, 테이블 컨텍스트 메뉴에서 `Primary Key`를 선택합니다. 두 개 이상 선택된 동안에는 이 메뉴 항목이 `Primary Key on selected columns`로 표시됩니다. [Column Primary Key](./table-editing.md#column-primary-key) 문서를 참고하세요.
 
 ![Alt + K로 product_id를 primary key로 지정했다가 해제하며 연결선이 실선과 점선으로 바뀌는 모습](/img/demo-identifying-relationship.webp)
@@ -193,7 +197,10 @@ primary key가 없는 부모에 에디터가 추가하는 primary key도, 자식
 이름은 관계를 생성할 때 정해집니다. 나중에 부모 테이블이나 키의 이름을 바꿔도 foreign key 컬럼의 이름은 바뀌지 않습니다.  
 [컬럼 매핑](#컬럼-매핑)의 `New column` 행도 같은 규칙으로 이름이 정해지며, 고르기 전에 목록에서 각 이름을 확인할 수 있습니다.  
 가져오기, 붙여넣기, 복제, 또는 기존 컬럼을 짝짓는 컬럼 매핑처럼 컬럼이 이미 갖춰진 채로 들어오는 관계는 그 컬럼의 이름을 그대로 유지합니다.  
-코딩 에이전트가 `erd_add_relationship`으로 관계를 추가해도 같은 이름과 데이터 타입이 적용됩니다. [도구](../../mcp/tools.md#관계) 문서를 참고하세요.
+코딩 에이전트가 `erd_add_relationship`으로 관계를 추가해도 같은 이름, 데이터 타입, 논리명, 도메인이 적용됩니다. [도구](../../mcp/tools.md#관계) 문서를 참고하세요.
+
+foreign key 컬럼의 이름은 복사한 논리명이 아니라 항상 키의 이름을 따르며, 그 이름은 직접 입력한 이름으로 취급됩니다. 따라서 나중에 컬럼에 논리명을 입력해도 이름이 비어 있지 않으면 이름은 그대로 유지됩니다. [직접 입력한 이름](./dictionary.md#names-of-your-own) 문서를 참고하세요.  
+그래서 복사한 논리명이 다른 이름을 주는 용어와 일치하는 동안에는 `Checks` 시트에 이 컬럼이 [`Physical name mismatch`](./dictionary.md#what-each-check-finds)로 나열됩니다. 물리명을 다시 생성하면 사전이 주는 이름으로 컬럼 이름이 바뀝니다. 단, 대소문자를 무시하고 자식 테이블의 다른 컬럼이 이미 그 이름을 가지고 있으면 바뀌지 않습니다. [물리명 다시 생성](./dictionary.md#derive-physical-names-again) 문서를 참고하세요.
 
 ## 연결선 읽기
 

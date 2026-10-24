@@ -53,7 +53,8 @@ Okno VS Code obsługuje diagramy w folderach swojego obszaru roboczego oraz każ
 2. Otwórz folder projektu i zaufaj obszarowi roboczemu. Rozszerzenie obsługuje agentów tylko w zaufanym obszarze roboczym.
 3. Pozostaw włączone ustawienie `dineug.erd-editor.agentHub.enabled`. Jest ono domyślnie włączone.
 
-Rozszerzenie od wersji `3.0.0` do `3.1.0` i serwer `1.0.0` odrzucają się nawzajem, a rozszerzenie w wersji starszej niż `3.0.0` nie obsługuje agentów – zobacz sekcję [Aktualizacja](#updating).
+Rozszerzenie od wersji `3.0.0` do `3.1.0` i serwer w wersji `1.0.0` lub nowszej odrzucają się nawzajem, a rozszerzenie w wersji starszej niż `3.0.0` nie obsługuje agentów.
+Rozszerzenie w wersji `4.0.0` lub `4.1.0` łączy się z serwerem, ale ani nie wyświetla, ani nie zachowuje nazw logicznych, powiązań z domeną i wierszy słowników zapisywanych przez agenta – zobacz sekcję [Aktualizacja](#updating).
 
 Rozszerzenie uruchamia się w obszarze roboczym, który zawiera pliki `.erd`, `.erd.json`, `.vuerd` lub `.vuerd.json`, więc agent ma dostęp do tych diagramów, zanim którykolwiek otworzysz.
 W obszarze roboczym bez żadnego z nich uruchamia się, gdy otworzysz diagram, a do tego czasu agent wprowadza zmiany na dysku.
@@ -69,7 +70,8 @@ Okno sejfu aplikacji Obsidian obsługuje diagramy ze swojego sejfu.
 1. Zainstaluj [wtyczkę ERD Editor](https://community.obsidian.md/plugins/erd-editor) w wersji `1.0.0` lub nowszej z sekcji Community plugins i włącz ją. Działa ona tylko w aplikacji desktopowej i wymaga aplikacji Obsidian w wersji `1.5.7` lub nowszej.
 2. Pozostaw włączoną opcję Settings → ERD Editor → Coding agents. Jest ona domyślnie włączona, a każdy sejf przechowuje własne ustawienie.
 
-Wcześniejsza wersja wtyczki i serwer `1.0.0` odrzucają się nawzajem – zobacz sekcję [Aktualizacja](#updating).
+Wtyczka w wersji starszej niż `1.0.0` i serwer w wersji `1.0.0` lub nowszej odrzucają się nawzajem.
+Wtyczka w wersji `1.0.0` lub `1.1.0` łączy się z serwerem, ale ani nie wyświetla, ani nie zachowuje nazw logicznych, powiązań z domeną i wierszy słowników zapisywanych przez agenta – zobacz sekcję [Aktualizacja](#updating).
 
 Okno sejfu obsługuje agentów od chwili załadowania wtyczki, więc agent ma dostęp do diagramów sejfu, zanim którykolwiek otworzysz.
 Nie ma tu etapu nadawania zaufania.
@@ -95,7 +97,8 @@ IDE JetBrains obsługuje diagramy każdego otwartego w nim projektu oraz każdy 
 2. Otwórz projekt i zaufaj mu. W projekcie, któremu IDE nie ufa, na przykład otwartym w trybie bezpiecznym, agenci odczytują diagramy, ale nigdy ich nie zmieniają.
 3. Pozostaw zaznaczoną opcję Settings | Tools | ERD Editor → Coding agents. Jest ona domyślnie włączona i dotyczy całego IDE.
 
-Wtyczka w wersji `0.9.0` lub `0.10.0` i serwer `1.0.0` odrzucają się nawzajem, a wtyczka w wersji starszej niż `0.9.0` nie obsługuje agentów – zobacz sekcję [Aktualizacja](#updating).
+Wtyczka w wersji `0.9.0` lub `0.10.0` i serwer w wersji `1.0.0` lub nowszej odrzucają się nawzajem, a wtyczka w wersji starszej niż `0.9.0` nie obsługuje agentów.
+Wtyczka w wersji `1.0.0` lub `1.1.0` łączy się z serwerem, ale ani nie wyświetla, ani nie zachowuje nazw logicznych, powiązań z domeną i wierszy słowników zapisywanych przez agenta – zobacz sekcję [Aktualizacja](#updating).
 
 IDE obsługuje agentów od chwili otwarcia pierwszego projektu, więc agent ma dostęp do diagramów projektu, zanim którykolwiek otworzysz.
 
@@ -125,19 +128,26 @@ Przed połączeniem serwer sprawdza, którą wersją protokołu posługuje się 
 Gdy wersje się różnią, każde wywołanie, które dociera do tego edytora, jest odrzucane z kodem `protocolMismatch`, łącznie z odczytami i narzędziem `erd_list_documents`, i nic nie zostaje zapisane.
 Komunikat wskazuje stronę, którą należy zaktualizować: serwer albo ERD Editor w edytorze, czyli rozszerzenie w VS Code oraz wtyczkę w aplikacji Obsidian i w IDE JetBrains.
 
-Serwer `1.0.0`, rozszerzenie VS Code w wersji `4.0.0` lub nowszej, wtyczka Obsidian w wersji `1.0.0` lub nowszej oraz wtyczka JetBrains w wersji `1.0.0` lub nowszej posługują się protokołem w wersji 2.
+Serwer w wersji `1.0.0` lub nowszej, rozszerzenie VS Code w wersji `4.0.0` lub nowszej, wtyczka Obsidian w wersji `1.0.0` lub nowszej oraz wtyczka JetBrains w wersji `1.0.0` lub nowszej posługują się protokołem w wersji 2.
 Każdy wcześniejszy serwer posługuje się protokołem w wersji 1, podobnie jak każda wcześniejsza wersja edytora obsługująca agentów: rozszerzenie VS Code od wersji `3.0.0` do `3.1.0`, wtyczka Obsidian w wersjach `0.1.0` i `0.2.0` oraz wtyczka JetBrains w wersjach `0.9.0` i `0.10.0`.
-Taki edytor i serwer `1.0.0` odrzucają się nawzajem, podobnie jak wcześniejszy serwer i edytor posługujący się protokołem w wersji 2.
+Taki edytor i serwer w wersji `1.0.0` lub nowszej odrzucają się nawzajem, podobnie jak wcześniejszy serwer i edytor posługujący się protokołem w wersji 2.
 Rozszerzenie VS Code w wersji starszej niż `3.0.0` lub wtyczka JetBrains w wersji starszej niż `0.9.0` w ogóle nie obsługuje agentów, więc agent edytuje pliki na dysku, nawet diagram w nim otwarty.
 
 | Kombinacja | Koniec komunikatu |
 | --- | --- |
-| Serwer `1.0.0` z rozszerzeniem lub wtyczką posługującą się protokołem w wersji 1 | `Update the ERD Editor extension or plugin in the editor until its hub speaks protocol 2.` |
+| Serwer w wersji `1.0.0` lub nowszej z rozszerzeniem lub wtyczką posługującą się protokołem w wersji 1 | `Update the ERD Editor extension or plugin in the editor until its hub speaks protocol 2.` |
 | Wcześniejszy serwer z rozszerzeniem lub wtyczką posługującą się protokołem w wersji 2 | `Update the MCP server (npx -y @dineug/erd-editor-mcp@latest) until it speaks protocol 2.` |
 
 Aktualizuj serwer razem z rozszerzeniem lub wtyczką.
+Serwer i edytor posługujące się tym samym protokołem łączą się ze sobą niezależnie od tego, który z nich jest starszy, ale tylko serwer w wersji `1.1.0` lub nowszej ma narzędzia do nazw logicznych, domen i słowników – zobacz sekcję [Słowniki](./tools.md#dictionaries).
+Tylko rozszerzenie VS Code w wersji `4.2.0` lub nowszej oraz wtyczki Obsidian i JetBrains w wersji `1.2.0` lub nowszej wyświetlają i zachowują nazwy logiczne, powiązania z domeną i wiersze słowników zapisywane przez te narzędzia.
+Wcześniejsza wersja rozszerzenia lub wtyczki, która się łączy, ignoruje je, choć wywołanie agenta kończy się powodzeniem.
+Nadal stosuje jednak nazwy fizyczne generowane przez słowniki i typy danych nadawane przez domeny.
+Serwer w wersji starszej niż `1.1.0` odczytuje plik bez jego nazw logicznych, powiązań z domeną i wierszy słowników, a edytując plik na dysku, pomija je – zobacz sekcję [Headless](./live-and-headless.md#headless).
+
 Aktualizuj też ERD Editor wszędzie tam, gdzie otwiera się diagramy.
-Rozszerzenie VS Code w wersji starszej niż `4.0.0`, wtyczka Obsidian w wersji starszej niż `1.0.0` i wtyczka JetBrains w wersji starszej niż `1.0.0` wyświetlają bez ikon klucza podstawowego diagram, który zapisała nowsza wersja albo który agent edytował na dysku.
-Gdy zapisują plik, usuwają z niego grupy tabel i skrypty Schematu SQL.
+Rozszerzenie VS Code w wersji starszej niż `4.2.0`, wtyczka Obsidian w wersji starszej niż `1.2.0` i wtyczka JetBrains w wersji starszej niż `1.2.0` otwierają diagram, który zapisała nowsza wersja albo który agent edytował na dysku, bez nazw logicznych jego tabel i kolumn, powiązań jego kolumn z domenami oraz jego słów, terminów i domen.
+Gdy zapisują plik, pomijają je.
+Rozszerzenie VS Code w wersji starszej niż `4.0.0`, wtyczka Obsidian w wersji starszej niż `1.0.0` i wtyczka JetBrains w wersji starszej niż `1.0.0` wyświetlają też taki diagram bez ikon klucza podstawowego, a podczas zapisywania pliku usuwają z niego grupy tabel i skrypty Schematu SQL.
 Rozszerzenie VS Code w wersji starszej niż `3.1.0`, wtyczka Obsidian w wersji starszej niż `0.2.0` i wtyczka JetBrains w wersji starszej niż `0.10.0` podczas zapisywania pliku usuwają też z diagramu akcje ON DELETE i ON UPDATE.
 Po zaktualizowaniu wtyczki uruchom ponownie aplikację Obsidian: do tego czasu okno sejfu nadal uruchamia ERD Editor z tej wersji wtyczki, którą załadowało jako pierwszą.

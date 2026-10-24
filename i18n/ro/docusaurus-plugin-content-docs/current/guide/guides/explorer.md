@@ -1,5 +1,5 @@
 ---
-sidebar_position: 8
+sidebar_position: 9
 description: Parcurgeți tabelele diagramei, cu coloanele, indexurile și cheile lor străine, grupurile de tabele și notele ei într-un arbore andocat alături de pânza ERD și mergeți la oricare dintre ele cu un clic.
 ---
 
@@ -26,11 +26,11 @@ Deschideți exploratorul în oricare dintre aceste moduri:
 - Elementul `Toggle Explorer` din meniul contextual al pânzei: faceți clic dreapta pe un loc liber al pânzei ERD, în afara oricărui [grup de tabele](./table-groups.md). Se află după `New Table`, `New Memo` și `New Table Group`, înainte de `Relationship`.
 
 Cele două elemente `Toggle Explorer` afișează comanda rapidă în dreapta.  
-Butonul din bara de instrumente, comanda rapidă și elementul din căutarea rapidă funcționează din orice filă. Din fila Vizualizare, Schemă SQL, Generator de cod sau Setări, acestea trec mai întâi la fila ERD, deoarece exploratorul apare doar acolo.
+Butonul din bara de instrumente, comanda rapidă și elementul din căutarea rapidă funcționează din orice filă. Din fila Vizualizare, Schemă SQL, Generator de cod, Dicționar sau Setări, acestea trec mai întâi la fila ERD, deoarece exploratorul apare doar acolo.
 
 Butonul din bara de instrumente doar deschide și închide panoul. Nu pune cursorul de text în câmpul Găsire și lasă deschise panoul Proprietăți tabel, configuratorul de teme și selectorul `Display Language`.  
 Comanda rapidă și cele două elemente `Toggle Explorer` deschid exploratorul cu focusul pe căutare: cursorul de text ajunge în câmpul Găsire, cu textul acestuia selectat, iar oricare dintre cele cinci casete de dialog din [Casete de dialog alături de explorator](#dialogs-beside-it) se închide. Ce păstrează căutarea între deschideri este descris în [Deschiderea și închiderea](./find-and-replace.md#opening-and-closing) din Găsire și înlocuire.  
-Comanda rapidă nu are niciun efect cât timp se editează o celulă de tabel, o notă sau numele unui grup de tabele.
+Comanda rapidă nu are niciun efect cât timp se editează o celulă de tabel, o notă sau numele unui grup de tabele ori cât timp este deschisă editarea unei celule în fila [Dicționar](./dictionary.md#keys-on-the-tab), inclusiv lista domeniilor unui termen.
 
 Butonul din bara de instrumente apare apăsat cât timp exploratorul este deschis în fila ERD și nu este ascuns de [modul Zen](#when-it-stands-aside). Cât timp butonul apare apăsat, butonul, comanda rapidă și oricare dintre elementele `Toggle Explorer` închid exploratorul, iar focusul tastaturii, dacă se afla în panou, revine în editor.  
 Comanda rapidă nu îl închide niciodată cât timp este deschisă căutarea rapidă sau una dintre cele cinci casete de dialog. În schimb, închide paleta sau caseta de dialog și mută focusul tastaturii în câmpul Găsire, cu textul acestuia selectat și, dacă exploratorul era deja afișat, cu potrivirea curentă păstrată. Elementul `Toggle Explorer` din căutarea rapidă nu face o astfel de excepție: rularea lui închide paleta, apoi exploratorul, dacă este deschis.
@@ -84,22 +84,27 @@ Bara de titlu afișează `Explorer` și conține două butoane: `Collapse All` �
 
 Nivelul superior conține trei foldere, în această ordine: `Tables`, `Table Groups` și `Memos`. Sub fiecare tabel se află propriile sale foldere `Columns`, `Indexes` și `Foreign Keys`.  
 Un folder gol nu este afișat, astfel că o diagramă goală nu afișează niciun rând. Folderul `Table Groups` este omis și cât timp [View Option](./table-related-functions.md#table-view-options) → `Table Groups` ascunde grupurile, iar folderul `Memos`, cât timp View Option → `Memos` ascunde notele.  
-Un rând de folder afișează o pictogramă de folder, numele folderului și, la capătul opus, un contor al rândurilor aflate direct sub el, astfel că contorul de lângă `Tables` indică numărul de tabele din diagramă.
+Un rând de folder afișează o pictogramă de folder, numele folderului și, la capătul opus, un contor al rândurilor aflate direct sub el, astfel că contorul de lângă `Tables` indică numărul de tabele din diagramă. Contorul grupează miile așa cum o face limba de afișare, întotdeauna cu cifrele de la 0 la 9, de exemplu `1,234` în engleză și `1.234` în germană.
 
 Tabelele sunt listate după nume, indiferent de majuscule, iar tabelele cu același nume păstrează ordinea din document. Grupurile de tabele sunt listate la fel, ca și tabelele din fiecare grup. Coloanele unui tabel păstrează ordinea proprie a tabelului, iar indexurile, cheile străine și notele păstrează ordinea din document.  
-Arborele urmează diagrama pe măsură ce aceasta se modifică, fie printr-o editare pe pânză, o anulare sau o refacere ori un import, fie prin acțiunea unui colaborator sau a unui agent de programare, astfel că redenumirea unui tabel îi mută rândul.
+Arborele urmează diagrama pe măsură ce aceasta se modifică, fie printr-o editare pe pânză, o anulare sau o refacere ori un import, fie prin acțiunea unui colaborator sau a unui agent de programare, astfel că redenumirea unui tabel îi mută rândul.  
+Ordinea urmează numele în orice [mod de afișare a numelor](./logical-names.md#name-view), niciodată numele logic. Schimbarea modului de afișare reetichetează rândurile tabelelor și coloanelor fără să mute niciunul dintre ele, la fel ca atribuirea unui nume logic unui tabel sau unei coloane în modul `Logical Names` sau `Both Names`. Totuși, un nume fizic [derivat](./dictionary.md#deriving-physical-names) dintr-un nume logic nou este o redenumire ca oricare alta, așa că poate muta rândul unui tabel.
 
 Fiecare tip de rând afișează:
 
 - Un tabel: o pictogramă de tabel și numele tabelului.
-- O coloană: o pictogramă de cheie pentru o coloană cheie primară sau cheie străină, colorată așa cum celula de cheie a tabelului colorează o cheie primară, o cheie străină sau ambele, și o pictogramă de listă pentru orice altă coloană. Apoi numele coloanei și, cu text estompat, tipul de date urmat de `PK`, `FK` sau ambele, de exemplu `id` `BIGINT PK` sau `user_id` `BIGINT FK`.
+- O coloană: o pictogramă de cheie pentru o coloană cheie primară sau cheie străină, colorată așa cum celula de cheie a tabelului colorează o cheie primară, o cheie străină sau ambele, și o pictogramă de listă pentru orice altă coloană. Apoi numele coloanei și, cu text estompat, tipul de date urmat de `PK`, `FK` sau ambele, de exemplu `id` `BIGINT PK` sau `user_id` `BIGINT FK`. Tipul afișat este întotdeauna tipul de date al coloanei, niciodată [domeniul](./logical-names.md#the-domain-cell) ei, indiferent de modul de afișare a numelor.
 - Un index: o pictogramă de index și numele indexului. Apoi, cu text estompat, `UNIQUE` pentru un index unic și coloanele sale între paranteze, în ordinea din index, cu `DESC` după o coloană descendentă, de exemplu `orders_user_idx` `UNIQUE (user_id DESC, total)` sau doar `(total)`.
 - O cheie străină: listată doar sub tabelul copil, cel care conține coloanele cheie străină, și doar cât timp tabelul părinte se află în diagramă. Pictograma sa de cheie preia culoarea conectorului: culoarea cheii primare și a cheii străine pentru o [relație identificatoare](./relationship-editing.md#identifying-relationships), altfel culoarea cheii străine. Afișează coloanele cheie ale tabelului copil, separate prin virgulă, apoi, cu text estompat, `→` cu tabelul părinte și coloanele acestuia, de exemplu `user_id` `→ users(id)`.
 - Un grup de tabele: un punct în culoarea grupului, gri pentru un grup fără culoare, și numele grupului. Tabelele sale sunt listate sub el după nume și fiecare duce la tabelul său. Un grup fără tabele nu are nimic de extins.
 - O notă: o pictogramă de notă adezivă și prima linie a notei.
 
-Un nume gol sau o notă a cărei primă linie este goală apare ca `unnamed`, cu caractere cursive.  
-Într-un panou îngust, textul estompat este trunchiat cu `…` înainte ca numele să fie trunchiat. Treceți cu indicatorul peste un nume sau peste textul său estompat pentru a-l vedea complet.
+Rândurile tabelelor, tabelele listate sub un grup și rândurile coloanelor urmează modul de afișare a numelor (consultați [Dincolo de pânză](./logical-names.md#beyond-the-canvas)). În modul `Both Names`, de exemplu, un rând de coloană afișează `Total Amount` `total` `NUMERIC`: numele logic, apoi numele și tipul de date, ambele cu text estompat.  
+În orice mod de afișare, rândurile indexurilor și ale cheilor străine își afișează coloanele după nume, iar un rând de cheie străină își afișează și tabelul părinte după nume.  
+Cât timp câmpul Găsire conține text, un rând găsit doar în numele pe care modul său de afișare îl omite afișează și acel nume, cu text estompat (consultați [Rezultatele](./find-and-replace.md#the-results)).
+
+Un nume gol sau o notă a cărei primă linie este goală apare ca `unnamed`, cu caractere cursive. În modurile `Logical Names` și `Both Names`, un tabel sau o coloană apare ca `unnamed` doar când și numele logic este gol.  
+Într-un panou îngust, textul estompat este trunchiat cu `…` înainte ca numele cu care începe rândul să fie trunchiat. Treceți cu indicatorul peste un nume sau peste textul său estompat pentru a-l vedea complet.
 
 Inițial, doar folderul `Tables` este extins. Faceți clic pe un rând de folder sau apăsați `Enter` ori `Space` pe el pentru a-l restrânge sau a-l extinde.  
 Săgeata de la începutul unui rând restrânge sau extinde acel rând fără a face niciun salt. Fiecare rând de tabel are una, chiar și cel al unui tabel fără nimic sub el. Și tastele `→` și `←` restrâng și extind (consultați [Taste în explorator](#keys-in-the-explorer)).  
@@ -110,8 +115,8 @@ Editările, anularea și refacerea, precum și modificările făcute de colabora
 
 Faceți clic pe un rând sau apăsați `Enter` ori `Space` cu focusul tastaturii pe el pentru a merge la elementul pe care îl reprezintă pe pânza ERD. Un rând de folder doar se restrânge sau se extinde, iar tastele săgeți doar mută focusul în arbore.
 
-- Un rând de tabel sau un tabel listat sub un grup selectează doar acel tabel și îl aduce în prim-plan. Celula activă trece pe numele tabelului, cu excepția cazului în care se află deja în acel tabel.
-- Un rând de coloană selectează doar tabelul coloanei și pune celula activă pe numele coloanei.
+- Un rând de tabel sau un tabel listat sub un grup selectează doar acel tabel și îl aduce în prim-plan. Cu excepția cazului în care celula activă se află deja în acel tabel, aceasta trece pe prima celulă a antetului tabelului: numele sau, în modurile `Logical Names` și `Both Names`, numele logic.
+- Un rând de coloană selectează doar tabelul coloanei și pune celula activă pe numele coloanei sau, în modul `Logical Names`, pe numele logic desenat în locul lui.
 - Un rând de index selectează tabelul indexului, ca un rând de tabel. Indexul însuși nu este selectat separat; indexurile se editează în panoul [Proprietăți tabel](./table-related-functions.md#indexes).
 - Un rând de cheie străină aduce în câmpul vizual ambele tabele ale relației deodată sau tabelul copil atunci când cele două sunt prea departe unul de altul pentru a fi afișate împreună. Selectează doar tabelul copil, împreună cu coloanele lui cheie străină, cu celula activă pe prima dintre ele, și evidențiază conectorul relației (consultați [Citirea unui conector](./relationship-editing.md#reading-a-connector)).
 - Un rând de grup de tabele aduce în câmpul vizual chenarul grupului, orientându-se după bara de titlu, selectează doar grupul și îl aduce în prim-plan împreună cu tabelele sale.
@@ -119,7 +124,7 @@ Faceți clic pe un rând sau apăsați `Enter` ori `Space` cu focusul tastaturii
 
 Vizualizarea se mută după regula comună tuturor salturilor: nivelul de zoom nu se schimbă niciodată, iar pânza se derulează doar atunci când elementul la care mergeți nu este deja bine vizibil (consultați [Unde ajunge un salt](./table-related-functions.md#where-a-jump-lands)).  
 Saltul la un rând închide mai întâi panoul Proprietăți tabel, dacă este deschis, și nu începe și nu încheie niciodată o relație în curs de trasare.  
-Cât timp câmpul Găsire conține text, un rând al cărui nume conține o potrivire sau unul care afișează un fragment dintr-un comentariu sau dintr-o notă duce în schimb la acea potrivire (consultați [Salt la o potrivire](./find-and-replace.md#going-to-a-match)).
+Cât timp câmpul Găsire conține text, un rând al cărui nume sau nume logic conține o potrivire ori unul care afișează un fragment dintr-un comentariu sau dintr-o notă duce în schimb la prima sa potrivire (consultați [Salt la o potrivire](./find-and-replace.md#going-to-a-match)).
 
 După un clic, focusul tastaturii rămâne în arbore, astfel că tastele `Delete`, `Backspace` și celelalte taste de editare nu ajung la noua selecție până când nu apăsați `Escape` sau nu faceți clic pe pânză (consultați [Taste în explorator](#keys-in-the-explorer)).
 

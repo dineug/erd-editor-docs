@@ -1,5 +1,5 @@
 ---
-sidebar_position: 5
+sidebar_position: 6
 description: Reúne tablas relacionadas en un recuadro con nombre y color dibujado detrás de ellas; crea grupos, dales nombre y color, muévelos, cambia su tamaño y elimínalos, ve a ellos desde el explorador, cambia qué tablas contienen, ocúltalos y mantenlos en la disposición automática, el Esquema SQL y DBML.
 ---
 

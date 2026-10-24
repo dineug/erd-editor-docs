@@ -13,9 +13,9 @@ Lo que encuentra el servidor decide adónde va la edición.
 | Qué encuentra | Qué hace una edición |
 | --- | --- |
 | Un editor cuya área de trabajo, bóveda o proyecto abierto contiene el documento, o que lo tiene abierto | **En vivo.** Abre el documento en el ERD Editor si hace falta, se une a la sesión de edición y aplica allí el cambio. Las ediciones aparecen al instante y se guardan como el editor guarda las tuyas; consulta [Guardar](#saving). |
-| Ningún editor | **Headless.** Carga el archivo, aplica el cambio y reemplaza el archivo. `erd_save` no tiene nada que hacer. |
+| Ningún editor | **Headless.** Carga el archivo, aplica el cambio y reemplaza el archivo antes de responder, así que el resultado indica `saved: true` y `erd_save` no tiene nada que hacer. |
 | Un editor con el hub desactivado | **Rechazado.** Las lecturas siguen funcionando, desde el disco. Un cambio escrito en el archivo a espaldas de un editor abierto podría quedar sobrescrito en su siguiente guardado, así que el servidor no escribe nada. |
-| Un editor cuyo hub está activado pero habla un protocolo distinto del que usa el servidor: con el servidor `1.0.0`, una extensión de VS Code `3.x`, un plugin de Obsidian `0.x` o un plugin de JetBrains `0.9.0` o `0.10.0`; con un servidor anterior a la `1.0.0`, la extensión `4.0.0` o posterior, o un plugin `1.0.0` o posterior | **Rechazado**, lecturas incluidas, con `protocolMismatch`. El mensaje indica qué lado hay que actualizar: la extensión o el plugin, o el servidor; consulta [Actualizar](./installation.md#updating). |
+| Un editor cuyo hub está activado pero habla un protocolo distinto del que usa el servidor: con el servidor `1.0.0` o posterior, una extensión de VS Code `3.x`, un plugin de Obsidian `0.x` o un plugin de JetBrains `0.9.0` o `0.10.0`; con un servidor anterior a la `1.0.0`, la extensión `4.0.0` o posterior, o un plugin `1.0.0` o posterior | **Rechazado**, lecturas incluidas, con `protocolMismatch`. El mensaje indica qué lado hay que actualizar: la extensión o el plugin, o el servidor; consulta [Actualizar](./installation.md#updating). |
 | En Windows, un editor que tiene el documento con otra ruta al mismo archivo: el agente lo indicó mediante un recurso compartido de red o una unidad asignada de este ordenador, como `\\localhost\C$\…`, y el editor lo tiene por su ruta de unidad, o al revés | **Rechazado**, lecturas incluidas, con `invalidPath`. El mensaje indica la ruta con la que el editor tiene el documento; vuelve a llamar con esa ruta. |
 | En Windows, un editor al que Windows no deja acceder al agente: uno iniciado como administrador cuando el agente no se inició así, o cualquier editor cuando el agente se ejecuta en un entorno aislado | **Rechazado**, lecturas incluidas, con `hubUnreachable` y un mensaje que explica el motivo. Ejecuta el editor y el agente con los mismos privilegios, por ejemplo, volviendo a iniciar el editor sin privilegios de administrador. |
 
@@ -35,6 +35,8 @@ Sus ediciones llegan al instante a todos los editores que tienen abierto el docu
 
 Una lectura nunca abre un editor. Una edición abre el documento en el ERD Editor cuando aún no está abierto, sin tomar el foco del teclado.
 
+Un editor con una extensión de VS Code anterior a la `4.2.0`, o con un plugin de Obsidian o de JetBrains anterior a la `1.2.0`, sigue recibiendo en vivo las ediciones del agente, pero no muestra ni conserva los nombres lógicos, los vínculos con dominios ni las filas de los diccionarios que escribe el agente; consulta [Actualizar](./installation.md#updating).
+
 ### Guardar {#saving}
 
 Cada editor guarda las ediciones del agente igual que guarda las tuyas.
@@ -51,7 +53,7 @@ En ambos, `erd_save` las escribe de inmediato.
 Se rechaza con `notSaved` cuando el editor no pudo confirmarlo o no escribió el archivo: VS Code deja una pestaña sin guardar cuando el archivo ha cambiado en disco, y un IDE de JetBrains no ha podido escribirlo, por ejemplo, mientras había un cuadro de diálogo abierto o cuando no se puede escribir en el archivo.
 
 En VS Code y en un IDE de JetBrains, `erd_save` sobre un documento sin nada pendiente de guardar tiene éxito y deja el archivo tal como está.
-Es el caso una vez guardadas todas las ediciones, cosa que un IDE de JetBrains hace por sí solo, y sigue siéndolo mientras cada cambio posterior sea uno que un [bloqueo](../guide/guides/settings.md#lock) mantiene fuera del archivo, como desplazar o hacer zoom con `Viewport` bloqueado, o cambiar de pestaña con `Canvas Type` bloqueado. Todos los bloqueos están activados de forma predeterminada.
+Es el caso una vez guardadas todas las ediciones, cosa que un IDE de JetBrains hace por sí solo, y sigue siéndolo mientras cada cambio posterior sea uno que un [bloqueo](../guide/guides/settings.md#lock) mantiene fuera del archivo, como desplazar o hacer zoom con `Viewport` bloqueado, cambiar de pestaña con `Canvas Type` bloqueado o cambiar la [vista de nombres](../guide/guides/logical-names.md#name-view) con `Name View` bloqueado. Todos los bloqueos están activados de forma predeterminada.
 Un archivo en el que un IDE de JetBrains no puede escribir se rechaza incluso entonces.
 
 Cuando el editor cierra el documento después de la última edición del agente, la siguiente llamada del agente incluye una nota que indica que esas ediciones solo están en el archivo si se guardaron antes de que se cerrara el editor.
@@ -63,7 +65,7 @@ La acción [Deshacer](../guide/guides/undo-redo.md) del propio editor funciona a
 
 Algunas ediciones no crean ninguna entrada de deshacer en el editor: `erd_set_database` y `erd_set_database_name`, entre las [herramientas de ajustes](./tools.md#settings), y `erd_resize_memo`.
 Tampoco la crea un `erd_move_table_group` que mueve el grupo menos de 20 píxeles en total, sumando el desplazamiento horizontal y el vertical, aunque el grupo se queda donde se movió.
-Una llamada que no cambia nada tampoco crea ninguna: `erd_set_column_primary_key`, `erd_set_column_unique`, `erd_set_column_not_null`, `erd_set_column_auto_increment`, `erd_set_index_unique` o `erd_set_index_column_order` cuando establecen un valor que el documento ya tiene; `erd_add_index_column` con una columna que ya está en el índice; `erd_set_table_group` con tablas que ya están en ese grupo (o que ya están sin grupo, con `groupId` `null`); `erd_move_table_group` al punto donde ya está el grupo; `erd_resize_table_group` al rectángulo que ya tiene el grupo; `erd_sort_tables` en un documento sin tablas; o una importación con `mode` `append` que no aporta ninguna tabla (en el caso de `erd_import_json`, ninguna tabla y ninguna nota).
+Una llamada que no cambia nada tampoco crea ninguna: `erd_set_column_primary_key`, `erd_set_column_unique`, `erd_set_column_not_null`, `erd_set_column_auto_increment`, `erd_set_index_unique` o `erd_set_index_column_order` cuando establecen un valor que el documento ya tiene; `erd_add_index_column` con una columna que ya está en el índice; `erd_set_table_group` con tablas que ya están en ese grupo (o que ya están sin grupo, con `groupId` `null`); `erd_move_table_group` al punto donde ya está el grupo; `erd_resize_table_group` al rectángulo que ya tiene el grupo; `erd_sort_tables` en un documento sin tablas; `erd_set_table_logical_name` o `erd_set_column_logical_name` con el nombre lógico que ya tiene la tabla o la columna, cuando derivar a partir de él no cambiaría nada; `erd_set_column_domain` con el dominio al que ya está vinculada la columna, cuando la columna ya tiene el tipo de ese dominio y [Sincronizar el tipo de datos en las relaciones](../guide/guides/settings.md#relationship-datatype-sync) no cambiaría el tipo de ninguna columna a lo largo de sus relaciones; `erd_update_word`, `erd_update_term` o `erd_update_domain` solo con valores que la fila ya tiene, salvo que a un término sin nombre físico se le pase su `name` y sus palabras compongan uno; `erd_derive_physical_names` cuando cada nombre que abarca y que tiene un nombre lógico ya contiene lo que le dan los [diccionarios](./tools.md#dictionaries) y está marcado como derivado; o una importación con `mode` `append` que no aporta ninguna tabla (en el caso de `erd_import_json`, ninguna tabla y ninguna nota).
 `erd_undo` las omite y las indica en su resultado.
 Otras ediciones, como `erd_change_relationship_type`, `erd_change_relationship_on_delete`, `erd_change_relationship_on_update`, `erd_change_table_group_name`, `erd_change_table_group_color` y `erd_set_ddl_script`, crean una entrada incluso cuando establecen un valor que el documento ya tiene.
 
@@ -91,7 +93,7 @@ Una lectura que no puede conectarse al hub de un editor se rechaza con `hubUnrea
 
 ## Headless {#headless}
 
-Sin ningún editor que sirva el documento, cada edición carga el archivo, aplica el cambio y vuelve a escribir el archivo.
+Sin ningún editor que sirva el documento, cada edición carga el archivo, aplica el cambio y vuelve a escribir el archivo antes de responder, así que su resultado indica `saved: true`; consulta [Resultados](./tools.md#results).
 La escritura va a un archivo temporal junto al documento, llamado `.<name>.<id>.tmp`, que luego lo reemplaza, de modo que el documento nunca queda escrito a medias, salvo en Windows, en el caso de escritura en el propio archivo que se describe más abajo.
 
 Antes de ese último paso, el servidor comprueba si el archivo cambió en disco durante la llamada.
@@ -107,6 +109,8 @@ En Windows se aplican dos reglas más:
 
 - Un documento con permisos propios, distintos de los de su carpeta, se escribe en el propio archivo en lugar de reemplazarse, para que los conserve, y el archivo temporal se elimina después. Un programa que lea el documento durante esa escritura puede encontrar texto que no se puede analizar.
 - Un archivo que otro programa tiene abierto no se puede reemplazar, así que el servidor lo vuelve a intentar durante un máximo de dos segundos. Cada intento vuelve a buscar primero un editor, y un editor que haya empezado a servir el documento entretanto rechaza la escritura con `hubAppeared`, o con `blocked` cuando tiene el hub desactivado. Si otro programa sigue teniendo abierto el archivo al cabo de dos segundos, no se escribe nada, el archivo se vuelve a cargar y la llamada falla con un mensaje que cita el error del sistema.
+
+Un servidor anterior a la `1.1.0` lee un documento sin sus nombres lógicos, sin los vínculos con dominios de sus columnas y sin sus palabras, términos y dominios, así que la primera edición que escribe en el archivo los omite. Actualiza el servidor; consulta [Actualizar](./installation.md#updating).
 
 ## Rechazado {#refused}
 
@@ -130,7 +134,7 @@ Una extensión de VS Code anterior a la `3.0.0` y un plugin de JetBrains anterio
 
 Un documento se indica por su `path`, absoluto o relativo al directorio de trabajo del servidor.
 
-- Los documentos nuevos son `.erd.json`. `erd_open_document` con `create` crea el archivo y añade `.erd.json` a un nombre que no tiene extensión. Como un diagrama nuevo en el editor, el documento nuevo tiene todos los [bloqueos](../guide/guides/settings.md#lock) activados, así que desplazar, hacer zoom, cambiar de pestaña o elegir otro lenguaje del Generador de código, estilo de nombres o tipo de delimitador en un editor nunca cambia el archivo. Ninguna herramienta activa ni desactiva un bloqueo concreto: eso lo haces tú en la pestaña Configuración del editor. `erd_import_json` en modo `replace` los reemplaza todos por los del documento que carga; consulta [Importación](./tools.md#import).
+- Los documentos nuevos son `.erd.json`. `erd_open_document` con `create` crea el archivo y añade `.erd.json` a un nombre que no tiene extensión. Como un diagrama nuevo en el editor, el documento nuevo tiene todos los [bloqueos](../guide/guides/settings.md#lock) activados, así que desplazar, hacer zoom, cambiar de pestaña, cambiar la vista de nombres o elegir otro lenguaje del Generador de código, estilo de nombres o tipo de delimitador en un editor nunca cambia el archivo. Ninguna herramienta activa ni desactiva un bloqueo concreto: eso lo haces tú en la pestaña Configuración del editor. `erd_import_json` en modo `replace` los reemplaza todos por los del documento que carga; consulta [Importación](./tools.md#import).
 - También se abren los archivos `.erd`, `.vuerd` y `.vuerd.json` existentes. Una ruta con cualquier otra extensión se rechaza con `invalidPath`.
 - En Windows, una ruta que contiene un nombre que Windows no almacena tal como está escrito se rechaza con `invalidPath` antes de leer o escribir el documento, lecturas incluidas: un nombre con dos puntos u otro carácter que Windows rechaza, como `orders:v2.erd`; un nombre de dispositivo como `NUL.erd` o `CON.erd`, con cualquier combinación de mayúsculas y minúsculas; o un nombre que termina en punto o en espacio. Cámbiale el nombre, por ejemplo, con `-` en lugar de `:`.
 - Un archivo que no es un documento que el editor pueda leer, como uno que haya quedado con marcadores de conflicto de fusión, se rechaza con `invalidDocument` y se deja tal como está. Nunca se carga como un diagrama vacío ni se vuelve a escribir.

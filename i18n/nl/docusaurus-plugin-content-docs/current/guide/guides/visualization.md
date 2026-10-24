@@ -1,6 +1,6 @@
 ---
-sidebar_position: 10
-description: Verken het schema als krachtgerichte graaf of als stroomweergave van tabelkaarten — zoom en pan, laat de gerelateerde tabellen van een tabel oplichten en focus op een paar tabellen tegelijk.
+sidebar_position: 11
+description: Verken het schema als krachtgerichte graaf of als stroomweergave van tabelkaarten — zoom en pan, laat de gerelateerde tabellen van een tabel oplichten, focus op een paar tabellen tegelijk en ga stap voor stap terug door eerdere focussen.
 ---
 
 # Visualisatie
@@ -21,15 +21,17 @@ Een net geopende editor begint in `Graph`. De modus die je kiest, blijft behoude
 Een werkbalk zweeft in het midden van de onderrand van het tabblad. Van links naar rechts:
 
 - `Graph` en `Flow`, waarbij de huidige modus gemarkeerd is.
+- `Previous table` en `Next table`, alleen in `Flow`: een pijl naar links en een pijl naar rechts die een stap terug en vooruit gaan door de tabellen waartoe de stroomweergave is beperkt — zie [Vorige en volgende tabel](#previous-table-and-next-table). Elke pijl is gedimd zolang er in die richting niets is om naartoe te gaan.
 - `Zoom out`, het huidige zoomniveau als percentage, zoals `100%`, en `Zoom in`. Elke druk verandert het zoomniveau met 4 procentpunten, waarbij het midden van het scherm op zijn plaats blijft. Het percentage toont het zoomniveau van de modus waarin je bent, en een klik erop zet dat zoomniveau terug op `100%`.
 - `Fit`, dat alles wat de modus toont in beeld brengt: elke knoop in `Graph`, elke kaart in `Flow`.
 - `Tidy Up`, alleen in `Flow`, dat de kaarten opnieuw indeelt — zie [Hoe de stroomweergave wordt ingedeeld](#how-flow-is-placed).
 - Het menu voor de rijweergave, alleen in `Flow`, met de huidige keuze als label — zie [Rijweergave](#row-display).
+- De lijst `Name View`, alleen in `Flow`, met de weergave die van kracht is als label — zie [Namen op de kaarten](#names-on-the-cards).
 - `Show all`, alleen in `Flow` en alleen zolang de weergave beperkt is, dat teruggaat naar het hele diagram — zie [Focussen op tabellen](#focusing-on-tables).
 - Het kompas `Go to content`, dat alleen aan het einde van de werkbalk verschijnt zolang er geen knoop of kaart op het scherm staat. Het toont een pijl die naar de dichtstbijzijnde knoop of kaart wijst en hoe ver die weg is, zoals `1.2k`. Klik erop om die knoop of kaart te centreren zonder het zoomniveau te wijzigen.
 
-De zoomknoppen noemen hun sneltoetsen in hun knopinfo, bijvoorbeeld `Zoom in (Ctrl + Plus)` (Windows/Linux) of `Zoom in (⌘ + Plus)` (Mac).  
-`Ctrl + Plus` en `Ctrl + Minus` (Windows/Linux) of `⌘ + Plus` en `⌘ + Minus` (Mac) wijzigen het zoomniveau stapsgewijs zoals de knoppen, in beide modi, en `Ctrl + 0` (Windows/Linux) of `⌘ + 0` (Mac) gaat direct terug naar `100%`.  
+De zoomknoppen en de twee pijlen noemen hun sneltoetsen in hun knopinfo, bijvoorbeeld `Zoom in (Ctrl + Plus)` (Windows/Linux) of `Zoom in (⌘ + Plus)` (Mac), en `Previous table (Ctrl + Z)` (Windows/Linux) of `Previous table (⌘ + Z)` (Mac).  
+`Ctrl + Plus` en `Ctrl + Minus` (Windows/Linux) of `⌘ + Plus` en `⌘ + Minus` (Mac) wijzigen het zoomniveau stapsgewijs zoals de knoppen, in beide modi, en `Ctrl + 0` (Windows/Linux) of `⌘ + 0` (Mac) gaat direct terug naar `100%`. In `Flow` gaan `Ctrl + Z` en `Ctrl + Shift + Z` (Windows/Linux) of `⌘ + Z` en `⌘ + Shift + Z` (Mac) een stap terug en vooruit zoals de twee pijlen.  
 Een klik op het percentage doet hetzelfde als `Ctrl + 0` (Windows/Linux) of `⌘ + 0` (Mac), en de knopinfo ervan noemt die sneltoets. De sneltoetsen doen niets zolang het palet Snel zoeken open is.
 
 ## Graafmodus {#graph-mode}
@@ -44,7 +46,8 @@ Elke tabel en elke kolom is een knoop, en de twee soorten worden in verschillend
 Elke kolomknoop is verbonden met de tabel waartoe hij behoort, en twee tabellen met een relatie ertussen zijn met elkaar verbonden.  
 Tabellen met meer dan één relatie in dezelfde richting ertussen worden maar één keer verbonden, en een relatie die op dezelfde tabel begint en eindigt, tekent geen verbinding.
 
-Tabelnamen verschijnen op de graaf wanneer je inzoomt, waarbij ze tussen `50%` en `100%` geleidelijk in beeld komen, en een naam van meer dan 15 tekens wordt afgekapt. Kolomknopen hebben bij geen enkel zoomniveau een label.
+Tabelnamen verschijnen op de graaf wanneer je inzoomt, waarbij ze tussen `50%` en `100%` geleidelijk in beeld komen, en een naam van meer dan 15 tekens wordt afgekapt. Kolomknopen hebben bij geen enkel zoomniveau een label.  
+De labels volgen de naamweergave — zie [Buiten het canvas](./logical-names.md#beyond-the-canvas). In de weergave `Both Names` zet een label de logische naam op de ene regel en de naam op de regel daaronder, en wordt elke regel afzonderlijk afgekapt.
 
 ### Navigeren in de graaf {#getting-around-the-graph}
 
@@ -59,9 +62,9 @@ De zoomknoppen op de [werkbalk](#toolbar) en de sneltoetsen voor zoomen houden i
 Houd de aanwijzer boven een tabelknoop om naast de cursor een voorbeeld van die tabel te zien.  
 Als je de aanwijzer boven een kolomknoop houdt, wordt er alleen een ring omheen getekend; er opent geen voorbeeld.
 
-Het voorbeeld toont dezelfde kolommen als het ERD-canvas, in dezelfde volgorde — zie [Weergaveopties voor tabellen](./table-related-functions.md#table-view-options) en [Kolomvolgorde aanpassen](./settings.md#adjusting-column-order).  
+Het voorbeeld toont dezelfde kolommen en cellen als het ERD-canvas, in dezelfde volgorde, en benoemt ze zoals het canvas dat doet in de naamweergave waarin je bent — zie [Weergaveopties voor tabellen](./table-related-functions.md#table-view-options), [Kolomvolgorde aanpassen](./settings.md#adjusting-column-order) en [Naamweergave](./logical-names.md#name-view).  
 Als de weergaveoptie `Alternate Key` aanstaat, draagt elke kolom van een [alternatieve sleutel](./table-related-functions.md#alternate-keys) haar markering, zoals `AK1.1`, als laatste in haar rij, en wordt het voorbeeld daarvoor breder, net als de tabel op het ERD-canvas.  
-Anders dan bij een tabel op het ERD-canvas neemt de kop van het voorbeeld nooit de kleur van de [groep](./table-groups.md#coloring-a-group) van de tabel over.  
+Anders dan bij een tabel op het ERD-canvas neemt de kop van het voorbeeld nooit de kleur van de [groep](./table-groups.md#coloring-a-group) van de tabel over, en dragen de namen ervan nooit de [markeringen](./dictionary.md#marks-on-the-canvas) die de controles van het woordenboek op het canvas aanbrengen.  
 Het voorbeeld dient alleen ter weergave en wordt verborgen terwijl je een knoop sleept of pant.
 
 ### Een omgeving markeren {#highlighting-a-neighbourhood}
@@ -86,7 +89,7 @@ Overschakelen van `Flow` naar `Graph` bouwt de graaf ook opnieuw op, en elke nie
 Tekent elke tabel als een kaart en deelt de kaarten in langs hun relaties. Memo's en [tabelgroepen](./table-groups.md) worden niet getekend.  
 Dit is niet de indeling `Flow` van [Automatische indeling](./table-related-functions.md#auto-layout), die de tabellen op het ERD-tabblad zelf verplaatst.
 
-Elke kaart wordt getekend als een tabel op het ERD-tabblad: de kleur van de tabel langs de linkerrand, een kopbalk met een tabelpictogram en de tabelnaam, en daarna de rijen die haar [rijweergave](#row-display) voorschrijft. Anders dan een tabel op het ERD-tabblad tekent een kaart ook een lijn tussen haar rijen, en neemt haar kop nooit de kleur van de [groep](./table-groups.md#coloring-a-group) van de tabel over. Kaarten behouden dat uiterlijk bij elk zoomniveau en klappen nooit in tot hun naam, zoals tabellen op het ERD-tabblad bij `70%` en lager doen. Niets op een kaart kan worden bewerkt.
+Elke kaart wordt getekend als een tabel op het ERD-tabblad: de kleur van de tabel langs de linkerrand, een kopbalk met een tabelpictogram en de namen van de tabel zoals de [naamweergave](#names-on-the-cards) ze toont, en daarna de rijen die haar [rijweergave](#row-display) voorschrijft. Anders dan een tabel op het ERD-tabblad tekent een kaart ook een lijn tussen haar rijen, en neemt haar kop nooit de kleur van de [groep](./table-groups.md#coloring-a-group) van de tabel over. Kaarten behouden dat uiterlijk bij elk zoomniveau en klappen nooit in tot hun naam, zoals tabellen op het ERD-tabblad bij `70%` en lager doen. Niets op een kaart kan worden bewerkt.
 
 Een verbindingslijn is één vloeiende curve van tabel naar tabel, getekend onder de kaarten, zodat ze achter een kaart langs kan lopen. Een relatie van een tabel naar zichzelf buigt om de rechterbovenhoek van de kaart heen, zoals op het ERD-tabblad — zie [Routering van verbindingslijnen](./relationship-editing.md#connector-routing). Elke verbindingslijn wordt getekend als dezelfde ononderbroken grijze lijn, of de relatie nu identificerend is of niet, met dezelfde eindmarkeringen als op het ERD-tabblad — zie [Een verbindingslijn lezen](./relationship-editing.md#reading-a-connector). De stroomweergave tekent verbindingslijnen ook als de [weergaveoptie](./table-related-functions.md#table-view-options) `Relationship` uitstaat. Ze tekent nooit de labels `D:` en `U:` van de ON DELETE- en ON UPDATE-acties van een relatie en toont nooit de knopinfo die deze acties voluit beschrijft, wat de weergaveoptie `Referential Actions` ook aangeeft.
 
@@ -105,11 +108,28 @@ Het menu opent boven de werkbalk, met een vinkje naast de huidige keuze. Het slu
 | `Keys only` | Kolommen met een primaire of refererende sleutel, plus elke andere kolom waarop een relatie eindigt. |
 | `All fields` | Elke kolom. |
 
-Rijen staan in de volgorde van de kolommen van de tabel. Elke rij toont de kolomnaam, met een sleutelpictogram ervoor wanneer de kolom een primaire sleutel, een refererende sleutel of beide is, en rechts het gegevenstype, dat alleen verschijnt zolang de kaart [opgelicht](#lighting-related-tables) is.  
+Rijen staan in de volgorde van de kolommen van de tabel. Elke rij toont de kolomnaam, met een sleutelpictogram ervoor wanneer de kolom een primaire sleutel, een refererende sleutel of beide is, en rechts het gegevenstype, of de kaart nu [opgelicht](#lighting-related-tables) is of niet. De [naamweergave](#names-on-the-cards) bepaalt welke namen een rij toont en of ze het domein van de kolom toont.  
 Er wordt geen andere cel en geen markering van een alternatieve sleutel getekend, en noch [Weergaveopties voor tabellen](./table-related-functions.md#table-view-options) noch [Kolomvolgorde aanpassen](./settings.md#adjusting-column-order), dat de volgorde van de cellen binnen een rij bepaalt, is van toepassing op kaarten.
 
 Wanneer de stroomweergave voor het eerst opent, begint ze met `Name only`, of met `Keys only` als ze is geopend via [focussen op tabellen](#focusing-on-tables). Daarna verandert de rijweergave alleen wanneer je een andere kiest, en blijft ze behouden bij het beperken of verruimen van de weergave.  
 Een andere rijweergave wijzigt de grootte van de kaarten, waarna de stroomweergave ze opnieuw indeelt en aan het scherm aanpast.
+
+### Namen op de kaarten {#names-on-the-cards}
+
+Een kaart benoemt haar tabel en kolommen in de naamweergave, dezelfde waarin het ERD-tabblad tekent — zie [Naamweergave](./logical-names.md#name-view).  
+Wissel haar hier met de lijst `Name View` op de [werkbalk](#toolbar). De knop ervan toont de weergave die van kracht is, `Physical Names`, `Logical Names` of `Both Names`, en de knopinfo ervan toont `Name View`. De lijst opent boven de werkbalk, met een vinkje naast de weergave die van kracht is, en sluit zoals het menu voor de [rijweergave](#row-display). Een keuze wisselt de weergave in de hele editor, het ERD-tabblad inbegrepen, zoals wisselen op elke andere plek dat doet — zie [De weergave wisselen](./logical-names.md#switching-the-view).
+
+Kaarten delen hun cellen alleen in volgens de naamweergave. Geen enkele [weergaveoptie](./table-related-functions.md#table-view-options) verandert ze, `Domain` inbegrepen:
+
+| Naamweergave | Kop | Elke rij |
+| --- | --- | --- |
+| `Physical Names` | De tabelnaam. | De kolomnaam, daarna het gegevenstype. |
+| `Logical Names` | De logische naam van de tabel. | De logische naam van de kolom, daarna de naam van haar [domein](./dictionary.md#domains-and-data-types), of haar gegevenstype zolang ze er geen heeft. |
+| `Both Names` | De logische naam, daarna de tabelnaam, gedempt. | De logische naam, de naam, het domein en het gegevenstype. |
+
+Zolang een logische naam leeg is, toont de weergave `Logical Names` op zijn plaats de naam, gedimd, of de tijdelijke aanduiding `table` of `column` als ook de naam leeg is, en toont de weergave `Both Names` de gedimde tijdelijke aanduiding `logical`. In de weergave `Both Names` toont een kolom zonder domein de gedimde tijdelijke aanduiding `domain`.  
+Een kaart draagt nooit de [markeringen](./dictionary.md#marks-on-the-canvas) die de controles van het woordenboek op het ERD-tabblad op namen aanbrengen.  
+Het wisselen van de naamweergave wijzigt de grootte van de kaarten, waarna de stroomweergave ze opnieuw indeelt — zie [Hoe de stroomweergave wordt ingedeeld](#how-flow-is-placed).
 
 ### Navigeren in de stroomweergave {#getting-around-the-flow}
 
@@ -124,7 +144,7 @@ De stroomweergave heeft geen minimap en geen schuifbalken. Als er na het pannen 
 ### Gerelateerde tabellen laten oplichten {#lighting-related-tables}
 
 Houd de aanwijzer boven een kaart om die kaart te laten oplichten, samen met de tabellen die er één relatie van verwijderd zijn en de verbindingslijnen die haar met die tabellen verbinden. Een verbindingslijn tussen twee van die tabellen licht niet op.  
-Een opgelichte kaart krijgt een rand en een gloed in de accentkleur, haar gegevenstypen komen geleidelijk in beeld, en haar rijen waarop een relatie eindigt, krijgen een tint. Een opgelichte verbindingslijn krijgt de accentkleur.  
+Een opgelichte kaart krijgt een rand en een gloed in de accentkleur, en haar rijen waarop een relatie eindigt, krijgen een tint. Een opgelichte verbindingslijn krijgt de accentkleur.  
 Anders dan in de [graafmodus](#highlighting-a-neighbourhood) vervaagt verder niets, en er licht niets op zolang de aanwijzer boven geen enkele kaart is en er geen kaart is vastgezet.
 
 Klik op een kaart om de markering vast te zetten, zodat de kaart opgelicht blijft wanneer de aanwijzer verdergaat. Klik nog eens op dezelfde kaart, of klik op de achtergrond, om haar los te laten; een klik op een andere kaart zet in plaats daarvan die kaart vast. De kaart onder de aanwijzer en de vastgezette kaart lichten samen op.  
@@ -136,8 +156,8 @@ Langs elke opgelichte verbindingslijn lopen deeltjes, van het uiteinde bij de ou
 
 Zolang de aanwijzer boven een kaart is, verschijnen aan het rechteruiteinde van haar kop twee pictogramknoppen, beide zonder knopinfo:
 
-- Het routepuntenpictogram, hetzelfde als op de knop `Flow`, beperkt de stroomweergave tot die tabel en de tabellen die er één relatie van verwijderd zijn — zie [Focussen op tabellen](#focusing-on-tables).
-- Het pictogram voor een externe link schakelt over naar het ERD-tabblad, selecteert alleen die tabel, brengt haar naar voren en verplaatst de gefocuste cel naar haar naam, tenzij die al op een cel van die tabel staat. Het canvas scrolt alleen naar de tabel als die nog niet goed in beeld is — zie [Waar een sprong terechtkomt](./table-related-functions.md#where-a-jump-lands). Het begint of voltooit nooit een relatie die wordt getekend.
+- Het routepuntenpictogram, hetzelfde als op de knop `Flow`, beperkt de stroomweergave tot die tabel en de tabellen die er één relatie van verwijderd zijn — zie [Focussen op tabellen](#focusing-on-tables). Wat de stroomweergave daarvoor toonde, blijft bereikbaar met één keer `Previous table` — zie [Vorige en volgende tabel](#previous-table-and-next-table).
+- Het pictogram voor een externe link schakelt over naar het ERD-tabblad, selecteert alleen die tabel, brengt haar naar voren en verplaatst de gefocuste cel naar haar naam, of naar haar logische naam in de weergaven `Logical Names` en `Both Names`, tenzij die al op een cel van die tabel staat. Het canvas scrolt alleen naar de tabel als die nog niet goed in beeld is — zie [Waar een sprong terechtkomt](./table-related-functions.md#where-a-jump-lands). Het begint of voltooit nooit een relatie die wordt getekend.
 
 Een druk op een van beide knoppen geldt alleen voor de knop zelf: anders dan een druk elders op de kaart selecteert hij de kaart niet en brengt hij haar niet naar voren. De routepuntenknop laat dus de selectie die je had ongemoeid; de knop voor een externe link selecteert de tabel alleen als onderdeel van het overschakelen naar het ERD-tabblad. Beide knoppen reageren alleen op een klik met de linkermuisknop.
 
@@ -147,7 +167,7 @@ Sleep een kaart met de linkermuisknop aan een willekeurig deel ervan, behalve de
 Een druk op een kaart selecteert haar, `Ctrl + click` (Windows/Linux) of `⌘ + click` (Mac) voegt haar toe aan de selectie, en een geselecteerde kaart slepen verplaatst elke geselecteerde kaart. Het is dezelfde selectie als op het ERD-tabblad, dus wat je hier selecteert, is nog steeds geselecteerd wanneer je teruggaat.
 
 Een kaart beweegt alleen in de stroomweergave: haar tabel blijft op het ERD-tabblad waar ze is.  
-Een verplaatste kaart blijft op haar plek bij pannen, zoomen en `Fit`. Ze gaat terug naar de plek waar de indeling haar plaatste wanneer je het tabblad verlaat of naar `Graph` overschakelt en terugkomt, en wanneer `Show all` terugkeert naar een indeling van het hele diagram die de stroomweergave al heeft. Een nieuwe indeling plaatst haar opnieuw, rekening houdend met waar je haar hebt achtergelaten — zie [Hoe de stroomweergave wordt ingedeeld](#how-flow-is-placed).
+Een verplaatste kaart blijft op haar plek bij pannen, zoomen en `Fit`. Ze gaat terug naar de plek waar de indeling haar plaatste wanneer je het tabblad verlaat of naar `Graph` overschakelt en terugkomt, en wanneer `Show all` of een [stap](#previous-table-and-next-table) terugkeert naar een indeling die de stroomweergave al heeft. Een nieuwe indeling plaatst haar opnieuw, rekening houdend met waar je haar hebt achtergelaten — zie [Hoe de stroomweergave wordt ingedeeld](#how-flow-is-placed).
 
 ### Focussen op tabellen {#focusing-on-tables}
 
@@ -158,25 +178,45 @@ Als de tabel waarop je met de rechtermuisknop klikt een van meerdere geselecteer
 `Alt + F` gebruikt de geselecteerde tabellen en laat memo's en [tabelgroepen](./table-groups.md) buiten beschouwing. Zonder geselecteerde tabel doet de sneltoets niets, ook niet als er een groep is geselecteerd: kies eerst `Select tables` in het contextmenu van de groep — zie [Groepen selecteren](./table-groups.md#selecting-groups).  
 De sneltoets wordt genegeerd terwijl een cel, een memo of de naam van een groep wordt bewerkt, terwijl de toetsenbordfocus in de [Verkenner](./explorer.md#keys-in-the-explorer) ligt, of terwijl het palet Snel zoeken, Tabeleigenschappen, de Verschilweergave, het voorbeeld van Automatische indeling, Tijdreizen, het dialoogvenster [`Export image`](./file-import-export.md#image) of [`Map Columns`](./relationship-editing.md#map-columns) open is.
 
-In de stroomweergave beperkt de [kaartknop](#card-buttons) met routepunten de weergave op dezelfde manier, tot die ene tabel. `Show all` op de [werkbalk](#toolbar) gaat terug naar het hele diagram.  
+In de stroomweergave beperkt de [kaartknop](#card-buttons) met routepunten de weergave op dezelfde manier, tot die ene tabel. `Show all` op de [werkbalk](#toolbar) gaat terug naar het hele diagram. `Previous table` en `Next table` op de werkbalk, of hun toetsen, gaan een stap terug en vooruit door de tabellen waartoe de stroomweergave is beperkt — zie [Vorige en volgende tabel](#previous-table-and-next-table).  
 Een beperkte weergave wordt afzonderlijk ingedeeld en aan het scherm aangepast. Ze blijft beperkt wanneer je het tabblad verlaat of naar `Graph` overschakelt en terugkomt, en `Escape` verruimt haar niet.
 
 ![Focussen op orders met ⌥ + F, beperken tot members met de routepuntenknop op de kaart ervan, daarna Show all](/img/demo-visualization-focus.webp)
+
+### Vorige en volgende tabel {#previous-table-and-next-table}
+
+De stroomweergave onthoudt waartoe ze is beperkt, zoals de geschiedenis van een browser. Telkens wanneer de weergave naar andere tabellen gaat — door [te focussen op tabellen](#focusing-on-tables) vanaf het ERD-tabblad, met de [kaartknop](#card-buttons) met routepunten of met `Show all` — wordt wat ze daarvoor toonde bewaard als stap terug, of dat nu een paar tabellen waren of het hele diagram.
+
+![De stroomweergave beperken tot orders met ⌥ + F en daarna tot members, teruggaan met Previous table, vooruitgaan met ⌘ + Shift + Z en teruggaan met ⌘ + Z, daarna Show all](/img/demo-visualization-steps.webp)
+
+- `Previous table` op de [werkbalk](#toolbar) gaat een stap terug, en `Next table` gaat weer vooruit naar wat `Previous table` heeft verlaten.
+- In `Flow` gaat `Ctrl + Z` (Windows/Linux) of `⌘ + Z` (Mac) een stap terug zoals `Previous table`, en gaat `Ctrl + Shift + Z` (Windows/Linux) of `⌘ + Shift + Z` (Mac) een stap vooruit zoals `Next table`. Daar maken ze nooit een bewerking van het diagram ongedaan en voeren ze er nooit een opnieuw uit. In `Graph`, en zolang Snel zoeken open is, doen ze niets.
+- Als je de weergave beperkt of op `Show all` drukt nadat je bent teruggegaan, vervallen de stappen vooruit. Opnieuw focussen op precies de tabellen waartoe de stroomweergave al is beperkt, voegt geen stap toe en laat er geen vervallen.
+- De laatste 100 stappen terug worden bewaard, en de oudste verdwijnt als eerste.
+
+Een stap toont de tabellen ervan die nog in het diagram staan, met elke tabel die er één relatie van verwijderd is, zoals bij focussen. Een stap waarvan alle tabellen zijn verwijderd, wordt overgeslagen en vervalt, en dat geldt ook voor een stap die de stroomweergave zou laten waar ze is: op precies de tabellen waartoe ze nu is beperkt, of over het hele diagram terwijl de stroomweergave dat al toont.  
+Een knop is gedimd en doet niets zolang er in die richting geen stap meer over is. Beide zijn gedimd wanneer de stroomweergave voor het eerst opent, of dat nu over het hele diagram is of op de tabellen waarmee een focus haar opende. Nadat de stroomweergave is geopend, bewaart een latere focus vanaf het ERD-tabblad wat de stroomweergave toonde toen je haar verliet als stap terug.  
+Een stap wordt ingedeeld en aan het scherm aangepast zoals een focus — zie [Hoe de stroomweergave wordt ingedeeld](#how-flow-is-placed) — en de rijweergave blijft zoals ze is.
+
+De stappen zijn van de stroomweergave zelf. Ze blijven bewaard zolang de editor open is, ook bij bezoeken aan andere tabbladen en aan `Graph`, maar ze worden niet in het document opgeslagen of naar medebewerkers gestuurd, en ze voegen niets toe aan de geschiedenis. Als het hele document wordt vervangen, worden ze samen met de rest van de stroomweergave gewist.
+
+In een weergavetaal van rechts naar links behoudt de werkbalk zijn volgorde en wisselen de twee pijlen van functie, zodat `Previous table` de pijl naar rechts is. De toetsen blijven dezelfde — zie [Talen van rechts naar links](./language-and-theme.md#right-to-left-languages).
 
 ### Hoe de stroomweergave wordt ingedeeld {#how-flow-is-placed}
 
 De eerste keer dat `Flow` wordt getoond, worden de getoonde tabellen buiten de hoofdthread ingedeeld en wordt het resultaat aan het scherm aangepast.  
 De indeling blijft bewaard zolang de editor open is. Verlaat je het tabblad of schakel je over naar `Graph` en kom je terug, dan gebruikt de stroomweergave haar opnieuw, met het zoomniveau en de weergavepositie zoals je ze achterliet.  
-De stroomweergave bewaart één indeling voor het hele diagram en één voor de beperkte weergave, dus `Show all` gaat terug naar de indeling van het hele diagram en past die aan het scherm aan zonder haar opnieuw te berekenen, zolang niets waaruit die indeling is gemaakt, is veranderd.
+De stroomweergave bewaart één indeling voor het hele diagram en één voor de tabellen waartoe ze het laatst is beperkt, dus `Show all` gaat terug naar de indeling van het hele diagram en past die aan het scherm aan zonder haar opnieuw te berekenen, zolang niets waaruit die indeling is gemaakt, is veranderd. Een [stap](#previous-table-and-next-table) naar het hele diagram, of naar de tabellen waartoe de stroomweergave het laatst is beperkt, gebruikt die indeling op dezelfde manier opnieuw.
 
 De stroomweergave deelt de kaarten opnieuw in wanneer:
 
 - Je op `Tidy Up` drukt. Het resultaat wordt aan het scherm aangepast.
-- Je de rijweergave wijzigt, of de weergave tot andere tabellen beperkt. Het resultaat wordt aan het scherm aangepast.
-- Er tabellen of relaties worden toegevoegd of verwijderd — op het ERD-tabblad terwijl je weg bent, wat wordt verwerkt wanneer je terugkomt, of door een medebewerker terwijl je in de stroomweergave bent. Het zoomniveau en de weergavepositie blijven zoals ze zijn.
+- Je de rijweergave wijzigt, de weergave tot andere tabellen beperkt of met `Previous table` of `Next table` naar andere tabellen gaat. Het resultaat wordt aan het scherm aangepast.
+- Je een andere weergave kiest in de lijst `Name View`. Het resultaat wordt aan het scherm aangepast.
+- Er tabellen of relaties worden toegevoegd of verwijderd, of de naamweergave wordt gewisseld — terwijl je niet in de stroomweergave bent, wat wordt verwerkt wanneer je terugkomt, of door een medebewerker terwijl je in de stroomweergave bent. Het zoomniveau en de weergavepositie blijven zoals ze zijn.
 
 Elke indeling houdt rekening met waar de kaarten op dat moment staan, dus `Tidy Up` herstelt niet per se een eerdere schikking.  
-Een wijziging die alleen de grootte van een kaart verandert, zoals de naam van een tabel wijzigen of een kolom toevoegen, deelt de kaarten niet opnieuw in. Druk op `Tidy Up` als kaarten elkaar gaan overlappen.
+Een wijziging die alleen de grootte van een kaart verandert, zoals de naam van een tabel wijzigen, een logische naam invoeren of een kolom toevoegen, deelt de kaarten niet opnieuw in. Druk op `Tidy Up` als kaarten elkaar gaan overlappen.
 
 Een indeling die langer dan 6 seconden duurt, toont de melding `Placing tables`, met een draaiende laadindicator en `Cancel`.  
 `Cancel`, of `Escape` op elk moment terwijl de indeling loopt, breekt haar af; `Tidy Up`, of terugkeren naar `Flow`, vraagt er opnieuw om.  
@@ -184,16 +224,17 @@ Als een indeling mislukt — de host draait geen shared worker, de worker start 
 De stroomweergave tekent alleen de tabellen die haar laatste indeling heeft geplaatst, zowel bij het hele diagram als in een beperkte weergave, dus de eerste keer dat ze wordt getoond, zijn er mogelijk helemaal geen kaarten tot een indeling slaagt.  
 Telkens wanneer de stroomweergave de kaarten opnieuw indeelt, zoals wanneer je de weergave tot andere tabellen beperkt, blijft de vorige schikking op het scherm tot de nieuwe indeling binnenkomt, en blijft ze daar als die indeling wordt geannuleerd of mislukt.
 
-Wanneer het hele document wordt vervangen, bijvoorbeeld door een bestand te importeren, worden de indelingen, de focus, de rijweergave, het zoomniveau en de weergavepositie van de stroomweergave gewist, en de volgende keer dat je de stroomweergave opent, begint ze opnieuw zoals de eerste keer: met het hele diagram, of beperkt als je haar opent via [focussen op tabellen](#focusing-on-tables).
+Wanneer het hele document wordt vervangen, bijvoorbeeld door een bestand te importeren, worden de indelingen, de focus, de stappen van `Previous table` en `Next table`, de rijweergave, het zoomniveau en de weergavepositie van de stroomweergave gewist, en de volgende keer dat je de stroomweergave opent, begint ze opnieuw zoals de eerste keer: met het hele diagram, of beperkt als je haar opent via [focussen op tabellen](#focusing-on-tables).
 
 ### De stroomweergave wijzigt het document nooit {#flow-never-edits-the-document}
 
-De stroomweergave leest het diagram alleen. Zoomen, pannen, kaarten verplaatsen, `Tidy Up`, de rijweergave, vastzetten en focussen voegen niets toe aan de [geschiedenis](./undo-redo.md#what-the-history-records).  
+De stroomweergave leest het diagram alleen. Zoomen, pannen, kaarten verplaatsen, `Tidy Up`, de rijweergave, vastzetten, focussen en stappen met `Previous table` en `Next table` voegen niets toe aan de [geschiedenis](./undo-redo.md#what-the-history-records).  
 Ze veranderen ook niets aan het diagram. Een druk op een kaart brengt haar tabel wel naar voren, net als een klik op een tabel op het ERD-tabblad, zodat die daar ook vooraan ligt, maar de stapelvolgorde wordt niet opgeslagen — zie [Meerdere tabellen verplaatsen](./table-related-functions.md#moving-multiple-tables). `Graph` laat het diagram op dezelfde manier ongemoeid.  
+De lijst `Name View` is een uitzondering, en alleen zolang de [vergrendeling](./settings.md#lock) `Name View` uitstaat: een keuze wisselt dan de naamweergave van het diagram, die wordt opgeslagen en waarmee medebewerkers meewisselen. Zolang de vergrendeling aanstaat, zoals standaard het geval is, verandert een keuze alleen je eigen scherm. In beide gevallen voegt ze niets toe aan de geschiedenis.  
 Een druk op een kaart voegt nooit een relatie toe. Als je het ERD-tabblad hebt verlaten terwijl je er een tekende, kiest een druk op een kaart haar tabel als begintabel wanneer er nog geen is gekozen, en beëindigt hij anders het tekenen.  
 De [kaartknop](#card-buttons) voor een externe link gaat verder, omdat die je uit de stroomweergave haalt: wanneer het ERD-tabblad naar de tabel moet scrollen, wordt dat scrollen vastgelegd zoals elke andere wijziging van de weergavepositie.
 
 Bewerkingen van medebewerkers bereiken het diagram nog steeds terwijl je in de stroomweergave bent, en kaarten volgen de tabellen en relaties die zij toevoegen of verwijderen — zie [Hoe de stroomweergave wordt ingedeeld](#how-flow-is-placed).  
 Hun selectie- en focusringen worden op de kaarten getekend, maar hun cursors en selectiekaders niet — zie [Gezamenlijk bewerken](../../api/advanced/collaborative-editing.md).
 
-Beide modi, focussen inbegrepen, werken ook in een editor met `readonly`.
+Beide modi, focussen en stappen inbegrepen, werken ook in een editor met `readonly`, en dat geldt ook voor de lijst `Name View`, die daar alleen je eigen scherm wisselt.

@@ -53,7 +53,8 @@ Uma janela do VS Code atende os diagramas das pastas do espaço de trabalho dela
 2. Abra a pasta do projeto e confie no espaço de trabalho. A extensão atende agentes apenas em um espaço de trabalho confiável.
 3. Deixe a configuração `dineug.erd-editor.agentHub.enabled` ativada. Ela está ativada por padrão.
 
-Uma extensão da `3.0.0` à `3.1.0` e o servidor `1.0.0` se recusam mutuamente, e uma extensão anterior à `3.0.0` não atende nenhum agente — consulte [Atualizar](#updating).
+Uma extensão da `3.0.0` à `3.1.0` e o servidor `1.0.0` ou posterior se recusam mutuamente, e uma extensão anterior à `3.0.0` não atende nenhum agente.
+Uma extensão `4.0.0` ou `4.1.0` se conecta, mas não mostra nem mantém os nomes lógicos, os vínculos com domínios e as linhas do dicionário que o agente grava — consulte [Atualizar](#updating).
 
 A extensão é iniciada em um espaço de trabalho que contém arquivos `.erd`, `.erd.json`, `.vuerd` ou `.vuerd.json`, então um agente alcança esses diagramas antes que você abra um deles.
 Em um espaço de trabalho sem nenhum deles, ela é iniciada quando você abre um diagrama e, até lá, o agente edita em disco.
@@ -69,7 +70,8 @@ Uma janela de cofre do Obsidian atende os diagramas do próprio cofre.
 1. Instale o [plugin ERD Editor](https://community.obsidian.md/plugins/erd-editor) `1.0.0` ou posterior a partir de Community plugins e ative-o. Ele funciona apenas no aplicativo para desktop e requer o Obsidian `1.5.7` ou posterior.
 2. Deixe ativada a opção Settings → ERD Editor → Coding agents. Ela está ativada por padrão, e cada cofre mantém sua própria configuração.
 
-Um plugin de versão anterior e o servidor `1.0.0` se recusam mutuamente — consulte [Atualizar](#updating).
+Um plugin anterior à `1.0.0` e o servidor `1.0.0` ou posterior se recusam mutuamente.
+Um plugin `1.0.0` ou `1.1.0` se conecta, mas não mostra nem mantém os nomes lógicos, os vínculos com domínios e as linhas do dicionário que o agente grava — consulte [Atualizar](#updating).
 
 Uma janela de cofre atende agentes a partir do momento em que o plugin é carregado, então um agente alcança os diagramas do cofre antes que você abra um deles.
 Não há etapa de confiança.
@@ -95,7 +97,8 @@ Uma IDE da JetBrains atende os diagramas de todos os projetos abertos nela e qua
 2. Abra o projeto e confie nele. Em um projeto em que a IDE não confia, como um aberto no modo seguro, os agentes leem os diagramas, mas nunca os alteram.
 3. Deixe marcada a opção Settings | Tools | ERD Editor → Coding agents. Ela está ativada por padrão e se aplica à IDE inteira.
 
-Um plugin `0.9.0` ou `0.10.0` e o servidor `1.0.0` se recusam mutuamente, e um plugin anterior à `0.9.0` não atende nenhum agente — consulte [Atualizar](#updating).
+Um plugin `0.9.0` ou `0.10.0` e o servidor `1.0.0` ou posterior se recusam mutuamente, e um plugin anterior à `0.9.0` não atende nenhum agente.
+Um plugin `1.0.0` ou `1.1.0` se conecta, mas não mostra nem mantém os nomes lógicos, os vínculos com domínios e as linhas do dicionário que o agente grava — consulte [Atualizar](#updating).
 
 A IDE atende agentes a partir do momento em que o primeiro projeto é aberto, então um agente alcança os diagramas de um projeto antes que você abra um deles.
 
@@ -125,19 +128,26 @@ O servidor verifica a versão do protocolo que o editor usa antes de se conectar
 Quando as duas versões diferem, toda chamada que chega a esse editor é recusada com `protocolMismatch`, inclusive as leituras e `erd_list_documents`, e nada é gravado.
 A mensagem indica o lado a atualizar: o servidor ou o ERD Editor no editor, que é a extensão no VS Code e o plugin no Obsidian e em uma IDE da JetBrains.
 
-O servidor `1.0.0`, a extensão do VS Code `4.0.0` ou posterior, o plugin do Obsidian `1.0.0` ou posterior e o plugin da JetBrains `1.0.0` ou posterior usam o protocolo 2.
+O servidor `1.0.0` ou posterior, a extensão do VS Code `4.0.0` ou posterior, o plugin do Obsidian `1.0.0` ou posterior e o plugin da JetBrains `1.0.0` ou posterior usam o protocolo 2.
 Todo servidor anterior usa o protocolo 1, assim como toda versão anterior de um editor que atende agentes: a extensão do VS Code da `3.0.0` à `3.1.0`, o plugin do Obsidian nas versões `0.1.0` e `0.2.0` e o plugin da JetBrains nas versões `0.9.0` e `0.10.0`.
-Um editor assim e o servidor `1.0.0` se recusam mutuamente, assim como um servidor anterior e um editor que usa o protocolo 2.
+Um editor assim e o servidor `1.0.0` ou posterior se recusam mutuamente, assim como um servidor anterior e um editor que usa o protocolo 2.
 Uma extensão do VS Code anterior à `3.0.0` ou um plugin da JetBrains anterior à `0.9.0` não atende nenhum agente, então o agente edita os arquivos em disco, mesmo um diagrama aberto nele.
 
 | Combinação | A mensagem termina com |
 | --- | --- |
-| Servidor `1.0.0` com uma extensão ou um plugin que usa o protocolo 1 | `Update the ERD Editor extension or plugin in the editor until its hub speaks protocol 2.` |
+| Servidor `1.0.0` ou posterior com uma extensão ou um plugin que usa o protocolo 1 | `Update the ERD Editor extension or plugin in the editor until its hub speaks protocol 2.` |
 | Um servidor anterior com uma extensão ou um plugin que usa o protocolo 2 | `Update the MCP server (npx -y @dineug/erd-editor-mcp@latest) until it speaks protocol 2.` |
 
 Atualize o servidor e a extensão ou o plugin juntos.
+Um servidor e um editor que usam o mesmo protocolo se conectam, qualquer que seja o mais antigo dos dois, mas só o servidor `1.1.0` ou posterior tem ferramentas para nomes lógicos, domínios e dicionários — consulte [Dicionários](./tools.md#dictionaries).
+Só a extensão do VS Code `4.2.0` ou posterior e os plugins do Obsidian e da JetBrains `1.2.0` ou posterior mostram e mantêm os nomes lógicos, os vínculos com domínios e as linhas do dicionário que essas ferramentas gravam.
+Uma extensão ou um plugin anterior que se conecta os ignora, embora a chamada do agente seja bem-sucedida.
+Ele ainda aplica os nomes físicos que os dicionários derivam e os tipos de dados que os domínios dão.
+Um servidor anterior à `1.1.0` lê um arquivo sem os nomes lógicos, os vínculos com domínios e as linhas do dicionário dele e os omite quando edita o arquivo em disco — consulte [Headless](./live-and-headless.md#headless).
+
 Atualize também o ERD Editor em todos os lugares onde os diagramas são abertos.
-A extensão do VS Code anterior à `4.0.0`, o plugin do Obsidian anterior à `1.0.0` e o plugin da JetBrains anterior à `1.0.0` exibem um diagrama que uma versão posterior salvou, ou que o agente editou em disco, sem os ícones de chave primária.
-Quando salvam o arquivo, eles descartam os grupos de tabelas e os scripts de Esquema SQL do diagrama.
+A extensão do VS Code anterior à `4.2.0`, o plugin do Obsidian anterior à `1.2.0` e o plugin da JetBrains anterior à `1.2.0` abrem um diagrama que uma versão posterior salvou, ou que o agente editou em disco, sem os nomes lógicos das tabelas e das colunas, os vínculos das colunas com domínios e as palavras, os termos e os domínios do diagrama.
+Quando salvam o arquivo, eles os omitem.
+A extensão do VS Code anterior à `4.0.0`, o plugin do Obsidian anterior à `1.0.0` e o plugin da JetBrains anterior à `1.0.0` também exibem um diagrama desses sem os ícones de chave primária e descartam os grupos de tabelas e os scripts de Esquema SQL dele quando salvam o arquivo.
 A extensão do VS Code anterior à `3.1.0`, o plugin do Obsidian anterior à `0.2.0` e o plugin da JetBrains anterior à `0.10.0` também descartam as ações ON DELETE e ON UPDATE de um diagrama ao salvar o arquivo.
 No Obsidian, reinicie o aplicativo depois de atualizar o plugin: até lá, uma janela de cofre continua executando o ERD Editor da versão do plugin que carregou primeiro.

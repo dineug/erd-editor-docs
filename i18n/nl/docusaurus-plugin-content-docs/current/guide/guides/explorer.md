@@ -1,5 +1,5 @@
 ---
-sidebar_position: 8
+sidebar_position: 9
 description: Blader door de tabellen van het diagram met hun kolommen, indexen en refererende sleutels, de tabelgroepen en de memo's in een boomstructuur die naast het ERD-canvas is vastgezet, en ga met een klik naar elk ervan.
 ---
 
@@ -26,11 +26,11 @@ Open de Verkenner op een van deze manieren:
 - `Toggle Explorer` in het contextmenu van het canvas: klik met de rechtermuisknop op een lege plek op het ERD-canvas, buiten elke [tabelgroep](./table-groups.md). Het staat na `New Table`, `New Memo` en `New Table Group`, vóór `Relationship`.
 
 De twee items `Toggle Explorer` tonen de sneltoets aan de rechterkant.  
-De knop op de werkbalk, de sneltoets en het item in Snel zoeken werken vanaf elk tabblad. Vanaf het tabblad Visualisatie, Schema SQL, Codegenerator of Instellingen schakelen ze eerst over naar het ERD-tabblad, omdat de Verkenner alleen daar wordt getoond.
+De knop op de werkbalk, de sneltoets en het item in Snel zoeken werken vanaf elk tabblad. Vanaf het tabblad Visualisatie, Schema SQL, Codegenerator, Woordenboek of Instellingen schakelen ze eerst over naar het ERD-tabblad, omdat de Verkenner alleen daar wordt getoond.
 
 De knop op de werkbalk opent en sluit alleen het paneel. Hij zet de tekstcursor niet in het zoekveld en laat Tabeleigenschappen, de themabouwer en de taalkiezer `Display Language` open.  
 De sneltoets en de twee items `Toggle Explorer` openen de Verkenner op de zoekfunctie: de tekstcursor gaat naar het zoekveld, met de tekst erin geselecteerd, en welk van de vijf dialoogvensters uit [Dialoogvensters ernaast](#dialogs-beside-it) ook open is, wordt gesloten. Wat de zoekfunctie bewaart van de ene keer openen tot de volgende, staat in [Openen en sluiten](./find-and-replace.md#opening-and-closing) op de pagina Zoeken en vervangen.  
-De sneltoets doet niets terwijl een tabelcel, een memo of de naam van een tabelgroep wordt bewerkt.
+De sneltoets doet niets terwijl een tabelcel, een memo of de naam van een tabelgroep wordt bewerkt, of terwijl een celbewerking open is op het tabblad [Woordenboek](./dictionary.md#keys-on-the-tab), de domeinlijst van een term inbegrepen.
 
 De knop op de werkbalk ziet er ingedrukt uit zolang de Verkenner op het ERD-tabblad open is en niet door de [zen-modus](#when-it-stands-aside) wordt verborgen. Zolang dat zo is, sluiten de knop, de sneltoets en elk van beide items `Toggle Explorer` de Verkenner, en gaat de toetsenbordfocus, als die in het paneel stond, terug naar de editor.  
 De sneltoets sluit de Verkenner nooit zolang Snel zoeken of een van de vijf dialoogvensters open is. In plaats daarvan sluit de sneltoets het palet of het dialoogvenster en brengt hij de toetsenbordfocus naar het zoekveld, met de tekst erin geselecteerd en, als de Verkenner al werd getoond, met behoud van de huidige overeenkomst. Het item `Toggle Explorer` in Snel zoeken maakt die uitzondering niet: uitvoeren ervan sluit het palet en daarna een geopende Verkenner.
@@ -84,22 +84,27 @@ De titelbalk toont `Explorer` en bevat twee knoppen: `Collapse All` en de `x` di
 
 Het bovenste niveau bevat drie mappen, in deze volgorde: `Tables`, `Table Groups` en `Memos`. Onder elke tabel staan haar eigen mappen `Columns`, `Indexes` en `Foreign Keys`.  
 Een map zonder inhoud wordt niet getoond, dus een leeg diagram toont helemaal geen rijen. `Table Groups` wordt ook weggelaten zolang [View Option](./table-related-functions.md#table-view-options) → `Table Groups` de groepen verbergt, en `Memos` zolang View Option → `Memos` de memo's verbergt.  
-Een maprij toont een mappictogram, de naam en helemaal aan het einde het aantal rijen direct eronder, dus het getal naast `Tables` is het aantal tabellen in het diagram.
+Een maprij toont een mappictogram, de naam en helemaal aan het einde het aantal rijen direct eronder, dus het getal naast `Tables` is het aantal tabellen in het diagram. Het getal groepeert duizendtallen zoals de weergavetaal dat doet, altijd met de cijfers 0 tot en met 9, zoals `1,234` in het Engels en `1.234` in het Duits.
 
 Tabellen worden op naam gesorteerd, zonder onderscheid tussen hoofdletters en kleine letters, en tabellen met dezelfde naam behouden de volgorde van het document. Tabelgroepen worden op dezelfde manier gesorteerd, en de tabellen onder elke groep ook. De kolommen van een tabel behouden de eigen volgorde van de tabel, en haar indexen, haar refererende sleutels en de memo's behouden die van het document.  
-De boom volgt het diagram terwijl het verandert, of dat nu komt door een bewerking op het canvas, door ongedaan maken of opnieuw uitvoeren, door een import of door een medebewerker of een codeeragent, dus als je de naam van een tabel wijzigt, verschuift haar rij.
+De boom volgt het diagram terwijl het verandert, of dat nu komt door een bewerking op het canvas, door ongedaan maken of opnieuw uitvoeren, door een import of door een medebewerker of een codeeragent, dus als je de naam van een tabel wijzigt, verschuift haar rij.  
+De volgorde gaat in elke [naamweergave](./logical-names.md#name-view) op naam, nooit op logische naam. Het wisselen van weergave geeft de tabel- en kolomrijen een ander label zonder er een te verplaatsen, en dat geldt ook als je een tabel of kolom een logische naam geeft in `Logical Names` of `Both Names`. Een fysieke naam die uit een nieuwe logische naam wordt [afgeleid](./dictionary.md#deriving-physical-names), is echter een naamswijziging zoals elke andere, dus die kan de rij van een tabel verplaatsen.
 
 Elke soort rij toont:
 
 - Een tabel: een tabelpictogram en de naam.
-- Een kolom: een sleutelpictogram voor een kolom met primaire of refererende sleutel, gekleurd zoals de sleutelcel van de tabel zelf een primaire sleutel, een refererende sleutel of beide kleurt, en een lijstpictogram voor elke andere kolom. Daarna de naam en, in een gedempte kleur, het gegevenstype gevolgd door `PK`, `FK` of beide, zoals `id` `BIGINT PK` of `user_id` `BIGINT FK`.
+- Een kolom: een sleutelpictogram voor een kolom met primaire of refererende sleutel, gekleurd zoals de sleutelcel van de tabel zelf een primaire sleutel, een refererende sleutel of beide kleurt, en een lijstpictogram voor elke andere kolom. Daarna de naam en, in een gedempte kleur, het gegevenstype gevolgd door `PK`, `FK` of beide, zoals `id` `BIGINT PK` of `user_id` `BIGINT FK`. Het type dat de rij toont, is altijd het gegevenstype van de kolom, nooit haar [domein](./logical-names.md#the-domain-cell), wat de naamweergave ook is.
 - Een index: een indexpictogram en de naam. Daarna, in een gedempte kleur, `UNIQUE` voor een unieke index en de kolommen tussen haakjes in de volgorde van de index, met `DESC` na een aflopende kolom, zoals `orders_user_idx` `UNIQUE (user_id DESC, total)`, of alleen `(total)`.
 - Een refererende sleutel: alleen vermeld onder de kindtabel, de tabel met de kolommen met refererende sleutel, en alleen zolang de oudertabel in het diagram staat. Het sleutelpictogram krijgt de kleur van de verbindingslijn: de kleur voor een primaire en refererende sleutel bij een [identificerende relatie](./relationship-editing.md#identifying-relationships), anders de kleur voor een refererende sleutel. De rij toont de sleutelkolommen van de kindtabel, gescheiden door komma's, en daarna, in een gedempte kleur, `→` met de oudertabel en haar kolommen, zoals `user_id` `→ users(id)`.
 - Een tabelgroep: een stip in de kleur van de groep, grijs voor een groep zonder kleur, en de naam. De tabellen ervan staan er op naam onder, en elk ervan gaat naar de bijbehorende tabel. Een groep zonder tabellen heeft niets om uit te vouwen.
 - Een memo: een pictogram van een plakbriefje en de eerste regel van de memo.
 
-Een lege naam, of een memo waarvan de eerste regel leeg is, toont `unnamed` in cursief.  
-In een smal paneel wordt de gedempte tekst eerder met `…` afgekapt dan de naam. Houd de aanwijzer boven een naam of de gedempte tekst ervan om die volledig te zien.
+Tabelrijen, de tabellen die onder een groep staan, en kolomrijen volgen de naamweergave — zie [Buiten het canvas](./logical-names.md#beyond-the-canvas). In `Both Names` toont een kolomrij bijvoorbeeld `Total Amount` `total` `NUMERIC`: de logische naam, daarna de naam en het gegevenstype, beide gedempt.  
+In elke weergave tonen rijen van indexen en refererende sleutels hun kolommen bij naam, en een rij van een refererende sleutel toont ook haar oudertabel bij naam.  
+Zolang het zoekveld tekst bevat, toont een rij die alleen is gevonden in de naam die de weergave weglaat, ook die naam, gedempt — zie [De resultaten](./find-and-replace.md#the-results).
+
+Een lege naam, of een memo waarvan de eerste regel leeg is, toont `unnamed` in cursief. In `Logical Names` en `Both Names` toont een tabel of kolom alleen `unnamed` als ook haar logische naam leeg is.  
+In een smal paneel wordt de gedempte tekst eerder met `…` afgekapt dan de naam waarmee de rij begint. Houd de aanwijzer boven een naam of de gedempte tekst ervan om die volledig te zien.
 
 In het begin is alleen `Tables` uitgevouwen. Klik op een maprij, of druk op `Enter` of `Space` terwijl de toetsenbordfocus erop staat, om die samen te vouwen of uit te vouwen.  
 De pijl aan het begin van een rij vouwt die rij samen of uit zonder ergens naartoe te gaan. Elke tabelrij heeft er een, ook een tabel zonder iets eronder. `→` en `←` vouwen ook samen en uit — zie [Toetsen in de Verkenner](#keys-in-the-explorer).  
@@ -110,8 +115,8 @@ Bewerkingen, ongedaan maken, opnieuw uitvoeren en wijzigingen van medebewerkers 
 
 Klik op een rij, of druk op `Enter` of `Space` terwijl de toetsenbordfocus erop staat, om naar het bijbehorende element op het ERD-canvas te gaan. Een maprij vouwt alleen samen of uit, en de pijltoetsen bewegen alleen binnen de boom.
 
-- Een tabelrij, of een tabel die onder een groep staat, selecteert alleen die tabel en brengt haar naar voren. De gefocuste cel gaat naar de naam van de tabel, tenzij die al in die tabel staat.
-- Een kolomrij selecteert alleen de tabel ervan en zet de gefocuste cel op de naam van de kolom.
+- Een tabelrij, of een tabel die onder een groep staat, selecteert alleen die tabel en brengt haar naar voren. Tenzij de gefocuste cel al in die tabel staat, gaat ze naar de eerste cel van de kop van de tabel: de naam, of de logische naam in `Logical Names` en `Both Names`.
+- Een kolomrij selecteert alleen de tabel ervan en zet de gefocuste cel op de naam van de kolom, of in `Logical Names` op de logische naam die op zijn plaats wordt getoond.
 - Een indexrij selecteert de tabel ervan, zoals een tabelrij doet. De index zelf wordt niet apart uitgelicht; indexen worden bewerkt in [Tabeleigenschappen](./table-related-functions.md#indexes).
 - Een rij van een refererende sleutel brengt beide tabellen van de relatie samen in beeld, of de kindtabel als de twee te ver uit elkaar liggen om samen te tonen. De rij selecteert alleen de kindtabel met haar kolommen met refererende sleutel, met de gefocuste cel op de eerste ervan, en laat de verbindingslijn van de relatie oplichten — zie [Een verbindingslijn lezen](./relationship-editing.md#reading-a-connector).
 - Een rij van een tabelgroep brengt het kader van de groep in beeld, uitgaande van de titelbalk, selecteert alleen de groep en brengt hem met zijn tabellen naar voren.
@@ -119,7 +124,7 @@ Klik op een rij, of druk op `Enter` of `Space` terwijl de toetsenbordfocus erop 
 
 De weergave beweegt volgens de regel die voor elke sprong geldt: het zoomniveau verandert nooit, en het canvas scrolt alleen als het element waar je naartoe gaat nog niet goed in beeld is — zie [Waar een sprong terechtkomt](./table-related-functions.md#where-a-jump-lands).  
 Naar een rij gaan sluit eerst Tabeleigenschappen als dat open is, en begint of voltooit nooit een relatie die wordt getekend.  
-Zolang het zoekveld tekst bevat, gaat een rij waarvan de eigen naam een overeenkomst bevat, of een rij die een fragment van een opmerking of memo toont, in plaats daarvan naar die overeenkomst — zie [Naar een overeenkomst gaan](./find-and-replace.md#going-to-a-match).
+Zolang het zoekveld tekst bevat, gaat een rij waarvan de naam of de logische naam een overeenkomst bevat, of een rij die een fragment van een opmerking of memo toont, in plaats daarvan naar de eerste overeenkomst ervan — zie [Naar een overeenkomst gaan](./find-and-replace.md#going-to-a-match).
 
 Na een klik blijft de toetsenbordfocus in de boom, dus `Delete`, `Backspace` en de andere bewerkingstoetsen bereiken de nieuwe selectie pas als je op `Escape` drukt of op het canvas klikt — zie [Toetsen in de Verkenner](#keys-in-the-explorer).
 

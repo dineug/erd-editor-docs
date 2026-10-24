@@ -38,7 +38,8 @@ editor.addEventListener('change', () => {
 
 `setInitialValue('')` یک سند جدید و خالی را آغاز می‌کند. در مقابل، مقداردهی خاصیت `value` سند را به‌صورت یک ویرایش بارگذاری می‌کند، بنابراین در تاریخچهٔ واگرد ثبت می‌شود.
 از نسخهٔ `4.0.0`، `editor.value` سند به همان شکلی است که فایل نگه می‌دارد و همان چیزی است که باید ذخیره شود. `editor.runtimeValue` سند به همان شکلی است که ویرایشگر نگه می‌دارد، همراه با موجودیت‌های حذف‌شده: برای مقداردهی اولیهٔ یک همکار به کار می‌رود و هرگز به فایل نمی‌رود؛ [runtimeValue](./erd-editor-element.md#runtimevalue) را ببینید.
-از نسخهٔ `4.0.0`، همهٔ [قفل‌های تنظیمات](../guide/guides/settings.md#lock) در سند جدید نیز روشن‌اند: ناحیهٔ دید، زبانه، زبان مولد کد، هر دو شیوهٔ نگارش نام و نوع علامت نقل‌قول. پیمایش، بزرگ‌نمایی، جابه‌جایی بین زبانه‌ها یا تغییر یکی از این تنظیمات، `editor.value` را همان‌طور که بود باقی می‌گذارد و هیچ رویداد `change` ارسال نمی‌کند. سندی که از متن بارگذاری می‌شود، قفل‌هایی را که در آن نام برده شده‌اند نگه می‌دارد. سندی که هیچ قفلی را نام نبرد، مانند هر فایلی که پیش از نسخهٔ `4.0.0` ذخیره شده است، صرف‌نظر از نما و زبانه‌ای که ذخیره کرده، با همهٔ قفل‌ها در حالت روشن، با بزرگ‌نمایی 100% و در زبانهٔ ERD باز می‌شود. نمای آن در مبدأ `0, 0` قفل می‌شود و اگر هیچ بخشی از نمودار در آنجا رسم نشده باشد، در عوض روی نمودار باز می‌شود؛ [setInitialValue](./erd-editor-element.md#setinitialvalue) را ببینید.
+از نسخهٔ `4.0.0`، همهٔ [قفل‌های تنظیمات](../guide/guides/settings.md#lock) در سند جدید نیز روشن‌اند: ناحیهٔ دید، زبانه، زبان مولد کد، هر دو شیوهٔ نگارش نام، نوع علامت نقل‌قول و از نسخهٔ `4.2.0`، [نمایش نام‌ها](../guide/guides/logical-names.md#name-view). پیمایش، بزرگ‌نمایی، جابه‌جایی بین زبانه‌ها، تغییر نمایش نام‌ها یا تغییر یکی از تنظیمات دیگر، `editor.value` را همان‌طور که بود باقی می‌گذارد و هیچ رویداد `change` ارسال نمی‌کند. سندی که از متن بارگذاری می‌شود، قفل‌هایی را که در آن نام برده شده‌اند نگه می‌دارد. سندی که هیچ قفلی را نام نبرد، مانند هر فایلی که پیش از نسخهٔ `4.0.0` ذخیره شده است، صرف‌نظر از ناحیهٔ دید و زبانه‌ای که ذخیره کرده، با همهٔ قفل‌ها در حالت روشن، با بزرگ‌نمایی 100% و در زبانهٔ ERD باز می‌شود. ناحیهٔ دید آن در مبدأ `0, 0` قفل می‌شود و اگر هیچ بخشی از نمودار در آنجا رسم نشده باشد، نما در عوض روی نمودار باز می‌شود؛ [setInitialValue](./erd-editor-element.md#setinitialvalue) را ببینید.
+فایلی که پیش از نسخهٔ `4.2.0` ذخیره شده است، در حالی باز می‌شود که نمایش نام‌ها روی نمای `Physical Names` قفل است، حتی اگر همهٔ قفل‌های دیگر آن خاموش باشند. ویرایشگر نسخهٔ `4.0.0` یا `4.1.0` هنگام ذخیره، قفل نمایش نام‌ها را همان‌طور که هست نگه می‌دارد اما خود نما را کنار می‌گذارد، بنابراین فایلی از نسخهٔ `4.2.0` که نمایش نام‌ها در آن بدون قفل ذخیره شده است، بدون قفل می‌ماند اما دوباره روی نمای `Physical Names` باز می‌شود.
 برای بقیهٔ API، [ErdEditorElement](./erd-editor-element.md) را ببینید.
 
 ### CDN {#cdn}
@@ -56,7 +57,7 @@ editor.addEventListener('change', () => {
 ```
 
 `esm.run` وابستگی‌های خارجی بسته را برای شما مسیریابی می‌کند، بنابراین این روش بدون باندلر کار می‌کند.
-نشانی بدون نسخه همیشه آخرین نسخه را ارائه می‌دهد. اگر نمی‌خواهید یک ارتقای نسخهٔ اصلی بدون اطلاع قبلی به صفحهٔ شما برسد، نسخه را ثابت کنید — `https://esm.run/@dineug/erd-editor@4.1.0`.
+نشانی بدون نسخه همیشه آخرین نسخه را ارائه می‌دهد. اگر نمی‌خواهید یک ارتقای نسخهٔ اصلی بدون اطلاع قبلی به صفحهٔ شما برسد، نسخه را ثابت کنید — `https://esm.run/@dineug/erd-editor@4.2.0`.
 خود `4.0.0` نیز یک ارتقای نسخهٔ اصلی است: صفحه‌ای که باید روی 3.x بماند، `@3.10.0` را ثابت می‌کند؛ [ارتقا از 3.x](#upgrading-from-3x) را ببینید.
 
 ### تگ script {#script-tag}
@@ -66,14 +67,14 @@ editor.addEventListener('change', () => {
 
 ```html
 <erd-editor></erd-editor>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@4.1.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@4.2.0"></script>
 <script>
   const editor = document.querySelector('erd-editor');
   editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
 </script>
 ```
 
-وارد کردن آن `<erd-editor>` را به همان شیوه ثبت می‌کند؛ `window.ErdEditor` دو تابع callback فایل، یعنی `ErdEditor.setExportFileCallback` و `ErdEditor.setImportFileCallback`، و از نسخهٔ `3.9.2`، `ErdEditor.createKeyBindingMap` را در خود دارد.
+وارد کردن آن `<erd-editor>` را به همان شیوه ثبت می‌کند؛ `window.ErdEditor` دو تابع callback فایل، یعنی `ErdEditor.setExportFileCallback` و `ErdEditor.setImportFileCallback`، و از نسخهٔ `3.9.2`، `ErdEditor.createKeyBindingMap` را در خود دارد. از نسخهٔ `4.2.0`، `ErdEditor.dictionaryRowChords` را نیز در خود دارد؛ [dictionaryRowChords](./erd-editor-element.md#dictionaryrowchords) را ببینید.
 نگاشت exports همچنان باندلر را به ماژول‌های ES هدایت می‌کند، بنابراین نصب از npm هرگز از این فایل استفاده نمی‌کند.
 
 ### HTML {#html}
@@ -166,17 +167,18 @@ const found = document.querySelector('erd-editor'); // ErdEditorElement | null
 
 ## نقاط ورود {#entry-points}
 
-وارد کردن `@dineug/erd-editor` به‌عنوان اثر جانبی، `<erd-editor>` را ثبت می‌کند. علاوه بر این، نوع عنصر، دو تابع تنظیم callback، از نسخهٔ `3.9.2` کلیدهای میان‌بر پیش‌فرض همراه با نوع‌هایشان و از نسخهٔ `4.0.0` نوع‌های زبان نمایش و نوع گزینه‌های `getSchemaSQL()` را صادر می‌کند.
+وارد کردن `@dineug/erd-editor` به‌عنوان اثر جانبی، `<erd-editor>` را ثبت می‌کند. علاوه بر این، نوع عنصر، دو تابع تنظیم callback، از نسخهٔ `3.9.2` کلیدهای میان‌بر پیش‌فرض همراه با نوع‌هایشان، از نسخهٔ `4.0.0` نوع‌های زبان نمایش و نوع گزینه‌های `getSchemaSQL()` و از نسخهٔ `4.2.0` ترکیب‌های کلید ردیف‌ها در زبانهٔ واژه‌نامه را صادر می‌کند.
 
 | خروجی | توضیح |
 | --- | --- |
 | `ErdEditorElement` (نوع) | رابط عنصر؛ [ErdEditorElement](./erd-editor-element.md) را ببینید. |
 | `setExportFileCallback(cb)` | دانلود مرورگر را جایگزین می‌کند، `(blob, { fileName }) => void`. |
-| `setImportFileCallback(cb)` | انتخابگر فایل مرورگر را جایگزین می‌کند، `({ type, op, accept, mode }) => void`؛ `mode` از نسخهٔ `4.0.0`. |
+| `setImportFileCallback(cb)` | انتخابگر فایل مرورگر را جایگزین می‌کند، `({ type, op, accept, mode }) => void`؛ `mode` از نسخهٔ `4.0.0`. از نسخهٔ `4.2.0`، `Import CSV` در زبانهٔ واژه‌نامه حتی با وجود تابع callback تنظیم‌شده، انتخابگر فایل مرورگر را باز می‌کند؛ [کادرهای گفت‌وگوی فایل](#file-dialogs) را ببینید. |
 | `createKeyBindingMap()` | در هر فراخوانی، کلیدهای میان‌بر پیش‌فرض را به‌صورت یک `KeyBindingMap` جدید برمی‌گرداند؛ [createKeyBindingMap](./erd-editor-element.md#createkeybindingmap) را ببینید. |
 | `KeyBindingMap`، `KeyBindingName`، `ShortcutOption` (نوع‌ها) | یک نگاشت کلیدهای میان‌بر، اجتماع نام‌های فرمان آن و یک کلید میان‌بر. |
+| `dictionaryRowChords(map)` | از نسخهٔ `4.2.0`. ترکیب‌های کلیدی را که شبکهٔ زبانهٔ [واژه‌نامه](../guide/guides/dictionary.md#adding-and-deleting-rows) با آن‌ها، بر اساس `KeyBindingMap` که ارسال می‌کنید، ردیف درج و حذف می‌کند، در هر فراخوانی به‌صورت یک `ShortcutOption[]` جدید برمی‌گرداند. ترکیبی که ردیف‌ها را در بالا درج می‌کند، یعنی `Alt+Shift+Enter` با مقادیر پیش‌فرض، در هیچ کلید میان‌بری نیامده است؛ [dictionaryRowChords](./erd-editor-element.md#dictionaryrowchords) را ببینید. |
 | `LocaleCode`، `LocaleOption` (نوع‌ها) | از نسخهٔ `4.0.0`. کدهای 25 زبان نمایش و همین کدها به‌علاوهٔ `'system'` که `setLocale()` می‌گیرد؛ [زبان نمایش](./erd-editor-element.md#display-language) را ببینید. |
-| `SchemaSQLOptions` (نوع) | از نسخهٔ `4.0.0`. گزینه‌های `statements` و `header` که `getSchemaSQL()` می‌گیرد؛ [getSchemaSQL](./erd-editor-element.md#getschemasql) را ببینید. |
+| `SchemaSQLOptions` (نوع) | از نسخهٔ `4.0.0`. گزینه‌هایی که `getSchemaSQL()` می‌گیرد: `statements`، `header` و از نسخهٔ `4.2.0`، `logicalNameAsComment`؛ [getSchemaSQL](./erd-editor-element.md#getschemasql) را ببینید. |
 
 `@dineug/erd-editor/engine.js` نقطهٔ ورود دوم است. این نقطهٔ ورود مخزن سند را بدون DOM اجرا می‌کند، بنابراین در یک Web Worker کار می‌کند؛ [ذخیره‌سازی راه دور](./advanced/remote-storage.md) را ببینید.
 این نقطهٔ ورود `createReplicationStore` و نوع `ReplicationStore` را صادر می‌کند. از نسخهٔ `3.10.0`، نوع `ReplicationChange` را نیز صادر می‌کند، یعنی `{ value: string; changed: boolean }`، که شنوندهٔ رویداد `change` یک رونوشت آن را دریافت می‌کند؛ [on@change](./advanced/remote-storage.md#onchange) را ببینید.
@@ -188,6 +190,7 @@ const found = document.querySelector('erd-editor'); // ErdEditorElement | null
 
 وارد کردن و صادر کردن از طریق توابع callback قابل تزریق انجام می‌شوند، بنابراین میزبانی که کادر گفت‌وگوی فایل مرورگر را ندارد — برای نمونه یک webview در IDE — می‌تواند کادر گفت‌وگوی خودش را فراهم کند.
 این دو متقارن نیستند: صادر کردن فایل نهایی را به شما تحویل می‌دهد، در حالی که وارد کردن فقط یک فایل درخواست می‌کند و خودتان محتوا را به ویرایشگر بازمی‌گردانید.
+از نسخهٔ `4.2.0`، `Import CSV` در زبانهٔ واژه‌نامه تنها وارد کردنی است که هرگز تابع callback وارد کردن را فراخوانی نمی‌کند، چون `type` این تابع مقداری برای CSV ندارد. این گزینه همیشه انتخابگر فایل خود مرورگر را برای فایل‌های `.csv` باز می‌کند؛ [وارد کردن و صادر کردن CSV](../guide/guides/dictionary.md#importing-and-exporting-csv) را ببینید.
 
 `op` برابر `set` یا `diff` است — یک `diff` به `setDiffValue()` می‌رود، هر `type` که داشته باشد. در غیر این صورت `type` متد را انتخاب می‌کند و `accept` پسوندهای آن نوع را در بر دارد، آماده برای تحویل به کادر گفت‌وگوی فایل میزبان.
 از نسخهٔ `4.0.0`، وقتی کاربر [وارد کردن و افزودن](../guide/guides/file-import-export.md#import-and-add) را انتخاب کرده باشد، `set` حامل `mode: 'append'` است و برای وارد کردن ساده هیچ `mode` ندارد. آن را منتقل کنید: اگر تابع callback آن را کنار بگذارد، نموداری را که کاربر خواسته بود به آن افزوده شود جایگزین می‌کند.
@@ -229,8 +232,8 @@ setImportFileCallback(async ({ type, op, accept, mode }) => {
 هر `type` را که پشتیبانی می‌کنید جداگانه بررسی کنید و بقیه را نادیده بگیرید.
 `setSchemaJSON()` در حالت جایگزینی، مانند مقداردهی خاصیت `value`، سند را پیش از تجزیه پاک می‌کند، بنابراین فرستادن داده‌ای که سند `.erd.json` نیست به آنجا — از طریق یک `else` فراگیر، یا به این دلیل که یک `type` که بعدها اضافه شده به آن شاخه رسیده است — به‌جای وارد کردن چیزی، نمودار را خالی می‌کند.
 
-مقدار `fileName` که ویرایشگر تولید می‌کند، `<database name>-<timestamp>` به‌علاوهٔ پسوند فایل است، که در آن مهر زمانی، زمان محلی با قالب `yyyy-MM-dd'T'HH_mm_ss` است. اگر نام پایگاه داده خالی باشد، `unnamed` به کار می‌رود.
-تابع callback صادر کردن این فایل‌ها را دریافت می‌کند. از نسخهٔ `4.0.0`، SVG و فایل‌های مولد کد نیز در میان آن‌ها هستند و فایل `.sql` از `Save file` در زبانهٔ طرح‌واره SQL می‌آید، نه مستقیماً از `Export`.
+مقدار `fileName` که ویرایشگر تولید می‌کند، `<database name>-<timestamp>` به‌علاوهٔ پسوند فایل است، که در آن مهر زمانی، زمان محلی با قالب `yyyy-MM-dd'T'HH_mm_ss` است. اگر نام پایگاه داده خالی باشد، `unnamed` به کار می‌رود. فایل CSV واژه‌نامه نام برگهٔ خود را پیش از پسوند می‌آورد، مانند `<database name>-<timestamp>-words.csv`.
+تابع callback صادر کردن این فایل‌ها را دریافت می‌کند. از نسخهٔ `4.0.0`، SVG و فایل‌های مولد کد نیز در میان آن‌ها هستند و فایل `.sql` از `Save file` در زبانهٔ طرح‌واره SQL می‌آید، نه مستقیماً از `Export`. از نسخهٔ `4.2.0`، فایل CSV زبانهٔ واژه‌نامه نیز در میان آن‌هاست.
 
 | فایل | پسوند | `type` در Blob |
 | --- | --- | --- |
@@ -238,6 +241,7 @@ setImportFileCallback(async ({ type, op, accept, mode }) => {
 | `Save file` در زبانهٔ طرح‌واره SQL، شامل متنی که این زبانه نشان می‌دهد؛ [طرح‌واره SQL](../guide/guides/schema-sql.md) را ببینید | `.sql` | ندارد |
 | کادر گفت‌وگوی [صادر کردن تصویر](../guide/guides/file-import-export.md#image) | `.png` یا `.svg` | `image/png` یا `image/svg+xml` |
 | `Save file` در زبانهٔ مولد کد؛ [مولد کد](../guide/guides/code-generator.md) را ببینید | پسوند زبان کد: `.cs`، `.go`، `.java`، `.kt`، `.php`، `.rs`، `.scala`، `.swift`، `.ts`، `.py`، `.aml`، `.dbml`، `.graphql`، `.json` یا `.mmd` | ندارد |
+| `Export CSV` در زبانهٔ واژه‌نامه، شامل همهٔ ردیف‌های برگهٔ نمایش داده‌شده، صرف‌نظر از آنچه جست‌وجوی آن فهرست می‌کند؛ [وارد کردن و صادر کردن CSV](../guide/guides/dictionary.md#importing-and-exporting-csv) را ببینید | `.csv` | `text/csv` |
 
 میزبانی که پردازشگر را بر اساس پسوند انتخاب می‌کند، برای هر یک از آن‌ها به یک پردازشگر نیاز دارد.
 
@@ -261,5 +265,5 @@ Chrome 91+، Edge 94+، Firefox 93+، Safari 16.4+ — خط پایهٔ ES2022 ک
 - تابع callback وارد کردن برای «وارد کردن و افزودن»، `mode: 'append'` را دریافت می‌کند که تابع callback باید آن را منتقل کند. تابع callback صادر کردن اکنون فایل‌های `.svg` و فایل‌های مولد کد را نیز دریافت می‌کند و `Export` ▸ `Schema SQL` به‌جای ذخیره کردن، زبانهٔ طرح‌واره SQL را باز می‌کند، بنابراین فایل `.sql` فقط از `Save file` همان زبانه می‌رسد؛ [کادرهای گفت‌وگوی فایل](#file-dialogs) را ببینید.
 - کلیدهای `Delete` و `Backspace` به فرمان جدید `removeSelection` متصل شده‌اند. تا زمانی که ویرایشگر بیرون از یک فیلد متنی فوکوس دارد، در همهٔ زبانه‌ها از رفتار پیش‌فرض کلید جلوگیری می‌شود و در زبانهٔ ERD موارد انتخاب‌شده حذف می‌شوند. `KeyBindingName` و `KeyBindingMap` اکنون آن را در بر می‌گیرند و `setKeyBindingMap({ removeSelection: [] })` هر دو کلید را به صفحه وامی‌گذارد؛ [setKeyBindingMap](./erd-editor-element.md#setkeybindingmap) را ببینید.
 - `ThemeOptions.appearance` مقدار `'system'` را نیز می‌پذیرد، یعنی گزینهٔ `System` در سازندهٔ طرح زمینه، که با روشن کردن `systemDarkMode` تنظیم می‌شود. رویداد `changePresetTheme` تا زمانی که این گزینه انتخاب شده است، `'system'` را گزارش می‌کند، بنابراین آن را همان‌طور که هست ذخیره کنید و به `setPresetTheme` بازگردانید. با روشن بودن `systemDarkMode`، فراخوانی `setPresetTheme()` با `'light'` یا `'dark'` اکنون باقی می‌ماند، به‌جای اینکه با تغییر بعدی در OS بازنویسی شود؛ [systemDarkMode](./erd-editor-element.md#systemdarkmode) و [changePresetTheme](./erd-editor-element.md#changepresettheme) را ببینید.
-- `@dineug/erd-editor-mcp` نسخهٔ `1.0.0`، افزونهٔ VS Code نسخهٔ `4.0.0` یا بالاتر و پلاگین‌های Obsidian و JetBrains نسخهٔ `1.0.0` یا بالاتر از پروتکل هاب 2 استفاده می‌کنند. سرور نسخهٔ `1.0.0` و نسخه‌ای قدیمی‌تر از ویرایشگر که به عامل‌ها سرویس می‌دهد، یا سروری قدیمی‌تر و یکی از این ویرایشگرها، یکدیگر را با `protocolMismatch` رد می‌کنند و طرفی را که باید به‌روزرسانی شود نام می‌برند؛ [به‌روزرسانی](../mcp/installation.md#updating) را ببینید.
+- `@dineug/erd-editor-mcp` نسخهٔ `1.0.0` یا بالاتر، افزونهٔ VS Code نسخهٔ `4.0.0` یا بالاتر و پلاگین‌های Obsidian و JetBrains نسخهٔ `1.0.0` یا بالاتر از پروتکل هاب 2 استفاده می‌کنند. سرور نسخهٔ `1.0.0` یا بالاتر و نسخه‌ای قدیمی‌تر از ویرایشگر که به عامل‌ها سرویس می‌دهد، یا سروری قدیمی‌تر و یکی از این ویرایشگرها، یکدیگر را با `protocolMismatch` رد می‌کنند و طرفی را که باید به‌روزرسانی شود نام می‌برند؛ [به‌روزرسانی](../mcp/installation.md#updating) را ببینید.
 - نشانی CDN بدون نسخه اکنون آخرین نسخهٔ 4.x را ارائه می‌دهد. برای ماندن روی 3.x، `@3.10.0` را ثابت کنید؛ [CDN](#cdn) را ببینید.

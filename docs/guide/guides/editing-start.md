@@ -77,8 +77,8 @@ Start a relationship from the context menu, from the [canvas toolbar](./table-re
 - One N: `Ctrl + Alt + 4` (Windows/Linux) or `⌘ + ⌥ + 4` (Mac)
 
 Once a type is armed the cursor changes. Click the parent table first, then the child table.  
-The parent gets a primary key if it does not have one, and for each of the parent's primary key columns the child gets a `Not Null` foreign key column with the same data type, default, and comment.  
-A serial key is the exception: its foreign key takes the integer type the serial stores, such as `integer` for `serial4` — see [Identifying Relationships](./relationship-editing.md#identifying-relationships).  
+The parent gets a primary key if it does not have one, and for each of the parent's primary key columns the child gets a `Not Null` foreign key column with the same data type, default, comment, [logical name](./logical-names.md), and [domain](./dictionary.md#domains-and-data-types).  
+A serial key is the exception: its foreign key takes the integer type the serial stores, such as `integer` for `serial4`, and then links no domain — see [Identifying Relationships](./relationship-editing.md#identifying-relationships).  
 Each foreign key column is named after its key: a one-word name such as `id` gets the parent table's name in front (`user_id`), a name of several words such as `member_id` is kept, and a name the child already has is numbered (`user_id_2`) — see [Foreign Key Column Names](./relationship-editing.md#foreign-key-column-names).  
 Clicking one table twice draws a self-referencing relationship.  
 A new relationship starts with `On Delete` and `On Update` both `Not set`; change them from its context menu — see [ON DELETE and ON UPDATE](./relationship-editing.md#on-delete-and-on-update).  
@@ -91,7 +91,8 @@ Once the parent is picked, pointing at a table the relationship can end on outli
 
 The parent shows the buttons too once the pointer has moved a short way from where you clicked it, so a self-referencing relationship can also be mapped onto existing columns.  
 A finger has no hover, so when you draw with one the buttons never show and tapping the child table draws the relationship at once; a pen shows them as a mouse does.  
-If the parent has lost its primary key by the time you reach the child, for example to an undo or a collaborator's edit, `Create new columns` is dimmed with the tooltip `<parent> has no primary key to copy`, and clicking the child table ends the draw without drawing anything.
+If the parent has lost its primary key by the time you reach the child, for example to an undo or a collaborator's edit, `Create new columns` is dimmed with the tooltip `<parent> has no primary key to copy`, and clicking the child table ends the draw without drawing anything.  
+The tooltip names the parent as the [Name View](./logical-names.md#beyond-the-canvas) does.
 
 ![Drawing a One N relationship with ⌘ + ⌥ + 4, then a Zero N one from the canvas toolbar, the child table outlined with its Map to existing columns and Create new columns buttons](/img/demo-relationship.webp)
 

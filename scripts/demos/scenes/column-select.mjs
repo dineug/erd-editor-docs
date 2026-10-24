@@ -31,7 +31,7 @@ export default {
   height: 450,
   async setup(d) {
     await seedSQL(d, SQL, {
-      tables: { products: { x: 20, y: 12 } },
+      tables: { products: { x: 36, y: 12 } },
       settings: { databaseName: 'shop', zoomLevel: 1.3 },
     });
     const id = await d.columnBox('products', 'id');

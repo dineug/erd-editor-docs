@@ -1,5 +1,5 @@
 ---
-sidebar_position: 4
+sidebar_position: 5
 description: 选中、移动、复制、删除表与备注并创建其副本，设置颜色与显示选项、定义索引与备用键、选择数据库、浏览无限画布以及比较文档。
 ---
 
@@ -7,15 +7,16 @@ description: 选中、移动、复制、删除表与备注并创建其副本，�
 
 表与备注创建之后的所有操作，包括选中、移动、复制、删除、着色，以及设置画布显示哪些内容，还包括围绕它们的画布控制。  
 先是表与备注的相关命令；然后是表属性、聚焦于表、索引与备用键、自动布局和数据库厂商；最后是画布本身：画布工具栏、缩放、平移与跳转的落点，以及 Diff Viewer。  
-表分组是容纳表的框，有单独的一页介绍，参见[表分组](./table-groups.md)。
+表分组是容纳表的框，有单独的一页介绍，参见[表分组](./table-groups.md)。  
+逻辑名和决定表显示哪些名称的名称显示也是如此，参见[逻辑名](./logical-names.md)。
 
 ## 多选
 
 支持以下三种方式：
 
-- `Ctrl + drag` (Windows/Linux) or `⌘ + drag` (Mac)
-- `Ctrl + click` (Windows/Linux) or `⌘ + click` (Mac)
-- `Ctrl + A` or `Ctrl + Alt + A` (Windows/Linux)，`⌘ + A` or `⌘ + ⌥ + A` (Mac)
+- `Ctrl + drag` (Windows/Linux) 或 `⌘ + drag` (Mac)
+- `Ctrl + click` (Windows/Linux) 或 `⌘ + click` (Mac)
+- `Ctrl + A` 或 `Ctrl + Alt + A` (Windows/Linux)，`⌘ + A` 或 `⌘ + ⌥ + A` (Mac)
 
 备注的选中方式相同，两个全选快捷键都会一次性选中所有表与备注。通过 View Option → `Memos` 隐藏的备注既不会被全选，也不会被选择框选中，参见[表显示选项](#table-view-options)。  
 在[表分组](./table-groups.md#selecting-groups)的标题栏上 `Ctrl + click` (Windows/Linux) 或 `⌘ + click` (Mac) 可以将其加入选中范围，但全选从不会选中表分组。  
@@ -26,11 +27,14 @@ description: 选中、移动、复制、删除表与备注并创建其副本，�
 
 ![用 ⌘ + drag 和 ⌘ + click 选中表，再用 ⌘ + A 选中所有表与备注](/img/demo-table-select.webp)
 
-在协同编辑会话中，每位参与者的选中状态、获得焦点的单元格和选择框都会以该参与者的颜色绘制在画布上。参见[协同编辑](../../api/advanced/collaborative-editing.md)。
+在协同编辑会话中，每位参与者的选中状态、获得焦点的单元格和选择框都会以该参与者的颜色绘制在画布上。参见[协同编辑](../../api/advanced/collaborative-editing.md)。  
+当参与者使用的是另一种显示方式时，其获得焦点的单元格会绘制在你的显示方式中替代它的那个单元格上，例如其名称单元格会绘制在你的逻辑名单元格上，参见[协作者](./logical-names.md#collaborators)。
 
 ## 移动多个表
 
 拖动已经处于选中范围内的表或备注时，无需任何修饰键，整个选中范围都会一起移动。  
+表可以通过其表头或任意一个列行拖动，因此从列行开始的拖动移动的是表，而不是列。列则改为通过获得焦点的行旁边的拖动手柄移动，参见[调整与移动列](./table-editing.md#调整与移动列)。  
+在表头单元格或列行上，只有当指针移动了一小段距离后表才会开始移动，因此在那里点击仍会让单元格获得焦点，双击仍会打开其编辑器。拖动永远不会从表的颜色边缘（它会打开选色器）、表头上的 `+` 和 `x` 按钮或列行的 `x` 开始。  
 拖动选中范围之外的对象时，选中状态会收缩到该对象上，只移动它。无论哪种情况，`Ctrl + drag` (Windows/Linux) 或 `⌘ + drag` (Mac) 都会保留选中状态。  
 只有鼠标左键可以移动表与备注。右键点击只决定右键菜单作用于哪些对象，不会移动任何内容；用鼠标中键拖动则会平移画布，参见[浏览画布](#getting-around-the-canvas)。
 
@@ -47,7 +51,9 @@ description: 选中、移动、复制、删除表与备注并创建其副本，�
 复制选中的表与备注，并将它们作为新的表与备注粘贴出来。  
 快捷键：`Ctrl + C` (Windows/Linux) 或 `⌘ + C` (Mac)，`Ctrl + V` (Windows/Linux) 或 `⌘ + V` (Mac)
 
-复制的表会保留名称、注释、列和颜色，复制的备注会保留文本、尺寸和颜色。  
+复制的表会保留名称、逻辑名、注释、列和颜色，复制的备注会保留文本、尺寸和颜色。  
+复制的每一列都会保留其逻辑名，每个表名和列名也都会保留其是否由词典生成的状态，参见[生成物理名](./dictionary.md#deriving-physical-names)。  
+粘贴的列只有在同时满足两个条件时才会保留其域关联：粘贴到的图中列有正是那个域（而不只是同名的域），并且该域的数据类型仍与复制该列时相同。否则，该列粘贴后不关联任何域，并保留复制时的类型，参见[关联列](./dictionary.md#linking-a-column)。  
 索引和关系也会一并复制：索引会被完整复制到复制出的表上；关系则只有在其连接的两个表都在复制范围内时才会被复制，并会带上其类型以及 ON DELETE 与 ON UPDATE 操作。只有一端在范围内的关系会被丢弃，而不会保留指向原表的连接。  
 粘贴出来的副本会成为新的选中对象，重复粘贴同一份内容时每次都会再偏移 `50px`，因此多次粘贴不会相互重叠。  
 副本不会保留其所属的[表分组](./table-groups.md)：粘贴出来的表不属于任何分组，即使它落在某个分组的框内也是如此；选中的分组也不会被复制。  
@@ -60,11 +66,12 @@ description: 选中、移动、复制、删除表与备注并创建其副本，�
 ## 创建表与备注的副本
 
 按住 `Alt` 并用鼠标左键拖动表或备注。  
+表可以通过其表头或任意一个列行抓取，因此在列行上 `Alt + drag` 会创建表的副本，而不会改变列的顺序。在列的拖动手柄上按住 `Alt` 不会创建任何副本：该列会像普通的手柄拖动一样移动，参见[调整与移动列](./table-editing.md#调整与移动列)。  
 半透明的预览会跟随指针移动，松开鼠标按键后副本会落在预览所在的位置。  
 如果拖动的对象已经属于某个选中范围，则整个选中范围都会被复制。否则选中状态会变为指针下的那个对象。  
 `Alt + click` 而不移动时，副本会落在右下方 `50px` 处，如果该位置已被占用则继续向右下方偏移。
 
-副本携带的内容与粘贴相同：名称、注释、列、颜色和备注尺寸，以及完全落在复制范围内的索引和关系。与粘贴一样，副本不属于任何表分组。  
+副本携带的内容与[粘贴](#copyingpasting-tables-and-memos)相同：名称和逻辑名、注释、列、颜色和备注尺寸，以及完全落在复制范围内的索引和关系。由于副本仍在同一张图中，它会原样保留每一列的域关联。与粘贴一样，副本不属于任何表分组。  
 在表分组的标题栏上 `Alt + drag` 会像普通拖动一样移动该分组；永远不会为分组创建副本。
 
 ![用 Alt + drag 创建表的副本，再用 Alt + click 在右下方再放一个副本](/img/demo-table-duplicate.webp)
@@ -119,6 +126,7 @@ description: 选中、移动、复制、删除表与备注并创建其副本，�
 - Table Comment
 - Column Comment
 - DataType
+- Domain
 - Default
 - Not Null
 - Unique
@@ -129,7 +137,9 @@ description: 选中、移动、复制、删除表与备注并创建其副本，�
 - Table Groups
 - Memos
 
-`Unique`、`Alternate Key` 和 `Auto Increment` 默认关闭，其余选项默认开启。  
+`Domain`、`Unique`、`Alternate Key` 和 `Auto Increment` 默认关闭，其余选项默认开启。  
+表显示哪些名称不属于显示选项：画布右键菜单中紧跟在 `View Option` 之后的 `Name View` 用于选择物理名、逻辑名或两者，参见[切换显示方式](./logical-names.md#switching-the-view)。  
+`Domain` 会为每一列添加一个单元格，其位置由[列顺序](./settings.md#adjusting-column-order)决定，显示该列所关联的域的名称。未关联 `Domains` 工作表中所列的任何域的列，会在该单元格中显示变暗的 `domain` 占位文字。该单元格在每种显示方式下都会显示。`Domain` 关闭期间，`Logical Names` 会改为在类型单元格中显示已关联的域的名称，参见[域单元格](./logical-names.md#the-domain-cell)。  
 `Alternate Key` 会标记每个备用键的列，例如 `AK1.1`，参见[备用键](#alternate-keys)。  
 `Referential Actions` 显示关系的 ON DELETE 与 ON UPDATE 操作在其连接线子表一端添加的 `D:` 和 `U:` 标签，参见[读懂连接线](./relationship-editing.md#reading-a-connector)。关闭它只会隐藏这些标签，不会移动任何表或连接线。  
 `Table Groups` 显示[表分组](./table-groups.md)，以及分组中各表表头上的分组颜色。关闭它会在画布、小地图和导出的图片中隐藏这些内容，不会移动任何表，每个表也仍留在其分组中，参见[隐藏分组](./table-groups.md#hiding-groups)。关闭它还会从[资源管理器](./explorer.md#the-tree)中移除 `Table Groups` 文件夹，从[画布工具栏](#canvas-toolbar)中移除 `New Table Group`，资源管理器的搜索也不再查找分组名称。  
@@ -139,19 +149,19 @@ description: 选中、移动、复制、删除表与备注并创建其副本，�
 
 ![切换 View Option 中的条目时表的显示随之变化，用 Alternate Key 将复合唯一索引的两列标记为 AK1.1 和 AK1.2，然后关闭再开启 Memos](/img/demo-view-options.webp)
 
-Visualization 标签页 `Flow` 模式中的卡片不遵循这些选项：它们使用自己的[行显示](./visualization.md#row-display)，并且即使关闭了 `Relationship` 也会绘制连接线。
+Visualization 标签页 `Flow` 模式中的卡片不遵循这些选项，包括 `Domain`：它们使用自己的[行显示](./visualization.md#row-display)，并且即使关闭了 `Relationship` 也会绘制连接线。卡片排布哪些单元格仅取决于名称显示，参见[卡片上的名称](./visualization.md#names-on-the-cards)。
 
 ## 表属性 {#table-properties}
 
 打开表的属性面板。  
 可以通过表的右键菜单中的 `Table Properties` 打开，此时打开的是你右键点击的表；也可以选中一个表后按 `Alt + Space`。  
-面板会在变暗的画布中央打开。只有画布会变暗，因此已打开的[资源管理器](./explorer.md#dialogs-beside-it)会保持打开，并且可以在面板旁边继续使用。面板顶部包含 `Table Properties` 标题、以标签形式列出的最近打开的五个表（当前表会高亮显示），以及一个关闭按钮。点击某个表的标签即可切换到该表，无需重新打开面板。  
+面板会在变暗的画布中央打开。只有画布会变暗，因此已打开的[资源管理器](./explorer.md#dialogs-beside-it)会保持打开，并且可以在面板旁边继续使用。面板顶部包含 `Table Properties` 标题、以标签形式列出的最近打开的五个表（当前表会高亮显示），以及一个关闭按钮。每个标签都按[名称显示](./logical-names.md#beyond-the-canvas)的方式显示其表名。点击某个表的标签即可切换到该表，无需重新打开面板。  
 顶部下方有三个标签页：`Indexes`、`Schema SQL` 和 `Code Generator`。三个标签页共用同一尺寸的面板，因此切换标签页时面板不会移动，也不会改变大小。  
 可以通过关闭按钮、`Escape` 或点击面板外部的画布将其关闭。  
 在资源管理器中选择文件夹以外的行，或跳转到其搜索的匹配项时，会先关闭表属性再跳转。`Ctrl + F` (Windows/Linux) 或 `⌘ + F` (Mac) 也会关闭表属性，该按键会打开资源管理器的搜索；资源管理器已经打开时，则把光标放入其查找输入框。在资源管理器中的其他任何点击（包括点击文件夹行），以及点击工具栏中的 `Explorer` 按钮，都会让表属性保持打开。键盘焦点位于资源管理器中时按下的 `Escape` 只会把键盘焦点交还给画布，因此需要再按一次 `Escape` 才能关闭表属性。
 
 `Indexes` 标签页的介绍参见[索引](#indexes)。  
-`Schema SQL` 标签页按所选[数据库](#databases)显示该表的 DDL：它的 `CREATE TABLE`、部分数据库为其 Unique 列单独写出的约束，以及它的索引。无论工具栏中的 [Schema SQL](./schema-sql.md) 标签页如何设置，它始终只写出普通的 `CREATE` 语句，不带头部语句，也不带前置或后置脚本。它没有选项面板，其右键菜单只提供 `Database` 和 `Bracket`。  
+`Schema SQL` 标签页按所选[数据库](#databases)显示该表的 DDL：它的 `CREATE TABLE`、部分数据库为其 Unique 列单独写出的约束，以及它的索引。无论工具栏中的 [Schema SQL](./schema-sql.md) 标签页如何设置，它始终只写出普通的 `CREATE` 语句，不带头部语句，不带前置或后置脚本，也不会把逻辑名写入空注释，参见[将逻辑名作为注释](./schema-sql.md#logical-names-as-comments)。它没有选项面板，其右键菜单只提供 `Database` 和 `Bracket`。  
 `Code Generator` 标签页只为这一张表生成代码，参见[代码生成](./code-generator.md)。
 
 在 `readonly` 编辑器中，面板仍然可以打开，标题旁会显示 `Read only` 徽标，但其 `Indexes` 标签页不提供任何编辑功能。
@@ -163,19 +173,19 @@ Visualization 标签页 `Flow` 模式中的卡片不遵循这些选项：它们�
 当你右键点击的表是多个选中表中的一个时，该条目会显示为 `Focus on selected tables`，并聚焦整个选中范围。在选中范围之外的表上右键，则只聚焦该表。  
 快捷键作用于选中的表，不包括备注，没有选中任何表时不起作用。  
 选中的[表分组](./table-groups.md)在这里不起任何作用，快捷键和菜单条目都是如此：分组中的表只有在其本身被选中时才会被纳入，分组菜单中的 `Select tables` 可以选中它们。  
-缩小后的视图显示哪些内容，以及如何回到整张图，参见[可视化](./visualization.md#focusing-on-tables)。
+缩小后的视图显示哪些内容，以及如何回到整张图，参见[可视化](./visualization.md#focusing-on-tables)；如何在 Flow 之前显示过的内容之间后退和前进，参见[上一个表与下一个表](./visualization.md#previous-table-and-next-table)。
 
 ## 索引 {#indexes}
 
 索引在表属性面板的 `Indexes` 标签页中定义，并会包含在导出的 Schema SQL 中。
 
 左侧分两组列出表的键和索引。  
-`Keys` 仅在表中有键时显示，列出由表的列所声明的键：先是覆盖标记为 PK 的列的 `PK_<table name>`，然后按列的顺序，为每个标记为 Unique 的列列出 `UQ_<table name>_<column name>`。这些名称与所选数据库的 Schema SQL 一致，因此当 `Bracket` 为 `None` 时，对于 `sales.users` 这样带 schema 限定的表，除 Databricks 和 Snowflake 外的所有数据库都会列出 `PK_users`，参见[带 schema 限定的表名](./schema-sql.md#schema-qualified-table-names)。每个键都带有 `PK` 或 `UQ` 标记和一个锁形图标。它们在这里是只读的，只会随列的 [PK](./table-editing.md#列主键) 与 [Unique](./table-editing.md#not-null-unique-auto-increment) 标志而变化。  
+`Keys` 仅在表中有键时显示，列出由表的列所声明的键：先是覆盖标记为 PK 的列的 `PK_<table name>`，然后按列的顺序，为每个标记为 Unique 的列列出 `UQ_<table name>_<column name>`。无论名称显示如何，这些名称都是所选数据库的 Schema SQL 所写出的物理名，因此当 `Bracket` 为 `None` 时，对于 `sales.users` 这样带 schema 限定的表，除 Databricks 和 Snowflake 外的所有数据库都会列出 `PK_users`，参见[带 schema 限定的表名](./schema-sql.md#schema-qualified-table-names)。每个键都带有 `PK` 或 `UQ` 标记和一个锁形图标。它们在这里是只读的，只会随列的 [PK](./table-editing.md#列主键) 与 [Unique](./table-editing.md#not-null-unique-auto-increment) 标志而变化。  
 `Indexes` 按添加的顺序列出表的索引。每个索引都有一个用于设为唯一的 `UQ` 开关、一个名称输入框，以及一个用于删除的 `x`。作为[备用键](#alternate-keys)的索引还会显示其编号，例如 `AK1`。通过列表底部的 `Add Index` 添加索引。
 
-右侧在 `Columns` 下列出表的列，每列各有一个复选框。在左侧选中索引之前，右侧不可编辑。  
+右侧在 `Columns` 下列出表的列，每列各有一个复选框。每一行显示的单元格与该列在画布上的行相同，遵循列顺序、显示选项和[名称显示](./logical-names.md#beyond-the-canvas)。在左侧选中索引之前，右侧不可编辑。  
 勾选某一列会将其添加到选中的索引中，取消勾选则将其移除。选中键时，其列会显示为已勾选，但复选框保持禁用。  
-选中索引所包含的列显示在下方的 `Index order` 下。通过拖动手柄可以调整它们的顺序，点击某一行的 `ASC` 或 `DESC` 标记可以切换排序方向。在备用键中，每一行的末尾都带有其 `AK<n>.<m>` 标记。该列表一次显示三行，其余的可以滚动查看。
+选中索引所包含的列显示在下方的 `Index order` 下，每一列都按名称显示命名；在 `Both Names` 下，名称以括号形式写在逻辑名之后，例如 `Member Number (member_no)`。通过拖动手柄可以调整它们的顺序，点击某一行的 `ASC` 或 `DESC` 标记可以切换排序方向。在备用键中，每一行的末尾都带有其 `AK<n>.<m>` 标记。该列表一次显示三行，其余的可以滚动查看。
 
 在 `readonly` 编辑器中，选中键或索引时仍会显示其列，但没有 `Add Index` 和 `x`，标签页中的其他内容也都无法更改。
 
@@ -216,12 +226,12 @@ Visualization 标签页 `Flow` 模式中的卡片不遵循这些选项：它们�
 | `Tree - horizontal` | 同样的分层，改为从左到右。 |
 
 `Force` 会在排列稳定之前打开预览，提示信息上提供 `Apply` 和 `Cancel`。  
-预览的取景以布局开始时的图为准，因此在排列稳定的过程中，表可能会移出取景范围。预览以 `70%` 或更低的缩放绘制，因此表会折叠为名称和颜色边缘。  
+预览的取景以布局开始时的图为准，因此在排列稳定的过程中，表可能会移出取景范围。预览以 `70%` 或更低的缩放绘制，因此表会折叠为名称和颜色边缘。无论文件保留的是哪种显示方式，预览都会以你当前所用的显示方式打开，参见[画布之外](./logical-names.md#beyond-the-canvas)。  
 `Apply` 会保留当前时刻的位置。排列自行稳定后，布局也会自动应用。`Cancel` 或 `Escape` 则保持图不变。
 
 其余三种在主线程之外一次算完，没有过程可看：计算期间会显示一条提示，算好的布局会落在图已经占据的区域中央。`Cancel` 或 `Escape` 会丢弃你不再等待的布局；不运行 shared worker 的宿主环境则会以 `Could not place tables` 收场，参见 [Web Worker](../../api/installation.md#web-workers)。60 秒内仍未返回的布局也会以同样的方式收场。
 
-无论选择哪一种，移动的都是表和表分组，备注留在原处。指向自身的关系会被忽略，同两个表之间的多条关系只算一条。  
+无论选择哪一种，移动的都是表和表分组，备注留在原处。表按其在你当前所用的显示方式下的宽度排布。指向自身的关系会被忽略，同两个表之间的多条关系只算一条。  
 无论分组是否显示，每种布局都会让每个分组中的表聚在一起，并调整每个含有表的分组，使其围住这些表，参见[表分组](./table-groups.md#auto-layout)。  
 结果只会记录为一条历史记录，因此一次 Undo 就能把所有表和分组恢复原位。
 
@@ -259,6 +269,7 @@ Visualization 标签页 `Flow` 模式中的卡片不遵循这些选项：它们�
 - `New Table`、`New Memo` 和 `New Table Group`。`New Table` 与 `Alt + N` 一样添加一个表，`New Memo` 与 `Alt + M` 一样添加一个备注。`New Table Group` 与 `Alt + G` 一样进入[分组绘制](./table-groups.md#drawing-a-group)状态，并关闭抓手工具；与再按一次 `Alt + G` 相同，再点击一次会结束绘制而不添加分组。View Option → `Memos` 隐藏备注期间不显示 `New Memo`，View Option → `Table Groups` 隐藏分组期间不显示 `New Table Group`。`readonly` 编辑器中这三个按钮都不显示。
 - 缩放：`Zoom out`、以百分比显示的当前缩放级别，以及 `Zoom in`。这两个按钮与缩放快捷键一样逐级调整缩放，点击百分比则会把缩放恢复为 `100%`。
 - 四种关系表示法，与开始绘制关系时使用的相同。参见[开始编辑](./editing-start.md)。绘制关系需要依次点击两个表，因此选择一种表示法后工具会切回指针。
+- `Name View`，一个带向下箭头的按钮，显示当前的显示方式：`Physical Names`、`Logical Names` 或 `Both Names`。无论显示的是哪种方式，它都保持同一宽度，因此切换时工具栏永远不会移位。点击它会在工具栏上方打开列出这三种方式的列表，当前的方式带有勾选标记。选择其中一种即可切换到该方式并关闭列表；再次点击该按钮、在其他任意位置按下或按 `Escape` 则会关闭列表而不切换。`readonly` 编辑器中同样会显示它。各显示方式绘制的内容参见[名称显示](./logical-names.md#name-view)，切换是否会被保存参见[切换显示方式](./logical-names.md#switching-the-view)。
 - 禅模式 `Alt + Z`，只保留画布和这个工具栏，隐藏其余界面。再次按 `Alt + Z` 或点击按钮即可恢复。已打开的资源管理器会与其余界面一起隐藏，但不会被关闭，并会随其余界面一起恢复。禅模式下仍然可以打开资源管理器，参见[何时让位](./explorer.md#when-it-stands-aside)。
 - `Go to content` 指南针，仅在屏幕上没有任何表、显示的备注或显示的表分组时才会出现在工具栏末尾。参见[浏览画布](#getting-around-the-canvas)。
 
@@ -277,7 +288,7 @@ Visualization 标签页 `Flow` 模式中的卡片不遵循这些选项：它们�
 [画布工具栏](#canvas-toolbar)上的 `Zoom out` 和 `Zoom in` 按钮与 `Minus`、`Plus` 快捷键一样逐级调整缩放：每按一次调整 4 个百分点，并保持屏幕中心不变。两个按钮之间的百分比显示当前的缩放级别，点击它会像 `Ctrl + 0` (Windows/Linux) 或 `⌘ + 0` (Mac) 一样直接回到 `100%`。
 
 缩放范围为 `10%` ~ `150%`。  
-在 `70%` 及以下时，表会折叠为名称和颜色边缘，单元格编辑、单元格快捷键以及复制粘贴都会停止工作，直到重新放大为止。
+在 `70%` 及以下时，表会折叠为名称和颜色边缘，单元格编辑、单元格快捷键以及复制粘贴都会停止工作，直到重新放大为止。折叠的表所显示的名称遵循名称显示，参见[名称显示](./logical-names.md#name-view)。
 
 这三个快捷键同样可以缩放 Visualization 标签页，`Graph` 模式与 `Flow` 模式均适用，各自在自己的范围内缩放。参见[可视化](./visualization.md#toolbar)。
 
@@ -302,11 +313,11 @@ Visualization 标签页 `Flow` 模式中的卡片不遵循这些选项：它们�
 
 如果平移之后屏幕上没有留下任何表、显示的备注或显示的表分组，[画布工具栏](#canvas-toolbar)末尾会出现一个 `Go to content` 指南针，用箭头指出最近的对象在哪个方向、有多远。点击它即可在不改变缩放的情况下把该对象移到屏幕中央。
 
-![通过拖动空白画布、在表的上方用中键拖动、小地图和滚轮平移视图，再跟随 Go to content 指南针返回](/img/demo-canvas-navigation.webp)
+![通过拖动空白画布、滚轮、在表的上方用中键拖动以及小地图平移视图，再用 Shift + wheel 平移到内容之外，并跟随 Go to content 指南针返回](/img/demo-canvas-navigation.webp)
 
 ### 跳转的落点 {#where-a-jump-lands}
 
-所有把你带到画布上某个对象的跳转，都按同一条规则移动视图：[快速搜索](./quick-search.md#searching-the-diagram)中 `#`、`@` 和 `:` 的结果，[资源管理器](./explorer.md#going-to-a-row)中的行及其[查找与替换](./find-and-replace.md#going-to-a-match)搜索的匹配项，[Diff Viewer](#going-to-a-change) 列表中的行，Flow 中的外部链接[卡片按钮](./visualization.md#card-buttons)，以及 [Import and Add](./file-import-export.md#import-and-add) 的落点。上述各节说明跳转会选中什么，本节则说明视图会移到哪里。
+所有把你带到画布上某个对象的跳转，都按同一条规则移动视图：[快速搜索](./quick-search.md#searching-the-diagram)中 `#`、`@` 和 `:` 的结果，[资源管理器](./explorer.md#going-to-a-row)中的行及其[查找与替换](./find-and-replace.md#going-to-a-match)搜索的匹配项，[Diff Viewer](#going-to-a-change) 列表中的行，Flow 中的外部链接[卡片按钮](./visualization.md#card-buttons)，Dictionary 标签页 [Checks 工作表](./dictionary.md#the-checks-sheet)中指明某个表或列的检查项，以及 [Import and Add](./file-import-export.md#import-and-add) 的落点。上述各节说明跳转会选中什么，本节则说明视图会移到哪里。
 
 跳转永远不会改变缩放，并且最多滚动一次。从其他标签页跳转时，会先切换到 ERD 标签页。  
 它按画布实际显示的范围计算：位于顶部工具栏下方（禅模式下则为整个高度），并位于已打开的资源管理器右侧，因为资源管理器会使画布变窄，而不是覆盖在画布上。
@@ -322,8 +333,8 @@ Visualization 标签页 `Flow` 模式中的卡片不遵循这些选项：它们�
 跳转带入视野的内容，以及无法完整显示时必须显示的关键部分：
 
 - 表：整个表，关键部分是其顶部的名称栏；对于表注释中的匹配项，如果 View Option → `Table Comment` 显示了注释，关键部分则是其注释单元格。在 `70%` 及以下，表会折叠为名称，此时关键部分是框中间的名称。
-- 列：该列所在的行，关键部分是跳转到的单元格：其名称，或者在 View Option → `Column Comment` 显示注释时，匹配项所在的注释。在 `70%` 及以下，列会按表的规则把其所在的表带入视野。
-- 宽到无法完整显示的单元格，例如很长的注释：关键部分是其中匹配的文本。
+- 列：该列所在的行，关键部分是跳转到的单元格：其名称；对于逻辑名的匹配项或针对逻辑名的检查项，是其逻辑名；对于针对其域的检查项，是其域单元格；或者在 View Option → `Column Comment` 显示注释时，匹配项所在的注释。该行没有绘制这样的单元格时，跳转会转到绘制在其位置上的单元格：在 `Logical Names` 下以逻辑名代替名称，在 `Physical Names` 下以名称代替逻辑名；View Option → `Domain` 关闭期间以类型单元格代替域单元格，`DataType` 也关闭时则以整行代替。在 `70%` 及以下，列会按表的规则把其所在的表带入视野。
+- 宽到无法完整显示的单元格，例如很长的注释：关键部分是其中匹配的文本。如果跳转到的是绘制在匹配项所在单元格位置上的替代单元格，例如在 `Physical Names` 下逻辑名匹配项对应的名称，则不以文本为准。
 - 关系：横跨其两个表的框，关键部分是子表。
 - 表分组：其框，关键部分是其标题栏。
 - 备注，或 Import and Add 落下的内容块：整个备注或内容块。
@@ -337,7 +348,7 @@ Visualization 标签页 `Flow` 模式中的卡片不遵循这些选项：它们�
 在画布的右键菜单中选择 `Diff Viewer`，然后选择之前导出的 `.json` 文档。
 
 该视图会覆盖在画布之上：左侧显示变更内容，右侧并排显示保存的文档与当前文档。  
-当前文档按视图打开时的状态进行比较；此后所做的更改，包括协作者所做的更改，都不会反映到视图中。视图打开期间，已打开的[资源管理器](./explorer.md#when-it-stands-aside)会被隐藏，因此视图会占据编辑器的整个宽度。  
+当前文档按视图打开时的状态进行比较；此后所做的更改，包括协作者所做的更改，都不会反映到视图中。无论两个文件各自保留的是哪种显示方式，两侧都会以你当前所用的显示方式打开并保持该方式，参见[画布之外](./logical-names.md#beyond-the-canvas)。视图打开期间，已打开的[资源管理器](./explorer.md#when-it-stands-aside)会被隐藏，因此视图会占据编辑器的整个宽度。  
 每一侧都可以通过滚轮、拖动空白区域或表分组的主体，或在其上任意位置用中键拖动来平移，并通过 `Ctrl + Wheel` (Windows/Linux)、`⌘ + Wheel` (Mac) 或捏合手势缩放。在 `70%` 及以下，表会像在画布上一样折叠，参见[两侧的标记](#marks-on-the-two-sides)。  
 两侧都是只读的，不会修改文档中的任何内容。每一侧都有各自的选中状态，在某一侧点击表只会在该侧选中它。  
 可以通过打开时出现的 `Diff Viewer` 提示上的 `Close` 按钮或 `Escape` 关闭该视图。
@@ -360,13 +371,14 @@ Visualization 标签页 `Flow` 模式中的卡片不遵循这些选项：它们�
 - 备注：文本、位置、尺寸和颜色。
 - 表分组：名称、其中的表、颜色、位置和尺寸。
 
-因此，只是被移动、调整了大小或更改了颜色的表、备注或分组也算作已变更。位置和尺寸按整像素比较，叠放顺序以及连接线与表的接点则从不计入。
+因此，只是被移动、调整了大小或更改了颜色的表、备注或分组也算作已变更。位置和尺寸按整像素比较，叠放顺序以及连接线与表的接点则从不计入。  
+逻辑名、域关联以及 [Dictionary](./dictionary.md) 标签页中的词根、术语和域都不参与比较，因此仅对它们所做的变更既不会列出，也不会标记。由域修改的数据类型则会计入，算作该列数据类型的变更。
 
 ### 变更树 {#the-change-tree}
 
 左侧的列表以[资源管理器的树](./explorer.md#the-tree)的形式绘制，只包含发生了变更的内容：`Tables`、`Table Groups` 和 `Memos`，每一项只在其中有行时才显示；表下方则是它自己的 `Columns`、`Indexes` 和 `Foreign Keys`。外键列在其子表之下，已添加或已删除的表下方不列出任何内容。  
 每个文件夹都会显示其中的行数，所有文件夹和表在开始时都处于展开状态。  
-表和表分组按名称排列，不区分大小写。备注，以及表的列、索引和外键，沿用当前文档中的顺序，已删除的项会放回其原来的位置。备注行显示备注的第一行，外键行先显示其子表的列，然后是 `→` 以及父表及其列，例如 `user_id → users(id)`。名称为空时以斜体显示 `unnamed`。
+表行或列行按两侧打开时所用的显示方式命名。在 `Both Names` 下，行中先显示逻辑名，其后是以淡色显示的名称；在已删除的行上，淡色的名称会与其余部分一起带删除线。无论哪种显示方式，表和表分组都按名称排列，不区分大小写。备注，以及表的列、索引和外键，沿用当前文档中的顺序，已删除的项会放回其原来的位置。备注行显示备注的第一行，外键行先显示其子表的列，然后是 `→` 以及父表及其列，例如 `user_id → users(id)`。名称为空时以斜体显示 `unnamed`。
 
 每一行的末尾都有一个字母，标记为 `A`、`D`、`M` 或 `R` 的行，其名称会以该字母的颜色显示：
 
@@ -378,7 +390,7 @@ Visualization 标签页 `Flow` 模式中的卡片不遵循这些选项：它们�
 
 将指针悬停在某一行的名称上会显示其提示：先是状态，即 `Added`、`Deleted`、`Modified`、`Renamed` 或 `Changed inside`，然后每项变更各占一行，例如 `Name: users → members` 或 `NN: ✗ → ✓`。文本只引用其第一行，超过 40 个字符的部分会被截断，空值显示为 `—`。已添加或已删除的项，其提示只显示状态。
 
-树上方的 `Filter by name` 会保留当前名称或保存时的名称中包含所输入文本的行，不区分大小写。名称匹配的表会保留其所有行，名称不匹配的表则只保留匹配的行。没有任何匹配时，树为空。  
+树上方的 `Filter by name` 会保留当前名称或保存时的名称，或者当前逻辑名或保存时的逻辑名中包含所输入文本的行，不区分大小写，在每种显示方式下都是如此。名称匹配的表会保留其所有行，名称不匹配的表则只保留匹配的行。没有任何匹配时，树为空。  
 两个文档完全没有差异时，树会显示 `No changes`。
 
 拖动树的右边缘可以在 `200px` 到 `480px` 之间调整其宽度，双击该边缘则恢复为 `260px`。每次打开比较时宽度都是 `260px`，其余宽度由两侧平分。  
@@ -407,5 +419,7 @@ Visualization 标签页 `Flow` 模式中的卡片不遵循这些选项：它们�
 - 索引的变更在两侧都不做任何标记，只显示在树中。
 
 每一侧都遵循其自身文档的显示选项。变更位于该侧未绘制的单元格中时，会改为显示在名称上。列的变更位于被显示选项隐藏的单元格中时，例如默认均为关闭的 `Unique` 或 `Auto Increment`，该列的名称会变为琥珀色；在不显示钥匙图标的行上发生的主键变更也是如此。`Table Comment` 关闭期间，表注释的变更会使表名变为琥珀色。重命名的蓝色优先于这种琥珀色。被其文档隐藏的备注或表分组会列在树中，但不会绘制在该侧。
+
+`Logical Names` 不绘制名称单元格，因此重命名的蓝色，以及变更位于该侧未绘制的单元格中时的琥珀色，都会显示在代替名称绘制的逻辑名上。在每种显示方式下，数据类型的变更都会使类型单元格变为琥珀色，即使该单元格显示的是域的名称。两侧都不会绘制词典的检查在画布上为名称添加的颜色，参见[画布上的标记](./dictionary.md#marks-on-the-canvas)。
 
 在 `70%` 及以下，折叠的表会保留其轮廓。已添加或已删除的表，其名称保留绿色或红色，已重命名的表保留蓝色；否则，注释发生变更时名称会变为琥珀色。列的变更在重新放大之前不会绘制，但树中仍会列出。

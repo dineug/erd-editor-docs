@@ -1,5 +1,5 @@
 ---
-sidebar_position: 12
+sidebar_position: 13
 description: Generovanie kódu pre dvadsaťdva cieľov z diagramu, nastavenie jazyka, databázy, štýlu názvov a úvodzoviek v paneli možností, prehľad cieľov, ktoré zapisujú akcie ON DELETE a ON UPDATE vzťahu, a uloženie alebo kopírovanie výsledku.
 ---
 
@@ -103,6 +103,10 @@ Pri každom štýle názvov sa názov, ktorý je v jazyku cieľa rezervovaný, o
 Ignoruje ich aj `SeaORM`: polia a moduly pomenúva v štýle snake case, v tvare, ktorý SeaORM spätne načíta, a uložené názvy uvádza v atribúte `table_name` a tam, kde sa líšia, v atribúte `column_name`.  
 Pri týchto štyroch cieľoch panel oba zoznamy stlmí a pod nimi zobrazí upozornenie `Not used by`.
 
+Každý cieľ zapisuje fyzické názvy bez ohľadu na to, čo zobrazuje [Zobrazenie názvov](./logical-names.md#name-view).  
+Žiadny cieľ nezapisuje logický názov, a to ani do prázdneho komentára: táto karta nemá obdobu prepínača [`Write logical names into empty comments`](./schema-sql.md#logical-names-as-comments) karty Schéma SQL.  
+Žiadny cieľ nezapisuje ani doménu: stĺpec prepojený s doménou sa zapíše so svojím typom údajov rovnako ako každý iný stĺpec.
+
 ## Databáza {#database}
 
 Typy údajov sa určujú podľa vybratej databázy – pozrite si časť [Databázy](./table-related-functions.md#databases).  
@@ -132,5 +136,5 @@ Súbor sa pomenuje ako každý export, `<database name>-<timestamp>`, s prípono
 Ponuka Export nemá položku pre Generátor kódu a karta `Code Generator` v paneli Vlastnosti tabuľky nedokáže uložiť súbor.
 
 Ak chcete kód skopírovať, kliknite na tlačidlo `Copy` v dolnej časti panela alebo podržte ukazovateľ nad kódom a kliknite na tlačidlo kopírovania v jeho pravom hornom rohu, čo je v paneli Vlastnosti tabuľky jediný spôsob.  
-Na dve sekundy to potvrdí oznámenie `Copied!` so značkou začiarknutia. Ak prehliadač alebo hostiteľská aplikácia odmietne prístup do schránky, upozorní na to namiesto toho oznámenie `Couldn't copy to the clipboard` s výstražným symbolom. Opätovné kopírovanie oznámenie nahradí, namiesto aby pridalo ďalšie.  
+Na dve sekundy to potvrdí oznámenie `Copied!` so značkou začiarknutia. Ak prehliadač alebo hostiteľská aplikácia odmietne prístup do schránky, upozorní na to namiesto toho na päť sekúnd oznámenie `Couldn't copy to the clipboard` s výstražným symbolom. Opätovné kopírovanie oznámenie nahradí, namiesto aby pridalo ďalšie.  
 Text sa dá aj vyberať, takže si môžete vziať iba tú časť, ktorú potrebujete.

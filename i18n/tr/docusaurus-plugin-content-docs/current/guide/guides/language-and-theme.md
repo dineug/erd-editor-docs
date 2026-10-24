@@ -1,5 +1,5 @@
 ---
-sidebar_position: 15
+sidebar_position: 17
 description: Düzenleyicinin 25 görüntüleme dili, sağdan sola düzen, tema oluşturucunun System, Light ve Dark görünüşleri ile renkleri ve her ana uygulamanın bunları nerede sakladığı.
 ---
 
@@ -13,8 +13,10 @@ Web uygulaması, Google Drive, VS Code, JetBrains IDE'leri ve Obsidian ikisini d
 
 ## Görüntüleme dili {#display-language}
 
-Dil, düzenleyicinin kendi metnini kapsar: araç çubuğundaki araç ipuçları, bağlam menüleri, Hızlı arama, paneller ve iletişim kutuları, Ayarlar sekmesi, [karşılama ekranı](./editing-start.md#welcome-screen), bildirimler ve iletiler ile boş bir ad, veri türü, varsayılan değer veya açıklamanın tuvalde ve dışa aktarılan bir görüntüde gösterdiği yer tutucu.  
-Şunları her dilde yazıldığı gibi bırakır: tablo ve sütun adlarınız, açıklamalarınız ve notlarınız; veritabanı sistemleri, Kod oluşturucu dilleri ve dosya biçimleri; veri türleri, SQL anahtar sözcükleri ve `ON DELETE` ile `ON UPDATE` eylemleri; Şema SQL seçenekleri `Create`, `If not exists`, `Drop & re-create`, `USE` ve `CREATE + USE`; `PK`, `FK`, `UQ`, `AI`, `NN`, `N-N`, `NULL` ve `AK1.1` işaretleri; [Fark görüntüleyicinin](./table-related-functions.md#diff-viewer) `A`, `M`, `D`, `R` ve `~` durum harfleri; `None` dışındaki ad biçimi ve `Bracket` seçenekleri; klavye tuşlarının adları; tema oluşturucunun renk adları; oluşturulan SQL ve kod; dışa aktarılan dosya adları.
+Dil, düzenleyicinin kendi metnini kapsar: araç çubuğundaki araç ipuçları, tuval araç çubuğundaki ve Akış modunun araç çubuğundaki [`Name View`](./logical-names.md#switching-the-view) düğmesi, Akış modunun satır görünümü menüsü, bağlam menüleri, Hızlı arama, paneller ve iletişim kutuları, [Sözlük](./dictionary.md) sekmesi (sayfa adları, sütun başlıkları, araçları, menüsü, durum satırı ve `Checks` sayfasının listelediği denetim türleri), Ayarlar sekmesi, [karşılama ekranı](./editing-start.md#welcome-screen), bildirimler ve iletiler ile boş bir ad, mantıksal ad, veri türü, değer alanı, varsayılan değer veya açıklamanın tuvalde ve dışa aktarılan bir görüntüde gösterdiği yer tutucu.  
+Şunları her dilde yazıldığı gibi bırakır: tablo ve sütun adlarınız, [mantıksal adlarınız](./logical-names.md), açıklamalarınız ve notlarınız; Sözlük sekmesinde tuttuğunuz sözcükler, terimler ve değer alanları; veritabanı sistemleri, Kod oluşturucu dilleri ve dosya biçimleri; veri türleri, SQL anahtar sözcükleri ve `ON DELETE` ile `ON UPDATE` eylemleri; Şema SQL seçenekleri `Create`, `If not exists`, `Drop & re-create`, `USE` ve `CREATE + USE`; `PK`, `FK`, `UQ`, `AI`, `NN`, `N-N`, `NULL` ve `AK1.1` işaretleri; [Fark görüntüleyicinin](./table-related-functions.md#diff-viewer) `A`, `M`, `D`, `R` ve `~` durum harfleri; `None` dışındaki ad biçimi ve `Bracket` seçenekleri; klavye tuşlarının adları; tema oluşturucunun renk adları; oluşturulan SQL ve kod; dışa aktarılan bir sözlük CSV'sinin başlık satırı; dışa aktarılan dosya adları.
+
+Sözlük sekmesinde bir sıralama, satırları görüntüleme dilinin alfabetik sırasına göre dizer ve `Checks` sayfasının araması, hücreleri görüntüleme dilinde okundukları hâliyle eşleştirir. [Sıralama](./dictionary.md#sorting) ve [Arama](./dictionary.md#searching) bölümlerine bakın.
 
 Diller, seçicinin listelediği sırayla:
 
@@ -84,11 +86,12 @@ Bölgesel bir varyant kendi dili sayılır, bu nedenle `de-AT` Deutsch, `fr-CA` 
 
 ### Sağdan sola yazılan diller {#right-to-left-languages}
 
-עברית (İbranice), العربية (Arapça) ve فارسی (Farsça) düzenleyiciyi sağdan sola yerleştirir: Araç çubuğu, menüler, paneller ve iletişim kutuları, Hızlı arama ve Ayarlar sekmesi yansıtılır. Bir bağlam menüsünün alt menüleri sola doğru açılır ve araç çubuğundaki Geri al ile Yinele simgeleri yer değiştirir, böylece Geri al simgesi sağdan sola okuyan birinin ilerleyiş yönüne göre geriyi gösterir.
+עברית (İbranice), العربية (Arapça) ve فارسی (Farsça) düzenleyiciyi sağdan sola yerleştirir: Araç çubuğu, menüler, paneller ve iletişim kutuları, Hızlı arama, Sözlük sekmesinin çubuğu ile durum satırı ve Ayarlar sekmesi yansıtılır. Bir bağlam menüsünün alt menüleri sola doğru açılır ve araç çubuğundaki Geri al ile Yinele simgeleri yer değiştirir, böylece Geri al simgesi sağdan sola okuyan birinin ilerleyiş yönüne göre geriyi gösterir.
 
-Diyagramın kendisi asla yansıtılmaz. Tabloları, sütunları, ilişkileri ve notlarıyla tuval soldan sağa kalır; mini harita, kaydırma çubukları, [tuval araç çubuğu](./table-related-functions.md#canvas-toolbar), [Görselleştirme](./visualization.md) ve onun araç çubuğu, veri türü hücreleri, Şema SQL ve Kod oluşturucu sekmelerindeki kod, renk seçici, Fark görüntüleyicinin iki tarafı, Zaman yolculuğu ve Otomatik düzenin önizlemesi de öyle kalır.  
+Diyagramın kendisi asla yansıtılmaz. Tabloları, sütunları, ilişkileri ve notlarıyla tuval soldan sağa kalır; mini harita, kaydırma çubukları, [tuval araç çubuğu](./table-related-functions.md#canvas-toolbar), [Görselleştirme](./visualization.md) ve onun araç çubuğu, veri türü hücreleri, Sözlük sekmesindeki sayfalar ve bir terimin değer alanı listesi, Şema SQL ve Kod oluşturucu sekmelerindeki kod, renk seçici, Fark görüntüleyicinin iki tarafı, Zaman yolculuğu ve Otomatik düzenin önizlemesi de öyle kalır.  
+Akış modunda Görselleştirme araç çubuğundaki iki ok yerlerinde kalır, işlevleri ise yer değiştirir: Sağı gösteren ok `Previous table`, solu gösteren ok ise `Next table` olur, böylece geri gitmek Geri al simgesiyle aynı yönü gösterir. Geri alma ve yineleme tuşları yine bir adım geri ve ileri gider. [Önceki tablo ve sonraki tablo](./visualization.md#previous-table-and-next-table) bölümüne bakın.  
 [Gezgin](./explorer.md#beside-the-canvas) tuvalin solunda, Fark görüntüleyicinin değişiklik ağacı da görüntüleyicinin solunda kalır ve ikisinin de sürükleme kenarı sağ tarafındadır. İçeride ise ikisi de sağdan sola okunur: Alanları ve satırları yansıtılır, satırlar sağdan girintilenir ve her iki ağaçta da `←` tuşu bir satırı genişletir veya ilk alt öğesine geçer, `→` tuşu ise satırı daraltır veya üst öğesine çıkar. [Gezgindeki tuşlar](./explorer.md#keys-in-the-explorer) bölümüne bakın.  
-Adlar, açıklamalar ve yazdığınız diğer metinler kendi yönlerini korur, bu nedenle İbranice, Arapça veya Farsça bir ad tuvalde de sağdan sola okunur.
+Adlar, açıklamalar ve yazdığınız diğer metinler kendi yönlerini korur, bu nedenle İbranice, Arapça veya Farsça bir ad tuvalde de sağdan sola okunur. Bir Sözlük bildiriminin listelediği her ad da kendi yönünü korur.
 
 ## Tema {#theme}
 

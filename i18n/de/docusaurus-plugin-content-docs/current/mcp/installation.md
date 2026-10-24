@@ -53,7 +53,8 @@ Ein Fenster von VS Code bedient die Diagramme in seinen Arbeitsbereichsordnern u
 2. Öffnen Sie den Projektordner und vertrauen Sie dem Arbeitsbereich. Die Erweiterung bedient Agenten nur in einem vertrauenswürdigen Arbeitsbereich.
 3. Lassen Sie die Einstellung `dineug.erd-editor.agentHub.enabled` eingeschaltet. Sie ist standardmäßig eingeschaltet.
 
-Eine Erweiterung von `3.0.0` bis `3.1.0` und der Server `1.0.0` lehnen einander ab, und eine Erweiterung vor `3.0.0` bedient keine Agenten – siehe [Aktualisieren](#updating).
+Eine Erweiterung von `3.0.0` bis `3.1.0` und der Server `1.0.0` oder neuer lehnen einander ab, und eine Erweiterung vor `3.0.0` bedient keine Agenten.
+Eine Erweiterung `4.0.0` oder `4.1.0` verbindet sich, zeigt die logischen Namen, Domänenverknüpfungen und Wörterbuchzeilen, die der Agent schreibt, aber weder an, noch behält sie sie – siehe [Aktualisieren](#updating).
 
 Die Erweiterung startet in einem Arbeitsbereich, der Dateien mit der Endung `.erd`, `.erd.json`, `.vuerd` oder `.vuerd.json` enthält, sodass ein Agent diese Diagramme erreicht, bevor Sie eines öffnen.
 In einem Arbeitsbereich ohne solche Dateien startet sie, wenn Sie ein Diagramm öffnen, und bis dahin arbeitet der Agent auf dem Datenträger.
@@ -69,7 +70,8 @@ Ein Vault-Fenster von Obsidian bedient die Diagramme in seinem Vault.
 1. Installieren Sie das [Plugin ERD Editor](https://community.obsidian.md/plugins/erd-editor) `1.0.0` oder neuer über Community plugins und schalten Sie es ein. Es läuft nur in der Desktop-App und benötigt Obsidian `1.5.7` oder neuer.
 2. Lassen Sie Settings → ERD Editor → Coding agents eingeschaltet. Die Einstellung ist standardmäßig eingeschaltet, und jeder Vault hat seine eigene.
 
-Ein älteres Plugin und der Server `1.0.0` lehnen einander ab – siehe [Aktualisieren](#updating).
+Ein Plugin vor `1.0.0` und der Server `1.0.0` oder neuer lehnen einander ab.
+Ein Plugin `1.0.0` oder `1.1.0` verbindet sich, zeigt die logischen Namen, Domänenverknüpfungen und Wörterbuchzeilen, die der Agent schreibt, aber weder an, noch behält es sie – siehe [Aktualisieren](#updating).
 
 Ein Vault-Fenster bedient Agenten ab dem Moment, in dem das Plugin geladen wird, sodass ein Agent die Diagramme des Vaults erreicht, bevor Sie eines öffnen.
 Einen Vertrauensschritt gibt es nicht.
@@ -95,7 +97,8 @@ Eine JetBrains-IDE bedient die Diagramme jedes darin geöffneten Projekts und je
 2. Öffnen Sie das Projekt und vertrauen Sie ihm. In einem Projekt, dem die IDE nicht vertraut, etwa einem im abgesicherten Modus geöffneten, lesen Agenten die Diagramme, ändern sie aber nie.
 3. Lassen Sie Settings | Tools | ERD Editor → Coding agents angehakt. Die Einstellung ist standardmäßig eingeschaltet und gilt für die gesamte IDE.
 
-Ein Plugin `0.9.0` oder `0.10.0` und der Server `1.0.0` lehnen einander ab, und ein Plugin vor `0.9.0` bedient keine Agenten – siehe [Aktualisieren](#updating).
+Ein Plugin `0.9.0` oder `0.10.0` und der Server `1.0.0` oder neuer lehnen einander ab, und ein Plugin vor `0.9.0` bedient keine Agenten.
+Ein Plugin `1.0.0` oder `1.1.0` verbindet sich, zeigt die logischen Namen, Domänenverknüpfungen und Wörterbuchzeilen, die der Agent schreibt, aber weder an, noch behält es sie – siehe [Aktualisieren](#updating).
 
 Die IDE bedient Agenten ab dem Moment, in dem das erste Projekt geöffnet wird, sodass ein Agent die Diagramme eines Projekts erreicht, bevor Sie eines öffnen.
 
@@ -125,19 +128,26 @@ Der Server prüft vor dem Verbinden, welche Protokollversion der Editor spricht.
 Unterscheiden sich die beiden, wird jeder Aufruf, der diesen Editor erreicht, mit `protocolMismatch` abgelehnt, Lesevorgänge und `erd_list_documents` eingeschlossen, und es wird nichts geschrieben.
 Die Meldung nennt die Seite, die zu aktualisieren ist: den Server oder den ERD Editor im Editor, also die Erweiterung in VS Code und das Plugin in Obsidian und einer JetBrains-IDE.
 
-Der Server `1.0.0`, die Erweiterung für VS Code `4.0.0` oder neuer, das Plugin für Obsidian `1.0.0` oder neuer und das Plugin für JetBrains `1.0.0` oder neuer sprechen Protokoll 2.
+Der Server `1.0.0` oder neuer, die Erweiterung für VS Code `4.0.0` oder neuer, das Plugin für Obsidian `1.0.0` oder neuer und das Plugin für JetBrains `1.0.0` oder neuer sprechen Protokoll 2.
 Jeder ältere Server spricht Protokoll 1, und ebenso jede ältere Editorversion, die Agenten bedient: die Erweiterung für VS Code von `3.0.0` bis `3.1.0`, das Plugin für Obsidian `0.1.0` und `0.2.0` sowie das Plugin für JetBrains `0.9.0` und `0.10.0`.
-Ein solcher Editor und der Server `1.0.0` lehnen einander ab, und ebenso ein älterer Server und ein Editor, der Protokoll 2 spricht.
+Ein solcher Editor und der Server `1.0.0` oder neuer lehnen einander ab, und ebenso ein älterer Server und ein Editor, der Protokoll 2 spricht.
 Eine Erweiterung für VS Code vor `3.0.0` oder ein Plugin für JetBrains vor `0.9.0` bedient überhaupt keine Agenten, sodass der Agent die Dateien auf dem Datenträger bearbeitet, selbst ein darin geöffnetes Diagramm.
 
 | Kombination | Die Meldung endet mit |
 | --- | --- |
-| Server `1.0.0` mit einer Erweiterung oder einem Plugin, das Protokoll 1 spricht | `Update the ERD Editor extension or plugin in the editor until its hub speaks protocol 2.` |
+| Server `1.0.0` oder neuer mit einer Erweiterung oder einem Plugin, das Protokoll 1 spricht | `Update the ERD Editor extension or plugin in the editor until its hub speaks protocol 2.` |
 | Ein älterer Server mit einer Erweiterung oder einem Plugin, das Protokoll 2 spricht | `Update the MCP server (npx -y @dineug/erd-editor-mcp@latest) until it speaks protocol 2.` |
 
 Aktualisieren Sie den Server zusammen mit der Erweiterung oder dem Plugin.
+Ein Server und ein Editor, die dasselbe Protokoll sprechen, verbinden sich, gleich welcher von beiden älter ist, aber nur der Server `1.1.0` oder neuer hat Tools für logische Namen, Domänen und die Wörterbücher – siehe [Wörterbücher](./tools.md#dictionaries).
+Nur die Erweiterung für VS Code `4.2.0` oder neuer und die Plugins für Obsidian und JetBrains `1.2.0` oder neuer zeigen und behalten die logischen Namen, Domänenverknüpfungen und Wörterbuchzeilen, die diese Tools schreiben.
+Eine ältere Erweiterung oder ein älteres Plugin, das sich verbindet, ignoriert sie, obwohl der Aufruf des Agenten gelingt.
+Die physischen Namen, die die Wörterbücher ableiten, und die Datentypen, die die Domänen geben, werden trotzdem übernommen.
+Ein Server vor `1.1.0` liest eine Datei ohne ihre logischen Namen, Domänenverknüpfungen und Wörterbuchzeilen und lässt sie weg, wenn er die Datei auf dem Datenträger bearbeitet – siehe [Headless](./live-and-headless.md#headless).
+
 Aktualisieren Sie ERD Editor außerdem überall dort, wo die Diagramme geöffnet werden.
-Die Erweiterung für VS Code vor `4.0.0`, das Plugin für Obsidian vor `1.0.0` und das Plugin für JetBrains vor `1.0.0` zeigen ein Diagramm, das eine neuere Version gespeichert oder das der Agent auf dem Datenträger bearbeitet hat, ohne seine Primärschlüsselsymbole an.
-Wenn sie die Datei speichern, verwerfen sie darin die Tabellengruppen und die Skripte von Schema SQL.
+Die Erweiterung für VS Code vor `4.2.0`, das Plugin für Obsidian vor `1.2.0` und das Plugin für JetBrains vor `1.2.0` öffnen ein Diagramm, das eine neuere Version gespeichert oder das der Agent auf dem Datenträger bearbeitet hat, ohne die logischen Namen seiner Tabellen und Spalten, die Domänenverknüpfungen seiner Spalten und seine Wörter, Begriffe und Domänen.
+Wenn sie die Datei speichern, lassen sie diese weg.
+Die Erweiterung für VS Code vor `4.0.0`, das Plugin für Obsidian vor `1.0.0` und das Plugin für JetBrains vor `1.0.0` zeigen ein solches Diagramm außerdem ohne seine Primärschlüsselsymbole an und verwerfen beim Speichern der Datei seine Tabellengruppen und die Skripte von Schema SQL.
 Die Erweiterung für VS Code vor `3.1.0`, das Plugin für Obsidian vor `0.2.0` und das Plugin für JetBrains vor `0.10.0` verwerfen beim Speichern der Datei außerdem die Aktionen für ON DELETE und ON UPDATE eines Diagramms.
 Starten Sie in Obsidian die App nach dem Aktualisieren des Plugins neu: Bis dahin führt ein Vault-Fenster weiterhin den ERD Editor der Plugin-Version aus, die es zuerst geladen hat.

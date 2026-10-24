@@ -1,5 +1,5 @@
 ---
-sidebar_position: 12
+sidebar_position: 13
 description: Generare codice per ventidue destinazioni a partire dal diagramma, scegliere linguaggio, database, stile dei nomi e delimitatore nel pannello opzioni, vedere quali destinazioni scrivono le azioni ON DELETE e ON UPDATE di una relazione e salvare o copiare il risultato.
 ---
 
@@ -103,6 +103,10 @@ Con qualsiasi stile, un nome riservato dal linguaggio della destinazione viene s
 Anche `SeaORM` le ignora: assegna a campi e moduli nomi in snake case, la forma che SeaORM rilegge, e indica i nomi memorizzati in `table_name` e, dove differiscono, in `column_name`.  
 Per queste quattro destinazioni il pannello attenua entrambi gli elenchi, con sotto la nota `Not used by`.
 
+Ogni destinazione scrive i nomi fisici, qualunque cosa mostri la [Visualizzazione nomi](./logical-names.md#name-view).  
+Nessuna scrive un nome logico, nemmeno in un commento vuoto: questa scheda non ha un equivalente dell’opzione [`Write logical names into empty comments`](./schema-sql.md#logical-names-as-comments) della scheda Schema SQL.  
+Nessuna scrive nemmeno un dominio: una colonna collegata a un dominio viene scritta con il suo tipo di dati, come ogni altra colonna.
+
 ## Database {#database}
 
 I tipi di dati vengono risolti in base al database selezionato — vedere [Database](./table-related-functions.md#databases).  
@@ -132,5 +136,5 @@ Il file viene denominato come ogni esportazione, `<database name>-<timestamp>`, 
 Il menu Esporta non ha una voce per il Generatore di codice, e la scheda `Code Generator` di Proprietà tabella non può salvare un file.
 
 Per copiare il codice, fare clic su `Copy` in fondo al pannello, oppure passare il puntatore sul codice e fare clic sul pulsante di copia in alto a destra, l’unico modo in Proprietà tabella.  
-Lo conferma per due secondi la notifica `Copied!` con un segno di spunta. Se il browser o l’host rifiuta l’accesso agli Appunti, lo segnala invece la notifica `Couldn't copy to the clipboard` con un simbolo di avviso. Una nuova copia sostituisce la notifica anziché aggiungerne un’altra.  
+Lo conferma per due secondi la notifica `Copied!` con un segno di spunta. Se il browser o l’host rifiuta l’accesso agli Appunti, lo segnala invece per cinque secondi la notifica `Couldn't copy to the clipboard` con un simbolo di avviso. Una nuova copia sostituisce la notifica anziché aggiungerne un’altra.  
 Il testo è anche selezionabile, quindi è possibile prenderne solo la parte che serve.

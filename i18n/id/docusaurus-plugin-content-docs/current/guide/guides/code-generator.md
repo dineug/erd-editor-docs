@@ -1,5 +1,5 @@
 ---
-sidebar_position: 12
+sidebar_position: 13
 description: Menghasilkan kode untuk dua puluh dua target dari diagram, memilih bahasa, database, konvensi penamaan, dan tanda kutip di panel opsi, melihat target mana yang menulis tindakan ON DELETE dan ON UPDATE hubungan, serta menyimpan atau menyalin hasilnya.
 ---
 
@@ -103,6 +103,10 @@ Pada setiap konvensi, nama yang dicadangkan oleh bahasa target di-escape jika ba
 `SeaORM` juga mengabaikannya: target ini menamai field dan modul dalam snake case, bentuk yang dibaca kembali oleh SeaORM, dan menuliskan nama yang disimpan di `table_name` dan, jika berbeda, di `column_name`.  
 Untuk keempat target ini, panel meredupkan kedua daftar, dengan catatan `Not used by` di bawahnya.
 
+Setiap target menulis nama fisik, apa pun yang ditampilkan [Tampilan Nama](./logical-names.md#name-view).  
+Tidak ada target yang menulis nama logis, bahkan ke dalam komentar kosong: tab ini tidak memiliki padanan untuk [`Write logical names into empty comments`](./schema-sql.md#logical-names-as-comments) di tab Skema SQL.  
+Tidak ada pula target yang menulis domain: kolom yang tertaut ke domain ditulis dengan tipe datanya, seperti kolom lainnya.
+
 ## Database {#database}
 
 Tipe data ditentukan berdasarkan database yang dipilih — lihat [Database](./table-related-functions.md#databases).  
@@ -132,5 +136,5 @@ File tersebut dinamai seperti setiap ekspor, `<database name>-<timestamp>`, diik
 Menu Ekspor tidak memiliki item Generator Kode, dan tab `Code Generator` di Properti Tabel tidak dapat menyimpan file.
 
 Untuk menyalin kode, klik `Copy` di bagian bawah panel, atau arahkan penunjuk ke kode lalu klik tombol salin di kanan atasnya, satu-satunya cara di Properti Tabel.  
-Notifikasi `Copied!` dengan tanda centang mengonfirmasinya selama dua detik. Jika browser atau host menolak akses ke papan klip, notifikasi `Couldn't copy to the clipboard` dengan tanda peringatan memberitahukannya sebagai gantinya. Menyalin lagi menggantikan notifikasi tersebut alih-alih menambahkan notifikasi lain.  
+Notifikasi `Copied!` dengan tanda centang mengonfirmasinya selama dua detik. Jika browser atau host menolak akses ke papan klip, notifikasi `Couldn't copy to the clipboard` dengan tanda peringatan memberitahukannya sebagai gantinya, selama lima detik. Menyalin lagi menggantikan notifikasi tersebut alih-alih menambahkan notifikasi lain.  
 Teks juga dapat dipilih, sehingga Anda dapat mengambil hanya bagian yang dibutuhkan.

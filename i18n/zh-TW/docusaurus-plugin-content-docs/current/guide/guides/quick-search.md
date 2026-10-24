@@ -1,6 +1,6 @@
 ---
-sidebar_position: 7
-description: 開啟命令選擇區，以切換索引標籤、執行目前索引標籤的命令、開啟或關閉物件總管、變更佈景主題或顯示語言，或輸入前置詞以跳至資料表、欄位、註解或備忘錄。
+sidebar_position: 8
+description: 開啟命令選擇區，以切換索引標籤或「名稱顯示」、執行目前索引標籤的命令、開啟或關閉物件總管、變更佈景主題或顯示語言，或輸入前置詞以跳至資料表、欄位、註解或備忘錄。
 ---
 
 # 快速搜尋
@@ -9,7 +9,7 @@ description: 開啟命令選擇區，以切換索引標籤、執行目前索引�
 它會列出目前所在索引標籤中可用的命令。在搜尋開頭輸入 `#`、`@` 或 `:`，即可改為搜尋圖表，並跳至資料表、欄位，或是註解或備忘錄。
 
 使用 `Ctrl + K` (Windows/Linux) 或 `⌘ + K` (Mac) 開啟，或按一下工具列中的 `Search`。  
-按相同的快速鍵即可將其關閉，按 `Esc` 或在面板外按一下也是如此。開啟時會關閉「資料表屬性」、[佈景主題建立器](./language-and-theme.md#theme)、[`Display Language`](./language-and-theme.md#picking-a-language) 選擇器、[`Export image`](./file-import-export.md#image) 對話方塊和「[對應欄位](./relationship-editing.md#map-columns)」，後者會捨棄其中已選取的內容。編輯資料表儲存格、備忘錄或資料表群組名稱期間，它不會開啟。
+按相同的快速鍵即可將其關閉，按 `Esc` 或在面板外按一下也是如此。開啟時會關閉「資料表屬性」、[佈景主題建立器](./language-and-theme.md#theme)、[`Display Language`](./language-and-theme.md#picking-a-language) 選擇器、[`Export image`](./file-import-export.md#image) 對話方塊和「[對應欄位](./relationship-editing.md#map-columns)」，後者會捨棄其中已選取的內容。編輯資料表儲存格、備忘錄、資料表群組名稱或[字典](./dictionary.md)索引標籤上的儲存格期間，它不會開啟。
 
 工具列中緊接在 `Search` 之後的按鈕是 `Explorer`。它會開啟或關閉[物件總管](./explorer.md)，這是停駐在畫布左側、以樹狀結構呈現圖表的面板，其頂端為尋找與取代。  
 開啟命令選擇區時，物件總管會保持開啟，此時 `Esc` 只會關閉命令選擇區。在命令選擇區中按 `Ctrl + F` (Windows/Linux) 或 `⌘ + F` (Mac) 會關閉命令選擇區，並將鍵盤焦點移到物件總管的「尋找」輸入框；若物件總管未顯示，則會將其開啟並進入其搜尋。與 `Toggle Explorer` 項目不同，在命令選擇區中按此按鍵絕不會關閉物件總管，請參閱[開啟與關閉](./explorer.md#opening-and-closing)。差異檢視器、時光旅行或自動版面配置預覽開啟期間，編輯器不會處理此按鍵：命令選擇區會保持開啟，按鍵會繼續傳給瀏覽器或主應用程式，請參閱[瀏覽器的尋找列](./find-and-replace.md#the-browsers-find-bar)。  
@@ -24,23 +24,25 @@ description: 開啟命令選擇區，以切換索引標籤、執行目前索引�
 在英文以外的顯示語言中，命令和子選單項目也能以其英文名稱和關鍵字找到，清單不會顯示這些英文名稱和關鍵字，因此無論 `New Table` 以哪種語言顯示，`new table` 都能找到它。  
 使用 `↑` 和 `↓` 在清單中移動（到達兩端時會循環），並按 `Enter` 執行醒目顯示的項目。具有專屬快速鍵的命令會在其列的末端顯示該快速鍵：位於右側，在由右至左的顯示語言中則位於左側。輸入法仍在組字時（例如輸入韓文音節到一半時），`↑`、`↓` 和 `Enter` 會交由輸入法處理，既不會移動醒目顯示的位置，也不會執行項目。
 
-例如 `Database`、`Import` 或 `Auto Layout` 等項目會開啟子選單：其項目會取代清單，搜尋輸入框也會清空。`Database`、`Bracket`、`Language`、兩種名稱大小寫、`Schema SQL: Statements`、`Schema SQL: Header`、`Theme` 和 `Display Language` 的子選單會勾選目前的選擇，並在開啟時醒目顯示該項，因此按 `Enter` 即可保留它；其他子選單開啟時不會醒目顯示任何項目。  
+例如 `Database`、`Import` 或 `Auto Layout` 等項目會開啟子選單：其項目會取代清單，搜尋輸入框也會清空。`Name View`、`Database`、`Bracket`、`Language`、兩種名稱大小寫、`Schema SQL: Statements`、`Schema SQL: Header`、`Theme` 和 `Display Language` 的子選單會勾選目前的選擇，並在開啟時醒目顯示該項，因此按 `Enter` 即可保留它；其他子選單開啟時不會醒目顯示任何項目。  
 篩選永遠只套用於目前顯示的清單，且無法返回上一層，因此要重新開始時，關閉命令選擇區再重新開啟即可。在子選單中，`#`、`@`、`:` 和 `?` 是一般文字，而不是[前置詞](#searching-the-diagram)。
 
 ## 命令選擇區列出的項目 {#what-the-palette-lists}
 
-清單內容取決於目前所在的索引標籤。每個索引標籤的清單都以 `Tab` 開頭，用來切換到 `Entity Relationship Diagram`、`Visualization`、`Schema SQL`、`Code Generator` 或 `Settings`，但目前所在的索引標籤不會出現在其中。
+清單內容取決於目前所在的索引標籤。每個索引標籤的清單都以 `Tab` 開頭，用來切換到 `Entity Relationship Diagram`、`Visualization`、`Schema SQL`、`Code Generator`、`Dictionary` 或 `Settings`，但目前所在的索引標籤不會出現在其中。
 
-在 ERD 索引標籤中：`Database`、`Import`、`Import and Add` 和 `Export`，接著是 `New Table`、`New Memo`、`New Table Group` 和 `Group Selected Tables`，再來是四種關聯類型和 `Auto Layout`。這裡不會列出資料表；輸入 `#` 即可[前往資料表](#searching-the-diagram)。  
+在 ERD 索引標籤中：`Name View` 和最多四個[重新產生物理名稱](./dictionary.md#derive-physical-names-again)的項目，接著是 `Database`、`Import`、`Import and Add` 和 `Export`，然後是 `New Table`、`New Memo`、`New Table Group` 和 `Group Selected Tables`，再來是四種關聯類型和 `Auto Layout`。這裡不會列出資料表；輸入 `#` 即可[前往資料表](#searching-the-diagram)。  
+`Name View` 會開啟 `Physical Names`、`Logical Names` 和 `Both Names`，並勾選目前的顯示方式，選擇其中一項會像畫布右鍵選單中的 `Name View` 一樣切換顯示方式，請參閱[切換顯示方式](./logical-names.md#switching-the-view)。它只會在 ERD 索引標籤中列出，唯讀編輯器中也是如此。  
+這些重新產生物理名稱的項目以其旁邊的關鍵字區分。旁邊顯示 `column` 的 `Derive Physical Name Again` 會為焦點欄位重新產生物理名稱。`Derive Physical Names Again` 有三列：旁邊顯示 `table` 的一列適用於焦點所在的資料表，包括其名稱和每個欄位；旁邊顯示 `selected tables` 的一列，在選取兩個或更多資料表時適用於所選的資料表；旁邊顯示 `whole document` 的一列則適用於圖表中的每個資料表。每一列只有在有內容可處理時才會列出，唯讀編輯器中則全都不會列出。  
 唯讀編輯器中不會列出 `Import and Add`；[View Option](./table-related-functions.md#table-view-options) → `Memos` 隱藏備忘錄時，則不會列出 `New Memo`。`New Table Group` 會開始在畫布上繪製[資料表群組](./table-groups.md)，`Group Selected Tables` 則會將所選資料表放入新群組，並開啟其名稱輸入框以供輸入名稱。在唯讀編輯器中，以及 View Option → `Table Groups` 隱藏群組時，兩者都不會列出，而 `Group Selected Tables` 還需要至少選取一個資料表。它們的列會顯示按鍵：[繪製群組](./table-groups.md#drawing-a-group)為 `Alt + G` (Windows/Linux) 或 `⌥ + G` (Mac)，[將所選資料表組成群組](./table-groups.md#grouping-selected-tables)為先按 `T` 再按 `G`。  
-除了 `Group Selected Tables` 對應的是資料表選單的 `Group selected tables` 之外，這些項目執行的命令與畫布的右鍵選單相同；`View Option` 和 `Diff Viewer` 只在右鍵選單中提供。`Export` 提供與右鍵選單相同的 `json`、`Schema SQL` 和 `Image`，在其中輸入 `png` 或 `svg` 即可找到 `Image`。  
+這些項目執行的命令與畫布的右鍵選單相同，但部分項目執行的是資料表選單的命令：`Group Selected Tables` 執行其 `Group selected tables`，而 `column`、`table` 和 `selected tables` 這幾個重新產生物理名稱的項目則執行其 `Derive Physical Name Again` 或 `Derive Physical Names Again`，並作用於焦點或選取範圍，而不是按滑鼠右鍵的位置。`View Option` 和 `Diff Viewer` 只在右鍵選單中提供。`Export` 提供與右鍵選單相同的 `json`、`Schema SQL` 和 `Image`，在其中輸入 `png` 或 `svg` 即可找到 `Image`。  
 關於各格式、[匯入並加入](./file-import-export.md#import-and-add)和[圖片匯出](./file-import-export.md#image)的作用，請參閱[匯入或匯出檔案](./file-import-export.md)；關於資料庫的選擇會影響什麼，請參閱[資料表相關功能](./table-related-functions.md#databases)。
 
 在「結構描述 SQL」索引標籤中：同樣有 `Database`，以及 `Bracket`，用來設定產生的 SQL 中包住資料表、欄位、條件約束和索引名稱的引號字元（`SingleQuote`、`DoubleQuote`、`Backtick`，或表示完全不加引號的 `None`）。接著是 `Schema SQL: Statements` 和 `Schema SQL: Header`（兩者提供與此索引標籤的選項面板相同的選擇，但只列出所選資料庫會寫出的項目），以及可顯示或隱藏該面板的 `Schema SQL: Options panel`。關於各選擇會寫出什麼，請參閱[結構描述 SQL](./schema-sql.md)。
 
 在「程式碼產生器」索引標籤中：`Database`、語言為 `Doctrine`、`JPA` 或 `SeaORM` 時的 `Bracket`，接著是 `Language`、`Table Name Case`、`Column Name Case` 和 `Code Generator: Options panel`，最後一項會顯示或隱藏此索引標籤的選項面板。關於各目標會產生什麼，請參閱[程式碼產生器](./code-generator.md)。
 
-「視覺化」和「設定」索引標籤沒有自己的命令，只有 `Tab` 和下文所述每個索引標籤都會列出的命令。
+「視覺化」、「字典」和「設定」索引標籤沒有自己的命令，只有 `Tab` 和下文所述每個索引標籤都會列出的命令。
 
 每個索引標籤的清單接近末尾處都有 `Toggle Explorer`（唯讀編輯器中也是如此），它會顯示其快速鍵 `Ctrl + F` (Windows/Linux) 或 `⌘ + F` (Mac)。輸入 `find`、`replace`、`rename`、`tree`、`outline` 或 `objects` 也能找到它。  
 執行它會關閉命令選擇區，其效果與在畫布上按此快速鍵相同。當工具列的 `Explorer` 按鈕顯示為按下狀態時，也就是物件總管在 ERD 索引標籤中為開啟狀態且未被禪模式隱藏時，它會關閉物件總管。否則，它會切換到 ERD 索引標籤，開啟物件總管並進入其搜尋，插入點會位於「尋找」輸入框中，請參閱[開啟與關閉](./explorer.md#opening-and-closing)。差異檢視器、時光旅行或自動版面配置預覽開啟期間，它不會出現在清單中。
@@ -58,21 +60,22 @@ description: 開啟命令選擇區，以切換索引標籤、執行目前索引�
 以前置詞開始搜尋，即可搜尋圖表而非命令：`#` 表示資料表、`@` 表示欄位、`:` 表示註解和備忘錄，`?` 則會列出前置詞。前置詞在任何索引標籤中都有效。它只有作為第一個字元時才算數，其前方的空格會被忽略。其後的空格可有可無，因此 `#users` 和 `# users` 是相同的搜尋，日文或中文輸入法輸入的全形 `＃`、`＠`、`：` 和 `？` 也同樣有效。  
 在頂層且輸入框為空白時，其下方會有一行顯示這四個前置詞；按一下其中一個即可輸入它。前置詞生效期間，輸入框末端會顯示其範圍：`Tables`、`Columns`、`Comments & memos` 或 `Help`。刪除前置詞即可恢復顯示命令。
 
-`#` 會列出資料表，每個資料表旁邊都會顯示 `Table`，名稱空白的資料表會列為 `unnamed`。`#` 之後沒有內容時，資料表會依名稱排序。`#` 之後的文字只會與資料表名稱比對（如上所述為模糊比對），名稱包含該文字的資料表會排在前面。任何前置詞都不會搜尋資料表群組名稱和索引名稱；[尋找與取代](./find-and-replace.md#what-it-searches)則會搜尋兩者。
+`#` 會列出資料表，每個資料表旁邊都會顯示 `Table`。每一列會依[名稱顯示](./logical-names.md#beyond-the-canvas)的方式指稱其資料表，例如在 `Both Names` 中為 `Accounts (users)`，沒有可顯示之名稱的資料表會列為 `unnamed`。`#` 之後沒有內容時，在每種顯示方式下，資料表都會依名稱排序，永遠不會依邏輯名稱排序。`#` 之後的文字會如上所述以模糊比對的方式，與每個資料表的名稱及其邏輯名稱比對，無論顯示方式顯示的是什麼，因此即使在 `Physical Names` 中，`#accounts` 也會列出 `users`。名稱或邏輯名稱包含該文字的資料表會排在前面。任何前置詞都不會搜尋資料表群組名稱和索引名稱；[尋找與取代](./find-and-replace.md#what-it-searches)則會搜尋兩者。
 
-`@` 會依名稱列出欄位，每個欄位旁邊都會顯示其所在位置，例如 `users.email · Column`。`@` 之後的文字必須出現在欄位名稱中，不區分大小寫；此比對不是模糊比對。第一個 `.` 之前的文字會將搜尋範圍縮小到名稱包含該文字的資料表：`@users.em` 會在名稱包含 `users` 的資料表中列出包含 `em` 的欄位，`@users.` 會列出這些資料表的欄位，`@.em` 則會搜尋所有資料表。`@` 之後沒有內容時，會列出所有欄位而不加篩選。
+`@` 會列出欄位，每個欄位旁邊都會顯示其所在位置，例如 `users.email · Column`。`@` 之後的文字必須出現在欄位的名稱或其邏輯名稱中，不區分大小寫，也不論「名稱顯示」顯示的是什麼；此比對不是模糊比對。含有該文字的每個名稱各自為一列：邏輯名稱的相符項目會顯示邏輯名稱，旁邊顯示 `users.email · Logical name`，因此名稱和邏輯名稱都含有該文字的欄位會列出兩次。第一個 `.` 之前的文字會將搜尋範圍縮小到名稱或邏輯名稱包含該文字的資料表：`@users.em` 會在名稱或邏輯名稱包含 `users` 的資料表中列出包含 `em` 的欄位，`@users.` 會列出這些資料表的欄位，`@.em` 則會搜尋所有資料表。資料表本身的邏輯名稱在 `@` 下不會產生任何列；`#` 才會找到它。`@` 之後沒有內容時，每個欄位都會依其名稱列出一次。
 
-`:` 會列出資料表註解、欄位註解和備忘錄，絕不列出名稱。每一列會顯示相符處前後文字的摘錄，旁邊顯示 `users · Table comment`、`users.email · Column comment` 或 `Memo`。`:` 之後的文字必須出現在註解或備忘錄中，與 `@` 一樣不區分大小寫。`:` 之後沒有內容時，會列出所有非空白的註解和備忘錄。View Option → `Memos` 隱藏備忘錄時，`:` 不會列出任何備忘錄。
+`:` 會列出資料表註解、欄位註解和備忘錄，絕不列出名稱或邏輯名稱。每一列會顯示相符處前後文字的摘錄，旁邊顯示 `users · Table comment`、`users.email · Column comment` 或 `Memo`。`:` 之後的文字必須出現在註解或備忘錄中，與 `@` 一樣不區分大小寫。`:` 之後沒有內容時，會列出所有非空白的註解和備忘錄。View Option → `Memos` 隱藏備忘錄時，`:` 不會列出任何備忘錄。
 
-`@` 和 `:` 會依文件中儲存的順序列出各列：逐一列出各資料表，每個資料表的註解排在其欄位之前，欄位依欄位順序排列，備忘錄則排在最後。
+`@` 和 `:` 會依文件中儲存的順序列出各列：逐一列出各資料表，每個資料表的註解排在其欄位之前，欄位依欄位順序排列，備忘錄則排在最後。在 `@` 下，欄位的邏輯名稱列會排在其名稱列之前。  
+在每種顯示方式下，`@` 或 `:` 列旁邊所顯示的位置都會使用資料表和欄位的名稱，永遠不會使用其邏輯名稱。
 
 `?` 會列出 `Tables`、`Columns` 和 `Comments & memos`，`?` 之後的文字會篩選它們。選擇其中一項會將輸入內容取代為其前置詞，並讓命令選擇區保持開啟。
 
 加上前置詞的清單會包含所有相符項目，無論數量多少。前置詞的搜尋找不到任何結果時，清單會是空的，且不會顯示任何訊息。
 
 選擇資料表、欄位、註解或備忘錄會關閉命令選擇區，若目前位於其他索引標籤，則會切換到 ERD 索引標籤。  
-除非該項目已清楚顯示，否則畫布會捲動到該處，請參閱[跳至目標時的落點](./table-related-functions.md#where-a-jump-lands)。資料表接著會被單獨選取並移到最前面，其名稱會取得焦點，除非焦點原本已在該資料表中。  
-備忘錄會被單獨選取並移到最前面。對於欄位或註解，其所屬資料表會被單獨選取、移到最前面，並將焦點放在含有該文字的儲存格上；若註解被[資料表檢視選項](./table-related-functions.md#table-view-options)隱藏，則會將焦點放在其旁邊的名稱上。  
+除非該項目已清楚顯示，否則畫布會捲動到該處，請參閱[跳至目標時的落點](./table-related-functions.md#where-a-jump-lands)。資料表接著會被單獨選取並移到最前面。除非焦點原本已在該資料表中，否則其表頭的第一個儲存格會取得焦點：其名稱，在 `Logical Names` 和 `Both Names` 中則為其邏輯名稱。  
+備忘錄會被單獨選取並移到最前面。對於欄位或註解，其所屬資料表會被單獨選取、移到最前面，並將焦點放在含有該文字的儲存格上。若顯示方式沒有繪製該儲存格，焦點會放在其位置所繪製的儲存格上：在 `Physical Names` 中找到的邏輯名稱會落在名稱上，在 `Logical Names` 中找到的名稱則會落在邏輯名稱上。被[資料表檢視選項](./table-related-functions.md#table-view-options)隱藏的註解會落在其旁邊的名稱上，在 `Logical Names` 中則會落在邏輯名稱上。  
 任何跳至目標的操作都不會開始或完成正在繪製的關聯。
 
 若要使用 `Match Case`、`Match Whole Word` 或 `Use Regular Expression`，或要取代文字，可使用物件總管頂端的[尋找與取代](./find-and-replace.md)。

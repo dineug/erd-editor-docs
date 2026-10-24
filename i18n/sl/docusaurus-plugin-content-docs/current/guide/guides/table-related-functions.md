@@ -1,5 +1,5 @@
 ---
-sidebar_position: 4
+sidebar_position: 5
 description: Izbiranje, premikanje, kopiranje, podvajanje in brisanje tabel in beležk, nastavljanje barv in možnosti pogleda, določanje indeksov in alternativnih ključev, izbira zbirke podatkov, premikanje po neskončnem platnu in primerjava dokumentov.
 ---
 
@@ -7,7 +7,8 @@ description: Izbiranje, premikanje, kopiranje, podvajanje in brisanje tabel in b
 
 Vse, kar počnete s tabelami in beležkami, ko že obstajajo – izbiranje, premikanje, kopiranje, brisanje, barvanje in nastavljanje tega, kaj prikazuje platno –, ter kontrolniki platna okoli njih.  
 Najprej so na vrsti ukazi za tabele in beležke; nato lastnosti tabele, osredotočanje na tabele, indeksi in alternativni ključi, samodejna postavitev in vrsta zbirke podatkov; na koncu pa še samo platno: orodna vrstica platna, povečava, premikanje pogleda in to, kam pripelje skok, ter pregledovalnik razlik.  
-Skupine tabel, okvirji, ki združujejo tabele, imajo svojo stran – glejte stran [Skupine tabel](./table-groups.md).
+Skupine tabel, okvirji, ki združujejo tabele, imajo svojo stran – glejte stran [Skupine tabel](./table-groups.md).  
+Svojo stran imajo tudi logična imena in prikaz imen, ki določa, katera imena prikazujejo tabele – glejte stran [Logična imena](./logical-names.md).
 
 ## Večkratni izbor {#multiple-selection}
 
@@ -26,11 +27,14 @@ Tipka `Escape` počisti izbor. Medtem ko je odprto urejanje celice, urejanje bel
 
 ![Izbiranje tabel s ⌘ + drag in ⌘ + click, nato vseh tabel in beležk s ⌘ + A](/img/demo-table-select.webp)
 
-V sodelovalni seji se izbor, celica s fokusom in okvir izbora vsakega udeleženca narišejo na platnu v barvi tega udeleženca – glejte stran [Sodelovalno urejanje](../../api/advanced/collaborative-editing.md).
+V sodelovalni seji se izbor, celica s fokusom in okvir izbora vsakega udeleženca narišejo na platnu v barvi tega udeleženca – glejte stran [Sodelovalno urejanje](../../api/advanced/collaborative-editing.md).  
+Celica s fokusom udeleženca, ki gleda drug prikaz imen, se nariše na celici, ki jo vaš prikaz izriše na njenem mestu, na primer njegova celica imena na vaši celici logičnega imena – glejte razdelek [Sodelavci](./logical-names.md#collaborators).
 
 ## Premikanje več tabel {#moving-multiple-tables}
 
 Povlecite katero koli tabelo ali beležko, ki je že del izbora, in z njo se premakne celoten izbor – modifikatorska tipka ni potrebna.  
+Tabelo povlečete za glavo ali za katero koli vrstico stolpca, zato vlečenje, ki se začne na vrstici stolpca, premakne tabelo in ne stolpca. Stolpci se namesto tega premikajo z ročico za vlečenje ob vrstici s fokusom – glejte razdelek [Prerazporejanje in premikanje stolpcev](./table-editing.md#rearranging-and-moving-columns).  
+Na celici glave ali vrstici stolpca se tabela začne premikati šele, ko kazalec prepotuje kratko razdaljo, zato klik tam celici še vedno da fokus, dvoklik pa še vedno odpre njeno urejanje. Vlečenje se nikoli ne začne z barvnega roba tabele, ki odpre izbirnik barv, z gumbov `+` in `x` na njeni glavi ali z gumba `x` v vrstici stolpca.  
 Če povlečete nekaj zunaj izbora, se izbor zoži nanj in premakne se samo to. `Ctrl + drag` (Windows/Linux) ali `⌘ + drag` (Mac) v obeh primerih ohrani izbor.  
 Tabele in beležke premika samo levi gumb miške. Klik z desno tipko miške določi, na kaj deluje priročni meni, in ne premakne ničesar, vlečenje s srednjim gumbom pa namesto tega premika pogled po platnu – glejte razdelek [Premikanje po platnu](#getting-around-the-canvas).
 
@@ -47,7 +51,9 @@ Vrstni red se ne shrani: ponovno odprt diagram zloži tabele v vrstnem redu, v k
 Kopira izbrane tabele in beležke ter jih prilepi nazaj kot nove.  
 Bližnjice: `Ctrl + C` (Windows/Linux) ali `⌘ + C` (Mac), `Ctrl + V` (Windows/Linux) ali `⌘ + V` (Mac)
 
-Kopirana tabela ohrani svoje ime, komentar, stolpce in barvo; kopirana beležka ohrani besedilo, velikost in barvo.  
+Kopirana tabela ohrani svoje ime, logično ime, komentar, stolpce in barvo; kopirana beležka ohrani besedilo, velikost in barvo.  
+Vsak kopirani stolpec ohrani svoje logično ime, vsako ime tabele in stolpca pa ohrani podatek o tem, ali je bilo izpeljano iz slovarjev – glejte razdelek [Izpeljava fizičnih imen](./dictionary.md#deriving-physical-names).  
+Prilepljeni stolpec ohrani povezavo z domeno samo, kadar veljata dve stvari: diagram, v katerega pristane, navaja prav to domeno, ne le domene z enakim imenom, in domena ima še vedno podatkovni tip, s katerim je bil stolpec kopiran. Sicer stolpec pristane brez povezave z domeno in ohrani tip, s katerim je bil kopiran – glejte razdelek [Povezovanje stolpca z domeno](./dictionary.md#linking-a-column).  
 Skupaj z njimi se kopirajo tudi indeksi in relacije: indeks se v celoti kopira na kopirano tabelo, relacija pa se kopira s svojo vrsto in dejanji ON DELETE in ON UPDATE, če sta obe tabeli, ki ju povezuje, v kopiranem naboru. Polovična relacija se izpusti, namesto da bi še naprej kazala na izvirnik.  
 Prilepljene kopije postanejo novi izbor, ponovno lepljenje iste kopije pa jo vsakič zamakne za dodatnih `50px`, tako da se ponovljene kopije ne nalagajo druga na drugo.  
 Kopija ne ohrani svoje [skupine tabel](./table-groups.md): prilepljena tabela ni v nobeni skupini, tudi če pristane znotraj okvirja skupine, izbrana skupina pa se ne kopira.  
@@ -60,11 +66,12 @@ Medtem ko View Option → `Memos` skriva beležke, lepljenje še vedno doda bele
 ## Podvajanje tabel in beležk {#duplicating-tables-and-memos}
 
 Držite tipko `Alt` in z levim gumbom miške povlecite tabelo ali beležko.  
+Tabelo primete za glavo ali za katero koli vrstico stolpca, zato `Alt + drag` na vrstici stolpca podvoji tabelo, vrstnega reda stolpcev pa ne spremeni. Tipka `Alt`, pridržana na ročici za vlečenje stolpca, ne podvoji ničesar: stolpec se premakne tako kot pri navadnem vlečenju za ročico – glejte razdelek [Prerazporejanje in premikanje stolpcev](./table-editing.md#rearranging-and-moving-columns).  
 Kazalcu sledi prosojen predogled, ko pa spustite gumb, se kopija postavi tja, kjer je predogled.  
 Če je to, kar primete, že del izbora, se podvoji celoten izbor. V nasprotnem primeru izbor nadomesti entiteta pod kazalcem.  
 `Alt + click` brez premikanja postavi kopijo `50px` navzdol in v desno, vsakič, ko je to mesto že zasedeno, pa jo zamakne še naprej.
 
-Dvojnik prenese isto kot lepljenje: imena, komentarje, stolpce, barve, velikosti beležk ter indekse in relacije, ki v celoti pripadajo temu, kar ste kopirali. Tako kot pri lepljenju ne pristane v nobeni skupini tabel.  
+Dvojnik prenese isto kot [lepljenje](#copyingpasting-tables-and-memos): imena in logična imena, komentarje, stolpce, barve, velikosti beležk ter indekse in relacije, ki v celoti pripadajo temu, kar ste kopirali. Ker ostane v istem diagramu, ohrani povezavo z domeno vsakega stolpca takšno, kot je. Tako kot pri lepljenju ne pristane v nobeni skupini tabel.  
 `Alt + drag` na naslovni vrstici skupine tabel premakne skupino tako kot navadno vlečenje; skupina se nikoli ne podvoji.
 
 ![Podvajanje tabele z Alt + drag, nato Alt + click za še eno kopijo spodaj desno](/img/demo-table-duplicate.webp)
@@ -119,6 +126,7 @@ Na voljo so naslednje možnosti pogleda:
 - Table Comment
 - Column Comment
 - DataType
+- Domain
 - Default
 - Not Null
 - Unique
@@ -129,7 +137,9 @@ Na voljo so naslednje možnosti pogleda:
 - Table Groups
 - Memos
 
-Možnosti `Unique`, `Alternate Key` in `Auto Increment` so privzeto izklopljene, vse druge pa vklopljene.  
+Možnosti `Domain`, `Unique`, `Alternate Key` in `Auto Increment` so privzeto izklopljene, vse druge pa vklopljene.  
+Katera imena prikazujejo tabele, ni možnost pogleda: postavka `Name View`, takoj za `View Option` v priročnem meniju platna, izbere fizična imena, logična imena ali oboje – glejte razdelek [Preklapljanje prikaza](./logical-names.md#switching-the-view).  
+Možnost `Domain` vsakemu stolpcu doda celico, katere mesto določa [vrstni red stolpcev](./settings.md#adjusting-column-order), z imenom domene, s katero je stolpec povezan. Stolpec, ki ni povezan z nobeno domeno, ki jo navaja list `Domains`, tam prikaže zatemnjeno nadomestno besedilo `domain`. Celica se prikaže v vsakem prikazu imen. Dokler je možnost `Domain` izklopljena, prikaz `Logical Names` namesto tega prikaže ime povezane domene v celici tipa – glejte razdelek [Celica domene](./logical-names.md#the-domain-cell).  
 Možnost `Alternate Key` označi stolpce vsakega alternativnega ključa z oznakami, kot je `AK1.1` – glejte razdelek [Alternativni ključi](#alternate-keys).  
 Možnost `Referential Actions` prikaže oznaki `D:` in `U:`, ki ju dejanji ON DELETE in ON UPDATE relacije postavita na konec njene povezovalne črte pri podrejeni tabeli – glejte razdelek [Branje povezovalne črte](./relationship-editing.md#reading-a-connector). Če jo izklopite, se skrijeta samo ti oznaki, nobena tabela ali povezovalna črta pa se ne premakne.  
 Možnost `Table Groups` prikaže [skupine tabel](./table-groups.md) in barve skupin na glavah njihovih tabel. Izklop jih skrije na platnu, na mini zemljevidu in v izvoženih slikah, ne premakne nobene tabele in vsako tabelo ohrani v njeni skupini – glejte razdelek [Skrivanje skupin](./table-groups.md#hiding-groups). Odstrani tudi mapo `Table Groups` iz [raziskovalca](./explorer.md#the-tree) in gumb `New Table Group` iz [orodne vrstice platna](#canvas-toolbar), iskanje v raziskovalcu pa ne najde več imen skupin.  
@@ -139,19 +149,19 @@ V urejevalniku z lastnostjo `readonly` stikala ne spremenijo ničesar.
 
 ![Preklapljanje postavk View Option, ob katerem se tabele prerazporedijo, označevanje sestavljenega enoličnega indeksa kot AK1.1 in AK1.2 z Alternate Key, nato izklop in vklop Memos](/img/demo-view-options.webp)
 
-Kartice v načinu `Flow` na zavihku Vizualizacija ne upoštevajo teh možnosti: uporabljajo svoj [prikaz vrstic](./visualization.md#row-display) in rišejo svoje povezovalne črte, tudi ko je možnost `Relationship` izklopljena.
+Kartice v načinu `Flow` na zavihku Vizualizacija ne upoštevajo teh možnosti, vključno z možnostjo `Domain`: uporabljajo svoj [prikaz vrstic](./visualization.md#row-display) in rišejo svoje povezovalne črte, tudi ko je možnost `Relationship` izklopljena. Katere celice razporedi kartica, je odvisno samo od prikaza imen – glejte razdelek [Imena na karticah](./visualization.md#names-on-the-cards).
 
 ## Lastnosti tabele {#table-properties}
 
 Odpre okno Lastnosti tabele.  
 Začnite s postavko `Table Properties` v priročnem meniju tabele, ki okno odpre za tabelo, ki ste jo kliknili z desno tipko miške, ali izberite tabelo in pritisnite `Alt + Space`.  
-Okno se odpre sredi zatemnjenega platna. Zatemni se samo platno, zato odprt [raziskovalec](./explorer.md#dialogs-beside-it) ob njem ostane odprt in uporaben. Njegova glava vsebuje naslov `Table Properties`, pet nazadnje odprtih tabel kot ploščice, med katerimi je trenutna poudarjena, in gumb za zapiranje. Kliknite ploščico, da preklopite na to tabelo, ne da bi znova odprli okno.  
+Okno se odpre sredi zatemnjenega platna. Zatemni se samo platno, zato odprt [raziskovalec](./explorer.md#dialogs-beside-it) ob njem ostane odprt in uporaben. Njegova glava vsebuje naslov `Table Properties`, pet nazadnje odprtih tabel kot ploščice, med katerimi je trenutna poudarjena, in gumb za zapiranje. Vsaka ploščica poimenuje svojo tabelo tako kot [prikaz imen](./logical-names.md#beyond-the-canvas). Kliknite ploščico, da preklopite na to tabelo, ne da bi znova odprli okno.  
 Pod glavo so trije zavihki: `Indexes`, `Schema SQL` in `Code Generator`. Okno ima za vse tri enako velikost, zato ga preklapljanje med zavihki ne premakne in mu ne spremeni velikosti.  
 Zaprete ga z gumbom za zapiranje, s tipko `Escape` ali s klikom na platno zunaj njega.  
 Izbira vrstice v raziskovalcu, ki ni mapa, ali prehod na zadetek njegovega iskanja zapre okno Lastnosti tabele pred skokom. Enako stori bližnjica `Ctrl + F` (Windows/Linux) ali `⌘ + F` (Mac), ki odpre iskanje v raziskovalcu ali postavi kazalko v njegovo iskalno polje, če je raziskovalec že odprt. Vsak drug klik v raziskovalcu, vključno z vrstico mape, ali na gumb `Explorer` v orodni vrstici pusti okno Lastnosti tabele odprto. Pritisk tipke `Escape`, medtem ko je tipkovnica v raziskovalcu, le vrne tipkovnico platnu, zato je za zapiranje okna Lastnosti tabele potreben drugi pritisk tipke `Escape`.
 
 Zavihek `Indexes` je opisan v razdelku [Indeksi](#indexes).  
-Zavihek `Schema SQL` prikaže DDL tabele za izbrano [zbirko podatkov](#databases): njen stavek `CREATE TABLE`, ločene omejitve, ki jih nekatere zbirke podatkov zapišejo za njene stolpce z zastavico Enolično, in njene indekse. Vedno zapiše navadne stavke `CREATE`, brez glave in brez skripta pred tabelami ali za njimi, ne glede na to, kako je nastavljen zavihek [Shema SQL](./schema-sql.md) v orodni vrstici. Nima plošče z možnostmi, njegov priročni meni pa ponuja samo `Database` in `Bracket`.  
+Zavihek `Schema SQL` prikaže DDL tabele za izbrano [zbirko podatkov](#databases): njen stavek `CREATE TABLE`, ločene omejitve, ki jih nekatere zbirke podatkov zapišejo za njene stolpce z zastavico Enolično, in njene indekse. Vedno zapiše navadne stavke `CREATE`, brez glave, brez skripta pred tabelami ali za njimi in brez logičnih imen v praznih komentarjih, ne glede na to, kako je nastavljen zavihek [Shema SQL](./schema-sql.md) v orodni vrstici – glejte razdelek [Logična imena kot komentarji](./schema-sql.md#logical-names-as-comments). Nima plošče z možnostmi, njegov priročni meni pa ponuja samo `Database` in `Bracket`.  
 Zavihek `Code Generator` ustvari kodo samo za to tabelo – glejte stran [Generator kode](./code-generator.md).
 
 V urejevalniku z lastnostjo `readonly` se okno še vedno odpre, z značko `Read only` ob naslovu, vendar njegov zavihek `Indexes` ne omogoča sprememb.
@@ -163,19 +173,19 @@ Začnite v priročnem meniju tabele s postavko `Focus on this table` ali izberit
 Kadar je tabela, ki jo kliknete z desno tipko miške, ena od več izbranih tabel, se postavka glasi `Focus on selected tables` in se osredotoči na celoten izbor. Če z desno tipko miške kliknete tabelo zunaj izbora, se osredotočite samo na to tabelo.  
 Bližnjica upošteva izbrane tabele, beležke izpusti in ne naredi ničesar, če ni izbrana nobena tabela.  
 Izbrana [skupina tabel](./table-groups.md) tu ne šteje, ne pri bližnjici ne pri postavki menija: njene tabele se upoštevajo samo, če so izbrane same, kar naredi postavka `Select tables` v meniju skupine.  
-Kaj prikazuje zoženi pogled in kako se vrnete k celotnemu diagramu, je opisano na strani [Vizualizacija](./visualization.md#focusing-on-tables).
+Kaj prikazuje zoženi pogled in kako se vrnete k celotnemu diagramu, je opisano na strani [Vizualizacija](./visualization.md#focusing-on-tables), kako se korak nazaj in naprej pomikate po tem, kar je način Tok prikazoval prej, pa v razdelku [Prejšnja in naslednja tabela](./visualization.md#previous-table-and-next-table).
 
 ## Indeksi {#indexes}
 
 Indeksi se določijo na zavihku `Indexes` okna Lastnosti tabele in so vključeni v izvoženo Shemo SQL.
 
 Leva stran navaja ključe in indekse tabele v dveh skupinah.  
-Skupina `Keys`, ki se prikaže, če ima tabela ključe, navaja ključe, ki jih določajo njeni stolpci: `PK_<table name>` nad stolpci z oznako PK, nato `UQ_<table name>_<column name>` za vsak stolpec z zastavico Enolično, v vrstnem redu stolpcev. Imena sledijo Shemi SQL izbrane zbirke podatkov, zato tabela, katere ime vsebuje shemo, kot je `sales.users`, pri vseh zbirkah podatkov razen Databricks in Snowflake navaja `PK_users`, ko ima nastavitev `Bracket` vrednost `None` – glejte razdelek [Imena tabel s shemo](./schema-sql.md#schema-qualified-table-names). Vsak ključ nosi oznako `PK` ali `UQ` in je označen s ključavnico. Tu so samo za branje in se spremenijo le z zastavicama [PK](./table-editing.md#column-primary-key) in [Enolično](./table-editing.md#not-null-unique-auto-increment) stolpcev.  
+Skupina `Keys`, ki se prikaže, če ima tabela ključe, navaja ključe, ki jih določajo njeni stolpci: `PK_<table name>` nad stolpci z oznako PK, nato `UQ_<table name>_<column name>` za vsak stolpec z zastavico Enolično, v vrstnem redu stolpcev. Imena so fizična imena, ki jih zapiše Shema SQL izbrane zbirke podatkov, ne glede na prikaz imen, zato tabela, katere ime vsebuje shemo, kot je `sales.users`, pri vseh zbirkah podatkov razen Databricks in Snowflake navaja `PK_users`, ko ima nastavitev `Bracket` vrednost `None` – glejte razdelek [Imena tabel s shemo](./schema-sql.md#schema-qualified-table-names). Vsak ključ nosi oznako `PK` ali `UQ` in je označen s ključavnico. Tu so samo za branje in se spremenijo le z zastavicama [PK](./table-editing.md#column-primary-key) in [Enolično](./table-editing.md#not-null-unique-auto-increment) stolpcev.  
 Skupina `Indexes` navaja indekse tabele v vrstnem redu, v katerem so bili dodani. Vsak indeks ima stikalo `UQ`, ki ga naredi enoličnega, polje za ime in gumb `x`, ki ga odstrani. Indeks, ki je [alternativni ključ](#alternate-keys), prikazuje tudi svojo številko, na primer `AK1`. Indeks dodate z gumbom `Add Index` na dnu seznama.
 
-Desna stran navaja stolpce tabele pod `Columns`, vsakega s potrditvenim poljem. Dokler na levi ni izbran indeks, ni mogoče urejati ničesar.  
+Desna stran navaja stolpce tabele pod `Columns`, vsakega s potrditvenim poljem. Vsaka vrstica prikazuje iste celice kot vrstica stolpca na platnu ter sledi vrstnemu redu stolpcev, možnostim pogleda in [prikazu imen](./logical-names.md#beyond-the-canvas). Dokler na levi ni izbran indeks, ni mogoče urejati ničesar.  
 Označite stolpec, da ga dodate v izbrani indeks, in počistite njegovo oznako, da ga odstranite. Ko izberete ključ, so njegovi stolpci prikazani kot označeni, vendar polja ostanejo onemogočena.  
-Stolpci izbranega indeksa so navedeni spodaj pod `Index order`. Povlecite jih za ročico za vlečenje, da spremenite njihov vrstni red, in kliknite ploščico `ASC` ali `DESC` v vrstici, da obrnete njen vrstni red razvrščanja. Pri alternativnem ključu se vsaka vrstica konča z oznako `AK<n>.<m>`. Seznam prikazuje tri vrstice hkrati, ostale pa so dosegljive s pomikanjem.
+Stolpci izbranega indeksa so navedeni spodaj pod `Index order`, vsak poimenovan tako, kot ga poimenuje prikaz imen, pri čemer je v prikazu `Both Names` fizično ime v oklepaju za logičnim imenom, na primer `Member Number (member_no)`. Povlecite jih za ročico za vlečenje, da spremenite njihov vrstni red, in kliknite ploščico `ASC` ali `DESC` v vrstici, da obrnete njen vrstni red razvrščanja. Pri alternativnem ključu se vsaka vrstica konča z oznako `AK<n>.<m>`. Seznam prikazuje tri vrstice hkrati, ostale pa so dosegljive s pomikanjem.
 
 V urejevalniku z lastnostjo `readonly` izbira ključa ali indeksa še vedno prikaže njegove stolpce, vendar ni gumbov `Add Index` in `x`, ničesar drugega na zavihku pa ni mogoče spremeniti.
 
@@ -216,12 +226,12 @@ Odprite `Auto Layout` v priročnem meniju platna ali v hitrem iskanju in izberit
 | `Tree - horizontal` | Enaka razporeditev v plasti, od leve proti desni. |
 
 Postavitev `Force` med umirjanjem odpre predogled z gumboma `Apply` in `Cancel` v obvestilu, ki ga prikaže.  
-Okvir predogleda se določi po diagramu, kakršen je bil ob začetku postavitve, zato se lahko tabele med umirjanjem postavitve premaknejo iz okvirja. Predogled se nariše pri `70%` ali manj, zato so njegove tabele prikazane strnjene na ime in barvni rob.  
+Okvir predogleda se določi po diagramu, kakršen je bil ob začetku postavitve, zato se lahko tabele med umirjanjem postavitve premaknejo iz okvirja. Predogled se nariše pri `70%` ali manj, zato so njegove tabele prikazane strnjene na ime in barvni rob. Odpre se v prikazu imen, ki ga gledate, ne glede na to, kateri prikaz hrani datoteka – glejte razdelek [Zunaj platna](./logical-names.md#beyond-the-canvas).  
 Gumb `Apply` ohrani položaje, kakršni so v tistem trenutku, postavitev pa se uporabi samodejno, ko se umiri. Gumb `Cancel` ali tipka `Escape` pusti diagram, kakršen je bil.
 
 Druge tri se izračunajo v enem koraku, zunaj glavne niti, zato ni česa opazovati: med izračunom postavitve je prikazano obvestilo, končna razporeditev pa se usredini na območje, ki ga diagram že zaseda. Gumb `Cancel` ali tipka `Escape` opusti postavitev, na katero ne čakate več, pri gostitelju, ki ne poganja procesa shared worker, pa se postavitev konča s sporočilom `Could not place tables` – glejte razdelek [Web Workers](../../api/installation.md#web-workers). Enako se konča postavitev, ki se ne vrne v 60 sekundah.
 
-Ne glede na to, katero izberete, se premaknejo tabele in skupine tabel, beležke pa ostanejo, kjer so. Rekurzivna relacija se ne upošteva, več relacij med istima dvema tabelama pa šteje kot ena.  
+Ne glede na to, katero izberete, se premaknejo tabele in skupine tabel, beležke pa ostanejo, kjer so. Tabele se razporedijo pri širinah, ki jih imajo v prikazu imen, ki ga gledate. Rekurzivna relacija se ne upošteva, več relacij med istima dvema tabelama pa šteje kot ena.  
 Vsaka postavitev ohrani tabele vsake skupine skupaj, ne glede na to, ali so skupine prikazane, in vsako skupino, ki vsebuje tabele, prilagodi okoli njih – glejte stran [Skupine tabel](./table-groups.md#auto-layout).  
 Rezultat se zapiše kot en sam vnos v zgodovini, zato ena razveljavitev vrne vse tabele in skupine tja, kjer so bile.
 
@@ -259,6 +269,7 @@ Nad sredino spodnjega roba platna lebdi majhna orodna vrstica, ki od leve proti 
 - `New Table`, `New Memo` in `New Table Group`. Gumb `New Table` doda tabelo tako kot `Alt + N`, gumb `New Memo` pa doda beležko tako kot `Alt + M`. Gumb `New Table Group` vklopi [risanje skupine](./table-groups.md#drawing-a-group) tako kot `Alt + G` in izklopi orodje Roka; drugi klik, tako kot drugi `Alt + G`, konča risanje, ne da bi se dodala skupina. Gumb `New Memo` je izpuščen, medtem ko View Option → `Memos` skriva beležke, gumb `New Table Group` pa, medtem ko View Option → `Table Groups` skriva skupine. Urejevalnik z lastnostjo `readonly` ne prikaže nobenega od teh treh gumbov.
 - Povečava: `Zoom out`, trenutna povečava v odstotkih in `Zoom in`. Gumba spreminjata povečavo v korakih na enak način kot bližnjice za povečavo, klik na odstotek pa jo ponastavi na `100%`.
 - Štiri notacije relacij, iste štiri, s katerimi začnete relacijo – glejte stran [Začetek urejanja](./editing-start.md). Izbira ene preklopi nazaj na orodje Izbira, saj relacijo narišete s klikom na dve tabeli.
+- `Name View`, gumb s puščico navzdol, ki ima za napis trenutni prikaz: `Physical Names`, `Logical Names` ali `Both Names`. Ne glede na to, kateri prikaz navaja, ohrani enako širino, zato preklop nikoli ne premakne orodne vrstice. Klik odpre nad orodno vrstico seznam vseh treh, pri čemer je trenutni označen s kljukico. Izbira enega preklopi nanj in zapre seznam; drugi klik na gumb, pritisk kjer koli drugje ali tipka `Escape` zapre seznam brez preklopa. Prikaže ga tudi urejevalnik z lastnostjo `readonly`. Kaj izriše posamezni prikaz, je opisano v razdelku [Prikaz imen](./logical-names.md#name-view), ali se preklop shrani, pa v razdelku [Preklapljanje prikaza](./logical-names.md#switching-the-view).
 - Način zen, `Alt + Z`, ki odstrani vse razen platna in te orodne vrstice. Ponovni `Alt + Z` ali gumb vrne vse ostalo. Odprt raziskovalec se skrije skupaj z ostalim, ne da bi se zaprl, in se vrne skupaj z njim. V načinu zen ga je še vedno mogoče odpreti – glejte razdelek [Ko se umakne](./explorer.md#when-it-stands-aside).
 - Kompas `Go to content`, ki se pridruži koncu orodne vrstice samo, kadar na zaslonu ni nobene tabele, prikazane beležke ali prikazane skupine tabel – glejte razdelek [Premikanje po platnu](#getting-around-the-canvas).
 
@@ -277,7 +288,7 @@ Bližnjice: `Ctrl + Plus` (Windows/Linux) ali `⌘ + Plus` (Mac), `Ctrl + Minus`
 Gumba `Zoom out` in `Zoom in` v [orodni vrstici platna](#canvas-toolbar) spreminjata povečavo v korakih tako kot bližnjici `Minus` in `Plus`: vsak pritisk jo spremeni za 4 odstotne točke, pri čemer sredina zaslona ostane na istem mestu. Odstotek med njima prikazuje trenutno povečavo, klik nanj pa jo takoj ponastavi na `100%`, tako kot `Ctrl + 0` (Windows/Linux) ali `⌘ + 0` (Mac).
 
 Povečava sega od `10%` do `150%`.  
-Pri `70%` in manj se tabele strnejo na ime in barvni rob, urejanje celic, bližnjice za celice ter kopiranje in lepljenje pa ne delujejo, dokler znova ne povečate pogleda.
+Pri `70%` in manj se tabele strnejo na ime in barvni rob, urejanje celic, bližnjice za celice ter kopiranje in lepljenje pa ne delujejo, dokler znova ne povečate pogleda. Ime, ki ga prikaže strnjena tabela, sledi prikazu imen – glejte razdelek [Prikaz imen](./logical-names.md#name-view).
 
 Iste tri bližnjice spreminjajo povečavo tudi na zavihku Vizualizacija, tako v načinu `Graph` kot v načinu `Flow`, vsak način v svojem obsegu – glejte stran [Vizualizacija](./visualization.md#toolbar).
 
@@ -302,11 +313,11 @@ Vlečenje drsnika drsnega traku ali pravokotnika vidnega območja na mini zemlje
 
 Če po premikanju pogleda na zaslonu ne ostane nobena tabela, prikazana beležka ali prikazana skupina tabel, se na konec [orodne vrstice platna](#canvas-toolbar) doda kompas `Go to content` s puščico, ki kaže proti najbližjemu elementu, in z njegovo oddaljenostjo. Kliknite nanj, da ta element usredinite, ne da bi spremenili povečavo.
 
-![Premikanje pogleda z vlečenjem praznega platna, vlečenjem s srednjim gumbom nad tabelo, z mini zemljevidom in kolescem miške, nato vrnitev s kompasom Go to content](/img/demo-canvas-navigation.webp)
+![Premikanje pogleda z vlečenjem praznega platna, s kolescem miške, z vlečenjem s srednjim gumbom nad tabelo in z mini zemljevidom, nato Shift + wheel mimo vsebine in vrnitev s kompasom Go to content](/img/demo-canvas-navigation.webp)
 
 ### Kam pripelje skok {#where-a-jump-lands}
 
-Vsak prehod, ki vas pripelje do nečesa na platnu, premakne pogled po istem pravilu: rezultati `#`, `@` in `:` [hitrega iskanja](./quick-search.md#searching-the-diagram), vrstice [raziskovalca](./explorer.md#going-to-a-row) in zadetki njegovega [iskanja in zamenjave](./find-and-replace.md#going-to-a-match), vrstice seznama [pregledovalnika razlik](#going-to-a-change), [gumb na kartici](./visualization.md#card-buttons) za zunanjo povezavo v načinu Tok in pristanek ukaza [Uvozi in dodaj](./file-import-export.md#import-and-add). Vsak od teh razdelkov pove, kaj prehod izbere; ta pove, kam se premakne pogled.
+Vsak prehod, ki vas pripelje do nečesa na platnu, premakne pogled po istem pravilu: rezultati `#`, `@` in `:` [hitrega iskanja](./quick-search.md#searching-the-diagram), vrstice [raziskovalca](./explorer.md#going-to-a-row) in zadetki njegovega [iskanja in zamenjave](./find-and-replace.md#going-to-a-match), vrstice seznama [pregledovalnika razlik](#going-to-a-change), [gumb na kartici](./visualization.md#card-buttons) za zunanjo povezavo v načinu Tok, preverjanje na [listu Preverjanja](./dictionary.md#the-checks-sheet) zavihka Slovar, ki navaja tabelo ali stolpec, in pristanek ukaza [Uvozi in dodaj](./file-import-export.md#import-and-add). Vsak od teh razdelkov pove, kaj prehod izbere; ta pove, kam se premakne pogled.
 
 Skok nikoli ne spremeni povečave in naredi največ en pomik. Iz drugega zavihka najprej preklopi na zavihek ERD.  
 Platno meri tako, kot je prikazano: pod zgornjo orodno vrstico ali po celotni višini v načinu zen ter desno od odprtega raziskovalca, ki platno zoži, namesto da bi ga prekril.
@@ -322,8 +333,8 @@ Majhna tabela blizu levega roba platna, na polovici višine, se zato premakne sa
 Kaj skok prikaže in kateri ključni del mora biti viden, kadar se celota ne prilega:
 
 - Tabela: celotna tabela, ključni del pa je pas z imenom na vrhu ali, pri zadetku v komentarju tabele, celica komentarja, medtem ko View Option → `Table Comment` prikazuje komentarje. Pri `70%` in manj, kjer se tabele strnejo na ime, je ključni del ime na sredini okvirja.
-- Stolpec: njegova vrstica, ključni del pa je celica, na katero skok pripelje: njegovo ime ali komentar, v katerem je zadetek, medtem ko View Option → `Column Comment` prikazuje komentarje. Pri `70%` in manj stolpec prikaže svojo tabelo po pravilu za tabele.
-- Celica, preširoka, da bi bila vidna v celoti, na primer dolg komentar: ključni del je besedilo zadetka v njej.
+- Stolpec: njegova vrstica, ključni del pa je celica, na katero skok pripelje: njegovo ime, njegovo logično ime pri zadetku v logičnem imenu ali preverjanju logičnega imena, njegova celica domene pri preverjanju njegove domene ali komentar, v katerem je zadetek, medtem ko View Option → `Column Comment` prikazuje komentarje. Kjer vrstica take celice ne izriše, skok pripelje do celice, izrisane na njenem mestu: do logičnega imena namesto fizičnega imena v prikazu `Logical Names`, do fizičnega imena namesto logičnega imena v prikazu `Physical Names` in do celice tipa namesto celice domene, medtem ko je možnost View Option → `Domain` izklopljena, oziroma do vrstice kot celote, kadar je izklopljena tudi možnost `DataType`. Pri `70%` in manj stolpec prikaže svojo tabelo po pravilu za tabele.
+- Celica, preširoka, da bi bila vidna v celoti, na primer dolg komentar: ključni del je besedilo zadetka v njej. Skok na celico, izrisano namesto tiste, v kateri je zadetek, na primer na fizično ime pri zadetku v logičnem imenu v prikazu `Physical Names`, se ne ravna po besedilu.
 - Relacija: okvir, ki obsega njeni dve tabeli, ključni del pa je podrejena tabela.
 - Skupina tabel: njen okvir, ključni del pa je naslovna vrstica.
 - Beležka ali blok, ki ga postavi ukaz Uvozi in dodaj: v celoti.
@@ -337,7 +348,7 @@ Prej shranjene dokumente lahko primerjate s trenutnim dokumentom.
 V priročnem meniju platna izberite `Diff Viewer` in nato dokument `.json`, ki ste ga prej izvozili.
 
 Pogled se odpre čez platno: na levi to, kar se je spremenilo, nato pa shranjeni in trenutni dokument drug ob drugem.  
-Trenutni dokument se primerja v stanju ob odprtju pogleda; spremembe, narejene pozneje, vključno s spremembami sodelavca, se v pogledu ne pokažejo. Odprt [raziskovalec](./explorer.md#when-it-stands-aside) se skrije, medtem ko je pogled odprt, zato pogled zavzame celotno širino urejevalnika.  
+Trenutni dokument se primerja v stanju ob odprtju pogleda; spremembe, narejene pozneje, vključno s spremembami sodelavca, se v pogledu ne pokažejo. Obe strani se odpreta in ostaneta v prikazu imen, ki ga gledate, ne glede na to, kateri prikaz hrani katera koli od obeh datotek – glejte razdelek [Zunaj platna](./logical-names.md#beyond-the-canvas). Odprt [raziskovalec](./explorer.md#when-it-stands-aside) se skrije, medtem ko je pogled odprt, zato pogled zavzame celotno širino urejevalnika.  
 Pogled na vsaki strani premikate s kolescem miške, z vlečenjem praznega območja ali notranjosti skupine tabel ali z vlečenjem s srednjim gumbom kjer koli nad njo, povečavo pa spreminjate z bližnjico `Ctrl + Wheel` (Windows/Linux), `⌘ + Wheel` (Mac) ali s stiskom prstov. Pri `70%` in manj se njene tabele strnejo tako kot na platnu – glejte razdelek [Oznake na obeh straneh](#marks-on-the-two-sides).  
 Obe strani sta samo za branje, zato se v vašem dokumentu nič ne spremeni. Vsaka ima svoj izbor, klik na tabelo na njej pa jo izbere samo na tej strani.  
 Pogled zaprete z gumbom `Close` v obvestilu `Diff Viewer`, ki se prikaže ob njegovem odprtju, ali s tipko `Escape`.
@@ -360,13 +371,14 @@ Kaj šteje kot sprememba:
 - Beležka: besedilo, položaj, velikost in barva.
 - Skupina tabel: ime, tabele, ki jih vsebuje, barva, položaj in velikost.
 
-Zato kot spremenjena šteje tabela, beležka ali skupina, ki se je samo premaknila ali ki se ji je spremenila samo velikost ali barva. Položaji in velikosti se primerjajo v celih slikovnih pikah, vrstni red prekrivanja in mesto, kjer se povezovalna črta stika s tabelo, pa ne štejeta nikoli.
+Zato kot spremenjena šteje tabela, beležka ali skupina, ki se je samo premaknila ali ki se ji je spremenila samo velikost ali barva. Položaji in velikosti se primerjajo v celih slikovnih pikah, vrstni red prekrivanja in mesto, kjer se povezovalna črta stika s tabelo, pa ne štejeta nikoli.  
+Logična imena, povezave z domeno ter besede, izrazi in domene na zavihku [Slovar](./dictionary.md) se ne primerjajo, zato sprememba samo teh ni niti navedena niti označena. Podatkovni tip, ki ga je spremenila domena, pa šteje, in sicer kot sprememba podatkovnega tipa stolpca.
 
 ### Drevo sprememb {#the-change-tree}
 
 Seznam na levi je prikazan kot [drevo raziskovalca](./explorer.md#the-tree) in vsebuje samo tisto, kar se je spremenilo: `Tables`, `Table Groups` in `Memos`, vsaka od teh map je prikazana le, če vsebuje vrstico, pod tabelo pa njene lastne `Columns`, `Indexes` in `Foreign Keys`. Tuji ključ je naveden pod svojo podrejeno tabelo, dodana ali odstranjena tabela pa v sebi ne navaja ničesar.  
 Vsaka mapa prikazuje, koliko vrstic vsebuje, vse mape in tabele pa so na začetku razširjene.  
-Tabele in skupine tabel so razvrščene po imenu, ne glede na velikost črk. Beležke ter stolpci, indeksi in tuji ključi tabele ohranijo vrstni red trenutnega dokumenta, odstranjeni element pa se vrne na mesto, kjer je bil. Vrstica beležke prikazuje prvo vrstico besedila beležke, vrstica tujega ključa pa njegove stolpce v podrejeni tabeli, nato `→` z nadrejeno tabelo in njenimi stolpci, na primer `user_id → users(id)`. Namesto praznega imena je ležeče zapisano `unnamed`.
+Vrstica tabele ali stolpca je poimenovana v prikazu imen, v katerem sta se odprli strani. V prikazu `Both Names` prikazuje logično ime, za njim pa bledo fizično ime, v odstranjeni vrstici pa je bledo ime prečrtano skupaj z ostalim. Tabele in skupine tabel so razvrščene po imenu, ne glede na velikost črk in ne glede na prikaz. Beležke ter stolpci, indeksi in tuji ključi tabele ohranijo vrstni red trenutnega dokumenta, odstranjeni element pa se vrne na mesto, kjer je bil. Vrstica beležke prikazuje prvo vrstico besedila beležke, vrstica tujega ključa pa njegove stolpce v podrejeni tabeli, nato `→` z nadrejeno tabelo in njenimi stolpci, na primer `user_id → users(id)`. Namesto praznega imena je ležeče zapisano `unnamed`.
 
 Vsaka vrstica se konča s črko, vrstica z oznako `A`, `D`, `M` ali `R` pa ima ime v barvi te črke:
 
@@ -378,7 +390,7 @@ Vsaka vrstica se konča s črko, vrstica z oznako `A`, `D`, `M` ali `R` pa ima i
 
 Premaknite kazalec nad ime vrstice, da se prikaže njen opis orodja: stanje, `Added`, `Deleted`, `Modified`, `Renamed` ali `Changed inside`, nato po ena vrstica za vsako spremembo, na primer `Name: users → members` ali `NN: ✗ → ✓`. Besedilo se navede s prvo vrstico, odrezano po 40 znakih, prazna vrednost pa je prikazana kot `—`. Opis orodja dodanega ali odstranjenega elementa vsebuje samo stanje.
 
-Polje `Filter by name` nad drevesom ohrani vrstice, katerih trenutno ali shranjeno ime vsebuje, kar vtipkate, ne glede na velikost črk. Tabela, katere ime se ujema, ohrani vse svoje vrstice, tabela, katere ime se ne ujema, pa ostane le z vrsticami, ki se ujemajo. Filter, ki se ne ujema z ničimer, pusti drevo prazno.  
+Polje `Filter by name` nad drevesom ohrani vrstice, katerih trenutno ali shranjeno ime ali trenutno ali shranjeno logično ime vsebuje, kar vtipkate, ne glede na velikost črk in v vsakem prikazu imen. Tabela, katere ime se ujema, ohrani vse svoje vrstice, tabela, katere ime se ne ujema, pa ostane le z vrsticami, ki se ujemajo. Filter, ki se ne ujema z ničimer, pusti drevo prazno.  
 Kadar se dokumenta sploh ne razlikujeta, drevo prikaže `No changes`.
 
 Povlecite desni rob drevesa, da ga razširite ali zožite, od `200px` do `480px`, in dvokliknite rob, da ga ponastavite na `260px`. Vsaka primerjava se odpre pri `260px`, obe strani pa si preostanek širine razdelita enakomerno.  
@@ -407,5 +419,7 @@ Obe strani obarvata besedilo, obrobe in povezovalne črte, ničesar pa ne zapoln
 - Sprememba indeksa ne označi ničesar na nobeni strani; vidna je samo v drevesu.
 
 Vsaka stran upošteva možnosti pogleda svojega dokumenta. Sprememba v celici, ki je ta stran ne nariše, se namesto tega pokaže na imenu. Sprememba stolpca v celici, ki jo skrije možnost pogleda, na primer `Unique` ali `Auto Increment`, ki sta obe privzeto izklopljeni, obarva ime stolpca jantarno, enako pa stori sprememba primarnega ključa v vrstici, ki ne prikazuje ikone ključa. Sprememba komentarja tabele, medtem ko je možnost `Table Comment` izklopljena, obarva ime tabele jantarno. Modra barva preimenovanja ima prednost pred to jantarno. Beležka ali skupina tabel, ki jo njen dokument skriva, je navedena v drevesu, na tej strani pa ni narisana.
+
+V prikazu `Logical Names`, ki ne izriše celice imena, gresta modra barva preimenovanja in jantarna barva spremembe v celici, ki je stran ne izriše, na logično ime, izrisano na mestu imena. Sprememba podatkovnega tipa obarva celico tipa jantarno v vsakem prikazu imen, tudi kjer celica prikazuje ime domene. Nobena stran ne izriše barv, ki jih preverjanja zavihka Slovar dajo imenom na platnu – glejte razdelek [Oznake na platnu](./dictionary.md#marks-on-the-canvas).
 
 Pri `70%` in manj strnjene tabele ohranijo obrobo. Ime ohrani zeleno ali rdečo barvo dodane ali odstranjene tabele ali modro barvo preimenovanja, sicer pa prevzame jantarno barvo spremembe komentarja. Spremembe stolpcev se ne narišejo, dokler znova ne povečate pogleda; drevo jih še vedno navaja.

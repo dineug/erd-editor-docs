@@ -1,6 +1,6 @@
 ---
-sidebar_position: 6
-description: Ta bort en relation, ändra dess typ, ange dess ON DELETE- och ON UPDATE-åtgärder, mappa den till befintliga kolumner med Mappa kolumner, läs relationslinjens notation, arbeta med N:M-relationer och identifierande relationer och se hur nya sekundärnyckelkolumner namnges.
+sidebar_position: 7
+description: Ta bort en relation, ändra dess typ, ange dess ON DELETE- och ON UPDATE-åtgärder, mappa den till befintliga kolumner med Mappa kolumner, läs relationslinjens notation, arbeta med N:M-relationer och identifierande relationer och se vad nya sekundärnyckelkolumner kopierar från sin nyckel och hur de namnges.
 ---
 
 # Redigera relationer
@@ -85,6 +85,9 @@ Den öppnas på två sätt:
 
 Dialogrutans underrubrik namnger de två tabellerna och relationstypen, till exempel `users → posts · One N`. Typen visas här men ändras inte – använd [Ändra typ](#type-change).
 
+I hela dialogrutan, även i noteringarna och textraderna under raderna och i meddelandet som den stängs med, namnges tabeller och kolumner så som [namnvisningen](./logical-names.md#beyond-the-canvas) namnger dem.  
+Tre saker förblir fysiska: varje datatyp, som är kolumnens egen och aldrig dess domäns namn; `New column: <name>`, som visar det namn som den nya kolumnen kommer att få; och de rader som `Map` fyller i från början, som den parar ihop efter namn, aldrig efter logiskt namn.
+
 `References` anger nyckeln som relationen pekar på: `Primary Key`, med dess kolumner i tabellens ordning, och sedan `Unique: <column>` för varje kolumn som är märkt med `Unique`. `References` visas bara när det finns mer än ett alternativ.  
 Ett unikt index räknas inte som en nyckel här, och en kolumn med `Unique` som utgör hela primärnyckeln listas inte två gånger.  
 Om du väljer en annan nyckel byggs raderna om. En rad behåller sitt val så länge den kolumnen fortfarande finns i barntabellen.
@@ -121,10 +124,10 @@ Om relationens kolumner eller nyckeln som den öppnades med ändras under tiden 
 Det här skriver `Map` och `Save`:
 
 - `Map` lägger till relationen med `On Delete` och `On Update` inställda på `Not set`. `Save` ändrar bara relationens kolumner, låter dess föräldrasida peka på nyckeln som har valts i `References` och behåller dess typ och dess ON DELETE och ON UPDATE.
-- En rad med `New column` lägger till en kolumn sist i barntabellen, på samma sätt som när en relation ritas: `NOT NULL`, namngiven efter sin nyckel, med nyckelns datatyp, standardvärde och kommentar – se [Identifierande relationer](#identifying-relationships).
-- En vald kolumn döps aldrig om, och dess `Not Null`, primärnyckel, `Unique`, standardvärde och kommentar förblir som de är. Dess datatyp ändras bara medan `Relationship DataType Sync` är på och föräldrakolumnen har en datatyp: den får den typ som föräldrakolumnen ger en sekundärnyckel, heltalstypen för en nyckel av typen serial precis som för en ny kolumn, och ändringen fortplantar sig längs relationerna på samma sätt som synkroniseringen gör.
+- En rad med `New column` lägger till en kolumn sist i barntabellen, på samma sätt som när en relation ritas: `NOT NULL`, namngiven efter sin nyckel, med nyckelns datatyp, standardvärde, kommentar, logiska namn och domän – se [Identifierande relationer](#identifying-relationships).
+- En vald kolumn döps aldrig om och kopplas aldrig till nyckelns domän, och dess `Not Null`, primärnyckel, `Unique`, standardvärde, kommentar och logiska namn förblir som de är. Dess datatyp ändras bara medan `Relationship DataType Sync` är på och föräldrakolumnen har en datatyp: den får den typ som föräldrakolumnen ger en sekundärnyckel, heltalstypen för en nyckel av typen serial precis som för en ny kolumn, och ändringen fortplantar sig längs relationerna på samma sätt som synkroniseringen gör. Varje kolumn som ändringen ger en ny typ, vald eller nådd längs relationerna, kopplas från sin [domän](./dictionary.md#domains-and-data-types) när dess nya typ skiljer sig från domänens.
 - En kolumn som mappningen slutar använda finns kvar i barntabellen och är inte längre märkt som sekundärnyckel, om inte en annan relation fortfarande slutar på den.
-- Allt som en `Map` eller `Save` skriver, inklusive nya kolumner och typändringar, ångras i ett steg.
+- Allt som en `Map` eller `Save` skriver – inklusive nya kolumner, typändringar och borttagna domänkopplingar – ångras i ett steg.
 
 Om relationen är identifierande och hur dess föräldraände ritas avgörs av de mappade barnkolumnerna, som för alla relationer. Om du mappar till barntabellens primärnyckelkolumner blir relationen identifierande direkt, och om du mappar till en kolumn som tillåter `NULL` får föräldraänden en ring – se [Läsa en relationslinje](#reading-a-connector).  
 Sekundärnyckeln i Schema SQL refererar till nyckeln som du valde, till exempel `REFERENCES vehicle (vin)` för en nyckel med `Unique`.
@@ -156,9 +159,10 @@ Se [Importera eller exportera filer](./file-import-export.md).
 ## Identifierande relationer {#identifying-relationships}
 
 När du ritar en relation genom att klicka på barntabellen, eller med `Create new columns`, kopieras varje primärnyckel i föräldratabellen till barntabellen som en sekundärnyckelkolumn med `NOT NULL`, så en ny relation är från början icke-identifierande.  
-Kopian får nyckelns datatyp, standardvärde och kommentar, men inte `Unique` eller `Auto Increment`, och namnges som beskrivs i [Namn på sekundärnyckelkolumner](#foreign-key-column-names).  
+Kopian får nyckelns datatyp, standardvärde, kommentar och logiska namn, men inte `Unique` eller `Auto Increment`, och namnges som beskrivs i [Namn på sekundärnyckelkolumner](#foreign-key-column-names).  
 En nyckel av typen serial är undantaget när det gäller datatypen: dess kopia får den heltalstyp som serial-typen lagrar. Oavsett databas ger `smallserial` och `serial2` `smallint`, `serial4` ger `integer`, och `bigserial` och `serial8` ger `bigint`. Typen `serial` utan tillägg ger `integer` i PostgreSQL och `bigint unsigned` i MySQL och MariaDB, och förblir `serial` i alla andra databaser.  
 Bara hela typnamnet räknas, oavsett skiftläge, så `serial(4)` kopieras som det är skrivet. En typ som är skriven med versaler ger versaler: `SERIAL` ger `INTEGER` i PostgreSQL. En sekundärnyckelkolumn som redan har typen `serial` i ett sparat diagram behåller den typen.  
+Kopian kopplas också till nyckelns [domän](./dictionary.md#domains-and-data-types), förutsatt att bladet `Domains` listar den domänen när kopian skapas och att kopian behåller nyckelns datatyp. Kopian av en nyckel av typen serial som får en heltalstyp kopplar därför ingen domän, medan typen `serial` utan tillägg, som behålls som `serial`, kopplar den.  
 För att göra relationen identifierande anger du de sekundärnyckelkolumnerna i barntabellen som primärnycklar: markera alla och tryck på `Alt + K` (Windows/Linux) eller `⌥ + K` (Mac) en gång, eller välj `Primary Key` i tabellens snabbmeny, där alternativet visar `Primary Key on selected columns` när två eller fler är markerade – se [Primärnyckel för kolumner](./table-editing.md#column-primary-key).
 
 ![Kolumnen product_id slås på och av som primärnyckel med Alt + K, och dess relationslinje blir heldragen och sedan streckad](/img/demo-identifying-relationship.webp)
@@ -193,7 +197,10 @@ Det gäller även den primärnyckel som editorn lägger till i en föräldratabe
 Namnen bestäms när relationen ritas. Om du senare byter namn på föräldratabellen eller dess nyckel ändras inte namnen.  
 Raderna med `New column` i [Mappa kolumner](#map-columns) namnges enligt samma regler, och listan visar varje namn innan du väljer det.  
 Relationer som kommer med sina kolumner redan på plats – från en import, en inklistring, en duplicering eller dialogrutan Mappa kolumner när den parar ihop befintliga kolumner – behåller de namn som de kolumnerna har.  
-En kodagent som lägger till en relation med `erd_add_relationship` får samma namn och datatyper – se [Verktyg](../../mcp/tools.md#relationships).
+En kodagent som lägger till en relation med `erd_add_relationship` får samma namn, datatyper, logiska namn och domäner – se [Verktyg](../../mcp/tools.md#relationships).
+
+En sekundärnyckelkolumn namnges efter sin nyckel, aldrig efter det logiska namn som den kopierar, och dess namn räknas som ett som du har skrivit: ett logiskt namn som senare skrivs på kolumnen lämnar namnet som det är, om inte namnet är tomt – se [Egna namn](./dictionary.md#names-of-your-own).  
+Medan det kopierade logiska namnet matchar en term som ger ett annat namn listar bladet `Checks` därför kolumnen under [`Physical name mismatch`](./dictionary.md#what-each-check-finds). Om du härleder dess fysiska namn igen får den ett nytt namn från ordlistorna, om inte en annan kolumn i barntabellen redan har det namn som de ger, oavsett skiftläge – se [Härled fysiska namn igen](./dictionary.md#derive-physical-names-again).
 
 ## Läsa en relationslinje {#reading-a-connector}
 

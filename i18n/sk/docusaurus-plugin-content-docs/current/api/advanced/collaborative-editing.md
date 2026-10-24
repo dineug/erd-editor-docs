@@ -44,19 +44,26 @@ S akciou zaobchádzajte ako s nepriehľadnou hodnotou a namiesto čítania alebo
 
 Časť toho, čo editor robí, zostáva iba v ňom.  
 Presunutie tabuľky, poznámky alebo skupiny tabuliek dopredu, ku ktorému dochádza aj pri ich výbere, sa neodosiela.  
-Neodosielajú sa ani voľby `Statements`, `Header` a `Tables` na karte [Schéma SQL](../../guide/guides/schema-sql.md), ktoré patria oknu, v ktorom sa urobili.  
+Neodosielajú sa ani voľby `Statements`, `Header`, `Write logical names into empty comments` (od verzie `4.2.0`) a `Tables` na karte [Schéma SQL](../../guide/guides/schema-sql.md), ktoré patria oknu, v ktorom sa urobili.  
 Od verzie `4.1.0` zostáva vo svojom editore aj [prieskumník](../../guide/guides/explorer.md): to, či je otvorený, jeho šírka, zbalené riadky, riadok s fokusom klávesnice, poloha posunutia stromu ani jeho vyhľadávanie a možnosti sa neodosielajú.  
 Neodosiela sa ani [zvýraznenie](../../guide/guides/relationship-editing.md#reading-a-connector), ktorým prechod na cudzí kľúč označí spojnicu jeho vzťahu.  
-Posunutie, priblíženie alebo prepnutie karty sa odošle, ale nikdy neposunie zobrazenie ani neprepne kartu iného používateľa. Platí to aj pre posunutie, ktoré spôsobí skok z prieskumníka, a pre prepnutie na kartu ERD, keď sa prieskumník otvorí z inej karty.
+Od verzie `4.2.0` zostáva vo svojom editore aj karta [Slovník](../../guide/guides/dictionary.md): to, ktorý hárok sa zobrazuje, ani vyhľadávanie, výber, posunutie a šírky stĺpcov každého hárka sa neodosielajú. Jej úpravy, zoradenia a importy súborov CSV sa odosielajú.  
+Posunutie, priblíženie alebo prepnutie karty sa odošle, ale nikdy neposunie zobrazenie ani neprepne kartu iného používateľa. Platí to aj pre posunutie, ktoré spôsobí skok z prieskumníka, pre prepnutie na kartu ERD, keď sa prieskumník otvorí z inej karty, a pre prepnutie karty a posunutie pri skoku z hárka [`Checks`](../../guide/guides/dictionary.md#the-checks-sheet) na karte Slovník na tabuľku alebo stĺpec. Skok z tohto hárka na slovo, termín alebo doménu zostáva na karte Slovník, takže sa z neho nič neodošle.
+
+Od verzie `4.2.0` sa odosiela aj prepnutie [Zobrazenia názvov](../../guide/guides/logical-names.md#switching-the-view) a o tom, čo s ním urobia ostatné editory, rozhoduje jeho [zamknutie](../../guide/guides/settings.md#lock). Zamknutie `Name View` je zapnuté v novom diagrame a v každom dokumente spred verzie `4.2.0`.  
+Kým je zamknutie zapnuté, prepnutie sa prejaví iba v editore, ktorý ho urobil: odošle sa síce, ale každý iný editor a každá replika ho zahodí, takže každý používateľ sa môže pozerať na iné zobrazenie, zatiaľ čo `value` uchováva zamknuté zobrazenie. Inak je to pri zmene jazyka, štýlu názvov alebo typu úvodzoviek: tá sa dostane do každého editora bez ohľadu na to, či je jej zamknutie zapnuté.  
+Kým je zamknutie vypnuté, prepnutie urobené v editore, ktorý môže upravovať, zmení Zobrazenie názvov v každom editore a replike, pričom platí posledné prepnutie, a každý z nich ho uloží.  
+Vlastné prepnutie v editore iba na čítanie vždy zostane v tomto editore a tento editor sa naďalej riadi zdieľanými prepnutiami ostatných.
 
 [Zamknutia](../../guide/guides/settings.md#lock) sú zdieľané: v každom editore platí posledné zamknutie alebo odomknutie nastavenia a zamknutie nesie hodnoty editora, ktorý ho zapol, takže každý editor aj každá replika ukladá rovnakú hodnotu.  
 Zamknutie `Viewport` preto uloží zobrazenie editora, ktorý ho zapol, a zamknutie `Canvas Type` poslednú kartu, na ktorej bol tento editor pred kartou Nastavenia, kde sa zamknutia zapínajú.  
-Vypnutie zamknutia `Language`, `Table Name Case`, `Column Name Case` alebo `Bracket Type` zároveň zmení toto nastavenie v každom editore na hodnotu zobrazenú v editore, ktorý ho vypol, takže všetky editory naďalej ukladajú jednu hodnotu. Vypnutie zamknutia `Viewport` alebo `Canvas Type` nikomu neposunie zobrazenie ani neprepne kartu.
+Vypnutie zamknutia `Language`, `Table Name Case`, `Column Name Case`, `Bracket Type` alebo od verzie `4.2.0` `Name View` zároveň zmení toto nastavenie v každom editore na hodnotu zobrazenú v editore, ktorý ho vypol, takže všetky editory naďalej ukladajú jednu hodnotu. Vypnutie zamknutia `Viewport` alebo `Canvas Type` nikomu neposunie zobrazenie ani neprepne kartu.
 
 Úprava skriptu `Before tables` alebo `After tables` sa odošle celá, keď jeho pole stratí fokus. Oba skripty sa zosúlaďujú samostatne, takže úprava jedného z nich od spolupracovníka nikdy neprepíše druhý.
 
 Nič, čo sa urobí v [režime Flow](../../guide/guides/visualization.md#flow-never-edits-the-document) na karte Vizualizácia, nie je zmenou dokumentu, takže editor v režime Flow neposiela ostatným žiadne zmeny a zmeny, ktoré posielajú ony, sa v ňom medzitým naďalej aplikujú.  
-Jedinou výnimkou je odchod z režimu Flow na inú kartu: toto prepnutie karty sa odošle ako každé iné.  
+Výnimky sú dve. Odchod z režimu Flow na inú kartu je prepnutím karty a odošle sa ako každé iné. Od verzie `4.2.0` je výber v zozname Zobrazenia názvov na paneli nástrojov režimu Flow prepnutím Zobrazenia názvov, ktoré sa odošle a aplikuje rovnako ako prepnutie urobené na plátne.  
+Tlačidlá `Previous table` a `Next table` a klávesy na vrátenie späť a opätovné vykonanie, ktorými sa v režime Flow [krokuje medzi zobrazeniami](../../guide/guides/visualization.md#previous-table-and-next-table), sa neodosielajú.  
 Tlačidlo externého odkazu na kartičke, výsledok [rýchleho vyhľadávania](../../guide/guides/quick-search.md#searching-the-diagram) vybratý po zadaní `#`, `@` alebo `:` a otvorenie [prieskumníka](../../guide/guides/explorer.md#opening-and-closing) prepnú z režimu Flow na kartu ERD. Odošle sa aj posunutie, ktoré tam spôsobí tlačidlo na kartičke alebo výsledok rýchleho vyhľadávania.
 
 ## Dva editory na jednej stránke {#two-editors-on-one-page}
@@ -99,6 +106,7 @@ const sharedStore2 = editor2.getSharedStore();
 
 Hodnota za behu stále obsahuje to, čo sa od otvorenia dokumentu odstránilo, takže keď iný editor neskôr vráti späť odstránenie, pripojený editor obnoví tabuľku aj s jej názvom a stĺpcami.  
 Vlastnosť [`value`](../erd-editor-element.md#value) je forma, ktorú obsahuje súbor, bez odstránených entít, takže pripojený editor inicializovaný z nej alebo zo súboru by namiesto toho obnovil prázdnu tabuľku bez názvu.  
+Od verzie `4.2.0` to isté platí pre slovo, termín alebo doménu odstránenú z hárka karty [Slovník](../../guide/guides/dictionary.md): keď iný editor vráti odstránenie späť, pripojený editor inicializovaný z `runtimeValue` znova uvedie celý riadok, kým editor inicializovaný z `value` uvedie prázdny riadok, ktorý potom jeho vlastná vlastnosť `value` vynechá.  
 Do trvalého úložiska naďalej zapisujte hodnotu `value`: hodnota `runtimeValue` slúži iba na inicializáciu ďalšieho editora, druhého zobrazenia alebo úložiska [replicationStore](./remote-storage.md).  
 Editory vo VS Code, v aplikácii Obsidian, v IDE od JetBrains a vo webovej aplikácii takto inicializujú druhé zobrazenie otvoreného dokumentu.
 
@@ -134,6 +142,31 @@ Všetky editory v relácii a každé úložisko [replicationStore](./remote-stor
 Editor verzie `4.1.0` neposiela žiadny nový typ akcie, takže editory a repliky verzií `4.0.0` a `4.1.0` zdieľajú jednu reláciu a nič im neunikne.  
 Jeho [hľadanie a nahrádzanie](../../guide/guides/find-and-replace.md#replacing) prehľadáva aj názvy indexov a názvy skupín tabuliek a tlačidlá `Replace` a `Replace All` ich premenúvajú akciami `index.changeName` a `tableGroup.changeName`, ktoré editor verzie `4.0.0` už aplikuje.
 
+Od verzie `4.2.0` sa tieto zmeny prenášajú novými typmi akcií a pri preposielaní akcií bez zmeny pre ne netreba nič nové:
+
+- [logický názov](../../guide/guides/logical-names.md) tabuľky alebo stĺpca: `table.changeLogicalName` a `column.changeLogicalName`; to, či bol ich názov [odvodený zo slovníkov](../../guide/guides/dictionary.md#deriving-physical-names): `table.changeNameDerived` a `column.changeNameDerived`;
+- prepojenie stĺpca s [doménou](../../guide/guides/dictionary.md#domains-and-data-types) alebo jeho odpojenie: `column.changeDomain`;
+- pridanie, zmena (vrátane poradia v hárku, ako ho nastaví zoradenie) alebo odstránenie slova, termínu alebo domény na karte [Slovník](../../guide/guides/dictionary.md): `dictionary.add`, `dictionary.update` a `dictionary.remove`;
+- prepnutie [Zobrazenia názvov](../../guide/guides/logical-names.md#switching-the-view): `settings.changeNameViewMode`.
+
+Zamknutie `Name View` sa prenáša existujúcou akciou `settings.changeLockSettings`, možnosť zobrazenia `Domain` akciou `settings.changeShow` a presun riadka `Logical Name` alebo `Domain` v [poradí stĺpcov](../../guide/guides/settings.md#adjusting-column-order) akciou `settings.changeColumnOrder`.  
+Akcie `editor.clear` a `editor.loadJson` importu schémy vo formáte SQL, GraphQL, DBML alebo AML z položky `Import` nesú `keepDictionaries: true`, čo v každom editore zachová slová, termíny a domény. Rovnako aj akcie nahrádzajúceho volania [setSchemaSQL](../erd-editor-element.md#setschemasql), `setSchemaGraphQL`, `setSchemaDBML` alebo `setSchemaAML`.  
+Fyzický názov, ktorý sa odvodí zo slovníkov, sa prenáša akciou `table.changeName` alebo `column.changeName` a typ údajov, ktorý doména dáva svojim stĺpcom, akciou `column.changeDataType`, teda akciami, ktoré posiela ručná úprava.
+
+Editor starší ako verzia `4.2.0` nové typy akcií ignoruje: nemá logické názvy, prepojenia s doménami, slovníky ani Zobrazenie názvov. Zamknutie alebo odomknutie `Name View` v ňom nič nezmení a nezmení nič ani presun riadka `Logical Name` alebo `Domain` v poradí stĺpcov, ani presun iného riadka na miesto niektorého z nich. Nič nezmení ani zamknutie `Canvas Type`, ktoré zapol editor, ktorý na kartu Nastavenia prešiel z karty Slovník: starší editor túto kartu nepozná, a preto ponechá nastavenie `Canvas Type` odomknuté. Naďalej zobrazuje fyzické názvy, ktoré sa odvodia zo slovníkov, a typy údajov, ktoré dávajú domény.  
+Jeho vlastné úpravy nevedia nič o logických názvoch, doménach ani slovníkoch, čo má na novšie editory tieto účinky:
+
+- Tabuľka alebo stĺpec, ktoré ručne premenuje, si ponechajú názov označený ako odvodený, takže logický názov, ktorý sa pre ne neskôr zapíše v novšom editore, môže znova odvodiť názov a prepísať ním ten, ktorý zadal starší editor.
+- Typ údajov, ktorý dá stĺpcu prepojenému s doménou, prepojenie ponechá, takže hárok `Checks` uvedie kontrolu `Domain type mismatch` a ďalšia zmena typu domény dá stĺpcu znova typ domény.
+- Stĺpce cudzieho kľúča vzťahu, ktorý pridá, nedostanú zo svojho kľúča logický názov ani doménu.
+- Tabuľka, ktorú prilepí alebo duplikuje, príde bez logických názvov a prepojení s doménami.
+- Import schémy vo formáte SQL, GraphQL, DBML alebo AML v ňom neposiela `keepDictionaries`, takže vyprázdni slová, termíny a domény v každom editore.
+- Keď sa v ňom vráti späť načítanie, import alebo volanie `clear()`, v každom editore sa načíta jeho vlastná kópia dokumentu a táto kópia nemá logické názvy, prepojenia s doménami ani slovníky.
+- Táto kópia a dokument, ktorý v ňom načíta import schémy vo formáte SQL, GraphQL, DBML alebo AML, zároveň v každom editore vrátia zamknutie `Name View` do stavu, v akom ho našiel tento starší editor. Každý editor potom ako Zobrazenie názvov ukladá zobrazenie `Physical Names`, a ak je zamknutie vypnuté, aj ho zobrazuje.
+
+Dokument z neho uložený nemá logické názvy, prepojenia s doménami, slovníky ani Zobrazenie názvov, takže ho editor verzie `4.2.0` otvorí v zobrazení `Physical Names`. Zamknutie `Name View` však starší editor uloží tak, ako ho našiel, takže dokument odomknutý v editore verzie `4.2.0` zostane odomknutý.  
+Všetky editory v relácii a každé úložisko [replicationStore](./remote-storage.md#dispatch-dispatchsync), ktoré ukladá jej dokument, udržiavajte vo verzii `4.2.0` alebo novšej.
+
 ## SharedStoreConfig {#sharedstoreconfig}
 
 ### getNickname {#getnickname}
@@ -161,6 +194,7 @@ editor.getSharedStore({ mouseTracker: false });
 Vysiela, na čom tento používateľ pracuje. Predvolená hodnota je `true`.  
 Tabuľka a bunka, na ktorých máte fokus, tabuľky, poznámky a skupiny tabuliek, ktoré máte vybraté, a rámec, ktorý ťaháte na plátne, sa odosielajú do ostatných editorov a tam sa vykresľujú.  
 Každý používateľ dostane vlastnú farbu, takže ich rozoznáte: obrys tabuľky s fokusom, podčiarknutie bunky s fokusom, orámovanie okolo vybratých tabuliek, poznámok a skupín tabuliek a prerušovaný obdĺžnik pre ťahaný rámec.  
+Od verzie `4.2.0` sa každý používateľ môže pozerať na iné [Zobrazenie názvov](../../guide/guides/logical-names.md#collaborators), kým je jeho zamknutie zapnuté, alebo po vlastnom prepnutí v editore iba na čítanie. Bunka s fokusom, ktorú vaše zobrazenie nevykresľuje, sa podčiarkne na bunke, ktorú vykresľuje namiesto nej: fyzický názov a logický názov sa navzájom zastupujú, rovnako ako typ údajov a doména.  
 Údaje o prítomnosti, ktoré prichádzajú od ostatných používateľov, sa na vašom plátne vykresľujú vždy, či je táto možnosť zapnutá, alebo nie.  
 V režime Flow na karte Vizualizácia sa fokus a výber ostatných používateľov vykresľujú na kartičkách tabuliek, ich ťahané rámce však nie. Tabuľky, ktoré tam vyberiete, sa stále odosielajú; rámec, ktorý tam ťaháte, nie.
 

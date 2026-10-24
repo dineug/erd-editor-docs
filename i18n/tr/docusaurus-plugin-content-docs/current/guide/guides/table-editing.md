@@ -6,9 +6,10 @@ description: Sütun ekleme, seçme, yeniden sıralama ve silme, sütun seçenekl
 # Tablo düzenleme
 
 Tablo düzenleme temel olarak Excel'e benzer bir düzenleme deneyimi sunar.  
+[Ad görünümü](./logical-names.md#name-view), bir tablonun başlığında ve satırlarında adları mı, mantıksal adları mı yoksa ikisini birden mi göstereceğine karar verir.  
 Düzenleme modu `Enter` tuşuyla veya bir hücreye çift tıklayarak başlar.  
-`Enter` veya `Escape` tuşu bu modu sonlandırır. Yazdığınız metin yazdığınız anda uygulanır, bu yüzden `Escape` tuşu metni eski hâline döndürmek yerine korur.  
-`Escape` tuşu hücreyi odakta ve tabloyu seçili bırakır, `Escape` tuşuna ikinci kez basmak ise ikisini de kaldırır.  
+`Enter` veya `Escape` tuşu bu modu sonlandırır. Yazdığınız metin yazdığınız anda uygulanır, bu yüzden `Escape` tuşu metni eski hâline döndürmek yerine korur. [Değer alanı hücresi](./logical-names.md#the-domain-cell) bunun istisnasıdır: Yalnızca listesinden seçim yapar ve yazdığınızı asla korumaz. Bir [mantıksal ad hücresini](./logical-names.md#writing-a-logical-name) değişmiş bir mantıksal adda kapatmak fiziksel adı da doldurabilir.  
+`Escape` tuşu hücreyi odakta ve tabloyu seçili bırakır, `Escape` tuşuna ikinci kez basmak ise ikisini de kaldırır. Bir mantıksal ad hücresi [terim listesini](./logical-names.md#completing-term-names) gösterirken `Escape` tuşuna ilk basış yalnızca listeyi kapatır.  
 Bir giriş yönteminde birleştirme hâlâ sürerken `Escape` tuşu düzenleme modunu açık bırakır.
 
 ![Alt + N ile tablo ekleme ve iki sütunu doldurma](/img/demo-table-edit.webp)
@@ -23,6 +24,7 @@ Seçili her tabloya bir sütun eklenir.
 Doğrudan sonraki hücrenin düzenleme moduna geçmek için `Tab` tuşuna basın.  
 Son hücrede `Tab` tuşuna basmak yeni bir sütun oluşturur.  
 Önceki hücrenin düzenleme moduna gitmek için `Shift + Tab` tuşlarını kullanın.  
+`Tab` ve `Shift + Tab` tuşları tablonun gösterdiği hücrelerden sırasıyla geçer, bu yüzden mantıksal ad ve değer alanı hücrelerinin bunlar arasında olup olmadığına Ad görünümü ve View Option → `Domain` karar verir. [Mantıksal ad yazma](./logical-names.md#writing-a-logical-name) bölümüne bakın.  
 Bir satırın son hücresinden sonra çizilen [alternatif anahtar](./table-related-functions.md#alternate-keys) işaretleri hücre değildir, bu yüzden klavye odağı onların üzerinden atlar ve hiçbir zaman düzenleme için açılmazlar.
 
 ![Tab ile bir satırın hücreleri arasında ilerleme, son hücreden sütun ekleme ve Shift + Tab ile geri dönme](/img/demo-table-tab.webp)
@@ -40,6 +42,9 @@ Ayrıca bir öneriye tıklayabilirsiniz.
 Liste aynı anda en fazla on öneri gösterir ve geri kalanlar için kaydırılır.  
 Hiçbir şey dayatılmaz, bu yüzden listede olmayan bir tür de `VARCHAR(255)` gibi argümanlar dahil serbestçe yazılabilir. Yazdığınız metin, `VARCHAR(255)` veya `BIGINT UNSIGNED` örneklerinde olduğu gibi tam bir tür adının ötesine geçtiğinde liste kapanır.  
 Öneriler seçili veritabanını izler. Veritabanını değiştirmek sunulan önerileri değiştirir ve mevcut sütunları olduğu gibi bırakır.
+
+Bir değer alanına bağlı sütunun `DataType` hücresine yazmak ya da orada bir öneriyi kabul etmek, sütunun türü değer alanınınkinden farklılaştığı anda sütunun bağlantısını kaldırır. [Değer alanları ve veri türleri](./dictionary.md#domains-and-data-types) bölümüne bakın.  
+View Option → `Domain` kapalıyken `Logical Names` görünümünde, adı olan bir değer alanına bağlı sütunun tür hücresi değer alanının adını gösterir ve bu hücreyi düzenlemek bu öneriler yerine [değer alanı seçiciyi](./logical-names.md#the-domain-cell) açar. Veri türü gösteren bir tür hücresi, veri türünü yukarıda anlatıldığı gibi düzenler.
 
 ![Ok tuşları, Tab ve Enter ile bulanık önerilerden DataType hücrelerini doldurma](/img/demo-data-type-autocomplete.webp)
 
@@ -67,6 +72,8 @@ Beş yöntem desteklenir:
 
 ![Shift + Arrow Down, Ctrl/⌘ + click, Shift + click ve Alt + A ile sütun seçme](/img/demo-column-select.webp)
 
+Seçili sütunları birlikte taşımak için odaktaki sütunun yanındaki tutamacı sürükleyin. [Sütunları yeniden sıralama ve taşıma](#rearranging-and-moving-columns) bölümüne bakın.
+
 Tablonun bağlam menüsünün hangi sütunlara uygulanacağını, hangi değiştirici tuş basılı tutulursa tutulsun, bir sütunun satırına yapılan sağ tıklama belirler.  
 Zaten seçili olan bir satırda seçim korunur ve odak o satıra geçer. Diğer herhangi bir satırda yalnızca o satır seçilir. Bu, anahtar simgesi ve bir [alternatif anahtar](./table-related-functions.md#alternate-keys) işareti dahil satırın her yerinde geçerlidir.  
 Bu yüzden menüden, [Sütun birincil anahtarı](#column-primary-key) veya [Sütun silme](#column-deletion) örneklerinde olduğu gibi birkaç sütun üzerinde işlem yapmak için seçili satırlardan birine sağ tıklayın.  
@@ -74,30 +81,37 @@ Mac'te `Ctrl + click` de menüyü açar, ancak düz bir tıklama sayılır, bu y
 
 ## Sütunları yeniden sıralama ve taşıma {#rearranging-and-moving-columns}
 
-`dragging` işlemiyle çalışır ve başka tablolara taşımaya olanak tanır.  
-Sürüklenen satırlar işaretçiyi izler, bırakma noktasının çevresindeki satırlar da yer açmak için kenara kayar.  
-Sütunu bir tablonun sonuna taşımak için o tablonun son satırının hemen altına bırakın. Sütunu olmayan bir tablo, bırakmayı üzerinin herhangi bir yerinde kabul eder.
+Bir sütun, tablonun sol kenarının hemen dışında, odaktaki satırın yanında duran ve tutamaç simgesi taşıyan küçük bir düğme olan sürükleme tutamacıyla taşınır.  
+Sütunun herhangi bir hücresini tıklayarak ya da ok tuşları veya `Tab` tuşuyla odağa aldığınızda tutamaç, satırının yanında belirir. Odak tablonun başlığındayken hiçbir satırda tutamaç olmaz.  
+Tutamaç, işaretçi üzerine gelene kadar silik çizilir, ardından işaretçi bir ele dönüşür. Yalnızca basmak hiçbir şey yapmaz: Sürükleme işaretçi hareket ettiğinde başlar ve sütunu tablosunda başka bir yere ya da başka bir tabloya taşıyabilir.  
+Bir tablonun satırları üzerinde sürüklenen satırlar yerine geçer, bırakma noktasının çevresindeki satırlar da yer açmak için kenara kayar. Tuvalin boş alanı ya da sütunları olan bir tablonun başlığı üzerinde ise satırların yarı saydam bir kopyası işaretçiyi izler ve her satırın ad ve tür hücrelerini, satırın geçerli [Ad görünümünde](./logical-names.md#name-view) gösterdiği gibi gösterir.  
+Sütunu bir tablonun sonuna taşımak için o tablonun son satırının hemen altına bırakın. Sütunu olmayan bir tablo, bırakmayı üzerinin herhangi bir yerinde kabul eder. Bir tablonun hemen solunda, tutamacın durduğu şerit de tablonun satırlarından sayılır, bu yüzden tutamaç boyunca dümdüz aşağı yapılan bir sürükleme, işaretçi tabloya girmeden sütunları yeniden sıralar.  
+Başka bir tabloya taşınan sütun, mantıksal adını ve değer alanını korur.
 
-![Bir sütunu yeni bir konuma, ardından başka bir tabloya sürükleme](/img/demo-column-move.webp)
+![Bir sütunu odağa alma ve satırının yanındaki tutamacı yeni bir konuma sürükleme, ardından başka bir sütunun tutamacını başka bir tabloya sürükleme](/img/demo-column-move.webp)
 
-`Ctrl + drag` (Windows/Linux) veya `⌘ + drag` (Mac) ile birden çok sütunu taşımayı destekler.
+Birkaç sütunu aynı anda taşımak için [onları seçin](#selecting-multiple-columns) ve odaktaki sütunun yanındaki tutamacı sürükleyin. Odaktaki sütun, tablosunun seçili iki veya daha fazla sütunundan biri olduğu sürece tutamaç hepsini taşır, aksi hâlde yalnızca kendi sütununu taşır.  
+Değiştirici tuş gerekmez. Tutamaç üzerinde `Alt` (Windows/Linux) veya `⌥` (Mac) tuşunu basılı tutmak, sütunları düz bir sürüklemenin yaptığı gibi taşır ve hiçbir şeyi çoğaltmaz.
 
-![Üç sütunu seçme ve Ctrl/⌘ + drag ile başka bir tabloya taşıma](/img/demo-column-multi-move.webp)
+![Üç sütunu seçme, ardından odaktaki sütunun yanındaki tutamacı başka bir tabloya sürükleme ve diğer seçili sütunların da onunla birlikte taşınması](/img/demo-column-multi-move.webp)
+
+Tutamaçta değil de bir sütunun satırında başlayan sürükleme, tablonun başlığındaki bir sürükleme gibi tabloyu taşır. [Birden çok tabloyu taşıma](./table-related-functions.md#moving-multiple-tables) bölümüne bakın. Bir satırda `Alt + drag` (Windows/Linux) veya `⌥ + drag` (Mac) tabloyu çoğaltır. [Tabloları ve notları çoğaltma](./table-related-functions.md#duplicating-tables-and-memos) bölümüne bakın.  
+Tabloların yalnızca adlarını gösterdiği `70%` ve altındaki yakınlaştırmada ya da salt okunur bir düzenleyicide tutamaç çizilmez, bu yüzden orada sütunlar yeniden sıralanamaz.
 
 ## Sütun silme {#column-deletion}
 
 Odaktaki tablonun seçili sütunlarını siler. Bir hücreye tıklamak onun sütununu seçer, bu yüzden bir hücreye tıklayıp `Delete` tuşuna basmak yalnızca o sütunu kaldırır.  
 Kısayollar:
 
-- `Delete` veya `Backspace` (Mac'te `⌫`). Bu tuşlar seçili sütunları, ait oldukları tablo seçili tek öğe olduğu sürece kaldırır. Hiçbir sütun seçili değilken (odak tablo adında veya açıklamasındayken), başka herhangi bir şey de seçiliyken ya da tabloların yalnızca adlarını gösterdiği `70%` ve altındaki yakınlaştırmada bunun yerine seçimin tamamını kaldırırlar. [Tablo ve not silme](./table-related-functions.md#table-and-memo-deletion) bölümüne bakın.
-- `Alt + Backspace` veya `Alt + Delete` (Windows/Linux), `⌥ + ⌫` veya `⌥ + Delete` (Mac). Bu tuşlar, başka tablolar veya notlar da seçiliyken bile odaktaki tablonun seçili sütunlarını kaldırır. Bir hücre düzenlenirken veya `70%` ve altındaki yakınlaştırmada hiçbir şey kaldırmazlar.
+- `Delete` veya `Backspace`. Bu tuşlar seçili sütunları, ait oldukları tablo seçili tek öğe olduğu sürece kaldırır. Hiçbir sütun seçili değilken (odak tablonun adında, [mantıksal adında](./logical-names.md#name-view) veya açıklamasındayken), başka herhangi bir şey de seçiliyken ya da tabloların yalnızca adlarını gösterdiği `70%` ve altındaki yakınlaştırmada bunun yerine seçimin tamamını kaldırırlar. [Tablo ve not silme](./table-related-functions.md#table-and-memo-deletion) bölümüne bakın.
+- `Alt + Backspace` veya `Alt + Delete` (Windows/Linux), `⌥ + Backspace` veya `⌥ + Delete` (Mac). Bu tuşlar, başka tablolar veya notlar da seçiliyken bile odaktaki tablonun seçili sütunlarını kaldırır. Bir hücre düzenlenirken veya `70%` ve altındaki yakınlaştırmada hiçbir şey kaldırmazlar.
 
 ![Alt + Backspace ile önce bir sütunu, ardından seçili iki sütunu silme](/img/demo-column-remove.webp)
 
 Tablonun bağlam menüsü de aynı işi yapar. Tablo seçili tek öğeyken bir sütunun satırına sağ tıklayın: Menünün son satırında `Delete column` yazar, o satır seçili iki veya daha fazla sütundan biri olduğunda ise `Delete columns` yazar.
 
 Bir hücre düzenlenirken `Delete` ve `Backspace` tuşları yalnızca metin siler. Hücre düzenleyicisinin dışında basılı tutulduklarında yalnızca bir kez kaldırırlar.  
-Bir kaldırma işleminin ardından odak, odaktaki sütunun üstünde kalan en yakın sütuna geçer. Üstünde hiç sütun kalmadığında, altında sütunlar kalsa bile odak tablo adına geçer, bu yüzden sonraki `Delete` veya `Backspace` basışı bir sütunu değil tabloyu kaldırır.  
+Bir kaldırma işleminin ardından odak, odaktaki sütunun üstünde kalan en yakın sütuna geçer. Üstünde hiç sütun kalmadığında, altında sütunlar kalsa bile odak tablo adına (`Logical Names` görünümünde onun yerine gösterilen mantıksal ada) geçer, bu yüzden sonraki `Delete` veya `Backspace` basışı bir sütunu değil tabloyu kaldırır.  
 Kaldırılan bir sütunu kullanan ilişkiler ve dizinler de onunla birlikte kaldırılır. Onay istenmez ve kaldırmanın tamamı tek bir geri alma adımıdır.
 
 ## Sütunları kopyalama/yapıştırma {#copyingpasting-columns}
@@ -105,8 +119,14 @@ Kaldırılan bir sütunu kullanan ilişkiler ve dizinler de onunla birlikte kald
 Tablo tabanlı bir pano gibi çalışır.  
 Kısayollar: `Ctrl + C` (Windows/Linux) veya `⌘ + C` (Mac), `Ctrl + V` (Windows/Linux) veya `⌘ + V` (Mac)
 
-Bir elektronik tabloya kopyalama, bir elektronik tablodan yapıştırma ve bir sütun hücresi odakta olan tabloya yapıştırma, tabloların gösterdiği hücreleri onları gösterdikleri sırayla kullanır. [Tablo görünüm seçenekleri](./table-related-functions.md#table-view-options) ve [Sütun sırasını ayarlama](./settings.md#adjusting-column-order) bölümlerine bakın.  
-Düzenleyicide kopyalanıp bir tablo başlığı seçiliyken ya da seçili diğer tablolara yapıştırılan sütunlar, Benzersiz ve Otomatik artırma gibi gizli olanlar dahil, kopyalanan sütunların her hücresini taşır.  
+Bir elektronik tabloya kopyalama, bir elektronik tablodan yapıştırma ve bir sütun hücresi odakta olan tabloya yapıştırma, tabloların gösterdiği hücreleri onları gösterdikleri sırayla kullanır. [Tablo görünüm seçenekleri](./table-related-functions.md#table-view-options), [Sütun sırasını ayarlama](./settings.md#adjusting-column-order) ve [Ad görünümü](./logical-names.md#name-view) bölümlerine bakın. Ad görünümü bu hücrelerin bazılarının içeriğini değiştirir:
+
+- `Logical Names` görünümünde adın hücresi mantıksal adı tutar, mantıksal ad boşken ise boş kalır. View Option → `Domain` kapalıyken tür hücresi, bir değer alanı gösterdiği yerde sütunun değer alanının adını, aksi hâlde veri türünü tutar.
+- `Both Names` görünümünde `Logical Name` hücresi, sütun sırasının onu koyduğu yerde kopyalanır ve yapıştırılır.
+- Gösterilen bir değer alanı hücresi değer alanının adını tutar, hiçbir değer alanı göstermeyen bir sütun için ise boştur.
+
+Düzenleyicide kopyalanıp bir tablo başlığı seçiliyken ya da seçili diğer tablolara yapıştırılan sütunlar, Benzersiz ve Otomatik artırma gibi gizli olanlar dahil, kopyalanan sütunların her hücresini ve mantıksal adlarını taşır.  
+Bir değer alanı bağlantısını ancak bu diyagram aynı değer alanını (aynı adı taşıyan herhangi bir değer alanını değil) listelediği ve değer alanı hâlâ kopyalanan sütunun türünü taşıdığı sürece korurlar. Aksi hâlde kopyalandıkları türle bağlantısız gelirler. Yapıştırılan bir ad boş olup mantıksal ad bir ad türetmedikçe adları kendi yazdığınız ad sayılır. [Fiziksel adları türetme](./dictionary.md#deriving-physical-names) bölümüne bakın.  
 `AK1.1` gibi [alternatif anahtar](./table-related-functions.md#alternate-keys) işaretleri hücre değildir, bu yüzden işaretler gösterilirken bile kopyalama ve yapıştırma onları dışarıda bırakır.
 
 Düzenleyiciden Excel'e ve Excel'den yeniden düzenleyiciye yapıştırabilirsiniz.  
@@ -131,6 +151,14 @@ Yapıştırmanın nereye uygulanacağı odağa bağlıdır:
 - Bir sütun hücresi odaktayken o tablonun seçili satırlarının, ardından bunların sonuncusunun altındaki satırların üzerine, yapıştırılan satır sayısı kadar sırayla yazılır. Ayrı seçimler arasındaki satırlar atlanır. Üzerine yazılan bir satır görünür hücrelerinde yapıştırılan değerleri alır ve gizli hücrelerini korur, artan satırlar ise yeni sütunlar olarak eklenir. Seçili diğer her tabloya yapıştırılan satırlar yeni sütunlar olarak eklenir.
 
 ![İki sütunu kopyalama ve seçili iki tabloya aynı anda yapıştırma](/img/demo-copy-column-multi.webp)
+
+Yapıştırılan bir satır mantıksal adları ve değer alanlarını şöyle yazar:
+
+- Bir `Logical Name` hücresinden ya da `Logical Names` görünümünde adın hücresinden gelen mantıksal ad, eksiksiz yazılmış sayılır. Sütunun adı boş ya da hâlâ türetilmiş olduğu sürece [sözlükler](./dictionary.md#deriving-physical-names) fiziksel adı ondan türetir ve satırın kendi değer alanı hücresi bir değer alanı bağlamadıkça teriminin verdiği değer alanını bağlar. Aynı satırın yapıştırdığı bir ad korunur ve kendi yazdığınız ad sayılır.
+- Bir değer alanı hücresi ya da View Option → `Domain` kapalıyken `Logical Names` görünümündeki tür hücresi, diyagram listeliyorsa metninin adlandırdığı değer alanını bağlar. Başka herhangi bir metin ya da boş bir hücre hiçbir değer alanı bağlamaz ve sütun yapıştırılan türde bir değer alanına bağlı olsa bile bağlantısını kaldırır. Tür hücresindeki, hiçbir değer alanını adlandırmayan metin veri türü olarak okunur. Düzenleyicide kopyalanan satırlar ise bunun yerine, yeni sütunların yaptığı gibi, kopyalandıkları değer alanını yalnızca bu diyagram onu kopyalanan türle listelediği sürece bağlar.
+- Satır kendi türünü yapıştırmadıkça bağlanan değer alanı sütuna veri türünü verir. Satır kendi türünü yapıştırdığında başka türde bir değer alanı bağlanmaz ve sütun yapıştırılan türü alır.
+- Değer alanı hücresi olmayan bir satırda yapıştırılan bir tür, onu yazmanın yaptığı gibi sütunun başka türdeki bir değer alanıyla bağlantısını kaldırır.
+- Hiçbir yapıştırma bir türü [İlişkilerde veri türü eşitleme](./settings.md#relationship-datatype-sync) yoluyla aktarmaz.
 
 ## Tabloları ve notları kopyalama/yapıştırma {#copyingpasting-tables-and-memos}
 

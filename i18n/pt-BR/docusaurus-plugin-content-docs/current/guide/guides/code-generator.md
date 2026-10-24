@@ -1,5 +1,5 @@
 ---
-sidebar_position: 12
+sidebar_position: 13
 description: Gerar código para vinte e dois destinos a partir do diagrama, escolher a linguagem, o banco de dados, o estilo de nome e o delimitador no painel de opções, ver quais destinos escrevem as ações ON DELETE e ON UPDATE de um relacionamento e salvar ou copiar o resultado.
 ---
 
@@ -103,6 +103,10 @@ Em qualquer estilo, um nome que a linguagem do destino reserva é escapado onde 
 O `SeaORM` também as ignora: ele nomeia campos e módulos em snake case, a forma que o SeaORM lê de volta, e informa os nomes armazenados em `table_name` e, quando diferem, em `column_name`.  
 Para esses quatro destinos, o painel esmaece as duas listas, com a observação `Not used by` abaixo delas.
 
+Todos os destinos escrevem os nomes físicos, seja qual for a [exibição de nomes](./logical-names.md#name-view) em uso.  
+Nenhum escreve um nome lógico, nem mesmo em um comentário vazio: esta aba não tem equivalente à opção [`Write logical names into empty comments`](./schema-sql.md#logical-names-as-comments) da aba Esquema SQL.  
+Também nenhum escreve um domínio: uma coluna vinculada a um domínio é escrita com seu tipo de dados, como qualquer outra coluna.
+
 ## Banco de dados {#database}
 
 Os tipos de dados são resolvidos de acordo com o banco de dados selecionado — consulte [Bancos de dados](./table-related-functions.md#databases).  
@@ -132,5 +136,5 @@ O arquivo é nomeado como qualquer exportação, `<database name>-<timestamp>`, 
 O menu Exportar não tem um item para o Gerador de código, e a aba `Code Generator` do painel Propriedades da tabela não pode salvar arquivos.
 
 Para copiar o código, clique em `Copy` no rodapé do painel ou passe o ponteiro sobre o código e clique no botão de copiar no canto superior direito dele, a única forma no painel Propriedades da tabela.  
-Uma notificação `Copied!` com uma marca de seleção confirma a cópia por dois segundos. Se o navegador ou o host recusar o acesso à área de transferência, em vez disso uma notificação `Couldn't copy to the clipboard` com um sinal de alerta informa o ocorrido. Copiar de novo substitui a notificação em vez de adicionar outra.  
+Uma notificação `Copied!` com uma marca de seleção confirma a cópia por dois segundos. Se o navegador ou o host recusar o acesso à área de transferência, em vez disso uma notificação `Couldn't copy to the clipboard` com um sinal de alerta informa o ocorrido, por cinco segundos. Copiar de novo substitui a notificação em vez de adicionar outra.  
 O texto também pode ser selecionado, então é possível pegar só a parte de que você precisa.

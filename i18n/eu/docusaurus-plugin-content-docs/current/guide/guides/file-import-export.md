@@ -16,16 +16,20 @@ Bost formatu inporta daitezke, oihalaren laster-menuko `Import` azpimenutik:
 - AML
 
 `Import` aukeraren azpian bertan dagoen `Import and Add` aukerak fitxategia diagramari gehitzen dio, hura ordeztu beharrean. Ikus [Inportatu eta gehitu](#import-and-add).  
-Diagrama huts batek erakusten duen ongietorri-pantailak `Import` aukera bat du, bost formatu berberekin. Ikus [Ongietorri-pantaila](./editing-start.md#welcome-screen).
+Diagrama huts batek erakusten duen ongietorri-pantailak `Import` aukera bat du, bost formatu berberekin. Ikus [Ongietorri-pantaila](./editing-start.md#welcome-screen).  
+[Hiztegia](./dictionary.md) fitxako orriek ere hitzak, terminoak eta domeinuak hartzen dituzte CSV fitxategietatik, fitxa horren beraren `Import CSV` aukerarekin. Ikus [CSV fitxategiak inportatzea eta esportatzea](./dictionary.md#importing-and-exporting-csv).
 
 Fitxategi-luzapenak maiuskulak eta minuskulak bereizi gabe egiaztatzen dira. Aukeratutako formatuarekin bat ez datorren luzapena duen fitxategi bat hautatzeak inportazioa bertan behera uzten du eta `Only <format> files can be imported` erakusten du; formatua `json`, `sql`, `graphql`, `dbml` edo `aml` gisa idazten da, `Only sql files can be imported` adibidean bezala.
 
 `Import` aukerak uneko dokumentua ordezten du, harekin bateratu beharrean, eta desegite bakar batek aurreko diagrama itzultzen du.  
-JSON fitxategi batek bere ezarpenak dakartza, bere [blokeoak](./settings.md#lock) barne. Fitxategiak fitxa, Kode-sortzailearen lengoaia, izenen idazkera bat edo mugatzaile mota blokeatzen dituen kasuetan, lehen zenuena ikusten jarraitzen duzu, baina fitxategiaren balio blokeatua da gordetzen dena. Ikuspen-eremua, blokeatuta egon ala ez, fitxategiak adierazten duen tokira joaten da. Blokeoak existitu baino lehen gordetako JSON fitxategi bat blokeo guztiak aktibatuta eta ikuspen-eremua % 100eko zoomean dituela sartzen da.  
+JSON fitxategi batek bere ezarpenak dakartza, bere [blokeoak](./settings.md#lock) barne. Fitxategiak fitxa, Kode-sortzailearen lengoaia, izenen idazkera bat, mugatzaile mota edo [Izenen ikuspegia](./logical-names.md#name-view) blokeatzen dituen kasuetan, lehen zenuena ikusten jarraitzen duzu, baina fitxategiaren balio blokeatua da gordetzen dena. Zooma eta ikuspen-eremuaren kokapena, blokeatuta egon ala ez, fitxategiak adierazten duen tokira joaten dira. Blokeoak existitu baino lehen gordetako JSON fitxategi bat blokeo guztiak aktibatuta eta ikuspen-eremua % 100eko zoomean dituela sartzen da. `Name View` blokeoa existitu baino lehen gordetako bat blokeo hori aktibatuta duela sartzen da, beste blokeoei buruz zer erregistratzen duen gorabehera.  
 Gainerako formatuek lehendik dituzun ezarpenak gordetzen dituzte, blokeoak barne, ikuspen-eremua izan ezik, % 100eko zoomean hasten baita.  
 GraphQL, DBML eta AML analizatzaileek ez dute inoiz huts egiten: irakur ezin duten fitxategi batek diagrama huts bat sortzen du, errore bat eman beharrean.
 
-JSON fitxategi batek dituen kokapenak gordetzen ditu. SQL eskema, GraphQL, DBML edo AML fitxategi bateko taulak diagrama aldatu aurretik kokatzen dira:
+JSON fitxategi batek bere taulen eta zutabeen izen logikoak eta bere zutabeen domeinu-loturak ere badakartza. Haren hitzek, terminoek eta domeinuek [Hiztegia](./dictionary.md) fitxakoen lekua hartzen dute; beraz, halakorik ez duen fitxategi batek orriak hutsik uzten ditu, eta inportazioa desegiteak ordeztu zituenak itzultzen ditu.  
+Gainerako formatuek ez dute horietako ezer. Haien taulak izen logikorik gabe eta domeinu bati lotutako zutaberik gabe sartzen dira, eta zure hitzak, terminoak eta domeinuak dauden bezala geratzen dira. Inportazioa desegiteak edo berregiteak ere dauden bezala uzten ditu; beraz, inportazioaren ondoren hiztegian egindako edizio bat mantendu egiten da. Halako inportazio batek orri bakoitzaren desegite-historia ere dagoen bezala uzten du; JSON inportazio batek, berriz, historia horiek husten ditu. Ikus [Hiztegiaren orriak](./undo-redo.md#dictionary-sheets).
+
+JSON fitxategi batek dituen kokapenak gordetzen ditu. SQL eskema, GraphQL, DBML edo AML fitxategi bateko taulak diagrama aldatu aurretik kokatzen dira, ikusten ari zaren [Izenen ikuspegian](./logical-names.md#beyond-the-canvas) hartzen dituzten zabalerekin:
 
 - Fitxategiak bi taula edo gehiago eta gutxienez erlazio bat dituenean, `Flow` moduko [Antolaketa automatikoa](./table-related-functions.md#auto-layout) erabiliz antolatzen dira, ezkerretik eskuinera erlazioei jarraituz, oihalaren goiko ezkerreko izkinatik hasita. Taula batek bere buruarekin duen erlazio bat ere kontuan hartzen da.
 - Bestela, errenkadatan jartzen dira goiko ezkerreko izkinatik hasita, zutabe gutxien dituzten taulak lehenik.
@@ -33,7 +37,7 @@ JSON fitxategi batek dituen kokapenak gordetzen ditu. SQL eskema, GraphQL, DBML 
 
 Ondoren, diagrama urrats bakarrean ordezten da, eta, beraz, tartean ez da ezer ikusten. Taulak kokatzen diren bitartean aldatzen duzun ezarpen bat, fitxa adibidez, gorde egiten da, eta bitartean beste fitxategi bat inportatzen baduzu, azken hasitako inportazioa nagusitzen da.
 
-Irakurtzeko soilik dagoen editore batek ez du ezer kargatzen `Import` aukeratik, eta ez du `Import and Add` aukera eskaintzen.
+Irakurtzeko soilik dagoen editore batek ez du ezer kargatzen `Import` aukeratik, eta ez du eskaintzen ez `Import and Add` aukera, ez Hiztegia fitxako `Import CSV` aukera.
 
 ### Inportatu eta gehitu {#import-and-add}
 
@@ -42,6 +46,7 @@ Irakurtzeko soilik dagoen editore batek ez du ezer kargatzen `Import` aukeratik,
 ![SQL fitxategi bat gehitzea Import and Add > Schema SQL bidez; haren taulak diagramaren azpian kokatzen dira, erlazioei jarraituz antolatuta eta hautatuta](/img/demo-import-and-add.webp)
 
 Fitxategia itsaste baten moduan sartzen da: dituen taula, zutabe, erlazio, indize, ohar eta [taula-talde](./table-groups.md) guztiak berri gisa gehitzen dira, diagraman lehendik dauden taulak ez dira mugitzen eta ez da ezarpenik aldatzen; beraz, JSON fitxategi baten ezarpenak kanpoan geratzen dira.  
+JSON fitxategi bateko taulek eta zutabeek beren izen logikoak mantentzen dituzte, eta izen fisiko bakoitza hiztegiena edo zuk idatzitakoa izaten jarraitzen du, fitxategian zegoen bezala; horrek erabakitzen du geroago idatzitako izen logiko batek izen berri bat eratortzen duen ala ez. Ikus [Izen fisikoak eratortzea](./dictionary.md#deriving-physical-names). Fitxategiaren hitzak, terminoak eta domeinuak kanpoan geratzen dira; beraz, Hiztegia fitxa zegoen bezala geratzen da, eta gehitutako zutabe bat ere ez da domeinu bati lotzen: bakoitzak duen datu mota mantentzen du.  
 Diagraman lehendik dagoen izena duen taula bat izen bereko bigarren taula gisa gehitzen da, eta ez da harekin bateratzen. Erlazioak eta indizeak fitxategitik soilik datoz; beraz, fitxategiak definitzen ez duen taula baterako gako arrotz bat ez da diagraman lehendik dagoen taula batekin lotzen.
 
 Gehitutako blokea diagramak duen guztiaren azpi-azpian kokatzen da, haren ezkerreko ertzarekin lerrokatuta, edo diagrama huts baten goiko ezkerreko izkinan. [View Option](./table-related-functions.md#table-view-options) bidez ezkutatutako oharrak eta taula-taldeak ere kontuan hartzen dira, bertan jarraitzen baitute.  
@@ -160,11 +165,10 @@ Komatxo baten aurreko alderantzizko barra batek ere, MySQL eta MariaDB datu-base
 `DEFAULT` balio batek bere komatxoak gordetzen ditu, eta barruko komatxoa bikoiztuta idazten da berriro, fitxategiak hari ihes egiteko erabilitako modua edozein dela ere: `'it''s'`.  
 Inportatzeko unean dokumentuaren datu-basea Databricks bada, komatxo bakunen arteko testuak Sparken arauak betetzen ditu horren ordez: alderantzizko barra bakoitzak ondorengo karaktereari ihes egiten dio; beraz, `'C:\\dir'` `C:\dir` gisa irakurtzen da, `\n`, `\t` eta `\u0041` bezalako ihes-sekuentziak deskodetu egiten dira, eta `DEFAULT` balio bat `'it\'s'` gisa gordetzen da.
 
-Esportatutako SQL eskemak taula edo zutabe baten iruzkineko komatxoari ihes egiten dio: `COMMENT 'it''s'` MySQL, MariaDB eta Snowflake datu-baseetarako, `COMMENT ON TABLE` eta `COMMENT ON COLUMN ... IS 'it''s'` PostgreSQL eta Oracle datu-baseetarako, eta bikoizketa bera, taula- eta zutabe-izenak barne, MSSQLen `sp_addextendedproperty` deietan. Komatxorik gabeko iruzkin bat dagoen bezala idazten da.  
-Databricks datu-baseak, aldiz, komatxoari eta alderantzizko barrari alderantzizko barra batekin egiten die ihes, `COMMENT 'it\'s'` adibidean bezala; beraz, haren esportazioa zehatz-mehatz irakurtzen da berriro Databricks hautatutako datu-basea den bitartean soilik.  
-MSSQL esportazioak iruzkin bakoitza `EXECUTE sys.sp_addextendedproperty 'MS_Description', '<comment>', 'schema', '<schema>', 'table', '<table>'` gisa idazten du, eta zutabe baterako ondoren `'column', '<column>'` gehitzen du. `Bracket` ezarpena `None` balioan dagoenean, `sales.users` izeneko taula batek `sales` eskema eta `users` taula ematen ditu, eta eskemarik gabeko izen bat `dbo` eskeman dago. Beste edozein `Bracket` baliorekin, izen osoa da taula, `dbo` eskeman.
-
-Iruzkinak galdu egiten dira SQLite esportazio eta inportazio joan-etorri batean: SQLite esportazioak `--` lerro arrunt gisa idazten ditu, eta analizatzaileak ez ditu lerro horiek irakurtzen. MSSQL esportazio baten `sp_addextendedproperty` deiak taula- eta zutabe-iruzkin berberak bihurtzen dira berriro inportatzean.
+Datu-base bakoitzak esportatzean iruzkin bat nola idazten duen, eta haren barruko komatxo bati nola egiten dion ihes, SQL eskema orriko [Iruzkinak](./schema-sql.md#comments) atalean azaltzen da.  
+MySQL, MariaDB, PostgreSQL, Oracle, Snowflake edo MSSQL datu-baseetarako esportazio bat taula- eta zutabe-iruzkin berberak bihurtzen da berriro inportatzean, komatxoak barne, Oracle esportazio batek kanpoan uzten dituen lerro hutsak izan ezik. Databricks esportazio bat, komatxoari eta alderantzizko barrari alderantzizko barra batekin ihes egiten diena, zehatz-mehatz irakurtzen da berriro Databricks hautatutako datu-basea den bitartean soilik.  
+Iruzkinak galdu egiten dira SQLite esportazio eta inportazio joan-etorri batean: SQLite esportazioak `--` lerro arrunt gisa idazten ditu, eta analizatzaileak ez ditu lerro horiek irakurtzen.  
+SQLite datu-basean izan ezik, `Write logical names into empty comments` etengailuak iruzkin huts batean idatzitako izen logiko bat taula edo zutabe horren iruzkin gisa inportatzen da berriro, ez haren izen logiko gisa. Ikus [Izen logikoak iruzkin gisa](./schema-sql.md#logical-names-as-comments).
 
 ### GraphQL {#graphql}
 
@@ -200,22 +204,24 @@ Fitxategi-izenak `.aml` luzapenarekin amaitu behar du.
 
 GraphQL, DBML eta AML joan-etorriko formatuak dira: bakoitza [Kode-sortzailea](./code-generator.md) fitxaren helburu bat ere bada.  
 DBML eta AML formatuek erlazio bakoitzaren ON DELETE eta ON UPDATE bi noranzkoetan eramaten dituzte. Ikus [Kode-sortzailea](./code-generator.md#on-delete-and-on-update). GraphQL formatuak ez du bat ere eramaten; beraz, GraphQL inportazio batek biak `Not set` balioan uzten ditu.  
-DBML formatuak, gainera, taulen koloreak, gardentasunik gabe, eta taularen bat duen taula-talde bakoitza eramaten ditu bi noranzkoetan. Izenik gabeko talde bat `group_1`, `group_2` eta abar gisa itzultzen da, eta errepikatutako talde-izen bat `_2`, `_3` eta abar gehituta itzultzen da. AML formatuak taula-kolore bat bere kolore-izenetatik hurbilenaren gisa soilik eramaten du; beraz, `#FF8800` `orange` gisa idazten da eta `#f97316` gisa itzultzen da, eta ez du talderik eramaten. GraphQL formatuak ez du ez kolorerik ez talderik eramaten.
+DBML formatuak, gainera, taulen koloreak, gardentasunik gabe, eta taularen bat duen taula-talde bakoitza eramaten ditu bi noranzkoetan. Izenik gabeko talde bat `group_1`, `group_2` eta abar gisa itzultzen da, eta errepikatutako talde-izen bat `_2`, `_3` eta abar gehituta itzultzen da. AML formatuak taula-kolore bat bere kolore-izenetatik hurbilenaren gisa soilik eramaten du; beraz, `#FF8800` `orange` gisa idazten da eta `#f97316` gisa itzultzen da, eta ez du talderik eramaten. GraphQL formatuak ez du ez kolorerik ez talderik eramaten.  
+Hiruretako batek ere ez ditu eramaten izen logikoak, domeinu-loturak edo hiztegiak, ez noranzko batean ez bestean: Kode-sortzaileak taula eta zutabe bakoitzaren izen fisikoa eta datu mota idazten ditu, inoiz ez izen logiko bat edo domeinu bat.
 
 ## Esportatzea {#exporting}
 
 Oihalaren laster-menuko `Export` azpimenuak hiru aukera ditu:
 
-- json: Diagrama bere fitxategiak gordetzen duen bezala gordetzen du, `.erd.json` gisa: taulak beren zutabe eta indizeekin, erlazioak, oharrak eta taula-taldeak, eta ezarpenak, [blokeatutako ezarpen](./settings.md#lock) bakoitza bere balio blokeatuarekin.
+- json: Diagrama bere fitxategiak gordetzen duen bezala gordetzen du, `.erd.json` gisa: taulak beren zutabe eta indizeekin, erlazioak, oharrak eta taula-taldeak, izen logikoak eta zutabeen domeinu-loturak, [Hiztegia](./dictionary.md) fitxako hitzak, terminoak eta domeinuak, eta ezarpenak, [blokeatutako ezarpen](./settings.md#lock) bakoitza bere balio blokeatuarekin. Ezer ez duena, adibidez testu hutsa edo hiztegiko errenkada huts bat, kanpoan uzten da. Ikus [Biltegiratze-forma eta exekuzio-garaiko balioa](../../api/advanced/schema.md#storage-form-and-runtime-value).
 - Schema SQL: [SQL eskema](./schema-sql.md#saving-or-copying-the-sql) fitxa irekitzen du, aukeren panela irekita eta `Save file` botoia fokuratuta dituela; beraz, `Enter` sakatzean fitxak erakusten duen SQLa `.sql` gisa gordetzen da. Ordura arte ez da ezer gordetzen.
 - Image: `Export image` elkarrizketa-koadroa irekitzen du; horrek diagrama `.png` edo `.svg` gisa gordetzen du, edo arbelean kopiatzen du PNG gisa. Ikus [Irudia](#image).
 
-Hirurek irakurtzeko soilik dagoen editore batean funtzionatzen dute.
+Hirurek irakurtzeko soilik dagoen editore batean funtzionatzen dute.  
+Hiztegia fitxaren beraren `Export CSV` aukerak, azpimenu honetan ez dagoenak, haren `Domains`, `Words` edo `Terms` orria CSV fitxategi gisa gordetzen du. Hiru horiek ez bezala, ez da eskaintzen irakurtzeko soilik dagoen editore batean. Ikus [CSV fitxategiak inportatzea eta esportatzea](./dictionary.md#importing-and-exporting-csv).
 
 SQL eskemak erlazio bakoitzaren ON DELETE eta ON UPDATE haren `REFERENCES` klausularen ondoren idazten ditu, ON DELETE lehenik. `Not set` balioak ez du ezer idazten, eta hautatutako datu-baseak onartzen ez duen ekintza bat kanpoan uzten da. Datu-base bakoitzak zein onartzen duen jakiteko, ikus [Erlazioak editatzea](./relationship-editing.md#on-delete-and-on-update).
 
 Esportatutako fitxategi bakoitzak `<database name>-<timestamp>` izena du, eta ondoren bere luzapena, denbora-zigilua tokiko orduan eta `yyyy-MM-dd'T'HH_mm_ss` formatuan dagoela; adibidez, `my-schema-2026-08-29T04_05_06.erd.json`. Datu-basearen izena hutsik badago, `unnamed` erabiltzen da.  
-SQL eskema fitxako eta [Kode-sortzailea](./code-generator.md) fitxako `Save file` botoiek modu berean izendatzen dituzte beren fitxategiak. Irudi batek elkarrizketa-koadroa ireki zen unean zegoen datu-basearen izena hartzen du.
+SQL eskema fitxako eta [Kode-sortzailea](./code-generator.md) fitxako `Save file` botoiek modu berean izendatzen dituzte beren fitxategiak, baita `Export CSV` aukerak ere, denbora-zigiluaren ondoren orria gehitzen duela: `-words.csv`, `-terms.csv` edo `-domains.csv`. Irudi batek elkarrizketa-koadroa ireki zen unean zegoen datu-basearen izena hartzen du.
 
 `Import`, `Import and Add` eta `Export` ERD fitxako [Bilaketa azkarrean](./quick-search.md) ere eskuragarri daude, oihalaren laster-menuko aukera berberekin.
 
@@ -235,7 +241,7 @@ Obsidianen fitxategi-arakatzaileak esportatutako `.erd.json` edo `.sql` fitxateg
 
 Aukerak editorea itxi arte gordetzen dira, eta ez dira inoiz dokumentuan gordetzen. Aurrebista irudia bezala marrazten da, eta berriro marrazten da `Background` edo `Dark mode` aldatzen denean.
 
-Irudiak elkarrizketa-koadroa ireki zenean zegoen bezala jasotzen du diagrama; itxi eta ireki berriro elkarrizketa-koadroa geroagoko aldaketak jasotzeko. Diagrama osoa jasotzen du, ikuspegia zenbateraino korrituta dagoen kontuan hartu gabe, diagramak marrazten duenera gehi marjina batera moztuta, eta beti % 100ean marrazten da, editoreak erakusten duen zooma edozein dela ere; beraz, taula guztiak osorik marrazten dira. [View Option](./table-related-functions.md#table-view-options) aukerak ezkutatzen duena — erlazioak, haien ON DELETE eta ON UPDATE etiketak, taula-taldeak edo oharrak — ez da marrazten, eta ez zaio tokirik ematen, eta taula-taldeak beste guztiaren atzean marrazten dira.
+Irudiak elkarrizketa-koadroa ireki zenean zegoen bezala jasotzen du diagrama; itxi eta ireki berriro elkarrizketa-koadroa geroagoko aldaketak jasotzeko. Haren taulak eta zutabeak editoreak une hartan erakusten zuen Izenen ikuspegian izendatzen dira, baita zure pantailan bakarrik aldatutako ikuspegi batean ere, `Name View` blokeoak fitxategian beste bat mantentzen duen bitartean. Ikus [Oihaletik kanpo](./logical-names.md#beyond-the-canvas). [Hiztegiaren egiaztapenek](./dictionary.md#marks-on-the-canvas) oihaleko izenei ematen dizkieten koloreak ez dira marrazten. Diagrama osoa jasotzen du, ikuspegia zenbateraino korrituta dagoen kontuan hartu gabe, diagramak marrazten duenera gehi marjina batera moztuta, eta beti % 100ean marrazten da, editoreak erakusten duen zooma edozein dela ere; beraz, taula guztiak osorik marrazten dira. [View Option](./table-related-functions.md#table-view-options) aukerak ezkutatzen duena — erlazioak, haien ON DELETE eta ON UPDATE etiketak, taula-taldeak edo oharrak — ez da marrazten, eta ez zaio tokirik ematen, eta taula-taldeak beste guztiaren atzean marrazten dira.
 
 Hiru botoik idazten dute irudia, eta bakoitzak elkarrizketa-koadroa irekita uzten du:
 

@@ -1,5 +1,5 @@
 ---
-sidebar_position: 12
+sidebar_position: 13
 description: Ustvarjanje kode za dvaindvajset ciljev iz diagrama, izbira jezika, zbirke podatkov, zapisa imen in narekovajev na plošči z možnostmi, pregled ciljev, ki zapišejo dejanji ON DELETE in ON UPDATE relacije, ter shranjevanje ali kopiranje rezultata.
 ---
 
@@ -103,6 +103,10 @@ Pri vsakem zapisu imen se ime, ki je v jeziku cilja rezervirano, zapiše v ubež
 Tudi `SeaORM` ju prezre: polja in module poimenuje v obliki snake case, ki jo SeaORM prebere nazaj, shranjena imena pa navede v `table_name` in, kjer se razlikujejo, v `column_name`.  
 Pri teh štirih ciljih plošča zatemni oba seznama, pod njima pa je opomba `Not used by`.
 
+Vsak cilj zapiše fizična imena, ne glede na to, kaj prikazuje [prikaz imen](./logical-names.md#name-view).  
+Noben cilj ne zapiše logičnega imena, niti v prazen komentar: ta zavihek nima ustreznice stikala [`Write logical names into empty comments`](./schema-sql.md#logical-names-as-comments) na zavihku Shema SQL.  
+Noben cilj tudi ne zapiše domene: stolpec, povezan z domeno, se zapiše s svojim podatkovnim tipom, tako kot vsak drug stolpec.
+
 ## Zbirka podatkov {#database}
 
 Podatkovni tipi se razrešijo glede na izbrano zbirko podatkov – glejte razdelek [Zbirke podatkov](./table-related-functions.md#databases).  
@@ -132,5 +136,5 @@ Datoteka je poimenovana kot vsak izvoz, `<database name>-<timestamp>`, imenu pa 
 Meni Izvozi nima postavke za generator kode, zavihek `Code Generator` v oknu Lastnosti tabele pa ne more shraniti datoteke.
 
 Če želite kodo kopirati, kliknite `Copy` na dnu plošče ali pa premaknite kazalec nad kodo in kliknite gumb za kopiranje v njenem zgornjem desnem kotu, kar je v oknu Lastnosti tabele edini način.  
-Pojavno obvestilo `Copied!` s kljukico to za dve sekundi potrdi. Če brskalnik ali gostitelj zavrne dostop do odložišča, to namesto tega sporoči pojavno obvestilo `Couldn't copy to the clipboard` z opozorilnim znakom. Ponovno kopiranje nadomesti pojavno obvestilo, namesto da bi dodalo novo.  
+Pojavno obvestilo `Copied!` s kljukico to za dve sekundi potrdi. Če brskalnik ali gostitelj zavrne dostop do odložišča, to namesto tega za pet sekund sporoči pojavno obvestilo `Couldn't copy to the clipboard` z opozorilnim znakom. Ponovno kopiranje nadomesti pojavno obvestilo, namesto da bi dodalo novo.  
 Besedilo je mogoče tudi izbrati, zato lahko vzamete samo del, ki ga potrebujete.

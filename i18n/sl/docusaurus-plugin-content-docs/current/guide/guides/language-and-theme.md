@@ -1,5 +1,5 @@
 ---
-sidebar_position: 15
+sidebar_position: 17
 description: 25 jezikov prikaza urejevalnika, postavitev od desne proti levi, videzi System, Light in Dark v izbirniku teme in njegove barve ter kje jih hrani posamezni gostitelj.
 ---
 
@@ -13,8 +13,10 @@ Spletna aplikacija, Google Drive, VS Code, razvojna okolja JetBrains in Obsidian
 
 ## Jezik prikaza {#display-language}
 
-Jezik zajema lastno besedilo urejevalnika: opise orodij v orodni vrstici, priročne menije, hitro iskanje, plošče in pogovorna okna, zavihek Nastavitve, [pozdravni zaslon](./editing-start.md#welcome-screen), pojavna obvestila in sporočila ter nadomestno besedilo, ki ga prazno ime, podatkovni tip, privzeta vrednost ali komentar prikazuje na platnu in v izvoženi sliki.  
-V vseh jezikih pa pusti nespremenjeno naslednje: vaša imena tabel in stolpcev, komentarje in beležke; vrste zbirk podatkov, jezike generatorja kode in oblike datotek; podatkovne tipe, ključne besede SQL ter dejanji `ON DELETE` in `ON UPDATE`; možnosti Sheme SQL `Create`, `If not exists`, `Drop & re-create`, `USE` in `CREATE + USE`; oznake `PK`, `FK`, `UQ`, `AI`, `NN`, `N-N`, `NULL` in `AK1.1`; črke stanja `A`, `M`, `D`, `R` in `~` v [pregledovalniku razlik](./table-related-functions.md#diff-viewer); izbire za zapis imen in za nastavitev `Bracket` razen `None`; imena tipk na tipkovnici; imena barv v izbirniku teme; ustvarjeno kodo SQL in drugo kodo ter imena izvoženih datotek.
+Jezik zajema lastno besedilo urejevalnika: opise orodij v orodni vrstici, gumb [`Name View`](./logical-names.md#switching-the-view) v orodni vrstici platna in v orodni vrstici načina Tok, meni prikaza vrstic v načinu Tok, priročne menije, hitro iskanje, plošče in pogovorna okna, zavihek [Slovar](./dictionary.md) (imena listov, glave stolpcev, orodja, meni, vrstico stanja in vrste preverjanj, ki jih navaja list `Checks`), zavihek Nastavitve, [pozdravni zaslon](./editing-start.md#welcome-screen), pojavna obvestila in sporočila ter nadomestno besedilo, ki ga prazno ime, logično ime, podatkovni tip, domena, privzeta vrednost ali komentar prikazuje na platnu in v izvoženi sliki.  
+V vseh jezikih pa pusti nespremenjeno naslednje: vaša imena tabel in stolpcev, [logična imena](./logical-names.md), komentarje in beležke; besede, izraze in domene, ki jih hranite na zavihku Slovar; vrste zbirk podatkov, jezike generatorja kode in oblike datotek; podatkovne tipe, ključne besede SQL ter dejanji `ON DELETE` in `ON UPDATE`; možnosti Sheme SQL `Create`, `If not exists`, `Drop & re-create`, `USE` in `CREATE + USE`; oznake `PK`, `FK`, `UQ`, `AI`, `NN`, `N-N`, `NULL` in `AK1.1`; črke stanja `A`, `M`, `D`, `R` in `~` v [pregledovalniku razlik](./table-related-functions.md#diff-viewer); izbire za zapis imen in za nastavitev `Bracket` razen `None`; imena tipk na tipkovnici; imena barv v izbirniku teme; ustvarjeno kodo SQL in drugo kodo; vrstico glave izvožene datoteke CSV slovarja ter imena izvoženih datotek.
+
+Na zavihku Slovar razvrščanje uredi vrstice po abecednem vrstnem redu jezika prikaza, iskanje na listu `Checks` pa se ujema s celicami tako, kot se glasijo v jeziku prikaza – glejte razdelka [Razvrščanje](./dictionary.md#sorting) in [Iskanje](./dictionary.md#searching).
 
 Jeziki v vrstnem redu, v katerem jih navaja izbirnik:
 
@@ -84,11 +86,12 @@ Regionalna različica se šteje za jezik, ki mu pripada, zato `de-AT` pomeni Deu
 
 ### Jeziki, ki se pišejo od desne proti levi {#right-to-left-languages}
 
-עברית (hebrejščina), العربية (arabščina) in فارسی (perzijščina) postavijo urejevalnik od desne proti levi: orodna vrstica, meniji, plošče in pogovorna okna, hitro iskanje in zavihek Nastavitve so zrcaljeni. Podmeniji priročnega menija se odpirajo v levo, ikoni za razveljavitev in uveljavitev v orodni vrstici pa zamenjata mesti, tako da ikona za razveljavitev kaže nazaj glede na smer branja od desne proti levi.
+עברית (hebrejščina), العربية (arabščina) in فارسی (perzijščina) postavijo urejevalnik od desne proti levi: orodna vrstica, meniji, plošče in pogovorna okna, hitro iskanje, zgornji pas in vrstica stanja zavihka Slovar ter zavihek Nastavitve so zrcaljeni. Podmeniji priročnega menija se odpirajo v levo, ikoni za razveljavitev in uveljavitev v orodni vrstici pa zamenjata mesti, tako da ikona za razveljavitev kaže nazaj glede na smer branja od desne proti levi.
 
-Sam diagram ni nikoli zrcaljen. Platno s tabelami, stolpci, relacijami in beležkami ostane od leve proti desni, prav tako pa tudi mini zemljevid, drsni trakovi, [orodna vrstica platna](./table-related-functions.md#canvas-toolbar), [vizualizacija](./visualization.md) in njena orodna vrstica, celice podatkovnih tipov, koda na zavihkih Shema SQL in Generator kode, izbirnik barv, obe strani pregledovalnika razlik, potovanje skozi čas in predogled samodejne postavitve.  
+Sam diagram ni nikoli zrcaljen. Platno s tabelami, stolpci, relacijami in beležkami ostane od leve proti desni, prav tako pa tudi mini zemljevid, drsni trakovi, [orodna vrstica platna](./table-related-functions.md#canvas-toolbar), [vizualizacija](./visualization.md) in njena orodna vrstica, celice podatkovnih tipov, listi na zavihku Slovar in seznam domen izraza, koda na zavihkih Shema SQL in Generator kode, izbirnik barv, obe strani pregledovalnika razlik, potovanje skozi čas in predogled samodejne postavitve.  
+V načinu Tok obe puščici v orodni vrstici vizualizacije ohranita svoji mesti in zamenjata delovanje: puščica, ki kaže v desno, je `Previous table`, tista, ki kaže v levo, pa `Next table`, tako da pomik nazaj kaže v isto smer kot razveljavitev. Tipki za razveljavitev in uveljavitev še vedno naredita korak nazaj oziroma naprej – glejte razdelek [Prejšnja in naslednja tabela](./visualization.md#previous-table-and-next-table).  
 [Raziskovalec](./explorer.md#beside-the-canvas) ostane na levi strani platna, drevo sprememb pregledovalnika razlik pa na levi strani pregledovalnika, oba z robom za vlečenje na svoji desni strani. Znotraj se oba bereta od desne proti levi: njuna polja in vrstice so zrcaljeni, vrstice se zamikajo od desne, v obeh drevesih pa `←` razširi vrstico ali premakne fokus na njen prvi podrejeni element, medtem ko `→` vrstico strne ali premakne fokus ven na nadrejeni element – glejte razdelek [Tipke v raziskovalcu](./explorer.md#keys-in-the-explorer).  
-Imena, komentarji in drugo besedilo, ki ste ga vnesli, ohranijo svojo smer, zato se hebrejsko, arabsko ali perzijsko ime tudi na platnu bere od desne proti levi.
+Imena, komentarji in drugo besedilo, ki ste ga vnesli, ohranijo svojo smer, zato se hebrejsko, arabsko ali perzijsko ime tudi na platnu bere od desne proti levi. Tudi vsako ime, ki ga navaja pojavno obvestilo zavihka Slovar, ohrani svojo smer.
 
 ## Tema {#theme}
 

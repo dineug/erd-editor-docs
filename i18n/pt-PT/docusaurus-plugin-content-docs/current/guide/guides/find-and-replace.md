@@ -1,12 +1,12 @@
 ---
-sidebar_position: 9
-description: Pesquisar nomes de tabelas, colunas, índices e grupos de tabelas, comentários e notas a partir do topo do explorador, percorrer as correspondências na respetiva árvore e na tela e substituir uma correspondência ou todas.
+sidebar_position: 10
+description: Pesquisar nomes de tabelas, colunas, índices e grupos de tabelas, nomes lógicos, comentários e notas a partir do topo do explorador, percorrer as correspondências na respetiva árvore e na tela e substituir uma correspondência ou todas.
 ---
 
 # Localizar e substituir
 
 Localiza texto em todo o diagrama, leva-o até cada correspondência na tela ERD e substitui uma correspondência ou todas.  
-Pesquisa sete tipos de texto: nomes de tabelas, comentários de tabelas, nomes de colunas, comentários de colunas, notas, nomes de índices e nomes de grupos de tabelas — consulte [O que é pesquisado](#what-it-searches).
+Pesquisa oito tipos de texto: nomes de tabelas, comentários de tabelas, nomes de colunas, comentários de colunas, notas, nomes de índices, nomes de grupos de tabelas e os [nomes lógicos](./logical-names.md) de tabelas e colunas — consulte [O que é pesquisado](#what-it-searches).
 
 Fica no topo do [explorador](./explorer.md), o painel ancorado à esquerda da tela ERD, entre a barra de título do explorador e a respetiva árvore. Não tem título próprio. De cima para baixo, contém:
 
@@ -30,7 +30,7 @@ O fecho do explorador, o que a tecla e as duas entradas `Toggle Explorer` fazem 
 [Quando se afasta](./explorer.md#when-it-stands-aside) explica como outro separador e o modo zen o ocultam e como o visualizador de diferenças, a viagem no tempo e a pré-visualização da disposição automática o ocultam e impedem que se abra. [Ao lado da tela](./explorer.md#beside-the-canvas) explica o caso de um editor demasiado estreito para ele.
 
 Reabrir mantém a última consulta, bem como o texto de substituição, as [opções](#options), os [tipos de texto](#what-it-searches) que estavam ativados e o estado expandido ou recolhido da linha `Replace` e dos tipos de texto.  
-São mantidos enquanto o editor está aberto e não são guardados no documento. Um editor acabado de abrir começa com todas as opções desativadas, a linha `Replace` e os tipos de texto recolhidos e apenas os quatro tipos de nome ativados — consulte [O que é pesquisado](#what-it-searches).
+São mantidos enquanto o editor está aberto e não são guardados no documento. Um editor acabado de abrir começa com todas as opções desativadas, a linha `Replace` e os tipos de texto recolhidos e apenas os quatro tipos de nome e `Logical names` ativados — consulte [O que é pesquisado](#what-it-searches).
 
 ## A barra de localização do navegador {#the-browsers-find-bar}
 
@@ -46,15 +46,16 @@ Uma página que incorpora o editor pode mudar a tecla ou removê-la — consulte
 
 ## O que é pesquisado {#what-it-searches}
 
-Sete botões escolhem os tipos de texto pesquisados, por esta ordem: `Table names`, `Table comments`, `Column names`, `Column comments`, `Memos`, `Index names` e `Table group names`.  
+Oito botões escolhem os tipos de texto pesquisados, por esta ordem: `Table names`, `Table comments`, `Column names`, `Column comments`, `Memos`, `Index names`, `Table group names` e `Logical names`.  
 Inicialmente estão recolhidos. O botão `Search In`, no fim da linha da contagem, expande-os por baixo dessa linha e volta a recolhê-los, e está realçado enquanto estão visíveis.  
-Um botão de tipo realçado está ativado. Clique num deles para o ativar ou desativar, e a pesquisa é executada de novo. Com os sete desativados, não se encontra nada.
+Um botão de tipo realçado está ativado. Clique num deles para o ativar ou desativar, e a pesquisa é executada de novo. Com os oito desativados, não se encontra nada.
 
-De início, a pesquisa abre com os quatro tipos de nome, `Table names`, `Column names`, `Index names` e `Table group names`, pelo que uma mudança de nome não chega aos comentários nem às notas, a menos que os ative.  
+De início, a pesquisa abre com os quatro tipos de nome, `Table names`, `Column names`, `Index names` e `Table group names`, e com `Logical names`, pelo que uma mudança de nome não chega aos comentários nem às notas, a menos que os ative.  
+`Logical names` é um único tipo para os nomes lógicos tanto de tabelas como de colunas.  
 Os nomes de índices são os nomes dos índices do separador `Indexes` do painel [Propriedades da tabela](./table-related-functions.md#indexes), e não as chaves `PK_` e `UQ_` listadas acima deles.
 
-Não é pesquisado mais nada: nem os tipos de dados, os valores predefinidos, as colunas de um índice, o nome da base de dados, o [Esquema SQL](./schema-sql.md) com os respetivos scripts `Before tables` e `After tables`, nem o código gerado.  
-Um comentário oculto por uma [opção de vista das tabelas](./table-related-functions.md#table-view-options) continua a ser pesquisado. As notas ocultadas com Opções de vista → `Memos` e os [grupos de tabelas](./table-groups.md#hiding-groups) ocultados com Opções de vista → `Table Groups` não o são, mesmo com o respetivo botão ativado, pelo que a ação `Replace All` nunca reescreve uma nota nem muda o nome de um grupo que não consegue ver.
+Não é pesquisado mais nada: nem os tipos de dados, o domínio de uma coluna, os valores predefinidos, as colunas de um índice, o nome da base de dados, o [Esquema SQL](./schema-sql.md) com os respetivos scripts `Before tables` e `After tables`, o código gerado, nem as folhas do separador [Dicionário](./dictionary.md), que têm uma [pesquisa própria](./dictionary.md#searching).  
+Os nomes lógicos são pesquisados seja o que for que a [vista de nomes](./logical-names.md#name-view) desenhe, incluindo a vista `Physical Names`, em que a tela não mostra nenhum. Um comentário oculto por uma [opção de vista das tabelas](./table-related-functions.md#table-view-options) também continua a ser pesquisado. As notas ocultadas com Opções de vista → `Memos` e os [grupos de tabelas](./table-groups.md#hiding-groups) ocultados com Opções de vista → `Table Groups` não o são, mesmo com o respetivo botão ativado, pelo que a ação `Replace All` nunca reescreve uma nota nem muda o nome de um grupo que não consegue ver.
 
 ## Opções {#options}
 
@@ -91,19 +92,21 @@ As mensagens `Replaced …`, `No changes` e `No more matches` dão lugar à cont
 Enquanto o campo Localizar tem texto, a [árvore](./explorer.md#the-tree) do explorador mostra os resultados em vez do diagrama completo: apenas as linhas que contêm uma correspondência e as linhas acima delas. Quando nada corresponde, ou não é possível analisar a expressão regular, fica vazia. Eliminar a consulta repõe a árvore completa, recolhida tal como estava antes.
 
 - As pastas `Tables`, `Table Groups` e `Memos` só aparecem quando contêm uma correspondência, e a contagem de cada pasta é o número de linhas diretamente por baixo dela nos resultados.
-- Na pasta `Tables` aparecem as tabelas que contêm uma correspondência, por ordem de nome. Por baixo de cada tabela aparecem uma linha por cada correspondência no seu comentário, depois uma pasta `Columns` com as colunas que contêm uma correspondência, pela ordem das colunas, cada uma com uma linha por cada correspondência no seu comentário, e depois uma pasta `Indexes` com os índices cujo nome corresponde. Não há pasta `Foreign Keys`.
+- Na pasta `Tables` aparecem as tabelas que contêm uma correspondência, por ordem de nome, nunca por nome lógico. Por baixo de cada tabela aparecem uma linha por cada correspondência no seu comentário, depois uma pasta `Columns` com as colunas que contêm uma correspondência, pela ordem das colunas, cada uma com uma linha por cada correspondência no seu comentário, e depois uma pasta `Indexes` com os índices cujo nome corresponde. Não há pasta `Foreign Keys`.
 - Na pasta `Table Groups` aparecem os grupos cujo nome corresponde, por ordem de nome, sem as respetivas tabelas. Uma tabela encontrada aparece na pasta `Tables`.
 - Na pasta `Memos` aparecem as notas que contêm uma correspondência, pela ordem do documento, cada uma apresentada pela sua primeira linha e com uma linha por cada correspondência que contém.
 
-Uma correspondência num nome é realçada na própria linha desse nome, pelo que um nome que contém a consulta duas vezes é uma só linha com dois realces.  
+Uma correspondência num nome é realçada na própria linha desse nome, pelo que um nome que contém a consulta duas vezes é uma só linha com dois realces. Uma correspondência no nome lógico de uma tabela ou coluna também fica na linha dessa tabela ou coluna, nunca numa linha própria.  
+Essas linhas nomeiam a tabela ou a coluna como a [vista de nomes](./logical-names.md#beyond-the-canvas) a mostra, e cada um dos dois nomes que uma linha pode mostrar realça apenas as suas próprias correspondências. Uma linha encontrada apenas no nome que a sua vista omite, o nome lógico na vista `Physical Names` ou o nome na vista `Logical Names`, acrescenta esse nome a seguir ao que mostra, esbatido como na vista `Both Names`, com a correspondência realçada. Quando o nome que mostra também contém uma correspondência, a linha mostra apenas esse nome, pelo que as correspondências no nome que a sua vista omite são contadas e percorridas, mas não realçadas.  
 Uma correspondência num comentário ou numa nota tem uma linha própria: um balão de fala para um comentário de tabela ou de coluna, ou uma nota autocolante para uma nota, e depois um excerto do texto com a correspondência realçada. Um texto longo é cortado com `…` e as quebras de linha aparecem como espaços. Passe o ponteiro sobre a linha para ver o texto completo.  
 Todas as outras linhas têm o mesmo aspeto que fora de uma pesquisa: uma coluna mostra o seu tipo de dados, um índice as suas colunas e um nome vazio indica `unnamed`.
 
 Todas as linhas com linhas por baixo aparecem expandidas quando uma pesquisa começa. Uma linha que recolha, ou que o botão `Collapse All` recolha, fica recolhida até uma correspondência por baixo dela se tornar a atual, ou até mudar a consulta, `Match Case`, `Match Whole Word`, `Use Regular Expression` ou um tipo de texto, ou até a pesquisa ser aberta de novo com a tecla ou com uma entrada `Toggle Explorer`.  
 A linha da correspondência atual fica realçada e é deslocada até ficar visível. A árvore lista todas as correspondências, sejam quantas forem.  
-As correspondências são percorridas pela ordem da árvore: tabela a tabela, o nome da tabela, o seu comentário, o nome e o comentário de cada uma das suas colunas pela ordem das colunas e os nomes dos seus índices; depois, os nomes dos grupos de tabelas; depois, as notas.
+As correspondências são percorridas pela ordem da árvore: tabela a tabela, o nome lógico, o nome e o comentário da tabela, depois o nome lógico, o nome e o comentário de cada uma das suas colunas pela ordem das colunas e depois os nomes dos seus índices; depois, os nomes dos grupos de tabelas; depois, as notas.
 
-Os resultados acompanham o documento enquanto o explorador está visível. Quando as edições fazem uma pausa, qualquer alteração aos textos pesquisados volta a pesquisar, e a correspondência atual mantém-se atual se ainda existir. Isto abrange um nome, um comentário ou o texto de uma nota editados, uma tabela, coluna, índice, nota ou grupo de tabelas adicionados ou removidos, uma coluna movida e as notas ou os grupos de tabelas ocultados ou mostrados com Opções de vista, o que retira as suas correspondências da árvore ou as repõe. Uma edição na tela, uma ação de anular ou refazer, uma importação e uma edição de um colaborador ou de um agente de programação contam todas. Selecionar, mover tabelas, notas ou grupos na tela, deslocar a vista, fazer zoom e passar o ponteiro não contam.  
+Os resultados acompanham o documento enquanto o explorador está visível. Quando as edições fazem uma pausa, qualquer alteração aos textos pesquisados volta a pesquisar, e a correspondência atual mantém-se atual se ainda existir. Isto abrange um nome, um nome lógico, um comentário ou o texto de uma nota editados, uma tabela, coluna, índice, nota ou grupo de tabelas adicionados ou removidos, uma coluna movida e as notas ou os grupos de tabelas ocultados ou mostrados com Opções de vista, o que retira as suas correspondências da árvore ou as repõe. Uma edição na tela, uma ação de anular ou refazer, uma importação e uma edição de um colaborador ou de um agente de programação contam todas. Selecionar, mover tabelas, notas ou grupos na tela, deslocar a vista, fazer zoom e passar o ponteiro não contam.  
+Também não conta mudar a vista de nomes, o que não altera nenhum texto que a pesquisa lê: as mesmas correspondências mantêm-se e as linhas assumem os nomes que a nova vista mostra.  
 As edições feitas enquanto o explorador está fechado ou fora de vista são pesquisadas assim que volta a aparecer.
 
 ## Ir para uma correspondência {#going-to-a-match}
@@ -113,17 +116,17 @@ O movimento dá a volta nas duas extremidades. Nenhuma correspondência é atual
 
 Um clique numa linha dos resultados, ou premir `Enter` ou `Space` com o foco do teclado nela, faz uma destas coisas:
 
-- Uma linha cujo próprio nome contém uma correspondência vai para a primeira correspondência desse nome.
+- Uma linha cujo próprio nome ou nome lógico contém uma correspondência vai para a sua primeira correspondência, a do nome lógico antes da do nome.
 - Uma linha que mostra um excerto de um comentário ou de uma nota vai para essa correspondência.
-- Qualquer outra linha, como uma tabela cujo nome não corresponde ou a linha da própria nota, vai para o que a linha representa e deixa a correspondência atual como está — consulte [Ir para uma linha](./explorer.md#going-to-a-row).
+- Qualquer outra linha, como uma tabela cujo nome e nome lógico não correspondem ou a linha da própria nota, vai para o que a linha representa e deixa a correspondência atual como está — consulte [Ir para uma linha](./explorer.md#going-to-a-row).
 - Uma pasta recolhe-se ou expande-se.
 
 Sempre que uma correspondência se torna a atual, a árvore expande as linhas recolhidas acima dela e coloca lá o foco do teclado, pelo que as teclas de seta na árvore continuam a partir dela.
 
 Ir para uma correspondência fecha o painel Propriedades da tabela, se estiver aberto, e depois:
 
-- Para o nome ou o comentário de uma tabela, ou o nome ou o comentário de uma coluna, seleciona apenas a tabela, trá-la para a frente e move a célula com o foco para a célula que contém a correspondência. Uma correspondência num comentário oculto por uma [opção de vista das tabelas](./table-related-functions.md#table-view-options) move, em vez disso, a célula com o foco para o nome ao lado.
-- Para o nome de um índice, seleciona apenas a tabela do índice e trá-la para a frente, com a célula com o foco no nome da tabela, a menos que a célula com o foco já esteja nessa tabela. Os nomes dos índices não são desenhados na tela.
+- Para o nome, o nome lógico ou o comentário de uma tabela ou de uma coluna, seleciona apenas a tabela, trá-la para a frente e move a célula com o foco para a célula que contém a correspondência. Uma correspondência num comentário oculto por uma [opção de vista das tabelas](./table-related-functions.md#table-view-options) move, em vez disso, a célula com o foco para o nome ao lado. Onde a [vista de nomes](./logical-names.md#name-view) não desenha nenhuma célula para o nome ou para o nome lógico, a célula com o foco passa para a que é desenhada no seu lugar: o nome na vista `Physical Names` e o nome lógico na vista `Logical Names`.
+- Para o nome de um índice, seleciona apenas a tabela do índice e trá-la para a frente, com a célula com o foco no nome da tabela, ou no seu nome lógico nas vistas `Logical Names` e `Both Names`, a menos que a célula com o foco já esteja nessa tabela. Os nomes dos índices não são desenhados na tela.
 - Para o nome de um grupo de tabelas, seleciona apenas o grupo e trá-lo para a frente com as respetivas tabelas.
 - Para uma nota, seleciona apenas a nota e trá-la para a frente.
 
@@ -151,7 +154,7 @@ Enquanto uma série dura, uma tabela ou um grupo de tabelas cujo nome a série a
 
 A ação `Replace All` é executada com `Ctrl + Enter` (Windows/Linux) ou `⌘ + Enter` (Mac) no campo Substituir, ou com o seu botão:
 
-- Substitui todas as correspondências nos tipos de texto ativados e não toca nos outros tipos. Com os tipos predefinidos, muda o nome de tabelas, colunas, índices e grupos de tabelas, e os comentários e as notas ficam intactos.
+- Substitui todas as correspondências nos tipos de texto ativados e não toca nos outros tipos, exceto nos nomes físicos que um nome lógico substituído deriva, que escreve mesmo enquanto `Table names` e `Column names` estão desativados — consulte abaixo. Com os tipos predefinidos, muda o nome de tabelas, colunas, índices e grupos de tabelas e reescreve os nomes lógicos de tabelas e colunas; os comentários e as notas ficam intactos.
 - Tudo o que altera é um único passo de anulação — consulte [Um gesto, um passo](./undo-redo.md#one-gesture-one-step).
 - A contagem indica `Replaced N matches`, contando apenas as ocorrências cujo texto mudou efetivamente. Quando nenhuma mudou, indica `No changes` e nada é registado no histórico, como ao substituir a expressão regular `(user)` por `$1`.
 - Em seguida, os resultados são pesquisados de novo sem nenhuma correspondência atual, pelo que podem listar correspondências contidas no novo texto.
@@ -171,8 +174,12 @@ Como é utilizado o texto de substituição:
   - Uma correspondência reescrita tal como estava não conta: com `Match Case` desativado, substituir `customer` por `Customer` volta a escrever `customer`, `Customer` e `CUSTOMER` tal como estavam, e nenhuma delas é contada.
 - Um campo Substituir vazio elimina a correspondência.
 
-Uma substituição é uma edição normal, tal como escrever por si o novo nome da tabela, o comentário, o nome da coluna ou o texto da nota, mudar o nome do índice no painel Propriedades da tabela ou mudar o nome do grupo de tabelas.  
+Uma substituição é uma edição normal, tal como escrever por si o novo nome da tabela, o nome da coluna, o nome lógico, o comentário ou o texto da nota, mudar o nome do índice no painel Propriedades da tabela ou mudar o nome do grupo de tabelas.  
 É registada no histórico e chega aos colaboradores e a um agente de programação como qualquer outra edição.
+
+Assim, um nome de tabela ou de coluna que uma substituição escreve passa a ser um nome escrito por si, que um nome lógico escrito mais tarde deixa como está até que a opção [Voltar a derivar os nomes físicos](./dictionary.md#derive-physical-names-again) o devolva aos dicionários. Um nome que uma substituição deixa vazio volta, em vez disso, a pertencer aos dicionários, tal como qualquer nome apagado — consulte [Nomes escritos por si](./dictionary.md#names-of-your-own).  
+Enquanto o nome físico de uma tabela ou coluna estiver vazio ou tiver sido ele próprio derivado, um nome lógico substituído deriva-o a partir dos dicionários, tal como acontece ao fechar a célula do nome lógico com um novo nome lógico — consulte [Derivar nomes físicos](./dictionary.md#deriving-physical-names). Nesse caso, uma coluna cujo novo nome lógico seja um termo recebe também o domínio do termo e, com ele, o tipo de dados do domínio. O que deriva faz parte do passo de anulação da substituição e não é contado em `Replaced N matches`.  
+Quando uma mesma ação `Replace All` reescreve tanto o nome lógico como o nome da mesma tabela ou coluna, o nome que escreve prevalece sobre o que o novo nome lógico derivaria.
 
 ## Teclas nos campos de pesquisa {#keys-in-the-search-fields}
 

@@ -13,9 +13,9 @@ Apa yang ditemukan server menentukan ke mana perubahan diarahkan.
 | Yang ditemukan | Yang dilakukan perubahan |
 | --- | --- |
 | Editor yang workspace, vault, atau proyek terbukanya memuat dokumen, atau yang sedang membuka dokumen tersebut | **Live.** Membuka dokumen di ERD Editor jika perlu, bergabung ke sesi pengeditan, dan menerapkan perubahan di sana. Perubahan langsung muncul dan disimpan seperti editor menyimpan perubahan Anda sendiri — lihat [Menyimpan](#saving). |
-| Tidak ada editor | **Headless.** Memuat file, menerapkan perubahan, dan mengganti file. `erd_save` tidak perlu melakukan apa pun. |
+| Tidak ada editor | **Headless.** Memuat file, menerapkan perubahan, dan mengganti file sebelum menjawab, sehingga hasilnya menyatakan `saved: true` dan `erd_save` tidak perlu melakukan apa pun. |
 | Editor dengan hub nonaktif | **Ditolak.** Pembacaan tetap berfungsi, dari disk. Perubahan yang ditulis ke file selagi editor terbuka dapat ditimpa oleh penyimpanan berikutnya dari editor tersebut, sehingga server tidak menulis apa pun. |
-| Editor yang hub-nya aktif tetapi menggunakan protokol yang berbeda dari protokol server: dengan server `1.0.0`, ekstensi VS Code `3.x`, plugin Obsidian `0.x`, atau plugin JetBrains `0.9.0` atau `0.10.0`; dengan server sebelum `1.0.0`, ekstensi `4.0.0` atau yang lebih baru, atau plugin `1.0.0` atau yang lebih baru | **Ditolak**, termasuk pembacaan, dengan `protocolMismatch`. Pesan menyebutkan sisi yang perlu diperbarui: ekstensi atau plugin, atau server — lihat [Memperbarui](./installation.md#updating). |
+| Editor yang hub-nya aktif tetapi menggunakan protokol yang berbeda dari protokol server: dengan server `1.0.0` atau yang lebih baru, ekstensi VS Code `3.x`, plugin Obsidian `0.x`, atau plugin JetBrains `0.9.0` atau `0.10.0`; dengan server sebelum `1.0.0`, ekstensi `4.0.0` atau yang lebih baru, atau plugin `1.0.0` atau yang lebih baru | **Ditolak**, termasuk pembacaan, dengan `protocolMismatch`. Pesan menyebutkan sisi yang perlu diperbarui: ekstensi atau plugin, atau server — lihat [Memperbarui](./installation.md#updating). |
 | Di Windows, editor yang memegang dokumen melalui jalur lain ke file yang sama: agen menyebutnya melalui folder berbagi jaringan atau drive yang dipetakan di komputer ini, seperti `\\localhost\C$\…`, sedangkan editor memegangnya melalui jalur drive-nya, atau sebaliknya | **Ditolak**, termasuk pembacaan, dengan `invalidPath`. Pesan menyebutkan jalur yang digunakan editor untuk memegang dokumen; panggil lagi dengan jalur tersebut. |
 | Di Windows, editor yang tidak dapat diakses agen karena dihalangi Windows: editor yang dijalankan sebagai administrator sedangkan agen tidak, atau editor mana pun saat agen berjalan di sandbox | **Ditolak**, termasuk pembacaan, dengan `hubUnreachable` dan pesan yang menjelaskan alasannya. Jalankan editor dan agen dengan hak akses yang sama, misalnya dengan menjalankan kembali editor tanpa hak administrator. |
 
@@ -35,6 +35,8 @@ Perubahannya langsung sampai ke setiap editor yang membuka dokumen, dan fokusnya
 
 Pembacaan tidak pernah membuka editor. Perubahan membuka dokumen di ERD Editor saat dokumen belum terbuka, tanpa mengambil alih fokus keyboard.
 
+Editor dengan ekstensi VS Code sebelum `4.2.0`, atau plugin Obsidian atau JetBrains sebelum `1.2.0`, tetap menerima perubahan agen secara live, tetapi tidak menampilkan maupun mempertahankan nama logis, tautan domain, dan baris kamus yang ditulis agen — lihat [Memperbarui](./installation.md#updating).
+
 ### Menyimpan {#saving}
 
 Setiap editor menyimpan perubahan agen dengan cara yang sama seperti menyimpan perubahan Anda.
@@ -51,7 +53,7 @@ Di keduanya, `erd_save` langsung menuliskannya.
 Alat ini ditolak dengan `notSaved` saat editor tidak dapat memastikannya, atau tidak menulis file: VS Code membiarkan tab tidak tersimpan saat file berubah di disk, dan IDE JetBrains tidak dapat menuliskannya, misalnya selama sebuah dialog terbuka atau saat file tidak dapat ditulis.
 
 Di VS Code dan IDE JetBrains, `erd_save` pada dokumen yang tidak memiliki apa pun lagi untuk disimpan berhasil dan membiarkan file apa adanya.
-Hal ini berlaku begitu setiap perubahan tersimpan, yang dilakukan IDE JetBrains dengan sendirinya, dan tetap berlaku selama setiap perubahan berikutnya merupakan perubahan yang dicegah masuk ke file oleh [penguncian](../guide/guides/settings.md#lock), seperti menggulir atau melakukan zoom saat `Viewport` terkunci, atau berpindah tab saat `Canvas Type` terkunci. Setiap penguncian aktif secara default.
+Hal ini berlaku begitu setiap perubahan tersimpan, yang dilakukan IDE JetBrains dengan sendirinya, dan tetap berlaku selama setiap perubahan berikutnya merupakan perubahan yang dicegah masuk ke file oleh [penguncian](../guide/guides/settings.md#lock), seperti menggulir atau melakukan zoom saat `Viewport` terkunci, berpindah tab saat `Canvas Type` terkunci, atau mengganti [Tampilan Nama](../guide/guides/logical-names.md#name-view) saat `Name View` terkunci. Setiap penguncian aktif secara default.
 File yang tidak dapat ditulis IDE JetBrains tetap ditolak, bahkan dalam keadaan tersebut.
 
 Saat editor menutup dokumen setelah perubahan terakhir agen, panggilan agen berikutnya membawa catatan bahwa perubahan tersebut hanya ada di file jika disimpan sebelum editor ditutup.
@@ -63,7 +65,7 @@ Perintah [Batalkan](../guide/guides/undo-redo.md) milik editor sendiri bekerja s
 
 Beberapa perubahan tidak membuat entri pembatalan di editor: `erd_set_database` dan `erd_set_database_name` di antara [alat pengaturan](./tools.md#settings), serta `erd_resize_memo`.
 `erd_move_table_group` yang memindahkan grup kurang dari 20 piksel secara total, dengan jarak horizontal dan vertikal dijumlahkan, juga tidak membuatnya, meskipun grup tetap berada di posisi barunya.
-Panggilan yang tidak mengubah apa pun juga tidak membuatnya: `erd_set_column_primary_key`, `erd_set_column_unique`, `erd_set_column_not_null`, `erd_set_column_auto_increment`, `erd_set_index_unique`, atau `erd_set_index_column_order` yang mengatur nilai yang sudah dimiliki dokumen; `erd_add_index_column` dengan kolom yang sudah ada di indeks; `erd_set_table_group` dengan tabel yang sudah berada di grup tersebut (atau yang sudah tidak berada di grup mana pun, dengan `groupId` `null`); `erd_move_table_group` ke titik tempat grup sudah berada; `erd_resize_table_group` ke persegi panjang yang sudah dimiliki grup; `erd_sort_tables` pada dokumen tanpa tabel; atau impor dengan `mode` `append` yang tidak membawa tabel (untuk `erd_import_json`, tidak membawa tabel maupun memo).
+Panggilan yang tidak mengubah apa pun juga tidak membuatnya: `erd_set_column_primary_key`, `erd_set_column_unique`, `erd_set_column_not_null`, `erd_set_column_auto_increment`, `erd_set_index_unique`, atau `erd_set_index_column_order` yang mengatur nilai yang sudah dimiliki dokumen; `erd_add_index_column` dengan kolom yang sudah ada di indeks; `erd_set_table_group` dengan tabel yang sudah berada di grup tersebut (atau yang sudah tidak berada di grup mana pun, dengan `groupId` `null`); `erd_move_table_group` ke titik tempat grup sudah berada; `erd_resize_table_group` ke persegi panjang yang sudah dimiliki grup; `erd_sort_tables` pada dokumen tanpa tabel; `erd_set_table_logical_name` atau `erd_set_column_logical_name` dengan nama logis yang sudah dimiliki tabel atau kolom, jika menghasilkan nama darinya tidak akan mengubah apa pun; `erd_set_column_domain` dengan domain yang sudah ditautkan kolom, jika kolom sudah memiliki tipe domain tersebut dan [Sinkronisasi tipe data hubungan](../guide/guides/settings.md#relationship-datatype-sync) tidak akan mengubah tipe kolom mana pun di sepanjang hubungannya; `erd_update_word`, `erd_update_term`, atau `erd_update_domain` dengan hanya nilai yang sudah dimiliki baris, kecuali jika istilah yang tidak memiliki nama fisik diberi `name` dan kata-katanya menyusun nama fisik; `erd_derive_physical_names` jika setiap nama dalam cakupannya yang memiliki nama logis sudah berisi apa yang diberikan [kamus](./tools.md#dictionaries) kepadanya dan ditandai sebagai dihasilkan; atau impor dengan `mode` `append` yang tidak membawa tabel (untuk `erd_import_json`, tidak membawa tabel maupun memo).
 `erd_undo` melewati perubahan ini dan menyebutkannya dalam hasilnya.
 Perubahan lain, seperti `erd_change_relationship_type`, `erd_change_relationship_on_delete`, `erd_change_relationship_on_update`, `erd_change_table_group_name`, `erd_change_table_group_color`, dan `erd_set_ddl_script`, membuat entri bahkan saat mengatur nilai yang sudah dimiliki dokumen.
 
@@ -91,7 +93,7 @@ Pembacaan yang tidak dapat terhubung ke hub editor ditolak dengan `hubUnreachabl
 
 ## Headless {#headless}
 
-Saat tidak ada editor yang melayani dokumen, setiap pengeditan memuat file, menerapkan perubahan, dan menulis file kembali.
+Saat tidak ada editor yang melayani dokumen, setiap pengeditan memuat file, menerapkan perubahan, dan menulis file kembali sebelum menjawab, sehingga hasilnya menyatakan `saved: true` — lihat [Hasil](./tools.md#results).
 Penulisan dilakukan ke file sementara di samping dokumen, bernama `.<name>.<id>.tmp`, yang kemudian menggantikan dokumen tersebut, sehingga dokumen tidak pernah tertinggal dalam keadaan setengah tertulis, kecuali di Windows dalam kasus penulisan di tempat yang dijelaskan di bawah.
 
 Sebelum langkah terakhir itu, server memeriksa apakah file berubah di disk selama panggilan.
@@ -107,6 +109,8 @@ Di Windows, dua aturan tambahan berlaku:
 
 - Dokumen yang memiliki izin sendiri, berbeda dari izin foldernya, ditulis di tempat alih-alih diganti, agar izin tersebut tetap terjaga, dan file sementara dihapus sesudahnya. Program yang membaca dokumen selama penulisan itu dapat menemukan teks yang tidak dapat diurai.
 - File yang sedang dibuka oleh program lain tidak dapat diganti, sehingga server mencoba lagi hingga dua detik. Setiap percobaan terlebih dahulu mencari editor lagi, dan editor yang mulai melayani dokumen sementara itu menolak penulisan dengan `hubAppeared`, atau dengan `blocked` saat hub-nya nonaktif. Jika file masih dibuka setelah dua detik, tidak ada yang ditulis, file dimuat ulang, dan panggilan gagal dengan pesan yang mengutip kesalahan sistem.
+
+Server sebelum `1.1.0` membaca dokumen tanpa nama logis, tautan domain kolom, serta kata, istilah, dan domainnya, sehingga pengeditan pertama yang ditulisnya ke file tidak menyertakan semua itu. Perbarui server — lihat [Memperbarui](./installation.md#updating).
 
 ## Ditolak {#refused}
 
@@ -130,7 +134,7 @@ Ekstensi VS Code sebelum `3.0.0` dan plugin JetBrains sebelum `0.9.0` juga tidak
 
 Dokumen disebutkan melalui `path`, berupa jalur absolut atau relatif terhadap direktori kerja server.
 
-- Dokumen baru berformat `.erd.json`. `erd_open_document` dengan `create` membuat file, dengan menambahkan `.erd.json` pada nama yang tidak memiliki ekstensi. Seperti diagram baru di editor, dokumen baru memiliki setiap [penguncian](../guide/guides/settings.md#lock) dalam keadaan aktif, sehingga menggulir, melakukan zoom, berpindah tab, atau memilih bahasa Generator Kode, konvensi penamaan, atau tipe tanda kutip yang lain di editor tidak pernah mengubah file. Tidak ada alat yang mengaktifkan atau menonaktifkan satu penguncian: Anda melakukannya di tab Pengaturan editor. `erd_import_json` dalam mode `replace` mengganti semuanya dengan penguncian dari dokumen yang dimuatnya — lihat [Impor](./tools.md#import).
+- Dokumen baru berformat `.erd.json`. `erd_open_document` dengan `create` membuat file, dengan menambahkan `.erd.json` pada nama yang tidak memiliki ekstensi. Seperti diagram baru di editor, dokumen baru memiliki setiap [penguncian](../guide/guides/settings.md#lock) dalam keadaan aktif, sehingga menggulir, melakukan zoom, berpindah tab, mengganti Tampilan Nama, atau memilih bahasa Generator Kode, konvensi penamaan, atau tipe tanda kutip yang lain di editor tidak pernah mengubah file. Tidak ada alat yang mengaktifkan atau menonaktifkan satu penguncian: Anda melakukannya di tab Pengaturan editor. `erd_import_json` dalam mode `replace` mengganti semuanya dengan penguncian dari dokumen yang dimuatnya — lihat [Impor](./tools.md#import).
 - File `.erd`, `.vuerd`, dan `.vuerd.json` yang sudah ada juga dapat dibuka. Jalur dengan ekstensi lain ditolak dengan `invalidPath`.
 - Di Windows, jalur yang memuat nama yang tidak disimpan Windows persis seperti yang ditulis ditolak dengan `invalidPath` sebelum dokumen dibaca atau ditulis, termasuk pembacaan: nama dengan titik dua atau karakter lain yang ditolak Windows, seperti `orders:v2.erd`; nama perangkat seperti `NUL.erd` atau `CON.erd`, dalam huruf besar maupun kecil; atau nama yang diakhiri titik atau spasi. Ganti namanya, misalnya dengan `-` sebagai pengganti `:`.
 - File yang bukan dokumen yang dapat dibaca editor, seperti file yang masih berisi penanda konflik merge, ditolak dengan `invalidDocument` dan dibiarkan apa adanya. File tersebut tidak pernah dimuat sebagai diagram kosong lalu ditulis kembali.

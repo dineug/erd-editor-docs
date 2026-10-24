@@ -1,5 +1,5 @@
 ---
-sidebar_position: 15
+sidebar_position: 17
 description: 25 jazykov zobrazenia editora, rozloženie sprava doľava, vzhľady System, Light a Dark vo výbere motívu a jeho farby a miesto, kde ich uchováva každá hostiteľská aplikácia.
 ---
 
@@ -13,8 +13,10 @@ Webová aplikácia, Google Drive, VS Code, IDE od JetBrains a Obsidian ponúkaj�
 
 ## Jazyk zobrazenia {#display-language}
 
-Jazyk sa vzťahuje na vlastný text editora: bublinové popisy na paneli nástrojov, kontextové ponuky, rýchle vyhľadávanie, panely a dialógové okná, kartu Nastavenia, [uvítaciu obrazovku](./editing-start.md#welcome-screen), oznámenia a správy a zástupný text, ktorý prázdny názov, typ údajov, predvolená hodnota alebo komentár zobrazuje na plátne a v exportovanom obrázku.  
-V každom jazyku ponecháva tak, ako sú napísané, tieto prvky: vaše názvy tabuliek a stĺpcov, komentáre a poznámky; databázové systémy, jazyky na karte Generátor kódu a formáty súborov; typy údajov, kľúčové slová SQL a akcie `ON DELETE` a `ON UPDATE`; možnosti karty Schéma SQL `Create`, `If not exists`, `Drop & re-create`, `USE` a `CREATE + USE`; označenia `PK`, `FK`, `UQ`, `AI`, `NN`, `N-N`, `NULL` a `AK1.1`; stavové písmená `A`, `M`, `D`, `R` a `~` v [prehliadači rozdielov](./table-related-functions.md#diff-viewer); možnosti štýlu názvov a možnosti `Bracket` okrem `None`; názvy klávesov; názvy farieb vo výbere motívu; vygenerované SQL a kód; názvy exportovaných súborov.
+Jazyk sa vzťahuje na vlastný text editora: bublinové popisy na paneli nástrojov, tlačidlo [`Name View`](./logical-names.md#switching-the-view) na paneli nástrojov plátna a na paneli nástrojov režimu Flow, ponuku zobrazenia riadkov v režime Flow, kontextové ponuky, rýchle vyhľadávanie, panely a dialógové okná, kartu [Slovník](./dictionary.md) (názvy jej hárkov, hlavičky stĺpcov, nástroje, ponuku, stavový riadok a druhy kontrol, ktoré uvádza hárok `Checks`), kartu Nastavenia, [uvítaciu obrazovku](./editing-start.md#welcome-screen), oznámenia a správy a zástupný text, ktorý prázdny názov, logický názov, typ údajov, doména, predvolená hodnota alebo komentár zobrazuje na plátne a v exportovanom obrázku.  
+V každom jazyku ponecháva tak, ako sú napísané, tieto prvky: vaše názvy tabuliek a stĺpcov, [logické názvy](./logical-names.md), komentáre a poznámky; slová, termíny a domény, ktoré uchovávate na karte Slovník; databázové systémy, jazyky na karte Generátor kódu a formáty súborov; typy údajov, kľúčové slová SQL a akcie `ON DELETE` a `ON UPDATE`; možnosti karty Schéma SQL `Create`, `If not exists`, `Drop & re-create`, `USE` a `CREATE + USE`; označenia `PK`, `FK`, `UQ`, `AI`, `NN`, `N-N`, `NULL` a `AK1.1`; stavové písmená `A`, `M`, `D`, `R` a `~` v [prehliadači rozdielov](./table-related-functions.md#diff-viewer); možnosti štýlu názvov a možnosti `Bracket` okrem `None`; názvy klávesov; názvy farieb vo výbere motívu; vygenerované SQL a kód; riadok hlavičky exportovaného súboru CSV slovníka; názvy exportovaných súborov.
+
+Na karte Slovník zoraďovanie usporiada riadky v abecednom poradí jazyka zobrazenia a vyhľadávanie v hárku `Checks` porovnáva jeho bunky tak, ako znejú v jazyku zobrazenia – pozrite si časti [Zoraďovanie](./dictionary.md#sorting) a [Vyhľadávanie](./dictionary.md#searching).
 
 Jazyky v poradí, v akom ich uvádza výber jazyka:
 
@@ -84,11 +86,12 @@ Regionálny variant sa počíta ako jeho jazyk, takže kód `de-AT` vyberie Deut
 
 ### Jazyky písané sprava doľava {#right-to-left-languages}
 
-עברית (hebrejčina), العربية (arabčina) a فارسی (perzština) rozložia editor sprava doľava: panel nástrojov, ponuky, panely a dialógové okná, rýchle vyhľadávanie a karta Nastavenia sú zrkadlovo otočené. Podponuky kontextovej ponuky sa otvárajú doľava a ikony Vrátiť späť a Znova vykonať na paneli nástrojov si vymenia miesta, aby ikona Vrátiť späť ukazovala dozadu v smere, ktorým postupuje čitateľ textu sprava doľava.
+עברית (hebrejčina), العربية (arabčina) a فارسی (perzština) rozložia editor sprava doľava: panel nástrojov, ponuky, panely a dialógové okná, rýchle vyhľadávanie, lišta a stavový riadok karty Slovník a karta Nastavenia sú zrkadlovo otočené. Podponuky kontextovej ponuky sa otvárajú doľava a ikony Vrátiť späť a Znova vykonať na paneli nástrojov si vymenia miesta, aby ikona Vrátiť späť ukazovala dozadu v smere, ktorým postupuje čitateľ textu sprava doľava.
 
-Samotný diagram sa nikdy zrkadlovo neotáča. Plátno s tabuľkami, stĺpcami, vzťahmi a poznámkami zostáva zľava doprava a rovnako aj minimapa, posúvacie pruhy, [panel nástrojov plátna](./table-related-functions.md#canvas-toolbar), karta [Vizualizácia](./visualization.md) a jej panel nástrojov, bunky typu údajov, kód na kartách Schéma SQL a Generátor kódu, výber farby, obe strany prehliadača rozdielov, cestovanie v čase a ukážka automatického rozloženia.  
+Samotný diagram sa nikdy zrkadlovo neotáča. Plátno s tabuľkami, stĺpcami, vzťahmi a poznámkami zostáva zľava doprava a rovnako aj minimapa, posúvacie pruhy, [panel nástrojov plátna](./table-related-functions.md#canvas-toolbar), karta [Vizualizácia](./visualization.md) a jej panel nástrojov, bunky typu údajov, hárky na karte Slovník a zoznam domén termínu, kód na kartách Schéma SQL a Generátor kódu, výber farby, obe strany prehliadača rozdielov, cestovanie v čase a ukážka automatického rozloženia.  
+V režime Flow si dve šípky na paneli nástrojov karty Vizualizácia ponechajú svoje miesta a vymenia si funkcie: šípka doprava je `Previous table` a šípka doľava `Next table`, takže návrat ukazuje rovnakým smerom ako Vrátiť späť. Klávesy vrátenia späť a opätovného vykonania naďalej robia krok späť a krok dopredu – pozrite si časť [Predchádzajúca a nasledujúca tabuľka](./visualization.md#previous-table-and-next-table).  
 [Prieskumník](./explorer.md#beside-the-canvas) zostáva naľavo od plátna a strom zmien prehliadača rozdielov naľavo v prehliadači, každý s okrajom na ťahanie na svojej pravej strane. Vo vnútri sa oba čítajú sprava doľava: ich polia a riadky sú zrkadlovo otočené, riadky sú odsadené sprava a v oboch stromoch kláves `←` rozbalí riadok alebo prejde na jeho prvý podradený riadok, zatiaľ čo kláves `→` ho zbalí alebo prejde späť na jeho nadradený riadok – pozrite si časť [Klávesy v prieskumníkovi](./explorer.md#keys-in-the-explorer).  
-Názvy, komentáre a iný text, ktorý ste napísali, si zachovávajú vlastný smer, takže hebrejský, arabský alebo perzský názov sa aj na plátne číta sprava doľava.
+Názvy, komentáre a iný text, ktorý ste napísali, si zachovávajú vlastný smer, takže hebrejský, arabský alebo perzský názov sa aj na plátne číta sprava doľava. Každý názov, ktorý uvádza oznámenie karty Slovník, si tiež zachováva vlastný smer.
 
 ## Motív {#theme}
 

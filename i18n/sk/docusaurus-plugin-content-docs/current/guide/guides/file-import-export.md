@@ -16,16 +16,20 @@ Z podponuky `Import` v kontextovej ponuke plátna možno importovať päť form�
 - AML
 
 Položka `Import and Add` hneď pod položkou `Import` pridá súbor do diagramu namiesto toho, aby ho nahradila – pozrite si časť [Importovať a pridať](#import-and-add).  
-Uvítacia obrazovka, ktorú zobrazuje prázdny diagram, má riadok `Import` s rovnakými piatimi formátmi – pozrite si časť [Uvítacia obrazovka](./editing-start.md#welcome-screen).
+Uvítacia obrazovka, ktorú zobrazuje prázdny diagram, má riadok `Import` s rovnakými piatimi formátmi – pozrite si časť [Uvítacia obrazovka](./editing-start.md#welcome-screen).  
+Hárky karty [Slovník](./dictionary.md) tiež preberajú slová, termíny a domény zo súborov CSV pomocou vlastného tlačidla `Import CSV` tejto karty – pozrite si časť [Import a export CSV](./dictionary.md#importing-and-exporting-csv).
 
 Prípony sa porovnávajú bez ohľadu na veľkosť písmen. Ak vyberiete súbor, ktorého prípona nezodpovedá zvolenému formátu, import sa zruší a zobrazí sa hlásenie `Only <format> files can be imported`, pričom formát je zapísaný ako `json`, `sql`, `graphql`, `dbml` alebo `aml`, napríklad `Only sql files can be imported`.
 
 Položka `Import` nahradí aktuálny dokument namiesto toho, aby doň obsah zlúčila, a jedno vrátenie späť obnoví predchádzajúci diagram.  
-Súbor JSON so sebou prináša vlastné nastavenia vrátane [zamknutí](./settings.md#lock). Ak súbor zamyká kartu, jazyk na karte Generátor kódu, niektorý štýl názvov alebo typ úvodzoviek, naďalej vidíte to, čo ste mali, ale uloží sa zamknutá hodnota zo súboru. Zobrazenie sa nastaví tak, ako ho určuje súbor, či už je zamknuté, alebo nie. Súbor JSON uložený pred zavedením zamknutí sa načíta so všetkými zamknutiami zapnutými a s priblížením zobrazenia 100 %.  
+Súbor JSON so sebou prináša vlastné nastavenia vrátane [zamknutí](./settings.md#lock). Ak súbor zamyká kartu, jazyk na karte Generátor kódu, niektorý štýl názvov, typ úvodzoviek alebo [Zobrazenie názvov](./logical-names.md#name-view), naďalej vidíte to, čo ste mali, ale uloží sa zamknutá hodnota zo súboru. Priblíženie a poloha zobrazenia sa nastavia tak, ako ich určuje súbor, či už sú zamknuté, alebo nie. Súbor JSON uložený pred zavedením zamknutí sa načíta so všetkými zamknutiami zapnutými a s priblížením zobrazenia 100 %. Súbor uložený pred zavedením zamknutia `Name View` sa načíta s týmto zamknutím zapnutým bez ohľadu na to, aké iné zamknutia zaznamenáva.  
 Ostatné formáty zachovajú nastavenia, ktoré už máte, vrátane zamknutí, okrem zobrazenia, ktoré začína s priblížením 100 %.  
 Parsery GraphQL, DBML a AML nikdy nezlyhajú: zo súboru, ktorý nedokážu prečítať, vznikne namiesto chyby prázdny diagram.
 
-Súbor JSON si zachová pozície, ktoré obsahuje. Tabuľky zo súboru Schéma SQL, GraphQL, DBML alebo AML sa umiestnia ešte predtým, ako sa diagram zmení:
+Súbor JSON prináša aj logické názvy svojich tabuliek a stĺpcov a prepojenia svojich stĺpcov s doménami. Jeho slová, termíny a domény nahradia slová, termíny a domény na karte [Slovník](./dictionary.md), takže súbor, ktorý žiadne neobsahuje, nechá hárky prázdne, a vrátenie importu späť obnoví tie, ktoré nahradil.  
+Ostatné formáty nič z toho neobsahujú. Ich tabuľky sa načítajú bez logických názvov a bez stĺpcov prepojených s doménou a vaše slová, termíny a domény zostanú tak, ako sú. Vrátenie späť alebo opätovné vykonanie importu ich tiež ponechá tak, ako sú, takže úprava slovníka vykonaná po importe sa zachová. Takýto import tiež ponechá vlastnú históriu zmien každého hárka tak, ako je, zatiaľ čo import JSON tieto histórie vyprázdni – pozrite si časť [Hárky karty Slovník](./undo-redo.md#dictionary-sheets).
+
+Súbor JSON si zachová pozície, ktoré obsahuje. Tabuľky zo súboru Schéma SQL, GraphQL, DBML alebo AML sa umiestnia ešte predtým, ako sa diagram zmení, a to so šírkami, ktoré majú v [Zobrazení názvov](./logical-names.md#beyond-the-canvas), ktoré práve máte:
 
 - Ak má súbor dve alebo viac tabuliek a aspoň jeden vzťah, rozložia sa pomocou [automatického rozloženia](./table-related-functions.md#auto-layout) `Flow` zľava doprava pozdĺž vzťahov, od ľavého horného rohu plátna. Počíta sa aj vzťah tabuľky so sebou samou.
 - V opačnom prípade sa usporiadajú do riadkov od ľavého horného rohu, pričom ako prvé idú tabuľky s najmenším počtom stĺpcov.
@@ -33,7 +37,7 @@ Súbor JSON si zachová pozície, ktoré obsahuje. Tabuľky zo súboru Schéma S
 
 Diagram sa potom nahradí v jednom kroku, takže sa medzitým nič nezobrazí. Nastavenie, ktoré zmeníte počas umiestňovania tabuliek, napríklad karta, sa zachová, a ak medzitým importujete ďalší súbor, platí import, ktorý sa spustil ako posledný.
 
-Editor iba na čítanie cez položku `Import` nič nenačíta a položku `Import and Add` neponúka.
+Editor iba na čítanie cez položku `Import` nič nenačíta a neponúka položku `Import and Add` ani tlačidlo `Import CSV` karty Slovník.
 
 ### Importovať a pridať {#import-and-add}
 
@@ -42,6 +46,7 @@ Položka `Import and Add` zachová diagram a pridá súbor pod neho. Nachádza s
 ![Pridanie súboru SQL cez Import and Add > Schema SQL, umiestnenie jeho tabuliek pod diagram, ich rozloženie pozdĺž vzťahov a výber](/img/demo-import-and-add.webp)
 
 Súbor sa načíta rovnako ako pri prilepení: všetky tabuľky, stĺpce, vzťahy, indexy, poznámky a [skupiny tabuliek](./table-groups.md), ktoré obsahuje, sa pridajú ako nové, tabuľky, ktoré už sú v diagrame, sa nepohnú a žiadne nastavenie sa nezmení, takže nastavenia súboru JSON sa vynechajú.  
+Tabuľky a stĺpce súboru JSON si ponechajú svoje logické názvy a každý fyzický názov naďalej patrí slovníkom alebo je vlastný tak, ako to bolo v súbore, čo rozhoduje o tom, či logický názov zapísaný neskôr odvodí nový – pozrite si časť [Odvodzovanie fyzických názvov](./dictionary.md#deriving-physical-names). Slová, termíny a domény súboru sa vynechajú, takže karta Slovník zostane taká, aká bola, a žiadny pridaný stĺpec nie je prepojený s doménou: každý si ponechá typ údajov, ktorý má.  
 Tabuľka, ktorej názov už diagram obsahuje, sa pridá ako druhá tabuľka s týmto názvom a nezlúči sa s existujúcou. Vzťahy a indexy pochádzajú iba zo súboru, takže cudzí kľúč odkazujúci na tabuľku, ktorú súbor nedefinuje, sa neprepojí s tabuľkou, ktorá už je v diagrame.
 
 Pridaný blok sa umiestni tesne pod všetko, čo diagram obsahuje, zarovnaný s jeho ľavým okrajom, alebo do ľavého horného rohu prázdneho diagramu. Započítajú sa aj poznámky a skupiny tabuliek skryté v ponuke [Možnosti zobrazenia](./table-related-functions.md#table-view-options), pretože na svojom mieste stále sú.  
@@ -160,11 +165,10 @@ Spätná lomka pred úvodzovkou, ako MySQL a MariaDB zapisujú `'it\'s'`, takist
 Hodnota `DEFAULT` si zachová úvodzovky a úvodzovka v nej sa zapíše späť zdvojená bez ohľadu na to, ako ju súbor ošetril: `'it''s'`.  
 Keď je v čase importu databázou dokumentu Databricks, text v jednoduchých úvodzovkách sa namiesto toho riadi pravidlami platformy Spark: každá spätná lomka je únikovým znakom pre znak, ktorý za ňou nasleduje, takže `'C:\\dir'` sa načíta ako `C:\dir`, únikové sekvencie ako `\n`, `\t` a `\u0041` sa dekódujú a hodnota `DEFAULT` sa zachová ako `'it\'s'`.
 
-Export Schéma SQL ošetrí úvodzovku v komentári tabuľky alebo stĺpca: `COMMENT 'it''s'` pre MySQL, MariaDB a Snowflake, `COMMENT ON TABLE` a `COMMENT ON COLUMN ... IS 'it''s'` pre PostgreSQL a Oracle a rovnaké zdvojenie vrátane názvov tabuliek a stĺpcov vo volaniach `sp_addextendedproperty` pre MSSQL. Komentár bez úvodzovky sa zapíše tak, ako je.  
-Databricks namiesto toho ošetrí úvodzovku aj spätnú lomku spätnou lomkou, ako v `COMMENT 'it\'s'`, takže jeho export sa načíta späť presne iba vtedy, keď je vybratou databázou Databricks.  
-MSSQL zapisuje každý komentár ako `EXECUTE sys.sp_addextendedproperty 'MS_Description', '<comment>', 'schema', '<schema>', 'table', '<table>'`, za čím pri stĺpci nasleduje `'column', '<column>'`. Keď je možnosť `Bracket` nastavená na `None`, z tabuľky s názvom `sales.users` vznikne schéma `sales` a tabuľka `users` a názov bez schémy patrí do schémy `dbo`. Pri akejkoľvek inej hodnote možnosti `Bracket` je celý názov názvom tabuľky v schéme `dbo`.
-
-Komentáre neprežijú export do SQLite a jeho spätný import: SQLite ich zapisuje ako obyčajné riadky `--`, ktoré parser nečíta. Volania `sp_addextendedproperty` z exportu MSSQL sa importujú späť ako tie isté komentáre tabuliek a stĺpcov.
+Ako jednotlivé databázy pri exporte zapisujú komentár a ako v ňom ošetrujú úvodzovku, opisuje časť [Komentáre](./schema-sql.md#comments) na stránke Schéma SQL.  
+Export pre MySQL, MariaDB, PostgreSQL, Oracle, Snowflake alebo MSSQL sa importuje späť ako tie isté komentáre tabuliek a stĺpcov vrátane úvodzoviek, s výnimkou prázdnych riadkov, ktoré export pre Oracle vynecháva. Export pre Databricks, ktorý ošetruje úvodzovku aj spätnú lomku spätnou lomkou, sa načíta späť presne iba vtedy, keď je vybratou databázou Databricks.  
+Komentáre neprežijú export do SQLite a jeho spätný import: SQLite ich zapisuje ako obyčajné riadky `--`, ktoré parser nečíta.  
+Okrem SQLite sa logický názov, ktorý prepínač `Write logical names into empty comments` zapísal do prázdneho komentára, importuje späť ako komentár danej tabuľky alebo stĺpca, nie ako ich logický názov – pozrite si časť [Logické názvy ako komentáre](./schema-sql.md#logical-names-as-comments).
 
 ### GraphQL {#graphql}
 
@@ -200,22 +204,24 @@ Názov súboru musí končiť na `.aml`.
 
 GraphQL, DBML a AML sú obojsmerné formáty: každý z nich je aj cieľom na karte [Generátor kódu](./code-generator.md).  
 DBML a AML prenášajú ON DELETE a ON UPDATE každého vzťahu oboma smermi – pozrite si stránku [Generátor kódu](./code-generator.md#on-delete-and-on-update). GraphQL neprenáša ani jedno, takže import GraphQL ponechá obe na hodnote `Not set`.  
-DBML oboma smermi prenáša aj farby tabuliek, bez prípadnej priehľadnosti, a každú skupinu tabuliek, ktorá obsahuje nejakú tabuľku. Skupina bez názvu sa vráti ako `group_1`, `group_2` a tak ďalej a opakovaný názov skupiny sa vráti s pridaným `_2`, `_3` a tak ďalej. AML prenáša farbu tabuľky iba ako najbližší zo svojich názvov farieb, takže `#FF8800` sa zapíše ako `orange` a vráti sa ako `#f97316`, a neprenáša žiadne skupiny. GraphQL neprenáša farby ani skupiny.
+DBML oboma smermi prenáša aj farby tabuliek, bez prípadnej priehľadnosti, a každú skupinu tabuliek, ktorá obsahuje nejakú tabuľku. Skupina bez názvu sa vráti ako `group_1`, `group_2` a tak ďalej a opakovaný názov skupiny sa vráti s pridaným `_2`, `_3` a tak ďalej. AML prenáša farbu tabuľky iba ako najbližší zo svojich názvov farieb, takže `#FF8800` sa zapíše ako `orange` a vráti sa ako `#f97316`, a neprenáša žiadne skupiny. GraphQL neprenáša farby ani skupiny.  
+Žiadny z týchto troch formátov neprenáša logické názvy, prepojenia s doménami ani slovníky, a to v žiadnom smere: karta Generátor kódu zapisuje fyzický názov a typ údajov každej tabuľky a stĺpca, nikdy logický názov ani doménu.
 
 ## Export {#exporting}
 
 Podponuka `Export` v kontextovej ponuke plátna má tri položky:
 
-- json: Uloží diagram v podobe, v akej ho obsahuje jeho súbor, ako `.erd.json`: tabuľky s ich stĺpcami a indexmi, vzťahy, poznámky a skupiny tabuliek a nastavenia, pričom každé [zamknuté nastavenie](./settings.md#lock) má svoju zamknutú hodnotu.
+- json: Uloží diagram v podobe, v akej ho obsahuje jeho súbor, ako `.erd.json`: tabuľky s ich stĺpcami a indexmi, vzťahy, poznámky a skupiny tabuliek, logické názvy a prepojenia stĺpcov s doménami, slová, termíny a domény karty [Slovník](./dictionary.md) a nastavenia, pričom každé [zamknuté nastavenie](./settings.md#lock) má svoju zamknutú hodnotu. To, čo nič neobsahuje, napríklad prázdny text alebo prázdny riadok slovníka, sa vynechá – pozrite si časť [Úložná forma a hodnota za behu](../../api/advanced/schema.md#storage-form-and-runtime-value).
 - Schema SQL: Otvorí kartu [Schéma SQL](./schema-sql.md#saving-or-copying-the-sql) s otvoreným panelom možností a s fokusom na tlačidle `Save file`, takže stlačením klávesu `Enter` sa kód SQL zobrazený na karte uloží ako `.sql`. Dovtedy sa nič neuloží.
 - Image: Otvorí dialógové okno `Export image`, ktoré diagram uloží ako `.png` alebo `.svg` alebo ho skopíruje do schránky ako PNG – pozrite si časť [Obrázok](#image).
 
-Všetky tri fungujú aj v editore iba na čítanie.
+Všetky tri fungujú aj v editore iba na čítanie.  
+Vlastné tlačidlo `Export CSV` karty Slovník, ktoré v tejto podponuke nie je, uloží jej hárok `Domains`, `Words` alebo `Terms` ako súbor CSV. Na rozdiel od týchto troch položiek sa v editore iba na čítanie neponúka – pozrite si časť [Import a export CSV](./dictionary.md#importing-and-exporting-csv).
 
 Schéma SQL zapisuje ON DELETE a ON UPDATE každého vzťahu za jeho `REFERENCES`, najprv ON DELETE. Hodnota `Not set` nezapíše nič a akcia, ktorú vybratá databáza neprijíma, sa vynechá. Informácie o tom, ktorá databáza prijíma ktoré akcie, nájdete na stránke [Úprava vzťahov](./relationship-editing.md#on-delete-and-on-update).
 
 Každý exportovaný súbor má názov `<database name>-<timestamp>` nasledovaný príponou, pričom časová pečiatka je v miestnom čase vo formáte `yyyy-MM-dd'T'HH_mm_ss` – napríklad `my-schema-2026-08-29T04_05_06.erd.json`. Ak je názov databázy prázdny, použije sa `unnamed`.  
-Tlačidlo `Save file` na karte Schéma SQL a na karte [Generátor kódu](./code-generator.md) pomenúva súbory rovnakým spôsobom. Obrázok použije názov databázy taký, aký bol pri otvorení dialógového okna.
+Tlačidlo `Save file` na karte Schéma SQL a na karte [Generátor kódu](./code-generator.md) pomenúva súbory rovnakým spôsobom a rovnako aj tlačidlo `Export CSV`, ktoré za časovú pečiatku pridá hárok: `-words.csv`, `-terms.csv` alebo `-domains.csv`. Obrázok použije názov databázy taký, aký bol pri otvorení dialógového okna.
 
 Položky `Import`, `Import and Add` a `Export` sú k dispozícii aj v [rýchlom vyhľadávaní](./quick-search.md) na karte ERD, s rovnakými položkami ako v kontextovej ponuke plátna.
 
@@ -235,7 +241,7 @@ Položka `Export` ▸ `Image` v kontextovej ponuke plátna alebo v rýchlom vyh�
 
 Zvolené hodnoty sa zachovajú, kým sa editor nezatvorí, a nikdy sa neukladajú do dokumentu. Ukážka sa vykresľuje rovnako ako obrázok a vykreslí sa znova, keď sa zmení možnosť `Background` alebo `Dark mode`.
 
-Obrázok zachytáva diagram v stave, v akom bol pri otvorení dialógového okna; ak chcete zahrnúť neskoršie zmeny, zatvorte dialógové okno a znova ho otvorte. Obsahuje celý diagram bez ohľadu na to, ako ďaleko je zobrazenie posunuté, orezaný na to, čo diagram vykresľuje, s pridaným okrajom, a vždy sa vykresľuje pri 100 % bez ohľadu na priblíženie, ktoré editor práve zobrazuje, takže sa každá tabuľka vykreslí celá. Prvky skryté v ponuke [Možnosti zobrazenia](./table-related-functions.md#table-view-options) – vzťahy, ich označenia ON DELETE a ON UPDATE, skupiny tabuliek alebo poznámky – sa nevykreslia ani sa pre ne nevyhradí miesto a skupiny tabuliek sa vykresľujú za všetkým ostatným.
+Obrázok zachytáva diagram v stave, v akom bol pri otvorení dialógového okna; ak chcete zahrnúť neskoršie zmeny, zatvorte dialógové okno a znova ho otvorte. Jeho tabuľky a stĺpce sú pomenované v Zobrazení názvov, ktoré editor vtedy zobrazoval, a to aj v takom, ktoré bolo prepnuté iba na vašej obrazovke, kým zamknutie `Name View` uchováva v súbore iné – pozrite si časť [Mimo plátna](./logical-names.md#beyond-the-canvas). Farby, ktoré [kontroly slovníkov](./dictionary.md#marks-on-the-canvas) dávajú názvom na plátne, sa nevykresľujú. Obsahuje celý diagram bez ohľadu na to, ako ďaleko je zobrazenie posunuté, orezaný na to, čo diagram vykresľuje, s pridaným okrajom, a vždy sa vykresľuje pri 100 % bez ohľadu na priblíženie, ktoré editor práve zobrazuje, takže sa každá tabuľka vykreslí celá. Prvky skryté v ponuke [Možnosti zobrazenia](./table-related-functions.md#table-view-options) – vzťahy, ich označenia ON DELETE a ON UPDATE, skupiny tabuliek alebo poznámky – sa nevykreslia ani sa pre ne nevyhradí miesto a skupiny tabuliek sa vykresľujú za všetkým ostatným.
 
 Obrázok zapisujú tri tlačidlá a každé z nich nechá dialógové okno otvorené:
 

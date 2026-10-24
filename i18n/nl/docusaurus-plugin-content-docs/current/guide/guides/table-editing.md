@@ -6,9 +6,10 @@ description: Voeg kolommen toe, selecteer, herschik en verwijder ze, schakel kol
 # Tabellen bewerken
 
 Tabellen bewerken biedt in de basis een bewerkervaring die lijkt op die van Excel.  
+De [naamweergave](./logical-names.md#name-view) bepaalt of een tabel in haar kop en rijen de namen, de logische namen of beide toont.  
 De bewerkmodus start met `Enter` of door op een cel te dubbelklikken.  
-`Enter` of `Escape` beëindigt de bewerkmodus. Wat je typt, wordt toegepast terwijl je typt, dus `Escape` behoudt de tekst in plaats van die terug te zetten.  
-Na `Escape` blijven de cel gefocust en de tabel geselecteerd, en een tweede `Escape` heft beide op.  
+`Enter` of `Escape` beëindigt de bewerkmodus. Wat je typt, wordt toegepast terwijl je typt, dus `Escape` behoudt de tekst in plaats van die terug te zetten. Een [domeincel](./logical-names.md#the-domain-cell) is de uitzondering: die kiest alleen uit haar lijst en behoudt nooit wat je typt. Het sluiten van de [cel van een logische naam](./logical-names.md#writing-a-logical-name) met een gewijzigde logische naam kan ook de fysieke naam invullen.  
+Na `Escape` blijven de cel gefocust en de tabel geselecteerd, en een tweede `Escape` heft beide op. Zolang de cel van een logische naam haar [termenlijst](./logical-names.md#completing-term-names) toont, sluit de eerste `Escape` alleen de lijst.  
 Zolang een invoermethode nog aan het samenstellen is, houdt `Escape` de bewerkmodus open.
 
 ![Een tabel toevoegen met Alt + N en twee kolommen invullen](/img/demo-table-edit.webp)
@@ -23,6 +24,7 @@ Er wordt een kolom toegevoegd aan elke geselecteerde tabel.
 Druk op `Tab` om direct naar de bewerkmodus van de volgende cel te gaan.  
 Als je in de laatste cel op `Tab` drukt, wordt er een nieuwe kolom gemaakt.  
 Gebruik `Shift + Tab` om naar de bewerkmodus van de vorige cel te gaan.  
+`Tab` en `Shift + Tab` gaan langs de cellen die de tabel toont, in hun volgorde, dus de naamweergave en View Option → `Domain` bepalen of cellen van de logische naam en domeincellen daartoe behoren — zie [Een logische naam invoeren](./logical-names.md#writing-a-logical-name).  
 De markeringen voor [alternatieve sleutels](./table-related-functions.md#alternate-keys) die na de laatste cel van een rij worden getekend, zijn geen cellen, dus de toetsenbordfocus slaat ze over en ze worden nooit geopend om te bewerken.
 
 ![Met Tab door de cellen van een rij gaan, vanuit de laatste cel een kolom toevoegen en met Shift + Tab teruggaan](/img/demo-table-tab.webp)
@@ -40,6 +42,9 @@ Je kunt ook op een suggestie klikken.
 De lijst toont maximaal tien suggesties tegelijk en scrolt om de rest te tonen.  
 Niets wordt afgedwongen, dus een type dat niet in de lijst staat, kun je vrij typen, inclusief argumenten zoals `VARCHAR(255)`. De lijst sluit zodra wat je typt verder gaat dan een volledige typenaam, zoals bij `VARCHAR(255)` of `BIGINT UNSIGNED`.  
 De suggesties volgen de geselecteerde database. Als je de database wijzigt, verandert wat er wordt aangeboden en blijven bestaande kolommen zoals ze zijn.
+
+Typen in de cel `DataType` van een kolom die aan een domein is gekoppeld, of daar een suggestie accepteren, ontkoppelt de kolom zodra haar type afwijkt van dat van het domein — zie [Domeinen en gegevenstypen](./dictionary.md#domains-and-data-types).  
+In de weergave `Logical Names` toont, zolang View Option → `Domain` uitstaat, de typecel van een kolom die aan een domein met een naam is gekoppeld, de naam van het domein, en opent het bewerken ervan de [domeinkiezer](./logical-names.md#the-domain-cell) in plaats van deze suggesties. Een typecel die een gegevenstype toont, bewerk je zoals hierboven beschreven.
 
 ![De cellen voor DataType invullen met suggesties bij benadering, via de pijltoetsen, Tab en Enter](/img/demo-data-type-autocomplete.webp)
 
@@ -67,6 +72,8 @@ Er zijn vijf manieren:
 
 ![Kolommen selecteren met Shift + Arrow Down, Ctrl/⌘ + click, Shift + click en Alt + A](/img/demo-column-select.webp)
 
+Om de geselecteerde kolommen samen te verplaatsen, sleep je de greep naast de gefocuste kolom — zie [Kolommen herschikken en verplaatsen](#rearranging-and-moving-columns).
+
 Een klik met de rechtermuisknop op de rij van een kolom bepaalt op welke kolommen het contextmenu van de tabel werkt, welke modificatietoets je ook ingedrukt houdt.  
 Op een rij die al geselecteerd is, blijft de selectie behouden en gaat de focus naar die rij. Op elke andere rij wordt alleen die rij geselecteerd. Dit geldt overal op de rij, ook op het sleutelpictogram en op een markering voor een [alternatieve sleutel](./table-related-functions.md#alternate-keys).  
 Om vanuit het menu op meerdere kolommen te werken, zoals bij [Primaire sleutel van een kolom](#column-primary-key) of [Kolommen verwijderen](#column-deletion), klik je dus met de rechtermuisknop op een van de geselecteerde rijen.  
@@ -74,30 +81,37 @@ Op een Mac opent `Ctrl + click` het menu ook, maar dat telt als een gewone klik,
 
 ## Kolommen herschikken en verplaatsen {#rearranging-and-moving-columns}
 
-Werkt bij `dragging` en maakt verplaatsen naar andere tabellen mogelijk.  
-De gesleepte rijen volgen de aanwijzer, en de rijen rond de plek waar je ze neerzet, schuiven opzij om ruimte te maken.  
-Zet de kolom net onder de laatste rij van een tabel neer om die naar het einde van die tabel te verplaatsen. Bij een tabel zonder kolommen kun je overal op de tabel neerzetten.
+Een kolom verplaats je met haar sleepgreep, een kleine knop met een greeppictogram die net buiten de linkerrand van de tabel staat, naast de gefocuste rij.  
+Focus een willekeurige cel van de kolom, door erop te klikken of met de pijltoetsen of `Tab`, en de greep verschijnt naast haar rij. Zolang de focus op de kop van de tabel staat, heeft geen enkele rij er een.  
+De greep wordt vaag getekend totdat de aanwijzer erop staat, en de aanwijzer verandert dan in een hand. Alleen indrukken doet niets: het slepen begint zodra de aanwijzer beweegt, en kan de kolom naar een andere plaats in haar tabel of naar een andere tabel brengen.  
+Boven de rijen van een tabel schuiven de gesleepte rijen op hun plaats, en de rijen rond de plek waar je ze neerzet, schuiven opzij om ruimte te maken. Boven leeg canvas, of boven de kop van een tabel die kolommen heeft, volgt een doorschijnende kopie van de rijen de aanwijzer, met de naam- en typecellen van elke rij zoals de rij ze in de huidige [naamweergave](./logical-names.md#name-view) toont.  
+Zet de kolom net onder de laatste rij van een tabel neer om die naar het einde van die tabel te verplaatsen. Bij een tabel zonder kolommen kun je overal op de tabel neerzetten. De strook net links van een tabel, waar de greep staat, telt ook als de rijen van de tabel, dus als je langs de greep recht naar beneden sleept, herschik je de kolommen zonder dat de aanwijzer de tabel binnengaat.  
+Een kolom die naar een andere tabel wordt verplaatst, behoudt haar logische naam en haar domein.
 
-![Een kolom naar een nieuwe positie slepen en daarna naar een andere tabel](/img/demo-column-move.webp)
+![Een kolom focussen en de greep naast haar rij naar een nieuwe positie slepen, en daarna de greep van een andere kolom naar een andere tabel slepen](/img/demo-column-move.webp)
 
-Met `Ctrl + drag` (Windows/Linux) of `⌘ + drag` (Mac) kun je meerdere kolommen verplaatsen.
+Om meerdere kolommen tegelijk te verplaatsen, [selecteer je ze](#selecting-multiple-columns) en sleep je de greep naast de gefocuste kolom. Zolang de gefocuste kolom een van twee of meer geselecteerde kolommen van haar tabel is, neemt de greep ze allemaal mee; anders neemt hij alleen zijn eigen kolom mee.  
+Er is geen modificatietoets nodig. Als je `Alt` (Windows/Linux) of `⌥` (Mac) ingedrukt houdt op de greep, worden de kolommen verplaatst zoals bij gewoon slepen en wordt er niets gedupliceerd.
 
-![Drie kolommen selecteren en ze met Ctrl/⌘ + drag naar een andere tabel verplaatsen](/img/demo-column-multi-move.webp)
+![Drie kolommen selecteren en daarna de greep naast de gefocuste kolom naar een andere tabel slepen, waarbij de andere geselecteerde kolommen meegaan](/img/demo-column-multi-move.webp)
+
+Slepen dat op de rij van een kolom begint in plaats van op haar greep, verplaatst de tabel, net als slepen aan de kop — zie [Meerdere tabellen verplaatsen](./table-related-functions.md#moving-multiple-tables). `Alt + drag` (Windows/Linux) of `⌥ + drag` (Mac) op een rij dupliceert de tabel — zie [Tabellen en memo's dupliceren](./table-related-functions.md#duplicating-tables-and-memos).  
+Bij een zoomniveau van `70%` en lager, waarbij tabellen alleen hun naam tonen, en in een editor in alleen-lezenmodus wordt geen greep getekend, dus daar kunnen kolommen niet worden herschikt.
 
 ## Kolommen verwijderen {#column-deletion}
 
 Verwijdert de geselecteerde kolommen van de gefocuste tabel. Een klik op een cel selecteert de kolom ervan, dus als je op een cel klikt en op `Delete` drukt, wordt die ene kolom verwijderd.  
 Sneltoetsen:
 
-- `Delete` of `Backspace` (`⌫` op een Mac). Deze verwijderen de geselecteerde kolommen zolang hun tabel het enige geselecteerde element is. Als er geen kolom is geselecteerd (de focus staat op de naam of de opmerking van de tabel), als er ook iets anders is geselecteerd of bij een zoomniveau van `70%` en lager, waarbij tabellen alleen hun naam tonen, verwijderen ze in plaats daarvan de hele selectie — zie [Tabellen en memo's verwijderen](./table-related-functions.md#table-and-memo-deletion).
-- `Alt + Backspace` of `Alt + Delete` (Windows/Linux), `⌥ + ⌫` of `⌥ + Delete` (Mac). Deze verwijderen de geselecteerde kolommen van de gefocuste tabel, ook als er tegelijk andere tabellen of memo's zijn geselecteerd. Ze verwijderen niets terwijl een cel wordt bewerkt of bij `70%` en lager.
+- `Delete` of `Backspace`. Deze verwijderen de geselecteerde kolommen zolang hun tabel het enige geselecteerde element is. Als er geen kolom is geselecteerd (de focus staat op de naam, de [logische naam](./logical-names.md#name-view) of de opmerking van de tabel), als er ook iets anders is geselecteerd of bij een zoomniveau van `70%` en lager, waarbij tabellen alleen hun naam tonen, verwijderen ze in plaats daarvan de hele selectie — zie [Tabellen en memo's verwijderen](./table-related-functions.md#table-and-memo-deletion).
+- `Alt + Backspace` of `Alt + Delete` (Windows/Linux), `⌥ + Backspace` of `⌥ + Delete` (Mac). Deze verwijderen de geselecteerde kolommen van de gefocuste tabel, ook als er tegelijk andere tabellen of memo's zijn geselecteerd. Ze verwijderen niets terwijl een cel wordt bewerkt of bij `70%` en lager.
 
 ![Eén kolom verwijderen en daarna twee geselecteerde kolommen, met Alt + Backspace](/img/demo-column-remove.webp)
 
 Het contextmenu van de tabel doet hetzelfde. Is de tabel het enige geselecteerde element, klik dan met de rechtermuisknop op de rij van een kolom: het laatste item van het menu toont `Delete column`, of `Delete columns` als die rij een van twee of meer geselecteerde kolommen is.
 
 Terwijl een cel wordt bewerkt, wissen `Delete` en `Backspace` alleen tekst. Als je ze buiten de celeditor ingedrukt houdt, verwijderen ze maar één keer.  
-Na het verwijderen gaat de focus naar de dichtstbijzijnde overgebleven kolom boven de gefocuste kolom. Als er daarboven geen meer over is, gaat de focus naar de tabelnaam, ook als er daaronder nog kolommen zijn, dus de volgende `Delete` of `Backspace` verwijdert de tabel in plaats van een kolom.  
+Na het verwijderen gaat de focus naar de dichtstbijzijnde overgebleven kolom boven de gefocuste kolom. Als er daarboven geen meer over is, gaat de focus naar de tabelnaam (in de weergave `Logical Names` de logische naam die op zijn plaats wordt getoond), ook als er daaronder nog kolommen zijn, dus de volgende `Delete` of `Backspace` verwijdert de tabel in plaats van een kolom.  
 Relaties en indexen die een verwijderde kolom gebruiken, worden meeverwijderd. Er wordt niet om bevestiging gevraagd, en de hele verwijdering is één stap in de geschiedenis.
 
 ## Kolommen kopiëren/plakken {#copyingpasting-columns}
@@ -105,8 +119,14 @@ Relaties en indexen die een verwijderde kolom gebruiken, worden meeverwijderd. E
 Werkt als een klembord in tabelvorm.  
 Sneltoetsen: `Ctrl + C` (Windows/Linux) of `⌘ + C` (Mac), `Ctrl + V` (Windows/Linux) of `⌘ + V` (Mac)
 
-Kopiëren naar een spreadsheet, plakken vanuit een spreadsheet en plakken in de tabel waarvan een kolomcel gefocust is, gebruiken de cellen die de tabellen tonen, in de volgorde waarin ze die tonen — zie [Weergaveopties voor tabellen](./table-related-functions.md#table-view-options) en [Kolomvolgorde aanpassen](./settings.md#adjusting-column-order).  
-Kolommen die in de editor zijn gekopieerd en worden geplakt terwijl de kop van een tabel is geselecteerd, of in de andere geselecteerde tabellen, nemen elke cel van de gekopieerde kolommen mee, ook verborgen cellen zoals Uniek en Automatisch ophogen.  
+Kopiëren naar een spreadsheet, plakken vanuit een spreadsheet en plakken in de tabel waarvan een kolomcel gefocust is, gebruiken de cellen die de tabellen tonen, in de volgorde waarin ze die tonen — zie [Weergaveopties voor tabellen](./table-related-functions.md#table-view-options), [Kolomvolgorde aanpassen](./settings.md#adjusting-column-order) en [Naamweergave](./logical-names.md#name-view). De naamweergave verandert wat sommige van die cellen bevatten:
+
+- In de weergave `Logical Names` bevat de cel van de naam de logische naam, of niets zolang die leeg is. Zolang View Option → `Domain` uitstaat, bevat de typecel de naam van het domein van de kolom waar ze er een toont, en anders het gegevenstype.
+- In de weergave `Both Names` wordt de cel `Logical Name` gekopieerd en geplakt op de plaats waar de kolomvolgorde haar zet.
+- Een getoonde domeincel bevat de naam van het domein, of niets voor een kolom die geen domein toont.
+
+Kolommen die in de editor zijn gekopieerd en worden geplakt terwijl de kop van een tabel is geselecteerd, of in de andere geselecteerde tabellen, nemen elke cel van de gekopieerde kolommen mee, ook verborgen cellen zoals Uniek en Automatisch ophogen, en hun logische namen.  
+Ze behouden een domeinkoppeling alleen zolang dit diagram datzelfde domein bevat, niet alleen een domein met dezelfde naam, en het domein nog het type van de gekopieerde kolom heeft. Anders komen ze zonder koppeling terecht, met het type waarmee ze zijn gekopieerd. Hun namen gelden als door jou ingevoerd, tenzij een geplakte naam leeg is en de logische naam er een afleidt — zie [Fysieke namen afleiden](./dictionary.md#deriving-physical-names).  
 Markeringen voor [alternatieve sleutels](./table-related-functions.md#alternate-keys) zoals `AK1.1` zijn geen cellen, dus kopiëren en plakken laten ze weg, ook als ze worden getoond.
 
 Je kunt vanuit de editor in Excel plakken en vanuit Excel terug in de editor.  
@@ -131,6 +151,14 @@ Waar een plakactie terechtkomt, hangt af van de focus:
 - Als een kolomcel gefocust is, worden de geselecteerde rijen van die tabel, en daarna de rijen onder de laatste daarvan, op volgorde overschreven, zoveel als er zijn geplakt. Rijen tussen afzonderlijke selecties worden overgeslagen. Een overschreven rij krijgt de geplakte waarden in haar zichtbare cellen en behoudt haar verborgen cellen, en de rijen die overblijven, worden als nieuwe kolommen toegevoegd. Aan elke andere geselecteerde tabel worden de geplakte rijen als nieuwe kolommen toegevoegd.
 
 ![Twee kolommen kopiëren en ze in één keer in twee geselecteerde tabellen plakken](/img/demo-copy-column-multi.webp)
+
+Een geplakte rij schrijft logische namen en domeinen als volgt:
+
+- Een logische naam, uit een cel `Logical Name` of uit de cel van de naam in de weergave `Logical Names`, geldt als volledig getypt. Zolang de naam van de kolom leeg of nog afgeleid is, leiden de [woordenboeken](./dictionary.md#deriving-physical-names) daaruit de fysieke naam af en koppelen ze het domein dat de term ervan oplevert, tenzij de eigen domeincel van de rij er een koppelt. Een naam die dezelfde rij plakt, blijft behouden en geldt als door jou ingevoerd.
+- Een domeincel, of de typecel in de weergave `Logical Names` zolang View Option → `Domain` uitstaat, koppelt het domein dat de tekst ervan noemt, als het diagram zo'n domein bevat. Elke andere tekst, of een lege cel, koppelt geen domein en ontkoppelt de kolom, zelfs van een domein van het geplakte type. Tekst in de typecel die geen domein noemt, wordt als gegevenstype gelezen. Rijen die in de editor zijn gekopieerd, koppelen in plaats daarvan het domein waarmee ze zijn gekopieerd, en alleen zolang dit diagram het met het gekopieerde type bevat, net als nieuwe kolommen.
+- Een gekoppeld domein geeft de kolom zijn gegevenstype, tenzij de rij een eigen type plakt. Dan wordt een domein van een ander type niet gekoppeld, en krijgt de kolom het geplakte type.
+- In een rij zonder domeincel ontkoppelt een geplakt type de kolom van een domein van een ander type, net als het typen ervan.
+- Geen enkele plakactie neemt een type mee via [Gegevenstypen via relaties synchroniseren](./settings.md#relationship-datatype-sync).
 
 ## Tabellen en memo's kopiëren/plakken {#copyingpasting-tables-and-memos}
 

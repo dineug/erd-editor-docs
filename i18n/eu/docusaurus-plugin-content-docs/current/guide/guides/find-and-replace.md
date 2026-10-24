@@ -1,12 +1,12 @@
 ---
-sidebar_position: 9
-description: Bilatu taulen, zutabeen, indizeen eta taula-taldeen izenak, iruzkinak eta oharrak Arakatzailearen goialdetik, igaro bat-etortzeak banan-banan haren zuhaitzean eta oihalean, eta ordeztu bat-etortze bat edo guztiak.
+sidebar_position: 10
+description: Bilatu taulen, zutabeen, indizeen eta taula-taldeen izenak, izen logikoak, iruzkinak eta oharrak Arakatzailearen goialdetik, igaro bat-etortzeak banan-banan haren zuhaitzean eta oihalean, eta ordeztu bat-etortze bat edo guztiak.
 ---
 
 # Bilatu eta ordeztu
 
 Testua diagrama osoan bilatzen du, ERD oihaleko bat-etortze bakoitzera eramaten zaitu, eta bat-etortze bat edo guztiak ordezten ditu.  
-Zazpi testu mota bilatzen ditu: taulen izenak, taulen iruzkinak, zutabeen izenak, zutabeen iruzkinak, oharrak, indizeen izenak eta taula-taldeen izenak. Ikus [Zer bilatzen duen](#what-it-searches).
+Zortzi testu mota bilatzen ditu: taulen izenak, taulen iruzkinak, zutabeen izenak, zutabeen iruzkinak, oharrak, indizeen izenak, taula-taldeen izenak, eta taulen eta zutabeen [izen logikoak](./logical-names.md). Ikus [Zer bilatzen duen](#what-it-searches).
 
 ERD oihalaren ezkerrean ainguratutako [Arakatzailea](./explorer.md) panelaren goialdean dago, Arakatzailearen titulu-barraren eta zuhaitzaren artean. Ez du titulu propiorik. Goitik behera, hauek ditu:
 
@@ -30,7 +30,7 @@ Arakatzailea ixtea, Arakatzailea irekita dagoen bitartean lasterbideak eta bi `T
 [Bazterrean gelditzen denean](./explorer.md#when-it-stands-aside) atalean azaltzen da beste fitxa batek eta zen moduak nola ezkutatzen duten, eta Diferentzia-ikustaileak, Denbora-bidaiak eta Antolaketa automatikoaren aurrebistak nola ezkutatzen duten eta irekitzea nola eragozten duten. [Oihalaren ondoan](./explorer.md#beside-the-canvas) atalean azaltzen da Arakatzailea erakusteko estuegia den editore baten kasua.
 
 Berriro irekitzean, azken bilaketa-testua mantentzen da, baita Ordeztu eremuko testua, [aukerak](#options), aktibatuta zeuden [testu motak](#what-it-searches), eta `Replace` errenkada eta testu motak zabalduta zeuden ala ez ere.  
-Editorea irekita dagoen bitartean mantentzen dira, eta ez dira dokumentuan gordetzen. Berriki irekitako editore bat aukera guztiak desaktibatuta, `Replace` errenkada eta testu motak tolestuta, eta lau izen motak bakarrik aktibatuta dituela hasten da. Ikus [Zer bilatzen duen](#what-it-searches).
+Editorea irekita dagoen bitartean mantentzen dira, eta ez dira dokumentuan gordetzen. Berriki irekitako editore bat aukera guztiak desaktibatuta, `Replace` errenkada eta testu motak tolestuta, eta lau izen motak eta `Logical names` bakarrik aktibatuta dituela hasten da. Ikus [Zer bilatzen duen](#what-it-searches).
 
 ## Nabigatzailearen bilaketa-barra {#the-browsers-find-bar}
 
@@ -46,15 +46,16 @@ Editorea txertatzen duen orri batek lasterbidea alda edo ken dezake. Ikus [Laste
 
 ## Zer bilatzen duen {#what-it-searches}
 
-Zazpi botoik aukeratzen dituzte bilatzen diren testu motak, ordena honetan: `Table names`, `Table comments`, `Column names`, `Column comments`, `Memos`, `Index names` eta `Table group names`.  
+Zortzi botoik aukeratzen dituzte bilatzen diren testu motak, ordena honetan: `Table names`, `Table comments`, `Column names`, `Column comments`, `Memos`, `Index names`, `Table group names` eta `Logical names`.  
 Hasieran tolestuta daude. Kontagailuaren errenkadaren amaierako `Search In` botoiak errenkada horren azpian zabaltzen ditu eta berriro tolesten ditu, eta nabarmenduta dago ikusgai dauden bitartean.  
-Nabarmenduta dagoen mota-botoi bat aktibatuta dago. Egin klik batean aktibatzeko edo desaktibatzeko, eta bilaketa berriro exekutatzen da. Zazpiak desaktibatuta badaude, ez da ezer aurkitzen.
+Nabarmenduta dagoen mota-botoi bat aktibatuta dago. Egin klik batean aktibatzeko edo desaktibatzeko, eta bilaketa berriro exekutatzen da. Zortziak desaktibatuta badaude, ez da ezer aurkitzen.
 
-Bilaketa lehen aldiz lau izen motak aktibatuta irekitzen da: `Table names`, `Column names`, `Index names` eta `Table group names`; beraz, izen-aldaketa batek ez ditu iruzkinak eta oharrak ukitzen, horiek aktibatzen ez badituzu.  
+Bilaketa lehen aldiz lau izen motak (`Table names`, `Column names`, `Index names` eta `Table group names`) eta `Logical names` aktibatuta irekitzen da; beraz, izen-aldaketa batek ez ditu iruzkinak eta oharrak ukitzen, horiek aktibatzen ez badituzu.  
+`Logical names` mota bakarra da tauletako zein zutabeetako izen logikoetarako.  
 Indizeen izenak [Taularen propietateak](./table-related-functions.md#indexes) paneleko `Indexes` fitxako indizeen izenak dira, ez horien gainean zerrendatutako `PK_` eta `UQ_` gakoak.
 
-Ez da beste ezer bilatzen: ez datu motak, ez balio lehenetsiak, ez indize baten zutabeak, ez datu-basearen izena, ez [SQL eskema](./schema-sql.md) bere `Before tables` eta `After tables` scriptekin, ez sortutako kodea.  
-[Taulen ikuspegi-aukera](./table-related-functions.md#table-view-options) batek ezkutatutako iruzkin bat bilatu egiten da hala ere. View Option → `Memos` bidez ezkutatutako oharrak eta View Option → `Table Groups` bidez ezkutatutako [taula-taldeak](./table-groups.md#hiding-groups), berriz, ez dira bilatzen, beren botoia aktibatuta egon arren; beraz, `Replace All` ekintzak ez du inoiz ikusten ez duzun oharrik berridazten, ezta ikusten ez duzun talderen baten izenik aldatzen ere.
+Ez da beste ezer bilatzen: ez datu motak, ez zutabe baten domeinua, ez balio lehenetsiak, ez indize baten zutabeak, ez datu-basearen izena, ez [SQL eskema](./schema-sql.md) bere `Before tables` eta `After tables` scriptekin, ez sortutako kodea, ez [Hiztegia](./dictionary.md) fitxako orriak, horiek [beren bilaketa](./dictionary.md#searching) baitute.  
+Izen logikoak bilatu egiten dira [Izenen ikuspegiak](./logical-names.md#name-view) marrazten duena edozein dela ere, `Physical Names` barne, nahiz eta bertan oihalak ez duen bat ere erakusten. [Taulen ikuspegi-aukera](./table-related-functions.md#table-view-options) batek ezkutatutako iruzkin bat ere bilatu egiten da. View Option → `Memos` bidez ezkutatutako oharrak eta View Option → `Table Groups` bidez ezkutatutako [taula-taldeak](./table-groups.md#hiding-groups), berriz, ez dira bilatzen, beren botoia aktibatuta egon arren; beraz, `Replace All` ekintzak ez du inoiz ikusten ez duzun oharrik berridazten, ezta ikusten ez duzun talderen baten izenik aldatzen ere.
 
 ## Aukerak {#options}
 
@@ -91,19 +92,21 @@ Kontagailuak, eremuen azpiko errenkadaren hasieran, non zauden adierazten du. Hu
 Bilatu eremuak testua duen bitartean, Arakatzailearen [zuhaitzak](./explorer.md#the-tree) emaitzak erakusten ditu diagrama osoaren ordez: bat-etortze bat duten errenkadak eta horien gaineko errenkadak bakarrik. Ezer bat ez datorrenean, edo adierazpen erregularra ezin denean analizatu, hutsik dago. Bilaketa-testua ezabatzean, zuhaitz osoa itzultzen da, lehen bezala tolestuta.
 
 - `Tables`, `Table Groups` eta `Memos` karpetak bat-etortzeren bat dutenean bakarrik agertzen dira, eta karpeta bakoitzak erakusten duen kopurua emaitzetan zuzenean haren azpian dauden errenkaden kopurua da.
-- `Tables` karpetaren azpian bat-etortzeren bat duten taulak daude, izenaren arabera ordenatuta. Taula bakoitzaren azpian errenkada bat dago haren iruzkineko bat-etortze bakoitzeko; ondoren, `Columns` karpeta bat, bat-etortzeren bat duten zutabeekin, zutabeen ordenan, bakoitza bere iruzkineko bat-etortze bakoitzeko errenkada batekin; eta ondoren, `Indexes` karpeta bat, izena bat datorren indizeekin. Ez dago `Foreign Keys` karpetarik.
+- `Tables` karpetaren azpian bat-etortzeren bat duten taulak daude, izenaren arabera ordenatuta, inoiz ez izen logikoaren arabera. Taula bakoitzaren azpian errenkada bat dago haren iruzkineko bat-etortze bakoitzeko; ondoren, `Columns` karpeta bat, bat-etortzeren bat duten zutabeekin, zutabeen ordenan, bakoitza bere iruzkineko bat-etortze bakoitzeko errenkada batekin; eta ondoren, `Indexes` karpeta bat, izena bat datorren indizeekin. Ez dago `Foreign Keys` karpetarik.
 - `Table Groups` karpetaren azpian izena bat datorren taldeak daude, izenaren arabera ordenatuta, beren taularik gabe. Aurkitutako taula bat `Tables` karpetaren azpian agertzen da.
 - `Memos` karpetaren azpian bat-etortzeren bat duten oharrak daude, dokumentuko ordenan, bakoitza bere lehen lerroarekin erakutsita eta bere bat-etortze bakoitzeko errenkada batekin.
 
-Izen bateko bat-etortzea izen horren beraren errenkadan nabarmentzen da; beraz, bilaketa-testua bi aldiz duen izen bat bi nabarmentze dituen errenkada bakarra da.  
+Izen bateko bat-etortzea izen horren beraren errenkadan nabarmentzen da; beraz, bilaketa-testua bi aldiz duen izen bat bi nabarmentze dituen errenkada bakarra da. Taula edo zutabe baten izen logikoko bat-etortze bat taula edo zutabe horren errenkadan ere jartzen da, inoiz ez bere errenkada propioan.  
+Errenkada horiek taula edo zutabea [Izenen ikuspegiak](./logical-names.md#beyond-the-canvas) erakusten duen bezala izendatzen dute, eta errenkada batek erakuts ditzakeen bi izenetako bakoitzak bere bat-etortzeak bakarrik nabarmentzen ditu. Haren ikuspegiak kanpoan uzten duen izenean bakarrik aurkitutako errenkada batek, `Physical Names` ikuspegiko izen logikoan edo `Logical Names` ikuspegiko izenean, izen hori gehitzen du erakusten duenaren ondoren, `Both Names` ikuspegian bezala lausotuta, bat-etortzea nabarmenduta duela. Erakusten duen izenak ere bat-etortze bat duenean, errenkadak izen hori bakarrik erakusten du; beraz, haren ikuspegiak kanpoan uzten duen izeneko bat-etortzeak zenbatu eta banan-banan igarotzen dira, baina ez dira nabarmentzen.  
 Iruzkin edo ohar bateko bat-etortze batek bere errenkada propioa du: hizketa-burbuila bat taula edo zutabe baten iruzkinerako, edo paper itsaskor bat ohar baterako, eta ondoren testuaren zati bat, bat-etortzea nabarmenduta duela. Testu luze bat `…` ikurrarekin mozten da, eta lerro-jauziak zuriune gisa agertzen dira. Pasatu sagua errenkadaren gainetik testu osoa ikusteko.  
 Gainerako errenkada guztiek bilaketatik kanpo duten itxura bera dute: zutabe batek bere datu mota erakusten du, indize batek bere zutabeak, eta izen huts batek `unnamed` dio.
 
 Azpian errenkadak dituen errenkada oro zabalduta agertzen da bilaketa bat hastean. Tolesten duzun errenkada bat, edo `Collapse All` botoiak tolesten duena, tolestuta geratzen da haren azpiko bat-etortze bat uneko bihurtu arte, edo bilaketa-testua, `Match Case`, `Match Whole Word`, `Use Regular Expression` edo testu mota bat aldatu arte, edo bilaketa berriro ireki arte lasterbidearekin edo `Toggle Explorer` aukera batekin.  
 Uneko bat-etortzearen errenkada nabarmendu egiten da, eta ikusgai geratu arte korritzen da. Zuhaitzak bat-etortze guztiak zerrendatzen ditu, zenbat diren gorabehera.  
-Bat-etortzeak zuhaitzaren ordenan igarotzen dira banan-banan: taulaz taula, taularen izena, haren iruzkina, haren zutabe bakoitzaren izena eta iruzkina zutabeen ordenan, eta haren indizeen izenak; ondoren, taula-taldeen izenak; ondoren, oharrak.
+Bat-etortzeak zuhaitzaren ordenan igarotzen dira banan-banan: taulaz taula, taularen izen logikoa, izena eta iruzkina, ondoren haren zutabe bakoitzaren izen logikoa, izena eta iruzkina zutabeen ordenan, eta ondoren haren indizeen izenak; ondoren, taula-taldeen izenak; ondoren, oharrak.
 
-Emaitzek dokumentuari jarraitzen diote Arakatzailea ikusgai dagoen bitartean. Edizioak eteten direnean, bilatutako testuetako edozein aldaketak bilaketa berriro abiarazten du, eta uneko bat-etortzea ez da aldatzen, oraindik badago. Horren barruan sartzen dira izen, iruzkin edo ohar-testu bat editatzea, taula, zutabe, indize, ohar edo taula-talde bat gehitzea edo kentzea, zutabe bat mugitzea, eta View Option bidez oharrak edo taula-taldeak ezkutatzea edo erakustea, eta horrek haien bat-etortzeak zuhaitzetik kentzen ditu edo berriro ekartzen ditu. Oihaleko edizio bat, desegite edo berregite bat, inportazio bat, eta lankide batek edo kodetze-agente batek egindako edizio bat, denak hartzen dira kontuan. Hautatzea, oihalean taulak, oharrak edo taldeak mugitzea, korritzea, zooma aldatzea eta sagua gainetik pasatzea, ez.  
+Emaitzek dokumentuari jarraitzen diote Arakatzailea ikusgai dagoen bitartean. Edizioak eteten direnean, bilatutako testuetako edozein aldaketak bilaketa berriro abiarazten du, eta uneko bat-etortzea ez da aldatzen, oraindik badago. Horren barruan sartzen dira izen, izen logiko, iruzkin edo ohar-testu bat editatzea, taula, zutabe, indize, ohar edo taula-talde bat gehitzea edo kentzea, zutabe bat mugitzea, eta View Option bidez oharrak edo taula-taldeak ezkutatzea edo erakustea, eta horrek haien bat-etortzeak zuhaitzetik kentzen ditu edo berriro ekartzen ditu. Oihaleko edizio bat, desegite edo berregite bat, inportazio bat, eta lankide batek edo kodetze-agente batek egindako edizio bat, denak hartzen dira kontuan. Hautatzea, oihalean taulak, oharrak edo taldeak mugitzea, korritzea, zooma aldatzea eta sagua gainetik pasatzea, ez.  
+Izenen ikuspegia aldatzeak ere ez, ez baitu bilaketak irakurtzen duen testurik aldatzen: bat-etortze berak geratzen dira, eta errenkadek ikuspegi berriak erakusten dituen izenak hartzen dituzte.  
 Arakatzailea itxita edo ikusgai ez dagoen bitartean egindako edizioak bilatu egiten dira Arakatzailea berriro agertu bezain laster.
 
 ## Bat-etortze batera joatea {#going-to-a-match}
@@ -113,17 +116,17 @@ Mugimenduak buelta ematen du bi muturretan. Lehen aldiz mugitu arte ez dago unek
 
 Emaitzetako errenkada batean klik egiteak, edo teklatua errenkada horretan dagoela `Enter` edo `Space` sakatzeak, hauetako bat egiten du:
 
-- Bere izenean bat-etortzeren bat duen errenkada batek izen horren lehen bat-etortzera eramaten du.
+- Bere izenean edo izen logikoan bat-etortzeren bat duen errenkada batek haren lehen bat-etortzera eramaten du, izen logikokoa izenekoaren aurretik.
 - Iruzkin edo ohar baten zati bat erakusten duen errenkada batek bat-etortze horretara eramaten du.
-- Beste edozein errenkadak, adibidez izena bat ez datorren taula batek edo ohar baten errenkada propioak, errenkadak adierazten duenera eramaten du, eta uneko bat-etortzea dagoen bezala uzten du. Ikus [Errenkada batera joatea](./explorer.md#going-to-a-row).
+- Beste edozein errenkadak, adibidez izena eta izen logikoa bat ez datozen taula batek edo ohar baten errenkada propioak, errenkadak adierazten duenera eramaten du, eta uneko bat-etortzea dagoen bezala uzten du. Ikus [Errenkada batera joatea](./explorer.md#going-to-a-row).
 - Karpeta bat tolestu edo zabaldu egiten da.
 
 Bat-etortze bat uneko bihurtzen den bakoitzean, zuhaitzak haren gaineko errenkada tolestuak zabaltzen ditu eta teklatuaren errenkada hara eramaten du; beraz, zuhaitzeko gezi-teklek handik jarraitzen dute.
 
 Bat-etortze batera joateak Taularen propietateak panela ixten du, irekita badago, eta ondoren:
 
-- Taula baten izena edo iruzkina, edo zutabe baten izena edo iruzkina bada, taula bakarrik hautatzen du, aurrera ekartzen du, eta fokuratutako gelaxka bat-etortzea duen gelaxkan jartzen du. [Taulen ikuspegi-aukera](./table-related-functions.md#table-view-options) batek ezkutatutako iruzkin bateko bat-etortzeak, aldiz, fokuratutako gelaxka ondoko izenean jartzen du.
-- Indize baten izena bada, indizearen taula bakarrik hautatzen du eta aurrera ekartzen du, eta fokuratutako gelaxka taularen izenean jartzen du, gelaxka hori dagoeneko taula horretan ez badago. Indizeen izenak ez dira oihalean marrazten.
+- Taula edo zutabe baten izena, izen logikoa edo iruzkina bada, taula bakarrik hautatzen du, aurrera ekartzen du, eta fokuratutako gelaxka bat-etortzea duen gelaxkan jartzen du. [Taulen ikuspegi-aukera](./table-related-functions.md#table-view-options) batek ezkutatutako iruzkin bateko bat-etortzeak, aldiz, fokuratutako gelaxka ondoko izenean jartzen du. [Izenen ikuspegiak](./logical-names.md#name-view) izenarentzat edo izen logikoarentzat gelaxkarik marrazten ez duen lekuan, fokuratutako gelaxka haren lekuan marrazten denera joaten da: izenera `Physical Names` ikuspegian, eta izen logikora `Logical Names` ikuspegian.
+- Indize baten izena bada, indizearen taula bakarrik hautatzen du eta aurrera ekartzen du, eta fokuratutako gelaxka taularen izenean jartzen du, edo haren izen logikoan `Logical Names` eta `Both Names` ikuspegietan, gelaxka hori dagoeneko taula horretan ez badago. Indizeen izenak ez dira oihalean marrazten.
 - Taula-talde baten izena bada, taldea bakarrik hautatzen du eta aurrera ekartzen du bere taulekin.
 - Ohar bat bada, oharra bakarrik hautatzen du eta aurrera ekartzen du.
 
@@ -151,7 +154,7 @@ Segida batek dirauen bitartean, izena aldatzen dion taula edo taula-talde batek 
 
 `Replace All` ekintza Ordeztu eremuan `Ctrl + Enter` (Windows/Linux) edo `⌘ + Enter` (Mac) sakatzean exekutatzen da, edo bere botoiarekin:
 
-- Aktibatuta dauden testu motetako bat-etortze guztiak ordezten ditu, eta beste motak bere horretan uzten ditu. Mota lehenetsiekin, taulen, zutabeen, indizeen eta taula-taldeen izenak aldatzen ditu, eta iruzkinak eta oharrak ez dira ukitzen.
+- Aktibatuta dauden testu motetako bat-etortze guztiak ordezten ditu, eta beste motak bere horretan uzten ditu, ordeztutako izen logiko batek eratortzen dituen izen fisikoak izan ezik; horiek idatzi egiten ditu `Table names` eta `Column names` desaktibatuta egon arren. Ikus behean. Mota lehenetsiekin, taulen, zutabeen, indizeen eta taula-taldeen izenak aldatzen ditu, eta taulen eta zutabeen izen logikoak berridazten ditu; iruzkinak eta oharrak ez dira ukitzen.
 - Aldatzen duen guztia desegite-urrats bat da. Ikus [Keinu bat, urrats bat](./undo-redo.md#one-gesture-one-step).
 - Kontagailuak `Replaced N matches` dio, eta testua benetan aldatu zaien agerraldiak bakarrik zenbatzen ditu. Bat ere aldatu ez denean, `No changes` dio eta historian ez da ezer erregistratzen, `(user)` adierazpen erregularra `$1` balioarekin ordeztean gertatzen den bezala.
 - Ondoren, emaitzak berriro bilatzen dira uneko bat-etortzerik gabe; beraz, testu berriak dituen bat-etortzeak zerrenda ditzakete.
@@ -171,8 +174,12 @@ Ordeztu eremuko testua nola erabiltzen den:
   - Lehen zegoen bezala berridatzitako bat-etortze bat ez da zenbatzen: `Match Case` desaktibatuta, `customer` testua `Customer` testuarekin ordezteak `customer`, `Customer` eta `CUSTOMER` zeuden bezala berridazten ditu, eta horietako bat ere ez da zenbatzen.
 - Ordeztu eremua hutsik badago, bat-etortzea ezabatu egiten da.
 
-Ordezpen bat edizio arrunt bat da, taularen izen berria, iruzkina, zutabearen izena edo oharraren testua zuk zeuk idaztea, indizearen izena Taularen propietateak panelean aldatzea edo taula-taldearen izena aldatzea bezalakoa.  
+Ordezpen bat edizio arrunt bat da, taularen izen berria, zutabearen izena, izen logikoa, iruzkina edo oharraren testua zuk zeuk idaztea, indizearen izena Taularen propietateak panelean aldatzea edo taula-taldearen izena aldatzea bezalakoa.  
 Historian erregistratzen da, eta lankideengana eta kodetze-agente batengana iristen da, beste edozein edizio bezala.
+
+Beraz, ordezpen batek idazten duen taula- edo zutabe-izen bat zuk idatzitako izen bihurtzen da, eta geroago idatzitako izen logiko batek dagoen bezala uzten du, [Izen fisikoak berriro eratortzea](./dictionary.md#derive-physical-names-again) ekintzak hiztegiei itzultzen dien arte. Ordezpen batek hutsik uzten duen izen bat, aldiz, hiztegiei itzultzen zaie, garbitutako edozein izen bezala. Ikus [Zuk idatzitako izenak](./dictionary.md#names-of-your-own).  
+Taula edo zutabe baten izen fisikoa hutsik dagoen edo bera ere eratorria den bitartean, ordeztutako izen logiko batek hiztegietatik eratortzen du, izen logikoaren gelaxka izen logiko berri batekin ixteak egiten duen bezala. Ikus [Izen fisikoak eratortzea](./dictionary.md#deriving-physical-names). Kasu horretan, izen logiko berria termino bat duen zutabe batek terminoaren domeinua ere hartzen du, eta harekin batera domeinuaren datu mota. Eratortzen duena ordezpenaren desegite-urratsaren parte da, eta ez da `Replaced N matches` kopuruan zenbatzen.  
+`Replace All` ekintza batek taula edo zutabe bereko izen logikoa eta izena biak berridazten dituenean, idazten duen izena nagusitzen da izen logiko berriak eratorriko lukeenaren gainetik.
 
 ## Bilaketa-eremuetako teklak {#keys-in-the-search-fields}
 

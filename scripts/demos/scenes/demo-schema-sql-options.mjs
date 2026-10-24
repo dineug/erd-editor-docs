@@ -2,9 +2,9 @@
  * Schema SQL options: Export ▸ Schema SQL opens the Schema SQL tab with its
  * options panel beside the DDL. Statements goes from If not exists to Create
  * and then to Drop & re-create, which adds the DROP block and a warning;
- * Header goes from CREATE + USE to USE, which keeps only `USE shop;`; and a
- * script typed into Before tables shows at the top of the DDL once the field
- * is left.
+ * Header goes from CREATE + USE to USE, which keeps only `USE shop;`; and,
+ * once the panel is wheeled up to it, a script typed into Before tables shows
+ * at the top of the DDL once the field is left.
  */
 import { center } from '../lib/recorder.mjs';
 import { hoverMenuPath, labelPoint, seedShopRing } from './_io-settings-helpers.mjs';
@@ -81,6 +81,18 @@ export default {
     await press('statements', 'Create', 700);
     await press('statements', 'Drop & re-create', 1200);
     await press('header', 'USE', 900);
+
+    // The panel now runs past the window (the logical-name switch row and the
+    // warning push the scripts down), and Before tables sits under the Save
+    // file and Copy footer: wheel the panel up from the blank space right of
+    // the Header row, which lands on the warning, off every button.
+    const createUse = await segmentBox(d, 'header', 'CREATE + USE');
+    await d.moveTo(createUse.x + createUse.width + 35, createUse.y + createUse.height / 2, 450);
+    await d.sleep(150);
+    await d.wheel(30, { steps: 4, gap: 45 });
+    mark('scrolled');
+    await d.sleep(450);
+    await d.shot('scrolled');
 
     const before = await waitDom(d, '#schema-sql-before');
     await d.click(before.x + 40, before.y + before.height / 2, { duration: 500 });

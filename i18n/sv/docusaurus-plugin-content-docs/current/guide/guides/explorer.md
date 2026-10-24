@@ -1,5 +1,5 @@
 ---
-sidebar_position: 8
+sidebar_position: 9
 description: Bläddra bland diagrammets tabeller med deras kolumner, index och sekundärnycklar, dess tabellgrupper och dess anteckningar i ett träd som är dockat bredvid ERD-arbetsytan, och gå till vilket av dem som helst med ett klick.
 ---
 
@@ -26,11 +26,11 @@ Inget av det sparas i filen, registreras i ångrahistoriken, delas med medarbeta
 - `Toggle Explorer` i arbetsytans snabbmeny: högerklicka på en tom plats på ERD-arbetsytan, utanför alla [tabellgrupper](./table-groups.md). Det ligger efter `New Table`, `New Memo` och `New Table Group`, före `Relationship`.
 
 De två posterna `Toggle Explorer` visar kortkommandot till höger.  
-Knappen i verktygsfältet, kortkommandot och posten i snabbsökningen fungerar från varje flik. Från fliken Visualisering, Schema SQL, Kodgenerator eller Inställningar växlar de först till ERD-fliken, eftersom utforskaren bara visas där.
+Knappen i verktygsfältet, kortkommandot och posten i snabbsökningen fungerar från varje flik. Från fliken Visualisering, Schema SQL, Kodgenerator, Ordlista eller Inställningar växlar de först till ERD-fliken, eftersom utforskaren bara visas där.
 
 Knappen i verktygsfältet öppnar och stänger bara panelen. Den placerar inte textmarkören i sökfältet, och den lämnar panelen Tabellegenskaper, temaverktyget och väljaren `Display Language` öppna.  
 Kortkommandot och de två posterna `Toggle Explorer` öppnar utforskaren med fokus på sökningen: textmarkören hamnar i sökfältet med dess text markerad, och en öppen dialogruta av de fem i [Dialogrutor bredvid utforskaren](#dialogs-beside-it) stängs. Vad sökningen behåller mellan öppningarna står i [Öppna och stänga](./find-and-replace.md#opening-and-closing) i Sök och ersätt.  
-Kortkommandot gör ingenting medan en tabellcell, en anteckning eller en tabellgrupps namn redigeras.
+Kortkommandot gör ingenting medan en tabellcell, en anteckning eller en tabellgrupps namn redigeras, eller medan en cellredigering är öppen på fliken [Ordlista](./dictionary.md#keys-on-the-tab), även en terms domänlista.
 
 Knappen i verktygsfältet ser intryckt ut medan utforskaren är öppen på ERD-fliken och inte dold av [zenläget](#when-it-stands-aside). Så länge den gör det stänger knappen, kortkommandot och endera posten `Toggle Explorer` utforskaren, och om tangentbordsfokus var i panelen går det tillbaka till editorn.  
 Kortkommandot stänger den aldrig medan snabbsökningen eller någon av de fem dialogrutorna är öppen. I stället stänger det paletten eller dialogrutan och flyttar tangentbordsfokus till sökfältet, med dess text markerad och, om utforskaren redan visades, med den aktuella träffen kvar. Posten `Toggle Explorer` i snabbsökningen gör inget sådant undantag: om du kör den stängs paletten och sedan en öppen utforskare.
@@ -84,22 +84,27 @@ Namnlisten visar `Explorer` och innehåller två knappar: `Collapse All` och kna
 
 Den översta nivån innehåller tre mappar, i den här ordningen: `Tables`, `Table Groups` och `Memos`. Under varje tabell finns dess egna mappar `Columns`, `Indexes` och `Foreign Keys`.  
 En mapp utan innehåll visas inte, så ett tomt diagram visar inga rader alls. `Table Groups` utelämnas också medan [View Option](./table-related-functions.md#table-view-options) → `Table Groups` döljer grupperna, och `Memos` medan View Option → `Memos` döljer anteckningarna.  
-En mapprad visar en mappikon, sitt namn och längst ut antalet rader direkt under den, så antalet bredvid `Tables` är antalet tabeller i diagrammet.
+En mapprad visar en mappikon, sitt namn och längst ut antalet rader direkt under den, så antalet bredvid `Tables` är antalet tabeller i diagrammet. Antalet delar upp tusental så som visningsspråket gör, alltid med siffrorna 0 till 9, till exempel `1,234` på engelska och `1.234` på tyska.
 
 Tabeller listas efter namn, utan hänsyn till skiftläge, och tabeller med samma namn behåller dokumentets ordning. Tabellgrupper listas på samma sätt, och likaså tabellerna under varje grupp. En tabells kolumner behåller tabellens egen ordning, och dess index, dess sekundärnycklar och anteckningarna behåller dokumentets.  
-Trädet följer diagrammet när det ändras, oavsett om det sker genom en redigering på arbetsytan, ett ångrat eller omgjort steg, en import, en medarbetare eller en kodagent, så om du byter namn på en tabell flyttas dess rad.
+Trädet följer diagrammet när det ändras, oavsett om det sker genom en redigering på arbetsytan, ett ångrat eller omgjort steg, en import, en medarbetare eller en kodagent, så om du byter namn på en tabell flyttas dess rad.  
+Ordningen följer namnet i varje [namnvisning](./logical-names.md#name-view), aldrig det logiska namnet. Ett byte av visning ger tabell- och kolumnraderna nya etiketter utan att flytta någon av dem, och det gör även ett logiskt namn som du ger en tabell eller kolumn i `Logical Names` eller `Both Names`. Ett fysiskt namn som [härleds](./dictionary.md#deriving-physical-names) från ett nytt logiskt namn är dock ett namnbyte som alla andra, så det kan flytta en tabells rad.
 
 Varje typ av rad visar:
 
 - En tabell: en tabellikon och dess namn.
-- En kolumn: en nyckelikon för en primärnyckel- eller sekundärnyckelkolumn, färgad så som tabellens egen nyckelcell färgar en primärnyckel, en sekundärnyckel eller båda, och en listikon för alla andra kolumner. Sedan dess namn och, nedtonat, dess datatyp följd av `PK`, `FK` eller båda, som `id` `BIGINT PK` eller `user_id` `BIGINT FK`.
+- En kolumn: en nyckelikon för en primärnyckel- eller sekundärnyckelkolumn, färgad så som tabellens egen nyckelcell färgar en primärnyckel, en sekundärnyckel eller båda, och en listikon för alla andra kolumner. Sedan dess namn och, nedtonat, dess datatyp följd av `PK`, `FK` eller båda, som `id` `BIGINT PK` eller `user_id` `BIGINT FK`. Typen som visas är alltid kolumnens datatyp, aldrig dess [domän](./logical-names.md#the-domain-cell), oavsett namnvisning.
 - Ett index: en indexikon och dess namn. Sedan, nedtonat, `UNIQUE` för ett unikt index och dess kolumner inom parentes i indexordning, med `DESC` efter en fallande kolumn, som `orders_user_idx` `UNIQUE (user_id DESC, total)`, eller bara `(total)`.
 - En sekundärnyckel: listas bara under barntabellen, den som innehåller sekundärnyckelkolumnerna, och bara medan föräldratabellen finns i diagrammet. Dess nyckelikon får relationslinjens färg: färgen för primärnyckel och sekundärnyckel för en [identifierande relation](./relationship-editing.md#identifying-relationships), annars färgen för sekundärnyckel. Den visar barntabellens nyckelkolumner, kommaseparerade, sedan, nedtonat, `→` med föräldratabellen och dess kolumner, som `user_id` `→ users(id)`.
 - En tabellgrupp: en punkt i gruppens färg, grå för en grupp utan färg, och dess namn. Dess tabeller listas under den efter namn, och var och en går till sin tabell. En grupp utan tabeller har inget att fälla ut.
 - En anteckning: en klisterlappsikon och anteckningens första rad.
 
-Ett tomt namn, eller en anteckning vars första rad är tom, visar `unnamed` i kursiv stil.  
-På en smal panel kortas den nedtonade texten av med `…` innan namnet kortas av. Håll pekaren över ett namn eller dess nedtonade text för att se den i sin helhet.
+Tabellrader, tabellerna som listas under en grupp och kolumnrader följer namnvisningen – se [Utanför arbetsytan](./logical-names.md#beyond-the-canvas). I `Both Names` visar till exempel en kolumnrad `Total Amount` `total` `NUMERIC`: det logiska namnet och sedan namnet och datatypen, båda nedtonade.  
+I varje visning visar index- och sekundärnyckelrader sina kolumner med namn, och en sekundärnyckelrad visar också sin föräldratabell med namn.  
+Medan sökfältet innehåller text visar en rad som bara hittas i det namn som dess visning utelämnar också det namnet, nedtonat – se [Resultaten](./find-and-replace.md#the-results).
+
+Ett tomt namn, eller en anteckning vars första rad är tom, visar `unnamed` i kursiv stil. I `Logical Names` och `Both Names` visar en tabell eller kolumn `unnamed` bara när även dess logiska namn är tomt.  
+På en smal panel kortas den nedtonade texten av med `…` innan det namn som raden börjar med kortas av. Håll pekaren över ett namn eller dess nedtonade text för att se den i sin helhet.
 
 Bara `Tables` är utfälld från början. Klicka på en mapprad, eller tryck på `Enter` eller `Space` på den, för att fälla ihop eller fälla ut den.  
 Pilen i början av en rad fäller ihop eller fäller ut den raden utan att gå någonstans. Varje tabellrad har en, även en tabell som inte har något under sig. `→` och `←` fäller också ihop och ut – se [Tangenter i utforskaren](#keys-in-the-explorer).  
@@ -110,8 +115,8 @@ Redigeringar, ångra och göra om och ändringar från medarbetare eller en koda
 
 Klicka på en rad, eller tryck på `Enter` eller `Space` medan tangentbordsfokus står på den, för att gå till det den representerar på ERD-arbetsytan. En mapprad fälls bara ihop eller ut, och piltangenterna flyttar bara inom trädet.
 
-- En tabellrad, eller en tabell som listas under en grupp, markerar enbart den tabellen och lägger den överst. Den fokuserade cellen flyttas till tabellens namn, om den inte redan finns i den tabellen.
-- En kolumnrad markerar enbart sin tabell och placerar den fokuserade cellen på kolumnens namn.
+- En tabellrad, eller en tabell som listas under en grupp, markerar enbart den tabellen och lägger den överst. Om den fokuserade cellen inte redan finns i den tabellen flyttas den till den första cellen i tabellhuvudet: namnet, eller det logiska namnet i `Logical Names` och `Both Names`.
+- En kolumnrad markerar enbart sin tabell och placerar den fokuserade cellen på kolumnens namn, eller i `Logical Names` på det logiska namnet som ritas i dess ställe.
 - En indexrad markerar sin tabell, som en tabellrad gör. Själva indexet pekas inte ut; index redigeras i panelen [Tabellegenskaper](./table-related-functions.md#indexes).
 - En sekundärnyckelrad visar relationens båda tabeller tillsammans i vyn, eller barntabellen när de två ligger för långt ifrån varandra för att visas tillsammans. Den markerar enbart barntabellen med dess sekundärnyckelkolumner, med den fokuserade cellen på den första av dem, och lyser upp relationslinjen – se [Läsa en relationslinje](./relationship-editing.md#reading-a-connector).
 - En tabellgruppsrad visar gruppens ruta i vyn, med namnlisten som huvuddel, markerar enbart gruppen och lägger den överst tillsammans med dess tabeller.
@@ -119,7 +124,7 @@ Klicka på en rad, eller tryck på `Enter` eller `Space` medan tangentbordsfokus
 
 Vyn flyttas enligt den regel som alla hopp delar: zoomen ändras aldrig, och arbetsytan rullar bara när det du går till inte redan syns väl – se [Var ett hopp hamnar](./table-related-functions.md#where-a-jump-lands).  
 Att gå till en rad stänger först panelen Tabellegenskaper om den är öppen, och startar eller slutför aldrig ritningen av en relation.  
-Medan sökfältet innehåller text går en rad vars eget namn innehåller en träff, eller en rad som visar ett utdrag ur en kommentar eller anteckning, i stället till den träffen – se [Gå till en träff](./find-and-replace.md#going-to-a-match).
+Medan sökfältet innehåller text går en rad vars namn eller logiska namn innehåller en träff, eller en rad som visar ett utdrag ur en kommentar eller anteckning, i stället till sin första träff – se [Gå till en träff](./find-and-replace.md#going-to-a-match).
 
 Efter ett klick stannar tangentbordsfokus i trädet, så `Delete`, `Backspace` och de andra redigeringstangenterna når inte den nya markeringen förrän du trycker på `Escape` eller klickar på arbetsytan – se [Tangenter i utforskaren](#keys-in-the-explorer).
 

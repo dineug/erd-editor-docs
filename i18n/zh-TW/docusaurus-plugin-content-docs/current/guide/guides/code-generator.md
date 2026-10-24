@@ -1,5 +1,5 @@
 ---
-sidebar_position: 12
+sidebar_position: 13
 description: 從圖表為二十二種目標產生程式碼，在選項面板中選擇語言、資料庫、名稱大小寫和引號，了解哪些目標會寫出關聯的 ON DELETE 和 ON UPDATE 動作，並儲存或複製結果。
 ---
 
@@ -103,6 +103,10 @@ ORM 目標會保留哪些動作取決於所選的資料庫，而 `AML` 和 `DBML
 `SeaORM` 也會忽略它們：它以 snake case 為欄位和模組命名，這是 SeaORM 讀回時使用的形式，並在 `table_name` 中提供儲存的名稱，兩者不同時也會在 `column_name` 中提供。  
 對於這四種目標，面板會將兩個清單都淡化顯示，並在其下方附上 `Not used by` 註記。
 
+無論[名稱顯示](./logical-names.md#name-view)顯示的是什麼，每種目標都會寫出物理名稱。  
+沒有任何目標會寫出邏輯名稱，即使是寫入空白註解也不會：此索引標籤沒有與「結構描述 SQL」索引標籤的 [`Write logical names into empty comments`](./schema-sql.md#logical-names-as-comments) 相對應的選項。  
+也沒有任何目標會寫出定義域：連結到定義域的欄位會和其他任何欄位一樣，以其資料類型寫出。
+
 ## 資料庫 {#database}
 
 資料類型會依所選的資料庫解析，請參閱[資料庫](./table-related-functions.md#databases)。  
@@ -132,5 +136,5 @@ ORM 目標會保留哪些動作取決於所選的資料庫，而 `AML` 和 `DBML
 「匯出」選單中沒有程式碼產生器項目，「資料表屬性」的 `Code Generator` 索引標籤也無法儲存檔案。
 
 若要複製程式碼，可按一下面板底部的 `Copy`，或將指標停留在程式碼上，再按一下其右上角的複製按鈕，後者是「資料表屬性」中唯一的方式。  
-帶有勾號的 `Copied!` 快顯通知會顯示兩秒以示確認。若瀏覽器或主應用程式拒絕存取剪貼簿，則會改為顯示帶有警告符號的 `Couldn't copy to the clipboard` 快顯通知。再次複製會取代原本的快顯通知，而不會再新增一則。  
+帶有勾號的 `Copied!` 快顯通知會顯示兩秒以示確認。若瀏覽器或主應用程式拒絕存取剪貼簿，則會改為顯示帶有警告符號的 `Couldn't copy to the clipboard` 快顯通知，持續五秒。再次複製會取代原本的快顯通知，而不會再新增一則。  
 文字也可以選取，因此可以只取用需要的部分。

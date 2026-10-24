@@ -1,5 +1,5 @@
 ---
-sidebar_position: 4
+sidebar_position: 5
 description: Zaznaczanie, przenoszenie, kopiowanie, duplikowanie i usuwanie tabel i notatek, ustawianie kolorów i opcji widoku, definiowanie indeksów i kluczy alternatywnych, wybór bazy danych, poruszanie się po nieskończonej kanwie i porównywanie dokumentów.
 ---
 
@@ -7,7 +7,8 @@ description: Zaznaczanie, przenoszenie, kopiowanie, duplikowanie i usuwanie tabe
 
 Wszystko, co robisz z tabelami i notatkami, gdy już istnieją – zaznaczanie, przenoszenie, kopiowanie, usuwanie, kolorowanie i ustawianie tego, co pokazuje kanwa – oraz otaczające je elementy sterowania kanwą.  
 Najpierw opisano polecenia dotyczące tabel i notatek; potem właściwości tabeli, skupianie widoku na tabelach, indeksy i klucze alternatywne, automatyczny układ i system bazy danych; na końcu samą kanwę: pasek narzędzi kanwy, powiększenie, przesuwanie widoku i to, dokąd prowadzi przejście, oraz podgląd różnic.  
-Grupy tabel, czyli ramki skupiające tabele, mają własną stronę – zobacz stronę [Grupy tabel](./table-groups.md).
+Grupy tabel, czyli ramki skupiające tabele, mają własną stronę – zobacz stronę [Grupy tabel](./table-groups.md).  
+Własną stronę mają też nazwy logiczne i Widok nazw, który określa, jakie nazwy pokazują tabele – zobacz stronę [Nazwy logiczne](./logical-names.md).
 
 ## Zaznaczanie wielu elementów {#multiple-selection}
 
@@ -26,11 +27,14 @@ Klawisz `Escape` anuluje zaznaczenie. Gdy otwarty jest edytor komórki, notatki 
 
 ![Zaznaczanie tabel za pomocą ⌘ + drag i ⌘ + click, a potem wszystkich tabel i notatek za pomocą ⌘ + A](/img/demo-table-select.webp)
 
-W sesji wspólnej edycji zaznaczenie, komórka z fokusem i ramka zaznaczenia każdego uczestnika są rysowane na kanwie w kolorze tego uczestnika – zobacz stronę [Wspólna edycja](../../api/advanced/collaborative-editing.md).
+W sesji wspólnej edycji zaznaczenie, komórka z fokusem i ramka zaznaczenia każdego uczestnika są rysowane na kanwie w kolorze tego uczestnika – zobacz stronę [Wspólna edycja](../../api/advanced/collaborative-editing.md).  
+Komórka z fokusem uczestnika, który ma ustawiony inny Widok nazw, jest rysowana na komórce, którą twój widok wyświetla w jej miejscu, na przykład jego komórka nazwy na twojej komórce nazwy logicznej – zobacz sekcję [Współpracownicy](./logical-names.md#collaborators).
 
 ## Przenoszenie wielu tabel {#moving-multiple-tables}
 
 Przeciągnij dowolną tabelę lub notatkę, która już należy do zaznaczenia, a całe zaznaczenie przesunie się razem z nią – bez żadnego klawisza modyfikującego.  
+Tabelę przeciąga się za jej nagłówek lub za dowolny z wierszy jej kolumn, więc przeciąganie rozpoczęte na wierszu kolumny przenosi tabelę, a nie kolumnę. Kolumny przenosi się zamiast tego za uchwyt przeciągania obok wiersza z fokusem – zobacz sekcję [Zmiana kolejności i przenoszenie kolumn](./table-editing.md#rearranging-and-moving-columns).  
+Na komórce nagłówka lub wierszu kolumny tabela zaczyna się przesuwać dopiero wtedy, gdy wskaźnik pokona niewielką odległość, więc kliknięcie w tym miejscu nadal ustawia fokus na komórce, a dwukrotne kliknięcie nadal otwiera jej edytor. Przeciąganie nigdy nie rozpoczyna się od krawędzi z kolorem tabeli, która otwiera selektor kolorów, od przycisków `+` i `x` w jej nagłówku ani od przycisku `x` w wierszu kolumny.  
 Przeciągnięcie czegoś spoza zaznaczenia zawęża zaznaczenie do tego elementu i przenosi tylko ten element. Skrót `Ctrl + drag` (Windows/Linux) lub `⌘ + drag` (Mac) w obu przypadkach zachowuje zaznaczenie.  
 Tabele i notatki przenosi tylko lewy przycisk myszy. Kliknięcie prawym przyciskiem myszy wybiera, na czym działa menu kontekstowe, i niczego nie przenosi, a przeciąganie środkowym przyciskiem zamiast tego przesuwa widok kanwy – zobacz sekcję [Poruszanie się po kanwie](#getting-around-the-canvas).
 
@@ -47,7 +51,9 @@ Kolejność nie jest zapisywana: ponownie otwarty diagram układa tabele w kolej
 Kopiuje zaznaczone tabele i notatki oraz wkleja je ponownie jako nowe.  
 Skróty klawiaturowe: `Ctrl + C` (Windows/Linux) lub `⌘ + C` (Mac), `Ctrl + V` (Windows/Linux) lub `⌘ + V` (Mac)
 
-Skopiowana tabela zachowuje nazwę, komentarz, kolumny i kolor; skopiowana notatka zachowuje tekst, rozmiar i kolor.  
+Skopiowana tabela zachowuje nazwę, nazwę logiczną, komentarz, kolumny i kolor; skopiowana notatka zachowuje tekst, rozmiar i kolor.  
+Każda skopiowana kolumna zachowuje swoją nazwę logiczną, a każda nazwa tabeli i kolumny zachowuje informację o tym, czy wygenerowały ją słowniki – zobacz sekcję [Generowanie nazw fizycznych](./dictionary.md#deriving-physical-names).  
+Wklejona kolumna zachowuje powiązanie z domeną tylko wtedy, gdy spełnione są dwa warunki: diagram, do którego trafia, ma na liście dokładnie tę domenę, a nie tylko domenę o tej samej nazwie, a domena nadal ma typ danych, z którym kolumnę skopiowano. W przeciwnym razie kolumna trafia do diagramu bez domeny i zachowuje typ, z którym ją skopiowano – zobacz sekcję [Powiązanie kolumny z domeną](./dictionary.md#linking-a-column).  
 Kopiowane są też indeksy i relacje: indeks trafia w całości do skopiowanej tabeli, a relacja jest kopiowana wraz z typem i akcjami ON DELETE i ON UPDATE, gdy obie łączone przez nią tabele należą do kopiowanego zestawu. Relacja skopiowana tylko w połowie jest pomijana, zamiast wskazywać z powrotem na oryginał.  
 Wklejone kopie stają się nowym zaznaczeniem, a każde kolejne wklejenie tej samej kopii przesuwa ją o następne `50px`, więc powtarzane wklejenia nie nakładają się na siebie.  
 Kopia nie zachowuje swojej [grupy tabel](./table-groups.md): wklejona tabela nie należy do żadnej grupy, nawet jeśli znajdzie się w obrębie ramki grupy, a zaznaczona grupa nie jest kopiowana.  
@@ -60,11 +66,12 @@ Gdy wewnątrz tabeli z fokusem zaznaczone są kolumny, ten sam skrót kopiuje za
 ## Duplikowanie tabel i notatek {#duplicating-tables-and-memos}
 
 Przytrzymaj klawisz `Alt` i przeciągnij tabelę lub notatkę lewym przyciskiem myszy.  
+Tabelę chwyta się za jej nagłówek lub za dowolny wiersz kolumny, więc skrót `Alt + drag` na wierszu kolumny duplikuje tabelę i nie zmienia kolejności kolumn. Przytrzymanie klawisza `Alt` na uchwycie przeciągania kolumny niczego nie duplikuje: kolumna przesuwa się tak jak przy zwykłym przeciąganiu uchwytu – zobacz sekcję [Zmiana kolejności i przenoszenie kolumn](./table-editing.md#rearranging-and-moving-columns).  
 Za wskaźnikiem podąża półprzezroczysty podgląd, a zwolnienie przycisku upuszcza kopię w miejscu podglądu.  
 Jeśli chwycony element już należy do zaznaczenia, duplikowane jest całe zaznaczenie. W przeciwnym razie miejsce zaznaczenia zajmuje encja pod wskaźnikiem.  
 Skrót `Alt + click` bez ruszania myszą upuszcza kopię `50px` niżej i w prawo, przesuwając ją dalej za każdym razem, gdy to miejsce jest już zajęte.
 
-Duplikat zawiera to samo co wklejenie: nazwy, komentarze, kolumny, kolory, rozmiary notatek oraz indeksy i relacje należące w całości do tego, co skopiowano. Podobnie jak wklejona kopia, nie trafia do żadnej grupy tabel.  
+Duplikat zawiera to samo co [wklejenie](#copyingpasting-tables-and-memos): nazwy i nazwy logiczne, komentarze, kolumny, kolory, rozmiary notatek oraz indeksy i relacje należące w całości do tego, co skopiowano. Ponieważ pozostaje w tym samym diagramie, zachowuje bez zmian powiązanie każdej kolumny z domeną. Podobnie jak wklejona kopia, nie trafia do żadnej grupy tabel.  
 Skrót `Alt + drag` na pasku tytułu grupy tabel przenosi grupę tak jak zwykłe przeciąganie; grupa nigdy nie jest duplikowana.
 
 ![Duplikowanie tabeli za pomocą Alt + drag, a potem Alt + click, aby dodać kolejną kopię niżej i w prawo](/img/demo-table-duplicate.webp)
@@ -119,6 +126,7 @@ Dostępne są następujące opcje widoku:
 - Table Comment
 - Column Comment
 - DataType
+- Domain
 - Default
 - Not Null
 - Unique
@@ -129,7 +137,9 @@ Dostępne są następujące opcje widoku:
 - Table Groups
 - Memos
 
-Opcje `Unique`, `Alternate Key` i `Auto Increment` są domyślnie wyłączone, a pozostałe włączone.  
+Opcje `Domain`, `Unique`, `Alternate Key` i `Auto Increment` są domyślnie wyłączone, a pozostałe włączone.  
+To, jakie nazwy pokazują tabele, nie jest opcją widoku: pozycja `Name View`, tuż za pozycją `View Option` w menu kontekstowym kanwy, wybiera nazwy fizyczne, nazwy logiczne lub obie – zobacz sekcję [Przełączanie widoku](./logical-names.md#switching-the-view).  
+Opcja `Domain` dodaje każdej kolumnie komórkę, umieszczoną zgodnie z [kolejnością kolumn](./settings.md#adjusting-column-order), z nazwą domeny, z którą kolumna jest powiązana. Kolumna, która nie jest powiązana z żadną domeną z arkusza `Domains`, pokazuje w niej przyciemniony tekst zastępczy `domain`. Komórka jest widoczna niezależnie od Widoku nazw. Gdy opcja `Domain` jest wyłączona, widok `Logical Names` pokazuje zamiast tego nazwę powiązanej domeny w komórce typu – zobacz sekcję [Komórka domeny](./logical-names.md#the-domain-cell).  
 Opcja `Alternate Key` oznacza kolumny każdego klucza alternatywnego, na przykład `AK1.1` – zobacz sekcję [Klucze alternatywne](#alternate-keys).  
 Opcja `Referential Actions` pokazuje etykiety `D:` i `U:`, które akcje ON DELETE i ON UPDATE relacji umieszczają na końcu jej łącznika przy tabeli podrzędnej – zobacz sekcję [Odczytywanie łącznika](./relationship-editing.md#reading-a-connector). Jej wyłączenie ukrywa tylko te etykiety i nie przesuwa żadnej tabeli ani łącznika.  
 Opcja `Table Groups` pokazuje [grupy tabel](./table-groups.md) i kolory grup na nagłówkach ich tabel. Jej wyłączenie ukrywa je na kanwie, minimapie i w eksportowanych obrazach, nie przesuwa żadnej tabeli i pozostawia każdą tabelę w jej grupie – zobacz sekcję [Ukrywanie grup](./table-groups.md#hiding-groups). Usuwa też folder `Table Groups` z [Eksploratora](./explorer.md#the-tree) i przycisk `New Table Group` z [paska narzędzi kanwy](#canvas-toolbar), a wyszukiwanie w Eksploratorze przestaje znajdować nazwy grup.  
@@ -139,19 +149,19 @@ W edytorze z atrybutem `readonly` przełączniki niczego nie zmieniają.
 
 ![Przełączanie pozycji Opcji widoku przy zmieniającym się układzie tabel, oznaczanie złożonego indeksu unikatowego jako AK1.1 i AK1.2 za pomocą Alternate Key, a potem wyłączanie i włączanie Memos](/img/demo-view-options.webp)
 
-Kafelki w trybie `Flow` karty Wizualizacja nie stosują się do tych opcji: korzystają z własnego [wyświetlania wierszy](./visualization.md#row-display) i rysują swoje łączniki nawet przy wyłączonej opcji `Relationship`.
+Kafelki w trybie `Flow` karty Wizualizacja nie stosują się do tych opcji, łącznie z opcją `Domain`: korzystają z własnego [wyświetlania wierszy](./visualization.md#row-display) i rysują swoje łączniki nawet przy wyłączonej opcji `Relationship`. To, jakie komórki rozmieszcza kafelek, zależy wyłącznie od Widoku nazw – zobacz sekcję [Nazwy na kafelkach](./visualization.md#names-on-the-cards).
 
 ## Właściwości tabeli {#table-properties}
 
 Otwiera panel właściwości tabeli.  
 Wybierz `Table Properties` w menu kontekstowym tabeli, co otwiera panel dla tabeli klikniętej prawym przyciskiem myszy, albo zaznacz tabelę i naciśnij `Alt + Space`.  
-Panel otwiera się na środku przyciemnionej kanwy. Przyciemniona jest tylko kanwa, więc otwarty [Eksplorator](./explorer.md#dialogs-beside-it) pozostaje otwarty i dostępny obok panelu. Nagłówek panelu zawiera tytuł `Table Properties`, pięć ostatnio otwartych tabel w postaci etykiet z wyróżnioną bieżącą tabelą oraz przycisk zamykania. Kliknij etykietę, aby przejść do tej tabeli bez ponownego otwierania panelu.  
+Panel otwiera się na środku przyciemnionej kanwy. Przyciemniona jest tylko kanwa, więc otwarty [Eksplorator](./explorer.md#dialogs-beside-it) pozostaje otwarty i dostępny obok panelu. Nagłówek panelu zawiera tytuł `Table Properties`, pięć ostatnio otwartych tabel w postaci etykiet z wyróżnioną bieżącą tabelą oraz przycisk zamykania. Każda etykieta nazywa swoją tabelę tak, jak robi to [Widok nazw](./logical-names.md#beyond-the-canvas). Kliknij etykietę, aby przejść do tej tabeli bez ponownego otwierania panelu.  
 Pod nagłówkiem znajdują się trzy karty: `Indexes`, `Schema SQL` i `Code Generator`. Panel ma ten sam rozmiar dla wszystkich trzech, więc przełączanie kart go nie przesuwa ani nie zmienia jego rozmiaru.  
 Zamknij go przyciskiem zamykania, klawiszem `Escape` lub kliknięciem kanwy poza panelem.  
 Wybranie w Eksploratorze wiersza innego niż folder lub przejście do dopasowania jego wyszukiwania zamyka Właściwości tabeli przed przejściem. To samo robi skrót `Ctrl + F` (Windows/Linux) lub `⌘ + F` (Mac), który otwiera wyszukiwanie Eksploratora albo, gdy Eksplorator jest już otwarty, umieszcza kursor tekstowy w jego polu wyszukiwania. Każde inne kliknięcie w Eksploratorze, także w wierszu folderu, lub na przycisku `Explorer` paska narzędzi pozostawia Właściwości tabeli otwarte. Naciśnięcie klawisza `Escape`, gdy fokus klawiatury jest w Eksploratorze, jedynie oddaje fokus klawiatury kanwie, więc do zamknięcia Właściwości tabeli potrzebne jest drugie naciśnięcie klawisza `Escape`.
 
 Kartę `Indexes` opisano w sekcji [Indeksy](#indexes).  
-Karta `Schema SQL` pokazuje kod DDL tabeli dla wybranej [bazy danych](#databases): jej instrukcję `CREATE TABLE`, osobne ograniczenia, które niektóre bazy danych zapisują dla jej kolumn oznaczonych jako unikatowe, oraz jej indeksy. Zawsze zapisuje zwykłe instrukcje `CREATE`, bez nagłówka i bez skryptów przed tabelami i po nich, niezależnie od ustawień karty [Schemat SQL](./schema-sql.md) na pasku narzędzi. Nie ma panelu opcji, a jej menu kontekstowe oferuje tylko `Database` i `Bracket`.  
+Karta `Schema SQL` pokazuje kod DDL tabeli dla wybranej [bazy danych](#databases): jej instrukcję `CREATE TABLE`, osobne ograniczenia, które niektóre bazy danych zapisują dla jej kolumn oznaczonych jako unikatowe, oraz jej indeksy. Zawsze zapisuje zwykłe instrukcje `CREATE`, bez nagłówka, bez skryptów przed tabelami i po nich oraz bez nazw logicznych w pustych komentarzach, niezależnie od ustawień karty [Schemat SQL](./schema-sql.md) na pasku narzędzi – zobacz sekcję [Nazwy logiczne jako komentarze](./schema-sql.md#logical-names-as-comments). Nie ma panelu opcji, a jej menu kontekstowe oferuje tylko `Database` i `Bracket`.  
 Karta `Code Generator` generuje kod tylko dla tej tabeli – zobacz stronę [Generator kodu](./code-generator.md).
 
 W edytorze z atrybutem `readonly` panel nadal się otwiera, z plakietką `Read only` obok tytułu, ale jego karta `Indexes` nie pozwala na żadne zmiany.
@@ -163,19 +173,19 @@ Wybierz `Focus on this table` w menu kontekstowym tabeli albo zaznacz jedną lub
 Gdy tabela kliknięta prawym przyciskiem myszy jest jedną z kilku zaznaczonych tabel, pozycja brzmi `Focus on selected tables` i skupia widok na całym zaznaczeniu. Kliknięcie prawym przyciskiem myszy tabeli spoza zaznaczenia skupia widok tylko na tej tabeli.  
 Skrót uwzględnia zaznaczone tabele, pomija notatki i nic nie robi, gdy żadna tabela nie jest zaznaczona.  
 Zaznaczona [grupa tabel](./table-groups.md) nie ma tu znaczenia, zarówno dla skrótu, jak i dla pozycji menu: jej tabele są uwzględniane tylko wtedy, gdy same są zaznaczone, co robi pozycja `Select tables` w menu grupy.  
-To, co pokazuje zawężony widok i jak wrócić do całego diagramu, opisano na stronie [Wizualizacja](./visualization.md#focusing-on-tables).
+To, co pokazuje zawężony widok i jak wrócić do całego diagramu, opisano na stronie [Wizualizacja](./visualization.md#focusing-on-tables), a to, jak cofać się i przechodzić do przodu po tym, co tryb Przepływ pokazywał wcześniej – w sekcji [Poprzednia i następna tabela](./visualization.md#previous-table-and-next-table).
 
 ## Indeksy {#indexes}
 
 Indeksy definiuje się na karcie `Indexes` panelu właściwości tabeli i są one uwzględniane w eksportowanym Schemacie SQL.
 
 Lewa strona zawiera klucze i indeksy tabeli w dwóch grupach.  
-Grupa `Keys`, widoczna, gdy tabela ma jakiekolwiek klucze, zawiera klucze deklarowane przez jej kolumny: klucz `PK_<table name>` obejmujący kolumny oznaczone jako PK, a następnie klucz `UQ_<table name>_<column name>` dla każdej kolumny oznaczonej jako unikatowa, w kolejności kolumn. Nazwy są zgodne ze Schematem SQL wybranej bazy danych, więc przy ustawieniu `Bracket` na `None` tabela kwalifikowana schematem, taka jak `sales.users`, pokazuje `PK_users` we wszystkich bazach danych oprócz Databricks i Snowflake – zobacz sekcję [Nazwy tabel kwalifikowane schematem](./schema-sql.md#schema-qualified-table-names). Każdy klucz ma oznaczenie `PK` lub `UQ` i ikonę kłódki. Są one tutaj tylko do odczytu i zmieniają się wyłącznie wraz z flagami kolumn [PK](./table-editing.md#column-primary-key) i [Unikatowość](./table-editing.md#not-null-unique-auto-increment).  
+Grupa `Keys`, widoczna, gdy tabela ma jakiekolwiek klucze, zawiera klucze deklarowane przez jej kolumny: klucz `PK_<table name>` obejmujący kolumny oznaczone jako PK, a następnie klucz `UQ_<table name>_<column name>` dla każdej kolumny oznaczonej jako unikatowa, w kolejności kolumn. Nazwy są nazwami fizycznymi, które zapisuje Schemat SQL wybranej bazy danych, niezależnie od Widoku nazw, więc przy ustawieniu `Bracket` na `None` tabela kwalifikowana schematem, taka jak `sales.users`, pokazuje `PK_users` we wszystkich bazach danych oprócz Databricks i Snowflake – zobacz sekcję [Nazwy tabel kwalifikowane schematem](./schema-sql.md#schema-qualified-table-names). Każdy klucz ma oznaczenie `PK` lub `UQ` i ikonę kłódki. Są one tutaj tylko do odczytu i zmieniają się wyłącznie wraz z flagami kolumn [PK](./table-editing.md#column-primary-key) i [Unikatowość](./table-editing.md#not-null-unique-auto-increment).  
 Grupa `Indexes` zawiera indeksy tabeli w kolejności ich dodania. Każdy indeks ma przełącznik `UQ`, który czyni go unikatowym, pole nazwy i przycisk `x`, który go usuwa. Indeks będący [kluczem alternatywnym](#alternate-keys) pokazuje też swój numer, na przykład `AK1`. Dodaj indeks przyciskiem `Add Index` na dole listy.
 
-Prawa strona zawiera kolumny tabeli pod nagłówkiem `Columns`, każdą z polem wyboru. Nic nie da się edytować, dopóki po lewej nie zostanie wybrany indeks.  
+Prawa strona zawiera kolumny tabeli pod nagłówkiem `Columns`, każdą z polem wyboru. Każdy wiersz pokazuje te same komórki co wiersz kolumny na kanwie, zgodnie z kolejnością kolumn, Opcjami widoku i [Widokiem nazw](./logical-names.md#beyond-the-canvas). Nic nie da się edytować, dopóki po lewej nie zostanie wybrany indeks.  
 Zaznacz kolumnę, aby dodać ją do wybranego indeksu, a odznacz ją, aby ją usunąć. Wybranie klucza pokazuje jego kolumny jako zaznaczone, ale pola wyboru pozostają nieaktywne.  
-Kolumny wybranego indeksu są wymienione niżej pod nagłówkiem `Index order`. Przeciągnij je za uchwyt, aby zmienić ich kolejność, i kliknij etykietę `ASC` lub `DESC` w wierszu, aby odwrócić kierunek sortowania. W kluczu alternatywnym każdy wiersz kończy się oznaczeniem `AK<n>.<m>`. Lista pokazuje naraz trzy wiersze, a pozostałe są dostępne po przewinięciu.
+Kolumny wybranego indeksu są wymienione niżej pod nagłówkiem `Index order`, każda nazwana tak, jak nazywa ją Widok nazw, a w widoku `Both Names` z nazwą fizyczną w nawiasie po nazwie logicznej, na przykład `Member Number (member_no)`. Przeciągnij je za uchwyt, aby zmienić ich kolejność, i kliknij etykietę `ASC` lub `DESC` w wierszu, aby odwrócić kierunek sortowania. W kluczu alternatywnym każdy wiersz kończy się oznaczeniem `AK<n>.<m>`. Lista pokazuje naraz trzy wiersze, a pozostałe są dostępne po przewinięciu.
 
 W edytorze z atrybutem `readonly` wybranie klucza lub indeksu nadal pokazuje jego kolumny, ale nie ma przycisków `Add Index` ani `x` i nic innego na karcie nie da się zmienić.
 
@@ -216,12 +226,12 @@ Otwórz `Auto Layout` z menu kontekstowego kanwy lub z szybkiego wyszukiwania i 
 | `Tree - horizontal` | Te same warstwy, ułożone od lewej do prawej. |
 
 Układ `Force` otwiera podgląd na czas stabilizowania się układu, z przyciskami `Apply` i `Cancel` w wyświetlanym komunikacie.  
-Kadr podglądu obejmuje diagram w stanie z chwili uruchomienia układu, więc podczas stabilizowania się układu tabele mogą wyjść poza kadr. Podgląd jest rysowany przy powiększeniu `70%` lub mniejszym, więc jego tabele są zwinięte do nazwy i krawędzi z kolorem.  
+Kadr podglądu obejmuje diagram w stanie z chwili uruchomienia układu, więc podczas stabilizowania się układu tabele mogą wyjść poza kadr. Podgląd jest rysowany przy powiększeniu `70%` lub mniejszym, więc jego tabele są zwinięte do nazwy i krawędzi z kolorem. Podgląd otwiera się w bieżącym Widoku nazw, niezależnie od widoku zachowanego w pliku – zobacz sekcję [Poza kanwą](./logical-names.md#beyond-the-canvas).  
 Przycisk `Apply` zachowuje położenia z danej chwili, a gdy układ się ustabilizuje, zostaje zastosowany samoczynnie. Przycisk `Cancel` lub klawisz `Escape` pozostawia diagram bez zmian.
 
 Pozostałe trzy są obliczane za jednym razem, poza wątkiem głównym, więc nie ma czego oglądać: podczas obliczania układu wyświetla się komunikat, a gotowe rozmieszczenie jest wyśrodkowane na obszarze, który diagram już zajmuje. Przycisk `Cancel` lub klawisz `Escape` porzuca układ, na który już nie czekasz, a w hoście, który nie uruchamia żadnego shared workera, układ kończy się komunikatem `Could not place tables` – zobacz sekcję [Web Workers](../../api/installation.md#web-workers). Tak samo kończy się układ, który nie wróci w ciągu 60 sekund.
 
-Niezależnie od wybranego układu przenoszone są tabele i grupy tabel, a notatki pozostają na miejscu. Relacja zwrotna jest ignorowana, a kilka relacji między tymi samymi dwiema tabelami liczy się jako jedna.  
+Niezależnie od wybranego układu przenoszone są tabele i grupy tabel, a notatki pozostają na miejscu. Tabele są rozmieszczane z szerokościami, jakie mają w bieżącym Widoku nazw. Relacja zwrotna jest ignorowana, a kilka relacji między tymi samymi dwiema tabelami liczy się jako jedna.  
 Każdy układ utrzymuje tabele każdej grupy razem, niezależnie od tego, czy grupy są widoczne, i dopasowuje każdą grupę zawierającą tabele tak, aby je obejmowała – zobacz stronę [Grupy tabel](./table-groups.md#auto-layout).  
 Wynik trafia do historii jako jeden wpis, więc jedno cofnięcie przywraca każdą tabelę i grupę na jej poprzednie miejsce.
 
@@ -259,6 +269,7 @@ Nad środkiem dolnej krawędzi kanwy unosi się mały pasek narzędzi, który za
 - `New Table`, `New Memo` i `New Table Group`. Przycisk `New Table` dodaje tabelę tak jak `Alt + N`, a przycisk `New Memo` dodaje notatkę tak jak `Alt + M`. Przycisk `New Table Group` włącza [rysowanie grupy](./table-groups.md#drawing-a-group) tak jak `Alt + G` i wyłącza Rączkę; drugie kliknięcie, podobnie jak drugie naciśnięcie `Alt + G`, kończy rysowanie bez dodawania grupy. Przycisk `New Memo` nie jest dostępny, gdy View Option → `Memos` ukrywa notatki, a przycisk `New Table Group`, gdy View Option → `Table Groups` ukrywa grupy. Edytor z atrybutem `readonly` nie pokazuje żadnego z tych trzech przycisków.
 - Powiększenie: `Zoom out`, bieżące powiększenie w procentach i `Zoom in`. Oba przyciski zmieniają powiększenie skokowo tak samo jak skróty powiększenia, a kliknięcie wartości procentowej przywraca je do `100%`.
 - Cztery notacje relacji, te same cztery, od których zaczynasz tworzenie relacji – zobacz stronę [Rozpoczęcie edycji](./editing-start.md). Wybranie jednej z nich przełącza z powrotem na wskaźnik, ponieważ relację rysuje się, klikając dwie tabele.
+- `Name View`, przycisk ze strzałką w dół, który podaje bieżący widok: `Physical Names`, `Logical Names` lub `Both Names`. Ma stałą szerokość niezależnie od podawanego widoku, więc przełączenie nigdy nie przesuwa paska narzędzi. Kliknięcie otwiera nad paskiem narzędzi listę tych trzech widoków z zaznaczonym bieżącym widokiem. Wybranie jednego z nich przełącza na ten widok i zamyka listę; drugie kliknięcie przycisku, naciśnięcie w dowolnym innym miejscu lub klawisz `Escape` zamyka listę bez przełączania. Edytor z atrybutem `readonly` również go pokazuje. To, co wyświetla każdy widok, opisano w sekcji [Widok nazw](./logical-names.md#name-view), a to, czy przełączenie jest zapisywane – w sekcji [Przełączanie widoku](./logical-names.md#switching-the-view).
 - Tryb zen, `Alt + Z`, który ukrywa wszystko oprócz kanwy i tego paska narzędzi. Ponowne naciśnięcie `Alt + Z` lub kliknięcie przycisku przywraca resztę. Otwarty Eksplorator jest ukrywany razem z resztą, bez zamykania, i wraca razem z nią. Nadal można go otworzyć w trybie zen – zobacz sekcję [Kiedy Eksplorator ustępuje miejsca](./explorer.md#when-it-stands-aside).
 - Kompas `Go to content`, który pojawia się na końcu paska narzędzi tylko wtedy, gdy na ekranie nie ma żadnej tabeli, widocznej notatki ani widocznej grupy tabel – zobacz sekcję [Poruszanie się po kanwie](#getting-around-the-canvas).
 
@@ -277,7 +288,7 @@ Skrót `Ctrl + 0` (Windows/Linux) lub `⌘ + 0` (Mac) od razu przywraca powięks
 Przyciski `Zoom out` i `Zoom in` na [pasku narzędzi kanwy](#canvas-toolbar) zmieniają powiększenie skokowo, tak jak skróty `Minus` i `Plus`: każde naciśnięcie zmienia je o 4 punkty procentowe, zachowując środek ekranu w miejscu. Wartość procentowa między nimi pokazuje bieżące powiększenie, a kliknięcie jej od razu przywraca `100%`, tak jak `Ctrl + 0` (Windows/Linux) lub `⌘ + 0` (Mac).
 
 Powiększenie mieści się w zakresie od `10%` do `150%`.  
-Przy powiększeniu `70%` i mniejszym tabele zwijają się do nazwy i krawędzi z kolorem, a edycja komórek, skróty komórek oraz kopiowanie i wklejanie przestają działać, dopóki ponownie nie powiększysz widoku.
+Przy powiększeniu `70%` i mniejszym tabele zwijają się do nazwy i krawędzi z kolorem, a edycja komórek, skróty komórek oraz kopiowanie i wklejanie przestają działać, dopóki ponownie nie powiększysz widoku. Nazwa wyświetlana przez zwiniętą tabelę jest zgodna z Widokiem nazw – zobacz sekcję [Widok nazw](./logical-names.md#name-view).
 
 Te same trzy skróty zmieniają też powiększenie na karcie Wizualizacja, zarówno w trybie `Graph`, jak i `Flow`, każdy tryb we własnym zakresie – zobacz stronę [Wizualizacja](./visualization.md#toolbar).
 
@@ -302,11 +313,11 @@ Przeciąganie uchwytu paska przewijania lub prostokąta obszaru widoku na minima
 
 Jeśli po przesunięciu widoku na ekranie nie ma żadnej tabeli, widocznej notatki ani widocznej grupy tabel, na końcu [paska narzędzi kanwy](#canvas-toolbar) pojawia się kompas `Go to content` ze strzałką wskazującą najbliższy z tych elementów i jego odległością. Kliknij go, aby wyśrodkować ten element bez zmiany powiększenia.
 
-![Przesuwanie widoku przez przeciąganie pustej kanwy, przeciąganie środkowym przyciskiem nad tabelą, minimapę i kółko myszy, a potem powrót za kompasem Go to content](/img/demo-canvas-navigation.webp)
+![Przesuwanie widoku przez przeciąganie pustej kanwy, kółkiem myszy, przeciąganiem środkowym przyciskiem nad tabelą i z minimapy, a potem Shift + wheel poza zawartość i powrót za kompasem Go to content](/img/demo-canvas-navigation.webp)
 
 ### Dokąd prowadzi przejście {#where-a-jump-lands}
 
-Każde przejście, które prowadzi do czegoś na kanwie, przesuwa widok według jednej reguły: wyniki `#`, `@` i `:` funkcji [Szybkie wyszukiwanie](./quick-search.md#searching-the-diagram), wiersze [Eksploratora](./explorer.md#going-to-a-row) i dopasowania jego wyszukiwania [Znajdź i zamień](./find-and-replace.md#going-to-a-match), wiersze listy [Podglądu różnic](#going-to-a-change), [przycisk kafelka](./visualization.md#card-buttons) z łączem zewnętrznym w trybie Przepływ oraz przejście do miejsca, w którym operacja [Importuj i dodaj](./file-import-export.md#import-and-add) umieszcza elementy. Każda z tych sekcji mówi, co zaznacza przejście; ta mówi, dokąd przesuwa się widok.
+Każde przejście, które prowadzi do czegoś na kanwie, przesuwa widok według jednej reguły: wyniki `#`, `@` i `:` funkcji [Szybkie wyszukiwanie](./quick-search.md#searching-the-diagram), wiersze [Eksploratora](./explorer.md#going-to-a-row) i dopasowania jego wyszukiwania [Znajdź i zamień](./find-and-replace.md#going-to-a-match), wiersze listy [Podglądu różnic](#going-to-a-change), [przycisk kafelka](./visualization.md#card-buttons) z łączem zewnętrznym w trybie Przepływ, kontrola wskazująca tabelę lub kolumnę w arkuszu [Kontrole](./dictionary.md#the-checks-sheet) na karcie Słownik oraz przejście do miejsca, w którym operacja [Importuj i dodaj](./file-import-export.md#import-and-add) umieszcza elementy. Każda z tych sekcji mówi, co zaznacza przejście; ta mówi, dokąd przesuwa się widok.
 
 Przejście nigdy nie zmienia powiększenia i wykonuje co najwyżej jedno przewinięcie. Z innej karty najpierw przełącza na kartę ERD.  
 Mierzy kanwę tak, jak jest widoczna: poniżej górnego paska narzędzi, a w trybie zen na całej wysokości, oraz na prawo od otwartego Eksploratora, który zwęża kanwę, a nie ją zasłania.
@@ -322,8 +333,8 @@ Zatem mała tabela przy lewej krawędzi kanwy, w połowie jej wysokości, przesu
 Co przejście pokazuje w widoku i jaka kluczowa część musi być widoczna, gdy całość się nie mieści:
 
 - Tabela: cała tabela, z paskiem nazwy u góry jako kluczową częścią albo z komórką komentarza przy dopasowaniu w komentarzu tabeli, gdy View Option → `Table Comment` pokazuje komentarze. Przy powiększeniu `70%` i mniejszym, gdy tabele są zwinięte do nazwy, kluczową częścią jest nazwa na środku prostokąta tabeli.
-- Kolumna: jej wiersz, z komórką, do której prowadzi przejście, jako kluczową częścią: z nazwą albo z komentarzem zawierającym dopasowanie, gdy View Option → `Column Comment` pokazuje komentarze. Przy powiększeniu `70%` i mniejszym kolumna pokazuje swoją tabelę według reguły dla tabel.
-- Komórka zbyt szeroka, aby pokazać ją w całości, na przykład długi komentarz: kluczową częścią jest dopasowany w niej tekst.
+- Kolumna: jej wiersz, z komórką, do której prowadzi przejście, jako kluczową częścią: z nazwą, z nazwą logiczną przy dopasowaniu w nazwie logicznej lub kontroli dotyczącej nazwy logicznej, z komórką domeny przy kontroli dotyczącej jej domeny albo z komentarzem zawierającym dopasowanie, gdy View Option → `Column Comment` pokazuje komentarze. Gdy wiersz nie wyświetla takiej komórki, przejście prowadzi do komórki wyświetlanej w jej miejscu: do nazwy logicznej zamiast nazwy fizycznej w widoku `Logical Names`, do nazwy fizycznej zamiast nazwy logicznej w widoku `Physical Names` oraz do komórki typu zamiast komórki domeny, gdy pozycja View Option → `Domain` jest wyłączona, albo do całego wiersza, gdy wyłączona jest też pozycja `DataType`. Przy powiększeniu `70%` i mniejszym kolumna pokazuje swoją tabelę według reguły dla tabel.
+- Komórka zbyt szeroka, aby pokazać ją w całości, na przykład długi komentarz: kluczową częścią jest dopasowany w niej tekst. Gdy przejście prowadzi do komórki wyświetlanej zamiast tej, która zawiera dopasowanie, na przykład do nazwy fizycznej przy dopasowaniu w nazwie logicznej w widoku `Physical Names`, kluczową częścią nie jest tekst.
 - Relacja: prostokąt obejmujący jej dwie tabele, z tabelą podrzędną jako kluczową częścią.
 - Grupa tabel: jej ramka, z paskiem tytułu jako kluczową częścią.
 - Notatka lub blok umieszczony przez operację Importuj i dodaj: całość.
@@ -337,7 +348,7 @@ Możesz porównać wcześniej zapisane dokumenty z bieżącym dokumentem.
 Wybierz `Diff Viewer` w menu kontekstowym kanwy i wskaż wcześniej wyeksportowany dokument `.json`.
 
 Widok otwiera się nad kanwą: po lewej to, co się zmieniło, a obok zapisany i bieżący dokument, jeden przy drugim.  
-Bieżący dokument jest porównywany w stanie z chwili otwarcia widoku; późniejsze zmiany, w tym zmiany współpracownika, do widoku nie docierają. Otwarty [Eksplorator](./explorer.md#when-it-stands-aside) jest ukryty, dopóki widok jest otwarty, więc widok zajmuje całą szerokość edytora.  
+Bieżący dokument jest porównywany w stanie z chwili otwarcia widoku; późniejsze zmiany, w tym zmiany współpracownika, do widoku nie docierają. Obie strony otwierają się w bieżącym Widoku nazw i w nim pozostają, niezależnie od widoku zachowanego w którymkolwiek z plików – zobacz sekcję [Poza kanwą](./logical-names.md#beyond-the-canvas). Otwarty [Eksplorator](./explorer.md#when-it-stands-aside) jest ukryty, dopóki widok jest otwarty, więc widok zajmuje całą szerokość edytora.  
 Widok każdej strony przesuwa się kółkiem myszy, przeciąganiem pustego obszaru lub wnętrza grupy tabel albo przeciąganiem środkowym przyciskiem w dowolnym jej miejscu, a powiększenie zmienia się skrótem `Ctrl + Wheel` (Windows/Linux), `⌘ + Wheel` (Mac) lub gestem szczypania. Przy powiększeniu `70%` i mniejszym jej tabele zwijają się tak jak na kanwie – zobacz sekcję [Oznaczenia po obu stronach](#marks-on-the-two-sides).  
 Obie strony są tylko do odczytu, więc nic w dokumencie nie zostaje zmienione. Każda ma własne zaznaczenie, a kliknięcie tam tabeli zaznacza ją tylko po tej stronie.  
 Zamknij widok przyciskiem `Close` w komunikacie `Diff Viewer`, który pojawia się przy jego otwarciu, lub klawiszem `Escape`.
@@ -360,13 +371,14 @@ Co liczy się jako zmiana:
 - Notatka: tekst, położenie, rozmiar i kolor.
 - Grupa tabel: nazwa, zawarte w niej tabele, kolor, położenie i rozmiar.
 
-Dlatego tabela, notatka lub grupa, którą tylko przeniesiono albo której zmieniono rozmiar lub kolor, liczy się jako zmieniona. Położenia i rozmiary są porównywane w pełnych pikselach, a kolejność warstw i miejsce, w którym łącznik styka się z tabelą, nigdy nie mają znaczenia.
+Dlatego tabela, notatka lub grupa, którą tylko przeniesiono albo której zmieniono rozmiar lub kolor, liczy się jako zmieniona. Położenia i rozmiary są porównywane w pełnych pikselach, a kolejność warstw i miejsce, w którym łącznik styka się z tabelą, nigdy nie mają znaczenia.  
+Nazwy logiczne, powiązania z domeną oraz słowa, terminy i domeny z karty [Słownik](./dictionary.md) nie są porównywane, więc sama ich zmiana nie jest ani wymieniana, ani oznaczana. Liczy się natomiast typ danych zmieniony przez domenę – jako zmiana typu danych kolumny.
 
 ### Drzewo zmian {#the-change-tree}
 
 Lista po lewej jest rysowana jak [drzewo Eksploratora](./explorer.md#the-tree) i zawiera tylko to, co się zmieniło: foldery `Tables`, `Table Groups` i `Memos`, każdy widoczny tylko wtedy, gdy zawiera wiersz, a pod tabelą jej własne foldery `Columns`, `Indexes` i `Foreign Keys`. Klucz obcy jest wymieniony pod swoją tabelą podrzędną, a dodana lub usunięta tabela nie ma w środku żadnych wierszy.  
 Każdy folder pokazuje, ile zawiera wierszy, a każdy folder i każda tabela są na początku rozwinięte.  
-Tabele i grupy tabel są uporządkowane według nazwy bez uwzględniania wielkości liter. Notatki oraz kolumny, indeksy i klucze obce tabeli zachowują kolejność bieżącego dokumentu, a usunięty element wraca na swoje dawne miejsce. Wiersz notatki pokazuje pierwszą linię notatki, a wiersz klucza obcego pokazuje jego kolumny w tabeli podrzędnej, a potem `→` z tabelą nadrzędną i jej kolumnami, na przykład `user_id → users(id)`. Pusta nazwa jest wyświetlana jako `unnamed` kursywą.
+Wiersz tabeli lub kolumny jest nazwany zgodnie z Widokiem nazw, w którym otworzyły się strony. W widoku `Both Names` pokazuje nazwę logiczną, a po niej wyciszoną nazwę fizyczną, a w usuniętym wierszu wyciszona nazwa jest przekreślona razem z resztą. Tabele i grupy tabel są uporządkowane według nazwy bez uwzględniania wielkości liter, niezależnie od widoku. Notatki oraz kolumny, indeksy i klucze obce tabeli zachowują kolejność bieżącego dokumentu, a usunięty element wraca na swoje dawne miejsce. Wiersz notatki pokazuje pierwszą linię notatki, a wiersz klucza obcego pokazuje jego kolumny w tabeli podrzędnej, a potem `→` z tabelą nadrzędną i jej kolumnami, na przykład `user_id → users(id)`. Pusta nazwa jest wyświetlana jako `unnamed` kursywą.
 
 Każdy wiersz kończy się literą, a wiersz oznaczony literą `A`, `D`, `M` lub `R` ma nazwę w kolorze tej litery:
 
@@ -378,7 +390,7 @@ Każdy wiersz kończy się literą, a wiersz oznaczony literą `A`, `D`, `M` lub
 
 Najedź wskaźnikiem na nazwę wiersza, aby zobaczyć podpowiedź: status `Added`, `Deleted`, `Modified`, `Renamed` lub `Changed inside`, a potem po jednej linii na każdą zmianę, na przykład `Name: users → members` lub `NN: ✗ → ✓`. Tekst jest przytaczany w postaci pierwszej linii, obciętej po 40 znakach, a pusta wartość jest wyświetlana jako `—`. Podpowiedź dodanego lub usuniętego elementu zawiera tylko jego status.
 
-Pole `Filter by name` nad drzewem zostawia wiersze, których bieżąca lub zapisana nazwa zawiera wpisany tekst, bez uwzględniania wielkości liter. Tabela, której nazwa pasuje, zachowuje wszystkie swoje wiersze, a tabela, której nazwa nie pasuje, zachowuje tylko pasujące wiersze. Filtr, który niczego nie dopasowuje, pozostawia drzewo puste.  
+Pole `Filter by name` nad drzewem zostawia wiersze, których bieżąca lub zapisana nazwa albo bieżąca lub zapisana nazwa logiczna zawiera wpisany tekst, bez uwzględniania wielkości liter, niezależnie od Widoku nazw. Tabela, której nazwa pasuje, zachowuje wszystkie swoje wiersze, a tabela, której nazwa nie pasuje, zachowuje tylko pasujące wiersze. Filtr, który niczego nie dopasowuje, pozostawia drzewo puste.  
 Gdy oba dokumenty w ogóle się nie różnią, drzewo pokazuje komunikat `No changes`.
 
 Przeciągnij prawą krawędź drzewa, aby je poszerzyć lub zwęzić, od `200px` do `480px`, a kliknij krawędź dwukrotnie, aby przywrócić wartość `260px`. Każde porównanie otwiera się z wartością `260px`, a obie strony dzielą resztę szerokości po równo.  
@@ -407,5 +419,7 @@ Obie strony kolorują tekst, obrysy i łączniki i niczego nie wypełniają. Dod
 - Zmiana indeksu niczego nie oznacza po żadnej ze stron; jest widoczna tylko w drzewie.
 
 Każda strona stosuje Opcje widoku swojego dokumentu. Zmiana w komórce, której dana strona nie rysuje, jest pokazywana zamiast tego na nazwie. Zmiana kolumny w komórce ukrytej przez jedną z Opcji widoku, takiej jak `Unique` lub `Auto Increment`, obie domyślnie wyłączone, zmienia kolor nazwy kolumny na bursztynowy, podobnie jak zmiana klucza podstawowego w wierszu, który nie pokazuje ikony klucza. Zmiana komentarza tabeli przy wyłączonej opcji `Table Comment` zmienia kolor nazwy tabeli na bursztynowy. Niebieski kolor zmiany nazwy ma pierwszeństwo przed tym bursztynowym. Notatka lub grupa tabel ukryta przez swój dokument jest wymieniona w drzewie, ale nie jest rysowana po tej stronie.
+
+W widoku `Logical Names`, który nie wyświetla komórki nazwy, niebieski kolor zmiany nazwy i bursztynowy kolor zmiany w komórce, której strona nie wyświetla, trafiają na nazwę logiczną wyświetlaną w miejscu nazwy. Zmiana typu danych zmienia kolor komórki typu na bursztynowy niezależnie od Widoku nazw, nawet tam, gdzie komórka pokazuje nazwę domeny. Żadna ze stron nie rysuje kolorów, które kontrole Słownika nadają nazwom na kanwie – zobacz sekcję [Oznaczenia na kanwie](./dictionary.md#marks-on-the-canvas).
 
 Przy powiększeniu `70%` i mniejszym zwinięte tabele zachowują obrys. Nazwa zachowuje zielony lub czerwony kolor dodanej lub usuniętej tabeli albo niebieski kolor zmiany nazwy, a w pozostałych przypadkach przyjmuje bursztynowy kolor zmiany komentarza. Zmiany kolumn nie są rysowane, dopóki ponownie nie powiększysz widoku; drzewo nadal je wymienia.

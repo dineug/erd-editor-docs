@@ -1,5 +1,5 @@
 ---
-sidebar_position: 4
+sidebar_position: 5
 description: Markera, flytta, kopiera, duplicera och ta bort tabeller och anteckningar, ange färger och visningsalternativ, definiera index och alternativa nycklar, välj en databas, navigera på den oändliga arbetsytan och jämför dokument.
 ---
 
@@ -7,7 +7,8 @@ description: Markera, flytta, kopiera, duplicera och ta bort tabeller och anteck
 
 Allt du gör med tabeller och anteckningar när de väl finns – markera, flytta, kopiera, ta bort, färglägga och ställa in vad arbetsytan visar – samt arbetsytans kontroller runt dem.  
 Först kommer kommandona för tabeller och anteckningar; sedan panelen Tabellegenskaper, fokusering på tabeller, index och alternativa nycklar, automatisk layout och databassystemet; och sist själva arbetsytan: arbetsytans verktygsfält, zoom, panorering och var ett hopp hamnar samt diff-visaren.  
-Tabellgrupper, rutorna som samlar tabeller, har en egen sida – se [Tabellgrupper](./table-groups.md).
+Tabellgrupper, rutorna som samlar tabeller, har en egen sida – se [Tabellgrupper](./table-groups.md).  
+Det gör även logiska namn och namnvisningen, som avgör vilka namn tabellerna visar – se [Logiska namn](./logical-names.md).
 
 ## Markera flera objekt {#multiple-selection}
 
@@ -26,11 +27,14 @@ Ett högerklick på något som redan är markerat behåller hela markeringen, s�
 
 ![Tabeller markeras med ⌘ + drag och ⌘ + click, och sedan varje tabell och anteckning med ⌘ + A](/img/demo-table-select.webp)
 
-I en session för gemensam redigering ritas varje deltagares markering, fokuserade cell och markeringsram på arbetsytan i den deltagarens färg – se [Gemensam redigering](../../api/advanced/collaborative-editing.md).
+I en session för gemensam redigering ritas varje deltagares markering, fokuserade cell och markeringsram på arbetsytan i den deltagarens färg – se [Gemensam redigering](../../api/advanced/collaborative-editing.md).  
+För en deltagare som tittar på en annan namnvisning ritas den fokuserade cellen på den cell som din visning ritar i dess ställe, till exempel deltagarens namncell på din cell för logiskt namn – se [Medarbetare](./logical-names.md#collaborators).
 
 ## Flytta flera tabeller {#moving-multiple-tables}
 
 Dra en tabell eller anteckning som redan ingår i markeringen, så flyttas hela markeringen med den – ingen modifierartangent behövs.  
+En tabell dras i sitt tabellhuvud eller i någon av sina kolumnrader, så en dragning som börjar på en kolumnrad flyttar tabellen, inte kolumnen. Kolumner flyttas i stället med draghandtaget bredvid den fokuserade raden – se [Ordna om och flytta kolumner](./table-editing.md#rearranging-and-moving-columns).  
+På en cell i tabellhuvudet eller en kolumnrad börjar tabellen flyttas först när pekaren har förflyttats en kort bit, så ett klick där fokuserar fortfarande cellen och ett dubbelklick öppnar fortfarande dess redigeringsfält. En dragning startar aldrig från en tabells färgkant, som öppnar färgväljaren, från knapparna `+` och `x` i dess tabellhuvud eller från knappen `x` på en kolumnrad.  
 Om du drar något utanför markeringen blir det ensamt markerat och flyttas för sig. `Ctrl + drag` (Windows/Linux) eller `⌘ + drag` (Mac) behåller markeringen i båda fallen.  
 Bara vänster musknapp flyttar tabeller och anteckningar. Ett högerklick väljer vad snabbmenyn verkar på och flyttar ingenting, och en dragning med mittenknappen panorerar i stället arbetsytan – se [Navigera på arbetsytan](#getting-around-the-canvas).
 
@@ -47,7 +51,9 @@ Ordningen sparas inte: ett diagram som öppnas igen staplar sina tabeller i den 
 Kopierar de markerade tabellerna och anteckningarna och klistrar in dem igen som nya.  
 Kortkommandon: `Ctrl + C` (Windows/Linux) eller `⌘ + C` (Mac), `Ctrl + V` (Windows/Linux) eller `⌘ + V` (Mac)
 
-En kopierad tabell behåller sitt namn, sin kommentar, sina kolumner och sin färg; en kopierad anteckning behåller sin text, sin storlek och sin färg.  
+En kopierad tabell behåller sitt namn, sitt logiska namn, sin kommentar, sina kolumner och sin färg; en kopierad anteckning behåller sin text, sin storlek och sin färg.  
+Varje kopierad kolumn behåller sitt logiska namn, och varje tabell- och kolumnnamn behåller uppgiften om huruvida det har härletts från ordlistorna – se [Härleda fysiska namn](./dictionary.md#deriving-physical-names).  
+En inklistrad kolumn behåller sin domänkoppling bara när två villkor är uppfyllda: diagrammet som den hamnar i listar just den domänen, inte bara en med samma namn, och domänen har fortfarande den datatyp som kolumnen kopierades med. Annars hamnar kolumnen utan domän och behåller den typ som den kopierades med – se [Koppla en kolumn](./dictionary.md#linking-a-column).  
 Index och relationer följer också med: ett index kopieras i sin helhet till den kopierade tabellen, och en relation kopieras med sin typ och sina åtgärder för ON DELETE och ON UPDATE när båda tabellerna som den förbinder ingår i det som kopieras. En halv relation utelämnas i stället för att lämnas kvar och peka tillbaka på originalet.  
 De inklistrade kopiorna blir den nya markeringen, och om du klistrar in samma kopia igen förskjuts den ytterligare `50px` varje gång, så att upprepade inklistringar inte hamnar ovanpå varandra.  
 En kopia behåller inte sin [tabellgrupp](./table-groups.md): den inklistrade tabellen ligger inte i någon grupp, även när den hamnar inuti en grupps ruta, och en markerad grupp kopieras inte.  
@@ -60,11 +66,12 @@ När kolumner är markerade i en fokuserad tabell kopierar samma kortkommando i 
 ## Duplicera tabeller och anteckningar {#duplicating-tables-and-memos}
 
 Håll ned `Alt` och dra en tabell eller anteckning med vänster musknapp.  
+Du tar tag i en tabell i dess tabellhuvud eller i någon kolumnrad, så `Alt + drag` på en kolumnrad duplicerar tabellen och lämnar kolumnordningen orörd. `Alt` nedtryckt på kolumnens draghandtag duplicerar ingenting: kolumnen flyttas som en vanlig dragning i handtaget flyttar den – se [Ordna om och flytta kolumner](./table-editing.md#rearranging-and-moving-columns).  
 En halvgenomskinlig förhandsgranskning följer pekaren, och när du släpper knappen placeras kopian där förhandsgranskningen ligger.  
 Om det du tar tag i redan ingår i en markering dupliceras hela markeringen. Annars ersätts markeringen av entiteten under pekaren.  
 `Alt + click` utan förflyttning placerar kopian `50px` nedåt och åt höger, och ytterligare ett steg bort varje gång den platsen redan är upptagen.
 
-En dubblett tar med samma saker som en inklistring: namn, kommentarer, kolumner, färger, anteckningsstorlekar samt de index och relationer som helt tillhör det du kopierade. Liksom en inklistring hamnar den inte i någon tabellgrupp.  
+En dubblett tar med samma saker som en [inklistring](#copyingpasting-tables-and-memos): namn och logiska namn, kommentarer, kolumner, färger, anteckningsstorlekar samt de index och relationer som helt tillhör det du kopierade. Eftersom den stannar i samma diagram behåller den varje kolumns domänkoppling som den är. Liksom en inklistring hamnar den inte i någon tabellgrupp.  
 `Alt + drag` på en tabellgrupps namnlist flyttar gruppen som en vanlig dragning gör; en grupp dupliceras aldrig.
 
 ![En tabell dupliceras med Alt + drag, och sedan ger Alt + click ytterligare en kopia nedåt och åt höger](/img/demo-table-duplicate.webp)
@@ -119,6 +126,7 @@ Följande visningsalternativ finns:
 - Table Comment
 - Column Comment
 - DataType
+- Domain
 - Default
 - Not Null
 - Unique
@@ -129,7 +137,9 @@ Följande visningsalternativ finns:
 - Table Groups
 - Memos
 
-`Unique`, `Alternate Key` och `Auto Increment` är av som standard, och resten är på.  
+`Domain`, `Unique`, `Alternate Key` och `Auto Increment` är av som standard, och resten är på.  
+Vilka namn tabellerna visar är inget visningsalternativ: `Name View`, direkt efter `View Option` i arbetsytans snabbmeny, väljer fysiska namn, logiska namn eller båda – se [Byta visning](./logical-names.md#switching-the-view).  
+`Domain` ger varje kolumn en cell, placerad enligt [kolumnordningen](./settings.md#adjusting-column-order), med namnet på den domän som kolumnen är kopplad till. En kolumn som inte är kopplad till någon domän som bladet `Domains` listar visar där platshållaren `domain`, nedtonad. Cellen visas i varje namnvisning. Medan `Domain` är av visar `Logical Names` i stället en kopplad domäns namn i typcellen – se [Domäncellen](./logical-names.md#the-domain-cell).  
 `Alternate Key` märker kolumnerna i varje alternativ nyckel, till exempel `AK1.1` – se [Alternativa nycklar](#alternate-keys).  
 `Referential Actions` visar etiketterna `D:` och `U:` som en relations åtgärder för ON DELETE och ON UPDATE sätter vid barnänden av dess relationslinje – se [Läsa en relationslinje](./relationship-editing.md#reading-a-connector). Om du slår av alternativet döljs bara de etiketterna, och ingen tabell eller relationslinje flyttas.  
 `Table Groups` visar [tabellgrupperna](./table-groups.md) och gruppfärgerna på deras tabellers tabellhuvuden. Om du slår av alternativet döljs de på arbetsytan, i minikartan och i bildexporter, ingen tabell flyttas och varje tabell stannar i sin grupp – se [Dölja grupper](./table-groups.md#hiding-groups). Det tar också bort mappen `Table Groups` från [utforskaren](./explorer.md#the-tree) och `New Table Group` från [arbetsytans verktygsfält](#canvas-toolbar), och utforskarens sökning slutar hitta gruppnamn.  
@@ -139,19 +149,19 @@ I en editor med `readonly` ändrar alternativen ingenting.
 
 ![Alternativ i View Option slås på och av medan tabellerna ordnas om, ett sammansatt unikt index märks AK1.1 och AK1.2 med Alternate Key, och sedan slås Memos av och på](/img/demo-view-options.webp)
 
-Korten i läget `Flow` på fliken Visualisering följer inte de här alternativen: de använder sin egen [radvisning](./visualization.md#row-display) och ritar sina relationslinjer även när `Relationship` är av.
+Korten i läget `Flow` på fliken Visualisering följer inte de här alternativen, inte heller `Domain`: de använder sin egen [radvisning](./visualization.md#row-display) och ritar sina relationslinjer även när `Relationship` är av. Vilka celler ett kort lägger upp beror enbart på namnvisningen – se [Namn på korten](./visualization.md#names-on-the-cards).
 
 ## Tabellegenskaper {#table-properties}
 
 Öppnar en tabells egenskapspanel.  
 Börja med `Table Properties` i tabellens snabbmeny, som öppnar panelen för tabellen du högerklickade på, eller markera en tabell och tryck på `Alt + Space`.  
-Panelen öppnas mitt på en nedtonad arbetsyta. Bara arbetsytan tonas ned, så en öppen [utforskare](./explorer.md#dialogs-beside-it) förblir öppen och användbar bredvid den. Panelens rubrikrad innehåller titeln `Table Properties`, de fem senast öppnade tabellerna som brickor med den aktuella framhävd och en stängningsknapp. Klicka på en bricka för att gå till den tabellen utan att öppna panelen igen.  
+Panelen öppnas mitt på en nedtonad arbetsyta. Bara arbetsytan tonas ned, så en öppen [utforskare](./explorer.md#dialogs-beside-it) förblir öppen och användbar bredvid den. Panelens rubrikrad innehåller titeln `Table Properties`, de fem senast öppnade tabellerna som brickor med den aktuella framhävd och en stängningsknapp. Varje bricka namnger sin tabell så som [namnvisningen](./logical-names.md#beyond-the-canvas) gör. Klicka på en bricka för att gå till den tabellen utan att öppna panelen igen.  
 Under rubrikraden finns tre flikar: `Indexes`, `Schema SQL` och `Code Generator`. Panelen har samma storlek för alla tre, så när du byter flik varken flyttas den eller ändrar storlek.  
 Stäng den med stängningsknappen, med `Escape` eller genom att klicka utanför den på arbetsytan.  
 Om du väljer en rad som inte är en mapp i utforskaren, eller går till en träff i dess sökning, stängs panelen Tabellegenskaper före hoppet. Detsamma gäller `Ctrl + F` (Windows/Linux) eller `⌘ + F` (Mac), som öppnar utforskarens sökning eller placerar textmarkören i dess sökfält när utforskaren redan är öppen. Alla andra klick i utforskaren, även på en mapprad, eller på knappen `Explorer` i verktygsfältet lämnar panelen Tabellegenskaper öppen. Ett tryck på `Escape` medan tangentbordsfokus är i utforskaren återför bara tangentbordsfokus till arbetsytan, så det krävs ett andra tryck på `Escape` för att stänga panelen Tabellegenskaper.
 
 Fliken `Indexes` beskrivs i [Index](#indexes).  
-Fliken `Schema SQL` visar tabellens DDL-kod för den valda [databasen](#databases): dess `CREATE TABLE`, de separata begränsningar som vissa databaser skriver för dess kolumner med flaggan Unik och dess index. Den skriver alltid vanliga satser av typen `CREATE`, utan inledning och utan skript före eller efter, oavsett hur fliken [Schema SQL](./schema-sql.md) i verktygsfältet är inställd. Den har ingen alternativpanel, och dess snabbmeny erbjuder bara `Database` och `Bracket`.  
+Fliken `Schema SQL` visar tabellens DDL-kod för den valda [databasen](#databases): dess `CREATE TABLE`, de separata begränsningar som vissa databaser skriver för dess kolumner med flaggan Unik och dess index. Den skriver alltid vanliga satser av typen `CREATE`, utan inledning, utan skript före eller efter och utan logiska namn i tomma kommentarer, oavsett hur fliken [Schema SQL](./schema-sql.md) i verktygsfältet är inställd – se [Logiska namn som kommentarer](./schema-sql.md#logical-names-as-comments). Den har ingen alternativpanel, och dess snabbmeny erbjuder bara `Database` och `Bracket`.  
 Fliken `Code Generator` genererar kod för enbart den här tabellen – se [Kodgenerator](./code-generator.md).
 
 I en editor med `readonly` öppnas panelen ändå, med etiketten `Read only` bredvid titeln, men fliken `Indexes` erbjuder inga redigeringsmöjligheter.
@@ -163,19 +173,19 @@ Börja i tabellens snabbmeny med `Focus on this table`, eller markera en eller f
 När tabellen du högerklickar på är en av flera markerade tabeller visar menyalternativet `Focus on selected tables` och fokuserar på hela markeringen. Ett högerklick på en tabell utanför markeringen fokuserar enbart på den tabellen.  
 Kortkommandot tar de markerade tabellerna, utelämnar anteckningar och gör ingenting när ingen tabell är markerad.  
 En markerad [tabellgrupp](./table-groups.md) räknas inte alls här, varken i kortkommandot eller i menyalternativet: gruppens tabeller tas med bara när de själva är markerade, vilket `Select tables` i gruppens meny åstadkommer.  
-Vad den begränsade vyn visar, och hur du kommer tillbaka till hela diagrammet, beskrivs i [Visualisering](./visualization.md#focusing-on-tables).
+Vad den begränsade vyn visar, och hur du kommer tillbaka till hela diagrammet, beskrivs i [Visualisering](./visualization.md#focusing-on-tables), och hur du går bakåt och framåt genom det som flödet har visat tidigare i [Föregående och nästa tabell](./visualization.md#previous-table-and-next-table).
 
 ## Index {#indexes}
 
 Index definieras på fliken `Indexes` i tabellens egenskapspanel och ingår i den exporterade Schema SQL-koden.
 
 Den vänstra sidan listar tabellens nycklar och index i två grupper.  
-`Keys`, som visas när tabellen har några, listar de nycklar som dess kolumner deklarerar: `PK_<table name>` över kolumnerna märkta PK, sedan `UQ_<table name>_<column name>` för varje kolumn med flaggan Unik, i kolumnordning. Namnen följer Schema SQL för den valda databasen, så med `Bracket` satt till `None` visas `PK_users` för en schemakvalificerad tabell som `sales.users` under alla databaser utom Databricks och Snowflake – se [Schemakvalificerade tabellnamn](./schema-sql.md#schema-qualified-table-names). Varje nyckel har etiketten `PK` eller `UQ` och är märkt med ett lås. De är skrivskyddade här och ändras bara med kolumnernas flaggor [PK](./table-editing.md#column-primary-key) och [Unik](./table-editing.md#not-null-unique-auto-increment).  
+`Keys`, som visas när tabellen har några, listar de nycklar som dess kolumner deklarerar: `PK_<table name>` över kolumnerna märkta PK, sedan `UQ_<table name>_<column name>` för varje kolumn med flaggan Unik, i kolumnordning. Namnen är de fysiska namn som Schema SQL för den valda databasen skriver, oavsett namnvisning, så med `Bracket` satt till `None` visas `PK_users` för en schemakvalificerad tabell som `sales.users` under alla databaser utom Databricks och Snowflake – se [Schemakvalificerade tabellnamn](./schema-sql.md#schema-qualified-table-names). Varje nyckel har etiketten `PK` eller `UQ` och är märkt med ett lås. De är skrivskyddade här och ändras bara med kolumnernas flaggor [PK](./table-editing.md#column-primary-key) och [Unik](./table-editing.md#not-null-unique-auto-increment).  
 `Indexes` listar tabellens index i den ordning de lades till. Varje index har en växlingsknapp `UQ` som gör det unikt, ett namnfält och ett `x` som tar bort det. Ett index som är en [alternativ nyckel](#alternate-keys) visar också sitt nummer, till exempel `AK1`. Lägg till ett index med `Add Index` längst ned i listan.
 
-Den högra sidan listar tabellens kolumner under `Columns`, var och en med en kryssruta. Ingenting går att redigera förrän ett index är markerat till vänster.  
+Den högra sidan listar tabellens kolumner under `Columns`, var och en med en kryssruta. Varje rad visar samma celler som kolumnens rad på arbetsytan och följer kolumnordningen, visningsalternativen och [namnvisningen](./logical-names.md#beyond-the-canvas). Ingenting går att redigera förrän ett index är markerat till vänster.  
 Kryssa i en kolumn för att lägga till den i det markerade indexet, och kryssa ur den för att ta bort den. Om du markerar en nyckel visas dess kolumner ikryssade, men rutorna förblir inaktiverade.  
-Kolumnerna i det markerade indexet listas nedanför under `Index order`. Dra dem i draghandtaget för att ändra ordning på dem, och klicka på brickan `ASC` eller `DESC` på en rad för att vända dess sorteringsordning. I en alternativ nyckel slutar varje rad med sitt märke `AK<n>.<m>`. Listan visar tre rader åt gången, och resten nås genom att rulla.
+Kolumnerna i det markerade indexet listas nedanför under `Index order`, var och en med det namn som namnvisningen ger den, med namnet inom parentes efter det logiska namnet i `Both Names`, till exempel `Member Number (member_no)`. Dra dem i draghandtaget för att ändra ordning på dem, och klicka på brickan `ASC` eller `DESC` på en rad för att vända dess sorteringsordning. I en alternativ nyckel slutar varje rad med sitt märke `AK<n>.<m>`. Listan visar tre rader åt gången, och resten nås genom att rulla.
 
 I en editor med `readonly` visas fortfarande kolumnerna när du markerar en nyckel eller ett index, men det finns inget `Add Index` och inget `x`, och ingenting annat på fliken kan ändras.
 
@@ -216,12 +226,12 @@ Ordnar alla tabeller på arbetsytan åt dig.
 | `Tree - horizontal` | Samma lagerindelning, från vänster till höger. |
 
 `Force` öppnar en förhandsgranskning medan layouten stabiliseras, med `Apply` och `Cancel` i meddelandet som visas.  
-Förhandsgranskningen är inramad kring diagrammet så som det såg ut när layouten startade, så tabeller kan röra sig ut ur ramen medan layouten stabiliseras. Den ritas vid `70%` eller mindre, så dess tabeller visas hopfällda till sitt namn och sin färgkant.  
+Förhandsgranskningen är inramad kring diagrammet så som det såg ut när layouten startade, så tabeller kan röra sig ut ur ramen medan layouten stabiliseras. Den ritas vid `70%` eller mindre, så dess tabeller visas hopfällda till sitt namn och sin färgkant. Den öppnas i den namnvisning du tittar på, oavsett vilken visning filen behåller – se [Utanför arbetsytan](./logical-names.md#beyond-the-canvas).  
 `Apply` behåller positionerna som de är i det ögonblicket, och layouten tillämpas av sig själv när den har kommit till vila. `Cancel` eller `Escape` lämnar diagrammet som det var.
 
 De andra tre beräknas i ett svep, utanför huvudtråden, så det finns inget att titta på: ett meddelande visas medan layouten beräknas, och den färdiga placeringen centreras på det område som diagrammet redan täcker. `Cancel` eller `Escape` avbryter en layout som du inte längre väntar på, och i ett värdprogram som inte kör någon shared worker slutar layouten med `Could not place tables` – se [Web Workers](../../api/installation.md#web-workers). En layout som inte har kommit tillbaka inom 60 sekunder slutar på samma sätt.
 
-Vilken du än väljer flyttas tabeller och tabellgrupper, medan anteckningar stannar där de är. En relation från en tabell till sig själv ignoreras, och flera relationer mellan samma två tabeller räknas som en.  
+Vilken du än väljer flyttas tabeller och tabellgrupper, medan anteckningar stannar där de är. Tabellerna placeras med de bredder som de har i den namnvisning du tittar på. En relation från en tabell till sig själv ignoreras, och flera relationer mellan samma två tabeller räknas som en.  
 Varje layout håller ihop varje grupps tabeller, oavsett om grupperna visas eller inte, och anpassar varje grupp som innehåller tabeller så att den omsluter dem – se [Tabellgrupper](./table-groups.md#auto-layout).  
 Resultatet blir ett enda steg i historiken, så en enda ångring flyttar tillbaka varje tabell och grupp dit den var.
 
@@ -259,6 +269,7 @@ Ett litet verktygsfält svävar över mitten av arbetsytans nederkant och inneh�
 - `New Table`, `New Memo` och `New Table Group`. `New Table` lägger till en tabell som `Alt + N` gör, och `New Memo` lägger till en anteckning som `Alt + M` gör. `New Table Group` aktiverar [ritläget för grupper](./table-groups.md#drawing-a-group) som `Alt + G` gör och slår av handen; ett andra klick avslutar, liksom ett andra `Alt + G`, ritläget utan att lägga till någon grupp. `New Memo` visas inte medan View Option → `Memos` döljer anteckningarna, och `New Table Group` inte medan View Option → `Table Groups` döljer grupperna. En editor med `readonly` visar ingen av de tre.
 - Zoomen: `Zoom out`, den aktuella zoomen i procent och `Zoom in`. De två knapparna ändrar zoomen i steg på samma sätt som zoomkortkommandona, och ett klick på procenttalet återställer den till `100%`.
 - De fyra relationsnotationerna, samma fyra som du startar en relation med – se [Börja redigera](./editing-start.md). Om du väljer en växlar du tillbaka till pekaren, eftersom en relation ritas genom att du klickar på två tabeller.
+- `Name View`, en knapp med en nedåtpil som visar den aktuella visningen: `Physical Names`, `Logical Names` eller `Both Names`. Den har samma bredd oavsett vilken visning den visar, så ett byte flyttar aldrig verktygsfältet. Ett klick öppnar en lista med de tre ovanför verktygsfältet, med en bock vid den aktuella. Om du väljer en byts visningen till den och listan stängs; ett andra klick på knappen, ett tryck någon annanstans eller `Escape` stänger listan utan att byta. En editor med `readonly` visar den också. Vad varje visning ritar beskrivs i [Namnvisning](./logical-names.md#name-view), och om ett byte sparas beskrivs i [Byta visning](./logical-names.md#switching-the-view).
 - Zenläget, `Alt + Z`, som rensar bort allt utom arbetsytan och det här verktygsfältet. `Alt + Z` igen, eller knappen, tar tillbaka resten. En öppen utforskare döljs med resten, utan att stängas, och kommer tillbaka med den. Den kan fortfarande öppnas i zenläget – se [När den viker undan](./explorer.md#when-it-stands-aside).
 - Kompassen `Go to content`, som läggs till i slutet av verktygsfältet bara när ingen tabell, synlig anteckning eller synlig tabellgrupp finns på skärmen – se [Navigera på arbetsytan](#getting-around-the-canvas).
 
@@ -277,7 +288,7 @@ Kortkommandon: `Ctrl + Plus` (Windows/Linux) eller `⌘ + Plus` (Mac), `Ctrl + M
 Knapparna `Zoom out` och `Zoom in` i [arbetsytans verktygsfält](#canvas-toolbar) ändrar zoomen i steg som kortkommandona `Minus` och `Plus`: varje tryck ändrar den med 4 procentenheter och behåller skärmens mitt där den är. Procenttalet mellan dem visar den aktuella zoomen, och ett klick på det går direkt tillbaka till `100%`, som `Ctrl + 0` (Windows/Linux) eller `⌘ + 0` (Mac).
 
 Zoomen går från `10%` till `150%`.  
-Vid `70%` och lägre fälls tabellerna ihop till sitt namn och sin färgkant, och cellredigering, cellkortkommandona samt kopiering och inklistring slutar fungera tills du zoomar in igen.
+Vid `70%` och lägre fälls tabellerna ihop till sitt namn och sin färgkant, och cellredigering, cellkortkommandona samt kopiering och inklistring slutar fungera tills du zoomar in igen. Namnet som en hopfälld tabell visar följer namnvisningen – se [Namnvisning](./logical-names.md#name-view).
 
 Samma tre kortkommandon zoomar också fliken Visualisering, i både läget `Graph` och läget `Flow`, varje läge inom sitt eget intervall – se [Visualisering](./visualization.md#toolbar).
 
@@ -302,11 +313,11 @@ Att dra i en rullningslists rullningsruta eller i minikartans rektangel för vis
 
 Om en panorering inte lämnar någon tabell, synlig anteckning eller synlig tabellgrupp på skärmen läggs kompassen `Go to content` till i slutet av [arbetsytans verktygsfält](#canvas-toolbar), med en pil mot det närmaste objektet och hur långt bort det är. Klicka på den för att centrera det objektet utan att ändra zoomen.
 
-![Panorering genom att dra på tom arbetsyta, dra med mittenknappen över en tabell, använda minikartan och mushjulet, och sedan tillbaka genom att följa kompassen Go to content](/img/demo-canvas-navigation.webp)
+![Panorering genom att dra på tom arbetsyta, med mushjulet, genom att dra med mittenknappen över en tabell och från minikartan, och sedan Shift + wheel förbi innehållet och tillbaka genom att följa kompassen Go to content](/img/demo-canvas-navigation.webp)
 
 ### Var ett hopp hamnar {#where-a-jump-lands}
 
-Varje hopp som tar dig till något på arbetsytan flyttar vyn enligt en och samma regel: resultaten för `#`, `@` och `:` i [snabbsökningen](./quick-search.md#searching-the-diagram), raderna i [utforskaren](./explorer.md#going-to-a-row) och träffarna i dess sökning med [Sök och ersätt](./find-and-replace.md#going-to-a-match), raderna i listan i [diff-visaren](#going-to-a-change), [kortknappen](./visualization.md#card-buttons) för extern länk i flödesläget och landningen efter [Importera och lägg till](./file-import-export.md#import-and-add). Vart och ett av de avsnitten säger vad hoppet markerar; det här avsnittet säger vart vyn går.
+Varje hopp som tar dig till något på arbetsytan flyttar vyn enligt en och samma regel: resultaten för `#`, `@` och `:` i [snabbsökningen](./quick-search.md#searching-the-diagram), raderna i [utforskaren](./explorer.md#going-to-a-row) och träffarna i dess sökning med [Sök och ersätt](./find-and-replace.md#going-to-a-match), raderna i listan i [diff-visaren](#going-to-a-change), [kortknappen](./visualization.md#card-buttons) för extern länk i flödesläget, en kontroll som anger en tabell eller en kolumn på [bladet Kontroller](./dictionary.md#the-checks-sheet) på fliken Ordlista och landningen efter [Importera och lägg till](./file-import-export.md#import-and-add). Vart och ett av de avsnitten säger vad hoppet markerar; det här avsnittet säger vart vyn går.
 
 Ett hopp ändrar aldrig zoomen och gör högst en rullning. Från en annan flik växlar det först till ERD-fliken.  
 Det mäter arbetsytan så som den visas: under det övre verktygsfältet, eller hela höjden i zenläget, och till höger om en öppen utforskare, som gör arbetsytan smalare i stället för att täcka den.
@@ -322,8 +333,8 @@ En liten tabell nära arbetsytans vänsterkant, halvvägs ned, flyttas alltså b
 Vad ett hopp visar, och den huvuddel som måste synas när helheten inte får plats:
 
 - En tabell: hela tabellen, med namnraden överst som huvuddel, eller med kommentarscellen vid en träff i tabellkommentaren medan View Option → `Table Comment` visar kommentarerna. Vid `70%` och lägre, där tabellerna fälls ihop till sitt namn, med namnet mitt i rutan.
-- En kolumn: dess rad, med cellen som hoppet går till som huvuddel: namnet, eller kommentaren som en träff finns i medan View Option → `Column Comment` visar kommentarerna. Vid `70%` och lägre visar en kolumn sin tabell enligt tabellens regel.
-- En cell som är för bred för att visas helt, till exempel en lång kommentar: med den matchade texten i den som huvuddel.
+- En kolumn: dess rad, med cellen som hoppet går till som huvuddel: namnet, det logiska namnet vid en träff i ett logiskt namn eller en kontroll av det logiska namnet, domäncellen vid en kontroll av domänen, eller kommentaren som en träff finns i medan View Option → `Column Comment` visar kommentarerna. Där raden inte ritar någon sådan cell går hoppet till den cell som ritas i dess ställe: det logiska namnet för namnet i `Logical Names`, namnet för det logiska namnet i `Physical Names` och typcellen för domäncellen medan View Option → `Domain` är av, eller raden som helhet medan även `DataType` är av. Vid `70%` och lägre visar en kolumn sin tabell enligt tabellens regel.
+- En cell som är för bred för att visas helt, till exempel en lång kommentar: med den matchade texten i den som huvuddel. Ett hopp till den cell som ritas i stället för den som träffen finns i, till exempel namnet för en träff i ett logiskt namn i `Physical Names`, har inte den matchade texten som huvuddel.
 - En relation: rutan som omfattar dess två tabeller, med barntabellen som huvuddel.
 - En tabellgrupp: dess ruta, med namnlisten som huvuddel.
 - En anteckning, eller blocket som Importera och lägg till placerar: hela objektet.
@@ -337,7 +348,7 @@ Du kan jämföra tidigare sparade dokument med det aktuella dokumentet.
 Välj `Diff Viewer` i arbetsytans snabbmeny och välj ett `.json`-dokument som du har exporterat tidigare.
 
 Vyn öppnas över arbetsytan: det som har ändrats till vänster, sedan det sparade dokumentet och det aktuella sida vid sida.  
-Det aktuella dokumentet jämförs som det ser ut när vyn öppnas; ändringar som görs efter det, även en medarbetares, når inte vyn. En öppen [utforskare](./explorer.md#when-it-stands-aside) döljs medan vyn är öppen, så att vyn tar editorns hela bredd.  
+Det aktuella dokumentet jämförs som det ser ut när vyn öppnas; ändringar som görs efter det, även en medarbetares, når inte vyn. Båda sidorna öppnas, och förblir, i den namnvisning du tittar på, oavsett vilken visning någon av filerna behåller – se [Utanför arbetsytan](./logical-names.md#beyond-the-canvas). En öppen [utforskare](./explorer.md#when-it-stands-aside) döljs medan vyn är öppen, så att vyn tar editorns hela bredd.  
 Varje sida panoreras med mushjulet, genom att dra på ett tomt område eller en tabellgrupps yta, eller genom att dra med mittenknappen var som helst över den, och zoomas med `Ctrl + Wheel` (Windows/Linux), `⌘ + Wheel` (Mac) eller en nypgest. Vid `70%` och lägre fälls dess tabeller ihop som på arbetsytan – se [Märkningar på båda sidorna](#marks-on-the-two-sides).  
 Båda sidorna är skrivskyddade, så ingenting i ditt dokument ändras. Varje sida har sin egen markering, och ett klick på en tabell där markerar den enbart på den sidan.  
 Stäng vyn med knappen `Close` i meddelandet `Diff Viewer` som den öppnas med, eller med `Escape`.
@@ -360,13 +371,14 @@ Vad som räknas som en ändring:
 - En anteckning: dess text, position, storlek och färg.
 - En tabellgrupp: dess namn, tabellerna den innehåller, färg, position och storlek.
 
-En tabell, anteckning eller grupp som bara har flyttats, fått ny storlek eller fått ny färg räknas alltså som ändrad. Positioner och storlekar jämförs i hela pixlar, och staplingsordningen och var en relationslinje möter en tabell räknas aldrig.
+En tabell, anteckning eller grupp som bara har flyttats, fått ny storlek eller fått ny färg räknas alltså som ändrad. Positioner och storlekar jämförs i hela pixlar, och staplingsordningen och var en relationslinje möter en tabell räknas aldrig.  
+Logiska namn, domänkopplingar och orden, termerna och domänerna på fliken [Ordlista](./dictionary.md) jämförs inte, så en ändring av enbart dem varken listas eller märks. En datatyp som en domän har ändrat räknas däremot, som en ändring av kolumnens datatyp.
 
 ### Ändringsträdet {#the-change-tree}
 
 Listan till vänster ritas som [utforskarens träd](./explorer.md#the-tree) och innehåller bara det som har ändrats: `Tables`, `Table Groups` och `Memos`, var och en bara när den innehåller en rad, och under en tabell dess egna `Columns`, `Indexes` och `Foreign Keys`. En sekundärnyckel listas under sin barntabell, och en tillagd eller borttagen tabell listar ingenting inuti sig.  
 Varje mapp visar hur många rader den innehåller, och varje mapp och tabell är utfälld från början.  
-Tabeller och tabellgrupper listas efter namn, utan hänsyn till skiftläge. Anteckningar, och en tabells kolumner, index och sekundärnycklar, behåller det aktuella dokumentets ordning, och ett borttaget objekt sätts tillbaka där det stod. En anteckningsrad visar anteckningens första rad, och en sekundärnyckelrad visar sina barnkolumner, sedan `→` med föräldratabellen och dess kolumner, till exempel `user_id → users(id)`. Ett tomt namn visas som `unnamed` i kursiv stil.
+En tabell- eller kolumnrad namnges i den namnvisning som sidorna öppnades i. I `Both Names` visar den det logiska namnet med namnet efter, dämpat, och på en borttagen rad är det dämpade namnet genomstruket tillsammans med resten. Tabeller och tabellgrupper listas efter namn, utan hänsyn till skiftläge, oavsett visning. Anteckningar, och en tabells kolumner, index och sekundärnycklar, behåller det aktuella dokumentets ordning, och ett borttaget objekt sätts tillbaka där det stod. En anteckningsrad visar anteckningens första rad, och en sekundärnyckelrad visar sina barnkolumner, sedan `→` med föräldratabellen och dess kolumner, till exempel `user_id → users(id)`. Ett tomt namn visas som `unnamed` i kursiv stil.
 
 Varje rad slutar med en bokstav, och en rad märkt `A`, `D`, `M` eller `R` har sitt namn i bokstavens färg:
 
@@ -378,7 +390,7 @@ Varje rad slutar med en bokstav, och en rad märkt `A`, `D`, `M` eller `R` har s
 
 Håll pekaren över en rads namn för att se dess knappbeskrivning: statusen, `Added`, `Deleted`, `Modified`, `Renamed` eller `Changed inside`, och sedan en rad per ändring, till exempel `Name: users → members` eller `NN: ✗ → ✓`. En text citeras med sin första rad, avkortad efter 40 tecken, och ett tomt värde visas som `—`. Knappbeskrivningen för ett tillagt eller borttaget objekt är enbart dess status.
 
-`Filter by name`, ovanför trädet, behåller de rader vars aktuella eller sparade namn innehåller det du skriver, utan hänsyn till skiftläge. En tabell vars namn matchar behåller alla sina rader, och en som inte gör det behåller bara de rader som matchar. Ett filter som inte matchar något lämnar trädet tomt.  
+`Filter by name`, ovanför trädet, behåller de rader vars aktuella eller sparade namn, eller aktuella eller sparade logiska namn, innehåller det du skriver, utan hänsyn till skiftläge, i varje namnvisning. En tabell vars namn matchar behåller alla sina rader, och en som inte gör det behåller bara de rader som matchar. Ett filter som inte matchar något lämnar trädet tomt.  
 När de två dokumenten inte skiljer sig åt alls visar trädet `No changes`.
 
 Dra trädets högerkant för att göra det bredare eller smalare, från `200px` till `480px`, och dubbelklicka på kanten för att återställa bredden till `260px`. Varje jämförelse öppnas med `260px`, och de två sidorna delar lika på resten av bredden.  
@@ -407,5 +419,7 @@ De två sidorna färgar text, konturer och relationslinjer, och fyller ingenting
 - En indexändring märker ingenting på någon av sidorna; den visas bara i trädet.
 
 Varje sida följer sitt eget dokuments visningsalternativ. En ändring i en cell som sidan inte ritar visas i stället på namnet. En kolumnändring i en cell som ett visningsalternativ döljer, till exempel `Unique` eller `Auto Increment`, som båda är av som standard, gör kolumnens namn bärnstensgult, och det gör även en ändring av primärnyckeln på en rad som inte visar någon nyckelikon. En ändring av tabellkommentaren medan `Table Comment` är av gör tabellens namn bärnstensgult. Ett namnbytes blå färg går före den här bärnstensgula. En anteckning eller tabellgrupp som dess dokument döljer listas i trädet men ritas inte på den sidan.
+
+I `Logical Names`, som inte ritar någon namncell, hamnar ett namnbytes blå färg och det bärnstensgula från en ändring i en cell som sidan inte ritar på det logiska namn som ritas i namnets ställe. En ändring av datatypen gör typcellen bärnstensgul i varje namnvisning, även där cellen visar en domäns namn. Ingen av sidorna ritar de färger som ordlistornas kontroller ger namn på arbetsytan – se [Märkningar på arbetsytan](./dictionary.md#marks-on-the-canvas).
 
 Vid `70%` och lägre behåller hopfällda tabeller sin kontur. Namnet behåller det gröna eller röda för en tillagd eller borttagen tabell, eller ett namnbytes blå, och får annars det bärnstensgula från en kommentarsändring. Kolumnändringar ritas inte förrän du zoomar in igen; trädet listar dem ändå.

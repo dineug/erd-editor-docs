@@ -6,9 +6,10 @@ description: Spalten hinzufügen, auswählen, neu anordnen und löschen, Spalten
 # Tabellen bearbeiten
 
 Das Bearbeiten von Tabellen bietet im Grunde eine ähnliche Bedienung wie Excel.  
+Die [Namensansicht](./logical-names.md#name-view) legt fest, ob eine Tabelle in ihrem Tabellenkopf und ihren Zeilen die Namen, die logischen Namen oder beide zeigt.  
 Der Bearbeitungsmodus beginnt mit `Enter` oder mit einem Doppelklick auf eine Zelle.  
-`Enter` oder `Escape` beendet ihn. Ihre Eingabe wird schon während des Tippens übernommen, sodass `Escape` den Text beibehält, statt ihn zurückzusetzen.  
-Nach `Escape` bleibt die Zelle fokussiert und die Tabelle ausgewählt, und ein zweites `Escape` hebt beides auf.  
+`Enter` oder `Escape` beendet ihn. Ihre Eingabe wird schon während des Tippens übernommen, sodass `Escape` den Text beibehält, statt ihn zurückzusetzen. Eine [Domänenzelle](./logical-names.md#the-domain-cell) ist die Ausnahme: Sie wählt nur aus ihrer Liste aus und behält Ihre Eingabe nie. Das Schließen einer [Zelle des logischen Namens](./logical-names.md#writing-a-logical-name) bei einem geänderten logischen Namen kann außerdem den physischen Namen eintragen.  
+Nach `Escape` bleibt die Zelle fokussiert und die Tabelle ausgewählt, und ein zweites `Escape` hebt beides auf. Solange eine Zelle des logischen Namens ihre [Begriffsliste](./logical-names.md#completing-term-names) zeigt, schließt das erste `Escape` nur die Liste.  
 Solange eine Eingabemethode noch Zeichen zusammensetzt, lässt `Escape` den Bearbeitungsmodus geöffnet.
 
 ![Mit Alt + N eine Tabelle hinzufügen und zwei Spalten ausfüllen](/img/demo-table-edit.webp)
@@ -23,6 +24,7 @@ Jeder ausgewählten Tabelle wird eine Spalte hinzugefügt.
 Drücken Sie `Tab`, um direkt in den Bearbeitungsmodus der nächsten Zelle zu wechseln.  
 Wenn Sie in der letzten Zelle `Tab` drücken, wird eine neue Spalte erstellt.  
 Mit `Shift + Tab` wechseln Sie in den Bearbeitungsmodus der vorherigen Zelle.  
+`Tab` und `Shift + Tab` durchlaufen die Zellen, die die Tabelle zeigt, in ihrer Reihenfolge, sodass die Namensansicht und View Option → `Domain` darüber entscheiden, ob Zellen des logischen Namens und Domänenzellen dazugehören – siehe [Logischen Namen eingeben](./logical-names.md#writing-a-logical-name).  
 Die Markierungen für [Alternativschlüssel](./table-related-functions.md#alternate-keys), die hinter der letzten Zelle einer Zeile gezeichnet werden, sind keine Zellen, sodass der Tastaturfokus sie überspringt und sie nie zur Bearbeitung geöffnet werden.
 
 ![Mit Tab durch die Zellen einer Zeile wechseln, aus der letzten Zelle eine Spalte hinzufügen und mit Shift + Tab zurückgehen](/img/demo-table-tab.webp)
@@ -40,6 +42,9 @@ Sie können auch auf einen Vorschlag klicken.
 Die Liste zeigt bis zu zehn Vorschläge auf einmal, und die übrigen erreichen Sie durch Scrollen.  
 Nichts wird erzwungen, sodass Sie einen Typ, der nicht in der Liste steht, frei eingeben können, auch mit Argumenten, etwa `VARCHAR(255)`. Die Liste schließt sich, sobald Ihre Eingabe über einen vollständigen Typnamen hinausgeht, wie es bei `VARCHAR(255)` oder `BIGINT UNSIGNED` der Fall ist.  
 Die Vorschläge richten sich nach der ausgewählten Datenbank. Ein Wechsel der Datenbank ändert, was angeboten wird, und lässt vorhandene Spalten unverändert.
+
+Eine Eingabe in die Zelle `DataType` einer mit einer Domäne verknüpften Spalte oder das Übernehmen eines Vorschlags dort hebt die Verknüpfung der Spalte auf, sobald sich ihr Typ von dem der Domäne unterscheidet – siehe [Domänen und Datentypen](./dictionary.md#domains-and-data-types).  
+In der Ansicht `Logical Names` zeigt, solange View Option → `Domain` ausgeschaltet ist, die Typzelle einer mit einer benannten Domäne verknüpften Spalte den Namen der Domäne, und ihre Bearbeitung öffnet statt dieser Vorschläge die [Domänenauswahl](./logical-names.md#the-domain-cell). Eine Typzelle, die einen Datentyp zeigt, bearbeitet ihn wie oben beschrieben.
 
 ![Zellen für den Datentyp mit den Pfeiltasten, Tab und Enter aus unscharfen Vorschlägen ausfüllen](/img/demo-data-type-autocomplete.webp)
 
@@ -67,6 +72,8 @@ Es gibt fünf Möglichkeiten:
 
 ![Spalten mit Shift + Arrow Down, Ctrl/⌘ + click, Shift + click und Alt + A auswählen](/img/demo-column-select.webp)
 
+Um die ausgewählten Spalten gemeinsam zu verschieben, ziehen Sie den Ziehgriff neben der fokussierten – siehe [Spalten neu anordnen und verschieben](#rearranging-and-moving-columns).
+
 Ein Rechtsklick auf die Zeile einer Spalte legt fest, auf welche Spalten das Kontextmenü der Tabelle wirkt, unabhängig davon, welche Zusatztaste gedrückt gehalten wird.  
 Bei einer bereits ausgewählten Zeile bleibt die Auswahl erhalten, und der Fokus wechselt auf diese Zeile. Bei jeder anderen Zeile wird nur diese Zeile ausgewählt. Das gilt überall auf der Zeile, auch auf dem Schlüsselsymbol und auf einer Markierung für einen [Alternativschlüssel](./table-related-functions.md#alternate-keys).  
 Um also über das Menü auf mehrere Spalten zu wirken, etwa bei [Primärschlüssel für Spalten](#column-primary-key) oder [Spalten löschen](#column-deletion), klicken Sie mit der rechten Maustaste auf eine der ausgewählten Zeilen.  
@@ -74,30 +81,37 @@ Auf einem Mac öffnet auch `Ctrl + click` das Menü, zählt aber als einfacher K
 
 ## Spalten neu anordnen und verschieben {#rearranging-and-moving-columns}
 
-Funktioniert per `dragging` und ermöglicht das Verschieben in andere Tabellen.  
-Die gezogenen Zeilen folgen dem Zeiger, und die Zeilen um die Ablagestelle rücken beiseite, um Platz zu machen.  
-Legen Sie die Spalte direkt unter der letzten Zeile einer Tabelle ab, um sie ans Ende dieser Tabelle zu verschieben. Auf einer Tabelle ohne Spalten können Sie an jeder beliebigen Stelle ablegen.
+Eine Spalte wird über ihren Ziehgriff verschoben, eine kleine Schaltfläche mit Griffmuster, die direkt außerhalb des linken Rands der Tabelle neben der fokussierten Zeile steht.  
+Fokussieren Sie eine beliebige Zelle der Spalte, per Klick oder mit den Pfeiltasten oder `Tab`, und der Ziehgriff erscheint neben ihrer Zeile. Solange der Fokus auf dem Tabellenkopf liegt, hat keine Zeile einen.  
+Der Ziehgriff wird blass gezeichnet, bis der Zeiger darauf steht, und der Zeiger wird dann zu einer Hand. Ein Drücken allein bewirkt nichts: Das Ziehen beginnt, sobald sich der Zeiger bewegt, und kann die Spalte an eine andere Stelle in ihrer Tabelle oder in eine andere Tabelle bringen.  
+Über den Zeilen einer Tabelle gleiten die gezogenen Zeilen an ihren Platz, und die Zeilen um die Ablagestelle rücken beiseite, um Platz zu machen. Über leerer Zeichenfläche oder über dem Tabellenkopf einer Tabelle mit Spalten folgt eine durchscheinende Kopie der Zeilen dem Zeiger und zeigt die Namens- und Typzellen jeder Zeile so, wie die Zeile sie in der aktuellen [Namensansicht](./logical-names.md#name-view) zeigt.  
+Legen Sie die Spalte direkt unter der letzten Zeile einer Tabelle ab, um sie ans Ende dieser Tabelle zu verschieben. Auf einer Tabelle ohne Spalten können Sie an jeder beliebigen Stelle ablegen. Der Streifen direkt links neben einer Tabelle, in dem der Ziehgriff steht, zählt ebenfalls zu den Zeilen der Tabelle, sodass ein Ziehen gerade nach unten entlang des Ziehgriffs die Spalten neu anordnet, ohne dass der Zeiger in die Tabelle gelangt.  
+Eine Spalte, die in eine andere Tabelle verschoben wird, behält ihren logischen Namen und ihre Domäne.
 
-![Eine Spalte an eine neue Position ziehen, dann in eine andere Tabelle](/img/demo-column-move.webp)
+![Eine Spalte fokussieren und den Ziehgriff neben ihrer Zeile an eine neue Position ziehen, dann den Ziehgriff einer anderen Spalte in eine andere Tabelle ziehen](/img/demo-column-move.webp)
 
-Mit `Ctrl + drag` (Windows/Linux) oder `⌘ + drag` (Mac) lassen sich mehrere Spalten verschieben.
+Um mehrere Spalten auf einmal zu verschieben, [wählen Sie sie aus](#selecting-multiple-columns), und ziehen Sie den Ziehgriff neben der fokussierten. Solange die fokussierte Spalte eine von zwei oder mehr ausgewählten Spalten ihrer Tabelle ist, nimmt der Ziehgriff alle mit, andernfalls nur seine eigene Spalte.  
+Eine Zusatztaste ist nicht nötig. Wenn Sie auf dem Ziehgriff `Alt` (Windows/Linux) oder `⌥` (Mac) gedrückt halten, werden die Spalten wie bei einem einfachen Ziehen verschoben, und nichts wird dupliziert.
 
-![Drei Spalten auswählen und mit Ctrl/⌘ + drag in eine andere Tabelle verschieben](/img/demo-column-multi-move.webp)
+![Drei Spalten auswählen, dann den Ziehgriff neben der fokussierten in eine andere Tabelle ziehen, wobei die anderen ausgewählten Spalten mitwandern](/img/demo-column-multi-move.webp)
+
+Ein Ziehen, das auf der Zeile einer Spalte statt auf ihrem Ziehgriff beginnt, verschiebt die Tabelle wie ein Ziehen an ihrem Tabellenkopf – siehe [Mehrere Tabellen verschieben](./table-related-functions.md#moving-multiple-tables). `Alt + drag` (Windows/Linux) oder `⌥ + drag` (Mac) auf einer Zeile dupliziert die Tabelle – siehe [Tabellen und Notizen duplizieren](./table-related-functions.md#duplicating-tables-and-memos).  
+Bei einer Zoomstufe von `70%` und darunter, wo Tabellen nur ihre Namen zeigen, und in einem schreibgeschützten Editor wird kein Ziehgriff gezeichnet, sodass sich Spalten dort nicht neu anordnen lassen.
 
 ## Spalten löschen {#column-deletion}
 
 Löscht die ausgewählten Spalten der fokussierten Tabelle. Ein Klick auf eine Zelle wählt deren Spalte aus, sodass Sie mit einem Klick auf eine Zelle und `Delete` genau diese eine Spalte entfernen.  
 Tastenkombinationen:
 
-- `Delete` oder `Backspace` (`⌫` auf einem Mac). Diese entfernen die ausgewählten Spalten, solange ihre Tabelle das einzige ausgewählte Element ist. Wenn keine Spalte ausgewählt ist (der Fokus liegt auf dem Namen oder Kommentar der Tabelle), wenn außerdem etwas anderes ausgewählt ist oder bei einer Zoomstufe von `70%` und darunter, wo Tabellen nur ihre Namen zeigen, entfernen sie stattdessen die gesamte Auswahl – siehe [Tabellen und Notizen löschen](./table-related-functions.md#table-and-memo-deletion).
-- `Alt + Backspace` oder `Alt + Delete` (Windows/Linux), `⌥ + ⌫` oder `⌥ + Delete` (Mac). Diese entfernen die ausgewählten Spalten der fokussierten Tabelle, auch wenn zusätzlich andere Tabellen oder Notizen ausgewählt sind. Sie entfernen nichts, solange eine Zelle bearbeitet wird, und auch nicht bei einer Zoomstufe von `70%` und darunter.
+- `Delete` oder `Backspace`. Diese entfernen die ausgewählten Spalten, solange ihre Tabelle das einzige ausgewählte Element ist. Wenn keine Spalte ausgewählt ist (der Fokus liegt auf dem Namen, dem [logischen Namen](./logical-names.md#name-view) oder dem Kommentar der Tabelle), wenn außerdem etwas anderes ausgewählt ist oder bei einer Zoomstufe von `70%` und darunter, wo Tabellen nur ihre Namen zeigen, entfernen sie stattdessen die gesamte Auswahl – siehe [Tabellen und Notizen löschen](./table-related-functions.md#table-and-memo-deletion).
+- `Alt + Backspace` oder `Alt + Delete` (Windows/Linux), `⌥ + Backspace` oder `⌥ + Delete` (Mac). Diese entfernen die ausgewählten Spalten der fokussierten Tabelle, auch wenn zusätzlich andere Tabellen oder Notizen ausgewählt sind. Sie entfernen nichts, solange eine Zelle bearbeitet wird, und auch nicht bei einer Zoomstufe von `70%` und darunter.
 
 ![Mit Alt + Backspace eine Spalte löschen, dann zwei ausgewählte Spalten](/img/demo-column-remove.webp)
 
 Das Kontextmenü der Tabelle bewirkt dasselbe. Wenn die Tabelle das einzige ausgewählte Element ist, klicken Sie mit der rechten Maustaste auf die Zeile einer Spalte: Der letzte Eintrag des Menüs lautet `Delete column` oder, wenn diese Zeile eine von zwei oder mehr ausgewählten Spalten ist, `Delete columns`.
 
 Während eine Zelle bearbeitet wird, löschen `Delete` und `Backspace` nur Text. Wenn Sie sie außerhalb des Zelleneditors gedrückt halten, entfernen sie nur ein einziges Mal etwas.  
-Nach dem Entfernen wechselt der Fokus auf die nächstgelegene verbleibende Spalte oberhalb der fokussierten. Wenn darüber keine mehr übrig ist, wechselt der Fokus auf den Tabellennamen, auch wenn darunter noch Spalten verbleiben, sodass das nächste `Delete` oder `Backspace` die Tabelle statt einer Spalte entfernt.  
+Nach dem Entfernen wechselt der Fokus auf die nächstgelegene verbleibende Spalte oberhalb der fokussierten. Wenn darüber keine mehr übrig ist, wechselt der Fokus auf den Tabellennamen (in der Ansicht `Logical Names` auf den logischen Namen, der an seiner Stelle gezeigt wird), auch wenn darunter noch Spalten verbleiben, sodass das nächste `Delete` oder `Backspace` die Tabelle statt einer Spalte entfernt.  
 Beziehungen und Indizes, die eine entfernte Spalte verwenden, werden mit ihr entfernt. Es gibt keine Rückfrage, und das gesamte Entfernen ist ein Rückgängig-Schritt.
 
 ## Spalten kopieren/einfügen {#copyingpasting-columns}
@@ -105,8 +119,14 @@ Beziehungen und Indizes, die eine entfernte Spalte verwenden, werden mit ihr ent
 Funktioniert wie eine tabellenbasierte Zwischenablage.  
 Tastenkombinationen: `Ctrl + C` (Windows/Linux) oder `⌘ + C` (Mac), `Ctrl + V` (Windows/Linux) oder `⌘ + V` (Mac)
 
-Das Kopieren in eine Tabellenkalkulation, das Einfügen aus einer solchen und das Einfügen in die Tabelle, deren Spaltenzelle fokussiert ist, verwenden die Zellen, die die Tabellen anzeigen, in der Reihenfolge, in der sie sie anzeigen – siehe [Ansichtsoptionen für Tabellen](./table-related-functions.md#table-view-options) und [Spaltenreihenfolge anpassen](./settings.md#adjusting-column-order).  
-Spalten, die im Editor kopiert und bei ausgewähltem Tabellenkopf oder in die anderen ausgewählten Tabellen eingefügt werden, übernehmen jede Zelle der kopierten Spalten, auch ausgeblendete, etwa Eindeutig und Autoinkrement.  
+Das Kopieren in eine Tabellenkalkulation, das Einfügen aus einer solchen und das Einfügen in die Tabelle, deren Spaltenzelle fokussiert ist, verwenden die Zellen, die die Tabellen anzeigen, in der Reihenfolge, in der sie sie anzeigen – siehe [Ansichtsoptionen für Tabellen](./table-related-functions.md#table-view-options), [Spaltenreihenfolge anpassen](./settings.md#adjusting-column-order) und [Namensansicht](./logical-names.md#name-view). Die Namensansicht ändert, was einige dieser Zellen enthalten:
+
+- In der Ansicht `Logical Names` enthält die Zelle des Namens den logischen Namen oder, solange dieser leer ist, nichts. Solange View Option → `Domain` ausgeschaltet ist, enthält die Typzelle den Namen der Domäne der Spalte, wo sie eine zeigt, und andernfalls den Datentyp.
+- In der Ansicht `Both Names` wird die Zelle `Logical Name` an der Stelle kopiert und eingefügt, an der die Spaltenreihenfolge sie einordnet.
+- Eine angezeigte Domänenzelle enthält den Namen der Domäne oder, bei einer Spalte, die keine Domäne zeigt, nichts.
+
+Spalten, die im Editor kopiert und bei ausgewähltem Tabellenkopf oder in die anderen ausgewählten Tabellen eingefügt werden, übernehmen jede Zelle der kopierten Spalten, auch ausgeblendete, etwa Eindeutig und Autoinkrement, sowie ihre logischen Namen.  
+Sie behalten eine Domänenverknüpfung nur, solange dieses Diagramm genau diese Domäne aufführt, nicht bloß eine gleichnamige, und die Domäne noch den Typ der kopierten Spalte hat. Andernfalls kommen sie nicht verknüpft an, mit dem Typ, mit dem sie kopiert wurden. Ihre Namen gelten als von Ihnen geschrieben, es sei denn, ein eingefügter Name ist leer und der logische Name leitet einen ab – siehe [Physische Namen ableiten](./dictionary.md#deriving-physical-names).  
 Die Markierungen für [Alternativschlüssel](./table-related-functions.md#alternate-keys), etwa `AK1.1`, sind keine Zellen, sodass Kopieren und Einfügen sie auslassen, auch wenn sie angezeigt werden.
 
 Sie können aus dem Editor in Excel und aus Excel zurück in den Editor einfügen.  
@@ -131,6 +151,14 @@ Wo eingefügte Inhalte landen, hängt vom Fokus ab:
 - Bei fokussierter Spaltenzelle werden die ausgewählten Zeilen dieser Tabelle und danach die Zeilen unterhalb der letzten von ihnen der Reihe nach überschrieben, so viele, wie eingefügt wurden. Zeilen zwischen getrennten Auswahlen werden übersprungen. Eine überschriebene Zeile übernimmt die eingefügten Werte in ihren sichtbaren Zellen und behält ihre ausgeblendeten, und die überzähligen Zeilen werden als neue Spalten hinzugefügt. Jeder anderen ausgewählten Tabelle werden die eingefügten Zeilen als neue Spalten hinzugefügt.
 
 ![Zwei Spalten kopieren und gleichzeitig in zwei ausgewählte Tabellen einfügen](/img/demo-copy-column-multi.webp)
+
+Eine eingefügte Zeile schreibt logische Namen und Domänen folgendermaßen:
+
+- Ein logischer Name, aus einer Zelle `Logical Name` oder aus der Zelle des Namens in der Ansicht `Logical Names`, gilt als vollständig eingegeben. Solange der Name der Spalte leer oder noch abgeleitet ist, leiten die [Wörterbücher](./dictionary.md#deriving-physical-names) daraus den physischen Namen ab und verknüpfen die Domäne, die sein Begriff vergibt, es sei denn, die eigene Domänenzelle der Zeile verknüpft eine. Ein Name, den dieselbe Zeile einfügt, wird beibehalten und gilt als von Ihnen geschrieben.
+- Eine Domänenzelle oder, solange View Option → `Domain` ausgeschaltet ist, die Typzelle in der Ansicht `Logical Names` verknüpft die Domäne, die ihr Text nennt, sofern das Diagramm eine solche aufführt. Jeder andere Text oder eine leere Zelle verknüpft keine und hebt die Verknüpfung der Spalte auf, selbst mit einer Domäne des eingefügten Typs. Text in der Typzelle, der keine Domäne nennt, wird als Datentyp gelesen. Im Editor kopierte Zeilen verknüpfen stattdessen die Domäne, mit der sie kopiert wurden, und zwar nur, solange dieses Diagramm sie mit dem kopierten Typ aufführt, wie bei neuen Spalten.
+- Eine verknüpfte Domäne gibt der Spalte ihren Datentyp, es sei denn, die Zeile fügt einen eigenen Typ ein. Dann wird eine Domäne eines anderen Typs nicht verknüpft, und die Spalte übernimmt den eingefügten Typ.
+- In einer Zeile ohne Domänenzelle hebt ein eingefügter Typ die Verknüpfung der Spalte mit einer Domäne eines anderen Typs auf, wie es auch seine Eingabe tut.
+- Kein Einfügen überträgt einen Typ über die [Datentyp-Synchronisierung für Beziehungen](./settings.md#relationship-datatype-sync).
 
 ## Tabellen und Notizen kopieren/einfügen {#copyingpasting-tables-and-memos}
 

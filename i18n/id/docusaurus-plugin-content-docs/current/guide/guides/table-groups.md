@@ -1,5 +1,5 @@
 ---
-sidebar_position: 5
+sidebar_position: 6
 description: Mengumpulkan tabel yang berkaitan dalam kotak bernama dan berwarna di belakangnya; membuat, memberi nama, memberi warna, memindahkan, mengubah ukuran, dan menghapus grup, menuju grup dari Penjelajah, mengubah tabel yang dimuatnya, menyembunyikannya, dan mempertahankannya melalui Tata Letak Otomatis, Skema SQL, dan DBML.
 ---
 

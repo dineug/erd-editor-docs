@@ -83,7 +83,10 @@ Das Ereignis `change` übergibt Ihnen dieses Ergebnis als `value`, und `changed`
 
 Seit `4.0.0` initialisieren Sie das Replikat wie oben mit dem `runtimeValue` des Editors, nicht mit der gespeicherten Datei oder dem `value` des Editors.  
 In der Datei fehlen die seit dem Speichern vorgenommenen Änderungen, und in `value` fehlen die in der Sitzung entfernten Entitäten.  
-Ein Replikat, das ohne eine entfernte Tabelle initialisiert wurde, stellt diese ohne Namen und Spalten wieder her, wenn ein Editor das Entfernen rückgängig macht, und speichert sie so.
+Ein Replikat, das ohne eine entfernte Tabelle initialisiert wurde, stellt diese ohne Namen und Spalten wieder her, wenn ein Editor das Entfernen rückgängig macht, und speichert sie so.  
+Seit `4.2.0` gilt dasselbe für ein Wort, einen Begriff oder eine Domäne, die von einem Blatt der Registerkarte [Wörterbuch](../../guide/guides/dictionary.md) entfernt wurden.  
+Macht ein Editor das Entfernen rückgängig, listet ein Replikat, das ohne die Zeile initialisiert wurde, sie wieder leer auf, und da `value` eine leere Zeile weglässt, speichert das Replikat das Dokument ohne sie.  
+Bei einer Domäne bleiben außerdem die Spalten und Begriffe, die mit ihr verknüpft waren, in diesem Replikat nicht verknüpft, da es die Verknüpfungen nie gehalten hat und das Rückgängigmachen sie nicht sendet.
 
 ## InjectEngineContext {#injectenginecontext}
 
@@ -91,6 +94,8 @@ Ein Replikat, das ohne eine entfernte Tabelle initialisiert wurde, stellt diese 
 
 Misst eine Zeichenkette in Pixeln.  
 Der Store hat kein DOM, kann Text also nicht selbst messen und berechnet die Spaltenbreiten jedes Mal mit dieser Funktion neu, wenn sich ein Name, ein Datentyp, ein Standardwert oder ein Kommentar ändert.  
+Seit `4.2.0` gehört dazu auch der [logische Name](../../guide/guides/logical-names.md) einer Tabelle oder Spalte.  
+Die Domänenzelle einer Spalte, die den Namen der mit der Spalte verknüpften Domäne zeigt, misst er jedes Mal, wenn die Spalte mit einer Domäne verknüpft oder ihre Verknüpfung aufgehoben wird, und jedes Mal, wenn diese Domäne hinzugefügt, umbenannt oder entfernt wird.  
 Außerdem misst er jede Tabelle und jede Spalte erneut, sobald [setInitialValue](#setinitialvalue) ein Dokument lädt.  
 Seit `4.0.0` werden die Breiten nur in [runtimeValue](#runtimevalue-getter) gehalten, nie in `value`.  
 Daher ergibt ein Dokument, das diese Version gespeichert hat, beim Laden Byte für Byte wieder denselben Wert von `value`, wo auch immer es gespeichert wurde und wie auch immer Text dort gemessen wurde.
@@ -146,11 +151,14 @@ const data = replicationStore.value;
 
 Seit `4.0.0` ist `value` die Speicherform: das Dokument so, wie eine Datei es enthält, derselbe Text, den die Eigenschaft [value](../erd-editor-element.md#value) des Elements zurückgibt.  
 Die Speicherform enthält nur die nicht entfernten Entitäten in fester Reihenfolge, ohne die entfernten, ohne die Stapelreihenfolge und ohne alles, was ein Ladevorgang erneut ermittelt, etwa die Breiten, die [toWidth](#towidth) misst.  
-Sie ist mit zwei Leerzeichen eingerückt und endet mit einem Zeilenumbruch, sodass dasselbe Dokument immer dieselben Bytes ergibt.  
+Seit `4.2.0` enthält sie außerdem die logischen Namen, die Angabe, ob jeder Name aus den Wörterbüchern abgeleitet wurde, die Domänenverknüpfungen sowie die Wörter, Begriffe und Domänen der Registerkarte [Wörterbuch](../../guide/guides/dictionary.md).  
+Seit `4.2.0` lässt sie außerdem jedes leere Textfeld einer Entität weg, jede Liste in `doc` und jede Collection, die nichts enthält, sowie `collections` selbst, wenn jede Collection leer ist.  
+Sie ist mit zwei Leerzeichen eingerückt, schreibt jede Wörterbuchzeile in eine eigene Textzeile und endet mit einem Zeilenumbruch, sodass dasselbe Dokument immer dieselben Bytes ergibt.  
 Zu ihrem Inhalt siehe [Speicherform und Laufzeitwert](./schema.md#storage-form-and-runtime-value).
 
 Jede Einstellung, deren [Sperre](../../guide/guides/settings.md#lock) eingeschaltet ist, wird mit dem Wert geschrieben, mit dem sie gesperrt wurde, jede andere Einstellung so, wie sie gerade steht.  
 Die Sperre `Viewport` umfasst den Ursprung der Ansicht und die Zoomstufe gemeinsam, und die Registerkarte, die Sprache des Codegenerators, beide Schreibweisen und der Begrenzertyp haben jeweils eine eigene Sperre.  
+Seit `4.2.0` hat auch die [Namensansicht](../../guide/guides/logical-names.md#name-view) eine eigene Sperre, `Name View`, die in einem neuen Dokument eingeschaltet ist.  
 Die Sperren ersetzen das Feld `ignoreSaveSettings` des Dokuments, das seit `4.0.0` weder gelesen noch geschrieben wird.  
 Vor `4.0.0` war `value` das ganze Dokument, wie der Store es hielt, wobei die Scroll- und Zoom-Bits dieses Felds angewandt wurden.
 
@@ -180,8 +188,10 @@ Die Methode akzeptiert die Speicherform, einen Laufzeitwert oder ein Dokument, d
 Eine leere Zeichenkette oder alles, was keine Zeichenkette ist, lädt ein neues, leeres Dokument, statt einen Fehler auszulösen.  
 Ein Store, dem nie ein Wert übergeben wurde, beginnt mit demselben neuen Dokument.  
 Seit `4.0.0` sind in diesem Dokument alle [Sperren](../../guide/guides/settings.md#lock) eingeschaltet, sodass es in `value` die Ansicht, die Registerkarte, die Sprache des Codegenerators, die Schreibweisen und den Begrenzertyp behält, mit denen es begonnen hat, während die Editoren, die der Store repliziert, scrollen, zoomen, die Registerkarte wechseln oder diese Einstellungen ändern. In `3.10.0` speicherte es weder die Scrollposition noch den Zoom, und davor speicherte es beides.  
+Seit `4.2.0` behält es außerdem seine Namensansicht, `Physical Names`, während die Editoren ihre wechseln.  
 Ein gespeichertes Dokument behält die Sperren, die es angibt.  
 Ein Dokument, das keine angibt, was auf jedes vor `4.0.0` gespeicherte Dokument zutrifft, auch auf ein v2-Dokument, wird mit allen eingeschalteten Sperren geladen: mit dem Ursprung der Ansicht bei `0, 0`, der Zoomstufe `1` und der Registerkarte ERD, gleich, was es gespeichert hat, sowie mit der Sprache des Codegenerators, den Schreibweisen und dem Begrenzertyp so, wie es sie gespeichert hat.  
+Ein vor `4.2.0` gespeichertes Dokument gibt keine Sperre `Name View` an und wird daher mit eingeschalteter Sperre und in der Ansicht `Physical Names` geladen, auch wenn es mit allen anderen Sperren im ausgeschalteten Zustand gespeichert wurde.  
 Seit `4.0.0` verwirft `setInitialValue` außerdem die Kollaborationsregister, die für das vorherige Dokument gehalten wurden, wie es die Methode [setInitialValue](../erd-editor-element.md#setinitialvalue) des Elements tut.  
 Auch Text, der kein JSON ist, etwa eine Datei mit zurückgebliebenen Merge-Konfliktmarkierungen, löst keinen Fehler aus: Der Parse-Fehler wird nur in der Konsole protokolliert, das Dokument wird geleert, und die Einstellungen bleiben, wie sie waren.
 
@@ -221,15 +231,19 @@ Vor `3.10.0` erhielt er nichts, und ein Listener, der das Argument ignoriert, fu
 
 Eine Änderung, die eine [Sperre](../../guide/guides/settings.md#lock) aus `value` heraushält, löst trotzdem das Ereignis `change` aus, wobei `changed` auf `false` gesetzt ist; schreiben Sie daher nur, wenn `changed` den Wert `true` hat.  
 Das sind ein Scrollen oder Zoomen, während `Viewport` gesperrt ist, ein Wechsel der Registerkarte, während `Canvas Type` gesperrt ist, sowie eine Änderung der Sprache des Codegenerators, einer Schreibweise oder des Begrenzertyps, während die jeweils eigene Sperre eingeschaltet ist.  
+Seit `4.2.0` gilt das auch für einen Wechsel der Namensansicht, während `Name View` gesperrt ist: Der Editor sendet ihn weiterhin, aber das Replikat verwirft ihn, wie es auch die anderen Editoren tun.  
+Ein Wechsel der Namensansicht in einem schreibgeschützten Editor wird auf dieselbe Weise verworfen, unabhängig vom Zustand der Sperre.  
 Das Ereignis [change](../erd-editor-element.md#change) des Elements lässt eine solche Änderung aus, das Replikat meldet sie aber trotzdem.  
-In einem neuen Dokument und in einem vor `4.0.0` gespeicherten ist jede Sperre eingeschaltet.  
-Ist `Viewport` entsperrt, ändert ein Scrollen oder Zoomen den Wert von `value`, und ist `Canvas Type` entsperrt, gilt das auch für das Öffnen einer anderen Registerkarte des Editors.  
+In einem neuen Dokument und in einem vor `4.0.0` gespeicherten ist jede Sperre eingeschaltet, und `Name View` ist in jedem vor `4.2.0` gespeicherten Dokument gesperrt.  
+Ist `Viewport` entsperrt, ändert ein Scrollen oder Zoomen den Wert von `value`, ist `Canvas Type` entsperrt, gilt das auch für das Öffnen einer anderen Registerkarte des Editors, und ist `Name View` entsperrt, gilt es auch für einen Wechsel der Namensansicht aus einem Editor, der nicht schreibgeschützt ist.  
 Auch das Ein- oder Ausschalten einer Sperre ändert `value`.
 
 Seit `4.0.0` vergleicht `changed` die Speicherform, die weder die entfernten Entitäten noch die Stapelreihenfolge enthält.  
-Daher führen eine Tabelle, die innerhalb eines einzigen Ereignisses `change` hinzugefügt und wieder entfernt wird, eine Änderung, die eine von einem anderen Mitbearbeiter entfernte Entität trifft, und ein weitergeleitetes Laden, das nur die Stapelreihenfolge ändert, ebenfalls alle zu `changed` mit dem Wert `false`.
+Daher führen eine Tabelle, die innerhalb eines einzigen Ereignisses `change` hinzugefügt und wieder entfernt wird, eine Änderung, die eine von einem anderen Mitbearbeiter entfernte Entität trifft, und ein weitergeleitetes Laden, das nur die Stapelreihenfolge ändert, ebenfalls alle zu `changed` mit dem Wert `false`.  
+Seit `4.2.0` gilt das auch für eine Zeile, die einem Blatt der Registerkarte Wörterbuch hinzugefügt und leer gelassen wird, da die Speicherform eine Zeile weglässt, die nichts enthält.
 
 `changed` vergleicht nie mit Ihrer gespeicherten Datei, die sich bereits von `value` unterscheiden kann, sobald sie geladen ist: Das gilt für eine Datei, die eine frühere Version gespeichert hat, auch für eine v2-Datei, ebenso für eine Datei, die mit einer Byte-Order-Mark beginnt, und für eine von Hand bearbeitete.  
+Seit `4.2.0` gehört dazu auch eine Datei, die `4.0.0` oder `4.1.0` gespeichert hat, da `value` die leeren Textfelder ihrer Entitäten sowie die leeren Listen in `doc` und die leeren Collections weglässt, die eine solche Datei enthält.  
 Ein Byte-Vergleich mit einer solchen Datei würde sogar ein Scrollen, das eine Sperre heraushält, als Änderung zählen.  
 Das erste Ereignis `change`, bei dem `changed` auf `true` gesetzt ist, liefert eine solche Datei in der Speicherform zurück, sodass sie beim Schreiben einmalig umgeschrieben wird.  
 Eine Datei, die diese Version gespeichert hat, unterscheidet sich nicht, wo auch immer sie gespeichert wurde, wie unter [toWidth](#towidth) erklärt.  
@@ -260,6 +274,14 @@ Betreiben Sie das Replikat mit derselben Version wie die Editoren oder einer neu
 Version `4.1.0` fügt keinen Aktionstyp hinzu und lässt `@dineug/erd-editor/engine.js` unverändert, sodass ein Replikat der Version `4.0.0` jede Änderung behält, die ein Editor der Version `4.1.0` sendet, genau wie ein Replikat der Version `4.1.0`.  
 Seit `4.1.0` benennen `Replace` und `Replace All` in [Suchen und Ersetzen](../../guide/guides/find-and-replace.md#replacing) auch Indizes und Tabellengruppen um, und zwar über die Aktionen `index.changeName` und `tableGroup.changeName`, die ein Replikat der Version `4.0.0` bereits behält.  
 Der eigene Zustand des [Explorers](../../guide/guides/explorer.md) wird nie gesendet, und ein Registerkartenwechsel oder ein Scrollen, das er auslöst, kommt an wie jeder andere Registerkartenwechsel und jedes andere Scrollen; siehe [Gemeinsame Bearbeitung](./collaborative-editing.md).
+
+Seit `4.2.0` gehören zu den behaltenen Aktionen außerdem `table.changeLogicalName`, `table.changeNameDerived`, `column.changeLogicalName`, `column.changeDomain`, `column.changeNameDerived`, `settings.changeNameViewMode` sowie `dictionary.add`, `dictionary.update` und `dictionary.remove`, die jede Änderung, jede Sortierung und jeden CSV-Import auf den Blättern der Registerkarte [Wörterbuch](../../guide/guides/dictionary.md) übertragen.  
+Von den Wechseln der Namensansicht wendet ein Replikat nur diejenigen an, die ein nicht schreibgeschützter Editor vornimmt, während `Name View` entsperrt ist, und verwirft den Rest (siehe [on@change](#onchange)).  
+Ein Store aus einer früheren Version verwirft alle diese Aktionen, sodass ihm die [logischen Namen](../../guide/guides/logical-names.md), die Domänenverknüpfungen, die Angabe, ob jeder Name aus den Wörterbüchern stammt, die Wörter, Begriffe und Domänen sowie die Namensansicht verloren gehen.  
+Ein Editor einer Version vor `4.2.0` in der Sitzung kann einem Replikat der Version `4.2.0` trotzdem einiges davon wieder nehmen.  
+Ein `Import` von Schema SQL, GraphQL, DBML oder AML in diesem Editor, nicht aber ein `Import and Add`, leert die Wörter, Begriffe und Domänen des Replikats.  
+Macht er ein Laden, einen `Import` oder `clear()` rückgängig, lädt er seine eigene Kopie des Dokuments in das Replikat, ohne logische Namen, Domänenverknüpfungen oder Wörterbücher; siehe [Gemischte Versionen](./collaborative-editing.md#mixing-releases).  
+`@dineug/erd-editor/engine.js` exportiert wie zuvor `createReplicationStore`, `ReplicationStore` und `ReplicationChange`, und `createReplicationStore` nimmt denselben Kontext an.
 
 Seit `4.0.0` wenden beide Methoden außerdem die Aktion `editor.mergeLWW` an, die die Kollaborationsregister überträgt, mit denen ein Editor antwortet, wenn ein anderer der Sitzung beitritt, sodass das Replikat gleichzeitige Änderungen so abgleicht wie die Editoren.  
 Sie ändert kein Byte von `value` und löst kein Ereignis `change` aus.  

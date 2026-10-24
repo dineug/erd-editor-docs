@@ -1,12 +1,12 @@
 ---
-sidebar_position: 9
-description: Hľadanie v názvoch tabuliek, stĺpcov, indexov a skupín tabuliek, v komentároch a poznámkach z hornej časti prieskumníka, prechádzanie zhodami v jeho strome a na plátne a nahradenie jednej zhody alebo všetkých.
+sidebar_position: 10
+description: Hľadanie v názvoch tabuliek, stĺpcov, indexov a skupín tabuliek, v logických názvoch, komentároch a poznámkach z hornej časti prieskumníka, prechádzanie zhodami v jeho strome a na plátne a nahradenie jednej zhody alebo všetkých.
 ---
 
 # Hľadanie a nahrádzanie
 
 Vyhľadá text v celom diagrame, prenesie vás ku každej zhode na plátne ERD a nahradí jednu zhodu alebo všetky.  
-Prehľadáva sedem druhov textu: názvy tabuliek, komentáre tabuliek, názvy stĺpcov, komentáre stĺpcov, poznámky, názvy indexov a názvy skupín tabuliek – pozrite si časť [Čo sa prehľadáva](#what-it-searches).
+Prehľadáva osem druhov textu: názvy tabuliek, komentáre tabuliek, názvy stĺpcov, komentáre stĺpcov, poznámky, názvy indexov, názvy skupín tabuliek a [logické názvy](./logical-names.md) tabuliek a stĺpcov – pozrite si časť [Čo sa prehľadáva](#what-it-searches).
 
 Nachádza sa v hornej časti [prieskumníka](./explorer.md), panela ukotveného naľavo od plátna ERD, medzi záhlavím prieskumníka a jeho stromom. Nemá vlastný nadpis. Zhora nadol obsahuje:
 
@@ -30,7 +30,7 @@ Zatváranie prieskumníka, to, čo klávesová skratka a dve položky `Toggle Ex
 Časť [Kedy sa prieskumník nezobrazuje](./explorer.md#when-it-stands-aside) opisuje, ako ho skryje iná karta a režim Zen a ako ho prehliadač rozdielov, cestovanie v čase a ukážka automatického rozloženia skryjú a nedovolia ho otvoriť. Časť [Vedľa plátna](./explorer.md#beside-the-canvas) opisuje editor, ktorý je naň príliš úzky.
 
 Pri opätovnom otvorení zostane posledný hľadaný text spolu s textom nahradenia, [možnosťami](#options), [druhmi textu](#what-it-searches), ktoré boli zapnuté, a s tým, či boli riadok `Replace` a druhy textu rozbalené.  
-Zachovajú sa, kým je editor otvorený, a neukladajú sa do dokumentu. Novo otvorený editor začína so všetkými možnosťami vypnutými, so zbaleným riadkom `Replace` a zbalenými druhmi textu a so zapnutými iba štyrmi druhmi názvov – pozrite si časť [Čo sa prehľadáva](#what-it-searches).
+Zachovajú sa, kým je editor otvorený, a neukladajú sa do dokumentu. Novo otvorený editor začína so všetkými možnosťami vypnutými, so zbaleným riadkom `Replace` a zbalenými druhmi textu a so zapnutými iba štyrmi druhmi názvov a druhom `Logical names` – pozrite si časť [Čo sa prehľadáva](#what-it-searches).
 
 ## Panel hľadania v prehliadači {#the-browsers-find-bar}
 
@@ -46,15 +46,16 @@ Stránka, ktorá editor vkladá, môže klávesovú skratku priradiť inému kl�
 
 ## Čo sa prehľadáva {#what-it-searches}
 
-Druhy prehľadávaného textu vyberá sedem tlačidiel v tomto poradí: `Table names`, `Table comments`, `Column names`, `Column comments`, `Memos`, `Index names` a `Table group names`.  
+Druhy prehľadávaného textu vyberá osem tlačidiel v tomto poradí: `Table names`, `Table comments`, `Column names`, `Column comments`, `Memos`, `Index names`, `Table group names` a `Logical names`.  
 Na začiatku sú zbalené. Tlačidlo `Search In` na konci riadka s počtom ich rozbalí pod týmto riadkom a znova zbalí a je zvýraznené, kým sú zobrazené.  
-Zvýraznené tlačidlo druhu je zapnuté. Kliknutím na tlačidlo ho zapnete alebo vypnete a hľadanie sa spustí znova. Keď je všetkých sedem vypnutých, nenájde sa nič.
+Zvýraznené tlačidlo druhu je zapnuté. Kliknutím na tlačidlo ho zapnete alebo vypnete a hľadanie sa spustí znova. Keď je všetkých osem vypnutých, nenájde sa nič.
 
-Hľadanie sa prvýkrát otvorí so štyrmi druhmi názvov, `Table names`, `Column names`, `Index names` a `Table group names`, takže premenovanie nezasiahne komentáre a poznámky, pokiaľ ich nezapnete.  
+Hľadanie sa prvýkrát otvorí so štyrmi druhmi názvov, `Table names`, `Column names`, `Index names` a `Table group names`, a s druhom `Logical names`, takže premenovanie nezasiahne komentáre a poznámky, pokiaľ ich nezapnete.  
+Druh textu `Logical names` je jeden spoločný druh pre logické názvy tabuliek aj stĺpcov.  
 Názvy indexov sú názvy indexov na karte `Indexes` panela [Vlastnosti tabuľky](./table-related-functions.md#indexes), nie kľúče `PK_` a `UQ_` uvedené nad nimi.
 
-Nič iné sa neprehľadáva: ani typy údajov, predvolené hodnoty, stĺpce indexu, názov databázy, [Schéma SQL](./schema-sql.md) so skriptami `Before tables` a `After tables`, ani vygenerovaný kód.  
-Komentár skrytý [možnosťou zobrazenia tabuliek](./table-related-functions.md#table-view-options) sa prehľadáva aj naďalej. Poznámky skryté cez View Option → `Memos` a [skupiny tabuliek](./table-groups.md#hiding-groups) skryté cez View Option → `Table Groups` sa neprehľadávajú, ani keď je ich tlačidlo zapnuté, takže `Replace All` nikdy neprepíše poznámku ani nepremenuje skupinu, ktorú nevidíte.
+Nič iné sa neprehľadáva: ani typy údajov, doména stĺpca, predvolené hodnoty, stĺpce indexu, názov databázy, [Schéma SQL](./schema-sql.md) so skriptami `Before tables` a `After tables`, vygenerovaný kód, ani hárky karty [Slovník](./dictionary.md), ktoré majú [vlastné vyhľadávanie](./dictionary.md#searching).  
+Logické názvy sa prehľadávajú bez ohľadu na to, čo vykresľuje [Zobrazenie názvov](./logical-names.md#name-view), a to aj v zobrazení `Physical Names`, v ktorom ich plátno nezobrazuje. Komentár skrytý [možnosťou zobrazenia tabuliek](./table-related-functions.md#table-view-options) sa tiež naďalej prehľadáva. Poznámky skryté cez View Option → `Memos` a [skupiny tabuliek](./table-groups.md#hiding-groups) skryté cez View Option → `Table Groups` sa neprehľadávajú, ani keď je ich tlačidlo zapnuté, takže `Replace All` nikdy neprepíše poznámku ani nepremenuje skupinu, ktorú nevidíte.
 
 ## Možnosti {#options}
 
@@ -91,19 +92,21 @@ Texty `Replaced …`, `No changes` a `No more matches` pri ďalšom hľadaní al
 Kým pole hľadania obsahuje text, [strom](./explorer.md#the-tree) prieskumníka namiesto celého diagramu zobrazuje výsledky: iba riadky, ktoré obsahujú zhodu, a riadky nad nimi. Keď sa nič nezhoduje alebo sa regulárny výraz nedá spracovať, je prázdny. Odstránením hľadaného textu sa vráti celý strom, zbalený tak ako predtým.
 
 - Priečinky `Tables`, `Table Groups` a `Memos` sa zobrazia, iba keď obsahujú zhodu, a počet pri každom priečinku je počet riadkov priamo pod ním vo výsledkoch.
-- Pod priečinkom `Tables` sú tabuľky, ktoré obsahujú zhodu, zoradené podľa názvu. Pod každou tabuľkou je riadok pre každú zhodu v jej komentári, potom priečinok `Columns` so stĺpcami, ktoré obsahujú zhodu, v poradí stĺpcov, každý s riadkom pre každú zhodu v jeho komentári, a potom priečinok `Indexes` s indexmi, ktorých názov sa zhoduje. Priečinok `Foreign Keys` tu nie je.
+- Pod priečinkom `Tables` sú tabuľky, ktoré obsahujú zhodu, zoradené podľa názvu, nikdy nie podľa logického názvu. Pod každou tabuľkou je riadok pre každú zhodu v jej komentári, potom priečinok `Columns` so stĺpcami, ktoré obsahujú zhodu, v poradí stĺpcov, každý s riadkom pre každú zhodu v jeho komentári, a potom priečinok `Indexes` s indexmi, ktorých názov sa zhoduje. Priečinok `Foreign Keys` tu nie je.
 - Pod priečinkom `Table Groups` sú skupiny, ktorých názov sa zhoduje, zoradené podľa názvu, bez svojich tabuliek. Nájdená tabuľka sa zobrazí pod priečinkom `Tables`.
 - Pod priečinkom `Memos` sú poznámky, ktoré obsahujú zhodu, v poradí podľa dokumentu, každá zobrazená svojím prvým riadkom a s riadkom pre každú zhodu v nej.
 
-Zhoda v názve je zvýraznená priamo v riadku daného názvu, takže názov, ktorý obsahuje hľadaný text dvakrát, je jeden riadok s dvoma zvýrazneniami.  
+Zhoda v názve je zvýraznená priamo v riadku daného názvu, takže názov, ktorý obsahuje hľadaný text dvakrát, je jeden riadok s dvoma zvýrazneniami. Zhoda v logickom názve tabuľky alebo stĺpca sa tiež zobrazí v riadku danej tabuľky alebo stĺpca, nikdy nie vo vlastnom riadku.  
+Tieto riadky pomenúvajú tabuľku alebo stĺpec tak, ako ich zobrazuje [Zobrazenie názvov](./logical-names.md#beyond-the-canvas), a každý z dvoch názvov, ktoré riadok môže zobrazovať, zvýrazňuje iba svoje vlastné zhody. Riadok nájdený iba v názve, ktorý jeho zobrazenie vynecháva, teda v logickom názve v zobrazení `Physical Names` alebo v názve v zobrazení `Logical Names`, pridá tento názov za ten, ktorý zobrazuje, tlmený ako v zobrazení `Both Names` a so zvýraznenou zhodou. Keď zhodu obsahuje aj zobrazený názov, riadok zobrazí iba tento názov, takže zhody v názve, ktorý zobrazenie vynecháva, sa započítajú a prechádza sa nimi, ale nezvýraznia sa.  
 Zhoda v komentári alebo poznámke má vlastný riadok: rečovú bublinu pri komentári tabuľky alebo stĺpca alebo lepiaci lístok pri poznámke a potom úryvok textu so zvýraznenou zhodou. Dlhý text sa skráti pomocou `…` a zlomy riadkov sa zobrazia ako medzery. Celý text uvidíte, keď podržíte ukazovateľ nad riadkom.  
 Každý iný riadok vyzerá tak ako mimo hľadania: stĺpec zobrazuje svoj typ údajov, index svoje stĺpce a prázdny názov sa zobrazí ako `unnamed`.
 
 Každý riadok, pod ktorým sú ďalšie riadky, sa na začiatku hľadania zobrazí rozbalený. Riadok, ktorý zbalíte alebo ktorý zbalí `Collapse All`, zostane zbalený, kým sa aktuálnou nestane zhoda pod ním, kým sa nezmení hľadaný text, `Match Case`, `Match Whole Word`, `Use Regular Expression` alebo druh textu, alebo kým sa hľadanie znova neotvorí klávesovou skratkou alebo položkou `Toggle Explorer`.  
 Riadok aktuálnej zhody je zvýraznený a posunie sa do viditeľnej oblasti. Strom uvádza každú zhodu, nech ich je koľkokoľvek.  
-Zhodami sa prechádza v poradí stromu: tabuľku po tabuľke, názov tabuľky, jej komentár, názov a komentár každého z jej stĺpcov v poradí stĺpcov a názvy jej indexov; potom názvy skupín tabuliek; potom poznámky.
+Zhodami sa prechádza v poradí stromu: tabuľku po tabuľke, logický názov, názov a komentár tabuľky, potom logický názov, názov a komentár každého z jej stĺpcov v poradí stĺpcov, potom názvy jej indexov; potom názvy skupín tabuliek; potom poznámky.
 
-Kým je prieskumník zobrazený, výsledky sledujú dokument. Keď sa úpravy prerušia, akákoľvek zmena prehľadávaných textov spustí hľadanie znova a aktuálna zhoda zostane aktuálna, ak tam stále je. Patrí sem úprava názvu, komentára alebo textu poznámky, pridanie alebo odstránenie tabuľky, stĺpca, indexu, poznámky alebo skupiny tabuliek, presun stĺpca a skrytie alebo zobrazenie poznámok či skupín tabuliek cez View Option, ktoré ich zhody zo stromu odoberie alebo ich doň vráti. Počíta sa úprava na plátne, vrátenie späť alebo opätovné vykonanie, import aj úprava od spolupracovníka alebo programovacieho agenta. Výber, presúvanie tabuliek, poznámok alebo skupín na plátne, posúvanie, zmena priblíženia a podržanie ukazovateľa sa nepočítajú.  
+Kým je prieskumník zobrazený, výsledky sledujú dokument. Keď sa úpravy prerušia, akákoľvek zmena prehľadávaných textov spustí hľadanie znova a aktuálna zhoda zostane aktuálna, ak tam stále je. Patrí sem úprava názvu, logického názvu, komentára alebo textu poznámky, pridanie alebo odstránenie tabuľky, stĺpca, indexu, poznámky alebo skupiny tabuliek, presun stĺpca a skrytie alebo zobrazenie poznámok či skupín tabuliek cez View Option, ktoré ich zhody zo stromu odoberie alebo ich doň vráti. Počíta sa úprava na plátne, vrátenie späť alebo opätovné vykonanie, import aj úprava od spolupracovníka alebo programovacieho agenta. Výber, presúvanie tabuliek, poznámok alebo skupín na plátne, posúvanie, zmena priblíženia a podržanie ukazovateľa sa nepočítajú.  
+Nepočíta sa ani prepnutie Zobrazenia názvov, ktoré nemení žiadny text, ktorý hľadanie číta: zostanú tie isté zhody a riadky prevezmú názvy, ktoré zobrazuje nové zobrazenie.  
 Úpravy vykonané, kým je prieskumník zatvorený alebo mimo dohľadu, sa prehľadajú hneď, ako sa znova zobrazí.
 
 ## Prechod na zhodu {#going-to-a-match}
@@ -113,17 +116,17 @@ Prechádzanie na oboch koncoch pokračuje z opačného konca. Kým sa prvýkrát
 
 Kliknutie na riadok výsledkov alebo `Enter` či `Space`, keď je na ňom fokus klávesnice, urobí jedno z nasledujúceho:
 
-- Pri riadku, ktorého vlastný názov obsahuje zhodu, sa prejde na prvú zhodu v tomto názve.
+- Pri riadku, ktorého vlastný názov alebo logický názov obsahuje zhodu, sa prejde na jeho prvú zhodu, pričom zhoda v logickom názve má prednosť pred zhodou v názve.
 - Pri riadku, ktorý zobrazuje úryvok komentára alebo poznámky, sa prejde na danú zhodu.
-- Pri akomkoľvek inom riadku, napríklad pri tabuľke, ktorej názov sa nezhoduje, alebo pri vlastnom riadku poznámky, sa prejde na to, čo riadok predstavuje, a aktuálna zhoda zostane bez zmeny – pozrite si časť [Prechod na riadok](./explorer.md#going-to-a-row).
+- Pri akomkoľvek inom riadku, napríklad pri tabuľke, ktorej názov ani logický názov sa nezhoduje, alebo pri vlastnom riadku poznámky, sa prejde na to, čo riadok predstavuje, a aktuálna zhoda zostane bez zmeny – pozrite si časť [Prechod na riadok](./explorer.md#going-to-a-row).
 - Priečinok sa zbalí alebo rozbalí.
 
 Vždy, keď sa zhoda stane aktuálnou, strom rozbalí všetky zbalené riadky nad ňou a presunie tam fokus klávesnice, takže klávesy so šípkami v strome pokračujú od nej.
 
 Prechod na zhodu zatvorí panel Vlastnosti tabuľky, ak je otvorený, a potom:
 
-- Pri názve alebo komentári tabuľky či názve alebo komentári stĺpca vyberie iba túto tabuľku, presunie ju dopredu a nastaví aktívnu bunku na bunku, ktorá obsahuje zhodu. Zhoda v komentári skrytom [možnosťou zobrazenia tabuliek](./table-related-functions.md#table-view-options) namiesto toho nastaví aktívnu bunku na názov vedľa neho.
-- Pri názve indexu vyberie iba tabuľku indexu a presunie ju dopredu, pričom aktívna bunka bude na názve tabuľky, pokiaľ už nie je v tejto tabuľke. Názvy indexov sa na plátne nevykresľujú.
+- Pri názve, logickom názve alebo komentári tabuľky či stĺpca vyberie iba túto tabuľku, presunie ju dopredu a nastaví aktívnu bunku na bunku, ktorá obsahuje zhodu. Zhoda v komentári skrytom [možnosťou zobrazenia tabuliek](./table-related-functions.md#table-view-options) namiesto toho nastaví aktívnu bunku na názov vedľa neho. Tam, kde [Zobrazenie názvov](./logical-names.md#name-view) pre názov alebo logický názov nevykresľuje žiadnu bunku, sa aktívna bunka presunie na bunku vykreslenú na jeho mieste: na názov v zobrazení `Physical Names` a na logický názov v zobrazení `Logical Names`.
+- Pri názve indexu vyberie iba tabuľku indexu a presunie ju dopredu, pričom aktívna bunka bude na názve tabuľky, prípadne na jej logickom názve v zobrazeniach `Logical Names` a `Both Names`, pokiaľ už nie je v tejto tabuľke. Názvy indexov sa na plátne nevykresľujú.
 - Pri názve skupiny tabuliek vyberie iba túto skupinu a presunie ju dopredu spolu s jej tabuľkami.
 - Pri poznámke vyberie iba túto poznámku a presunie ju dopredu.
 
@@ -151,7 +154,7 @@ Kým séria trvá, tabuľka alebo skupina tabuliek, ktorú premenuje, si zachov�
 
 `Replace All` sa vykoná stlačením `Ctrl + Enter` (Windows/Linux) alebo `⌘ + Enter` (Mac) v poli nahradenia alebo tlačidlom:
 
-- Nahradí každú zhodu v zapnutých druhoch textu a ostatné druhy nechá tak. S predvolenými druhmi premenuje tabuľky, stĺpce, indexy a skupiny tabuliek, pričom komentáre a poznámky zostanú nedotknuté.
+- Nahradí každú zhodu v zapnutých druhoch textu a ostatné druhy nechá tak, s výnimkou fyzických názvov, ktoré odvodí nahradený logický názov a ktoré zapíše, aj keď sú druhy `Table names` a `Column names` vypnuté – pozrite si informácie nižšie. S predvolenými druhmi premenuje tabuľky, stĺpce, indexy a skupiny tabuliek a prepíše logické názvy tabuliek a stĺpcov; komentáre a poznámky zostanú nedotknuté.
 - Všetko, čo zmení, je jeden krok histórie zmien – pozrite si časť [Jedno gesto, jeden krok](./undo-redo.md#one-gesture-one-step).
 - Počet zobrazí `Replaced N matches`, pričom započíta iba výskyty, ktorých text sa skutočne zmenil. Keď sa nezmenil žiadny, zobrazí `No changes` a do histórie sa nič nezaznamená, ako pri nahradení regulárneho výrazu `(user)` textom `$1`.
 - Výsledky sa potom vyhľadajú znova bez aktuálnej zhody, takže môžu uvádzať zhody, ktoré sa nachádzajú v novom texte.
@@ -171,8 +174,12 @@ Ako sa používa text nahradenia:
   - Zhoda zapísaná späť tak, ako bola, sa nezapočíta: keď je možnosť `Match Case` vypnutá, nahradenie `customer` textom `Customer` zapíše `customer`, `Customer` a `CUSTOMER` späť tak, ako boli, a žiadna z nich sa nezapočíta.
 - Prázdne pole nahradenia zhodu odstráni.
 
-Nahradenie je bežná úprava, rovnaká, ako keby ste sami napísali nový názov tabuľky, komentár, názov stĺpca alebo text poznámky, premenovali index v paneli Vlastnosti tabuľky alebo premenovali skupinu tabuliek.  
+Nahradenie je bežná úprava, rovnaká, ako keby ste sami napísali nový názov tabuľky, názov stĺpca, logický názov, komentár alebo text poznámky, premenovali index v paneli Vlastnosti tabuľky alebo premenovali skupinu tabuliek.  
 Zaznamená sa do histórie a dostane sa k spolupracovníkom aj k programovaciemu agentovi ako každá iná úprava.
+
+Názov tabuľky alebo stĺpca, ktorý nahradenie zapíše, sa preto stane vlastným názvom, ktorý logický názov zapísaný neskôr ponechá nezmenený, kým ho príkaz [Znova odvodiť fyzické názvy](./dictionary.md#derive-physical-names-again) nevráti slovníkom. Názov, ktorý nahradenie nechá prázdny, sa naopak vráti slovníkom ako každý vymazaný názov – pozrite si časť [Vlastné názvy](./dictionary.md#names-of-your-own).  
+Kým je fyzický názov tabuľky alebo stĺpca prázdny alebo bol sám odvodený, nahradený logický názov ho odvodí pomocou slovníkov rovnako ako zatvorenie bunky logického názvu s novým logickým názvom – pozrite si časť [Odvodzovanie fyzických názvov](./dictionary.md#deriving-physical-names). Stĺpec, ktorého nový logický názov je termín, vtedy prevezme aj doménu termínu a s ňou aj typ údajov domény. To, čo sa odvodí, je súčasťou kroku histórie zmien nahradenia a nezapočítava sa do `Replaced N matches`.  
+Keď jedno použitie `Replace All` prepíše logický názov aj názov tej istej tabuľky alebo stĺpca, názov, ktorý zapíše, má prednosť pred názvom, ktorý by odvodil nový logický názov.
 
 ## Klávesy v poliach hľadania {#keys-in-the-search-fields}
 

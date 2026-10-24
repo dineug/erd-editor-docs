@@ -1,5 +1,5 @@
 ---
-sidebar_position: 8
+sidebar_position: 9
 description: Przeglądanie tabel diagramu wraz z ich kolumnami, indeksami i kluczami obcymi, jego grup tabel i notatek w drzewie zadokowanym obok kanwy ERD oraz przechodzenie do każdego z tych elementów jednym kliknięciem.
 ---
 
@@ -26,11 +26,11 @@ Otwórz go jednym z tych sposobów:
 - Pozycja `Toggle Explorer` w menu kontekstowym kanwy: kliknij prawym przyciskiem myszy puste miejsce na kanwie ERD poza jakąkolwiek [grupą tabel](./table-groups.md). Znajduje się za pozycjami `New Table`, `New Memo` i `New Table Group`, przed pozycją `Relationship`.
 
 Obie pozycje `Toggle Explorer` pokazują skrót po prawej stronie.  
-Przycisk na pasku narzędzi, skrót i pozycja w Szybkim wyszukiwaniu działają na każdej karcie. Na karcie Wizualizacja, Schemat SQL, Generator kodu lub Ustawienia najpierw przełączają na kartę ERD, ponieważ Eksplorator jest widoczny tylko tam.
+Przycisk na pasku narzędzi, skrót i pozycja w Szybkim wyszukiwaniu działają na każdej karcie. Na karcie Wizualizacja, Schemat SQL, Generator kodu, Słownik lub Ustawienia najpierw przełączają na kartę ERD, ponieważ Eksplorator jest widoczny tylko tam.
 
 Przycisk na pasku narzędzi tylko otwiera i zamyka panel. Nie umieszcza kursora tekstowego w polu wyszukiwania i pozostawia otwarte Właściwości tabeli, kreator motywu oraz selektor `Display Language`.  
 Skrót i obie pozycje `Toggle Explorer` otwierają Eksplorator z aktywnym wyszukiwaniem: kursor tekstowy trafia do pola wyszukiwania z zaznaczonym tekstem, a każde z pięciu okien dialogowych wymienionych w sekcji [Okna dialogowe obok Eksploratora](#dialogs-beside-it) się zamyka. To, co wyszukiwanie zachowuje między otwarciami, opisano w sekcji [Otwieranie i zamykanie](./find-and-replace.md#opening-and-closing) na stronie Znajdź i zamień.  
-Skrót nic nie robi podczas edycji komórki tabeli, notatki lub nazwy grupy tabel.
+Skrót nic nie robi podczas edycji komórki tabeli, notatki lub nazwy grupy tabel ani wtedy, gdy na karcie [Słownik](./dictionary.md#keys-on-the-tab) otwarta jest edycja komórki, w tym lista domen terminu.
 
 Przycisk na pasku narzędzi wygląda na wciśnięty, gdy Eksplorator jest otwarty na karcie ERD i nie jest ukryty przez [tryb zen](#when-it-stands-aside). Gdy tak jest, przycisk, skrót i każda z pozycji `Toggle Explorer` zamykają Eksplorator, a fokus klawiatury, jeśli był w panelu, wraca do edytora.  
 Skrót nigdy nie zamyka Eksploratora, gdy otwarte jest Szybkie wyszukiwanie lub jedno z pięciu okien dialogowych. Zamiast tego zamyka paletę lub okno dialogowe i przenosi fokus klawiatury do pola wyszukiwania, zaznaczając jego tekst i, jeśli Eksplorator był już widoczny, zachowując bieżące dopasowanie. Pozycja `Toggle Explorer` w Szybkim wyszukiwaniu nie robi takiego wyjątku: jej uruchomienie zamyka paletę, a następnie otwarty Eksplorator.
@@ -84,22 +84,27 @@ Pasek tytułu zawiera napis `Explorer` i dwa przyciski: `Collapse All` oraz `x`,
 
 Najwyższy poziom zawiera trzy foldery, w tej kolejności: `Tables`, `Table Groups` i `Memos`. Pod każdą tabelą znajdują się jej własne foldery `Columns`, `Indexes` i `Foreign Keys`.  
 Pusty folder nie jest wyświetlany, więc pusty diagram nie pokazuje żadnych wierszy. Folder `Table Groups` jest też pomijany, gdy [View Option](./table-related-functions.md#table-view-options) → `Table Groups` ukrywa grupy, a folder `Memos` – gdy View Option → `Memos` ukrywa notatki.  
-Wiersz folderu pokazuje ikonę folderu, jego nazwę, a na samym końcu licznik wierszy znajdujących się bezpośrednio pod nim, więc licznik obok folderu `Tables` to liczba tabel w diagramie.
+Wiersz folderu pokazuje ikonę folderu, jego nazwę, a na samym końcu licznik wierszy znajdujących się bezpośrednio pod nim, więc licznik obok folderu `Tables` to liczba tabel w diagramie. Licznik grupuje tysiące tak jak język wyświetlania, zawsze za pomocą cyfr od 0 do 9, na przykład `1,234` w języku angielskim i `1.234` w języku niemieckim.
 
 Tabele są uporządkowane według nazwy bez uwzględniania wielkości liter, a tabele o tej samej nazwie zachowują kolejność z dokumentu. Grupy tabel są uporządkowane w ten sam sposób, podobnie jak tabele pod każdą grupą. Kolumny tabeli zachowują jej własną kolejność, a jej indeksy, klucze obce oraz notatki – kolejność z dokumentu.  
-Drzewo śledzi zmiany diagramu, niezależnie od tego, czy wynikają one ze zmiany na kanwie, cofnięcia lub ponowienia, importu, czy z działań współpracownika lub agenta kodującego, więc zmiana nazwy tabeli przenosi jej wiersz.
+Drzewo śledzi zmiany diagramu, niezależnie od tego, czy wynikają one ze zmiany na kanwie, cofnięcia lub ponowienia, importu, czy z działań współpracownika lub agenta kodującego, więc zmiana nazwy tabeli przenosi jej wiersz.  
+Przy każdym ustawieniu [Widok nazw](./logical-names.md#name-view) kolejność zależy od nazwy, nigdy od nazwy logicznej. Przełączenie widoku zmienia etykiety wierszy tabel i kolumn bez przenoszenia któregokolwiek z nich, podobnie jak nadanie tabeli lub kolumnie nazwy logicznej w widoku `Logical Names` lub `Both Names`. Nazwa fizyczna [wygenerowana](./dictionary.md#deriving-physical-names) na podstawie nowej nazwy logicznej jest jednak zmianą nazwy jak każda inna, więc może przenieść wiersz tabeli.
 
 Każdy rodzaj wiersza pokazuje:
 
 - Tabela: ikonę tabeli i jej nazwę.
-- Kolumna: ikonę klucza dla kolumny klucza podstawowego lub klucza obcego, w kolorze, jakim komórka klucza w samej tabeli oznacza klucz podstawowy, klucz obcy lub oba, a dla każdej innej kolumny ikonę listy. Następnie jej nazwę oraz przygaszonym tekstem jej typ danych, a po nim `PK`, `FK` lub oba oznaczenia, na przykład `id` `BIGINT PK` lub `user_id` `BIGINT FK`.
+- Kolumna: ikonę klucza dla kolumny klucza podstawowego lub klucza obcego, w kolorze, jakim komórka klucza w samej tabeli oznacza klucz podstawowy, klucz obcy lub oba, a dla każdej innej kolumny ikonę listy. Następnie jej nazwę oraz przygaszonym tekstem jej typ danych, a po nim `PK`, `FK` lub oba oznaczenia, na przykład `id` `BIGINT PK` lub `user_id` `BIGINT FK`. Pokazywany typ to zawsze typ danych kolumny, nigdy jej [domena](./logical-names.md#the-domain-cell), niezależnie od Widoku nazw.
 - Indeks: ikonę indeksu i jego nazwę. Następnie przygaszonym tekstem oznaczenie `UNIQUE` dla indeksu unikatowego oraz jego kolumny w nawiasach, w kolejności indeksu, z oznaczeniem `DESC` po kolumnie malejącej, na przykład `orders_user_idx` `UNIQUE (user_id DESC, total)` lub po prostu `(total)`.
 - Klucz obcy: wymieniony tylko pod tabelą podrzędną, czyli tą, która zawiera kolumny klucza obcego, i tylko wtedy, gdy tabela nadrzędna jest w diagramie. Jego ikona klucza przyjmuje kolor łącznika: kolor klucza podstawowego i klucza obcego dla [relacji identyfikującej](./relationship-editing.md#identifying-relationships), a w pozostałych przypadkach kolor klucza obcego. Pokazuje kolumny klucza tabeli podrzędnej rozdzielone przecinkami, a następnie przygaszonym tekstem `→` z tabelą nadrzędną i jej kolumnami, na przykład `user_id` `→ users(id)`.
 - Grupa tabel: kropkę w kolorze grupy, szarą dla grupy bez koloru, oraz jej nazwę. Jej tabele są wymienione pod nią według nazwy, a wiersz każdej z nich prowadzi do danej tabeli. Grupa bez tabel nie ma nic do rozwinięcia.
 - Notatka: ikonę karteczki samoprzylepnej i pierwszą linię notatki.
 
-Pusta nazwa lub notatka, której pierwsza linia jest pusta, wyświetla się jako `unnamed` kursywą.  
-W wąskim panelu przygaszony tekst jest skracany znakiem `…` wcześniej niż nazwa. Najedź wskaźnikiem na nazwę lub jej przygaszony tekst, aby zobaczyć pełną treść.
+Wiersze tabel, tabele wymienione pod grupą i wiersze kolumn podążają za Widokiem nazw – zobacz sekcję [Poza kanwą](./logical-names.md#beyond-the-canvas). Na przykład w widoku `Both Names` wiersz kolumny ma postać `Total Amount` `total` `NUMERIC`: nazwa logiczna, a potem nazwa i typ danych, oba przygaszone.  
+We wszystkich widokach wiersze indeksów i kluczy obcych pokazują swoje kolumny pod ich nazwami, a wiersz klucza obcego również swoją tabelę nadrzędną pokazuje pod jej nazwą.  
+Gdy pole wyszukiwania zawiera tekst, wiersz znaleziony tylko w nazwie pomijanej przez jego widok pokazuje też tę nazwę, przygaszoną – zobacz sekcję [Wyniki](./find-and-replace.md#the-results).
+
+Pusta nazwa lub notatka, której pierwsza linia jest pusta, wyświetla się jako `unnamed` kursywą. W widokach `Logical Names` i `Both Names` tabela lub kolumna wyświetla się jako `unnamed` tylko wtedy, gdy jej nazwa logiczna również jest pusta.  
+W wąskim panelu przygaszony tekst jest skracany znakiem `…` wcześniej niż nazwa, od której zaczyna się wiersz. Najedź wskaźnikiem na nazwę lub jej przygaszony tekst, aby zobaczyć pełną treść.
 
 Na początku rozwinięty jest tylko folder `Tables`. Kliknij wiersz folderu albo naciśnij na nim klawisz `Enter` lub `Space`, aby go zwinąć lub rozwinąć.  
 Strzałka na początku wiersza zwija lub rozwija ten wiersz bez przechodzenia gdziekolwiek. Ma ją każdy wiersz tabeli, nawet tabeli, pod którą nic nie ma. Klawisze `→` i `←` również zwijają i rozwijają – zobacz sekcję [Klawisze w Eksploratorze](#keys-in-the-explorer).  
@@ -110,8 +115,8 @@ Edycja, cofanie i ponawianie oraz zmiany wprowadzane przez współpracowników l
 
 Kliknij wiersz albo naciśnij klawisz `Enter` lub `Space`, gdy jest na nim fokus klawiatury, aby przejść do odpowiadającego mu elementu na kanwie ERD. Wiersz folderu tylko się zwija lub rozwija, a klawisze strzałek służą tylko do poruszania się po drzewie.
 
-- Wiersz tabeli, także tabeli wymienionej pod grupą, zaznacza tylko tę tabelę i przenosi ją na wierzch. Fokus przechodzi na komórkę z nazwą tabeli, chyba że komórka z fokusem jest już w tej tabeli.
-- Wiersz kolumny zaznacza tylko jej tabelę i ustawia fokus na komórce z nazwą kolumny.
+- Wiersz tabeli, także tabeli wymienionej pod grupą, zaznacza tylko tę tabelę i przenosi ją na wierzch. Jeśli komórka z fokusem nie jest już w tej tabeli, fokus przechodzi na pierwszą komórkę nagłówka tabeli: nazwę, a w widokach `Logical Names` i `Both Names` – nazwę logiczną.
+- Wiersz kolumny zaznacza tylko jej tabelę i ustawia fokus na komórce z nazwą kolumny, a w widoku `Logical Names` – na nazwie logicznej wyświetlanej w jej miejscu.
 - Wiersz indeksu zaznacza jego tabelę, tak jak wiersz tabeli. Sam indeks nie jest wyróżniany; indeksy edytuje się we [Właściwościach tabeli](./table-related-functions.md#indexes).
 - Wiersz klucza obcego pokazuje w widoku obie tabele relacji naraz albo samą tabelę podrzędną, gdy tabele są zbyt daleko od siebie, aby pokazać je razem. Zaznacza tylko tabelę podrzędną wraz z jej kolumnami kluczy obcych, ustawia fokus na pierwszej z nich i podświetla łącznik relacji – zobacz sekcję [Odczytywanie łącznika](./relationship-editing.md#reading-a-connector).
 - Wiersz grupy tabel przesuwa widok na ramkę grupy, kierując się jej paskiem tytułu, zaznacza tylko tę grupę i przenosi ją wraz z tabelami na wierzch.
@@ -119,7 +124,7 @@ Kliknij wiersz albo naciśnij klawisz `Enter` lub `Space`, gdy jest na nim fokus
 
 Widok przesuwa się według reguły wspólnej dla wszystkich przejść: powiększenie nigdy się nie zmienia, a kanwa przewija się tylko wtedy, gdy element docelowy nie jest już dobrze widoczny – zobacz sekcję [Dokąd prowadzi przejście](./table-related-functions.md#where-a-jump-lands).  
 Przejście do wiersza najpierw zamyka Właściwości tabeli, jeśli są otwarte, i nigdy nie rozpoczyna ani nie kończy rysowania relacji.  
-Gdy pole wyszukiwania zawiera tekst, wiersz, którego własna nazwa zawiera dopasowanie, lub wiersz pokazujący fragment komentarza albo notatki prowadzi zamiast tego do dopasowania – zobacz sekcję [Przechodzenie do dopasowania](./find-and-replace.md#going-to-a-match).
+Gdy pole wyszukiwania zawiera tekst, wiersz, którego nazwa lub nazwa logiczna zawiera dopasowanie, lub wiersz pokazujący fragment komentarza albo notatki prowadzi zamiast tego do swojego pierwszego dopasowania – zobacz sekcję [Przechodzenie do dopasowania](./find-and-replace.md#going-to-a-match).
 
 Po kliknięciu fokus klawiatury pozostaje w drzewie, więc klawisze `Delete`, `Backspace` i inne klawisze edycji nie docierają do nowego zaznaczenia, dopóki nie naciśniesz klawisza `Escape` lub nie klikniesz kanwy – zobacz sekcję [Klawisze w Eksploratorze](#keys-in-the-explorer).
 

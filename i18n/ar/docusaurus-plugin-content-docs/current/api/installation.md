@@ -38,7 +38,8 @@ editor.addEventListener('change', () => {
 
 تبدأ الدالة `setInitialValue('')` مستندًا جديدًا فارغًا. أما إسناد قيمة إلى `value` فيحمّل المستند بوصفه تعديلًا، فيُضاف إلى سجل التراجع.
 منذ الإصدار `4.0.0`، تمثل الخاصية `editor.value` المستند بالصيغة التي يحفظها الملف، وهي ما ينبغي تخزينه. أما `editor.runtimeValue` فتمثل المستند كما يحتفظ به المحرر، بما في ذلك الكيانات المُزالة: فهي تهيّئ متعاونًا ولا تُكتب في ملف أبدًا، راجع [runtimeValue](./erd-editor-element.md#runtimevalue).
-منذ الإصدار `4.0.0`، تكون جميع [أقفال الإعدادات](../guide/guides/settings.md#lock) مفعّلة أيضًا في المستند الجديد: إطار العرض وعلامة التبويب ولغة منشئ التعليمات البرمجية ونمطا التسمية كلاهما ونوع علامات الاقتباس. التمرير أو تغيير مستوى التكبير أو التبديل بين علامات التبويب أو تغيير أحد هذه الإعدادات يُبقي القيمة `editor.value` كما هي ولا يُطلِق الحدث `change`. يحتفظ المستند المحمَّل من نص بالأقفال التي يحددها. أما المستند الذي لا يحدد أيًّا منها، مثل أي ملف حُفظ قبل الإصدار `4.0.0`، فيُفتح وكل الأقفال مفعّلة، بمستوى تكبير 100% وفي علامة تبويب ERD، أيًّا كان العرض وعلامة التبويب المحفوظان فيه. ويُقفل عرضه عند نقطة الأصل `0, 0`، ويُفتح على المخطط بدلًا من ذلك إذا لم يُرسم أي جزء من المخطط هناك، راجع [setInitialValue](./erd-editor-element.md#setinitialvalue).
+منذ الإصدار `4.0.0`، تكون جميع [أقفال الإعدادات](../guide/guides/settings.md#lock) مفعّلة أيضًا في المستند الجديد: إطار العرض وعلامة التبويب ولغة منشئ التعليمات البرمجية ونمطا التسمية كلاهما ونوع علامات الاقتباس، ومنذ الإصدار `4.2.0` [عرض الأسماء](../guide/guides/logical-names.md#name-view). التمرير أو تغيير مستوى التكبير أو التبديل بين علامات التبويب أو تبديل عرض الأسماء أو تغيير أحد الإعدادات الأخرى يُبقي القيمة `editor.value` كما هي ولا يُطلِق الحدث `change`. يحتفظ المستند المحمَّل من نص بالأقفال التي يحددها. أما المستند الذي لا يحدد أيًّا منها، مثل أي ملف حُفظ قبل الإصدار `4.0.0`، فيُفتح وكل الأقفال مفعّلة، بمستوى تكبير 100% وفي علامة تبويب ERD، أيًّا كان إطار العرض وعلامة التبويب المحفوظان فيه. ويُقفل إطار عرضه عند نقطة الأصل `0, 0`، ويُفتح موضع العرض على المخطط بدلًا من ذلك إذا لم يُرسم أي جزء من المخطط هناك، راجع [setInitialValue](./erd-editor-element.md#setinitialvalue).
+يُفتح الملف المحفوظ قبل الإصدار `4.2.0` وعرض الأسماء مقفل على العرض `Physical Names`، حتى لو كانت كل أقفاله الأخرى معطّلة. يُبقي المحرر بالإصدار `4.0.0` أو `4.1.0` قفل عرض الأسماء على حاله عند الحفظ لكنه يُسقط العرض، لذا فإن ملف الإصدار `4.2.0` المحفوظ وعرض الأسماء غير مقفل يبقى غير مقفل لكنه يُعاد فتحه على العرض `Physical Names`.
 لمعرفة بقية واجهة برمجة التطبيقات، راجع [ErdEditorElement](./erd-editor-element.md).
 
 ### CDN {#cdn}
@@ -56,7 +57,7 @@ editor.addEventListener('change', () => {
 ```
 
 يحلّ `esm.run` التبعيات الخارجية للحزمة نيابةً عنك، لذا يعمل هذا دون أداة تجميع.
-يقدّم عنوان URL غير المحدد بإصدار أحدث إصدار دائمًا. حدّد إصدارًا بعينه — `https://esm.run/@dineug/erd-editor@4.1.0` — إذا كنت لا تريد أن تصل ترقية رئيسية إلى صفحتك دون سابق إنذار.
+يقدّم عنوان URL غير المحدد بإصدار أحدث إصدار دائمًا. حدّد إصدارًا بعينه — `https://esm.run/@dineug/erd-editor@4.2.0` — إذا كنت لا تريد أن تصل ترقية رئيسية إلى صفحتك دون سابق إنذار.
 والإصدار `4.0.0` نفسه ترقية من هذا النوع: فالصفحة التي يجب أن تبقى على الإصدار 3.x تحدّد `@3.10.0` في العنوان، راجع [الترقية من الإصدار 3.x](#upgrading-from-3x).
 
 ### الوسم script {#script-tag}
@@ -66,14 +67,14 @@ editor.addEventListener('change', () => {
 
 ```html
 <erd-editor></erd-editor>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@4.1.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@4.2.0"></script>
 <script>
   const editor = document.querySelector('erd-editor');
   editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
 </script>
 ```
 
-يسجّل استيرادها العنصر `<erd-editor>` بالطريقة نفسها؛ ويحمل `window.ErdEditor` دالتَي رد النداء الخاصتين بالملفات، `ErdEditor.setExportFileCallback` و`ErdEditor.setImportFileCallback`، ويحمل منذ الإصدار `3.9.2` الدالة `ErdEditor.createKeyBindingMap`.
+يسجّل استيرادها العنصر `<erd-editor>` بالطريقة نفسها؛ ويحمل `window.ErdEditor` دالتَي رد النداء الخاصتين بالملفات، `ErdEditor.setExportFileCallback` و`ErdEditor.setImportFileCallback`، ويحمل منذ الإصدار `3.9.2` الدالة `ErdEditor.createKeyBindingMap`. ومنذ الإصدار `4.2.0` يحمل أيضًا `ErdEditor.dictionaryRowChords`، راجع [dictionaryRowChords](./erd-editor-element.md#dictionaryrowchords).
 ولا تزال خريطة exports توجّه أداة التجميع إلى وحدات ES، لذا لا يلتقط التثبيت من npm هذا الملف أبدًا.
 
 ### HTML {#html}
@@ -166,17 +167,18 @@ const found = document.querySelector('erd-editor'); // ErdEditorElement | null
 
 ## نقاط الدخول {#entry-points}
 
-يسجّل استيراد `@dineug/erd-editor` العنصر `<erd-editor>` كأثر جانبي. وفضلًا عن ذلك يصدّر نوع العنصر، ودالتين لتعيين دوال رد النداء، ومنذ الإصدار `3.9.2` اختصارات لوحة المفاتيح الافتراضية مع أنواعها، ومنذ الإصدار `4.0.0` أنواع لغة العرض ونوع خيارات الدالة `getSchemaSQL()`.
+يسجّل استيراد `@dineug/erd-editor` العنصر `<erd-editor>` كأثر جانبي. وفضلًا عن ذلك يصدّر نوع العنصر، ودالتين لتعيين دوال رد النداء، ومنذ الإصدار `3.9.2` اختصارات لوحة المفاتيح الافتراضية مع أنواعها، ومنذ الإصدار `4.0.0` أنواع لغة العرض ونوع خيارات الدالة `getSchemaSQL()`، ومنذ الإصدار `4.2.0` تركيبات مفاتيح الصفوف في علامة تبويب القاموس.
 
 | ما يُصدَّر | الوصف |
 | --- | --- |
 | `ErdEditorElement` (نوع) | واجهة العنصر، راجع [ErdEditorElement](./erd-editor-element.md). |
 | `setExportFileCallback(cb)` | تحل محل التنزيل في المتصفح، `(blob, { fileName }) => void`. |
-| `setImportFileCallback(cb)` | تحل محل منتقي الملفات في المتصفح، `({ type, op, accept, mode }) => void`؛ ويتوفر الحقل `mode` منذ الإصدار `4.0.0`. |
+| `setImportFileCallback(cb)` | تحل محل منتقي الملفات في المتصفح، `({ type, op, accept, mode }) => void`؛ ويتوفر الحقل `mode` منذ الإصدار `4.0.0`. ومنذ الإصدار `4.2.0` يفتح الأمر `Import CSV` في علامة تبويب القاموس منتقي الملفات في المتصفح حتى مع تعيين دالة رد نداء، راجع [مربعات حوار الملفات](#file-dialogs). |
 | `createKeyBindingMap()` | تُرجع اختصارات لوحة المفاتيح الافتراضية في `KeyBindingMap` جديد عند كل استدعاء، راجع [createKeyBindingMap](./erd-editor-element.md#createkeybindingmap). |
 | `KeyBindingMap` و`KeyBindingName` و`ShortcutOption` (أنواع) | خريطة اختصارات، ونوع اتحاد يضم أسماء أوامرها، واختصار واحد. |
+| `dictionaryRowChords(map)` | منذ الإصدار `4.2.0`. تُرجع، في مصفوفة `ShortcutOption[]` جديدة عند كل استدعاء، تركيبات المفاتيح التي تُدرج بها شبكة علامة تبويب [القاموس](../guide/guides/dictionary.md#adding-and-deleting-rows) الصفوف وتحذفها وفق `KeyBindingMap` الذي تمرّره. أما التركيبة التي تُدرج الصفوف في الأعلى، وهي `Alt+Shift+Enter` مع القيم الافتراضية، فلا ترد في أي اختصار، راجع [dictionaryRowChords](./erd-editor-element.md#dictionaryrowchords). |
 | `LocaleCode` و`LocaleOption` (نوعان) | منذ الإصدار `4.0.0`. رموز لغات العرض البالغة 25 لغة، وهذه الرموز مضافًا إليها `'system'`، وهو ما تقبله الدالة `setLocale()`، راجع [لغة العرض](./erd-editor-element.md#display-language). |
-| `SchemaSQLOptions` (نوع) | منذ الإصدار `4.0.0`. الخياران `statements` و`header` اللذان تقبلهما الدالة `getSchemaSQL()`، راجع [getSchemaSQL](./erd-editor-element.md#getschemasql). |
+| `SchemaSQLOptions` (نوع) | منذ الإصدار `4.0.0`. الخيارات التي تقبلها الدالة `getSchemaSQL()`: `statements` و`header`، ومنذ الإصدار `4.2.0` الخيار `logicalNameAsComment`، راجع [getSchemaSQL](./erd-editor-element.md#getschemasql). |
 
 تمثل `@dineug/erd-editor/engine.js` نقطة دخول ثانية. وهي تشغّل مخزن المستند دون DOM، لذا تعمل في Web Worker، راجع [التخزين البعيد](./advanced/remote-storage.md).
 وهي تصدّر `createReplicationStore` والنوع `ReplicationStore`. ومنذ الإصدار `3.10.0` تصدّر أيضًا النوع `ReplicationChange`، `{ value: string; changed: boolean }`، الذي يتلقاه مستمع الحدث `change` في النسخة المتماثلة، راجع [on@change](./advanced/remote-storage.md#onchange).
@@ -188,6 +190,7 @@ const found = document.querySelector('erd-editor'); // ErdEditorElement | null
 
 يمر الاستيراد والتصدير عبر دوال رد نداء قابلة للحقن، لذا يمكن للمضيف الذي لا يملك مربع حوار ملفات المتصفح — عرض ويب داخل بيئة تطوير، على سبيل المثال — أن يوفر مربعه الخاص.
 والاثنان غير متماثلين: فالتصدير يسلّمك الملف الجاهز، بينما يطلب الاستيراد ملفًا فحسب، وتعيد أنت المحتوى إلى المحرر بنفسك.
+منذ الإصدار `4.2.0`، يمثل الأمر `Import CSV` في علامة تبويب القاموس الاستيراد الوحيد الذي لا يستدعي دالة رد نداء الاستيراد أبدًا، إذ لا يملك الحقل `type` فيها قيمة لملفات CSV. فهو يفتح دائمًا منتقي الملفات الخاص بالمتصفح، لملفات `.csv`، راجع [استيراد ملفات CSV وتصديرها](../guide/guides/dictionary.md#importing-and-exporting-csv).
 
 تكون قيمة `op` إما `set` أو `diff` — ويُوجَّه طلب `diff` إلى `setDiffValue()` أيًّا كانت قيمة `type`. وفي غير ذلك يحدد `type` الدالة، ويحمل `accept` امتدادات ذلك النوع، جاهزةً لتمريرها إلى مربع حوار الملفات لدى المضيف.
 منذ الإصدار `4.0.0`، يحمل طلب `set` القيمة `mode: 'append'` عندما يختار المستخدم [استيراد وإضافة](../guide/guides/file-import-export.md#import-and-add)، ولا يحمل أي `mode` في الاستيراد العادي. مرّره كما هو: فدالة رد النداء التي تُسقطه تستبدل المخطط الذي طلب المستخدم الإضافة إليه.
@@ -229,8 +232,8 @@ setImportFileCallback(async ({ type, op, accept, mode }) => {
 خصّص فرعًا لكل قيمة `type` تعالجها، وتجاهل البقية.
 يمسح استدعاء `setSchemaJSON()` بوضع الاستبدال، مثل إسناد `value`، المستندَ قبل أن يحلل المحتوى، لذا فإن توجيه حمولة ليست مستند `.erd.json` إليه — عبر `else` شامل، أو لأن قيمة `type` أُضيفت لاحقًا فوصلت إليه دون معالجة — يُفرغ المخطط بدلًا من استيراد أي شيء.
 
-يكون `fileName` الذي يُنشئه المحرر على الشكل `<database name>-<timestamp>` مضافًا إليه امتداد الملف، حيث الطابع الزمني هو الوقت المحلي بالتنسيق `yyyy-MM-dd'T'HH_mm_ss`. وإذا كان اسم قاعدة البيانات فارغًا يُستخدم `unnamed` بدلًا منه.
-تتلقى دالة رد نداء التصدير هذه الملفات. منذ الإصدار `4.0.0`، أصبحت صورة SVG وملفات منشئ التعليمات البرمجية من بينها، ويأتي ملف `.sql` من الزر `Save file` في علامة تبويب مخطط SQL بدلًا من أن يأتي مباشرةً من `Export`.
+يكون `fileName` الذي يُنشئه المحرر على الشكل `<database name>-<timestamp>` مضافًا إليه امتداد الملف، حيث الطابع الزمني هو الوقت المحلي بالتنسيق `yyyy-MM-dd'T'HH_mm_ss`. وإذا كان اسم قاعدة البيانات فارغًا يُستخدم `unnamed` بدلًا منه. ويذكر ملف CSV الخاص بالقاموس اسم ورقته قبل الامتداد، كما في `<database name>-<timestamp>-words.csv`.
+تتلقى دالة رد نداء التصدير هذه الملفات. منذ الإصدار `4.0.0`، أصبحت صورة SVG وملفات منشئ التعليمات البرمجية من بينها، ويأتي ملف `.sql` من الزر `Save file` في علامة تبويب مخطط SQL بدلًا من أن يأتي مباشرةً من `Export`. ومنذ الإصدار `4.2.0` أصبح ملف CSV من علامة تبويب القاموس من بينها أيضًا.
 
 | الملف | الامتداد | قيمة `type` في Blob |
 | --- | --- | --- |
@@ -238,6 +241,7 @@ setImportFileCallback(async ({ type, op, accept, mode }) => {
 | ما يحفظه الزر `Save file` في علامة تبويب مخطط SQL، وهو يحتوي على النص الذي تعرضه علامة التبويب، راجع [مخطط SQL](../guide/guides/schema-sql.md) | `.sql` | لا يوجد |
 | مربع حوار [تصدير الصورة](../guide/guides/file-import-export.md#image) | `.png` أو `.svg` | `image/png` أو `image/svg+xml` |
 | ما يحفظه الزر `Save file` في علامة تبويب منشئ التعليمات البرمجية، راجع [منشئ التعليمات البرمجية](../guide/guides/code-generator.md) | امتداد اللغة: `.cs`، `.go`، `.java`، `.kt`، `.php`، `.rs`، `.scala`، `.swift`، `.ts`، `.py`، `.aml`، `.dbml`، `.graphql`، `.json` أو `.mmd` | لا يوجد |
+| ما يحفظه الأمر `Export CSV` في علامة تبويب القاموس، وهو يحتوي على كل صفوف الورقة المعروضة، أيًّا كان ما يعرضه بحثها، راجع [استيراد ملفات CSV وتصديرها](../guide/guides/dictionary.md#importing-and-exporting-csv) | `.csv` | `text/csv` |
 
 يحتاج المضيف الذي يختار المعالج حسب الامتداد إلى معالج لكل منها.
 
@@ -261,5 +265,5 @@ Chrome 91+ وEdge 94+ وFirefox 93+ وSafari 16.4+ — وهو خط الأساس 
 - تتلقى دالة رد نداء الاستيراد `mode: 'append'` عند استخدام استيراد وإضافة، وعلى دالة رد النداء أن تمرّره. وتتلقى دالة رد نداء التصدير الآن أيضًا ملفات `.svg` وملفات منشئ التعليمات البرمجية، ويفتح `Export` ▸ `Schema SQL` علامة تبويب مخطط SQL بدلًا من الحفظ، لذا لا يصل ملف `.sql` إلا من الزر `Save file` في علامة التبويب تلك، راجع [مربعات حوار الملفات](#file-dialogs).
 - يرتبط المفتاحان `Delete` و`Backspace` بالأمر الجديد `removeSelection`. وما دام التركيز في المحرر خارج حقل نصي، يُمنع السلوك الافتراضي للمفتاح في كل علامات التبويب، ويُزال التحديد في علامة تبويب ERD. ويُضاف الأمر إلى `KeyBindingName` و`KeyBindingMap`، ويترك `setKeyBindingMap({ removeSelection: [] })` كلا المفتاحين للصفحة، راجع [setKeyBindingMap](./erd-editor-element.md#setkeybindingmap).
 - تقبل `ThemeOptions.appearance` أيضًا القيمة `'system'`، وهي `System` في منشئ النسق، والتي يضبطها تفعيل `systemDarkMode`. ويُبلغ الحدث `changePresetTheme` عن `'system'` ما دامت محددة، لذا خزّنها كما هي وأعدها إلى `setPresetTheme`. ومع تفعيل `systemDarkMode`، يبقى الآن استدعاء `setPresetTheme()` بالقيمة `'light'` أو `'dark'` بدلًا من أن يُستبدل عند التغيير التالي في نظام التشغيل، راجع [systemDarkMode](./erd-editor-element.md#systemdarkmode) و[changePresetTheme](./erd-editor-element.md#changepresettheme).
-- يستخدم `@dineug/erd-editor-mcp` `1.0.0` وإضافة VS Code بالإصدار `4.0.0` أو أحدث ومكوّنا Obsidian وJetBrains الإضافيان بالإصدار `1.0.0` أو أحدث بروتوكول المحور 2. والخادم `1.0.0` مع إصدار أقدم من المحرر يخدم الوكلاء، أو خادم أقدم مع أحد هذه المحررات، يرفض كلٌّ منهما الآخر بالرمز `protocolMismatch`، مع تسمية الطرف الذي يلزم تحديثه، راجع [التحديث](../mcp/installation.md#updating).
+- يستخدم `@dineug/erd-editor-mcp` بالإصدار `1.0.0` أو أحدث وإضافة VS Code بالإصدار `4.0.0` أو أحدث ومكوّنا Obsidian وJetBrains الإضافيان بالإصدار `1.0.0` أو أحدث بروتوكول المحور 2. والخادم بالإصدار `1.0.0` أو أحدث مع إصدار أقدم من المحرر يخدم الوكلاء، أو خادم أقدم مع أحد هذه المحررات، يرفض كلٌّ منهما الآخر بالرمز `protocolMismatch`، مع تسمية الطرف الذي يلزم تحديثه، راجع [التحديث](../mcp/installation.md#updating).
 - يقدّم عنوان CDN غير المحدد بإصدار الآن أحدث إصدار من 4.x. حدّد `@3.10.0` للبقاء على الإصدار 3.x، راجع [CDN](#cdn).

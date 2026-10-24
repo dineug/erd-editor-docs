@@ -16,16 +16,20 @@ Du kan importera fem format från undermenyn `Import` i arbetsytans snabbmeny:
 - AML
 
 Menyalternativet `Import and Add` direkt under `Import` lägger till filen i diagrammet i stället för att ersätta det – se [Importera och lägg till](#import-and-add).  
-Välkomstskärmen som ett tomt diagram visar har en rad `Import` med samma fem format – se [Välkomstskärmen](./editing-start.md#welcome-screen).
+Välkomstskärmen som ett tomt diagram visar har en rad `Import` med samma fem format – se [Välkomstskärmen](./editing-start.md#welcome-screen).  
+Bladen på fliken [Ordlista](./dictionary.md) tar också emot ord, termer och domäner från CSV-filer, med flikens egen `Import CSV` – se [Importera och exportera CSV](./dictionary.md#importing-and-exporting-csv).
 
 Filändelser matchas oavsett skiftläge. Om du väljer en fil vars filändelse inte matchar det valda formatet avbryts importen och meddelandet `Only <format> files can be imported` visas, med formatet skrivet som `json`, `sql`, `graphql`, `dbml` eller `aml`, som i `Only sql files can be imported`.
 
 `Import` ersätter det aktuella dokumentet i stället för att slås samman med det, och om du ångrar ett steg kommer det tidigare diagrammet tillbaka.  
-En JSON-fil tar med sig sina egna inställningar, inklusive sina [lås](./settings.md#lock). Där filen låser fliken, kodgeneratorns språk, ett skiftläge eller typen av citattecken ser du fortfarande det du hade, men det är filens låsta värde som sparas. Vyn hamnar, låst eller inte, där filen anger. En JSON-fil som sparades innan låsen fanns importeras med alla lås påslagna och vyn på 100 %.  
+En JSON-fil tar med sig sina egna inställningar, inklusive sina [lås](./settings.md#lock). Där filen låser fliken, kodgeneratorns språk, ett skiftläge, typen av citattecken eller [namnvisningen](./logical-names.md#name-view) ser du fortfarande det du hade, men det är filens låsta värde som sparas. Zoomnivån och vypositionen hamnar, låsta eller inte, där filen anger. En JSON-fil som sparades innan låsen fanns importeras med alla lås påslagna och vyn på 100 %. En fil som sparades innan låset `Name View` fanns importeras med det låset påslaget, oavsett vilka andra lås den registrerar.  
 De andra formaten behåller de inställningar du redan har, inklusive låsen, utom vyn, som börjar på 100 %.  
 Parsrarna för GraphQL, DBML och AML misslyckas aldrig: en fil som de inte kan tolka ger ett tomt diagram i stället för ett fel.
 
-En JSON-fil behåller sina positioner. Tabellerna i en Schema SQL-, GraphQL-, DBML- eller AML-fil placeras innan diagrammet ändras:
+En JSON-fil tar också med sig tabellernas och kolumnernas logiska namn och kolumnernas domänkopplingar. Dess ord, termer och domäner ersätter dem på fliken [Ordlista](./dictionary.md), så en fil som inte innehåller några lämnar bladen tomma, och om du ångrar importen kommer de som ersattes tillbaka.  
+De andra formaten innehåller inget av detta. Deras tabeller kommer in utan logiska namn och utan någon kolumn som är kopplad till en domän, och dina ord, termer och domäner förblir som de är. Att ångra eller göra om importen lämnar dem också som de är, så en ändring i ordlistan som görs efter importen behålls. En sådan import lämnar också varje blads egen ångrahistorik som den är, medan en JSON-import tömmer de historikerna – se [Ordlistans blad](./undo-redo.md#dictionary-sheets).
+
+En JSON-fil behåller sina positioner. Tabellerna i en Schema SQL-, GraphQL-, DBML- eller AML-fil placeras innan diagrammet ändras, med de bredder de har i den [namnvisning](./logical-names.md#beyond-the-canvas) du tittar på:
 
 - När filen har två eller fler tabeller och minst en relation läggs tabellerna ut med den [automatiska layouten](./table-related-functions.md#auto-layout) `Flow`, från vänster till höger längs relationerna, med början uppe till vänster på arbetsytan. En relation från en tabell till sig själv räknas.
 - Annars ställs de upp i rader med början uppe till vänster, med de tabeller som har färst kolumner först.
@@ -33,7 +37,7 @@ En JSON-fil behåller sina positioner. Tabellerna i en Schema SQL-, GraphQL-, DB
 
 Diagrammet ersätts sedan i ett enda steg, så ingenting visas däremellan. En inställning som du ändrar medan tabellerna placeras, till exempel fliken, behålls, och om du importerar en annan fil under tiden vinner den import som startades sist.
 
-En skrivskyddad editor läser inte in något från `Import` och erbjuder inte `Import and Add`.
+En skrivskyddad editor läser inte in något från `Import` och erbjuder varken `Import and Add` eller `Import CSV` på fliken Ordlista.
 
 ### Importera och lägg till {#import-and-add}
 
@@ -42,6 +46,7 @@ En skrivskyddad editor läser inte in något från `Import` och erbjuder inte `I
 ![En SQL-fil läggs till från Import and Add > Schema SQL, och dess tabeller hamnar under diagrammet, utlagda längs sina relationer och markerade](/img/demo-import-and-add.webp)
 
 Filen läggs in på samma sätt som vid en inklistring: alla tabeller, kolumner, relationer, index, anteckningar och [tabellgrupper](./table-groups.md) som den innehåller läggs till som nya, tabellerna som redan finns i diagrammet flyttas inte och ingen inställning ändras, så inställningarna i en JSON-fil utelämnas.  
+Tabellerna och kolumnerna i en JSON-fil behåller sina logiska namn, och varje fysiskt namn tillhör fortfarande ordlistorna eller dig, så som det var i filen, vilket avgör om ett logiskt namn som skrivs senare härleder ett nytt – se [Härleda fysiska namn](./dictionary.md#deriving-physical-names). Filens ord, termer och domäner utelämnas, så fliken Ordlista förblir som den var, och ingen tillagd kolumn kopplas till en domän: var och en behåller den datatyp den har.  
 En tabell vars namn redan finns i diagrammet läggs till som en andra tabell med det namnet och slås inte ihop med den. Relationer och index kommer bara från filen, så en sekundärnyckel till en tabell som filen inte definierar kopplas inte till en tabell som redan finns i diagrammet.
 
 Det tillagda blocket hamnar precis under allt som diagrammet innehåller, i linje med dess vänsterkant, eller uppe till vänster i ett tomt diagram. Anteckningar och tabellgrupper som är dolda med [visningsalternativen](./table-related-functions.md#table-view-options) räknas också, eftersom de fortfarande står kvar där.  
@@ -160,11 +165,10 @@ Ett omvänt snedstreck före ett citattecken, som när MySQL och MariaDB skriver
 Ett värde i `DEFAULT` behåller sina citattecken, och ett citattecken inuti det skrivs tillbaka dubblerat oavsett hur filen maskerade det: `'it''s'`.  
 När dokumentets databas är Databricks vid importen följer text inom enkla citattecken i stället reglerna i Spark: varje omvänt snedstreck maskerar tecknet efter det, så `'C:\\dir'` läses som `C:\dir`, escape-sekvenser som `\n`, `\t` och `\u0041` avkodas och ett värde i `DEFAULT` behålls som `'it\'s'`.
 
-Exporterad Schema SQL maskerar ett citattecken inuti en tabell- eller kolumnkommentar: `COMMENT 'it''s'` för MySQL, MariaDB och Snowflake, `COMMENT ON TABLE` och `COMMENT ON COLUMN ... IS 'it''s'` för PostgreSQL och Oracle samt samma dubblering, inklusive tabell- och kolumnnamn, i anropen av `sp_addextendedproperty` för MSSQL. En kommentar utan citattecken skrivs som den är.  
-Databricks maskerar i stället ett citattecken och ett omvänt snedstreck med ett omvänt snedstreck, som i `COMMENT 'it\'s'`, så dess export läses tillbaka exakt bara medan Databricks är den valda databasen.  
-MSSQL skriver varje kommentar som `EXECUTE sys.sp_addextendedproperty 'MS_Description', '<comment>', 'schema', '<schema>', 'table', '<table>'`, följt av `'column', '<column>'` för en kolumn. När `Bracket` är `None` ger en tabell med namnet `sales.users` schemat `sales` och tabellen `users`, och ett namn utan schema hamnar i `dbo`. Med alla andra värden för `Bracket` är hela namnet tabellen, i `dbo`.
-
-Kommentarer överlever inte en export och återimport med SQLite: SQLite skriver dem som vanliga rader med `--`, som parsern inte läser. Anropen av `sp_addextendedproperty` i en MSSQL-export importeras tillbaka som samma tabell- och kolumnkommentarer.
+Hur varje databas skriver en kommentar vid export, och hur den maskerar ett citattecken i en, beskrivs i [Kommentarer](./schema-sql.md#comments) på sidan om Schema SQL.  
+En export till MySQL, MariaDB, PostgreSQL, Oracle, Snowflake eller MSSQL importeras tillbaka som samma tabell- och kolumnkommentarer, inklusive citattecken, bortsett från de tomma rader som en Oracle-export utelämnar. En Databricks-export, som maskerar ett citattecken och ett omvänt snedstreck med ett omvänt snedstreck, läses tillbaka exakt bara medan Databricks är den valda databasen.  
+Kommentarer överlever inte en export och återimport med SQLite: SQLite skriver dem som vanliga rader med `--`, som parsern inte läser.  
+Utom i SQLite importeras ett logiskt namn som `Write logical names into empty comments` skrev i en tom kommentar tillbaka som tabellens eller kolumnens kommentar, inte som dess logiska namn – se [Logiska namn som kommentarer](./schema-sql.md#logical-names-as-comments).
 
 ### GraphQL {#graphql}
 
@@ -200,22 +204,24 @@ Filnamnet måste sluta på `.aml`.
 
 GraphQL, DBML och AML fungerar i båda riktningarna: vart och ett är också ett mål i [kodgeneratorn](./code-generator.md).  
 DBML och AML för över varje relations ON DELETE och ON UPDATE i båda riktningarna – se [Kodgenerator](./code-generator.md#on-delete-and-on-update). GraphQL för inte över någon av dem, så en GraphQL-import lämnar båda som `Not set`.  
-DBML för också över tabellfärger, utan eventuell transparens, och varje tabellgrupp som innehåller en tabell, i båda riktningarna. En grupp utan namn kommer tillbaka som `group_1`, `group_2` och så vidare, och ett upprepat gruppnamn kommer tillbaka med `_2`, `_3` och så vidare tillagt. AML för bara över en tabellfärg som det närmaste av sina färgnamn, så `#FF8800` skrivs som `orange` och kommer tillbaka som `#f97316`, och det för inte över några grupper. GraphQL för över varken färger eller grupper.
+DBML för också över tabellfärger, utan eventuell transparens, och varje tabellgrupp som innehåller en tabell, i båda riktningarna. En grupp utan namn kommer tillbaka som `group_1`, `group_2` och så vidare, och ett upprepat gruppnamn kommer tillbaka med `_2`, `_3` och så vidare tillagt. AML för bara över en tabellfärg som det närmaste av sina färgnamn, så `#FF8800` skrivs som `orange` och kommer tillbaka som `#f97316`, och det för inte över några grupper. GraphQL för över varken färger eller grupper.  
+Inget av de tre för över logiska namn, domänkopplingar eller ordlistorna, i någon riktning: kodgeneratorn skriver varje tabells och kolumns fysiska namn och datatyp, aldrig ett logiskt namn eller en domän.
 
 ## Exportera {#exporting}
 
 Undermenyn `Export` i arbetsytans snabbmeny har tre alternativ:
 
-- json: Sparar diagrammet så som dess fil innehåller det, som `.erd.json`: tabellerna med deras kolumner och index, relationerna, anteckningarna och tabellgrupperna samt inställningarna, varje [låst inställning](./settings.md#lock) med sitt låsta värde.
+- json: Sparar diagrammet så som dess fil innehåller det, som `.erd.json`: tabellerna med deras kolumner och index, relationerna, anteckningarna och tabellgrupperna, de logiska namnen och kolumnernas domänkopplingar, orden, termerna och domänerna på fliken [Ordlista](./dictionary.md) samt inställningarna, varje [låst inställning](./settings.md#lock) med sitt låsta värde. Det som inte innehåller något, som tom text eller en tom rad i en ordlista, utelämnas – se [Lagringsform och körtidsvärde](../../api/advanced/schema.md#storage-form-and-runtime-value).
 - Schema SQL: Öppnar fliken [Schema SQL](./schema-sql.md#saving-or-copying-the-sql) med dess alternativpanel öppen och dess knapp `Save file` i fokus, så att ett tryck på `Enter` sparar den SQL-kod som fliken visar som en `.sql`-fil. Ingenting sparas innan dess.
 - Image: Öppnar dialogrutan `Export image`, som sparar diagrammet som `.png` eller `.svg` eller kopierar det till Urklipp som PNG – se [Bild](#image).
 
-Alla tre fungerar i en skrivskyddad editor.
+Alla tre fungerar i en skrivskyddad editor.  
+`Export CSV` på fliken Ordlista, som inte finns i den här undermenyn, sparar bladet `Domains`, `Words` eller `Terms` som en CSV-fil. Till skillnad från de här tre erbjuds den inte i en skrivskyddad editor – se [Importera och exportera CSV](./dictionary.md#importing-and-exporting-csv).
 
 Schema SQL skriver varje relations ON DELETE och ON UPDATE efter dess `REFERENCES`, med ON DELETE först. `Not set` skriver ingenting, och en åtgärd som den valda databasen inte godtar utelämnas. Se [Redigera relationer](./relationship-editing.md#on-delete-and-on-update) för vilken databas som godtar vilken åtgärd.
 
 Varje exporterad fil får namnet `<database name>-<timestamp>` följt av sin filändelse, med tidsstämpeln i lokal tid formaterad som `yyyy-MM-dd'T'HH_mm_ss` – till exempel `my-schema-2026-08-29T04_05_06.erd.json`. Ett tomt databasnamn ersätts med `unnamed`.  
-Knapparna `Save file` på fliken Schema SQL och i [kodgeneratorn](./code-generator.md) namnger sina filer på samma sätt. En bild får databasnamnet så som det var när dialogrutan öppnades.
+Knapparna `Save file` på fliken Schema SQL och i [kodgeneratorn](./code-generator.md) namnger sina filer på samma sätt, och det gör även `Export CSV`, som lägger till bladet efter tidsstämpeln: `-words.csv`, `-terms.csv` eller `-domains.csv`. En bild får databasnamnet så som det var när dialogrutan öppnades.
 
 `Import`, `Import and Add` och `Export` finns också i [snabbsökningen](./quick-search.md) på ERD-fliken, med samma alternativ som i arbetsytans snabbmeny.
 
@@ -235,7 +241,7 @@ Filutforskaren i Obsidian listar en exporterad `.erd.json`- eller `.sql`-fil bar
 
 Valen behålls tills editorn stängs och sparas aldrig i dokumentet. Förhandsgranskningen ritas på samma sätt som bilden och ritas om när `Background` eller `Dark mode` ändras.
 
-Bilden innehåller diagrammet som det såg ut när dialogrutan öppnades; stäng och öppna dialogrutan igen för att få med senare ändringar. Den innehåller hela diagrammet oavsett hur långt bort från det vyn har rullats, beskuret till det som diagrammet ritar plus en marginal, och den ritas alltid i 100 %, oavsett vilken zoomnivå editorn visar, så att varje tabell ritas i sin helhet. Det som [visningsalternativen](./table-related-functions.md#table-view-options) döljer – relationer, deras etiketter för ON DELETE och ON UPDATE, tabellgrupper eller anteckningar – varken ritas eller får plats, och tabellgrupper ritas bakom allt annat.
+Bilden innehåller diagrammet som det såg ut när dialogrutan öppnades; stäng och öppna dialogrutan igen för att få med senare ändringar. Dess tabeller och kolumner namnges i den namnvisning som editorn visade då, även en som du bara har bytt till på din egen skärm medan låset `Name View` behåller en annan i filen – se [Utanför arbetsytan](./logical-names.md#beyond-the-canvas). De färger som [ordlistornas kontroller](./dictionary.md#marks-on-the-canvas) ger namn på arbetsytan ritas inte. Den innehåller hela diagrammet oavsett hur långt bort från det vyn har rullats, beskuret till det som diagrammet ritar plus en marginal, och den ritas alltid i 100 %, oavsett vilken zoomnivå editorn visar, så att varje tabell ritas i sin helhet. Det som [visningsalternativen](./table-related-functions.md#table-view-options) döljer – relationer, deras etiketter för ON DELETE och ON UPDATE, tabellgrupper eller anteckningar – varken ritas eller får plats, och tabellgrupper ritas bakom allt annat.
 
 Tre knappar skriver bilden, och var och en lämnar dialogrutan öppen:
 

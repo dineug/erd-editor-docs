@@ -38,7 +38,8 @@ Panelen ritas aldrig smalare än `200px` och lämnar minst `320px` åt arbetsyta
 
 `setInitialValue('')` startar ett nytt, tomt dokument. En tilldelning av `value` läser i stället in ett dokument som en redigering, så det hamnar i ångrahistoriken.
 Sedan `4.0.0` är `editor.value` dokumentet i den form som en fil innehåller, och det är det du ska lagra. `editor.runtimeValue` är dokumentet så som editorn håller det, borttagna entiteter inräknade: det initierar en medarbetare och hamnar aldrig i en fil – se [runtimeValue](./erd-editor-element.md#runtimevalue).
-Sedan `4.0.0` har ett nytt dokument dessutom alla [inställningslås](../guide/guides/settings.md#lock) påslagna: visningsområdet, fliken, kodgeneratorns språk, båda skiftlägena och typen av citattecken. Rullning, zoomning, flikbyte eller en ändring av någon av de inställningarna lämnar `editor.value` som det var och utlöser ingen `change`. Ett dokument som läses in från text behåller de lås som det anger. Ett dokument som inte anger några, som varje fil som sparats före `4.0.0`, öppnas med alla lås påslagna, med zoomnivån 100 % och på ERD-fliken, oavsett vilken vy och flik det sparade. Vyn låses vid origo `0, 0` och öppnas i stället på diagrammet om ingen del av det ritas där – se [setInitialValue](./erd-editor-element.md#setinitialvalue).
+Sedan `4.0.0` har ett nytt dokument dessutom alla [inställningslås](../guide/guides/settings.md#lock) påslagna: visningsområdet, fliken, kodgeneratorns språk, båda skiftlägena, typen av citattecken och, sedan `4.2.0`, [namnvisningen](../guide/guides/logical-names.md#name-view). Rullning, zoomning, flikbyte, byte av namnvisning eller en ändring av någon av de andra inställningarna lämnar `editor.value` som det var och utlöser ingen `change`. Ett dokument som läses in från text behåller de lås som det anger. Ett dokument som inte anger några, som varje fil som sparats före `4.0.0`, öppnas med alla lås påslagna, med zoomnivån 100 % och på ERD-fliken, oavsett vilket visningsområde och vilken flik det sparade. Dess visningsområde låses vid origo `0, 0`, och vyn öppnas i stället på diagrammet om ingen del av det ritas där – se [setInitialValue](./erd-editor-element.md#setinitialvalue).
+En fil som sparats före `4.2.0` öppnas med namnvisningen låst på `Physical Names`, även en fil där alla andra lås är avslagna. En editor i version `4.0.0` eller `4.1.0` behåller låset för namnvisningen som det är vid en sparning men tappar visningen, så en fil från `4.2.0` som sparats med namnvisningen upplåst förblir upplåst men öppnas igen i `Physical Names`.
 Se [ErdEditorElement](./erd-editor-element.md) för resten av API:t.
 
 ### CDN {#cdn}
@@ -56,7 +57,7 @@ Se [ErdEditorElement](./erd-editor-element.md) för resten av API:t.
 ```
 
 `esm.run` löser upp paketets externa beroenden åt dig, så det här fungerar utan bundler.
-URL:en utan version levererar alltid den senaste versionen. Ange en fast version – `https://esm.run/@dineug/erd-editor@4.1.0` – om du inte vill att en uppgradering till en ny huvudversion ska nå din sida utan förvarning.
+URL:en utan version levererar alltid den senaste versionen. Ange en fast version – `https://esm.run/@dineug/erd-editor@4.2.0` – om du inte vill att en uppgradering till en ny huvudversion ska nå din sida utan förvarning.
 `4.0.0` är i sig en sådan: en sida som måste stanna på 3.x anger `@3.10.0` – se [Uppgradera från 3.x](#upgrading-from-3x).
 
 ### Script-tagg {#script-tag}
@@ -66,14 +67,14 @@ Det är den som fälten `unpkg` och `jsdelivr` pekar på, så paketets rena URL 
 
 ```html
 <erd-editor></erd-editor>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@4.1.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@4.2.0"></script>
 <script>
   const editor = document.querySelector('erd-editor');
   editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
 </script>
 ```
 
-När den importeras registreras `<erd-editor>` på samma sätt; `window.ErdEditor` innehåller de två callback-funktionerna för filer, `ErdEditor.setExportFileCallback` och `ErdEditor.setImportFileCallback`, och sedan `3.9.2` även `ErdEditor.createKeyBindingMap`.
+När den importeras registreras `<erd-editor>` på samma sätt; `window.ErdEditor` innehåller de två callback-funktionerna för filer, `ErdEditor.setExportFileCallback` och `ErdEditor.setImportFileCallback`, och sedan `3.9.2` även `ErdEditor.createKeyBindingMap`. Sedan `4.2.0` innehåller `window.ErdEditor` också `ErdEditor.dictionaryRowChords` – se [dictionaryRowChords](./erd-editor-element.md#dictionaryrowchords).
 Exports-mappningen hänvisar fortfarande en bundler till ES-modulerna, så en installation från npm får aldrig med den här filen.
 
 ### HTML {#html}
@@ -166,17 +167,18 @@ I builden för [script-taggen](#script-tag) följer alla tre med inuti filen som
 
 ## Ingångspunkter {#entry-points}
 
-När `@dineug/erd-editor` importeras registreras `<erd-editor>` som en sidoeffekt. Utöver det exporterar paketet elementtypen, två funktioner som sätter callbacks, sedan `3.9.2` standardtangentkombinationerna med deras typer och sedan `4.0.0` typerna för visningsspråk och typen för alternativen till `getSchemaSQL()`.
+När `@dineug/erd-editor` importeras registreras `<erd-editor>` som en sidoeffekt. Utöver det exporterar paketet elementtypen, två funktioner som sätter callbacks, sedan `3.9.2` standardtangentkombinationerna med deras typer, sedan `4.0.0` typerna för visningsspråk och typen för alternativen till `getSchemaSQL()` och sedan `4.2.0` tangentkombinationerna för rader på fliken Ordlista.
 
 | Export | Beskrivning |
 | --- | --- |
 | `ErdEditorElement` (typ) | Elementets gränssnitt – se [ErdEditorElement](./erd-editor-element.md). |
 | `setExportFileCallback(cb)` | Ersätter webbläsarens nedladdning, `(blob, { fileName }) => void`. |
-| `setImportFileCallback(cb)` | Ersätter webbläsarens filväljare, `({ type, op, accept, mode }) => void`; `mode` sedan `4.0.0`. |
+| `setImportFileCallback(cb)` | Ersätter webbläsarens filväljare, `({ type, op, accept, mode }) => void`; `mode` sedan `4.0.0`. Sedan `4.2.0` öppnar `Import CSV` på fliken Ordlista webbläsarens filväljare även när en callback är satt – se [Fildialogrutor](#file-dialogs). |
 | `createKeyBindingMap()` | Returnerar standardtangentkombinationerna som en ny `KeyBindingMap` vid varje anrop – se [createKeyBindingMap](./erd-editor-element.md#createkeybindingmap). |
 | `KeyBindingMap`, `KeyBindingName`, `ShortcutOption` (typer) | En bindningskarta, unionen av dess kommandonamn och en enskild bindning. |
+| `dictionaryRowChords(map)` | Sedan `4.2.0`. Returnerar, som en ny `ShortcutOption[]` vid varje anrop, de tangentkombinationer som rutnätet på fliken [Ordlista](../guide/guides/dictionary.md#adding-and-deleting-rows) infogar och tar bort rader med under den `KeyBindingMap` som du skickar in. Den som infogar rader ovanför, `Alt+Shift+Enter` med standardbindningarna, finns inte i någon bindning – se [dictionaryRowChords](./erd-editor-element.md#dictionaryrowchords). |
 | `LocaleCode`, `LocaleOption` (typer) | Sedan `4.0.0`. De 25 koderna för visningsspråk, och samma koder plus `'system'`, som `setLocale()` tar emot – se [Visningsspråk](./erd-editor-element.md#display-language). |
-| `SchemaSQLOptions` (typ) | Sedan `4.0.0`. Alternativen `statements` och `header` som `getSchemaSQL()` tar emot – se [getSchemaSQL](./erd-editor-element.md#getschemasql). |
+| `SchemaSQLOptions` (typ) | Sedan `4.0.0`. Alternativen som `getSchemaSQL()` tar emot: `statements`, `header` och, sedan `4.2.0`, `logicalNameAsComment` – se [getSchemaSQL](./erd-editor-element.md#getschemasql). |
 
 `@dineug/erd-editor/engine.js` är en andra ingångspunkt. Den kör dokumentets store utan DOM, så den fungerar i en Web Worker – se [Fjärrlagring](./advanced/remote-storage.md).
 Den exporterar `createReplicationStore` och typen `ReplicationStore`. Sedan `3.10.0` exporterar den också typen `ReplicationChange`, `{ value: string; changed: boolean }`, som en repliks lyssnare för `change` tar emot – se [on@change](./advanced/remote-storage.md#onchange).
@@ -188,6 +190,7 @@ Sedan `3.9.1` finns en tredje, `@dineug/erd-editor/peer.js`: den headless deltag
 
 Import och export går via injicerbara callbacks, så ett värdprogram utan webbläsarens fildialogruta – till exempel en webview i en IDE – kan tillhandahålla sin egen.
 De två är inte symmetriska: exporten ger dig den färdiga filen, medan importen bara ber om en, och du skickar själv in innehållet igen.
+Sedan `4.2.0` är `Import CSV` på fliken Ordlista den enda import som aldrig anropar callbacken för import, vars `type` saknar ett värde för CSV. Den öppnar alltid webbläsarens egen filväljare, för `.csv`-filer – se [Importera och exportera CSV](../guide/guides/dictionary.md#importing-and-exporting-csv).
 
 `op` är `set` eller `diff` – en `diff` går till `setDiffValue()`, oavsett `type`. Annars väljer `type` metoden, och `accept` innehåller den typens filändelser, redo att lämnas till en fildialogruta i värdprogrammet.
 Sedan `4.0.0` innehåller en `set` värdet `mode: 'append'` när användaren valde [Importera och lägg till](../guide/guides/file-import-export.md#import-and-add), och inget `mode` vid en vanlig import. Skicka det vidare: en callback som utelämnar det ersätter diagrammet som användaren ville lägga till i.
@@ -229,8 +232,8 @@ setImportFileCallback(async ({ type, op, accept, mode }) => {
 Gör en gren för varje `type` som du hanterar och ignorera resten.
 Ett ersättande anrop till `setSchemaJSON()` tömmer, precis som en tilldelning av `value`, dokumentet före tolkningen, så om innehåll som inte är ett `.erd.json`-dokument skickas dit – via en `else` som fångar allt, eller för att en `type` som lagts till senare föll igenom – töms diagrammet i stället för att något importeras.
 
-Värdet `fileName` som editorn genererar är `<database name>-<timestamp>` plus filändelsen, där tidsstämpeln är lokal tid i formatet `yyyy-MM-dd'T'HH_mm_ss`. Om databasnamnet är tomt används `unnamed`.
-Callbacken för export tar emot de här filerna. Sedan `4.0.0` finns SVG-bilden och kodgeneratorns filer bland dem, och `.sql`-filen kommer från `Save file` på fliken Schema SQL i stället för direkt från `Export`.
+Värdet `fileName` som editorn genererar är `<database name>-<timestamp>` plus filändelsen, där tidsstämpeln är lokal tid i formatet `yyyy-MM-dd'T'HH_mm_ss`. Om databasnamnet är tomt används `unnamed`. En CSV-fil från ordlistan har bladets namn före filändelsen, som i `<database name>-<timestamp>-words.csv`.
+Callbacken för export tar emot de här filerna. Sedan `4.0.0` finns SVG-bilden och kodgeneratorns filer bland dem, och `.sql`-filen kommer från `Save file` på fliken Schema SQL i stället för direkt från `Export`. Sedan `4.2.0` finns även CSV-filen från fliken Ordlista bland dem.
 
 | Fil | Filändelse | `type` för Blob |
 | --- | --- | --- |
@@ -238,6 +241,7 @@ Callbacken för export tar emot de här filerna. Sedan `4.0.0` finns SVG-bilden 
 | `Save file` på fliken Schema SQL, med den text som fliken visar – se [Schema SQL](../guide/guides/schema-sql.md) | `.sql` | ingen |
 | Dialogrutan [Export image](../guide/guides/file-import-export.md#image) | `.png` eller `.svg` | `image/png` eller `image/svg+xml` |
 | `Save file` på fliken Kodgenerator – se [Kodgenerator](../guide/guides/code-generator.md) | Språkets: `.cs`, `.go`, `.java`, `.kt`, `.php`, `.rs`, `.scala`, `.swift`, `.ts`, `.py`, `.aml`, `.dbml`, `.graphql`, `.json` eller `.mmd` | ingen |
+| `Export CSV` på fliken Ordlista, med alla rader på det visade bladet, oavsett vad dess sökning listar – se [Importera och exportera CSV](../guide/guides/dictionary.md#importing-and-exporting-csv) | `.csv` | `text/csv` |
 
 Ett värdprogram som väljer hanterare efter filändelse behöver en för var och en av dem.
 
@@ -261,5 +265,5 @@ Inga polyfills ingår. Lägg till egna om du behöver nå äldre webbläsare.
 - Callbacken för import får `mode: 'append'` vid Importera och lägg till, vilket en callback måste skicka vidare. Callbacken för export får nu också `.svg`-filer och filer från kodgeneratorn, och `Export` ▸ `Schema SQL` öppnar fliken Schema SQL i stället för att spara, så `.sql`-filen kommer bara från `Save file` på den fliken – se [Fildialogrutor](#file-dialogs).
 - `Delete` och `Backspace` är bundna till den nya bindningen `removeSelection`. Medan editorn har fokus utanför ett textfält förhindras tangentens standardåtgärd på alla flikar, och på ERD-fliken tas markeringen bort. `KeyBindingName` och `KeyBindingMap` får den, och `setKeyBindingMap({ removeSelection: [] })` överlåter båda tangenterna till sidan – se [setKeyBindingMap](./erd-editor-element.md#setkeybindingmap).
 - `ThemeOptions.appearance` tar också emot `'system'`, alternativet `System` i temaverktyget, som sätts när du slår på `systemDarkMode`. `changePresetTheme` rapporterar `'system'` medan det är valt, så lagra värdet som det är och lämna tillbaka det till `setPresetTheme`. När `systemDarkMode` är på ligger ett anrop till `setPresetTheme()` med `'light'` eller `'dark'` nu kvar i stället för att skrivas över av nästa ändring i operativsystemet – se [systemDarkMode](./erd-editor-element.md#systemdarkmode) och [changePresetTheme](./erd-editor-element.md#changepresettheme).
-- `@dineug/erd-editor-mcp` `1.0.0`, VS Code-tillägget `4.0.0` eller senare och Obsidian- och JetBrains-pluginen `1.0.0` eller senare talar hubbprotokoll 2. Servern `1.0.0` och en tidigare editorversion som betjänar agenter, eller en tidigare server och en av de här editorerna, nekar varandra med `protocolMismatch` och anger vilken sida som ska uppdateras – se [Uppdatera](../mcp/installation.md#updating).
+- `@dineug/erd-editor-mcp` `1.0.0` eller senare, VS Code-tillägget `4.0.0` eller senare och Obsidian- och JetBrains-pluginen `1.0.0` eller senare talar hubbprotokoll 2. Servern `1.0.0` eller senare och en tidigare editorversion som betjänar agenter, eller en tidigare server och en av de här editorerna, nekar varandra med `protocolMismatch` och anger vilken sida som ska uppdateras – se [Uppdatera](../mcp/installation.md#updating).
 - En CDN-URL utan version levererar nu den senaste 4.x-versionen. Ange `@3.10.0` för att stanna på 3.x – se [CDN](#cdn).

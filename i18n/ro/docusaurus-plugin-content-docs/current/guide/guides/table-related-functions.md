@@ -1,5 +1,5 @@
 ---
-sidebar_position: 4
+sidebar_position: 5
 description: Selectați, mutați, copiați, duplicați și ștergeți tabele și note, setați culori și opțiuni de afișare, definiți indexuri și chei alternative, alegeți o bază de date, deplasați-vă pe pânza infinită și comparați documente.
 ---
 
@@ -7,7 +7,8 @@ description: Selectați, mutați, copiați, duplicați și ștergeți tabele și
 
 Tot ce faceți cu tabelele și notele odată ce există – selectarea, mutarea, copierea, ștergerea, colorarea și alegerea a ceea ce afișează pânza – precum și controalele pânzei din jurul lor.  
 Mai întâi vin comenzile pentru tabele și note; apoi proprietățile tabelului, focalizarea pe tabele, indexurile și cheile alternative, aranjarea automată și sistemul de baze de date; iar la final pânza însăși: bara de instrumente a pânzei, zoomul, deplasarea pânzei și locul unde ajunge un salt, precum și vizualizatorul de diferențe.  
-Grupurile de tabele, chenarele care adună tabele, au o pagină proprie (consultați [Grupuri de tabele](./table-groups.md)).
+Grupurile de tabele, chenarele care adună tabele, au o pagină proprie (consultați [Grupuri de tabele](./table-groups.md)).  
+O pagină proprie au și numele logice și modul de afișare a numelor, care stabilește ce nume afișează tabelele (consultați [Nume logice](./logical-names.md)).
 
 ## Selecție multiplă {#multiple-selection}
 
@@ -26,11 +27,14 @@ Un clic dreapta pe ceva deja selectat păstrează întreaga selecție, așa că 
 
 ![Selectarea tabelelor cu ⌘ + drag și ⌘ + click, apoi a tuturor tabelelor și notelor cu ⌘ + A](/img/demo-table-select.webp)
 
-Într-o sesiune colaborativă, selecția, celula activă și caseta de selecție ale fiecărui participant sunt desenate pe pânză în culoarea acelui participant (consultați [Editare colaborativă](../../api/advanced/collaborative-editing.md)).
+Într-o sesiune colaborativă, selecția, celula activă și caseta de selecție ale fiecărui participant sunt desenate pe pânză în culoarea acelui participant (consultați [Editare colaborativă](../../api/advanced/collaborative-editing.md)).  
+Celula activă a unui participant care vede alt mod de afișare a numelor este desenată pe celula pe care modul dumneavoastră de afișare o desenează în locul ei, de exemplu celula numelui său, pe celula dumneavoastră a numelui logic (consultați [Colaboratori](./logical-names.md#collaborators)).
 
 ## Mutarea mai multor tabele {#moving-multiple-tables}
 
 Glisați orice tabel sau notă care face deja parte din selecție, iar întreaga selecție se mută odată cu elementul respectiv – nu este nevoie de nicio tastă de modificare.  
+Un tabel se glisează de antet sau de oricare dintre rândurile coloanelor sale, așa că o glisare care începe pe rândul unei coloane mută tabelul, nu coloana. Coloanele se mută în schimb de mânerul de glisare de lângă rândul activ (consultați [Reordonarea și mutarea coloanelor](./table-editing.md#rearranging-and-moving-columns)).  
+Pe o celulă de antet sau pe rândul unei coloane, tabelul începe să se miște doar după ce indicatorul a parcurs o mică distanță, așa că un clic acolo activează în continuare celula, iar un dublu clic îi deschide în continuare editorul. O glisare nu pornește niciodată de pe marginea colorată a unui tabel, care deschide selectorul de culori, de pe butoanele `+` și `x` din antetul său sau de pe butonul `x` al rândului unei coloane.  
 Glisarea unui element din afara selecției reduce selecția la acel element și îl mută doar pe el. `Ctrl + drag` (Windows/Linux) sau `⌘ + drag` (Mac) păstrează selecția în ambele cazuri.  
 Doar butonul stâng al mouse-ului mută tabelele și notele. Un clic dreapta alege elementele asupra cărora acționează meniul contextual și nu mută nimic, iar o glisare cu butonul din mijloc deplasează în schimb pânza (consultați [Deplasarea pe pânză](#getting-around-the-canvas)).
 
@@ -47,7 +51,9 @@ Ordinea nu se salvează: o diagramă redeschisă își suprapune tabelele în or
 Copiază tabelele și notele selectate și le lipește înapoi ca elemente noi.  
 Comenzi rapide: `Ctrl + C` (Windows/Linux) sau `⌘ + C` (Mac), `Ctrl + V` (Windows/Linux) sau `⌘ + V` (Mac)
 
-Un tabel copiat își păstrează numele, comentariul, coloanele și culoarea; o notă copiată își păstrează textul, dimensiunea și culoarea.  
+Un tabel copiat își păstrează numele, numele logic, comentariul, coloanele și culoarea; o notă copiată își păstrează textul, dimensiunea și culoarea.  
+Fiecare coloană copiată își păstrează numele logic, iar fiecare nume de tabel și de coloană păstrează informația dacă a fost derivat din dicționare (consultați [Derivarea numelor fizice](./dictionary.md#deriving-physical-names)).  
+O coloană lipită își păstrează legătura cu domeniul doar când sunt îndeplinite două condiții: diagrama în care ajunge listează exact acel domeniu, nu doar unul cu același nume, iar domeniul are încă tipul de date cu care a fost copiată coloana. Altfel, coloana ajunge fără domeniu și păstrează tipul cu care a fost copiată (consultați [Legarea unei coloane](./dictionary.md#linking-a-column)).  
 Indexurile și relațiile sunt preluate și ele: un index se copiază integral pe tabelul copiat, iar o relație se copiază cu tipul ei și cu acțiunile ON DELETE și ON UPDATE atunci când ambele tabele pe care le leagă sunt în setul copiat. O relație inclusă doar pe jumătate este omisă, în loc să rămână îndreptată înapoi spre original.  
 Copiile lipite devin noua selecție, iar lipirea repetată a aceleiași copii o decalează de fiecare dată cu încă un pas de `50px`, astfel încât lipirile repetate nu se suprapun.  
 O copie nu își păstrează [grupul de tabele](./table-groups.md): tabelul lipit nu face parte din niciun grup, chiar dacă ajunge în interiorul chenarului unui grup, iar un grup selectat nu se copiază.  
@@ -60,11 +66,12 @@ Când sunt selectate coloane în interiorul unui tabel activ, aceeași comandă 
 ## Duplicarea tabelelor și notelor {#duplicating-tables-and-memos}
 
 Țineți apăsat `Alt` și glisați un tabel sau o notă cu butonul stâng al mouse-ului.  
+Un tabel este apucat de antet sau de oricare rând de coloană, așa că `Alt + drag` pe rândul unei coloane duplică tabelul și lasă neschimbată ordinea coloanelor. Tasta `Alt` ținută apăsată pe mânerul de glisare al coloanei nu duplică nimic: coloana se mută la fel ca la o glisare simplă de mâner (consultați [Reordonarea și mutarea coloanelor](./table-editing.md#rearranging-and-moving-columns)).  
 O previzualizare translucidă urmează indicatorul, iar la eliberarea butonului copia este plasată acolo unde se află previzualizarea.  
 Dacă elementul apucat face deja parte dintr-o selecție, se duplică întreaga selecție. Altfel, selecția este înlocuită cu entitatea de sub indicator.  
 `Alt + click` fără deplasare plasează copia la o distanță de `50px` în jos și spre dreapta, avansând mai departe ori de câte ori acel loc este deja ocupat.
 
-Un duplicat preia aceleași lucruri ca o lipire: nume, comentarii, coloane, culori, dimensiunile notelor, precum și indexurile și relațiile care aparțin în întregime elementelor copiate. La fel ca o lipire, nu ajunge în niciun grup de tabele.  
+Un duplicat preia aceleași lucruri ca o [lipire](#copyingpasting-tables-and-memos): nume și nume logice, comentarii, coloane, culori, dimensiunile notelor, precum și indexurile și relațiile care aparțin în întregime elementelor copiate. Deoarece rămâne în aceeași diagramă, păstrează neschimbată legătura cu domeniul a fiecărei coloane. La fel ca o lipire, nu ajunge în niciun grup de tabele.  
 `Alt + drag` pe bara de titlu a unui grup de tabele mută grupul la fel ca o glisare obișnuită; un grup nu se duplică niciodată.
 
 ![Duplicarea unui tabel cu Alt + drag, apoi Alt + click pentru încă o copie în jos și spre dreapta](/img/demo-table-duplicate.webp)
@@ -119,6 +126,7 @@ Sunt disponibile următoarele opțiuni de afișare:
 - Table Comment
 - Column Comment
 - DataType
+- Domain
 - Default
 - Not Null
 - Unique
@@ -129,7 +137,9 @@ Sunt disponibile următoarele opțiuni de afișare:
 - Table Groups
 - Memos
 
-Opțiunile `Unique`, `Alternate Key` și `Auto Increment` sunt dezactivate implicit, iar celelalte sunt activate.  
+Opțiunile `Domain`, `Unique`, `Alternate Key` și `Auto Increment` sunt dezactivate implicit, iar celelalte sunt activate.  
+Numele afișate de tabele nu sunt o opțiune de afișare: elementul `Name View`, aflat imediat după `View Option` în meniul contextual al pânzei, alege nume fizice, nume logice sau ambele (consultați [Schimbarea modului de afișare](./logical-names.md#switching-the-view)).  
+Opțiunea `Domain` dă fiecărei coloane o celulă, plasată conform [ordinii coloanelor](./settings.md#adjusting-column-order), cu numele domeniului de care este legată coloana. O coloană care nu este legată de niciun domeniu listat în foaia `Domains` afișează acolo textul substituent `domain`, estompat. Celula apare în orice mod de afișare. Cât timp opțiunea `Domain` este dezactivată, modul `Logical Names` afișează în schimb numele unui domeniu legat în celula tipului (consultați [Celula Domeniu](./logical-names.md#the-domain-cell)).  
 Opțiunea `Alternate Key` marchează coloanele fiecărei chei alternative, de exemplu `AK1.1` (consultați [Chei alternative](#alternate-keys)).  
 Opțiunea `Referential Actions` afișează etichetele `D:` și `U:` pe care acțiunile ON DELETE și ON UPDATE ale unei relații le plasează la capătul conectorului dinspre tabelul copil (consultați [Citirea unui conector](./relationship-editing.md#reading-a-connector)). Dezactivarea ei ascunde doar acele etichete și nu mută niciun tabel sau conector.  
 Opțiunea `Table Groups` afișează [grupurile de tabele](./table-groups.md) și culorile grupurilor pe anteturile tabelelor lor. Dezactivarea ei le ascunde pe pânză, pe minihartă și în exporturile de imagini, nu mută niciun tabel și păstrează fiecare tabel în grupul său (consultați [Ascunderea grupurilor](./table-groups.md#hiding-groups)). De asemenea, elimină folderul `Table Groups` din [explorator](./explorer.md#the-tree) și butonul `New Table Group` de pe [bara de instrumente a pânzei](#canvas-toolbar), iar căutarea din explorator nu mai găsește numele grupurilor.  
@@ -139,19 +149,19 @@ Ascunderea notelor le deselectează și închide editorul unei note, dacă este 
 
 ![Comutarea elementelor din View Option în timp ce tabelele se rearanjează, marcarea unui index unic compus cu AK1.1 și AK1.2 prin Alternate Key, apoi dezactivarea și reactivarea opțiunii Memos](/img/demo-view-options.webp)
 
-Cardurile din modul `Flow` al filei Vizualizare nu respectă aceste opțiuni: folosesc propria [afișare a rândurilor](./visualization.md#row-display) și își desenează conectorii chiar și cu opțiunea `Relationship` dezactivată.
+Cardurile din modul `Flow` al filei Vizualizare nu respectă aceste opțiuni, inclusiv `Domain`: folosesc propria [afișare a rândurilor](./visualization.md#row-display) și își desenează conectorii chiar și cu opțiunea `Relationship` dezactivată. Celulele pe care le dispune un card depind doar de modul de afișare a numelor (consultați [Numele de pe carduri](./visualization.md#names-on-the-cards)).
 
 ## Proprietăți tabel {#table-properties}
 
 Deschide panoul de proprietăți al unui tabel.  
 Porniți de la elementul `Table Properties` din meniul contextual al tabelului, care îl deschide pentru tabelul pe care ați făcut clic dreapta, sau selectați un tabel și apăsați `Alt + Space`.  
-Panoul se deschide în mijlocul pânzei, care devine estompată. Doar pânza este estompată, așa că un [explorator](./explorer.md#dialogs-beside-it) deschis rămâne deschis și utilizabil alături. Antetul panoului conține titlul `Table Properties`, ultimele cinci tabele deschise sub formă de etichete, cu cel curent evidențiat, și un buton de închidere. Faceți clic pe o etichetă pentru a trece la acel tabel fără a redeschide panoul.  
+Panoul se deschide în mijlocul pânzei, care devine estompată. Doar pânza este estompată, așa că un [explorator](./explorer.md#dialogs-beside-it) deschis rămâne deschis și utilizabil alături. Antetul panoului conține titlul `Table Properties`, ultimele cinci tabele deschise sub formă de etichete, cu cel curent evidențiat, și un buton de închidere. Fiecare etichetă își denumește tabelul așa cum o face [modul de afișare a numelor](./logical-names.md#beyond-the-canvas). Faceți clic pe o etichetă pentru a trece la acel tabel fără a redeschide panoul.  
 Sub antet se află trei file: `Indexes`, `Schema SQL` și `Code Generator`. Panoul păstrează aceeași dimensiune pentru toate trei, așa că trecerea de la o filă la alta nu îl mută și nu îl redimensionează.  
 Închideți-l cu butonul de închidere, cu `Escape` sau făcând clic pe pânză în afara lui.  
 Alegerea în explorator a unui rând care nu este un folder sau saltul la o potrivire a căutării sale închide panoul Proprietăți tabel înainte de salt. La fel face `Ctrl + F` (Windows/Linux) sau `⌘ + F` (Mac), care deschide căutarea exploratorului sau plasează cursorul de text în câmpul Găsire dacă exploratorul este deja deschis. Orice alt clic în explorator, inclusiv pe un rând de folder, sau pe butonul `Explorer` al barei de instrumente lasă panoul Proprietăți tabel deschis. O apăsare pe `Escape` cât timp focusul tastaturii este în explorator doar redă focusul pânzei, așa că este nevoie de o a doua apăsare pe `Escape` pentru a închide panoul Proprietăți tabel.
 
 Fila `Indexes` este descrisă în [Indexuri](#indexes).  
-Fila `Schema SQL` afișează codul DDL al tabelului pentru [baza de date](#databases) selectată: instrucțiunea `CREATE TABLE`, constrângerile separate pe care unele baze de date le scriu pentru coloanele sale unice și indexurile sale. Scrie întotdeauna instrucțiuni `CREATE` simple, fără antet și fără scripturi înainte sau după tabele, indiferent de setările filei [Schemă SQL](./schema-sql.md) din bara de instrumente. Nu are panou de opțiuni, iar meniul său contextual oferă doar `Database` și `Bracket`.  
+Fila `Schema SQL` afișează codul DDL al tabelului pentru [baza de date](#databases) selectată: instrucțiunea `CREATE TABLE`, constrângerile separate pe care unele baze de date le scriu pentru coloanele sale unice și indexurile sale. Scrie întotdeauna instrucțiuni `CREATE` simple, fără antet, fără scripturi înainte sau după tabele și fără nume logice în comentariile goale, indiferent de setările filei [Schemă SQL](./schema-sql.md) din bara de instrumente (consultați [Nume logice drept comentarii](./schema-sql.md#logical-names-as-comments)). Nu are panou de opțiuni, iar meniul său contextual oferă doar `Database` și `Bracket`.  
 Fila `Code Generator` generează cod doar pentru acest tabel (consultați [Generator de cod](./code-generator.md)).
 
 Într-un editor `readonly`, panoul se deschide în continuare, cu insigna `Read only` lângă titlu, dar fila `Indexes` nu permite nicio modificare.
@@ -163,19 +173,19 @@ Porniți din meniul contextual al tabelului cu elementul `Focus on this table` s
 Când tabelul pe care faceți clic dreapta este unul dintre mai multe tabele selectate, elementul devine `Focus on selected tables` și focalizează întreaga selecție. Un clic dreapta pe un tabel din afara selecției focalizează doar acel tabel.  
 Comanda rapidă preia tabelele selectate, lasă deoparte notele și nu face nimic când niciun tabel nu este selectat.  
 Un [grup de tabele](./table-groups.md) selectat nu contează aici, nici pentru comanda rapidă, nici pentru elementul de meniu: tabelele sale sunt preluate doar când sunt selectate ele însele, lucru pe care îl face elementul `Select tables` din meniul grupului.  
-Ce afișează vizualizarea restrânsă și cum reveniți la întreaga diagramă sunt descrise în [Vizualizare](./visualization.md#focusing-on-tables).
+Ce afișează vizualizarea restrânsă și cum reveniți la întreaga diagramă sunt descrise în [Vizualizare](./visualization.md#focusing-on-tables), iar cum faceți pași înapoi și înainte prin ce a afișat anterior modul Flux, în [Tabelul anterior și tabelul următor](./visualization.md#previous-table-and-next-table).
 
 ## Indexuri {#indexes}
 
 Indexurile se definesc în fila `Indexes` a panoului de proprietăți al tabelului și sunt incluse în codul Schemă SQL exportat.
 
 Partea stângă listează cheile și indexurile tabelului în două secțiuni.  
-Secțiunea `Keys`, afișată când tabelul are chei, listează cheile declarate de coloanele sale: `PK_<table name>` peste coloanele marcate PK, apoi `UQ_<table name>_<column name>` pentru fiecare coloană marcată ca unică, în ordinea coloanelor. Numele urmează codul Schemă SQL al bazei de date selectate, așa că, cu opțiunea `Bracket` setată la `None`, un tabel calificat cu schema, de exemplu `sales.users`, listează `PK_users` pentru toate bazele de date, cu excepția Databricks și Snowflake (consultați [Nume de tabele calificate cu schema](./schema-sql.md#schema-qualified-table-names)). Fiecare cheie are eticheta `PK` sau `UQ` și este marcată cu un lacăt. Aici cheile sunt doar în citire și se modifică numai prin indicatorii [PK](./table-editing.md#column-primary-key) și [unic](./table-editing.md#not-null-unique-auto-increment) ai coloanelor.  
+Secțiunea `Keys`, afișată când tabelul are chei, listează cheile declarate de coloanele sale: `PK_<table name>` peste coloanele marcate PK, apoi `UQ_<table name>_<column name>` pentru fiecare coloană marcată ca unică, în ordinea coloanelor. Numele sunt cele fizice, scrise de codul Schemă SQL al bazei de date selectate, indiferent de modul de afișare a numelor, așa că, cu opțiunea `Bracket` setată la `None`, un tabel calificat cu schema, de exemplu `sales.users`, listează `PK_users` pentru toate bazele de date, cu excepția Databricks și Snowflake (consultați [Nume de tabele calificate cu schema](./schema-sql.md#schema-qualified-table-names)). Fiecare cheie are eticheta `PK` sau `UQ` și este marcată cu un lacăt. Aici cheile sunt doar în citire și se modifică numai prin indicatorii [PK](./table-editing.md#column-primary-key) și [unic](./table-editing.md#not-null-unique-auto-increment) ai coloanelor.  
 Secțiunea `Indexes` listează indexurile tabelului în ordinea în care au fost adăugate. Fiecare index are un comutator `UQ` care îl face unic, un câmp pentru nume și un buton `x` care îl elimină. Un index care este o [cheie alternativă](#alternate-keys) își afișează și numărul, de exemplu `AK1`. Adăugați un index cu butonul `Add Index` din partea de jos a listei.
 
-Partea dreaptă listează coloanele tabelului sub `Columns`, fiecare cu o casetă de selectare. Nimic nu poate fi editat până când nu selectați un index în partea stângă.  
+Partea dreaptă listează coloanele tabelului sub `Columns`, fiecare cu o casetă de selectare. Fiecare rând afișează aceleași celule ca rândul coloanei de pe pânză, urmând ordinea coloanelor, opțiunile de afișare și [modul de afișare a numelor](./logical-names.md#beyond-the-canvas). Nimic nu poate fi editat până când nu selectați un index în partea stângă.  
 Bifați o coloană pentru a o adăuga la indexul selectat și debifați-o pentru a o elimina. Selectarea unei chei îi afișează coloanele bifate, dar casetele rămân dezactivate.  
-Coloanele indexului selectat sunt listate mai jos, sub `Index order`. Glisați-le de pictograma de prindere pentru a le reordona și faceți clic pe eticheta `ASC` sau `DESC` de pe un rând pentru a-i inversa ordinea de sortare. Într-o cheie alternativă, fiecare rând se termină cu marcajul său `AK<n>.<m>`. Lista afișează câte trei rânduri, iar restul se derulează.
+Coloanele indexului selectat sunt listate mai jos, sub `Index order`, fiecare denumită așa cum o denumește modul de afișare a numelor, iar în modul `Both Names` cu numele între paranteze după numele logic, de exemplu `Member Number (member_no)`. Glisați-le de pictograma de prindere pentru a le reordona și faceți clic pe eticheta `ASC` sau `DESC` de pe un rând pentru a-i inversa ordinea de sortare. Într-o cheie alternativă, fiecare rând se termină cu marcajul său `AK<n>.<m>`. Lista afișează câte trei rânduri, iar restul se derulează.
 
 Într-un editor `readonly`, selectarea unei chei sau a unui index îi afișează în continuare coloanele, dar nu există butonul `Add Index` și nici butonul `x`, iar nimic altceva din filă nu poate fi modificat.
 
@@ -216,12 +226,12 @@ Deschideți `Auto Layout` din meniul contextual al pânzei sau din căutarea rap
 | `Tree - horizontal` | Aceeași dispunere pe niveluri, de la stânga la dreapta. |
 
 Aranjarea `Force` deschide o previzualizare cât timp aceasta se stabilizează, cu butoanele `Apply` și `Cancel` în mesajul pe care îl afișează.  
-Previzualizarea este încadrată pe diagramă așa cum era aceasta la pornirea aranjării, așa că tabelele pot ieși din cadru pe măsură ce aranjarea se stabilizează. Este desenată la un zoom de `70%` sau mai mic, așa că tabelele sale apar restrânse la nume și la marginea colorată.  
+Previzualizarea este încadrată pe diagramă așa cum era aceasta la pornirea aranjării, așa că tabelele pot ieși din cadru pe măsură ce aranjarea se stabilizează. Este desenată la un zoom de `70%` sau mai mic, așa că tabelele sale apar restrânse la nume și la marginea colorată. Se deschide în modul de afișare a numelor pe care îl vedeți, indiferent de modul pe care îl păstrează fișierul (consultați [Dincolo de pânză](./logical-names.md#beyond-the-canvas)).  
 `Apply` păstrează pozițiile așa cum sunt în acel moment, iar aranjarea se aplică de la sine odată ce se stabilizează. `Cancel` sau `Escape` lasă diagrama așa cum era.
 
 Celelalte trei se calculează dintr-odată, în afara firului principal, așa că nu există nimic de urmărit: un mesaj apare cât timp se calculează aranjarea, iar aranjamentul final este centrat pe zona pe care o acoperă deja diagrama. `Cancel` sau `Escape` renunță la o aranjare pe care nu o mai așteptați, iar, într-o aplicație gazdă care nu rulează niciun worker partajat, aranjarea se încheie cu mesajul `Could not place tables` (consultați [Web Workers](../../api/installation.md#web-workers)). O aranjare care nu a returnat un rezultat în 60 de secunde se încheie la fel.
 
-Indiferent de alegere, tabelele și grupurile de tabele sunt mutate, iar notele rămân unde sunt. O relație a unui tabel cu el însuși este ignorată, iar mai multe relații între aceleași două tabele contează o singură dată.  
+Indiferent de alegere, tabelele și grupurile de tabele sunt mutate, iar notele rămân unde sunt. Tabelele sunt plasate la lățimile pe care le au în modul de afișare a numelor pe care îl vedeți. O relație a unui tabel cu el însuși este ignorată, iar mai multe relații între aceleași două tabele contează o singură dată.  
 Fiecare aranjare păstrează împreună tabelele fiecărui grup, indiferent dacă grupurile sunt afișate sau nu, și ajustează fiecare grup care conține tabele în jurul acestora (consultați [Grupuri de tabele](./table-groups.md#auto-layout)).  
 Rezultatul este înregistrat ca o singură intrare în istoric, așa că o singură anulare readuce fiecare tabel și grup unde era.
 
@@ -259,6 +269,7 @@ O bară de instrumente mică plutește deasupra mijlocului marginii de jos a pâ
 - `New Table`, `New Memo` și `New Table Group`. `New Table` adaugă un tabel la fel ca `Alt + N`, iar `New Memo` adaugă o notă la fel ca `Alt + M`. `New Table Group` activează [trasarea grupului](./table-groups.md#drawing-a-group) la fel ca `Alt + G` și dezactivează mâna; un al doilea clic, la fel ca o a doua apăsare pe `Alt + G`, încheie trasarea fără a adăuga un grup. `New Memo` lipsește cât timp View Option → `Memos` ascunde notele, iar `New Table Group` cât timp View Option → `Table Groups` ascunde grupurile. Un editor `readonly` nu afișează niciunul dintre cele trei butoane.
 - Zoomul: `Zoom out`, zoomul curent ca procent și `Zoom in`. Cele două butoane modifică zoomul în pași, la fel ca comenzile rapide de zoom, iar un clic pe procent îl readuce la `100%`.
 - Cele patru notații de relație, aceleași patru cu care începeți o relație (consultați [Începerea editării](./editing-start.md)). Alegerea uneia revine la indicator, deoarece o relație se trasează făcând clic pe două tabele.
+- `Name View`, un buton cu o săgeată în jos care numește modul activ: `Physical Names`, `Logical Names` sau `Both Names`. Își păstrează lățimea indiferent de modul pe care îl numește, așa că o schimbare nu deplasează niciodată bara de instrumente. Un clic deschide deasupra barei de instrumente o listă cu cele trei, cu modul activ bifat. Alegerea unuia trece la acesta și închide lista; un al doilea clic pe buton, o apăsare oriunde altundeva sau `Escape` închide lista fără a schimba modul. Și un editor `readonly` îl afișează. Ce desenează fiecare mod este descris în [Afișare nume](./logical-names.md#name-view), iar dacă o schimbare se salvează, în [Schimbarea modului de afișare](./logical-names.md#switching-the-view).
 - Modul Zen, `Alt + Z`, care ascunde totul în afară de pânză și de această bară de instrumente. O nouă apăsare pe `Alt + Z` sau un clic pe buton readuce restul. Un explorator deschis este ascuns împreună cu restul, fără a fi închis, și revine odată cu acesta. Exploratorul poate fi deschis și în modul Zen (consultați [Când se retrage](./explorer.md#when-it-stands-aside)).
 - Busola `Go to content`, care apare la capătul barei de instrumente doar cât timp pe ecran nu se află niciun tabel, nicio notă afișată și niciun grup de tabele afișat (consultați [Deplasarea pe pânză](#getting-around-the-canvas)).
 
@@ -277,7 +288,7 @@ Comenzi rapide: `Ctrl + Plus` (Windows/Linux) sau `⌘ + Plus` (Mac), `Ctrl + Mi
 Butoanele `Zoom out` și `Zoom in` de pe [bara de instrumente a pânzei](#canvas-toolbar) modifică zoomul în pași, la fel ca comenzile rapide `Minus` și `Plus`: fiecare apăsare îl modifică cu 4 puncte procentuale, păstrând mijlocul ecranului pe loc. Procentul dintre ele afișează zoomul curent, iar un clic pe el revine direct la `100%`, la fel ca `Ctrl + 0` (Windows/Linux) sau `⌘ + 0` (Mac).
 
 Zoomul variază între `10%` și `150%`.  
-La un zoom de `70%` sau mai mic, tabelele se restrâng la nume și la marginea colorată, iar editarea celulelor, comenzile rapide pentru celule, copierea și lipirea nu mai funcționează până când nu măriți din nou.
+La un zoom de `70%` sau mai mic, tabelele se restrâng la nume și la marginea colorată, iar editarea celulelor, comenzile rapide pentru celule, copierea și lipirea nu mai funcționează până când nu măriți din nou. Numele afișat de un tabel restrâns urmează modul de afișare a numelor (consultați [Afișare nume](./logical-names.md#name-view)).
 
 Aceleași trei comenzi rapide aplică zoom și în fila Vizualizare, atât în modul `Graph`, cât și în modul `Flow`, fiecare mod în propriul interval (consultați [Vizualizare](./visualization.md#toolbar)).
 
@@ -302,11 +313,11 @@ Glisarea cursorului unei bare de derulare sau a dreptunghiului zonei de vizualiz
 
 Dacă după o deplasare pe ecran nu mai rămâne niciun tabel, nicio notă afișată și niciun grup de tabele afișat, la capătul [barei de instrumente a pânzei](#canvas-toolbar) apare busola `Go to content`, cu o săgeată spre cel mai apropiat element și distanța până la el. Faceți clic pe ea pentru a centra acel element fără a modifica zoomul.
 
-![Deplasarea pânzei prin glisarea pe pânza goală, prin glisarea cu butonul din mijloc peste un tabel, prin minihartă și prin rotița mouse-ului, apoi revenirea urmând busola Go to content](/img/demo-canvas-navigation.webp)
+![Deplasarea pânzei prin glisarea pe pânza goală, cu rotița mouse-ului, prin glisarea cu butonul din mijloc peste un tabel și din minihartă, apoi Shift + wheel dincolo de conținut și revenirea urmând busola Go to content](/img/demo-canvas-navigation.webp)
 
 ### Unde ajunge un salt {#where-a-jump-lands}
 
-Orice salt care vă duce la ceva de pe pânză mută vizualizarea după aceeași regulă: rezultatele prefixelor `#`, `@` și `:` din [căutarea rapidă](./quick-search.md#searching-the-diagram), rândurile [exploratorului](./explorer.md#going-to-a-row) și potrivirile funcției sale [Găsire și înlocuire](./find-and-replace.md#going-to-a-match), rândurile din lista [vizualizatorului de diferențe](#going-to-a-change), [butonul cardului](./visualization.md#card-buttons) cu link extern din modul Flux și plasarea rezultatului unei operații [Import și adăugare](./file-import-export.md#import-and-add). Fiecare dintre acele secțiuni spune ce selectează saltul; aceasta spune unde ajunge vizualizarea.
+Orice salt care vă duce la ceva de pe pânză mută vizualizarea după aceeași regulă: rezultatele prefixelor `#`, `@` și `:` din [căutarea rapidă](./quick-search.md#searching-the-diagram), rândurile [exploratorului](./explorer.md#going-to-a-row) și potrivirile funcției sale [Găsire și înlocuire](./find-and-replace.md#going-to-a-match), rândurile din lista [vizualizatorului de diferențe](#going-to-a-change), [butonul cardului](./visualization.md#card-buttons) cu link extern din modul Flux, o verificare care numește un tabel sau o coloană în [foaia Verificări](./dictionary.md#the-checks-sheet) din fila Dicționar și plasarea rezultatului unei operații [Import și adăugare](./file-import-export.md#import-and-add). Fiecare dintre acele secțiuni spune ce selectează saltul; aceasta spune unde ajunge vizualizarea.
 
 Un salt nu modifică niciodată zoomul și face cel mult o derulare. Dintr-o altă filă, trece mai întâi la fila ERD.  
 Saltul măsoară pânza așa cum apare: sub bara de instrumente de sus sau pe toată înălțimea în modul Zen și la dreapta unui explorator deschis, care îngustează pânza în loc să o acopere.
@@ -322,8 +333,8 @@ Astfel, un tabel mic aflat lângă marginea stângă a pânzei, la jumătatea î
 Ce aduce un salt în câmpul vizual și partea esențială care trebuie să fie vizibilă când întregul nu încape:
 
 - Un tabel: tot tabelul; partea esențială este banda cu numele din partea de sus sau, pentru o potrivire în comentariul tabelului, celula de comentariu, cât timp View Option → `Table Comment` afișează comentariile. La un zoom de `70%` sau mai mic, unde tabelele se restrâng la nume, partea esențială este numele din mijlocul tabelului.
-- O coloană: rândul ei; partea esențială este celula la care duce saltul: numele coloanei sau comentariul în care se află o potrivire, cât timp View Option → `Column Comment` afișează comentariile. La un zoom de `70%` sau mai mic, o coloană aduce în câmpul vizual tabelul ei, după regula pentru tabele.
-- O celulă prea lată pentru a fi afișată întreagă, de exemplu un comentariu lung: partea esențială este textul potrivit din ea.
+- O coloană: rândul ei; partea esențială este celula la care duce saltul: numele coloanei, numele ei logic pentru o potrivire în numele logic sau o verificare a numelui logic, celula Domeniu pentru o verificare a domeniului ei sau comentariul în care se află o potrivire, cât timp View Option → `Column Comment` afișează comentariile. Acolo unde rândul nu desenează o astfel de celulă, saltul duce la celula desenată în locul ei: numele logic pentru nume în modul `Logical Names`, numele pentru numele logic în modul `Physical Names` și celula tipului pentru celula Domeniu cât timp opțiunea View Option → `Domain` este dezactivată sau rândul ca întreg cât timp este dezactivată și opțiunea `DataType`. La un zoom de `70%` sau mai mic, o coloană aduce în câmpul vizual tabelul ei, după regula pentru tabele.
+- O celulă prea lată pentru a fi afișată întreagă, de exemplu un comentariu lung: partea esențială este textul potrivit din ea. Un salt la celula desenată în locul celei în care se află potrivirea, de exemplu la nume pentru o potrivire în numele logic în modul `Physical Names`, nu se ghidează după text.
 - O relație: dreptunghiul care cuprinde cele două tabele ale ei; partea esențială este tabelul copil.
 - Un grup de tabele: chenarul lui; partea esențială este bara de titlu.
 - O notă sau blocul plasat de o operație Import și adăugare: elementul în întregime.
@@ -337,7 +348,7 @@ Puteți compara documente salvate anterior cu documentul curent.
 Alegeți `Diff Viewer` din meniul contextual al pânzei și selectați un document `.json` exportat anterior.
 
 Vizualizarea se deschide peste pânză: în stânga, ce s-a modificat, apoi documentul salvat și cel curent, unul lângă altul.  
-Documentul curent este comparat așa cum este în momentul deschiderii vizualizării; modificările făcute după aceea, inclusiv cele ale unui colaborator, nu ajung în vizualizare. Un [explorator](./explorer.md#when-it-stands-aside) deschis este ascuns cât timp vizualizarea este deschisă, așa că vizualizarea ocupă toată lățimea editorului.  
+Documentul curent este comparat așa cum este în momentul deschiderii vizualizării; modificările făcute după aceea, inclusiv cele ale unui colaborator, nu ajung în vizualizare. Ambele părți se deschid și rămân în modul de afișare a numelor pe care îl vedeți, indiferent de modul pe care îl păstrează fiecare fișier (consultați [Dincolo de pânză](./logical-names.md#beyond-the-canvas)). Un [explorator](./explorer.md#when-it-stands-aside) deschis este ascuns cât timp vizualizarea este deschisă, așa că vizualizarea ocupă toată lățimea editorului.  
 Fiecare parte se deplasează cu rotița mouse-ului, prin glisarea unei zone goale sau a corpului unui grup de tabele ori prin glisarea cu butonul din mijloc oriunde pe ea și se mărește sau se micșorează cu `Ctrl + Wheel` (Windows/Linux), `⌘ + Wheel` (Mac) sau prin ciupire. La un zoom de `70%` sau mai mic, tabelele ei se restrâng la fel ca pe pânză (consultați [Marcaje pe cele două părți](#marks-on-the-two-sides)).  
 Ambele părți sunt doar în citire, așa că nimic din documentul dumneavoastră nu se modifică. Fiecare își păstrează propria selecție, iar un clic pe un tabel de acolo îl selectează doar pe acea parte.  
 Închideți vizualizarea cu butonul `Close` din mesajul `Diff Viewer` care apare la deschidere sau cu `Escape`.
@@ -360,13 +371,14 @@ Ce contează ca modificare:
 - O notă: textul, poziția, dimensiunea și culoarea.
 - Un grup de tabele: numele, tabelele pe care le conține, culoarea, poziția și dimensiunea.
 
-Astfel, un tabel, o notă sau un grup care a fost doar mutat, redimensionat sau recolorat contează ca modificat. Pozițiile și dimensiunile se compară în pixeli întregi, iar ordinea de suprapunere și punctul în care un conector întâlnește un tabel nu contează niciodată.
+Astfel, un tabel, o notă sau un grup care a fost doar mutat, redimensionat sau recolorat contează ca modificat. Pozițiile și dimensiunile se compară în pixeli întregi, iar ordinea de suprapunere și punctul în care un conector întâlnește un tabel nu contează niciodată.  
+Numele logice, legăturile cu domeniile și cuvintele, termenii și domeniile din fila [Dicționar](./dictionary.md) nu se compară, așa că o modificare doar a acestora nu este nici listată, nici marcată. Un tip de date modificat de un domeniu contează totuși, ca modificare a tipului de date al coloanei.
 
 ### Arborele modificărilor {#the-change-tree}
 
 Lista din stânga este desenată ca [arborele exploratorului](./explorer.md#the-tree) și conține doar ce s-a modificat: folderele `Tables`, `Table Groups` și `Memos`, fiecare afișat doar când conține un rând, iar sub un tabel, propriile foldere `Columns`, `Indexes` și `Foreign Keys`. O cheie străină este listată sub tabelul copil, iar un tabel adăugat sau eliminat nu listează nimic în interior.  
 Fiecare folder afișează câte rânduri conține, iar fiecare folder și fiecare tabel pornesc extinse.  
-Tabelele și grupurile de tabele sunt listate după nume, indiferent de majuscule. Notele, precum și coloanele, indexurile și cheile străine ale unui tabel, păstrează ordinea din documentul curent, iar un element eliminat este repus unde se afla. Rândul unei note afișează prima linie a notei, iar rândul unei chei străine afișează coloanele copil, apoi `→` cu tabelul părinte și coloanele acestuia, de exemplu `user_id → users(id)`. Un nume gol apare ca `unnamed`, cu caractere cursive.
+Rândul unui tabel sau al unei coloane este denumit în modul de afișare a numelor în care s-au deschis părțile. În modul `Both Names`, afișează numele logic urmat de nume, atenuat, iar pe un rând eliminat numele atenuat este tăiat împreună cu restul. Tabelele și grupurile de tabele sunt listate după nume, indiferent de majuscule și de modul de afișare. Notele, precum și coloanele, indexurile și cheile străine ale unui tabel, păstrează ordinea din documentul curent, iar un element eliminat este repus unde se afla. Rândul unei note afișează prima linie a notei, iar rândul unei chei străine afișează coloanele copil, apoi `→` cu tabelul părinte și coloanele acestuia, de exemplu `user_id → users(id)`. Un nume gol apare ca `unnamed`, cu caractere cursive.
 
 Fiecare rând se termină cu o literă, iar un rând marcat cu `A`, `D`, `M` sau `R` are numele în culoarea literei:
 
@@ -378,7 +390,7 @@ Fiecare rând se termină cu o literă, iar un rând marcat cu `A`, `D`, `M` sau
 
 Treceți cu indicatorul peste numele unui rând pentru a-i vedea sfatul ecran: starea, `Added`, `Deleted`, `Modified`, `Renamed` sau `Changed inside`, apoi câte o linie pentru fiecare modificare, de exemplu `Name: users → members` sau `NN: ✗ → ✓`. Un text este citat prin prima sa linie, tăiată după 40 de caractere, iar o valoare goală apare ca `—`. Sfatul ecran al unui element adăugat sau eliminat conține doar starea.
 
-Câmpul `Filter by name`, deasupra arborelui, păstrează rândurile al căror nume curent sau salvat conține ce tastați, indiferent de majuscule. Un tabel al cărui nume se potrivește își păstrează toate rândurile, iar unul al cărui nume nu se potrivește rămâne doar cu rândurile care se potrivesc. Un filtru care nu se potrivește cu nimic lasă arborele gol.  
+Câmpul `Filter by name`, deasupra arborelui, păstrează rândurile al căror nume curent sau salvat ori nume logic curent sau salvat conține ce tastați, indiferent de majuscule, în orice mod de afișare a numelor. Un tabel al cărui nume se potrivește își păstrează toate rândurile, iar unul al cărui nume nu se potrivește rămâne doar cu rândurile care se potrivesc. Un filtru care nu se potrivește cu nimic lasă arborele gol.  
 Când cele două documente nu diferă deloc, arborele afișează `No changes`.
 
 Glisați marginea dreaptă a arborelui pentru a-l lărgi sau îngusta, la o lățime între `200px` și `480px`, și faceți dublu clic pe margine pentru a-l readuce la o lățime de `260px`. Fiecare comparație se deschide cu o lățime de `260px`, iar cele două părți împart în mod egal restul lățimii.  
@@ -407,5 +419,7 @@ Cele două părți colorează textul, contururile și conectorii și nu umplu ni
 - O modificare de index nu marchează nimic pe niciuna dintre părți; apare doar în arbore.
 
 Fiecare parte respectă opțiunile de afișare ale propriului document. O modificare într-o celulă pe care acea parte nu o desenează apare în schimb pe nume. O modificare de coloană într-o celulă pe care o opțiune de afișare o ascunde, de exemplu `Unique` sau `Auto Increment`, ambele dezactivate implicit, colorează numele coloanei în chihlimbar, la fel ca o modificare a cheii primare pe un rând care nu afișează pictograma cheii. O modificare a comentariului tabelului cât timp opțiunea `Table Comment` este dezactivată colorează numele tabelului în chihlimbar. Albastrul unei redenumiri are prioritate față de acest chihlimbar. O notă sau un grup de tabele pe care documentul său îl ascunde este listat în arbore, dar nu este desenat pe acea parte.
+
+În modul `Logical Names`, care nu desenează nicio celulă de nume, albastrul unei redenumiri și chihlimbarul unei modificări într-o celulă pe care partea nu o desenează se aplică numelui logic desenat în locul numelui. O modificare a tipului de date colorează celula tipului în chihlimbar în orice mod de afișare, chiar și acolo unde celula afișează numele unui domeniu. Niciuna dintre părți nu desenează culorile pe care verificările dicționarelor le dau numelor pe pânză (consultați [Marcaje pe pânză](./dictionary.md#marks-on-the-canvas)).
 
 La un zoom de `70%` sau mai mic, tabelele restrânse își păstrează conturul. Numele păstrează verdele sau roșul unui tabel adăugat ori eliminat sau albastrul unei redenumiri și, în rest, preia chihlimbarul unei modificări de comentariu. Modificările de coloane nu sunt desenate până când nu măriți din nou; arborele le listează în continuare.

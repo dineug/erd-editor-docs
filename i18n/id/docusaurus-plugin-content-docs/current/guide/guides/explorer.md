@@ -1,5 +1,5 @@
 ---
-sidebar_position: 8
+sidebar_position: 9
 description: Menelusuri tabel diagram beserta kolom, indeks, dan kunci asingnya, grup tabelnya, dan memonya dalam pohon yang tertambat di samping kanvas ERD, serta menuju salah satunya dengan satu klik.
 ---
 
@@ -26,11 +26,11 @@ Buka Penjelajah dengan salah satu cara berikut:
 - `Toggle Explorer` di menu konteks kanvas: klik kanan tempat kosong di kanvas ERD, di luar [grup tabel](./table-groups.md) mana pun. Item ini berada setelah `New Table`, `New Memo`, dan `New Table Group`, sebelum `Relationship`.
 
 Kedua item `Toggle Explorer` menampilkan pintasan di sebelah kanan.  
-Tombol bilah alat, pintasan, dan item Pencarian Cepat berfungsi dari setiap tab. Dari tab Visualisasi, Skema SQL, Generator Kode, atau Pengaturan, ketiganya beralih ke tab ERD lebih dahulu, karena Penjelajah hanya tampil di sana.
+Tombol bilah alat, pintasan, dan item Pencarian Cepat berfungsi dari setiap tab. Dari tab Visualisasi, Skema SQL, Generator Kode, Kamus, atau Pengaturan, ketiganya beralih ke tab ERD lebih dahulu, karena Penjelajah hanya tampil di sana.
 
 Tombol bilah alat hanya membuka dan menutup panel. Tombol ini tidak menempatkan kursor teks di kotak Temukan, dan membiarkan Properti Tabel, pembuat tema, dan pemilih `Display Language` tetap terbuka.  
 Pintasan dan kedua item `Toggle Explorer` membuka Penjelajah pada pencariannya: kursor teks berpindah ke kotak Temukan dengan teksnya terpilih, dan dialog mana pun dari lima dialog di [Dialog di sampingnya](#dialogs-beside-it) tertutup. Apa yang dipertahankan pencarian di antara pembukaan dijelaskan di [Membuka dan menutup](./find-and-replace.md#opening-and-closing) di Temukan dan Ganti.  
-Pintasan tidak melakukan apa pun selama sel tabel, memo, atau nama grup tabel sedang diedit.
+Pintasan tidak melakukan apa pun selama sel tabel, memo, atau nama grup tabel sedang diedit, atau selama pengeditan sel terbuka di tab [Kamus](./dictionary.md#keys-on-the-tab), termasuk daftar domain sebuah istilah.
 
 Tombol bilah alat tampak tertekan selama Penjelajah terbuka di tab ERD dan tidak disembunyikan oleh [mode Zen](#when-it-stands-aside). Selama tombol tampak demikian, tombol tersebut, pintasan, dan item `Toggle Explorer` mana pun menutup Penjelajah, dan fokus keyboard yang berada di panel kembali ke editor.  
 Pintasan tidak pernah menutupnya selama Pencarian Cepat atau salah satu dari lima dialog tersebut terbuka. Sebagai gantinya, pintasan menutup palet atau dialog tersebut dan memindahkan fokus keyboard ke kotak Temukan, dengan teksnya terpilih dan, jika Penjelajah sudah tampil, kecocokan saat ini dipertahankan. Item `Toggle Explorer` di Pencarian Cepat tidak membuat pengecualian semacam itu: menjalankannya menutup palet lalu Penjelajah yang terbuka.
@@ -84,22 +84,27 @@ Bilah judul bertuliskan `Explorer` dan memuat dua tombol: `Collapse All`, dan `x
 
 Tingkat teratas memuat tiga folder, dalam urutan ini: `Tables`, `Table Groups`, dan `Memos`. Di bawah setiap tabel terdapat folder `Columns`, `Indexes`, dan `Foreign Keys` milik tabel itu sendiri.  
 Folder yang tidak berisi apa pun tidak ditampilkan, sehingga diagram kosong tidak menampilkan baris sama sekali. `Table Groups` juga tidak dicantumkan selama [View Option](./table-related-functions.md#table-view-options) → `Table Groups` menyembunyikan grup, begitu pula `Memos` selama View Option → `Memos` menyembunyikan memo.  
-Baris folder menampilkan ikon folder, namanya, dan, di ujung terjauh, jumlah baris yang berada langsung di bawahnya, sehingga angka di samping `Tables` adalah jumlah tabel di diagram.
+Baris folder menampilkan ikon folder, namanya, dan, di ujung terjauh, jumlah baris yang berada langsung di bawahnya, sehingga angka di samping `Tables` adalah jumlah tabel di diagram. Angka tersebut mengelompokkan ribuannya sesuai bahasa tampilan, selalu dengan angka 0 hingga 9, misalnya `1,234` dalam bahasa Inggris dan `1.234` dalam bahasa Jerman.
 
 Tabel dicantumkan menurut nama, tanpa membedakan huruf besar dan kecil, dan tabel dengan nama yang sama mempertahankan urutan dokumen. Grup tabel dicantumkan dengan cara yang sama, begitu pula tabel di bawah setiap grup. Kolom tabel mempertahankan urutan tabel itu sendiri, sedangkan indeks dan kunci asingnya, serta memo, mempertahankan urutan dokumen.  
-Pohon mengikuti diagram saat diagram berubah, baik karena perubahan di kanvas, pembatalan atau pengulangan, impor, maupun kolaborator atau agen pemrograman, sehingga mengganti nama tabel memindahkan barisnya.
+Pohon mengikuti diagram saat diagram berubah, baik karena perubahan di kanvas, pembatalan atau pengulangan, impor, maupun kolaborator atau agen pemrograman, sehingga mengganti nama tabel memindahkan barisnya.  
+Urutannya menurut nama di setiap [Tampilan Nama](./logical-names.md#name-view), tidak pernah menurut nama logis. Mengganti tampilan mengubah label baris tabel dan kolom tanpa memindahkan satu pun di antaranya, begitu pula memberi tabel atau kolom nama logis dalam tampilan `Logical Names` atau `Both Names`. Namun, nama fisik yang [dihasilkan](./dictionary.md#deriving-physical-names) dari nama logis baru merupakan penggantian nama seperti lainnya, sehingga dapat memindahkan baris tabel.
 
 Setiap jenis baris menampilkan:
 
 - Tabel: ikon tabel dan namanya.
-- Kolom: ikon kunci untuk kolom kunci utama atau kunci asing, dengan warna yang sama seperti sel kunci tabel itu sendiri mewarnai kunci utama, kunci asing, atau keduanya, dan ikon daftar untuk kolom lainnya. Lalu namanya dan, dengan warna redup, tipe datanya diikuti `PK`, `FK`, atau keduanya, misalnya `id` `BIGINT PK` atau `user_id` `BIGINT FK`.
+- Kolom: ikon kunci untuk kolom kunci utama atau kunci asing, dengan warna yang sama seperti sel kunci tabel itu sendiri mewarnai kunci utama, kunci asing, atau keduanya, dan ikon daftar untuk kolom lainnya. Lalu namanya dan, dengan warna redup, tipe datanya diikuti `PK`, `FK`, atau keduanya, misalnya `id` `BIGINT PK` atau `user_id` `BIGINT FK`. Tipe yang ditampilkannya selalu tipe data kolom, tidak pernah [domain](./logical-names.md#the-domain-cell) kolom itu, apa pun Tampilan Nama yang berlaku.
 - Indeks: ikon indeks dan namanya. Lalu, dengan warna redup, `UNIQUE` untuk indeks unik serta kolomnya dalam tanda kurung sesuai urutan indeks, dengan `DESC` setelah kolom yang berurutan turun, misalnya `orders_user_idx` `UNIQUE (user_id DESC, total)`, atau hanya `(total)`.
 - Kunci asing: hanya dicantumkan di bawah tabel anak, yaitu tabel yang memuat kolom kunci asing, dan hanya selama tabel induk ada di diagram. Ikon kuncinya mengambil warna konektor: warna kunci utama dan kunci asing untuk [hubungan pengidentifikasi](./relationship-editing.md#identifying-relationships), dan warna kunci asing untuk hubungan lainnya. Baris ini menampilkan kolom kunci tabel anak, dipisahkan koma, lalu, dengan warna redup, `→` beserta tabel induk dan kolomnya, misalnya `user_id` `→ users(id)`.
 - Grup tabel: titik berwarna grup, abu-abu untuk grup tanpa warna, dan namanya. Tabel-tabelnya dicantumkan di bawahnya menurut nama, dan masing-masing menuju tabelnya. Grup tanpa tabel tidak memiliki apa pun untuk dibentangkan.
 - Memo: ikon catatan tempel dan baris pertama memo.
 
-Nama kosong, atau memo yang baris pertamanya kosong, bertuliskan `unnamed` dalam huruf miring.  
-Pada panel yang sempit, teks redup dipotong dengan `…` sebelum namanya dipotong. Arahkan penunjuk ke nama atau teks redupnya untuk melihatnya secara lengkap.
+Baris tabel, tabel yang dicantumkan di bawah grup, dan baris kolom mengikuti Tampilan Nama — lihat [Di luar kanvas](./logical-names.md#beyond-the-canvas). Dalam tampilan `Both Names`, misalnya, baris kolom bertuliskan `Total Amount` `total` `NUMERIC`: nama logis, lalu nama dan tipe data, keduanya dengan warna redup.  
+Di setiap tampilan, baris indeks dan kunci asing menampilkan kolomnya menurut nama, dan baris kunci asing juga menampilkan tabel induknya menurut nama.  
+Selama kotak Temukan berisi teks, baris yang hanya ditemukan pada nama yang dihilangkan tampilannya juga menampilkan nama itu, dengan warna redup — lihat [Hasil](./find-and-replace.md#the-results).
+
+Nama kosong, atau memo yang baris pertamanya kosong, bertuliskan `unnamed` dalam huruf miring. Dalam tampilan `Logical Names` dan `Both Names`, tabel atau kolom hanya bertuliskan `unnamed` jika nama logisnya juga kosong.  
+Pada panel yang sempit, teks redup dipotong dengan `…` sebelum nama yang mengawali baris dipotong. Arahkan penunjuk ke nama atau teks redupnya untuk melihatnya secara lengkap.
 
 Awalnya hanya `Tables` yang dibentangkan. Klik baris folder, atau tekan `Enter` atau `Space` pada baris tersebut, untuk menciutkan atau membentangkannya.  
 Panah di awal baris menciutkan atau membentangkan baris tersebut tanpa menuju ke mana pun. Setiap baris tabel memilikinya, bahkan tabel yang tidak memiliki apa pun di bawahnya. `→` dan `←` juga menciutkan dan membentangkan — lihat [Tombol di Penjelajah](#keys-in-the-explorer).  
@@ -110,8 +115,8 @@ Pengeditan, pembatalan dan pengulangan, serta perubahan dari kolaborator atau ag
 
 Klik baris, atau tekan `Enter` atau `Space` saat keyboard berada di baris tersebut, untuk menuju apa yang diwakilinya di kanvas ERD. Baris folder hanya menciutkan atau membentangkan, dan tombol panah hanya bergerak di dalam pohon.
 
-- Baris tabel, atau tabel yang dicantumkan di bawah grup, hanya memilih tabel tersebut dan membawanya ke depan. Sel yang difokuskan berpindah ke nama tabel, kecuali jika sel tersebut sudah berada di tabel itu.
-- Baris kolom hanya memilih tabelnya dan menempatkan sel yang difokuskan pada nama kolom.
+- Baris tabel, atau tabel yang dicantumkan di bawah grup, hanya memilih tabel tersebut dan membawanya ke depan. Kecuali jika sel yang difokuskan sudah berada di tabel itu, sel tersebut berpindah ke sel pertama header tabel: nama, atau nama logis dalam tampilan `Logical Names` dan `Both Names`.
+- Baris kolom hanya memilih tabelnya dan menempatkan sel yang difokuskan pada nama kolom, atau, dalam tampilan `Logical Names`, pada nama logis yang ditampilkan di tempatnya.
 - Baris indeks memilih tabelnya, seperti baris tabel. Indeks itu sendiri tidak ditandai secara khusus; indeks diedit di [Properti Tabel](./table-related-functions.md#indexes).
 - Baris kunci asing menampilkan kedua tabel hubungan di layar bersama-sama, atau tabel anak jika keduanya terlalu berjauhan untuk ditampilkan bersama. Baris ini hanya memilih tabel anak beserta kolom kunci asingnya, dengan sel yang difokuskan pada kolom pertamanya, dan menyorot konektor hubungan — lihat [Membaca konektor](./relationship-editing.md#reading-a-connector).
 - Baris grup tabel menampilkan kotak grup di layar dengan berpatokan pada bilah judulnya, hanya memilih grup tersebut, dan membawanya ke depan bersama tabelnya.
@@ -119,7 +124,7 @@ Klik baris, atau tekan `Enter` atau `Space` saat keyboard berada di baris terseb
 
 Area pandang bergerak menurut aturan yang sama untuk setiap perpindahan: zoom tidak pernah berubah, dan kanvas hanya menggulir jika apa yang dituju belum tampil dengan baik — lihat [Tempat lompatan berakhir](./table-related-functions.md#where-a-jump-lands).  
 Menuju baris menutup Properti Tabel lebih dahulu jika sedang terbuka, dan tidak pernah memulai atau menyelesaikan hubungan yang sedang digambar.  
-Selama kotak Temukan berisi teks, baris yang namanya sendiri memuat kecocokan, atau baris yang menampilkan kutipan komentar atau memo, menuju kecocokan tersebut sebagai gantinya — lihat [Menuju kecocokan](./find-and-replace.md#going-to-a-match).
+Selama kotak Temukan berisi teks, baris yang nama atau nama logisnya memuat kecocokan, atau baris yang menampilkan kutipan komentar atau memo, menuju kecocokan pertamanya sebagai gantinya — lihat [Menuju kecocokan](./find-and-replace.md#going-to-a-match).
 
 Setelah klik, keyboard tetap berada di pohon, sehingga `Delete`, `Backspace`, dan tombol pengeditan lainnya tidak sampai ke pilihan baru hingga Anda menekan `Escape` atau mengeklik kanvas — lihat [Tombol di Penjelajah](#keys-in-the-explorer).
 

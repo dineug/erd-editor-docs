@@ -44,19 +44,26 @@ Trattare un’azione come opaca e passarla così com’è invece di leggerla o r
 
 Parte di ciò che fa un editor resta su quell’editor.  
 Il passaggio in primo piano di una tabella, di un memo o di un gruppo di tabelle, come avviene con la selezione, non viene inviato.  
-Non vengono inviate nemmeno le scelte `Statements`, `Header` e `Tables` della scheda [Schema SQL](../../guide/guides/schema-sql.md), che appartengono alla finestra in cui vengono effettuate.  
+Non vengono inviate nemmeno le scelte `Statements`, `Header`, `Write logical names into empty comments` (dalla versione `4.2.0`) e `Tables` della scheda [Schema SQL](../../guide/guides/schema-sql.md), che appartengono alla finestra in cui vengono effettuate.  
 Dalla versione `4.1.0` anche il pannello [Esplora](../../guide/guides/explorer.md) resta sul proprio editor: lo stato di apertura, la larghezza, le righe compresse, la riga su cui si trova il focus della tastiera, la posizione di scorrimento dell’albero, la ricerca e le opzioni non vengono inviati.  
 Non viene inviata nemmeno l’[evidenziazione](../../guide/guides/relationship-editing.md#reading-a-connector) che compare sul connettore della relazione di una chiave esterna quando si va a quest’ultima.  
-Uno scorrimento, uno zoom o un cambio di scheda viene inviato, ma non sposta mai la vista o la scheda di un altro utente. Ciò vale anche per lo scorrimento prodotto da un salto dal pannello Esplora e per il passaggio alla scheda ERD quando il pannello Esplora viene aperto da un’altra scheda.
+Dalla versione `4.2.0` anche la scheda [Dizionario](../../guide/guides/dictionary.md) resta sul proprio editor: il foglio visualizzato e, per ogni foglio, la ricerca, la selezione, la posizione di scorrimento e le larghezze delle colonne non vengono inviati. Vengono invece inviati le sue modifiche, i suoi ordinamenti e le sue importazioni CSV.  
+Uno scorrimento, uno zoom o un cambio di scheda viene inviato, ma non sposta mai la vista o la scheda di un altro utente. Ciò vale anche per lo scorrimento prodotto da un salto dal pannello Esplora, per il passaggio alla scheda ERD quando il pannello Esplora viene aperto da un’altra scheda e per il cambio di scheda e lo scorrimento prodotti da un salto dal foglio [`Checks`](../../guide/guides/dictionary.md#the-checks-sheet) della scheda Dizionario a una tabella o a una colonna. Un salto da quel foglio a una parola, a un termine o a un dominio resta nella scheda Dizionario, quindi non ne viene inviato nulla.
+
+Dalla versione `4.2.0` viene inviato anche un cambio della [Visualizzazione nomi](../../guide/guides/logical-names.md#switching-the-view), e il suo [blocco](../../guide/guides/settings.md#lock) decide che cosa ne fanno gli altri editor. Il blocco `Name View` è attivo in un nuovo diagramma e in qualsiasi documento precedente alla versione `4.2.0`.  
+Mentre il blocco è attivo, il cambio compare solo nell’editor che lo ha effettuato: viene comunque inviato, ma ogni altro editor e ogni replica lo scartano, così ogni utente può guardare una vista diversa mentre `value` mantiene quella bloccata. Diverso è il caso di un cambio di linguaggio, di stile dei nomi o di tipo di delimitatore: raggiunge ogni editor, che il suo blocco sia attivo o no.  
+Mentre il blocco è disattivato, un cambio effettuato in un editor che può modificare il documento cambia la Visualizzazione nomi su ogni editor e su ogni replica, dove prevale l’ultimo cambio, e ognuno di essi la salva.  
+Il cambio effettuato da un editor di sola lettura resta sempre su quell’editor, che continua comunque a seguire i cambi condivisi degli altri.
 
 I [blocchi](../../guide/guides/settings.md#lock) sono condivisi: l’ultimo blocco o sblocco di un’impostazione prevale su ogni editor e un blocco porta con sé i valori dell’editor che lo ha attivato, quindi ogni editor e ogni replica salvano lo stesso valore.  
 Il blocco `Viewport` salva quindi la vista dell’editor che lo ha attivato e il blocco `Canvas Type` l’ultima scheda in cui si trovava quell’editor prima della scheda Impostazioni, dove i blocchi vengono attivati.  
-La disattivazione del blocco `Language`, `Table Name Case`, `Column Name Case` o `Bracket Type` porta anche quell’impostazione, su ogni editor, al valore mostrato nell’editor che lo ha disattivato, così tutti continuano a salvare un unico valore. La disattivazione di `Viewport` o `Canvas Type` non sposta la vista né la scheda di nessuno.
+La disattivazione del blocco `Language`, `Table Name Case`, `Column Name Case`, `Bracket Type` o, dalla versione `4.2.0`, `Name View` porta anche quell’impostazione, su ogni editor, al valore mostrato nell’editor che lo ha disattivato, così tutti continuano a salvare un unico valore. La disattivazione di `Viewport` o `Canvas Type` non sposta la vista né la scheda di nessuno.
 
 Una modifica allo script `Before tables` o `After tables` viene inviata per intero quando il suo campo perde il focus. I due script vengono risolti separatamente, quindi la modifica di uno da parte di un collaboratore non sovrascrive mai l’altro.
 
 Nulla di ciò che si fa nella [modalità Flusso](../../guide/guides/visualization.md#flow-never-edits-the-document) della scheda Visualizzazione è una modifica del documento, quindi un editor in modalità Flusso non invia modifiche agli altri e le modifiche inviate da questi continuano a essere applicate mentre vi si trova.  
-L’unica eccezione è l’uscita dalla modalità Flusso verso un’altra scheda: quel cambio di scheda viene inviato come qualsiasi altro.  
+Ci sono due eccezioni. L’uscita dalla modalità Flusso verso un’altra scheda è un cambio di scheda, inviato come qualsiasi altro. Dalla versione `4.2.0` una scelta nell’elenco della Visualizzazione nomi sulla barra degli strumenti della modalità Flusso è un cambio della Visualizzazione nomi, inviato e applicato come uno effettuato nell’area di disegno.  
+`Previous table`, `Next table` e i tasti di annullamento e ripetizione, che in modalità Flusso [tornano indietro e vanno avanti tra le viste](../../guide/guides/visualization.md#previous-table-and-next-table), non vengono inviati.  
 Il pulsante di link esterno della card, un risultato della [Ricerca rapida](../../guide/guides/quick-search.md#searching-the-diagram) scelto dopo `#`, `@` o `:` e l’apertura del pannello [Esplora](../../guide/guides/explorer.md#opening-and-closing) fanno tutti uscire dalla modalità Flusso verso la scheda ERD. Viene inviato anche lo scorrimento che il pulsante della card o un risultato della Ricerca rapida producono lì.
 
 ## Due editor in una pagina {#two-editors-on-one-page}
@@ -99,6 +106,7 @@ const sharedStore2 = editor2.getSharedStore();
 
 Il valore di runtime contiene ancora ciò che è stato rimosso dall’apertura del documento, quindi quando in seguito un altro editor annulla una rimozione, il nuovo partecipante ripristina la tabella con il suo nome e le sue colonne.  
 [`value`](../erd-editor-element.md#value) è la forma contenuta in un file, senza le entità rimosse, quindi un nuovo partecipante inizializzato da esso, o dal file, ripristinerebbe invece una tabella vuota e senza nome.  
+Dalla versione `4.2.0` lo stesso vale per una parola, un termine o un dominio rimosso da un foglio della scheda [Dizionario](../../guide/guides/dictionary.md): quando un altro editor ne annulla la rimozione, un nuovo partecipante inizializzato da `runtimeValue` elenca di nuovo la riga per intero, mentre uno inizializzato da `value` elenca una riga vuota, che il suo stesso `value` poi esclude.  
 Continuare a scrivere `value` nell’archivio: `runtimeValue` serve solo a inizializzare un altro editor, una seconda vista o un [replicationStore](./remote-storage.md).  
 Gli editor in VS Code, in Obsidian, in un IDE JetBrains e nell’app web inizializzano in questo modo una seconda vista di un documento aperto.
 
@@ -134,6 +142,31 @@ Mantenere ogni editor di una sessione, e qualsiasi [replicationStore](./remote-s
 Un editor `4.1.0` non invia nessun nuovo tipo di azione, quindi editor e repliche `4.0.0` e `4.1.0` condividono una sessione senza perdere nulla.  
 Il suo [Trova e sostituisci](../../guide/guides/find-and-replace.md#replacing) cerca anche nei nomi degli indici e dei gruppi di tabelle, e `Replace` e `Replace All` li rinominano tramite le azioni `index.changeName` e `tableGroup.changeName` che un editor `4.0.0` applica già.
 
+Dalla versione `4.2.0` queste modifiche viaggiano su nuovi tipi di azione, e un inoltro che passa le azioni così come sono non ha bisogno di nulla di nuovo per essi:
+
+- il [nome logico](../../guide/guides/logical-names.md) di una tabella o di una colonna: `table.changeLogicalName` e `column.changeLogicalName`; se il suo nome è stato [derivato dai dizionari](../../guide/guides/dictionary.md#deriving-physical-names): `table.changeNameDerived` e `column.changeNameDerived`;
+- una colonna collegata a un [dominio](../../guide/guides/dictionary.md#domains-and-data-types) o scollegata: `column.changeDomain`;
+- una parola, un termine o un dominio aggiunto, modificato (compresa la sua posizione nel foglio, come la imposta un ordinamento) o rimosso nella scheda [Dizionario](../../guide/guides/dictionary.md): `dictionary.add`, `dictionary.update` e `dictionary.remove`;
+- un cambio della [Visualizzazione nomi](../../guide/guides/logical-names.md#switching-the-view): `settings.changeNameViewMode`.
+
+Il blocco `Name View` viaggia sull’azione esistente `settings.changeLockSettings`, l’opzione di visualizzazione `Domain` su `settings.changeShow` e uno spostamento di `Logical Name` o `Domain` nell’[ordine delle colonne](../../guide/guides/settings.md#adjusting-column-order) su `settings.changeColumnOrder`.  
+Le azioni `editor.clear` ed `editor.loadJson` di un’importazione Schema SQL, GraphQL, DBML o AML da `Import` contengono `keepDictionaries: true`, che mantiene le parole, i termini e i domini su ogni editor. Lo stesso vale per quelle di un [setSchemaSQL](../erd-editor-element.md#setschemasql), `setSchemaGraphQL`, `setSchemaDBML` o `setSchemaAML` che sostituisce il documento.  
+Un nome fisico derivato dai dizionari viaggia su `table.changeName` o `column.changeName`, e il tipo di dati che un dominio assegna alle sue colonne su `column.changeDataType`, le stesse azioni inviate da una modifica manuale.
+
+Un editor precedente alla versione `4.2.0` ignora i nuovi tipi di azione: non ha nomi logici, collegamenti a domini, dizionari né Visualizzazione nomi. Un blocco o uno sblocco di `Name View` non vi cambia nulla, e lo stesso vale per uno spostamento di `Logical Name` o `Domain` nell’ordine delle colonne, o per uno spostamento su uno dei due. Né vi cambia nulla un blocco `Canvas Type` attivato da un editor arrivato alla scheda Impostazioni dalla scheda Dizionario: l’editor più vecchio non conosce quella scheda, quindi mantiene `Canvas Type` sbloccato. Mostra comunque i nomi fisici derivati dai dizionari e i tipi di dati assegnati dai domini.  
+Le modifiche che effettua ignorano nomi logici, domini e dizionari, con questi effetti sugli editor più recenti:
+
+- Una tabella o una colonna che rinomina a mano mantiene il nome contrassegnato come derivato, quindi un nome logico scritto in seguito per essa in un editor più recente può derivare di nuovo il nome al posto di quello digitato.
+- Un tipo di dati che assegna a una colonna collegata a un dominio lascia il collegamento, quindi il foglio `Checks` elenca `Domain type mismatch` e la successiva modifica del tipo del dominio riassegna alla colonna il tipo del dominio.
+- Le colonne di chiave esterna di una relazione che aggiunge non ricevono dalla loro chiave alcun nome logico né dominio.
+- Una tabella che incolla o duplica arriva senza nomi logici né collegamenti a domini.
+- Un’importazione Schema SQL, GraphQL, DBML o AML su di esso non invia alcun `keepDictionaries`, quindi svuota le parole, i termini e i domini su ogni editor.
+- Il suo annullamento di un caricamento, di un’importazione o di `clear()` carica su ogni editor la propria copia del documento, e quella copia non ha nomi logici, collegamenti a domini né dizionari.
+- Quella copia, e il documento caricato da un’importazione Schema SQL, GraphQL, DBML o AML su di esso, riportano inoltre il blocco `Name View` di ogni editor allo stato in cui quell’editor lo aveva trovato. Ogni editor salva quindi `Physical Names` come Visualizzazione nomi, e la mostra anche se il blocco è disattivato.
+
+Un documento salvato da esso non ha nomi logici, collegamenti a domini, dizionari né Visualizzazione nomi, quindi un editor `4.2.0` lo apre nella vista `Physical Names`. L’editor più vecchio salva però il blocco `Name View` così come lo ha trovato, quindi un documento sbloccato in un editor `4.2.0` resta sbloccato.  
+Mantenere ogni editor di una sessione, e qualsiasi [replicationStore](./remote-storage.md#dispatch-dispatchsync) che ne archivia il documento, alla versione `4.2.0` o successiva.
+
 ## SharedStoreConfig {#sharedstoreconfig}
 
 ### getNickname {#getnickname}
@@ -161,6 +194,7 @@ editor.getSharedStore({ mouseTracker: false });
 Trasmette ciò su cui sta lavorando questo utente. Il valore predefinito è `true`.  
 La tabella e la cella con il focus, le tabelle, i memo e i gruppi di tabelle selezionati e il riquadro che si trascina nell’area di disegno vengono inviati agli altri editor e lì disegnati.  
 Ogni utente riceve un proprio colore, così è possibile distinguerli: un contorno sulla tabella con il focus, una sottolineatura sulla cella con il focus, un anello attorno alle tabelle, ai memo e ai gruppi di tabelle selezionati e un rettangolo tratteggiato per il riquadro di trascinamento.  
+Dalla versione `4.2.0` ogni utente può guardare una diversa vista della [Visualizzazione nomi](../../guide/guides/logical-names.md#collaborators) mentre il relativo blocco è attivo, o dopo il cambio di vista effettuato da un editor di sola lettura. Una cella con il focus che la propria vista non disegna viene sottolineata sulla cella disegnata al suo posto: il nome e il nome logico prendono l’uno il posto dell’altro, come fanno il tipo di dati e il dominio.  
 La presenza in arrivo dagli altri utenti viene sempre disegnata nella propria area di disegno, che questa opzione sia attiva o no.  
 Nella modalità Flusso della scheda Visualizzazione, il focus e la selezione degli altri utenti vengono disegnati sulle card delle tabelle, ma i loro riquadri di trascinamento no. Le tabelle selezionate lì vengono comunque inviate; il riquadro trascinato lì no.
 

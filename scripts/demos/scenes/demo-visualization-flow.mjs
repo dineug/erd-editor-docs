@@ -38,7 +38,12 @@ export default {
     const mark = timer();
     await d.sleep(450);
     await clickDom(d, `${BAR} [title="Flow"]`, { duration: 500 });
-    await d.sleep(600);
+    // The Flow bar is wider and centred again, so the pointer now stands on
+    // its zoom readout: lift it off onto the empty canvas above.
+    await d.sleep(120);
+    const flowBar = await d.domBox(BAR);
+    await d.moveTo(d.mouse.x, flowBar.y - 40, 300);
+    await d.sleep(350);
     mark('flow');
     await d.shot('flow');
 
@@ -67,8 +72,10 @@ export default {
     await d.click(keys.x + keys.width * 0.62, keys.y + keys.height / 2, { duration: 400 });
     mark('keys only');
     await d.sleep(250);
-    // Beside the bar, where no card reaches even zoomed in.
-    await canvasSafeMoveTo(d, { x: 700, y: 498 }, 300);
+    // Right of the bar, where no card reaches even zoomed in. The Flow bar
+    // ends in the Name View trigger, which would catch the ⌘ + wheel.
+    const bar = await d.domBox(BAR);
+    await canvasSafeMoveTo(d, { x: bar.x + bar.width + 50, y: bar.y + bar.height / 2 }, 300);
     await d.sleep(900);
     await d.shot('keys-only');
 

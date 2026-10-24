@@ -1,5 +1,5 @@
 ---
-sidebar_position: 12
+sidebar_position: 13
 description: Genera código para veintidós destinos a partir del diagrama, elige el lenguaje, la base de datos, el estilo de nombres y el delimitador en el panel de opciones, consulta qué destinos escriben las acciones ON DELETE y ON UPDATE de una relación y guarda o copia el resultado.
 ---
 
@@ -103,6 +103,10 @@ Con cualquier estilo, un nombre que el lenguaje del destino reserva se escapa cu
 `SeaORM` también los ignora: nombra los campos y los módulos en snake case, la forma que SeaORM vuelve a leer, e indica los nombres almacenados en `table_name` y, cuando difieren, en `column_name`.  
 Para estos cuatro destinos, el panel atenúa ambas listas, con la nota `Not used by` debajo.
 
+Todos los destinos escriben los nombres físicos, sea lo que sea lo que muestre la [vista de nombres](./logical-names.md#name-view).  
+Ninguno escribe un nombre lógico, ni siquiera en un comentario vacío: esta pestaña no tiene nada equivalente a la opción [`Write logical names into empty comments`](./schema-sql.md#logical-names-as-comments) de la pestaña Esquema SQL.  
+Tampoco escribe ninguno un dominio: una columna vinculada a uno se escribe con su tipo de datos, como cualquier otra columna.
+
 ## Base de datos {#database}
 
 Los tipos de datos se resuelven según la base de datos seleccionada; consulta [Bases de datos](./table-related-functions.md#databases).  
@@ -132,5 +136,5 @@ Se nombra como cualquier exportación, `<database name>-<timestamp>`, seguido de
 El menú Exportar no tiene ninguna opción para el Generador de código, y la pestaña `Code Generator` del panel Propiedades de la tabla no puede guardar archivos.
 
 Para copiar el código, haz clic en `Copy` al pie del panel, o pasa el puntero por encima del código y haz clic en el botón de copiar de su esquina superior derecha, que es la única forma en el panel Propiedades de la tabla.  
-Una notificación `Copied!` con una marca de verificación lo confirma durante dos segundos. Si el navegador o el host deniega el acceso al portapapeles, una notificación `Couldn't copy to the clipboard` con un icono de advertencia lo indica en su lugar. Volver a copiar reemplaza la notificación en lugar de añadir otra.  
+Una notificación `Copied!` con una marca de verificación lo confirma durante dos segundos. Si el navegador o el host deniega el acceso al portapapeles, una notificación `Couldn't copy to the clipboard` con un icono de advertencia lo indica en su lugar, durante cinco segundos. Volver a copiar reemplaza la notificación en lugar de añadir otra.  
 El texto también se puede seleccionar, así que puedes tomar solo la parte que necesitas.

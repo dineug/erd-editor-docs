@@ -1,7 +1,7 @@
 /**
  * Editing Start: the canvas context menu, New Table, then a table's own menu.
- * The canvas menu has twelve rows (about 400px), so the frame is 480 tall and
- * the menu opens high enough to clear its bottom edge.
+ * On an empty diagram the canvas menu has thirteen rows (434px), so the frame
+ * is 500 tall and the menu opens high enough to clear its bottom edge.
  */
 
 /**
@@ -26,7 +26,7 @@ const menuItem = (d, name) =>
 export default {
   name: 'demo-context-menu',
   width: 800,
-  height: 480,
+  height: 500,
   async setup(d) {
     await d.page.evaluate(() => {
       const editor = document.querySelector('erd-editor');
@@ -38,7 +38,7 @@ export default {
   },
   async scenario(d) {
     await d.sleep(500);
-    await d.rightClick(330, 50, { duration: 450 });
+    await d.rightClick(330, 44, { duration: 450 });
     await d.sleep(550);
     await d.shot('menu');
 

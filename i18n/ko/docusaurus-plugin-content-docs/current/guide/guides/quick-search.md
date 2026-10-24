@@ -1,6 +1,6 @@
 ---
-sidebar_position: 7
-description: 명령 팔레트에서 탭 전환, 현재 탭의 명령 실행, 탐색기 열기와 닫기, 테마나 표시 언어 변경, 접두사를 입력해 테이블·컬럼·코멘트·메모로 이동.
+sidebar_position: 8
+description: 명령 팔레트에서 탭이나 이름 표시 전환, 현재 탭의 명령 실행, 탐색기 열기와 닫기, 테마나 표시 언어 변경, 접두사를 입력해 테이블·컬럼·코멘트·메모로 이동.
 ---
 
 # 빠른 검색
@@ -9,7 +9,7 @@ description: 명령 팔레트에서 탭 전환, 현재 탭의 명령 실행, 탐
 현재 탭에서 사용 가능한 명령을 나열합니다. 검색어를 `#`, `@`, `:`로 시작하면 명령 대신 다이어그램을 검색해 테이블, 컬럼, 코멘트나 메모로 바로 이동합니다.
 
 단축키 `Ctrl + K` (Windows/Linux) or `⌘ + K` (Mac)로 열거나, 툴바의 `Search`를 클릭해 엽니다.  
-같은 단축키로 닫히며 `Esc`나 패널 바깥 클릭으로도 닫힙니다. 팔레트를 열면 테이블 속성, [테마 빌더](./language-and-theme.md#테마), [`Display Language`](./language-and-theme.md#언어-선택) 선택기, [`Export image`](./file-import-export.md#이미지) 대화 상자, [컬럼 매핑](./relationship-editing.md#컬럼-매핑)이 닫히며, 컬럼 매핑에서 고른 내용은 사라집니다. 테이블 셀, 메모, 테이블 그룹 이름을 편집하는 중에는 열리지 않습니다.
+같은 단축키로 닫히며 `Esc`나 패널 바깥 클릭으로도 닫힙니다. 팔레트를 열면 테이블 속성, [테마 빌더](./language-and-theme.md#테마), [`Display Language`](./language-and-theme.md#언어-선택) 선택기, [`Export image`](./file-import-export.md#이미지) 대화 상자, [컬럼 매핑](./relationship-editing.md#컬럼-매핑)이 닫히며, 컬럼 매핑에서 고른 내용은 사라집니다. 테이블 셀, 메모, 테이블 그룹 이름, [사전](./dictionary.md) 탭의 셀을 편집하는 중에는 열리지 않습니다.
 
 툴바에서 `Search` 바로 다음 버튼은 `Explorer`입니다. 이 버튼은 [탐색기](./explorer.md)를 열거나 닫습니다. 탐색기는 캔버스 왼쪽에 도킹되는 다이어그램의 트리이며, 맨 위에 찾기와 바꾸기가 있습니다.  
 팔레트를 열어도 탐색기는 열린 채로 남으며, 이때 `Esc`는 팔레트만 닫습니다. 팔레트에서 `Ctrl + F` (Windows/Linux) or `⌘ + F` (Mac)를 누르면 팔레트가 닫히고 키보드 포커스가 탐색기의 Find 입력란으로 옮겨 가며, 탐색기가 표시되어 있지 않으면 탐색기를 검색 상태로 엽니다. `Toggle Explorer` 항목과 달리 이 키는 팔레트에서 탐색기를 닫는 일이 없습니다. [열기와 닫기](./explorer.md#열기와-닫기) 문서를 참고하세요. Diff Viewer, Time Travel, 자동 배치 미리보기가 열려 있는 동안에는 에디터가 이 키를 처리하지 않으므로, 팔레트는 열린 채로 남고 키는 브라우저나 호스트로 넘어갑니다. [브라우저의 찾기 막대](./find-and-replace.md#브라우저의-찾기-막대) 문서를 참고하세요.  
@@ -24,23 +24,25 @@ description: 명령 팔레트에서 탭 전환, 현재 탭의 명령 실행, 탐
 영어가 아닌 표시 언어에서는 명령과 하위 메뉴 항목을 목록에 표시되지 않는 영어 이름과 키워드로도 찾을 수 있으므로, 어떤 언어로 표시되든 `new table`로 `New Table`을 찾습니다.  
 `↑`와 `↓`로 목록을 이동하며 양 끝에서 순환하고, `Enter`로 선택된 항목을 실행합니다. 자체 단축키가 있는 명령은 행의 끝에 단축키를 표시합니다. 보통은 오른쪽이고, 오른쪽에서 왼쪽으로 쓰는 표시 언어에서는 왼쪽입니다. 한글 음절을 입력하는 도중처럼 IME가 아직 조합 중일 때는 `↑`, `↓`, `Enter`가 조합에 속하므로, 선택된 항목을 옮기지도 항목을 실행하지도 않습니다.
 
-`Database`, `Import`, `Auto Layout` 같은 항목은 하위 메뉴를 엽니다. 하위 메뉴 항목이 기존 목록을 대체하고 검색어는 비워집니다. `Database`, `Bracket`, `Language`, 두 가지 이름 케이스, `Schema SQL: Statements`, `Schema SQL: Header`, `Theme`, `Display Language`의 하위 메뉴는 현재 고른 항목에 체크 표시를 하고 그 항목이 선택된 채로 열리므로, `Enter`를 누르면 그대로 유지됩니다. 그 밖의 하위 메뉴는 아무 항목도 선택되지 않은 채로 열립니다.  
+`Database`, `Import`, `Auto Layout` 같은 항목은 하위 메뉴를 엽니다. 하위 메뉴 항목이 기존 목록을 대체하고 검색어는 비워집니다. `Name View`, `Database`, `Bracket`, `Language`, 두 가지 이름 케이스, `Schema SQL: Statements`, `Schema SQL: Header`, `Theme`, `Display Language`의 하위 메뉴는 현재 고른 항목에 체크 표시를 하고 그 항목이 선택된 채로 열리므로, `Enter`를 누르면 그대로 유지됩니다. 그 밖의 하위 메뉴는 아무 항목도 선택되지 않은 채로 열립니다.  
 필터링은 항상 현재 보이는 목록에만 적용되며 상위 단계로 돌아가는 방법은 없으므로, 처음부터 다시 하려면 팔레트를 닫았다가 다시 엽니다. 하위 메뉴 안에서는 `#`, `@`, `:`, `?`가 [접두사](#다이어그램-검색)가 아닌 일반 텍스트입니다.
 
 ## 팔레트에 표시되는 항목
 
-목록은 현재 탭에 따라 달라집니다. 모든 탭에서 목록은 `Tab`으로 시작하며 `Entity Relationship Diagram`, `Visualization`, `Schema SQL`, `Code Generator`, `Settings` 중 현재 탭을 제외한 탭으로 전환합니다.
+목록은 현재 탭에 따라 달라집니다. 모든 탭에서 목록은 `Tab`으로 시작하며 `Entity Relationship Diagram`, `Visualization`, `Schema SQL`, `Code Generator`, `Dictionary`, `Settings` 중 현재 탭을 제외한 탭으로 전환합니다.
 
-ERD 탭에서는 `Database`, `Import`, `Import and Add`, `Export`, 이어서 `New Table`, `New Memo`, `New Table Group`, `Group Selected Tables`, 4가지 관계 타입, `Auto Layout`이 표시됩니다. 테이블은 여기에 표시되지 않으므로, `#`을 입력해 [테이블로 이동](#다이어그램-검색)합니다.  
+ERD 탭에서는 `Name View`와 [물리명을 다시 생성](./dictionary.md#derive-physical-names-again)하는 최대 4개의 행, 이어서 `Database`, `Import`, `Import and Add`, `Export`, 이어서 `New Table`, `New Memo`, `New Table Group`, `Group Selected Tables`, 4가지 관계 타입, `Auto Layout`이 표시됩니다. 테이블은 여기에 표시되지 않으므로, `#`을 입력해 [테이블로 이동](#다이어그램-검색)합니다.  
+`Name View`는 현재 보기에 체크 표시가 된 `Physical Names`, `Logical Names`, `Both Names`를 열며, 하나를 고르면 캔버스 컨텍스트 메뉴의 `Name View`와 같은 방식으로 보기가 전환됩니다. [보기 전환](./logical-names.md#switching-the-view) 문서를 참고하세요. ERD 탭에서만 표시되며, 읽기 전용 에디터에서도 표시됩니다.  
+물리명을 다시 생성하는 행은 옆에 표시되는 키워드로 구분합니다. 옆에 `column`이 표시되는 `Derive Physical Name Again`은 포커스된 컬럼의 물리명을 생성합니다. `Derive Physical Names Again`은 세 행으로 나옵니다. `table`이 붙은 행은 포커스가 있는 테이블의 이름과 모든 컬럼을, `selected tables`가 붙은 행은 두 개 이상 선택되어 있는 동안 선택된 테이블을, `whole document`가 붙은 행은 다이어그램의 모든 테이블을 대상으로 합니다. 각 행은 대상이 있는 동안에만 표시되며, 읽기 전용 에디터에서는 어느 것도 표시되지 않습니다.  
 `Import and Add`는 읽기 전용 에디터에서 제외되고, `New Memo`는 [View Option](./table-related-functions.md#테이블-보기-옵션) → `Memos`로 메모를 숨긴 동안 제외됩니다. `New Table Group`은 캔버스에 [테이블 그룹](./table-groups.md)을 그리기 시작하고, `Group Selected Tables`는 선택한 테이블을 새 그룹에 넣은 뒤 그 이름을 입력할 수 있게 엽니다. 둘 다 읽기 전용 에디터에서, 그리고 View Option → `Table Groups`로 그룹을 숨긴 동안 제외되며, `Group Selected Tables`는 테이블이 하나 이상 선택되어 있어야 표시됩니다. 두 항목의 행에는 키가 표시됩니다. [그룹을 그리는](./table-groups.md#그룹-그리기) 키는 `Alt + G` (Windows/Linux) or `⌥ + G` (Mac)이고, [선택한 테이블을 그룹으로 묶는](./table-groups.md#선택한-테이블-그룹화) 키는 `T` 다음 `G`입니다.  
-이 항목들은 캔버스 컨텍스트 메뉴와 같은 명령을 실행하지만, `Group Selected Tables`는 테이블 메뉴의 `Group selected tables`에 해당하고, `View Option`과 `Diff Viewer`는 컨텍스트 메뉴에서만 사용 가능합니다. `Export`는 컨텍스트 메뉴와 같은 `json`, `Schema SQL`, `Image`를 제공하며, 그 안에서 `png`나 `svg`를 입력하면 `Image`를 찾습니다.  
+이 항목들은 캔버스 컨텍스트 메뉴와 같은 명령을 실행하지만, 테이블 메뉴의 명령을 실행하는 경우는 예외입니다. `Group Selected Tables`는 테이블 메뉴의 `Group selected tables`를 실행하고, `column`, `table`, `selected tables` 행은 마우스 오른쪽 클릭한 위치가 아니라 포커스나 선택을 대상으로 테이블 메뉴의 `Derive Physical Name Again`이나 `Derive Physical Names Again`을 실행합니다. `View Option`과 `Diff Viewer`는 컨텍스트 메뉴에서만 사용 가능합니다. `Export`는 컨텍스트 메뉴와 같은 `json`, `Schema SQL`, `Image`를 제공하며, 그 안에서 `png`나 `svg`를 입력하면 `Image`를 찾습니다.  
 각 형식, [가져와서 추가](./file-import-export.md#가져와서-추가), [이미지 내보내기](./file-import-export.md#이미지)의 동작은 [파일 가져오기와 내보내기](./file-import-export.md) 문서를, 데이터베이스 선택이 영향을 주는 범위는 [테이블 관련 기능](./table-related-functions.md#데이터베이스) 문서를 참고하세요.
 
 Schema SQL 탭에서는 `Database`가 다시 표시되고, `Bracket`도 표시됩니다. `Bracket`은 생성되는 SQL에서 테이블, 컬럼, 제약 조건, 인덱스 이름을 감싸는 따옴표 문자를 지정하며 `SingleQuote`, `DoubleQuote`, `Backtick`, 전혀 감싸지 않는 `None`을 지원합니다. 이어서 탭의 옵션 패널과 같은 선택을 하되 선택한 데이터베이스가 작성하는 항목만 나열하는 `Schema SQL: Statements`와 `Schema SQL: Header`, 그리고 그 패널을 표시하거나 숨기는 `Schema SQL: Options panel`이 표시됩니다. 각 선택이 작성하는 내용은 [Schema SQL](./schema-sql.md) 문서를 참고하세요.
 
 Code Generator 탭에서는 `Database`, 언어가 `Doctrine`, `JPA`, `SeaORM`일 때의 `Bracket`, 이어서 `Language`, `Table Name Case`, `Column Name Case`, 그리고 탭의 옵션 패널을 표시하거나 숨기는 `Code Generator: Options panel`이 표시됩니다. 각 대상이 생성하는 코드는 [코드 생성](./code-generator.md) 문서를 참고하세요.
 
-Visualization과 설정 탭에는 자체 명령이 없으며, `Tab`과 아래에서 설명하는 모든 탭에 표시되는 명령만 표시됩니다.
+Visualization, 사전, 설정 탭에는 자체 명령이 없으며, `Tab`과 아래에서 설명하는 모든 탭에 표시되는 명령만 표시됩니다.
 
 모든 탭에서, 읽기 전용 에디터에서도 목록의 끝 가까이에는 `Toggle Explorer`가 있으며, 단축키 `Ctrl + F` (Windows/Linux) or `⌘ + F` (Mac)가 표시됩니다. `find`, `replace`, `rename`, `tree`, `outline`, `objects`를 입력해도 찾을 수 있습니다.  
 실행하면 팔레트가 닫히고 캔버스에서 단축키를 눌렀을 때와 같은 동작을 합니다. 툴바의 `Explorer` 버튼이 눌린 상태로 표시되는 동안, 즉 ERD 탭에서 탐색기가 열려 있고 Zen 모드로 숨겨져 있지 않은 동안에는 탐색기를 닫습니다. 그 밖의 경우에는 ERD 탭으로 전환하고 탐색기를 검색 상태로 열며, 커서는 Find 입력란에 놓입니다. [열기와 닫기](./explorer.md#열기와-닫기) 문서를 참고하세요. Diff Viewer, Time Travel, 자동 배치 미리보기가 열려 있는 동안에는 이 항목이 표시되지 않습니다.
@@ -58,21 +60,22 @@ Visualization과 설정 탭에는 자체 명령이 없으며, `Tab`과 아래에
 검색어를 접두사로 시작하면 명령 대신 다이어그램을 검색합니다. 테이블은 `#`, 컬럼은 `@`, 코멘트와 메모는 `:`이며, `?`는 접두사 목록을 보여 줍니다. 접두사는 어느 탭에서나 동작합니다. 접두사는 첫 글자일 때만 인정되며, 그 앞의 공백은 무시됩니다. 접두사 뒤의 공백은 있어도 없어도 되므로 `#users`와 `# users`는 같은 검색이며, 일본어나 중국어 IME가 입력하는 전각 `＃`, `＠`, `：`, `？`도 접두사로 인정됩니다.  
 최상위 단계에서 입력란이 비어 있는 동안에는 그 아래 줄에 네 가지 접두사가 표시되며, 하나를 클릭하면 입력됩니다. 접두사가 적용되어 있는 동안에는 입력란 끝에 그 범위가 `Tables`, `Columns`, `Comments & memos`, `Help` 중 하나로 표시됩니다. 접두사를 지우면 명령 목록으로 돌아갑니다.
 
-`#` 접두사는 테이블을 나열하며 각 테이블 옆에 `Table`이 표시되고, 이름이 비어 있는 테이블은 `unnamed`로 표시됩니다. `#` 뒤에 아무것도 없으면 이름순으로 정렬됩니다. `#` 뒤의 텍스트는 테이블 이름에만 위와 같은 퍼지 매칭으로 대조하며, 이름에 그 텍스트가 포함된 테이블이 먼저 옵니다. 테이블 그룹 이름과 인덱스 이름은 어떤 접두사로도 검색되지 않으며, [찾기와 바꾸기](./find-and-replace.md#검색-대상)는 둘 다 검색합니다.
+`#` 접두사는 테이블을 나열하며 각 테이블 옆에 `Table`이 표시됩니다. 행은 `Both Names` 보기의 `Accounts (users)`처럼 [이름 표시](./logical-names.md#beyond-the-canvas)를 따라 테이블의 이름을 표시하며, 표시할 이름이 없는 테이블은 `unnamed`로 표시됩니다. `#` 뒤에 아무것도 없으면 테이블은 어느 보기에서나 논리명순이 아닌 이름순으로 정렬됩니다. `#` 뒤의 텍스트는 위와 같은 퍼지 매칭으로, 보기가 무엇을 표시하든 각 테이블의 이름과 논리명에 대조하므로 `Physical Names` 보기에서도 `#accounts`로 `users`가 나열됩니다. 이름이나 논리명에 그 텍스트가 포함된 테이블이 먼저 옵니다. 테이블 그룹 이름과 인덱스 이름은 어떤 접두사로도 검색되지 않으며, [찾기와 바꾸기](./find-and-replace.md#검색-대상)는 둘 다 검색합니다.
 
-`@` 접두사는 컬럼을 이름으로 나열하며, 각 컬럼 옆에 `users.email · Column`처럼 위치가 표시됩니다. `@` 뒤의 텍스트는 대소문자와 상관없이 컬럼 이름에 포함되어 있어야 하며, 이 매칭은 퍼지 매칭이 아닙니다. 첫 번째 `.` 앞의 텍스트는 이름에 그 텍스트가 포함된 테이블로 검색 범위를 좁힙니다. `@users.em`은 이름에 `users`가 포함된 테이블에서 `em`이 포함된 컬럼을, `@users.`는 그 테이블들의 컬럼을 나열하고, `@.em`은 모든 테이블을 검색합니다. `@` 뒤에 아무것도 없으면 컬럼을 필터링 없이 나열합니다.
+`@` 접두사는 컬럼을 나열하며, 각 컬럼 옆에 `users.email · Column`처럼 위치가 표시됩니다. `@` 뒤의 텍스트는 대소문자나 이름 표시가 보여 주는 것과 상관없이 컬럼의 이름이나 논리명에 포함되어 있어야 하며, 이 매칭은 퍼지 매칭이 아닙니다. 텍스트가 포함된 이름마다 별도의 행이 됩니다. 논리명의 일치 항목은 논리명을 표시하고 그 옆에 `users.email · Logical name`이 표시되므로, 이름과 논리명 모두에 텍스트가 포함된 컬럼은 두 번 나열됩니다. 첫 번째 `.` 앞의 텍스트는 이름이나 논리명에 그 텍스트가 포함된 테이블로 검색 범위를 좁힙니다. `@users.em`은 이름이나 논리명에 `users`가 포함된 테이블에서 `em`이 포함된 컬럼을, `@users.`는 그 테이블들의 컬럼을 나열하고, `@.em`은 모든 테이블을 검색합니다. 테이블 자체의 논리명은 `@`에서 행이 되지 않으며, `#`으로 찾습니다. `@` 뒤에 아무것도 없으면 각 컬럼을 이름으로 한 번씩 나열합니다.
 
-`:` 접두사는 테이블 코멘트, 컬럼 코멘트, 메모를 나열하며 이름은 나열하지 않습니다. 각 행에는 일치한 부분 주변의 텍스트 일부가 표시되고, 옆에 `users · Table comment`, `users.email · Column comment`, `Memo` 중 하나가 표시됩니다. `:` 뒤의 텍스트는 `@`와 마찬가지로 대소문자와 상관없이 코멘트나 메모에 포함되어 있어야 합니다. `:` 뒤에 아무것도 없으면 비어 있지 않은 코멘트와 메모를 나열합니다. View Option → `Memos`로 메모를 숨긴 동안에는 `:` 접두사가 메모를 나열하지 않습니다.
+`:` 접두사는 테이블 코멘트, 컬럼 코멘트, 메모를 나열하며 이름이나 논리명은 나열하지 않습니다. 각 행에는 일치한 부분 주변의 텍스트 일부가 표시되고, 옆에 `users · Table comment`, `users.email · Column comment`, `Memo` 중 하나가 표시됩니다. `:` 뒤의 텍스트는 `@`와 마찬가지로 대소문자와 상관없이 코멘트나 메모에 포함되어 있어야 합니다. `:` 뒤에 아무것도 없으면 비어 있지 않은 코멘트와 메모를 나열합니다. View Option → `Memos`로 메모를 숨긴 동안에는 `:` 접두사가 메모를 나열하지 않습니다.
 
-`@`와 `:` 접두사는 문서에 담긴 순서대로 행을 나열합니다. 테이블 하나씩 차례로 나열하되 각 테이블의 코멘트를 먼저 두고 그 뒤에 컬럼을 컬럼 순서대로 두며, 메모는 마지막에 둡니다.
+`@`와 `:` 접두사는 문서에 담긴 순서대로 행을 나열합니다. 테이블 하나씩 차례로 나열하되 각 테이블의 코멘트를 먼저 두고 그 뒤에 컬럼을 컬럼 순서대로 두며, 메모는 마지막에 둡니다. `@`에서는 컬럼의 논리명 행이 이름 행보다 먼저 옵니다.  
+`@`나 `:` 행 옆에 표시되는 위치는 어느 보기에서나 논리명이 아닌 테이블과 컬럼의 이름을 나타냅니다.
 
 `?` 접두사는 `Tables`, `Columns`, `Comments & memos`를 나열하며, `?` 뒤의 텍스트로 이를 필터링합니다. 하나를 고르면 입력란이 해당 접두사로 바뀌고 팔레트는 열린 채로 남습니다.
 
 접두사로 검색한 목록에는 개수와 상관없이 모든 일치 항목이 들어갑니다. 접두사로 검색해 아무것도 찾지 못하면 목록은 메시지 없이 비어 있습니다.
 
 테이블, 컬럼, 코멘트, 메모를 고르면 팔레트가 닫히고, 다른 탭에 있었다면 ERD 탭으로 전환됩니다.  
-대상이 이미 잘 보이는 상태가 아니라면 캔버스가 그 대상으로 스크롤됩니다. [이동 후 화면 위치](./table-related-functions.md#이동-후-화면-위치) 문서를 참고하세요. 그런 다음 테이블은 그 테이블만 선택되고 맨 앞으로 오며, 포커스가 이미 그 테이블 안에 있지 않았다면 테이블 이름에 포커스가 갑니다.  
-메모는 그 메모만 선택되고 맨 앞으로 옵니다. 컬럼이나 코멘트는 그것이 속한 테이블만 선택되고 맨 앞으로 온 뒤 텍스트가 있는 셀에 포커스가 갑니다. [테이블 보기 옵션](./table-related-functions.md#테이블-보기-옵션)으로 숨겨진 코멘트라면 그 옆의 이름에 포커스가 갑니다.  
+대상이 이미 잘 보이는 상태가 아니라면 캔버스가 그 대상으로 스크롤됩니다. [이동 후 화면 위치](./table-related-functions.md#이동-후-화면-위치) 문서를 참고하세요. 그런 다음 테이블은 그 테이블만 선택되고 맨 앞으로 옵니다. 포커스가 이미 그 테이블 안에 있지 않았다면 헤더의 첫 번째 셀, 즉 테이블 이름에 포커스가 가며, `Logical Names`와 `Both Names` 보기에서는 논리명에 포커스가 갑니다.  
+메모는 그 메모만 선택되고 맨 앞으로 옵니다. 컬럼이나 코멘트는 그것이 속한 테이블만 선택되고 맨 앞으로 온 뒤 텍스트가 있는 셀에 포커스가 갑니다. 보기가 그 셀을 그리지 않으면 그 자리에 그려지는 셀에 포커스가 갑니다. `Physical Names` 보기에서 찾은 논리명은 이름에, `Logical Names` 보기에서 찾은 이름은 논리명에 포커스가 갑니다. [테이블 보기 옵션](./table-related-functions.md#테이블-보기-옵션)으로 숨겨진 코멘트라면 그 옆의 이름에, `Logical Names` 보기에서는 논리명에 포커스가 갑니다.  
 어떤 이동도 그리는 중인 관계를 시작하거나 끝내지 않습니다.
 
 `Match Case`, `Match Whole Word`, `Use Regular Expression`을 사용하거나 텍스트를 바꾸려면 탐색기 맨 위의 [찾기와 바꾸기](./find-and-replace.md)를 사용하세요.

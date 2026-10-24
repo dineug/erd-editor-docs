@@ -1,5 +1,5 @@
 ---
-sidebar_position: 12
+sidebar_position: 13
 description: Generera kod för tjugotvå mål från diagrammet, välj språk, databas, skiftläge för namn och citattecken i alternativpanelen, se vilka mål som skriver en relations ON DELETE- och ON UPDATE-åtgärder och spara eller kopiera resultatet.
 ---
 
@@ -103,6 +103,10 @@ Oavsett skiftläge maskeras ett namn som målets språk reserverar där språket
 `SeaORM` ignorerar dem också: det namnger fält och moduler i snake case, den form som SeaORM läser tillbaka, och anger de lagrade namnen i `table_name` och, där de skiljer sig, `column_name`.  
 För de här fyra målen tonar panelen ned båda listorna, med noteringen `Not used by` under dem.
 
+Varje mål skriver de fysiska namnen, oavsett vad [namnvisningen](./logical-names.md#name-view) visar.  
+Inget mål skriver ett logiskt namn, inte ens i en tom kommentar: den här fliken har ingen motsvarighet till [`Write logical names into empty comments`](./schema-sql.md#logical-names-as-comments) på fliken Schema SQL.  
+Inget mål skriver heller någon domän: en kolumn som är kopplad till en domän skrivs med sin datatyp, som alla andra kolumner.
+
 ## Databas {#database}
 
 Datatyperna bestäms utifrån den valda databasen – se [Databaser](./table-related-functions.md#databases).  
@@ -132,5 +136,5 @@ Filen namnges som alla exporter, `<database name>-<timestamp>`, följt av filän
 Menyn Export har inget alternativ för kodgeneratorn, och fliken `Code Generator` i panelen Tabellegenskaper kan inte spara någon fil.
 
 Klicka på `Copy` längst ned i panelen för att kopiera koden, eller håll pekaren över koden och klicka på kopieringsknappen längst upp till höger i den, vilket är det enda sättet i panelen Tabellegenskaper.  
-Meddelandet `Copied!` med en bock bekräftar kopieringen i två sekunder. Om webbläsaren eller värdprogrammet nekar åtkomst till Urklipp talar meddelandet `Couldn't copy to the clipboard` med en varningssymbol om det i stället. En ny kopiering ersätter meddelandet i stället för att lägga till ett till.  
+Meddelandet `Copied!` med en bock bekräftar kopieringen i två sekunder. Om webbläsaren eller värdprogrammet nekar åtkomst till Urklipp talar meddelandet `Couldn't copy to the clipboard` med en varningssymbol om det i stället, i fem sekunder. En ny kopiering ersätter meddelandet i stället för att lägga till ett till.  
 Texten går också att markera, så du kan ta bara den del du behöver.

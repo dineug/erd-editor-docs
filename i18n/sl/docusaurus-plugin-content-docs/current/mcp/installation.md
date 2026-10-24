@@ -53,7 +53,8 @@ Okno VS Code streže diagrame v mapah svojega delovnega prostora in vsak diagram
 2. Odprite mapo projekta in zaupajte delovnemu prostoru. Razširitev streže agentom samo v zaupanja vrednem delovnem prostoru.
 3. Pustite nastavitev `dineug.erd-editor.agentHub.enabled` vklopljeno. Privzeto je vklopljena.
 
-Razširitev od različice `3.0.0` do `3.1.0` in strežnik različice `1.0.0` se med seboj zavračata, razširitev pred različico `3.0.0` pa ne streže nobenemu agentu – glejte razdelek [Posodabljanje](#updating).
+Razširitev od različice `3.0.0` do `3.1.0` in strežnik različice `1.0.0` ali novejše se med seboj zavračata, razširitev pred različico `3.0.0` pa ne streže nobenemu agentu.
+Razširitev različice `4.0.0` ali `4.1.0` se poveže, vendar logičnih imen, povezav z domeno in vrstic slovarjev, ki jih zapiše agent, niti ne prikaže niti ne ohrani – glejte razdelek [Posodabljanje](#updating).
 
 Razširitev se zažene v delovnem prostoru, ki vsebuje datoteke `.erd`, `.erd.json`, `.vuerd` ali `.vuerd.json`, zato agent do teh diagramov dostopa, še preden odprete katerega od njih.
 V delovnem prostoru brez takih datotek se zažene, ko odprete diagram, do takrat pa agent ureja na disku.
@@ -69,7 +70,8 @@ Okno trezorja v aplikaciji Obsidian streže diagrame v svojem trezorju.
 1. V razdelku Community plugins namestite [vtičnik ERD Editor](https://community.obsidian.md/plugins/erd-editor) različice `1.0.0` ali novejše in ga vklopite. Deluje samo v namizni aplikaciji in potrebuje aplikacijo Obsidian različice `1.5.7` ali novejše.
 2. Pustite nastavitev Settings → ERD Editor → Coding agents vklopljeno. Privzeto je vklopljena, vsak trezor pa ima svojo nastavitev.
 
-Vtičnik starejše različice in strežnik različice `1.0.0` se med seboj zavračata – glejte razdelek [Posodabljanje](#updating).
+Vtičnik pred različico `1.0.0` in strežnik različice `1.0.0` ali novejše se med seboj zavračata.
+Vtičnik različice `1.0.0` ali `1.1.0` se poveže, vendar logičnih imen, povezav z domeno in vrstic slovarjev, ki jih zapiše agent, niti ne prikaže niti ne ohrani – glejte razdelek [Posodabljanje](#updating).
 
 Okno trezorja streže agentom od trenutka, ko se vtičnik naloži, zato agent do diagramov trezorja dostopa, še preden odprete katerega od njih.
 Koraka zaupanja ni.
@@ -95,7 +97,8 @@ Razvojno okolje JetBrains streže diagrame vseh projektov, ki so v njem odprti, 
 2. Odprite projekt in mu zaupajte. V projektu, ki mu razvojno okolje ne zaupa, na primer v projektu, odprtem v varnem načinu, agenti diagrame berejo, nikoli pa jih ne spremenijo.
 3. Pustite nastavitev Settings | Tools | ERD Editor → Coding agents označeno. Privzeto je vklopljena in velja za celotno razvojno okolje.
 
-Vtičnik različice `0.9.0` ali `0.10.0` in strežnik različice `1.0.0` se med seboj zavračata, vtičnik pred različico `0.9.0` pa ne streže nobenemu agentu – glejte razdelek [Posodabljanje](#updating).
+Vtičnik različice `0.9.0` ali `0.10.0` in strežnik različice `1.0.0` ali novejše se med seboj zavračata, vtičnik pred različico `0.9.0` pa ne streže nobenemu agentu.
+Vtičnik različice `1.0.0` ali `1.1.0` se poveže, vendar logičnih imen, povezav z domeno in vrstic slovarjev, ki jih zapiše agent, niti ne prikaže niti ne ohrani – glejte razdelek [Posodabljanje](#updating).
 
 Razvojno okolje streže agentom od trenutka, ko se odpre prvi projekt, zato agent do diagramov projekta dostopa, še preden odprete katerega od njih.
 
@@ -125,19 +128,26 @@ Strežnik pred vzpostavitvijo povezave preveri, katero različico protokola upor
 Če se različici razlikujeta, se vsak klic, ki doseže ta urejevalnik, zavrne s kodo `protocolMismatch`, vključno s klici za branje in orodjem `erd_list_documents`, in ničesar se ne zapiše.
 Sporočilo navede stran, ki jo je treba posodobiti: strežnik ali ERD Editor v urejevalniku, kar je v VS Code razširitev, v aplikaciji Obsidian in razvojnem okolju JetBrains pa vtičnik.
 
-Strežnik različice `1.0.0`, razširitev za VS Code različice `4.0.0` ali novejše, vtičnik za Obsidian različice `1.0.0` ali novejše in vtičnik za JetBrains različice `1.0.0` ali novejše uporabljajo protokol 2.
+Strežnik različice `1.0.0` ali novejše, razširitev za VS Code različice `4.0.0` ali novejše, vtičnik za Obsidian različice `1.0.0` ali novejše in vtičnik za JetBrains različice `1.0.0` ali novejše uporabljajo protokol 2.
 Vsak starejši strežnik uporablja protokol 1, prav tako vsaka starejša izdaja urejevalnika, ki streže agentom: razširitev za VS Code od različice `3.0.0` do `3.1.0`, vtičnik za Obsidian različic `0.1.0` in `0.2.0` ter vtičnik za JetBrains različic `0.9.0` in `0.10.0`.
-Tak urejevalnik in strežnik različice `1.0.0` se med seboj zavračata, prav tako pa tudi starejši strežnik in urejevalnik, ki uporablja protokol 2.
+Tak urejevalnik in strežnik različice `1.0.0` ali novejše se med seboj zavračata, prav tako pa tudi starejši strežnik in urejevalnik, ki uporablja protokol 2.
 Razširitev za VS Code pred različico `3.0.0` ali vtičnik za JetBrains pred različico `0.9.0` sploh ne streže agentom, zato agent ureja datoteke na disku, tudi diagram, ki je odprt v urejevalniku.
 
 | Kombinacija | Konec sporočila |
 | --- | --- |
-| Strežnik različice `1.0.0` z razširitvijo ali vtičnikom, ki uporablja protokol 1 | `Update the ERD Editor extension or plugin in the editor until its hub speaks protocol 2.` |
+| Strežnik različice `1.0.0` ali novejše z razširitvijo ali vtičnikom, ki uporablja protokol 1 | `Update the ERD Editor extension or plugin in the editor until its hub speaks protocol 2.` |
 | Starejši strežnik z razširitvijo ali vtičnikom, ki uporablja protokol 2 | `Update the MCP server (npx -y @dineug/erd-editor-mcp@latest) until it speaks protocol 2.` |
 
 Strežnik in razširitev ali vtičnik posodobite hkrati.
+Strežnik in urejevalnik, ki uporabljata isti protokol, se povežeta ne glede na to, kateri od njiju je starejši, vendar ima orodja za logična imena, domene in slovarje samo strežnik različice `1.1.0` ali novejše – glejte razdelek [Slovarji](./tools.md#dictionaries).
+Logična imena, povezave z domeno in vrstice slovarjev, ki jih zapišejo ta orodja, prikažejo in ohranijo samo razširitev za VS Code različice `4.2.0` ali novejše ter vtičnika za Obsidian in JetBrains različice `1.2.0` ali novejše.
+Starejša razširitev ali vtičnik, ki se poveže, jih prezre, čeprav agentov klic uspe.
+Še vedno pa uporabi fizična imena, ki jih izpeljejo slovarji, in podatkovne tipe, ki jih dajo domene.
+Strežnik pred različico `1.1.0` prebere datoteko brez njenih logičnih imen, povezav z domeno in vrstic slovarjev, ko pa datoteko ureja na disku, jih izpusti – glejte razdelek [Brez vmesnika](./live-and-headless.md#headless).
+
 ERD Editor posodobite tudi povsod, kjer se diagrami odpirajo.
-Razširitev za VS Code pred različico `4.0.0`, vtičnik za Obsidian pred različico `1.0.0` in vtičnik za JetBrains pred različico `1.0.0` prikažejo diagram, ki ga je shranila novejša izdaja ali ga je agent uredil na disku, brez ikon primarnih ključev.
-Ko datoteko shranijo, iz nje odstranijo skupine tabel in skripte Sheme SQL.
+Razširitev za VS Code pred različico `4.2.0`, vtičnik za Obsidian pred različico `1.2.0` in vtičnik za JetBrains pred različico `1.2.0` odprejo diagram, ki ga je shranila novejša izdaja ali ga je agent uredil na disku, brez logičnih imen njegovih tabel in stolpcev, povezav njegovih stolpcev z domeno ter njegovih besed, izrazov in domen.
+Ko datoteko shranijo, jih izpustijo.
+Razširitev za VS Code pred različico `4.0.0`, vtičnik za Obsidian pred različico `1.0.0` in vtičnik za JetBrains pred različico `1.0.0` tak diagram prikažejo tudi brez ikon primarnih ključev, ko datoteko shranijo, pa iz nje odstranijo skupine tabel in skripte Sheme SQL.
 Razširitev za VS Code pred različico `3.1.0`, vtičnik za Obsidian pred različico `0.2.0` in vtičnik za JetBrains pred različico `0.10.0` ob shranjevanju datoteke iz diagrama odstranijo tudi dejanja ON DELETE in ON UPDATE.
 Po posodobitvi vtičnika aplikacijo Obsidian znova zaženite: do takrat okno trezorja še naprej poganja ERD Editor različice vtičnika, ki jo je naložilo najprej.

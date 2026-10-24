@@ -1,5 +1,5 @@
 ---
-sidebar_position: 4
+sidebar_position: 5
 description: Tabloları ve notları seçme, taşıma, kopyalama, çoğaltma ve silme, renkleri ve görünüm seçeneklerini ayarlama, dizinleri ve alternatif anahtarları tanımlama, veritabanı seçme, sonsuz tuvalde gezinme ve belgeleri karşılaştırma.
 ---
 
@@ -7,7 +7,8 @@ description: Tabloları ve notları seçme, taşıma, kopyalama, çoğaltma ve s
 
 Tablolar ve notlar oluşturulduktan sonra onlarla yaptığınız her şey – seçme, taşıma, kopyalama, silme, renklendirme ve tuvalin neyi göstereceğini ayarlama – ile çevrelerindeki tuval denetimleri.  
 Önce tablo ve not komutları gelir; ardından Tablo özellikleri, tablolara odaklanma, dizinler ve alternatif anahtarlar, Otomatik düzen ve veritabanı sistemi; en son da tuvalin kendisi: tuval araç çubuğu, yakınlaştırma, kaydırma ile atlamanın varış noktası ve Fark görüntüleyici.  
-Tabloları bir araya toplayan kutular olan tablo gruplarının kendi sayfası vardır. [Tablo grupları](./table-groups.md) sayfasına bakın.
+Tabloları bir araya toplayan kutular olan tablo gruplarının kendi sayfası vardır. [Tablo grupları](./table-groups.md) sayfasına bakın.  
+Tabloların göstereceği adlara karar veren Ad görünümünün ve mantıksal adların da kendi sayfası vardır. [Mantıksal adlar](./logical-names.md) sayfasına bakın.
 
 ## Çoklu seçim {#multiple-selection}
 
@@ -26,11 +27,14 @@ Zaten seçili bir öğeye sağ tıklamak seçimin tamamını korur, bu yüzden `
 
 ![⌘ + drag ve ⌘ + click ile tabloları, ardından ⌘ + A ile her tabloyu ve notu seçme](/img/demo-table-select.webp)
 
-Ortak düzenleme oturumunda her katılımcının seçimi, odaktaki hücresi ve seçim kutusu tuvalde o katılımcının renginde çizilir. [Ortak düzenleme](../../api/advanced/collaborative-editing.md) sayfasına bakın.
+Ortak düzenleme oturumunda her katılımcının seçimi, odaktaki hücresi ve seçim kutusu tuvalde o katılımcının renginde çizilir. [Ortak düzenleme](../../api/advanced/collaborative-editing.md) sayfasına bakın.  
+Başka bir Ad görünümüne bakan bir katılımcının odaktaki hücresi, sizin görünümünüzün onun yerine çizdiği hücrenin üzerine çizilir; örneğin onun ad hücresi sizin mantıksal ad hücrenizin üzerine. [Ortak çalışanlar](./logical-names.md#collaborators) bölümüne bakın.
 
 ## Birden çok tabloyu taşıma {#moving-multiple-tables}
 
 Zaten seçimin parçası olan herhangi bir tabloyu veya notu sürüklediğinizde seçimin tamamı onunla birlikte taşınır – değiştirici tuş gerekmez.  
+Bir tablo, başlığından ya da sütun satırlarının herhangi birinden sürüklenir, bu yüzden bir sütun satırında başlayan sürükleme sütunu değil tabloyu taşır. Sütunlar ise bunun yerine odaktaki satırın yanındaki sürükleme tutamacıyla taşınır. [Sütunları yeniden sıralama ve taşıma](./table-editing.md#rearranging-and-moving-columns) bölümüne bakın.  
+Bir başlık hücresinde veya bir sütun satırında tablo ancak işaretçi kısa bir yol aldıktan sonra hareket etmeye başlar, bu yüzden oraya yapılan bir tıklama yine hücreye odaklanır ve bir çift tıklama yine hücrenin düzenleyicisini açar. Sürükleme hiçbir zaman tablonun renk seçiciyi açan renkli kenarından, başlığındaki `+` ve `x` düğmelerinden ya da bir sütun satırının `x` düğmesinden başlamaz.  
 Seçimin dışındaki bir öğeyi sürüklemek seçimi o öğeye indirger ve yalnızca onu taşır. `Ctrl + drag` (Windows/Linux) veya `⌘ + drag` (Mac) her iki durumda da seçimi korur.  
 Tabloları ve notları yalnızca farenin sol düğmesi taşır. Sağ tıklama bağlam menüsünün neye uygulanacağını belirler ve hiçbir şeyi taşımaz, orta düğmeyle sürükleme ise bunun yerine tuvali kaydırır. [Tuvalde gezinme](#getting-around-the-canvas) bölümüne bakın.
 
@@ -47,7 +51,9 @@ Bu sıra kaydedilmez: Yeniden açılan bir diyagram tablolarını dosyada listel
 Seçili tabloları ve notları kopyalar ve yeni öğeler olarak geri yapıştırır.  
 Kısayollar: `Ctrl + C` (Windows/Linux) veya `⌘ + C` (Mac), `Ctrl + V` (Windows/Linux) veya `⌘ + V` (Mac)
 
-Kopyalanan bir tablo adını, açıklamasını, sütunlarını ve rengini korur; kopyalanan bir not ise metnini, boyutunu ve rengini korur.  
+Kopyalanan bir tablo adını, mantıksal adını, açıklamasını, sütunlarını ve rengini korur; kopyalanan bir not ise metnini, boyutunu ve rengini korur.  
+Kopyalanan her sütun mantıksal adını korur; her tablo ve sütun adı da sözlüklerden türetilmiş olup olmadığını korur. [Fiziksel adları türetme](./dictionary.md#deriving-physical-names) bölümüne bakın.  
+Yapıştırılan bir sütun, değer alanı bağlantısını yalnızca iki koşul sağlandığında korur: Yapıştırıldığı diyagram yalnızca aynı adlı bir değer alanını değil, tam olarak o değer alanını listeler ve değer alanı hâlâ sütunun kopyalandığı andaki veri türüne sahiptir. Aksi hâlde sütun değer alanı olmadan gelir ve kopyalandığı andaki türü korur. [Sütunu bağlama](./dictionary.md#linking-a-column) bölümüne bakın.  
 Dizinler ve ilişkiler de birlikte gelir: Bir dizin kopyalanan tabloya bütünüyle kopyalanır, bir ilişki ise bağladığı tabloların ikisi de kopyalanan kümede olduğunda türü ve ON DELETE ile ON UPDATE eylemleriyle birlikte kopyalanır. Yarım kalan bir ilişki özgün tabloyu gösterir hâlde bırakılmaz, atılır.  
 Yapıştırılan kopyalar yeni seçim olur ve aynı kopyayı yeniden yapıştırmak onu her seferinde `50px` daha öteye yerleştirir, böylece art arda yapılan yapıştırmalar üst üste binmez.  
 Kopya, ait olduğu [tablo grubunu](./table-groups.md) korumaz: Yapıştırılan tablo bir grubun kutusunun içine düşse bile hiçbir grupta yer almaz ve seçili bir grup kopyalanmaz.  
@@ -60,11 +66,12 @@ Odaktaki bir tablonun içinde sütunlar seçiliyken aynı kısayol bunun yerine 
 ## Tabloları ve notları çoğaltma {#duplicating-tables-and-memos}
 
 `Alt` tuşunu basılı tutun ve bir tabloyu veya notu farenin sol düğmesiyle sürükleyin.  
+Bir tablo, başlığından ya da herhangi bir sütun satırından tutulur, bu yüzden bir sütun satırında `Alt + drag` tabloyu çoğaltır ve sütun sırasına dokunmaz. Sütunun sürükleme tutamacında `Alt` tuşunu basılı tutmak hiçbir şey çoğaltmaz: Sütun, düz bir tutamaç sürüklemesinde olduğu gibi taşınır. [Sütunları yeniden sıralama ve taşıma](./table-editing.md#rearranging-and-moving-columns) bölümüne bakın.  
 Yarı saydam bir önizleme işaretçiyi izler ve düğmeyi bıraktığınızda kopya önizlemenin bulunduğu yere bırakılır.  
 Tuttuğunuz öğe zaten bir seçimin parçasıysa seçimin tamamı çoğaltılır. Aksi hâlde seçim, işaretçinin altındaki varlıkla değiştirilir.  
 Hareket ettirmeden yapılan `Alt + click` kopyayı `50px` aşağıya ve sağa bırakır, o nokta zaten dolu olduğunda bir adım daha ilerler.
 
-Bir kopya yapıştırmayla aynı şeyleri taşır: adları, açıklamaları, sütunları, renkleri, not boyutlarını ve tamamen kopyaladığınız öğelere ait olan dizinleri ve ilişkileri. Yapıştırmada olduğu gibi kopya da hiçbir tablo grubunda yer almaz.  
+Bir kopya bir [yapıştırmayla](#copyingpasting-tables-and-memos) aynı şeyleri taşır: adları ve mantıksal adları, açıklamaları, sütunları, renkleri, not boyutlarını ve tamamen kopyaladığınız öğelere ait olan dizinleri ve ilişkileri. Aynı diyagramda kaldığı için her sütunun değer alanı bağlantısını olduğu gibi korur. Yapıştırmada olduğu gibi kopya da hiçbir tablo grubunda yer almaz.  
 Bir tablo grubunun başlık çubuğunda `Alt + drag`, grubu düz bir sürükleme gibi taşır; grup hiçbir zaman çoğaltılmaz.
 
 ![Alt + drag ile bir tabloyu çoğaltma, ardından Alt + click ile aşağıda ve sağda bir kopya daha oluşturma](/img/demo-table-duplicate.webp)
@@ -119,6 +126,7 @@ Klavye odağı seçicideyken geri alma ve yineleme, yakınlaştırma kısayollar
 - Table Comment
 - Column Comment
 - DataType
+- Domain
 - Default
 - Not Null
 - Unique
@@ -129,7 +137,9 @@ Klavye odağı seçicideyken geri alma ve yineleme, yakınlaştırma kısayollar
 - Table Groups
 - Memos
 
-`Unique`, `Alternate Key` ve `Auto Increment` varsayılan olarak kapalı, diğerleri açıktır.  
+`Domain`, `Unique`, `Alternate Key` ve `Auto Increment` varsayılan olarak kapalı, diğerleri açıktır.  
+Tabloların hangi adları göstereceği bir görünüm seçeneği değildir: Tuvalin bağlam menüsünde `View Option` öğesinin hemen ardından gelen `Name View`, fiziksel adları, mantıksal adları ya da her ikisini seçer. [Görünümü değiştirme](./logical-names.md#switching-the-view) bölümüne bakın.  
+`Domain`, her sütuna [sütun sırasına](./settings.md#adjusting-column-order) göre yerleştirilen ve sütunun bağlı olduğu değer alanının adını içeren bir hücre verir. `Domains` sayfasının listelediği hiçbir değer alanına bağlı olmayan bir sütun orada soluk `domain` yer tutucusunu gösterir. Hücre her Ad görünümünde görünür. `Domain` kapalıyken `Logical Names` görünümü bunun yerine bağlı bir değer alanının adını tür hücresinde gösterir. [Değer alanı hücresi](./logical-names.md#the-domain-cell) bölümüne bakın.  
 `Alternate Key` her alternatif anahtarın sütunlarını `AK1.1` gibi işaretlerle gösterir. [Alternatif anahtarlar](#alternate-keys) bölümüne bakın.  
 `Referential Actions`, bir ilişkinin ON DELETE ve ON UPDATE eylemlerinin bağlantı çizgisinin alt tablo ucuna koyduğu `D:` ve `U:` etiketlerini gösterir. [Bağlantı çizgisini okuma](./relationship-editing.md#reading-a-connector) bölümüne bakın. Kapatmak yalnızca bu etiketleri gizler ve hiçbir tabloyu ya da bağlantı çizgisini taşımaz.  
 `Table Groups`, [tablo gruplarını](./table-groups.md) ve tablolarının başlıklarındaki grup renklerini gösterir. Kapatmak bunları tuvalde, mini haritada ve görüntü dışa aktarmalarında gizler, hiçbir tabloyu taşımaz ve her tabloyu kendi grubunda tutar. [Grupları gizleme](./table-groups.md#hiding-groups) bölümüne bakın. Ayrıca `Table Groups` klasörünü [Gezginden](./explorer.md#the-tree), `New Table Group` düğmesini de [tuval araç çubuğundan](#canvas-toolbar) kaldırır ve Gezginin araması artık grup adlarını bulmaz.  
@@ -139,19 +149,19 @@ Notları gizlemek onların seçimini kaldırır ve açık bir not düzenleyicisi
 
 ![Tablolar yeniden yerleşirken Görünüm seçenekleri girdilerini açıp kapatma, Alternate Key ile bileşik bir benzersiz dizini AK1.1 ve AK1.2 olarak işaretleme, ardından Memos seçeneğini kapatıp açma](/img/demo-view-options.webp)
 
-Görselleştirme sekmesinin `Flow` modundaki kartlar bu seçenekleri izlemez: Kendi [satır görünümlerini](./visualization.md#row-display) kullanır ve `Relationship` kapalıyken bile bağlantı çizgilerini çizer.
+Görselleştirme sekmesinin `Flow` modundaki kartlar `Domain` dahil bu seçenekleri izlemez: Kendi [satır görünümlerini](./visualization.md#row-display) kullanır ve `Relationship` kapalıyken bile bağlantı çizgilerini çizer. Bir kartın hangi hücreleri yerleştireceği yalnızca Ad görünümüne bağlıdır. [Kartlardaki adlar](./visualization.md#names-on-the-cards) bölümüne bakın.
 
 ## Tablo özellikleri {#table-properties}
 
 Bir tablonun özellik panelini açar.  
 Paneli sağ tıkladığınız tablo için açan, tablo bağlam menüsündeki `Table Properties` öğesiyle başlayın ya da bir tablo seçip `Alt + Space` tuşlarına basın.  
-Panel, soluklaştırılmış tuvalin ortasında açılır. Yalnızca tuval soluklaşır, bu yüzden açık bir [Gezgin](./explorer.md#dialogs-beside-it) panelin yanında açık ve kullanılabilir kalır. Panelin başlık alanında `Table Properties` başlığı, geçerli tablo vurgulanmış olarak en son açılan beş tablonun çipleri ve bir kapatma düğmesi bulunur. Paneli yeniden açmadan o tabloya geçmek için bir çipe tıklayın.  
+Panel, soluklaştırılmış tuvalin ortasında açılır. Yalnızca tuval soluklaşır, bu yüzden açık bir [Gezgin](./explorer.md#dialogs-beside-it) panelin yanında açık ve kullanılabilir kalır. Panelin başlık alanında `Table Properties` başlığı, geçerli tablo vurgulanmış olarak en son açılan beş tablonun çipleri ve bir kapatma düğmesi bulunur. Her çip, tablosunu [Ad görünümünün](./logical-names.md#beyond-the-canvas) adlandırdığı gibi adlandırır. Paneli yeniden açmadan o tabloya geçmek için bir çipe tıklayın.  
 Başlık alanının altında üç sekme vardır: `Indexes`, `Schema SQL` ve `Code Generator`. Panel üçü için de aynı boyutu korur, bu yüzden sekme değiştirmek paneli taşımaz veya yeniden boyutlandırmaz.  
 Paneli kapatma düğmesiyle, `Escape` tuşuyla ya da dışında tuvale tıklayarak kapatın.  
 Gezginde klasör dışında bir satır seçmek veya Gezginin aramasındaki bir eşleşmeye gitmek, atlamadan önce Tablo özelliklerini kapatır. Gezginin aramasını açan ya da Gezgin zaten açıksa metin imlecini Bul alanına yerleştiren `Ctrl + F` (Windows/Linux) veya `⌘ + F` (Mac) de aynısını yapar. Gezginde – bir klasör satırı dahil – başka herhangi bir yere ya da araç çubuğundaki `Explorer` düğmesine tıklamak Tablo özelliklerini açık bırakır. Klavye odağı Gezgindeyken basılan `Escape` yalnızca klavye odağını tuvale geri verir, bu yüzden Tablo özelliklerini kapatmak için `Escape` tuşuna ikinci kez basmak gerekir.
 
 `Indexes` sekmesi [Dizinler](#indexes) bölümünde anlatılır.  
-`Schema SQL` sekmesi, tablonun DDL'ini seçili [veritabanına](#databases) göre gösterir: `CREATE TABLE` ifadesini, bazı veritabanlarının Benzersiz sütunlar için yazdığı ayrı kısıtlamaları ve dizinlerini. Araç çubuğundaki [Şema SQL](./schema-sql.md) sekmesi nasıl ayarlanmış olursa olsun, her zaman başlık ve tablolardan önceki ya da sonraki betik olmadan düz `CREATE` ifadeleri yazar. Seçenekler paneli yoktur ve bağlam menüsünde yalnızca `Database` ve `Bracket` bulunur.  
+`Schema SQL` sekmesi, tablonun DDL'ini seçili [veritabanına](#databases) göre gösterir: `CREATE TABLE` ifadesini, bazı veritabanlarının Benzersiz sütunlar için yazdığı ayrı kısıtlamaları ve dizinlerini. Araç çubuğundaki [Şema SQL](./schema-sql.md) sekmesi nasıl ayarlanmış olursa olsun, her zaman başlık, tablolardan önceki ya da sonraki betik ve boş açıklamalarda mantıksal adlar olmadan düz `CREATE` ifadeleri yazar. [Açıklama olarak mantıksal adlar](./schema-sql.md#logical-names-as-comments) bölümüne bakın. Seçenekler paneli yoktur ve bağlam menüsünde yalnızca `Database` ve `Bracket` bulunur.  
 `Code Generator` sekmesi yalnızca bu tablo için kod oluşturur. [Kod oluşturucu](./code-generator.md) sayfasına bakın.
 
 `readonly` bir düzenleyicide panel yine açılır ve başlığının yanında `Read only` rozeti görünür, ancak `Indexes` sekmesinde hiçbir düzenleme yapılamaz.
@@ -163,19 +173,19 @@ Tablo bağlam menüsündeki `Focus on this table` öğesiyle başlayın ya da bi
 Sağ tıkladığınız tablo seçili birkaç tablodan biriyse menü öğesinde `Focus on selected tables` yazar ve öğe seçimin tamamına odaklanır. Seçimin dışındaki bir tabloya sağ tıklamak yalnızca o tabloya odaklanır.  
 Kısayol seçili tabloları alır, notları dışarıda bırakır ve hiçbir tablo seçili değilse hiçbir şey yapmaz.  
 Seçili bir [tablo grubu](./table-groups.md) burada, kısayolda da menü öğesinde de hiçbir şey ifade etmez: Grubun tabloları yalnızca kendileri seçiliyse alınır, grubun menüsündeki `Select tables` öğesi de tam olarak bunu yapar.  
-Daraltılmış görünümün neyi gösterdiği ve diyagramın tamamına nasıl dönüleceği [Görselleştirme](./visualization.md#focusing-on-tables) bölümünde anlatılır.
+Daraltılmış görünümün neyi gösterdiği ve diyagramın tamamına nasıl dönüleceği [Görselleştirme](./visualization.md#focusing-on-tables) bölümünde, Akış modunun daha önce gösterdikleri arasında nasıl bir adım geri ve ileri gidileceği ise [Önceki tablo ve sonraki tablo](./visualization.md#previous-table-and-next-table) bölümünde anlatılır.
 
 ## Dizinler {#indexes}
 
 Dizinler tablo özellik panelinin `Indexes` sekmesinde tanımlanır ve dışa aktarılan Şema SQL'e dahil edilir.
 
 Sol taraf tablonun anahtarlarını ve dizinlerini iki grupta listeler.  
-Tablonun anahtarı olduğunda görünen `Keys`, sütunlarının bildirdiği anahtarları listeler: PK olarak işaretli sütunlar üzerinde `PK_<table name>`, ardından sütun sırasıyla Benzersiz olarak işaretli her sütun için `UQ_<table name>_<column name>`. Adlar seçili veritabanının Şema SQL'ini izler, bu yüzden `Bracket` ayarı `None` iken `sales.users` gibi şema nitelikli bir tablo için Databricks ve Snowflake dışındaki her veritabanında `PK_users` listelenir. [Şema nitelikli tablo adları](./schema-sql.md#schema-qualified-table-names) bölümüne bakın. Her biri `PK` veya `UQ` etiketi taşır ve bir kilitle işaretlenir. Burada salt okunurdur ve yalnızca sütunların [PK](./table-editing.md#column-primary-key) ve [Benzersiz](./table-editing.md#not-null-unique-auto-increment) bayraklarıyla değişir.  
+Tablonun anahtarı olduğunda görünen `Keys`, sütunlarının bildirdiği anahtarları listeler: PK olarak işaretli sütunlar üzerinde `PK_<table name>`, ardından sütun sırasıyla Benzersiz olarak işaretli her sütun için `UQ_<table name>_<column name>`. Adlar, Ad görünümü ne olursa olsun seçili veritabanının Şema SQL'inin yazdığı fiziksel adlardır, bu yüzden `Bracket` ayarı `None` iken `sales.users` gibi şema nitelikli bir tablo için Databricks ve Snowflake dışındaki her veritabanında `PK_users` listelenir. [Şema nitelikli tablo adları](./schema-sql.md#schema-qualified-table-names) bölümüne bakın. Her biri `PK` veya `UQ` etiketi taşır ve bir kilitle işaretlenir. Burada salt okunurdur ve yalnızca sütunların [PK](./table-editing.md#column-primary-key) ve [Benzersiz](./table-editing.md#not-null-unique-auto-increment) bayraklarıyla değişir.  
 `Indexes`, tablonun dizinlerini eklenme sırasıyla listeler. Her dizinde onu benzersiz yapan bir `UQ` aç/kapat düğmesi, bir ad alanı ve onu kaldıran bir `x` bulunur. [Alternatif anahtar](#alternate-keys) olan bir dizin ayrıca `AK1` gibi numarasını da gösterir. Listenin altındaki `Add Index` düğmesiyle dizin ekleyin.
 
-Sağ taraf tablonun sütunlarını, her birinin yanında bir onay kutusuyla `Columns` başlığı altında listeler. Solda bir dizin seçilene kadar hiçbir şey düzenlenemez.  
+Sağ taraf tablonun sütunlarını, her birinin yanında bir onay kutusuyla `Columns` başlığı altında listeler. Her satır, sütun sırasını, Görünüm seçeneklerini ve [Ad görünümünü](./logical-names.md#beyond-the-canvas) izleyerek sütunun tuvaldeki satırıyla aynı hücreleri gösterir. Solda bir dizin seçilene kadar hiçbir şey düzenlenemez.  
 Bir sütunu seçili dizine eklemek için işaretleyin, kaldırmak için işaretini kaldırın. Bir anahtar seçmek sütunlarını işaretli gösterir, ancak kutular devre dışı kalır.  
-Seçili dizinin sütunları aşağıda `Index order` başlığı altında listelenir. Yeniden sıralamak için onları tutamaçtan sürükleyin ve sıralama yönünü tersine çevirmek için bir satırdaki `ASC` veya `DESC` çipine tıklayın. Alternatif anahtarda her satır kendi `AK<n>.<m>` işaretiyle biter. Liste aynı anda üç satır gösterir, gerisi kaydırılır.
+Seçili dizinin sütunları aşağıda `Index order` başlığı altında, her biri Ad görünümünün adlandırdığı gibi adlandırılarak listelenir; `Both Names` görünümünde ad, mantıksal addan sonra parantez içinde yer alır, örneğin `Member Number (member_no)`. Yeniden sıralamak için onları tutamaçtan sürükleyin ve sıralama yönünü tersine çevirmek için bir satırdaki `ASC` veya `DESC` çipine tıklayın. Alternatif anahtarda her satır kendi `AK<n>.<m>` işaretiyle biter. Liste aynı anda üç satır gösterir, gerisi kaydırılır.
 
 `readonly` bir düzenleyicide bir anahtarı veya dizini seçmek yine sütunlarını gösterir, ancak `Add Index` ve `x` bulunmaz ve sekmedeki başka hiçbir şey değiştirilemez.
 
@@ -216,12 +226,12 @@ Tuvalin bağlam menüsünden veya Hızlı aramadan `Auto Layout` öğesini açı
 | `Tree - horizontal` | Aynı katmanlama, soldan sağa doğru. |
 
 `Force`, düzen otururken bir önizleme açar ve gösterdiği bilgi kutusunda `Apply` ile `Cancel` bulunur.  
-Önizleme, düzen başladığı andaki diyagrama göre çerçevelenir, bu yüzden düzen otururken tablolar çerçevenin dışına çıkabilir. Önizleme `70%` veya daha düşük yakınlaştırmada çizilir, bu yüzden tablolar adlarına ve renkli kenarlarına daraltılmış görünür.  
+Önizleme, düzen başladığı andaki diyagrama göre çerçevelenir, bu yüzden düzen otururken tablolar çerçevenin dışına çıkabilir. Önizleme `70%` veya daha düşük yakınlaştırmada çizilir, bu yüzden tablolar adlarına ve renkli kenarlarına daraltılmış görünür. Önizleme, dosya hangi görünümü korursa korusun baktığınız Ad görünümünde açılır. [Tuvalin ötesinde](./logical-names.md#beyond-the-canvas) bölümüne bakın.  
 `Apply` konumları o anki hâlleriyle korur, düzen durulduğunda ise kendiliğinden uygulanır. `Cancel` veya `Escape` diyagramı olduğu gibi bırakır.
 
 Diğer üçü ana iş parçacığının dışında tek seferde hesaplanır, bu yüzden izlenecek bir şey yoktur: Düzen hesaplanırken bir bilgi kutusu görünür ve tamamlanan yerleşim, diyagramın zaten kapladığı alanın ortasına yerleştirilir. `Cancel` veya `Escape` artık beklemediğiniz bir düzeni iptal eder, paylaşımlı worker çalıştırmayan bir ana uygulamada ise sonuç `Could not place tables` olur. [Web Worker'lar](../../api/installation.md#web-workers) bölümüne bakın. 60 saniye içinde dönmeyen bir düzen de aynı şekilde sona erer.
 
-Hangisini seçerseniz seçin tablolar ve tablo grupları taşınır, notlar ise yerinde kalır. Bir tablodan kendisine giden ilişki yok sayılır ve aynı iki tablo arasındaki birden çok ilişki bir kez sayılır.  
+Hangisini seçerseniz seçin tablolar ve tablo grupları taşınır, notlar ise yerinde kalır. Tablolar, baktığınız Ad görünümünde aldıkları genişliklerle yerleştirilir. Bir tablodan kendisine giden ilişki yok sayılır ve aynı iki tablo arasındaki birden çok ilişki bir kez sayılır.  
 Her düzen, gruplar gösterilsin ya da gösterilmesin her grubun tablolarını bir arada tutar ve tablo içeren her grubu tablolarının çevresine oturtur. [Tablo grupları](./table-groups.md#auto-layout) bölümüne bakın.  
 Sonuç tek bir geçmiş kaydı olarak eklenir, bu yüzden tek bir geri alma her tabloyu ve grubu eski yerine döndürür.
 
@@ -259,6 +269,7 @@ Tuvalin alt kenarının ortasında yüzen küçük bir araç çubuğu, soldan sa
 - `New Table`, `New Memo` ve `New Table Group`. `New Table`, `Alt + N` tuşlarının yaptığı gibi tablo ekler, `New Memo` da `Alt + M` tuşlarının yaptığı gibi not ekler. `New Table Group`, `Alt + G` tuşlarının yaptığı gibi [grup çizimini](./table-groups.md#drawing-a-group) hazırlar ve el aracını kapatır; ikinci bir tıklama, tıpkı `Alt + G` tuşlarına ikinci kez basmak gibi, grup eklemeden çizimi sonlandırır. View Option → `Memos` notları gizlerken `New Memo`, View Option → `Table Groups` grupları gizlerken de `New Table Group` yer almaz. `readonly` bir düzenleyici üçünden hiçbirini göstermez.
 - Yakınlaştırma: `Zoom out`, yüzde olarak geçerli yakınlaştırma ve `Zoom in`. İki düğme yakınlaştırmayı yakınlaştırma kısayollarıyla aynı şekilde adım adım değiştirir ve yüzdeye tıklamak yakınlaştırmayı `100%` değerine geri getirir.
 - Dört ilişki gösterimi, bir ilişkiye başlarken kullandığınız dördün aynısı. [Düzenlemeye başlama](./editing-start.md) sayfasına bakın. İlişki iki tabloya tıklanarak çizildiğinden, birini seçmek seçim aracına geri geçer.
+- Geçerli görünümü adlandıran, aşağı oklu bir düğme olan `Name View`: `Physical Names`, `Logical Names` veya `Both Names`. Hangi görünümü adlandırırsa adlandırsın aynı genişliği korur, bu yüzden bir görünüm değişikliği araç çubuğunu asla kaydırmaz. Bir tıklama, araç çubuğunun üstünde geçerli olanı işaretli olarak üç görünümün listesini açar. Birini seçmek o görünüme geçer ve listeyi kapatır; düğmeye ikinci kez tıklamak, başka herhangi bir yere basmak veya `Escape` listeyi görünümü değiştirmeden kapatır. `readonly` bir düzenleyici de bu düğmeyi gösterir. Her görünümün neyi gösterdiği [Ad görünümü](./logical-names.md#name-view) bölümünde, bir görünüm değişikliğinin kaydedilip kaydedilmediği ise [Görünümü değiştirme](./logical-names.md#switching-the-view) bölümünde anlatılır.
 - Tuval ve bu araç çubuğu dışındaki her şeyi kaldıran Zen modu, `Alt + Z`. `Alt + Z` tuşlarına yeniden basmak veya düğme geri kalanını geri getirir. Açık bir Gezgin kapatılmadan geri kalanıyla birlikte gizlenir ve onlarla birlikte geri gelir. Zen modu sırasında da açılabilir. [Kenara çekildiğinde](./explorer.md#when-it-stands-aside) bölümüne bakın.
 - Yalnızca ekranda hiçbir tablo, gösterilen not veya gösterilen tablo grubu yokken araç çubuğunun sonuna eklenen `Go to content` pusulası. [Tuvalde gezinme](#getting-around-the-canvas) bölümüne bakın.
 
@@ -277,7 +288,7 @@ Kısayollar: `Ctrl + Plus` (Windows/Linux) veya `⌘ + Plus` (Mac), `Ctrl + Minu
 [Tuval araç çubuğundaki](#canvas-toolbar) `Zoom out` ve `Zoom in` düğmeleri yakınlaştırmayı `Minus` ve `Plus` kısayolları gibi adım adım değiştirir: Her basış, ekranın ortasını yerinde tutarak yakınlaştırmayı 4 yüzde puanı değiştirir. Aralarındaki yüzde geçerli yakınlaştırmayı gösterir ve ona tıklamak, `Ctrl + 0` (Windows/Linux) veya `⌘ + 0` (Mac) gibi doğrudan `100%` değerine döner.
 
 Yakınlaştırma `10%` ile `150%` arasında değişir.  
-`70%` ve altındaki yakınlaştırmada tablolar adlarına ve renkli kenarlarına daralır ve hücre düzenleme, hücre kısayolları ile kopyalama ve yapıştırma yeniden yakınlaştırana kadar çalışmaz.
+`70%` ve altındaki yakınlaştırmada tablolar adlarına ve renkli kenarlarına daralır ve hücre düzenleme, hücre kısayolları ile kopyalama ve yapıştırma yeniden yakınlaştırana kadar çalışmaz. Daraltılmış bir tablonun gösterdiği ad Ad görünümünü izler. [Ad görünümü](./logical-names.md#name-view) bölümüne bakın.
 
 Aynı üç kısayol Görselleştirme sekmesini de `Graph` ve `Flow` modunda aynı şekilde, her modun kendi aralığında yakınlaştırır. [Görselleştirme](./visualization.md#toolbar) bölümüne bakın.
 
@@ -302,11 +313,11 @@ Kaydırma çubuğu tutamacını veya mini haritanın görünüm alanı dikdörtg
 
 Bir kaydırma ekranda hiçbir tablo, gösterilen not veya gösterilen tablo grubu bırakmazsa [tuval araç çubuğunun](#canvas-toolbar) sonuna, en yakın öğeyi gösteren bir ok ve o öğenin ne kadar uzakta olduğuyla birlikte bir `Go to content` pusulası eklenir. Yakınlaştırmayı değiştirmeden o öğeyi ortalamak için pusulaya tıklayın.
 
-![Tuvalin boş alanını sürükleyerek, bir tablonun üzerinde orta düğmeyle sürükleyerek, mini haritayla ve fare tekerleğiyle kaydırma, ardından Go to content pusulasını izleyerek geri dönme](/img/demo-canvas-navigation.webp)
+![Tuvalin boş alanını sürükleyerek, fare tekerleğiyle, bir tablonun üzerinde orta düğmeyle sürükleyerek ve mini haritadan kaydırma, ardından Shift + wheel ile içeriğin ötesine geçme ve Go to content pusulasını izleyerek geri dönme](/img/demo-canvas-navigation.webp)
 
 ### Atlamanın varış noktası {#where-a-jump-lands}
 
-Tuvaldeki bir öğeye götüren her atlama görünümü tek bir kurala göre taşır: [Hızlı aramanın](./quick-search.md#searching-the-diagram) `#`, `@` ve `:` sonuçları, [Gezginin](./explorer.md#going-to-a-row) satırları ve onun [Bul ve değiştir](./find-and-replace.md#going-to-a-match) aramasının eşleşmeleri, [Fark görüntüleyicinin](#going-to-a-change) listesindeki satırlar, Akış modundaki dış bağlantı [kart düğmesi](./visualization.md#card-buttons) ve [İçe aktar ve ekle](./file-import-export.md#import-and-add) işleminden sonraki yerleşim. Bu bölümlerin her biri atlamanın neyi seçtiğini anlatır; bu bölüm ise görünümün nereye gittiğini anlatır.
+Tuvaldeki bir öğeye götüren her atlama görünümü tek bir kurala göre taşır: [Hızlı aramanın](./quick-search.md#searching-the-diagram) `#`, `@` ve `:` sonuçları, [Gezginin](./explorer.md#going-to-a-row) satırları ve onun [Bul ve değiştir](./find-and-replace.md#going-to-a-match) aramasının eşleşmeleri, [Fark görüntüleyicinin](#going-to-a-change) listesindeki satırlar, Akış modundaki dış bağlantı [kart düğmesi](./visualization.md#card-buttons), Sözlük sekmesindeki [Denetimler sayfasında](./dictionary.md#the-checks-sheet) bir tabloyu veya sütunu belirten bir denetim ve [İçe aktar ve ekle](./file-import-export.md#import-and-add) işleminden sonraki yerleşim. Bu bölümlerin her biri atlamanın neyi seçtiğini anlatır; bu bölüm ise görünümün nereye gittiğini anlatır.
 
 Atlama hiçbir zaman yakınlaştırmayı değiştirmez ve en fazla bir kaydırma yapar. Başka bir sekmedeyken önce ERD sekmesine geçer.  
 Tuvali göründüğü hâliyle ölçer: üst araç çubuğunun altında kalan kısmı ya da Zen modunda tüm yüksekliği ve tuvali örtmek yerine daraltan açık bir Gezginin sağında kalan kısmı.
@@ -322,8 +333,8 @@ Bu yüzden tuvalin sol kenarına yakın ve dikeyde yarı yolda duran küçük bi
 Bir atlamanın görünüme getirdiği şey ve tamamı sığmadığında görünmesi gereken ana kısım:
 
 - Tablo: tablonun tamamı, ana kısmı üstündeki ad şeridi ya da View Option → `Table Comment` açıklamaları gösterirken bir tablo açıklaması eşleşmesinde açıklama hücresi. Tabloların adlarına daraldığı `70%` ve altındaki yakınlaştırmada ana kısmı kutunun ortasındaki ad.
-- Sütun: sütunun satırı, ana kısmı atlamanın gittiği hücre: sütunun adı ya da View Option → `Column Comment` açıklamaları gösterirken eşleşmenin bulunduğu açıklama. `70%` ve altındaki yakınlaştırmada sütun, tablosunu tablonun kuralına göre görünüme getirir.
-- Uzun bir açıklama gibi tamamı gösterilemeyecek kadar geniş bir hücre: ana kısmı içindeki eşleşen metin.
+- Sütun: sütunun satırı, ana kısmı atlamanın gittiği hücre: sütunun adı, bir mantıksal ad eşleşmesinde veya mantıksal ad üzerindeki bir denetimde mantıksal adı, değer alanı üzerindeki bir denetimde değer alanı hücresi ya da View Option → `Column Comment` açıklamaları gösterirken eşleşmenin bulunduğu açıklama. Satır böyle bir hücre çizmiyorsa atlama onun yerine çizilen hücreye gider: `Logical Names` görünümünde ad için mantıksal ad, `Physical Names` görünümünde mantıksal ad için ad ve View Option → `Domain` kapalıyken değer alanı hücresi için tür hücresi ya da `DataType` de kapalıyken satırın tamamı. `70%` ve altındaki yakınlaştırmada sütun, tablosunu tablonun kuralına göre görünüme getirir.
+- Uzun bir açıklama gibi tamamı gösterilemeyecek kadar geniş bir hücre: ana kısmı içindeki eşleşen metin. Eşleşmenin bulunduğu hücrenin yerine çizilen hücreye yapılan bir atlama, örneğin `Physical Names` görünümünde bir mantıksal ad eşleşmesi için ada yapılan atlama, metne göre gitmez.
 - İlişki: iki tablosunu kapsayan kutu, ana kısmı alt tablo.
 - Tablo grubu: grubun kutusu, ana kısmı başlık çubuğu.
 - Not ya da İçe aktar ve ekle işleminin yerleştirdiği blok: tamamı.
@@ -337,7 +348,7 @@ Daha önce kaydedilmiş belgeleri geçerli belgeyle karşılaştırabilirsiniz.
 Tuvalin bağlam menüsünden `Diff Viewer` öğesini seçin ve daha önce dışa aktardığınız bir `.json` belgesini belirleyin.
 
 Görünüm tuvalin üzerinde açılır: solda değişenler, ardından yan yana kaydedilmiş belge ve geçerli belge.  
-Geçerli belge, görünüm açıldığı andaki hâliyle karşılaştırılır; bundan sonra yapılan değişiklikler, bir ortak çalışanınkiler dahil, görünüme yansımaz. Görünüm açıkken açık bir [Gezgin](./explorer.md#when-it-stands-aside) gizlenir, bu yüzden görünüm düzenleyicinin tüm genişliğini kaplar.  
+Geçerli belge, görünüm açıldığı andaki hâliyle karşılaştırılır; bundan sonra yapılan değişiklikler, bir ortak çalışanınkiler dahil, görünüme yansımaz. İki taraf da, iki dosyadan herhangi biri hangi görünümü korursa korusun, baktığınız Ad görünümünde açılır ve öyle kalır. [Tuvalin ötesinde](./logical-names.md#beyond-the-canvas) bölümüne bakın. Görünüm açıkken açık bir [Gezgin](./explorer.md#when-it-stands-aside) gizlenir, bu yüzden görünüm düzenleyicinin tüm genişliğini kaplar.  
 Her taraf fare tekerleğiyle, boş bir alanı ya da bir tablo grubunun gövdesini sürükleyerek veya üzerinde herhangi bir yerde orta düğmeyle sürükleyerek kaydırılır ve `Ctrl + Wheel` (Windows/Linux), `⌘ + Wheel` (Mac) ya da kıstırma hareketiyle yakınlaştırılır. `70%` ve altındaki yakınlaştırmada tabloları tuvaldeki gibi daralır. [İki taraftaki işaretler](#marks-on-the-two-sides) bölümüne bakın.  
 İki taraf da salt okunurdur, bu yüzden belgenizdeki hiçbir şey değişmez. Her taraf kendi seçimini korur ve orada bir tabloya tıklamak onu yalnızca o tarafta seçer.  
 Görünümü, açılışta gösterdiği `Diff Viewer` bilgi kutusundaki `Close` düğmesiyle ya da `Escape` tuşuyla kapatın.
@@ -360,13 +371,14 @@ Değişiklik sayılanlar:
 - Not: metni, konumu, boyutu ve rengi.
 - Tablo grubu: adı, tuttuğu tablolar, rengi, konumu ve boyutu.
 
-Bu yüzden yalnızca taşınmış, yeniden boyutlandırılmış veya yeniden renklendirilmiş bir tablo, not ya da grup değişmiş sayılır. Konumlar ve boyutlar tam piksel olarak karşılaştırılır, katman sırası ve bir bağlantı çizgisinin tabloya değdiği yer ise hiçbir zaman hesaba katılmaz.
+Bu yüzden yalnızca taşınmış, yeniden boyutlandırılmış veya yeniden renklendirilmiş bir tablo, not ya da grup değişmiş sayılır. Konumlar ve boyutlar tam piksel olarak karşılaştırılır, katman sırası ve bir bağlantı çizgisinin tabloya değdiği yer ise hiçbir zaman hesaba katılmaz.  
+Mantıksal adlar, değer alanı bağlantıları ve [Sözlük](./dictionary.md) sekmesinin sözcükleri, terimleri ve değer alanları karşılaştırılmaz, bu yüzden yalnızca bunlarda yapılan bir değişiklik ne listelenir ne de işaretlenir. Bir değer alanının değiştirdiği veri türü ise sütunun veri türündeki bir değişiklik olarak sayılır.
 
 ### Değişiklik ağacı {#the-change-tree}
 
 Soldaki liste [Gezginin ağacı](./explorer.md#the-tree) gibi çizilir ve yalnızca değişenleri içerir: her biri yalnızca bir satır içerdiğinde gösterilen `Tables`, `Table Groups` ve `Memos` ile bir tablonun altında kendi `Columns`, `Indexes` ve `Foreign Keys` klasörleri. Yabancı anahtar alt tablosunun altında listelenir, eklenmiş ya da kaldırılmış bir tablonun içinde ise hiçbir şey listelenmez.  
 Her klasör kaç satır içerdiğini gösterir ve her klasör ile tablo genişletilmiş olarak başlar.  
-Tablolar ve tablo grupları büyük/küçük harf ayrımı yapmadan ada göre listelenir. Notlar ile bir tablonun sütunları, dizinleri ve yabancı anahtarları geçerli belgenin sırasını korur, kaldırılmış olanlar ise eski yerlerine konur. Not satırında notun ilk satırı, yabancı anahtar satırında ise alt tablo sütunları, ardından `→` ile üst tablo ve onun sütunları yazar, örneğin `user_id → users(id)`. Boş bir adın yerinde italik `unnamed` yazar.
+Bir tablo veya sütun satırı, tarafların açıldığı Ad görünümünde adlandırılır. `Both Names` görünümünde satırda mantıksal ad ve ardından soluk olarak ad yazar; kaldırılmış bir satırda soluk ad da geri kalanıyla birlikte üstü çizili gösterilir. Tablolar ve tablo grupları, görünüm ne olursa olsun büyük/küçük harf ayrımı yapmadan ada göre listelenir. Notlar ile bir tablonun sütunları, dizinleri ve yabancı anahtarları geçerli belgenin sırasını korur, kaldırılmış olanlar ise eski yerlerine konur. Not satırında notun ilk satırı, yabancı anahtar satırında ise alt tablo sütunları, ardından `→` ile üst tablo ve onun sütunları yazar, örneğin `user_id → users(id)`. Boş bir adın yerinde italik `unnamed` yazar.
 
 Her satır bir harfle biter ve `A`, `D`, `M` veya `R` ile işaretlenmiş bir satırın adı o harfin rengindedir:
 
@@ -378,7 +390,7 @@ Her satır bir harfle biter ve `A`, `D`, `M` veya `R` ile işaretlenmiş bir sat
 
 Araç ipucunu görmek için bir satırın adının üzerine gelin: önce durum, yani `Added`, `Deleted`, `Modified`, `Renamed` veya `Changed inside`, ardından her değişiklik için bir satır, örneğin `Name: users → members` veya `NN: ✗ → ✓`. Bir metin, 40 karakterden sonra kesilerek ilk satırıyla alıntılanır ve boş bir değerin yerinde `—` yazar. Eklenmiş veya kaldırılmış bir öğenin araç ipucu yalnızca durumudur.
 
-Ağacın üstündeki `Filter by name` alanı, büyük/küçük harf ayrımı yapmadan, geçerli veya kaydedilmiş adı yazdığınız metni içeren satırları tutar. Adı eşleşen bir tablo tüm satırlarını korur, eşleşmeyen bir tabloda ise yalnızca eşleşen satırlar kalır. Hiçbir şeyle eşleşmeyen bir süzgeç ağacı boş bırakır.  
+Ağacın üstündeki `Filter by name` alanı, her Ad görünümünde büyük/küçük harf ayrımı yapmadan, geçerli veya kaydedilmiş adı ya da geçerli veya kaydedilmiş mantıksal adı yazdığınız metni içeren satırları tutar. Adı eşleşen bir tablo tüm satırlarını korur, eşleşmeyen bir tabloda ise yalnızca eşleşen satırlar kalır. Hiçbir şeyle eşleşmeyen bir süzgeç ağacı boş bırakır.  
 İki belge hiç farklı değilse ağaçta `No changes` yazar.
 
 Ağacı `200px` ile `480px` arasında genişletmek veya daraltmak için sağ kenarını sürükleyin, `260px` genişliğine geri döndürmek için kenara çift tıklayın. Her fark görünümü `260px` genişlikte açılır ve iki taraf genişliğin geri kalanını eşit olarak paylaşır.  
@@ -407,5 +419,7 @@ Her taraf, o tarafta ölçülerek [Atlamanın varış noktası](#where-a-jump-la
 - Dizin değişikliği iki tarafta da hiçbir şeyi işaretlemez; yalnızca ağaçta görünür.
 
 Her taraf kendi belgesinin Görünüm seçeneklerini izler. O tarafın çizmediği bir hücredeki değişiklik bunun yerine adda görünür. İkisi de varsayılan olarak kapalı olan `Unique` veya `Auto Increment` gibi bir Görünüm seçeneğinin gizlediği hücredeki sütun değişikliği sütunun adını kehribar rengine çevirir, anahtar simgesi göstermeyen bir satırdaki birincil anahtar değişikliği de aynısını yapar. `Table Comment` kapalıyken bir tablo açıklaması değişikliği tablonun adını kehribar rengine çevirir. Yeniden adlandırmanın mavisi bu kehribar rengine baskın gelir. Belgesinin gizlediği bir not veya tablo grubu ağaçta listelenir, ancak o tarafta çizilmez.
+
+Ad hücresi çizmeyen `Logical Names` görünümünde, yeniden adlandırmanın mavisi ve tarafın çizmediği bir hücredeki değişikliğin kehribar rengi, adın yerine çizilen mantıksal adda görünür. Bir veri türü değişikliği, hücre bir değer alanının adını gösterse bile her Ad görünümünde tür hücresini kehribar rengine çevirir. İki taraf da Sözlük denetimlerinin tuvaldeki adlara verdiği renkleri çizmez. [Tuvaldeki işaretler](./dictionary.md#marks-on-the-canvas) bölümüne bakın.
 
 `70%` ve altındaki yakınlaştırmada daraltılmış tablolar dış çizgilerini korur. Ad, eklenmiş veya kaldırılmış bir tablonun yeşilini ya da kırmızısını veya yeniden adlandırmanın mavisini korur, aksi hâlde bir açıklama değişikliğinin kehribar rengini alır. Sütun değişiklikleri yeniden yakınlaştırana kadar çizilmez; ağaç onları yine de listeler.

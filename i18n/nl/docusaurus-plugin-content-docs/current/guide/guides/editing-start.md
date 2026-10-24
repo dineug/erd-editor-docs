@@ -77,8 +77,8 @@ Begin een relatie via het contextmenu, via de [canvaswerkbalk](./table-related-f
 - One N: `Ctrl + Alt + 4` (Windows/Linux) of `⌘ + ⌥ + 4` (Mac)
 
 Zodra een type actief is, verandert de cursor. Klik eerst op de oudertabel en daarna op de kindtabel.  
-De oudertabel krijgt een primaire sleutel als ze er geen heeft, en voor elke kolom van de primaire sleutel van de oudertabel krijgt de kindtabel een kolom met refererende sleutel die `Not Null` is, met hetzelfde gegevenstype, dezelfde standaardwaarde en dezelfde opmerking.  
-Een serial-sleutel is de uitzondering: de refererende sleutel ervan krijgt het integertype dat de serial opslaat, zoals `integer` voor `serial4` — zie [Identificerende relaties](./relationship-editing.md#identifying-relationships).  
+De oudertabel krijgt een primaire sleutel als ze er geen heeft, en voor elke kolom van de primaire sleutel van de oudertabel krijgt de kindtabel een kolom met refererende sleutel die `Not Null` is, met hetzelfde gegevenstype, dezelfde standaardwaarde, dezelfde opmerking, dezelfde [logische naam](./logical-names.md) en hetzelfde [domein](./dictionary.md#domains-and-data-types).  
+Een serial-sleutel is de uitzondering: de refererende sleutel ervan krijgt het integertype dat de serial opslaat, zoals `integer` voor `serial4`, en koppelt dan geen domein — zie [Identificerende relaties](./relationship-editing.md#identifying-relationships).  
 Elke kolom met refererende sleutel wordt vernoemd naar de bijbehorende sleutel: een naam van één woord, zoals `id`, krijgt de naam van de oudertabel ervoor (`user_id`), een naam van meerdere woorden, zoals `member_id`, blijft behouden en een naam die de kindtabel al heeft, wordt genummerd (`user_id_2`) — zie [Namen van kolommen met refererende sleutel](./relationship-editing.md#foreign-key-column-names).  
 Als je twee keer op dezelfde tabel klikt, wordt een zelfverwijzende relatie getekend.  
 Een nieuwe relatie begint met `On Delete` en `On Update` allebei op `Not set`; wijzig ze via het contextmenu van de relatie — zie [ON DELETE en ON UPDATE](./relationship-editing.md#on-delete-and-on-update).  
@@ -91,7 +91,8 @@ Als de oudertabel is gekozen en je een tabel aanwijst waarop de relatie kan eind
 
 Ook de oudertabel toont de knoppen zodra de aanwijzer een klein stukje is bewogen vanaf de plek waar je erop klikte, zodat ook een zelfverwijzende relatie aan bestaande kolommen kan worden toegewezen.  
 Een vinger kan niet aanwijzen, dus als je met een vinger tekent, verschijnen de knoppen nooit en tekent een tik op de kindtabel meteen de relatie; een pen toont ze net als een muis.  
-Als de oudertabel haar primaire sleutel kwijt is tegen de tijd dat je bij de kindtabel bent, bijvoorbeeld door ongedaan maken of door een bewerking van een medebewerker, is `Create new columns` gedimd met de knopinfo `<parent> has no primary key to copy`, en beëindigt een klik op de kindtabel het tekenen zonder iets te tekenen.
+Als de oudertabel haar primaire sleutel kwijt is tegen de tijd dat je bij de kindtabel bent, bijvoorbeeld door ongedaan maken of door een bewerking van een medebewerker, is `Create new columns` gedimd met de knopinfo `<parent> has no primary key to copy`, en beëindigt een klik op de kindtabel het tekenen zonder iets te tekenen.  
+De knopinfo noemt de oudertabel zoals de [naamweergave](./logical-names.md#beyond-the-canvas) dat doet.
 
 ![Een One N-relatie tekenen met ⌘ + ⌥ + 4 en daarna een Zero N-relatie via de canvaswerkbalk, waarbij de kindtabel is omlijnd en de knoppen Map to existing columns en Create new columns toont](/img/demo-relationship.webp)
 

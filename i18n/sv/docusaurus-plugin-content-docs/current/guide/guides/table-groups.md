@@ -1,5 +1,5 @@
 ---
-sidebar_position: 5
+sidebar_position: 6
 description: Samla relaterade tabeller i en namngiven, färgad ruta bakom dem; skapa, namnge, färglägg, flytta, ändra storlek på och ta bort grupper, gå till dem från utforskaren, ändra vilka tabeller de innehåller, dölj dem och behåll dem i automatisk layout, Schema SQL och DBML.
 ---
 

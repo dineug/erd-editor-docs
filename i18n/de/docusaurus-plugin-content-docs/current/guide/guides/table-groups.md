@@ -1,5 +1,5 @@
 ---
-sidebar_position: 5
+sidebar_position: 6
 description: Zusammengehörige Tabellen in einem benannten, farbigen Rahmen hinter ihnen sammeln; Gruppen erstellen, benennen, einfärben, verschieben, in der Größe ändern und entfernen, vom Explorer aus zu ihnen wechseln, ändern, welche Tabellen sie enthalten, sie ausblenden und sie im Automatischen Layout, in Schema SQL und in DBML beibehalten.
 ---
 

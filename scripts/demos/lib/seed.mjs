@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 
-import { DEMOS_DIR, ERD_EDITOR_DIR, sleep } from './recorder.mjs';
+import { DEMOS_DIR, ERD_EDITOR_DIR, sleep, withLists } from './recorder.mjs';
 
 /** A seed from scripts/demos/seeds, or one of erd-editor's own data/ fixtures. */
 export function readSeed(file) {
@@ -13,8 +13,8 @@ export function readSeed(file) {
   }
 }
 
-const readDoc = page =>
-  page.evaluate(() => JSON.parse(document.querySelector('erd-editor').value));
+const readDoc = async page =>
+  withLists(await page.evaluate(() => JSON.parse(document.querySelector('erd-editor').value)));
 
 /**
  * Imports Schema SQL the way a user would, waits for the automatic placement

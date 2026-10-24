@@ -53,7 +53,8 @@ Een VS Code-venster bedient de diagrammen in zijn werkruimtemappen en elk diagra
 2. Open de projectmap en vertrouw de werkruimte. De extensie bedient agents alleen in een vertrouwde werkruimte.
 3. Laat de instelling `dineug.erd-editor.agentHub.enabled` aanstaan. Die staat standaard aan.
 
-Een extensie van `3.0.0` tot en met `3.1.0` en server `1.0.0` weigeren elkaar, en een extensie vóór `3.0.0` bedient geen agents — zie [Bijwerken](#updating).
+Een extensie van `3.0.0` tot en met `3.1.0` en server `1.0.0` of later weigeren elkaar, en een extensie vóór `3.0.0` bedient geen agents.
+Een extensie `4.0.0` of `4.1.0` maakt verbinding, maar toont noch behoudt de logische namen, domeinkoppelingen en woordenboekrijen die de agent schrijft — zie [Bijwerken](#updating).
 
 De extensie start in een werkruimte die `.erd`-, `.erd.json`-, `.vuerd`- of `.vuerd.json`-bestanden bevat, zodat een agent die diagrammen bereikt voordat je er een opent.
 In een werkruimte zonder zulke bestanden start de extensie wanneer je een diagram opent, en tot dan bewerkt de agent op schijf.
@@ -69,7 +70,8 @@ Een venster van een Obsidian-kluis bedient de diagrammen in die kluis.
 1. Installeer de [ERD Editor-plug-in](https://community.obsidian.md/plugins/erd-editor) `1.0.0` of later vanuit Community plugins en schakel die in. De plug-in draait alleen in de desktopapp en heeft Obsidian `1.5.7` of later nodig.
 2. Laat Settings → ERD Editor → Coding agents aanstaan. Die staat standaard aan, en elke kluis heeft zijn eigen instelling.
 
-Een eerdere plug-in en server `1.0.0` weigeren elkaar — zie [Bijwerken](#updating).
+Een plug-in vóór `1.0.0` en server `1.0.0` of later weigeren elkaar.
+Een plug-in `1.0.0` of `1.1.0` maakt verbinding, maar toont noch behoudt de logische namen, domeinkoppelingen en woordenboekrijen die de agent schrijft — zie [Bijwerken](#updating).
 
 Een kluisvenster bedient agents vanaf het moment dat de plug-in wordt geladen, zodat een agent de diagrammen van de kluis bereikt voordat je er een opent.
 Er is geen vertrouwensstap.
@@ -95,7 +97,8 @@ Een JetBrains-IDE bedient de diagrammen van elk project dat erin geopend is, en 
 2. Open het project en vertrouw het. In een project dat de IDE niet vertrouwt, zoals een project dat in de veilige modus is geopend, lezen agents de diagrammen, maar wijzigen ze die nooit.
 3. Laat Settings | Tools | ERD Editor → Coding agents aangevinkt. Die staat standaard aan en geldt voor de hele IDE.
 
-Een plug-in `0.9.0` of `0.10.0` en server `1.0.0` weigeren elkaar, en een plug-in vóór `0.9.0` bedient geen agents — zie [Bijwerken](#updating).
+Een plug-in `0.9.0` of `0.10.0` en server `1.0.0` of later weigeren elkaar, en een plug-in vóór `0.9.0` bedient geen agents.
+Een plug-in `1.0.0` of `1.1.0` maakt verbinding, maar toont noch behoudt de logische namen, domeinkoppelingen en woordenboekrijen die de agent schrijft — zie [Bijwerken](#updating).
 
 De IDE bedient agents vanaf het moment dat het eerste project wordt geopend, zodat een agent de diagrammen van een project bereikt voordat je er een opent.
 
@@ -125,19 +128,26 @@ De server controleert welke protocolversie de editor gebruikt voordat hij verbin
 Als de twee verschillen, wordt elke aanroep die bij die editor aankomt, geweigerd met `protocolMismatch`, leesopdrachten en `erd_list_documents` inbegrepen, en wordt er niets geschreven.
 Het bericht noemt de kant die moet worden bijgewerkt: de server, of de ERD Editor in de editor, wat in VS Code de extensie is en in Obsidian en een JetBrains-IDE de plug-in.
 
-Server `1.0.0`, de VS Code-extensie `4.0.0` of later, de Obsidian-plug-in `1.0.0` of later en de JetBrains-plug-in `1.0.0` of later gebruiken protocol 2.
+Server `1.0.0` of later, de VS Code-extensie `4.0.0` of later, de Obsidian-plug-in `1.0.0` of later en de JetBrains-plug-in `1.0.0` of later gebruiken protocol 2.
 Elke eerdere server gebruikt protocol 1, en dat geldt ook voor elke eerdere editorversie die agents bedient: de VS Code-extensie `3.0.0` tot en met `3.1.0`, de Obsidian-plug-in `0.1.0` en `0.2.0` en de JetBrains-plug-in `0.9.0` en `0.10.0`.
-Zo'n editor en server `1.0.0` weigeren elkaar, en dat doen ook een eerdere server en een editor die protocol 2 gebruikt.
+Zo'n editor en server `1.0.0` of later weigeren elkaar, en dat doen ook een eerdere server en een editor die protocol 2 gebruikt.
 Een VS Code-extensie vóór `3.0.0` of een JetBrains-plug-in vóór `0.9.0` bedient helemaal geen agents, dus bewerkt de agent de bestanden op schijf, zelfs een diagram dat erin geopend is.
 
 | Combinatie | Het bericht eindigt met |
 | --- | --- |
-| Server `1.0.0` met een extensie of plug-in die protocol 1 gebruikt | `Update the ERD Editor extension or plugin in the editor until its hub speaks protocol 2.` |
+| Server `1.0.0` of later met een extensie of plug-in die protocol 1 gebruikt | `Update the ERD Editor extension or plugin in the editor until its hub speaks protocol 2.` |
 | Een eerdere server met een extensie of plug-in die protocol 2 gebruikt | `Update the MCP server (npx -y @dineug/erd-editor-mcp@latest) until it speaks protocol 2.` |
 
 Werk de server en de extensie of plug-in samen bij.
+Een server en een editor die hetzelfde protocol gebruiken, maken verbinding, welke van de twee ook ouder is, maar alleen server `1.1.0` of later heeft tools voor logische namen, domeinen en de woordenboeken — zie [Woordenboeken](./tools.md#dictionaries).
+Alleen de VS Code-extensie `4.2.0` of later en de Obsidian- en JetBrains-plug-ins `1.2.0` of later tonen en behouden de logische namen, domeinkoppelingen en woordenboekrijen die deze tools schrijven.
+Een eerdere extensie of plug-in die verbinding maakt, negeert ze, al slaagt de aanroep van de agent wel.
+Wel past die nog steeds de fysieke namen toe die de woordenboeken afleiden en de gegevenstypen die de domeinen geven.
+Een server vóór `1.1.0` leest een bestand zonder de logische namen, domeinkoppelingen en woordenboekrijen ervan, en laat ze weg wanneer hij het bestand op schijf bewerkt — zie [Headless](./live-and-headless.md#headless).
+
 Werk ERD Editor ook bij overal waar de diagrammen worden geopend.
-De VS Code-extensie vóór `4.0.0`, de Obsidian-plug-in vóór `1.0.0` en de JetBrains-plug-in vóór `1.0.0` tonen een diagram dat een latere versie heeft opgeslagen, of dat de agent op schijf heeft bewerkt, zonder de pictogrammen voor primaire sleutels.
-Wanneer ze het bestand opslaan, laten ze de tabelgroepen en Schema SQL-scripts ervan weg.
+De VS Code-extensie vóór `4.2.0`, de Obsidian-plug-in vóór `1.2.0` en de JetBrains-plug-in vóór `1.2.0` openen een diagram dat een latere versie heeft opgeslagen, of dat de agent op schijf heeft bewerkt, zonder de logische namen van de tabellen en kolommen, de domeinkoppelingen van de kolommen en de woorden, termen en domeinen ervan.
+Wanneer ze het bestand opslaan, laten ze die weg.
+De VS Code-extensie vóór `4.0.0`, de Obsidian-plug-in vóór `1.0.0` en de JetBrains-plug-in vóór `1.0.0` tonen zo'n diagram bovendien zonder de pictogrammen voor primaire sleutels, en laten de tabelgroepen en Schema SQL-scripts ervan weg wanneer ze het bestand opslaan.
 De VS Code-extensie vóór `3.1.0`, de Obsidian-plug-in vóór `0.2.0` en de JetBrains-plug-in vóór `0.10.0` laten bij het opslaan van het bestand ook de ON DELETE- en ON UPDATE-acties van een diagram weg.
 Start in Obsidian de app opnieuw na het bijwerken van de plug-in: tot dan blijft een kluisvenster de ERD Editor uitvoeren van de plug-inversie die het als eerste heeft geladen.

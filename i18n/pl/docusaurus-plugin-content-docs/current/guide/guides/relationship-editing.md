@@ -1,6 +1,6 @@
 ---
-sidebar_position: 6
-description: Usuwanie relacji, zmiana jej typu, ustawianie akcji ON DELETE i ON UPDATE, mapowanie relacji na istniejące kolumny w oknie dialogowym „Mapuj kolumny”, odczytywanie notacji łącznika, praca z relacjami N:M i identyfikującymi oraz sposób nazywania nowych kolumn kluczy obcych.
+sidebar_position: 7
+description: Usuwanie relacji, zmiana jej typu, ustawianie akcji ON DELETE i ON UPDATE, mapowanie relacji na istniejące kolumny w oknie dialogowym „Mapuj kolumny”, odczytywanie notacji łącznika, praca z relacjami N:M i identyfikującymi oraz sprawdzanie, co nowe kolumny kluczy obcych kopiują ze swojego klucza i jak są nazywane.
 ---
 
 # Edycja relacji
@@ -85,6 +85,9 @@ Okno dialogowe można otworzyć na dwa sposoby:
 
 Podtytuł okna dialogowego podaje obie tabele i typ relacji, na przykład `users → posts · One N`. Typ jest tu widoczny, ale nie da się go tu zmienić – aby go zmienić, zobacz sekcję [Zmiana typu](#type-change).
 
+W całym oknie dialogowym, łącznie z komunikatami i dopiskami pod wierszami oraz powiadomieniem, z którym okno się zamyka, tabele i kolumny są nazywane tak, jak nazywa je [Widok nazw](./logical-names.md#beyond-the-canvas).  
+Trzy rzeczy pozostają w postaci fizycznej: każdy typ danych, który jest własnym typem kolumny, a nigdy nazwą jej domeny; pozycja `New column: <name>`, która pokazuje nazwę, jaką otrzyma nowa kolumna; oraz wiersze, które okno z przyciskiem `Map` od razu wypełnia, łącząc je w pary według nazwy, nigdy według nazwy logicznej.
+
 Pole `References` określa klucz, na który wskazuje relacja: `Primary Key` z kolumnami w kolejności występowania w tabeli, a następnie `Unique: <column>` dla każdej kolumny oznaczonej opcją `Unique`. Pole jest widoczne tylko wtedy, gdy do wyboru jest więcej niż jedna możliwość.  
 Indeks unikatowy nie jest tu traktowany jako klucz, a kolumna z opcją `Unique`, która stanowi cały klucz podstawowy, nie pojawia się na liście dwukrotnie.  
 Wybór innego klucza tworzy wiersze od nowa. Wiersz zachowuje wybraną kolumnę, dopóki ta kolumna nadal jest w tabeli podrzędnej.
@@ -121,10 +124,10 @@ Jeśli w tym czasie zmienią się kolumny relacji lub klucz, z którym okno zost
 Co zapisują przyciski `Map` i `Save`:
 
 - Przycisk `Map` dodaje relację z pozycjami `On Delete` i `On Update` ustawionymi na `Not set`. Przycisk `Save` zmienia tylko kolumny relacji, kierując jej stronę nadrzędną na klucz wybrany w polu `References`, i zachowuje jej typ oraz akcje ON DELETE i ON UPDATE.
-- Wiersz `New column` dodaje kolumnę na końcu tabeli podrzędnej, tak samo jak rysowanie relacji: z flagą `NOT NULL`, z nazwą utworzoną od klucza, z typem danych, wartością domyślną i komentarzem klucza – zobacz sekcję [Relacje identyfikujące](#identifying-relationships).
-- Nazwa wybranej kolumny nigdy się nie zmienia, a jej flaga `Not Null`, klucz podstawowy, flaga `Unique`, wartość domyślna i komentarz pozostają bez zmian. Jej typ danych zmienia się tylko wtedy, gdy ustawienie `Relationship DataType Sync` jest włączone, a kolumna tabeli nadrzędnej ma typ danych: kolumna przyjmuje typ, który kolumna tabeli nadrzędnej nadaje kluczowi obcemu, czyli dla klucza typu serial typ całkowity, tak jak nowa kolumna, a zmiana przenosi się dalej wzdłuż relacji w taki sam sposób jak przy synchronizacji.
+- Wiersz `New column` dodaje kolumnę na końcu tabeli podrzędnej, tak samo jak rysowanie relacji: z flagą `NOT NULL`, z nazwą utworzoną od klucza, z typem danych, wartością domyślną, komentarzem, nazwą logiczną i domeną klucza – zobacz sekcję [Relacje identyfikujące](#identifying-relationships).
+- Wybrana kolumna nigdy nie zmienia nazwy ani nie zostaje powiązana z domeną klucza, a jej flaga `Not Null`, klucz podstawowy, flaga `Unique`, wartość domyślna, komentarz i nazwa logiczna pozostają bez zmian. Jej typ danych zmienia się tylko wtedy, gdy ustawienie `Relationship DataType Sync` jest włączone, a kolumna tabeli nadrzędnej ma typ danych: kolumna przyjmuje typ, który kolumna tabeli nadrzędnej nadaje kluczowi obcemu, czyli dla klucza typu serial typ całkowity, tak jak nowa kolumna, a zmiana przenosi się dalej wzdłuż relacji w taki sam sposób jak przy synchronizacji. Każda kolumna, której zmiana nadaje nowy typ, wybrana lub osiągnięta wzdłuż relacji, jest odłączana od swojej [domeny](./dictionary.md#domains-and-data-types), gdy jej nowy typ różni się od typu domeny.
 - Kolumna, której mapowanie przestaje używać, pozostaje w tabeli podrzędnej i przestaje być oznaczona jako klucz obcy, chyba że kończy się na niej jeszcze inna relacja.
-- Wszystko, co zapisuje jedno użycie przycisku `Map` lub `Save`, łącznie z nowymi kolumnami i zmianami typów, stanowi jeden krok cofania.
+- Wszystko, co zapisuje jedno użycie przycisku `Map` lub `Save` – łącznie z nowymi kolumnami, zmianami typów i odłączeniami od domen – stanowi jeden krok cofania.
 
 To, czy relacja jest identyfikująca i jak rysowany jest jej koniec przy tabeli nadrzędnej, wynika ze zmapowanych kolumn tabeli podrzędnej, tak jak w przypadku każdej relacji. Mapowanie na kolumny klucza podstawowego tabeli podrzędnej od razu czyni relację identyfikującą, a mapowanie na kolumnę dopuszczającą wartość `NULL` umieszcza kółko na końcu przy tabeli nadrzędnej – zobacz sekcję [Odczytywanie łącznika](#reading-a-connector).  
 Klucz obcy w Schemacie SQL odwołuje się do wybranego klucza, na przykład `REFERENCES vehicle (vin)` dla klucza `Unique`.
@@ -156,9 +159,10 @@ Zobacz stronę [Importowanie i eksportowanie plików](./file-import-export.md).
 ## Relacje identyfikujące {#identifying-relationships}
 
 Narysowanie relacji przez kliknięcie tabeli podrzędnej lub za pomocą przycisku `Create new columns` kopiuje każdy klucz podstawowy tabeli nadrzędnej do tabeli podrzędnej jako kolumnę klucza obcego z flagą `NOT NULL`, więc nowa relacja jest początkowo nieidentyfikująca.  
-Kopia przejmuje typ danych, wartość domyślną i komentarz klucza, ale nie flagi `Unique` ani `Auto Increment`, a jej nazwa powstaje zgodnie z opisem w sekcji [Nazwy kolumn kluczy obcych](#foreign-key-column-names).  
+Kopia przejmuje typ danych, wartość domyślną, komentarz i nazwę logiczną klucza, ale nie flagi `Unique` ani `Auto Increment`, a jej nazwa powstaje zgodnie z opisem w sekcji [Nazwy kolumn kluczy obcych](#foreign-key-column-names).  
 Wyjątkiem co do typu danych jest klucz typu serial: jego kopia przyjmuje typ całkowity, który przechowuje typ serial. W każdej bazie danych `smallserial` i `serial2` dają `smallint`, `serial4` daje `integer`, a `bigserial` i `serial8` dają `bigint`. Sam typ `serial` daje `integer` w PostgreSQL i `bigint unsigned` w MySQL oraz MariaDB, a w każdej innej bazie danych pozostaje typem `serial`.  
 Liczy się tylko cała nazwa typu, bez uwzględniania wielkości liter, więc typ `serial(4)` jest kopiowany w niezmienionej postaci. Typ zapisany wielkimi literami daje wielkie litery: `SERIAL` daje `INTEGER` w PostgreSQL. Kolumna klucza obcego, która w zapisanym diagramie ma już typ `serial`, zachowuje ten typ.  
+Kopia zostaje też powiązana z [domeną](./dictionary.md#domains-and-data-types) klucza, pod warunkiem że w chwili tworzenia kopii arkusz `Domains` zawiera tę domenę, a kopia zachowuje typ danych klucza. Dlatego kopia klucza typu serial, która przyjmuje typ całkowity, nie jest powiązana z żadną domeną, natomiast kopia klucza z samym typem `serial`, która zachowuje typ `serial`, jest z nią powiązana.  
 Aby relacja stała się identyfikująca, ustaw te kolumny kluczy obcych w tabeli podrzędnej jako klucze podstawowe: zaznacz je wszystkie i naciśnij raz `Alt + K` (Windows/Linux) lub `⌥ + K` (Mac) albo wybierz w menu kontekstowym tabeli pozycję `Primary Key`, która przy zaznaczeniu dwóch lub więcej kolumn nosi nazwę `Primary Key on selected columns` – zobacz sekcję [Klucz podstawowy kolumny](./table-editing.md#column-primary-key).
 
 ![Włączanie i wyłączanie klucza podstawowego dla product_id skrótem Alt + K, przez co łącznik staje się ciągły, a potem przerywany](/img/demo-identifying-relationship.webp)
@@ -193,7 +197,10 @@ Dotyczy to również klucza podstawowego, który edytor dodaje do tabeli nadrzę
 Nazwy są ustalane podczas rysowania relacji. Późniejsza zmiana nazwy tabeli nadrzędnej lub jej klucza nie zmienia ich nazw.  
 Wiersze `New column` w oknie dialogowym [Mapuj kolumny](#map-columns) są nazywane według tych samych zasad, a lista pokazuje każdą nazwę, zanim ją wybierzesz.  
 Relacje, które pojawiają się z gotowymi kolumnami – z importu, wklejenia, duplikowania lub z okna dialogowego „Mapuj kolumny” łączącego w pary istniejące kolumny – zachowują nazwy tych kolumn.  
-Agent kodujący, który dodaje relację narzędziem `erd_add_relationship`, otrzymuje te same nazwy i typy danych – zobacz stronę [Narzędzia](../../mcp/tools.md#relationships).
+Agent kodujący, który dodaje relację narzędziem `erd_add_relationship`, otrzymuje te same nazwy, typy danych, nazwy logiczne i domeny – zobacz stronę [Narzędzia](../../mcp/tools.md#relationships).
+
+Nazwa kolumny klucza obcego powstaje od jej klucza, nigdy od kopiowanej nazwy logicznej, i jest traktowana jako wpisana samodzielnie: nazwa logiczna wpisana później w kolumnie pozostawia nazwę bez zmian, chyba że nazwa jest pusta – zobacz sekcję [Własne nazwy](./dictionary.md#names-of-your-own).  
+Dlatego dopóki skopiowana nazwa logiczna pasuje do terminu, który nadaje inną nazwę, arkusz `Checks` wyświetla tę kolumnę przy kontroli [`Physical name mismatch`](./dictionary.md#what-each-check-finds). Ponowne wygenerowanie jej nazwy fizycznej zmienia jej nazwę na podstawie słowników, chyba że inna kolumna tabeli podrzędnej ma już nazwę, którą one nadają, bez uwzględniania wielkości liter – zobacz sekcję [Wygeneruj ponownie nazwy fizyczne](./dictionary.md#derive-physical-names-again).
 
 ## Odczytywanie łącznika {#reading-a-connector}
 

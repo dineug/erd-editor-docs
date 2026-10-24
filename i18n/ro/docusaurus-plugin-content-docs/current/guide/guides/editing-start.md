@@ -77,8 +77,8 @@ Denumirea, colorarea, mutarea, redimensionarea și celelalte operații sunt desc
 - One N: `Ctrl + Alt + 4` (Windows/Linux) sau `⌘ + ⌥ + 4` (Mac)
 
 Odată ce trasarea unui tip este activă, cursorul se schimbă. Faceți clic mai întâi pe tabelul părinte, apoi pe tabelul copil.  
-Tabelul părinte primește o cheie primară dacă nu are niciuna, iar pentru fiecare coloană cheie primară a părintelui, tabelul copil primește o coloană cheie străină `Not Null` cu același tip de date, aceeași valoare implicită și același comentariu.  
-O cheie de tip serial face excepție: cheia străină corespunzătoare primește tipul întreg pe care îl stochează tipul serial, de exemplu `integer` pentru `serial4` (consultați [Relații identificatoare](./relationship-editing.md#identifying-relationships)).  
+Tabelul părinte primește o cheie primară dacă nu are niciuna, iar pentru fiecare coloană cheie primară a părintelui, tabelul copil primește o coloană cheie străină `Not Null` cu același tip de date, aceeași valoare implicită, același comentariu, același [nume logic](./logical-names.md) și același [domeniu](./dictionary.md#domains-and-data-types).  
+O cheie de tip serial face excepție: cheia străină corespunzătoare primește tipul întreg pe care îl stochează tipul serial, de exemplu `integer` pentru `serial4`, și apoi nu leagă niciun domeniu (consultați [Relații identificatoare](./relationship-editing.md#identifying-relationships)).  
 Fiecare coloană cheie străină este denumită după cheia sa: un nume dintr-un singur cuvânt, de exemplu `id`, primește în față numele tabelului părinte (`user_id`), un nume din mai multe cuvinte, de exemplu `member_id`, se păstrează, iar un nume pe care tabelul copil îl are deja primește un număr, ca în `user_id_2` (consultați [Numele coloanelor cheie străină](./relationship-editing.md#foreign-key-column-names)).  
 Două clicuri pe același tabel trasează o relație autoreferențială.  
 O relație nouă pornește cu `On Delete` și `On Update` setate amândouă pe `Not set`; modificați-le din meniul ei contextual (consultați [ON DELETE și ON UPDATE](./relationship-editing.md#on-delete-and-on-update)).  
@@ -91,7 +91,8 @@ După ce ați ales tabelul părinte, trecerea indicatorului peste un tabel la ca
 
 Și tabelul părinte afișează butoanele, odată ce indicatorul s-a deplasat puțin față de locul în care ați făcut clic pe el, astfel încât și o relație autoreferențială poate fi mapată pe coloane existente.  
 Degetul nu are o stare de trecere a indicatorului, așa că atunci când trasați cu el, butoanele nu apar niciodată, iar o atingere pe tabelul copil trasează imediat relația; un stilou le afișează la fel ca un mouse.  
-Dacă, până ajungeți la tabelul copil, tabelul părinte și-a pierdut cheia primară, de exemplu în urma unei anulări sau a unei editări făcute de un colaborator, butonul `Create new columns` este estompat și are sfatul ecran `<parent> has no primary key to copy`, iar un clic pe tabelul copil încheie trasarea fără a trasa nimic.
+Dacă, până ajungeți la tabelul copil, tabelul părinte și-a pierdut cheia primară, de exemplu în urma unei anulări sau a unei editări făcute de un colaborator, butonul `Create new columns` este estompat și are sfatul ecran `<parent> has no primary key to copy`, iar un clic pe tabelul copil încheie trasarea fără a trasa nimic.  
+Sfatul ecran numește tabelul părinte așa cum o face [modul de afișare a numelor](./logical-names.md#beyond-the-canvas).
 
 ![Trasarea unei relații One N cu ⌘ + ⌥ + 4, apoi a uneia Zero N din bara de instrumente a pânzei, cu tabelul copil conturat și butoanele sale Map to existing columns și Create new columns](/img/demo-relationship.webp)
 

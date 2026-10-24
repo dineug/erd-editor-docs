@@ -1,5 +1,5 @@
 ---
-sidebar_position: 5
+sidebar_position: 6
 description: Grupați tabelele înrudite într-un chenar denumit și colorat, așezat în spatele lor; creați, denumiți, colorați, mutați, redimensionați și eliminați grupuri, mergeți la ele din explorator, schimbați tabelele pe care le conțin, ascundeți-le și păstrați-le în aranjarea automată, în fila Schemă SQL și în DBML.
 ---
 

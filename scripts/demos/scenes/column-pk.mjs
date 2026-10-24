@@ -24,8 +24,9 @@ export default {
   width: 800,
   height: 420,
   async setup(d) {
+    // x 36 leaves room for the drag handle beside the focused row.
     await seedSQL(d, SQL, {
-      tables: { order_items: { x: 20, y: 14 } },
+      tables: { order_items: { x: 36, y: 14 } },
       settings: { databaseName: 'shop', zoomLevel: 1.4 },
     });
     await d.moveTo(PARK.x, PARK.y, 50);

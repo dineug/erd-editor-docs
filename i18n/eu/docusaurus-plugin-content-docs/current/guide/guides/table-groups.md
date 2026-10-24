@@ -1,5 +1,5 @@
 ---
-sidebar_position: 5
+sidebar_position: 6
 description: Bildu erlazionatutako taulak izena eta kolorea dituen koadro batean, haien atzean; sortu taldeak, eman izena eta kolorea, mugitu, tamainaz aldatu eta kendu, joan haietara Arakatzailetik, aldatu zer taula dituzten, ezkutatu, eta mantendu Antolaketa automatikoan, SQL eskeman eta DBMLn.
 ---
 

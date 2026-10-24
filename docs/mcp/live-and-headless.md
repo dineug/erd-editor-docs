@@ -13,9 +13,9 @@ What the server finds decides where the edit goes.
 | What it finds | What an edit does |
 | --- | --- |
 | An editor whose workspace, vault, or open project contains the document, or that has it open | **Live.** Opens the document in the ERD Editor if needed, joins the editing session, and applies the change there. Edits appear at once and are saved as the editor saves your own — see [Saving](#saving). |
-| No editor | **Headless.** Loads the file, applies the change, and replaces the file. `erd_save` has nothing to do. |
+| No editor | **Headless.** Loads the file, applies the change, and replaces the file before it answers, so the result says `saved: true` and `erd_save` has nothing to do. |
 | An editor with its hub off | **Refused.** Reads still work, from disk. A change written to the file under an open editor could be overwritten by its next save, so the server writes nothing. |
-| An editor whose hub is on but speaks a protocol other than the server's: with server `1.0.0`, a VS Code extension `3.x`, an Obsidian plugin `0.x`, or a JetBrains plugin `0.9.0` or `0.10.0`; with a server before `1.0.0`, the extension `4.0.0` or later, or a plugin `1.0.0` or later | **Refused**, reads included, with `protocolMismatch`. The message names the side to update: the extension or plugin, or the server — see [Updating](./installation.md#updating). |
+| An editor whose hub is on but speaks a protocol other than the server's: with server `1.0.0` or later, a VS Code extension `3.x`, an Obsidian plugin `0.x`, or a JetBrains plugin `0.9.0` or `0.10.0`; with a server before `1.0.0`, the extension `4.0.0` or later, or a plugin `1.0.0` or later | **Refused**, reads included, with `protocolMismatch`. The message names the side to update: the extension or plugin, or the server — see [Updating](./installation.md#updating). |
 | On Windows, an editor that holds the document under another path to the same file: the agent named it through a network share or a mapped drive of this computer, such as `\\localhost\C$\…`, and the editor holds it by its drive path, or the other way round | **Refused**, reads included, with `invalidPath`. The message names the path the editor holds the document by; call again with that path. |
 | On Windows, an editor Windows keeps the agent out of: one started as administrator when the agent was not, or any editor when the agent runs in a sandbox | **Refused**, reads included, with `hubUnreachable` and a message that says why. Run the editor and the agent with the same rights, for example by starting the editor again without administrator rights. |
 
@@ -35,6 +35,8 @@ Its edits reach every editor open on the document at once, and its focus is draw
 
 A read never opens an editor. An edit opens the document in the ERD Editor when it is not open yet, without taking the keyboard focus.
 
+An editor with a VS Code extension before `4.2.0`, or an Obsidian or JetBrains plugin before `1.2.0`, still takes the agent's edits live, but it neither shows nor keeps the logical names, domain links, and dictionary rows the agent writes — see [Updating](./installation.md#updating).
+
 ### Saving
 
 Each editor saves the agent's edits the way it saves your own.
@@ -51,7 +53,7 @@ In both, `erd_save` writes them at once.
 It is refused with `notSaved` when the editor could not confirm that, or did not write the file: VS Code keeps a tab unsaved when the file changed on disk, and a JetBrains IDE could not write it, such as while a dialog was open or when the file cannot be written.
 
 In VS Code and a JetBrains IDE, `erd_save` on a document with nothing left to save succeeds and leaves the file as it is.
-That is the case once every edit is saved, which a JetBrains IDE does on its own, and it stays so while every later change is one a [lock](../guide/guides/settings.md#lock) keeps out of the file, such as scrolling or zooming with `Viewport` locked, or switching tabs with `Canvas Type` locked. Every lock is on by default.
+That is the case once every edit is saved, which a JetBrains IDE does on its own, and it stays so while every later change is one a [lock](../guide/guides/settings.md#lock) keeps out of the file, such as scrolling or zooming with `Viewport` locked, switching tabs with `Canvas Type` locked, or switching the [Name View](../guide/guides/logical-names.md#name-view) with `Name View` locked. Every lock is on by default.
 A file a JetBrains IDE cannot write is refused even then.
 
 When the editor closes the document after the agent's last edit, the agent's next call carries a note that those edits are in the file only if they were saved before the editor closed.
@@ -63,7 +65,7 @@ The editor's own [Undo](../guide/guides/undo-redo.md) works the other way round:
 
 A few edits make no undo entry in the editor: `erd_set_database` and `erd_set_database_name` among the [settings tools](./tools.md#settings), and `erd_resize_memo`.
 Neither does an `erd_move_table_group` that moves the group less than 20 pixels in all, across and down added together, though the group stays where it moved.
-A call that changes nothing makes none either: `erd_set_column_primary_key`, `erd_set_column_unique`, `erd_set_column_not_null`, `erd_set_column_auto_increment`, `erd_set_index_unique`, or `erd_set_index_column_order` setting a value the document already holds; `erd_add_index_column` with a column already in the index; `erd_set_table_group` with tables already in that group (or already in none, with `groupId` `null`); `erd_move_table_group` to the point where the group already stands; `erd_resize_table_group` to the rect the group already has; `erd_sort_tables` on a document with no table; or an import with `mode` `append` that brings no table (for `erd_import_json`, no table and no memo).
+A call that changes nothing makes none either: `erd_set_column_primary_key`, `erd_set_column_unique`, `erd_set_column_not_null`, `erd_set_column_auto_increment`, `erd_set_index_unique`, or `erd_set_index_column_order` setting a value the document already holds; `erd_add_index_column` with a column already in the index; `erd_set_table_group` with tables already in that group (or already in none, with `groupId` `null`); `erd_move_table_group` to the point where the group already stands; `erd_resize_table_group` to the rect the group already has; `erd_sort_tables` on a document with no table; `erd_set_table_logical_name` or `erd_set_column_logical_name` with the logical name the table or column already holds, when deriving from it would change nothing; `erd_set_column_domain` with the domain the column already links, when the column already has that domain's type and [Relationship DataType Sync](../guide/guides/settings.md#relationship-datatype-sync) would retype no column along its relationships; `erd_update_word`, `erd_update_term`, or `erd_update_domain` with only values the row already holds, unless a term that holds no physical name is passed its `name` and its words compose one; `erd_derive_physical_names` when every name it covers that has a logical name already holds what the [dictionaries](./tools.md#dictionaries) give it and is marked derived; or an import with `mode` `append` that brings no table (for `erd_import_json`, no table and no memo).
 `erd_undo` passes over these and names them in its result.
 Other edits, such as `erd_change_relationship_type`, `erd_change_relationship_on_delete`, `erd_change_relationship_on_update`, `erd_change_table_group_name`, `erd_change_table_group_color`, and `erd_set_ddl_script`, make an entry even when they set a value the document already holds.
 
@@ -91,7 +93,7 @@ A read that cannot connect to an editor's hub is refused with `hubUnreachable`, 
 
 ## Headless
 
-With no editor serving the document, each edit loads the file, applies the change, and writes the file back.
+With no editor serving the document, each edit loads the file, applies the change, and writes the file back before it answers, so its result says `saved: true` — see [Results](./tools.md#results).
 The write goes to a temporary file beside the document, named `.<name>.<id>.tmp`, which then replaces it, so the document is never left half written, except on Windows in the in-place case described below.
 
 Before that last step the server checks whether the file changed on disk during the call.
@@ -107,6 +109,8 @@ On Windows two more rules apply:
 
 - A document with permissions of its own, unlike its folder's, is written in place instead of replaced, so that it keeps them, and the temporary file is removed afterwards. A program that reads the document during that write can find text that does not parse.
 - A file that another program holds open cannot be replaced, so the server tries again for up to two seconds. Each try first looks for an editor again, and an editor that started serving the document meanwhile refuses the write with `hubAppeared`, or with `blocked` when its hub is off. If the file is still held after two seconds, nothing is written, the file is loaded again, and the call fails with a message that quotes the system error.
+
+A server before `1.1.0` reads a document without its logical names, its columns' domain links, and its words, terms, and domains, so the first edit it writes to the file leaves them out. Update the server — see [Updating](./installation.md#updating).
 
 ## Refused
 
@@ -130,7 +134,7 @@ A VS Code extension before `3.0.0` and a JetBrains plugin before `0.9.0` keep no
 
 A document is named by `path`, absolute or relative to the server's working directory.
 
-- New documents are `.erd.json`. `erd_open_document` with `create` makes the file, adding `.erd.json` to a name that has no extension. Like a new diagram in the editor, the new document has every [lock](../guide/guides/settings.md#lock) on, so scrolling, zooming, switching tabs, or picking another Code Generator language, name case, or bracket type in an editor never changes the file. No tool turns a single lock on or off: you do that on the editor's Settings tab. `erd_import_json` in `replace` mode replaces them all with those of the document it loads — see [Import](./tools.md#import).
+- New documents are `.erd.json`. `erd_open_document` with `create` makes the file, adding `.erd.json` to a name that has no extension. Like a new diagram in the editor, the new document has every [lock](../guide/guides/settings.md#lock) on, so scrolling, zooming, switching tabs, switching the Name View, or picking another Code Generator language, name case, or bracket type in an editor never changes the file. No tool turns a single lock on or off: you do that on the editor's Settings tab. `erd_import_json` in `replace` mode replaces them all with those of the document it loads — see [Import](./tools.md#import).
 - Existing `.erd`, `.vuerd`, and `.vuerd.json` files open too. A path with any other extension is refused with `invalidPath`.
 - On Windows, a path that holds a name Windows does not store as written is refused with `invalidPath` before the document is read or written, reads included: a name with a colon or another character Windows refuses, such as `orders:v2.erd`; a device name such as `NUL.erd` or `CON.erd`, in any case; or a name ending in a dot or a space. Rename it, for example with `-` in place of `:`.
 - A file that is not a document the editor can read, such as one left with merge conflict markers, is refused with `invalidDocument` and left as it is. It is never loaded as an empty diagram and written back.

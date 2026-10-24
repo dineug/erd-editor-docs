@@ -16,16 +16,20 @@ Lima format dapat diimpor dari submenu `Import` pada menu konteks kanvas:
 - AML
 
 `Import and Add`, tepat di bawah `Import`, menambahkan file ke diagram alih-alih menggantikannya — lihat [Impor dan Tambahkan](#import-and-add).  
-Layar sambutan yang ditampilkan diagram kosong memiliki item `Import` dengan lima format yang sama — lihat [Layar sambutan](./editing-start.md#welcome-screen).
+Layar sambutan yang ditampilkan diagram kosong memiliki item `Import` dengan lima format yang sama — lihat [Layar sambutan](./editing-start.md#welcome-screen).  
+Lembar di tab [Kamus](./dictionary.md) juga menerima kata, istilah, dan domain dari file CSV, melalui `Import CSV` milik tab tersebut — lihat [Mengimpor dan mengekspor CSV](./dictionary.md#importing-and-exporting-csv).
 
 Ekstensi dicocokkan tanpa membedakan huruf besar dan kecil. Memilih file yang ekstensinya tidak sesuai dengan format yang dipilih membatalkan impor dan menampilkan `Only <format> files can be imported`, dengan format ditulis `json`, `sql`, `graphql`, `dbml`, atau `aml`, seperti pada `Only sql files can be imported`.
 
 `Import` menggantikan dokumen saat ini alih-alih menggabungkan file ke dalamnya, dan satu kali pembatalan mengembalikan diagram sebelumnya.  
-File JSON membawa pengaturannya sendiri, termasuk [penguncian](./settings.md#lock) di dalamnya. Jika file mengunci tab, bahasa Generator Kode, konvensi penamaan, atau tipe tanda kutip, Anda tetap melihat nilai yang Anda miliki sebelumnya, tetapi nilai terkunci dari file itulah yang disimpan. Area pandang, terkunci atau tidak, berpindah ke posisi yang ditetapkan file. File JSON yang disimpan sebelum adanya penguncian masuk dengan semua penguncian aktif dan area pandang pada 100%.  
+File JSON membawa pengaturannya sendiri, termasuk [penguncian](./settings.md#lock) di dalamnya. Jika file mengunci tab, bahasa Generator Kode, konvensi penamaan, tipe tanda kutip, atau [Tampilan Nama](./logical-names.md#name-view), Anda tetap melihat nilai yang Anda miliki sebelumnya, tetapi nilai terkunci dari file itulah yang disimpan. Zoom dan posisi area pandang, terkunci atau tidak, mengikuti nilai yang ditetapkan file. File JSON yang disimpan sebelum adanya penguncian masuk dengan semua penguncian aktif dan area pandang pada 100%. File yang disimpan sebelum adanya penguncian `Name View` masuk dengan penguncian itu aktif, apa pun penguncian lain yang dicatatnya.  
 Format lainnya mempertahankan pengaturan yang sudah Anda miliki, termasuk penguncian, kecuali area pandang, yang dimulai pada 100%.  
 Parser GraphQL, DBML, dan AML tidak pernah gagal: file yang tidak dapat dibacanya menghasilkan diagram kosong, bukan kesalahan.
 
-File JSON mempertahankan posisi yang dimilikinya. Tabel dari file Skema SQL, GraphQL, DBML, atau AML ditempatkan sebelum diagram berubah:
+File JSON juga membawa nama logis tabel dan kolomnya serta tautan domain kolomnya. Kata, istilah, dan domain di dalamnya menggantikan milik tab [Kamus](./dictionary.md), sehingga file yang tidak memuatnya membuat lembar-lembar itu kosong, dan membatalkan impor mengembalikan yang digantikannya.  
+Format lainnya tidak memuat satu pun dari hal tersebut. Tabelnya masuk tanpa nama logis dan tanpa kolom yang tertaut ke domain, dan kata, istilah, serta domain Anda tetap seperti semula. Membatalkan atau mengulangi impor juga membiarkannya seperti semula, sehingga perubahan kamus yang dibuat setelah impor tetap dipertahankan. Impor semacam itu juga membiarkan riwayat pembatalan setiap lembar seperti semula, sedangkan impor JSON mengosongkan riwayat tersebut — lihat [Lembar kamus](./undo-redo.md#dictionary-sheets).
+
+File JSON mempertahankan posisi yang dimilikinya. Tabel dari file Skema SQL, GraphQL, DBML, atau AML ditempatkan sebelum diagram berubah, dengan lebar yang dimilikinya di [Tampilan Nama](./logical-names.md#beyond-the-canvas) yang sedang Anda lihat:
 
 - Jika file memiliki dua tabel atau lebih dan setidaknya satu hubungan, tabel ditata dengan [Tata Letak Otomatis](./table-related-functions.md#auto-layout) `Flow`, dari kiri ke kanan mengikuti hubungan, mulai dari kiri atas kanvas. Hubungan dari sebuah tabel ke dirinya sendiri ikut dihitung.
 - Jika tidak, tabel disusun dalam baris dari kiri atas, dimulai dari tabel dengan kolom paling sedikit.
@@ -33,7 +37,7 @@ File JSON mempertahankan posisi yang dimilikinya. Tabel dari file Skema SQL, Gra
 
 Diagram kemudian diganti dalam satu langkah, sehingga tidak ada yang terlihat di tengah prosesnya. Pengaturan yang Anda ubah selama tabel ditempatkan, seperti tab, tetap dipertahankan, dan jika Anda mengimpor file lain sementara itu, impor yang dimulai paling akhir yang berlaku.
 
-Editor hanya baca tidak memuat apa pun dari `Import` dan tidak menawarkan `Import and Add`.
+Editor hanya baca tidak memuat apa pun dari `Import` dan tidak menawarkan `Import and Add` maupun `Import CSV` di tab Kamus.
 
 ### Impor dan Tambahkan {#import-and-add}
 
@@ -42,6 +46,7 @@ Editor hanya baca tidak memuat apa pun dari `Import` dan tidak menawarkan `Impor
 ![Menambahkan file SQL dari Import and Add > Schema SQL, tabelnya ditempatkan di bawah diagram, ditata mengikuti hubungannya, dan dipilih](/img/demo-import-and-add.webp)
 
 File masuk seperti saat menempel: setiap tabel, kolom, hubungan, indeks, memo, dan [grup tabel](./table-groups.md) di dalamnya ditambahkan sebagai yang baru, tabel yang sudah ada di diagram tidak berpindah, dan tidak ada pengaturan yang berubah, sehingga pengaturan file JSON tidak disertakan.  
+Tabel dan kolom dari file JSON mempertahankan nama logisnya, dan setiap nama fisik tetap menjadi milik kamus atau nama buatan Anda sendiri, seperti di dalam file, yang menentukan apakah nama logis yang ditulis kemudian menghasilkan nama baru — lihat [Menghasilkan nama fisik](./dictionary.md#deriving-physical-names). Kata, istilah, dan domain dari file tidak disertakan, sehingga tab Kamus tetap seperti semula, dan tidak ada kolom tambahan yang ditautkan ke domain: masing-masing mempertahankan tipe data yang dimilikinya.  
 Tabel yang namanya sudah ada di diagram ditambahkan sebagai tabel kedua dengan nama tersebut, bukan digabungkan dengannya. Hubungan dan indeks hanya berasal dari file, sehingga kunci asing ke tabel yang tidak didefinisikan file tidak ditautkan ke tabel yang sudah ada di diagram.
 
 Blok yang ditambahkan ditempatkan tepat di bawah semua isi diagram, sejajar dengan tepi kirinya, atau di kiri atas jika diagram kosong. Memo dan grup tabel yang disembunyikan dengan [opsi tampilan](./table-related-functions.md#table-view-options) juga ikut dihitung, karena keduanya masih berada di tempatnya.  
@@ -160,11 +165,10 @@ Garis miring terbalik sebelum tanda kutip, seperti `'it\'s'` yang ditulis MySQL 
 Nilai `DEFAULT` mempertahankan tanda kutipnya, dan tanda kutip di dalamnya ditulis kembali dalam bentuk digandakan, apa pun cara file meng-escape-nya: `'it''s'`.  
 Jika database dokumen adalah Databricks saat impor, teks bertanda kutip tunggal mengikuti aturan Spark sebagai gantinya: setiap garis miring terbalik meng-escape karakter sesudahnya, sehingga `'C:\\dir'` dibaca sebagai `C:\dir`, urutan escape seperti `\n`, `\t`, dan `\u0041` didekode, dan nilai `DEFAULT` dipertahankan sebagai `'it\'s'`.
 
-Skema SQL yang diekspor meng-escape tanda kutip di dalam komentar tabel atau kolom: `COMMENT 'it''s'` untuk MySQL, MariaDB, dan Snowflake, `COMMENT ON TABLE` dan `COMMENT ON COLUMN ... IS 'it''s'` untuk PostgreSQL dan Oracle, serta penggandaan yang sama, termasuk nama tabel dan kolom, dalam panggilan `sp_addextendedproperty` MSSQL. Komentar tanpa tanda kutip ditulis apa adanya.  
-Databricks justru meng-escape tanda kutip dan garis miring terbalik dengan garis miring terbalik, seperti pada `COMMENT 'it\'s'`, sehingga ekspornya hanya terbaca kembali dengan tepat selama Databricks menjadi database yang dipilih.  
-MSSQL menulis setiap komentar sebagai `EXECUTE sys.sp_addextendedproperty 'MS_Description', '<comment>', 'schema', '<schema>', 'table', '<table>'`, diikuti `'column', '<column>'` untuk kolom. Dengan `Bracket` pada `None`, tabel bernama `sales.users` menghasilkan skema `sales` dan tabel `users`, dan nama tanpa skema berada di `dbo`. Dengan nilai `Bracket` lainnya, seluruh nama menjadi nama tabel, di `dbo`.
-
-Komentar tidak bertahan dalam siklus ekspor lalu impor SQLite: SQLite menuliskannya sebagai baris `--` biasa, yang tidak dibaca parser. Panggilan `sp_addextendedproperty` dari ekspor MSSQL diimpor kembali sebagai komentar tabel dan kolom yang sama.
+Cara setiap database menulis komentar saat ekspor, dan cara database meng-escape tanda kutip di dalamnya, dijelaskan di [Komentar](./schema-sql.md#comments) pada halaman Skema SQL.  
+Ekspor ke MySQL, MariaDB, PostgreSQL, Oracle, Snowflake, atau MSSQL diimpor kembali sebagai komentar tabel dan kolom yang sama, termasuk tanda kutipnya, kecuali baris kosong yang dihilangkan ekspor Oracle. Ekspor Databricks, yang meng-escape tanda kutip dan garis miring terbalik dengan garis miring terbalik, hanya terbaca kembali dengan tepat selama Databricks menjadi database yang dipilih.  
+Komentar tidak bertahan dalam siklus ekspor lalu impor SQLite: SQLite menuliskannya sebagai baris `--` biasa, yang tidak dibaca parser.  
+Kecuali pada SQLite, nama logis yang ditulis `Write logical names into empty comments` ke dalam komentar kosong diimpor kembali sebagai komentar tabel atau kolom tersebut, bukan sebagai nama logisnya — lihat [Nama logis sebagai komentar](./schema-sql.md#logical-names-as-comments).
 
 ### GraphQL {#graphql}
 
@@ -200,22 +204,24 @@ Nama file harus berakhiran `.aml`.
 
 GraphQL, DBML, dan AML adalah format dua arah: masing-masing juga merupakan target [Generator Kode](./code-generator.md).  
 DBML dan AML membawa ON DELETE dan ON UPDATE setiap hubungan dalam dua arah — lihat [Generator Kode](./code-generator.md#on-delete-and-on-update). GraphQL tidak membawa keduanya, sehingga impor GraphQL membiarkan keduanya `Not set`.  
-DBML juga membawa warna tabel, tanpa transparansinya, dan setiap grup tabel yang berisi tabel, dalam dua arah. Grup tanpa nama kembali sebagai `group_1`, `group_2`, dan seterusnya, dan nama grup yang berulang kembali dengan tambahan `_2`, `_3`, dan seterusnya. AML membawa warna tabel hanya sebagai nama warnanya yang terdekat, sehingga `#FF8800` ditulis sebagai `orange` dan kembali sebagai `#f97316`, dan AML tidak membawa grup. GraphQL tidak membawa warna maupun grup.
+DBML juga membawa warna tabel, tanpa transparansinya, dan setiap grup tabel yang berisi tabel, dalam dua arah. Grup tanpa nama kembali sebagai `group_1`, `group_2`, dan seterusnya, dan nama grup yang berulang kembali dengan tambahan `_2`, `_3`, dan seterusnya. AML membawa warna tabel hanya sebagai nama warnanya yang terdekat, sehingga `#FF8800` ditulis sebagai `orange` dan kembali sebagai `#f97316`, dan AML tidak membawa grup. GraphQL tidak membawa warna maupun grup.  
+Ketiganya tidak membawa nama logis, tautan domain, maupun kamus, ke arah mana pun: Generator Kode menulis nama fisik dan tipe data setiap tabel dan kolom, tidak pernah nama logis atau domain.
 
 ## Mengekspor {#exporting}
 
 Submenu `Export` pada menu konteks kanvas memiliki tiga item:
 
-- json: Menyimpan diagram sebagaimana dimuat dalam filenya, sebagai `.erd.json`: tabel beserta kolom dan indeksnya, hubungan, memo, dan grup tabel, serta pengaturan, dengan setiap [pengaturan yang terkunci](./settings.md#lock) pada nilai terkuncinya.
+- json: Menyimpan diagram sebagaimana dimuat dalam filenya, sebagai `.erd.json`: tabel beserta kolom dan indeksnya, hubungan, memo, dan grup tabel, nama logis dan tautan domain kolom, kata, istilah, dan domain di tab [Kamus](./dictionary.md), serta pengaturan, dengan setiap [pengaturan yang terkunci](./settings.md#lock) pada nilai terkuncinya. Bagian yang tidak berisi apa pun, seperti teks kosong atau baris kamus yang kosong, tidak disertakan — lihat [Bentuk penyimpanan dan nilai runtime](../../api/advanced/schema.md#storage-form-and-runtime-value).
 - Skema SQL: Membuka tab [Skema SQL](./schema-sql.md#saving-or-copying-the-sql) dengan panel opsinya terbuka dan tombol `Save file` mendapat fokus, sehingga menekan `Enter` menyimpan SQL yang ditampilkan tab sebagai `.sql`. Tidak ada yang disimpan hingga saat itu.
 - Gambar: Membuka dialog `Export image`, yang menyimpan diagram sebagai `.png` atau `.svg`, atau menyalinnya ke papan klip sebagai PNG — lihat [Gambar](#image).
 
-Ketiganya berfungsi di editor hanya baca.
+Ketiganya berfungsi di editor hanya baca.  
+`Export CSV` milik tab Kamus, yang tidak ada di submenu ini, menyimpan lembar `Domains`, `Words`, atau `Terms` sebagai file CSV. Tidak seperti ketiga item ini, item tersebut tidak ditawarkan di editor hanya baca — lihat [Mengimpor dan mengekspor CSV](./dictionary.md#importing-and-exporting-csv).
 
 Skema SQL menulis ON DELETE dan ON UPDATE setiap hubungan setelah `REFERENCES`-nya, dengan ON DELETE lebih dulu. `Not set` tidak menulis apa pun, dan tindakan yang tidak diterima database yang dipilih tidak disertakan. Lihat [Pengeditan hubungan](./relationship-editing.md#on-delete-and-on-update) untuk mengetahui database mana yang menerima tindakan mana.
 
 Setiap file yang diekspor dinamai `<database name>-<timestamp>` diikuti ekstensinya, dengan stempel waktu dalam waktu lokal berformat `yyyy-MM-dd'T'HH_mm_ss` — misalnya `my-schema-2026-08-29T04_05_06.erd.json`. Nama database yang kosong diganti dengan `unnamed`.  
-`Save file` pada tab Skema SQL dan pada [Generator Kode](./code-generator.md) menamai filenya dengan cara yang sama. Gambar mengambil nama database seperti saat dialog dibuka.
+`Save file` pada tab Skema SQL dan pada [Generator Kode](./code-generator.md) menamai filenya dengan cara yang sama, begitu pula `Export CSV`, yang menambahkan nama lembar setelah stempel waktu: `-words.csv`, `-terms.csv`, atau `-domains.csv`. Gambar mengambil nama database seperti saat dialog dibuka.
 
 `Import`, `Import and Add`, dan `Export` juga tersedia dari [Pencarian Cepat](./quick-search.md) pada tab ERD, dengan item yang sama seperti menu konteks kanvas.
 
@@ -235,7 +241,7 @@ Penjelajah file Obsidian hanya mencantumkan file `.erd.json` atau `.sql` yang di
 
 Pilihan tersebut dipertahankan hingga editor ditutup dan tidak pernah disimpan di dokumen. Pratinjau dirender dengan cara yang sama seperti gambar, dan dirender ulang saat `Background` atau `Dark mode` berubah.
 
-Gambar memuat diagram sebagaimana keadaannya saat dialog dibuka; tutup lalu buka kembali dialog untuk menyertakan perubahan setelahnya. Gambar memuat seluruh diagram seberapa jauh pun diagram tergulir dari layar, dipangkas sesuai apa yang dirender diagram ditambah margin, dan selalu dirender pada 100%, berapa pun tingkat zoom yang ditampilkan editor, sehingga setiap tabel dirender secara utuh. Apa yang disembunyikan [opsi tampilan](./table-related-functions.md#table-view-options) — hubungan, label ON DELETE dan ON UPDATE-nya, grup tabel, atau memo — tidak dirender dan tidak diberi ruang, dan grup tabel dirender di belakang semua elemen lainnya.
+Gambar memuat diagram sebagaimana keadaannya saat dialog dibuka; tutup lalu buka kembali dialog untuk menyertakan perubahan setelahnya. Tabel dan kolomnya dinamai sesuai Tampilan Nama yang ditampilkan editor saat itu, bahkan tampilan yang diganti hanya di layar Anda selama penguncian `Name View` mempertahankan tampilan lain di file — lihat [Di luar kanvas](./logical-names.md#beyond-the-canvas). Warna yang diberikan [pemeriksaan kamus](./dictionary.md#marks-on-the-canvas) pada nama di kanvas tidak dirender. Gambar memuat seluruh diagram seberapa jauh pun diagram tergulir dari layar, dipangkas sesuai apa yang dirender diagram ditambah margin, dan selalu dirender pada 100%, berapa pun tingkat zoom yang ditampilkan editor, sehingga setiap tabel dirender secara utuh. Apa yang disembunyikan [opsi tampilan](./table-related-functions.md#table-view-options) — hubungan, label ON DELETE dan ON UPDATE-nya, grup tabel, atau memo — tidak dirender dan tidak diberi ruang, dan grup tabel dirender di belakang semua elemen lainnya.
 
 Tiga tombol menulis gambar, dan masing-masing membiarkan dialog tetap terbuka:
 

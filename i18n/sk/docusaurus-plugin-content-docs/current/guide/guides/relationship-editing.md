@@ -1,6 +1,6 @@
 ---
-sidebar_position: 6
-description: Odstránenie vzťahu, zmena jeho typu, nastavenie jeho akcií ON DELETE a ON UPDATE, jeho namapovanie na existujúce stĺpce v dialógovom okne Mapovať stĺpce, čítanie notácie spojníc, práca so vzťahmi N:M a identifikujúcimi vzťahmi a spôsob, akým sa pomenúvajú nové stĺpce cudzích kľúčov.
+sidebar_position: 7
+description: Odstránenie vzťahu, zmena jeho typu, nastavenie jeho akcií ON DELETE a ON UPDATE, jeho namapovanie na existujúce stĺpce v dialógovom okne Mapovať stĺpce, čítanie notácie spojníc, práca so vzťahmi N:M a identifikujúcimi vzťahmi a prehľad toho, čo nové stĺpce cudzích kľúčov preberajú zo svojho kľúča a ako sa pomenúvajú.
 ---
 
 # Úprava vzťahov
@@ -85,6 +85,9 @@ Otvára sa dvoma spôsobmi:
 
 Podnadpis dialógového okna uvádza obe tabuľky a typ vzťahu, napríklad `users → posts · One N`. Typ sa tu zobrazuje, ale nemení – typ zmeníte podľa časti [Zmena typu](#type-change).
 
+V celom dialógovom okne vrátane upozornení a hlásení pod riadkami a oznámenia, ktorým sa okno zatvára, sa tabuľky a stĺpce pomenúvajú tak, ako ich pomenúva [Zobrazenie názvov](./logical-names.md#beyond-the-canvas).  
+Tri veci zostávajú fyzické: každý typ údajov, ktorý je vlastným typom stĺpca a nikdy nie názvom jeho domény; položka `New column: <name>`, ktorá zobrazuje názov, aký dostane nový stĺpec; a riadky, ktoré tlačidlo `Map` na začiatku vyplní, pričom ich páruje podľa názvu, nikdy nie podľa logického názvu.
+
 Pole `References` určuje kľúč, na ktorý vzťah odkazuje: `Primary Key` so stĺpcami v poradí tabuľky, potom `Unique: <column>` pre každý stĺpec označený príznakom `Unique`. Zobrazuje sa, len keď je na výber viac ako jedna možnosť.  
 Jedinečný index sa tu za kľúč nepovažuje a stĺpec s príznakom `Unique`, ktorý tvorí celý primárny kľúč, sa neuvádza dvakrát.  
 Výber iného kľúča riadky znova vytvorí. Riadok si ponechá svoj výber, kým je daný stĺpec stále v podradenej tabuľke.
@@ -121,10 +124,10 @@ Ak sa medzitým zmenia stĺpce vzťahu alebo kľúč, s ktorým sa okno otvorilo
 Čo tlačidlá `Map` a `Save` zapisujú:
 
 - Tlačidlo `Map` pridá vzťah s položkami `On Delete` a `On Update` nastavenými na `Not set`. Tlačidlo `Save` zmení iba stĺpce vzťahu, pričom jeho stranu pri nadradenej tabuľke nasmeruje na kľúč vybratý v poli `References`, a ponechá jeho typ aj ON DELETE a ON UPDATE.
-- Riadok `New column` pridá stĺpec na koniec podradenej tabuľky rovnako ako kreslenie: `NOT NULL`, pomenovaný podľa svojho kľúča, s typom údajov, predvolenou hodnotou a komentárom kľúča – pozrite si časť [Identifikujúce vzťahy](#identifying-relationships).
-- Vybratý stĺpec sa nikdy nepremenuje a jeho príznak `Not Null`, primárny kľúč, príznak `Unique`, predvolená hodnota a komentár zostanú tak, ako sú. Jeho typ údajov sa zmení, len keď je zapnuté nastavenie `Relationship DataType Sync` a nadradený stĺpec má typ údajov: prevezme typ, ktorý nadradený stĺpec dáva cudziemu kľúču, pri kľúči typu serial celočíselný typ rovnako ako nový stĺpec, a zmena sa šíri ďalej po vzťahoch tak, ako to robí synchronizácia.
+- Riadok `New column` pridá stĺpec na koniec podradenej tabuľky rovnako ako kreslenie: `NOT NULL`, pomenovaný podľa svojho kľúča, s typom údajov, predvolenou hodnotou, komentárom, logickým názvom a doménou kľúča – pozrite si časť [Identifikujúce vzťahy](#identifying-relationships).
+- Vybratý stĺpec sa nikdy nepremenuje ani neprepojí s doménou kľúča a jeho príznak `Not Null`, primárny kľúč, príznak `Unique`, predvolená hodnota, komentár a logický názov zostanú tak, ako sú. Jeho typ údajov sa zmení, len keď je zapnuté nastavenie `Relationship DataType Sync` a nadradený stĺpec má typ údajov: prevezme typ, ktorý nadradený stĺpec dáva cudziemu kľúču, pri kľúči typu serial celočíselný typ rovnako ako nový stĺpec, a zmena sa šíri ďalej po vzťahoch tak, ako to robí synchronizácia. Každý stĺpec, ktorému zmena zmení typ, či už je vybratý, alebo bol zasiahnutý cez vzťahy, sa odpojí od svojej [domény](./dictionary.md#domains-and-data-types), keď sa jeho nový typ líši od typu domény.
 - Stĺpec, ktorý mapovanie prestane používať, zostane v podradenej tabuľke a už nie je označený ako cudzí kľúč, pokiaľ na ňom stále nekončí iný vzťah.
-- Všetko, čo jedno stlačenie tlačidla `Map` alebo `Save` zapíše, vrátane nových stĺpcov a zmien typu, je jeden krok histórie zmien.
+- Všetko, čo jedno stlačenie tlačidla `Map` alebo `Save` zapíše – vrátane nových stĺpcov, zmien typu a odpojení od domén –, je jeden krok histórie zmien.
 
 Či je vzťah identifikujúci a ako sa kreslí jeho koniec pri nadradenej tabuľke, sa určuje podľa namapovaných stĺpcov podradenej tabuľky rovnako ako pri každom vzťahu. Mapovanie na stĺpce primárneho kľúča podradenej tabuľky ho okamžite urobí identifikujúcim a mapovanie na stĺpec, ktorý povoľuje `NULL`, pridá krúžok na koniec pri nadradenej tabuľke – pozrite si časť [Čítanie spojnice](#reading-a-connector).  
 Cudzí kľúč v schéme SQL odkazuje na kľúč, ktorý ste vybrali, napríklad `REFERENCES vehicle (vin)` pri kľúči `Unique`.
@@ -156,9 +159,10 @@ Pozrite si stránku [Import a export súborov](./file-import-export.md).
 ## Identifikujúce vzťahy {#identifying-relationships}
 
 Kreslenie vzťahu kliknutím na podradenú tabuľku alebo tlačidlom `Create new columns` skopíruje každý primárny kľúč nadradenej tabuľky do podradenej tabuľky ako stĺpec cudzieho kľúča s `NOT NULL`, takže nový vzťah je na začiatku neidentifikujúci.  
-Kópia prevezme typ údajov, predvolenú hodnotu a komentár kľúča, ale nie príznaky `Unique` ani `Auto Increment`, a pomenuje sa podľa časti [Názvy stĺpcov cudzích kľúčov](#foreign-key-column-names).  
+Kópia prevezme typ údajov, predvolenú hodnotu, komentár a logický názov kľúča, ale nie príznaky `Unique` ani `Auto Increment`, a pomenuje sa podľa časti [Názvy stĺpcov cudzích kľúčov](#foreign-key-column-names).  
 Pokiaľ ide o typ údajov, výnimkou je kľúč typu serial: jeho kópia prevezme celočíselný typ, ktorý serial ukladá. Pri akejkoľvek databáze dávajú `smallserial` a `serial2` typ `smallint`, `serial4` dáva `integer` a `bigserial` a `serial8` dávajú `bigint`. Samotný `serial` dáva `integer` pri PostgreSQL a `bigint unsigned` pri MySQL a MariaDB a pri akejkoľvek inej databáze zostáva `serial`.  
 Počíta sa iba celý názov typu bez ohľadu na veľkosť písmen, takže `serial(4)` sa skopíruje tak, ako je napísaný. Typ napísaný veľkými písmenami dáva veľké písmená: `SERIAL` dáva pri PostgreSQL `INTEGER`. Stĺpec cudzieho kľúča, ktorý už má v uloženom diagrame typ `serial`, si tento typ ponechá.  
+Kópia sa tiež prepojí s [doménou](./dictionary.md#domains-and-data-types) kľúča, ak hárok `Domains` túto doménu v čase vytvorenia kópie obsahuje a kópia si ponechá typ údajov kľúča. Kópia kľúča typu serial, ktorá prevezme celočíselný typ, sa teda neprepojí so žiadnou doménou, zatiaľ čo samotný `serial`, ktorý zostane `serial`, sa s ňou prepojí.  
 Ak chcete, aby bol vzťah identifikujúci, nastavte tieto stĺpce cudzích kľúčov v podradenej tabuľke ako primárne kľúče: vyberte ich všetky a raz stlačte `Alt + K` (Windows/Linux) alebo `⌥ + K` (Mac), alebo vyberte položku `Primary Key` v kontextovej ponuke tabuľky, ktorá znie `Primary Key on selected columns`, keď sú vybraté dva alebo viac stĺpcov – pozrite si časť [Primárny kľúč stĺpca](./table-editing.md#column-primary-key).
 
 ![Prepínanie product_id ako primárneho kľúča pomocou Alt + K, pri ktorom sa jeho spojnica zmení na plnú a potom na prerušovanú](/img/demo-identifying-relationship.webp)
@@ -193,7 +197,10 @@ Platí to aj pre primárny kľúč, ktorý editor pridá do nadradenej tabuľky,
 Názvy sa určia pri kreslení vzťahu. Neskoršie premenovanie nadradenej tabuľky alebo jej kľúča ich nepremenuje.  
 Riadky `New column` v dialógovom okne [Mapovať stĺpce](#map-columns) sa pomenúvajú podľa rovnakých pravidiel a zoznam zobrazí každý názov ešte predtým, ako ho vyberiete.  
 Vzťahy, ktoré prídu s už existujúcimi stĺpcami, si ponechajú názvy, ktoré tieto stĺpce majú – ide o import, prilepenie, duplikovanie alebo párovanie existujúcich stĺpcov v dialógovom okne Mapovať stĺpce.  
-Programovací agent, ktorý pridá vzťah nástrojom `erd_add_relationship`, dostane rovnaké názvy a typy údajov – pozrite si stránku [Nástroje](../../mcp/tools.md#relationships).
+Programovací agent, ktorý pridá vzťah nástrojom `erd_add_relationship`, dostane rovnaké názvy, typy údajov, logické názvy a domény – pozrite si stránku [Nástroje](../../mcp/tools.md#relationships).
+
+Stĺpec cudzieho kľúča sa pomenúva podľa svojho kľúča, nikdy nie podľa logického názvu, ktorý skopíruje, a jeho názov sa považuje za vlastný: logický názov, ktorý do stĺpca zapíšete neskôr, ponechá názov nezmenený, pokiaľ názov nie je prázdny – pozrite si časť [Vlastné názvy](./dictionary.md#names-of-your-own).  
+Kým skopírovaný logický názov zodpovedá termínu, ktorý dáva iný názov, hárok `Checks` preto uvádza stĺpec pod kontrolou [`Physical name mismatch`](./dictionary.md#what-each-check-finds). Opätovné odvodenie jeho fyzického názvu ho premenuje podľa slovníkov, pokiaľ iný stĺpec podradenej tabuľky už nemá názov, ktorý slovníky dávajú, bez ohľadu na veľkosť písmen – pozrite si časť [Znova odvodiť fyzické názvy](./dictionary.md#derive-physical-names-again).
 
 ## Čítanie spojnice {#reading-a-connector}
 

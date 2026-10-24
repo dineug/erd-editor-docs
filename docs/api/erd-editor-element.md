@@ -71,16 +71,23 @@ Nothing inside can be reached with a selector — style it through [setTheme](#s
 Since `4.1.0` the ERD tab has an [Explorer](../guide/guides/explorer.md), a tree of the diagram docked left of the canvas with Find and Replace at its top. No attribute, property, method, or event opens, closes, or reports it: it opens from the toolbar's `Explorer` button, from `Toggle Explorer` in quick search or the canvas context menu, or with the [`findReplace`](#setkeybindingmap) binding.  
 Every element starts with it closed. Whether it is open, its width, its folding, and its search last as long as the element does, through tab switches and every load, `setInitialValue` included, and are never in `value`, `runtimeValue`, the undo history, or a shared store.
 
+Since `4.2.0` tables and columns can have [logical names](../guide/guides/logical-names.md) beside their names, and the Name View, a document setting like the tab, decides whether the canvas draws their names, their logical names, or both.  
+The toolbar also has a [Dictionary](../guide/guides/dictionary.md) tab, between `Code Generator` and `Settings`, holding the document's words, terms, and domains and a `Checks` sheet. It is a tab like the others: its `canvasType`, `'@dineug/erd-editor/builtin-dictionary'`, is held by the `Canvas Type` lock, so a text saved on it opens on it through [setInitialValue](#setinitialvalue), and a switch to it is written to `value` and emits [change](#change) only while that lock is off. No attribute, property, method, or event of its own opens it or reports on it. Its edits are document changes: they are in `value`, emit [change](#change), and reach collaborators, but their undo and redo run on each sheet's own history, not the document's.  
+The tab's own place — which sheet shows, `Domains` at first, and each sheet's search, selection, scroll, and column widths — lasts as long as the element does, through tab switches and every load, and is never in `value`, `runtimeValue`, an undo history, or a shared store.  
+The `ErdEditorElement` interface gains no member. What the API adds is `logicalNameAsComment` in [getSchemaSQL](#getschemasql)'s options, twelve [theme tokens](#settheme), and the [dictionaryRowChords](#dictionaryrowchords) export.
+
 ## readonly
 
 Sets the editing capability of the editor.  
-While it is set, assigning `value`, `clear()`, `setSchemaSQL()`, `setSchemaGraphQL()`, `setSchemaDBML()`, `setSchemaAML()`, `setSchemaJSON()`, undo, and redo are all ignored, and the `change` event is never emitted. Load a document with [setInitialValue](#setinitialvalue) instead.  
+While it is set, assigning `value`, `clear()`, `setSchemaSQL()`, `setSchemaGraphQL()`, `setSchemaDBML()`, `setSchemaAML()`, `setSchemaJSON()`, undo, and redo, since `4.2.0` a Dictionary sheet's included, are all ignored, and the `change` event is never emitted. Load a document with [setInitialValue](#setinitialvalue) instead.  
 Viewing still works: zoom, panning, the hand tool, zen mode, the canvas tab, the [Visualization](../guide/guides/visualization.md) tab in both of its modes with focusing on tables included, the database vendor, and the SQL and code generator output settings all still apply, so a read-only viewer can still export SQL for another vendor or read generated code.  
 Since `4.1.0` the [Explorer](../guide/guides/explorer.md#read-only-editors) opens too, and choosing one of its rows goes to what the row stands for, as it does in an editable editor. [Find and Replace](../guide/guides/find-and-replace.md#read-only-editors) at its top finds only, with no `Toggle Replace` arrow and no Replace row, and going to a match still brings it into view and selects it. The panel is titled `Explorer`, and the toolbar button's tooltip is `Explorer (Ctrl + F)` (Windows/Linux) or `Explorer (⌘ + F)` (Mac) in every editor. From `3.10.0` to `4.0.0` Find and Replace opened as a find-only floating panel titled `Find`.  
 Table Properties still opens, and since `3.10.0` it shows a `Read only` badge beside its title and its `Indexes` tab offers no edits — see [Table Properties](../guide/guides/table-related-functions.md#table-properties).  
 Since `4.0.0` a read-only editor offers no [`Import and Add`](../guide/guides/file-import-export.md#import-and-add), `New Table Group`, `Group selected tables`, `Remove from group` (see [Table Groups](../guide/guides/table-groups.md#read-only-editors)), or [`Map Columns`](../guide/guides/relationship-editing.md#map-columns), and shows no [welcome screen](#enablewelcomescreen). The lock buttons on the Settings tab change nothing, and the Schema SQL tab's `Before tables` and `After tables` scripts cannot be edited.  
 Since `4.1.0` it also shows no `New Table`, `New Memo`, or `New Table Group` button on the [canvas toolbar](../guide/guides/table-related-functions.md#canvas-toolbar), and the `addTableGroup` and `groupSelectedTables` bindings do nothing.  
-The Schema SQL tab's `This window only` choices, `Statements`, `Header`, and `Tables`, are never saved and still apply, and so do the [`Export image`](../guide/guides/file-import-export.md#image) dialog, the theme builder, and the Display Language picker. A pick in the theme builder or the Display Language picker still emits [changePresetTheme](#changepresettheme) or [changeLocale](#changelocale).  
+Since `4.2.0` the [Name View](../guide/guides/logical-names.md#read-only-editors) still switches from each of its pickers, but on that editor's screen alone: whatever its lock says, the switch never reaches collaborators. Flow's `Previous table` and `Next table` still step, by their buttons or the undo and redo keys.  
+The [Dictionary](../guide/guides/dictionary.md#read-only-editors) tab still opens: its sheets can be switched, searched, selected, scrolled, and copied from, and a row of the `Checks` sheet still goes to what it names. No cell takes an edit, a paste, or a clear, the tab shows no `Add Row`, `Delete Rows`, `Import CSV`, or `Export CSV` tool and no menu on the grid, and its row chords insert and delete nothing. The table menu, the canvas menu, and quick search offer no [`Derive Physical Names Again`](../guide/guides/dictionary.md#derive-physical-names-again) or `Derive Physical Name Again`.  
+The Schema SQL tab's `This window only` choices, `Statements`, `Header`, since `4.2.0` `Write logical names into empty comments`, and `Tables`, are never saved and still apply, and so do the [`Export image`](../guide/guides/file-import-export.md#image) dialog, the theme builder, and the Display Language picker. A pick in the theme builder or the Display Language picker still emits [changePresetTheme](#changepresettheme) or [changeLocale](#changelocale).  
 A bare attribute, `=""`, and `="true"` all read as `true`. `="false"` reads as `false`, and so does any other string — including the HTML idiom `readonly="readonly"`.
 
 ```js
@@ -173,8 +180,9 @@ editor.setAttribute('enable-welcome-screen', 'true');
 
 Retrieves the current document as a JSON string, in the [schema](./advanced/schema.md) the editor defines.  
 Since `4.0.0` it is the storage form, the document as a file holds it, which is also what the `json` export writes and the official hosts save. It holds the live entities alone, without the removed ones, the stacking order, or what the editor works out for itself, such as measured widths, key marks, and relationship anchors. Its entities are keyed in a fixed order, it is indented two spaces, and it ends with a newline, so the same document always gives the same bytes.  
-Each setting whose [lock](../guide/guides/settings.md#lock) is on is written at the value it is locked at, not as the screen shows it. The `Viewport` lock holds `originX`, `originY`, and `zoomLevel`, and `Canvas Type`, `Language`, `Table Name Case`, `Column Name Case`, and `Bracket Type` each hold their own setting. Every other setting is written as it stands, and `lockSettings` is always written. See [Settings](./advanced/schema.md#settings) for the bits.  
-A new document has every lock on, whether it is the one an element shows before it is given a value or one loaded from a blank value. Its `value` keeps the origin at `0, 0`, the zoom level at `1`, the ERD tab, and the default Code Generator language, name cases, and bracket type until the matching lock is turned off.  
+Since `4.2.0` it also leaves out what is empty: an empty `doc` list, an empty collection, a dictionary row that holds nothing, and an entity's empty text field, such as a name, comment, data type, default, or color. A list inside an entity, such as a table's `columnIds`, is still written when empty. A new document's `doc` is `{}`, and it has no `collections`, so read a missing field, list, or collection as empty. It holds the logical names and derived-name flags of tables and columns, the columns' domain links, and the words, terms, and domains, each dictionary written as one header of field names followed by its rows, one row to a line, in the sheet's order. See [Storage Form and Runtime Value](./advanced/schema.md#storage-form-and-runtime-value).  
+Each setting whose [lock](../guide/guides/settings.md#lock) is on is written at the value it is locked at, not as the screen shows it. The `Viewport` lock holds `originX`, `originY`, and `zoomLevel`, and `Canvas Type`, `Language`, `Table Name Case`, `Column Name Case`, `Bracket Type`, and since `4.2.0` `Name View` each hold their own setting. The Name View is written as `nameViewMode`, and only while it is not `'physical'`. Every other setting is written as it stands, and `lockSettings` is always written. See [Settings](./advanced/schema.md#settings) for the bits; the `Name View` lock's bit reads the other way round.  
+A new document has every lock on, whether it is the one an element shows before it is given a value or one loaded from a blank value. Its `value` keeps the origin at `0, 0`, the zoom level at `1`, the ERD tab, the default Code Generator language, name cases, and bracket type, and since `4.2.0` `Physical Names`, until the matching lock is turned off.  
 Before `4.0.0` it returned the whole document as the editor held it, with `ignoreSaveSettings` applied. The document as the editor holds it is now [runtimeValue](#runtimevalue), and `ignoreSaveSettings` is no longer read or written.
 
 ```js
@@ -183,14 +191,14 @@ const data = editor.value;
 
 ### setter
 
-Loads a previously saved editor state. It replaces the whole document — the current one is cleared first.  
-Like `clear()`, `setInitialValue()`, and the `setSchema*` methods in their default `mode: 'replace'`, it also discards the Visualization tab's Flow view: its layout, the tables it is narrowed to, its row display, zoom, and pan. An append (`mode: 'append'`) does not discard it.  
+Loads a previously saved editor state. It replaces the whole document — the current one is cleared first. Since `4.2.0` that includes the words, terms, and domains: the document takes the ones the text holds, or none, and every Dictionary sheet's own undo history is emptied.  
+Like `clear()`, `setInitialValue()`, and the `setSchema*` methods in their default `mode: 'replace'`, it also discards the Visualization tab's Flow view: its layout, the tables it is narrowed to, its row display, zoom, and pan, and since `4.2.0` the tables its `Previous table` and `Next table` step through. An append (`mode: 'append'`) does not discard it.  
 It is recorded in the history list, enabling `Undo, Redo`, and it emits `change`.  
 It takes the storage form, a [runtimeValue](#runtimevalue), or a file an earlier release saved.  
 A blank string, or anything that is not a string, loads a new document rather than raising an error, so guard the value before assigning it.  
 That new document is the one `setInitialValue('')` starts: empty, with default settings, and since `4.0.0` with every lock on. In `3.10.x` it saved neither the scroll position nor the zoom level, and before that it saved both.  
-A shared store relays that load to collaborators with the new document's full JSON, so every peer, an older release included, loads the same document.  
-Since `4.0.0` the loaded document's locks, and the locked values `value` then writes, come from the text, and the view lands where the text puts it, or on the diagram when none of it is drawn there. For each other setting the text locks — the tab, the Code Generator language, the name cases, and the bracket type — the editor keeps showing what it showed before the load. A setting the text leaves unlocked takes the text's value. [setInitialValue](#setinitialvalue) instead takes every value the text holds; see it also for a text that names no locks.  
+A shared store relays that load to collaborators with the new document's full JSON, so every peer, an older release included, loads it, though an editor before `4.2.0` drops what it does not know, such as the logical names, domain links, and dictionaries — see [Mixing Releases](./advanced/collaborative-editing.md#mixing-releases).  
+Since `4.0.0` the loaded document's locks, and the locked values `value` then writes, come from the text, and the view lands where the text puts it, or on the diagram when none of it is drawn there. For each other setting the text locks — the tab, the Code Generator language, the name cases, the bracket type, and since `4.2.0` the Name View — the editor keeps showing what it showed before the load. A setting the text leaves unlocked takes the text's value. A file saved before `4.2.0` names no `Name View` lock unless a `4.2.0` editor turned that lock off in it, so it loads with the Name View locked at `Physical Names`, and the editor keeps the Name View it showed. [setInitialValue](#setinitialvalue) instead takes every value the text holds; see it also for a text that names no locks.  
 Text that is not JSON, such as a file left with merge-conflict markers, does not raise an error either: the document is emptied, its settings stay as they were, and the parse error is logged to the console.  
 It is ignored while `readonly` is set; use [setInitialValue](#setinitialvalue) to load into a read-only editor.
 
@@ -201,8 +209,8 @@ editor.value = 'json...';
 ## runtimeValue
 
 Since `4.0.0`, retrieves the document as this editor holds it, as a JSON string. It has no setter, so assigning it throws in strict-mode code.  
-It carries what [value](#value) leaves out: removed entities and their order, stacking order, measured widths, key marks, relationship anchors, and sequences. Locked settings are written at their locked values here too.  
-Use it to seed another editor that joins a session already running, such as a collaborator or a second view of the same document, through its [setInitialValue](#setinitialvalue). An undo of a removal that the session sends later then restores the entity whole there, while an editor seeded from `value` holds no removed entity and restores an empty, nameless table instead. See [Collaborative Editing](./advanced/collaborative-editing.md).  
+It carries what [value](#value) leaves out: removed entities and their order, stacking order, measured widths, key marks, relationship anchors, and sequences, and since `4.2.0` the empty text fields, `doc` lists, and collections; the rows removed from a Dictionary sheet and those that hold nothing; each dictionary row's order key; the `doc` lists of words, terms, and domains; and a link to a removed domain. Locked settings are written at their locked values here too.  
+Use it to seed another editor that joins a session already running, such as a collaborator or a second view of the same document, through its [setInitialValue](#setinitialvalue). An undo of a removal that the session sends later then restores the entity whole there, while an editor seeded from `value` holds no removed entity and restores an empty, nameless table, or since `4.2.0` an empty dictionary row, instead. See [Collaborative Editing](./advanced/collaborative-editing.md).  
 Nothing collects removed entities any more, so they stay in it until the document is next opened from its file.  
 Never write it to a file: save `value`, which the [JSON Schema](./advanced/schema.md#json-schema) accepts and this does not.
 
@@ -213,11 +221,12 @@ otherEditor.setInitialValue(editor.runtimeValue);
 ## setInitialValue
 
 Loads a previously saved editor state. The load itself is not recorded in the history list, so it cannot be undone, and no `change` event is emitted.  
-It also clears the undo history, so nothing done before the load can be undone or redone onto the loaded document.  
+It also clears the undo history, so nothing done before the load can be undone or redone onto the loaded document, and since `4.2.0` each Dictionary sheet's own history too.  
 It takes the storage form, a [runtimeValue](#runtimevalue), or a file an earlier release saved, and unlike assigning `value` it takes every setting the text holds, the tab and the code settings included.  
 A blank string, or anything that is not a string, loads a new document rather than raising an error, so `setInitialValue('')` starts a blank diagram.  
-Since `4.0.0` that new document, which is also what an element shows before it is given any value, has every lock on. Scrolling, zooming, switching tabs, and changing the Code Generator language, the name cases, or the bracket type leave `value` as it was and emit no `change`. In `3.10.x` it saved neither the scroll position nor the zoom level, and before that it saved both.  
+Since `4.0.0` that new document, which is also what an element shows before it is given any value, has every lock on. Scrolling, zooming, switching tabs, and changing the Code Generator language, the name cases, the bracket type, or since `4.2.0` the Name View leave `value` as it was and emit no `change`. In `3.10.x` it saved neither the scroll position nor the zoom level, and before that it saved both.  
 A document loaded from text keeps the locks it names. One that names none — any file saved before `4.0.0`, whatever its `ignoreSaveSettings` said, and a v2 `.vuerd` file — opens with every lock on, its `Viewport` locked at origin `0, 0` and zoom level `1`, on the ERD tab, with its language, name cases, and bracket type as it saved them.  
+Since `4.2.0` a text that names its locks but not the `Name View` lock opens with that lock on too, even when every other lock is off. A file saved before `4.2.0` is such a text unless a `4.2.0` editor turned that lock off in it (see [Settings](./advanced/schema.md#settings)). It opens in `Physical Names`, as one that names no lock at all does.  
 Either way the view opens at the document's view — the one the text saved when it names its locks, origin `0, 0` at zoom level `1` when it names none — or on the diagram when none of it is drawn there. A locked `Viewport` still keeps its locked values in `value`.  
 Since `4.0.0` it also drops the collaboration state of the document held before, and a [shared store](#getsharedstore) of this editor that is already subscribed asks the other editors for theirs again, so an editor reloaded in a running session catches up. Seed such an editor with another editor's [runtimeValue](#runtimevalue).  
 Text that is not JSON does not raise an error either: the document is emptied, its settings stay as they were, and the parse error is logged to the console.  
@@ -246,10 +255,11 @@ The element also dispatches internal `@dineug/erd-editor/internal-*` events on i
 When there are changes in the editor, it emits an event.  
 The event is debounced by 200ms, and it is not emitted while `readonly` is `true`.  
 It fires for any document change — an edit in the UI, assigning `value`, `clear()`, each of the `setSchema*` methods, and since `4.0.0` `setSchemaJSON()` and `Import and Add`. `setInitialValue` does not emit it.  
-Nothing done inside the Visualization tab's Flow mode emits it — zoom, panning, moving cards, `Tidy Up`, the row display, or narrowing the view from a card — since none of it is a document change.  
-Since `4.0.0` a change to a setting whose [lock](../guide/guides/settings.md#lock) is on does not emit it either, because it moves only the screen and never `value`: a scroll or a zoom of the ERD canvas while `Viewport` is locked, a tab switch while `Canvas Type` is locked, and a change of the Code Generator language, the table name case, the column name case, or the bracket type while its own lock is on. Only those changes are left out, so a batch that also edits the document still emits it. Locking or unlocking a setting emits it.  
-Every lock is on in a new document and in any file saved before `4.0.0`, so by default scrolling, zooming, and switching tabs emit nothing. That covers focusing on tables from the ERD tab, the external-link card button that takes you from Flow back to the ERD tab, going to an Explorer row or a search match, and opening the Explorer or going to a quick search result from another tab. Each of those emits one `change` only while a lock that covers it is off: `Canvas Type` for the tab switch, and `Viewport` for the scroll a card button, a quick search result, an Explorer row, or a search match also makes. Since `4.1.0` every one of those scrolls follows one rule, [Where a Jump Lands](../guide/guides/table-related-functions.md#where-a-jump-lands), so a quick search table result no longer scrolls every time, and a jump the rule leaves in place makes no scroll to emit. Opening, closing, or resizing the Explorer narrows or widens the canvas without moving its origin, and emits nothing either. Before `4.0.0` scrolling, zooming, and switching tabs always emitted it, even when `editor.value` came out the same.  
-To skip writes that change nothing, compare `editor.value` with the value you last stored, not with the file you loaded: a file an earlier release wrote, a v2 file, or a hand-edited one can come out different in `value` as soon as it loads, because `value` writes it in the storage form. So can a file whose `Viewport` lock is off and whose origin draws none of the diagram on this screen: the load moves the view onto the diagram, and `value` writes where it lands. Since `4.0.0` measured widths no longer cause this, because `value` holds none. A host that writes files can instead tell an edit from a view change with a replication store's `changed` — see [on@change](./advanced/remote-storage.md#onchange).  
+Since `4.2.0` that includes every edit on the [Dictionary](../guide/guides/dictionary.md) tab and every undo or redo of one, a change of a logical name or a domain link, `Derive Physical Names Again`, and a Name View switch while the `Name View` lock is off.  
+Nothing done inside the Visualization tab's Flow mode emits it — zoom, panning, moving cards, `Tidy Up`, the row display, narrowing the view from a card, or since `4.2.0` stepping with `Previous table` and `Next table` or the undo and redo keys — since none of it is a document change. Its `Name View` list is the exception: a switch there emits it while the `Name View` lock is off, as one on the ERD tab does.  
+Since `4.0.0` a change to a setting whose [lock](../guide/guides/settings.md#lock) is on does not emit it either, because it moves only the screen and never `value`: a scroll or a zoom of the ERD canvas while `Viewport` is locked, a tab switch while `Canvas Type` is locked, a change of the Code Generator language, the table name case, the column name case, or the bracket type while its own lock is on, and since `4.2.0` a Name View switch while `Name View` is locked. Only those changes are left out, so a batch that also edits the document still emits it. Locking or unlocking a setting emits it.  
+Every lock is on in a new document and in any file saved before `4.0.0`, and the `Name View` lock is on in any file saved before `4.2.0` unless a `4.2.0` editor turned it off there, so by default scrolling, zooming, switching tabs, and switching the Name View emit nothing. That covers focusing on tables from the ERD tab, the external-link card button that takes you from Flow back to the ERD tab, going to an Explorer row or a search match, opening the Explorer or going to a quick search result from another tab, and since `4.2.0` going to a table or column from a row of the Dictionary tab's `Checks` sheet. Each of those emits one `change` only while a lock that covers it is off: `Canvas Type` for the tab switch, and `Viewport` for the scroll a card button, a quick search result, an Explorer row, a search match, or a `Checks` row also makes. Since `4.1.0` every one of those scrolls follows one rule, [Where a Jump Lands](../guide/guides/table-related-functions.md#where-a-jump-lands), so a quick search table result no longer scrolls every time, and a jump the rule leaves in place makes no scroll to emit. Opening, closing, or resizing the Explorer narrows or widens the canvas without moving its origin, and emits nothing either. Before `4.0.0` scrolling, zooming, and switching tabs always emitted it, even when `editor.value` came out the same.  
+To skip writes that change nothing, compare `editor.value` with the value you last stored, not with the file you loaded: a file an earlier release wrote, a v2 file, or a hand-edited one can come out different in `value` as soon as it loads, because `value` writes it in the storage form. So can a file whose `Viewport` lock is off and whose origin draws none of the diagram on this screen: the load moves the view onto the diagram, and `value` writes where it lands. Since `4.0.0` measured widths no longer cause this, because `value` holds none. Since `4.2.0` a file `4.0.0` or `4.1.0` saved can come out different too, as `value` now leaves out its empty text fields, lists, and collections, so such a file is rewritten once, on its next save. A host that writes files can instead tell an edit from a view change with a replication store's `changed` — see [on@change](./advanced/remote-storage.md#onchange).  
 The event carries no `detail` and neither bubbles nor crosses the shadow boundary, so listen on the element itself and read `editor.value` in the handler.
 
 ```js
@@ -301,9 +311,9 @@ editor.blur();
 
 ## clear
 
-Empties the document, removing every table, column, relationship, index, and memo, and since `4.0.0` every table group.  
+Empties the document, removing every table, column, relationship, index, and memo, since `4.0.0` every table group, and since `4.2.0` the Dictionary tab's words, terms, and domains, emptying every sheet's own undo history too.  
 Every setting stays, including the database, the view position, the zoom level, the table view options, each lock with the value it holds, and the Schema SQL tab's `Before tables` and `After tables` scripts, so a cleared file keeps saving what it saved. To start a new document instead, assign `''` to `value` or call `setInitialValue('')`.  
-It is recorded in the history list, so it can be undone, and it emits `change`. An undo brings the document back as the editor held it, each locked setting at its locked value. It is ignored while `readonly` is set.
+It is recorded in the history list, so it can be undone, and it emits `change`. An undo brings the document back as the editor held it, its words, terms, and domains included, each locked setting at its locked value. It is ignored while `readonly` is set.
 
 ```js
 editor.clear();
@@ -328,6 +338,7 @@ Since `3.10.0`, `search` can be redefined, and `findReplace` is new. Before, `se
 A binding value must be a `ShortcutOption[]`. A bare string is ignored, so write `{ addTable: [{ shortcut: 'Alt+KeyN' }] }` rather than `{ addTable: 'Alt+KeyN' }`.  
 An empty array is accepted and binds nothing: `setKeyBindingMap({ findReplace: [] })` leaves `Ctrl + F` (Windows/Linux) or `⌘ + F` (Mac) to the page, and `{ search: [] }` does the same for `Ctrl + K` (Windows/Linux) or `⌘ + K` (Mac). The toolbar's `Search` button still opens quick search, the toolbar's `Explorer` button still opens and closes the Explorer, and `Toggle Explorer` in quick search and in the canvas context menu still opens its search or closes it; none of these shows a shortcut for a name left empty. `{ removeSelection: [] }` leaves `Delete` and `Backspace` to the page, and the delete rows of the table, memo, and table group menus (`Delete`, `Delete selected`, `Delete column`, `Delete columns`) then show no shortcut.  
 Since `4.1.0`, `{ addTableGroup: [] }` leaves `Alt + G` (Windows/Linux) or `⌥ + G` (Mac) to the page, and `{ groupSelectedTables: [] }` leaves `T` then `G`. `New Table Group` on the canvas toolbar, in the canvas context menu, and in quick search, `Group selected tables` in the table menu, and `Group Selected Tables` in quick search still work, with no shortcut shown. The tooltips of the canvas toolbar's `New Table`, `New Memo`, and `New Table Group` buttons name the first chord of `addTable`, `addMemo`, and `addTableGroup`, or only the button for a binding left empty.  
+Since `4.2.0`, `addColumn` and `removeColumn` also give the Dictionary tab's grid its row chords, as below, so rebinding either moves those chords with it. `{ addColumn: [] }` leaves the grid no chord to insert rows, and the grid menu's two insert rows then show no shortcut; `{ removeColumn: [] }` leaves it none to delete them, and the menu's delete row and the `Delete Rows` tooltip then show none.  
 The call is a partial merge: names you leave out keep their defaults, and calling it twice keeps the earlier changes. There is no getter for the current bindings: [createKeyBindingMap](#createkeybindingmap) returns the defaults, not what `setKeyBindingMap` changed.
 
 ```ts
@@ -401,21 +412,27 @@ editor.setKeyBindingMap({
 `selectAllTable`, `handTool`, `removeSelection`, and since `4.1.0` `groupSelectedTables` give way to a caret: while the focus is in an input, a textarea, or a `contenteditable`, `$mod + A` selects the text, `Space` types a space, `Delete` and `Backspace` erase text, and `T` then `G` types the two letters, instead of reaching the canvas. None of those presses is prevented. Whatever you rebind them to behaves the same way.
 
 Since `4.0.0`, `removeSelection` (`Delete` or `Backspace`) removes the selection on the ERD tab as one undo step, without asking. When the focused table is the only thing selected, one or more of its columns are selected, and the zoom draws its rows, it removes those columns; otherwise it removes every selected table, memo, and table group, a group's tables kept. See [Table and Memo Deletion](../guide/guides/table-related-functions.md#table-and-memo-deletion).  
-A held key removes once, and nothing is removed while a cell, memo, or table group name editor is open. Outside a text field and the panels that hold bindings back (see [createKeyBindingMap](#createkeybindingmap)), the press is prevented on every tab while the editor has focus, on a focused toolbar button too, and in a read-only editor, where it removes nothing.
+A held key removes once, and nothing is removed while a cell, memo, or table group name editor is open. Outside a text field and the panels and tabs that hold bindings back (see [createKeyBindingMap](#createkeybindingmap)), the press is prevented on every tab while the editor has focus, on a focused toolbar button too, and in a read-only editor, where it removes nothing.
 
 Since `4.1.0`, `addTableGroup` (`Alt+KeyG`) arms the `New Table Group` draw on the ERD tab, whose next main-button press on the canvas draws the group, and pressing it again disarms the draw, as the canvas toolbar's `New Table Group` button does. `groupSelectedTables` (`KeyT KeyG`, `T` then `G`) puts the selected tables in a new group and opens its name editor, as `Group selected tables` in a table's context menu does. With no table selected it adds nothing; a selected memo or table group does not count. See [Drawing a Group](../guide/guides/table-groups.md#drawing-a-group) and [Grouping Selected Tables](../guide/guides/table-groups.md#grouping-selected-tables).  
 Both act only where the menus offer a group: not while `readonly` is set, while the `Table Groups` view option hides the groups, or while a cell, memo, or table group name editor is open. Like the other canvas bindings, they act only on the ERD tab, and not while quick search, Table Properties, the diff viewer, time travel, the Auto Layout preview, `Export image`, or `Map Columns` is open. Where they do nothing, the press is still prevented, unless `groupSelectedTables` gives way to a caret. `addTableGroup` is also stopped, as `focusView` and `zenMode` are, so a page's bubbling `keydown` listener never hears it.
 
+Since `4.2.0`, on the [Dictionary](../guide/guides/dictionary.md#adding-and-deleting-rows) tab, each one-press chord of `addColumn` inserts as many rows below the selection as the selection covers, the same chord with `Shift` held as well inserts them above, and each one-press chord of `removeColumn` deletes the rows the selection covers: `Alt+Enter`, `Alt+Shift+Enter`, and `Alt+Backspace` or `Alt+Delete` with the defaults. They act in the grid of the `Domains`, `Words`, and `Terms` sheets while no cell edit is open. A chord of `addColumn` that already holds `Shift` gives no chord to insert above, and a sequence bound to either name gives the grid nothing.  
+Each such press is prevented as its option says and always stopped, so it adds or removes no column on the ERD tab. On the `Checks` sheet and in a read-only editor it does nothing, though it is still prevented and stopped. In an open cell edit or the tab's search field the chords are left to the text: they are stopped there but not prevented, so the field acts on them as it would anywhere (on a Mac, `⌥ + Backspace` deletes a word). [dictionaryRowChords](#dictionaryrowchords) lists them.
+
 Since `3.10.0`, `findReplace` (`$mod+KeyF`) opens [Find and Replace](../guide/guides/find-and-replace.md). Since `4.1.0` it toggles the [Explorer](../guide/guides/explorer.md#opening-and-closing) that holds it, and the Shortcuts tab lists it as `Toggle Explorer`.  
 While the toolbar's `Explorer` button shows pressed (the Explorer open on the ERD tab and not hidden by zen mode), it closes the Explorer, unless quick search, Table Properties, the theme builder, the Display Language picker, the `Export image` dialog, or `Map Columns` is open. Otherwise it closes whichever of those is open, brings the ERD tab up from any other tab, and opens the Explorer with the caret in its `Find` field and the query selected. An editor too narrow to show the Explorer beside the canvas keeps it open but aside, and shows the toast `Widen the window to show the Explorer`. Before `4.1.0` it opened the floating Find and Replace panel, or gave its field the keyboard back, and never closed it.  
-It does not give way to a caret: while the editor is focused it is taken on every tab, from the canvas or from an input inside the editor. The press is prevented, so the browser opens no find bar, and stopped, so no bubbling `keydown` listener on the page hears it. With a cell or memo editor open, or since `4.0.0` a table group name editor, it is still prevented and stopped, but does nothing.  
+It does not give way to a caret: while the editor is focused it is taken on every tab, from the canvas or from an input inside the editor. The press is prevented, so the browser opens no find bar, and stopped, so no bubbling `keydown` listener on the page hears it. With a cell or memo editor open, since `4.0.0` a table group name editor, or since `4.2.0` a cell edit in the Dictionary tab's grid, it is still prevented and stopped, but does nothing. In that last case `search` does nothing either, so the text typed so far stays.  
 While the diff viewer, time travel, or the Auto Layout preview is open, on whichever tab, or while an IME is still composing, it is neither prevented nor stopped, so the browser's or the host's own find gets it. Inside the Explorer, a press still composing is stopped there, though not prevented. Whatever you rebind `findReplace` to behaves the same way.
 
 `focusView` acts on the ERD tab only. With at least one table selected, it opens the Visualization tab in Flow mode, narrowed to those tables and every table one relationship away; a selected memo or table group does not count, and with no table selected it does nothing. See [Focusing on Tables](../guide/guides/visualization.md#focusing-on-tables).
 
+`undo` and `redo` act by tab. On the ERD tab they undo and redo the document's history. Since `4.2.0` on the Dictionary tab they undo and redo the shown sheet's own history, and nothing on the `Checks` sheet — see [Dictionary Sheets](../guide/guides/undo-redo.md#dictionary-sheets). In the Visualization tab's Flow mode they step back and forward as [`Previous table` and `Next table`](../guide/guides/visualization.md#previous-table-and-next-table) do, leaving the document's history alone. On the other tabs, and in Graph mode, they undo nothing.
+
 `stop` (`Escape`) on the ERD tab ends an open cell or memo editor, or a relationship being drawn, and leaves the selection as it is. Since `4.0.0` it also ends a table group name editor, writing no name, and a `New Table Group` draw. The editor calls `preventDefault()` on that press.  
 With none of those open, `Escape` clears the selection and the focused cell, and is not prevented. Leaving an edit and clearing the selection therefore takes two presses.  
-Apart from the Explorer, the [welcome screen](#enablewelcomescreen)'s `Import` formats, and the pickers and dialogs below, the editor never stops `Escape` from propagating, so a page that listens for it itself, to close a dialog of its own for example, hears both presses and can skip the one whose `defaultPrevented` is `true`.  
+Since `4.2.0`, while a logical name cell's term list shows (see [Completing Term Names](../guide/guides/logical-names.md#completing-term-names)), the first `Escape` closes the list alone and leaves the editor open. That press is prevented and stopped at the cell, so neither `stop` nor a page's bubbling `keydown` listener hears it.  
+Apart from the Explorer, the [welcome screen](#enablewelcomescreen)'s `Import` formats, a logical name cell's term list, the [Dictionary](../guide/guides/dictionary.md#keys-on-the-tab) tab, and the pickers and dialogs below, the editor never stops `Escape` from propagating, so a page that listens for it itself, to close a dialog of its own for example, hears both presses and can skip the one whose `defaultPrevented` is `true`.  
 While quick search, table properties, the diff viewer, the Auto Layout preview, or time travel is open, `Escape` closes that instead and leaves the selection as it is. That press is not prevented either.  
 Since `4.0.0` an open [`Export image`](../guide/guides/file-import-export.md#image) or [`Map Columns`](../guide/guides/relationship-editing.md#map-columns) dialog also takes `Escape`, closing itself and leaving the selection as it is. Each takes the keyboard when it opens, and that `Escape` is both prevented and stopped.  
 Since `4.1.0` an `Escape` pressed with the focus inside the [Explorer](../guide/guides/explorer.md#keys-in-the-explorer), in its tree, its fields, or its buttons, gives the keyboard back to the canvas and leaves the Explorer open and the selection as it is. The editor calls both `preventDefault()` and `stopPropagation()` on it, so it never reaches a page's bubbling `keydown` listener.  
@@ -429,7 +446,7 @@ Before `3.9.2` a single `Escape` both ended an edit or draw and cleared the sele
 Since `3.9.2` the package exports `createKeyBindingMap()`, and the `KeyBindingMap`, `KeyBindingName`, and `ShortcutOption` types with it.  
 It returns the default key bindings, all 28 names with the fixed ones included, as a new map on every call, so changing the map it returns changes nothing else.  
 It is what every editor starts from, and a `setKeyBindingMap` call does not show in it.  
-Only `createKeyBindingMap` is a runtime export; the other three are types.
+Of these four only `createKeyBindingMap` is a runtime export; the other three are types. Since `4.2.0` [dictionaryRowChords](#dictionaryrowchords) is exported beside it.
 
 ```ts
 type KeyBindingName =
@@ -483,11 +500,38 @@ The editor listens for these on its own element, so a host that takes keys befor
 Build the list to let through from `createKeyBindingMap()`, with the bindings you passed to `setKeyBindingMap` in place of the defaults.  
 Since `3.10.0` that list includes `$mod+KeyF`, the browser's own find chord. A host that wants to keep its own find on that chord passes `setKeyBindingMap({ findReplace: [] })`.  
 Since `4.0.0` it also includes bare `Delete` and `Backspace`. A host that wants to keep those keys passes `setKeyBindingMap({ removeSelection: [] })`.  
-Since `4.1.0` it also includes `Alt+KeyG` and the sequence `KeyT KeyG`, which comes as one string: split it at the space and let each press through, bare `T` and `G` included, since a sequence missing a press never completes. A host that wants to keep those keys passes `setKeyBindingMap({ addTableGroup: [] })` or `setKeyBindingMap({ groupSelectedTables: [] })`.
+Since `4.1.0` it also includes `Alt+KeyG` and the sequence `KeyT KeyG`, which comes as one string: split it at the space and let each press through, bare `T` and `G` included, since a sequence missing a press never completes. A host that wants to keep those keys passes `setKeyBindingMap({ addTableGroup: [] })` or `setKeyBindingMap({ groupSelectedTables: [] })`.  
+Since `4.2.0` add to it the chords [dictionaryRowChords](#dictionaryrowchords) returns for the same map, `Alt+Shift+Enter` among them. A host that wants to keep those keys passes `setKeyBindingMap({ addColumn: [] })` or `setKeyBindingMap({ removeColumn: [] })`, which also takes them off adding and removing columns on the ERD tab.
 
 While the focus is inside the Explorer, in its tree, its `Find` and `Replace` fields, or its buttons, `findReplace`, `search`, `undo`, `redo`, `zoomIn`, `zoomOut`, and `zoomReset` pass through to the editor, so `findReplace` acts there as it does on the canvas. Every other binding, as currently set, stops at the Explorer, a sequence by its last press (a bare `G` with the defaults), and so do the arrow keys, `Tab`, `Enter`, `Space`, `Home`, `End`, and any key pressed while an IME is still composing. Apart from `Escape`, which gives the keyboard back to the canvas, they are stopped without being prevented, so they act as ordinary keys in the Explorer's fields, buttons, and tree and reach neither the canvas nor a page's bubbling `keydown` listener: `Alt + N` there adds no table, and `Delete` removes nothing. The keys that move, fold, or go to a tree row, and `Enter` in the `Find` or `Replace` field, which moves through the matches or replaces, are prevented as well.  
 Any other key, such as a host's save or command palette chord, goes on to the page as usual. See [Keys in the Explorer](../guide/guides/explorer.md#keys-in-the-explorer). Before `4.1.0` the floating Find and Replace panel held keys the same way, apart from `Home`, `End`, the last press of a sequence, and `Space` while `handTool` was bound to another key.  
 Since `4.0.0` the Display Language picker holds keys the same way: the same seven bindings pass through, and every other binding (since `4.1.0` a sequence by its last press), the arrow keys, and `Tab` are stopped there without being prevented, as is any key pressed while an IME is still composing. `↑`, `↓`, `Home`, `End`, `Enter`, and `Space` on one of its rows move through the rows or pick one, and are prevented as well.
+
+Since `4.2.0` the [Dictionary](../guide/guides/dictionary.md#keys-on-the-tab) tab holds keys too, with only `search`, `findReplace`, `undo`, and `redo` passing through to the editor. `undo` and `redo` run the shown sheet's own history, and with a cell edit open or the focus in the tab's search field they are left to the text, stopped there but not prevented. `search` and `findReplace` do nothing while a cell edit is open, as above. The row chords run in the grid, as described under `addColumn` and `removeColumn` above.  
+Every other binding, as currently set, stops at the tab, a sequence by its last press, and so do the arrow keys, `Tab`, `Enter`, `Space`, `Home`, `End`, and any key pressed while an IME is still composing. None of them reaches the canvas or a page's bubbling `keydown` listener: `Alt + N` there adds no table, and `Delete` removes nothing from the diagram. Copy, cut, and paste events in the tab stop there too, so the diagram never reads them as its own. Any other key goes on to the page as usual.
+
+### dictionaryRowChords
+
+Since `4.2.0` the package exports `dictionaryRowChords()`. It returns, as a new `ShortcutOption[]` on every call, every chord with which the Dictionary tab's grid inserts or deletes rows under the key binding map you pass.  
+In order, they are the one-press chords of `addColumn`, which insert rows below the selection; each of those with `Shift` held as well, which insert rows above, none for a chord that already holds `Shift`; and the one-press chords of `removeColumn`, which delete rows. Each keeps the `preventDefault` and `stopPropagation` of the binding it comes from, and a sequence is left out. See [Adding and Deleting Rows](../guide/guides/dictionary.md#adding-and-deleting-rows).  
+The chord that inserts rows above, `Alt+Shift+Enter` with the defaults, is in no binding, so a host that matches modifiers exactly and builds its list of keys to let through from [createKeyBindingMap](#createkeybindingmap) alone never lets it through. Let both lists through, as the Obsidian plugin does.  
+It reads only the map it is given, not the element's bindings, so pass it the map you built your list of keys from.
+
+```ts
+declare function dictionaryRowChords(
+  keyBindingMap: KeyBindingMap
+): ShortcutOption[];
+
+// example
+import { createKeyBindingMap, dictionaryRowChords } from '@dineug/erd-editor';
+
+const map = createKeyBindingMap();
+const shortcuts = [
+  ...Object.values(map).flat(),
+  ...dictionaryRowChords(map),
+].map(({ shortcut }) => shortcut);
+// dictionaryRowChords(map): 'Alt+Enter', 'Alt+Shift+Enter', 'Alt+Backspace', 'Alt+Delete'
+```
 
 ### $mod
 
@@ -635,6 +679,11 @@ type Theme = {
   columnSelectHover: string;
   columnHover: string;
 
+  columnHandleBackground: string;
+  columnHandleBorder: string;
+  columnHandleHoverBackground: string;
+  columnHandleHoverBorder: string;
+
   relationshipHover: string;
 
   visualizationLink: string;
@@ -692,6 +741,15 @@ type Theme = {
   explorerBackground: string;
   explorerBorder: string;
 
+  dictionaryErrorForeground: string;
+  dictionaryErrorBackground: string;
+  dictionaryWarningForeground: string;
+  dictionaryWarningBackground: string;
+  dictionaryBackground: string;
+  dictionaryHeaderBackground: string;
+  dictionaryGridLine: string;
+  dictionaryHeaderSelect: string;
+
   diffInsertForeground: string;
   diffDeleteForeground: string;
   diffModifyForeground: string;
@@ -722,6 +780,12 @@ Since `4.1.0` there are nine more tokens:
 - `diffModifyForeground` and `diffRenameForeground` color what the Diff Viewer marks changed and renamed, in its tree and on both documents. `diffModifyForeground` also outlines a table, memo, or table group that was moved, resized, recolored, or regrouped, whatever else changed in it, and draws the connector of a foreign key that changed.
 
 `diffInsertForeground` and `diffDeleteForeground` now color what the Diff Viewer marks added and removed, in its tree and on the document that holds it, in text, outlines, and connectors alike. `diffInsertBackground`, `diffDeleteBackground`, `diffCrossBackground`, and `diffCrossForeground` were removed in `4.1.0`, as the Diff Viewer no longer fills cells. `setTheme` drops them like any other name not in `Theme`, and their hooks, `--erd-editor-diff-insert-background`, `--erd-editor-diff-delete-background`, `--erd-editor-diff-cross-background`, and `--erd-editor-diff-cross-foreground`, are no longer read.
+
+Since `4.2.0` there are twelve more tokens:
+
+- `columnHandleBackground` and `columnHandleBorder` fill and outline the [column drag handle](../guide/guides/table-editing.md#rearranging-and-moving-columns), drawn just outside a table's left edge beside a focused column row, and `columnHandleHoverBackground` and `columnHandleHoverBorder` take over while the pointer is on it. Its grip takes `foreground`, and `active` under the pointer.
+- `dictionaryErrorForeground` and `dictionaryWarningForeground` color what the [dictionary checks](../guide/guides/dictionary.md#what-each-check-finds) find, an error or a warning: a flagged name on the ERD canvas (see [Marks on the Canvas](../guide/guides/dictionary.md#marks-on-the-canvas)), the text of a flagged cell on the `Domains`, `Words`, and `Terms` sheets, and the `Checks` count. `dictionaryErrorBackground` and `dictionaryWarningBackground` fill such a cell. `dictionaryErrorForeground` also colors the `Delete Rows` tool under the pointer.
+- `dictionaryBackground`, `dictionaryHeaderBackground`, `dictionaryGridLine`, and `dictionaryHeaderSelect` color the [Dictionary](../guide/guides/dictionary.md#the-sheets) tab's sheet: its cells, which also fill the tab's search field and a term's domain list; its column headers and row numbers; the lines between cells, which also draw the tab's bar and the borders of its fields; and a header whose row or column meets the selection. The rest of the sheet takes shared tokens: `foreground` for header labels, `active` for cell text, `grayColor7` for the line that sets the column headers and the row numbers off from the cells, `focus` for the active cell's edge, `accentColor9` for a selected range's edge and, at 20% opacity, its fill, `accentColor6` for the header of a whole selected row or column, `grayColor3` for read-only cells, and the scrollbar tokens. An `accentColor9` not written as `#rgb` or `#rrggbb` leaves a selected range unfilled.
 
 #### CSS Variables
 
@@ -782,6 +846,10 @@ Since `3.4.0` the misspelled `dargSelect` tokens are spelled `dragSelect`, and t
   --erd-editor-column-select: #182449;
   --erd-editor-column-select-hover: #1d2e62;
   --erd-editor-column-hover: #272a2d;
+  --erd-editor-column-handle-background: #18191b;
+  --erd-editor-column-handle-border: #363a3f;
+  --erd-editor-column-handle-hover-background: #2e3135;
+  --erd-editor-column-handle-hover-border: #43484e;
   --erd-editor-relationship-hover: #435db1;
   --erd-editor-visualization-link: #43484e;
   --erd-editor-visualization-column: #5a6169;
@@ -823,6 +891,14 @@ Since `3.4.0` the misspelled `dargSelect` tokens are spelled `dragSelect`, and t
   --erd-editor-tree-match: #253974;
   --erd-editor-explorer-background: #111113;
   --erd-editor-explorer-border: #363a3f;
+  --erd-editor-dictionary-error-foreground: #ff9592;
+  --erd-editor-dictionary-error-background: #500f1c;
+  --erd-editor-dictionary-warning-foreground: #ffca16;
+  --erd-editor-dictionary-warning-background: #3f2700;
+  --erd-editor-dictionary-background: #18191b;
+  --erd-editor-dictionary-header-background: #2e3135;
+  --erd-editor-dictionary-grid-line: #363a3f;
+  --erd-editor-dictionary-header-select: #182449;
   --erd-editor-diff-insert-foreground: #3dd68c;
   --erd-editor-diff-delete-foreground: #ff9592;
   --erd-editor-diff-modify-foreground: #ffca16;
@@ -903,6 +979,7 @@ editor.setSystemLocale('pt-PT'); // null follows the browser again
 
 Loads a Schema SQL file.  
 By default it replaces the current document rather than merging into it; see `mode` below. The settings you already have are kept, each lock and its locked value included, apart from the view position and the zoom level, and the tables are placed once the file is read, in rows unless `placement` below asks otherwise. With `Viewport` locked, `value` then writes the view the import starts on, origin `0, 0` at zoom level `1`. A document imported into an element never given a value therefore has every lock on, as a new document does.  
+Since `4.2.0` a replace also keeps the document's words, terms, and domains, which the text cannot hold, with each Dictionary sheet's undo history, and an undo or redo of the import keeps them too. A replacing [setSchemaJSON](#setschemajson) and assigning `value` take the ones their document holds instead.  
 It is recorded in the history list, enabling `Undo, Redo`, and it emits `change`. An empty string is ignored, and the call does nothing while `readonly` is set.  
 `setSchemaGraphQL`, `setSchemaDBML`, and `setSchemaAML` behave the same way, and their parsers never fail: text they cannot read loads an empty document rather than raising an error.  
 Since `4.0.0` all four take an optional second argument, `{ placement, mode }`:
@@ -968,8 +1045,8 @@ editor.setSchemaAML('AML...');
 ## setSchemaJSON
 
 Since `4.0.0`, loads an `.erd.json` document, such as the text [value](#value) returns.  
-In its default `mode: 'replace'` it loads the document as assigning `value` does: it is recorded in the history list, emits `change`, and takes the document's locks the same way. Unlike `value`, an empty string or a value that is not a string is ignored rather than starting a new document. Text that is not JSON empties the document, as it does with `value`.  
-`mode: 'append'` adds the document's tables, relationships, indexes, memos, and table groups below the diagram under new ids, keeping their places relative to each other and leaving out the document's settings, as [Import and Add](../guide/guides/file-import-export.md#import-and-add) does with a `json` file. Text it cannot read, or a document with no table and no memo, adds nothing. Otherwise it lands as a [setSchemaSQL](#setschemasql) append does, its new memos and table groups selected with its tables, each kind while it is shown.  
+In its default `mode: 'replace'` it loads the document as assigning `value` does: it is recorded in the history list, emits `change`, and takes the document's locks the same way, and since `4.2.0` the document's words, terms, and domains replace the editor's. Unlike `value`, an empty string or a value that is not a string is ignored rather than starting a new document. Text that is not JSON empties the document, as it does with `value`.  
+`mode: 'append'` adds the document's tables, relationships, indexes, memos, and table groups below the diagram under new ids, keeping their places relative to each other and leaving out the document's settings, as [Import and Add](../guide/guides/file-import-export.md#import-and-add) does with a `json` file. Since `4.2.0` it keeps the tables' and columns' logical names and derived-name flags but leaves the document's words, terms, and domains behind, so none of its columns links a domain. Text it cannot read, or a document with no table and no memo, adds nothing. Otherwise it lands as a [setSchemaSQL](#setschemasql) append does, its new memos and table groups selected with its tables, each kind while it is shown.  
 It returns once the document has landed, and it is ignored while `readonly` is set.
 
 ```js
@@ -982,16 +1059,18 @@ editor.setSchemaJSON('json...', { mode: 'append' });
 
 Exports the current editor state as Schema SQL.  
 If `databaseVendor` is not specified, it operates based on the currently set vendor. A name that is not in the list below is treated the same way, without raising an error.  
-Names are quoted with the bracket type the editor shows. While `Bracket Type` is [locked](../guide/guides/settings.md#lock), that can differ from the one `value` saves, which is the one a coding agent's [`erd_read`](../mcp/tools.md#reading-a-document) quotes with.  
-Since `4.0.0` an optional `options` argument chooses the statements and the header, as the options of the [Schema SQL](../guide/guides/schema-sql.md) tab do. `SchemaSQLOptions` is exported as a type.
+Names are quoted with the bracket type the editor shows. While `Bracket Type` is [locked](../guide/guides/settings.md#lock), that can differ from the one `value` saves, which is the one a coding agent's [`erd_read`](../mcp/tools.md#reading-a-document) quotes with. The names written are always the physical ones, whatever the Name View.  
+Since `4.0.0` an optional `options` argument chooses the statements and the header, as the options of the [Schema SQL](../guide/guides/schema-sql.md) tab do, and since `4.2.0` whether logical names fill empty comments. `SchemaSQLOptions` is exported as a type.
 
 - `statements`: `'create'`, the default; `'ifNotExists'`, which writes `IF NOT EXISTS` on MySQL, MariaDB, PostgreSQL, SQLite, and Databricks and falls back to `'create'` elsewhere; or `'recreate'`, which drops the tables before creating them, Snowflake writing `CREATE OR REPLACE TABLE` instead.
 - `header`: `'none'`, the default; `'use'`, which switches to the document's database or schema; or `'createAndUse'`, which first creates it if it does not exist and then switches to it. A database that lacks the one asked for falls back as the tab does: Oracle writes `'use'` for `'createAndUse'`, PostgreSQL writes no header for `'use'`, and SQLite writes none. A header is written only while the document's database name is a plain identifier — ASCII letters, digits, and `_`, not starting with a digit.
+- `logicalNameAsComment`, since `4.2.0`: `true` writes a table's or column's logical name as its comment where its own comment is empty or only blanks and the logical name is not, in the form that database writes a comment. A comment with text is written as before. Only `true` turns it on: left out, `false`, or any other value, such as `'true'` or `1`, writes no logical name. It does what the tab's [`Write logical names into empty comments`](../guide/guides/schema-sql.md#logical-names-as-comments) switch does.
 
 An option left out, or one with an unknown value, reads as its default, so a call without options writes plain `CREATE` statements with no header, as before.  
-Since `4.0.0` the output always includes the document's `Before tables` and `After tables` scripts, in the order header, before script, drop statements, tables, after script. The Schema SQL tab's own `Statements`, `Header`, and `Tables` choices never affect this call, which always writes the whole document.  
+Since `4.0.0` the output always includes the document's `Before tables` and `After tables` scripts, in the order header, before script, drop statements, tables, after script. The Schema SQL tab's own `Statements`, `Header`, `Write logical names into empty comments`, and `Tables` choices never affect this call, which always writes the whole document.  
 Since `3.10.0` each foreign key carries the relationship's `ON DELETE` and `ON UPDATE` clauses. A clause is written only when its action is set and the vendor accepts it, so an action that vendor does not take is left out and its default applies. Since `4.0.0` Snowflake accepts only `NO ACTION`. See [ON DELETE and ON UPDATE](../guide/guides/relationship-editing.md#on-delete-and-on-update) for what each database writes.  
 Since `3.10.0` a single quote inside a table or column comment is escaped, so a comment such as `it's` no longer breaks the statement. Every vendor that writes comments as string literals doubles it, except Databricks, which puts a backslash before each quote and each backslash. SQLite still writes comments as `--` lines.  
+Since `4.2.0` SQL Server writes each comment as a national literal, `N'…'`, so text outside the database's code page, such as Korean, is kept. Oracle writes each run of blank lines in a comment as one line break, and SQLite writes a comment's line breaks as spaces, so it stays on its `--` line. See [Comments](../guide/guides/schema-sql.md#comments).  
 Since `4.0.0` several databases also write key names, defaults, and auto increment differently. See [What the DDL Writes](../guide/guides/schema-sql.md#what-the-ddl-writes).
 
 ```ts
@@ -1008,6 +1087,7 @@ type DatabaseVendor =
 type SchemaSQLOptions = {
   statements?: 'create' | 'ifNotExists' | 'recreate';
   header?: 'none' | 'use' | 'createAndUse';
+  logicalNameAsComment?: boolean;
 };
 
 const schemaSQL = editor.getSchemaSQL();
@@ -1017,6 +1097,10 @@ const postgresSQL = editor.getSchemaSQL('PostgreSQL');
 const mysqlSQL = editor.getSchemaSQL('MySQL', {
   statements: 'ifNotExists',
   header: 'createAndUse',
+});
+// or
+const commentedSQL = editor.getSchemaSQL('PostgreSQL', {
+  logicalNameAsComment: true,
 });
 ```
 
@@ -1039,7 +1123,8 @@ Opens the Diff Viewer, comparing the document currently open against the one you
 It returns nothing and does not modify the document, so closing the viewer leaves the editor exactly as it was.  
 A blank value, or anything that is not a string, is compared against an empty document.  
 It is the same overlay as [Diff Viewer](../guide/guides/table-related-functions.md#diff-viewer) in the canvas context menu.  
-Since `4.1.0` it pairs what the two documents hold by id first and only then by what each keeps, such as a table's name or a memo's text — see [What Is Compared](../guide/guides/table-related-functions.md#what-is-compared). Against an earlier version of the same document, such as a Git revision of its file, a rename therefore shows as one renamed item; against a document whose ids differ, it shows as a removal and an addition. The viewer lists what changed in a tree beside the two documents and marks the changes in color instead of filling cells.
+Since `4.1.0` it pairs what the two documents hold by id first and only then by what each keeps, such as a table's name or a memo's text — see [What Is Compared](../guide/guides/table-related-functions.md#what-is-compared). Against an earlier version of the same document, such as a Git revision of its file, a rename therefore shows as one renamed item; against a document whose ids differ, it shows as a removal and an addition. The viewer lists what changed in a tree beside the two documents and marks the changes in color instead of filling cells.  
+Since `4.2.0` both documents open in the Name View this editor shows, whatever the document passed saved, and the tree names tables and columns by it too — see [Beyond the Canvas](../guide/guides/logical-names.md#beyond-the-canvas). Logical names, domain links, and the dictionaries are not compared, so a change to them alone shows no change.
 
 ```js
 editor.setDiffValue('prev json...');

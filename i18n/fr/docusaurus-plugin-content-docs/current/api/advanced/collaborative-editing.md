@@ -44,19 +44,26 @@ Traitez une action comme opaque et faites-la suivre telle quelle plutôt que de 
 
 Une partie de ce que fait un éditeur reste sur cet éditeur.  
 Mettre une table, un mémo ou un groupe de tables au premier plan, comme le fait sa sélection, n’est pas envoyé.  
-Les choix `Statements`, `Header` et `Tables` de l’onglet [Schéma SQL](../../guide/guides/schema-sql.md), qui appartiennent à la fenêtre où ils sont faits, ne le sont pas non plus.  
+Les choix `Statements`, `Header`, `Write logical names into empty comments` (depuis la version `4.2.0`) et `Tables` de l’onglet [Schéma SQL](../../guide/guides/schema-sql.md), qui appartiennent à la fenêtre où ils sont faits, ne le sont pas non plus.  
 Depuis la version `4.1.0`, l’[explorateur](../../guide/guides/explorer.md) reste lui aussi sur son éditeur : son ouverture ou sa fermeture, sa largeur, ses lignes réduites, la ligne où se trouve le focus clavier, la position de défilement de son arborescence, ainsi que sa recherche et ses options ne sont pas envoyés.  
 Aller à une clé étrangère met en surbrillance le connecteur de sa relation, et cette [surbrillance](../../guide/guides/relationship-editing.md#reading-a-connector) n’est pas envoyée non plus.  
-Un défilement, un zoom ou un changement d’onglet est envoyé, mais il ne modifie jamais la vue ni l’onglet d’un autre utilisateur. Cela vaut aussi pour le défilement que provoque un saut depuis l’explorateur et pour le passage à l’onglet ERD quand l’explorateur s’ouvre depuis un autre onglet.
+Depuis la version `4.2.0`, l’onglet [Dictionnaire](../../guide/guides/dictionary.md) reste lui aussi sur son éditeur : la feuille affichée, ainsi que la recherche, la sélection, le défilement et la largeur des colonnes de chaque feuille ne sont pas envoyés. Ses modifications, ses tris et ses importations CSV le sont.  
+Un défilement, un zoom ou un changement d’onglet est envoyé, mais il ne modifie jamais la vue ni l’onglet d’un autre utilisateur. Cela vaut aussi pour le défilement que provoque un saut depuis l’explorateur, pour le passage à l’onglet ERD quand l’explorateur s’ouvre depuis un autre onglet, et pour le changement d’onglet et le défilement d’un saut depuis la feuille [`Checks`](../../guide/guides/dictionary.md#the-checks-sheet) de l’onglet Dictionnaire vers une table ou une colonne. Un saut depuis cette feuille vers un mot, un terme ou un domaine reste dans l’onglet Dictionnaire, si bien que rien n’en est envoyé.
+
+Depuis la version `4.2.0`, un changement de l’[affichage des noms](../../guide/guides/logical-names.md#switching-the-view) est envoyé lui aussi, et son [verrou](../../guide/guides/settings.md#lock) décide de ce qu’en font les autres éditeurs. Le verrou `Name View` est activé dans un nouveau diagramme et dans tout document antérieur à la version `4.2.0`.  
+Tant que le verrou est activé, le changement n’apparaît que sur l’éditeur qui l’a fait : il est tout de même envoyé, mais tous les autres éditeurs et toutes les répliques l’écartent, si bien que chaque utilisateur peut regarder une vue différente pendant que `value` conserve la vue verrouillée. Il en va autrement d’un changement de langage, de casse des noms ou de type de délimiteur : il atteint tous les éditeurs, que son verrou soit activé ou non.  
+Tant que le verrou est désactivé, un changement fait dans un éditeur qui peut modifier le document change l’affichage des noms sur tous les éditeurs et toutes les répliques, le dernier changement l’emportant, et chacun d’eux l’enregistre.  
+Le changement propre à un éditeur en lecture seule reste toujours sur cet éditeur, et cet éditeur suit tout de même les changements partagés des autres.
 
 Les [verrous](../../guide/guides/settings.md#lock) sont partagés : le dernier verrouillage ou déverrouillage d’un paramètre l’emporte sur tous les éditeurs, et un verrou porte les valeurs de l’éditeur qui a verrouillé le paramètre, si bien que chaque éditeur et chaque réplique enregistrent la même valeur.  
 Un verrou `Viewport` enregistre donc la vue de l’éditeur qui a verrouillé ce paramètre, et un verrou `Canvas Type` le dernier onglet ouvert sur cet éditeur avant l’onglet Paramètres, où se fait le verrouillage.  
-Déverrouiller `Language`, `Table Name Case`, `Column Name Case` ou `Bracket Type` donne aussi à ce paramètre, sur tous les éditeurs, la valeur affichée sur l’éditeur qui l’a déverrouillé, si bien qu’ils continuent d’enregistrer une seule et même valeur. Déverrouiller `Viewport` ou `Canvas Type` ne change ni la vue ni l’onglet de personne.
+Déverrouiller `Language`, `Table Name Case`, `Column Name Case`, `Bracket Type` ou, depuis la version `4.2.0`, `Name View` donne aussi à ce paramètre, sur tous les éditeurs, la valeur affichée sur l’éditeur qui l’a déverrouillé, si bien qu’ils continuent d’enregistrer une seule et même valeur. Déverrouiller `Viewport` ou `Canvas Type` ne change ni la vue ni l’onglet de personne.
 
 Une modification du script `Before tables` ou `After tables` est envoyée en entier quand son champ perd le focus. Les modifications des deux scripts sont départagées séparément, si bien que la modification de l’un par un collaborateur n’écrase jamais l’autre.
 
 Rien de ce qui se fait dans le [mode Flux](../../guide/guides/visualization.md#flow-never-edits-the-document) de l’onglet Visualisation n’est une modification du document, si bien qu’un éditeur en mode Flux n’envoie aucune modification aux autres, et que les modifications qu’ils envoient continuent de s’appliquer tant qu’il y reste.  
-La seule exception est la sortie du mode Flux vers un autre onglet : ce changement d’onglet est envoyé comme n’importe quel autre.  
+Il y a deux exceptions. Quitter le mode Flux pour un autre onglet est un changement d’onglet, envoyé comme n’importe quel autre. Depuis la version `4.2.0`, un choix dans la liste d’affichage des noms de la barre d’outils du mode Flux est un changement de l’affichage des noms, envoyé et appliqué comme celui qui est fait sur le canevas.  
+`Previous table`, `Next table` et les touches d’annulation et de rétablissement, qui [parcourent les vues](../../guide/guides/visualization.md#previous-table-and-next-table) en mode Flux, ne sont pas envoyés.  
 Le bouton de lien externe d’une carte, un résultat de [recherche rapide](../../guide/guides/quick-search.md#searching-the-diagram) choisi après `#`, `@` ou `:`, et l’ouverture de l’[explorateur](../../guide/guides/explorer.md#opening-and-closing) font tous quitter le mode Flux pour l’onglet ERD. Un défilement qu’y provoque le bouton de la carte ou un résultat de recherche rapide est également envoyé.
 
 ## Deux éditeurs sur une même page {#two-editors-on-one-page}
@@ -99,6 +106,7 @@ const sharedStore2 = editor2.getSharedStore();
 
 La valeur d’exécution conserve encore ce qui a été supprimé depuis l’ouverture du document, si bien que lorsqu’un autre éditeur annule plus tard une suppression, le nouvel arrivant restaure la table avec son nom et ses colonnes.  
 [`value`](../erd-editor-element.md#value) est la forme que contient un fichier, sans les entités supprimées, si bien qu’un nouvel arrivant initialisé à partir de celle-ci, ou à partir du fichier, restaurerait à la place une table vide et sans nom.  
+Depuis la version `4.2.0`, il en va de même pour un mot, un terme ou un domaine supprimé d’une feuille de l’onglet [Dictionnaire](../../guide/guides/dictionary.md) : lorsqu’un autre éditeur annule la suppression, un nouvel arrivant initialisé à partir de `runtimeValue` affiche de nouveau la ligne complète, et celui qui a été initialisé à partir de `value` une ligne vide, que son propre `value` omet ensuite.  
 Continuez d’écrire `value` dans le stockage : `runtimeValue` sert uniquement à initialiser un autre éditeur, une seconde vue ou un [replicationStore](./remote-storage.md).  
 Les éditeurs de VS Code, d’Obsidian, d’un IDE JetBrains et de l’application web initialisent ainsi une seconde vue d’un document ouvert.
 
@@ -134,6 +142,31 @@ Gardez chaque éditeur d’une session, ainsi que tout [replicationStore](./remo
 Un éditeur en version `4.1.0` n’envoie aucun nouveau type d’action, si bien que des éditeurs et des répliques en `4.0.0` et en `4.1.0` partagent une session sans rien manquer.  
 Sa fonction [Rechercher et remplacer](../../guide/guides/find-and-replace.md#replacing) recherche aussi dans les noms d’index et les noms de groupes de tables, et `Replace` et `Replace All` les renomment au moyen des actions `index.changeName` et `tableGroup.changeName` qu’un éditeur en version `4.0.0` applique déjà.
 
+Depuis la version `4.2.0`, les modifications suivantes passent par de nouveaux types d’action, et un relais qui fait suivre les actions telles quelles n’a besoin de rien de nouveau pour elles :
+
+- le [nom logique](../../guide/guides/logical-names.md) d’une table ou d’une colonne : `table.changeLogicalName` et `column.changeLogicalName` ; le fait que son nom ait été [dérivé des dictionnaires](../../guide/guides/dictionary.md#deriving-physical-names) : `table.changeNameDerived` et `column.changeNameDerived` ;
+- une colonne liée à un [domaine](../../guide/guides/dictionary.md#domains-and-data-types) ou déliée : `column.changeDomain` ;
+- un mot, un terme ou un domaine ajouté, modifié (y compris sa place dans la feuille, telle qu’un tri la fixe) ou supprimé dans l’onglet [Dictionnaire](../../guide/guides/dictionary.md) : `dictionary.add`, `dictionary.update` et `dictionary.remove` ;
+- un changement de l’[affichage des noms](../../guide/guides/logical-names.md#switching-the-view) : `settings.changeNameViewMode`.
+
+Le verrou `Name View` passe par l’action existante `settings.changeLockSettings`, l’option d’affichage `Domain` par `settings.changeShow`, et un déplacement de `Logical Name` ou de `Domain` dans l’[ordre des colonnes](../../guide/guides/settings.md#adjusting-column-order) par `settings.changeColumnOrder`.  
+Les `editor.clear` et `editor.loadJson` d’une importation Schéma SQL, GraphQL, DBML ou AML depuis `Import` portent `keepDictionaries: true`, qui conserve les mots, les termes et les domaines sur tous les éditeurs. Il en va de même de ceux d’un [setSchemaSQL](../erd-editor-element.md#setschemasql), d’un `setSchemaGraphQL`, d’un `setSchemaDBML` ou d’un `setSchemaAML` qui remplace le document.  
+Un nom physique que dérivent les dictionnaires passe par `table.changeName` ou `column.changeName`, et le type de données qu’un domaine donne à ses colonnes par `column.changeDataType`, les actions qu’envoie une modification manuelle.
+
+Un éditeur antérieur à la version `4.2.0` ignore les nouveaux types d’action : il n’a ni noms logiques, ni liens de domaine, ni dictionnaires, ni affichage des noms. Un verrouillage ou un déverrouillage de `Name View` n’y change rien, pas plus qu’un déplacement de `Logical Name` ou de `Domain` dans l’ordre des colonnes, ou un déplacement sur l’un d’eux. Un verrou `Canvas Type` activé par un éditeur venu à l’onglet Paramètres depuis l’onglet Dictionnaire n’y change rien non plus : l’éditeur plus ancien ne connaît pas cet onglet, si bien qu’il laisse `Canvas Type` déverrouillé. Il affiche tout de même les noms physiques que dérivent les dictionnaires et les types de données que donnent les domaines.  
+Ses propres modifications ignorent tout des noms logiques, des domaines et des dictionnaires, avec les effets suivants sur les éditeurs plus récents :
+
+- Une table ou une colonne qu’il renomme à la main garde son nom marqué comme dérivé, si bien qu’un nom logique écrit plus tard pour elle sur un éditeur plus récent peut dériver de nouveau le nom par-dessus celui qu’il a saisi.
+- Un type de données qu’il donne à une colonne liée à un domaine laisse le lien en place, si bien que la feuille `Checks` liste `Domain type mismatch` et que le prochain changement de type du domaine redonne à la colonne le type du domaine.
+- Les colonnes de clé étrangère d’une relation qu’il ajoute ne reçoivent de leur clé ni nom logique ni domaine.
+- Une table qu’il colle ou duplique arrive sans noms logiques ni liens de domaine.
+- Une importation Schéma SQL, GraphQL, DBML ou AML sur cet éditeur n’envoie pas de `keepDictionaries`, si bien qu’elle vide les mots, les termes et les domaines sur tous les éditeurs.
+- Son annulation d’un chargement, d’une importation ou de `clear()` charge sa propre copie du document sur tous les éditeurs, et cette copie n’a ni noms logiques, ni liens de domaine, ni dictionnaires.
+- Cette copie, ainsi que le document que charge une importation Schéma SQL, GraphQL, DBML ou AML sur cet éditeur, remettent aussi le verrou `Name View` de tous les éditeurs dans l’état où cet éditeur l’a trouvé. Tous les éditeurs enregistrent alors `Physical Names` comme affichage des noms, et l’affichent aussi si le verrou est désactivé.
+
+Un document enregistré depuis un tel éditeur n’a ni noms logiques, ni liens de domaine, ni dictionnaires, ni affichage des noms, si bien qu’un éditeur en version `4.2.0` l’ouvre dans la vue `Physical Names`. L’éditeur plus ancien enregistre bien le verrou `Name View` tel qu’il l’a trouvé, si bien qu’un document déverrouillé dans un éditeur en version `4.2.0` reste déverrouillé.  
+Gardez chaque éditeur d’une session, ainsi que tout [replicationStore](./remote-storage.md#dispatch-dispatchsync) qui stocke son document, en version `4.2.0` ou ultérieure.
+
 ## SharedStoreConfig {#sharedstoreconfig}
 
 ### getNickname {#getnickname}
@@ -161,6 +194,7 @@ editor.getSharedStore({ mouseTracker: false });
 Diffuse ce sur quoi cet utilisateur travaille. La valeur par défaut est `true`.  
 La table et la cellule sur lesquelles se trouve votre focus, les tables, mémos et groupes de tables que vous avez sélectionnés, et le rectangle de sélection que vous tracez sur le canevas sont envoyés aux autres éditeurs et y sont affichés.  
 Chaque utilisateur reçoit sa propre couleur, pour que vous puissiez les distinguer : un contour sur la table qui a le focus, un soulignement sous la cellule active, un anneau autour des tables, mémos et groupes de tables sélectionnés, et un cadre en pointillés pour le rectangle de sélection.  
+Depuis la version `4.2.0`, les utilisateurs peuvent regarder chacun une vue différente de l’[affichage des noms](../../guide/guides/logical-names.md#collaborators) tant que son verrou est activé, ou après le changement propre à un éditeur en lecture seule. Une cellule active que votre vue n’affiche pas est soulignée sur la cellule que la vue affiche à sa place : le nom et le nom logique se remplacent l’un l’autre, comme le type de données et le domaine.  
 La présence qui arrive des autres utilisateurs est toujours affichée sur votre canevas, que cette option soit activée ou non.  
 En mode Flux de l’onglet Visualisation, le focus et la sélection des autres utilisateurs sont affichés sur les cartes de tables, mais pas leurs rectangles de sélection. Les tables que vous y sélectionnez sont tout de même envoyées ; le rectangle de sélection que vous y tracez ne l’est pas.
 

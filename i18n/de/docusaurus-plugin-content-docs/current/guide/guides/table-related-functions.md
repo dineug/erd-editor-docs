@@ -1,5 +1,5 @@
 ---
-sidebar_position: 4
+sidebar_position: 5
 description: Tabellen und Notizen auswählen, verschieben, kopieren, duplizieren und löschen, Farben und Ansichtsoptionen festlegen, Indizes und Alternativschlüssel definieren, eine Datenbank wählen, sich auf der unendlichen Zeichenfläche bewegen und Dokumente vergleichen.
 ---
 
@@ -7,7 +7,8 @@ description: Tabellen und Notizen auswählen, verschieben, kopieren, duplizieren
 
 Alles, was Sie mit Tabellen und Notizen tun, sobald sie existieren – Auswählen, Verschieben, Kopieren, Löschen, Einfärben und Festlegen, was die Zeichenfläche anzeigt –, dazu die Bedienelemente der Zeichenfläche um sie herum.  
 Zuerst kommen die Befehle für Tabellen und Notizen; dann die Tabelleneigenschaften, das Fokussieren auf Tabellen, Indizes und Alternativschlüssel, das Automatische Layout und das Datenbanksystem; und zuletzt die Zeichenfläche selbst: die Symbolleiste der Zeichenfläche, der Zoom, das Verschieben der Ansicht und wohin ein Sprung führt sowie die Diff-Ansicht.  
-Tabellengruppen, die Rahmen, die Tabellen zusammenfassen, haben eine eigene Seite – siehe [Tabellengruppen](./table-groups.md).
+Tabellengruppen, die Rahmen, die Tabellen zusammenfassen, haben eine eigene Seite – siehe [Tabellengruppen](./table-groups.md).  
+Ebenso haben logische Namen und die Namensansicht, die festlegt, welche Namen die Tabellen zeigen, eine eigene Seite – siehe [Logische Namen](./logical-names.md).
 
 ## Mehrfachauswahl {#multiple-selection}
 
@@ -26,11 +27,14 @@ Ein Rechtsklick auf etwas bereits Ausgewähltes behält die gesamte Auswahl bei,
 
 ![Tabellen mit ⌘ + drag und ⌘ + click auswählen, dann alle Tabellen und Notizen mit ⌘ + A](/img/demo-table-select.webp)
 
-In einer gemeinsamen Sitzung werden die Auswahl, die fokussierte Zelle und der Auswahlrahmen jedes Teilnehmers in dessen Farbe auf der Zeichenfläche dargestellt – siehe [Gemeinsame Bearbeitung](../../api/advanced/collaborative-editing.md).
+In einer gemeinsamen Sitzung werden die Auswahl, die fokussierte Zelle und der Auswahlrahmen jedes Teilnehmers in dessen Farbe auf der Zeichenfläche dargestellt – siehe [Gemeinsame Bearbeitung](../../api/advanced/collaborative-editing.md).  
+Betrachtet ein Teilnehmer eine andere Namensansicht, wird seine fokussierte Zelle auf der Zelle gezeichnet, die Ihre Ansicht an ihrer Stelle zeigt, etwa seine Namenszelle auf Ihrer Zelle des logischen Namens – siehe [Mitbearbeiter](./logical-names.md#collaborators).
 
 ## Mehrere Tabellen verschieben {#moving-multiple-tables}
 
 Ziehen Sie eine Tabelle oder Notiz, die bereits zur Auswahl gehört, und die gesamte Auswahl bewegt sich mit – ohne Zusatztaste.  
+Eine Tabelle wird an ihrem Tabellenkopf oder an einer beliebigen ihrer Spaltenzeilen gezogen, sodass ein Ziehen, das auf einer Spaltenzeile beginnt, die Tabelle verschiebt, nicht die Spalte. Spalten werden stattdessen mit dem Ziehgriff neben der fokussierten Zeile verschoben – siehe [Spalten neu anordnen und verschieben](./table-editing.md#rearranging-and-moving-columns).  
+Auf einer Zelle des Tabellenkopfs oder einer Spaltenzeile beginnt sich die Tabelle erst zu bewegen, wenn der Zeiger ein kurzes Stück zurückgelegt hat, sodass ein Klick dort weiterhin die Zelle fokussiert und ein Doppelklick weiterhin ihren Editor öffnet. Ein Ziehen beginnt nie am Farbrand einer Tabelle, der die Farbauswahl öffnet, an den Schaltflächen `+` und `x` in ihrem Tabellenkopf oder am `x` einer Spaltenzeile.  
 Wenn Sie etwas außerhalb der Auswahl ziehen, wird die Auswahl auf dieses Element reduziert und nur dieses verschoben. `Ctrl + drag` (Windows/Linux) oder `⌘ + drag` (Mac) behält die Auswahl in beiden Fällen bei.  
 Nur die linke Maustaste verschiebt Tabellen und Notizen. Ein Rechtsklick legt fest, worauf das Kontextmenü wirkt, und verschiebt nichts, und Ziehen mit der mittleren Maustaste verschiebt stattdessen die Ansicht der Zeichenfläche – siehe [Auf der Zeichenfläche navigieren](#getting-around-the-canvas).
 
@@ -47,7 +51,9 @@ Die Reihenfolge wird nicht gespeichert: Ein erneut geöffnetes Diagramm stapelt 
 Kopiert die ausgewählten Tabellen und Notizen und fügt sie als neue wieder ein.  
 Tastenkombinationen: `Ctrl + C` (Windows/Linux) oder `⌘ + C` (Mac), `Ctrl + V` (Windows/Linux) oder `⌘ + V` (Mac)
 
-Eine kopierte Tabelle behält ihren Namen, Kommentar, ihre Spalten und Farbe; eine kopierte Notiz behält ihren Text, ihre Größe und Farbe.  
+Eine kopierte Tabelle behält ihren Namen, logischen Namen, Kommentar, ihre Spalten und Farbe; eine kopierte Notiz behält ihren Text, ihre Größe und Farbe.  
+Jede kopierte Spalte behält ihren logischen Namen, und jeder Tabellen- und Spaltenname behält bei, ob er aus den Wörterbüchern abgeleitet wurde – siehe [Physische Namen ableiten](./dictionary.md#deriving-physical-names).  
+Eine eingefügte Spalte behält ihre Domänenverknüpfung nur, wenn zwei Bedingungen erfüllt sind: Das Diagramm, in dem sie landet, führt genau diese Domäne, nicht nur eine gleichnamige, und die Domäne hat noch den Datentyp, mit dem die Spalte kopiert wurde. Andernfalls landet die Spalte ohne Domäne und behält den Typ, mit dem sie kopiert wurde – siehe [Spalte verknüpfen](./dictionary.md#linking-a-column).  
 Indizes und Beziehungen werden ebenfalls übernommen: Ein Index wird vollständig auf die kopierte Tabelle kopiert, und eine Beziehung wird mit ihrem Typ und ihren Aktionen für ON DELETE und ON UPDATE kopiert, wenn beide Tabellen, die sie verbindet, zu den kopierten gehören. Eine halbe Beziehung wird verworfen, statt weiter auf das Original zu verweisen.  
 Die eingefügten Kopien werden zur neuen Auswahl, und wenn Sie dieselbe Kopie erneut einfügen, wird sie jedes Mal um weitere `50px` versetzt, sodass sich wiederholte Einfügungen nicht übereinanderstapeln.  
 Eine Kopie behält ihre [Tabellengruppe](./table-groups.md) nicht: Die eingefügte Tabelle gehört zu keiner Gruppe, auch wenn sie innerhalb des Rahmens einer Gruppe landet, und eine ausgewählte Gruppe wird nicht kopiert.  
@@ -60,11 +66,12 @@ Wenn innerhalb einer fokussierten Tabelle Spalten ausgewählt sind, kopiert dies
 ## Tabellen und Notizen duplizieren {#duplicating-tables-and-memos}
 
 Halten Sie `Alt` gedrückt, und ziehen Sie eine Tabelle oder Notiz mit der linken Maustaste.  
+Eine Tabelle wird an ihrem Tabellenkopf oder an einer beliebigen Spaltenzeile gegriffen, sodass `Alt + drag` auf einer Spaltenzeile die Tabelle dupliziert und die Spaltenreihenfolge unverändert lässt. Wird `Alt` am Ziehgriff der Spalte gehalten, wird nichts dupliziert: Die Spalte bewegt sich so, wie ein einfaches Ziehen am Griff sie bewegt – siehe [Spalten neu anordnen und verschieben](./table-editing.md#rearranging-and-moving-columns).  
 Eine durchscheinende Vorschau folgt dem Zeiger, und beim Loslassen der Taste wird die Kopie dort abgelegt, wo die Vorschau steht.  
 Wenn das, was Sie greifen, bereits zu einer Auswahl gehört, wird die gesamte Auswahl dupliziert. Andernfalls wird die Auswahl durch die Entität unter dem Zeiger ersetzt.  
 `Alt + click` ohne Bewegung legt die Kopie `50px` nach rechts unten versetzt ab und rückt weiter, wann immer diese Stelle schon belegt ist.
 
-Ein Duplikat enthält dasselbe wie eine eingefügte Kopie: Namen, Kommentare, Spalten, Farben, Notizgrößen sowie die Indizes und Beziehungen, die vollständig zu dem gehören, was Sie kopiert haben. Wie eine eingefügte Kopie landet es in keiner Tabellengruppe.  
+Ein Duplikat enthält dasselbe wie eine [eingefügte Kopie](#copyingpasting-tables-and-memos): Namen und logische Namen, Kommentare, Spalten, Farben, Notizgrößen sowie die Indizes und Beziehungen, die vollständig zu dem gehören, was Sie kopiert haben. Da es im selben Diagramm bleibt, behält es die Domänenverknüpfung jeder Spalte unverändert bei. Wie eine eingefügte Kopie landet es in keiner Tabellengruppe.  
 `Alt + drag` auf der Titelleiste einer Tabellengruppe verschiebt die Gruppe wie normales Ziehen; eine Gruppe wird nie dupliziert.
 
 ![Eine Tabelle mit Alt + drag duplizieren, dann mit Alt + click eine weitere Kopie nach rechts unten](/img/demo-table-duplicate.webp)
@@ -119,6 +126,7 @@ Bietet die folgenden Ansichtsoptionen:
 - Table Comment
 - Column Comment
 - DataType
+- Domain
 - Default
 - Not Null
 - Unique
@@ -129,7 +137,9 @@ Bietet die folgenden Ansichtsoptionen:
 - Table Groups
 - Memos
 
-`Unique`, `Alternate Key` und `Auto Increment` sind standardmäßig ausgeschaltet, alle übrigen eingeschaltet.  
+`Domain`, `Unique`, `Alternate Key` und `Auto Increment` sind standardmäßig ausgeschaltet, alle übrigen eingeschaltet.  
+Welche Namen die Tabellen zeigen, ist keine Ansichtsoption: `Name View`, direkt nach `View Option` im Kontextmenü der Zeichenfläche, wählt physische Namen, logische Namen oder beide – siehe [Ansicht wechseln](./logical-names.md#switching-the-view).  
+`Domain` gibt jeder Spalte eine Zelle mit dem Namen der Domäne, mit der die Spalte verknüpft ist, an dem Platz, den die [Spaltenreihenfolge](./settings.md#adjusting-column-order) bestimmt. Eine Spalte, die mit keiner Domäne verknüpft ist, die das Blatt `Domains` führt, zeigt dort abgeblendet den Platzhalter `domain`. Die Zelle erscheint in jeder Namensansicht. Solange `Domain` ausgeschaltet ist, zeigt die Ansicht `Logical Names` den Namen einer verknüpften Domäne stattdessen in der Typzelle – siehe [Die Domänenzelle](./logical-names.md#the-domain-cell).  
 `Alternate Key` markiert die Spalten jedes Alternativschlüssels, etwa mit `AK1.1` – siehe [Alternativschlüssel](#alternate-keys).  
 `Referential Actions` zeigt die Beschriftungen `D:` und `U:`, die die Aktionen für ON DELETE und ON UPDATE einer Beziehung am Ende ihrer Verbindungslinie an der Kindtabelle anbringen – siehe [Verbindungslinien lesen](./relationship-editing.md#reading-a-connector). Das Ausschalten blendet nur diese Beschriftungen aus und verschiebt weder Tabellen noch Verbindungslinien.  
 `Table Groups` zeigt die [Tabellengruppen](./table-groups.md) und die Gruppenfarben auf den Tabellenköpfen ihrer Tabellen. Das Ausschalten blendet sie auf der Zeichenfläche, in der Minimap und in Bildexporten aus, verschiebt keine Tabelle und belässt jede Tabelle in ihrer Gruppe – siehe [Gruppen ausblenden](./table-groups.md#hiding-groups). Außerdem entfernt es den Ordner `Table Groups` aus dem [Explorer](./explorer.md#the-tree) und die Schaltfläche `New Table Group` aus der [Symbolleiste der Zeichenfläche](#canvas-toolbar), und die Suche des Explorers findet keine Gruppennamen mehr.  
@@ -139,19 +149,19 @@ In einem Editor mit `readonly` ändern die Schalter nichts.
 
 ![Einträge der Ansichtsoptionen ein- und ausschalten, während sich die Tabellen neu anordnen, einen zusammengesetzten eindeutigen Index mit Alternate Key als AK1.1 und AK1.2 markieren, dann Memos aus- und wieder einschalten](/img/demo-view-options.webp)
 
-Karten im Modus `Flow` der Registerkarte Visualisierung folgen diesen Optionen nicht: Die Karten verwenden ihre eigene [Zeilenanzeige](./visualization.md#row-display) und zeichnen ihre Verbindungslinien auch bei ausgeschalteter Option `Relationship`.
+Karten im Modus `Flow` der Registerkarte Visualisierung folgen diesen Optionen nicht, auch `Domain` nicht: Die Karten verwenden ihre eigene [Zeilenanzeige](./visualization.md#row-display) und zeichnen ihre Verbindungslinien auch bei ausgeschalteter Option `Relationship`. Welche Zellen eine Karte anordnet, hängt allein von der Namensansicht ab – siehe [Namen auf den Karten](./visualization.md#names-on-the-cards).
 
 ## Tabelleneigenschaften {#table-properties}
 
 Öffnet die Tabelleneigenschaften einer Tabelle.  
 Wählen Sie `Table Properties` im Kontextmenü der Tabelle, um sie für die Tabelle zu öffnen, auf die Sie mit der rechten Maustaste geklickt haben, oder wählen Sie eine Tabelle aus, und drücken Sie `Alt + Space`.  
-Der Bereich öffnet sich in der Mitte der abgedunkelten Zeichenfläche. Nur die Zeichenfläche wird abgedunkelt, sodass ein geöffneter [Explorer](./explorer.md#dialogs-beside-it) daneben geöffnet und bedienbar bleibt. Die Kopfzeile des Bereichs enthält den Titel `Table Properties`, die fünf zuletzt geöffneten Tabellen als Chips, wobei die aktuelle hervorgehoben ist, und eine Schaltfläche zum Schließen. Klicken Sie auf einen Chip, um zu dieser Tabelle zu wechseln, ohne den Bereich erneut zu öffnen.  
+Der Bereich öffnet sich in der Mitte der abgedunkelten Zeichenfläche. Nur die Zeichenfläche wird abgedunkelt, sodass ein geöffneter [Explorer](./explorer.md#dialogs-beside-it) daneben geöffnet und bedienbar bleibt. Die Kopfzeile des Bereichs enthält den Titel `Table Properties`, die fünf zuletzt geöffneten Tabellen als Chips, wobei die aktuelle hervorgehoben ist, und eine Schaltfläche zum Schließen. Jeder Chip benennt seine Tabelle so, wie es die [Namensansicht](./logical-names.md#beyond-the-canvas) tut. Klicken Sie auf einen Chip, um zu dieser Tabelle zu wechseln, ohne den Bereich erneut zu öffnen.  
 Unter der Kopfzeile liegen drei Registerkarten: `Indexes`, `Schema SQL` und `Code Generator`. Der Bereich behält für alle drei dieselbe Größe, sodass ein Wechsel der Registerkarte ihn weder verschiebt noch seine Größe ändert.  
 Schließen Sie ihn mit der Schaltfläche zum Schließen, mit `Escape` oder durch einen Klick außerhalb des Bereichs auf die Zeichenfläche.  
 Wenn Sie im Explorer eine Zeile wählen, die kein Ordner ist, oder zu einem Treffer seiner Suche wechseln, werden die Tabelleneigenschaften vor dem Sprung geschlossen. Dasselbe gilt für `Ctrl + F` (Windows/Linux) oder `⌘ + F` (Mac), das die Suche des Explorers öffnet oder den Textcursor in sein Suchfeld setzt, wenn der Explorer bereits geöffnet ist. Jeder andere Klick im Explorer, auch auf eine Ordnerzeile, oder auf die Schaltfläche `Explorer` der Symbolleiste lässt die Tabelleneigenschaften geöffnet. Ein `Escape`, das gedrückt wird, während der Tastaturfokus im Explorer liegt, gibt nur den Tastaturfokus an die Zeichenfläche zurück, sodass es ein zweites `Escape` braucht, um die Tabelleneigenschaften zu schließen.
 
 Die Registerkarte `Indexes` wird in [Indizes](#indexes) beschrieben.  
-Die Registerkarte `Schema SQL` zeigt die DDL der Tabelle für die ausgewählte [Datenbank](#databases): ihr `CREATE TABLE`, die separaten Constraints, die manche Datenbanken für ihre als Eindeutig markierten Spalten schreiben, und ihre Indizes. Sie schreibt immer einfache Anweisungen mit `CREATE`, ohne Vorspann und ohne Skript vor oder nach den Tabellen, unabhängig davon, wie die Registerkarte [Schema SQL](./schema-sql.md) der Symbolleiste eingestellt ist. Sie hat keinen Optionsbereich, und ihr Kontextmenü bietet nur `Database` und `Bracket`.  
+Die Registerkarte `Schema SQL` zeigt die DDL der Tabelle für die ausgewählte [Datenbank](#databases): ihr `CREATE TABLE`, die separaten Constraints, die manche Datenbanken für ihre als Eindeutig markierten Spalten schreiben, und ihre Indizes. Sie schreibt immer einfache Anweisungen mit `CREATE`, ohne Vorspann, ohne Skript vor oder nach den Tabellen und ohne logische Namen in leeren Kommentaren, unabhängig davon, wie die Registerkarte [Schema SQL](./schema-sql.md) der Symbolleiste eingestellt ist – siehe [Logische Namen als Kommentare](./schema-sql.md#logical-names-as-comments). Sie hat keinen Optionsbereich, und ihr Kontextmenü bietet nur `Database` und `Bracket`.  
 Die Registerkarte `Code Generator` generiert Code nur für diese Tabelle – siehe [Codegenerator](./code-generator.md).
 
 In einem Editor mit `readonly` öffnet sich der Bereich weiterhin, mit einem Badge `Read only` neben seinem Titel, aber seine Registerkarte `Indexes` bietet keine Bearbeitung an.
@@ -163,19 +173,19 @@ Wählen Sie im Kontextmenü der Tabelle `Focus on this table`, oder wählen Sie 
 Wenn die Tabelle, auf die Sie mit der rechten Maustaste klicken, eine von mehreren ausgewählten Tabellen ist, lautet der Eintrag `Focus on selected tables` und fokussiert auf die gesamte Auswahl. Ein Rechtsklick auf eine Tabelle außerhalb der Auswahl fokussiert nur auf diese Tabelle.  
 Die Tastenkombination verwendet die ausgewählten Tabellen, lässt Notizen außen vor und bewirkt nichts, wenn keine Tabelle ausgewählt ist.  
 Eine ausgewählte [Tabellengruppe](./table-groups.md) zählt hier nicht, weder bei der Tastenkombination noch beim Menüeintrag: Ihre Tabellen werden nur übernommen, wenn sie selbst ausgewählt sind, was `Select tables` im Gruppenmenü erledigt.  
-Was die eingeschränkte Ansicht zeigt und wie Sie zum ganzen Diagramm zurückkehren, wird in [Visualisierung](./visualization.md#focusing-on-tables) beschrieben.
+Was die eingeschränkte Ansicht zeigt und wie Sie zum ganzen Diagramm zurückkehren, wird in [Visualisierung](./visualization.md#focusing-on-tables) beschrieben, und wie Sie durch das, was Flow zuvor gezeigt hat, einen Schritt zurück- und vorgehen, in [Vorherige und nächste Tabelle](./visualization.md#previous-table-and-next-table).
 
 ## Indizes {#indexes}
 
 Indizes werden auf der Registerkarte `Indexes` der Tabelleneigenschaften definiert und sind im exportierten Schema SQL enthalten.
 
 Die linke Seite listet die Schlüssel und Indizes der Tabelle in zwei Gruppen auf.  
-Die Gruppe `Keys`, die angezeigt wird, wenn die Tabelle Schlüssel hat, listet die Schlüssel auf, die ihre Spalten deklarieren: `PK_<table name>` über die als PK markierten Spalten, dann `UQ_<table name>_<column name>` für jede als Eindeutig markierte Spalte, in Spaltenreihenfolge. Die Namen folgen dem Schema SQL der ausgewählten Datenbank, sodass, wenn `Bracket` auf `None` steht, für eine schemaqualifizierte Tabelle wie `sales.users` bei jeder Datenbank außer Databricks und Snowflake `PK_users` aufgeführt wird – siehe [Schemaqualifizierte Tabellennamen](./schema-sql.md#schema-qualified-table-names). Jeder Schlüssel ist mit `PK` oder `UQ` gekennzeichnet und mit einem Schloss markiert. Die Schlüssel sind hier schreibgeschützt und ändern sich nur mit den Kennzeichen [PK](./table-editing.md#column-primary-key) und [Eindeutig](./table-editing.md#not-null-unique-auto-increment) der Spalten.  
+Die Gruppe `Keys`, die angezeigt wird, wenn die Tabelle Schlüssel hat, listet die Schlüssel auf, die ihre Spalten deklarieren: `PK_<table name>` über die als PK markierten Spalten, dann `UQ_<table name>_<column name>` für jede als Eindeutig markierte Spalte, in Spaltenreihenfolge. Die Namen sind die physischen, die das Schema SQL der ausgewählten Datenbank schreibt, gleich welche Namensansicht gilt, sodass, wenn `Bracket` auf `None` steht, für eine schemaqualifizierte Tabelle wie `sales.users` bei jeder Datenbank außer Databricks und Snowflake `PK_users` aufgeführt wird – siehe [Schemaqualifizierte Tabellennamen](./schema-sql.md#schema-qualified-table-names). Jeder Schlüssel ist mit `PK` oder `UQ` gekennzeichnet und mit einem Schloss markiert. Die Schlüssel sind hier schreibgeschützt und ändern sich nur mit den Kennzeichen [PK](./table-editing.md#column-primary-key) und [Eindeutig](./table-editing.md#not-null-unique-auto-increment) der Spalten.  
 Die Gruppe `Indexes` listet die Indizes der Tabelle in der Reihenfolge auf, in der sie hinzugefügt wurden. Jeder Index hat einen Schalter `UQ`, der ihn eindeutig macht, ein Namensfeld und ein `x`, das ihn entfernt. Ein Index, der ein [Alternativschlüssel](#alternate-keys) ist, zeigt zusätzlich seine Nummer, etwa `AK1`. Fügen Sie mit `Add Index` am Ende der Liste einen Index hinzu.
 
-Die rechte Seite listet unter `Columns` die Spalten der Tabelle auf, jede mit einem Kontrollkästchen. Nichts ist bearbeitbar, bis links ein Index ausgewählt ist.  
+Die rechte Seite listet unter `Columns` die Spalten der Tabelle auf, jede mit einem Kontrollkästchen. Jede Zeile zeigt dieselben Zellen wie die Zeile der Spalte auf der Zeichenfläche und folgt dabei der Spaltenreihenfolge, den Ansichtsoptionen und der [Namensansicht](./logical-names.md#beyond-the-canvas). Nichts ist bearbeitbar, bis links ein Index ausgewählt ist.  
 Setzen Sie bei einer Spalte den Haken, um sie dem ausgewählten Index hinzuzufügen, und entfernen Sie den Haken, um sie aus ihm zu entfernen. Wenn Sie einen Schlüssel auswählen, werden seine Spalten mit Haken angezeigt, die Kontrollkästchen bleiben aber deaktiviert.  
-Die Spalten des ausgewählten Index sind darunter unter `Index order` aufgeführt. Ziehen Sie sie am Griff, um sie neu anzuordnen, und klicken Sie auf den Chip `ASC` oder `DESC` einer Zeile, um ihre Sortierrichtung umzukehren. In einem Alternativschlüssel endet jede Zeile mit ihrer Markierung `AK<n>.<m>`. Die Liste zeigt drei Zeilen auf einmal, die übrigen erreichen Sie durch Scrollen.
+Die Spalten des ausgewählten Index sind darunter unter `Index order` aufgeführt, jede so benannt, wie die Namensansicht sie benennt, in der Ansicht `Both Names` mit dem Namen in Klammern nach dem logischen Namen, etwa `Member Number (member_no)`. Ziehen Sie sie am Griff, um sie neu anzuordnen, und klicken Sie auf den Chip `ASC` oder `DESC` einer Zeile, um ihre Sortierrichtung umzukehren. In einem Alternativschlüssel endet jede Zeile mit ihrer Markierung `AK<n>.<m>`. Die Liste zeigt drei Zeilen auf einmal, die übrigen erreichen Sie durch Scrollen.
 
 In einem Editor mit `readonly` zeigt die Auswahl eines Schlüssels oder Index weiterhin seine Spalten, aber es gibt kein `Add Index` und kein `x`, und auch sonst lässt sich auf der Registerkarte nichts ändern.
 
@@ -216,12 +226,12 @@ Ordnet alle Tabellen auf der Zeichenfläche für Sie an.
 | `Tree - horizontal` | Dieselbe Anordnung in Ebenen, von links nach rechts. |
 
 `Force` öffnet eine Vorschau, während sich das Layout einpendelt, mit `Apply` und `Cancel` auf dem angezeigten Hinweis.  
-Die Vorschau ist auf das Diagramm zugeschnitten, wie es beim Start des Layouts stand, sodass Tabellen beim Einpendeln aus dem Ausschnitt wandern können. Sie wird bei `70%` oder weniger gezeichnet, sodass ihre Tabellen auf ihren Namen und ihren Farbrand eingeklappt erscheinen.  
+Die Vorschau ist auf das Diagramm zugeschnitten, wie es beim Start des Layouts stand, sodass Tabellen beim Einpendeln aus dem Ausschnitt wandern können. Sie wird bei `70%` oder weniger gezeichnet, sodass ihre Tabellen auf ihren Namen und ihren Farbrand eingeklappt erscheinen. Sie öffnet sich in der Namensansicht, die Sie gerade betrachten, gleich welche Ansicht die Datei behält – siehe [Außerhalb der Zeichenfläche](./logical-names.md#beyond-the-canvas).  
 `Apply` übernimmt die Positionen so, wie sie in diesem Moment stehen, und das Layout wird von selbst übernommen, sobald es zur Ruhe kommt. `Cancel` oder `Escape` lässt das Diagramm, wie es war.
 
 Die anderen drei werden in einem Durchgang außerhalb des Hauptthreads berechnet, sodass es nichts zu beobachten gibt: Während das Layout berechnet wird, wird ein Hinweis angezeigt, und die fertige Anordnung wird auf die Fläche zentriert, die das Diagramm bereits einnimmt. `Cancel` oder `Escape` verwirft ein Layout, auf das Sie nicht mehr warten, und in einem Host, der keinen Shared Worker ausführt, endet es mit `Could not place tables` – siehe [Web Worker](../../api/installation.md#web-workers). Ein Layout, das nicht innerhalb von 60 Sekunden zurückkommt, endet ebenso.
 
-Welches Layout Sie auch wählen, Tabellen und Tabellengruppen werden verschoben, und Notizen bleiben, wo sie sind. Eine Beziehung einer Tabelle zu sich selbst wird ignoriert, und mehrere Beziehungen zwischen denselben zwei Tabellen zählen nur einmal.  
+Welches Layout Sie auch wählen, Tabellen und Tabellengruppen werden verschoben, und Notizen bleiben, wo sie sind. Die Tabellen werden mit den Breiten platziert, die sie in der Namensansicht haben, die Sie gerade betrachten. Eine Beziehung einer Tabelle zu sich selbst wird ignoriert, und mehrere Beziehungen zwischen denselben zwei Tabellen zählen nur einmal.  
 Jedes Layout hält die Tabellen jeder Gruppe zusammen, ob die Gruppen angezeigt werden oder nicht, und passt jede Gruppe, die Tabellen enthält, um diese herum an – siehe [Tabellengruppen](./table-groups.md#auto-layout).  
 Das Ergebnis landet als ein einziger Eintrag im Verlauf, sodass ein einziges Rückgängigmachen alle Tabellen und Gruppen an ihren vorherigen Platz zurücksetzt.
 
@@ -259,6 +269,7 @@ Eine kleine Symbolleiste schwebt über der Mitte des unteren Rands der Zeichenfl
 - `New Table`, `New Memo` und `New Table Group`. `New Table` fügt wie `Alt + N` eine Tabelle hinzu, und `New Memo` fügt wie `Alt + M` eine Notiz hinzu. `New Table Group` aktiviert wie `Alt + G` das [Zeichnen einer Gruppe](./table-groups.md#drawing-a-group) und schaltet die Hand aus; ein zweiter Klick beendet, wie ein zweites `Alt + G`, das Zeichnen, ohne eine Gruppe hinzuzufügen. `New Memo` entfällt, solange View Option → `Memos` die Notizen ausblendet, und `New Table Group`, solange View Option → `Table Groups` die Gruppen ausblendet. Ein Editor mit `readonly` zeigt keine der drei.
 - Den Zoom: `Zoom out`, die aktuelle Zoomstufe als Prozentwert und `Zoom in`. Die beiden Schaltflächen ändern den Zoom schrittweise wie die Tastenkombinationen für den Zoom, und ein Klick auf den Prozentwert setzt ihn auf `100%` zurück.
 - Die vier Beziehungsnotationen, dieselben vier, mit denen Sie das Zeichnen einer Beziehung beginnen – siehe [Mit dem Bearbeiten beginnen](./editing-start.md). Die Wahl einer davon schaltet zurück auf den Zeiger, da eine Beziehung durch Klicken auf zwei Tabellen gezeichnet wird.
+- `Name View`, eine Schaltfläche mit einem Pfeil nach unten, die die aktuelle Ansicht nennt: `Physical Names`, `Logical Names` oder `Both Names`. Sie behält ihre Breite, welche Ansicht sie auch nennt, sodass ein Wechsel die Symbolleiste nie verschiebt. Ein Klick öffnet oberhalb der Symbolleiste eine Liste der drei Ansichten, in der die aktuelle mit einem Häkchen markiert ist. Die Wahl einer Ansicht wechselt zu ihr und schließt die Liste; ein zweiter Klick auf die Schaltfläche, ein Drücken an einer beliebigen anderen Stelle oder `Escape` schließt die Liste ohne Wechsel. Auch ein Editor mit `readonly` zeigt sie. Was jede Ansicht zeigt, wird in [Namensansicht](./logical-names.md#name-view) beschrieben, und ob ein Wechsel gespeichert wird, in [Ansicht wechseln](./logical-names.md#switching-the-view).
 - Den Zen-Modus, `Alt + Z`, der alles außer der Zeichenfläche und dieser Symbolleiste ausblendet. Ein erneutes `Alt + Z` oder die Schaltfläche holt den Rest zurück. Ein geöffneter Explorer wird mit dem Rest ausgeblendet, ohne geschlossen zu werden, und kehrt mit ihm zurück. Er lässt sich auch im Zen-Modus öffnen – siehe [Wann der Explorer ausgeblendet wird](./explorer.md#when-it-stands-aside).
 - Den Kompass `Go to content`, der nur so lange am Ende der Symbolleiste erscheint, wie keine Tabelle, keine angezeigte Notiz und keine angezeigte Tabellengruppe auf dem Bildschirm zu sehen ist – siehe [Auf der Zeichenfläche navigieren](#getting-around-the-canvas).
 
@@ -277,7 +288,7 @@ Tastenkombinationen: `Ctrl + Plus` (Windows/Linux) oder `⌘ + Plus` (Mac), `Ctr
 Die Schaltflächen `Zoom out` und `Zoom in` in der [Symbolleiste der Zeichenfläche](#canvas-toolbar) ändern den Zoom schrittweise wie die Tastenkombinationen mit `Minus` und `Plus`: Jeder Klick ändert ihn um 4 Prozentpunkte, wobei die Bildschirmmitte an ihrer Stelle bleibt. Der Prozentwert dazwischen zeigt die aktuelle Zoomstufe, und ein Klick darauf springt wie `Ctrl + 0` (Windows/Linux) oder `⌘ + 0` (Mac) direkt auf `100%` zurück.
 
 Der Zoom reicht von `10%` bis `150%`.  
-Bei `70%` und darunter werden Tabellen auf ihren Namen und ihren Farbrand eingeklappt, und das Bearbeiten von Zellen, die Tastenkombinationen für Zellen sowie Kopieren und Einfügen funktionieren erst wieder, wenn Sie wieder vergrößern.
+Bei `70%` und darunter werden Tabellen auf ihren Namen und ihren Farbrand eingeklappt, und das Bearbeiten von Zellen, die Tastenkombinationen für Zellen sowie Kopieren und Einfügen funktionieren erst wieder, wenn Sie wieder vergrößern. Welchen Namen eine eingeklappte Tabelle zeigt, folgt der Namensansicht – siehe [Namensansicht](./logical-names.md#name-view).
 
 Dieselben drei Tastenkombinationen zoomen auch die Registerkarte Visualisierung, im Modus `Graph` ebenso wie im Modus `Flow`, jeder Modus innerhalb seines eigenen Wertebereichs – siehe [Visualisierung](./visualization.md#toolbar).
 
@@ -302,11 +313,11 @@ Das Ziehen des Schiebers einer Scrollleiste oder des Ansichtsrechtecks der Minim
 
 Wenn nach dem Verschieben keine Tabelle, keine angezeigte Notiz und keine angezeigte Tabellengruppe mehr auf dem Bildschirm ist, erscheint am Ende der [Symbolleiste der Zeichenfläche](#canvas-toolbar) ein Kompass `Go to content` mit einem Pfeil auf das nächstgelegene Element und dessen Entfernung. Klicken Sie darauf, um dieses Element zu zentrieren, ohne den Zoom zu ändern.
 
-![Die Ansicht durch Ziehen auf leerer Zeichenfläche, Ziehen mit der mittleren Maustaste über einer Tabelle, die Minimap und das Mausrad verschieben, dann dem Kompass Go to content zurück folgen](/img/demo-canvas-navigation.webp)
+![Die Ansicht durch Ziehen auf leerer Zeichenfläche, mit dem Mausrad, durch Ziehen mit der mittleren Maustaste über einer Tabelle und über die Minimap verschieben, dann mit Shift + wheel über den Inhalt hinaus scrollen und dem Kompass Go to content zurück folgen](/img/demo-canvas-navigation.webp)
 
 ### Wohin ein Sprung führt {#where-a-jump-lands}
 
-Jeder Sprung, der Sie zu etwas auf der Zeichenfläche bringt, bewegt die Ansicht nach einer einzigen Regel: die Ergebnisse von `#`, `@` und `:` in der [Schnellsuche](./quick-search.md#searching-the-diagram), die Zeilen des [Explorers](./explorer.md#going-to-a-row) und die Treffer seiner Suche mit [Suchen und Ersetzen](./find-and-replace.md#going-to-a-match), die Zeilen der Liste der [Diff-Ansicht](#going-to-a-change), die [Kartenschaltfläche](./visualization.md#card-buttons) für externe Links in Flow und die Platzierung durch [Importieren und hinzufügen](./file-import-export.md#import-and-add). Jeder dieser Abschnitte sagt, was der Sprung auswählt; dieser sagt, wohin die Ansicht geht.
+Jeder Sprung, der Sie zu etwas auf der Zeichenfläche bringt, bewegt die Ansicht nach einer einzigen Regel: die Ergebnisse von `#`, `@` und `:` in der [Schnellsuche](./quick-search.md#searching-the-diagram), die Zeilen des [Explorers](./explorer.md#going-to-a-row) und die Treffer seiner Suche mit [Suchen und Ersetzen](./find-and-replace.md#going-to-a-match), die Zeilen der Liste der [Diff-Ansicht](#going-to-a-change), die [Kartenschaltfläche](./visualization.md#card-buttons) für externe Links in Flow, eine Prüfung, die auf dem [Blatt Prüfungen](./dictionary.md#the-checks-sheet) der Registerkarte Wörterbuch eine Tabelle oder eine Spalte nennt, und die Platzierung durch [Importieren und hinzufügen](./file-import-export.md#import-and-add). Jeder dieser Abschnitte sagt, was der Sprung auswählt; dieser sagt, wohin die Ansicht geht.
 
 Ein Sprung ändert nie den Zoom und scrollt höchstens einmal. Von einer anderen Registerkarte aus wechselt er zuerst zur Registerkarte ERD.  
 Er misst die Zeichenfläche so, wie sie angezeigt wird: unterhalb der oberen Symbolleiste, im Zen-Modus über die ganze Höhe, und rechts von einem geöffneten Explorer, der die Zeichenfläche verschmälert, statt sie zu verdecken.
@@ -322,8 +333,8 @@ Eine kleine Tabelle nahe dem linken Rand der Zeichenfläche auf halber Höhe wir
 Was ein Sprung sichtbar macht und welcher maßgebliche Teil zu sehen sein muss, wenn das Ganze nicht hineinpasst:
 
 - Eine Tabelle: die ganze Tabelle, anhand des Namensbands an ihrer Oberkante oder, bei einem Treffer im Tabellenkommentar, anhand ihrer Kommentarzelle, solange View Option → `Table Comment` die Kommentare anzeigt. Bei `70%` und darunter, wo Tabellen auf ihren Namen eingeklappt sind, anhand des Namens in der Mitte des Rahmens.
-- Eine Spalte: ihre Zeile, anhand der Zelle, zu der der Sprung führt: ihr Name oder der Kommentar, in dem ein Treffer liegt, solange View Option → `Column Comment` die Kommentare anzeigt. Bei `70%` und darunter macht eine Spalte ihre Tabelle nach der Regel für Tabellen sichtbar.
-- Eine Zelle, die zu breit ist, um ganz angezeigt zu werden, etwa ein langer Kommentar: anhand des gefundenen Textes darin.
+- Eine Spalte: ihre Zeile, anhand der Zelle, zu der der Sprung führt: ihr Name, ihr logischer Name bei einem Treffer im logischen Namen oder einer Prüfung des logischen Namens, ihre Domänenzelle bei einer Prüfung ihrer Domäne oder der Kommentar, in dem ein Treffer liegt, solange View Option → `Column Comment` die Kommentare anzeigt. Wo die Zeile keine solche Zelle zeigt, führt der Sprung zu der Zelle, die an ihrer Stelle gezeigt wird: zum logischen Namen anstelle des Namens in der Ansicht `Logical Names`, zum Namen anstelle des logischen Namens in der Ansicht `Physical Names` und zur Typzelle anstelle der Domänenzelle, solange View Option → `Domain` ausgeschaltet ist, oder zur Zeile als Ganzes, solange zusätzlich `DataType` ausgeschaltet ist. Bei `70%` und darunter macht eine Spalte ihre Tabelle nach der Regel für Tabellen sichtbar.
+- Eine Zelle, die zu breit ist, um ganz angezeigt zu werden, etwa ein langer Kommentar: anhand des gefundenen Textes darin. Ein Sprung zu der Zelle, die anstelle derjenigen gezeigt wird, in der der Treffer liegt, etwa zum Namen bei einem Treffer im logischen Namen in der Ansicht `Physical Names`, richtet sich nicht nach dem Text.
 - Eine Beziehung: der Rahmen, der ihre beiden Tabellen umspannt, anhand der Kindtabelle.
 - Eine Tabellengruppe: ihr Rahmen, anhand ihrer Titelleiste.
 - Eine Notiz oder der Block, den „Importieren und hinzufügen“ platziert: jeweils das Ganze.
@@ -337,7 +348,7 @@ Sie können zuvor gespeicherte Dokumente mit dem aktuellen Dokument vergleichen.
 Wählen Sie `Diff Viewer` im Kontextmenü der Zeichenfläche, und wählen Sie ein Dokument `.json`, das Sie zuvor exportiert haben.
 
 Die Ansicht öffnet sich über der Zeichenfläche: links, was sich geändert hat, dann das gespeicherte und das aktuelle Dokument nebeneinander.  
-Das aktuelle Dokument wird in dem Stand verglichen, den es beim Öffnen der Ansicht hat; danach vorgenommene Änderungen, auch die eines Mitbearbeiters, erreichen die Ansicht nicht. Ein geöffneter [Explorer](./explorer.md#when-it-stands-aside) wird ausgeblendet, solange die Ansicht geöffnet ist, sodass die Ansicht die ganze Breite des Editors einnimmt.  
+Das aktuelle Dokument wird in dem Stand verglichen, den es beim Öffnen der Ansicht hat; danach vorgenommene Änderungen, auch die eines Mitbearbeiters, erreichen die Ansicht nicht. Beide Seiten öffnen sich in der Namensansicht, die Sie gerade betrachten, und bleiben in ihr, gleich welche Ansicht eine der beiden Dateien behält – siehe [Außerhalb der Zeichenfläche](./logical-names.md#beyond-the-canvas). Ein geöffneter [Explorer](./explorer.md#when-it-stands-aside) wird ausgeblendet, solange die Ansicht geöffnet ist, sodass die Ansicht die ganze Breite des Editors einnimmt.  
 Jede Seite lässt sich mit dem Mausrad, durch Ziehen auf einer leeren Stelle oder der Innenfläche einer Tabellengruppe oder durch Ziehen mit der mittleren Maustaste an beliebiger Stelle darüber verschieben und mit `Ctrl + Wheel` (Windows/Linux), `⌘ + Wheel` (Mac) oder einer Pinch-Geste zoomen. Bei `70%` und darunter werden ihre Tabellen wie auf der Zeichenfläche eingeklappt – siehe [Markierungen auf beiden Seiten](#marks-on-the-two-sides).  
 Beide Seiten sind schreibgeschützt, sodass nichts in Ihrem Dokument verändert wird. Jede behält ihre eigene Auswahl, und ein Klick auf eine Tabelle dort wählt sie nur auf dieser Seite aus.  
 Schließen Sie die Ansicht mit der Schaltfläche `Close` auf dem Hinweis `Diff Viewer`, mit dem sie sich öffnet, oder mit `Escape`.
@@ -360,13 +371,14 @@ Was als Änderung zählt:
 - Eine Notiz: ihr Text, ihre Position, Größe und Farbe.
 - Eine Tabellengruppe: ihr Name, die Tabellen, die sie enthält, ihre Farbe, Position und Größe.
 
-Eine Tabelle, Notiz oder Gruppe, die nur verschoben, in der Größe geändert oder umgefärbt wurde, gilt also als geändert. Positionen und Größen werden in ganzen Pixeln verglichen, und die Stapelreihenfolge sowie die Stelle, an der eine Verbindungslinie auf eine Tabelle trifft, zählen nie.
+Eine Tabelle, Notiz oder Gruppe, die nur verschoben, in der Größe geändert oder umgefärbt wurde, gilt also als geändert. Positionen und Größen werden in ganzen Pixeln verglichen, und die Stapelreihenfolge sowie die Stelle, an der eine Verbindungslinie auf eine Tabelle trifft, zählen nie.  
+Logische Namen, Domänenverknüpfungen sowie die Wörter, Begriffe und Domänen der Registerkarte [Wörterbuch](./dictionary.md) werden nicht verglichen, sodass eine Änderung allein an ihnen weder aufgeführt noch markiert wird. Ein Datentyp, den eine Domäne geändert hat, zählt jedoch als Änderung des Datentyps der Spalte.
 
 ### Der Änderungsbaum {#the-change-tree}
 
 Die Liste links wird wie der [Baum des Explorers](./explorer.md#the-tree) dargestellt und enthält nur, was sich geändert hat: `Tables`, `Table Groups` und `Memos`, jeder Ordner nur angezeigt, wenn er eine Zeile enthält, und unter einer Tabelle deren eigene `Columns`, `Indexes` und `Foreign Keys`. Ein Fremdschlüssel wird unter seiner Kindtabelle aufgeführt, und eine hinzugefügte oder entfernte Tabelle listet nichts darunter auf.  
 Jeder Ordner zeigt, wie viele Zeilen er enthält, und alle Ordner und Tabellen sind anfangs ausgeklappt.  
-Tabellen und Tabellengruppen werden nach Namen geordnet aufgeführt, ohne Beachtung der Groß-/Kleinschreibung. Notizen sowie die Spalten, Indizes und Fremdschlüssel einer Tabelle behalten die Reihenfolge des aktuellen Dokuments, wobei ein entferntes Element an seine frühere Stelle zurückgesetzt wird. Eine Notizzeile zeigt die erste Zeile der Notiz, und eine Fremdschlüsselzeile zeigt ihre Spalten in der Kindtabelle, dann `→` mit der Elterntabelle und deren Spalten, etwa `user_id → users(id)`. Ein leerer Name erscheint kursiv als `unnamed`.
+Eine Tabellen- oder Spaltenzeile wird in der Namensansicht benannt, in der sich die Seiten geöffnet haben. In der Ansicht `Both Names` zeigt sie den logischen Namen mit dem Namen danach, abgeschwächt, und in einer entfernten Zeile ist der abgeschwächte Name mit dem Rest durchgestrichen. Tabellen und Tabellengruppen werden nach Namen geordnet aufgeführt, ohne Beachtung der Groß-/Kleinschreibung, gleich in welcher Ansicht. Notizen sowie die Spalten, Indizes und Fremdschlüssel einer Tabelle behalten die Reihenfolge des aktuellen Dokuments, wobei ein entferntes Element an seine frühere Stelle zurückgesetzt wird. Eine Notizzeile zeigt die erste Zeile der Notiz, und eine Fremdschlüsselzeile zeigt ihre Spalten in der Kindtabelle, dann `→` mit der Elterntabelle und deren Spalten, etwa `user_id → users(id)`. Ein leerer Name erscheint kursiv als `unnamed`.
 
 Jede Zeile endet mit einem Buchstaben, und bei einer mit `A`, `D`, `M` oder `R` markierten Zeile erscheint der Name in der Farbe des Buchstabens:
 
@@ -378,7 +390,7 @@ Jede Zeile endet mit einem Buchstaben, und bei einer mit `A`, `D`, `M` oder `R` 
 
 Zeigen Sie mit dem Zeiger auf den Namen einer Zeile, um ihren Tooltip zu sehen: den Status, `Added`, `Deleted`, `Modified`, `Renamed` oder `Changed inside`, dann eine Zeile pro Änderung, etwa `Name: users → members` oder `NN: ✗ → ✓`. Ein Text wird mit seiner ersten Zeile zitiert, nach 40 Zeichen abgeschnitten, und ein leerer Wert erscheint als `—`. Der Tooltip eines hinzugefügten oder entfernten Elements besteht nur aus seinem Status.
 
-Das Feld `Filter by name` über dem Baum behält die Zeilen, deren aktueller oder gespeicherter Name das Eingegebene enthält, ohne Beachtung der Groß-/Kleinschreibung. Eine Tabelle, deren Name passt, behält alle ihre Zeilen, und eine, deren Name nicht passt, bleibt nur mit den passenden Zeilen stehen. Ein Filter ohne Treffer lässt den Baum leer.  
+Das Feld `Filter by name` über dem Baum behält die Zeilen, deren aktueller oder gespeicherter Name oder deren aktueller oder gespeicherter logischer Name das Eingegebene enthält, ohne Beachtung der Groß-/Kleinschreibung, in jeder Namensansicht. Eine Tabelle, deren Name passt, behält alle ihre Zeilen, und eine, deren Name nicht passt, bleibt nur mit den passenden Zeilen stehen. Ein Filter ohne Treffer lässt den Baum leer.  
 Wenn sich die beiden Dokumente überhaupt nicht unterscheiden, zeigt der Baum `No changes`.
 
 Ziehen Sie den rechten Rand des Baums, um ihn breiter oder schmaler zu machen, von `200px` bis `480px`, und doppelklicken Sie auf den Rand, um ihn auf `260px` zurückzusetzen. Jeder Vergleich öffnet sich mit `260px`, und die beiden Seiten teilen sich die restliche Breite zu gleichen Teilen.  
@@ -407,5 +419,7 @@ Die beiden Seiten färben Text, Umrisse und Verbindungslinien ein und füllen ni
 - Eine Indexänderung markiert auf keiner der beiden Seiten etwas; sie erscheint nur im Baum.
 
 Jede Seite folgt den Ansichtsoptionen ihres eigenen Dokuments. Eine Änderung in einer Zelle, die diese Seite nicht zeichnet, erscheint stattdessen am Namen. Eine Spaltenänderung in einer Zelle, die eine Ansichtsoption ausblendet, etwa `Unique` oder `Auto Increment`, die beide standardmäßig ausgeschaltet sind, färbt den Namen der Spalte bernsteinfarben, ebenso eine Änderung des Primärschlüssels in einer Zeile, die kein Schlüsselsymbol zeigt. Eine Änderung des Tabellenkommentars, während `Table Comment` ausgeschaltet ist, färbt den Namen der Tabelle bernsteinfarben. Das Blau einer Umbenennung hat Vorrang vor diesem Bernstein. Eine Notiz oder Tabellengruppe, die in ihrem Dokument ausgeblendet ist, wird im Baum aufgeführt, aber auf dieser Seite nicht gezeichnet.
+
+In der Ansicht `Logical Names`, die keine Namenszelle zeigt, erscheinen das Blau einer Umbenennung und das Bernstein einer Änderung in einer Zelle, die die Seite nicht zeichnet, auf dem logischen Namen, der anstelle des Namens gezeigt wird. Eine Änderung des Datentyps färbt die Typzelle in jeder Namensansicht bernsteinfarben, auch wo die Zelle den Namen einer Domäne zeigt. Keine der beiden Seiten zeichnet die Farben, die die Prüfungen des Wörterbuchs Namen auf der Zeichenfläche geben – siehe [Markierungen auf der Zeichenfläche](./dictionary.md#marks-on-the-canvas).
 
 Bei `70%` und darunter behalten eingeklappte Tabellen ihren Umriss. Der Name behält das Grün oder Rot einer hinzugefügten oder entfernten Tabelle oder das Blau einer Umbenennung und nimmt andernfalls das Bernstein einer Kommentaränderung an. Spaltenänderungen werden erst gezeichnet, wenn Sie wieder vergrößern; der Baum führt sie trotzdem auf.

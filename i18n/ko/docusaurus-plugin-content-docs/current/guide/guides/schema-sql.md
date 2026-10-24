@@ -1,6 +1,6 @@
 ---
-sidebar_position: 11
-description: Schema SQL 탭에서 다이어그램의 DDL 읽기, 옵션 패널에서 데이터베이스·따옴표·구문·헤더·테이블 고르기, 테이블 앞뒤에 직접 작성한 스크립트 추가하기, SQL 저장과 복사.
+sidebar_position: 12
+description: Schema SQL 탭에서 다이어그램의 DDL 읽기, 옵션 패널에서 데이터베이스·따옴표·구문·헤더·빈 코멘트의 논리명·테이블 고르기, 테이블 앞뒤에 직접 작성한 스크립트 추가하기, SQL 저장과 복사.
 ---
 
 # Schema SQL
@@ -20,24 +20,25 @@ SQL을 마우스 오른쪽 클릭하면 컨텍스트 메뉴가 열립니다.
 - `Options panel`. 패널이 표시되어 있는 동안 체크 표시가 되며, 패널을 접거나 엽니다.
 - `Save file`
 
-이 탭이 열려 있는 동안 빠른 검색에는 `Database`와 `Bracket`, 데이터베이스에 있는 선택지만 나열하는 `Schema SQL: Statements`와 `Schema SQL: Header`, 그리고 패널을 접거나 여는 `Schema SQL: Options panel`이 표시됩니다.
+이 탭이 열려 있는 동안 빠른 검색에는 `Database`와 `Bracket`, 데이터베이스에 있는 선택지만 나열하는 `Schema SQL: Statements`와 `Schema SQL: Header`, 그리고 패널을 접거나 여는 `Schema SQL: Options panel`이 표시됩니다.  
+컨텍스트 메뉴와 빠른 검색 모두 `Write logical names into empty comments`를 제공하지 않으며, 이 스위치는 옵션 패널에만 있습니다. [논리명을 코멘트로 쓰기](#logical-names-as-comments) 항목을 참고하세요.
 
 SQL은 탭이 열릴 때 작성되며, 패널의 선택, 데이터베이스 이름, 스크립트 중 하나가 바뀔 때마다 다시 작성됩니다. 공동 편집자나 코딩 에이전트의 편집처럼 탭이 열려 있는 동안 테이블에 가해진 편집은 탭을 벗어났다가 다시 돌아오거나 위의 항목 중 하나가 바뀌어야 표시됩니다.
 
-[테이블 속성](./table-related-functions.md#테이블-속성)에는 테이블 하나의 DDL을 보여 주는 자체 `Schema SQL` 탭이 있습니다. 이 탭은 항상 헤더나 스크립트 없이 일반 `CREATE` 문을 작성하고, 옵션 패널이 없으며, 컨텍스트 메뉴에는 `Database`와 `Bracket`만 있습니다.
+[테이블 속성](./table-related-functions.md#테이블-속성)에는 테이블 하나의 DDL을 보여 주는 자체 `Schema SQL` 탭이 있습니다. 이 탭은 항상 헤더나 스크립트 없이 일반 `CREATE` 문을 작성하고, 빈 코멘트에 논리명을 쓰지 않으며, 옵션 패널이 없고, 컨텍스트 메뉴에는 `Database`와 `Bracket`만 있습니다.
 
 ## 옵션 패널
 
 패널에는 각각 캡션 아래에 놓인 세 묶음이 있습니다.
 
 1. `Saved in the document`: `Database`와 `Bracket`. [데이터베이스와 Bracket](#데이터베이스와-bracket) 항목을 참고하세요.
-2. `This window only`: `Statements`, `Header`, 그리고 다이어그램에 [테이블 그룹](./table-groups.md)이 있는 동안의 `Tables`. [Statements](#statements), [Header](#header), [Tables](#tables) 항목을 참고하세요.
+2. `This window only`: `Statements`, `Header`, `Write logical names into empty comments`, 그리고 다이어그램에 [테이블 그룹](./table-groups.md)이 있는 동안의 `Tables`. [Statements](#statements), [Header](#header), [논리명을 코멘트로 쓰기](#logical-names-as-comments), [Tables](#tables) 항목을 참고하세요.
 3. `Saved in the document · written as is for every database`: `Before tables`와 `After tables` 스크립트. [앞뒤 스크립트](#앞뒤-스크립트) 항목을 참고하세요.
 
 패널 맨 아래에는 `Save file`과 `Copy`가 있습니다. [SQL 저장과 복사](#sql-저장과-복사) 항목을 참고하세요.
 
 `This window only` 아래의 선택은 그 선택을 한 에디터 창에 속합니다. 문서에 저장되지도, 공동 편집자와 공유되지도, Undo 히스토리에 기록되지도 않으며, 에디터를 닫거나 다시 불러오면 초기화됩니다. 탭을 전환해도 유지됩니다.  
-`Statements`는 `If not exists`에서, `Header`는 `CREATE + USE`에서 시작합니다. 에디터를 임베드한 페이지가 [`getSchemaSQL()`](../../api/erd-editor-element.md#getschemasql)로 읽는 SQL과 코딩 에이전트가 읽는 SQL은 대신 헤더 없이 `Create`에서 시작합니다.
+`Statements`는 `If not exists`에서, `Header`는 `CREATE + USE`에서 시작하며, `Write logical names into empty comments`는 꺼진 상태로 시작합니다. 에디터를 임베드한 페이지가 [`getSchemaSQL()`](../../api/erd-editor-element.md#getschemasql)로 읽는 SQL과 [코딩 에이전트가 읽는](../../mcp/tools.md#문서-읽기) SQL은 대신 헤더 없이 `Create`에서 시작하며, 요청하지 않는 한 논리명을 쓰지 않습니다.
 
 선택한 데이터베이스에 없는 선택지는 패널에 흐리게 남고 `Not in Oracle`처럼 `Not in <database>` 툴팁이 붙으며, 눌러도 아무 일도 일어나지 않습니다.  
 이때 SQL은 데이터베이스에 있는 가장 가까운 형태를 사용하며, 그 형태의 버튼이 눌린 상태로 표시됩니다. `If not exists`는 `Create`로, `CREATE + USE`는 `USE`로, 데이터베이스에 `USE`도 없으면 `None`으로, `USE`는 `None`으로 대체됩니다. 고른 선택은 유지되므로, 그 선택지가 있는 데이터베이스로 바꾸면 다시 적용됩니다.
@@ -92,6 +93,21 @@ SQL은 탭이 열릴 때 작성되며, 패널의 선택, 데이터베이스 이�
 빈 이름을 포함해 그 밖의 이름은 헤더를 작성하지 않으며, 이때 PostgreSQL의 `DROP TABLE`도 스키마를 붙이지 않습니다. `None`이 아닌 헤더가 적용 중인 동안에는 `Header` 아래의 안내 문구 `Database name "<name>" is not a valid identifier.`가 이를 알려 줍니다.  
 새 다이어그램의 데이터베이스 이름은 비어 있으므로, 이름을 지정하기 전까지 패널에는 `Database name "" is not a valid identifier.`가 표시됩니다.
 
+## 논리명을 코멘트로 쓰기 {#logical-names-as-comments}
+
+`This window only` 아래의 스위치인 `Write logical names into empty comments`는 모든 데이터베이스에서, 코멘트가 비어 있는 테이블이나 컬럼의 [논리명](./logical-names.md)을 DDL의 그 코멘트 자리에 씁니다.
+
+![Schema SQL 패널에서 Write logical names into empty comments를 켜자 order_items의 각 컬럼 논리명이 비어 있던 COMMENT에 작성되고 members의 코멘트는 그대로 남는 모습](/img/demo-schema-sql-logical-names.webp)
+
+- 텍스트가 있는 코멘트가 항상 우선합니다. 논리명이 그 코멘트를 대체하거나 그 코멘트에 덧붙여지는 일은 없습니다.
+- 공백만으로 된 코멘트는 빈 코멘트로 취급되므로 그 자리에 논리명이 작성됩니다. 비어 있거나 공백만으로 된 논리명은 아무것도 쓰지 않으며, 그 테이블이나 컬럼은 여전히 코멘트를 받지 않습니다.
+- 논리명은 데이터베이스가 코멘트를 작성하는 위치와 형태로 작성되며, 따옴표도 같은 방식으로 이스케이프됩니다. [코멘트](#comments) 항목을 참고하세요.
+
+예를 들어 MySQL에서 논리명이 `Member ID`이고 코멘트가 없는 컬럼 `id`는 `COMMENT 'Member ID'`와 함께 작성되고, 논리명이 `Email`이고 코멘트가 `Sign-in address`인 컬럼 `email`은 `COMMENT 'Sign-in address'`를 유지합니다.
+
+`Statements`, `Header`와 마찬가지로 이 스위치는 창에 속하며 꺼진 상태로 시작합니다. [옵션 패널](#옵션-패널) 항목을 참고하세요.  
+가져오기는 이런 코멘트를 논리명으로 다시 읽지 않습니다. [코멘트](./file-import-export.md#코멘트) 문서를 참고하세요.
+
 ## Tables
 
 다이어그램에 표시되어 있든 숨겨져 있든 [테이블 그룹](./table-groups.md)이 하나 이상 있는 동안에는 `This window only` 아래에 `Tables`가 나타나며, 선택지마다 체크박스가 있습니다.
@@ -125,22 +141,24 @@ MSSQL에서는 마지막 줄이 `GO`(또는 개수가 붙은 `GO`)가 아닌 스
 
 ## SQL 저장과 복사
 
-패널 맨 아래나 컨텍스트 메뉴에 있는 `Save file`은 현재 데이터베이스, `Bracket`, 구문, 헤더, 테이블, 스크립트가 반영된, 탭에 표시된 SQL 그대로를 `<데이터베이스 이름>-<시간>.sql`로 저장합니다. 파일 이름과 저장 방식은 다른 모든 내보내기와 같습니다. [내보내기](./file-import-export.md#내보내기) 문서를 참고하세요.
+패널 맨 아래나 컨텍스트 메뉴에 있는 `Save file`은 현재 데이터베이스, `Bracket`, 구문, 헤더, 논리명 코멘트, 테이블, 스크립트가 반영된, 탭에 표시된 SQL 그대로를 `<데이터베이스 이름>-<시간>.sql`로 저장합니다. 파일 이름과 저장 방식은 다른 모든 내보내기와 같습니다. [내보내기](./file-import-export.md#내보내기) 문서를 참고하세요.
 
 캔버스 컨텍스트 메뉴나 빠른 검색의 `Export` ▸ `Schema SQL`은 그것만으로는 아무것도 저장하지 않습니다.  
 고르면 이 탭으로 전환하고, 옵션 패널이 접혀 있었더라도 열고, `Save file`에 키보드 포커스를 두므로 `Enter`를 누르면 파일이 저장됩니다.
 
 패널 맨 아래의 `Copy` 또는 코드에 마우스를 올리는 동안 코드 오른쪽 위에 나타나는 복사 버튼은 SQL을 복사합니다.  
-체크 표시가 있는 `Copied!` 토스트가 2초 동안 표시되어 확인해 줍니다. 브라우저나 호스트가 클립보드 사용을 거부하면 대신 경고 표시가 있는 `Couldn't copy to the clipboard` 토스트가 알려 줍니다. 다시 복사하면 토스트가 하나 더 추가되지 않고 기존 토스트를 대체합니다.  
+체크 표시가 있는 `Copied!` 토스트가 2초 동안 표시되어 확인해 줍니다. 브라우저나 호스트가 클립보드 사용을 거부하면 대신 경고 표시가 있는 `Couldn't copy to the clipboard` 토스트가 5초 동안 알려 줍니다. 다시 복사하면 토스트가 하나 더 추가되지 않고 기존 토스트를 대체합니다.  
 SQL은 선택할 수도 있으므로 필요한 부분만 가져올 수 있습니다.
 
 ## DDL이 작성하는 내용
 
 이 규칙은 에디터가 Schema SQL을 작성하는 모든 곳에 적용됩니다. 이 탭과 그 파일, 그리고 에디터를 임베드한 페이지나 코딩 에이전트가 읽는 SQL입니다.  
-테이블 속성의 `Schema SQL` 탭도 표시하는 테이블 하나에 대해 이 규칙을 따릅니다. 다만 `CREATE TABLE` 안에 놓이는 SQLite의 foreign key를 제외하면 foreign key를 작성하지 않으며, Oracle의 시퀀스와 트리거도 작성하지 않습니다.
+테이블 속성의 `Schema SQL` 탭도 표시하는 테이블 하나에 대해 이 규칙을 따릅니다. 다만 Oracle의 시퀀스와 트리거를 작성하지 않으며, `CREATE TABLE` 안에 놓이는 SQLite의 foreign key를 제외하면 foreign key도 작성하지 않습니다. PostgreSQL, Oracle, MSSQL이 테이블 뒤에 두는 코멘트 구문도 작성하지 않으므로, 이 세 데이터베이스에서는 코멘트가 표시되지 않습니다.
 
 각 부분은 헤더, 앞 스크립트, `DROP` 문, 테이블, 뒤 스크립트 순서로 빈 줄 하나를 사이에 두고 놓입니다. 테이블은 이름순으로 작성됩니다.  
 테이블도 스크립트도 없는 다이어그램은 헤더를 골랐더라도 아무것도 작성하지 않습니다.
+
+테이블과 컬럼은 [이름 표시](./logical-names.md#name-view)가 무엇을 표시하든 물리명으로 작성됩니다. 도메인에 연결된 컬럼은 도메인이 정하는 컬럼 자신의 데이터 타입으로 작성됩니다. [도메인과 데이터 타입](./dictionary.md#domains-and-data-types) 문서를 참고하세요.
 
 ### Auto Increment
 
@@ -181,7 +199,28 @@ Snowflake가 동작을 생략하면, 그 foreign key의 `ALTER TABLE` 위에 `--
 - PostgreSQL은 `(now() AT TIME ZONE 'utc')`처럼 괄호 밖에 `AT TIME ZONE`, `AND`, `OR`, `IS`, `IN`, `LIKE`, `COLLATE`, `= ANY` 같은 단어가 있는 표현식만 감쌉니다.
 - MSSQL, Oracle, Snowflake, Databricks는 모든 기본값을 입력한 그대로 작성합니다.
 
+### 코멘트 {#comments}
+
+비어 있지 않은 테이블이나 컬럼의 코멘트, 또는 [`Write logical names into empty comments`](#logical-names-as-comments)가 그 자리에 쓰는 논리명은 각 데이터베이스가 코멘트를 작성하는 방식대로 작성됩니다.
+
+- MySQL과 MariaDB는 인라인으로 작성합니다. 컬럼은 `COMMENT 'Member ID'`로 끝나고 테이블은 `) COMMENT 'Members';`로 닫히며, MySQL의 `If not exists` 묶음에서도 마찬가지입니다.
+- Snowflake는 컬럼의 코멘트를 `COMMENT 'Member ID'`처럼 인라인으로 작성하고, 테이블의 코멘트는 닫는 괄호 뒤의 별도 줄에 `COMMENT = 'Members';`로 작성합니다.
+- Databricks는 컬럼의 코멘트를 인라인으로 작성하고, 테이블의 코멘트는 `USING DELTA` 뒤에 `COMMENT 'Members';`로 작성합니다.
+- PostgreSQL은 테이블의 `CREATE TABLE` 바로 뒤에 `COMMENT ON TABLE member IS 'Members';`와 `COMMENT ON COLUMN member.id IS 'Member ID';`를 작성합니다. Oracle은 같은 구문을 테이블, 그 unique 제약 조건, auto-increment 시퀀스와 트리거 뒤에 작성합니다.
+- MSSQL은 테이블과 그 unique 제약 조건 뒤에 테이블마다, 컬럼마다 호출을 하나씩 작성하며, 각 호출 뒤에 `GO`가 붙습니다. 호출은 `EXECUTE sys.sp_addextendedproperty 'MS_Description', N'Members', 'schema', 'dbo', 'table', 'member'`이며, 컬럼에는 `'column', 'id'`가 추가됩니다.  
+  텍스트는 국가 문자 리터럴 `N'…'`이므로, SQL Server는 한국어처럼 데이터베이스의 코드 페이지 밖에 있는 텍스트를 물음표로 저장하지 않고 그대로 유지합니다.  
+  `Bracket`이 `None`이면 `sales.users`라는 테이블은 스키마 `sales`와 테이블 `users`가 되며, 대괄호와 큰따옴표가 제거되는 `[sales].[users]`와 `"sales"."users"`도 마찬가지입니다. 스키마가 없는 이름은 `dbo`에 속합니다. `shop.sales.users`처럼 스키마 앞에 부분이 더 있으면 그 데이터베이스의 프로시저인 `shop.sys.sp_addextendedproperty`를 실행합니다. 그 밖의 `Bracket`에서는 이름 전체가 `dbo`의 테이블입니다.
+- SQLite는 코멘트를 보관하지 않으므로 각 코멘트를 설명하는 대상 위에 `--` 줄로 작성합니다. `CREATE TABLE member` 위에 `-- Members`를, 컬럼 위에 `-- Member ID`를 작성합니다.
+
+따옴표로 감싼 코멘트 안의 따옴표는 `'it''s'`와 `N'it''s'`처럼 두 번 쓰며, MSSQL의 호출이 전달하는 이름 안의 따옴표도 마찬가지입니다. Databricks는 대신 `'it\'s'`처럼 따옴표와 백슬래시를 백슬래시로 이스케이프하며, 이는 모든 Spark 릴리스가 읽는 형태입니다. SQLite의 `--` 줄은 따옴표로 감싸지 않으므로 `-- it's`처럼 따옴표를 입력한 그대로 유지합니다.  
+그 밖에는 텍스트가 줄바꿈을 포함해 입력한 그대로 작성되며, 두 데이터베이스만 예외입니다.
+
+- Oracle은 빈 줄을 생략하며, 공백이나 탭만 있는 줄도 빈 줄로 칩니다. SQL\*Plus는 빈 줄에서 구문을 끝내고 그 나머지를 건너뛰기 때문입니다. `Members`, 빈 줄, `Active only`로 된 테이블 코멘트는 `COMMENT ON TABLE member IS 'Members`와 다음 줄의 `Active only';`로 작성됩니다.
+- SQLite는 줄바꿈이 연달아 있는 부분마다 공백 하나로 작성합니다. 줄바꿈이 `--` 줄을 끝내고 나머지를 SQL로 실행하게 되기 때문입니다. 같은 코멘트는 `-- Members Active only`로 작성됩니다.
+
+가져올 때 이 코멘트를 어떻게 다시 읽는지는 [코멘트](./file-import-export.md#코멘트) 문서에서 설명합니다.
+
 ## 읽기 전용 에디터
 
-`readonly` 에디터에서도 탭은 평소처럼 동작합니다. `Database`와 `Bracket`은 여전히 표시되는 SQL을 바꾸고, `Statements`, `Header`, `Tables`도 여전히 동작하며, `Save file`과 `Copy`도 여전히 SQL을 저장하고 복사합니다.  
+`readonly` 에디터에서도 탭은 평소처럼 동작합니다. `Database`와 `Bracket`은 여전히 표시되는 SQL을 바꾸고, `Statements`, `Header`, `Write logical names into empty comments`, `Tables`도 여전히 동작하며, `Save file`과 `Copy`도 여전히 SQL을 저장하고 복사합니다.  
 두 스크립트 입력란만 읽기 전용입니다.

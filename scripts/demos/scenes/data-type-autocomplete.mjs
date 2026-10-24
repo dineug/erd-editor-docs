@@ -11,7 +11,7 @@ CREATE TABLE products (
 `;
 
 /** Where the pointer waits: under the table, left of every suggestion list. */
-const PARK = { x: 62, y: 236 };
+const PARK = { x: 78, y: 236 };
 
 /** Viewport point inside one column's DataType cell. */
 async function dataTypeCell(d, column) {
@@ -45,7 +45,7 @@ export default {
   height: 500,
   async setup(d) {
     await seedSQL(d, SQL, {
-      tables: { products: { x: 20, y: 8 } },
+      tables: { products: { x: 36, y: 8 } },
       settings: { databaseName: 'shop', zoomLevel: 1 },
       patch(doc) {
         for (const column of Object.values(doc.collections.tableColumnEntities)) {

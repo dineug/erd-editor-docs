@@ -1,6 +1,6 @@
 ---
-sidebar_position: 6
-description: Verwijder een relatie, wijzig het type ervan, stel de acties voor ON DELETE en ON UPDATE in, wijs de relatie toe aan bestaande kolommen met het dialoogvenster Kolommen toewijzen, lees de notatie van verbindingslijnen, werk met N:M- en identificerende relaties en bekijk hoe nieuwe kolommen met refererende sleutel worden benoemd.
+sidebar_position: 7
+description: Verwijder een relatie, wijzig het type ervan, stel de acties voor ON DELETE en ON UPDATE in, wijs de relatie toe aan bestaande kolommen met het dialoogvenster Kolommen toewijzen, lees de notatie van verbindingslijnen, werk met N:M- en identificerende relaties en bekijk wat nieuwe kolommen met refererende sleutel van hun sleutel overnemen en hoe ze worden benoemd.
 ---
 
 # Relaties bewerken
@@ -85,6 +85,9 @@ Het dialoogvenster opent op twee manieren:
 
 De ondertitel van het dialoogvenster noemt de twee tabellen en het relatietype, zoals `users → posts · One N`. Het type wordt hier getoond maar niet gewijzigd — gebruik [Type wijzigen](#type-change).
 
+In het hele dialoogvenster, inclusief de notities en regels onder de rijen en de melding waarmee het sluit, worden tabellen en kolommen genoemd zoals de [naamweergave](./logical-names.md#beyond-the-canvas) ze noemt.  
+Drie dingen blijven fysiek: elk gegevenstype, dat dat van de kolom zelf is en nooit de naam van haar domein; `New column: <name>`, dat de naam toont die de nieuwe kolom krijgt; en de rijen die bij `Map` vooraf zijn ingevuld, die op naam worden gekoppeld, nooit op logische naam.
+
 `References` kiest de sleutel waarnaar de relatie verwijst: `Primary Key`, met de bijbehorende kolommen in tabelvolgorde, en daarna `Unique: <column>` voor elke kolom die als `Unique` is gemarkeerd. Dit veld wordt alleen getoond als er meer dan één keuze is.  
 Een unieke index telt hier niet als sleutel, en een kolom met `Unique` die de hele primaire sleutel vormt, wordt niet twee keer vermeld.  
 Als je een andere sleutel kiest, worden de rijen opnieuw opgebouwd. Een rij behoudt haar keuze zolang die kolom nog in de kindtabel staat.
@@ -121,10 +124,10 @@ Als de kolommen van de relatie of de sleutel waarop het dialoogvenster opende in
 Wat `Map` en `Save` schrijven:
 
 - `Map` voegt de relatie toe met `On Delete` en `On Update` op `Not set`. `Save` wijzigt alleen de kolommen van de relatie, laat de ouderkant verwijzen naar de sleutel die bij `References` is gekozen, en behoudt het type en de ON DELETE en ON UPDATE ervan.
-- Een rij met `New column` voegt een kolom toe aan het eind van de kindtabel, zoals tekenen dat doet: `NOT NULL`, benoemd naar de sleutel, met het gegevenstype, de standaardwaarde en de opmerking van de sleutel — zie [Identificerende relaties](#identifying-relationships).
-- De naam van een gekozen kolom wordt nooit gewijzigd, en `Not Null`, primaire sleutel, `Unique`, standaardwaarde en opmerking van de kolom blijven zoals ze zijn. Het gegevenstype verandert alleen zolang `Relationship DataType Sync` aanstaat en de ouderkolom een gegevenstype heeft: de kolom krijgt het type dat de ouderkolom aan een refererende sleutel geeft, bij een serial-sleutel het integertype zoals bij een nieuwe kolom, en de wijziging zet zich voort langs de relaties zoals de synchronisatie dat doet.
+- Een rij met `New column` voegt een kolom toe aan het eind van de kindtabel, zoals tekenen dat doet: `NOT NULL`, benoemd naar de sleutel, met het gegevenstype, de standaardwaarde, de opmerking, de logische naam en het domein van de sleutel — zie [Identificerende relaties](#identifying-relationships).
+- De naam van een gekozen kolom wordt nooit gewijzigd en de kolom wordt nooit aan het domein van de sleutel gekoppeld, en `Not Null`, primaire sleutel, `Unique`, standaardwaarde, opmerking en logische naam van de kolom blijven zoals ze zijn. Het gegevenstype verandert alleen zolang `Relationship DataType Sync` aanstaat en de ouderkolom een gegevenstype heeft: de kolom krijgt het type dat de ouderkolom aan een refererende sleutel geeft, bij een serial-sleutel het integertype zoals bij een nieuwe kolom, en de wijziging zet zich voort langs de relaties zoals de synchronisatie dat doet. Elke kolom waarvan de wijziging het type aanpast, gekozen of langs de relaties bereikt, wordt van haar [domein](./dictionary.md#domains-and-data-types) ontkoppeld wanneer haar nieuwe type afwijkt van dat van het domein.
 - Een kolom die de toewijzing niet meer gebruikt, blijft in de kindtabel en is niet langer als refererende sleutel gemarkeerd, tenzij een andere relatie er nog op eindigt.
-- Alles wat één `Map` of `Save` schrijft, inclusief nieuwe kolommen en typewijzigingen, is één stap in de geschiedenis.
+- Alles wat één `Map` of `Save` schrijft — inclusief nieuwe kolommen, typewijzigingen en het ontkoppelen van domeinen — is één stap in de geschiedenis.
 
 Of de relatie identificerend is en hoe het ouderuiteinde wordt getekend, wordt zoals bij elke relatie afgeleid uit de toegewezen kolommen van de kindtabel. Toewijzen aan de kolommen van de primaire sleutel van de kindtabel maakt de relatie meteen identificerend, en toewijzen aan een kolom die `NULL` toestaat, zet een ring op het ouderuiteinde — zie [Een verbindingslijn lezen](#reading-a-connector).  
 De refererende sleutel in Schema SQL verwijst naar de sleutel die je hebt gekozen, zoals `REFERENCES vehicle (vin)` voor een sleutel met `Unique`.
@@ -156,9 +159,10 @@ Zie [Bestanden importeren of exporteren](./file-import-export.md).
 ## Identificerende relaties {#identifying-relationships}
 
 Wanneer je een relatie tekent door op de kindtabel te klikken of met `Create new columns`, wordt elke primaire sleutel van de oudertabel naar de kindtabel gekopieerd als kolom met refererende sleutel die `NOT NULL` is, zodat een nieuwe relatie niet-identificerend begint.  
-De kopie neemt het gegevenstype, de standaardwaarde en de opmerking van de sleutel over, maar niet `Unique` of `Auto Increment`, en krijgt een naam zoals beschreven in [Namen van kolommen met refererende sleutel](#foreign-key-column-names).  
+De kopie neemt het gegevenstype, de standaardwaarde, de opmerking en de logische naam van de sleutel over, maar niet `Unique` of `Auto Increment`, en krijgt een naam zoals beschreven in [Namen van kolommen met refererende sleutel](#foreign-key-column-names).  
 Een serial-sleutel is de uitzondering voor het gegevenstype: de kopie ervan krijgt het integertype dat de serial opslaat. Bij elke database geven `smallserial` en `serial2` `smallint`, geeft `serial4` `integer` en geven `bigserial` en `serial8` `bigint`. Een losse `serial` geeft `integer` bij PostgreSQL en `bigint unsigned` bij MySQL en MariaDB, en blijft `serial` bij elke andere database.  
 Alleen de volledige typenaam telt, ongeacht het hoofdlettergebruik, dus `serial(4)` wordt gekopieerd zoals het is geschreven. Een type in hoofdletters geeft hoofdletters: `SERIAL` geeft `INTEGER` bij PostgreSQL. Een kolom met refererende sleutel die in een opgeslagen diagram al het type `serial` heeft, behoudt dat type.  
+De kopie wordt ook gekoppeld aan het [domein](./dictionary.md#domains-and-data-types) van de sleutel, mits het blad `Domains` dat domein bevat wanneer de kopie wordt gemaakt en de kopie het gegevenstype van de sleutel behoudt. Een kopie van een serial-sleutel die een integertype krijgt, koppelt dus geen domein, terwijl een losse `serial` die `serial` blijft, het wel koppelt.  
 Om de relatie identificerend te maken, stel je die kolommen met refererende sleutel in de kindtabel in als primaire sleutels: selecteer ze allemaal en druk één keer op `Alt + K` (Windows/Linux) of `⌥ + K` (Mac), of kies in het contextmenu van de tabel `Primary Key`, dat `Primary Key on selected columns` toont zolang er twee of meer zijn geselecteerd — zie [Primaire sleutel van een kolom](./table-editing.md#column-primary-key).
 
 ![Met Alt + K product_id als primaire sleutel in- en uitschakelen, waardoor de verbindingslijn eerst doorgetrokken en daarna onderbroken wordt](/img/demo-identifying-relationship.webp)
@@ -193,7 +197,10 @@ Dat geldt ook voor de primaire sleutel die de editor toevoegt aan een oudertabel
 De namen worden vastgelegd wanneer de relatie wordt getekend. Als je later de naam van de oudertabel of van haar sleutel wijzigt, veranderen ze niet mee.  
 De rijen met `New column` van [Kolommen toewijzen](#map-columns) krijgen namen volgens dezelfde regels, en de lijst toont elke naam voordat je die kiest.  
 Relaties die binnenkomen terwijl hun kolommen al bestaan — via een import, plakken, dupliceren of het dialoogvenster Kolommen toewijzen dat bestaande kolommen koppelt — behouden de namen die die kolommen hebben.  
-Een codeeragent die een relatie toevoegt met `erd_add_relationship`, krijgt dezelfde namen en gegevenstypen — zie [Tools](../../mcp/tools.md#relationships).
+Een codeeragent die een relatie toevoegt met `erd_add_relationship`, krijgt dezelfde namen, gegevenstypen, logische namen en domeinen — zie [Tools](../../mcp/tools.md#relationships).
+
+Een kolom met refererende sleutel wordt vernoemd naar haar sleutel, nooit naar de logische naam die ze overneemt, en haar naam geldt als een naam die je zelf hebt ingevoerd: een logische naam die later voor de kolom wordt ingevoerd, laat de naam zoals hij is, tenzij de naam leeg is — zie [Eigen namen](./dictionary.md#names-of-your-own).  
+Zolang de overgenomen logische naam overeenkomt met een term die een andere naam oplevert, vermeldt het blad `Checks` de kolom daarom onder [`Physical name mismatch`](./dictionary.md#what-each-check-finds). Als je haar fysieke naam opnieuw afleidt, krijgt ze de naam uit de woordenboeken, tenzij een andere kolom van de kindtabel die naam al heeft, ongeacht hoofdlettergebruik — zie [Fysieke namen opnieuw afleiden](./dictionary.md#derive-physical-names-again).
 
 ## Een verbindingslijn lezen {#reading-a-connector}
 

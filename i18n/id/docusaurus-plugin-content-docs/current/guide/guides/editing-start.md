@@ -77,8 +77,8 @@ Mulai hubungan dari menu konteks, dari [bilah alat kanvas](./table-related-funct
 - Satu hingga N: `Ctrl + Alt + 4` (Windows/Linux) atau `⌘ + ⌥ + 4` (Mac)
 
 Setelah suatu tipe disiapkan, kursor berubah. Klik tabel induk terlebih dahulu, lalu tabel anak.  
-Tabel induk mendapatkan kunci utama jika belum memilikinya, dan untuk setiap kolom kunci utama tabel induk, tabel anak mendapatkan kolom kunci asing `Not Null` dengan tipe data, nilai default, dan komentar yang sama.  
-Kunci serial merupakan pengecualian: kunci asingnya mengambil tipe integer yang disimpan serial tersebut, seperti `integer` untuk `serial4` — lihat [Hubungan pengidentifikasi](./relationship-editing.md#identifying-relationships).  
+Tabel induk mendapatkan kunci utama jika belum memilikinya, dan untuk setiap kolom kunci utama tabel induk, tabel anak mendapatkan kolom kunci asing `Not Null` dengan tipe data, nilai default, komentar, [nama logis](./logical-names.md), dan [domain](./dictionary.md#domains-and-data-types) yang sama.  
+Kunci serial merupakan pengecualian: kunci asingnya mengambil tipe integer yang disimpan serial tersebut, seperti `integer` untuk `serial4`, sehingga tidak menautkan domain apa pun — lihat [Hubungan pengidentifikasi](./relationship-editing.md#identifying-relationships).  
 Setiap kolom kunci asing diberi nama berdasarkan kuncinya: nama satu kata seperti `id` diberi nama tabel induk di depannya (`user_id`), nama beberapa kata seperti `member_id` dipertahankan, dan nama yang sudah dimiliki tabel anak diberi nomor (`user_id_2`) — lihat [Nama kolom kunci asing](./relationship-editing.md#foreign-key-column-names).  
 Mengeklik satu tabel dua kali menggambar hubungan yang merujuk dirinya sendiri.  
 Hubungan baru dimulai dengan `On Delete` dan `On Update` keduanya bernilai `Not set`; ubah keduanya dari menu konteksnya — lihat [ON DELETE dan ON UPDATE](./relationship-editing.md#on-delete-and-on-update).  
@@ -91,7 +91,8 @@ Setelah tabel induk ditentukan, saat penunjuk diarahkan ke tabel tempat hubungan
 
 Tabel induk juga menampilkan tombol tersebut setelah penunjuk bergerak sedikit menjauh dari titik tempat Anda mengekliknya, sehingga hubungan yang merujuk dirinya sendiri juga dapat dipetakan ke kolom yang sudah ada.  
 Jari tidak dapat mengarahkan penunjuk tanpa menyentuh, sehingga saat Anda menggambar dengan jari, tombol tersebut tidak pernah tampil dan mengetuk tabel anak langsung menggambar hubungan; pena menampilkannya seperti mouse.  
-Jika tabel induk telah kehilangan kunci utamanya saat Anda mencapai tabel anak, misalnya karena pembatalan atau perubahan dari kolaborator, `Create new columns` diredupkan dengan tooltip `<parent> has no primary key to copy`, dan mengeklik tabel anak mengakhiri penggambaran tanpa menggambar apa pun.
+Jika tabel induk telah kehilangan kunci utamanya saat Anda mencapai tabel anak, misalnya karena pembatalan atau perubahan dari kolaborator, `Create new columns` diredupkan dengan tooltip `<parent> has no primary key to copy`, dan mengeklik tabel anak mengakhiri penggambaran tanpa menggambar apa pun.  
+Tooltip itu menamai tabel induk sesuai [Tampilan Nama](./logical-names.md#beyond-the-canvas).
 
 ![Menggambar hubungan Satu hingga N dengan ⌘ + ⌥ + 4, lalu hubungan Nol hingga N dari bilah alat kanvas, dengan tabel anak bergaris tepi beserta tombolnya, Map to existing columns dan Create new columns](/img/demo-relationship.webp)
 

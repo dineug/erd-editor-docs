@@ -1,6 +1,6 @@
 ---
-sidebar_position: 10
-description: Raziščite shemo v načinu Graf kot graf, razporejen na osnovi sil, ali v načinu Tok kot kartice tabel – povečujte in premikajte pogled, osvetlite tabele, povezane s posamezno tabelo, in se osredotočite na nekaj tabel hkrati.
+sidebar_position: 11
+description: Raziščite shemo v načinu Graf kot graf, razporejen na osnovi sil, ali v načinu Tok kot kartice tabel – povečujte in premikajte pogled, osvetlite tabele, povezane s posamezno tabelo, osredotočite se na nekaj tabel hkrati in se po korakih vrnite na prejšnje osredotočitve.
 ---
 
 # Vizualizacija
@@ -21,15 +21,17 @@ Na novo odprt urejevalnik se začne v načinu `Graph`. Izbrani način ostane, do
 Nad sredino spodnjega roba zavihka lebdi orodna vrstica. Od leve proti desni:
 
 - `Graph` in `Flow`, pri čemer je trenutni način poudarjen.
+- `Previous table` in `Next table`, samo v načinu `Flow`: puščica levo in puščica desno, ki naredita korak nazaj in naprej po tabelah, na katere je bil zožen način Tok – glejte razdelek [Prejšnja in naslednja tabela](#previous-table-and-next-table). Vsaka od njiju je zatemnjena, dokler v tej smeri ni koraka, na katerega bi se lahko premaknili.
 - `Zoom out`, trenutna povečava v odstotkih, kot je `100%`, in `Zoom in`. Vsak pritisk spremeni povečavo za 4 odstotne točke, sredina zaslona pa ostane na mestu. Odstotek kaže povečavo načina, v katerem ste, klik nanj pa to povečavo ponastavi na `100%`.
 - `Fit`, ki pogled prilagodi tako, da je vidno vse, kar način prikazuje: vsako vozlišče v načinu `Graph`, vsaka kartica v načinu `Flow`.
 - `Tidy Up`, samo v načinu `Flow`, ki kartice znova razporedi – glejte razdelek [Kako način Tok razporedi kartice](#how-flow-is-placed).
 - Meni prikaza vrstic, samo v načinu `Flow`, ki ima za napis trenutno izbiro – glejte razdelek [Prikaz vrstic](#row-display).
+- Seznam `Name View`, samo v načinu `Flow`, ki ima za napis trenutni prikaz – glejte razdelek [Imena na karticah](#names-on-the-cards).
 - `Show all`, ki znova prikaže celoten diagram, samo v načinu `Flow` in samo, dokler je pogled zožen – glejte razdelek [Osredotočanje na tabele](#focusing-on-tables).
 - Kompas `Go to content`, ki se pridruži koncu orodne vrstice samo, dokler na zaslonu ni nobenega vozlišča ali kartice. Prikazuje puščico, ki kaže proti najbližjemu vozlišču ali kartici, in kako daleč je, na primer `1.2k`. Kliknite ga, da to vozlišče ali kartico postavite na sredino zaslona, ne da bi se spremenila povečava.
 
-Gumba za povečavo navajata svoji bližnjici v opisih orodja, na primer `Zoom in (Ctrl + Plus)` (Windows/Linux) ali `Zoom in (⌘ + Plus)` (Mac).  
-Bližnjici `Ctrl + Plus` in `Ctrl + Minus` (Windows/Linux) ali `⌘ + Plus` in `⌘ + Minus` (Mac) v obeh načinih spreminjata povečavo po korakih tako kot gumba, bližnjica `Ctrl + 0` (Windows/Linux) ali `⌘ + 0` (Mac) pa jo takoj vrne na `100%`.  
+Gumba za povečavo in obe puščici navajajo svoje bližnjice v opisih orodja, na primer `Zoom in (Ctrl + Plus)` (Windows/Linux) ali `Zoom in (⌘ + Plus)` (Mac) ter `Previous table (Ctrl + Z)` (Windows/Linux) ali `Previous table (⌘ + Z)` (Mac).  
+Bližnjici `Ctrl + Plus` in `Ctrl + Minus` (Windows/Linux) ali `⌘ + Plus` in `⌘ + Minus` (Mac) v obeh načinih spreminjata povečavo po korakih tako kot gumba, bližnjica `Ctrl + 0` (Windows/Linux) ali `⌘ + 0` (Mac) pa jo takoj vrne na `100%`. V načinu `Flow` bližnjici `Ctrl + Z` in `Ctrl + Shift + Z` (Windows/Linux) ali `⌘ + Z` in `⌘ + Shift + Z` (Mac) naredita korak tako kot obe puščici.  
 Klik na odstotek naredi isto kot `Ctrl + 0` (Windows/Linux) ali `⌘ + 0` (Mac), odstotek pa to bližnjico navaja v svojem opisu orodja. Bližnjice ne naredijo ničesar, dokler je odprto hitro iskanje.
 
 ## Način Graf {#graph-mode}
@@ -44,7 +46,8 @@ Vsaka tabela in vsak stolpec je vozlišče, obe vrsti vozlišč pa sta prikazani
 Vsako vozlišče stolpca je povezano s tabelo, ki ji pripada, dve tabeli, ki ju povezuje relacija, pa sta povezani med seboj.  
 Tabele, ki jih povezuje več relacij v isti smeri, so povezane samo enkrat, relacija, ki se začne in konča na isti tabeli, pa ne nariše nobene povezave.
 
-Imena tabel se na grafu prikazujejo med povečevanjem, pri čemer med `50%` in `100%` postopno postajajo vidna, ime, daljše od 15 znakov, pa se odreže. Vozlišča stolpcev nimajo napisa pri nobeni povečavi.
+Imena tabel se na grafu prikazujejo med povečevanjem, pri čemer med `50%` in `100%` postopno postajajo vidna, ime, daljše od 15 znakov, pa se odreže. Vozlišča stolpcev nimajo napisa pri nobeni povečavi.  
+Napisi sledijo prikazu imen – glejte razdelek [Zunaj platna](./logical-names.md#beyond-the-canvas). V prikazu `Both Names` napis postavi logično ime v eno vrstico, fizično ime pa v vrstico pod njo, pri čemer se vsaka vrstica odreže posebej.
 
 ### Premikanje po grafu {#getting-around-the-graph}
 
@@ -59,9 +62,9 @@ Gumba za povečavo v [orodni vrstici](#toolbar) in bližnjice za povečavo names
 Premaknite kazalec nad vozlišče tabele, da se ob kazalcu prikaže predogled te tabele.  
 Ko je kazalec nad vozliščem stolpca, se okoli njega nariše le obroč; predogled se ne odpre.
 
-Predogled prikazuje iste stolpce kot platno ERD, v enakem vrstnem redu – glejte razdelka [Možnosti pogleda tabel](./table-related-functions.md#table-view-options) in [Prilagajanje vrstnega reda stolpcev](./settings.md#adjusting-column-order).  
+Predogled prikazuje iste stolpce in celice kot platno ERD, v enakem vrstnem redu, in jih poimenuje tako kot platno v prikazu imen, v katerem ste – glejte razdelke [Možnosti pogleda tabel](./table-related-functions.md#table-view-options), [Prilagajanje vrstnega reda stolpcev](./settings.md#adjusting-column-order) in [Prikaz imen](./logical-names.md#name-view).  
 Ko je možnost pogleda `Alternate Key` vklopljena, ima vsak stolpec [alternativnega ključa](./table-related-functions.md#alternate-keys) na koncu svoje vrstice svojo oznako, kot je `AK1.1`, predogled pa se zaradi nje razširi tako kot tabela na platnu ERD.  
-Za razliko od tabele na platnu ERD njegova glava nikoli ne prevzame barve [skupine](./table-groups.md#coloring-a-group) tabele.  
+Za razliko od tabele na platnu ERD njegova glava nikoli ne prevzame barve [skupine](./table-groups.md#coloring-a-group) tabele, njegova imena pa nikoli nimajo [oznak](./dictionary.md#marks-on-the-canvas), ki jih preverjanja slovarja postavijo na platno.  
 Namenjen je samo prikazu in se skrije, medtem ko vlečete vozlišče ali premikate pogled.
 
 ### Poudarjanje soseščine {#highlighting-a-neighbourhood}
@@ -86,7 +89,7 @@ Znova ga zgradi tudi preklop iz načina `Flow` v način `Graph`, vsaka ponovna g
 Vsako tabelo nariše kot kartico in kartice razporedi glede na njihove relacije. Beležk in [skupin tabel](./table-groups.md) ne riše.  
 To ni postavitev `Flow` v [samodejni postavitvi](./table-related-functions.md#auto-layout), ki premika tabele na samem zavihku ERD.
 
-Vsaka kartica se nariše kot tabela na zavihku ERD: barva tabele ob njenem levem robu, pas glave z ikono tabele in imenom tabele ter nato vrstice, ki jih zahteva njen [prikaz vrstic](#row-display). Za razliko od tabele na zavihku ERD kartica med svojimi vrsticami nariše tudi črto, njena glava pa nikoli ne prevzame barve [skupine](./table-groups.md#coloring-a-group) tabele. Kartice ohranijo ta videz pri vsaki povečavi in se nikoli ne strnejo na svoje ime, kot se to zgodi tabelam na zavihku ERD pri `70%` in manj. Na kartici ni mogoče urediti ničesar.
+Vsaka kartica se nariše kot tabela na zavihku ERD: barva tabele ob njenem levem robu, pas glave z ikono tabele in imeni tabele, kot jih prikazuje [prikaz imen](#names-on-the-cards), ter nato vrstice, ki jih zahteva njen [prikaz vrstic](#row-display). Za razliko od tabele na zavihku ERD kartica med svojimi vrsticami nariše tudi črto, njena glava pa nikoli ne prevzame barve [skupine](./table-groups.md#coloring-a-group) tabele. Kartice ohranijo ta videz pri vsaki povečavi in se nikoli ne strnejo na svoje ime, kot se to zgodi tabelam na zavihku ERD pri `70%` in manj. Na kartici ni mogoče urediti ničesar.
 
 Povezovalna črta je ena gladka krivulja od tabele do tabele, narisana pod karticami, zato lahko poteka za kartico. Rekurzivna relacija se ukrivi okoli zgornjega desnega kota kartice, tako kot na zavihku ERD – glejte razdelek [Usmerjanje povezovalnih črt](./relationship-editing.md#connector-routing). Vsaka povezovalna črta se nariše kot enaka polna siva črta, ne glede na to, ali je relacija identifikacijska ali ne, z enakimi oznakami na koncih kot na zavihku ERD – glejte razdelek [Branje povezovalne črte](./relationship-editing.md#reading-a-connector). Način Tok nariše povezovalne črte tudi, ko je [možnost pogleda](./table-related-functions.md#table-view-options) `Relationship` izklopljena. Nikoli ne nariše oznak `D:` in `U:`, ki označujeta dejanji ON DELETE in ON UPDATE relacije, in ne prikaže opisa orodja, ki ju izpiše v celoti, ne glede na nastavitev možnosti pogleda `Referential Actions`.
 
@@ -105,11 +108,28 @@ Meni se odpre nad orodno vrstico, ob trenutni izbiri pa je kljukica. Zapre se, k
 | `Keys only` | Stolpce primarnih in tujih ključev ter vse druge stolpce, na katerih se konča kakšna relacija. |
 | `All fields` | Vse stolpce. |
 
-Vrstice si sledijo v vrstnem redu stolpcev tabele. Vsaka vrstica prikazuje ime stolpca, pred katerim je ikona ključa, kadar je stolpec primarni ključ, tuji ključ ali oboje, na desni pa podatkovni tip, ki se prikaže samo, ko je kartica [osvetljena](#lighting-related-tables).  
+Vrstice si sledijo v vrstnem redu stolpcev tabele. Vsaka vrstica prikazuje ime stolpca, pred katerim je ikona ključa, kadar je stolpec primarni ključ, tuji ključ ali oboje, na desni pa podatkovni tip, ne glede na to, ali je kartica [osvetljena](#lighting-related-tables) ali ne. [Prikaz imen](#names-on-the-cards) določa, katera imena prikazuje vrstica in ali prikazuje domeno stolpca.  
 Nobena druga celica ali oznaka alternativnega ključa se ne nariše, za kartice pa ne veljajo niti [možnosti pogleda tabel](./table-related-functions.md#table-view-options) niti [prilagajanje vrstnega reda stolpcev](./settings.md#adjusting-column-order), ki določa vrstni red celic v vrstici.
 
 Ko se način Tok odpre prvič, se začne z možnostjo `Name only` ali z možnostjo `Keys only`, če ga je odprlo [osredotočanje na tabele](#focusing-on-tables). Nato se prikaz vrstic spremeni samo, ko izberete drugo možnost, zoževanje ali razširjanje pogleda pa ga ohrani.  
 Sprememba prikaza vrstic spremeni velikost kartic, zato jih način Tok znova razporedi in prilagodi zaslonu.
+
+### Imena na karticah {#names-on-the-cards}
+
+Kartica poimenuje svojo tabelo in stolpce v prikazu imen, istem, v katerem izrisuje zavihek ERD – glejte razdelek [Prikaz imen](./logical-names.md#name-view).  
+Tukaj ga preklopite s seznamom `Name View` v [orodni vrstici](#toolbar). Njegov gumb ima za napis trenutni prikaz, `Physical Names`, `Logical Names` ali `Both Names`, njegov opis orodja pa je `Name View`. Seznam se odpre nad orodno vrstico s kljukico ob trenutnem prikazu in se zapre tako kot meni [prikaza vrstic](#row-display). Izbira preklopi celoten urejevalnik, vključno z zavihkom ERD, tako kot preklop kjer koli drugje – glejte razdelek [Preklapljanje prikaza](./logical-names.md#switching-the-view).
+
+Kartice razporedijo svoje celice samo glede na prikaz imen. Nobena [možnost pogleda](./table-related-functions.md#table-view-options) jih ne spremeni, vključno z možnostjo `Domain`:
+
+| Prikaz imen | Glava | Vsaka vrstica |
+| --- | --- | --- |
+| `Physical Names` | Ime tabele. | Ime stolpca, nato podatkovni tip. |
+| `Logical Names` | Logično ime tabele. | Logično ime stolpca, nato ime njegove [domene](./dictionary.md#domains-and-data-types) ali njegov podatkovni tip, dokler domene nima. |
+| `Both Names` | Logično ime, nato bledo ime tabele. | Logično ime, fizično ime, domena in podatkovni tip. |
+
+Dokler je logično ime prazno, prikaz `Logical Names` na njegovem mestu prikaže zatemnjeno fizično ime ali nadomestno besedilo `table` oziroma `column`, kadar je prazno tudi fizično ime, prikaz `Both Names` pa prikaže zatemnjeno nadomestno besedilo `logical`. V prikazu `Both Names` stolpec brez domene prikaže zatemnjeno nadomestno besedilo `domain`.  
+Kartica nikoli nima [oznak](./dictionary.md#marks-on-the-canvas), ki jih preverjanja slovarja postavijo na imena na zavihku ERD.  
+Preklop prikaza imen spremeni velikost kartic, zato jih način Tok znova razporedi – glejte razdelek [Kako način Tok razporedi kartice](#how-flow-is-placed).
 
 ### Premikanje v načinu Tok {#getting-around-the-flow}
 
@@ -124,7 +144,7 @@ Način Tok nima mini zemljevida in nima drsnih trakov. Ko po premiku pogleda na 
 ### Osvetljevanje povezanih tabel {#lighting-related-tables}
 
 Premaknite kazalec nad kartico, da osvetlite njo, tabele, ki so od nje oddaljene za eno relacijo, in povezovalne črte, ki jo povezujejo s temi tabelami. Povezovalna črta med dvema od teh tabel ostane neosvetljena.  
-Osvetljena kartica dobi obrobo in sij v barvi poudarka, njeni podatkovni tipi postopno postanejo vidni, njene vrstice, na katerih se konča relacija, pa se rahlo obarvajo. Osvetljena povezovalna črta se obarva v barvo poudarka.  
+Osvetljena kartica dobi obrobo in sij v barvi poudarka, njene vrstice, na katerih se konča relacija, pa se rahlo obarvajo. Osvetljena povezovalna črta se obarva v barvo poudarka.  
 Za razliko od [načina Graf](#highlighting-a-neighbourhood) se nič drugega ne zatemni in nič ni osvetljeno, dokler kazalec ni nad nobeno kartico in nobena kartica ni pripeta.
 
 Kliknite kartico, da pripnete njeno osvetlitev, tako da ostane osvetljena tudi, ko kazalec odide drugam. Za sprostitev znova kliknite isto kartico ali kliknite ozadje; klik na drugo kartico pa prenese pripetje nanjo. Kartica pod kazalcem in pripeta kartica se osvetlita skupaj.  
@@ -136,8 +156,8 @@ Po vsaki osvetljeni povezovalni črti tečejo delci, od konca pri nadrejeni tabe
 
 Ko je kazalec nad kartico, se na desnem koncu njene glave prikažeta dva gumba z ikonama, ki nimata opisa orodja:
 
-- Ikona točk poti, enaka tisti na gumbu `Flow`, zoži način Tok na to tabelo in tabele, ki so od nje oddaljene za eno relacijo – glejte razdelek [Osredotočanje na tabele](#focusing-on-tables).
-- Ikona zunanje povezave preklopi na zavihek ERD, izbere samo to tabelo, jo postavi v ospredje in premakne fokus na celico z njenim imenom, razen če ima fokus že kakšna celica te tabele. Platno se do tabele pomakne samo, če ta še ni dobro vidna – glejte razdelek [Kam pripelje skok](./table-related-functions.md#where-a-jump-lands). Risanja relacije nikoli niti ne začne niti ne konča.
+- Ikona točk poti, enaka tisti na gumbu `Flow`, zoži način Tok na to tabelo in tabele, ki so od nje oddaljene za eno relacijo – glejte razdelek [Osredotočanje na tabele](#focusing-on-tables). Od tistega, kar je način Tok prikazoval prej, vas loči en pritisk gumba `Previous table` – glejte razdelek [Prejšnja in naslednja tabela](#previous-table-and-next-table).
+- Ikona zunanje povezave preklopi na zavihek ERD, izbere samo to tabelo, jo postavi v ospredje in premakne fokus na celico z njenim imenom ali, v prikazih `Logical Names` in `Both Names`, na celico z njenim logičnim imenom, razen če ima fokus že kakšna celica te tabele. Platno se do tabele pomakne samo, če ta še ni dobro vidna – glejte razdelek [Kam pripelje skok](./table-related-functions.md#where-a-jump-lands). Risanja relacije nikoli niti ne začne niti ne konča.
 
 Pritisk na katerega koli od obeh gumbov velja samo za ta gumb: za razliko od pritiska drugje na kartici kartice ne izbere in je ne postavi v ospredje. Gumb z ikono točk poti zato ohrani izbor, ki ste ga imeli; gumb z ikono zunanje povezave izbere tabelo samo kot del preklopa na zavihek ERD. Oba gumba se odzivata samo na klik z levim gumbom miške.
 
@@ -147,7 +167,7 @@ Kartico povlecite z levim gumbom miške za kateri koli njen del razen obeh gumbo
 Pritisk na kartico jo izbere, `Ctrl + click` (Windows/Linux) ali `⌘ + click` (Mac) jo doda izboru, vlečenje izbrane kartice pa premakne vse izbrane kartice. To je isti izbor, ki ga uporablja zavihek ERD, zato je tisto, kar izberete tukaj, izbrano tudi, ko se vrnete.
 
 Kartica se premakne samo v načinu Tok: njena tabela na zavihku ERD ostane, kjer je.  
-Premaknjena kartica ostane na mestu ob premikanju pogleda, spreminjanju povečave in uporabi gumba `Fit`. Na mesto, kamor jo je razporedila postavitev, se vrne, ko zapustite zavihek ali preklopite v način `Graph` in se vrnete, ter ko gumb `Show all` preklopi nazaj na postavitev celotnega diagrama, ki jo način Tok že ima. Nova postavitev jo znova razporedi in pri tem upošteva, kam ste jo pustili – glejte razdelek [Kako način Tok razporedi kartice](#how-flow-is-placed).
+Premaknjena kartica ostane na mestu ob premikanju pogleda, spreminjanju povečave in uporabi gumba `Fit`. Na mesto, kamor jo je razporedila postavitev, se vrne, ko zapustite zavihek ali preklopite v način `Graph` in se vrnete, ter ko gumb `Show all` ali [korak](#previous-table-and-next-table) preklopi nazaj na postavitev, ki jo način Tok že ima. Nova postavitev jo znova razporedi in pri tem upošteva, kam ste jo pustili – glejte razdelek [Kako način Tok razporedi kartice](#how-flow-is-placed).
 
 ### Osredotočanje na tabele {#focusing-on-tables}
 
@@ -158,25 +178,45 @@ Ko je tabela, ki jo kliknete z desno tipko miške, ena od več izbranih tabel, s
 Bližnjica `Alt + F` upošteva izbrane tabele, beležke in [skupine tabel](./table-groups.md) pa izpusti. Če ni izbrana nobena tabela, ne naredi ničesar, tudi če je izbrana skupina: najprej izberite `Select tables` v priročnem meniju skupine – glejte razdelek [Izbiranje skupin](./table-groups.md#selecting-groups).  
 Ne deluje, medtem ko se ureja celica, beležka ali ime skupine, medtem ko je tipkovnica v [raziskovalcu](./explorer.md#keys-in-the-explorer) ali medtem ko je odprto hitro iskanje, okno Lastnosti tabele, pregledovalnik razlik, predogled samodejne postavitve, potovanje skozi čas, pogovorno okno [`Export image`](./file-import-export.md#image) ali okno [`Map Columns`](./relationship-editing.md#map-columns).
 
-V načinu Tok [gumb na kartici](#card-buttons) z ikono točk poti na enak način zoži pogled, in sicer na to eno tabelo. Gumb `Show all` v [orodni vrstici](#toolbar) znova prikaže celoten diagram.  
+V načinu Tok [gumb na kartici](#card-buttons) z ikono točk poti na enak način zoži pogled, in sicer na to eno tabelo. Gumb `Show all` v [orodni vrstici](#toolbar) znova prikaže celoten diagram. Gumba `Previous table` in `Next table` v orodni vrstici ali njune tipke naredijo korak nazaj in naprej po tem, na kar je bil zožen način Tok – glejte razdelek [Prejšnja in naslednja tabela](#previous-table-and-next-table).  
 Zoženi pogled se razporedi ločeno in prilagodi zaslonu. Ostane zožen, ko zapustite zavihek ali preklopite v način `Graph` in se vrnete, tipka `Escape` pa ga ne razširi.
 
 ![Osredotočanje na tabelo orders z ⌥ + F, zoženje na tabelo members z gumbom točk poti na njeni kartici, nato Show all](/img/demo-visualization-focus.webp)
+
+### Prejšnja in naslednja tabela {#previous-table-and-next-table}
+
+Način Tok si zapomni, na kaj je bil zožen, podobno kot zgodovina brskalnika. Vsakič, ko se pogled premakne na druge tabele – z [osredotočanjem na tabele](#focusing-on-tables) z zavihka ERD, z [gumbom na kartici](#card-buttons) z ikono točk poti ali z gumbom `Show all` –, se tisto, kar je prikazoval prej, ohrani kot korak nazaj, ne glede na to, ali je bilo to nekaj tabel ali celoten diagram.
+
+![Zoženje načina Tok na tabelo orders z ⌥ + F in nato na tabelo members, korak nazaj s Previous table, naprej s ⌘ + Shift + Z in nazaj s ⌘ + Z, nato Show all](/img/demo-visualization-steps.webp)
+
+- Gumb `Previous table` v [orodni vrstici](#toolbar) naredi korak nazaj, gumb `Next table` pa se znova pomakne naprej na tisto, kar je zapustil gumb `Previous table`.
+- V načinu `Flow` bližnjica `Ctrl + Z` (Windows/Linux) ali `⌘ + Z` (Mac) naredi korak nazaj tako kot `Previous table`, bližnjica `Ctrl + Shift + Z` (Windows/Linux) ali `⌘ + Shift + Z` (Mac) pa korak naprej tako kot `Next table`. Tam nikoli ne razveljavita in ne uveljavita spremembe diagrama. V načinu `Graph` in med odprtim hitrim iskanjem ne naredita ničesar.
+- Zoženje pogleda ali pritisk gumba `Show all` po koraku nazaj zavrže korake naprej. Ponovno osredotočanje na natanko tiste tabele, na katere je način Tok že zožen, ne doda nobenega koraka in nobenega ne zavrže.
+- Ohrani se zadnjih 100 korakov nazaj, najstarejši pa se zavrže prvi.
+
+Korak prikaže tiste svoje tabele, ki so še v diagramu, skupaj z vsemi tabelami, oddaljenimi za eno relacijo, tako kot osredotočanje. Korak, katerega tabele so bile vse odstranjene, se preskoči in zavrže, enako pa velja za korak, ki bi pustil način Tok tam, kjer je: na natanko tistih tabelah, na katere je zožen zdaj, ali na celotnem diagramu, kadar ga način Tok že prikazuje.  
+Gumb je zatemnjen in ne naredi ničesar, dokler v tej smeri ne ostane noben korak. Oba sta zatemnjena, ko se način Tok prvič odpre, ne glede na to, ali se odpre na celotnem diagramu ali na tabelah, s katerimi ga je odprlo osredotočanje. Ko je način Tok enkrat odprt, poznejše osredotočanje z zavihka ERD ohrani kot korak nazaj tisto, kar je način Tok prikazoval, ko ste ga zapustili.  
+Korak se razporedi in prilagodi zaslonu tako kot osredotočanje – glejte razdelek [Kako način Tok razporedi kartice](#how-flow-is-placed) –, prikaz vrstic pa ostane takšen, kot je.
+
+Koraki pripadajo samo načinu Tok. Ohranijo se, dokler je urejevalnik odprt, tudi med obiski drugih zavihkov in načina `Graph`, vendar se ne shranijo v dokument in ne pošljejo sodelavcem, v zgodovino razveljavitev pa ne dodajo ničesar. Zamenjava celotnega dokumenta jih zavrže skupaj z ostalim stanjem načina Tok.
+
+V jeziku prikaza, ki se piše od desne proti levi, orodna vrstica ohrani svoj vrstni red, puščici pa zamenjata vlogi, tako da je gumb `Previous table` puščica, ki kaže v desno. Tipke ostanejo enake – glejte razdelek [Jeziki, ki se pišejo od desne proti levi](./language-and-theme.md#right-to-left-languages).
 
 ### Kako način Tok razporedi kartice {#how-flow-is-placed}
 
 Ko se način `Flow` prvič prikaže, se tabele, ki jih prikazuje, razporedijo zunaj glavne niti, rezultat pa se prilagodi zaslonu.  
 Postavitev se ohrani, dokler je urejevalnik odprt. Če zapustite zavihek ali preklopite v način `Graph` in se vrnete, jo način Tok uporabi znova, povečava in položaj pogleda pa sta takšna, kot ste ju pustili.  
-Način Tok hrani eno postavitev za celoten diagram in eno za zoženi pogled, zato se gumb `Show all` vrne na postavitev celotnega diagrama in jo prilagodi zaslonu, ne da bi jo znova izračunal, če se ni spremenilo nič od tistega, iz česar je ta postavitev nastala.
+Način Tok hrani eno postavitev za celoten diagram in eno za tabele, na katere je bil nazadnje zožen, zato se gumb `Show all` vrne na postavitev celotnega diagrama in jo prilagodi zaslonu, ne da bi jo znova izračunal, če se ni spremenilo nič od tistega, iz česar je ta postavitev nastala. Tudi [korak](#previous-table-and-next-table) na celoten diagram ali na tabele, na katere je bil način Tok nazadnje zožen, na enak način znova uporabi to postavitev.
 
 Način Tok kartice znova razporedi, ko:
 
 - pritisnete gumb `Tidy Up`. Rezultat se prilagodi zaslonu.
-- spremenite prikaz vrstic ali zožite pogled na druge tabele. Rezultat se prilagodi zaslonu.
-- se dodajo ali odstranijo tabele ali relacije – na zavihku ERD, medtem ko ste drugje, kar način Tok upošteva ob vaši vrnitvi, ali pa to stori sodelavec, medtem ko ste v načinu Tok. Povečava in položaj pogleda ostaneta, kjer sta.
+- spremenite prikaz vrstic, zožite pogled na druge tabele ali se z gumbom `Previous table` ali `Next table` pomaknete na druge tabele. Rezultat se prilagodi zaslonu.
+- na seznamu `Name View` izberete drug prikaz. Rezultat se prilagodi zaslonu.
+- se dodajo ali odstranijo tabele ali relacije ali se preklopi prikaz imen – medtem ko niste v načinu Tok, kar način Tok upošteva ob vaši vrnitvi, ali pa to stori sodelavec, medtem ko ste v načinu Tok. Povečava in položaj pogleda ostaneta, kjer sta.
 
 Vsaka postavitev upošteva, kje so kartice trenutno, zato gumb `Tidy Up` ne povrne nujno prejšnje razporeditve.  
-Sprememba, ki samo spremeni velikost kartice, kot je preimenovanje tabele ali dodajanje stolpca, kartic ne razporedi znova. Če se kartice na koncu prekrivajo, pritisnite `Tidy Up`.
+Sprememba, ki samo spremeni velikost kartice, kot je preimenovanje tabele, vnos logičnega imena ali dodajanje stolpca, kartic ne razporedi znova. Če se kartice na koncu prekrivajo, pritisnite `Tidy Up`.
 
 Postavitev, ki traja dlje kot 6 sekund, prikaže obvestilo `Placing tables` z vrtečim se indikatorjem nalaganja in gumbom `Cancel`.  
 Gumb `Cancel` ali tipka `Escape`, pritisnjena kadar koli med izvajanjem postavitve, jo prekliče; gumb `Tidy Up` ali vrnitev v način `Flow` jo znova zahteva.  
@@ -184,16 +224,17 @@ Gumb `Cancel` ali tipka `Escape`, pritisnjena kadar koli med izvajanjem postavit
 Način Tok nariše samo tabele, ki jih je razporedila njegova zadnja postavitev, tako v pogledu celotnega diagrama kot v zoženem pogledu, zato ob prvem prikazu morda ne bo nobene kartice, dokler postavitev ne uspe.  
 Kadar koli način Tok kartice znova razporedi, na primer takrat, ko zožite pogled na druge tabele, prejšnja razporeditev ostane na zaslonu, dokler ne prispe nova postavitev, in tam ostane tudi, če se ta postavitev prekliče ali ne uspe.
 
-Ko se zamenja celoten dokument, na primer z uvozom datoteke, se postavitve, osredotočitev, prikaz vrstic, povečava in položaj pogleda načina Tok zavržejo, ob naslednjem odprtju pa način Tok začne znova tako kot prvič: s celotnim diagramom ali z zoženim pogledom, če ga odprete z [osredotočanjem na tabele](#focusing-on-tables).
+Ko se zamenja celoten dokument, na primer z uvozom datoteke, se postavitve, osredotočitev, koraki gumbov `Previous table` in `Next table`, prikaz vrstic, povečava in položaj pogleda načina Tok zavržejo, ob naslednjem odprtju pa način Tok začne znova tako kot prvič: s celotnim diagramom ali z zoženim pogledom, če ga odprete z [osredotočanjem na tabele](#focusing-on-tables).
 
 ### Način Tok nikoli ne ureja dokumenta {#flow-never-edits-the-document}
 
-Način Tok diagram samo bere. Spreminjanje povečave, premikanje pogleda, premikanje kartic, `Tidy Up`, prikaz vrstic, pripetja in osredotočanje ne dodajo ničesar v [zgodovino razveljavitev](./undo-redo.md#what-the-history-records).  
+Način Tok diagram samo bere. Spreminjanje povečave, premikanje pogleda, premikanje kartic, `Tidy Up`, prikaz vrstic, pripetja, osredotočanje in koraki z gumboma `Previous table` in `Next table` ne dodajo ničesar v [zgodovino razveljavitev](./undo-redo.md#what-the-history-records).  
 Tudi v diagramu ne spremenijo ničesar. Pritisk na kartico sicer postavi njeno tabelo v ospredje, tako kot klik na tabelo na zavihku ERD, zato je ta tudi tam v ospredju, vendar se vrstni red prekrivanja ne shrani – glejte razdelek [Premikanje več tabel](./table-related-functions.md#moving-multiple-tables). Način `Graph` na enak način pusti diagram nedotaknjen.  
+Izjema je seznam `Name View`, in to samo, dokler je [zaklep](./settings.md#lock) `Name View` izklopljen: izbira takrat preklopi prikaz imen diagrama, ki se shrani in se preklopi tudi pri sodelavcih. Dokler je zaklep vklopljen, kot je privzeto, izbira spremeni samo vaš zaslon. V obeh primerih ne doda ničesar v zgodovino razveljavitev.  
 Pritisk na kartico nikoli ne doda relacije. Če ste zavihek ERD zapustili med risanjem relacije, pritisk na kartico njeno tabelo izbere za začetno, kadar začetna tabela še ni izbrana, sicer pa risanje konča.  
 [Gumb na kartici](#card-buttons) z ikono zunanje povezave gre dlje, ker vas odpelje iz načina Tok: kadar se mora zavihek ERD pomakniti do tabele, se to pomikanje zabeleži kot vsaka druga sprememba položaja pogleda.
 
 Spremembe sodelavcev dosežejo diagram tudi, medtem ko ste v načinu Tok, kartice pa sledijo tabelam in relacijam, ki jih dodajo ali odstranijo – glejte razdelek [Kako način Tok razporedi kartice](#how-flow-is-placed).  
 Njihovi obroči izbora in fokusa se narišejo na karticah, njihovi kazalci in okvirji vlečenja pa ne – glejte stran [Sodelovalno urejanje](../../api/advanced/collaborative-editing.md).
 
-Oba načina, vključno z osredotočanjem, delujeta tudi v urejevalniku z lastnostjo `readonly`.
+Oba načina, vključno z osredotočanjem in koraki, delujeta tudi v urejevalniku z lastnostjo `readonly`, prav tako pa tudi seznam `Name View`, ki tam preklopi samo vaš zaslon.

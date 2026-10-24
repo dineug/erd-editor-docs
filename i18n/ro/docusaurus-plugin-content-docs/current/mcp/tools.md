@@ -1,11 +1,11 @@
 ---
 sidebar_position: 4
-description: "Toate instrumentele oferite de serverul MCP erd-editor: citirea unui document câte o pagină, cele 54 de instrumente de editare, erd_batch și cum arată un rezultat și un refuz."
+description: "Toate instrumentele oferite de serverul MCP erd-editor: citirea unui document câte o pagină, verificările dicționarelor, cele 67 de instrumente de editare, erd_batch și cum arată un rezultat și un refuz."
 ---
 
 # Instrumente
 
-Serverul oferă 63 de instrumente: cinci instrumente de sesiune, trei instrumente de citire, 54 de instrumente de editare, câte unul pentru fiecare operație de editare, și `erd_batch`, care rulează mai multe instrumente de editare ca o singură editare.
+Serverul oferă 77 de instrumente: cinci instrumente de sesiune, patru instrumente de citire, 67 de instrumente de editare, câte unul pentru fiecare operație de editare, și `erd_batch`, care rulează mai multe instrumente de editare ca o singură editare.
 
 Toate instrumentele, cu excepția instrumentului `erd_list_documents`, primesc ca prim argument calea documentului, `path`, iar tabelele de mai jos o omit.
 Un argument marcat cu `?` este opțional.
@@ -16,7 +16,7 @@ Un argument marcat cu `?` este opțional.
 | --- | --- | --- |
 | `erd_list_documents` | | Listează documentele ERD cu `path`, `open`, `active`, `dirty` și `readonly`: pe cele ale editorului care deservește directorul de lucru și care, într-un IDE JetBrains, cuprinde toate proiectele deschise, altfel fișierele ERD din directorul de lucru. |
 | `erd_open_document` | `create?` | Deschide un document pentru editare, în ERD Editor din editorul care îl deservește, dacă există unul. Cu `create`, creează mai întâi fișierul dacă acesta lipsește, iar un nume fără extensie primește `.erd.json`. |
-| `erd_save` | | Salvează un document deținut de un editor. VS Code păstrează editările agentului nesalvate până la apelarea acestui instrument; Obsidian și un IDE JetBrains le salvează așa cum le salvează pe ale dumneavoastră, iar acest instrument le scrie imediat. În modul fără interfață, fiecare editare este deja scrisă, iar acest instrument nu face nimic. |
+| `erd_save` | | Salvează un document deținut de un editor. VS Code păstrează editările agentului nesalvate până la apelarea acestui instrument; Obsidian și un IDE JetBrains le salvează așa cum le salvează pe ale dumneavoastră, iar acest instrument le scrie imediat. În modul fără interfață, fiecare editare este deja scrisă, așa cum indică `saved: true` din rezultatul acesteia, iar acest instrument nu face nimic. |
 | `erd_undo` | | Anulează ultima editare făcută de acest agent, niciodată pe ale dumneavoastră. Apelurile care nu au creat niciun pas de anulare sunt omise și menționate. |
 | `erd_redo` | | Aplică din nou editarea anulată ultima dată de instrumentul `erd_undo`. |
 
@@ -26,32 +26,38 @@ Pentru ce fac salvarea și anularea în fiecare mod, consultați [În direct și
 
 | Instrument | Argumente | Ce face |
 | --- | --- | --- |
-| `erd_list` | `query?`, `offset?`, `limit?`, `namesOnly?` | Setările și contoarele, apoi o pagină de tabele cu indexurile și relațiile lor, fiecare tabel cu ID-ul, poziția și dimensiunea sa pe pânză, numărul de coloane și grupul de tabele, dacă face parte dintr-unul. În afara unei căutări, după tabele urmează grupurile de tabele, apoi notele. |
-| `erd_get` | `tableIds?`, `tableNames?`, `relationshipIds?`, `indexIds?`, `memoIds?`, `tableGroupIds?` | Entitățile indicate, în întregime: tabelele cu coloanele și grupul lor de tabele, relațiile cu coloanele lor și cu `onDelete` și `onUpdate`, indexurile cu coloanele lor, notele cu textul lor, grupurile de tabele cu tabelele lor. |
-| `erd_read` | `format`, `vendor?`, `statements?`, `header?`, `tableIds?`, `tableNames?`, `groupNames?` | Întregul document dintr-odată, într-unul dintre cele patru formate, sau doar codul DDL al unor tabele sau grupuri de tabele. |
+| `erd_list` | `query?`, `offset?`, `limit?`, `namesOnly?` | Setările și contoarele, apoi o pagină de tabele cu indexurile și relațiile lor, fiecare tabel cu ID-ul, poziția și dimensiunea sa pe pânză, numărul de coloane, numele logic, dacă are unul, și grupul de tabele, dacă face parte dintr-unul. În afara unei căutări, după tabele urmează grupurile de tabele, notele, apoi domeniile, termenii și cuvintele. |
+| `erd_get` | `tableIds?`, `tableNames?`, `relationshipIds?`, `indexIds?`, `memoIds?`, `tableGroupIds?`, `wordIds?`, `termIds?`, `domainIds?` | Entitățile indicate, în întregime: tabelele cu coloanele și grupul lor de tabele, relațiile cu coloanele lor și cu `onDelete` și `onUpdate`, indexurile cu coloanele lor, notele cu textul lor, grupurile de tabele cu tabelele lor, precum și cuvintele, termenii și domeniile cu toate câmpurile lor. |
+| `erd_read` | `format`, `vendor?`, `statements?`, `header?`, `logicalNameAsComment?`, `tableIds?`, `tableNames?`, `groupNames?` | Întregul document dintr-odată, într-unul dintre cele patru formate, sau doar codul DDL al unor tabele sau grupuri de tabele. |
+| `erd_list_checks` | `level?`, `tableIds?`, `tableNames?`, `offset?`, `limit?` | Problemele pe care le detectează dicționarele de cuvinte, termeni și domenii, așa cum le listează foaia `Checks` a filei Dicționar din editor, câte o pagină. Nu modifică nimic (consultați [Verificările dicționarelor](#dictionary-checks)). |
 
-Un agent găsește ID-urile cu `erd_list`, citește coloanele și alte detalii cu `erd_get` și transmite acele ID-uri instrumentelor de editare.
+Un agent găsește ID-urile cu `erd_list`, citește coloanele, rândurile dicționarelor și alte detalii cu `erd_get` și transmite acele ID-uri instrumentelor de editare.
 Dimensiunea unui tabel în `erd_list` este chenarul pe care îl ocupă pe pânză: înălțimea exactă, lățimea aproximativă.
 Un grup de tabele este listat prin dreptunghiul pe care îl stochează, cu numele, culoarea și numărul de tabele pe care le conține.
 Fiecare relație este listată o singură dată, la unul dintre cele două tabele ale sale.
+Un rând de dicționar este listat prin ID-ul său, câmpul `name` și ceea ce dă unui nume fizic sau unei coloane: câmpul `dataType` al unui domeniu, câmpurile `physicalName` și `domainId` ale unui termen și câmpul `abbreviation` al unui cuvânt. Fiecare dicționar își listează rândurile în ordinea în care le afișează foaia sa.
 Setările raportate de `erd_list` și `erd_read` sunt cele salvate în fișier (consultați [Setări](#settings)).
+
+În `erd_get` și în formatul `snapshot` al instrumentului `erd_read`, fiecare tabel și fiecare coloană conține `logicalName`, un șir de caractere gol dacă nu are unul, și `nameDerived`, care este `true` cât timp numele a fost dat de dicționare, așa că un nou nume logic îl derivă din nou (consultați [Dicționare](#dictionaries)).
+Fiecare coloană conține `domainId`, la fel ca fiecare termen: un șir de caractere gol dacă nu există niciun domeniu sau pentru un domeniu pe care documentul nu îl mai listează.
 
 Instrumentul `erd_read` acceptă unul dintre cele patru formate:
 
 | `format` | Ce returnează |
 | --- | --- |
-| `snapshot` | JSON compact cu fiecare entitate și ID-ul ei, inclusiv grupurile de tabele, și setările cu scripturile filei Schemă SQL. Omite ceea ce diferă de la un utilizator la altul: lățimile măsurate, ordinea de suprapunere, vizualizarea și fila. Voluminos pentru o schemă mare. |
+| `snapshot` | JSON compact cu fiecare entitate și ID-ul ei, inclusiv grupurile de tabele și rândurile de cuvinte, termeni și domenii, și setările cu scripturile filei Schemă SQL. Omite ceea ce diferă de la un utilizator la altul: lățimile măsurate, ordinea de suprapunere, vizualizarea, fila și modul de afișare a numelor. Voluminos pentru o schemă mare. |
 | `sql` | Cod DDL pentru unul dintre cele opt sisteme de baze de date: `Databricks`, `MariaDB`, `MSSQL`, `MySQL`, `Oracle`, `PostgreSQL`, `Snowflake` sau `SQLite`. Argumentul `vendor` are ca valoare implicită baza de date setată pentru document. Codul DDL al întregului document include scripturile înainte și după tabele. Cu `tableIds`, `tableNames` sau `groupNames`, doar acele tabele, cu cheile străine pe care le conțin, și fără scripturi. Cheile străine includ acțiunile lor ON DELETE și ON UPDATE, cu excepția celor pe care baza de date țintă le omite (consultați [ON DELETE și ON UPDATE](../guide/guides/relationship-editing.md#on-delete-and-on-update)). |
 | `json` | Întregul document exact așa cum o salvare scrie fișierul, inclusiv editările pe care editorul nu le-a salvat încă (consultați [Forma de stocare și valoarea de execuție](../api/advanced/schema.md#storage-form-and-runtime-value)). |
 | `scripts` | Doar scripturile înainte și după tabele ale documentului, sub forma `{"before":"…","after":"…"}`, fiecare gol când nu este setat, oricât de mare ar fi schema. |
 
-Doar formatul `sql` acceptă argumentele `vendor`, `statements`, `header`, `tableIds`, `tableNames` și `groupNames`, iar un alt format le refuză.
+Doar formatul `sql` acceptă argumentele `vendor`, `statements`, `header`, `logicalNameAsComment`, `tableIds`, `tableNames` și `groupNames`, iar un alt format le refuză.
 
 - `statements`: `create`, valoarea implicită; `ifNotExists`, care scrie `CREATE TABLE IF NOT EXISTS` pentru MySQL, MariaDB, PostgreSQL, SQLite și Databricks și un simplu `CREATE TABLE` pentru celelalte; sau `recreate`, care elimină tabelele înainte de a le crea, caz în care Snowflake scrie în schimb `CREATE OR REPLACE TABLE`.
 - `header`: `none`, valoarea implicită; `use`, care selectează baza de date sau schema indicată de numele bazei de date din document; sau `createAndUse`, care o creează mai întâi. Oracle are doar `use`, așa că acolo `createAndUse` scrie `use`, iar PostgreSQL are doar `createAndUse`, așa că acolo `use` nu scrie niciun antet. SQLite nu scrie niciunul, iar nicio bază de date nu scrie unul cât timp numele bazei de date este gol sau nu este un identificator simplu.
+- `logicalNameAsComment`: `true` scrie numele logic al unui tabel sau al unei coloane drept comentariu al acestuia cât timp comentariul este gol sau conține doar spații albe, acolo unde și în forma în care fiecare bază de date scrie un comentariu, și păstrează fiecare comentariu care conține text; `false`, valoarea implicită, nu scrie niciun nume logic (consultați [Nume logice drept comentarii](../guide/guides/schema-sql.md#logical-names-as-comments)).
 - `groupNames`: tabelele grupurilor de tabele indicate, după nume, indiferent de majuscule, reunite cu `tableIds` și `tableNames`. Un nume care nu corespunde niciunui grup este refuzat cu codul `notFound`. Un grup care nu conține niciun tabel nu adaugă niciunul, iar o citire rămasă fără niciun tabel, ca atunci când fiecare grup indicat este gol și nu este indicat niciun tabel, este refuzată cu codul `invalidArgs`.
 
-Argumentele `statements` și `header` se aplică și atunci când codul DDL cuprinde doar unele tabele. Ele funcționează ca opțiunile `Statements` și `Header` ale filei [Schemă SQL](../guide/guides/schema-sql.md#options-panel) din editor, deși fila pornește cu valorile `If not exists` și `CREATE + USE`.
+Argumentele `statements`, `header` și `logicalNameAsComment` se aplică și atunci când codul DDL cuprinde doar unele tabele. Ele funcționează ca opțiunile `Statements` și `Header` și comutatorul `Write logical names into empty comments` ale filei [Schemă SQL](../guide/guides/schema-sql.md#options-panel) din editor, deși fila pornește cu valorile `If not exists` și `CREATE + USE`. Comutatorul pornește dezactivat, la fel ca `logicalNameAsComment`.
 Numele sunt delimitate cu tipul de delimitator salvat în fișier, cel blocat cât timp setarea `Bracket Type` este blocată (consultați [Blocare](../guide/guides/settings.md#lock)).
 
 ### Scheme mari {#large-schemas}
@@ -59,12 +65,43 @@ Numele sunt delimitate cu tipul de delimitator salvat în fișier, cel blocat c�
 Funcționează și schemele cu sute sau mii de tabele.
 O citire returnează cel mult 40.000 de caractere, sub pragul de la care Claude Code salvează rezultatul unui instrument separat, într-un fișier.
 
-- `erd_list` returnează implicit o pagină de 100 de intrări, întâi tabelele, apoi grupurile de tabele, apoi notele, și indică unde începe pagina următoare prin `nextOffset` și un câmp `note`. Transmiteți acel `nextOffset` ca `offset`, cu același `query`.
-- `query` găsește tabele după cuvintele din numele sau comentariul unui tabel ori al unei coloane, indiferent de majuscule. Tabelele ale căror nume conțin mai multe dintre cuvinte apar primele. O căutare nu listează grupuri de tabele sau note.
+- `erd_list` returnează implicit o pagină de 100 de intrări, întâi tabelele, apoi grupurile de tabele, notele, domeniile, termenii și cuvintele, cu un singur offset care le parcurge pe toate, și indică unde începe pagina următoare prin `nextOffset` și un câmp `note`. Transmiteți acel `nextOffset` ca `offset`, cu același `query`.
+- `query` găsește tabele după cuvintele din numele, numele logic sau comentariul unui tabel ori al unei coloane, indiferent de majuscule. Tabelele ale căror nume sau nume logice conțin mai multe dintre cuvinte apar primele. O căutare nu listează grupuri de tabele, note sau rânduri de dicționar.
 - `namesOnly` listează doar numele tabelelor, aproximativ 2.000 de nume scurte într-un singur răspuns.
 - `erd_get` și `erd_read` acceptă `tableNames` pe lângă ID-uri, iar `erd_read` acceptă `groupNames`, astfel încât un agent căruia i se cere o interogare SQL pe o schemă mare citește codul DDL doar al tabelelor de care are nevoie.
+- Și dicționarele vin pe părți: `erd_list` parcurge pagină cu pagină rândurile lor după tabele, iar `erd_get` dă rândurile în întregime după `domainIds`, `termIds` și `wordIds`.
 - `erd_get` listează în `missing` ID-urile și numele care nu desemnează nimic, iar în `notReturned` ID-urile pentru care nu mai este loc într-un răspuns, pentru a fi cerute din nou.
+- `erd_list_checks` returnează câte o pagină în același mod (consultați [Verificările dicționarelor](#dictionary-checks)).
 - O citire prea mare pentru un singur răspuns este refuzată cu codul `tooLarge`, cu indicații despre cum poate fi restrânsă.
+
+### Verificările dicționarelor {#dictionary-checks}
+
+`erd_list_checks` listează verificările din [foaia Verificări](../guide/guides/dictionary.md#the-checks-sheet) a editorului, în aceeași ordine: întâi verificările cuvintelor, apoi cele ale termenilor și domeniilor, fiecare dicționar în ordinea afișată de foaia sa, apoi fiecare tabel urmat de coloanele sale.
+Ca în foaie, o verificare rulează doar cât timp dicționarul pe care îl citește conține un rând. Un document ale cărui dicționare nu conțin niciun cuvânt, termen sau domeniu nu este verificat deloc: `total` este `0`, iar câmpul `note` o spune.
+
+- `level`: `error` sau `warning`, doar pentru acel nivel; implicit, ambele.
+- `tableIds` și `tableNames`: doar verificările acelor tabele și ale coloanelor lor, cu numele indiferent de majuscule, ceea ce omite rândurile proprii ale dicționarelor. Un ID sau un nume care nu desemnează niciun tabel este refuzat cu codul `notFound`.
+- `offset` și `limit`: implicit o pagină de 100 de verificări, care se oprește și acolo unde un răspuns este plin. Cât timp mai urmează altele, `nextOffset` și un câmp `note` indică unde începe pagina următoare; transmiteți-l ca `offset`, cu aceleași filtre. După ce corectați câteva verificări, listați din nou de la offsetul `0`: o verificare corectată iese din listă, așa că un offset ulterior ar sări peste verificări încă necorectate.
+
+Răspunsul conține `total`, numărul de verificări păstrate de filtre; `counts`, câte dintre acestea are fiecare cod, fără codurile care nu au niciuna; și pagina, sub forma `checks`.
+Fiecare verificare indică `level`, `code`, precum și `kind` și `id` ale elementului său: `table`, `column`, `word`, `term` sau `domain`. Verificarea unei coloane adaugă `tableId` și numele tabelului său, ca `table`.
+`name` este numele elementului, numele fizic al unui tabel sau al unei coloane, însoțit de `logicalName` când are unul. `field` este ceea ce citește verificarea: `name`, `logicalName` sau `domainId`. `text` este ceea ce a găsit acolo, iar `suggestions`, acolo unde dicționarele oferă ceva, este ceea ce trebuie folosit în schimb. Astfel, un agent poate corecta o verificare fără un apel `erd_get`:
+
+```json
+{"level":"warning","code":"physicalNameMismatch","kind":"column","id":"8e1z0q4xk2m7cwd5tfb9h3ynp","tableId":"03h17be2plxpj5n59tqag7ogj","table":"users","name":"id","logicalName":"Member Number","field":"name","text":"id","suggestions":["MBR_NO"]}
+```
+
+| `code` | `level` | `Type` în foaie | Ce detectează |
+| --- | --- | --- | --- |
+| `duplicateName` | `error` | `Duplicate name` | Un nume pe care îl au în comun două rânduri ale aceluiași dicționar. Fiecare dintre rânduri este listat. |
+| `unknownDomain` | `error` | `Unknown domain` | O coloană sau un termen legat de un domeniu pe care documentul nu îl mai listează. `text` este numele acelui domeniu sau ID-ul său când nu se cunoaște niciun nume. |
+| `forbiddenWord` | `error` | `Forbidden word` | Un cuvânt pe care un cuvânt din dicționar îl listează ca interzis, în numele logic al unui tabel sau al unei coloane ori în numele unui termen. `suggestions` sunt cuvintele standard. |
+| `unregisteredWord` | `warning` | `Unregistered word` | Text pe care nu îl listează niciun cuvânt, în aceleași locuri. |
+| `synonymWord` | `warning` | `Synonym` | Un sinonim folosit în locul unui cuvânt standard, în aceleași locuri. `suggestions` sunt cuvintele standard. |
+| `physicalNameMismatch` | `warning` | `Physical name mismatch` | Numele fizic al unui tabel sau al unei coloane, diferit de cel pe care îl dă termenul numelui său logic. Sugestia este numele fizic al termenului sau, cât timp termenul nu are unul, cel pe care îl compun cuvintele sale. |
+| `domainTypeMismatch` | `warning` | `Domain type mismatch` | O coloană al cărei tip de date nu este cel al domeniului de care este legată. `text` este tipul coloanei, iar sugestia, tipul domeniului. |
+
+Modul în care fiecare verificare citește un nume este descris în [Ce detectează fiecare verificare](../guide/guides/dictionary.md#what-each-check-finds).
 
 ## Instrumente de editare {#edit-tools}
 
@@ -78,8 +115,9 @@ Un ID nou are 25 de litere mici și cifre, de exemplu `03h17be2plxpj5n59tqag7ogj
 | --- | --- | --- |
 | `erd_add_table` | | Adaugă un tabel gol într-un loc liber și returnează ID-ul acestuia în `createdIds`. |
 | `erd_remove_table` | `tableId` | Elimină un tabel împreună cu coloanele, indexurile și toate relațiile care îl implică. |
-| `erd_change_table_name` | `tableId`, `value` | Redenumește un tabel. |
+| `erd_change_table_name` | `tableId`, `value` | Redenumește un tabel. Numele este apoi considerat scris manual, așa că un nume logic ulterior îl lasă neschimbat cât timp nu este gol (consultați [Dicționare](#dictionaries)). |
 | `erd_change_table_comment` | `tableId`, `value` | Setează comentariul unui tabel. Un șir de caractere gol îl șterge. |
+| `erd_set_table_logical_name` | `tableId`, `value` | Setează numele logic al unui tabel. Un șir de caractere gol îl șterge și lasă numele neschimbat. Cât timp numele tabelului este gol sau a fost derivat, dicționarele îl derivă din numele logic (consultați [Dicționare](#dictionaries)). Un termen nu dă unui tabel niciun domeniu. |
 | `erd_change_table_color` | `tableId`, `color` | Setează culoarea unui tabel. |
 | `erd_move_table` | `tableId`, `x`, `y` | Mută un tabel într-o poziție de pe pânză. |
 | `erd_move_tables` | `positions` | Mută mai multe tabele într-o singură editare, pe care o anulează un singur apel `erd_undo`. `positions` conține `{ tableId, x, y }` pentru fiecare tabel, fiecare tabel cel mult o dată. |
@@ -91,10 +129,12 @@ Un ID nou are 25 de litere mici și cifre, de exemplu `03h17be2plxpj5n59tqag7ogj
 | --- | --- | --- |
 | `erd_add_column` | `tableId` | Adaugă o coloană goală într-un tabel și returnează ID-ul acesteia în `createdIds`. |
 | `erd_remove_columns` | `tableId`, `columnIds` | Elimină coloane dintr-un singur tabel, împreună cu relațiile și intrările de index care le folosesc. |
-| `erd_change_column_name` | `tableId`, `columnId`, `value` | Redenumește o coloană. |
-| `erd_change_column_data_type` | `tableId`, `columnId`, `value` | Setează tipul de date, de exemplu `INT` sau `VARCHAR(255)`. Cât timp [sincronizarea tipului de date în relații](../guide/guides/settings.md#relationship-datatype-sync) este activată, modificarea urmează relațiile în ambele sensuri, ca în editor: un tip serial ajunge la cheile străine ca tipul întreg pe care îl stochează, așa cum îl copiază `erd_add_relationship`, iar o cheie de tip serial își păstrează tipul când una dintre cheile ei străine se modifică, ceea ce oprește modificarea acolo. Activarea sau dezactivarea sincronizării îi revine utilizatorului, iar `erd_list` o raportează ca `relationshipDataTypeSync`. |
+| `erd_change_column_name` | `tableId`, `columnId`, `value` | Redenumește o coloană. Numele este apoi considerat scris manual, ca în cazul unui tabel. |
+| `erd_change_column_data_type` | `tableId`, `columnId`, `value` | Setează tipul de date, de exemplu `INT` sau `VARCHAR(255)`. Cât timp [sincronizarea tipului de date în relații](../guide/guides/settings.md#relationship-datatype-sync) este activată, modificarea urmează relațiile în ambele sensuri, ca în editor: un tip serial ajunge la cheile străine ca tipul întreg pe care îl stochează, așa cum îl copiază `erd_add_relationship`, iar o cheie de tip serial își păstrează tipul când una dintre cheile ei străine se modifică, ceea ce oprește modificarea acolo. Activarea sau dezactivarea sincronizării îi revine utilizatorului, iar `erd_list` o raportează ca `relationshipDataTypeSync`. Când unei coloane legate de un domeniu i se setează un alt tip decât cel al domeniului, legătura sa cu domeniul este eliminată, la fel ca pentru fiecare coloană la care ajunge sincronizarea și al cărei tip nou diferă de cel al propriului domeniu (consultați [Eliminarea legăturii](../guide/guides/dictionary.md#unlinking)). |
 | `erd_change_column_default` | `tableId`, `columnId`, `value` | Setează valoarea implicită, ca text SQL. Un șir de caractere gol o șterge. |
 | `erd_change_column_comment` | `tableId`, `columnId`, `value` | Setează comentariul. Un șir de caractere gol îl șterge. |
+| `erd_set_column_logical_name` | `tableId`, `columnId`, `value` | Setează numele logic al unei coloane. Un șir de caractere gol îl șterge și lasă numele neschimbat. Cât timp numele coloanei este gol sau a fost derivat, dicționarele îl derivă, iar coloana este legată de domeniul unui termen și primește tipul de date al domeniului (consultați [Dicționare](#dictionaries)). |
+| `erd_set_column_domain` | `tableId`, `columnId`, `domainId?`, `domainName?` | Leagă o coloană de un domeniu, indicat prin ID sau prin nume, unul dintre cele două. Coloana preia tipul de date al domeniului, care urmează relațiile cât timp sincronizarea tipului de date în relații este activată, cu aceeași eliminare a legăturii ca la `erd_change_column_data_type`. Un argument `domainId` egal cu `null` sau cu un șir de caractere gol ori un argument `domainName` gol elimină legătura coloanei cu domeniul și îi păstrează tipul. |
 | `erd_set_column_primary_key` | `tableId`, `columnId`, `value` | `true` include coloana în cheia primară, `false` o scoate din ea. |
 | `erd_set_column_unique` | `tableId`, `columnId`, `value` | Setează dacă coloana este unică. |
 | `erd_set_column_not_null` | `tableId`, `columnId`, `value` | Setează dacă coloana este `NOT NULL`. |
@@ -111,14 +151,15 @@ O acțiune omisă în `erd_add_relationship` sau `erd_link_columns` este `none`.
 
 | Instrument | Argumente | Ce face |
 | --- | --- | --- |
-| `erd_add_relationship` | `startTableId`, `endTableId`, `relationshipType`, `onDelete?`, `onUpdate?` | Leagă două tabele. Copiază cheia primară a părintelui în copil sub formă de coloane cheie străină, creând mai întâi o coloană cheie primară dacă părintele nu are niciuna. Fiecare coloană cheie străină este denumită așa cum o denumește trasarea unei relații în editor: cheia `id` a tabelului `users` dă `users_id`, iar o cheie precum `member_id` își păstrează numele (consultați [Numele coloanelor cheie străină](../guide/guides/relationship-editing.md#foreign-key-column-names)). Fiecare copiază tipul de date al cheii sale, cu excepția faptului că o cheie de tip serial dă tipul întreg pe care îl stochează, de exemplu `integer` pentru `serial4`, iar un simplu `serial` rămâne `serial` pe alte baze de date decât PostgreSQL, MySQL și MariaDB (consultați [Relații identificatoare](../guide/guides/relationship-editing.md#identifying-relationships)). `createdIds` conține noua coloană cheie, dacă a fost creată una, coloanele cheie străină și, la final, ID-ul relației. |
-| `erd_link_columns` | `startTableId`, `startColumnIds`, `endTableId`, `endColumnIds`, `relationshipType`, `onDelete?`, `onUpdate?` | Trasează o relație între coloane care există deja, împerechind coloanele de început și de sfârșit după poziție. Nu redenumește nicio coloană și nu modifică niciun tip de date. |
+| `erd_add_relationship` | `startTableId`, `endTableId`, `relationshipType`, `onDelete?`, `onUpdate?` | Leagă două tabele. Copiază cheia primară a părintelui în copil sub formă de coloane cheie străină, creând mai întâi o coloană cheie primară dacă părintele nu are niciuna. Fiecare coloană cheie străină este denumită așa cum o denumește trasarea unei relații în editor: cheia `id` a tabelului `users` dă `users_id`, iar o cheie precum `member_id` își păstrează numele (consultați [Numele coloanelor cheie străină](../guide/guides/relationship-editing.md#foreign-key-column-names)). Fiecare copiază tipul de date al cheii sale, cu excepția faptului că o cheie de tip serial dă tipul întreg pe care îl stochează, de exemplu `integer` pentru `serial4`, iar un simplu `serial` rămâne `serial` pe alte baze de date decât PostgreSQL, MySQL și MariaDB (consultați [Relații identificatoare](../guide/guides/relationship-editing.md#identifying-relationships)). Fiecare preia și numele logic al cheii sale și se leagă de domeniul de care este legată cheia sa, cu excepția cazului în care o cheie de tip serial îi dă un alt tip. `createdIds` conține noua coloană cheie, dacă a fost creată una, coloanele cheie străină și, la final, ID-ul relației. |
+| `erd_link_columns` | `startTableId`, `startColumnIds`, `endTableId`, `endColumnIds`, `relationshipType`, `onDelete?`, `onUpdate?` | Trasează o relație între coloane care există deja, împerechind coloanele de început și de sfârșit după poziție. Nu redenumește nicio coloană, nu modifică niciun tip de date și nu copiază niciun nume logic sau domeniu. |
 | `erd_remove_relationship` | `relationshipId` | Elimină linia unei relații. Coloanele sale cheie străină rămân în tabel. |
 | `erd_change_relationship_type` | `relationshipId`, `relationshipType` | Modifică cardinalitatea unei relații. |
 | `erd_change_relationship_on_delete` | `relationshipId`, `onDelete` | Setează acțiunea ON DELETE a unei relații: ce face ștergerea unui rând părinte cu rândurile copil ale acestuia. |
 | `erd_change_relationship_on_update` | `relationshipId`, `onUpdate` | Setează acțiunea ON UPDATE a unei relații: ce face modificarea unei chei părinte cu rândurile copil ale acesteia. |
 
-`erd_add_relationship` denumește coloanele cheie străină în momentul rulării, așa că denumiți mai întâi tabelul părinte și cheia sa primară.
+`erd_add_relationship` denumește coloanele cheie străină și copiază numele logice ale cheilor lor în momentul rulării. O redenumire sau un nume logic dat ulterior cheii nu ajunge la ele, așa că denumiți mai întâi tabelul părinte și cheia sa primară și dați cheii numele logic.
+Numele pe care le dă sunt considerate scrise manual, așa că un nume logic ulterior le lasă neschimbate, în timp ce `erd_derive_physical_names` le trece înapoi în gestiunea dicționarelor (consultați [Dicționare](#dictionaries)).
 
 Niciun instrument nu modifică coloanele unei relații existente așa cum o face caseta de dialog [Mapare coloane](../guide/guides/relationship-editing.md#map-columns) din editor.
 Pentru a mapa o relație pe alte coloane, rulați `erd_remove_relationship`, care lasă coloanele cheie străină ale acesteia în tabel, și `erd_link_columns` cu coloanele dorite, într-un singur `erd_batch`, pe care îl anulează un singur apel `erd_undo`.
@@ -172,15 +213,59 @@ Cât timp grupurile sunt ascunse cu `View Option` → `Table Groups`, aceste ins
 `erd_sort_tables` păstrează împreună tabelele fiecărui grup, `erd_import_dbml` și `erd_import_json` aduc grupuri (consultați [Import](#import)), iar `erd_read` scrie codul DDL al grupurilor alese cu `groupNames`.
 O versiune de ERD Editor anterioară grupurilor de tabele elimină grupurile unui fișier atunci când salvează fișierul, așa cum fac extensia pentru VS Code anterioară versiunii `4.0.0` și pluginurile pentru Obsidian și JetBrains anterioare versiunii `1.0.0` (consultați [Actualizarea](./installation.md#updating)).
 
+### Dicționare {#dictionaries}
+
+Aceste instrumente editează cele trei dicționare ale filei [Dicționar](../guide/guides/dictionary.md) din editor, din care numele logic al unui tabel sau al unei coloane își derivă numele fizic:
+
+- Un cuvânt este un cuvânt standard din care sunt alcătuite numele logice, cu abrevierea pe care o scrie într-un nume fizic, de exemplu `Member` și `MBR`.
+- Un termen este un nume logic întreg, cu numele fizic pe care îl dă și, pentru o coloană, domeniul de care o leagă, de exemplu `Member Number` cu `MBR_NO` și `Identifier`.
+- Un domeniu este un tip de date cu nume de care se leagă coloanele, de exemplu `Identifier` pentru `INT`.
+
+| Instrument | Argumente | Ce face |
+| --- | --- | --- |
+| `erd_add_word` | `name`, `abbreviation`, `englishName?`, `description?`, `synonyms?`, `forbiddenWords?` | Adaugă un cuvânt la sfârșitul dicționarului de cuvinte și returnează ID-ul acestuia în `createdIds`. `synonyms` și `forbiddenWords` sunt separate prin virgulă: alte grafii ale cuvântului și cuvinte care nu trebuie folosite în locul lui. |
+| `erd_update_word` | `wordId`, `name?`, `abbreviation?`, `englishName?`, `description?`, `synonyms?`, `forbiddenWords?` | Modifică câmpurile transmise și le lasă neschimbate pe celelalte. |
+| `erd_remove_word` | `wordId` | Elimină un cuvânt. |
+| `erd_add_term` | `name`, `physicalName?`, `domainId?`, `domainName?`, `description?`, `synonyms?` | Adaugă un termen la sfârșitul dicționarului de termeni și returnează ID-ul acestuia în `createdIds`. Fără un argument `physicalName`, cuvintele compun unul, dacă pot, de exemplu `MBR_NO` pentru `Member Number`. |
+| `erd_update_term` | `termId`, `name?`, `physicalName?`, `domainId?`, `domainName?`, `description?`, `synonyms?` | Modifică câmpurile transmise și le lasă neschimbate pe celelalte. Un argument `name` transmis cât timp termenul nu conține niciun nume fizic sau împreună cu un argument `physicalName` gol scrie și numele fizic pe care îl compun cuvintele sale, dacă îl compun. |
+| `erd_remove_term` | `termId` | Elimină un termen. |
+| `erd_add_domain` | `name`, `category?`, `dataType`, `description?` | Adaugă un domeniu la sfârșitul dicționarului de domenii și returnează ID-ul acestuia în `createdIds`. `category` grupează domeniile, de exemplu `Number` sau `Text`. |
+| `erd_update_domain` | `domainId`, `name?`, `category?`, `dataType?`, `description?` | Modifică câmpurile transmise și le lasă neschimbate pe celelalte. O valoare nouă pentru `dataType` ajunge la fiecare coloană legată de domeniu și urmează relațiile cât timp sincronizarea tipului de date în relații este activată, cu aceeași eliminare a legăturii ca la `erd_change_column_data_type`. |
+| `erd_remove_domain` | `domainId` | Elimină un domeniu. Coloanele legate de el își păstrează tipul de date, iar ele și termenii legați de el nu mai afișează niciun domeniu: câmpul lor `domainId` se citește ca șir de caractere gol. `erd_undo` readuce legăturile, iar o salvare le omite din fișier. |
+| `erd_derive_physical_names` | `scope`, `tableId?`, `columnId?` | Derivă din nou numele fizice din numele logice, așa cum face comanda [Derivare din nou a numelor fizice](../guide/guides/dictionary.md#derive-physical-names-again) a editorului, pentru o coloană, un tabel sau întregul document. |
+
+- Un dicționar conține fiecare nume o singură dată, așa că un nume pe care îl conține deja un alt rând al aceluiași dicționar este refuzat cu codul `invalidArgs`. Numele se compară fără spațiile de la capete, ținând cont de majuscule, așa că `Member` și `member` sunt două nume.
+- O actualizare indică rândul prin ID-ul său și transmite cel puțin un câmp. Valorile pe care rândul le conține deja nu schimbă nimic și nu creează niciun pas de anulare; o adăugare sau o eliminare creează întotdeauna unul.
+- Domeniul unui termen se indică fie prin `domainId`, cu `null` sau un șir de caractere gol pentru niciun domeniu, fie prin `domainName`, cu un șir de caractere gol pentru niciun domeniu. Un argument `domainName` preia primul domeniu cu acel nume în ordinea dicționarului, comparat așa cum se compară numele. Transmiterea ambelor argumente sau a unui `domainName` pe care nu îl are niciun domeniu este refuzată. `erd_set_column_domain` primește un domeniu în același mod.
+- Modificarea sau eliminarea unui cuvânt ori a unui termen nu redenumește nimic și nu elimină nicio legătură: numele și domeniile pe care le-a dat rămân neschimbate. `erd_derive_physical_names` derivă din nou numele și leagă domeniul pe care îl dă acum un termen, dar o coloană căreia nu îi mai corespunde acum niciun termen sau al cărei termen nu dă niciun domeniu își păstrează domeniul de care este legată. `erd_set_column_domain` cu un `domainId` gol elimină legătura.
+- Niciun instrument nu importă sau exportă un dicționar ca fișier CSV, nu sortează un dicționar și nu inserează rânduri într-o anumită poziție, așa cum face fila Dicționar.
+
+`erd_list` listează rândurile, `erd_get` dă toate câmpurile, formatul `snapshot` al instrumentului `erd_read` le conține pe toate, iar `erd_list_checks` listează problemele pe care le detectează dicționarele (consultați [Citirea unui document](#reading-a-document)).
+
+`erd_set_table_logical_name` și `erd_set_column_logical_name` derivă un nume fizic așa cum o face editorul când se scrie un nume logic (consultați [Derivarea numelor fizice](../guide/guides/dictionary.md#deriving-physical-names)):
+
+- Un nume se derivă doar cât timp este gol sau a fost el însuși derivat, ceea ce citirile arată prin `nameDerived: true`. Un nume care nu este gol și a fost scris manual rămâne, și se scrie doar numele logic. `erd_change_table_name`, `erd_change_column_name`, importurile SQL, GraphQL, DBML și AML și coloanele cheie străină denumite de `erd_add_relationship` scriu toate nume manual. Un nume redenumit la un șir de caractere gol este derivat din nou de următorul nume logic.
+- Are prioritate termenul al cărui nume este numele logic, comparat așa cum se compară numele din dicționare. Acesta dă numele său fizic sau, cât timp nu are unul, pe cel pe care îl compun cuvintele sale. Pentru o coloană, leagă și domeniul termenului, chiar și când nu se derivă niciun nume, iar coloana preia tipul de date al domeniului, urmând relațiile cât timp sincronizarea tipului de date în relații este activată.
+- Fără un astfel de termen, cuvintele compun numele, cu abrevierile lor unite prin caractere de subliniere: `Member Number` dă `MBR_NO`. Totul sau nimic: un sinonim, un cuvânt interzis, un text pe care nu îl listează niciun cuvânt sau un cuvânt fără abreviere nu compune nimic, iar numele rămâne cum era. Cuvintele nu leagă niciun domeniu, la fel ca un termen care nu are niciunul, așa că o coloană își păstrează domeniul de care este legată.
+- O coloană al cărei nume derivat îl are deja o altă coloană a tabelului său, indiferent de majuscule, își păstrează numele, `nameDerived` și domeniul.
+- Ștergerea unui nume logic lasă numele fizic neschimbat. Un apel al cărui nume logic, împreună cu ceea ce derivă acesta, este deja la locul lui nu schimbă nimic și nu creează niciun pas de anulare.
+
+`erd_derive_physical_names` primește un argument `scope`: `column`, cu `tableId` și `columnId`, pentru acea coloană; `table`, cu `tableId`, pentru numele tabelului și toate coloanele sale; sau `document`, fără niciun ID, pentru fiecare tabel și coloanele sale. Un argument `scope` căruia îi lipsește un ID de care are nevoie sau căruia i se dă unul pe care nu îl acceptă este refuzat.
+Fiecare nume vizat care are un nume logic trece înapoi în gestiunea dicționarelor, inclusiv un nume scris manual, și preia ceea ce dau acestea acum: numele fizic al unui termen și, pentru o coloană, domeniul și tipul acestuia, sau altfel compunerea din cuvinte, care lasă domeniul coloanei neschimbat. Un nume logic care nu derivă nimic lasă numele neschimbat, iar `nameDerived` devine `true`. Un nume fără nume logic rămâne neschimbat, la fel ca o coloană al cărei nume nou îl are o altă coloană a tabelului său, de exemplu o a doua cheie străină către același tabel, care își păstrează și `nameDerived`. Un singur apel `erd_undo` anulează întregul apel.
+Numele unei scheme importate sunt scrise manual, așa că, pentru a o denumi pe baza dicționarelor, setați numele logice și apoi apelați `erd_derive_physical_names`. Acest apel dă numele fizic propriu al termenului, pe care o modificare a cuvintelor termenului nu îl recompune. Așadar, după ce modificați cuvintele unui termen, actualizați mai întâi termenul: transmiteți argumentul `name` al acestuia cu un `physicalName` gol pentru ca cuvintele să îl compună din nou sau transmiteți noul `physicalName`.
+
+O versiune de ERD Editor anterioară filei Dicționar elimină numele logice, legăturile cu domeniile și rândurile de dicționar ale unui fișier atunci când salvează fișierul, așa cum fac extensia pentru VS Code anterioară versiunii `4.2.0` și pluginurile pentru Obsidian și JetBrains anterioare versiunii `1.2.0`. Dintre acestea, extensia în versiunea `4.0.0` sau `4.1.0` și pluginurile în versiunea `1.0.0` sau `1.1.0` editează în continuare în direct cu serverul, dar nu afișează și nu păstrează numele logice, legăturile cu domeniile și rândurile de dicționar pe care le scrie un agent (consultați [Actualizarea](./installation.md#updating)).
+
 ### Setări {#settings}
 
 Un agent stabilește setările care țin de schema propriu-zisă: baza de date, numele acesteia și scripturile filei [Schemă SQL](../guide/guides/schema-sql.md).
-Orice altă setare stocată de document îi revine utilizatorului, care o stabilește în editor: comutatoarele din [View Option](../guide/guides/table-related-functions.md#table-view-options), opțiunile filei [Setări](../guide/guides/settings.md), limbajul și stilurile de denumire ale generatorului de cod, tipul de delimitator și [blocările](../guide/guides/settings.md#lock).
+Orice altă setare stocată de document îi revine utilizatorului, care o stabilește în editor: [modul de afișare a numelor](../guide/guides/logical-names.md#name-view), comutatoarele din [View Option](../guide/guides/table-related-functions.md#table-view-options), opțiunile filei [Setări](../guide/guides/settings.md), limbajul și stilurile de denumire ale generatorului de cod, tipul de delimitator și [blocările](../guide/guides/settings.md#lock).
 Niciun instrument nu le modifică, cu excepția importurilor în modul `replace`: `erd_import_json` aduce setările și blocările documentului pe care îl încarcă, iar celelalte patru readuc vizualizarea la începutul pânzei (consultați [Import](#import)).
 Versiunea `1.0.0` a serverului a eliminat instrumentele care le setau: `erd_set_language`, `erd_set_table_name_case`, `erd_set_column_name_case`, `erd_set_bracket_type`, `erd_set_relationship_data_type_sync`, `erd_set_relationship_optimization`, `erd_set_column_order`, `erd_set_max_width_comment`, `erd_set_ignore_save_settings` și `erd_set_show`.
 
-`erd_list` și formatul `snapshot` al instrumentului `erd_read` raportează setările așa cum le salvează fișierul, iar câmpul `lockSettings` conține câte un indicator pentru fiecare blocare: `viewport`, `canvasType`, `language`, `tableNameCase`, `columnNameCase` și `bracketType`.
-Un limbaj, un stil de denumire sau un tip de delimitator blocat este raportat cu valoarea sa blocată, cea pe care o păstrează fișierul și cu care se deschide orice editor, indiferent de ce afișează ecranul unui editor. Vizualizarea și fila nu sunt raportate.
+`erd_list` și formatul `snapshot` al instrumentului `erd_read` raportează setările așa cum le salvează fișierul, iar câmpul `lockSettings` conține câte un indicator pentru fiecare blocare: `viewport`, `canvasType`, `language`, `tableNameCase`, `columnNameCase`, `bracketType` și `unlockNameViewMode`.
+Ultimul se citește invers: este `false` cât timp blocarea `Name View` este activată, cum este într-un document nou și într-un fișier salvat înainte de existența acestei blocări, și `true` după ce utilizatorul dezactivează blocarea.
+Un limbaj, un stil de denumire sau un tip de delimitator blocat este raportat cu valoarea sa blocată, cea pe care o păstrează fișierul și cu care se deschide orice editor, indiferent de ce afișează ecranul unui editor. Vizualizarea, fila și modul de afișare a numelor nu sunt raportate. Un agent citește și scrie numele logice indiferent de modul de afișare activ.
 
 `erd_set_ddl_script` creează un pas de anulare. `erd_set_database` și `erd_set_database_name` nu creează niciunul, așa că `erd_undo` nu le poate anula.
 
@@ -208,14 +293,14 @@ Fiecare primește textul în argumentul `value`, precum și argumentul `mode`: `
 
 Modul `replace` înlocuiește documentul, iar `erd_undo` îl restaurează pe cel de dinainte:
 
-- `erd_import_sql`, `erd_import_graphql`, `erd_import_dbml` și `erd_import_aml` înlocuiesc toate tabelele, relațiile, indexurile, notele și grupurile de tabele. Ele păstrează setările documentului, inclusiv blocările, cu excepția vizualizării, care revine la începutul pânzei, la 100%.
-- `erd_import_json` înlocuiește întregul document, inclusiv setările: setările și blocările din JSON le iau locul celor ale acestui document, iar un document JSON care nu înregistrează nicio blocare activează toate blocările și aduce vizualizarea la începutul pânzei. Pentru a păstra setările acestui document, porniți de la textul returnat de formatul `json` al instrumentului `erd_read`. Un text gol dă un document nou, ca cel pe care îl creează `erd_open_document` cu `create`.
+- `erd_import_sql`, `erd_import_graphql`, `erd_import_dbml` și `erd_import_aml` înlocuiesc toate tabelele, relațiile, indexurile, notele și grupurile de tabele. Ele păstrează setările documentului, inclusiv blocările, cu excepția vizualizării, care revine la începutul pânzei, la 100%, și păstrează dicționarele sale de cuvinte, termeni și domenii. Tabelele pe care le aduc nu au nume logice și nu sunt legate de niciun domeniu.
+- `erd_import_json` înlocuiește întregul document, inclusiv setările și dicționarele: setările, blocările, cuvintele, termenii și domeniile din JSON le iau locul celor ale acestui document, iar un document JSON care nu înregistrează nicio blocare activează toate blocările și aduce vizualizarea la începutul pânzei. Fiecare utilizator își păstrează propriul mod de afișare a numelor, cu excepția cazului în care JSON-ul are blocarea `Name View` dezactivată, caz în care aduce modul de afișare al său. Pentru a păstra setările acestui document, porniți de la textul returnat de formatul `json` al instrumentului `erd_read`. Un text gol dă un document nou, ca cel pe care îl creează `erd_open_document` cu `create`.
 
 Modul `append` adaugă importul la document, așa cum o face funcția [Import și adăugare](../guide/guides/file-import-export.md#import-and-add) a editorului, iar un singur apel `erd_undo` anulează întreaga adăugare:
 
 - Conținutul textului intră ca entități noi, cu ID-uri noi, într-un bloc aflat sub tot ce conține documentul, inclusiv notele ascunse și grupurile de tabele, aliniat la marginea din stânga a acestuia. Fiecare tabel și fiecare setare existente rămân, inclusiv un tabel cu același nume: nimic nu este combinat după nume.
 - Relațiile și indexurile sunt preluate doar între tabelele pe care le aduce importul, așa că o cheie străină către un tabel pe care textul nu îl declară este eliminată.
-- `erd_import_sql`, `erd_import_graphql` și `erd_import_aml` adaugă tabele cu relațiile și indexurile lor, iar `erd_import_dbml` adaugă în plus grupurile sale de tabele. `erd_import_json` adaugă tabele, relații, indexuri, note și grupuri de tabele, niciodată setările sale, și refuză un text gol.
+- `erd_import_sql`, `erd_import_graphql` și `erd_import_aml` adaugă tabele cu relațiile și indexurile lor, iar `erd_import_dbml` adaugă în plus grupurile sale de tabele. `erd_import_json` adaugă tabele, relații, indexuri, note și grupuri de tabele, niciodată setările sale, și refuză un text gol. Tabelele și coloanele sale își aduc numele logice, dar nicio coloană nu este legată de un domeniu și nu intră niciunul dintre cuvintele, termenii sau domeniile din JSON.
 
 Un document JSON își păstrează propria aranjare, inclusiv grupurile de tabele: cu `replace`, acolo unde își plasează tabelele, iar cu `append`, în interiorul blocului adăugat.
 Tabelele din SQL, GraphQL, DBML și AML sunt dispuse pe rânduri, începând cu cele cu cele mai puține coloane și cu tabelele fiecărui grup împreună, așa cum le plasează `erd_sort_tables`, niciodată prin `Flow`, cum le aranjează, atunci când poate, importul propriu al editorului. Aceste patru instrumente refuză un text gol în oricare dintre moduri.
@@ -224,14 +309,15 @@ Tabelele din SQL, GraphQL, DBML și AML sunt dispuse pe rânduri, începând cu 
 
 `erd_batch` rulează mai multe instrumente de editare, în ordine, ca o singură editare: toate sau niciunul.
 
-- `operations` conține până la 100 de intrări, fiecare de forma `{ tool, as?, args? }`, unde `args` sunt argumentele instrumentului fără `path`.
+- `operations` conține până la 100 de intrări, fiecare de forma `{ tool, as?, args? }`, unde `tool` este un instrument de editare, iar `args` sunt argumentele instrumentului fără `path`. Un instrument de citire, de exemplu `erd_list_checks`, este refuzat.
 - Operațiile sunt încercate mai întâi pe o copie a documentului. O operație refuzată este indicată, de exemplu `operations[1] erd_remove_table: …`, și nu se aplică nimic.
 - Un singur apel `erd_undo` anulează întregul lot, cu excepția operațiilor pe care nu le poate anula, indicate de câmpul `undoNote` al rezultatului: cele ale unui instrument care nu creează niciun pas de anulare, de exemplu `erd_set_database`, și cele care au modificat documentul fără să creeze unul, de exemplu un `erd_move_table_group` scurt. Un lot care nu a creat niciun pas de anulare este omis de `erd_undo`. `historyEntries` din rezultat numără intrările din istoricul editorului din cadrul lotului, nu apelurile `erd_undo`.
 - Într-o sesiune în direct, editorul preia fie întregul lot, fie nimic din el.
 
 Un agent nu poate cunoaște ID-urile pe care le creează un lot înainte de apel, așa că o operație denumită cu `as` permite unei operații ulterioare să facă referire la ele: `$name` sau `$name.0` pentru primul ID creat, `$name.1` pentru al doilea și `$name.last` pentru ultimul.
 Un nume conține litere ASCII, cifre și caractere de subliniere, nu începe cu o cifră și denumește o singură operație.
-O referință este rezolvată doar acolo unde un argument primește ID-ul unei entități, așa că un nume sau un comentariu cu textul `$x` rămâne text.
+O referință este rezolvată doar acolo unde un argument primește ID-ul unei entități, inclusiv `wordId`, `termId` și `domainId`, așa că un nume sau un comentariu cu textul `$x` rămâne text.
+Și un argument `domainName` este text, dar este citit în momentul rulării operației sale, așa că poate desemna un domeniu adăugat de o operație anterioară a lotului.
 
 Un tabel cu coloanele sale și o relație, într-un singur apel:
 
@@ -254,6 +340,29 @@ Un tabel cu coloanele sale și o relație, într-un singur apel:
 
 Tabelul `users` și cheia sa `id` sunt denumite înaintea relației, așa că coloana cheie străină pe care aceasta o adaugă în `orders` este `users_id`.
 
+Cuvinte, un domeniu și un termen, apoi un tabel denumit pe baza lor prin numele sale logice:
+
+```json
+{
+  "path": "shop.erd.json",
+  "operations": [
+    { "tool": "erd_add_word", "args": { "name": "Member", "abbreviation": "MBR" } },
+    { "tool": "erd_add_word", "args": { "name": "Number", "abbreviation": "NO" } },
+    { "tool": "erd_add_word", "args": { "name": "Name", "abbreviation": "NM" } },
+    { "tool": "erd_add_domain", "as": "identifier", "args": { "name": "Identifier", "dataType": "INT" } },
+    { "tool": "erd_add_term", "args": { "name": "Member Number", "domainId": "$identifier" } },
+    { "tool": "erd_add_table", "as": "members" },
+    { "tool": "erd_set_table_logical_name", "args": { "tableId": "$members", "value": "Member" } },
+    { "tool": "erd_add_column", "as": "no", "args": { "tableId": "$members" } },
+    { "tool": "erd_set_column_logical_name", "args": { "tableId": "$members", "columnId": "$no", "value": "Member Number" } },
+    { "tool": "erd_add_column", "as": "nm", "args": { "tableId": "$members" } },
+    { "tool": "erd_set_column_logical_name", "args": { "tableId": "$members", "columnId": "$nm", "value": "Member Name" } }
+  ]
+}
+```
+
+Termenul compune `MBR_NO` din cuvintele sale, iar tabelul primește numele `MBR`. Coloana `Member Number` preia numele `MBR_NO` al termenului și domeniul acestuia, așa că este legată de `Identifier` și are tipul `INT`, iar coloana `Member Name`, pe care nu o conține niciun termen, primește numele compus `MBR_NM`.
+
 ## Rezultate {#results}
 
 O editare răspunde cu o singură linie JSON:
@@ -265,6 +374,7 @@ O editare răspunde cu o singură linie JSON:
 | Câmp | Semnificație |
 | --- | --- |
 | `mode` | `live` sau `headless` (consultați [În direct și fără interfață](./live-and-headless.md)). |
+| `saved` | `true` în modul fără interfață, în rezultatul fiecărei editări și al apelurilor `erd_batch`, `erd_undo` și `erd_redo`: fișierul conține modificarea în momentul în care apelul răspunde, așa că nu mai rămâne nimic de salvat. Un rezultat în direct nu conține câmpul `saved`, deoarece editorul deține modificarea (consultați [Salvarea](./live-and-headless.md#saving)). |
 | `createdIds` | ID-urile a ceea ce a creat apelul, în ordine. |
 | `batches`, `historyEntries` | Câte loturi de modificări a trimis apelul și câte intrări în istoricul editorului a creat. |
 | `undoable`, `undoNote` | `undoable` este `false` când `erd_undo` va omite apelul, iar `undoNote` spune de ce: instrumentul nu creează niciun pas de anulare, apelul a modificat documentul fără să creeze unul, cum face un `erd_move_table_group` sub 20 de pixeli, sau documentul conținea deja valoarea. Un rezultat al instrumentului `erd_batch` conține întotdeauna câmpul `undoNote`. Când lotul a creat un pas de anulare, nota spune că un singur apel `erd_undo` anulează lotul și indică orice operație pe care acesta nu o anulează; când nu a creat niciunul, rezultatul conține `undoable: false`, iar nota spune că `erd_undo` îl omite. |
@@ -290,10 +400,10 @@ Un refuz este un rezultat de eroare care conține un cod și un mesaj care spune
 | `hubAppeared`, `hubGone` | Un editor a început să deservească un document pe care agentul îl edita pe disc, sau editorul care îl deservea încă rulează, dar fișierul său de blocare și conexiunea au dispărut. Nu s-a scris nimic. |
 | `notSaved` | `erd_save` nu a putut salva documentul editorului. |
 | `readonly` | Editorul deține documentul doar în citire, de exemplu un fișier în care nu poate scrie sau pe care nu îl poate citi ca diagramă. Fără editor, fișierul însuși este doar în citire, de exemplu un fișier Perforce sau TFVC pentru care nu s-a făcut check-out. Nu s-a scris nimic. |
-| `protocolMismatch` | Extensia sau pluginul ERD Editor al editorului și serverul folosesc versiuni de protocol diferite, de exemplu versiunea `1.0.0` a serverului cu o extensie pentru VS Code `3.x`. Și citirile sunt refuzate, iar mesajul indică partea care trebuie actualizată (consultați [Actualizarea](./installation.md#updating)). |
+| `protocolMismatch` | Extensia sau pluginul ERD Editor al editorului și serverul folosesc versiuni de protocol diferite, de exemplu serverul în versiunea `1.0.0` sau o versiune ulterioară, cu o extensie pentru VS Code `3.x`. Și citirile sunt refuzate, iar mesajul indică partea care trebuie actualizată (consultați [Actualizarea](./installation.md#updating)). |
 | `hubUnreachable`, `timeout`, `disconnected` | Hubul unui editor nu a acceptat conexiunea, nu a răspuns în 30 de secunde sau a închis conexiunea în timpul apelului. Pe Windows, `hubUnreachable` înseamnă și că Windows a împiedicat accesul agentului la hub: editorul rulează cu mai multe drepturi decât agentul, ca atunci când a fost pornit ca administrator, iar agentul nu, sau agentul rulează într-un mediu izolat (sandbox). |
 
 Alte coduri sunt mai rare, iar fiecare refuz conține un mesaj care spune ce s-a întâmplat.
 
-Instrumentele de editare, `erd_batch` și cele trei instrumente de citire refuză un argument pe care nu îl declară, sau unul de tip greșit, cu o eroare JSON-RPC de tip invalid params (`-32602`) înainte de a atinge documentul, așa că un argument scris greșit nu este niciodată ignorat în tăcere.
+Instrumentele de editare, `erd_batch` și cele patru instrumente de citire refuză un argument pe care nu îl declară, sau unul de tip greșit, cu o eroare JSON-RPC de tip invalid params (`-32602`) înainte de a atinge documentul, așa că un argument scris greșit nu este niciodată ignorat în tăcere.
 Cele cinci instrumente de sesiune ignoră argumentele pe care nu le cunosc.

@@ -77,8 +77,8 @@ View Option → `Memos`가 꺼져 있는 동안에는 메모가 숨겨지고, �
 - One N: `Ctrl + Alt + 4` (Windows/Linux) or `⌘ + ⌥ + 4` (Mac)
 
 관계 타입을 선택하면 커서가 바뀝니다. 부모 테이블을 먼저 클릭하고, 그다음 자식 테이블을 클릭합니다.  
-부모 테이블에 primary key가 없으면 생성되고, 부모 테이블의 primary key 컬럼마다 데이터 타입, 기본값, 코멘트가 같고 `Not Null`이 설정된 foreign key 컬럼이 자식 테이블에 생성됩니다.  
-serial 키는 예외로, 그 foreign key는 `serial4`에 대한 `integer`처럼 serial이 저장하는 정수 타입을 사용합니다. [식별 관계](./relationship-editing.md#식별-관계) 문서를 참고하세요.  
+부모 테이블에 primary key가 없으면 생성되고, 부모 테이블의 primary key 컬럼마다 데이터 타입, 기본값, 코멘트, [논리명](./logical-names.md), [도메인](./dictionary.md#domains-and-data-types)이 같고 `Not Null`이 설정된 foreign key 컬럼이 자식 테이블에 생성됩니다.  
+serial 키는 예외로, 그 foreign key는 `serial4`에 대한 `integer`처럼 serial이 저장하는 정수 타입을 사용하며, 이때는 도메인을 연결하지 않습니다. [식별 관계](./relationship-editing.md#식별-관계) 문서를 참고하세요.  
 각 foreign key 컬럼의 이름은 해당 키의 이름을 따릅니다. `id`처럼 한 단어로 된 이름은 앞에 부모 테이블 이름이 붙고(`user_id`), `member_id`처럼 여러 단어로 된 이름은 그대로 유지되며, 자식 테이블에 이미 있는 이름에는 번호가 붙습니다(`user_id_2`). [Foreign Key 컬럼 이름](./relationship-editing.md#foreign-key-컬럼-이름) 문서를 참고하세요.  
 같은 테이블을 두 번 클릭하면 자기 참조 관계가 그려집니다.  
 새 관계는 `On Delete`와 `On Update`가 모두 `Not set`인 상태로 시작하며, 관계 컨텍스트 메뉴에서 변경합니다. [ON DELETE와 ON UPDATE](./relationship-editing.md#on-delete와-on-update) 문서를 참고하세요.  
@@ -91,7 +91,8 @@ serial 키는 예외로, 그 foreign key는 `serial4`에 대한 `integer`처럼 
 
 포인터가 부모 테이블을 클릭한 지점에서 조금 벗어나면 부모 테이블에도 버튼이 표시되므로, 자기 참조 관계도 기존 컬럼에 매핑할 수 있습니다.  
 손가락에는 호버가 없으므로, 손가락으로 그릴 때는 버튼이 표시되지 않고 자식 테이블을 탭하면 곧바로 관계가 그려집니다. 펜은 마우스처럼 버튼을 표시합니다.  
-Undo나 공동 편집자의 편집 등으로 자식 테이블에 닿기 전에 부모 테이블의 primary key가 사라지면, `Create new columns`가 `<parent> has no primary key to copy` 툴팁과 함께 흐리게 표시되고, 자식 테이블을 클릭하면 아무것도 그리지 않고 관계 그리기가 끝납니다.
+Undo나 공동 편집자의 편집 등으로 자식 테이블에 닿기 전에 부모 테이블의 primary key가 사라지면, `Create new columns`가 `<parent> has no primary key to copy` 툴팁과 함께 흐리게 표시되고, 자식 테이블을 클릭하면 아무것도 그리지 않고 관계 그리기가 끝납니다.  
+툴팁은 부모 테이블의 이름을 [이름 표시](./logical-names.md#beyond-the-canvas)에 따라 표시합니다.
 
 ![⌘ + ⌥ + 4로 One N 관계를, 캔버스 툴바에서 Zero N 관계를 그리며 외곽선이 표시된 자식 테이블 옆에 Map to existing columns와 Create new columns 버튼이 나타나는 모습](/img/demo-relationship.webp)
 

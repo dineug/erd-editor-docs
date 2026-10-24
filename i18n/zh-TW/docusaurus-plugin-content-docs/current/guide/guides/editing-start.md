@@ -77,8 +77,8 @@ View Option → `Memos` 關閉期間，備忘錄會被隱藏，任何地方都�
 - One N：`Ctrl + Alt + 4` (Windows/Linux) 或 `⌘ + ⌥ + 4` (Mac)
 
 進入某種類型的繪製狀態後，游標會隨之改變。先按一下父資料表，再按一下子資料表。  
-父資料表沒有主鍵時會為其加入主鍵，而父資料表的每個主鍵欄位，都會在子資料表上產生一個具有相同資料類型、預設值和註解的 `Not Null` 外鍵欄位。  
-serial 鍵是例外：其外鍵會採用該 serial 所儲存的整數類型，例如 `serial4` 對應 `integer`，請參閱[識別關聯](./relationship-editing.md#identifying-relationships)。  
+父資料表沒有主鍵時會為其加入主鍵，而父資料表的每個主鍵欄位，都會在子資料表上產生一個具有相同資料類型、預設值、註解、[邏輯名稱](./logical-names.md)和[定義域](./dictionary.md#domains-and-data-types)的 `Not Null` 外鍵欄位。  
+serial 鍵是例外：其外鍵會採用該 serial 所儲存的整數類型，例如 `serial4` 對應 `integer`，且此時不會連結任何定義域，請參閱[識別關聯](./relationship-editing.md#identifying-relationships)。  
 每個外鍵欄位都以其鍵命名：像 `id` 這樣只有一個單字的名稱，前面會加上父資料表的名稱（`user_id`），像 `member_id` 這樣由多個單字組成的名稱會保持不變，子資料表已有的名稱則會加上編號（`user_id_2`），請參閱[外鍵欄位名稱](./relationship-editing.md#foreign-key-column-names)。  
 在同一個資料表上按一下兩次，會繪製自我參照關聯。  
 新關聯的 `On Delete` 和 `On Update` 一開始都是 `Not set`；從關聯的右鍵選單即可變更，請參閱 [ON DELETE 與 ON UPDATE](./relationship-editing.md#on-delete-and-on-update)。  
@@ -91,7 +91,8 @@ serial 鍵是例外：其外鍵會採用該 serial 所儲存的整數類型，�
 
 指標從按一下父資料表的位置移開一小段距離後，父資料表旁也會顯示這兩個按鈕，因此自我參照關聯也可以對應到現有的欄位。  
 手指無法懸停，因此以手指繪製時，這兩個按鈕永遠不會顯示，點一下子資料表就會立即繪製關聯；觸控筆則會像滑鼠一樣顯示這兩個按鈕。  
-若到達子資料表時父資料表已失去其主鍵，例如因為復原或協作者的編輯，`Create new columns` 會變暗並顯示工具提示 `<parent> has no primary key to copy`，此時按一下子資料表會結束繪製，而不會繪製任何內容。
+若到達子資料表時父資料表已失去其主鍵，例如因為復原或協作者的編輯，`Create new columns` 會變暗並顯示工具提示 `<parent> has no primary key to copy`，此時按一下子資料表會結束繪製，而不會繪製任何內容。  
+此工具提示會依[名稱顯示](./logical-names.md#beyond-the-canvas)的方式指稱父資料表。
 
 ![使用 ⌘ + ⌥ + 4 繪製 One N 關聯，再從畫布工具列繪製 Zero N 關聯，子資料表以外框標示，旁邊顯示其 Map to existing columns 和 Create new columns 按鈕](/img/demo-relationship.webp)
 

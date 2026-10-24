@@ -44,19 +44,26 @@ const sharedStore = editor.getSharedStore();
 
 編輯器所做的部分操作只會留在該編輯器上。  
 將資料表、備忘錄或資料表群組移到最前面（選取其中之一時就會如此）不會送出。  
-同樣不會送出的還有「[結構描述 SQL](../../guide/guides/schema-sql.md)」索引標籤中 `Statements`、`Header` 和 `Tables` 的選擇，這些選擇屬於做出選擇的那個視窗。  
+同樣不會送出的還有「[結構描述 SQL](../../guide/guides/schema-sql.md)」索引標籤中 `Statements`、`Header`、`Write logical names into empty comments`（自 `4.2.0` 起）和 `Tables` 的選擇，這些選擇屬於做出選擇的那個視窗。  
 自 `4.1.0` 起，[物件總管](../../guide/guides/explorer.md)也只會留在其所屬的編輯器上：它是否開啟、它的寬度、摺疊的列、鍵盤所在的列、樹狀結構的捲動位置，以及它的搜尋和選項，都不會送出。  
 前往外鍵時為其關聯的連接線加上的[亮顯](../../guide/guides/relationship-editing.md#reading-a-connector)也不會送出。  
-捲動、縮放或索引標籤切換會送出，但絕不會移動其他使用者的檢視或索引標籤。這也包括從物件總管跳至目標時產生的捲動，以及從其他索引標籤開啟物件總管時切換到 ERD 索引標籤的動作。
+自 `4.2.0` 起，[字典](../../guide/guides/dictionary.md)索引標籤也只會留在其所屬的編輯器上：顯示的是哪一個工作表，以及每個工作表的搜尋、選取範圍、捲動位置和欄寬，都不會送出。它的編輯、排序和匯入 CSV 則會送出。  
+捲動、縮放或索引標籤切換會送出，但絕不會移動其他使用者的檢視或索引標籤。這也包括從物件總管跳至目標時產生的捲動、從其他索引標籤開啟物件總管時切換到 ERD 索引標籤的動作，以及從「字典」索引標籤的 [`Checks`](../../guide/guides/dictionary.md#the-checks-sheet) 工作表跳至資料表或欄位時的索引標籤切換和捲動。從該工作表跳至詞彙、術語或定義域時會停留在「字典」索引標籤上，因此這類跳至目標的操作完全不會送出。
+
+自 `4.2.0` 起，[名稱顯示](../../guide/guides/logical-names.md#switching-the-view)的切換也會送出，而其[鎖定](../../guide/guides/settings.md#lock)決定其他編輯器如何處理它。在新的圖表中，以及在 `4.2.0` 之前的任何文件中，`Name View` 鎖定都是開啟的。  
+鎖定開啟期間，切換只會顯示在做出切換的編輯器上：切換仍會送出，但其他每個編輯器和每個複本都會捨棄它，因此每位使用者都可以檢視不同的顯示方式，而 `value` 會保留鎖定的顯示方式。語言、名稱大小寫或引號類型的變更則不同：無論其鎖定是否開啟，都會送達每個編輯器。  
+鎖定關閉期間，在可編輯的編輯器中做出的切換會變更每個編輯器和複本上的「名稱顯示」，以最後一次切換為準，而且它們每一個都會儲存該設定。  
+唯讀編輯器自身的切換一律只會留在該編輯器上，而該編輯器仍會跟隨其他編輯器共用的切換。
 
 [鎖定](../../guide/guides/settings.md#lock)是共用的：每個編輯器都以對某項設定最後一次的鎖定或解除鎖定為準，而鎖定會攜帶開啟它的那個編輯器上的值，因此每個編輯器和複本都會儲存相同的值。  
 因此，`Viewport` 鎖定會儲存開啟它的那個編輯器的檢視，而 `Canvas Type` 鎖定會儲存該編輯器在切換到「設定」索引標籤（鎖定就是在此開啟）之前所在的最後一個索引標籤。  
-關閉 `Language`、`Table Name Case`、`Column Name Case` 或 `Bracket Type` 鎖定時，也會將每個編輯器上的該項設定改為關閉它的那個編輯器上所顯示的值，因此各編輯器仍會儲存同一個值。關閉 `Viewport` 或 `Canvas Type` 的鎖定不會移動任何人的檢視或索引標籤。
+關閉 `Language`、`Table Name Case`、`Column Name Case`、`Bracket Type` 鎖定，或自 `4.2.0` 起的 `Name View` 鎖定時，也會將每個編輯器上的該項設定改為關閉它的那個編輯器上所顯示的值，因此各編輯器仍會儲存同一個值。關閉 `Viewport` 或 `Canvas Type` 的鎖定不會移動任何人的檢視或索引標籤。
 
 對 `Before tables` 或 `After tables` 指令碼的編輯，會在其輸入框失去焦點時整個送出。這兩個指令碼的結果會分別裁定，因此協作者對其中一個的編輯絕不會覆寫另一個。
 
 在「視覺化」索引標籤的[流程模式](../../guide/guides/visualization.md#flow-never-edits-the-document)中所做的任何操作都不是文件變更，因此處於流程模式的編輯器不會向其他編輯器送出任何變更，而其他編輯器送來的變更在它處於該模式期間仍會持續套用。  
-唯一的例外是離開流程模式前往其他索引標籤：這次索引標籤切換會像其他切換一樣送出。  
+例外有兩個。離開流程模式前往其他索引標籤是一次索引標籤切換，會像其他切換一樣送出。自 `4.2.0` 起，在流程模式工具列的「名稱顯示」清單中所做的選擇是一次「名稱顯示」切換，會像在畫布上所做的切換一樣送出並套用。  
+在流程模式中用來[逐步瀏覽各個檢視](../../guide/guides/visualization.md#previous-table-and-next-table)的 `Previous table`、`Next table`，以及復原和重做按鍵，都不會送出。  
 外部連結卡片按鈕、在 `#`、`@` 或 `:` 之後選擇的[快速搜尋](../../guide/guides/quick-search.md#searching-the-diagram)結果，以及開啟[物件總管](../../guide/guides/explorer.md#opening-and-closing)，都會離開流程模式並前往 ERD 索引標籤。卡片按鈕或快速搜尋結果在那裡產生的捲動也會送出。
 
 ## 同一頁面中的兩個編輯器 {#two-editors-on-one-page}
@@ -99,6 +106,7 @@ const sharedStore2 = editor2.getSharedStore();
 
 執行階段值仍保有自文件開啟以來已移除的內容，因此當另一個編輯器之後復原某次移除時，加入者會將該資料表連同其名稱和欄位一起還原。  
 [`value`](../erd-editor-element.md#value) 是檔案所保存的形式，不含已移除的實體，因此以它或以檔案初始化的加入者，還原出來的反而會是一個沒有名稱的空白資料表。  
+自 `4.2.0` 起，從[字典](../../guide/guides/dictionary.md)工作表移除的詞彙、術語或定義域也是如此：當另一個編輯器復原該次移除時，以 `runtimeValue` 初始化的加入者會再次完整列出該列，而以 `value` 初始化的加入者則會列出一個空的列，隨後它自己的 `value` 會省略該列。  
 請繼續將 `value` 寫入儲存空間：`runtimeValue` 只用於初始化另一個編輯器、第二個檢視或 [replicationStore](./remote-storage.md)。  
 VS Code、Obsidian、JetBrains IDE 和網頁應用程式中的編輯器，就是以這種方式初始化已開啟文件的第二個檢視。
 
@@ -134,6 +142,31 @@ VS Code、Obsidian、JetBrains IDE 和網頁應用程式中的編輯器，就是
 `4.1.0` 編輯器不會送出任何新的動作類型，因此 `4.0.0` 和 `4.1.0` 的編輯器與複本可以共用同一個工作階段，而不會錯過任何內容。  
 它的[尋找與取代](../../guide/guides/find-and-replace.md#replacing)也會搜尋索引名稱和資料表群組名稱，而 `Replace` 和 `Replace All` 會透過 `4.0.0` 編輯器已會套用的 `index.changeName` 和 `tableGroup.changeName` 動作將其重新命名。
 
+自 `4.2.0` 起，以下變更透過新的動作類型傳遞，而原樣傳遞動作的轉送端不需要為此做任何新的處理：
+
+- 資料表或欄位的[邏輯名稱](../../guide/guides/logical-names.md)：`table.changeLogicalName` 和 `column.changeLogicalName`；其名稱是否[由字典產生](../../guide/guides/dictionary.md#deriving-physical-names)：`table.changeNameDerived` 和 `column.changeNameDerived`；
+- 欄位連結到[定義域](../../guide/guides/dictionary.md#domains-and-data-types)或解除連結：`column.changeDomain`；
+- 在[字典](../../guide/guides/dictionary.md)索引標籤上新增、變更（包括排序所設定的它在工作表中的位置）或移除詞彙、術語或定義域：`dictionary.add`、`dictionary.update` 和 `dictionary.remove`；
+- [名稱顯示](../../guide/guides/logical-names.md#switching-the-view)的切換：`settings.changeNameViewMode`。
+
+`Name View` 鎖定透過現有的 `settings.changeLockSettings` 動作傳遞，`Domain` 檢視選項透過 `settings.changeShow` 傳遞，而在[欄位順序](../../guide/guides/settings.md#adjusting-column-order)中移動 `Logical Name` 或 `Domain` 則透過 `settings.changeColumnOrder` 傳遞。  
+從 `Import` 匯入結構描述 SQL、GraphQL、DBML 或 AML 時，其 `editor.clear` 和 `editor.loadJson` 會攜帶 `keepDictionaries: true`，以保留每個編輯器上的詞彙、術語和定義域。以取代方式呼叫的 [setSchemaSQL](../erd-editor-element.md#setschemasql)、`setSchemaGraphQL`、`setSchemaDBML` 或 `setSchemaAML` 所送出的這兩個動作也是如此。  
+字典產生的物理名稱透過 `table.changeName` 或 `column.changeName` 傳遞，而定義域賦予其欄位的資料類型則透過 `column.changeDataType` 傳遞，這些正是手動編輯時送出的動作。
+
+`4.2.0` 之前的編輯器會忽略這些新的動作類型：它沒有邏輯名稱、定義域連結、字典或「名稱顯示」。`Name View` 的鎖定或解除鎖定在它那裡不會變更任何內容，在欄位順序中移動 `Logical Name` 或 `Domain`，或將其他項目移到其中任一個的位置上，也同樣不會。從「字典」索引標籤前往「設定」索引標籤的編輯器所開啟的 `Canvas Type` 鎖定也是如此：較舊的編輯器不認得該索引標籤，因此會讓 `Canvas Type` 保持解除鎖定。它仍會顯示字典產生的物理名稱和定義域賦予的資料類型。  
+它自己的編輯對邏輯名稱、定義域或字典一無所知，因而對較新的編輯器產生以下影響：
+
+- 它手動重新命名的資料表或欄位，其名稱仍會標示為由字典產生，因此之後在較新的編輯器上為其撰寫的邏輯名稱，可能會重新產生名稱，取代它所輸入的名稱。
+- 它為連結到定義域的欄位設定的資料類型會保留該連結，因此 `Checks` 工作表會列出 `Domain type mismatch`，而定義域下一次變更類型時，會再次將定義域的類型賦予該欄位。
+- 它新增的關聯，其外鍵欄位不會從其鍵取得邏輯名稱或定義域。
+- 它貼上或建立副本的資料表在送達時不含邏輯名稱或定義域連結。
+- 在它上面匯入結構描述 SQL、GraphQL、DBML 或 AML 時不會送出 `keepDictionaries`，因此會清空每個編輯器上的詞彙、術語和定義域。
+- 它對載入、匯入或 `clear()` 的復原，會在每個編輯器上載入它自己的文件副本，而該副本不含邏輯名稱、定義域連結或字典。
+- 該副本，以及在它上面匯入結構描述 SQL、GraphQL、DBML 或 AML 時所載入的文件，也會將每個編輯器上的 `Name View` 鎖定恢復成那個較舊的編輯器當初看到的狀態。之後每個編輯器都會將 `Physical Names` 儲存為「名稱顯示」，而若鎖定為關閉，也會顯示它。
+
+由這種編輯器儲存的文件不含邏輯名稱、定義域連結、字典或「名稱顯示」，因此 `4.2.0` 編輯器會以 `Physical Names` 開啟它。不過較舊的編輯器確實會依其當初看到的狀態儲存 `Name View` 鎖定，因此在 `4.2.0` 編輯器中解除鎖定的文件仍會保持解除鎖定。  
+工作階段中的每個編輯器，以及儲存其文件的任何 [replicationStore](./remote-storage.md#dispatch-dispatchsync)，都應使用 `4.2.0` 或更新版本。
+
 ## SharedStoreConfig {#sharedstoreconfig}
 
 ### getNickname {#getnickname}
@@ -161,6 +194,7 @@ editor.getSharedStore({ mouseTracker: false });
 廣播此使用者正在處理的內容。預設為 `true`。  
 取得焦點的資料表和儲存格，選取的資料表、備忘錄和資料表群組，以及在畫布上拖曳的框，都會送到其他編輯器並在那裡繪製。  
 每位使用者都有各自的顏色，因此可以加以區分：取得焦點的資料表會有外框，取得焦點的儲存格會有底線，選取的資料表、備忘錄和資料表群組周圍會有一圈框線，拖曳框則是虛線矩形。  
+自 `4.2.0` 起，在其鎖定開啟期間，或唯讀編輯器自行切換之後，每位使用者看到的[名稱顯示](../../guide/guides/logical-names.md#collaborators)可能各不相同。若取得焦點的儲存格未在您的顯示方式中繪製，底線會畫在代替它繪製的儲存格上：名稱和邏輯名稱互為替代，資料類型和定義域也是如此。  
 無論此選項是否開啟，從其他使用者送達的在線狀態一律會繪製在您的畫布上。  
 在「視覺化」索引標籤的流程模式中，其他使用者的焦點和選取範圍會繪製在資料表卡片上，但他們的拖曳框不會。在那裡選取的資料表仍會送出；在那裡拖曳的框則不會。
 

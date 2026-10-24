@@ -1,6 +1,6 @@
 ---
-sidebar_position: 6
-description: 删除关系、修改关系类型、设置 ON DELETE 与 ON UPDATE 操作、通过映射列将关系映射到已有的列上、读懂连接线的表示法、处理 N:M 关系与识别关系，以及了解新外键列的命名方式。
+sidebar_position: 7
+description: 删除关系、修改关系类型、设置 ON DELETE 与 ON UPDATE 操作、通过映射列将关系映射到已有的列上、读懂连接线的表示法、处理 N:M 关系与识别关系，以及了解新外键列会从其键复制哪些内容以及其命名方式。
 ---
 
 # 编辑关系
@@ -85,6 +85,9 @@ Code Generator 的 ORM 目标会写出哪些操作，不仅取决于所选数据
 
 对话框的副标题会写出两个表和关系类型，例如 `users → posts · One N`。类型在这里只显示而不能修改，要修改请参见[修改类型](#修改类型)。
 
+在整个对话框中，包括各行下方的说明和文字以及对话框关闭时显示的提示，表和列都按[名称显示](./logical-names.md#beyond-the-canvas)的方式命名。  
+以下三项保持物理形式：每个数据类型，它始终是列自身的数据类型，而不是其域的名称；`New column: <name>`，它显示新列将获得的名称；以及 `Map` 一开始就填好的各行，它们按名称配对，永远不会按逻辑名配对。
+
 `References` 用于选择关系所指向的键：先是 `Primary Key`，其列按表中的顺序排列，然后是每个标记为 `Unique` 的列对应的 `Unique: <column>`。只有在可选项多于一个时才会显示。  
 唯一索引在这里不算作键，本身就是整个主键的 `Unique` 列也不会重复列出。  
 选择另一个键会重建各行。一行所选的列只要仍在子表中，该行就会保留这一选择。
@@ -121,10 +124,10 @@ Code Generator 的 ORM 目标会写出哪些操作，不仅取决于所选数据
 `Map` 与 `Save` 写入的内容：
 
 - `Map` 添加的关系的 `On Delete` 与 `On Update` 均为 `Not set`。`Save` 只修改关系的列，使其父表一侧指向在 `References` 中选择的键，并保留其类型以及 ON DELETE 与 ON UPDATE。
-- `New column` 行会像绘制关系时一样，在子表末尾添加一列：该列为 `NOT NULL`，以其对应的键命名，并沿用该键的数据类型、默认值和注释，参见[识别关系](#识别关系)。
-- 所选的列永远不会被重命名，其 `Not Null`、主键、`Unique`、默认值和注释也都保持不变。只有在 `Relationship DataType Sync` 开启且父列设有数据类型时，其数据类型才会改变：它会采用父列赋予外键的类型，serial 类型的键与新列一样对应其整数类型，并且该修改会像同步时一样沿着关系继续传递。
+- `New column` 行会像绘制关系时一样，在子表末尾添加一列：该列为 `NOT NULL`，以其对应的键命名，并沿用该键的数据类型、默认值、注释、逻辑名和域，参见[识别关系](#识别关系)。
+- 所选的列永远不会被重命名，也不会关联到该键的域，其 `Not Null`、主键、`Unique`、默认值、注释和逻辑名也都保持不变。只有在 `Relationship DataType Sync` 开启且父列设有数据类型时，其数据类型才会改变：它会采用父列赋予外键的类型，serial 类型的键与新列一样对应其整数类型，并且该修改会像同步时一样沿着关系继续传递。所有因此修改类型的列，无论是所选的列还是沿着关系传递到的列，只要其新类型与其[域](./dictionary.md#domains-and-data-types)的类型不同，就会取消与该域的关联。
 - 映射不再使用的列会保留在子表中，除非仍有另一条关系连接到它，否则它不再被标记为外键。
-- 一次 `Map` 或 `Save` 写入的所有内容，包括新列和类型修改，都只算一步 Undo。
+- 一次 `Map` 或 `Save` 写入的所有内容，包括新列、类型修改和域关联的取消，都只算一步 Undo。
 
 与其他关系一样，关系是否为识别关系、其父表一端如何绘制，都由映射到的子表列决定。映射到子表的主键列会使其立即成为识别关系，映射到允许 `NULL` 的列则会在父表一端绘制圆环，参见[读懂连接线](#reading-a-connector)。  
 Schema SQL 中的外键会引用所选择的键，例如 `Unique` 键对应 `REFERENCES vehicle (vin)`。
@@ -156,9 +159,10 @@ Schema SQL 中的外键会引用所选择的键，例如 `Unique` 键对应 `REF
 ## 识别关系
 
 通过点击子表或使用 `Create new columns` 创建关系时，父表的每个主键都会以 `NOT NULL` 外键列的形式复制到子表上，因此新建的关系起初是非识别关系。  
-复制出的列会沿用该键的数据类型、默认值和注释，但不会沿用 `Unique` 或 `Auto Increment`，其命名方式参见[外键列名](#foreign-key-column-names)。  
+复制出的列会沿用该键的数据类型、默认值、注释和逻辑名，但不会沿用 `Unique` 或 `Auto Increment`，其命名方式参见[外键列名](#foreign-key-column-names)。  
 serial 类型的键在数据类型上是例外：复制出的列会采用该 serial 所存储的整数类型。在任何数据库下，`smallserial` 和 `serial2` 都对应 `smallint`，`serial4` 对应 `integer`，`bigserial` 和 `serial8` 对应 `bigint`。单独的 `serial` 在 PostgreSQL 下对应 `integer`，在 MySQL 和 MariaDB 下对应 `bigint unsigned`，在其他任何数据库下则仍为 `serial`。  
 只有完整的类型名称才算数（不区分大小写），因此 `serial(4)` 会按原样复制。以大写字母写成的类型会得到大写的结果：在 PostgreSQL 下，`SERIAL` 对应 `INTEGER`。已保存的图中类型已为 `serial` 的外键列会保留该类型。  
+复制出的列还会关联到该键的[域](./dictionary.md#domains-and-data-types)，前提是复制时 `Domains` 工作表中列有该域，且复制出的列保留了该键的数据类型。因此，serial 类型的键复制出的列若采用了整数类型，就不会关联任何域，而单独的 `serial` 若仍保留为 `serial`，则会关联该域。  
 若要使关系成为识别关系，可将子表上的这些外键列设为主键：选中所有这些列后按一次 `Alt + K` (Windows/Linux) 或 `⌥ + K` (Mac)，或者在表右键菜单中选择 `Primary Key`，选中两列或更多列时该条目会显示为 `Primary Key on selected columns`，参见[列主键](./table-editing.md#列主键)。
 
 ![用 Alt + K 将 product_id 设为主键再取消，连接线随之先变为实线、再变为虚线](/img/demo-identifying-relationship.webp)
@@ -193,7 +197,10 @@ serial 类型的键在数据类型上是例外：复制出的列会采用该 ser
 这些名称在创建关系时确定。之后重命名父表或其键，不会随之重命名这些列。  
 [映射列](#map-columns)中的 `New column` 行也按相同的规则命名，列表会在选择之前显示每个名称。  
 通过导入、粘贴、创建副本或在映射列中与已有的列配对得到的关系，其列已经存在，因此会保留这些列原有的名称。  
-编码智能体通过 `erd_add_relationship` 添加关系时，得到的名称和数据类型与此相同，参见[工具](../../mcp/tools.md#关系)。
+编码智能体通过 `erd_add_relationship` 添加关系时，得到的名称、数据类型、逻辑名和域与此相同，参见[工具](../../mcp/tools.md#关系)。
+
+外键列以其对应的键命名，永远不会以它所复制的逻辑名命名，并且其名称算作你自己填写的名称：之后在该列上输入的逻辑名不会改变该名称，除非该名称为空，参见[自行填写的名称](./dictionary.md#names-of-your-own)。  
+因此，当复制来的逻辑名与某个提供其他名称的术语匹配时，`Checks` 工作表会将该列列在 [`Physical name mismatch`](./dictionary.md#what-each-check-finds) 下。重新生成其物理名会按词典为其重命名，除非子表中的另一列已经使用了词典所给出的名称（不区分大小写），参见[重新生成物理名](./dictionary.md#derive-physical-names-again)。
 
 ## 读懂连接线 {#reading-a-connector}
 

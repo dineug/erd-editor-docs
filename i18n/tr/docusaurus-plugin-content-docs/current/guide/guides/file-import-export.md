@@ -16,16 +16,20 @@ Tuvalin bağlam menüsündeki `Import` alt menüsünden beş biçim içe aktarı
 - AML
 
 `Import` öğesinin hemen altındaki `Import and Add` öğesi, diyagramı dosyayla değiştirmek yerine dosyayı diyagrama ekler. [İçe aktar ve ekle](#import-and-add) bölümüne bakın.  
-Boş bir diyagramın gösterdiği karşılama ekranında aynı beş biçimi sunan bir `Import` satırı bulunur. [Karşılama ekranı](./editing-start.md#welcome-screen) bölümüne bakın.
+Boş bir diyagramın gösterdiği karşılama ekranında aynı beş biçimi sunan bir `Import` satırı bulunur. [Karşılama ekranı](./editing-start.md#welcome-screen) bölümüne bakın.  
+[Sözlük](./dictionary.md) sekmesinin sayfaları da, o sekmenin kendi `Import CSV` öğesiyle CSV dosyalarından sözcük, terim ve değer alanı alır. [CSV içe ve dışa aktarma](./dictionary.md#importing-and-exporting-csv) bölümüne bakın.
 
 Uzantılar büyük/küçük harf ayrımı yapılmadan eşleştirilir. Uzantısı seçilen biçimle eşleşmeyen bir dosya seçildiğinde içe aktarma iptal edilir ve `Only <format> files can be imported` iletisi gösterilir. Biçim, `Only sql files can be imported` iletisinde olduğu gibi `json`, `sql`, `graphql`, `dbml` veya `aml` olarak yazılır.
 
 `Import` öğesi dosyayı geçerli belgeyle birleştirmek yerine belgeyi dosyayla değiştirir ve tek bir geri alma önceki diyagramı geri getirir.  
-Bir JSON dosyası, [kilitleri](./settings.md#lock) de dahil olmak üzere kendi ayarlarını beraberinde getirir. Dosya sekmeyi, Kod oluşturucu dilini, bir ad biçimini veya tırnak türünü kilitliyorsa, önceden sahip olduğunuz değeri görmeye devam edersiniz, ancak kaydedilen değer dosyanın kilitli değeridir. Görünüm, kilitli olsun ya da olmasın, dosyanın belirttiği konuma geçer. Kilitler henüz yokken kaydedilmiş bir JSON dosyası, tüm kilitler etkin ve görünüm %100'de olacak şekilde içe aktarılır.  
+Bir JSON dosyası, [kilitleri](./settings.md#lock) de dahil olmak üzere kendi ayarlarını beraberinde getirir. Dosya sekmeyi, Kod oluşturucu dilini, bir ad biçimini, tırnak türünü veya [Ad görünümünü](./logical-names.md#name-view) kilitliyorsa, önceden sahip olduğunuz değeri görmeye devam edersiniz, ancak kaydedilen değer dosyanın kilitli değeridir. Yakınlaştırma ve görünüm konumu, kilitli olsun ya da olmasın, dosyanın belirttiği yere geçer. Kilitler henüz yokken kaydedilmiş bir JSON dosyası, tüm kilitler etkin ve görünüm %100'de olacak şekilde içe aktarılır. `Name View` kilidi henüz yokken kaydedilmiş bir dosya ise, kaydettiği diğer kilitler ne olursa olsun bu kilit etkin olarak içe aktarılır.  
 Diğer biçimler kilitler dahil mevcut ayarlarınızı korur; yalnızca görünüm %100'den başlar.  
 GraphQL, DBML ve AML ayrıştırıcıları asla başarısız olmaz: Okuyamadıkları bir dosya hata yerine boş bir diyagram üretir.
 
-Bir JSON dosyası içerdiği konumları korur. Bir Şema SQL, GraphQL, DBML veya AML dosyasının tabloları diyagram değişmeden önce yerleştirilir:
+Bir JSON dosyası, tablolarının ve sütunlarının mantıksal adlarını ve sütunlarının değer alanı bağlantılarını da getirir. Dosyanın sözcükleri, terimleri ve değer alanları [Sözlük](./dictionary.md) sekmesindekilerin yerini alır, bu yüzden hiçbirini içermeyen bir dosya sayfaları boş bırakır ve içe aktarmayı geri almak yerini aldıklarını geri getirir.  
+Diğer biçimler bunların hiçbirini içermez. Tabloları mantıksal adsız ve hiçbir sütunu bir değer alanına bağlı olmadan gelir, sözcükleriniz, terimleriniz ve değer alanlarınız da olduğu gibi kalır. İçe aktarmayı geri almak veya yinelemek de onları olduğu gibi bırakır, bu yüzden içe aktarmadan sonra yapılan bir sözlük düzenlemesi korunur. Böyle bir içe aktarma her sayfanın kendi geri alma geçmişini de olduğu gibi bırakır, bir JSON içe aktarması ise bu geçmişleri boşaltır. [Sözlük sayfaları](./undo-redo.md#dictionary-sheets) bölümüne bakın.
+
+Bir JSON dosyası içerdiği konumları korur. Bir Şema SQL, GraphQL, DBML veya AML dosyasının tabloları diyagram değişmeden önce, baktığınız [Ad görünümünde](./logical-names.md#beyond-the-canvas) aldıkları genişliklerle yerleştirilir:
 
 - Dosyada iki veya daha fazla tablo ve en az bir ilişki varsa, tablolar [Otomatik düzenin](./table-related-functions.md#auto-layout) `Flow` düzeniyle, tuvalin sol üst köşesinden başlayarak ilişkiler boyunca soldan sağa yerleştirilir. Bir tablodan kendisine giden bir ilişki de sayılır.
 - Aksi takdirde tablolar, en az sütunu olanlar önce gelecek şekilde, sol üstten başlayarak satırlara dizilir.
@@ -33,7 +37,7 @@ Bir JSON dosyası içerdiği konumları korur. Bir Şema SQL, GraphQL, DBML veya
 
 Ardından diyagram tek adımda değiştirilir, böylece arada hiçbir şey görünmez. Tablolar yerleştirilirken değiştirdiğiniz sekme gibi bir ayar korunur ve bu sırada başka bir dosya içe aktarırsanız en son başlatılan içe aktarma geçerli olur.
 
-Salt okunur bir düzenleyici `Import` öğesinden hiçbir şey yüklemez ve `Import and Add` öğesini sunmaz.
+Salt okunur bir düzenleyici `Import` öğesinden hiçbir şey yüklemez ve ne `Import and Add` öğesini ne de Sözlük sekmesinin `Import CSV` öğesini sunar.
 
 ### İçe aktar ve ekle {#import-and-add}
 
@@ -42,6 +46,7 @@ Salt okunur bir düzenleyici `Import` öğesinden hiçbir şey yüklemez ve `Imp
 ![Import and Add > Schema SQL üzerinden bir SQL dosyası ekleme, tablolarının ilişkileri boyunca düzenlenip seçili olarak diyagramın altına yerleşmesi](/img/demo-import-and-add.webp)
 
 Dosya, yapıştırma işleminde olduğu gibi eklenir: İçerdiği her tablo, sütun, ilişki, dizin, not ve [tablo grubu](./table-groups.md) yeni bir öğe olarak eklenir, diyagramda zaten bulunan tablolar yerinden oynamaz ve hiçbir ayar değişmez, bu nedenle bir JSON dosyasının ayarları alınmaz.  
+Bir JSON dosyasının tabloları ve sütunları mantıksal adlarını korur ve her fiziksel ad, dosyada olduğu gibi sözlüklere ya da size ait kalır; daha sonra yazılan bir mantıksal adın yeni bir ad türetip türetmeyeceğini bu belirler. [Fiziksel adları türetme](./dictionary.md#deriving-physical-names) bölümüne bakın. Dosyanın sözcükleri, terimleri ve değer alanları alınmaz, bu yüzden Sözlük sekmesi olduğu gibi kalır ve eklenen hiçbir sütun bir değer alanına bağlanmaz: Her biri sahip olduğu veri türünü korur.  
 Adı diyagramda zaten bulunan bir tablo, mevcut tabloyla birleştirilmez, o adı taşıyan ikinci bir tablo olarak eklenir. İlişkiler ve dizinler yalnızca dosyadan gelir; bu nedenle dosyanın tanımlamadığı bir tabloya başvuran bir yabancı anahtar, diyagramda zaten bulunan bir tabloya bağlanmaz.
 
 Eklenen blok, diyagramın içerdiği her şeyin hemen altına ve onun sol kenarıyla hizalı olarak, boş bir diyagramda ise sol üst köşeye yerleşir. [Görünüm seçenekleriyle](./table-related-functions.md#table-view-options) gizlenen notlar ve tablo grupları da hâlâ orada durdukları için hesaba katılır.  
@@ -160,11 +165,10 @@ MySQL ve MariaDB'nin `'it\'s'` biçiminde yazdığı gibi tırnaktan önce gelen
 Bir `DEFAULT` değeri tırnaklarını korur ve içindeki bir tırnak, dosya onu nasıl kaçışlamış olursa olsun iki kez yazılmış olarak geri yazılır: `'it''s'`.  
 İçe aktarma sırasında belgenin veritabanı Databricks ise tek tırnaklı metin bunun yerine Spark'ın kurallarına uyar: Her ters eğik çizgi kendisinden sonraki karakteri kaçışlar, bu nedenle `'C:\\dir'` metni `C:\dir` olarak okunur, `\n`, `\t` ve `\u0041` gibi kaçış dizileri çözülür ve bir `DEFAULT` değeri `'it\'s'` olarak saklanır.
 
-Dışa aktarılan Şema SQL, bir tablo veya sütun açıklamasının içindeki tırnağı kaçışlar: MySQL, MariaDB ve Snowflake için `COMMENT 'it''s'`, PostgreSQL ve Oracle için `COMMENT ON TABLE` ve `COMMENT ON COLUMN ... IS 'it''s'`, MSSQL'in `sp_addextendedproperty` çağrılarında ise tablo ve sütun adları da dahil olmak üzere tırnağın aynı şekilde iki kez yazılması. Tırnak içermeyen bir açıklama olduğu gibi yazılır.  
-Databricks ise tırnağı ve ters eğik çizgiyi bunun yerine `COMMENT 'it\'s'` örneğindeki gibi ters eğik çizgiyle kaçışlar; bu nedenle dışa aktarması yalnızca seçili veritabanı Databricks olduğu sürece birebir geri okunur.  
-MSSQL her açıklamayı `EXECUTE sys.sp_addextendedproperty 'MS_Description', '<comment>', 'schema', '<schema>', 'table', '<table>'` olarak, bir sütun için ardından `'column', '<column>'` ekleyerek yazar. `Bracket` ayarı `None` olduğunda `sales.users` adlı bir tablo `sales` şemasını ve `users` tablosunu verir; şeması olmayan bir ad ise `dbo` şemasında yer alır. Başka herhangi bir `Bracket` ayarında adın tamamı `dbo` şemasındaki tablonun adı olur.
-
-Açıklamalar bir SQLite dışa aktarma ve içe aktarma gidiş-dönüşünde korunmaz: SQLite onları ayrıştırıcının okumadığı düz `--` satırları olarak yazar. Bir MSSQL dışa aktarmasının `sp_addextendedproperty` çağrıları ise aynı tablo ve sütun açıklamaları olarak geri içe aktarılır.
+Her veritabanının dışa aktarmada bir açıklamayı nasıl yazdığı ve içindeki bir tırnağı nasıl kaçışladığı, Şema SQL sayfasındaki [Açıklamalar](./schema-sql.md#comments) bölümünde anlatılır.  
+MySQL, MariaDB, PostgreSQL, Oracle, Snowflake veya MSSQL'e yapılan bir dışa aktarma, bir Oracle dışa aktarmasının dışarıda bıraktığı boş satırlar dışında, tırnaklar dahil aynı tablo ve sütun açıklamaları olarak geri içe aktarılır. Bir tırnağı ve ters eğik çizgiyi ters eğik çizgiyle kaçışlayan Databricks dışa aktarması ise yalnızca seçili veritabanı Databricks olduğu sürece birebir geri okunur.  
+Açıklamalar bir SQLite dışa aktarma ve içe aktarma gidiş-dönüşünde korunmaz: SQLite onları ayrıştırıcının okumadığı düz `--` satırları olarak yazar.  
+SQLite dışında, `Write logical names into empty comments` seçeneğinin boş bir açıklamaya yazdığı mantıksal ad, o tablonun veya sütunun mantıksal adı olarak değil, açıklaması olarak geri içe aktarılır. [Açıklama olarak mantıksal adlar](./schema-sql.md#logical-names-as-comments) bölümüne bakın.
 
 ### GraphQL {#graphql}
 
@@ -200,22 +204,24 @@ Dosya adı `.aml` ile bitmelidir.
 
 GraphQL, DBML ve AML gidiş-dönüş biçimleridir: Her biri aynı zamanda bir [Kod oluşturucu](./code-generator.md) hedefidir.  
 DBML ve AML, her ilişkinin ON DELETE ve ON UPDATE değerlerini iki yönde de taşır. [Kod oluşturucu](./code-generator.md#on-delete-and-on-update) bölümüne bakın. GraphQL ikisini de taşımaz, bu nedenle bir GraphQL içe aktarması ikisini de `Not set` olarak bırakır.  
-DBML ayrıca saydamlık dışında tablo renklerini ve tablo içeren her tablo grubunu iki yönde de taşır. Adı olmayan bir grup `group_1`, `group_2` vb. olarak geri gelir; yinelenen bir grup adı ise sonuna `_2`, `_3` vb. eklenerek geri gelir. AML bir tablo rengini yalnızca renk adlarından en yakını olarak taşır, bu nedenle `#FF8800` rengi `orange` olarak yazılır ve `#f97316` olarak geri gelir; AML grup da taşımaz. GraphQL ne renkleri ne de grupları taşır.
+DBML ayrıca saydamlık dışında tablo renklerini ve tablo içeren her tablo grubunu iki yönde de taşır. Adı olmayan bir grup `group_1`, `group_2` vb. olarak geri gelir; yinelenen bir grup adı ise sonuna `_2`, `_3` vb. eklenerek geri gelir. AML bir tablo rengini yalnızca renk adlarından en yakını olarak taşır, bu nedenle `#FF8800` rengi `orange` olarak yazılır ve `#f97316` olarak geri gelir; AML grup da taşımaz. GraphQL ne renkleri ne de grupları taşır.  
+Üçü de mantıksal adları, değer alanı bağlantılarını veya sözlükleri hiçbir yönde taşımaz: Kod oluşturucu her tablonun ve sütunun fiziksel adını ve veri türünü yazar, hiçbir zaman mantıksal adı veya değer alanını yazmaz.
 
 ## Dışa aktarma {#exporting}
 
 Tuvalin bağlam menüsündeki `Export` alt menüsünde üç öğe bulunur:
 
-- json: Diyagramı, dosyasında tutulduğu biçimiyle `.erd.json` olarak kaydeder: sütunları ve dizinleriyle birlikte tablolar, ilişkiler, notlar ve tablo grupları, ayrıca her [kilitli ayar](./settings.md#lock) kendi kilitli değerinde olmak üzere ayarlar.
+- json: Diyagramı, dosyasında tutulduğu biçimiyle `.erd.json` olarak kaydeder: sütunları ve dizinleriyle birlikte tablolar, ilişkiler, notlar ve tablo grupları, mantıksal adlar ve sütunların değer alanı bağlantıları, [Sözlük](./dictionary.md) sekmesinin sözcükleri, terimleri ve değer alanları, ayrıca her [kilitli ayar](./settings.md#lock) kendi kilitli değerinde olmak üzere ayarlar. Boş metin veya boş bir sözlük satırı gibi hiçbir şey içermeyenler yer almaz. [Depolama biçimi ve çalışma zamanı değeri](../../api/advanced/schema.md#storage-form-and-runtime-value) bölümüne bakın.
 - Schema SQL: [Şema SQL](./schema-sql.md#saving-or-copying-the-sql) sekmesini, seçenekler paneli açık ve `Save file` düğmesi odakta olacak şekilde açar; böylece `Enter` tuşuna basmak, sekmenin gösterdiği SQL'i `.sql` olarak kaydeder. O ana kadar hiçbir şey kaydedilmez.
 - Image: Diyagramı `.png` ya da `.svg` olarak kaydeden veya PNG olarak panoya kopyalayan `Export image` iletişim kutusunu açar. [Görüntü](#image) bölümüne bakın.
 
-Üçü de salt okunur bir düzenleyicide çalışır.
+Üçü de salt okunur bir düzenleyicide çalışır.  
+Sözlük sekmesinin bu alt menüde bulunmayan kendi `Export CSV` öğesi, sekmenin `Domains`, `Words` veya `Terms` sayfasını bir CSV dosyası olarak kaydeder. Bu üçünün aksine salt okunur bir düzenleyicide sunulmaz. [CSV içe ve dışa aktarma](./dictionary.md#importing-and-exporting-csv) bölümüne bakın.
 
 Şema SQL, her ilişkinin ON DELETE ve ON UPDATE değerlerini, önce ON DELETE olmak üzere `REFERENCES` yan tümcesinden sonra yazar. `Not set` hiçbir şey yazmaz ve seçili veritabanının kabul etmediği bir eylem yer almaz. Hangi veritabanının hangi eylemi kabul ettiği için [İlişki düzenleme](./relationship-editing.md#on-delete-and-on-update) bölümüne bakın.
 
 Dışa aktarılan her dosya, `<database name>-<timestamp>` ve ardından uzantısı biçiminde adlandırılır; zaman damgası yerel saatte `yyyy-MM-dd'T'HH_mm_ss` biçimindedir – örneğin `my-schema-2026-08-29T04_05_06.erd.json`. Boş bir veritabanı adı yerine `unnamed` kullanılır.  
-Şema SQL sekmesindeki ve [Kod oluşturucudaki](./code-generator.md) `Save file` düğmeleri dosyalarını aynı şekilde adlandırır. Bir görüntü, veritabanı adının iletişim kutusu açıldığı andaki değerini alır.
+Şema SQL sekmesindeki ve [Kod oluşturucudaki](./code-generator.md) `Save file` düğmeleri dosyalarını aynı şekilde adlandırır, zaman damgasından sonra sayfayı ekleyen `Export CSV` de öyle: `-words.csv`, `-terms.csv` veya `-domains.csv`. Bir görüntü, veritabanı adının iletişim kutusu açıldığı andaki değerini alır.
 
 `Import`, `Import and Add` ve `Export` öğeleri, tuvalin bağlam menüsündekiyle aynı öğelerle ERD sekmesindeki [Hızlı aramadan](./quick-search.md) da kullanılabilir.
 
@@ -235,7 +241,7 @@ Tuvalin bağlam menüsünden ya da Hızlı aramadan seçilen `Export` ▸ `Image
 
 Seçimler düzenleyici kapanana kadar korunur ve hiçbir zaman belgeye kaydedilmez. Önizleme görüntüyle aynı şekilde çizilir ve `Background` ya da `Dark mode` değiştiğinde yeniden çizilir.
 
-Görüntü, diyagramı iletişim kutusu açıldığı andaki durumuyla içerir; sonraki değişiklikleri almak için iletişim kutusunu kapatıp yeniden açın. Görüntü, ne kadar uzağa kaydırılmış olursa olsun diyagramın tamamını, diyagramın çizdiği alan artı bir kenar boşluğu olacak şekilde kırpılmış olarak içerir ve düzenleyici hangi yakınlaştırmayı gösterirse göstersin her zaman %100'de çizilir; böylece her tablo eksiksiz çizilir. [Görünüm seçeneklerinin](./table-related-functions.md#table-view-options) gizlediği öğeler – ilişkiler, bunların ON DELETE ve ON UPDATE etiketleri, tablo grupları ya da notlar – ne çizilir ne de onlara yer ayrılır ve tablo grupları diğer her şeyin arkasında çizilir.
+Görüntü, diyagramı iletişim kutusu açıldığı andaki durumuyla içerir; sonraki değişiklikleri almak için iletişim kutusunu kapatıp yeniden açın. Tabloları ve sütunları, `Name View` kilidi dosyada başka bir görünümü tutarken yalnızca sizin ekranınızda geçilmiş bir görünüm olsa bile, düzenleyicinin o anda gösterdiği Ad görünümünde adlandırılır. [Tuvalin ötesinde](./logical-names.md#beyond-the-canvas) bölümüne bakın. [Sözlük denetimlerinin](./dictionary.md#marks-on-the-canvas) tuvaldeki adlara verdiği renkler çizilmez. Görüntü, ne kadar uzağa kaydırılmış olursa olsun diyagramın tamamını, diyagramın çizdiği alan artı bir kenar boşluğu olacak şekilde kırpılmış olarak içerir ve düzenleyici hangi yakınlaştırmayı gösterirse göstersin her zaman %100'de çizilir; böylece her tablo eksiksiz çizilir. [Görünüm seçeneklerinin](./table-related-functions.md#table-view-options) gizlediği öğeler – ilişkiler, bunların ON DELETE ve ON UPDATE etiketleri, tablo grupları ya da notlar – ne çizilir ne de onlara yer ayrılır ve tablo grupları diğer her şeyin arkasında çizilir.
 
 Görüntüyü üç düğme yazar ve her biri iletişim kutusunu açık bırakır:
 

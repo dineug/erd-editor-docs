@@ -38,7 +38,8 @@ Panela ez da `200px` zabalera baino estuagoa marrazten, eta oihalari gutxienez `
 
 `setInitialValue('')` deiak dokumentu berri eta huts bat hasten du. `value` propietatea esleitzeak, aldiz, dokumentua edizio gisa kargatzen du; beraz, desegite-historian geratzen da.
 `4.0.0` bertsiotik aurrera, `editor.value` propietatea fitxategi batek gordetzen duen forman dagoen dokumentua da, eta hori da gorde behar dena. `editor.runtimeValue` propietatea editoreak duen moduko dokumentua da, kendutako entitateak barne: lankide bat hasieratzeko erabiltzen da, eta ez da inoiz fitxategi batera joaten. Ikus [runtimeValue](./erd-editor-element.md#runtimevalue).
-`4.0.0` bertsiotik aurrera, dokumentu berri batek [ezarpen-blokeo](../guide/guides/settings.md#lock) guztiak ere aktibatuta ditu: ikuspen-eremua, fitxa, Kode-sortzailearen lengoaia, izenen bi idazkerak eta mugatzaile mota. Korritzeak, zooma aldatzeak, fitxaz aldatzeak edo ezarpen horietako bat aldatzeak `editor.value` lehen zegoen bezala uzten du, eta ez du `change` gertaerarik igortzen. Testutik kargatutako dokumentu batek bertan izendatutako blokeoak mantentzen ditu. Blokeorik izendatzen ez duena, `4.0.0` bertsioa baino lehen gordetako edozein fitxategi bezala, blokeo guztiak aktibatuta irekitzen da, % 100eko zoomean eta ERD fitxan, gordetako ikuspegia eta fitxa edozein direla ere. Haren ikuspegia `0, 0` jatorrian blokeatzen da, eta, han diagramaren zatirik marraztuta ez badago, diagraman irekitzen da horren ordez. Ikus [setInitialValue](./erd-editor-element.md#setinitialvalue).
+`4.0.0` bertsiotik aurrera, dokumentu berri batek [ezarpen-blokeo](../guide/guides/settings.md#lock) guztiak ere aktibatuta ditu: ikuspen-eremua, fitxa, Kode-sortzailearen lengoaia, izenen bi idazkerak, mugatzaile mota eta, `4.2.0` bertsiotik aurrera, [Izenen ikuspegia](../guide/guides/logical-names.md#name-view). Korritzeak, zooma aldatzeak, fitxaz aldatzeak, Izenen ikuspegia aldatzeak edo gainerako ezarpenetako bat aldatzeak `editor.value` lehen zegoen bezala uzten du, eta ez du `change` gertaerarik igortzen. Testutik kargatutako dokumentu batek bertan izendatutako blokeoak mantentzen ditu. Blokeorik izendatzen ez duena, `4.0.0` bertsioa baino lehen gordetako edozein fitxategi bezala, blokeo guztiak aktibatuta irekitzen da, % 100eko zoomean eta ERD fitxan, gordetako ikuspen-eremua eta fitxa edozein direla ere. Haren ikuspen-eremua `0, 0` jatorrian blokeatzen da, eta, han diagramaren zatirik marraztuta ez badago, ikuspegia diagraman irekitzen da horren ordez. Ikus [setInitialValue](./erd-editor-element.md#setinitialvalue).
+`4.2.0` bertsioa baino lehen gordetako fitxategi bat Izenen ikuspegia `Physical Names` ikuspegian blokeatuta duela irekitzen da, gainerako blokeo guztiak desaktibatuta dituena ere bai. `4.0.0` edo `4.1.0` bertsioko editore batek Izenen ikuspegiaren blokeoa dagoen bezala mantentzen du gordetzean, baina ikuspegia galdu egiten du; beraz, Izenen ikuspegia desblokeatuta duela gordetako `4.2.0` bertsioko fitxategi bat desblokeatuta geratzen da, baina `Physical Names` ikuspegian irekitzen da berriro.
 APIaren gainerakorako, ikus [ErdEditorElement](./erd-editor-element.md).
 
 ### CDN {#cdn}
@@ -56,7 +57,7 @@ APIaren gainerakorako, ikus [ErdEditorElement](./erd-editor-element.md).
 ```
 
 `esm.run` zerbitzuak paketearen kanpoko mendekotasunak ebazten ditu zure ordez; beraz, honek paketatzailerik gabe funtzionatzen du.
-Bertsiorik gabeko URLak beti azken bertsioa zerbitzatzen du. Finkatu bertsio bat — `https://esm.run/@dineug/erd-editor@4.1.0` — ez baduzu nahi eguneratze nagusi bat abisurik gabe zure orrira iristea.
+Bertsiorik gabeko URLak beti azken bertsioa zerbitzatzen du. Finkatu bertsio bat — `https://esm.run/@dineug/erd-editor@4.2.0` — ez baduzu nahi eguneratze nagusi bat abisurik gabe zure orrira iristea.
 `4.0.0` bertsioa bera da horietako bat: 3.x bertsioan geratu behar duen orri batek `@3.10.0` bertsioa finkatzen du. Ikus [3.x bertsiotik eguneratzea](#upgrading-from-3x).
 
 ### Script etiketa {#script-tag}
@@ -66,14 +67,14 @@ Bertsiorik gabeko URLak beti azken bertsioa zerbitzatzen du. Finkatu bertsio bat
 
 ```html
 <erd-editor></erd-editor>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@4.1.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@4.2.0"></script>
 <script>
   const editor = document.querySelector('erd-editor');
   editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
 </script>
 ```
 
-Hura inportatzeak `<erd-editor>` elementua modu berean erregistratzen du; `window.ErdEditor` objektuak fitxategien bi callback funtzioak ditu, `ErdEditor.setExportFileCallback` eta `ErdEditor.setImportFileCallback`, eta, `3.9.2` bertsiotik aurrera, `ErdEditor.createKeyBindingMap` funtzioa.
+Hura inportatzeak `<erd-editor>` elementua modu berean erregistratzen du; `window.ErdEditor` objektuak fitxategien bi callback funtzioak ditu, `ErdEditor.setExportFileCallback` eta `ErdEditor.setImportFileCallback`, eta, `3.9.2` bertsiotik aurrera, `ErdEditor.createKeyBindingMap` funtzioa. `4.2.0` bertsiotik aurrera, `ErdEditor.dictionaryRowChords` funtzioa ere badu. Ikus [dictionaryRowChords](./erd-editor-element.md#dictionaryrowchords).
 Paketearen exports mapak paketatzailea ES moduluetara bideratzen du oraindik; beraz, npm bidezko instalazio batek ez du inoiz fitxategi hau hartzen.
 
 ### HTML {#html}
@@ -166,17 +167,18 @@ Paketatutako konpilazioan, hirurak paketearen ondoan fitxategi gisa sortzen dira
 
 ## Sarrera-puntuak {#entry-points}
 
-`@dineug/erd-editor` paketea inportatzeak `<erd-editor>` elementua erregistratzen du albo-ondorio gisa. Horretaz gain, elementuaren mota esportatzen du, callback funtzioak ezartzeko bi funtzio, `3.9.2` bertsiotik aurrera tekla-konbinazio lehenetsiak beren motekin, eta `4.0.0` bertsiotik aurrera bistaratze-hizkuntzaren motak eta `getSchemaSQL()` metodoaren aukeren mota.
+`@dineug/erd-editor` paketea inportatzeak `<erd-editor>` elementua erregistratzen du albo-ondorio gisa. Horretaz gain, elementuaren mota esportatzen du, callback funtzioak ezartzeko bi funtzio, `3.9.2` bertsiotik aurrera tekla-konbinazio lehenetsiak beren motekin, `4.0.0` bertsiotik aurrera bistaratze-hizkuntzaren motak eta `getSchemaSQL()` metodoaren aukeren mota, eta `4.2.0` bertsiotik aurrera Hiztegia fitxako errenkaden tekla-konbinazioak.
 
 | Esportazioa | Deskribapena |
 | --- | --- |
 | `ErdEditorElement` (mota) | Elementuaren interfazea. Ikus [ErdEditorElement](./erd-editor-element.md). |
 | `setExportFileCallback(cb)` | Nabigatzailearen deskarga ordezten du, `(blob, { fileName }) => void`. |
-| `setImportFileCallback(cb)` | Nabigatzailearen fitxategi-hautatzailea ordezten du, `({ type, op, accept, mode }) => void`; `mode` parametroa `4.0.0` bertsiotik aurrera. |
+| `setImportFileCallback(cb)` | Nabigatzailearen fitxategi-hautatzailea ordezten du, `({ type, op, accept, mode }) => void`; `mode` parametroa `4.0.0` bertsiotik aurrera. `4.2.0` bertsiotik aurrera, Hiztegia fitxako `Import CSV` aukerak nabigatzailearen hautatzailea irekitzen du, callback funtzio bat ezarrita egon arren. Ikus [Fitxategi-elkarrizketak](#file-dialogs). |
 | `createKeyBindingMap()` | Tekla-konbinazio lehenetsiak itzultzen ditu `KeyBindingMap` berri gisa dei bakoitzean. Ikus [createKeyBindingMap](./erd-editor-element.md#createkeybindingmap). |
 | `KeyBindingMap`, `KeyBindingName`, `ShortcutOption` (motak) | Tekla-konbinazioen mapa bat, haren komando-izenen bildura eta tekla-konbinazio bat. |
+| `dictionaryRowChords(map)` | `4.2.0` bertsiotik aurrera. Pasatzen duzun `KeyBindingMap` maparen arabera [Hiztegia](../guide/guides/dictionary.md#adding-and-deleting-rows) fitxako saretak errenkadak txertatzeko eta ezabatzeko erabiltzen dituen tekla-konbinazioak itzultzen ditu, `ShortcutOption[]` berri gisa dei bakoitzean. Errenkadak gainean txertatzen dituena, `Alt+Shift+Enter` balio lehenetsiekin, ez dago inongo izeni lotuta. Ikus [dictionaryRowChords](./erd-editor-element.md#dictionaryrowchords). |
 | `LocaleCode`, `LocaleOption` (motak) | `4.0.0` bertsiotik aurrera. 25 bistaratze-hizkuntzen kodeak, eta kode horiek gehi `'system'`, `setLocale()` metodoak hartzen duena. Ikus [Bistaratze-hizkuntza](./erd-editor-element.md#display-language). |
-| `SchemaSQLOptions` (mota) | `4.0.0` bertsiotik aurrera. `getSchemaSQL()` metodoak hartzen dituen `statements` eta `header` aukerak. Ikus [getSchemaSQL](./erd-editor-element.md#getschemasql). |
+| `SchemaSQLOptions` (mota) | `4.0.0` bertsiotik aurrera. `getSchemaSQL()` metodoak hartzen dituen aukerak: `statements`, `header` eta, `4.2.0` bertsiotik aurrera, `logicalNameAsComment`. Ikus [getSchemaSQL](./erd-editor-element.md#getschemasql). |
 
 `@dineug/erd-editor/engine.js` bigarren sarrera-puntu bat da. Dokumentu-biltegia DOMik gabe exekutatzen du; beraz, Web Worker batean funtzionatzen du. Ikus [Urruneko biltegiratzea](./advanced/remote-storage.md).
 `createReplicationStore` funtzioa eta `ReplicationStore` mota esportatzen ditu. `3.10.0` bertsiotik aurrera, `ReplicationChange` mota ere esportatzen du, `{ value: string; changed: boolean }`, erreplika baten `change` entzuleak jasotzen duena. Ikus [on@change](./advanced/remote-storage.md#onchange).
@@ -188,6 +190,7 @@ Paketatutako konpilazioan, hirurak paketearen ondoan fitxategi gisa sortzen dira
 
 Inportazioa eta esportazioa injekta daitezkeen callback funtzioen bidez egiten dira; beraz, nabigatzailearen fitxategi-elkarrizketarik ez duen ostalari batek, adibidez IDE baten webview batek, berea eman dezake.
 Biak ez dira simetrikoak: esportazioak amaitutako fitxategia ematen dizu; inportazioak, berriz, fitxategi bat eskatu besterik ez du egiten, eta edukia zuk zeuk sartu behar duzu berriro.
+`4.2.0` bertsiotik aurrera, Hiztegia fitxako `Import CSV` aukera da inoiz inportazioko callback funtzioari deitzen ez dion inportazio bakarra; callback horren `type` parametroak ez du CSV baliorik. Beti nabigatzailearen beraren fitxategi-hautatzailea irekitzen du, `.csv` fitxategietarako. Ikus [CSV fitxategiak inportatzea eta esportatzea](../guide/guides/dictionary.md#importing-and-exporting-csv).
 
 `op` parametroa `set` edo `diff` da: `diff` bat `setDiffValue()` metodora doa, `type` edozein dela ere. Bestela, `type` parametroak aukeratzen du metodoa, eta `accept` parametroak mota horren luzapenak ditu, ostalariaren fitxategi-elkarrizketa bati emateko prest.
 `4.0.0` bertsiotik aurrera, `set` batek `mode: 'append'` darama erabiltzaileak [Inportatu eta gehitu](../guide/guides/file-import-export.md#import-and-add) aukeratu duenean, eta ez du `mode` baliorik eramaten inportazio arrunt batean. Pasatu aurrera: hura baztertzen duen callback funtzio batek erabiltzaileak gehitu nahi zion diagrama ordezten du.
@@ -229,8 +232,8 @@ setImportFileCallback(async ({ type, op, accept, mode }) => {
 Adarkatu kudeatzen duzun `type` balio bakoitzaren arabera, eta baztertu gainerakoak.
 Ordezten duen `setSchemaJSON()` dei batek, `value` propietatea esleitzeak bezala, dokumentua garbitzen du analizatu aurretik; beraz, `.erd.json` dokumentu bat ez den eduki bat hara bideratzeak — dena harrapatzen duen `else` adar baten bidez, edo geroago gehitutako `type` balio bat azken adarrera erori delako — diagrama hustu egiten du, ezer inportatu beharrean.
 
-Editoreak sortzen duen `fileName` balioa `<database name>-<timestamp>` gehi fitxategiaren luzapena da, eta denbora-zigilua tokiko ordua da, `yyyy-MM-dd'T'HH_mm_ss` formatuan. Datu-basearen izena hutsik badago, `unnamed` erabiltzen da haren ordez.
-Esportazioko callback funtzioak fitxategi hauek jasotzen ditu. `4.0.0` bertsiotik aurrera, SVG irudia eta Kode-sortzailearen fitxategiak ere haien artean daude, eta `.sql` fitxategia SQL eskema fitxako `Save file` aukeratik dator, ez zuzenean `Export` menutik.
+Editoreak sortzen duen `fileName` balioa `<database name>-<timestamp>` gehi fitxategiaren luzapena da, eta denbora-zigilua tokiko ordua da, `yyyy-MM-dd'T'HH_mm_ss` formatuan. Datu-basearen izena hutsik badago, `unnamed` erabiltzen da haren ordez. Hiztegiko CSV fitxategi batek bere orriaren izena jartzen du luzapenaren aurretik, `<database name>-<timestamp>-words.csv` fitxategian bezala.
+Esportazioko callback funtzioak fitxategi hauek jasotzen ditu. `4.0.0` bertsiotik aurrera, SVG irudia eta Kode-sortzailearen fitxategiak ere haien artean daude, eta `.sql` fitxategia SQL eskema fitxako `Save file` aukeratik dator, ez zuzenean `Export` menutik. `4.2.0` bertsiotik aurrera, Hiztegia fitxako CSV fitxategia ere haien artean dago.
 
 | Fitxategia | Luzapena | Blob `type` |
 | --- | --- | --- |
@@ -238,6 +241,7 @@ Esportazioko callback funtzioak fitxategi hauek jasotzen ditu. `4.0.0` bertsioti
 | SQL eskema fitxako `Save file` aukera, fitxak erakusten duen testuarekin. Ikus [SQL eskema](../guide/guides/schema-sql.md) | `.sql` | bat ere ez |
 | [Export image](../guide/guides/file-import-export.md#image) elkarrizketa-koadroa | `.png` edo `.svg` | `image/png` edo `image/svg+xml` |
 | Kode-sortzailea fitxako `Save file` aukera. Ikus [Kode-sortzailea](../guide/guides/code-generator.md) | Lengoaiarena: `.cs`, `.go`, `.java`, `.kt`, `.php`, `.rs`, `.scala`, `.swift`, `.ts`, `.py`, `.aml`, `.dbml`, `.graphql`, `.json` edo `.mmd` | bat ere ez |
+| Hiztegia fitxako `Export CSV` aukera, erakusten den orriaren errenkada guztiekin, haren bilaketak zer zerrendatzen duen gorabehera. Ikus [CSV fitxategiak inportatzea eta esportatzea](../guide/guides/dictionary.md#importing-and-exporting-csv) | `.csv` | `text/csv` |
 
 Kudeatzailea luzapenaren arabera aukeratzen duen ostalari batek horietako bakoitzerako bat behar du.
 
@@ -261,5 +265,5 @@ Ez da polyfillik paketatzen. Gehitu zureak, nabigatzaile zaharragoetara iritsi b
 - Inportazioko callback funtzioak `mode: 'append'` jasotzen du Inportatu eta gehitu ekintzarako, eta callback funtzio batek aurrera pasatu behar du. Esportazioko callback funtzioak `.svg` fitxategiak eta Kode-sortzailearen fitxategiak ere jasotzen ditu orain, eta `Export` ▸ `Schema SQL` aukerak SQL eskema fitxa irekitzen du gorde beharrean; beraz, `.sql` fitxategia fitxa horretako `Save file` aukeratik bakarrik iristen da. Ikus [Fitxategi-elkarrizketak](#file-dialogs).
 - `Delete` eta `Backspace` teklak `removeSelection` komando berriari lotuta daude. Editoreak testu-eremu batetik kanpo fokua duen bitartean, teklaren portaera lehenetsia eragotzi egiten da fitxa guztietan, eta ERD fitxan hautapena kentzen da. `KeyBindingName` eta `KeyBindingMap` motek barne hartzen dute orain, eta `setKeyBindingMap({ removeSelection: [] })` deiak bi teklak orriaren esku uzten ditu. Ikus [setKeyBindingMap](./erd-editor-element.md#setkeybindingmap).
 - `ThemeOptions.appearance` propietateak `'system'` balioa ere hartzen du, gai-sortzaileko `System` aukera, `systemDarkMode` aktibatzeak ezartzen duena. `changePresetTheme` gertaerak `'system'` jakinarazten du hura hautatuta dagoen bitartean; beraz, gorde dagoen bezala eta itzuli `setPresetTheme` metodoari. `systemDarkMode` aktibatuta dagoela, `'light'` edo `'dark'` balioarekin egindako `setPresetTheme()` dei bat bere horretan geratzen da orain, sistema eragilearen hurrengo aldaketak hura gainidatzi beharrean. Ikus [systemDarkMode](./erd-editor-element.md#systemdarkmode) eta [changePresetTheme](./erd-editor-element.md#changepresettheme).
-- `@dineug/erd-editor-mcp` paketearen `1.0.0` bertsioak, VS Code luzapenaren `4.0.0` edo berriagoak eta Obsidian eta JetBrains pluginen `1.0.0` edo berriagoak agente-gunearen protokoloaren 2. bertsioa erabiltzen dute. `1.0.0` bertsioko zerbitzariak eta agenteei zerbitzua ematen dien lehenagoko editore-bertsio batek, edo lehenagoko zerbitzari batek eta editore hauetako batek, elkar ukatzen dute `protocolMismatch` errorearekin, eguneratu beharreko aldea adieraziz. Ikus [Eguneratzea](../mcp/installation.md#updating).
+- `@dineug/erd-editor-mcp` paketearen `1.0.0` edo berriagoak, VS Code luzapenaren `4.0.0` edo berriagoak eta Obsidian eta JetBrains pluginen `1.0.0` edo berriagoak agente-gunearen protokoloaren 2. bertsioa erabiltzen dute. `1.0.0` edo berriagoko zerbitzariak eta agenteei zerbitzua ematen dien lehenagoko editore-bertsio batek, edo lehenagoko zerbitzari batek eta editore hauetako batek, elkar ukatzen dute `protocolMismatch` errorearekin, eguneratu beharreko aldea adieraziz. Ikus [Eguneratzea](../mcp/installation.md#updating).
 - Bertsiorik gabeko CDN URL batek azken 4.x bertsioa zerbitzatzen du orain. Finkatu `@3.10.0` 3.x bertsioan geratzeko. Ikus [CDN](#cdn).

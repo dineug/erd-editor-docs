@@ -1,5 +1,5 @@
 ---
-sidebar_position: 5
+sidebar_position: 6
 description: Breng gerelateerde tabellen samen in een benoemd, gekleurd kader erachter; maak groepen, geef ze een naam en kleur, verplaats ze, wijzig hun grootte en verwijder ze, ga er vanuit de Verkenner naartoe, wijzig welke tabellen ze bevatten, verberg ze en neem ze mee in Automatische indeling, Schema SQL en DBML.
 ---
 

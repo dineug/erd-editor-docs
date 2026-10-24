@@ -1,12 +1,12 @@
 ---
-sidebar_position: 9
-description: Sök i tabell-, kolumn-, index- och tabellgruppsnamn, kommentarer och anteckningar högst upp i utforskaren, stega igenom träffarna i dess träd och på arbetsytan och ersätt en träff eller alla.
+sidebar_position: 10
+description: Sök i tabell-, kolumn-, index- och tabellgruppsnamn, logiska namn, kommentarer och anteckningar högst upp i utforskaren, stega igenom träffarna i dess träd och på arbetsytan och ersätt en träff eller alla.
 ---
 
 # Sök och ersätt
 
 Söker efter text i hela diagrammet, tar dig till varje träff på ERD-arbetsytan och ersätter en träff eller alla.  
-Funktionen söker i sju texttyper: tabellnamn, tabellkommentarer, kolumnnamn, kolumnkommentarer, anteckningar, indexnamn och tabellgruppsnamn – se [Vad som söks](#what-it-searches).
+Funktionen söker i åtta texttyper: tabellnamn, tabellkommentarer, kolumnnamn, kolumnkommentarer, anteckningar, indexnamn, tabellgruppsnamn och de [logiska namnen](./logical-names.md) för tabeller och kolumner – se [Vad som söks](#what-it-searches).
 
 Den ligger högst upp i [utforskaren](./explorer.md), panelen som är dockad till vänster om ERD-arbetsytan, mellan utforskarens namnlist och dess träd. Den har ingen egen rubrik. Uppifrån och ned innehåller den:
 
@@ -30,7 +30,7 @@ Hur du stänger utforskaren, vad tangenten och de två posterna `Toggle Explorer
 [När den viker undan](./explorer.md#when-it-stands-aside) beskriver hur en annan flik och zenläget döljer den och hur diff-visaren, tidsresan och förhandsgranskningen av automatisk layout döljer den och hindrar den från att öppnas. [Bredvid arbetsytan](./explorer.md#beside-the-canvas) beskriver en editor som är för smal för den.
 
 Vid återöppning behålls den senaste sökfrågan, tillsammans med ersättningstexten, [alternativen](#options), de [texttyper](#what-it-searches) som var på och om raden `Replace` och texttyperna var utfällda.  
-De behålls medan editorn är öppen och sparas inte i dokumentet. En nyöppnad editor startar med alla alternativ av, raden `Replace` och texttyperna ihopfällda och bara de fyra namntyperna på – se [Vad som söks](#what-it-searches).
+De behålls medan editorn är öppen och sparas inte i dokumentet. En nyöppnad editor startar med alla alternativ av, raden `Replace` och texttyperna ihopfällda och bara de fyra namntyperna och `Logical names` på – se [Vad som söks](#what-it-searches).
 
 ## Webbläsarens sökruta {#the-browsers-find-bar}
 
@@ -46,15 +46,16 @@ En sida som bäddar in editorn kan flytta eller ta bort tangenten – se [Ändra
 
 ## Vad som söks {#what-it-searches}
 
-Sju knappar väljer vilka texttyper som söks, i den här ordningen: `Table names`, `Table comments`, `Column names`, `Column comments`, `Memos`, `Index names` och `Table group names`.  
+Åtta knappar väljer vilka texttyper som söks, i den här ordningen: `Table names`, `Table comments`, `Column names`, `Column comments`, `Memos`, `Index names`, `Table group names` och `Logical names`.  
 De är ihopfällda från början. Knappen `Search In` i slutet av räknarens rad fäller ut dem under den raden och fäller ihop dem igen, och den är framhävd medan de visas.  
-En framhävd typknapp är på. Klicka på en för att slå på eller slå av den, så körs sökningen på nytt. När alla sju är av hittas ingenting.
+En framhävd typknapp är på. Klicka på en för att slå på eller slå av den, så körs sökningen på nytt. När alla åtta är av hittas ingenting.
 
-Sökningen öppnas först med de fyra namntyperna, `Table names`, `Column names`, `Index names` och `Table group names`, så ett namnbyte når inte kommentarer och anteckningar om du inte slår på dem.  
+Sökningen öppnas först med de fyra namntyperna, `Table names`, `Column names`, `Index names` och `Table group names`, och med `Logical names`, så ett namnbyte når inte kommentarer och anteckningar om du inte slår på dem.  
+`Logical names` är en enda texttyp för de logiska namnen på både tabeller och kolumner.  
 Indexnamn är namnen på indexen på fliken `Indexes` i panelen [Tabellegenskaper](./table-related-functions.md#indexes), inte nycklarna `PK_` och `UQ_` som listas ovanför dem.
 
-Ingenting annat söks: inte datatyper, standardvärden, kolumnerna i ett index, databasnamnet, [Schema SQL](./schema-sql.md) med dess skript `Before tables` och `After tables` eller genererad kod.  
-En kommentar som döljs av ett [visningsalternativ för tabeller](./table-related-functions.md#table-view-options) söks ändå. Anteckningar som döljs med View Option → `Memos` och [tabellgrupper](./table-groups.md#hiding-groups) som döljs med View Option → `Table Groups` söks inte, inte ens när deras knapp är på, så `Replace All` skriver aldrig om en anteckning eller byter namn på en grupp som du inte kan se.
+Ingenting annat söks: inte datatyper, en kolumns domän, standardvärden, kolumnerna i ett index, databasnamnet, [Schema SQL](./schema-sql.md) med dess skript `Before tables` och `After tables`, genererad kod eller bladen på fliken [Ordlista](./dictionary.md), som har en [egen sökning](./dictionary.md#searching).  
+Logiska namn söks oavsett vad [namnvisningen](./logical-names.md#name-view) ritar, även i `Physical Names`, där arbetsytan inte visar några. En kommentar som döljs av ett [visningsalternativ för tabeller](./table-related-functions.md#table-view-options) söks även den. Anteckningar som döljs med View Option → `Memos` och [tabellgrupper](./table-groups.md#hiding-groups) som döljs med View Option → `Table Groups` söks inte, inte ens när deras knapp är på, så `Replace All` skriver aldrig om en anteckning eller byter namn på en grupp som du inte kan se.
 
 ## Alternativ {#options}
 
@@ -91,19 +92,21 @@ Räknaren, i början av raden under fälten, visar var du är. Den är tom medan
 Medan sökfältet innehåller text visar utforskarens [träd](./explorer.md#the-tree) resultaten i stället för hela diagrammet: bara de rader som innehåller en träff och raderna ovanför dem. När ingenting matchar, eller när det reguljära uttrycket inte går att tolka, är det tomt. Om du tar bort sökfrågan kommer hela trädet tillbaka, ihopfällt som det var tidigare.
 
 - `Tables`, `Table Groups` och `Memos` visas bara när de innehåller en träff, och siffran vid varje mapp anger antalet rader direkt under den i resultaten.
-- Under `Tables` kommer de tabeller som innehåller en träff, i namnordning. Under varje tabell kommer en rad för varje träff i dess kommentar, sedan en mapp `Columns` med de kolumner som innehåller en träff, i kolumnordning, var och en med en rad för varje träff i dess kommentar, och sedan en mapp `Indexes` med de index vars namn matchar. Det finns ingen mapp `Foreign Keys`.
+- Under `Tables` kommer de tabeller som innehåller en träff, sorterade efter namn, aldrig efter logiskt namn. Under varje tabell kommer en rad för varje träff i dess kommentar, sedan en mapp `Columns` med de kolumner som innehåller en träff, i kolumnordning, var och en med en rad för varje träff i dess kommentar, och sedan en mapp `Indexes` med de index vars namn matchar. Det finns ingen mapp `Foreign Keys`.
 - Under `Table Groups` kommer de grupper vars namn matchar, i namnordning, utan sina tabeller. En tabell som hittas visas under `Tables`.
 - Under `Memos` kommer de anteckningar som innehåller en träff, i dokumentordning, var och en visad med sin första rad och med en rad för varje träff i den.
 
-En träff i ett namn framhävs på namnets egen rad, så ett namn som innehåller sökfrågan två gånger blir en rad med två framhävningar.  
+En träff i ett namn framhävs på namnets egen rad, så ett namn som innehåller sökfrågan två gånger blir en rad med två framhävningar. En träff i en tabells eller kolumns logiska namn hamnar också på den tabellens eller kolumnens rad, aldrig på en egen rad.  
+De raderna namnger tabellen eller kolumnen så som [namnvisningen](./logical-names.md#beyond-the-canvas) visar den, och vart och ett av de två namn som en rad kan visa framhäver bara sina egna träffar. En rad som hittas bara i det namn som dess visning utelämnar, det logiska namnet i `Physical Names` eller namnet i `Logical Names`, lägger till det namnet efter det som den visar, dämpat som i `Both Names`, med träffen framhävd. När det namn som raden visar också innehåller en träff visar raden bara det namnet, så träffarna i det namn som visningen utelämnar räknas och stegas igenom men framhävs inte.  
 En träff i en kommentar eller en anteckning har en egen rad: en pratbubbla för en tabell- eller kolumnkommentar eller en klisterlapp för en anteckning, sedan ett utdrag ur texten med träffen framhävd. En lång text kortas av med `…`, och radbrytningar visas som blanksteg. Håll pekaren över raden för att se hela texten.  
 Alla andra rader ser ut som de gör utanför en sökning: en kolumn visar sin datatyp, ett index sina kolumner och ett tomt namn visas som `unnamed`.
 
 Varje rad med rader under sig visas utfälld när en sökning startar. En rad som du fäller ihop, eller som `Collapse All` fäller ihop, förblir ihopfälld tills en träff under den blir aktuell, eller tills sökfrågan, `Match Case`, `Match Whole Word`, `Use Regular Expression` eller en texttyp ändras, eller tills sökningen öppnas igen med tangenten eller en av posterna `Toggle Explorer`.  
 Den aktuella träffens rad framhävs och rullas in i vyn. Trädet listar varje träff, hur många de än är.  
-Träffarna stegas igenom i trädets ordning: tabell för tabell, tabellens namn, dess kommentar, namn och kommentar för var och en av dess kolumner i kolumnordning och dess indexnamn; sedan tabellgruppsnamnen; sedan anteckningarna.
+Träffarna stegas igenom i trädets ordning: tabell för tabell, tabellens logiska namn, namn och kommentar, sedan logiskt namn, namn och kommentar för var och en av dess kolumner i kolumnordning och sedan dess indexnamn; sedan tabellgruppsnamnen; sedan anteckningarna.
 
-Resultaten följer dokumentet medan utforskaren visas. När redigeringarna gör en paus leder varje ändring av de genomsökta texterna till en ny sökning, och den aktuella träffen förblir aktuell om den fortfarande finns kvar. Det omfattar ett namn, en kommentar eller en anteckningstext som redigeras, en tabell, en kolumn, ett index, en anteckning eller en tabellgrupp som läggs till eller tas bort, en kolumn som flyttas och anteckningar eller tabellgrupper som döljs eller visas med View Option, vilket tar bort deras träffar från trädet eller för tillbaka dem. En redigering på arbetsytan, ett ångrat eller omgjort steg, en import och en redigering av en medarbetare eller en kodagent räknas alla. Markering, förflyttning av tabeller, anteckningar eller grupper på arbetsytan, rullning, zoomning och hovring räknas inte.  
+Resultaten följer dokumentet medan utforskaren visas. När redigeringarna gör en paus leder varje ändring av de genomsökta texterna till en ny sökning, och den aktuella träffen förblir aktuell om den fortfarande finns kvar. Det omfattar ett namn, ett logiskt namn, en kommentar eller en anteckningstext som redigeras, en tabell, en kolumn, ett index, en anteckning eller en tabellgrupp som läggs till eller tas bort, en kolumn som flyttas och anteckningar eller tabellgrupper som döljs eller visas med View Option, vilket tar bort deras träffar från trädet eller för tillbaka dem. En redigering på arbetsytan, ett ångrat eller omgjort steg, en import och en redigering av en medarbetare eller en kodagent räknas alla. Markering, förflyttning av tabeller, anteckningar eller grupper på arbetsytan, rullning, zoomning och hovring räknas inte.  
+Det gör inte heller ett byte av namnvisning, som inte ändrar någon text som sökningen läser: samma träffar finns kvar, och raderna får de namn som den nya visningen visar.  
 Redigeringar som görs medan utforskaren är stängd eller inte syns söks igenom så snart den visas igen.
 
 ## Gå till en träff {#going-to-a-match}
@@ -113,17 +116,17 @@ Förflyttningen går runt vid båda ändarna. Ingen träff är aktuell förrän 
 
 Ett klick på en rad i resultaten, eller `Enter` eller `Space` när raden har tangentbordsfokus, gör något av följande:
 
-- En rad vars eget namn innehåller en träff går till namnets första träff.
+- En rad vars eget namn eller logiska namn innehåller en träff går till dess första träff, det logiska namnets före namnets.
 - En rad som visar ett utdrag ur en kommentar eller anteckning går till den träffen.
-- Varje annan rad, som en tabell vars namn inte matchar eller en antecknings egen rad, går till det som raden står för och lämnar den aktuella träffen som den är – se [Gå till en rad](./explorer.md#going-to-a-row).
+- Varje annan rad, som en tabell vars namn och logiska namn inte matchar eller en antecknings egen rad, går till det som raden står för och lämnar den aktuella träffen som den är – se [Gå till en rad](./explorer.md#going-to-a-row).
 - En mapp fälls ihop eller ut.
 
 Varje gång en träff blir aktuell fäller trädet ut alla ihopfällda rader ovanför den och flyttar tangentbordsfokus till dess rad, så piltangenterna i trädet fortsätter därifrån.
 
 Att gå till en träff stänger panelen Tabellegenskaper om den är öppen, och sedan:
 
-- För ett tabellnamn eller en tabellkommentar, eller ett kolumnnamn eller en kolumnkommentar, markeras bara tabellen, den läggs överst och den fokuserade cellen hamnar på cellen som innehåller träffen. En träff i en kommentar som döljs av ett [visningsalternativ för tabeller](./table-related-functions.md#table-view-options) placerar i stället den fokuserade cellen på namnet bredvid den.
-- För ett indexnamn markeras bara indexets tabell och läggs överst, och den fokuserade cellen hamnar på tabellens namn om den inte redan finns i den tabellen. Indexnamn ritas inte på arbetsytan.
+- För en tabells eller kolumns namn, logiska namn eller kommentar markeras bara tabellen, den läggs överst och den fokuserade cellen hamnar på cellen som innehåller träffen. En träff i en kommentar som döljs av ett [visningsalternativ för tabeller](./table-related-functions.md#table-view-options) placerar i stället den fokuserade cellen på namnet bredvid den. Där [namnvisningen](./logical-names.md#name-view) inte ritar någon cell för namnet eller det logiska namnet hamnar den fokuserade cellen på den som ritas i dess ställe: namnet i `Physical Names`, det logiska namnet i `Logical Names`.
+- För ett indexnamn markeras bara indexets tabell och läggs överst, och den fokuserade cellen hamnar på tabellens namn, eller dess logiska namn i `Logical Names` och `Both Names`, om den inte redan finns i den tabellen. Indexnamn ritas inte på arbetsytan.
 - För ett tabellgruppsnamn markeras bara gruppen och läggs överst med sina tabeller.
 - För en anteckning markeras bara anteckningen och läggs överst.
 
@@ -151,7 +154,7 @@ Medan en serie pågår behåller en tabell eller tabellgrupp som serien byter na
 
 `Replace All` körs med `Ctrl + Enter` (Windows/Linux) eller `⌘ + Enter` (Mac) i ersättningsfältet, eller med sin knapp:
 
-- Den ersätter varje träff i de texttyper som är på och lämnar de andra typerna orörda. Med standardtyperna byter den namn på tabeller, kolumner, index och tabellgrupper, och kommentarer och anteckningar förblir oförändrade.
+- Den ersätter varje träff i de texttyper som är på och lämnar de andra typerna orörda, bortsett från de fysiska namn som ett ersatt logiskt namn härleder, som den skriver även medan `Table names` och `Column names` är av – se nedan. Med standardtyperna byter den namn på tabeller, kolumner, index och tabellgrupper och skriver om de logiska namnen på tabeller och kolumner; kommentarer och anteckningar förblir oförändrade.
 - Allt den ändrar ångras i ett steg – se [En gest, ett steg](./undo-redo.md#one-gesture-one-step).
 - Räknaren visar `Replaced N matches` och räknar bara de förekomster vars text faktiskt ändrades. När ingen ändrades visar den `No changes` och ingenting registreras i historiken, som när det reguljära uttrycket `(user)` ersätts med `$1`.
 - Resultaten söks sedan på nytt utan någon aktuell träff, så de kan lista träffar som den nya texten innehåller.
@@ -171,8 +174,12 @@ Så används ersättningstexten:
   - En träff som skrivs tillbaka som den var räknas inte: med `Match Case` av skriver en ersättning av `customer` med `Customer` tillbaka `customer`, `Customer` och `CUSTOMER` som de var, och ingen av dem räknas.
 - Ett tomt ersättningsfält tar bort träffen.
 
-En ersättning är en vanlig redigering, samma sak som att själv skriva det nya tabellnamnet, kommentaren, kolumnnamnet eller anteckningstexten, att byta namn på indexet i panelen Tabellegenskaper eller att byta namn på tabellgruppen.  
+En ersättning är en vanlig redigering, samma sak som att själv skriva det nya tabellnamnet, kolumnnamnet, logiska namnet, kommentaren eller anteckningstexten, att byta namn på indexet i panelen Tabellegenskaper eller att byta namn på tabellgruppen.  
 Den registreras i historiken och når medarbetare och en kodagent som vilken annan redigering som helst.
+
+Ett tabell- eller kolumnnamn som en ersättning skriver blir därför ett eget namn, som ett logiskt namn som skrivs senare lämnar som det är tills [Härled fysiska namn igen](./dictionary.md#derive-physical-names-again) lämnar tillbaka namnet till ordlistorna. Ett namn som en ersättning lämnar tomt går i stället tillbaka till ordlistorna, som alla tömda namn gör – se [Egna namn](./dictionary.md#names-of-your-own).  
+Medan en tabells eller kolumns fysiska namn är tomt eller självt har härletts härleder ett ersatt logiskt namn det från ordlistorna, som när du stänger cellen för logiskt namn på ett nytt logiskt namn – se [Härleda fysiska namn](./dictionary.md#deriving-physical-names). I så fall får en kolumn vars nya logiska namn är en term också termens domän, och med den domänens datatyp. Det som härleds ingår i ersättningens steg i ångrahistoriken och räknas inte i `Replaced N matches`.  
+När en och samma `Replace All` skriver om både det logiska namnet och namnet på samma tabell eller kolumn går det namn som den skriver före det som det nya logiska namnet skulle härleda.
 
 ## Tangenter i sökfälten {#keys-in-the-search-fields}
 

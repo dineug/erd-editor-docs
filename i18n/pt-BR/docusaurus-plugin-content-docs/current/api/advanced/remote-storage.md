@@ -83,7 +83,10 @@ O evento `change` entrega esse resultado como `value`, e `changed` indica quando
 
 A partir da `4.0.0`, inicialize a réplica com o `runtimeValue` do editor, como acima, e não com o arquivo armazenado nem com o `value` do editor.  
 O arquivo não tem as edições feitas desde que foi salvo, e o `value` não tem as entidades removidas na sessão.  
-Uma réplica inicializada sem uma tabela removida a traz de volta sem o nome nem as colunas quando um editor desfaz a remoção, e a salva assim.
+Uma réplica inicializada sem uma tabela removida a traz de volta sem o nome nem as colunas quando um editor desfaz a remoção, e a salva assim.  
+A partir da `4.2.0`, o mesmo vale para uma palavra, um termo ou um domínio removido de uma planilha da aba [Dicionário](../../guide/guides/dictionary.md).  
+Quando um editor desfaz a remoção, uma réplica inicializada sem a linha volta a listá-la vazia, e, como `value` deixa de fora uma linha vazia, a réplica salva o documento sem ela.  
+No caso de um domínio, as colunas e os termos vinculados a ele também continuam desvinculados nessa réplica, já que ela nunca teve os vínculos e o desfazer não os envia.
 
 ## InjectEngineContext {#injectenginecontext}
 
@@ -91,6 +94,8 @@ Uma réplica inicializada sem uma tabela removida a traz de volta sem o nome nem
 
 Mede uma string em pixels.  
 O armazenamento não tem DOM, então não consegue medir texto por conta própria, e recalcula as larguras das colunas com esta função sempre que um nome, tipo de dados, valor padrão ou comentário muda.  
+A partir da `4.2.0`, isso inclui o [nome lógico](../../guide/guides/logical-names.md) de uma tabela ou coluna.  
+Ele mede a célula Domínio de uma coluna, que mostra o nome do domínio ao qual a coluna está vinculada, sempre que a coluna é vinculada a um domínio ou desvinculada dele e sempre que esse domínio é adicionado, renomeado ou removido.  
 Ele também mede de novo todas as tabelas e colunas sempre que [setInitialValue](#setinitialvalue) carrega um documento.  
 A partir da `4.0.0`, as larguras ficam apenas no [runtimeValue](#runtimevalue-getter), nunca no `value`.  
 Assim, um documento salvo por esta versão é lido de volta com o mesmo `value`, byte a byte, onde quer que tenha sido salvo e independentemente de como o texto era medido ali.
@@ -146,11 +151,14 @@ const data = replicationStore.value;
 
 A partir da `4.0.0`, `value` é a forma de armazenamento: o documento tal como um arquivo o contém, o mesmo texto que o [value](../erd-editor-element.md#value) do elemento retorna.  
 Ele contém apenas as entidades ativas, em uma ordem fixa, sem as removidas, a ordem de empilhamento ou qualquer coisa que um carregamento calcule de novo, como as larguras que [toWidth](#towidth) mede.  
-Ele é indentado com dois espaços e termina com uma quebra de linha, então o mesmo documento sempre gera os mesmos bytes.  
+A partir da `4.2.0`, ele também contém os nomes lógicos, se cada nome foi derivado dos dicionários, os vínculos com domínios e as palavras, os termos e os domínios da aba [Dicionário](../../guide/guides/dictionary.md).  
+Ele também deixa de fora, a partir da `4.2.0`, cada campo de texto vazio de uma entidade, cada lista de `doc` e cada coleção que não contém nada e o próprio `collections` quando todas as coleções estão vazias.  
+Ele é indentado com dois espaços, com cada linha de dicionário em uma linha própria do texto, e termina com uma quebra de linha, então o mesmo documento sempre gera os mesmos bytes.  
 Consulte [Forma de armazenamento e valor em tempo de execução](./schema.md#storage-form-and-runtime-value) para saber o que ele contém.
 
 Cada configuração cujo [bloqueio](../../guide/guides/settings.md#lock) está ativado é gravada com o valor em que foi bloqueada, e todas as outras, como estão.  
 O bloqueio `Viewport` abrange a origem da área visível e o nível de zoom juntos, e a aba, a linguagem do Gerador de código, os dois estilos de nome e o tipo de delimitador têm, cada um, seu próprio bloqueio.  
+A partir da `4.2.0`, o mesmo vale para a [exibição de nomes](../../guide/guides/logical-names.md#name-view), cujo bloqueio `Name View` está ativado em um documento novo.  
 Os bloqueios substituem o campo `ignoreSaveSettings` do documento, que não é lido nem gravado a partir da `4.0.0`.  
 Antes da `4.0.0`, `value` era o documento inteiro tal como o armazenamento o mantinha, com os bits de rolagem e de zoom desse campo aplicados.
 
@@ -180,8 +188,10 @@ Aceita a forma de armazenamento, um valor em tempo de execução ou um documento
 Uma string em branco, ou qualquer coisa que não seja uma string, carrega um documento novo e vazio em vez de gerar um erro.  
 Um armazenamento que nunca recebeu um valor começa como esse mesmo documento novo.  
 A partir da `4.0.0`, esse documento tem todos os [bloqueios](../../guide/guides/settings.md#lock) ativados, então seu `value` mantém a área visível, a aba, a linguagem do Gerador de código, os estilos de nome e o tipo de delimitador com que começou enquanto os editores que ele replica rolam, aplicam zoom, trocam de aba ou alteram essas configurações. Na `3.10.0`, ele não salvava nem a rolagem nem o zoom, e antes disso salvava os dois.  
+A partir da `4.2.0`, ele também mantém sua exibição de nomes, `Physical Names`, enquanto os editores trocam as deles.  
 Um documento armazenado mantém os bloqueios que indica.  
 Um que não indica nenhum, o que vale para todo documento salvo antes da `4.0.0`, incluindo um documento v2, é carregado com todos os bloqueios ativados: a origem da área visível em `0, 0`, o nível de zoom em `1` e a aba em ERD, independentemente do que tenha salvo, e a linguagem do Gerador de código, os estilos de nome e o tipo de delimitador como os salvou.  
+Um documento salvo antes da `4.2.0` não indica nenhum bloqueio `Name View`, então é carregado com esse bloqueio ativado e na exibição `Physical Names`, mesmo um salvo com todos os outros bloqueios desativados.  
 A partir da `4.0.0`, `setInitialValue` também descarta os registros de colaboração mantidos para o documento anterior, como faz o [setInitialValue](../erd-editor-element.md#setinitialvalue) do elemento.  
 Um texto que não é JSON, como um arquivo que ficou com marcadores de conflito de merge, também não gera erro: o erro de análise é apenas registrado no console, o documento é esvaziado e as configurações ficam como estavam.
 
@@ -221,15 +231,19 @@ Antes da `3.10.0`, ele não recebia nada, e um listener que ignora o argumento c
 
 Uma alteração que um [bloqueio](../../guide/guides/settings.md#lock) deixa fora do `value` ainda dispara `change`, com `changed` definido como `false`, então grave apenas quando `changed` for `true`.  
 É o caso de uma rolagem ou um zoom enquanto `Viewport` está bloqueado, de uma troca de aba enquanto `Canvas Type` está bloqueado e de uma alteração da linguagem do Gerador de código, de um estilo de nome ou do tipo de delimitador enquanto seu próprio bloqueio está ativado.  
+A partir da `4.2.0`, o mesmo vale para uma troca da exibição de nomes enquanto `Name View` está bloqueado: o editor ainda a envia, mas a réplica a descarta, como fazem os outros editores.  
+Uma troca da exibição de nomes feita em um editor somente leitura é descartada da mesma forma, qualquer que seja seu bloqueio.  
 O evento [change](../erd-editor-element.md#change) do elemento deixa essa alteração de fora, mas a réplica ainda a informa.  
-Todos os bloqueios estão ativados em um documento novo e em um salvo antes da `4.0.0`.  
-Com `Viewport` desbloqueado, uma rolagem ou um zoom altera `value`, e, com `Canvas Type` desbloqueado, abrir outra das abas do editor também o altera.  
+Todos os bloqueios estão ativados em um documento novo e em um salvo antes da `4.0.0`, e `Name View` está bloqueado em qualquer documento salvo antes da `4.2.0`.  
+Com `Viewport` desbloqueado, uma rolagem ou um zoom altera `value`, com `Canvas Type` desbloqueado, abrir outra das abas do editor também o altera, e, com `Name View` desbloqueado, também o altera uma troca da exibição de nomes feita por um editor que não é somente leitura.  
 Ativar ou desativar um bloqueio também altera `value`.
 
 A partir da `4.0.0`, `changed` compara a forma de armazenamento, que não contém nem as entidades removidas nem a ordem de empilhamento.  
-Assim, uma tabela adicionada e removida de novo dentro de um mesmo `change`, uma edição que recai sobre uma entidade que outro colaborador removeu e um carregamento retransmitido que só altera a ordem de empilhamento também resultam, todos, em `changed` definido como `false`.
+Assim, uma tabela adicionada e removida de novo dentro de um mesmo `change`, uma edição que recai sobre uma entidade que outro colaborador removeu e um carregamento retransmitido que só altera a ordem de empilhamento também resultam, todos, em `changed` definido como `false`.  
+A partir da `4.2.0`, o mesmo acontece com uma linha adicionada a uma planilha da aba Dicionário e deixada vazia, porque a forma de armazenamento deixa de fora uma linha que não contém nada.
 
 `changed` nunca compara com o seu arquivo armazenado, que já pode diferir de `value` assim que é carregado: é o caso de um arquivo salvo por uma versão anterior, incluindo um arquivo v2, e também de um arquivo que começa com uma marca de ordem de bytes e de um editado à mão.  
+A partir da `4.2.0`, isso inclui um arquivo salvo pela `4.0.0` ou pela `4.1.0`, porque `value` deixa de fora os campos de texto vazios das entidades e as listas de `doc` e as coleções vazias que um arquivo assim contém.  
 Comparar bytes com um arquivo assim contaria como edição até mesmo uma rolagem que um bloqueio deixa de fora.  
 O primeiro `change` com `changed` definido como `true` devolve esse arquivo na forma de armazenamento, então gravá-lo reescreve o arquivo uma única vez.  
 Um arquivo salvo por esta versão não difere, onde quer que tenha sido salvo, como [toWidth](#towidth) explica.  
@@ -260,6 +274,14 @@ Execute a réplica na mesma versão dos editores ou em uma mais recente.
 A `4.1.0` não adiciona nenhum tipo de ação e deixa `@dineug/erd-editor/engine.js` como estava, então uma réplica `4.0.0` mantém todas as alterações que um editor `4.1.0` envia, assim como uma réplica `4.1.0`.  
 A partir da `4.1.0`, `Replace` e `Replace All` em [Localizar e substituir](../../guide/guides/find-and-replace.md#replacing) também renomeiam índices e grupos de tabelas, por meio das ações `index.changeName` e `tableGroup.changeName` que uma réplica `4.0.0` já mantém.  
 O estado próprio do [explorador](../../guide/guides/explorer.md) nunca é enviado, e uma troca de aba ou uma rolagem que ele faz chega como qualquer outra troca de aba ou rolagem; consulte [Edição colaborativa](./collaborative-editing.md).
+
+A partir da `4.2.0`, as ações mantidas também incluem `table.changeLogicalName`, `table.changeNameDerived`, `column.changeLogicalName`, `column.changeDomain`, `column.changeNameDerived`, `settings.changeNameViewMode` e `dictionary.add`, `dictionary.update` e `dictionary.remove`, que levam cada edição, classificação e importação de CSV feita nas planilhas da aba [Dicionário](../../guide/guides/dictionary.md).  
+Das trocas da exibição de nomes, uma réplica aplica apenas as que um editor que não é somente leitura faz enquanto `Name View` está desbloqueado, e descarta as demais (consulte [on@change](#onchange)).  
+Um armazenamento de uma versão anterior descarta todas essas ações, então perde os [nomes lógicos](../../guide/guides/logical-names.md), os vínculos com domínios, a informação de se cada nome veio dos dicionários, a exibição de nomes e as palavras, os termos e os domínios.  
+Um editor anterior à `4.2.0` na sessão ainda pode tirar parte disso de uma réplica `4.2.0`.  
+Um `Import` de Esquema SQL, GraphQL, DBML ou AML nesse editor, mas não um `Import and Add`, esvazia as palavras, os termos e os domínios da réplica.  
+Desfazer nele um carregamento, um `Import` ou um `clear()` carrega a própria cópia do documento dele na réplica, sem nomes lógicos, vínculos com domínios nem dicionários; consulte [Misturar versões](./collaborative-editing.md#mixing-releases).  
+`@dineug/erd-editor/engine.js` exporta os mesmos `createReplicationStore`, `ReplicationStore` e `ReplicationChange` de antes, e `createReplicationStore` recebe o mesmo contexto.
 
 A partir da `4.0.0`, os dois métodos também aplicam a ação `editor.mergeLWW`, que traz os registros de colaboração com que um editor responde quando outro entra na sessão, então a réplica resolve as edições simultâneas como os editores fazem.  
 Ela não altera nenhum byte de `value` e não dispara nenhum `change`.  

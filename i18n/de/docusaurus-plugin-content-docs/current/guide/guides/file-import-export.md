@@ -16,16 +16,20 @@ Fünf Formate lassen sich über das Untermenü `Import` des Kontextmenüs der Ze
 - AML
 
 Der Eintrag `Import and Add` direkt unter `Import` fügt die Datei dem Diagramm hinzu, statt es zu ersetzen – siehe [Importieren und hinzufügen](#import-and-add).  
-Der Willkommensbildschirm, den ein leeres Diagramm zeigt, hat einen Eintrag `Import` mit denselben fünf Formaten – siehe [Willkommensbildschirm](./editing-start.md#welcome-screen).
+Der Willkommensbildschirm, den ein leeres Diagramm zeigt, hat einen Eintrag `Import` mit denselben fünf Formaten – siehe [Willkommensbildschirm](./editing-start.md#welcome-screen).  
+Die Blätter der Registerkarte [Wörterbuch](./dictionary.md) übernehmen außerdem Wörter, Begriffe und Domänen aus CSV-Dateien, über die eigene Schaltfläche `Import CSV` dieser Registerkarte – siehe [CSV importieren und exportieren](./dictionary.md#importing-and-exporting-csv).
 
 Dateiendungen werden in jeder Groß-/Kleinschreibung erkannt. Wenn Sie eine Datei auswählen, deren Endung nicht zum gewählten Format passt, wird der Import abgebrochen und `Only <format> files can be imported` angezeigt, wobei das Format als `json`, `sql`, `graphql`, `dbml` oder `aml` geschrieben wird, wie in `Only sql files can be imported`.
 
 `Import` ersetzt das aktuelle Dokument, statt die Datei damit zusammenzuführen, und ein einziges Rückgängigmachen stellt das vorherige Diagramm wieder her.  
-Eine JSON-Datei bringt ihre eigenen Einstellungen mit, einschließlich ihrer [Sperren](./settings.md#lock). Wo die Datei die Registerkarte, die Sprache des Codegenerators, eine Schreibweise oder den Begrenzertyp sperrt, sehen Sie weiterhin, was Sie hatten, gespeichert wird aber der gesperrte Wert der Datei. Die Ansicht landet, ob gesperrt oder nicht, dort, wo die Datei sie festlegt. Eine JSON-Datei, die gespeichert wurde, bevor es die Sperren gab, wird so übernommen, dass alle Sperren eingeschaltet sind und die Ansicht bei 100 % steht.  
+Eine JSON-Datei bringt ihre eigenen Einstellungen mit, einschließlich ihrer [Sperren](./settings.md#lock). Wo die Datei die Registerkarte, die Sprache des Codegenerators, eine Schreibweise, den Begrenzertyp oder die [Namensansicht](./logical-names.md#name-view) sperrt, sehen Sie weiterhin, was Sie hatten, gespeichert wird aber der gesperrte Wert der Datei. Zoomstufe und Ansichtsposition landen, ob gesperrt oder nicht, dort, wo die Datei sie festlegt. Eine JSON-Datei, die gespeichert wurde, bevor es die Sperren gab, wird so übernommen, dass alle Sperren eingeschaltet sind und die Ansicht bei 100 % steht. Eine Datei, die gespeichert wurde, bevor es die Sperre `Name View` gab, wird mit eingeschalteter Sperre `Name View` übernommen, unabhängig davon, welche anderen Sperren sie verzeichnet.  
 Die anderen Formate behalten Ihre bestehenden Einstellungen bei, einschließlich der Sperren, mit Ausnahme der Ansicht, die bei 100 % beginnt.  
 Die Parser für GraphQL, DBML und AML schlagen nie fehl: Eine Datei, die sie nicht lesen können, ergibt ein leeres Diagramm statt eines Fehlers.
 
-Eine JSON-Datei behält die Positionen, die sie enthält. Die Tabellen einer Datei in Schema SQL, GraphQL, DBML oder AML werden angeordnet, bevor sich das Diagramm ändert:
+Eine JSON-Datei bringt außerdem die logischen Namen ihrer Tabellen und Spalten und die Domänenverknüpfungen ihrer Spalten mit. Ihre Wörter, Begriffe und Domänen treten an die Stelle derer der Registerkarte [Wörterbuch](./dictionary.md), sodass eine Datei, die keine enthält, die Blätter leer lässt, und das Rückgängigmachen des Imports bringt die ersetzten zurück.  
+Die anderen Formate enthalten nichts davon. Ihre Tabellen kommen ohne logische Namen und ohne mit einer Domäne verknüpfte Spalte an, und Ihre Wörter, Begriffe und Domänen bleiben unverändert. Auch das Rückgängigmachen oder Wiederholen des Imports lässt sie unverändert, sodass eine nach dem Import vorgenommene Änderung am Wörterbuch erhalten bleibt. Ein solcher Import lässt außerdem den eigenen Verlauf jedes Blatts unverändert, während ein JSON-Import diese Verläufe leert – siehe [Wörterbuchblätter](./undo-redo.md#dictionary-sheets).
+
+Eine JSON-Datei behält die Positionen, die sie enthält. Die Tabellen einer Datei in Schema SQL, GraphQL, DBML oder AML werden angeordnet, bevor sich das Diagramm ändert, und zwar in den Breiten, die sie in der [Namensansicht](./logical-names.md#beyond-the-canvas) haben, die Sie gerade sehen:
 
 - Hat die Datei zwei oder mehr Tabellen und mindestens eine Beziehung, werden sie mit dem [Automatischen Layout](./table-related-functions.md#auto-layout) `Flow` von links nach rechts entlang der Beziehungen angeordnet, ausgehend von oben links auf der Zeichenfläche. Eine Beziehung von einer Tabelle zu sich selbst zählt mit.
 - Andernfalls werden sie ab oben links in Zeilen angeordnet, die Tabellen mit den wenigsten Spalten zuerst.
@@ -33,7 +37,7 @@ Eine JSON-Datei behält die Positionen, die sie enthält. Die Tabellen einer Dat
 
 Danach wird das Diagramm in einem Schritt ersetzt, sodass kein Zwischenstand zu sehen ist. Eine Einstellung, die Sie ändern, während die Tabellen angeordnet werden, etwa die Registerkarte, bleibt erhalten, und wenn Sie währenddessen eine andere Datei importieren, setzt sich der zuletzt gestartete Import durch.
 
-Ein schreibgeschützter Editor lädt über `Import` nichts und bietet `Import and Add` nicht an.
+Ein schreibgeschützter Editor lädt über `Import` nichts und bietet weder `Import and Add` noch die Schaltfläche `Import CSV` der Registerkarte Wörterbuch an.
 
 ### Importieren und hinzufügen {#import-and-add}
 
@@ -42,6 +46,7 @@ Ein schreibgeschützter Editor lädt über `Import` nichts und bietet `Import an
 ![Eine SQL-Datei über Import and Add > Schema SQL hinzufügen, deren Tabellen unter dem Diagramm landen, entlang ihrer Beziehungen angeordnet und ausgewählt](/img/demo-import-and-add.webp)
 
 Die Datei wird wie beim Einfügen übernommen: Alle Tabellen, Spalten, Beziehungen, Indizes, Notizen und [Tabellengruppen](./table-groups.md), die sie enthält, werden als neue hinzugefügt, die bereits im Diagramm vorhandenen Tabellen bewegen sich nicht und keine Einstellung ändert sich, sodass die Einstellungen einer JSON-Datei entfallen.  
+Die Tabellen und Spalten einer JSON-Datei behalten ihre logischen Namen, und jeder physische Name bleibt, wie in der Datei, von den Wörterbüchern abgeleitet oder Ihr eigener, was darüber entscheidet, ob ein später geschriebener logischer Name einen neuen ableitet – siehe [Physische Namen ableiten](./dictionary.md#deriving-physical-names). Die Wörter, Begriffe und Domänen der Datei entfallen, sodass die Registerkarte Wörterbuch so bleibt, wie sie war, und keine hinzugefügte Spalte mit einer Domäne verknüpft ist: Jede behält den Datentyp, den sie hat.  
 Eine Tabelle, deren Namen das Diagramm bereits enthält, wird als zweite Tabelle mit diesem Namen hinzugefügt, nicht mit der vorhandenen zusammengeführt. Beziehungen und Indizes stammen nur aus der Datei, sodass ein Fremdschlüssel auf eine Tabelle, die die Datei nicht definiert, nicht mit einer bereits im Diagramm vorhandenen Tabelle verknüpft wird.
 
 Der hinzugefügte Block landet direkt unter allem, was das Diagramm enthält, bündig an dessen linkem Rand, oder oben links in einem leeren Diagramm. Notizen und Tabellengruppen, die mit den [Ansichtsoptionen](./table-related-functions.md#table-view-options) ausgeblendet sind, zählen ebenfalls, da sie weiterhin dort stehen.  
@@ -160,11 +165,10 @@ Ein Backslash vor einem Anführungszeichen, wie MySQL und MariaDB `'it\'s'` schr
 Ein Wert von `DEFAULT` behält seine Anführungszeichen, und ein Anführungszeichen darin wird verdoppelt zurückgeschrieben, unabhängig davon, wie die Datei es maskiert hat: `'it''s'`.  
 Ist die Datenbank des Dokuments zum Zeitpunkt des Imports Databricks, folgt Text in einfachen Anführungszeichen stattdessen den Regeln von Spark: Jeder Backslash maskiert das Zeichen danach, sodass `'C:\\dir'` als `C:\dir` gelesen wird, Escape-Sequenzen wie `\n`, `\t` und `\u0041` dekodiert werden und ein Wert von `DEFAULT` als `'it\'s'` erhalten bleibt.
 
-Exportiertes Schema SQL maskiert ein Anführungszeichen in einem Tabellen- oder Spaltenkommentar: `COMMENT 'it''s'` für MySQL, MariaDB und Snowflake, `COMMENT ON TABLE` und `COMMENT ON COLUMN ... IS 'it''s'` für PostgreSQL und Oracle sowie dieselbe Verdopplung, einschließlich der Tabellen- und Spaltennamen, in den Aufrufen von `sp_addextendedproperty` für MSSQL. Ein Kommentar ohne Anführungszeichen wird unverändert geschrieben.  
-Databricks maskiert ein Anführungszeichen und einen Backslash stattdessen mit einem Backslash, wie in `COMMENT 'it\'s'`, sodass sein Export nur so lange exakt zurückgelesen wird, wie Databricks die ausgewählte Datenbank ist.  
-MSSQL schreibt jeden Kommentar als `EXECUTE sys.sp_addextendedproperty 'MS_Description', '<comment>', 'schema', '<schema>', 'table', '<table>'`, bei einer Spalte gefolgt von `'column', '<column>'`. Mit `Bracket` auf `None` ergibt eine Tabelle namens `sales.users` das Schema `sales` und die Tabelle `users`, und ein Name ohne Schema liegt in `dbo`. Bei jedem anderen Wert von `Bracket` ist der ganze Name die Tabelle, in `dbo`.
-
-Kommentare überstehen einen Export nach SQLite mit anschließendem erneutem Import nicht: SQLite schreibt sie als einfache Zeilen mit `--`, die der Parser nicht liest. Die Aufrufe von `sp_addextendedproperty` eines MSSQL-Exports werden als dieselben Tabellen- und Spaltenkommentare wieder importiert.
+Wie jede Datenbank einen Kommentar beim Export schreibt und wie sie ein Anführungszeichen darin maskiert, wird in [Kommentare](./schema-sql.md#comments) auf der Seite zu Schema SQL beschrieben.  
+Ein Export nach MySQL, MariaDB, PostgreSQL, Oracle, Snowflake oder MSSQL wird als dieselben Tabellen- und Spaltenkommentare wieder importiert, einschließlich der Anführungszeichen, abgesehen von den Leerzeilen, die ein Oracle-Export auslässt. Ein Databricks-Export, der ein Anführungszeichen und einen Backslash mit einem Backslash maskiert, wird nur so lange exakt zurückgelesen, wie Databricks die ausgewählte Datenbank ist.  
+Kommentare überstehen einen Export nach SQLite mit anschließendem erneutem Import nicht: SQLite schreibt sie als einfache Zeilen mit `--`, die der Parser nicht liest.  
+Außer bei SQLite wird ein logischer Name, den `Write logical names into empty comments` in einen leeren Kommentar geschrieben hat, als Kommentar dieser Tabelle oder Spalte wieder importiert, nicht als ihr logischer Name – siehe [Logische Namen als Kommentare](./schema-sql.md#logical-names-as-comments).
 
 ### GraphQL {#graphql}
 
@@ -200,22 +204,24 @@ Der Dateiname muss auf `.aml` enden.
 
 GraphQL, DBML und AML sind Round-Trip-Formate: Jedes ist auch ein Ziel im [Codegenerator](./code-generator.md).  
 DBML und AML übertragen ON DELETE und ON UPDATE jeder Beziehung in beide Richtungen – siehe [Codegenerator](./code-generator.md#on-delete-and-on-update). GraphQL überträgt keines von beiden, daher lässt ein GraphQL-Import beide auf `Not set`.  
-DBML überträgt außerdem Tabellenfarben, ohne etwaige Transparenz, und jede Tabellengruppe, die eine Tabelle enthält, in beide Richtungen. Eine Gruppe ohne Namen kommt als `group_1`, `group_2` usw. zurück, und ein wiederholter Gruppenname kommt mit angehängtem `_2`, `_3` usw. zurück. AML überträgt eine Tabellenfarbe nur als den nächstliegenden seiner Farbnamen, sodass `#FF8800` als `orange` geschrieben wird und als `#f97316` zurückkommt, und es überträgt keine Gruppen. GraphQL überträgt weder Farben noch Gruppen.
+DBML überträgt außerdem Tabellenfarben, ohne etwaige Transparenz, und jede Tabellengruppe, die eine Tabelle enthält, in beide Richtungen. Eine Gruppe ohne Namen kommt als `group_1`, `group_2` usw. zurück, und ein wiederholter Gruppenname kommt mit angehängtem `_2`, `_3` usw. zurück. AML überträgt eine Tabellenfarbe nur als den nächstliegenden seiner Farbnamen, sodass `#FF8800` als `orange` geschrieben wird und als `#f97316` zurückkommt, und es überträgt keine Gruppen. GraphQL überträgt weder Farben noch Gruppen.  
+Keines der drei überträgt logische Namen, Domänenverknüpfungen oder die Wörterbücher, in keiner Richtung: Der Codegenerator schreibt den physischen Namen und den Datentyp jeder Tabelle und Spalte, nie einen logischen Namen oder eine Domäne.
 
 ## Exportieren {#exporting}
 
 Das Untermenü `Export` des Kontextmenüs der Zeichenfläche hat drei Einträge:
 
-- json: Speichert das Diagramm so, wie seine Datei es enthält, als `.erd.json`: die Tabellen mit ihren Spalten und Indizes, die Beziehungen, Notizen und Tabellengruppen sowie die Einstellungen, jede [gesperrte Einstellung](./settings.md#lock) mit ihrem gesperrten Wert.
+- json: Speichert das Diagramm so, wie seine Datei es enthält, als `.erd.json`: die Tabellen mit ihren Spalten und Indizes, die Beziehungen, Notizen und Tabellengruppen, die logischen Namen und die Domänenverknüpfungen der Spalten, die Wörter, Begriffe und Domänen der Registerkarte [Wörterbuch](./dictionary.md) sowie die Einstellungen, jede [gesperrte Einstellung](./settings.md#lock) mit ihrem gesperrten Wert. Was nichts enthält, etwa leerer Text oder eine leere Wörterbuchzeile, entfällt – siehe [Speicherform und Laufzeitwert](../../api/advanced/schema.md#storage-form-and-runtime-value).
 - Schema SQL: Öffnet die Registerkarte [Schema SQL](./schema-sql.md#saving-or-copying-the-sql) mit geöffnetem Optionsbereich und fokussierter Schaltfläche `Save file`, sodass das Drücken von `Enter` das SQL, das die Registerkarte zeigt, als `.sql` speichert. Bis dahin wird nichts gespeichert.
 - Image: Öffnet den Dialog `Export image`, der das Diagramm als `.png` oder `.svg` speichert oder es als PNG in die Zwischenablage kopiert – siehe [Bild](#image).
 
-Alle drei funktionieren in einem schreibgeschützten Editor.
+Alle drei funktionieren in einem schreibgeschützten Editor.  
+Die eigene Schaltfläche `Export CSV` der Registerkarte Wörterbuch, die nicht in diesem Untermenü steht, speichert deren Blatt `Domains`, `Words` oder `Terms` als CSV-Datei. Anders als diese drei wird sie in einem schreibgeschützten Editor nicht angeboten – siehe [CSV importieren und exportieren](./dictionary.md#importing-and-exporting-csv).
 
 Schema SQL schreibt ON DELETE und ON UPDATE jeder Beziehung nach ihrem `REFERENCES`, ON DELETE zuerst. `Not set` schreibt nichts, und eine Aktion, die die ausgewählte Datenbank nicht akzeptiert, entfällt. Zu den Aktionen, die jede Datenbank akzeptiert, siehe [Beziehungen bearbeiten](./relationship-editing.md#on-delete-and-on-update).
 
 Jede exportierte Datei heißt `<database name>-<timestamp>`, gefolgt von ihrer Dateiendung, wobei der Zeitstempel in Ortszeit als `yyyy-MM-dd'T'HH_mm_ss` formatiert ist – zum Beispiel `my-schema-2026-08-29T04_05_06.erd.json`. Bei einem leeren Datenbanknamen wird `unnamed` verwendet.  
-Die Schaltflächen `Save file` auf der Registerkarte Schema SQL und im [Codegenerator](./code-generator.md) benennen ihre Dateien auf dieselbe Weise. Ein Bild übernimmt den Datenbanknamen so, wie er beim Öffnen des Dialogs war.
+Die Schaltflächen `Save file` auf der Registerkarte Schema SQL und im [Codegenerator](./code-generator.md) benennen ihre Dateien auf dieselbe Weise, ebenso `Export CSV`, das nach dem Zeitstempel das Blatt anfügt: `-words.csv`, `-terms.csv` oder `-domains.csv`. Ein Bild übernimmt den Datenbanknamen so, wie er beim Öffnen des Dialogs war.
 
 `Import`, `Import and Add` und `Export` sind auch über die [Schnellsuche](./quick-search.md) auf der Registerkarte ERD verfügbar, mit denselben Einträgen wie im Kontextmenü der Zeichenfläche.
 
@@ -235,7 +241,7 @@ Der Dateiexplorer von Obsidian listet eine exportierte Datei `.erd.json` oder `.
 
 Die Auswahl bleibt erhalten, bis der Editor geschlossen wird, und wird nie im Dokument gespeichert. Die Vorschau wird so gezeichnet wie das Bild und neu gezeichnet, wenn sich `Background` oder `Dark mode` ändert.
 
-Das Bild enthält das Diagramm so, wie es beim Öffnen des Dialogs war; schließen Sie den Dialog und öffnen Sie ihn erneut, um spätere Änderungen zu übernehmen. Es enthält das ganze Diagramm, wie weit es auch weggescrollt ist, zugeschnitten auf das, was das Diagramm zeichnet, plus einen Rand, und es wird immer bei 100 % gezeichnet, unabhängig von der Zoomstufe, die der Editor zeigt, sodass jede Tabelle vollständig gezeichnet wird. Was die [Ansichtsoptionen](./table-related-functions.md#table-view-options) ausblenden – Beziehungen, ihre Beschriftungen für ON DELETE und ON UPDATE, Tabellengruppen oder Notizen –, wird weder gezeichnet, noch wird Platz dafür freigehalten, und Tabellengruppen werden hinter allem anderen gezeichnet.
+Das Bild enthält das Diagramm so, wie es beim Öffnen des Dialogs war; schließen Sie den Dialog und öffnen Sie ihn erneut, um spätere Änderungen zu übernehmen. Seine Tabellen und Spalten werden in der Namensansicht benannt, die der Editor zu diesem Zeitpunkt zeigte, auch wenn Sie diese nur auf Ihrem Bildschirm eingestellt haben, während die Sperre `Name View` in der Datei eine andere beibehält – siehe [Außerhalb der Zeichenfläche](./logical-names.md#beyond-the-canvas). Die Farben, die die [Prüfungen des Wörterbuchs](./dictionary.md#marks-on-the-canvas) Namen auf der Zeichenfläche geben, werden nicht gezeichnet. Es enthält das ganze Diagramm, wie weit es auch weggescrollt ist, zugeschnitten auf das, was das Diagramm zeichnet, plus einen Rand, und es wird immer bei 100 % gezeichnet, unabhängig von der Zoomstufe, die der Editor zeigt, sodass jede Tabelle vollständig gezeichnet wird. Was die [Ansichtsoptionen](./table-related-functions.md#table-view-options) ausblenden – Beziehungen, ihre Beschriftungen für ON DELETE und ON UPDATE, Tabellengruppen oder Notizen –, wird weder gezeichnet, noch wird Platz dafür freigehalten, und Tabellengruppen werden hinter allem anderen gezeichnet.
 
 Drei Schaltflächen schreiben das Bild, und jede lässt den Dialog geöffnet:
 

@@ -38,7 +38,8 @@ Panoul nu se desenează mai îngust de `200px` și lasă pânzei cel puțin `320
 
 Apelul `setInitialValue('')` începe un document nou, gol. Atribuirea proprietății `value` încarcă în schimb un document ca editare, așa că acesta ajunge în istoricul anulărilor.
 Începând cu versiunea `4.0.0`, proprietatea `editor.value` este documentul în forma pe care o are într-un fișier, adică ceea ce trebuie stocat. Proprietatea `editor.runtimeValue` este documentul așa cum îl păstrează editorul, inclusiv entitățile eliminate: ea inițializează un colaborator și nu ajunge niciodată într-un fișier (consultați [runtimeValue](./erd-editor-element.md#runtimevalue)).
-Începând cu versiunea `4.0.0`, un document nou are, de asemenea, toate [blocările setărilor](../guide/guides/settings.md#lock) activate: zona de vizualizare, fila, limbajul generatorului de cod, ambele stiluri de denumire și tipul de delimitator. Derularea, zoomul, schimbarea filei sau modificarea uneia dintre aceste setări lasă proprietatea `editor.value` neschimbată și nu declanșează niciun eveniment `change`. Un document încărcat din text păstrează blocările pe care le specifică. Unul care nu specifică niciuna, de exemplu orice fișier salvat înainte de versiunea `4.0.0`, se deschide cu toate blocările activate, la un zoom de 100% și în fila ERD, indiferent de vizualizarea și fila pe care le-a salvat. Vizualizarea sa este blocată la originea `0, 0` și se deschide în schimb pe diagramă dacă nicio parte din aceasta nu este desenată acolo (consultați [setInitialValue](./erd-editor-element.md#setinitialvalue)).
+Începând cu versiunea `4.0.0`, un document nou are, de asemenea, toate [blocările setărilor](../guide/guides/settings.md#lock) activate: zona de vizualizare, fila, limbajul generatorului de cod, ambele stiluri de denumire, tipul de delimitator și, începând cu versiunea `4.2.0`, [modul de afișare a numelor](../guide/guides/logical-names.md#name-view). Derularea, zoomul, schimbarea filei, schimbarea modului de afișare sau modificarea uneia dintre celelalte setări lasă proprietatea `editor.value` neschimbată și nu declanșează niciun eveniment `change`. Un document încărcat din text păstrează blocările pe care le specifică. Unul care nu specifică niciuna, de exemplu orice fișier salvat înainte de versiunea `4.0.0`, se deschide cu toate blocările activate, la un zoom de 100% și în fila ERD, indiferent de zona de vizualizare și fila pe care le-a salvat. Zona sa de vizualizare este blocată la originea `0, 0`, iar vizualizarea se deschide în schimb pe diagramă dacă nicio parte din aceasta nu este desenată acolo (consultați [setInitialValue](./erd-editor-element.md#setinitialvalue)).
+Un fișier salvat înainte de versiunea `4.2.0` se deschide în modul `Physical Names`, cu modul de afișare a numelor blocat, chiar și unul cu toate celelalte blocări dezactivate. Un editor cu versiunea `4.0.0` sau `4.1.0` păstrează la salvare blocarea modului de afișare în starea în care se află, dar nu păstrează modul de afișare însuși, așa că un fișier din versiunea `4.2.0` salvat cu modul de afișare deblocat rămâne deblocat, dar se redeschide în modul `Physical Names`.
 Pentru restul API-ului, consultați [ErdEditorElement](./erd-editor-element.md).
 
 ### CDN {#cdn}
@@ -56,7 +57,7 @@ Pentru restul API-ului, consultați [ErdEditorElement](./erd-editor-element.md).
 ```
 
 Serviciul `esm.run` rezolvă în locul dumneavoastră dependențele externe ale pachetului, așa că acest cod funcționează fără bundler.
-URL-ul fără versiune servește întotdeauna cea mai recentă versiune. Fixați o versiune – `https://esm.run/@dineug/erd-editor@4.1.0` – dacă nu doriți ca o actualizare majoră să ajungă neanunțată pe pagina dumneavoastră.
+URL-ul fără versiune servește întotdeauna cea mai recentă versiune. Fixați o versiune – `https://esm.run/@dineug/erd-editor@4.2.0` – dacă nu doriți ca o actualizare majoră să ajungă neanunțată pe pagina dumneavoastră.
 Versiunea `4.0.0` este ea însăși una: o pagină care trebuie să rămână pe 3.x fixează `@3.10.0` (consultați [Actualizarea de la 3.x](#upgrading-from-3x)).
 
 ### Eticheta script {#script-tag}
@@ -66,14 +67,14 @@ Spre ea indică câmpurile `unpkg` și `jsdelivr`, așa că URL-ul simplu al pac
 
 ```html
 <erd-editor></erd-editor>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@4.1.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@4.2.0"></script>
 <script>
   const editor = document.querySelector('erd-editor');
   editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
 </script>
 ```
 
-Importarea ei înregistrează elementul `<erd-editor>` în același mod; obiectul `window.ErdEditor` conține cele două funcții callback pentru fișiere, `ErdEditor.setExportFileCallback` și `ErdEditor.setImportFileCallback`, și, începând cu versiunea `3.9.2`, `ErdEditor.createKeyBindingMap`.
+Importarea ei înregistrează elementul `<erd-editor>` în același mod; obiectul `window.ErdEditor` conține cele două funcții callback pentru fișiere, `ErdEditor.setExportFileCallback` și `ErdEditor.setImportFileCallback`, și, începând cu versiunea `3.9.2`, `ErdEditor.createKeyBindingMap`. Începând cu versiunea `4.2.0`, conține și `ErdEditor.dictionaryRowChords` (consultați [dictionaryRowChords](./erd-editor-element.md#dictionaryrowchords)).
 Harta exporturilor îndreaptă în continuare un bundler spre modulele ES, așa că o instalare din npm nu preia niciodată acest fișier.
 
 ### HTML {#html}
@@ -166,17 +167,18 @@ Dacă oricare dintre aceste așteptări expiră, plasarea se încheie la fel ca 
 
 ## Puncte de intrare {#entry-points}
 
-Importarea pachetului `@dineug/erd-editor` înregistrează elementul `<erd-editor>` ca efect secundar. În plus, pachetul exportă tipul elementului, două funcții de setare a funcțiilor callback, combinațiile de taste implicite împreună cu tipurile lor (începând cu versiunea `3.9.2`), precum și tipurile pentru limba de afișare și tipul opțiunilor metodei `getSchemaSQL()` (începând cu versiunea `4.0.0`).
+Importarea pachetului `@dineug/erd-editor` înregistrează elementul `<erd-editor>` ca efect secundar. În plus, pachetul exportă tipul elementului, două funcții de setare a funcțiilor callback, combinațiile de taste implicite împreună cu tipurile lor (începând cu versiunea `3.9.2`), tipurile pentru limba de afișare și tipul opțiunilor metodei `getSchemaSQL()` (începând cu versiunea `4.0.0`), precum și combinațiile pentru rânduri ale filei Dicționar (începând cu versiunea `4.2.0`).
 
 | Export | Descriere |
 | --- | --- |
 | `ErdEditorElement` (tip) | Interfața elementului (consultați [ErdEditorElement](./erd-editor-element.md)). |
 | `setExportFileCallback(cb)` | Înlocuiește descărcarea din browser, `(blob, { fileName }) => void`. |
-| `setImportFileCallback(cb)` | Înlocuiește selectorul de fișiere al browserului, `({ type, op, accept, mode }) => void`; `mode` începând cu versiunea `4.0.0`. |
+| `setImportFileCallback(cb)` | Înlocuiește selectorul de fișiere al browserului, `({ type, op, accept, mode }) => void`; `mode` începând cu versiunea `4.0.0`. Începând cu versiunea `4.2.0`, comanda `Import CSV` din fila Dicționar deschide selectorul de fișiere al browserului chiar și când este setată o funcție callback (consultați [Casete de dialog pentru fișiere](#file-dialogs)). |
 | `createKeyBindingMap()` | Returnează la fiecare apel combinațiile de taste implicite ca un nou obiect `KeyBindingMap` (consultați [createKeyBindingMap](./erd-editor-element.md#createkeybindingmap)). |
 | `KeyBindingMap`, `KeyBindingName`, `ShortcutOption` (tipuri) | O hartă de combinații de taste, uniunea numelor comenzilor sale și o singură combinație. |
+| `dictionaryRowChords(map)` | Începând cu versiunea `4.2.0`. Returnează la fiecare apel, ca un nou tablou `ShortcutOption[]`, combinațiile cu care grila filei [Dicționar](../guide/guides/dictionary.md#adding-and-deleting-rows) inserează și șterge rânduri conform hărții `KeyBindingMap` pe care o transmiteți. Combinația care inserează rânduri deasupra, `Alt+Shift+Enter` cu valorile implicite, nu figurează în nicio combinație de taste (consultați [dictionaryRowChords](./erd-editor-element.md#dictionaryrowchords)). |
 | `LocaleCode`, `LocaleOption` (tipuri) | Începând cu versiunea `4.0.0`. Cele 25 de coduri ale limbilor de afișare și aceleași coduri plus `'system'`, pe care le primește metoda `setLocale()` (consultați [Limbă de afișare](./erd-editor-element.md#display-language)). |
-| `SchemaSQLOptions` (tip) | Începând cu versiunea `4.0.0`. Opțiunile `statements` și `header` pe care le primește metoda `getSchemaSQL()` (consultați [getSchemaSQL](./erd-editor-element.md#getschemasql)). |
+| `SchemaSQLOptions` (tip) | Începând cu versiunea `4.0.0`. Opțiunile pe care le primește metoda `getSchemaSQL()`: `statements`, `header` și, începând cu versiunea `4.2.0`, `logicalNameAsComment` (consultați [getSchemaSQL](./erd-editor-element.md#getschemasql)). |
 
 Subcalea `@dineug/erd-editor/engine.js` este un al doilea punct de intrare. Rulează store-ul documentului fără DOM, așa că funcționează într-un Web Worker (consultați [Stocare la distanță](./advanced/remote-storage.md)).
 Exportă funcția `createReplicationStore` și tipul `ReplicationStore`. Începând cu versiunea `3.10.0`, exportă și tipul `ReplicationChange`, `{ value: string; changed: boolean }`, pe care îl primește ascultătorul `change` al unei replici (consultați [on@change](./advanced/remote-storage.md#onchange)).
@@ -188,6 +190,7 @@ Exportă funcția `createReplicationStore` și tipul `ReplicationStore`. Încep�
 
 Importul și exportul trec prin funcții callback injectabile, așa că o aplicație gazdă fără casetă de dialog pentru fișiere a browserului – de exemplu, un webview dintr-un IDE – o poate furniza pe a sa.
 Cele două nu sunt simetrice: exportul vă predă fișierul finalizat, în timp ce importul doar cere unul, iar conținutul îl introduceți înapoi dumneavoastră.
+Începând cu versiunea `4.2.0`, comanda `Import CSV` din fila Dicționar este singurul import care nu apelează niciodată funcția callback de import, al cărei câmp `type` nu are nicio valoare pentru CSV. Deschide întotdeauna selectorul de fișiere propriu al browserului, pentru fișiere `.csv` (consultați [Importarea și exportarea fișierelor CSV](../guide/guides/dictionary.md#importing-and-exporting-csv)).
 
 Câmpul `op` este `set` sau `diff`: un `diff` ajunge la metoda `setDiffValue()`, indiferent de `type`. Altfel, câmpul `type` alege metoda, iar câmpul `accept` conține extensiile acelui tip, gata să fie transmise unei casete de dialog pentru fișiere a aplicației gazdă.
 Începând cu versiunea `4.0.0`, un `set` conține `mode: 'append'` când utilizatorul a ales [Import și adăugare](../guide/guides/file-import-export.md#import-and-add) și niciun `mode` pentru un import simplu. Transmiteți-l mai departe: o funcție callback care îl omite înlocuiește diagrama la care utilizatorul a cerut să adauge.
@@ -229,8 +232,8 @@ setImportFileCallback(async ({ type, op, accept, mode }) => {
 Tratați separat fiecare valoare `type` pe care o gestionați și ignorați-le pe celelalte.
 Un apel `setSchemaJSON()` în modul de înlocuire, la fel ca atribuirea proprietății `value`, golește documentul înainte de parsare, așa că trimiterea acolo a unui conținut care nu este un document `.erd.json` – printr-un `else` general sau pentru că un `type` adăugat ulterior a ajuns pe ramura implicită – golește diagrama în loc să importe ceva.
 
-Valoarea `fileName` generată de editor este `<database name>-<timestamp>` plus extensia fișierului, unde marcajul de timp este ora locală în formatul `yyyy-MM-dd'T'HH_mm_ss`. Dacă numele bazei de date este gol, se folosește `unnamed`.
-Funcția callback de export primește aceste fișiere. Începând cu versiunea `4.0.0`, printre ele se află imaginea SVG și fișierele generatorului de cod, iar fișierul `.sql` provine din butonul `Save file` al filei Schemă SQL, nu direct din submeniul `Export`.
+Valoarea `fileName` generată de editor este `<database name>-<timestamp>` plus extensia fișierului, unde marcajul de timp este ora locală în formatul `yyyy-MM-dd'T'HH_mm_ss`. Dacă numele bazei de date este gol, se folosește `unnamed`. Un fișier CSV din fila Dicționar include numele foii înainte de extensie, ca în `<database name>-<timestamp>-words.csv`.
+Funcția callback de export primește aceste fișiere. Începând cu versiunea `4.0.0`, printre ele se află imaginea SVG și fișierele generatorului de cod, iar fișierul `.sql` provine din butonul `Save file` al filei Schemă SQL, nu direct din submeniul `Export`. Începând cu versiunea `4.2.0`, printre ele se află și fișierul CSV din fila Dicționar.
 
 | Fișier | Extensie | Proprietatea `type` a blobului |
 | --- | --- | --- |
@@ -238,6 +241,7 @@ Funcția callback de export primește aceste fișiere. Începând cu versiunea `
 | Fișierul salvat cu butonul `Save file` din fila Schemă SQL, care conține textul afișat de filă (consultați [Schemă SQL](../guide/guides/schema-sql.md)) | `.sql` | niciunul |
 | Caseta de dialog [Export imagine](../guide/guides/file-import-export.md#image) | `.png` sau `.svg` | `image/png` sau `image/svg+xml` |
 | Fișierul salvat cu butonul `Save file` din fila Generator de cod (consultați [Generator de cod](../guide/guides/code-generator.md)) | Cea a limbajului: `.cs`, `.go`, `.java`, `.kt`, `.php`, `.rs`, `.scala`, `.swift`, `.ts`, `.py`, `.aml`, `.dbml`, `.graphql`, `.json` sau `.mmd` | niciunul |
+| Fișierul salvat cu comanda `Export CSV` din fila Dicționar, care conține toate rândurile foii afișate, indiferent ce listează căutarea acesteia (consultați [Importarea și exportarea fișierelor CSV](../guide/guides/dictionary.md#importing-and-exporting-csv)) | `.csv` | `text/csv` |
 
 O aplicație gazdă care alege o funcție de tratare după extensie are nevoie de câte una pentru fiecare dintre ele.
 
@@ -261,5 +265,5 @@ Versiunea `4.0.0` este o versiune majoră. Verificați fiecare dintre aceste pun
 - Funcția callback de import primește `mode: 'append'` pentru Import și adăugare, pe care o funcție callback trebuie să îl transmită mai departe. Funcția callback de export primește acum și fișiere `.svg` și fișiere ale generatorului de cod, iar `Export` ▸ `Schema SQL` deschide fila Schemă SQL în loc să salveze, așa că fișierul `.sql` vine doar din butonul `Save file` al acelei file (consultați [Casete de dialog pentru fișiere](#file-dialogs)).
 - Tastele `Delete` și `Backspace` sunt asociate noii comenzi `removeSelection`. Cât timp editorul are focusul în afara unui câmp de text, acțiunea implicită a tastei este împiedicată în fiecare filă, iar în fila ERD selecția este eliminată. Tipurile `KeyBindingName` și `KeyBindingMap` o includ, iar `setKeyBindingMap({ removeSelection: [] })` lasă ambele taste în seama paginii (consultați [setKeyBindingMap](./erd-editor-element.md#setkeybindingmap)).
 - Câmpul `ThemeOptions.appearance` acceptă și `'system'`, adică opțiunea `System` din configuratorul de teme, pe care o setează activarea proprietății `systemDarkMode`. Evenimentul `changePresetTheme` raportează `'system'` cât timp această opțiune este aleasă, așa că stocați valoarea ca atare și transmiteți-o înapoi metodei `setPresetTheme`. Cu proprietatea `systemDarkMode` activată, un apel `setPresetTheme()` cu `'light'` sau `'dark'` rămâne acum în vigoare în loc să fie suprascris de următoarea schimbare din sistemul de operare (consultați [systemDarkMode](./erd-editor-element.md#systemdarkmode) și [changePresetTheme](./erd-editor-element.md#changepresettheme)).
-- Pachetul `@dineug/erd-editor-mcp` `1.0.0`, extensia pentru VS Code `4.0.0` sau o versiune ulterioară și pluginurile pentru Obsidian și JetBrains `1.0.0` sau o versiune ulterioară folosesc versiunea 2 a protocolului hubului. Serverul `1.0.0` și o versiune anterioară a unui editor care deservește agenți, sau o versiune anterioară a serverului și unul dintre aceste editoare, se refuză reciproc cu eroarea `protocolMismatch`, indicând partea care trebuie actualizată (consultați [Actualizarea](../mcp/installation.md#updating)).
+- Pachetul `@dineug/erd-editor-mcp` `1.0.0` sau o versiune ulterioară, extensia pentru VS Code `4.0.0` sau o versiune ulterioară și pluginurile pentru Obsidian și JetBrains `1.0.0` sau o versiune ulterioară folosesc versiunea 2 a protocolului hubului. Serverul `1.0.0` sau o versiune ulterioară și o versiune anterioară a unui editor care deservește agenți, sau o versiune anterioară a serverului și unul dintre aceste editoare, se refuză reciproc cu eroarea `protocolMismatch`, indicând partea care trebuie actualizată (consultați [Actualizarea](../mcp/installation.md#updating)).
 - Un URL CDN fără versiune servește acum cea mai recentă versiune 4.x. Fixați `@3.10.0` pentru a rămâne pe 3.x (consultați [CDN](#cdn)).

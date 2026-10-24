@@ -13,9 +13,9 @@ Düzenlemenin nereye gideceğini sunucunun bulduğu şey belirler.
 | Sunucunun bulduğu | Düzenlemenin yaptığı |
 | --- | --- |
 | Çalışma alanı, kasası veya açık projesi belgeyi içeren ya da belgeyi açmış olan bir düzenleyici | **Canlı.** Gerekirse belgeyi ERD Editor ile açar, düzenleme oturumuna katılır ve değişikliği orada uygular. Düzenlemeler hemen görünür ve düzenleyicinin sizinkileri kaydettiği gibi kaydedilir. [Kaydetme](#saving) bölümüne bakın. |
-| Düzenleyici yok | **Headless.** Dosyayı yükler, değişikliği uygular ve dosyayı yenisiyle değiştirir. `erd_save` aracının yapacağı bir şey yoktur. |
+| Düzenleyici yok | **Headless.** Dosyayı yükler, değişikliği uygular ve yanıt vermeden önce dosyayı yenisiyle değiştirir; bu yüzden sonuçta `saved: true` yazar ve `erd_save` aracının yapacağı bir şey yoktur. |
 | Hub'ı kapalı bir düzenleyici | **Reddedilir.** Okumalar diskten yine de çalışır. Açık bir düzenleyici varken dosyaya yazılan bir değişikliğin üzerine düzenleyicinin bir sonraki kaydetmesiyle yazılabilir, bu yüzden sunucu hiçbir şey yazmaz. |
-| Hub'ı açık olan ancak sunucununkinden farklı bir protokol kullanan bir düzenleyici: `1.0.0` sürümlü sunucuyla `3.x` sürümlü bir VS Code uzantısı, `0.x` sürümlü bir Obsidian eklentisi ya da `0.9.0` veya `0.10.0` sürümlü bir JetBrains eklentisi; `1.0.0` sürümünden önceki bir sunucuyla uzantının `4.0.0` veya sonraki bir sürümü ya da eklentinin `1.0.0` veya sonraki bir sürümü | **Reddedilir**, okumalar dahil, `protocolMismatch` koduyla. İleti güncellenmesi gereken tarafı belirtir: uzantı veya eklenti ya da sunucu. [Güncelleme](./installation.md#updating) bölümüne bakın. |
+| Hub'ı açık olan ancak sunucununkinden farklı bir protokol kullanan bir düzenleyici: sunucunun `1.0.0` veya sonraki bir sürümüyle `3.x` sürümlü bir VS Code uzantısı, `0.x` sürümlü bir Obsidian eklentisi ya da `0.9.0` veya `0.10.0` sürümlü bir JetBrains eklentisi; `1.0.0` sürümünden önceki bir sunucuyla uzantının `4.0.0` veya sonraki bir sürümü ya da eklentinin `1.0.0` veya sonraki bir sürümü | **Reddedilir**, okumalar dahil, `protocolMismatch` koduyla. İleti güncellenmesi gereken tarafı belirtir: uzantı veya eklenti ya da sunucu. [Güncelleme](./installation.md#updating) bölümüne bakın. |
 | Windows'ta, belgeyi aynı dosyaya giden başka bir yolla tutan bir düzenleyici: Ajan belgeyi bu bilgisayarın `\\localhost\C$\…` gibi bir ağ paylaşımı veya eşlenmiş sürücüsü üzerinden belirtmiştir ve düzenleyici belgeyi sürücü yoluyla tutar ya da tam tersi | **Reddedilir**, okumalar dahil, `invalidPath` koduyla. İleti, düzenleyicinin belgeyi tuttuğu yolu belirtir; o yolla yeniden çağırın. |
 | Windows'ta, Windows'un ajanı uzak tuttuğu bir düzenleyici: ajan yönetici olarak başlatılmamışken yönetici olarak başlatılmış bir düzenleyici ya da ajan bir korumalı alanda çalışırken herhangi bir düzenleyici | **Reddedilir**, okumalar dahil, `hubUnreachable` koduyla ve nedenini söyleyen bir iletiyle. Düzenleyiciyi ve ajanı aynı haklarla çalıştırın, örneğin düzenleyiciyi yönetici hakları olmadan yeniden başlatarak. |
 
@@ -35,6 +35,8 @@ Düzenlemeleri belgenin açık olduğu her düzenleyiciye hemen ulaşır ve oda�
 
 Bir okuma hiçbir zaman bir düzenleyici açmaz. Bir düzenleme, belge henüz açık değilse onu klavye odağını almadan ERD Editor ile açar.
 
+`4.2.0` sürümünden önceki bir VS Code uzantısına ya da `1.2.0` sürümünden önceki bir Obsidian veya JetBrains eklentisine sahip bir düzenleyici ajanın düzenlemelerini yine canlı olarak alır, ancak ajanın yazdığı mantıksal adları, değer alanı bağlantılarını ve sözlük satırlarını ne gösterir ne de korur. [Güncelleme](./installation.md#updating) bölümüne bakın.
+
 ### Kaydetme {#saving}
 
 Her düzenleyici, ajanın düzenlemelerini sizinkileri kaydettiği şekilde kaydeder.
@@ -51,7 +53,7 @@ Her ikisinde de `erd_save` aracı bunları hemen yazar.
 Düzenleyici bunu doğrulayamadığında ya da dosyayı yazmadığında çağrı `notSaved` koduyla reddedilir: VS Code, dosya diskte değiştiğinde sekmeyi kaydedilmemiş tutar ve bir JetBrains IDE'si, örneğin bir iletişim kutusu açıkken ya da dosya yazılamadığında, dosyayı yazamamıştır.
 
 VS Code'da ve bir JetBrains IDE'sinde, kaydedilecek bir şeyi kalmamış bir belge üzerindeki `erd_save` çağrısı başarılı olur ve dosyayı olduğu gibi bırakır.
-Her düzenleme kaydedildiğinde durum budur ve bir JetBrains IDE'si kaydetmeyi kendiliğinden yapar. Sonraki her değişiklik, `Viewport` kilitliyken kaydırma veya yakınlaştırma ya da `Canvas Type` kilitliyken sekme değiştirme gibi bir [kilidin](../guide/guides/settings.md#lock) dosyanın dışında tuttuğu bir değişiklik olduğu sürece de böyle kalır. Her kilit varsayılan olarak etkindir.
+Her düzenleme kaydedildiğinde durum budur ve bir JetBrains IDE'si kaydetmeyi kendiliğinden yapar. Sonraki her değişiklik, `Viewport` kilitliyken kaydırma veya yakınlaştırma, `Canvas Type` kilitliyken sekme değiştirme ya da `Name View` kilitliyken [Ad görünümünü](../guide/guides/logical-names.md#name-view) değiştirme gibi bir [kilidin](../guide/guides/settings.md#lock) dosyanın dışında tuttuğu bir değişiklik olduğu sürece de böyle kalır. Her kilit varsayılan olarak etkindir.
 Bir JetBrains IDE'sinin yazamadığı bir dosya bu durumda bile reddedilir.
 
 Düzenleyici, ajanın son düzenlemesinden sonra belgeyi kapattığında, ajanın bir sonraki çağrısı bu düzenlemelerin ancak düzenleyici kapanmadan önce kaydedilmişlerse dosyada bulunduğunu belirten bir bilgi notu içerir.
@@ -63,7 +65,7 @@ Düzenleyicinin kendi [Geri al](../guide/guides/undo-redo.md) komutu tam tersi �
 
 Birkaç düzenleme düzenleyicide geri alma kaydı oluşturmaz: [ayar araçlarından](./tools.md#settings) `erd_set_database` ve `erd_set_database_name` ile `erd_resize_memo`.
 Grubu, yatay ve dikey kayma toplandığında 20 pikselden az taşıyan bir `erd_move_table_group` çağrısı da kayıt oluşturmaz, ancak grup taşındığı yerde kalır.
-Hiçbir şeyi değiştirmeyen bir çağrı da kayıt oluşturmaz: belgenin zaten sahip olduğu bir değeri ayarlayan `erd_set_column_primary_key`, `erd_set_column_unique`, `erd_set_column_not_null`, `erd_set_column_auto_increment`, `erd_set_index_unique` veya `erd_set_index_column_order`; dizinde zaten bulunan bir sütunla `erd_add_index_column`; zaten o grupta olan (ya da `groupId` değeri `null` iken zaten hiçbir grupta olmayan) tablolarla `erd_set_table_group`; grubun zaten durduğu noktaya `erd_move_table_group`; grubun zaten sahip olduğu dikdörtgene `erd_resize_table_group`; hiç tablosu olmayan bir belgede `erd_sort_tables`; ya da `mode` değeri `append` olan ve hiç tablo getirmeyen (`erd_import_json` için ne tablo ne de not getirmeyen) bir içe aktarma.
+Hiçbir şeyi değiştirmeyen bir çağrı da kayıt oluşturmaz: belgenin zaten sahip olduğu bir değeri ayarlayan `erd_set_column_primary_key`, `erd_set_column_unique`, `erd_set_column_not_null`, `erd_set_column_auto_increment`, `erd_set_index_unique` veya `erd_set_index_column_order`; dizinde zaten bulunan bir sütunla `erd_add_index_column`; zaten o grupta olan (ya da `groupId` değeri `null` iken zaten hiçbir grupta olmayan) tablolarla `erd_set_table_group`; grubun zaten durduğu noktaya `erd_move_table_group`; grubun zaten sahip olduğu dikdörtgene `erd_resize_table_group`; hiç tablosu olmayan bir belgede `erd_sort_tables`; tablonun veya sütunun zaten sahip olduğu mantıksal adla ve ondan türetme hiçbir şeyi değiştirmeyecekken `erd_set_table_logical_name` veya `erd_set_column_logical_name`; sütunun zaten bağlı olduğu değer alanıyla, sütun o değer alanının türüne zaten sahipken ve [İlişkilerde veri türü eşitleme](../guide/guides/settings.md#relationship-datatype-sync) ilişkiler boyunca hiçbir sütunun türünü değiştirmeyecekken `erd_set_column_domain`; fiziksel adı olmayan bir terime `name` değeri verilip sözcükleri bir fiziksel ad oluşturmadıkça, yalnızca satırın zaten sahip olduğu değerlerle `erd_update_word`, `erd_update_term` veya `erd_update_domain`; kapsadığı ve mantıksal adı olan her ad [sözlüklerin](./tools.md#dictionaries) ona verdiğini zaten taşıyor ve türetilmiş olarak işaretliyken `erd_derive_physical_names`; ya da `mode` değeri `append` olan ve hiç tablo getirmeyen (`erd_import_json` için ne tablo ne de not getirmeyen) bir içe aktarma.
 `erd_undo` aracı bunları atlar ve sonucunda belirtir.
 `erd_change_relationship_type`, `erd_change_relationship_on_delete`, `erd_change_relationship_on_update`, `erd_change_table_group_name`, `erd_change_table_group_color` ve `erd_set_ddl_script` gibi diğer düzenlemeler, belgenin zaten sahip olduğu bir değeri ayarladıklarında bile kayıt oluşturur.
 
@@ -91,7 +93,7 @@ Bir düzenleyicinin hub'ına bağlanamayan bir okuma, bir düzenleme gibi `hubUn
 
 ## Headless {#headless}
 
-Belgeye hizmet veren bir düzenleyici yokken her düzenleme dosyayı yükler, değişikliği uygular ve dosyayı geri yazar.
+Belgeye hizmet veren bir düzenleyici yokken her düzenleme dosyayı yükler, değişikliği uygular ve yanıt vermeden önce dosyayı geri yazar; bu yüzden sonucunda `saved: true` yazar. [Sonuçlar](./tools.md#results) bölümüne bakın.
 Yazma, belgenin yanındaki `.<name>.<id>.tmp` adlı geçici bir dosyaya yapılır ve bu dosya ardından belgenin yerini alır; böylece belge, aşağıda anlatılan Windows'taki yerinde yazma durumu dışında hiçbir zaman yarım yazılmış kalmaz.
 
 Bu son adımdan önce sunucu, çağrı sırasında dosyanın diskte değişip değişmediğini denetler.
@@ -107,6 +109,8 @@ Windows'ta iki kural daha geçerlidir:
 
 - Klasörününkinden farklı, kendine ait izinleri olan bir belge, bu izinleri koruması için yenisiyle değiştirilmek yerine yerinde yazılır ve geçici dosya ardından kaldırılır. Bu yazma sırasında belgeyi okuyan bir program ayrıştırılamayan bir metinle karşılaşabilir.
 - Başka bir programın açık tuttuğu bir dosya yenisiyle değiştirilemez, bu yüzden sunucu en fazla iki saniye boyunca yeniden dener. Her deneme önce yeniden bir düzenleyici arar ve bu arada belgeye hizmet vermeye başlayan bir düzenleyici yazmayı `hubAppeared` koduyla, hub'ı kapalıysa `blocked` koduyla reddeder. Dosya iki saniye sonra hâlâ tutuluyorsa hiçbir şey yazılmaz, dosya yeniden yüklenir ve çağrı sistem hatasını aktaran bir iletiyle başarısız olur.
+
+`1.1.0` sürümünden önceki bir sunucu bir belgeyi mantıksal adları, sütunlarının değer alanı bağlantıları ve sözcükleri, terimleri ve değer alanları olmadan okur; bu yüzden dosyaya yazdığı ilk düzenleme bunları dışarıda bırakır. Sunucuyu güncelleyin. [Güncelleme](./installation.md#updating) bölümüne bakın.
 
 ## Reddedilme {#refused}
 
@@ -130,7 +134,7 @@ Linux'ta Flatpak olarak kurulmuş Obsidian ya da bir JetBrains IDE'si, JCEF içe
 
 Bir belge, mutlak ya da sunucunun çalışma dizinine göreli olan `path` değeriyle belirtilir.
 
-- Yeni belgeler `.erd.json` biçimindedir. `create` ile çağrılan `erd_open_document` aracı dosyayı oluşturur ve uzantısı olmayan bir ada `.erd.json` ekler. Düzenleyicideki yeni bir diyagramda olduğu gibi yeni belgede her [kilit](../guide/guides/settings.md#lock) etkindir, bu yüzden bir düzenleyicide kaydırmak, yakınlaştırmak, sekme değiştirmek ya da başka bir Kod oluşturucu dili, ad biçimi veya tırnak türü seçmek dosyayı asla değiştirmez. Hiçbir araç tek bir kilidi etkinleştirmez veya devre dışı bırakmaz: Bunu düzenleyicinin Ayarlar sekmesinde yaparsınız. `replace` modundaki `erd_import_json` aracı hepsini yüklediği belgenin kilitleriyle değiştirir. [İçe aktarma](./tools.md#import) bölümüne bakın.
+- Yeni belgeler `.erd.json` biçimindedir. `create` ile çağrılan `erd_open_document` aracı dosyayı oluşturur ve uzantısı olmayan bir ada `.erd.json` ekler. Düzenleyicideki yeni bir diyagramda olduğu gibi yeni belgede her [kilit](../guide/guides/settings.md#lock) etkindir, bu yüzden bir düzenleyicide kaydırmak, yakınlaştırmak, sekme değiştirmek, Ad görünümünü değiştirmek ya da başka bir Kod oluşturucu dili, ad biçimi veya tırnak türü seçmek dosyayı asla değiştirmez. Hiçbir araç tek bir kilidi etkinleştirmez veya devre dışı bırakmaz: Bunu düzenleyicinin Ayarlar sekmesinde yaparsınız. `replace` modundaki `erd_import_json` aracı hepsini yüklediği belgenin kilitleriyle değiştirir. [İçe aktarma](./tools.md#import) bölümüne bakın.
 - Mevcut `.erd`, `.vuerd` ve `.vuerd.json` dosyaları da açılır. Başka herhangi bir uzantıya sahip bir yol `invalidPath` koduyla reddedilir.
 - Windows'ta, Windows'un yazıldığı gibi saklamadığı bir ad içeren bir yol, okumalar dahil, belge okunmadan veya yazılmadan önce `invalidPath` koduyla reddedilir: `orders:v2.erd` gibi iki nokta üst üste ya da Windows'un reddettiği başka bir karakter içeren bir ad; büyük ya da küçük harfle yazılmış `NUL.erd` veya `CON.erd` gibi bir aygıt adı; ya da nokta veya boşlukla biten bir ad. Dosyayı yeniden adlandırın, örneğin `:` yerine `-` kullanarak.
 - Birleştirme çakışması işaretleriyle bırakılmış bir dosya gibi, düzenleyicinin okuyabileceği bir belge olmayan bir dosya `invalidDocument` koduyla reddedilir ve olduğu gibi bırakılır. Asla boş bir diyagram olarak yüklenip geri yazılmaz.

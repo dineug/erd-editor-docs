@@ -1,5 +1,5 @@
 ---
-sidebar_position: 15
+sidebar_position: 17
 description: The editor's 25 display languages, right-to-left layout, the theme builder's System, Light, and Dark appearances and its colors, and where each host keeps them.
 ---
 
@@ -13,8 +13,10 @@ The web app, Google Drive, VS Code, JetBrains IDEs, and Obsidian all offer both 
 
 ## Display Language
 
-The language covers the editor's own text: toolbar tooltips, context menus, Quick Search, panels and dialogs, the Settings tab, the [welcome screen](./editing-start.md#welcome-screen), toasts and messages, and the placeholder an empty name, data type, default, or comment shows on the canvas and in an exported image.  
-It leaves these as written in every language: your table and column names, comments, and memos; database vendors, Code Generator languages, and file formats; data types, SQL keywords, and the `ON DELETE` and `ON UPDATE` actions; the Schema SQL options `Create`, `If not exists`, `Drop & re-create`, `USE`, and `CREATE + USE`; the marks `PK`, `FK`, `UQ`, `AI`, `NN`, `N-N`, `NULL`, and `AK1.1`; the [diff viewer](./table-related-functions.md#diff-viewer)'s status letters `A`, `M`, `D`, `R`, and `~`; the name case and `Bracket` choices other than `None`; the names of keyboard keys; the theme builder's color names; generated SQL and code; and exported file names.
+The language covers the editor's own text: toolbar tooltips, the [`Name View`](./logical-names.md#switching-the-view) button on the canvas toolbar and on Flow's toolbar, Flow's row display menu, context menus, Quick Search, panels and dialogs, the [Dictionary](./dictionary.md) tab (its sheet names, column headers, tools, menu, status line, and the kinds of check the `Checks` sheet lists), the Settings tab, the [welcome screen](./editing-start.md#welcome-screen), toasts and messages, and the placeholder an empty name, logical name, data type, domain, default, or comment shows on the canvas and in an exported image.  
+It leaves these as written in every language: your table and column names, [logical names](./logical-names.md), comments, and memos; the words, terms, and domains you keep on the Dictionary tab; database vendors, Code Generator languages, and file formats; data types, SQL keywords, and the `ON DELETE` and `ON UPDATE` actions; the Schema SQL options `Create`, `If not exists`, `Drop & re-create`, `USE`, and `CREATE + USE`; the marks `PK`, `FK`, `UQ`, `AI`, `NN`, `N-N`, `NULL`, and `AK1.1`; the [diff viewer](./table-related-functions.md#diff-viewer)'s status letters `A`, `M`, `D`, `R`, and `~`; the name case and `Bracket` choices other than `None`; the names of keyboard keys; the theme builder's color names; generated SQL and code; the header row of an exported dictionary CSV; and exported file names.
+
+On the Dictionary tab, a sort orders the rows in the display language's alphabetical order, and the `Checks` sheet's search matches its cells as they read in the display language — see [Sorting](./dictionary.md#sorting) and [Searching](./dictionary.md#searching).
 
 The languages, in the order the picker lists them:
 
@@ -84,11 +86,12 @@ A regional variant counts as its language, so `de-AT` gives Deutsch and `fr-CA` 
 
 ### Right-to-left Languages
 
-עברית (Hebrew), العربية (Arabic), and فارسی (Persian) lay the editor out right to left: the toolbar, the menus, the panels and dialogs, Quick Search, and the Settings tab are mirrored. A context menu's submenus open to the left, and the toolbar's Undo and Redo icons swap, so that Undo points back the way a right-to-left reader goes.
+עברית (Hebrew), العربية (Arabic), and فارسی (Persian) lay the editor out right to left: the toolbar, the menus, the panels and dialogs, Quick Search, the Dictionary tab's bar and status line, and the Settings tab are mirrored. A context menu's submenus open to the left, and the toolbar's Undo and Redo icons swap, so that Undo points back the way a right-to-left reader goes.
 
-The diagram itself is never mirrored. The canvas with its tables, columns, relationships, and memos stays left to right, and so do the minimap, the scrollbars, the [canvas toolbar](./table-related-functions.md#canvas-toolbar), [Visualization](./visualization.md) and its toolbar, the data type cells, the code on the Schema SQL and Code Generator tabs, the color picker, the diff viewer's two sides, time travel, and the Auto Layout preview.  
+The diagram itself is never mirrored. The canvas with its tables, columns, relationships, and memos stays left to right, and so do the minimap, the scrollbars, the [canvas toolbar](./table-related-functions.md#canvas-toolbar), [Visualization](./visualization.md) and its toolbar, the data type cells, the sheets on the Dictionary tab and a term's domain list, the code on the Schema SQL and Code Generator tabs, the color picker, the diff viewer's two sides, time travel, and the Auto Layout preview.  
+In Flow, the two arrows on Visualization's toolbar keep their places and swap what they do: the right-pointing arrow is `Previous table` and the left-pointing one `Next table`, so going back points the way Undo does. The undo and redo keys still step back and forward — see [Previous Table and Next Table](./visualization.md#previous-table-and-next-table).  
 The [Explorer](./explorer.md#beside-the-canvas) stays at the left of the canvas, and the diff viewer's change tree at the left of the viewer, each with its drag edge on its right. Inside, both read right to left: their fields and rows are mirrored, rows indent from the right, and in either tree `←` unfolds a row or steps to its first child while `→` folds it or steps out to its parent — see [Keys in the Explorer](./explorer.md#keys-in-the-explorer).  
-Names, comments, and other text you typed keep their own direction, so a Hebrew, Arabic, or Persian name reads right to left on the canvas as well.
+Names, comments, and other text you typed keep their own direction, so a Hebrew, Arabic, or Persian name reads right to left on the canvas as well. Each name a Dictionary toast lists keeps its own direction too.
 
 ## Theme
 

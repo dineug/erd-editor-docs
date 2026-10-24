@@ -44,19 +44,26 @@ Behandla en åtgärd som ogenomskinlig och skicka den vidare oförändrad i stä
 
 En del av det som en editor gör stannar i den editorn.  
 Att lägga en tabell, en anteckning eller en tabellgrupp överst, vilket sker när du markerar den, skickas inte.  
-Inte heller skickas valen `Statements`, `Header` och `Tables` på fliken [Schema SQL](../../guide/guides/schema-sql.md), som hör till det fönster där de görs.  
+Inte heller skickas valen `Statements`, `Header`, `Write logical names into empty comments` (sedan `4.2.0`) och `Tables` på fliken [Schema SQL](../../guide/guides/schema-sql.md), som hör till det fönster där de görs.  
 Sedan `4.1.0` stannar även [utforskaren](../../guide/guides/explorer.md) i sin editor: om den är öppen, dess bredd, dess hopfällda rader, raden med tangentbordsfokus, var dess träd är rullat samt dess sökning och alternativ skickas inte.  
 Inte heller skickas det [ljus](../../guide/guides/relationship-editing.md#reading-a-connector) som tänds på relationens relationslinje när du går till en sekundärnyckel.  
-En rullning, en zoomning eller ett flikbyte skickas, men det flyttar aldrig en annan användares vy eller flik. Det gäller även rullningen som ett hopp från utforskaren gör och bytet till ERD-fliken när utforskaren öppnas från en annan flik.
+Sedan `4.2.0` stannar även fliken [Ordlista](../../guide/guides/dictionary.md) i sin editor: vilket blad som visas samt varje blads sökning, markering, rullning och kolumnbredder skickas inte. Dess redigeringar, sorteringar och CSV-importer skickas däremot.  
+En rullning, en zoomning eller ett flikbyte skickas, men det flyttar aldrig en annan användares vy eller flik. Det gäller även rullningen som ett hopp från utforskaren gör, bytet till ERD-fliken när utforskaren öppnas från en annan flik samt flikbytet och rullningen vid ett hopp från bladet [`Checks`](../../guide/guides/dictionary.md#the-checks-sheet) på fliken Ordlista till en tabell eller kolumn. Ett hopp från det bladet till ett ord, en term eller en domän stannar på fliken Ordlista, så ingenting av det skickas.
+
+Sedan `4.2.0` skickas även ett byte av [namnvisning](../../guide/guides/logical-names.md#switching-the-view), och namnvisningens [lås](../../guide/guides/settings.md#lock) avgör vad de andra editorerna gör med bytet. Låset `Name View` är på i ett nytt diagram och i varje dokument från före `4.2.0`.  
+När låset är på syns bytet bara i den editor som gjorde det: det skickas ändå, men alla andra editorer och alla repliker kastar det, så varje användare kan titta på en egen visning medan `value` behåller den låsta. En ändring av språk, skiftläge eller typ av citattecken är annorlunda: den når alla editorer oavsett om dess lås är på eller inte.  
+När låset är av ändrar ett byte som görs i en redigerbar editor namnvisningen i alla editorer och repliker, där det senaste bytet vinner, och var och en av dem sparar den.  
+En skrivskyddad editors eget byte stannar alltid i den editorn, och editorn följer ändå de andras delade byten.
 
 [Lås](../../guide/guides/settings.md#lock) delas: den senaste låsningen eller upplåsningen av en inställning vinner i alla editorer, och ett lås bär med sig värdena från editorn som slog på det, så att alla editorer och repliker sparar samma värde.  
 Låset `Viewport` sparar därför vyn i editorn som slog på det, och låset `Canvas Type` den sista flik som den editorn var på före fliken Inställningar, där lås slås på.  
-Att slå av låset `Language`, `Table Name Case`, `Column Name Case` eller `Bracket Type` ställer också in den inställningen i alla editorer på det värde som visas i editorn som slog av det, så att de fortsätter att spara ett och samma värde. Att slå av `Viewport` eller `Canvas Type` flyttar ingens vy eller flik.
+Att slå av låset `Language`, `Table Name Case`, `Column Name Case`, `Bracket Type` eller, sedan `4.2.0`, `Name View` ställer också in den inställningen i alla editorer på det värde som visas i editorn som slog av det, så att de fortsätter att spara ett och samma värde. Att slå av `Viewport` eller `Canvas Type` flyttar ingens vy eller flik.
 
 En redigering av skriptet `Before tables` eller `After tables` skickas i sin helhet när dess fält tappar fokus. De två skripten avgörs var för sig, så en medarbetares redigering av det ena skriver aldrig över det andra.
 
 Ingenting som görs i [flödesläget](../../guide/guides/visualization.md#flow-never-edits-the-document) på fliken Visualisering är en ändring av dokumentet, så en editor i flödet skickar inga ändringar till de andra, och de ändringar som de skickar fortsätter att tillämpas medan den är där.  
-Det enda undantaget är att lämna flödet för en annan flik: det flikbytet skickas som alla andra.  
+Det finns två undantag. Att lämna flödet för en annan flik är ett flikbyte, som skickas som alla andra. Sedan `4.2.0` är ett val i listan för namnvisning i flödets verktygsfält ett byte av namnvisning, som skickas och tillämpas som ett byte på arbetsytan.  
+`Previous table`, `Next table` och tangenterna för att ångra och göra om, som [stegar igenom vyerna](../../guide/guides/visualization.md#previous-table-and-next-table) i flödet, skickas inte.  
 Kortknappen för extern länk, öppnandet av [utforskaren](../../guide/guides/explorer.md#opening-and-closing) och ett resultat i [snabbsökningen](../../guide/guides/quick-search.md#searching-the-diagram) som väljs efter `#`, `@` eller `:` lämnar alla flödet för ERD-fliken. En rullning som kortknappen eller ett resultat i snabbsökningen gör där skickas också.
 
 ## Två editorer på en sida {#two-editors-on-one-page}
@@ -99,6 +106,7 @@ const sharedStore2 = editor2.getSharedStore();
 
 Körtidsvärdet innehåller fortfarande det som har tagits bort sedan dokumentet öppnades, så när en annan editor senare ångrar en borttagning återställer den anslutande editorn tabellen med dess namn och kolumner.  
 [`value`](../erd-editor-element.md#value) är den form som en fil innehåller, utan borttagna entiteter, så en anslutande editor som initieras med den, eller med filen, skulle i stället återställa en tom tabell utan namn.  
+Sedan `4.2.0` gäller samma sak för ett ord, en term eller en domän som tagits bort från ett blad i [ordlistan](../../guide/guides/dictionary.md): när en annan editor ångrar borttagningen listar en anslutande editor som initierats med `runtimeValue` raden igen i sin helhet, och en som initierats med `value` listar en tom rad, som dess egen `value` sedan utelämnar.  
 Fortsätt att skriva `value` till lagringen: `runtimeValue` är bara till för att initiera en annan editor, en andra vy eller en [replicationStore](./remote-storage.md).  
 Editorerna i VS Code, Obsidian, en JetBrains-IDE och webbappen initierar en andra vy av ett öppet dokument på det här sättet.
 
@@ -134,6 +142,31 @@ Håll alla editorer i en session, och varje [replicationStore](./remote-storage.
 En editor med `4.1.0` skickar ingen ny åtgärdstyp, så editorer och repliker med `4.0.0` och `4.1.0` delar en session utan att något går förlorat.  
 Dess funktion [Sök och ersätt](../../guide/guides/find-and-replace.md#replacing) söker också i indexnamn och tabellgruppsnamn, och `Replace` och `Replace All` byter namn på dem med åtgärderna `index.changeName` och `tableGroup.changeName`, som en editor med `4.0.0` redan tillämpar.
 
+Sedan `4.2.0` skickas de här ändringarna med nya åtgärdstyper, och ett relä som skickar åtgärder vidare oförändrade behöver inget nytt för dem:
+
+- en tabells eller kolumns [logiska namn](../../guide/guides/logical-names.md): `table.changeLogicalName` och `column.changeLogicalName`; om dess namn [härleddes från ordlistorna](../../guide/guides/dictionary.md#deriving-physical-names): `table.changeNameDerived` och `column.changeNameDerived`;
+- en kolumn som kopplas till en [domän](../../guide/guides/dictionary.md#domains-and-data-types) eller kopplas från: `column.changeDomain`;
+- ett ord, en term eller en domän som läggs till, ändras (inklusive dess plats på bladet, som en sortering anger den) eller tas bort på fliken [Ordlista](../../guide/guides/dictionary.md): `dictionary.add`, `dictionary.update` och `dictionary.remove`;
+- ett byte av [namnvisning](../../guide/guides/logical-names.md#switching-the-view): `settings.changeNameViewMode`.
+
+Låset `Name View` skickas med den befintliga åtgärden `settings.changeLockSettings`, visningsalternativet `Domain` med `settings.changeShow` och en flytt av `Logical Name` eller `Domain` i [kolumnordningen](../../guide/guides/settings.md#adjusting-column-order) med `settings.changeColumnOrder`.  
+Åtgärderna `editor.clear` och `editor.loadJson` i en import av Schema SQL, GraphQL, DBML eller AML från `Import` bär `keepDictionaries: true`, som behåller orden, termerna och domänerna i alla editorer. Det gör även åtgärderna från ett ersättande anrop till [setSchemaSQL](../erd-editor-element.md#setschemasql), `setSchemaGraphQL`, `setSchemaDBML` eller `setSchemaAML`.  
+Ett fysiskt namn som ordlistorna härleder skickas med `table.changeName` eller `column.changeName`, och den datatyp som en domän ger sina kolumner med `column.changeDataType`, samma åtgärder som en redigering för hand skickar.
+
+En editor från före `4.2.0` ignorerar de nya åtgärdstyperna: den har inga logiska namn, domänkopplingar, ordlistor eller namnvisning. En låsning eller upplåsning av `Name View` ändrar ingenting där, och det gör inte heller en flytt av `Logical Name` eller `Domain` i kolumnordningen, eller en flytt till någon av dem. Detsamma gäller låset `Canvas Type` när det slås på av en editor som kom till fliken Inställningar från fliken Ordlista: den äldre editorn känner inte till den fliken, så den behåller `Canvas Type` upplåst. Den visar ändå de fysiska namn som ordlistorna härleder och de datatyper som domänerna ger.  
+Dess egna redigeringar känner inte till logiska namn, domäner eller ordlistorna, med följande effekter i de nyare editorerna:
+
+- En tabell eller kolumn som den byter namn på för hand behåller sitt namn märkt som härlett, så ett logiskt namn som senare skrivs för den i en nyare editor kan härleda namnet igen och ersätta det som den äldre editorn skrev in.
+- En datatyp som den ger en kolumn som är kopplad till en domän lämnar kopplingen kvar, så bladet `Checks` listar `Domain type mismatch` och domänens nästa typändring ger kolumnen domänens typ igen.
+- Sekundärnyckelkolumnerna i en relation som den lägger till får inget logiskt namn och ingen domän från sin nyckel.
+- En tabell som den klistrar in eller duplicerar kommer fram utan logiska namn och domänkopplingar.
+- En import av Schema SQL, GraphQL, DBML eller AML i den skickar inget `keepDictionaries`, så den tömmer orden, termerna och domänerna i alla editorer.
+- När den ångrar en inläsning, en import eller `clear()` läser den in sin egen kopia av dokumentet i alla editorer, och den kopian har inga logiska namn, domänkopplingar eller ordlistor.
+- Den kopian, och dokumentet som en import av Schema SQL, GraphQL, DBML eller AML i den läser in, återställer också låset `Name View` i alla editorer till det läge som den äldre editorn fann det i. Alla editorer sparar sedan `Physical Names` som namnvisning och visar den också om låset är av.
+
+Ett dokument som sparas från en sådan editor har inga logiska namn, domänkopplingar, ordlistor eller namnvisning, så en editor med `4.2.0` öppnar det i `Physical Names`. Den äldre editorn sparar dock låset `Name View` som den fann det, så ett dokument som låsts upp i en editor med `4.2.0` förblir upplåst.  
+Håll alla editorer i en session, och varje [replicationStore](./remote-storage.md#dispatch-dispatchsync) som lagrar dess dokument, på `4.2.0` eller senare.
+
 ## SharedStoreConfig {#sharedstoreconfig}
 
 ### getNickname {#getnickname}
@@ -161,6 +194,7 @@ editor.getSharedStore({ mouseTracker: false });
 Sänder vad den här användaren arbetar med. Standardvärdet är `true`.  
 Tabellen och cellen som du har fokuserat, tabellerna, anteckningarna och tabellgrupperna som du har markerat och rutan som du drar upp på arbetsytan skickas till de andra editorerna och ritas där.  
 Varje användare får en egen färg så att du kan skilja dem åt: en kontur på den fokuserade tabellen, en understrykning under den fokuserade cellen, en ring runt de markerade tabellerna, anteckningarna och tabellgrupperna och en streckad rektangel för dragrutan.  
+Sedan `4.2.0` kan användarna titta på var sin [namnvisning](../../guide/guides/logical-names.md#collaborators) medan dess lås är på, eller efter ett eget byte i en skrivskyddad editor. En fokuserad cell som din visning inte ritar stryks under på den cell som din visning ritar i dess ställe: namnet och det logiska namnet ersätter varandra, liksom datatypen och domänen gör.  
 Närvaroinformation som kommer från andra användare ritas alltid på din arbetsyta, oavsett om det här alternativet är på eller inte.  
 I flödesläget på fliken Visualisering ritas andra användares fokus och markering på tabellkorten, men inte deras dragrutor. De tabeller som du markerar där skickas ändå; rutan som du drar upp där skickas inte.
 

@@ -1,5 +1,5 @@
 ---
-sidebar_position: 12
+sidebar_position: 13
 description: Diyagramdan yirmi iki hedef için kod oluşturma, seçenekler panelinde dili, veritabanını, ad biçimini ve tırnağı seçme, hangi hedeflerin bir ilişkinin ON DELETE ve ON UPDATE eylemlerini yazdığını görme, sonucu kaydetme veya kopyalama.
 ---
 
@@ -103,6 +103,10 @@ Her biçimde, hedefin dilinin ayırdığı bir ad, o dilin kaçış uygulayabild
 `SeaORM` de bunları yok sayar: Alanları ve modülleri SeaORM'un geri okuduğu biçim olan snake case ile adlandırır, saklanan adları ise `table_name` içinde ve farklı olduklarında `column_name` içinde verir.  
 Bu dört hedef için panel, iki listeyi de altlarında `Not used by` bilgi notuyla soluk gösterir.
 
+Her hedef, [Ad görünümü](./logical-names.md#name-view) ne gösterirse göstersin fiziksel adları yazar.  
+Hiçbiri mantıksal ad yazmaz, boş bir açıklamaya bile: Bu sekmede Şema SQL sekmesindeki [`Write logical names into empty comments`](./schema-sql.md#logical-names-as-comments) seçeneğinin bir karşılığı yoktur.  
+Hiçbiri değer alanı da yazmaz: Bir değer alanına bağlı sütun, diğer her sütun gibi veri türüyle yazılır.
+
 ## Veritabanı {#database}
 
 Veri türleri seçili veritabanına göre çözümlenir. [Veritabanları](./table-related-functions.md#databases) bölümüne bakın.  
@@ -132,5 +136,5 @@ Dosya her dışa aktarma gibi adlandırılır: `<database name>-<timestamp>` ve 
 Dışa aktar menüsünde Kod oluşturucu öğesi yoktur ve Tablo özelliklerinin `Code Generator` sekmesi dosya kaydedemez.
 
 Kodu kopyalamak için panelin alt kısmındaki `Copy` düğmesine tıklayın ya da kodun üzerine gelip sağ üst köşesindeki, Tablo özelliklerindeki tek yol olan kopyalama düğmesine tıklayın.  
-Onay işaretli bir `Copied!` bildirimi bunu iki saniye boyunca doğrular. Tarayıcı veya ana uygulama panoya erişimi reddederse, bunun yerine uyarı işaretli bir `Couldn't copy to the clipboard` bildirimi bunu belirtir. Yeniden kopyalamak yeni bir bildirim eklemek yerine mevcut bildirimi değiştirir.  
+Onay işaretli bir `Copied!` bildirimi bunu iki saniye boyunca doğrular. Tarayıcı veya ana uygulama panoya erişimi reddederse, bunun yerine uyarı işaretli bir `Couldn't copy to the clipboard` bildirimi bunu beş saniye boyunca belirtir. Yeniden kopyalamak yeni bir bildirim eklemek yerine mevcut bildirimi değiştirir.  
 Metin ayrıca seçilebilir, böylece yalnızca ihtiyacınız olan kısmı alabilirsiniz.

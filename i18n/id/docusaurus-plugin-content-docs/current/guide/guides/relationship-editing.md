@@ -1,6 +1,6 @@
 ---
-sidebar_position: 6
-description: Menghapus hubungan, mengubah tipenya, mengatur tindakan ON DELETE dan ON UPDATE-nya, memetakannya ke kolom yang sudah ada dengan Petakan Kolom, membaca notasi konektor, bekerja dengan hubungan N:M dan hubungan pengidentifikasi, serta melihat cara kolom kunci asing baru diberi nama.
+sidebar_position: 7
+description: Menghapus hubungan, mengubah tipenya, mengatur tindakan ON DELETE dan ON UPDATE-nya, memetakannya ke kolom yang sudah ada dengan Petakan Kolom, membaca notasi konektor, bekerja dengan hubungan N:M dan hubungan pengidentifikasi, serta melihat apa yang disalin kolom kunci asing baru dari kuncinya dan cara kolom tersebut diberi nama.
 ---
 
 # Pengeditan hubungan
@@ -85,6 +85,9 @@ Dialog ini dibuka dengan dua cara:
 
 Subjudul dialog menyebutkan kedua tabel dan tipe hubungan, seperti `users → posts · One N`. Tipe ditampilkan di sini tetapi tidak diubah — gunakan [Perubahan tipe](#type-change).
 
+Di seluruh dialog, termasuk keterangan dan baris teks di bawah baris pemetaan serta notifikasi yang muncul saat dialog ditutup, tabel dan kolom dinamai sesuai [Tampilan Nama](./logical-names.md#beyond-the-canvas).  
+Tiga hal tetap menggunakan nama fisik: setiap tipe data, yang merupakan tipe milik kolom itu sendiri dan tidak pernah nama domainnya; `New column: <name>`, yang menampilkan nama yang akan didapat kolom baru; dan baris yang sudah terisi saat `Map` dimulai, yang dipasangkan berdasarkan nama, tidak pernah berdasarkan nama logis.
+
 `References` memilih kunci yang dirujuk hubungan: `Primary Key`, dengan kolomnya dalam urutan tabel, lalu `Unique: <column>` untuk setiap kolom yang ditandai `Unique`. Daftar ini hanya muncul saat ada lebih dari satu pilihan.  
 Indeks unik tidak dihitung sebagai kunci di sini, dan kolom `Unique` yang merupakan seluruh kunci utama tidak dicantumkan dua kali.  
 Memilih kunci lain menyusun ulang baris. Sebuah baris mempertahankan pilihannya selama kolom tersebut masih ada di tabel anak.
@@ -121,10 +124,10 @@ Jika kolom hubungan atau kunci yang digunakan saat dialog dibuka berubah sementa
 Apa yang ditulis `Map` dan `Save`:
 
 - `Map` menambahkan hubungan dengan `On Delete` dan `On Update` diatur ke `Not set`. `Save` hanya mengubah kolom hubungan, mengarahkan sisi induknya ke kunci yang dipilih di `References`, serta mempertahankan tipenya dan tindakan ON DELETE dan ON UPDATE-nya.
-- Baris `New column` menambahkan kolom di akhir tabel anak, seperti saat menggambar: `NOT NULL`, dinamai menurut kuncinya, dengan tipe data, nilai default, dan komentar kunci tersebut — lihat [Hubungan pengidentifikasi](#identifying-relationships).
-- Kolom yang dipilih tidak pernah diganti namanya, dan `Not Null`, kunci utama, `Unique`, nilai default, serta komentarnya tetap seperti semula. Tipe datanya hanya berubah selama `Relationship DataType Sync` aktif dan kolom induk memiliki tipe data: kolom itu mengambil tipe yang diberikan kolom induk kepada kunci asing, yaitu tipe integer untuk kunci serial seperti pada kolom baru, dan perubahan itu berlanjut di sepanjang hubungan seperti yang dilakukan sinkronisasi.
+- Baris `New column` menambahkan kolom di akhir tabel anak, seperti saat menggambar: `NOT NULL`, dinamai menurut kuncinya, dengan tipe data, nilai default, komentar, nama logis, dan domain kunci tersebut — lihat [Hubungan pengidentifikasi](#identifying-relationships).
+- Kolom yang dipilih tidak pernah diganti namanya atau ditautkan ke domain kunci, dan `Not Null`, kunci utama, `Unique`, nilai default, komentar, serta nama logisnya tetap seperti semula. Tipe datanya hanya berubah selama `Relationship DataType Sync` aktif dan kolom induk memiliki tipe data: kolom itu mengambil tipe yang diberikan kolom induk kepada kunci asing, yaitu tipe integer untuk kunci serial seperti pada kolom baru, dan perubahan itu berlanjut di sepanjang hubungan seperti yang dilakukan sinkronisasi. Setiap kolom yang tipenya diubah oleh perubahan ini, baik yang dipilih maupun yang dicapai di sepanjang hubungan, dilepas tautannya dari [domain](./dictionary.md#domains-and-data-types) saat tipe barunya berbeda dari tipe domain.
 - Kolom yang tidak lagi digunakan pemetaan tetap berada di tabel anak, dan tidak lagi ditandai sebagai kunci asing kecuali jika hubungan lain masih berakhir padanya.
-- Semua yang ditulis satu kali `Map` atau `Save`, termasuk kolom baru dan perubahan tipe, merupakan satu langkah pembatalan.
+- Semua yang ditulis satu kali `Map` atau `Save` — termasuk kolom baru, perubahan tipe, dan pelepasan tautan domain — merupakan satu langkah pembatalan.
 
 Apakah hubungan bersifat pengidentifikasi, dan bagaimana ujung induknya digambar, ditentukan dari kolom tabel anak yang dipetakan, seperti pada hubungan mana pun. Memetakan ke kolom kunci utama tabel anak langsung menjadikannya hubungan pengidentifikasi, dan memetakan ke kolom yang mengizinkan `NULL` menempatkan lingkaran di ujung induk — lihat [Membaca konektor](#reading-a-connector).  
 Kunci asing di Skema SQL merujuk kunci yang Anda pilih, seperti `REFERENCES vehicle (vin)` untuk kunci `Unique`.
@@ -156,9 +159,10 @@ Lihat [Mengimpor atau mengekspor file](./file-import-export.md).
 ## Hubungan pengidentifikasi {#identifying-relationships}
 
 Menggambar hubungan dengan mengeklik tabel anak, atau dengan `Create new columns`, menyalin setiap kunci utama tabel induk ke tabel anak sebagai kolom kunci asing `NOT NULL`, sehingga hubungan baru dimulai sebagai hubungan non-pengidentifikasi.  
-Salinan tersebut mengambil tipe data, nilai default, dan komentar kunci, tetapi tidak `Unique` atau `Auto Increment`, dan diberi nama seperti dijelaskan di [Nama kolom kunci asing](#foreign-key-column-names).  
+Salinan tersebut mengambil tipe data, nilai default, komentar, dan nama logis kunci, tetapi tidak `Unique` atau `Auto Increment`, dan diberi nama seperti dijelaskan di [Nama kolom kunci asing](#foreign-key-column-names).  
 Kunci serial merupakan pengecualian untuk tipe data: salinannya mengambil tipe integer yang disimpan serial tersebut. Pada database apa pun, `smallserial` dan `serial2` menghasilkan `smallint`, `serial4` menghasilkan `integer`, serta `bigserial` dan `serial8` menghasilkan `bigint`. Tipe `serial` saja menghasilkan `integer` pada PostgreSQL dan `bigint unsigned` pada MySQL dan MariaDB, serta tetap `serial` pada database lainnya.  
 Hanya nama tipe secara utuh yang dihitung, tanpa membedakan huruf besar dan kecil, sehingga `serial(4)` disalin sebagaimana tertulis. Tipe yang ditulis dengan huruf kapital menghasilkan huruf kapital: `SERIAL` menghasilkan `INTEGER` pada PostgreSQL. Kolom kunci asing yang sudah bertipe `serial` di diagram yang tersimpan mempertahankan tipe tersebut.  
+Salinan tersebut juga ditautkan ke [domain](./dictionary.md#domains-and-data-types) kunci, asalkan lembar `Domains` mencantumkan domain itu saat salinan dibuat dan salinan mempertahankan tipe data kunci. Jadi, salinan kunci serial yang mengambil tipe integer tidak menautkan domain apa pun, sedangkan `serial` saja yang tetap `serial` menautkannya.  
 Untuk membuat hubungan menjadi hubungan pengidentifikasi, jadikan kolom kunci asing tersebut di tabel anak sebagai kunci utama: pilih semuanya lalu tekan `Alt + K` (Windows/Linux) atau `⌥ + K` (Mac) satu kali, atau pilih `Primary Key` di menu konteks tabel, yang bertuliskan `Primary Key on selected columns` selama dua kolom atau lebih dipilih — lihat [Kunci utama kolom](./table-editing.md#column-primary-key).
 
 ![Mengaktifkan lalu menonaktifkan product_id sebagai kunci utama dengan Alt + K, yang membuat konektornya menjadi garis utuh, lalu garis putus-putus](/img/demo-identifying-relationship.webp)
@@ -193,7 +197,10 @@ Hal ini termasuk kunci utama yang ditambahkan editor ke tabel induk yang tidak m
 Nama-nama tersebut ditetapkan saat hubungan digambar. Mengganti nama tabel induk atau kuncinya kemudian tidak mengganti nama kolom-kolom tersebut.  
 Baris `New column` di [Petakan Kolom](#map-columns) diberi nama dengan aturan yang sama, dan daftarnya menampilkan setiap nama sebelum Anda memilihnya.  
 Hubungan yang datang dengan kolom yang sudah tersedia — dari impor, penempelan, duplikasi, atau Petakan Kolom yang memasangkan kolom yang sudah ada — mempertahankan nama yang dimiliki kolom-kolom tersebut.  
-Agen pemrograman yang menambahkan hubungan dengan `erd_add_relationship` mendapatkan nama dan tipe data yang sama — lihat [Alat](../../mcp/tools.md#relationships).
+Agen pemrograman yang menambahkan hubungan dengan `erd_add_relationship` mendapatkan nama, tipe data, nama logis, dan domain yang sama — lihat [Alat](../../mcp/tools.md#relationships).
+
+Kolom kunci asing dinamai menurut kuncinya, tidak pernah menurut nama logis yang disalinnya, dan namanya dianggap nama buatan Anda sendiri: nama logis yang kemudian ditulis pada kolom itu membiarkan namanya tetap seperti semula, kecuali jika nama itu kosong — lihat [Nama buatan Anda sendiri](./dictionary.md#names-of-your-own).  
+Karena itu, selama nama logis yang disalin cocok dengan istilah yang memberikan nama lain, lembar `Checks` mencantumkan kolom tersebut di bawah [`Physical name mismatch`](./dictionary.md#what-each-check-finds). Menghasilkan ulang nama fisiknya mengganti namanya dari kamus, kecuali jika kolom lain di tabel anak sudah memiliki nama yang diberikan kamus, tanpa membedakan huruf besar dan kecil — lihat [Hasilkan ulang nama-nama fisik](./dictionary.md#derive-physical-names-again).
 
 ## Membaca konektor {#reading-a-connector}
 

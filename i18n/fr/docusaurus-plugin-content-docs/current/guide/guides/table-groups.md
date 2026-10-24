@@ -1,5 +1,5 @@
 ---
-sidebar_position: 5
+sidebar_position: 6
 description: Rassembler des tables liées dans un cadre nommé et coloré affiché derrière elles ; créer, nommer, colorer, déplacer, redimensionner et supprimer des groupes, y accéder depuis l’explorateur, changer les tables qu’ils contiennent, les masquer et les conserver dans la disposition automatique, le Schéma SQL et le DBML.
 ---
 

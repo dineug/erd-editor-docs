@@ -1,12 +1,12 @@
 ---
-sidebar_position: 9
-description: Search table, column, index, and table group names, comments, and memos from the top of the Explorer, step through the matches in its tree and on the canvas, and replace one match or all of them.
+sidebar_position: 10
+description: Search table, column, index, and table group names, logical names, comments, and memos from the top of the Explorer, step through the matches in its tree and on the canvas, and replace one match or all of them.
 ---
 
 # Find and Replace
 
 Finds text across the whole diagram, takes you to each match on the ERD canvas, and replaces one match or all of them.  
-It searches seven kinds of text: table names, table comments, column names, column comments, memos, index names, and table group names — see [What It Searches](#what-it-searches).
+It searches eight kinds of text: table names, table comments, column names, column comments, memos, index names, table group names, and the [logical names](./logical-names.md) of tables and columns — see [What It Searches](#what-it-searches).
 
 It sits at the top of the [Explorer](./explorer.md), the panel docked left of the ERD canvas, between the Explorer's title bar and its tree. It has no title of its own. From top to bottom it holds:
 
@@ -30,7 +30,7 @@ Closing the Explorer, what the key and the two `Toggle Explorer` entries do whil
 [When It Stands Aside](./explorer.md#when-it-stands-aside) covers how another tab and zen mode hide it, and how the diff viewer, time travel, and the Auto Layout preview hide it and keep it from opening. [Beside the Canvas](./explorer.md#beside-the-canvas) covers an editor too narrow for it.
 
 Reopening keeps the last query, along with the Replace text, the [options](#options), the [kinds of text](#what-it-searches) that were on, and whether the `Replace` row and the kinds of text were unfolded.  
-They are kept while the editor stays open and are not saved in the document. A newly opened editor starts with every option off, the `Replace` row and the kinds of text folded, and only the four kinds of name on — see [What It Searches](#what-it-searches).
+They are kept while the editor stays open and are not saved in the document. A newly opened editor starts with every option off, the `Replace` row and the kinds of text folded, and only the four kinds of name and `Logical names` on — see [What It Searches](#what-it-searches).
 
 ## The Browser's Find Bar
 
@@ -46,15 +46,16 @@ A page that embeds the editor can move or remove the key — see [Changing the S
 
 ## What It Searches
 
-Seven buttons choose the kinds of text searched, in this order: `Table names`, `Table comments`, `Column names`, `Column comments`, `Memos`, `Index names`, and `Table group names`.  
+Eight buttons choose the kinds of text searched, in this order: `Table names`, `Table comments`, `Column names`, `Column comments`, `Memos`, `Index names`, `Table group names`, and `Logical names`.  
 They are folded away at first. The `Search In` button at the end of the count's row unfolds them below that row and folds them again, and is highlighted while they show.  
-A highlighted kind button is on. Click one to turn it on or off, and the search runs again. With all seven off, nothing is found.
+A highlighted kind button is on. Click one to turn it on or off, and the search runs again. With all eight off, nothing is found.
 
-The search first opens on the four kinds of name, `Table names`, `Column names`, `Index names`, and `Table group names`, so a rename does not reach comments and memos unless you turn them on.  
+The search first opens on the four kinds of name, `Table names`, `Column names`, `Index names`, and `Table group names`, and on `Logical names`, so a rename does not reach comments and memos unless you turn them on.  
+`Logical names` is one kind for the logical names of tables and of columns alike.  
 Index names are the names of the indexes in the `Indexes` tab of [Table Properties](./table-related-functions.md#indexes), not the `PK_` and `UQ_` keys listed above them.
 
-Nothing else is searched: not data types, default values, an index's columns, the database name, the [Schema SQL](./schema-sql.md) with its `Before tables` and `After tables` scripts, or generated code.  
-A comment hidden by a [table view option](./table-related-functions.md#table-view-options) is still searched. Memos hidden with View Option → `Memos`, and [table groups](./table-groups.md#hiding-groups) hidden with View Option → `Table Groups`, are not, even with their button on, so `Replace All` never rewrites a memo or renames a group you cannot see.
+Nothing else is searched: not data types, a column's domain, default values, an index's columns, the database name, the [Schema SQL](./schema-sql.md) with its `Before tables` and `After tables` scripts, generated code, or the [Dictionary](./dictionary.md) tab's sheets, which have a [search of their own](./dictionary.md#searching).  
+Logical names are searched whatever the [Name View](./logical-names.md#name-view) draws, `Physical Names` included, where the canvas shows none. A comment hidden by a [table view option](./table-related-functions.md#table-view-options) is still searched too. Memos hidden with View Option → `Memos`, and [table groups](./table-groups.md#hiding-groups) hidden with View Option → `Table Groups`, are not, even with their button on, so `Replace All` never rewrites a memo or renames a group you cannot see.
 
 ## Options
 
@@ -91,19 +92,21 @@ The count, at the start of the row under the fields, says where you are. It is e
 While the Find field holds text, the Explorer's [tree](./explorer.md#the-tree) shows the results instead of the whole diagram: only the rows that hold a match and the rows above them. When nothing matches, or the regular expression does not parse, it is empty. Deleting the query brings back the whole tree, folded as it was before.
 
 - `Tables`, `Table Groups`, and `Memos` show only when they hold a match, and each folder's count is the number of rows directly under it in the results.
-- Under `Tables` come the tables that hold a match, by name. Under each table come a row for each match in its comment, then a `Columns` folder with the columns that hold a match, in column order, each with a row for each match in its comment, then an `Indexes` folder with the indexes whose name matches. There is no `Foreign Keys` folder.
+- Under `Tables` come the tables that hold a match, by name, never by logical name. Under each table come a row for each match in its comment, then a `Columns` folder with the columns that hold a match, in column order, each with a row for each match in its comment, then an `Indexes` folder with the indexes whose name matches. There is no `Foreign Keys` folder.
 - Under `Table Groups` come the groups whose name matches, by name, without their tables. A table found shows under `Tables`.
 - Under `Memos` come the memos that hold a match, in document order, each shown by its first line and with a row for each match in it.
 
-A match in a name is highlighted in that name's own row, so a name that holds the query twice is one row with two highlights.  
+A match in a name is highlighted in that name's own row, so a name that holds the query twice is one row with two highlights. A match in a table's or column's logical name goes on that table's or column's row as well, never on a row of its own.  
+Those rows name the table or column as the [Name View](./logical-names.md#beyond-the-canvas) shows it, and each of the two names a row may show highlights only its own matches. A row found only in the name its view leaves out, the logical name in `Physical Names` or the name in `Logical Names`, adds that name after the one it shows, muted as in `Both Names`, with the match highlighted. When the name it shows holds a match as well, the row shows that name alone, so the matches in the name its view leaves out are counted and stepped through but not highlighted.  
 A match in a comment or a memo has a row of its own: a speech bubble for a table or column comment, or a sticky note for a memo, then an excerpt of the text with the match highlighted. A long text is cut with `…`, and line breaks show as spaces. Hover the row to see the whole text.  
 Every other row looks as it does outside a search: a column shows its data type, an index its columns, and a blank name reads `unnamed`.
 
 Every row with rows under it shows unfolded when a search starts. A row you fold, or one `Collapse All` folds, stays folded until a match under it becomes current, or until the query, `Match Case`, `Match Whole Word`, `Use Regular Expression`, or a kind of text changes, or the search is opened again with the key or a `Toggle Explorer` entry.  
 The current match's row is highlighted and scrolled into view. The tree lists every match, however many there are.  
-The matches are stepped through in the tree's order: table by table, the table's name, its comment, each of its columns' name and comment in column order, and its index names; then the table group names; then the memos.
+The matches are stepped through in the tree's order: table by table, the table's logical name, name, and comment, then each of its columns' logical name, name, and comment in column order, then its index names; then the table group names; then the memos.
 
-The results follow the document while the Explorer shows. Once edits pause, any change to the searched texts searches again, and the current match stays current if it is still there. That covers a name, comment, or memo text edited, a table, column, index, memo, or table group added or removed, a column moved, and the memos or table groups hidden or shown with View Option, which takes their matches out of the tree or brings them back. An edit on the canvas, an undo or redo, an import, and an edit by a collaborator or a coding agent all count. Selecting, moving tables, memos, or groups on the canvas, scrolling, zooming, and hovering do not.  
+The results follow the document while the Explorer shows. Once edits pause, any change to the searched texts searches again, and the current match stays current if it is still there. That covers a name, logical name, comment, or memo text edited, a table, column, index, memo, or table group added or removed, a column moved, and the memos or table groups hidden or shown with View Option, which takes their matches out of the tree or brings them back. An edit on the canvas, an undo or redo, an import, and an edit by a collaborator or a coding agent all count. Selecting, moving tables, memos, or groups on the canvas, scrolling, zooming, and hovering do not.  
+Nor does switching the Name View, which changes no text the search reads: the same matches stay, and the rows take the names the new view shows.  
 Edits made while the Explorer is closed or out of sight are searched as soon as it shows again.
 
 ## Going to a Match
@@ -113,17 +116,17 @@ Movement wraps at both ends. No match is current until you first move, so the fi
 
 A click on a row of the results, or `Enter` or `Space` with the keyboard on it, does one of these:
 
-- A row whose own name holds a match goes to that name's first match.
+- A row whose own name or logical name holds a match goes to its first match, the logical name's before the name's.
 - A row that shows an excerpt of a comment or memo goes to that match.
-- Any other row, such as a table whose name does not match or a memo's own row, goes to what the row stands for and leaves the current match as it is — see [Going to a Row](./explorer.md#going-to-a-row).
+- Any other row, such as a table whose name and logical name do not match or a memo's own row, goes to what the row stands for and leaves the current match as it is — see [Going to a Row](./explorer.md#going-to-a-row).
 - A folder folds or unfolds.
 
 Whenever a match becomes current, the tree unfolds any folded rows above it and moves the keyboard's row there, so the arrow keys in the tree go on from it.
 
 Going to a match closes Table Properties if it is open, then:
 
-- For a table name or comment, or a column name or comment, it selects the table alone, brings it to the front, and puts the focused cell on the cell that holds the match. A match in a comment hidden by a [table view option](./table-related-functions.md#table-view-options) puts the focused cell on the name beside it instead.
-- For an index name, it selects the index's table alone and brings it to the front, with the focused cell on the table's name unless it is already in that table. Index names are not drawn on the canvas.
+- For a table's or column's name, logical name, or comment, it selects the table alone, brings it to the front, and puts the focused cell on the cell that holds the match. A match in a comment hidden by a [table view option](./table-related-functions.md#table-view-options) puts the focused cell on the name beside it instead. Where the [Name View](./logical-names.md#name-view) draws no cell for the name or the logical name, the focused cell goes on the one drawn in its place: the name in `Physical Names`, the logical name in `Logical Names`.
+- For an index name, it selects the index's table alone and brings it to the front, with the focused cell on the table's name, or its logical name in `Logical Names` and `Both Names`, unless it is already in that table. Index names are not drawn on the canvas.
 - For a table group name, it selects the group alone and brings it to the front with its tables.
 - For a memo, it selects the memo alone and brings it to the front.
 
@@ -151,7 +154,7 @@ While a run lasts, a table or table group it renames keeps its place in the tree
 
 `Replace All` runs on `Ctrl + Enter` (Windows/Linux) or `⌘ + Enter` (Mac) in the Replace field, or on its button:
 
-- It replaces every match in the kinds of text that are on and leaves the other kinds alone. With the default kinds, it renames tables, columns, indexes, and table groups, and comments and memos are untouched.
+- It replaces every match in the kinds of text that are on and leaves the other kinds alone, apart from the physical names that a replaced logical name derives, which it writes even while `Table names` and `Column names` are off — see below. With the default kinds, it renames tables, columns, indexes, and table groups, and rewrites the logical names of tables and columns; comments and memos are untouched.
 - Everything it changes is one undo step — see [One Gesture, One Step](./undo-redo.md#one-gesture-one-step).
 - The count reads `Replaced N matches`, counting only the occurrences whose text actually changed. When none did, it reads `No changes` and nothing is recorded in the history, as when replacing the regular expression `(user)` with `$1`.
 - The results are then searched again with no match current, so they may list matches that the new text contains.
@@ -171,8 +174,12 @@ How the Replace text is used:
   - A match written back as it was counts for none: with `Match Case` off, replacing `customer` with `Customer` writes `customer`, `Customer`, and `CUSTOMER` back as they were, and none of them is counted.
 - An empty Replace field deletes the match.
 
-A replacement is an ordinary edit, the same as typing the new table name, comment, column name, or memo text yourself, renaming the index in Table Properties, or renaming the table group.  
+A replacement is an ordinary edit, the same as typing the new table name, column name, logical name, comment, or memo text yourself, renaming the index in Table Properties, or renaming the table group.  
 It is recorded in the history and reaches collaborators and a coding agent like any other edit.
+
+So a table or column name a replacement writes becomes a name of your own, which a logical name written later leaves as it is until [Derive Physical Names Again](./dictionary.md#derive-physical-names-again) gives it back to the dictionaries. A name a replacement leaves empty goes back to the dictionaries instead, as any cleared name does — see [Names of Your Own](./dictionary.md#names-of-your-own).  
+While a table's or column's physical name is empty or was itself derived, a replaced logical name derives it from the dictionaries, as closing the logical name cell on a new logical name does — see [Deriving Physical Names](./dictionary.md#deriving-physical-names). In that case, a column whose new logical name is a term also takes the term's domain, and with it the domain's data type. What it derives is part of the replacement's undo step and is not counted in `Replaced N matches`.  
+When one `Replace All` rewrites both the logical name and the name of the same table or column, the name it writes wins over the one the new logical name would derive.
 
 ## Keys in the Search Fields
 

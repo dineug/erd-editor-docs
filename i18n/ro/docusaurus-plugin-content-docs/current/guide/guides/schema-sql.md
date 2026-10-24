@@ -1,6 +1,6 @@
 ---
-sidebar_position: 11
-description: Citiți codul DDL al diagramei în fila Schemă SQL, alegeți baza de date, delimitatorul, instrucțiunile, antetul și tabelele în panoul de opțiuni, adăugați propriile scripturi înainte și după tabele și salvați sau copiați codul SQL.
+sidebar_position: 12
+description: Citiți codul DDL al diagramei în fila Schemă SQL, alegeți baza de date, delimitatorul, instrucțiunile, antetul, numele logice în comentariile goale și tabelele în panoul de opțiuni, adăugați propriile scripturi înainte și după tabele și salvați sau copiați codul SQL.
 ---
 
 # Schemă SQL
@@ -20,24 +20,25 @@ Faceți clic dreapta pe codul SQL pentru a-i deschide meniul contextual:
 - `Options panel`, bifat cât timp panoul este afișat, care restrânge sau deschide panoul.
 - `Save file`
 
-Cât timp această filă este deschisă, căutarea rapidă oferă `Database` și `Bracket`; `Schema SQL: Statements` și `Schema SQL: Header`, care listează doar variantele pe care le are baza de date; și `Schema SQL: Options panel`, care restrânge sau deschide panoul.
+Cât timp această filă este deschisă, căutarea rapidă oferă `Database` și `Bracket`; `Schema SQL: Statements` și `Schema SQL: Header`, care listează doar variantele pe care le are baza de date; și `Schema SQL: Options panel`, care restrânge sau deschide panoul.  
+Nici meniul contextual, nici căutarea rapidă nu oferă opțiunea `Write logical names into empty comments`, care se află doar în panoul de opțiuni (consultați [Nume logice drept comentarii](#logical-names-as-comments)).
 
 Codul SQL este scris când fila se deschide și din nou de fiecare dată când se schimbă una dintre variantele panoului, numele bazei de date sau un script. O editare a tabelelor făcută cât timp fila este deschisă, de exemplu de un colaborator sau de un agent de programare, apare după ce părăsiți fila și reveniți sau după ce se schimbă unul dintre aceste elemente.
 
-Panoul [Proprietăți tabel](./table-related-functions.md#table-properties) are propria filă `Schema SQL`, care afișează codul DDL al unui singur tabel. Aceasta scrie întotdeauna instrucțiuni `CREATE` simple, fără antet sau scripturi, nu are panou de opțiuni, iar meniul ei contextual oferă doar `Database` și `Bracket`.
+Panoul [Proprietăți tabel](./table-related-functions.md#table-properties) are propria filă `Schema SQL`, care afișează codul DDL al unui singur tabel. Aceasta scrie întotdeauna instrucțiuni `CREATE` simple, fără antet sau scripturi, nu scrie niciodată un nume logic într-un comentariu gol, nu are panou de opțiuni, iar meniul ei contextual oferă doar `Database` și `Bracket`.
 
 ## Panoul de opțiuni {#options-panel}
 
 Panoul conține trei grupuri, fiecare sub un titlu:
 
 1. `Saved in the document`: `Database` și `Bracket` (consultați [Bază de date și delimitator](#database-and-bracket)).
-2. `This window only`: `Statements`, `Header` și, cât timp diagrama are un [grup de tabele](./table-groups.md), `Tables` (consultați [Instrucțiuni](#statements), [Antet](#header) și [Tabele](#tables)).
+2. `This window only`: `Statements`, `Header`, `Write logical names into empty comments` și, cât timp diagrama are un [grup de tabele](./table-groups.md), `Tables` (consultați [Instrucțiuni](#statements), [Antet](#header), [Nume logice drept comentarii](#logical-names-as-comments) și [Tabele](#tables)).
 3. `Saved in the document · written as is for every database`: scripturile `Before tables` și `After tables` (consultați [Scripturi înainte și după tabele](#before-and-after-scripts)).
 
 Butoanele `Save file` și `Copy` se află în partea de jos a panoului (consultați [Salvarea sau copierea codului SQL](#saving-or-copying-the-sql)).
 
 Variantele de sub `This window only` aparțin ferestrei editorului în care le alegeți. Ele nu se salvează în document, nu se partajează cu colaboratorii și nu se înregistrează pentru anulare, iar când editorul este închis sau reîncărcat se resetează; schimbarea filei le păstrează.  
-Opțiunea `Statements` pornește de la `If not exists`, iar `Header` de la `CREATE + USE`. Codul SQL pe care îl citește cu [`getSchemaSQL()`](../../api/erd-editor-element.md#getschemasql) o pagină care încorporează editorul și codul SQL pe care îl citește un agent de programare pornesc în schimb de la `Create`, fără antet.
+Opțiunea `Statements` pornește de la `If not exists`, `Header` de la `CREATE + USE`, iar `Write logical names into empty comments` pornește dezactivată. Codul SQL pe care îl citește cu [`getSchemaSQL()`](../../api/erd-editor-element.md#getschemasql) o pagină care încorporează editorul și codul SQL pe care [îl citește un agent de programare](../../mcp/tools.md#reading-a-document) pornesc în schimb de la `Create`, fără antet, și nu scriu nume logice decât dacă li se cere.
 
 O variantă pe care baza de date selectată nu o are rămâne în panou, estompată, cu sfatul ecran `Not in <database>`, de exemplu `Not in Oracle`, iar apăsarea ei nu face nimic.  
 Codul SQL folosește atunci cea mai apropiată formă pe care o are baza de date, iar butonul acelei forme apare apăsat: `If not exists` revine la `Create`, `CREATE + USE` la `USE` sau la `None` acolo unde baza de date nu are nici `USE`, iar `USE` la `None`. Alegerea dumneavoastră se păstrează, astfel încât trecerea la o bază de date care are acea variantă o readuce.
@@ -92,6 +93,21 @@ Un antet se scrie doar cât timp numele bazei de date este un identificator simp
 Cu orice alt nume, inclusiv cu unul gol, nu se scrie niciun antet, iar instrucțiunea `DROP TABLE` din PostgreSQL nu numește atunci nicio schemă. Cât timp este în vigoare un alt antet decât `None`, o mențiune sub `Header` semnalează acest lucru: `Database name "<name>" is not a valid identifier.`  
 Numele bazei de date al unei diagrame noi este gol, așa că, până când îi dați un nume, panoul afișează `Database name "" is not a valid identifier.`
 
+## Nume logice drept comentarii {#logical-names-as-comments}
+
+Comutatorul `Write logical names into empty comments`, aflat sub `This window only`, scrie în codul DDL [numele logic](./logical-names.md) al unui tabel sau al unei coloane acolo unde comentariul acestuia este gol, pentru orice bază de date.
+
+![Activarea opțiunii Write logical names into empty comments în panoul Schemă SQL, care scrie numele logic al fiecărei coloane din order_items în clauza ei COMMENT goală, în timp ce comentariile din members rămân neschimbate](/img/demo-schema-sql-logical-names.webp)
+
+- Un comentariu cu text are întotdeauna prioritate: numele logic nu îl înlocuiește niciodată și nu i se adaugă niciodată.
+- Un comentariu format doar din spații albe este considerat gol, așa că numele logic se scrie în locul lui. Un nume logic gol sau format doar din spații albe nu scrie nimic, iar acel tabel sau acea coloană rămâne în continuare fără comentariu.
+- Numele logic se scrie acolo unde și în forma în care baza de date scrie un comentariu, cu apostrofurile protejate în același fel (consultați [Comentarii](#comments)).
+
+În MySQL, de exemplu, o coloană `id` cu numele logic `Member ID` și fără comentariu este scrisă cu `COMMENT 'Member ID'`, în timp ce o coloană `email` cu numele logic `Email` și comentariul `Sign-in address` păstrează `COMMENT 'Sign-in address'`.
+
+Ca opțiunile `Statements` și `Header`, comutatorul aparține ferestrei și pornește dezactivat (consultați [Panoul de opțiuni](#options-panel)).  
+Un import nu citește niciodată un astfel de comentariu înapoi ca nume logic (consultați [Comentarii](./file-import-export.md#comments)).
+
 ## Tabele {#tables}
 
 Cât timp diagrama are cel puțin un [grup de tabele](./table-groups.md), afișat sau ascuns, opțiunea `Tables` apare sub `This window only`, cu o casetă de selectare pentru fiecare variantă:
@@ -125,22 +141,24 @@ Un câmp fără focusul tastaturii preia o modificare pe care un colaborator sau
 
 ## Salvarea sau copierea codului SQL {#saving-or-copying-the-sql}
 
-Comanda `Save file`, din partea de jos a panoului sau din meniul contextual, salvează exact codul SQL afișat de filă, cu baza de date, delimitatorul, instrucțiunile, antetul, tabelele și scripturile curente, ca `<database name>-<timestamp>.sql`. Fișierul este denumit și salvat ca orice alt export (consultați [Exportarea](./file-import-export.md#exporting)).
+Comanda `Save file`, din partea de jos a panoului sau din meniul contextual, salvează exact codul SQL afișat de filă, cu baza de date, delimitatorul, instrucțiunile, antetul, comentariile cu nume logice, tabelele și scripturile curente, ca `<database name>-<timestamp>.sql`. Fișierul este denumit și salvat ca orice alt export (consultați [Exportarea](./file-import-export.md#exporting)).
 
 Elementul `Export` ▸ `Schema SQL`, din meniul contextual al pânzei sau din căutarea rapidă, nu salvează nimic singur.  
 Trece la această filă, deschide panoul de opțiuni chiar dacă era restrâns și mută focusul tastaturii pe `Save file`, astfel încât apăsarea tastei `Enter` salvează fișierul.
 
 Butonul `Copy` din partea de jos a panoului, sau butonul de copiere care apare în dreapta sus a codului cât timp treceți cu indicatorul peste acesta, copiază codul SQL.  
-O notificare `Copied!` cu o bifă confirmă copierea timp de două secunde. Dacă browserul sau aplicația gazdă refuză accesul la clipboard, o notificare `Couldn't copy to the clipboard` cu un semn de avertizare semnalează în schimb acest lucru. O nouă copiere înlocuiește notificarea în loc să adauge alta.  
+O notificare `Copied!` cu o bifă confirmă copierea timp de două secunde. Dacă browserul sau aplicația gazdă refuză accesul la clipboard, o notificare `Couldn't copy to the clipboard` cu un semn de avertizare semnalează în schimb acest lucru, timp de cinci secunde. O nouă copiere înlocuiește notificarea în loc să adauge alta.  
 Codul SQL poate fi și selectat, astfel încât puteți prelua doar o parte din el.
 
 ## Ce scrie codul DDL {#what-the-ddl-writes}
 
 Aceste reguli se aplică oriunde editorul scrie cod Schemă SQL: în această filă și în fișierul ei, precum și în codul SQL pe care îl citește o pagină care încorporează editorul sau un agent de programare.  
-Fila `Schema SQL` din panoul Proprietăți tabel le respectă pentru singurul tabel pe care îl afișează. Nu scrie chei străine, cu excepția celor din SQLite, care se află în instrucțiunea `CREATE TABLE` a tabelului, și nici secvențe sau triggere Oracle.
+Fila `Schema SQL` din panoul Proprietăți tabel le respectă pentru singurul tabel pe care îl afișează. Nu scrie secvențe sau triggere Oracle și nici chei străine, cu excepția celor din SQLite, care se află în instrucțiunea `CREATE TABLE` a tabelului. Nu scrie nici instrucțiunile de comentariu pe care PostgreSQL, Oracle și MSSQL le pun după un tabel, așa că, pentru aceste trei baze de date, nu afișează niciun comentariu.
 
 Părțile apar în această ordine, separate de câte o linie goală: antetul, scriptul de dinaintea tabelelor, instrucțiunile `DROP`, tabelele și scriptul de după tabele. Tabelele sunt scrise în ordinea numelor.  
 Pentru o diagramă fără tabele și fără scripturi nu se scrie nimic, chiar dacă este ales un antet.
+
+Tabelele și coloanele sunt scrise cu numele lor fizice, indiferent ce afișează [modul de afișare a numelor](./logical-names.md#name-view). O coloană legată de un domeniu este scrisă cu propriul tip de date, pe care îl stabilește domeniul (consultați [Domenii și tipuri de date](./dictionary.md#domains-and-data-types)).
 
 ### Autoincrementare {#auto-increment}
 
@@ -181,7 +199,28 @@ Valoarea implicită a unei coloane este scrisă așa cum ați tastat-o, dar înt
 - PostgreSQL pune între paranteze doar o expresie care conține în afara parantezelor un cuvânt precum `AT TIME ZONE`, `AND`, `OR`, `IS`, `IN`, `LIKE`, `COLLATE` sau `= ANY`, de exemplu `(now() AT TIME ZONE 'utc')`.
 - MSSQL, Oracle, Snowflake și Databricks scriu fiecare valoare implicită așa cum a fost tastată.
 
+### Comentarii {#comments}
+
+Comentariul unui tabel sau al unei coloane care nu este gol, sau numele logic pe care opțiunea [`Write logical names into empty comments`](#logical-names-as-comments) îl scrie în locul lui, este scris așa cum scrie fiecare bază de date comentariile:
+
+- MySQL și MariaDB îl scriu în linie: o coloană se termină cu `COMMENT 'Member ID'`, iar tabelul se încheie cu `) COMMENT 'Members';`, inclusiv în lotul `If not exists` din MySQL.
+- Snowflake scrie comentariul unei coloane în linie, `COMMENT 'Member ID'`, iar pe cel al tabelului pe o linie separată după paranteza de închidere, `COMMENT = 'Members';`.
+- Databricks scrie comentariul unei coloane în linie, iar pe cel al tabelului ca `COMMENT 'Members';` după `USING DELTA`.
+- PostgreSQL scrie `COMMENT ON TABLE member IS 'Members';` și `COMMENT ON COLUMN member.id IS 'Member ID';` imediat după instrucțiunea `CREATE TABLE` a tabelului. Oracle scrie aceleași instrucțiuni după tabel, după constrângerile lui unice și după secvența și triggerul lui de autoincrementare.
+- MSSQL scrie câte un apel pentru fiecare tabel și pentru fiecare coloană, după tabel și după constrângerile lui unice, fiecare urmat de `GO`: `EXECUTE sys.sp_addextendedproperty 'MS_Description', N'Members', 'schema', 'dbo', 'table', 'member'`, cu `'column', 'id'` adăugat pentru o coloană.  
+  Textul este un literal național, `N'…'`, astfel încât SQL Server păstrează textul din afara paginii de cod a bazei de date, de exemplu în coreeană, în loc să stocheze semne de întrebare.  
+  Cu opțiunea `Bracket` la `None`, un tabel numit `sales.users` dă schema `sales` și tabelul `users`, la fel ca `[sales].[users]` și `"sales"."users"`, ale căror paranteze drepte și ghilimele duble sunt eliminate. Un nume fără schemă se află în `dbo`. O parte dinaintea schemei, ca în `shop.sales.users`, rulează procedura acelei baze de date, `shop.sys.sp_addextendedproperty`. Cu orice altă valoare a opțiunii `Bracket`, întregul nume este tabelul, în `dbo`.
+- SQLite nu păstrează comentarii, așa că îl scrie pe fiecare ca linie `--` deasupra elementului pe care îl descrie: `-- Members` deasupra instrucțiunii `CREATE TABLE member` și `-- Member ID` deasupra coloanei.
+
+Un apostrof dintr-un comentariu delimitat cu apostrofuri se dublează, ca în `'it''s'` și `N'it''s'`, la fel ca unul din numele pe care le transmit apelurile MSSQL. Databricks protejează în schimb un apostrof și un backslash cu un backslash, ca în `'it\'s'`, forma pe care o citește orice versiune Spark. Liniile `--` din SQLite nu sunt delimitate, așa că păstrează un apostrof așa cum a fost tastat: `-- it's`.  
+În rest, textul se scrie așa cum a fost tastat, inclusiv sfârșiturile de linie, cu excepția a două baze de date:
+
+- Oracle omite liniile goale, o linie formată doar din spații sau tabulatori fiind considerată goală, deoarece SQL\*Plus încheie o instrucțiune la o linie goală și sare peste restul ei. Un comentariu de tabel format din `Members`, o linie goală și `Active only` este scris ca `COMMENT ON TABLE member IS 'Members`, cu `Active only';` pe linia următoare.
+- SQLite scrie fiecare succesiune de sfârșituri de linie ca un singur spațiu, deoarece un sfârșit de linie ar încheia linia `--` și ar rula restul ca SQL. Același comentariu este scris ca `-- Members Active only`.
+
+Modul în care aceste comentarii sunt citite înapoi la import este descris în [Comentarii](./file-import-export.md#comments).
+
 ## Editoare doar în citire {#read-only-editors}
 
-Într-un editor cu atributul `readonly`, fila funcționează ca de obicei: `Database` și `Bracket` schimbă în continuare codul SQL afișat, `Statements`, `Header` și `Tables` funcționează în continuare, iar `Save file` și `Copy` îl salvează și îl copiază în continuare.  
+Într-un editor cu atributul `readonly`, fila funcționează ca de obicei: `Database` și `Bracket` schimbă în continuare codul SQL afișat, `Statements`, `Header`, `Write logical names into empty comments` și `Tables` funcționează în continuare, iar `Save file` și `Copy` îl salvează și îl copiază în continuare.  
 Singurele elemente doar în citire sunt cele două câmpuri pentru scripturi.

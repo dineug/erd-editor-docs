@@ -1,6 +1,6 @@
 ---
-sidebar_position: 11
-description: 在「結構描述 SQL」索引標籤中查看圖表的 DDL，在其選項面板中選擇資料庫、引號、陳述式、標頭和資料表，在資料表之前與之後加入自己的指令碼，並儲存或複製 SQL。
+sidebar_position: 12
+description: 在「結構描述 SQL」索引標籤中查看圖表的 DDL，在其選項面板中選擇資料庫、引號、陳述式、標頭、空白註解中的邏輯名稱和資料表，在資料表之前與之後加入自己的指令碼，並儲存或複製 SQL。
 ---
 
 # 結構描述 SQL
@@ -20,24 +20,25 @@ SQL 位於左側，其右側是標題為 `Schema SQL` 的選項面板，其中�
 - `Options panel`，面板顯示時為勾選狀態，可摺疊或開啟面板。
 - `Save file`
 
-此索引標籤開啟期間，快速搜尋會提供 `Database` 和 `Bracket`；只列出該資料庫所支援選項的 `Schema SQL: Statements` 和 `Schema SQL: Header`；以及可摺疊或開啟面板的 `Schema SQL: Options panel`。
+此索引標籤開啟期間，快速搜尋會提供 `Database` 和 `Bracket`；只列出該資料庫所支援選項的 `Schema SQL: Statements` 和 `Schema SQL: Header`；以及可摺疊或開啟面板的 `Schema SQL: Options panel`。  
+右鍵選單和快速搜尋都不提供 `Write logical names into empty comments`，此選項只位於選項面板中，請參閱[以邏輯名稱作為註解](#logical-names-as-comments)。
 
 SQL 會在此索引標籤開啟時寫出，之後每當面板中的某個選項、資料庫名稱或某段指令碼變更時，都會再次寫出。此索引標籤開啟期間對資料表所做的編輯（例如協作者或程式碼代理程式所做的編輯），要等到離開此索引標籤再回來，或上述其中一項變更時才會顯示。
 
-「[資料表屬性](./table-related-functions.md#table-properties)」有自己的 `Schema SQL` 索引標籤，會顯示單一資料表的 DDL。它一律寫出單純的 `CREATE` 陳述式，不含標頭或指令碼，沒有選項面板，其右鍵選單也只提供 `Database` 和 `Bracket`。
+「[資料表屬性](./table-related-functions.md#table-properties)」有自己的 `Schema SQL` 索引標籤，會顯示單一資料表的 DDL。它一律寫出單純的 `CREATE` 陳述式，不含標頭或指令碼，永遠不會將邏輯名稱寫入空白註解，沒有選項面板，其右鍵選單也只提供 `Database` 和 `Bracket`。
 
 ## 選項面板 {#options-panel}
 
 面板包含三組選項，每組各有一個標題：
 
 1. `Saved in the document`：`Database` 和 `Bracket`，請參閱[資料庫與引號](#database-and-bracket)。
-2. `This window only`：`Statements`、`Header`，以及圖表中有[資料表群組](./table-groups.md)時出現的 `Tables`，請參閱[陳述式](#statements)、[標頭](#header)和[資料表](#tables)。
+2. `This window only`：`Statements`、`Header`、`Write logical names into empty comments`，以及圖表中有[資料表群組](./table-groups.md)時出現的 `Tables`，請參閱[陳述式](#statements)、[標頭](#header)、[以邏輯名稱作為註解](#logical-names-as-comments)和[資料表](#tables)。
 3. `Saved in the document · written as is for every database`：`Before tables` 和 `After tables` 指令碼，請參閱[前置與後置指令碼](#before-and-after-scripts)。
 
 面板底部是 `Save file` 和 `Copy`，請參閱[儲存或複製 SQL](#saving-or-copying-the-sql)。
 
 `This window only` 下的選項屬於做出這些選擇的編輯器視窗。它們不會儲存在文件中、不會與協作者共用，也不會記錄到復原歷程記錄中；編輯器關閉或重新載入時會重設，切換索引標籤則會保留。  
-`Statements` 的初始值為 `If not exists`，`Header` 的初始值為 `CREATE + USE`。嵌入編輯器的網頁透過 [`getSchemaSQL()`](../../api/erd-editor-element.md#getschemasql) 讀取的 SQL，以及程式碼代理程式讀取的 SQL，則改以 `Create` 為初始值，且不含標頭。
+`Statements` 的初始值為 `If not exists`，`Header` 的初始值為 `CREATE + USE`，`Write logical names into empty comments` 則初始為關閉。嵌入編輯器的網頁透過 [`getSchemaSQL()`](../../api/erd-editor-element.md#getschemasql) 讀取的 SQL，以及[程式碼代理程式讀取](../../mcp/tools.md#reading-a-document)的 SQL，則改以 `Create` 為初始值，且不含標頭，除非另有要求，否則也不會寫出邏輯名稱。
 
 所選資料庫不支援的選項會以淡化方式留在面板中，並帶有 `Not in <database>` 工具提示，例如 `Not in Oracle`，按下它不會有任何作用。  
 此時 SQL 會改用該資料庫支援的最接近形式，且該形式的按鈕會顯示為按下狀態：`If not exists` 退回 `Create`，`CREATE + USE` 退回 `USE`（若資料庫也不支援 `USE`，則退回 `None`），`USE` 則退回 `None`。所做的選擇會保留，因此切換到支援該選項的資料庫時，該選擇就會恢復。
@@ -92,6 +93,21 @@ SQL 會在此索引標籤開啟時寫出，之後每當面板中的某個選項�
 其他任何名稱（包括空白名稱）都不會寫出標頭，此時 PostgreSQL 的 `DROP TABLE` 也不會指定結構描述。當生效的標頭不是 `None` 時，`Header` 下方會有一則註記指出這一點：`Database name "<name>" is not a valid identifier.`  
 新圖表的資料庫名稱為空白，因此在為其命名之前，面板會顯示 `Database name "" is not a valid identifier.`
 
+## 以邏輯名稱作為註解 {#logical-names-as-comments}
+
+`Write logical names into empty comments` 是 `This window only` 下的開關，會在每種資料庫上，於資料表或欄位的註解為空時，將其[邏輯名稱](./logical-names.md)寫入 DDL。
+
+![在結構描述 SQL 面板中開啟 Write logical names into empty comments，將 order_items 每個欄位的邏輯名稱寫入其空白的 COMMENT，而 members 的註解則保持不變](/img/demo-schema-sql-logical-names.webp)
+
+- 含有文字的註解一律優先：邏輯名稱永遠不會取代它，也永遠不會附加到其中。
+- 只有空白字元的註解會被視為空的，因此會在其位置寫入邏輯名稱。空的或只有空白字元的邏輯名稱不會寫出任何內容，該資料表或欄位仍不會有註解。
+- 邏輯名稱會寫在資料庫寫出註解的位置，並採用相同的形式，其中的引號也會以相同的方式逸出，請參閱[註解](#comments)。
+
+例如在 MySQL 上，邏輯名稱為 `Member ID` 且沒有註解的欄位 `id` 會寫出 `COMMENT 'Member ID'`，而邏輯名稱為 `Email`、註解為 `Sign-in address` 的欄位 `email` 則會保留 `COMMENT 'Sign-in address'`。
+
+與 `Statements` 和 `Header` 一樣，此開關屬於視窗，且初始為關閉，請參閱[選項面板](#options-panel)。  
+匯入時永遠不會將這類註解讀回為邏輯名稱，請參閱[註解](./file-import-export.md#comments)。
+
 ## 資料表 {#tables}
 
 只要圖表中至少有一個[資料表群組](./table-groups.md)（無論顯示或隱藏），`This window only` 下方就會出現 `Tables`，每個選項各有一個核取方塊：
@@ -125,22 +141,24 @@ SQL 會在此索引標籤開啟時寫出，之後每當面板中的某個選項�
 
 ## 儲存或複製 SQL {#saving-or-copying-the-sql}
 
-面板底部或右鍵選單中的 `Save file` 會將此索引標籤顯示的 SQL 原樣儲存為 `<database name>-<timestamp>.sql`，包括其目前的資料庫、引號、陳述式、標頭、資料表和指令碼。其命名與儲存方式和其他所有匯出相同，請參閱[匯出](./file-import-export.md#exporting)。
+面板底部或右鍵選單中的 `Save file` 會將此索引標籤顯示的 SQL 原樣儲存為 `<database name>-<timestamp>.sql`，包括其目前的資料庫、引號、陳述式、標頭、邏輯名稱註解、資料表和指令碼。其命名與儲存方式和其他所有匯出相同，請參閱[匯出](./file-import-export.md#exporting)。
 
 畫布右鍵選單或快速搜尋中的 `Export` ▸ `Schema SQL` 本身不會儲存任何內容。  
 它會切換到此索引標籤，即使選項面板已摺疊也會將其開啟，並將鍵盤焦點放在 `Save file` 上，因此按 `Enter` 即可儲存檔案。
 
 面板底部的 `Copy`，或將指標停留在程式碼上時其右上角出現的複製按鈕，都會複製 SQL。  
-帶有勾號的 `Copied!` 快顯通知會顯示兩秒以示確認。若瀏覽器或主應用程式拒絕存取剪貼簿，則會改為顯示帶有警告符號的 `Couldn't copy to the clipboard` 快顯通知。再次複製會取代原本的快顯通知，而不會再新增一則。  
+帶有勾號的 `Copied!` 快顯通知會顯示兩秒以示確認。若瀏覽器或主應用程式拒絕存取剪貼簿，則會改為顯示帶有警告符號的 `Couldn't copy to the clipboard` 快顯通知，持續五秒。再次複製會取代原本的快顯通知，而不會再新增一則。  
 SQL 也可以選取，因此可以只取用其中一部分。
 
 ## DDL 寫出的內容 {#what-the-ddl-writes}
 
 無論編輯器在何處寫出結構描述 SQL，以下規則都適用：此索引標籤及其檔案，以及嵌入編輯器的網頁或程式碼代理程式讀取的 SQL。  
-「資料表屬性」的 `Schema SQL` 索引標籤也會對其顯示的那一個資料表遵循這些規則。它不會寫出外鍵（但 SQLite 位於其 `CREATE TABLE` 之內的外鍵除外），也不會寫出 Oracle 的序列或觸發程序。
+「資料表屬性」的 `Schema SQL` 索引標籤也會對其顯示的那一個資料表遵循這些規則。它不會寫出 Oracle 的序列或觸發程序，也不會寫出外鍵（但 SQLite 位於其 `CREATE TABLE` 之內的外鍵除外）。它也不會寫出 PostgreSQL、Oracle 和 MSSQL 放在資料表之後的註解陳述式，因此在這三種資料庫上不會顯示任何註解。
 
 各部分依下列順序排列，彼此間隔一個空白行：標頭、前置指令碼、`DROP` 陳述式、資料表和後置指令碼。資料表依名稱順序寫出。  
 沒有資料表也沒有指令碼的圖表不會寫出任何內容，即使選擇了標頭也一樣。
+
+無論[名稱顯示](./logical-names.md#name-view)顯示的是什麼，資料表和欄位都會以其物理名稱寫出。連結到定義域的欄位會以其自身的資料類型寫出，該類型由定義域設定，請參閱[定義域與資料類型](./dictionary.md#domains-and-data-types)。
 
 ### Auto Increment {#auto-increment}
 
@@ -181,7 +199,28 @@ Oracle 則會得到序列 `SEQ_<table>`，以及從該序列填入欄位值的�
 - PostgreSQL 只會為在括號外含有 `AT TIME ZONE`、`AND`、`OR`、`IS`、`IN`、`LIKE`、`COLLATE` 或 `= ANY` 等字詞的運算式加上括號，例如 `(now() AT TIME ZONE 'utc')`。
 - MSSQL、Oracle、Snowflake 和 Databricks 會依輸入的原樣寫出所有預設值。
 
+### 註解 {#comments}
+
+資料表或欄位不是空白的註解，或 [`Write logical names into empty comments`](#logical-names-as-comments) 在其位置寫入的邏輯名稱，會依各資料庫寫出註解的方式寫出：
+
+- MySQL 和 MariaDB 會以內嵌方式寫出：欄位以 `COMMENT 'Member ID'` 結尾，資料表則以 `) COMMENT 'Members';` 結束，在 MySQL 的 `If not exists` 批次中也是如此。
+- Snowflake 會以內嵌方式寫出欄位的註解 `COMMENT 'Member ID'`，資料表的註解則在右括號之後獨立成一行：`COMMENT = 'Members';`。
+- Databricks 會以內嵌方式寫出欄位的註解，資料表的註解則在 `USING DELTA` 之後寫成 `COMMENT 'Members';`。
+- PostgreSQL 會緊接在資料表的 `CREATE TABLE` 之後寫出 `COMMENT ON TABLE member IS 'Members';` 和 `COMMENT ON COLUMN member.id IS 'Member ID';`。Oracle 會在資料表、其唯一條件約束，以及其自動遞增序列和觸發程序之後寫出相同的陳述式。
+- MSSQL 會在資料表及其唯一條件約束之後，為每個資料表和每個欄位各寫出一次呼叫，每次呼叫後面都接著 `GO`：`EXECUTE sys.sp_addextendedproperty 'MS_Description', N'Members', 'schema', 'dbo', 'table', 'member'`，欄位則會再加上 `'column', 'id'`。  
+  文字為國家字元常值 `N'…'`，因此 SQL Server 會保留資料庫字碼頁以外的文字（例如韓文），而不會將其儲存為問號。  
+  當 `Bracket` 為 `None` 時，名為 `sales.users` 的資料表會得到結構描述 `sales` 和資料表 `users`，`[sales].[users]` 和 `"sales"."users"` 也是如此，其方括號和雙引號會被移除。沒有結構描述的名稱屬於 `dbo`。位於結構描述之前的部分（例如 `shop.sales.users`）會執行該資料庫的程序 `shop.sys.sp_addextendedproperty`。在其他任何 `Bracket` 下，整個名稱都是資料表，屬於 `dbo`。
+- SQLite 不保存註解，因此會將每個註解寫成其所描述內容上方的一行 `--`：`CREATE TABLE member` 上方的 `-- Members`，以及欄位上方的 `-- Member ID`。
+
+加上引號的註解中的引號會重複一次，例如 `'it''s'` 和 `N'it''s'`，MSSQL 呼叫所傳遞的名稱中的引號也是如此。Databricks 則改以反斜線逸出引號和反斜線，例如 `'it\'s'`，這是每個 Spark 版本都能讀取的形式。SQLite 的 `--` 行不加引號，因此會依輸入的原樣保留引號：`-- it's`。  
+除此之外，文字會依輸入的原樣寫出（包括換行），但有兩種資料庫例外：
+
+- Oracle 會省略空白行（只有空格或定位字元的行也算作空白行），因為 SQL\*Plus 會在空白行處結束陳述式，並略過其餘部分。由 `Members`、一個空白行和 `Active only` 組成的資料表註解，會寫成 `COMMENT ON TABLE member IS 'Members`，並在下一行寫出 `Active only';`。
+- SQLite 會將每段連續的換行寫成一個空格，因為換行會結束 `--` 行，並將其餘部分當作 SQL 執行。同一個註解會寫成 `-- Members Active only`。
+
+這些註解在匯入時如何讀回，在[註解](./file-import-export.md#comments)中說明。
+
 ## 唯讀編輯器 {#read-only-editors}
 
-在 `readonly` 編輯器中，此索引標籤會照常運作：`Database` 和 `Bracket` 仍會變更顯示的 SQL，`Statements`、`Header` 和 `Tables` 仍可使用，`Save file` 和 `Copy` 也仍可儲存和複製 SQL。  
+在 `readonly` 編輯器中，此索引標籤會照常運作：`Database` 和 `Bracket` 仍會變更顯示的 SQL，`Statements`、`Header`、`Write logical names into empty comments` 和 `Tables` 仍可使用，`Save file` 和 `Copy` 也仍可儲存和複製 SQL。  
 只有兩個指令碼輸入框是唯讀的。

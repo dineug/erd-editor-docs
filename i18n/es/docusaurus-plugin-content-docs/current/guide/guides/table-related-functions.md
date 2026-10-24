@@ -1,5 +1,5 @@
 ---
-sidebar_position: 4
+sidebar_position: 5
 description: Selecciona, mueve, copia, duplica y elimina tablas y notas, asigna colores y opciones de vista, define índices y claves alternativas, elige una base de datos, muévete por el lienzo infinito y compara documentos.
 ---
 
@@ -7,7 +7,8 @@ description: Selecciona, mueve, copia, duplica y elimina tablas y notas, asigna 
 
 Todo lo que haces con las tablas y las notas una vez que existen —seleccionarlas, moverlas, copiarlas, eliminarlas, darles color y decidir qué muestra el lienzo—, además de los controles del lienzo que las rodean.  
 Primero vienen los comandos de tablas y notas; después, las propiedades de la tabla, centrarse en tablas, los índices y las claves alternativas, la disposición automática y el proveedor de base de datos; y por último, el propio lienzo: la barra de herramientas del lienzo, el zoom, el desplazamiento de la vista y dónde termina un salto, y el visor de diferencias.  
-Los grupos de tablas, los recuadros que reúnen tablas, tienen su propia página; consulta [Grupos de tablas](./table-groups.md).
+Los grupos de tablas, los recuadros que reúnen tablas, tienen su propia página; consulta [Grupos de tablas](./table-groups.md).  
+También la tienen los nombres lógicos y la vista de nombres, que decide los nombres que muestran las tablas; consulta [Nombres lógicos](./logical-names.md).
 
 ## Selección múltiple {#multiple-selection}
 
@@ -26,11 +27,14 @@ Un clic derecho sobre algo ya seleccionado conserva toda la selección, de modo 
 
 ![Seleccionar tablas con ⌘ + drag y ⌘ + click y, luego, todas las tablas y notas con ⌘ + A](/img/demo-table-select.webp)
 
-En una sesión colaborativa, la selección, la celda con el foco y el cuadro de selección de cada participante se dibujan en el lienzo con el color de ese participante; consulta [Edición colaborativa](../../api/advanced/collaborative-editing.md).
+En una sesión colaborativa, la selección, la celda con el foco y el cuadro de selección de cada participante se dibujan en el lienzo con el color de ese participante; consulta [Edición colaborativa](../../api/advanced/collaborative-editing.md).  
+Si un participante está mirando otra vista de nombres, su celda con el foco se dibuja en la celda que tu vista dibuja en su lugar, por ejemplo, su celda del nombre en tu celda del nombre lógico; consulta [Colaboradores](./logical-names.md#collaborators).
 
 ## Mover varias tablas {#moving-multiple-tables}
 
 Arrastra cualquier tabla o nota que ya forme parte de la selección y toda la selección se mueve con ella; no hace falta ninguna tecla modificadora.  
+Una tabla se arrastra por su encabezado o por cualquiera de sus filas de columna, así que un arrastre que empieza en una fila de columna mueve la tabla, no la columna. Las columnas, en cambio, se mueven con el asa de arrastre que hay junto a la fila con el foco; consulta [Reordenar y mover columnas](./table-editing.md#rearranging-and-moving-columns).  
+En una celda del encabezado o en una fila de columna, la tabla solo empieza a moverse cuando el puntero ha recorrido una distancia corta, así que un clic allí sigue llevando el foco a la celda y un doble clic sigue abriendo su editor. Un arrastre nunca empieza desde el borde de color de una tabla, que abre el selector de color, desde los botones `+` y `x` de su encabezado ni desde la `x` de una fila de columna.  
 Al arrastrar algo que está fuera de la selección, la selección se reduce a ese elemento y solo se mueve él. `Ctrl + drag` (Windows/Linux) o `⌘ + drag` (Mac) conserva la selección en ambos casos.  
 Solo el botón izquierdo del ratón mueve tablas y notas. Un clic derecho elige sobre qué actúa el menú contextual y no mueve nada, y un arrastre con el botón central, en cambio, desplaza la vista del lienzo; consulta [Moverse por el lienzo](#getting-around-the-canvas).
 
@@ -47,7 +51,9 @@ El orden no se guarda: al volver a abrir un diagrama, sus tablas se apilan en el
 Copia las tablas y notas seleccionadas y las vuelve a pegar como tablas y notas nuevas.  
 Atajos de teclado: `Ctrl + C` (Windows/Linux) o `⌘ + C` (Mac), `Ctrl + V` (Windows/Linux) o `⌘ + V` (Mac)
 
-Una tabla copiada conserva su nombre, comentario, columnas y color; una nota copiada conserva su texto, tamaño y color.  
+Una tabla copiada conserva su nombre, nombre lógico, comentario, columnas y color; una nota copiada conserva su texto, tamaño y color.  
+Cada columna copiada conserva su nombre lógico, y cada nombre de tabla y de columna conserva si se derivó de los diccionarios; consulta [Derivar nombres físicos](./dictionary.md#deriving-physical-names).  
+Una columna pegada solo conserva su vínculo con el dominio cuando se cumplen dos condiciones: el diagrama en el que se pega incluye ese mismo dominio, no solo uno con el mismo nombre, y el dominio sigue teniendo el tipo de datos con el que se copió la columna. Si no, la columna se pega sin dominio y conserva el tipo con el que se copió; consulta [Vincular una columna](./dictionary.md#linking-a-column).  
 Los índices y las relaciones también se copian: un índice se copia entero en la tabla copiada, y una relación se copia con su tipo y sus acciones ON DELETE y ON UPDATE cuando las dos tablas que une están en el conjunto copiado. Una relación a medias se descarta en lugar de quedar apuntando al original.  
 Las copias pegadas pasan a ser la nueva selección, y cada vez que vuelves a pegar la misma copia, esta se desplaza otros `50px`, para que los pegados repetidos no se apilen unos encima de otros.  
 Una copia no conserva su [grupo de tablas](./table-groups.md): la tabla pegada no pertenece a ningún grupo, aunque quede dentro del recuadro de un grupo, y un grupo seleccionado no se copia.  
@@ -60,11 +66,12 @@ Cuando hay columnas seleccionadas dentro de una tabla con el foco, el mismo ataj
 ## Duplicar tablas y notas {#duplicating-tables-and-memos}
 
 Mantén pulsado `Alt` y arrastra una tabla o una nota con el botón izquierdo del ratón.  
+Una tabla se agarra por su encabezado o por cualquier fila de columna, así que `Alt + drag` en una fila de columna duplica la tabla y deja intacto el orden de las columnas. Mantener `Alt` pulsado en el asa de arrastre de la columna no duplica nada: la columna se mueve igual que con un arrastre normal del asa; consulta [Reordenar y mover columnas](./table-editing.md#rearranging-and-moving-columns).  
 Una vista previa translúcida sigue al puntero, y al soltar el botón la copia se coloca donde está la vista previa.  
 Si lo que agarras ya forma parte de una selección, se duplica toda la selección. De lo contrario, la selección se sustituye por el elemento que hay bajo el puntero.  
 `Alt + click` sin mover el ratón coloca la copia `50px` más abajo y a la derecha, y avanza un paso más cada vez que ese sitio ya está ocupado.
 
-Un duplicado lleva lo mismo que un pegado: nombres, comentarios, columnas, colores, tamaños de las notas y los índices y relaciones que pertenecen por completo a lo que has copiado. Como un pegado, no queda en ningún grupo de tablas.  
+Un duplicado lleva lo mismo que un [pegado](#copyingpasting-tables-and-memos): nombres y nombres lógicos, comentarios, columnas, colores, tamaños de las notas y los índices y relaciones que pertenecen por completo a lo que has copiado. Como se queda en el mismo diagrama, conserva tal cual el vínculo con el dominio de cada columna. Como un pegado, no queda en ningún grupo de tablas.  
 `Alt + drag` en la barra de título de un grupo de tablas mueve el grupo igual que un arrastre normal; un grupo nunca se duplica.
 
 ![Duplicar una tabla con Alt + drag y, después, Alt + click para otra copia más abajo y a la derecha](/img/demo-table-duplicate.webp)
@@ -119,6 +126,7 @@ Ofrece las siguientes opciones de vista:
 - Table Comment
 - Column Comment
 - DataType
+- Domain
 - Default
 - Not Null
 - Unique
@@ -129,7 +137,9 @@ Ofrece las siguientes opciones de vista:
 - Table Groups
 - Memos
 
-`Unique`, `Alternate Key` y `Auto Increment` están desactivadas de forma predeterminada, y el resto, activadas.  
+`Domain`, `Unique`, `Alternate Key` y `Auto Increment` están desactivadas de forma predeterminada, y el resto, activadas.  
+Qué nombres muestran las tablas no es una opción de vista: `Name View`, justo después de `View Option` en el menú contextual del lienzo, elige nombres físicos, nombres lógicos o ambos; consulta [Cambiar la vista](./logical-names.md#switching-the-view).  
+`Domain` da a cada columna una celda, colocada según el [orden de columnas](./settings.md#adjusting-column-order), con el nombre del dominio al que está vinculada la columna. Una columna que no está vinculada a ningún dominio de los que incluye la hoja `Domains` muestra allí el marcador de posición `domain`, atenuado. La celda se muestra en todas las vistas de nombres. Mientras `Domain` está desactivada, la vista `Logical Names` muestra en su lugar el nombre de un dominio vinculado en la celda del tipo; consulta [La celda Dominio](./logical-names.md#the-domain-cell).  
 `Alternate Key` marca las columnas de cada clave alternativa, como `AK1.1`; consulta [Claves alternativas](#alternate-keys).  
 `Referential Actions` muestra las etiquetas `D:` y `U:` que las acciones ON DELETE y ON UPDATE de una relación colocan en el extremo de su conector que da a la tabla hija; consulta [Cómo leer un conector](./relationship-editing.md#reading-a-connector). Al desactivarla, solo se ocultan esas etiquetas y no se mueve ninguna tabla ni ningún conector.  
 `Table Groups` muestra los [grupos de tablas](./table-groups.md) y los colores de grupo en los encabezados de sus tablas. Al desactivarla, se ocultan en el lienzo, el minimapa y las exportaciones de imagen, no se mueve ninguna tabla y cada tabla sigue en su grupo; consulta [Ocultar grupos](./table-groups.md#hiding-groups). También quita la carpeta `Table Groups` del [explorador](./explorer.md#the-tree) y `New Table Group` de la [barra de herramientas del lienzo](#canvas-toolbar), y la búsqueda del explorador deja de encontrar nombres de grupo.  
@@ -139,19 +149,19 @@ En un editor `readonly`, los interruptores no cambian nada.
 
 ![Activar y desactivar opciones del menú Opciones de vista mientras las tablas se reorganizan, marcar un índice único compuesto como AK1.1 y AK1.2 con Alternate Key y, después, desactivar y volver a activar Memos](/img/demo-view-options.webp)
 
-Las tarjetas del modo `Flow` de la pestaña Visualización no siguen estas opciones: usan su propia [vista de filas](./visualization.md#row-display) y dibujan sus conectores aunque `Relationship` esté desactivada.
+Las tarjetas del modo `Flow` de la pestaña Visualización no siguen estas opciones, `Domain` incluida: usan su propia [vista de filas](./visualization.md#row-display) y dibujan sus conectores aunque `Relationship` esté desactivada. Qué celdas dispone una tarjeta depende solo de la vista de nombres; consulta [Nombres en las tarjetas](./visualization.md#names-on-the-cards).
 
 ## Propiedades de la tabla {#table-properties}
 
 Abre el panel de propiedades de una tabla.  
 Empieza desde `Table Properties` en el menú contextual de la tabla, que lo abre para la tabla en la que has hecho clic con el botón derecho, o selecciona una tabla y pulsa `Alt + Space`.  
-El panel se abre en el centro del lienzo atenuado. Solo se atenúa el lienzo, así que un [explorador](./explorer.md#dialogs-beside-it) abierto sigue abierto y utilizable a su lado. Su encabezado contiene el título `Table Properties`, las cinco tablas abiertas más recientemente como chips, con la actual resaltada, y un botón de cierre. Haz clic en un chip para pasar a esa tabla sin volver a abrir el panel.  
+El panel se abre en el centro del lienzo atenuado. Solo se atenúa el lienzo, así que un [explorador](./explorer.md#dialogs-beside-it) abierto sigue abierto y utilizable a su lado. Su encabezado contiene el título `Table Properties`, las cinco tablas abiertas más recientemente como chips, con la actual resaltada, y un botón de cierre. Cada chip nombra su tabla como lo hace la [vista de nombres](./logical-names.md#beyond-the-canvas). Haz clic en un chip para pasar a esa tabla sin volver a abrir el panel.  
 Debajo del encabezado hay tres pestañas: `Indexes`, `Schema SQL` y `Code Generator`. El panel mantiene el mismo tamaño para las tres, así que cambiar de pestaña no lo mueve ni cambia su tamaño.  
 Ciérralo con el botón de cierre, con `Escape` o haciendo clic fuera de él en el lienzo.  
 Elegir en el explorador una fila que no sea una carpeta, o ir a una coincidencia de su búsqueda, cierra el panel Propiedades de la tabla antes del salto. Lo mismo hace `Ctrl + F` (Windows/Linux) o `⌘ + F` (Mac), que abre la búsqueda del explorador, o pone el cursor de texto en su campo Buscar cuando el explorador ya está abierto. Cualquier otro clic en el explorador, incluido uno en una fila de carpeta, o en el botón `Explorer` de la barra de herramientas, deja abierto el panel Propiedades de la tabla. Un `Escape` pulsado mientras el foco del teclado está en el explorador solo devuelve el teclado al lienzo, así que hace falta un segundo `Escape` para cerrar el panel Propiedades de la tabla.
 
 La pestaña `Indexes` se explica en [Índices](#indexes).  
-La pestaña `Schema SQL` muestra el DDL de la tabla para la [base de datos](#databases) seleccionada: su `CREATE TABLE`, las restricciones independientes que algunas bases de datos escriben para sus columnas únicas, así como sus índices. Siempre escribe sentencias `CREATE` simples, sin cabecera ni scripts previos o posteriores, sea cual sea la configuración de la pestaña [Esquema SQL](./schema-sql.md) de la barra de herramientas. No tiene panel de opciones, y su menú contextual solo ofrece `Database` y `Bracket`.  
+La pestaña `Schema SQL` muestra el DDL de la tabla para la [base de datos](#databases) seleccionada: su `CREATE TABLE`, las restricciones independientes que algunas bases de datos escriben para sus columnas únicas, así como sus índices. Siempre escribe sentencias `CREATE` simples, sin cabecera, sin scripts previos o posteriores y sin nombres lógicos en los comentarios vacíos, sea cual sea la configuración de la pestaña [Esquema SQL](./schema-sql.md) de la barra de herramientas; consulta [Nombres lógicos como comentarios](./schema-sql.md#logical-names-as-comments). No tiene panel de opciones, y su menú contextual solo ofrece `Database` y `Bracket`.  
 La pestaña `Code Generator` genera código solo para esta tabla; consulta [Generador de código](./code-generator.md).
 
 En un editor `readonly`, el panel se sigue abriendo, con un distintivo `Read only` junto a su título, pero su pestaña `Indexes` no permite ninguna edición.
@@ -163,19 +173,19 @@ Empieza desde el menú contextual de la tabla con `Focus on this table`, o selec
 Cuando la tabla en la que haces clic con el botón derecho es una de varias tablas seleccionadas, la opción indica `Focus on selected tables` y se centra en toda la selección. Al hacer clic con el botón derecho en una tabla fuera de la selección, se centra solo en esa tabla.  
 El atajo toma las tablas seleccionadas, deja fuera las notas y no hace nada cuando no hay ninguna tabla seleccionada.  
 Un [grupo de tablas](./table-groups.md) seleccionado no cuenta aquí, ni en el atajo ni en la opción del menú: sus tablas solo se toman cuando están seleccionadas ellas mismas, que es lo que hace `Select tables` en el menú del grupo.  
-Lo que muestra la vista acotada, y cómo volver al diagrama completo, se explica en [Visualización](./visualization.md#focusing-on-tables).
+Lo que muestra la vista acotada, y cómo volver al diagrama completo, se explica en [Visualización](./visualization.md#focusing-on-tables), y cómo retroceder y avanzar por lo que Flow ha mostrado antes, en [Tabla anterior y tabla siguiente](./visualization.md#previous-table-and-next-table).
 
 ## Índices {#indexes}
 
 Los índices se definen en la pestaña `Indexes` del panel de propiedades de la tabla y se incluyen en el Esquema SQL exportado.
 
 El lado izquierdo muestra las claves y los índices de la tabla en dos grupos.  
-`Keys`, que se muestra cuando la tabla tiene alguna, enumera las claves que declaran sus columnas: `PK_<table name>` sobre las columnas marcadas como PK y, después, `UQ_<table name>_<column name>` por cada columna marcada como Único, en el orden de las columnas. Los nombres siguen el Esquema SQL de la base de datos seleccionada, de modo que, con `Bracket` en `None`, una tabla cualificada con esquema como `sales.users` muestra `PK_users` en todas las bases de datos excepto Databricks y Snowflake; consulta [Nombres de tabla cualificados con esquema](./schema-sql.md#schema-qualified-table-names). Cada una lleva la etiqueta `PK` o `UQ` y un candado. Aquí son de solo lectura y solo cambian con los indicadores [PK](./table-editing.md#column-primary-key) y [Único](./table-editing.md#not-null-unique-auto-increment) de las columnas.  
+`Keys`, que se muestra cuando la tabla tiene alguna, enumera las claves que declaran sus columnas: `PK_<table name>` sobre las columnas marcadas como PK y, después, `UQ_<table name>_<column name>` por cada columna marcada como Único, en el orden de las columnas. Los nombres son los físicos que escribe el Esquema SQL de la base de datos seleccionada, sea cual sea la vista de nombres, de modo que, con `Bracket` en `None`, una tabla cualificada con esquema como `sales.users` muestra `PK_users` en todas las bases de datos excepto Databricks y Snowflake; consulta [Nombres de tabla cualificados con esquema](./schema-sql.md#schema-qualified-table-names). Cada una lleva la etiqueta `PK` o `UQ` y un candado. Aquí son de solo lectura y solo cambian con los indicadores [PK](./table-editing.md#column-primary-key) y [Único](./table-editing.md#not-null-unique-auto-increment) de las columnas.  
 `Indexes` enumera los índices de la tabla en el orden en que se añadieron. Cada índice tiene un interruptor `UQ` que lo hace único, un campo de nombre y una `x` que lo elimina. Un índice que es una [clave alternativa](#alternate-keys) muestra también su número, como `AK1`. Añade un índice con `Add Index`, al final de la lista.
 
-El lado derecho muestra las columnas de la tabla bajo `Columns`, cada una con su casilla. No se puede editar nada hasta que se selecciona un índice a la izquierda.  
+El lado derecho muestra las columnas de la tabla bajo `Columns`, cada una con su casilla. Cada fila muestra las mismas celdas que la fila de la columna en el lienzo, según el orden de columnas, las opciones de vista y la [vista de nombres](./logical-names.md#beyond-the-canvas). No se puede editar nada hasta que se selecciona un índice a la izquierda.  
 Marca una columna para añadirla al índice seleccionado y desmárcala para quitarla. Al seleccionar una clave se muestran sus columnas marcadas, pero las casillas siguen deshabilitadas.  
-Las columnas del índice seleccionado aparecen debajo, bajo `Index order`. Arrástralas por el asa de arrastre para reordenarlas, y haz clic en el chip `ASC` o `DESC` de una fila para invertir su orden. En una clave alternativa, cada fila termina con su marca `AK<n>.<m>`. La lista muestra tres filas a la vez y se desplaza para mostrar el resto.
+Las columnas del índice seleccionado aparecen debajo, bajo `Index order`, cada una con el nombre que le da la vista de nombres, con el nombre entre paréntesis después del nombre lógico en `Both Names`, como `Member Number (member_no)`. Arrástralas por el asa de arrastre para reordenarlas, y haz clic en el chip `ASC` o `DESC` de una fila para invertir su orden. En una clave alternativa, cada fila termina con su marca `AK<n>.<m>`. La lista muestra tres filas a la vez y se desplaza para mostrar el resto.
 
 En un editor `readonly`, al seleccionar una clave o un índice se siguen mostrando sus columnas, pero no hay `Add Index` ni `x`, y no se puede cambiar nada más de la pestaña.
 
@@ -216,12 +226,12 @@ Abre `Auto Layout` desde el menú contextual del lienzo o desde la búsqueda rá
 | `Tree - horizontal` | Las mismas capas, de izquierda a derecha. |
 
 `Force` abre una vista previa mientras la disposición se estabiliza, con `Apply` y `Cancel` en el aviso que muestra.  
-La vista previa se encuadra sobre el diagrama tal como estaba cuando empezó la disposición, así que las tablas pueden salirse del encuadre mientras la disposición se estabiliza. Se dibuja al `70%` o menos, así que sus tablas se ven reducidas a su nombre y su borde de color.  
+La vista previa se encuadra sobre el diagrama tal como estaba cuando empezó la disposición, así que las tablas pueden salirse del encuadre mientras la disposición se estabiliza. Se dibuja al `70%` o menos, así que sus tablas se ven reducidas a su nombre y su borde de color. Se abre en la vista de nombres que estás mirando, sea cual sea la vista que conserva el archivo; consulta [Más allá del lienzo](./logical-names.md#beyond-the-canvas).  
 `Apply` conserva las posiciones tal como están en ese momento, y la disposición se aplica sola en cuanto se detiene. `Cancel` o `Escape` deja el diagrama como estaba.
 
 Las otras tres se calculan de una vez, fuera del hilo principal, así que no hay nada que ver: se muestra un aviso mientras se calcula la disposición, y el resultado final se centra en la zona que ya ocupa el diagrama. `Cancel` o `Escape` descarta una disposición que ya no quieres esperar, y en un host que no ejecuta ningún worker compartido termina en `Could not place tables`; consulta [Web Workers](../../api/installation.md#web-workers). Una disposición que no ha vuelto en 60 segundos termina igual.
 
-Elijas la que elijas, se mueven las tablas y los grupos de tablas, y las notas se quedan donde están. Una relación de una tabla consigo misma se ignora, y varias relaciones entre las mismas dos tablas cuentan como una.  
+Elijas la que elijas, se mueven las tablas y los grupos de tablas, y las notas se quedan donde están. Las tablas se colocan con los anchos que ocupan en la vista de nombres que estás mirando. Una relación de una tabla consigo misma se ignora, y varias relaciones entre las mismas dos tablas cuentan como una.  
 Todas las disposiciones mantienen juntas las tablas de cada grupo, se muestren o no los grupos, y ajustan cada grupo que contiene tablas alrededor de ellas; consulta [Grupos de tablas](./table-groups.md#auto-layout).  
 El resultado queda como una sola entrada del historial, así que deshacer una vez devuelve cada tabla y cada grupo a donde estaba.
 
@@ -259,6 +269,7 @@ Una pequeña barra de herramientas flota sobre el centro del borde inferior del 
 - `New Table`, `New Memo` y `New Table Group`. `New Table` añade una tabla como `Alt + N`, y `New Memo` añade una nota como `Alt + M`. `New Table Group` prepara el [dibujo de grupos](./table-groups.md#drawing-a-group) como `Alt + G` y desactiva la mano; un segundo clic, como un segundo `Alt + G`, termina el dibujo sin añadir ningún grupo. `New Memo` no aparece mientras Opciones de vista → `Memos` oculta las notas, ni `New Table Group` mientras Opciones de vista → `Table Groups` oculta los grupos. Un editor `readonly` no muestra ninguno de los tres.
 - El zoom: `Zoom out`, el zoom actual como porcentaje y `Zoom in`. Los dos botones cambian el zoom por pasos igual que los atajos de zoom, y al hacer clic en el porcentaje el zoom vuelve al `100%`.
 - Las cuatro notaciones de relación, las mismas cuatro con las que empiezas una relación; consulta [Empezar a editar](./editing-start.md). Al elegir una se vuelve al puntero, ya que una relación se dibuja haciendo clic en dos tablas.
+- `Name View`, un botón con una flecha hacia abajo que indica la vista vigente: `Physical Names`, `Logical Names` o `Both Names`. Mantiene el mismo ancho sea cual sea la vista que indica, así que un cambio de vista nunca desplaza la barra de herramientas. Un clic abre encima de la barra de herramientas una lista con las tres, con la vigente marcada. Al elegir una se cambia a ella y se cierra la lista; un segundo clic en el botón, una pulsación en cualquier otra parte o `Escape` cierran la lista sin cambiar de vista. Un editor `readonly` también lo muestra. Lo que dibuja cada vista se explica en [Vista de nombres](./logical-names.md#name-view), y si un cambio se guarda, en [Cambiar la vista](./logical-names.md#switching-the-view).
 - El modo zen, `Alt + Z`, que quita todo excepto el lienzo y esta barra de herramientas. Volver a pulsar `Alt + Z`, o el botón, recupera el resto. Un explorador abierto se oculta con el resto, sin cerrarse, y vuelve con él. Aún se puede abrir durante el modo zen; consulta [Cuándo se aparta](./explorer.md#when-it-stands-aside).
 - La brújula `Go to content`, que se añade al final de la barra de herramientas solo mientras no hay en pantalla ninguna tabla, nota visible ni grupo de tablas visible; consulta [Moverse por el lienzo](#getting-around-the-canvas).
 
@@ -277,7 +288,7 @@ Atajos de teclado: `Ctrl + Plus` (Windows/Linux) o `⌘ + Plus` (Mac), `Ctrl + M
 Los botones `Zoom out` y `Zoom in` de la [barra de herramientas del lienzo](#canvas-toolbar) cambian el zoom por pasos como los atajos `Minus` y `Plus`: cada pulsación lo mueve 4 puntos porcentuales, manteniendo el centro de la pantalla donde está. El porcentaje entre ellos muestra el zoom actual, y al hacer clic en él se vuelve directamente al `100%`, como con `Ctrl + 0` (Windows/Linux) o `⌘ + 0` (Mac).
 
 El zoom va del `10%` al `150%`.  
-Al `70%` o menos, las tablas se reducen a su nombre y su borde de color, y la edición de celdas, los atajos de celda y copiar y pegar dejan de funcionar hasta que vuelves a acercar el zoom.
+Al `70%` o menos, las tablas se reducen a su nombre y su borde de color, y la edición de celdas, los atajos de celda y copiar y pegar dejan de funcionar hasta que vuelves a acercar el zoom. El nombre que muestra una tabla reducida sigue la vista de nombres; consulta [Vista de nombres](./logical-names.md#name-view).
 
 Los mismos tres atajos también hacen zoom en la pestaña Visualización, tanto en modo `Graph` como en `Flow`, cada modo dentro de su propio rango; consulta [Visualización](./visualization.md#toolbar).
 
@@ -302,11 +313,11 @@ Arrastrar el cuadro de desplazamiento de una barra o el rectángulo del área vi
 
 Si un desplazamiento de la vista deja la pantalla sin ninguna tabla, nota visible ni grupo de tablas visible, se añade al final de la [barra de herramientas del lienzo](#canvas-toolbar) una brújula `Go to content`, con una flecha que señala el más cercano y la distancia a la que se encuentra. Haz clic en ella para centrar ese elemento sin cambiar el zoom.
 
-![Desplazar la vista arrastrando el lienzo vacío, con un arrastre con el botón central sobre una tabla, con el minimapa y con la rueda, y volver después siguiendo la brújula Go to content](/img/demo-canvas-navigation.webp)
+![Desplazar la vista arrastrando el lienzo vacío, con la rueda, con un arrastre con el botón central sobre una tabla y desde el minimapa, y después con Shift + wheel más allá del contenido y volver siguiendo la brújula Go to content](/img/demo-canvas-navigation.webp)
 
 ### Dónde termina un salto {#where-a-jump-lands}
 
-Todo salto que te lleva a algo del lienzo mueve la vista según una misma regla: los resultados `#`, `@` y `:` de la [búsqueda rápida](./quick-search.md#searching-the-diagram), las filas del [explorador](./explorer.md#going-to-a-row) y las coincidencias de su búsqueda [Buscar y reemplazar](./find-and-replace.md#going-to-a-match), las filas de la lista del [visor de diferencias](#going-to-a-change), el [botón de la tarjeta](./visualization.md#card-buttons) de enlace externo en Flow y el destino de un [Importar y añadir](./file-import-export.md#import-and-add). Cada una de esas secciones indica qué selecciona el salto; esta indica adónde va la vista.
+Todo salto que te lleva a algo del lienzo mueve la vista según una misma regla: los resultados `#`, `@` y `:` de la [búsqueda rápida](./quick-search.md#searching-the-diagram), las filas del [explorador](./explorer.md#going-to-a-row) y las coincidencias de su búsqueda [Buscar y reemplazar](./find-and-replace.md#going-to-a-match), las filas de la lista del [visor de diferencias](#going-to-a-change), el [botón de la tarjeta](./visualization.md#card-buttons) de enlace externo en Flow, una comprobación que nombra una tabla o una columna en la [hoja Comprobaciones](./dictionary.md#the-checks-sheet) de la pestaña Diccionario y el destino de un [Importar y añadir](./file-import-export.md#import-and-add). Cada una de esas secciones indica qué selecciona el salto; esta indica adónde va la vista.
 
 Un salto nunca cambia el zoom y hace como mucho un desplazamiento. Desde otra pestaña, primero cambia a la pestaña ERD.  
 Mide el lienzo tal como se muestra: por debajo de la barra de herramientas superior, o con toda la altura en el modo zen, y a la derecha de un explorador abierto, que estrecha el lienzo en lugar de taparlo.
@@ -322,8 +333,8 @@ Así, una tabla pequeña cerca del borde izquierdo del lienzo, a media altura, s
 Lo que un salto muestra y la parte clave que debe verse cuando no cabe entero:
 
 - Una tabla: la tabla entera, por la franja del nombre de su parte superior, o por su celda de comentario si la coincidencia está en el comentario de la tabla mientras Opciones de vista → `Table Comment` muestra los comentarios. Al `70%` o menos, donde las tablas se reducen a su nombre, por el nombre en el centro del recuadro.
-- Una columna: su fila, por la celda a la que va el salto: su nombre, o el comentario en el que está la coincidencia mientras Opciones de vista → `Column Comment` muestra los comentarios. Al `70%` o menos, una columna muestra su tabla según la regla de la tabla.
-- Una celda demasiado ancha para verse entera, como un comentario largo: por el texto coincidente que contiene.
+- Una columna: su fila, por la celda a la que va el salto: su nombre, su nombre lógico para una coincidencia en el nombre lógico o una comprobación sobre el nombre lógico, su celda Dominio para una comprobación sobre su dominio, o el comentario en el que está la coincidencia mientras Opciones de vista → `Column Comment` muestra los comentarios. Donde la fila no dibuja esa celda, el salto va a la celda que se dibuja en su lugar: el nombre lógico en lugar del nombre en `Logical Names`, el nombre en lugar del nombre lógico en `Physical Names`, y la celda del tipo en lugar de la celda Dominio mientras Opciones de vista → `Domain` está desactivada, o la fila entera mientras `DataType` también está desactivada. Al `70%` o menos, una columna muestra su tabla según la regla de la tabla.
+- Una celda demasiado ancha para verse entera, como un comentario largo: por el texto coincidente que contiene. Un salto a la celda que se dibuja en lugar de aquella en la que está la coincidencia, como el nombre para una coincidencia en el nombre lógico en `Physical Names`, no se guía por el texto.
 - Una relación: el recuadro que abarca sus dos tablas, por la tabla hija.
 - Un grupo de tablas: su recuadro, por su barra de título.
 - Una nota, o el bloque que coloca un Importar y añadir: entero.
@@ -337,7 +348,7 @@ Puedes comparar documentos guardados anteriormente con el documento actual.
 Elige `Diff Viewer` en el menú contextual del lienzo y, a continuación, un documento `.json` que hayas exportado antes.
 
 La vista se abre sobre el lienzo: lo que ha cambiado a la izquierda y, después, el documento guardado y el actual, uno al lado del otro.  
-El documento actual se compara tal como está cuando se abre la vista; los cambios hechos después, incluidos los de un colaborador, no llegan a la vista. Un [explorador](./explorer.md#when-it-stands-aside) abierto se oculta mientras la vista está abierta, así que la vista ocupa todo el ancho del editor.  
+El documento actual se compara tal como está cuando se abre la vista; los cambios hechos después, incluidos los de un colaborador, no llegan a la vista. Los dos lados se abren, y se mantienen, en la vista de nombres que estás mirando, sea cual sea la vista que conserva cada archivo; consulta [Más allá del lienzo](./logical-names.md#beyond-the-canvas). Un [explorador](./explorer.md#when-it-stands-aside) abierto se oculta mientras la vista está abierta, así que la vista ocupa todo el ancho del editor.  
 En cada lado, la vista se desplaza con la rueda, arrastrando una zona vacía o el cuerpo de un grupo de tablas, o arrastrando con el botón central en cualquier punto del lado, y se hace zoom con `Ctrl + Wheel` (Windows/Linux), `⌘ + Wheel` (Mac) o pellizcando. Al `70%` o menos, sus tablas se reducen igual que en el lienzo; consulta [Marcas en los dos lados](#marks-on-the-two-sides).  
 Los dos lados son de solo lectura, así que no se modifica nada de tu documento. Cada uno conserva su propia selección, y un clic en una tabla allí la selecciona solo en ese lado.  
 Cierra la vista con el botón `Close` del aviso `Diff Viewer` que aparece al abrirla, o con `Escape`.
@@ -360,13 +371,14 @@ Qué cuenta como cambio:
 - Una nota: su texto, posición, tamaño y color.
 - Un grupo de tablas: su nombre, las tablas que contiene, color, posición y tamaño.
 
-Así, una tabla, nota o grupo que solo se ha movido, ha cambiado de tamaño o ha cambiado de color cuenta como modificado. Las posiciones y los tamaños se comparan en píxeles enteros, y el orden de apilamiento y el punto donde un conector se une a una tabla nunca cuentan.
+Así, una tabla, nota o grupo que solo se ha movido, ha cambiado de tamaño o ha cambiado de color cuenta como modificado. Las posiciones y los tamaños se comparan en píxeles enteros, y el orden de apilamiento y el punto donde un conector se une a una tabla nunca cuentan.  
+No se comparan los nombres lógicos, los vínculos con dominios ni las palabras, los términos y los dominios de la pestaña [Diccionario](./dictionary.md), así que un cambio solo en ellos no se enumera ni se marca. Un tipo de datos cambiado por un dominio sí cuenta, como un cambio del tipo de datos de la columna.
 
 ### El árbol de cambios {#the-change-tree}
 
 La lista de la izquierda se dibuja como el [árbol del explorador](./explorer.md#the-tree) y solo contiene lo que ha cambiado: `Tables`, `Table Groups` y `Memos`, que solo se muestran cuando contienen alguna fila, y, bajo una tabla, sus propias carpetas `Columns`, `Indexes` y `Foreign Keys`. Una clave externa aparece bajo su tabla hija, y una tabla añadida o eliminada no muestra nada dentro.  
 Cada carpeta muestra cuántas filas contiene, y todas las carpetas y tablas empiezan expandidas.  
-Las tablas y los grupos de tablas se ordenan por nombre, sin distinguir mayúsculas y minúsculas. Las notas, y las columnas, índices y claves externas de una tabla, mantienen el orden del documento actual, y un elemento eliminado se vuelve a colocar donde estaba. Una fila de nota muestra la primera línea de la nota, y una fila de clave externa muestra sus columnas hijas y, después, `→` con la tabla padre y sus columnas, como `user_id → users(id)`. Un nombre vacío se muestra como `unnamed` en cursiva.
+Una fila de tabla o de columna se nombra en la vista de nombres en la que se abrieron los lados. En `Both Names` muestra el nombre lógico con el nombre detrás, atenuado, y en una fila eliminada el nombre atenuado se tacha junto con el resto. Las tablas y los grupos de tablas se ordenan por nombre, sin distinguir mayúsculas y minúsculas, sea cual sea la vista. Las notas, y las columnas, índices y claves externas de una tabla, mantienen el orden del documento actual, y un elemento eliminado se vuelve a colocar donde estaba. Una fila de nota muestra la primera línea de la nota, y una fila de clave externa muestra sus columnas hijas y, después, `→` con la tabla padre y sus columnas, como `user_id → users(id)`. Un nombre vacío se muestra como `unnamed` en cursiva.
 
 Cada fila termina con una letra, y una fila marcada con `A`, `D`, `M` o `R` tiene su nombre en el color de la letra:
 
@@ -378,7 +390,7 @@ Cada fila termina con una letra, y una fila marcada con `A`, `D`, `M` o `R` tien
 
 Pasa el puntero por encima del nombre de una fila para ver su descripción emergente: el estado, `Added`, `Deleted`, `Modified`, `Renamed` o `Changed inside`, y después una línea por cambio, como `Name: users → members` o `NN: ✗ → ✓`. Un texto se cita por su primera línea, cortada a partir de 40 caracteres, y un valor vacío se muestra como `—`. La descripción emergente de un elemento añadido o eliminado es solo su estado.
 
-`Filter by name`, encima del árbol, conserva las filas cuyo nombre actual o guardado contiene lo que escribes, sin distinguir mayúsculas y minúsculas. Una tabla cuyo nombre coincide conserva todas sus filas, y una que no coincide se queda solo con las filas que coinciden. Un filtro que no coincide con nada deja el árbol vacío.  
+`Filter by name`, encima del árbol, conserva las filas cuyo nombre actual o guardado, o cuyo nombre lógico actual o guardado, contiene lo que escribes, sin distinguir mayúsculas y minúsculas, en todas las vistas de nombres. Una tabla cuyo nombre coincide conserva todas sus filas, y una que no coincide se queda solo con las filas que coinciden. Un filtro que no coincide con nada deja el árbol vacío.  
 Cuando los dos documentos no difieren en nada, el árbol indica `No changes`.
 
 Arrastra el borde derecho del árbol para ensancharlo o estrecharlo, de `200px` a `480px`, y haz doble clic en el borde para devolverlo a `260px`. Cada comparación se abre a `260px`, y los dos lados se reparten a partes iguales el resto del ancho.  
@@ -407,5 +419,7 @@ Los dos lados colorean el texto, los contornos y los conectores, y no rellenan n
 - Un cambio de índice no marca nada en ninguno de los lados; solo se muestra en el árbol.
 
 Cada lado sigue las opciones de vista de su propio documento. Un cambio en una celda que ese lado no dibuja se muestra, en su lugar, en el nombre. Un cambio de columna en una celda que oculta una opción de vista, como `Unique` o `Auto Increment`, ambas desactivadas de forma predeterminada, pone en ámbar el nombre de la columna, y lo mismo hace un cambio de clave principal en una fila que no muestra icono de clave. Un cambio en el comentario de la tabla mientras `Table Comment` está desactivada pone en ámbar el nombre de la tabla. El azul de un cambio de nombre prevalece sobre este ámbar. Una nota o un grupo de tablas que su documento oculta aparece en el árbol, pero no se dibuja en ese lado.
+
+En `Logical Names`, que no dibuja ninguna celda del nombre, el azul de un cambio de nombre y el ámbar de un cambio en una celda que el lado no dibuja van en el nombre lógico que se dibuja en lugar del nombre. Un cambio de tipo de datos pone en ámbar la celda del tipo en todas las vistas de nombres, incluso donde la celda muestra el nombre de un dominio. Ninguno de los dos lados dibuja los colores que las comprobaciones del diccionario dan a los nombres en el lienzo; consulta [Marcas en el lienzo](./dictionary.md#marks-on-the-canvas).
 
 Al `70%` o menos, las tablas reducidas conservan su contorno. El nombre conserva el verde o el rojo de una tabla añadida o eliminada, o el azul de un cambio de nombre, y, si no, toma el ámbar de un cambio de comentario. Los cambios de columna no se dibujan hasta que vuelves a acercar el zoom; el árbol sigue mostrándolos.

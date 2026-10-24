@@ -38,7 +38,8 @@ Panel sa nikdy nevykreslí užší ako `200px` a plátnu ponechá aspoň `320px`
 
 Volanie `setInitialValue('')` začne nový, prázdny dokument. Priradenie vlastnosti `value` naopak načíta dokument ako úpravu, takže sa dostane do histórie zmien.
 Od verzie `4.0.0` je vlastnosť `editor.value` dokument vo forme, v akej ho uchováva súbor, a práve ju treba ukladať. Vlastnosť `editor.runtimeValue` je dokument tak, ako ho uchováva editor, vrátane odstránených entít: slúži na inicializáciu spolupracovníka a nikdy sa nedostane do súboru – pozrite si časť [runtimeValue](./erd-editor-element.md#runtimevalue).
-Od verzie `4.0.0` má nový dokument zapnuté aj všetky [zamknutia nastavení](../guide/guides/settings.md#lock): zobrazovacej oblasti, karty, jazyka na karte Generátor kódu, oboch štýlov názvov a typu úvodzoviek. Posúvanie, zmena priblíženia, prepínanie kariet alebo zmena niektorého z týchto nastavení ponechá `editor.value` bez zmeny a nevyvolá udalosť `change`. Dokument načítaný z textu si ponechá zamknutia, ktoré uvádza. Dokument, ktorý žiadne neuvádza, napríklad každý súbor uložený pred verziou `4.0.0`, sa otvorí so všetkými zamknutiami zapnutými, s priblížením 100 % a na karte ERD bez ohľadu na to, aké zobrazenie a akú kartu uložil. Jeho zobrazenie je zamknuté v počiatku `0, 0` a otvorí sa namiesto toho na diagrame, ak sa tam nevykresľuje žiadna jeho časť – pozrite si časť [setInitialValue](./erd-editor-element.md#setinitialvalue).
+Od verzie `4.0.0` má nový dokument zapnuté aj všetky [zamknutia nastavení](../guide/guides/settings.md#lock): zobrazovacej oblasti, karty, jazyka na karte Generátor kódu, oboch štýlov názvov, typu úvodzoviek a od verzie `4.2.0` aj [Zobrazenia názvov](../guide/guides/logical-names.md#name-view). Posúvanie, zmena priblíženia, prepínanie kariet, prepnutie Zobrazenia názvov alebo zmena niektorého z ostatných nastavení ponechá `editor.value` bez zmeny a nevyvolá udalosť `change`. Dokument načítaný z textu si ponechá zamknutia, ktoré uvádza. Dokument, ktorý žiadne neuvádza, napríklad každý súbor uložený pred verziou `4.0.0`, sa otvorí so všetkými zamknutiami zapnutými, s priblížením 100 % a na karte ERD bez ohľadu na to, akú zobrazovaciu oblasť a akú kartu uložil. Jeho zobrazovacia oblasť je zamknutá v počiatku `0, 0` a zobrazenie sa namiesto toho otvorí na diagrame, ak sa tam nevykresľuje žiadna jeho časť – pozrite si časť [setInitialValue](./erd-editor-element.md#setinitialvalue).
+Súbor uložený pred verziou `4.2.0` sa otvorí so Zobrazením názvov zamknutým na zobrazení `Physical Names`, a to aj vtedy, keď má všetky ostatné zamknutia vypnuté. Editor verzie `4.0.0` alebo `4.1.0` pri uložení ponechá zamknutie Zobrazenia názvov tak, ako je, ale samotné zobrazenie zahodí, takže súbor verzie `4.2.0` uložený s odomknutým Zobrazením názvov zostane odomknutý, no znova sa otvorí v zobrazení `Physical Names`.
 Zvyšok API opisuje stránka [ErdEditorElement](./erd-editor-element.md).
 
 ### CDN {#cdn}
@@ -56,7 +57,7 @@ Zvyšok API opisuje stránka [ErdEditorElement](./erd-editor-element.md).
 ```
 
 Služba `esm.run` za vás rozrieši externé závislosti balíka, takže tento spôsob funguje bez bundlera.
-Adresa URL bez verzie vždy poskytuje najnovšiu verziu. Ak nechcete, aby sa na vašu stránku bez ohlásenia dostala nová hlavná verzia, pripnite si verziu – `https://esm.run/@dineug/erd-editor@4.1.0`.
+Adresa URL bez verzie vždy poskytuje najnovšiu verziu. Ak nechcete, aby sa na vašu stránku bez ohlásenia dostala nová hlavná verzia, pripnite si verziu – `https://esm.run/@dineug/erd-editor@4.2.0`.
 Verzia `4.0.0` je práve takou novou hlavnou verziou: stránka, ktorá musí zostať na verzii 3.x, si pripne `@3.10.0` – pozrite si časť [Prechod z verzie 3.x](#upgrading-from-3x).
 
 ### Značka script {#script-tag}
@@ -66,14 +67,14 @@ Práve naň odkazujú polia `unpkg` a `jsdelivr`, takže ho na oboch CDN poskytu
 
 ```html
 <erd-editor></erd-editor>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@4.1.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@4.2.0"></script>
 <script>
   const editor = document.querySelector('erd-editor');
   editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
 </script>
 ```
 
-Jeho načítanie zaregistruje element `<erd-editor>` rovnakým spôsobom; objekt `window.ErdEditor` obsahuje dve spätné volania pre súbory, `ErdEditor.setExportFileCallback` a `ErdEditor.setImportFileCallback`, a od verzie `3.9.2` aj `ErdEditor.createKeyBindingMap`.
+Jeho načítanie zaregistruje element `<erd-editor>` rovnakým spôsobom; objekt `window.ErdEditor` obsahuje dve spätné volania pre súbory, `ErdEditor.setExportFileCallback` a `ErdEditor.setImportFileCallback`, a od verzie `3.9.2` aj `ErdEditor.createKeyBindingMap`. Od verzie `4.2.0` obsahuje aj `ErdEditor.dictionaryRowChords` – pozrite si časť [dictionaryRowChords](./erd-editor-element.md#dictionaryrowchords).
 Mapa exportov naďalej smeruje bundler na moduly ES, takže inštalácia z npm tento súbor nikdy nepoužije.
 
 ### HTML {#html}
@@ -166,17 +167,18 @@ V zostavení pre [značku script](#script-tag) sú všetky tri priamo v súbore 
 
 ## Vstupné body {#entry-points}
 
-Import balíka `@dineug/erd-editor` zaregistruje element `<erd-editor>` ako vedľajší účinok. Okrem toho exportuje typ elementu, dva settery spätných volaní, od verzie `3.9.2` predvolené klávesové skratky s ich typmi a od verzie `4.0.0` typy jazykov zobrazenia a typ možností metódy `getSchemaSQL()`.
+Import balíka `@dineug/erd-editor` zaregistruje element `<erd-editor>` ako vedľajší účinok. Okrem toho exportuje typ elementu, dva settery spätných volaní, od verzie `3.9.2` predvolené klávesové skratky s ich typmi, od verzie `4.0.0` typy jazykov zobrazenia a typ možností metódy `getSchemaSQL()` a od verzie `4.2.0` kombinácie klávesov pre riadky na karte Slovník.
 
 | Export | Popis |
 | --- | --- |
 | `ErdEditorElement` (typ) | Rozhranie elementu – pozrite si stránku [ErdEditorElement](./erd-editor-element.md). |
 | `setExportFileCallback(cb)` | Nahrádza sťahovanie v prehliadači, `(blob, { fileName }) => void`. |
-| `setImportFileCallback(cb)` | Nahrádza výber súboru v prehliadači, `({ type, op, accept, mode }) => void`; `mode` od verzie `4.0.0`. |
+| `setImportFileCallback(cb)` | Nahrádza výber súboru v prehliadači, `({ type, op, accept, mode }) => void`; `mode` od verzie `4.0.0`. Od verzie `4.2.0` tlačidlo `Import CSV` na karte Slovník otvorí výber súboru v prehliadači aj vtedy, keď je spätné volanie nastavené – pozrite si časť [Dialógové okná súborov](#file-dialogs). |
 | `createKeyBindingMap()` | Pri každom volaní vráti predvolené klávesové skratky ako nový objekt `KeyBindingMap` – pozrite si časť [createKeyBindingMap](./erd-editor-element.md#createkeybindingmap). |
 | `KeyBindingMap`, `KeyBindingName`, `ShortcutOption` (typy) | Mapa klávesových skratiek, zjednotenie (union) názvov jej príkazov a jedna klávesová skratka. |
+| `dictionaryRowChords(map)` | Od verzie `4.2.0`. Pri každom volaní vráti ako nové pole `ShortcutOption[]` kombinácie klávesov, ktorými mriežka na karte [Slovník](../guide/guides/dictionary.md#adding-and-deleting-rows) vkladá a odstraňuje riadky podľa odovzdaného objektu `KeyBindingMap`. Kombinácia, ktorá vkladá riadky nad výber, pri predvolených skratkách `Alt+Shift+Enter`, nie je súčasťou žiadnej klávesovej skratky – pozrite si časť [dictionaryRowChords](./erd-editor-element.md#dictionaryrowchords). |
 | `LocaleCode`, `LocaleOption` (typy) | Od verzie `4.0.0`. Kódy 25 jazykov zobrazenia a tieto kódy spolu s `'system'`, ktoré prijíma metóda `setLocale()` – pozrite si časť [Jazyk zobrazenia](./erd-editor-element.md#display-language). |
-| `SchemaSQLOptions` (typ) | Od verzie `4.0.0`. Možnosti `statements` a `header`, ktoré prijíma metóda `getSchemaSQL()` – pozrite si časť [getSchemaSQL](./erd-editor-element.md#getschemasql). |
+| `SchemaSQLOptions` (typ) | Od verzie `4.0.0`. Možnosti, ktoré prijíma metóda `getSchemaSQL()`: `statements`, `header` a od verzie `4.2.0` `logicalNameAsComment` – pozrite si časť [getSchemaSQL](./erd-editor-element.md#getschemasql). |
 
 Druhým vstupným bodom je `@dineug/erd-editor/engine.js`. Spúšťa úložisko dokumentu bez DOM, takže funguje v prostredí Web Worker – pozrite si stránku [Vzdialené ukladanie](./advanced/remote-storage.md).
 Exportuje funkciu `createReplicationStore` a typ `ReplicationStore`. Od verzie `3.10.0` exportuje aj typ `ReplicationChange`, `{ value: string; changed: boolean }`, ktorý dostáva poslucháč udalosti `change` repliky – pozrite si časť [on@change](./advanced/remote-storage.md#onchange).
@@ -188,6 +190,7 @@ Od verzie `3.9.1` existuje tretí vstupný bod, `@dineug/erd-editor/peer.js`: ú
 
 Import a export prechádzajú cez nastaviteľné spätné volania, takže hostiteľ bez dialógového okna súborov prehliadača – napríklad webview v IDE – môže poskytnúť vlastné.
 Tieto dve spätné volania nie sú symetrické: export vám odovzdá hotový súbor, kým import o súbor iba požiada, a obsah do editora vložíte späť sami.
+Od verzie `4.2.0` je tlačidlo `Import CSV` na karte Slovník jediným importom, ktorý nikdy nevolá spätné volanie importu, ktorého parameter `type` nemá žiadnu hodnotu pre CSV. Vždy otvorí vlastný výber súboru prehliadača, a to pre súbory `.csv` – pozrite si časť [Import a export CSV](../guide/guides/dictionary.md#importing-and-exporting-csv).
 
 Parameter `op` je `set` alebo `diff` – `diff` smeruje do metódy `setDiffValue()` bez ohľadu na hodnotu `type`. Inak metódu určuje parameter `type` a parameter `accept` obsahuje prípony daného typu, pripravené na odovzdanie dialógovému oknu súborov hostiteľa.
 Od verzie `4.0.0` obsahuje operácia `set` hodnotu `mode: 'append'`, keď používateľ vybral možnosť [Importovať a pridať](../guide/guides/file-import-export.md#import-and-add), a pri obyčajnom importe parameter `mode` chýba. Odovzdajte ho ďalej: spätné volanie, ktoré ho zahodí, nahradí diagram, do ktorého chcel používateľ pridávať.
@@ -229,8 +232,8 @@ setImportFileCallback(async ({ type, op, accept, mode }) => {
 Pre každú hodnotu `type`, ktorú spracúvate, majte samostatnú vetvu a ostatné hodnoty ignorujte.
 Nahrádzajúce volanie `setSchemaJSON()`, rovnako ako priradenie vlastnosti `value`, pred spracovaním vymaže dokument, takže smerovanie obsahu, ktorý nie je dokumentom `.erd.json`, do tohto volania – cez univerzálnu vetvu `else` alebo preto, že neskôr pridaný `type` prepadol až sem – diagram vyprázdni namiesto toho, aby sa čokoľvek importovalo.
 
-Hodnota `fileName`, ktorú editor vygeneruje, je `<database name>-<timestamp>` s príponou súboru, kde časová pečiatka je miestny čas vo formáte `yyyy-MM-dd'T'HH_mm_ss`. Ak je názov databázy prázdny, použije sa `unnamed`.
-Spätné volanie exportu dostáva tieto súbory. Od verzie `4.0.0` medzi ne patria aj súbor SVG a súbory z karty Generátor kódu, pričom súbor `.sql` pochádza z tlačidla `Save file` na karte Schéma SQL, a nie priamo z ponuky `Export`.
+Hodnota `fileName`, ktorú editor vygeneruje, je `<database name>-<timestamp>` s príponou súboru, kde časová pečiatka je miestny čas vo formáte `yyyy-MM-dd'T'HH_mm_ss`. Ak je názov databázy prázdny, použije sa `unnamed`. Súbor CSV z karty Slovník uvádza pred príponou názov svojho hárka, napríklad `<database name>-<timestamp>-words.csv`.
+Spätné volanie exportu dostáva tieto súbory. Od verzie `4.0.0` medzi ne patria aj súbor SVG a súbory z karty Generátor kódu, pričom súbor `.sql` pochádza z tlačidla `Save file` na karte Schéma SQL, a nie priamo z ponuky `Export`. Od verzie `4.2.0` medzi ne patrí aj súbor CSV z karty Slovník.
 
 | Súbor | Prípona | `type` objektu Blob |
 | --- | --- | --- |
@@ -238,6 +241,7 @@ Spätné volanie exportu dostáva tieto súbory. Od verzie `4.0.0` medzi ne patr
 | Súbor z tlačidla `Save file` na karte Schéma SQL s textom, ktorý karta zobrazuje – pozrite si stránku [Schéma SQL](../guide/guides/schema-sql.md) | `.sql` | žiadny |
 | Dialógové okno [Exportovať obrázok](../guide/guides/file-import-export.md#image) | `.png` alebo `.svg` | `image/png` alebo `image/svg+xml` |
 | Súbor z tlačidla `Save file` na karte Generátor kódu – pozrite si stránku [Generátor kódu](../guide/guides/code-generator.md) | Podľa jazyka: `.cs`, `.go`, `.java`, `.kt`, `.php`, `.rs`, `.scala`, `.swift`, `.ts`, `.py`, `.aml`, `.dbml`, `.graphql`, `.json` alebo `.mmd` | žiadny |
+| Súbor z tlačidla `Export CSV` na karte Slovník so všetkými riadkami zobrazeného hárka bez ohľadu na to, čo uvádza jeho vyhľadávanie – pozrite si časť [Import a export CSV](../guide/guides/dictionary.md#importing-and-exporting-csv) | `.csv` | `text/csv` |
 
 Hostiteľ, ktorý vyberá obslužnú funkciu podľa prípony, potrebuje jednu pre každý z nich.
 
@@ -261,5 +265,5 @@ Verzia `4.0.0` je novou hlavnou verziou. Pri prechode stránky z verzie 3.x skon
 - Spätné volanie importu dostáva pri možnosti Importovať a pridať hodnotu `mode: 'append'`, ktorú musí odovzdať ďalej. Spätné volanie exportu teraz dostáva aj súbory `.svg` a súbory z karty Generátor kódu. Položka `Export` ▸ `Schema SQL` namiesto uloženia otvorí kartu Schéma SQL, takže súbor `.sql` prichádza iba z tlačidla `Save file` na tejto karte – pozrite si časť [Dialógové okná súborov](#file-dialogs).
 - Klávesy `Delete` a `Backspace` sú priradené novému príkazu `removeSelection`. Kým má editor fokus mimo textového poľa, predvolené správanie klávesu sa na každej karte potlačí a na karte ERD sa odstráni výber. Do typov `KeyBindingName` a `KeyBindingMap` tento príkaz pribudol a volanie `setKeyBindingMap({ removeSelection: [] })` ponechá oba klávesy stránke – pozrite si časť [setKeyBindingMap](./erd-editor-element.md#setkeybindingmap).
 - Pole `ThemeOptions.appearance` prijíma aj `'system'`, teda možnosť `System` vo výbere motívu, ktorú nastaví zapnutie atribútu `systemDarkMode`. Udalosť `changePresetTheme` hlási `'system'`, kým je táto možnosť vybratá, preto túto hodnotu uložte bez zmeny a odovzdajte ju späť metóde `setPresetTheme`. Keď je atribút `systemDarkMode` zapnutý, volanie `setPresetTheme()` s hodnotou `'light'` alebo `'dark'` teraz zostane platné namiesto toho, aby ho prepísala ďalšia zmena v operačnom systéme – pozrite si časti [systemDarkMode](./erd-editor-element.md#systemdarkmode) a [changePresetTheme](./erd-editor-element.md#changepresettheme).
-- Balík `@dineug/erd-editor-mcp` `1.0.0`, rozšírenie pre VS Code vo verzii `4.0.0` alebo novšej a doplnky pre Obsidian a JetBrains vo verzii `1.0.0` alebo novšej používajú protokol hubu verzie 2. Server vo verzii `1.0.0` a staršia verzia editora, ktorá obsluhuje agentov, alebo starší server a jeden z týchto editorov sa navzájom odmietnu chybou `protocolMismatch`, ktorá uvádza stranu, ktorú treba aktualizovať – pozrite si časť [Aktualizácia](../mcp/installation.md#updating).
+- Balík `@dineug/erd-editor-mcp` vo verzii `1.0.0` alebo novšej, rozšírenie pre VS Code vo verzii `4.0.0` alebo novšej a doplnky pre Obsidian a JetBrains vo verzii `1.0.0` alebo novšej používajú protokol hubu verzie 2. Server vo verzii `1.0.0` alebo novšej a staršia verzia editora, ktorá obsluhuje agentov, alebo starší server a jeden z týchto editorov sa navzájom odmietnu chybou `protocolMismatch`, ktorá uvádza stranu, ktorú treba aktualizovať – pozrite si časť [Aktualizácia](../mcp/installation.md#updating).
 - Adresa URL na CDN bez verzie teraz poskytuje najnovšiu verziu 4.x. Ak chcete zostať na verzii 3.x, pripnite `@3.10.0` – pozrite si časť [CDN](#cdn).

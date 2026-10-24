@@ -77,8 +77,8 @@ Bağlam menüsünden, tuvalin altındaki [tuval araç çubuğundan](./table-rela
 - One N: `Ctrl + Alt + 4` (Windows/Linux) veya `⌘ + ⌥ + 4` (Mac)
 
 Bir tür hazırlandığında imleç değişir. Önce üst tabloya, ardından alt tabloya tıklayın.  
-Üst tablo, birincil anahtarı yoksa bir birincil anahtar alır ve üst tablonun her birincil anahtar sütunu için alt tablo, aynı veri türüne, varsayılan değere ve açıklamaya sahip `Not Null` bir yabancı anahtar sütunu alır.  
-İstisna serial anahtardır: Yabancı anahtarı, `serial4` için `integer` gibi, serial türünün sakladığı tamsayı türünü alır. [Tanımlayıcı ilişkiler](./relationship-editing.md#identifying-relationships) bölümüne bakın.  
+Üst tablo, birincil anahtarı yoksa bir birincil anahtar alır ve üst tablonun her birincil anahtar sütunu için alt tablo, aynı veri türüne, varsayılan değere, açıklamaya, [mantıksal ada](./logical-names.md) ve [değer alanına](./dictionary.md#domains-and-data-types) sahip `Not Null` bir yabancı anahtar sütunu alır.  
+İstisna serial anahtardır: Yabancı anahtarı, `serial4` için `integer` gibi, serial türünün sakladığı tamsayı türünü alır ve bu durumda hiçbir değer alanı bağlamaz. [Tanımlayıcı ilişkiler](./relationship-editing.md#identifying-relationships) bölümüne bakın.  
 Her yabancı anahtar sütunu kendi anahtarına göre adlandırılır: `id` gibi tek sözcüklü bir adın önüne üst tablonun adı eklenir (`user_id`), `member_id` gibi birkaç sözcükten oluşan bir ad korunur ve alt tablonun zaten sahip olduğu bir ad numaralandırılır (`user_id_2`). [Yabancı anahtar sütun adları](./relationship-editing.md#foreign-key-column-names) bölümüne bakın.  
 Bir tabloya iki kez tıklamak kendine başvuran bir ilişki çizer.  
 Yeni bir ilişki, `On Delete` ve `On Update` ayarlarının ikisi de `Not set` olacak şekilde başlar; bunları ilişkinin bağlam menüsünden değiştirin. [ON DELETE ve ON UPDATE](./relationship-editing.md#on-delete-and-on-update) bölümüne bakın.  
@@ -91,7 +91,8 @@ Yeni bir ilişki, `On Delete` ve `On Update` ayarlarının ikisi de `Not set` ol
 
 İşaretçi, üst tabloya tıkladığınız yerden biraz uzaklaştıktan sonra üst tablo da bu düğmeleri gösterir, böylece kendine başvuran bir ilişki de mevcut sütunlarla eşlenebilir.  
 Parmakla üzerine gelinemez, bu yüzden parmakla çizdiğinizde düğmeler hiçbir zaman görünmez ve alt tabloya dokunmak ilişkiyi hemen çizer; kalem ise düğmeleri farenin yaptığı gibi gösterir.  
-Alt tabloya ulaştığınızda üst tablo, örneğin bir geri alma veya bir ortak çalışanın düzenlemesi nedeniyle birincil anahtarını kaybetmişse, `Create new columns` düğmesi `<parent> has no primary key to copy` araç ipucuyla soluk görünür ve alt tabloya tıklamak hiçbir şey çizmeden çizimi bitirir.
+Alt tabloya ulaştığınızda üst tablo, örneğin bir geri alma veya bir ortak çalışanın düzenlemesi nedeniyle birincil anahtarını kaybetmişse, `Create new columns` düğmesi `<parent> has no primary key to copy` araç ipucuyla soluk görünür ve alt tabloya tıklamak hiçbir şey çizmeden çizimi bitirir.  
+Araç ipucu, üst tabloyu [Ad görünümünün](./logical-names.md#beyond-the-canvas) adlandırdığı gibi adlandırır.
 
 ![⌘ + ⌥ + 4 ile bir One N ilişkisi, ardından tuval araç çubuğundan bir Zero N ilişkisi çizme, Map to existing columns ve Create new columns düğmeleriyle birlikte dış çizgiyle çevrelenen alt tablo](/img/demo-relationship.webp)
 

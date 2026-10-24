@@ -25,7 +25,7 @@ const editor = document.createElement('erd-editor');
 editor.style.cssText = 'display: block; width: 100%; height: 100vh;';
 document.body.appendChild(editor);
 
-// Undo 기록을 남기지 않고 문서를 불러온 뒤, 변경사항을 계속 동기화합니다
+// load a document without adding an undo entry, then keep it in sync
 editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
 editor.addEventListener('change', () => {
   localStorage.setItem('my-diagram', editor.value);
@@ -38,7 +38,8 @@ editor.addEventListener('change', () => {
 
 `setInitialValue('')`는 비어 있는 새 문서로 시작합니다. 반면 `value`에 할당하면 문서를 편집으로 불러오므로 Undo 히스토리에 남습니다.
 `4.0.0`부터 `editor.value`는 파일에 담기는 형태의 문서이며, 저장할 것은 이 값입니다. `editor.runtimeValue`는 삭제된 엔티티까지 포함해 에디터가 가지고 있는 그대로의 문서입니다. 공동 편집자를 초기화하는 데 쓰며 파일에는 절대 저장하지 않습니다. [runtimeValue](./erd-editor-element.md#runtimevalue) 문서를 참고하세요.
-`4.0.0`부터 새 문서는 모든 [설정 잠금](../guide/guides/settings.md#잠금)도 켜진 상태입니다. 화면, 탭, Code Generator 언어, 두 이름 케이스, 괄호 타입이 잠깁니다. 스크롤하거나 확대/축소하거나 탭을 전환하거나 이 설정 중 하나를 바꿔도 `editor.value`는 그대로 유지되며 `change`도 발생하지 않습니다. 텍스트에서 불러온 문서는 그 안에 기록된 잠금을 유지합니다. `4.0.0` 이전에 저장한 모든 파일처럼 잠금이 기록되지 않은 문서는 저장된 화면과 탭에 상관없이 모든 잠금이 켜진 상태로, 확대/축소 100%와 ERD 탭에서 열립니다. 화면은 원점 `0, 0`으로 잠기며, 그 위치에 다이어그램이 전혀 그려져 있지 않으면 대신 다이어그램이 있는 곳에서 열립니다. [setInitialValue](./erd-editor-element.md#setinitialvalue) 문서를 참고하세요.
+`4.0.0`부터 새 문서는 모든 [설정 잠금](../guide/guides/settings.md#잠금)도 켜진 상태입니다. 화면, 탭, Code Generator 언어, 두 이름 케이스, 괄호 타입, 그리고 `4.2.0`부터는 [이름 표시](../guide/guides/logical-names.md#name-view)가 잠깁니다. 스크롤하거나 확대/축소하거나 탭을 전환하거나 이름 표시를 전환하거나 나머지 설정 중 하나를 바꿔도 `editor.value`는 그대로 유지되며 `change`도 발생하지 않습니다. 텍스트에서 불러온 문서는 그 안에 기록된 잠금을 유지합니다. `4.0.0` 이전에 저장한 모든 파일처럼 잠금이 기록되지 않은 문서는 저장된 화면과 탭에 상관없이 모든 잠금이 켜진 상태로, 확대/축소 100%와 ERD 탭에서 열립니다. 화면은 원점 `0, 0`으로 잠기며, 그 위치에 다이어그램이 전혀 그려져 있지 않으면 대신 다이어그램이 있는 곳에서 열립니다. [setInitialValue](./erd-editor-element.md#setinitialvalue) 문서를 참고하세요.
+`4.2.0` 이전에 저장한 파일은 나머지 잠금이 모두 꺼져 있더라도 이름 표시가 `Physical Names`로 잠긴 상태로 열립니다. `4.0.0`이나 `4.1.0` 에디터는 저장할 때 이름 표시 잠금은 그대로 유지하지만 보기는 버리므로, 이름 표시의 잠금을 해제한 채 저장된 `4.2.0` 파일은 잠금이 해제된 상태로 남지만 다시 열면 `Physical Names`로 열립니다.
 나머지 API는 [ErdEditorElement](./erd-editor-element.md) 문서를 참고하세요.
 
 ### CDN
@@ -56,7 +57,7 @@ editor.addEventListener('change', () => {
 ```
 
 `esm.run`이 패키지의 외부 의존성을 대신 해석해 주므로 번들러 없이도 동작합니다.
-버전이 없는 URL은 항상 최신 릴리스를 제공합니다. 메이저 업그레이드가 예고 없이 페이지에 반영되는 것을 원하지 않는다면 `https://esm.run/@dineug/erd-editor@4.1.0`처럼 버전을 고정하세요.
+버전이 없는 URL은 항상 최신 릴리스를 제공합니다. 메이저 업그레이드가 예고 없이 페이지에 반영되는 것을 원하지 않는다면 `https://esm.run/@dineug/erd-editor@4.2.0`처럼 버전을 고정하세요.
 `4.0.0` 자체가 메이저 업그레이드입니다. 3.x에 머물러야 하는 페이지는 `@3.10.0`으로 고정하세요. [3.x에서 업그레이드](#3x에서-업그레이드) 항목을 참고하세요.
 
 ### script 태그
@@ -66,14 +67,14 @@ editor.addEventListener('change', () => {
 
 ```html
 <erd-editor></erd-editor>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@4.1.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@4.2.0"></script>
 <script>
   const editor = document.querySelector('erd-editor');
   editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
 </script>
 ```
 
-이 파일을 불러오면 `<erd-editor>`가 동일하게 등록되고, `window.ErdEditor`에 파일 콜백 두 개, `ErdEditor.setExportFileCallback`과 `ErdEditor.setImportFileCallback`, 그리고 `3.9.2`부터는 `ErdEditor.createKeyBindingMap`이 들어 있습니다.
+이 파일을 불러오면 `<erd-editor>`가 동일하게 등록되고, `window.ErdEditor`에 파일 콜백 두 개, `ErdEditor.setExportFileCallback`과 `ErdEditor.setImportFileCallback`, 그리고 `3.9.2`부터는 `ErdEditor.createKeyBindingMap`이 들어 있습니다. `4.2.0`부터는 `ErdEditor.dictionaryRowChords`도 들어 있습니다. [dictionaryRowChords](./erd-editor-element.md#dictionaryrowchords) 문서를 참고하세요.
 exports 맵은 여전히 ES 모듈을 가리키므로 npm으로 설치하면 번들러가 이 파일을 사용하지 않습니다.
 
 ### HTML
@@ -166,17 +167,18 @@ Schema SQL과 Code Generator 패널은 전용 shared worker에서 동작하는 [
 
 ## 진입점
 
-`@dineug/erd-editor`를 import하면 부수 효과로 `<erd-editor>`가 등록됩니다. 그 외에는 엘리먼트 타입과 2개의 콜백 setter, `3.9.2`부터는 기본 키 바인딩과 그 타입, `4.0.0`부터는 표시 언어 타입과 `getSchemaSQL()` 옵션 타입을 export합니다.
+`@dineug/erd-editor`를 import하면 부수 효과로 `<erd-editor>`가 등록됩니다. 그 외에는 엘리먼트 타입과 2개의 콜백 setter, `3.9.2`부터는 기본 키 바인딩과 그 타입, `4.0.0`부터는 표시 언어 타입과 `getSchemaSQL()` 옵션 타입, `4.2.0`부터는 사전 탭의 행 키 조합을 export합니다.
 
 | Export | 설명 |
 | --- | --- |
 | `ErdEditorElement` (타입) | 엘리먼트 인터페이스입니다. [ErdEditorElement](./erd-editor-element.md) 문서를 참고하세요. |
 | `setExportFileCallback(cb)` | 브라우저 다운로드를 대체합니다. `(blob, { fileName }) => void` |
-| `setImportFileCallback(cb)` | 브라우저 파일 선택창을 대체합니다. `({ type, op, accept, mode }) => void`이며, `mode`는 `4.0.0`부터 전달됩니다. |
+| `setImportFileCallback(cb)` | 브라우저 파일 선택창을 대체합니다. `({ type, op, accept, mode }) => void`이며, `mode`는 `4.0.0`부터 전달됩니다. `4.2.0`부터 사전 탭의 `Import CSV`는 콜백이 설정되어 있어도 브라우저의 파일 선택창을 엽니다. [파일 다이얼로그](#파일-다이얼로그) 항목을 참고하세요. |
 | `createKeyBindingMap()` | 기본 키 바인딩을 호출할 때마다 새 `KeyBindingMap`으로 반환합니다. [createKeyBindingMap](./erd-editor-element.md#createkeybindingmap) 문서를 참고하세요. |
 | `KeyBindingMap`, `KeyBindingName`, `ShortcutOption` (타입) | 바인딩 맵, 그 명령 이름의 유니언, 바인딩 하나의 타입입니다. |
+| `dictionaryRowChords(map)` | `4.2.0`부터 제공됩니다. 전달한 `KeyBindingMap`에서 [사전](../guide/guides/dictionary.md#adding-and-deleting-rows) 탭의 그리드가 행을 삽입하고 삭제하는 키 조합을 호출할 때마다 새 `ShortcutOption[]`으로 반환합니다. 위에 행을 삽입하는 키 조합(기본값에서는 `Alt+Shift+Enter`)은 어떤 바인딩에도 들어 있지 않습니다. [dictionaryRowChords](./erd-editor-element.md#dictionaryrowchords) 문서를 참고하세요. |
 | `LocaleCode`, `LocaleOption` (타입) | `4.0.0`부터 제공됩니다. 25개 표시 언어 코드, 그리고 그 코드에 `'system'`을 더한 것으로 `setLocale()`이 받는 타입입니다. [Display Language](./erd-editor-element.md#display-language) 문서를 참고하세요. |
-| `SchemaSQLOptions` (타입) | `4.0.0`부터 제공됩니다. `getSchemaSQL()`이 받는 `statements`와 `header` 옵션입니다. [getSchemaSQL](./erd-editor-element.md#getschemasql) 문서를 참고하세요. |
+| `SchemaSQLOptions` (타입) | `4.0.0`부터 제공됩니다. `getSchemaSQL()`이 받는 옵션으로, `statements`, `header`, 그리고 `4.2.0`부터는 `logicalNameAsComment`가 있습니다. [getSchemaSQL](./erd-editor-element.md#getschemasql) 문서를 참고하세요. |
 
 `@dineug/erd-editor/engine.js`는 두 번째 진입점입니다. DOM 없이 문서 store를 실행하므로 Web Worker에서도 동작합니다. [원격 저장](./advanced/remote-storage.md) 문서를 참고하세요.
 이 진입점은 `createReplicationStore`와 `ReplicationStore` 타입을 export합니다. `3.10.0`부터는 복제본의 `change` 리스너가 받는 `ReplicationChange` 타입(`{ value: string; changed: boolean }`)도 export합니다. [on@change](./advanced/remote-storage.md#onchange) 문서를 참고하세요.
@@ -188,6 +190,7 @@ Schema SQL과 Code Generator 패널은 전용 shared worker에서 동작하는 [
 
 가져오기와 내보내기는 주입 가능한 콜백을 거치기 때문에, 브라우저 파일 대화 상자가 없는 호스트(예: IDE 웹뷰)도 자체 구현을 제공할 수 있습니다.
 둘은 대칭이 아닙니다. 내보내기는 완성된 파일을 넘겨주지만, 가져오기는 파일을 요청하기만 하고 그 내용을 다시 에디터에 넣는 것은 직접 처리해야 합니다.
+`4.2.0`부터 사전 탭의 `Import CSV`는 가져오기 콜백을 절대 호출하지 않는 유일한 가져오기이며, 이 콜백의 `type`에는 CSV 값이 없습니다. 이 가져오기는 항상 `.csv` 파일을 고르는 브라우저 자체의 파일 선택창을 엽니다. [CSV 가져오기와 내보내기](../guide/guides/dictionary.md#importing-and-exporting-csv) 문서를 참고하세요.
 
 `op`는 `set` 또는 `diff`입니다. `diff`이면 `type`과 관계없이 `setDiffValue()`로 전달됩니다. 그 외에는 `type`이 메서드를 결정하며, `accept`에는 해당 타입의 확장자가 담겨 있어 호스트의 파일 대화 상자에 그대로 넘길 수 있습니다.
 `4.0.0`부터 사용자가 [Import and Add](../guide/guides/file-import-export.md#가져와서-추가)를 고르면 `set`에 `mode: 'append'`가 함께 전달되며, 일반 Import에는 `mode`가 없습니다. 이 값을 그대로 넘기세요. `mode`를 버리는 콜백은 사용자가 추가하려던 다이어그램을 대체해 버립니다.
@@ -229,8 +232,8 @@ setImportFileCallback(async ({ type, op, accept, mode }) => {
 처리할 `type`마다 분기하고 나머지는 무시하세요.
 문서를 대체하는 `setSchemaJSON()`은 `value` 할당과 마찬가지로 파싱하기 전에 문서를 먼저 비우기 때문에, `.erd.json` 문서가 아닌 데이터를 그쪽으로 보내면(catch-all `else`를 두었거나 나중에 추가된 `type`이 흘러 들어온 경우) 가져오기 대신 다이어그램이 비워집니다.
 
-에디터가 생성하는 `fileName`은 `<데이터베이스 이름>-<시간>`에 파일의 확장자를 붙인 형태이며, 시간은 현지 시간 기준으로 `yyyy-MM-dd'T'HH_mm_ss` 형식입니다. 데이터베이스 이름이 비어 있으면 `unnamed`로 대체됩니다.
-내보내기 콜백은 다음 파일을 받습니다. `4.0.0`부터는 SVG와 Code Generator의 파일도 포함되며, `.sql`은 `Export`에서 바로 저장되지 않고 Schema SQL 탭의 `Save file`에서 옵니다.
+에디터가 생성하는 `fileName`은 `<database name>-<timestamp>`에 파일의 확장자를 붙인 형태이며, 타임스탬프는 현지 시간 기준으로 `yyyy-MM-dd'T'HH_mm_ss` 형식입니다. 데이터베이스 이름이 비어 있으면 `unnamed`로 대체됩니다. 사전의 CSV는 `<database name>-<timestamp>-words.csv`처럼 확장자 앞에 시트 이름이 붙습니다.
+내보내기 콜백은 다음 파일을 받습니다. `4.0.0`부터는 SVG와 Code Generator의 파일도 포함되며, `.sql`은 `Export`에서 바로 저장되지 않고 Schema SQL 탭의 `Save file`에서 옵니다. `4.2.0`부터는 사전 탭의 CSV도 포함됩니다.
 
 | 파일 | 확장자 | Blob `type` |
 | --- | --- | --- |
@@ -238,6 +241,7 @@ setImportFileCallback(async ({ type, op, accept, mode }) => {
 | 탭에 표시된 텍스트를 담는 Schema SQL 탭의 `Save file`. [Schema SQL](../guide/guides/schema-sql.md) 문서를 참고하세요 | `.sql` | 없음 |
 | [Export image](../guide/guides/file-import-export.md#이미지) 대화 상자 | `.png` 또는 `.svg` | `image/png` 또는 `image/svg+xml` |
 | Code Generator 탭의 `Save file`. [코드 생성](../guide/guides/code-generator.md) 문서를 참고하세요 | 언어별 확장자: `.cs`, `.go`, `.java`, `.kt`, `.php`, `.rs`, `.scala`, `.swift`, `.ts`, `.py`, `.aml`, `.dbml`, `.graphql`, `.json`, `.mmd` 중 하나 | 없음 |
+| 검색에 표시되는 행과 상관없이 표시된 시트의 모든 행을 담는 사전 탭의 `Export CSV`. [CSV 가져오기와 내보내기](../guide/guides/dictionary.md#importing-and-exporting-csv) 문서를 참고하세요 | `.csv` | `text/csv` |
 
 확장자로 처리기를 고르는 호스트는 이 확장자마다 처리기가 필요합니다.
 
@@ -261,5 +265,5 @@ Chrome 91+, Edge 94+, Firefox 93+, Safari 16.4+ — 배포되는 번들이 빌�
 - 가져오기 콜백은 가져와서 추가에서 `mode: 'append'`를 받으며, 콜백은 이 값을 그대로 넘겨야 합니다. 내보내기 콜백은 이제 `.svg`와 Code Generator 파일도 받으며, `Export` ▸ `Schema SQL`은 저장하는 대신 Schema SQL 탭을 열므로 `.sql`은 그 탭의 `Save file`에서만 옵니다. [파일 다이얼로그](#파일-다이얼로그) 항목을 참고하세요.
 - `Delete`와 `Backspace`는 새 `removeSelection`에 지정됩니다. 에디터가 텍스트 입력란 밖에서 포커스를 가지고 있는 동안에는 모든 탭에서 키의 기본 동작이 막히며, ERD 탭에서는 선택한 항목이 삭제됩니다. `KeyBindingName`과 `KeyBindingMap`에 이 항목이 추가되었으며, `setKeyBindingMap({ removeSelection: [] })`을 호출하면 두 키를 페이지에 맡깁니다. [setKeyBindingMap](./erd-editor-element.md#setkeybindingmap) 문서를 참고하세요.
 - `ThemeOptions.appearance`는 테마 빌더의 `System`에 해당하는 `'system'`도 받으며, `systemDarkMode`를 켜면 이 값이 설정됩니다. `changePresetTheme`은 `System`이 선택된 동안 `'system'`을 보고하므로, 그대로 저장했다가 `setPresetTheme`에 다시 넘기세요. `systemDarkMode`가 켜져 있을 때 `'light'`나 `'dark'`로 호출한 `setPresetTheme()`은 이제 다음 운영체제 변경에 덮어쓰이지 않고 그대로 유지됩니다. [systemDarkMode](./erd-editor-element.md#systemdarkmode)와 [changePresetTheme](./erd-editor-element.md#changepresettheme) 문서를 참고하세요.
-- `@dineug/erd-editor-mcp` `1.0.0`, VS Code 확장 `4.0.0` 이상, Obsidian과 JetBrains 플러그인 `1.0.0` 이상은 허브 프로토콜 2를 사용합니다. 서버 `1.0.0`과 에이전트를 지원하는 이전 에디터 릴리스, 또는 이전 서버와 이 에디터들은 `protocolMismatch`로 서로를 거부하며, 업데이트해야 할 쪽을 알려 줍니다. [업데이트](../mcp/installation.md#업데이트) 문서를 참고하세요.
+- `@dineug/erd-editor-mcp` `1.0.0` 이상, VS Code 확장 `4.0.0` 이상, Obsidian과 JetBrains 플러그인 `1.0.0` 이상은 허브 프로토콜 2를 사용합니다. 서버 `1.0.0` 이상과 에이전트를 지원하는 이전 에디터 릴리스, 또는 이전 서버와 이 에디터들은 `protocolMismatch`로 서로를 거부하며, 업데이트해야 할 쪽을 알려 줍니다. [업데이트](../mcp/installation.md#업데이트) 문서를 참고하세요.
 - 버전이 없는 CDN URL은 이제 최신 4.x 릴리스를 제공합니다. 3.x에 머무르려면 `@3.10.0`으로 고정하세요. [CDN](#cdn) 항목을 참고하세요.

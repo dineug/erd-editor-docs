@@ -1,6 +1,6 @@
 ---
-sidebar_position: 11
-description: Read the diagram's DDL on the Schema SQL tab, pick the database, quoting, statements, header, and tables in its options panel, add your own scripts before and after the tables, and save or copy the SQL.
+sidebar_position: 12
+description: Read the diagram's DDL on the Schema SQL tab, pick the database, quoting, statements, header, logical names in empty comments, and tables in its options panel, add your own scripts before and after the tables, and save or copy the SQL.
 ---
 
 # Schema SQL
@@ -20,24 +20,25 @@ Right-click the SQL to open its context menu:
 - `Options panel`, checked while the panel shows, which folds or opens it.
 - `Save file`
 
-While this tab is open, Quick Search offers `Database` and `Bracket`; `Schema SQL: Statements` and `Schema SQL: Header`, which list only the choices the database has; and `Schema SQL: Options panel`, which folds or opens the panel.
+While this tab is open, Quick Search offers `Database` and `Bracket`; `Schema SQL: Statements` and `Schema SQL: Header`, which list only the choices the database has; and `Schema SQL: Options panel`, which folds or opens the panel.  
+Neither the context menu nor Quick Search offers `Write logical names into empty comments`, which is in the options panel alone — see [Logical Names as Comments](#logical-names-as-comments).
 
 The SQL is written when the tab opens, and again whenever one of the panel's choices, the database name, or a script changes. An edit made to the tables while the tab is open, such as a collaborator's or a coding agent's, shows once you leave the tab and come back, or once one of those changes.
 
-[Table Properties](./table-related-functions.md#table-properties) has a `Schema SQL` tab of its own, which shows one table's DDL. It always writes plain `CREATE` statements with no header or scripts, has no options panel, and its context menu offers only `Database` and `Bracket`.
+[Table Properties](./table-related-functions.md#table-properties) has a `Schema SQL` tab of its own, which shows one table's DDL. It always writes plain `CREATE` statements with no header or scripts, never writes a logical name into an empty comment, has no options panel, and its context menu offers only `Database` and `Bracket`.
 
 ## Options Panel
 
 The panel holds three groups, each under a caption:
 
 1. `Saved in the document`: `Database` and `Bracket` — see [Database and Bracket](#database-and-bracket).
-2. `This window only`: `Statements`, `Header`, and, while the diagram has a [table group](./table-groups.md), `Tables` — see [Statements](#statements), [Header](#header), and [Tables](#tables).
+2. `This window only`: `Statements`, `Header`, `Write logical names into empty comments`, and, while the diagram has a [table group](./table-groups.md), `Tables` — see [Statements](#statements), [Header](#header), [Logical Names as Comments](#logical-names-as-comments), and [Tables](#tables).
 3. `Saved in the document · written as is for every database`: the `Before tables` and `After tables` scripts — see [Before and After Scripts](#before-and-after-scripts).
 
 `Save file` and `Copy` sit at its foot — see [Saving or Copying the SQL](#saving-or-copying-the-sql).
 
 The choices under `This window only` belong to the editor window you make them in. They are not saved in the document, shared with collaborators, or recorded for undo, and they reset when the editor is closed or reloaded; switching tabs keeps them.  
-`Statements` starts at `If not exists` and `Header` at `CREATE + USE`. The SQL a page embedding the editor reads with [`getSchemaSQL()`](../../api/erd-editor-element.md#getschemasql), and the SQL a coding agent reads, start at `Create` with no header instead.
+`Statements` starts at `If not exists`, `Header` at `CREATE + USE`, and `Write logical names into empty comments` off. The SQL a page embedding the editor reads with [`getSchemaSQL()`](../../api/erd-editor-element.md#getschemasql), and the SQL a [coding agent reads](../../mcp/tools.md#reading-a-document), start at `Create` with no header instead, and write no logical names unless asked to.
 
 A choice the selected database does not have stays in the panel, dimmed, with the tooltip `Not in <database>`, such as `Not in Oracle`, and pressing it does nothing.  
 The SQL then uses the nearest form the database has, and that form's button shows pressed: `If not exists` falls back to `Create`, `CREATE + USE` to `USE`, or to `None` where the database has no `USE` either, and `USE` to `None`. Your choice is kept, so switching to a database that has it brings it back.
@@ -92,6 +93,21 @@ A header is written only while the database name is a plain identifier: an ASCII
 Any other name, a blank one included, writes no header, and PostgreSQL's `DROP TABLE` then names no schema. While a header other than `None` is in effect, a note under `Header` says so: `Database name "<name>" is not a valid identifier.`  
 A new diagram's database name is blank, so until you name it the panel shows `Database name "" is not a valid identifier.`
 
+## Logical Names as Comments
+
+`Write logical names into empty comments`, a switch under `This window only`, writes the [logical name](./logical-names.md) of a table or column into the DDL where its comment is empty, on every database.
+
+![Turning on Write logical names into empty comments in the Schema SQL panel, which writes each order_items column's logical name into its empty COMMENT while the members comments stay](/img/demo-schema-sql-logical-names.webp)
+
+- A comment with text always wins: the logical name never replaces it and is never added to it.
+- A comment of only blanks counts as empty, so the logical name is written in its place. A logical name that is empty or only blanks writes nothing, and that table or column still gets no comment.
+- The logical name is written where and in the form the database writes a comment, its quotes escaped the same way — see [Comments](#comments).
+
+On MySQL, for example, a column `id` with the logical name `Member ID` and no comment is written with `COMMENT 'Member ID'`, while a column `email` with the logical name `Email` and the comment `Sign-in address` keeps `COMMENT 'Sign-in address'`.
+
+Like `Statements` and `Header`, the switch belongs to the window and starts off — see [Options Panel](#options-panel).  
+An import never reads such a comment back as a logical name — see [Comments](./file-import-export.md#comments).
+
 ## Tables
 
 While the diagram has at least one [table group](./table-groups.md), shown or hidden, `Tables` appears under `This window only` with a checkbox for each choice:
@@ -125,22 +141,24 @@ A field without the keyboard focus follows a change a collaborator or a [coding 
 
 ## Saving or Copying the SQL
 
-`Save file`, at the foot of the panel or in the context menu, saves exactly the SQL the tab shows, with its current database, bracket, statements, header, tables, and scripts, as `<database name>-<timestamp>.sql`. It is named and saved like every other export — see [Exporting](./file-import-export.md#exporting).
+`Save file`, at the foot of the panel or in the context menu, saves exactly the SQL the tab shows, with its current database, bracket, statements, header, logical name comments, tables, and scripts, as `<database name>-<timestamp>.sql`. It is named and saved like every other export — see [Exporting](./file-import-export.md#exporting).
 
 `Export` ▸ `Schema SQL`, in the canvas context menu or in Quick Search, saves nothing by itself.  
 It switches to this tab, opens the options panel even if it was folded, and puts the keyboard focus on `Save file`, so pressing `Enter` saves the file.
 
 `Copy` at the foot of the panel, or the copy button that appears at the top right of the code while you hover it, copies the SQL.  
-A `Copied!` toast with a check mark confirms for two seconds. If the browser or host refuses the clipboard, a `Couldn't copy to the clipboard` toast with a warning sign says so instead. Copying again replaces the toast rather than adding another.  
+A `Copied!` toast with a check mark confirms for two seconds. If the browser or host refuses the clipboard, a `Couldn't copy to the clipboard` toast with a warning sign says so instead, for five seconds. Copying again replaces the toast rather than adding another.  
 The SQL is selectable as well, so you can take only part of it.
 
 ## What the DDL Writes
 
 These rules hold wherever the editor writes Schema SQL: on this tab and in its file, and in the SQL a page embedding the editor or a coding agent reads.  
-The `Schema SQL` tab of Table Properties follows them for the one table it shows. It writes no foreign keys, except SQLite's, which sit inside its `CREATE TABLE`, and no Oracle sequence or trigger.
+The `Schema SQL` tab of Table Properties follows them for the one table it shows. It writes no Oracle sequence or trigger, and no foreign keys except SQLite's, which sit inside its `CREATE TABLE`. Nor does it write the comment statements PostgreSQL, Oracle, and MSSQL put after a table, so on those three it shows no comments.
 
 The parts come in this order, one blank line apart: the header, the before script, the `DROP` statements, the tables, and the after script. Tables are written in name order.  
 A diagram with no tables and no scripts writes nothing, even with a header chosen.
+
+Tables and columns are written by their physical names, whatever the [Name View](./logical-names.md#name-view) shows. A column linked to a domain is written with its own data type, which the domain sets — see [Domains and Data Types](./dictionary.md#domains-and-data-types).
 
 ### Auto Increment
 
@@ -181,7 +199,28 @@ A column's default is written as you typed it, but in parentheses where the data
 - PostgreSQL wraps only an expression with a word such as `AT TIME ZONE`, `AND`, `OR`, `IS`, `IN`, `LIKE`, `COLLATE`, or `= ANY` outside parentheses, such as `(now() AT TIME ZONE 'utc')`.
 - MSSQL, Oracle, Snowflake, and Databricks write every default as typed.
 
+### Comments
+
+A table's or column's comment that is not blank, or the logical name that [`Write logical names into empty comments`](#logical-names-as-comments) writes in its place, is written as each database writes comments:
+
+- MySQL and MariaDB write it inline: a column ends with `COMMENT 'Member ID'`, and the table closes with `) COMMENT 'Members';`, in MySQL's `If not exists` batch too.
+- Snowflake writes a column's inline, `COMMENT 'Member ID'`, and the table's on its own line after the closing parenthesis, `COMMENT = 'Members';`.
+- Databricks writes a column's inline, and the table's as `COMMENT 'Members';` after `USING DELTA`.
+- PostgreSQL writes `COMMENT ON TABLE member IS 'Members';` and `COMMENT ON COLUMN member.id IS 'Member ID';` right after the table's `CREATE TABLE`. Oracle writes the same statements after the table, its unique constraints, and its auto-increment sequence and trigger.
+- MSSQL writes one call per table and per column, after the table and its unique constraints, each followed by `GO`: `EXECUTE sys.sp_addextendedproperty 'MS_Description', N'Members', 'schema', 'dbo', 'table', 'member'`, with `'column', 'id'` added for a column.  
+  The text is a national literal, `N'…'`, so SQL Server keeps text outside the database's code page, such as Korean, rather than storing question marks.  
+  With `Bracket` at `None`, a table named `sales.users` gives schema `sales` and table `users`, and so do `[sales].[users]` and `"sales"."users"`, whose brackets and double quotes are dropped. A name without a schema is in `dbo`. A part before the schema, as in `shop.sales.users`, runs that database's procedure, `shop.sys.sp_addextendedproperty`. Under any other `Bracket` the whole name is the table, in `dbo`.
+- SQLite keeps no comments, so it writes each as a `--` line above what it describes: `-- Members` above `CREATE TABLE member`, and `-- Member ID` above the column.
+
+A quote inside a quoted comment is doubled, as in `'it''s'` and `N'it''s'`, and so is one in the names MSSQL's calls pass. Databricks escapes a quote and a backslash with a backslash instead, as in `'it\'s'`, the form every Spark release reads. SQLite's `--` lines are not quoted, so they keep a quote as typed: `-- it's`.  
+The text is otherwise written as typed, line breaks included, except on two databases:
+
+- Oracle leaves out blank lines, a line of only spaces or tabs counting as blank, because SQL\*Plus ends a statement at a blank line and skips the rest of it. A table comment of `Members`, a blank line, and `Active only` is written as `COMMENT ON TABLE member IS 'Members` with `Active only';` on the next line.
+- SQLite writes each run of line breaks as one space, because a line break would end the `--` line and run the rest as SQL. The same comment is written as `-- Members Active only`.
+
+How these comments read back on import is described in [Comments](./file-import-export.md#comments).
+
 ## Read-only Editors
 
-In a `readonly` editor the tab works as usual: `Database` and `Bracket` still change the SQL shown, `Statements`, `Header`, and `Tables` still work, and `Save file` and `Copy` still save and copy it.  
+In a `readonly` editor the tab works as usual: `Database` and `Bracket` still change the SQL shown, `Statements`, `Header`, `Write logical names into empty comments`, and `Tables` still work, and `Save file` and `Copy` still save and copy it.  
 Only the two script fields are read-only.

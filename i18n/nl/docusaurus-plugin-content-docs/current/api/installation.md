@@ -38,7 +38,8 @@ Het paneel wordt nooit smaller dan `200px` getekend en laat voor het canvas mins
 
 `setInitialValue('')` start een nieuw, leeg document. Als je `value` toewijst, wordt een document in plaats daarvan als bewerking geladen, zodat het in de geschiedenis terechtkomt.
 Sinds `4.0.0` is `editor.value` het document in de vorm die een bestand bevat, en dat is wat je opslaat. `editor.runtimeValue` is het document zoals de editor het bijhoudt, verwijderde entiteiten inbegrepen: het dient om een medebewerker te initialiseren en gaat nooit naar een bestand — zie [runtimeValue](./erd-editor-element.md#runtimevalue).
-Sinds `4.0.0` staat in een nieuw document ook elke [instellingsvergrendeling](../guide/guides/settings.md#lock) aan: het weergavegebied, het tabblad, de taal van de Codegenerator, beide naamnotaties en het type aanhalingstekens. Scrollen, zoomen, van tabblad wisselen of een van die instellingen wijzigen laat `editor.value` zoals het was, en er treedt geen `change` op. Een document dat uit tekst is geladen, behoudt de vergrendelingen die het noemt. Een document dat er geen noemt, zoals elk bestand dat vóór `4.0.0` is opgeslagen, opent met elke vergrendeling aan, op een zoomniveau van 100% en op het ERD-tabblad, ongeacht de weergave en het tabblad die het heeft opgeslagen. De weergave wordt vergrendeld op de oorsprong `0, 0` en opent in plaats daarvan op het diagram als daar niets van het diagram wordt getekend — zie [setInitialValue](./erd-editor-element.md#setinitialvalue).
+Sinds `4.0.0` staat in een nieuw document ook elke [instellingsvergrendeling](../guide/guides/settings.md#lock) aan: het weergavegebied, het tabblad, de taal van de Codegenerator, beide naamnotaties, het type aanhalingstekens en, sinds `4.2.0`, de [naamweergave](../guide/guides/logical-names.md#name-view). Scrollen, zoomen, van tabblad wisselen, van naamweergave wisselen of een van de andere instellingen wijzigen laat `editor.value` zoals het was, en er treedt geen `change` op. Een document dat uit tekst is geladen, behoudt de vergrendelingen die het noemt. Een document dat er geen noemt, zoals elk bestand dat vóór `4.0.0` is opgeslagen, opent met elke vergrendeling aan, op een zoomniveau van 100% en op het ERD-tabblad, ongeacht het weergavegebied en het tabblad die het heeft opgeslagen. Het weergavegebied wordt vergrendeld op de oorsprong `0, 0`, en de weergave opent in plaats daarvan op het diagram als daar niets van het diagram wordt getekend — zie [setInitialValue](./erd-editor-element.md#setinitialvalue).
+Een bestand dat vóór `4.2.0` is opgeslagen, opent met de naamweergave vergrendeld op `Physical Names`, ook een bestand waarin elke andere vergrendeling uitstaat. Een editor van `4.0.0` of `4.1.0` behoudt bij het opslaan de vergrendeling van de naamweergave zoals ze staat, maar laat de weergave zelf vallen, dus een bestand van `4.2.0` dat met ontgrendelde naamweergave is opgeslagen, blijft ontgrendeld maar opent daarna weer in `Physical Names`.
 Zie [ErdEditorElement](./erd-editor-element.md) voor de rest van de API.
 
 ### CDN {#cdn}
@@ -56,7 +57,7 @@ Zie [ErdEditorElement](./erd-editor-element.md) voor de rest van de API.
 ```
 
 `esm.run` lost de externe afhankelijkheden van het pakket voor je op, dus dit werkt zonder bundler.
-De URL zonder versienummer levert altijd de nieuwste versie. Zet een versie vast — `https://esm.run/@dineug/erd-editor@4.1.0` — als je niet wilt dat een upgrade naar een nieuwe hoofdversie onaangekondigd je pagina bereikt.
+De URL zonder versienummer levert altijd de nieuwste versie. Zet een versie vast — `https://esm.run/@dineug/erd-editor@4.2.0` — als je niet wilt dat een upgrade naar een nieuwe hoofdversie onaangekondigd je pagina bereikt.
 `4.0.0` is zelf zo'n upgrade: een pagina die op 3.x moet blijven, zet `@3.10.0` vast — zie [Upgraden vanaf 3.x](#upgrading-from-3x).
 
 ### Scripttag {#script-tag}
@@ -66,14 +67,14 @@ Daar verwijzen de velden `unpkg` en `jsdelivr` naar, dus de kale pakket-URL leve
 
 ```html
 <erd-editor></erd-editor>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@4.1.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@4.2.0"></script>
 <script>
   const editor = document.querySelector('erd-editor');
   editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
 </script>
 ```
 
-Het importeren ervan registreert `<erd-editor>` op dezelfde manier; `window.ErdEditor` bevat de twee bestandscallbacks, `ErdEditor.setExportFileCallback` en `ErdEditor.setImportFileCallback`, en, sinds `3.9.2`, `ErdEditor.createKeyBindingMap`.
+Het importeren ervan registreert `<erd-editor>` op dezelfde manier; `window.ErdEditor` bevat de twee bestandscallbacks, `ErdEditor.setExportFileCallback` en `ErdEditor.setImportFileCallback`, en, sinds `3.9.2`, `ErdEditor.createKeyBindingMap`. Sinds `4.2.0` bevat `window.ErdEditor` ook `ErdEditor.dictionaryRowChords` — zie [dictionaryRowChords](./erd-editor-element.md#dictionaryrowchords).
 De exports-map wijst een bundler nog steeds naar de ES-modules, dus een installatie via npm pikt dit bestand nooit op.
 
 ### HTML {#html}
@@ -166,17 +167,18 @@ In de [scripttag-build](#script-tag) zitten alle drie als `data:`-URL's in het b
 
 ## Ingangspunten {#entry-points}
 
-Het importeren van `@dineug/erd-editor` registreert `<erd-editor>` als neveneffect. Daarnaast exporteert het pakket het elementtype, twee setters voor callbacks, sinds `3.9.2` de standaardtoetscombinaties met hun typen en sinds `4.0.0` de typen voor de weergavetalen en het type voor de opties van `getSchemaSQL()`.
+Het importeren van `@dineug/erd-editor` registreert `<erd-editor>` als neveneffect. Daarnaast exporteert het pakket het elementtype, twee setters voor callbacks, sinds `3.9.2` de standaardtoetscombinaties met hun typen, sinds `4.0.0` de typen voor de weergavetalen en het type voor de opties van `getSchemaSQL()` en sinds `4.2.0` de toetscombinaties voor de rijen van het tabblad Woordenboek.
 
 | Export | Beschrijving |
 | --- | --- |
 | `ErdEditorElement` (type) | De interface van het element — zie [ErdEditorElement](./erd-editor-element.md). |
 | `setExportFileCallback(cb)` | Vervangt de browserdownload, `(blob, { fileName }) => void`. |
-| `setImportFileCallback(cb)` | Vervangt de bestandskiezer van de browser, `({ type, op, accept, mode }) => void`; `mode` sinds `4.0.0`. |
+| `setImportFileCallback(cb)` | Vervangt de bestandskiezer van de browser, `({ type, op, accept, mode }) => void`; `mode` sinds `4.0.0`. Sinds `4.2.0` opent `Import CSV` op het tabblad Woordenboek de bestandskiezer van de browser, ook als er een callback is ingesteld — zie [Bestandsdialoogvensters](#file-dialogs). |
 | `createKeyBindingMap()` | Geeft bij elke aanroep de standaardtoetscombinaties terug als een nieuwe `KeyBindingMap` — zie [createKeyBindingMap](./erd-editor-element.md#createkeybindingmap). |
 | `KeyBindingMap`, `KeyBindingName`, `ShortcutOption` (typen) | Een map met toewijzingen, de union van de opdrachtnamen ervan en één toewijzing. |
+| `dictionaryRowChords(map)` | Sinds `4.2.0`. Geeft bij elke aanroep als een nieuwe `ShortcutOption[]` de toetscombinaties terug waarmee het raster van het tabblad [Woordenboek](../guide/guides/dictionary.md#adding-and-deleting-rows) rijen invoegt en verwijdert op basis van de `KeyBindingMap` die je doorgeeft. De toetscombinatie die rijen erboven invoegt, met de standaardwaarden `Alt+Shift+Enter`, zit in geen enkele toewijzing — zie [dictionaryRowChords](./erd-editor-element.md#dictionaryrowchords). |
 | `LocaleCode`, `LocaleOption` (typen) | Sinds `4.0.0`. De 25 codes van de weergavetalen en die codes plus `'system'`, wat `setLocale()` accepteert — zie [Weergavetaal](./erd-editor-element.md#display-language). |
-| `SchemaSQLOptions` (type) | Sinds `4.0.0`. De opties `statements` en `header` die `getSchemaSQL()` accepteert — zie [getSchemaSQL](./erd-editor-element.md#getschemasql). |
+| `SchemaSQLOptions` (type) | Sinds `4.0.0`. De opties die `getSchemaSQL()` accepteert: `statements`, `header` en, sinds `4.2.0`, `logicalNameAsComment` — zie [getSchemaSQL](./erd-editor-element.md#getschemasql). |
 
 `@dineug/erd-editor/engine.js` is een tweede ingangspunt. Het draait de documentstore zonder DOM, dus het werkt in een Web Worker — zie [Externe opslag](./advanced/remote-storage.md).
 Het exporteert `createReplicationStore` en het type `ReplicationStore`. Sinds `3.10.0` exporteert het ook het type `ReplicationChange`, `{ value: string; changed: boolean }`, dat de listener voor `change` van een replica ontvangt — zie [on@change](./advanced/remote-storage.md#onchange).
@@ -188,6 +190,7 @@ Sinds `3.9.1` is er een derde, `@dineug/erd-editor/peer.js`: de headless peer wa
 
 Importeren en exporteren lopen via injecteerbare callbacks, zodat een host zonder bestandsdialoogvenster van de browser — bijvoorbeeld een webview in een IDE — een eigen dialoogvenster kan leveren.
 De twee zijn niet symmetrisch: de export geeft je het voltooide bestand, terwijl de import er alleen om vraagt, en je zet de inhoud zelf terug in de editor.
+Sinds `4.2.0` is `Import CSV` op het tabblad Woordenboek de enige import die nooit de importcallback aanroept, want het `type` van die callback heeft geen waarde voor CSV. Deze import opent altijd de eigen bestandskiezer van de browser, voor `.csv`-bestanden — zie [CSV importeren en exporteren](../guide/guides/dictionary.md#importing-and-exporting-csv).
 
 `op` is `set` of `diff` — een `diff` gaat naar `setDiffValue()`, ongeacht het `type`. Anders kiest `type` de methode, en `accept` bevat de extensies van dat type, klaar om door te geven aan een bestandsdialoogvenster van de host.
 Sinds `4.0.0` krijgt een `set` de waarde `mode: 'append'` mee wanneer de gebruiker [Importeren en toevoegen](../guide/guides/file-import-export.md#import-and-add) heeft gekozen, en geen `mode` bij een gewone import. Geef het door: een callback die het weglaat, vervangt het diagram waaraan de gebruiker wilde toevoegen.
@@ -229,8 +232,8 @@ setImportFileCallback(async ({ type, op, accept, mode }) => {
 Vertak op elk `type` dat je afhandelt en negeer de rest.
 Een vervangende `setSchemaJSON()` maakt, net als een toewijzing aan `value`, het document leeg voordat er wordt geparseerd, dus als je daar een payload naartoe stuurt die geen `.erd.json`-document is — via een allesvangende `else` of omdat een later toegevoegd `type` daar terechtkwam — wordt het diagram leeggemaakt in plaats van dat er iets wordt geïmporteerd.
 
-De `fileName` die de editor genereert, is `<database name>-<timestamp>` plus de extensie van het bestand, waarbij de tijdstempel de lokale tijd is in de notatie `yyyy-MM-dd'T'HH_mm_ss`. Een lege databasenaam valt terug op `unnamed`.
-De exportcallback ontvangt deze bestanden. Sinds `4.0.0` horen de SVG en de bestanden van de Codegenerator erbij, en komt de `.sql` uit `Save file` op het tabblad Schema SQL in plaats van rechtstreeks uit `Export`.
+De `fileName` die de editor genereert, is `<database name>-<timestamp>` plus de extensie van het bestand, waarbij de tijdstempel de lokale tijd is in de notatie `yyyy-MM-dd'T'HH_mm_ss`. Een lege databasenaam valt terug op `unnamed`. De naam van een CSV-bestand van het Woordenboek bevat vóór de extensie de naam van het blad, zoals in `<database name>-<timestamp>-words.csv`.
+De exportcallback ontvangt deze bestanden. Sinds `4.0.0` horen de SVG en de bestanden van de Codegenerator erbij, en komt de `.sql` uit `Save file` op het tabblad Schema SQL in plaats van rechtstreeks uit `Export`. Sinds `4.2.0` hoort ook de CSV van het tabblad Woordenboek erbij.
 
 | Bestand | Extensie | `type` van de blob |
 | --- | --- | --- |
@@ -238,6 +241,7 @@ De exportcallback ontvangt deze bestanden. Sinds `4.0.0` horen de SVG en de best
 | `Save file` op het tabblad Schema SQL, met de tekst die het tabblad toont — zie [Schema SQL](../guide/guides/schema-sql.md) | `.sql` | geen |
 | Het dialoogvenster [Export image](../guide/guides/file-import-export.md#image) | `.png` of `.svg` | `image/png` of `image/svg+xml` |
 | `Save file` op het tabblad Codegenerator — zie [Codegenerator](../guide/guides/code-generator.md) | Die van de taal: `.cs`, `.go`, `.java`, `.kt`, `.php`, `.rs`, `.scala`, `.swift`, `.ts`, `.py`, `.aml`, `.dbml`, `.graphql`, `.json` of `.mmd` | geen |
+| `Export CSV` op het tabblad Woordenboek, met elke rij van het getoonde blad, ongeacht wat de zoekopdracht ervan toont — zie [CSV importeren en exporteren](../guide/guides/dictionary.md#importing-and-exporting-csv) | `.csv` | `text/csv` |
 
 Een host die een handler op basis van de extensie kiest, heeft voor elk van deze bestanden een handler nodig.
 
@@ -261,5 +265,5 @@ Er worden geen polyfills meegebundeld. Voeg je eigen polyfills toe als je oudere
 - De importcallback krijgt `mode: 'append'` bij importeren en toevoegen, en een callback moet dat doorgeven. De exportcallback krijgt nu ook `.svg`-bestanden en bestanden van de Codegenerator, en `Export` ▸ `Schema SQL` opent het tabblad Schema SQL in plaats van op te slaan, dus de `.sql` komt alleen nog uit `Save file` op dat tabblad — zie [Bestandsdialoogvensters](#file-dialogs).
 - `Delete` en `Backspace` zijn gekoppeld aan de nieuwe `removeSelection`. Zolang de editor de focus heeft buiten een tekstveld, wordt de standaardactie van de toets op elk tabblad geblokkeerd, en op het ERD-tabblad wordt de selectie verwijderd. `KeyBindingName` en `KeyBindingMap` krijgen die erbij, en `setKeyBindingMap({ removeSelection: [] })` laat beide toetsen aan de pagina over — zie [setKeyBindingMap](./erd-editor-element.md#setkeybindingmap).
 - `ThemeOptions.appearance` accepteert ook `'system'`, `System` in de themabouwer, dat wordt ingesteld als je `systemDarkMode` inschakelt. `changePresetTheme` meldt `'system'` zolang die waarde is gekozen, dus sla de waarde ongewijzigd op en geef ze terug aan `setPresetTheme`. Als `systemDarkMode` aanstaat, blijft een `setPresetTheme()` met `'light'` of `'dark'` nu staan in plaats van bij de volgende wijziging in het besturingssysteem te worden overschreven — zie [systemDarkMode](./erd-editor-element.md#systemdarkmode) en [changePresetTheme](./erd-editor-element.md#changepresettheme).
-- `@dineug/erd-editor-mcp` `1.0.0`, de VS Code-extensie `4.0.0` of later en de Obsidian- en JetBrains-plug-ins `1.0.0` of later spreken hubprotocol 2. Server `1.0.0` en een eerdere editorversie die agents bedient, of een eerdere server en een van deze editors, weigeren elkaar met `protocolMismatch`, waarbij de kant wordt genoemd die moet worden bijgewerkt — zie [Bijwerken](../mcp/installation.md#updating).
+- `@dineug/erd-editor-mcp` `1.0.0` of later, de VS Code-extensie `4.0.0` of later en de Obsidian- en JetBrains-plug-ins `1.0.0` of later spreken hubprotocol 2. Server `1.0.0` of later en een eerdere editorversie die agents bedient, of een eerdere server en een van deze editors, weigeren elkaar met `protocolMismatch`, waarbij de kant wordt genoemd die moet worden bijgewerkt — zie [Bijwerken](../mcp/installation.md#updating).
 - Een CDN-URL zonder versie levert nu de nieuwste 4.x-versie. Zet `@3.10.0` vast om op 3.x te blijven — zie [CDN](#cdn).

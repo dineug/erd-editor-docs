@@ -77,8 +77,8 @@ Inicie um relacionamento pelo menu de contexto, pela [barra de ferramentas do ca
 - One N: `Ctrl + Alt + 4` (Windows/Linux) ou `⌘ + ⌥ + 4` (Mac)
 
 Assim que um tipo é preparado, o cursor muda. Clique primeiro na tabela pai e depois na tabela filha.  
-A tabela pai recebe uma chave primária se não tiver uma e, para cada coluna de chave primária da tabela pai, a tabela filha recebe uma coluna de chave estrangeira `Not Null` com o mesmo tipo de dados, valor padrão e comentário.  
-Uma chave serial é a exceção: sua chave estrangeira recebe o tipo inteiro que o serial armazena, como `integer` para `serial4` — consulte [Relacionamentos identificadores](./relationship-editing.md#identifying-relationships).  
+A tabela pai recebe uma chave primária se não tiver uma e, para cada coluna de chave primária da tabela pai, a tabela filha recebe uma coluna de chave estrangeira `Not Null` com o mesmo tipo de dados, valor padrão, comentário, [nome lógico](./logical-names.md) e [domínio](./dictionary.md#domains-and-data-types).  
+Uma chave serial é a exceção: sua chave estrangeira recebe o tipo inteiro que o serial armazena, como `integer` para `serial4`, e então não vincula nenhum domínio — consulte [Relacionamentos identificadores](./relationship-editing.md#identifying-relationships).  
 Cada coluna de chave estrangeira é nomeada a partir da sua chave: um nome de uma só palavra, como `id`, ganha na frente o nome da tabela pai (`user_id`), um nome de várias palavras, como `member_id`, é mantido e um nome que a tabela filha já tem é numerado (`user_id_2`) — consulte [Nomes das colunas de chave estrangeira](./relationship-editing.md#foreign-key-column-names).  
 Clicar na mesma tabela nas duas vezes desenha um relacionamento autorreferenciado.  
 Um relacionamento novo começa com `On Delete` e `On Update` ambos definidos como `Not set`; altere-os pelo menu de contexto dele — consulte [ON DELETE e ON UPDATE](./relationship-editing.md#on-delete-and-on-update).  
@@ -91,7 +91,8 @@ Depois que a tabela pai é escolhida, apontar para uma tabela em que o relaciona
 
 A tabela pai também mostra os botões depois que o ponteiro se afasta um pouco do ponto em que você clicou nela, então um relacionamento autorreferenciado também pode ser mapeado para colunas existentes.  
 Um dedo não tem como passar o ponteiro sobre nada, então, ao desenhar com o dedo, os botões nunca aparecem e tocar na tabela filha desenha o relacionamento de imediato; uma caneta os mostra como faz um mouse.  
-Se a tabela pai tiver perdido a chave primária quando você chegar à tabela filha, por exemplo por causa de um desfazer ou da edição de um colaborador, `Create new columns` fica esmaecido com a dica de ferramenta `<parent> has no primary key to copy`, e clicar na tabela filha encerra o desenho sem desenhar nada.
+Se a tabela pai tiver perdido a chave primária quando você chegar à tabela filha, por exemplo por causa de um desfazer ou da edição de um colaborador, `Create new columns` fica esmaecido com a dica de ferramenta `<parent> has no primary key to copy`, e clicar na tabela filha encerra o desenho sem desenhar nada.  
+A dica de ferramenta nomeia a tabela pai como faz a [exibição de nomes](./logical-names.md#beyond-the-canvas).
 
 ![Desenho de um relacionamento One N com ⌘ + ⌥ + 4 e, depois, de um Zero N pela barra de ferramentas do canvas, com a tabela filha contornada e seus botões Map to existing columns e Create new columns](/img/demo-relationship.webp)
 

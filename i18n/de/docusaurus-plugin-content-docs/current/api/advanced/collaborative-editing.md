@@ -44,19 +44,26 @@ Behandeln Sie eine Aktion als Blackbox und reichen Sie sie unverändert durch, s
 
 Einiges von dem, was ein Editor tut, bleibt in diesem Editor.  
 Wenn eine Tabelle, Notiz oder Tabellengruppe in den Vordergrund geholt wird, wie es beim Auswählen geschieht, wird das nicht gesendet.  
-Auch die Auswahl bei `Statements`, `Header` und `Tables` auf der Registerkarte [Schema SQL](../../guide/guides/schema-sql.md) wird nicht gesendet, denn sie gehört zu dem Fenster, in dem sie getroffen wird.  
+Auch die Auswahl bei `Statements`, `Header`, `Write logical names into empty comments` (seit `4.2.0`) und `Tables` auf der Registerkarte [Schema SQL](../../guide/guides/schema-sql.md) wird nicht gesendet, denn sie gehört zu dem Fenster, in dem sie getroffen wird.  
 Seit `4.1.0` bleibt auch der [Explorer](../../guide/guides/explorer.md) in seinem Editor: Ob er geöffnet ist, seine Breite, seine eingeklappten Zeilen, die Zeile, auf der der Tastaturfokus liegt, wohin sein Baum gescrollt ist sowie seine Suche und Optionen werden nicht gesendet.  
 Auch die [Hervorhebung](../../guide/guides/relationship-editing.md#reading-a-connector), die beim Wechseln zu einem Fremdschlüssel auf der Verbindungslinie seiner Beziehung erscheint, wird nicht gesendet.  
-Scrollen, Zoomen oder ein Wechsel der Registerkarte wird gesendet, verschiebt aber nie die Ansicht eines anderen Benutzers und wechselt nie dessen Registerkarte. Das gilt auch für das Scrollen bei einem Sprung aus dem Explorer und für den Wechsel zur Registerkarte ERD, wenn der Explorer von einer anderen Registerkarte aus geöffnet wird.
+Seit `4.2.0` bleibt auch die Registerkarte [Wörterbuch](../../guide/guides/dictionary.md) in ihrem Editor: Welches Blatt angezeigt wird sowie Suche, Auswahl, Scrollposition und Spaltenbreiten jedes Blatts werden nicht gesendet. Ihre Änderungen, Sortierungen und CSV-Importe werden dagegen gesendet.  
+Scrollen, Zoomen oder ein Wechsel der Registerkarte wird gesendet, verschiebt aber nie die Ansicht eines anderen Benutzers und wechselt nie dessen Registerkarte. Das gilt auch für das Scrollen bei einem Sprung aus dem Explorer, für den Wechsel zur Registerkarte ERD, wenn der Explorer von einer anderen Registerkarte aus geöffnet wird, und für den Wechsel der Registerkarte und das Scrollen bei einem Sprung vom Blatt [`Checks`](../../guide/guides/dictionary.md#the-checks-sheet) der Registerkarte Wörterbuch zu einer Tabelle oder Spalte. Ein Sprung von diesem Blatt zu einem Wort, einem Begriff oder einer Domäne bleibt auf der Registerkarte Wörterbuch, daher wird nichts davon gesendet.
+
+Seit `4.2.0` wird auch ein Wechsel der [Namensansicht](../../guide/guides/logical-names.md#switching-the-view) gesendet, und ihre [Sperre](../../guide/guides/settings.md#lock) entscheidet, was die anderen Editoren damit tun. Die Sperre `Name View` ist in einem neuen Diagramm und in jedem Dokument aus einer Version vor `4.2.0` eingeschaltet.  
+Solange die Sperre eingeschaltet ist, zeigt sich der Wechsel nur in dem Editor, der ihn vorgenommen hat: Er wird zwar weiterhin gesendet, aber jeder andere Editor und jedes Replikat verwirft ihn, sodass jeder Benutzer eine andere Ansicht betrachten kann, während `value` die gesperrte behält. Bei einer Änderung der Sprache, einer Schreibweise oder des Begrenzertyps ist das anders: Sie erreicht jeden Editor, unabhängig davon, ob ihre Sperre eingeschaltet ist.  
+Solange die Sperre ausgeschaltet ist, ändert ein Wechsel in einem Editor, der bearbeiten kann, die Namensansicht in jedem Editor und jedem Replikat, wobei sich der letzte Wechsel durchsetzt, und jeder von ihnen speichert sie.  
+Der eigene Wechsel eines schreibgeschützten Editors bleibt immer in diesem Editor, und der Editor folgt weiterhin den gemeinsamen Wechseln der anderen.
 
 [Sperren](../../guide/guides/settings.md#lock) werden gemeinsam genutzt: Das letzte Sperren oder Entsperren einer Einstellung setzt sich in jedem Editor durch, und eine Sperre trägt die Werte des Editors mit, der sie eingeschaltet hat, sodass jeder Editor und jedes Replikat denselben Wert speichert.  
 Eine Sperre `Viewport` speichert daher die Ansicht des Editors, der sie eingeschaltet hat, und eine Sperre `Canvas Type` die letzte Registerkarte, auf der dieser Editor vor der Registerkarte Einstellungen war, auf der Sperren eingeschaltet werden.  
-Das Ausschalten der Sperre `Language`, `Table Name Case`, `Column Name Case` oder `Bracket Type` setzt diese Einstellung außerdem in jedem Editor auf den Wert, den der Editor anzeigt, der sie ausgeschaltet hat, sodass alle weiterhin einen einzigen Wert speichern. Das Ausschalten von `Viewport` oder `Canvas Type` verändert bei niemandem die Ansicht oder die Registerkarte.
+Das Ausschalten der Sperre `Language`, `Table Name Case`, `Column Name Case`, `Bracket Type` oder seit `4.2.0` `Name View` setzt diese Einstellung außerdem in jedem Editor auf den Wert, den der Editor anzeigt, der sie ausgeschaltet hat, sodass alle weiterhin einen einzigen Wert speichern. Das Ausschalten von `Viewport` oder `Canvas Type` verändert bei niemandem die Ansicht oder die Registerkarte.
 
 Eine Änderung am Skript `Before tables` oder `After tables` wird als Ganzes gesendet, wenn sein Feld den Fokus verliert. Die beiden Skripte werden getrennt abgeglichen, sodass die Änderung eines Mitbearbeiters am einen nie das andere überschreibt.
 
 Nichts, was im [Flow-Modus](../../guide/guides/visualization.md#flow-never-edits-the-document) der Registerkarte Visualisierung getan wird, ist eine Änderung am Dokument, deshalb sendet ein Editor in Flow den anderen keine Änderungen, und die Änderungen, die sie senden, werden weiter angewendet, solange er dort ist.  
-Die einzige Ausnahme ist der Wechsel von Flow zu einer anderen Registerkarte: Dieser Wechsel der Registerkarte wird wie jeder andere gesendet.  
+Es gibt zwei Ausnahmen. Der Wechsel von Flow zu einer anderen Registerkarte ist ein Wechsel der Registerkarte und wird wie jeder andere gesendet. Seit `4.2.0` ist eine Auswahl in der Liste der Namensansicht auf der Symbolleiste von Flow ein Wechsel der Namensansicht und wird wie ein auf der Zeichenfläche vorgenommener Wechsel gesendet und angewendet.  
+`Previous table`, `Next table` sowie die Tasten für Rückgängig und Wiederholen, mit denen Sie in Flow die Ansichten [schrittweise durchlaufen](../../guide/guides/visualization.md#previous-table-and-next-table), werden nicht gesendet.  
 Die Kartenschaltfläche für den externen Link, ein nach `#`, `@` oder `:` gewähltes Ergebnis der [Schnellsuche](../../guide/guides/quick-search.md#searching-the-diagram) und das Öffnen des [Explorers](../../guide/guides/explorer.md#opening-and-closing) wechseln alle von Flow zur Registerkarte ERD. Ein Scrollen, das die Kartenschaltfläche oder ein Ergebnis der Schnellsuche dort auslöst, wird ebenfalls gesendet.
 
 ## Zwei Editoren auf einer Seite {#two-editors-on-one-page}
@@ -99,6 +106,7 @@ const sharedStore2 = editor2.getSharedStore();
 
 Der Laufzeitwert enthält noch, was seit dem Öffnen des Dokuments entfernt wurde, sodass der beitretende Editor, wenn ein anderer Editor später ein Entfernen rückgängig macht, die Tabelle mit ihrem Namen und ihren Spalten zurückholt.  
 [`value`](../erd-editor-element.md#value) ist die Form, die eine Datei enthält, ohne entfernte Entitäten, sodass ein beitretender Editor, der daraus oder aus der Datei initialisiert wurde, stattdessen eine leere, namenlose Tabelle zurückholen würde.  
+Seit `4.2.0` gilt dasselbe für ein Wort, einen Begriff oder eine Domäne, die von einem Blatt der Registerkarte [Wörterbuch](../../guide/guides/dictionary.md) entfernt wurden: Macht ein anderer Editor das Entfernen rückgängig, listet ein aus `runtimeValue` initialisierter beitretender Editor die Zeile wieder vollständig auf, und einer, der aus `value` initialisiert wurde, listet eine leere Zeile auf, die sein eigener Wert `value` dann weglässt.  
 Schreiben Sie weiterhin `value` in den Speicher: `runtimeValue` dient nur dazu, einen anderen Editor, eine zweite Ansicht oder einen [replicationStore](./remote-storage.md) zu initialisieren.  
 Die Editoren in VS Code, Obsidian, einer JetBrains-IDE und der Web-App initialisieren auf diese Weise eine zweite Ansicht eines geöffneten Dokuments.
 
@@ -134,6 +142,31 @@ Halten Sie jeden Editor einer Sitzung und jeden [replicationStore](./remote-stor
 Ein Editor der Version `4.1.0` sendet keinen neuen Aktionstyp, sodass Editoren und Replikate der Versionen `4.0.0` und `4.1.0` eine Sitzung teilen, ohne dass etwas verloren geht.  
 In ihm durchsucht [Suchen und Ersetzen](../../guide/guides/find-and-replace.md#replacing) auch Indexnamen und Tabellengruppennamen, und `Replace` und `Replace All` benennen sie über die Aktionen `index.changeName` und `tableGroup.changeName` um, die ein Editor der Version `4.0.0` bereits anwendet.
 
+Seit `4.2.0` werden diese Änderungen über neue Aktionstypen übertragen, und eine Weiterleitung, die Aktionen unverändert durchreicht, braucht dafür nichts Neues:
+
+- der [logische Name](../../guide/guides/logical-names.md) einer Tabelle oder Spalte: `table.changeLogicalName` und `column.changeLogicalName`; ob ihr Name [aus den Wörterbüchern abgeleitet](../../guide/guides/dictionary.md#deriving-physical-names) wurde: `table.changeNameDerived` und `column.changeNameDerived`;
+- eine Spalte, die mit einer [Domäne](../../guide/guides/dictionary.md#domains-and-data-types) verknüpft wird oder deren Verknüpfung aufgehoben wird: `column.changeDomain`;
+- das Hinzufügen, Ändern (einschließlich der Position im Blatt, wie eine Sortierung sie setzt) oder Entfernen eines Worts, eines Begriffs oder einer Domäne auf der Registerkarte [Wörterbuch](../../guide/guides/dictionary.md): `dictionary.add`, `dictionary.update` und `dictionary.remove`;
+- ein Wechsel der [Namensansicht](../../guide/guides/logical-names.md#switching-the-view): `settings.changeNameViewMode`.
+
+Die Sperre `Name View` wird über die bestehende Aktion `settings.changeLockSettings` übertragen, die Ansichtsoption `Domain` über `settings.changeShow` und das Verschieben von `Logical Name` oder `Domain` in der [Spaltenreihenfolge](../../guide/guides/settings.md#adjusting-column-order) über `settings.changeColumnOrder`.  
+Die Aktionen `editor.clear` und `editor.loadJson` eines Imports von Schema SQL, GraphQL, DBML oder AML über `Import` führen `keepDictionaries: true` mit, wodurch die Wörter, Begriffe und Domänen in jedem Editor erhalten bleiben. Dasselbe gilt für die eines ersetzenden Aufrufs von [setSchemaSQL](../erd-editor-element.md#setschemasql), `setSchemaGraphQL`, `setSchemaDBML` oder `setSchemaAML`.  
+Ein physischer Name, den die Wörterbücher ableiten, wird über `table.changeName` oder `column.changeName` übertragen und der Datentyp, den eine Domäne ihren Spalten gibt, über `column.changeDataType`, also über dieselben Aktionen, die auch eine Änderung von Hand sendet.
+
+Ein Editor einer Version vor `4.2.0` ignoriert die neuen Aktionstypen: Er hat keine logischen Namen, keine Domänenverknüpfungen, keine Wörterbücher und keine Namensansicht. Das Sperren oder Entsperren von `Name View` ändert dort nichts, ebenso wenig das Verschieben von `Logical Name` oder `Domain` in der Spaltenreihenfolge oder das Verschieben einer anderen Zeile auf eine der beiden. Auch eine Sperre `Canvas Type`, die ein Editor einschaltet, der von der Registerkarte Wörterbuch zur Registerkarte Einstellungen gekommen ist, ändert dort nichts: Der ältere Editor kennt diese Registerkarte nicht, daher lässt er `Canvas Type` entsperrt. Er zeigt weiterhin die physischen Namen, die die Wörterbücher ableiten, und die Datentypen, die Domänen vergeben.  
+Seine eigenen Änderungen wissen nichts von logischen Namen, Domänen oder den Wörterbüchern, was sich so auf die neueren Editoren auswirkt:
+
+- Bei einer Tabelle oder Spalte, die er von Hand umbenennt, bleibt der Name als abgeleitet markiert, sodass ein logischer Name, der später in einem neueren Editor für sie eingegeben wird, den Namen erneut ableiten und dabei den von ihm eingetippten überschreiben kann.
+- Ein Datentyp, den er einer mit einer Domäne verknüpften Spalte gibt, lässt die Verknüpfung bestehen, sodass das Blatt `Checks` die Prüfung `Domain type mismatch` auflistet und die nächste Typänderung der Domäne der Spalte wieder den Typ der Domäne gibt.
+- Die Fremdschlüsselspalten einer Beziehung, die er hinzufügt, erhalten von ihrem Schlüssel keinen logischen Namen und keine Domäne.
+- Eine Tabelle, die er einfügt oder dupliziert, kommt ohne logische Namen und ohne Domänenverknüpfungen an.
+- Ein Import von Schema SQL, GraphQL, DBML oder AML in ihm sendet kein `keepDictionaries` und leert daher die Wörter, Begriffe und Domänen in jedem Editor.
+- Macht er ein Laden, einen Import oder `clear()` rückgängig, lädt er seine eigene Kopie des Dokuments in jeden Editor, und diese Kopie hat keine logischen Namen, keine Domänenverknüpfungen und keine Wörterbücher.
+- Diese Kopie und das Dokument, das ein Import von Schema SQL, GraphQL, DBML oder AML in ihm lädt, setzen außerdem die Sperre `Name View` in jedem Editor auf den Zustand zurück, in dem der ältere Editor sie vorgefunden hat. Jeder Editor speichert dann `Physical Names` als Namensansicht und zeigt sie auch an, wenn die Sperre ausgeschaltet ist.
+
+Ein mit einem solchen Editor gespeichertes Dokument hat keine logischen Namen, keine Domänenverknüpfungen, keine Wörterbücher und keine Namensansicht, daher öffnet ein Editor der Version `4.2.0` es in der Ansicht `Physical Names`. Die Sperre `Name View` speichert der ältere Editor dagegen so, wie er sie vorgefunden hat, sodass ein in einem Editor der Version `4.2.0` entsperrtes Dokument entsperrt bleibt.  
+Halten Sie jeden Editor einer Sitzung und jeden [replicationStore](./remote-storage.md#dispatch-dispatchsync), der ihr Dokument speichert, auf `4.2.0` oder neuer.
+
 ## SharedStoreConfig {#sharedstoreconfig}
 
 ### getNickname {#getnickname}
@@ -161,6 +194,7 @@ editor.getSharedStore({ mouseTracker: false });
 Überträgt, woran dieser Benutzer gerade arbeitet. Der Standardwert ist `true`.  
 Die Tabelle und die Zelle, die Sie fokussiert haben, die Tabellen, Notizen und Tabellengruppen, die Sie ausgewählt haben, und der Auswahlrahmen, den Sie auf der Zeichenfläche aufziehen, werden an die anderen Editoren gesendet und dort gezeichnet.  
 Jeder Benutzer erhält eine eigene Farbe, sodass Sie die Benutzer unterscheiden können: ein Umriss um die fokussierte Tabelle, eine Unterstreichung der fokussierten Zelle, ein Ring um die ausgewählten Tabellen, Notizen und Tabellengruppen und ein gestricheltes Rechteck für den Auswahlrahmen.  
+Seit `4.2.0` kann jeder Benutzer eine andere [Namensansicht](../../guide/guides/logical-names.md#collaborators) vor sich haben, solange ihre Sperre eingeschaltet ist oder nachdem ein schreibgeschützter Editor selbst gewechselt hat. Eine fokussierte Zelle, die Ihre Ansicht nicht zeigt, wird an der Zelle unterstrichen, die die Ansicht an ihrer Stelle zeigt: Der Name und der logische Name vertreten einander, ebenso der Datentyp und die Domäne.  
 Präsenzinformationen, die von anderen Benutzern eintreffen, werden immer auf Ihrer Zeichenfläche gezeichnet, unabhängig davon, ob diese Option eingeschaltet ist.  
 Im Flow-Modus der Registerkarte Visualisierung werden Fokus und Auswahl anderer Benutzer auf den Tabellenkarten gezeichnet, ihre Auswahlrahmen jedoch nicht. Die Tabellen, die Sie dort auswählen, werden weiterhin gesendet; der Auswahlrahmen, den Sie dort aufziehen, nicht.
 

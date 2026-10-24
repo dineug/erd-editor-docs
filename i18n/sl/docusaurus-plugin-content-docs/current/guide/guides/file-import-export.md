@@ -16,16 +16,20 @@ Pet formatov je mogoče uvoziti iz podmenija `Import` v priročnem meniju platna
 - AML
 
 Ukaz `Import and Add` tik pod ukazom `Import` datoteko doda v diagram, namesto da bi ga nadomestil – glejte razdelek [Uvozi in dodaj](#import-and-add).  
-Pozdravni zaslon, ki ga prikaže prazen diagram, ima postavko `Import` z istimi petimi formati – glejte razdelek [Pozdravni zaslon](./editing-start.md#welcome-screen).
+Pozdravni zaslon, ki ga prikaže prazen diagram, ima postavko `Import` z istimi petimi formati – glejte razdelek [Pozdravni zaslon](./editing-start.md#welcome-screen).  
+Tudi listi zavihka [Slovar](./dictionary.md) sprejmejo besede, izraze in domene iz datotek CSV, in sicer z lastnim ukazom `Import CSV` tega zavihka – glejte razdelek [Uvoz in izvoz CSV](./dictionary.md#importing-and-exporting-csv).
 
 Končnice se preverjajo ne glede na velikost črk. Če izberete datoteko, katere končnica se ne ujema z izbranim formatom, se uvoz prekliče in prikaže se sporočilo `Only <format> files can be imported`, pri čemer je format zapisan kot `json`, `sql`, `graphql`, `dbml` ali `aml`, na primer `Only sql files can be imported`.
 
 Ukaz `Import` trenutni dokument nadomesti, namesto da bi vanj združil vsebino, ena razveljavitev pa povrne prejšnji diagram.  
-Datoteka JSON s seboj prinese lastne nastavitve, vključno s svojimi [zaklepi](./settings.md#lock). Kjer datoteka zaklene zavihek, jezik generatorja kode, zapis imen ali vrsto narekovajev, še naprej vidite to, kar ste imeli, shrani pa se zaklenjena vrednost iz datoteke. Pogled, zaklenjen ali ne, se postavi tja, kamor ga postavi datoteka. Datoteka JSON, shranjena pred uvedbo zaklepanja, se uvozi z vsemi vklopljenimi zaklepi in s pogledom pri 100 %.  
+Datoteka JSON s seboj prinese lastne nastavitve, vključno s svojimi [zaklepi](./settings.md#lock). Kjer datoteka zaklene zavihek, jezik generatorja kode, zapis imen, vrsto narekovajev ali [prikaz imen](./logical-names.md#name-view), še naprej vidite to, kar ste imeli, shrani pa se zaklenjena vrednost iz datoteke. Povečava in položaj pogleda, zaklenjena ali ne, se postavita tja, kamor ju postavi datoteka. Datoteka JSON, shranjena pred uvedbo zaklepanja, se uvozi z vsemi vklopljenimi zaklepi in s pogledom pri 100 %. Datoteka, shranjena pred uvedbo zaklepa `Name View`, se uvozi tako, da je ta zaklep vklopljen, ne glede na to, katere druge zaklepe beleži.  
 Drugi formati ohranijo nastavitve, ki jih že imate, vključno z zaklepi, razen pogleda, ki se začne pri 100 %.  
 Razčlenjevalniki za GraphQL, DBML in AML nikoli ne odpovejo: iz datoteke, ki je ne morejo prebrati, nastane prazen diagram namesto napake.
 
-Datoteka JSON ohrani položaje, ki jih ima. Tabele iz datoteke Sheme SQL, GraphQL, DBML ali AML se razporedijo, preden se diagram spremeni:
+Datoteka JSON prinese tudi logična imena svojih tabel in stolpcev ter povezave svojih stolpcev z domenami. Njene besede, izrazi in domene nadomestijo tiste na zavihku [Slovar](./dictionary.md), zato datoteka, ki jih nima, pusti liste prazne, razveljavitev uvoza pa povrne tiste, ki jih je nadomestila.  
+Drugi formati nimajo ničesar od tega. Njihove tabele se uvozijo brez logičnih imen in brez stolpcev, povezanih z domeno, vaše besede, izrazi in domene pa ostanejo nespremenjeni. Tudi razveljavitev ali uveljavitev uvoza jih pusti nespremenjene, zato se sprememba slovarja, narejena po uvozu, ohrani. Tak uvoz pusti nespremenjeno tudi lastno zgodovino razveljavitev vsakega lista, medtem ko uvoz JSON te zgodovine izprazni – glejte razdelek [Listi zavihka Slovar](./undo-redo.md#dictionary-sheets).
+
+Datoteka JSON ohrani položaje, ki jih ima. Tabele iz datoteke Sheme SQL, GraphQL, DBML ali AML se razporedijo, preden se diagram spremeni, s širinami, ki jih imajo v [prikazu imen](./logical-names.md#beyond-the-canvas), ki ga gledate:
 
 - Če ima datoteka dve ali več tabel in vsaj eno relacijo, jih [samodejna postavitev](./table-related-functions.md#auto-layout) `Flow` razporedi od leve proti desni vzdolž relacij, od zgornjega levega kota platna. Šteje tudi relacija, ki tabelo povezuje s samo seboj.
 - Sicer se razporedijo v vrstice od zgornjega levega kota, najprej tabele z najmanj stolpci.
@@ -33,7 +37,7 @@ Datoteka JSON ohrani položaje, ki jih ima. Tabele iz datoteke Sheme SQL, GraphQ
 
 Diagram se nato nadomesti v enem koraku, zato vmes ni prikazano nič. Nastavitev, ki jo spremenite med razporejanjem tabel, kot je zavihek, se ohrani, če pa medtem uvozite drugo datoteko, obvelja uvoz, ki se je začel zadnji.
 
-Urejevalnik samo za branje z ukazom `Import` ne naloži ničesar in ukaza `Import and Add` ne ponuja.
+Urejevalnik samo za branje z ukazom `Import` ne naloži ničesar in ne ponuja niti ukaza `Import and Add` niti ukaza `Import CSV` na zavihku Slovar.
 
 ### Uvozi in dodaj {#import-and-add}
 
@@ -42,6 +46,7 @@ Ukaz `Import and Add` ohrani diagram in pod njim doda datoteko. Na voljo je v pr
 ![Dodajanje datoteke SQL prek Import and Add > Schema SQL: njene tabele pristanejo pod diagramom, razporejene vzdolž relacij, in so izbrane](/img/demo-import-and-add.webp)
 
 Datoteka se uvozi tako kot pri lepljenju: vse tabele, stolpci, relacije, indeksi, beležke in [skupine tabel](./table-groups.md), ki jih vsebuje, se dodajo kot novi elementi, tabele, ki so že v diagramu, se ne premaknejo in nobena nastavitev se ne spremeni, zato so nastavitve datoteke JSON izpuščene.  
+Tabele in stolpci iz datoteke JSON ohranijo svoja logična imena, vsako fizično ime pa še naprej upravljajo slovarji ali ostane vaše, kot je bilo v datoteki, kar določa, ali logično ime, vneseno pozneje, izpelje novo ime – glejte razdelek [Izpeljava fizičnih imen](./dictionary.md#deriving-physical-names). Besede, izrazi in domene iz datoteke so izpuščeni, zato zavihek Slovar ostane takšen, kot je bil, in noben dodani stolpec ni povezan z domeno: vsak ohrani podatkovni tip, ki ga ima.  
 Tabela z imenom, ki ga diagram že ima, se doda kot druga tabela s tem imenom in se z obstoječo ne združi. Relacije in indeksi prihajajo samo iz datoteke, zato tuji ključ na tabelo, ki je datoteka ne določa, ni povezan s tabelo, ki je že v diagramu.
 
 Dodani blok pristane tik pod vsem, kar vsebuje diagram, poravnan z njegovim levim robom, v praznem diagramu pa v zgornjem levem kotu. Upoštevajo se tudi beležke in skupine tabel, skrite z [možnostmi pogleda](./table-related-functions.md#table-view-options), saj so še vedno na svojem mestu.  
@@ -160,11 +165,10 @@ Poševnica nazaj pred narekovajem, kot jo MySQL in MariaDB zapišeta v `'it\'s'`
 Vrednost `DEFAULT` ohrani narekovaje, narekovaj v njej pa se zapiše nazaj podvojen, ne glede na to, kako ga je zaščitila datoteka: `'it''s'`.  
 Če je ob uvozu zbirka podatkov dokumenta Databricks, besedilo v enojnih narekovajih namesto tega sledi pravilom ogrodja Spark: vsaka poševnica nazaj zaščiti znak za njo, zato se `'C:\\dir'` prebere kot `C:\dir`, ubežna zaporedja, kot so `\n`, `\t` in `\u0041`, se dekodirajo, vrednost `DEFAULT` pa se ohrani kot `'it\'s'`.
 
-Izvožena Shema SQL zaščiti narekovaj v komentarju tabele ali stolpca: `COMMENT 'it''s'` za MySQL, MariaDB in Snowflake, `COMMENT ON TABLE` in `COMMENT ON COLUMN ... IS 'it''s'` za PostgreSQL in Oracle ter enako podvajanje, vključno z imeni tabel in stolpcev, v klicih `sp_addextendedproperty` za MSSQL. Komentar brez narekovaja se zapiše takšen, kot je.  
-Databricks namesto tega narekovaj in poševnico nazaj zaščiti s poševnico nazaj, kot v `COMMENT 'it\'s'`, zato se njegov izvoz natančno prebere nazaj samo, dokler je izbrana zbirka podatkov Databricks.  
-MSSQL vsak komentar zapiše kot `EXECUTE sys.sp_addextendedproperty 'MS_Description', '<comment>', 'schema', '<schema>', 'table', '<table>'`, pri stolpcu pa mu sledi `'column', '<column>'`. Ko ima nastavitev `Bracket` vrednost `None`, tabela z imenom `sales.users` da shemo `sales` in tabelo `users`, ime brez sheme pa je v shemi `dbo`. Pri kateri koli drugi vrednosti nastavitve `Bracket` celotno ime postane ime tabele v shemi `dbo`.
-
-Komentarji se pri izvozu za SQLite in ponovnem uvozu izgubijo: SQLite jih zapiše kot navadne vrstice `--`, ki jih razčlenjevalnik ne bere. Klici `sp_addextendedproperty` iz izvoza za MSSQL se uvozijo nazaj kot enaki komentarji tabel in stolpcev.
+Kako posamezna zbirka podatkov pri izvozu zapiše komentar in kako v njem zaščiti narekovaj, je opisano v razdelku [Komentarji](./schema-sql.md#comments) na strani Shema SQL.  
+Izvoz za MySQL, MariaDB, PostgreSQL, Oracle, Snowflake ali MSSQL se uvozi nazaj kot enaki komentarji tabel in stolpcev, vključno z narekovaji, razen praznih vrstic, ki jih izvoz za Oracle izpusti. Izvoz za Databricks, ki narekovaj in poševnico nazaj zaščiti s poševnico nazaj, se natančno prebere nazaj samo, dokler je izbrana zbirka podatkov Databricks.  
+Komentarji se pri izvozu za SQLite in ponovnem uvozu izgubijo: SQLite jih zapiše kot navadne vrstice `--`, ki jih razčlenjevalnik ne bere.  
+Razen pri SQLite se logično ime, ki ga je stikalo `Write logical names into empty comments` zapisalo v prazen komentar, uvozi nazaj kot komentar te tabele ali stolpca, ne kot logično ime – glejte razdelek [Logična imena kot komentarji](./schema-sql.md#logical-names-as-comments).
 
 ### GraphQL {#graphql}
 
@@ -200,22 +204,24 @@ Ime datoteke se mora končati s končnico `.aml`.
 
 GraphQL, DBML in AML so formati za izmenjavo v obe smeri: vsak je tudi cilj [generatorja kode](./code-generator.md).  
 DBML in AML prenašata ON DELETE in ON UPDATE vsake relacije v obe smeri – glejte stran [Generator kode](./code-generator.md#on-delete-and-on-update). GraphQL ne prenaša nobenega od njiju, zato sta po uvozu GraphQL obe nastavitvi `Not set`.  
-DBML v obe smeri prenaša tudi barve tabel, brez morebitne prosojnosti, in vsako skupino tabel, ki vsebuje vsaj eno tabelo. Skupina brez imena se vrne kot `group_1`, `group_2` in tako naprej, ponovljeno ime skupine pa se vrne z dodanim `_2`, `_3` in tako naprej. AML prenaša barvo tabele samo kot najbližje od svojih imen barv, zato se `#FF8800` zapiše kot `orange` in vrne kot `#f97316`, skupin pa ne prenaša. GraphQL ne prenaša ne barv ne skupin.
+DBML v obe smeri prenaša tudi barve tabel, brez morebitne prosojnosti, in vsako skupino tabel, ki vsebuje vsaj eno tabelo. Skupina brez imena se vrne kot `group_1`, `group_2` in tako naprej, ponovljeno ime skupine pa se vrne z dodanim `_2`, `_3` in tako naprej. AML prenaša barvo tabele samo kot najbližje od svojih imen barv, zato se `#FF8800` zapiše kot `orange` in vrne kot `#f97316`, skupin pa ne prenaša. GraphQL ne prenaša ne barv ne skupin.  
+Nobeden od teh treh formatov ne prenaša logičnih imen, povezav z domenami ali slovarjev, v nobeno smer: generator kode zapiše fizično ime in podatkovni tip vsake tabele in stolpca, nikoli logičnega imena ali domene.
 
 ## Izvoz {#exporting}
 
 Podmeni `Export` v priročnem meniju platna ima tri postavke:
 
-- json: shrani diagram tako, kot ga vsebuje njegova datoteka, kot datoteko `.erd.json`: tabele z njihovimi stolpci in indeksi, relacije, beležke in skupine tabel ter nastavitve, pri čemer ima vsaka [zaklenjena nastavitev](./settings.md#lock) svojo zaklenjeno vrednost.
+- json: shrani diagram tako, kot ga vsebuje njegova datoteka, kot datoteko `.erd.json`: tabele z njihovimi stolpci in indeksi, relacije, beležke in skupine tabel, logična imena in povezave stolpcev z domenami, besede, izraze in domene zavihka [Slovar](./dictionary.md) ter nastavitve, pri čemer ima vsaka [zaklenjena nastavitev](./settings.md#lock) svojo zaklenjeno vrednost. Kar ne vsebuje ničesar, na primer prazno besedilo ali prazna vrstica slovarja, je izpuščeno – glejte razdelek [Oblika za shranjevanje in vrednost med izvajanjem](../../api/advanced/schema.md#storage-form-and-runtime-value).
 - Schema SQL: odpre zavihek [Shema SQL](./schema-sql.md#saving-or-copying-the-sql) z odprto ploščo z možnostmi in fokusom na gumbu `Save file`, tako da pritisk tipke `Enter` shrani kodo SQL, ki jo prikazuje zavihek, kot datoteko `.sql`. Do takrat se ne shrani nič.
 - Image: odpre pogovorno okno `Export image`, ki diagram shrani kot datoteko `.png` ali `.svg` ali ga kopira v odložišče kot PNG – glejte razdelek [Slika](#image).
 
-Vse tri delujejo v urejevalniku samo za branje.
+Vse tri delujejo v urejevalniku samo za branje.  
+Lastni ukaz `Export CSV` zavihka Slovar, ki ga v tem podmeniju ni, shrani list `Domains`, `Words` ali `Terms` kot datoteko CSV. Za razliko od teh treh v urejevalniku samo za branje ni na voljo – glejte razdelek [Uvoz in izvoz CSV](./dictionary.md#importing-and-exporting-csv).
 
 Shema SQL zapiše ON DELETE in ON UPDATE vsake relacije za njenim določilom `REFERENCES`, najprej ON DELETE. Vrednost `Not set` ne zapiše ničesar, dejanje, ki ga izbrana zbirka podatkov ne sprejema, pa je izpuščeno. Katera zbirka podatkov sprejema katero dejanje, je opisano na strani [Urejanje relacij](./relationship-editing.md#on-delete-and-on-update).
 
 Vsaka izvožena datoteka dobi ime `<database name>-<timestamp>`, ki mu sledi njena končnica, pri čemer je časovni žig v lokalnem času, oblikovan kot `yyyy-MM-dd'T'HH_mm_ss` – na primer `my-schema-2026-08-29T04_05_06.erd.json`. Če je ime zbirke podatkov prazno, se uporabi `unnamed`.  
-Gumba `Save file` na zavihku Shema SQL in v [generatorju kode](./code-generator.md) poimenujeta datoteke na enak način. Slika prevzame ime zbirke podatkov, kakršno je bilo ob odprtju pogovornega okna.
+Gumba `Save file` na zavihku Shema SQL in v [generatorju kode](./code-generator.md) poimenujeta datoteke na enak način, prav tako ukaz `Export CSV`, ki za časovnim žigom doda list: `-words.csv`, `-terms.csv` ali `-domains.csv`. Slika prevzame ime zbirke podatkov, kakršno je bilo ob odprtju pogovornega okna.
 
 Ukazi `Import`, `Import and Add` in `Export` so na voljo tudi v [hitrem iskanju](./quick-search.md) na zavihku ERD, z enakimi postavkami kot v priročnem meniju platna.
 
@@ -235,7 +241,7 @@ Raziskovalec datotek v aplikaciji Obsidian izvoženo datoteko `.erd.json` ali `.
 
 Izbire se ohranijo, dokler se urejevalnik ne zapre, in se nikoli ne shranijo v dokument. Predogled se izriše na enak način kot slika in se znova izriše, ko se spremeni možnost `Background` ali `Dark mode`.
 
-Slika vsebuje diagram, kakršen je bil ob odprtju pogovornega okna; če želite zajeti poznejše spremembe, okno zaprite in znova odprite. Vsebuje celoten diagram, ne glede na to, kako daleč je pomaknjen iz vidnega območja, obrezana je na to, kar diagram izriše, z dodanim robom, in vedno je izrisana pri 100 %, ne glede na povečavo, ki jo prikazuje urejevalnik, tako da je vsaka tabela izrisana v celoti. Kar skrivajo [možnosti pogleda](./table-related-functions.md#table-view-options) – relacije, njihove oznake ON DELETE in ON UPDATE, skupine tabel ali beležke –, se ne izriše in zanj ni prostora, skupine tabel pa se izrišejo za vsem drugim.
+Slika vsebuje diagram, kakršen je bil ob odprtju pogovornega okna; če želite zajeti poznejše spremembe, okno zaprite in znova odprite. Njene tabele in stolpci so poimenovani v prikazu imen, ki ga je takrat prikazoval urejevalnik, tudi če ste ga preklopili samo na svojem zaslonu, medtem ko zaklep `Name View` v datoteki ohranja drugega – glejte razdelek [Zunaj platna](./logical-names.md#beyond-the-canvas). Barve, ki jih [preverjanja slovarjev](./dictionary.md#marks-on-the-canvas) dajo imenom na platnu, se ne izrišejo. Vsebuje celoten diagram, ne glede na to, kako daleč je pomaknjen iz vidnega območja, obrezana je na to, kar diagram izriše, z dodanim robom, in vedno je izrisana pri 100 %, ne glede na povečavo, ki jo prikazuje urejevalnik, tako da je vsaka tabela izrisana v celoti. Kar skrivajo [možnosti pogleda](./table-related-functions.md#table-view-options) – relacije, njihove oznake ON DELETE in ON UPDATE, skupine tabel ali beležke –, se ne izriše in zanj ni prostora, skupine tabel pa se izrišejo za vsem drugim.
 
 Sliko zapišejo trije gumbi in vsak pusti pogovorno okno odprto:
 

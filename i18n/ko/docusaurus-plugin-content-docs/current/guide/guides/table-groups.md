@@ -1,5 +1,5 @@
 ---
-sidebar_position: 5
+sidebar_position: 6
 description: 관련된 테이블을 뒤에 그려지는 이름과 색상이 있는 박스로 묶기. 그룹의 생성·이름 지정·색상 지정·이동·크기 조절·삭제, 탐색기에서 그룹으로 이동, 그룹에 속한 테이블 변경, 그룹 숨기기, 자동 배치·Schema SQL·DBML에서의 그룹 유지.
 ---
 

@@ -46,21 +46,23 @@ const NOT_NULL = 8;
 
 export default {
   name: 'demo-copy-sheet-column',
-  width: 960,
-  height: 540,
+  // The editor keeps 560px, so the 544px floating toolbar fits whole; the
+  // sheet's 474px of columns fill the rest.
+  width: 1040,
+  height: 585,
   async setup(d) {
     await seedSQL(d, SQL, {
-      tables: { members: { x: 24, y: 175 } },
+      tables: { members: { x: 48, y: 195 } },
       settings: { databaseName: 'shop', show: SHOW },
     });
     await installSheet(d, {
-      editorWidth: 480,
+      editorWidth: 560,
       columns: SHEET_COLUMNS,
       cells: SHEET_CELLS,
       active: [0, 0],
       headerRow: true,
     });
-    await d.moveTo(780, 330, 50);
+    await d.moveTo(860, 330, 50);
   },
   async scenario(d) {
     await d.sleep(600);
@@ -87,7 +89,7 @@ export default {
       { duration: 900, holdBefore: 120, holdAfter: 200 }
     );
     await d.sleep(450);
-    await keysAt(d, 720);
+    await keysAt(d, 800);
     await d.press('ControlOrMeta+KeyC');
     await d.sleep(600);
 
@@ -95,7 +97,7 @@ export default {
     const header = await tableHeader(d, 'members');
     await d.click(header.x, header.y, { duration: 900 });
     await d.sleep(400);
-    await keysAt(d, 240);
+    await keysAt(d, 280);
     await d.press('ControlOrMeta+KeyV');
     await d.sleep(600);
     await d.moveTo(230, 130, 600);

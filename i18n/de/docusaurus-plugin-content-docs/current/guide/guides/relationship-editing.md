@@ -1,6 +1,6 @@
 ---
-sidebar_position: 6
-description: Eine Beziehung löschen, ihren Typ ändern, ihre Aktionen für ON DELETE und ON UPDATE festlegen, sie im Dialog „Spalten zuordnen“ vorhandenen Spalten zuordnen, die Notation der Verbindungslinien lesen, mit N:M- und identifizierenden Beziehungen arbeiten und sehen, wie neue Fremdschlüsselspalten benannt werden.
+sidebar_position: 7
+description: Eine Beziehung löschen, ihren Typ ändern, ihre Aktionen für ON DELETE und ON UPDATE festlegen, sie im Dialog „Spalten zuordnen“ vorhandenen Spalten zuordnen, die Notation der Verbindungslinien lesen, mit N:M- und identifizierenden Beziehungen arbeiten und sehen, was neue Fremdschlüsselspalten von ihrem Schlüssel übernehmen und wie sie benannt werden.
 ---
 
 # Beziehungen bearbeiten
@@ -85,6 +85,9 @@ Er lässt sich auf zwei Arten öffnen:
 
 Der Untertitel des Dialogs nennt die beiden Tabellen und den Beziehungstyp, etwa `users → posts · One N`. Der Typ wird hier angezeigt, aber nicht geändert – verwenden Sie dafür [Typ ändern](#type-change).
 
+Im gesamten Dialog, einschließlich der Hinweise und Textzeilen unter den Zeilen und der Meldung, mit der er sich schließt, werden Tabellen und Spalten so benannt, wie die [Namensansicht](./logical-names.md#beyond-the-canvas) sie benennt.  
+Drei Dinge bleiben physisch: jeder Datentyp, der der eigene der Spalte ist und nie der Name ihrer Domäne; der Eintrag `New column: <name>`, der den Namen zeigt, den die neue Spalte erhalten wird; und die Zeilen, die bei `Map` anfangs ausgefüllt sind und nach Name zugeordnet werden, nie nach logischem Namen.
+
 In `References` wählen Sie den Schlüssel, auf den die Beziehung verweist: `Primary Key` mit seinen Spalten in Tabellenreihenfolge, dann `Unique: <column>` für jede als `Unique` markierte Spalte. Das Feld wird nur angezeigt, wenn es mehr als eine Auswahl gibt.  
 Ein eindeutiger Index zählt hier nicht als Schlüssel, und eine Spalte mit `Unique`, die den gesamten Primärschlüssel bildet, wird nicht doppelt aufgeführt.  
 Die Wahl eines anderen Schlüssels baut die Zeilen neu auf. Eine Zeile behält ihre Auswahl, solange die betreffende Spalte noch in der Kindtabelle ist.
@@ -121,10 +124,10 @@ Der Dialog folgt dem Diagramm, solange er geöffnet ist, einschließlich der Än
 Was `Map` und `Save` schreiben:
 
 - `Map` fügt die Beziehung mit `On Delete` und `On Update` auf `Not set` hinzu. `Save` ändert nur die Spalten der Beziehung, richtet ihre Seite an der Elterntabelle auf den in `References` gewählten Schlüssel aus und behält ihren Typ sowie ihr ON DELETE und ON UPDATE bei.
-- Eine Zeile mit `New column` fügt am Ende der Kindtabelle eine Spalte hinzu, wie beim Zeichnen: `NOT NULL`, nach ihrem Schlüssel benannt, mit Datentyp, Standardwert und Kommentar des Schlüssels – siehe [Identifizierende Beziehungen](#identifying-relationships).
-- Eine ausgewählte Spalte wird nie umbenannt, und ihre Kennzeichen `Not Null`, Primärschlüssel und `Unique` sowie Standardwert und Kommentar bleiben unverändert. Ihr Datentyp ändert sich nur, solange `Relationship DataType Sync` eingeschaltet ist und die Elternspalte einen Datentyp hat: Die Spalte erhält den Typ, den die Elternspalte einem Fremdschlüssel gibt, bei einem Serial-Schlüssel wie bei einer neuen Spalte den Ganzzahltyp, und die Änderung setzt sich entlang der Beziehungen so fort, wie es die Synchronisierung tut.
+- Eine Zeile mit `New column` fügt am Ende der Kindtabelle eine Spalte hinzu, wie beim Zeichnen: `NOT NULL`, nach ihrem Schlüssel benannt, mit Datentyp, Standardwert, Kommentar, logischem Namen und Domäne des Schlüssels – siehe [Identifizierende Beziehungen](#identifying-relationships).
+- Eine ausgewählte Spalte wird nie umbenannt oder mit der Domäne des Schlüssels verknüpft, und ihre Kennzeichen `Not Null`, Primärschlüssel und `Unique` sowie Standardwert, Kommentar und logischer Name bleiben unverändert. Ihr Datentyp ändert sich nur, solange `Relationship DataType Sync` eingeschaltet ist und die Elternspalte einen Datentyp hat: Die Spalte erhält den Typ, den die Elternspalte einem Fremdschlüssel gibt, bei einem Serial-Schlüssel wie bei einer neuen Spalte den Ganzzahltyp, und die Änderung setzt sich entlang der Beziehungen so fort, wie es die Synchronisierung tut. Bei jeder Spalte, deren Typ die Änderung neu setzt, ob ausgewählt oder entlang der Beziehungen erreicht, wird die Verknüpfung mit ihrer [Domäne](./dictionary.md#domains-and-data-types) aufgehoben, wenn sich ihr neuer Typ von dem der Domäne unterscheidet.
 - Eine Spalte, die die Zuordnung nicht mehr verwendet, bleibt in der Kindtabelle und ist nicht mehr als Fremdschlüssel markiert, es sei denn, eine andere Beziehung endet noch auf ihr.
-- Alles, was ein einzelnes `Map` oder `Save` schreibt, einschließlich neuer Spalten und Typänderungen, ist ein Rückgängig-Schritt.
+- Alles, was ein einzelnes `Map` oder `Save` schreibt – einschließlich neuer Spalten, Typänderungen und aufgehobener Domänenverknüpfungen –, ist ein Rückgängig-Schritt.
 
 Ob die Beziehung identifizierend ist und wie ihr Ende an der Elterntabelle gezeichnet wird, ergibt sich wie bei jeder Beziehung aus den zugeordneten Spalten der Kindtabelle. Eine Zuordnung zu den Primärschlüsselspalten der Kindtabelle macht sie sofort identifizierend, und eine Zuordnung zu einer Spalte, die `NULL` erlaubt, setzt einen Kreis an das Ende an der Elterntabelle – siehe [Verbindungslinien lesen](#reading-a-connector).  
 Der Fremdschlüssel in Schema SQL verweist auf den von Ihnen gewählten Schlüssel, etwa `REFERENCES vehicle (vin)` bei einem Schlüssel vom Typ `Unique`.
@@ -156,9 +159,10 @@ Siehe [Dateien importieren oder exportieren](./file-import-export.md).
 ## Identifizierende Beziehungen {#identifying-relationships}
 
 Wenn Sie eine Beziehung durch Klicken auf die Kindtabelle oder mit `Create new columns` zeichnen, wird jeder Primärschlüssel der Elterntabelle als Fremdschlüsselspalte mit `NOT NULL` in die Kindtabelle kopiert, sodass eine neue Beziehung zunächst nicht identifizierend ist.  
-Die Kopie übernimmt Datentyp, Standardwert und Kommentar des Schlüssels, aber nicht `Unique` oder `Auto Increment`, und wird wie in [Namen der Fremdschlüsselspalten](#foreign-key-column-names) beschrieben benannt.  
+Die Kopie übernimmt Datentyp, Standardwert, Kommentar und logischen Namen des Schlüssels, aber nicht `Unique` oder `Auto Increment`, und wird wie in [Namen der Fremdschlüsselspalten](#foreign-key-column-names) beschrieben benannt.  
 Beim Datentyp bildet ein Serial-Schlüssel die Ausnahme: Seine Kopie erhält den Ganzzahltyp, den der Serial-Typ speichert. Bei jeder Datenbank ergeben `smallserial` und `serial2` den Typ `smallint`, `serial4` ergibt `integer`, und `bigserial` und `serial8` ergeben `bigint`. Ein bloßes `serial` ergibt unter PostgreSQL `integer` und unter MySQL und MariaDB `bigint unsigned` und bleibt bei jeder anderen Datenbank `serial`.  
 Nur der vollständige Typname zählt, ohne Beachtung der Groß-/Kleinschreibung, daher wird `serial(4)` so kopiert, wie er geschrieben ist. Ein in Großbuchstaben geschriebener Typ ergibt Großbuchstaben: `SERIAL` ergibt unter PostgreSQL `INTEGER`. Eine Fremdschlüsselspalte, die in einem gespeicherten Diagramm bereits den Typ `serial` hat, behält diesen Typ.  
+Die Kopie wird außerdem mit der [Domäne](./dictionary.md#domains-and-data-types) des Schlüssels verknüpft, sofern das Blatt `Domains` diese Domäne beim Erstellen der Kopie aufführt und die Kopie den Datentyp des Schlüssels behält. Die Kopie eines Serial-Schlüssels, die einen Ganzzahltyp erhält, verknüpft daher keine Domäne, während ein bloßes `serial`, das `serial` bleibt, sie verknüpft.  
 Um die Beziehung identifizierend zu machen, legen Sie diese Fremdschlüsselspalten in der Kindtabelle als Primärschlüssel fest: Wählen Sie sie alle aus und drücken Sie einmal `Alt + K` (Windows/Linux) oder `⌥ + K` (Mac), oder wählen Sie im Kontextmenü der Tabelle den Eintrag `Primary Key`, der `Primary Key on selected columns` lautet, solange zwei oder mehr ausgewählt sind – siehe [Primärschlüssel für Spalten](./table-editing.md#column-primary-key).
 
 ![product_id mit Alt + K als Primärschlüssel ein- und ausschalten, wodurch die Verbindungslinie durchgezogen und dann gestrichelt wird](/img/demo-identifying-relationship.webp)
@@ -193,7 +197,10 @@ Das gilt auch für den Primärschlüssel, den der Editor einer Elterntabelle ohn
 Die Namen werden beim Zeichnen der Beziehung festgelegt. Ein späteres Umbenennen der Elterntabelle oder ihres Schlüssels benennt sie nicht um.  
 Die Zeilen mit `New column` im Dialog [Spalten zuordnen](#map-columns) werden nach denselben Regeln benannt, und die Liste zeigt jeden Namen, bevor Sie ihn wählen.  
 Beziehungen, deren Spalten bereits vorhanden sind – aus einem Import, einem Einfügen, einem Duplikat oder aus „Spalten zuordnen“ mit vorhandenen Spalten –, behalten die Namen, die diese Spalten haben.  
-Ein Coding-Agent, der mit `erd_add_relationship` eine Beziehung hinzufügt, erhält dieselben Namen und Datentypen – siehe [Tools](../../mcp/tools.md#relationships).
+Ein Coding-Agent, der mit `erd_add_relationship` eine Beziehung hinzufügt, erhält dieselben Namen, Datentypen, logischen Namen und Domänen – siehe [Tools](../../mcp/tools.md#relationships).
+
+Eine Fremdschlüsselspalte wird nach ihrem Schlüssel benannt, nie nach dem logischen Namen, den sie übernimmt, und ihr Name gilt als eigener Name: Ein später in die Spalte geschriebener logischer Name lässt den Namen unverändert, es sei denn, der Name ist leer – siehe [Eigene Namen](./dictionary.md#names-of-your-own).  
+Solange der übernommene logische Name einem Begriff entspricht, der einen anderen Namen vergibt, führt das Blatt `Checks` die Spalte daher unter [`Physical name mismatch`](./dictionary.md#what-each-check-finds) auf. Wird ihr physischer Name neu abgeleitet, benennen die Wörterbücher sie um, es sei denn, eine andere Spalte der Kindtabelle trägt bereits den Namen, den sie vergeben, ohne Beachtung der Groß-/Kleinschreibung – siehe [Physische Namen neu ableiten](./dictionary.md#derive-physical-names-again).
 
 ## Verbindungslinien lesen {#reading-a-connector}
 

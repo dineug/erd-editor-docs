@@ -16,16 +16,20 @@ description: 匯入 JSON、結構描述 SQL、GraphQL、DBML 或 AML 以取代�
 - AML
 
 位於 `Import` 正下方的 `Import and Add` 會將檔案加入圖表，而不是取代圖表，請參閱[匯入並加入](#import-and-add)。  
-空白圖表所顯示的歡迎畫面中有一個 `Import` 列，提供相同的五種格式，請參閱[歡迎畫面](./editing-start.md#welcome-screen)。
+空白圖表所顯示的歡迎畫面中有一個 `Import` 列，提供相同的五種格式，請參閱[歡迎畫面](./editing-start.md#welcome-screen)。  
+[字典](./dictionary.md)索引標籤的工作表也會透過該索引標籤自己的 `Import CSV`，從 CSV 檔案匯入詞彙、術語和定義域，請參閱[匯入與匯出 CSV](./dictionary.md#importing-and-exporting-csv)。
 
 副檔名的比對不論大小寫。若選取的檔案副檔名與所選格式不符，匯入會取消並顯示 `Only <format> files can be imported`，其中的格式寫作 `json`、`sql`、`graphql`、`dbml` 或 `aml`，例如 `Only sql files can be imported`。
 
 `Import` 會取代目前的文件，而不是合併到其中，執行一次復原即可恢復先前的圖表。  
-JSON 檔案會帶入自己的設定，包括其[鎖定](./settings.md#lock)。若檔案鎖定了索引標籤、程式碼產生器的語言、名稱大小寫或引號類型，畫面上仍會顯示您原本的值，但儲存的是檔案中鎖定的值。無論是否鎖定，檢視都會移到檔案指定的位置。在鎖定功能推出之前儲存的 JSON 檔案，匯入後所有鎖定都會開啟，檢視則為 100%。  
+JSON 檔案會帶入自己的設定，包括其[鎖定](./settings.md#lock)。若檔案鎖定了索引標籤、程式碼產生器的語言、名稱大小寫、引號類型或[名稱顯示](./logical-names.md#name-view)，畫面上仍會顯示您原本的值，但儲存的是檔案中鎖定的值。無論是否鎖定，縮放比例和檢視位置都會採用檔案所指定的值。在鎖定功能推出之前儲存的 JSON 檔案，匯入後所有鎖定都會開啟，檢視則為 100%。在 `Name View` 鎖定推出之前儲存的檔案，無論其記錄了哪些其他鎖定，匯入後該鎖定都會開啟。  
 其他格式會保留您現有的設定（包括鎖定），但檢視除外，檢視會從 100% 開始。  
 GraphQL、DBML 和 AML 剖析器永遠不會失敗：無法讀取的檔案會產生空白圖表，而不是錯誤。
 
-JSON 檔案會保留其原有的位置。結構描述 SQL、GraphQL、DBML 或 AML 檔案中的資料表，會在圖表變更之前完成排列：
+JSON 檔案也會帶入其資料表和欄位的邏輯名稱，以及其欄位的定義域連結。其詞彙、術語和定義域會取代[字典](./dictionary.md)索引標籤中原有的內容，因此不含任何這類內容的檔案會讓工作表變為空的，而復原該次匯入則會恢復被取代的內容。  
+其他格式不含上述任何內容。其資料表匯入時沒有邏輯名稱，也沒有任何欄位連結到定義域，而您的詞彙、術語和定義域會保持不變。復原或重做該次匯入也會讓它們保持不變，因此匯入後對字典所做的編輯會保留下來。這類匯入也會讓每個工作表自己的復原歷程記錄保持不變，而 JSON 匯入則會清空這些歷程記錄，請參閱[字典工作表](./undo-redo.md#dictionary-sheets)。
+
+JSON 檔案會保留其原有的位置。結構描述 SQL、GraphQL、DBML 或 AML 檔案中的資料表，會在圖表變更之前，依其在您目前看到的[名稱顯示](./logical-names.md#beyond-the-canvas)下所佔的寬度完成排列：
 
 - 當檔案有兩個或更多資料表且至少有一個關聯時，這些資料表會以 `Flow` [自動版面配置](./table-related-functions.md#auto-layout)，從畫布左上角開始，沿著關聯由左至右配置。資料表指向自身的關聯也算在內。
 - 否則會從左上角開始逐列排列，欄位最少的資料表排在最前面。
@@ -33,7 +37,7 @@ JSON 檔案會保留其原有的位置。結構描述 SQL、GraphQL、DBML 或 A
 
 接著圖表會一次完成取代，因此中間不會顯示任何過渡狀態。在排列資料表期間變更的設定（例如索引標籤）會保留下來；若在此期間匯入另一個檔案，則以最後開始的匯入為準。
 
-唯讀編輯器不會從 `Import` 載入任何內容，也不提供 `Import and Add`。
+唯讀編輯器不會從 `Import` 載入任何內容，也不提供 `Import and Add` 或「字典」索引標籤的 `Import CSV`。
 
 ### 匯入並加入 {#import-and-add}
 
@@ -42,6 +46,7 @@ JSON 檔案會保留其原有的位置。結構描述 SQL、GraphQL、DBML 或 A
 ![從 Import and Add > Schema SQL 加入 SQL 檔案，其資料表落在圖表下方，沿著關聯配置並處於選取狀態](/img/demo-import-and-add.webp)
 
 檔案會以貼上的方式加入：其中的每個資料表、欄位、關聯、索引、備忘錄和[資料表群組](./table-groups.md)都會以新項目加入，圖表中既有的資料表不會移動，也不會變更任何設定，因此 JSON 檔案的設定會被省略。  
+JSON 檔案的資料表和欄位會保留其邏輯名稱，每個物理名稱也會如同在檔案中一樣，仍由字典產生或仍為自行撰寫的名稱，這決定了之後輸入的邏輯名稱是否會產生新的名稱，請參閱[產生物理名稱](./dictionary.md#deriving-physical-names)。檔案的詞彙、術語和定義域會被省略，因此「字典」索引標籤會保持原樣，且加入的欄位都不會連結到定義域：每個欄位都會保留其原有的資料類型。  
 名稱與圖表中既有資料表相同的資料表，會以同名的第二個資料表加入，而不會與其合併。關聯和索引只來自該檔案，因此指向檔案未定義之資料表的外鍵，不會連結到圖表中既有的資料表。
 
 加入的區塊會落在圖表所有內容的正下方，並與其左邊緣對齊；若圖表為空白，則落在左上角。以[檢視選項](./table-related-functions.md#table-view-options)隱藏的備忘錄和資料表群組也算在內，因為它們仍佔據該處。  
@@ -160,11 +165,10 @@ SQL Server 的呼叫無論採用具名引數（如 SQL Server Management Studio 
 `DEFAULT` 值會保留其引號，且無論檔案如何逸出，其中的引號都會改寫為兩個連續的引號：`'it''s'`。  
 若匯入時文件的資料庫為 Databricks，單引號文字則改依 Spark 的規則：每個反斜線都會逸出其後的字元，因此 `'C:\\dir'` 會讀取為 `C:\dir`，`\n`、`\t` 和 `\u0041` 等逸出序列會被解碼，而 `DEFAULT` 值會保留為 `'it\'s'`。
 
-匯出的結構描述 SQL 會逸出資料表或欄位註解中的引號：MySQL、MariaDB 和 Snowflake 為 `COMMENT 'it''s'`，PostgreSQL 和 Oracle 為 `COMMENT ON TABLE` 和 `COMMENT ON COLUMN ... IS 'it''s'`，MSSQL 的 `sp_addextendedproperty` 呼叫中也採用相同的重複寫法，資料表和欄位名稱也包括在內。不含引號的註解會原樣寫出。  
-Databricks 則改以反斜線逸出引號和反斜線，例如 `COMMENT 'it\'s'`，因此其匯出結果只有在選取的資料庫為 Databricks 時，才能完全照原樣讀回。  
-MSSQL 會將每個註解寫成 `EXECUTE sys.sp_addextendedproperty 'MS_Description', '<comment>', 'schema', '<schema>', 'table', '<table>'`，欄位的註解則會再接上 `'column', '<column>'`。當 `Bracket` 為 `None` 時，名為 `sales.users` 的資料表會得到結構描述 `sales` 和資料表 `users`，而沒有結構描述的名稱則位於 `dbo` 中。在其他任何 `Bracket` 設定下，整個名稱都是資料表名稱，位於 `dbo` 中。
-
-註解無法在 SQLite 的匯出與匯入往返過程中保留：SQLite 會將註解寫成一般的 `--` 行，而剖析器不會讀取這些行。MSSQL 匯出結果中的 `sp_addextendedproperty` 呼叫，會再匯入為相同的資料表和欄位註解。
+各資料庫在匯出時如何寫出註解，以及如何逸出其中的引號，請參閱結構描述 SQL 頁面中的[註解](./schema-sql.md#comments)。  
+匯出到 MySQL、MariaDB、PostgreSQL、Oracle、Snowflake 或 MSSQL 的結果，會再匯入為相同的資料表和欄位註解（包括引號），但 Oracle 匯出時省略的空白行除外。Databricks 的匯出結果會以反斜線逸出引號和反斜線，因此只有在選取的資料庫為 Databricks 時，才能完全照原樣讀回。  
+註解無法在 SQLite 的匯出與匯入往返過程中保留：SQLite 會將註解寫成一般的 `--` 行，而剖析器不會讀取這些行。  
+除了 SQLite 以外，由 `Write logical names into empty comments` 寫入空白註解的邏輯名稱，會再匯入為該資料表或欄位的註解，而不是其邏輯名稱，請參閱[以邏輯名稱作為註解](./schema-sql.md#logical-names-as-comments)。
 
 ### GraphQL {#graphql}
 
@@ -200,22 +204,24 @@ MSSQL 會將每個註解寫成 `EXECUTE sys.sp_addextendedproperty 'MS_Descripti
 
 GraphQL、DBML 和 AML 都是可往返的格式：每一種也都是[程式碼產生器](./code-generator.md)的目標。  
 DBML 和 AML 在匯入與匯出兩個方向都會保留每個關聯的 ON DELETE 和 ON UPDATE，請參閱[程式碼產生器](./code-generator.md#on-delete-and-on-update)。GraphQL 兩者都不保留，因此匯入 GraphQL 時兩者都會是 `Not set`。  
-DBML 也會在兩個方向保留資料表顏色（不含任何透明度）和每個包含資料表的資料表群組。沒有名稱的群組會還原為 `group_1`、`group_2` 等，重複的群組名稱還原時則會依序加上 `_2`、`_3` 等。AML 只會將資料表顏色保留為最接近的顏色名稱，因此 `#FF8800` 會寫成 `orange`，並還原為 `#f97316`，且 AML 不保留群組。GraphQL 既不保留顏色，也不保留群組。
+DBML 也會在兩個方向保留資料表顏色（不含任何透明度）和每個包含資料表的資料表群組。沒有名稱的群組會還原為 `group_1`、`group_2` 等，重複的群組名稱還原時則會依序加上 `_2`、`_3` 等。AML 只會將資料表顏色保留為最接近的顏色名稱，因此 `#FF8800` 會寫成 `orange`，並還原為 `#f97316`，且 AML 不保留群組。GraphQL 既不保留顏色，也不保留群組。  
+這三種格式在兩個方向都不會保留邏輯名稱、定義域連結或字典：程式碼產生器會寫出每個資料表和欄位的物理名稱和資料類型，永遠不會寫出邏輯名稱或定義域。
 
 ## 匯出 {#exporting}
 
 畫布右鍵選單的 `Export` 子選單有三個項目：
 
-- json：將圖表依其檔案所含的內容儲存為 `.erd.json`：包括資料表及其欄位和索引、關聯、備忘錄和資料表群組，以及設定，每個[鎖定的設定](./settings.md#lock)都以其鎖定的值儲存。
+- json：將圖表依其檔案所含的內容儲存為 `.erd.json`：包括資料表及其欄位和索引、關聯、備忘錄和資料表群組、邏輯名稱和欄位的定義域連結、[字典](./dictionary.md)索引標籤的詞彙、術語和定義域，以及設定，每個[鎖定的設定](./settings.md#lock)都以其鎖定的值儲存。不含任何內容的項目（例如空白文字或空的字典列）會被省略，請參閱[儲存形式與執行階段值](../../api/advanced/schema.md#storage-form-and-runtime-value)。
 - Schema SQL：開啟「[結構描述 SQL](./schema-sql.md#saving-or-copying-the-sql)」索引標籤，同時開啟其選項面板，並讓 `Save file` 按鈕取得焦點，因此按 `Enter` 即可將該索引標籤所顯示的 SQL 儲存為 `.sql`。在此之前不會儲存任何內容。
 - Image：開啟 `Export image` 對話方塊，可將圖表儲存為 `.png` 或 `.svg`，或以 PNG 格式複製到剪貼簿，請參閱[圖片](#image)。
 
-這三個項目在唯讀編輯器中都能使用。
+這三個項目在唯讀編輯器中都能使用。  
+「字典」索引標籤自己的 `Export CSV` 不在此子選單中，它會將其 `Domains`、`Words` 或 `Terms` 工作表儲存為 CSV 檔案。與這三個項目不同，唯讀編輯器中不提供此項目，請參閱[匯入與匯出 CSV](./dictionary.md#importing-and-exporting-csv)。
 
 結構描述 SQL 會在每個關聯的 `REFERENCES` 之後寫出其 ON DELETE 和 ON UPDATE，ON DELETE 在前。`Not set` 不會寫出任何內容，而選取的資料庫不接受的動作會被省略。關於各資料庫接受哪些動作，請參閱[編輯關聯](./relationship-editing.md#on-delete-and-on-update)。
 
 每個匯出的檔案都會以 `<database name>-<timestamp>` 加上副檔名命名，其中時間戳記採用當地時間，格式為 `yyyy-MM-dd'T'HH_mm_ss`，例如 `my-schema-2026-08-29T04_05_06.erd.json`。資料庫名稱空白時會改用 `unnamed`。  
-「結構描述 SQL」索引標籤和[程式碼產生器](./code-generator.md)的 `Save file` 也以相同方式為檔案命名。圖片則採用對話方塊開啟時的資料庫名稱。
+「結構描述 SQL」索引標籤和[程式碼產生器](./code-generator.md)的 `Save file` 也以相同方式為檔案命名，`Export CSV` 也是如此，它會在時間戳記之後加上工作表：`-words.csv`、`-terms.csv` 或 `-domains.csv`。圖片則採用對話方塊開啟時的資料庫名稱。
 
 `Import`、`Import and Add` 和 `Export` 也可從 ERD 索引標籤的[快速搜尋](./quick-search.md)中使用，其中的項目與畫布的右鍵選單相同。
 
@@ -235,7 +241,7 @@ Obsidian 不允許用於檔案名稱的字元 `\ / : * ? " < > |` 會被取代�
 
 這些選擇會保留到編輯器關閉為止，且永遠不會儲存在文件中。預覽的繪製方式與圖片相同，並會在 `Background` 或 `Dark mode` 變更時重新繪製。
 
-圖片包含的是對話方塊開啟時的圖表；關閉後重新開啟對話方塊即可納入之後的變更。無論圖表捲動到多遠，圖片都會包含整個圖表，並裁切為圖表所繪製的範圍再加上邊界；而且無論編輯器目前顯示的縮放比例為何，圖片一律以 100% 繪製，因此每個資料表都會完整繪製。[檢視選項](./table-related-functions.md#table-view-options)所隱藏的內容（關聯、關聯的 ON DELETE 和 ON UPDATE 標籤、資料表群組或備忘錄）既不會繪製，也不會保留空間，而資料表群組會繪製在其他所有內容的後方。
+圖片包含的是對話方塊開啟時的圖表；關閉後重新開啟對話方塊即可納入之後的變更。其中的資料表和欄位會以編輯器當時顯示的「名稱顯示」命名，即使是 `Name View` 鎖定讓檔案保留另一種顯示方式、而只在您的畫面上切換的顯示方式也一樣，請參閱[畫布以外的地方](./logical-names.md#beyond-the-canvas)。[字典檢查](./dictionary.md#marks-on-the-canvas)在畫布上為名稱設定的顏色不會繪製出來。無論圖表捲動到多遠，圖片都會包含整個圖表，並裁切為圖表所繪製的範圍再加上邊界；而且無論編輯器目前顯示的縮放比例為何，圖片一律以 100% 繪製，因此每個資料表都會完整繪製。[檢視選項](./table-related-functions.md#table-view-options)所隱藏的內容（關聯、關聯的 ON DELETE 和 ON UPDATE 標籤、資料表群組或備忘錄）既不會繪製，也不會保留空間，而資料表群組會繪製在其他所有內容的後方。
 
 有三個按鈕可寫出圖片，且每個按鈕都會讓對話方塊保持開啟：
 

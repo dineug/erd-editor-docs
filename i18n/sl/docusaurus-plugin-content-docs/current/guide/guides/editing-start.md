@@ -77,8 +77,8 @@ Risanje relacije začnite v priročnem meniju, v [orodni vrstici platna](./table
 - One N: `Ctrl + Alt + 4` (Windows/Linux) ali `⌘ + ⌥ + 4` (Mac)
 
 Ko je vrsta vklopljena, se kazalec spremeni. Najprej kliknite nadrejeno tabelo, nato pa podrejeno tabelo.  
-Nadrejena tabela dobi primarni ključ, če ga nima, podrejena tabela pa za vsak stolpec primarnega ključa nadrejene tabele dobi stolpec tujega ključa z zastavico `Not Null` ter z enakim podatkovnim tipom, privzeto vrednostjo in komentarjem.  
-Izjema je ključ serial: njegov tuji ključ prevzame celoštevilski tip, ki ga hrani serial, na primer `integer` za `serial4` – glejte razdelek [Identifikacijske relacije](./relationship-editing.md#identifying-relationships).  
+Nadrejena tabela dobi primarni ključ, če ga nima, podrejena tabela pa za vsak stolpec primarnega ključa nadrejene tabele dobi stolpec tujega ključa z zastavico `Not Null` ter z enakim podatkovnim tipom, privzeto vrednostjo, komentarjem, [logičnim imenom](./logical-names.md) in [domeno](./dictionary.md#domains-and-data-types).  
+Izjema je ključ serial: njegov tuji ključ prevzame celoštevilski tip, ki ga hrani serial, na primer `integer` za `serial4`, in takrat ni povezan z nobeno domeno – glejte razdelek [Identifikacijske relacije](./relationship-editing.md#identifying-relationships).  
 Vsak stolpec tujega ključa dobi ime po svojem ključu: enobesedno ime, kot je `id`, dobi pred seboj ime nadrejene tabele (`user_id`), ime iz več besed, kot je `member_id`, se ohrani, ime, ki ga podrejena tabela že ima, pa se oštevilči (`user_id_2`) – glejte razdelek [Imena stolpcev tujega ključa](./relationship-editing.md#foreign-key-column-names).  
 Če dvakrat kliknete isto tabelo, se nariše rekurzivna relacija.  
 Nova relacija ima na začetku obe možnosti, `On Delete` in `On Update`, nastavljeni na `Not set`; spremenite ju v njenem priročnem meniju – glejte razdelek [ON DELETE in ON UPDATE](./relationship-editing.md#on-delete-and-on-update).  
@@ -91,7 +91,8 @@ Ko je nadrejena tabela izbrana, se tabela, pri kateri se relacija lahko konča, 
 
 Gumba se prikažeta tudi ob nadrejeni tabeli, ko se kazalec nekoliko odmakne od mesta, kjer ste jo kliknili, zato je mogoče tudi rekurzivno relacijo preslikati na obstoječe stolpce.  
 Prst ne more premakniti kazalca nad tabelo, zato se gumba pri risanju s prstom nikoli ne prikažeta, ko pa tapnete podrejeno tabelo, se relacija takoj nariše; pri pisalu se gumba prikažeta tako kot pri miški.  
-Če je nadrejena tabela do trenutka, ko pridete do podrejene, izgubila primarni ključ, na primer zaradi razveljavitve ali sodelavčeve spremembe, je gumb `Create new columns` zatemnjen z opisom orodja `<parent> has no primary key to copy`, klik na podrejeno tabelo pa konča risanje, ne da bi se kar koli narisalo.
+Če je nadrejena tabela do trenutka, ko pridete do podrejene, izgubila primarni ključ, na primer zaradi razveljavitve ali sodelavčeve spremembe, je gumb `Create new columns` zatemnjen z opisom orodja `<parent> has no primary key to copy`, klik na podrejeno tabelo pa konča risanje, ne da bi se kar koli narisalo.  
+Opis orodja poimenuje nadrejeno tabelo tako, kot določa [prikaz imen](./logical-names.md#beyond-the-canvas).
 
 ![Risanje relacije One N s ⌘ + ⌥ + 4, nato pa relacije Zero N z orodno vrstico platna, pri čemer je podrejena tabela obrobljena, ob njej pa sta gumba Map to existing columns in Create new columns](/img/demo-relationship.webp)
 

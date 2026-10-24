@@ -71,16 +71,23 @@ interface ErdEditorElement extends HTMLElement {
 从 `4.1.0` 起，ERD 标签页中有一个[资源管理器](../guide/guides/explorer.md)：它以树形列出整张图，停靠在画布左侧，顶部是查找与替换。任何 HTML 属性、元素属性、方法或事件都无法打开或关闭它，也无法报告其状态：它通过工具栏的 `Explorer` 按钮、快速搜索或画布右键菜单中的 `Toggle Explorer`，或 [`findReplace`](#setkeybindingmap) 绑定打开。  
 每个元素中的资源管理器初始都处于关闭状态。它是否打开、宽度、折叠状态以及搜索会在元素的整个生命周期内一直保留，切换标签页和每一次加载（包括 `setInitialValue`）都不会改变它们，并且永远不会出现在 `value`、`runtimeValue`、Undo 历史记录或 shared store 中。
 
+从 `4.2.0` 起，表和列除名称外还可以有[逻辑名](../guide/guides/logical-names.md)，名称显示（与标签页一样是一项文档设置）决定画布绘制它们的名称、逻辑名还是两者。  
+工具栏中还有一个 [Dictionary](../guide/guides/dictionary.md) 标签页，位于 `Code Generator` 和 `Settings` 之间，容纳文档的词根、术语和域，以及一个 `Checks` 工作表。它与其他标签页一样：其 `canvasType` 为 `'@dineug/erd-editor/builtin-dictionary'`，由 `Canvas Type` 锁定掌管，因此停留在该标签页时保存的文本，通过 [setInitialValue](#setinitialvalue) 加载时也会在该标签页打开；而只有在该锁定关闭期间，切换到该标签页才会写入 `value` 并发出 [change](#change)。没有任何专属于它的 HTML 属性、元素属性、方法或事件能够打开它或报告其状态。在其中所做的编辑都是文档变更：它们会出现在 `value` 中、发出 [change](#change) 并传到协作者那里，但其 Undo 和 Redo 在每个工作表自己的历史记录上进行，而不是在文档的历史记录上进行。  
+该标签页自身的状态（显示哪个工作表，初始为 `Domains`，以及每个工作表的搜索、选中范围、滚动位置和列宽）会在元素的整个生命周期内一直保留，切换标签页和每一次加载都不会改变它们，并且永远不会出现在 `value`、`runtimeValue`、任何 Undo 历史记录或 shared store 中。  
+`ErdEditorElement` 接口没有新增任何成员。API 新增的是 [getSchemaSQL](#getschemasql) 选项中的 `logicalNameAsComment`、十二个[主题 token](#settheme)，以及导出的 [dictionaryRowChords](#dictionaryrowchords)。
+
 ## readonly
 
 设置编辑器是否可编辑。  
-在其生效期间，为 `value` 赋值、`clear()`、`setSchemaSQL()`、`setSchemaGraphQL()`、`setSchemaDBML()`、`setSchemaAML()`、`setSchemaJSON()`、Undo 和 Redo 都会被忽略，并且不会发出 `change` 事件。此时改用 [setInitialValue](#setinitialvalue) 加载文档。  
+在其生效期间，为 `value` 赋值、`clear()`、`setSchemaSQL()`、`setSchemaGraphQL()`、`setSchemaDBML()`、`setSchemaAML()`、`setSchemaJSON()`、Undo 和 Redo（从 `4.2.0` 起也包括词典工作表的 Undo 和 Redo）都会被忽略，并且不会发出 `change` 事件。此时改用 [setInitialValue](#setinitialvalue) 加载文档。  
 查看功能仍然可用：缩放、平移、抓手工具、禅模式、画布标签页、[Visualization](../guide/guides/visualization.md) 标签页的两种模式（包括聚焦于表）、数据库厂商，以及 SQL 与代码生成的输出设置都仍然生效，因此只读的查看者依然可以导出其他厂商的 SQL 或阅读生成的代码。  
 从 `4.1.0` 起，[资源管理器](../guide/guides/explorer.md#read-only-editors)也可以打开，选择其中的某一行会跳转到该行所代表的对象，与在可编辑的编辑器中相同。其顶部的[查找与替换](../guide/guides/find-and-replace.md#read-only-editors)只能查找，没有 `Toggle Replace` 箭头，也没有 Replace 行；跳转到匹配项时，仍会将其带入视野并选中它。在任何编辑器中，该面板的标题都是 `Explorer`，工具栏按钮的提示都是 `Explorer (Ctrl + F)` (Windows/Linux) 或 `Explorer (⌘ + F)` (Mac)。从 `3.10.0` 到 `4.0.0`，查找与替换以标题为 `Find`、只能查找的浮动面板形式打开。  
 表属性仍然可以打开，并且从 `3.10.0` 起，其标题旁会显示 `Read only` 徽标，其 `Indexes` 标签页也不提供任何编辑功能，参见[表属性](../guide/guides/table-related-functions.md#table-properties)。  
 从 `4.0.0` 起，只读编辑器不提供 [`Import and Add`](../guide/guides/file-import-export.md#import-and-add)、`New Table Group`、`Group selected tables`、`Remove from group`（参见[表分组](../guide/guides/table-groups.md#read-only-editors)）以及 [`Map Columns`](../guide/guides/relationship-editing.md#map-columns)，也不显示[欢迎界面](#enablewelcomescreen)。Settings 标签页上的锁定按钮不会改变任何内容，Schema SQL 标签页的 `Before tables` 和 `After tables` 脚本也无法编辑。  
 从 `4.1.0` 起，它的[画布工具栏](../guide/guides/table-related-functions.md#canvas-toolbar)上也不显示 `New Table`、`New Memo` 和 `New Table Group` 按钮，`addTableGroup` 和 `groupSelectedTables` 绑定也不起作用。  
-Schema SQL 标签页中 `This window only` 下的选择，即 `Statements`、`Header` 和 `Tables`，从不保存，并且仍然生效；[`Export image`](../guide/guides/file-import-export.md#image) 对话框、主题构建器和 Display Language 选择器也同样可用。在主题构建器或 Display Language 选择器中做出选择时，仍会发出 [changePresetTheme](#changepresettheme) 或 [changeLocale](#changelocale)。  
+从 `4.2.0` 起，[名称显示](../guide/guides/logical-names.md#read-only-editors)仍可通过它的每个选择器切换，但只作用于该编辑器自己的屏幕：无论其锁定如何，切换都永远不会传到协作者那里。Flow 中的 `Previous table` 和 `Next table` 仍可通过其按钮或 Undo 与 Redo 的按键后退和前进。  
+[Dictionary](../guide/guides/dictionary.md#read-only-editors) 标签页仍然可以打开：可以切换、搜索、选中和滚动其工作表，也可以从中复制，`Checks` 工作表中的行也仍会跳转到它所指的对象。任何单元格都不接受编辑、粘贴或清除，该标签页不显示 `Add Row`、`Delete Rows`、`Import CSV` 或 `Export CSV` 工具，网格上也没有菜单，其行组合键既不会插入也不会删除任何行。表菜单、画布菜单和快速搜索都不提供 [`Derive Physical Names Again`](../guide/guides/dictionary.md#derive-physical-names-again) 或 `Derive Physical Name Again`。  
+Schema SQL 标签页中 `This window only` 下的选择，即 `Statements`、`Header`、从 `4.2.0` 起的 `Write logical names into empty comments` 和 `Tables`，从不保存，并且仍然生效；[`Export image`](../guide/guides/file-import-export.md#image) 对话框、主题构建器和 Display Language 选择器也同样可用。在主题构建器或 Display Language 选择器中做出选择时，仍会发出 [changePresetTheme](#changepresettheme) 或 [changeLocale](#changelocale)。  
 仅写属性名、`=""` 和 `="true"` 都会被读作 `true`。`="false"` 会被读作 `false`，其他任何字符串也一样，包括 HTML 惯用写法 `readonly="readonly"`。
 
 ```js
@@ -173,8 +180,9 @@ editor.setAttribute('enable-welcome-screen', 'true');
 
 以 JSON 字符串的形式获取当前文档，采用编辑器定义的 [schema](./advanced/schema.md)。  
 从 `4.0.0` 起，它是存储形式，即文件所保存形式的文档，也就是 `json` 导出写出的内容以及官方宿主保存的内容。它只包含现存的实体，不含已删除的实体、叠放顺序，以及编辑器自行推算的内容，例如测量得到的宽度、键标记和关系的连接线锚点。其中的实体按固定顺序排列键，以两个空格缩进，并以换行符结尾，因此同一个文档总是得到相同的字节。  
-[锁定](../guide/guides/settings.md#锁定)处于开启状态的每项设置，都按其锁定的值写出，而不是按屏幕上显示的值写出。`Viewport` 锁定掌管 `originX`、`originY` 和 `zoomLevel`，`Canvas Type`、`Language`、`Table Name Case`、`Column Name Case` 和 `Bracket Type` 则各自掌管对应的设置。其他所有设置都按其当前的值写出，`lockSettings` 总会写出。各个位的说明参见 [Settings](./advanced/schema.md#settings)。  
-新文档的所有锁定都处于开启状态，无论是元素在被赋予值之前显示的文档，还是从空白值加载的文档。在相应的锁定关闭之前，其 `value` 会一直把原点写为 `0, 0`、缩放级别写为 `1`、标签页写为 ERD 标签页，并写出默认的 Code Generator 语言、名称大小写和括号类型。  
+从 `4.2.0` 起，它还会省略空的内容：空的 `doc` 列表、空的集合、不含任何内容的词典行，以及实体中为空的文本字段，例如名称、注释、数据类型、默认值或颜色。实体内部的列表（例如表的 `columnIds`）即使为空也仍会写出。新文档的 `doc` 为 `{}`，并且没有 `collections`，因此应把缺失的字段、列表或集合读作空。它包含表和列的逻辑名以及标明名称是否由词典生成的标记、列的域关联，以及词根、术语和域；每个词典都先写出一个由字段名组成的标题行，再按工作表中的顺序写出其各行，每行占一行。参见[存储形式与运行时值](./advanced/schema.md#存储形式与运行时值)。  
+[锁定](../guide/guides/settings.md#锁定)处于开启状态的每项设置，都按其锁定的值写出，而不是按屏幕上显示的值写出。`Viewport` 锁定掌管 `originX`、`originY` 和 `zoomLevel`，`Canvas Type`、`Language`、`Table Name Case`、`Column Name Case`、`Bracket Type` 以及从 `4.2.0` 起的 `Name View` 则各自掌管对应的设置。名称显示写为 `nameViewMode`，并且只在其不为 `'physical'` 时才写出。其他所有设置都按其当前的值写出，`lockSettings` 总会写出。各个位的说明参见 [Settings](./advanced/schema.md#settings)；`Name View` 锁定的位含义相反。  
+新文档的所有锁定都处于开启状态，无论是元素在被赋予值之前显示的文档，还是从空白值加载的文档。在相应的锁定关闭之前，其 `value` 会一直把原点写为 `0, 0`、缩放级别写为 `1`、标签页写为 ERD 标签页，写出默认的 Code Generator 语言、名称大小写和括号类型，并且从 `4.2.0` 起把名称显示写为 `Physical Names`。  
 在 `4.0.0` 之前，它返回的是编辑器所持有形式的完整文档，并应用了 `ignoreSaveSettings`。编辑器所持有形式的文档现在是 [runtimeValue](#runtimevalue)，`ignoreSaveSettings` 也已不再被读取或写入。
 
 ```js
@@ -183,14 +191,14 @@ const data = editor.value;
 
 ### setter
 
-加载此前保存的编辑器状态。它会替换整个文档，先清空当前文档。  
-与 `clear()`、`setInitialValue()` 以及处于默认 `mode: 'replace'` 的各个 `setSchema*` 方法一样，它也会丢弃 Visualization 标签页的 Flow 视图：包括它的布局、视图范围所缩小到的表、行显示、缩放和平移。追加（`mode: 'append'`）则不会丢弃它。  
+加载此前保存的编辑器状态。它会替换整个文档，先清空当前文档。从 `4.2.0` 起，这也包括词根、术语和域：文档会采用文本中的词根、术语和域，文本中没有时则一个都没有，并且每个词典工作表自己的 Undo 历史记录都会被清空。  
+与 `clear()`、`setInitialValue()` 以及处于默认 `mode: 'replace'` 的各个 `setSchema*` 方法一样，它也会丢弃 Visualization 标签页的 Flow 视图：包括它的布局、视图范围所缩小到的表、行显示、缩放和平移，以及从 `4.2.0` 起其 `Previous table` 和 `Next table` 所依次经过的表。追加（`mode: 'append'`）则不会丢弃它。  
 会记录到 Undo 历史记录中，因此可以 `Undo, Redo`，并且会发出 `change`。  
 它接受存储形式、[runtimeValue](#runtimevalue)，或较早发布版本保存的文件。  
 空字符串或非字符串的值不会报错，而是加载一个新文档，因此赋值前需要先做好校验。  
 该新文档就是 `setInitialValue('')` 所开始的文档：内容为空、采用默认设置，并且从 `4.0.0` 起所有锁定都处于开启状态。在 `3.10.x` 中，它既不保存滚动位置也不保存缩放级别；在此之前，两者都会保存。  
-shared store 会把这次加载连同新文档的完整 JSON 一起中继给协作者，因此每个协作者（包括使用较旧发布版本的协作者）都会加载同一个文档。  
-从 `4.0.0` 起，所加载文档的锁定，以及 `value` 随后写出的锁定值，都来自文本；视图会落在文本所指定的位置，如果那里没有绘制图的任何部分，则落在图上。对于文本锁定的其他各项设置（标签页、Code Generator 的语言、名称大小写和括号类型），编辑器会继续显示加载之前所显示的内容。文本未锁定的设置则采用文本中的值。[setInitialValue](#setinitialvalue) 则会采用文本中的每一个值；一个锁定都没有写明的文本，也请参见该节。  
+shared store 会把这次加载连同新文档的完整 JSON 一起中继给协作者，因此每个协作者（包括使用较旧发布版本的协作者）都会加载它，不过 `4.2.0` 之前的编辑器会丢掉它不认识的内容，例如逻辑名、域关联和词典，参见[混用不同版本](./advanced/collaborative-editing.md#mixing-releases)。  
+从 `4.0.0` 起，所加载文档的锁定，以及 `value` 随后写出的锁定值，都来自文本；视图会落在文本所指定的位置，如果那里没有绘制图的任何部分，则落在图上。对于文本锁定的其他各项设置（标签页、Code Generator 的语言、名称大小写、括号类型，以及从 `4.2.0` 起的名称显示），编辑器会继续显示加载之前所显示的内容。文本未锁定的设置则采用文本中的值。`4.2.0` 之前保存的文件不会写明 `Name View` 锁定，除非有 `4.2.0` 的编辑器在其中关闭了该锁定，因此这样的文件加载后，名称显示锁定在 `Physical Names`，编辑器则保持其原先显示的名称显示。[setInitialValue](#setinitialvalue) 则会采用文本中的每一个值；一个锁定都没有写明的文本，也请参见该节。  
 不是 JSON 的文本（例如残留合并冲突标记的文件）同样不会报错：文档会被清空，设置保持原样，解析错误则会输出到控制台。  
 在 `readonly` 生效期间会被忽略，要在只读编辑器中加载文档需使用 [setInitialValue](#setinitialvalue)。
 
@@ -201,8 +209,8 @@ editor.value = 'json...';
 ## runtimeValue
 
 从 `4.0.0` 起，以 JSON 字符串的形式获取该编辑器所持有形式的文档。它没有 setter，因此在严格模式的代码中为其赋值会抛出错误。  
-它包含 [value](#value) 所省略的内容：已删除的实体及其顺序、叠放顺序、测量得到的宽度、键标记、关系的连接线锚点以及序列。锁定的设置在这里同样按其锁定的值写出。  
-可以用它通过 [setInitialValue](#setinitialvalue)，为加入已在进行中的会话的另一个编辑器（例如协作者，或同一文档的第二个视图）载入初始文档。这样，会话之后发来的对删除操作的 Undo 会在那里完整地恢复该实体；而用 `value` 载入初始文档的编辑器不持有任何已删除的实体，恢复出来的会是一个空的、没有名称的表。参见[协同编辑](./advanced/collaborative-editing.md)。  
+它包含 [value](#value) 所省略的内容：已删除的实体及其顺序、叠放顺序、测量得到的宽度、键标记、关系的连接线锚点以及序列，并且从 `4.2.0` 起还包括空的文本字段、`doc` 列表和集合；从词典工作表中删除的行以及不含任何内容的行；每个词典行的排序键；词根、术语和域的 `doc` 列表；以及指向已删除的域的关联。锁定的设置在这里同样按其锁定的值写出。  
+可以用它通过 [setInitialValue](#setinitialvalue)，为加入已在进行中的会话的另一个编辑器（例如协作者，或同一文档的第二个视图）载入初始文档。这样，会话之后发来的对删除操作的 Undo 会在那里完整地恢复该实体；而用 `value` 载入初始文档的编辑器不持有任何已删除的实体，恢复出来的会是一个空的、没有名称的表，或者从 `4.2.0` 起是一个空的词典行。参见[协同编辑](./advanced/collaborative-editing.md)。  
 已不再有任何机制回收已删除的实体，因此它们会一直留在其中，直到下次从文件打开该文档。  
 切勿将它写入文件：请保存 `value`，[JSON Schema](./advanced/schema.md#json-schema) 接受 `value`，而不接受它。
 
@@ -213,11 +221,12 @@ otherEditor.setInitialValue(editor.runtimeValue);
 ## setInitialValue
 
 加载此前保存的编辑器状态。加载本身不会记录到 Undo 历史记录中，因此无法 Undo，也不会发出 `change` 事件。  
-加载时还会清空 Undo 历史记录，因此加载之前所做的操作无法在加载后的文档上撤回或重做。  
+加载时还会清空 Undo 历史记录，因此加载之前所做的操作无法在加载后的文档上撤回或重做；从 `4.2.0` 起，每个词典工作表自己的历史记录也会一并清空。  
 它接受存储形式、[runtimeValue](#runtimevalue)，或较早发布版本保存的文件，并且与为 `value` 赋值不同，它会采用文本中的每一项设置，包括标签页和代码相关的设置。  
 空字符串或非字符串的值不会报错，而是加载一个新文档，因此 `setInitialValue('')` 会以空白的图开始。  
-从 `4.0.0` 起，该新文档（也就是元素在被赋予任何值之前显示的文档）的所有锁定都处于开启状态。滚动、缩放、切换标签页，以及更改 Code Generator 的语言、名称大小写或括号类型，都会让 `value` 保持原样，也不会发出 `change`。在 `3.10.x` 中，它既不保存滚动位置也不保存缩放级别；在此之前，两者都会保存。  
+从 `4.0.0` 起，该新文档（也就是元素在被赋予任何值之前显示的文档）的所有锁定都处于开启状态。滚动、缩放、切换标签页，以及更改 Code Generator 的语言、名称大小写、括号类型或（从 `4.2.0` 起）名称显示，都会让 `value` 保持原样，也不会发出 `change`。在 `3.10.x` 中，它既不保存滚动位置也不保存缩放级别；在此之前，两者都会保存。  
 从文本加载的文档会沿用其中写明的锁定。一个锁定都没有写明的文档（`4.0.0` 之前保存的任何文件，无论其 `ignoreSaveSettings` 写的是什么，以及 v2 的 `.vuerd` 文件）打开时所有锁定都处于开启状态，其 `Viewport` 锁定在原点 `0, 0` 和缩放级别 `1`，停留在 ERD 标签页，语言、名称大小写和括号类型则保持其保存时的值。  
+从 `4.2.0` 起，写明了锁定但没有写明 `Name View` 锁定的文本，打开时该锁定同样处于开启状态，即使其他所有锁定都处于关闭状态。`4.2.0` 之前保存的文件就是这样的文本，除非有 `4.2.0` 的编辑器在其中关闭了该锁定（参见 [Settings](./advanced/schema.md#settings)）。它会以 `Physical Names` 打开，与一个锁定都没有写明的文本相同。  
 无论哪种情况，视图都会在文档的视图处打开（文本写明了锁定时为它保存的视图，一个都没有写明时为原点 `0, 0`、缩放级别 `1`）；如果那里没有绘制图的任何部分，则在图上打开。锁定的 `Viewport` 仍会在 `value` 中保留其锁定的值。  
 从 `4.0.0` 起，它还会丢弃此前所持有文档的协同状态，并且该编辑器已经订阅的 [shared store](#getsharedstore) 会再次向其他编辑器请求它们的协同状态，因此在进行中的会话里重新加载的编辑器能够跟上进度。请用另一个编辑器的 [runtimeValue](#runtimevalue) 为这样的编辑器载入初始文档。  
 不是 JSON 的文本同样不会报错：文档会被清空，设置保持原样，解析错误则会输出到控制台。  
@@ -246,10 +255,11 @@ editor.addEventListener('change', () => {
 编辑器发生变更时会发出事件。  
 该事件有 200ms 的防抖，并且在 `readonly` 为 `true` 期间不会发出。  
 任何文档变更都会触发它：在 UI 中编辑、为 `value` 赋值、`clear()`、各个 `setSchema*` 方法，以及从 `4.0.0` 起的 `setSchemaJSON()` 和 `Import and Add`。`setInitialValue` 不会触发它。  
-在 Visualization 标签页的 Flow 模式中所做的任何操作都不会触发它，包括缩放、平移、移动卡片、`Tidy Up`、行显示，以及从卡片缩小视图范围，因为这些都不是文档变更。  
-从 `4.0.0` 起，对[锁定](../guide/guides/settings.md#锁定)处于开启状态的设置所做的更改也不会触发它，因为这类更改只会移动屏幕，而永远不会改变 `value`：在 `Viewport` 锁定期间滚动或缩放 ERD 画布，在 `Canvas Type` 锁定期间切换标签页，以及在各自的锁定开启期间更改 Code Generator 的语言、表名大小写、列名大小写或括号类型。只有这些更改会被排除，因此同时编辑了文档的批次仍会触发它。锁定或解锁某项设置会触发它。  
-新文档以及 `4.0.0` 之前保存的任何文件的所有锁定都处于开启状态，因此默认情况下，滚动、缩放和切换标签页都不会发出任何事件。这包括从 ERD 标签页聚焦于表、把你从 Flow 带回 ERD 标签页的外部链接卡片按钮、跳转到资源管理器中的行或搜索的匹配项，以及从其他标签页打开资源管理器或跳转到快速搜索的结果。只有在覆盖相应操作的锁定关闭时，它们才会各发出一次 `change`：标签页切换对应 `Canvas Type`，卡片按钮、快速搜索结果、资源管理器中的行或搜索的匹配项同时造成的滚动对应 `Viewport`。从 `4.1.0` 起，这些滚动都遵循同一条规则，即[跳转的落点](../guide/guides/table-related-functions.md#where-a-jump-lands)，因此快速搜索的表结果不再每次都会滚动，而该规则判定无需移动的跳转不会产生滚动，也就没有可发出的事件。打开、关闭资源管理器或调整其宽度会让画布变窄或变宽，但不会移动其原点，同样不会发出任何事件。在 `4.0.0` 之前，滚动、缩放和切换标签页总会触发它，即使 `editor.value` 并未改变。  
-要跳过不改变任何内容的写入，应将 `editor.value` 与你上一次存储的值进行比较，而不是与你加载的文件比较：由较早发布版本写出的文件、v2 文件或手动编辑过的文件，一经加载，其 `value` 就可能与文件不同，因为 `value` 会以存储形式写出它。`Viewport` 锁定关闭、并且其原点在当前屏幕上没有绘制图的任何部分的文件也是如此：加载会把视图移到图上，`value` 则写出视图落下的位置。从 `4.0.0` 起，测量得到的宽度不再造成这种情况，因为 `value` 中不包含宽度。写入文件的宿主也可以改为借助用于数据复制的 store 提供的 `changed` 来区分编辑与视图变化，参见 [on@change](./advanced/remote-storage.md#onchange)。  
+从 `4.2.0` 起，这包括 [Dictionary](../guide/guides/dictionary.md) 标签页上的每次编辑及其每次 Undo 或 Redo、逻辑名或域关联的更改、`Derive Physical Names Again`，以及 `Name View` 锁定关闭期间的名称显示切换。  
+在 Visualization 标签页的 Flow 模式中所做的任何操作都不会触发它，包括缩放、平移、移动卡片、`Tidy Up`、行显示、从卡片缩小视图范围，以及从 `4.2.0` 起通过 `Previous table` 和 `Next table` 或 Undo 与 Redo 的按键后退和前进，因为这些都不是文档变更。其 `Name View` 列表是例外：在 `Name View` 锁定关闭期间，在那里切换会触发它，与在 ERD 标签页上切换相同。  
+从 `4.0.0` 起，对[锁定](../guide/guides/settings.md#锁定)处于开启状态的设置所做的更改也不会触发它，因为这类更改只会移动屏幕，而永远不会改变 `value`：在 `Viewport` 锁定期间滚动或缩放 ERD 画布，在 `Canvas Type` 锁定期间切换标签页，在各自的锁定开启期间更改 Code Generator 的语言、表名大小写、列名大小写或括号类型，以及从 `4.2.0` 起在 `Name View` 锁定期间切换名称显示。只有这些更改会被排除，因此同时编辑了文档的批次仍会触发它。锁定或解锁某项设置会触发它。  
+新文档以及 `4.0.0` 之前保存的任何文件的所有锁定都处于开启状态，`4.2.0` 之前保存的任何文件的 `Name View` 锁定也处于开启状态（除非有 `4.2.0` 的编辑器在其中关闭了它），因此默认情况下，滚动、缩放、切换标签页和切换名称显示都不会发出任何事件。这包括从 ERD 标签页聚焦于表、把你从 Flow 带回 ERD 标签页的外部链接卡片按钮、跳转到资源管理器中的行或搜索的匹配项、从其他标签页打开资源管理器或跳转到快速搜索的结果，以及从 `4.2.0` 起，由 Dictionary 标签页 `Checks` 工作表中的行跳转到表或列。只有在覆盖相应操作的锁定关闭时，它们才会各发出一次 `change`：标签页切换对应 `Canvas Type`，卡片按钮、快速搜索结果、资源管理器中的行、搜索的匹配项或 `Checks` 工作表的行同时造成的滚动对应 `Viewport`。从 `4.1.0` 起，这些滚动都遵循同一条规则，即[跳转的落点](../guide/guides/table-related-functions.md#where-a-jump-lands)，因此快速搜索的表结果不再每次都会滚动，而该规则判定无需移动的跳转不会产生滚动，也就没有可发出的事件。打开、关闭资源管理器或调整其宽度会让画布变窄或变宽，但不会移动其原点，同样不会发出任何事件。在 `4.0.0` 之前，滚动、缩放和切换标签页总会触发它，即使 `editor.value` 并未改变。  
+要跳过不改变任何内容的写入，应将 `editor.value` 与你上一次存储的值进行比较，而不是与你加载的文件比较：由较早发布版本写出的文件、v2 文件或手动编辑过的文件，一经加载，其 `value` 就可能与文件不同，因为 `value` 会以存储形式写出它。`Viewport` 锁定关闭、并且其原点在当前屏幕上没有绘制图的任何部分的文件也是如此：加载会把视图移到图上，`value` 则写出视图落下的位置。从 `4.0.0` 起，测量得到的宽度不再造成这种情况，因为 `value` 中不包含宽度。从 `4.2.0` 起，`4.0.0` 或 `4.1.0` 保存的文件也可能不同，因为 `value` 现在会省略其中为空的文本字段、列表和集合，因此这样的文件会在下一次保存时被重写一次。写入文件的宿主也可以改为借助用于数据复制的 store 提供的 `changed` 来区分编辑与视图变化，参见 [on@change](./advanced/remote-storage.md#onchange)。  
 该事件不携带 `detail`，既不冒泡也不跨越 shadow 边界，因此需要在元素自身上监听，并在处理函数中读取 `editor.value`。
 
 ```js
@@ -301,9 +311,9 @@ editor.blur();
 
 ## clear
 
-清空文档，移除所有表、列、关系、索引和备注，并且从 `4.0.0` 起还会移除所有表分组。  
+清空文档，移除所有表、列、关系、索引和备注，从 `4.0.0` 起还会移除所有表分组，从 `4.2.0` 起还会移除 Dictionary 标签页的词根、术语和域，并清空每个工作表自己的 Undo 历史记录。  
 所有设置都会保留，包括数据库、视图位置、缩放级别、表显示选项、每个锁定及其持有的值，以及 Schema SQL 标签页的 `Before tables` 和 `After tables` 脚本，因此清空后的文件仍会保存它原先保存的那些信息。如果想改为开始一个新文档，请为 `value` 赋值 `''`，或调用 `setInitialValue('')`。  
-会记录到 Undo 历史记录中，因此可以 Undo，并且会发出 `change`。Undo 会按编辑器所持有的形式恢复文档，每项锁定的设置都处于其锁定的值。在 `readonly` 生效期间会被忽略。
+会记录到 Undo 历史记录中，因此可以 Undo，并且会发出 `change`。Undo 会按编辑器所持有的形式恢复文档（包括其词根、术语和域），每项锁定的设置都处于其锁定的值。在 `readonly` 生效期间会被忽略。
 
 ```js
 editor.clear();
@@ -328,6 +338,7 @@ editor.destroy();
 绑定的值必须是 `ShortcutOption[]`。单纯的字符串会被忽略，因此要写成 `{ addTable: [{ shortcut: 'Alt+KeyN' }] }`，而不是 `{ addTable: 'Alt+KeyN' }`。  
 空数组也会被接受，并且不绑定任何按键：`setKeyBindingMap({ findReplace: [] })` 会把 `Ctrl + F` (Windows/Linux) 或 `⌘ + F` (Mac) 留给页面处理，`{ search: [] }` 对 `Ctrl + K` (Windows/Linux) 或 `⌘ + K` (Mac) 也是如此。工具栏的 `Search` 按钮仍可打开快速搜索，工具栏的 `Explorer` 按钮仍可打开和关闭资源管理器，快速搜索和画布右键菜单中的 `Toggle Explorer` 也仍可打开其搜索或将其关闭；对于留空的名称，这些位置都不会显示快捷键。`{ removeSelection: [] }` 会把 `Delete` 和 `Backspace` 留给页面处理，此时表、备注和表分组菜单中的删除条目（`Delete`、`Delete selected`、`Delete column`、`Delete columns`）都不会显示快捷键。  
 从 `4.1.0` 起，`{ addTableGroup: [] }` 会把 `Alt + G` (Windows/Linux) 或 `⌥ + G` (Mac) 留给页面处理，`{ groupSelectedTables: [] }` 则会把先按 `T` 再按 `G` 留给页面处理。画布工具栏、画布右键菜单和快速搜索中的 `New Table Group`，表菜单中的 `Group selected tables`，以及快速搜索中的 `Group Selected Tables` 仍然可用，只是不显示快捷键。画布工具栏的 `New Table`、`New Memo` 和 `New Table Group` 按钮的提示会标出 `addTable`、`addMemo` 和 `addTableGroup` 的第一个组合键；对于留空的绑定，则只显示按钮名称。  
+从 `4.2.0` 起，`addColumn` 和 `removeColumn` 还为 Dictionary 标签页的网格提供行组合键（见下文），因此改绑其中任何一个，这些组合键也会随之改变。`{ addColumn: [] }` 会让网格没有用于插入行的组合键，此时网格菜单中的两个插入条目都不显示快捷键；`{ removeColumn: [] }` 会让网格没有用于删除行的组合键，此时该菜单中的删除条目和 `Delete Rows` 的提示都不显示快捷键。  
 该调用是部分合并：未写出的名称保持默认值，调用两次也会保留先前的更改。没有用于读取当前绑定的 getter：[createKeyBindingMap](#createkeybindingmap) 返回的是默认值，而不是经 `setKeyBindingMap` 更改后的内容。
 
 ```ts
@@ -401,21 +412,27 @@ editor.setKeyBindingMap({
 `selectAllTable`、`handTool`、`removeSelection`，以及从 `4.1.0` 起的 `groupSelectedTables`，都会让位于光标：只要焦点位于 input、textarea 或 `contenteditable` 中，`$mod + A` 就会选中文本，`Space` 就会输入空格，`Delete` 和 `Backspace` 就会删除文本，先按 `T` 再按 `G` 就会输入这两个字母，都不会传到画布上。这些按键的默认行为都不会被阻止。改绑到其他快捷键后行为同样如此。
 
 从 `4.0.0` 起，`removeSelection`（`Delete` 或 `Backspace`）会在 ERD 标签页上删除选中的对象，算作一步 Undo，并且不会要求确认。当唯一选中的对象是获得焦点的表、其中选中了一列或多列，并且当前缩放会绘制其各行时，它会删除这些列；否则它会删除所有选中的表、备注和表分组，分组中的表会保留。参见[删除表与备注](../guide/guides/table-related-functions.md#删除表与备注)。  
-按住按键不放时只会删除一次，单元格、备注或表分组名称编辑器打开期间不会删除任何内容。在文本框以及会拦下绑定的面板（参见 [createKeyBindingMap](#createkeybindingmap)）之外，只要编辑器获得焦点，这次按键在每个标签页上都会被阻止默认行为，焦点位于工具栏按钮上时也是如此；在只读编辑器中同样会被阻止，但不会删除任何内容。
+按住按键不放时只会删除一次，单元格、备注或表分组名称编辑器打开期间不会删除任何内容。在文本框以及会拦下绑定的面板和标签页（参见 [createKeyBindingMap](#createkeybindingmap)）之外，只要编辑器获得焦点，这次按键在每个标签页上都会被阻止默认行为，焦点位于工具栏按钮上时也是如此；在只读编辑器中同样会被阻止，但不会删除任何内容。
 
 从 `4.1.0` 起，`addTableGroup`（`Alt+KeyG`）会在 ERD 标签页上进入 `New Table Group` 绘制状态，此后在画布上按下鼠标左键即会绘制分组；再按一次则结束绘制状态，与画布工具栏的 `New Table Group` 按钮相同。`groupSelectedTables`（`KeyT KeyG`，即先按 `T` 再按 `G`）会把选中的表放入一个新分组并打开其名称编辑器，与表右键菜单中的 `Group selected tables` 相同。没有选中任何表时它不会添加任何内容；选中的备注或表分组不计算在内。参见[绘制分组](../guide/guides/table-groups.md#drawing-a-group)和[为选中的表分组](../guide/guides/table-groups.md#grouping-selected-tables)。  
 两者只在菜单提供分组的情况下起作用：在 `readonly` 生效期间、View Option 中的 `Table Groups` 隐藏分组期间，或单元格、备注或表分组名称编辑器打开期间，它们都不起作用。与其他画布绑定一样，它们仅作用于 ERD 标签页，并且在快速搜索、表属性、Diff Viewer、Time Travel、自动布局预览、`Export image` 或 `Map Columns` 打开期间不起作用。在它们不起作用的地方，这次按键仍会被阻止默认行为，`groupSelectedTables` 让位于光标时除外。`addTableGroup` 还会像 `focusView` 和 `zenMode` 一样被停止传播，因此页面中冒泡阶段的 `keydown` 监听器永远收不到它。
 
+从 `4.2.0` 起，在 [Dictionary](../guide/guides/dictionary.md#adding-and-deleting-rows) 标签页上，`addColumn` 的每个单次按键组合键都会在选中范围下方插入与选中范围所覆盖行数相同的行，同时再按住 `Shift` 的同一组合键会在上方插入这些行，`removeColumn` 的每个单次按键组合键则会删除选中范围所覆盖的行：在默认设置下分别为 `Alt+Enter`、`Alt+Shift+Enter`，以及 `Alt+Backspace` 或 `Alt+Delete`。它们在 `Domains`、`Words` 和 `Terms` 工作表的网格中、没有打开任何单元格编辑时起作用。本身已包含 `Shift` 的 `addColumn` 组合键不会产生在上方插入的组合键，绑定到这两个名称之一的序列也不会为网格提供任何组合键。  
+每次这样的按键都会按其选项的规定被阻止默认行为，并且总会被停止传播，因此它不会在 ERD 标签页上添加或删除任何列。在 `Checks` 工作表上以及只读编辑器中，它不起作用，但仍会被阻止默认行为并停止传播。在打开的单元格编辑或该标签页的搜索输入框中，这些组合键交给文本处理：它们在那里会被停止传播，但不会被阻止默认行为，因此输入框会像在其他任何地方一样响应它们（在 Mac 上，`⌥ + Backspace` 会删除一个单词）。[dictionaryRowChords](#dictionaryrowchords) 列出了这些组合键。
+
 从 `3.10.0` 起，`findReplace`（`$mod+KeyF`）会打开[查找与替换](../guide/guides/find-and-replace.md)。从 `4.1.0` 起，它用于开关容纳查找与替换的[资源管理器](../guide/guides/explorer.md#opening-and-closing)，Shortcuts 标签页将其列为 `Toggle Explorer`。  
 工具栏的 `Explorer` 按钮显示为按下状态期间（即资源管理器在 ERD 标签页中处于打开状态且未被禅模式隐藏），它会关闭资源管理器，除非快速搜索、表属性、主题构建器、Display Language 选择器、`Export image` 对话框或 `Map Columns` 处于打开状态。其他情况下，它会关闭上述已打开的那一个，在其他任何标签页中按下时先切换到 ERD 标签页，然后打开资源管理器，把光标放到其 `Find` 输入框中并选中查询内容。编辑器过窄、无法在画布旁显示资源管理器时，资源管理器仍保持打开，但会让位、不再绘制，并显示 `Widen the window to show the Explorer` 提示。在 `4.1.0` 之前，它会打开浮动的查找与替换面板，或把键盘焦点交还给其输入框，并且从不关闭该面板。  
-它不会让位于光标：只要编辑器获得焦点，无论在哪个标签页，也无论焦点位于画布上还是编辑器内部的输入框中，该按键都会被它截获。这次按键的默认行为会被阻止，因此浏览器不会打开查找栏；它也会被停止传播，因此页面上冒泡阶段的 `keydown` 监听器都收不到它。单元格或备注编辑器处于打开状态时，或者从 `4.0.0` 起表分组名称编辑器处于打开状态时，它仍会被阻止默认行为并停止传播，但不起任何作用。  
+它不会让位于光标：只要编辑器获得焦点，无论在哪个标签页，也无论焦点位于画布上还是编辑器内部的输入框中，该按键都会被它截获。这次按键的默认行为会被阻止，因此浏览器不会打开查找栏；它也会被停止传播，因此页面上冒泡阶段的 `keydown` 监听器都收不到它。单元格或备注编辑器处于打开状态时，从 `4.0.0` 起表分组名称编辑器处于打开状态时，或者从 `4.2.0` 起 Dictionary 标签页的网格中有单元格编辑处于打开状态时，它仍会被阻止默认行为并停止传播，但不起任何作用。在最后这种情况下，`search` 同样不起作用，因此已输入的文本会保留下来。  
 Diff Viewer、Time Travel 或自动布局预览打开期间（无论在哪个标签页），或输入法仍在组字时，它既不会被阻止默认行为，也不会被停止传播，因此会交给浏览器或宿主自己的查找功能。在资源管理器中，仍在组字的按键会在资源管理器处被停止传播，但其默认行为不会被阻止。把 `findReplace` 改绑到其他快捷键后行为同样如此。
 
 `focusView` 仅作用于 ERD 标签页。至少选中一个表时，它会以 Flow 模式打开 Visualization 标签页，范围缩小到这些表以及与它们相隔一条关系的所有表；选中的备注或表分组不计算在内，没有选中任何表时它不起作用。参见[聚焦于表](../guide/guides/visualization.md#focusing-on-tables)。
 
+`undo` 和 `redo` 的作用因标签页而异。在 ERD 标签页上，它们撤回和重做文档的历史记录。从 `4.2.0` 起，在 Dictionary 标签页上，它们撤回和重做当前显示的工作表自己的历史记录，在 `Checks` 工作表上则不起作用，参见[词典工作表](../guide/guides/undo-redo.md#dictionary-sheets)。在 Visualization 标签页的 Flow 模式中，它们会像 [`Previous table` 和 `Next table`](../guide/guides/visualization.md#previous-table-and-next-table) 那样后退和前进，不触及文档的历史记录。在其他标签页上以及 Graph 模式中，它们不会撤回任何内容。
+
 在 ERD 标签页上，`stop`（`Escape`）会关闭已打开的单元格或备注编辑器，或取消正在绘制的关系，并保持选中状态不变。从 `4.0.0` 起，它还会关闭表分组名称编辑器（不写入任何名称），并取消正在进行的 `New Table Group` 绘制。编辑器会对这次按键调用 `preventDefault()`。  
 没有上述任何一项处于打开状态时，`Escape` 会清除选中状态和单元格焦点，并且其默认行为不会被阻止。因此，结束编辑并清除选中状态需要按两次。  
-除了资源管理器、[欢迎界面](#enablewelcomescreen)中 `Import` 的各种格式，以及下面所述的选择器和对话框之外，编辑器从不阻止 `Escape` 继续传播，因此自行监听它的页面（例如用来关闭自己的对话框）会收到这两次按键，并可以跳过 `defaultPrevented` 为 `true` 的那一次。  
+从 `4.2.0` 起，逻辑名单元格的术语列表显示期间（参见[补全术语名称](../guide/guides/logical-names.md#completing-term-names)），第一次按下的 `Escape` 只会关闭该列表，编辑器保持打开。这次按键会在该单元格处被阻止默认行为并停止传播，因此 `stop` 和页面中冒泡阶段的 `keydown` 监听器都收不到它。  
+除了资源管理器、[欢迎界面](#enablewelcomescreen)中 `Import` 的各种格式、逻辑名单元格的术语列表、[Dictionary](../guide/guides/dictionary.md#keys-on-the-tab) 标签页，以及下面所述的选择器和对话框之外，编辑器从不阻止 `Escape` 继续传播，因此自行监听它的页面（例如用来关闭自己的对话框）会收到这两次按键，并可以跳过 `defaultPrevented` 为 `true` 的那一次。  
 快速搜索、表属性、Diff Viewer、自动布局预览或 Time Travel 打开期间，`Escape` 会改为关闭它们，并保持选中状态不变。这次按键的默认行为同样不会被阻止。  
 从 `4.0.0` 起，已打开的 [`Export image`](../guide/guides/file-import-export.md#image) 或 [`Map Columns`](../guide/guides/relationship-editing.md#map-columns) 对话框也会接收 `Escape`，关闭自身并保持选中状态不变。它们打开时都会接管键盘，这次 `Escape` 会同时被阻止默认行为并停止传播。  
 从 `4.1.0` 起，焦点位于[资源管理器](../guide/guides/explorer.md#keys-in-the-explorer)中（无论在其树、输入框还是按钮上）时按下的 `Escape`，会把键盘焦点交还给画布，资源管理器保持打开，选中状态也保持不变。编辑器会对这次按键同时调用 `preventDefault()` 和 `stopPropagation()`，因此它永远不会到达页面中冒泡阶段的 `keydown` 监听器。  
@@ -429,7 +446,7 @@ Diff Viewer、Time Travel 或自动布局预览打开期间（无论在哪个标
 从 `3.9.2` 起，该包导出 `createKeyBindingMap()`，并一同导出 `KeyBindingMap`、`KeyBindingName` 和 `ShortcutOption` 类型。  
 它返回默认的按键绑定，包含全部 28 个名称（固定名称也在其中），并且每次调用都返回一个新的映射，因此修改它返回的映射不会影响其他任何内容。  
 每个编辑器都以它为起点，而 `setKeyBindingMap` 的调用不会反映在其中。  
-只有 `createKeyBindingMap` 是运行时导出，其余三个都是类型。
+这四者中只有 `createKeyBindingMap` 是运行时导出，其余三个都是类型。从 `4.2.0` 起，[dictionaryRowChords](#dictionaryrowchords) 也与它一同导出。
 
 ```ts
 type KeyBindingName =
@@ -483,11 +500,38 @@ const shortcuts = Object.values(createKeyBindingMap())
 要放行的按键列表可以基于 `createKeyBindingMap()` 构建，并用传给 `setKeyBindingMap` 的绑定替换相应的默认值。  
 从 `3.10.0` 起，该列表包含浏览器自身的查找组合键 `$mod+KeyF`。希望在该组合键上保留自己的查找功能的宿主，可以传入 `setKeyBindingMap({ findReplace: [] })`。  
 从 `4.0.0` 起，该列表还包含不带修饰键的 `Delete` 和 `Backspace`。希望保留这两个按键的宿主，可以传入 `setKeyBindingMap({ removeSelection: [] })`。  
-从 `4.1.0` 起，该列表还包含 `Alt+KeyG` 和序列 `KeyT KeyG`，后者是一个字符串：请在空格处将其拆开，并放行其中的每次按键，包括不带修饰键的 `T` 和 `G`，因为缺少任何一次按键的序列永远无法完成。希望保留这些按键的宿主，可以传入 `setKeyBindingMap({ addTableGroup: [] })` 或 `setKeyBindingMap({ groupSelectedTables: [] })`。
+从 `4.1.0` 起，该列表还包含 `Alt+KeyG` 和序列 `KeyT KeyG`，后者是一个字符串：请在空格处将其拆开，并放行其中的每次按键，包括不带修饰键的 `T` 和 `G`，因为缺少任何一次按键的序列永远无法完成。希望保留这些按键的宿主，可以传入 `setKeyBindingMap({ addTableGroup: [] })` 或 `setKeyBindingMap({ groupSelectedTables: [] })`。  
+从 `4.2.0` 起，还需向该列表中加入 [dictionaryRowChords](#dictionaryrowchords) 针对同一映射返回的组合键，其中包括 `Alt+Shift+Enter`。希望保留这些按键的宿主，可以传入 `setKeyBindingMap({ addColumn: [] })` 或 `setKeyBindingMap({ removeColumn: [] })`，这样也会让这些按键不再用于在 ERD 标签页上添加和删除列。
 
 焦点位于资源管理器中时，无论是在其树、`Find` 和 `Replace` 输入框还是按钮上，`findReplace`、`search`、`undo`、`redo`、`zoomIn`、`zoomOut` 和 `zoomReset` 都会传给编辑器，因此 `findReplace` 在那里的作用与在画布上相同。其他所有绑定（以当前的设置为准）都止于资源管理器，序列则止于其最后一次按键（在默认设置下为不带修饰键的 `G`），方向键、`Tab`、`Enter`、`Space`、`Home`、`End` 以及输入法仍在组字时按下的任何按键也是如此。除了把键盘焦点交还给画布的 `Escape` 之外，这些按键只会被停止传播而不会被阻止默认行为，因此它们在资源管理器的输入框、按钮和树中作为普通按键使用，既不会到达画布，也不会到达页面中冒泡阶段的 `keydown` 监听器：在那里按 `Alt + N` 不会添加表，按 `Delete` 也不会删除任何内容。用于在树中移动、折叠或跳转到行的按键，以及在 `Find` 或 `Replace` 输入框中用于在匹配项之间移动或执行替换的 `Enter`，同样会被阻止默认行为。  
 其他任何按键，例如宿主的保存或命令面板组合键，都会照常传给页面。参见[资源管理器中的按键](../guide/guides/explorer.md#keys-in-the-explorer)。在 `4.1.0` 之前，浮动的查找与替换面板也以相同的方式处理按键，但 `Home`、`End`、序列的最后一次按键，以及 `handTool` 绑定到其他按键时的 `Space` 除外。  
 从 `4.0.0` 起，Display Language 选择器也以相同的方式处理按键：同样的七个绑定会传给编辑器，其他所有绑定（从 `4.1.0` 起，序列以其最后一次按键为准）、方向键和 `Tab` 都会在那里被停止传播而不会被阻止默认行为，输入法仍在组字时按下的任何按键也是如此。在其中某一行上按下的 `↑`、`↓`、`Home`、`End`、`Enter` 和 `Space` 会在各行之间移动或选择该行，并且同样会被阻止默认行为。
+
+从 `4.2.0` 起，[Dictionary](../guide/guides/dictionary.md#keys-on-the-tab) 标签页也会拦下按键，只有 `search`、`findReplace`、`undo` 和 `redo` 会传给编辑器。`undo` 和 `redo` 作用于当前显示的工作表自己的历史记录；有单元格编辑处于打开状态或焦点位于该标签页的搜索输入框中时，它们交给文本处理，在那里会被停止传播，但不会被阻止默认行为。如上文所述，单元格编辑处于打开状态时，`search` 和 `findReplace` 不起作用。行组合键在网格中起作用，如上文 `addColumn` 和 `removeColumn` 部分所述。  
+其他所有绑定（以当前的设置为准）都止于该标签页，序列则止于其最后一次按键，方向键、`Tab`、`Enter`、`Space`、`Home`、`End` 以及输入法仍在组字时按下的任何按键也是如此。它们都不会到达画布，也不会到达页面中冒泡阶段的 `keydown` 监听器：在那里按 `Alt + N` 不会添加表，按 `Delete` 也不会从图中删除任何内容。该标签页中的复制、剪切和粘贴事件同样止于那里，因此图永远不会把它们当作自己的事件读取。其他任何按键都会照常传给页面。
+
+### dictionaryRowChords {#dictionaryrowchords}
+
+从 `4.2.0` 起，该包导出 `dictionaryRowChords()`。它返回在你传入的按键绑定映射下，Dictionary 标签页的网格用于插入或删除行的所有组合键，每次调用都返回一个新的 `ShortcutOption[]`。  
+它们依次为：`addColumn` 的单次按键组合键，用于在选中范围下方插入行；这些组合键各自再按住 `Shift` 的形式，用于在上方插入行，本身已包含 `Shift` 的组合键则没有对应项；以及 `removeColumn` 的单次按键组合键，用于删除行。每个组合键都保留其来源绑定的 `preventDefault` 和 `stopPropagation`，序列则被省略。参见[添加与删除行](../guide/guides/dictionary.md#adding-and-deleting-rows)。  
+在上方插入行的组合键（在默认设置下为 `Alt+Shift+Enter`）不属于任何绑定，因此严格匹配修饰键、并且只基于 [createKeyBindingMap](#createkeybindingmap) 构建放行按键列表的宿主永远不会放行它。请像 Obsidian 插件那样，同时放行这两个列表。  
+它只读取传给它的映射，而不读取元素的绑定，因此请把你构建按键列表时所依据的映射传给它。
+
+```ts
+declare function dictionaryRowChords(
+  keyBindingMap: KeyBindingMap
+): ShortcutOption[];
+
+// example
+import { createKeyBindingMap, dictionaryRowChords } from '@dineug/erd-editor';
+
+const map = createKeyBindingMap();
+const shortcuts = [
+  ...Object.values(map).flat(),
+  ...dictionaryRowChords(map),
+].map(({ shortcut }) => shortcut);
+// dictionaryRowChords(map): 'Alt+Enter', 'Alt+Shift+Enter', 'Alt+Backspace', 'Alt+Delete'
+```
 
 ### $mod
 
@@ -635,6 +679,11 @@ type Theme = {
   columnSelectHover: string;
   columnHover: string;
 
+  columnHandleBackground: string;
+  columnHandleBorder: string;
+  columnHandleHoverBackground: string;
+  columnHandleHoverBorder: string;
+
   relationshipHover: string;
 
   visualizationLink: string;
@@ -692,6 +741,15 @@ type Theme = {
   explorerBackground: string;
   explorerBorder: string;
 
+  dictionaryErrorForeground: string;
+  dictionaryErrorBackground: string;
+  dictionaryWarningForeground: string;
+  dictionaryWarningBackground: string;
+  dictionaryBackground: string;
+  dictionaryHeaderBackground: string;
+  dictionaryGridLine: string;
+  dictionaryHeaderSelect: string;
+
   diffInsertForeground: string;
   diffDeleteForeground: string;
   diffModifyForeground: string;
@@ -722,6 +780,12 @@ editor.setTheme({
 - `diffModifyForeground` 和 `diffRenameForeground` 用于设置 Diff Viewer 在其树中以及两侧文档上标记为已变更和已重命名的内容的颜色。`diffModifyForeground` 还用于为被移动、调整了大小、更改了颜色或更换了分组的表、备注或表分组描出轮廓（无论其中还有哪些其他变更），并绘制已变更外键的连接线。
 
 `diffInsertForeground` 和 `diffDeleteForeground` 现在用于设置 Diff Viewer 标记为已添加和已删除的内容的颜色，在其树中以及包含该内容的文档上，文本、轮廓和连接线都使用它们。`diffInsertBackground`、`diffDeleteBackground`、`diffCrossBackground` 和 `diffCrossForeground` 已在 `4.1.0` 中移除，因为 Diff Viewer 不再填充单元格。`setTheme` 会像丢弃其他任何不在 `Theme` 中的名称一样丢弃它们，它们的钩子 `--erd-editor-diff-insert-background`、`--erd-editor-diff-delete-background`、`--erd-editor-diff-cross-background` 和 `--erd-editor-diff-cross-foreground` 也不再被读取。
+
+从 `4.2.0` 起，又新增了十二个 token：
+
+- `columnHandleBackground` 和 `columnHandleBorder` 用于设置[列的拖动手柄](../guide/guides/table-editing.md#调整与移动列)的填充色和轮廓颜色，该手柄绘制在表的左边缘外侧、获得焦点的列行旁边；指针位于其上方时，则改用 `columnHandleHoverBackground` 和 `columnHandleHoverBorder`。手柄上的握把图标使用 `foreground`，指针位于其上方时使用 `active`。
+- `dictionaryErrorForeground` 和 `dictionaryWarningForeground` 用于设置[词典的检查](../guide/guides/dictionary.md#what-each-check-finds)所发现的错误或警告的颜色：ERD 画布上被标出的名称（参见[画布上的标记](../guide/guides/dictionary.md#marks-on-the-canvas)）、`Domains`、`Words` 和 `Terms` 工作表中被标出的单元格的文本，以及 `Checks` 的计数。`dictionaryErrorBackground` 和 `dictionaryWarningBackground` 用于填充这样的单元格。`dictionaryErrorForeground` 还用于设置指针下方的 `Delete Rows` 工具的颜色。
+- `dictionaryBackground`、`dictionaryHeaderBackground`、`dictionaryGridLine` 和 `dictionaryHeaderSelect` 用于设置 [Dictionary](../guide/guides/dictionary.md#the-sheets) 标签页中工作表的颜色，依次为：单元格，它同时也填充该标签页的搜索输入框和术语的域列表；列标题和行号；单元格之间的线条，它同时也用于绘制该标签页的顶部栏以及其中各输入框的边框；以及所在行或列与选中范围相交的标题。工作表的其余部分使用共用的 token：标题文字使用 `foreground`，单元格文本使用 `active`，把列标题和行号与单元格分隔开的线条使用 `grayColor7`，活动单元格的边缘使用 `focus`，选中区域的边缘使用 `accentColor9`，其填充则使用 20% 不透明度的 `accentColor9`，整行或整列被选中时的标题使用 `accentColor6`，只读单元格使用 `grayColor3`，此外还使用滚动条的 token。`accentColor9` 不是以 `#rgb` 或 `#rrggbb` 形式写出时，选中区域不会被填充。
 
 #### CSS Variables
 
@@ -782,6 +846,10 @@ erd-editor {
   --erd-editor-column-select: #182449;
   --erd-editor-column-select-hover: #1d2e62;
   --erd-editor-column-hover: #272a2d;
+  --erd-editor-column-handle-background: #18191b;
+  --erd-editor-column-handle-border: #363a3f;
+  --erd-editor-column-handle-hover-background: #2e3135;
+  --erd-editor-column-handle-hover-border: #43484e;
   --erd-editor-relationship-hover: #435db1;
   --erd-editor-visualization-link: #43484e;
   --erd-editor-visualization-column: #5a6169;
@@ -823,6 +891,14 @@ erd-editor {
   --erd-editor-tree-match: #253974;
   --erd-editor-explorer-background: #111113;
   --erd-editor-explorer-border: #363a3f;
+  --erd-editor-dictionary-error-foreground: #ff9592;
+  --erd-editor-dictionary-error-background: #500f1c;
+  --erd-editor-dictionary-warning-foreground: #ffca16;
+  --erd-editor-dictionary-warning-background: #3f2700;
+  --erd-editor-dictionary-background: #18191b;
+  --erd-editor-dictionary-header-background: #2e3135;
+  --erd-editor-dictionary-grid-line: #363a3f;
+  --erd-editor-dictionary-header-select: #182449;
   --erd-editor-diff-insert-foreground: #3dd68c;
   --erd-editor-diff-delete-foreground: #ff9592;
   --erd-editor-diff-modify-foreground: #ffca16;
@@ -903,6 +979,7 @@ editor.setSystemLocale('pt-PT'); // null follows the browser again
 
 加载 Schema SQL 文件。  
 默认情况下，它会替换当前文档，而不是合并到当前文档中，参见下文的 `mode`。现有的设置（包括每个锁定及其锁定的值）会保留，仅视图位置和缩放级别除外，并且文件读取后会排布表：除非下文的 `placement` 另有要求，否则逐行排列。`Viewport` 锁定时，`value` 随后会写出导入开始时的视图，即原点 `0, 0`、缩放级别 `1`。因此，导入到从未被赋予过值的元素中的文档，会像新文档一样所有锁定都处于开启状态。  
+从 `4.2.0` 起，替换还会保留文档的词根、术语和域（文本无法容纳它们），连同每个词典工作表的 Undo 历史记录，对该导入的 Undo 或 Redo 也会保留它们。以替换方式调用的 [setSchemaJSON](#setschemajson) 以及为 `value` 赋值，则会改为采用其文档所含的词根、术语和域。  
 会记录到 Undo 历史记录中，因此可以 `Undo, Redo`，并且会发出 `change`。空字符串会被忽略，在 `readonly` 生效期间调用不会有任何效果。  
 `setSchemaGraphQL`、`setSchemaDBML` 和 `setSchemaAML` 的行为相同，它们的解析器不会失败，无法读取的文本只会加载空白文档，而不会报错。  
 从 `4.0.0` 起，这四个方法都接受可选的第二个参数 `{ placement, mode }`：
@@ -968,8 +1045,8 @@ editor.setSchemaAML('AML...');
 ## setSchemaJSON
 
 从 `4.0.0` 起，加载 `.erd.json` 文档，例如 [value](#value) 返回的文本。  
-在默认的 `mode: 'replace'` 下，它会像为 `value` 赋值那样加载文档：记录到 Undo 历史记录中，发出 `change`，并以相同的方式采用文档的锁定。与 `value` 不同，空字符串或非字符串的值会被忽略，而不是开始一个新文档。不是 JSON 的文本会清空文档，与 `value` 相同。  
-`mode: 'append'` 会以新的 id 把文档中的表、关系、索引、备注和表分组添加到图的下方，保持它们彼此之间的相对位置，并略去文档的设置，与 [Import and Add](../guide/guides/file-import-export.md#import-and-add) 对 `json` 文件的处理相同。无法读取的文本，或既没有表也没有备注的文档，不会添加任何内容。否则，它会像 [setSchemaSQL](#setschemasql) 的追加那样落下，其中新的备注和表分组会与表一同成为选中对象，二者各自仅在处于显示状态时才会被选中。  
+在默认的 `mode: 'replace'` 下，它会像为 `value` 赋值那样加载文档：记录到 Undo 历史记录中，发出 `change`，以相同的方式采用文档的锁定，并且从 `4.2.0` 起用文档中的词根、术语和域取代编辑器中的词根、术语和域。与 `value` 不同，空字符串或非字符串的值会被忽略，而不是开始一个新文档。不是 JSON 的文本会清空文档，与 `value` 相同。  
+`mode: 'append'` 会以新的 id 把文档中的表、关系、索引、备注和表分组添加到图的下方，保持它们彼此之间的相对位置，并略去文档的设置，与 [Import and Add](../guide/guides/file-import-export.md#import-and-add) 对 `json` 文件的处理相同。从 `4.2.0` 起，它会保留表和列的逻辑名以及标明名称是否由词典生成的标记，但不会带入文档的词根、术语和域，因此其中的列都不会关联任何域。无法读取的文本，或既没有表也没有备注的文档，不会添加任何内容。否则，它会像 [setSchemaSQL](#setschemasql) 的追加那样落下，其中新的备注和表分组会与表一同成为选中对象，二者各自仅在处于显示状态时才会被选中。  
 它会在文档落下之后返回，并且在 `readonly` 生效期间会被忽略。
 
 ```js
@@ -982,16 +1059,18 @@ editor.setSchemaJSON('json...', { mode: 'append' });
 
 将当前编辑器状态导出为 Schema SQL。  
 若未指定 `databaseVendor`，则按当前已设置的厂商执行。不在下面列表中的名称也按相同方式处理，不会报错。  
-名称会使用编辑器所显示的括号类型加引号。`Bracket Type` [锁定](../guide/guides/settings.md#锁定)期间，它可能与 `value` 保存的括号类型不同，而编码智能体的 [`erd_read`](../mcp/tools.md#reading-a-document) 使用的是后者。  
-从 `4.0.0` 起，可选的 `options` 参数会像 [Schema SQL](../guide/guides/schema-sql.md) 标签页的选项那样，选择语句和头部。`SchemaSQLOptions` 作为类型导出。
+名称会使用编辑器所显示的括号类型加引号。`Bracket Type` [锁定](../guide/guides/settings.md#锁定)期间，它可能与 `value` 保存的括号类型不同，而编码智能体的 [`erd_read`](../mcp/tools.md#reading-a-document) 使用的是后者。写出的名称始终是物理名，无论名称显示如何。  
+从 `4.0.0` 起，可选的 `options` 参数会像 [Schema SQL](../guide/guides/schema-sql.md) 标签页的选项那样，选择语句和头部，从 `4.2.0` 起还可以选择是否用逻辑名填充空注释。`SchemaSQLOptions` 作为类型导出。
 
 - `statements`：`'create'` 为默认值；`'ifNotExists'` 会在 MySQL、MariaDB、PostgreSQL、SQLite 和 Databricks 上写出 `IF NOT EXISTS`，在其他数据库上退回为 `'create'`；`'recreate'` 会先删除表再创建，Snowflake 则改为写出 `CREATE OR REPLACE TABLE`。
 - `header`：`'none'` 为默认值；`'use'` 会切换到文档的数据库或 schema；`'createAndUse'` 会在其不存在时先创建，再切换到它。数据库不具备所请求的头部时，会像该标签页那样退回：Oracle 对 `'createAndUse'` 写出 `'use'`，PostgreSQL 对 `'use'` 不写出头部，SQLite 不写出任何头部。只有当文档的数据库名是普通标识符（由 ASCII 字母、数字和 `_` 组成，且不以数字开头）时，才会写出头部。
+- `logicalNameAsComment`（从 `4.2.0` 起）：`true` 会在表或列自身的注释为空或只含空白、而其逻辑名不为空时，把逻辑名作为注释写出，写法与该数据库写出注释的形式相同。含有文本的注释照旧写出。只有 `true` 才会开启它：省略、`false` 或其他任何值（例如 `'true'` 或 `1`）都不会写出逻辑名。它的作用与该标签页的 [`Write logical names into empty comments`](../guide/guides/schema-sql.md#logical-names-as-comments) 开关相同。
 
 省略的选项或值未知的选项会按其默认值读取，因此不带选项的调用会与以前一样，写出普通的 `CREATE` 语句且不带头部。  
-从 `4.0.0` 起，输出总会包含文档的 `Before tables` 和 `After tables` 脚本，顺序为：头部、前置脚本、删除语句、表、后置脚本。Schema SQL 标签页自身的 `Statements`、`Header` 和 `Tables` 选择永远不会影响该调用，它总是写出整个文档。  
+从 `4.0.0` 起，输出总会包含文档的 `Before tables` 和 `After tables` 脚本，顺序为：头部、前置脚本、删除语句、表、后置脚本。Schema SQL 标签页自身的 `Statements`、`Header`、`Write logical names into empty comments` 和 `Tables` 选择永远不会影响该调用，它总是写出整个文档。  
 从 `3.10.0` 起，每个外键都会带上关系的 `ON DELETE` 和 `ON UPDATE` 子句。只有在设置了操作且该厂商支持时才会写出子句，因此该厂商不支持的操作会被省略，并由其默认行为决定。从 `4.0.0` 起，Snowflake 只接受 `NO ACTION`。各数据库写出的内容参见 [ON DELETE 与 ON UPDATE](../guide/guides/relationship-editing.md#on-delete-and-on-update)。  
 从 `3.10.0` 起，表注释或列注释中的单引号会被转义，因此 `it's` 这样的注释不会再破坏语句。所有以字符串字面量写出注释的厂商都会将单引号双写，Databricks 除外，它会在每个单引号和每个反斜杠前加上反斜杠。SQLite 仍以 `--` 行写出注释。  
+从 `4.2.0` 起，SQL Server 会把每条注释写为带 N 前缀的 Unicode 字面量 `N'…'`，因此数据库代码页之外的文本（例如韩文）得以保留。Oracle 会把注释中每一段连续的空行写为一个换行，SQLite 则会把注释中的换行写为空格，使注释保持在其 `--` 行上。参见[注释](../guide/guides/schema-sql.md#comments)。  
 从 `4.0.0` 起，若干数据库写出键名、默认值和 Auto Increment 的方式也有所不同。参见 [DDL 写出的内容](../guide/guides/schema-sql.md#what-the-ddl-writes)。
 
 ```ts
@@ -1008,6 +1087,7 @@ type DatabaseVendor =
 type SchemaSQLOptions = {
   statements?: 'create' | 'ifNotExists' | 'recreate';
   header?: 'none' | 'use' | 'createAndUse';
+  logicalNameAsComment?: boolean;
 };
 
 const schemaSQL = editor.getSchemaSQL();
@@ -1017,6 +1097,10 @@ const postgresSQL = editor.getSchemaSQL('PostgreSQL');
 const mysqlSQL = editor.getSchemaSQL('MySQL', {
   statements: 'ifNotExists',
   header: 'createAndUse',
+});
+// or
+const commentedSQL = editor.getSchemaSQL('PostgreSQL', {
+  logicalNameAsComment: true,
 });
 ```
 
@@ -1039,7 +1123,8 @@ const sharedStore = editor.getSharedStore({
 它没有返回值，也不会修改文档，因此关闭该查看器后编辑器与之前完全相同。  
 空值或非字符串的值会与空白文档进行比较。  
 它与画布右键菜单中的 [Diff Viewer](../guide/guides/table-related-functions.md#diff-viewer) 是同一个视图。  
-从 `4.1.0` 起，它首先按 id 为两个文档中的内容配对，然后才按各自保留下来的内容配对，例如表的名称或备注的文本，参见[比较的内容](../guide/guides/table-related-functions.md#what-is-compared)。因此，与同一文档的较早版本（例如其文件的某个 Git 修订版本）比较时，重命名会显示为一个已重命名的项；与 id 不同的文档比较时，则会显示为一次删除和一次添加。该查看器会在两个文档旁边以树的形式列出变更内容，并以颜色标记变更，而不是填充单元格。
+从 `4.1.0` 起，它首先按 id 为两个文档中的内容配对，然后才按各自保留下来的内容配对，例如表的名称或备注的文本，参见[比较的内容](../guide/guides/table-related-functions.md#what-is-compared)。因此，与同一文档的较早版本（例如其文件的某个 Git 修订版本）比较时，重命名会显示为一个已重命名的项；与 id 不同的文档比较时，则会显示为一次删除和一次添加。该查看器会在两个文档旁边以树的形式列出变更内容，并以颜色标记变更，而不是填充单元格。  
+从 `4.2.0` 起，两个文档都会以该编辑器当前的名称显示打开，无论传入的文档保存的是哪一种，树也按该名称显示来称呼表和列，参见[画布之外](../guide/guides/logical-names.md#beyond-the-canvas)。逻辑名、域关联和词典不参与比较，因此只对它们做出的更改不会显示为任何变更。
 
 ```js
 editor.setDiffValue('prev json...');

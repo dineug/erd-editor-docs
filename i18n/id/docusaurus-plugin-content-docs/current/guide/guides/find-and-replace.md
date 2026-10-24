@@ -1,12 +1,12 @@
 ---
-sidebar_position: 9
-description: Mencari nama tabel, kolom, indeks, dan grup tabel, komentar, serta memo dari bagian atas Penjelajah, menelusuri kecocokan satu per satu di pohon dan di kanvas, lalu mengganti satu kecocokan atau semuanya.
+sidebar_position: 10
+description: Mencari nama tabel, kolom, indeks, dan grup tabel, nama logis, komentar, serta memo dari bagian atas Penjelajah, menelusuri kecocokan satu per satu di pohon dan di kanvas, lalu mengganti satu kecocokan atau semuanya.
 ---
 
 # Temukan dan Ganti
 
 Menemukan teks di seluruh diagram, membawa Anda ke setiap kecocokan di kanvas ERD, dan mengganti satu kecocokan atau semuanya.  
-Fitur ini mencari tujuh jenis teks: nama tabel, komentar tabel, nama kolom, komentar kolom, memo, nama indeks, dan nama grup tabel — lihat [Apa yang dicari](#what-it-searches).
+Fitur ini mencari delapan jenis teks: nama tabel, komentar tabel, nama kolom, komentar kolom, memo, nama indeks, nama grup tabel, dan [nama logis](./logical-names.md) tabel dan kolom — lihat [Apa yang dicari](#what-it-searches).
 
 Fitur ini berada di bagian atas [Penjelajah](./explorer.md), panel yang tertambat di sebelah kiri kanvas ERD, di antara bilah judul Penjelajah dan pohonnya. Fitur ini tidak memiliki judul sendiri. Dari atas ke bawah, fitur ini memuat:
 
@@ -30,7 +30,7 @@ Cara menutup Penjelajah, apa yang dilakukan tombol pintasan dan dua item `Toggle
 [Saat Penjelajah menyingkir](./explorer.md#when-it-stands-aside) membahas cara tab lain dan mode Zen menyembunyikannya, serta cara Penampil Perbedaan, Perjalanan Waktu, dan pratinjau Tata Letak Otomatis menyembunyikannya dan mencegahnya terbuka. [Di samping kanvas](./explorer.md#beside-the-canvas) membahas editor yang terlalu sempit untuknya.
 
 Membuka kembali mempertahankan kueri terakhir, beserta teks Ganti, [opsi](#options), [jenis teks](#what-it-searches) yang aktif, dan apakah baris `Replace` serta jenis teks dalam keadaan terbentang.  
-Semua itu dipertahankan selama editor tetap terbuka dan tidak disimpan di dokumen. Editor yang baru dibuka dimulai dengan semua opsi nonaktif, baris `Replace` dan jenis teks diciutkan, dan hanya empat jenis nama yang aktif — lihat [Apa yang dicari](#what-it-searches).
+Semua itu dipertahankan selama editor tetap terbuka dan tidak disimpan di dokumen. Editor yang baru dibuka dimulai dengan semua opsi nonaktif, baris `Replace` dan jenis teks diciutkan, dan hanya empat jenis nama serta `Logical names` yang aktif — lihat [Apa yang dicari](#what-it-searches).
 
 ## Bilah pencarian browser {#the-browsers-find-bar}
 
@@ -46,15 +46,16 @@ Halaman yang menyematkan editor dapat memindahkan atau menghapus tombol ini — 
 
 ## Apa yang dicari {#what-it-searches}
 
-Tujuh tombol memilih jenis teks yang dicari, dengan urutan berikut: `Table names`, `Table comments`, `Column names`, `Column comments`, `Memos`, `Index names`, dan `Table group names`.  
+Delapan tombol memilih jenis teks yang dicari, dengan urutan berikut: `Table names`, `Table comments`, `Column names`, `Column comments`, `Memos`, `Index names`, `Table group names`, dan `Logical names`.  
 Awalnya tombol-tombol ini diciutkan. Tombol `Search In` di ujung baris penghitung membentangkannya di bawah baris tersebut dan menciutkannya kembali, serta disorot selama tombol-tombol itu tampil.  
-Tombol jenis yang disorot berarti aktif. Klik salah satunya untuk mengaktifkan atau menonaktifkannya, dan pencarian dijalankan ulang. Jika ketujuhnya nonaktif, tidak ada yang ditemukan.
+Tombol jenis yang disorot berarti aktif. Klik salah satunya untuk mengaktifkan atau menonaktifkannya, dan pencarian dijalankan ulang. Jika kedelapannya nonaktif, tidak ada yang ditemukan.
 
-Pencarian pertama kali terbuka dengan empat jenis nama, yaitu `Table names`, `Column names`, `Index names`, dan `Table group names`, sehingga penggantian nama tidak menjangkau komentar dan memo kecuali jika Anda mengaktifkannya.  
+Pencarian pertama kali terbuka dengan empat jenis nama, yaitu `Table names`, `Column names`, `Index names`, dan `Table group names`, serta dengan `Logical names`, sehingga penggantian nama tidak menjangkau komentar dan memo kecuali jika Anda mengaktifkannya.  
+`Logical names` merupakan satu jenis untuk nama logis tabel maupun kolom.  
 Nama indeks adalah nama indeks di tab `Indexes` pada [Properti Tabel](./table-related-functions.md#indexes), bukan kunci `PK_` dan `UQ_` yang tercantum di atasnya.
 
-Tidak ada hal lain yang dicari: bukan tipe data, nilai default, kolom suatu indeks, nama database, [Skema SQL](./schema-sql.md) beserta skrip `Before tables` dan `After tables`, ataupun kode yang dihasilkan.  
-Komentar yang disembunyikan oleh [opsi tampilan tabel](./table-related-functions.md#table-view-options) tetap dicari. Memo yang disembunyikan dengan View Option → `Memos`, dan [grup tabel](./table-groups.md#hiding-groups) yang disembunyikan dengan View Option → `Table Groups`, tidak dicari, bahkan saat tombolnya aktif, sehingga `Replace All` tidak pernah menulis ulang memo atau mengganti nama grup yang tidak dapat Anda lihat.
+Tidak ada hal lain yang dicari: bukan tipe data, domain kolom, nilai default, kolom suatu indeks, nama database, [Skema SQL](./schema-sql.md) beserta skrip `Before tables` dan `After tables`, kode yang dihasilkan, ataupun lembar di tab [Kamus](./dictionary.md), yang memiliki [pencariannya sendiri](./dictionary.md#searching).  
+Nama logis dicari apa pun yang ditampilkan [Tampilan Nama](./logical-names.md#name-view), termasuk tampilan `Physical Names`, yang kanvasnya tidak menampilkan nama logis sama sekali. Komentar yang disembunyikan oleh [opsi tampilan tabel](./table-related-functions.md#table-view-options) juga tetap dicari. Memo yang disembunyikan dengan View Option → `Memos`, dan [grup tabel](./table-groups.md#hiding-groups) yang disembunyikan dengan View Option → `Table Groups`, tidak dicari, bahkan saat tombolnya aktif, sehingga `Replace All` tidak pernah menulis ulang memo atau mengganti nama grup yang tidak dapat Anda lihat.
 
 ## Opsi {#options}
 
@@ -91,19 +92,21 @@ Penghitung, di awal baris di bawah kotak-kotak tersebut, menunjukkan posisi Anda
 Selama kotak Temukan berisi teks, [pohon](./explorer.md#the-tree) Penjelajah menampilkan hasil alih-alih seluruh diagram: hanya baris yang memuat kecocokan dan baris di atasnya. Saat tidak ada yang cocok, atau ekspresi reguler tidak dapat diurai, pohon kosong. Menghapus kueri mengembalikan seluruh pohon, dengan keadaan ciut seperti sebelumnya.
 
 - `Tables`, `Table Groups`, dan `Memos` hanya tampil jika memuat kecocokan, dan angka pada setiap folder adalah jumlah baris tepat di bawahnya dalam hasil.
-- Di bawah `Tables` tercantum tabel yang memuat kecocokan, menurut nama. Di bawah setiap tabel tercantum satu baris untuk setiap kecocokan di komentarnya, lalu folder `Columns` berisi kolom yang memuat kecocokan, sesuai urutan kolom, masing-masing dengan satu baris untuk setiap kecocokan di komentarnya, lalu folder `Indexes` berisi indeks yang namanya cocok. Tidak ada folder `Foreign Keys`.
+- Di bawah `Tables` tercantum tabel yang memuat kecocokan, menurut nama, tidak pernah menurut nama logis. Di bawah setiap tabel tercantum satu baris untuk setiap kecocokan di komentarnya, lalu folder `Columns` berisi kolom yang memuat kecocokan, sesuai urutan kolom, masing-masing dengan satu baris untuk setiap kecocokan di komentarnya, lalu folder `Indexes` berisi indeks yang namanya cocok. Tidak ada folder `Foreign Keys`.
 - Di bawah `Table Groups` tercantum grup yang namanya cocok, menurut nama, tanpa tabel-tabelnya. Tabel yang ditemukan tampil di bawah `Tables`.
 - Di bawah `Memos` tercantum memo yang memuat kecocokan, sesuai urutan dokumen, masing-masing ditampilkan dengan baris pertamanya dan dengan satu baris untuk setiap kecocokan di dalamnya.
 
-Kecocokan dalam nama disorot di baris nama itu sendiri, sehingga nama yang memuat kueri dua kali menjadi satu baris dengan dua sorotan.  
+Kecocokan dalam nama disorot di baris nama itu sendiri, sehingga nama yang memuat kueri dua kali menjadi satu baris dengan dua sorotan. Kecocokan dalam nama logis tabel atau kolom juga ditempatkan pada baris tabel atau kolom tersebut, tidak pernah pada barisnya sendiri.  
+Baris-baris tersebut menamai tabel atau kolom seperti yang ditampilkan [Tampilan Nama](./logical-names.md#beyond-the-canvas), dan masing-masing dari dua nama yang dapat ditampilkan sebuah baris hanya menyorot kecocokannya sendiri. Baris yang hanya ditemukan pada nama yang dihilangkan tampilannya, yaitu nama logis dalam tampilan `Physical Names` atau nama dalam tampilan `Logical Names`, menambahkan nama itu setelah nama yang ditampilkannya, dengan warna redup seperti dalam tampilan `Both Names`, dan kecocokannya disorot. Jika nama yang ditampilkannya juga memuat kecocokan, baris hanya menampilkan nama itu, sehingga kecocokan pada nama yang dihilangkan tampilannya dihitung dan ditelusuri tetapi tidak disorot.  
 Kecocokan dalam komentar atau memo memiliki barisnya sendiri: gelembung ucapan untuk komentar tabel atau kolom, atau catatan tempel untuk memo, lalu kutipan teks dengan kecocokan yang disorot. Teks yang panjang dipotong dengan `…`, dan jeda baris ditampilkan sebagai spasi. Arahkan penunjuk ke baris tersebut untuk melihat seluruh teks.  
 Setiap baris lainnya tampak seperti di luar pencarian: kolom menampilkan tipe datanya, indeks menampilkan kolom-kolomnya, dan nama kosong bertuliskan `unnamed`.
 
 Setiap baris yang memiliki baris di bawahnya tampil terbentang saat pencarian dimulai. Baris yang Anda ciutkan, atau yang diciutkan oleh `Collapse All`, tetap diciutkan hingga kecocokan di bawahnya menjadi kecocokan saat ini, atau hingga kueri, `Match Case`, `Match Whole Word`, `Use Regular Expression`, atau jenis teks berubah, atau pencarian dibuka lagi dengan tombol pintasan atau item `Toggle Explorer`.  
 Baris kecocokan saat ini disorot dan digulir hingga terlihat. Pohon mencantumkan setiap kecocokan, berapa pun jumlahnya.  
-Kecocokan ditelusuri sesuai urutan pohon: tabel demi tabel, nama tabel, komentarnya, nama dan komentar setiap kolomnya sesuai urutan kolom, dan nama indeksnya; lalu nama grup tabel; lalu memo.
+Kecocokan ditelusuri sesuai urutan pohon: tabel demi tabel, nama logis, nama, dan komentar tabel, lalu nama logis, nama, dan komentar setiap kolomnya sesuai urutan kolom, lalu nama indeksnya; lalu nama grup tabel; lalu memo.
 
-Hasil mengikuti dokumen selama Penjelajah tampil. Begitu pengeditan berhenti sejenak, setiap perubahan pada teks yang dicari menjalankan pencarian ulang, dan kecocokan saat ini tetap dipertahankan jika masih ada. Ini mencakup nama, komentar, atau teks memo yang diedit, tabel, kolom, indeks, memo, atau grup tabel yang ditambahkan atau dihapus, kolom yang dipindahkan, serta memo atau grup tabel yang disembunyikan atau ditampilkan dengan View Option, yang mengeluarkan kecocokannya dari pohon atau mengembalikannya. Perubahan di kanvas, pembatalan atau pengulangan, impor, dan perubahan oleh kolaborator atau agen pemrograman semuanya ikut dihitung. Memilih, memindahkan tabel, memo, atau grup di kanvas, menggulir, memperbesar/memperkecil, dan mengarahkan penunjuk tidak dihitung.  
+Hasil mengikuti dokumen selama Penjelajah tampil. Begitu pengeditan berhenti sejenak, setiap perubahan pada teks yang dicari menjalankan pencarian ulang, dan kecocokan saat ini tetap dipertahankan jika masih ada. Ini mencakup nama, nama logis, komentar, atau teks memo yang diedit, tabel, kolom, indeks, memo, atau grup tabel yang ditambahkan atau dihapus, kolom yang dipindahkan, serta memo atau grup tabel yang disembunyikan atau ditampilkan dengan View Option, yang mengeluarkan kecocokannya dari pohon atau mengembalikannya. Perubahan di kanvas, pembatalan atau pengulangan, impor, dan perubahan oleh kolaborator atau agen pemrograman semuanya ikut dihitung. Memilih, memindahkan tabel, memo, atau grup di kanvas, menggulir, memperbesar/memperkecil, dan mengarahkan penunjuk tidak dihitung.  
+Penggantian Tampilan Nama juga tidak dihitung karena tidak mengubah teks apa pun yang dibaca pencarian: kecocokan yang sama tetap ada, dan baris-baris mengambil nama yang ditampilkan dalam tampilan baru.  
 Perubahan yang dibuat selama Penjelajah tertutup atau tidak terlihat dicari begitu Penjelajah tampil kembali.
 
 ## Menuju kecocokan {#going-to-a-match}
@@ -113,17 +116,17 @@ Perpindahan berputar di kedua ujung. Tidak ada kecocokan saat ini hingga Anda pe
 
 Klik pada baris hasil, atau `Enter` atau `Space` saat keyboard berada di baris itu, melakukan salah satu hal berikut:
 
-- Baris yang namanya sendiri memuat kecocokan menuju kecocokan pertama nama tersebut.
+- Baris yang nama atau nama logisnya sendiri memuat kecocokan menuju kecocokan pertamanya, dengan kecocokan nama logis lebih dulu daripada kecocokan nama.
 - Baris yang menampilkan kutipan komentar atau memo menuju kecocokan tersebut.
-- Baris lain apa pun, seperti tabel yang namanya tidak cocok atau baris memo itu sendiri, menuju apa yang diwakili baris tersebut dan membiarkan kecocokan saat ini apa adanya — lihat [Menuju baris](./explorer.md#going-to-a-row).
+- Baris lain apa pun, seperti tabel yang nama dan nama logisnya tidak cocok atau baris memo itu sendiri, menuju apa yang diwakili baris tersebut dan membiarkan kecocokan saat ini apa adanya — lihat [Menuju baris](./explorer.md#going-to-a-row).
 - Folder diciutkan atau dibentangkan.
 
 Setiap kali sebuah kecocokan menjadi kecocokan saat ini, pohon membentangkan baris yang diciutkan di atasnya dan memindahkan baris fokus keyboard ke sana, sehingga tombol panah di pohon melanjutkan dari baris itu.
 
 Menuju kecocokan menutup Properti Tabel jika sedang terbuka, lalu:
 
-- Untuk nama atau komentar tabel, atau nama atau komentar kolom, tindakan ini hanya memilih tabel tersebut, membawanya ke depan, dan menempatkan sel yang difokuskan pada sel yang memuat kecocokan. Kecocokan dalam komentar yang disembunyikan oleh [opsi tampilan tabel](./table-related-functions.md#table-view-options) menempatkan sel yang difokuskan pada nama di sebelahnya sebagai gantinya.
-- Untuk nama indeks, tindakan ini hanya memilih tabel indeks tersebut dan membawanya ke depan, dengan sel yang difokuskan pada nama tabel kecuali jika sel itu sudah berada di tabel tersebut. Nama indeks tidak digambar di kanvas.
+- Untuk nama, nama logis, atau komentar tabel atau kolom, tindakan ini hanya memilih tabel tersebut, membawanya ke depan, dan menempatkan sel yang difokuskan pada sel yang memuat kecocokan. Kecocokan dalam komentar yang disembunyikan oleh [opsi tampilan tabel](./table-related-functions.md#table-view-options) menempatkan sel yang difokuskan pada nama di sebelahnya sebagai gantinya. Jika [Tampilan Nama](./logical-names.md#name-view) tidak menampilkan sel untuk nama atau nama logis, sel yang difokuskan ditempatkan pada sel yang ditampilkan di tempatnya: nama dalam tampilan `Physical Names`, nama logis dalam tampilan `Logical Names`.
+- Untuk nama indeks, tindakan ini hanya memilih tabel indeks tersebut dan membawanya ke depan, dengan sel yang difokuskan pada nama tabel, atau nama logisnya dalam tampilan `Logical Names` dan `Both Names`, kecuali jika sel itu sudah berada di tabel tersebut. Nama indeks tidak digambar di kanvas.
 - Untuk nama grup tabel, tindakan ini hanya memilih grup tersebut dan membawanya ke depan bersama tabel-tabelnya.
 - Untuk memo, tindakan ini hanya memilih memo tersebut dan membawanya ke depan.
 
@@ -151,7 +154,7 @@ Selama rangkaian berlangsung, tabel atau grup tabel yang diganti namanya oleh ra
 
 `Replace All` dijalankan dengan `Ctrl + Enter` (Windows/Linux) atau `⌘ + Enter` (Mac) di kotak Ganti, atau dengan tombolnya:
 
-- Tindakan ini mengganti setiap kecocokan dalam jenis teks yang aktif dan membiarkan jenis lainnya. Dengan jenis default, tindakan ini mengganti nama tabel, kolom, indeks, dan grup tabel, sementara komentar dan memo tidak tersentuh.
+- Tindakan ini mengganti setiap kecocokan dalam jenis teks yang aktif dan membiarkan jenis lainnya, kecuali nama fisik yang dihasilkan dari nama logis yang diganti, yang tetap ditulisnya bahkan selama `Table names` dan `Column names` nonaktif — lihat di bawah. Dengan jenis default, tindakan ini mengganti nama tabel, kolom, indeks, dan grup tabel, serta menulis ulang nama logis tabel dan kolom; komentar dan memo tidak tersentuh.
 - Semua yang diubahnya merupakan satu langkah pembatalan — lihat [Satu gerakan, satu langkah](./undo-redo.md#one-gesture-one-step).
 - Penghitung bertuliskan `Replaced N matches`, yang hanya menghitung kemunculan yang teksnya benar-benar berubah. Jika tidak ada yang berubah, penghitung bertuliskan `No changes` dan tidak ada yang dicatat di riwayat, seperti saat mengganti ekspresi reguler `(user)` dengan `$1`.
 - Hasil kemudian dicari ulang tanpa kecocokan saat ini, sehingga hasil dapat mencantumkan kecocokan yang terdapat dalam teks baru.
@@ -171,8 +174,12 @@ Cara teks Ganti digunakan:
   - Kecocokan yang ditulis ulang seperti semula tidak dihitung: dengan `Match Case` nonaktif, mengganti `customer` dengan `Customer` menulis ulang `customer`, `Customer`, dan `CUSTOMER` seperti semula, dan tidak satu pun yang dihitung.
 - Kotak Ganti yang kosong menghapus kecocokan.
 
-Penggantian adalah perubahan biasa, sama seperti mengetik sendiri nama tabel, komentar, nama kolom, atau teks memo yang baru, mengganti nama indeks di Properti Tabel, atau mengganti nama grup tabel.  
+Penggantian adalah perubahan biasa, sama seperti mengetik sendiri nama tabel, nama kolom, nama logis, komentar, atau teks memo yang baru, mengganti nama indeks di Properti Tabel, atau mengganti nama grup tabel.  
 Penggantian dicatat di riwayat dan sampai ke kolaborator serta agen pemrograman seperti perubahan lainnya.
+
+Karena itu, nama tabel atau kolom yang ditulis oleh penggantian menjadi nama buatan Anda sendiri, yang dibiarkan apa adanya oleh nama logis yang ditulis kemudian hingga [Hasilkan ulang nama-nama fisik](./dictionary.md#derive-physical-names-again) mengembalikannya ke kamus. Sebaliknya, nama yang dikosongkan oleh penggantian kembali menjadi milik kamus, seperti nama lain yang dikosongkan — lihat [Nama buatan Anda sendiri](./dictionary.md#names-of-your-own).  
+Selama nama fisik tabel atau kolom kosong atau merupakan nama yang dihasilkan, nama logis yang diganti menghasilkan nama fisik itu dari kamus, seperti saat sel nama logis ditutup dengan nama logis baru — lihat [Menghasilkan nama fisik](./dictionary.md#deriving-physical-names). Dalam hal itu, kolom yang nama logis barunya merupakan istilah juga mengambil domain istilah tersebut, beserta tipe data domain itu. Apa yang dihasilkannya merupakan bagian dari langkah pembatalan penggantian dan tidak dihitung dalam `Replaced N matches`.  
+Saat satu kali `Replace All` menulis ulang nama logis sekaligus nama tabel atau kolom yang sama, nama yang ditulisnya diutamakan atas nama yang akan dihasilkan nama logis baru.
 
 ## Tombol di kotak pencarian {#keys-in-the-search-fields}
 

@@ -71,14 +71,14 @@ View Option → `Memos` 关闭期间，备注会被隐藏，任何地方都不�
 
 通过右键菜单、画布底部的[画布工具栏](./table-related-functions.md#canvas-toolbar)或快捷键创建关系。每种关系类型都有各自的快捷键：
 
-- Zero One: `Ctrl + Alt + 1` (Windows/Linux) or `⌘ + ⌥ + 1` (Mac)
-- Zero N: `Ctrl + Alt + 2` (Windows/Linux) or `⌘ + ⌥ + 2` (Mac)
-- One Only: `Ctrl + Alt + 3` (Windows/Linux) or `⌘ + ⌥ + 3` (Mac)
-- One N: `Ctrl + Alt + 4` (Windows/Linux) or `⌘ + ⌥ + 4` (Mac)
+- Zero One: `Ctrl + Alt + 1` (Windows/Linux) 或 `⌘ + ⌥ + 1` (Mac)
+- Zero N: `Ctrl + Alt + 2` (Windows/Linux) 或 `⌘ + ⌥ + 2` (Mac)
+- One Only: `Ctrl + Alt + 3` (Windows/Linux) 或 `⌘ + ⌥ + 3` (Mac)
+- One N: `Ctrl + Alt + 4` (Windows/Linux) 或 `⌘ + ⌥ + 4` (Mac)
 
 选定某种类型后光标会随之变化。先点击父表，再点击子表。  
-若父表没有主键，则会为其添加主键；父表的每个主键列都会在子表上对应生成一个 `Not Null` 外键列，其数据类型、默认值和注释均与该主键列相同。  
-serial 类型的键是例外：它的外键会采用该 serial 所存储的整数类型，例如 `serial4` 对应 `integer`，参见[识别关系](./relationship-editing.md#识别关系)。  
+若父表没有主键，则会为其添加主键；父表的每个主键列都会在子表上对应生成一个 `Not Null` 外键列，其数据类型、默认值、注释、[逻辑名](./logical-names.md)和[域](./dictionary.md#domains-and-data-types)均与该主键列相同。  
+serial 类型的键是例外：它的外键会采用该 serial 所存储的整数类型，例如 `serial4` 对应 `integer`，此时不关联任何域，参见[识别关系](./relationship-editing.md#识别关系)。  
 每个外键列都以其对应的键命名：像 `id` 这样由一个单词组成的名称会在前面加上父表的名称（`user_id`），像 `member_id` 这样由多个单词组成的名称保持不变，子表中已有的名称则会加上编号（`user_id_2`），参见[外键列名](./relationship-editing.md#foreign-key-column-names)。  
 对同一张表点击两次会绘制自引用关系。  
 新建关系的 `On Delete` 与 `On Update` 起初均为 `Not set`，可通过该关系的右键菜单修改，参见 [ON DELETE 与 ON UPDATE](./relationship-editing.md#on-delete-and-on-update)。  
@@ -91,7 +91,8 @@ serial 类型的键是例外：它的外键会采用该 serial 所存储的整�
 
 指针从点击父表的位置移开一小段距离后，父表旁也会显示这两个按钮，因此自引用关系同样可以映射到已有的列上。  
 手指无法悬停，因此用手指绘制时这两个按钮永远不会出现，轻点子表会立即绘制关系；触控笔则与鼠标一样会显示它们。  
-如果指向子表时父表已经失去了主键，例如因为 Undo 或协作者的编辑，`Create new columns` 会变暗并显示提示 `<parent> has no primary key to copy`，此时点击子表会结束绘制，而不会绘制任何关系。
+如果指向子表时父表已经失去了主键，例如因为 Undo 或协作者的编辑，`Create new columns` 会变暗并显示提示 `<parent> has no primary key to copy`，此时点击子表会结束绘制，而不会绘制任何关系。  
+该提示按[名称显示](./logical-names.md#beyond-the-canvas)来命名父表。
 
 ![用 ⌘ + ⌥ + 4 创建 One N 关系，再从画布工具栏创建 Zero N 关系，子表显示轮廓，旁边带有 Map to existing columns 和 Create new columns 按钮](/img/demo-relationship.webp)
 

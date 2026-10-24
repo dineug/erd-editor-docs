@@ -44,19 +44,26 @@ Traktuj akcję jak nieprzezroczysty obiekt i przekazuj ją bez zmian, zamiast j�
 
 Część tego, co robi edytor, pozostaje w tym edytorze.  
 Przeniesienie tabeli, notatki lub grupy tabel na wierzch, tak jak robi to ich zaznaczenie, nie jest wysyłane.  
-Nie są też wysyłane wybory opcji `Statements`, `Header` i `Tables` na karcie [Schemat SQL](../../guide/guides/schema-sql.md), które należą do okna, w którym ich dokonano.  
+Nie są też wysyłane wybory opcji `Statements`, `Header`, `Write logical names into empty comments` (od wersji `4.2.0`) i `Tables` na karcie [Schemat SQL](../../guide/guides/schema-sql.md), które należą do okna, w którym ich dokonano.  
 Od wersji `4.1.0` w swoim edytorze pozostaje też [Eksplorator](../../guide/guides/explorer.md): to, czy jest otwarty, jego szerokość, zwinięte wiersze, wiersz z fokusem klawiatury, pozycja przewinięcia drzewa oraz wyszukiwanie i opcje nie są wysyłane.  
 Nie jest też wysyłane [podświetlenie](../../guide/guides/relationship-editing.md#reading-a-connector), które przejście do klucza obcego nakłada na łącznik jego relacji.  
-Przewinięcie, powiększenie lub przełączenie karty jest wysyłane, ale nigdy nie przesuwa widoku ani nie przełącza karty innego użytkownika. Dotyczy to również przewinięcia wykonywanego przy przejściu z Eksploratora i przełączenia na kartę ERD, gdy Eksplorator otwiera się z poziomu innej karty.
+Od wersji `4.2.0` w swoim edytorze pozostaje również karta [Słownik](../../guide/guides/dictionary.md): to, który arkusz jest wyświetlany, oraz wyszukiwanie, zaznaczenie, przewinięcie i szerokości kolumn każdego arkusza nie są wysyłane. Wysyłane są natomiast jej edycje, sortowania i importy CSV.  
+Przewinięcie, powiększenie lub przełączenie karty jest wysyłane, ale nigdy nie przesuwa widoku ani nie przełącza karty innego użytkownika. Dotyczy to również przewinięcia wykonywanego przy przejściu z Eksploratora, przełączenia na kartę ERD, gdy Eksplorator otwiera się z poziomu innej karty, oraz przełączenia karty i przewinięcia przy przejściu z arkusza [`Checks`](../../guide/guides/dictionary.md#the-checks-sheet) karty Słownik do tabeli lub kolumny. Przejście z tego arkusza do słowa, terminu lub domeny pozostaje na karcie Słownik, więc nic z niego nie jest wysyłane.
+
+Od wersji `4.2.0` wysyłane jest też przełączenie [Widoku nazw](../../guide/guides/logical-names.md#switching-the-view), a to, co robią z nim pozostałe edytory, zależy od jego [blokady](../../guide/guides/settings.md#lock). Blokada `Name View` jest włączona w nowym diagramie i w każdym dokumencie sprzed wersji `4.2.0`.  
+Gdy blokada jest włączona, przełączenie widać tylko w edytorze, który go dokonał: nadal jest wysyłane, ale każdy inny edytor i każda replika je pomijają, więc każdy użytkownik może oglądać inny widok, podczas gdy `value` zachowuje zablokowany widok. Inaczej jest ze zmianą języka, stylu nazw lub typu cudzysłowu: dociera ona do każdego edytora niezależnie od tego, czy jej blokada jest włączona.  
+Gdy blokada jest wyłączona, przełączenie dokonane w edytorze, który może edytować, zmienia Widok nazw w każdym edytorze i każdej replice, przy czym obowiązuje ostatnie przełączenie, a każdy z nich ten widok zapisuje.  
+Własne przełączenie edytora tylko do odczytu zawsze pozostaje w tym edytorze, a edytor nadal podąża za współdzielonymi przełączeniami pozostałych.
 
 [Blokady](../../guide/guides/settings.md#lock) są współdzielone: w każdym edytorze obowiązuje ostatnie zablokowanie lub odblokowanie danego ustawienia, a blokada przenosi wartości edytora, który ją włączył, więc każdy edytor i każda replika zapisują tę samą wartość.  
 Blokada `Viewport` zapisuje więc widok edytora, który ją włączył, a blokada `Canvas Type` – ostatnią kartę otwartą w tym edytorze przed kartą Ustawienia, na której włącza się blokady.  
-Wyłączenie blokady `Language`, `Table Name Case`, `Column Name Case` lub `Bracket Type` zmienia też to ustawienie w każdym edytorze na wartość wyświetlaną w edytorze, który ją wyłączył, więc edytory nadal zapisują jedną wartość. Wyłączenie blokady `Viewport` lub `Canvas Type` nie przesuwa niczyjego widoku ani nie przełącza niczyjej karty.
+Wyłączenie blokady `Language`, `Table Name Case`, `Column Name Case`, `Bracket Type` lub, od wersji `4.2.0`, `Name View` zmienia też to ustawienie w każdym edytorze na wartość wyświetlaną w edytorze, który ją wyłączył, więc edytory nadal zapisują jedną wartość. Wyłączenie blokady `Viewport` lub `Canvas Type` nie przesuwa niczyjego widoku ani nie przełącza niczyjej karty.
 
 Zmiana skryptu `Before tables` lub `After tables` jest wysyłana w całości, gdy jego pole traci fokus. Oba skrypty są uzgadniane osobno, więc zmiana jednego z nich wprowadzona przez współpracownika nigdy nie nadpisuje drugiego.
 
 Żadna czynność w [trybie Przepływ](../../guide/guides/visualization.md#flow-never-edits-the-document) na karcie Wizualizacja nie jest zmianą dokumentu, więc edytor w trybie Przepływ nie wysyła innym edytorom żadnych zmian, a zmiany wysyłane przez nie są w tym czasie nadal stosowane.  
-Jedynym wyjątkiem jest przejście z trybu Przepływ na inną kartę: to przełączenie karty jest wysyłane jak każde inne.  
+Są dwa wyjątki. Przejście z trybu Przepływ na inną kartę jest przełączeniem karty, wysyłanym jak każde inne. Od wersji `4.2.0` wybór na liście Widoku nazw na pasku narzędzi trybu Przepływ jest przełączeniem Widoku nazw, wysyłanym i stosowanym tak jak przełączenie dokonane na kanwie.  
+Polecenia `Previous table` i `Next table` oraz klawisze cofania i ponawiania, które w trybie Przepływ [przechodzą krok po kroku przez widoki](../../guide/guides/visualization.md#previous-table-and-next-table), nie są wysyłane.  
 Przycisk kafelka z łączem zewnętrznym, wynik [szybkiego wyszukiwania](../../guide/guides/quick-search.md#searching-the-diagram) wybrany po prefiksie `#`, `@` lub `:` oraz otwarcie [Eksploratora](../../guide/guides/explorer.md#opening-and-closing) przenoszą z trybu Przepływ na kartę ERD. Przewinięcie wykonane tam przez przycisk kafelka lub wynik szybkiego wyszukiwania również jest wysyłane.
 
 ## Dwa edytory na jednej stronie {#two-editors-on-one-page}
@@ -99,6 +106,7 @@ const sharedStore2 = editor2.getSharedStore();
 
 Wartość czasu wykonania nadal zawiera to, co usunięto od otwarcia dokumentu, więc gdy inny edytor później cofnie usunięcie, dołączający edytor przywraca tabelę z jej nazwą i kolumnami.  
 Właściwość [`value`](../erd-editor-element.md#value) to postać, którą przechowuje plik, bez usuniętych encji, więc dołączający edytor zainicjowany z niej lub z pliku przywróciłby zamiast tego pustą tabelę bez nazwy.  
+Od wersji `4.2.0` to samo dotyczy słowa, terminu lub domeny usuniętych z arkusza karty [Słownik](../../guide/guides/dictionary.md): gdy inny edytor cofnie usunięcie, dołączający edytor zainicjowany z `runtimeValue` przywraca wiersz w całości, a zainicjowany z `value` – pusty wiersz, który jego własna właściwość `value` następnie pomija.  
 Nadal zapisuj wartość `value` w pamięci trwałej: wartość `runtimeValue` służy tylko do inicjowania innego edytora, drugiego widoku lub magazynu [replicationStore](./remote-storage.md).  
 Edytory w VS Code, aplikacji Obsidian, IDE JetBrains i aplikacji internetowej inicjują w ten sposób drugi widok otwartego dokumentu.
 
@@ -134,6 +142,31 @@ Wszystkie edytory w sesji oraz każdy magazyn [replicationStore](./remote-storag
 Edytor w wersji `4.1.0` nie wysyła żadnego nowego typu akcji, więc edytory i repliki w wersjach `4.0.0` i `4.1.0` dzielą jedną sesję, niczego nie tracąc.  
 Jego funkcja [Znajdź i zamień](../../guide/guides/find-and-replace.md#replacing) przeszukuje też nazwy indeksów i nazwy grup tabel, a przyciski `Replace` i `Replace All` zmieniają ich nazwy akcjami `index.changeName` i `tableGroup.changeName`, które edytor w wersji `4.0.0` już stosuje.
 
+Od wersji `4.2.0` poniższe zmiany są przesyłane akcjami nowych typów, a pośrednik przekazujący akcje bez zmian nie potrzebuje do ich obsługi niczego nowego:
+
+- [nazwa logiczna](../../guide/guides/logical-names.md) tabeli lub kolumny: `table.changeLogicalName` i `column.changeLogicalName`; to, czy nazwę tabeli lub kolumny [wygenerowano na podstawie słowników](../../guide/guides/dictionary.md#deriving-physical-names): `table.changeNameDerived` i `column.changeNameDerived`;
+- powiązanie kolumny z [domeną](../../guide/guides/dictionary.md#domains-and-data-types) lub odłączenie jej od domeny: `column.changeDomain`;
+- dodanie, zmiana (łącznie z miejscem w arkuszu, które ustala sortowanie) lub usunięcie słowa, terminu lub domeny na karcie [Słownik](../../guide/guides/dictionary.md): `dictionary.add`, `dictionary.update` i `dictionary.remove`;
+- przełączenie [Widoku nazw](../../guide/guides/logical-names.md#switching-the-view): `settings.changeNameViewMode`.
+
+Blokada `Name View` jest przesyłana istniejącą akcją `settings.changeLockSettings`, opcja widoku `Domain` – akcją `settings.changeShow`, a przeniesienie pozycji `Logical Name` lub `Domain` w [kolejności kolumn](../../guide/guides/settings.md#adjusting-column-order) – akcją `settings.changeColumnOrder`.  
+Akcje `editor.clear` i `editor.loadJson` importu w formacie Schemat SQL, GraphQL, DBML lub AML wykonanego przez pozycję `Import` zawierają `keepDictionaries: true`, co zachowuje słowa, terminy i domeny w każdym edytorze. To samo dotyczy akcji zastępującego wywołania [setSchemaSQL](../erd-editor-element.md#setschemasql), `setSchemaGraphQL`, `setSchemaDBML` lub `setSchemaAML`.  
+Nazwa fizyczna wygenerowana przez słowniki jest przesyłana akcją `table.changeName` lub `column.changeName`, a typ danych, który domena nadaje swoim kolumnom – akcją `column.changeDataType`, czyli tymi samymi akcjami, które wysyła edycja ręczna.
+
+Edytor w wersji starszej niż `4.2.0` ignoruje nowe typy akcji: nie ma w nim nazw logicznych, powiązań z domenami, słowników ani Widoku nazw. Zablokowanie lub odblokowanie ustawienia `Name View` niczego w nim nie zmienia, podobnie jak przeniesienie pozycji `Logical Name` lub `Domain` w kolejności kolumn albo przeniesienie innej pozycji na miejsce którejś z nich. Niczego nie zmienia w nim również blokada `Canvas Type` włączona przez edytor, który przeszedł na kartę Ustawienia z karty Słownik: starszy edytor nie zna tej karty, więc pozostawia ustawienie `Canvas Type` odblokowane. Nadal wyświetla nazwy fizyczne generowane przez słowniki i typy danych nadawane przez domeny.  
+Jego własne zmiany nic nie wiedzą o nazwach logicznych, domenach ani słownikach, co ma następujące skutki w nowszych edytorach:
+
+- Tabela lub kolumna, której nazwę zmienia ręcznie, zachowuje oznaczenie nazwy jako wygenerowanej, więc nazwa logiczna wpisana dla niej później w nowszym edytorze może ponownie wygenerować nazwę fizyczną, nadpisując tę wpisaną w starszym edytorze.
+- Typ danych, który nadaje kolumnie powiązanej z domeną, pozostawia powiązanie, więc arkusz `Checks` wyświetla kontrolę `Domain type mismatch`, a następna zmiana typu domeny ponownie nadaje kolumnie typ domeny.
+- Kolumny klucza obcego relacji, którą dodaje, nie otrzymują od swojego klucza ani nazwy logicznej, ani domeny.
+- Tabela, którą wkleja lub duplikuje, przychodzi bez nazw logicznych i powiązań z domenami.
+- Import w formacie Schemat SQL, GraphQL, DBML lub AML wykonany w tym edytorze nie wysyła `keepDictionaries`, więc opróżnia słowa, terminy i domeny w każdym edytorze.
+- Cofnięcie przez niego wczytania, importu lub wywołania `clear()` wczytuje w każdym edytorze jego własną kopię dokumentu, a ta kopia nie ma nazw logicznych, powiązań z domenami ani słowników.
+- Ta kopia, a także dokument wczytywany przez wykonany w nim import w formacie Schemat SQL, GraphQL, DBML lub AML, przywracają też w każdym edytorze blokadę `Name View` do stanu, w jakim zastał ją starszy edytor. Każdy edytor zapisuje wtedy jako Widok nazw widok `Physical Names`, a jeśli blokada jest wyłączona, również go wyświetla.
+
+Dokument zapisany w takim edytorze nie ma nazw logicznych, powiązań z domenami, słowników ani Widoku nazw, więc edytor w wersji `4.2.0` otwiera go w widoku `Physical Names`. Starszy edytor zapisuje jednak blokadę `Name View` w takim stanie, w jakim ją zastał, więc dokument odblokowany w edytorze w wersji `4.2.0` pozostaje odblokowany.  
+Wszystkie edytory w sesji oraz każdy magazyn [replicationStore](./remote-storage.md#dispatch-dispatchsync), który przechowuje jej dokument, utrzymuj w wersji `4.2.0` lub nowszej.
+
 ## SharedStoreConfig {#sharedstoreconfig}
 
 ### getNickname {#getnickname}
@@ -161,6 +194,7 @@ editor.getSharedStore({ mouseTracker: false });
 Rozsyła informacje o tym, nad czym pracuje ten użytkownik. Wartość domyślna to `true`.  
 Tabela i komórka z twoim fokusem, zaznaczone przez ciebie tabele, notatki i grupy tabel oraz ramka, którą przeciągasz na kanwie, są wysyłane do pozostałych edytorów i tam rysowane.  
 Każdy użytkownik dostaje własny kolor, dzięki czemu można ich odróżnić: obrys tabeli z fokusem, podkreślenie komórki z fokusem, obwódka wokół zaznaczonych tabel, notatek i grup tabel oraz przerywany prostokąt w miejscu ramki przeciągania.  
+Od wersji `4.2.0` każdy z użytkowników może mieć ustawiony inny [Widok nazw](../../guide/guides/logical-names.md#collaborators), gdy jego blokada jest włączona, albo po własnym przełączeniu w edytorze tylko do odczytu. Komórka z fokusem, której twój widok nie wyświetla, jest podkreślana na komórce wyświetlanej w jej miejscu: nazwa i nazwa logiczna zastępują się nawzajem, tak jak typ danych i domena.  
 Informacje o obecności napływające od innych użytkowników są zawsze rysowane na twojej kanwie, niezależnie od tego, czy ta opcja jest włączona.  
 W trybie Przepływ na karcie Wizualizacja fokus i zaznaczenie innych użytkowników są rysowane na kafelkach tabel, ale ich ramki przeciągania już nie. Tabele, które tam zaznaczasz, nadal są wysyłane; ramka, którą tam przeciągasz – już nie.
 

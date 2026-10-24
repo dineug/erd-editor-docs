@@ -1,5 +1,5 @@
 ---
-sidebar_position: 15
+sidebar_position: 17
 description: Editorns 25 visningsspråk, layout från höger till vänster, temaverktygets utseenden System, Light och Dark och dess färger samt var varje värdprogram lagrar dem.
 ---
 
@@ -13,8 +13,10 @@ Webbappen, Google Drive, VS Code, JetBrains-IDE:er och Obsidian erbjuder alla b�
 
 ## Visningsspråk {#display-language}
 
-Språket gäller editorns egen text: knappbeskrivningarna i verktygsfältet, snabbmenyer, snabbsökningen, paneler och dialogrutor, fliken Inställningar, [välkomstskärmen](./editing-start.md#welcome-screen), aviseringar och meddelanden samt platshållaren som visas på arbetsytan och i en exporterad bild för ett tomt namn, en tom datatyp, ett tomt standardvärde eller en tom kommentar.  
-På alla språk lämnas följande som de är skrivna: dina tabell- och kolumnnamn, kommentarer och anteckningar; databassystem, kodgeneratorns språk och filformat; datatyper, SQL-nyckelord och åtgärderna för `ON DELETE` och `ON UPDATE`; alternativen `Create`, `If not exists`, `Drop & re-create`, `USE` och `CREATE + USE` för Schema SQL; märkena `PK`, `FK`, `UQ`, `AI`, `NN`, `N-N`, `NULL` och `AK1.1`; statusbokstäverna `A`, `M`, `D`, `R` och `~` i [diff-visaren](./table-related-functions.md#diff-viewer); valen för skiftläge och för `Bracket` utom `None`; namnen på tangenter; temaverktygets färgnamn; genererad SQL och kod samt exporterade filnamn.
+Språket gäller editorns egen text: knappbeskrivningarna i verktygsfältet, knappen [`Name View`](./logical-names.md#switching-the-view) i arbetsytans verktygsfält och i flödets verktygsfält, flödets meny för radvisning, snabbmenyer, snabbsökningen, paneler och dialogrutor, fliken [Ordlista](./dictionary.md) (dess bladnamn, kolumnrubriker, verktyg, meny, statusrad och de kontrolltyper som bladet `Checks` listar), fliken Inställningar, [välkomstskärmen](./editing-start.md#welcome-screen), aviseringar och meddelanden samt platshållaren som visas på arbetsytan och i en exporterad bild för ett tomt namn, ett tomt logiskt namn, en tom datatyp, en tom domän, ett tomt standardvärde eller en tom kommentar.  
+På alla språk lämnas följande som de är skrivna: dina tabell- och kolumnnamn, [logiska namn](./logical-names.md), kommentarer och anteckningar; de ord, termer och domäner som du har på fliken Ordlista; databassystem, kodgeneratorns språk och filformat; datatyper, SQL-nyckelord och åtgärderna för `ON DELETE` och `ON UPDATE`; alternativen `Create`, `If not exists`, `Drop & re-create`, `USE` och `CREATE + USE` för Schema SQL; märkena `PK`, `FK`, `UQ`, `AI`, `NN`, `N-N`, `NULL` och `AK1.1`; statusbokstäverna `A`, `M`, `D`, `R` och `~` i [diff-visaren](./table-related-functions.md#diff-viewer); valen för skiftläge och för `Bracket` utom `None`; namnen på tangenter; temaverktygets färgnamn; genererad SQL och kod; rubrikraden i en exporterad CSV-fil från en ordlista samt exporterade filnamn.
+
+På fliken Ordlista ordnar en sortering raderna i visningsspråkets alfabetiska ordning, och sökningen på bladet `Checks` matchar bladets celler så som de lyder på visningsspråket – se [Sortera](./dictionary.md#sorting) och [Söka](./dictionary.md#searching).
 
 Språken, i den ordning som språkväljaren listar dem:
 
@@ -84,11 +86,12 @@ En regional variant räknas som sitt språk, så `de-AT` ger Deutsch och `fr-CA`
 
 ### Språk som skrivs från höger till vänster {#right-to-left-languages}
 
-עברית (hebreiska), العربية (arabiska) och فارسی (persiska) ger editorn en layout från höger till vänster: verktygsfältet, menyerna, panelerna och dialogrutorna, snabbsökningen och fliken Inställningar spegelvänds. En snabbmenys undermenyer öppnas åt vänster, och ikonerna för Ångra och Gör om i verktygsfältet byter plats, så att Ångra pekar bakåt i läsriktningen för den som läser från höger till vänster.
+עברית (hebreiska), العربية (arabiska) och فارسی (persiska) ger editorn en layout från höger till vänster: verktygsfältet, menyerna, panelerna och dialogrutorna, snabbsökningen, listen och statusraden på fliken Ordlista samt fliken Inställningar spegelvänds. En snabbmenys undermenyer öppnas åt vänster, och ikonerna för Ångra och Gör om i verktygsfältet byter plats, så att Ångra pekar bakåt i läsriktningen för den som läser från höger till vänster.
 
-Själva diagrammet spegelvänds aldrig. Arbetsytan med dess tabeller, kolumner, relationer och anteckningar behåller riktningen från vänster till höger, och detsamma gäller minikartan, rullningslisterna, [arbetsytans verktygsfält](./table-related-functions.md#canvas-toolbar), [visualiseringen](./visualization.md) och dess verktygsfält, datatypscellerna, koden på flikarna Schema SQL och Kodgenerator, färgväljaren, diff-visarens två sidor, tidsresan och förhandsgranskningen av automatisk layout.  
+Själva diagrammet spegelvänds aldrig. Arbetsytan med dess tabeller, kolumner, relationer och anteckningar behåller riktningen från vänster till höger, och detsamma gäller minikartan, rullningslisterna, [arbetsytans verktygsfält](./table-related-functions.md#canvas-toolbar), [visualiseringen](./visualization.md) och dess verktygsfält, datatypscellerna, bladen på fliken Ordlista och en terms domänlista, koden på flikarna Schema SQL och Kodgenerator, färgväljaren, diff-visarens två sidor, tidsresan och förhandsgranskningen av automatisk layout.  
+I flödet behåller de två pilarna i verktygsfältet på fliken Visualisering sina platser och byter funktion: pilen som pekar åt höger är `Previous table` och den som pekar åt vänster `Next table`, så att bakåt pekar åt samma håll som Ångra. Tangenterna för ångra och göra om går fortfarande ett steg bakåt och framåt – se [Föregående och nästa tabell](./visualization.md#previous-table-and-next-table).  
 [Utforskaren](./explorer.md#beside-the-canvas) ligger kvar till vänster om arbetsytan, och diff-visarens ändringsträd till vänster i visaren, båda med sin dragkant på höger sida. Inuti läses båda från höger till vänster: deras fält och rader spegelvänds, raderna dras in från höger, och i båda träden fäller `←` ut en rad eller går till dess första underordnade rad medan `→` fäller ihop den eller går ut till dess överordnade rad – se [Tangenter i utforskaren](./explorer.md#keys-in-the-explorer).  
-Namn, kommentarer och annan text som du har skrivit behåller sin egen riktning, så ett hebreiskt, arabiskt eller persiskt namn läses från höger till vänster även på arbetsytan.
+Namn, kommentarer och annan text som du har skrivit behåller sin egen riktning, så ett hebreiskt, arabiskt eller persiskt namn läses från höger till vänster även på arbetsytan. Varje namn som ett meddelande på fliken Ordlista listar behåller också sin egen riktning.
 
 ## Tema {#theme}
 

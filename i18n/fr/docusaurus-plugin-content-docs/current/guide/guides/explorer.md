@@ -1,5 +1,5 @@
 ---
-sidebar_position: 8
+sidebar_position: 9
 description: Parcourir les tables du diagramme avec leurs colonnes, index et clés étrangères, ses groupes de tables et ses mémos dans une arborescence ancrée à côté du canevas ERD, et aller à chacun d’eux d’un clic.
 ---
 
@@ -26,11 +26,11 @@ Ouvrez-le par l’un de ces moyens :
 - `Toggle Explorer` dans le menu contextuel du canevas : cliquez avec le bouton droit sur un emplacement vide du canevas ERD, en dehors de tout [groupe de tables](./table-groups.md). Il se trouve après `New Table`, `New Memo` et `New Table Group`, avant `Relationship`.
 
 Les deux entrées `Toggle Explorer` affichent le raccourci à droite.  
-Le bouton de la barre d’outils, le raccourci et l’entrée de la recherche rapide fonctionnent depuis tous les onglets. Depuis l’onglet Visualisation, Schéma SQL, Générateur de code ou Paramètres, ils passent d’abord à l’onglet ERD, car l’explorateur ne s’affiche que là.
+Le bouton de la barre d’outils, le raccourci et l’entrée de la recherche rapide fonctionnent depuis tous les onglets. Depuis l’onglet Visualisation, Schéma SQL, Générateur de code, Dictionnaire ou Paramètres, ils passent d’abord à l’onglet ERD, car l’explorateur ne s’affiche que là.
 
 Le bouton de la barre d’outils ne fait qu’ouvrir et fermer le panneau. Il ne place pas le point d’insertion dans le champ Rechercher et laisse ouverts la boîte de dialogue Propriétés de la table, le configurateur de thème et le sélecteur `Display Language`.  
 Le raccourci et les deux entrées `Toggle Explorer` ouvrent l’explorateur sur sa recherche : le point d’insertion va dans le champ Rechercher, dont le texte est sélectionné, et toute boîte de dialogue ouverte parmi les cinq de [Boîtes de dialogue à côté de l’explorateur](#dialogs-beside-it) se ferme. Ce que la recherche conserve d’une ouverture à l’autre est indiqué dans [Ouvrir et fermer](./find-and-replace.md#opening-and-closing), dans la page Rechercher et remplacer.  
-Le raccourci est sans effet pendant la modification d’une cellule de table, d’un mémo ou du nom d’un groupe de tables.
+Le raccourci est sans effet pendant la modification d’une cellule de table, d’un mémo ou du nom d’un groupe de tables, ou tant qu’une modification de cellule est ouverte dans l’onglet [Dictionnaire](./dictionary.md#keys-on-the-tab), liste des domaines d’un terme comprise.
 
 Le bouton de la barre d’outils apparaît enfoncé tant que l’explorateur est ouvert dans l’onglet ERD et n’est pas masqué par le [mode zen](#when-it-stands-aside). Tant que c’est le cas, le bouton, le raccourci et l’une ou l’autre entrée `Toggle Explorer` ferment l’explorateur, et le focus, s’il se trouvait dans le panneau, revient à l’éditeur.  
 Le raccourci ne le ferme jamais tant que la recherche rapide ou l’une des cinq boîtes de dialogue est ouverte. Il ferme à la place la palette ou la boîte de dialogue et place le focus dans le champ Rechercher, avec son texte sélectionné et, si l’explorateur était déjà affiché, la correspondance actuelle conservée. L’entrée `Toggle Explorer` de la recherche rapide ne fait pas cette exception : l’exécuter ferme la palette, puis un explorateur ouvert.
@@ -84,22 +84,27 @@ La barre de titre affiche `Explorer` et contient deux boutons : `Collapse All` 
 
 Le niveau supérieur contient trois dossiers, dans cet ordre : `Tables`, `Table Groups` et `Memos`. Sous chaque table se trouvent ses propres dossiers `Columns`, `Indexes` et `Foreign Keys`.  
 Un dossier vide n’est pas affiché, si bien qu’un diagramme vide n’affiche aucune ligne. `Table Groups` est aussi omis tant que [View Option](./table-related-functions.md#table-view-options) → `Table Groups` masque les groupes, et `Memos` tant que View Option → `Memos` masque les mémos.  
-Une ligne de dossier affiche une icône de dossier, son nom et, tout au bout, le nombre de lignes placées directement dessous, si bien que le nombre affiché à côté de `Tables` est le nombre de tables du diagramme.
+Une ligne de dossier affiche une icône de dossier, son nom et, tout au bout, le nombre de lignes placées directement dessous, si bien que le nombre affiché à côté de `Tables` est le nombre de tables du diagramme. Le nombre groupe ses milliers comme le fait la langue d’affichage, toujours avec les chiffres 0 à 9, comme `1,234` en anglais et `1.234` en allemand.
 
 Les tables sont triées par nom, sans tenir compte de la casse, et les tables de même nom gardent l’ordre du document. Les groupes de tables sont triés de la même façon, tout comme les tables sous chaque groupe. Les colonnes d’une table gardent l’ordre de la table, et ses index, ses clés étrangères et les mémos gardent celui du document.  
-L’arborescence suit le diagramme à mesure qu’il change, que ce soit par une modification sur le canevas, une annulation ou un rétablissement, une importation, ou du fait d’un collaborateur ou d’un agent de codage, si bien que renommer une table déplace sa ligne.
+L’arborescence suit le diagramme à mesure qu’il change, que ce soit par une modification sur le canevas, une annulation ou un rétablissement, une importation, ou du fait d’un collaborateur ou d’un agent de codage, si bien que renommer une table déplace sa ligne.  
+L’ordre suit le nom dans toutes les vues de l’[affichage des noms](./logical-names.md#name-view), jamais le nom logique. Changer de vue change le libellé des lignes de table et de colonne sans en déplacer aucune, tout comme donner un nom logique à une table ou à une colonne dans la vue `Logical Names` ou `Both Names`. Un nom physique [dérivé](./dictionary.md#deriving-physical-names) d’un nouveau nom logique est toutefois un renommage comme un autre, si bien qu’il peut déplacer la ligne d’une table.
 
 Chaque type de ligne affiche :
 
 - Une table : une icône de table et son nom.
-- Une colonne : une icône de clé pour une colonne de clé primaire ou de clé étrangère, colorée comme la cellule de clé de la table colore une clé primaire, une clé étrangère ou les deux, et une icône de liste pour toute autre colonne. Puis son nom et, en texte atténué, son type de données suivi de `PK`, `FK` ou des deux, comme `id` `BIGINT PK` ou `user_id` `BIGINT FK`.
+- Une colonne : une icône de clé pour une colonne de clé primaire ou de clé étrangère, colorée comme la cellule de clé de la table colore une clé primaire, une clé étrangère ou les deux, et une icône de liste pour toute autre colonne. Puis son nom et, en texte atténué, son type de données suivi de `PK`, `FK` ou des deux, comme `id` `BIGINT PK` ou `user_id` `BIGINT FK`. Le type affiché est toujours le type de données de la colonne, jamais son [domaine](./logical-names.md#the-domain-cell), quel que soit l’affichage des noms.
 - Un index : une icône d’index et son nom. Puis, en texte atténué, `UNIQUE` pour un index unique et ses colonnes entre parenthèses dans l’ordre de l’index, avec `DESC` après une colonne décroissante, comme `orders_user_idx` `UNIQUE (user_id DESC, total)`, ou seulement `(total)`.
 - Une clé étrangère : listée uniquement sous la table enfant, celle qui contient les colonnes de clé étrangère, et seulement tant que la table parente est dans le diagramme. Son icône de clé prend la couleur du connecteur : la couleur de clé primaire et étrangère pour une [relation identifiante](./relationship-editing.md#identifying-relationships), la couleur de clé étrangère sinon. Elle affiche les colonnes de clé de la table enfant, séparées par des virgules, puis, en texte atténué, `→` suivi de la table parente et de ses colonnes, comme `user_id` `→ users(id)`.
 - Un groupe de tables : un point de la couleur du groupe, gris pour un groupe sans couleur, et son nom. Ses tables sont listées dessous par nom, et chacune mène à sa table. Un groupe sans table n’a rien à développer.
 - Un mémo : une icône de note adhésive et la première ligne du mémo.
 
-Un nom vide, ou un mémo dont la première ligne est vide, s’affiche `unnamed` en italique.  
-Dans un panneau étroit, le texte atténué est tronqué par `…` avant le nom. Survolez un nom ou son texte atténué pour l’afficher en entier.
+Les lignes de table, les tables listées sous un groupe et les lignes de colonne suivent l’affichage des noms (voir [Au-delà du canevas](./logical-names.md#beyond-the-canvas)). Dans la vue `Both Names`, par exemple, une ligne de colonne affiche `Total Amount` `total` `NUMERIC` : le nom logique, puis le nom et le type de données, tous deux atténués.  
+Dans toutes les vues, les lignes d’index et de clé étrangère affichent leurs colonnes par leur nom, et une ligne de clé étrangère affiche aussi sa table parente par son nom.  
+Tant que le champ Rechercher contient du texte, une ligne trouvée uniquement dans le nom que sa vue omet affiche aussi ce nom, atténué (voir [Les résultats](./find-and-replace.md#the-results)).
+
+Un nom vide, ou un mémo dont la première ligne est vide, s’affiche `unnamed` en italique. Dans les vues `Logical Names` et `Both Names`, une table ou une colonne n’affiche `unnamed` que si son nom logique est vide lui aussi.  
+Dans un panneau étroit, le texte atténué est tronqué par `…` avant le nom par lequel commence la ligne. Survolez un nom ou son texte atténué pour l’afficher en entier.
 
 Seul `Tables` est développé au départ. Cliquez sur une ligne de dossier, ou appuyez sur `Enter` ou `Space` lorsqu’elle a le focus, pour la réduire ou la développer.  
 La flèche au début d’une ligne réduit ou développe cette ligne sans aller nulle part. Chaque ligne de table en a une, même pour une table sans rien dessous. `→` et `←` réduisent et développent aussi (voir [Touches dans l’explorateur](#keys-in-the-explorer)).  
@@ -110,8 +115,8 @@ Les modifications, les annulations et rétablissements, et les changements venan
 
 Cliquez sur une ligne, ou appuyez sur `Enter` ou `Space` lorsqu’elle a le focus, pour aller à ce qu’elle représente sur le canevas ERD. Une ligne de dossier ne fait que se réduire ou se développer, et les touches fléchées ne font que déplacer le focus dans l’arborescence.
 
-- Une ligne de table, ou une table listée sous un groupe, sélectionne uniquement cette table et la met au premier plan. La cellule active passe sur le nom de la table, sauf si elle se trouve déjà dans cette table.
-- Une ligne de colonne sélectionne uniquement sa table et place la cellule active sur le nom de la colonne.
+- Une ligne de table, ou une table listée sous un groupe, sélectionne uniquement cette table et la met au premier plan. Sauf si la cellule active se trouve déjà dans cette table, elle passe sur la première cellule de l’en-tête de la table : le nom, ou le nom logique dans les vues `Logical Names` et `Both Names`.
+- Une ligne de colonne sélectionne uniquement sa table et place la cellule active sur le nom de la colonne, ou, dans la vue `Logical Names`, sur le nom logique dessiné à sa place.
 - Une ligne d’index sélectionne sa table, comme une ligne de table. L’index lui-même n’est pas mis en avant ; les index se modifient dans la boîte de dialogue [Propriétés de la table](./table-related-functions.md#indexes).
 - Une ligne de clé étrangère amène les deux tables de la relation ensemble dans la vue, ou la table enfant lorsque les deux sont trop éloignées pour être affichées ensemble. Elle sélectionne uniquement la table enfant avec ses colonnes de clé étrangère, la cellule active sur la première d’entre elles, et met en surbrillance le connecteur de la relation (voir [Lire un connecteur](./relationship-editing.md#reading-a-connector)).
 - Une ligne de groupe de tables amène le cadre du groupe dans la vue par sa barre de titre, sélectionne uniquement le groupe et le met au premier plan avec ses tables.
@@ -119,7 +124,7 @@ Cliquez sur une ligne, ou appuyez sur `Enter` ou `Space` lorsqu’elle a le focu
 
 La vue se déplace selon la règle commune à chaque « aller à » : le zoom ne change jamais, et le canevas ne défile que lorsque ce à quoi vous allez n’est pas déjà bien visible (voir [Où aboutit un saut](./table-related-functions.md#where-a-jump-lands)).  
 Aller à une ligne ferme d’abord la boîte de dialogue Propriétés de la table si elle est ouverte, et ne commence ni ne termine jamais le tracé d’une relation.  
-Tant que le champ Rechercher contient du texte, une ligne dont le nom même contient une correspondance, ou qui affiche un extrait d’un commentaire ou d’un mémo, mène plutôt à cette correspondance (voir [Aller à une correspondance](./find-and-replace.md#going-to-a-match)).
+Tant que le champ Rechercher contient du texte, une ligne dont le nom ou le nom logique contient une correspondance, ou qui affiche un extrait d’un commentaire ou d’un mémo, mène plutôt à sa première correspondance (voir [Aller à une correspondance](./find-and-replace.md#going-to-a-match)).
 
 Après un clic, le focus reste dans l’arborescence, si bien que `Delete`, `Backspace` et les autres touches d’édition n’atteignent pas la nouvelle sélection tant que vous n’appuyez pas sur `Escape` ou ne cliquez pas sur le canevas (voir [Touches dans l’explorateur](#keys-in-the-explorer)).
 

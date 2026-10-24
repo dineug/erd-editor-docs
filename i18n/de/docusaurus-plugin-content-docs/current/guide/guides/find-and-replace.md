@@ -1,12 +1,12 @@
 ---
-sidebar_position: 9
-description: Namen von Tabellen, Spalten, Indizes und Tabellengruppen, Kommentare und Notizen oben im Explorer durchsuchen, die Treffer im Baum und auf der Zeichenfläche nacheinander durchgehen und einen oder alle Treffer ersetzen.
+sidebar_position: 10
+description: Namen von Tabellen, Spalten, Indizes und Tabellengruppen, logische Namen, Kommentare und Notizen oben im Explorer durchsuchen, die Treffer im Baum und auf der Zeichenfläche nacheinander durchgehen und einen oder alle Treffer ersetzen.
 ---
 
 # Suchen und Ersetzen
 
 Sucht Text im gesamten Diagramm, führt Sie zu jedem Treffer auf der ERD-Zeichenfläche und ersetzt einen oder alle Treffer.  
-Durchsucht werden sieben Textarten: Tabellennamen, Tabellenkommentare, Spaltennamen, Spaltenkommentare, Notizen, Indexnamen und Tabellengruppennamen – siehe [Was durchsucht wird](#what-it-searches).
+Durchsucht werden acht Textarten: Tabellennamen, Tabellenkommentare, Spaltennamen, Spaltenkommentare, Notizen, Indexnamen, Tabellengruppennamen und die [logischen Namen](./logical-names.md) von Tabellen und Spalten – siehe [Was durchsucht wird](#what-it-searches).
 
 Suchen und Ersetzen befindet sich oben im [Explorer](./explorer.md), dem links an die ERD-Zeichenfläche angedockten Bereich, zwischen der Titelleiste des Explorers und seinem Baum. Es hat keinen eigenen Titel. Von oben nach unten enthält es:
 
@@ -30,7 +30,7 @@ Wie der Explorer geschlossen wird, was die Tastenkombination und die beiden Eint
 [Wann der Explorer ausgeblendet wird](./explorer.md#when-it-stands-aside) beschreibt, wie eine andere Registerkarte und der Zen-Modus ihn ausblenden und wie die Diff-Ansicht, die Zeitreise und die Vorschau des Automatischen Layouts ihn ausblenden und sein Öffnen verhindern. [Neben der Zeichenfläche](./explorer.md#beside-the-canvas) beschreibt einen Editor, der zu schmal für ihn ist.
 
 Beim erneuten Öffnen bleibt der letzte Suchbegriff erhalten, ebenso der Ersetzungstext, die [Optionen](#options), die eingeschalteten [Textarten](#what-it-searches) und ob die Zeile `Replace` und die Textarten ausgeklappt waren.  
-Sie bleiben erhalten, solange der Editor geöffnet bleibt, und werden nicht im Dokument gespeichert. In einem neu geöffneten Editor sind zu Beginn alle Optionen ausgeschaltet, die Zeile `Replace` und die Textarten eingeklappt und nur die vier Namensarten eingeschaltet – siehe [Was durchsucht wird](#what-it-searches).
+Sie bleiben erhalten, solange der Editor geöffnet bleibt, und werden nicht im Dokument gespeichert. In einem neu geöffneten Editor sind zu Beginn alle Optionen ausgeschaltet, die Zeile `Replace` und die Textarten eingeklappt und nur die vier Namensarten und `Logical names` eingeschaltet – siehe [Was durchsucht wird](#what-it-searches).
 
 ## Die Suchleiste des Browsers {#the-browsers-find-bar}
 
@@ -46,15 +46,16 @@ Eine Seite, die den Editor einbettet, kann die Tastenkombination neu belegen ode
 
 ## Was durchsucht wird {#what-it-searches}
 
-Sieben Schaltflächen wählen die durchsuchten Textarten aus, in dieser Reihenfolge: `Table names`, `Table comments`, `Column names`, `Column comments`, `Memos`, `Index names` und `Table group names`.  
+Acht Schaltflächen wählen die durchsuchten Textarten aus, in dieser Reihenfolge: `Table names`, `Table comments`, `Column names`, `Column comments`, `Memos`, `Index names`, `Table group names` und `Logical names`.  
 Sie sind anfangs eingeklappt. Die Schaltfläche `Search In` am Ende der Zeile mit dem Zähler klappt sie unterhalb dieser Zeile aus und wieder ein und ist hervorgehoben, solange sie angezeigt werden.  
-Eine hervorgehobene Schaltfläche einer Textart ist eingeschaltet. Klicken Sie auf eine, um sie ein- oder auszuschalten, und die Suche wird erneut ausgeführt. Sind alle sieben ausgeschaltet, wird nichts gefunden.
+Eine hervorgehobene Schaltfläche einer Textart ist eingeschaltet. Klicken Sie auf eine, um sie ein- oder auszuschalten, und die Suche wird erneut ausgeführt. Sind alle acht ausgeschaltet, wird nichts gefunden.
 
-Die Suche öffnet sich zunächst mit den vier Namensarten `Table names`, `Column names`, `Index names` und `Table group names`, sodass ein Umbenennen Kommentare und Notizen nicht erreicht, es sei denn, Sie schalten sie ein.  
+Die Suche öffnet sich zunächst mit den vier Namensarten `Table names`, `Column names`, `Index names` und `Table group names` sowie mit `Logical names`, sodass ein Umbenennen Kommentare und Notizen nicht erreicht, es sei denn, Sie schalten sie ein.  
+`Logical names` ist eine einzige Textart für die logischen Namen von Tabellen und von Spalten gleichermaßen.  
 Indexnamen sind die Namen der Indizes auf der Registerkarte `Indexes` der [Tabelleneigenschaften](./table-related-functions.md#indexes), nicht die darüber aufgeführten Schlüssel `PK_` und `UQ_`.
 
-Sonst wird nichts durchsucht: weder Datentypen, Standardwerte, die Spalten eines Index, der Datenbankname, [Schema SQL](./schema-sql.md) mit seinen Skripten `Before tables` und `After tables` noch generierter Code.  
-Ein Kommentar, der durch eine [Ansichtsoption für Tabellen](./table-related-functions.md#table-view-options) ausgeblendet ist, wird trotzdem durchsucht. Mit View Option → `Memos` ausgeblendete Notizen und mit View Option → `Table Groups` ausgeblendete [Tabellengruppen](./table-groups.md#hiding-groups) werden nicht durchsucht, auch wenn ihre Schaltfläche eingeschaltet ist, sodass `Replace All` nie eine Notiz umschreibt oder eine Gruppe umbenennt, die Sie nicht sehen können.
+Sonst wird nichts durchsucht: weder Datentypen, die Domäne einer Spalte, Standardwerte, die Spalten eines Index, der Datenbankname, [Schema SQL](./schema-sql.md) mit seinen Skripten `Before tables` und `After tables`, generierter Code noch die Blätter der Registerkarte [Wörterbuch](./dictionary.md), die eine [eigene Suche](./dictionary.md#searching) haben.  
+Logische Namen werden unabhängig davon durchsucht, was die [Namensansicht](./logical-names.md#name-view) zeigt, auch in der Ansicht `Physical Names`, in der die Zeichenfläche keine anzeigt. Auch ein Kommentar, der durch eine [Ansichtsoption für Tabellen](./table-related-functions.md#table-view-options) ausgeblendet ist, wird trotzdem durchsucht. Mit View Option → `Memos` ausgeblendete Notizen und mit View Option → `Table Groups` ausgeblendete [Tabellengruppen](./table-groups.md#hiding-groups) werden nicht durchsucht, auch wenn ihre Schaltfläche eingeschaltet ist, sodass `Replace All` nie eine Notiz umschreibt oder eine Gruppe umbenennt, die Sie nicht sehen können.
 
 ## Optionen {#options}
 
@@ -91,19 +92,21 @@ Der Zähler am Anfang der Zeile unter den Feldern zeigt, wo Sie sich befinden. E
 Solange das Suchfeld Text enthält, zeigt der [Baum](./explorer.md#the-tree) des Explorers statt des ganzen Diagramms die Ergebnisse: nur die Zeilen, die einen Treffer enthalten, und die Zeilen darüber. Wenn nichts passt oder sich der reguläre Ausdruck nicht parsen lässt, ist er leer. Das Löschen des Suchbegriffs bringt den ganzen Baum zurück, so eingeklappt wie zuvor.
 
 - `Tables`, `Table Groups` und `Memos` werden nur angezeigt, wenn sie einen Treffer enthalten, und die Zahl an jedem Ordner gibt an, wie viele Zeilen in den Ergebnissen direkt darunter stehen.
-- Unter `Tables` stehen die Tabellen, die einen Treffer enthalten, nach Namen. Unter jeder Tabelle stehen eine Zeile für jeden Treffer in ihrem Kommentar, dann ein Ordner `Columns` mit den Spalten, die einen Treffer enthalten, in Spaltenreihenfolge, jede mit einer Zeile für jeden Treffer in ihrem Kommentar, dann ein Ordner `Indexes` mit den Indizes, deren Name passt. Einen Ordner `Foreign Keys` gibt es nicht.
+- Unter `Tables` stehen die Tabellen, die einen Treffer enthalten, nach Namen, nie nach logischem Namen. Unter jeder Tabelle stehen eine Zeile für jeden Treffer in ihrem Kommentar, dann ein Ordner `Columns` mit den Spalten, die einen Treffer enthalten, in Spaltenreihenfolge, jede mit einer Zeile für jeden Treffer in ihrem Kommentar, dann ein Ordner `Indexes` mit den Indizes, deren Name passt. Einen Ordner `Foreign Keys` gibt es nicht.
 - Unter `Table Groups` stehen die Gruppen, deren Name passt, nach Namen, ohne ihre Tabellen. Eine gefundene Tabelle erscheint unter `Tables`.
 - Unter `Memos` stehen die Notizen, die einen Treffer enthalten, in Dokumentreihenfolge, jede mit ihrer ersten Zeile dargestellt und mit einer Zeile für jeden Treffer darin.
 
-Ein Treffer in einem Namen wird in der eigenen Zeile dieses Namens hervorgehoben, sodass ein Name, der den Suchbegriff zweimal enthält, eine Zeile mit zwei Hervorhebungen ist.  
+Ein Treffer in einem Namen wird in der eigenen Zeile dieses Namens hervorgehoben, sodass ein Name, der den Suchbegriff zweimal enthält, eine Zeile mit zwei Hervorhebungen ist. Ein Treffer im logischen Namen einer Tabelle oder Spalte erscheint ebenfalls in der Zeile dieser Tabelle oder Spalte, nie in einer eigenen Zeile.  
+Diese Zeilen benennen die Tabelle oder Spalte so, wie die [Namensansicht](./logical-names.md#beyond-the-canvas) sie zeigt, und jeder der beiden Namen, die eine Zeile zeigen kann, hebt nur seine eigenen Treffer hervor. Eine Zeile, die nur in dem Namen gefunden wurde, den ihre Ansicht auslässt, also im logischen Namen in der Ansicht `Physical Names` oder im Namen in der Ansicht `Logical Names`, fügt diesen Namen hinter dem gezeigten an, abgeschwächt wie in der Ansicht `Both Names` und mit hervorgehobenem Treffer. Enthält auch der gezeigte Name einen Treffer, zeigt die Zeile nur diesen Namen, sodass die Treffer in dem Namen, den ihre Ansicht auslässt, gezählt und durchlaufen, aber nicht hervorgehoben werden.  
 Ein Treffer in einem Kommentar oder einer Notiz hat eine eigene Zeile: eine Sprechblase für einen Tabellen- oder Spaltenkommentar oder eine Haftnotiz für eine Notiz, dann ein Auszug des Texts mit hervorgehobenem Treffer. Ein langer Text wird mit `…` gekürzt, und Zeilenumbrüche erscheinen als Leerzeichen. Zeigen Sie mit dem Zeiger auf die Zeile, um den ganzen Text zu sehen.  
 Jede andere Zeile sieht aus wie außerhalb einer Suche: Eine Spalte zeigt ihren Datentyp, ein Index seine Spalten, und ein leerer Name lautet `unnamed`.
 
 Jede Zeile mit Zeilen darunter wird beim Start einer Suche ausgeklappt angezeigt. Eine Zeile, die Sie einklappen oder die `Collapse All` einklappt, bleibt eingeklappt, bis ein Treffer darunter aktuell wird, bis sich der Suchbegriff, `Match Case`, `Match Whole Word`, `Use Regular Expression` oder eine Textart ändert oder bis die Suche mit der Tastenkombination oder einem Eintrag `Toggle Explorer` erneut geöffnet wird.  
 Die Zeile des aktuellen Treffers wird hervorgehoben und in den sichtbaren Bereich gescrollt. Der Baum listet jeden Treffer auf, egal wie viele es sind.  
-Die Treffer werden in der Reihenfolge des Baums durchlaufen: Tabelle für Tabelle der Name der Tabelle, ihr Kommentar, Name und Kommentar jeder ihrer Spalten in Spaltenreihenfolge und ihre Indexnamen; dann die Tabellengruppennamen; dann die Notizen.
+Die Treffer werden in der Reihenfolge des Baums durchlaufen: Tabelle für Tabelle der logische Name, der Name und der Kommentar der Tabelle, dann logischer Name, Name und Kommentar jeder ihrer Spalten in Spaltenreihenfolge, dann ihre Indexnamen; dann die Tabellengruppennamen; dann die Notizen.
 
-Die Ergebnisse folgen dem Dokument, solange der Explorer angezeigt wird. Sobald die Änderungen pausieren, löst jede Änderung an den durchsuchten Texten eine erneute Suche aus, und der aktuelle Treffer bleibt aktuell, wenn er noch vorhanden ist. Dazu gehören das Bearbeiten eines Namens, eines Kommentars oder eines Notiztexts, das Hinzufügen oder Entfernen einer Tabelle, einer Spalte, eines Index, einer Notiz oder einer Tabellengruppe, das Verschieben einer Spalte sowie das Aus- oder Einblenden der Notizen oder Tabellengruppen mit Ansichtsoptionen, wodurch ihre Treffer aus dem Baum verschwinden oder zurückkehren. Eine Änderung auf der Zeichenfläche, Rückgängigmachen oder Wiederholen, ein Import und eine Änderung durch einen Mitbearbeiter oder einen Coding-Agenten zählen alle. Auswählen, das Verschieben von Tabellen, Notizen oder Gruppen auf der Zeichenfläche, Scrollen, Zoomen und das Zeigen mit dem Zeiger zählen nicht.  
+Die Ergebnisse folgen dem Dokument, solange der Explorer angezeigt wird. Sobald die Änderungen pausieren, löst jede Änderung an den durchsuchten Texten eine erneute Suche aus, und der aktuelle Treffer bleibt aktuell, wenn er noch vorhanden ist. Dazu gehören das Bearbeiten eines Namens, eines logischen Namens, eines Kommentars oder eines Notiztexts, das Hinzufügen oder Entfernen einer Tabelle, einer Spalte, eines Index, einer Notiz oder einer Tabellengruppe, das Verschieben einer Spalte sowie das Aus- oder Einblenden der Notizen oder Tabellengruppen mit Ansichtsoptionen, wodurch ihre Treffer aus dem Baum verschwinden oder zurückkehren. Eine Änderung auf der Zeichenfläche, Rückgängigmachen oder Wiederholen, ein Import und eine Änderung durch einen Mitbearbeiter oder einen Coding-Agenten zählen alle. Auswählen, das Verschieben von Tabellen, Notizen oder Gruppen auf der Zeichenfläche, Scrollen, Zoomen und das Zeigen mit dem Zeiger zählen nicht.  
+Ebenso wenig zählt ein Wechsel der Namensansicht, der keinen Text ändert, den die Suche liest: Dieselben Treffer bleiben, und die Zeilen übernehmen die Namen, die die neue Ansicht zeigt.  
 Änderungen, die vorgenommen werden, während der Explorer geschlossen oder nicht sichtbar ist, werden durchsucht, sobald er wieder angezeigt wird.
 
 ## Zu einem Treffer wechseln {#going-to-a-match}
@@ -113,17 +116,17 @@ Die Navigation springt an beiden Enden zum jeweils anderen Ende um. Bis Sie zum 
 
 Ein Klick auf eine Zeile der Ergebnisse oder `Enter` oder `Space`, wenn der Tastaturfokus auf ihr liegt, bewirkt eines der Folgenden:
 
-- Eine Zeile, deren eigener Name einen Treffer enthält, wechselt zum ersten Treffer dieses Namens.
+- Eine Zeile, deren eigener Name oder logischer Name einen Treffer enthält, wechselt zu ihrem ersten Treffer, wobei der im logischen Namen vor dem im Namen kommt.
 - Eine Zeile, die einen Auszug aus einem Kommentar oder einer Notiz zeigt, wechselt zu diesem Treffer.
-- Jede andere Zeile, etwa eine Tabelle, deren Name nicht passt, oder die eigene Zeile einer Notiz, wechselt zu dem, wofür die Zeile steht, und lässt den aktuellen Treffer unverändert – siehe [Zu einer Zeile wechseln](./explorer.md#going-to-a-row).
+- Jede andere Zeile, etwa eine Tabelle, deren Name und logischer Name nicht passen, oder die eigene Zeile einer Notiz, wechselt zu dem, wofür die Zeile steht, und lässt den aktuellen Treffer unverändert – siehe [Zu einer Zeile wechseln](./explorer.md#going-to-a-row).
 - Ein Ordner wird ein- oder ausgeklappt.
 
 Immer wenn ein Treffer aktuell wird, klappt der Baum alle eingeklappten Zeilen darüber aus und setzt den Tastaturfokus auf die Zeile des Treffers, sodass die Pfeiltasten im Baum von dort aus weitergehen.
 
 Der Wechsel zu einem Treffer schließt die Tabelleneigenschaften, falls sie geöffnet sind, und dann gilt:
 
-- Bei einem Tabellennamen oder Tabellenkommentar oder einem Spaltennamen oder Spaltenkommentar wählt er ausschließlich die Tabelle aus, holt sie in den Vordergrund und setzt die fokussierte Zelle auf die Zelle, die den Treffer enthält. Ein Treffer in einem Kommentar, der durch eine [Ansichtsoption für Tabellen](./table-related-functions.md#table-view-options) ausgeblendet ist, setzt die fokussierte Zelle stattdessen auf den Namen daneben.
-- Bei einem Indexnamen wählt er ausschließlich die Tabelle des Index aus, holt sie in den Vordergrund und setzt die fokussierte Zelle auf den Namen der Tabelle, sofern die fokussierte Zelle nicht bereits in dieser Tabelle liegt. Indexnamen werden auf der Zeichenfläche nicht dargestellt.
+- Bei einem Namen, logischen Namen oder Kommentar einer Tabelle oder Spalte wählt er ausschließlich die Tabelle aus, holt sie in den Vordergrund und setzt die fokussierte Zelle auf die Zelle, die den Treffer enthält. Ein Treffer in einem Kommentar, der durch eine [Ansichtsoption für Tabellen](./table-related-functions.md#table-view-options) ausgeblendet ist, setzt die fokussierte Zelle stattdessen auf den Namen daneben. Wo die [Namensansicht](./logical-names.md#name-view) keine Zelle für den Namen oder den logischen Namen zeigt, kommt die fokussierte Zelle auf die Zelle, die an ihrer Stelle gezeigt wird: den Namen in der Ansicht `Physical Names`, den logischen Namen in der Ansicht `Logical Names`.
+- Bei einem Indexnamen wählt er ausschließlich die Tabelle des Index aus, holt sie in den Vordergrund und setzt die fokussierte Zelle auf den Namen der Tabelle oder, in den Ansichten `Logical Names` und `Both Names`, auf ihren logischen Namen, sofern die fokussierte Zelle nicht bereits in dieser Tabelle liegt. Indexnamen werden auf der Zeichenfläche nicht dargestellt.
 - Bei einem Tabellengruppennamen wählt er ausschließlich die Gruppe aus und holt sie mit ihren Tabellen in den Vordergrund.
 - Bei einer Notiz wählt er ausschließlich die Notiz aus und holt sie in den Vordergrund.
 
@@ -151,7 +154,7 @@ Solange ein Durchlauf andauert, behält eine Tabelle oder Tabellengruppe, die er
 
 `Replace All` wird mit `Ctrl + Enter` (Windows/Linux) oder `⌘ + Enter` (Mac) im Ersetzungsfeld oder über seine Schaltfläche ausgeführt:
 
-- Es ersetzt jeden Treffer in den eingeschalteten Textarten und lässt die übrigen Arten unberührt. Mit den voreingestellten Textarten benennt es Tabellen, Spalten, Indizes und Tabellengruppen um, und Kommentare und Notizen bleiben unberührt.
+- Es ersetzt jeden Treffer in den eingeschalteten Textarten und lässt die übrigen Arten unberührt, abgesehen von den physischen Namen, die ein ersetzter logischer Name ableitet und die es auch dann schreibt, wenn `Table names` und `Column names` ausgeschaltet sind – siehe unten. Mit den voreingestellten Textarten benennt es Tabellen, Spalten, Indizes und Tabellengruppen um und schreibt die logischen Namen von Tabellen und Spalten um; Kommentare und Notizen bleiben unberührt.
 - Alles, was es ändert, ist ein Rückgängig-Schritt – siehe [Eine Geste, ein Schritt](./undo-redo.md#one-gesture-one-step).
 - Der Zähler zeigt `Replaced N matches` und zählt dabei nur die Vorkommen, deren Text sich tatsächlich geändert hat. Hat sich keines geändert, zeigt er `No changes`, und im Verlauf wird nichts aufgezeichnet, etwa beim Ersetzen des regulären Ausdrucks `(user)` durch `$1`.
 - Danach wird erneut gesucht, ohne dass ein Treffer aktuell ist, sodass die Ergebnisse Treffer auflisten können, die der neue Text enthält.
@@ -171,8 +174,12 @@ So wird der Ersetzungstext verwendet:
   - Ein Treffer, der so zurückgeschrieben wird, wie er war, zählt nicht: Bei ausgeschaltetem `Match Case` schreibt das Ersetzen von `customer` durch `Customer` die Treffer `customer`, `Customer` und `CUSTOMER` unverändert zurück, und keiner davon wird gezählt.
 - Ein leeres Ersetzungsfeld löscht den Treffer.
 
-Eine Ersetzung ist eine gewöhnliche Änderung, genauso, als würden Sie den neuen Tabellennamen, Kommentar, Spaltennamen oder Notiztext selbst eingeben, den Index in den Tabelleneigenschaften umbenennen oder die Tabellengruppe umbenennen.  
+Eine Ersetzung ist eine gewöhnliche Änderung, genauso, als würden Sie den neuen Tabellennamen, Spaltennamen, logischen Namen, Kommentar oder Notiztext selbst eingeben, den Index in den Tabelleneigenschaften umbenennen oder die Tabellengruppe umbenennen.  
 Sie wird im Verlauf aufgezeichnet und erreicht Mitbearbeiter und einen Coding-Agenten wie jede andere Änderung.
+
+Ein Tabellen- oder Spaltenname, den eine Ersetzung schreibt, wird daher zu einem eigenen Namen, den ein später geschriebener logischer Name unverändert lässt, bis [Physische Namen neu ableiten](./dictionary.md#derive-physical-names-again) ihn wieder den Wörterbüchern überlässt. Ein Name, den eine Ersetzung leer lässt, fällt stattdessen an die Wörterbücher zurück, wie jeder geleerte Name – siehe [Eigene Namen](./dictionary.md#names-of-your-own).  
+Solange der physische Name einer Tabelle oder Spalte leer ist oder selbst abgeleitet wurde, leitet ein ersetzter logischer Name ihn aus den Wörterbüchern ab, wie es das Schließen der Zelle des logischen Namens bei einem neuen logischen Namen tut – siehe [Physische Namen ableiten](./dictionary.md#deriving-physical-names). In diesem Fall erhält eine Spalte, deren neuer logischer Name ein Begriff ist, auch die Domäne des Begriffs und damit den Datentyp der Domäne. Was dabei abgeleitet wird, gehört zum Rückgängig-Schritt der Ersetzung und wird in `Replaced N matches` nicht mitgezählt.  
+Schreibt ein einzelnes `Replace All` sowohl den logischen Namen als auch den Namen derselben Tabelle oder Spalte um, hat der Name, den es schreibt, Vorrang vor dem, den der neue logische Name ableiten würde.
 
 ## Tasten in den Suchfeldern {#keys-in-the-search-fields}
 

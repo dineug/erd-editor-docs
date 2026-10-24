@@ -44,19 +44,26 @@ Tratatu ekintza opako gisa eta pasatu dagoen-dagoenean, irakurri edo berridatzi 
 
 Editore batek egiten duenaren zati bat editore horretan bertan geratzen da.  
 Taula bat, ohar bat edo taula-talde bat aurrera ekartzea, bat hautatzeak egiten duen bezala, ez da bidaltzen.  
-Ez dira bidaltzen [SQL eskema](../../guide/guides/schema-sql.md) fitxako `Statements`, `Header` eta `Tables` aukerak ere, egiten diren leihokoak baitira.  
+Ez dira bidaltzen [SQL eskema](../../guide/guides/schema-sql.md) fitxako `Statements`, `Header`, `Write logical names into empty comments` (`4.2.0` bertsiotik aurrera) eta `Tables` aukerak ere, egiten diren leihokoak baitira.  
 `4.1.0` bertsiotik aurrera, [Arakatzailea](../../guide/guides/explorer.md) ere bere editorean geratzen da: irekita dagoen ala ez, haren zabalera, tolestutako errenkadak, teklatua dagoen errenkada, zuhaitzaren korritze-posizioa, eta haren bilaketa eta aukerak ez dira bidaltzen.  
 Ezta gako arrotz batera joateak haren erlazioaren konektorean jartzen duen [argia](../../guide/guides/relationship-editing.md#reading-a-connector) ere.  
-Korritze bat, zoom bat edo fitxa-aldaketa bat bidali egiten da, baina ez du inoiz beste erabiltzaile baten ikuspegia edo fitxa mugitzen. Horren barruan sartzen dira Arakatzailetik egindako jauzi batek eragiten duen korritzea eta Arakatzailea beste fitxa batetik irekitzean ERD fitxara egiten den aldaketa.
+`4.2.0` bertsiotik aurrera, [Hiztegia](../../guide/guides/dictionary.md) fitxa ere bere editorean geratzen da: zein orri erakusten den, eta orri bakoitzaren bilaketa, hautapena, korritze-posizioa eta zutabeen zabalerak ez dira bidaltzen. Haren edizioak, ordenatzeak eta CSV inportazioak, berriz, bai.  
+Korritze bat, zoom bat edo fitxa-aldaketa bat bidali egiten da, baina ez du inoiz beste erabiltzaile baten ikuspegia edo fitxa mugitzen. Horren barruan sartzen dira Arakatzailetik egindako jauzi batek eragiten duen korritzea, Arakatzailea beste fitxa batetik irekitzean ERD fitxara egiten den aldaketa, eta Hiztegia fitxako [`Checks`](../../guide/guides/dictionary.md#the-checks-sheet) orritik taula edo zutabe batera egindako jauzi baten fitxa-aldaketa eta korritzea. Orri horretatik hitz, termino edo domeinu batera egindako jauzi bat Hiztegia fitxan geratzen da; beraz, ez da horretatik ezer bidaltzen.
+
+`4.2.0` bertsiotik aurrera, [Izenen ikuspegiaren](../../guide/guides/logical-names.md#switching-the-view) aldaketa bat ere bidaltzen da, eta haren [blokeoak](../../guide/guides/settings.md#lock) erabakitzen du beste editoreek harekin zer egiten duten. `Name View` blokeoa aktibatuta dago diagrama berri batean eta `4.2.0` bertsioa baino lehenagoko edozein dokumentutan.  
+Blokeoa aktibatuta dagoen bitartean, aldaketa hura egin duen editorean bakarrik ikusten da: bidali egiten da oraindik, baina beste editore guztiek eta erreplika guztiek baztertu egiten dute; beraz, erabiltzaile bakoitzak beste ikuspegi bat begira dezake, `value` balioak ikuspegi blokeatua mantentzen duen bitartean. Lengoaiaren, izenen idazkeraren edo mugatzaile motaren aldaketa bat desberdina da: editore guztietara iristen da, haren blokeoa aktibatuta egon ala ez.  
+Blokeoa desaktibatuta dagoen bitartean, edita dezakeen editore batean egindako aldaketa batek editore eta erreplika guztietako Izenen ikuspegia aldatzen du, azken aldaketak irabazten duela, eta guztiek gordetzen dute.  
+Irakurtzeko soilik dagoen editore batek berak egindako aldaketa editore horretan geratzen da beti, eta editoreak besteen aldaketa partekatuei jarraitzen die oraindik.
 
 [Blokeoak](../../guide/guides/settings.md#lock) partekatuak dira: ezarpen bat azkenekoz blokeatzeak edo desblokeatzeak irabazten du editore guztietan, eta blokeo batek hura aktibatu zuen editorearen balioak daramatza; horrela, editore eta erreplika guztiek balio bera gordetzen dute.  
 Beraz, `Viewport` blokeoak hura aktibatu zuen editorearen ikuspegia gordetzen du, eta `Canvas Type` blokeoak editore horrek Ezarpenak fitxaren aurretik irekita izan zuen azken fitxa; Ezarpenak fitxan aktibatzen dira blokeoak.  
-`Language`, `Table Name Case`, `Column Name Case` edo `Bracket Type` blokeoa desaktibatzeak, gainera, ezarpen hori editore guztietan hura desaktibatu zuen editorean erakusten den baliora ezartzen du, eta horrela balio bakarra gordetzen jarraitzen dute. `Viewport` edo `Canvas Type` blokeoa desaktibatzeak ez du inoren ikuspegia edo fitxa mugitzen.
+`Language`, `Table Name Case`, `Column Name Case`, `Bracket Type` edo, `4.2.0` bertsiotik aurrera, `Name View` blokeoa desaktibatzeak, gainera, ezarpen hori editore guztietan hura desaktibatu zuen editorean erakusten den baliora ezartzen du, eta horrela balio bakarra gordetzen jarraitzen dute. `Viewport` edo `Canvas Type` blokeoa desaktibatzeak ez du inoren ikuspegia edo fitxa mugitzen.
 
 `Before tables` edo `After tables` scriptaren edizio bat osorik bidaltzen da haren eremuak fokua galtzen duenean. Bi scriptak bereiz ebazten dira; beraz, lankide batek bata editatzeak ez du inoiz bestea gainidazten.
 
 Bisualizazioa fitxako [Fluxu moduan](../../guide/guides/visualization.md#flow-never-edits-the-document) egiten den ezer ez da dokumentuaren aldaketa; beraz, Fluxuan dagoen editore batek ez die besteei aldaketarik bidaltzen, eta besteek bidaltzen dizkioten aldaketak aplikatzen jarraitzen du, bertan dagoen bitartean.  
-Salbuespen bakarra Fluxua uztea da beste fitxa batera joateko: fitxa-aldaketa hori beste edozein bezala bidaltzen da.  
+Bi salbuespen daude. Fluxua beste fitxa batera joateko uztea fitxa-aldaketa bat da, eta beste edozein bezala bidaltzen da. `4.2.0` bertsiotik aurrera, Fluxuaren tresna-barrako Izenen ikuspegiaren zerrendan egindako aukeraketa bat Izenen ikuspegiaren aldaketa bat da, eta oihalean egindako bat bezala bidaltzen eta aplikatzen da.  
+`Previous table` eta `Next table` botoiak eta desegiteko eta berregiteko teklak, Fluxuan [ikuspegietan zehar atzera eta aurrera egiten dutenak](../../guide/guides/visualization.md#previous-table-and-next-table), ez dira bidaltzen.  
 Txarteleko kanpo-estekaren botoiak, `#`, `@` edo `:` ikurraren ondoren aukeratutako [Bilaketa azkarreko](../../guide/guides/quick-search.md#searching-the-diagram) emaitza batek eta [Arakatzailea](../../guide/guides/explorer.md#opening-and-closing) irekitzeak Fluxua uzten dute ERD fitxara joateko. Txarteleko botoiak edo Bilaketa azkarreko emaitza batek bertan eragiten duen korritzea ere bidaltzen da.
 
 ## Bi editore orri bakarrean {#two-editors-on-one-page}
@@ -99,6 +106,7 @@ const sharedStore2 = editor2.getSharedStore();
 
 Exekuzio-garaiko balioak dokumentua ireki zenetik kendutakoa gordetzen du oraindik; beraz, beste editore batek geroago kentze bat desegiten duenean, saiora sartu den editoreak taula berreskuratzen du bere izen eta zutabeekin.  
 [`value`](../erd-editor-element.md#value) propietatea fitxategi batek gordetzen duen forma da, kendutako entitaterik gabe; beraz, hartatik edo fitxategitik hasieratutako editore batek taula huts eta izenik gabeko bat berreskuratuko luke horren ordez.  
+`4.2.0` bertsiotik aurrera, gauza bera gertatzen da [Hiztegia](../../guide/guides/dictionary.md) fitxako orri batetik kendutako hitz, termino edo domeinu batekin: beste editore batek kentzea desegiten duenean, `runtimeValue` balioarekin hasieratutako editoreak errenkada osorik zerrendatzen du berriro, eta `value` balioarekin hasieratutakoak errenkada huts bat zerrendatzen du, bere `value` balioak gero kanpoan uzten duena.  
 Jarraitu `value` propietatea biltegian idazten: `runtimeValue` beste editore bat, bigarren ikuspegi bat edo [replicationStore](./remote-storage.md) bat hasieratzeko soilik da.  
 Ostalari hauetako editoreek horrela hasieratzen dute irekitako dokumentu baten bigarren ikuspegia: VS Code, Obsidian, JetBrains IDE bat eta web aplikazioa.
 
@@ -134,6 +142,31 @@ Mantendu saio bateko editore guztiak, eta haren dokumentua gordetzen duen edozei
 `4.1.0` bertsioko editore batek ez du ekintza mota berririk bidaltzen; beraz, `4.0.0` eta `4.1.0` bertsioetako editoreek eta erreplikek saio bera parteka dezakete ezer galdu gabe.  
 Haren [Bilatu eta ordeztu](../../guide/guides/find-and-replace.md#replacing) funtzioak indizeen izenetan eta taula-taldeen izenetan ere bilatzen du, eta `Replace` eta `Replace All` botoiek `4.0.0` bertsioko editore batek dagoeneko aplikatzen dituen `index.changeName` eta `tableGroup.changeName` ekintzen bidez aldatzen dute haien izena.
 
+`4.2.0` bertsiotik aurrera, aldaketa hauek ekintza mota berrietan doaz, eta ekintzak dauden-daudenean pasatzen dituen birbidaltzaile batek ez du ezer berririk behar horietarako:
+
+- taula baten edo zutabe baten [izen logikoa](../../guide/guides/logical-names.md): `table.changeLogicalName` eta `column.changeLogicalName`; haren izena [hiztegietatik eratorria](../../guide/guides/dictionary.md#deriving-physical-names) den ala ez: `table.changeNameDerived` eta `column.changeNameDerived`;
+- zutabe bat [domeinu](../../guide/guides/dictionary.md#domains-and-data-types) bati lotzea edo haren lotura kentzea: `column.changeDomain`;
+- [Hiztegia](../../guide/guides/dictionary.md) fitxan hitz, termino edo domeinu bat gehitzea, aldatzea (orrian duen lekua barne, ordenatze batek ezartzen duen bezala) edo kentzea: `dictionary.add`, `dictionary.update` eta `dictionary.remove`;
+- [Izenen ikuspegia](../../guide/guides/logical-names.md#switching-the-view) aldatzea: `settings.changeNameViewMode`.
+
+`Name View` blokeoa lehendik dagoen `settings.changeLockSettings` ekintzan doa, `Domain` ikuspegi-aukera `settings.changeShow` ekintzan, eta [Column Order](../../guide/guides/settings.md#adjusting-column-order) zerrendan `Logical Name` edo `Domain` errenkadaren mugimendu bat `settings.changeColumnOrder` ekintzan.  
+`Import` aukeratik egindako SQL eskema, GraphQL, DBML edo AML inportazio baten `editor.clear` eta `editor.loadJson` ekintzek `keepDictionaries: true` daramate, eta horrek editore guztietan mantentzen ditu hitzak, terminoak eta domeinuak. Gauza bera gertatzen da ordezten duen [setSchemaSQL](../erd-editor-element.md#setschemasql), `setSchemaGraphQL`, `setSchemaDBML` edo `setSchemaAML` dei baten ekintzekin.  
+Hiztegiek eratortzen duten izen fisiko bat `table.changeName` edo `column.changeName` ekintzan doa, eta domeinu batek bere zutabeei ematen dien datu mota `column.changeDataType` ekintzan: eskuzko edizio batek bidaltzen dituen ekintzak.
+
+`4.2.0` bertsioa baino lehenagoko editore batek ez ditu aintzat hartzen ekintza mota berriak: ez du izen logikorik, domeinu-loturarik, hiztegirik ezta Izenen ikuspegirik ere. `Name View` blokeatzeak edo desblokeatzeak ez du ezer aldatzen han, ezta Column Order zerrendan `Logical Name` edo `Domain` errenkadaren mugimendu batek ere, edo horietako baten gainera egindako batek. Ezta Ezarpenak fitxara Hiztegia fitxatik iritsitako editore batek aktibatutako `Canvas Type` blokeo batek ere: editore zaharragoak ez du fitxa hori ezagutzen; beraz, `Canvas Type` desblokeatuta mantentzen du. Hiztegiek eratortzen dituzten izen fisikoak eta domeinuek ematen dituzten datu motak erakusten ditu oraindik.  
+Haren edizioek ez dakite ezer izen logikoei, domeinuei edo hiztegiei buruz, eta ondorio hauek dituzte editore berriagoetan:
+
+- Eskuz izena aldatzen dion taula edo zutabe batek bere izena eratorritzat markatuta mantentzen du; beraz, geroago editore berriago batean hari idatzitako izen logiko batek izena berriro erator dezake, editore zaharrak idatzitakoaren gainetik.
+- Domeinu bati lotutako zutabe bati ematen dion datu motak lotura bere horretan uzten du; beraz, `Checks` orriak `Domain type mismatch` egiaztapena zerrendatzen du, eta domeinuaren hurrengo mota-aldaketak domeinuaren mota ematen dio berriro zutabeari.
+- Gehitzen duen erlazio baten gako arrotzeko zutabeek ez dute izen logikorik ez domeinurik jasotzen beren gakotik.
+- Itsasten edo bikoizten duen taula bat izen logikorik eta domeinu-loturarik gabe iristen da.
+- Hartan egindako SQL eskema, GraphQL, DBML edo AML inportazio batek ez du `keepDictionaries` bidaltzen; beraz, editore guztietan hustu egiten ditu hitzak, terminoak eta domeinuak.
+- Karga bat, inportazio bat edo `clear()` dei bat desegiteak dokumentuaren bere kopia kargatzen du editore guztietan, eta kopia horrek ez du izen logikorik, domeinu-loturarik ezta hiztegirik ere.
+- Kopia horrek, eta hartan egindako SQL eskema, GraphQL, DBML edo AML inportazio batek kargatzen duen dokumentuak, editore guztietako `Name View` blokeoa editore horrek aurkitu zuen egoerara itzultzen dute. Ondoren, editore guztiek `Physical Names` gordetzen dute Izenen ikuspegi gisa, eta hura erakutsi ere egiten dute, blokeoa desaktibatuta badago.
+
+Halako batetik gordetako dokumentu batek ez du izen logikorik, domeinu-loturarik, hiztegirik ezta Izenen ikuspegirik ere; beraz, `4.2.0` bertsioko editore batek `Physical Names` ikuspegian irekitzen du. Editore zaharragoak, hala ere, `Name View` blokeoa aurkitu zuen bezala gordetzen du; beraz, `4.2.0` bertsioko editore batean desblokeatutako dokumentu bat desblokeatuta geratzen da.  
+Mantendu saio bateko editore guztiak, eta haren dokumentua gordetzen duen edozein [replicationStore](./remote-storage.md#dispatch-dispatchsync), `4.2.0` bertsioan edo berriago batean.
+
 ## SharedStoreConfig {#sharedstoreconfig}
 
 ### getNickname {#getnickname}
@@ -161,6 +194,7 @@ editor.getSharedStore({ mouseTracker: false });
 Erabiltzaile hau zertan ari den igortzen du. Balio lehenetsia `true` da.  
 Fokuratuta dituzun taula eta gelaxka, hautatu dituzun taulak, oharrak eta taula-taldeak, eta oihalean arrastatzen duzun laukia beste editoreetara bidaltzen dira, eta han marrazten dira.  
 Erabiltzaile bakoitzak bere kolorea du, eta horrela elkarrengandik bereiz ditzakezu: ingerada bat fokuratutako taulan, azpimarra bat fokuratutako gelaxkan, eraztun bat hautatutako taulen, oharren eta taula-taldeen inguruan, eta marra etenezko laukizuzen bat arrastatze-laukiarentzat.  
+`4.2.0` bertsiotik aurrera, erabiltzaile bakoitzak beste [Izenen ikuspegi](../../guide/guides/logical-names.md#collaborators) bat begira dezake, haren blokeoa aktibatuta dagoen bitartean edo irakurtzeko soilik dagoen editore batek berak egindako aldaketa baten ondoren. Zure ikuspegiak marrazten ez duen fokuratutako gelaxka bat haren lekuan marrazten duen gelaxkan azpimarratzen da: izenak eta izen logikoak elkar ordezkatzen dute, datu motak eta domeinuak bezala.  
 Beste erabiltzaileengandik iristen den presentzia beti marrazten da zure oihalean, aukera hau aktibatuta egon ala ez.  
 Bisualizazioa fitxako Fluxu moduan, beste erabiltzaileen fokua eta hautapena taulen txarteletan marrazten dira, baina haien arrastatze-laukiak ez. Han hautatzen dituzun taulak bidaltzen dira oraindik ere; han arrastatzen duzun laukia, ez.
 

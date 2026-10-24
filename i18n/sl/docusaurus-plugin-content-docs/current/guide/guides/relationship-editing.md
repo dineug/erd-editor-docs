@@ -1,6 +1,6 @@
 ---
-sidebar_position: 6
-description: Brisanje relacije, sprememba njene vrste, nastavitev njenih dejanj ON DELETE in ON UPDATE, preslikava na obstoječe stolpce z oknom Preslikaj stolpce, branje notacije povezovalne črte, delo z relacijami N:M in identifikacijskimi relacijami ter način poimenovanja novih stolpcev tujega ključa.
+sidebar_position: 7
+description: Brisanje relacije, sprememba njene vrste, nastavitev njenih dejanj ON DELETE in ON UPDATE, preslikava na obstoječe stolpce z oknom Preslikaj stolpce, branje notacije povezovalne črte, delo z relacijami N:M in identifikacijskimi relacijami ter pregled, kaj novi stolpci tujega ključa kopirajo iz svojega ključa in kako so poimenovani.
 ---
 
 # Urejanje relacij
@@ -85,6 +85,9 @@ Okno se odpre na dva načina:
 
 Podnaslov okna navaja obe tabeli in vrsto relacije, na primer `users → posts · One N`. Vrsta je tu prikazana, ne pa tudi spremenjena – za spremembo glejte razdelek [Sprememba vrste](#type-change).
 
+Povsod v oknu, vključno z opombami in vrsticami besedila pod vrsticami ter pojavnim obvestilom, s katerim se okno zapre, so tabele in stolpci poimenovani tako, kot jih poimenuje [prikaz imen](./logical-names.md#beyond-the-canvas).  
+Fizične ostanejo tri stvari: vsak podatkovni tip, ki je tip samega stolpca in nikoli ime njegove domene; `New column: <name>`, ki prikazuje ime, ki ga bo dobil novi stolpec; ter vrstice, ki jih `Map` vnaprej izpolni, saj jih poveže po imenu, nikoli po logičnem imenu.
+
 Polje `References` določa ključ, na katerega kaže relacija: `Primary Key` s stolpci v vrstnem redu tabele, nato `Unique: <column>` za vsak stolpec z zastavico `Unique`. Prikaže se le, ko je na voljo več kot ena izbira.  
 Enoličen indeks tu ne šteje za ključ, stolpec z zastavico `Unique`, ki je celoten primarni ključ, pa ni naveden dvakrat.  
 Izbira drugega ključa vrstice zgradi znova. Vrstica ohrani svojo izbiro, dokler je ta stolpec še v podrejeni tabeli.
@@ -95,7 +98,7 @@ Pod naslovoma `Referenced column` in `Foreign key column` vsaka vrstica prikaže
 - Postavka `New column: <name>` doda nov stolpec tujega ključa. Prikazano ime je tisto, ki ga bo stolpec dobil, kot je opisano v razdelku [Imena stolpcev tujega ključa](#foreign-key-column-names), oštevilčeno glede na stolpce podrejene tabele in druge vrstice, ki dodajo nov stolpec. Ni na voljo, ko bi bilo ime prazno, na primer pri ključu brez imena.
 - Vsak stolpec podrejene tabele, kot `<name> (<data type>)`. Stolpec, ki ga je izbrala druga vrstica, je prikazan kot `<name> (<data type>) · in use` in ga ni mogoče izbrati, zato si nobeni dve vrstici ne delita istega stolpca. Stolpec, ki ga že uporablja druga relacija, je še vedno mogoče izbrati, zato lahko stolpec, na primer skupni `tenant_id`, služi več relacijam.
 
-V oknu z gumbom `Map` je vrstica sprva izpolnjena le, ko se ime natanko enega stolpca podrejene tabele ne glede na velikost črk ujema z imenom, ki bi ga zanjo dobil nov stolpec tujega ključa pred kakršnim koli številčenjem `_2`, na primer `users_id` za `id` v tabeli `users` in `member_id` za `member_id`. Dokler je možnost [`Bracket`](./schema-sql.md#database-and-bracket) nastavljena na `None`, kar je privzeto, šteje tudi ime, zgrajeno iz tabelnega dela imena tabele s shemo, zato se `id` v tabeli `public.users` poveže s stolpcem `public.users_id` ali `users_id`. Pri ključu `Unique` šteje tudi lastno ime stolpca ključa, zato se `vin` poveže s stolpcem `vin`. Vse druge vrstice se začnejo pri postavki `Pick a column`.  
+V oknu z gumbom `Map` je vrstica sprva izpolnjena le, ko se ime natanko enega stolpca podrejene tabele ne glede na velikost črk ujema z imenom, ki bi ga zanjo dobil nov stolpec tujega ključa pred kakršnim koli številčenjem `_2`, na primer `users_id` za `id` v tabeli `users` in `member_id` za `member_id`. Dokler je možnost [`Bracket`](./schema-sql.md#database-and-bracket) nastavljena na `None`, kar je privzeto, šteje tudi ime, zgrajeno iz tabelnega dela imena tabele s shemo, zato se `id` v tabeli `public.users` poveže s stolpcem `public.users_id` ali `users_id`. Pri ključu `Unique` šteje tudi nespremenjeno ime stolpca ključa, zato se `vin` poveže s stolpcem `vin`. Vse druge vrstice se začnejo pri postavki `Pick a column`.  
 V oknu z gumbom `Save` se vsaka vrstica začne pri stolpcu, ki ga relacija uporablja zdaj. V obeh primerih izbira drugega ključa v polju `References` izpolni prazne vrstice tega ključa po istih imenih.
 
 Kadar se podatkovni tip izbranega stolpca razlikuje od tipa, ki ga stolpec nadrejene tabele dodeli tujemu ključu, to pove opomba pod vrstico.  
@@ -121,10 +124,10 @@ Medtem ko je okno odprto, sledi diagramu, vključno s spremembami sodelavca ali 
 Kaj zapišeta gumba `Map` in `Save`:
 
 - Gumb `Map` doda relacijo z možnostma `On Delete` in `On Update`, nastavljenima na `Not set`. Gumb `Save` spremeni le stolpce relacije, pri čemer konec pri nadrejeni tabeli usmeri na ključ, izbran v polju `References`, in ohrani njeno vrsto ter njeni dejanji ON DELETE in ON UPDATE.
-- Vrstica `New column` doda stolpec na konec podrejene tabele, tako kot risanje: `NOT NULL`, poimenovan po svojem ključu, s podatkovnim tipom, privzeto vrednostjo in komentarjem ključa – glejte razdelek [Identifikacijske relacije](#identifying-relationships).
-- Izbrani stolpec se nikoli ne preimenuje, njegova zastavica `Not Null`, primarni ključ, zastavica `Unique`, privzeta vrednost in komentar pa ostanejo nespremenjeni. Njegov podatkovni tip se spremeni le, ko je nastavitev `Relationship DataType Sync` vklopljena in ima stolpec nadrejene tabele podatkovni tip: prevzame tip, ki ga stolpec nadrejene tabele dodeli tujemu ključu, pri ključu serial tako kot nov stolpec celoštevilski tip, sprememba pa se po relacijah prenaša naprej tako, kot to počne sinhronizacija.
+- Vrstica `New column` doda stolpec na konec podrejene tabele, tako kot risanje: `NOT NULL`, poimenovan po svojem ključu, s podatkovnim tipom, privzeto vrednostjo, komentarjem, logičnim imenom in domeno ključa – glejte razdelek [Identifikacijske relacije](#identifying-relationships).
+- Izbrani stolpec se nikoli ne preimenuje ali poveže z domeno ključa, njegova zastavica `Not Null`, primarni ključ, zastavica `Unique`, privzeta vrednost, komentar in logično ime pa ostanejo nespremenjeni. Njegov podatkovni tip se spremeni le, ko je nastavitev `Relationship DataType Sync` vklopljena in ima stolpec nadrejene tabele podatkovni tip: prevzame tip, ki ga stolpec nadrejene tabele dodeli tujemu ključu, pri ključu serial tako kot nov stolpec celoštevilski tip, sprememba pa se po relacijah prenaša naprej tako, kot to počne sinhronizacija. Vsakemu stolpcu, ki mu sprememba spremeni tip, izbranemu ali doseženemu po relacijah, se povezava z [domeno](./dictionary.md#domains-and-data-types) prekine, ko se njegov novi tip razlikuje od tipa domene.
 - Stolpec, ki ga preslikava preneha uporabljati, ostane v podrejeni tabeli in ni več označen kot tuji ključ, razen če se na njem še vedno konča druga relacija.
-- Vse, kar zapiše en pritisk gumba `Map` ali `Save`, vključno z novimi stolpci in spremembami tipov, je en korak razveljavitve.
+- Vse, kar zapiše en pritisk gumba `Map` ali `Save` – vključno z novimi stolpci, spremembami tipov in prekinitvami povezav z domenami – je en korak razveljavitve.
 
 Ali je relacija identifikacijska in kako je narisan njen konec pri nadrejeni tabeli, se tako kot pri vsaki relaciji določi iz preslikanih stolpcev podrejene tabele. Preslikava na stolpce primarnega ključa podrejene tabele jo takoj naredi identifikacijsko, preslikava na stolpec, ki dovoljuje `NULL`, pa na konec pri nadrejeni tabeli postavi krožec – glejte razdelek [Branje povezovalne črte](#reading-a-connector).  
 Tuji ključ v Shemi SQL se sklicuje na ključ, ki ste ga izbrali, na primer `REFERENCES vehicle (vin)` za ključ `Unique`.
@@ -156,9 +159,10 @@ Glejte stran [Uvoz in izvoz datotek](./file-import-export.md).
 ## Identifikacijske relacije {#identifying-relationships}
 
 Risanje relacije s klikom na podrejeno tabelo ali z gumbom `Create new columns` vsak primarni ključ nadrejene tabele kopira v podrejeno tabelo kot stolpec tujega ključa `NOT NULL`, zato je nova relacija sprva neidentifikacijska.  
-Kopija prevzame podatkovni tip, privzeto vrednost in komentar ključa, ne pa tudi zastavic `Unique` ali `Auto Increment`, ime pa dobi, kot je opisano v razdelku [Imena stolpcev tujega ključa](#foreign-key-column-names).  
+Kopija prevzame podatkovni tip, privzeto vrednost, komentar in logično ime ključa, ne pa tudi zastavic `Unique` ali `Auto Increment`, ime pa dobi, kot je opisano v razdelku [Imena stolpcev tujega ključa](#foreign-key-column-names).  
 Izjema pri podatkovnem tipu je ključ serial: njegova kopija prevzame celoštevilski tip, ki ga hrani serial. Tipa `smallserial` in `serial2` pri vsaki zbirki podatkov dasta `smallint`, tip `serial4` da `integer`, tipa `bigserial` in `serial8` pa dasta `bigint`. Sam tip `serial` da `integer` pri PostgreSQL in `bigint unsigned` pri MySQL in MariaDB, pri vsaki drugi zbirki podatkov pa ostane `serial`.  
 Šteje le celotno ime tipa, ne glede na velikost črk, zato se tip `serial(4)` kopira tako, kot je zapisan. Tip, zapisan z velikimi črkami, da velike črke: tip `SERIAL` da `INTEGER` pri PostgreSQL. Stolpec tujega ključa, ki ima v shranjenem diagramu že tip `serial`, ta tip obdrži.  
+Kopija se poveže tudi z [domeno](./dictionary.md#domains-and-data-types) ključa, če list `Domains` to domeno navaja v trenutku, ko kopija nastane, in kopija ohrani podatkovni tip ključa. Kopija ključa serial, ki prevzame celoštevilski tip, zato ni povezana z nobeno domeno, kopija ključa s samim tipom `serial`, ki ostane `serial`, pa je povezana z njo.  
 Če želite relacijo narediti identifikacijsko, te stolpce tujega ključa v podrejeni tabeli nastavite kot primarne ključe: izberite jih vse in enkrat pritisnite `Alt + K` (Windows/Linux) ali `⌥ + K` (Mac) ali pa v priročnem meniju tabele izberite postavko `Primary Key`, ki se glasi `Primary Key on selected columns`, ko sta izbrana vsaj dva stolpca – glejte razdelek [Primarni ključ stolpca](./table-editing.md#column-primary-key).
 
 ![Preklapljanje stolpca product_id kot primarnega ključa z Alt + K, pri čemer njegova povezovalna črta postane polna in nato črtkana](/img/demo-identifying-relationship.webp)
@@ -193,7 +197,10 @@ To velja tudi za primarni ključ, ki ga urejevalnik doda nadrejeni tabeli, ki ga
 Imena se določijo ob risanju relacije. Poznejše preimenovanje nadrejene tabele ali njenega ključa jih ne preimenuje.  
 Vrstice `New column` v oknu [Preslikaj stolpce](#map-columns) se poimenujejo po istih pravilih, seznam pa vsako ime prikaže, preden ga izberete.  
 Relacije, ki nastanejo na že obstoječih stolpcih (z uvozom, lepljenjem, podvajanjem ali v oknu Preslikaj stolpce, ki poveže obstoječe stolpce), ohranijo imena, ki jih imajo ti stolpci.  
-Agent za kodiranje, ki relacijo doda z orodjem `erd_add_relationship`, dobi enaka imena in podatkovne tipe – glejte stran [Orodja](../../mcp/tools.md#relationships).
+Agent za kodiranje, ki relacijo doda z orodjem `erd_add_relationship`, dobi enaka imena, podatkovne tipe, logična imena in domene – glejte stran [Orodja](../../mcp/tools.md#relationships).
+
+Stolpec tujega ključa je poimenovan po svojem ključu, nikoli po logičnem imenu, ki ga kopira, njegovo ime pa šteje za vaše: logično ime, ki ga pozneje vnesete v stolpec, pusti ime nespremenjeno, razen če je ime prazno – glejte razdelek [Vaša imena](./dictionary.md#names-of-your-own).  
+Dokler se kopirano logično ime ujema z izrazom, ki daje drugačno ime, list `Checks` zato navaja stolpec pod preverjanjem [`Physical name mismatch`](./dictionary.md#what-each-check-finds). Ponovna izpeljava njegovega fizičnega imena ga preimenuje po slovarjih, razen če ime, ki ga dajo, ne glede na velikost črk že ima drug stolpec podrejene tabele – glejte razdelek [Znova izpelji fizična imena](./dictionary.md#derive-physical-names-again).
 
 ## Branje povezovalne črte {#reading-a-connector}
 

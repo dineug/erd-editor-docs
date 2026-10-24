@@ -165,9 +165,9 @@ export default {
     const { ids } = d;
     await d.sleep(450);
 
-    // Empty canvas right of the diagram, high enough that the menu stays
-    // clear of the floating toolbar.
-    await d.rightClick(700, 64, { duration: 380 });
+    // Empty canvas right of the diagram, high enough that the menu (14 rows
+    // since 4.2.0) stays clear of the floating toolbar.
+    await d.rightClick(700, 50, { duration: 380 });
     mark('menu');
     await d.sleep(350);
     const item = await waitMenuItem(d, 'Diff Viewer');

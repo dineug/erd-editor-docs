@@ -1,6 +1,6 @@
 ---
-sidebar_position: 11
-description: Die DDL des Diagramms auf der Registerkarte Schema SQL lesen, im Optionsbereich Datenbank, Begrenzer, Anweisungen, Vorspann und Tabellen wählen, eigene Skripte vor und nach den Tabellen hinzufügen und das SQL speichern oder kopieren.
+sidebar_position: 12
+description: Die DDL des Diagramms auf der Registerkarte Schema SQL lesen, im Optionsbereich Datenbank, Begrenzer, Anweisungen, Vorspann, logische Namen in leeren Kommentaren und Tabellen wählen, eigene Skripte vor und nach den Tabellen hinzufügen und das SQL speichern oder kopieren.
 ---
 
 # Schema SQL
@@ -20,24 +20,25 @@ Klicken Sie mit der rechten Maustaste auf das SQL, um sein Kontextmenü zu öffn
 - `Options panel`, das den Bereich einklappt oder öffnet und mit einem Häkchen markiert ist, solange er angezeigt wird.
 - `Save file`
 
-Solange diese Registerkarte geöffnet ist, bietet die Schnellsuche `Database` und `Bracket`, dazu `Schema SQL: Statements` und `Schema SQL: Header`, die nur die Optionen auflisten, die die Datenbank hat, sowie `Schema SQL: Options panel`, das den Bereich einklappt oder öffnet.
+Solange diese Registerkarte geöffnet ist, bietet die Schnellsuche `Database` und `Bracket`, dazu `Schema SQL: Statements` und `Schema SQL: Header`, die nur die Optionen auflisten, die die Datenbank hat, sowie `Schema SQL: Options panel`, das den Bereich einklappt oder öffnet.  
+Weder das Kontextmenü noch die Schnellsuche bietet die Option `Write logical names into empty comments`, die es nur im Optionsbereich gibt – siehe [Logische Namen als Kommentare](#logical-names-as-comments).
 
 Das SQL wird geschrieben, wenn sich die Registerkarte öffnet, und erneut, sobald sich eine der Optionen des Bereichs, der Datenbankname oder ein Skript ändert. Eine Änderung an den Tabellen, die vorgenommen wird, während die Registerkarte geöffnet ist, etwa die eines Mitbearbeiters oder eines Coding-Agenten, erscheint, sobald Sie die Registerkarte verlassen und zurückkehren oder sobald sich eines davon ändert.
 
-Die [Tabelleneigenschaften](./table-related-functions.md#table-properties) haben eine eigene Registerkarte `Schema SQL`, die die DDL einer einzelnen Tabelle zeigt. Sie schreibt immer einfache Anweisungen mit `CREATE` ohne Vorspann und Skripte, hat keinen Optionsbereich und ihr Kontextmenü bietet nur `Database` und `Bracket`.
+Die [Tabelleneigenschaften](./table-related-functions.md#table-properties) haben eine eigene Registerkarte `Schema SQL`, die die DDL einer einzelnen Tabelle zeigt. Sie schreibt immer einfache Anweisungen mit `CREATE` ohne Vorspann und Skripte, schreibt nie einen logischen Namen in einen leeren Kommentar, hat keinen Optionsbereich und ihr Kontextmenü bietet nur `Database` und `Bracket`.
 
 ## Optionsbereich {#options-panel}
 
 Der Bereich enthält drei Gruppen, jede unter einer Beschriftung:
 
 1. `Saved in the document`: `Database` und `Bracket` – siehe [Datenbank und Begrenzer](#database-and-bracket).
-2. `This window only`: `Statements`, `Header` und, solange das Diagramm eine [Tabellengruppe](./table-groups.md) hat, `Tables` – siehe [Anweisungen](#statements), [Vorspann](#header) und [Tabellen](#tables).
+2. `This window only`: `Statements`, `Header`, `Write logical names into empty comments` und, solange das Diagramm eine [Tabellengruppe](./table-groups.md) hat, `Tables` – siehe [Anweisungen](#statements), [Vorspann](#header), [Logische Namen als Kommentare](#logical-names-as-comments) und [Tabellen](#tables).
 3. `Saved in the document · written as is for every database`: die Skripte `Before tables` und `After tables` – siehe [Skripte vor und nach den Tabellen](#before-and-after-scripts).
 
 `Save file` und `Copy` befinden sich am unteren Rand des Bereichs – siehe [SQL speichern oder kopieren](#saving-or-copying-the-sql).
 
 Die Optionen unter `This window only` gehören zu dem Editorfenster, in dem Sie sie wählen. Sie werden weder im Dokument gespeichert noch mit Mitbearbeitern geteilt noch für das Rückgängigmachen aufgezeichnet, und sie werden zurückgesetzt, wenn der Editor geschlossen oder neu geladen wird; beim Wechsel der Registerkarte bleiben sie erhalten.  
-`Statements` steht anfangs auf `If not exists` und `Header` auf `CREATE + USE`. Für das SQL, das eine Seite mit eingebettetem Editor über [`getSchemaSQL()`](../../api/erd-editor-element.md#getschemasql) liest, und für das SQL, das ein Coding-Agent liest, gilt dagegen anfangs `Create` ohne Vorspann.
+`Statements` steht anfangs auf `If not exists` und `Header` auf `CREATE + USE`, und `Write logical names into empty comments` ist ausgeschaltet. Für das SQL, das eine Seite mit eingebettetem Editor über [`getSchemaSQL()`](../../api/erd-editor-element.md#getschemasql) liest, und für das SQL, das ein [Coding-Agent liest](../../mcp/tools.md#reading-a-document), gilt dagegen anfangs `Create` ohne Vorspann, und es werden keine logischen Namen geschrieben, sofern dies nicht verlangt wird.
 
 Eine Option, die die ausgewählte Datenbank nicht hat, bleibt abgeblendet im Bereich, mit dem Tooltip `Not in <database>`, etwa `Not in Oracle`, und wenn Sie sie drücken, bewirkt das nichts.  
 Das SQL verwendet dann die nächstliegende Form, die die Datenbank hat, und die Schaltfläche dieser Form wird gedrückt angezeigt: `If not exists` fällt auf `Create` zurück, `CREATE + USE` auf `USE` oder, wo die Datenbank auch kein `USE` hat, auf `None`, und `USE` auf `None`. Ihre Auswahl bleibt erhalten, sodass sie bei einem Wechsel zu einer Datenbank, die sie hat, wieder gilt.
@@ -92,6 +93,21 @@ Ein Vorspann wird nur geschrieben, solange der Datenbankname ein einfacher Bezei
 Bei jedem anderen Namen, auch einem leeren, wird kein Vorspann geschrieben, und das `DROP TABLE` von PostgreSQL nennt dann kein Schema. Solange ein anderer Vorspann als `None` wirksam ist, weist ein Hinweis unter `Header` darauf hin: `Database name "<name>" is not a valid identifier.`  
 Der Datenbankname eines neuen Diagramms ist leer, daher zeigt der Bereich, bis Sie die Datenbank benennen, `Database name "" is not a valid identifier.`
 
+## Logische Namen als Kommentare {#logical-names-as-comments}
+
+Der Schalter `Write logical names into empty comments` unter `This window only` schreibt bei jeder Datenbank den [logischen Namen](./logical-names.md) einer Tabelle oder Spalte in die DDL, wo ihr Kommentar leer ist.
+
+![Im Bereich Schema SQL die Option Write logical names into empty comments einschalten, wodurch der logische Name jeder Spalte von order_items in ihr leeres COMMENT geschrieben wird, während die Kommentare von members erhalten bleiben](/img/demo-schema-sql-logical-names.webp)
+
+- Ein Kommentar mit Text hat immer Vorrang: Der logische Name ersetzt ihn nie und wird ihm nie hinzugefügt.
+- Ein Kommentar, der nur aus Leerraum besteht, gilt als leer, sodass an seiner Stelle der logische Name geschrieben wird. Ein logischer Name, der leer ist oder nur aus Leerraum besteht, schreibt nichts, und diese Tabelle oder Spalte erhält weiterhin keinen Kommentar.
+- Der logische Name wird dort und in der Form geschrieben, in der die Datenbank einen Kommentar schreibt, und seine Anführungszeichen werden auf dieselbe Weise maskiert – siehe [Kommentare](#comments).
+
+Bei MySQL wird zum Beispiel eine Spalte `id` mit dem logischen Namen `Member ID` und ohne Kommentar mit `COMMENT 'Member ID'` geschrieben, während eine Spalte `email` mit dem logischen Namen `Email` und dem Kommentar `Sign-in address` ihr `COMMENT 'Sign-in address'` behält.
+
+Wie `Statements` und `Header` gehört der Schalter zum Fenster und ist anfangs ausgeschaltet – siehe [Optionsbereich](#options-panel).  
+Ein Import liest einen solchen Kommentar nie als logischen Namen zurück – siehe [Kommentare](./file-import-export.md#comments).
+
 ## Tabellen {#tables}
 
 Solange das Diagramm mindestens eine [Tabellengruppe](./table-groups.md) hat, ob eingeblendet oder ausgeblendet, erscheint `Tables` unter `This window only` mit einem Kontrollkästchen für jede Option:
@@ -125,22 +141,24 @@ Ein Feld ohne Tastaturfokus folgt einer Änderung, die ein Mitbearbeiter oder ei
 
 ## SQL speichern oder kopieren {#saving-or-copying-the-sql}
 
-`Save file` am unteren Rand des Bereichs oder im Kontextmenü speichert genau das SQL, das die Registerkarte zeigt, mit der aktuellen Datenbank, dem Begrenzer, den Anweisungen, dem Vorspann, den Tabellen und den Skripten, als `<database name>-<timestamp>.sql`. Die Datei wird wie jeder andere Export benannt und gespeichert – siehe [Exportieren](./file-import-export.md#exporting).
+`Save file` am unteren Rand des Bereichs oder im Kontextmenü speichert genau das SQL, das die Registerkarte zeigt, mit der aktuellen Datenbank, dem Begrenzer, den Anweisungen, dem Vorspann, den Kommentaren mit logischen Namen, den Tabellen und den Skripten, als `<database name>-<timestamp>.sql`. Die Datei wird wie jeder andere Export benannt und gespeichert – siehe [Exportieren](./file-import-export.md#exporting).
 
 `Export` ▸ `Schema SQL` im Kontextmenü der Zeichenfläche oder in der Schnellsuche speichert von sich aus nichts.  
 Es wechselt zu dieser Registerkarte, öffnet den Optionsbereich, auch wenn er eingeklappt war, und setzt den Tastaturfokus auf `Save file`, sodass Sie die Datei mit `Enter` speichern.
 
 `Copy` am unteren Rand des Bereichs oder die Kopierschaltfläche, die oben rechts am Code erscheint, während Sie mit dem Zeiger darauf zeigen, kopiert das SQL.  
-Eine Meldung `Copied!` mit einem Häkchen bestätigt dies zwei Sekunden lang. Verweigert der Browser oder Host den Zugriff auf die Zwischenablage, weist stattdessen eine Meldung `Couldn't copy to the clipboard` mit einem Warnsymbol darauf hin. Erneutes Kopieren ersetzt die Meldung, statt eine weitere hinzuzufügen.  
+Eine Meldung `Copied!` mit einem Häkchen bestätigt dies zwei Sekunden lang. Verweigert der Browser oder Host den Zugriff auf die Zwischenablage, weist stattdessen fünf Sekunden lang eine Meldung `Couldn't copy to the clipboard` mit einem Warnsymbol darauf hin. Erneutes Kopieren ersetzt die Meldung, statt eine weitere hinzuzufügen.  
 Das SQL lässt sich auch auswählen, sodass Sie nur einen Teil davon übernehmen können.
 
 ## Was die DDL schreibt {#what-the-ddl-writes}
 
 Diese Regeln gelten überall, wo der Editor Schema SQL schreibt: auf dieser Registerkarte und in ihrer Datei sowie in dem SQL, das eine Seite mit eingebettetem Editor oder ein Coding-Agent liest.  
-Die Registerkarte `Schema SQL` der Tabelleneigenschaften folgt ihnen für die eine Tabelle, die sie zeigt. Sie schreibt keine Fremdschlüssel, außer denen von SQLite, die innerhalb von `CREATE TABLE` stehen, und für Oracle weder Sequenz noch Trigger.
+Die Registerkarte `Schema SQL` der Tabelleneigenschaften folgt ihnen für die eine Tabelle, die sie zeigt. Sie schreibt für Oracle weder Sequenz noch Trigger und keine Fremdschlüssel außer denen von SQLite, die innerhalb ihres `CREATE TABLE` stehen. Auch die Kommentaranweisungen, die PostgreSQL, Oracle und MSSQL nach einer Tabelle setzen, schreibt sie nicht, sodass sie bei diesen dreien keine Kommentare zeigt.
 
 Die Teile folgen in dieser Reihenfolge, jeweils durch eine Leerzeile getrennt: der Vorspann, das Skript vor den Tabellen, die Anweisungen `DROP`, die Tabellen und das Skript nach den Tabellen. Tabellen werden nach Namen sortiert geschrieben.  
 Ein Diagramm ohne Tabellen und ohne Skripte schreibt nichts, auch wenn ein Vorspann gewählt ist.
+
+Tabellen und Spalten werden mit ihren physischen Namen geschrieben, unabhängig davon, was die [Namensansicht](./logical-names.md#name-view) zeigt. Eine mit einer Domäne verknüpfte Spalte wird mit ihrem eigenen Datentyp geschrieben, den die Domäne festlegt – siehe [Domänen und Datentypen](./dictionary.md#domains-and-data-types).
 
 ### Autoinkrement {#auto-increment}
 
@@ -181,7 +199,28 @@ Der Standardwert einer Spalte wird so geschrieben, wie Sie ihn eingegeben haben,
 - PostgreSQL klammert nur einen Ausdruck ein, der außerhalb von Klammern ein Wort wie `AT TIME ZONE`, `AND`, `OR`, `IS`, `IN`, `LIKE`, `COLLATE` oder `= ANY` enthält, etwa `(now() AT TIME ZONE 'utc')`.
 - MSSQL, Oracle, Snowflake und Databricks schreiben jeden Standardwert so, wie er eingegeben wurde.
 
+### Kommentare {#comments}
+
+Der Kommentar einer Tabelle oder Spalte, der nicht leer ist, oder der logische Name, den [`Write logical names into empty comments`](#logical-names-as-comments) an seiner Stelle schreibt, wird so geschrieben, wie die jeweilige Datenbank Kommentare schreibt:
+
+- MySQL und MariaDB schreiben ihn inline: Eine Spalte endet mit `COMMENT 'Member ID'`, und die Tabelle schließt mit `) COMMENT 'Members';`, auch im Block für `If not exists` von MySQL.
+- Snowflake schreibt den Kommentar einer Spalte inline, `COMMENT 'Member ID'`, und den der Tabelle in einer eigenen Zeile nach der schließenden Klammer, `COMMENT = 'Members';`.
+- Databricks schreibt den Kommentar einer Spalte inline und den der Tabelle als `COMMENT 'Members';` nach `USING DELTA`.
+- PostgreSQL schreibt `COMMENT ON TABLE member IS 'Members';` und `COMMENT ON COLUMN member.id IS 'Member ID';` direkt nach dem `CREATE TABLE` der Tabelle. Oracle schreibt dieselben Anweisungen nach der Tabelle, ihren Unique-Constraints sowie ihrer Autoinkrement-Sequenz und ihrem Trigger.
+- MSSQL schreibt einen Aufruf pro Tabelle und pro Spalte, nach der Tabelle und ihren Unique-Constraints, jeweils gefolgt von `GO`: `EXECUTE sys.sp_addextendedproperty 'MS_Description', N'Members', 'schema', 'dbo', 'table', 'member'`, bei einer Spalte ergänzt um `'column', 'id'`.  
+  Der Text ist ein National-Literal, `N'…'`, sodass SQL Server Text außerhalb der Codepage der Datenbank, etwa Koreanisch, beibehält, statt Fragezeichen zu speichern.  
+  Steht `Bracket` auf `None`, ergibt eine Tabelle namens `sales.users` das Schema `sales` und die Tabelle `users`, ebenso `[sales].[users]` und `"sales"."users"`, deren eckige Klammern und doppelte Anführungszeichen entfallen. Ein Name ohne Schema liegt in `dbo`. Ein Teil vor dem Schema, wie in `shop.sales.users`, führt die Prozedur dieser Datenbank aus, `shop.sys.sp_addextendedproperty`. Bei jedem anderen Wert von `Bracket` ist der gesamte Name die Tabelle, in `dbo`.
+- SQLite speichert keine Kommentare, daher schreibt es jeden als Zeile mit `--` über das, was er beschreibt: `-- Members` über `CREATE TABLE member` und `-- Member ID` über die Spalte.
+
+Ein Anführungszeichen in einem in Anführungszeichen gesetzten Kommentar wird verdoppelt, wie in `'it''s'` und `N'it''s'`, ebenso eines in den Namen, die die Aufrufe von MSSQL übergeben. Databricks maskiert ein Anführungszeichen und einen Backslash stattdessen mit einem Backslash, wie in `'it\'s'`, der Form, die jede Version von Spark liest. Die Zeilen mit `--` von SQLite stehen nicht in Anführungszeichen, daher behalten sie ein Anführungszeichen so, wie es eingegeben wurde: `-- it's`.  
+Ansonsten wird der Text so geschrieben, wie er eingegeben wurde, einschließlich der Zeilenumbrüche, außer bei zwei Datenbanken:
+
+- Oracle lässt Leerzeilen weg, wobei eine Zeile nur aus Leerzeichen oder Tabulatoren als leer gilt, weil SQL\*Plus eine Anweisung an einer Leerzeile beendet und den Rest überspringt. Ein Tabellenkommentar aus `Members`, einer Leerzeile und `Active only` wird als `COMMENT ON TABLE member IS 'Members` mit `Active only';` in der nächsten Zeile geschrieben.
+- SQLite schreibt jede Folge von Zeilenumbrüchen als ein einziges Leerzeichen, weil ein Zeilenumbruch die Zeile mit `--` beenden und den Rest als SQL ausführen würde. Derselbe Kommentar wird als `-- Members Active only` geschrieben.
+
+Wie diese Kommentare beim Import zurückgelesen werden, wird in [Kommentare](./file-import-export.md#comments) beschrieben.
+
 ## Schreibgeschützte Editoren {#read-only-editors}
 
-In einem Editor mit `readonly` funktioniert die Registerkarte wie gewohnt: `Database` und `Bracket` ändern weiterhin das angezeigte SQL, `Statements`, `Header` und `Tables` funktionieren weiterhin, und `Save file` und `Copy` speichern und kopieren es weiterhin.  
+In einem Editor mit `readonly` funktioniert die Registerkarte wie gewohnt: `Database` und `Bracket` ändern weiterhin das angezeigte SQL, `Statements`, `Header`, `Write logical names into empty comments` und `Tables` funktionieren weiterhin, und `Save file` und `Copy` speichern und kopieren es weiterhin.  
 Nur die beiden Skriptfelder sind schreibgeschützt.

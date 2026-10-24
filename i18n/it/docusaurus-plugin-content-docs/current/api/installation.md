@@ -38,7 +38,8 @@ Il pannello non viene disegnato con una larghezza inferiore a `200px` e lascia a
 
 `setInitialValue('')` avvia un nuovo documento vuoto. Assegnando `value`, invece, il documento viene caricato come modifica e finisce quindi nella cronologia delle modifiche.
 Dalla versione `4.0.0`, `editor.value` è il documento nella forma in cui è contenuto in un file, ed è ciò che va memorizzato. `editor.runtimeValue` è il documento così come lo contiene l’editor, entità rimosse incluse: serve a inizializzare un collaboratore e non finisce mai in un file — vedere [runtimeValue](./erd-editor-element.md#runtimevalue).
-Dalla versione `4.0.0`, in un nuovo documento è inoltre attivo ogni [blocco delle impostazioni](../guide/guides/settings.md#lock): l’area visibile, la scheda, il linguaggio del Generatore di codice, entrambi gli stili dei nomi e il tipo di delimitatore. Scorrere, eseguire lo zoom, cambiare scheda o modificare una di queste impostazioni lascia `editor.value` invariato e non emette alcun evento `change`. Un documento caricato da testo mantiene i blocchi che indica. Un documento che non ne indica nessuno, come qualsiasi file salvato prima della versione `4.0.0`, si apre con tutti i blocchi attivi, con lo zoom al 100% e sulla scheda ERD, qualunque vista e scheda abbia salvato. La sua vista è bloccata sull’origine `0, 0` e, se lì non viene disegnata alcuna parte del diagramma, si apre invece sul diagramma — vedere [setInitialValue](./erd-editor-element.md#setinitialvalue).
+Dalla versione `4.0.0`, in un nuovo documento è inoltre attivo ogni [blocco delle impostazioni](../guide/guides/settings.md#lock): l’area visibile, la scheda, il linguaggio del Generatore di codice, entrambi gli stili dei nomi, il tipo di delimitatore e, dalla versione `4.2.0`, la [Visualizzazione nomi](../guide/guides/logical-names.md#name-view). Scorrere, eseguire lo zoom, cambiare scheda, cambiare la Visualizzazione nomi o modificare una delle altre impostazioni lascia `editor.value` invariato e non emette alcun evento `change`. Un documento caricato da testo mantiene i blocchi che indica. Un documento che non ne indica nessuno, come qualsiasi file salvato prima della versione `4.0.0`, si apre con tutti i blocchi attivi, con lo zoom al 100% e sulla scheda ERD, qualunque area visibile e scheda abbia salvato. La sua area visibile è bloccata sull’origine `0, 0` e, se lì non viene disegnata alcuna parte del diagramma, la vista si apre invece sul diagramma — vedere [setInitialValue](./erd-editor-element.md#setinitialvalue).
+Un file salvato prima della versione `4.2.0` si apre con la Visualizzazione nomi bloccata su `Physical Names`, anche se ha ogni altro blocco disattivato. Un editor della versione `4.0.0` o `4.1.0` mantiene il blocco della Visualizzazione nomi così com’è durante un salvataggio, ma scarta la vista, quindi un file `4.2.0` salvato con la Visualizzazione nomi sbloccata resta sbloccato ma si riapre su `Physical Names`.
 Per il resto dell’API, vedere [ErdEditorElement](./erd-editor-element.md).
 
 ### CDN {#cdn}
@@ -56,7 +57,7 @@ Per il resto dell’API, vedere [ErdEditorElement](./erd-editor-element.md).
 ```
 
 `esm.run` risolve automaticamente le dipendenze esterne del pacchetto, quindi questo codice funziona senza bundler.
-L’URL senza versione fornisce sempre la versione più recente. Fissare una versione — `https://esm.run/@dineug/erd-editor@4.1.0` — se non si vuole che una nuova versione principale arrivi sulla pagina senza preavviso.
+L’URL senza versione fornisce sempre la versione più recente. Fissare una versione — `https://esm.run/@dineug/erd-editor@4.2.0` — se non si vuole che una nuova versione principale arrivi sulla pagina senza preavviso.
 La `4.0.0` è proprio una di queste: una pagina che deve restare alla versione 3.x fissa `@3.10.0` — vedere [Aggiornamento dalla versione 3.x](#upgrading-from-3x).
 
 ### Tag script {#script-tag}
@@ -66,14 +67,14 @@ Dalla versione `3.6.0`, il pacchetto distribuisce anche una build UMD che contie
 
 ```html
 <erd-editor></erd-editor>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@4.1.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@4.2.0"></script>
 <script>
   const editor = document.querySelector('erd-editor');
   editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
 </script>
 ```
 
-L’importazione del file registra `<erd-editor>` allo stesso modo; `window.ErdEditor` contiene le due callback dei file, `ErdEditor.setExportFileCallback` e `ErdEditor.setImportFileCallback`, e, dalla versione `3.9.2`, `ErdEditor.createKeyBindingMap`.
+L’importazione del file registra `<erd-editor>` allo stesso modo; `window.ErdEditor` contiene le due callback dei file, `ErdEditor.setExportFileCallback` e `ErdEditor.setImportFileCallback`, e, dalla versione `3.9.2`, `ErdEditor.createKeyBindingMap`. Dalla versione `4.2.0` contiene anche `ErdEditor.dictionaryRowChords` — vedere [dictionaryRowChords](./erd-editor-element.md#dictionaryrowchords).
 La mappa delle esportazioni continua a indirizzare un bundler verso i moduli ES, quindi un’installazione da npm non utilizza mai questo file.
 
 ### HTML {#html}
@@ -166,17 +167,18 @@ Nella build per [tag script](#script-tag) tutti e tre viaggiano all’interno de
 
 ## Punti di ingresso {#entry-points}
 
-L’importazione di `@dineug/erd-editor` registra `<erd-editor>` come effetto collaterale. Oltre a questo, esporta il tipo dell’elemento, due setter di callback, dalla versione `3.9.2` le associazioni di tasti predefinite con i relativi tipi e dalla versione `4.0.0` i tipi della lingua di visualizzazione e il tipo delle opzioni di `getSchemaSQL()`.
+L’importazione di `@dineug/erd-editor` registra `<erd-editor>` come effetto collaterale. Oltre a questo, esporta il tipo dell’elemento, due setter di callback, dalla versione `3.9.2` le associazioni di tasti predefinite con i relativi tipi, dalla versione `4.0.0` i tipi della lingua di visualizzazione e il tipo delle opzioni di `getSchemaSQL()` e dalla versione `4.2.0` le combinazioni di tasti per le righe della scheda Dizionario.
 
 | Esportazione | Descrizione |
 | --- | --- |
 | `ErdEditorElement` (tipo) | L’interfaccia dell’elemento — vedere [ErdEditorElement](./erd-editor-element.md). |
 | `setExportFileCallback(cb)` | Sostituisce il download del browser, `(blob, { fileName }) => void`. |
-| `setImportFileCallback(cb)` | Sostituisce il selettore di file del browser, `({ type, op, accept, mode }) => void`; `mode` dalla versione `4.0.0`. |
+| `setImportFileCallback(cb)` | Sostituisce il selettore di file del browser, `({ type, op, accept, mode }) => void`; `mode` dalla versione `4.0.0`. Dalla versione `4.2.0` il comando `Import CSV` della scheda Dizionario apre il selettore del browser anche quando è impostata una callback — vedere [Finestre di dialogo dei file](#file-dialogs). |
 | `createKeyBindingMap()` | Restituisce a ogni chiamata le associazioni di tasti predefinite come una nuova `KeyBindingMap` — vedere [createKeyBindingMap](./erd-editor-element.md#createkeybindingmap). |
 | `KeyBindingMap`, `KeyBindingName`, `ShortcutOption` (tipi) | Una mappa delle associazioni, l’unione dei nomi dei suoi comandi e una singola associazione. |
+| `dictionaryRowChords(map)` | Dalla versione `4.2.0`. Restituisce, come un nuovo `ShortcutOption[]` a ogni chiamata, le combinazioni di tasti con cui la griglia della scheda [Dizionario](../guide/guides/dictionary.md#adding-and-deleting-rows) inserisce ed elimina righe in base alla `KeyBindingMap` passata. Quella che inserisce righe sopra, `Alt+Shift+Enter` con le associazioni predefinite, non fa parte di alcuna associazione — vedere [dictionaryRowChords](./erd-editor-element.md#dictionaryrowchords). |
 | `LocaleCode`, `LocaleOption` (tipi) | Dalla versione `4.0.0`. I 25 codici delle lingue di visualizzazione e quegli stessi codici più `'system'`, che è quanto accetta `setLocale()` — vedere [Lingua di visualizzazione](./erd-editor-element.md#display-language). |
-| `SchemaSQLOptions` (tipo) | Dalla versione `4.0.0`. Le opzioni `statements` e `header` accettate da `getSchemaSQL()` — vedere [getSchemaSQL](./erd-editor-element.md#getschemasql). |
+| `SchemaSQLOptions` (tipo) | Dalla versione `4.0.0`. Le opzioni accettate da `getSchemaSQL()`: `statements`, `header` e, dalla versione `4.2.0`, `logicalNameAsComment` — vedere [getSchemaSQL](./erd-editor-element.md#getschemasql). |
 
 `@dineug/erd-editor/engine.js` è un secondo punto di ingresso. Esegue lo store del documento senza DOM, quindi funziona in un Web Worker — vedere [Archiviazione remota](./advanced/remote-storage.md).
 Esporta `createReplicationStore` e il tipo `ReplicationStore`. Dalla versione `3.10.0` esporta anche il tipo `ReplicationChange`, `{ value: string; changed: boolean }`, ricevuto dal gestore `change` di una replica — vedere [on@change](./advanced/remote-storage.md#onchange).
@@ -188,6 +190,7 @@ Dalla versione `3.9.1` ne esiste un terzo, `@dineug/erd-editor/peer.js`: il peer
 
 L’importazione e l’esportazione passano attraverso callback iniettabili, quindi un host senza la finestra di dialogo dei file del browser — ad esempio una webview di un IDE — può fornire la propria.
 Le due operazioni non sono simmetriche: l’esportazione consegna il file finito, mentre l’importazione si limita a richiederne uno, e il contenuto va reinserito autonomamente.
+Dalla versione `4.2.0` il comando `Import CSV` della scheda Dizionario è l’unica importazione che non chiama mai la callback di importazione, il cui `type` non ha alcun valore CSV. Apre sempre il selettore di file del browser, per i file `.csv` — vedere [Importare ed esportare file CSV](../guide/guides/dictionary.md#importing-and-exporting-csv).
 
 `op` è `set` o `diff` — un `diff` va a `setDiffValue()`, qualunque sia il `type`. Altrimenti `type` sceglie il metodo e `accept` contiene le estensioni di quel tipo, pronte da passare a una finestra di dialogo dei file dell’host.
 Dalla versione `4.0.0`, un `set` contiene `mode: 'append'` quando l’utente ha scelto [Importa e aggiungi](../guide/guides/file-import-export.md#import-and-add), e nessun `mode` per una semplice importazione. Inoltrarlo: una callback che lo scarta sostituisce il diagramma a cui l’utente ha chiesto di aggiungere.
@@ -229,8 +232,8 @@ setImportFileCallback(async ({ type, op, accept, mode }) => {
 Prevedere un ramo per ogni `type` gestito e ignorare tutti gli altri.
 Una chiamata `setSchemaJSON()` che sostituisce il documento, come l’assegnazione di `value`, lo svuota prima dell’analisi, quindi indirizzarvi un contenuto che non è un documento `.erd.json` — tramite un `else` generico, oppure perché un `type` aggiunto in seguito è ricaduto in quel ramo — svuota il diagramma invece di importare qualcosa.
 
-Il `fileName` generato dall’editor è `<database name>-<timestamp>` più l’estensione del file, dove il timestamp è l’ora locale nel formato `yyyy-MM-dd'T'HH_mm_ss`. Se il nome del database è vuoto, si usa `unnamed`.
-La callback di esportazione riceve questi file. Dalla versione `4.0.0` tra questi ci sono anche l’SVG e i file del Generatore di codice, e il `.sql` proviene dal pulsante `Save file` della scheda Schema SQL anziché direttamente da `Export`.
+Il `fileName` generato dall’editor è `<database name>-<timestamp>` più l’estensione del file, dove il timestamp è l’ora locale nel formato `yyyy-MM-dd'T'HH_mm_ss`. Se il nome del database è vuoto, si usa `unnamed`. Un file CSV della scheda Dizionario indica il proprio foglio prima dell’estensione, come in `<database name>-<timestamp>-words.csv`.
+La callback di esportazione riceve questi file. Dalla versione `4.0.0` tra questi ci sono anche l’SVG e i file del Generatore di codice, e il `.sql` proviene dal pulsante `Save file` della scheda Schema SQL anziché direttamente da `Export`. Dalla versione `4.2.0` tra questi c’è anche il file CSV della scheda Dizionario.
 
 | File | Estensione | `type` del Blob |
 | --- | --- | --- |
@@ -238,6 +241,7 @@ La callback di esportazione riceve questi file. Dalla versione `4.0.0` tra quest
 | Il pulsante `Save file` della scheda Schema SQL, che salva il testo mostrato nella scheda — vedere [Schema SQL](../guide/guides/schema-sql.md) | `.sql` | nessuno |
 | La finestra di dialogo [Esporta immagine](../guide/guides/file-import-export.md#image) | `.png` o `.svg` | `image/png` o `image/svg+xml` |
 | Il pulsante `Save file` della scheda Generatore di codice — vedere [Generatore di codice](../guide/guides/code-generator.md) | Quella del linguaggio: `.cs`, `.go`, `.java`, `.kt`, `.php`, `.rs`, `.scala`, `.swift`, `.ts`, `.py`, `.aml`, `.dbml`, `.graphql`, `.json` o `.mmd` | nessuno |
+| Il comando `Export CSV` della scheda Dizionario, che salva ogni riga del foglio visualizzato, qualunque cosa elenchi la sua ricerca — vedere [Importare ed esportare file CSV](../guide/guides/dictionary.md#importing-and-exporting-csv) | `.csv` | `text/csv` |
 
 Un host che sceglie un gestore in base all’estensione deve averne uno per ciascuno di essi.
 
@@ -261,5 +265,5 @@ La `4.0.0` è una versione principale. Quando si migra una pagina dalla versione
 - La callback di importazione riceve `mode: 'append'` per Importa e aggiungi, e una callback deve inoltrarlo. La callback di esportazione ora riceve anche i file `.svg` e quelli del Generatore di codice, e `Export` ▸ `Schema SQL` apre la scheda Schema SQL invece di salvare, quindi il `.sql` arriva solo dal pulsante `Save file` di quella scheda — vedere [Finestre di dialogo dei file](#file-dialogs).
 - `Delete` e `Backspace` sono associati al nuovo comando `removeSelection`. Quando l’editor ha il focus al di fuori di un campo di testo, il comportamento predefinito del tasto viene impedito in ogni scheda e, nella scheda ERD, la selezione viene rimossa. `KeyBindingName` e `KeyBindingMap` ora lo includono, e `setKeyBindingMap({ removeSelection: [] })` lascia entrambi i tasti alla pagina — vedere [setKeyBindingMap](./erd-editor-element.md#setkeybindingmap).
 - `ThemeOptions.appearance` accetta anche `'system'`, l’opzione `System` del generatore di temi, che viene impostata attivando `systemDarkMode`. `changePresetTheme` segnala `'system'` finché è selezionato, quindi memorizzarlo così com’è e ripassarlo a `setPresetTheme`. Con `systemDarkMode` attivo, un `setPresetTheme()` con `'light'` o `'dark'` ora resta valido invece di essere sovrascritto dal successivo cambiamento del sistema operativo — vedere [systemDarkMode](./erd-editor-element.md#systemdarkmode) e [changePresetTheme](./erd-editor-element.md#changepresettheme).
-- `@dineug/erd-editor-mcp` `1.0.0`, l’estensione per VS Code `4.0.0` o successiva e i plugin per Obsidian e JetBrains `1.0.0` o successivi usano la versione 2 del protocollo dell’hub. Il server `1.0.0` e una versione precedente dell’editor che serve gli agenti, oppure un server precedente e uno di questi editor, si rifiutano a vicenda con `protocolMismatch`, indicando la parte da aggiornare — vedere [Aggiornamento](../mcp/installation.md#updating).
+- `@dineug/erd-editor-mcp` `1.0.0` o successiva, l’estensione per VS Code `4.0.0` o successiva e i plugin per Obsidian e JetBrains `1.0.0` o successivi usano la versione 2 del protocollo dell’hub. Il server `1.0.0` o successivo e una versione precedente dell’editor che serve gli agenti, oppure un server precedente e uno di questi editor, si rifiutano a vicenda con `protocolMismatch`, indicando la parte da aggiornare — vedere [Aggiornamento](../mcp/installation.md#updating).
 - Un URL CDN senza versione ora fornisce la versione 4.x più recente. Fissare `@3.10.0` per restare alla versione 3.x — vedere [CDN](#cdn).

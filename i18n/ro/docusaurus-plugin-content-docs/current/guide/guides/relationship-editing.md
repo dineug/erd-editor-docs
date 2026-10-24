@@ -1,6 +1,6 @@
 ---
-sidebar_position: 6
-description: Ștergeți o relație, schimbați-i tipul, setați-i acțiunile ON DELETE și ON UPDATE, mapați-o pe coloane existente cu caseta de dialog Mapare coloane, citiți notația conectorului, lucrați cu relații N:M și identificatoare și aflați cum se denumesc noile coloane cheie străină.
+sidebar_position: 7
+description: Ștergeți o relație, schimbați-i tipul, setați-i acțiunile ON DELETE și ON UPDATE, mapați-o pe coloane existente cu caseta de dialog Mapare coloane, citiți notația conectorului, lucrați cu relații N:M și identificatoare și aflați ce copiază noile coloane cheie străină de la cheia lor și cum se denumesc.
 ---
 
 # Editarea relațiilor
@@ -85,6 +85,9 @@ Se deschide în două moduri:
 
 Subtitlul casetei de dialog numește cele două tabele și tipul relației, de exemplu `users → posts · One N`. Aici tipul este doar afișat, nu și schimbat (folosiți [Schimbarea tipului](#type-change)).
 
+În toată caseta de dialog, inclusiv în mențiunile și liniile de sub rânduri și în notificarea cu care se închide, tabelele și coloanele sunt numite așa cum le numește [modul de afișare a numelor](./logical-names.md#beyond-the-canvas).  
+Trei lucruri rămân fizice: fiecare tip de date, care este al coloanei și niciodată numele domeniului ei; `New column: <name>`, care arată numele pe care îl va primi coloana nouă; și rândurile care pornesc completate cu butonul `Map`, asociate după nume, niciodată după numele logic.
+
 Selectorul `References` alege cheia spre care indică relația: `Primary Key`, cu coloanele ei în ordinea din tabel, apoi `Unique: <column>` pentru fiecare coloană marcată `Unique`. Selectorul apare doar când există mai mult de o opțiune.  
 Un index unic nu contează aici drept cheie, iar o coloană marcată `Unique` care constituie întreaga cheie primară nu este listată de două ori.  
 Alegerea altei chei reconstruiește rândurile. Un rând își păstrează coloana aleasă cât timp aceasta se află încă în tabelul copil.
@@ -121,10 +124,10 @@ Dacă între timp se schimbă coloanele relației sau cheia pe care s-a deschis,
 Ce scriu butoanele `Map` și `Save`:
 
 - Butonul `Map` adaugă relația cu `On Delete` și `On Update` la `Not set`. Butonul `Save` schimbă doar coloanele relației, îndreptând partea ei părinte spre cheia aleasă în `References`, și îi păstrează tipul și acțiunile ON DELETE și ON UPDATE.
-- Un rând `New column` adaugă o coloană la sfârșitul tabelului copil, la fel ca trasarea: `NOT NULL`, denumită după cheia ei, cu tipul de date, valoarea implicită și comentariul cheii (consultați [Relații identificatoare](#identifying-relationships)).
-- O coloană aleasă nu este niciodată redenumită, iar indicatorii ei `Not Null`, cheie primară și `Unique`, valoarea implicită și comentariul rămân așa cum sunt. Tipul ei de date se schimbă doar cât timp setarea `Relationship DataType Sync` este activată și coloana părinte are un tip de date: preia tipul pe care coloana părinte îl dă unei chei străine, tipul întreg pentru o cheie de tip serial, ca la o coloană nouă, iar modificarea se propagă de-a lungul relațiilor așa cum o face sincronizarea.
+- Un rând `New column` adaugă o coloană la sfârșitul tabelului copil, la fel ca trasarea: `NOT NULL`, denumită după cheia ei, cu tipul de date, valoarea implicită, comentariul, numele logic și domeniul cheii (consultați [Relații identificatoare](#identifying-relationships)).
+- O coloană aleasă nu este niciodată redenumită sau legată de domeniul cheii, iar indicatorii ei `Not Null`, cheie primară și `Unique`, valoarea implicită, comentariul și numele logic rămân așa cum sunt. Tipul ei de date se schimbă doar cât timp setarea `Relationship DataType Sync` este activată și coloana părinte are un tip de date: preia tipul pe care coloana părinte îl dă unei chei străine, tipul întreg pentru o cheie de tip serial, ca la o coloană nouă, iar modificarea se propagă de-a lungul relațiilor așa cum o face sincronizarea. Modificarea elimină legătura cu [domeniul](./dictionary.md#domains-and-data-types) pentru fiecare coloană căreia îi schimbă tipul, aleasă sau atinsă de-a lungul relațiilor, când noul ei tip diferă de cel al domeniului.
 - O coloană pe care maparea nu o mai folosește rămâne în tabelul copil și nu mai este marcată drept cheie străină, cu excepția cazului în care o altă relație se termină încă pe ea.
-- Tot ce scrie o singură apăsare pe `Map` sau `Save`, inclusiv coloanele noi și schimbările de tip, reprezintă un singur pas de anulare.
+- Tot ce scrie o singură apăsare pe `Map` sau `Save` – inclusiv coloanele noi, schimbările de tip și eliminarea legăturilor cu domeniile – reprezintă un singur pas de anulare.
 
 Dacă relația este identificatoare și cum este desenat capătul ei părinte se deduc din coloanele copil mapate, ca la orice relație. Maparea pe coloanele cheii primare ale tabelului copil o face imediat identificatoare, iar maparea pe o coloană care permite `NULL` pune un cerc la capătul părinte (consultați [Citirea unui conector](#reading-a-connector)).  
 Cheia străină din codul Schemă SQL referă cheia pe care ați ales-o, de exemplu `REFERENCES vehicle (vin)` pentru o cheie `Unique`.
@@ -156,9 +159,10 @@ Consultați [Importarea sau exportarea fișierelor](./file-import-export.md).
 ## Relații identificatoare {#identifying-relationships}
 
 Trasarea unei relații prin clic pe tabelul copil sau cu `Create new columns` copiază fiecare cheie primară a tabelului părinte în tabelul copil ca o coloană cheie străină `NOT NULL`, astfel încât o relație nouă pornește ca neidentificatoare.  
-Copia preia tipul de date, valoarea implicită și comentariul cheii, dar nu și `Unique` sau `Auto Increment`, și este denumită conform descrierii din [Numele coloanelor cheie străină](#foreign-key-column-names).  
+Copia preia tipul de date, valoarea implicită, comentariul și numele logic ale cheii, dar nu și `Unique` sau `Auto Increment`, și este denumită conform descrierii din [Numele coloanelor cheie străină](#foreign-key-column-names).  
 O cheie de tip serial este excepția în privința tipului de date: copia ei preia tipul întreg pe care îl stochează tipul serial. Indiferent de baza de date, `smallserial` și `serial2` dau `smallint`, `serial4` dă `integer`, iar `bigserial` și `serial8` dau `bigint`. Un `serial` simplu dă `integer` în PostgreSQL și `bigint unsigned` în MySQL și MariaDB și rămâne `serial` în orice altă bază de date.  
 Contează doar numele întreg al tipului, indiferent de majuscule, astfel încât `serial(4)` este copiat așa cum este scris. Un tip scris cu majuscule dă majuscule: `SERIAL` dă `INTEGER` în PostgreSQL. O coloană cheie străină care are deja tipul `serial` într-o diagramă salvată își păstrează acest tip.  
+Copia este legată și de [domeniul](./dictionary.md#domains-and-data-types) cheii, cu condiția ca foaia `Domains` să listeze acel domeniu în momentul copierii și copia să păstreze tipul de date al cheii. Astfel, copia unei chei de tip serial care preia un tip întreg nu leagă niciun domeniu, în timp ce un `serial` simplu păstrat ca `serial` îl leagă.  
 Pentru a face relația identificatoare, setați acele coloane cheie străină din tabelul copil drept chei primare: selectați-le pe toate și apăsați o dată `Alt + K` (Windows/Linux) sau `⌥ + K` (Mac) ori alegeți elementul `Primary Key` din meniul contextual al tabelului, care devine `Primary Key on selected columns` când sunt selectate două sau mai multe (consultați [Cheie primară pe coloană](./table-editing.md#column-primary-key)).
 
 ![Comutarea cheii primare pe product_id cu Alt + K, care face conectorul continuu, apoi întrerupt](/img/demo-identifying-relationship.webp)
@@ -193,7 +197,10 @@ Acest lucru include cheia primară pe care editorul o adaugă unui tabel părint
 Numele se stabilesc când este trasată relația. Redenumirea ulterioară a tabelului părinte sau a cheii lui nu le redenumește.  
 Rândurile `New column` din caseta de dialog [Mapare coloane](#map-columns) sunt denumite după aceleași reguli, iar lista arată fiecare nume înainte să-l alegeți.  
 Relațiile care sosesc cu coloanele deja existente – dintr-un import, o lipire, o duplicare sau din caseta de dialog Mapare coloane când asociază coloane existente – păstrează numele pe care le au acele coloane.  
-Un agent de programare care adaugă o relație cu instrumentul `erd_add_relationship` obține aceleași nume și tipuri de date (consultați [Instrumente](../../mcp/tools.md#relationships)).
+Un agent de programare care adaugă o relație cu instrumentul `erd_add_relationship` obține aceleași nume, tipuri de date, nume logice și domenii (consultați [Instrumente](../../mcp/tools.md#relationships)).
+
+O coloană cheie străină este denumită după cheia ei, niciodată după numele logic pe care îl copiază, iar numele ei este considerat personalizat: un nume logic scris ulterior pe coloană lasă numele așa cum este, cu excepția cazului în care numele este gol (consultați [Nume personalizate](./dictionary.md#names-of-your-own)).  
+De aceea, cât timp numele logic copiat corespunde unui termen care dă alt nume, foaia `Checks` listează coloana la [`Physical name mismatch`](./dictionary.md#what-each-check-finds). Derivarea din nou a numelui ei fizic o redenumește după dicționare, cu excepția cazului în care o altă coloană a tabelului copil are deja, indiferent de majuscule, numele pe care îl dau acestea (consultați [Derivare din nou a numelor fizice](./dictionary.md#derive-physical-names-again)).
 
 ## Citirea unui conector {#reading-a-connector}
 

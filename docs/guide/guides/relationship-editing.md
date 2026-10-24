@@ -1,6 +1,6 @@
 ---
-sidebar_position: 6
-description: Delete a relationship, change its type, set its ON DELETE and ON UPDATE actions, map it onto existing columns with Map Columns, read the connector notation, work with N:M and identifying relationships, and see how new foreign key columns are named.
+sidebar_position: 7
+description: Delete a relationship, change its type, set its ON DELETE and ON UPDATE actions, map it onto existing columns with Map Columns, read the connector notation, work with N:M and identifying relationships, and see what new foreign key columns copy from their key and how they are named.
 ---
 
 # Relationship Editing
@@ -85,6 +85,9 @@ It opens in two ways:
 
 The dialog's subtitle names the two tables and the relationship type, such as `users → posts · One N`. The type is shown here but not changed — use [Type Change](#type-change).
 
+Throughout the dialog, the notes and lines under the rows and the toast it closes with included, tables and columns are named as the [Name View](./logical-names.md#beyond-the-canvas) names them.  
+Three things stay physical: each data type, which is the column's own and never its domain's name; `New column: <name>`, which shows the name the new column will get; and the rows `Map` starts filled, which it pairs by name, never by logical name.
+
 `References` chooses the key the relationship points at: `Primary Key`, with its columns in table order, then `Unique: <column>` for each column marked `Unique`. It shows only when there is more than one choice.  
 A unique index does not count as a key here, and a `Unique` column that is the whole primary key is not listed twice.  
 Choosing another key rebuilds the rows. A row keeps its pick while that column is still in the child table.
@@ -121,10 +124,10 @@ If the relationship's columns or the key it opened on change meanwhile, it adds 
 What `Map` and `Save` write:
 
 - `Map` adds the relationship with `On Delete` and `On Update` at `Not set`. `Save` changes only the relationship's columns, pointing its parent side at the key chosen in `References`, and keeps its type and its ON DELETE and ON UPDATE.
-- A `New column` row adds a column at the end of the child table, as drawing does: `NOT NULL`, named after its key, with the key's data type, default, and comment — see [Identifying Relationships](#identifying-relationships).
-- A picked column is never renamed, and its `Not Null`, primary key, `Unique`, default, and comment stay as they are. Its data type changes only while `Relationship DataType Sync` is on and the parent column has a data type: it takes the type the parent column gives a foreign key, the integer type for a serial key as for a new column, and the change carries on along the relationships the way the sync does.
+- A `New column` row adds a column at the end of the child table, as drawing does: `NOT NULL`, named after its key, with the key's data type, default, comment, logical name, and domain — see [Identifying Relationships](#identifying-relationships).
+- A picked column is never renamed or linked to the key's domain, and its `Not Null`, primary key, `Unique`, default, comment, and logical name stay as they are. Its data type changes only while `Relationship DataType Sync` is on and the parent column has a data type: it takes the type the parent column gives a foreign key, the integer type for a serial key as for a new column, and the change carries on along the relationships the way the sync does. Every column the change retypes, picked or reached along the relationships, is unlinked from its [domain](./dictionary.md#domains-and-data-types) when its new type differs from the domain's.
 - A column the mapping stops using stays in the child table, and is no longer marked as a foreign key unless another relationship still ends on it.
-- Everything one `Map` or `Save` writes, new columns and type changes included, is one undo step.
+- Everything one `Map` or `Save` writes — new columns, type changes, and domain unlinks included — is one undo step.
 
 Whether the relationship is identifying, and how its parent end is drawn, are read off the mapped child columns as for any relationship. Mapping onto the child's primary key columns makes it identifying at once, and mapping onto a column that allows `NULL` puts a ring at the parent end — see [Reading a Connector](#reading-a-connector).  
 Schema SQL's foreign key references the key you chose, such as `REFERENCES vehicle (vin)` for a `Unique` key.
@@ -156,9 +159,10 @@ See [Importing or Exporting Files](./file-import-export.md).
 ## Identifying Relationships
 
 Drawing a relationship by clicking the child table, or with `Create new columns`, copies each primary key of the parent table onto the child table as a `NOT NULL` foreign key column, so a new relationship starts out non-identifying.  
-The copy takes the key's data type, default, and comment, but not `Unique` or `Auto Increment`, and is named as described in [Foreign Key Column Names](#foreign-key-column-names).  
+The copy takes the key's data type, default, comment, and logical name, but not `Unique` or `Auto Increment`, and is named as described in [Foreign Key Column Names](#foreign-key-column-names).  
 A serial key is the exception to the data type: its copy takes the integer type the serial stores. Under any database, `smallserial` and `serial2` give `smallint`, `serial4` gives `integer`, and `bigserial` and `serial8` give `bigint`. A bare `serial` gives `integer` under PostgreSQL and `bigint unsigned` under MySQL and MariaDB, and stays `serial` under any other database.  
 Only the whole type name counts, ignoring case, so `serial(4)` is copied as written. A type written in capitals gives capitals: `SERIAL` gives `INTEGER` under PostgreSQL. A foreign key column already typed `serial` in a saved diagram keeps that type.  
+The copy is also linked to the key's [domain](./dictionary.md#domains-and-data-types), provided the `Domains` sheet lists that domain when the copy is made and the copy keeps the key's data type. So a serial key's copy that takes an integer type links no domain, while a bare `serial` kept as `serial` links it.  
 To make the relationship identifying, set those foreign key columns on the child table as primary keys: select them all and press `Alt + K` (Windows/Linux) or `⌥ + K` (Mac) once, or choose `Primary Key` in the table context menu, which reads `Primary Key on selected columns` while two or more are selected — see [Column Primary Key](./table-editing.md#column-primary-key).
 
 ![Toggling product_id as a primary key with Alt + K, turning its connector solid, then dashed](/img/demo-identifying-relationship.webp)
@@ -193,7 +197,10 @@ That includes the primary key the editor adds to a parent that has none, unless 
 The names are set when the relationship is drawn. Renaming the parent table or its key later does not rename them.  
 The `New column` rows of [Map Columns](#map-columns) are named by the same rules, and the list shows each name before you choose it.  
 Relationships that arrive with their columns already in place — from an import, a paste, a duplicate, or Map Columns pairing existing columns — keep the names those columns have.  
-A coding agent adding a relationship with `erd_add_relationship` gets the same names and data types — see [Tools](../../mcp/tools.md#relationships).
+A coding agent adding a relationship with `erd_add_relationship` gets the same names, data types, logical names, and domains — see [Tools](../../mcp/tools.md#relationships).
+
+A foreign key column is named after its key, never after the logical name it copies, and its name counts as one you wrote: a logical name written on the column later leaves the name as it is, unless the name is empty — see [Names of Your Own](./dictionary.md#names-of-your-own).  
+While the copied logical name matches a term that gives another name, the `Checks` sheet therefore lists the column under [`Physical name mismatch`](./dictionary.md#what-each-check-finds). Deriving its physical name again renames it from the dictionaries, unless another column of the child table already holds the name they give, ignoring case — see [Derive Physical Names Again](./dictionary.md#derive-physical-names-again).
 
 ## Reading a Connector
 

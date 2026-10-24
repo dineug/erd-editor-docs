@@ -1,5 +1,5 @@
 ---
-sidebar_position: 15
+sidebar_position: 17
 description: Editorearen 25 bistaratze-hizkuntzak, eskuinetik ezkerrerako antolaketa, gai-sortzailearen System, Light eta Dark itxurak eta haren koloreak, eta ostalari bakoitzak non gordetzen dituen.
 ---
 
@@ -13,8 +13,10 @@ Web aplikazioak, Google Drive zerbitzuak, VS Code editoreak, JetBrains IDEek eta
 
 ## Bistaratze-hizkuntza {#display-language}
 
-Hizkuntzak editorearen beraren testua hartzen du barne: tresna-barrako argibideak, laster-menuak, Bilaketa azkarra, panelak eta elkarrizketa-koadroak, Ezarpenak fitxa, [ongietorri-pantaila](./editing-start.md#welcome-screen), jakinarazpenak eta mezuak, eta izen, datu mota, balio lehenetsi edo iruzkin huts batek oihalean eta esportatutako irudi batean erakusten duen leku-marka.  
-Hauek idatzita dauden bezala uzten ditu hizkuntza guztietan: zure taulen eta zutabeen izenak, iruzkinak eta oharrak; datu-base hornitzaileak, Kode-sortzailearen lengoaiak eta fitxategi-formatuak; datu motak, SQL gako-hitzak eta `ON DELETE` eta `ON UPDATE` ekintzak; SQL eskemaren `Create`, `If not exists`, `Drop & re-create`, `USE` eta `CREATE + USE` aukerak; `PK`, `FK`, `UQ`, `AI`, `NN`, `N-N`, `NULL` eta `AK1.1` markak; [Diferentzia-ikustailearen](./table-related-functions.md#diff-viewer) `A`, `M`, `D`, `R` eta `~` egoera-letrak; izenen idazkeraren eta `Bracket` ezarpenaren aukerak, `None` izan ezik; teklatuko teklen izenak; gai-sortzailearen koloreen izenak; sortutako SQLa eta kodea; eta esportatutako fitxategien izenak.
+Hizkuntzak editorearen beraren testua hartzen du barne: tresna-barrako argibideak, oihaleko tresna-barrako eta Fluxuaren tresna-barrako [`Name View`](./logical-names.md#switching-the-view) botoia, Fluxuaren errenkaden bistaratzearen menua, laster-menuak, Bilaketa azkarra, panelak eta elkarrizketa-koadroak, [Hiztegia](./dictionary.md) fitxa (haren orrien izenak, zutabe-goiburuak, tresnak, menua, egoera-lerroa eta `Checks` orriak zerrendatzen dituen egiaztapen motak), Ezarpenak fitxa, [ongietorri-pantaila](./editing-start.md#welcome-screen), jakinarazpenak eta mezuak, eta izen, izen logiko, datu mota, domeinu, balio lehenetsi edo iruzkin huts batek oihalean eta esportatutako irudi batean erakusten duen leku-marka.  
+Hauek idatzita dauden bezala uzten ditu hizkuntza guztietan: zure taulen eta zutabeen izenak, [izen logikoak](./logical-names.md), iruzkinak eta oharrak; Hiztegia fitxan gordetzen dituzun hitzak, terminoak eta domeinuak; datu-base hornitzaileak, Kode-sortzailearen lengoaiak eta fitxategi-formatuak; datu motak, SQL gako-hitzak eta `ON DELETE` eta `ON UPDATE` ekintzak; SQL eskemaren `Create`, `If not exists`, `Drop & re-create`, `USE` eta `CREATE + USE` aukerak; `PK`, `FK`, `UQ`, `AI`, `NN`, `N-N`, `NULL` eta `AK1.1` markak; [Diferentzia-ikustailearen](./table-related-functions.md#diff-viewer) `A`, `M`, `D`, `R` eta `~` egoera-letrak; izenen idazkeraren eta `Bracket` ezarpenaren aukerak, `None` izan ezik; teklatuko teklen izenak; gai-sortzailearen koloreen izenak; sortutako SQLa eta kodea; esportatutako hiztegi-CSV baten goiburu-errenkada; eta esportatutako fitxategien izenak.
+
+Hiztegia fitxan, ordenatze batek errenkadak bistaratze-hizkuntzaren ordena alfabetikoan ordenatzen ditu, eta `Checks` orriaren bilaketak gelaxkak bistaratze-hizkuntzan irakurtzen diren bezala alderatzen ditu. Ikus [Ordenatzea](./dictionary.md#sorting) eta [Bilatzea](./dictionary.md#searching).
 
 Hizkuntzak, hautatzaileak zerrendatzen dituen ordenan:
 
@@ -84,11 +86,12 @@ Eskualde-aldaera bat dagokion hizkuntzatzat hartzen da; beraz, `de-AT` kodeak De
 
 ### Eskuinetik ezkerrera idazten diren hizkuntzak {#right-to-left-languages}
 
-עברית (hebreera), العربية (arabiera) eta فارسی (persiera) hizkuntzek editorea eskuinetik ezkerrera antolatzen dute: tresna-barra, menuak, panelak eta elkarrizketa-koadroak, Bilaketa azkarra eta Ezarpenak fitxa ispilatuta agertzen dira. Laster-menu baten azpimenuak ezkerrera irekitzen dira, eta tresna-barrako Undo eta Redo ikonoak trukatu egiten dira, Undo ikonoak eskuinetik ezkerrera irakurtzen duenarentzat atzerantz seinala dezan.
+עברית (hebreera), العربية (arabiera) eta فارسی (persiera) hizkuntzek editorea eskuinetik ezkerrera antolatzen dute: tresna-barra, menuak, panelak eta elkarrizketa-koadroak, Bilaketa azkarra, Hiztegia fitxako barra eta egoera-lerroa, eta Ezarpenak fitxa ispilatuta agertzen dira. Laster-menu baten azpimenuak ezkerrera irekitzen dira, eta tresna-barrako Undo eta Redo ikonoak trukatu egiten dira, Undo ikonoak eskuinetik ezkerrera irakurtzen duenarentzat atzerantz seinala dezan.
 
-Diagrama bera ez da inoiz ispilatzen. Oihala, bere taula, zutabe, erlazio eta oharrekin, ezkerretik eskuinera geratzen da, baita minimapa, korritze-barrak, [oihaleko tresna-barra](./table-related-functions.md#canvas-toolbar), [Bisualizazioa](./visualization.md) eta haren tresna-barra, datu moten gelaxkak, SQL eskema eta Kode-sortzailea fitxetako kodea, kolore-hautatzailea, Diferentzia-ikustailearen bi aldeak, Denbora-bidaia eta Antolaketa automatikoaren aurrebista ere.  
+Diagrama bera ez da inoiz ispilatzen. Oihala, bere taula, zutabe, erlazio eta oharrekin, ezkerretik eskuinera geratzen da, baita minimapa, korritze-barrak, [oihaleko tresna-barra](./table-related-functions.md#canvas-toolbar), [Bisualizazioa](./visualization.md) eta haren tresna-barra, datu moten gelaxkak, Hiztegia fitxako orriak eta termino baten domeinu-zerrenda, SQL eskema eta Kode-sortzailea fitxetako kodea, kolore-hautatzailea, Diferentzia-ikustailearen bi aldeak, Denbora-bidaia eta Antolaketa automatikoaren aurrebista ere.  
+Fluxuan, Bisualizazioaren tresna-barrako bi geziek beren lekuak mantentzen dituzte eta egiten dutena trukatzen dute: eskuinera seinalatzen duen gezia `Previous table` da, eta ezkerrera seinalatzen duena `Next table`; beraz, atzera egiteak Undo ikonoaren norabidea seinalatzen du. Desegiteko eta berregiteko teklek atzera eta aurrera egiten jarraitzen dute. Ikus [Aurreko taula eta hurrengo taula](./visualization.md#previous-table-and-next-table).  
 [Arakatzailea](./explorer.md#beside-the-canvas) oihalaren ezkerrean geratzen da, eta Diferentzia-ikustailearen aldaketen zuhaitza ikustailearen ezkerrean, bakoitza bere arrastatzeko ertza eskuinean duela. Barruan, biak eskuinetik ezkerrera irakurtzen dira: haien eremuak eta errenkadak ispilatuta daude, errenkadak eskuinetik koskatzen dira, eta bi zuhaitzetan `←` teklak errenkada bat zabaltzen du edo fokua haren lehen umera eramaten du, `→` teklak, berriz, tolestu egiten du edo fokua haren gurasora eramaten du. Ikus [Arakatzaileko teklak](./explorer.md#keys-in-the-explorer).  
-Izenek, iruzkinek eta idatzi duzun beste edozein testuk beren norabidea mantentzen dute; beraz, hebreerazko, arabierazko edo persierazko izen bat eskuinetik ezkerrera irakurtzen da oihalean ere.
+Izenek, iruzkinek eta idatzi duzun beste edozein testuk beren norabidea mantentzen dute; beraz, hebreerazko, arabierazko edo persierazko izen bat eskuinetik ezkerrera irakurtzen da oihalean ere. Hiztegiaren jakinarazpen batek zerrendatzen duen izen bakoitzak ere bere norabidea mantentzen du.
 
 ## Gaia {#theme}
 

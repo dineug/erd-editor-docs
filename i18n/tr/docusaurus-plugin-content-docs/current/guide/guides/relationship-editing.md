@@ -1,6 +1,6 @@
 ---
-sidebar_position: 6
-description: Bir ilişkiyi silme, türünü değiştirme, ON DELETE ve ON UPDATE eylemlerini ayarlama, “Sütunları eşle” iletişim kutusuyla mevcut sütunlara eşleme, bağlantı çizgisi gösterimini okuma, N:M ve tanımlayıcı ilişkilerle çalışma ve yeni yabancı anahtar sütunlarının nasıl adlandırıldığını görme.
+sidebar_position: 7
+description: Bir ilişkiyi silme, türünü değiştirme, ON DELETE ve ON UPDATE eylemlerini ayarlama, “Sütunları eşle” iletişim kutusuyla mevcut sütunlara eşleme, bağlantı çizgisi gösterimini okuma, N:M ve tanımlayıcı ilişkilerle çalışma ve yeni yabancı anahtar sütunlarının anahtarlarından neleri kopyaladığını ve nasıl adlandırıldığını görme.
 ---
 
 # İlişki düzenleme
@@ -85,6 +85,9 @@ Her satır ya alt tablonun zaten sahip olduğu bir sütunu kullanır ya da yeni 
 
 İletişim kutusunun alt başlığı, `users → posts · One N` gibi, iki tabloyu ve ilişki türünü belirtir. Tür burada gösterilir ancak değiştirilmez. Türü değiştirmek için [Tür değiştirme](#type-change) bölümüne bakın.
 
+İletişim kutusunun her yerinde, satırların altındaki bilgi notları ve iletiler ile kapanırken gösterdiği bildirim dahil, tablolar ve sütunlar [Ad görünümünün](./logical-names.md#beyond-the-canvas) adlandırdığı gibi adlandırılır.  
+Üç şey fiziksel kalır: her veri türü, çünkü bu tür sütunun kendisine aittir ve hiçbir zaman değer alanının adı değildir; yeni sütunun alacağı adı gösteren `New column: <name>`; `Map` düğmesinin dolu başlattığı ve asla mantıksal ada göre değil, ada göre eşleştirdiği satırlar.
+
 `References` alanı, ilişkinin işaret ettiği anahtarı seçer: önce sütunları tablo sırasıyla gösterilen `Primary Key`, ardından `Unique` olarak işaretli her sütun için `Unique: <column>`. Yalnızca birden fazla seçenek olduğunda gösterilir.  
 Benzersiz bir dizin burada anahtar sayılmaz ve birincil anahtarın tamamı olan bir `Unique` sütunu iki kez listelenmez.  
 Başka bir anahtar seçmek satırları yeniden oluşturur. Bir satır, seçtiği sütun alt tabloda bulunduğu sürece seçimini korur.
@@ -121,10 +124,10 @@ Bu sırada ilişkinin sütunları veya iletişim kutusunun açıldığında seç
 `Map` ve `Save` düğmelerinin yazdıkları:
 
 - `Map` ilişkiyi, `On Delete` ve `On Update` değerleri `Not set` olacak şekilde ekler. `Save` yalnızca ilişkinin sütunlarını değiştirir, üst tablo tarafını `References` alanında seçilen anahtara yönlendirir ve ilişkinin türünü, ON DELETE ve ON UPDATE eylemlerini korur.
-- Bir `New column` satırı, ilişki çizmenin yaptığı gibi alt tablonun sonuna bir sütun ekler: `NOT NULL`, anahtarına göre adlandırılmış, anahtarın veri türü, varsayılan değeri ve açıklamasıyla. [Tanımlayıcı ilişkiler](#identifying-relationships) bölümüne bakın.
-- Seçilen bir sütun asla yeniden adlandırılmaz ve `Not Null`, birincil anahtar, `Unique`, varsayılan değer ve açıklama ayarları olduğu gibi kalır. Veri türü yalnızca `Relationship DataType Sync` açıkken ve üst tablo sütununun bir veri türü varken değişir: Sütun, üst tablo sütununun bir yabancı anahtara verdiği türü alır – bir serial anahtar için bu, yeni bir sütunda olduğu gibi tamsayı türüdür – ve değişiklik, eşitlemenin yaptığı gibi ilişkiler boyunca ilerler.
+- Bir `New column` satırı, ilişki çizmenin yaptığı gibi alt tablonun sonuna bir sütun ekler: `NOT NULL`, anahtarına göre adlandırılmış, anahtarın veri türü, varsayılan değeri, açıklaması, mantıksal adı ve değer alanıyla. [Tanımlayıcı ilişkiler](#identifying-relationships) bölümüne bakın.
+- Seçilen bir sütun asla yeniden adlandırılmaz veya anahtarın değer alanına bağlanmaz, `Not Null`, birincil anahtar ve `Unique` ayarları, varsayılan değeri, açıklaması ve mantıksal adı da olduğu gibi kalır. Veri türü yalnızca `Relationship DataType Sync` açıkken ve üst tablo sütununun bir veri türü varken değişir: Sütun, üst tablo sütununun bir yabancı anahtara verdiği türü alır – bir serial anahtar için bu, yeni bir sütunda olduğu gibi tamsayı türüdür – ve değişiklik, eşitlemenin yaptığı gibi ilişkiler boyunca ilerler. Değişikliğin türünü değiştirdiği her sütunun, ister seçilmiş ister ilişkiler boyunca ulaşılmış olsun, yeni türü değer alanınınkinden farklı olduğunda [değer alanıyla](./dictionary.md#domains-and-data-types) bağlantısı kaldırılır.
 - Eşlemenin artık kullanmadığı bir sütun alt tabloda kalır ve başka bir ilişki hâlâ onda sonlanmıyorsa artık yabancı anahtar olarak işaretlenmez.
-- Tek bir `Map` veya `Save` işleminin yazdığı her şey, yeni sütunlar ve tür değişiklikleri de dahil, tek bir geri alma adımıdır.
+- Tek bir `Map` veya `Save` işleminin yazdığı her şey – yeni sütunlar, tür değişiklikleri ve değer alanı bağlantılarının kaldırılması dahil – tek bir geri alma adımıdır.
 
 İlişkinin tanımlayıcı olup olmadığı ve üst tablo ucunun nasıl çizildiği, her ilişkide olduğu gibi eşlenen alt tablo sütunlarından belirlenir. Alt tablonun birincil anahtar sütunlarına eşlemek ilişkiyi hemen tanımlayıcı yapar ve `NULL` değerine izin veren bir sütuna eşlemek üst tablo ucuna bir halka koyar. [Bağlantı çizgisini okuma](#reading-a-connector) bölümüne bakın.  
 Şema SQL'deki yabancı anahtar, bir `Unique` anahtar için `REFERENCES vehicle (vin)` gibi, seçtiğiniz anahtara başvurur.
@@ -156,9 +159,10 @@ GraphQL, DBML veya AML içe aktarmak eşleme tablosunu sizin için oluşturur.
 ## Tanımlayıcı ilişkiler {#identifying-relationships}
 
 Alt tabloya tıklayarak veya `Create new columns` seçeneğiyle bir ilişki çizmek, üst tablonun her birincil anahtarını alt tabloya `NOT NULL` bir yabancı anahtar sütunu olarak kopyalar, bu nedenle yeni bir ilişki tanımlayıcı olmayan bir ilişki olarak başlar.  
-Kopya, anahtarın veri türünü, varsayılan değerini ve açıklamasını alır, ancak `Unique` veya `Auto Increment` ayarını almaz ve [Yabancı anahtar sütun adları](#foreign-key-column-names) bölümünde anlatıldığı gibi adlandırılır.  
+Kopya, anahtarın veri türünü, varsayılan değerini, açıklamasını ve mantıksal adını alır, ancak `Unique` veya `Auto Increment` ayarını almaz ve [Yabancı anahtar sütun adları](#foreign-key-column-names) bölümünde anlatıldığı gibi adlandırılır.  
 Veri türündeki istisna serial anahtardır: Kopyası, serial türünün sakladığı tamsayı türünü alır. Hangi veritabanı olursa olsun `smallserial` ve `serial2` türleri `smallint`, `serial4` türü `integer`, `bigserial` ve `serial8` türleri `bigint` verir. Yalın bir `serial`, PostgreSQL'de `integer`, MySQL ve MariaDB'de `bigint unsigned` verir ve diğer tüm veritabanlarında `serial` olarak kalır.  
 Büyük/küçük harf ayrımı yapmadan yalnızca türün adının tamamı dikkate alınır, bu nedenle `serial(4)` yazıldığı gibi kopyalanır. Büyük harflerle yazılmış bir tür büyük harfli bir tür verir: PostgreSQL'de `SERIAL`, `INTEGER` verir. Kaydedilmiş bir diyagramda türü zaten `serial` olan bir yabancı anahtar sütunu bu türü korur.  
+Kopya ayrıca, oluşturulduğu anda `Domains` sayfası o değer alanını listeliyor ve kopya anahtarın veri türünü koruyorsa anahtarın [değer alanına](./dictionary.md#domains-and-data-types) bağlanır. Bu yüzden bir serial anahtarın tamsayı türü alan kopyası hiçbir değer alanı bağlamaz, `serial` olarak kalan yalın bir `serial` ise onu bağlar.  
 İlişkiyi tanımlayıcı yapmak için alt tablodaki bu yabancı anahtar sütunlarını birincil anahtar olarak ayarlayın: Hepsini seçip `Alt + K` (Windows/Linux) veya `⌥ + K` (Mac) tuşlarına bir kez basın ya da tablonun bağlam menüsünde, iki veya daha fazla sütun seçiliyken `Primary Key on selected columns` olarak görünen `Primary Key` öğesini seçin. [Sütun birincil anahtarı](./table-editing.md#column-primary-key) bölümüne bakın.
 
 ![Alt + K ile product_id sütununu birincil anahtar olarak açıp kapatma, bağlantı çizgisinin önce düz, ardından kesikli hâle gelmesi](/img/demo-identifying-relationship.webp)
@@ -193,7 +197,10 @@ Alt tabloya tıklamadan önce adlandırmadığınız sürece, düzenleyicinin bi
 Adlar ilişki çizildiğinde belirlenir. Üst tabloyu veya anahtarını daha sonra yeniden adlandırmak onları yeniden adlandırmaz.  
 [Sütunları eşle](#map-columns) iletişim kutusunun `New column` satırları da aynı kurallarla adlandırılır ve liste her adı seçiminizden önce gösterir.  
 Sütunlarıyla birlikte hazır gelen ilişkiler – bir içe aktarmadan, bir yapıştırmadan, bir çoğaltmadan ya da mevcut sütunları eşleştiren “Sütunları eşle” iletişim kutusundan gelenler – bu sütunların adlarını korur.  
-`erd_add_relationship` aracıyla ilişki ekleyen bir kodlama ajanı da aynı adları ve veri türlerini elde eder. [Araçlar](../../mcp/tools.md#relationships) bölümüne bakın.
+`erd_add_relationship` aracıyla ilişki ekleyen bir kodlama ajanı da aynı adları, veri türlerini, mantıksal adları ve değer alanlarını elde eder. [Araçlar](../../mcp/tools.md#relationships) bölümüne bakın.
+
+Bir yabancı anahtar sütunu her zaman anahtarına göre adlandırılır, asla kopyaladığı mantıksal ada göre adlandırılmaz ve adı kendi yazdığınız ad sayılır: Sütuna daha sonra yazılan bir mantıksal ad, ad boş olmadıkça adı olduğu gibi bırakır. [Kendi yazdığınız adlar](./dictionary.md#names-of-your-own) bölümüne bakın.  
+Bu nedenle kopyalanan mantıksal ad başka bir ad veren bir terimle eşleştiği sürece `Checks` sayfası sütunu [`Physical name mismatch`](./dictionary.md#what-each-check-finds) altında listeler. Fiziksel adını yeniden türetmek, alt tablonun başka bir sütunu sözlüklerin verdiği adı büyük/küçük harf ayrımı yapmadan zaten taşımıyorsa sütunu sözlüklerden yeniden adlandırır. [Fiziksel adları yeniden türetme](./dictionary.md#derive-physical-names-again) bölümüne bakın.
 
 ## Bağlantı çizgisini okuma {#reading-a-connector}
 

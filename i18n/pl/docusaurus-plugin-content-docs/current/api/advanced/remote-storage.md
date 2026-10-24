@@ -83,7 +83,10 @@ Zdarzenie `change` przekazuje ten wynik jako `value`, a pole `changed` informuje
 
 Od wersji `4.0.0` inicjuj replikę na podstawie właściwości `runtimeValue` edytora, tak jak powyżej, a nie na podstawie zapisanego pliku ani właściwości `value` edytora.  
 W pliku brakuje zmian wprowadzonych od jego zapisania, a we właściwości `value` – encji usuniętych w trakcie sesji.  
-Replika zainicjowana bez usuniętej tabeli przywraca ją bez nazwy ani kolumn, gdy edytor cofnie usunięcie, i w takiej postaci ją zapisuje.
+Replika zainicjowana bez usuniętej tabeli przywraca ją bez nazwy ani kolumn, gdy edytor cofnie usunięcie, i w takiej postaci ją zapisuje.  
+Od wersji `4.2.0` to samo dotyczy słowa, terminu lub domeny usuniętych z arkusza karty [Słownik](../../guide/guides/dictionary.md).  
+Gdy edytor cofnie usunięcie, replika zainicjowana bez tego wiersza przywraca go jako pusty, a ponieważ `value` pomija pusty wiersz, replika zapisuje dokument bez niego.  
+W przypadku domeny kolumny i terminy, które były z nią powiązane, również pozostają w tej replice niepowiązane, ponieważ replika nigdy nie miała tych powiązań, a cofnięcie ich nie wysyła.
 
 ## InjectEngineContext {#injectenginecontext}
 
@@ -91,6 +94,8 @@ Replika zainicjowana bez usuniętej tabeli przywraca ją bez nazwy ani kolumn, g
 
 Mierzy szerokość ciągu znaków w pikselach.  
 Magazyn nie ma drzewa DOM, więc nie może sam mierzyć tekstu, a szerokości kolumn przelicza za pomocą tej funkcji przy każdej zmianie nazwy, typu danych, wartości domyślnej lub komentarza.  
+Od wersji `4.2.0` obejmuje to też [nazwę logiczną](../../guide/guides/logical-names.md) tabeli lub kolumny.  
+Komórkę domeny kolumny, która pokazuje nazwę domeny powiązanej z kolumną, mierzy za każdym razem, gdy kolumna zostaje powiązana z domeną lub od niej odłączona, oraz za każdym razem, gdy ta domena zostaje dodana, otrzymuje nową nazwę lub zostaje usunięta.  
 Ponownie mierzy też każdą tabelę i kolumnę za każdym razem, gdy metoda [setInitialValue](#setinitialvalue) wczytuje dokument.  
 Od wersji `4.0.0` szerokości są przechowywane tylko we właściwości [runtimeValue](#runtimevalue-getter), nigdy w `value`.  
 Dlatego dokument zapisany w tej wersji po ponownym wczytaniu daje bajt w bajt tę samą wartość `value`, niezależnie od tego, gdzie go zapisano i jak mierzono tam tekst.
@@ -146,11 +151,14 @@ const data = replicationStore.value;
 
 Od wersji `4.0.0` właściwość `value` jest postacią zapisu: to dokument w takiej postaci, w jakiej zawiera go plik, czyli ten sam tekst, który zwraca właściwość [value](../erd-editor-element.md#value) elementu.  
 Zawiera tylko nieusunięte encje, w ustalonej kolejności, bez encji usuniętych, kolejności warstw ani niczego, co wczytanie wylicza ponownie, na przykład szerokości mierzonych przez funkcję [toWidth](#towidth).  
-Ma wcięcia o szerokości dwóch spacji i kończy się znakiem nowego wiersza, więc ten sam dokument zawsze daje te same bajty.  
+Od wersji `4.2.0` zawiera też nazwy logiczne, informację, czy każdą nazwę wygenerowano na podstawie słowników, powiązania z domenami oraz słowa, terminy i domeny karty [Słownik](../../guide/guides/dictionary.md).  
+Od wersji `4.2.0` pomija też każde puste pole tekstowe encji, każdą pustą listę `doc` i każdą pustą kolekcję, a także samo pole `collections`, gdy wszystkie kolekcje są puste.  
+Ma wcięcia o szerokości dwóch spacji, zapisuje każdy wiersz słownika w osobnej linii i kończy się znakiem nowego wiersza, więc ten sam dokument zawsze daje te same bajty.  
 Informacje o tym, co zawiera, znajdziesz w sekcji [Postać zapisu i wartość czasu wykonania](./schema.md#storage-form-and-runtime-value).
 
 Każde ustawienie, którego [blokada](../../guide/guides/settings.md#lock) jest włączona, zapisuje się z wartością, przy której zostało zablokowane, a każde inne – z bieżącą wartością.  
 Blokada `Viewport` obejmuje łącznie położenie widoku i poziom powiększenia, a karta, język Generatora kodu, oba style nazw i typ cudzysłowu mają własne, osobne blokady.  
+Od wersji `4.2.0` własną blokadę ma też [Widok nazw](../../guide/guides/logical-names.md#name-view), którego blokada `Name View` jest w nowym dokumencie włączona.  
 Blokady zastępują pole `ignoreSaveSettings` dokumentu, które od wersji `4.0.0` nie jest ani odczytywane, ani zapisywane.  
 Przed wersją `4.0.0` właściwość `value` była całym dokumentem w postaci, w jakiej przechowywał go magazyn, z zastosowanymi bitami przewijania i powiększenia z tego pola.
 
@@ -180,8 +188,10 @@ Przyjmuje postać zapisu, wartość czasu wykonania lub dokument zapisany przez 
 Pusty ciąg znaków lub cokolwiek, co nie jest ciągiem znaków, wczytuje nowy, pusty dokument zamiast zgłosić błąd.  
 Magazyn, któremu nigdy nie przekazano wartości, zaczyna od takiego samego nowego dokumentu.  
 Od wersji `4.0.0` w takim dokumencie każda [blokada](../../guide/guides/settings.md#lock) jest włączona, więc jego właściwość `value` zachowuje widok, kartę, język Generatora kodu, style nazw i typ cudzysłowu, z jakimi zaczynał, gdy edytory, które magazyn replikuje, przewijają widok, zmieniają powiększenie, przełączają karty lub zmieniają te ustawienia. W wersji `3.10.0` nie zapisywał ani przewinięcia, ani powiększenia, a wcześniej zapisywał jedno i drugie.  
+Od wersji `4.2.0` zachowuje też swój Widok nazw, czyli widok `Physical Names`, gdy edytory przełączają własne.  
 Zapisany dokument zachowuje blokady, które wymienia.  
 Dokument, który nie wymienia żadnej, czyli każdy dokument zapisany przed wersją `4.0.0`, w tym dokument v2, wczytuje się z włączonymi wszystkimi blokadami: z położeniem widoku `0, 0`, poziomem powiększenia `1` i kartą ERD, niezależnie od tego, co zapisał, oraz z językiem Generatora kodu, stylami nazw i typem cudzysłowu w takiej postaci, w jakiej je zapisał.  
+Dokument zapisany przed wersją `4.2.0` nie wymienia blokady `Name View`, więc wczytuje się z tą blokadą włączoną i w widoku `Physical Names`, nawet jeśli zapisano go z wyłączonymi wszystkimi pozostałymi blokadami.  
 Od wersji `4.0.0` metoda `setInitialValue` usuwa też rejestry współpracy przechowywane dla poprzedniego dokumentu, tak jak metoda [setInitialValue](../erd-editor-element.md#setinitialvalue) elementu.  
 Tekst, który nie jest w formacie JSON, na przykład plik pozostawiony ze znacznikami konfliktu scalania, również nie powoduje zgłoszenia błędu: błąd parsowania trafia tylko do konsoli, dokument zostaje opróżniony, a ustawienia pozostają bez zmian.
 
@@ -221,15 +231,19 @@ Pole `changed` ma wartość `false`, gdy akcje od poprzedniego zdarzenia `change
 
 Zmiana, którą [blokada](../../guide/guides/settings.md#lock) pomija w `value`, nadal wywołuje zdarzenie `change` z polem `changed` ustawionym na `false`, więc zapisuj tylko wtedy, gdy `changed` ma wartość `true`.  
 Chodzi o przewinięcie lub zmianę powiększenia przy zablokowanym ustawieniu `Viewport`, przełączenie karty przy zablokowanym ustawieniu `Canvas Type` oraz zmianę języka Generatora kodu, stylu nazw lub typu cudzysłowu przy włączonej blokadzie danego ustawienia.  
+Od wersji `4.2.0` chodzi też o przełączenie Widoku nazw przy zablokowanym ustawieniu `Name View`: edytor nadal je wysyła, ale replika je pomija, tak jak robią to pozostałe edytory.  
+Przełączenie Widoku nazw wykonane w edytorze tylko do odczytu jest pomijane w ten sam sposób, niezależnie od stanu jego blokady.  
 Zdarzenie [change](../erd-editor-element.md#change) elementu pomija taką zmianę, ale replika nadal ją zgłasza.  
-W nowym dokumencie i w dokumencie zapisanym przed wersją `4.0.0` wszystkie blokady są włączone.  
-Gdy ustawienie `Viewport` jest odblokowane, przewinięcie lub zmiana powiększenia zmienia `value`, a gdy odblokowane jest ustawienie `Canvas Type`, to samo dotyczy otwarcia innej karty edytora.  
+W nowym dokumencie i w dokumencie zapisanym przed wersją `4.0.0` wszystkie blokady są włączone, a w każdym dokumencie zapisanym przed wersją `4.2.0` zablokowane jest ustawienie `Name View`.  
+Gdy ustawienie `Viewport` jest odblokowane, przewinięcie lub zmiana powiększenia zmienia `value`, gdy odblokowane jest ustawienie `Canvas Type`, to samo dotyczy otwarcia innej karty edytora, a gdy odblokowane jest ustawienie `Name View`, to samo dotyczy przełączenia Widoku nazw w edytorze, który nie jest tylko do odczytu.  
 Włączenie lub wyłączenie blokady również zmienia `value`.
 
 Od wersji `4.0.0` pole `changed` porównuje postać zapisu, która nie zawiera ani usuniętych encji, ani kolejności warstw.  
-Dlatego tabela dodana i ponownie usunięta w obrębie jednego zdarzenia `change`, zmiana, która trafia na encję usuniętą przez innego współpracownika, oraz przekazane wczytanie, które zmienia tylko kolejność warstw, również dają pole `changed` ustawione na `false`.
+Dlatego tabela dodana i ponownie usunięta w obrębie jednego zdarzenia `change`, zmiana, która trafia na encję usuniętą przez innego współpracownika, oraz przekazane wczytanie, które zmienia tylko kolejność warstw, również dają pole `changed` ustawione na `false`.  
+Od wersji `4.2.0` to samo dotyczy wiersza dodanego do arkusza karty Słownik i pozostawionego bez zawartości, ponieważ postać zapisu pomija wiersz, który niczego nie zawiera.
 
 Pole `changed` nigdy nie wynika z porównania z zapisanym plikiem, który już po wczytaniu może różnić się od `value`: tak jest w przypadku pliku zapisanego przez wcześniejszą wersję, w tym pliku v2, a także pliku zaczynającego się od znacznika kolejności bajtów i pliku edytowanego ręcznie.  
+Od wersji `4.2.0` dotyczy to też pliku zapisanego przez wersję `4.0.0` lub `4.1.0`, ponieważ `value` pomija puste pola tekstowe jego encji oraz puste listy `doc` i kolekcje, które zawiera taki plik.  
 Porównanie bajtów z takim plikiem uznałoby za zmianę nawet przewinięcie, które blokada pomija.  
 Pierwsze zdarzenie `change` z polem `changed` ustawionym na `true` zwraca taki plik w postaci zapisu, więc zapisanie tej wartości jednorazowo przepisuje plik.  
 Plik zapisany w tej wersji nie różni się, niezależnie od tego, gdzie go zapisano, co wyjaśnia sekcja [toWidth](#towidth).  
@@ -260,6 +274,14 @@ Uruchamiaj replikę w tej samej wersji co edytory lub w nowszej.
 Wersja `4.1.0` nie dodaje żadnego typu akcji i pozostawia `@dineug/erd-editor/engine.js` bez zmian, więc replika w wersji `4.0.0` zachowuje każdą zmianę wysyłaną przez edytor w wersji `4.1.0`, tak samo jak replika w wersji `4.1.0`.  
 Od wersji `4.1.0` przyciski `Replace` i `Replace All` w funkcji [Znajdź i zamień](../../guide/guides/find-and-replace.md#replacing) zmieniają też nazwy indeksów i grup tabel za pomocą akcji `index.changeName` i `tableGroup.changeName`, które replika w wersji `4.0.0` już zachowuje.  
 Własny stan panelu [Eksplorator](../../guide/guides/explorer.md) nigdy nie jest wysyłany, a przełączenie karty lub przewinięcie wywołane przez ten panel dociera tak samo jak każde inne przełączenie karty lub przewinięcie; zobacz stronę [Wspólna edycja](./collaborative-editing.md).
+
+Od wersji `4.2.0` zachowywane akcje obejmują też `table.changeLogicalName`, `table.changeNameDerived`, `column.changeLogicalName`, `column.changeDomain`, `column.changeNameDerived`, `settings.changeNameViewMode` oraz `dictionary.add`, `dictionary.update` i `dictionary.remove`, które przenoszą każdą edycję, sortowanie i import CSV w arkuszach karty [Słownik](../../guide/guides/dictionary.md).  
+Z przełączeń Widoku nazw replika stosuje tylko te, które przy odblokowanym ustawieniu `Name View` wykonuje edytor, który nie jest tylko do odczytu, a pozostałe pomija (zobacz sekcję [on@change](#onchange)).  
+Magazyn z wcześniejszej wersji pomija wszystkie te akcje, więc traci [nazwy logiczne](../../guide/guides/logical-names.md), powiązania z domenami, informację, czy każda nazwa pochodzi ze słowników, słowa, terminy i domeny oraz Widok nazw.  
+Edytor w wersji starszej niż `4.2.0` uczestniczący w sesji może nadal odebrać część tych danych replice w wersji `4.2.0`.  
+Operacja `Import` w formacie Schemat SQL, GraphQL, DBML lub AML wykonana w tym edytorze, choć już nie operacja `Import and Add`, opróżnia słowa, terminy i domeny repliki.  
+Cofnięcie przez niego wczytania, operacji `Import` lub wywołania `clear()` wczytuje do repliki jego własną kopię dokumentu, bez nazw logicznych, powiązań z domenami i słowników; zobacz sekcję [Mieszanie wersji](./collaborative-editing.md#mixing-releases).  
+Punkt wejścia `@dineug/erd-editor/engine.js` eksportuje te same elementy `createReplicationStore`, `ReplicationStore` i `ReplicationChange` co wcześniej, a funkcja `createReplicationStore` przyjmuje ten sam kontekst.
 
 Od wersji `4.0.0` obie metody stosują też akcję `editor.mergeLWW`, która przenosi rejestry współpracy wysyłane przez edytor w odpowiedzi na dołączenie innego edytora do sesji, więc replika uzgadnia równoczesne zmiany tak samo jak edytory.  
 Nie zmienia ani jednego bajtu `value` i nie wywołuje zdarzenia `change`.  

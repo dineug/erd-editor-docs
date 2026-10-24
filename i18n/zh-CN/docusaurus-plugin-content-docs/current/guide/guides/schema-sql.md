@@ -1,6 +1,6 @@
 ---
-sidebar_position: 11
-description: 在 Schema SQL 标签页中查看图的 DDL，在其选项面板中选择数据库、引号、语句、头部和表，在表之前和之后加入你自己的脚本，并保存或复制 SQL。
+sidebar_position: 12
+description: 在 Schema SQL 标签页中查看图的 DDL，在其选项面板中选择数据库、引号、语句、头部、空注释中的逻辑名和表，在表之前和之后加入你自己的脚本，并保存或复制 SQL。
 ---
 
 # Schema SQL
@@ -20,24 +20,25 @@ SQL 位于左侧，其右侧是标题为 `Schema SQL` 的选项面板，其中�
 - `Options panel`，面板显示时处于勾选状态，用于收起或展开面板。
 - `Save file`
 
-此标签页打开期间，快速搜索会提供 `Database` 和 `Bracket`；只列出该数据库所具备选项的 `Schema SQL: Statements` 和 `Schema SQL: Header`；以及用于收起或展开面板的 `Schema SQL: Options panel`。
+此标签页打开期间，快速搜索会提供 `Database` 和 `Bracket`；只列出该数据库所具备选项的 `Schema SQL: Statements` 和 `Schema SQL: Header`；以及用于收起或展开面板的 `Schema SQL: Options panel`。  
+右键菜单和快速搜索都不提供 `Write logical names into empty comments`，该选项只在选项面板中，参见[将逻辑名作为注释](#logical-names-as-comments)。
 
 SQL 在标签页打开时写出，之后每当面板中的某项选择、数据库名或某段脚本发生变化时都会重新写出。标签页打开期间对表所做的编辑，例如协作者或编码智能体所做的编辑，要等你离开该标签页再回来，或上述某一项发生变化后才会显示。
 
-[表属性](./table-related-functions.md#table-properties)有自己的 `Schema SQL` 标签页，显示的是一张表的 DDL。它始终只写出普通的 `CREATE` 语句，不带头部语句或脚本，没有选项面板，其右键菜单也只提供 `Database` 和 `Bracket`。
+[表属性](./table-related-functions.md#table-properties)有自己的 `Schema SQL` 标签页，显示的是一张表的 DDL。它始终只写出普通的 `CREATE` 语句，不带头部语句或脚本，从不将逻辑名写入空注释，没有选项面板，其右键菜单也只提供 `Database` 和 `Bracket`。
 
 ## 选项面板 {#options-panel}
 
 面板包含三组内容，每组各有一个标题：
 
 1. `Saved in the document`：`Database` 和 `Bracket`，参见[数据库与括号](#database-and-bracket)。
-2. `This window only`：`Statements`、`Header`，以及图中有[表分组](./table-groups.md)时显示的 `Tables`，参见[语句](#statements)、[头部](#header)和[表](#tables)。
+2. `This window only`：`Statements`、`Header`、`Write logical names into empty comments`，以及图中有[表分组](./table-groups.md)时显示的 `Tables`，参见[语句](#statements)、[头部](#header)、[将逻辑名作为注释](#logical-names-as-comments)和[表](#tables)。
 3. `Saved in the document · written as is for every database`：`Before tables` 和 `After tables` 脚本，参见[前置与后置脚本](#before-and-after-scripts)。
 
 面板底部是 `Save file` 和 `Copy`，参见[保存或复制 SQL](#saving-or-copying-the-sql)。
 
 `This window only` 下的选择属于你做出这些选择的编辑器窗口。它们不会保存到文档中，不会与协作者共享，也不会记录到 Undo 历史记录中；编辑器关闭或重新加载时它们会被重置，切换标签页则会保留它们。  
-`Statements` 的初始值为 `If not exists`，`Header` 的初始值为 `CREATE + USE`。而嵌入编辑器的页面通过 [`getSchemaSQL()`](../../api/erd-editor-element.md#getschemasql) 读取的 SQL，以及编码智能体读取的 SQL，则默认为 `Create`，并且不带头部。
+`Statements` 的初始值为 `If not exists`，`Header` 的初始值为 `CREATE + USE`，`Write logical names into empty comments` 初始为关闭。而嵌入编辑器的页面通过 [`getSchemaSQL()`](../../api/erd-editor-element.md#getschemasql) 读取的 SQL，以及[编码智能体读取](../../mcp/tools.md#reading-a-document)的 SQL，则默认为 `Create`，不带头部，并且除非明确要求，否则不写出任何逻辑名。
 
 所选数据库不具备的选项会留在面板中，但会变暗显示，并带有 `Not in <database>` 提示，例如 `Not in Oracle`，按下它不会有任何作用。  
 此时 SQL 会使用该数据库具备的最接近的形式，该形式的按钮显示为按下状态：`If not exists` 退回到 `Create`；`CREATE + USE` 退回到 `USE`，数据库连 `USE` 也不具备时退回到 `None`；`USE` 退回到 `None`。你的选择会被保留，因此切换到具备该选项的数据库后，它会重新生效。
@@ -92,6 +93,21 @@ Snowflake 只用双引号为名称加引号，因此在 `None` 以外的任何�
 其他任何名称（包括空白的名称）都不会写出头部，此时 PostgreSQL 的 `DROP TABLE` 也不会带上 schema。当生效的头部不是 `None` 时，`Header` 下方会有一条说明指出这一点：`Database name "<name>" is not a valid identifier.`  
 新建的图的数据库名为空，因此在你为其命名之前，面板会显示 `Database name "" is not a valid identifier.`
 
+## 将逻辑名作为注释 {#logical-names-as-comments}
+
+`This window only` 下的开关 `Write logical names into empty comments` 会在任何数据库上，将表或列的[逻辑名](./logical-names.md)写入 DDL 中其注释为空的位置。
+
+![在 Schema SQL 面板中开启 Write logical names into empty comments，order_items 每一列的逻辑名会写入其空的 COMMENT，而 members 的注释保持不变](/img/demo-schema-sql-logical-names.webp)
+
+- 有文本的注释始终优先：逻辑名永远不会替换它，也永远不会附加到它上面。
+- 只由空白组成的注释算作空注释，因此会在其位置写入逻辑名。为空或只由空白组成的逻辑名不会写出任何内容，该表或列仍然没有注释。
+- 逻辑名的写出位置和形式与该数据库写出注释时相同，其中的引号也以同样的方式转义，参见[注释](#comments)。
+
+例如在 MySQL 上，逻辑名为 `Member ID` 且没有注释的列 `id` 会写出 `COMMENT 'Member ID'`，而逻辑名为 `Email`、注释为 `Sign-in address` 的列 `email` 则保留 `COMMENT 'Sign-in address'`。
+
+与 `Statements` 和 `Header` 一样，该开关属于窗口，初始为关闭，参见[选项面板](#options-panel)。  
+导入时永远不会将这样的注释读回为逻辑名，参见[注释](./file-import-export.md#comments)。
+
 ## 表 {#tables}
 
 只要图中至少有一个[表分组](./table-groups.md)（无论显示还是隐藏），`This window only` 下就会出现 `Tables`，每个选项各有一个复选框：
@@ -125,22 +141,24 @@ Snowflake 只用双引号为名称加引号，因此在 `None` 以外的任何�
 
 ## 保存或复制 SQL {#saving-or-copying-the-sql}
 
-面板底部或右键菜单中的 `Save file` 会将该标签页显示的 SQL 原样保存为 `<database name>-<timestamp>.sql`，包括其当前的数据库、引号、语句、头部、表和脚本。它的命名和保存方式与其他所有导出相同，参见[导出](./file-import-export.md#exporting)。
+面板底部或右键菜单中的 `Save file` 会将该标签页显示的 SQL 原样保存为 `<database name>-<timestamp>.sql`，包括其当前的数据库、引号、语句、头部、逻辑名注释、表和脚本。它的命名和保存方式与其他所有导出相同，参见[导出](./file-import-export.md#exporting)。
 
 画布右键菜单或快速搜索中的 `Export` ▸ `Schema SQL` 本身不会保存任何内容。  
 它会切换到此标签页，即使选项面板已收起也会将其打开，并把键盘焦点放在 `Save file` 上，因此按 `Enter` 即可保存文件。
 
 面板底部的 `Copy`，或鼠标悬停在代码上时其右上角出现的复制按钮，都会复制 SQL。  
-随后会显示带有勾选标记的 `Copied!` 提示，持续两秒。如果浏览器或宿主拒绝访问剪贴板，则会改为显示带有警告标志的 `Couldn't copy to the clipboard` 提示。再次复制会替换该提示，而不是再添加一条。  
+随后会显示带有勾选标记的 `Copied!` 提示，持续两秒。如果浏览器或宿主拒绝访问剪贴板，则会改为显示带有警告标志的 `Couldn't copy to the clipboard` 提示，持续五秒。再次复制会替换该提示，而不是再添加一条。  
 SQL 也可以直接选中，因此可以只取其中一部分。
 
 ## DDL 写出的内容 {#what-the-ddl-writes}
 
 无论编辑器在哪里写出 Schema SQL，以下规则都适用：此标签页及其保存的文件，以及嵌入编辑器的页面或编码智能体读取的 SQL。  
-表属性的 `Schema SQL` 标签页对其显示的那一张表同样遵循这些规则。它不写出外键（SQLite 的外键除外，因为它们位于 `CREATE TABLE` 之内），也不写出 Oracle 的序列或触发器。
+表属性的 `Schema SQL` 标签页对其显示的那一张表同样遵循这些规则。它不写出 Oracle 的序列或触发器，也不写出外键（SQLite 的外键除外，因为它们位于 `CREATE TABLE` 之内）。它也不写出 PostgreSQL、Oracle 和 MSSQL 放在表之后的注释语句，因此在这三种数据库上它不显示任何注释。
 
 各部分按以下顺序排列，彼此之间隔一个空行：头部、前置脚本、`DROP` 语句、表，以及后置脚本。表按名称顺序写出。  
 既没有表也没有脚本的图不会写出任何内容，即使选择了头部也是如此。
+
+无论[名称显示](./logical-names.md#name-view)当前是哪种显示方式，表和列都以其物理名写出。关联到域的列以其自身的数据类型写出，该数据类型由域设定，参见[域与数据类型](./dictionary.md#domains-and-data-types)。
 
 ### Auto Increment
 
@@ -181,7 +199,28 @@ Snowflake 省略某个操作时，会在该外键的 `ALTER TABLE` 上方写一�
 - PostgreSQL 只为在括号之外含有 `AT TIME ZONE`、`AND`、`OR`、`IS`、`IN`、`LIKE`、`COLLATE` 或 `= ANY` 等词的表达式加上括号，例如 `(now() AT TIME ZONE 'utc')`。
 - MSSQL、Oracle、Snowflake 和 Databricks 会按输入的原样写出所有默认值。
 
+### 注释 {#comments}
+
+表或列的非空白注释，或 [`Write logical names into empty comments`](#logical-names-as-comments) 在其位置写入的逻辑名，会按各数据库写出注释的方式写出：
+
+- MySQL 和 MariaDB 以内联方式写出：列以 `COMMENT 'Member ID'` 结尾，表以 `) COMMENT 'Members';` 结束，在 MySQL 的 `If not exists` 整批语句中也是如此。
+- Snowflake 以内联方式写出列的注释 `COMMENT 'Member ID'`，表的注释则写在右括号之后的单独一行中：`COMMENT = 'Members';`。
+- Databricks 以内联方式写出列的注释，表的注释则在 `USING DELTA` 之后写为 `COMMENT 'Members';`。
+- PostgreSQL 在表的 `CREATE TABLE` 之后紧接着写出 `COMMENT ON TABLE member IS 'Members';` 和 `COMMENT ON COLUMN member.id IS 'Member ID';`。Oracle 写出相同的语句，位于表、其唯一约束及其自动递增序列和触发器之后。
+- MSSQL 在表及其唯一约束之后，为每个表和每一列各写出一次调用，每次调用后跟 `GO`：`EXECUTE sys.sp_addextendedproperty 'MS_Description', N'Members', 'schema', 'dbo', 'table', 'member'`，对于列还会加上 `'column', 'id'`。  
+  文本是国家字符字面量 `N'…'`，因此 SQL Server 会保留数据库代码页之外的文本（例如韩文），而不是存储为问号。  
+  当 `Bracket` 为 `None` 时，名为 `sales.users` 的表会得到 schema `sales` 和表 `users`，`[sales].[users]` 和 `"sales"."users"` 也是如此，其方括号和双引号会被去掉。不带 schema 的名称位于 `dbo` 中。schema 之前的部分（如 `shop.sales.users` 中）会运行该数据库的存储过程 `shop.sys.sp_addextendedproperty`。在其他任何 `Bracket` 下，整个名称都是表，位于 `dbo` 中。
+- SQLite 不保存注释，因此它将每条注释写为其所描述内容上方的一行 `--`：`CREATE TABLE member` 上方的 `-- Members`，以及列上方的 `-- Member ID`。
+
+带引号的注释中的引号会被双写，例如 `'it''s'` 和 `N'it''s'`，MSSQL 的调用所传递的名称中的引号也是如此。Databricks 则改用反斜杠转义引号和反斜杠，例如 `'it\'s'`，这是每个 Spark 版本都能读取的形式。SQLite 的 `--` 行不加引号，因此会按输入的原样保留引号：`-- it's`。  
+除以下两种数据库外，文本都按输入的原样写出，包括换行：
+
+- Oracle 会省略空行（只含空格或制表符的行也算作空行），因为 SQL\*Plus 会在空行处结束语句并跳过其余部分。由 `Members`、一个空行和 `Active only` 组成的表注释会写为 `COMMENT ON TABLE member IS 'Members`，下一行为 `Active only';`。
+- SQLite 会将每一串连续的换行写为一个空格，因为换行会结束 `--` 行，并将其余部分作为 SQL 执行。同一条注释会写为 `-- Members Active only`。
+
+这些注释在导入时如何读回，参见[注释](./file-import-export.md#comments)。
+
 ## 只读编辑器 {#read-only-editors}
 
-在 `readonly` 编辑器中，该标签页照常工作：`Database` 和 `Bracket` 仍会改变显示的 SQL，`Statements`、`Header` 和 `Tables` 仍然有效，`Save file` 和 `Copy` 仍可保存和复制 SQL。  
+在 `readonly` 编辑器中，该标签页照常工作：`Database` 和 `Bracket` 仍会改变显示的 SQL，`Statements`、`Header`、`Write logical names into empty comments` 和 `Tables` 仍然有效，`Save file` 和 `Copy` 仍可保存和复制 SQL。  
 只有两个脚本输入框是只读的。

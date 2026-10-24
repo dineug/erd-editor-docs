@@ -1,5 +1,5 @@
 ---
-sidebar_position: 4
+sidebar_position: 5
 description: Memilih, memindahkan, menyalin, menduplikasi, dan menghapus tabel dan memo, mengatur warna dan opsi tampilan, mendefinisikan indeks dan kunci alternatif, memilih database, bernavigasi di kanvas tanpa batas, dan membandingkan dokumen.
 ---
 
@@ -7,7 +7,8 @@ description: Memilih, memindahkan, menyalin, menduplikasi, dan menghapus tabel d
 
 Semua yang Anda lakukan pada tabel dan memo setelah keduanya ada — memilih, memindahkan, menyalin, menghapus, memberi warna, dan mengatur apa yang ditampilkan kanvas — beserta kontrol kanvas di sekitarnya.  
 Perintah tabel dan memo dibahas lebih dahulu; lalu Properti Tabel, memfokuskan tabel, indeks dan kunci alternatif, Tata Letak Otomatis, dan vendor database; dan terakhir kanvas itu sendiri: bilah alat kanvas, zoom, penggeseran dan tempat lompatan berakhir, serta Penampil Perbedaan.  
-Grup tabel, yaitu kotak yang menghimpun tabel, memiliki halamannya sendiri — lihat [Grup tabel](./table-groups.md).
+Grup tabel, yaitu kotak yang menghimpun tabel, memiliki halamannya sendiri — lihat [Grup tabel](./table-groups.md).  
+Begitu pula nama logis dan Tampilan Nama, yang menentukan nama yang ditampilkan tabel — lihat [Nama logis](./logical-names.md).
 
 ## Pemilihan jamak {#multiple-selection}
 
@@ -26,11 +27,14 @@ Klik kanan pada sesuatu yang sudah dipilih mempertahankan seluruh pilihan, sehin
 
 ![Memilih tabel dengan ⌘ + drag dan ⌘ + click, lalu semua tabel dan memo dengan ⌘ + A](/img/demo-table-select.webp)
 
-Dalam sesi kolaboratif, pilihan, sel yang difokuskan, dan kotak seleksi setiap peserta digambar di kanvas dengan warna peserta tersebut — lihat [Pengeditan kolaboratif](../../api/advanced/collaborative-editing.md).
+Dalam sesi kolaboratif, pilihan, sel yang difokuskan, dan kotak seleksi setiap peserta digambar di kanvas dengan warna peserta tersebut — lihat [Pengeditan kolaboratif](../../api/advanced/collaborative-editing.md).  
+Sel yang difokuskan oleh peserta yang melihat Tampilan Nama lain digambar pada sel yang ditampilkan tampilan Anda sebagai gantinya, misalnya sel nama milik peserta itu pada sel nama logis Anda — lihat [Kolaborator](./logical-names.md#collaborators).
 
 ## Memindahkan beberapa tabel {#moving-multiple-tables}
 
 Seret tabel atau memo mana pun yang sudah termasuk dalam pilihan, dan seluruh pilihan ikut berpindah — tanpa perlu tombol pengubah.  
+Tabel diseret melalui headernya atau melalui baris kolom mana pun, sehingga seretan yang dimulai pada baris kolom memindahkan tabel, bukan kolom. Kolom justru dipindahkan melalui pegangan seret di samping baris yang difokuskan — lihat [Mengubah urutan dan memindahkan kolom](./table-editing.md#rearranging-and-moving-columns).  
+Pada sel header atau baris kolom, tabel baru mulai berpindah setelah penunjuk bergerak sedikit, sehingga klik di sana tetap memfokuskan sel dan klik dua kali tetap membuka editornya. Seretan tidak pernah dimulai dari tepi warna tabel, yang membuka pemilih warna, dari tombol `+` dan `x` di headernya, atau dari `x` pada baris kolom.  
 Menyeret sesuatu di luar pilihan menyusutkan pilihan menjadi objek itu dan hanya memindahkan objek itu. `Ctrl + drag` (Windows/Linux) atau `⌘ + drag` (Mac) mempertahankan pilihan dalam kedua kasus.  
 Hanya tombol kiri mouse yang memindahkan tabel dan memo. Klik kanan memilih objek yang menjadi sasaran menu konteks dan tidak memindahkan apa pun, sedangkan seretan dengan tombol tengah justru menggeser kanvas — lihat [Navigasi di kanvas](#getting-around-the-canvas).
 
@@ -47,7 +51,9 @@ Urutan ini tidak disimpan: diagram yang dibuka kembali menumpuk tabelnya sesuai 
 Menyalin tabel dan memo yang dipilih lalu menempelkannya kembali sebagai tabel dan memo baru.  
 Pintasan: `Ctrl + C` (Windows/Linux) atau `⌘ + C` (Mac), `Ctrl + V` (Windows/Linux) atau `⌘ + V` (Mac)
 
-Tabel yang disalin mempertahankan nama, komentar, kolom, dan warnanya; memo yang disalin mempertahankan teks, ukuran, dan warnanya.  
+Tabel yang disalin mempertahankan nama, nama logis, komentar, kolom, dan warnanya; memo yang disalin mempertahankan teks, ukuran, dan warnanya.  
+Setiap kolom yang disalin mempertahankan nama logisnya, dan setiap nama tabel dan kolom mempertahankan keterangan apakah nama itu dihasilkan dari kamus — lihat [Menghasilkan nama fisik](./dictionary.md#deriving-physical-names).  
+Kolom yang ditempel mempertahankan tautan domainnya hanya jika dua hal terpenuhi: diagram tujuannya memuat domain yang persis sama, bukan sekadar domain dengan nama yang sama, dan domain tersebut masih memiliki tipe data yang sama seperti saat kolom disalin. Jika tidak, kolom ditempel tanpa domain dan mempertahankan tipe saat disalin — lihat [Menautkan kolom](./dictionary.md#linking-a-column).  
 Indeks dan hubungan juga ikut tersalin: indeks disalin utuh ke tabel salinan, dan hubungan disalin beserta tipenya serta tindakan ON DELETE dan ON UPDATE-nya jika kedua tabel yang dihubungkannya termasuk dalam kumpulan yang disalin. Hubungan yang hanya tersalin separuh dibuang alih-alih dibiarkan menunjuk kembali ke aslinya.  
 Salinan yang ditempel menjadi pilihan baru, dan menempel salinan yang sama lagi menggesernya `50px` lebih jauh setiap kali, sehingga tempelan berulang tidak bertumpuk satu sama lain.  
 Salinan tidak mempertahankan [grup tabel](./table-groups.md) asalnya: tabel yang ditempel tidak berada dalam grup mana pun, bahkan saat mendarat di dalam kotak grup, dan grup yang dipilih tidak disalin.  
@@ -60,11 +66,12 @@ Saat kolom dipilih di dalam tabel yang difokuskan, pintasan yang sama justru men
 ## Menduplikasi tabel dan memo {#duplicating-tables-and-memos}
 
 Tahan `Alt` dan seret tabel atau memo dengan tombol kiri mouse.  
+Tabel diambil melalui headernya atau baris kolom mana pun, sehingga `Alt + drag` pada baris kolom menduplikasi tabel dan membiarkan urutan kolom apa adanya. `Alt` yang ditahan pada pegangan seret kolom tidak menduplikasi apa pun: kolom berpindah seperti saat pegangan diseret biasa — lihat [Mengubah urutan dan memindahkan kolom](./table-editing.md#rearranging-and-moving-columns).  
 Pratinjau tembus pandang mengikuti penunjuk, dan melepaskan tombol menaruh salinan di tempat pratinjau berada.  
 Jika yang Anda ambil sudah termasuk dalam pilihan, seluruh pilihan diduplikasi. Jika tidak, pilihan diganti dengan entitas di bawah penunjuk.  
 `Alt + click` tanpa menggeser mouse menaruh salinan `50px` ke bawah dan ke kanan, dan bergeser lebih jauh setiap kali posisi itu sudah terisi.
 
-Duplikat membawa hal yang sama seperti tempelan: nama, komentar, kolom, warna, ukuran memo, serta indeks dan hubungan yang sepenuhnya milik apa yang Anda salin. Seperti tempelan, duplikat tidak masuk ke grup tabel mana pun.  
+Duplikat membawa hal yang sama seperti [tempelan](#copyingpasting-tables-and-memos): nama dan nama logis, komentar, kolom, warna, ukuran memo, serta indeks dan hubungan yang sepenuhnya milik apa yang Anda salin. Karena tetap berada di diagram yang sama, duplikat mempertahankan tautan domain setiap kolom apa adanya. Seperti tempelan, duplikat tidak masuk ke grup tabel mana pun.  
 `Alt + drag` pada bilah judul grup tabel memindahkan grup seperti seretan biasa; grup tidak pernah diduplikasi.
 
 ![Menduplikasi tabel dengan Alt + drag, lalu Alt + click untuk satu salinan lagi di kanan bawah](/img/demo-table-duplicate.webp)
@@ -119,6 +126,7 @@ Menyediakan opsi tampilan berikut:
 - Komentar tabel
 - Komentar kolom
 - Tipe data
+- Domain
 - Nilai default
 - Tidak boleh NULL
 - Unik
@@ -129,7 +137,9 @@ Menyediakan opsi tampilan berikut:
 - Grup tabel
 - Memo
 
-`Unique`, `Alternate Key`, dan `Auto Increment` nonaktif secara default, dan sisanya aktif.  
+`Domain`, `Unique`, `Alternate Key`, dan `Auto Increment` nonaktif secara default, dan sisanya aktif.  
+Nama yang ditampilkan tabel bukan opsi tampilan: `Name View`, tepat setelah `View Option` di menu konteks kanvas, memilih nama fisik, nama logis, atau keduanya — lihat [Mengganti tampilan](./logical-names.md#switching-the-view).  
+`Domain` memberi setiap kolom sebuah sel, yang ditempatkan menurut [urutan kolom](./settings.md#adjusting-column-order), berisi nama domain yang ditautkan kolom tersebut. Kolom yang tidak tertaut ke domain mana pun yang tercantum di lembar `Domains` menampilkan placeholder `domain` di sana, dalam keadaan diredupkan. Sel ini tampil di ketiga tampilan. Selama `Domain` nonaktif, tampilan `Logical Names` justru menampilkan nama domain yang tertaut di sel tipe — lihat [Sel Domain](./logical-names.md#the-domain-cell).  
 `Alternate Key` menandai kolom setiap kunci alternatif, misalnya `AK1.1` — lihat [Kunci alternatif](#alternate-keys).  
 `Referential Actions` menampilkan label `D:` dan `U:` yang dipasang tindakan ON DELETE dan ON UPDATE suatu hubungan di ujung konektornya pada sisi tabel anak — lihat [Membaca konektor](./relationship-editing.md#reading-a-connector). Menonaktifkannya hanya menyembunyikan label tersebut dan tidak memindahkan tabel maupun konektor.  
 `Table Groups` menampilkan [grup tabel](./table-groups.md) dan warna grup di header tabel-tabelnya. Menonaktifkannya menyembunyikan grup di kanvas, minimap, dan ekspor gambar, tidak memindahkan tabel apa pun, dan mempertahankan setiap tabel di grupnya — lihat [Menyembunyikan grup](./table-groups.md#hiding-groups). Opsi ini juga mengeluarkan folder `Table Groups` dari [Penjelajah](./explorer.md#the-tree) dan `New Table Group` dari [bilah alat kanvas](#canvas-toolbar), dan pencarian Penjelajah berhenti menemukan nama grup.  
@@ -139,19 +149,19 @@ Di editor `readonly`, mengaktifkan atau menonaktifkan opsi ini tidak mengubah ap
 
 ![Mengaktifkan dan menonaktifkan entri View Option sementara tampilan tabel menyesuaikan diri, menandai indeks unik komposit dengan AK1.1 dan AK1.2 melalui Alternate Key, lalu menonaktifkan dan mengaktifkan kembali Memos](/img/demo-view-options.webp)
 
-Kartu di mode `Flow` pada tab Visualisasi tidak mengikuti opsi ini: kartu memakai [tampilan baris](./visualization.md#row-display) tersendiri, dan menggambar konektornya bahkan saat `Relationship` nonaktif.
+Kartu di mode `Flow` pada tab Visualisasi tidak mengikuti opsi ini, termasuk `Domain`: kartu memakai [tampilan baris](./visualization.md#row-display) tersendiri dan menggambar konektornya bahkan saat `Relationship` nonaktif. Sel mana yang ditata kartu hanya bergantung pada Tampilan Nama — lihat [Nama pada kartu](./visualization.md#names-on-the-cards).
 
 ## Properti Tabel {#table-properties}
 
 Membuka panel properti sebuah tabel.  
 Mulai dari `Table Properties` di menu konteks tabel, yang membukanya untuk tabel yang Anda klik kanan, atau pilih tabel dan tekan `Alt + Space`.  
-Panel terbuka di tengah kanvas yang diredupkan. Hanya kanvas yang diredupkan, sehingga [Penjelajah](./explorer.md#dialogs-beside-it) yang terbuka tetap terbuka dan dapat digunakan di sampingnya. Headernya berisi judul `Table Properties`, lima tabel yang paling baru dibuka sebagai chip dengan tabel saat ini disorot, dan tombol tutup. Klik chip untuk berpindah ke tabel itu tanpa membuka ulang panel.  
+Panel terbuka di tengah kanvas yang diredupkan. Hanya kanvas yang diredupkan, sehingga [Penjelajah](./explorer.md#dialogs-beside-it) yang terbuka tetap terbuka dan dapat digunakan di sampingnya. Headernya berisi judul `Table Properties`, lima tabel yang paling baru dibuka sebagai chip dengan tabel saat ini disorot, dan tombol tutup. Setiap chip menamai tabelnya seperti yang dilakukan [Tampilan Nama](./logical-names.md#beyond-the-canvas). Klik chip untuk berpindah ke tabel itu tanpa membuka ulang panel.  
 Di bawah header terdapat tiga tab: `Indexes`, `Schema SQL`, dan `Code Generator`. Panel mempertahankan satu ukuran untuk ketiganya, sehingga berpindah tab tidak memindahkan atau mengubah ukurannya.  
 Tutup panel dengan tombol tutup, dengan `Escape`, atau dengan mengeklik di luar panel pada kanvas.  
 Memilih baris selain folder di Penjelajah, atau menuju kecocokan dari pencariannya, menutup Properti Tabel sebelum lompatan. Begitu pula `Ctrl + F` (Windows/Linux) atau `⌘ + F` (Mac), yang membuka pencarian Penjelajah, atau menempatkan kursor teks di kotak Temukan jika Penjelajah sudah terbuka. Klik lain apa pun di Penjelajah, termasuk pada baris folder, atau pada tombol `Explorer` di bilah alat, membiarkan Properti Tabel tetap terbuka. `Escape` yang ditekan selama keyboard berada di Penjelajah hanya mengembalikan keyboard ke kanvas, sehingga diperlukan `Escape` kedua untuk menutup Properti Tabel.
 
 Tab `Indexes` dibahas di [Indeks](#indexes).  
-Tab `Schema SQL` menampilkan DDL tabel untuk [database](#databases) yang dipilih: `CREATE TABLE`-nya, constraint terpisah yang ditulis beberapa database untuk kolom uniknya, dan indeksnya. Tab ini selalu menulis pernyataan `CREATE` biasa, tanpa pembuka dan tanpa skrip sebelum atau setelah tabel, apa pun pengaturan tab [Skema SQL](./schema-sql.md) di bilah alat. Tab ini tidak memiliki panel opsi, dan menu konteksnya hanya menawarkan `Database` dan `Bracket`.  
+Tab `Schema SQL` menampilkan DDL tabel untuk [database](#databases) yang dipilih: `CREATE TABLE`-nya, constraint terpisah yang ditulis beberapa database untuk kolom uniknya, dan indeksnya. Tab ini selalu menulis pernyataan `CREATE` biasa, tanpa pembuka, tanpa skrip sebelum atau setelah tabel, dan tanpa nama logis di komentar kosong, apa pun pengaturan tab [Skema SQL](./schema-sql.md) di bilah alat — lihat [Nama logis sebagai komentar](./schema-sql.md#logical-names-as-comments). Tab ini tidak memiliki panel opsi, dan menu konteksnya hanya menawarkan `Database` dan `Bracket`.  
 Tab `Code Generator` menghasilkan kode hanya untuk tabel ini — lihat [Generator Kode](./code-generator.md).
 
 Di editor `readonly`, panel tetap terbuka, dengan lencana `Read only` di samping judulnya, tetapi tab `Indexes` tidak menyediakan pengeditan apa pun.
@@ -163,19 +173,19 @@ Mulai dari menu konteks tabel dengan `Focus on this table`, atau pilih satu tabe
 Saat tabel yang Anda klik kanan merupakan salah satu dari beberapa tabel yang dipilih, item itu bertuliskan `Focus on selected tables` dan memfokuskan seluruh pilihan. Klik kanan pada tabel di luar pilihan hanya memfokuskan tabel itu.  
 Pintasan ini mengambil tabel yang dipilih, mengabaikan memo, dan tidak melakukan apa pun jika tidak ada tabel yang dipilih.  
 [Grup tabel](./table-groups.md) yang dipilih tidak dihitung di sini, baik pada pintasan maupun item menu: tabel-tabelnya hanya diambil jika tabel itu sendiri dipilih, seperti yang dilakukan `Select tables` di menu grup.  
-Apa yang ditampilkan area pandang yang dipersempit, dan cara kembali ke seluruh diagram, dibahas di [Visualisasi](./visualization.md#focusing-on-tables).
+Apa yang ditampilkan area pandang yang dipersempit, dan cara kembali ke seluruh diagram, dibahas di [Visualisasi](./visualization.md#focusing-on-tables), dan cara mundur dan maju melalui apa yang pernah ditampilkan Alur sebelumnya, di [Tabel sebelumnya dan berikutnya](./visualization.md#previous-table-and-next-table).
 
 ## Indeks {#indexes}
 
 Indeks didefinisikan di tab `Indexes` pada panel Properti Tabel dan disertakan dalam Skema SQL yang diekspor.
 
 Sisi kiri mencantumkan kunci dan indeks tabel dalam dua kelompok.  
-`Keys`, yang tampil jika tabel memilikinya, mencantumkan kunci yang dideklarasikan kolomnya: `PK_<table name>` atas kolom yang ditandai PK, lalu `UQ_<table name>_<column name>` untuk setiap kolom yang ditandai Unik, sesuai urutan kolom. Nama-nama ini mengikuti Skema SQL database yang dipilih, sehingga dengan `Bracket` pada `None`, tabel berkualifikasi skema seperti `sales.users` mencantumkan `PK_users` di semua database kecuali Databricks dan Snowflake — lihat [Nama tabel berkualifikasi skema](./schema-sql.md#schema-qualified-table-names). Masing-masing diberi tag `PK` atau `UQ` dan ditandai dengan gembok. Kunci ini hanya baca di sini dan hanya berubah mengikuti penanda [PK](./table-editing.md#column-primary-key) dan [Unik](./table-editing.md#not-null-unique-auto-increment) pada kolom.  
+`Keys`, yang tampil jika tabel memilikinya, mencantumkan kunci yang dideklarasikan kolomnya: `PK_<table name>` atas kolom yang ditandai PK, lalu `UQ_<table name>_<column name>` untuk setiap kolom yang ditandai Unik, sesuai urutan kolom. Nama-nama ini adalah nama fisik yang ditulis Skema SQL database yang dipilih, apa pun Tampilan Nama yang berlaku, sehingga dengan `Bracket` pada `None`, tabel berkualifikasi skema seperti `sales.users` mencantumkan `PK_users` di semua database kecuali Databricks dan Snowflake — lihat [Nama tabel berkualifikasi skema](./schema-sql.md#schema-qualified-table-names). Masing-masing diberi tag `PK` atau `UQ` dan ditandai dengan gembok. Kunci ini hanya baca di sini dan hanya berubah mengikuti penanda [PK](./table-editing.md#column-primary-key) dan [Unik](./table-editing.md#not-null-unique-auto-increment) pada kolom.  
 `Indexes` mencantumkan indeks tabel sesuai urutan penambahannya. Setiap indeks memiliki sakelar `UQ` yang menjadikannya unik, kotak nama, dan `x` yang menghapusnya. Indeks yang merupakan [kunci alternatif](#alternate-keys) juga menampilkan nomornya, misalnya `AK1`. Tambahkan indeks dengan `Add Index` di bagian bawah daftar.
 
-Sisi kanan mencantumkan kolom tabel di bawah `Columns`, masing-masing dengan kotak centang. Tidak ada yang dapat diedit hingga sebuah indeks dipilih di sisi kiri.  
+Sisi kanan mencantumkan kolom tabel di bawah `Columns`, masing-masing dengan kotak centang. Setiap baris menampilkan sel yang sama dengan baris kolom tersebut di kanvas, mengikuti urutan kolom, opsi tampilan, dan [Tampilan Nama](./logical-names.md#beyond-the-canvas). Tidak ada yang dapat diedit hingga sebuah indeks dipilih di sisi kiri.  
 Centang kolom untuk menambahkannya ke indeks yang dipilih, dan hapus centangnya untuk mengeluarkannya. Memilih kunci menampilkan kolomnya dalam keadaan tercentang, tetapi kotak centangnya tetap nonaktif.  
-Kolom indeks yang dipilih dicantumkan di bawahnya, pada `Index order`. Seret kolom melalui pegangan seretnya untuk mengubah urutannya, dan klik chip `ASC` atau `DESC` pada baris untuk membalik arah pengurutannya. Pada kunci alternatif, setiap baris diakhiri dengan tandanya, `AK<n>.<m>`. Daftar ini menampilkan tiga baris sekaligus dan sisanya dapat digulir.
+Kolom indeks yang dipilih dicantumkan di bawahnya, pada `Index order`, masing-masing dinamai seperti cara Tampilan Nama menamainya, dengan nama di dalam tanda kurung setelah nama logis dalam tampilan `Both Names`, misalnya `Member Number (member_no)`. Seret kolom melalui pegangan seretnya untuk mengubah urutannya, dan klik chip `ASC` atau `DESC` pada baris untuk membalik arah pengurutannya. Pada kunci alternatif, setiap baris diakhiri dengan tandanya, `AK<n>.<m>`. Daftar ini menampilkan tiga baris sekaligus dan sisanya dapat digulir.
 
 Di editor `readonly`, memilih kunci atau indeks tetap menampilkan kolomnya, tetapi tidak ada `Add Index` dan tidak ada `x`, dan tidak ada hal lain di tab ini yang dapat diubah.
 
@@ -216,12 +226,12 @@ Buka `Auto Layout` dari menu konteks kanvas atau dari Pencarian Cepat, lalu pili
 | `Tree - horizontal` | Pelapisan yang sama, berjalan dari kiri ke kanan. |
 
 `Force` membuka pratinjau selama tata letak menuju keadaan stabil, dengan `Apply` dan `Cancel` pada pemberitahuan yang ditampilkannya.  
-Pratinjau dibingkai pada diagram sebagaimana keadaannya saat tata letak dimulai, sehingga tabel dapat bergerak keluar dari bingkai selama tata letak menuju keadaan stabil. Pratinjau digambar pada `70%` atau kurang, sehingga tabelnya tampil menciut menjadi nama dan tepi warnanya.  
+Pratinjau dibingkai pada diagram sebagaimana keadaannya saat tata letak dimulai, sehingga tabel dapat bergerak keluar dari bingkai selama tata letak menuju keadaan stabil. Pratinjau digambar pada `70%` atau kurang, sehingga tabelnya tampil menciut menjadi nama dan tepi warnanya. Pratinjau dibuka dalam Tampilan Nama yang sedang Anda lihat, apa pun tampilan yang dipertahankan file — lihat [Di luar kanvas](./logical-names.md#beyond-the-canvas).  
 `Apply` mempertahankan posisi sebagaimana adanya saat itu, dan tata letak diterapkan dengan sendirinya setelah berhenti bergerak. `Cancel` atau `Escape` membiarkan diagram seperti semula.
 
 Tiga tata letak lainnya dihitung sekaligus, di luar thread utama, sehingga tidak ada yang perlu diamati: pemberitahuan tampil selama tata letak dihitung, dan susunan yang selesai dipusatkan pada area yang sudah ditempati diagram. `Cancel` atau `Escape` membuang tata letak yang tidak lagi Anda tunggu, dan host yang tidak menjalankan shared worker berakhir dengan `Could not place tables` — lihat [Web Worker](../../api/installation.md#web-workers). Tata letak yang belum kembali dalam 60 detik berakhir dengan cara yang sama.
 
-Apa pun yang Anda pilih, tabel dan grup tabel dipindahkan, sedangkan memo tetap di tempatnya. Hubungan dari suatu tabel ke dirinya sendiri diabaikan, dan beberapa hubungan antara dua tabel yang sama dihitung satu kali.  
+Apa pun yang Anda pilih, tabel dan grup tabel dipindahkan, sedangkan memo tetap di tempatnya. Tabel ditempatkan dengan lebar yang dimilikinya dalam Tampilan Nama yang sedang Anda lihat. Hubungan dari suatu tabel ke dirinya sendiri diabaikan, dan beberapa hubungan antara dua tabel yang sama dihitung satu kali.  
 Setiap tata letak menjaga tabel setiap grup tetap bersama, baik grup ditampilkan maupun tidak, dan menyesuaikan setiap grup yang berisi tabel agar melingkupi tabel-tabelnya — lihat [Grup tabel](./table-groups.md#auto-layout).  
 Hasilnya tercatat sebagai satu entri riwayat, sehingga satu kali pembatalan mengembalikan setiap tabel dan grup ke tempat semula.
 
@@ -259,6 +269,7 @@ Bilah alat kecil melayang di tengah tepi bawah kanvas, berisi, dari kiri ke kana
 - `New Table`, `New Memo`, dan `New Table Group`. `New Table` menambahkan tabel seperti `Alt + N`, dan `New Memo` menambahkan memo seperti `Alt + M`. `New Table Group` menyiapkan [penggambaran grup](./table-groups.md#drawing-a-group) seperti `Alt + G` dan menonaktifkan tangan; klik kedua, seperti `Alt + G` kedua, mengakhiri penggambaran tanpa menambahkan grup. `New Memo` tidak ditampilkan selama View Option → `Memos` menyembunyikan memo, begitu pula `New Table Group` selama View Option → `Table Groups` menyembunyikan grup. Editor `readonly` tidak menampilkan satu pun dari ketiganya.
 - Zoom: `Zoom out`, zoom saat ini dalam persentase, dan `Zoom in`. Kedua tombol mengubah zoom secara bertahap dengan cara yang sama seperti pintasan zoom, dan mengeklik persentase mengembalikannya ke `100%`.
 - Empat notasi hubungan, sama dengan empat notasi yang Anda gunakan untuk memulai hubungan — lihat [Memulai pengeditan](./editing-start.md). Memilih salah satunya beralih kembali ke alat penunjuk, karena hubungan digambar dengan mengeklik dua tabel.
+- `Name View`, tombol dengan panah ke bawah yang menyebutkan tampilan yang sedang berlaku: `Physical Names`, `Logical Names`, atau `Both Names`. Lebarnya tetap sama, tampilan mana pun yang disebutkannya, sehingga penggantian tidak pernah menggeser bilah alat. Klik membuka daftar ketiga tampilan tersebut di atas bilah alat, dengan tampilan yang sedang berlaku dicentang. Memilih salah satunya beralih ke tampilan itu dan menutup daftar; klik kedua pada tombol, tekanan di tempat lain mana pun, atau `Escape` menutup daftar tanpa mengganti tampilan. Editor `readonly` juga menampilkannya. Apa yang ditampilkan setiap tampilan dibahas di [Tampilan Nama](./logical-names.md#name-view), dan apakah penggantian disimpan dibahas di [Mengganti tampilan](./logical-names.md#switching-the-view).
 - Mode Zen, `Alt + Z`, yang menyembunyikan semuanya kecuali kanvas dan bilah alat ini. `Alt + Z` sekali lagi, atau tombolnya, memunculkan kembali sisanya. Penjelajah yang terbuka ikut disembunyikan bersama sisanya, tanpa ditutup, dan muncul kembali bersamanya. Penjelajah tetap dapat dibuka selama mode Zen — lihat [Saat Penjelajah menyingkir](./explorer.md#when-it-stands-aside).
 - Kompas `Go to content`, yang muncul di ujung bilah alat hanya selama tidak ada tabel, memo yang ditampilkan, atau grup tabel yang ditampilkan di layar — lihat [Navigasi di kanvas](#getting-around-the-canvas).
 
@@ -277,7 +288,7 @@ Pintasan: `Ctrl + Plus` (Windows/Linux) atau `⌘ + Plus` (Mac), `Ctrl + Minus` 
 Tombol `Zoom out` dan `Zoom in` di [bilah alat kanvas](#canvas-toolbar) mengubah zoom secara bertahap seperti pintasan `Minus` dan `Plus`: setiap penekanan mengubahnya sebesar 4 poin persentase, dengan bagian tengah layar tetap di tempatnya. Persentase di antara keduanya menampilkan zoom saat ini, dan mengekliknya langsung kembali ke `100%` seperti `Ctrl + 0` (Windows/Linux) atau `⌘ + 0` (Mac).
 
 Rentang zoom dari `10%` hingga `150%`.  
-Pada `70%` ke bawah, tabel menciut menjadi nama dan tepi warnanya, dan pengeditan sel, pintasan sel, serta salin dan tempel berhenti berfungsi hingga Anda memperbesar kembali.
+Pada `70%` ke bawah, tabel menciut menjadi nama dan tepi warnanya, dan pengeditan sel, pintasan sel, serta salin dan tempel berhenti berfungsi hingga Anda memperbesar kembali. Nama yang ditampilkan tabel yang menciut mengikuti Tampilan Nama — lihat [Tampilan Nama](./logical-names.md#name-view).
 
 Tiga pintasan yang sama juga melakukan zoom di tab Visualisasi, baik dalam mode `Graph` maupun `Flow`, masing-masing mode dalam rentangnya sendiri — lihat [Visualisasi](./visualization.md#toolbar).
 
@@ -302,11 +313,11 @@ Menyeret kenop bilah gulir atau persegi area pandang minimap adalah satu-satunya
 
 Jika penggeseran membuat tidak ada tabel, memo yang ditampilkan, atau grup tabel yang ditampilkan di layar, kompas `Go to content` muncul di ujung [bilah alat kanvas](#canvas-toolbar), dengan panah yang menunjuk ke objek terdekat beserta jaraknya. Klik kompas untuk memusatkan objek itu tanpa mengubah zoom.
 
-![Menggeser dengan menyeret kanvas kosong, seretan tombol tengah di atas tabel, minimap, dan roda mouse, lalu kembali dengan mengikuti kompas Go to content](/img/demo-canvas-navigation.webp)
+![Menggeser dengan menyeret kanvas kosong, dengan roda mouse, dengan seretan tombol tengah di atas tabel, dan dari minimap, lalu Shift + wheel melewati konten dan kembali dengan mengikuti kompas Go to content](/img/demo-canvas-navigation.webp)
 
 ### Tempat lompatan berakhir {#where-a-jump-lands}
 
-Setiap perpindahan yang membawa Anda ke sesuatu di kanvas menggerakkan area pandang dengan satu aturan: hasil `#`, `@`, dan `:` dari [Pencarian Cepat](./quick-search.md#searching-the-diagram), baris di [Penjelajah](./explorer.md#going-to-a-row) dan kecocokan pencarian [Temukan dan Ganti](./find-and-replace.md#going-to-a-match) di dalamnya, baris di daftar [Penampil Perbedaan](#going-to-a-change), [tombol kartu](./visualization.md#card-buttons) tautan eksternal di Alur, dan penempatan hasil [Impor dan Tambahkan](./file-import-export.md#import-and-add). Setiap bagian tersebut menjelaskan apa yang dipilih oleh perpindahan itu; bagian ini menjelaskan ke mana area pandang bergerak.
+Setiap perpindahan yang membawa Anda ke sesuatu di kanvas menggerakkan area pandang dengan satu aturan: hasil `#`, `@`, dan `:` dari [Pencarian Cepat](./quick-search.md#searching-the-diagram), baris di [Penjelajah](./explorer.md#going-to-a-row) dan kecocokan pencarian [Temukan dan Ganti](./find-and-replace.md#going-to-a-match) di dalamnya, baris di daftar [Penampil Perbedaan](#going-to-a-change), [tombol kartu](./visualization.md#card-buttons) tautan eksternal di Alur, pemeriksaan yang menyebut tabel atau kolom di [lembar Pemeriksaan](./dictionary.md#the-checks-sheet) di tab Kamus, dan penempatan hasil [Impor dan Tambahkan](./file-import-export.md#import-and-add). Setiap bagian tersebut menjelaskan apa yang dipilih oleh perpindahan itu; bagian ini menjelaskan ke mana area pandang bergerak.
 
 Lompatan tidak pernah mengubah zoom, dan paling banyak melakukan satu guliran. Dari tab lain, lompatan beralih ke tab ERD terlebih dahulu.  
 Lompatan mengukur kanvas sebagaimana yang tampil: di bawah bilah alat atas, atau seluruh tingginya dalam mode Zen, dan di sebelah kanan Penjelajah yang terbuka, yang mempersempit kanvas alih-alih menutupinya.
@@ -322,8 +333,8 @@ Jadi, tabel kecil di dekat tepi kiri kanvas, di pertengahan tinggi kanvas, hanya
 Apa yang ditampilkan lompatan di layar, dan bagian inti yang harus tampil jika keseluruhannya tidak muat:
 
 - Tabel: seluruh tabel, berpatokan pada pita nama di bagian atasnya, atau pada sel komentarnya untuk kecocokan komentar tabel selama View Option → `Table Comment` menampilkan komentar. Pada `70%` ke bawah, tempat tabel menciut menjadi namanya, berpatokan pada nama di tengah kotak.
-- Kolom: barisnya, berpatokan pada sel yang dituju lompatan: namanya, atau komentar tempat kecocokan berada selama View Option → `Column Comment` menampilkan komentar. Pada `70%` ke bawah, kolom menampilkan tabelnya di layar menurut aturan tabel.
-- Sel yang terlalu lebar untuk ditampilkan utuh, misalnya komentar panjang: berpatokan pada teks yang cocok di dalamnya.
+- Kolom: barisnya, berpatokan pada sel yang dituju lompatan: namanya, nama logisnya untuk kecocokan nama logis atau pemeriksaan pada nama logis, sel Domain miliknya untuk pemeriksaan pada domainnya, atau komentar tempat kecocokan berada selama View Option → `Column Comment` menampilkan komentar. Jika baris tidak menampilkan sel tersebut, lompatan menuju sel yang ditampilkan di tempatnya: nama logis untuk nama dalam tampilan `Logical Names`, nama untuk nama logis dalam tampilan `Physical Names`, dan sel tipe untuk sel Domain selama View Option → `Domain` nonaktif, atau baris secara keseluruhan selama `DataType` juga nonaktif. Pada `70%` ke bawah, kolom menampilkan tabelnya di layar menurut aturan tabel.
+- Sel yang terlalu lebar untuk ditampilkan utuh, misalnya komentar panjang: berpatokan pada teks yang cocok di dalamnya. Lompatan ke sel yang ditampilkan sebagai pengganti sel tempat kecocokan berada, misalnya nama untuk kecocokan nama logis dalam tampilan `Physical Names`, tidak berpatokan pada teks.
 - Hubungan: kotak yang membentang meliputi kedua tabelnya, berpatokan pada tabel anak.
 - Grup tabel: kotaknya, berpatokan pada bilah judulnya.
 - Memo, atau blok yang ditempatkan Impor dan Tambahkan: seluruhnya.
@@ -337,7 +348,7 @@ Anda dapat membandingkan dokumen yang disimpan sebelumnya dengan dokumen saat in
 Pilih `Diff Viewer` dari menu konteks kanvas, lalu pilih dokumen `.json` yang Anda ekspor sebelumnya.
 
 Penampil Perbedaan terbuka di atas kanvas: apa yang berubah di sebelah kiri, lalu dokumen yang disimpan dan dokumen saat ini berdampingan.  
-Dokumen saat ini dibandingkan sebagaimana keadaannya saat penampil terbuka; perubahan yang dibuat setelahnya, termasuk dari kolaborator, tidak sampai ke penampil. [Penjelajah](./explorer.md#when-it-stands-aside) yang terbuka disembunyikan selama penampil terbuka, sehingga penampil memakai seluruh lebar editor.  
+Dokumen saat ini dibandingkan sebagaimana keadaannya saat penampil terbuka; perubahan yang dibuat setelahnya, termasuk dari kolaborator, tidak sampai ke penampil. Kedua sisi dibuka, dan tetap, dalam Tampilan Nama yang sedang Anda lihat, apa pun tampilan yang dipertahankan masing-masing file — lihat [Di luar kanvas](./logical-names.md#beyond-the-canvas). [Penjelajah](./explorer.md#when-it-stands-aside) yang terbuka disembunyikan selama penampil terbuka, sehingga penampil memakai seluruh lebar editor.  
 Setiap sisi digeser dengan roda mouse, dengan menyeret area kosong atau badan grup tabel, atau dengan menyeret menggunakan tombol tengah di mana saja di atasnya, dan di-zoom dengan `Ctrl + Wheel` (Windows/Linux), `⌘ + Wheel` (Mac), atau gerakan cubit. Pada `70%` ke bawah, tabelnya menciut seperti di kanvas — lihat [Tanda di kedua sisi](#marks-on-the-two-sides).  
 Kedua sisi hanya baca, sehingga tidak ada yang diubah di dokumen Anda. Masing-masing mempertahankan pilihannya sendiri, dan klik pada tabel di sana memilihnya hanya di sisi itu.  
 Tutup penampil dengan tombol `Close` pada pemberitahuan `Diff Viewer` yang muncul saat penampil dibuka, atau dengan `Escape`.
@@ -360,13 +371,14 @@ Yang dihitung sebagai perubahan:
 - Memo: teks, posisi, ukuran, dan warnanya.
 - Grup tabel: nama, tabel yang dikandungnya, warna, posisi, dan ukurannya.
 
-Jadi, tabel, memo, atau grup yang hanya dipindahkan, diubah ukurannya, atau diubah warnanya dihitung sebagai berubah. Posisi dan ukuran dibandingkan dalam piksel bulat, dan urutan tumpukan serta titik pertemuan konektor dengan tabel tidak pernah dihitung.
+Jadi, tabel, memo, atau grup yang hanya dipindahkan, diubah ukurannya, atau diubah warnanya dihitung sebagai berubah. Posisi dan ukuran dibandingkan dalam piksel bulat, dan urutan tumpukan serta titik pertemuan konektor dengan tabel tidak pernah dihitung.  
+Nama logis, tautan domain, serta kata, istilah, dan domain di tab [Kamus](./dictionary.md) tidak dibandingkan, sehingga perubahan yang hanya mengenai hal-hal tersebut tidak dicantumkan maupun ditandai. Tipe data yang diubah oleh domain tetap dihitung, sebagai perubahan tipe data kolom.
 
 ### Pohon perubahan {#the-change-tree}
 
 Daftar di sebelah kiri digambar seperti [pohon Penjelajah](./explorer.md#the-tree) dan hanya berisi apa yang berubah: `Tables`, `Table Groups`, dan `Memos`, masing-masing hanya tampil jika berisi baris, dan di bawah tabel, `Columns`, `Indexes`, dan `Foreign Keys` milik tabel itu. Kunci asing dicantumkan di bawah tabel anaknya, dan tabel yang ditambahkan atau dihapus tidak mencantumkan apa pun di dalamnya.  
 Setiap folder menampilkan jumlah baris yang dikandungnya, dan setiap folder dan tabel mulai dalam keadaan terbentang.  
-Tabel dan grup tabel dicantumkan menurut nama, tanpa membedakan huruf besar dan kecil. Memo, serta kolom, indeks, dan kunci asing suatu tabel, mengikuti urutan dokumen saat ini, dengan item yang dihapus dikembalikan ke tempat asalnya. Baris memo bertuliskan baris pertama memo, dan baris kunci asing bertuliskan kolom anaknya, lalu `→` dengan tabel induk dan kolomnya, misalnya `user_id → users(id)`. Nama kosong bertuliskan `unnamed` dalam huruf miring.
+Baris tabel atau kolom dinamai dalam Tampilan Nama tempat kedua sisi dibuka. Dalam tampilan `Both Names`, baris bertuliskan nama logis diikuti nama dalam warna redup, dan pada baris yang dihapus, nama yang redup itu ikut dicoret bersama bagian lainnya. Tabel dan grup tabel dicantumkan menurut nama, tanpa membedakan huruf besar dan kecil, apa pun tampilannya. Memo, serta kolom, indeks, dan kunci asing suatu tabel, mengikuti urutan dokumen saat ini, dengan item yang dihapus dikembalikan ke tempat asalnya. Baris memo bertuliskan baris pertama memo, dan baris kunci asing bertuliskan kolom anaknya, lalu `→` dengan tabel induk dan kolomnya, misalnya `user_id → users(id)`. Nama kosong bertuliskan `unnamed` dalam huruf miring.
 
 Setiap baris diakhiri sebuah huruf, dan baris bertanda `A`, `D`, `M`, atau `R` menampilkan namanya dengan warna huruf tersebut:
 
@@ -378,7 +390,7 @@ Setiap baris diakhiri sebuah huruf, dan baris bertanda `A`, `D`, `M`, atau `R` m
 
 Arahkan penunjuk ke nama baris untuk melihat tooltipnya: statusnya, `Added`, `Deleted`, `Modified`, `Renamed`, atau `Changed inside`, lalu satu baris per perubahan, misalnya `Name: users → members` atau `NN: ✗ → ✓`. Teks dikutip dari baris pertamanya, dipotong setelah 40 karakter, dan nilai kosong bertuliskan `—`. Tooltip item yang ditambahkan atau dihapus hanya berisi statusnya.
 
-`Filter by name`, di atas pohon, mempertahankan baris yang nama saat ini atau nama tersimpannya mengandung apa yang Anda ketik, tanpa membedakan huruf besar dan kecil. Tabel yang namanya cocok mempertahankan semua barisnya, dan tabel yang namanya tidak cocok tetap ada dengan hanya baris yang cocok. Filter yang tidak cocok dengan apa pun membuat pohon kosong.  
+`Filter by name`, di atas pohon, mempertahankan baris yang nama saat ini atau nama tersimpannya, atau nama logis saat ini atau nama logis tersimpannya, mengandung apa yang Anda ketik, tanpa membedakan huruf besar dan kecil, di Tampilan Nama mana pun. Tabel yang namanya cocok mempertahankan semua barisnya, dan tabel yang namanya tidak cocok tetap ada dengan hanya baris yang cocok. Filter yang tidak cocok dengan apa pun membuat pohon kosong.  
 Jika kedua dokumen sama sekali tidak berbeda, pohon bertuliskan `No changes`.
 
 Seret tepi kanan pohon untuk melebarkan atau menyempitkannya, dari `200px` hingga `480px`, dan klik dua kali tepi tersebut untuk mengembalikannya ke `260px`. Setiap perbandingan dibuka pada `260px`, dan kedua sisi membagi sisa lebar secara merata.  
@@ -407,5 +419,7 @@ Kedua sisi mewarnai teks, garis tepi, dan konektor, dan tidak mengisi warna apa 
 - Perubahan indeks tidak menandai apa pun di kedua sisi; perubahan ini hanya tampil di pohon.
 
 Setiap sisi mengikuti opsi tampilan dokumennya sendiri. Perubahan pada sel yang tidak digambar sisi itu justru tampil pada nama. Perubahan kolom pada sel yang disembunyikan suatu opsi tampilan, misalnya `Unique` atau `Auto Increment`, yang keduanya nonaktif secara default, membuat nama kolom berwarna ambar, begitu pula perubahan kunci utama pada baris yang tidak menampilkan ikon kunci. Perubahan komentar tabel selama `Table Comment` nonaktif membuat nama tabel berwarna ambar. Warna biru penggantian nama mengalahkan warna ambar ini. Memo atau grup tabel yang disembunyikan dokumennya dicantumkan di pohon tetapi tidak digambar di sisi itu.
+
+Dalam tampilan `Logical Names`, yang tidak menampilkan sel nama, warna biru penggantian nama dan warna ambar dari perubahan pada sel yang tidak digambar sisi itu ditempatkan pada nama logis yang ditampilkan di tempat nama. Perubahan tipe data membuat sel tipe berwarna ambar di setiap tampilan, bahkan saat sel tersebut menampilkan nama domain. Kedua sisi tidak menggambar warna yang diberikan pemeriksaan tab Kamus pada nama di kanvas — lihat [Tanda di kanvas](./dictionary.md#marks-on-the-canvas).
 
 Pada `70%` ke bawah, tabel yang menciut mempertahankan garis tepinya. Nama tetap berwarna hijau atau merah untuk tabel yang ditambahkan atau dihapus, atau biru untuk penggantian nama, dan jika tidak, mengambil warna ambar dari perubahan komentar. Perubahan kolom tidak digambar hingga Anda memperbesar kembali; pohon tetap mencantumkannya.

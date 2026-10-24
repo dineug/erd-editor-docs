@@ -53,7 +53,8 @@ Okno VS Code obsluhuje diagramy v priečinkoch svojho pracovného priestoru a ka
 2. Otvorte priečinok projektu a dôverujte pracovnému priestoru. Rozšírenie obsluhuje agentov iba v dôveryhodnom pracovnom priestore.
 3. Nechajte nastavenie `dineug.erd-editor.agentHub.enabled` zapnuté. Predvolene je zapnuté.
 
-Rozšírenie od verzie `3.0.0` po verziu `3.1.0` a server vo verzii `1.0.0` sa navzájom odmietnu a rozšírenie pred verziou `3.0.0` neobsluhuje žiadnych agentov – pozrite si časť [Aktualizácia](#updating).
+Rozšírenie od verzie `3.0.0` po verziu `3.1.0` a server vo verzii `1.0.0` alebo novšej sa navzájom odmietnu a rozšírenie pred verziou `3.0.0` neobsluhuje žiadnych agentov.
+Rozšírenie vo verzii `4.0.0` alebo `4.1.0` sa pripojí, ale logické názvy, prepojenia s doménami a riadky slovníkov, ktoré agent zapíše, nezobrazuje ani neuchováva – pozrite si časť [Aktualizácia](#updating).
 
 Rozšírenie sa spustí v pracovnom priestore, ktorý obsahuje súbory `.erd`, `.erd.json`, `.vuerd` alebo `.vuerd.json`, takže agent sa k týmto diagramom dostane ešte predtým, ako niektorý z nich otvoríte.
 V pracovnom priestore bez takýchto súborov sa spustí, keď otvoríte diagram, a dovtedy agent vykonáva úpravy na disku.
@@ -69,7 +70,8 @@ Okno trezoru aplikácie Obsidian obsluhuje diagramy vo svojom trezore.
 1. Nainštalujte [doplnok ERD Editor](https://community.obsidian.md/plugins/erd-editor) vo verzii `1.0.0` alebo novšej z časti Community plugins a zapnite ho. Funguje iba v desktopovej aplikácii a vyžaduje aplikáciu Obsidian vo verzii `1.5.7` alebo novšej.
 2. Nechajte možnosť Settings → ERD Editor → Coding agents zapnutú. Predvolene je zapnutá a každý trezor má vlastné nastavenie.
 
-Staršia verzia doplnku a server vo verzii `1.0.0` sa navzájom odmietnu – pozrite si časť [Aktualizácia](#updating).
+Doplnok pred verziou `1.0.0` a server vo verzii `1.0.0` alebo novšej sa navzájom odmietnu.
+Doplnok vo verzii `1.0.0` alebo `1.1.0` sa pripojí, ale logické názvy, prepojenia s doménami a riadky slovníkov, ktoré agent zapíše, nezobrazuje ani neuchováva – pozrite si časť [Aktualizácia](#updating).
 
 Okno trezoru obsluhuje agentov od chvíle, keď sa doplnok načíta, takže agent sa k diagramom trezoru dostane ešte predtým, ako niektorý z nich otvoríte.
 Nie je tu žiadny krok udelenia dôvery.
@@ -95,7 +97,8 @@ IDE od JetBrains obsluhuje diagramy každého projektu, ktorý je v ňom otvoren
 2. Otvorte projekt a dôverujte mu. V projekte, ktorému IDE nedôveruje, napríklad v projekte otvorenom v bezpečnom režime, agenti diagramy čítajú, ale nikdy ich nemenia.
 3. Nechajte možnosť Settings | Tools | ERD Editor → Coding agents začiarknutú. Predvolene je zapnutá a platí pre celé IDE.
 
-Doplnok vo verzii `0.9.0` alebo `0.10.0` a server vo verzii `1.0.0` sa navzájom odmietnu a doplnok pred verziou `0.9.0` neobsluhuje žiadnych agentov – pozrite si časť [Aktualizácia](#updating).
+Doplnok vo verzii `0.9.0` alebo `0.10.0` a server vo verzii `1.0.0` alebo novšej sa navzájom odmietnu a doplnok pred verziou `0.9.0` neobsluhuje žiadnych agentov.
+Doplnok vo verzii `1.0.0` alebo `1.1.0` sa pripojí, ale logické názvy, prepojenia s doménami a riadky slovníkov, ktoré agent zapíše, nezobrazuje ani neuchováva – pozrite si časť [Aktualizácia](#updating).
 
 IDE obsluhuje agentov od chvíle, keď sa otvorí prvý projekt, takže agent sa k diagramom projektu dostane ešte predtým, ako niektorý z nich otvoríte.
 
@@ -125,19 +128,26 @@ Pred pripojením server overí, akú verziu protokolu používa editor.
 Ak sa verzie líšia, odmietne sa s kódom `protocolMismatch` každé volanie, ktoré sa dostane k tomuto editoru, vrátane čítania a nástroja `erd_list_documents`, a nič sa nezapíše.
 Správa uvádza stranu, ktorú treba aktualizovať: server alebo ERD Editor v editore, čo je vo VS Code rozšírenie a v aplikácii Obsidian a v IDE od JetBrains doplnok.
 
-Server vo verzii `1.0.0`, rozšírenie pre VS Code vo verzii `4.0.0` alebo novšej, doplnok pre Obsidian vo verzii `1.0.0` alebo novšej a doplnok pre JetBrains vo verzii `1.0.0` alebo novšej používajú protokol verzie 2.
+Server vo verzii `1.0.0` alebo novšej, rozšírenie pre VS Code vo verzii `4.0.0` alebo novšej, doplnok pre Obsidian vo verzii `1.0.0` alebo novšej a doplnok pre JetBrains vo verzii `1.0.0` alebo novšej používajú protokol verzie 2.
 Každý starší server používa protokol verzie 1 a rovnako aj každá staršia verzia editora, ktorá obsluhuje agentov: rozšírenie pre VS Code od verzie `3.0.0` po verziu `3.1.0`, doplnok pre Obsidian vo verziách `0.1.0` a `0.2.0` a doplnok pre JetBrains vo verziách `0.9.0` a `0.10.0`.
-Takýto editor a server vo verzii `1.0.0` sa navzájom odmietnu a rovnako aj starší server a editor, ktorý používa protokol verzie 2.
+Takýto editor a server vo verzii `1.0.0` alebo novšej sa navzájom odmietnu a rovnako aj starší server a editor, ktorý používa protokol verzie 2.
 Rozšírenie pre VS Code pred verziou `3.0.0` alebo doplnok pre JetBrains pred verziou `0.9.0` neobsluhuje vôbec žiadnych agentov, takže agent upravuje súbory na disku, dokonca aj diagram, ktorý je v ňom otvorený.
 
 | Kombinácia | Koniec správy |
 | --- | --- |
-| Server vo verzii `1.0.0` s rozšírením alebo doplnkom, ktorý používa protokol verzie 1 | `Update the ERD Editor extension or plugin in the editor until its hub speaks protocol 2.` |
+| Server vo verzii `1.0.0` alebo novšej s rozšírením alebo doplnkom, ktorý používa protokol verzie 1 | `Update the ERD Editor extension or plugin in the editor until its hub speaks protocol 2.` |
 | Starší server s rozšírením alebo doplnkom, ktorý používa protokol verzie 2 | `Update the MCP server (npx -y @dineug/erd-editor-mcp@latest) until it speaks protocol 2.` |
 
 Server a rozšírenie alebo doplnok aktualizujte spoločne.
+Server a editor, ktoré používajú rovnaký protokol, sa pripoja bez ohľadu na to, ktorý z nich je starší, ale nástroje na logické názvy, domény a slovníky má iba server vo verzii `1.1.0` alebo novšej – pozrite si časť [Slovníky](./tools.md#dictionaries).
+Logické názvy, prepojenia s doménami a riadky slovníkov, ktoré tieto nástroje zapíšu, zobrazujú a uchovávajú iba rozšírenie pre VS Code vo verzii `4.2.0` alebo novšej a doplnky pre Obsidian a JetBrains vo verzii `1.2.0` alebo novšej.
+Staršie rozšírenie alebo doplnok, ktorý sa pripojí, ich ignoruje, hoci volanie agenta uspeje.
+Fyzické názvy, ktoré odvodia slovníky, a typy údajov, ktoré dávajú domény, však naďalej použije.
+Server pred verziou `1.1.0` číta súbor bez jeho logických názvov, prepojení s doménami a riadkov slovníkov a pri úprave súboru na disku ich vynechá – pozrite si časť [Headless](./live-and-headless.md#headless).
+
 ERD Editor aktualizujte aj všade, kde sa diagramy otvárajú.
-Rozšírenie pre VS Code pred verziou `4.0.0`, doplnok pre Obsidian pred verziou `1.0.0` a doplnok pre JetBrains pred verziou `1.0.0` zobrazujú diagram, ktorý uložila novšia verzia alebo ktorý agent upravil na disku, bez ikon primárneho kľúča.
-Pri uložení súboru zahodia jeho skupiny tabuliek a skripty karty Schéma SQL.
+Rozšírenie pre VS Code pred verziou `4.2.0`, doplnok pre Obsidian pred verziou `1.2.0` a doplnok pre JetBrains pred verziou `1.2.0` otvoria diagram, ktorý uložila novšia verzia alebo ktorý agent upravil na disku, bez logických názvov jeho tabuliek a stĺpcov, bez prepojení jeho stĺpcov s doménami a bez jeho slov, termínov a domén.
+Pri uložení súboru ich vynechajú.
+Rozšírenie pre VS Code pred verziou `4.0.0`, doplnok pre Obsidian pred verziou `1.0.0` a doplnok pre JetBrains pred verziou `1.0.0` navyše zobrazujú taký diagram bez ikon primárneho kľúča a pri uložení súboru zahodia jeho skupiny tabuliek a skripty karty Schéma SQL.
 Rozšírenie pre VS Code pred verziou `3.1.0`, doplnok pre Obsidian pred verziou `0.2.0` a doplnok pre JetBrains pred verziou `0.10.0` pri uložení súboru zahodia aj akcie ON DELETE a ON UPDATE diagramu.
 V aplikácii Obsidian po aktualizácii doplnku reštartujte aplikáciu: dovtedy okno trezoru naďalej spúšťa ERD Editor z tej verzie doplnku, ktorú načítalo ako prvú.

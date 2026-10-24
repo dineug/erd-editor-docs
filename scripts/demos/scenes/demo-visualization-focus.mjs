@@ -69,7 +69,10 @@ export default {
     await d.click(related.x + related.width / 2, related.y + related.height / 2, { duration: 350 });
     mark('related');
     await d.sleep(350);
-    await canvasSafeMoveTo(d, { x: 760, y: 498 }, 500);
+    // Right of the bar, which runs to about x 756 while Show all shows.
+    const bar = await d.domBox(BAR);
+    const park = { x: bar.x + bar.width + 44, y: bar.y + bar.height / 2 };
+    await canvasSafeMoveTo(d, park, 500);
     await d.sleep(900);
     await d.shot('members-focus');
 
@@ -77,7 +80,7 @@ export default {
     await clickDom(d, `${BAR} [title="Show all"]`, { duration: 500 });
     mark('show all');
     await d.sleep(250);
-    await d.moveTo(760, 498, 350);
+    await d.moveTo(park.x, park.y, 350);
     await d.shot('show-all');
     await d.sleep(1300);
     mark('end');

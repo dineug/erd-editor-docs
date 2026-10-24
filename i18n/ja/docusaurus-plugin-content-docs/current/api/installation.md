@@ -38,7 +38,8 @@ editor.addEventListener('change', () => {
 
 `setInitialValue('')` は新しい空のドキュメントから始めます。`value` への代入は読み込みを編集として扱うため、Undo の履歴に記録されます。
 `4.0.0` からは、`editor.value` はファイルが保持する形式のドキュメントで、保存するのはこちらです。`editor.runtimeValue` は、削除したエンティティも含めた、エディタが保持しているとおりのドキュメントです。共同編集の参加者に初期値を設定するためのもので、ファイルに書き込むことはありません。[runtimeValue](./erd-editor-element.md#runtimevalue) を参照してください。
-`4.0.0` からは、新しいドキュメントではすべての[設定のロック](../guide/guides/settings.md#ロック)もオンになっています。対象は表示位置と拡大・縮小、タブ、Code Generator の言語、2 つの名前のケース、括弧の種類です。スクロール、拡大・縮小、タブの切り替え、これらの設定の変更をしても `editor.value` は変わらず、`change` も発行されません。テキストから読み込んだドキュメントは、そこに指定されているロックを保ちます。`4.0.0` より前に保存したファイルのように何も指定されていないドキュメントは、保存した表示とタブにかかわらず、すべてのロックがオンで、拡大・縮小が 100%、ERD タブの状態で開きます。その表示は原点 `0, 0` でロックされ、そこにダイアグラムが何も描かれていない場合は、代わりにダイアグラムが見える位置で開きます。[setInitialValue](./erd-editor-element.md#setinitialvalue) を参照してください。
+`4.0.0` からは、新しいドキュメントではすべての[設定のロック](../guide/guides/settings.md#ロック)もオンになっています。対象は表示位置と拡大・縮小、タブ、Code Generator の言語、2 つの名前のケース、括弧の種類、そして `4.2.0` からは[名前の表示](../guide/guides/logical-names.md#name-view)です。スクロール、拡大・縮小、タブの切り替え、名前の表示の切り替え、その他の設定の変更をしても `editor.value` は変わらず、`change` も発行されません。テキストから読み込んだドキュメントは、そこに指定されているロックを保ちます。`4.0.0` より前に保存したファイルのように何も指定されていないドキュメントは、保存した表示位置とタブにかかわらず、すべてのロックがオンで、拡大・縮小が 100%、ERD タブの状態で開きます。その表示位置は原点 `0, 0` でロックされ、そこにダイアグラムが何も描かれていない場合は、画面は代わりにダイアグラムが見える位置で開きます。[setInitialValue](./erd-editor-element.md#setinitialvalue) を参照してください。
+`4.2.0` より前に保存したファイルは、他のロックがすべてオフのものでも、名前の表示が `Physical Names` でロックされた状態で開きます。`4.0.0` または `4.1.0` のエディタは、保存しても名前の表示のロックはそのまま保ちますが、表示そのものは保持しません。そのため、名前の表示のロックをオフにして保存した `4.2.0` のファイルは、ロックはオフのままですが、開き直すと `Physical Names` になります。
 残りの API については [ErdEditorElement](./erd-editor-element.md) を参照してください。
 
 ### CDN
@@ -56,7 +57,7 @@ editor.addEventListener('change', () => {
 ```
 
 `esm.run` がパッケージの外部依存を解決してくれるため、バンドラーなしでも動作します。
-バージョンを指定しない URL は常に最新のリリースを配信します。メジャーアップグレードが予告なくページに反映されるのを避けたい場合は、`https://esm.run/@dineug/erd-editor@4.1.0` のようにバージョンを固定します。
+バージョンを指定しない URL は常に最新のリリースを配信します。メジャーアップグレードが予告なくページに反映されるのを避けたい場合は、`https://esm.run/@dineug/erd-editor@4.2.0` のようにバージョンを固定します。
 `4.0.0` 自体がメジャーアップグレードです。3.x にとどまる必要があるページは `@3.10.0` に固定します。[3.x からのアップグレード](#3x-からのアップグレード)を参照してください。
 
 ### script タグ
@@ -66,14 +67,14 @@ editor.addEventListener('change', () => {
 
 ```html
 <erd-editor></erd-editor>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@4.1.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@4.2.0"></script>
 <script>
   const editor = document.querySelector('erd-editor');
   editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
 </script>
 ```
 
-読み込むと `<erd-editor>` が同じように登録され、`window.ErdEditor` に 2 つのファイルコールバック `ErdEditor.setExportFileCallback` と `ErdEditor.setImportFileCallback`、そして `3.9.2` からは `ErdEditor.createKeyBindingMap` が入っています。
+読み込むと `<erd-editor>` が同じように登録され、`window.ErdEditor` に 2 つのファイルコールバック `ErdEditor.setExportFileCallback` と `ErdEditor.setImportFileCallback`、そして `3.9.2` からは `ErdEditor.createKeyBindingMap` が入っています。`4.2.0` からは `ErdEditor.dictionaryRowChords` も入っています。[dictionaryRowChords](./erd-editor-element.md#dictionaryrowchords) を参照してください。
 exports マップは引き続き ES モジュールを指しているため、npm からインストールした場合にこのファイルが使われることはありません。
 
 ### HTML
@@ -166,17 +167,18 @@ Schema SQL と Code Generator のパネルは、専用の Shared Worker で動�
 
 ## エントリーポイント
 
-`@dineug/erd-editor` を読み込むと、副作用として `<erd-editor>` を登録します。それ以外には、要素の型、2 つのコールバック設定関数、`3.9.2` からは既定のキーバインディングとその型、そして `4.0.0` からは表示言語の型と `getSchemaSQL()` のオプションの型をエクスポートしています。
+`@dineug/erd-editor` を読み込むと、副作用として `<erd-editor>` を登録します。それ以外には、要素の型、2 つのコールバック設定関数、`3.9.2` からは既定のキーバインディングとその型、`4.0.0` からは表示言語の型と `getSchemaSQL()` のオプションの型、そして `4.2.0` からは辞書タブの行のキーの組み合わせをエクスポートしています。
 
 | エクスポート | 説明 |
 | --- | --- |
 | `ErdEditorElement`（型） | 要素のインターフェースです。[ErdEditorElement](./erd-editor-element.md) を参照してください。 |
 | `setExportFileCallback(cb)` | ブラウザのダウンロードを置き換えます。`(blob, { fileName }) => void` です。 |
-| `setImportFileCallback(cb)` | ブラウザのファイル選択を置き換えます。`({ type, op, accept, mode }) => void` です。`mode` は `4.0.0` からです。 |
+| `setImportFileCallback(cb)` | ブラウザのファイル選択を置き換えます。`({ type, op, accept, mode }) => void` です。`mode` は `4.0.0` からです。`4.2.0` からは、辞書タブの `Import CSV` は、コールバックを設定していてもブラウザのファイル選択を開きます。[ファイルダイアログ](#ファイルダイアログ)を参照してください。 |
 | `createKeyBindingMap()` | 既定のキーバインディングを、呼び出すたびに新しい `KeyBindingMap` として返します。[createKeyBindingMap](./erd-editor-element.md#createkeybindingmap) を参照してください。 |
 | `KeyBindingMap`、`KeyBindingName`、`ShortcutOption`（型） | バインディングのマップ、そのコマンド名のユニオン、1 つのバインディングです。 |
+| `dictionaryRowChords(map)` | `4.2.0` から。渡した `KeyBindingMap` のもとで[辞書](../guide/guides/dictionary.md#adding-and-deleting-rows)タブのグリッドが行を挿入・削除するキーの組み合わせを、呼び出すたびに新しい `ShortcutOption[]` として返します。上に行を挿入する組み合わせ（既定では `Alt+Shift+Enter`）は、どのバインディングにも含まれません。[dictionaryRowChords](./erd-editor-element.md#dictionaryrowchords) を参照してください。 |
 | `LocaleCode`、`LocaleOption`（型） | `4.0.0` から。25 の表示言語のコードと、`setLocale()` が受け取る、そのコードに `'system'` を加えたものです。[Display Language](./erd-editor-element.md#display-language) を参照してください。 |
-| `SchemaSQLOptions`（型） | `4.0.0` から。`getSchemaSQL()` が受け取る `statements` と `header` のオプションです。[getSchemaSQL](./erd-editor-element.md#getschemasql) を参照してください。 |
+| `SchemaSQLOptions`（型） | `4.0.0` から。`getSchemaSQL()` が受け取るオプションで、`statements`、`header`、そして `4.2.0` からは `logicalNameAsComment` があります。[getSchemaSQL](./erd-editor-element.md#getschemasql) を参照してください。 |
 
 `@dineug/erd-editor/engine.js` は 2 つ目のエントリーポイントです。DOM なしでドキュメントの store を動かすため、Web Worker でも動作します。[リモート保存](./advanced/remote-storage.md)を参照してください。
 `createReplicationStore` と `ReplicationStore` 型をエクスポートしています。`3.10.0` からは、レプリカの `change` リスナーが受け取る `ReplicationChange` 型 `{ value: string; changed: boolean }` もエクスポートしています。[on@change](./advanced/remote-storage.md#onchange) を参照してください。
@@ -188,6 +190,7 @@ Schema SQL と Code Generator のパネルは、専用の Shared Worker で動�
 
 読み込みと書き出しは差し替え可能なコールバックを経由するため、ブラウザのファイルダイアログを持たないホスト、例えば IDE の Webview でも独自の実装を渡せます。
 2 つは対称ではありません。書き出しは完成したファイルを渡しますが、読み込みはファイルを要求するだけで、内容は自分でエディタに渡します。
+`4.2.0` からは、辞書タブの `Import CSV` は、読み込みのコールバックを一切呼ばない唯一の読み込みです。このコールバックの `type` には CSV の値がありません。`Import CSV` は常にブラウザ自身のファイル選択を `.csv` ファイル向けに開きます。[CSV の読み込みと書き出し](../guide/guides/dictionary.md#importing-and-exporting-csv)を参照してください。
 
 `op` は `set` または `diff` です。`diff` の場合は `type` に関係なく `setDiffValue()` に渡します。それ以外では `type` がメソッドを決め、`accept` にはその型の拡張子が入っているため、そのままホストのファイルダイアログに渡せます。
 `4.0.0` からは、ユーザーが [Import and Add](../guide/guides/file-import-export.md#import-and-add) を選んだ場合は `set` に `mode: 'append'` が付き、通常の Import では `mode` は付きません。`mode` はそのまま渡してください。渡さないコールバックでは、ユーザーがファイルを追加しようとしたダイアグラムが置き換えられてしまいます。
@@ -229,8 +232,8 @@ setImportFileCallback(async ({ type, op, accept, mode }) => {
 処理する `type` ごとに分岐し、それ以外は無視します。
 置き換えを行う `setSchemaJSON()` は、`value` への代入と同じく、パースの前にドキュメントを消去します。そのため、`.erd.json` ドキュメントではないデータを、包括的な `else` や、後から追加された `type` が漏れたことによってそこに渡すと、何も読み込まれずにダイアグラムが空になります。
 
-エディタが生成する `fileName` は `<データベース名>-<時刻>` にファイルの拡張子を付けたもので、時刻はローカル時刻で `yyyy-MM-dd'T'HH_mm_ss` の形式です。データベース名が空の場合は `unnamed` になります。
-書き出しのコールバックは次のファイルを受け取ります。`4.0.0` からは SVG と Code Generator のファイルも含まれ、`.sql` は `Export` から直接ではなく、Schema SQL タブの `Save file` から届きます。
+エディタが生成する `fileName` は `<database name>-<timestamp>` にファイルの拡張子を付けたもので、タイムスタンプはローカル時刻で `yyyy-MM-dd'T'HH_mm_ss` の形式です。データベース名が空の場合は `unnamed` になります。辞書の CSV では、`<database name>-<timestamp>-words.csv` のように、拡張子の前にシート名が入ります。
+書き出しのコールバックは次のファイルを受け取ります。`4.0.0` からは SVG と Code Generator のファイルも含まれ、`.sql` は `Export` から直接ではなく、Schema SQL タブの `Save file` から届きます。`4.2.0` からは辞書タブの CSV も含まれます。
 
 | ファイル | 拡張子 | Blob の `type` |
 | --- | --- | --- |
@@ -238,6 +241,7 @@ setImportFileCallback(async ({ type, op, accept, mode }) => {
 | タブに表示されているテキストを保存する、Schema SQL タブの `Save file`。[Schema SQL](../guide/guides/schema-sql.md) を参照してください | `.sql` | なし |
 | [Export image](../guide/guides/file-import-export.md#画像) ダイアログ | `.png` または `.svg` | `image/png` または `image/svg+xml` |
 | Code Generator タブの `Save file`。[コード生成](../guide/guides/code-generator.md)を参照してください | 言語ごとの拡張子。`.cs`、`.go`、`.java`、`.kt`、`.php`、`.rs`、`.scala`、`.swift`、`.ts`、`.py`、`.aml`、`.dbml`、`.graphql`、`.json`、`.mmd` のいずれかです | なし |
+| 検索で表示されている行にかかわらず、表示中のシートのすべての行を収めた、辞書タブの `Export CSV`。[CSV の読み込みと書き出し](../guide/guides/dictionary.md#importing-and-exporting-csv)を参照してください | `.csv` | `text/csv` |
 
 拡張子でハンドラーを選ぶホストには、そのそれぞれに対するハンドラーが必要です。
 
@@ -261,5 +265,5 @@ Chrome 91+、Edge 94+、Firefox 93+、Safari 16.4+ に対応しています。�
 - 読み込みのコールバックは Import and Add で `mode: 'append'` を受け取るため、コールバックはそれをそのまま渡す必要があります。書き出しのコールバックは `.svg` と Code Generator のファイルも受け取るようになり、`Export` ▸ `Schema SQL` は保存せずに Schema SQL タブを開くため、`.sql` はそのタブの `Save file` からのみ届きます。[ファイルダイアログ](#ファイルダイアログ)を参照してください。
 - `Delete` と `Backspace` は新しい `removeSelection` に割り当てられています。エディタにフォーカスがあり、テキストフィールドの外にある間は、どのタブでもキーの既定の動作が抑止され、ERD タブでは選択しているものが削除されます。`KeyBindingName` と `KeyBindingMap` にはこれが加わり、`setKeyBindingMap({ removeSelection: [] })` で両方のキーをページに任せられます。[setKeyBindingMap](./erd-editor-element.md#setkeybindingmap) を参照してください。
 - `ThemeOptions.appearance` は `'system'` も受け取ります。テーマビルダーの `System` にあたり、`systemDarkMode` をオンにするとこの値になります。`changePresetTheme` は `System` を選んでいる間 `'system'` を報告するため、そのまま保存し、そのまま `setPresetTheme` に渡します。`systemDarkMode` がオンの間に `'light'` または `'dark'` を指定した `setPresetTheme()` は、次の OS の切り替えで上書きされず、そのまま保たれるようになりました。[systemDarkMode](./erd-editor-element.md#systemdarkmode) と [changePresetTheme](./erd-editor-element.md#changepresettheme) を参照してください。
-- `@dineug/erd-editor-mcp` `1.0.0`、VS Code の拡張機能 `4.0.0` 以降、Obsidian と JetBrains のプラグイン `1.0.0` 以降は、ハブのプロトコル 2 を使います。サーバー `1.0.0` とエージェントに対応する以前のエディタのリリース、または以前のサーバーとこれらのエディタは、`protocolMismatch` で互いを拒否し、更新が必要な側を示します。[アップデート](../mcp/installation.md#アップデート)を参照してください。
+- `@dineug/erd-editor-mcp` `1.0.0` 以降、VS Code の拡張機能 `4.0.0` 以降、Obsidian と JetBrains のプラグイン `1.0.0` 以降は、ハブのプロトコル 2 を使います。サーバー `1.0.0` 以降とエージェントに対応する以前のエディタのリリース、または以前のサーバーとこれらのエディタは、`protocolMismatch` で互いを拒否し、更新が必要な側を示します。[アップデート](../mcp/installation.md#アップデート)を参照してください。
 - バージョンを指定しない CDN の URL は最新の 4.x リリースを配信するようになりました。3.x にとどまるには `@3.10.0` に固定します。[CDN](#cdn) を参照してください。

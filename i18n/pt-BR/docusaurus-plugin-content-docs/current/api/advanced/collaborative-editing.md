@@ -44,19 +44,26 @@ Trate uma ação como opaca e repasse-a sem alterações, em vez de lê-la ou re
 
 Parte do que um editor faz fica restrita a esse editor.  
 Trazer uma tabela, uma nota ou um grupo de tabelas para a frente, como acontece ao selecionar um deles, não é enviado.  
-Também não são enviadas as escolhas `Statements`, `Header` e `Tables` da aba [Esquema SQL](../../guide/guides/schema-sql.md), que pertencem à janela em que são feitas.  
+Também não são enviadas as escolhas `Statements`, `Header`, `Write logical names into empty comments` (a partir da `4.2.0`) e `Tables` da aba [Esquema SQL](../../guide/guides/schema-sql.md), que pertencem à janela em que são feitas.  
 A partir da `4.1.0`, o [explorador](../../guide/guides/explorer.md) também fica restrito ao seu editor: se ele está aberto, sua largura, suas linhas recolhidas, a linha em que o teclado está, a posição de rolagem da árvore, sua pesquisa e suas opções não são enviados.  
 Também não é enviada a [iluminação](../../guide/guides/relationship-editing.md#reading-a-connector) que ir para uma chave estrangeira aplica ao conector do relacionamento dela.  
-Uma rolagem, um zoom ou uma troca de aba são enviados, mas nunca movem a área visível nem a aba de outro usuário. Isso inclui a rolagem que um salto a partir do explorador faz e a troca para a aba ERD quando o explorador é aberto a partir de outra aba.
+A partir da `4.2.0`, a aba [Dicionário](../../guide/guides/dictionary.md) também fica restrita ao seu editor: qual planilha é mostrada e a pesquisa, a seleção, a rolagem e as larguras das colunas de cada planilha não são enviados. Já suas edições, classificações e importações de CSV são enviadas.  
+Uma rolagem, um zoom ou uma troca de aba são enviados, mas nunca movem a área visível nem a aba de outro usuário. Isso inclui a rolagem que um salto a partir do explorador faz, a troca para a aba ERD quando o explorador é aberto a partir de outra aba e a troca de aba e a rolagem de um salto da planilha [`Checks`](../../guide/guides/dictionary.md#the-checks-sheet) da aba Dicionário para uma tabela ou coluna. Um salto dessa planilha para uma palavra, um termo ou um domínio permanece na aba Dicionário, então nada disso é enviado.
+
+A partir da `4.2.0`, uma troca da [exibição de nomes](../../guide/guides/logical-names.md#switching-the-view) também é enviada, e o [bloqueio](../../guide/guides/settings.md#lock) dela decide o que os outros editores fazem com ela. O bloqueio `Name View` está ativado em um diagrama novo e em qualquer documento anterior à `4.2.0`.  
+Enquanto o bloqueio está ativado, a troca aparece apenas no editor que a fez: ela continua sendo enviada, mas todos os outros editores e todas as réplicas a descartam, então cada usuário pode olhar para uma exibição diferente enquanto `value` mantém a exibição bloqueada. Uma alteração de linguagem, de estilo de nome ou de tipo de delimitador é diferente: ela chega a todos os editores, esteja o bloqueio dela ativado ou não.  
+Enquanto o bloqueio está desativado, uma troca feita em um editor que pode editar altera a exibição de nomes em todos os editores e réplicas, prevalecendo a troca mais recente, e todos eles a salvam.  
+Uma troca feita por um editor somente leitura sempre fica restrita a esse editor, e o editor continua seguindo as trocas compartilhadas dos outros.
 
 Os [bloqueios](../../guide/guides/settings.md#lock) são compartilhados: o bloqueio ou desbloqueio mais recente de uma configuração prevalece em todos os editores, e um bloqueio carrega os valores do editor que o ativou, então todos os editores e réplicas salvam o mesmo valor.  
 Portanto, um bloqueio `Viewport` salva a área visível do editor que o ativou, e um bloqueio `Canvas Type`, a última aba em que esse editor estava antes da aba Configurações, onde os bloqueios são ativados.  
-Desativar o bloqueio `Language`, `Table Name Case`, `Column Name Case` ou `Bracket Type` também define essa configuração, em todos os editores, com o valor mostrado no editor que o desativou, para que todos continuem salvando um único valor. Desativar `Viewport` ou `Canvas Type` não move a área visível nem a aba de ninguém.
+Desativar o bloqueio `Language`, `Table Name Case`, `Column Name Case`, `Bracket Type` ou, a partir da `4.2.0`, `Name View` também define essa configuração, em todos os editores, com o valor mostrado no editor que o desativou, para que todos continuem salvando um único valor. Desativar `Viewport` ou `Canvas Type` não move a área visível nem a aba de ninguém.
 
 Uma edição no script `Before tables` ou `After tables` é enviada inteira quando o campo dele perde o foco. Os dois scripts são resolvidos separadamente, então a edição de um colaborador em um deles nunca sobrescreve o outro.
 
 Nada do que se faz no [modo Flow](../../guide/guides/visualization.md#flow-never-edits-the-document) da aba Visualização é uma alteração no documento, então um editor no Flow não envia alterações aos outros, e as alterações que eles enviam continuam sendo aplicadas enquanto ele está lá.  
-A única exceção é sair do Flow para outra aba: essa troca de aba é enviada como qualquer outra.  
+Há duas exceções. Sair do Flow para outra aba é uma troca de aba, enviada como qualquer outra. A partir da `4.2.0`, uma escolha na lista de exibição de nomes da barra do Flow é uma troca da exibição de nomes, enviada e aplicada como uma feita no canvas.  
+`Previous table`, `Next table` e as teclas de desfazer e refazer, que [percorrem as exibições](../../guide/guides/visualization.md#previous-table-and-next-table) no Flow, não são enviados.  
 O botão de link externo do cartão, um resultado da [pesquisa rápida](../../guide/guides/quick-search.md#searching-the-diagram) escolhido após `#`, `@` ou `:` e a abertura do [explorador](../../guide/guides/explorer.md#opening-and-closing) saem todos do Flow para a aba ERD. Uma rolagem feita ali pelo botão do cartão ou por um resultado da pesquisa rápida também é enviada.
 
 ## Dois editores em uma página {#two-editors-on-one-page}
@@ -99,6 +106,7 @@ const sharedStore2 = editor2.getSharedStore();
 
 O valor em tempo de execução ainda contém o que foi removido desde que o documento foi aberto, então, quando outro editor desfaz uma remoção mais tarde, o editor que entrou traz a tabela de volta com seu nome e suas colunas.  
 [`value`](../erd-editor-element.md#value) é a forma que um arquivo contém, sem as entidades removidas, então um editor que entra inicializado com ele, ou com o arquivo, traria de volta, em vez disso, uma tabela vazia e sem nome.  
+A partir da `4.2.0`, o mesmo vale para uma palavra, um termo ou um domínio removido de uma planilha da aba [Dicionário](../../guide/guides/dictionary.md): quando outro editor desfaz a remoção, um editor que entra inicializado com `runtimeValue` lista a linha de novo inteira, e um inicializado com `value` lista uma linha vazia, que o próprio `value` dele então deixa de fora.  
 Continue escrevendo `value` no armazenamento: `runtimeValue` serve apenas para inicializar outro editor, uma segunda exibição ou um [replicationStore](./remote-storage.md).  
 Os editores no VS Code, no Obsidian, em uma IDE da JetBrains e no aplicativo web inicializam assim uma segunda exibição de um documento aberto.
 
@@ -134,6 +142,31 @@ Mantenha todos os editores de uma sessão, e qualquer [replicationStore](./remot
 Um editor `4.1.0` não envia nenhum tipo de ação novo, então editores e réplicas `4.0.0` e `4.1.0` compartilham uma sessão sem perder nada.  
 Nele, [Localizar e substituir](../../guide/guides/find-and-replace.md#replacing) também pesquisa nomes de índices e nomes de grupos de tabelas, e `Replace` e `Replace All` os renomeiam com as ações `index.changeName` e `tableGroup.changeName` que um editor `4.0.0` já aplica.
 
+A partir da `4.2.0`, estas alterações trafegam em novos tipos de ação, e um retransmissor que repassa as ações sem alterações não precisa de nada novo para elas:
+
+- o [nome lógico](../../guide/guides/logical-names.md) de uma tabela ou coluna: `table.changeLogicalName` e `column.changeLogicalName`; se o nome dela foi [derivado dos dicionários](../../guide/guides/dictionary.md#deriving-physical-names): `table.changeNameDerived` e `column.changeNameDerived`;
+- uma coluna vinculada a um [domínio](../../guide/guides/dictionary.md#domains-and-data-types) ou desvinculada: `column.changeDomain`;
+- uma palavra, um termo ou um domínio adicionado, alterado (incluindo sua posição na planilha, como uma classificação a define) ou removido na aba [Dicionário](../../guide/guides/dictionary.md): `dictionary.add`, `dictionary.update` e `dictionary.remove`;
+- uma troca da [exibição de nomes](../../guide/guides/logical-names.md#switching-the-view): `settings.changeNameViewMode`.
+
+O bloqueio `Name View` trafega na ação existente `settings.changeLockSettings`, a opção de exibição `Domain`, em `settings.changeShow`, e uma movimentação de `Logical Name` ou `Domain` na [ordem das colunas](../../guide/guides/settings.md#adjusting-column-order), em `settings.changeColumnOrder`.  
+Os `editor.clear` e `editor.loadJson` de uma importação de Esquema SQL, GraphQL, DBML ou AML feita por `Import` trazem `keepDictionaries: true`, que mantém as palavras, os termos e os domínios em todos os editores. O mesmo acontece com os de um [setSchemaSQL](../erd-editor-element.md#setschemasql), `setSchemaGraphQL`, `setSchemaDBML` ou `setSchemaAML` de substituição.  
+Um nome físico que os dicionários derivam trafega em `table.changeName` ou `column.changeName`, e o tipo de dados que um domínio dá às suas colunas, em `column.changeDataType`, as ações que uma edição manual envia.
+
+Um editor anterior à `4.2.0` ignora os novos tipos de ação: ele não tem nomes lógicos, vínculos com domínios, dicionários nem exibição de nomes. Um bloqueio ou desbloqueio de `Name View` não altera nada nele, e o mesmo vale para uma movimentação de `Logical Name` ou `Domain` na ordem das colunas, ou para uma movimentação para a posição de qualquer um deles. Também não altera nada um bloqueio `Canvas Type` ativado por um editor que chegou à aba Configurações a partir da aba Dicionário: o editor mais antigo não conhece essa aba, então mantém `Canvas Type` desbloqueado. Ele continua mostrando os nomes físicos que os dicionários derivam e os tipos de dados que os domínios dão.  
+As próprias edições dele não sabem nada de nomes lógicos, domínios nem dicionários, com estes efeitos nos editores mais novos:
+
+- Uma tabela ou coluna que ele renomeia manualmente mantém o nome marcado como derivado, então um nome lógico escrito para ela mais tarde em um editor mais novo pode derivar o nome novamente por cima do que ele digitou.
+- Um tipo de dados que ele dá a uma coluna vinculada a um domínio mantém o vínculo, então a planilha `Checks` lista `Domain type mismatch`, e a próxima alteração de tipo do domínio dá à coluna o tipo do domínio novamente.
+- As colunas de chave estrangeira de um relacionamento que ele adiciona não recebem nome lógico nem domínio da sua chave.
+- Uma tabela que ele cola ou duplica chega sem nomes lógicos nem vínculos com domínios.
+- Uma importação de Esquema SQL, GraphQL, DBML ou AML feita nele não envia `keepDictionaries`, então esvazia as palavras, os termos e os domínios em todos os editores.
+- Desfazer nele um carregamento, uma importação ou um `clear()` carrega a própria cópia do documento dele em todos os editores, e essa cópia não tem nomes lógicos, vínculos com domínios nem dicionários.
+- Essa cópia, e o documento que uma importação de Esquema SQL, GraphQL, DBML ou AML feita nele carrega, também devolvem o bloqueio `Name View` em todos os editores ao estado em que esse editor o encontrou. Todos os editores passam então a salvar `Physical Names` como a exibição de nomes, e também a mostrá-la se o bloqueio estiver desativado.
+
+Um documento salvo por um deles não tem nomes lógicos, vínculos com domínios, dicionários nem exibição de nomes, então um editor `4.2.0` o abre na exibição `Physical Names`. O editor mais antigo salva, sim, o bloqueio `Name View` como o encontrou, então um documento desbloqueado em um editor `4.2.0` continua desbloqueado.  
+Mantenha todos os editores de uma sessão, e qualquer [replicationStore](./remote-storage.md#dispatch-dispatchsync) que armazene o documento dela, na `4.2.0` ou posterior.
+
 ## SharedStoreConfig {#sharedstoreconfig}
 
 ### getNickname {#getnickname}
@@ -161,6 +194,7 @@ editor.getSharedStore({ mouseTracker: false });
 Transmite aquilo em que este usuário está trabalhando. O padrão é `true`.  
 A tabela e a célula que você tem em foco, as tabelas, as notas e os grupos de tabelas que você selecionou e o retângulo que você arrasta no canvas são enviados aos outros editores e desenhados neles.  
 Cada usuário recebe uma cor própria, para que seja possível distingui-los: um contorno na tabela em foco, um sublinhado na célula em foco, um anel ao redor das tabelas, notas e grupos de tabelas selecionados e um retângulo tracejado para o retângulo de arrasto.  
+A partir da `4.2.0`, cada usuário pode estar olhando para uma [exibição de nomes](../../guide/guides/logical-names.md#collaborators) diferente enquanto o bloqueio dela está ativado, ou depois de uma troca feita por um editor somente leitura. Uma célula em foco que a sua exibição não desenha é sublinhada na célula que ela desenha no lugar dela: o nome e o nome lógico ocupam o lugar um do outro, assim como o tipo de dados e o domínio.  
 A presença que chega de outros usuários é sempre desenhada no seu canvas, esteja esta opção ativada ou não.  
 No modo Flow da aba Visualização, o foco e a seleção dos outros usuários são desenhados nos cartões das tabelas, mas os retângulos de arrasto deles não. As tabelas que você seleciona ali continuam sendo enviadas; o retângulo que você arrasta ali, não.
 

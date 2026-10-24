@@ -159,8 +159,12 @@ export default {
     // Shift + wheel sideways past the last table.
     mark('away');
     // Below the tables and above the toolbar, where no table passes under the
-    // pointer, near the end of the toolbar where the compass appears.
-    await d.moveTo(560, 462, 450);
+    // pointer, near the end of the toolbar where the compass appears. The way
+    // there runs straight down from the minimap, right of payments, then left
+    // along that empty band: a diagonal would cross payments and light it up.
+    const pay = await d.tableBox('payments');
+    const downX = Math.max(d.mouse.x, pay.x + pay.width + 40);
+    await glide(d, [{ x: downX, y: d.mouse.y }, { x: downX, y: 462 }, { x: 560, y: 462 }], 650);
     await d.holding(
       ['Shift'],
       async () => {

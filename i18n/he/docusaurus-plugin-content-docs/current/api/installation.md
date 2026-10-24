@@ -38,7 +38,8 @@ editor.addEventListener('change', () => {
 
 `setInitialValue('')` פותחת מסמך חדש וריק. השמה ל-`value`, לעומת זאת, טוענת מסמך כעריכה, ולכן הוא נרשם בהיסטוריית הפעולות.
 החל מגרסה `4.0.0`, `editor.value` הוא המסמך בצורה שבה קובץ מכיל אותו, וזה מה שיש לשמור. `editor.runtimeValue` הוא המסמך כפי שהעורך מחזיק אותו, כולל ישויות שהוסרו: הוא משמש לאתחול שותף לעריכה ולעולם אינו נכתב לקובץ – ראו [runtimeValue](./erd-editor-element.md#runtimevalue).
-החל מגרסה `4.0.0`, במסמך חדש גם כל [נעילות ההגדרות](../guide/guides/settings.md#lock) מופעלות: אזור התצוגה, הכרטיסייה, שפת הקוד במחולל הקוד, שני סגנונות השמות וסוג המירכאות. גלילה, זום, מעבר בין כרטיסיות או שינוי של אחת מההגדרות האלה משאירים את `editor.value` כפי שהיה ואינם משגרים `change`. מסמך שנטען מטקסט שומר על הנעילות שהוא מציין. מסמך שאינו מציין אף נעילה, כגון כל קובץ שנשמר לפני גרסה `4.0.0`, נפתח כשכל הנעילות מופעלות, ברמת זום של 100% ובכרטיסיית ERD, בלי קשר לתצוגה ולכרטיסייה שנשמרו בו. התצוגה שלו נעולה בנקודת הראשית `0, 0`, ונפתחת במקום זאת על התרשים אם שום חלק מהתרשים אינו מוצג שם – ראו [setInitialValue](./erd-editor-element.md#setinitialvalue).
+החל מגרסה `4.0.0`, במסמך חדש גם כל [נעילות ההגדרות](../guide/guides/settings.md#lock) מופעלות: אזור התצוגה, הכרטיסייה, שפת הקוד במחולל הקוד, שני סגנונות השמות, סוג המירכאות, והחל מגרסה `4.2.0` גם [תצוגת השמות](../guide/guides/logical-names.md#name-view). גלילה, זום, מעבר בין כרטיסיות, החלפת תצוגת השמות או שינוי של אחת מההגדרות האחרות משאירים את `editor.value` כפי שהיה ואינם משגרים `change`. מסמך שנטען מטקסט שומר על הנעילות שהוא מציין. מסמך שאינו מציין אף נעילה, כגון כל קובץ שנשמר לפני גרסה `4.0.0`, נפתח כשכל הנעילות מופעלות, ברמת זום של 100% ובכרטיסיית ERD, בלי קשר לאזור התצוגה ולכרטיסייה שנשמרו בו. אזור התצוגה שלו נעול בנקודת הראשית `0, 0`, והתצוגה נפתחת במקום זאת על התרשים אם שום חלק מהתרשים אינו מוצג שם – ראו [setInitialValue](./erd-editor-element.md#setinitialvalue).
+קובץ שנשמר לפני גרסה `4.2.0` נפתח כשתצוגת השמות נעולה על `Physical Names`, גם אם כל שאר הנעילות בו כבויות. עורך בגרסה `4.0.0` או `4.1.0` משאיר את הנעילה של תצוגת השמות כפי שהיא בשמירה אבל משמיט את התצוגה, ולכן קובץ של גרסה `4.2.0` שנשמר כשתצוגת השמות לא נעולה נשאר לא נעול, אבל נפתח מחדש בתצוגה `Physical Names`.
 לגבי שאר ה-API, ראו [ErdEditorElement](./erd-editor-element.md).
 
 ### CDN {#cdn}
@@ -56,7 +57,7 @@ editor.addEventListener('change', () => {
 ```
 
 `esm.run` מאתר בעצמו את התלויות החיצוניות של החבילה, ולכן הקוד הזה עובד בלי bundler.
-כתובת ה-URL ללא גרסה מגישה תמיד את הגרסה האחרונה. יש לקבע גרסה – `https://esm.run/@dineug/erd-editor@4.1.0` – כדי ששדרוג לגרסה ראשית חדשה לא יגיע לדף בלי הודעה מראש.
+כתובת ה-URL ללא גרסה מגישה תמיד את הגרסה האחרונה. יש לקבע גרסה – `https://esm.run/@dineug/erd-editor@4.2.0` – כדי ששדרוג לגרסה ראשית חדשה לא יגיע לדף בלי הודעה מראש.
 גרסה `4.0.0` היא בעצמה שדרוג כזה: דף שצריך להישאר בגרסה 3 מקבע את `@3.10.0` – ראו [שדרוג מגרסה 3](#upgrading-from-3x).
 
 ### תגית script {#script-tag}
@@ -66,14 +67,14 @@ editor.addEventListener('change', () => {
 
 ```html
 <erd-editor></erd-editor>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@4.1.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@4.2.0"></script>
 <script>
   const editor = document.querySelector('erd-editor');
   editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
 </script>
 ```
 
-טעינת הקובץ רושמת את `<erd-editor>` באותו אופן; `window.ErdEditor` מכיל את שתי פונקציות ה-callback של הקבצים, `ErdEditor.setExportFileCallback` ו-`ErdEditor.setImportFileCallback`, וכן, החל מגרסה `3.9.2`, את `ErdEditor.createKeyBindingMap`.
+טעינת הקובץ רושמת את `<erd-editor>` באותו אופן; `window.ErdEditor` מכיל את שתי פונקציות ה-callback של הקבצים, `ErdEditor.setExportFileCallback` ו-`ErdEditor.setImportFileCallback`, וכן, החל מגרסה `3.9.2`, את `ErdEditor.createKeyBindingMap`. החל מגרסה `4.2.0`, הוא מכיל גם את `ErdEditor.dictionaryRowChords` – ראו [dictionaryRowChords](./erd-editor-element.md#dictionaryrowchords).
 מפת ה-exports עדיין מפנה bundler אל מודולי ה-ES, ולכן התקנה מ-npm לעולם אינה משתמשת בקובץ הזה.
 
 ### HTML {#html}
@@ -166,17 +167,18 @@ const found = document.querySelector('erd-editor'); // ErdEditorElement | null
 
 ## נקודות כניסה {#entry-points}
 
-ייבוא של `@dineug/erd-editor` רושם את `<erd-editor>` כתופעת לוואי. מעבר לכך, החבילה מייצאת את טיפוס האלמנט, שתי פונקציות להגדרת callback, החל מגרסה `3.9.2` את צירופי המקשים של ברירת המחדל יחד עם הטיפוסים שלהם, והחל מגרסה `4.0.0` את הטיפוסים של שפת התצוגה ואת טיפוס האפשרויות של `getSchemaSQL()`.
+ייבוא של `@dineug/erd-editor` רושם את `<erd-editor>` כתופעת לוואי. מעבר לכך, החבילה מייצאת את טיפוס האלמנט, שתי פונקציות להגדרת callback, החל מגרסה `3.9.2` את צירופי המקשים של ברירת המחדל יחד עם הטיפוסים שלהם, החל מגרסה `4.0.0` את הטיפוסים של שפת התצוגה ואת טיפוס האפשרויות של `getSchemaSQL()`, והחל מגרסה `4.2.0` את צירופי המקשים של השורות בכרטיסיית מילון.
 
 | ייצוא | תיאור |
 | --- | --- |
 | `ErdEditorElement` (טיפוס) | הממשק של האלמנט – ראו [ErdEditorElement](./erd-editor-element.md). |
 | `setExportFileCallback(cb)` | מחליפה את ההורדה של הדפדפן, `(blob, { fileName }) => void`. |
-| `setImportFileCallback(cb)` | מחליפה את בורר הקבצים של הדפדפן, `({ type, op, accept, mode }) => void`; `mode` החל מגרסה `4.0.0`. |
+| `setImportFileCallback(cb)` | מחליפה את בורר הקבצים של הדפדפן, `({ type, op, accept, mode }) => void`; `mode` החל מגרסה `4.0.0`. החל מגרסה `4.2.0`, הפעולה `Import CSV` של כרטיסיית מילון פותחת את הבורר של הדפדפן גם כשמוגדרת פונקציית callback – ראו [תיבות דו-שיח של קבצים](#file-dialogs). |
 | `createKeyBindingMap()` | מחזירה את צירופי המקשים של ברירת המחדל כ-`KeyBindingMap` חדש בכל קריאה – ראו [createKeyBindingMap](./erd-editor-element.md#createkeybindingmap). |
 | `KeyBindingMap`, `KeyBindingName`, `ShortcutOption` (טיפוסים) | מפה של צירופי מקשים, האיחוד של שמות הפקודות שבה, וצירוף מקשים יחיד. |
+| `dictionaryRowChords(map)` | החל מגרסה `4.2.0`. מחזירה, כ-`ShortcutOption[]` חדש בכל קריאה, את צירופי המקשים שבהם הרשת של כרטיסיית [מילון](../guide/guides/dictionary.md#adding-and-deleting-rows) מוסיפה ומוחקת שורות לפי ה-`KeyBindingMap` שמועבר אליה. הצירוף שמוסיף שורות מעל, `Alt+Shift+Enter` בברירות המחדל, אינו מופיע באף צירוף מקשים של המפה – ראו [dictionaryRowChords](./erd-editor-element.md#dictionaryrowchords). |
 | `LocaleCode`, `LocaleOption` (טיפוסים) | החל מגרסה `4.0.0`. 25 הקודים של שפות התצוגה, ואותם קודים בתוספת `'system'`, שהמתודה `setLocale()` מקבלת – ראו [שפת תצוגה](./erd-editor-element.md#display-language). |
-| `SchemaSQLOptions` (טיפוס) | החל מגרסה `4.0.0`. האפשרויות `statements` ו-`header` שהמתודה `getSchemaSQL()` מקבלת – ראו [getSchemaSQL](./erd-editor-element.md#getschemasql). |
+| `SchemaSQLOptions` (טיפוס) | החל מגרסה `4.0.0`. האפשרויות שהמתודה `getSchemaSQL()` מקבלת: `statements`, `header` והחל מגרסה `4.2.0` גם `logicalNameAsComment` – ראו [getSchemaSQL](./erd-editor-element.md#getschemasql). |
 
 `@dineug/erd-editor/engine.js` היא נקודת כניסה שנייה. היא מריצה את מאגר המסמך בלי DOM, ולכן היא עובדת ב-Web Worker – ראו [אחסון מרוחק](./advanced/remote-storage.md).
 היא מייצאת את `createReplicationStore` ואת הטיפוס `ReplicationStore`. החל מגרסה `3.10.0`, היא מייצאת גם את הטיפוס `ReplicationChange`, `{ value: string; changed: boolean }`, שמאזין ה-`change` של רפליקה מקבל – ראו [on@change](./advanced/remote-storage.md#onchange).
@@ -188,6 +190,7 @@ const found = document.querySelector('erd-editor'); // ErdEditorElement | null
 
 ייבוא וייצוא עוברים דרך פונקציות callback שניתן להזריק, כך שסביבה מארחת שאין בה תיבת דו-שיח של הדפדפן לבחירת קבצים – לדוגמה, webview של IDE – יכולה לספק תיבה משלה.
 השניים אינם סימטריים: הייצוא מוסר לסביבה המארחת את הקובץ המוגמר, ואילו הייבוא רק מבקש קובץ, והסביבה המארחת מכניסה את התוכן חזרה בעצמה.
+החל מגרסה `4.2.0`, הפעולה `Import CSV` של כרטיסיית מילון היא הייבוא היחיד שלעולם אינו קורא לפונקציית ה-callback של הייבוא, שב-`type` שלה אין ערך ל-CSV. היא תמיד פותחת את בורר הקבצים של הדפדפן עצמו, לקובצי `.csv` – ראו [ייבוא וייצוא של CSV](../guide/guides/dictionary.md#importing-and-exporting-csv).
 
 `op` הוא `set` או `diff` – `diff` מועבר ל-`setDiffValue()`, בלי קשר ל-`type`. אחרת, `type` קובע את המתודה, ו-`accept` מכיל את הסיומות של אותו סוג, מוכנות להעברה לתיבת דו-שיח של קבצים בסביבה המארחת.
 החל מגרסה `4.0.0`, `set` כולל `mode: 'append'` כשהמשתמש בחר ב[ייבוא והוספה](../guide/guides/file-import-export.md#import-and-add), ואינו כולל `mode` בייבוא רגיל. יש להעביר אותו הלאה: פונקציית callback שמשמיטה אותו מחליפה את התרשים שהמשתמש ביקש להוסיף אליו.
@@ -229,8 +232,8 @@ setImportFileCallback(async ({ type, op, accept, mode }) => {
 יש לפצל לפי כל `type` שמטופל ולהתעלם מהשאר.
 קריאה ל-`setSchemaJSON()` במצב החלפה, כמו השמה ל-`value`, מנקה את המסמך לפני הניתוח, ולכן ניתוב לשם של תוכן שאינו מסמך `.erd.json` – דרך `else` שתופס הכול, או משום ש-`type` שנוסף מאוחר יותר נפל לשם – מרוקן את התרשים במקום לייבא משהו.
 
-ה-`fileName` שהעורך יוצר הוא `<database name>-<timestamp>` בתוספת סיומת הקובץ, כאשר חותמת הזמן היא השעה המקומית בתבנית `yyyy-MM-dd'T'HH_mm_ss`. שם מסד נתונים ריק מוחלף ב-`unnamed`.
-פונקציית ה-callback של הייצוא מקבלת את הקבצים האלה. החל מגרסה `4.0.0`, קובץ ה-SVG והקבצים של מחולל הקוד נמנים עליהם, וקובץ ה-`.sql` מגיע מהלחצן `Save file` בכרטיסיית סכמת SQL ולא ישירות מתפריט המשנה `Export`.
+ה-`fileName` שהעורך יוצר הוא `<database name>-<timestamp>` בתוספת סיומת הקובץ, כאשר חותמת הזמן היא השעה המקומית בתבנית `yyyy-MM-dd'T'HH_mm_ss`. שם מסד נתונים ריק מוחלף ב-`unnamed`. בקובץ CSV של המילון, שם הגיליון מופיע לפני הסיומת, כמו ב-`<database name>-<timestamp>-words.csv`.
+פונקציית ה-callback של הייצוא מקבלת את הקבצים האלה. החל מגרסה `4.0.0`, קובץ ה-SVG והקבצים של מחולל הקוד נמנים עליהם, וקובץ ה-`.sql` מגיע מהלחצן `Save file` בכרטיסיית סכמת SQL ולא ישירות מתפריט המשנה `Export`. החל מגרסה `4.2.0`, גם קובץ ה-CSV של כרטיסיית מילון נמנה עליהם.
 
 | קובץ | סיומת | `type` של ה-Blob |
 | --- | --- | --- |
@@ -238,6 +241,7 @@ setImportFileCallback(async ({ type, op, accept, mode }) => {
 | הקובץ מהלחצן `Save file` בכרטיסיית סכמת SQL, ובו הטקסט שהכרטיסייה מציגה – ראו [סכמת SQL](../guide/guides/schema-sql.md) | `.sql` | אין |
 | תיבת הדו-שיח [ייצוא תמונה](../guide/guides/file-import-export.md#image) | `.png` או `.svg` | `image/png` או `image/svg+xml` |
 | הקובץ מהלחצן `Save file` בכרטיסיית מחולל קוד – ראו [מחולל קוד](../guide/guides/code-generator.md) | הסיומת של שפת הקוד: `.cs`, `.go`, `.java`, `.kt`, `.php`, `.rs`, `.scala`, `.swift`, `.ts`, `.py`, `.aml`, `.dbml`, `.graphql`, `.json` או `.mmd` | אין |
+| הקובץ מהפעולה `Export CSV` בכרטיסיית מילון, ובו כל השורות של הגיליון המוצג, בלי קשר למה שהחיפוש בו מציג – ראו [ייבוא וייצוא של CSV](../guide/guides/dictionary.md#importing-and-exporting-csv) | `.csv` | `text/csv` |
 
 סביבה מארחת שבוחרת מטפל לפי סיומת צריכה מטפל לכל אחת מהן.
 
@@ -261,5 +265,5 @@ Chrome 91 ומעלה, Edge 94 ומעלה, Firefox 93 ומעלה, Safari 16.4 ו�
 - פונקציית ה-callback של הייבוא מקבלת `mode: 'append'` בייבוא והוספה, ועליה להעביר אותו הלאה. פונקציית ה-callback של הייצוא מקבלת כעת גם קובצי `.svg` וקבצים של מחולל הקוד, ו-`Export` ◂ `Schema SQL` פותח את כרטיסיית סכמת SQL במקום לשמור, ולכן קובץ ה-`.sql` מגיע רק מהלחצן `Save file` של אותה כרטיסייה – ראו [תיבות דו-שיח של קבצים](#file-dialogs).
 - המקשים `Delete` ו-`Backspace` משויכים ל-`removeSelection` החדש. כל עוד לעורך יש פוקוס מחוץ לשדה טקסט, פעולת ברירת המחדל של המקש נמנעת בכל כרטיסייה, ובכרטיסיית ERD הבחירה מוסרת. `KeyBindingName` ו-`KeyBindingMap` כוללים אותו כעת, ו-`setKeyBindingMap({ removeSelection: [] })` משאיר את שני המקשים לדף – ראו [setKeyBindingMap](./erd-editor-element.md#setkeybindingmap).
 - `ThemeOptions.appearance` מקבל גם את `'system'`, כלומר הערך `System` של בונה ערכת הנושא, שהפעלת `systemDarkMode` מגדירה. האירוע `changePresetTheme` מדווח על `'system'` כל עוד הוא נבחר, ולכן יש לשמור אותו כמות שהוא ולהעביר אותו חזרה ל-`setPresetTheme`. כש-`systemDarkMode` מופעל, קריאה ל-`setPresetTheme()` עם `'light'` או `'dark'` נשארת כעת בתוקף במקום שהשינוי הבא ב-OS ידרוס אותה – ראו [systemDarkMode](./erd-editor-element.md#systemdarkmode) ו-[changePresetTheme](./erd-editor-element.md#changepresettheme).
-- `@dineug/erd-editor-mcp` בגרסה `1.0.0`, הרחבת VS Code בגרסה `4.0.0` ומעלה והתוספים ל-Obsidian ול-JetBrains בגרסה `1.0.0` ומעלה משתמשים בגרסה 2 של פרוטוקול ה-hub. השרת בגרסה `1.0.0` וגרסה קודמת של עורך שמשרת סוכנים, או שרת בגרסה קודמת ואחד מהעורכים האלה, דוחים זה את זה עם `protocolMismatch`, תוך ציון הצד שיש לעדכן – ראו [עדכון](../mcp/installation.md#updating).
+- `@dineug/erd-editor-mcp` בגרסה `1.0.0` ומעלה, הרחבת VS Code בגרסה `4.0.0` ומעלה והתוספים ל-Obsidian ול-JetBrains בגרסה `1.0.0` ומעלה משתמשים בגרסה 2 של פרוטוקול ה-hub. השרת בגרסה `1.0.0` ומעלה וגרסה קודמת של עורך שמשרת סוכנים, או שרת בגרסה קודמת ואחד מהעורכים האלה, דוחים זה את זה עם `protocolMismatch`, תוך ציון הצד שיש לעדכן – ראו [עדכון](../mcp/installation.md#updating).
 - כתובת URL של CDN ללא גרסה מגישה כעת את הגרסה האחרונה של גרסה 4. כדי להישאר בגרסה 3, יש לקבע את `@3.10.0` – ראו [CDN](#cdn).

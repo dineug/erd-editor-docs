@@ -51,7 +51,7 @@ const ORDER = [
 // minimap over empty canvas, and the rest of the tables out of frame. Schema
 // SQL import keeps sakila's UNSIGNED in the data types, so the tables run
 // about 310 wide: three fit side by side only below the minimap, and the top
-// row keeps two. The floating toolbar (about 418px wide since 4.1.0) spans
+// row keeps two. The floating toolbar (about 544px wide since 4.2.0) spans
 // the middle of the bottom edge, and address, eight rows tall and too wide
 // to sit left of it, ends above it only below 75%; at 70% and under, the
 // tables would draw as bare names. city and staff start just below the

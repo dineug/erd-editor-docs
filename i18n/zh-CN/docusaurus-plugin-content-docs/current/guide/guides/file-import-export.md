@@ -16,16 +16,20 @@ description: 导入 JSON、schema SQL、GraphQL、DBML 或 AML 以替换当前�
 - AML
 
 `Import` 正下方的 `Import and Add` 会把文件添加到图中，而不是替换图，参见 [Import and Add](#import-and-add)。  
-空白的图所显示的欢迎界面中有一个 `Import` 条目，提供同样的五种格式，参见[欢迎界面](./editing-start.md#欢迎界面)。
+空白的图所显示的欢迎界面中有一个 `Import` 条目，提供同样的五种格式，参见[欢迎界面](./editing-start.md#欢迎界面)。  
+[Dictionary](./dictionary.md) 标签页的工作表也可以通过该标签页自己的 `Import CSV` 从 CSV 文件中读取词根、术语和域，参见[导入与导出 CSV](./dictionary.md#importing-and-exporting-csv)。
 
 扩展名的匹配不区分大小写。如果所选文件的扩展名与所选格式不符，导入会被取消并显示 `Only <format> files can be imported`，其中的格式写作 `json`、`sql`、`graphql`、`dbml` 或 `aml`，例如 `Only sql files can be imported`。
 
 `Import` 会替换当前文档，而不是合并到当前文档中，一次 Undo 即可恢复之前的图。  
-JSON 文件会带上自身的设置，其中也包括它的[锁定](./settings.md#锁定)。当文件锁定了标签页、Code Generator 的语言、某种名称大小写或括号类型时，你看到的仍是原来的内容，但保存的是文件中锁定的值。无论是否锁定，视图都会移到文件所指定的位置。在锁定功能出现之前保存的 JSON 文件导入后，所有锁定都处于开启状态，视图为 100%。  
+JSON 文件会带上自身的设置，其中也包括它的[锁定](./settings.md#锁定)。当文件锁定了标签页、Code Generator 的语言、某种名称大小写、括号类型或[名称显示](./logical-names.md#name-view)时，你看到的仍是原来的内容，但保存的是文件中锁定的值。无论是否锁定，缩放和视图位置都会采用文件所指定的值。在锁定功能出现之前保存的 JSON 文件导入后，所有锁定都处于开启状态，视图为 100%。在 `Name View` 锁定出现之前保存的文件导入后，无论其中记录了哪些其他锁定，该锁定都处于开启状态。  
 其他格式则保留你现有的设置，锁定也包括在内，只有视图除外，视图会从 100% 开始。  
 GraphQL、DBML 和 AML 解析器不会失败，无法读取的文件只会生成空白的图，而不会报错。
 
-JSON 文件会保留其中已有的位置。Schema SQL、GraphQL、DBML 或 AML 文件中的表会在图发生变化之前排布好：
+JSON 文件还会带上其表和列的逻辑名以及其列的域关联。其中的词根、术语和域会取代 [Dictionary](./dictionary.md) 标签页中原有的内容，因此不含任何这些内容的文件会让各工作表变为空，撤回该导入则会恢复被取代的内容。  
+其他格式都不包含这些内容。它们的表导入后没有逻辑名，也没有任何列关联到域，你的词根、术语和域保持不变。撤回或重做该导入时它们也保持不变，因此导入之后对词典所做的编辑会被保留。这样的导入还会保留每个工作表自身的 Undo 历史记录，而 JSON 导入会清空这些历史记录，参见[词典工作表](./undo-redo.md#dictionary-sheets)。
+
+JSON 文件会保留其中已有的位置。Schema SQL、GraphQL、DBML 或 AML 文件中的表会在图发生变化之前，按其在你当前看到的[名称显示](./logical-names.md#beyond-the-canvas)下所占的宽度排布好：
 
 - 当文件中有两个或更多表并且至少有一个关系时，这些表会按 `Flow` [自动布局](./table-related-functions.md#auto-layout)从画布左上角开始，沿着关系从左到右排布。指向自身的关系也计算在内。
 - 否则会从左上角开始逐行排列，列最少的表排在最前。
@@ -33,7 +37,7 @@ JSON 文件会保留其中已有的位置。Schema SQL、GraphQL、DBML 或 AML 
 
 随后图会一步替换完成，因此中间不会显示任何过渡状态。排布期间你更改的设置（例如标签页）会被保留；如果在此期间又导入了另一个文件，则以最后开始的导入为准。
 
-只读编辑器不会从 `Import` 载入任何内容，也不提供 `Import and Add`。
+只读编辑器不会从 `Import` 载入任何内容，既不提供 `Import and Add`，也不提供 Dictionary 标签页的 `Import CSV`。
 
 ### Import and Add
 
@@ -42,6 +46,7 @@ JSON 文件会保留其中已有的位置。Schema SQL、GraphQL、DBML 或 AML 
 ![通过 Import and Add > Schema SQL 添加 SQL 文件，其中的表落在图的下方，沿着关系排布并处于选中状态](/img/demo-import-and-add.webp)
 
 文件会像粘贴一样载入：其中的每个表、列、关系、索引、备注和[表分组](./table-groups.md)都会作为新的对象添加，图中已有的表不会移动，任何设置也不会改变，因此 JSON 文件的设置会被忽略。  
+JSON 文件中的表和列会保留其逻辑名，每个物理名也保持文件中的状态，即由词典生成或由你自行填写，这决定了之后输入的逻辑名是否会生成新的物理名，参见[生成物理名](./dictionary.md#deriving-physical-names)。文件中的词根、术语和域会被忽略，因此 Dictionary 标签页保持原样，添加的列也都不会关联到域：每一列都保留其原有的数据类型。  
 名称与图中已有的表相同的表会作为同名的第二个表添加，而不会与其合并。关系和索引只来自该文件，因此指向文件中未定义的表的外键，不会与图中已有的表相连。
 
 添加的内容块会落在图中所有内容的正下方，与其左边缘对齐；图为空白时则落在左上角。通过 [View Option](./table-related-functions.md#table-view-options) 隐藏的备注和表分组同样计算在内，因为它们仍然占据着那里的位置。  
@@ -160,11 +165,10 @@ SQL Server 的调用无论使用命名参数（SQL Server Management Studio 生�
 `DEFAULT` 值会保留其引号，无论文件以何种方式转义，其内部的引号都会以双写形式写回：`'it''s'`。  
 如果导入时文档的数据库为 Databricks，单引号文本会改为遵循 Spark 的规则：每个反斜杠都会转义其后的字符，因此 `'C:\\dir'` 读作 `C:\dir`，`\n`、`\t` 和 `\u0041` 等转义序列会被解码，`DEFAULT` 值则保留为 `'it\'s'`。
 
-导出的 Schema SQL 会转义表注释或列注释中的引号：MySQL、MariaDB 和 Snowflake 写为 `COMMENT 'it''s'`，PostgreSQL 和 Oracle 写为 `COMMENT ON TABLE` 与 `COMMENT ON COLUMN ... IS 'it''s'`，MSSQL 的 `sp_addextendedproperty` 调用中也采用同样的双写方式，表名和列名也包括在内。不含引号的注释会原样写出。  
-Databricks 则改用反斜杠来转义引号和反斜杠，例如 `COMMENT 'it\'s'`，因此只有在所选数据库为 Databricks 时，其导出结果才能被原样读回。  
-MSSQL 会将每条注释写为 `EXECUTE sys.sp_addextendedproperty 'MS_Description', '<comment>', 'schema', '<schema>', 'table', '<table>'`，列注释还会在其后加上 `'column', '<column>'`。当 `Bracket` 为 `None` 时，名为 `sales.users` 的表会得到 schema `sales` 和表 `users`，不带 schema 的名称则位于 `dbo` 中。`Bracket` 为其他任何值时，整个名称都作为表名，位于 `dbo` 中。
-
-注释无法在 SQLite 的导出与导入往返中保留：SQLite 会将其写成普通的 `--` 行，而解析器不读取这些行。MSSQL 导出的 `sp_addextendedproperty` 调用再导入后，会还原为相同的表注释和列注释。
+各数据库在导出时如何写出注释，以及如何转义注释中的引号，参见 Schema SQL 页面中的[注释](./schema-sql.md#comments)。  
+导出到 MySQL、MariaDB、PostgreSQL、Oracle、Snowflake 或 MSSQL 的结果再导入后，会还原为相同的表注释和列注释，引号也包括在内，只是 Oracle 导出时省略的空行除外。Databricks 导出会用反斜杠转义引号和反斜杠，因此只有在所选数据库为 Databricks 时才能被原样读回。  
+注释无法在 SQLite 的导出与导入往返中保留：SQLite 会将其写成普通的 `--` 行，而解析器不读取这些行。  
+除 SQLite 外，`Write logical names into empty comments` 写入空注释的逻辑名再导入后，会成为该表或该列的注释，而不是其逻辑名，参见[将逻辑名作为注释](./schema-sql.md#logical-names-as-comments)。
 
 ### GraphQL
 
@@ -200,22 +204,24 @@ MSSQL 会将每条注释写为 `EXECUTE sys.sp_addextendedproperty 'MS_Descripti
 
 GraphQL、DBML 和 AML 都是可往返的格式，它们同时也是[代码生成](./code-generator.md)的目标格式。  
 DBML 和 AML 在导入与导出两个方向上都会保留每个关系的 ON DELETE 与 ON UPDATE，参见[代码生成](./code-generator.md#on-delete-and-on-update)。GraphQL 两者都不保留，因此导入 GraphQL 时两者均为 `Not set`。  
-DBML 还会在两个方向上保留表的颜色（透明度除外）以及每个包含表的表分组。没有名称的分组会还原为 `group_1`、`group_2` 等，重复的分组名则会加上 `_2`、`_3` 等后缀还原。AML 只会把表的颜色保留为与之最接近的颜色名称，因此 `#FF8800` 会写为 `orange`，再还原为 `#f97316`，并且 AML 不保留分组。GraphQL 既不保留颜色，也不保留分组。
+DBML 还会在两个方向上保留表的颜色（透明度除外）以及每个包含表的表分组。没有名称的分组会还原为 `group_1`、`group_2` 等，重复的分组名则会加上 `_2`、`_3` 等后缀还原。AML 只会把表的颜色保留为与之最接近的颜色名称，因此 `#FF8800` 会写为 `orange`，再还原为 `#f97316`，并且 AML 不保留分组。GraphQL 既不保留颜色，也不保留分组。  
+这三种格式在两个方向上都不保留逻辑名、域关联或词典：Code Generator 会写出每个表和列的物理名和数据类型，永远不会写出逻辑名或域。
 
 ## 导出 {#exporting}
 
 画布右键菜单的 `Export` 子菜单中有三个条目：
 
-- json：按图在文件中的保存形式，将图保存为 `.erd.json`：包括表及其列和索引、关系、备注和表分组，以及设置，每个[锁定的设置](./settings.md#锁定)都按其锁定的值保存。
+- json：按图在文件中的保存形式，将图保存为 `.erd.json`：包括表及其列和索引、关系、备注和表分组，逻辑名和列的域关联，[Dictionary](./dictionary.md) 标签页中的词根、术语和域，以及设置，每个[锁定的设置](./settings.md#锁定)都按其锁定的值保存。不含任何内容的部分（例如空文本或空的词典行）会被省略，参见[存储形式与运行时值](../../api/advanced/schema.md#存储形式与运行时值)。
 - Schema SQL：打开 [Schema SQL](./schema-sql.md#saving-or-copying-the-sql) 标签页，同时打开其选项面板并让 `Save file` 按钮获得焦点，因此按 `Enter` 即可将该标签页显示的 SQL 保存为 `.sql`。在此之前不会保存任何内容。
 - Image：打开 `Export image` 对话框，可将图保存为 `.png` 或 `.svg`，或以 PNG 格式复制到剪贴板，参见[图片](#image)。
 
-三者在只读编辑器中均可使用。
+三者在只读编辑器中均可使用。  
+Dictionary 标签页自己的 `Export CSV` 不在此子菜单中，它会将其 `Domains`、`Words` 或 `Terms` 工作表保存为 CSV 文件。与这三者不同，它在只读编辑器中不提供，参见[导入与导出 CSV](./dictionary.md#importing-and-exporting-csv)。
 
 Schema SQL 会在每个关系的 `REFERENCES` 之后写出其 ON DELETE 与 ON UPDATE，ON DELETE 在前。`Not set` 不会写出任何内容，所选数据库不接受的操作会被省略。各数据库接受哪些操作参见[编辑关系](./relationship-editing.md#on-delete-and-on-update)。
 
 每个导出的文件都以 `<database name>-<timestamp>` 加上其扩展名命名，其中时间戳采用本地时间，格式为 `yyyy-MM-dd'T'HH_mm_ss`，例如 `my-schema-2026-08-29T04_05_06.erd.json`。数据库名为空时会退回为 `unnamed`。  
-Schema SQL 标签页和[代码生成](./code-generator.md)的 `Save file` 也以同样的方式为文件命名。图片使用的是打开对话框时的数据库名。
+Schema SQL 标签页和[代码生成](./code-generator.md)的 `Save file` 也以同样的方式为文件命名，`Export CSV` 也是如此，它会在时间戳之后加上工作表：`-words.csv`、`-terms.csv` 或 `-domains.csv`。图片使用的是打开对话框时的数据库名。
 
 `Import`、`Import and Add` 与 `Export` 也可以从 ERD 标签页的[快速搜索](./quick-search.md)中使用，其中的条目与画布右键菜单相同。
 
@@ -235,7 +241,7 @@ Obsidian 不允许在文件名中使用的字符 `\ / : * ? " < > |` 会被替�
 
 这些选择会一直保留到编辑器关闭，并且从不保存到文档中。预览的绘制方式与图片相同，`Background` 或 `Dark mode` 改变时会重新绘制。
 
-图片包含的是打开对话框时的图；要纳入之后的更改，请关闭并重新打开对话框。无论视图平移到多远，图片都会包含整张图，按图绘制出的范围加上一圈外边距裁切，并且无论编辑器当前显示的缩放级别如何，始终以 100% 绘制，因此每个表都会完整绘制。[View Option](./table-related-functions.md#table-view-options) 隐藏的内容（关系、关系的 ON DELETE 与 ON UPDATE 标签、表分组或备注）既不会被绘制，也不会为其留出空间，表分组则绘制在其他所有内容的后面。
+图片包含的是打开对话框时的图；要纳入之后的更改，请关闭并重新打开对话框。其中的表和列按编辑器当时的名称显示命名，即使该显示方式只是在你自己的屏幕上切换的，而 `Name View` 锁定让文件保留的是另一种，参见[画布之外](./logical-names.md#beyond-the-canvas)。[词典检查](./dictionary.md#marks-on-the-canvas)在画布上为名称赋予的颜色不会被绘制。无论视图平移到多远，图片都会包含整张图，按图绘制出的范围加上一圈外边距裁切，并且无论编辑器当前显示的缩放级别如何，始终以 100% 绘制，因此每个表都会完整绘制。[View Option](./table-related-functions.md#table-view-options) 隐藏的内容（关系、关系的 ON DELETE 与 ON UPDATE 标签、表分组或备注）既不会被绘制，也不会为其留出空间，表分组则绘制在其他所有内容的后面。
 
 有三个按钮用于写出图片，按下其中任何一个后对话框都会保持打开：
 

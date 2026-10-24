@@ -1,6 +1,6 @@
 ---
-sidebar_position: 6
-description: Ezabatu erlazio bat, aldatu haren mota, ezarri haren ON DELETE eta ON UPDATE ekintzak, mapatu lehendik dauden zutabeetara Mapatu zutabeak erabiliz, irakurri konektorearen notazioa, landu N:M erlazioak eta erlazio identifikatzaileak, eta ikusi gako arrotzen zutabe berriei nola ematen zaien izena.
+sidebar_position: 7
+description: Ezabatu erlazio bat, aldatu haren mota, ezarri haren ON DELETE eta ON UPDATE ekintzak, mapatu lehendik dauden zutabeetara Mapatu zutabeak erabiliz, irakurri konektorearen notazioa, landu N:M erlazioak eta erlazio identifikatzaileak, eta ikusi gako arrotzen zutabe berriek beren gakotik zer kopiatzen duten eta nola ematen zaien izena.
 ---
 
 # Erlazioak editatzea
@@ -51,7 +51,7 @@ Bere taulekin batera kopiatu eta itsatsi edo bikoiztu den erlazio batek bi ekint
 ![orders taulatik order_items taulara doan erlazioan ON DELETE CASCADE eta ON UPDATE RESTRICT ezartzea haren laster-menutik, etiketak D:C U:R dioela, eta ondoren gainetik pasatzea biak berriro irakurtzeko](/img/demo-referential-actions.webp)
 
 Ekintza guztiak aukera daitezke, datu-basea edozein dela ere.  
-Hautatutako [datu-baseak](./table-related-functions.md#databases) bere SQL eskematik kanpo uzten duen ekintza batek tonu apaleko azalpen bat du ondoan, adibidez `not in MySQL`. `Not set` aukerak ez du inoiz azalpenik, eta datu-basea aldatzean azalpenak eguneratu egiten dira.  
+Hautatutako [datu-baseak](./table-related-functions.md#databases) bere SQL eskematik kanpo uzten duen ekintza batek azalpen lausotu bat du ondoan, adibidez `not in MySQL`. `Not set` aukerak ez du inoiz azalpenik, eta datu-basea aldatzean azalpenak eguneratu egiten dira.  
 Azalpena duen ekintza erlazioan gordeta geratzen da hala ere: konektoreak erakusten du, eta JSON, DBML eta AML formatuek gordetzen dute, baina datu-base horren SQL eskemak klausula kanpo uzten du; beraz, datu-basearen balio lehenetsia aplikatzen da.
 
 [SQL eskema](./schema-sql.md) fitxak ekintza hauek idazten ditu eta gainerakoak kanpo uzten ditu:
@@ -84,6 +84,9 @@ Bi modutara irekitzen da:
 - Erlazioaren laster-menuko `Map Columns` aukeratik, lehendik dagoen erlazio baten zutabeak aldatzeko. Orduan, `Save` botoiak aldaketa idazten du. Irakurtzeko soilik dagoen editore batek ez du aukera hau erakusten.
 
 Elkarrizketa-koadroaren azpitituluak bi taulak eta erlazio mota aipatzen ditu, adibidez `users → posts · One N`. Mota hemen erakusten da, baina ez da aldatzen. Erabili [Mota aldatzea](#type-change).
+
+Elkarrizketa-koadro osoan, errenkaden azpiko azalpenak eta lerroak eta ixtean erakusten duen jakinarazpena barne, taulak eta zutabeak [Izenen ikuspegiak](./logical-names.md#beyond-the-canvas) izendatzen dituen bezala izendatzen dira.  
+Hiru gauza beti dira fisikoak: datu mota bakoitza, zutabearena bera dena eta inoiz ez haren domeinuaren izena; `New column: <name>`, zutabe berriak izango duen izena erakusten duena; eta `Map` botoiak beteta hasten dituen errenkadak, izenaren arabera parekatzen dituenak, inoiz ez izen logikoaren arabera.
 
 `References` hautatzaileak erlazioak seinalatzen duen gakoa aukeratzen du: `Primary Key`, bere zutabeak taulako ordenan dituela, eta ondoren `Unique: <column>`, `Unique` gisa markatutako zutabe bakoitzeko. Aukera bat baino gehiago dagoenean bakarrik agertzen da.  
 Indize bakar bat ez da gakotzat hartzen hemen, eta gako nagusi osoa den `Unique` zutabe bat ez da bi aldiz zerrendatzen.  
@@ -121,10 +124,10 @@ Bitartean erlazioaren zutabeak edo elkarrizketa-koadroa irekitzean hautatuta zeg
 `Map` eta `Save` botoiek idazten dutena:
 
 - `Map` botoiak erlazioa gehitzen du, `On Delete` eta `On Update` `Not set` balioan dituela. `Save` botoiak erlazioaren zutabeak soilik aldatzen ditu, gurasoaren aldea `References` hautatzailean aukeratutako gakora zuzenduz, eta haren mota eta haren ON DELETE eta ON UPDATE gordetzen ditu.
-- `New column` errenkada batek zutabe bat gehitzen du taula umearen amaieran, marrazteak egiten duen bezala: `NOT NULL`, bere gakoaren araberako izenarekin, eta gakoaren datu mota, balio lehenetsia eta iruzkina dituela. Ikus [Erlazio identifikatzaileak](#identifying-relationships).
-- Aukeratutako zutabe bati ez zaio inoiz izena aldatzen, eta haren `Not Null`, gako nagusia, `Unique`, balio lehenetsia eta iruzkina dauden bezala geratzen dira. Haren datu mota `Relationship DataType Sync` aktibatuta dagoen bitartean eta zutabe gurasoak datu mota bat duenean bakarrik aldatzen da: zutabe gurasoak gako arrotz bati ematen dion mota hartzen du (serial motako gako baterako, zenbaki osoko mota, zutabe berri batean bezala), eta aldaketa erlazioetan zehar hedatzen da, sinkronizazioak egiten duen bezala.
+- `New column` errenkada batek zutabe bat gehitzen du taula umearen amaieran, marrazteak egiten duen bezala: `NOT NULL`, bere gakoaren araberako izenarekin, eta gakoaren datu mota, balio lehenetsia, iruzkina, izen logikoa eta domeinua dituela. Ikus [Erlazio identifikatzaileak](#identifying-relationships).
+- Aukeratutako zutabe bati ez zaio inoiz izena aldatzen, ezta gakoaren domeinuari lotzen ere, eta haren `Not Null`, gako nagusia, `Unique`, balio lehenetsia, iruzkina eta izen logikoa dauden bezala geratzen dira. Haren datu mota `Relationship DataType Sync` aktibatuta dagoen bitartean eta zutabe gurasoak datu mota bat duenean bakarrik aldatzen da: zutabe gurasoak gako arrotz bati ematen dion mota hartzen du (serial motako gako baterako, zenbaki osoko mota, zutabe berri batean bezala), eta aldaketa erlazioetan zehar hedatzen da, sinkronizazioak egiten duen bezala. Aldaketak mota aldatzen dien zutabe guztiei, aukeratutakoei zein erlazioetan zehar iritsitakoei, beren [domeinuarekiko](./dictionary.md#domains-and-data-types) lotura kentzen zaie, mota berria domeinuarenaren desberdina denean.
 - Mapaketak erabiltzeari uzten dion zutabea taula umean geratzen da, eta jada ez da gako arrotz gisa markatzen, beste erlazio bat oraindik hartan amaitzen ez bada behintzat.
-- `Map` edo `Save` sakatze batek idazten duen guztia, zutabe berriak eta mota-aldaketak barne, desegite-urrats bat da.
+- `Map` edo `Save` sakatze batek idazten duen guztia, zutabe berriak, mota-aldaketak eta domeinu-loturen kentzeak barne, desegite-urrats bat da.
 
 Erlazioa identifikatzailea den ala ez, eta haren gurasoaren muturra nola marrazten den, mapatutako taula umearen zutabeetatik ondorioztatzen da, beste edozein erlaziotan bezala. Taula umearen gako nagusiko zutabeetara mapatzeak berehala bihurtzen du identifikatzaile, eta `NULL` onartzen duen zutabe batera mapatzeak eraztun bat jartzen du gurasoaren muturrean. Ikus [Konektore bat irakurtzea](#reading-a-connector).  
 SQL eskemako gako arrotzak aukeratu duzun gakoari egiten dio erreferentzia, adibidez `REFERENCES vehicle (vin)` `Unique` gako baterako.
@@ -156,9 +159,10 @@ Ikus [Fitxategiak inportatzea edo esportatzea](./file-import-export.md).
 ## Erlazio identifikatzaileak {#identifying-relationships}
 
 Erlazio bat taula umean klik eginez edo `Create new columns` aukerarekin marrazteak taula gurasoaren gako nagusi bakoitza taula umera kopiatzen du `NOT NULL` gako arrotzaren zutabe gisa; beraz, erlazio berri bat ez-identifikatzaile gisa hasten da.  
-Kopiak gakoaren datu mota, balio lehenetsia eta iruzkina hartzen ditu, baina ez `Unique` edo `Auto Increment`, eta [Gako arrotzen zutabeen izenak](#foreign-key-column-names) atalean azaltzen den bezala ematen zaio izena.  
+Kopiak gakoaren datu mota, balio lehenetsia, iruzkina eta izen logikoa hartzen ditu, baina ez `Unique` edo `Auto Increment`, eta [Gako arrotzen zutabeen izenak](#foreign-key-column-names) atalean azaltzen den bezala ematen zaio izena.  
 Serial motako gakoa da datu motaren salbuespena: haren kopiak serial motak gordetzen duen zenbaki osoko mota hartzen du. Edozein datu-basetan, `smallserial` eta `serial2` motek `smallint` ematen dute, `serial4` motak `integer`, eta `bigserial` eta `serial8` motek `bigint`. `serial` mota soilak `integer` ematen du PostgreSQL datu-basean eta `bigint unsigned` MySQL eta MariaDB datu-baseetan, eta `serial` gisa geratzen da beste edozein datu-basetan.  
 Mota-izen osoak bakarrik balio du, maiuskulak eta minuskulak bereizi gabe; beraz, `serial(4)` idatzita dagoen bezala kopiatzen da. Maiuskulaz idatzitako mota batek maiuskulak ematen ditu: `SERIAL` motak `INTEGER` ematen du PostgreSQL datu-basean. Gordetako diagrama batean dagoeneko `serial` mota duen gako arrotzaren zutabe batek mota hori gordetzen du.  
+Kopia gakoaren [domeinuari](./dictionary.md#domains-and-data-types) ere lotzen zaio, baldin eta `Domains` orriak domeinu hori zerrendatzen badu kopia egiten denean eta kopiak gakoaren datu mota mantentzen badu. Beraz, zenbaki osoko mota hartzen duen serial motako gako baten kopiak ez du domeinurik lotzen; `serial` gisa mantentzen den `serial` mota soil batek, berriz, lotu egiten du.  
 Erlazioa identifikatzaile bihurtzeko, ezarri taula umeko gako arrotzen zutabe horiek gako nagusi gisa: hautatu guztiak eta sakatu `Alt + K` (Windows/Linux) edo `⌥ + K` (Mac) behin, edo aukeratu `Primary Key` taularen laster-menuan; aukera horrek `Primary Key on selected columns` dio bi zutabe edo gehiago hautatuta daudenean. Ikus [Zutabearen gako nagusia](./table-editing.md#column-primary-key).
 
 ![product_id gako nagusi gisa aktibatzea eta desaktibatzea Alt + K lasterbidearekin, haren konektorea jarraitua eta ondoren etena bihurtuz](/img/demo-identifying-relationship.webp)
@@ -193,7 +197,10 @@ Horren barruan dago editoreak gako nagusirik ez duen taula guraso bati gehitzen 
 Izenak erlazioa marrazten denean ezartzen dira. Geroago taula gurasoaren edo haren gakoaren izena aldatzeak ez du haien izena aldatzen.  
 [Mapatu zutabeak](#map-columns) elkarrizketa-koadroko `New column` errenkadei arau berberen arabera ematen zaie izena, eta zerrendak izen bakoitza erakusten du hura aukeratu aurretik.  
 Zutabeak dagoeneko lekuan dituztela iristen diren erlazioek, inportazio, itsaste edo bikoizte batetik edo lehendik dauden zutabeak parekatzen dituen Mapatu zutabeak elkarrizketa-koadrotik, zutabe horiek dituzten izenak gordetzen dituzte.  
-`erd_add_relationship` tresnarekin erlazio bat gehitzen duen kodetze-agente batek izen eta datu mota berberak lortzen ditu. Ikus [Tresnak](../../mcp/tools.md#relationships).
+`erd_add_relationship` tresnarekin erlazio bat gehitzen duen kodetze-agente batek izen, datu mota, izen logiko eta domeinu berberak lortzen ditu. Ikus [Tresnak](../../mcp/tools.md#relationships).
+
+Gako arrotzaren zutabe bati bere gakoaren arabera ematen zaio izena, inoiz ez kopiatzen duen izen logikoaren arabera, eta haren izena zuk idatzitakotzat hartzen da: geroago zutabean idatzitako izen logiko batek izena dagoen bezala uzten du, izena hutsik ez badago behintzat. Ikus [Zuk idatzitako izenak](./dictionary.md#names-of-your-own).  
+Kopiatutako izen logikoa beste izen bat ematen duen termino batekin bat datorren bitartean, `Checks` orriak, beraz, zutabea [`Physical name mismatch`](./dictionary.md#what-each-check-finds) egiaztapenean zerrendatzen du. Haren izen fisikoa berriro eratortzeak hiztegien arabera aldatzen dio izena, taula umeko beste zutabe batek hiztegiek ematen duten izena dagoeneko ez badu behintzat, maiuskulak eta minuskulak bereizi gabe. Ikus [Izen fisikoak berriro eratortzea](./dictionary.md#derive-physical-names-again).
 
 ## Konektore bat irakurtzea {#reading-a-connector}
 

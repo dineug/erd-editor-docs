@@ -1,6 +1,6 @@
 ---
-sidebar_position: 11
-description: Branje DDL diagrama na zavihku Shema SQL, izbira zbirke podatkov, narekovajev, stavkov, glave in tabel na njegovi plošči z možnostmi, dodajanje lastnih skriptov pred tabelami in za njimi ter shranjevanje ali kopiranje kode SQL.
+sidebar_position: 12
+description: Branje DDL diagrama na zavihku Shema SQL, izbira zbirke podatkov, narekovajev, stavkov, glave, logičnih imen v praznih komentarjih in tabel na njegovi plošči z možnostmi, dodajanje lastnih skriptov pred tabelami in za njimi ter shranjevanje ali kopiranje kode SQL.
 ---
 
 # Shema SQL
@@ -20,24 +20,25 @@ Kliknite kodo SQL z desno tipko miške, da odprete njen priročni meni:
 - `Options panel`, ki ploščo strne ali odpre in ima kljukico, dokler je plošča prikazana.
 - `Save file`
 
-Dokler je ta zavihek odprt, hitro iskanje ponuja `Database` in `Bracket`, ukaza `Schema SQL: Statements` in `Schema SQL: Header`, ki navajata samo izbire, ki jih zbirka podatkov ima, ter ukaz `Schema SQL: Options panel`, ki ploščo strne ali odpre.
+Dokler je ta zavihek odprt, hitro iskanje ponuja `Database` in `Bracket`, ukaza `Schema SQL: Statements` in `Schema SQL: Header`, ki navajata samo izbire, ki jih zbirka podatkov ima, ter ukaz `Schema SQL: Options panel`, ki ploščo strne ali odpre.  
+Stikala `Write logical names into empty comments`, ki je samo na plošči z možnostmi, ne ponujata niti priročni meni niti hitro iskanje – glejte razdelek [Logična imena kot komentarji](#logical-names-as-comments).
 
 Koda SQL se zapiše ob odprtju zavihka in znova vsakič, ko se spremeni katera od izbir na plošči, ime zbirke podatkov ali skript. Sprememba tabel, narejena med odprtim zavihkom, na primer sprememba sodelavca ali agenta za kodiranje, se prikaže, ko zavihek zapustite in se vrnete nanj, ali ko se spremeni kar koli od naštetega.
 
-Okno [Lastnosti tabele](./table-related-functions.md#table-properties) ima svoj zavihek `Schema SQL`, ki prikaže DDL ene tabele. Vedno zapiše navadne stavke `CREATE` brez glave in skriptov, nima plošče z možnostmi, njegov priročni meni pa ponuja samo `Database` in `Bracket`.
+Okno [Lastnosti tabele](./table-related-functions.md#table-properties) ima svoj zavihek `Schema SQL`, ki prikaže DDL ene tabele. Vedno zapiše navadne stavke `CREATE` brez glave in skriptov, nikoli ne zapiše logičnega imena v prazen komentar, nima plošče z možnostmi, njegov priročni meni pa ponuja samo `Database` in `Bracket`.
 
 ## Plošča z možnostmi {#options-panel}
 
 Plošča vsebuje tri skupine, vsako pod svojim napisom:
 
 1. `Saved in the document`: `Database` in `Bracket` – glejte razdelek [Zbirka podatkov in narekovaji](#database-and-bracket).
-2. `This window only`: `Statements`, `Header` in, dokler ima diagram [skupino tabel](./table-groups.md), `Tables` – glejte razdelke [Stavki](#statements), [Glava](#header) in [Tabele](#tables).
+2. `This window only`: `Statements`, `Header`, `Write logical names into empty comments` in, dokler ima diagram [skupino tabel](./table-groups.md), `Tables` – glejte razdelke [Stavki](#statements), [Glava](#header), [Logična imena kot komentarji](#logical-names-as-comments) in [Tabele](#tables).
 3. `Saved in the document · written as is for every database`: skripta `Before tables` in `After tables` – glejte razdelek [Skripti pred tabelami in za njimi](#before-and-after-scripts).
 
 Gumba `Save file` in `Copy` sta na njenem dnu – glejte razdelek [Shranjevanje ali kopiranje kode SQL](#saving-or-copying-the-sql).
 
 Izbire pod `This window only` pripadajo oknu urejevalnika, v katerem jih naredite. Ne shranijo se v dokument, ne delijo se s sodelavci in se ne beležijo za razveljavitev, ponastavijo pa se, ko se urejevalnik zapre ali znova naloži; preklapljanje zavihkov jih ohrani.  
-Začetna vrednost za `Statements` je `If not exists`, za `Header` pa `CREATE + USE`. Za kodo SQL, ki jo stran z vdelanim urejevalnikom prebere z metodo [`getSchemaSQL()`](../../api/erd-editor-element.md#getschemasql), in za kodo SQL, ki jo prebere agent za kodiranje, pa je začetna vrednost namesto tega `Create` brez glave.
+Začetna vrednost za `Statements` je `If not exists`, za `Header` `CREATE + USE`, stikalo `Write logical names into empty comments` pa je izklopljeno. Za kodo SQL, ki jo stran z vdelanim urejevalnikom prebere z metodo [`getSchemaSQL()`](../../api/erd-editor-element.md#getschemasql), in za kodo SQL, ki jo [prebere agent za kodiranje](../../mcp/tools.md#reading-a-document), pa je začetna vrednost namesto tega `Create` brez glave, logična imena pa se v njej zapišejo le na zahtevo.
 
 Izbira, ki je izbrana zbirka podatkov nima, ostane na plošči, zatemnjena, z opisom orodja `Not in <database>`, kot je `Not in Oracle`, in pritisk nanjo ne naredi ničesar.  
 Koda SQL tedaj uporabi najbližjo obliko, ki jo zbirka podatkov ima, gumb te oblike pa je prikazan kot pritisnjen: `If not exists` preide na `Create`, `CREATE + USE` na `USE` ali na `None`, kjer zbirka podatkov nima niti `USE`, `USE` pa na `None`. Vaša izbira se ohrani, zato jo preklop na zbirko podatkov, ki jo ima, povrne.
@@ -92,6 +93,21 @@ Glava se zapiše samo, dokler je ime zbirke podatkov preprost identifikator: na 
 Pri vsakem drugem imenu, vključno s praznim, se glava ne zapiše, `DROP TABLE` pri PostgreSQL pa tedaj ne navede sheme. Dokler velja glava, ki ni `None`, to pove opomba pod `Header`: `Database name "<name>" is not a valid identifier.`  
 Ime zbirke podatkov novega diagrama je prazno, zato plošča, dokler zbirke podatkov ne poimenujete, prikazuje `Database name "" is not a valid identifier.`
 
+## Logična imena kot komentarji {#logical-names-as-comments}
+
+Stikalo `Write logical names into empty comments` pod `This window only` pri vsaki zbirki podatkov zapiše [logično ime](./logical-names.md) tabele ali stolpca v DDL tam, kjer je komentar prazen.
+
+![Vklop stikala Write logical names into empty comments na plošči zavihka Shema SQL, ki logično ime vsakega stolpca tabele order_items zapiše v njegov prazen COMMENT, komentarji tabele members pa ostanejo](/img/demo-schema-sql-logical-names.webp)
+
+- Komentar z besedilom ima vedno prednost: logično ime ga nikoli ne nadomesti in se mu nikoli ne doda.
+- Komentar iz samih presledkov šteje za prazen, zato se na njegovo mesto zapiše logično ime. Logično ime, ki je prazno ali iz samih presledkov, ne zapiše ničesar in ta tabela ali stolpec še vedno ne dobi komentarja.
+- Logično ime se zapiše na mestu in v obliki, v kateri zbirka podatkov zapiše komentar, njegovi narekovaji pa se na enak način zapišejo v ubežni obliki – glejte razdelek [Komentarji](#comments).
+
+Pri MySQL se na primer stolpec `id` z logičnim imenom `Member ID` in brez komentarja zapiše s `COMMENT 'Member ID'`, stolpec `email` z logičnim imenom `Email` in komentarjem `Sign-in address` pa ohrani `COMMENT 'Sign-in address'`.
+
+Tako kot `Statements` in `Header` stikalo pripada oknu in je na začetku izklopljeno – glejte razdelek [Plošča z možnostmi](#options-panel).  
+Uvoz takega komentarja nikoli ne prebere nazaj kot logično ime – glejte razdelek [Komentarji](./file-import-export.md#comments).
+
 ## Tabele {#tables}
 
 Dokler ima diagram vsaj eno [skupino tabel](./table-groups.md), prikazano ali skrito, se pod `This window only` prikaže `Tables` s potrditvenim poljem za vsako izbiro:
@@ -125,22 +141,24 @@ Polje brez fokusa tipkovnice sledi spremembi, ki jo sodelavec ali [agent za kodi
 
 ## Shranjevanje ali kopiranje kode SQL {#saving-or-copying-the-sql}
 
-Ukaz `Save file` na dnu plošče ali v priročnem meniju shrani natanko kodo SQL, ki jo prikazuje zavihek, s trenutno zbirko podatkov, narekovaji, stavki, glavo, tabelami in skripti, kot datoteko `<database name>-<timestamp>.sql`. Poimenuje in shrani se kot vsak drug izvoz – glejte razdelek [Izvoz](./file-import-export.md#exporting).
+Ukaz `Save file` na dnu plošče ali v priročnem meniju shrani natanko kodo SQL, ki jo prikazuje zavihek, s trenutno zbirko podatkov, narekovaji, stavki, glavo, komentarji z logičnimi imeni, tabelami in skripti, kot datoteko `<database name>-<timestamp>.sql`. Poimenuje in shrani se kot vsak drug izvoz – glejte razdelek [Izvoz](./file-import-export.md#exporting).
 
 Ukaz `Export` ▸ `Schema SQL` v priročnem meniju platna ali v hitrem iskanju sam po sebi ne shrani ničesar.  
 Preklopi na ta zavihek, odpre ploščo z možnostmi, tudi če je bila strnjena, in postavi fokus tipkovnice na `Save file`, zato pritisk tipke `Enter` shrani datoteko.
 
 Kodo SQL kopira gumb `Copy` na dnu plošče ali gumb za kopiranje, ki se prikaže v zgornjem desnem kotu kode, ko je kazalec nad njo.  
-Pojavno obvestilo `Copied!` s kljukico to za dve sekundi potrdi. Če brskalnik ali gostitelj zavrne dostop do odložišča, to namesto tega sporoči pojavno obvestilo `Couldn't copy to the clipboard` z opozorilnim znakom. Ponovno kopiranje nadomesti pojavno obvestilo, namesto da bi dodalo novo.  
+Pojavno obvestilo `Copied!` s kljukico to za dve sekundi potrdi. Če brskalnik ali gostitelj zavrne dostop do odložišča, to namesto tega za pet sekund sporoči pojavno obvestilo `Couldn't copy to the clipboard` z opozorilnim znakom. Ponovno kopiranje nadomesti pojavno obvestilo, namesto da bi dodalo novo.  
 Kodo SQL je mogoče tudi izbrati, zato lahko vzamete samo njen del.
 
 ## Kaj zapiše DDL {#what-the-ddl-writes}
 
 Ta pravila veljajo povsod, kjer urejevalnik zapiše Shemo SQL: na tem zavihku in v njegovi datoteki ter v kodi SQL, ki jo prebere stran z vdelanim urejevalnikom ali agent za kodiranje.  
-Zavihek `Schema SQL` v oknu Lastnosti tabele jim sledi za tisto eno tabelo, ki jo prikazuje. Ne zapiše tujih ključev, razen pri SQLite, kjer so znotraj stavka `CREATE TABLE`, in ne zaporedja ali sprožilca za Oracle.
+Zavihek `Schema SQL` v oknu Lastnosti tabele jim sledi za tisto eno tabelo, ki jo prikazuje. Ne zapiše zaporedja ali sprožilca za Oracle in ne tujih ključev, razen pri SQLite, kjer so znotraj stavka `CREATE TABLE`. Prav tako ne zapiše stavkov za komentarje, ki jih PostgreSQL, Oracle in MSSQL postavijo za tabelo, zato pri teh treh ne prikaže komentarjev.
 
 Deli si sledijo v tem vrstnem redu, ločeni s prazno vrstico: glava, skript pred tabelami, stavki `DROP`, tabele in skript za tabelami. Tabele se zapišejo po vrstnem redu imen.  
 Diagram brez tabel in brez skriptov ne zapiše ničesar, tudi če je izbrana glava.
+
+Tabele in stolpci se zapišejo s fizičnimi imeni, ne glede na to, kaj prikazuje [prikaz imen](./logical-names.md#name-view). Stolpec, povezan z domeno, se zapiše s svojim podatkovnim tipom, ki ga določa domena – glejte razdelek [Domene in podatkovni tipi](./dictionary.md#domains-and-data-types).
 
 ### Samodejno povečevanje {#auto-increment}
 
@@ -181,7 +199,28 @@ Privzeta vrednost stolpca se zapiše tako, kot ste jo vnesli, vendar v oklepajih
 - PostgreSQL obda samo izraz, ki zunaj oklepajev vsebuje besedo, kot so `AT TIME ZONE`, `AND`, `OR`, `IS`, `IN`, `LIKE`, `COLLATE` ali `= ANY`, na primer `(now() AT TIME ZONE 'utc')`.
 - MSSQL, Oracle, Snowflake in Databricks zapišejo vsako privzeto vrednost tako, kot je vnesena.
 
+### Komentarji {#comments}
+
+Komentar tabele ali stolpca, ki ni prazen, ali logično ime, ki ga stikalo [`Write logical names into empty comments`](#logical-names-as-comments) zapiše na njegovo mesto, se zapiše tako, kot posamezna zbirka podatkov zapisuje komentarje:
+
+- MySQL in MariaDB ga zapišeta neposredno v definicijo: stolpec se konča s `COMMENT 'Member ID'`, tabela pa se zapre z vrstico `) COMMENT 'Members';`, tudi v paketu `If not exists` pri MySQL.
+- Snowflake komentar stolpca zapiše neposredno v definicijo, `COMMENT 'Member ID'`, komentar tabele pa v svojo vrstico za zaklepajem, `COMMENT = 'Members';`.
+- Databricks komentar stolpca zapiše neposredno v definicijo, komentar tabele pa kot `COMMENT 'Members';` za `USING DELTA`.
+- PostgreSQL zapiše `COMMENT ON TABLE member IS 'Members';` in `COMMENT ON COLUMN member.id IS 'Member ID';` takoj za stavkom `CREATE TABLE` tabele. Oracle zapiše enake stavke za tabelo, njenimi omejitvami enoličnosti ter njenim zaporedjem in sprožilcem za samodejno povečevanje.
+- MSSQL zapiše en klic za vsako tabelo in vsak stolpec, za tabelo in njenimi omejitvami enoličnosti, vsakemu pa sledi `GO`: `EXECUTE sys.sp_addextendedproperty 'MS_Description', N'Members', 'schema', 'dbo', 'table', 'member'`, pri stolpcu pa se doda še `'column', 'id'`.  
+  Besedilo je nacionalni literal, `N'…'`, zato SQL Server besedilo zunaj kodne strani zbirke podatkov, na primer korejsko, ohrani, namesto da bi shranil vprašaje.  
+  Ko ima nastavitev `Bracket` vrednost `None`, tabela z imenom `sales.users` da shemo `sales` in tabelo `users`, enako pa tudi `[sales].[users]` in `"sales"."users"`, katerih oglati oklepaji in dvojni narekovaji se odstranijo. Ime brez sheme je v `dbo`. Del pred shemo, kot v `shop.sales.users`, izvede proceduro te zbirke podatkov, `shop.sys.sp_addextendedproperty`. Pri kateri koli drugi vrednosti nastavitve `Bracket` je celotno ime tabela v `dbo`.
+- SQLite ne hrani komentarjev, zato vsakega zapiše kot vrstico `--` nad tem, kar opisuje: `-- Members` nad `CREATE TABLE member` in `-- Member ID` nad stolpcem.
+
+Narekovaj znotraj komentarja v narekovajih se podvoji, kot v `'it''s'` in `N'it''s'`, prav tako narekovaj v imenih, ki jih posredujejo klici MSSQL. Databricks pa narekovaj in poševnico nazaj zapiše v ubežni obliki s poševnico nazaj, kot v `'it\'s'`, kar je oblika, ki jo prebere vsaka izdaja Spark. Vrstice `--` pri SQLite niso v narekovajih, zato narekovaj ohranijo tako, kot je vnesen: `-- it's`.  
+Besedilo se sicer zapiše tako, kot je vneseno, vključno s prelomi vrstic, razen pri dveh zbirkah podatkov:
+
+- Oracle izpusti prazne vrstice, pri čemer vrstica iz samih presledkov ali tabulatorjev šteje za prazno, ker SQL\*Plus stavek konča pri prazni vrstici in njegov preostanek preskoči. Komentar tabele iz `Members`, prazne vrstice in `Active only` se zapiše kot `COMMENT ON TABLE member IS 'Members` z `Active only';` v naslednji vrstici.
+- SQLite vsako zaporedje prelomov vrstic zapiše kot en presledek, ker bi prelom vrstice končal vrstico `--`, preostanek pa bi se izvedel kot SQL. Isti komentar se zapiše kot `-- Members Active only`.
+
+Kako se ti komentarji preberejo nazaj pri uvozu, je opisano v razdelku [Komentarji](./file-import-export.md#comments).
+
 ## Urejevalniki samo za branje {#read-only-editors}
 
-V urejevalniku z lastnostjo `readonly` zavihek deluje kot običajno: `Database` in `Bracket` še vedno spremenita prikazano kodo SQL, `Statements`, `Header` in `Tables` še vedno delujejo, `Save file` in `Copy` pa jo še vedno shranita in kopirata.  
+V urejevalniku z lastnostjo `readonly` zavihek deluje kot običajno: `Database` in `Bracket` še vedno spremenita prikazano kodo SQL, `Statements`, `Header`, `Write logical names into empty comments` in `Tables` še vedno delujejo, `Save file` in `Copy` pa jo še vedno shranita in kopirata.  
 Le polji za skripta sta samo za branje.

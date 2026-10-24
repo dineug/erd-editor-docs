@@ -189,9 +189,9 @@ export default {
     // row lights up on the way, then onto the button from straight above.
     // The run along the top edge stays 1px above the table: the spline would
     // bulge up into the header toolbar (y < 30) ahead of a sharper bend, so
-    // the turn down is eased in over two points. The bar's New Table, New
-    // Memo and New Table Group buttons put Zero N right of payments' left
-    // edge, so the way down keeps left of payments until below it.
+    // the turn down is eased in over two points. The centred bar puts Zero N
+    // under payments' left edge, so the way down keeps in the gap between
+    // members and payments until below payments.
     const ordersBox = await d.tableBox('orders');
     const right = ordersBox.x + ordersBox.width;
     const paymentsBox = await d.tableBox('payments');

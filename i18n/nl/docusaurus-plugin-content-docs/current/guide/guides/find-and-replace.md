@@ -1,12 +1,12 @@
 ---
-sidebar_position: 9
-description: Doorzoek namen van tabellen, kolommen, indexen en tabelgroepen, opmerkingen en memo's bovenaan in de Verkenner, loop de overeenkomsten langs in de boomstructuur ervan en op het canvas, en vervang één overeenkomst of allemaal.
+sidebar_position: 10
+description: Doorzoek namen van tabellen, kolommen, indexen en tabelgroepen, logische namen, opmerkingen en memo's bovenaan in de Verkenner, loop de overeenkomsten langs in de boomstructuur ervan en op het canvas, en vervang één overeenkomst of allemaal.
 ---
 
 # Zoeken en vervangen
 
 De functie Zoeken en vervangen vindt tekst in het hele diagram, brengt je naar elke overeenkomst op het ERD-canvas en vervangt één overeenkomst of allemaal.  
-Ze doorzoekt zeven soorten tekst: tabelnamen, tabelopmerkingen, kolomnamen, kolomopmerkingen, memo's, indexnamen en tabelgroepnamen — zie [Wat er wordt doorzocht](#what-it-searches).
+Ze doorzoekt acht soorten tekst: tabelnamen, tabelopmerkingen, kolomnamen, kolomopmerkingen, memo's, indexnamen, tabelgroepnamen en de [logische namen](./logical-names.md) van tabellen en kolommen — zie [Wat er wordt doorzocht](#what-it-searches).
 
 De functie staat bovenaan in de [Verkenner](./explorer.md), het paneel dat links naast het ERD-canvas is vastgezet, tussen de titelbalk van de Verkenner en de boomstructuur ervan. Ze heeft geen eigen titel. Van boven naar beneden bevat ze:
 
@@ -30,7 +30,7 @@ Het sluiten van de Verkenner, wat de toets en de twee items `Toggle Explorer` do
 [Wanneer de Verkenner plaatsmaakt](./explorer.md#when-it-stands-aside) beschrijft hoe een ander tabblad en de zen-modus de Verkenner verbergen, en hoe de Verschilweergave, Tijdreizen en het voorbeeld van Automatische indeling hem verbergen en verhinderen dat hij opent. [Naast het canvas](./explorer.md#beside-the-canvas) gaat over een editor die te smal is voor de Verkenner.
 
 Bij opnieuw openen blijft de laatste zoekopdracht behouden, samen met de vervangtekst, de [opties](#options), de [soorten tekst](#what-it-searches) die aanstonden, en of de rij `Replace` en de soorten tekst waren uitgevouwen.  
-Ze blijven bewaard zolang de editor open blijft en worden niet in het document opgeslagen. Een nieuw geopende editor begint met alle opties uit, de rij `Replace` en de soorten tekst samengevouwen, en alleen de vier soorten namen aan — zie [Wat er wordt doorzocht](#what-it-searches).
+Ze blijven bewaard zolang de editor open blijft en worden niet in het document opgeslagen. Een nieuw geopende editor begint met alle opties uit, de rij `Replace` en de soorten tekst samengevouwen, en alleen de vier soorten namen en `Logical names` aan — zie [Wat er wordt doorzocht](#what-it-searches).
 
 ## De zoekbalk van de browser {#the-browsers-find-bar}
 
@@ -46,15 +46,16 @@ Een pagina die de editor insluit, kan de sneltoets naar een andere toets verplaa
 
 ## Wat er wordt doorzocht {#what-it-searches}
 
-Zeven knoppen bepalen welke soorten tekst worden doorzocht, in deze volgorde: `Table names`, `Table comments`, `Column names`, `Column comments`, `Memos`, `Index names` en `Table group names`.  
+Acht knoppen bepalen welke soorten tekst worden doorzocht, in deze volgorde: `Table names`, `Table comments`, `Column names`, `Column comments`, `Memos`, `Index names`, `Table group names` en `Logical names`.  
 Ze zijn aanvankelijk samengevouwen. De knop `Search In` aan het einde van de rij met de teller vouwt ze onder die rij uit en weer samen, en is gemarkeerd zolang ze zichtbaar zijn.  
-Een gemarkeerde knop voor een soort tekst staat aan. Klik op een knop om die in of uit te schakelen, en er wordt opnieuw gezocht. Staan alle zeven uit, dan wordt niets gevonden.
+Een gemarkeerde knop voor een soort tekst staat aan. Klik op een knop om die in of uit te schakelen, en er wordt opnieuw gezocht. Staan alle acht uit, dan wordt niets gevonden.
 
-De zoekfunctie opent eerst met de vier soorten namen aan, `Table names`, `Column names`, `Index names` en `Table group names`, zodat een naamswijziging opmerkingen en memo's niet bereikt, tenzij je die inschakelt.  
+De zoekfunctie opent eerst met de vier soorten namen aan, `Table names`, `Column names`, `Index names` en `Table group names`, en met `Logical names`, zodat een naamswijziging opmerkingen en memo's niet bereikt, tenzij je die inschakelt.  
+`Logical names` is één soort voor zowel de logische namen van tabellen als die van kolommen.  
 Indexnamen zijn de namen van de indexen op het tabblad `Indexes` van [Tabeleigenschappen](./table-related-functions.md#indexes), niet de sleutels `PK_` en `UQ_` die erboven staan.
 
-Verder wordt niets doorzocht: niet de gegevenstypen, de standaardwaarden, de kolommen van een index, de databasenaam, de [Schema SQL](./schema-sql.md) met de scripts `Before tables` en `After tables`, of gegenereerde code.  
-Een opmerking die door een [weergaveoptie voor tabellen](./table-related-functions.md#table-view-options) is verborgen, wordt toch doorzocht. Memo's die met View Option → `Memos` zijn verborgen, en [tabelgroepen](./table-groups.md#hiding-groups) die met View Option → `Table Groups` zijn verborgen, worden niet doorzocht, ook niet als hun knop aanstaat, zodat `Replace All` nooit een memo herschrijft of een groep hernoemt die je niet kunt zien.
+Verder wordt niets doorzocht: niet de gegevenstypen, het domein van een kolom, de standaardwaarden, de kolommen van een index, de databasenaam, de [Schema SQL](./schema-sql.md) met de scripts `Before tables` en `After tables`, gegenereerde code of de bladen van het tabblad [Woordenboek](./dictionary.md), die een [eigen zoekfunctie](./dictionary.md#searching) hebben.  
+Logische namen worden doorzocht wat de [naamweergave](./logical-names.md#name-view) ook toont, ook in `Physical Names`, waarin het canvas er geen toont. Ook een opmerking die door een [weergaveoptie voor tabellen](./table-related-functions.md#table-view-options) is verborgen, wordt toch doorzocht. Memo's die met View Option → `Memos` zijn verborgen, en [tabelgroepen](./table-groups.md#hiding-groups) die met View Option → `Table Groups` zijn verborgen, worden niet doorzocht, ook niet als hun knop aanstaat, zodat `Replace All` nooit een memo herschrijft of een groep hernoemt die je niet kunt zien.
 
 ## Opties {#options}
 
@@ -91,19 +92,21 @@ De teller, aan het begin van de rij onder de velden, laat zien waar je bent. Hij
 Zolang het zoekveld tekst bevat, toont de [boomstructuur](./explorer.md#the-tree) van de Verkenner de resultaten in plaats van het hele diagram: alleen de rijen die een overeenkomst bevatten en de rijen daarboven. Als niets overeenkomt of de reguliere expressie niet kan worden geparseerd, is de boom leeg. Als je de zoekopdracht verwijdert, komt de hele boom terug, samengevouwen zoals hij eerder was.
 
 - `Tables`, `Table Groups` en `Memos` worden alleen getoond als ze een overeenkomst bevatten, en het getal bij elke map is het aantal rijen direct eronder in de resultaten.
-- Onder `Tables` staan de tabellen die een overeenkomst bevatten, gesorteerd op naam. Onder elke tabel staan een rij voor elke overeenkomst in de opmerking ervan, daarna een map `Columns` met de kolommen die een overeenkomst bevatten, in kolomvolgorde, elk met een rij voor elke overeenkomst in de opmerking ervan, en daarna een map `Indexes` met de indexen waarvan de naam overeenkomt. Er is geen map `Foreign Keys`.
+- Onder `Tables` staan de tabellen die een overeenkomst bevatten, gesorteerd op naam, nooit op logische naam. Onder elke tabel staan een rij voor elke overeenkomst in de opmerking ervan, daarna een map `Columns` met de kolommen die een overeenkomst bevatten, in kolomvolgorde, elk met een rij voor elke overeenkomst in de opmerking ervan, en daarna een map `Indexes` met de indexen waarvan de naam overeenkomt. Er is geen map `Foreign Keys`.
 - Onder `Table Groups` staan de groepen waarvan de naam overeenkomt, gesorteerd op naam, zonder hun tabellen. Een gevonden tabel staat onder `Tables`.
 - Onder `Memos` staan de memo's die een overeenkomst bevatten, in documentvolgorde, elk getoond met de eerste regel ervan en met een rij voor elke overeenkomst erin.
 
-Een overeenkomst in een naam wordt gemarkeerd in de eigen rij van die naam, dus een naam die de zoekopdracht twee keer bevat, is één rij met twee markeringen.  
+Een overeenkomst in een naam wordt gemarkeerd in de eigen rij van die naam, dus een naam die de zoekopdracht twee keer bevat, is één rij met twee markeringen. Een overeenkomst in de logische naam van een tabel of kolom komt ook op de rij van die tabel of kolom, nooit op een eigen rij.  
+Die rijen noemen de tabel of kolom zoals de [naamweergave](./logical-names.md#beyond-the-canvas) haar toont, en elk van de twee namen die een rij kan tonen, markeert alleen zijn eigen overeenkomsten. Een rij die alleen is gevonden in de naam die de weergave weglaat, de logische naam in `Physical Names` of de naam in `Logical Names`, voegt die naam toe na de naam die ze toont, gedempt zoals in `Both Names`, met de overeenkomst gemarkeerd. Als ook de naam die ze toont een overeenkomst bevat, toont de rij alleen die naam, dus de overeenkomsten in de naam die de weergave weglaat, worden wel geteld en doorlopen, maar niet gemarkeerd.  
 Een overeenkomst in een opmerking of memo heeft een eigen rij: een tekstballon bij een tabel- of kolomopmerking, of een plakbriefje bij een memo, gevolgd door een fragment van de tekst met de overeenkomst gemarkeerd. Een lange tekst wordt afgekapt met `…`, en regeleinden worden als spaties getoond. Houd de aanwijzer boven de rij om de hele tekst te zien.  
 Elke andere rij ziet eruit zoals buiten een zoekactie: een kolom toont het gegevenstype ervan, een index de kolommen ervan, en een lege naam toont `unnamed`.
 
 Elke rij met rijen eronder wordt uitgevouwen getoond wanneer een zoekactie start. Een rij die je samenvouwt, of die `Collapse All` samenvouwt, blijft samengevouwen tot een overeenkomst eronder de huidige wordt, of tot de zoekopdracht, `Match Case`, `Match Whole Word`, `Use Regular Expression` of een soort tekst verandert, of tot de zoekfunctie opnieuw wordt geopend met de toets of een item `Toggle Explorer`.  
 De rij van de huidige overeenkomst wordt gemarkeerd en in beeld gescrold. De boom toont elke overeenkomst, hoeveel het er ook zijn.  
-De overeenkomsten worden doorlopen in de volgorde van de boom: tabel voor tabel de naam van de tabel, de opmerking ervan, de naam en de opmerking van elk van de kolommen in kolomvolgorde, en de indexnamen; daarna de tabelgroepnamen; daarna de memo's.
+De overeenkomsten worden doorlopen in de volgorde van de boom: tabel voor tabel de logische naam, de naam en de opmerking van de tabel, daarna de logische naam, de naam en de opmerking van elk van de kolommen in kolomvolgorde, daarna de indexnamen; daarna de tabelgroepnamen; daarna de memo's.
 
-De resultaten volgen het document zolang de Verkenner zichtbaar is. Zodra het bewerken pauzeert, leidt elke wijziging in de doorzochte teksten tot een nieuwe zoekactie, en de huidige overeenkomst blijft de huidige als die er nog is. Dat geldt voor een bewerkte naam, opmerking of memotekst, een toegevoegde of verwijderde tabel, kolom, index, memo of tabelgroep, een verplaatste kolom, en de memo's of tabelgroepen die met View Option worden verborgen of getoond, waardoor hun overeenkomsten uit de boom verdwijnen of terugkomen. Een bewerking op het canvas, ongedaan maken of opnieuw uitvoeren, een import en een bewerking door een medebewerker of een codeeragent tellen allemaal mee. Selecteren, tabellen, memo's of groepen op het canvas verplaatsen, scrollen, zoomen en aanwijzen tellen niet mee.  
+De resultaten volgen het document zolang de Verkenner zichtbaar is. Zodra het bewerken pauzeert, leidt elke wijziging in de doorzochte teksten tot een nieuwe zoekactie, en de huidige overeenkomst blijft de huidige als die er nog is. Dat geldt voor een bewerkte naam, logische naam, opmerking of memotekst, een toegevoegde of verwijderde tabel, kolom, index, memo of tabelgroep, een verplaatste kolom, en de memo's of tabelgroepen die met View Option worden verborgen of getoond, waardoor hun overeenkomsten uit de boom verdwijnen of terugkomen. Een bewerking op het canvas, ongedaan maken of opnieuw uitvoeren, een import en een bewerking door een medebewerker of een codeeragent tellen allemaal mee. Selecteren, tabellen, memo's of groepen op het canvas verplaatsen, scrollen, zoomen en aanwijzen tellen niet mee.  
+Ook het wisselen van de naamweergave telt niet mee, omdat dat geen tekst verandert die de zoekfunctie leest: dezelfde overeenkomsten blijven, en de rijen krijgen de namen die de nieuwe weergave toont.  
 Bewerkingen die zijn gedaan terwijl de Verkenner gesloten of uit beeld was, worden doorzocht zodra hij weer zichtbaar is.
 
 ## Naar een overeenkomst gaan {#going-to-a-match}
@@ -113,17 +116,17 @@ De navigatie loopt aan beide uiteinden rond. Er is geen huidige overeenkomst tot
 
 Een klik op een rij van de resultaten, of `Enter` of `Space` terwijl de toetsenbordfocus erop staat, doet een van de volgende dingen:
 
-- Een rij waarvan de eigen naam een overeenkomst bevat, gaat naar de eerste overeenkomst in die naam.
+- Een rij waarvan de eigen naam of logische naam een overeenkomst bevat, gaat naar de eerste overeenkomst daarin, die in de logische naam vóór die in de naam.
 - Een rij die een fragment van een opmerking of memo toont, gaat naar die overeenkomst.
-- Elke andere rij, zoals een tabel waarvan de naam niet overeenkomt of de eigen rij van een memo, gaat naar wat de rij voorstelt en laat de huidige overeenkomst zoals die is — zie [Naar een rij gaan](./explorer.md#going-to-a-row).
+- Elke andere rij, zoals een tabel waarvan de naam en de logische naam niet overeenkomen of de eigen rij van een memo, gaat naar wat de rij voorstelt en laat de huidige overeenkomst zoals die is — zie [Naar een rij gaan](./explorer.md#going-to-a-row).
 - Een map wordt samengevouwen of uitgevouwen.
 
 Telkens wanneer een overeenkomst de huidige wordt, vouwt de boom alle samengevouwen rijen erboven uit en zet hij de toetsenbordfocus op die rij, zodat de pijltoetsen in de boom vanaf daar verdergaan.
 
 Naar een overeenkomst gaan sluit Tabeleigenschappen als die open is, en daarna:
 
-- Bij een tabelnaam of tabelopmerking, of een kolomnaam of kolomopmerking, wordt alleen die tabel geselecteerd en naar voren gebracht, en komt de gefocuste cel op de cel die de overeenkomst bevat. Bij een overeenkomst in een opmerking die door een [weergaveoptie voor tabellen](./table-related-functions.md#table-view-options) is verborgen, komt de gefocuste cel in plaats daarvan op de naam ernaast.
-- Bij een indexnaam wordt alleen de tabel van de index geselecteerd en naar voren gebracht, met de gefocuste cel op de naam van de tabel, tenzij de gefocuste cel al in die tabel staat. Indexnamen worden niet op het canvas getekend.
+- Bij de naam, logische naam of opmerking van een tabel of kolom wordt alleen die tabel geselecteerd en naar voren gebracht, en komt de gefocuste cel op de cel die de overeenkomst bevat. Bij een overeenkomst in een opmerking die door een [weergaveoptie voor tabellen](./table-related-functions.md#table-view-options) is verborgen, komt de gefocuste cel in plaats daarvan op de naam ernaast. Waar de [naamweergave](./logical-names.md#name-view) geen cel voor de naam of de logische naam toont, komt de gefocuste cel op de cel die op haar plaats wordt getoond: de naam in `Physical Names`, de logische naam in `Logical Names`.
+- Bij een indexnaam wordt alleen de tabel van de index geselecteerd en naar voren gebracht, met de gefocuste cel op de naam van de tabel, of op haar logische naam in `Logical Names` en `Both Names`, tenzij de gefocuste cel al in die tabel staat. Indexnamen worden niet op het canvas getekend.
 - Bij een tabelgroepnaam wordt alleen de groep geselecteerd en samen met zijn tabellen naar voren gebracht.
 - Bij een memo wordt alleen die memo geselecteerd en naar voren gebracht.
 
@@ -151,7 +154,7 @@ Zolang een reeks duurt, behoudt een tabel of tabelgroep die erdoor wordt hernoem
 
 `Replace All` wordt uitgevoerd met `Ctrl + Enter` (Windows/Linux) of `⌘ + Enter` (Mac) in het vervangveld, of met de knop ervan:
 
-- Het vervangt elke overeenkomst in de soorten tekst die aanstaan en laat de andere soorten ongemoeid. Met de standaardsoorten hernoemt het tabellen, kolommen, indexen en tabelgroepen, en blijven opmerkingen en memo's onaangeroerd.
+- Het vervangt elke overeenkomst in de soorten tekst die aanstaan en laat de andere soorten ongemoeid, afgezien van de fysieke namen die een vervangen logische naam afleidt, die het zelfs schrijft als `Table names` en `Column names` uitstaan — zie hieronder. Met de standaardsoorten hernoemt het tabellen, kolommen, indexen en tabelgroepen en herschrijft het de logische namen van tabellen en kolommen; opmerkingen en memo's blijven onaangeroerd.
 - Alles wat het wijzigt, is één stap in de geschiedenis — zie [Eén handeling, één stap](./undo-redo.md#one-gesture-one-step).
 - De teller toont `Replaced N matches` en telt alleen de exemplaren waarvan de tekst echt is veranderd. Is er geen enkele veranderd, dan toont hij `No changes` en wordt niets in de geschiedenis vastgelegd, zoals wanneer je de reguliere expressie `(user)` vervangt door `$1`.
 - Daarna wordt opnieuw gezocht, zonder huidige overeenkomst, dus de resultaten kunnen overeenkomsten tonen die in de nieuwe tekst staan.
@@ -171,8 +174,12 @@ Hoe de vervangtekst wordt gebruikt:
   - Een overeenkomst die wordt teruggeschreven zoals ze was, telt niet mee: met `Match Case` uit schrijft het vervangen van `customer` door `Customer` de teksten `customer`, `Customer` en `CUSTOMER` terug zoals ze waren, en geen ervan wordt geteld.
 - Een leeg vervangveld verwijdert de overeenkomst.
 
-Een vervanging is een gewone bewerking, net als wanneer je zelf de nieuwe tabelnaam, opmerking, kolomnaam of memotekst typt, de naam van de index wijzigt in Tabeleigenschappen of de naam van de tabelgroep wijzigt.  
+Een vervanging is een gewone bewerking, net als wanneer je zelf de nieuwe tabelnaam, kolomnaam, logische naam, opmerking of memotekst typt, de naam van de index wijzigt in Tabeleigenschappen of de naam van de tabelgroep wijzigt.  
 Ze wordt vastgelegd in de geschiedenis en bereikt medebewerkers en een codeeragent zoals elke andere bewerking.
+
+Een tabel- of kolomnaam die een vervanging schrijft, wordt dus een eigen naam, die een later ingevoerde logische naam laat zoals hij is, totdat [Fysieke namen opnieuw afleiden](./dictionary.md#derive-physical-names-again) hem teruggeeft aan de woordenboeken. Een naam die een vervanging leeg laat, gaat in plaats daarvan terug naar de woordenboeken, zoals elke gewiste naam — zie [Eigen namen](./dictionary.md#names-of-your-own).  
+Zolang de fysieke naam van een tabel of kolom leeg is of zelf is afgeleid, leidt een vervangen logische naam hem af uit de woordenboeken, zoals het sluiten van de cel van de logische naam met een nieuwe logische naam dat doet — zie [Fysieke namen afleiden](./dictionary.md#deriving-physical-names). In dat geval krijgt een kolom waarvan de nieuwe logische naam een term is, ook het domein van de term, en daarmee het gegevenstype van het domein. Wat er wordt afgeleid, hoort bij de stap in de geschiedenis van de vervanging en telt niet mee in `Replaced N matches`.  
+Als één `Replace All` zowel de logische naam als de naam van dezelfde tabel of kolom herschrijft, wint de naam die het schrijft van de naam die de nieuwe logische naam zou afleiden.
 
 ## Toetsen in de zoekvelden {#keys-in-the-search-fields}
 

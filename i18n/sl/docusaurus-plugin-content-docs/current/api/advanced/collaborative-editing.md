@@ -44,19 +44,26 @@ Dejanje obravnavajte kot neprozoren objekt in ga posredujte nespremenjenega, nam
 
 Nekaj tega, kar naredi urejevalnik, ostane samo v tem urejevalniku.  
 Postavitev tabele, beležke ali skupine tabel v ospredje, kot se zgodi ob njenem izboru, se ne pošlje.  
-Prav tako se ne pošljejo izbire `Statements`, `Header` in `Tables` na zavihku [Shema SQL](../../guide/guides/schema-sql.md), ki pripadajo oknu, v katerem se izberejo.  
+Prav tako se ne pošljejo izbire `Statements`, `Header`, `Write logical names into empty comments` (od različice `4.2.0`) in `Tables` na zavihku [Shema SQL](../../guide/guides/schema-sql.md), ki pripadajo oknu, v katerem se izberejo.  
 Od različice `4.1.0` tudi [raziskovalec](../../guide/guides/explorer.md) ostane v svojem urejevalniku: ali je odprt, njegova širina, strnjene vrstice, vrstica s fokusom tipkovnice, položaj pomika drevesa ter iskanje in možnosti se ne pošljejo.  
 Prav tako se ne pošlje [osvetlitev](../../guide/guides/relationship-editing.md#reading-a-connector), ki jo prehod na tuji ključ prižge na povezovalni črti njegove relacije.  
-Pomik, povečava ali preklop zavihka se pošlje, vendar nikoli ne premakne pogleda drugega uporabnika in ne zamenja njegovega zavihka. To velja tudi za pomik, ki ga izvede skok iz raziskovalca, in za preklop na zavihek ERD, ko se raziskovalec odpre z drugega zavihka.
+Od različice `4.2.0` tudi zavihek [Slovar](../../guide/guides/dictionary.md) ostane v svojem urejevalniku: kateri list je prikazan ter iskanje, izbor, položaj pomika in širine stolpcev vsakega lista se ne pošljejo. Njegove spremembe, razvrščanja in uvozi CSV pa se pošljejo.  
+Pomik, povečava ali preklop zavihka se pošlje, vendar nikoli ne premakne pogleda drugega uporabnika in ne zamenja njegovega zavihka. To velja tudi za pomik, ki ga izvede skok iz raziskovalca, za preklop na zavihek ERD, ko se raziskovalec odpre z drugega zavihka, ter za preklop zavihka in pomik ob skoku z lista [`Checks`](../../guide/guides/dictionary.md#the-checks-sheet) na zavihku Slovar na tabelo ali stolpec. Skok s tega lista na besedo, izraz ali domeno ostane na zavihku Slovar, zato se od njega ne pošlje nič.
+
+Od različice `4.2.0` se pošlje tudi preklop [prikaza imen](../../guide/guides/logical-names.md#switching-the-view), o tem, kaj z njim naredijo drugi urejevalniki, pa odloča njegov [zaklep](../../guide/guides/settings.md#lock). Zaklep `Name View` je vklopljen v novem diagramu in v vsakem dokumentu izpred različice `4.2.0`.  
+Dokler je zaklep vklopljen, se preklop pokaže samo v urejevalniku, v katerem je bil opravljen: še vedno se pošlje, vendar ga vsi drugi urejevalniki in vse replike zavržejo, zato lahko vsak uporabnik gleda drug prikaz, lastnost `value` pa ohrani zaklenjenega. Sprememba jezika, zapisa imen ali vrste narekovajev je drugačna: doseže vse urejevalnike ne glede na to, ali je njen zaklep vklopljen.  
+Dokler je zaklep izklopljen, preklop v urejevalniku, ki lahko ureja, spremeni prikaz imen v vseh urejevalnikih in replikah, pri čemer obvelja zadnji preklop, vsi pa ga tudi shranijo.  
+Lastni preklop urejevalnika samo za branje vedno ostane v tem urejevalniku, ta pa še vedno sledi skupnim preklopom drugih.
 
 [Zaklepi](../../guide/guides/settings.md#lock) so skupni: v vseh urejevalnikih obvelja zadnje zaklepanje ali odklepanje nastavitve, zaklep pa nosi vrednosti urejevalnika, ki ga je vklopil, zato vsi urejevalniki in replike shranijo isto vrednost.  
 Zaklep `Viewport` zato shrani pogled urejevalnika, ki ga je vklopil, zaklep `Canvas Type` pa zadnji zavihek, na katerem je bil ta urejevalnik pred zavihkom Nastavitve, kjer se zaklepi vklapljajo.  
-Izklop zaklepa `Language`, `Table Name Case`, `Column Name Case` ali `Bracket Type` to nastavitev v vseh urejevalnikih postavi tudi na vrednost, prikazano v urejevalniku, ki ga je izklopil, tako da vsi še naprej shranjujejo eno samo vrednost. Izklop zaklepa `Viewport` ali `Canvas Type` nikomur ne premakne pogleda in ne zamenja zavihka.
+Izklop zaklepa `Language`, `Table Name Case`, `Column Name Case`, `Bracket Type` ali od različice `4.2.0` zaklepa `Name View` to nastavitev v vseh urejevalnikih postavi tudi na vrednost, prikazano v urejevalniku, ki ga je izklopil, tako da vsi še naprej shranjujejo eno samo vrednost. Izklop zaklepa `Viewport` ali `Canvas Type` nikomur ne premakne pogleda in ne zamenja zavihka.
 
 Sprememba skripta `Before tables` ali `After tables` se pošlje v celoti, ko njegovo polje izgubi fokus. Skripta se razrešujeta ločeno, zato sprememba enega, ki jo naredi sodelavec, nikoli ne prepiše drugega.
 
 Nič, kar se naredi v [načinu Tok](../../guide/guides/visualization.md#flow-never-edits-the-document) na zavihku Vizualizacija, ni sprememba dokumenta, zato urejevalnik v načinu Tok drugim ne pošilja sprememb, spremembe, ki jih pošiljajo drugi, pa se medtem še naprej uporabljajo.  
-Edina izjema je izhod iz načina Tok na drug zavihek: ta preklop zavihka se pošlje kot vsak drug.  
+Izjemi sta dve. Izhod iz načina Tok na drug zavihek je preklop zavihka in se pošlje kot vsak drug. Od različice `4.2.0` je izbira na seznamu prikaza imen v orodni vrstici načina Tok preklop prikaza imen, ki se pošlje in uporabi tako kot preklop na platnu.  
+Gumba `Previous table` in `Next table` ter bližnjici za razveljavitev in uveljavitev, ki v načinu Tok [prehajajo med pogledi](../../guide/guides/visualization.md#previous-table-and-next-table), se ne pošljejo.  
 Gumb na kartici za zunanjo povezavo, rezultat [hitrega iskanja](../../guide/guides/quick-search.md#searching-the-diagram), izbran po `#`, `@` ali `:`, in odpiranje [raziskovalca](../../guide/guides/explorer.md#opening-and-closing) vsi preklopijo iz načina Tok na zavihek ERD. Pošlje se tudi pomik, ki ga tam izvede gumb na kartici ali rezultat hitrega iskanja.
 
 ## Dva urejevalnika na eni strani {#two-editors-on-one-page}
@@ -99,6 +106,7 @@ const sharedStore2 = editor2.getSharedStore();
 
 Vrednost med izvajanjem še vedno hrani to, kar je bilo odstranjeno, odkar je bil dokument odprt, zato novi udeleženec, ko drug urejevalnik pozneje razveljavi odstranitev, tabelo povrne z njenim imenom in stolpci.  
 Lastnost [`value`](../erd-editor-element.md#value) je oblika, ki jo hrani datoteka, brez odstranjenih entitet, zato bi novi udeleženec, inicializiran iz nje ali iz datoteke, namesto tega povrnil prazno tabelo brez imena.  
+Od različice `4.2.0` enako velja za besedo, izraz ali domeno, odstranjeno z lista na zavihku [Slovar](../../guide/guides/dictionary.md): ko drug urejevalnik razveljavi odstranitev, novi udeleženec, inicializiran iz lastnosti `runtimeValue`, vrstico znova navede v celoti, udeleženec, inicializiran iz lastnosti `value`, pa navede prazno vrstico, ki jo lastnost `value` tega udeleženca nato izpusti.  
 Lastnost `value` še naprej zapisujte v shrambo: lastnost `runtimeValue` je namenjena samo inicializaciji drugega urejevalnika, drugega pogleda ali shrambe [replicationStore](./remote-storage.md).  
 Urejevalniki v VS Code, v aplikaciji Obsidian, v razvojnem okolju JetBrains in v spletni aplikaciji na ta način inicializirajo drugi pogled odprtega dokumenta.
 
@@ -134,6 +142,31 @@ Vse urejevalnike v seji in vsako shrambo [replicationStore](./remote-storage.md#
 Urejevalnik različice `4.1.0` ne pošilja nobene nove vrste dejanj, zato si urejevalniki in replike različic `4.0.0` in `4.1.0` delijo sejo, ne da bi kaj zgrešili.  
 V njem [iskanje in zamenjava](../../guide/guides/find-and-replace.md#replacing) preiskuje tudi imena indeksov in imena skupin tabel, ukaza `Replace` in `Replace All` pa jih preimenujeta z dejanjema `index.changeName` in `tableGroup.changeName`, ki ju urejevalnik različice `4.0.0` že uporablja.
 
+Od različice `4.2.0` te spremembe potujejo z novimi vrstami dejanj, posrednik, ki dejanja posreduje nespremenjena, pa zanje ne potrebuje ničesar novega:
+
+- [logično ime](../../guide/guides/logical-names.md) tabele ali stolpca: `table.changeLogicalName` in `column.changeLogicalName`; ali je bilo ime [izpeljano iz slovarjev](../../guide/guides/dictionary.md#deriving-physical-names): `table.changeNameDerived` in `column.changeNameDerived`;
+- stolpec, ki se poveže z [domeno](../../guide/guides/dictionary.md#domains-and-data-types) ali se mu povezava z domeno prekine: `column.changeDomain`;
+- beseda, izraz ali domena, ki je dodana, spremenjena (vključno z mestom na listu, kot ga določi razvrščanje) ali odstranjena na zavihku [Slovar](../../guide/guides/dictionary.md): `dictionary.add`, `dictionary.update` in `dictionary.remove`;
+- preklop [prikaza imen](../../guide/guides/logical-names.md#switching-the-view): `settings.changeNameViewMode`.
+
+Zaklep `Name View` potuje z obstoječim dejanjem `settings.changeLockSettings`, možnost pogleda `Domain` z dejanjem `settings.changeShow`, premik vrstice `Logical Name` ali `Domain` v [vrstnem redu stolpcev](../../guide/guides/settings.md#adjusting-column-order) pa z dejanjem `settings.changeColumnOrder`.  
+Dejanji `editor.clear` in `editor.loadJson` uvoza Sheme SQL, GraphQL, DBML ali AML z ukazom `Import` nosita `keepDictionaries: true`, kar v vseh urejevalnikih ohrani besede, izraze in domene. Enako velja za dejanji klica metode [setSchemaSQL](../erd-editor-element.md#setschemasql), `setSchemaGraphQL`, `setSchemaDBML` ali `setSchemaAML`, ki nadomesti dokument.  
+Fizično ime, ki ga izpeljejo slovarji, potuje z dejanjem `table.changeName` ali `column.changeName`, podatkovni tip, ki ga domena da svojim stolpcem, pa z dejanjem `column.changeDataType`, torej z dejanji, ki jih pošlje ročna sprememba.
+
+Urejevalnik izdaje pred različico `4.2.0` nove vrste dejanj prezre: nima logičnih imen, povezav z domenami, slovarjev ali prikaza imen. Zaklepanje ali odklepanje nastavitve `Name View` tam ne spremeni ničesar, prav tako ne premik vrstice `Logical Name` ali `Domain` v vrstnem redu stolpcev ali premik druge vrstice na mesto ene od njiju. Ničesar ne spremeni niti zaklep `Canvas Type`, ki ga vklopi urejevalnik, ki je na zavihek Nastavitve prišel z zavihka Slovar: starejši urejevalnik tega zavihka ne pozna, zato pusti nastavitev `Canvas Type` odklenjeno. Še vedno pa prikazuje fizična imena, ki jih izpeljejo slovarji, in podatkovne tipe, ki jih dajo domene.  
+Njegove lastne spremembe ne vedo ničesar o logičnih imenih, domenah ali slovarjih, kar ima na novejše urejevalnike te učinke:
+
+- Tabela ali stolpec, ki ga ročno preimenuje, ohrani ime označeno kot izpeljano, zato lahko logično ime, ki se zanj pozneje vnese v novejšem urejevalniku, znova izpelje ime in prepiše tisto, ki ga je vnesel ta urejevalnik.
+- Podatkovni tip, ki ga da stolpcu, povezanemu z domeno, povezavo pusti, zato list `Checks` navede preverjanje `Domain type mismatch`, naslednja sprememba tipa domene pa stolpcu znova da tip domene.
+- Stolpci tujega ključa relacije, ki jo doda, od svojega ključa ne dobijo logičnega imena ali domene.
+- Tabela, ki jo prilepi ali podvoji, prispe brez logičnih imen in povezav z domenami.
+- Uvoz Sheme SQL, GraphQL, DBML ali AML v njem ne pošlje `keepDictionaries`, zato v vseh urejevalnikih izprazni besede, izraze in domene.
+- Njegova razveljavitev nalaganja, uvoza ali metode `clear()` v vseh urejevalnikih naloži njegovo lastno kopijo dokumenta, ta kopija pa nima logičnih imen, povezav z domenami ali slovarjev.
+- Ta kopija in dokument, ki ga v njem naloži uvoz Sheme SQL, GraphQL, DBML ali AML, v vseh urejevalnikih tudi vrneta zaklep `Name View` v stanje, v katerem ga je ta urejevalnik našel. Vsi urejevalniki nato kot prikaz imen shranijo `Physical Names` in ga, če je zaklep izklopljen, tudi prikažejo.
+
+Dokument, shranjen iz takega urejevalnika, nima logičnih imen, povezav z domenami, slovarjev ali prikaza imen, zato ga urejevalnik različice `4.2.0` odpre v prikazu `Physical Names`. Starejši urejevalnik pa zaklep `Name View` shrani takšen, kot ga je našel, zato dokument, odklenjen v urejevalniku različice `4.2.0`, ostane odklenjen.  
+Vse urejevalnike v seji in vsako shrambo [replicationStore](./remote-storage.md#dispatch-dispatchsync), ki shranjuje njen dokument, ohranjajte na različici `4.2.0` ali novejši.
+
 ## SharedStoreConfig {#sharedstoreconfig}
 
 ### getNickname {#getnickname}
@@ -161,6 +194,7 @@ editor.getSharedStore({ mouseTracker: false });
 Oddaja, na čem ta uporabnik dela. Privzeta vrednost je `true`.  
 Tabela in celica s fokusom, tabele, beležke in skupine tabel, ki ste jih izbrali, ter okvir, ki ga vlečete po platnu, se pošljejo drugim urejevalnikom in se tam narišejo.  
 Vsak uporabnik dobi svojo barvo, tako da jih lahko ločite: obroba na tabeli s fokusom, podčrtanje celice s fokusom, obroč okoli izbranih tabel, beležk in skupin tabel ter črtkan pravokotnik za okvir vlečenja.  
+Od različice `4.2.0` lahko vsak uporabnik gleda drug [prikaz imen](../../guide/guides/logical-names.md#collaborators), dokler je njegov zaklep vklopljen, ali po lastnem preklopu urejevalnika samo za branje. Celica s fokusom, ki je vaš prikaz ne izriše, je podčrtana na celici, ki jo prikaz izriše na njenem mestu: ime in logično ime se nadomeščata, prav tako podatkovni tip in domena.  
 Prisotnost, ki prihaja od drugih uporabnikov, se na vašem platnu vedno nariše, ne glede na to, ali je ta možnost vklopljena.  
 V načinu Tok na zavihku Vizualizacija se fokus in izbor drugih uporabnikov narišeta na karticah tabel, njihovi okvirji vlečenja pa ne. Tabele, ki jih tam izberete, se še vedno pošljejo, okvir, ki ga tam vlečete, pa ne.
 

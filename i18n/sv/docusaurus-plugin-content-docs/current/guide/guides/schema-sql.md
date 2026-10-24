@@ -1,6 +1,6 @@
 ---
-sidebar_position: 11
-description: Läs diagrammets DDL på fliken Schema SQL, välj databas, citattecken, satser, inledning och tabeller i dess alternativpanel, lägg till egna skript före och efter tabellerna och spara eller kopiera SQL-koden.
+sidebar_position: 12
+description: Läs diagrammets DDL på fliken Schema SQL, välj databas, citattecken, satser, inledning, logiska namn i tomma kommentarer och tabeller i dess alternativpanel, lägg till egna skript före och efter tabellerna och spara eller kopiera SQL-koden.
 ---
 
 # Schema SQL
@@ -20,24 +20,25 @@ Högerklicka på SQL-koden för att öppna dess snabbmeny:
 - `Options panel`, som är ikryssat medan panelen visas och som fäller ihop eller öppnar den.
 - `Save file`
 
-Medan den här fliken är öppen erbjuder snabbsökningen `Database` och `Bracket`; `Schema SQL: Statements` och `Schema SQL: Header`, som bara listar de val som databasen har; och `Schema SQL: Options panel`, som fäller ihop eller öppnar panelen.
+Medan den här fliken är öppen erbjuder snabbsökningen `Database` och `Bracket`; `Schema SQL: Statements` och `Schema SQL: Header`, som bara listar de val som databasen har; och `Schema SQL: Options panel`, som fäller ihop eller öppnar panelen.  
+Varken snabbmenyn eller snabbsökningen erbjuder `Write logical names into empty comments`, som bara finns i alternativpanelen – se [Logiska namn som kommentarer](#logical-names-as-comments).
 
 SQL-koden skrivs när fliken öppnas, och igen varje gång ett av panelens val, databasnamnet eller ett skript ändras. En ändring i tabellerna medan fliken är öppen, till exempel från en medarbetare eller en kodagent, visas när du lämnar fliken och kommer tillbaka, eller när något av dem ändras.
 
-Panelen [Tabellegenskaper](./table-related-functions.md#table-properties) har en egen flik `Schema SQL` som visar en enskild tabells DDL. Den skriver alltid vanliga satser med `CREATE` utan inledning eller skript, har ingen alternativpanel, och dess snabbmeny erbjuder bara `Database` och `Bracket`.
+Panelen [Tabellegenskaper](./table-related-functions.md#table-properties) har en egen flik `Schema SQL` som visar en enskild tabells DDL. Den skriver alltid vanliga satser med `CREATE` utan inledning eller skript, skriver aldrig ett logiskt namn i en tom kommentar, har ingen alternativpanel, och dess snabbmeny erbjuder bara `Database` och `Bracket`.
 
 ## Alternativpanelen {#options-panel}
 
 Panelen innehåller tre grupper, var och en under en rubrik:
 
 1. `Saved in the document`: `Database` och `Bracket` – se [Databas och citattecken](#database-and-bracket).
-2. `This window only`: `Statements`, `Header` och, medan diagrammet har en [tabellgrupp](./table-groups.md), `Tables` – se [Satser](#statements), [Inledning](#header) och [Tabeller](#tables).
+2. `This window only`: `Statements`, `Header`, `Write logical names into empty comments` och, medan diagrammet har en [tabellgrupp](./table-groups.md), `Tables` – se [Satser](#statements), [Inledning](#header), [Logiska namn som kommentarer](#logical-names-as-comments) och [Tabeller](#tables).
 3. `Saved in the document · written as is for every database`: skripten `Before tables` och `After tables` – se [Skript före och efter tabellerna](#before-and-after-scripts).
 
 `Save file` och `Copy` finns längst ned i panelen – se [Spara eller kopiera SQL-koden](#saving-or-copying-the-sql).
 
 Valen under `This window only` hör till det editorfönster där du gör dem. De sparas inte i dokumentet, delas inte med medarbetare och registreras inte i ångrahistoriken, och de återställs när editorn stängs eller läses in på nytt; ett flikbyte behåller dem.  
-`Statements` börjar på `If not exists` och `Header` på `CREATE + USE`. Den SQL-kod som en sida med inbäddad editor läser med [`getSchemaSQL()`](../../api/erd-editor-element.md#getschemasql), och den SQL-kod som en kodagent läser, börjar i stället på `Create` utan inledning.
+`Statements` börjar på `If not exists` och `Header` på `CREATE + USE`, och `Write logical names into empty comments` är av från början. Den SQL-kod som en sida med inbäddad editor läser med [`getSchemaSQL()`](../../api/erd-editor-element.md#getschemasql), och den SQL-kod som en [kodagent läser](../../mcp/tools.md#reading-a-document), börjar i stället på `Create` utan inledning och skriver inga logiska namn om den inte ombeds att göra det.
 
 Ett val som den valda databasen inte har står kvar i panelen, nedtonat, med knappbeskrivningen `Not in <database>`, till exempel `Not in Oracle`, och ett tryck på det gör ingenting.  
 SQL-koden använder då den närmaste form som databasen har, och knappen för den formen visas intryckt: `If not exists` faller tillbaka på `Create`, `CREATE + USE` på `USE`, eller på `None` där databasen inte heller har `USE`, och `USE` på `None`. Ditt val behålls, så om du byter till en databas som har det kommer det tillbaka.
@@ -92,6 +93,21 @@ En inledning skrivs bara medan databasnamnet är en enkel identifierare: en ASCI
 Med alla andra namn, även ett tomt, skrivs ingen inledning, och `DROP TABLE` i PostgreSQL namnger då inget schema. Medan en annan inledning än `None` gäller påpekar en notering under `Header` det: `Database name "<name>" is not a valid identifier.`  
 I ett nytt diagram är databasnamnet tomt, så tills du ger databasen ett namn visar panelen `Database name "" is not a valid identifier.`
 
+## Logiska namn som kommentarer {#logical-names-as-comments}
+
+`Write logical names into empty comments`, en växlingsknapp under `This window only`, skriver det [logiska namnet](./logical-names.md) för en tabell eller kolumn i DDL-koden där dess kommentar är tom, i alla databaser.
+
+![Write logical names into empty comments slås på i panelen Schema SQL, vilket skriver det logiska namnet för varje kolumn i order_items i dess tomma COMMENT medan kommentarerna i members står kvar](/img/demo-schema-sql-logical-names.webp)
+
+- En kommentar med text har alltid företräde: det logiska namnet ersätter den aldrig och läggs aldrig till i den.
+- En kommentar som bara består av blanktecken räknas som tom, så det logiska namnet skrivs i dess ställe. Ett logiskt namn som är tomt eller bara består av blanktecken skriver ingenting, och den tabellen eller kolumnen får fortfarande ingen kommentar.
+- Det logiska namnet skrivs där och i den form som databasen skriver en kommentar, med citattecknen maskerade på samma sätt – se [Kommentarer](#comments).
+
+I MySQL skrivs till exempel en kolumn `id` med det logiska namnet `Member ID` och utan kommentar med `COMMENT 'Member ID'`, medan en kolumn `email` med det logiska namnet `Email` och kommentaren `Sign-in address` behåller `COMMENT 'Sign-in address'`.
+
+Precis som `Statements` och `Header` hör växlingsknappen till fönstret och är av från början – se [Alternativpanelen](#options-panel).  
+En import läser aldrig tillbaka en sådan kommentar som ett logiskt namn – se [Kommentarer](./file-import-export.md#comments).
+
 ## Tabeller {#tables}
 
 Medan diagrammet har minst en [tabellgrupp](./table-groups.md), synlig eller dold, visas `Tables` under `This window only` med en kryssruta för varje val:
@@ -125,22 +141,24 @@ Ett fält utan tangentbordsfokus följer en ändring som en medarbetare eller en
 
 ## Spara eller kopiera SQL-koden {#saving-or-copying-the-sql}
 
-`Save file`, längst ned i panelen eller i snabbmenyn, sparar exakt den SQL-kod som fliken visar, med dess aktuella databas, citattecken, satser, inledning, tabeller och skript, som `<database name>-<timestamp>.sql`. Filen namnges och sparas som alla andra exporter – se [Exportera](./file-import-export.md#exporting).
+`Save file`, längst ned i panelen eller i snabbmenyn, sparar exakt den SQL-kod som fliken visar, med dess aktuella databas, citattecken, satser, inledning, kommentarer med logiska namn, tabeller och skript, som `<database name>-<timestamp>.sql`. Filen namnges och sparas som alla andra exporter – se [Exportera](./file-import-export.md#exporting).
 
 `Export` ▸ `Schema SQL`, i arbetsytans snabbmeny eller i snabbsökningen, sparar ingenting av sig själv.  
 Det byter till den här fliken, öppnar alternativpanelen även om den var ihopfälld och lägger tangentbordsfokus på `Save file`, så att ett tryck på `Enter` sparar filen.
 
 `Copy` längst ned i panelen, eller kopieringsknappen som visas längst upp till höger i koden medan du håller pekaren över den, kopierar SQL-koden.  
-Meddelandet `Copied!` med en bock bekräftar kopieringen i två sekunder. Om webbläsaren eller värdprogrammet nekar åtkomst till Urklipp talar meddelandet `Couldn't copy to the clipboard` med en varningssymbol om det i stället. En ny kopiering ersätter meddelandet i stället för att lägga till ett till.  
+Meddelandet `Copied!` med en bock bekräftar kopieringen i två sekunder. Om webbläsaren eller värdprogrammet nekar åtkomst till Urklipp talar meddelandet `Couldn't copy to the clipboard` med en varningssymbol om det i stället, i fem sekunder. En ny kopiering ersätter meddelandet i stället för att lägga till ett till.  
 SQL-koden går också att markera, så du kan ta bara en del av den.
 
 ## Vad DDL-koden skriver {#what-the-ddl-writes}
 
 De här reglerna gäller överallt där editorn skriver Schema SQL: på den här fliken och i dess fil, och i den SQL-kod som en sida med inbäddad editor eller en kodagent läser.  
-Fliken `Schema SQL` i panelen Tabellegenskaper följer dem för den enda tabell som den visar. Den skriver inga sekundärnycklar, utom i SQLite, där de står inuti `CREATE TABLE`, och ingen sekvens eller trigger för Oracle.
+Fliken `Schema SQL` i panelen Tabellegenskaper följer dem för den enda tabell som den visar. Den skriver ingen sekvens eller trigger för Oracle, och inga sekundärnycklar utom i SQLite, där de står inuti `CREATE TABLE`. Den skriver inte heller de kommentarssatser som PostgreSQL, Oracle och MSSQL placerar efter en tabell, så i de tre databaserna visar den inga kommentarer.
 
 Delarna kommer i den här ordningen, åtskilda av en tom rad: inledningen, skriptet före tabellerna, satserna med `DROP`, tabellerna och skriptet efter tabellerna. Tabellerna skrivs i namnordning.  
 För ett diagram utan tabeller och utan skript skrivs ingenting, även om en inledning är vald.
+
+Tabeller och kolumner skrivs med sina fysiska namn, oavsett vad [namnvisningen](./logical-names.md#name-view) visar. En kolumn som är kopplad till en domän skrivs med sin egen datatyp, som domänen anger – se [Domäner och datatyper](./dictionary.md#domains-and-data-types).
 
 ### Automatisk uppräkning {#auto-increment}
 
@@ -181,7 +199,28 @@ En kolumns standardvärde skrivs så som du skrev det, men inom parenteser där 
 - PostgreSQL sätter bara ett uttryck inom parenteser när det har ett ord som `AT TIME ZONE`, `AND`, `OR`, `IS`, `IN`, `LIKE`, `COLLATE` eller `= ANY` utanför parenteser, till exempel `(now() AT TIME ZONE 'utc')`.
 - MSSQL, Oracle, Snowflake och Databricks skriver alla standardvärden så som de skrevs.
 
+### Kommentarer {#comments}
+
+En tabells eller kolumns kommentar som inte är tom, eller det logiska namn som [`Write logical names into empty comments`](#logical-names-as-comments) skriver i dess ställe, skrivs så som varje databas skriver kommentarer:
+
+- MySQL och MariaDB skriver den direkt i definitionen: en kolumn slutar med `COMMENT 'Member ID'`, och tabellen avslutas med `) COMMENT 'Members';`, även i den batch som MySQL skriver för `If not exists`.
+- Snowflake skriver en kolumns kommentar direkt i definitionen, `COMMENT 'Member ID'`, och tabellens på en egen rad efter den avslutande parentesen, `COMMENT = 'Members';`.
+- Databricks skriver en kolumns kommentar direkt i definitionen och tabellens som `COMMENT 'Members';` efter `USING DELTA`.
+- PostgreSQL skriver `COMMENT ON TABLE member IS 'Members';` och `COMMENT ON COLUMN member.id IS 'Member ID';` direkt efter tabellens `CREATE TABLE`. Oracle skriver samma satser efter tabellen, dess unika begränsningar och dess sekvens och trigger för automatisk uppräkning.
+- MSSQL skriver ett anrop per tabell och per kolumn, efter tabellen och dess unika begränsningar, vart och ett följt av `GO`: `EXECUTE sys.sp_addextendedproperty 'MS_Description', N'Members', 'schema', 'dbo', 'table', 'member'`, med `'column', 'id'` tillagt för en kolumn.  
+  Texten är en nationell literal, `N'…'`, så SQL Server behåller text utanför databasens teckentabell, till exempel koreanska, i stället för att lagra frågetecken.  
+  När `Bracket` är `None` ger en tabell med namnet `sales.users` schemat `sales` och tabellen `users`, och det gör även `[sales].[users]` och `"sales"."users"`, vars hakparenteser och dubbla citattecken tas bort. Ett namn utan schema hamnar i `dbo`. En del före schemat, som i `shop.sales.users`, kör den databasens procedur, `shop.sys.sp_addextendedproperty`. Med alla andra värden för `Bracket` är hela namnet tabellen, i `dbo`.
+- SQLite sparar inga kommentarer, så SQLite skriver var och en som en rad med `--` ovanför det som den beskriver: `-- Members` ovanför `CREATE TABLE member` och `-- Member ID` ovanför kolumnen.
+
+Ett citattecken inuti en kommentar inom citattecken dubbleras, som i `'it''s'` och `N'it''s'`, och det gäller även ett citattecken i de namn som anropen i MSSQL skickar. Databricks maskerar i stället ett citattecken och ett omvänt snedstreck med ett omvänt snedstreck, som i `'it\'s'`, den form som alla Spark-versioner läser. Raderna med `--` i SQLite står inte inom citattecken, så de behåller ett citattecken så som det skrevs: `-- it's`.  
+I övrigt skrivs texten så som den skrevs, även radbrytningar, utom i två databaser:
+
+- Oracle utelämnar tomma rader, där en rad med bara blanksteg eller tabbar räknas som tom, eftersom SQL\*Plus avslutar en sats vid en tom rad och hoppar över resten av den. En tabellkommentar som består av `Members`, en tom rad och `Active only` skrivs som `COMMENT ON TABLE member IS 'Members` med `Active only';` på nästa rad.
+- SQLite skriver varje följd av radbrytningar som ett enda blanksteg, eftersom en radbrytning skulle avsluta raden med `--` och köra resten som SQL. Samma kommentar skrivs som `-- Members Active only`.
+
+Hur de här kommentarerna läses in igen vid import beskrivs i [Kommentarer](./file-import-export.md#comments).
+
 ## Skrivskyddade editorer {#read-only-editors}
 
-I en editor med `readonly` fungerar fliken som vanligt: `Database` och `Bracket` ändrar fortfarande den SQL-kod som visas, `Statements`, `Header` och `Tables` fungerar fortfarande, och `Save file` och `Copy` sparar och kopierar den fortfarande.  
+I en editor med `readonly` fungerar fliken som vanligt: `Database` och `Bracket` ändrar fortfarande den SQL-kod som visas, `Statements`, `Header`, `Write logical names into empty comments` och `Tables` fungerar fortfarande, och `Save file` och `Copy` sparar och kopierar den fortfarande.  
 Bara de två skriptfälten är skrivskyddade.

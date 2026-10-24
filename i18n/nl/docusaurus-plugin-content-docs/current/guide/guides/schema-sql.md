@@ -1,6 +1,6 @@
 ---
-sidebar_position: 11
-description: Lees de DDL van het diagram op het tabblad Schema SQL, kies in het optiepaneel de database, de aanhalingstekens, de instructies, de kop en de tabellen, voeg je eigen scripts vóór en na de tabellen toe en sla de SQL op of kopieer die.
+sidebar_position: 12
+description: Lees de DDL van het diagram op het tabblad Schema SQL, kies in het optiepaneel de database, de aanhalingstekens, de instructies, de kop, logische namen in lege opmerkingen en de tabellen, voeg je eigen scripts vóór en na de tabellen toe en sla de SQL op of kopieer die.
 ---
 
 # Schema SQL
@@ -20,24 +20,25 @@ Klik met de rechtermuisknop op de SQL om het contextmenu ervan te openen:
 - `Options panel`, aangevinkt zolang het paneel zichtbaar is, dat het paneel samenvouwt of opent.
 - `Save file`
 
-Zolang dit tabblad open is, biedt Snel zoeken `Database` en `Bracket`; `Schema SQL: Statements` en `Schema SQL: Header`, die alleen de keuzes tonen die de database heeft; en `Schema SQL: Options panel`, dat het paneel samenvouwt of opent.
+Zolang dit tabblad open is, biedt Snel zoeken `Database` en `Bracket`; `Schema SQL: Statements` en `Schema SQL: Header`, die alleen de keuzes tonen die de database heeft; en `Schema SQL: Options panel`, dat het paneel samenvouwt of opent.  
+Noch het contextmenu noch Snel zoeken biedt `Write logical names into empty comments`, dat alleen in het optiepaneel staat — zie [Logische namen als opmerkingen](#logical-names-as-comments).
 
 De SQL wordt geschreven wanneer het tabblad opent, en opnieuw telkens wanneer een van de keuzes in het paneel, de databasenaam of een script verandert. Een bewerking van de tabellen terwijl het tabblad open is, zoals die van een medebewerker of een codeeragent, wordt zichtbaar zodra je het tabblad verlaat en terugkomt, of zodra een van die dingen verandert.
 
-[Tabeleigenschappen](./table-related-functions.md#table-properties) heeft een eigen tabblad `Schema SQL`, dat de DDL van één tabel toont. Het schrijft altijd gewone `CREATE`-instructies zonder kop of scripts, heeft geen optiepaneel en het contextmenu ervan biedt alleen `Database` en `Bracket`.
+[Tabeleigenschappen](./table-related-functions.md#table-properties) heeft een eigen tabblad `Schema SQL`, dat de DDL van één tabel toont. Het schrijft altijd gewone `CREATE`-instructies zonder kop of scripts, schrijft nooit een logische naam in een lege opmerking, heeft geen optiepaneel en het contextmenu ervan biedt alleen `Database` en `Bracket`.
 
 ## Optiepaneel {#options-panel}
 
 Het paneel bevat drie groepen, elk onder een opschrift:
 
 1. `Saved in the document`: `Database` en `Bracket` — zie [Database en aanhalingstekens](#database-and-bracket).
-2. `This window only`: `Statements`, `Header` en, zolang het diagram een [tabelgroep](./table-groups.md) heeft, `Tables` — zie [Instructies](#statements), [Kop](#header) en [Tabellen](#tables).
+2. `This window only`: `Statements`, `Header`, `Write logical names into empty comments` en, zolang het diagram een [tabelgroep](./table-groups.md) heeft, `Tables` — zie [Instructies](#statements), [Kop](#header), [Logische namen als opmerkingen](#logical-names-as-comments) en [Tabellen](#tables).
 3. `Saved in the document · written as is for every database`: de scripts `Before tables` en `After tables` — zie [Scripts vóór en na de tabellen](#before-and-after-scripts).
 
 `Save file` en `Copy` staan onder aan het paneel — zie [De SQL opslaan of kopiëren](#saving-or-copying-the-sql).
 
 De keuzes onder `This window only` horen bij het editorvenster waarin je ze maakt. Ze worden niet in het document opgeslagen, niet met medebewerkers gedeeld en niet in de geschiedenis vastgelegd, en ze worden teruggezet wanneer de editor wordt gesloten of opnieuw geladen; bij het wisselen van tabblad blijven ze behouden.  
-`Statements` begint bij `If not exists` en `Header` bij `CREATE + USE`. De SQL die een pagina met een ingesloten editor via [`getSchemaSQL()`](../../api/erd-editor-element.md#getschemasql) leest, en de SQL die een codeeragent leest, beginnen in plaats daarvan bij `Create`, zonder kop.
+`Statements` begint bij `If not exists`, `Header` bij `CREATE + USE` en `Write logical names into empty comments` staat uit. De SQL die een pagina met een ingesloten editor via [`getSchemaSQL()`](../../api/erd-editor-element.md#getschemasql) leest, en de SQL die een [codeeragent leest](../../mcp/tools.md#reading-a-document), beginnen in plaats daarvan bij `Create`, zonder kop, en schrijven geen logische namen, tenzij daarom wordt gevraagd.
 
 Een keuze die de geselecteerde database niet heeft, blijft gedimd in het paneel staan, met de knopinfo `Not in <database>`, zoals `Not in Oracle`, en erop drukken doet niets.  
 De SQL gebruikt dan de dichtstbijzijnde vorm die de database heeft, en de knop van die vorm wordt ingedrukt weergegeven: `If not exists` valt terug op `Create`, `CREATE + USE` op `USE`, of op `None` als de database ook geen `USE` heeft, en `USE` op `None`. Je keuze blijft bewaard, dus als je overschakelt naar een database die de keuze heeft, komt die terug.
@@ -92,6 +93,21 @@ Een kop wordt alleen geschreven zolang de databasenaam een eenvoudige identifier
 Elke andere naam, een lege inbegrepen, levert geen kop op, en de `DROP TABLE` van PostgreSQL noemt dan geen schema. Zolang een andere kop dan `None` geldt, meldt een notitie onder `Header` dit: `Database name "<name>" is not a valid identifier.`  
 De databasenaam van een nieuw diagram is leeg, dus totdat je de database een naam geeft, toont het paneel `Database name "" is not a valid identifier.`
 
+## Logische namen als opmerkingen {#logical-names-as-comments}
+
+`Write logical names into empty comments`, een schakelaar onder `This window only`, schrijft de [logische naam](./logical-names.md) van een tabel of kolom in de DDL waar de opmerking ervan leeg is, op elke database.
+
+![Write logical names into empty comments inschakelen in het paneel Schema SQL, waardoor de logische naam van elke kolom van order_items in haar lege COMMENT wordt geschreven, terwijl de opmerkingen van members blijven staan](/img/demo-schema-sql-logical-names.webp)
+
+- Een opmerking met tekst wint altijd: de logische naam vervangt haar nooit en wordt er nooit aan toegevoegd.
+- Een opmerking die alleen uit witruimte bestaat, geldt als leeg, dus de logische naam wordt op haar plaats geschreven. Een logische naam die leeg is of alleen uit witruimte bestaat, schrijft niets, en die tabel of kolom krijgt dan nog steeds geen opmerking.
+- De logische naam wordt geschreven waar en in de vorm waarin de database een opmerking schrijft, met aanhalingstekens erin op dezelfde manier geëscapet — zie [Opmerkingen](#comments).
+
+Op MySQL wordt bijvoorbeeld een kolom `id` met de logische naam `Member ID` en zonder opmerking geschreven met `COMMENT 'Member ID'`, terwijl een kolom `email` met de logische naam `Email` en de opmerking `Sign-in address` haar `COMMENT 'Sign-in address'` behoudt.
+
+Net als bij `Statements` en `Header` hoort de schakelaar bij het venster en staat hij aanvankelijk uit — zie [Optiepaneel](#options-panel).  
+Een import leest zo'n opmerking nooit terug als logische naam — zie [Opmerkingen](./file-import-export.md#comments).
+
 ## Tabellen {#tables}
 
 Zolang het diagram minstens één [tabelgroep](./table-groups.md) heeft, getoond of verborgen, verschijnt `Tables` onder `This window only` met een selectievakje voor elke keuze:
@@ -125,22 +141,24 @@ Een veld zonder toetsenbordfocus volgt een wijziging die een medebewerker of een
 
 ## De SQL opslaan of kopiëren {#saving-or-copying-the-sql}
 
-`Save file`, onder aan het paneel of in het contextmenu, slaat precies de SQL op die het tabblad toont, met de huidige database, aanhalingstekens, instructies, kop, tabellen en scripts, als `<database name>-<timestamp>.sql`. Het bestand krijgt een naam en wordt opgeslagen zoals elke andere export — zie [Exporteren](./file-import-export.md#exporting).
+`Save file`, onder aan het paneel of in het contextmenu, slaat precies de SQL op die het tabblad toont, met de huidige database, aanhalingstekens, instructies, kop, opmerkingen met logische namen, tabellen en scripts, als `<database name>-<timestamp>.sql`. Het bestand krijgt een naam en wordt opgeslagen zoals elke andere export — zie [Exporteren](./file-import-export.md#exporting).
 
 `Export` ▸ `Schema SQL`, in het contextmenu van het canvas of in Snel zoeken, slaat zelf niets op.  
 Het schakelt over naar dit tabblad, opent het optiepaneel, ook als dat was samengevouwen, en zet de toetsenbordfocus op `Save file`, zodat een druk op `Enter` het bestand opslaat.
 
 `Copy` onder aan het paneel, of de kopieerknop die rechtsboven in de code verschijnt terwijl je de aanwijzer erboven houdt, kopieert de SQL.  
-De melding `Copied!` met een vinkje bevestigt dit twee seconden lang. Als de browser of host het klembord weigert, verschijnt in plaats daarvan de melding `Couldn't copy to the clipboard` met een waarschuwingsteken. Opnieuw kopiëren vervangt de melding in plaats van er nog een toe te voegen.  
+De melding `Copied!` met een vinkje bevestigt dit twee seconden lang. Als de browser of host het klembord weigert, verschijnt in plaats daarvan de melding `Couldn't copy to the clipboard` met een waarschuwingsteken, vijf seconden lang. Opnieuw kopiëren vervangt de melding in plaats van er nog een toe te voegen.  
 De SQL is ook selecteerbaar, zodat je er alleen een deel van kunt overnemen.
 
 ## Wat de DDL schrijft {#what-the-ddl-writes}
 
 Deze regels gelden overal waar de editor Schema SQL schrijft: op dit tabblad en in het bestand ervan, en in de SQL die een pagina met een ingesloten editor of een codeeragent leest.  
-Het tabblad `Schema SQL` van Tabeleigenschappen volgt ze voor de ene tabel die het toont. Het schrijft geen refererende sleutels, behalve die van SQLite, die in de `CREATE TABLE` staan, en geen Oracle-sequence of -trigger.
+Het tabblad `Schema SQL` van Tabeleigenschappen volgt ze voor de ene tabel die het toont. Het schrijft geen Oracle-sequence of -trigger, en geen refererende sleutels behalve die van SQLite, die in de `CREATE TABLE` staan. Ook schrijft het de instructies voor opmerkingen niet die PostgreSQL, Oracle en MSSQL na een tabel plaatsen, dus op die drie toont het geen opmerkingen.
 
 De onderdelen volgen in deze volgorde, telkens gescheiden door een lege regel: de kop, het script vóór de tabellen, de `DROP`-instructies, de tabellen en het script na de tabellen. Tabellen worden in volgorde van naam geschreven.  
 Een diagram zonder tabellen en zonder scripts levert niets op, ook niet als er een kop is gekozen.
+
+Tabellen en kolommen worden geschreven met hun fysieke namen, wat de [naamweergave](./logical-names.md#name-view) ook toont. Een kolom die aan een domein is gekoppeld, wordt geschreven met haar eigen gegevenstype, dat het domein bepaalt — zie [Domeinen en gegevenstypen](./dictionary.md#domains-and-data-types).
 
 ### Automatisch ophogen {#auto-increment}
 
@@ -181,7 +199,28 @@ De standaardwaarde van een kolom wordt geschreven zoals je die hebt getypt, maar
 - PostgreSQL zet alleen een expressie tussen haakjes die buiten haakjes een woord bevat zoals `AT TIME ZONE`, `AND`, `OR`, `IS`, `IN`, `LIKE`, `COLLATE` of `= ANY`, zoals `(now() AT TIME ZONE 'utc')`.
 - MSSQL, Oracle, Snowflake en Databricks schrijven elke standaardwaarde zoals die is getypt.
 
+### Opmerkingen {#comments}
+
+Een opmerking van een tabel of kolom die niet leeg is, of de logische naam die [`Write logical names into empty comments`](#logical-names-as-comments) op haar plaats schrijft, wordt geschreven zoals elke database opmerkingen schrijft:
+
+- MySQL en MariaDB schrijven haar inline: een kolom eindigt met `COMMENT 'Member ID'`, en de tabel sluit af met `) COMMENT 'Members';`, ook in de batch `If not exists` van MySQL.
+- Snowflake schrijft die van een kolom inline, `COMMENT 'Member ID'`, en die van de tabel op een eigen regel na het sluithaakje, `COMMENT = 'Members';`.
+- Databricks schrijft die van een kolom inline, en die van de tabel als `COMMENT 'Members';` na `USING DELTA`.
+- PostgreSQL schrijft `COMMENT ON TABLE member IS 'Members';` en `COMMENT ON COLUMN member.id IS 'Member ID';` direct na de `CREATE TABLE` van de tabel. Oracle schrijft dezelfde instructies na de tabel, de unieke beperkingen ervan en de sequence en trigger ervan voor automatisch ophogen.
+- MSSQL schrijft één aanroep per tabel en per kolom, na de tabel en de unieke beperkingen ervan, elk gevolgd door `GO`: `EXECUTE sys.sp_addextendedproperty 'MS_Description', N'Members', 'schema', 'dbo', 'table', 'member'`, met `'column', 'id'` erbij voor een kolom.  
+  De tekst is een nationale literal, `N'…'`, zodat SQL Server tekst buiten de codetabel van de database, zoals Koreaans, behoudt in plaats van vraagtekens op te slaan.  
+  Met `Bracket` op `None` levert een tabel met de naam `sales.users` het schema `sales` en de tabel `users` op, net als `[sales].[users]` en `"sales"."users"`, waarvan de vierkante haken en dubbele aanhalingstekens worden weggelaten. Een naam zonder schema valt in `dbo`. Een deel vóór het schema, zoals in `shop.sales.users`, voert de procedure van die database uit, `shop.sys.sp_addextendedproperty`. Bij elke andere waarde van `Bracket` is de hele naam de tabel, in `dbo`.
+- SQLite bewaart geen opmerkingen, dus het schrijft elke opmerking als een regel `--` boven wat ze beschrijft: `-- Members` boven `CREATE TABLE member`, en `-- Member ID` boven de kolom.
+
+Een aanhalingsteken binnen een opmerking tussen aanhalingstekens wordt verdubbeld, zoals in `'it''s'` en `N'it''s'`, en dat geldt ook voor een aanhalingsteken in de namen die de aanroepen van MSSQL doorgeven. Databricks escapet een aanhalingsteken en een backslash in plaats daarvan met een backslash, zoals in `'it\'s'`, de vorm die elke Spark-versie leest. De regels `--` van SQLite staan niet tussen aanhalingstekens, dus die behouden een aanhalingsteken zoals getypt: `-- it's`.  
+Verder wordt de tekst geschreven zoals getypt, regeleinden inbegrepen, behalve op twee databases:
+
+- Oracle laat lege regels weg, waarbij een regel met alleen spaties of tabs als leeg geldt, omdat SQL\*Plus een instructie bij een lege regel beëindigt en de rest ervan overslaat. Een tabelopmerking van `Members`, een lege regel en `Active only` wordt geschreven als `COMMENT ON TABLE member IS 'Members` met `Active only';` op de volgende regel.
+- SQLite schrijft elke reeks regeleinden als één spatie, omdat een regeleinde de regel `--` zou beëindigen en de rest als SQL zou uitvoeren. Dezelfde opmerking wordt geschreven als `-- Members Active only`.
+
+Hoe deze opmerkingen bij het importeren worden teruggelezen, staat beschreven in [Opmerkingen](./file-import-export.md#comments).
+
 ## Editors in alleen-lezenmodus {#read-only-editors}
 
-In een editor met `readonly` werkt het tabblad zoals gewoonlijk: `Database` en `Bracket` wijzigen nog steeds de getoonde SQL, `Statements`, `Header` en `Tables` werken nog steeds, en met `Save file` en `Copy` sla je die nog steeds op en kopieer je die.  
+In een editor met `readonly` werkt het tabblad zoals gewoonlijk: `Database` en `Bracket` wijzigen nog steeds de getoonde SQL, `Statements`, `Header`, `Write logical names into empty comments` en `Tables` werken nog steeds, en met `Save file` en `Copy` sla je die nog steeds op en kopieer je die.  
 Alleen de twee scriptvelden zijn alleen-lezen.

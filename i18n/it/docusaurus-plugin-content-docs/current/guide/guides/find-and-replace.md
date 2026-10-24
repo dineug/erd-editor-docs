@@ -1,12 +1,12 @@
 ---
-sidebar_position: 9
-description: Cercare nomi di tabelle, colonne, indici e gruppi di tabelle, commenti e memo dalla parte superiore del pannello Esplora, spostarsi da una corrispondenza all’altra nel suo albero e nell’area di disegno e sostituirne una o tutte.
+sidebar_position: 10
+description: Cercare nomi di tabelle, colonne, indici e gruppi di tabelle, nomi logici, commenti e memo dalla parte superiore del pannello Esplora, spostarsi da una corrispondenza all’altra nel suo albero e nell’area di disegno e sostituirne una o tutte.
 ---
 
 # Trova e sostituisci
 
 Trova il testo in tutto il diagramma, porta a ciascuna corrispondenza nell’area di disegno ERD e sostituisce una sola corrispondenza o tutte.  
-Cerca in sette tipi di testo: nomi delle tabelle, commenti delle tabelle, nomi delle colonne, commenti delle colonne, memo, nomi degli indici e nomi dei gruppi di tabelle — vedere [Cosa cerca](#what-it-searches).
+Cerca in otto tipi di testo: nomi delle tabelle, commenti delle tabelle, nomi delle colonne, commenti delle colonne, memo, nomi degli indici, nomi dei gruppi di tabelle e i [nomi logici](./logical-names.md) di tabelle e colonne — vedere [Cosa cerca](#what-it-searches).
 
 Si trova in cima a [Esplora](./explorer.md), il pannello ancorato a sinistra dell’area di disegno ERD, tra la barra del titolo di Esplora e il suo albero. Non ha un titolo proprio. Dall’alto in basso contiene:
 
@@ -30,7 +30,7 @@ La chiusura di Esplora, l’effetto del tasto e delle due voci `Toggle Explorer`
 [Quando si nasconde](./explorer.md#when-it-stands-aside) spiega come un’altra scheda e la modalità Zen lo nascondano e come il Visualizzatore differenze, il Viaggio nel tempo e l’anteprima del Layout automatico lo nascondano e ne impediscano l’apertura. [Accanto all’area di disegno](./explorer.md#beside-the-canvas) tratta il caso di un editor troppo stretto per mostrarlo.
 
 Alla riapertura vengono mantenuti l’ultimo testo di ricerca e, con esso, il testo di sostituzione, le [opzioni](#options), i [tipi di testo](#what-it-searches) che erano attivi e lo stato espanso o compresso della riga `Replace` e dei tipi di testo.  
-Vengono mantenuti finché l’editor resta aperto e non sono salvati nel documento. Un editor appena aperto parte con tutte le opzioni disattivate, la riga `Replace` e i tipi di testo compressi e solo i quattro tipi di nome attivi — vedere [Cosa cerca](#what-it-searches).
+Vengono mantenuti finché l’editor resta aperto e non sono salvati nel documento. Un editor appena aperto parte con tutte le opzioni disattivate, la riga `Replace` e i tipi di testo compressi e solo i quattro tipi di nome e `Logical names` attivi — vedere [Cosa cerca](#what-it-searches).
 
 ## La barra di ricerca del browser {#the-browsers-find-bar}
 
@@ -46,15 +46,16 @@ Una pagina che incorpora l’editor può spostare o rimuovere il tasto — veder
 
 ## Cosa cerca {#what-it-searches}
 
-Sette pulsanti scelgono i tipi di testo in cui cercare, in questo ordine: `Table names`, `Table comments`, `Column names`, `Column comments`, `Memos`, `Index names` e `Table group names`.  
+Otto pulsanti scelgono i tipi di testo in cui cercare, in questo ordine: `Table names`, `Table comments`, `Column names`, `Column comments`, `Memos`, `Index names`, `Table group names` e `Logical names`.  
 Inizialmente sono compressi. Il pulsante `Search In`, alla fine della riga del contatore, li espande sotto quella riga e li comprime di nuovo, ed è evidenziato mentre sono visibili.  
-Un pulsante di tipo evidenziato è attivo. Fare clic su uno di essi per attivarlo o disattivarlo, e la ricerca viene eseguita di nuovo. Con tutti e sette disattivati, non viene trovato nulla.
+Un pulsante di tipo evidenziato è attivo. Fare clic su uno di essi per attivarlo o disattivarlo, e la ricerca viene eseguita di nuovo. Con tutti e otto disattivati, non viene trovato nulla.
 
-La ricerca si apre la prima volta con i quattro tipi di nome, `Table names`, `Column names`, `Index names` e `Table group names`, quindi una ridenominazione non raggiunge commenti e memo, a meno che non vengano attivati.  
+La ricerca si apre la prima volta con i quattro tipi di nome, `Table names`, `Column names`, `Index names` e `Table group names`, e con `Logical names`, quindi una ridenominazione non raggiunge commenti e memo, a meno che non vengano attivati.  
+`Logical names` è un unico tipo per i nomi logici sia delle tabelle sia delle colonne.  
 I nomi degli indici sono i nomi degli indici nella scheda `Indexes` di [Proprietà tabella](./table-related-functions.md#indexes), non le chiavi `PK_` e `UQ_` elencate sopra di essi.
 
-Non viene cercato nient’altro: né i tipi di dati, né i valori predefiniti, né le colonne di un indice, né il nome del database, né lo [Schema SQL](./schema-sql.md) con i suoi script `Before tables` e `After tables`, né il codice generato.  
-Un commento nascosto da un’[opzione di visualizzazione delle tabelle](./table-related-functions.md#table-view-options) viene comunque cercato. I memo nascosti con View Option → `Memos` e i [gruppi di tabelle](./table-groups.md#hiding-groups) nascosti con View Option → `Table Groups` invece non vengono cercati, anche con il relativo pulsante attivo, quindi `Replace All` non riscrive mai un memo né rinomina un gruppo che non è visibile.
+Non viene cercato nient’altro: né i tipi di dati, né il dominio di una colonna, né i valori predefiniti, né le colonne di un indice, né il nome del database, né lo [Schema SQL](./schema-sql.md) con i suoi script `Before tables` e `After tables`, né il codice generato, né i fogli della scheda [Dizionario](./dictionary.md), che hanno una [ricerca propria](./dictionary.md#searching).  
+I nomi logici vengono cercati qualunque cosa disegni la [Visualizzazione nomi](./logical-names.md#name-view), compresa la vista `Physical Names`, in cui l’area di disegno non ne mostra alcuno. Anche un commento nascosto da un’[opzione di visualizzazione delle tabelle](./table-related-functions.md#table-view-options) viene comunque cercato. I memo nascosti con View Option → `Memos` e i [gruppi di tabelle](./table-groups.md#hiding-groups) nascosti con View Option → `Table Groups` invece non vengono cercati, anche con il relativo pulsante attivo, quindi `Replace All` non riscrive mai un memo né rinomina un gruppo che non è visibile.
 
 ## Opzioni {#options}
 
@@ -91,19 +92,21 @@ Il contatore, all’inizio della riga sotto i campi, indica la posizione corrent
 Mentre il campo Trova contiene del testo, l’[albero](./explorer.md#the-tree) di Esplora mostra i risultati invece dell’intero diagramma: solo le righe che contengono una corrispondenza e le righe sopra di esse. Quando non c’è alcuna corrispondenza, o l’espressione regolare non può essere analizzata, è vuoto. Eliminando il testo di ricerca torna l’intero albero, compresso com’era prima.
 
 - `Tables`, `Table Groups` e `Memos` compaiono solo quando contengono una corrispondenza e il conteggio di ogni cartella è il numero di righe direttamente sotto di essa nei risultati.
-- Sotto `Tables` compaiono le tabelle che contengono una corrispondenza, in ordine di nome. Sotto ogni tabella compaiono una riga per ogni corrispondenza nel suo commento, poi una cartella `Columns` con le colonne che contengono una corrispondenza, nell’ordine delle colonne, ciascuna con una riga per ogni corrispondenza nel suo commento, poi una cartella `Indexes` con gli indici il cui nome corrisponde. Non c’è una cartella `Foreign Keys`.
+- Sotto `Tables` compaiono le tabelle che contengono una corrispondenza, in ordine di nome, mai di nome logico. Sotto ogni tabella compaiono una riga per ogni corrispondenza nel suo commento, poi una cartella `Columns` con le colonne che contengono una corrispondenza, nell’ordine delle colonne, ciascuna con una riga per ogni corrispondenza nel suo commento, poi una cartella `Indexes` con gli indici il cui nome corrisponde. Non c’è una cartella `Foreign Keys`.
 - Sotto `Table Groups` compaiono i gruppi il cui nome corrisponde, in ordine di nome, senza le loro tabelle. Una tabella trovata compare sotto `Tables`.
 - Sotto `Memos` compaiono i memo che contengono una corrispondenza, nell’ordine del documento, ciascuno indicato dalla sua prima riga e con una riga per ogni corrispondenza al suo interno.
 
-Una corrispondenza in un nome è evidenziata nella riga di quel nome, quindi un nome che contiene due volte il testo di ricerca è una sola riga con due evidenziazioni.  
+Una corrispondenza in un nome è evidenziata nella riga di quel nome, quindi un nome che contiene due volte il testo di ricerca è una sola riga con due evidenziazioni. Anche una corrispondenza nel nome logico di una tabella o di una colonna compare nella riga di quella tabella o colonna, mai in una riga propria.  
+Quelle righe indicano la tabella o la colonna come la mostra la [Visualizzazione nomi](./logical-names.md#beyond-the-canvas), e ciascuno dei due nomi che una riga può mostrare evidenzia solo le proprie corrispondenze. Una riga trovata solo nel nome che la sua vista omette, il nome logico in `Physical Names` o il nome in `Logical Names`, aggiunge quel nome dopo quello che mostra, attenuato come in `Both Names`, con la corrispondenza evidenziata. Quando anche il nome che mostra contiene una corrispondenza, la riga mostra solo quel nome, quindi le corrispondenze nel nome che la sua vista omette vengono contate e percorse ma non evidenziate.  
 Una corrispondenza in un commento o in un memo ha una riga propria: un fumetto per il commento di una tabella o di una colonna, o un foglietto adesivo per un memo, poi un estratto del testo con la corrispondenza evidenziata. Un testo lungo viene troncato con `…` e le interruzioni di riga appaiono come spazi. Passare il puntatore sulla riga per vedere il testo completo.  
 Ogni altra riga appare come al di fuori di una ricerca: una colonna mostra il suo tipo di dati, un indice le sue colonne e un nome vuoto appare come `unnamed`.
 
 Ogni riga che ha righe sotto di sé appare espansa quando inizia una ricerca. Una riga compressa manualmente, o da `Collapse All`, resta compressa finché una corrispondenza sotto di essa non diventa quella corrente, o finché non cambiano il testo di ricerca, `Match Case`, `Match Whole Word`, `Use Regular Expression` o un tipo di testo, o la ricerca non viene riaperta con il tasto o con una voce `Toggle Explorer`.  
 La riga della corrispondenza corrente è evidenziata e resa visibile con lo scorrimento. L’albero elenca tutte le corrispondenze, per quante siano.  
-Le corrispondenze si percorrono nell’ordine dell’albero: tabella per tabella, il nome della tabella, il suo commento, il nome e il commento di ciascuna delle sue colonne nell’ordine delle colonne e i nomi dei suoi indici; poi i nomi dei gruppi di tabelle; poi i memo.
+Le corrispondenze si percorrono nell’ordine dell’albero: tabella per tabella, il nome logico, il nome e il commento della tabella, poi il nome logico, il nome e il commento di ciascuna delle sue colonne nell’ordine delle colonne, poi i nomi dei suoi indici; poi i nomi dei gruppi di tabelle; poi i memo.
 
-I risultati seguono il documento mentre Esplora è visibile. Quando le modifiche si interrompono, qualsiasi cambiamento ai testi cercati avvia una nuova ricerca e la corrispondenza corrente resta tale se esiste ancora. Ciò comprende la modifica del testo di un nome, di un commento o di un memo, l’aggiunta o la rimozione di una tabella, una colonna, un indice, un memo o un gruppo di tabelle, lo spostamento di una colonna e i memo o i gruppi di tabelle nascosti o mostrati con Opzioni di visualizzazione, il che toglie le loro corrispondenze dall’albero o le riporta. Una modifica nell’area di disegno, un annullamento o una ripetizione, un’importazione e una modifica da parte di un collaboratore o di un agente di programmazione contano tutti. Non contano la selezione, lo spostamento di tabelle, memo o gruppi nell’area di disegno, lo scorrimento, lo zoom e il passaggio del puntatore.  
+I risultati seguono il documento mentre Esplora è visibile. Quando le modifiche si interrompono, qualsiasi cambiamento ai testi cercati avvia una nuova ricerca e la corrispondenza corrente resta tale se esiste ancora. Ciò comprende la modifica del testo di un nome, di un nome logico, di un commento o di un memo, l’aggiunta o la rimozione di una tabella, una colonna, un indice, un memo o un gruppo di tabelle, lo spostamento di una colonna e i memo o i gruppi di tabelle nascosti o mostrati con Opzioni di visualizzazione, il che toglie le loro corrispondenze dall’albero o le riporta. Una modifica nell’area di disegno, un annullamento o una ripetizione, un’importazione e una modifica da parte di un collaboratore o di un agente di programmazione contano tutti. Non contano la selezione, lo spostamento di tabelle, memo o gruppi nell’area di disegno, lo scorrimento, lo zoom e il passaggio del puntatore.  
+Non conta nemmeno il cambio della Visualizzazione nomi, che non modifica alcun testo letto dalla ricerca: restano le stesse corrispondenze, e le righe assumono i nomi mostrati dalla nuova vista.  
 Le modifiche apportate mentre Esplora è chiuso o non visibile vengono cercate non appena torna visibile.
 
 ## Andare a una corrispondenza {#going-to-a-match}
@@ -113,17 +116,17 @@ Arrivati a un’estremità, lo spostamento ricomincia dall’altra. Nessuna corr
 
 Un clic su una riga dei risultati, o `Enter` o `Space` quando la riga ha il focus, fa una di queste cose:
 
-- Una riga il cui nome contiene una corrispondenza va alla prima corrispondenza di quel nome.
+- Una riga il cui nome o nome logico contiene una corrispondenza va alla sua prima corrispondenza, quella del nome logico prima di quella del nome.
 - Una riga che mostra un estratto di un commento o di un memo va a quella corrispondenza.
-- Qualsiasi altra riga, come una tabella il cui nome non corrisponde o la riga propria di un memo, va all’elemento che la riga rappresenta e lascia invariata la corrispondenza corrente — vedere [Andare a una riga](./explorer.md#going-to-a-row).
+- Qualsiasi altra riga, come una tabella il cui nome e il cui nome logico non corrispondono o la riga propria di un memo, va all’elemento che la riga rappresenta e lascia invariata la corrispondenza corrente — vedere [Andare a una riga](./explorer.md#going-to-a-row).
 - Una cartella si comprime o si espande.
 
 Ogni volta che una corrispondenza diventa quella corrente, l’albero espande le eventuali righe compresse sopra di essa e vi porta la riga con il focus, così i tasti freccia nell’albero proseguono da lì.
 
 Andare a una corrispondenza chiude il pannello Proprietà tabella, se è aperto, poi:
 
-- Per il nome o il commento di una tabella, o il nome o il commento di una colonna, seleziona solo la tabella, la porta in primo piano e sposta il focus sulla cella che contiene la corrispondenza. Una corrispondenza in un commento nascosto da un’[opzione di visualizzazione delle tabelle](./table-related-functions.md#table-view-options) sposta invece il focus sul nome accanto.
-- Per il nome di un indice, seleziona solo la tabella dell’indice e la porta in primo piano, con il focus sul nome della tabella, a meno che il focus non sia già in quella tabella. I nomi degli indici non sono disegnati nell’area di disegno.
+- Per il nome, il nome logico o il commento di una tabella o di una colonna, seleziona solo la tabella, la porta in primo piano e sposta il focus sulla cella che contiene la corrispondenza. Una corrispondenza in un commento nascosto da un’[opzione di visualizzazione delle tabelle](./table-related-functions.md#table-view-options) sposta invece il focus sul nome accanto. Dove la [Visualizzazione nomi](./logical-names.md#name-view) non disegna alcuna cella per il nome o per il nome logico, il focus va su quella disegnata al suo posto: il nome in `Physical Names`, il nome logico in `Logical Names`.
+- Per il nome di un indice, seleziona solo la tabella dell’indice e la porta in primo piano, con il focus sul nome della tabella, o sul suo nome logico in `Logical Names` e `Both Names`, a meno che il focus non sia già in quella tabella. I nomi degli indici non sono disegnati nell’area di disegno.
 - Per il nome di un gruppo di tabelle, seleziona solo il gruppo e lo porta in primo piano con le sue tabelle.
 - Per un memo, seleziona solo il memo e lo porta in primo piano.
 
@@ -151,7 +154,7 @@ Finché dura una serie, una tabella o un gruppo di tabelle che essa rinomina man
 
 `Replace All` si esegue con `Ctrl + Enter` (Windows/Linux) o `⌘ + Enter` (Mac) nel campo Sostituisci, o con il suo pulsante:
 
-- Sostituisce tutte le corrispondenze nei tipi di testo attivi e lascia intatti gli altri tipi. Con i tipi predefiniti, rinomina tabelle, colonne, indici e gruppi di tabelle, mentre commenti e memo restano invariati.
+- Sostituisce tutte le corrispondenze nei tipi di testo attivi e lascia intatti gli altri tipi, a parte i nomi fisici che un nome logico sostituito deriva, che scrive anche mentre `Table names` e `Column names` sono disattivati — vedere più avanti. Con i tipi predefiniti, rinomina tabelle, colonne, indici e gruppi di tabelle e riscrive i nomi logici di tabelle e colonne; commenti e memo restano invariati.
 - Tutto ciò che modifica è un solo passo di annullamento — vedere [Un gesto, un passo](./undo-redo.md#one-gesture-one-step).
 - Il contatore mostra `Replaced N matches`, contando solo le occorrenze il cui testo è effettivamente cambiato. Quando nessuna è cambiata, mostra `No changes` e nella cronologia non viene registrato nulla, come quando si sostituisce l’espressione regolare `(user)` con `$1`.
 - I risultati vengono poi cercati di nuovo senza alcuna corrispondenza corrente, quindi possono elencare corrispondenze contenute nel nuovo testo.
@@ -171,8 +174,12 @@ Come viene usato il testo di sostituzione:
   - Una corrispondenza riscritta com’era non viene contata: con `Match Case` disattivato, sostituire `customer` con `Customer` riscrive `customer`, `Customer` e `CUSTOMER` com’erano e nessuna di esse viene contata.
 - Un campo Sostituisci vuoto elimina la corrispondenza.
 
-Una sostituzione è una normale modifica, come digitare personalmente il nuovo nome della tabella, il commento, il nome della colonna o il testo del memo, rinominare l’indice in Proprietà tabella o rinominare il gruppo di tabelle.  
+Una sostituzione è una normale modifica, come digitare personalmente il nuovo nome della tabella, il nome della colonna, il nome logico, il commento o il testo del memo, rinominare l’indice in Proprietà tabella o rinominare il gruppo di tabelle.  
 Viene registrata nella cronologia e raggiunge i collaboratori e un agente di programmazione come qualsiasi altra modifica.
+
+Così un nome di tabella o di colonna scritto da una sostituzione diventa un nome personalizzato, che un nome logico scritto in seguito lascia com’è finché [Deriva di nuovo i nomi fisici](./dictionary.md#derive-physical-names-again) non lo restituisce ai dizionari. Un nome che una sostituzione lascia vuoto torna invece ai dizionari, come qualsiasi nome cancellato — vedere [Nomi personalizzati](./dictionary.md#names-of-your-own).  
+Finché il nome fisico di una tabella o di una colonna è vuoto o è stato a sua volta derivato, un nome logico sostituito lo deriva dai dizionari, come fa la chiusura della cella del nome logico su un nuovo nome logico — vedere [Derivare i nomi fisici](./dictionary.md#deriving-physical-names). In tal caso, una colonna il cui nuovo nome logico è un termine assume anche il dominio del termine e, con esso, il tipo di dati del dominio. Ciò che viene derivato fa parte del passo di annullamento della sostituzione e non viene contato in `Replaced N matches`.  
+Quando un solo `Replace All` riscrive sia il nome logico sia il nome della stessa tabella o colonna, il nome che scrive prevale su quello che deriverebbe il nuovo nome logico.
 
 ## Tasti nei campi di ricerca {#keys-in-the-search-fields}
 

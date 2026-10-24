@@ -1,5 +1,5 @@
 ---
-sidebar_position: 5
+sidebar_position: 6
 description: Združevanje sorodnih tabel v poimenovan, obarvan okvir za njimi; ustvarjanje, poimenovanje, barvanje, premikanje, spreminjanje velikosti in odstranjevanje skupin, prehod nanje iz raziskovalca, spreminjanje, katere tabele vsebujejo, skrivanje skupin ter njihovo ohranjanje pri samodejni postavitvi, v Shemi SQL in v DBML.
 ---
 

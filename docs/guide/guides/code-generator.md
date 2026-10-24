@@ -1,5 +1,5 @@
 ---
-sidebar_position: 12
+sidebar_position: 13
 description: Generate code for twenty-two targets from the diagram, pick the language, database, name case and bracket in the options panel, see which targets write a relationship's ON DELETE and ON UPDATE actions, and save or copy the result.
 ---
 
@@ -103,6 +103,10 @@ Under every case, a name the target's language reserves is escaped where that la
 `SeaORM` ignores them too: it names fields and modules in snake case, the form SeaORM reads back, and gives the stored names in `table_name` and, where they differ, `column_name`.  
 For these four targets the panel dims both lists, with the `Not used by` note under them.
 
+Every target writes the physical names, whatever the [Name View](./logical-names.md#name-view) shows.  
+None writes a logical name, not even into an empty comment: this tab has no counterpart to the Schema SQL tab's [`Write logical names into empty comments`](./schema-sql.md#logical-names-as-comments).  
+None writes a domain either: a column linked to one is written with its data type, like any other column.
+
 ## Database
 
 Data types are resolved against the selected database — see [Databases](./table-related-functions.md#databases).  
@@ -132,5 +136,5 @@ It is named like every export, `<database name>-<timestamp>`, followed by the ex
 The Export menu has no Code Generator entry, and the `Code Generator` tab of Table Properties cannot save a file.
 
 To copy the code, click `Copy` at the foot of the panel, or hover the code and click the copy button at its top right, the only way in Table Properties.  
-A `Copied!` toast with a check mark confirms for two seconds. If the browser or host refuses the clipboard, a `Couldn't copy to the clipboard` toast with a warning sign says so instead. Copying again replaces the toast rather than adding another.  
+A `Copied!` toast with a check mark confirms for two seconds. If the browser or host refuses the clipboard, a `Couldn't copy to the clipboard` toast with a warning sign says so instead, for five seconds. Copying again replaces the toast rather than adding another.  
 The text is selectable as well, so you can take only the part you need.

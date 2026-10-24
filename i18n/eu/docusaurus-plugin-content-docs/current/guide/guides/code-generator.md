@@ -1,5 +1,5 @@
 ---
-sidebar_position: 12
+sidebar_position: 13
 description: Sortu hogeita bi helburutarako kodea diagramatik, aukeratu lengoaia, datu-basea, izenen idazkera eta mugatzailea aukeren panelean, ikusi zein helburuk idazten dituzten erlazio baten ON DELETE eta ON UPDATE ekintzak, eta gorde edo kopiatu emaitza.
 ---
 
@@ -103,6 +103,10 @@ Idazkera guztietan, helburuaren lengoaiak erreserbatzen duen izen bat ihes-ikur 
 `SeaORM` helburuak ere alde batera uzten ditu: eremuei eta moduluei snake case idazkeran ematen die izena, SeaORMek berriro irakurtzen duen forman, eta gordetako izenak `table_name` atributuan eta, desberdinak direnean, `column_name` atributuan ematen ditu.  
 Lau helburu horietarako, panelak bi zerrendak lausotzen ditu, azpian `Not used by` azalpenarekin.
 
+Helburu guztiek izen fisikoak idazten dituzte, [Izenen ikuspegiak](./logical-names.md#name-view) erakusten duena edozein dela ere.  
+Bat ere ez du izen logikorik idazten, ezta iruzkin huts batean ere: fitxa honek ez du SQL eskema fitxako [`Write logical names into empty comments`](./schema-sql.md#logical-names-as-comments) etengailuaren parekorik.  
+Era berean, bat ere ez du domeinurik idazten: domeinu bati lotutako zutabe bat bere datu motarekin idazten da, beste edozein zutabe bezala.
+
 ## Datu-basea {#database}
 
 Datu motak hautatutako datu-basearen arabera ebazten dira. Ikus [Datu-baseak](./table-related-functions.md#databases).  
@@ -132,5 +136,5 @@ Esportazio guztien izen-eredu bera du, `<database name>-<timestamp>`, eta horren
 Export menuak ez du Kode-sortzailearen aukerarik, eta Taularen propietateak paneleko `Code Generator` fitxak ezin du fitxategirik gorde.
 
 Kodea kopiatzeko, egin klik panelaren oineko `Copy` botoian, edo pasatu sagua kodearen gainetik eta egin klik haren goiko eskuineko kopiatzeko botoian; Taularen propietateak panelean, hori da modu bakarra.  
-Egiaztatze-marka bat duen `Copied!` jakinarazpen batek berresten du bi segundoz. Nabigatzaileak edo ostalariak arbela ukatzen badu, abisu-ikur bat duen `Couldn't copy to the clipboard` jakinarazpen batek adierazten du hori, haren ordez. Berriro kopiatzean, jakinarazpena ordezten da, beste bat gehitu beharrean.  
+Egiaztatze-marka bat duen `Copied!` jakinarazpen batek berresten du bi segundoz. Nabigatzaileak edo ostalariak arbela ukatzen badu, abisu-ikur bat duen `Couldn't copy to the clipboard` jakinarazpen batek adierazten du hori haren ordez, bost segundoz. Berriro kopiatzean, jakinarazpena ordezten da, beste bat gehitu beharrean.  
 Testua hautatu ere egin daiteke; beraz, behar duzun zatia soilik har dezakezu.

@@ -1,6 +1,16 @@
 /** Where the pointer waits, clear of the new table and its suggestion lists. */
 const PARK = { x: 790, y: 300 };
 
+/** Viewport point a little into one column's name cell. */
+function nameCell(d, columnId) {
+  return d.page.evaluate(id => {
+    const stage = window.__erdStages.canvas;
+    const r = stage.findOne(`#column-${id}`).findOne('.columnName').getClientRect();
+    const c = stage.container().getBoundingClientRect();
+    return { x: c.left + r.x + Math.min(30, r.width / 2), y: c.top + r.y + r.height / 2 };
+  }, columnId);
+}
+
 /**
  * Table Editing: an Excel-like grid. A table made from the keyboard is filled
  * in with Enter and Tab, and a double-click opens a cell for editing too.
@@ -60,8 +70,9 @@ export default {
     const doc = await d.value();
     const tableId = await d.tableId('orders');
     const columnId = doc.collections.tableEntities[tableId].columnIds.at(-1);
-    const row = await d.nodeBox(`#column-${columnId}`);
-    const at = { x: row.x + 45, y: row.y + row.height / 2 };
+    // The focused row's box takes in the drag handle left of the card, so aim
+    // at the name cell itself.
+    const at = await nameCell(d, columnId);
     await d.dblclick(at.x, at.y, { duration: 450 });
     await d.sleep(200);
     await d.moveTo(PARK.x, PARK.y, 380);

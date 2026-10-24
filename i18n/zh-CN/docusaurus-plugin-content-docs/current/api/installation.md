@@ -38,7 +38,8 @@ editor.addEventListener('change', () => {
 
 `setInitialValue('')` 会以一个新的空文档开始。为 `value` 赋值则会把加载当作一次编辑，因此会记录到 Undo 历史记录中。
 从 `4.0.0` 起，`editor.value` 是文件所保存形式的文档，也就是应当存储的内容。`editor.runtimeValue` 是编辑器所持有形式的文档，其中包括已删除的实体：它用作协作者的初始文档，从不写入文件。参见 [runtimeValue](./erd-editor-element.md#runtimevalue)。
-从 `4.0.0` 起，新文档的所有[设置锁定](../guide/guides/settings.md#锁定)也都处于开启状态：包括视图、标签页、Code Generator 的语言、两种名称大小写以及括号类型。滚动、缩放、切换标签页或更改其中任何一项设置都不会改变 `editor.value`，也不会发出 `change`。从文本加载的文档会沿用其中写明的锁定。一个锁定都没有写明的文档（例如 `4.0.0` 之前保存的任何文件）打开时所有锁定都处于开启状态，缩放为 100%，并停留在 ERD 标签页，无论它保存的是怎样的视图和标签页。其视图锁定在原点 `0, 0`；如果图的任何部分都没有绘制在那里，则改为在图所在的位置打开。参见 [setInitialValue](./erd-editor-element.md#setinitialvalue)。
+从 `4.0.0` 起，新文档的所有[设置锁定](../guide/guides/settings.md#锁定)也都处于开启状态：包括视口、标签页、Code Generator 的语言、两种名称大小写、括号类型，以及从 `4.2.0` 起的[名称显示](../guide/guides/logical-names.md#name-view)。滚动、缩放、切换标签页、切换名称显示或更改其他任何一项设置都不会改变 `editor.value`，也不会发出 `change`。从文本加载的文档会沿用其中写明的锁定。一个锁定都没有写明的文档（例如 `4.0.0` 之前保存的任何文件）打开时所有锁定都处于开启状态，缩放为 100%，并停留在 ERD 标签页，无论它保存的是怎样的视口和标签页。其视口锁定在原点 `0, 0`；如果图的任何部分都没有绘制在那里，视图则改为在图所在的位置打开。参见 [setInitialValue](./erd-editor-element.md#setinitialvalue)。
+`4.2.0` 之前保存的文件打开时，名称显示锁定为 `Physical Names`，即使其他所有锁定都已关闭也是如此。`4.0.0` 或 `4.1.0` 的编辑器保存时会原样保留名称显示的锁定，但会丢弃显示方式，因此以名称显示未锁定状态保存的 `4.2.0` 文件仍保持未锁定，但重新打开时显示为 `Physical Names`。
 其余 API 参见 [ErdEditorElement](./erd-editor-element.md)。
 
 ### CDN
@@ -56,7 +57,7 @@ editor.addEventListener('change', () => {
 ```
 
 `esm.run` 会替你解析该包的外部依赖，因此无需打包器也能工作。
-不带版本号的 URL 始终提供最新的发布版本。如果不希望大版本升级在毫无预告的情况下进入页面，可以像 `https://esm.run/@dineug/erd-editor@4.1.0` 这样固定版本。
+不带版本号的 URL 始终提供最新的发布版本。如果不希望大版本升级在毫无预告的情况下进入页面，可以像 `https://esm.run/@dineug/erd-editor@4.2.0` 这样固定版本。
 `4.0.0` 本身就是一次大版本升级：需要停留在 3.x 的页面应固定为 `@3.10.0`，参见[从 3.x 升级](#从-3x-升级)。
 
 ### script 标签
@@ -66,14 +67,14 @@ editor.addEventListener('change', () => {
 
 ```html
 <erd-editor></erd-editor>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@4.1.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@4.2.0"></script>
 <script>
   const editor = document.querySelector('erd-editor');
   editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
 </script>
 ```
 
-引入它同样会注册 `<erd-editor>`，`window.ErdEditor` 上带有两个文件回调 `ErdEditor.setExportFileCallback` 与 `ErdEditor.setImportFileCallback`，以及从 `3.9.2` 起提供的 `ErdEditor.createKeyBindingMap`。
+引入它同样会注册 `<erd-editor>`，`window.ErdEditor` 上带有两个文件回调 `ErdEditor.setExportFileCallback` 与 `ErdEditor.setImportFileCallback`，以及从 `3.9.2` 起提供的 `ErdEditor.createKeyBindingMap`。从 `4.2.0` 起，它还带有 `ErdEditor.dictionaryRowChords`，参见 [dictionaryRowChords](./erd-editor-element.md#dictionaryrowchords)。
 exports 映射仍然指向 ES 模块，因此从 npm 安装时打包器不会用到这个文件。
 
 ### HTML
@@ -166,17 +167,18 @@ Schema SQL 与 Code Generator 面板由 [Shiki](https://shiki.style) 高亮，�
 
 ## 入口点
 
-导入 `@dineug/erd-editor` 会作为副作用注册 `<erd-editor>`。除此之外，它还导出元素的类型、两个回调 setter、从 `3.9.2` 起提供的默认按键绑定及其类型，以及从 `4.0.0` 起提供的显示语言类型和 `getSchemaSQL()` 的选项类型。
+导入 `@dineug/erd-editor` 会作为副作用注册 `<erd-editor>`。除此之外，它还导出元素的类型、两个回调 setter、从 `3.9.2` 起提供的默认按键绑定及其类型、从 `4.0.0` 起提供的显示语言类型和 `getSchemaSQL()` 的选项类型，以及从 `4.2.0` 起提供的 Dictionary 标签页的行组合键。
 
 | 导出 | 说明 |
 | --- | --- |
 | `ErdEditorElement`（类型） | 元素的接口，参见 [ErdEditorElement](./erd-editor-element.md)。 |
 | `setExportFileCallback(cb)` | 替换浏览器的下载行为，`(blob, { fileName }) => void`。 |
-| `setImportFileCallback(cb)` | 替换浏览器的文件选择框，`({ type, op, accept, mode }) => void`；`mode` 从 `4.0.0` 起提供。 |
+| `setImportFileCallback(cb)` | 替换浏览器的文件选择框，`({ type, op, accept, mode }) => void`；`mode` 从 `4.0.0` 起提供。从 `4.2.0` 起，即使设置了回调，Dictionary 标签页的 `Import CSV` 也会打开浏览器的文件选择框，参见[文件对话框](#文件对话框)。 |
 | `createKeyBindingMap()` | 每次调用都以一个新的 `KeyBindingMap` 返回默认按键绑定，参见 [createKeyBindingMap](./erd-editor-element.md#createkeybindingmap)。 |
 | `KeyBindingMap`、`KeyBindingName`、`ShortcutOption`（类型） | 绑定映射、由其命令名称组成的联合类型，以及单个绑定。 |
+| `dictionaryRowChords(map)` | 从 `4.2.0` 起提供。每次调用都以一个新的 `ShortcutOption[]` 返回在你传入的 `KeyBindingMap` 下，[Dictionary](../guide/guides/dictionary.md#adding-and-deleting-rows) 标签页的网格用于插入和删除行的组合键。其中在上方插入行的组合键（默认为 `Alt+Shift+Enter`）不属于任何绑定，参见 [dictionaryRowChords](./erd-editor-element.md#dictionaryrowchords)。 |
 | `LocaleCode`、`LocaleOption`（类型） | 从 `4.0.0` 起提供。前者是 25 种显示语言的代码，后者是这些代码加上 `'system'`，即 `setLocale()` 所接受的值，参见 [Display Language](./erd-editor-element.md#display-language)。 |
-| `SchemaSQLOptions`（类型） | 从 `4.0.0` 起提供。`getSchemaSQL()` 所接受的 `statements` 与 `header` 选项，参见 [getSchemaSQL](./erd-editor-element.md#getschemasql)。 |
+| `SchemaSQLOptions`（类型） | 从 `4.0.0` 起提供。`getSchemaSQL()` 所接受的选项：`statements`、`header`，以及从 `4.2.0` 起提供的 `logicalNameAsComment`，参见 [getSchemaSQL](./erd-editor-element.md#getschemasql)。 |
 
 `@dineug/erd-editor/engine.js` 是第二个入口点。它在没有 DOM 的情况下运行文档 store，因此也可以在 Web Worker 中使用。参见[远程存储](./advanced/remote-storage.md)。
 它导出 `createReplicationStore` 与 `ReplicationStore` 类型。从 `3.10.0` 起还导出 `ReplicationChange` 类型 `{ value: string; changed: boolean }`，即副本的 `change` 监听器接收到的参数。参见 [on@change](./advanced/remote-storage.md#onchange)。
@@ -188,6 +190,7 @@ Schema SQL 与 Code Generator 面板由 [Shiki](https://shiki.style) 高亮，�
 
 导入与导出都会经过可注入的回调，因此没有浏览器文件对话框的宿主（例如 IDE 的 webview）也可以提供自己的实现。
 两者并不对称：导出会直接交出已经生成好的文件，而导入只是请求一个文件，其内容需要自行放回编辑器。
+从 `4.2.0` 起，Dictionary 标签页的 `Import CSV` 是唯一一个从不调用导入回调的导入，该回调的 `type` 中也没有 CSV 值。它总是打开浏览器自身的文件选择框，用于选择 `.csv` 文件，参见[导入与导出 CSV](../guide/guides/dictionary.md#importing-and-exporting-csv)。
 
 `op` 为 `set` 或 `diff`。为 `diff` 时无论 `type` 是什么都会交给 `setDiffValue()`。其余情况由 `type` 决定使用哪个方法，`accept` 中是该类型的扩展名，可以直接传给宿主的文件对话框。
 从 `4.0.0` 起，当用户选择 [Import and Add](../guide/guides/file-import-export.md#import-and-add) 时，`set` 会带有 `mode: 'append'`；普通的 Import 则不带 `mode`。请将它传递下去：丢弃它的回调会替换掉用户想要向其中添加内容的图。
@@ -229,8 +232,8 @@ setImportFileCallback(async ({ type, op, accept, mode }) => {
 对需要处理的每个 `type` 分别分支，其余的忽略即可。
 以替换方式调用的 `setSchemaJSON()` 与为 `value` 赋值一样，会在解析之前先清空文档，因此把并非 `.erd.json` 文档的内容送到那里（例如写了兜底的 `else`，或者后来新增的 `type` 漏掉了处理），结果不是导入任何内容，而是把图清空。
 
-编辑器生成的 `fileName` 为 `<database name>-<timestamp>` 加上文件的扩展名，其中时间戳采用本地时间，格式为 `yyyy-MM-dd'T'HH_mm_ss`。数据库名为空时会退回为 `unnamed`。
-导出回调接收的就是这些文件。从 `4.0.0` 起，其中还包括 SVG 和 Code Generator 的文件，而 `.sql` 来自 Schema SQL 标签页的 `Save file`，不再直接来自 `Export`。
+编辑器生成的 `fileName` 为 `<database name>-<timestamp>` 加上文件的扩展名，其中时间戳采用本地时间，格式为 `yyyy-MM-dd'T'HH_mm_ss`。数据库名为空时会退回为 `unnamed`。Dictionary 标签页的 CSV 会在扩展名之前加上其工作表的名称，例如 `<database name>-<timestamp>-words.csv`。
+导出回调接收的就是这些文件。从 `4.0.0` 起，其中还包括 SVG 和 Code Generator 的文件，而 `.sql` 来自 Schema SQL 标签页的 `Save file`，不再直接来自 `Export`。从 `4.2.0` 起，其中还包括 Dictionary 标签页的 CSV。
 
 | 文件 | 扩展名 | Blob 的 `type` |
 | --- | --- | --- |
@@ -238,6 +241,7 @@ setImportFileCallback(async ({ type, op, accept, mode }) => {
 | Schema SQL 标签页的 `Save file`，内容为该标签页显示的文本，参见 [Schema SQL](../guide/guides/schema-sql.md) | `.sql` | 无 |
 | [Export image](../guide/guides/file-import-export.md#image) 对话框 | `.png` 或 `.svg` | `image/png` 或 `image/svg+xml` |
 | Code Generator 标签页的 `Save file`，参见[代码生成](../guide/guides/code-generator.md) | 对应语言的扩展名：`.cs`、`.go`、`.java`、`.kt`、`.php`、`.rs`、`.scala`、`.swift`、`.ts`、`.py`、`.aml`、`.dbml`、`.graphql`、`.json` 或 `.mmd` | 无 |
+| Dictionary 标签页的 `Export CSV`，内容为当前显示的工作表中的每一行，与其搜索列出的内容无关，参见[导入与导出 CSV](../guide/guides/dictionary.md#importing-and-exporting-csv) | `.csv` | `text/csv` |
 
 按扩展名选择处理方式的宿主，需要为其中每一种文件都准备好处理方式。
 
@@ -261,5 +265,5 @@ setImportFileCallback(async ({ type, op, accept, mode }) => {
 - 导入回调会在 Import and Add 时收到 `mode: 'append'`，回调必须将其传递下去。导出回调现在还会收到 `.svg` 和 Code Generator 的文件，并且 `Export` ▸ `Schema SQL` 会打开 Schema SQL 标签页而不是直接保存，因此 `.sql` 只会来自该标签页的 `Save file`。参见[文件对话框](#文件对话框)。
 - `Delete` 与 `Backspace` 绑定到新增的 `removeSelection`。编辑器获得焦点且焦点不在文本输入框中时，每个标签页都会阻止该按键的默认行为，在 ERD 标签页中还会删除选中的对象。`KeyBindingName` 与 `KeyBindingMap` 中都加入了它，`setKeyBindingMap({ removeSelection: [] })` 会把这两个按键都交给页面处理。参见 [setKeyBindingMap](./erd-editor-element.md#setkeybindingmap)。
 - `ThemeOptions.appearance` 还接受 `'system'`，即主题构建器中的 `System`，开启 `systemDarkMode` 时会设为该值。选中它期间，`changePresetTheme` 报告的是 `'system'`，因此请原样存储，并原样传回给 `setPresetTheme`。开启 `systemDarkMode` 时，以 `'light'` 或 `'dark'` 调用的 `setPresetTheme()` 现在会保持生效，而不会被操作系统的下一次变更覆盖。参见 [systemDarkMode](./erd-editor-element.md#systemdarkmode) 和 [changePresetTheme](./erd-editor-element.md#changepresettheme)。
-- `@dineug/erd-editor-mcp` `1.0.0`、VS Code 扩展 `4.0.0` 或更高版本以及 Obsidian 和 JetBrains 插件 `1.0.0` 或更高版本使用 hub 协议 2。服务器 `1.0.0` 与为智能体提供服务的较早编辑器版本之间，或者较早的服务器与上述某个编辑器之间，会以 `protocolMismatch` 互相拒绝，并指出需要更新的一方。参见[更新](../mcp/installation.md#更新)。
+- `@dineug/erd-editor-mcp` `1.0.0` 或更高版本、VS Code 扩展 `4.0.0` 或更高版本以及 Obsidian 和 JetBrains 插件 `1.0.0` 或更高版本使用 hub 协议 2。服务器 `1.0.0` 或更高版本与为智能体提供服务的较早编辑器版本之间，或者较早的服务器与上述某个编辑器之间，会以 `protocolMismatch` 互相拒绝，并指出需要更新的一方。参见[更新](../mcp/installation.md#更新)。
 - 不带版本号的 CDN URL 现在提供的是最新的 4.x 版本。要停留在 3.x，请固定为 `@3.10.0`。参见 [CDN](#cdn)。

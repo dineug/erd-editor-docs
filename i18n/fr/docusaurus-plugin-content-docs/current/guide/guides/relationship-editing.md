@@ -1,6 +1,6 @@
 ---
-sidebar_position: 6
-description: "Supprimer une relation, changer son type, définir ses actions ON DELETE et ON UPDATE, l’associer à des colonnes existantes avec Associer les colonnes, lire la notation des connecteurs, travailler avec les relations N:M et identifiantes, et voir comment sont nommées les nouvelles colonnes de clé étrangère."
+sidebar_position: 7
+description: "Supprimer une relation, changer son type, définir ses actions ON DELETE et ON UPDATE, l’associer à des colonnes existantes avec Associer les colonnes, lire la notation des connecteurs, travailler avec les relations N:M et identifiantes, et voir ce que les nouvelles colonnes de clé étrangère copient de leur clé et comment elles sont nommées."
 ---
 
 # Modification des relations
@@ -85,6 +85,9 @@ Elle s’ouvre de deux façons :
 
 Le sous-titre de la boîte de dialogue nomme les deux tables et le type de relation, comme `users → posts · One N`. Le type y est affiché mais ne s’y modifie pas : utilisez [Changement de type](#type-change).
 
+Dans toute la boîte de dialogue, y compris les notes et les mentions sous les lignes et la notification sur laquelle elle se ferme, les tables et les colonnes sont nommées comme les nomme l’[affichage des noms](./logical-names.md#beyond-the-canvas).  
+Trois éléments restent physiques : chaque type de données, qui est celui de la colonne et jamais le nom de son domaine ; `New column: <name>`, qui affiche le nom que recevra la nouvelle colonne ; et les lignes que `Map` préremplit, en les appariant par nom, jamais par nom logique.
+
 `References` choisit la clé que vise la relation : `Primary Key`, avec ses colonnes dans l’ordre de la table, puis `Unique: <column>` pour chaque colonne marquée `Unique`. Ce sélecteur n’apparaît que lorsqu’il y a plus d’un choix.  
 Un index unique ne compte pas comme une clé ici, et une colonne `Unique` qui forme à elle seule toute la clé primaire n’est pas listée deux fois.  
 Choisir une autre clé reconstruit les lignes. Une ligne conserve son choix tant que cette colonne est encore dans la table enfant.
@@ -121,10 +124,10 @@ Si les colonnes de la relation ou la clé sur laquelle elle s’est ouverte chan
 Ce qu’écrivent `Map` et `Save` :
 
 - `Map` ajoute la relation avec `On Delete` et `On Update` à `Not set`. `Save` ne modifie que les colonnes de la relation, en faisant pointer son côté parent vers la clé choisie dans `References`, et conserve son type ainsi que ses ON DELETE et ON UPDATE.
-- Une ligne `New column` ajoute une colonne à la fin de la table enfant, comme le fait le tracé : `NOT NULL`, nommée d’après sa clé, avec le type de données, la valeur par défaut et le commentaire de la clé (voir [Relations identifiantes](#identifying-relationships)).
-- Une colonne choisie n’est jamais renommée, et son `Not Null`, sa clé primaire, son `Unique`, sa valeur par défaut et son commentaire restent tels quels. Son type de données ne change que lorsque `Relationship DataType Sync` est activé et que la colonne parente a un type de données : elle prend le type que la colonne parente donne à une clé étrangère, le type entier pour une clé de type serial comme pour une nouvelle colonne, et la modification se propage le long des relations comme le fait la synchronisation.
+- Une ligne `New column` ajoute une colonne à la fin de la table enfant, comme le fait le tracé : `NOT NULL`, nommée d’après sa clé, avec le type de données, la valeur par défaut, le commentaire, le nom logique et le domaine de la clé (voir [Relations identifiantes](#identifying-relationships)).
+- Une colonne choisie n’est jamais renommée ni liée au domaine de la clé, et son `Not Null`, sa clé primaire, son `Unique`, sa valeur par défaut, son commentaire et son nom logique restent tels quels. Son type de données ne change que lorsque `Relationship DataType Sync` est activé et que la colonne parente a un type de données : elle prend le type que la colonne parente donne à une clé étrangère, le type entier pour une clé de type serial comme pour une nouvelle colonne, et la modification se propage le long des relations comme le fait la synchronisation. Chaque colonne dont la modification change le type, choisie ou atteinte le long des relations, est déliée de son [domaine](./dictionary.md#domains-and-data-types) lorsque son nouveau type diffère de celui du domaine.
 - Une colonne que l’association cesse d’utiliser reste dans la table enfant, et n’est plus marquée comme clé étrangère, sauf si une autre relation aboutit encore sur elle.
-- Tout ce qu’écrit un `Map` ou un `Save`, nouvelles colonnes et changements de type compris, forme une seule étape d’annulation.
+- Tout ce qu’écrit un `Map` ou un `Save`, nouvelles colonnes, changements de type et suppressions de liens de domaine compris, forme une seule étape d’annulation.
 
 Le fait que la relation soit identifiante ou non, ainsi que la façon dont son extrémité parente est tracée, se déduisent des colonnes associées de la table enfant, comme pour toute relation. Une association aux colonnes de clé primaire de la table enfant la rend aussitôt identifiante, et une association à une colonne qui accepte `NULL` place un cercle à l’extrémité parente (voir [Lire un connecteur](#reading-a-connector)).  
 La clé étrangère du Schéma SQL référence la clé que vous avez choisie, comme `REFERENCES vehicle (vin)` pour une clé `Unique`.
@@ -156,9 +159,10 @@ Voir [Importer ou exporter des fichiers](./file-import-export.md).
 ## Relations identifiantes {#identifying-relationships}
 
 Tracer une relation en cliquant sur la table enfant, ou avec `Create new columns`, copie chaque clé primaire de la table parente dans la table enfant sous forme de colonne de clé étrangère `NOT NULL`, si bien qu’une nouvelle relation est d’abord non identifiante.  
-La copie reprend le type de données, la valeur par défaut et le commentaire de la clé, mais pas `Unique` ni `Auto Increment`, et elle est nommée comme décrit dans [Noms des colonnes de clé étrangère](#foreign-key-column-names).  
+La copie reprend le type de données, la valeur par défaut, le commentaire et le nom logique de la clé, mais pas `Unique` ni `Auto Increment`, et elle est nommée comme décrit dans [Noms des colonnes de clé étrangère](#foreign-key-column-names).  
 Une clé de type serial fait exception pour le type de données : sa copie prend le type entier que stocke le serial. Quelle que soit la base de données, `smallserial` et `serial2` donnent `smallint`, `serial4` donne `integer`, et `bigserial` et `serial8` donnent `bigint`. Un `serial` seul donne `integer` sous PostgreSQL et `bigint unsigned` sous MySQL et MariaDB, et reste `serial` sous toute autre base de données.  
 Seul le nom complet du type compte, sans tenir compte de la casse, si bien que `serial(4)` est copié tel quel. Un type écrit en majuscules donne des majuscules : `SERIAL` donne `INTEGER` sous PostgreSQL. Une colonne de clé étrangère déjà typée `serial` dans un diagramme enregistré conserve ce type.  
+La copie est aussi liée au [domaine](./dictionary.md#domains-and-data-types) de la clé, à condition que la feuille `Domains` liste ce domaine au moment de la copie et que la copie conserve le type de données de la clé. Ainsi, la copie d’une clé de type serial qui prend un type entier ne lie aucun domaine, tandis qu’un `serial` seul conservé en `serial` le lie.  
 Pour rendre la relation identifiante, définissez ces colonnes de clé étrangère de la table enfant comme clés primaires : sélectionnez-les toutes et appuyez une fois sur `Alt + K` (Windows/Linux) ou `⌥ + K` (Mac), ou choisissez `Primary Key` dans le menu contextuel de la table, qui affiche `Primary Key on selected columns` lorsque deux colonnes ou plus sont sélectionnées (voir [Clé primaire de colonne](./table-editing.md#column-primary-key)).
 
 ![Activation puis désactivation de product_id comme clé primaire avec Alt + K, son connecteur passant en trait continu, puis discontinu](/img/demo-identifying-relationship.webp)
@@ -193,7 +197,10 @@ Cela inclut la clé primaire que l’éditeur ajoute à une table parente qui n�
 Les noms sont fixés au tracé de la relation. Renommer ensuite la table parente ou sa clé ne les renomme pas.  
 Les lignes `New column` de la boîte de dialogue [Associer les colonnes](#map-columns) sont nommées selon les mêmes règles, et la liste affiche chaque nom avant que vous le choisissiez.  
 Les relations qui arrivent avec leurs colonnes déjà en place (importation, collage, duplication ou association de colonnes existantes dans Associer les colonnes) conservent les noms de ces colonnes.  
-Un agent de codage qui ajoute une relation avec `erd_add_relationship` obtient les mêmes noms et types de données (voir [Outils](../../mcp/tools.md#relationships)).
+Un agent de codage qui ajoute une relation avec `erd_add_relationship` obtient les mêmes noms, types de données, noms logiques et domaines (voir [Outils](../../mcp/tools.md#relationships)).
+
+Une colonne de clé étrangère est nommée d’après sa clé, jamais d’après le nom logique qu’elle copie, et son nom compte comme un nom que vous avez écrit : un nom logique écrit plus tard sur la colonne laisse le nom tel quel, sauf si le nom est vide (voir [Vos propres noms](./dictionary.md#names-of-your-own)).  
+Tant que le nom logique copié correspond à un terme qui donne un autre nom, la feuille `Checks` liste donc la colonne sous [`Physical name mismatch`](./dictionary.md#what-each-check-finds). Dériver à nouveau son nom physique la renomme d’après les dictionnaires, sauf si une autre colonne de la table enfant porte déjà le nom qu’ils donnent, sans tenir compte de la casse (voir [Dériver à nouveau les noms physiques](./dictionary.md#derive-physical-names-again)).
 
 ## Lire un connecteur {#reading-a-connector}
 

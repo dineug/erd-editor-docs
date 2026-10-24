@@ -46,7 +46,8 @@ export default {
     await d.press('Alt+Backspace');
     await d.sleep(700);
     await d.shot('removed');
-    await d.moveTo(720, 470, 450);
+    // Off to the right of the floating toolbar (it reaches x 752 since 4.2.0).
+    await d.moveTo(800, 455, 450);
 
     await d.press('ControlOrMeta+KeyZ');
     await d.sleep(800);

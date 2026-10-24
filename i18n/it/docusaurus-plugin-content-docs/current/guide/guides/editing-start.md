@@ -77,8 +77,8 @@ Avviare una relazione dal menu contestuale, dalla [barra degli strumenti dell’
 - One N: `Ctrl + Alt + 4` (Windows/Linux) o `⌘ + ⌥ + 4` (Mac)
 
 Una volta attivato un tipo, il cursore cambia. Fare clic prima sulla tabella padre, poi sulla tabella figlia.  
-La tabella padre riceve una chiave primaria se non ne ha una, e per ogni colonna della chiave primaria della tabella padre la tabella figlia riceve una colonna chiave esterna `Not Null` con lo stesso tipo di dati, valore predefinito e commento.  
-Una chiave serial è l’eccezione: la sua chiave esterna assume il tipo intero memorizzato dal serial, come `integer` per `serial4` — vedere [Relazioni identificanti](./relationship-editing.md#identifying-relationships).  
+La tabella padre riceve una chiave primaria se non ne ha una, e per ogni colonna della chiave primaria della tabella padre la tabella figlia riceve una colonna chiave esterna `Not Null` con lo stesso tipo di dati, valore predefinito, commento, [nome logico](./logical-names.md) e [dominio](./dictionary.md#domains-and-data-types).  
+Una chiave serial è l’eccezione: la sua chiave esterna assume il tipo intero memorizzato dal serial, come `integer` per `serial4`, e in tal caso non collega alcun dominio — vedere [Relazioni identificanti](./relationship-editing.md#identifying-relationships).  
 Ogni colonna chiave esterna prende il nome dalla sua chiave: un nome di una sola parola come `id` riceve davanti il nome della tabella padre (`user_id`), un nome di più parole come `member_id` viene mantenuto, e un nome già presente nella tabella figlia viene numerato (`user_id_2`) — vedere [Nomi delle colonne chiave esterna](./relationship-editing.md#foreign-key-column-names).  
 Facendo clic due volte sulla stessa tabella si disegna una relazione autoreferenziale.  
 Una nuova relazione parte con `On Delete` e `On Update` entrambi su `Not set`; modificarli dal suo menu contestuale — vedere [ON DELETE e ON UPDATE](./relationship-editing.md#on-delete-and-on-update).  
@@ -91,7 +91,8 @@ Una volta scelta la tabella padre, passando il puntatore su una tabella su cui l
 
 Anche la tabella padre mostra i pulsanti una volta che il puntatore si è spostato di un breve tratto dal punto in cui si è fatto clic su di essa, quindi anche una relazione autoreferenziale può essere associata a colonne esistenti.  
 Un dito non consente il passaggio del puntatore, quindi disegnando con un dito i pulsanti non compaiono mai e un tocco sulla tabella figlia disegna subito la relazione; una penna li mostra come fa un mouse.  
-Se la tabella padre ha perso la sua chiave primaria prima che si raggiunga la tabella figlia, ad esempio a causa di un annullamento o della modifica di un collaboratore, `Create new columns` appare attenuato con il tooltip `<parent> has no primary key to copy`, e un clic sulla tabella figlia termina il disegno senza disegnare nulla.
+Se la tabella padre ha perso la sua chiave primaria prima che si raggiunga la tabella figlia, ad esempio a causa di un annullamento o della modifica di un collaboratore, `Create new columns` appare attenuato con il tooltip `<parent> has no primary key to copy`, e un clic sulla tabella figlia termina il disegno senza disegnare nulla.  
+Il tooltip riporta il nome della tabella padre come lo mostra la [Visualizzazione nomi](./logical-names.md#beyond-the-canvas).
 
 ![Disegno di una relazione One N con ⌘ + ⌥ + 4, poi di una Zero N dalla barra degli strumenti dell’area di disegno, con la tabella figlia contornata e i suoi pulsanti Map to existing columns e Create new columns](/img/demo-relationship.webp)
 

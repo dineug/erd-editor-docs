@@ -1,5 +1,5 @@
 ---
-sidebar_position: 15
+sidebar_position: 17
 description: 25 języków wyświetlania edytora, układ od prawej do lewej, wygląd System, Light i Dark oraz kolory w kreatorze motywu, a także miejsca, w których przechowuje je każdy host.
 ---
 
@@ -13,8 +13,10 @@ Aplikacja internetowa, Google Drive, VS Code, IDE JetBrains i Obsidian oferują 
 
 ## Język wyświetlania {#display-language}
 
-Język obejmuje tekst samego edytora: podpowiedzi paska narzędzi, menu kontekstowe, Szybkie wyszukiwanie, panele i okna dialogowe, kartę Ustawienia, [ekran powitalny](./editing-start.md#welcome-screen), powiadomienia i komunikaty oraz tekst zastępczy wyświetlany na kanwie i w wyeksportowanym obrazie w miejscu pustej nazwy, typu danych, wartości domyślnej lub komentarza.  
-W każdym języku bez zmian pozostają: własne nazwy tabel i kolumn, komentarze i notatki; systemy baz danych, języki Generatora kodu i formaty plików; typy danych, słowa kluczowe SQL oraz akcje `ON DELETE` i `ON UPDATE`; opcje Schematu SQL `Create`, `If not exists`, `Drop & re-create`, `USE` i `CREATE + USE`; oznaczenia `PK`, `FK`, `UQ`, `AI`, `NN`, `N-N`, `NULL` i `AK1.1`; litery statusu `A`, `M`, `D`, `R` i `~`, których używa [podgląd różnic](./table-related-functions.md#diff-viewer); opcje stylu nazw i opcje `Bracket` inne niż `None`; nazwy klawiszy; nazwy kolorów w kreatorze motywu; wygenerowany SQL i kod; nazwy wyeksportowanych plików.
+Język obejmuje tekst samego edytora: podpowiedzi paska narzędzi, przycisk [`Name View`](./logical-names.md#switching-the-view) na pasku narzędzi kanwy i na pasku narzędzi trybu Przepływ, menu wyświetlania wierszy w trybie Przepływ, menu kontekstowe, Szybkie wyszukiwanie, panele i okna dialogowe, kartę [Słownik](./dictionary.md) (nazwy jej arkuszy, nagłówki kolumn, narzędzia, menu, wiersz stanu i rodzaje kontroli wymieniane w arkuszu `Checks`), kartę Ustawienia, [ekran powitalny](./editing-start.md#welcome-screen), powiadomienia i komunikaty oraz tekst zastępczy wyświetlany na kanwie i w wyeksportowanym obrazie w miejscu pustej nazwy, nazwy logicznej, typu danych, domeny, wartości domyślnej lub komentarza.  
+W każdym języku bez zmian pozostają: własne nazwy tabel i kolumn, [nazwy logiczne](./logical-names.md), komentarze i notatki; słowa, terminy i domeny przechowywane na karcie Słownik; systemy baz danych, języki Generatora kodu i formaty plików; typy danych, słowa kluczowe SQL oraz akcje `ON DELETE` i `ON UPDATE`; opcje Schematu SQL `Create`, `If not exists`, `Drop & re-create`, `USE` i `CREATE + USE`; oznaczenia `PK`, `FK`, `UQ`, `AI`, `NN`, `N-N`, `NULL` i `AK1.1`; litery statusu `A`, `M`, `D`, `R` i `~`, których używa [podgląd różnic](./table-related-functions.md#diff-viewer); opcje stylu nazw i opcje `Bracket` inne niż `None`; nazwy klawiszy; nazwy kolorów w kreatorze motywu; wygenerowany SQL i kod; wiersz nagłówka wyeksportowanego pliku CSV ze słownikiem; nazwy wyeksportowanych plików.
+
+Na karcie Słownik sortowanie porządkuje wiersze według kolejności alfabetycznej języka wyświetlania, a wyszukiwanie w arkuszu `Checks` dopasowuje jego komórki w takiej postaci, w jakiej brzmią w języku wyświetlania – zobacz sekcje [Sortowanie](./dictionary.md#sorting) i [Wyszukiwanie](./dictionary.md#searching).
 
 Języki w kolejności, w jakiej wyświetla je selektor:
 
@@ -84,11 +86,12 @@ Wariant regionalny jest traktowany jak jego język, więc `de-AT` daje Deutsch, 
 
 ### Języki pisane od prawej do lewej {#right-to-left-languages}
 
-עברית (hebrajski), العربية (arabski) i فارسی (perski) układają edytor od prawej do lewej: pasek narzędzi, menu, panele i okna dialogowe, Szybkie wyszukiwanie oraz karta Ustawienia są odbite lustrzanie. Podmenu menu kontekstowego otwierają się w lewo, a ikony Cofnij i Ponów na pasku narzędzi zamieniają się miejscami, tak aby ikona Cofnij wskazywała wstecz z perspektywy osoby czytającej od prawej do lewej.
+עברית (hebrajski), العربية (arabski) i فارسی (perski) układają edytor od prawej do lewej: pasek narzędzi, menu, panele i okna dialogowe, Szybkie wyszukiwanie, pasek i wiersz stanu karty Słownik oraz karta Ustawienia są odbite lustrzanie. Podmenu menu kontekstowego otwierają się w lewo, a ikony Cofnij i Ponów na pasku narzędzi zamieniają się miejscami, tak aby ikona Cofnij wskazywała wstecz z perspektywy osoby czytającej od prawej do lewej.
 
-Sam diagram nigdy nie jest odbijany lustrzanie. Kanwa z tabelami, kolumnami, relacjami i notatkami pozostaje w układzie od lewej do prawej, podobnie jak minimapa, paski przewijania, [pasek narzędzi kanwy](./table-related-functions.md#canvas-toolbar), [Wizualizacja](./visualization.md) i jej pasek narzędzi, komórki typu danych, kod na kartach Schemat SQL i Generator kodu, selektor kolorów, obie strony podglądu różnic, podróż w czasie oraz podgląd Automatycznego układu.  
+Sam diagram nigdy nie jest odbijany lustrzanie. Kanwa z tabelami, kolumnami, relacjami i notatkami pozostaje w układzie od lewej do prawej, podobnie jak minimapa, paski przewijania, [pasek narzędzi kanwy](./table-related-functions.md#canvas-toolbar), [Wizualizacja](./visualization.md) i jej pasek narzędzi, komórki typu danych, arkusze na karcie Słownik i lista domen terminu, kod na kartach Schemat SQL i Generator kodu, selektor kolorów, obie strony podglądu różnic, podróż w czasie oraz podgląd Automatycznego układu.  
+W trybie Przepływ dwie strzałki na pasku narzędzi karty Wizualizacja pozostają na swoich miejscach i zamieniają się działaniem: strzałka skierowana w prawo to `Previous table`, a skierowana w lewo – `Next table`, tak aby powrót wskazywał w tę samą stronę co ikona Cofnij. Klawisze cofania i ponawiania nadal cofają o krok i przechodzą o krok do przodu – zobacz sekcję [Poprzednia i następna tabela](./visualization.md#previous-table-and-next-table).  
 [Eksplorator](./explorer.md#beside-the-canvas) pozostaje po lewej stronie kanwy, a drzewo zmian podglądu różnic po lewej stronie podglądu, przy czym każdy z nich ma krawędź do przeciągania po swojej prawej stronie. Wewnątrz oba czyta się od prawej do lewej: ich pola i wiersze są odbite lustrzanie, wiersze mają wcięcia od prawej, a w każdym z drzew `←` rozwija wiersz lub przechodzi do jego pierwszego wiersza podrzędnego, podczas gdy `→` zwija go lub wychodzi do wiersza nadrzędnego – zobacz sekcję [Klawisze w Eksploratorze](./explorer.md#keys-in-the-explorer).  
-Nazwy, komentarze i inny wpisany tekst zachowują własny kierunek, więc nazwę w języku hebrajskim, arabskim lub perskim również na kanwie czyta się od prawej do lewej.
+Nazwy, komentarze i inny wpisany tekst zachowują własny kierunek, więc nazwę w języku hebrajskim, arabskim lub perskim również na kanwie czyta się od prawej do lewej. Każda nazwa wymieniona w powiadomieniu karty Słownik również zachowuje własny kierunek.
 
 ## Motyw {#theme}
 

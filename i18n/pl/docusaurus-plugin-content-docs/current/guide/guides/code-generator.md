@@ -1,5 +1,5 @@
 ---
-sidebar_position: 12
+sidebar_position: 13
 description: Generowanie kodu w dwudziestu dwóch formatach docelowych na podstawie diagramu, wybór języka, bazy danych, stylu nazw i cudzysłowu w panelu opcji, sprawdzanie, które formaty docelowe zapisują akcje ON DELETE i ON UPDATE relacji, oraz zapisywanie lub kopiowanie wyniku.
 ---
 
@@ -103,6 +103,10 @@ Przy każdym stylu nazwa zarezerwowana przez język formatu docelowego jest zapi
 `SeaORM` również je ignoruje: nazywa pola i moduły w stylu snake case, czyli w postaci, którą SeaORM odczytuje z powrotem, a przechowywane nazwy podaje w `table_name` oraz, gdy się różnią, w `column_name`.  
 Dla tych czterech formatów docelowych panel przyciemnia obie listy i wyświetla pod nimi dopisek `Not used by`.
 
+Każdy format docelowy zapisuje nazwy fizyczne niezależnie od tego, co pokazuje [Widok nazw](./logical-names.md#name-view).  
+Żaden nie zapisuje nazwy logicznej, nawet do pustego komentarza: ta karta nie ma odpowiednika przełącznika [`Write logical names into empty comments`](./schema-sql.md#logical-names-as-comments) z karty Schemat SQL.  
+Żaden nie zapisuje też domeny: kolumna powiązana z domeną jest zapisywana ze swoim typem danych, jak każda inna kolumna.
+
 ## Baza danych {#database}
 
 Typy danych są ustalane na podstawie wybranej bazy danych – zobacz sekcję [Bazy danych](./table-related-functions.md#databases).  
@@ -132,5 +136,5 @@ Plik jest nazywany tak jak każdy eksport, `<database name>-<timestamp>`, z dopi
 W menu Export nie ma pozycji Code Generator, a karta `Code Generator` we Właściwościach tabeli nie pozwala zapisać pliku.
 
 Aby skopiować kod, kliknij przycisk `Copy` u dołu panelu albo najedź wskaźnikiem na kod i kliknij przycisk kopiowania w jego prawym górnym rogu, co jest jedynym sposobem we Właściwościach tabeli.  
-Powiadomienie `Copied!` ze znacznikiem wyboru potwierdza to przez dwie sekundy. Jeśli przeglądarka lub host odmówi dostępu do schowka, zamiast tego informuje o tym powiadomienie `Couldn't copy to the clipboard` ze znakiem ostrzeżenia. Ponowne skopiowanie zastępuje powiadomienie, zamiast dodawać kolejne.  
+Powiadomienie `Copied!` ze znacznikiem wyboru potwierdza to przez dwie sekundy. Jeśli przeglądarka lub host odmówi dostępu do schowka, zamiast tego przez pięć sekund informuje o tym powiadomienie `Couldn't copy to the clipboard` ze znakiem ostrzeżenia. Ponowne skopiowanie zastępuje powiadomienie, zamiast dodawać kolejne.  
 Tekst można też zaznaczyć, więc możesz skopiować tylko potrzebną część.

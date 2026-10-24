@@ -16,16 +16,20 @@ description: Importar JSON, Esquema SQL, GraphQL, DBML ou AML no lugar do diagra
 - AML
 
 O item `Import and Add`, logo abaixo de `Import`, adiciona o arquivo ao diagrama em vez de substituí-lo — consulte [Importar e adicionar](#import-and-add).  
-A tela de boas-vindas exibida por um diagrama vazio tem um item `Import` com os mesmos cinco formatos — consulte [Tela de boas-vindas](./editing-start.md#welcome-screen).
+A tela de boas-vindas exibida por um diagrama vazio tem um item `Import` com os mesmos cinco formatos — consulte [Tela de boas-vindas](./editing-start.md#welcome-screen).  
+As planilhas da aba [Dicionário](./dictionary.md) também recebem palavras, termos e domínios de arquivos CSV, com o `Import CSV` da própria aba — consulte [Importar e exportar CSV](./dictionary.md#importing-and-exporting-csv).
 
 As extensões são reconhecidas sem diferenciar maiúsculas de minúsculas. Escolher um arquivo cuja extensão não corresponda ao formato selecionado cancela a importação e exibe `Only <format> files can be imported`, com o formato escrito como `json`, `sql`, `graphql`, `dbml` ou `aml`, como em `Only sql files can be imported`.
 
 `Import` substitui o documento atual em vez de mesclar o arquivo a ele, e um único desfazer traz o diagrama anterior de volta.  
-Um arquivo JSON traz consigo as próprias configurações, incluindo seus [bloqueios](./settings.md#lock). Quando o arquivo bloqueia a aba, a linguagem do Gerador de código, um estilo de nome ou o tipo de delimitador, você continua vendo o que tinha, mas o valor salvo é o valor bloqueado do arquivo. A área visível, bloqueada ou não, vai para onde o arquivo a coloca. Um arquivo JSON salvo antes de os bloqueios existirem entra com todos os bloqueios ativados e a área visível em 100%.  
+Um arquivo JSON traz consigo as próprias configurações, incluindo seus [bloqueios](./settings.md#lock). Quando o arquivo bloqueia a aba, a linguagem do Gerador de código, um estilo de nome, o tipo de delimitador ou a [exibição de nomes](./logical-names.md#name-view), você continua vendo o que tinha, mas o valor salvo é o valor bloqueado do arquivo. O zoom e a posição da área visível, bloqueados ou não, ficam como o arquivo os define. Um arquivo JSON salvo antes de os bloqueios existirem entra com todos os bloqueios ativados e a área visível em 100%. Um arquivo salvo antes de o bloqueio `Name View` existir entra com esse bloqueio ativado, quaisquer que sejam os outros bloqueios que ele registre.  
 Os outros formatos mantêm as configurações que você já tem, incluindo os bloqueios, exceto a área visível, que começa em 100%.  
 Os parsers de GraphQL, DBML e AML nunca falham: um arquivo que eles não conseguem ler produz um diagrama vazio em vez de um erro.
 
-Um arquivo JSON mantém as posições que tem. As tabelas de um arquivo de Esquema SQL, GraphQL, DBML ou AML são posicionadas antes de o diagrama mudar:
+Um arquivo JSON também traz os nomes lógicos das suas tabelas e colunas e os vínculos das suas colunas com domínios. As palavras, os termos e os domínios dele substituem os da aba [Dicionário](./dictionary.md), então um arquivo que não contém nenhum deixa as planilhas vazias, e desfazer a importação traz de volta os que ela substituiu.  
+Os outros formatos não contêm nada disso. As tabelas deles entram sem nomes lógicos e sem nenhuma coluna vinculada a um domínio, e as suas palavras, termos e domínios ficam como estão. Desfazer ou refazer a importação também os deixa como estão, então uma edição do dicionário feita depois da importação é mantida. Uma importação desse tipo também deixa como está o histórico de desfazer próprio de cada planilha, enquanto uma importação de JSON esvazia esses históricos — consulte [Planilhas do dicionário](./undo-redo.md#dictionary-sheets).
+
+Um arquivo JSON mantém as posições que tem. As tabelas de um arquivo de Esquema SQL, GraphQL, DBML ou AML são posicionadas antes de o diagrama mudar, com as larguras que têm na [exibição de nomes](./logical-names.md#beyond-the-canvas) que você está vendo:
 
 - Quando o arquivo tem duas ou mais tabelas e pelo menos um relacionamento, elas são organizadas pelo [layout automático](./table-related-functions.md#auto-layout) `Flow`, da esquerda para a direita ao longo dos relacionamentos, a partir do canto superior esquerdo do canvas. Um relacionamento de uma tabela consigo mesma também conta.
 - Caso contrário, elas são dispostas em linhas a partir do canto superior esquerdo, primeiro as tabelas com menos colunas.
@@ -33,7 +37,7 @@ Um arquivo JSON mantém as posições que tem. As tabelas de um arquivo de Esque
 
 Em seguida, o diagrama é substituído em uma única etapa, de modo que nenhum estado intermediário é exibido. Uma configuração que você alterar enquanto as tabelas estão sendo posicionadas, como a aba, é mantida, e, se você importar outro arquivo nesse meio-tempo, prevalece a importação iniciada por último.
 
-Um editor somente leitura não carrega nada por `Import` e não oferece `Import and Add`.
+Um editor somente leitura não carrega nada por `Import` e não oferece `Import and Add` nem o `Import CSV` da aba Dicionário.
 
 ### Importar e adicionar {#import-and-add}
 
@@ -42,6 +46,7 @@ O item `Import and Add` mantém o diagrama e adiciona um arquivo abaixo dele. El
 ![Adição de um arquivo SQL por Import and Add > Schema SQL, com as tabelas chegando abaixo do diagrama, organizadas ao longo dos relacionamentos e selecionadas](/img/demo-import-and-add.webp)
 
 O arquivo entra da mesma forma que uma colagem: cada tabela, coluna, relacionamento, índice, nota e [grupo de tabelas](./table-groups.md) que ele contém é adicionado como novo, as tabelas que já estão no diagrama não se movem e nenhuma configuração muda, portanto as configurações de um arquivo JSON ficam de fora.  
+As tabelas e colunas de um arquivo JSON mantêm seus nomes lógicos, e cada nome físico continua derivado dos dicionários ou escrito por você, como era no arquivo, o que decide se um nome lógico escrito depois deriva um novo — consulte [Derivar nomes físicos](./dictionary.md#deriving-physical-names). As palavras, os termos e os domínios do arquivo ficam de fora, então a aba Dicionário fica como estava, e nenhuma coluna adicionada é vinculada a um domínio: cada uma mantém o tipo de dados que tem.  
 Uma tabela cujo nome já existe no diagrama é adicionada como uma segunda tabela com esse nome, sem ser mesclada à existente. Relacionamentos e índices vêm somente do arquivo, portanto uma chave estrangeira para uma tabela que o arquivo não define não é ligada a uma tabela que já está no diagrama.
 
 O bloco adicionado é inserido logo abaixo de tudo o que o diagrama contém, alinhado à sua borda esquerda, ou no canto superior esquerdo de um diagrama vazio. Notas e grupos de tabelas ocultados com [Opções de exibição](./table-related-functions.md#table-view-options) também contam, pois continuam ali.  
@@ -160,11 +165,10 @@ Uma barra invertida antes de uma aspa, como o MySQL e o MariaDB escrevem `'it\'s
 Um valor `DEFAULT` mantém as aspas, e uma aspa dentro dele é reescrita duplicada, qualquer que seja a forma como o arquivo a escapou: `'it''s'`.  
 Quando o banco de dados do documento é Databricks no momento da importação, o texto entre aspas simples segue, em vez disso, as regras do Spark: cada barra invertida escapa o caractere seguinte, então `'C:\\dir'` é lido como `C:\dir`, sequências de escape como `\n`, `\t` e `\u0041` são decodificadas e um valor `DEFAULT` é mantido como `'it\'s'`.
 
-O Esquema SQL exportado escapa uma aspa dentro de um comentário de tabela ou coluna: `COMMENT 'it''s'` para MySQL, MariaDB e Snowflake; `COMMENT ON TABLE` e `COMMENT ON COLUMN ... IS 'it''s'` para PostgreSQL e Oracle; e a mesma duplicação, incluindo os nomes de tabelas e colunas, nas chamadas `sp_addextendedproperty` do MSSQL. Um comentário sem aspas é escrito como está.  
-O Databricks, em vez disso, escapa uma aspa e uma barra invertida com uma barra invertida, como em `COMMENT 'it\'s'`, então sua exportação só é lida de volta com exatidão enquanto Databricks é o banco de dados selecionado.  
-O MSSQL escreve cada comentário como `EXECUTE sys.sp_addextendedproperty 'MS_Description', '<comment>', 'schema', '<schema>', 'table', '<table>'`, seguido de `'column', '<column>'` para uma coluna. Com a opção `Bracket` em `None`, uma tabela chamada `sales.users` gera o esquema `sales` e a tabela `users`, e um nome sem esquema fica em `dbo`. Com qualquer outro `Bracket`, o nome inteiro é a tabela, em `dbo`.
-
-Os comentários não sobrevivem a uma ida e volta de exportação e importação no SQLite: o SQLite os escreve como linhas `--` simples, que o parser não lê. As chamadas `sp_addextendedproperty` de uma exportação para MSSQL são importadas de volta como os mesmos comentários de tabela e coluna.
+Como cada banco de dados escreve um comentário na exportação, e como escapa uma aspa dentro dele, é descrito em [Comentários](./schema-sql.md#comments), na página do Esquema SQL.  
+Uma exportação para MySQL, MariaDB, PostgreSQL, Oracle, Snowflake ou MSSQL é importada de volta como os mesmos comentários de tabela e coluna, inclusive as aspas, exceto pelas linhas em branco que uma exportação para Oracle omite. Uma exportação para Databricks, que escapa uma aspa e uma barra invertida com uma barra invertida, só é lida de volta com exatidão enquanto Databricks é o banco de dados selecionado.  
+Os comentários não sobrevivem a uma ida e volta de exportação e importação no SQLite: o SQLite os escreve como linhas `--` simples, que o parser não lê.  
+Exceto no SQLite, um nome lógico que a opção `Write logical names into empty comments` escreveu em um comentário vazio é importado de volta como comentário dessa tabela ou coluna, e não como nome lógico dela — consulte [Nomes lógicos como comentários](./schema-sql.md#logical-names-as-comments).
 
 ### GraphQL {#graphql}
 
@@ -200,22 +204,24 @@ O nome do arquivo deve terminar em `.aml`.
 
 GraphQL, DBML e AML são formatos de ida e volta: cada um também é um destino do [Gerador de código](./code-generator.md).  
 O DBML e o AML levam o ON DELETE e o ON UPDATE de cada relacionamento nos dois sentidos — consulte [Gerador de código](./code-generator.md#on-delete-and-on-update). O GraphQL não leva nenhum dos dois, então uma importação de GraphQL deixa ambos como `Not set`.  
-O DBML também leva, nos dois sentidos, as cores das tabelas, descontada qualquer transparência, e cada grupo de tabelas que contém uma tabela. Um grupo sem nome volta como `group_1`, `group_2` e assim por diante, e um nome de grupo repetido volta com `_2`, `_3` e assim por diante acrescentados. O AML leva a cor de uma tabela apenas como o nome de cor mais próximo, então `#FF8800` é escrito como `orange` e volta como `#f97316`, e não leva grupos. O GraphQL não leva nem cores nem grupos.
+O DBML também leva, nos dois sentidos, as cores das tabelas, descontada qualquer transparência, e cada grupo de tabelas que contém uma tabela. Um grupo sem nome volta como `group_1`, `group_2` e assim por diante, e um nome de grupo repetido volta com `_2`, `_3` e assim por diante acrescentados. O AML leva a cor de uma tabela apenas como o nome de cor mais próximo, então `#FF8800` é escrito como `orange` e volta como `#f97316`, e não leva grupos. O GraphQL não leva nem cores nem grupos.  
+Nenhum dos três leva nomes lógicos, vínculos com domínios ou os dicionários, em nenhum dos sentidos: o Gerador de código escreve o nome físico e o tipo de dados de cada tabela e coluna, nunca um nome lógico ou um domínio.
 
 ## Exportar {#exporting}
 
 O submenu `Export` do menu de contexto do canvas tem três itens:
 
-- json: Salva o diagrama tal como o seu arquivo o armazena, como `.erd.json`: as tabelas com suas colunas e índices; os relacionamentos, as notas e os grupos de tabelas; e as configurações, cada [configuração bloqueada](./settings.md#lock) com seu valor bloqueado.
+- json: Salva o diagrama tal como o seu arquivo o armazena, como `.erd.json`: as tabelas com suas colunas e índices; os relacionamentos, as notas e os grupos de tabelas; os nomes lógicos e os vínculos das colunas com domínios; as palavras, os termos e os domínios da aba [Dicionário](./dictionary.md); e as configurações, cada [configuração bloqueada](./settings.md#lock) com seu valor bloqueado. O que não contém nada, como um texto vazio ou uma linha de dicionário vazia, fica de fora — consulte [Forma de armazenamento e valor em tempo de execução](../../api/advanced/schema.md#storage-form-and-runtime-value).
 - Schema SQL: Abre a aba [Esquema SQL](./schema-sql.md#saving-or-copying-the-sql) com o painel de opções aberto e o botão `Save file` em foco, de modo que pressionar `Enter` salva como `.sql` o SQL exibido na aba. Nada é salvo até lá.
 - Image: Abre a caixa de diálogo `Export image`, que salva o diagrama como `.png` ou `.svg` ou o copia para a área de transferência como PNG — consulte [Imagem](#image).
 
-Os três funcionam em um editor somente leitura.
+Os três funcionam em um editor somente leitura.  
+O `Export CSV` da própria aba Dicionário, que não está nesse submenu, salva a planilha `Domains`, `Words` ou `Terms` dela como um arquivo CSV. Ao contrário desses três, ele não é oferecido em um editor somente leitura — consulte [Importar e exportar CSV](./dictionary.md#importing-and-exporting-csv).
 
 O Esquema SQL escreve o ON DELETE e o ON UPDATE de cada relacionamento depois do seu `REFERENCES`, primeiro o ON DELETE. `Not set` não escreve nada, e uma ação que o banco de dados selecionado não aceita é omitida. Consulte [Edição de relacionamentos](./relationship-editing.md#on-delete-and-on-update) para saber qual banco de dados aceita qual ação.
 
 Todo arquivo exportado recebe o nome `<database name>-<timestamp>` seguido da extensão, com o carimbo de data e hora no horário local, no formato `yyyy-MM-dd'T'HH_mm_ss` — por exemplo, `my-schema-2026-08-29T04_05_06.erd.json`. Um nome de banco de dados em branco é substituído por `unnamed`.  
-O botão `Save file` da aba Esquema SQL e o do [Gerador de código](./code-generator.md) nomeiam seus arquivos da mesma forma. Uma imagem usa o nome do banco de dados como estava quando a caixa de diálogo foi aberta.
+O botão `Save file` da aba Esquema SQL e o do [Gerador de código](./code-generator.md) nomeiam seus arquivos da mesma forma, assim como o `Export CSV`, que acrescenta a planilha depois do carimbo de data e hora: `-words.csv`, `-terms.csv` ou `-domains.csv`. Uma imagem usa o nome do banco de dados como estava quando a caixa de diálogo foi aberta.
 
 `Import`, `Import and Add` e `Export` também estão disponíveis na [pesquisa rápida](./quick-search.md) da aba ERD, com os mesmos itens do menu de contexto do canvas.
 
@@ -235,7 +241,7 @@ O explorador de arquivos do Obsidian só lista um arquivo `.erd.json` ou `.sql` 
 
 As escolhas são mantidas até o editor ser fechado e nunca são salvas no documento. A pré-visualização é desenhada da mesma forma que a imagem e é desenhada novamente quando `Background` ou `Dark mode` muda.
 
-A imagem contém o diagrama como estava quando a caixa de diálogo foi aberta; feche e reabra a caixa de diálogo para incluir alterações posteriores. Ela contém o diagrama inteiro, por mais longe dele que a área visível tenha sido rolada, recortado ao que o diagrama desenha mais uma margem, e é sempre desenhada em 100%, qualquer que seja o zoom exibido pelo editor, então todas as tabelas são desenhadas por completo. O que as [Opções de exibição](./table-related-functions.md#table-view-options) ocultam — relacionamentos, seus rótulos de ON DELETE e ON UPDATE, grupos de tabelas ou notas — não é desenhado nem recebe espaço, e os grupos de tabelas são desenhados atrás de todo o resto.
+A imagem contém o diagrama como estava quando a caixa de diálogo foi aberta; feche e reabra a caixa de diálogo para incluir alterações posteriores. As tabelas e colunas dela são nomeadas conforme a exibição de nomes que o editor mostrava naquele momento, mesmo uma que tenha sido trocada só na sua tela enquanto o bloqueio `Name View` mantém outra no arquivo — consulte [Além do canvas](./logical-names.md#beyond-the-canvas). As cores que as [verificações do dicionário](./dictionary.md#marks-on-the-canvas) dão aos nomes no canvas não são desenhadas. Ela contém o diagrama inteiro, por mais longe dele que a área visível tenha sido rolada, recortado ao que o diagrama desenha mais uma margem, e é sempre desenhada em 100%, qualquer que seja o zoom exibido pelo editor, então todas as tabelas são desenhadas por completo. O que as [Opções de exibição](./table-related-functions.md#table-view-options) ocultam — relacionamentos, seus rótulos de ON DELETE e ON UPDATE, grupos de tabelas ou notas — não é desenhado nem recebe espaço, e os grupos de tabelas são desenhados atrás de todo o resto.
 
 Três botões gravam a imagem, e cada um deixa a caixa de diálogo aberta:
 

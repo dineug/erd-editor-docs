@@ -1,12 +1,12 @@
 ---
-sidebar_position: 9
-description: Busca nombres de tabla, columna, índice y grupo de tablas, comentarios y notas desde la parte superior del explorador, recorre las coincidencias en su árbol y en el lienzo, y reemplaza una coincidencia o todas.
+sidebar_position: 10
+description: Busca nombres de tabla, columna, índice y grupo de tablas, nombres lógicos, comentarios y notas desde la parte superior del explorador, recorre las coincidencias en su árbol y en el lienzo, y reemplaza una coincidencia o todas.
 ---
 
 # Buscar y reemplazar
 
 Busca texto en todo el diagrama, te lleva a cada coincidencia en el lienzo ERD y reemplaza una coincidencia o todas.  
-Busca en siete tipos de texto: nombres de tabla, comentarios de tabla, nombres de columna, comentarios de columna, notas, nombres de índice y nombres de grupo de tablas; consulta [Qué se busca](#what-it-searches).
+Busca en ocho tipos de texto: nombres de tabla, comentarios de tabla, nombres de columna, comentarios de columna, notas, nombres de índice, nombres de grupo de tablas y los [nombres lógicos](./logical-names.md) de tablas y columnas; consulta [Qué se busca](#what-it-searches).
 
 Se encuentra en la parte superior del [explorador](./explorer.md), el panel acoplado a la izquierda del lienzo ERD, entre la barra de título del explorador y su árbol. No tiene título propio. De arriba abajo contiene:
 
@@ -30,7 +30,7 @@ Cómo se cierra el explorador, qué hacen la tecla y las dos opciones `Toggle Ex
 [Cuándo se aparta](./explorer.md#when-it-stands-aside) explica cómo lo ocultan otra pestaña y el modo zen, y cómo el visor de diferencias, el viaje en el tiempo y la vista previa de la disposición automática lo ocultan e impiden que se abra. [Junto al lienzo](./explorer.md#beside-the-canvas) trata el caso de un editor demasiado estrecho para él.
 
 Al volver a abrirlo se conserva la última consulta, junto con el texto de reemplazo, las [opciones](#options), los [tipos de texto](#what-it-searches) que estaban activados y si la fila `Replace` y los tipos de texto estaban expandidos.  
-Se conservan mientras el editor sigue abierto y no se guardan en el documento. Un editor recién abierto empieza con todas las opciones desactivadas, con la fila `Replace` y los tipos de texto contraídos y con solo los cuatro tipos de nombre activados; consulta [Qué se busca](#what-it-searches).
+Se conservan mientras el editor sigue abierto y no se guardan en el documento. Un editor recién abierto empieza con todas las opciones desactivadas, con la fila `Replace` y los tipos de texto contraídos y con solo los cuatro tipos de nombre y `Logical names` activados; consulta [Qué se busca](#what-it-searches).
 
 ## La barra de búsqueda del navegador {#the-browsers-find-bar}
 
@@ -46,15 +46,16 @@ Una página que integra el editor puede reasignar o quitar la tecla; consulta [C
 
 ## Qué se busca {#what-it-searches}
 
-Siete botones eligen los tipos de texto en los que se busca, en este orden: `Table names`, `Table comments`, `Column names`, `Column comments`, `Memos`, `Index names` y `Table group names`.  
+Ocho botones eligen los tipos de texto en los que se busca, en este orden: `Table names`, `Table comments`, `Column names`, `Column comments`, `Memos`, `Index names`, `Table group names` y `Logical names`.  
 Al principio están contraídos. El botón `Search In`, al final de la fila del recuento, los expande debajo de esa fila y los vuelve a contraer, y está resaltado mientras se muestran.  
-Un botón de tipo resaltado está activado. Haz clic en uno para activarlo o desactivarlo, y la búsqueda se vuelve a ejecutar. Con los siete desactivados, no se encuentra nada.
+Un botón de tipo resaltado está activado. Haz clic en uno para activarlo o desactivarlo, y la búsqueda se vuelve a ejecutar. Con los ocho desactivados, no se encuentra nada.
 
-La búsqueda se abre al principio con los cuatro tipos de nombre, `Table names`, `Column names`, `Index names` y `Table group names`, así que un cambio de nombre no llega a los comentarios ni a las notas a menos que los actives.  
+La búsqueda se abre al principio con los cuatro tipos de nombre, `Table names`, `Column names`, `Index names` y `Table group names`, y con `Logical names`, así que un cambio de nombre no llega a los comentarios ni a las notas a menos que los actives.  
+`Logical names` es un solo tipo para los nombres lógicos tanto de las tablas como de las columnas.  
 Los nombres de índice son los nombres de los índices de la pestaña `Indexes` del panel [Propiedades de la tabla](./table-related-functions.md#indexes), no las claves `PK_` y `UQ_` que aparecen encima de ellos.
 
-No se busca nada más: ni los tipos de datos, ni los valores predeterminados, ni las columnas de un índice, ni el nombre de la base de datos, ni el [Esquema SQL](./schema-sql.md) con sus scripts `Before tables` y `After tables`, ni el código generado.  
-Un comentario oculto por una [opción de vista de tabla](./table-related-functions.md#table-view-options) se sigue buscando. Las notas ocultas con Opciones de vista → `Memos` y los [grupos de tablas](./table-groups.md#hiding-groups) ocultos con Opciones de vista → `Table Groups` no se buscan, aunque su botón esté activado, así que `Replace All` nunca reescribe una nota ni cambia el nombre de un grupo que no puedes ver.
+No se busca nada más: ni los tipos de datos, ni el dominio de una columna, ni los valores predeterminados, ni las columnas de un índice, ni el nombre de la base de datos, ni el [Esquema SQL](./schema-sql.md) con sus scripts `Before tables` y `After tables`, ni el código generado, ni las hojas de la pestaña [Diccionario](./dictionary.md), que tienen su [propia búsqueda](./dictionary.md#searching).  
+Los nombres lógicos se buscan sea lo que sea lo que dibuje la [vista de nombres](./logical-names.md#name-view), incluida `Physical Names`, en la que el lienzo no muestra ninguno. Un comentario oculto por una [opción de vista de tabla](./table-related-functions.md#table-view-options) también se sigue buscando. Las notas ocultas con Opciones de vista → `Memos` y los [grupos de tablas](./table-groups.md#hiding-groups) ocultos con Opciones de vista → `Table Groups` no se buscan, aunque su botón esté activado, así que `Replace All` nunca reescribe una nota ni cambia el nombre de un grupo que no puedes ver.
 
 ## Opciones {#options}
 
@@ -91,19 +92,21 @@ El recuento, al principio de la fila que hay bajo los campos, indica dónde est�
 Mientras el campo Buscar contiene texto, el [árbol](./explorer.md#the-tree) del explorador muestra los resultados en lugar de todo el diagrama: solo las filas que contienen una coincidencia y las filas que están por encima de ellas. Cuando nada coincide, o la expresión regular no se puede analizar, está vacío. Al borrar la consulta vuelve el árbol completo, contraído como estaba antes.
 
 - `Tables`, `Table Groups` y `Memos` solo se muestran cuando contienen una coincidencia, y el recuento de cada carpeta es el número de filas que tiene directamente debajo en los resultados.
-- Bajo `Tables` aparecen las tablas que contienen una coincidencia, ordenadas por nombre. Bajo cada tabla aparecen una fila por cada coincidencia de su comentario, después una carpeta `Columns` con las columnas que contienen una coincidencia, en orden de columnas, cada una con una fila por cada coincidencia de su comentario, y después una carpeta `Indexes` con los índices cuyo nombre coincide. No hay carpeta `Foreign Keys`.
+- Bajo `Tables` aparecen las tablas que contienen una coincidencia, ordenadas por nombre, nunca por nombre lógico. Bajo cada tabla aparecen una fila por cada coincidencia de su comentario, después una carpeta `Columns` con las columnas que contienen una coincidencia, en orden de columnas, cada una con una fila por cada coincidencia de su comentario, y después una carpeta `Indexes` con los índices cuyo nombre coincide. No hay carpeta `Foreign Keys`.
 - Bajo `Table Groups` aparecen los grupos cuyo nombre coincide, ordenados por nombre, sin sus tablas. Una tabla encontrada se muestra bajo `Tables`.
 - Bajo `Memos` aparecen las notas que contienen una coincidencia, en el orden del documento, cada una representada por su primera línea y con una fila por cada coincidencia que contiene.
 
-Una coincidencia en un nombre se resalta en la propia fila de ese nombre, así que un nombre que contiene la consulta dos veces es una sola fila con dos resaltados.  
+Una coincidencia en un nombre se resalta en la propia fila de ese nombre, así que un nombre que contiene la consulta dos veces es una sola fila con dos resaltados. Una coincidencia en el nombre lógico de una tabla o columna también va en la fila de esa tabla o columna, nunca en una fila propia.  
+Esas filas nombran la tabla o la columna como la muestra la [vista de nombres](./logical-names.md#beyond-the-canvas), y cada uno de los dos nombres que puede mostrar una fila solo resalta sus propias coincidencias. Una fila encontrada solo en el nombre que su vista omite, el nombre lógico en `Physical Names` o el nombre en `Logical Names`, añade ese nombre después del que muestra, atenuado como en `Both Names`, con la coincidencia resaltada. Cuando el nombre que muestra también contiene una coincidencia, la fila muestra solo ese nombre, así que las coincidencias del nombre que su vista omite se cuentan y se recorren, pero no se resaltan.  
 Una coincidencia en un comentario o una nota tiene su propia fila: un bocadillo para un comentario de tabla o de columna, o una nota adhesiva para una nota, y después un fragmento del texto con la coincidencia resaltada. Un texto largo se corta con `…` y los saltos de línea se muestran como espacios. Pasa el puntero por encima de la fila para ver el texto completo.  
 Las demás filas se ven igual que fuera de una búsqueda: una columna muestra su tipo de datos, un índice muestra sus columnas y un nombre en blanco indica `unnamed`.
 
 Toda fila que tiene filas debajo se muestra expandida cuando empieza una búsqueda. Una fila que contraes, o una que contrae `Collapse All`, sigue contraída hasta que una coincidencia que tiene debajo pase a ser la actual, o hasta que cambien la consulta, `Match Case`, `Match Whole Word`, `Use Regular Expression` o un tipo de texto, o se vuelva a abrir la búsqueda con la tecla o con una opción `Toggle Explorer`.  
 La fila de la coincidencia actual se resalta y se desplaza hasta quedar a la vista. El árbol enumera todas las coincidencias, por muchas que haya.  
-Las coincidencias se recorren en el orden del árbol: tabla por tabla, el nombre de la tabla, su comentario, el nombre y el comentario de cada una de sus columnas en orden de columnas, y los nombres de sus índices; después, los nombres de grupo de tablas; después, las notas.
+Las coincidencias se recorren en el orden del árbol: tabla por tabla, el nombre lógico, el nombre y el comentario de la tabla, luego el nombre lógico, el nombre y el comentario de cada una de sus columnas en orden de columnas, y luego los nombres de sus índices; después, los nombres de grupo de tablas; después, las notas.
 
-Los resultados siguen al documento mientras se muestra el explorador. Cuando las ediciones se detienen un momento, cualquier cambio en los textos buscados vuelve a lanzar la búsqueda, y la coincidencia actual sigue siendo la actual si todavía existe. Eso incluye editar un nombre, un comentario o el texto de una nota; añadir o eliminar una tabla, una columna, un índice, una nota o un grupo de tablas; mover una columna, y ocultar o mostrar las notas o los grupos de tablas con Opciones de vista, lo que quita sus coincidencias del árbol o las devuelve. Cuentan una edición en el lienzo, un deshacer o un rehacer, una importación y una edición de un colaborador o de un agente de programación. Seleccionar, mover tablas, notas o grupos en el lienzo, desplazar la vista, hacer zoom y pasar el puntero por encima no cuentan.  
+Los resultados siguen al documento mientras se muestra el explorador. Cuando las ediciones se detienen un momento, cualquier cambio en los textos buscados vuelve a lanzar la búsqueda, y la coincidencia actual sigue siendo la actual si todavía existe. Eso incluye editar un nombre, un nombre lógico, un comentario o el texto de una nota; añadir o eliminar una tabla, una columna, un índice, una nota o un grupo de tablas; mover una columna, y ocultar o mostrar las notas o los grupos de tablas con Opciones de vista, lo que quita sus coincidencias del árbol o las devuelve. Cuentan una edición en el lienzo, un deshacer o un rehacer, una importación y una edición de un colaborador o de un agente de programación. Seleccionar, mover tablas, notas o grupos en el lienzo, desplazar la vista, hacer zoom y pasar el puntero por encima no cuentan.  
+Tampoco cuenta cambiar la vista de nombres, que no cambia ningún texto que lea la búsqueda: se mantienen las mismas coincidencias, y las filas toman los nombres que muestra la nueva vista.  
 Las ediciones hechas mientras el explorador está cerrado o fuera de la vista se buscan en cuanto vuelve a mostrarse.
 
 ## Ir a una coincidencia {#going-to-a-match}
@@ -113,17 +116,17 @@ El recorrido da la vuelta en ambos extremos. Ninguna coincidencia es la actual h
 
 Un clic en una fila de los resultados, o `Enter` o `Space` con el teclado en ella, hace una de estas cosas:
 
-- Una fila cuyo propio nombre contiene una coincidencia va a la primera coincidencia de ese nombre.
+- Una fila cuyo propio nombre o nombre lógico contiene una coincidencia va a su primera coincidencia, la del nombre lógico antes que la del nombre.
 - Una fila que muestra un fragmento de un comentario o una nota va a esa coincidencia.
-- Cualquier otra fila, como una tabla cuyo nombre no coincide o la propia fila de una nota, va a lo que representa la fila y deja la coincidencia actual como está; consulta [Ir a una fila](./explorer.md#going-to-a-row).
+- Cualquier otra fila, como una tabla cuyo nombre y nombre lógico no coinciden o la propia fila de una nota, va a lo que representa la fila y deja la coincidencia actual como está; consulta [Ir a una fila](./explorer.md#going-to-a-row).
 - Una carpeta se contrae o se expande.
 
 Siempre que una coincidencia pasa a ser la actual, el árbol expande las filas contraídas que haya por encima de ella y lleva allí la fila del teclado, así que las teclas de flecha del árbol continúan desde ella.
 
 Ir a una coincidencia cierra el panel Propiedades de la tabla si está abierto y, a continuación:
 
-- Para un nombre o un comentario de tabla, o un nombre o un comentario de columna, selecciona solo la tabla, la trae al frente y deja la celda con el foco en la celda que contiene la coincidencia. Una coincidencia en un comentario oculto por una [opción de vista de tabla](./table-related-functions.md#table-view-options) deja, en cambio, la celda con el foco en el nombre que tiene al lado.
-- Para un nombre de índice, selecciona solo la tabla del índice y la trae al frente, con la celda con el foco en el nombre de la tabla, salvo que ya esté en esa tabla. Los nombres de índice no se dibujan en el lienzo.
+- Para el nombre, el nombre lógico o el comentario de una tabla o columna, selecciona solo la tabla, la trae al frente y deja la celda con el foco en la celda que contiene la coincidencia. Una coincidencia en un comentario oculto por una [opción de vista de tabla](./table-related-functions.md#table-view-options) deja, en cambio, la celda con el foco en el nombre que tiene al lado. Donde la [vista de nombres](./logical-names.md#name-view) no dibuja ninguna celda para el nombre o el nombre lógico, la celda con el foco va a la que se dibuja en su lugar: el nombre en `Physical Names` y el nombre lógico en `Logical Names`.
+- Para un nombre de índice, selecciona solo la tabla del índice y la trae al frente, con la celda con el foco en el nombre de la tabla, o en su nombre lógico en `Logical Names` y `Both Names`, salvo que ya esté en esa tabla. Los nombres de índice no se dibujan en el lienzo.
 - Para un nombre de grupo de tablas, selecciona solo el grupo y lo trae al frente con sus tablas.
 - Para una nota, selecciona solo la nota y la trae al frente.
 
@@ -151,7 +154,7 @@ Mientras dura una serie, una tabla o un grupo de tablas al que cambia el nombre 
 
 `Replace All` se ejecuta con `Ctrl + Enter` (Windows/Linux) o `⌘ + Enter` (Mac) en el campo Reemplazar, o con su botón:
 
-- Reemplaza todas las coincidencias de los tipos de texto activados y no toca los demás tipos. Con los tipos predeterminados, cambia el nombre de tablas, columnas, índices y grupos de tablas, y los comentarios y las notas quedan intactos.
+- Reemplaza todas las coincidencias de los tipos de texto activados y no toca los demás tipos, salvo los nombres físicos que deriva un nombre lógico reemplazado, que escribe aunque `Table names` y `Column names` estén desactivados; consulta más abajo. Con los tipos predeterminados, cambia el nombre de tablas, columnas, índices y grupos de tablas, y reescribe los nombres lógicos de tablas y columnas; los comentarios y las notas quedan intactos.
 - Todo lo que cambia forma un solo paso de deshacer; consulta [Un gesto, un paso](./undo-redo.md#one-gesture-one-step).
 - El recuento indica `Replaced N matches` y solo cuenta las apariciones cuyo texto ha cambiado realmente. Cuando no ha cambiado ninguna, indica `No changes` y no se registra nada en el historial, como al reemplazar la expresión regular `(user)` por `$1`.
 - A continuación, los resultados se vuelven a buscar sin ninguna coincidencia actual, así que pueden incluir coincidencias que contiene el texto nuevo.
@@ -171,8 +174,12 @@ Cómo se usa el texto de reemplazo:
   - Una coincidencia que se vuelve a escribir tal como estaba no cuenta: con `Match Case` desactivado, al reemplazar `customer` por `Customer` se vuelven a escribir `customer`, `Customer` y `CUSTOMER` tal como estaban, y no se cuenta ninguna.
 - Un campo Reemplazar vacío elimina la coincidencia.
 
-Un reemplazo es una edición normal, igual que escribir tú mismo el nuevo nombre de tabla, comentario, nombre de columna o texto de nota, cambiar el nombre del índice en el panel Propiedades de la tabla o cambiar el nombre del grupo de tablas.  
+Un reemplazo es una edición normal, igual que escribir tú mismo el nuevo nombre de tabla, nombre de columna, nombre lógico, comentario o texto de nota, cambiar el nombre del índice en el panel Propiedades de la tabla o cambiar el nombre del grupo de tablas.  
 Se registra en el historial y llega a los colaboradores y a un agente de programación como cualquier otra edición.
+
+Así, un nombre de tabla o columna que escribe un reemplazo pasa a ser un nombre escrito por ti, que un nombre lógico escrito después deja como está hasta que [Volver a derivar los nombres físicos](./dictionary.md#derive-physical-names-again) lo devuelve a los diccionarios. En cambio, un nombre que un reemplazo deja vacío vuelve a los diccionarios, como cualquier nombre borrado; consulta [Nombres escritos por ti](./dictionary.md#names-of-your-own).  
+Mientras el nombre físico de una tabla o columna está vacío o fue a su vez derivado, un nombre lógico reemplazado lo deriva a partir de los diccionarios, como al cerrar la celda del nombre lógico con un nombre lógico nuevo; consulta [Derivar nombres físicos](./dictionary.md#deriving-physical-names). En ese caso, una columna cuyo nuevo nombre lógico es un término también toma el dominio del término y, con él, el tipo de datos del dominio. Lo que deriva forma parte del paso de deshacer del reemplazo y no se cuenta en `Replaced N matches`.  
+Cuando un mismo `Replace All` reescribe tanto el nombre lógico como el nombre de la misma tabla o columna, el nombre que escribe prevalece sobre el que derivaría el nuevo nombre lógico.
 
 ## Teclas en los campos de búsqueda {#keys-in-the-search-fields}
 

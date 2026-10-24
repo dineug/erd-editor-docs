@@ -16,16 +16,20 @@ Z podmenu `Import` w menu kontekstowym kanwy można importować pięć formatów
 - AML
 
 Pozycja `Import and Add`, tuż pod pozycją `Import`, dodaje plik do diagramu, zamiast go zastępować – zobacz sekcję [Importuj i dodaj](#import-and-add).  
-Ekran powitalny wyświetlany przy pustym diagramie ma pozycję `Import` z tymi samymi pięcioma formatami – zobacz sekcję [Ekran powitalny](./editing-start.md#welcome-screen).
+Ekran powitalny wyświetlany przy pustym diagramie ma pozycję `Import` z tymi samymi pięcioma formatami – zobacz sekcję [Ekran powitalny](./editing-start.md#welcome-screen).  
+Arkusze karty [Słownik](./dictionary.md) przyjmują też słowa, terminy i domeny z plików CSV za pomocą własnego przycisku `Import CSV` tej karty – zobacz sekcję [Importowanie i eksportowanie plików CSV](./dictionary.md#importing-and-exporting-csv).
 
 Rozszerzenia są dopasowywane bez uwzględniania wielkości liter. Wskazanie pliku, którego rozszerzenie nie pasuje do wybranego formatu, anuluje import i wyświetla komunikat `Only <format> files can be imported`, w którym format ma postać `json`, `sql`, `graphql`, `dbml` lub `aml`, na przykład `Only sql files can be imported`.
 
 Operacja `Import` zastępuje bieżący dokument, zamiast scalać z nim plik, a jedno cofnięcie przywraca poprzedni diagram.  
-Plik JSON przynosi ze sobą własne ustawienia, łącznie z [blokadami](./settings.md#lock). Jeśli plik blokuje kartę, język Generatora kodu, styl nazw lub typ cudzysłowu, nadal widzisz to, co było wcześniej, ale zapisywana jest zablokowana wartość z pliku. Widok, zablokowany czy nie, ustawia się tam, gdzie wskazuje plik. Plik JSON zapisany przed wprowadzeniem blokad jest importowany ze wszystkimi blokadami włączonymi i z widokiem w powiększeniu 100%.  
+Plik JSON przynosi ze sobą własne ustawienia, łącznie z [blokadami](./settings.md#lock). Jeśli plik blokuje kartę, język Generatora kodu, styl nazw, typ cudzysłowu lub [Widok nazw](./logical-names.md#name-view), nadal widzisz to, co było wcześniej, ale zapisywana jest zablokowana wartość z pliku. Powiększenie i położenie widoku, zablokowane czy nie, ustawiają się tak, jak wskazuje plik. Plik JSON zapisany przed wprowadzeniem blokad jest importowany ze wszystkimi blokadami włączonymi i z widokiem w powiększeniu 100%. Plik zapisany przed wprowadzeniem blokady `Name View` jest importowany z tą blokadą włączoną, niezależnie od innych zapisanych w nim blokad.  
 Pozostałe formaty zachowują dotychczasowe ustawienia, łącznie z blokadami, z wyjątkiem widoku, który zaczyna od powiększenia 100%.  
 Parsery GraphQL, DBML i AML nigdy nie zawodzą: plik, którego nie potrafią odczytać, daje pusty diagram, a nie błąd.
 
-Plik JSON zachowuje zapisane w nim położenia. Tabele z pliku w formacie Schemat SQL, GraphQL, DBML lub AML są rozmieszczane, zanim diagram się zmieni:
+Plik JSON przynosi też nazwy logiczne swoich tabel i kolumn oraz powiązania swoich kolumn z domenami. Jego słowa, terminy i domeny zastępują te z karty [Słownik](./dictionary.md), więc plik, który ich nie zawiera, pozostawia arkusze puste, a cofnięcie importu przywraca zastąpione elementy.  
+Pozostałe formaty nie zawierają żadnej z tych rzeczy. Ich tabele są importowane bez nazw logicznych i bez kolumn powiązanych z domenami, a twoje słowa, terminy i domeny pozostają bez zmian. Cofnięcie lub ponowienie importu również ich nie zmienia, więc zmiana w słowniku wprowadzona po imporcie zostaje zachowana. Taki import pozostawia też bez zmian własną historię cofania każdego arkusza, natomiast import JSON czyści te historie – zobacz sekcję [Arkusze karty Słownik](./undo-redo.md#dictionary-sheets).
+
+Plik JSON zachowuje zapisane w nim położenia. Tabele z pliku w formacie Schemat SQL, GraphQL, DBML lub AML są rozmieszczane, zanim diagram się zmieni, z szerokościami, jakie mają przy ustawieniu [Widok nazw](./logical-names.md#beyond-the-canvas), które właśnie oglądasz:
 
 - Gdy plik ma co najmniej dwie tabele i co najmniej jedną relację, rozmieszcza je [Automatyczny układ](./table-related-functions.md#auto-layout) z opcją `Flow`, od lewej do prawej wzdłuż relacji, począwszy od lewego górnego rogu kanwy. Liczy się także relacja tabeli z samą sobą.
 - W przeciwnym razie tabele są układane w rzędach od lewego górnego rogu, począwszy od tabel z najmniejszą liczbą kolumn.
@@ -33,7 +37,7 @@ Plik JSON zachowuje zapisane w nim położenia. Tabele z pliku w formacie Schema
 
 Następnie diagram jest zastępowany w jednym kroku, więc nie widać żadnego stanu pośredniego. Ustawienie zmienione w trakcie rozmieszczania tabel, na przykład karta, zostaje zachowane, a jeśli w tym czasie zaimportujesz inny plik, wygrywa import rozpoczęty jako ostatni.
 
-Edytor tylko do odczytu nic nie wczytuje przez pozycję `Import` i nie oferuje pozycji `Import and Add`.
+Edytor tylko do odczytu nic nie wczytuje przez pozycję `Import` i nie oferuje ani pozycji `Import and Add`, ani przycisku `Import CSV` na karcie Słownik.
 
 ### Importuj i dodaj {#import-and-add}
 
@@ -42,6 +46,7 @@ Pozycja `Import and Add` zachowuje diagram i dodaje plik poniżej niego. Jest do
 ![Dodawanie pliku SQL przez Import and Add > Schema SQL – jego tabele trafiają pod diagram, ułożone wzdłuż relacji i zaznaczone](/img/demo-import-and-add.webp)
 
 Plik jest dodawany tak jak przy wklejaniu: wszystkie zawarte w nim tabele, kolumny, relacje, indeksy, notatki i [grupy tabel](./table-groups.md) są dodawane jako nowe, tabele już obecne w diagramie się nie przesuwają, a żadne ustawienie się nie zmienia, więc ustawienia z pliku JSON są pomijane.  
+Tabele i kolumny z pliku JSON zachowują swoje nazwy logiczne, a każda nazwa fizyczna nadal należy do słowników lub jest własna, tak jak w pliku, co decyduje o tym, czy później wpisana nazwa logiczna wygeneruje nową – zobacz sekcję [Generowanie nazw fizycznych](./dictionary.md#deriving-physical-names). Słowa, terminy i domeny z pliku są pomijane, więc karta Słownik pozostaje bez zmian, a żadna dodana kolumna nie jest powiązana z domeną: każda zachowuje swój typ danych.  
 Tabela o nazwie, którą diagram już zawiera, jest dodawana jako druga tabela o tej nazwie, a nie scalana z istniejącą. Relacje i indeksy pochodzą wyłącznie z pliku, więc klucz obcy odwołujący się do tabeli, której plik nie definiuje, nie zostaje połączony z tabelą już obecną w diagramie.
 
 Dodany blok trafia tuż pod całą zawartość diagramu, wyrównany do jej lewej krawędzi, a w przypadku pustego diagramu – w lewy górny róg. Notatki i grupy tabel ukryte w [Opcjach widoku](./table-related-functions.md#table-view-options) również się liczą, ponieważ nadal tam są.  
@@ -160,11 +165,10 @@ Ukośnik odwrotny przed znakiem cudzysłowu, tak jak MySQL i MariaDB zapisują `
 Wartość `DEFAULT` zachowuje swoje cudzysłowy, a znak cudzysłowu wewnątrz niej jest zapisywany z powrotem jako podwojony, niezależnie od tego, jakiej sekwencji ucieczki użył plik: `'it''s'`.  
 Gdy w chwili importu bazą danych dokumentu jest Databricks, tekst w pojedynczych cudzysłowach podlega zamiast tego regułom platformy Spark: każdy ukośnik odwrotny działa jako znak ucieczki dla następnego znaku, więc `'C:\\dir'` jest odczytywane jako `C:\dir`, sekwencje ucieczki, takie jak `\n`, `\t` i `\u0041`, są dekodowane, a wartość `DEFAULT` jest zachowywana jako `'it\'s'`.
 
-Wyeksportowany Schemat SQL stosuje sekwencję ucieczki dla znaku cudzysłowu wewnątrz komentarza tabeli lub kolumny: `COMMENT 'it''s'` dla MySQL, MariaDB i Snowflake, `COMMENT ON TABLE` i `COMMENT ON COLUMN ... IS 'it''s'` dla PostgreSQL i Oracle oraz takie samo podwojenie, łącznie z nazwami tabel i kolumn, w wywołaniach `sp_addextendedproperty` dla MSSQL. Komentarz bez znaku cudzysłowu jest zapisywany bez zmian.  
-Databricks zamiast tego poprzedza znak cudzysłowu i ukośnik odwrotny ukośnikiem odwrotnym, jak w `COMMENT 'it\'s'`, więc jego eksport odczytuje się z powrotem dokładnie tylko wtedy, gdy wybraną bazą danych jest Databricks.  
-MSSQL zapisuje każdy komentarz jako `EXECUTE sys.sp_addextendedproperty 'MS_Description', '<comment>', 'schema', '<schema>', 'table', '<table>'`, a w przypadku kolumny dodaje po tym `'column', '<column>'`. Gdy opcja `Bracket` ma wartość `None`, tabela o nazwie `sales.users` daje schemat `sales` i tabelę `users`, a nazwa bez schematu trafia do `dbo`. Przy każdej innej wartości opcji `Bracket` cała nazwa jest nazwą tabeli w schemacie `dbo`.
-
-Komentarze nie przetrwają eksportu do SQLite i ponownego importu: SQLite zapisuje je jako zwykłe wiersze `--`, których parser nie odczytuje. Wywołania `sp_addextendedproperty` z eksportu MSSQL importują się z powrotem jako te same komentarze tabel i kolumn.
+To, jak każda baza danych zapisuje komentarz przy eksporcie i jak stosuje w nim sekwencję ucieczki dla znaku cudzysłowu, opisano w sekcji [Komentarze](./schema-sql.md#comments) na stronie Schemat SQL.  
+Eksport do MySQL, MariaDB, PostgreSQL, Oracle, Snowflake lub MSSQL importuje się z powrotem jako te same komentarze tabel i kolumn, łącznie ze znakami cudzysłowu, z wyjątkiem pustych wierszy, które pomija eksport Oracle. Eksport Databricks, który poprzedza znak cudzysłowu i ukośnik odwrotny ukośnikiem odwrotnym, odczytuje się z powrotem dokładnie tylko wtedy, gdy wybraną bazą danych jest Databricks.  
+Komentarze nie przetrwają eksportu do SQLite i ponownego importu: SQLite zapisuje je jako zwykłe wiersze `--`, których parser nie odczytuje.  
+Poza SQLite nazwa logiczna, którą przełącznik `Write logical names into empty comments` wpisał do pustego komentarza, importuje się z powrotem jako komentarz tej tabeli lub kolumny, a nie jako jej nazwa logiczna – zobacz sekcję [Nazwy logiczne jako komentarze](./schema-sql.md#logical-names-as-comments).
 
 ### GraphQL {#graphql}
 
@@ -200,22 +204,24 @@ Nazwa pliku musi kończyć się na `.aml`.
 
 GraphQL, DBML i AML to formaty obsługiwane w obie strony: każdy z nich jest też formatem docelowym na karcie [Generator kodu](./code-generator.md).  
 DBML i AML przenoszą ON DELETE i ON UPDATE każdej relacji w obie strony – zobacz stronę [Generator kodu](./code-generator.md#on-delete-and-on-update). GraphQL nie przenosi żadnej z tych akcji, więc import GraphQL pozostawia obie z wartością `Not set`.  
-DBML przenosi w obie strony również kolory tabel, bez przezroczystości, oraz każdą grupę tabel, która zawiera tabelę. Grupa bez nazwy wraca jako `group_1`, `group_2` itd., a powtórzona nazwa grupy wraca z dodanym `_2`, `_3` itd. AML przenosi kolor tabeli tylko jako najbliższą ze swoich nazw kolorów, więc `#FF8800` jest zapisywany jako `orange` i wraca jako `#f97316`, a grup nie przenosi wcale. GraphQL nie przenosi ani kolorów, ani grup.
+DBML przenosi w obie strony również kolory tabel, bez przezroczystości, oraz każdą grupę tabel, która zawiera tabelę. Grupa bez nazwy wraca jako `group_1`, `group_2` itd., a powtórzona nazwa grupy wraca z dodanym `_2`, `_3` itd. AML przenosi kolor tabeli tylko jako najbliższą ze swoich nazw kolorów, więc `#FF8800` jest zapisywany jako `orange` i wraca jako `#f97316`, a grup nie przenosi wcale. GraphQL nie przenosi ani kolorów, ani grup.  
+Żaden z tych trzech formatów nie przenosi nazw logicznych, powiązań z domenami ani słowników w żadną stronę: Generator kodu zapisuje nazwę fizyczną i typ danych każdej tabeli i kolumny, nigdy nazwę logiczną ani domenę.
 
 ## Eksportowanie {#exporting}
 
 Podmenu `Export` w menu kontekstowym kanwy ma trzy pozycje:
 
-- json: Zapisuje diagram w takiej postaci, w jakiej przechowuje go jego plik, jako `.erd.json`: tabele z ich kolumnami i indeksami, relacje, notatki i grupy tabel oraz ustawienia, przy czym każde [zablokowane ustawienie](./settings.md#lock) ma swoją zablokowaną wartość.
+- json: Zapisuje diagram w takiej postaci, w jakiej przechowuje go jego plik, jako `.erd.json`: tabele z ich kolumnami i indeksami, relacje, notatki i grupy tabel, nazwy logiczne i powiązania kolumn z domenami, słowa, terminy i domeny z karty [Słownik](./dictionary.md) oraz ustawienia, przy czym każde [zablokowane ustawienie](./settings.md#lock) ma swoją zablokowaną wartość. To, co nic nie zawiera, na przykład pusty tekst lub pusty wiersz słownika, jest pomijane – zobacz sekcję [Postać zapisu i wartość czasu wykonania](../../api/advanced/schema.md#storage-form-and-runtime-value).
 - Schema SQL: Otwiera kartę [Schemat SQL](./schema-sql.md#saving-or-copying-the-sql) z otwartym panelem opcji i fokusem na przycisku `Save file`, więc naciśnięcie klawisza `Enter` zapisuje kod SQL wyświetlany na karcie jako `.sql`. Do tego momentu nic nie jest zapisywane.
 - Image: Otwiera okno dialogowe `Export image`, które zapisuje diagram jako plik `.png` lub `.svg` albo kopiuje go do schowka jako obraz PNG – zobacz sekcję [Obraz](#image).
 
-Wszystkie trzy działają w edytorze tylko do odczytu.
+Wszystkie trzy działają w edytorze tylko do odczytu.  
+Własny przycisk `Export CSV` karty Słownik, którego nie ma w tym podmenu, zapisuje arkusz `Domains`, `Words` lub `Terms` jako plik CSV. W przeciwieństwie do tych trzech pozycji nie jest dostępny w edytorze tylko do odczytu – zobacz sekcję [Importowanie i eksportowanie plików CSV](./dictionary.md#importing-and-exporting-csv).
 
 Schemat SQL zapisuje ON DELETE i ON UPDATE każdej relacji po jej klauzuli `REFERENCES`, najpierw ON DELETE. Wartość `Not set` niczego nie zapisuje, a akcja, której wybrana baza danych nie akceptuje, jest pomijana. Informacje o tym, która baza danych przyjmuje które akcje, znajdziesz na stronie [Edycja relacji](./relationship-editing.md#on-delete-and-on-update).
 
 Każdy eksportowany plik otrzymuje nazwę `<database name>-<timestamp>` z rozszerzeniem, przy czym znacznik czasu jest podawany w czasie lokalnym w formacie `yyyy-MM-dd'T'HH_mm_ss` – na przykład `my-schema-2026-08-29T04_05_06.erd.json`. Pusta nazwa bazy danych jest zastępowana wartością `unnamed`.  
-Przyciski `Save file` na karcie Schemat SQL i na karcie [Generator kodu](./code-generator.md) nazywają swoje pliki w ten sam sposób. Obraz otrzymuje nazwę bazy danych z chwili otwarcia okna dialogowego.
+Przyciski `Save file` na karcie Schemat SQL i na karcie [Generator kodu](./code-generator.md) nazywają swoje pliki w ten sam sposób, podobnie jak przycisk `Export CSV`, który dodaje po znaczniku czasu nazwę arkusza: `-words.csv`, `-terms.csv` lub `-domains.csv`. Obraz otrzymuje nazwę bazy danych z chwili otwarcia okna dialogowego.
 
 Polecenia `Import`, `Import and Add` i `Export` są też dostępne w palecie [Szybkie wyszukiwanie](./quick-search.md) na karcie ERD, z tymi samymi pozycjami co menu kontekstowe kanwy.
 
@@ -235,7 +241,7 @@ Polecenie `Export` ▸ `Image`, wywołane z menu kontekstowego kanwy lub z Szybk
 
 Wybrane ustawienia są zachowywane do zamknięcia edytora i nigdy nie są zapisywane w dokumencie. Podgląd jest rysowany tak samo jak obraz i jest rysowany ponownie, gdy zmieni się opcja `Background` lub `Dark mode`.
 
-Obraz przedstawia diagram w stanie z chwili otwarcia okna dialogowego; aby uwzględnić późniejsze zmiany, zamknij okno dialogowe i otwórz je ponownie. Obejmuje cały diagram, bez względu na to, jak daleko jest on przewinięty, jest przycinany do tego, co rysuje diagram, z dodatkiem marginesu, i zawsze jest rysowany w powiększeniu 100%, niezależnie od bieżącego powiększenia edytora, więc każda tabela jest narysowana w całości. To, co ukrywają [Opcje widoku](./table-related-functions.md#table-view-options) – relacje, ich etykiety ON DELETE i ON UPDATE, grupy tabel lub notatki – nie jest rysowane ani nie zajmuje miejsca, a grupy tabel są rysowane za wszystkimi innymi elementami.
+Obraz przedstawia diagram w stanie z chwili otwarcia okna dialogowego; aby uwzględnić późniejsze zmiany, zamknij okno dialogowe i otwórz je ponownie. Jego tabele i kolumny są nazywane zgodnie z ustawieniem Widoku nazw, które edytor pokazywał w tej chwili, nawet jeśli przełączono je tylko na twoim ekranie, a blokada `Name View` zachowuje w pliku inny widok – zobacz sekcję [Poza kanwą](./logical-names.md#beyond-the-canvas). Kolory, które [kontrole słowników](./dictionary.md#marks-on-the-canvas) nadają nazwom na kanwie, nie są rysowane. Obraz obejmuje cały diagram, bez względu na to, jak daleko jest on przewinięty, jest przycinany do tego, co rysuje diagram, z dodatkiem marginesu, i zawsze jest rysowany w powiększeniu 100%, niezależnie od bieżącego powiększenia edytora, więc każda tabela jest narysowana w całości. To, co ukrywają [Opcje widoku](./table-related-functions.md#table-view-options) – relacje, ich etykiety ON DELETE i ON UPDATE, grupy tabel lub notatki – nie jest rysowane ani nie zajmuje miejsca, a grupy tabel są rysowane za wszystkimi innymi elementami.
 
 Obraz zapisują trzy przyciski i każdy z nich pozostawia okno dialogowe otwarte:
 

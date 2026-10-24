@@ -13,9 +13,9 @@ To, co serwer znajdzie, decyduje, dokąd trafia zmiana.
 | Co serwer znajduje | Co robi zmiana |
 | --- | --- |
 | Edytor, którego obszar roboczy, sejf lub otwarty projekt zawiera dokument albo w którym dokument jest otwarty | **Live.** W razie potrzeby otwiera dokument w ERD Editor, dołącza do sesji edycji i tam stosuje zmianę. Zmiany pojawiają się od razu i są zapisywane tak, jak edytor zapisuje twoje – zobacz sekcję [Zapisywanie](#saving). |
-| Brak edytora | **Headless.** Wczytuje plik, stosuje zmianę i zastępuje plik. Narzędzie `erd_save` nie ma nic do zrobienia. |
+| Brak edytora | **Headless.** Wczytuje plik, stosuje zmianę i zastępuje plik, zanim zwróci odpowiedź, więc wynik podaje `saved: true`, a narzędzie `erd_save` nie ma nic do zrobienia. |
 | Edytor z wyłączonym hubem | **Odrzucenie.** Odczyty nadal działają, ale korzystają z dysku. Zmianę zapisaną w pliku otwartym w edytorze mógłby nadpisać następny zapis tego edytora, więc serwer niczego nie zapisuje. |
-| Edytor z włączonym hubem, który jednak używa innego protokołu niż serwer: przy serwerze w wersji `1.0.0` rozszerzenie VS Code w wersji `3.x`, wtyczka Obsidian w wersji `0.x` lub wtyczka JetBrains w wersji `0.9.0` albo `0.10.0`; przy serwerze w wersji starszej niż `1.0.0` rozszerzenie w wersji `4.0.0` lub nowszej albo wtyczka w wersji `1.0.0` lub nowszej | **Odrzucenie**, także odczytów, z kodem `protocolMismatch`. Komunikat wskazuje stronę, którą trzeba zaktualizować: rozszerzenie lub wtyczkę albo serwer – zobacz sekcję [Aktualizacja](./installation.md#updating). |
+| Edytor z włączonym hubem, który jednak używa innego protokołu niż serwer: przy serwerze w wersji `1.0.0` lub nowszej rozszerzenie VS Code w wersji `3.x`, wtyczka Obsidian w wersji `0.x` lub wtyczka JetBrains w wersji `0.9.0` albo `0.10.0`; przy serwerze w wersji starszej niż `1.0.0` rozszerzenie w wersji `4.0.0` lub nowszej albo wtyczka w wersji `1.0.0` lub nowszej | **Odrzucenie**, także odczytów, z kodem `protocolMismatch`. Komunikat wskazuje stronę, którą trzeba zaktualizować: rozszerzenie lub wtyczkę albo serwer – zobacz sekcję [Aktualizacja](./installation.md#updating). |
 | W systemie Windows edytor, który ma dokument pod inną ścieżką prowadzącą do tego samego pliku: agent wskazał go przez udział sieciowy lub zmapowany dysk tego komputera, np. `\\localhost\C$\…`, a edytor ma go pod ścieżką z literą dysku, albo odwrotnie | **Odrzucenie**, także odczytów, z kodem `invalidPath`. Komunikat podaje ścieżkę, pod którą edytor ma dokument; wywołaj ponownie z tą ścieżką. |
 | W systemie Windows edytor, do którego Windows nie dopuszcza agenta: edytor uruchomiony jako administrator, gdy agent nie został tak uruchomiony, albo dowolny edytor, gdy agent działa w piaskownicy | **Odrzucenie**, także odczytów, z kodem `hubUnreachable` i komunikatem, który podaje przyczynę. Uruchom edytor i agenta z tymi samymi uprawnieniami, na przykład uruchamiając edytor ponownie bez uprawnień administratora. |
 
@@ -35,6 +35,8 @@ Jego zmiany od razu docierają do każdego edytora, w którym otwarty jest dokum
 
 Odczyt nigdy nie otwiera edytora. Zmiana otwiera dokument w ERD Editor, jeśli nie jest on jeszcze otwarty, bez przejmowania fokusu klawiatury.
 
+Edytor z rozszerzeniem VS Code w wersji starszej niż `4.2.0` albo z wtyczką Obsidian lub JetBrains w wersji starszej niż `1.2.0` nadal przyjmuje zmiany agenta na żywo, ale ani nie wyświetla, ani nie zachowuje nazw logicznych, powiązań z domeną i wierszy słowników zapisywanych przez agenta – zobacz sekcję [Aktualizacja](./installation.md#updating).
+
 ### Zapisywanie {#saving}
 
 Każdy edytor zapisuje zmiany agenta tak, jak zapisuje twoje.
@@ -51,7 +53,7 @@ Narzędzie `erd_save` najpierw czeka maksymalnie dwie sekundy, aż w edytorze zn
 Wywołanie jest odrzucane z kodem `notSaved`, gdy edytor nie mógł tego potwierdzić lub nie zapisał pliku: VS Code pozostawia kartę niezapisaną, gdy plik zmienił się na dysku, a IDE JetBrains nie mogło go zapisać, na przykład gdy było otwarte okno dialogowe lub gdy pliku nie da się zapisać.
 
 W VS Code i IDE JetBrains narzędzie `erd_save` wywołane dla dokumentu, w którym nie ma już nic do zapisania, kończy się powodzeniem i pozostawia plik bez zmian.
-Tak jest po zapisaniu każdej zmiany, co IDE JetBrains robi samoczynnie, i pozostaje tak, dopóki każda późniejsza zmiana należy do tych, których [blokada](../guide/guides/settings.md#lock) nie dopuszcza do pliku, na przykład przewijanie lub powiększanie przy zablokowanej opcji `Viewport` albo przełączanie kart przy zablokowanej opcji `Canvas Type`. Każda blokada jest domyślnie włączona.
+Tak jest po zapisaniu każdej zmiany, co IDE JetBrains robi samoczynnie, i pozostaje tak, dopóki każda późniejsza zmiana należy do tych, których [blokada](../guide/guides/settings.md#lock) nie dopuszcza do pliku, na przykład przewijanie lub powiększanie przy zablokowanej opcji `Viewport`, przełączanie kart przy zablokowanej opcji `Canvas Type` albo przełączanie ustawienia [Widok nazw](../guide/guides/logical-names.md#name-view) przy zablokowanej opcji `Name View`. Każda blokada jest domyślnie włączona.
 Wywołanie dla pliku, którego IDE JetBrains nie może zapisać, jest odrzucane nawet wtedy.
 
 Gdy edytor zamknie dokument po ostatniej zmianie agenta, następne wywołanie agenta zawiera uwagę, że te zmiany są w pliku tylko wtedy, gdy zostały zapisane przed zamknięciem edytora.
@@ -63,7 +65,7 @@ Polecenie [Cofnij](../guide/guides/undo-redo.md) samego edytora działa odwrotni
 
 Kilka zmian nie tworzy wpisu w historii cofania edytora: `erd_set_database` i `erd_set_database_name` spośród [narzędzi ustawień](./tools.md#settings) oraz `erd_resize_memo`.
 Nie tworzy go też wywołanie `erd_move_table_group`, które przesuwa grupę łącznie o mniej niż 20 pikseli, licząc razem przesunięcie w poziomie i w pionie, choć grupa pozostaje tam, gdzie została przesunięta.
-Nie tworzy go również wywołanie, które niczego nie zmienia: `erd_set_column_primary_key`, `erd_set_column_unique`, `erd_set_column_not_null`, `erd_set_column_auto_increment`, `erd_set_index_unique` lub `erd_set_index_column_order` ustawiające wartość, którą dokument już ma; `erd_add_index_column` z kolumną, która już jest w indeksie; `erd_set_table_group` z tabelami, które już są w tej grupie (lub już nie należą do żadnej, przy argumencie `groupId` o wartości `null`); `erd_move_table_group` do punktu, w którym grupa już się znajduje; `erd_resize_table_group` do prostokąta, który grupa już ma; `erd_sort_tables` w dokumencie bez tabel; albo import z argumentem `mode` o wartości `append`, który nie dodaje żadnej tabeli (w przypadku `erd_import_json` żadnej tabeli ani notatki).
+Nie tworzy go również wywołanie, które niczego nie zmienia: `erd_set_column_primary_key`, `erd_set_column_unique`, `erd_set_column_not_null`, `erd_set_column_auto_increment`, `erd_set_index_unique` lub `erd_set_index_column_order` ustawiające wartość, którą dokument już ma; `erd_add_index_column` z kolumną, która już jest w indeksie; `erd_set_table_group` z tabelami, które już są w tej grupie (lub już nie należą do żadnej, przy argumencie `groupId` o wartości `null`); `erd_move_table_group` do punktu, w którym grupa już się znajduje; `erd_resize_table_group` do prostokąta, który grupa już ma; `erd_sort_tables` w dokumencie bez tabel; `erd_set_table_logical_name` lub `erd_set_column_logical_name` z nazwą logiczną, którą tabela lub kolumna już ma, gdy generowanie na jej podstawie niczego by nie zmieniło; `erd_set_column_domain` z domeną, z którą kolumna jest już powiązana, gdy kolumna ma już typ tej domeny, a [Synchronizacja typu danych w relacjach](../guide/guides/settings.md#relationship-datatype-sync) nie zmieniłaby typu żadnej kolumny wzdłuż jej relacji; `erd_update_word`, `erd_update_term` lub `erd_update_domain` wyłącznie z wartościami, które wiersz już ma, chyba że terminowi bez nazwy fizycznej przekazano argument `name`, a jego słowa składają się na nazwę fizyczną; `erd_derive_physical_names`, gdy każda objęta nim nazwa z nazwą logiczną ma już wartość, którą nadają jej [słowniki](./tools.md#dictionaries), i jest oznaczona jako wygenerowana; albo import z argumentem `mode` o wartości `append`, który nie dodaje żadnej tabeli (w przypadku `erd_import_json` żadnej tabeli ani notatki).
 Narzędzie `erd_undo` pomija takie wywołania i wymienia je w swoim wyniku.
 Inne zmiany, takie jak `erd_change_relationship_type`, `erd_change_relationship_on_delete`, `erd_change_relationship_on_update`, `erd_change_table_group_name`, `erd_change_table_group_color` i `erd_set_ddl_script`, tworzą wpis nawet wtedy, gdy ustawiają wartość, którą dokument już ma.
 
@@ -91,7 +93,7 @@ Odczyt, który nie może połączyć się z hubem edytora, jest odrzucany z kode
 
 ## Headless {#headless}
 
-Gdy żaden edytor nie obsługuje dokumentu, każda edycja wczytuje plik, stosuje zmianę i zapisuje plik z powrotem.
+Gdy żaden edytor nie obsługuje dokumentu, każda edycja wczytuje plik, stosuje zmianę i zapisuje plik z powrotem, zanim zwróci odpowiedź, więc jej wynik podaje `saved: true` – zobacz sekcję [Wyniki](./tools.md#results).
 Zapis trafia do pliku tymczasowego obok dokumentu, o nazwie `.<name>.<id>.tmp`, który następnie go zastępuje, dzięki czemu dokument nigdy nie pozostaje zapisany do połowy, z wyjątkiem opisanego niżej przypadku zapisu w miejscu w systemie Windows.
 
 Przed tym ostatnim krokiem serwer sprawdza, czy plik zmienił się na dysku w trakcie wywołania.
@@ -107,6 +109,8 @@ W systemie Windows obowiązują jeszcze dwie reguły:
 
 - Dokument z własnymi uprawnieniami, innymi niż uprawnienia jego folderu, jest zapisywany w miejscu, a nie zastępowany, aby je zachował, a plik tymczasowy jest potem usuwany. Program, który odczytuje dokument podczas tego zapisu, może natrafić na tekst, którego nie da się sparsować.
 - Pliku, który inny program ma otwarty, nie można zastąpić, więc serwer ponawia próby przez maksymalnie dwie sekundy. Każda próba najpierw ponownie szuka edytora, a edytor, który w międzyczasie zaczął obsługiwać dokument, odrzuca zapis z kodem `hubAppeared` albo, gdy jego hub jest wyłączony, z kodem `blocked`. Jeśli po dwóch sekundach plik nadal jest zajęty, nic nie jest zapisywane, plik jest wczytywany ponownie, a wywołanie kończy się niepowodzeniem z komunikatem cytującym błąd systemowy.
+
+Serwer w wersji starszej niż `1.1.0` odczytuje dokument bez jego nazw logicznych, powiązań jego kolumn z domenami oraz jego słów, terminów i domen, więc pierwsza zmiana, którą zapisze w pliku, je pomija. Zaktualizuj serwer – zobacz sekcję [Aktualizacja](./installation.md#updating).
 
 ## Odrzucenie {#refused}
 
@@ -130,7 +134,7 @@ Rozszerzenie VS Code w wersji starszej niż `3.0.0` i wtyczka JetBrains w wersji
 
 Dokument wskazuje się argumentem `path`, czyli ścieżką bezwzględną lub względną wobec katalogu roboczego serwera.
 
-- Nowe dokumenty mają rozszerzenie `.erd.json`. Narzędzie `erd_open_document` z argumentem `create` tworzy plik, dodając rozszerzenie `.erd.json` do nazwy bez rozszerzenia. Podobnie jak nowy diagram w edytorze, nowy dokument ma włączoną każdą [blokadę](../guide/guides/settings.md#lock), więc przewijanie, powiększanie, przełączanie kart lub wybór innego języka Generatora kodu, stylu nazw albo typu cudzysłowu w edytorze nigdy nie zmienia pliku. Żadne narzędzie nie włącza ani nie wyłącza pojedynczej blokady: robisz to na karcie Ustawienia w edytorze. Narzędzie `erd_import_json` w trybie `replace` zastępuje je wszystkie blokadami dokumentu, który wczytuje – zobacz sekcję [Import](./tools.md#import).
+- Nowe dokumenty mają rozszerzenie `.erd.json`. Narzędzie `erd_open_document` z argumentem `create` tworzy plik, dodając rozszerzenie `.erd.json` do nazwy bez rozszerzenia. Podobnie jak nowy diagram w edytorze, nowy dokument ma włączoną każdą [blokadę](../guide/guides/settings.md#lock), więc przewijanie, powiększanie, przełączanie kart, przełączanie Widoku nazw lub wybór innego języka Generatora kodu, stylu nazw albo typu cudzysłowu w edytorze nigdy nie zmienia pliku. Żadne narzędzie nie włącza ani nie wyłącza pojedynczej blokady: robisz to na karcie Ustawienia w edytorze. Narzędzie `erd_import_json` w trybie `replace` zastępuje je wszystkie blokadami dokumentu, który wczytuje – zobacz sekcję [Import](./tools.md#import).
 - Otwierają się również istniejące pliki `.erd`, `.vuerd` i `.vuerd.json`. Ścieżka z dowolnym innym rozszerzeniem jest odrzucana z kodem `invalidPath`.
 - W systemie Windows ścieżka zawierająca nazwę, której Windows nie zapisuje w podanej postaci, jest odrzucana z kodem `invalidPath`, zanim dokument zostanie odczytany lub zapisany, także przy odczytach: nazwa z dwukropkiem lub innym znakiem, którego Windows nie akceptuje, na przykład `orders:v2.erd`; nazwa urządzenia, na przykład `NUL.erd` lub `CON.erd`, pisana dowolną wielkością liter; albo nazwa kończąca się kropką lub spacją. Zmień nazwę pliku, na przykład używając `-` zamiast `:`.
 - Plik, który nie jest dokumentem możliwym do odczytania przez edytor, na przykład plik z pozostawionymi znacznikami konfliktu scalania, jest odrzucany z kodem `invalidDocument` i pozostaje nietknięty. Nigdy nie jest wczytywany jako pusty diagram i zapisywany z powrotem.

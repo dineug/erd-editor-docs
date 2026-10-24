@@ -1,6 +1,6 @@
 ---
-sidebar_position: 11
-description: Şema SQL sekmesinde diyagramın DDL'ini okuma, seçenekler panelinde veritabanını, tırnak türünü, ifadeleri, başlığı ve tabloları seçme, tablolardan önce ve sonra kendi betiklerinizi ekleme, SQL'i kaydetme veya kopyalama.
+sidebar_position: 12
+description: Şema SQL sekmesinde diyagramın DDL'ini okuma, seçenekler panelinde veritabanını, tırnak türünü, ifadeleri, başlığı, boş açıklamalardaki mantıksal adları ve tabloları seçme, tablolardan önce ve sonra kendi betiklerinizi ekleme, SQL'i kaydetme veya kopyalama.
 ---
 
 # Şema SQL
@@ -20,24 +20,25 @@ Bağlam menüsünü açmak için SQL'e sağ tıklayın:
 - `Options panel`, panel görünürken işaretli olan ve paneli daraltan ya da açan öğe.
 - `Save file`
 
-Bu sekme açıkken Hızlı arama şunları sunar: `Database` ve `Bracket`; yalnızca veritabanının desteklediği seçimleri listeleyen `Schema SQL: Statements` ve `Schema SQL: Header`; paneli daraltan ya da açan `Schema SQL: Options panel`.
+Bu sekme açıkken Hızlı arama şunları sunar: `Database` ve `Bracket`; yalnızca veritabanının desteklediği seçimleri listeleyen `Schema SQL: Statements` ve `Schema SQL: Header`; paneli daraltan ya da açan `Schema SQL: Options panel`.  
+Ne bağlam menüsü ne de Hızlı arama, yalnızca seçenekler panelinde bulunan `Write logical names into empty comments` seçeneğini sunar. [Açıklama olarak mantıksal adlar](#logical-names-as-comments) bölümüne bakın.
 
 SQL, sekme açıldığında yazılır ve panelin seçimlerinden biri, veritabanı adı veya bir betik her değiştiğinde yeniden yazılır. Sekme açıkken tablolarda yapılan bir düzenleme, örneğin bir ortak çalışanın veya bir kodlama ajanının düzenlemesi, sekmeden çıkıp geri döndüğünüzde ya da bunlardan biri değiştiğinde görünür.
 
-[Tablo özelliklerinin](./table-related-functions.md#table-properties) tek bir tablonun DDL'ini gösteren kendi `Schema SQL` sekmesi vardır. Bu sekme her zaman başlık veya betik olmadan düz `CREATE` ifadeleri yazar, seçenekler paneli yoktur ve bağlam menüsü yalnızca `Database` ve `Bracket` öğelerini sunar.
+[Tablo özelliklerinin](./table-related-functions.md#table-properties) tek bir tablonun DDL'ini gösteren kendi `Schema SQL` sekmesi vardır. Bu sekme her zaman başlık veya betik olmadan düz `CREATE` ifadeleri yazar, boş bir açıklamaya asla mantıksal ad yazmaz, seçenekler paneli yoktur ve bağlam menüsü yalnızca `Database` ve `Bracket` öğelerini sunar.
 
 ## Seçenekler paneli {#options-panel}
 
 Panel, her biri kendi başlık yazısının altında olan üç grup tutar:
 
 1. `Saved in the document`: `Database` ve `Bracket`. [Veritabanı ve tırnak](#database-and-bracket) bölümüne bakın.
-2. `This window only`: `Statements`, `Header` ve diyagramda bir [tablo grubu](./table-groups.md) olduğu sürece `Tables`. [İfadeler](#statements), [Başlık](#header) ve [Tablolar](#tables) bölümlerine bakın.
+2. `This window only`: `Statements`, `Header`, `Write logical names into empty comments` ve diyagramda bir [tablo grubu](./table-groups.md) olduğu sürece `Tables`. [İfadeler](#statements), [Başlık](#header), [Açıklama olarak mantıksal adlar](#logical-names-as-comments) ve [Tablolar](#tables) bölümlerine bakın.
 3. `Saved in the document · written as is for every database`: `Before tables` ve `After tables` betikleri. [Önceki ve sonraki betikler](#before-and-after-scripts) bölümüne bakın.
 
 `Save file` ve `Copy` düğmeleri panelin alt kısmında yer alır. [SQL'i kaydetme veya kopyalama](#saving-or-copying-the-sql) bölümüne bakın.
 
 `This window only` altındaki seçimler, onları yaptığınız düzenleyici penceresine aittir. Belgeye kaydedilmez, ortak çalışanlarla paylaşılmaz, geri alma geçmişine de eklenmez ve düzenleyici kapatıldığında ya da yeniden yüklendiğinde sıfırlanır; sekme değiştirmek ise onları korur.  
-`Statements` seçeneği `If not exists`, `Header` seçeneği ise `CREATE + USE` değeriyle başlar. Düzenleyiciyi gömen bir sayfanın [`getSchemaSQL()`](../../api/erd-editor-element.md#getschemasql) yöntemiyle okuduğu SQL ve bir kodlama ajanının okuduğu SQL ise bunun yerine başlık olmadan `Create` ile başlar.
+`Statements` seçeneği `If not exists`, `Header` seçeneği `CREATE + USE` değeriyle başlar, `Write logical names into empty comments` ise kapalı başlar. Düzenleyiciyi gömen bir sayfanın [`getSchemaSQL()`](../../api/erd-editor-element.md#getschemasql) yöntemiyle okuduğu SQL ve bir [kodlama ajanının okuduğu](../../mcp/tools.md#reading-a-document) SQL ise bunun yerine başlık olmadan `Create` ile başlar ve istenmedikçe mantıksal ad yazmaz.
 
 Seçili veritabanının desteklemediği bir seçim, `Not in Oracle` gibi bir `Not in <database>` araç ipucuyla soluk olarak panelde kalır ve ona basmak hiçbir şey yapmaz.  
 SQL bu durumda veritabanının desteklediği en yakın biçimi kullanır ve o biçimin düğmesi basılı görünür: `If not exists` yerine `Create`, `CREATE + USE` yerine `USE` ya da veritabanında `USE` de yoksa `None`, `USE` yerine de `None` kullanılır. Seçiminiz korunur, bu yüzden onu destekleyen bir veritabanına geçmek seçimi geri getirir.
@@ -92,6 +93,21 @@ Başlık yalnızca veritabanı adı basit bir tanımlayıcı olduğu sürece yaz
 Boş ad da dahil olmak üzere başka herhangi bir adla başlık yazılmaz ve PostgreSQL'in `DROP TABLE` ifadesi de bu durumda şema belirtmez. `None` dışında bir başlık etkinken, `Header` altındaki bir bilgi notu bunu bildirir: `Database name "<name>" is not a valid identifier.`  
 Yeni bir diyagramın veritabanı adı boştur, bu yüzden ona bir ad verene kadar panel `Database name "" is not a valid identifier.` bilgi notunu gösterir.
 
+## Açıklama olarak mantıksal adlar {#logical-names-as-comments}
+
+`This window only` altındaki bir aç/kapat düğmesi olan `Write logical names into empty comments`, her veritabanında bir tablonun veya sütunun [mantıksal adını](./logical-names.md), açıklamasının boş olduğu yerde DDL'e yazar.
+
+![Şema SQL panelinde Write logical names into empty comments seçeneğini açma, bunun order_items tablosundaki her sütunun mantıksal adını boş COMMENT değerine yazması ve members açıklamalarının olduğu gibi kalması](/img/demo-schema-sql-logical-names.webp)
+
+- Metin içeren bir açıklama her zaman önceliklidir: Mantıksal ad onun yerini asla almaz ve ona asla eklenmez.
+- Yalnızca boşluklardan oluşan bir açıklama boş sayılır, bu yüzden mantıksal ad onun yerine yazılır. Boş ya da yalnızca boşluklardan oluşan bir mantıksal ad hiçbir şey yazmaz ve o tablo veya sütun yine açıklama almaz.
+- Mantıksal ad, veritabanının açıklama yazdığı yere ve biçimde yazılır, tırnakları da aynı şekilde kaçışlanır. [Açıklamalar](#comments) bölümüne bakın.
+
+Örneğin MySQL'de, mantıksal adı `Member ID` olan ve açıklaması olmayan bir `id` sütunu `COMMENT 'Member ID'` ile yazılır, mantıksal adı `Email` ve açıklaması `Sign-in address` olan bir `email` sütunu ise `COMMENT 'Sign-in address'` değerini korur.
+
+`Statements` ve `Header` gibi bu aç/kapat düğmesi de pencereye aittir ve kapalı başlar. [Seçenekler paneli](#options-panel) bölümüne bakın.  
+Bir içe aktarma, böyle bir açıklamayı asla mantıksal ad olarak geri okumaz. [Açıklamalar](./file-import-export.md#comments) bölümüne bakın.
+
 ## Tablolar {#tables}
 
 Diyagramda gösterilsin ya da gizlensin en az bir [tablo grubu](./table-groups.md) olduğu sürece, `This window only` altında her seçim için bir onay kutusuyla `Tables` görünür:
@@ -125,22 +141,24 @@ Klavye odağı olmayan bir alan, bir ortak çalışanın veya bir [kodlama ajan�
 
 ## SQL'i kaydetme veya kopyalama {#saving-or-copying-the-sql}
 
-Panelin alt kısmındaki veya bağlam menüsündeki `Save file`, tam olarak sekmenin gösterdiği SQL'i geçerli veritabanı, tırnak, ifadeler, başlık, tablolar ve betiklerle birlikte `<database name>-<timestamp>.sql` adıyla kaydeder. Diğer tüm dışa aktarmalar gibi adlandırılır ve kaydedilir. [Dışa aktarma](./file-import-export.md#exporting) bölümüne bakın.
+Panelin alt kısmındaki veya bağlam menüsündeki `Save file`, tam olarak sekmenin gösterdiği SQL'i geçerli veritabanı, tırnak, ifadeler, başlık, mantıksal ad açıklamaları, tablolar ve betiklerle birlikte `<database name>-<timestamp>.sql` adıyla kaydeder. Diğer tüm dışa aktarmalar gibi adlandırılır ve kaydedilir. [Dışa aktarma](./file-import-export.md#exporting) bölümüne bakın.
 
 Tuvalin bağlam menüsündeki veya Hızlı aramadaki `Export` ▸ `Schema SQL` tek başına hiçbir şey kaydetmez.  
 Bu sekmeye geçer, daraltılmış olsa bile seçenekler panelini açar ve klavye odağını `Save file` düğmesine verir, böylece `Enter` tuşuna basmak dosyayı kaydeder.
 
 Panelin alt kısmındaki `Copy` ya da kodun üzerine geldiğinizde sağ üst köşesinde beliren kopyalama düğmesi SQL'i kopyalar.  
-Onay işaretli bir `Copied!` bildirimi bunu iki saniye boyunca doğrular. Tarayıcı veya ana uygulama panoya erişimi reddederse, bunun yerine uyarı işaretli bir `Couldn't copy to the clipboard` bildirimi durumu bildirir. Yeniden kopyalamak yeni bir bildirim eklemek yerine mevcut bildirimi değiştirir.  
+Onay işaretli bir `Copied!` bildirimi bunu iki saniye boyunca doğrular. Tarayıcı veya ana uygulama panoya erişimi reddederse, bunun yerine uyarı işaretli bir `Couldn't copy to the clipboard` bildirimi durumu beş saniye boyunca bildirir. Yeniden kopyalamak yeni bir bildirim eklemek yerine mevcut bildirimi değiştirir.  
 SQL ayrıca seçilebilir, bu yüzden yalnızca bir kısmını alabilirsiniz.
 
 ## DDL'in yazdıkları {#what-the-ddl-writes}
 
 Bu kurallar düzenleyicinin Şema SQL yazdığı her yerde geçerlidir: bu sekmede ve dosyasında, ayrıca düzenleyiciyi gömen bir sayfanın veya bir kodlama ajanının okuduğu SQL'de.  
-Tablo özelliklerinin `Schema SQL` sekmesi, gösterdiği tek tablo için bu kurallara uyar. `CREATE TABLE` ifadesinin içinde yer alan SQLite yabancı anahtarları dışında yabancı anahtar yazmaz, Oracle dizisi veya tetikleyicisi de yazmaz.
+Tablo özelliklerinin `Schema SQL` sekmesi, gösterdiği tek tablo için bu kurallara uyar. Oracle dizisi veya tetikleyicisi yazmaz, `CREATE TABLE` ifadesinin içinde yer alan SQLite yabancı anahtarları dışında yabancı anahtar da yazmaz. PostgreSQL, Oracle ve MSSQL'in bir tablodan sonra koyduğu açıklama ifadelerini de yazmaz, bu yüzden bu üç veritabanında hiçbir açıklama göstermez.
 
 Bölümler, aralarında birer boş satırla şu sırayla gelir: başlık, önceki betik, `DROP` ifadeleri, tablolar ve sonraki betik. Tablolar ad sırasına göre yazılır.  
 Tablosu ve betiği olmayan bir diyagram, bir başlık seçili olsa bile hiçbir şey yazmaz.
+
+Tablolar ve sütunlar, [Ad görünümü](./logical-names.md#name-view) ne gösterirse göstersin fiziksel adlarıyla yazılır. Bir değer alanına bağlı sütun, değer alanının belirlediği kendi veri türüyle yazılır. [Değer alanları ve veri türleri](./dictionary.md#domains-and-data-types) bölümüne bakın.
 
 ### Otomatik artırma {#auto-increment}
 
@@ -181,7 +199,28 @@ Bir sütunun varsayılan değeri yazdığınız gibi yazılır, ancak veritaban�
 - PostgreSQL yalnızca parantezlerin dışında `AT TIME ZONE`, `AND`, `OR`, `IS`, `IN`, `LIKE`, `COLLATE` veya `= ANY` gibi bir sözcük içeren bir ifadeyi parantez içine alır, örneğin `(now() AT TIME ZONE 'utc')`.
 - MSSQL, Oracle, Snowflake ve Databricks her varsayılan değeri yazıldığı gibi yazar.
 
+### Açıklamalar {#comments}
+
+Bir tablonun veya sütunun boş olmayan açıklaması ya da [`Write logical names into empty comments`](#logical-names-as-comments) seçeneğinin onun yerine yazdığı mantıksal ad, her veritabanının açıklama yazdığı şekilde yazılır:
+
+- MySQL ve MariaDB bunu satır içi yazar: Bir sütun `COMMENT 'Member ID'` ile biter, tablo da `) COMMENT 'Members';` ile kapanır, MySQL'in `If not exists` ifade grubunda da.
+- Snowflake bir sütunun açıklamasını satır içi, `COMMENT 'Member ID'` olarak, tablonunkini ise kapanış parantezinden sonra kendi satırında, `COMMENT = 'Members';` olarak yazar.
+- Databricks bir sütunun açıklamasını satır içi, tablonunkini ise `USING DELTA` ifadesinden sonra `COMMENT 'Members';` olarak yazar.
+- PostgreSQL, tablonun `CREATE TABLE` ifadesinin hemen ardından `COMMENT ON TABLE member IS 'Members';` ve `COMMENT ON COLUMN member.id IS 'Member ID';` yazar. Oracle aynı ifadeleri tablodan, tablonun benzersiz kısıtlamalarından ve otomatik artırma dizisi ile tetikleyicisinden sonra yazar.
+- MSSQL, tablodan ve benzersiz kısıtlamalarından sonra her tablo ve her sütun için, her birinin ardından `GO` gelen bir çağrı yazar: `EXECUTE sys.sp_addextendedproperty 'MS_Description', N'Members', 'schema', 'dbo', 'table', 'member'`, bir sütun için de buna `'column', 'id'` eklenir.  
+  Metin `N'…'` biçiminde bir ulusal karakter sabitidir, bu yüzden SQL Server, Korece gibi veritabanının kod sayfası dışındaki metni soru işaretleri olarak saklamak yerine korur.  
+  `Bracket` değeri `None` iken `sales.users` adlı bir tablo `sales` şemasını ve `users` tablosunu verir, köşeli parantezleri ve çift tırnakları atılan `[sales].[users]` ve `"sales"."users"` da aynısını verir. Şeması olmayan bir ad `dbo` içindedir. `shop.sales.users` örneğindeki gibi şemadan önce gelen bir kısım, o veritabanının yordamını (`shop.sys.sp_addextendedproperty`) çalıştırır. Başka herhangi bir `Bracket` değerinde adın tamamı `dbo` içindeki tablodur.
+- SQLite açıklama tutmaz, bu yüzden her açıklamayı açıkladığı öğenin üstünde bir `--` satırı olarak yazar: `CREATE TABLE member` üstünde `-- Members`, sütunun üstünde de `-- Member ID`.
+
+Tırnak içindeki bir açıklamanın içindeki tırnak, `'it''s'` ve `N'it''s'` örneklerindeki gibi iki kez yazılır, MSSQL çağrılarının geçirdiği adlardaki tırnak da öyle. Databricks ise bunun yerine bir tırnağı ve ters eğik çizgiyi, her Spark sürümünün okuduğu biçim olan `'it\'s'` örneğindeki gibi ters eğik çizgiyle kaçışlar. SQLite'ın `--` satırları tırnak içinde değildir, bu yüzden tırnağı yazıldığı gibi korur: `-- it's`.  
+Bunun dışında metin, satır sonları dahil yazıldığı gibi yazılır, yalnızca iki veritabanı bunun istisnasıdır:
+
+- Oracle boş satırları dışarıda bırakır (yalnızca boşluk veya sekme içeren bir satır boş sayılır), çünkü SQL\*Plus bir ifadeyi boş bir satırda sonlandırır ve geri kalanını atlar. `Members`, bir boş satır ve `Active only` içeren bir tablo açıklaması, `COMMENT ON TABLE member IS 'Members` ve bir sonraki satırda `Active only';` olarak yazılır.
+- SQLite art arda gelen satır sonlarını tek bir boşluk olarak yazar, çünkü bir satır sonu `--` satırını sonlandırır ve geri kalanını SQL olarak çalıştırır. Aynı açıklama `-- Members Active only` olarak yazılır.
+
+Bu açıklamaların içe aktarmada nasıl geri okunduğu [Açıklamalar](./file-import-export.md#comments) bölümünde anlatılır.
+
 ## Salt okunur düzenleyiciler {#read-only-editors}
 
-`readonly` bir düzenleyicide sekme her zamanki gibi çalışır: `Database` ve `Bracket` gösterilen SQL'i yine değiştirir, `Statements`, `Header` ve `Tables` yine çalışır, `Save file` ve `Copy` de SQL'i yine kaydeder ve kopyalar.  
+`readonly` bir düzenleyicide sekme her zamanki gibi çalışır: `Database` ve `Bracket` gösterilen SQL'i yine değiştirir, `Statements`, `Header`, `Write logical names into empty comments` ve `Tables` yine çalışır, `Save file` ve `Copy` de SQL'i yine kaydeder ve kopyalar.  
 Yalnızca iki betik alanı salt okunurdur.

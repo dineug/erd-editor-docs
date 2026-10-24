@@ -72,7 +72,9 @@ export default {
     await d.page.keyboard.press('ControlOrMeta+Alt+Digit2');
     await connect(d, 'orders', 'payments');
     await d.page.mouse.click(700, 470);
-    await d.moveTo(700, 470, 0);
+    // The pointer rests right of the floating toolbar, which reaches x 752
+    // since 4.2.0, so neither glide crosses it.
+    await d.moveTo(800, 455, 0);
     await d.sleep(300);
   },
   async scenario(d) {
@@ -117,7 +119,7 @@ export default {
     });
     await d.click(apply.x, apply.y, { duration: 450 });
     await d.sleep(350);
-    await d.moveTo(700, 470, 380);
+    await d.moveTo(800, 455, 380);
     await d.sleep(1300);
   },
 };

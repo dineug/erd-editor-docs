@@ -77,8 +77,8 @@ Commencez une relation depuis le menu contextuel, depuis la [barre d’outils du
 - One N : `Ctrl + Alt + 4` (Windows/Linux) ou `⌘ + ⌥ + 4` (Mac)
 
 Dès qu’un type est actif, le curseur change. Cliquez d’abord sur la table parente, puis sur la table enfant.  
-La table parente reçoit une clé primaire si elle n’en a pas, et pour chaque colonne de clé primaire de la table parente, la table enfant reçoit une colonne de clé étrangère `Not Null` avec le même type de données, la même valeur par défaut et le même commentaire.  
-Une clé serial fait exception : sa clé étrangère prend le type entier que stocke le serial, comme `integer` pour `serial4` (voir [Relations identifiantes](./relationship-editing.md#identifying-relationships)).  
+La table parente reçoit une clé primaire si elle n’en a pas, et pour chaque colonne de clé primaire de la table parente, la table enfant reçoit une colonne de clé étrangère `Not Null` avec le même type de données, la même valeur par défaut, le même commentaire, le même [nom logique](./logical-names.md) et le même [domaine](./dictionary.md#domains-and-data-types).  
+Une clé serial fait exception : sa clé étrangère prend le type entier que stocke le serial, comme `integer` pour `serial4`, et ne lie alors aucun domaine (voir [Relations identifiantes](./relationship-editing.md#identifying-relationships)).  
 Chaque colonne de clé étrangère est nommée d’après sa clé : un nom d’un seul mot comme `id` est précédé du nom de la table parente (`user_id`), un nom de plusieurs mots comme `member_id` est conservé, et un nom que la table enfant possède déjà est numéroté, par exemple `user_id_2` (voir [Noms des colonnes de clé étrangère](./relationship-editing.md#foreign-key-column-names)).  
 Cliquer deux fois sur une même table trace une relation autoréférencée.  
 Une nouvelle relation commence avec `On Delete` et `On Update` tous deux à `Not set` ; modifiez-les depuis son menu contextuel (voir [ON DELETE et ON UPDATE](./relationship-editing.md#on-delete-and-on-update)).  
@@ -91,7 +91,8 @@ Une fois la table parente choisie, placer le pointeur sur une table où la relat
 
 La table parente affiche elle aussi les boutons dès que le pointeur s’est un peu éloigné de l’endroit où vous avez cliqué dessus, si bien qu’une relation autoréférencée peut aussi être associée à des colonnes existantes.  
 Un doigt ne permet pas le survol, donc lorsque vous tracez avec un doigt, les boutons ne s’affichent jamais et toucher la table enfant trace aussitôt la relation ; un stylet les affiche comme le fait une souris.  
-Si la table parente a perdu sa clé primaire au moment où vous atteignez la table enfant, par exemple à la suite d’une annulation ou de la modification d’un collaborateur, `Create new columns` est grisé avec l’info-bulle `<parent> has no primary key to copy`, et un clic sur la table enfant termine le tracé sans rien tracer.
+Si la table parente a perdu sa clé primaire au moment où vous atteignez la table enfant, par exemple à la suite d’une annulation ou de la modification d’un collaborateur, `Create new columns` est grisé avec l’info-bulle `<parent> has no primary key to copy`, et un clic sur la table enfant termine le tracé sans rien tracer.  
+L’info-bulle nomme la table parente comme le fait l’[affichage des noms](./logical-names.md#beyond-the-canvas).
 
 ![Tracé d’une relation One N avec ⌘ + ⌥ + 4, puis d’une relation Zero N depuis la barre d’outils du canevas, la table enfant entourée avec ses boutons Map to existing columns et Create new columns](/img/demo-relationship.webp)
 

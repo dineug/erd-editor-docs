@@ -83,7 +83,10 @@ Erreplikak aplikatu egiten du, eta emaitza bere aldean serializatzen du.
 
 `4.0.0` bertsiotik aurrera, hasieratu erreplika editorearen `runtimeValue` propietatetik, goian bezala, eta ez gordetako fitxategitik edo editorearen `value` propietatetik.  
 Fitxategian ez daude gorde zenetik egindako edizioak, eta `value` propietatean ez daude saioan kendutako entitateak.  
-Kendutako taula bat gabe hasieratutako erreplika batek, editore batek kentzea desegiten duenean, taula izenik eta zutaberik gabe itzultzen du, eta horrela gordetzen du.
+Kendutako taula bat gabe hasieratutako erreplika batek, editore batek kentzea desegiten duenean, taula izenik eta zutaberik gabe itzultzen du, eta horrela gordetzen du.  
+`4.2.0` bertsiotik aurrera, gauza bera gertatzen da [Hiztegia](../../guide/guides/dictionary.md) fitxako orri batetik kendutako hitz, termino edo domeinu batekin.  
+Editore batek kentzea desegiten duenean, errenkada gabe hasieratutako erreplika batek hutsik zerrendatzen du berriro, eta `value` balioak errenkada huts bat kanpoan uzten duenez, erreplikak dokumentua hura gabe gordetzen du.  
+Domeinu baten kasuan, hari lotuta zeuden zutabeak eta terminoak ere loturarik gabe geratzen dira erreplika horretan, ez baitzituen inoiz loturak eduki eta desegiteak ez baititu bidaltzen.
 
 ## InjectEngineContext {#injectenginecontext}
 
@@ -91,6 +94,8 @@ Kendutako taula bat gabe hasieratutako erreplika batek, editore batek kentzea de
 
 Kate bat pixeletan neurtzen du.  
 Biltegiak ez du DOMik; beraz, ezin du testua berak neurtu, eta funtzio honen bidez birkalkulatzen ditu zutabeen zabalerak izen bat, datu mota bat, balio lehenetsi bat edo iruzkin bat aldatzen den bakoitzean.  
+`4.2.0` bertsiotik aurrera, horren barruan dago taula baten edo zutabe baten [izen logikoa](../../guide/guides/logical-names.md) ere.  
+Zutabe baten Domain gelaxka neurtzen du, zutabeak lotzen duen domeinuaren izena erakusten duena, zutabeak domeinu bat lotzen duen edo haren lotura kentzen duen bakoitzean, eta domeinu hori gehitzen, haren izena aldatzen edo kentzen den bakoitzean.  
 Gainera, taula eta zutabe guztiak berriro neurtzen ditu [setInitialValue](#setinitialvalue) metodoak dokumentu bat kargatzen duen bakoitzean.  
 `4.0.0` bertsiotik aurrera, zabalerak [runtimeValue](#runtimevalue-getter) propietatean bakarrik gordetzen dira, inoiz ez `value` propietatean.  
 Hortaz, bertsio honek gordetako dokumentu bat berriro irakurtzean `value` bera lortzen da, bytez byte, non gorde zen eta han testua nola neurtzen zen gorabehera.
@@ -146,11 +151,14 @@ const data = replicationStore.value;
 
 `4.0.0` bertsiotik aurrera, `value` biltegiratze-forma da: fitxategi batek gordetzen duen dokumentua, elementuaren [value](../erd-editor-element.md#value) propietateak itzultzen duen testu bera.  
 Entitate biziak soilik ditu, ordena finko batean, kendutakoak, pilatze-ordena eta karga batek berriro kalkulatzen duen ezer gabe, hala nola [toWidth](#towidth) funtzioak neurtzen dituen zabalerak.  
-Bi zuriuneko koska du eta lerro-jauzi batekin amaitzen da; beraz, dokumentu berak beti byte berak ematen ditu.  
+`4.2.0` bertsiotik aurrera, izen logikoak, izen bakoitza hiztegietatik eratorria den ala ez, domeinu-loturak, eta [Hiztegia](../../guide/guides/dictionary.md) fitxako hitzak, terminoak eta domeinuak ere baditu.  
+`4.2.0` bertsiotik aurrera, kanpoan uzten ditu, halaber, entitate baten testu-eremu huts bakoitza, ezer ez duen `doc` zerrenda eta bilduma bakoitza, eta `collections` bera, bilduma guztiak hutsik daudenean.  
+Bi zuriuneko koska du, hiztegiko errenkada bakoitza bere lerroan, eta lerro-jauzi batekin amaitzen da; beraz, dokumentu berak beti byte berak ematen ditu.  
 Zer duen jakiteko, ikus [Biltegiratze-forma eta exekuzio-garaiko balioa](./schema.md#storage-form-and-runtime-value).
 
 [Blokeoa](../../guide/guides/settings.md#lock) aktibatuta duen ezarpen bakoitza blokeatu zen balioarekin idazten da, eta gainerako ezarpen guztiak dauden bezala.  
 `Viewport` blokeoak ikuspegiaren jatorria eta zoom-maila batera hartzen ditu, eta fitxak, Kode-sortzailearen lengoaiak, izenen bi idazkerek eta mugatzaile motak blokeo bana dute.  
+`4.2.0` bertsiotik aurrera, [Izenen ikuspegiak](../../guide/guides/logical-names.md#name-view) ere badu berea, eta haren `Name View` blokeoa aktibatuta dago dokumentu berri batean.  
 Blokeoek dokumentuaren `ignoreSaveSettings` eremua ordezten dute; `4.0.0` bertsiotik aurrera, eremu hori ez da irakurtzen ez idazten.  
 `4.0.0` bertsioa baino lehen, `value` biltegiak zuen bezalako dokumentu osoa zen, eremu horren korritze- eta zoom-bitak aplikatuta.
 
@@ -180,8 +188,10 @@ Biltegiratze-forma, exekuzio-garaiko balio bat edo aurreko bertsio batek gordeta
 Kate huts batek, edo kate ez den edozerk, dokumentu berri eta huts bat kargatzen du errore bat jaurti beharrean.  
 Inoiz baliorik jaso ez duen biltegi bat dokumentu berri berarekin hasten da.  
 `4.0.0` bertsiotik aurrera, dokumentu horrek [blokeo](../../guide/guides/settings.md#lock) guztiak aktibatuta ditu; beraz, haren `value` propietateak hasieran zituen ikuspegia, fitxa, Kode-sortzailearen lengoaia, izenen idazkerak eta mugatzaile mota gordetzen ditu, erreplikatzen dituen editoreek korritu, zooma aldatu, fitxaz aldatu edo ezarpen horiek aldatu arren. `3.10.0` bertsioan ez zuen gordetzen ez korritzea ez zooma, eta horren aurretik biak gordetzen zituen.  
+`4.2.0` bertsiotik aurrera, bere Izenen ikuspegia ere mantentzen du, `Physical Names`, editoreek beraiena aldatzen duten bitartean.  
 Gordetako dokumentu batek bertan aipatzen diren blokeoak mantentzen ditu.  
 Bat ere aipatzen ez duena, hau da, `4.0.0` bertsioa baino lehen gordetako edozein dokumentu, v2 dokumentuak barne, blokeo guztiak aktibatuta kargatzen da: ikuspegiaren jatorria `0, 0` posizioan, zoom-maila `1` balioan eta ERD fitxa hautatuta, gorde zuena edozein dela ere, eta Kode-sortzailearen lengoaia, izenen idazkerak eta mugatzaile mota gorde zituen bezala.  
+`4.2.0` bertsioa baino lehen gordetako dokumentu batek ez du `Name View` blokeorik aipatzen; beraz, blokeo hori aktibatuta eta `Physical Names` ikuspegian kargatzen da, gainerako blokeo guztiak desaktibatuta gordetakoa ere bai.  
 `4.0.0` bertsiotik aurrera, `setInitialValue` metodoak aurreko dokumenturako gordetako elkarlaneko erregistroak ere baztertzen ditu, elementuaren [setInitialValue](../erd-editor-element.md#setinitialvalue) metodoak egiten duen bezala.  
 JSON ez den testuak ere, adibidez bateratze-gatazken markekin geratu den fitxategi batek, ez du errorerik jaurtitzen: analisi-errorea kontsolan erregistratzen da soilik, dokumentua hustu egiten da, eta ezarpenak zeuden bezala geratzen dira.
 
@@ -221,15 +231,19 @@ Harpidetza kentzeko, deitu itzulitako funtzioari.
 
 [Blokeo](../../guide/guides/settings.md#lock) batek `value` propietatetik kanpo uzten duen aldaketak ere `change` gertaera abiarazten du, `changed` propietatea `false` dela; beraz, idatzi soilik `changed` propietatea `true` denean.  
 Halakoak dira korritze bat edo zoom bat `Viewport` blokeatuta dagoen bitartean, fitxa-aldaketa bat `Canvas Type` blokeatuta dagoen bitartean, eta Kode-sortzailearen lengoaiaren, izenen idazkera baten edo mugatzaile motaren aldaketa bat bere blokeoa aktibatuta dagoen bitartean.  
+`4.2.0` bertsiotik aurrera, halakoa da Izenen ikuspegiaren aldaketa bat ere `Name View` blokeatuta dagoen bitartean: editoreak bidali egiten du oraindik, baina erreplikak baztertu egiten du, beste editoreek bezala.  
+Irakurtzeko soilik dagoen editore batean egindako Izenen ikuspegiaren aldaketa bat modu berean baztertzen da, haren blokeoa edozein dela ere.  
 Elementuaren [change](../erd-editor-element.md#change) gertaerak halako aldaketa kanpoan uzten du, baina erreplikak jakinarazi egiten du hala ere.  
-Blokeo guztiak aktibatuta daude dokumentu berri batean eta `4.0.0` bertsioa baino lehen gordetako batean.  
-`Viewport` desblokeatuta dagoela, korritze batek edo zoom batek `value` aldatzen du, eta `Canvas Type` desblokeatuta dagoela, editorearen beste fitxa bat irekitzeak ere bai.  
+Blokeo guztiak aktibatuta daude dokumentu berri batean eta `4.0.0` bertsioa baino lehen gordetako batean, eta `Name View` blokeatuta dago `4.2.0` bertsioa baino lehen gordetako edozein dokumentutan.  
+`Viewport` desblokeatuta dagoela, korritze batek edo zoom batek `value` aldatzen du; `Canvas Type` desblokeatuta dagoela, editorearen beste fitxa bat irekitzeak ere bai; eta `Name View` desblokeatuta dagoela, irakurtzeko soilik ez dagoen editore batetik egindako Izenen ikuspegiaren aldaketa batek ere bai.  
 Blokeo bat aktibatzeak edo desaktibatzeak ere `value` aldatzen du.
 
 `4.0.0` bertsiotik aurrera, `changed` propietateak biltegiratze-forma alderatzen du, eta horrek ez ditu ez kendutako entitateak ez pilatze-ordena.  
-Hortaz, `change` gertaera bakar baten barruan gehitu eta berriro kendutako taula bat, beste lankide batek kendutako entitate batean egindako edizio bat eta pilatze-ordena soilik aldatzen duen birbidalitako karga bat, guztiak ere `changed` propietatea `false` dela iristen dira.
+Hortaz, `change` gertaera bakar baten barruan gehitu eta berriro kendutako taula bat, beste lankide batek kendutako entitate batean egindako edizio bat eta pilatze-ordena soilik aldatzen duen birbidalitako karga bat, guztiak ere `changed` propietatea `false` dela iristen dira.  
+`4.2.0` bertsiotik aurrera, gauza bera gertatzen da Hiztegia fitxako orri batean gehitu eta hutsik utzitako errenkada batekin, biltegiratze-formak ezer ez duen errenkada kanpoan uzten baitu.
 
 `changed` propietateak ez du inoiz zure gordetako fitxategiarekin alderatzen, eta fitxategi hori kargatu bezain laster `value` propietatetik desberdina izan daiteke: aurreko bertsio batek gordetako fitxategi bat desberdina da, v2 fitxategi bat barne, eta baita byte-ordenaren marka batekin hasten den fitxategi bat eta eskuz editatutako bat ere.  
+`4.2.0` bertsiotik aurrera, horien artean dago `4.0.0` edo `4.1.0` bertsioak gordetako fitxategi bat ere, `value` balioak kanpoan uzten baititu halako fitxategi batek dituen entitateen testu-eremu hutsak eta `doc` zerrenda eta bilduma hutsak.  
 Halako fitxategi batekin byteak alderatzeak blokeo batek kanpoan uzten duen korritze bat ere edizio gisa zenbatuko luke.  
 `changed` propietatea `true` duen lehen `change` gertaerak halako fitxategia biltegiratze-forman itzultzen du; beraz, hura idazteak fitxategia behin berridazten du.  
 Bertsio honek gordetako fitxategi bat ez da desberdina, non gorde zen gorabehera, [toWidth](#towidth) atalean azaltzen den bezala.  
@@ -260,6 +274,14 @@ Exekutatu erreplika editoreen bertsio berean edo berriago batean.
 `4.1.0` bertsioak ez du ekintza motarik gehitzen eta `@dineug/erd-editor/engine.js` zegoen bezala uzten du; beraz, `4.0.0` bertsioko erreplika batek `4.1.0` bertsioko editore batek bidaltzen duen aldaketa oro gordetzen du, `4.1.0` bertsioko erreplika batek egiten duen bezalaxe.  
 `4.1.0` bertsiotik aurrera, [Bilatu eta ordeztu](../../guide/guides/find-and-replace.md#replacing) funtzioko `Replace` eta `Replace All` botoiek indizeen eta taula-taldeen izena ere aldatzen dute, `4.0.0` bertsioko erreplika batek dagoeneko gordetzen dituen `index.changeName` eta `tableGroup.changeName` ekintzen bidez.  
 [Arakatzailearen](../../guide/guides/explorer.md) egoera propioa ez da inoiz bidaltzen, eta hark eragindako fitxa-aldaketa edo korritze bat beste edozein fitxa-aldaketa edo korritze bezala iristen da; ikus [Elkarlaneko edizioa](./collaborative-editing.md).
+
+`4.2.0` bertsiotik aurrera, gordetako ekintzen artean daude, halaber, `table.changeLogicalName`, `table.changeNameDerived`, `column.changeLogicalName`, `column.changeDomain`, `column.changeNameDerived`, `settings.changeNameViewMode`, eta `dictionary.add`, `dictionary.update` eta `dictionary.remove`, [Hiztegia](../../guide/guides/dictionary.md) fitxako orrietako edizio, ordenatze eta CSV inportazio guztiak daramatzatenak.  
+Izenen ikuspegiaren aldaketetatik, erreplika batek irakurtzeko soilik ez dagoen editore batek `Name View` desblokeatuta dagoen bitartean egiten dituenak bakarrik aplikatzen ditu, eta gainerakoak baztertzen ditu (ikus [on@change](#onchange)).  
+Aurreko bertsio bateko biltegi batek ekintza horiek guztiak baztertzen ditu; beraz, [izen logikoak](../../guide/guides/logical-names.md), domeinu-loturak, izen bakoitza hiztegietatik zetorren ala ez, hitzak, terminoak eta domeinuak, eta Izenen ikuspegia galtzen ditu.  
+Saioan dagoen `4.2.0` bertsioa baino lehenagoko editore batek horren zati bat ken diezaioke oraindik `4.2.0` bertsioko erreplika bati.  
+Editore horretan egindako SQL eskema, GraphQL, DBML edo AML `Import` ekintza batek, ez ordea `Import and Add` batek, erreplikaren hitzak, terminoak eta domeinuak husten ditu.  
+Editore horrek karga bat, `Import` ekintza bat edo `clear()` dei bat desegiteak dokumentuaren bere kopia kargatzen du erreplikan, izen logikorik, domeinu-loturarik eta hiztegirik gabe; ikus [Bertsioak nahastea](./collaborative-editing.md#mixing-releases).  
+`@dineug/erd-editor/engine.js` azpibideak lehen bezala esportatzen ditu `createReplicationStore`, `ReplicationStore` eta `ReplicationChange`, eta `createReplicationStore` funtzioak testuinguru bera hartzen du.
 
 `4.0.0` bertsiotik aurrera, bi metodoek `editor.mergeLWW` ere aplikatzen dute; ekintza horrek beste editore bat saiora sartzen denean editore batek erantzun gisa bidaltzen dituen elkarlaneko erregistroak daramatza, eta, horri esker, erreplikak editoreek bezala ebazten ditu aldi bereko edizioak.  
 Ez du `value` propietatearen byte bakar bat ere aldatzen, eta ez du `change` gertaerarik abiarazten.  

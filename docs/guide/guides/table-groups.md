@@ -1,5 +1,5 @@
 ---
-sidebar_position: 5
+sidebar_position: 6
 description: Gather related tables in a named, colored box behind them; create, name, color, move, resize, and remove groups, go to them from the Explorer, change which tables they hold, hide them, and carry them through Auto Layout, Schema SQL, and DBML.
 ---
 

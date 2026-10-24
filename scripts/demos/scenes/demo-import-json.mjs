@@ -58,8 +58,7 @@ export default {
     await d.sleep(400);
 
     // Opened over the draft's left edge, so the json row of the submenu ends
-    // right of the draft, in the gap between order_items and products of the
-    // diagram that replaces it.
+    // right of the draft.
     await d.rightClick(320, 70, { duration: 320 });
     await d.sleep(300);
     const json = await hoverMenuPath(d, ['Import', 'json'], { pause: 250, lastPause: 120 });
@@ -72,10 +71,12 @@ export default {
       d.click(p.x, p.y),
     ]);
     await d.shot('picking');
-    // The moment a person spends picking the file. The pointer rises a little,
-    // right of the draft, to a spot clear of every table and connector of the
-    // diagram that replaces it.
-    await d.moveTo(p.x, p.y - 52, 360);
+    // The moment a person spends picking the file. The pointer drops a little,
+    // right of the draft, to the open space under products of the diagram
+    // that replaces it, clear of every table and connector (a connector is
+    // 94 px away). Straight up from the json row lies on order_items ->
+    // products since 4.2.0's taller canvas menu.
+    await d.moveTo(690, 420, 360);
     await d.sleep(90);
     await chooser.setFiles({
       name: 'shop-2026-09-14T10_30_00.erd.json',

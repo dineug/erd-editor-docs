@@ -38,21 +38,23 @@ const SHEET_HEADER = ['Name', 'Type', 'Not Null', 'UQ', 'AI', 'Comment'];
 
 export default {
   name: 'demo-copy-column-to-sheet',
-  width: 960,
-  height: 540,
+  // The editor keeps 560px, so the 544px floating toolbar fits whole; the
+  // sheet's 474px of columns fill the rest.
+  width: 1040,
+  height: 585,
   async setup(d) {
     await seedSQL(d, SQL, {
-      tables: { members: { x: 24, y: 200 } },
+      tables: { members: { x: 48, y: 220 } },
       settings: { databaseName: 'shop', show: SHOW },
     });
     await installSheet(d, {
-      editorWidth: 480,
+      editorWidth: 560,
       columns: SHEET_COLUMNS,
       cells: [SHEET_HEADER],
       active: [0, 0],
       headerRow: true,
     });
-    await d.moveTo(250, 140, 50);
+    await d.moveTo(280, 140, 50);
   },
   async scenario(d) {
     await d.sleep(600);
@@ -62,7 +64,7 @@ export default {
     const phone = await nameCell(d, 'members', 'phone');
     await d.click(id.x, id.y, { duration: 800 });
     await d.sleep(400);
-    await keysAt(d, 240);
+    await keysAt(d, 280);
     await d.holding(
       ['Shift'],
       async () => {
@@ -79,10 +81,10 @@ export default {
     const a2 = await sheetCell(d, 1, 0);
     await d.click(a2.x + 24, a2.y + a2.height / 2, { duration: 900 });
     await d.sleep(450);
-    await keysAt(d, 720);
+    await keysAt(d, 800);
     await d.press('ControlOrMeta+KeyV');
     await d.sleep(500);
-    await d.moveTo(760, 330, 700);
+    await d.moveTo(840, 330, 700);
 
     const rows = (await sheetData(d)).slice(1, 5).map(row => row.join('|'));
     const expected = [

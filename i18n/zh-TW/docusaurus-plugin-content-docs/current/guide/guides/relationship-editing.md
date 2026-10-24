@@ -1,6 +1,6 @@
 ---
-sidebar_position: 6
-description: 刪除關聯、變更其類型、設定其 ON DELETE 和 ON UPDATE 動作、使用「對應欄位」將其對應到現有欄位、解讀連接線的表示法、處理 N:M 關聯和識別關聯，以及了解新外鍵欄位的命名方式。
+sidebar_position: 7
+description: 刪除關聯、變更其類型、設定其 ON DELETE 和 ON UPDATE 動作、使用「對應欄位」將其對應到現有欄位、解讀連接線的表示法、處理 N:M 關聯和識別關聯，以及了解新外鍵欄位會從其鍵複製哪些內容及其命名方式。
 ---
 
 # 編輯關聯
@@ -85,6 +85,9 @@ Snowflake 的結構描述 SQL 還會寫出一則註解，列出其省略的每�
 
 對話方塊的副標題會列出兩個資料表和關聯類型，例如 `users → posts · One N`。類型在此只會顯示，無法在此變更，請使用[變更類型](#type-change)。
 
+在整個對話方塊中（包括各列下方的註記和說明行，以及對話方塊關閉時顯示的快顯通知），資料表和欄位都會依[名稱顯示](./logical-names.md#beyond-the-canvas)的方式命名。  
+有三項內容一律以物理名稱和資料類型為準：每個資料類型，這是欄位自己的資料類型，永遠不會是其定義域的名稱；`New column: <name>`，它會顯示新欄位將取得的名稱；以及 `Map` 一開始就填入的列，這些列依名稱配對，永遠不會依邏輯名稱配對。
+
 `References` 用來選擇關聯所指向的鍵：先是 `Primary Key`（其欄位依資料表中的順序排列），接著是每個標示為 `Unique` 的欄位各自的 `Unique: <column>`。只有在有多個選項時才會顯示。  
 唯一索引在此不算作鍵，而本身就是整個主鍵的 `Unique` 欄位也不會重複列出。  
 選擇另一個鍵會重建各列。只要所選的欄位仍在子資料表中，該列就會保留其選擇。
@@ -121,10 +124,10 @@ Snowflake 的結構描述 SQL 還會寫出一則註解，列出其省略的每�
 `Map` 和 `Save` 寫入的內容：
 
 - `Map` 會加入關聯，其 `On Delete` 和 `On Update` 皆為 `Not set`。`Save` 只會變更關聯的欄位，將其父端指向在 `References` 中選擇的鍵，並保留其類型及其 ON DELETE 和 ON UPDATE。
-- `New column` 列會像繪製時一樣，在子資料表的末尾加入一個欄位：此欄位為 `NOT NULL`，以其鍵命名，並採用該鍵的資料類型、預設值和註解，請參閱[識別關聯](#identifying-relationships)。
-- 所選欄位永遠不會被重新命名，其 `Not Null`、主鍵、`Unique`、預設值和註解也都保持不變。只有在 `Relationship DataType Sync` 開啟且父欄位設有資料類型時，其資料類型才會變更：它會採用父欄位賦予外鍵的類型（serial 鍵則與新欄位一樣採用整數類型），且此變更會像同步一樣沿著關聯繼續傳遞。
+- `New column` 列會像繪製時一樣，在子資料表的末尾加入一個欄位：此欄位為 `NOT NULL`，以其鍵命名，並採用該鍵的資料類型、預設值、註解、邏輯名稱和定義域，請參閱[識別關聯](#identifying-relationships)。
+- 所選欄位永遠不會被重新命名，也不會連結到鍵的定義域，其 `Not Null`、主鍵、`Unique`、預設值、註解和邏輯名稱也都保持不變。只有在 `Relationship DataType Sync` 開啟且父欄位設有資料類型時，其資料類型才會變更：它會採用父欄位賦予外鍵的類型（serial 鍵則與新欄位一樣採用整數類型），且此變更會像同步一樣沿著關聯繼續傳遞。此變更所改變類型的每個欄位，無論是所選的欄位，還是沿著關聯所及的欄位，只要其新類型與其[定義域](./dictionary.md#domains-and-data-types)的類型不同，就會解除與該定義域的連結。
 - 對應關係不再使用的欄位會留在子資料表中，且除非仍有另一個關聯連接到它，否則不再標示為外鍵。
-- 一次 `Map` 或 `Save` 所寫入的所有內容（包括新欄位和類型變更）算作一個復原步驟。
+- 一次 `Map` 或 `Save` 所寫入的所有內容（包括新欄位、類型變更和定義域連結的解除）算作一個復原步驟。
 
 與任何關聯一樣，關聯是否為識別關聯以及其父端如何繪製，都由對應的子資料表欄位決定。對應到子資料表的主鍵欄位會使其立即成為識別關聯，對應到允許 `NULL` 的欄位則會在父端繪製圓圈，請參閱[解讀連接線](#reading-a-connector)。  
 結構描述 SQL 的外鍵會參照所選擇的鍵，例如 `Unique` 鍵會寫成 `REFERENCES vehicle (vin)`。
@@ -156,9 +159,10 @@ Snowflake 的結構描述 SQL 還會寫出一則註解，列出其省略的每�
 ## 識別關聯 {#identifying-relationships}
 
 以按一下子資料表或使用 `Create new columns` 的方式繪製關聯時，父資料表的每個主鍵都會以 `NOT NULL` 外鍵欄位的形式複製到子資料表上，因此新的關聯一開始是非識別關聯。  
-複製出的欄位會採用該鍵的資料類型、預設值和註解，但不會採用 `Unique` 或 `Auto Increment`，其命名方式如[外鍵欄位名稱](#foreign-key-column-names)所述。  
+複製出的欄位會採用該鍵的資料類型、預設值、註解和邏輯名稱，但不會採用 `Unique` 或 `Auto Increment`，其命名方式如[外鍵欄位名稱](#foreign-key-column-names)所述。  
 serial 鍵是資料類型的例外：其複製出的欄位會採用該 serial 所儲存的整數類型。在任何資料庫下，`smallserial` 和 `serial2` 會得到 `smallint`，`serial4` 會得到 `integer`，`bigserial` 和 `serial8` 會得到 `bigint`。單獨的 `serial` 在 PostgreSQL 下會得到 `integer`，在 MySQL 和 MariaDB 下會得到 `bigint unsigned`，在其他任何資料庫下則維持為 `serial`。  
 只有完整的類型名稱才算數（不區分大小寫），因此 `serial(4)` 會依原樣複製。以大寫字母書寫的類型會得到大寫的結果：在 PostgreSQL 下，`SERIAL` 會得到 `INTEGER`。已儲存的圖表中類型已是 `serial` 的外鍵欄位會保留該類型。  
+只要複製時 `Domains` 工作表列有鍵的[定義域](./dictionary.md#domains-and-data-types)，且複製出的欄位保留了鍵的資料類型，複製出的欄位也會連結到該定義域。因此，serial 鍵複製出的欄位若採用整數類型，就不會連結任何定義域，而維持為 `serial` 的單獨 `serial` 則會連結該定義域。  
 若要讓關聯成為識別關聯，可將子資料表上的這些外鍵欄位設為主鍵：全部選取後按一次 `Alt + K` (Windows/Linux) 或 `⌥ + K` (Mac)，或在資料表的右鍵選單中選擇 `Primary Key`，選取兩個以上的欄位時此項目會顯示為 `Primary Key on selected columns`，請參閱[欄位主鍵](./table-editing.md#column-primary-key)。
 
 ![使用 Alt + K 切換 product_id 的主鍵設定，其連接線先變為實線，再變為虛線](/img/demo-identifying-relationship.webp)
@@ -193,7 +197,10 @@ serial 鍵是資料類型的例外：其複製出的欄位會採用該 serial �
 這些名稱會在繪製關聯時決定。之後重新命名父資料表或其鍵，並不會重新命名這些欄位。  
 「[對應欄位](#map-columns)」中的 `New column` 列也依相同規則命名，且清單會在選擇之前顯示每個名稱。  
 欄位已經就位的關聯（來自匯入、貼上、建立副本，或在「對應欄位」中與現有欄位配對）會保留這些欄位原有的名稱。  
-程式碼代理程式以 `erd_add_relationship` 加入關聯時，也會得到相同的名稱和資料類型，請參閱[工具](../../mcp/tools.md#relationships)。
+程式碼代理程式以 `erd_add_relationship` 加入關聯時，也會得到相同的名稱、資料類型、邏輯名稱和定義域，請參閱[工具](../../mcp/tools.md#relationships)。
+
+外鍵欄位是以其鍵命名，永遠不會以其所複製的邏輯名稱命名，且其名稱會被視為您自行撰寫的名稱：之後在該欄位上輸入邏輯名稱時，名稱會保持不變，除非名稱是空的，請參閱[自行撰寫的名稱](./dictionary.md#names-of-your-own)。  
+因此，當所複製的邏輯名稱與提供其他名稱的術語相符時，`Checks` 工作表會將該欄位列在 [`Physical name mismatch`](./dictionary.md#what-each-check-finds) 之下。重新產生其物理名稱時，會依字典重新命名該欄位，除非子資料表中已有另一個欄位使用字典所提供的名稱（不區分大小寫），請參閱[重新產生物理名稱](./dictionary.md#derive-physical-names-again)。
 
 ## 解讀連接線 {#reading-a-connector}
 

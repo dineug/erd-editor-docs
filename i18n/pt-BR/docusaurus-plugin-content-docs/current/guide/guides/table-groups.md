@@ -1,5 +1,5 @@
 ---
-sidebar_position: 5
+sidebar_position: 6
 description: Reunir tabelas relacionadas em uma caixa com nome e cor desenhada atrás delas; criar, nomear, colorir, mover, redimensionar e remover grupos, ir até eles pelo explorador, alterar quais tabelas eles contêm, ocultá-los e preservá-los no layout automático, no Esquema SQL e no DBML.
 ---
 

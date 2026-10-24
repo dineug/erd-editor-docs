@@ -16,16 +16,20 @@ Din submeniul `Import` al meniului contextual al pânzei se pot importa cinci fo
 - AML
 
 Elementul `Import and Add`, aflat imediat sub `Import`, adaugă fișierul la diagramă în loc să o înlocuiască (consultați [Import și adăugare](#import-and-add)).  
-Ecranul de bun venit afișat de o diagramă goală are un rând `Import` cu aceleași cinci formate (consultați [Ecranul de bun venit](./editing-start.md#welcome-screen)).
+Ecranul de bun venit afișat de o diagramă goală are un rând `Import` cu aceleași cinci formate (consultați [Ecranul de bun venit](./editing-start.md#welcome-screen)).  
+Și foile din fila [Dicționar](./dictionary.md) preiau cuvinte, termeni și domenii din fișiere CSV, prin comanda `Import CSV` proprie acelei file (consultați [Importarea și exportarea fișierelor CSV](./dictionary.md#importing-and-exporting-csv)).
 
 Extensiile sunt recunoscute indiferent de majuscule. Alegerea unui fișier a cărui extensie nu corespunde formatului ales anulează importul și afișează mesajul `Only <format> files can be imported`, cu formatul scris `json`, `sql`, `graphql`, `dbml` sau `aml`, ca în `Only sql files can be imported`.
 
 Elementul `Import` înlocuiește documentul curent în loc să fuzioneze cu acesta, iar o singură anulare readuce diagrama anterioară.  
-Un fișier JSON își aduce propriile setări, inclusiv [blocările](./settings.md#lock). Acolo unde fișierul blochează fila, limbajul generatorului de cod, un stil de denumire sau tipul de delimitator, vedeți în continuare ce aveați, dar valoarea blocată din fișier este cea salvată. Vizualizarea, blocată sau nu, ajunge acolo unde o plasează fișierul. Un fișier JSON salvat înainte de apariția blocărilor se importă cu toate blocările activate și cu vizualizarea la 100%.  
+Un fișier JSON își aduce propriile setări, inclusiv [blocările](./settings.md#lock). Acolo unde fișierul blochează fila, limbajul generatorului de cod, un stil de denumire, tipul de delimitator sau [modul de afișare a numelor](./logical-names.md#name-view), vedeți în continuare ce aveați, dar valoarea blocată din fișier este cea salvată. Zoomul și poziția vizualizării, blocate sau nu, ajung acolo unde le plasează fișierul. Un fișier JSON salvat înainte de apariția blocărilor se importă cu toate blocările activate și cu vizualizarea la 100%. Unul salvat înainte de apariția blocării `Name View` se importă cu această blocare activată, indiferent de celelalte blocări pe care le înregistrează.  
 Celelalte formate păstrează setările pe care le aveți deja, inclusiv blocările, cu excepția vizualizării, care pornește la 100%.  
 Parserele GraphQL, DBML și AML nu eșuează niciodată: un fișier pe care nu îl pot citi produce o diagramă goală, nu o eroare.
 
-Un fișier JSON își păstrează pozițiile. Tabelele unui fișier Schemă SQL, GraphQL, DBML sau AML sunt plasate înainte ca diagrama să se schimbe:
+Un fișier JSON aduce și numele logice ale tabelelor și coloanelor sale, precum și legăturile coloanelor cu domeniile. Cuvintele, termenii și domeniile lui le înlocuiesc pe cele din fila [Dicționar](./dictionary.md), așa că un fișier care nu conține niciunul lasă foile goale, iar anularea importului le readuce pe cele înlocuite.  
+Celelalte formate nu conțin nimic din toate acestea. Tabelele lor se importă fără nume logice și fără nicio coloană legată de un domeniu, iar cuvintele, termenii și domeniile dumneavoastră rămân așa cum sunt. Anularea sau refacerea importului le lasă, de asemenea, neschimbate, așa că o editare a dicționarelor făcută după import se păstrează. Un astfel de import lasă neschimbat și istoricul propriu al fiecărei foi, în timp ce un import JSON golește aceste istorice (consultați [Foile din fila Dicționar](./undo-redo.md#dictionary-sheets)).
+
+Un fișier JSON își păstrează pozițiile. Tabelele unui fișier Schemă SQL, GraphQL, DBML sau AML sunt plasate înainte ca diagrama să se schimbe, la lățimile pe care le au în [modul de afișare a numelor](./logical-names.md#beyond-the-canvas) pe care îl vedeți:
 
 - Când fișierul are două sau mai multe tabele și cel puțin o relație, acestea sunt aranjate cu modul `Flow` al [aranjării automate](./table-related-functions.md#auto-layout), de la stânga la dreapta de-a lungul relațiilor, pornind din colțul din stânga sus al pânzei. Se ia în calcul și o relație a unui tabel cu el însuși.
 - Altfel, sunt dispuse pe rânduri din stânga sus, începând cu tabelele cu cele mai puține coloane.
@@ -33,7 +37,7 @@ Un fișier JSON își păstrează pozițiile. Tabelele unui fișier Schemă SQL,
 
 Diagrama este apoi înlocuită într-un singur pas, așa că nu apare nicio stare intermediară. O setare pe care o schimbați în timp ce tabelele sunt plasate, de exemplu fila, se păstrează, iar dacă importați între timp un alt fișier, câștigă importul pornit ultimul.
 
-Un editor doar în citire nu încarcă nimic prin `Import` și nu oferă elementul `Import and Add`.
+Un editor doar în citire nu încarcă nimic prin `Import` și nu oferă nici elementul `Import and Add`, nici comanda `Import CSV` din fila Dicționar.
 
 ### Import și adăugare {#import-and-add}
 
@@ -42,6 +46,7 @@ Elementul `Import and Add` păstrează diagrama și adaugă un fișier sub ea. S
 ![Adăugarea unui fișier SQL din Import and Add > Schema SQL, cu tabelele sale ajungând sub diagramă, aranjate de-a lungul relațiilor și selectate](/img/demo-import-and-add.webp)
 
 Fișierul intră la fel ca la o lipire: toate tabelele, coloanele, relațiile, indexurile, notele și [grupurile de tabele](./table-groups.md) pe care le conține se adaugă ca noi, tabelele aflate deja în diagramă nu se mută și nicio setare nu se schimbă, așa că setările unui fișier JSON sunt omise.  
+Tabelele și coloanele unui fișier JSON își păstrează numele logice, iar fiecare nume fizic rămâne personalizat sau gestionat de dicționare, așa cum era în fișier, ceea ce stabilește dacă un nume logic scris ulterior derivă unul nou (consultați [Derivarea numelor fizice](./dictionary.md#deriving-physical-names)). Cuvintele, termenii și domeniile fișierului sunt omise, așa că fila Dicționar rămâne așa cum era, iar nicio coloană adăugată nu este legată de un domeniu: fiecare își păstrează tipul de date pe care îl are.  
 Un tabel al cărui nume există deja în diagramă se adaugă ca al doilea tabel cu acel nume, fără a fi îmbinat cu primul. Relațiile și indexurile provin doar din fișier, așa că o cheie străină către un tabel pe care fișierul nu îl definește nu este legată de un tabel aflat deja în diagramă.
 
 Blocul adăugat ajunge imediat sub tot ce conține diagrama, aliniat cu marginea ei din stânga, sau în colțul din stânga sus al unei diagrame goale. Se iau în calcul și notele și grupurile de tabele ascunse cu [opțiunile de afișare](./table-related-functions.md#table-view-options), deoarece ele se află în continuare acolo.  
@@ -160,11 +165,10 @@ Un backslash înaintea unei ghilimele, cum scriu MySQL și MariaDB `'it\'s'`, se
 O valoare `DEFAULT` își păstrează ghilimelele, iar o ghilimea din interiorul ei este rescrisă dublată, indiferent de forma de escape din fișier: `'it''s'`.  
 Când baza de date a documentului este Databricks în momentul importului, textul între ghilimele simple urmează în schimb regulile Spark: fiecare backslash servește drept caracter de escape pentru caracterul de după el, așa că `'C:\\dir'` se citește ca `C:\dir`, secvențele de escape, de exemplu `\n`, `\t` și `\u0041`, sunt decodificate, iar o valoare `DEFAULT` se păstrează ca `'it\'s'`.
 
-În codul Schemă SQL exportat, o ghilimea din comentariul unui tabel sau al unei coloane este scrisă cu escape: `COMMENT 'it''s'` pentru MySQL, MariaDB și Snowflake, `COMMENT ON TABLE` și `COMMENT ON COLUMN ... IS 'it''s'` pentru PostgreSQL și Oracle și aceeași dublare, inclusiv în numele tabelelor și ale coloanelor, în apelurile `sp_addextendedproperty` ale MSSQL. Un comentariu fără ghilimele este scris așa cum este.  
-Databricks folosește în schimb un backslash drept caracter de escape pentru o ghilimea și pentru un backslash, ca în `COMMENT 'it\'s'`, așa că exportul său se reimportă exact doar cât timp Databricks este baza de date selectată.  
-MSSQL scrie fiecare comentariu ca `EXECUTE sys.sp_addextendedproperty 'MS_Description', '<comment>', 'schema', '<schema>', 'table', '<table>'`, urmat de `'column', '<column>'` pentru o coloană. Cu setarea `Bracket` la `None`, un tabel numit `sales.users` dă schema `sales` și tabelul `users`, iar un nume fără schemă se află în `dbo`. Cu orice altă valoare `Bracket`, întregul nume este tabelul, în `dbo`.
-
-Comentariile nu supraviețuiesc unui export SQLite urmat de import: SQLite le scrie ca simple linii `--`, pe care parserul nu le citește. Apelurile `sp_addextendedproperty` ale unui export MSSQL se reimportă ca aceleași comentarii de tabel și de coloană.
+Modul în care fiecare bază de date scrie un comentariu la export și modul în care protejează o ghilimea din el sunt descrise în [Comentarii](./schema-sql.md#comments) din pagina Schemă SQL.  
+Un export în MySQL, MariaDB, PostgreSQL, Oracle, Snowflake sau MSSQL se reimportă ca aceleași comentarii de tabel și de coloană, inclusiv cu ghilimelele, cu excepția liniilor goale pe care le omite un export Oracle. Un export Databricks, care folosește un backslash drept caracter de escape pentru o ghilimea și pentru un backslash, se reimportă exact doar cât timp Databricks este baza de date selectată.  
+Comentariile nu supraviețuiesc unui export SQLite urmat de import: SQLite le scrie ca simple linii `--`, pe care parserul nu le citește.  
+Cu excepția SQLite, un nume logic pe care opțiunea `Write logical names into empty comments` l-a scris într-un comentariu gol se reimportă drept comentariu al acelui tabel sau al acelei coloane, nu drept nume logic (consultați [Nume logice drept comentarii](./schema-sql.md#logical-names-as-comments)).
 
 ### GraphQL {#graphql}
 
@@ -200,22 +204,24 @@ Numele fișierului trebuie să se termine cu `.aml`.
 
 GraphQL, DBML și AML sunt formate bidirecționale: fiecare este și o țintă a [generatorului de cod](./code-generator.md).  
 DBML și AML transmit în ambele sensuri ON DELETE și ON UPDATE ale fiecărei relații (consultați [Generator de cod](./code-generator.md#on-delete-and-on-update)). GraphQL nu transmite niciuna dintre ele, așa că un import GraphQL le lasă pe amândouă la `Not set`.  
-DBML transmite în ambele sensuri și culorile tabelelor, fără transparență, și fiecare grup de tabele care conține un tabel. Un grup fără nume revine ca `group_1`, `group_2` și așa mai departe, iar un nume de grup repetat revine cu sufixul `_2`, `_3` și așa mai departe. AML transmite culoarea unui tabel doar ca cel mai apropiat nume de culoare AML, așa că `#FF8800` este scris ca `orange` și revine ca `#f97316`, și nu transmite niciun grup. GraphQL nu transmite nici culori, nici grupuri.
+DBML transmite în ambele sensuri și culorile tabelelor, fără transparență, și fiecare grup de tabele care conține un tabel. Un grup fără nume revine ca `group_1`, `group_2` și așa mai departe, iar un nume de grup repetat revine cu sufixul `_2`, `_3` și așa mai departe. AML transmite culoarea unui tabel doar ca cel mai apropiat nume de culoare AML, așa că `#FF8800` este scris ca `orange` și revine ca `#f97316`, și nu transmite niciun grup. GraphQL nu transmite nici culori, nici grupuri.  
+Niciunul dintre cele trei nu transmite, în niciun sens, nume logice, legături cu domeniile sau dicționarele: generatorul de cod scrie numele fizic și tipul de date ale fiecărui tabel și ale fiecărei coloane, niciodată un nume logic sau un domeniu.
 
 ## Exportarea {#exporting}
 
 Submeniul `Export` al meniului contextual al pânzei are trei elemente:
 
-- json: salvează diagrama așa cum o conține fișierul său, ca `.erd.json`: tabelele cu coloanele și indexurile lor, relațiile, notele și grupurile de tabele, precum și setările, fiecare [setare blocată](./settings.md#lock) cu valoarea sa blocată.
+- json: salvează diagrama așa cum o conține fișierul său, ca `.erd.json`: tabelele cu coloanele și indexurile lor, relațiile, notele și grupurile de tabele, numele logice și legăturile coloanelor cu domeniile, cuvintele, termenii și domeniile din fila [Dicționar](./dictionary.md), precum și setările, fiecare [setare blocată](./settings.md#lock) cu valoarea sa blocată. Ce nu conține nimic, de exemplu un text gol sau un rând de dicționar gol, este omis (consultați [Forma de stocare și valoarea de execuție](../../api/advanced/schema.md#storage-form-and-runtime-value)).
 - Schema SQL: deschide fila [Schemă SQL](./schema-sql.md#saving-or-copying-the-sql) cu panoul de opțiuni deschis și cu focusul pe butonul `Save file`, așa că apăsarea tastei `Enter` salvează ca `.sql` codul SQL afișat în filă. Până atunci nu se salvează nimic.
 - Image: deschide caseta de dialog `Export image`, care salvează diagrama ca `.png` sau `.svg` ori o copiază în clipboard ca PNG (consultați [Imagine](#image)).
 
-Toate trei funcționează într-un editor doar în citire.
+Toate trei funcționează într-un editor doar în citire.  
+Comanda `Export CSV` proprie filei Dicționar, care nu se află în acest submeniu, salvează foaia `Domains`, `Words` sau `Terms` a acesteia ca fișier CSV. Spre deosebire de cele trei, nu este oferită într-un editor doar în citire (consultați [Importarea și exportarea fișierelor CSV](./dictionary.md#importing-and-exporting-csv)).
 
 Fila Schemă SQL scrie ON DELETE și ON UPDATE ale fiecărei relații după clauza `REFERENCES`, întâi ON DELETE. Valoarea `Not set` nu scrie nimic, iar o acțiune pe care baza de date selectată nu o acceptă este omisă. Pentru a afla ce acțiuni acceptă fiecare bază de date, consultați [Editarea relațiilor](./relationship-editing.md#on-delete-and-on-update).
 
 Fiecare fișier exportat se numește `<database name>-<timestamp>`, urmat de extensia sa, cu marcajul de timp în ora locală, în formatul `yyyy-MM-dd'T'HH_mm_ss`, de exemplu `my-schema-2026-08-29T04_05_06.erd.json`. Un nume de bază de date gol este înlocuit cu `unnamed`.  
-Butoanele `Save file` ale filei Schemă SQL și ale [generatorului de cod](./code-generator.md) își denumesc fișierele în același mod. O imagine preia numele bazei de date așa cum era la deschiderea casetei de dialog.
+Butoanele `Save file` ale filei Schemă SQL și ale [generatorului de cod](./code-generator.md) își denumesc fișierele în același mod, la fel ca comanda `Export CSV`, care adaugă foaia după marcajul de timp: `-words.csv`, `-terms.csv` sau `-domains.csv`. O imagine preia numele bazei de date așa cum era la deschiderea casetei de dialog.
 
 Comenzile `Import`, `Import and Add` și `Export` sunt disponibile și din [căutarea rapidă](./quick-search.md) din fila ERD, cu aceleași elemente ca în meniul contextual al pânzei.
 
@@ -235,7 +241,7 @@ Elementul `Export` ▸ `Image`, din meniul contextual al pânzei sau din căutar
 
 Alegerile se păstrează până la închiderea editorului și nu se salvează niciodată în document. Previzualizarea se desenează la fel ca imaginea și se redesenează când se schimbă opțiunea `Background` sau `Dark mode`.
 
-Imaginea conține diagrama așa cum era la deschiderea casetei de dialog; închideți și redeschideți caseta de dialog pentru a include modificările ulterioare. Conține întreaga diagramă, oricât de departe ar fi derulată, decupată la ce desenează diagrama plus o margine, și este desenată mereu la 100%, indiferent de zoomul afișat de editor, așa că fiecare tabel este desenat complet. Ce ascund [opțiunile de afișare](./table-related-functions.md#table-view-options) – relațiile, etichetele lor ON DELETE și ON UPDATE, grupurile de tabele sau notele – nu este nici desenat, nici nu i se face loc, iar grupurile de tabele sunt desenate în spatele tuturor celorlalte elemente.
+Imaginea conține diagrama așa cum era la deschiderea casetei de dialog; închideți și redeschideți caseta de dialog pentru a include modificările ulterioare. Tabelele și coloanele ei sunt numite în modul de afișare a numelor pe care îl afișa atunci editorul, chiar și unul schimbat doar pe ecranul dumneavoastră cât timp blocarea `Name View` păstrează altul în fișier (consultați [Dincolo de pânză](./logical-names.md#beyond-the-canvas)). Culorile pe care [verificările dicționarelor](./dictionary.md#marks-on-the-canvas) le dau numelor pe pânză nu sunt desenate. Conține întreaga diagramă, oricât de departe ar fi derulată, decupată la ce desenează diagrama plus o margine, și este desenată mereu la 100%, indiferent de zoomul afișat de editor, așa că fiecare tabel este desenat complet. Ce ascund [opțiunile de afișare](./table-related-functions.md#table-view-options) – relațiile, etichetele lor ON DELETE și ON UPDATE, grupurile de tabele sau notele – nu este nici desenat, nici nu i se face loc, iar grupurile de tabele sunt desenate în spatele tuturor celorlalte elemente.
 
 Trei butoane scriu imaginea și fiecare lasă caseta de dialog deschisă:
 

@@ -16,16 +16,20 @@ Via het submenu `Import` van het contextmenu van het canvas kun je vijf formaten
 - AML
 
 `Import and Add`, direct onder `Import`, voegt het bestand toe aan het diagram in plaats van het te vervangen — zie [Importeren en toevoegen](#import-and-add).  
-Het welkomstscherm dat een leeg diagram toont, heeft een rij `Import` met dezelfde vijf formaten — zie [Welkomstscherm](./editing-start.md#welcome-screen).
+Het welkomstscherm dat een leeg diagram toont, heeft een rij `Import` met dezelfde vijf formaten — zie [Welkomstscherm](./editing-start.md#welcome-screen).  
+Ook de bladen van het tabblad [Woordenboek](./dictionary.md) nemen woorden, termen en domeinen over uit CSV-bestanden, met de eigen knop `Import CSV` van dat tabblad — zie [CSV importeren en exporteren](./dictionary.md#importing-and-exporting-csv).
 
 Extensies worden herkend ongeacht het hoofdlettergebruik. Kies je een bestand waarvan de extensie niet bij het gekozen formaat past, dan wordt de import geannuleerd en verschijnt `Only <format> files can be imported`, met het formaat geschreven als `json`, `sql`, `graphql`, `dbml` of `aml`, zoals in `Only sql files can be imported`.
 
 `Import` vervangt het huidige document in plaats van het bestand ermee samen te voegen, en met één keer ongedaan maken krijg je het vorige diagram terug.  
-Een JSON-bestand brengt zijn eigen instellingen mee, inclusief zijn [vergrendelingen](./settings.md#lock). Waar het bestand het tabblad, de taal van de Codegenerator, een naamnotatie of het type aanhalingstekens vergrendelt, blijf je zien wat je had, maar wordt de vergrendelde waarde uit het bestand opgeslagen. De weergave gaat, vergrendeld of niet, naar de plek die het bestand aangeeft. Een JSON-bestand dat is opgeslagen voordat de vergrendelingen bestonden, komt binnen met elke vergrendeling ingeschakeld en de weergave op 100%.  
+Een JSON-bestand brengt zijn eigen instellingen mee, inclusief zijn [vergrendelingen](./settings.md#lock). Waar het bestand het tabblad, de taal van de Codegenerator, een naamnotatie, het type aanhalingstekens of de [naamweergave](./logical-names.md#name-view) vergrendelt, blijf je zien wat je had, maar wordt de vergrendelde waarde uit het bestand opgeslagen. Het zoomniveau en de weergavepositie volgen, vergrendeld of niet, wat het bestand aangeeft. Een JSON-bestand dat is opgeslagen voordat de vergrendelingen bestonden, komt binnen met elke vergrendeling ingeschakeld en de weergave op 100%. Een bestand dat is opgeslagen voordat de vergrendeling `Name View` bestond, komt binnen met die vergrendeling ingeschakeld, welke andere vergrendelingen het ook vastlegt.  
 De andere formaten behouden de instellingen die je al hebt, inclusief de vergrendelingen, behalve de weergave, die op 100% begint.  
 De parsers voor GraphQL, DBML en AML falen nooit: een bestand dat ze niet kunnen lezen, levert een leeg diagram op in plaats van een fout.
 
-Een JSON-bestand behoudt de posities die het heeft. De tabellen van een Schema SQL-, GraphQL-, DBML- of AML-bestand worden geplaatst voordat het diagram verandert:
+Een JSON-bestand brengt ook de logische namen van zijn tabellen en kolommen en de domeinkoppelingen van zijn kolommen mee. Zijn woorden, termen en domeinen komen in de plaats van die van het tabblad [Woordenboek](./dictionary.md), dus een bestand zonder woorden, termen en domeinen laat de bladen leeg, en als je de import ongedaan maakt, komen de vervangen woorden, termen en domeinen terug.  
+De andere formaten bevatten niets hiervan. Hun tabellen komen binnen zonder logische namen en zonder kolommen die aan een domein zijn gekoppeld, en je woorden, termen en domeinen blijven zoals ze zijn. Ook ongedaan maken of opnieuw uitvoeren van de import laat ze zoals ze zijn, dus een bewerking van het woordenboek na de import blijft behouden. Zo'n import laat ook de eigen geschiedenis van elk blad zoals ze is, terwijl een JSON-import die geschiedenissen leegmaakt — zie [Woordenboekbladen](./undo-redo.md#dictionary-sheets).
+
+Een JSON-bestand behoudt de posities die het heeft. De tabellen van een Schema SQL-, GraphQL-, DBML- of AML-bestand worden geplaatst voordat het diagram verandert, met de breedte die ze hebben in de [naamweergave](./logical-names.md#beyond-the-canvas) die je voor je hebt:
 
 - Als het bestand twee of meer tabellen en minstens één relatie heeft, worden ze ingedeeld met de [Automatische indeling](./table-related-functions.md#auto-layout) `Flow`, van links naar rechts langs de relaties, vanaf de linkerbovenhoek van het canvas. Een relatie van een tabel naar zichzelf telt mee.
 - Anders worden ze vanaf de linkerbovenhoek in rijen gezet, de tabellen met de minste kolommen eerst.
@@ -33,7 +37,7 @@ Een JSON-bestand behoudt de posities die het heeft. De tabellen van een Schema S
 
 Daarna wordt het diagram in één stap vervangen, zodat er tussendoor niets te zien is. Een instelling die je wijzigt terwijl de tabellen worden geplaatst, zoals het tabblad, blijft behouden, en als je intussen een ander bestand importeert, wint de import die als laatste is gestart.
 
-Een editor in alleen-lezenmodus laadt niets via `Import` en biedt `Import and Add` niet aan.
+Een editor in alleen-lezenmodus laadt niets via `Import` en biedt `Import and Add` noch `Import CSV` van het tabblad Woordenboek aan.
 
 ### Importeren en toevoegen {#import-and-add}
 
@@ -42,6 +46,7 @@ Een editor in alleen-lezenmodus laadt niets via `Import` en biedt `Import and Ad
 ![Een SQL-bestand toevoegen via Import and Add > Schema SQL, waarna de tabellen onder het diagram terechtkomen, langs hun relaties ingedeeld en geselecteerd](/img/demo-import-and-add.webp)
 
 Het bestand komt binnen zoals bij plakken: elke tabel, kolom, relatie, index, memo en [tabelgroep](./table-groups.md) die het bevat, wordt als nieuw item toegevoegd, de tabellen die al in het diagram staan, worden niet verplaatst en er verandert geen instelling, dus de instellingen van een JSON-bestand worden weggelaten.  
+De tabellen en kolommen van een JSON-bestand behouden hun logische namen, en elke fysieke naam blijft van de woordenboeken of je eigen naam, zoals in het bestand, wat bepaalt of een later ingevoerde logische naam een nieuwe naam afleidt — zie [Fysieke namen afleiden](./dictionary.md#deriving-physical-names). De woorden, termen en domeinen van het bestand worden weggelaten, dus het tabblad Woordenboek blijft zoals het was, en geen enkele toegevoegde kolom wordt aan een domein gekoppeld: elke kolom behoudt het gegevenstype dat ze heeft.  
 Een tabel met een naam die al in het diagram voorkomt, wordt toegevoegd als tweede tabel met die naam en niet met die tabel samengevoegd. Relaties en indexen komen alleen uit het bestand, dus een refererende sleutel naar een tabel die het bestand niet definieert, wordt niet gekoppeld aan een tabel die al in het diagram staat.
 
 Het toegevoegde blok komt direct onder alles in het diagram terecht, uitgelijnd met de linkerrand daarvan, of linksboven in een leeg diagram. Memo's en tabelgroepen die met de [weergaveopties](./table-related-functions.md#table-view-options) zijn verborgen, tellen ook mee, omdat ze daar nog steeds staan.  
@@ -160,11 +165,10 @@ Een backslash vóór een aanhalingsteken, zoals MySQL en MariaDB `'it\'s'` schri
 Een waarde bij `DEFAULT` behoudt haar aanhalingstekens, en een aanhalingsteken erin wordt verdubbeld teruggeschreven, hoe het bestand het ook heeft geëscapet: `'it''s'`.  
 Als de database van het document op het moment van importeren Databricks is, volgt tekst tussen enkele aanhalingstekens in plaats daarvan de regels van Spark: elke backslash escapet het teken erna, dus `'C:\\dir'` wordt gelezen als `C:\dir`, escapereeksen zoals `\n`, `\t` en `\u0041` worden gedecodeerd, en een waarde bij `DEFAULT` wordt bewaard als `'it\'s'`.
 
-Geëxporteerde Schema SQL escapet een aanhalingsteken binnen een tabel- of kolomopmerking: `COMMENT 'it''s'` voor MySQL, MariaDB en Snowflake, `COMMENT ON TABLE` en `COMMENT ON COLUMN ... IS 'it''s'` voor PostgreSQL en Oracle, en dezelfde verdubbeling, tabel- en kolomnamen inbegrepen, in de aanroepen van `sp_addextendedproperty` van MSSQL. Een opmerking zonder aanhalingsteken wordt geschreven zoals ze is.  
-Databricks escapet een aanhalingsteken en een backslash in plaats daarvan met een backslash, zoals in `COMMENT 'it\'s'`, dus de export ervan wordt alleen exact teruggelezen zolang Databricks de geselecteerde database is.  
-MSSQL schrijft elke opmerking als `EXECUTE sys.sp_addextendedproperty 'MS_Description', '<comment>', 'schema', '<schema>', 'table', '<table>'`, gevolgd door `'column', '<column>'` voor een kolom. Met `Bracket` op `None` levert een tabel met de naam `sales.users` het schema `sales` en de tabel `users` op, en valt een naam zonder schema in `dbo`. Bij elke andere waarde van `Bracket` is de hele naam de tabel, in `dbo`.
-
-Opmerkingen blijven niet behouden als je naar SQLite exporteert en het resultaat weer importeert: SQLite schrijft ze als gewone regels met `--`, die de parser niet leest. De aanroepen van `sp_addextendedproperty` uit een MSSQL-export komen bij het opnieuw importeren terug als dezelfde tabel- en kolomopmerkingen.
+Hoe elke database bij het exporteren een opmerking schrijft en hoe ze een aanhalingsteken erin escapet, staat beschreven in [Opmerkingen](./schema-sql.md#comments) op de pagina Schema SQL.  
+Een export naar MySQL, MariaDB, PostgreSQL, Oracle, Snowflake of MSSQL komt bij het importeren terug als dezelfde tabel- en kolomopmerkingen, aanhalingstekens inbegrepen, op de lege regels na die een Oracle-export weglaat. Een Databricks-export, die een aanhalingsteken en een backslash met een backslash escapet, wordt alleen exact teruggelezen zolang Databricks de geselecteerde database is.  
+Opmerkingen blijven niet behouden als je naar SQLite exporteert en het resultaat weer importeert: SQLite schrijft ze als gewone regels met `--`, die de parser niet leest.  
+Behalve op SQLite komt een logische naam die `Write logical names into empty comments` in een lege opmerking heeft geschreven, bij het importeren terug als de opmerking van die tabel of kolom, niet als haar logische naam — zie [Logische namen als opmerkingen](./schema-sql.md#logical-names-as-comments).
 
 ### GraphQL {#graphql}
 
@@ -200,22 +204,24 @@ De bestandsnaam moet eindigen op `.aml`.
 
 GraphQL, DBML en AML zijn formaten die heen en terug werken: elk ervan is ook een doel van de [Codegenerator](./code-generator.md).  
 DBML en AML dragen ON DELETE en ON UPDATE van elke relatie in beide richtingen over — zie [Codegenerator](./code-generator.md#on-delete-and-on-update). GraphQL draagt geen van beide over, dus een GraphQL-import laat beide op `Not set` staan.  
-DBML draagt ook tabelkleuren, zonder eventuele transparantie, en elke tabelgroep die een tabel bevat, in beide richtingen over. Een groep zonder naam komt terug als `group_1`, `group_2` enzovoort, en een herhaalde groepsnaam komt terug met `_2`, `_3` enzovoort erachter. AML draagt een tabelkleur alleen over als de dichtstbijzijnde van zijn kleurnamen, dus `#FF8800` wordt geschreven als `orange` en komt terug als `#f97316`, en AML draagt geen groepen over. GraphQL draagt kleuren noch groepen over.
+DBML draagt ook tabelkleuren, zonder eventuele transparantie, en elke tabelgroep die een tabel bevat, in beide richtingen over. Een groep zonder naam komt terug als `group_1`, `group_2` enzovoort, en een herhaalde groepsnaam komt terug met `_2`, `_3` enzovoort erachter. AML draagt een tabelkleur alleen over als de dichtstbijzijnde van zijn kleurnamen, dus `#FF8800` wordt geschreven als `orange` en komt terug als `#f97316`, en AML draagt geen groepen over. GraphQL draagt kleuren noch groepen over.  
+Geen van de drie draagt logische namen, domeinkoppelingen of de woordenboeken over, in geen van beide richtingen: de Codegenerator schrijft de fysieke naam en het gegevenstype van elke tabel en kolom, nooit een logische naam of een domein.
 
 ## Exporteren {#exporting}
 
 Het submenu `Export` van het contextmenu van het canvas heeft drie items:
 
-- json: Slaat het diagram op zoals het bestand ervan het bevat, als `.erd.json`: de tabellen met hun kolommen en indexen, de relaties, memo's en tabelgroepen, en de instellingen, elke [vergrendelde instelling](./settings.md#lock) op haar vergrendelde waarde.
+- json: Slaat het diagram op zoals het bestand ervan het bevat, als `.erd.json`: de tabellen met hun kolommen en indexen, de relaties, memo's en tabelgroepen, de logische namen en de domeinkoppelingen van de kolommen, de woorden, termen en domeinen van het tabblad [Woordenboek](./dictionary.md), en de instellingen, elke [vergrendelde instelling](./settings.md#lock) op haar vergrendelde waarde. Wat niets bevat, zoals lege tekst of een lege woordenboekrij, wordt weggelaten — zie [Opslagvorm en runtimewaarde](../../api/advanced/schema.md#storage-form-and-runtime-value).
 - Schema SQL: Opent het tabblad [Schema SQL](./schema-sql.md#saving-or-copying-the-sql) met het optiepaneel open en de focus op de knop `Save file`, zodat een druk op `Enter` de SQL die het tabblad toont opslaat als `.sql`. Tot dan wordt er niets opgeslagen.
 - Image: Opent het dialoogvenster `Export image`, dat het diagram opslaat als `.png` of `.svg`, of het als PNG naar het klembord kopieert — zie [Afbeelding](#image).
 
-Alle drie werken in een editor in alleen-lezenmodus.
+Alle drie werken in een editor in alleen-lezenmodus.  
+De eigen knop `Export CSV` van het tabblad Woordenboek, die niet in dit submenu staat, slaat het blad `Domains`, `Words` of `Terms` op als CSV-bestand. Anders dan deze drie wordt die knop niet aangeboden in een editor in alleen-lezenmodus — zie [CSV importeren en exporteren](./dictionary.md#importing-and-exporting-csv).
 
 Schema SQL schrijft ON DELETE en ON UPDATE van elke relatie na de `REFERENCES` ervan, ON DELETE eerst. `Not set` schrijft niets, en een actie die de geselecteerde database niet accepteert, wordt weggelaten. Zie [Relaties bewerken](./relationship-editing.md#on-delete-and-on-update) voor welke database welke actie accepteert.
 
 Elk geëxporteerd bestand heet `<database name>-<timestamp>` gevolgd door de extensie, met de tijdstempel in lokale tijd in de notatie `yyyy-MM-dd'T'HH_mm_ss` — bijvoorbeeld `my-schema-2026-08-29T04_05_06.erd.json`. Bij een lege databasenaam wordt `unnamed` gebruikt.  
-`Save file` op het tabblad Schema SQL en in de [Codegenerator](./code-generator.md) geeft bestanden op dezelfde manier een naam. Een afbeelding krijgt de databasenaam zoals die was toen het dialoogvenster werd geopend.
+`Save file` op het tabblad Schema SQL en in de [Codegenerator](./code-generator.md) geeft bestanden op dezelfde manier een naam, en dat doet ook `Export CSV`, dat het blad na de tijdstempel toevoegt: `-words.csv`, `-terms.csv` of `-domains.csv`. Een afbeelding krijgt de databasenaam zoals die was toen het dialoogvenster werd geopend.
 
 `Import`, `Import and Add` en `Export` zijn ook beschikbaar via [Snel zoeken](./quick-search.md) op het ERD-tabblad, met dezelfde items als het contextmenu van het canvas.
 
@@ -235,7 +241,7 @@ De bestandsverkenner van Obsidian toont een geëxporteerd `.erd.json`- of `.sql`
 
 De keuzes blijven bewaard tot de editor sluit en worden nooit in het document opgeslagen. Het voorbeeld wordt getekend zoals de afbeelding, en wordt opnieuw getekend als `Background` of `Dark mode` verandert.
 
-De afbeelding bevat het diagram zoals het was toen het dialoogvenster werd geopend; sluit het dialoogvenster en open het opnieuw om latere wijzigingen mee te nemen. Ze bevat het hele diagram, hoe ver het ook is weggescrold, bijgesneden tot wat het diagram tekent plus een marge, en ze wordt altijd op 100% getekend, welk zoomniveau de editor ook toont, zodat elke tabel volledig wordt getekend. Wat de [weergaveopties](./table-related-functions.md#table-view-options) verbergen — relaties, hun labels voor ON DELETE en ON UPDATE, tabelgroepen of memo's — wordt niet getekend en krijgt geen ruimte, en tabelgroepen worden achter al het andere getekend.
+De afbeelding bevat het diagram zoals het was toen het dialoogvenster werd geopend; sluit het dialoogvenster en open het opnieuw om latere wijzigingen mee te nemen. De tabellen en kolommen erin worden genoemd in de naamweergave die de editor toen toonde, ook als die alleen op je scherm is gewisseld terwijl de vergrendeling `Name View` een andere in het bestand houdt — zie [Buiten het canvas](./logical-names.md#beyond-the-canvas). De kleuren die de [controles van het woordenboek](./dictionary.md#marks-on-the-canvas) aan namen op het canvas geven, worden niet getekend. De afbeelding bevat het hele diagram, hoe ver het ook is weggescrold, bijgesneden tot wat het diagram tekent plus een marge, en ze wordt altijd op 100% getekend, welk zoomniveau de editor ook toont, zodat elke tabel volledig wordt getekend. Wat de [weergaveopties](./table-related-functions.md#table-view-options) verbergen — relaties, hun labels voor ON DELETE en ON UPDATE, tabelgroepen of memo's — wordt niet getekend en krijgt geen ruimte, en tabelgroepen worden achter al het andere getekend.
 
 Drie knoppen schrijven de afbeelding weg, en elk ervan laat het dialoogvenster open:
 

@@ -83,7 +83,10 @@ Repliken tillämpar den och serialiserar resultatet på sin egen sida.
 
 Sedan `4.0.0` ska du initiera repliken med editorns `runtimeValue`, som ovan, i stället för med den sparade filen eller editorns `value`.  
 Filen saknar de redigeringar som gjorts sedan den sparades, och `value` saknar de entiteter som tagits bort under sessionen.  
-En replik som initierats utan en borttagen tabell återskapar den utan namn eller kolumner när en editor ångrar borttagningen, och sparar den på det sättet.
+En replik som initierats utan en borttagen tabell återskapar den utan namn eller kolumner när en editor ångrar borttagningen, och sparar den på det sättet.  
+Sedan `4.2.0` gäller samma sak för ett ord, en term eller en domän som tagits bort från ett blad i [ordlistan](../../guide/guides/dictionary.md).  
+När en editor ångrar borttagningen listar en replik som initierats utan raden den på nytt, men tom, och eftersom `value` utelämnar en tom rad sparar repliken dokumentet utan den.  
+För en domän förblir också de kolumner och termer som var kopplade till den okopplade i den repliken, eftersom den aldrig hade kopplingarna och ångringen inte skickar dem.
 
 ## InjectEngineContext {#injectenginecontext}
 
@@ -91,6 +94,8 @@ En replik som initierats utan en borttagen tabell återskapar den utan namn elle
 
 Mäter en sträng i pixlar.  
 Storen har ingen DOM, så den kan inte mäta text själv, och den beräknar om kolumnbredderna med den här funktionen varje gång ett namn, en datatyp, ett standardvärde eller en kommentar ändras.  
+Sedan `4.2.0` gäller det även en tabells eller kolumns [logiska namn](../../guide/guides/logical-names.md).  
+Den mäter en kolumns domäncell, som visar namnet på den domän som kolumnen är kopplad till, varje gång kolumnen kopplas till eller från en domän och varje gång den domänen läggs till, byter namn eller tas bort.  
 Den mäter också alla tabeller och kolumner på nytt varje gång [setInitialValue](#setinitialvalue) läser in ett dokument.  
 Sedan `4.0.0` lagras bredderna bara i [runtimeValue](#runtimevalue-getter), aldrig i `value`.  
 Ett dokument som den här versionen har sparat ger därför samma `value` byte för byte när det läses in igen, var det än sparades och hur text än mättes där.
@@ -146,11 +151,14 @@ const data = replicationStore.value;
 
 Sedan `4.0.0` är `value` lagringsformen: dokumentet så som en fil innehåller det, samma text som elementets [value](../erd-editor-element.md#value) returnerar.  
 Den innehåller bara de befintliga entiteterna, i en fast ordning, utan de borttagna entiteterna, staplingsordningen eller något som en inläsning räknar ut på nytt, till exempel bredderna som [toWidth](#towidth) mäter.  
-Den är indragen med två blanksteg och slutar med en radbrytning, så samma dokument ger alltid samma byte.  
+Sedan `4.2.0` innehåller den också de logiska namnen, om varje namn härleddes från ordlistorna, domänkopplingarna samt orden, termerna och domänerna på fliken [Ordlista](../../guide/guides/dictionary.md).  
+Den utelämnar också, sedan `4.2.0`, varje tomt textfält i en entitet, varje lista i `doc` och varje samling som inte innehåller något samt själva `collections` när alla samlingar är tomma.  
+Den är indragen med två blanksteg, med varje rad från ordlistorna på en egen textrad, och slutar med en radbrytning, så samma dokument ger alltid samma byte.  
 Se [Lagringsform och körtidsvärde](./schema.md#storage-form-and-runtime-value) för vad den innehåller.
 
 Varje inställning vars [lås](../../guide/guides/settings.md#lock) är på skrivs med det värde den låstes med, och varje annan inställning med sitt aktuella värde.  
 Låset `Viewport` omfattar vyns origo och zoomnivån tillsammans, och fliken, kodgeneratorns språk, båda skiftlägena för namn och typen av citattecken har vart och ett sitt eget lås.  
+Sedan `4.2.0` har även [namnvisningen](../../guide/guides/logical-names.md#name-view) ett eget lås, `Name View`, som är på i ett nytt dokument.  
 Låsen ersätter dokumentets `ignoreSaveSettings`, som varken läses eller skrivs sedan `4.0.0`.  
 Före `4.0.0` var `value` hela dokumentet så som storen höll det, med fältets bitar för rullning och zoom tillämpade.
 
@@ -180,8 +188,10 @@ Den tar emot lagringsformen, ett körtidsvärde eller ett dokument som en tidiga
 En tom sträng, eller något som inte är en sträng, läser in ett nytt, tomt dokument i stället för att utlösa ett fel.  
 En store som aldrig har fått något värde startar som samma nya dokument.  
 Sedan `4.0.0` är alla [lås](../../guide/guides/settings.md#lock) på i det dokumentet, så dess `value` behåller den vy, den flik, det språk i kodgeneratorn, de skiftlägen för namn och den typ av citattecken som det startade med, medan editorerna som storen replikerar rullar, zoomar, byter flik eller ändrar de inställningarna. I `3.10.0` sparade det varken rullningsläget eller zoomnivån, och innan dess sparade det båda.  
+Sedan `4.2.0` behåller det också sin namnvisning, `Physical Names`, medan editorerna byter sina.  
 Ett lagrat dokument behåller de lås som det anger.  
 Ett dokument som inte anger några lås, vilket gäller varje dokument som sparats före `4.0.0`, inklusive v2-dokument, läses in med alla lås på: vyns origo på `0, 0`, zoomnivån på `1` och fliken på ERD, oavsett vad det sparade, och kodgeneratorns språk, skiftlägena för namn och typen av citattecken så som det sparade dem.  
+Ett dokument som sparats före `4.2.0` anger inte låset `Name View`, så det läses in med det låset på och i `Physical Names`, även ett dokument som sparats med alla andra lås av.  
 Sedan `4.0.0` kastar `setInitialValue` också bort de samarbetsregister som hölls för det föregående dokumentet, som elementets [setInitialValue](../erd-editor-element.md#setinitialvalue) gör.  
 Text som inte är JSON, till exempel en fil med kvarlämnade märken för sammanslagningskonflikter, utlöser inte heller något fel: tolkningsfelet loggas bara till konsolen, dokumentet töms och inställningarna förblir som de var.
 
@@ -221,15 +231,19 @@ Före `3.10.0` tog den inte emot något, och en lyssnare som ignorerar argumente
 
 En ändring som ett [lås](../../guide/guides/settings.md#lock) håller utanför `value` utlöser ändå `change`, med `changed` satt till `false`, så skriv bara när `changed` är `true`.  
 Det gäller en rullning eller zoomning när `Viewport` är låst, ett flikbyte när `Canvas Type` är låst och en ändring av kodgeneratorns språk, ett skiftläge för namn eller typen av citattecken när dess eget lås är på.  
+Sedan `4.2.0` gäller det även ett byte av namnvisning när `Name View` är låst: editorn skickar det ändå, men repliken kastar det, som de andra editorerna gör.  
+Ett byte av namnvisning som görs i en skrivskyddad editor kastas på samma sätt, oavsett låset.  
 Elementets händelse [change](../erd-editor-element.md#change) utelämnar en sådan ändring, men repliken rapporterar den ändå.  
-Alla lås är på i ett nytt dokument och i ett som sparats före `4.0.0`.  
-När `Viewport` är upplåst ändrar en rullning eller zoomning `value`, och när `Canvas Type` är upplåst gäller detsamma när en annan av editorns flikar öppnas.  
+Alla lås är på i ett nytt dokument och i ett som sparats före `4.0.0`, och `Name View` är låst i varje dokument som sparats före `4.2.0`.  
+När `Viewport` är upplåst ändrar en rullning eller zoomning `value`, när `Canvas Type` är upplåst gäller detsamma när en annan av editorns flikar öppnas, och när `Name View` är upplåst gäller detsamma för ett byte av namnvisning från en editor som inte är skrivskyddad.  
 Att slå på eller av ett lås ändrar också `value`.
 
 Sedan `4.0.0` jämför `changed` lagringsformen, som varken innehåller de borttagna entiteterna eller staplingsordningen.  
-En tabell som läggs till och tas bort igen inom en och samma `change`, en redigering som träffar en entitet som en annan medarbetare har tagit bort och en vidarebefordrad inläsning som bara ändrar staplingsordningen får därför alla också `changed` satt till `false`.
+En tabell som läggs till och tas bort igen inom en och samma `change`, en redigering som träffar en entitet som en annan medarbetare har tagit bort och en vidarebefordrad inläsning som bara ändrar staplingsordningen får därför alla också `changed` satt till `false`.  
+Sedan `4.2.0` gäller det även en rad som läggs till på ett blad i ordlistan och lämnas tom, eftersom lagringsformen utelämnar en rad som inte innehåller något.
 
 `changed` jämför aldrig med din lagrade fil, som redan kan skilja sig från `value` när den har lästs in: det gör en fil som en tidigare version har sparat, inklusive en v2-fil, och likaså en fil som börjar med ett byteordningsmärke och en fil som har redigerats för hand.  
+Sedan `4.2.0` gäller det även en fil som `4.0.0` eller `4.1.0` har sparat, eftersom `value` utelämnar de tomma textfälten i dess entiteter och de tomma listorna i `doc` och tomma samlingarna som en sådan fil innehåller.  
 En bytejämförelse med en sådan fil skulle räkna till och med en rullning som ett lås håller utanför som en redigering.  
 Den första `change` med `changed` satt till `true` lämnar tillbaka en sådan fil i lagringsformen, så filen skrivs om en gång när du skriver den.  
 En fil som den här versionen har sparat skiljer sig inte, var den än sparades, som [toWidth](#towidth) förklarar.  
@@ -260,6 +274,14 @@ Kör repliken på samma version som editorerna, eller en nyare.
 `4.1.0` lägger inte till någon åtgärdstyp och lämnar `@dineug/erd-editor/engine.js` som det var, så en replik med `4.0.0` behåller varje ändring som en editor med `4.1.0` skickar, precis som en replik med `4.1.0` gör.  
 Sedan `4.1.0` byter `Replace` och `Replace All` i [Sök och ersätt](../../guide/guides/find-and-replace.md#replacing) också namn på index och tabellgrupper, genom åtgärderna `index.changeName` och `tableGroup.changeName` som en replik med `4.0.0` redan behåller.  
 [Utforskarens](../../guide/guides/explorer.md) eget tillstånd skickas aldrig, och ett flikbyte eller en rullning som den gör kommer fram som vilket annat flikbyte eller vilken annan rullning som helst; se [Gemensam redigering](./collaborative-editing.md).
+
+Sedan `4.2.0` ingår även `table.changeLogicalName`, `table.changeNameDerived`, `column.changeLogicalName`, `column.changeDomain`, `column.changeNameDerived`, `settings.changeNameViewMode` samt `dictionary.add`, `dictionary.update` och `dictionary.remove` bland de behållna åtgärderna, där de tre sista bär varje redigering, sortering och CSV-import på bladen i [ordlistan](../../guide/guides/dictionary.md).  
+Av bytena av namnvisning tillämpar en replik bara de som en editor som inte är skrivskyddad gör medan `Name View` är upplåst, och kastar resten (se [on@change](#onchange)).  
+En store från en tidigare version kastar alla dessa åtgärder, så den förlorar de [logiska namnen](../../guide/guides/logical-names.md), domänkopplingarna, uppgiften om varje namn kom från ordlistorna, orden, termerna och domänerna samt namnvisningen.  
+En editor från före `4.2.0` i sessionen kan ändå ta bort en del av detta från en replik med `4.2.0`.  
+En `Import` av Schema SQL, GraphQL, DBML eller AML i den editorn, dock inte en `Import and Add`, tömmer replikens ord, termer och domäner.  
+När den ångrar en inläsning, en `Import` eller `clear()` läser den in sin egen kopia av dokumentet i repliken, utan logiska namn, domänkopplingar eller ordlistor; se [Blanda versioner](./collaborative-editing.md#mixing-releases).  
+`@dineug/erd-editor/engine.js` exporterar samma `createReplicationStore`, `ReplicationStore` och `ReplicationChange` som tidigare, och `createReplicationStore` tar emot samma kontext.
 
 Sedan `4.0.0` tillämpar båda metoderna också `editor.mergeLWW`, som bär de samarbetsregister som en editor svarar med när en annan ansluter till sessionen, så repliken avgör samtidiga redigeringar på samma sätt som editorerna.  
 Den ändrar ingen byte i `value` och utlöser ingen `change`.  

@@ -77,8 +77,8 @@ Beginnen Sie das Zeichnen einer Beziehung über das Kontextmenü, über die [Sym
 - One N: `Ctrl + Alt + 4` (Windows/Linux) oder `⌘ + ⌥ + 4` (Mac)
 
 Sobald ein Typ aktiviert ist, ändert sich der Mauszeiger. Klicken Sie zuerst auf die Elterntabelle und dann auf die Kindtabelle.  
-Die Elterntabelle erhält einen Primärschlüssel, falls sie keinen hat, und für jede Primärschlüsselspalte der Elterntabelle erhält die Kindtabelle eine Fremdschlüsselspalte mit `Not Null` und demselben Datentyp, Standardwert und Kommentar.  
-Ein Serial-Schlüssel bildet die Ausnahme: Sein Fremdschlüssel erhält den Ganzzahltyp, den der Serial-Typ speichert, etwa `integer` für `serial4` – siehe [Identifizierende Beziehungen](./relationship-editing.md#identifying-relationships).  
+Die Elterntabelle erhält einen Primärschlüssel, falls sie keinen hat, und für jede Primärschlüsselspalte der Elterntabelle erhält die Kindtabelle eine Fremdschlüsselspalte mit `Not Null` und demselben Datentyp, Standardwert, Kommentar, [logischen Namen](./logical-names.md) und derselben [Domäne](./dictionary.md#domains-and-data-types).  
+Ein Serial-Schlüssel bildet die Ausnahme: Sein Fremdschlüssel erhält den Ganzzahltyp, den der Serial-Typ speichert, etwa `integer` für `serial4`, und verknüpft dann keine Domäne – siehe [Identifizierende Beziehungen](./relationship-editing.md#identifying-relationships).  
 Jede Fremdschlüsselspalte wird nach ihrem Schlüssel benannt: Einem Namen aus einem Wort wie `id` wird der Name der Elterntabelle vorangestellt (`user_id`), ein Name aus mehreren Wörtern wie `member_id` bleibt erhalten, und ein Name, den die Kindtabelle bereits hat, wird nummeriert (`user_id_2`) – siehe [Namen der Fremdschlüsselspalten](./relationship-editing.md#foreign-key-column-names).  
 Wenn Sie zweimal auf dieselbe Tabelle klicken, wird eine selbstreferenzierende Beziehung gezeichnet.  
 Bei einer neuen Beziehung stehen `On Delete` und `On Update` beide auf `Not set`; ändern Sie sie über das Kontextmenü der Beziehung – siehe [ON DELETE und ON UPDATE](./relationship-editing.md#on-delete-and-on-update).  
@@ -91,7 +91,8 @@ Sobald die Elterntabelle gewählt ist und Sie mit dem Zeiger auf eine Tabelle ze
 
 Auch die Elterntabelle zeigt die Schaltflächen, sobald sich der Zeiger ein kleines Stück von der Stelle entfernt hat, an der Sie sie angeklickt haben, sodass auch eine selbstreferenzierende Beziehung bestehenden Spalten zugeordnet werden kann.  
 Ein Finger hat keinen Hover-Zustand, daher erscheinen die Schaltflächen nie, wenn Sie mit einem Finger zeichnen, und ein Tippen auf die Kindtabelle zeichnet die Beziehung sofort; ein Stift zeigt sie wie eine Maus an.  
-Hat die Elterntabelle ihren Primärschlüssel bis zum Erreichen der Kindtabelle verloren, zum Beispiel durch ein Rückgängigmachen oder die Änderung eines Mitbearbeiters, ist die Schaltfläche `Create new columns` mit dem Tooltip `<parent> has no primary key to copy` abgeblendet, und ein Klick auf die Kindtabelle beendet das Zeichnen, ohne etwas zu zeichnen.
+Hat die Elterntabelle ihren Primärschlüssel bis zum Erreichen der Kindtabelle verloren, zum Beispiel durch ein Rückgängigmachen oder die Änderung eines Mitbearbeiters, ist die Schaltfläche `Create new columns` mit dem Tooltip `<parent> has no primary key to copy` abgeblendet, und ein Klick auf die Kindtabelle beendet das Zeichnen, ohne etwas zu zeichnen.  
+Der Tooltip benennt die Elterntabelle gemäß der [Namensansicht](./logical-names.md#beyond-the-canvas).
 
 ![Mit ⌘ + ⌥ + 4 eine Beziehung vom Typ One N zeichnen, dann eine vom Typ Zero N über die Symbolleiste der Zeichenfläche, wobei die Kindtabelle mit ihren Schaltflächen Map to existing columns und Create new columns umrandet ist](/img/demo-relationship.webp)
 

@@ -1,12 +1,12 @@
 ---
-sidebar_position: 9
-description: Iskanje na vrhu raziskovalca po imenih tabel, stolpcev, indeksov in skupin tabel, komentarjih in beležkah, premikanje po zadetkih v njegovem drevesu in na platnu ter zamenjava enega zadetka ali vseh.
+sidebar_position: 10
+description: Iskanje na vrhu raziskovalca po imenih tabel, stolpcev, indeksov in skupin tabel, logičnih imenih, komentarjih in beležkah, premikanje po zadetkih v njegovem drevesu in na platnu ter zamenjava enega zadetka ali vseh.
 ---
 
 # Iskanje in zamenjava
 
 Poišče besedilo v celotnem diagramu, vas pripelje do vsakega zadetka na platnu ERD in zamenja en zadetek ali vse.  
-Preiskuje sedem vrst besedila: imena tabel, komentarje tabel, imena stolpcev, komentarje stolpcev, beležke, imena indeksov in imena skupin tabel – glejte razdelek [Kaj preiskuje](#what-it-searches).
+Preiskuje osem vrst besedila: imena tabel, komentarje tabel, imena stolpcev, komentarje stolpcev, beležke, imena indeksov, imena skupin tabel ter [logična imena](./logical-names.md) tabel in stolpcev – glejte razdelek [Kaj preiskuje](#what-it-searches).
 
 Nahaja se na vrhu [raziskovalca](./explorer.md), plošče, zasidrane levo od platna ERD, med naslovno vrstico raziskovalca in njegovim drevesom. Svojega naslova nima. Od zgoraj navzdol vsebuje:
 
@@ -30,7 +30,7 @@ Kako se raziskovalec zapre, kaj naredijo bližnjica in obe postavki `Toggle Expl
 Razdelek [Ko se umakne](./explorer.md#when-it-stands-aside) opisuje, kako ga skrijeta drug zavihek in način zen ter kako ga pregledovalnik razlik, potovanje skozi čas in predogled samodejne postavitve skrijejo in preprečijo njegovo odpiranje. Razdelek [Ob platnu](./explorer.md#beside-the-canvas) opisuje urejevalnik, ki je zanj preozek.
 
 Ponovno odpiranje ohrani zadnji iskalni niz, pa tudi besedilo za zamenjavo, [možnosti](#options), [vrste besedila](#what-it-searches), ki so bile vklopljene, ter to, ali so bile vrstica `Replace` in vrste besedila razširjene.  
-Ohranijo se, dokler je urejevalnik odprt, in se ne shranijo v dokument. Na novo odprt urejevalnik začne z vsemi izklopljenimi možnostmi, s strnjeno vrstico `Replace` in strnjenimi vrstami besedila ter samo s štirimi vklopljenimi vrstami imen – glejte razdelek [Kaj preiskuje](#what-it-searches).
+Ohranijo se, dokler je urejevalnik odprt, in se ne shranijo v dokument. Na novo odprt urejevalnik začne z vsemi izklopljenimi možnostmi, s strnjeno vrstico `Replace` in strnjenimi vrstami besedila ter z vklopljenimi samo štirimi vrstami imen in vrsto `Logical names` – glejte razdelek [Kaj preiskuje](#what-it-searches).
 
 ## Iskalna vrstica brskalnika {#the-browsers-find-bar}
 
@@ -46,15 +46,16 @@ Stran, ki vdela urejevalnik, lahko bližnjico premakne ali odstrani – glejte r
 
 ## Kaj preiskuje {#what-it-searches}
 
-Sedem gumbov določa, katere vrste besedila se preiskujejo, v tem vrstnem redu: `Table names`, `Table comments`, `Column names`, `Column comments`, `Memos`, `Index names` in `Table group names`.  
+Osem gumbov določa, katere vrste besedila se preiskujejo, v tem vrstnem redu: `Table names`, `Table comments`, `Column names`, `Column comments`, `Memos`, `Index names`, `Table group names` in `Logical names`.  
 Sprva so strnjeni. Gumb `Search In` na koncu vrstice s števcem jih razširi pod to vrstico in jih znova strne, dokler so prikazani, pa je poudarjen.  
-Poudarjen gumb vrste je vklopljen. Kliknite gumb, da ga vklopite ali izklopite, in iskanje se znova izvede. Ko je izklopljenih vseh sedem, se ne najde nič.
+Poudarjen gumb vrste je vklopljen. Kliknite gumb, da ga vklopite ali izklopite, in iskanje se znova izvede. Ko je izklopljenih vseh osem, se ne najde nič.
 
-Iskanje se sprva odpre s štirimi vrstami imen, `Table names`, `Column names`, `Index names` in `Table group names`, zato preimenovanje ne seže do komentarjev in beležk, razen če jih vklopite.  
+Iskanje se sprva odpre s štirimi vrstami imen, `Table names`, `Column names`, `Index names` in `Table group names`, ter z vrsto `Logical names`, zato preimenovanje ne seže do komentarjev in beležk, razen če jih vklopite.  
+Vrsta `Logical names` je ena sama za logična imena tabel in stolpcev.  
 Imena indeksov so imena indeksov na zavihku `Indexes` v oknu [Lastnosti tabele](./table-related-functions.md#indexes), ne ključi `PK_` in `UQ_`, navedeni nad njimi.
 
-Nič drugega se ne preiskuje: niti podatkovni tipi, privzete vrednosti, stolpci indeksa, ime zbirke podatkov, [Shema SQL](./schema-sql.md) s skriptoma `Before tables` in `After tables` niti ustvarjena koda.  
-Komentar, skrit z [možnostjo pogleda tabel](./table-related-functions.md#table-view-options), se še vedno preiskuje. Beležke, skrite z View Option → `Memos`, in [skupine tabel](./table-groups.md#hiding-groups), skrite z View Option → `Table Groups`, se ne, tudi če je njihov gumb vklopljen, zato `Replace All` nikoli ne prepiše beležke ali preimenuje skupine, ki je ne vidite.
+Nič drugega se ne preiskuje: niti podatkovni tipi, domena stolpca, privzete vrednosti, stolpci indeksa, ime zbirke podatkov, [Shema SQL](./schema-sql.md) s skriptoma `Before tables` in `After tables`, ustvarjena koda niti listi zavihka [Slovar](./dictionary.md), ki imajo [svoje iskanje](./dictionary.md#searching).  
+Logična imena se preiskujejo ne glede na to, kaj izriše [prikaz imen](./logical-names.md#name-view), tudi v prikazu `Physical Names`, v katerem jih platno ne prikazuje. Prav tako se še vedno preiskuje komentar, skrit z [možnostjo pogleda tabel](./table-related-functions.md#table-view-options). Beležke, skrite z View Option → `Memos`, in [skupine tabel](./table-groups.md#hiding-groups), skrite z View Option → `Table Groups`, se ne, tudi če je njihov gumb vklopljen, zato `Replace All` nikoli ne prepiše beležke ali preimenuje skupine, ki je ne vidite.
 
 ## Možnosti {#options}
 
@@ -91,19 +92,21 @@ Sporočila `Replaced …`, `No changes` in `No more matches` se ob naslednjem is
 Dokler je v iskalnem polju besedilo, [drevo](./explorer.md#the-tree) raziskovalca namesto celotnega diagrama prikazuje rezultate: samo vrstice, ki vsebujejo zadetek, in vrstice nad njimi. Ko se nič ne ujema ali regularnega izraza ni mogoče razčleniti, je prazno. Izbris iskalnega niza vrne celotno drevo, strnjeno tako, kot je bilo prej.
 
 - Mape `Tables`, `Table Groups` in `Memos` so prikazane le, kadar vsebujejo zadetek, število ob vsaki mapi pa je število vrstic neposredno pod njo v rezultatih.
-- Pod mapo `Tables` so tabele, ki vsebujejo zadetek, razvrščene po imenu. Pod vsako tabelo je najprej vrstica za vsak zadetek v njenem komentarju, nato mapa `Columns` s stolpci, ki vsebujejo zadetek, v vrstnem redu stolpcev, vsak z vrstico za vsak zadetek v svojem komentarju, nato pa mapa `Indexes` z indeksi, katerih ime se ujema. Mape `Foreign Keys` ni.
+- Pod mapo `Tables` so tabele, ki vsebujejo zadetek, razvrščene po imenu, nikoli po logičnem imenu. Pod vsako tabelo je najprej vrstica za vsak zadetek v njenem komentarju, nato mapa `Columns` s stolpci, ki vsebujejo zadetek, v vrstnem redu stolpcev, vsak z vrstico za vsak zadetek v svojem komentarju, nato pa mapa `Indexes` z indeksi, katerih ime se ujema. Mape `Foreign Keys` ni.
 - Pod mapo `Table Groups` so skupine, katerih ime se ujema, razvrščene po imenu, brez svojih tabel. Najdena tabela je prikazana pod mapo `Tables`.
 - Pod mapo `Memos` so beležke, ki vsebujejo zadetek, v vrstnem redu dokumenta, vsaka prikazana s svojo prvo vrstico in z vrstico za vsak zadetek v njej.
 
-Zadetek v imenu je poudarjen v vrstici tega imena, zato je ime, ki iskalni niz vsebuje dvakrat, ena vrstica z dvema poudarkoma.  
+Zadetek v imenu je poudarjen v vrstici tega imena, zato je ime, ki iskalni niz vsebuje dvakrat, ena vrstica z dvema poudarkoma. Zadetek v logičnem imenu tabele ali stolpca je prav tako v vrstici te tabele ali stolpca, nikoli v svoji vrstici.  
+Te vrstice navajajo tabelo ali stolpec z imenom, kot ga prikazuje [prikaz imen](./logical-names.md#beyond-the-canvas), v vsakem od obeh imen, ki ju vrstica lahko prikaže, pa so poudarjeni samo njegovi zadetki. Vrstica, najdena samo v imenu, ki ga njen prikaz izpusti, torej v logičnem imenu v prikazu `Physical Names` ali v imenu v prikazu `Logical Names`, za prikazanim imenom doda še to ime, bledo kot v prikazu `Both Names`, s poudarjenim zadetkom. Kadar zadetek vsebuje tudi prikazano ime, vrstica prikaže samo to ime, zato se zadetki v imenu, ki ga njen prikaz izpusti, štejejo in se po njih lahko premikate, vendar niso poudarjeni.  
 Zadetek v komentarju ali beležki ima svojo vrstico: oblaček za komentar tabele ali stolpca oziroma samolepilni listek za beležko, nato izsek besedila s poudarjenim zadetkom. Dolgo besedilo je odrezano z `…`, prelomi vrstic pa so prikazani kot presledki. Za prikaz celotnega besedila premaknite kazalec nad vrstico.  
 Vse druge vrstice so videti tako kot zunaj iskanja: stolpec prikazuje svoj podatkovni tip, indeks svoje stolpce, prazno ime pa je prikazano kot `unnamed`.
 
 Ko se iskanje začne, je vsaka vrstica, pod katero so druge vrstice, razširjena. Vrstica, ki jo strnete sami ali jo strne gumb `Collapse All`, ostane strnjena, dokler zadetek pod njo ne postane trenutni ali dokler se ne spremeni iskalni niz, `Match Case`, `Match Whole Word`, `Use Regular Expression` ali vrsta besedila oziroma dokler se iskanje ne odpre znova z bližnjico ali postavko `Toggle Explorer`.  
 Vrstica trenutnega zadetka je poudarjena in se pomakne na vidno mesto. Drevo navede vse zadetke, ne glede na to, koliko jih je.  
-Premikanje po zadetkih poteka v vrstnem redu drevesa: tabela za tabelo, ime tabele, njen komentar, ime in komentar vsakega njenega stolpca v vrstnem redu stolpcev ter imena njenih indeksov; nato imena skupin tabel; nato beležke.
+Premikanje po zadetkih poteka v vrstnem redu drevesa: tabela za tabelo, logično ime, ime in komentar tabele, nato logično ime, ime in komentar vsakega njenega stolpca v vrstnem redu stolpcev, nato imena njenih indeksov; nato imena skupin tabel; nato beležke.
 
-Dokler je raziskovalec prikazan, rezultati sledijo dokumentu. Ko se spreminjanje ustavi, vsaka sprememba preiskovanih besedil znova sproži iskanje, trenutni zadetek pa ostane trenutni, če še obstaja. To zajema urejanje imena, komentarja ali besedila beležke, dodajanje ali odstranjevanje tabele, stolpca, indeksa, beležke ali skupine tabel, premik stolpca ter skrivanje ali prikazovanje beležk ali skupin tabel z možnostmi pogleda, kar njihove zadetke odstrani iz drevesa ali jih vrne vanj. Šteje vse: sprememba na platnu, razveljavitev ali uveljavitev, uvoz in sprememba sodelavca ali agenta za kodiranje. Izbiranje, premikanje tabel, beležk ali skupin na platnu, pomikanje, spreminjanje povečave in premikanje kazalca nad elemente pa ne.  
+Dokler je raziskovalec prikazan, rezultati sledijo dokumentu. Ko se spreminjanje ustavi, vsaka sprememba preiskovanih besedil znova sproži iskanje, trenutni zadetek pa ostane trenutni, če še obstaja. To zajema urejanje imena, logičnega imena, komentarja ali besedila beležke, dodajanje ali odstranjevanje tabele, stolpca, indeksa, beležke ali skupine tabel, premik stolpca ter skrivanje ali prikazovanje beležk ali skupin tabel z možnostmi pogleda, kar njihove zadetke odstrani iz drevesa ali jih vrne vanj. Šteje vse: sprememba na platnu, razveljavitev ali uveljavitev, uvoz in sprememba sodelavca ali agenta za kodiranje. Izbiranje, premikanje tabel, beležk ali skupin na platnu, pomikanje, spreminjanje povečave in premikanje kazalca nad elemente pa ne.  
+Prav tako ne preklop prikaza imen, ki ne spremeni nobenega besedila, ki ga bere iskanje: zadetki ostanejo isti, vrstice pa prevzamejo imena, ki jih prikazuje novi prikaz.  
 Spremembe, narejene, ko je raziskovalec zaprt ali ni viden, se upoštevajo v iskanju takoj, ko se znova prikaže.
 
 ## Prehod na zadetek {#going-to-a-match}
@@ -113,17 +116,17 @@ Premikanje se na obeh koncih nadaljuje na nasprotnem koncu. Dokler se prvič ne 
 
 Klik na vrstico rezultatov ali pritisk tipke `Enter` ali `Space`, ko je na njej fokus tipkovnice, naredi eno od naslednjega:
 
-- Vrstica, katere lastno ime vsebuje zadetek, preide na prvi zadetek v tem imenu.
+- Vrstica, ki ima zadetek v svojem imenu ali logičnem imenu, preide na svoj prvi zadetek, najprej v logičnem imenu in šele nato v imenu.
 - Vrstica, ki prikazuje izsek komentarja ali beležke, preide na ta zadetek.
-- Vsaka druga vrstica, kot je tabela, katere ime se ne ujema, ali lastna vrstica beležke, preide na to, kar vrstica predstavlja, trenutni zadetek pa pusti takšen, kot je – glejte razdelek [Prehod na vrstico](./explorer.md#going-to-a-row).
+- Vsaka druga vrstica, kot je tabela, katere ime in logično ime se ne ujemata, ali lastna vrstica beležke, preide na to, kar vrstica predstavlja, trenutni zadetek pa pusti takšen, kot je – glejte razdelek [Prehod na vrstico](./explorer.md#going-to-a-row).
 - Mapa se strne ali razširi.
 
 Kadar koli zadetek postane trenutni, drevo razširi vse strnjene vrstice nad njim in tja premakne vrstico s fokusom tipkovnice, zato puščične tipke v drevesu nadaljujejo od njega.
 
 Prehod na zadetek zapre okno Lastnosti tabele, če je odprto, nato pa:
 
-- Pri imenu ali komentarju tabele oziroma imenu ali komentarju stolpca izbere samo to tabelo, jo postavi v ospredje in fokus premakne na celico, ki vsebuje zadetek. Zadetek v komentarju, skritem z [možnostjo pogleda tabel](./table-related-functions.md#table-view-options), namesto tega premakne fokus na ime ob njem.
-- Pri imenu indeksa izbere samo tabelo indeksa in jo postavi v ospredje, fokus pa premakne na ime tabele, razen če je celica s fokusom že v tej tabeli. Imena indeksov na platnu niso narisana.
+- Pri imenu, logičnem imenu ali komentarju tabele ali stolpca izbere samo to tabelo, jo postavi v ospredje in fokus premakne na celico, ki vsebuje zadetek. Zadetek v komentarju, skritem z [možnostjo pogleda tabel](./table-related-functions.md#table-view-options), namesto tega premakne fokus na ime ob njem. Kjer [prikaz imen](./logical-names.md#name-view) ne izriše celice za ime ali logično ime, fokus preide na celico, izrisano na njenem mestu: na ime v prikazu `Physical Names`, na logično ime v prikazu `Logical Names`.
+- Pri imenu indeksa izbere samo tabelo indeksa in jo postavi v ospredje, fokus pa premakne na ime tabele ali v prikazih `Logical Names` in `Both Names` na njeno logično ime, razen če je celica s fokusom že v tej tabeli. Imena indeksov na platnu niso narisana.
 - Pri imenu skupine tabel izbere samo skupino in jo skupaj z njenimi tabelami postavi v ospredje.
 - Pri beležki izbere samo beležko in jo postavi v ospredje.
 
@@ -151,7 +154,7 @@ Dokler zaporedje traja, tabela ali skupina tabel, ki jo preimenuje, obdrži svoj
 
 Ukaz `Replace All` se izvede z bližnjico `Ctrl + Enter` (Windows/Linux) ali `⌘ + Enter` (Mac) v polju za zamenjavo ali z njegovim gumbom:
 
-- Zamenja vse zadetke v vrstah besedila, ki so vklopljene, drugih vrst pa ne spreminja. S privzetimi vrstami preimenuje tabele, stolpce, indekse in skupine tabel, komentarji in beležke pa ostanejo nespremenjeni.
+- Zamenja vse zadetke v vrstah besedila, ki so vklopljene, drugih vrst pa ne spreminja, razen fizičnih imen, ki jih izpelje zamenjano logično ime in ki jih zapiše, tudi ko sta vrsti `Table names` in `Column names` izklopljeni – glejte spodaj. S privzetimi vrstami preimenuje tabele, stolpce, indekse in skupine tabel ter prepiše logična imena tabel in stolpcev, komentarji in beležke pa ostanejo nespremenjeni.
 - Vse, kar spremeni, je en korak razveljavitve – glejte razdelek [Ena poteza, en korak](./undo-redo.md#one-gesture-one-step).
 - Števec prikaže `Replaced N matches` in pri tem šteje le pojavitve, katerih besedilo se je dejansko spremenilo. Kadar se ni spremenila nobena, prikaže `No changes` in v zgodovino se ne zabeleži nič, kot pri zamenjavi regularnega izraza `(user)` z `$1`.
 - Iskanje se nato ponovi brez trenutnega zadetka, zato lahko rezultati navajajo zadetke, ki jih vsebuje novo besedilo.
@@ -171,8 +174,12 @@ Kako se uporabi besedilo za zamenjavo:
   - Zadetek, zapisan nazaj takšen, kot je bil, se ne šteje: ob izklopljenem stikalu `Match Case` zamenjava `customer` s `Customer` zapiše `customer`, `Customer` in `CUSTOMER` nazaj nespremenjene in noben od njih se ne šteje.
 - Prazno polje za zamenjavo zadetek izbriše.
 
-Zamenjava je običajna sprememba, enaka, kot če bi sami vnesli novo ime tabele, komentar, ime stolpca ali besedilo beležke, preimenovali indeks v oknu Lastnosti tabele ali preimenovali skupino tabel.  
+Zamenjava je običajna sprememba, enaka, kot če bi sami vnesli novo ime tabele, ime stolpca, logično ime, komentar ali besedilo beležke, preimenovali indeks v oknu Lastnosti tabele ali preimenovali skupino tabel.  
 Zabeleži se v zgodovino ter doseže sodelavce in agenta za kodiranje kot vsaka druga sprememba.
+
+Ime tabele ali stolpca, ki ga zapiše zamenjava, zato postane vaše ime, ki ga pozneje vneseno logično ime pusti nespremenjeno, dokler ga ukaz [Znova izpelji fizična imena](./dictionary.md#derive-physical-names-again) ne vrne v upravljanje slovarjem. Ime, ki ga zamenjava pusti prazno, pa se namesto tega vrne v upravljanje slovarjem, tako kot vsako izbrisano ime – glejte razdelek [Vaša imena](./dictionary.md#names-of-your-own).  
+Dokler je fizično ime tabele ali stolpca prazno ali je bilo samo izpeljano, ga zamenjano logično ime izpelje iz slovarjev, tako kot zaprtje celice logičnega imena z novim logičnim imenom – glejte razdelek [Izpeljava fizičnih imen](./dictionary.md#deriving-physical-names). V tem primeru stolpec, katerega novo logično ime je izraz, prevzame tudi domeno izraza in z njo podatkovni tip domene. Kar izpelje, je del koraka razveljavitve zamenjave in se ne šteje v `Replaced N matches`.  
+Kadar en ukaz `Replace All` prepiše logično ime in ime iste tabele ali stolpca, ima ime, ki ga zapiše, prednost pred imenom, ki bi ga izpeljalo novo logično ime.
 
 ## Tipke v iskalnih poljih {#keys-in-the-search-fields}
 

@@ -1,5 +1,5 @@
 ---
-sidebar_position: 15
+sidebar_position: 17
 description: Ke-25 bahasa tampilan editor, tata letak kanan ke kiri, tampilan Sistem, Terang, dan Gelap pada pembuat tema beserta warnanya, dan tempat setiap host menyimpannya.
 ---
 
@@ -13,8 +13,10 @@ Aplikasi web, Google Drive, VS Code, IDE JetBrains, dan Obsidian semuanya menyed
 
 ## Bahasa tampilan {#display-language}
 
-Bahasa ini mencakup teks milik editor sendiri: tooltip bilah alat, menu konteks, Pencarian Cepat, panel dan dialog, tab Pengaturan, [layar sambutan](./editing-start.md#welcome-screen), notifikasi dan pesan, serta teks placeholder yang ditampilkan untuk nama, tipe data, nilai default, atau komentar yang kosong di kanvas dan di gambar yang diekspor.  
-Bahasa ini membiarkan hal-hal berikut tetap seperti yang tertulis dalam setiap bahasa: nama tabel dan kolom, komentar, dan memo Anda; vendor database, bahasa Generator Kode, dan format file; tipe data, kata kunci SQL, serta tindakan `ON DELETE` dan `ON UPDATE`; opsi Skema SQL `Create`, `If not exists`, `Drop & re-create`, `USE`, dan `CREATE + USE`; tanda `PK`, `FK`, `UQ`, `AI`, `NN`, `N-N`, `NULL`, dan `AK1.1`; huruf status `A`, `M`, `D`, `R`, dan `~` pada [Penampil Perbedaan](./table-related-functions.md#diff-viewer); pilihan konvensi penamaan dan `Bracket` selain `None`; nama tombol keyboard; nama warna di pembuat tema; SQL dan kode yang dihasilkan; serta nama file yang diekspor.
+Bahasa ini mencakup teks milik editor sendiri: tooltip bilah alat, tombol [`Name View`](./logical-names.md#switching-the-view) di bilah alat kanvas dan di bilah alat Alur, menu tampilan baris Alur, menu konteks, Pencarian Cepat, panel dan dialog, tab [Kamus](./dictionary.md) (nama lembar, header kolom, alat, menu, baris status, dan jenis pemeriksaan yang dicantumkan lembar `Checks`), tab Pengaturan, [layar sambutan](./editing-start.md#welcome-screen), notifikasi dan pesan, serta teks placeholder yang ditampilkan untuk nama, nama logis, tipe data, domain, nilai default, atau komentar yang kosong di kanvas dan di gambar yang diekspor.  
+Bahasa ini membiarkan hal-hal berikut tetap seperti yang tertulis dalam setiap bahasa: nama tabel dan kolom, [nama logis](./logical-names.md), komentar, dan memo Anda; kata, istilah, dan domain yang Anda simpan di tab Kamus; vendor database, bahasa Generator Kode, dan format file; tipe data, kata kunci SQL, serta tindakan `ON DELETE` dan `ON UPDATE`; opsi Skema SQL `Create`, `If not exists`, `Drop & re-create`, `USE`, dan `CREATE + USE`; tanda `PK`, `FK`, `UQ`, `AI`, `NN`, `N-N`, `NULL`, dan `AK1.1`; huruf status `A`, `M`, `D`, `R`, dan `~` pada [Penampil Perbedaan](./table-related-functions.md#diff-viewer); pilihan konvensi penamaan dan `Bracket` selain `None`; nama tombol keyboard; nama warna di pembuat tema; SQL dan kode yang dihasilkan; baris header file CSV kamus yang diekspor; serta nama file yang diekspor.
+
+Di tab Kamus, pengurutan menyusun baris sesuai urutan abjad bahasa tampilan, dan pencarian lembar `Checks` mencocokkan sel-selnya sebagaimana sel itu terbaca dalam bahasa tampilan — lihat [Mengurutkan](./dictionary.md#sorting) dan [Mencari](./dictionary.md#searching).
 
 Berikut bahasanya, dalam urutan yang dicantumkan pemilih:
 
@@ -84,11 +86,12 @@ Varian regional dianggap sebagai bahasa induknya, sehingga `de-AT` menghasilkan 
 
 ### Bahasa kanan ke kiri {#right-to-left-languages}
 
-עברית (Ibrani), العربية (Arab), dan فارسی (Persia) menata editor dari kanan ke kiri: bilah alat, menu, panel dan dialog, Pencarian Cepat, serta tab Pengaturan dicerminkan. Submenu menu konteks terbuka ke kiri, dan ikon Batalkan dan Ulangi di bilah alat saling bertukar, sehingga Batalkan menunjuk ke arah mundur bagi pembaca kanan ke kiri.
+עברית (Ibrani), العربية (Arab), dan فارسی (Persia) menata editor dari kanan ke kiri: bilah alat, menu, panel dan dialog, Pencarian Cepat, bilah dan baris status tab Kamus, serta tab Pengaturan dicerminkan. Submenu menu konteks terbuka ke kiri, dan ikon Batalkan dan Ulangi di bilah alat saling bertukar, sehingga Batalkan menunjuk ke arah mundur bagi pembaca kanan ke kiri.
 
-Diagram itu sendiri tidak pernah dicerminkan. Kanvas beserta tabel, kolom, hubungan, dan memonya tetap dari kiri ke kanan, begitu pula minimap, bilah gulir, [bilah alat kanvas](./table-related-functions.md#canvas-toolbar), [Visualisasi](./visualization.md) dan bilah alatnya, sel tipe data, kode di tab Skema SQL dan Generator Kode, pemilih warna, kedua sisi Penampil Perbedaan, Perjalanan Waktu, dan pratinjau Tata Letak Otomatis.  
+Diagram itu sendiri tidak pernah dicerminkan. Kanvas beserta tabel, kolom, hubungan, dan memonya tetap dari kiri ke kanan, begitu pula minimap, bilah gulir, [bilah alat kanvas](./table-related-functions.md#canvas-toolbar), [Visualisasi](./visualization.md) dan bilah alatnya, sel tipe data, lembar di tab Kamus dan daftar domain sebuah istilah, kode di tab Skema SQL dan Generator Kode, pemilih warna, kedua sisi Penampil Perbedaan, Perjalanan Waktu, dan pratinjau Tata Letak Otomatis.  
+Dalam mode Alur, kedua panah di bilah alat Visualisasi tetap di tempatnya dan bertukar fungsi: panah yang menunjuk ke kanan adalah `Previous table` dan yang menunjuk ke kiri adalah `Next table`, sehingga arah mundur menunjuk ke arah yang sama dengan Batalkan. Tombol pintasan Batalkan dan Ulangi tetap mundur dan maju satu langkah — lihat [Tabel sebelumnya dan berikutnya](./visualization.md#previous-table-and-next-table).  
 [Penjelajah](./explorer.md#beside-the-canvas) tetap berada di sebelah kiri kanvas, dan pohon perubahan Penampil Perbedaan di sebelah kiri penampil, masing-masing dengan tepi seretnya di sisi kanan. Di dalamnya, keduanya dibaca dari kanan ke kiri: kotak dan barisnya dicerminkan, baris menjorok dari kanan, dan di kedua pohon `←` membentangkan baris atau melangkah ke anak pertamanya, sedangkan `→` menciutkannya atau keluar ke induknya — lihat [Tombol di Penjelajah](./explorer.md#keys-in-the-explorer).  
-Nama, komentar, dan teks lain yang Anda ketik mempertahankan arahnya sendiri, sehingga nama dalam bahasa Ibrani, Arab, atau Persia juga dibaca dari kanan ke kiri di kanvas.
+Nama, komentar, dan teks lain yang Anda ketik mempertahankan arahnya sendiri, sehingga nama dalam bahasa Ibrani, Arab, atau Persia juga dibaca dari kanan ke kiri di kanvas. Setiap nama yang dicantumkan notifikasi tab Kamus juga mempertahankan arahnya sendiri.
 
 ## Tema {#theme}
 

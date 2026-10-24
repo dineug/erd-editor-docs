@@ -1,5 +1,5 @@
 ---
-sidebar_position: 4
+sidebar_position: 5
 description: Výber, presúvanie, kopírovanie, duplikovanie a odstraňovanie tabuliek a poznámok, nastavenie farieb a možností zobrazenia, definovanie indexov a alternatívnych kľúčov, výber databázy, pohyb po nekonečnom plátne a porovnávanie dokumentov.
 ---
 
@@ -7,7 +7,8 @@ description: Výber, presúvanie, kopírovanie, duplikovanie a odstraňovanie ta
 
 Všetko, čo s tabuľkami a poznámkami robíte, keď už existujú – výber, presúvanie, kopírovanie, odstraňovanie, nastavenie farby a toho, čo plátno zobrazuje –, a k tomu ovládacie prvky plátna okolo nich.  
 Najprv prídu na rad príkazy pre tabuľky a poznámky; potom Vlastnosti tabuľky, zameranie na tabuľky, indexy a alternatívne kľúče, automatické rozloženie a databázový systém; a nakoniec samotné plátno: panel nástrojov plátna, priblíženie, posúvanie a miesto, kam vedie skok, a prehliadač rozdielov.  
-Skupiny tabuliek, teda rámce, ktoré zoskupujú tabuľky, majú vlastnú stránku – pozrite si stránku [Skupiny tabuliek](./table-groups.md).
+Skupiny tabuliek, teda rámce, ktoré zoskupujú tabuľky, majú vlastnú stránku – pozrite si stránku [Skupiny tabuliek](./table-groups.md).  
+Vlastnú stránku majú aj logické názvy a Zobrazenie názvov, ktoré určuje, aké názvy tabuľky zobrazujú – pozrite si stránku [Logické názvy](./logical-names.md).
 
 ## Viacnásobný výber {#multiple-selection}
 
@@ -26,11 +27,14 @@ Kláves `Escape` zruší výber. Keď je otvorený editor bunky, poznámky alebo
 
 ![Výber tabuliek pomocou ⌘ + drag a ⌘ + click, potom všetkých tabuliek a poznámok pomocou ⌘ + A](/img/demo-table-select.webp)
 
-V relácii spoločných úprav sa výber, aktívna bunka a výberový rámec každého účastníka vykresľujú na plátne vo farbe daného účastníka – pozrite si stránku [Spoločné úpravy](../../api/advanced/collaborative-editing.md).
+V relácii spoločných úprav sa výber, aktívna bunka a výberový rámec každého účastníka vykresľujú na plátne vo farbe daného účastníka – pozrite si stránku [Spoločné úpravy](../../api/advanced/collaborative-editing.md).  
+Aktívna bunka účastníka, ktorý sa pozerá na iné Zobrazenie názvov, sa vykreslí na bunke, ktorú vaše zobrazenie vykresľuje na jej mieste, napríklad jeho bunka názvu na vašej bunke logického názvu – pozrite si časť [Spolupracovníci](./logical-names.md#collaborators).
 
 ## Presúvanie viacerých tabuliek {#moving-multiple-tables}
 
 Presuňte myšou ľubovoľnú tabuľku alebo poznámku, ktorá už je súčasťou výberu, a celý výber sa presunie s ňou – modifikačný kláves netreba.  
+Tabuľka sa presúva za hlavičku alebo za ktorýkoľvek riadok stĺpca, takže presúvanie začaté na riadku stĺpca presunie tabuľku, nie stĺpec. Stĺpce sa namiesto toho presúvajú za úchyt na presúvanie vedľa aktívneho riadka – pozrite si časť [Zmena poradia a presúvanie stĺpcov](./table-editing.md#rearranging-and-moving-columns).  
+Na bunke hlavičky alebo na riadku stĺpca sa tabuľka začne presúvať, až keď ukazovateľ prejde krátku vzdialenosť, takže kliknutie tam stále urobí bunku aktívnou a dvojité kliknutie stále otvorí jej editor. Presúvanie sa nikdy nezačne z farebného okraja tabuľky, ktorý otvára výber farby, z tlačidiel `+` a `x` na jej hlavičke ani z tlačidla `x` riadka stĺpca.  
 Ak presuniete niečo, čo nie je súčasťou výberu, výber sa zúži iba na tento objekt a presunie sa len on. `Ctrl + drag` (Windows/Linux) alebo `⌘ + drag` (Mac) zachová výber v oboch prípadoch.  
 Tabuľky a poznámky presúva iba ľavé tlačidlo myši. Kliknutie pravým tlačidlom určí, na čo sa použije kontextová ponuka, a nič nepresunie a ťahanie stredným tlačidlom namiesto toho posúva plátno – pozrite si časť [Pohyb po plátne](#getting-around-the-canvas).
 
@@ -47,7 +51,9 @@ Poradie sa neukladá: znova otvorený diagram usporiada tabuľky v poradí, v ak
 Skopíruje vybraté tabuľky a poznámky a prilepí ich späť ako nové.  
 Klávesové skratky: `Ctrl + C` (Windows/Linux) alebo `⌘ + C` (Mac), `Ctrl + V` (Windows/Linux) alebo `⌘ + V` (Mac)
 
-Skopírovaná tabuľka si zachová názov, komentár, stĺpce a farbu; skopírovaná poznámka si zachová text, veľkosť a farbu.  
+Skopírovaná tabuľka si zachová názov, logický názov, komentár, stĺpce a farbu; skopírovaná poznámka si zachová text, veľkosť a farbu.  
+Každý skopírovaný stĺpec si zachová svoj logický názov a každý názov tabuľky a stĺpca si zachová informáciu o tom, či bol odvodený zo slovníkov – pozrite si časť [Odvodzovanie fyzických názvov](./dictionary.md#deriving-physical-names).  
+Prilepený stĺpec si zachová prepojenie s doménou, iba ak platia dve podmienky: diagram, do ktorého sa prilepí, obsahuje práve túto doménu, nielen doménu s rovnakým názvom, a doména má stále typ údajov, s ktorým bol stĺpec skopírovaný. Inak sa stĺpec prilepí bez domény a ponechá si typ, s ktorým bol skopírovaný – pozrite si časť [Prepojenie stĺpca](./dictionary.md#linking-a-column).  
 Skopírujú sa aj indexy a vzťahy: index sa skopíruje celý do skopírovanej tabuľky a vzťah sa skopíruje spolu so svojím typom a akciami ON DELETE a ON UPDATE, ak sú obe tabuľky, ktoré spája, v kopírovanej množine. Vzťah, z ktorého by sa skopírovala iba polovica, sa vynechá a nezostane odkazovať späť na originál.  
 Prilepené kópie sa stanú novým výberom a každé ďalšie prilepenie tej istej kópie ju posunie o ďalších `50px`, takže opakované prilepenia sa neukladajú jedno na druhé.  
 Kópia si nezachová svoju [skupinu tabuliek](./table-groups.md): prilepená tabuľka nepatrí do žiadnej skupiny, ani keď sa ocitne vnútri rámca skupiny, a vybratá skupina sa neskopíruje.  
@@ -60,11 +66,12 @@ Keď sú vnútri aktívnej tabuľky vybraté stĺpce, rovnaká klávesová skrat
 ## Duplikovanie tabuliek a poznámok {#duplicating-tables-and-memos}
 
 Podržte kláves `Alt` a presuňte tabuľku alebo poznámku ľavým tlačidlom myši.  
+Tabuľka sa uchopí za hlavičku alebo za ktorýkoľvek riadok stĺpca, takže `Alt + drag` na riadku stĺpca duplikuje tabuľku a poradie stĺpcov nechá tak. Kláves `Alt` podržaný na úchyte na presúvanie stĺpca nič neduplikuje: stĺpec sa presunie tak, ako ho presunie obyčajné ťahanie za úchyt – pozrite si časť [Zmena poradia a presúvanie stĺpcov](./table-editing.md#rearranging-and-moving-columns).  
 Za ukazovateľom sa pohybuje priesvitná ukážka a po uvoľnení tlačidla sa kópia umiestni tam, kde je ukážka.  
 Ak je to, čo uchopíte, už súčasťou výberu, duplikuje sa celý výber. Inak sa výber nahradí entitou pod ukazovateľom.  
 `Alt + click` bez pohybu umiestni kópiu o `50px` nižšie a doprava a vždy, keď je toto miesto už obsadené, ju posunie ešte ďalej.
 
-Duplikát prenáša to isté ako prilepenie: názvy, komentáre, stĺpce, farby, veľkosti poznámok a indexy a vzťahy, ktoré celé patria do toho, čo ste skopírovali. Rovnako ako prilepená kópia nepatrí do žiadnej skupiny tabuliek.  
+Duplikát prenáša to isté ako [prilepenie](#copyingpasting-tables-and-memos): názvy a logické názvy, komentáre, stĺpce, farby, veľkosti poznámok a indexy a vzťahy, ktoré celé patria do toho, čo ste skopírovali. Keďže zostáva v tom istom diagrame, zachová prepojenie každého stĺpca s doménou tak, ako je. Rovnako ako prilepená kópia nepatrí do žiadnej skupiny tabuliek.  
 `Alt + drag` na záhlaví skupiny tabuliek presunie skupinu rovnako ako obyčajné presunutie myšou; skupina sa nikdy neduplikuje.
 
 ![Duplikovanie tabuľky pomocou Alt + drag, potom Alt + click pre ďalšiu kópiu nižšie a vpravo](/img/demo-table-duplicate.webp)
@@ -119,6 +126,7 @@ Ponúka tieto možnosti zobrazenia:
 - Table Comment
 - Column Comment
 - DataType
+- Domain
 - Default
 - Not Null
 - Unique
@@ -129,7 +137,9 @@ Ponúka tieto možnosti zobrazenia:
 - Table Groups
 - Memos
 
-Možnosti `Unique`, `Alternate Key` a `Auto Increment` sú predvolene vypnuté a ostatné sú zapnuté.  
+Možnosti `Domain`, `Unique`, `Alternate Key` a `Auto Increment` sú predvolene vypnuté a ostatné sú zapnuté.  
+To, aké názvy tabuľky zobrazujú, nie je možnosť zobrazenia: položka `Name View`, hneď za položkou `View Option` v kontextovej ponuke plátna, vyberá fyzické názvy, logické názvy alebo oba – pozrite si časť [Prepnutie zobrazenia](./logical-names.md#switching-the-view).  
+Možnosť `Domain` dá každému stĺpcu bunku umiestnenú podľa [poradia stĺpcov](./settings.md#adjusting-column-order) s názvom domény, s ktorou je stĺpec prepojený. Stĺpec, ktorý nie je prepojený so žiadnou doménou uvedenou v hárku `Domains`, tam zobrazuje stlmený zástupný text `domain`. Bunka sa zobrazuje vo všetkých zobrazeniach. Kým je možnosť `Domain` vypnutá, zobrazenie `Logical Names` namiesto toho zobrazuje názov prepojenej domény v bunke typu – pozrite si časť [Bunka domény](./logical-names.md#the-domain-cell).  
 Možnosť `Alternate Key` označí stĺpce každého alternatívneho kľúča, napríklad ako `AK1.1` – pozrite si časť [Alternatívne kľúče](#alternate-keys).  
 Možnosť `Referential Actions` zobrazuje popisky `D:` a `U:`, ktoré akcie ON DELETE a ON UPDATE vzťahu umiestňujú na koniec jeho spojnice pri podradenej tabuľke – pozrite si časť [Čítanie spojnice](./relationship-editing.md#reading-a-connector). Jej vypnutím sa skryjú iba tieto popisky a nepresunie sa žiadna tabuľka ani spojnica.  
 Možnosť `Table Groups` zobrazuje [skupiny tabuliek](./table-groups.md) a farby skupín na hlavičkách ich tabuliek. Jej vypnutím sa skupiny skryjú na plátne, v minimape a v exportoch obrázkov, žiadna tabuľka sa nepresunie a každá tabuľka zostane vo svojej skupine – pozrite si časť [Skrytie skupín](./table-groups.md#hiding-groups). Zároveň sa z [prieskumníka](./explorer.md#the-tree) odstráni priečinok `Table Groups` a z [panela nástrojov plátna](#canvas-toolbar) tlačidlo `New Table Group` a vyhľadávanie v prieskumníkovi prestane nachádzať názvy skupín.  
@@ -139,19 +149,19 @@ V editore s atribútom `readonly` prepínače nič nezmenia.
 
 ![Prepínanie položiek View Option, pri ktorom sa tabuľky prekresľujú, označenie zloženého jedinečného indexu ako AK1.1 a AK1.2 pomocou Alternate Key, potom vypnutie a zapnutie Memos](/img/demo-view-options.webp)
 
-Kartičky v režime `Flow` na karte Vizualizácia sa týmito možnosťami neriadia: používajú vlastné [zobrazenie riadkov](./visualization.md#row-display) a svoje spojnice vykresľujú, aj keď je možnosť `Relationship` vypnutá.
+Kartičky v režime `Flow` na karte Vizualizácia sa týmito možnosťami neriadia, a to ani možnosťou `Domain`: používajú vlastné [zobrazenie riadkov](./visualization.md#row-display) a svoje spojnice vykresľujú, aj keď je možnosť `Relationship` vypnutá. To, ktoré bunky kartička zobrazí, závisí iba od Zobrazenia názvov – pozrite si časť [Názvy na kartičkách](./visualization.md#names-on-the-cards).
 
 ## Vlastnosti tabuľky {#table-properties}
 
 Otvorí panel vlastností tabuľky.  
 Začnite položkou `Table Properties` v kontextovej ponuke tabuľky, ktorá ho otvorí pre tabuľku, na ktorú ste klikli pravým tlačidlom, alebo vyberte tabuľku a stlačte `Alt + Space`.  
-Panel sa otvorí uprostred stmaveného plátna. Stmaví sa iba plátno, takže otvorený [prieskumník](./explorer.md#dialogs-beside-it) zostane vedľa neho otvorený a použiteľný. Hlavička panela obsahuje nadpis `Table Properties`, päť naposledy otvorených tabuliek ako štítky so zvýraznenou aktuálnou tabuľkou a tlačidlo zatvorenia. Kliknutím na štítok prejdete na danú tabuľku bez opätovného otvorenia panela.  
+Panel sa otvorí uprostred stmaveného plátna. Stmaví sa iba plátno, takže otvorený [prieskumník](./explorer.md#dialogs-beside-it) zostane vedľa neho otvorený a použiteľný. Hlavička panela obsahuje nadpis `Table Properties`, päť naposledy otvorených tabuliek ako štítky so zvýraznenou aktuálnou tabuľkou a tlačidlo zatvorenia. Každý štítok pomenúva svoju tabuľku tak, ako to robí [Zobrazenie názvov](./logical-names.md#beyond-the-canvas). Kliknutím na štítok prejdete na danú tabuľku bez opätovného otvorenia panela.  
 Pod hlavičkou sú tri karty: `Indexes`, `Schema SQL` a `Code Generator`. Panel má pre všetky tri rovnakú veľkosť, takže prepínanie kariet ho nepresúva ani nemení jeho veľkosť.  
 Zatvorte ho tlačidlom zatvorenia, klávesom `Escape` alebo kliknutím na plátno mimo neho.  
 Výber iného riadka ako priečinka v prieskumníkovi alebo prechod na zhodu jeho vyhľadávania zatvorí panel Vlastnosti tabuľky pred skokom. To isté urobí klávesová skratka `Ctrl + F` (Windows/Linux) alebo `⌘ + F` (Mac), ktorá otvorí vyhľadávanie v prieskumníkovi alebo umiestni textový kurzor do jeho poľa hľadania, keď je prieskumník už otvorený. Akékoľvek iné kliknutie v prieskumníkovi vrátane riadka priečinka alebo kliknutie na tlačidlo `Explorer` na paneli nástrojov nechá panel Vlastnosti tabuľky otvorený. Stlačenie klávesu `Escape`, kým je fokus klávesnice v prieskumníkovi, iba vráti fokus klávesnice plátnu, takže na zatvorenie panela Vlastnosti tabuľky treba stlačiť `Escape` druhýkrát.
 
 Kartu `Indexes` opisuje časť [Indexy](#indexes).  
-Karta `Schema SQL` zobrazuje kód DDL tabuľky pre vybratú [databázu](#databases): jej príkaz `CREATE TABLE`, samostatné obmedzenia, ktoré niektoré databázy zapisujú pre jej stĺpce s príznakom Jedinečný, a jej indexy. Vždy zapisuje obyčajné príkazy `CREATE` bez hlavičky a bez skriptu pred tabuľkami alebo za tabuľkami, bez ohľadu na nastavenie karty [Schéma SQL](./schema-sql.md) na paneli nástrojov. Nemá panel možností a jej kontextová ponuka ponúka iba položky `Database` a `Bracket`.  
+Karta `Schema SQL` zobrazuje kód DDL tabuľky pre vybratú [databázu](#databases): jej príkaz `CREATE TABLE`, samostatné obmedzenia, ktoré niektoré databázy zapisujú pre jej stĺpce s príznakom Jedinečný, a jej indexy. Vždy zapisuje obyčajné príkazy `CREATE` bez hlavičky, bez skriptu pred tabuľkami alebo za tabuľkami a bez logických názvov v prázdnych komentároch, bez ohľadu na nastavenie karty [Schéma SQL](./schema-sql.md) na paneli nástrojov – pozrite si časť [Logické názvy ako komentáre](./schema-sql.md#logical-names-as-comments). Nemá panel možností a jej kontextová ponuka ponúka iba položky `Database` a `Bracket`.  
 Karta `Code Generator` generuje kód iba pre túto tabuľku – pozrite si stránku [Generátor kódu](./code-generator.md).
 
 V editore s atribútom `readonly` sa panel aj tak otvorí, s odznakom `Read only` vedľa nadpisu, no jeho karta `Indexes` neumožňuje žiadne úpravy.
@@ -163,19 +173,19 @@ Začnite položkou `Focus on this table` v kontextovej ponuke tabuľky alebo vyb
 Keď je tabuľka, na ktorú kliknete pravým tlačidlom, jednou z viacerých vybratých tabuliek, položka znie `Focus on selected tables` a zameria zobrazenie na celý výber. Kliknutie pravým tlačidlom na tabuľku mimo výberu zameria zobrazenie iba na túto tabuľku.  
 Klávesová skratka použije vybraté tabuľky, poznámky vynechá a nemá žiadny účinok, keď nie je vybratá žiadna tabuľka.  
 Vybratá [skupina tabuliek](./table-groups.md) sa tu nepočíta, pri klávesovej skratke ani pri položke ponuky: jej tabuľky sa použijú, iba keď sú samy vybraté, čo urobí položka `Select tables` v ponuke skupiny.  
-Čo zúžené zobrazenie ukazuje a ako sa vrátiť k celému diagramu, opisuje stránka [Vizualizácia](./visualization.md#focusing-on-tables).
+Čo zúžené zobrazenie ukazuje a ako sa vrátiť k celému diagramu, opisuje stránka [Vizualizácia](./visualization.md#focusing-on-tables) a postup, ako prechádzať o krok späť a dopredu cez to, čo režim Flow zobrazoval predtým, opisuje časť [Predchádzajúca a nasledujúca tabuľka](./visualization.md#previous-table-and-next-table).
 
 ## Indexy {#indexes}
 
 Indexy sa definujú na karte `Indexes` panela vlastností tabuľky a sú zahrnuté v exportovanej schéme SQL.
 
 Ľavá strana uvádza kľúče a indexy tabuľky v dvoch častiach.  
-Časť `Keys`, ktorá sa zobrazuje, ak tabuľka nejaké kľúče má, uvádza kľúče, ktoré deklarujú jej stĺpce: `PK_<table name>` nad stĺpcami označenými ako PK, potom `UQ_<table name>_<column name>` pre každý stĺpec s príznakom Jedinečný, v poradí stĺpcov. Názvy sa riadia schémou SQL vybratej databázy, takže pri možnosti `Bracket` nastavenej na `None` sa pre tabuľku so schémou, napríklad `sales.users`, vo všetkých databázach okrem Databricks a Snowflake uvádza `PK_users` – pozrite si časť [Názvy tabuliek so schémou](./schema-sql.md#schema-qualified-table-names). Každý kľúč má značku `PK` alebo `UQ` a je označený zámkom. Sú tu iba na čítanie a menia sa iba spolu s príznakmi [PK](./table-editing.md#column-primary-key) a [Jedinečný](./table-editing.md#not-null-unique-auto-increment) stĺpcov.  
+Časť `Keys`, ktorá sa zobrazuje, ak tabuľka nejaké kľúče má, uvádza kľúče, ktoré deklarujú jej stĺpce: `PK_<table name>` nad stĺpcami označenými ako PK, potom `UQ_<table name>_<column name>` pre každý stĺpec s príznakom Jedinečný, v poradí stĺpcov. Ide o fyzické názvy, ktoré zapisuje schéma SQL vybratej databázy, bez ohľadu na Zobrazenie názvov, takže pri možnosti `Bracket` nastavenej na `None` sa pre tabuľku so schémou, napríklad `sales.users`, vo všetkých databázach okrem Databricks a Snowflake uvádza `PK_users` – pozrite si časť [Názvy tabuliek so schémou](./schema-sql.md#schema-qualified-table-names). Každý kľúč má značku `PK` alebo `UQ` a je označený zámkom. Sú tu iba na čítanie a menia sa iba spolu s príznakmi [PK](./table-editing.md#column-primary-key) a [Jedinečný](./table-editing.md#not-null-unique-auto-increment) stĺpcov.  
 Časť `Indexes` uvádza indexy tabuľky v poradí, v akom boli pridané. Každý index má prepínač `UQ`, ktorý z neho urobí jedinečný index, pole názvu a tlačidlo `x`, ktoré ho odstráni. Index, ktorý je [alternatívnym kľúčom](#alternate-keys), zobrazuje aj svoje číslo, napríklad `AK1`. Index pridáte tlačidlom `Add Index` v dolnej časti zoznamu.
 
-Pravá strana uvádza stĺpce tabuľky v časti `Columns`, každý so začiarkavacím políčkom. Kým nie je vľavo vybratý index, nič sa nedá upraviť.  
+Pravá strana uvádza stĺpce tabuľky v časti `Columns`, každý so začiarkavacím políčkom. Každý riadok zobrazuje tie isté bunky ako riadok stĺpca na plátne a riadi sa poradím stĺpcov, možnosťami zobrazenia a [Zobrazením názvov](./logical-names.md#beyond-the-canvas). Kým nie je vľavo vybratý index, nič sa nedá upraviť.  
 Začiarknutím stĺpca ho pridáte do vybratého indexu a zrušením začiarknutia ho odstránite. Po výbere kľúča sa jeho stĺpce zobrazia začiarknuté, ale políčka zostanú neaktívne.  
-Stĺpce vybratého indexu sú uvedené nižšie v časti `Index order`. Ich poradie zmeníte presunutím myšou za úchyt a kliknutím na štítok `ASC` alebo `DESC` v riadku prepnete jeho smer zoradenia. V alternatívnom kľúči sa každý riadok končí svojím označením `AK<n>.<m>`. Zoznam zobrazuje tri riadky naraz a ostatné sú dostupné posúvaním.
+Stĺpce vybratého indexu sú uvedené nižšie v časti `Index order`, každý pomenovaný tak, ako ho pomenúva Zobrazenie názvov, pričom v zobrazení `Both Names` nasleduje za logickým názvom fyzický názov v zátvorkách, napríklad `Member Number (member_no)`. Ich poradie zmeníte presunutím myšou za úchyt a kliknutím na štítok `ASC` alebo `DESC` v riadku prepnete jeho smer zoradenia. V alternatívnom kľúči sa každý riadok končí svojím označením `AK<n>.<m>`. Zoznam zobrazuje tri riadky naraz a ostatné sú dostupné posúvaním.
 
 V editore s atribútom `readonly` sa po výbere kľúča alebo indexu jeho stĺpce stále zobrazia, ale nie je k dispozícii tlačidlo `Add Index` ani `x` a nič iné na karte sa nedá zmeniť.
 
@@ -216,12 +226,12 @@ Otvorte položku `Auto Layout` z kontextovej ponuky plátna alebo z rýchleho vy
 | `Tree - horizontal` | Rovnaké vrstvenie, zľava doprava. |
 
 Rozloženie `Force` otvorí ukážku, kým sa rozloženie ustáli, s tlačidlami `Apply` a `Cancel` v upozornení, ktoré zobrazí.  
-Záber ukážky zodpovedá diagramu v stave, v akom bol pri spustení rozloženia, takže tabuľky sa počas ustaľovania rozloženia môžu dostať mimo záberu. Ukážka sa vykresľuje pri `70%` alebo menej, takže jej tabuľky sú zbalené na svoj názov a farebný okraj.  
+Záber ukážky zodpovedá diagramu v stave, v akom bol pri spustení rozloženia, takže tabuľky sa počas ustaľovania rozloženia môžu dostať mimo záberu. Ukážka sa vykresľuje pri `70%` alebo menej, takže jej tabuľky sú zbalené na svoj názov a farebný okraj. Otvorí sa v Zobrazení názvov, na ktoré sa pozeráte, bez ohľadu na to, aké zobrazenie uchováva súbor – pozrite si časť [Mimo plátna](./logical-names.md#beyond-the-canvas).  
 Tlačidlo `Apply` zachová polohy v stave, v akom sú v danej chvíli, a keď sa rozloženie ustáli, použije sa samo. Tlačidlo `Cancel` alebo kláves `Escape` ponechá diagram v pôvodnom stave.
 
 Ostatné tri sa vypočítajú naraz mimo hlavného vlákna, takže nie je čo sledovať: počas výpočtu rozloženia sa zobrazuje upozornenie a hotové usporiadanie sa vycentruje na oblasť, ktorú diagram už zaberá. Tlačidlo `Cancel` alebo kláves `Escape` zahodí rozloženie, na ktoré už nečakáte, a v hostiteľskej aplikácii, ktorá nespúšťa shared worker, skončí rozloženie oznámením `Could not place tables` – pozrite si časť [Web Workers](../../api/installation.md#web-workers). Rovnako skončí aj rozloženie, ktoré sa nevráti do 60 sekúnd.
 
-Nech vyberiete ktorékoľvek, presunú sa tabuľky a skupiny tabuliek a poznámky zostanú na svojom mieste. Vzťah tabuľky so sebou samou sa ignoruje a viac vzťahov medzi tými istými dvoma tabuľkami sa počíta ako jeden.  
+Nech vyberiete ktorékoľvek, presunú sa tabuľky a skupiny tabuliek a poznámky zostanú na svojom mieste. Tabuľky sa umiestnia v šírkach, aké majú v Zobrazení názvov, na ktoré sa pozeráte. Vzťah tabuľky so sebou samou sa ignoruje a viac vzťahov medzi tými istými dvoma tabuľkami sa počíta ako jeden.  
 Každé rozloženie drží tabuľky každej skupiny pohromade bez ohľadu na to, či sú skupiny zobrazené, a každú skupinu, ktorá obsahuje tabuľky, prispôsobí tak, aby ich obklopovala – pozrite si stránku [Skupiny tabuliek](./table-groups.md#auto-layout).  
 Výsledok sa zapíše ako jediný záznam histórie, takže jedno vrátenie späť vráti každú tabuľku a skupinu na pôvodné miesto.
 
@@ -259,6 +269,7 @@ Nad stredom dolného okraja plátna sa vznáša malý panel nástrojov, ktorý z
 - `New Table`, `New Memo` a `New Table Group`. Tlačidlo `New Table` pridá tabuľku rovnako ako `Alt + N` a tlačidlo `New Memo` pridá poznámku rovnako ako `Alt + M`. Tlačidlo `New Table Group` aktivuje [kreslenie skupiny](./table-groups.md#drawing-a-group) rovnako ako `Alt + G` a vypne ruku; druhé kliknutie, rovnako ako druhé stlačenie `Alt + G`, ukončí kreslenie bez pridania skupiny. Tlačidlo `New Memo` nie je k dispozícii, kým View Option → `Memos` skrýva poznámky, a tlačidlo `New Table Group`, kým View Option → `Table Groups` skrýva skupiny. Editor s atribútom `readonly` nezobrazuje ani jedno z týchto troch tlačidiel.
 - Priblíženie: `Zoom out`, aktuálne priblíženie v percentách a `Zoom in`. Obe tlačidlá menia priblíženie po krokoch rovnako ako klávesové skratky priblíženia a kliknutie na percentuálnu hodnotu ho vráti na `100%`.
 - Štyri notácie vzťahu, tie isté štyri, ktorými začínate vzťah – pozrite si stránku [Začíname s úpravami](./editing-start.md). Výber jednej z nich prepne späť na ukazovateľ, pretože vzťah sa kreslí kliknutím na dve tabuľky.
+- `Name View`, tlačidlo so šípkou nadol, ktoré uvádza aktuálne zobrazenie: `Physical Names`, `Logical Names` alebo `Both Names`. Má rovnakú šírku bez ohľadu na to, ktoré zobrazenie uvádza, takže prepnutie nikdy neposunie panel nástrojov. Kliknutím sa nad panelom nástrojov otvorí zoznam týchto troch zobrazení so začiarknutým aktuálnym zobrazením. Výber niektorého z nich naň prepne a zoznam zatvorí; druhé kliknutie na tlačidlo, stlačenie kdekoľvek inde alebo `Escape` zoznam zatvorí bez prepnutia. Zobrazuje ho aj editor s atribútom `readonly`. Čo jednotlivé zobrazenia vykresľujú, opisuje časť [Zobrazenie názvov](./logical-names.md#name-view) a či sa prepnutie ukladá, opisuje časť [Prepnutie zobrazenia](./logical-names.md#switching-the-view).
 - Režim Zen, `Alt + Z`, ktorý skryje všetko okrem plátna a tohto panela nástrojov. Opätovné stlačenie `Alt + Z` alebo tlačidlo vráti zvyšok späť. Otvorený prieskumník sa skryje spolu so zvyškom bez toho, aby sa zatvoril, a spolu s ním sa aj vráti. V režime Zen ho možno stále otvoriť – pozrite si časť [Kedy sa prieskumník nezobrazuje](./explorer.md#when-it-stands-aside).
 - Kompas `Go to content`, ktorý sa na koniec panela nástrojov pridá iba vtedy, keď na obrazovke nie je žiadna tabuľka, zobrazená poznámka ani zobrazená skupina tabuliek – pozrite si časť [Pohyb po plátne](#getting-around-the-canvas).
 
@@ -277,7 +288,7 @@ Klávesové skratky: `Ctrl + Plus` (Windows/Linux) alebo `⌘ + Plus` (Mac), `Ct
 Tlačidlá `Zoom out` a `Zoom in` na [paneli nástrojov plátna](#canvas-toolbar) menia priblíženie po krokoch ako klávesové skratky `Minus` a `Plus`: každé stlačenie ho zmení o 4 percentuálne body, pričom stred obrazovky zostane na mieste. Percentuálna hodnota medzi nimi zobrazuje aktuálne priblíženie a kliknutím na ňu sa priblíženie vráti priamo na `100%` rovnako ako pri `Ctrl + 0` (Windows/Linux) alebo `⌘ + 0` (Mac).
 
 Priblíženie sa pohybuje od `10%` do `150%`.  
-Pri `70%` a menej sa tabuľky zbalia na svoj názov a farebný okraj a úprava buniek, klávesové skratky buniek a kopírovanie a prilepovanie prestanú fungovať, kým zobrazenie znova nepriblížite.
+Pri `70%` a menej sa tabuľky zbalia na svoj názov a farebný okraj a úprava buniek, klávesové skratky buniek a kopírovanie a prilepovanie prestanú fungovať, kým zobrazenie znova nepriblížite. Názov, ktorý zbalená tabuľka zobrazuje, sa riadi Zobrazením názvov – pozrite si časť [Zobrazenie názvov](./logical-names.md#name-view).
 
 Tie isté tri klávesové skratky menia priblíženie aj na karte Vizualizácia, v režime `Graph` aj `Flow`, každý režim vo vlastnom rozsahu – pozrite si stránku [Vizualizácia](./visualization.md#toolbar).
 
@@ -302,11 +313,11 @@ Posúvacie pruhy pozdĺž pravého a dolného okraja opisujú ten istý rozsah p
 
 Ak po posunutí nezostane na obrazovke žiadna tabuľka, zobrazená poznámka ani zobrazená skupina tabuliek, na koniec [panela nástrojov plátna](#canvas-toolbar) sa pridá kompas `Go to content` so šípkou smerujúcou k najbližšiemu z týchto objektov a s údajom o jeho vzdialenosti. Kliknutím naň tento objekt vycentrujete bez zmeny priblíženia.
 
-![Posúvanie ťahaním prázdneho plátna, ťahaním stredným tlačidlom nad tabuľkou, minimapou a kolieskom myši, potom návrat podľa kompasu Go to content](/img/demo-canvas-navigation.webp)
+![Posúvanie ťahaním prázdneho plátna, kolieskom myši, ťahaním stredným tlačidlom nad tabuľkou a z minimapy, potom posunutie pomocou Shift + wheel za obsah a návrat podľa kompasu Go to content](/img/demo-canvas-navigation.webp)
 
 ### Kam vedie skok {#where-a-jump-lands}
 
-Každý prechod, ktorý vás presunie na niečo na plátne, posúva zobrazenie podľa jedného pravidla: výsledky `#`, `@` a `:` [rýchleho vyhľadávania](./quick-search.md#searching-the-diagram), riadky [prieskumníka](./explorer.md#going-to-a-row) a zhody jeho funkcie [hľadanie a nahrádzanie](./find-and-replace.md#going-to-a-match), riadky zoznamu [prehliadača rozdielov](#going-to-a-change), [tlačidlo na kartičke](./visualization.md#card-buttons) s externým odkazom v režime Flow a umiestnenie po príkaze [Importovať a pridať](./file-import-export.md#import-and-add). Každá z týchto častí uvádza, čo prechod vyberie; táto časť uvádza, kam sa presunie zobrazenie.
+Každý prechod, ktorý vás presunie na niečo na plátne, posúva zobrazenie podľa jedného pravidla: výsledky `#`, `@` a `:` [rýchleho vyhľadávania](./quick-search.md#searching-the-diagram), riadky [prieskumníka](./explorer.md#going-to-a-row) a zhody jeho funkcie [hľadanie a nahrádzanie](./find-and-replace.md#going-to-a-match), riadky zoznamu [prehliadača rozdielov](#going-to-a-change), [tlačidlo na kartičke](./visualization.md#card-buttons) s externým odkazom v režime Flow, kontrola v [hárku Kontroly](./dictionary.md#the-checks-sheet) na karte Slovník, ktorá uvádza tabuľku alebo stĺpec, a umiestnenie po príkaze [Importovať a pridať](./file-import-export.md#import-and-add). Každá z týchto častí uvádza, čo prechod vyberie; táto časť uvádza, kam sa presunie zobrazenie.
 
 Skok nikdy nemení priblíženie a posunie zobrazenie najviac raz. Z inej karty najprv prepne na kartu ERD.  
 Plátno meria tak, ako sa zobrazuje: pod horným panelom nástrojov, v režime Zen na celú výšku, a vpravo od otvoreného prieskumníka, ktorý plátno zužuje, a nie prekrýva.
@@ -322,8 +333,8 @@ Pri malej tabuľke pri ľavom okraji plátna v polovici výšky sa teda zobrazen
 Čo skok zobrazí a kľúčová časť, ktorá musí byť viditeľná, keď sa celok nezmestí:
 
 - Tabuľka: celá tabuľka, podľa pásu s názvom v jej hornej časti alebo pri zhode v komentári tabuľky podľa bunky komentára, kým View Option → `Table Comment` zobrazuje komentáre. Pri `70%` a menej, keď sú tabuľky zbalené na svoj názov, podľa názvu v strede rámčeka tabuľky.
-- Stĺpec: jeho riadok, podľa bunky, na ktorú skok vedie: jeho názov alebo komentár, v ktorom je zhoda, kým View Option → `Column Comment` zobrazuje komentáre. Pri `70%` a menej stĺpec zobrazí svoju tabuľku podľa pravidla pre tabuľky.
-- Bunka, ktorá je príliš široká na to, aby sa zobrazila celá, napríklad dlhý komentár: podľa zhodného textu v nej.
+- Stĺpec: jeho riadok, podľa bunky, na ktorú skok vedie: jeho názov, jeho logický názov pri zhode v logickom názve alebo pri kontrole logického názvu, jeho bunka domény pri kontrole jeho domény alebo komentár, v ktorom je zhoda, kým View Option → `Column Comment` zobrazuje komentáre. Ak riadok takú bunku nevykresľuje, skok vedie na bunku vykreslenú na jej mieste: na logický názov namiesto názvu v zobrazení `Logical Names`, na názov namiesto logického názvu v zobrazení `Physical Names` a na bunku typu namiesto bunky domény, kým je možnosť View Option → `Domain` vypnutá, alebo na celý riadok, keď je vypnutá aj možnosť `DataType`. Pri `70%` a menej stĺpec zobrazí svoju tabuľku podľa pravidla pre tabuľky.
+- Bunka, ktorá je príliš široká na to, aby sa zobrazila celá, napríklad dlhý komentár: podľa zhodného textu v nej. Skok na bunku vykreslenú na mieste bunky so zhodou, napríklad na názov pri zhode v logickom názve v zobrazení `Physical Names`, sa podľa textu neriadi.
 - Vzťah: oblasť pokrývajúca jeho dve tabuľky, podľa podradenej tabuľky.
 - Skupina tabuliek: jej rámec, podľa jej záhlavia.
 - Poznámka alebo blok, ktorý umiestni príkaz Importovať a pridať: celý objekt.
@@ -337,7 +348,7 @@ Môžete porovnať predtým uložené dokumenty s aktuálnym dokumentom.
 V kontextovej ponuke plátna vyberte položku `Diff Viewer` a zvoľte dokument `.json`, ktorý ste predtým exportovali.
 
 Zobrazenie sa otvorí nad plátnom: vľavo to, čo sa zmenilo, potom vedľa seba uložený a aktuálny dokument.  
-Aktuálny dokument sa porovnáva v stave, v akom je pri otvorení zobrazenia; zmeny vykonané potom, vrátane zmien spolupracovníka, sa do zobrazenia nedostanú. Otvorený [prieskumník](./explorer.md#when-it-stands-aside) je skrytý, kým je zobrazenie otvorené, takže zobrazenie zaberá celú šírku editora.  
+Aktuálny dokument sa porovnáva v stave, v akom je pri otvorení zobrazenia; zmeny vykonané potom, vrátane zmien spolupracovníka, sa do zobrazenia nedostanú. Obe strany sa otvoria a zostanú v Zobrazení názvov, na ktoré sa pozeráte, bez ohľadu na to, aké zobrazenie uchováva ktorýkoľvek zo súborov – pozrite si časť [Mimo plátna](./logical-names.md#beyond-the-canvas). Otvorený [prieskumník](./explorer.md#when-it-stands-aside) je skrytý, kým je zobrazenie otvorené, takže zobrazenie zaberá celú šírku editora.  
 Každú stranu možno posúvať kolieskom myši, ťahaním prázdnej oblasti alebo tela skupiny tabuliek alebo ťahaním stredným tlačidlom kdekoľvek nad ňou a priblíženie sa na nej mení pomocou `Ctrl + Wheel` (Windows/Linux), `⌘ + Wheel` (Mac) alebo stiahnutím prstov. Pri `70%` a menej sa jej tabuľky zbalia rovnako ako na plátne – pozrite si časť [Označenia na oboch stranách](#marks-on-the-two-sides).  
 Obe strany sú iba na čítanie, takže vo vašom dokumente sa nič nezmení. Každá má vlastný výber a kliknutie na tabuľku na niektorej strane ju vyberie iba na tejto strane.  
 Zobrazenie zatvorte tlačidlom `Close` v upozornení `Diff Viewer`, ktoré sa zobrazí pri jeho otvorení, alebo klávesom `Escape`.
@@ -360,13 +371,14 @@ Pri porovnaní so súborom z iného zdroja, napríklad s diagramom znova vytvore
 - Poznámka: text, poloha, veľkosť a farba.
 - Skupina tabuliek: názov, tabuľky, ktoré obsahuje, farba, poloha a veľkosť.
 
-Tabuľka, poznámka alebo skupina, ktorá bola iba presunutá alebo jej bola zmenená veľkosť či farba, sa teda počíta ako zmenená. Polohy a veľkosti sa porovnávajú v celých pixeloch a poradie prekrývania ani miesto, kde sa spojnica stretáva s tabuľkou, sa nikdy nepočítajú.
+Tabuľka, poznámka alebo skupina, ktorá bola iba presunutá alebo jej bola zmenená veľkosť či farba, sa teda počíta ako zmenená. Polohy a veľkosti sa porovnávajú v celých pixeloch a poradie prekrývania ani miesto, kde sa spojnica stretáva s tabuľkou, sa nikdy nepočítajú.  
+Logické názvy, prepojenia s doménami a slová, termíny a domény na karte [Slovník](./dictionary.md) sa neporovnávajú, takže zmena iba v nich sa neuvádza ani neoznačuje. Typ údajov, ktorý zmenila doména, sa však počíta ako zmena typu údajov stĺpca.
 
 ### Strom zmien {#the-change-tree}
 
 Zoznam vľavo sa vykresľuje ako [strom prieskumníka](./explorer.md#the-tree) a obsahuje iba to, čo sa zmenilo: `Tables`, `Table Groups` a `Memos`, pričom každý z týchto priečinkov sa zobrazuje, iba ak obsahuje nejaký riadok, a pod tabuľkou jej vlastné `Columns`, `Indexes` a `Foreign Keys`. Cudzí kľúč je uvedený pod svojou podradenou tabuľkou a pridaná alebo odstránená tabuľka v sebe nič neuvádza.  
 Každý priečinok zobrazuje, koľko riadkov obsahuje, a každý priečinok a tabuľka sú na začiatku rozbalené.  
-Tabuľky a skupiny tabuliek sú zoradené podľa názvu bez ohľadu na veľkosť písmen. Poznámky a stĺpce, indexy a cudzie kľúče tabuľky zachovávajú poradie aktuálneho dokumentu, pričom odstránená položka sa vráti na miesto, kde bola. Riadok poznámky zobrazuje prvý riadok poznámky a riadok cudzieho kľúča zobrazuje jeho stĺpce v podradenej tabuľke, potom `→` s nadradenou tabuľkou a jej stĺpcami, napríklad `user_id → users(id)`. Prázdny názov sa zobrazí ako `unnamed` kurzívou.
+Riadok tabuľky alebo stĺpca je pomenovaný v Zobrazení názvov, v ktorom sa strany otvorili. V zobrazení `Both Names` zobrazuje logický názov, za ktorým nasleduje tlmený fyzický názov, a v odstránenom riadku je tlmený názov prečiarknutý spolu so zvyškom. Tabuľky a skupiny tabuliek sú zoradené podľa názvu bez ohľadu na veľkosť písmen a bez ohľadu na zobrazenie. Poznámky a stĺpce, indexy a cudzie kľúče tabuľky zachovávajú poradie aktuálneho dokumentu, pričom odstránená položka sa vráti na miesto, kde bola. Riadok poznámky zobrazuje prvý riadok poznámky a riadok cudzieho kľúča zobrazuje jeho stĺpce v podradenej tabuľke, potom `→` s nadradenou tabuľkou a jej stĺpcami, napríklad `user_id → users(id)`. Prázdny názov sa zobrazí ako `unnamed` kurzívou.
 
 Každý riadok končí písmenom a riadok označený `A`, `D`, `M` alebo `R` má názov vo farbe tohto písmena:
 
@@ -378,7 +390,7 @@ Každý riadok končí písmenom a riadok označený `A`, `D`, `M` alebo `R` má
 
 Keď podržíte ukazovateľ nad názvom riadka, zobrazí sa jeho bublinový popis: stav `Added`, `Deleted`, `Modified`, `Renamed` alebo `Changed inside`, potom jeden riadok pre každú zmenu, napríklad `Name: users → members` alebo `NN: ✗ → ✓`. Text sa cituje svojím prvým riadkom skráteným po 40 znakoch a prázdna hodnota sa zobrazí ako `—`. Bublinový popis pridanej alebo odstránenej položky obsahuje iba jej stav.
 
-Pole `Filter by name` nad stromom ponechá riadky, ktorých aktuálny alebo uložený názov obsahuje zadaný text, bez ohľadu na veľkosť písmen. Tabuľka, ktorej názov sa zhoduje, si ponechá všetky svoje riadky, a tabuľka, ktorej názov sa nezhoduje, zostane iba so zhodnými riadkami. Filter, ktorému nič nezodpovedá, ponechá strom prázdny.  
+Pole `Filter by name` nad stromom ponechá riadky, ktorých aktuálny alebo uložený názov alebo aktuálny alebo uložený logický názov obsahuje zadaný text, bez ohľadu na veľkosť písmen, a to v každom zobrazení. Tabuľka, ktorej názov sa zhoduje, si ponechá všetky svoje riadky, a tabuľka, ktorej názov sa nezhoduje, zostane iba so zhodnými riadkami. Filter, ktorému nič nezodpovedá, ponechá strom prázdny.  
 Keď sa tieto dva dokumenty vôbec nelíšia, v strome sa zobrazí `No changes`.
 
 Ťahaním pravého okraja stromu ho rozšírite alebo zúžite, od `200px` do `480px`, a dvojitým kliknutím na okraj ho vrátite na `260px`. Každé porovnanie sa otvorí so šírkou `260px` a obe strany si zvyšok šírky rozdelia rovným dielom.  
@@ -407,5 +419,7 @@ Obe strany farbia text, obrysy a spojnice a nič nevypĺňajú. Pridané je zele
 - Zmena indexu neoznačí nič na žiadnej strane; zobrazuje sa iba v strome.
 
 Každá strana sa riadi možnosťami zobrazenia svojho dokumentu. Zmena v bunke, ktorú daná strana nevykresľuje, sa namiesto toho prejaví na názve. Zmena stĺpca v bunke, ktorú skrýva niektorá možnosť zobrazenia, napríklad `Unique` alebo `Auto Increment`, ktoré sú obe predvolene vypnuté, zafarbí názov stĺpca jantárovou, a rovnako aj zmena primárneho kľúča v riadku, ktorý nezobrazuje ikonu kľúča. Zmena komentára tabuľky, kým je možnosť `Table Comment` vypnutá, zafarbí názov tabuľky jantárovou. Modrá farba premenovania má prednosť pred touto jantárovou. Poznámka alebo skupina tabuliek, ktorú jej dokument skrýva, je uvedená v strome, ale na tejto strane sa nevykresľuje.
+
+V zobrazení `Logical Names`, ktoré nevykresľuje bunku názvu, sa modrá farba premenovania a jantárová farba zmeny v bunke, ktorú strana nevykresľuje, prejavia na logickom názve vykreslenom na mieste názvu. Zmena typu údajov zafarbí bunku typu jantárovou v každom zobrazení, aj tam, kde bunka zobrazuje názov domény. Žiadna strana nevykresľuje farby, ktoré kontroly karty Slovník dávajú názvom na plátne – pozrite si časť [Označenia na plátne](./dictionary.md#marks-on-the-canvas).
 
 Pri `70%` a menej si zbalené tabuľky ponechávajú obrys. Názov si ponecháva zelenú alebo červenú farbu pridanej alebo odstránenej tabuľky, prípadne modrú farbu premenovania, a inak preberá jantárovú farbu zmeny komentára. Zmeny stĺpcov sa nevykresľujú, kým zobrazenie znova nepriblížite; strom ich stále uvádza.

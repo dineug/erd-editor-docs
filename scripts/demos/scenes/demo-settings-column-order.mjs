@@ -119,13 +119,15 @@ export default {
     const gripX = from.x + 22;
     const midY = box => box.y + box.height / 2;
     const pitch = rows.DataType.y - rows.Name.y;
+    // The list's first row, Logical Name since 4.2.0.
+    const first = rows['Logical Name'] ?? rows.Name;
     // Take the row by its grip, coming in along the gap above the list and
     // down its left edge, so the rows on the way do not light up.
     await glide(
       d,
       [
-        { x: 560, y: rows.Name.y - 10 },
-        { x: from.x - 8, y: rows.Name.y - 4 },
+        { x: 560, y: first.y - 10 },
+        { x: from.x - 8, y: first.y - 4 },
         { x: from.x - 8, y: midY(from) },
       ],
       900

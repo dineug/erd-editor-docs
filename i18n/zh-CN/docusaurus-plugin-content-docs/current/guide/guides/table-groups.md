@@ -1,5 +1,5 @@
 ---
-sidebar_position: 5
+sidebar_position: 6
 description: 把相关的表归入位于它们后面、带有名称和颜色的框中；创建、命名、着色、移动、调整大小和删除分组，从资源管理器跳转到分组，更改分组容纳的表，隐藏分组，并在自动布局、Schema SQL 和 DBML 中保留分组。
 ---
 

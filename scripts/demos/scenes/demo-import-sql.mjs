@@ -60,7 +60,8 @@ export default {
   async scenario(d) {
     await d.sleep(400);
 
-    // High enough that the menu ends above the canvas toolbar.
+    // As high as the menu opens. Since 4.2.0 its last row (Diff Viewer) still
+    // covers the canvas toolbar for the second the menu is open.
     await d.rightClick(380, 64, { duration: 320 });
     await d.sleep(300);
     const item = await hoverMenuPath(d, ['Import', 'Schema SQL'], {
@@ -82,9 +83,10 @@ export default {
       mimeType: 'application/sql',
       buffer: Buffer.from(readSeed('shop.sql')),
     });
-    // Flow places the tables before they land, in one step.
+    // Flow places the tables before they land, in one step. An empty
+    // document's value leaves tableIds out (since 4.2.0).
     await d.page.waitForFunction(
-      () => JSON.parse(document.querySelector('erd-editor').value).doc.tableIds.length > 0
+      () => JSON.parse(document.querySelector('erd-editor').value).doc.tableIds?.length > 0
     );
     await d.whenDrawn();
     await d.shot('imported');

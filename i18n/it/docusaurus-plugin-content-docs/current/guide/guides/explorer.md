@@ -1,5 +1,5 @@
 ---
-sidebar_position: 8
+sidebar_position: 9
 description: Sfogliare le tabelle del diagramma con le loro colonne, i loro indici e le loro chiavi esterne, i suoi gruppi di tabelle e i suoi memo in un albero ancorato accanto all’area di disegno ERD, e raggiungere ciascuno di essi con un clic.
 ---
 
@@ -26,11 +26,11 @@ Si apre in uno qualsiasi di questi modi:
 - La voce `Toggle Explorer` nel menu contestuale dell’area di disegno: fare clic con il pulsante destro su un punto vuoto dell’area di disegno ERD, al di fuori di qualsiasi [gruppo di tabelle](./table-groups.md). Si trova dopo `New Table`, `New Memo` e `New Table Group`, prima di `Relationship`.
 
 Le due voci `Toggle Explorer` mostrano il tasto di scelta rapida a destra.  
-Il pulsante della barra degli strumenti, il tasto di scelta rapida e la voce della Ricerca rapida funzionano da ogni scheda. Dalla scheda Visualizzazione, Schema SQL, Generatore di codice o Impostazioni passano prima alla scheda ERD, poiché il pannello Esplora compare solo lì.
+Il pulsante della barra degli strumenti, il tasto di scelta rapida e la voce della Ricerca rapida funzionano da ogni scheda. Dalla scheda Visualizzazione, Schema SQL, Generatore di codice, Dizionario o Impostazioni passano prima alla scheda ERD, poiché il pannello Esplora compare solo lì.
 
 Il pulsante della barra degli strumenti si limita ad aprire e chiudere il pannello. Non porta il punto di inserimento nel campo Trova e lascia aperti il pannello Proprietà tabella, il generatore di temi e il selettore `Display Language`.  
 Il tasto di scelta rapida e le due voci `Toggle Explorer` aprono il pannello Esplora sulla sua ricerca: il punto di inserimento va nel campo Trova con il testo selezionato, e si chiude l’eventuale finestra di dialogo aperta tra le cinque descritte in [Finestre di dialogo accanto al pannello](#dialogs-beside-it). Cosa conserva la ricerca tra un’apertura e l’altra è descritto in [Apertura e chiusura](./find-and-replace.md#opening-and-closing) nella pagina Trova e sostituisci.  
-Il tasto di scelta rapida non ha effetto mentre si modifica una cella di tabella, un memo o il nome di un gruppo di tabelle.
+Il tasto di scelta rapida non ha effetto mentre si modifica una cella di tabella, un memo o il nome di un gruppo di tabelle, o mentre è aperta la modifica di una cella nella scheda [Dizionario](./dictionary.md#keys-on-the-tab), compreso l’elenco dei domini di un termine.
 
 Il pulsante della barra degli strumenti appare premuto mentre il pannello Esplora è aperto nella scheda ERD e non è nascosto dalla [modalità Zen](#when-it-stands-aside). In quel caso, il pulsante, il tasto di scelta rapida e ciascuna delle due voci `Toggle Explorer` chiudono il pannello Esplora, e il focus, se si trovava nel pannello, torna all’editor.  
 Il tasto di scelta rapida non lo chiude mai mentre è aperta la Ricerca rapida o una delle cinque finestre di dialogo. Chiude invece il riquadro comandi o la finestra di dialogo e porta il focus nel campo Trova, con il testo selezionato e, se il pannello Esplora era già visibile, mantenendo la corrispondenza corrente. La voce `Toggle Explorer` della Ricerca rapida non prevede questa eccezione: eseguirla chiude il riquadro comandi e poi il pannello Esplora, se è aperto.
@@ -84,22 +84,27 @@ La barra del titolo riporta `Explorer` e contiene due pulsanti: `Collapse All` e
 
 Il livello superiore contiene tre cartelle, in questo ordine: `Tables`, `Table Groups` e `Memos`. Sotto ogni tabella si trovano le sue cartelle `Columns`, `Indexes` e `Foreign Keys`.  
 Una cartella vuota non viene mostrata, quindi un diagramma vuoto non mostra alcuna riga. Anche la cartella `Table Groups` viene omessa mentre [View Option](./table-related-functions.md#table-view-options) → `Table Groups` nasconde i gruppi, e la cartella `Memos` mentre View Option → `Memos` nasconde i memo.  
-Una riga di cartella mostra un’icona di cartella, il suo nome e, in fondo alla riga, il numero delle righe direttamente sotto di essa, quindi il numero accanto a `Tables` è il numero di tabelle del diagramma.
+Una riga di cartella mostra un’icona di cartella, il suo nome e, in fondo alla riga, il numero delle righe direttamente sotto di essa, quindi il numero accanto a `Tables` è il numero di tabelle del diagramma. Il numero raggruppa le migliaia come fa la lingua di visualizzazione, sempre con le cifre da 0 a 9, come `1,234` in inglese e `1.234` in tedesco.
 
 Le tabelle sono elencate per nome, senza distinzione tra maiuscole e minuscole, e le tabelle con lo stesso nome mantengono l’ordine del documento. I gruppi di tabelle sono elencati allo stesso modo, così come le tabelle sotto ciascun gruppo. Le colonne di una tabella mantengono l’ordine della tabella stessa, mentre i suoi indici, le sue chiavi esterne e i memo mantengono quello del documento.  
-L’albero segue il diagramma man mano che cambia, che sia per una modifica nell’area di disegno, un annullamento o una ripetizione, un’importazione, un collaboratore o un agente di programmazione, quindi rinominare una tabella ne sposta la riga.
+L’albero segue il diagramma man mano che cambia, che sia per una modifica nell’area di disegno, un annullamento o una ripetizione, un’importazione, un collaboratore o un agente di programmazione, quindi rinominare una tabella ne sposta la riga.  
+L’ordine segue il nome in ogni vista della [Visualizzazione nomi](./logical-names.md#name-view), mai il nome logico. Cambiare vista modifica le etichette delle righe delle tabelle e delle colonne senza spostarne alcuna, e lo stesso vale per l’assegnazione di un nome logico a una tabella o a una colonna in `Logical Names` o `Both Names`. Un nome fisico [derivato](./dictionary.md#deriving-physical-names) da un nuovo nome logico è però una ridenominazione come le altre, quindi può spostare la riga di una tabella.
 
 Ogni tipo di riga mostra:
 
 - Una tabella: un’icona di tabella e il suo nome.
-- Una colonna: un’icona a forma di chiave per una colonna chiave primaria o chiave esterna, colorata come la cella chiave della tabella colora una chiave primaria, una chiave esterna o entrambe, e un’icona a elenco per qualsiasi altra colonna. Poi il suo nome e, in tono attenuato, il suo tipo di dati seguito da `PK`, `FK` o entrambi, come `id` `BIGINT PK` o `user_id` `BIGINT FK`.
+- Una colonna: un’icona a forma di chiave per una colonna chiave primaria o chiave esterna, colorata come la cella chiave della tabella colora una chiave primaria, una chiave esterna o entrambe, e un’icona a elenco per qualsiasi altra colonna. Poi il suo nome e, in tono attenuato, il suo tipo di dati seguito da `PK`, `FK` o entrambi, come `id` `BIGINT PK` o `user_id` `BIGINT FK`. Il tipo mostrato è sempre il tipo di dati della colonna, mai il suo [dominio](./logical-names.md#the-domain-cell), qualunque sia la Visualizzazione nomi.
 - Un indice: un’icona di indice e il suo nome. Poi, in tono attenuato, `UNIQUE` per un indice univoco e le sue colonne tra parentesi nell’ordine dell’indice, con `DESC` dopo una colonna discendente, come `orders_user_idx` `UNIQUE (user_id DESC, total)`, o semplicemente `(total)`.
 - Una chiave esterna: elencata solo sotto la tabella figlia, quella che contiene le colonne chiave esterna, e solo finché la tabella padre si trova nel diagramma. La sua icona a forma di chiave assume il colore del connettore: il colore di chiave primaria e chiave esterna per una [relazione identificante](./relationship-editing.md#identifying-relationships), altrimenti il colore di chiave esterna. Mostra le colonne chiave della tabella figlia, separate da virgole, poi, in tono attenuato, `→` con la tabella padre e le sue colonne, come `user_id` `→ users(id)`.
 - Un gruppo di tabelle: un punto nel colore del gruppo, grigio per un gruppo senza colore, e il suo nome. Le sue tabelle sono elencate sotto di esso per nome, e ciascuna porta alla propria tabella. Un gruppo senza tabelle non ha nulla da espandere.
 - Un memo: un’icona di nota adesiva e la prima riga del memo.
 
-Un nome vuoto, o un memo la cui prima riga è vuota, appare come `unnamed` in corsivo.  
-In un pannello stretto, il testo attenuato viene troncato con `…` prima del nome. Passare il puntatore su un nome o sul suo testo attenuato per vederlo per intero.
+Le righe delle tabelle, le tabelle elencate sotto un gruppo e le righe delle colonne seguono la Visualizzazione nomi — vedere [Oltre l’area di disegno](./logical-names.md#beyond-the-canvas). In `Both Names`, ad esempio, una riga di colonna riporta `Total Amount` `total` `NUMERIC`: il nome logico, poi il nome e il tipo di dati, entrambi attenuati.  
+In ogni vista, le righe degli indici e delle chiavi esterne mostrano le loro colonne per nome, e anche una riga di chiave esterna mostra la sua tabella padre per nome.  
+Mentre il campo Trova contiene del testo, una riga trovata solo nel nome che la sua vista omette mostra anche quel nome, attenuato — vedere [I risultati](./find-and-replace.md#the-results).
+
+Un nome vuoto, o un memo la cui prima riga è vuota, appare come `unnamed` in corsivo. In `Logical Names` e `Both Names`, una tabella o una colonna appare come `unnamed` solo quando anche il suo nome logico è vuoto.  
+In un pannello stretto, il testo attenuato viene troncato con `…` prima del nome con cui inizia la riga. Passare il puntatore su un nome o sul suo testo attenuato per vederlo per intero.
 
 All’inizio è espansa solo la cartella `Tables`. Fare clic su una riga di cartella, oppure premere `Enter` o `Space` su di essa, per comprimerla o espanderla.  
 La freccia all’inizio di una riga comprime o espande quella riga senza andare da nessuna parte. Ogni riga di tabella ne ha una, anche quella di una tabella senza nulla sotto. Anche `→` e `←` comprimono ed espandono — vedere [Tasti nel pannello Esplora](#keys-in-the-explorer).  
@@ -110,8 +115,8 @@ Le modifiche, gli annullamenti, le ripetizioni e i cambiamenti apportati da coll
 
 Fare clic su una riga, oppure premere `Enter` o `Space` mentre ha il focus, per andare a ciò che rappresenta nell’area di disegno ERD. Una riga di cartella si limita a comprimersi o espandersi, e i tasti freccia si spostano solo all’interno dell’albero.
 
-- Una riga di tabella, o una tabella elencata sotto un gruppo, seleziona solo quella tabella e la porta in primo piano. La cella con il focus passa al nome della tabella, a meno che non si trovi già in quella tabella.
-- Una riga di colonna seleziona solo la sua tabella e porta la cella con il focus sul nome della colonna.
+- Una riga di tabella, o una tabella elencata sotto un gruppo, seleziona solo quella tabella e la porta in primo piano. A meno che la cella con il focus non si trovi già in quella tabella, il focus passa alla prima cella dell’intestazione della tabella: il nome, o il nome logico in `Logical Names` e `Both Names`.
+- Una riga di colonna seleziona solo la sua tabella e porta la cella con il focus sul nome della colonna o, in `Logical Names`, sul nome logico disegnato al suo posto.
 - Una riga di indice seleziona la sua tabella, come fa una riga di tabella. L’indice in sé non viene messo in evidenza; gli indici si modificano in [Proprietà tabella](./table-related-functions.md#indexes).
 - Una riga di chiave esterna porta in vista insieme entrambe le tabelle della relazione, oppure la tabella figlia quando le due sono troppo distanti per essere mostrate insieme. Seleziona solo la tabella figlia con le sue colonne chiave esterna, porta la cella con il focus sulla prima di esse ed evidenzia il connettore della relazione — vedere [Leggere un connettore](./relationship-editing.md#reading-a-connector).
 - Una riga di gruppo di tabelle porta in vista il riquadro del gruppo inquadrandone la barra del titolo, seleziona solo il gruppo e lo porta in primo piano insieme alle sue tabelle.
@@ -119,7 +124,7 @@ Fare clic su una riga, oppure premere `Enter` o `Space` mentre ha il focus, per 
 
 La vista si sposta secondo la regola comune a ogni navigazione: lo zoom non cambia mai, e l’area di disegno scorre solo quando l’elemento raggiunto non è già ben visibile — vedere [Dove porta un salto](./table-related-functions.md#where-a-jump-lands).  
 Andare a una riga chiude prima il pannello Proprietà tabella, se è aperto, e non avvia né completa mai una relazione in corso di disegno.  
-Mentre il campo Trova contiene del testo, una riga il cui nome contiene una corrispondenza, o una che mostra un estratto di un commento o di un memo, porta invece a quella corrispondenza — vedere [Andare a una corrispondenza](./find-and-replace.md#going-to-a-match).
+Mentre il campo Trova contiene del testo, una riga il cui nome o nome logico contiene una corrispondenza, o una che mostra un estratto di un commento o di un memo, porta invece alla sua prima corrispondenza — vedere [Andare a una corrispondenza](./find-and-replace.md#going-to-a-match).
 
 Dopo un clic, il focus resta nell’albero, quindi `Delete`, `Backspace` e gli altri tasti di modifica non raggiungono la nuova selezione finché non si preme `Escape` o si fa clic sull’area di disegno — vedere [Tasti nel pannello Esplora](#keys-in-the-explorer).
 

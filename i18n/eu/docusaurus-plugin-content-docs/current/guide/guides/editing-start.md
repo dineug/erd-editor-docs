@@ -77,8 +77,8 @@ Hasi erlazio bat laster-menutik, oihalaren behealdeko [oihaleko tresna-barratik]
 - One N: `Ctrl + Alt + 4` (Windows/Linux) edo `⌘ + ⌥ + 4` (Mac)
 
 Mota bat prest jarritakoan, kurtsorea aldatu egiten da. Egin klik lehenik taula gurasoan, eta ondoren taula umean.  
-Gurasoak gako nagusirik ez badu, bat jasotzen du, eta gurasoaren gako nagusiko zutabe bakoitzeko, taula umeak `Not Null` gisa markatutako gako arrotzaren zutabe bat jasotzen du, datu mota, balio lehenetsi eta iruzkin berberekin.  
-Serial motako gakoa da salbuespena: haren gako arrotzak serial motak gordetzen duen zenbaki osoko mota hartzen du, adibidez `integer`, `serial4` motaren kasuan. Ikus [Erlazio identifikatzaileak](./relationship-editing.md#identifying-relationships).  
+Gurasoak gako nagusirik ez badu, bat jasotzen du, eta gurasoaren gako nagusiko zutabe bakoitzeko, taula umeak `Not Null` gisa markatutako gako arrotzaren zutabe bat jasotzen du, datu mota, balio lehenetsi, iruzkin, [izen logiko](./logical-names.md) eta [domeinu](./dictionary.md#domains-and-data-types) berberekin.  
+Serial motako gakoa da salbuespena: haren gako arrotzak serial motak gordetzen duen zenbaki osoko mota hartzen du, adibidez `integer`, `serial4` motaren kasuan, eta orduan ez du domeinurik lotzen. Ikus [Erlazio identifikatzaileak](./relationship-editing.md#identifying-relationships).  
 Gako arrotzaren zutabe bakoitza bere gakoaren arabera izendatzen da: hitz bakarreko izen bati, `id` bezalakoari, taula gurasoaren izena jartzen zaio aurrean (`user_id`); hainbat hitzeko izen bat, `member_id` bezalakoa, mantendu egiten da, eta taula umeak dagoeneko duen izen bati zenbaki bat gehitzen zaio (`user_id_2`). Ikus [Gako arrotzen zutabeen izenak](./relationship-editing.md#foreign-key-column-names).  
 Taula berean bi aldiz klik egiteak auto-erreferentziazko erlazio bat marrazten du.  
 Erlazio berri bat `On Delete` eta `On Update` biak `Not set` balioan dituela hasten da; aldatu haren laster-menutik. Ikus [ON DELETE eta ON UPDATE](./relationship-editing.md#on-delete-and-on-update).  
@@ -91,7 +91,8 @@ Gurasoa aukeratu ondoren, erlazioa amai daitekeen taula bat erakusleaz seinalatz
 
 Gurasoak ere erakusten ditu botoiak, erakuslea gurasoan klik egin zenuen lekutik apur bat urrundu ondoren; beraz, auto-erreferentziazko erlazio bat ere lehendik dauden zutabeetara mapa daiteke.  
 Hatzarekin ezin da elementuen gainetik pasatu; beraz, hatzarekin marrazten duzunean, botoiak ez dira inoiz agertzen, eta taula umea ukitzeak erlazioa berehala marrazten du; arkatz batek saguak bezala erakusten ditu.  
-Taula umera iristen zarenerako gurasoak bere gako nagusia galdu badu, adibidez desegite baten edo lankide baten edizio baten ondorioz, `Create new columns` botoia lausotuta agertzen da `<parent> has no primary key to copy` argibidearekin, eta taula umean klik egiteak marrazketa amaitzen du ezer marraztu gabe.
+Taula umera iristen zarenerako gurasoak bere gako nagusia galdu badu, adibidez desegite baten edo lankide baten edizio baten ondorioz, `Create new columns` botoia lausotuta agertzen da `<parent> has no primary key to copy` argibidearekin, eta taula umean klik egiteak marrazketa amaitzen du ezer marraztu gabe.  
+Argibideak gurasoa [Izenen ikuspegiak](./logical-names.md#beyond-the-canvas) izendatzen duen bezala izendatzen du.
 
 ![One N erlazio bat ⌘ + ⌥ + 4 lasterbidearekin marraztea, eta ondoren Zero N bat oihaleko tresna-barratik, taula umea nabarmenduta bere Map to existing columns eta Create new columns botoiekin](/img/demo-relationship.webp)
 

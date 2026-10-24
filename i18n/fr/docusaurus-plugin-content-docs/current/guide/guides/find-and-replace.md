@@ -1,12 +1,12 @@
 ---
-sidebar_position: 9
-description: Rechercher les noms de table, de colonne, d’index et de groupe de tables, les commentaires et les mémos depuis le haut de l’explorateur, parcourir les correspondances dans son arborescence et sur le canevas, et remplacer une correspondance ou toutes.
+sidebar_position: 10
+description: Rechercher les noms de table, de colonne, d’index et de groupe de tables, les noms logiques, les commentaires et les mémos depuis le haut de l’explorateur, parcourir les correspondances dans son arborescence et sur le canevas, et remplacer une correspondance ou toutes.
 ---
 
 # Rechercher et remplacer
 
 Rechercher et remplacer trouve du texte dans l’ensemble du diagramme, vous amène à chaque correspondance sur le canevas ERD et remplace une correspondance ou toutes.  
-La recherche porte sur sept types de texte : les noms de table, les commentaires de table, les noms de colonne, les commentaires de colonne, les mémos, les noms d’index et les noms de groupe de tables (voir [Ce qui est recherché](#what-it-searches)).
+La recherche porte sur huit types de texte : les noms de table, les commentaires de table, les noms de colonne, les commentaires de colonne, les mémos, les noms d’index, les noms de groupe de tables et les [noms logiques](./logical-names.md) des tables et des colonnes (voir [Ce qui est recherché](#what-it-searches)).
 
 La fonction se trouve en haut de l’[explorateur](./explorer.md), le panneau ancré à gauche du canevas ERD, entre la barre de titre de l’explorateur et son arborescence. Elle n’a pas de titre propre. De haut en bas, elle contient :
 
@@ -30,7 +30,7 @@ La fermeture de l’explorateur, ce que font la touche et les deux entrées `Tog
 [Quand l’explorateur s’efface](./explorer.md#when-it-stands-aside) explique comment un autre onglet et le mode zen le masquent, et comment la visionneuse de différences, le voyage dans le temps et l’aperçu de la disposition automatique le masquent et l’empêchent de s’ouvrir. [À côté du canevas](./explorer.md#beside-the-canvas) traite d’un éditeur trop étroit pour lui.
 
 La réouverture conserve la dernière requête, avec le texte de remplacement, les [options](#options), les [types de texte](#what-it-searches) qui étaient activés et l’état, développé ou non, de la ligne `Replace` et des types de texte.  
-Ces réglages sont conservés tant que l’éditeur reste ouvert et ne sont pas enregistrés dans le document. Un éditeur qui vient d’être ouvert démarre avec toutes les options désactivées, la ligne `Replace` et les types de texte réduits, et seuls les quatre types de nom activés (voir [Ce qui est recherché](#what-it-searches)).
+Ces réglages sont conservés tant que l’éditeur reste ouvert et ne sont pas enregistrés dans le document. Un éditeur qui vient d’être ouvert démarre avec toutes les options désactivées, la ligne `Replace` et les types de texte réduits, et seuls les quatre types de nom et `Logical names` activés (voir [Ce qui est recherché](#what-it-searches)).
 
 ## La barre de recherche du navigateur {#the-browsers-find-bar}
 
@@ -46,15 +46,16 @@ Une page qui intègre l’éditeur peut réaffecter ou supprimer la touche (voir
 
 ## Ce qui est recherché {#what-it-searches}
 
-Sept boutons choisissent les types de texte recherchés, dans cet ordre : `Table names`, `Table comments`, `Column names`, `Column comments`, `Memos`, `Index names` et `Table group names`.  
+Huit boutons choisissent les types de texte recherchés, dans cet ordre : `Table names`, `Table comments`, `Column names`, `Column comments`, `Memos`, `Index names`, `Table group names` et `Logical names`.  
 Ils sont réduits au départ. Le bouton `Search In`, au bout de la ligne du compteur, les développe sous cette ligne et les réduit à nouveau, et il est mis en évidence tant qu’ils sont affichés.  
-Un bouton de type mis en évidence est activé. Cliquez sur l’un d’eux pour l’activer ou le désactiver, et la recherche est relancée. Si les sept sont désactivés, rien n’est trouvé.
+Un bouton de type mis en évidence est activé. Cliquez sur l’un d’eux pour l’activer ou le désactiver, et la recherche est relancée. Si les huit sont désactivés, rien n’est trouvé.
 
-À sa première ouverture, la recherche porte sur les quatre types de nom, `Table names`, `Column names`, `Index names` et `Table group names`, si bien qu’un renommage n’atteint les commentaires et les mémos que si vous les activez.  
+À sa première ouverture, la recherche porte sur les quatre types de nom, `Table names`, `Column names`, `Index names` et `Table group names`, ainsi que sur `Logical names`, si bien qu’un renommage n’atteint les commentaires et les mémos que si vous les activez.  
+`Logical names` est un seul type pour les noms logiques des tables comme des colonnes.  
 Les noms d’index sont les noms des index de l’onglet `Indexes` de la boîte de dialogue [Propriétés de la table](./table-related-functions.md#indexes), et non les clés `PK_` et `UQ_` listées au-dessus d’eux.
 
-Rien d’autre n’est recherché : ni les types de données, ni les valeurs par défaut, ni les colonnes d’un index, ni le nom de la base de données, ni le [Schéma SQL](./schema-sql.md) avec ses scripts `Before tables` et `After tables`, ni le code généré.  
-Un commentaire masqué par une [option d’affichage des tables](./table-related-functions.md#table-view-options) est tout de même recherché. Les mémos masqués avec View Option → `Memos` et les [groupes de tables](./table-groups.md#hiding-groups) masqués avec View Option → `Table Groups` ne le sont pas, même avec leur bouton activé, si bien que `Replace All` ne réécrit jamais un mémo et ne renomme jamais un groupe que vous ne voyez pas.
+Rien d’autre n’est recherché : ni les types de données, ni le domaine d’une colonne, ni les valeurs par défaut, ni les colonnes d’un index, ni le nom de la base de données, ni le [Schéma SQL](./schema-sql.md) avec ses scripts `Before tables` et `After tables`, ni le code généré, ni les feuilles de l’onglet [Dictionnaire](./dictionary.md), qui ont leur [propre recherche](./dictionary.md#searching).  
+Les noms logiques sont recherchés quelle que soit la vue de l’[affichage des noms](./logical-names.md#name-view), y compris `Physical Names`, où le canevas n’en affiche aucun. Un commentaire masqué par une [option d’affichage des tables](./table-related-functions.md#table-view-options) est lui aussi recherché. Les mémos masqués avec View Option → `Memos` et les [groupes de tables](./table-groups.md#hiding-groups) masqués avec View Option → `Table Groups` ne le sont pas, même avec leur bouton activé, si bien que `Replace All` ne réécrit jamais un mémo et ne renomme jamais un groupe que vous ne voyez pas.
 
 ## Options {#options}
 
@@ -91,19 +92,21 @@ Le compteur, au début de la ligne sous les champs, indique où vous en êtes. I
 Tant que le champ Rechercher contient du texte, l’[arborescence](./explorer.md#the-tree) de l’explorateur affiche les résultats au lieu du diagramme entier : seulement les lignes qui contiennent une correspondance et les lignes au-dessus d’elles. Lorsque rien ne correspond, ou que l’expression régulière ne peut pas être analysée, elle est vide. Effacer la requête fait revenir l’arborescence entière, réduite comme elle l’était auparavant.
 
 - `Tables`, `Table Groups` et `Memos` n’apparaissent que lorsqu’ils contiennent une correspondance, et le nombre affiché sur chaque dossier est le nombre de lignes directement sous lui dans les résultats.
-- Sous `Tables` viennent les tables qui contiennent une correspondance, triées par nom. Sous chaque table viennent une ligne pour chaque correspondance de son commentaire, puis un dossier `Columns` avec les colonnes qui contiennent une correspondance, dans l’ordre des colonnes, chacune avec une ligne pour chaque correspondance de son commentaire, puis un dossier `Indexes` avec les index dont le nom correspond. Il n’y a pas de dossier `Foreign Keys`.
+- Sous `Tables` viennent les tables qui contiennent une correspondance, triées par nom, jamais par nom logique. Sous chaque table viennent une ligne pour chaque correspondance de son commentaire, puis un dossier `Columns` avec les colonnes qui contiennent une correspondance, dans l’ordre des colonnes, chacune avec une ligne pour chaque correspondance de son commentaire, puis un dossier `Indexes` avec les index dont le nom correspond. Il n’y a pas de dossier `Foreign Keys`.
 - Sous `Table Groups` viennent les groupes dont le nom correspond, triés par nom, sans leurs tables. Une table trouvée apparaît sous `Tables`.
 - Sous `Memos` viennent les mémos qui contiennent une correspondance, dans l’ordre du document, chacun représenté par sa première ligne de texte et accompagné d’une ligne pour chaque correspondance qu’il contient.
 
-Une correspondance dans un nom est mise en évidence dans la ligne de ce nom, si bien qu’un nom qui contient deux fois la requête forme une seule ligne avec deux mises en évidence.  
+Une correspondance dans un nom est mise en évidence dans la ligne de ce nom, si bien qu’un nom qui contient deux fois la requête forme une seule ligne avec deux mises en évidence. Une correspondance dans le nom logique d’une table ou d’une colonne apparaît elle aussi sur la ligne de cette table ou de cette colonne, jamais sur une ligne à part.  
+Ces lignes nomment la table ou la colonne comme le montre l’[affichage des noms](./logical-names.md#beyond-the-canvas), et chacun des deux noms qu’une ligne peut afficher ne met en évidence que ses propres correspondances. Une ligne trouvée uniquement dans le nom que sa vue omet, le nom logique dans la vue `Physical Names` ou le nom dans la vue `Logical Names`, ajoute ce nom après celui qu’elle affiche, atténué comme dans la vue `Both Names`, avec la correspondance mise en évidence. Lorsque le nom qu’elle affiche contient lui aussi une correspondance, la ligne n’affiche que ce nom, si bien que les correspondances du nom que sa vue omet sont comptées et parcourues, mais pas mises en évidence.  
 Une correspondance dans un commentaire ou un mémo a sa propre ligne : une bulle de dialogue pour un commentaire de table ou de colonne, ou une note adhésive pour un mémo, puis un extrait du texte où la correspondance est mise en évidence. Un texte long est coupé par `…`, et les sauts de ligne s’affichent comme des espaces. Survolez la ligne pour voir le texte entier.  
 Toutes les autres lignes ont le même aspect qu’en dehors d’une recherche : une colonne affiche son type de données, un index ses colonnes, et un nom vide affiche `unnamed`.
 
 Chaque ligne qui a des lignes en dessous apparaît développée au début d’une recherche. Une ligne que vous réduisez, ou que `Collapse All` réduit, reste réduite jusqu’à ce qu’une correspondance en dessous devienne actuelle, ou que la requête, `Match Case`, `Match Whole Word`, `Use Regular Expression` ou un type de texte change, ou que la recherche soit rouverte avec la touche ou une entrée `Toggle Explorer`.  
 La ligne de la correspondance actuelle est mise en évidence, et l’arborescence défile pour l’afficher. L’arborescence liste toutes les correspondances, quel que soit leur nombre.  
-Les correspondances sont parcourues dans l’ordre de l’arborescence : table par table, le nom de la table, son commentaire, le nom et le commentaire de chacune de ses colonnes dans l’ordre des colonnes, et ses noms d’index ; puis les noms de groupe de tables ; puis les mémos.
+Les correspondances sont parcourues dans l’ordre de l’arborescence : table par table, le nom logique, le nom et le commentaire de la table, puis le nom logique, le nom et le commentaire de chacune de ses colonnes dans l’ordre des colonnes, puis ses noms d’index ; puis les noms de groupe de tables ; puis les mémos.
 
-Les résultats suivent le document tant que l’explorateur est affiché. Dès que les modifications marquent une pause, tout changement dans les textes recherchés relance la recherche, et la correspondance actuelle le reste si elle existe encore. Cela couvre un nom, un commentaire ou le texte d’un mémo modifié, une table, une colonne, un index, un mémo ou un groupe de tables ajouté ou supprimé, une colonne déplacée, ainsi que les mémos ou groupes de tables masqués ou affichés avec View Option, ce qui retire leurs correspondances de l’arborescence ou les y ramène. Une modification sur le canevas, une annulation ou un rétablissement, une importation et une modification par un collaborateur ou un agent de codage sont tous pris en compte. Sélectionner, déplacer des tables, des mémos ou des groupes sur le canevas, faire défiler, zoomer et survoler ne le sont pas.  
+Les résultats suivent le document tant que l’explorateur est affiché. Dès que les modifications marquent une pause, tout changement dans les textes recherchés relance la recherche, et la correspondance actuelle le reste si elle existe encore. Cela couvre un nom, un nom logique, un commentaire ou le texte d’un mémo modifié, une table, une colonne, un index, un mémo ou un groupe de tables ajouté ou supprimé, une colonne déplacée, ainsi que les mémos ou groupes de tables masqués ou affichés avec View Option, ce qui retire leurs correspondances de l’arborescence ou les y ramène. Une modification sur le canevas, une annulation ou un rétablissement, une importation et une modification par un collaborateur ou un agent de codage sont tous pris en compte. Sélectionner, déplacer des tables, des mémos ou des groupes sur le canevas, faire défiler, zoomer et survoler ne le sont pas.  
+Changer de vue dans l’affichage des noms ne l’est pas non plus, car cela ne modifie aucun texte que lit la recherche : les mêmes correspondances restent, et les lignes prennent les noms qu’affiche la nouvelle vue.  
 Les modifications faites pendant que l’explorateur est fermé ou hors de vue sont prises en compte dans la recherche dès qu’il réapparaît.
 
 ## Aller à une correspondance {#going-to-a-match}
@@ -113,17 +116,17 @@ Le déplacement boucle aux deux extrémités. Aucune correspondance n’est actu
 
 Un clic sur une ligne des résultats, ou `Enter` ou `Space` lorsque le focus clavier est sur elle, produit l’un des effets suivants :
 
-- Une ligne dont le nom contient une correspondance va à la première correspondance de ce nom.
+- Une ligne dont le nom ou le nom logique contient une correspondance va à sa première correspondance, celle du nom logique avant celle du nom.
 - Une ligne qui affiche un extrait d’un commentaire ou d’un mémo va à cette correspondance.
-- Toute autre ligne, comme une table dont le nom ne correspond pas ou la ligne propre d’un mémo, va à ce que la ligne représente et laisse la correspondance actuelle telle quelle (voir [Aller à une ligne](./explorer.md#going-to-a-row)).
+- Toute autre ligne, comme une table dont ni le nom ni le nom logique ne correspondent ou la ligne propre d’un mémo, va à ce que la ligne représente et laisse la correspondance actuelle telle quelle (voir [Aller à une ligne](./explorer.md#going-to-a-row)).
 - Un dossier se réduit ou se développe.
 
 Chaque fois qu’une correspondance devient actuelle, l’arborescence développe les lignes réduites au-dessus d’elle et y place le focus clavier, si bien que les touches fléchées de l’arborescence reprennent à partir de cette ligne.
 
 Aller à une correspondance ferme la boîte de dialogue Propriétés de la table si elle est ouverte, puis :
 
-- Pour un nom ou un commentaire de table, ou un nom ou un commentaire de colonne, sélectionne la table seule, la met au premier plan et place la cellule active sur la cellule qui contient la correspondance. Une correspondance dans un commentaire masqué par une [option d’affichage des tables](./table-related-functions.md#table-view-options) place plutôt la cellule active sur le nom voisin.
-- Pour un nom d’index, sélectionne la table de l’index seule et la met au premier plan, en plaçant la cellule active sur le nom de la table, sauf si elle est déjà dans cette table. Les noms d’index ne sont pas dessinés sur le canevas.
+- Pour le nom, le nom logique ou le commentaire d’une table ou d’une colonne, sélectionne la table seule, la met au premier plan et place la cellule active sur la cellule qui contient la correspondance. Une correspondance dans un commentaire masqué par une [option d’affichage des tables](./table-related-functions.md#table-view-options) place plutôt la cellule active sur le nom voisin. Là où l’[affichage des noms](./logical-names.md#name-view) ne dessine aucune cellule pour le nom ou le nom logique, la cellule active va sur celle qui est dessinée à sa place : le nom dans la vue `Physical Names`, le nom logique dans la vue `Logical Names`.
+- Pour un nom d’index, sélectionne la table de l’index seule et la met au premier plan, en plaçant la cellule active sur le nom de la table, ou sur son nom logique dans les vues `Logical Names` et `Both Names`, sauf si elle est déjà dans cette table. Les noms d’index ne sont pas dessinés sur le canevas.
 - Pour un nom de groupe de tables, sélectionne le groupe seul et le met au premier plan avec ses tables.
 - Pour un mémo, sélectionne le mémo seul et le met au premier plan.
 
@@ -151,7 +154,7 @@ Tant qu’une série dure, une table ou un groupe de tables qu’elle renomme ga
 
 `Replace All` s’exécute avec `Ctrl + Enter` (Windows/Linux) ou `⌘ + Enter` (Mac) dans le champ Remplacer, ou avec son bouton :
 
-- Il remplace chaque correspondance dans les types de texte activés et ne touche pas aux autres types. Avec les types par défaut, il renomme des tables, des colonnes, des index et des groupes de tables, et les commentaires et les mémos restent intacts.
+- Il remplace chaque correspondance dans les types de texte activés et ne touche pas aux autres types, hormis les noms physiques que dérive un nom logique remplacé, qu’il écrit même lorsque `Table names` et `Column names` sont désactivés (voir ci-dessous). Avec les types par défaut, il renomme des tables, des colonnes, des index et des groupes de tables, et réécrit les noms logiques des tables et des colonnes ; les commentaires et les mémos restent intacts.
 - Tout ce qu’il modifie forme une seule étape d’annulation (voir [Un geste, une étape](./undo-redo.md#one-gesture-one-step)).
 - Le compteur indique `Replaced N matches`, en ne comptant que les occurrences dont le texte a réellement changé. Si aucune n’a changé, il indique `No changes` et rien n’est enregistré dans l’historique, comme en remplaçant l’expression régulière `(user)` par `$1`.
 - La recherche est ensuite relancée sans correspondance actuelle, si bien que les résultats peuvent lister des correspondances que contient le nouveau texte.
@@ -171,8 +174,12 @@ Utilisation du texte de remplacement :
   - Une correspondance réécrite telle qu’elle était n’est pas comptée : avec `Match Case` désactivé, remplacer `customer` par `Customer` réécrit `customer`, `Customer` et `CUSTOMER` tels qu’ils étaient, et aucun n’est compté.
 - Un champ Remplacer vide supprime la correspondance.
 
-Un remplacement est une modification ordinaire, identique au fait de saisir vous-même le nouveau nom de table, le commentaire, le nom de colonne ou le texte du mémo, de renommer l’index dans la boîte de dialogue Propriétés de la table ou de renommer le groupe de tables.  
+Un remplacement est une modification ordinaire, identique au fait de saisir vous-même le nouveau nom de table, le nom de colonne, le nom logique, le commentaire ou le texte du mémo, de renommer l’index dans la boîte de dialogue Propriétés de la table ou de renommer le groupe de tables.  
 Il est enregistré dans l’historique et parvient aux collaborateurs et à un agent de codage comme toute autre modification.
+
+Un nom de table ou de colonne qu’écrit un remplacement devient donc un nom personnel, qu’un nom logique écrit plus tard laisse tel quel jusqu’à ce que [Dériver à nouveau les noms physiques](./dictionary.md#derive-physical-names-again) le rende aux dictionnaires. Un nom qu’un remplacement laisse vide revient au contraire aux dictionnaires, comme tout nom effacé (voir [Vos propres noms](./dictionary.md#names-of-your-own)).  
+Tant que le nom physique d’une table ou d’une colonne est vide ou a lui-même été dérivé, un nom logique remplacé le dérive des dictionnaires, comme le fait la fermeture de la cellule du nom logique sur un nouveau nom logique (voir [Dériver les noms physiques](./dictionary.md#deriving-physical-names)). Dans ce cas, une colonne dont le nouveau nom logique est un terme prend aussi le domaine du terme, et avec lui le type de données du domaine. Ce qu’il dérive fait partie de l’étape d’annulation du remplacement et n’est pas compté dans `Replaced N matches`.  
+Lorsqu’un même `Replace All` réécrit à la fois le nom logique et le nom d’une même table ou colonne, le nom qu’il écrit l’emporte sur celui que dériverait le nouveau nom logique.
 
 ## Touches dans les champs de recherche {#keys-in-the-search-fields}
 

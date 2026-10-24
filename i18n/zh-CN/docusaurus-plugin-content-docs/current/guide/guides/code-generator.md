@@ -1,5 +1,5 @@
 ---
-sidebar_position: 12
+sidebar_position: 13
 description: 根据图为二十二种目标生成代码，在选项面板中选择语言、数据库、名称大小写与括号，了解哪些目标会写出关系的 ON DELETE 与 ON UPDATE 操作，并保存或复制结果。
 ---
 
@@ -103,6 +103,10 @@ ORM 目标会保留哪些操作取决于所选数据库，而 `AML` 和 `DBML` �
 `SeaORM` 同样会忽略它们：它以 snake case 命名字段和模块，这是 SeaORM 读回时使用的形式，并在 `table_name` 中给出存储的名称，在两者不同时还会在 `column_name` 中给出。  
 对于这四种目标，面板会将两个列表都变暗显示，并在其下方带有 `Not used by` 说明。
 
+无论[名称显示](./logical-names.md#name-view)当前是哪种显示方式，所有目标都会写出物理名。  
+没有任何目标会写出逻辑名，即使是写入空注释也不会：此标签页没有与 Schema SQL 标签页的 [`Write logical names into empty comments`](./schema-sql.md#logical-names-as-comments) 相对应的选项。  
+也没有任何目标会写出域：关联到域的列会像其他列一样以其数据类型写出。
+
 ## 数据库 {#database}
 
 数据类型根据所选数据库解析，参见[数据库](./table-related-functions.md#databases)。  
@@ -132,5 +136,5 @@ ORM 目标会保留哪些操作取决于所选数据库，而 `AML` 和 `DBML` �
 Export 菜单中没有 Code Generator 条目，表属性的 `Code Generator` 标签页也无法保存文件。
 
 要复制代码，可以点击面板底部的 `Copy`，也可以将鼠标悬停在代码上并点击右上角的复制按钮，后者是表属性中唯一的复制方式。  
-带有勾选标记的 `Copied!` 提示会显示两秒以示确认。如果浏览器或宿主拒绝访问剪贴板，则会改为显示带有警告标志的 `Couldn't copy to the clipboard` 提示。再次复制会替换当前提示，而不会再添加一条。  
+带有勾选标记的 `Copied!` 提示会显示两秒以示确认。如果浏览器或宿主拒绝访问剪贴板，则会改为显示带有警告标志的 `Couldn't copy to the clipboard` 提示，持续五秒。再次复制会替换当前提示，而不会再添加一条。  
 文本也可以直接选中，因此可以只取需要的部分。

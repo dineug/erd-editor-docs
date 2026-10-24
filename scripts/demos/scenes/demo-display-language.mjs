@@ -90,12 +90,18 @@ export default {
 
     /**
      * Clicks the Display Language button, reached through `via` so the
-     * pointer crosses no table, and up into it from under the toolbar so it
-     * slides over no other button.
+     * pointer crosses no table, then straight up into it from under the
+     * toolbar so it slides over no other button. Two points under the button:
+     * the curve swings wide past the first, below the toolbar, and leaves the
+     * second heading straight up.
      */
     const openPicker = async (via, duration) => {
       const button = center(await d.domBox('.toolbar-locale'));
-      await sweep(d, [...via, button], duration);
+      await sweep(
+        d,
+        [...via, { x: button.x, y: 54 }, { x: button.x, y: 42 }, button],
+        duration
+      );
       await d.sleep(110);
       await d.click(button.x, button.y, { duration: 0 });
       await waitDom(d, '.locale-picker');
@@ -103,7 +109,7 @@ export default {
 
     // The picker opens on System, which names the system language. Up left
     // of members, over its top and up into the button.
-    await openPicker([{ x: 300, y: 56 }, { x: 395, y: 46 }], 800);
+    await openPicker([{ x: 300, y: 56 }], 800);
     mark('picker');
     await d.sleep(500);
     await d.shot('picker');
@@ -149,7 +155,7 @@ export default {
 
     // Back to the picker, now in Korean, for Arabic: under the toolbar's
     // buttons, then up to it.
-    await openPicker([{ x: 395, y: 46 }], 700);
+    await openPicker([], 700);
     await d.sleep(400);
     await d.shot('picker-korean');
     const arabic = center(await optionBox(d, 'ar-SA'));
@@ -175,7 +181,7 @@ export default {
 
     // System follows the system language: English. The button is now on the
     // other side of the toolbar: up the left and along over members.
-    await openPicker([{ x: 290, y: 64 }, { x: 555, y: 50 }], 1000);
+    await openPicker([{ x: 290, y: 64 }], 1000);
     await d.sleep(300);
     await d.shot('picker-arabic');
     // The row's empty left end: once the picker closes and the chrome flips

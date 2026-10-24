@@ -1,5 +1,5 @@
 ---
-sidebar_position: 8
+sidebar_position: 9
 description: Browse the diagram's tables with their columns, indexes, and foreign keys, its table groups, and its memos in a tree docked beside the ERD canvas, and go to any of them with a click.
 ---
 
@@ -26,11 +26,11 @@ Open it with any of these:
 - `Toggle Explorer` in the canvas context menu: right-click an empty spot on the ERD canvas, outside any [table group](./table-groups.md). It sits after `New Table`, `New Memo`, and `New Table Group`, before `Relationship`.
 
 The two `Toggle Explorer` entries show the shortcut on the right.  
-The toolbar button, the shortcut, and the Quick Search entry work from every tab. From the Visualization, Schema SQL, Code Generator, or Settings tab they switch to the ERD tab first, since the Explorer shows only there.
+The toolbar button, the shortcut, and the Quick Search entry work from every tab. From the Visualization, Schema SQL, Code Generator, Dictionary, or Settings tab they switch to the ERD tab first, since the Explorer shows only there.
 
 The toolbar button only opens and closes the panel. It does not put the caret in the Find field, and it leaves Table Properties, the theme builder, and the `Display Language` picker open.  
 The shortcut and the two `Toggle Explorer` entries open the Explorer on its search: the caret goes to the Find field with its text selected, and any of the five dialogs in [Dialogs Beside It](#dialogs-beside-it) closes. What the search keeps between openings is in [Opening and Closing](./find-and-replace.md#opening-and-closing) in Find and Replace.  
-The shortcut does nothing while a table cell, a memo, or a table group's name is being edited.
+The shortcut does nothing while a table cell, a memo, or a table group's name is being edited, or while a cell edit is open on the [Dictionary](./dictionary.md#keys-on-the-tab) tab, a term's domain list included.
 
 The toolbar button looks pressed while the Explorer is open on the ERD tab and not hidden by [zen mode](#when-it-stands-aside). While it does, the button, the shortcut, and either `Toggle Explorer` entry close the Explorer, and a keyboard that was in the panel goes back to the editor.  
 The shortcut never closes it while Quick Search or one of the five dialogs is open. It closes the palette or the dialog instead and takes the keyboard to the Find field, with its text selected and, if the Explorer was already showing, the current match kept. The `Toggle Explorer` entry in Quick Search makes no such exception: running it closes the palette and then an open Explorer.
@@ -84,22 +84,27 @@ The title bar reads `Explorer` and holds two buttons: `Collapse All`, and the `x
 
 The top level holds three folders, in this order: `Tables`, `Table Groups`, and `Memos`. Under each table are its own `Columns`, `Indexes`, and `Foreign Keys` folders.  
 A folder with nothing in it is not shown, so an empty diagram shows no rows at all. `Table Groups` is also left out while [View Option](./table-related-functions.md#table-view-options) → `Table Groups` hides the groups, and `Memos` while View Option → `Memos` hides the memos.  
-A folder row shows a folder icon, its name, and at the far end a count of the rows directly under it, so the count beside `Tables` is the number of tables in the diagram.
+A folder row shows a folder icon, its name, and at the far end a count of the rows directly under it, so the count beside `Tables` is the number of tables in the diagram. The count groups its thousands as the display language does, always in the digits 0 to 9, such as `1,234` in English and `1.234` in German.
 
 Tables are listed by name, ignoring case, and tables with the same name keep the document's order. Table groups are listed the same way, and so are the tables under each group. A table's columns keep the table's own order, and its indexes, its foreign keys, and the memos keep the document's.  
-The tree follows the diagram as it changes, whether by an edit on the canvas, an undo or redo, an import, or a collaborator or a coding agent, so renaming a table moves its row.
+The tree follows the diagram as it changes, whether by an edit on the canvas, an undo or redo, an import, or a collaborator or a coding agent, so renaming a table moves its row.  
+The order goes by name in every [Name View](./logical-names.md#name-view), never by logical name. Switching the view relabels the table and column rows without moving any of them, and so does giving a table or column a logical name in `Logical Names` or `Both Names`. A physical name [derived](./dictionary.md#deriving-physical-names) from a new logical name is a rename like any other, though, so it can move a table's row.
 
 Each kind of row shows:
 
 - A table: a table icon and its name.
-- A column: a key icon for a primary key or foreign key column, colored as the table's own key cell colors a primary key, a foreign key, or both, and a list icon for any other column. Then its name and, muted, its data type followed by `PK`, `FK`, or both, such as `id` `BIGINT PK` or `user_id` `BIGINT FK`.
+- A column: a key icon for a primary key or foreign key column, colored as the table's own key cell colors a primary key, a foreign key, or both, and a list icon for any other column. Then its name and, muted, its data type followed by `PK`, `FK`, or both, such as `id` `BIGINT PK` or `user_id` `BIGINT FK`. The type it shows is always the column's data type, never its [domain](./logical-names.md#the-domain-cell), whatever the Name View.
 - An index: an index icon and its name. Then, muted, `UNIQUE` for a unique index and its columns in parentheses in index order, with `DESC` after a descending one, such as `orders_user_idx` `UNIQUE (user_id DESC, total)`, or just `(total)`.
 - A foreign key: listed only under the child table, the one holding the foreign key columns, and only while the parent table is in the diagram. Its key icon takes the connector's color: the primary key and foreign key color for an [identifying relationship](./relationship-editing.md#identifying-relationships), the foreign key color otherwise. It shows the child's key columns, comma-separated, then, muted, `→` with the parent table and its columns, such as `user_id` `→ users(id)`.
 - A table group: a dot in the group's color, grey for a group with no color, and its name. Its tables are listed under it by name, and each goes to its table. A group with no tables has nothing to unfold.
 - A memo: a sticky-note icon and the memo's first line.
 
-A blank name, or a memo whose first line is blank, reads `unnamed` in italics.  
-On a narrow panel, the muted text is cut short with `…` before the name is. Hover a name or its muted text to see it in full.
+Table rows, the tables listed under a group, and column rows follow the Name View — see [Beyond the Canvas](./logical-names.md#beyond-the-canvas). In `Both Names`, for example, a column row reads `Total Amount` `total` `NUMERIC`: the logical name, then the name and the data type, both muted.  
+In every view, index and foreign key rows show their columns by name, and a foreign key row shows its parent table by name too.  
+While the Find field holds text, a row found only in the name its view leaves out also shows that name, muted — see [The Results](./find-and-replace.md#the-results).
+
+A blank name, or a memo whose first line is blank, reads `unnamed` in italics. In `Logical Names` and `Both Names`, a table or column reads `unnamed` only when its logical name is blank too.  
+On a narrow panel, the muted text is cut short with `…` before the name the row leads with is. Hover a name or its muted text to see it in full.
 
 Only `Tables` is unfolded at first. Click a folder row, or press `Enter` or `Space` on it, to fold or unfold it.  
 The arrow at the start of a row folds or unfolds that row without going anywhere. Every table row has one, even a table with nothing under it. `→` and `←` fold and unfold too — see [Keys in the Explorer](#keys-in-the-explorer).  
@@ -110,8 +115,8 @@ Edits, undo and redo, and changes from collaborators or a coding agent leave the
 
 Click a row, or press `Enter` or `Space` with the keyboard on it, to go to what it stands for on the ERD canvas. A folder row only folds or unfolds, and the arrow keys only move within the tree.
 
-- A table row, or a table listed under a group, selects that table alone and brings it to the front. The focused cell goes to the table's name, unless it is already in that table.
-- A column row selects its table alone and puts the focused cell on the column's name.
+- A table row, or a table listed under a group, selects that table alone and brings it to the front. Unless the focused cell is already in that table, it goes to the first cell of the table's header: the name, or the logical name in `Logical Names` and `Both Names`.
+- A column row selects its table alone and puts the focused cell on the column's name, or in `Logical Names` on the logical name drawn in its place.
 - An index row selects its table, as a table row does. The index itself is not singled out; indexes are edited in [Table Properties](./table-related-functions.md#indexes).
 - A foreign key row brings both tables of the relationship into view together, or the child table when the two are too far apart to show together. It selects the child table alone with its foreign key columns, the focused cell on the first of them, and lights the relationship's connector — see [Reading a Connector](./relationship-editing.md#reading-a-connector).
 - A table group row brings the group's box into view by its title bar, selects the group alone, and brings it to the front with its tables.
@@ -119,7 +124,7 @@ Click a row, or press `Enter` or `Space` with the keyboard on it, to go to what 
 
 The view moves by the rule every go-to shares: the zoom never changes, and the canvas scrolls only when what you go to does not already show well — see [Where a Jump Lands](./table-related-functions.md#where-a-jump-lands).  
 Going to a row closes Table Properties first if it is open, and never starts or finishes a relationship being drawn.  
-While the Find field holds text, a row whose own name holds a match, or one that shows an excerpt of a comment or memo, goes to that match instead — see [Going to a Match](./find-and-replace.md#going-to-a-match).
+While the Find field holds text, a row whose name or logical name holds a match, or one that shows an excerpt of a comment or memo, goes to its first match instead — see [Going to a Match](./find-and-replace.md#going-to-a-match).
 
 After a click, the keyboard stays in the tree, so `Delete`, `Backspace`, and the other editing keys do not reach the new selection until you press `Escape` or click the canvas — see [Keys in the Explorer](#keys-in-the-explorer).
 

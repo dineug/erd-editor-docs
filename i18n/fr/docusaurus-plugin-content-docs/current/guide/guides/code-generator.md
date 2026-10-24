@@ -1,5 +1,5 @@
 ---
-sidebar_position: 12
+sidebar_position: 13
 description: Générer du code pour vingt-deux cibles à partir du diagramme, choisir le langage, la base de données, la casse des noms et le délimiteur dans le panneau des options, voir quelles cibles écrivent les actions ON DELETE et ON UPDATE d’une relation, et enregistrer ou copier le résultat.
 ---
 
@@ -103,6 +103,10 @@ Quelle que soit la casse, un nom que réserve le langage de la cible est échapp
 `SeaORM` les ignore aussi : il nomme les champs et les modules en snake case, la forme que SeaORM relit, et indique les noms stockés dans `table_name` et, lorsqu’ils diffèrent, dans `column_name`.  
 Pour ces quatre cibles, le panneau grise les deux listes, avec la note `Not used by` en dessous.
 
+Chaque cible écrit les noms physiques, quelle que soit la vue de l’[affichage des noms](./logical-names.md#name-view).  
+Aucune n’écrit de nom logique, pas même dans un commentaire vide : cet onglet n’a pas d’équivalent à l’option [`Write logical names into empty comments`](./schema-sql.md#logical-names-as-comments) de l’onglet Schéma SQL.  
+Aucune n’écrit non plus de domaine : une colonne liée à un domaine est écrite avec son type de données, comme toute autre colonne.
+
 ## Base de données {#database}
 
 Les types de données sont résolus d’après la base de données sélectionnée (voir [Bases de données](./table-related-functions.md#databases)).  
@@ -132,5 +136,5 @@ Le fichier est nommé comme toute exportation, `<database name>-<timestamp>`, su
 Le menu Export ne propose aucune entrée pour le générateur de code, et l’onglet `Code Generator` de la boîte de dialogue Propriétés de la table ne peut pas enregistrer de fichier.
 
 Pour copier le code, cliquez sur `Copy` en bas du panneau, ou survolez le code et cliquez sur le bouton de copie en haut à droite, seul moyen possible dans la boîte de dialogue Propriétés de la table.  
-Une notification `Copied!` accompagnée d’une coche confirme la copie pendant deux secondes. Si le navigateur ou l’hôte refuse l’accès au Presse-papiers, une notification `Couldn't copy to the clipboard` accompagnée d’un signe d’avertissement le signale à la place. Copier de nouveau remplace la notification au lieu d’en ajouter une autre.  
+Une notification `Copied!` accompagnée d’une coche confirme la copie pendant deux secondes. Si le navigateur ou l’hôte refuse l’accès au Presse-papiers, une notification `Couldn't copy to the clipboard` accompagnée d’un signe d’avertissement le signale à la place, pendant cinq secondes. Copier de nouveau remplace la notification au lieu d’en ajouter une autre.  
 Le texte peut aussi être sélectionné, si bien que vous pouvez n’en prendre que la partie dont vous avez besoin.

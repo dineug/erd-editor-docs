@@ -38,7 +38,8 @@ Panel ini tidak digambar lebih sempit dari `200px` dan menyisakan setidaknya `32
 
 `setInitialValue('')` memulai dokumen baru yang kosong. Menetapkan `value` justru memuat dokumen sebagai perubahan, sehingga dokumen itu masuk ke riwayat pembatalan.
 Sejak `4.0.0`, `editor.value` adalah dokumen dalam bentuk yang tersimpan di file, dan bentuk itulah yang perlu disimpan. `editor.runtimeValue` adalah dokumen sebagaimana dipegang editor, termasuk entitas yang dihapus: nilai ini mengisi data awal kolaborator dan tidak pernah masuk ke file — lihat [runtimeValue](./erd-editor-element.md#runtimevalue).
-Sejak `4.0.0`, dokumen baru juga memiliki setiap [penguncian pengaturan](../guide/guides/settings.md#lock) dalam keadaan aktif: area pandang, tab, bahasa Generator Kode, kedua konvensi penamaan, dan tipe tanda kutip. Menggulir, melakukan zoom, berpindah tab, atau mengubah salah satu pengaturan tersebut membiarkan `editor.value` seperti semula dan tidak memicu `change`. Dokumen yang dimuat dari teks mempertahankan penguncian yang disebutkannya. Dokumen yang tidak menyebutkan penguncian apa pun, misalnya file apa pun yang disimpan sebelum `4.0.0`, dibuka dengan setiap penguncian aktif, pada zoom 100% dan di tab ERD, apa pun area pandang dan tab yang disimpannya. Area pandangnya dikunci pada titik asal `0, 0`, dan justru dibuka pada diagram jika tidak ada bagian diagram yang digambar di sana — lihat [setInitialValue](./erd-editor-element.md#setinitialvalue).
+Sejak `4.0.0`, dokumen baru juga memiliki setiap [penguncian pengaturan](../guide/guides/settings.md#lock) dalam keadaan aktif: area pandang, tab, bahasa Generator Kode, kedua konvensi penamaan, tipe tanda kutip, dan, sejak `4.2.0`, [Tampilan Nama](../guide/guides/logical-names.md#name-view). Menggulir, melakukan zoom, berpindah tab, mengganti Tampilan Nama, atau mengubah salah satu pengaturan lainnya membiarkan `editor.value` seperti semula dan tidak memicu `change`. Dokumen yang dimuat dari teks mempertahankan penguncian yang disebutkannya. Dokumen yang tidak menyebutkan penguncian apa pun, misalnya file apa pun yang disimpan sebelum `4.0.0`, dibuka dengan setiap penguncian aktif, pada zoom 100% dan di tab ERD, apa pun area pandang dan tab yang disimpannya. Area pandangnya dikunci pada titik asal `0, 0`, dan area pandang justru dibuka pada diagram jika tidak ada bagian diagram yang digambar di sana — lihat [setInitialValue](./erd-editor-element.md#setinitialvalue).
+File yang disimpan sebelum `4.2.0` dibuka dengan Tampilan Nama terkunci pada `Physical Names`, bahkan file dengan semua penguncian lainnya nonaktif. Editor `4.0.0` atau `4.1.0` mempertahankan penguncian Tampilan Nama apa adanya saat menyimpan, tetapi membuang tampilannya, sehingga file `4.2.0` yang disimpan dengan Tampilan Nama tidak terkunci tetap tidak terkunci, tetapi dibuka kembali pada `Physical Names`.
 Lihat [ErdEditorElement](./erd-editor-element.md) untuk bagian API lainnya.
 
 ### CDN {#cdn}
@@ -56,7 +57,7 @@ Lihat [ErdEditorElement](./erd-editor-element.md) untuk bagian API lainnya.
 ```
 
 `esm.run` me-resolve dependensi eksternal paket untuk Anda, sehingga cara ini berfungsi tanpa bundler.
-URL tanpa versi selalu menyajikan rilis terbaru. Sematkan versi — `https://esm.run/@dineug/erd-editor@4.1.0` — jika Anda tidak ingin peningkatan versi mayor sampai ke halaman Anda tanpa pemberitahuan.
+URL tanpa versi selalu menyajikan rilis terbaru. Sematkan versi — `https://esm.run/@dineug/erd-editor@4.2.0` — jika Anda tidak ingin peningkatan versi mayor sampai ke halaman Anda tanpa pemberitahuan.
 `4.0.0` sendiri merupakan peningkatan versi mayor: halaman yang harus tetap di 3.x menyematkan `@3.10.0` — lihat [Migrasi dari 3.x](#upgrading-from-3x).
 
 ### Tag script {#script-tag}
@@ -66,14 +67,14 @@ Build inilah yang dirujuk oleh field `unpkg` dan `jsdelivr`, sehingga URL paket 
 
 ```html
 <erd-editor></erd-editor>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@4.1.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@4.2.0"></script>
 <script>
   const editor = document.querySelector('erd-editor');
   editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
 </script>
 ```
 
-Mengimpornya mendaftarkan `<erd-editor>` dengan cara yang sama; `window.ErdEditor` membawa dua callback file, `ErdEditor.setExportFileCallback` dan `ErdEditor.setImportFileCallback`, serta, sejak `3.9.2`, `ErdEditor.createKeyBindingMap`.
+Mengimpornya mendaftarkan `<erd-editor>` dengan cara yang sama; `window.ErdEditor` membawa dua callback file, `ErdEditor.setExportFileCallback` dan `ErdEditor.setImportFileCallback`, serta, sejak `3.9.2`, `ErdEditor.createKeyBindingMap`. Sejak `4.2.0`, `window.ErdEditor` juga membawa `ErdEditor.dictionaryRowChords` — lihat [dictionaryRowChords](./erd-editor-element.md#dictionaryrowchords).
 Peta exports tetap mengarahkan bundler ke modul ES, sehingga instalasi dari npm tidak pernah mengambil file ini.
 
 ### HTML {#html}
@@ -166,17 +167,18 @@ Di build [tag script](#script-tag), ketiganya dibawa di dalam file sebagai URL `
 
 ## Titik masuk {#entry-points}
 
-Mengimpor `@dineug/erd-editor` mendaftarkan `<erd-editor>` sebagai efek samping. Selain itu, paket ini mengekspor tipe elemen, dua setter callback, sejak `3.9.2` kombinasi tombol default beserta tipenya, dan sejak `4.0.0` tipe bahasa tampilan serta tipe opsi `getSchemaSQL()`.
+Mengimpor `@dineug/erd-editor` mendaftarkan `<erd-editor>` sebagai efek samping. Selain itu, paket ini mengekspor tipe elemen, dua setter callback, sejak `3.9.2` kombinasi tombol default beserta tipenya, sejak `4.0.0` tipe bahasa tampilan serta tipe opsi `getSchemaSQL()`, dan sejak `4.2.0` kombinasi tombol baris di tab Kamus.
 
 | Ekspor | Deskripsi |
 | --- | --- |
 | `ErdEditorElement` (tipe) | Antarmuka elemen — lihat [ErdEditorElement](./erd-editor-element.md). |
 | `setExportFileCallback(cb)` | Menggantikan unduhan browser, `(blob, { fileName }) => void`. |
-| `setImportFileCallback(cb)` | Menggantikan pemilih file browser, `({ type, op, accept, mode }) => void`; `mode` sejak `4.0.0`. |
+| `setImportFileCallback(cb)` | Menggantikan pemilih file browser, `({ type, op, accept, mode }) => void`; `mode` sejak `4.0.0`. Sejak `4.2.0`, `Import CSV` di tab Kamus membuka pemilih file browser bahkan saat callback telah ditetapkan — lihat [Dialog file](#file-dialogs). |
 | `createKeyBindingMap()` | Mengembalikan kombinasi tombol default sebagai `KeyBindingMap` baru pada setiap panggilan — lihat [createKeyBindingMap](./erd-editor-element.md#createkeybindingmap). |
 | `KeyBindingMap`, `KeyBindingName`, `ShortcutOption` (tipe) | Peta kombinasi tombol, union dari nama perintahnya, dan satu kombinasi tombol. |
+| `dictionaryRowChords(map)` | Sejak `4.2.0`. Mengembalikan, sebagai `ShortcutOption[]` baru pada setiap panggilan, kombinasi tombol yang digunakan kisi tab [Kamus](../guide/guides/dictionary.md#adding-and-deleting-rows) untuk menyisipkan dan menghapus baris menurut `KeyBindingMap` yang Anda berikan. Kombinasi yang menyisipkan baris di atas, `Alt+Shift+Enter` dengan nilai default, tidak terdapat di kombinasi tombol mana pun — lihat [dictionaryRowChords](./erd-editor-element.md#dictionaryrowchords). |
 | `LocaleCode`, `LocaleOption` (tipe) | Sejak `4.0.0`. 25 kode bahasa tampilan, dan kode-kode tersebut ditambah `'system'`, yang diterima `setLocale()` — lihat [Bahasa tampilan](./erd-editor-element.md#display-language). |
-| `SchemaSQLOptions` (tipe) | Sejak `4.0.0`. Opsi `statements` dan `header` yang diterima `getSchemaSQL()` — lihat [getSchemaSQL](./erd-editor-element.md#getschemasql). |
+| `SchemaSQLOptions` (tipe) | Sejak `4.0.0`. Opsi yang diterima `getSchemaSQL()`: `statements`, `header`, dan, sejak `4.2.0`, `logicalNameAsComment` — lihat [getSchemaSQL](./erd-editor-element.md#getschemasql). |
 
 `@dineug/erd-editor/engine.js` adalah titik masuk kedua. Titik masuk ini menjalankan store dokumen tanpa DOM, sehingga berfungsi di Web Worker — lihat [Penyimpanan jarak jauh](./advanced/remote-storage.md).
 Titik masuk ini mengekspor `createReplicationStore` dan tipe `ReplicationStore`. Sejak `3.10.0`, titik masuk ini juga mengekspor tipe `ReplicationChange`, `{ value: string; changed: boolean }`, yang diterima listener `change` milik replika — lihat [on@change](./advanced/remote-storage.md#onchange).
@@ -188,6 +190,7 @@ Sejak `3.9.1`, ada titik masuk ketiga, `@dineug/erd-editor/peer.js`: peer headle
 
 Impor dan ekspor melewati callback yang dapat diinjeksi, sehingga host tanpa dialog file browser — misalnya webview IDE — dapat menyediakan dialognya sendiri.
 Keduanya tidak simetris: ekspor menyerahkan file yang sudah jadi kepada Anda, sedangkan impor hanya meminta file, dan Anda sendiri yang memasukkan kembali isinya.
+Sejak `4.2.0`, `Import CSV` di tab Kamus adalah satu-satunya impor yang tidak pernah memanggil callback impor, yang `type`-nya tidak memiliki nilai CSV. Impor ini selalu membuka pemilih file milik browser sendiri, untuk file `.csv` — lihat [Mengimpor dan mengekspor CSV](../guide/guides/dictionary.md#importing-and-exporting-csv).
 
 `op` bernilai `set` atau `diff` — `diff` diteruskan ke `setDiffValue()`, apa pun `type`-nya. Selain itu, `type` menentukan metodenya, dan `accept` membawa ekstensi tipe tersebut, siap diserahkan ke dialog file host.
 Sejak `4.0.0`, `set` membawa `mode: 'append'` saat pengguna memilih [Impor dan Tambahkan](../guide/guides/file-import-export.md#import-and-add), dan tidak membawa `mode` untuk Impor biasa. Teruskan nilai ini: callback yang membuangnya mengganti diagram yang ingin ditambahi pengguna.
@@ -229,8 +232,8 @@ setImportFileCallback(async ({ type, op, accept, mode }) => {
 Buat cabang untuk setiap `type` yang Anda tangani dan abaikan sisanya.
 Panggilan `setSchemaJSON()` yang mengganti, seperti menetapkan `value`, mengosongkan dokumen sebelum mem-parsing, sehingga mengarahkan payload yang bukan dokumen `.erd.json` ke sana — melalui `else` penampung semua kasus, atau karena `type` yang ditambahkan kemudian lolos ke cabang tersebut — mengosongkan diagram alih-alih mengimpor apa pun.
 
-`fileName` yang dihasilkan editor adalah `<database name>-<timestamp>` ditambah ekstensi file, dengan stempel waktu berupa waktu lokal berformat `yyyy-MM-dd'T'HH_mm_ss`. Nama database yang kosong diganti dengan `unnamed`.
-Callback ekspor menerima file berikut. Sejak `4.0.0`, SVG dan file Generator Kode termasuk di antaranya, dan `.sql` berasal dari `Save file` di tab Skema SQL, bukan langsung dari `Export`.
+`fileName` yang dihasilkan editor adalah `<database name>-<timestamp>` ditambah ekstensi file, dengan stempel waktu berupa waktu lokal berformat `yyyy-MM-dd'T'HH_mm_ss`. Nama database yang kosong diganti dengan `unnamed`. File CSV dari tab Kamus mencantumkan nama lembarnya sebelum ekstensi, seperti pada `<database name>-<timestamp>-words.csv`.
+Callback ekspor menerima file berikut. Sejak `4.0.0`, SVG dan file Generator Kode termasuk di antaranya, dan `.sql` berasal dari `Save file` di tab Skema SQL, bukan langsung dari `Export`. Sejak `4.2.0`, file CSV dari tab Kamus juga termasuk di antaranya.
 
 | File | Ekstensi | `type` Blob |
 | --- | --- | --- |
@@ -238,6 +241,7 @@ Callback ekspor menerima file berikut. Sejak `4.0.0`, SVG dan file Generator Kod
 | `Save file` di tab Skema SQL, yang berisi teks yang ditampilkan tab tersebut — lihat [Skema SQL](../guide/guides/schema-sql.md) | `.sql` | tidak ada |
 | Dialog [Ekspor gambar](../guide/guides/file-import-export.md#image) | `.png` atau `.svg` | `image/png` atau `image/svg+xml` |
 | `Save file` di tab Generator Kode — lihat [Generator Kode](../guide/guides/code-generator.md) | Ekstensi bahasanya: `.cs`, `.go`, `.java`, `.kt`, `.php`, `.rs`, `.scala`, `.swift`, `.ts`, `.py`, `.aml`, `.dbml`, `.graphql`, `.json` atau `.mmd` | tidak ada |
+| `Export CSV` di tab Kamus, yang berisi setiap baris lembar yang ditampilkan, apa pun yang dicantumkan pencariannya — lihat [Mengimpor dan mengekspor CSV](../guide/guides/dictionary.md#importing-and-exporting-csv) | `.csv` | `text/csv` |
 
 Host yang memilih handler berdasarkan ekstensi memerlukan satu handler untuk masing-masing file tersebut.
 
@@ -261,5 +265,5 @@ Tidak ada polyfill yang dibundel. Tambahkan polyfill sendiri jika Anda perlu men
 - Callback impor menerima `mode: 'append'` untuk Impor dan Tambahkan, yang harus diteruskan oleh callback. Callback ekspor kini juga menerima file `.svg` dan file Generator Kode, dan `Export` ▸ `Schema SQL` membuka tab Skema SQL alih-alih menyimpan, sehingga `.sql` hanya datang dari `Save file` di tab tersebut — lihat [Dialog file](#file-dialogs).
 - `Delete` dan `Backspace` diikat ke `removeSelection` yang baru. Selama editor memiliki fokus di luar kotak teks, perilaku default tombol tersebut dicegah di setiap tab, dan di tab ERD, item yang dipilih dihapus. `KeyBindingName` dan `KeyBindingMap` mendapatkan perintah ini, dan `setKeyBindingMap({ removeSelection: [] })` menyerahkan kedua tombol ke halaman — lihat [setKeyBindingMap](./erd-editor-element.md#setkeybindingmap).
 - `ThemeOptions.appearance` juga menerima `'system'`, yaitu `System` di pembuat tema, yang disetel saat `systemDarkMode` diaktifkan. `changePresetTheme` melaporkan `'system'` selama opsi itu dipilih, sehingga nilainya perlu disimpan apa adanya dan diserahkan kembali ke `setPresetTheme`. Dengan `systemDarkMode` aktif, `setPresetTheme()` dengan `'light'` atau `'dark'` kini tetap bertahan alih-alih ditimpa oleh perubahan sistem operasi berikutnya — lihat [systemDarkMode](./erd-editor-element.md#systemdarkmode) dan [changePresetTheme](./erd-editor-element.md#changepresettheme).
-- `@dineug/erd-editor-mcp` `1.0.0`, ekstensi VS Code `4.0.0` atau yang lebih baru, serta plugin Obsidian dan JetBrains `1.0.0` atau yang lebih baru menggunakan protokol hub 2. Server `1.0.0` dan rilis editor sebelumnya yang melayani agen, atau server sebelumnya dan salah satu editor ini, saling menolak dengan `protocolMismatch`, sambil menyebutkan sisi yang perlu diperbarui — lihat [Memperbarui](../mcp/installation.md#updating).
+- `@dineug/erd-editor-mcp` `1.0.0` atau yang lebih baru, ekstensi VS Code `4.0.0` atau yang lebih baru, serta plugin Obsidian dan JetBrains `1.0.0` atau yang lebih baru menggunakan protokol hub 2. Server `1.0.0` atau yang lebih baru dan rilis editor sebelumnya yang melayani agen, atau server sebelumnya dan salah satu editor ini, saling menolak dengan `protocolMismatch`, sambil menyebutkan sisi yang perlu diperbarui — lihat [Memperbarui](../mcp/installation.md#updating).
 - URL CDN tanpa versi kini menyajikan rilis 4.x terbaru. Sematkan `@3.10.0` untuk tetap di 3.x — lihat [CDN](#cdn).

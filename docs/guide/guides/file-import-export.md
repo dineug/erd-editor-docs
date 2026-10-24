@@ -16,16 +16,20 @@ Five formats can be imported, from the `Import` submenu of the canvas context me
 - AML
 
 `Import and Add`, right below `Import`, adds the file to the diagram instead of replacing it — see [Import and Add](#import-and-add).  
-The welcome screen an empty diagram shows has an `Import` row with the same five formats — see [Welcome Screen](./editing-start.md#welcome-screen).
+The welcome screen an empty diagram shows has an `Import` row with the same five formats — see [Welcome Screen](./editing-start.md#welcome-screen).  
+The [Dictionary](./dictionary.md) tab's sheets also take words, terms, and domains from CSV files, with that tab's own `Import CSV` — see [Importing and Exporting CSV](./dictionary.md#importing-and-exporting-csv).
 
 Extensions are matched in any letter case. Picking a file whose extension does not match the chosen format cancels the import and shows `Only <format> files can be imported`, with the format written `json`, `sql`, `graphql`, `dbml`, or `aml`, as in `Only sql files can be imported`.
 
 `Import` replaces the current document rather than merging into it, and one undo brings the previous diagram back.  
-A JSON file brings its own settings with it, its [locks](./settings.md#lock) included. Where the file locks the tab, the Code Generator language, a name case, or the bracket type, you keep seeing what you had, but the file's locked value is the one saved. The view, locked or not, goes where the file puts it. A JSON file saved before the locks existed comes in with every lock on and the view at 100%.  
+A JSON file brings its own settings with it, its [locks](./settings.md#lock) included. Where the file locks the tab, the Code Generator language, a name case, the bracket type, or the [Name View](./logical-names.md#name-view), you keep seeing what you had, but the file's locked value is the one saved. The zoom and view position, locked or not, go where the file puts them. A JSON file saved before the locks existed comes in with every lock on and the view at 100%. One saved before the `Name View` lock existed comes in with that lock on, whatever other locks it records.  
 The other formats keep the settings you already have, the locks included, apart from the view, which starts at 100%.  
 The GraphQL, DBML, and AML parsers never fail: a file they cannot read produces an empty diagram rather than an error.
 
-A JSON file keeps the positions it has. The tables of a Schema SQL, GraphQL, DBML, or AML file are placed before the diagram changes:
+A JSON file also brings its tables' and columns' logical names and its columns' domain links. Its words, terms, and domains take the place of the [Dictionary](./dictionary.md) tab's, so a file that holds none leaves the sheets empty, and undoing the import brings back the ones it replaced.  
+The other formats hold none of these. Their tables come in with no logical names and no column linked to a domain, and your words, terms, and domains stay as they are. Undoing or redoing the import leaves them as they are too, so a dictionary edit made after the import is kept. Such an import also leaves each sheet's own undo history as it is, while a JSON import empties those histories — see [Dictionary Sheets](./undo-redo.md#dictionary-sheets).
+
+A JSON file keeps the positions it has. The tables of a Schema SQL, GraphQL, DBML, or AML file are placed before the diagram changes, at the widths they take in the [Name View](./logical-names.md#beyond-the-canvas) you are looking at:
 
 - When the file has two or more tables and at least one relationship, they are laid out by the `Flow` [Auto Layout](./table-related-functions.md#auto-layout), left to right along the relationships, from the top left of the canvas. A relationship from a table to itself counts.
 - Otherwise they are set out in rows from the top left, the tables with the fewest columns first.
@@ -33,7 +37,7 @@ A JSON file keeps the positions it has. The tables of a Schema SQL, GraphQL, DBM
 
 The diagram is then replaced in one step, so nothing shows in between. A setting you change while the tables are being placed, such as the tab, is kept, and if you import another file meanwhile, the import started last wins.
 
-A read-only editor loads nothing from `Import` and does not offer `Import and Add`.
+A read-only editor loads nothing from `Import` and offers neither `Import and Add` nor the Dictionary tab's `Import CSV`.
 
 ### Import and Add
 
@@ -42,6 +46,7 @@ A read-only editor loads nothing from `Import` and does not offer `Import and Ad
 ![Adding a SQL file from Import and Add > Schema SQL, its tables landing below the diagram, laid out along their relationships and selected](/img/demo-import-and-add.webp)
 
 The file comes in the way a paste does: every table, column, relationship, index, memo, and [table group](./table-groups.md) it holds is added as a new one, the tables already in the diagram do not move, and no setting changes, so a JSON file's settings are left out.  
+A JSON file's tables and columns keep their logical names, and each physical name stays the dictionaries' or your own, as it was in the file, which decides whether a logical name written later derives a new one — see [Deriving Physical Names](./dictionary.md#deriving-physical-names). The file's words, terms, and domains are left out, so the Dictionary tab stays as it was, and no added column is linked to a domain: each keeps the data type it has.  
 A table whose name the diagram already has is added as a second table with that name, not merged with it. Relationships and indexes come only from the file, so a foreign key to a table the file does not define is not linked to a table already in the diagram.
 
 The added block lands just below everything the diagram holds, lined up with its left edge, or at the top left of an empty diagram. Memos and table groups hidden with [View Option](./table-related-functions.md#table-view-options) count as well, since they still stand there.  
@@ -160,11 +165,10 @@ A backslash before a quote, as MySQL and MariaDB write `'it\'s'`, escapes the qu
 A `DEFAULT` value keeps its quotes, and a quote inside it is written back doubled however the file escaped it: `'it''s'`.  
 When the document's database is Databricks at import time, single-quoted text follows Spark's rules instead: every backslash escapes the character after it, so `'C:\\dir'` reads as `C:\dir`, escapes such as `\n`, `\t`, and `\u0041` are decoded, and a `DEFAULT` value is kept as `'it\'s'`.
 
-Exported Schema SQL escapes a quote inside a table or column comment: `COMMENT 'it''s'` for MySQL, MariaDB, and Snowflake, `COMMENT ON TABLE` and `COMMENT ON COLUMN ... IS 'it''s'` for PostgreSQL and Oracle, and the same doubling, table and column names included, in MSSQL's `sp_addextendedproperty` calls. A comment with no quote is written as it is.  
-Databricks escapes a quote and a backslash with a backslash instead, as in `COMMENT 'it\'s'`, so its export reads back exactly only while Databricks is the selected database.  
-MSSQL writes each comment as `EXECUTE sys.sp_addextendedproperty 'MS_Description', '<comment>', 'schema', '<schema>', 'table', '<table>'`, followed by `'column', '<column>'` for a column. With `Bracket` at `None`, a table named `sales.users` gives schema `sales` and table `users`, and a name without a schema is in `dbo`. Under any other `Bracket` the whole name is the table, in `dbo`.
-
-Comments do not survive a SQLite export and import round trip: SQLite writes them as plain `--` lines, which the parser does not read. An MSSQL export's `sp_addextendedproperty` calls import back as the same table and column comments.
+How each database writes a comment on export, and how it escapes a quote in one, is described in [Comments](./schema-sql.md#comments) on the Schema SQL page.  
+An export to MySQL, MariaDB, PostgreSQL, Oracle, Snowflake, or MSSQL imports back to the same table and column comments, quotes included, but for the blank lines an Oracle export leaves out. A Databricks export, which escapes a quote and a backslash with a backslash, reads back exactly only while Databricks is the selected database.  
+Comments do not survive a SQLite export and import round trip: SQLite writes them as plain `--` lines, which the parser does not read.  
+Except on SQLite, a logical name that `Write logical names into empty comments` wrote into an empty comment imports back as that table's or column's comment, not as its logical name — see [Logical Names as Comments](./schema-sql.md#logical-names-as-comments).
 
 ### GraphQL
 
@@ -200,22 +204,24 @@ The file name must end in `.aml`.
 
 GraphQL, DBML, and AML are round-trip formats: each is also a [Code Generator](./code-generator.md) target.  
 DBML and AML carry each relationship's ON DELETE and ON UPDATE both ways — see [Code Generator](./code-generator.md#on-delete-and-on-update). GraphQL carries neither, so a GraphQL import leaves both `Not set`.  
-DBML also carries table colors, less any transparency, and each table group that holds a table, both ways. A group with no name comes back as `group_1`, `group_2`, and so on, and a repeated group name comes back with `_2`, `_3`, and so on added. AML carries a table color only as the nearest of its color names, so `#FF8800` is written as `orange` and comes back as `#f97316`, and it carries no groups. GraphQL carries neither colors nor groups.
+DBML also carries table colors, less any transparency, and each table group that holds a table, both ways. A group with no name comes back as `group_1`, `group_2`, and so on, and a repeated group name comes back with `_2`, `_3`, and so on added. AML carries a table color only as the nearest of its color names, so `#FF8800` is written as `orange` and comes back as `#f97316`, and it carries no groups. GraphQL carries neither colors nor groups.  
+None of the three carries logical names, domain links, or the dictionaries, either way: the Code Generator writes each table's and column's physical name and data type, never a logical name or a domain.
 
 ## Exporting
 
 The `Export` submenu of the canvas context menu has three entries:
 
-- json: Saves the diagram as its file holds it, as `.erd.json`: the tables with their columns and indexes, the relationships, memos, and table groups, and the settings, each [locked setting](./settings.md#lock) at its locked value.
+- json: Saves the diagram as its file holds it, as `.erd.json`: the tables with their columns and indexes, the relationships, memos, and table groups, the logical names and the columns' domain links, the [Dictionary](./dictionary.md) tab's words, terms, and domains, and the settings, each [locked setting](./settings.md#lock) at its locked value. What holds nothing, such as empty text or an empty dictionary row, is left out — see [Storage Form and Runtime Value](../../api/advanced/schema.md#storage-form-and-runtime-value).
 - Schema SQL: Opens the [Schema SQL](./schema-sql.md#saving-or-copying-the-sql) tab with its options panel open and its `Save file` button focused, so pressing `Enter` saves the SQL the tab shows as `.sql`. Nothing is saved until then.
 - Image: Opens the `Export image` dialog, which saves the diagram as a `.png` or `.svg`, or copies it to the clipboard as a PNG — see [Image](#image).
 
-All three work in a read-only editor.
+All three work in a read-only editor.  
+The Dictionary tab's own `Export CSV`, which is not in this submenu, saves its `Domains`, `Words`, or `Terms` sheet as a CSV file. Unlike these three, it is not offered in a read-only editor — see [Importing and Exporting CSV](./dictionary.md#importing-and-exporting-csv).
 
 Schema SQL writes each relationship's ON DELETE and ON UPDATE after its `REFERENCES`, ON DELETE first. `Not set` writes nothing, and an action the selected database does not accept is left out. See [Relationship Editing](./relationship-editing.md#on-delete-and-on-update) for which database takes which.
 
 Every exported file is named `<database name>-<timestamp>` followed by its extension, with the timestamp in local time formatted as `yyyy-MM-dd'T'HH_mm_ss` — for example `my-schema-2026-08-29T04_05_06.erd.json`. A blank database name falls back to `unnamed`.  
-The Schema SQL tab's and the [Code Generator](./code-generator.md)'s `Save file` name their files the same way. An image takes the database name as it was when the dialog opened.
+The Schema SQL tab's and the [Code Generator](./code-generator.md)'s `Save file` name their files the same way, and so does `Export CSV`, which adds the sheet after the timestamp: `-words.csv`, `-terms.csv`, or `-domains.csv`. An image takes the database name as it was when the dialog opened.
 
 `Import`, `Import and Add`, and `Export` are also available from [Quick Search](./quick-search.md) on the ERD tab, with the same entries as the canvas context menu.
 
@@ -235,7 +241,7 @@ Obsidian's file explorer lists an exported `.erd.json` or `.sql` file only while
 
 The choices are kept until the editor closes and are never saved in the document. The preview is drawn the way the image is, and is drawn again when `Background` or `Dark mode` changes.
 
-The image holds the diagram as it stood when the dialog opened; close and reopen the dialog to take in later changes. It holds the whole diagram however far it is scrolled away, cropped to what the diagram draws plus a margin, and it is always drawn at 100%, whatever zoom the editor is showing, so every table is drawn in full. What [View Option](./table-related-functions.md#table-view-options) hides — relationships, their ON DELETE and ON UPDATE labels, table groups, or memos — is neither drawn nor given room, and table groups are drawn behind everything else.
+The image holds the diagram as it stood when the dialog opened; close and reopen the dialog to take in later changes. Its tables and columns are named in the Name View the editor showed then, even one switched on your screen alone while the `Name View` lock keeps another in the file — see [Beyond the Canvas](./logical-names.md#beyond-the-canvas). The colors the [dictionary checks](./dictionary.md#marks-on-the-canvas) give names on the canvas are not drawn. It holds the whole diagram however far it is scrolled away, cropped to what the diagram draws plus a margin, and it is always drawn at 100%, whatever zoom the editor is showing, so every table is drawn in full. What [View Option](./table-related-functions.md#table-view-options) hides — relationships, their ON DELETE and ON UPDATE labels, table groups, or memos — is neither drawn nor given room, and table groups are drawn behind everything else.
 
 Three buttons write the image, and each leaves the dialog open:
 

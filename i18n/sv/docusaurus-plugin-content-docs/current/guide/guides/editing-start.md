@@ -77,8 +77,8 @@ Påbörja en relation från snabbmenyn, från [arbetsytans verktygsfält](./tabl
 - One N: `Ctrl + Alt + 4` (Windows/Linux) eller `⌘ + ⌥ + 4` (Mac)
 
 När en typ är aktiverad ändras markören. Klicka först på föräldratabellen och sedan på barntabellen.  
-Föräldratabellen får en primärnyckel om den inte har någon, och för var och en av föräldratabellens primärnyckelkolumner får barntabellen en sekundärnyckelkolumn med `Not Null` och samma datatyp, standardvärde och kommentar.  
-En nyckel av typen serial är undantaget: dess sekundärnyckel får den heltalstyp som serial-typen lagrar, till exempel `integer` för `serial4` – se [Identifierande relationer](./relationship-editing.md#identifying-relationships).  
+Föräldratabellen får en primärnyckel om den inte har någon, och för var och en av föräldratabellens primärnyckelkolumner får barntabellen en sekundärnyckelkolumn med `Not Null` och samma datatyp, standardvärde, kommentar, [logiska namn](./logical-names.md) och [domän](./dictionary.md#domains-and-data-types).  
+En nyckel av typen serial är undantaget: dess sekundärnyckel får den heltalstyp som serial-typen lagrar, till exempel `integer` för `serial4`, och kopplar då ingen domän – se [Identifierande relationer](./relationship-editing.md#identifying-relationships).  
 Varje sekundärnyckelkolumn namnges efter sin nyckel: ett namn på ett ord, som `id`, får föräldratabellens namn framför sig (`user_id`), ett namn på flera ord, som `member_id`, behålls och ett namn som barntabellen redan har numreras (`user_id_2`) – se [Namn på sekundärnyckelkolumner](./relationship-editing.md#foreign-key-column-names).  
 Om du klickar två gånger på samma tabell ritas en självrefererande relation.  
 En ny relation börjar med både `On Delete` och `On Update` inställda på `Not set`; ändra dem i relationens snabbmeny – se [ON DELETE och ON UPDATE](./relationship-editing.md#on-delete-and-on-update).  
@@ -91,7 +91,8 @@ När föräldratabellen har valts och du pekar på en tabell som relationen kan 
 
 Föräldratabellen visar också knapparna när pekaren har flyttats en bit från stället där du klickade på den, så att även en självrefererande relation kan mappas till befintliga kolumner.  
 Ett finger ger ingen hovring, så när du ritar med ett finger visas knapparna aldrig och ett tryck på barntabellen ritar relationen direkt; en penna visar dem som en mus gör.  
-Om föräldratabellen har förlorat sin primärnyckel när du når barntabellen, till exempel genom att ett steg ångras eller genom en medarbetares ändring, är knappen `Create new columns` nedtonad med knappbeskrivningen `<parent> has no primary key to copy`, och ett klick på barntabellen avslutar ritningen utan att något ritas.
+Om föräldratabellen har förlorat sin primärnyckel när du når barntabellen, till exempel genom att ett steg ångras eller genom en medarbetares ändring, är knappen `Create new columns` nedtonad med knappbeskrivningen `<parent> has no primary key to copy`, och ett klick på barntabellen avslutar ritningen utan att något ritas.  
+Knappbeskrivningen namnger föräldratabellen så som [namnvisningen](./logical-names.md#beyond-the-canvas) gör.
 
 ![En One N-relation ritas med ⌘ + ⌥ + 4 och sedan en Zero N-relation från arbetsytans verktygsfält, där barntabellen får en kontur och knapparna Map to existing columns och Create new columns](/img/demo-relationship.webp)
 

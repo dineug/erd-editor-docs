@@ -1,5 +1,5 @@
 ---
-sidebar_position: 8
+sidebar_position: 9
 description: Prehliadanie tabuliek diagramu s ich stĺpcami, indexmi a cudzími kľúčmi, jeho skupín tabuliek a poznámok v strome ukotvenom vedľa plátna ERD a prechod na ktorúkoľvek z týchto položiek kliknutím.
 ---
 
@@ -26,11 +26,11 @@ Otvoriť ho môžete ktorýmkoľvek z týchto spôsobov:
 - Položka `Toggle Explorer` v kontextovej ponuke plátna: kliknite pravým tlačidlom na prázdne miesto na plátne ERD mimo akejkoľvek [skupiny tabuliek](./table-groups.md). Nachádza sa za položkami `New Table`, `New Memo` a `New Table Group` a pred položkou `Relationship`.
 
 Obe položky `Toggle Explorer` zobrazujú vpravo klávesovú skratku.  
-Tlačidlo na paneli nástrojov, klávesová skratka a položka rýchleho vyhľadávania fungujú na každej karte. Z karty Vizualizácia, Schéma SQL, Generátor kódu alebo Nastavenia najprv prepnú na kartu ERD, pretože prieskumník sa zobrazuje iba tam.
+Tlačidlo na paneli nástrojov, klávesová skratka a položka rýchleho vyhľadávania fungujú na každej karte. Z karty Vizualizácia, Schéma SQL, Generátor kódu, Slovník alebo Nastavenia najprv prepnú na kartu ERD, pretože prieskumník sa zobrazuje iba tam.
 
 Tlačidlo na paneli nástrojov panel iba otvára a zatvára. Neumiestni textový kurzor do poľa hľadania a panel Vlastnosti tabuľky, výber motívu a výber jazyka `Display Language` nechá otvorené.  
 Klávesová skratka a obe položky `Toggle Explorer` otvoria prieskumníka s fokusom na jeho vyhľadávaní: textový kurzor prejde do poľa hľadania s vybratým textom a ktorékoľvek z piatich dialógových okien z časti [Dialógové okná vedľa prieskumníka](#dialogs-beside-it) sa zatvorí. Čo si vyhľadávanie zachováva medzi otvoreniami, opisuje časť [Otvorenie a zatvorenie](./find-and-replace.md#opening-and-closing) na stránke Hľadanie a nahrádzanie.  
-Klávesová skratka nemá žiadny účinok, kým sa upravuje bunka tabuľky, poznámka alebo názov skupiny tabuliek.
+Klávesová skratka nemá žiadny účinok, kým sa upravuje bunka tabuľky, poznámka alebo názov skupiny tabuliek, ani kým je otvorená úprava bunky na karte [Slovník](./dictionary.md#keys-on-the-tab) vrátane zoznamu domén termínu.
 
 Tlačidlo na paneli nástrojov vyzerá ako stlačené, kým je prieskumník otvorený na karte ERD a nie je skrytý [režimom Zen](#when-it-stands-aside). Vtedy tlačidlo, klávesová skratka aj ktorákoľvek z oboch položiek `Toggle Explorer` prieskumníka zatvoria, a ak bol fokus klávesnice v paneli, vráti sa do editora.  
 Klávesová skratka ho nikdy nezatvorí, kým je otvorené rýchle vyhľadávanie alebo jedno z piatich dialógových okien. Namiesto toho zatvorí paletu alebo dialógové okno a presunie fokus klávesnice do poľa hľadania s vybratým textom, pričom ak sa prieskumník už zobrazoval, zachová sa aktuálna zhoda. Položka `Toggle Explorer` v rýchlom vyhľadávaní takúto výnimku nerobí: jej spustenie zatvorí paletu a potom otvoreného prieskumníka.
@@ -84,22 +84,27 @@ V záhlaví je nápis `Explorer` a dve tlačidlá: `Collapse All` a `x`, ktoré 
 
 Najvyššia úroveň obsahuje tri priečinky v tomto poradí: `Tables`, `Table Groups` a `Memos`. Pod každou tabuľkou sú jej vlastné priečinky `Columns`, `Indexes` a `Foreign Keys`.  
 Prázdny priečinok sa nezobrazuje, takže pri prázdnom diagrame sa nezobrazí vôbec žiadny riadok. Priečinok `Table Groups` sa vynechá aj vtedy, keď [View Option](./table-related-functions.md#table-view-options) → `Table Groups` skryje skupiny, a priečinok `Memos`, keď View Option → `Memos` skryje poznámky.  
-Riadok priečinka zobrazuje ikonu priečinka, jeho názov a na samom konci počet riadkov priamo pod ním, takže počet vedľa priečinka `Tables` je počet tabuliek v diagrame.
+Riadok priečinka zobrazuje ikonu priečinka, jeho názov a na samom konci počet riadkov priamo pod ním, takže počet vedľa priečinka `Tables` je počet tabuliek v diagrame. Počet zoskupuje tisíce tak, ako to robí jazyk zobrazenia, vždy číslicami 0 až 9, napríklad `1,234` v angličtine a `1.234` v nemčine.
 
 Tabuľky sú zoradené podľa názvu bez ohľadu na veľkosť písmen a tabuľky s rovnakým názvom si zachovávajú poradie z dokumentu. Rovnako sú zoradené skupiny tabuliek aj tabuľky pod každou skupinou. Stĺpce tabuľky si zachovávajú poradie, ktoré majú v tabuľke, a jej indexy, jej cudzie kľúče a poznámky poradie z dokumentu.  
-Strom sleduje zmeny diagramu, či už ide o úpravu na plátne, vrátenie späť alebo opätovné vykonanie, import alebo zmenu od spolupracovníka či programovacieho agenta, takže premenovanie tabuľky presunie jej riadok.
+Strom sleduje zmeny diagramu, či už ide o úpravu na plátne, vrátenie späť alebo opätovné vykonanie, import alebo zmenu od spolupracovníka či programovacieho agenta, takže premenovanie tabuľky presunie jej riadok.  
+Poradie sa v každom [Zobrazení názvov](./logical-names.md#name-view) riadi názvom, nikdy nie logickým názvom. Prepnutie zobrazenia zmení označenia riadkov tabuliek a stĺpcov bez toho, aby niektorý z nich presunulo, a rovnako aj priradenie logického názvu tabuľke alebo stĺpcu v zobrazení `Logical Names` alebo `Both Names`. Fyzický názov [odvodený](./dictionary.md#deriving-physical-names) z nového logického názvu je však premenovanie ako každé iné, takže môže riadok tabuľky presunúť.
 
 Jednotlivé druhy riadkov zobrazujú:
 
 - Tabuľka: ikona tabuľky a jej názov.
-- Stĺpec: ikona kľúča pri stĺpci primárneho alebo cudzieho kľúča, zafarbená tak, ako bunka kľúča samotnej tabuľky zafarbuje primárny kľúč, cudzí kľúč alebo oboje, a ikona zoznamu pri každom inom stĺpci. Potom jeho názov a tlmeným písmom jeho typ údajov, za ktorým nasleduje `PK`, `FK` alebo oboje, napríklad `id` `BIGINT PK` alebo `user_id` `BIGINT FK`.
+- Stĺpec: ikona kľúča pri stĺpci primárneho alebo cudzieho kľúča, zafarbená tak, ako bunka kľúča samotnej tabuľky zafarbuje primárny kľúč, cudzí kľúč alebo oboje, a ikona zoznamu pri každom inom stĺpci. Potom jeho názov a tlmeným písmom jeho typ údajov, za ktorým nasleduje `PK`, `FK` alebo oboje, napríklad `id` `BIGINT PK` alebo `user_id` `BIGINT FK`. Zobrazený typ je bez ohľadu na Zobrazenie názvov vždy typ údajov stĺpca, nikdy nie jeho [doména](./logical-names.md#the-domain-cell).
 - Index: ikona indexu a jeho názov. Potom tlmeným písmom `UNIQUE` pri jedinečnom indexe a jeho stĺpce v zátvorkách v poradí indexu, pričom za zostupným stĺpcom nasleduje `DESC`, napríklad `orders_user_idx` `UNIQUE (user_id DESC, total)` alebo iba `(total)`.
 - Cudzí kľúč: uvádza sa iba pod podradenou tabuľkou, teda tou, ktorá obsahuje stĺpce cudzieho kľúča, a iba vtedy, keď je nadradená tabuľka v diagrame. Jeho ikona kľúča preberá farbu spojnice: farbu primárneho a cudzieho kľúča pri [identifikujúcom vzťahu](./relationship-editing.md#identifying-relationships), inak farbu cudzieho kľúča. Zobrazuje stĺpce kľúča podradenej tabuľky oddelené čiarkami, potom tlmeným písmom `→` s nadradenou tabuľkou a jej stĺpcami, napríklad `user_id` `→ users(id)`.
 - Skupina tabuliek: bodka vo farbe skupiny, sivá pri skupine bez farby, a jej názov. Jej tabuľky sú pod ňou zoradené podľa názvu a každý takýto riadok prejde na svoju tabuľku. Skupina bez tabuliek nemá čo rozbaliť.
 - Poznámka: ikona lepiaceho lístka a prvý riadok poznámky.
 
-Prázdny názov alebo poznámka s prázdnym prvým riadkom sa zobrazí ako `unnamed` kurzívou.  
-Na úzkom paneli sa tlmený text skráti a ukončí znakom `…` skôr ako názov. Podržaním ukazovateľa nad názvom alebo jeho tlmeným textom zobrazíte celé znenie.
+Riadky tabuliek, tabuľky uvedené pod skupinou a riadky stĺpcov sa riadia Zobrazením názvov – pozrite si časť [Mimo plátna](./logical-names.md#beyond-the-canvas). V zobrazení `Both Names` napríklad riadok stĺpca znie `Total Amount` `total` `NUMERIC`: logický názov, potom názov a typ údajov, oba tlmeným písmom.  
+V každom zobrazení riadky indexov a cudzích kľúčov uvádzajú svoje stĺpce podľa názvu a riadok cudzieho kľúča uvádza podľa názvu aj svoju nadradenú tabuľku.  
+Kým pole hľadania obsahuje text, riadok nájdený iba v názve, ktorý jeho zobrazenie vynecháva, zobrazuje tlmeným písmom aj tento názov – pozrite si časť [Výsledky](./find-and-replace.md#the-results).
+
+Prázdny názov alebo poznámka s prázdnym prvým riadkom sa zobrazí ako `unnamed` kurzívou. V zobrazeniach `Logical Names` a `Both Names` sa tabuľka alebo stĺpec zobrazí ako `unnamed`, iba keď je prázdny aj logický názov.  
+Na úzkom paneli sa tlmený text skráti a ukončí znakom `…` skôr ako názov, ktorým riadok začína. Podržaním ukazovateľa nad názvom alebo jeho tlmeným textom zobrazíte celé znenie.
 
 Na začiatku je rozbalený iba priečinok `Tables`. Kliknutím na riadok priečinka alebo stlačením klávesu `Enter` alebo `Space` na ňom ho zbalíte alebo rozbalíte.  
 Šípka na začiatku riadka tento riadok zbalí alebo rozbalí bez prechodu kamkoľvek. Má ju každý riadok tabuľky, aj pri tabuľke, pod ktorou nič nie je. Klávesy `→` a `←` tiež zbaľujú a rozbaľujú – pozrite si časť [Klávesy v prieskumníkovi](#keys-in-the-explorer).  
@@ -110,8 +115,8 @@ Tlačidlo `Collapse All` pri každom stlačení zbalí jednu úroveň: najhlbši
 
 Kliknutím na riadok alebo stlačením klávesu `Enter` alebo `Space`, keď je na ňom fokus klávesnice, prejdete na to, čo riadok predstavuje na plátne ERD. Riadok priečinka sa iba zbalí alebo rozbalí a klávesy so šípkami sa pohybujú iba v rámci stromu.
 
-- Riadok tabuľky alebo tabuľka uvedená pod skupinou vyberie iba túto tabuľku a presunie ju dopredu. Aktívna bunka sa presunie na názov tabuľky, pokiaľ už nie je v tejto tabuľke.
-- Riadok stĺpca vyberie iba jeho tabuľku a umiestni aktívnu bunku na názov stĺpca.
+- Riadok tabuľky alebo tabuľka uvedená pod skupinou vyberie iba túto tabuľku a presunie ju dopredu. Pokiaľ aktívna bunka už nie je v tejto tabuľke, presunie sa na prvú bunku hlavičky tabuľky: na názov, prípadne na logický názov v zobrazeniach `Logical Names` a `Both Names`.
+- Riadok stĺpca vyberie iba jeho tabuľku a umiestni aktívnu bunku na názov stĺpca, prípadne v zobrazení `Logical Names` na logický názov vykreslený na jeho mieste.
 - Riadok indexu vyberie jeho tabuľku rovnako ako riadok tabuľky. Samotný index sa nijako nevyznačí; indexy sa upravujú v paneli [Vlastnosti tabuľky](./table-related-functions.md#indexes).
 - Riadok cudzieho kľúča posunie do zobrazenia obe tabuľky vzťahu naraz, prípadne iba podradenú tabuľku, ak sú od seba príliš ďaleko na to, aby sa zobrazili spolu. Vyberie iba podradenú tabuľku s jej stĺpcami cudzieho kľúča, s aktívnou bunkou na prvom z nich, a zvýrazní spojnicu vzťahu – pozrite si časť [Čítanie spojnice](./relationship-editing.md#reading-a-connector).
 - Riadok skupiny tabuliek posunie rámec skupiny do zobrazenia podľa jeho záhlavia, vyberie iba túto skupinu a presunie ju dopredu spolu s jej tabuľkami.
@@ -119,7 +124,7 @@ Kliknutím na riadok alebo stlačením klávesu `Enter` alebo `Space`, keď je n
 
 Zobrazenie sa presúva podľa pravidla spoločného pre všetky prechody: priblíženie sa nikdy nemení a plátno sa posunie iba vtedy, ak to, na čo prechádzate, už nie je dobre viditeľné – pozrite si časť [Kam vedie skok](./table-related-functions.md#where-a-jump-lands).  
 Prechod na riadok najprv zatvorí panel Vlastnosti tabuľky, ak je otvorený, a nikdy nezačne ani nedokončí práve kreslený vzťah.  
-Kým pole hľadania obsahuje text, riadok, ktorého vlastný názov obsahuje zhodu, alebo riadok, ktorý zobrazuje úryvok komentára alebo poznámky, namiesto toho prejde na túto zhodu – pozrite si časť [Prechod na zhodu](./find-and-replace.md#going-to-a-match).
+Kým pole hľadania obsahuje text, riadok, ktorého názov alebo logický názov obsahuje zhodu, alebo riadok, ktorý zobrazuje úryvok komentára alebo poznámky, namiesto toho prejde na svoju prvú zhodu – pozrite si časť [Prechod na zhodu](./find-and-replace.md#going-to-a-match).
 
 Po kliknutí zostane fokus klávesnice v strome, takže klávesy `Delete`, `Backspace` a ostatné klávesy na úpravy sa k novému výberu nedostanú, kým nestlačíte `Escape` alebo nekliknete na plátno – pozrite si časť [Klávesy v prieskumníkovi](#keys-in-the-explorer).
 

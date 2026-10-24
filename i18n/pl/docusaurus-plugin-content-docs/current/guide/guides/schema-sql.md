@@ -1,6 +1,6 @@
 ---
-sidebar_position: 11
-description: Odczytywanie kodu DDL diagramu na karcie Schemat SQL, wybór bazy danych, cudzysłowu, instrukcji, nagłówka i tabel w jej panelu opcji, dodawanie własnych skryptów przed tabelami i po nich oraz zapisywanie lub kopiowanie kodu SQL.
+sidebar_position: 12
+description: Odczytywanie kodu DDL diagramu na karcie Schemat SQL, wybór bazy danych, cudzysłowu, instrukcji, nagłówka, nazw logicznych w pustych komentarzach i tabel w jej panelu opcji, dodawanie własnych skryptów przed tabelami i po nich oraz zapisywanie lub kopiowanie kodu SQL.
 ---
 
 # Schemat SQL
@@ -20,24 +20,25 @@ Kliknij kod SQL prawym przyciskiem myszy, aby otworzyć jego menu kontekstowe:
 - Pozycja `Options panel`, która zwija lub otwiera panel i jest zaznaczona, gdy panel jest widoczny.
 - `Save file`
 
-Gdy ta karta jest otwarta, Szybkie wyszukiwanie oferuje polecenia `Database` i `Bracket`; polecenia `Schema SQL: Statements` i `Schema SQL: Header`, które wyświetlają tylko opcje obsługiwane przez bazę danych; a także polecenie `Schema SQL: Options panel`, które zwija lub otwiera panel.
+Gdy ta karta jest otwarta, Szybkie wyszukiwanie oferuje polecenia `Database` i `Bracket`; polecenia `Schema SQL: Statements` i `Schema SQL: Header`, które wyświetlają tylko opcje obsługiwane przez bazę danych; a także polecenie `Schema SQL: Options panel`, które zwija lub otwiera panel.  
+Ani menu kontekstowe, ani Szybkie wyszukiwanie nie oferuje przełącznika `Write logical names into empty comments`, który znajduje się wyłącznie w panelu opcji – zobacz sekcję [Nazwy logiczne jako komentarze](#logical-names-as-comments).
 
 Kod SQL jest generowany przy otwarciu karty i ponownie przy każdej zmianie jednej z opcji panelu, nazwy bazy danych lub skryptu. Zmiana tabel wprowadzona, gdy karta jest otwarta, na przykład przez współpracownika lub agenta kodującego, pojawia się dopiero, gdy opuścisz kartę i do niej wrócisz albo gdy zmieni się jedna z tych rzeczy.
 
-[Właściwości tabeli](./table-related-functions.md#table-properties) mają własną kartę `Schema SQL`, która pokazuje kod DDL jednej tabeli. Karta ta zawsze zapisuje zwykłe instrukcje `CREATE` bez nagłówka i skryptów, nie ma panelu opcji, a jej menu kontekstowe oferuje tylko pozycje `Database` i `Bracket`.
+[Właściwości tabeli](./table-related-functions.md#table-properties) mają własną kartę `Schema SQL`, która pokazuje kod DDL jednej tabeli. Karta ta zawsze zapisuje zwykłe instrukcje `CREATE` bez nagłówka i skryptów, nigdy nie wpisuje nazwy logicznej do pustego komentarza, nie ma panelu opcji, a jej menu kontekstowe oferuje tylko pozycje `Database` i `Bracket`.
 
 ## Panel opcji {#options-panel}
 
 Panel zawiera trzy grupy, każdą pod własnym podpisem:
 
 1. `Saved in the document`: `Database` i `Bracket` – zobacz sekcję [Baza danych i cudzysłów](#database-and-bracket).
-2. `This window only`: `Statements`, `Header` oraz, gdy diagram ma [grupę tabel](./table-groups.md), `Tables` – zobacz sekcje [Instrukcje](#statements), [Nagłówek](#header) i [Tabele](#tables).
+2. `This window only`: `Statements`, `Header`, `Write logical names into empty comments` oraz, gdy diagram ma [grupę tabel](./table-groups.md), `Tables` – zobacz sekcje [Instrukcje](#statements), [Nagłówek](#header), [Nazwy logiczne jako komentarze](#logical-names-as-comments) i [Tabele](#tables).
 3. `Saved in the document · written as is for every database`: skrypty `Before tables` i `After tables` – zobacz sekcję [Skrypty przed tabelami i po nich](#before-and-after-scripts).
 
 Przyciski `Save file` i `Copy` znajdują się u jego dołu – zobacz sekcję [Zapisywanie lub kopiowanie kodu SQL](#saving-or-copying-the-sql).
 
 Opcje w grupie `This window only` należą do okna edytora, w którym je ustawiono. Nie są zapisywane w dokumencie, udostępniane współpracownikom ani rejestrowane w historii cofania, a po zamknięciu lub ponownym wczytaniu edytora wracają do wartości początkowych; przełączanie kart je zachowuje.  
-Opcja `Statements` ma początkowo wartość `If not exists`, a opcja `Header` – `CREATE + USE`. Kod SQL, który strona osadzająca edytor odczytuje za pomocą [`getSchemaSQL()`](../../api/erd-editor-element.md#getschemasql), oraz kod SQL odczytywany przez agenta kodującego zaczynają natomiast od `Create` bez nagłówka.
+Opcja `Statements` ma początkowo wartość `If not exists`, opcja `Header` – `CREATE + USE`, a przełącznik `Write logical names into empty comments` jest wyłączony. Kod SQL, który strona osadzająca edytor odczytuje za pomocą [`getSchemaSQL()`](../../api/erd-editor-element.md#getschemasql), oraz kod SQL [odczytywany przez agenta kodującego](../../mcp/tools.md#reading-a-document) zaczynają natomiast od `Create` bez nagłówka i nie zapisują nazw logicznych, chyba że się o to poprosi.
 
 Opcja, której wybrana baza danych nie obsługuje, pozostaje w panelu, przyciemniona, z podpowiedzią `Not in <database>`, na przykład `Not in Oracle`, a jej naciśnięcie nic nie robi.  
 Kod SQL używa wtedy najbliższej postaci obsługiwanej przez bazę danych, a przycisk tej postaci jest wyświetlany jako wciśnięty: zamiast `If not exists` używana jest opcja `Create`, zamiast `CREATE + USE` – `USE` albo `None`, jeśli baza danych nie obsługuje również `USE`, a zamiast `USE` – `None`. Twój wybór zostaje zachowany, więc po przełączeniu na bazę danych, która go obsługuje, znów obowiązuje.
@@ -92,6 +93,21 @@ Nagłówek jest zapisywany tylko wtedy, gdy nazwa bazy danych jest prostym ident
 Przy każdej innej nazwie, także pustej, nagłówek nie jest zapisywany, a instrukcja `DROP TABLE` w PostgreSQL nie podaje wtedy schematu. Gdy obowiązuje nagłówek inny niż `None`, informuje o tym komunikat pod opcją `Header`: `Database name "<name>" is not a valid identifier.`  
 Nowy diagram ma pustą nazwę bazy danych, więc dopóki jej nie wpiszesz, panel wyświetla komunikat `Database name "" is not a valid identifier.`
 
+## Nazwy logiczne jako komentarze {#logical-names-as-comments}
+
+Przełącznik `Write logical names into empty comments` w grupie `This window only` wpisuje do kodu DDL [nazwę logiczną](./logical-names.md) tabeli lub kolumny tam, gdzie jej komentarz jest pusty, w każdej bazie danych.
+
+![Włączanie Write logical names into empty comments w panelu karty Schemat SQL, co wpisuje nazwę logiczną każdej kolumny tabeli order_items do jej pustego COMMENT, podczas gdy komentarze tabeli members pozostają bez zmian](/img/demo-schema-sql-logical-names.webp)
+
+- Komentarz z tekstem zawsze ma pierwszeństwo: nazwa logiczna nigdy go nie zastępuje ani nie jest do niego dodawana.
+- Komentarz składający się tylko z białych znaków jest traktowany jako pusty, więc w jego miejscu wpisywana jest nazwa logiczna. Nazwa logiczna, która jest pusta lub składa się tylko z białych znaków, niczego nie wpisuje, a ta tabela lub kolumna nadal nie otrzymuje komentarza.
+- Nazwa logiczna jest zapisywana w tym miejscu i w tej postaci, w jakich baza danych zapisuje komentarz, a znajdujące się w niej znaki cudzysłowu są zapisywane ze znakiem ucieczki w ten sam sposób – zobacz sekcję [Komentarze](#comments).
+
+Na przykład w MySQL kolumna `id` z nazwą logiczną `Member ID` i bez komentarza jest zapisywana z `COMMENT 'Member ID'`, natomiast kolumna `email` z nazwą logiczną `Email` i komentarzem `Sign-in address` zachowuje `COMMENT 'Sign-in address'`.
+
+Podobnie jak opcje `Statements` i `Header`, ten przełącznik należy do okna i jest początkowo wyłączony – zobacz sekcję [Panel opcji](#options-panel).  
+Import nigdy nie odczytuje takiego komentarza z powrotem jako nazwy logicznej – zobacz sekcję [Komentarze](./file-import-export.md#comments).
+
 ## Tabele {#tables}
 
 Gdy diagram ma co najmniej jedną [grupę tabel](./table-groups.md), widoczną lub ukrytą, w grupie `This window only` pojawia się opcja `Tables` z polem wyboru dla każdej pozycji:
@@ -125,22 +141,24 @@ Pole bez fokusu klawiatury odzwierciedla zmianę skryptu wprowadzoną przez wsp�
 
 ## Zapisywanie lub kopiowanie kodu SQL {#saving-or-copying-the-sql}
 
-Polecenie `Save file`, dostępne u dołu panelu i w menu kontekstowym, zapisuje dokładnie ten kod SQL, który pokazuje karta, z jej bieżącą bazą danych, cudzysłowem, instrukcjami, nagłówkiem, tabelami i skryptami, jako `<database name>-<timestamp>.sql`. Plik jest nazywany i zapisywany tak jak każdy inny eksport – zobacz sekcję [Eksportowanie](./file-import-export.md#exporting).
+Polecenie `Save file`, dostępne u dołu panelu i w menu kontekstowym, zapisuje dokładnie ten kod SQL, który pokazuje karta, z jej bieżącą bazą danych, cudzysłowem, instrukcjami, nagłówkiem, komentarzami z nazwami logicznymi, tabelami i skryptami, jako `<database name>-<timestamp>.sql`. Plik jest nazywany i zapisywany tak jak każdy inny eksport – zobacz sekcję [Eksportowanie](./file-import-export.md#exporting).
 
 Polecenie `Export` ▸ `Schema SQL` w menu kontekstowym kanwy lub w Szybkim wyszukiwaniu samo niczego nie zapisuje.  
 Przełącza na tę kartę, otwiera panel opcji, nawet jeśli był zwinięty, i ustawia fokus klawiatury na przycisku `Save file`, więc naciśnięcie klawisza `Enter` zapisuje plik.
 
 Przycisk `Copy` u dołu panelu lub przycisk kopiowania, który pojawia się w prawym górnym rogu kodu po najechaniu na kod wskaźnikiem, kopiuje kod SQL.  
-Powiadomienie `Copied!` ze znacznikiem wyboru potwierdza to przez dwie sekundy. Jeśli przeglądarka lub host odmówi dostępu do schowka, zamiast tego informuje o tym powiadomienie `Couldn't copy to the clipboard` ze znakiem ostrzeżenia. Ponowne skopiowanie zastępuje powiadomienie, zamiast dodawać kolejne.  
+Powiadomienie `Copied!` ze znacznikiem wyboru potwierdza to przez dwie sekundy. Jeśli przeglądarka lub host odmówi dostępu do schowka, zamiast tego przez pięć sekund informuje o tym powiadomienie `Couldn't copy to the clipboard` ze znakiem ostrzeżenia. Ponowne skopiowanie zastępuje powiadomienie, zamiast dodawać kolejne.  
 Kod SQL można też zaznaczyć, więc możesz skopiować tylko jego fragment.
 
 ## Co zawiera kod DDL {#what-the-ddl-writes}
 
 Te reguły obowiązują wszędzie, gdzie edytor zapisuje Schemat SQL: na tej karcie i w jej pliku oraz w kodzie SQL, który odczytuje strona osadzająca edytor lub agent kodujący.  
-Karta `Schema SQL` we Właściwościach tabeli stosuje je do jednej tabeli, którą pokazuje. Nie zapisuje kluczy obcych, z wyjątkiem kluczy SQLite, które znajdują się wewnątrz instrukcji `CREATE TABLE`, ani sekwencji, ani wyzwalacza Oracle.
+Karta `Schema SQL` we Właściwościach tabeli stosuje je do jednej tabeli, którą pokazuje. Nie zapisuje sekwencji ani wyzwalacza Oracle, a klucze obce zapisuje tylko dla SQLite, w którym znajdują się one wewnątrz instrukcji `CREATE TABLE`. Nie zapisuje też instrukcji komentarzy, które PostgreSQL, Oracle i MSSQL umieszczają po tabeli, więc w tych trzech bazach danych nie pokazuje komentarzy.
 
 Części występują w tej kolejności, oddzielone jednym pustym wierszem: nagłówek, skrypt przed tabelami, instrukcje `DROP`, tabele i skrypt po tabelach. Tabele są zapisywane w kolejności nazw.  
 Dla diagramu bez tabel i bez skryptów nic nie jest zapisywane, nawet jeśli wybrano nagłówek.
+
+Tabele i kolumny są zapisywane pod nazwami fizycznymi niezależnie od tego, co pokazuje [Widok nazw](./logical-names.md#name-view). Kolumna powiązana z domeną jest zapisywana z własnym typem danych, który ustala domena – zobacz sekcję [Domeny i typy danych](./dictionary.md#domains-and-data-types).
 
 ### Autoinkrementacja {#auto-increment}
 
@@ -181,7 +199,28 @@ Wartość domyślna kolumny jest zapisywana we wpisanej postaci, ale w nawiasach
 - PostgreSQL ujmuje w nawiasy tylko wyrażenie zawierające poza nawiasami słowo takie jak `AT TIME ZONE`, `AND`, `OR`, `IS`, `IN`, `LIKE`, `COLLATE` lub `= ANY`, na przykład `(now() AT TIME ZONE 'utc')`.
 - MSSQL, Oracle, Snowflake i Databricks zapisują każdą wartość domyślną we wpisanej postaci.
 
+### Komentarze {#comments}
+
+Komentarz tabeli lub kolumny, który nie jest pusty, albo nazwę logiczną, którą przełącznik [`Write logical names into empty comments`](#logical-names-as-comments) wpisuje w jego miejscu, każda baza danych zapisuje tak, jak zapisuje komentarze:
+
+- MySQL i MariaDB zapisują go bezpośrednio w definicji: kolumna kończy się klauzulą `COMMENT 'Member ID'`, a tabela zamyka się fragmentem `) COMMENT 'Members';`, także w pakiecie `If not exists` dla MySQL.
+- Snowflake zapisuje komentarz kolumny bezpośrednio w definicji, `COMMENT 'Member ID'`, a komentarz tabeli w osobnym wierszu po nawiasie zamykającym, `COMMENT = 'Members';`.
+- Databricks zapisuje komentarz kolumny bezpośrednio w definicji, a komentarz tabeli jako `COMMENT 'Members';` po `USING DELTA`.
+- PostgreSQL zapisuje `COMMENT ON TABLE member IS 'Members';` i `COMMENT ON COLUMN member.id IS 'Member ID';` tuż po instrukcji `CREATE TABLE` tabeli. Oracle zapisuje te same instrukcje po tabeli, jej ograniczeniach unikatowości oraz jej sekwencji i wyzwalaczu autoinkrementacji.
+- MSSQL zapisuje jedno wywołanie na każdą tabelę i każdą kolumnę, po tabeli i jej ograniczeniach unikatowości, a po każdym z nich następuje `GO`: `EXECUTE sys.sp_addextendedproperty 'MS_Description', N'Members', 'schema', 'dbo', 'table', 'member'`, z dodanym `'column', 'id'` w przypadku kolumny.  
+  Tekst jest literałem znaków narodowych, `N'…'`, więc SQL Server zachowuje tekst spoza strony kodowej bazy danych, na przykład koreański, zamiast zapisywać znaki zapytania.  
+  Gdy opcja `Bracket` ma wartość `None`, tabela o nazwie `sales.users` daje schemat `sales` i tabelę `users`, podobnie jak `[sales].[users]` i `"sales"."users"`, z których usuwane są nawiasy kwadratowe i cudzysłowy podwójne. Nazwa bez schematu należy do schematu `dbo`. Część przed schematem, jak w `shop.sales.users`, uruchamia procedurę tej bazy danych, `shop.sys.sp_addextendedproperty`. Przy każdej innej wartości opcji `Bracket` cała nazwa jest nazwą tabeli w schemacie `dbo`.
+- SQLite nie przechowuje komentarzy, więc zapisuje każdy z nich jako wiersz `--` nad opisywanym elementem: `-- Members` nad `CREATE TABLE member` i `-- Member ID` nad kolumną.
+
+Znak cudzysłowu wewnątrz komentarza ujętego w cudzysłów jest podwajany, jak w `'it''s'` i `N'it''s'`, podobnie jak znak cudzysłowu w nazwach przekazywanych przez wywołania MSSQL. Databricks zamiast tego poprzedza znak cudzysłowu i ukośnik odwrotny ukośnikiem odwrotnym, jak w `'it\'s'`, czyli w postaci, którą odczytuje każda wersja Spark. Wiersze `--` w SQLite nie są ujmowane w cudzysłów, więc zachowują znak cudzysłowu we wpisanej postaci: `-- it's`.  
+Poza tym tekst jest zapisywany we wpisanej postaci, łącznie z podziałami wierszy, z wyjątkiem dwóch baz danych:
+
+- Oracle pomija puste wiersze, przy czym wiersz zawierający tylko spacje lub tabulatory liczy się jako pusty, ponieważ SQL\*Plus kończy instrukcję na pustym wierszu i pomija jej resztę. Komentarz tabeli składający się z `Members`, pustego wiersza i `Active only` jest zapisywany jako `COMMENT ON TABLE member IS 'Members` z `Active only';` w następnym wierszu.
+- SQLite zapisuje każdy ciąg podziałów wierszy jako jedną spację, ponieważ podział wiersza zakończyłby wiersz `--`, a resztę wykonałby jako kod SQL. Ten sam komentarz jest zapisywany jako `-- Members Active only`.
+
+To, jak te komentarze są odczytywane przy imporcie, opisano w sekcji [Komentarze](./file-import-export.md#comments).
+
 ## Edytory tylko do odczytu {#read-only-editors}
 
-W edytorze z atrybutem `readonly` karta działa jak zwykle: `Database` i `Bracket` nadal zmieniają wyświetlany kod SQL, `Statements`, `Header` i `Tables` nadal działają, a `Save file` i `Copy` nadal go zapisują i kopiują.  
+W edytorze z atrybutem `readonly` karta działa jak zwykle: `Database` i `Bracket` nadal zmieniają wyświetlany kod SQL, `Statements`, `Header`, `Write logical names into empty comments` i `Tables` nadal działają, a `Save file` i `Copy` nadal go zapisują i kopiują.  
 Jedynie oba pola skryptów są tylko do odczytu.

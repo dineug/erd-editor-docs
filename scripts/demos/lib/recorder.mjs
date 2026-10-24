@@ -51,6 +51,30 @@ const KEY_LABEL = {
 };
 
 /** The keycap labels one Playwright key combo is shown with. */
+/**
+ * Puts back the id lists and collections a storage form leaves out when they
+ * are empty (since erd-editor 4.2.0), so scenes can read them as before.
+ */
+export function withLists(doc) {
+  doc.doc ??= {};
+  for (const key of ['tableIds', 'relationshipIds', 'indexIds', 'memoIds', 'tableGroupIds']) {
+    doc.doc[key] ??= [];
+  }
+  doc.collections ??= {};
+  for (const key of [
+    'tableEntities',
+    'tableColumnEntities',
+    'relationshipEntities',
+    'indexEntities',
+    'indexColumnEntities',
+    'memoEntities',
+    'tableGroupEntities',
+  ]) {
+    doc.collections[key] ??= {};
+  }
+  return doc;
+}
+
 export function labelsOf(combo) {
   return combo
     .split('+')
@@ -235,8 +259,10 @@ function createDemo(page, { width, height, outDir, debug }) {
     },
 
     /** The live document, parsed from the element's value getter. */
-    value() {
-      return page.evaluate(() => JSON.parse(document.querySelector('erd-editor').value));
+    async value() {
+      return withLists(
+        await page.evaluate(() => JSON.parse(document.querySelector('erd-editor').value))
+      );
     },
 
     async tableId(name) {

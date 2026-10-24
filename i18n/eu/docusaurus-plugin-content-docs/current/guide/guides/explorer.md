@@ -1,5 +1,5 @@
 ---
-sidebar_position: 8
+sidebar_position: 9
 description: Arakatu diagramaren taulak, beren zutabe, indize eta gako arrotzekin, haren taula-taldeak eta oharrak ERD oihalaren ondoan ainguratutako zuhaitz batean, eta joan haietako edozeinetara klik batekin.
 ---
 
@@ -26,11 +26,11 @@ Ireki honako hauetako edozeinekin:
 - Oihalaren laster-menuko `Toggle Explorer` aukera: egin eskuineko klik ERD oihaleko leku huts batean, edozein [taula-taldetatik](./table-groups.md) kanpo. `New Table`, `New Memo` eta `New Table Group` aukeren ondoren dago, `Relationship` aukeraren aurretik.
 
 Bi `Toggle Explorer` aukerek lasterbidea erakusten dute eskuinean.  
-Tresna-barrako botoiak, lasterbideak eta Bilaketa azkarreko aukerak fitxa guztietatik funtzionatzen dute. Bisualizazioa, SQL eskema, Kode-sortzailea edo Ezarpenak fitxatik, lehenik ERD fitxara aldatzen dira, Arakatzailea han bakarrik erakusten baita.
+Tresna-barrako botoiak, lasterbideak eta Bilaketa azkarreko aukerak fitxa guztietatik funtzionatzen dute. Bisualizazioa, SQL eskema, Kode-sortzailea, Hiztegia edo Ezarpenak fitxatik, lehenik ERD fitxara aldatzen dira, Arakatzailea han bakarrik erakusten baita.
 
 Tresna-barrako botoiak panela ireki eta itxi baino ez du egiten. Ez du testu-kurtsorea Bilatu eremuan jartzen, eta Taularen propietateak, gai-sortzailea eta `Display Language` hautatzailea irekita uzten ditu.  
 Lasterbideak eta bi `Toggle Explorer` aukerek Arakatzailea bilaketan fokua duela irekitzen dute: testu-kurtsorea Bilatu eremura joaten da, haren testua hautatuta dagoela, eta [Haren ondoko elkarrizketa-koadroak](#dialogs-beside-it) ataleko bost elkarrizketa-koadroetako edozein ixten da, irekita badago. Bilatu eta ordeztu orriko [Irekitzea eta ixtea](./find-and-replace.md#opening-and-closing) atalean azaltzen da bilaketak irekitze batetik bestera zer gordetzen duen.  
-Lasterbideak ez du ezer egiten taula-gelaxka bat, ohar bat edo taula-talde baten izena editatzen den bitartean.
+Lasterbideak ez du ezer egiten taula-gelaxka bat, ohar bat edo taula-talde baten izena editatzen den bitartean, edo [Hiztegia](./dictionary.md#keys-on-the-tab) fitxan gelaxka-edizio bat irekita dagoen bitartean, termino baten domeinu-zerrenda barne.
 
 Tresna-barrako botoia sakatuta ageri da Arakatzailea ERD fitxan irekita dagoen eta [zen moduak](#when-it-stands-aside) ezkutatzen ez duen bitartean. Hala dagoen bitartean, botoiak, lasterbideak eta bi `Toggle Explorer` aukeretako edozeinek Arakatzailea ixten dute, eta panelean zegoen teklatua editorera itzultzen da.  
 Lasterbideak ez du inoiz ixten Bilaketa azkarra edo bost elkarrizketa-koadroetako bat irekita dagoen bitartean. Horren ordez, paleta edo elkarrizketa-koadroa ixten du eta teklatua Bilatu eremura eramaten du, haren testua hautatuta eta, Arakatzailea lehendik ikusgai bazegoen, uneko bat-etortzea mantenduta. Bilaketa azkarreko `Toggle Explorer` aukerak ez du salbuespen hori egiten: exekutatzean, paleta ixten du eta ondoren irekita dagoen Arakatzailea.
@@ -84,22 +84,27 @@ Titulu-barrak `Explorer` dio eta bi botoi ditu: `Collapse All` eta Arakatzailea 
 
 Goiko mailak hiru karpeta ditu, ordena honetan: `Tables`, `Table Groups` eta `Memos`. Taula bakoitzaren azpian bere `Columns`, `Indexes` eta `Foreign Keys` karpetak daude.  
 Hutsik dagoen karpeta ez da erakusten; beraz, diagrama huts batek ez du errenkadarik batere erakusten. `Table Groups` karpeta ere ez da erakusten [View Option](./table-related-functions.md#table-view-options) → `Table Groups` aukerak taldeak ezkutatzen dituen bitartean, ezta `Memos` karpeta ere View Option → `Memos` aukerak oharrak ezkutatzen dituen bitartean.  
-Karpeta-errenkada batek karpeta-ikono bat, bere izena eta, beste muturrean, zuzenean bere azpian dauden errenkaden kopurua erakusten ditu; beraz, `Tables` karpetaren ondoko kopurua diagramako taulen kopurua da.
+Karpeta-errenkada batek karpeta-ikono bat, bere izena eta, beste muturrean, zuzenean bere azpian dauden errenkaden kopurua erakusten ditu; beraz, `Tables` karpetaren ondoko kopurua diagramako taulen kopurua da. Kopuruak milakoak bistaratze-hizkuntzak bezala taldekatzen ditu, beti 0tik 9rako digituekin, adibidez `1,234` ingelesez eta `1.234` alemanez.
 
 Taulak izenaren arabera zerrendatzen dira, maiuskulak eta minuskulak bereizi gabe, eta izen bera duten taulek dokumentuko ordena mantentzen dute. Taula-taldeak era berean zerrendatzen dira, baita talde bakoitzaren azpiko taulak ere. Taula baten zutabeek taularen beraren ordena mantentzen dute, eta haren indizeek eta gako arrotzek, baita oharrek ere, dokumentukoa.  
-Zuhaitzak diagramaren aldaketei jarraitzen die, oihaleko edizio batek, desegite edo berregite batek, inportazio batek, edo lankide batek edo kodetze-agente batek eragindakoak izan; beraz, taula bati izena aldatzeak haren errenkada mugitzen du.
+Zuhaitzak diagramaren aldaketei jarraitzen die, oihaleko edizio batek, desegite edo berregite batek, inportazio batek, edo lankide batek edo kodetze-agente batek eragindakoak izan; beraz, taula bati izena aldatzeak haren errenkada mugitzen du.  
+Ordena izenaren araberakoa da [Izenen ikuspegi](./logical-names.md#name-view) guztietan, inoiz ez izen logikoaren araberakoa. Ikuspegia aldatzeak taula- eta zutabe-errenkadei etiketa aldatzen die, haietako bat ere mugitu gabe, eta gauza bera gertatzen da `Logical Names` edo `Both Names` ikuspegian taula edo zutabe bati izen logiko bat ematean. Izen logiko berri batetik [eratorritako](./dictionary.md#deriving-physical-names) izen fisiko bat, ordea, beste edozein bezalako izen-aldaketa bat da; beraz, taula baten errenkada mugi dezake.
 
 Errenkada mota bakoitzak hau erakusten du:
 
 - Taula bat: taula-ikono bat eta bere izena.
-- Zutabe bat: gako-ikono bat gako nagusiko edo gako arrotzeko zutabe batentzat, taularen beraren gako-gelaxkak gako nagusia, gako arrotza edo biak koloreztatzen dituen bezala koloreztatuta, eta zerrenda-ikono bat beste edozein zutaberentzat. Ondoren, bere izena eta, tonu apalean, bere datu mota eta jarraian `PK`, `FK` edo biak, adibidez `id` `BIGINT PK` edo `user_id` `BIGINT FK`.
-- Indize bat: indize-ikono bat eta bere izena. Ondoren, tonu apalean, `UNIQUE` indize bakar batentzat eta bere zutabeak parentesi artean, indizearen ordenan, beheranzko zutabe bakoitzaren ondoren `DESC` jarrita, adibidez `orders_user_idx` `UNIQUE (user_id DESC, total)`, edo `(total)` soilik.
-- Gako arrotz bat: taula umearen azpian soilik zerrendatzen da, gako arrotzaren zutabeak dituenaren azpian, eta taula gurasoa diagraman dagoen bitartean soilik. Bere gako-ikonoak konektorearen kolorea hartzen du: gako nagusiaren eta gako arrotzaren kolorea [erlazio identifikatzaile](./relationship-editing.md#identifying-relationships) batentzat, eta gako arrotzaren kolorea bestela. Taula umearen gako-zutabeak erakusten ditu, komaz bereizita, eta ondoren, tonu apalean, `→` ikurra taula gurasoarekin eta haren zutabeekin, adibidez `user_id` `→ users(id)`.
+- Zutabe bat: gako-ikono bat gako nagusiko edo gako arrotzeko zutabe batentzat, taularen beraren gako-gelaxkak gako nagusia, gako arrotza edo biak koloreztatzen dituen bezala koloreztatuta, eta zerrenda-ikono bat beste edozein zutaberentzat. Ondoren, bere izena eta, lausotuta, bere datu mota eta jarraian `PK`, `FK` edo biak, adibidez `id` `BIGINT PK` edo `user_id` `BIGINT FK`. Erakusten duen mota beti zutabearen datu mota da, inoiz ez haren [domeinua](./logical-names.md#the-domain-cell), Izenen ikuspegia edozein dela ere.
+- Indize bat: indize-ikono bat eta bere izena. Ondoren, lausotuta, `UNIQUE` indize bakar batentzat eta bere zutabeak parentesi artean, indizearen ordenan, beheranzko zutabe bakoitzaren ondoren `DESC` jarrita, adibidez `orders_user_idx` `UNIQUE (user_id DESC, total)`, edo `(total)` soilik.
+- Gako arrotz bat: taula umearen azpian soilik zerrendatzen da, gako arrotzaren zutabeak dituenaren azpian, eta taula gurasoa diagraman dagoen bitartean soilik. Bere gako-ikonoak konektorearen kolorea hartzen du: gako nagusiaren eta gako arrotzaren kolorea [erlazio identifikatzaile](./relationship-editing.md#identifying-relationships) batentzat, eta gako arrotzaren kolorea bestela. Taula umearen gako-zutabeak erakusten ditu, komaz bereizita, eta ondoren, lausotuta, `→` ikurra taula gurasoarekin eta haren zutabeekin, adibidez `user_id` `→ users(id)`.
 - Taula-talde bat: taldearen koloreko puntu bat, grisa kolorerik gabeko talde batentzat, eta bere izena. Bere taulak haren azpian zerrendatzen dira izenaren arabera, eta bakoitzak bere taulara eramaten du. Taularik gabeko talde batek ez du zabaltzeko ezer.
 - Ohar bat: paper itsaskor baten ikonoa eta oharraren lehen lerroa.
 
-Izen huts batek, edo lehen lerroa hutsik duen ohar batek, `unnamed` dio letra etzanez.  
-Panel estu batean, tonu apaleko testua `…` ikurrarekin mozten da izena moztu aurretik. Pasatu sagua izen baten edo haren tonu apaleko testuaren gainetik, osorik ikusteko.
+Taula-errenkadek, talde baten azpian zerrendatutako taulek eta zutabe-errenkadek Izenen ikuspegiari jarraitzen diote. Ikus [Oihaletik kanpo](./logical-names.md#beyond-the-canvas). `Both Names` ikuspegian, adibidez, zutabe-errenkada batek `Total Amount` `total` `NUMERIC` dio: izen logikoa, eta ondoren izena eta datu mota, biak lausotuta.  
+Ikuspegi guztietan, indize- eta gako arrotzeko errenkadek beren zutabeen izenak erakusten dituzte, eta gako arrotzeko errenkada batek bere taula gurasoaren izena ere bai.  
+Bilatu eremuak testua duen bitartean, haren ikuspegiak kanpoan uzten duen izenean bakarrik aurkitutako errenkada batek izen hori ere erakusten du, lausotuta. Ikus [Emaitzak](./find-and-replace.md#the-results).
+
+Izen huts batek, edo lehen lerroa hutsik duen ohar batek, `unnamed` dio letra etzanez. `Logical Names` eta `Both Names` ikuspegietan, taula edo zutabe batek `unnamed` dio haren izen logikoa ere hutsik dagoenean bakarrik.  
+Panel estu batean, testu lausotua `…` ikurrarekin mozten da errenkadaren hasierako izena moztu aurretik. Pasatu sagua izen baten edo haren testu lausotuaren gainetik, osorik ikusteko.
 
 Hasieran `Tables` karpeta bakarrik dago zabalduta. Egin klik karpeta-errenkada batean, edo sakatu `Enter` edo `Space` haren gainean, tolestu edo zabaltzeko.  
 Errenkada baten hasierako geziak errenkada hori tolestu edo zabaltzen du, inora joan gabe. Taula-errenkada guztiek dute gezi bat, baita azpian ezer ez duen taula batek ere. `→` eta `←` teklek ere tolestu eta zabaldu egiten dute. Ikus [Arakatzaileko teklak](#keys-in-the-explorer).  
@@ -110,8 +115,8 @@ Edizioek, desegiteak eta berregiteak, eta lankideen edo kodetze-agente baten ald
 
 Egin klik errenkada batean, edo sakatu `Enter` edo `Space` teklatua haren gainean dagoela, ERD oihalean adierazten duen horretara joateko. Karpeta-errenkada batek tolestu edo zabaldu baino ez du egiten, eta gezi-teklek zuhaitzaren barruan mugitu baino ez dute egiten.
 
-- Taula-errenkada batek, edo talde baten azpian zerrendatutako taula batek, taula hori bakarrik hautatzen du eta aurrera ekartzen du. Fokuratutako gelaxka taularen izenera joaten da, dagoeneko taula horretan ez badago.
-- Zutabe-errenkada batek bere taula bakarrik hautatzen du eta fokuratutako gelaxka zutabearen izenean jartzen du.
+- Taula-errenkada batek, edo talde baten azpian zerrendatutako taula batek, taula hori bakarrik hautatzen du eta aurrera ekartzen du. Fokuratutako gelaxka dagoeneko taula horretan ez badago, taularen goiburuko lehen gelaxkara joaten da: izenera, edo izen logikora `Logical Names` eta `Both Names` ikuspegietan.
+- Zutabe-errenkada batek bere taula bakarrik hautatzen du eta fokuratutako gelaxka zutabearen izenean jartzen du, edo, `Logical Names` ikuspegian, haren lekuan marraztutako izen logikoan.
 - Indize-errenkada batek bere taula hautatzen du, taula-errenkada batek bezala. Indizea bera ez da berariaz markatzen; indizeak [Taularen propietateetan](./table-related-functions.md#indexes) editatzen dira.
 - Gako arrotzeko errenkada batek erlazioaren bi taulak batera jartzen ditu ikusgai, edo taula umea, biak batera erakusteko elkarrengandik urrunegi badaude. Taula umea bakarrik hautatzen du bere gako arrotzaren zutabeekin, fokuratutako gelaxka haietako lehenengoan duela, eta erlazioaren konektorea argiztatzen du. Ikus [Konektore bat irakurtzea](./relationship-editing.md#reading-a-connector).
 - Taula-talde baten errenkadak taldearen koadroa ikusgai jartzen du titulu-barra erreferentziatzat hartuta, taldea bakarrik hautatzen du, eta aurrera ekartzen du bere taulekin.
@@ -119,7 +124,7 @@ Egin klik errenkada batean, edo sakatu `Enter` edo `Space` teklatua haren gainea
 
 Ikuspegia jauzi guztiek partekatzen duten arauaren arabera mugitzen da: zooma ez da inoiz aldatzen, eta oihala helmuga dagoeneko ondo ikusten ez denean bakarrik korritzen da. Ikus [Jauziaren helmuga](./table-related-functions.md#where-a-jump-lands).  
 Errenkada batera joateak Taularen propietateak ixten ditu lehenik, irekita badaude, eta ez du inoiz marrazten ari den erlazio bat hasten edo amaitzen.  
-Bilatu eremuak testua duen bitartean, bere izenean bat-etortze bat duen errenkada batek, edo iruzkin baten edo ohar baten zati bat erakusten duen batek, bat-etortze horretara eramaten du horren ordez. Ikus [Bat-etortze batera joatea](./find-and-replace.md#going-to-a-match).
+Bilatu eremuak testua duen bitartean, izenean edo izen logikoan bat-etortze bat duen errenkada batek, edo iruzkin baten edo ohar baten zati bat erakusten duen batek, bere lehen bat-etortzera eramaten du horren ordez. Ikus [Bat-etortze batera joatea](./find-and-replace.md#going-to-a-match).
 
 Klik egin ondoren, teklatua zuhaitzean geratzen da; beraz, `Delete`, `Backspace` eta beste edizio-teklak ez dira hautapen berrira iristen `Escape` sakatu edo oihalean klik egin arte. Ikus [Arakatzaileko teklak](#keys-in-the-explorer).
 

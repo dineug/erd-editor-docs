@@ -6,9 +6,10 @@ description: Dodajanje, izbiranje, prerazporejanje in brisanje stolpcev, preklap
 # Urejanje tabel
 
 Urejanje tabel v osnovi ponuja izkušnjo urejanja, podobno kot v programu Excel.  
+[Prikaz imen](./logical-names.md#name-view) določa, ali tabela v glavi in vrsticah izriše imena, logična imena ali oboje.  
 Način urejanja se začne s tipko `Enter` ali z dvoklikom na celico.  
-Tipka `Enter` ali `Escape` ga konča. Kar vnesete, se uporabi že med tipkanjem, zato tipka `Escape` besedilo ohrani in ga ne povrne v prejšnje stanje.  
-Tipka `Escape` pusti fokus na celici in tabelo izbrano, drugi pritisk tipke `Escape` pa počisti oboje.  
+Tipka `Enter` ali `Escape` ga konča. Kar vnesete, se uporabi že med tipkanjem, zato tipka `Escape` besedilo ohrani in ga ne povrne v prejšnje stanje. Izjema je [celica domene](./logical-names.md#the-domain-cell): samo izbira s svojega seznama in nikoli ne ohrani, kar vnesete. Zaprtje [celice logičnega imena](./logical-names.md#writing-a-logical-name) s spremenjenim logičnim imenom lahko izpolni tudi fizično ime.  
+Tipka `Escape` pusti fokus na celici in tabelo izbrano, drugi pritisk tipke `Escape` pa počisti oboje. Medtem ko celica logičnega imena prikazuje svoj [seznam izrazov](./logical-names.md#completing-term-names), prvi pritisk tipke `Escape` zapre samo seznam.  
 Medtem ko vnosna metoda še sestavlja besedilo, tipka `Escape` pusti način urejanja odprt.
 
 ![Dodajanje tabele z Alt + N in izpolnjevanje dveh stolpcev](/img/demo-table-edit.webp)
@@ -23,6 +24,7 @@ Vsaki izbrani tabeli se doda stolpec.
 Pritisnite `Tab`, da preidete neposredno v način urejanja naslednje celice.  
 Pritisk tipke `Tab` v zadnji celici ustvari nov stolpec.  
 Z bližnjico `Shift + Tab` se pomaknete v način urejanja prejšnje celice.  
+`Tab` in `Shift + Tab` se po vrsti premikata po celicah, ki jih izriše tabela, zato prikaz imen in možnost View Option → `Domain` določata, ali so med njimi celice logičnega imena in celice domene – glejte razdelek [Vnos logičnega imena](./logical-names.md#writing-a-logical-name).  
 Oznake [alternativnih ključev](./table-related-functions.md#alternate-keys), ki so narisane za zadnjo celico vrstice, niso celice, zato jih fokus tipkovnice preskoči in se nikoli ne odprejo za urejanje.
 
 ![Premikanje po celicah vrstice s tipko Tab, dodajanje stolpca iz zadnje celice in vračanje nazaj s Shift + Tab](/img/demo-table-tab.webp)
@@ -40,6 +42,9 @@ Predlog lahko tudi kliknete.
 Seznam naenkrat prikaže največ deset predlogov, preostali pa so dosegljivi s pomikanjem.  
 Nič ni vsiljeno, zato lahko tip, ki ga ni na seznamu, prosto vnesete, vključno z argumenti, kot je `VARCHAR(255)`. Seznam se zapre, ko vneseno besedilo preseže celotno ime tipa, kot se zgodi pri `VARCHAR(255)` ali `BIGINT UNSIGNED`.  
 Predlogi sledijo izbrani zbirki podatkov. Sprememba zbirke podatkov spremeni ponujene predloge, obstoječe stolpce pa pusti takšne, kot so.
+
+Tipkanje v celico `DataType` stolpca, povezanega z domeno, ali sprejem predloga v njej prekine povezavo stolpca z domeno, takoj ko se njegov tip razlikuje od tipa domene – glejte razdelek [Domene in podatkovni tipi](./dictionary.md#domains-and-data-types).  
+V prikazu `Logical Names`, medtem ko je možnost View Option → `Domain` izklopljena, celica tipa stolpca, povezanega z domeno z imenom, prikazuje ime domene, njeno urejanje pa namesto teh predlogov odpre [izbirnik domene](./logical-names.md#the-domain-cell). Celica tipa, ki prikazuje podatkovni tip, ga ureja, kot je opisano zgoraj.
 
 ![Izpolnjevanje celic DataType iz približnih predlogov s puščičnimi tipkami, Tab in Enter](/img/demo-data-type-autocomplete.webp)
 
@@ -67,6 +72,8 @@ Podprtih je pet načinov:
 
 ![Izbiranje stolpcev s Shift + Arrow Down, Ctrl/⌘ + click, Shift + click in Alt + A](/img/demo-column-select.webp)
 
+Če želite izbrane stolpce premakniti skupaj, povlecite ročico ob stolpcu s fokusom – glejte razdelek [Prerazporejanje in premikanje stolpcev](#rearranging-and-moving-columns).
+
 Klik z desno tipko miške na vrstico stolpca določi, na katere stolpce deluje priročni meni tabele, ne glede na to, katero modifikatorsko tipko držite.  
 Na vrstici, ki je že izbrana, izbor ostane, fokus pa se premakne na to vrstico. Na kateri koli drugi vrstici se izbere samo ta vrstica. To velja kjer koli na vrstici, vključno z ikono ključa in oznako [alternativnega ključa](./table-related-functions.md#alternate-keys).  
 Če želite torej prek menija delovati na več stolpcev, kot v razdelku [Primarni ključ stolpca](#column-primary-key) ali [Brisanje stolpcev](#column-deletion), kliknite z desno tipko miške na eno od izbranih vrstic.  
@@ -74,30 +81,37 @@ Na računalniku Mac meni odpre tudi `Ctrl + click`, vendar šteje kot navaden kl
 
 ## Prerazporejanje in premikanje stolpcev {#rearranging-and-moving-columns}
 
-Deluje s potezo `dragging` in omogoča premikanje v druge tabele.  
-Povlečene vrstice sledijo kazalcu, vrstice okoli mesta spusta pa se umaknejo vstran in naredijo prostor.  
-Stolpec spustite tik pod zadnjo vrstico tabele, da ga premaknete na konec te tabele. Tabela brez stolpcev sprejme spust kjer koli na njej.
+Stolpec premaknete z ročico za vlečenje, majhnim gumbom z oznako za oprijem, ki stoji tik zunaj levega roba tabele ob vrstici s fokusom.  
+Postavite fokus na katero koli celico stolpca, s klikom nanjo ali s puščičnimi tipkami ali tipko `Tab`, in ročica se prikaže ob njegovi vrstici. Medtem ko je fokus na glavi tabele, je nima nobena vrstica.  
+Ročica je izrisana bledo, dokler kazalec ni nad njo, kazalec pa se nato spremeni v roko. Sam pritisk ne naredi ničesar: vlečenje se začne, ko se kazalec premakne, in lahko stolpec prenese na drugo mesto v njegovi tabeli ali v drugo tabelo.  
+Nad vrsticami tabele se povlečene vrstice premaknejo na mesto, vrstice okoli mesta spusta pa se umaknejo vstran in naredijo prostor. Nad praznim platnom ali nad glavo tabele, ki ima stolpce, kazalcu sledi prosojna kopija vrstic, ki prikazuje celici imena in tipa vsake vrstice tako, kot ju vrstica izriše v trenutnem [prikazu imen](./logical-names.md#name-view).  
+Stolpec spustite tik pod zadnjo vrstico tabele, da ga premaknete na konec te tabele. Tabela brez stolpcev sprejme spust kjer koli na njej. Pas tik levo od tabele, kjer stoji ročica, prav tako šteje za vrstice tabele, zato vlečenje naravnost navzdol ob ročici spremeni vrstni red stolpcev, ne da bi kazalec vstopil v tabelo.  
+Stolpec, premaknjen v drugo tabelo, ohrani svoje logično ime in domeno.
 
-![Vlečenje stolpca na novo mesto, nato v drugo tabelo](/img/demo-column-move.webp)
+![Postavitev fokusa na stolpec in vlečenje ročice ob njegovi vrstici na novo mesto, nato vlečenje ročice drugega stolpca v drugo tabelo](/img/demo-column-move.webp)
 
-Podprto je premikanje več stolpcev s `Ctrl + drag` (Windows/Linux) ali `⌘ + drag` (Mac).
+Če želite premakniti več stolpcev hkrati, jih [izberite](#selecting-multiple-columns) in povlecite ročico ob stolpcu s fokusom. Kadar je stolpec s fokusom eden od dveh ali več izbranih stolpcev svoje tabele, ročica prenese vse, sicer prenese samo svoj stolpec.  
+Modifikatorska tipka ni potrebna. Če na ročici držite `Alt` (Windows/Linux) ali `⌥` (Mac), se stolpci premaknejo tako kot pri navadnem vlečenju in nič se ne podvoji.
 
-![Izbiranje treh stolpcev in njihovo premikanje v drugo tabelo s Ctrl/⌘ + drag](/img/demo-column-multi-move.webp)
+![Izbiranje treh stolpcev, nato vlečenje ročice ob stolpcu s fokusom v drugo tabelo, pri čemer se z njim premaknejo tudi drugi izbrani stolpci](/img/demo-column-multi-move.webp)
+
+Vlečenje, ki se začne na vrstici stolpca in ne na njegovi ročici, premakne tabelo, tako kot vlečenje njene glave – glejte razdelek [Premikanje več tabel](./table-related-functions.md#moving-multiple-tables). `Alt + drag` (Windows/Linux) ali `⌥ + drag` (Mac) na vrstici podvoji tabelo – glejte razdelek [Podvajanje tabel in beležk](./table-related-functions.md#duplicating-tables-and-memos).  
+Pri povečavi `70%` in manj, kjer tabele prikazujejo le svoja imena, in v urejevalniku samo za branje ročica ni izrisana, zato tam vrstnega reda stolpcev ni mogoče spreminjati.
 
 ## Brisanje stolpcev {#column-deletion}
 
 Izbriše izbrane stolpce tabele s fokusom. Klik na celico izbere njen stolpec, zato s klikom na celico in pritiskom tipke `Delete` odstranite samo ta stolpec.  
 Bližnjice:
 
-- `Delete` ali `Backspace` (`⌫` na računalniku Mac). Ti tipki odstranita izbrane stolpce, dokler je njihova tabela edino, kar je izbrano. Kadar ni izbran noben stolpec (fokus je na imenu ali komentarju tabele), kadar je izbrano še kar koli drugega ali pri povečavi `70%` in manj, kjer tabele prikazujejo le svoja imena, namesto tega odstranita celoten izbor – glejte razdelek [Brisanje tabel in beležk](./table-related-functions.md#table-and-memo-deletion).
-- `Alt + Backspace` ali `Alt + Delete` (Windows/Linux), `⌥ + ⌫` ali `⌥ + Delete` (Mac). Te bližnjice odstranijo izbrane stolpce tabele s fokusom, tudi kadar so hkrati izbrane druge tabele ali beležke. Ničesar ne odstranijo med urejanjem celice ali pri povečavi `70%` in manj.
+- `Delete` ali `Backspace`. Ti tipki odstranita izbrane stolpce, dokler je njihova tabela edino, kar je izbrano. Kadar ni izbran noben stolpec (fokus je na imenu, [logičnem imenu](./logical-names.md#name-view) ali komentarju tabele), kadar je izbrano še kar koli drugega ali pri povečavi `70%` in manj, kjer tabele prikazujejo le svoja imena, namesto tega odstranita celoten izbor – glejte razdelek [Brisanje tabel in beležk](./table-related-functions.md#table-and-memo-deletion).
+- `Alt + Backspace` ali `Alt + Delete` (Windows/Linux), `⌥ + Backspace` ali `⌥ + Delete` (Mac). Te bližnjice odstranijo izbrane stolpce tabele s fokusom, tudi kadar so hkrati izbrane druge tabele ali beležke. Ničesar ne odstranijo med urejanjem celice ali pri povečavi `70%` in manj.
 
 ![Brisanje enega stolpca, nato dveh izbranih stolpcev, z Alt + Backspace](/img/demo-column-remove.webp)
 
 Enako naredi priročni meni tabele. Ko je tabela edino, kar je izbrano, kliknite z desno tipko miške na vrstico stolpca: zadnja postavka menija se glasi `Delete column` ali, kadar ta vrstica pripada enemu od dveh ali več izbranih stolpcev, `Delete columns`.
 
 Med urejanjem celice tipki `Delete` in `Backspace` le brišeta besedilo. Če ju pridržite zunaj urejanja celice, odstranita le enkrat.  
-Po odstranitvi se fokus premakne na najbližji preostali stolpec nad stolpcem, ki je imel fokus. Kadar nad njim ne ostane noben, se fokus premakne na ime tabele, tudi če pod njim ostanejo stolpci, zato naslednji pritisk tipke `Delete` ali `Backspace` odstrani tabelo in ne stolpca.  
+Po odstranitvi se fokus premakne na najbližji preostali stolpec nad stolpcem, ki je imel fokus. Kadar nad njim ne ostane noben, se fokus premakne na ime tabele (v prikazu `Logical Names` na logično ime, izrisano na njegovem mestu), tudi če pod njim ostanejo stolpci, zato naslednji pritisk tipke `Delete` ali `Backspace` odstrani tabelo in ne stolpca.  
 Relacije in indeksi, ki uporabljajo odstranjeni stolpec, se odstranijo skupaj z njim. Potrditve ni, celotna odstranitev pa je en korak razveljavitve.
 
 ## Kopiranje/lepljenje stolpcev {#copyingpasting-columns}
@@ -105,8 +119,14 @@ Relacije in indeksi, ki uporabljajo odstranjeni stolpec, se odstranijo skupaj z 
 Deluje kot tabelarično odložišče.  
 Bližnjice: `Ctrl + C` (Windows/Linux) ali `⌘ + C` (Mac), `Ctrl + V` (Windows/Linux) ali `⌘ + V` (Mac)
 
-Kopiranje v preglednico, lepljenje iz nje in lepljenje v tabelo, v kateri ima fokus celica stolpca, uporabljajo celice, ki jih tabele prikazujejo, v vrstnem redu, v katerem jih prikazujejo – glejte razdelka [Možnosti pogleda tabel](./table-related-functions.md#table-view-options) in [Prilagajanje vrstnega reda stolpcev](./settings.md#adjusting-column-order).  
-Stolpci, kopirani v urejevalniku in prilepljeni, ko je izbrana glava tabele, ali v druge izbrane tabele, prenesejo vse celice kopiranih stolpcev, vključno s skritimi, kot sta Enolično in Samodejno povečevanje.  
+Kopiranje v preglednico, lepljenje iz nje in lepljenje v tabelo, v kateri ima fokus celica stolpca, uporabljajo celice, ki jih tabele prikazujejo, v vrstnem redu, v katerem jih prikazujejo – glejte razdelke [Možnosti pogleda tabel](./table-related-functions.md#table-view-options), [Prilagajanje vrstnega reda stolpcev](./settings.md#adjusting-column-order) in [Prikaz imen](./logical-names.md#name-view). Prikaz imen spremeni, kaj vsebujejo nekatere od teh celic:
+
+- V prikazu `Logical Names` celica imena vsebuje logično ime ali nič, dokler je to prazno. Medtem ko je možnost View Option → `Domain` izklopljena, celica tipa vsebuje ime domene stolpca, kadar jo prikazuje, sicer pa podatkovni tip.
+- V prikazu `Both Names` se celica `Logical Name` kopira in prilepi na mestu, kamor jo postavi vrstni red stolpcev.
+- Prikazana celica domene vsebuje ime domene ali nič za stolpec, ki ne prikazuje nobene domene.
+
+Stolpci, kopirani v urejevalniku in prilepljeni, ko je izbrana glava tabele, ali v druge izbrane tabele, prenesejo vse celice kopiranih stolpcev, vključno s skritimi, kot sta Enolično in Samodejno povečevanje, in svoja logična imena.  
+Povezavo z domeno ohranijo le, če ta diagram navaja prav to domeno, ne le domene z enakim imenom, in ima domena še vedno tip kopiranega stolpca. Sicer pristanejo brez povezave z domeno, s tipom, s katerim so bili kopirani. Njihova imena štejejo za imena, ki ste jih vnesli sami, razen če je prilepljeno ime prazno in ga izpelje logično ime – glejte razdelek [Izpeljava fizičnih imen](./dictionary.md#deriving-physical-names).  
 Oznake [alternativnih ključev](./table-related-functions.md#alternate-keys), kot je `AK1.1`, niso celice, zato jih kopiranje in lepljenje izpustita, tudi ko so prikazane.
 
 Iz urejevalnika lahko lepite v program Excel in iz programa Excel nazaj v urejevalnik.  
@@ -131,6 +151,14 @@ Kam se vsebina prilepi, je odvisno od fokusa:
 - Ko ima fokus celica stolpca, se izbrane vrstice te tabele in nato vrstice pod zadnjo od njih po vrsti prepišejo, in sicer toliko, kolikor jih je bilo prilepljenih. Vrstice med ločenimi izbori se preskočijo. Prepisana vrstica prevzame prilepljene vrednosti v vidnih celicah in ohrani vrednosti skritih celic, preostale vrstice pa se dodajo kot novi stolpci. Vsaki drugi izbrani tabeli se prilepljene vrstice dodajo kot novi stolpci.
 
 ![Kopiranje dveh stolpcev in njuno lepljenje v dve izbrani tabeli hkrati](/img/demo-copy-column-multi.webp)
+
+Prilepljena vrstica logična imena in domene zapiše takole:
+
+- Logično ime iz celice `Logical Name` ali iz celice imena v prikazu `Logical Names` šteje, kot da je bilo v celoti vneseno. Dokler je ime stolpca prazno ali še izpeljano, [slovarji](./dictionary.md#deriving-physical-names) iz njega izpeljejo fizično ime in povežejo stolpec z domeno, ki jo da njegov izraz, razen če stolpec z domeno poveže lastna celica domene v vrstici. Ime, ki ga prilepi ista vrstica, se ohrani in šteje za ime, ki ste ga vnesli sami.
+- Celica domene ali celica tipa v prikazu `Logical Names`, medtem ko je možnost View Option → `Domain` izklopljena, poveže stolpec z domeno, ki jo imenuje njeno besedilo, če jo diagram navaja. Kakršno koli drugo besedilo ali prazna celica stolpca ne poveže z nobeno domeno in prekine povezavo stolpca z domeno, tudi z domeno prilepljenega tipa. Besedilo v celici tipa, ki ne imenuje nobene domene, se prebere kot podatkovni tip. Vrstice, kopirane v urejevalniku, namesto tega povežejo stolpec z domeno, s katero so bile kopirane, in to le, če jo ta diagram navaja s kopiranim tipom, tako kot novi stolpci.
+- Povezana domena da stolpcu svoj podatkovni tip, razen če vrstica prilepi svoj tip. Takrat se domena drugega tipa ne poveže, stolpec pa prevzame prilepljeni tip.
+- V vrstici brez celice domene prilepljeni tip prekine povezavo stolpca z domeno drugega tipa, tako kot če ga vnesete.
+- Nobeno lepljenje ne prenese tipa naprej s [sinhronizacijo tipa podatkov v relacijah](./settings.md#relationship-datatype-sync).
 
 ## Kopiranje/lepljenje tabel in beležk {#copyingpasting-tables-and-memos}
 

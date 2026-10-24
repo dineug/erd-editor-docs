@@ -38,13 +38,13 @@ export default {
       },
     });
     // Keycaps over the floating toolbar rather than over the reviews table,
-    // and over its four notation buttons, between zoom in and zen mode, so
-    // the zoom readout in the middle of the bar stays readable.
+    // and over its four notation buttons, between zoom in and the Name View
+    // trigger, so the zoom readout and the view's label stay readable.
     await d.page.evaluate(() => {
       const root = window.__erdShadowRoot;
       const zoomIn = root.querySelector('.floating-toolbar .zoom-level').nextElementSibling;
-      const zen = root.querySelector('.floating-toolbar .zen-mode');
-      const x = (zoomIn.getBoundingClientRect().right + zen.getBoundingClientRect().left) / 2;
+      const nameView = root.querySelector('.floating-toolbar .name-view-trigger');
+      const x = (zoomIn.getBoundingClientRect().right + nameView.getBoundingClientRect().left) / 2;
       document.documentElement.style.setProperty('--demo-keys-bottom', '18px');
       document.getElementById('demo-keys').style.left = `${x}px`;
     });

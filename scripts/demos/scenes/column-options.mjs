@@ -41,7 +41,7 @@ export default {
   height: 420,
   async setup(d) {
     await seedSQL(d, SQL, {
-      tables: { members: { x: 16, y: 22 } },
+      tables: { members: { x: 36, y: 22 } },
       settings: { databaseName: 'shop', zoomLevel: 1.4, show: SHOW },
     });
     await d.moveTo(PARK.x, PARK.y, 50);

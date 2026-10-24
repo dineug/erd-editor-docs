@@ -1,5 +1,5 @@
 ---
-sidebar_position: 15
+sidebar_position: 17
 description: 编辑器的 25 种显示语言、从右到左排布，主题构建器的 System、Light 和 Dark 外观及其颜色，以及各宿主保存它们的位置。
 ---
 
@@ -13,8 +13,10 @@ Web 应用、Google Drive、VS Code、JetBrains IDE 和 Obsidian 都提供这两
 
 ## 显示语言 {#display-language}
 
-语言涵盖编辑器自身的文本：工具栏的提示、右键菜单、快速搜索、面板和对话框、Settings 标签页、[欢迎界面](./editing-start.md#欢迎界面)、弹出提示和消息，以及空的名称、数据类型、默认值或注释在画布上和导出的图片中显示的占位文字。  
-在任何语言下，以下内容都保持原样：你的表名和列名、注释和备注；数据库厂商、Code Generator 的语言和文件格式；数据类型、SQL 关键字，以及 `ON DELETE` 与 `ON UPDATE` 操作；Schema SQL 的选项 `Create`、`If not exists`、`Drop & re-create`、`USE` 和 `CREATE + USE`；标记 `PK`、`FK`、`UQ`、`AI`、`NN`、`N-N`、`NULL` 和 `AK1.1`；[Diff Viewer](./table-related-functions.md#diff-viewer) 的状态字母 `A`、`M`、`D`、`R` 和 `~`；名称大小写与 `Bracket` 中除 `None` 以外的选项；键盘按键的名称；主题构建器中的颜色名称；生成的 SQL 和代码；以及导出的文件名。
+语言涵盖编辑器自身的文本：工具栏的提示、画布工具栏和 Flow 工具栏上的 [`Name View`](./logical-names.md#switching-the-view) 按钮、Flow 的行显示菜单、右键菜单、快速搜索、面板和对话框、[Dictionary](./dictionary.md) 标签页（其工作表名称、列标题、工具、菜单、状态行以及 `Checks` 工作表所列检查项的种类）、Settings 标签页、[欢迎界面](./editing-start.md#欢迎界面)、弹出提示和消息，以及空的名称、逻辑名、数据类型、域、默认值或注释在画布上和导出的图片中显示的占位文字。  
+在任何语言下，以下内容都保持原样：你的表名和列名、[逻辑名](./logical-names.md)、注释和备注；你在 Dictionary 标签页中维护的词根、术语和域；数据库厂商、Code Generator 的语言和文件格式；数据类型、SQL 关键字，以及 `ON DELETE` 与 `ON UPDATE` 操作；Schema SQL 的选项 `Create`、`If not exists`、`Drop & re-create`、`USE` 和 `CREATE + USE`；标记 `PK`、`FK`、`UQ`、`AI`、`NN`、`N-N`、`NULL` 和 `AK1.1`；[Diff Viewer](./table-related-functions.md#diff-viewer) 的状态字母 `A`、`M`、`D`、`R` 和 `~`；名称大小写与 `Bracket` 中除 `None` 以外的选项；键盘按键的名称；主题构建器中的颜色名称；生成的 SQL 和代码；导出的词典 CSV 的标题行；以及导出的文件名。
+
+在 Dictionary 标签页中，排序会按显示语言的字母顺序排列各行，`Checks` 工作表的搜索会按单元格在显示语言中的文字进行匹配，参见[排序](./dictionary.md#sorting)和[搜索](./dictionary.md#searching)。
 
 各语言按选择器中的排列顺序如下：
 
@@ -84,11 +86,12 @@ Web 应用、Google Drive、VS Code、JetBrains IDE 和 Obsidian 都提供这两
 
 ### 从右到左书写的语言 {#right-to-left-languages}
 
-עברית（希伯来语）、العربية（阿拉伯语）和 فارسی（波斯语）会让编辑器从右到左排布：工具栏、各菜单、面板和对话框、快速搜索以及 Settings 标签页都会镜像显示。右键菜单的子菜单向左展开，工具栏的 Undo 和 Redo 图标也会互换，使 Undo 按照从右到左的阅读方向指向后方。
+עברית（希伯来语）、العربية（阿拉伯语）和 فارسی（波斯语）会让编辑器从右到左排布：工具栏、各菜单、面板和对话框、快速搜索、Dictionary 标签页的顶部栏和状态行以及 Settings 标签页都会镜像显示。右键菜单的子菜单向左展开，工具栏的 Undo 和 Redo 图标也会互换，使 Undo 按照从右到左的阅读方向指向后方。
 
-图本身永远不会镜像。画布及其中的表、列、关系和备注保持从左到右，小地图、滚动条、[画布工具栏](./table-related-functions.md#canvas-toolbar)、[Visualization](./visualization.md) 及其工具栏、数据类型单元格、Schema SQL 与 Code Generator 标签页中的代码、选色器、Diff Viewer 的两侧、Time Travel 以及自动布局预览也是如此。  
+图本身永远不会镜像。画布及其中的表、列、关系和备注保持从左到右，小地图、滚动条、[画布工具栏](./table-related-functions.md#canvas-toolbar)、[Visualization](./visualization.md) 及其工具栏、数据类型单元格、Dictionary 标签页中的工作表和术语的域列表、Schema SQL 与 Code Generator 标签页中的代码、选色器、Diff Viewer 的两侧、Time Travel 以及自动布局预览也是如此。  
+在 Flow 中，Visualization 工具栏上的两个箭头保持各自的位置，但作用互换：指向右侧的箭头是 `Previous table`，指向左侧的箭头是 `Next table`，因此后退的箭头与 Undo 指向同一方向。Undo 和 Redo 按键仍然分别后退和前进，参见[上一个表与下一个表](./visualization.md#previous-table-and-next-table)。  
 [资源管理器](./explorer.md#beside-the-canvas)仍位于画布左侧，Diff Viewer 的变更树也仍位于查看器左侧，两者的拖动边缘都在其右侧。两者内部则从右到左阅读：输入框和各行都会镜像显示，各行从右侧缩进；在这两棵树中，`←` 会展开一行或移到其第一个子项，而 `→` 会折叠该行或退回到其父项，参见[资源管理器中的按键](./explorer.md#keys-in-the-explorer)。  
-名称、注释以及你输入的其他文本保持其自身的书写方向，因此希伯来语、阿拉伯语或波斯语的名称在画布上同样从右到左阅读。
+名称、注释以及你输入的其他文本保持其自身的书写方向，因此希伯来语、阿拉伯语或波斯语的名称在画布上同样从右到左阅读。词典提示中列出的每个名称同样保持其自身的书写方向。
 
 ## 主题 {#theme}
 

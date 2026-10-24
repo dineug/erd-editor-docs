@@ -44,19 +44,26 @@ Tratați o acțiune ca opacă și transmiteți-o ca atare, fără s-o citiți sa
 
 Unele dintre lucrurile pe care le face un editor rămân pe acel editor.  
 Aducerea în prim-plan a unui tabel, a unei note sau a unui grup de tabele, pe care o produce și selectarea, nu este trimisă.  
-Nu sunt trimise nici opțiunile `Statements`, `Header` și `Tables` din fila [Schemă SQL](../../guide/guides/schema-sql.md), care aparțin ferestrei în care sunt alese.  
+Nu sunt trimise nici opțiunile `Statements`, `Header`, `Write logical names into empty comments` (începând cu versiunea `4.2.0`) și `Tables` din fila [Schemă SQL](../../guide/guides/schema-sql.md), care aparțin ferestrei în care sunt alese.  
 Începând cu versiunea `4.1.0`, și [exploratorul](../../guide/guides/explorer.md) rămâne pe editorul său: dacă este deschis, lățimea sa, rândurile restrânse, rândul pe care se află focusul tastaturii, poziția de derulare a arborelui, precum și căutarea și opțiunile sale nu sunt trimise.  
 Nu este trimisă nici [evidențierea](../../guide/guides/relationship-editing.md#reading-a-connector) pe care saltul la o cheie străină o aplică pe conectorul relației sale.  
-O derulare, un zoom sau o comutare de filă se trimite, dar nu mută niciodată vizualizarea sau fila altui utilizator. Aceasta include derularea pe care o face un salt din explorator și comutarea la fila ERD atunci când exploratorul se deschide dintr-o altă filă.
+Începând cu versiunea `4.2.0`, și fila [Dicționar](../../guide/guides/dictionary.md) rămâne pe editorul său: foaia afișată, precum și căutarea, selecția, poziția de derulare și lățimile coloanelor fiecărei foi nu sunt trimise. Editările, sortările și importurile CSV din ea sunt trimise.  
+O derulare, un zoom sau o comutare de filă se trimite, dar nu mută niciodată vizualizarea sau fila altui utilizator. Aceasta include derularea pe care o face un salt din explorator, comutarea la fila ERD atunci când exploratorul se deschide dintr-o altă filă, precum și comutarea de filă și derularea pe care le face un salt din foaia [`Checks`](../../guide/guides/dictionary.md#the-checks-sheet) a filei Dicționar la un tabel sau la o coloană. Un salt din acea foaie la un cuvânt, un termen sau un domeniu rămâne în fila Dicționar, așa că nimic din el nu este trimis.
+
+Începând cu versiunea `4.2.0`, se trimite și o schimbare a [modului de afișare a numelor](../../guide/guides/logical-names.md#switching-the-view), iar [blocarea](../../guide/guides/settings.md#lock) acestuia decide ce fac celelalte editoare cu ea. Blocarea `Name View` este activată într-o diagramă nouă și în orice document anterior versiunii `4.2.0`.  
+Cât timp blocarea este activată, schimbarea apare doar pe editorul care a făcut-o: este trimisă în continuare, dar toate celelalte editoare și toate replicile o elimină, așa că fiecare utilizator poate vedea un alt mod de afișare, în timp ce `value` păstrează modul blocat. O modificare a limbajului, a unui stil de denumire sau a tipului de delimitator este diferită: ajunge la toate editoarele, indiferent dacă blocarea sa este activată sau nu.  
+Cât timp blocarea este dezactivată, o schimbare făcută într-un editor care poate edita modifică modul de afișare a numelor pe toate editoarele și replicile, cea mai recentă schimbare impunându-se, iar fiecare dintre ele îl salvează.  
+Schimbarea proprie a unui editor doar în citire rămâne întotdeauna pe acel editor, iar editorul urmează în continuare schimbările partajate ale celorlalte.
 
 [Blocările](../../guide/guides/settings.md#lock) sunt partajate: cea mai recentă blocare sau deblocare a unei setări se impune pe toate editoarele, iar o blocare transportă valorile editorului care a activat-o, astfel încât fiecare editor și fiecare replică salvează aceeași valoare.  
 Prin urmare, o blocare `Viewport` salvează vizualizarea editorului care a activat-o, iar o blocare `Canvas Type`, ultima filă pe care s-a aflat acel editor înainte de fila Setări, unde se activează blocările.  
-Dezactivarea blocării `Language`, `Table Name Case`, `Column Name Case` sau `Bracket Type` setează totodată acea setare, pe fiecare editor, la valoarea afișată pe editorul care a dezactivat-o, astfel încât toate continuă să salveze o singură valoare. Dezactivarea blocării `Viewport` sau `Canvas Type` nu mută vizualizarea sau fila nimănui.
+Dezactivarea blocării `Language`, `Table Name Case`, `Column Name Case`, `Bracket Type` sau, începând cu versiunea `4.2.0`, `Name View` setează totodată acea setare, pe fiecare editor, la valoarea afișată pe editorul care a dezactivat-o, astfel încât toate continuă să salveze o singură valoare. Dezactivarea blocării `Viewport` sau `Canvas Type` nu mută vizualizarea sau fila nimănui.
 
 O editare a scriptului `Before tables` sau `After tables` se trimite întreagă atunci când câmpul său pierde focusul. Cele două scripturi se reconciliază separat, astfel încât editarea unuia de către un colaborator nu îl suprascrie niciodată pe celălalt.
 
 Nimic din ce se face în [modul Flux](../../guide/guides/visualization.md#flow-never-edits-the-document) al filei Vizualizare nu este o modificare a documentului, așa că un editor aflat în Flux nu le trimite celorlalte nicio modificare, iar modificările pe care le trimit acestea continuă să se aplice cât timp se află acolo.  
-Singura excepție este părăsirea modului Flux pentru o altă filă: această comutare de filă se trimite ca oricare alta.  
+Există două excepții. Părăsirea modului Flux pentru o altă filă este o comutare de filă, trimisă ca oricare alta. Începând cu versiunea `4.2.0`, o alegere din lista modurilor de afișare a numelor din bara de instrumente a modului Flux este o schimbare a modului de afișare, trimisă și aplicată ca una făcută pe pânză.  
+Comenzile `Previous table` și `Next table`, precum și tastele de anulare și refacere, care în modul Flux [parcurg pas cu pas vizualizările](../../guide/guides/visualization.md#previous-table-and-next-table), nu sunt trimise.  
 Butonul de link extern al cardului, un rezultat al [căutării rapide](../../guide/guides/quick-search.md#searching-the-diagram) ales după `#`, `@` sau `:` și deschiderea [exploratorului](../../guide/guides/explorer.md#opening-and-closing) părăsesc toate modul Flux pentru fila ERD. O derulare pe care o face acolo butonul cardului sau un rezultat al căutării rapide se trimite și ea.
 
 ## Două editoare pe aceeași pagină {#two-editors-on-one-page}
@@ -99,6 +106,7 @@ const sharedStore2 = editor2.getSharedStore();
 
 Valoarea de execuție conține încă ceea ce a fost eliminat de la deschiderea documentului, astfel încât, atunci când un alt editor anulează ulterior o eliminare, noul participant readuce tabelul cu numele și coloanele sale.  
 Proprietatea [`value`](../erd-editor-element.md#value) este forma pe care o conține un fișier, fără entitățile eliminate, așa că un participant inițializat din ea sau din fișier ar readuce în schimb un tabel gol, fără nume.  
+Începând cu versiunea `4.2.0`, același lucru este valabil pentru un cuvânt, un termen sau un domeniu eliminat dintr-o foaie a filei [Dicționar](../../guide/guides/dictionary.md): când un alt editor anulează eliminarea, un participant nou inițializat din `runtimeValue` listează din nou rândul întreg, iar unul inițializat din `value` listează un rând gol, pe care propria lui proprietate `value` îl omite apoi.  
 Continuați să scrieți proprietatea `value` în stocare: proprietatea `runtimeValue` servește doar la inițializarea unui alt editor, a unei a doua vizualizări sau a unui store [replicationStore](./remote-storage.md).  
 Editoarele din VS Code, din Obsidian, dintr-un IDE JetBrains și din aplicația web inițializează în acest mod o a doua vizualizare a unui document deschis.
 
@@ -134,6 +142,31 @@ Păstrați fiecare editor dintr-o sesiune, precum și orice store [replicationSt
 Un editor `4.1.0` nu trimite niciun tip nou de acțiune, așa că editoarele și replicile `4.0.0` și `4.1.0` participă la aceeași sesiune fără să piardă nimic.  
 Funcția sa [Găsire și înlocuire](../../guide/guides/find-and-replace.md#replacing) caută și în numele indexurilor și ale grupurilor de tabele, iar butoanele `Replace` și `Replace All` le redenumesc prin acțiunile `index.changeName` și `tableGroup.changeName` pe care un editor `4.0.0` le aplică deja.
 
+Începând cu versiunea `4.2.0`, următoarele modificări circulă prin tipuri noi de acțiuni, iar un releu care transmite acțiunile ca atare nu are nevoie de nimic nou pentru ele:
+
+- [numele logic](../../guide/guides/logical-names.md) al unui tabel sau al unei coloane: `table.changeLogicalName` și `column.changeLogicalName`; informația dacă numele său a fost [derivat din dicționare](../../guide/guides/dictionary.md#deriving-physical-names): `table.changeNameDerived` și `column.changeNameDerived`;
+- o coloană legată de un [domeniu](../../guide/guides/dictionary.md#domains-and-data-types) sau a cărei legătură cu domeniul este eliminată: `column.changeDomain`;
+- un cuvânt, un termen sau un domeniu adăugat, modificat (inclusiv locul său în foaie, așa cum îl stabilește o sortare) sau eliminat în fila [Dicționar](../../guide/guides/dictionary.md): `dictionary.add`, `dictionary.update` și `dictionary.remove`;
+- o schimbare a [modului de afișare a numelor](../../guide/guides/logical-names.md#switching-the-view): `settings.changeNameViewMode`.
+
+Blocarea `Name View` circulă prin acțiunea existentă `settings.changeLockSettings`, opțiunea de afișare `Domain` prin `settings.changeShow`, iar o mutare a rândului `Logical Name` sau `Domain` în [ordinea coloanelor](../../guide/guides/settings.md#adjusting-column-order) prin `settings.changeColumnOrder`.  
+Acțiunile `editor.clear` și `editor.loadJson` ale unui import Schemă SQL, GraphQL, DBML sau AML făcut cu `Import` conțin `keepDictionaries: true`, care păstrează cuvintele, termenii și domeniile pe toate editoarele. La fel le conțin și cele ale unui apel [setSchemaSQL](../erd-editor-element.md#setschemasql), `setSchemaGraphQL`, `setSchemaDBML` sau `setSchemaAML` în modul de înlocuire.  
+Un nume fizic derivat de dicționare circulă prin `table.changeName` sau `column.changeName`, iar tipul de date pe care un domeniu îl dă coloanelor sale, prin `column.changeDataType`, adică prin acțiunile pe care le trimite o editare manuală.
+
+Un editor anterior versiunii `4.2.0` ignoră noile tipuri de acțiuni: nu are nume logice, legături cu domeniile, dicționare sau mod de afișare a numelor. O blocare sau deblocare a setării `Name View` nu schimbă nimic acolo și nici o mutare a rândului `Logical Name` sau `Domain` în ordinea coloanelor ori a altui rând pe locul unuia dintre ele. Nu schimbă nimic nici o blocare `Canvas Type` activată de un editor care a ajuns în fila Setări din fila Dicționar: editorul mai vechi nu cunoaște acea filă, așa că păstrează setarea `Canvas Type` deblocată. Afișează totuși numele fizice pe care le derivă dicționarele și tipurile de date pe care le dau domeniile.  
+Propriile sale editări nu știu nimic despre numele logice, domenii sau dicționare, cu următoarele efecte asupra editoarelor mai noi:
+
+- Un tabel sau o coloană pe care o redenumește manual își păstrează numele marcat ca derivat, așa că un nume logic scris ulterior pentru acel element într-un editor mai nou poate deriva din nou numele peste cel tastat în editorul mai vechi.
+- Un tip de date pe care îl dă unei coloane legate de un domeniu nu elimină legătura cu domeniul, așa că foaia `Checks` listează `Domain type mismatch`, iar următoarea modificare a tipului domeniului îi dă coloanei din nou tipul domeniului.
+- Coloanele cheie străină ale unei relații pe care o adaugă nu primesc de la cheia lor niciun nume logic și niciun domeniu.
+- Un tabel pe care îl lipește sau îl duplică sosește fără nume logice și fără legături cu domeniile.
+- Un import Schemă SQL, GraphQL, DBML sau AML făcut pe el nu trimite `keepDictionaries`, așa că elimină cuvintele, termenii și domeniile de pe toate editoarele.
+- Anularea unei încărcări, a unui import sau a unui apel `clear()` pe el încarcă propria lui copie a documentului pe toate editoarele, iar acea copie nu are nume logice, legături cu domeniile sau dicționare.
+- Acea copie, precum și documentul pe care îl încarcă un import Schemă SQL, GraphQL, DBML sau AML făcut pe el readuc totodată blocarea `Name View` de pe toate editoarele la starea în care a găsit-o acel editor. Fiecare editor salvează apoi `Physical Names` ca mod de afișare a numelor și îl și afișează dacă blocarea este dezactivată.
+
+Un document salvat de un astfel de editor nu are nume logice, legături cu domeniile, dicționare sau mod de afișare a numelor, așa că un editor `4.2.0` îl deschide în modul `Physical Names`. Editorul mai vechi salvează totuși blocarea `Name View` așa cum a găsit-o, așa că un document deblocat într-un editor `4.2.0` rămâne deblocat.  
+Păstrați fiecare editor dintr-o sesiune, precum și orice store [replicationStore](./remote-storage.md#dispatch-dispatchsync) care îi stochează documentul, la versiunea `4.2.0` sau la o versiune ulterioară.
+
 ## SharedStoreConfig {#sharedstoreconfig}
 
 ### getNickname {#getnickname}
@@ -161,6 +194,7 @@ editor.getSharedStore({ mouseTracker: false });
 Difuzează elementele la care lucrează acest utilizator. Valoarea implicită este `true`.  
 Tabelul și celula în care aveți focusul, tabelele, notele și grupurile de tabele pe care le-ați selectat și caseta de selecție pe care o trasați pe pânză sunt trimise celorlalte editoare și desenate acolo.  
 Fiecare utilizator primește o culoare proprie, ca să-i puteți deosebi: un contur pe tabelul activ, o subliniere pe celula activă, un inel în jurul tabelelor, notelor și grupurilor de tabele selectate și un dreptunghi cu linie întreruptă pentru caseta de selecție.  
+Începând cu versiunea `4.2.0`, fiecare utilizator poate vedea un alt [mod de afișare a numelor](../../guide/guides/logical-names.md#collaborators) cât timp blocarea acestuia este activată sau după o schimbare proprie a unui editor doar în citire. O celulă activă pe care modul dumneavoastră de afișare nu o desenează este subliniată pe celula pe care acesta o desenează în locul ei: numele și numele logic își țin locul unul altuia, la fel ca tipul de date și domeniul.  
 Prezența care sosește de la alți utilizatori este desenată întotdeauna pe pânza dumneavoastră, indiferent dacă această opțiune este activată sau nu.  
 În modul Flux al filei Vizualizare, focusul și selecția altor utilizatori sunt desenate pe cardurile tabelelor, dar casetele lor de selecție nu. Tabelele pe care le selectați acolo sunt totuși trimise; caseta pe care o trasați acolo nu.
 

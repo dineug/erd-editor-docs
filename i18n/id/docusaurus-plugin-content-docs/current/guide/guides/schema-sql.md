@@ -1,6 +1,6 @@
 ---
-sidebar_position: 11
-description: Membaca DDL diagram di tab Skema SQL, memilih database, tanda kutip, pernyataan, pembuka, dan tabel di panel opsinya, menambahkan skrip Anda sendiri sebelum dan setelah tabel, serta menyimpan atau menyalin SQL.
+sidebar_position: 12
+description: Membaca DDL diagram di tab Skema SQL, memilih database, tanda kutip, pernyataan, pembuka, nama logis di komentar kosong, dan tabel di panel opsinya, menambahkan skrip Anda sendiri sebelum dan setelah tabel, serta menyimpan atau menyalin SQL.
 ---
 
 # Skema SQL
@@ -20,24 +20,25 @@ Klik kanan SQL untuk membuka menu konteksnya:
 - `Options panel`, dicentang selama panel ditampilkan, yang menciutkan atau membuka panel.
 - `Save file`
 
-Selama tab ini terbuka, Pencarian Cepat menawarkan `Database` dan `Bracket`; `Schema SQL: Statements` dan `Schema SQL: Header`, yang hanya mencantumkan pilihan yang dimiliki database; serta `Schema SQL: Options panel`, yang menciutkan atau membuka panel.
+Selama tab ini terbuka, Pencarian Cepat menawarkan `Database` dan `Bracket`; `Schema SQL: Statements` dan `Schema SQL: Header`, yang hanya mencantumkan pilihan yang dimiliki database; serta `Schema SQL: Options panel`, yang menciutkan atau membuka panel.  
+Menu konteks maupun Pencarian Cepat tidak menawarkan `Write logical names into empty comments`, yang hanya ada di panel opsi — lihat [Nama logis sebagai komentar](#logical-names-as-comments).
 
 SQL ditulis saat tab dibuka, dan ditulis lagi setiap kali salah satu pilihan panel, nama database, atau skrip berubah. Perubahan yang dilakukan pada tabel selama tab terbuka, seperti perubahan dari kolaborator atau agen pemrograman, baru terlihat setelah Anda meninggalkan tab lalu kembali, atau setelah salah satu hal tersebut berubah.
 
-[Properti Tabel](./table-related-functions.md#table-properties) memiliki tab `Schema SQL` sendiri, yang menampilkan DDL satu tabel. Tab tersebut selalu menulis pernyataan `CREATE` biasa tanpa pembuka atau skrip, tidak memiliki panel opsi, dan menu konteksnya hanya menawarkan `Database` dan `Bracket`.
+[Properti Tabel](./table-related-functions.md#table-properties) memiliki tab `Schema SQL` sendiri, yang menampilkan DDL satu tabel. Tab tersebut selalu menulis pernyataan `CREATE` biasa tanpa pembuka atau skrip, tidak pernah menulis nama logis ke dalam komentar kosong, tidak memiliki panel opsi, dan menu konteksnya hanya menawarkan `Database` dan `Bracket`.
 
 ## Panel opsi {#options-panel}
 
 Panel memuat tiga kelompok, masing-masing di bawah sebuah keterangan:
 
 1. `Saved in the document`: `Database` dan `Bracket` — lihat [Database dan tanda kutip](#database-and-bracket).
-2. `This window only`: `Statements`, `Header`, dan, selama diagram memiliki [grup tabel](./table-groups.md), `Tables` — lihat [Pernyataan](#statements), [Pembuka](#header), dan [Tabel](#tables).
+2. `This window only`: `Statements`, `Header`, `Write logical names into empty comments`, dan, selama diagram memiliki [grup tabel](./table-groups.md), `Tables` — lihat [Pernyataan](#statements), [Pembuka](#header), [Nama logis sebagai komentar](#logical-names-as-comments), dan [Tabel](#tables).
 3. `Saved in the document · written as is for every database`: skrip `Before tables` dan `After tables` — lihat [Skrip sebelum dan setelah tabel](#before-and-after-scripts).
 
 `Save file` dan `Copy` berada di bagian bawahnya — lihat [Menyimpan atau menyalin SQL](#saving-or-copying-the-sql).
 
 Pilihan di bawah `This window only` terikat pada jendela editor tempat Anda membuatnya. Pilihan tersebut tidak disimpan di dokumen, tidak dibagikan dengan kolaborator, dan tidak dicatat untuk pembatalan, serta kembali ke nilai awal saat editor ditutup atau dimuat ulang; berpindah tab tetap mempertahankannya.  
-`Statements` dimulai pada `If not exists` dan `Header` pada `CREATE + USE`. SQL yang dibaca halaman yang menyematkan editor dengan [`getSchemaSQL()`](../../api/erd-editor-element.md#getschemasql), dan SQL yang dibaca agen pemrograman, justru dimulai pada `Create` tanpa pembuka.
+`Statements` dimulai pada `If not exists`, `Header` pada `CREATE + USE`, dan `Write logical names into empty comments` dalam keadaan nonaktif. SQL yang dibaca halaman yang menyematkan editor dengan [`getSchemaSQL()`](../../api/erd-editor-element.md#getschemasql), dan SQL yang [dibaca agen pemrograman](../../mcp/tools.md#reading-a-document), justru dimulai pada `Create` tanpa pembuka, dan tidak menulis nama logis kecuali jika diminta.
 
 Pilihan yang tidak dimiliki database yang dipilih tetap ada di panel, diredupkan, dengan tooltip `Not in <database>`, seperti `Not in Oracle`, dan menekannya tidak melakukan apa pun.  
 SQL kemudian menggunakan bentuk terdekat yang dimiliki database, dan tombol bentuk tersebut tampil tertekan: `If not exists` beralih ke `Create`, `CREATE + USE` ke `USE`, atau ke `None` jika database juga tidak memiliki `USE`, dan `USE` ke `None`. Pilihan Anda tetap dipertahankan, sehingga beralih ke database yang memilikinya mengembalikan pilihan tersebut.
@@ -92,6 +93,21 @@ Pembuka hanya ditulis selama nama database merupakan pengenal biasa: huruf ASCII
 Dengan nama lain apa pun, termasuk nama kosong, pembuka tidak ditulis, dan `DROP TABLE` milik PostgreSQL kemudian tidak menyebutkan skema. Selama pembuka selain `None` berlaku, sebuah catatan di bawah `Header` menyatakannya: `Database name "<name>" is not a valid identifier.`  
 Nama database diagram baru kosong, sehingga sebelum Anda menamainya, panel menampilkan `Database name "" is not a valid identifier.`
 
+## Nama logis sebagai komentar {#logical-names-as-comments}
+
+`Write logical names into empty comments`, sakelar di bawah `This window only`, menulis [nama logis](./logical-names.md) tabel atau kolom ke dalam DDL jika komentarnya kosong, di setiap database.
+
+![Mengaktifkan Write logical names into empty comments di panel Skema SQL, yang menulis nama logis setiap kolom order_items ke dalam COMMENT-nya yang kosong, sementara komentar members tetap dipertahankan](/img/demo-schema-sql-logical-names.webp)
+
+- Komentar yang berisi teks selalu diutamakan: nama logis tidak pernah menggantikannya dan tidak pernah ditambahkan ke dalamnya.
+- Komentar yang hanya berisi karakter spasi dianggap kosong, sehingga nama logis ditulis di tempatnya. Nama logis yang kosong atau hanya berisi karakter spasi tidak menulis apa pun, dan tabel atau kolom itu tetap tidak mendapatkan komentar.
+- Nama logis ditulis di tempat dan dalam bentuk yang digunakan database untuk menulis komentar, dengan tanda kutipnya di-escape dengan cara yang sama — lihat [Komentar](#comments).
+
+Di MySQL, misalnya, kolom `id` dengan nama logis `Member ID` dan tanpa komentar ditulis dengan `COMMENT 'Member ID'`, sedangkan kolom `email` dengan nama logis `Email` dan komentar `Sign-in address` mempertahankan `COMMENT 'Sign-in address'`.
+
+Seperti `Statements` dan `Header`, sakelar ini terikat pada jendela dan dimulai dalam keadaan nonaktif — lihat [Panel opsi](#options-panel).  
+Impor tidak pernah membaca kembali komentar semacam itu sebagai nama logis — lihat [Komentar](./file-import-export.md#comments).
+
 ## Tabel {#tables}
 
 Selama diagram memiliki setidaknya satu [grup tabel](./table-groups.md), baik ditampilkan maupun disembunyikan, `Tables` muncul di bawah `This window only` dengan kotak centang untuk setiap pilihan:
@@ -125,22 +141,24 @@ Kotak yang tidak memiliki fokus keyboard mengikuti perubahan yang dibuat kolabor
 
 ## Menyimpan atau menyalin SQL {#saving-or-copying-the-sql}
 
-`Save file`, di bagian bawah panel atau di menu konteks, menyimpan persis SQL yang ditampilkan tab, dengan database, tanda kutip, pernyataan, pembuka, tabel, dan skrip saat ini, sebagai `<database name>-<timestamp>.sql`. File tersebut dinamai dan disimpan seperti setiap ekspor lainnya — lihat [Mengekspor](./file-import-export.md#exporting).
+`Save file`, di bagian bawah panel atau di menu konteks, menyimpan persis SQL yang ditampilkan tab, dengan database, tanda kutip, pernyataan, pembuka, komentar nama logis, tabel, dan skrip saat ini, sebagai `<database name>-<timestamp>.sql`. File tersebut dinamai dan disimpan seperti setiap ekspor lainnya — lihat [Mengekspor](./file-import-export.md#exporting).
 
 `Export` ▸ `Schema SQL`, di menu konteks kanvas atau di Pencarian Cepat, tidak menyimpan apa pun dengan sendirinya.  
 Item ini beralih ke tab ini, membuka panel opsi meskipun sebelumnya terciut, dan menempatkan fokus keyboard pada `Save file`, sehingga menekan `Enter` menyimpan file.
 
 `Copy` di bagian bawah panel, atau tombol salin yang muncul di kanan atas kode selama penunjuk berada di atasnya, menyalin SQL.  
-Notifikasi `Copied!` dengan tanda centang mengonfirmasinya selama dua detik. Jika browser atau host menolak akses ke papan klip, notifikasi `Couldn't copy to the clipboard` dengan tanda peringatan memberitahukannya sebagai gantinya. Menyalin lagi menggantikan notifikasi tersebut alih-alih menambahkan notifikasi lain.  
+Notifikasi `Copied!` dengan tanda centang mengonfirmasinya selama dua detik. Jika browser atau host menolak akses ke papan klip, notifikasi `Couldn't copy to the clipboard` dengan tanda peringatan memberitahukannya sebagai gantinya, selama lima detik. Menyalin lagi menggantikan notifikasi tersebut alih-alih menambahkan notifikasi lain.  
 SQL juga dapat dipilih, sehingga Anda dapat mengambil sebagiannya saja.
 
 ## Apa yang ditulis DDL {#what-the-ddl-writes}
 
 Aturan ini berlaku di mana pun editor menulis Skema SQL: di tab ini dan di filenya, serta di SQL yang dibaca halaman yang menyematkan editor atau agen pemrograman.  
-Tab `Schema SQL` di Properti Tabel mengikutinya untuk satu tabel yang ditampilkannya. Tab tersebut tidak menulis kunci asing, kecuali milik SQLite, yang berada di dalam `CREATE TABLE`-nya, dan tidak menulis sequence atau trigger Oracle.
+Tab `Schema SQL` di Properti Tabel mengikutinya untuk satu tabel yang ditampilkannya. Tab tersebut tidak menulis sequence atau trigger Oracle, dan tidak menulis kunci asing kecuali milik SQLite, yang berada di dalam `CREATE TABLE`-nya. Tab tersebut juga tidak menulis pernyataan komentar yang ditempatkan PostgreSQL, Oracle, dan MSSQL setelah tabel, sehingga pada ketiga database itu tab tersebut tidak menampilkan komentar.
 
 Bagian-bagiannya muncul dalam urutan ini, dipisahkan satu baris kosong: pembuka, skrip sebelum tabel, pernyataan `DROP`, tabel, dan skrip setelah tabel. Tabel ditulis menurut urutan nama.  
 Diagram tanpa tabel dan tanpa skrip tidak menulis apa pun, bahkan saat pembuka dipilih.
+
+Tabel dan kolom ditulis dengan nama fisiknya, apa pun yang ditampilkan [Tampilan Nama](./logical-names.md#name-view). Kolom yang tertaut ke domain ditulis dengan tipe datanya sendiri, yang ditetapkan oleh domain — lihat [Domain dan tipe data](./dictionary.md#domains-and-data-types).
 
 ### Kenaikan otomatis {#auto-increment}
 
@@ -181,7 +199,28 @@ Nilai default kolom ditulis seperti yang Anda ketik, tetapi dalam tanda kurung j
 - PostgreSQL hanya membungkus ekspresi yang memuat kata seperti `AT TIME ZONE`, `AND`, `OR`, `IS`, `IN`, `LIKE`, `COLLATE`, atau `= ANY` di luar tanda kurung, seperti `(now() AT TIME ZONE 'utc')`.
 - MSSQL, Oracle, Snowflake, dan Databricks menulis setiap nilai default seperti yang diketik.
 
+### Komentar {#comments}
+
+Komentar tabel atau kolom yang tidak kosong, atau nama logis yang ditulis [`Write logical names into empty comments`](#logical-names-as-comments) di tempatnya, ditulis sesuai cara setiap database menulis komentar:
+
+- MySQL dan MariaDB menulisnya secara inline: kolom diakhiri dengan `COMMENT 'Member ID'`, dan tabel ditutup dengan `) COMMENT 'Members';`, termasuk dalam rangkaian pernyataan `If not exists` milik MySQL.
+- Snowflake menulis komentar kolom secara inline, `COMMENT 'Member ID'`, dan komentar tabel pada barisnya sendiri setelah tanda kurung penutup, `COMMENT = 'Members';`.
+- Databricks menulis komentar kolom secara inline, dan komentar tabel sebagai `COMMENT 'Members';` setelah `USING DELTA`.
+- PostgreSQL menulis `COMMENT ON TABLE member IS 'Members';` dan `COMMENT ON COLUMN member.id IS 'Member ID';` tepat setelah `CREATE TABLE` tabel tersebut. Oracle menulis pernyataan yang sama setelah tabel, constraint uniknya, serta sequence dan trigger kenaikan otomatisnya.
+- MSSQL menulis satu panggilan per tabel dan per kolom, setelah tabel dan constraint uniknya, masing-masing diikuti `GO`: `EXECUTE sys.sp_addextendedproperty 'MS_Description', N'Members', 'schema', 'dbo', 'table', 'member'`, dengan tambahan `'column', 'id'` untuk kolom.  
+  Teksnya berupa literal nasional, `N'…'`, sehingga SQL Server mempertahankan teks di luar code page database, seperti bahasa Korea, alih-alih menyimpan tanda tanya.  
+  Dengan `Bracket` pada `None`, tabel bernama `sales.users` menghasilkan skema `sales` dan tabel `users`, demikian pula `[sales].[users]` dan `"sales"."users"`, yang kurung siku dan tanda kutip gandanya dibuang. Nama tanpa skema berada di `dbo`. Bagian sebelum skema, seperti pada `shop.sales.users`, menjalankan prosedur milik database tersebut, `shop.sys.sp_addextendedproperty`. Pada `Bracket` lainnya, seluruh nama merupakan tabel, di `dbo`.
+- SQLite tidak menyimpan komentar, sehingga SQLite menulis masing-masing sebagai baris `--` di atas hal yang dideskripsikannya: `-- Members` di atas `CREATE TABLE member`, dan `-- Member ID` di atas kolom.
+
+Tanda kutip di dalam komentar yang dikutip ditulis ganda, seperti pada `'it''s'` dan `N'it''s'`, demikian pula tanda kutip pada nama yang diteruskan panggilan MSSQL. Databricks justru meng-escape tanda kutip dan garis miring terbalik dengan garis miring terbalik, seperti pada `'it\'s'`, bentuk yang dibaca setiap rilis Spark. Baris `--` milik SQLite tidak dikutip, sehingga tanda kutip tetap seperti yang diketik: `-- it's`.  
+Selain itu, teks ditulis seperti yang diketik, termasuk jeda baris, kecuali pada dua database:
+
+- Oracle menghilangkan baris kosong, dengan baris yang hanya berisi spasi atau tab dianggap kosong, karena SQL\*Plus mengakhiri pernyataan pada baris kosong dan melewati sisanya. Komentar tabel berisi `Members`, satu baris kosong, dan `Active only` ditulis sebagai `COMMENT ON TABLE member IS 'Members` dengan `Active only';` di baris berikutnya.
+- SQLite menulis setiap rangkaian jeda baris sebagai satu spasi, karena jeda baris akan mengakhiri baris `--` dan menjalankan sisanya sebagai SQL. Komentar yang sama ditulis sebagai `-- Members Active only`.
+
+Cara komentar ini dibaca kembali saat impor dijelaskan di [Komentar](./file-import-export.md#comments).
+
 ## Editor hanya baca {#read-only-editors}
 
-Di editor `readonly`, tab bekerja seperti biasa: `Database` dan `Bracket` tetap mengubah SQL yang ditampilkan, `Statements`, `Header`, dan `Tables` tetap berfungsi, serta `Save file` dan `Copy` tetap menyimpan dan menyalinnya.  
+Di editor `readonly`, tab bekerja seperti biasa: `Database` dan `Bracket` tetap mengubah SQL yang ditampilkan, `Statements`, `Header`, `Write logical names into empty comments`, dan `Tables` tetap berfungsi, serta `Save file` dan `Copy` tetap menyimpan dan menyalinnya.  
 Hanya kedua kotak skrip yang bersifat hanya baca.

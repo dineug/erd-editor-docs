@@ -77,8 +77,8 @@ Vzťah začnite kresliť z kontextovej ponuky, z [panela nástrojov plátna](./t
 - One N: `Ctrl + Alt + 4` (Windows/Linux) alebo `⌘ + ⌥ + 4` (Mac)
 
 Keď je typ aktivovaný, kurzor sa zmení. Kliknite najprv na nadradenú tabuľku a potom na podradenú tabuľku.  
-Nadradená tabuľka dostane primárny kľúč, ak ho nemá, a pre každý stĺpec primárneho kľúča nadradenej tabuľky dostane podradená tabuľka stĺpec cudzieho kľúča s príznakom `Not Null`, ktorý má rovnaký typ údajov, predvolenú hodnotu a komentár.  
-Výnimkou je kľúč typu serial: jeho cudzí kľúč prevezme celočíselný typ, ktorý serial ukladá, napríklad `integer` pre `serial4` – pozrite si časť [Identifikujúce vzťahy](./relationship-editing.md#identifying-relationships).  
+Nadradená tabuľka dostane primárny kľúč, ak ho nemá, a pre každý stĺpec primárneho kľúča nadradenej tabuľky dostane podradená tabuľka stĺpec cudzieho kľúča s príznakom `Not Null`, ktorý má rovnaký typ údajov, predvolenú hodnotu, komentár, [logický názov](./logical-names.md) a [doménu](./dictionary.md#domains-and-data-types).  
+Výnimkou je kľúč typu serial: jeho cudzí kľúč prevezme celočíselný typ, ktorý serial ukladá, napríklad `integer` pre `serial4`, a potom sa neprepojí so žiadnou doménou – pozrite si časť [Identifikujúce vzťahy](./relationship-editing.md#identifying-relationships).  
 Každý stĺpec cudzieho kľúča sa pomenuje podľa svojho kľúča: jednoslovný názov, napríklad `id`, dostane pred seba názov nadradenej tabuľky (`user_id`), viacslovný názov, napríklad `member_id`, sa zachová a názov, ktorý podradená tabuľka už má, sa očísluje (`user_id_2`) – pozrite si časť [Názvy stĺpcov cudzích kľúčov](./relationship-editing.md#foreign-key-column-names).  
 Dve kliknutia na tú istú tabuľku nakreslia rekurzívny vzťah.  
 Nový vzťah má na začiatku akcie `On Delete` aj `On Update` nastavené na `Not set`; zmeňte ich v jeho kontextovej ponuke – pozrite si časť [ON DELETE a ON UPDATE](./relationship-editing.md#on-delete-and-on-update).  
@@ -91,7 +91,8 @@ Keď je nadradená tabuľka zvolená, podržanie ukazovateľa nad tabuľkou, na 
 
 Tlačidlá zobrazí aj nadradená tabuľka, keď sa ukazovateľ posunie kúsok od miesta, kde ste na ňu klikli, takže aj rekurzívny vzťah možno namapovať na existujúce stĺpce.  
 Dotyk prstom nepozná podržanie ukazovateľa, takže keď kreslíte prstom, tlačidlá sa nikdy nezobrazia a ťuknutie na podradenú tabuľku nakreslí vzťah okamžite; pero ich zobrazuje rovnako ako myš.  
-Ak nadradená tabuľka do chvíle, keď sa dostanete k podradenej, stratí primárny kľúč, napríklad v dôsledku vrátenia späť alebo úpravy od spolupracovníka, tlačidlo `Create new columns` sa zobrazí stlmené s bublinovým popisom `<parent> has no primary key to copy` a kliknutie na podradenú tabuľku ukončí kreslenie bez toho, aby sa čokoľvek nakreslilo.
+Ak nadradená tabuľka do chvíle, keď sa dostanete k podradenej, stratí primárny kľúč, napríklad v dôsledku vrátenia späť alebo úpravy od spolupracovníka, tlačidlo `Create new columns` sa zobrazí stlmené s bublinovým popisom `<parent> has no primary key to copy` a kliknutie na podradenú tabuľku ukončí kreslenie bez toho, aby sa čokoľvek nakreslilo.  
+Bublinový popis uvádza nadradenú tabuľku tak, ako ju pomenúva [Zobrazenie názvov](./logical-names.md#beyond-the-canvas).
 
 ![Kreslenie vzťahu One N pomocou ⌘ + ⌥ + 4 a potom vzťahu Zero N z panela nástrojov plátna, s orámovanou podradenou tabuľkou a jej tlačidlami Map to existing columns a Create new columns](/img/demo-relationship.webp)
 

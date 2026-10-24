@@ -1,5 +1,5 @@
 ---
-sidebar_position: 12
+sidebar_position: 13
 description: Generați cod pentru douăzeci și două de ținte din diagramă, alegeți limbajul, baza de date, stilul de denumire și delimitatorul în panoul de opțiuni, vedeți care ținte scriu acțiunile ON DELETE și ON UPDATE ale unei relații și salvați sau copiați rezultatul.
 ---
 
@@ -103,6 +103,10 @@ La orice stil, un nume pe care limbajul țintei îl rezervă este protejat prin 
 Și `SeaORM` le ignoră: denumește câmpurile și modulele în snake case, forma pe care SeaORM o recunoaște la citire, și indică numele stocate în `table_name` și, acolo unde diferă, în `column_name`.  
 Pentru aceste patru ținte, panoul estompează ambele liste, cu mențiunea `Not used by` sub ele.
 
+Fiecare țintă scrie numele fizice, indiferent ce afișează [modul de afișare a numelor](./logical-names.md#name-view).  
+Niciuna nu scrie un nume logic, nici măcar într-un comentariu gol: această filă nu are un echivalent al opțiunii [`Write logical names into empty comments`](./schema-sql.md#logical-names-as-comments) din fila Schemă SQL.  
+Nicio țintă nu scrie nici domenii: o coloană legată de un domeniu este scrisă cu tipul ei de date, ca orice altă coloană.
+
 ## Bază de date {#database}
 
 Tipurile de date se stabilesc în funcție de baza de date selectată (consultați [Baze de date](./table-related-functions.md#databases)).  
@@ -132,5 +136,5 @@ Fișierul este denumit ca orice export, `<database name>-<timestamp>`, urmat de 
 Meniul Export nu are niciun element pentru generatorul de cod, iar fila `Code Generator` a panoului Proprietăți tabel nu poate salva un fișier.
 
 Pentru a copia codul, faceți clic pe butonul `Copy` din partea de jos a panoului sau treceți cu indicatorul peste cod și faceți clic pe butonul de copiere din dreapta sus a acestuia, singura modalitate din panoul Proprietăți tabel.  
-O notificare `Copied!` cu o bifă confirmă copierea timp de două secunde. Dacă browserul sau aplicația gazdă refuză accesul la clipboard, o notificare `Couldn't copy to the clipboard` cu un semn de avertizare semnalează în schimb acest lucru. O nouă copiere înlocuiește notificarea, în loc să adauge alta.  
+O notificare `Copied!` cu o bifă confirmă copierea timp de două secunde. Dacă browserul sau aplicația gazdă refuză accesul la clipboard, o notificare `Couldn't copy to the clipboard` cu un semn de avertizare semnalează în schimb acest lucru, timp de cinci secunde. O nouă copiere înlocuiește notificarea, în loc să adauge alta.  
 Textul poate fi și selectat, astfel încât puteți prelua doar partea de care aveți nevoie.

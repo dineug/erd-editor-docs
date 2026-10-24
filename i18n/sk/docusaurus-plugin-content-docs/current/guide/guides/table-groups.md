@@ -1,5 +1,5 @@
 ---
-sidebar_position: 5
+sidebar_position: 6
 description: Zoskupenie súvisiacich tabuliek do pomenovaného farebného rámca za nimi; vytvorenie, pomenovanie, nastavenie farby, presun, zmena veľkosti a odstránenie skupín, prechod na ne z prieskumníka, zmena tabuliek, ktoré obsahujú, ich skrytie a zachovanie pri automatickom rozložení, na karte Schéma SQL a v DBML.
 ---
 

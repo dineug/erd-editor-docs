@@ -77,8 +77,8 @@ Rozpocznij tworzenie relacji za pomocą menu kontekstowego, [paska narzędzi kan
 - One N: `Ctrl + Alt + 4` (Windows/Linux) lub `⌘ + ⌥ + 4` (Mac)
 
 Po wybraniu typu kursor zmienia wygląd. Kliknij najpierw tabelę nadrzędną, a potem tabelę podrzędną.  
-Tabela nadrzędna otrzymuje klucz podstawowy, jeśli go nie ma, a dla każdej kolumny klucza podstawowego tabeli nadrzędnej tabela podrzędna otrzymuje kolumnę klucza obcego z flagą `Not Null` i z tym samym typem danych, wartością domyślną i komentarzem.  
-Wyjątkiem jest klucz typu serial: jego klucz obcy przyjmuje typ całkowity przechowywany przez typ serial, na przykład `integer` dla `serial4` – zobacz sekcję [Relacje identyfikujące](./relationship-editing.md#identifying-relationships).  
+Tabela nadrzędna otrzymuje klucz podstawowy, jeśli go nie ma, a dla każdej kolumny klucza podstawowego tabeli nadrzędnej tabela podrzędna otrzymuje kolumnę klucza obcego z flagą `Not Null` i z tym samym typem danych, wartością domyślną, komentarzem, [nazwą logiczną](./logical-names.md) i [domeną](./dictionary.md#domains-and-data-types).  
+Wyjątkiem jest klucz typu serial: jego klucz obcy przyjmuje typ całkowity przechowywany przez typ serial, na przykład `integer` dla `serial4`, i wtedy nie jest powiązany z żadną domeną – zobacz sekcję [Relacje identyfikujące](./relationship-editing.md#identifying-relationships).  
 Każda kolumna klucza obcego otrzymuje nazwę od swojego klucza: jednowyrazowa nazwa, taka jak `id`, otrzymuje na początku nazwę tabeli nadrzędnej (`user_id`), nazwa wielowyrazowa, taka jak `member_id`, pozostaje bez zmian, a nazwa, którą tabela podrzędna już ma, otrzymuje numer (`user_id_2`) – zobacz sekcję [Nazwy kolumn kluczy obcych](./relationship-editing.md#foreign-key-column-names).  
 Dwa kliknięcia tej samej tabeli rysują relację zwrotną.  
 Nowa relacja ma na początku obie akcje, `On Delete` i `On Update`, ustawione na `Not set`; zmień je w menu kontekstowym relacji – zobacz sekcję [ON DELETE i ON UPDATE](./relationship-editing.md#on-delete-and-on-update).  
@@ -91,7 +91,8 @@ Po wybraniu tabeli nadrzędnej najechanie wskaźnikiem na tabelę, na której re
 
 Tabela nadrzędna również pokazuje te przyciski, gdy wskaźnik przesunie się nieco od miejsca kliknięcia, więc relację zwrotną także można zmapować na istniejące kolumny.  
 Palcem nie można najechać na tabelę, więc podczas rysowania palcem przyciski nigdy się nie pojawiają, a dotknięcie tabeli podrzędnej od razu rysuje relację; pióro pokazuje je tak samo jak mysz.  
-Jeśli w chwili dotarcia do tabeli podrzędnej tabela nadrzędna nie ma już klucza podstawowego, na przykład w wyniku cofnięcia lub zmiany wprowadzonej przez współpracownika, przycisk `Create new columns` jest przyciemniony i ma podpowiedź `<parent> has no primary key to copy`, a kliknięcie tabeli podrzędnej kończy rysowanie, niczego nie rysując.
+Jeśli w chwili dotarcia do tabeli podrzędnej tabela nadrzędna nie ma już klucza podstawowego, na przykład w wyniku cofnięcia lub zmiany wprowadzonej przez współpracownika, przycisk `Create new columns` jest przyciemniony i ma podpowiedź `<parent> has no primary key to copy`, a kliknięcie tabeli podrzędnej kończy rysowanie, niczego nie rysując.  
+Podpowiedź nazywa tabelę nadrzędną tak, jak robi to [Widok nazw](./logical-names.md#beyond-the-canvas).
 
 ![Rysowanie relacji One N skrótem ⌘ + ⌥ + 4, a następnie relacji Zero N z paska narzędzi kanwy, z obrysowaną tabelą podrzędną i jej przyciskami Map to existing columns i Create new columns](/img/demo-relationship.webp)
 

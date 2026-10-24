@@ -1,6 +1,6 @@
 ---
-sidebar_position: 6
-description: Elimina una relación, cambia su tipo, define sus acciones ON DELETE y ON UPDATE, asígnala a columnas existentes con Asignar columnas, interpreta la notación de los conectores, trabaja con relaciones N:M e identificadoras y consulta cómo se nombran las nuevas columnas de clave externa.
+sidebar_position: 7
+description: Elimina una relación, cambia su tipo, define sus acciones ON DELETE y ON UPDATE, asígnala a columnas existentes con Asignar columnas, interpreta la notación de los conectores, trabaja con relaciones N:M e identificadoras y consulta qué copian de su clave las nuevas columnas de clave externa y cómo se nombran.
 ---
 
 # Edición de relaciones
@@ -85,6 +85,9 @@ Se abre de dos maneras:
 
 El subtítulo del cuadro de diálogo indica las dos tablas y el tipo de relación, como `users → posts · One N`. Aquí el tipo se muestra, pero no se cambia; recurre a [Cambio de tipo](#type-change).
 
+En todo el cuadro de diálogo, incluidas las notas y las líneas bajo las filas y la notificación con la que se cierra, las tablas y las columnas se nombran como las nombra la [vista de nombres](./logical-names.md#beyond-the-canvas).  
+Tres cosas siguen siendo físicas: cada tipo de datos, que es el de la propia columna y nunca el nombre de su dominio; `New column: <name>`, que muestra el nombre que recibirá la columna nueva; y las filas que aparecen ya rellenadas con `Map`, que se emparejan por nombre, nunca por nombre lógico.
+
 `References` elige la clave a la que apunta la relación: `Primary Key`, con sus columnas en el orden de la tabla, y luego `Unique: <column>` por cada columna marcada como `Unique`. Solo aparece cuando hay más de una opción.  
 Aquí un índice único no cuenta como clave, y una columna `Unique` que constituye toda la clave principal no aparece dos veces.  
 Al elegir otra clave se reconstruyen las filas. Una fila conserva su elección mientras esa columna siga en la tabla hija.
@@ -121,10 +124,10 @@ Si mientras tanto cambian las columnas de la relación o la clave con la que se 
 Qué escriben `Map` y `Save`:
 
 - `Map` añade la relación con `On Delete` y `On Update` en `Not set`. `Save` cambia solo las columnas de la relación, apunta su lado padre a la clave elegida en `References` y conserva su tipo y sus acciones ON DELETE y ON UPDATE.
-- Una fila `New column` añade una columna al final de la tabla hija, igual que al dibujar: `NOT NULL`, con un nombre basado en su clave y con el tipo de datos, el valor predeterminado y el comentario de la clave; consulta [Relaciones identificadoras](#identifying-relationships).
-- A una columna elegida nunca se le cambia el nombre, y su `Not Null`, su clave principal, su `Unique`, su valor predeterminado y su comentario se quedan como están. Su tipo de datos solo cambia mientras el ajuste `Relationship DataType Sync` esté activado y la columna padre tenga un tipo de datos: toma el tipo que la columna padre da a una clave externa —el tipo entero para una clave serial, igual que en una columna nueva—, y el cambio se propaga por las relaciones igual que en la sincronización.
+- Una fila `New column` añade una columna al final de la tabla hija, igual que al dibujar: `NOT NULL`, con un nombre basado en su clave y con el tipo de datos, el valor predeterminado, el comentario, el nombre lógico y el dominio de la clave; consulta [Relaciones identificadoras](#identifying-relationships).
+- A una columna elegida nunca se le cambia el nombre ni se la vincula al dominio de la clave, y su `Not Null`, su clave principal, su `Unique`, su valor predeterminado, su comentario y su nombre lógico se quedan como están. Su tipo de datos solo cambia mientras el ajuste `Relationship DataType Sync` esté activado y la columna padre tenga un tipo de datos: toma el tipo que la columna padre da a una clave externa —el tipo entero para una clave serial, igual que en una columna nueva—, y el cambio se propaga por las relaciones igual que en la sincronización. Toda columna cuyo tipo cambia, sea una columna elegida o una alcanzada a través de las relaciones, se desvincula de su [dominio](./dictionary.md#domains-and-data-types) cuando su nuevo tipo difiere del del dominio.
 - Una columna que la asignación deja de usar permanece en la tabla hija y deja de estar marcada como clave externa, salvo que otra relación siga terminando en ella.
-- Todo lo que escribe un `Map` o un `Save`, incluidas las columnas nuevas y los cambios de tipo, es un solo paso de deshacer.
+- Todo lo que escribe un `Map` o un `Save` —incluidas las columnas nuevas, los cambios de tipo y las desvinculaciones de dominios— es un solo paso de deshacer.
 
 Si la relación es identificadora y cómo se dibuja su extremo padre se deducen de las columnas asignadas de la tabla hija, como en cualquier relación. Asignarla a las columnas de clave principal de la tabla hija la hace identificadora de inmediato, y asignarla a una columna que admite `NULL` pone un círculo en el extremo padre; consulta [Cómo leer un conector](#reading-a-connector).  
 La clave externa del Esquema SQL hace referencia a la clave que has elegido, como `REFERENCES vehicle (vin)` para una clave `Unique`.
@@ -156,9 +159,10 @@ Consulta [Importar o exportar archivos](./file-import-export.md).
 ## Relaciones identificadoras {#identifying-relationships}
 
 Al dibujar una relación haciendo clic en la tabla hija, o con `Create new columns`, cada clave principal de la tabla padre se copia en la tabla hija como una columna de clave externa `NOT NULL`, así que una relación nueva empieza siendo no identificadora.  
-La copia toma el tipo de datos, el valor predeterminado y el comentario de la clave, pero no `Unique` ni `Auto Increment`, y recibe el nombre que se describe en [Nombres de las columnas de clave externa](#foreign-key-column-names).  
+La copia toma el tipo de datos, el valor predeterminado, el comentario y el nombre lógico de la clave, pero no `Unique` ni `Auto Increment`, y recibe el nombre que se describe en [Nombres de las columnas de clave externa](#foreign-key-column-names).  
 Una clave serial es la excepción en cuanto al tipo de datos: su copia toma el tipo entero que almacena el serial. Con cualquier base de datos, `smallserial` y `serial2` dan `smallint`, `serial4` da `integer`, y `bigserial` y `serial8` dan `bigint`. Un `serial` a secas da `integer` con PostgreSQL y `bigint unsigned` con MySQL y MariaDB, y se queda en `serial` con cualquier otra base de datos.  
 Solo cuenta el nombre de tipo completo, sin distinguir mayúsculas y minúsculas, así que `serial(4)` se copia tal como está escrito. Un tipo escrito en mayúsculas da mayúsculas: `SERIAL` da `INTEGER` con PostgreSQL. Una columna de clave externa que ya tiene el tipo `serial` en un diagrama guardado conserva ese tipo.  
+La copia también se vincula al [dominio](./dictionary.md#domains-and-data-types) de la clave, siempre que la hoja `Domains` incluya ese dominio cuando se hace la copia y la copia conserve el tipo de datos de la clave. Así, la copia de una clave serial que toma un tipo entero no vincula ningún dominio, mientras que un `serial` a secas que se queda en `serial` sí lo vincula.  
 Para que la relación sea identificadora, define esas columnas de clave externa de la tabla hija como claves principales: selecciónalas todas y pulsa `Alt + K` (Windows/Linux) o `⌥ + K` (Mac) una vez, o elige `Primary Key` en el menú contextual de la tabla, que indica `Primary Key on selected columns` mientras hay dos o más seleccionadas; consulta [Clave principal de columna](./table-editing.md#column-primary-key).
 
 ![Activar y desactivar product_id como clave principal con Alt + K, con lo que su conector pasa a línea continua y luego a discontinua](/img/demo-identifying-relationship.webp)
@@ -193,7 +197,10 @@ Eso incluye la clave principal que el editor añade a una tabla padre que no tie
 Los nombres se fijan al dibujar la relación. Cambiar después el nombre de la tabla padre o de su clave no les cambia el nombre.  
 Las filas `New column` de [Asignar columnas](#map-columns) se nombran con las mismas reglas, y la lista muestra cada nombre antes de que lo elijas.  
 Las relaciones que llegan con sus columnas ya creadas —desde una importación, un pegado, un duplicado o Asignar columnas al emparejar columnas existentes— conservan los nombres que tienen esas columnas.  
-Un agente de programación que añade una relación con `erd_add_relationship` obtiene los mismos nombres y tipos de datos; consulta [Herramientas](../../mcp/tools.md#relationships).
+Un agente de programación que añade una relación con `erd_add_relationship` obtiene los mismos nombres, tipos de datos, nombres lógicos y dominios; consulta [Herramientas](../../mcp/tools.md#relationships).
+
+Una columna de clave externa recibe su nombre a partir de su clave, nunca a partir del nombre lógico que copia, y su nombre cuenta como escrito por ti: un nombre lógico que se escriba después en la columna deja el nombre como está, salvo que el nombre esté vacío; consulta [Nombres escritos por ti](./dictionary.md#names-of-your-own).  
+Por eso, mientras el nombre lógico copiado coincide con un término que da otro nombre, la hoja `Checks` muestra la columna en [`Physical name mismatch`](./dictionary.md#what-each-check-finds). Volver a derivar su nombre físico le cambia el nombre a partir de los diccionarios, salvo que otra columna de la tabla hija ya tenga el nombre que estos dan, sin distinguir mayúsculas y minúsculas; consulta [Volver a derivar los nombres físicos](./dictionary.md#derive-physical-names-again).
 
 ## Cómo leer un conector {#reading-a-connector}
 

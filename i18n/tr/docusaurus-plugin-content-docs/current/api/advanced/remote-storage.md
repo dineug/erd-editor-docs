@@ -83,7 +83,10 @@ Replika değişikliği uygular ve sonucu kendi tarafında serileştirir.
 
 `4.0.0` sürümünden itibaren replikayı, yukarıdaki gibi, depolanan dosyayla ya da düzenleyicinin `value` değeriyle değil, düzenleyicinin `runtimeValue` değeriyle başlatın.  
 Dosyada, kaydedildiğinden bu yana yapılan düzenlemeler yoktur; `value` değerinde de oturumda kaldırılan varlıklar yoktur.  
-Kaldırılan bir tablo olmadan başlatılan bir replika, bir düzenleyici bu kaldırmayı geri aldığında tabloyu adı ve sütunları olmadan geri getirir ve onu bu hâliyle kaydeder.
+Kaldırılan bir tablo olmadan başlatılan bir replika, bir düzenleyici bu kaldırmayı geri aldığında tabloyu adı ve sütunları olmadan geri getirir ve onu bu hâliyle kaydeder.  
+`4.2.0` sürümünden itibaren aynı durum bir [Sözlük](../../guide/guides/dictionary.md) sayfasından kaldırılan bir sözcük, terim veya değer alanı için de geçerlidir.  
+Bir düzenleyici kaldırmayı geri aldığında, satır olmadan başlatılan bir replika onu yeniden boş olarak listeler ve `value` boş bir satırı dışarıda bıraktığı için replika belgeyi bu satır olmadan kaydeder.  
+Bir değer alanı söz konusu olduğunda, ona bağlanan sütunlar ve terimler de o replikada bağlantısız kalır, çünkü replika bu bağlantıları hiç tutmamıştır ve geri alma işlemi onları göndermez.
 
 ## InjectEngineContext {#injectenginecontext}
 
@@ -91,6 +94,8 @@ Kaldırılan bir tablo olmadan başlatılan bir replika, bir düzenleyici bu kal
 
 Bir dizeyi piksel cinsinden ölçer.  
 Deponun DOM'u olmadığından metni kendisi ölçemez; bir ad, veri türü, varsayılan değer veya açıklama her değiştiğinde sütun genişliklerini bu işlevle yeniden hesaplar.  
+`4.2.0` sürümünden itibaren buna bir tablonun veya sütunun [mantıksal adı](../../guide/guides/logical-names.md) da dahildir.  
+Depo, bir sütunun bağlandığı değer alanının adını gösteren değer alanı hücresini, sütun bir değer alanına bağlandığı ya da bağlantısı kaldırıldığı ve o değer alanı eklendiği, yeniden adlandırıldığı ya da kaldırıldığı her seferde ölçer.  
 Depo, [setInitialValue](#setinitialvalue) bir belge yüklediği her seferde tüm tabloları ve sütunları da yeniden ölçer.  
 `4.0.0` sürümünden itibaren genişlikler yalnızca [runtimeValue](#runtimevalue-getter) içinde tutulur, hiçbir zaman `value` içinde tutulmaz.  
 Bu nedenle bu sürümün kaydettiği bir belge, nerede kaydedilmiş olursa olsun ve orada metin nasıl ölçülmüş olursa olsun, bayt bayt aynı `value` değeri olarak geri okunur.
@@ -146,11 +151,14 @@ const data = replicationStore.value;
 
 `4.0.0` sürümünden itibaren `value` depolama biçimidir: belgenin bir dosyada tutulduğu hâli, yani öğenin [value](../erd-editor-element.md#value) özelliğinin döndürdüğü metnin aynısı.  
 Yalnızca canlı varlıkları sabit bir sırayla tutar; kaldırılan varlıkları, katman sırasını ve [toWidth](#towidth) işlevinin ölçtüğü genişlikler gibi bir yüklemenin yeniden hesapladığı hiçbir şeyi içermez.  
-İki boşlukla girintilenir ve bir satır sonuyla biter; böylece aynı belge her zaman aynı baytları verir.  
+`4.2.0` sürümünden itibaren mantıksal adları, her adın sözlüklerden türetilip türetilmediğini, değer alanı bağlantılarını ve [Sözlük](../../guide/guides/dictionary.md) sekmesinin sözcüklerini, terimlerini ve değer alanlarını da tutar.  
+`4.2.0` sürümünden itibaren bir varlığın her boş metin alanını, hiçbir şey tutmayan her `doc` listesini ve koleksiyonu ve tüm koleksiyonlar boş olduğunda `collections` alanının kendisini de dışarıda bırakır.  
+İki boşlukla girintilenir, her sözlük satırını ayrı bir satırda tutar ve bir satır sonuyla biter; böylece aynı belge her zaman aynı baytları verir.  
 Neleri tuttuğu için [Depolama biçimi ve çalışma zamanı değeri](./schema.md#storage-form-and-runtime-value) bölümüne bakın.
 
 [Kilidi](../../guide/guides/settings.md#lock) etkin olan her ayar kilitlendiği değerle, diğer her ayar ise o anki hâliyle yazılır.  
 `Viewport` kilidi görünümün başlangıç noktasını ve yakınlaştırma düzeyini birlikte kapsar; sekmenin, Kod oluşturucu dilinin, her iki ad biçiminin ve tırnak türünün ise her birinin kendi kilidi vardır.  
+`4.2.0` sürümünden itibaren [Ad görünümünün](../../guide/guides/logical-names.md#name-view) de kendi kilidi vardır; bu `Name View` kilidi yeni bir belgede etkindir.  
 Kilitler, belgenin `ignoreSaveSettings` alanının yerini alır; bu alan `4.0.0` sürümünden itibaren ne okunur ne de yazılır.  
 `4.0.0` sürümünden önce `value`, deponun tuttuğu hâliyle belgenin tamamıydı ve bu alanın kaydırma ve yakınlaştırma bitleri ona uygulanırdı.
 
@@ -180,8 +188,10 @@ Depolama biçimini, bir çalışma zamanı değerini ya da v2 belgesi dahil daha
 Boş bir dize ya da dize olmayan herhangi bir şey, hata fırlatmak yerine yeni ve boş bir belge yükler.  
 Kendisine hiç değer verilmemiş bir depo da aynı yeni belgeyle başlar.  
 `4.0.0` sürümünden itibaren bu belgede her [kilit](../../guide/guides/settings.md#lock) etkindir; bu yüzden deponun replike ettiği düzenleyiciler kaydırırken, yakınlaştırırken, sekme değiştirirken veya bu ayarları değiştirirken belgenin `value` değeri başlangıçtaki görünümü, sekmeyi, Kod oluşturucu dilini, ad biçimlerini ve tırnak türünü korur. `3.10.0` sürümünde bu belge ne kaydırmayı ne de yakınlaştırmayı kaydediyordu, ondan önce ise ikisini de kaydediyordu.  
+`4.2.0` sürümünden itibaren düzenleyiciler kendi Ad görünümlerini değiştirirken belge de kendi Ad görünümünü, yani `Physical Names` görünümünü korur.  
 Depolanmış bir belge, belirttiği kilitleri korur.  
 Hiç kilit belirtmeyen bir belge, yani v2 belgesi dahil `4.0.0` sürümünden önce kaydedilmiş her belge, tüm kilitler etkin olarak yüklenir: Ne kaydetmiş olursa olsun görünümün başlangıç noktası `0, 0`, yakınlaştırma düzeyi `1` ve sekmesi ERD olur; Kod oluşturucu dili, ad biçimleri ve tırnak türü ise kaydettiği gibi kalır.  
+`4.2.0` sürümünden önce kaydedilmiş bir belge hiçbir `Name View` kilidi belirtmez; bu yüzden diğer tüm kilitleri devre dışı olarak kaydedilmiş olsa bile bu kilit etkin olarak ve `Physical Names` görünümünde yüklenir.  
 `4.0.0` sürümünden itibaren `setInitialValue`, öğenin [setInitialValue](../erd-editor-element.md#setinitialvalue) yönteminin yaptığı gibi, önceki belge için tutulan ortak çalışma kayıtlarını da temizler.  
 Birleştirme çakışması işaretleriyle kalmış bir dosya gibi JSON olmayan bir metin de hata fırlatmaz: Ayrıştırma hatası yalnızca konsola yazılır, belge boşaltılır ve ayarlar olduğu gibi kalır.
 
@@ -221,15 +231,19 @@ Aboneliği sonlandırmak için döndürülen işlevi çağırın.
 
 Bir [kilidin](../../guide/guides/settings.md#lock) `value` dışında bıraktığı bir değişiklik yine de `change` olayını tetikler ve `changed` değeri `false` olur; bu yüzden yalnızca `changed` değeri `true` olduğunda yazın.  
 Bunlar `Viewport` kilitliyken yapılan bir kaydırma veya yakınlaştırma, `Canvas Type` kilitliyken yapılan bir sekme değişikliği ve kendi kilidi etkinken Kod oluşturucu dilinin, bir ad biçiminin ya da tırnak türünün değiştirilmesidir.  
+`4.2.0` sürümünden itibaren `Name View` kilitliyken yapılan bir Ad görünümü değişikliği de bunlardandır: Düzenleyici onu yine gönderir, ancak replika onu diğer düzenleyicilerin yaptığı gibi atar.  
+Salt okunur bir düzenleyicide yapılan bir Ad görünümü değişikliği de, kilidi ne olursa olsun, aynı şekilde atılır.  
 Öğenin [change](../erd-editor-element.md#change) olayı böyle bir değişikliği dışarıda bırakır, ancak replika onu yine de bildirir.  
-Yeni bir belgede ve `4.0.0` sürümünden önce kaydedilmiş bir belgede tüm kilitler etkindir.  
-`Viewport` kilitli değilken bir kaydırma veya yakınlaştırma `value` değerini değiştirir; `Canvas Type` kilitli değilken düzenleyicinin başka bir sekmesini açmak da aynısını yapar.  
+Yeni bir belgede ve `4.0.0` sürümünden önce kaydedilmiş bir belgede tüm kilitler etkindir; `4.2.0` sürümünden önce kaydedilmiş her belgede de `Name View` kilitlidir.  
+`Viewport` kilitli değilken bir kaydırma veya yakınlaştırma `value` değerini değiştirir; `Canvas Type` kilitli değilken düzenleyicinin başka bir sekmesini açmak, `Name View` kilitli değilken de salt okunur olmayan bir düzenleyiciden gelen bir Ad görünümü değişikliği aynısını yapar.  
 Bir kilidi etkinleştirmek veya devre dışı bırakmak da `value` değerini değiştirir.
 
 `4.0.0` sürümünden itibaren `changed`, ne kaldırılan varlıkları ne de katman sırasını tutan depolama biçimini karşılaştırır.  
-Bu nedenle tek bir `change` içinde eklenip yeniden kaldırılan bir tablo, başka bir ortak çalışanın kaldırdığı bir varlığa denk gelen bir düzenleme ve yalnızca katman sırasını değiştiren aktarılmış bir yükleme de `changed` değeri `false` olarak sonuçlanır.
+Bu nedenle tek bir `change` içinde eklenip yeniden kaldırılan bir tablo, başka bir ortak çalışanın kaldırdığı bir varlığa denk gelen bir düzenleme ve yalnızca katman sırasını değiştiren aktarılmış bir yükleme de `changed` değeri `false` olarak sonuçlanır.  
+`4.2.0` sürümünden itibaren bir Sözlük sayfasına eklenip boş bırakılan bir satır da aynı sonucu verir, çünkü depolama biçimi hiçbir şey tutmayan bir satırı dışarıda bırakır.
 
 `changed` hiçbir zaman, yüklendiği anda `value` değerinden zaten farklı olabilecek depoladığınız dosyayla karşılaştırma yapmaz: Daha eski bir sürümün kaydettiği bir dosya, v2 dosyası dahil, farklıdır; bayt sırası işaretiyle başlayan bir dosya ve elle düzenlenmiş bir dosya da öyle.  
+`4.2.0` sürümünden itibaren buna `4.0.0` veya `4.1.0` sürümünün kaydettiği bir dosya da dahildir, çünkü `value`, böyle bir dosyanın içerdiği, varlıklarının boş metin alanlarını, boş `doc` listelerini ve koleksiyonlarını dışarıda bırakır.  
 Böyle bir dosyayla baytları karşılaştırmak, bir kilidin dışarıda bıraktığı bir kaydırmayı bile düzenleme olarak sayardı.  
 `changed` değeri `true` olan ilk `change` olayı böyle bir dosyayı depolama biçiminde geri verir; bu yüzden onu yazmak dosyayı bir kez yeniden yazar.  
 [toWidth](#towidth) bölümünde açıklandığı gibi, bu sürümün kaydettiği bir dosya nerede kaydedilmiş olursa olsun farklı olmaz.  
@@ -260,6 +274,14 @@ Replikayı düzenleyicilerle aynı sürümde ya da daha yeni bir sürümde çal�
 `4.1.0` sürümü yeni bir eylem türü eklemez ve `@dineug/erd-editor/engine.js` giriş noktasını olduğu gibi bırakır; bu yüzden `4.0.0` sürümlü bir replika, tıpkı `4.1.0` sürümlü bir replika gibi, `4.1.0` sürümlü bir düzenleyicinin gönderdiği her değişikliği tutar.  
 `4.1.0` sürümünden itibaren [Bul ve değiştir](../../guide/guides/find-and-replace.md#replacing) içindeki `Replace` ve `Replace All`, `4.0.0` sürümlü bir replikanın zaten tuttuğu `index.changeName` ve `tableGroup.changeName` eylemleri aracılığıyla dizinleri ve tablo gruplarını da yeniden adlandırır.  
 [Gezginin](../../guide/guides/explorer.md) kendi durumu asla gönderilmez; onun yaptığı bir sekme değişikliği veya kaydırma da diğer tüm sekme değişiklikleri ve kaydırmalar gibi ulaşır. [Ortak düzenleme](./collaborative-editing.md) sayfasına bakın.
+
+`4.2.0` sürümünden itibaren tutulan eylemler arasında ayrıca `table.changeLogicalName`, `table.changeNameDerived`, `column.changeLogicalName`, `column.changeDomain`, `column.changeNameDerived`, `settings.changeNameViewMode` ile [Sözlük](../../guide/guides/dictionary.md) sayfalarındaki her düzenlemeyi, sıralamayı ve CSV içe aktarmasını taşıyan `dictionary.add`, `dictionary.update` ve `dictionary.remove` de vardır.  
+Ad görünümü değişikliklerinden replika yalnızca salt okunur olmayan bir düzenleyicinin `Name View` kilitli değilken yaptıklarını uygular, geri kalanını atar ([on@change](#onchange) bölümüne bakın).  
+Daha eski bir sürümden gelen bir depo bu eylemlerin hepsini atar; bu yüzden [mantıksal adları](../../guide/guides/logical-names.md), değer alanı bağlantılarını, her adın sözlüklerden gelip gelmediğini, sözcükleri, terimleri, değer alanlarını ve Ad görünümünü kaybeder.  
+Oturumdaki `4.2.0` sürümünden önceki bir düzenleyici, `4.2.0` sürümlü bir replikadan bunların bir kısmını yine de alıp götürebilir.  
+O düzenleyicide Şema SQL, GraphQL, DBML veya AML ile yapılan bir `Import` işlemi – `Import and Add` değil – replikanın sözcüklerini, terimlerini ve değer alanlarını boşaltır.  
+Bu düzenleyicinin bir yüklemeyi, bir `Import` işlemini veya `clear()` çağrısını geri alması, belgenin kendi kopyasını mantıksal adlar, değer alanı bağlantıları ve sözlükler olmadan replikaya yükler. [Sürümleri karıştırma](./collaborative-editing.md#mixing-releases) bölümüne bakın.  
+`@dineug/erd-editor/engine.js` giriş noktası öncekiyle aynı `createReplicationStore`, `ReplicationStore` ve `ReplicationChange` öğelerini dışa aktarır; `createReplicationStore` de aynı bağlamı alır.
 
 `4.0.0` sürümünden itibaren her iki yöntem, başka bir düzenleyici oturuma katıldığında bir düzenleyicinin yanıt olarak gönderdiği ortak çalışma kayıtlarını taşıyan `editor.mergeLWW` eylemini de uygular; böylece replika eşzamanlı düzenlemeleri düzenleyicilerin yaptığı gibi çözümler.  
 Bu eylem `value` değerinin hiçbir baytını değiştirmez ve `change` olayını tetiklemez.  

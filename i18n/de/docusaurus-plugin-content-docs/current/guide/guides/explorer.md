@@ -1,5 +1,5 @@
 ---
-sidebar_position: 8
+sidebar_position: 9
 description: Die Tabellen des Diagramms mit ihren Spalten, Indizes und Fremdschlüsseln, seine Tabellengruppen und seine Notizen in einem neben der ERD-Zeichenfläche angedockten Baum durchsehen und mit einem Klick zu jedem davon wechseln.
 ---
 
@@ -26,11 +26,11 @@ Nichts davon wird in der Datei gespeichert, im Verlauf aufgezeichnet, mit Mitbea
 - `Toggle Explorer` im Kontextmenü der Zeichenfläche: Klicken Sie mit der rechten Maustaste auf eine leere Stelle der ERD-Zeichenfläche außerhalb jeder [Tabellengruppe](./table-groups.md). Der Eintrag steht nach `New Table`, `New Memo` und `New Table Group` und vor `Relationship`.
 
 Die beiden Einträge `Toggle Explorer` zeigen rechts die Tastenkombination an.  
-Die Schaltfläche in der Symbolleiste, die Tastenkombination und der Eintrag in der Schnellsuche funktionieren auf jeder Registerkarte. Auf der Registerkarte Visualisierung, Schema SQL, Codegenerator oder Einstellungen wechseln sie zuerst zur Registerkarte ERD, da der Explorer nur dort angezeigt wird.
+Die Schaltfläche in der Symbolleiste, die Tastenkombination und der Eintrag in der Schnellsuche funktionieren auf jeder Registerkarte. Auf der Registerkarte Visualisierung, Schema SQL, Codegenerator, Wörterbuch oder Einstellungen wechseln sie zuerst zur Registerkarte ERD, da der Explorer nur dort angezeigt wird.
 
 Die Schaltfläche in der Symbolleiste öffnet und schließt nur den Bereich. Sie setzt den Textcursor nicht in das Suchfeld und lässt die Tabelleneigenschaften, die Designauswahl und die Sprachauswahl `Display Language` geöffnet.  
 Die Tastenkombination und die beiden Einträge `Toggle Explorer` öffnen den Explorer direkt in seiner Suche: Der Textcursor springt in das Suchfeld, dessen Text ausgewählt wird, und jeder der fünf Dialoge aus [Dialoge neben dem Explorer](#dialogs-beside-it) wird geschlossen. Was die Suche von einem Öffnen zum nächsten behält, steht unter [Öffnen und Schließen](./find-and-replace.md#opening-and-closing) in Suchen und Ersetzen.  
-Die Tastenkombination bewirkt nichts, solange eine Tabellenzelle, eine Notiz oder der Name einer Tabellengruppe bearbeitet wird.
+Die Tastenkombination bewirkt nichts, solange eine Tabellenzelle, eine Notiz oder der Name einer Tabellengruppe bearbeitet wird oder solange auf der Registerkarte [Wörterbuch](./dictionary.md#keys-on-the-tab) eine Zellbearbeitung geöffnet ist, einschließlich der Domänenliste eines Begriffs.
 
 Die Schaltfläche in der Symbolleiste erscheint gedrückt, solange der Explorer auf der Registerkarte ERD geöffnet und nicht durch den [Zen-Modus](#when-it-stands-aside) ausgeblendet ist. Solange das der Fall ist, schließen die Schaltfläche, die Tastenkombination und jeder der beiden Einträge `Toggle Explorer` den Explorer, und lag der Tastaturfokus im Bereich, geht er an den Editor zurück.  
 Solange die Schnellsuche oder einer der fünf Dialoge geöffnet ist, schließt die Tastenkombination den Explorer nie. Stattdessen schließt sie die Palette oder den Dialog und bringt den Tastaturfokus in das Suchfeld, wobei dessen Text ausgewählt wird und, falls der Explorer bereits angezeigt wurde, der aktuelle Treffer erhalten bleibt. Der Eintrag `Toggle Explorer` in der Schnellsuche macht keine solche Ausnahme: Wird er ausgeführt, schließt er die Palette und danach einen geöffneten Explorer.
@@ -84,22 +84,27 @@ In der Titelleiste steht `Explorer`, und sie enthält zwei Schaltflächen: `Coll
 
 Die oberste Ebene enthält drei Ordner in dieser Reihenfolge: `Tables`, `Table Groups` und `Memos`. Unter jeder Tabelle liegen ihre eigenen Ordner `Columns`, `Indexes` und `Foreign Keys`.  
 Ein Ordner ohne Inhalt wird nicht angezeigt, daher zeigt ein leeres Diagramm überhaupt keine Zeilen. `Table Groups` entfällt außerdem, solange [View Option](./table-related-functions.md#table-view-options) → `Table Groups` die Gruppen ausblendet, und `Memos`, solange View Option → `Memos` die Notizen ausblendet.  
-Eine Ordnerzeile zeigt ein Ordnersymbol, ihren Namen und ganz am Ende die Anzahl der Zeilen direkt darunter, sodass die Zahl neben `Tables` die Anzahl der Tabellen im Diagramm ist.
+Eine Ordnerzeile zeigt ein Ordnersymbol, ihren Namen und ganz am Ende die Anzahl der Zeilen direkt darunter, sodass die Zahl neben `Tables` die Anzahl der Tabellen im Diagramm ist. Die Zahl gruppiert ihre Tausender so, wie es die Anzeigesprache tut, immer mit den Ziffern 0 bis 9, etwa `1,234` auf Englisch und `1.234` auf Deutsch.
 
 Tabellen werden nach Namen sortiert aufgelistet, ohne Beachtung der Groß-/Kleinschreibung, und Tabellen mit demselben Namen behalten die Reihenfolge des Dokuments. Tabellengruppen werden ebenso aufgelistet, und ebenso die Tabellen unter jeder Gruppe. Die Spalten einer Tabelle behalten die eigene Reihenfolge der Tabelle, und ihre Indizes, ihre Fremdschlüssel und die Notizen behalten die des Dokuments.  
-Der Baum folgt dem Diagramm, während es sich ändert, sei es durch eine Änderung auf der Zeichenfläche, ein Rückgängigmachen oder Wiederholen, einen Import oder durch einen Mitbearbeiter oder einen Coding-Agenten, daher verschiebt das Umbenennen einer Tabelle ihre Zeile.
+Der Baum folgt dem Diagramm, während es sich ändert, sei es durch eine Änderung auf der Zeichenfläche, ein Rückgängigmachen oder Wiederholen, einen Import oder durch einen Mitbearbeiter oder einen Coding-Agenten, daher verschiebt das Umbenennen einer Tabelle ihre Zeile.  
+Die Reihenfolge richtet sich in jeder [Namensansicht](./logical-names.md#name-view) nach dem Namen, nie nach dem logischen Namen. Ein Wechsel der Ansicht beschriftet die Tabellen- und Spaltenzeilen neu, ohne eine davon zu verschieben, ebenso wie das Vergeben eines logischen Namens an eine Tabelle oder Spalte in der Ansicht `Logical Names` oder `Both Names`. Ein physischer Name, der aus einem neuen logischen Namen [abgeleitet](./dictionary.md#deriving-physical-names) wird, ist jedoch eine Umbenennung wie jede andere und kann daher die Zeile einer Tabelle verschieben.
 
 Jede Art von Zeile zeigt:
 
 - Eine Tabelle: ein Tabellensymbol und ihren Namen.
-- Eine Spalte: ein Schlüsselsymbol für eine Primärschlüssel- oder Fremdschlüsselspalte, in der Farbe, in der die eigene Schlüsselzelle der Tabelle einen Primärschlüssel, einen Fremdschlüssel oder beides darstellt, und ein Listensymbol für jede andere Spalte. Dann ihren Namen und, abgeschwächt, ihren Datentyp, gefolgt von `PK`, `FK` oder beidem, etwa `id` `BIGINT PK` oder `user_id` `BIGINT FK`.
+- Eine Spalte: ein Schlüsselsymbol für eine Primärschlüssel- oder Fremdschlüsselspalte, in der Farbe, in der die eigene Schlüsselzelle der Tabelle einen Primärschlüssel, einen Fremdschlüssel oder beides darstellt, und ein Listensymbol für jede andere Spalte. Dann ihren Namen und, abgeschwächt, ihren Datentyp, gefolgt von `PK`, `FK` oder beidem, etwa `id` `BIGINT PK` oder `user_id` `BIGINT FK`. Der angezeigte Typ ist unabhängig von der Namensansicht immer der Datentyp der Spalte, nie ihre [Domäne](./logical-names.md#the-domain-cell).
 - Ein Index: ein Indexsymbol und seinen Namen. Dann, abgeschwächt, `UNIQUE` für einen eindeutigen Index und seine Spalten in Klammern in Indexreihenfolge, mit `DESC` nach einer absteigenden Spalte, etwa `orders_user_idx` `UNIQUE (user_id DESC, total)` oder nur `(total)`.
 - Ein Fremdschlüssel: nur unter der Kindtabelle aufgeführt, derjenigen, die die Fremdschlüsselspalten enthält, und nur, solange die Elterntabelle im Diagramm ist. Sein Schlüsselsymbol übernimmt die Farbe der Verbindungslinie: die Farbe für Primär- und Fremdschlüssel bei einer [identifizierenden Beziehung](./relationship-editing.md#identifying-relationships), sonst die Fremdschlüsselfarbe. Er zeigt die Schlüsselspalten der Kindtabelle, durch Kommas getrennt, dann, abgeschwächt, `→` mit der Elterntabelle und ihren Spalten, etwa `user_id` `→ users(id)`.
 - Eine Tabellengruppe: einen Punkt in der Farbe der Gruppe, grau bei einer Gruppe ohne Farbe, und ihren Namen. Ihre Tabellen werden darunter nach Namen aufgelistet, und jeder dieser Einträge wechselt zu seiner Tabelle. Eine Gruppe ohne Tabellen hat nichts zum Ausklappen.
 - Eine Notiz: ein Haftnotizsymbol und die erste Zeile der Notiz.
 
-Ein leerer Name oder eine Notiz, deren erste Zeile leer ist, erscheint kursiv als `unnamed`.  
-In einem schmalen Bereich wird zuerst der abgeschwächte Text mit `…` gekürzt und erst dann der Name. Zeigen Sie mit dem Zeiger auf einen Namen oder seinen abgeschwächten Text, um ihn vollständig zu sehen.
+Tabellenzeilen, die unter einer Gruppe aufgeführten Tabellen und Spaltenzeilen folgen der Namensansicht – siehe [Außerhalb der Zeichenfläche](./logical-names.md#beyond-the-canvas). In der Ansicht `Both Names` lautet eine Spaltenzeile zum Beispiel `Total Amount` `total` `NUMERIC`: der logische Name, dann der Name und der Datentyp, beide abgeschwächt.  
+In jeder Ansicht zeigen Index- und Fremdschlüsselzeilen ihre Spalten mit deren Namen, und eine Fremdschlüsselzeile zeigt auch ihre Elterntabelle mit deren Namen.  
+Solange das Suchfeld Text enthält, zeigt eine Zeile, die nur in dem Namen gefunden wurde, den ihre Ansicht auslässt, auch diesen Namen, abgeschwächt – siehe [Die Ergebnisse](./find-and-replace.md#the-results).
+
+Ein leerer Name oder eine Notiz, deren erste Zeile leer ist, erscheint kursiv als `unnamed`. In den Ansichten `Logical Names` und `Both Names` erscheint eine Tabelle oder Spalte nur dann als `unnamed`, wenn auch ihr logischer Name leer ist.  
+In einem schmalen Bereich wird zuerst der abgeschwächte Text mit `…` gekürzt und erst dann der Name, mit dem die Zeile beginnt. Zeigen Sie mit dem Zeiger auf einen Namen oder seinen abgeschwächten Text, um ihn vollständig zu sehen.
 
 Anfangs ist nur `Tables` ausgeklappt. Klicken Sie auf eine Ordnerzeile oder drücken Sie darauf `Enter` oder `Space`, um sie ein- oder auszuklappen.  
 Der Pfeil am Anfang einer Zeile klappt diese Zeile ein oder aus, ohne irgendwohin zu wechseln. Jede Tabellenzeile hat einen, auch eine Tabelle ohne Inhalt darunter. `→` und `←` klappen ebenfalls ein und aus – siehe [Tasten im Explorer](#keys-in-the-explorer).  
@@ -110,8 +115,8 @@ Der Pfeil am Anfang einer Zeile klappt diese Zeile ein oder aus, ohne irgendwohi
 
 Klicken Sie auf eine Zeile oder drücken Sie `Enter` oder `Space`, während der Tastaturfokus darauf liegt, um zu dem zu wechseln, wofür sie auf der ERD-Zeichenfläche steht. Eine Ordnerzeile klappt nur ein oder aus, und die Pfeiltasten bewegen sich nur innerhalb des Baums.
 
-- Eine Tabellenzeile oder eine unter einer Gruppe aufgeführte Tabelle wählt allein diese Tabelle aus und holt sie in den Vordergrund. Die fokussierte Zelle wechselt zum Namen der Tabelle, sofern sie nicht bereits in dieser Tabelle liegt.
-- Eine Spaltenzeile wählt allein ihre Tabelle aus und setzt die fokussierte Zelle auf den Namen der Spalte.
+- Eine Tabellenzeile oder eine unter einer Gruppe aufgeführte Tabelle wählt allein diese Tabelle aus und holt sie in den Vordergrund. Sofern die fokussierte Zelle nicht bereits in dieser Tabelle liegt, wechselt sie zur ersten Zelle des Tabellenkopfs: zum Namen oder, in den Ansichten `Logical Names` und `Both Names`, zum logischen Namen.
+- Eine Spaltenzeile wählt allein ihre Tabelle aus und setzt die fokussierte Zelle auf den Namen der Spalte oder, in der Ansicht `Logical Names`, auf den logischen Namen, der an seiner Stelle gezeigt wird.
 - Eine Indexzeile wählt ihre Tabelle aus, wie eine Tabellenzeile. Der Index selbst wird nicht eigens markiert; Indizes werden in den [Tabelleneigenschaften](./table-related-functions.md#indexes) bearbeitet.
 - Eine Fremdschlüsselzeile holt beide Tabellen der Beziehung gemeinsam in den sichtbaren Bereich oder, wenn die beiden zu weit auseinanderliegen, um zusammen angezeigt zu werden, die Kindtabelle. Sie wählt allein die Kindtabelle mit ihren Fremdschlüsselspalten aus, setzt die fokussierte Zelle auf die erste davon und hebt die Verbindungslinie der Beziehung hervor – siehe [Verbindungslinien lesen](./relationship-editing.md#reading-a-connector).
 - Eine Tabellengruppenzeile holt den Rahmen der Gruppe, ausgerichtet an seiner Titelleiste, in den sichtbaren Bereich, wählt allein die Gruppe aus und holt sie mit ihren Tabellen in den Vordergrund.
@@ -119,7 +124,7 @@ Klicken Sie auf eine Zeile oder drücken Sie `Enter` oder `Space`, während der 
 
 Die Ansicht bewegt sich nach der Regel, die für jeden Sprung gilt: Der Zoom ändert sich nie, und die Zeichenfläche scrollt nur, wenn das, wozu Sie wechseln, nicht bereits gut zu sehen ist – siehe [Wohin ein Sprung führt](./table-related-functions.md#where-a-jump-lands).  
 Das Wechseln zu einer Zeile schließt zuerst die Tabelleneigenschaften, falls sie geöffnet sind, und startet oder beendet nie eine Beziehung, die gerade gezeichnet wird.  
-Solange das Suchfeld Text enthält, wechselt eine Zeile, deren eigener Name einen Treffer enthält, oder eine, die einen Auszug aus einem Kommentar oder einer Notiz zeigt, stattdessen zu diesem Treffer – siehe [Zu einem Treffer wechseln](./find-and-replace.md#going-to-a-match).
+Solange das Suchfeld Text enthält, wechselt eine Zeile, deren Name oder logischer Name einen Treffer enthält, oder eine, die einen Auszug aus einem Kommentar oder einer Notiz zeigt, stattdessen zu ihrem ersten Treffer – siehe [Zu einem Treffer wechseln](./find-and-replace.md#going-to-a-match).
 
 Nach einem Klick bleibt der Tastaturfokus im Baum, daher erreichen `Delete`, `Backspace` und die anderen Bearbeitungstasten die neue Auswahl erst, wenn Sie `Escape` drücken oder auf die Zeichenfläche klicken – siehe [Tasten im Explorer](#keys-in-the-explorer).
 

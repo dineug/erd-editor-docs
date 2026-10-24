@@ -13,9 +13,9 @@ description: MCP 伺服器如何決定是在編輯器（VS Code、Obsidian 或 J
 | 找到的結果 | 編輯的行為 |
 | --- | --- |
 | 工作區、儲存庫或已開啟的專案包含該文件的編輯器，或已開啟該文件的編輯器 | **即時**。必要時在 ERD Editor 中開啟文件，加入編輯工作階段，並在其中套用變更。編輯會立即出現，並會像您自己的編輯一樣由編輯器儲存，請參閱[儲存](#saving)。 |
-| 沒有編輯器 | **無介面**。載入檔案、套用變更，然後取代該檔案。`erd_save` 無事可做。 |
+| 沒有編輯器 | **無介面**。載入檔案、套用變更，並在回應之前取代該檔案，因此結果會顯示 `saved: true`，而 `erd_save` 無事可做。 |
 | hub 已關閉的編輯器 | **拒絕**。讀取仍可運作，會從磁碟讀取。在編輯器開啟該檔案時寫入檔案的變更，可能會被該編輯器的下一次儲存覆寫，因此伺服器不會寫入任何內容。 |
-| hub 已開啟，但使用的協定與伺服器不同的編輯器：搭配伺服器 `1.0.0` 時，為 `3.x` 的 VS Code 擴充功能、`0.x` 的 Obsidian 外掛程式，或 `0.9.0` 或 `0.10.0` 的 JetBrains 外掛程式；搭配 `1.0.0` 之前的伺服器時，為 `4.0.0` 或更新版本的擴充功能，或 `1.0.0` 或更新版本的外掛程式 | **拒絕**，包括讀取，錯誤碼為 `protocolMismatch`。訊息會指出需要更新的一方：擴充功能或外掛程式，或是伺服器，請參閱[更新](./installation.md#updating)。 |
+| hub 已開啟，但使用的協定與伺服器不同的編輯器：搭配伺服器 `1.0.0` 或更新版本時，為 `3.x` 的 VS Code 擴充功能、`0.x` 的 Obsidian 外掛程式，或 `0.9.0` 或 `0.10.0` 的 JetBrains 外掛程式；搭配 `1.0.0` 之前的伺服器時，為 `4.0.0` 或更新版本的擴充功能，或 `1.0.0` 或更新版本的外掛程式 | **拒絕**，包括讀取，錯誤碼為 `protocolMismatch`。訊息會指出需要更新的一方：擴充功能或外掛程式，或是伺服器，請參閱[更新](./installation.md#updating)。 |
 | 在 Windows 上，以同一檔案的另一個路徑持有該文件的編輯器：代理程式透過這台電腦的網路共用或對應的網路磁碟機指定該文件，例如 `\\localhost\C$\…`，而編輯器以其磁碟機路徑持有它，或反之亦然 | **拒絕**，包括讀取，錯誤碼為 `invalidPath`。訊息會指出編輯器持有該文件所用的路徑；請以該路徑再呼叫一次。 |
 | 在 Windows 上，Windows 不讓代理程式存取的編輯器：在代理程式並非以系統管理員身分執行時以系統管理員身分啟動的編輯器，或代理程式在沙箱中執行時的任何編輯器 | **拒絕**，包括讀取，錯誤碼為 `hubUnreachable`，並附上說明原因的訊息。請以相同的權限執行編輯器和代理程式，例如不以系統管理員權限重新啟動編輯器。 |
 
@@ -35,6 +35,8 @@ description: MCP 伺服器如何決定是在編輯器（VS Code、Obsidian 或 J
 
 讀取絕不會開啟編輯器。文件尚未開啟時，編輯會在 ERD Editor 中開啟該文件，且不會奪走鍵盤焦點。
 
+VS Code 擴充功能為 `4.2.0` 之前版本，或 Obsidian 或 JetBrains 外掛程式為 `1.2.0` 之前版本的編輯器，仍會即時接收代理程式的編輯，但既不會顯示也不會保留代理程式寫入的邏輯名稱、定義域連結和字典列，請參閱[更新](./installation.md#updating)。
+
 ### 儲存 {#saving}
 
 每個編輯器儲存代理程式編輯的方式，都與儲存您自己的編輯相同。
@@ -51,7 +53,7 @@ JetBrains IDE 會在編輯停止後不到一秒內寫入這些編輯，而關閉
 當編輯器無法確認這一點，或未寫入檔案時，它會以 `notSaved` 被拒絕：檔案在磁碟上已變更時，VS Code 會讓分頁保持未儲存，而 JetBrains IDE 則是無法寫入檔案，例如在對話方塊開啟期間，或檔案無法寫入時。
 
 在 VS Code 和 JetBrains IDE 中，對沒有任何待儲存內容的文件呼叫 `erd_save` 會成功，並讓檔案保持原樣。
-每項編輯都已儲存後就屬於這種情況（JetBrains IDE 會自行儲存），而只要之後的每項變更都是被[鎖定](../guide/guides/settings.md#lock)擋在檔案之外的變更，例如在 `Viewport` 鎖定時捲動或縮放，或在 `Canvas Type` 鎖定時切換索引標籤，情況就會維持如此。所有鎖定預設為開啟。
+每項編輯都已儲存後就屬於這種情況（JetBrains IDE 會自行儲存），而只要之後的每項變更都是被[鎖定](../guide/guides/settings.md#lock)擋在檔案之外的變更，例如在 `Viewport` 鎖定時捲動或縮放、在 `Canvas Type` 鎖定時切換索引標籤，或在 `Name View` 鎖定時切換[名稱顯示](../guide/guides/logical-names.md#name-view)，情況就會維持如此。所有鎖定預設為開啟。
 即使如此，JetBrains IDE 無法寫入的檔案仍會被拒絕。
 
 若編輯器在代理程式最後一次編輯之後關閉了該文件，代理程式的下一次呼叫會附上一則說明：只有在編輯器關閉前已儲存，這些編輯才會存在於檔案中。
@@ -63,7 +65,7 @@ JetBrains IDE 會在編輯停止後不到一秒內寫入這些編輯，而關閉
 
 有幾種編輯不會在編輯器中產生復原步驟：[設定工具](./tools.md#settings)中的 `erd_set_database` 和 `erd_set_database_name`，以及 `erd_resize_memo`。
 將群組總共移動不到 20 像素（水平與垂直距離相加）的 `erd_move_table_group` 也不會產生復原步驟，不過群組會停留在移動後的位置。
-未變更任何內容的呼叫也不會產生復原步驟：`erd_set_column_primary_key`、`erd_set_column_unique`、`erd_set_column_not_null`、`erd_set_column_auto_increment`、`erd_set_index_unique` 或 `erd_set_index_column_order` 設定的值與文件已有的值相同；`erd_add_index_column` 加入的欄位已在索引中；`erd_set_table_group` 指定的資料表已在該群組中（或在 `groupId` 為 `null` 時，已不在任何群組中）；`erd_move_table_group` 移動到群組已在的位置；`erd_resize_table_group` 調整成群組已有的矩形；在沒有任何資料表的文件上呼叫 `erd_sort_tables`；或 `mode` 為 `append` 且未帶入任何資料表的匯入（對 `erd_import_json` 而言，是未帶入任何資料表也未帶入任何備忘錄）。
+未變更任何內容的呼叫也不會產生復原步驟：`erd_set_column_primary_key`、`erd_set_column_unique`、`erd_set_column_not_null`、`erd_set_column_auto_increment`、`erd_set_index_unique` 或 `erd_set_index_column_order` 設定的值與文件已有的值相同；`erd_add_index_column` 加入的欄位已在索引中；`erd_set_table_group` 指定的資料表已在該群組中（或在 `groupId` 為 `null` 時，已不在任何群組中）；`erd_move_table_group` 移動到群組已在的位置；`erd_resize_table_group` 調整成群組已有的矩形；在沒有任何資料表的文件上呼叫 `erd_sort_tables`；`erd_set_table_logical_name` 或 `erd_set_column_logical_name` 設定的邏輯名稱與資料表或欄位已有的相同，且依其產生名稱不會變更任何內容；`erd_set_column_domain` 指定的定義域是欄位已連結的定義域，且欄位已具有該定義域的類型，[關聯資料類型同步](../guide/guides/settings.md#relationship-datatype-sync)也不會沿著其關聯重新設定任何欄位的類型；`erd_update_word`、`erd_update_term` 或 `erd_update_domain` 只傳入該列已有的值，除非對尚無物理名稱的術語傳入其 `name`，且其詞彙可組成一個物理名稱；`erd_derive_physical_names` 所涵蓋的每個具有邏輯名稱的名稱，都已是[字典](./tools.md#dictionaries)所提供的名稱且已標示為由字典產生；或 `mode` 為 `append` 且未帶入任何資料表的匯入（對 `erd_import_json` 而言，是未帶入任何資料表也未帶入任何備忘錄）。
 `erd_undo` 會略過這些編輯，並在其結果中列出它們。
 其他編輯，例如 `erd_change_relationship_type`、`erd_change_relationship_on_delete`、`erd_change_relationship_on_update`、`erd_change_table_group_name`、`erd_change_table_group_color` 和 `erd_set_ddl_script`，即使設定的值與文件已有的值相同，也會產生復原步驟。
 
@@ -91,7 +93,7 @@ JetBrains IDE 會在編輯停止後不到一秒內寫入這些編輯，而關閉
 
 ## 無介面 {#headless}
 
-沒有編輯器為該文件提供服務時，每次編輯都會載入檔案、套用變更，然後將檔案寫回。
+沒有編輯器為該文件提供服務時，每次編輯都會載入檔案、套用變更，並在回應之前將檔案寫回，因此其結果會顯示 `saved: true`，請參閱[結果](./tools.md#results)。
 寫入會先寫到文件旁一個名為 `.<name>.<id>.tmp` 的暫存檔案，再以它取代文件，因此文件絕不會處於寫到一半的狀態，但下文所述 Windows 上就地寫入的情況除外。
 
 在最後這一步之前，伺服器會檢查檔案在呼叫期間是否已在磁碟上變更。
@@ -107,6 +109,8 @@ JetBrains IDE 會在編輯停止後不到一秒內寫入這些編輯，而關閉
 
 - 具有與其資料夾不同之專屬權限的文件會就地寫入，而不是被取代，以保留這些權限，且暫存檔案會在之後移除。在寫入期間讀取該文件的程式，可能會讀到無法剖析的文字。
 - 被其他程式開啟佔用的檔案無法被取代，因此伺服器會在最多兩秒內重試。每次重試都會先重新尋找編輯器，而在此期間開始為該文件提供服務的編輯器會以 `hubAppeared` 拒絕寫入，若其 hub 已關閉則以 `blocked` 拒絕。若兩秒後檔案仍被佔用，則不會寫入任何內容，檔案會重新載入，且該呼叫會失敗，並附上引述系統錯誤的訊息。
+
+`1.1.0` 之前的伺服器讀取文件時不會包含其邏輯名稱、其欄位的定義域連結，以及其詞彙、術語和定義域，因此它寫入檔案的第一次編輯會將這些內容省略。請依照[更新](./installation.md#updating)中的說明更新伺服器。
 
 ## 拒絕 {#refused}
 
@@ -130,7 +134,7 @@ JetBrains IDE 也會以 `hubDisabled` 拒絕變更僅由其不信任的專案所
 
 文件以 `path` 指定，可以是絕對路徑，或相對於伺服器工作目錄的路徑。
 
-- 新文件為 `.erd.json`。使用 `create` 的 `erd_open_document` 會建立檔案，並為沒有副檔名的名稱加上 `.erd.json`。與編輯器中的新圖表一樣，新文件的每個[鎖定](../guide/guides/settings.md#lock)都處於開啟狀態，因此在編輯器中捲動、縮放、切換索引標籤，或選擇其他程式碼產生器語言、名稱大小寫或引號類型，都絕不會變更檔案。沒有任何工具能單獨開啟或關閉某個鎖定：這需在編輯器的「設定」索引標籤中進行。`replace` 模式的 `erd_import_json` 會將所有鎖定取代為其載入之文件的鎖定，請參閱[匯入](./tools.md#import)。
+- 新文件為 `.erd.json`。使用 `create` 的 `erd_open_document` 會建立檔案，並為沒有副檔名的名稱加上 `.erd.json`。與編輯器中的新圖表一樣，新文件的每個[鎖定](../guide/guides/settings.md#lock)都處於開啟狀態，因此在編輯器中捲動、縮放、切換索引標籤、切換「名稱顯示」，或選擇其他程式碼產生器語言、名稱大小寫或引號類型，都絕不會變更檔案。沒有任何工具能單獨開啟或關閉某個鎖定：這需在編輯器的「設定」索引標籤中進行。`replace` 模式的 `erd_import_json` 會將所有鎖定取代為其載入之文件的鎖定，請參閱[匯入](./tools.md#import)。
 - 現有的 `.erd`、`.vuerd` 和 `.vuerd.json` 檔案也能開啟。具有其他任何副檔名的路徑會以 `invalidPath` 被拒絕。
 - 在 Windows 上，包含 Windows 不會依原樣儲存之名稱的路徑，會在讀取或寫入文件之前以 `invalidPath` 被拒絕，包括讀取：含有冒號或其他 Windows 拒絕之字元的名稱，例如 `orders:v2.erd`；裝置名稱，例如 `NUL.erd` 或 `CON.erd`，不論大小寫；或以句點或空格結尾的名稱。請重新命名，例如以 `-` 取代 `:`。
 - 不是編輯器可讀取之文件的檔案，例如殘留合併衝突標記的檔案，會以 `invalidDocument` 被拒絕並保持原樣。它絕不會被當作空白圖表載入後再寫回。

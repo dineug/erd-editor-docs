@@ -13,9 +13,9 @@ description: MCP 服务器如何在编辑器（VS Code、Obsidian 或 JetBrains 
 | 找到的情况 | 编辑的行为 |
 | --- | --- |
 | 某个编辑器的工作区、仓库或已打开的项目包含该文档，或者该编辑器已打开该文档 | **实时模式。** 必要时在 ERD Editor 中打开文档，加入编辑会话，并在那里应用变更。编辑会立即显示，并像编辑器保存你自己的编辑那样被保存，参见[保存](#saving)。 |
-| 没有编辑器 | **无头模式。** 加载文件、应用变更，然后替换该文件。`erd_save` 无事可做。 |
+| 没有编辑器 | **无头模式。** 加载文件、应用变更，并在应答之前替换该文件，因此结果中会注明 `saved: true`，`erd_save` 无事可做。 |
 | hub 已关闭的编辑器 | **拒绝编辑。** 仍可从磁盘读取。绕过打开的编辑器写入文件的变更可能会在其下次保存时被覆盖，因此服务器不写入任何内容。 |
-| hub 已开启、但所用协议与服务器不同的编辑器：对于服务器 `1.0.0`，即 VS Code 扩展 `3.x`、Obsidian 插件 `0.x`，或者 JetBrains 插件 `0.9.0` 或 `0.10.0`；对于 `1.0.0` 之前的服务器，即扩展 `4.0.0` 或更高版本，或者插件 `1.0.0` 或更高版本 | **拒绝编辑**，读取也不例外，以 `protocolMismatch` 被拒绝。消息会指出需要更新的一方：扩展或插件，或者服务器，参见[更新](./installation.md#更新)。 |
+| hub 已开启、但所用协议与服务器不同的编辑器：对于服务器 `1.0.0` 或更高版本，即 VS Code 扩展 `3.x`、Obsidian 插件 `0.x`，或者 JetBrains 插件 `0.9.0` 或 `0.10.0`；对于 `1.0.0` 之前的服务器，即扩展 `4.0.0` 或更高版本，或者插件 `1.0.0` 或更高版本 | **拒绝编辑**，读取也不例外，以 `protocolMismatch` 被拒绝。消息会指出需要更新的一方：扩展或插件，或者服务器，参见[更新](./installation.md#更新)。 |
 | 在 Windows 上，以同一文件的另一条路径持有该文档的编辑器：智能体通过本机的网络共享或映射驱动器指定该文档（例如 `\\localhost\C$\…`），而编辑器以其驱动器路径持有它，或者反过来 | **拒绝编辑**，读取也不例外，以 `invalidPath` 被拒绝。消息会指出编辑器持有该文档所用的路径；请用该路径再次调用。 |
 | 在 Windows 上，Windows 不允许智能体访问的编辑器：智能体未以管理员身份运行时以管理员身份启动的编辑器，或者智能体在沙箱中运行时的任何编辑器 | **拒绝编辑**，读取也不例外，以 `hubUnreachable` 被拒绝，并附带一条说明原因的消息。请以相同的权限运行编辑器和智能体，例如不使用管理员权限重新启动编辑器。 |
 
@@ -35,6 +35,8 @@ description: MCP 服务器如何在编辑器（VS Code、Obsidian 或 JetBrains 
 
 读取从不会打开编辑器。文档尚未打开时，编辑会在 ERD Editor 中打开它，且不会夺取键盘焦点。
 
+装有 `4.2.0` 之前的 VS Code 扩展，或 `1.2.0` 之前的 Obsidian 或 JetBrains 插件的编辑器，仍会实时接收智能体的编辑，但既不会显示也不会保留智能体写入的逻辑名、域关联和词典行，参见[更新](./installation.md#更新)。
+
 ### 保存 {#saving}
 
 每个编辑器都会像保存你自己的编辑一样保存智能体的编辑。
@@ -51,7 +53,7 @@ JetBrains IDE 会在编辑停止后不到一秒写入它们，关闭标签页时
 当编辑器无法确认这一点，或者没有写入文件时，它会以 `notSaved` 被拒绝：VS Code 会在文件于磁盘上发生变化时让标签页保持未保存状态，而 JetBrains IDE 未能写入文件，例如在有对话框打开期间，或者文件无法写入时。
 
 在 VS Code 和 JetBrains IDE 中，对没有任何待保存内容的文档调用 `erd_save` 会成功，并让文件保持原样。
-每次编辑都已保存时（JetBrains IDE 会自行做到这一点）就属于这种情况；只要此后的每次变更都是被[锁定](../guide/guides/settings.md#锁定)挡在文件之外的变更，例如在 `Viewport` 锁定时滚动或缩放，或者在 `Canvas Type` 锁定时切换标签页，情况就一直如此。所有锁定默认都处于开启状态。
+每次编辑都已保存时（JetBrains IDE 会自行做到这一点）就属于这种情况；只要此后的每次变更都是被[锁定](../guide/guides/settings.md#锁定)挡在文件之外的变更，例如在 `Viewport` 锁定时滚动或缩放、在 `Canvas Type` 锁定时切换标签页，或者在 `Name View` 锁定时切换[名称显示](../guide/guides/logical-names.md#name-view)，情况就一直如此。所有锁定默认都处于开启状态。
 即便如此，JetBrains IDE 无法写入的文件仍会被拒绝。
 
 当编辑器在智能体最后一次编辑之后关闭了该文档时，智能体的下一次调用会附带一条说明：只有在编辑器关闭之前已经保存，这些编辑才会存在于文件中。
@@ -63,7 +65,7 @@ JetBrains IDE 会在编辑停止后不到一秒写入它们，关闭标签页时
 
 有几种编辑不会在编辑器中产生 Undo 记录：[设置工具](./tools.md#settings)中的 `erd_set_database` 和 `erd_set_database_name`，以及 `erd_resize_memo`。
 将分组移动总计不足 20 像素（横向与纵向的距离相加）的 `erd_move_table_group` 也不会产生 Undo 记录，不过分组会停留在移动后的位置。
-不改变任何内容的调用同样不会产生 Undo 记录：`erd_set_column_primary_key`、`erd_set_column_unique`、`erd_set_column_not_null`、`erd_set_column_auto_increment`、`erd_set_index_unique` 或 `erd_set_index_column_order` 所设置的值与文档已有的值相同；`erd_add_index_column` 添加索引中已有的列；`erd_set_table_group` 指定的表已在该分组中（或者 `groupId` 为 `null` 时，表已不在任何分组中）；`erd_move_table_group` 移动到分组已在的位置；`erd_resize_table_group` 设置的矩形与分组已有的矩形相同；在没有任何表的文档上调用 `erd_sort_tables`；或者 `mode` 为 `append`、却没有带来任何表的导入（对于 `erd_import_json`，则是既没有带来表，也没有带来备注）。
+不改变任何内容的调用同样不会产生 Undo 记录：`erd_set_column_primary_key`、`erd_set_column_unique`、`erd_set_column_not_null`、`erd_set_column_auto_increment`、`erd_set_index_unique` 或 `erd_set_index_column_order` 所设置的值与文档已有的值相同；`erd_add_index_column` 添加索引中已有的列；`erd_set_table_group` 指定的表已在该分组中（或者 `groupId` 为 `null` 时，表已不在任何分组中）；`erd_move_table_group` 移动到分组已在的位置；`erd_resize_table_group` 设置的矩形与分组已有的矩形相同；在没有任何表的文档上调用 `erd_sort_tables`；`erd_set_table_logical_name` 或 `erd_set_column_logical_name` 设置的逻辑名与表或列已有的逻辑名相同，且由其生成物理名不会改变任何内容；`erd_set_column_domain` 指定的域正是该列已关联的域，且该列已具有该域的类型，[关系数据类型同步](../guide/guides/settings.md#关系数据类型同步)也不会沿关系修改任何列的类型；`erd_update_word`、`erd_update_term` 或 `erd_update_domain` 传入的只有该行已有的值，除非为没有物理名的术语传入了其 `name`，且其词根能组合出一个物理名；`erd_derive_physical_names` 所涵盖的每个带有逻辑名的名称都已是[词典](./tools.md#dictionaries)给出的名称，并且已标记为由词典生成；或者 `mode` 为 `append`、却没有带来任何表的导入（对于 `erd_import_json`，则是既没有带来表，也没有带来备注）。
 `erd_undo` 会跳过这些编辑，并在结果中列出它们。
 其他编辑，例如 `erd_change_relationship_type`、`erd_change_relationship_on_delete`、`erd_change_relationship_on_update`、`erd_change_table_group_name`、`erd_change_table_group_color` 和 `erd_set_ddl_script`，即使所设置的值与文档已有的值相同，也会产生 Undo 记录。
 
@@ -91,7 +93,7 @@ JetBrains IDE 会在编辑停止后不到一秒写入它们，关闭标签页时
 
 ## 无头模式
 
-没有编辑器为该文档提供服务时，每次编辑都会加载文件、应用变更，然后把文件写回。
+没有编辑器为该文档提供服务时，每次编辑都会加载文件、应用变更，并在应答之前把文件写回，因此其结果中会注明 `saved: true`，参见[结果](./tools.md#结果)。
 写入会先写到文档旁边一个名为 `.<name>.<id>.tmp` 的临时文件中，再用它替换文档，因此文档绝不会处于写了一半的状态，但下文所述 Windows 上就地写入的情况除外。
 
 在最后这一步之前，服务器会检查文件在调用期间是否在磁盘上发生了变化。
@@ -107,6 +109,8 @@ JetBrains IDE 会在编辑停止后不到一秒写入它们，关闭标签页时
 
 - 拥有不同于其文件夹的独立权限的文档会被就地写入而不是被替换，以便保留这些权限，临时文件随后会被删除。在写入期间读取该文档的程序可能会读到无法解析的文本。
 - 被其他程序打开占用的文件无法被替换，因此服务器会在最多两秒内重试。每次重试都会先重新查找编辑器，而在此期间开始为该文档提供服务的编辑器会以 `hubAppeared` 拒绝写入，如果其 hub 已关闭则以 `blocked` 拒绝。如果两秒后文件仍被占用，则不写入任何内容，重新加载文件，调用会失败，并附带一条引用系统错误的消息。
+
+`1.1.0` 之前的服务器读取文档时不包含其逻辑名、列的域关联以及其中的词根、术语和域，因此它写入文件的第一次编辑就会将这些内容略去。请更新服务器，参见[更新](./installation.md#更新)。
 
 ## 拒绝编辑
 
@@ -130,7 +134,7 @@ JetBrains IDE 还会以 `hubDisabled` 拒绝修改仅由其不信任的项目持
 
 文档由 `path` 指定，可以是绝对路径，也可以是相对于服务器工作目录的路径。
 
-- 新文档为 `.erd.json`。带 `create` 的 `erd_open_document` 会创建文件，并为没有扩展名的名称加上 `.erd.json`。与编辑器中新建的图一样，新文档的所有[锁定](../guide/guides/settings.md#锁定)都处于开启状态，因此在编辑器中滚动、缩放、切换标签页，或者选择其他 Code Generator 语言、名称大小写或括号类型，永远不会改动文件。没有任何工具能单独开启或关闭某个锁定：这需要你在编辑器的 Settings 标签页中进行。以 `replace` 模式调用的 `erd_import_json` 会把所有锁定替换为它所加载的文档中的锁定，参见[导入](./tools.md#导入)。
+- 新文档为 `.erd.json`。带 `create` 的 `erd_open_document` 会创建文件，并为没有扩展名的名称加上 `.erd.json`。与编辑器中新建的图一样，新文档的所有[锁定](../guide/guides/settings.md#锁定)都处于开启状态，因此在编辑器中滚动、缩放、切换标签页、切换名称显示，或者选择其他 Code Generator 语言、名称大小写或括号类型，永远不会改动文件。没有任何工具能单独开启或关闭某个锁定：这需要你在编辑器的 Settings 标签页中进行。以 `replace` 模式调用的 `erd_import_json` 会把所有锁定替换为它所加载的文档中的锁定，参见[导入](./tools.md#导入)。
 - 已有的 `.erd`、`.vuerd` 和 `.vuerd.json` 文件同样可以打开。其他扩展名的路径会以 `invalidPath` 被拒绝。
 - 在 Windows 上，包含 Windows 无法按原样存储的名称的路径，会在读取或写入文档之前以 `invalidPath` 被拒绝，读取也不例外：包含冒号或其他 Windows 拒绝的字符的名称，例如 `orders:v2.erd`；设备名称，例如 `NUL.erd` 或 `CON.erd`，不区分大小写；或者以点或空格结尾的名称。请重命名，例如用 `-` 代替 `:`。
 - 编辑器无法读取的文件，例如残留合并冲突标记的文件，会以 `invalidDocument` 被拒绝并保持原样。它绝不会被当作空图加载后再写回。

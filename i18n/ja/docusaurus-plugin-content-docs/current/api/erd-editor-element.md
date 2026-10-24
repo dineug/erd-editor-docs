@@ -71,16 +71,23 @@ interface ErdEditorElement extends HTMLElement {
 `4.1.0` からは、ERD タブに[エクスプローラー](../guide/guides/explorer.md)があります。キャンバスの左にドッキングされたダイアグラムのツリーで、上部に検索と置換があります。エクスプローラーを開いたり、閉じたり、その状態を知らせたりする属性、プロパティ、メソッド、イベントはありません。エクスプローラーは、ツールバーの `Explorer` ボタン、クイック検索またはキャンバスのコンテキストメニューの `Toggle Explorer`、または [`findReplace`](#setkeybindingmap) のバインディングで開きます。  
 どの要素でも、エクスプローラーは閉じた状態で始まります。開いているかどうか、幅、折りたたみの状態、検索は、要素が存在する間、タブを切り替えても、`setInitialValue` を含むどの読み込みを行っても保たれ、`value`、`runtimeValue`、Undo の履歴、shared store のいずれにも含まれません。
 
+`4.2.0` からは、テーブルとカラムは名前とは別に[論理名](../guide/guides/logical-names.md)を持てます。タブと同じくドキュメントの設定である名前の表示は、キャンバスが名前、論理名、その両方のどれを描くかを決めます。  
+ツールバーには、`Code Generator` と `Settings` の間に[辞書](../guide/guides/dictionary.md)タブもあり、ドキュメントの単語、用語、ドメインと `Checks` シートを持ちます。辞書タブもほかと同じタブです。その `canvasType` である `'@dineug/erd-editor/builtin-dictionary'` は `Canvas Type` のロックが保持するため、辞書タブを表示した状態で保存したテキストは [setInitialValue](#setinitialvalue) で辞書タブのまま開き、辞書タブへの切り替えが `value` に書き込まれて [change](#change) を発行するのは、そのロックがオフの間だけです。辞書タブを開いたり、その状態を知らせたりする専用の属性、プロパティ、メソッド、イベントはありません。辞書タブでの編集はドキュメントの変更です。`value` に含まれ、[change](#change) を発行し、共同編集者に届きますが、その Undo と Redo はドキュメントの履歴ではなく、各シート自身の履歴で行われます。  
+タブ自身の状態、つまり表示しているシート（最初は `Domains`）と、各シートの検索、選択、スクロール、列幅は、要素が存在する間、タブを切り替えても、どの読み込みを行っても保たれ、`value`、`runtimeValue`、Undo の履歴、shared store のいずれにも含まれません。  
+`ErdEditorElement` のインターフェースにメンバーは増えていません。API に追加されたのは、[getSchemaSQL](#getschemasql) のオプションの `logicalNameAsComment`、12 個の[テーマのトークン](#settheme)、そしてエクスポートの [dictionaryRowChords](#dictionaryrowchords) です。
+
 ## readonly
 
 エディタの編集可否を設定します。  
-設定されている間は、`value` への代入、`clear()`、`setSchemaSQL()`、`setSchemaGraphQL()`、`setSchemaDBML()`、`setSchemaAML()`、`setSchemaJSON()`、Undo、Redo がすべて無視され、`change` イベントも発行されません。ドキュメントの読み込みには [setInitialValue](#setinitialvalue) を使用します。  
+設定されている間は、`value` への代入、`clear()`、`setSchemaSQL()`、`setSchemaGraphQL()`、`setSchemaDBML()`、`setSchemaAML()`、`setSchemaJSON()`、Undo、Redo（`4.2.0` からは辞書のシートのものを含みます）がすべて無視され、`change` イベントも発行されません。ドキュメントの読み込みには [setInitialValue](#setinitialvalue) を使用します。  
 表示は引き続き動作します。拡大・縮小、表示位置の移動、ハンドツール、Zen モード、キャンバスのタブ、テーブルへのフォーカスを含む [Visualization](../guide/guides/visualization.md) タブの両方のモード、データベースベンダー、SQL とコード生成の出力設定はそのまま適用されるため、読み取り専用のビューアーでも別のベンダー向けの SQL を書き出したり、生成されたコードを読んだりできます。  
 `4.1.0` からは[エクスプローラー](../guide/guides/explorer.md#read-only-editors)も開き、その行を選ぶと、編集できるエディタと同じように、その行が表す対象へ移動します。上部の[検索と置換](../guide/guides/find-and-replace.md#read-only-editors)は検索だけを行い、`Toggle Replace` の矢印も Replace の行もありません。一致箇所へ移動すると、引き続きその一致箇所が表示され、選択されます。パネルのタイトルは `Explorer` で、ツールバーのボタンのツールチップは、どのエディタでも `Explorer (Ctrl + F)` (Windows/Linux) または `Explorer (⌘ + F)` (Mac) です。`3.10.0` から `4.0.0` までは、検索と置換は、ヘッダーに `Find` と表示される検索専用のフローティングパネルとして開きました。  
 テーブルのプロパティも引き続き開きます。`3.10.0` からは、タイトルの横に `Read only` のバッジが表示され、`Indexes` タブでは何も編集できません。[テーブルのプロパティ](../guide/guides/table-related-functions.md#table-properties)を参照してください。  
 `4.0.0` からは、読み取り専用のエディタには [`Import and Add`](../guide/guides/file-import-export.md#import-and-add)、`New Table Group`、`Group selected tables`、`Remove from group`（[テーブルグループ](../guide/guides/table-groups.md#読み取り専用のエディタ)を参照してください）、[`Map Columns`](../guide/guides/relationship-editing.md#map-columns) がなく、[ウェルカム画面](#enablewelcomescreen)も表示されません。設定タブのロックのボタンを押しても何も変わらず、Schema SQL タブの `Before tables` と `After tables` のスクリプトは編集できません。  
 `4.1.0` からは、[キャンバスツールバー](../guide/guides/table-related-functions.md#canvas-toolbar)にも `New Table`、`New Memo`、`New Table Group` のボタンが表示されず、`addTableGroup` と `groupSelectedTables` のバインディングは何もしません。  
-Schema SQL タブの `This window only` の選択、つまり `Statements`、`Header`、`Tables` は保存されることがなく、引き続き適用されます。[`Export image`](../guide/guides/file-import-export.md#画像) ダイアログ、テーマビルダー、Display Language のピッカーも同様です。テーマビルダーや Display Language のピッカーで選ぶと、引き続き [changePresetTheme](#changepresettheme) または [changeLocale](#changelocale) が発行されます。  
+`4.2.0` からは、[名前の表示](../guide/guides/logical-names.md#read-only-editors)は引き続きどのピッカーからも切り替えられますが、変わるのはそのエディタの画面だけです。ロックの状態にかかわらず、切り替えが共同編集者に届くことはありません。Flow の `Previous table` と `Next table` は、そのボタンでも Undo と Redo のキーでも、引き続き前後に移動します。  
+[辞書](../guide/guides/dictionary.md#read-only-editors)タブも引き続き開きます。シートの切り替え、検索、選択、スクロール、コピーができ、`Checks` シートの行は引き続きその行が示す対象へ移動します。どのセルも編集、貼り付け、消去を受け付けず、タブには `Add Row`、`Delete Rows`、`Import CSV`、`Export CSV` のツールもグリッドのメニューも表示されず、行のキーの組み合わせを押しても、行は挿入も削除もされません。テーブルのメニュー、キャンバスのメニュー、クイック検索には [`Derive Physical Names Again`](../guide/guides/dictionary.md#derive-physical-names-again) も `Derive Physical Name Again` もありません。  
+Schema SQL タブの `This window only` の選択、つまり `Statements`、`Header`、`4.2.0` からは `Write logical names into empty comments`、`Tables` は保存されることがなく、引き続き適用されます。[`Export image`](../guide/guides/file-import-export.md#画像) ダイアログ、テーマビルダー、Display Language のピッカーも同様です。テーマビルダーや Display Language のピッカーで選ぶと、引き続き [changePresetTheme](#changepresettheme) または [changeLocale](#changelocale) が発行されます。  
 属性名のみの指定、`=""`、`="true"` はいずれも `true` として扱われます。`="false"` は `false` として扱われ、HTML の慣用表現である `readonly="readonly"` を含むその他の文字列も同様です。
 
 ```js
@@ -173,8 +180,9 @@ editor.setAttribute('enable-welcome-screen', 'true');
 
 現在のドキュメントを、エディタが定義する[スキーマ](./advanced/schema.md)の JSON 文字列として取得します。  
 `4.0.0` からは、保存形式、つまりファイルが保持する形式のドキュメントです。これは `json` の書き出しが書き込む内容であり、公式のホストが保存する内容でもあります。含まれるのは現存するエンティティだけで、削除したエンティティ、重なり順、そして計測した幅、キーのマーク、リレーションシップの接続位置のようにエディタが自分で求めるものは含まれません。エンティティは決まった順序のキーで並び、2 つのスペースでインデントされ、改行で終わるため、同じドキュメントからは常に同じバイト列が得られます。  
-[ロック](../guide/guides/settings.md#ロック)がオンの設定は、画面の表示ではなく、ロックされた値で書き出されます。`Viewport` のロックは `originX`、`originY`、`zoomLevel` を保持し、`Canvas Type`、`Language`、`Table Name Case`、`Column Name Case`、`Bracket Type` はそれぞれ自身の設定を保持します。それ以外の設定は現在の値のまま書き出され、`lockSettings` は常に書き出されます。ビットについては [Settings](./advanced/schema.md#settings) を参照してください。  
-要素に値を渡す前に表示されるドキュメントでも、空の値から読み込んだドキュメントでも、新しいドキュメントではすべてのロックがオンです。その `value` は、対応するロックをオフにするまで、表示の原点を `0, 0`、拡大・縮小のレベルを `1`、タブを ERD タブ、Code Generator の言語、名前のケース、括弧の種類を既定値のまま保ちます。  
+`4.2.0` からは、空のものも含みません。つまり、空の `doc` のリスト、空のコレクション、何も持たない辞書の行、そして名前、コメント、データ型、既定値、色のようなエンティティの空のテキストフィールドです。テーブルの `columnIds` のようなエンティティ内のリストは、空でも書き出されます。新しいドキュメントの `doc` は `{}` で、`collections` はないため、存在しないフィールド、リスト、コレクションは空として読み取ります。テーブルとカラムの論理名と、名前を生成したかどうかのフラグ、カラムのドメインの紐付け、そして単語、用語、ドメインを含み、各辞書は、フィールド名を並べた 1 つのヘッダーの後に、シートの順で 1 行に 1 つずつ行を続けて書き出されます。[保存形式とランタイム値](./advanced/schema.md#保存形式とランタイム値)を参照してください。  
+[ロック](../guide/guides/settings.md#ロック)がオンの設定は、画面の表示ではなく、ロックされた値で書き出されます。`Viewport` のロックは `originX`、`originY`、`zoomLevel` を保持し、`Canvas Type`、`Language`、`Table Name Case`、`Column Name Case`、`Bracket Type`、そして `4.2.0` からは `Name View` がそれぞれ自身の設定を保持します。名前の表示は `nameViewMode` として、`'physical'` でない間だけ書き出されます。それ以外の設定は現在の値のまま書き出され、`lockSettings` は常に書き出されます。ビットについては [Settings](./advanced/schema.md#settings) を参照してください。`Name View` のロックのビットは、ほかとは逆の意味になります。  
+要素に値を渡す前に表示されるドキュメントでも、空の値から読み込んだドキュメントでも、新しいドキュメントではすべてのロックがオンです。その `value` は、対応するロックをオフにするまで、表示の原点を `0, 0`、拡大・縮小のレベルを `1`、タブを ERD タブ、Code Generator の言語、名前のケース、括弧の種類を既定値、そして `4.2.0` からは名前の表示を `Physical Names` のまま保ちます。  
 `4.0.0` より前は、`ignoreSaveSettings` を適用した、エディタが保持しているとおりのドキュメント全体を返していました。エディタが保持しているとおりのドキュメントは [runtimeValue](#runtimevalue) になり、`ignoreSaveSettings` は読み取りも書き込みもされなくなりました。
 
 ```js
@@ -183,14 +191,14 @@ const data = editor.value;
 
 ### setter
 
-以前に保存したエディタの状態を読み込みます。ドキュメント全体を置き換えるため、現在のドキュメントは先に消去されます。  
-`clear()`、`setInitialValue()`、既定の `mode: 'replace'` での `setSchema*` の各メソッドと同様に、Visualization タブの Flow の表示状態、つまりレイアウト、絞り込んでいるテーブル、行の表示、拡大・縮小、表示位置も破棄します。追加（`mode: 'append'`）では破棄しません。  
+以前に保存したエディタの状態を読み込みます。ドキュメント全体を置き換えるため、現在のドキュメントは先に消去されます。`4.2.0` からは、これには単語、用語、ドメインも含まれます。ドキュメントはテキストが持つものを取り込み、なければ何も持たず、辞書の各シート自身の Undo の履歴は空になります。  
+`clear()`、`setInitialValue()`、既定の `mode: 'replace'` での `setSchema*` の各メソッドと同様に、Visualization タブの Flow の表示状態、つまりレイアウト、絞り込んでいるテーブル、行の表示、拡大・縮小、表示位置、そして `4.2.0` からは `Previous table` と `Next table` でたどるテーブルも破棄します。追加（`mode: 'append'`）では破棄しません。  
 履歴に記録されるため `Undo, Redo` が可能で、`change` を発行します。  
 保存形式、[runtimeValue](#runtimevalue)、以前のリリースで保存したファイルのいずれも受け付けます。  
 空文字列や文字列以外の値を指定した場合はエラーにならず、新しいドキュメントを読み込むため、代入する前に値を確認します。  
 この新しいドキュメントは `setInitialValue('')` で始まるものと同じで、空で、設定は既定値のまま、`4.0.0` からはすべてのロックがオンです。`3.10.x` では表示位置も拡大・縮小のレベルも保存せず、それより前は両方を保存していました。  
-shared store はこの読み込みを、新しいドキュメントの JSON 全体を付けて共同編集の参加者へ中継するため、古いリリースのエディタも含め、すべての参加者が同じドキュメントを読み込みます。  
-`4.0.0` からは、読み込んだドキュメントのロックと、その後 `value` が書き出すロックされた値はテキストから取られ、表示はテキストが指定する位置になります。そこにダイアグラムが何も描かれていない場合は、ダイアグラムが見える位置になります。テキストがロックしているそれ以外の設定、つまりタブ、Code Generator の言語、名前のケース、括弧の種類については、エディタは読み込む前に表示していたものを表示し続けます。テキストがロックしていない設定は、テキストの値になります。[setInitialValue](#setinitialvalue) は代わりにテキストが持つすべての値を取ります。ロックを何も指定していないテキストについても、そちらを参照してください。  
+shared store はこの読み込みを、新しいドキュメントの JSON 全体を付けて共同編集の参加者へ中継するため、古いリリースのエディタも含め、すべての参加者がそれを読み込みます。ただし、`4.2.0` より前のエディタは、論理名、ドメインの紐付け、辞書のような、知らないものを破棄します。[リリースの混在](./advanced/collaborative-editing.md#リリースの混在)を参照してください。  
+`4.0.0` からは、読み込んだドキュメントのロックと、その後 `value` が書き出すロックされた値はテキストから取られ、表示はテキストが指定する位置になります。そこにダイアグラムが何も描かれていない場合は、ダイアグラムが見える位置になります。テキストがロックしているそれ以外の設定、つまりタブ、Code Generator の言語、名前のケース、括弧の種類、そして `4.2.0` からは名前の表示については、エディタは読み込む前に表示していたものを表示し続けます。テキストがロックしていない設定は、テキストの値になります。`4.2.0` より前に保存したファイルは、`4.2.0` のエディタがその中で `Name View` のロックをオフにしていない限り `Name View` のロックを指定していないため、名前の表示が `Physical Names` でロックされた状態で読み込まれ、エディタは表示していた名前の表示を保ちます。[setInitialValue](#setinitialvalue) は代わりにテキストが持つすべての値を取ります。ロックを何も指定していないテキストについても、そちらを参照してください。  
 マージコンフリクトのマーカーが残ったファイルなど、JSON でないテキストもエラーにはなりません。ドキュメントは空になり、設定はそのまま保たれ、パースエラーがコンソールに出力されます。  
 `readonly` が設定されている間は無視されます。読み取り専用のエディタに読み込むには [setInitialValue](#setinitialvalue) を使用します。
 
@@ -201,8 +209,8 @@ editor.value = 'json...';
 ## runtimeValue
 
 `4.0.0` からは、このエディタが保持しているとおりのドキュメントを JSON 文字列として取得します。setter はないため、strict モードのコードで代入すると例外が発生します。  
-[value](#value) が含まないもの、つまり削除したエンティティとその順序、重なり順、計測した幅、キーのマーク、リレーションシップの接続位置、シーケンスを含みます。ここでも、ロックされた設定はロックされた値で書き出されます。  
-共同編集の参加者や同じドキュメントの 2 つ目のビューのように、すでに進行中のセッションに参加する別のエディタに、その [setInitialValue](#setinitialvalue) で初期値を設定するために使います。後でセッションから削除の Undo が送られてくると、そのエディタではエンティティが元のとおりに戻ります。一方、`value` から初期値を設定したエディタは削除したエンティティを持たないため、代わりに名前のない空のテーブルが戻ります。[共同編集](./advanced/collaborative-editing.md)を参照してください。  
+[value](#value) が含まないもの、つまり削除したエンティティとその順序、重なり順、計測した幅、キーのマーク、リレーションシップの接続位置、シーケンス、そして `4.2.0` からは空のテキストフィールド、`doc` のリスト、コレクション、辞書のシートから削除した行と何も持たない行、辞書の各行の順序キー、単語、用語、ドメインの `doc` のリスト、削除したドメインへの紐付けを含みます。ここでも、ロックされた設定はロックされた値で書き出されます。  
+共同編集の参加者や同じドキュメントの 2 つ目のビューのように、すでに進行中のセッションに参加する別のエディタに、その [setInitialValue](#setinitialvalue) で初期値を設定するために使います。後でセッションから削除の Undo が送られてくると、そのエディタではエンティティが元のとおりに戻ります。一方、`value` から初期値を設定したエディタは削除したエンティティを持たないため、代わりに名前のない空のテーブル、または `4.2.0` からは空の辞書の行が戻ります。[共同編集](./advanced/collaborative-editing.md)を参照してください。  
 削除したエンティティを回収するものはもうないため、次にドキュメントをファイルから開くまで、それらはここに残ります。  
 ファイルには決して書き込まないでください。保存するのは `value` です。[JSON Schema](./advanced/schema.md#json-schema) は `value` を受け付けますが、こちらは受け付けません。
 
@@ -213,11 +221,12 @@ otherEditor.setInitialValue(editor.runtimeValue);
 ## setInitialValue
 
 以前に保存したエディタの状態を読み込みます。読み込み自体は履歴に記録されないため Undo できず、`change` イベントも発行されません。  
-読み込むときに Undo の履歴も消去されるため、読み込む前に行った操作を、読み込んだドキュメントに対して `Undo, Redo` することはできません。  
+読み込むときに Undo の履歴と、`4.2.0` からは辞書の各シート自身の履歴も消去されるため、読み込む前に行った操作を、読み込んだドキュメントに対して `Undo, Redo` することはできません。  
 保存形式、[runtimeValue](#runtimevalue)、以前のリリースで保存したファイルのいずれも受け付け、`value` への代入とは異なり、タブとコードの設定を含め、テキストが持つすべての設定を取ります。  
 空文字列や文字列以外の値を指定した場合はエラーにならず、新しいドキュメントを読み込むため、`setInitialValue('')` は空のダイアグラムから始めます。  
-`4.0.0` からは、この新しいドキュメントは、要素に値を一度も渡していないときに表示されるドキュメントでもあり、すべてのロックがオンです。スクロール、拡大・縮小、タブの切り替え、Code Generator の言語、名前のケース、括弧の種類の変更をしても、`value` は変わらず、`change` も発行されません。`3.10.x` では表示位置も拡大・縮小のレベルも保存せず、それより前は両方を保存していました。  
+`4.0.0` からは、この新しいドキュメントは、要素に値を一度も渡していないときに表示されるドキュメントでもあり、すべてのロックがオンです。スクロール、拡大・縮小、タブの切り替え、Code Generator の言語、名前のケース、括弧の種類、`4.2.0` からは名前の表示の変更をしても、`value` は変わらず、`change` も発行されません。`3.10.x` では表示位置も拡大・縮小のレベルも保存せず、それより前は両方を保存していました。  
 テキストから読み込んだドキュメントは、そこに指定されているロックを保ちます。何も指定されていないドキュメント、つまり `ignoreSaveSettings` の内容にかかわらず `4.0.0` より前に保存したすべてのファイルと v2 の `.vuerd` ファイルは、すべてのロックがオンの状態で開きます。`Viewport` は原点 `0, 0`、拡大・縮小のレベル `1` でロックされ、タブは ERD タブで、言語、名前のケース、括弧の種類は保存されたときのままです。  
+`4.2.0` からは、ロックを指定していても `Name View` のロックを指定していないテキストは、ほかのロックがすべてオフでも、そのロックがオンの状態で開きます。`4.2.0` より前に保存したファイルは、`4.2.0` のエディタがその中でこのロックをオフにしていない限り、このようなテキストです（[Settings](./advanced/schema.md#settings) を参照してください）。ロックを何も指定していないテキストと同じく、`Physical Names` で開きます。  
 どちらの場合も、表示はドキュメントの表示位置で開きます。テキストがロックを指定している場合はテキストが保存した表示位置、指定していない場合は拡大・縮小のレベル `1` の原点 `0, 0` です。そこにダイアグラムが何も描かれていない場合は、ダイアグラムが見える位置で開きます。ロックされた `Viewport` は、引き続きロックされた値を `value` に保ちます。  
 `4.0.0` からは、それまで保持していたドキュメントの共同編集の状態も破棄し、このエディタの [shared store](#getsharedstore) がすでに購読されている場合は、ほかのエディタにそれぞれの状態を改めて要求するため、進行中のセッションで読み込み直したエディタも追いつきます。そのようなエディタには、別のエディタの [runtimeValue](#runtimevalue) で初期値を設定します。  
 JSON でないテキストもエラーにはなりません。ドキュメントは空になり、設定はそのまま保たれ、パースエラーがコンソールに出力されます。  
@@ -246,10 +255,11 @@ editor.addEventListener('change', () => {
 エディタに変更があるとイベントを発行します。  
 200ms のデバウンスがかかり、`readonly` が `true` の間は発行されません。  
 UI での編集、`value` への代入、`clear()`、`setSchema*` の各メソッド、`4.0.0` からは `setSchemaJSON()` と `Import and Add` など、ドキュメントのあらゆる変更で発行されます。`setInitialValue` では発行されません。  
-Visualization タブの Flow モード内の操作、つまり拡大・縮小、表示位置の移動、カードの移動、`Tidy Up`、行の表示の変更、カードからの表示の絞り込みは、どれもドキュメントの変更ではないため発行されません。  
-`4.0.0` からは、[ロック](../guide/guides/settings.md#ロック)がオンの設定の変更も、画面を動かすだけで `value` を変えることはないため、発行されません。`Viewport` がロックされている間の ERD キャンバスのスクロールや拡大・縮小、`Canvas Type` がロックされている間のタブの切り替え、それぞれのロックがオンの間の Code Generator の言語、テーブル名のケース、カラム名のケース、括弧の種類の変更がこれにあたります。除外されるのはこれらの変更だけのため、ドキュメントの編集も含むバッチでは引き続き発行されます。設定をロックしたりロックを解除したりすると発行されます。  
-新しいドキュメントと `4.0.0` より前に保存したすべてのファイルではすべてのロックがオンのため、既定ではスクロール、拡大・縮小、タブの切り替えでは何も発行されません。ERD タブからテーブルにフォーカスする操作、Flow から ERD タブへ戻るカードの外部リンクボタン、エクスプローラーの行や検索の一致箇所への移動、別のタブからエクスプローラーを開く操作やクイック検索の結果へ移動する操作も同様です。これらがそれぞれ `change` を 1 回発行するのは、対象となるロックがオフの間だけです。タブの切り替えには `Canvas Type`、カードのボタン、クイック検索の結果、エクスプローラーの行、検索の一致箇所があわせて行うスクロールには `Viewport` が対象になります。`4.1.0` からは、これらのスクロールはすべて 1 つの規則、[移動先の表示位置](../guide/guides/table-related-functions.md#where-a-jump-lands)に従うため、クイック検索のテーブルの結果で毎回スクロールすることはなくなり、規則によって表示位置が動かない移動ではスクロールが起きないため、発行するものもありません。エクスプローラーを開いたり、閉じたり、サイズを変えたりすると、キャンバスの幅は狭まったり広がったりしますが、その原点は動かないため、これも何も発行しません。`4.0.0` より前は、スクロール、拡大・縮小、タブの切り替えでは、`editor.value` が変わらない場合でも常に発行されていました。  
-何も変えない書き込みを省くには、読み込んだファイルではなく、最後に保存した値と `editor.value` を比較します。以前のリリースが書き出したファイル、v2 のファイル、手で編集したファイルは、`value` が保存形式で書き出すため、読み込んだ時点で `value` が異なることがあります。`Viewport` のロックがオフで、その原点ではこの画面にダイアグラムが何も描かれないファイルも同様です。読み込みによって表示がダイアグラムの見える位置に移動し、`value` は移動した先を書き出すためです。`4.0.0` からは、`value` が計測した幅を持たないため、計測した幅がこの原因になることはなくなりました。ファイルを書き出すホストは、代わりにレプリケーション用の store の `changed` で、編集と表示の変更を区別することもできます。[on@change](./advanced/remote-storage.md#onchange) を参照してください。  
+`4.2.0` からは、[辞書](../guide/guides/dictionary.md)タブでのすべての編集とその Undo または Redo、論理名やドメインの紐付けの変更、`Derive Physical Names Again`、`Name View` のロックがオフの間の名前の表示の切り替えも含まれます。  
+Visualization タブの Flow モード内の操作、つまり拡大・縮小、表示位置の移動、カードの移動、`Tidy Up`、行の表示の変更、カードからの表示の絞り込み、`4.2.0` からは `Previous table` と `Next table`、または Undo と Redo のキーによる移動は、どれもドキュメントの変更ではないため発行されません。例外は Flow モードの `Name View` の一覧で、そこでの切り替えは、ERD タブでの切り替えと同じく、`Name View` のロックがオフの間は発行されます。  
+`4.0.0` からは、[ロック](../guide/guides/settings.md#ロック)がオンの設定の変更も、画面を動かすだけで `value` を変えることはないため、発行されません。`Viewport` がロックされている間の ERD キャンバスのスクロールや拡大・縮小、`Canvas Type` がロックされている間のタブの切り替え、それぞれのロックがオンの間の Code Generator の言語、テーブル名のケース、カラム名のケース、括弧の種類の変更、そして `4.2.0` からは `Name View` がロックされている間の名前の表示の切り替えがこれにあたります。除外されるのはこれらの変更だけのため、ドキュメントの編集も含むバッチでは引き続き発行されます。設定をロックしたりロックを解除したりすると発行されます。  
+新しいドキュメントと `4.0.0` より前に保存したすべてのファイルではすべてのロックがオンで、`4.2.0` より前に保存したすべてのファイルでは、`4.2.0` のエディタがそこでオフにしていない限り `Name View` のロックがオンのため、既定ではスクロール、拡大・縮小、タブの切り替え、名前の表示の切り替えでは何も発行されません。ERD タブからテーブルにフォーカスする操作、Flow から ERD タブへ戻るカードの外部リンクボタン、エクスプローラーの行や検索の一致箇所への移動、別のタブからエクスプローラーを開く操作やクイック検索の結果へ移動する操作、そして `4.2.0` からは辞書タブの `Checks` シートの行からテーブルやカラムへ移動する操作も同様です。これらがそれぞれ `change` を 1 回発行するのは、対象となるロックがオフの間だけです。タブの切り替えには `Canvas Type`、カードのボタン、クイック検索の結果、エクスプローラーの行、検索の一致箇所、`Checks` の行があわせて行うスクロールには `Viewport` が対象になります。`4.1.0` からは、これらのスクロールはすべて 1 つの規則、[移動先の表示位置](../guide/guides/table-related-functions.md#where-a-jump-lands)に従うため、クイック検索のテーブルの結果で毎回スクロールすることはなくなり、規則によって表示位置が動かない移動ではスクロールが起きないため、発行するものもありません。エクスプローラーを開いたり、閉じたり、サイズを変えたりすると、キャンバスの幅は狭まったり広がったりしますが、その原点は動かないため、これも何も発行しません。`4.0.0` より前は、スクロール、拡大・縮小、タブの切り替えでは、`editor.value` が変わらない場合でも常に発行されていました。  
+何も変えない書き込みを省くには、読み込んだファイルではなく、最後に保存した値と `editor.value` を比較します。以前のリリースが書き出したファイル、v2 のファイル、手で編集したファイルは、`value` が保存形式で書き出すため、読み込んだ時点で `value` が異なることがあります。`Viewport` のロックがオフで、その原点ではこの画面にダイアグラムが何も描かれないファイルも同様です。読み込みによって表示がダイアグラムの見える位置に移動し、`value` は移動した先を書き出すためです。`4.0.0` からは、`value` が計測した幅を持たないため、計測した幅がこの原因になることはなくなりました。`4.2.0` からは、`4.0.0` または `4.1.0` で保存したファイルも異なることがあります。`value` が空のテキストフィールド、リスト、コレクションを含まなくなったためで、そのようなファイルは次の保存で 1 回だけ書き直されます。ファイルを書き出すホストは、代わりにレプリケーション用の store の `changed` で、編集と表示の変更を区別することもできます。[on@change](./advanced/remote-storage.md#onchange) を参照してください。  
 イベントは `detail` を持たず、バブリングもシャドウ境界の通過もしないため、要素自身で購読し、ハンドラー内で `editor.value` を読み取ります。
 
 ```js
@@ -301,9 +311,9 @@ editor.blur();
 
 ## clear
 
-ドキュメントを空にし、すべてのテーブル、カラム、リレーションシップ、インデックス、メモ、そして `4.0.0` からはすべてのテーブルグループを削除します。  
+ドキュメントを空にし、すべてのテーブル、カラム、リレーションシップ、インデックス、メモ、`4.0.0` からはすべてのテーブルグループ、そして `4.2.0` からは辞書タブの単語、用語、ドメインを削除し、各シート自身の Undo の履歴も空にします。  
 データベース、表示位置、拡大・縮小のレベル、テーブルの表示オプション、保持している値を含む各ロック、Schema SQL タブの `Before tables` と `After tables` のスクリプトを含め、設定はすべてそのまま残るため、消去したファイルはそれまでと同じものを保存し続けます。代わりに新しいドキュメントから始めるには、`value` に `''` を代入するか、`setInitialValue('')` を呼び出します。  
-履歴に記録されるため元に戻すことができ、`change` を発行します。Undo すると、ドキュメントはエディタが保持していたとおりに、ロックされた各設定はロックされた値で戻ります。`readonly` が設定されている間は無視されます。
+履歴に記録されるため元に戻すことができ、`change` を発行します。Undo すると、ドキュメントは単語、用語、ドメインも含めてエディタが保持していたとおりに、ロックされた各設定はロックされた値で戻ります。`readonly` が設定されている間は無視されます。
 
 ```js
 editor.clear();
@@ -328,6 +338,7 @@ editor.destroy();
 バインディングの値は `ShortcutOption[]` である必要があります。文字列だけの指定は無視されるため、`{ addTable: 'Alt+KeyN' }` ではなく `{ addTable: [{ shortcut: 'Alt+KeyN' }] }` と記述します。  
 空の配列も受け付けられ、何も割り当てません。`setKeyBindingMap({ findReplace: [] })` は `Ctrl + F` (Windows/Linux) または `⌘ + F` (Mac) をページに任せ、`{ search: [] }` は `Ctrl + K` (Windows/Linux) または `⌘ + K` (Mac) を同じようにページに任せます。ツールバーの `Search` ボタンからは引き続きクイック検索を開け、ツールバーの `Explorer` ボタンでは引き続きエクスプローラーを開閉でき、クイック検索とキャンバスのコンテキストメニューの `Toggle Explorer` では引き続きエクスプローラーを検索の状態で開くか、閉じることができます。空にした名前のショートカットは、これらのどこにも表示されません。`{ removeSelection: [] }` は `Delete` と `Backspace` をページに任せ、このときテーブル、メモ、テーブルグループのメニューの削除の項目（`Delete`、`Delete selected`、`Delete column`、`Delete columns`）にはショートカットが表示されません。  
 `4.1.0` からは、`{ addTableGroup: [] }` は `Alt + G` (Windows/Linux) または `⌥ + G` (Mac) を、`{ groupSelectedTables: [] }` は `T` に続けて `G` をページに任せます。キャンバスツールバー、キャンバスのコンテキストメニュー、クイック検索の `New Table Group`、テーブルのメニューの `Group selected tables`、クイック検索の `Group Selected Tables` は引き続き動作し、ショートカットは表示されません。キャンバスツールバーの `New Table`、`New Memo`、`New Table Group` のボタンのツールチップには、`addTable`、`addMemo`、`addTableGroup` の最初のキーの組み合わせが表示され、空にしたバインディングについてはボタンの名前だけが表示されます。  
+`4.2.0` からは、`addColumn` と `removeColumn` は、後述のように辞書タブのグリッドの行のキーの組み合わせにもなるため、どちらかを再定義すると、それらのキーの組み合わせも一緒に変わります。`{ addColumn: [] }` ではグリッドに行を挿入するキーの組み合わせがなくなり、グリッドのメニューの 2 つの挿入の項目にはショートカットが表示されません。`{ removeColumn: [] }` では行を削除するキーの組み合わせがなくなり、メニューの削除の項目と `Delete Rows` のツールチップにはショートカットが表示されません。  
 呼び出しは部分的なマージです。指定しなかった名前は既定値のまま維持され、2 回呼び出しても以前の変更は保持されます。現在のバインディングを取得する getter はありません。[createKeyBindingMap](#createkeybindingmap) が返すのは既定値であり、`setKeyBindingMap` で変更した内容ではありません。
 
 ```ts
@@ -401,21 +412,27 @@ editor.setKeyBindingMap({
 `selectAllTable`、`handTool`、`removeSelection`、そして `4.1.0` からは `groupSelectedTables` はキャレットに譲ります。フォーカスが input、textarea、`contenteditable` の中にある間は `$mod + A` がテキストを選択し、`Space` は空白を入力し、`Delete` と `Backspace` はテキストを消去し、`T` に続けて `G` はその 2 文字を入力して、キャンバスには届きません。これらの入力では `preventDefault()` は呼び出されません。別のショートカットに再定義しても動作は同じです。
 
 `4.0.0` からは、`removeSelection`（`Delete` または `Backspace`）は、ERD タブで選択しているものを確認なしに Undo の 1 ステップとして削除します。選択しているのがフォーカスしているテーブルだけで、そのカラムを 1 つ以上選択していて、拡大・縮小のレベルでその行が描画されている場合は、それらのカラムを削除します。それ以外の場合は、選択しているすべてのテーブル、メモ、テーブルグループを削除し、グループのテーブルは残します。[テーブルとメモの削除](../guide/guides/table-related-functions.md#テーブルとメモの削除)を参照してください。  
-キーを押し続けても削除は 1 回だけで、セル、メモ、テーブルグループの名前の編集中は何も削除されません。テキストフィールドと、バインディングをそこで止めるパネル（[createKeyBindingMap](#createkeybindingmap) を参照してください）の外では、エディタにフォーカスがある間はどのタブでも、フォーカスしているツールバーのボタンの上でも、何も削除しない読み取り専用のエディタでも、この入力に対して `preventDefault()` が呼び出されます。
+キーを押し続けても削除は 1 回だけで、セル、メモ、テーブルグループの名前の編集中は何も削除されません。テキストフィールドと、バインディングをそこで止めるパネルとタブ（[createKeyBindingMap](#createkeybindingmap) を参照してください）の外では、エディタにフォーカスがある間はどのタブでも、フォーカスしているツールバーのボタンの上でも、何も削除しない読み取り専用のエディタでも、この入力に対して `preventDefault()` が呼び出されます。
 
 `4.1.0` からは、`addTableGroup`（`Alt+KeyG`）は ERD タブで `New Table Group` の描画を準備し、次にキャンバスでマウスの主ボタンを押すと、そこからグループを描きます。キャンバスツールバーの `New Table Group` ボタンと同じように、もう一度押すと描画の準備が解除されます。`groupSelectedTables`（`KeyT KeyG`、`T` に続けて `G`）は、テーブルのコンテキストメニューの `Group selected tables` と同じように、選択しているテーブルを新しいグループに入れて、その名前の入力欄を開きます。テーブルを選択していない場合は何も追加せず、選択しているメモやテーブルグループは数に入りません。[グループの描画](../guide/guides/table-groups.md#グループの描画)と[選択したテーブルのグループ化](../guide/guides/table-groups.md#選択したテーブルのグループ化)を参照してください。  
 どちらも、メニューがグループの項目を表示する場合にだけ動作します。`readonly` が設定されている間、`Table Groups` の表示オプションでグループを非表示にしている間、セル、メモ、テーブルグループの名前の編集中は動作しません。ほかのキャンバスのバインディングと同じように ERD タブでのみ動作し、クイック検索、テーブルのプロパティ、Diff Viewer、Time Travel、自動レイアウトのプレビュー、`Export image`、`Map Columns` のいずれかが開いている間も動作しません。何もしない場合でも、`groupSelectedTables` がキャレットに譲る場合を除き、この入力では `preventDefault()` が呼び出されます。`addTableGroup` は、`focusView` や `zenMode` と同じく伝播も止められるため、ページのバブリングフェーズの `keydown` リスナーには届きません。
 
+`4.2.0` からは、[辞書](../guide/guides/dictionary.md#adding-and-deleting-rows)タブでは、`addColumn` の 1 回の入力からなる各キーの組み合わせは、選択範囲がまたがる行と同じ数の行を選択範囲の下に挿入し、同じキーの組み合わせに `Shift` も押すと上に挿入し、`removeColumn` の 1 回の入力からなる各キーの組み合わせは、選択範囲がまたがる行を削除します。既定値では `Alt+Enter`、`Alt+Shift+Enter`、そして `Alt+Backspace` または `Alt+Delete` です。これらは、セルの編集中でない間、`Domains`、`Words`、`Terms` シートのグリッドで動作します。すでに `Shift` を含む `addColumn` のキーの組み合わせからは、上に挿入するキーの組み合わせは作られず、どちらかの名前に割り当てたシーケンスはグリッドでは何もしません。  
+このような入力では、オプションの指定どおりに `preventDefault()` が呼び出され、伝播は常に止められるため、ERD タブでカラムが追加・削除されることはありません。`Checks` シートと読み取り専用のエディタでは何もしませんが、それでも `preventDefault()` が呼び出され、伝播も止められます。セルの編集中やタブの検索フィールドでは、これらのキーの組み合わせはテキストに任されます。そこでは伝播は止められますが `preventDefault()` は呼び出されないため、フィールドはほかの場所と同じようにそれらを処理します（Mac では `⌥ + Backspace` で単語を削除します）。[dictionaryRowChords](#dictionaryrowchords) がこれらを一覧にします。
+
 `3.10.0` からは、`findReplace`（`$mod+KeyF`）は[検索と置換](../guide/guides/find-and-replace.md)を開きます。`4.1.0` からは、検索と置換を収める[エクスプローラー](../guide/guides/explorer.md#opening-and-closing)を開閉し、設定のショートカットタブでは `Toggle Explorer` として表示されます。  
 ツールバーの `Explorer` ボタンが押された状態で表示されている間（エクスプローラーが ERD タブで開いていて、Zen モードで隠れていない間）は、クイック検索、テーブルのプロパティ、テーマビルダー、Display Language のピッカー、`Export image` ダイアログ、`Map Columns` のいずれかが開いている場合を除き、エクスプローラーを閉じます。それ以外の場合は、それらのうち開いているものを閉じ、ほかのどのタブからでも ERD タブを表示して、`Find` フィールドにキャレットを置き、検索語を選択した状態でエクスプローラーを開きます。エクスプローラーをキャンバスの横に表示するには幅が足りないエディタでは、エクスプローラーは開いたまま退き、`Widen the window to show the Explorer` のトーストが表示されます。`4.1.0` より前は、フローティングの検索と置換のパネルを開くか、そのフィールドにキーボード操作を戻すだけで、パネルを閉じることはありませんでした。  
-キャレットには譲りません。エディタにフォーカスがある間は、どのタブでも、キャンバスからでもエディタ内の入力欄からでもこのキーを受け取ります。`preventDefault()` が呼び出されるためブラウザの検索バーは開かず、伝播も止められるため、ページのバブリングフェーズの `keydown` リスナーには届きません。セルやメモの編集中、または `4.0.0` からはテーブルグループの名前の編集中も、`preventDefault()` が呼び出されて伝播も止められますが、何もしません。  
+キャレットには譲りません。エディタにフォーカスがある間は、どのタブでも、キャンバスからでもエディタ内の入力欄からでもこのキーを受け取ります。`preventDefault()` が呼び出されるためブラウザの検索バーは開かず、伝播も止められるため、ページのバブリングフェーズの `keydown` リスナーには届きません。セルやメモの編集中、`4.0.0` からはテーブルグループの名前の編集中、または `4.2.0` からは辞書タブのグリッドでのセルの編集中も、`preventDefault()` が呼び出されて伝播も止められますが、何もしません。最後の場合は `search` も何もしないため、それまでに入力したテキストはそのまま残ります。  
 Diff Viewer、Time Travel、自動レイアウトのプレビューのいずれかが開いている間は、どのタブであっても、また IME の変換中も、`preventDefault()` は呼び出されず伝播も止められないため、ブラウザやホスト自身の検索がこのキーを受け取ります。エクスプローラー内では、変換中の入力はそこで伝播が止められますが、`preventDefault()` は呼び出されません。`findReplace` を別のショートカットに再定義しても動作は同じです。
 
 `focusView` は ERD タブでのみ動作します。テーブルを 1 つ以上選択している場合は、Visualization タブを Flow モードで開き、それらのテーブルと、リレーションシップ 1 つでつながるすべてのテーブルに表示を絞り込みます。選択しているメモやテーブルグループは数に入らず、テーブルを選択していない場合は何もしません。[テーブルへのフォーカス](../guide/guides/visualization.md#focusing-on-tables)を参照してください。
 
+`undo` と `redo` の動作はタブによって異なります。ERD タブでは、ドキュメントの履歴を Undo、Redo します。`4.2.0` からは、辞書タブでは表示しているシート自身の履歴を Undo、Redo し、`Checks` シートでは何もしません。[辞書のシート](../guide/guides/undo-redo.md#dictionary-sheets)を参照してください。Visualization タブの Flow モードでは、[`Previous table` と `Next table`](../guide/guides/visualization.md#previous-table-and-next-table) と同じように 1 つ戻り、1 つ進み、ドキュメントの履歴には触れません。ほかのタブと Graph モードでは、何も Undo しません。
+
 `stop`（`Escape`）は ERD タブで、セルやメモの編集、またはリレーションシップの作成を終了し、選択はそのまま残します。`4.0.0` からは、テーブルグループの名前の編集も名前を書き込まずに終了し、`New Table Group` の描画も終了します。このときエディタは `preventDefault()` を呼び出します。  
 そのいずれでもない場合、`Escape` は選択とフォーカスしているセルを解除し、`preventDefault()` は呼び出されません。そのため、編集を抜けて選択も解除するには 2 回押す必要があります。  
-エクスプローラー、[ウェルカム画面](#enablewelcomescreen)の `Import` の形式の一覧、後述のピッカーとダイアログを除き、エディタが `Escape` の伝播を止めることはないため、独自のダイアログを閉じるためなど、自分で `Escape` を監視しているページには両方の入力が届き、`defaultPrevented` が `true` のほうを無視できます。  
+`4.2.0` からは、論理名のセルの用語の候補一覧が表示されている間（[用語名の補完](../guide/guides/logical-names.md#completing-term-names)を参照してください）、最初の `Escape` は一覧だけを閉じ、入力欄は開いたままにします。この入力はセルで `preventDefault()` が呼び出されて伝播も止められるため、`stop` にもページのバブリングフェーズの `keydown` リスナーにも届きません。  
+エクスプローラー、[ウェルカム画面](#enablewelcomescreen)の `Import` の形式の一覧、論理名のセルの用語の候補一覧、[辞書](../guide/guides/dictionary.md#keys-on-the-tab)タブ、後述のピッカーとダイアログを除き、エディタが `Escape` の伝播を止めることはないため、独自のダイアログを閉じるためなど、自分で `Escape` を監視しているページには両方の入力が届き、`defaultPrevented` が `true` のほうを無視できます。  
 クイック検索、テーブルのプロパティ、Diff Viewer、自動レイアウトのプレビュー、Time Travel のいずれかが開いている間は、`Escape` は代わりにそれを閉じ、選択はそのまま残します。このときも `preventDefault()` は呼び出されません。  
 `4.0.0` からは、開いている [`Export image`](../guide/guides/file-import-export.md#画像) ダイアログや [`Map Columns`](../guide/guides/relationship-editing.md#map-columns) ダイアログも `Escape` を受け取り、自身を閉じて、選択はそのまま残します。どちらも開いたときにキーボード操作を受け取り、この `Escape` では `preventDefault()` が呼び出されて伝播も止められます。  
 `4.1.0` からは、[エクスプローラー](../guide/guides/explorer.md#keys-in-the-explorer)内、つまりそのツリー、フィールド、ボタンにフォーカスがある状態で押した `Escape` は、キーボード操作をキャンバスに戻し、エクスプローラーは開いたまま、選択もそのまま残します。エディタはこの入力に対して `preventDefault()` と `stopPropagation()` の両方を呼び出すため、ページのバブリングフェーズの `keydown` リスナーには届きません。  
@@ -429,7 +446,7 @@ IME の変換中に押した `Escape` は変換のためのものです。編集
 `3.9.2` からは、パッケージは `createKeyBindingMap()` と、あわせて `KeyBindingMap`、`KeyBindingName`、`ShortcutOption` の型をエクスポートしています。  
 固定の名前を含む 28 個すべての名前の既定のキーバインディングを、呼び出すたびに新しいマップとして返すため、返されたマップを変更してもほかには何も影響しません。  
 すべてのエディタはこの状態から始まり、`setKeyBindingMap` の呼び出しはここには反映されません。  
-ランタイムのエクスポートは `createKeyBindingMap` だけで、残りの 3 つは型です。
+この 4 つのうちランタイムのエクスポートは `createKeyBindingMap` だけで、残りの 3 つは型です。`4.2.0` からは、[dictionaryRowChords](#dictionaryrowchords) もあわせてエクスポートされています。
 
 ```ts
 type KeyBindingName =
@@ -483,11 +500,38 @@ const shortcuts = Object.values(createKeyBindingMap())
 通すキーの一覧は `createKeyBindingMap()` から作成し、既定値の代わりに `setKeyBindingMap` に渡したバインディングを使います。  
 `3.10.0` からは、この一覧にブラウザ自身の検索のキーである `$mod+KeyF` が含まれます。このキーで自身の検索を使い続けたいホストは、`setKeyBindingMap({ findReplace: [] })` を渡します。  
 `4.0.0` からは、この一覧には修飾キーなしの `Delete` と `Backspace` も含まれます。これらのキーを使い続けたいホストは、`setKeyBindingMap({ removeSelection: [] })` を渡します。  
-`4.1.0` からは、`Alt+KeyG` とシーケンス `KeyT KeyG` も含まれます。シーケンスは 1 つの文字列として含まれるため、スペースで分割し、修飾キーなしの `T` と `G` も含めて、それぞれの入力を通します。入力が 1 つでも欠けたシーケンスは完了しないためです。これらのキーを使い続けたいホストは、`setKeyBindingMap({ addTableGroup: [] })` または `setKeyBindingMap({ groupSelectedTables: [] })` を渡します。
+`4.1.0` からは、`Alt+KeyG` とシーケンス `KeyT KeyG` も含まれます。シーケンスは 1 つの文字列として含まれるため、スペースで分割し、修飾キーなしの `T` と `G` も含めて、それぞれの入力を通します。入力が 1 つでも欠けたシーケンスは完了しないためです。これらのキーを使い続けたいホストは、`setKeyBindingMap({ addTableGroup: [] })` または `setKeyBindingMap({ groupSelectedTables: [] })` を渡します。  
+`4.2.0` からは、同じマップに対して [dictionaryRowChords](#dictionaryrowchords) が返す、`Alt+Shift+Enter` を含むキーの組み合わせもこの一覧に加えます。これらのキーを使い続けたいホストは、`setKeyBindingMap({ addColumn: [] })` または `setKeyBindingMap({ removeColumn: [] })` を渡します。これにより、それらのキーは ERD タブでのカラムの追加と削除からも外れます。
 
 エクスプローラー内、つまりそのツリー、`Find` と `Replace` のフィールド、ボタンにフォーカスがある間は、`findReplace`、`search`、`undo`、`redo`、`zoomIn`、`zoomOut`、`zoomReset` はエディタに届くため、`findReplace` はそこでもキャンバスと同じように動作します。それ以外のバインディングに現在割り当てられているキーはエクスプローラーで止まり、シーケンスはその最後の入力（既定値では修飾キーなしの `G`）で止まります。矢印キー、`Tab`、`Enter`、`Space`、`Home`、`End`、IME の変換中に押したキーも同様です。キーボード操作をキャンバスに戻す `Escape` を除き、これらは `preventDefault()` を呼び出されずに伝播だけが止められるため、エクスプローラーのフィールド、ボタン、ツリーでは通常のキーとして動作し、キャンバスにもページのバブリングフェーズの `keydown` リスナーにも届きません。そこで `Alt + N` を押してもテーブルは追加されず、`Delete` を押しても何も削除されません。ツリーで行の間を移動したり、行を折りたたんだり、行へ移動したりするキーと、`Find` フィールドや `Replace` フィールドで一致箇所を移動したり置換したりする `Enter` では、`preventDefault()` も呼び出されます。  
 ホストの保存やコマンドパレットのキーなど、それ以外のキーは通常どおりページに届きます。[エクスプローラー内のキー](../guide/guides/explorer.md#keys-in-the-explorer)を参照してください。`4.1.0` より前は、フローティングの検索と置換のパネルも同じようにキーを扱っていましたが、`Home`、`End`、シーケンスの最後の入力、`handTool` が別のキーに割り当てられている間の `Space` は例外でした。  
 `4.0.0` からは、Display Language のピッカーも同じようにキーを扱います。同じ 7 つのバインディングはエディタに届き、それ以外のバインディング（`4.1.0` からは、シーケンスはその最後の入力で止まります）、矢印キー、`Tab` は、IME の変換中に押したキーと同じく、`preventDefault()` を呼び出されずにそこで伝播だけが止められます。行の上で押した `↑`、`↓`、`Home`、`End`、`Enter`、`Space` は行を移動するか行を選び、`preventDefault()` も呼び出されます。
+
+`4.2.0` からは、[辞書](../guide/guides/dictionary.md#keys-on-the-tab)タブもキーを扱い、エディタに届くのは `search`、`findReplace`、`undo`、`redo` だけです。`undo` と `redo` は表示しているシート自身の履歴で動作し、セルの編集中やタブの検索フィールドにフォーカスがある間はテキストに任され、そこで伝播は止められますが `preventDefault()` は呼び出されません。`search` と `findReplace` は、前述のとおり、セルの編集中は何もしません。行のキーの組み合わせは、前述の `addColumn` と `removeColumn` で説明したとおりグリッドで動作します。  
+それ以外のバインディングに現在割り当てられているキーはタブで止まり、シーケンスはその最後の入力で止まります。矢印キー、`Tab`、`Enter`、`Space`、`Home`、`End`、IME の変換中に押したキーも同様です。これらはどれもキャンバスにもページのバブリングフェーズの `keydown` リスナーにも届きません。そこで `Alt + N` を押してもテーブルは追加されず、`Delete` を押してもダイアグラムからは何も削除されません。タブ内のコピー、切り取り、貼り付けのイベントもそこで止まるため、ダイアグラムがそれらを自分のものとして読み取ることはありません。それ以外のキーは通常どおりページに届きます。
+
+### dictionaryRowChords {#dictionaryrowchords}
+
+`4.2.0` からは、パッケージは `dictionaryRowChords()` をエクスポートしています。渡したキーバインディングのマップのもとで辞書タブのグリッドが行を挿入または削除するすべてのキーの組み合わせを、呼び出すたびに新しい `ShortcutOption[]` として返します。  
+順に、選択範囲の下に行を挿入する `addColumn` の 1 回の入力からなるキーの組み合わせ、それぞれに `Shift` も加えた、上に行を挿入するキーの組み合わせ（すでに `Shift` を含むキーの組み合わせからは作られません）、行を削除する `removeColumn` の 1 回の入力からなるキーの組み合わせです。それぞれ元のバインディングの `preventDefault` と `stopPropagation` を保ち、シーケンスは含まれません。[行の追加と削除](../guide/guides/dictionary.md#adding-and-deleting-rows)を参照してください。  
+上に行を挿入するキーの組み合わせ（既定値では `Alt+Shift+Enter`）はどのバインディングにも含まれないため、修飾キーを厳密に照合し、通すキーの一覧を [createKeyBindingMap](#createkeybindingmap) だけから作成するホストは、これを決して通しません。Obsidian のプラグインと同じように、両方の一覧を通してください。  
+読み取るのは渡されたマップだけで、要素のバインディングは読み取らないため、キーの一覧の作成に使ったマップを渡します。
+
+```ts
+declare function dictionaryRowChords(
+  keyBindingMap: KeyBindingMap
+): ShortcutOption[];
+
+// example
+import { createKeyBindingMap, dictionaryRowChords } from '@dineug/erd-editor';
+
+const map = createKeyBindingMap();
+const shortcuts = [
+  ...Object.values(map).flat(),
+  ...dictionaryRowChords(map),
+].map(({ shortcut }) => shortcut);
+// dictionaryRowChords(map): 'Alt+Enter', 'Alt+Shift+Enter', 'Alt+Backspace', 'Alt+Delete'
+```
 
 ### $mod
 
@@ -635,6 +679,11 @@ type Theme = {
   columnSelectHover: string;
   columnHover: string;
 
+  columnHandleBackground: string;
+  columnHandleBorder: string;
+  columnHandleHoverBackground: string;
+  columnHandleHoverBorder: string;
+
   relationshipHover: string;
 
   visualizationLink: string;
@@ -692,6 +741,15 @@ type Theme = {
   explorerBackground: string;
   explorerBorder: string;
 
+  dictionaryErrorForeground: string;
+  dictionaryErrorBackground: string;
+  dictionaryWarningForeground: string;
+  dictionaryWarningBackground: string;
+  dictionaryBackground: string;
+  dictionaryHeaderBackground: string;
+  dictionaryGridLine: string;
+  dictionaryHeaderSelect: string;
+
   diffInsertForeground: string;
   diffDeleteForeground: string;
   diffModifyForeground: string;
@@ -722,6 +780,12 @@ editor.setTheme({
 - `diffModifyForeground` と `diffRenameForeground` は、Diff Viewer が変更、名前の変更として示すものの、ツリーと両方のドキュメントでの色です。`diffModifyForeground` は、ほかに何が変わったかにかかわらず、移動、サイズの変更、色の変更、グループの変更があったテーブル、メモ、テーブルグループの枠線も描き、変更された外部キーのコネクタも描きます。
 
 `diffInsertForeground` と `diffDeleteForeground` は現在、Diff Viewer が追加、削除として示すものの色で、テキスト、枠線、コネクタのいずれでも、ツリーと、それを持つ側のドキュメントで使われます。`diffInsertBackground`、`diffDeleteBackground`、`diffCrossBackground`、`diffCrossForeground` は、Diff Viewer がセルを塗りつぶさなくなったため、`4.1.0` で削除されました。`setTheme` は `Theme` にないほかの名前と同じようにこれらを破棄し、そのフックである `--erd-editor-diff-insert-background`、`--erd-editor-diff-delete-background`、`--erd-editor-diff-cross-background`、`--erd-editor-diff-cross-foreground` も読み取られなくなりました。
+
+`4.2.0` からは、トークンがさらに 12 個増えました。
+
+- `columnHandleBackground` と `columnHandleBorder` は、フォーカスしているカラムの行の横、テーブルの左端のすぐ外側に描かれる[カラムのドラッグハンドル](../guide/guides/table-editing.md#カラムの並べ替えと移動)の塗りと枠線の色で、ポインタを重ねている間は `columnHandleHoverBackground` と `columnHandleHoverBorder` に替わります。グリップには `foreground` が、ポインタを重ねている間は `active` が使われます。
+- `dictionaryErrorForeground` と `dictionaryWarningForeground` は、[辞書のチェック](../guide/guides/dictionary.md#what-each-check-finds)が検出したもの、つまりエラーまたは警告の色です。対象は、ERD キャンバス上の検出された名前（[キャンバス上のマーク](../guide/guides/dictionary.md#marks-on-the-canvas)を参照してください）、`Domains`、`Words`、`Terms` シートの検出されたセルのテキスト、そして `Checks` の件数です。`dictionaryErrorBackground` と `dictionaryWarningBackground` は、そのようなセルの背景を塗ります。`dictionaryErrorForeground` は、ポインタを重ねた `Delete Rows` のツールの色にも使われます。
+- `dictionaryBackground`、`dictionaryHeaderBackground`、`dictionaryGridLine`、`dictionaryHeaderSelect` は、[辞書](../guide/guides/dictionary.md#the-sheets)タブのシートの色です。それぞれ、セル（タブの検索フィールドと用語のドメインの一覧も塗ります）、列見出しと行番号、セルの間の線（タブのバーとそのフィールドの枠線も描きます）、そして選択範囲と行または列が重なる見出しの色です。シートのそれ以外の部分には共通のトークンが使われます。見出しのラベルには `foreground`、セルのテキストには `active`、列見出しと行番号をセルから区切る線には `grayColor7`、アクティブなセルの縁には `focus`、選択範囲の縁と、不透明度 20% でのその塗りには `accentColor9`、行全体または列全体を選択したときの見出しには `accentColor6`、読み取り専用のセルには `grayColor3`、そしてスクロールバーのトークンです。`#rgb` または `#rrggbb` の形式で書かれていない `accentColor9` では、選択範囲は塗られません。
 
 #### CSS Variables
 
@@ -782,6 +846,10 @@ erd-editor {
   --erd-editor-column-select: #182449;
   --erd-editor-column-select-hover: #1d2e62;
   --erd-editor-column-hover: #272a2d;
+  --erd-editor-column-handle-background: #18191b;
+  --erd-editor-column-handle-border: #363a3f;
+  --erd-editor-column-handle-hover-background: #2e3135;
+  --erd-editor-column-handle-hover-border: #43484e;
   --erd-editor-relationship-hover: #435db1;
   --erd-editor-visualization-link: #43484e;
   --erd-editor-visualization-column: #5a6169;
@@ -823,6 +891,14 @@ erd-editor {
   --erd-editor-tree-match: #253974;
   --erd-editor-explorer-background: #111113;
   --erd-editor-explorer-border: #363a3f;
+  --erd-editor-dictionary-error-foreground: #ff9592;
+  --erd-editor-dictionary-error-background: #500f1c;
+  --erd-editor-dictionary-warning-foreground: #ffca16;
+  --erd-editor-dictionary-warning-background: #3f2700;
+  --erd-editor-dictionary-background: #18191b;
+  --erd-editor-dictionary-header-background: #2e3135;
+  --erd-editor-dictionary-grid-line: #363a3f;
+  --erd-editor-dictionary-header-select: #182449;
   --erd-editor-diff-insert-foreground: #3dd68c;
   --erd-editor-diff-delete-foreground: #ff9592;
   --erd-editor-diff-modify-foreground: #ffca16;
@@ -903,6 +979,7 @@ editor.setSystemLocale('pt-PT'); // null follows the browser again
 
 Schema SQL ファイルを読み込みます。  
 既定では、現在のドキュメントにマージするのではなく、置き換えます。後述の `mode` を参照してください。表示位置と拡大・縮小のレベルを除いて、各ロックとそのロックされた値を含む既存の設定は維持され、ファイルの読み込み後にテーブルが配置されます。後述の `placement` で別の指定をしない限り、複数の行に並べて配置されます。`Viewport` がロックされている場合、その後 `value` は読み込みの開始時の表示、つまり拡大・縮小のレベル `1` の原点 `0, 0` を書き出します。そのため、値を一度も渡していない要素に読み込んだドキュメントは、新しいドキュメントと同じくすべてのロックがオンです。  
+`4.2.0` からは、置き換えでも、テキストが持つことのできないドキュメントの単語、用語、ドメインは、辞書の各シートの Undo の履歴とともに維持され、読み込みを Undo または Redo しても維持されます。置き換えを行う [setSchemaJSON](#setschemajson) と `value` への代入は、代わりにそれぞれのドキュメントが持つものを取り込みます。  
 履歴に記録されるため `Undo, Redo` が可能で、`change` を発行します。空文字列は無視され、`readonly` が設定されている間は何も行いません。  
 `setSchemaGraphQL`、`setSchemaDBML`、`setSchemaAML` も同じように動作し、これらのパーサーは失敗しません。解析できないテキストはエラーにならず、空のドキュメントを読み込みます。  
 `4.0.0` からは、4 つとも省略可能な 2 番目の引数 `{ placement, mode }` を受け取ります。
@@ -968,8 +1045,8 @@ editor.setSchemaAML('AML...');
 ## setSchemaJSON
 
 `4.0.0` からは、[value](#value) が返すテキストのような `.erd.json` ドキュメントを読み込みます。  
-既定の `mode: 'replace'` では、`value` への代入と同じようにドキュメントを読み込みます。履歴に記録され、`change` を発行し、ドキュメントのロックも同じように取り込みます。`value` とは異なり、空文字列や文字列以外の値は、新しいドキュメントを始めるのではなく無視されます。JSON でないテキストは、`value` と同じくドキュメントを空にします。  
-`mode: 'append'` は、[Import and Add](../guide/guides/file-import-export.md#import-and-add) が `json` ファイルで行うのと同じように、ドキュメントのテーブル、リレーションシップ、インデックス、メモ、テーブルグループを新しい ID でダイアグラムの下に追加し、互いの相対的な位置を保ち、ドキュメントの設定は取り込みません。読み取れないテキストや、テーブルもメモもないドキュメントは何も追加しません。それ以外の場合は [setSchemaSQL](#setschemasql) の追加と同じように反映され、新しいメモとテーブルグループも、それぞれ表示されている間はテーブルとともに選択されます。  
+既定の `mode: 'replace'` では、`value` への代入と同じようにドキュメントを読み込みます。履歴に記録され、`change` を発行し、ドキュメントのロックも同じように取り込み、`4.2.0` からはドキュメントの単語、用語、ドメインがエディタのものを置き換えます。`value` とは異なり、空文字列や文字列以外の値は、新しいドキュメントを始めるのではなく無視されます。JSON でないテキストは、`value` と同じくドキュメントを空にします。  
+`mode: 'append'` は、[Import and Add](../guide/guides/file-import-export.md#import-and-add) が `json` ファイルで行うのと同じように、ドキュメントのテーブル、リレーションシップ、インデックス、メモ、テーブルグループを新しい ID でダイアグラムの下に追加し、互いの相対的な位置を保ち、ドキュメントの設定は取り込みません。`4.2.0` からは、テーブルとカラムの論理名と、名前を生成したかどうかのフラグは保ちますが、ドキュメントの単語、用語、ドメインは取り込まないため、どのカラムもドメインに紐付きません。読み取れないテキストや、テーブルもメモもないドキュメントは何も追加しません。それ以外の場合は [setSchemaSQL](#setschemasql) の追加と同じように反映され、新しいメモとテーブルグループも、それぞれ表示されている間はテーブルとともに選択されます。  
 ドキュメントが反映されてから戻り、`readonly` が設定されている間は無視されます。
 
 ```js
@@ -982,16 +1059,18 @@ editor.setSchemaJSON('json...', { mode: 'append' });
 
 現在のエディタの状態を Schema SQL として書き出します。  
 `databaseVendor` を指定しない場合は、現在設定されているベンダーに従って動作します。次の一覧にない名前を指定した場合も、エラーにならず同じように動作します。  
-名前は、エディタが表示している括弧の種類で囲まれます。`Bracket Type` が[ロック](../guide/guides/settings.md#ロック)されている間は、これが `value` に保存される括弧の種類と異なることがあります。コーディングエージェントの [`erd_read`](../mcp/tools.md#reading-a-document) が名前を囲むのは、`value` に保存されるほうです。  
-`4.0.0` からは、省略可能な `options` 引数で、[Schema SQL](../guide/guides/schema-sql.md) タブのオプションと同じようにステートメントとヘッダーを選べます。`SchemaSQLOptions` は型としてエクスポートされています。
+名前は、エディタが表示している括弧の種類で囲まれます。`Bracket Type` が[ロック](../guide/guides/settings.md#ロック)されている間は、これが `value` に保存される括弧の種類と異なることがあります。コーディングエージェントの [`erd_read`](../mcp/tools.md#reading-a-document) が名前を囲むのは、`value` に保存されるほうです。名前の表示にかかわらず、書き出される名前は常に物理名です。  
+`4.0.0` からは、省略可能な `options` 引数で、[Schema SQL](../guide/guides/schema-sql.md) タブのオプションと同じようにステートメントとヘッダーを、`4.2.0` からは論理名で空のコメントを埋めるかどうかを選べます。`SchemaSQLOptions` は型としてエクスポートされています。
 
 - `statements`: 既定値の `'create'`、MySQL、MariaDB、PostgreSQL、SQLite、Databricks では `IF NOT EXISTS` を書き出し、それ以外では `'create'` として扱われる `'ifNotExists'`、テーブルを作成する前に削除する `'recreate'` のいずれかです。`'recreate'` では、Snowflake は代わりに `CREATE OR REPLACE TABLE` を書き出します。
 - `header`: 既定値の `'none'`、ドキュメントのデータベースまたはスキーマに切り替える `'use'`、それが存在しない場合は先に作成してから切り替える `'createAndUse'` のいずれかです。指定したものがないデータベースは、タブと同じように別の形式で書き出します。Oracle は `'createAndUse'` に対して `'use'` を書き出し、PostgreSQL は `'use'` に対してヘッダーを書き出さず、SQLite はヘッダーを書き出しません。ヘッダーが書き出されるのは、ドキュメントのデータベース名が単純な識別子、つまり ASCII の英字、数字、`_` からなり、数字で始まらない名前である間だけです。
+- `logicalNameAsComment`（`4.2.0` から）: `true` は、テーブルやカラム自身のコメントが空または空白だけで、論理名がそうでない場合に、その論理名を、そのデータベースがコメントを書き出す形式でコメントとして書き出します。テキストのあるコメントは、これまでどおり書き出されます。オンになるのは `true` だけです。省略した場合、`false`、または `'true'` や `1` のようなほかの値では、論理名は書き出されません。タブの [`Write logical names into empty comments`](../guide/guides/schema-sql.md#logical-names-as-comments) のスイッチと同じ動作です。
 
 省略したオプションや未知の値を指定したオプションは既定値として扱われるため、オプションなしで呼び出すと、これまでどおりヘッダーのない通常の `CREATE` 文が書き出されます。  
-`4.0.0` からは、出力には常にドキュメントの `Before tables` と `After tables` のスクリプトが含まれ、ヘッダー、前のスクリプト、DROP 文、テーブル、後のスクリプトの順に並びます。Schema SQL タブ自身の `Statements`、`Header`、`Tables` の選択がこの呼び出しに影響することはなく、常にドキュメント全体が書き出されます。  
+`4.0.0` からは、出力には常にドキュメントの `Before tables` と `After tables` のスクリプトが含まれ、ヘッダー、前のスクリプト、DROP 文、テーブル、後のスクリプトの順に並びます。Schema SQL タブ自身の `Statements`、`Header`、`Write logical names into empty comments`、`Tables` の選択がこの呼び出しに影響することはなく、常にドキュメント全体が書き出されます。  
 `3.10.0` からは、各外部キーにリレーションシップの `ON DELETE` 句と `ON UPDATE` 句が付きます。句が書き出されるのは、アクションが設定されていて、そのベンダーが受け付ける場合だけのため、そのベンダーが受け付けないアクションは省かれ、既定の動作が適用されます。`4.0.0` からは、Snowflake が受け付けるのは `NO ACTION` だけです。各データベースが何を書き出すかは、[ON DELETE と ON UPDATE](../guide/guides/relationship-editing.md#on-delete-and-on-update) を参照してください。  
 `3.10.0` からは、テーブルやカラムのコメントの中の一重引用符がエスケープされるため、`it's` のようなコメントで文が壊れることはなくなりました。コメントを文字列リテラルとして書き出すベンダーはいずれも引用符を 2 つ重ねますが、Databricks は例外で、各引用符と各バックスラッシュの前にバックスラッシュを付けます。SQLite は引き続きコメントを `--` 行として書き出します。  
+`4.2.0` からは、SQL Server は各コメントを `N'…'` という各国語文字のリテラルとして書き出すため、韓国語のようなデータベースのコードページ外のテキストも保たれます。Oracle はコメント内の連続する空行を 1 つの改行として書き出し、SQLite はコメントの改行を空白として書き出すため、コメントは `--` の行に収まります。[コメント](../guide/guides/schema-sql.md#comments)を参照してください。  
 `4.0.0` からは、いくつかのデータベースで、キーの名前、既定値、Auto Increment の書き出し方も変わりました。[DDL が書き出す内容](../guide/guides/schema-sql.md#ddl-が書き出す内容)を参照してください。
 
 ```ts
@@ -1008,6 +1087,7 @@ type DatabaseVendor =
 type SchemaSQLOptions = {
   statements?: 'create' | 'ifNotExists' | 'recreate';
   header?: 'none' | 'use' | 'createAndUse';
+  logicalNameAsComment?: boolean;
 };
 
 const schemaSQL = editor.getSchemaSQL();
@@ -1017,6 +1097,10 @@ const postgresSQL = editor.getSchemaSQL('PostgreSQL');
 const mysqlSQL = editor.getSchemaSQL('MySQL', {
   statements: 'ifNotExists',
   header: 'createAndUse',
+});
+// or
+const commentedSQL = editor.getSchemaSQL('PostgreSQL', {
+  logicalNameAsComment: true,
 });
 ```
 
@@ -1039,7 +1123,8 @@ const sharedStore = editor.getSharedStore({
 戻り値はなく、ドキュメントも変更しないため、ビューアーを閉じてもエディタは元のままです。  
 空の値や文字列以外の値を指定した場合は、空のドキュメントと比較します。  
 キャンバスのコンテキストメニューにある [Diff Viewer](../guide/guides/table-related-functions.md#diff-viewer) と同じオーバーレイです。  
-`4.1.0` からは、2 つのドキュメントが持つ項目をまず ID で対応付け、その後で、テーブルの名前やメモの本文のように、それぞれが変わらずに保っているもので対応付けます。[比較対象](../guide/guides/table-related-functions.md#what-is-compared)を参照してください。そのため、ファイルの Git のリビジョンのような同じドキュメントの以前のバージョンと比較すると、名前の変更は名前を変更した 1 つの項目として表示され、ID が異なるドキュメントと比較すると、1 つの削除と 1 つの追加として表示されます。ビューアーは変更点を 2 つのドキュメントの横のツリーに一覧表示し、セルを塗りつぶす代わりに色で変更を示します。
+`4.1.0` からは、2 つのドキュメントが持つ項目をまず ID で対応付け、その後で、テーブルの名前やメモの本文のように、それぞれが変わらずに保っているもので対応付けます。[比較対象](../guide/guides/table-related-functions.md#what-is-compared)を参照してください。そのため、ファイルの Git のリビジョンのような同じドキュメントの以前のバージョンと比較すると、名前の変更は名前を変更した 1 つの項目として表示され、ID が異なるドキュメントと比較すると、1 つの削除と 1 つの追加として表示されます。ビューアーは変更点を 2 つのドキュメントの横のツリーに一覧表示し、セルを塗りつぶす代わりに色で変更を示します。  
+`4.2.0` からは、渡したドキュメントが保存した表示にかかわらず、両方のドキュメントはこのエディタが表示している名前の表示で開き、ツリーもその表示でテーブルとカラムの名前を示します。[キャンバスの外](../guide/guides/logical-names.md#beyond-the-canvas)を参照してください。論理名、ドメインの紐付け、辞書は比較されないため、それらだけを変更しても変更は表示されません。
 
 ```js
 editor.setDiffValue('prev json...');

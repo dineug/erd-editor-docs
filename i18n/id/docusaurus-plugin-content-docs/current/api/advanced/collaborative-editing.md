@@ -44,19 +44,26 @@ Perlakukan aksi sebagai data opak dan teruskan apa adanya alih-alih membaca atau
 
 Sebagian dari apa yang dilakukan sebuah editor tetap berada di editor itu.  
 Membawa tabel, memo, atau grup tabel ke depan, seperti yang terjadi saat memilihnya, tidak dikirim.  
-Pilihan `Statements`, `Header`, dan `Tables` di tab [Skema SQL](../../guide/guides/schema-sql.md) juga tidak dikirim, karena pilihan itu milik jendela tempat pilihan tersebut dibuat.  
+Pilihan `Statements`, `Header`, `Write logical names into empty comments` (sejak `4.2.0`), dan `Tables` di tab [Skema SQL](../../guide/guides/schema-sql.md) juga tidak dikirim, karena pilihan itu milik jendela tempat pilihan tersebut dibuat.  
 Sejak `4.1.0`, [Penjelajah](../../guide/guides/explorer.md) juga tetap berada di editornya: apakah panel itu terbuka, lebarnya, baris yang diciutkan, baris tempat fokus keyboard berada, posisi guliran pohonnya, serta pencarian dan opsinya tidak dikirim.  
 [Sorotan](../../guide/guides/relationship-editing.md#reading-a-connector) yang diberikan pada konektor hubungan saat menuju sebuah kunci asing juga tidak dikirim.  
-Guliran, zoom, atau perpindahan tab dikirim, tetapi tidak pernah memindahkan area pandang atau tab pengguna lain. Hal ini termasuk guliran yang dibuat oleh lompatan dari Penjelajah dan perpindahan ke tab ERD saat Penjelajah dibuka dari tab lain.
+Sejak `4.2.0`, tab [Kamus](../../guide/guides/dictionary.md) juga tetap berada di editornya: lembar mana yang ditampilkan, serta pencarian, pilihan, guliran, dan lebar kolom setiap lembar tidak dikirim. Perubahan, pengurutan, dan impor CSV di tab itu dikirim.  
+Guliran, zoom, atau perpindahan tab dikirim, tetapi tidak pernah memindahkan area pandang atau tab pengguna lain. Hal ini termasuk guliran yang dibuat oleh lompatan dari Penjelajah, perpindahan ke tab ERD saat Penjelajah dibuka dari tab lain, serta perpindahan tab dan guliran yang dibuat oleh lompatan dari lembar [`Checks`](../../guide/guides/dictionary.md#the-checks-sheet) di tab Kamus ke tabel atau kolom. Lompatan dari lembar itu ke kata, istilah, atau domain tetap berada di tab Kamus, sehingga tidak ada bagiannya yang dikirim.
+
+Sejak `4.2.0`, penggantian [Tampilan Nama](../../guide/guides/logical-names.md#switching-the-view) juga dikirim, dan [penguncian](../../guide/guides/settings.md#lock) Tampilan Nama menentukan apa yang dilakukan editor lain terhadap penggantian itu. Penguncian `Name View` aktif di diagram baru dan di dokumen apa pun dari sebelum `4.2.0`.  
+Selama penguncian itu aktif, penggantian hanya tampil di editor yang melakukannya: penggantian tetap dikirim, tetapi setiap editor lain dan setiap replika membuangnya, sehingga setiap pengguna dapat melihat tampilan yang berbeda sementara `value` mempertahankan tampilan yang terkunci. Perubahan bahasa, konvensi penamaan, atau tipe tanda kutip berbeda: perubahan itu mencapai setiap editor, baik penguncian miliknya aktif maupun tidak.  
+Selama penguncian itu nonaktif, penggantian yang dilakukan di editor yang dapat mengedit mengubah Tampilan Nama di setiap editor dan replika, dengan penggantian terakhir yang berlaku, dan semuanya menyimpannya.  
+Penggantian yang dilakukan sendiri oleh editor hanya baca selalu tetap berada di editor itu, dan editor tersebut tetap mengikuti penggantian bersama dari editor lain.
 
 [Penguncian](../../guide/guides/settings.md#lock) dibagikan: penguncian atau pembukaan kunci terakhir pada sebuah pengaturan berlaku di setiap editor, dan penguncian membawa nilai dari editor yang mengaktifkannya, sehingga setiap editor dan replika menyimpan nilai yang sama.  
 Karena itu, penguncian `Viewport` menyimpan area pandang editor yang mengaktifkannya, dan penguncian `Canvas Type` menyimpan tab terakhir yang dibuka editor tersebut sebelum tab Pengaturan, tempat penguncian diaktifkan.  
-Menonaktifkan penguncian `Language`, `Table Name Case`, `Column Name Case`, atau `Bracket Type` juga menetapkan pengaturan itu di setiap editor ke nilai yang ditampilkan di editor yang menonaktifkannya, sehingga semua editor tetap menyimpan satu nilai. Menonaktifkan `Viewport` atau `Canvas Type` tidak memindahkan area pandang atau tab siapa pun.
+Menonaktifkan penguncian `Language`, `Table Name Case`, `Column Name Case`, `Bracket Type`, atau, sejak `4.2.0`, `Name View` juga menetapkan pengaturan itu di setiap editor ke nilai yang ditampilkan di editor yang menonaktifkannya, sehingga semua editor tetap menyimpan satu nilai. Menonaktifkan `Viewport` atau `Canvas Type` tidak memindahkan area pandang atau tab siapa pun.
 
 Perubahan pada skrip `Before tables` atau `After tables` dikirim secara utuh saat kotaknya kehilangan fokus. Hasil kedua skrip ditentukan secara terpisah, sehingga perubahan seorang kolaborator pada salah satunya tidak pernah menimpa yang lain.
 
 Apa pun yang dilakukan di [mode Alur](../../guide/guides/visualization.md#flow-never-edits-the-document) pada tab Visualisasi bukanlah perubahan dokumen, sehingga editor yang berada di Alur tidak mengirim perubahan apa pun ke editor lain, dan perubahan yang dikirim editor lain tetap diterapkan selama editor itu berada di sana.  
-Satu-satunya pengecualian adalah meninggalkan Alur menuju tab lain: perpindahan tab itu dikirim seperti perpindahan tab lainnya.  
+Ada dua pengecualian. Meninggalkan Alur menuju tab lain merupakan perpindahan tab, yang dikirim seperti perpindahan tab lainnya. Sejak `4.2.0`, pilihan di daftar Tampilan Nama pada bilah Alur merupakan penggantian Tampilan Nama, yang dikirim dan diterapkan seperti penggantian yang dilakukan di kanvas.  
+`Previous table`, `Next table`, serta tombol Batalkan dan Ulangi, yang [melangkah mundur dan maju](../../guide/guides/visualization.md#previous-table-and-next-table) di Alur, tidak dikirim.  
 Tombol tautan eksternal pada kartu, hasil [Pencarian Cepat](../../guide/guides/quick-search.md#searching-the-diagram) yang dipilih setelah `#`, `@`, atau `:`, serta membuka [Penjelajah](../../guide/guides/explorer.md#opening-and-closing) semuanya meninggalkan Alur menuju tab ERD. Guliran yang dibuat tombol kartu atau hasil Pencarian Cepat di sana juga dikirim.
 
 ## Dua editor dalam satu halaman {#two-editors-on-one-page}
@@ -99,6 +106,7 @@ const sharedStore2 = editor2.getSharedStore();
 
 Nilai runtime masih memuat apa yang telah dihapus sejak dokumen dibuka, sehingga saat editor lain kemudian membatalkan sebuah penghapusan, editor yang bergabung mengembalikan tabel itu beserta nama dan kolomnya.  
 [`value`](../erd-editor-element.md#value) adalah bentuk yang tersimpan di file, tanpa entitas yang dihapus, sehingga editor yang bergabung dan diisi data awal darinya, atau dari file, justru akan mengembalikan tabel kosong tanpa nama.  
+Sejak `4.2.0`, hal yang sama berlaku untuk kata, istilah, atau domain yang dihapus dari lembar di tab [Kamus](../../guide/guides/dictionary.md): saat editor lain membatalkan penghapusannya, editor yang bergabung dan diisi data awal dari `runtimeValue` mencantumkan baris itu kembali secara utuh, sedangkan editor yang diisi dari `value` mencantumkan baris kosong, yang kemudian tidak disertakan oleh `value` miliknya sendiri.  
 Tetap tulis `value` ke penyimpanan: `runtimeValue` hanya untuk mengisi data awal editor lain, tampilan kedua, atau [replicationStore](./remote-storage.md).  
 Editor di VS Code, Obsidian, IDE JetBrains, dan aplikasi web mengisi data awal tampilan kedua dari dokumen yang terbuka dengan cara ini.
 
@@ -134,6 +142,31 @@ Pastikan setiap editor dalam sesi, dan setiap [replicationStore](./remote-storag
 Editor `4.1.0` tidak mengirim tipe aksi baru, sehingga editor dan replika `4.0.0` dan `4.1.0` berbagi sesi tanpa ada yang terlewat.  
 [Temukan dan Ganti](../../guide/guides/find-and-replace.md#replacing) di editor itu juga mencari nama indeks dan nama grup tabel, dan `Replace` serta `Replace All` mengganti namanya melalui aksi `index.changeName` dan `tableGroup.changeName` yang sudah diterapkan editor `4.0.0`.
 
+Sejak `4.2.0`, perubahan berikut dibawa oleh tipe aksi baru, dan relai yang meneruskan aksi apa adanya tidak memerlukan apa pun yang baru untuk itu:
+
+- [nama logis](../../guide/guides/logical-names.md) tabel atau kolom: `table.changeLogicalName` dan `column.changeLogicalName`; apakah namanya [dihasilkan dari kamus](../../guide/guides/dictionary.md#deriving-physical-names): `table.changeNameDerived` dan `column.changeNameDerived`;
+- kolom yang ditautkan ke [domain](../../guide/guides/dictionary.md#domains-and-data-types) atau dilepas tautannya: `column.changeDomain`;
+- kata, istilah, atau domain yang ditambahkan, diubah (termasuk posisinya di lembar, seperti yang ditetapkan pengurutan), atau dihapus di tab [Kamus](../../guide/guides/dictionary.md): `dictionary.add`, `dictionary.update`, dan `dictionary.remove`;
+- penggantian [Tampilan Nama](../../guide/guides/logical-names.md#switching-the-view): `settings.changeNameViewMode`.
+
+Penguncian `Name View` dibawa oleh aksi `settings.changeLockSettings` yang sudah ada, opsi tampilan `Domain` oleh `settings.changeShow`, dan pemindahan `Logical Name` atau `Domain` di [Urutan kolom](../../guide/guides/settings.md#adjusting-column-order) oleh `settings.changeColumnOrder`.  
+`editor.clear` dan `editor.loadJson` dari impor Skema SQL, GraphQL, DBML, atau AML melalui `Import` membawa `keepDictionaries: true`, yang mempertahankan kata, istilah, dan domain di setiap editor. Begitu pula aksi tersebut dari panggilan [setSchemaSQL](../erd-editor-element.md#setschemasql), `setSchemaGraphQL`, `setSchemaDBML`, atau `setSchemaAML` yang mengganti.  
+Nama fisik yang dihasilkan kamus dibawa oleh `table.changeName` atau `column.changeName`, dan tipe data yang diberikan domain kepada kolomnya oleh `column.changeDataType`, yaitu aksi yang dikirim oleh pengeditan manual.
+
+Editor dari sebelum `4.2.0` mengabaikan tipe aksi baru: editor itu tidak memiliki nama logis, tautan domain, kamus, maupun Tampilan Nama. Penguncian atau pembukaan kunci `Name View` tidak mengubah apa pun di sana, begitu pula pemindahan `Logical Name` atau `Domain` di Urutan kolom, atau pemindahan kolom lain ke posisi salah satunya. Begitu pula penguncian `Canvas Type` yang diaktifkan oleh editor yang membuka tab Pengaturan dari tab Kamus: editor lama tidak mengenal tab itu, sehingga membiarkan `Canvas Type` tidak terkunci. Editor lama tetap menampilkan nama fisik yang dihasilkan kamus dan tipe data yang diberikan domain.  
+Perubahan yang dibuatnya sendiri tidak mengenal nama logis, domain, maupun kamus, dengan dampak berikut pada editor yang lebih baru:
+
+- Tabel atau kolom yang diganti namanya secara manual di editor itu tetap memiliki nama yang ditandai sebagai dihasilkan, sehingga nama logis yang kemudian ditulis untuknya di editor yang lebih baru dapat menghasilkan nama lagi, menimpa nama yang diketik di editor lama.
+- Tipe data yang diberikannya kepada kolom yang tertaut ke domain membiarkan tautan itu, sehingga lembar `Checks` mencantumkan `Domain type mismatch` dan perubahan tipe domain berikutnya memberikan tipe domain itu lagi kepada kolom tersebut.
+- Kolom kunci asing dari hubungan yang ditambahkannya tidak mendapatkan nama logis maupun domain dari kuncinya.
+- Tabel yang ditempel atau diduplikasinya tiba tanpa nama logis maupun tautan domain.
+- Impor Skema SQL, GraphQL, DBML, atau AML di editor itu tidak mengirim `keepDictionaries`, sehingga mengosongkan kata, istilah, dan domain di setiap editor.
+- Pembatalan pemuatan, impor, atau `clear()` oleh editor itu memuat salinan dokumennya sendiri di setiap editor, dan salinan itu tidak memiliki nama logis, tautan domain, maupun kamus.
+- Salinan itu, dan dokumen yang dimuat oleh impor Skema SQL, GraphQL, DBML, atau AML di editor itu, juga mengembalikan penguncian `Name View` di setiap editor ke keadaan sebagaimana didapati editor lama tersebut. Setiap editor kemudian menyimpan `Physical Names` sebagai Tampilan Nama, dan juga menampilkannya jika penguncian nonaktif.
+
+Dokumen yang disimpan dari editor itu tidak memiliki nama logis, tautan domain, kamus, maupun Tampilan Nama, sehingga editor `4.2.0` membukanya dalam tampilan `Physical Names`. Editor lama memang menyimpan penguncian `Name View` sebagaimana didapatinya, sehingga dokumen yang tidak dikunci di editor `4.2.0` tetap tidak terkunci.  
+Pastikan setiap editor dalam sesi, dan setiap [replicationStore](./remote-storage.md#dispatch-dispatchsync) yang menyimpan dokumennya, menggunakan `4.2.0` atau yang lebih baru.
+
 ## SharedStoreConfig {#sharedstoreconfig}
 
 ### getNickname {#getnickname}
@@ -161,6 +194,7 @@ editor.getSharedStore({ mouseTracker: false });
 Menyiarkan apa yang sedang dikerjakan pengguna ini. Nilai defaultnya `true`.  
 Tabel dan sel yang Anda fokuskan, tabel, memo, dan grup tabel yang Anda pilih, serta kotak yang Anda seret di kanvas dikirim ke editor lain dan digambar di sana.  
 Setiap pengguna mendapat warnanya sendiri agar Anda dapat membedakan mereka: garis tepi pada tabel yang difokuskan, garis bawah pada sel yang difokuskan, cincin di sekeliling tabel, memo, dan grup tabel yang dipilih, serta persegi panjang putus-putus untuk kotak seret.  
+Sejak `4.2.0`, setiap pengguna dapat melihat [Tampilan Nama](../../guide/guides/logical-names.md#collaborators) yang berbeda selama penguncian Tampilan Nama aktif, atau setelah editor hanya baca mengganti tampilannya sendiri. Sel terfokus yang tidak ditampilkan oleh tampilan Anda diberi garis bawah pada sel yang ditampilkan sebagai penggantinya: nama dan nama logis saling menggantikan, seperti halnya tipe data dan domain.  
 Kehadiran yang datang dari pengguna lain selalu digambar di kanvas Anda, baik opsi ini aktif maupun tidak.  
 Di mode Alur pada tab Visualisasi, fokus dan pilihan pengguna lain digambar pada kartu tabel, tetapi kotak seret mereka tidak. Tabel yang Anda pilih di sana tetap dikirim; kotak yang Anda seret di sana tidak.
 

@@ -11,17 +11,21 @@ Seit `4.0.0` hat ein Dokument zwei Serialisierungen, beide mit dem Wert `'3.0.0'
 
 ## Speicherform und Laufzeitwert {#storage-form-and-runtime-value}
 
-Die Speicherform enthält nur die nicht entfernten Entitäten: jede in `doc.tableIds` aufgeführte Tabelle, die Spalten, die diese Tabellen aufführen, die Beziehungen zwischen zwei verbleibenden Tabellen, die Indizes verbleibender Tabellen mit den Indexspalten, deren Spalte die Tabelle noch aufführt, sowie die aufgeführten Notizen und Tabellengruppen. Sie lässt weg, was ein Editor beim Laden ableitet oder vorhält, solange er geöffnet ist: entfernte Entitäten, `seqColumnIds` und `seqIndexColumnIds`, jeden `zIndex`, die gemessenen Breiten, das Feld `ui` der Spalten sowie `identification`, `startRelationshipType` und die Ankerpunkte einer Beziehung. Die Typen unten markieren jedes dieser Felder mit `// runtime only`.  
-Die Einträge jeder Collection sind nach ID geschlüsselt und in der Reihenfolge der Codeeinheiten sortiert, wobei Spalten zuerst nach `tableId` und Indexspalten zuerst nach `indexId` gruppiert sind. Jede Entität schreibt ihre Felder in einer festen Reihenfolge, und der Text ist mit zwei Leerzeichen eingerückt und endet mit einem Zeilenumbruch. Dadurch ergibt dasselbe Dokument immer dieselben Bytes, eine Änderung verändert nur, was sie betrifft, und eine Datei, die auf einem Rechner mit anderen Schriftarten gespeichert wurde, wird mit demselben Wert von `value` wieder geöffnet.  
+Die Speicherform enthält nur die nicht entfernten Entitäten: jede in `doc.tableIds` aufgeführte Tabelle, die Spalten, die diese Tabellen aufführen, die Beziehungen zwischen zwei verbleibenden Tabellen, die Indizes verbleibender Tabellen mit den Indexspalten, deren Spalte die Tabelle noch aufführt, die aufgeführten Notizen und Tabellengruppen sowie seit `4.2.0` die aufgeführten Wörter, Begriffe und Domänen, die über ihre ID hinaus einen Wert enthalten. Sie lässt weg, was ein Editor beim Laden ableitet oder vorhält, solange er geöffnet ist: entfernte Entitäten, `seqColumnIds` und `seqIndexColumnIds`, jeden `zIndex`, die gemessenen Breiten, das Feld `ui` der Spalten, `identification`, `startRelationshipType` und die Ankerpunkte einer Beziehung sowie seit `4.2.0` das Feld `order` jeder Wörterbuchzeile und die Listen `doc.wordIds`, `doc.termIds` und `doc.domainIds`. Die Typen unten markieren jedes dieser Felder mit `// runtime only`.  
+Die Einträge jeder Collection außer den Wörterbüchern sind nach ID geschlüsselt und in der Reihenfolge der Codeeinheiten sortiert, wobei Spalten zuerst nach `tableId` und Indexspalten zuerst nach `indexId` gruppiert sind. Seit `4.2.0` folgen `wordEntities`, `termEntities` und `domainEntities` in dieser Reihenfolge auf alle anderen Collections, jeweils als Kopfzeile und Zeilen geschrieben, jede Zeile in einer eigenen Textzeile (siehe [Wörterbuchzeilen](#dictionary-rows)). Jede Entität schreibt ihre Felder in einer festen Reihenfolge, und der Text ist mit zwei Leerzeichen eingerückt und endet mit einem Zeilenumbruch. Dadurch ergibt dasselbe Dokument immer dieselben Bytes, eine Änderung verändert nur, was sie betrifft, und eine Datei, die auf einem Rechner mit anderen Schriftarten gespeichert wurde, wird mit demselben Wert von `value` wieder geöffnet.  
 VS Code, Obsidian und das JetBrains-Plugin schreiben eine Datei nur, wenn eine Änderung `value` verändert, sodass eine Datei, die eine frühere Version gespeichert hat, ihre alte Form bis zu ihrer ersten Änderung behält.
 
-Der Laufzeitwert behält, was die Speicherform weglässt: entfernte Entitäten, Sequenzen, Z-Indizes, Breiten, Schlüsselmarkierungen, Beziehungs-Flags und Ankerpunkte. Er ist mit zwei Leerzeichen eingerückt und hat keinen abschließenden Zeilenumbruch. Verwenden Sie ihn nur, um über `setInitialValue()` einen Mitbearbeiter oder eine zweite Ansicht zu initialisieren, damit das Rückgängigmachen einer Entfernung, das ein anderer Editor sendet, die Entität dort vollständig wiederherstellt. Schreiben Sie ihn nie in eine Datei; das JSON Schema lehnt ihn ab. Entfernte Entitäten werden nicht mehr aufgeräumt, daher behält der Laufzeitwert sie, bis das Dokument das nächste Mal aus seiner Datei geöffnet wird.
+Seit `4.2.0` lässt die Speicherform außerdem weg, was nichts enthält: jedes Textfeld, das eine Entität oder ihr `ui` als `''` enthält (bei einer Tabelle `name`, `comment` und `ui.color`, bei einer Spalte `name`, `comment`, `dataType` und `default`, bei einem Index `name`, bei einer Notiz `value` und `ui.color`, bei einer Tabellengruppe `name` und `color`), jede Liste in `doc` und jede Collection, die keinen Eintrag enthält, sowie `collections` selbst, sobald jede Collection leer ist. Text, der nur aus Leerraum besteht, wird so geschrieben, wie er vorliegt, außer bei einem logischen Namen, der dann entfällt; ein Wort, ein Begriff oder eine Domäne, deren Werte nach der ID alle leer sind oder nur aus Leerraum bestehen, entfällt ganz. Jede ID, jede Liste innerhalb einer Entität und jede Zahl, `0` eingeschlossen, wird weiterhin geschrieben. `doc` wird immer geschrieben, daher enthält die Datei eines neuen Dokuments `$schema`, `version`, seine Einstellungen und `"doc": {}`.  
+Beim Parsen wird ein fehlendes Textfeld als `''` und eine fehlende Collection als leer gelesen, wie es jede v3-Version tut, und die Speicherform lässt eine Liste in `doc` nur weg, solange ihre Collection nichts enthält (siehe [Doc](#doc)). Daher öffnet auch ein Editor vor `4.2.0` diese Dateien, und ein Programm, das eine Datei selbst liest, muss Fehlendes auf dieselbe Weise lesen. Eine Datei, die eine frühere Version gespeichert hat, kommt aus ihrem nächsten Speichern ohne ihren leeren Text, ihre leeren Listen und Collections zurück, eine einmalige Änderung, und wird von da an Byte für Byte gleich gespeichert.
 
-Beide Formen schreiben jede gesperrte Einstellung mit ihrem gesperrten Wert (siehe [`lockSettings`](#settings)), `settings.ddlScripts` nur, solange ein Skript Text enthält, und das Feld `groupId` einer Tabelle nur, solange es nicht leer ist. Die Speicherform schreibt `doc.tableGroupIds` und `tableGroupEntities` nur, solange eine Tabellengruppe existiert; der Laufzeitwert schreibt sie, solange das Dokument eine Gruppe oder eine entfernte Gruppe enthält.
+Der Laufzeitwert behält, was die Speicherform weglässt: entfernte Entitäten, Sequenzen, Z-Indizes, Breiten, Schlüsselmarkierungen, Beziehungs-Flags und Ankerpunkte, die leeren Textfelder sowie die vier Listen `tableIds`, `relationshipIds`, `indexIds` und `memoIds` und die sechs Collections von `tableEntities` bis `memoEntities`, auch wenn sie leer sind. Seit `4.2.0` behält er außerdem entfernte Wörter, Begriffe und Domänen, Zeilen, die nichts enthalten, das Feld `order` jeder Zeile, die drei Listen der Wörterbücher, einen logischen Namen, der nur aus Leerraum besteht, und eine Verknüpfung mit einer entfernten Domäne. Er ist mit zwei Leerzeichen eingerückt und hat keinen abschließenden Zeilenumbruch. Verwenden Sie ihn nur, um über `setInitialValue()` einen Mitbearbeiter oder eine zweite Ansicht zu initialisieren, damit das Rückgängigmachen einer Entfernung, das ein anderer Editor sendet, die Entität dort vollständig wiederherstellt. Schreiben Sie ihn nie in eine Datei; das JSON Schema lehnt ihn ab. Entfernte Entitäten werden nicht mehr aufgeräumt, daher behält der Laufzeitwert sie, bis das Dokument das nächste Mal aus seiner Datei geöffnet wird.
+
+Beide Formen schreiben jede gesperrte Einstellung mit ihrem gesperrten Wert (siehe [`lockSettings`](#settings)), `settings.ddlScripts` nur, solange ein Skript Text enthält, und das Feld `groupId` einer Tabelle nur, solange es nicht leer ist. Seit `4.2.0` schreiben beide außerdem `settings.nameViewMode` nur, solange der geschriebene Wert nicht `'physical'` ist, `settings.columnOrder` nach Möglichkeit mit sieben Einträgen (siehe [Settings](#settings)) und das Feld `nameDerived` einer Tabelle nur, solange es `true` ist.  
+Die Speicherform schreibt `doc.tableGroupIds` und `tableGroupEntities` nur, solange eine Tabellengruppe existiert, ein Feld `logicalName` nur, solange es anderen Text als Leerraum enthält, das Feld `domainId` einer Spalte nur, solange es eine Domäne benennt, die die Datei schreibt, und jedes Wörterbuch nur, solange es eine Zeile enthält, die die Datei schreibt. Der Laufzeitwert schreibt die Felder der Tabellengruppen, solange das Dokument eine Gruppe oder eine entfernte Gruppe enthält, `logicalName` und `domainId`, solange sie nicht `''` sind, und jedes Wörterbuch mit seiner Liste, solange eines von beiden einen Eintrag enthält, eine entfernte Zeile eingeschlossen.
 
 ## TypeScript {#typescript}
 
-Die Typen beschreiben den Laufzeitwert. Ein mit `// runtime only` markiertes Feld entfällt in der Speicherform, und ein mit `?` markiertes Feld wird nur geschrieben, solange es etwas enthält.
+Die Typen beschreiben den Laufzeitwert. Ein mit `// runtime only` markiertes Feld entfällt in der Speicherform, und ein mit `?` markiertes Feld wird nur geschrieben, solange es etwas enthält. Der leere Text sowie die leeren Listen und Collections, die die Speicherform seit `4.2.0` weglässt, sind nicht markiert.
 
 ### ERDEditorSchemaV3 {#erdeditorschemav3}
 
@@ -39,11 +43,15 @@ type ERDEditorSchemaV3 = {
     indexColumnEntities: Record<string, IndexColumn>;
     memoEntities: Record<string, Memo>;
     tableGroupEntities?: Record<string, TableGroup>;
+    wordEntities?: DictionaryRows; // rows of Word
+    termEntities?: DictionaryRows; // rows of Term
+    domainEntities?: DictionaryRows; // rows of Domain
   };
 };
 ```
 
-Der Schlüssel jeder Entität ist ihre `id`, eine opake Zeichenkette; beim Parsen wird eine Entität verworfen, deren `id` fehlt oder leer ist. Seit `4.0.0` ist jede neue ID eine UUIDv7 in Uuid25-Form, 25 kleingeschriebene Base-36-Ziffern, etwa `03gzrxjv20bdlcak89q25d2m7`, sodass sich die IDs, die ein Editor erzeugt, in der Reihenfolge sortieren, in der er sie erzeugt hat. Ein Dokument behält die IDs, die es enthält, etwa die nanoid-IDs einer früheren Version oder die IDs einer v2-Datei, daher sollte sich nichts auf die Form einer ID verlassen.
+Jede Entität hat eine `id`, eine opake Zeichenkette, die als Schlüssel in ihrer Collection dient, außer in den drei Wörterbüchern, wo sie der erste Wert einer Zeile ist. Seit `4.2.0` wird beim Parsen eine Entität der sieben geschlüsselten Collections, deren `id` fehlt, leer oder keine Zeichenkette ist, nach dem Schlüssel gelesen, unter dem sie steht, und ein Eintrag verworfen, der kein Objekt ist, oder einer ohne ID, dessen Schlüssel `''` ist. Eine Wörterbuchzeile wird verworfen, wenn sie kein Array ist oder ihre `id` keine Zeichenkette ungleich `''` ist. Ein Editor vor `4.2.0` verwirft eine Entität, deren `id` fehlt oder leer ist, daher schreibt die Speicherform weiterhin jede ID.  
+Seit `4.0.0` ist jede neue ID, auch die einer Wörterbuchzeile, eine UUIDv7 in Uuid25-Form, 25 kleingeschriebene Base-36-Ziffern, etwa `03gzrxjv20bdlcak89q25d2m7`, sodass sich die IDs, die ein Editor erzeugt, in der Reihenfolge sortieren, in der er sie erzeugt hat. Ein Dokument behält die IDs, die es enthält, etwa die nanoid-IDs einer früheren Version oder die IDs einer v2-Datei, daher sollte sich nichts auf die Form einer ID verlassen.
 
 Seit `4.0.0` trägt keine Entität mehr ein Objekt `meta` (`createAt`, `updateAt`), und die Typen `EntityMeta` und `EntityType` wurden entfernt. Nichts schreibt es, beim Parsen wird das Objekt `meta` einer älteren Datei verworfen, und das JSON Schema lehnt es ab. Es diente nur der zeitlichen Steuerung der Garbage Collection entfernter Entitäten, die ebenfalls entfallen ist.
 
@@ -67,6 +75,7 @@ type Settings = {
   maxWidthComment: number;
   lockSettings: number; // Constants: LockSettingType
   ddlScripts?: DDLScripts;
+  nameViewMode?: string; // Constants: NameViewMode
 };
 
 type DDLScripts = {
@@ -81,6 +90,7 @@ const CanvasType = {
   schemaSQL: '@dineug/erd-editor/builtin-schema-sql',
   generatorCode: '@dineug/erd-editor/builtin-generator-code',
   settings: 'settings',
+  dictionary: '@dineug/erd-editor/builtin-dictionary',
 } as const;
 
 const Show = {
@@ -97,6 +107,7 @@ const Show = {
   hideReferentialAction: 1024,
   hideTableGroup: 2048,
   hideMemo: 4096,
+  columnDomain: 8192,
 } as const;
 
 const ColumnType = {
@@ -107,6 +118,8 @@ const ColumnType = {
   columnAutoIncrement: 16,
   columnDefault: 32,
   columnComment: 64,
+  columnLogicalName: 128,
+  columnDomain: 256,
 } as const;
 
 const Database = {
@@ -166,6 +179,13 @@ const LockSettingType = {
   tableNameCase: 8,
   columnNameCase: 16,
   bracketType: 32,
+  unlockNameViewMode: 64, // nameViewMode; set while unlocked
+} as const;
+
+const NameViewMode = {
+  physical: 'physical',
+  logical: 'logical',
+  both: 'both',
 } as const;
 ```
 
@@ -175,10 +195,11 @@ Seit `4.0.0` enthalten die Einstellungen keine Felder `width`, `height`, `scroll
 
 `canvasType` ist die Registerkarte, auf der sich ein Dokument öffnet. Ein auf der Registerkarte Visualisierung gespeichertes Dokument enthält `'@dineug/erd-editor/builtin-visualization'`, aber nicht, ob der Modus `Graph` oder `Flow` angezeigt wurde, und ein neu erstellter Editor zeigt diese Registerkarte im Modus `Graph`.  
 Seit `4.0.0` behält das Dokument, solange die Sperre `Canvas Type` eingeschaltet ist, wie es in einem neuen Dokument der Fall ist, die Registerkarte, die beim Sperren angezeigt wurde, und ein Wechsel der Registerkarte lässt `value` unverändert. Eine auf der Registerkarte Einstellungen gesetzte Sperre hält die Registerkarte fest, von der der Leser kam, und ein gesperrtes `'settings'`, das nur eine Bearbeitung von Hand schreiben kann, öffnet sich auf `'ERD'`.  
-Vom eigenen Zustand des Modus `Flow` wird nichts serialisiert – Platzierung, Zoom, Verschieben, Zeilenanzeige und fokussierte Tabellen bleiben im Editor –, daher beschreiben `originX`, `originY` und `zoomLevel` immer die ERD-Zeichenfläche.
+Seit `4.2.0` kann `canvasType` auch `'@dineug/erd-editor/builtin-dictionary'` sein, die Registerkarte [Wörterbuch](../../guide/guides/dictionary.md), die die Sperre `Canvas Type` wie die anderen festhält. Ein Editor vor `4.2.0` behält diesen Wert, zeigt aber unter seiner Symbolleiste keine Registerkarte an, bis der Leser eine auswählt.  
+Vom eigenen Zustand des Modus `Flow` wird nichts serialisiert: Platzierung, Zoom, Verschieben, Zeilenanzeige und fokussierte Tabellen bleiben im Editor, und seit `4.2.0` gilt das auch für die Ansichten, die [`Previous table` und `Next table`](../../guide/guides/visualization.md#previous-table-and-next-table) schrittweise durchlaufen. Daher beschreiben `originX`, `originY` und `zoomLevel` immer die ERD-Zeichenfläche.
 
 `show` und `lockSettings` sind Bitmasken – verknüpfen Sie die Flags mit OR.  
-`columnOrder` ist ein Array mit allen sieben Werten von `ColumnType` in Anzeigereihenfolge.  
+`columnOrder` ist ein Array, das jeden Wert von `ColumnType` einmal enthält, in Anzeigereihenfolge; seit `4.2.0` kann ein Dokument es mit sieben der neun Werte schreiben, wie der Absatz zur Spaltenreihenfolge weiter unten beschreibt.  
 `database`, `language`, `tableNameCase`, `columnNameCase` und `bracketType` enthalten jeweils genau einen Wert, und das JSON Schema lehnt einen kombinierten Wert ab.
 
 Bei einem neuen Dokument hat `show` den Wert `431`: `tableComment`, `columnComment`, `columnDataType`, `columnDefault`, `columnPrimaryKey`, `columnNotNull` und `relationship`.  
@@ -191,17 +212,31 @@ Seit `4.0.0` gibt es zwei weitere Flags in `show`, die in einem neuen Dokument u
 `hideTableGroup` (`2048`) blendet die [Tabellengruppen](../../guide/guides/table-groups.md) aus, und `hideMemo` (`4096`) blendet jede Notiz aus. Es sind die [Ansichtsoptionen](../../guide/guides/table-related-functions.md#table-view-options) `Table Groups` und `Memos`, die jeweils aktiviert sind, solange ihr Flag ausgeschaltet ist. Keines der beiden ändert die Größe einer Tabelle.  
 Ein Editor vor `4.0.0` behält `show` als ganze Zahl, sodass beide Flags ein Speichern dort überstehen.
 
+Seit `4.2.0` gibt es ein weiteres Flag in `show`, `columnDomain` (`8192`), das in einem neuen Dokument und in jedem vor `4.2.0` gespeicherten Dokument ausgeschaltet ist, sodass `show` bei einem neuen Dokument weiterhin den Wert `431` hat. Es ist die [Ansichtsoption](../../guide/guides/table-related-functions.md#table-view-options) `Domain`: Ist es gesetzt, zeigt jede Spaltenzeile eine [Domänenzelle](../../guide/guides/logical-names.md#the-domain-cell), was die Tabellen verbreitert. Es ist anfangs ausgeschaltet, sodass kein bestehendes Diagramm seine Breite ändert.  
+Ein Editor vor `4.2.0` behält `show` als ganze Zahl, sodass das Flag ein Speichern dort übersteht.
+
+Seit `4.2.0` hat `ColumnType` neun Werte. `columnLogicalName` (`128`) platziert die Zelle des logischen Namens, die eine Spaltenzeile nur in der Ansicht `Both Names` zeigt, und `columnDomain` (`256`) die Domänenzelle. Es sind die Zeilen `Logical Name` und `Domain` der [Spaltenreihenfolge](../../guide/guides/settings.md#adjusting-column-order) auf der Registerkarte Einstellungen. Ein Editor hält eine Reihenfolge aller neun Werte, und die eines neuen Dokuments ist `128, 1, 2, 256, 4, 8, 16, 32, 64`.  
+Beide Formen schreiben die Reihenfolge mit sieben Einträgen und lassen `128` und `256` weg, solange `128` direkt vor `columnName` und `256` direkt nach `columnDataType` stehen. Daher schreibt ein neues Dokument weiterhin `1, 2, 4, 8, 16, 32, 64`, und eine Datei, in deren Reihenfolge die beiden nie verschoben wurden, behält ihre Bytes. Andernfalls schreiben sie alle neun.  
+Beim Parsen werden die beiden in eine Reihenfolge mit sieben Einträgen an diesen Stellen eingefügt, unabhängig davon, in welcher Reihenfolge die sieben stehen, neun Einträge, die jeden Typ enthalten, werden so übernommen, wie sie stehen, und alles andere wird als Standardreihenfolge gelesen. Das JSON Schema akzeptiert sieben oder neun ganze Zahlen.
+
 Seit `4.0.0` hat `Language` acht weitere Ziele des [Codegenerators](../../guide/guides/code-generator.md), von `Mermaid` bis `JSONSchema`. Ein Wert von `language`, den der Parser nicht kennt, wird als `GraphQL` gelesen, daher öffnet ein Editor vor `4.0.0` ein Dokument, das mit einem davon gespeichert wurde, mit GraphQL, und ein Speichern dort schreibt GraphQL.
 
 Seit `4.0.0` tritt `lockSettings` an die Stelle von `ignoreSaveSettings` und `LockSettingType` an die Stelle von `SaveSettingType`, das entfernt wurde. `lockSettings` benennt die Einstellungen, die ein Dokument so speichert, wie sie beim Sperren standen. `viewport` umfasst `originX`, `originY` und `zoomLevel` zusammen, da sich ein ohne seinen Zoom gespeicherter Ursprung an anderer Stelle öffnet, und jedes andere Bit umfasst das Feld, nach dem es benannt ist. Dies sind die Zeilen unter [`Lock`](../../guide/guides/settings.md#lock) auf der Registerkarte Einstellungen.  
-Eine gesperrte Einstellung wird von `value` und `runtimeValue` gleichermaßen mit ihrem gesperrten Wert geschrieben, unabhängig davon, was der Editor anzeigt, und jede andere Einstellung so, wie sie gerade steht. Solange die passende Sperre eingeschaltet ist, lassen daher Scrollen und Zoomen, ein Wechsel der Registerkarte oder das Ändern der Sprache des Codegenerators, einer Schreibweise oder des Begrenzertyps die Datei unverändert. Beim Sperren wird der Wert übernommen, den die Einstellung in diesem Moment hat, und beim Parsen wird der gesperrte Wert aus dem gespeicherten Feld übernommen.  
+Eine gesperrte Einstellung wird von `value` und `runtimeValue` gleichermaßen mit ihrem gesperrten Wert geschrieben, unabhängig davon, was der Editor anzeigt, und jede andere Einstellung so, wie sie gerade steht. Solange die passende Sperre eingeschaltet ist, lassen daher Scrollen und Zoomen, ein Wechsel der Registerkarte, das Ändern der Sprache des Codegenerators, einer Schreibweise oder des Begrenzertyps oder ein Wechsel der Namensansicht die Datei unverändert. Beim Sperren wird der Wert übernommen, den die Einstellung in diesem Moment hat, und beim Parsen wird der gesperrte Wert aus dem gespeicherten Feld übernommen.  
 Ein von Grund auf neu begonnenes Dokument – ein neuer Editor oder Replikations-Store oder ein leerer Wert, der `value` zugewiesen oder an `setInitialValue()` übergeben wird – hat `lockSettings` auf `63` gesetzt, also jede Sperre eingeschaltet. Ein Dokument, dessen `settings` kein `lockSettings` enthalten – jede vor `4.0.0` gespeicherte Datei, unabhängig von ihrem Wert für `ignoreSaveSettings`, und jedes v2-Dokument –, öffnet sich ebenfalls mit allen Sperren eingeschaltet: Ansicht und Registerkarte dort, wo sie bei einem neuen Dokument sind (`originX` und `originY` auf `0`, `zoomLevel` auf `1`, die Registerkarte ERD), und Sprache, Schreibweisen und Begrenzertyp auf dem gespeicherten Stand gesperrt. Ein Dokument, das seine Sperren benennt, behält sie, `0` eingeschlossen, sowie jeden gespeicherten Wert.  
 Beim Parsen bleibt jedes Bit von `lockSettings` erhalten, auch unbekannte, sodass eine Sperre, die eine spätere Version hinzufügt, ein Speichern hier übersteht; das JSON Schema prüft nur, ob der Wert eine ganze Zahl ist. Ein Editor vor `4.0.0` verwirft `lockSettings` beim Speichern und schreibt Ansicht und Registerkarte so, wie sie gerade stehen, sodass sich die Datei hier wieder wie eine vor `4.0.0` gespeicherte öffnet.
 
-Seit `4.0.0` enthält `ddlScripts` die beiden Skripte der Registerkarte [Schema SQL](../../guide/guides/schema-sql.md), die die DDL jeder Datenbank schreibt: `before` nach dem Vorspann und vor den Tabellen, `after` nach der generierten DDL. Die DDL schreibt jedes Skript mit LF-Zeilenumbrüchen, ohne führende Leerzeilen und ohne abschließenden Leerraum und bei MSSQL mit `GO` abgeschlossen, wie unter [Skripte vor und nach den Tabellen](../../guide/guides/schema-sql.md#before-and-after-scripts) beschrieben; `ddlScripts` selbst behält jedes Skript so, wie es eingegeben wurde. Der Schlüssel wird nur geschrieben, solange eines der beiden Skripte Text enthält, und dann mit beiden; ein fehlender Schlüssel oder ein Skript, das keine Zeichenkette ist, wird als `''` gelesen. Die Auswahl bei `Statements`, `Header` und `Tables` auf der Registerkarte wird nicht im Dokument gespeichert.  
+Seit `4.2.0` gibt es eine siebte Sperre, `unlockNameViewMode` (`64`), die Zeile `Name View`, die `nameViewMode` umfasst. Ihr Bit wird umgekehrt zu den anderen Sperrbits gelesen, wie die Ausblende-Bits von `Show`: Ist es gesetzt, ist die Namensansicht entsperrt, ist es nicht gesetzt, ist sie gesperrt. Daher bedeutet `63` weiterhin, dass jede Sperre eingeschaltet ist, und ein neues Dokument enthält diesen Wert, wobei die Namensansicht auf `'physical'` gesperrt ist. Eine vor `4.2.0` gespeicherte Datei hat das Bit nicht gesetzt, unabhängig von ihren anderen Sperren, `0` eingeschlossen, daher öffnet sie sich mit einer auf `'physical'` gesperrten Namensansicht. Ein Dokument, in dem alle Sperren ausgeschaltet sind, enthält `64`, und eines, in dem alle anderen Sperren eingeschaltet sind und die Namensansicht entsperrt ist, enthält `127`. Prüfen Sie diese Sperre umgekehrt: Sie ist eingeschaltet, solange `(lockSettings & 64) === 0` gilt.  
+Solange sie eingeschaltet ist, ändert ein Wechsel der Namensansicht nur den Bildschirm des Editors, der ihn vorgenommen hat, und das Dokument behält die gesperrte Ansicht. Solange sie ausgeschaltet ist, gehört ein Wechsel in einem Editor, der bearbeiten kann, zum Dokument, und jeder Mitbearbeiter wechselt mit. Der Wechsel eines schreibgeschützten Editors ändert in beiden Fällen nur dessen eigenen Bildschirm. Siehe [`Lock`](../../guide/guides/settings.md#lock).  
+Ein Editor der Version `4.0.0` oder `4.1.0` behält das Bit beim Speichern bei, verwirft aber `nameViewMode`, daher öffnet sich das Dokument hier wieder mit `'physical'`, die Sperre unverändert.
+
+Seit `4.0.0` enthält `ddlScripts` die beiden Skripte der Registerkarte [Schema SQL](../../guide/guides/schema-sql.md), die die DDL jeder Datenbank schreibt: `before` nach dem Vorspann und vor den Tabellen, `after` nach der generierten DDL. Die DDL schreibt jedes Skript mit LF-Zeilenumbrüchen, ohne führende Leerzeilen und ohne abschließenden Leerraum und bei MSSQL mit `GO` abgeschlossen, wie unter [Skripte vor und nach den Tabellen](../../guide/guides/schema-sql.md#before-and-after-scripts) beschrieben; `ddlScripts` selbst behält jedes Skript so, wie es eingegeben wurde. Der Schlüssel wird nur geschrieben, solange eines der beiden Skripte Text enthält, und dann mit beiden; ein fehlender Schlüssel oder ein Skript, das keine Zeichenkette ist, wird als `''` gelesen. Die Auswahl bei `Statements`, `Header` und `Tables` auf der Registerkarte und seit `4.2.0` ihr Schalter [`Write logical names into empty comments`](../../guide/guides/schema-sql.md#logical-names-as-comments) werden nicht im Dokument gespeichert.  
 Ein Editor vor `4.0.0` verwirft die Skripte, wenn er ein Dokument lädt, sodass sie beim Speichern dort verloren gehen.
 
-`Database`, `Language`, `Show`, `LockSettingType` und `ReferentialAction` werden nur am Ende erweitert. Ein gespeichertes Dokument enthält die Zahl, daher erhält ein neues Datenbanksystem, ein neues Ziel der Codegenerierung, ein neues Flag, eine neue Sperre oder eine neue Aktion das nächste Bit statt eines Platzes in der Mitte.
+Seit `4.2.0` ist `nameViewMode` die [Namensansicht](../../guide/guides/logical-names.md#name-view), also die Namen, die das Diagramm zeigt: `'physical'` den Namen jeder Tabelle und Spalte, `'logical'` ihren logischen Namen an der Stelle des Namens und `'both'` den logischen Namen und den Namen. Die Menüs nennen sie `Physical Names`, `Logical Names` und `Both Names`. Beide Formen schreiben das Feld zuletzt, nach `ddlScripts`, und nur, solange der geschriebene Wert nicht `'physical'` ist; solange die Sperre `Name View` eingeschaltet ist, ist das der gesperrte Wert, unabhängig davon, was der Bildschirm zeigt. Ein fehlender Wert oder einer, den der Parser nicht kennt, wird als `'physical'` gelesen, und das JSON Schema akzeptiert nur `"logical"` und `"both"`.  
+Ein Editor vor `4.2.0` verwirft `nameViewMode`, wenn er ein Dokument lädt.
+
+`Database`, `Language`, `Show`, `ColumnType`, `ColumnOption`, `LockSettingType` und `ReferentialAction` werden nur am Ende erweitert. Ein gespeichertes Dokument enthält die Zahl, daher erhält ein neues Datenbanksystem, ein neues Ziel der Codegenerierung, ein neues Flag, ein neuer Spaltentyp, eine neue Spaltenoption, eine neue Sperre oder eine neue Aktion das nächste Bit statt eines Platzes in der Mitte.
 
 ### Doc {#doc}
 
@@ -212,10 +247,16 @@ type Doc = {
   indexIds: string[];
   memoIds: string[];
   tableGroupIds?: string[];
+  wordIds?: string[]; // runtime only
+  termIds?: string[]; // runtime only
+  domainIds?: string[]; // runtime only
 };
 ```
 
-Jede Liste ist die Reihenfolge einer Art von Entität, nach der sich die DDL, die Tabellensortierung und die Zeichenreihenfolge richten. In der Speicherform enthält jede Liste nur die IDs verbleibender Entitäten, jeweils einmal, in der aufgeführten Reihenfolge. Seit `4.0.0` ist `tableGroupIds` die Reihenfolge der Tabellengruppen.
+Jede der ersten fünf Listen ist die Reihenfolge einer Art von Entität, nach der sich die DDL, die Tabellensortierung und die Zeichenreihenfolge richten. In der Speicherform enthält jede Liste nur die IDs verbleibender Entitäten, jeweils einmal, in der aufgeführten Reihenfolge, und seit `4.2.0` entfällt eine Liste, die keine enthält. Seit `4.0.0` ist `tableGroupIds` die Reihenfolge der Tabellengruppen.
+
+Seit `4.2.0` listen `wordIds`, `termIds` und `domainIds` die nicht entfernten Zeilen jedes Wörterbuchs auf: Eine Zeile, die ihre Collection enthält, ihre Liste aber nicht, ist entfernt. Sie sind nicht die Reihenfolge eines Blatts, die das Feld `order` jeder Zeile angibt. Nur der Laufzeitwert schreibt sie, jede, solange sie oder ihre Collection einen Eintrag enthält. Die Zeilen einer Datei sind selbst die Zugehörigkeit und die Reihenfolge, und das JSON Schema lehnt die Listen ab.  
+Seit `4.2.0` wird beim Parsen eine Liste, die das Dokument weglässt oder als etwas anderes als ein Array enthält, so gelesen, als enthielte sie jeden Eintrag ihrer Collection, jede ID einmal, in der Reihenfolge, in der die Collection sie enthält; ein leeres Array bleibt leer, und jeder Eintrag seiner Collection gilt dann als entfernt. Ein Editor vor `4.2.0` liest eine fehlende Liste als leer, daher schreibt die Speicherform weiterhin jede Liste, sobald ihre Collection eine Entität enthält.
 
 Seit `4.0.0` wird die Stapelreihenfolge nicht gespeichert. Beim Parsen wird jede aufgeführte Tabelle, Notiz und Tabellengruppe ohne `zIndex` nach ihrem Platz in ihrer Liste gestapelt, spätere weiter vorn: Tabellengruppen ab `1`, Tabellen ab `2` und Notizen über allen Tabellen. Eine Entität mit `zIndex`, wie in einem Laufzeitwert oder einer vor `4.0.0` gespeicherten Datei, behält ihn. Wird eine Tabelle oder Notiz in den Vordergrund geholt, geht das daher verloren, wenn die Datei erneut geöffnet wird.
 
@@ -225,10 +266,12 @@ Seit `4.0.0` wird die Stapelreihenfolge nicht gespeichert. Beim Parsen wird jede
 type Table = {
   id: string;
   name: string;
+  logicalName?: string;
   comment: string;
   columnIds: string[];
   seqColumnIds: string[]; // runtime only
   groupId?: string;
+  nameDerived?: boolean;
   ui: TableUI;
 };
 
@@ -237,13 +280,18 @@ type TableUI = {
   y: number;
   zIndex: number; // runtime only
   widthName: number; // runtime only
+  widthLogicalName: number; // runtime only
   widthComment: number; // runtime only
   color: string;
 };
 ```
 
 Seit `4.0.0` trägt eine Tabelle das Feld `groupId`, die ID der [Tabellengruppe](../../guide/guides/table-groups.md), zu der sie gehört. Ein fehlendes oder leeres Feld `groupId` oder eines, das keine Gruppe in `doc.tableGroupIds` benennt, bedeutet keine Gruppe, und die Speicherform schreibt es nur, solange es eine verbleibende Gruppe benennt.  
-Beim Parsen wird `seqColumnIds` auf `columnIds` gesetzt, wenn es fehlt oder eine aufgeführte ID nicht enthält, und ein Editor misst `widthName` und `widthComment` bei jedem Laden mit seinen eigenen Schriftarten neu.
+Beim Parsen wird `seqColumnIds` auf `columnIds` gesetzt, wenn es fehlt oder eine aufgeführte ID nicht enthält, und ein Editor misst `widthName`, `widthLogicalName` und `widthComment` bei jedem Laden mit seinen eigenen Schriftarten neu.
+
+Seit `4.2.0` trägt eine Tabelle das Feld `logicalName`, den Namen, den die [Ansichten](../../guide/guides/logical-names.md#name-view) `Logical Names` und `Both Names` zeigen, `''` für keinen, und das Feld `nameDerived`, das `true` ist, solange die Wörterbücher `name` aus dem logischen Namen [abgeleitet](../../guide/guides/dictionary.md#deriving-physical-names) haben. Solange es gesetzt ist, leitet ein neuer logischer Name den Namen erneut ab; solange nicht, ist der Name ein eigener Name, und ein neuer logischer Name lässt ihn unverändert, es sei denn, der Name ist leer oder besteht nur aus Leerraum. Eine Umbenennung von Hand schaltet es aus, und [`Derive Physical Names Again`](../../guide/guides/dictionary.md#derive-physical-names-again) schreibt sogar einen Namen neu, den jemand selbst geschrieben hat, und schaltet es überall ein, wo es einen logischen Namen gibt.  
+Die Speicherform schreibt `logicalName` nach `name`, so wie eingegeben, nur, solange es anderen Text als Leerraum enthält, und `nameDerived` nach `groupId` nur, solange es `true` ist, der einzige Wert, den das JSON Schema akzeptiert. Ein fehlendes Feld `logicalName` wird als `''` gelesen und ein fehlendes Feld `nameDerived` als `false`, daher gilt jeder Name in einer vor `4.2.0` gespeicherten Datei als eigener Name.  
+Ein Editor vor `4.2.0` verwirft beide, wenn er ein Dokument lädt, sodass beim Speichern dort der logische Name jeder Tabelle verloren geht.
 
 ### Collection: tableColumnEntities {#collection-tablecolumnentities}
 
@@ -256,14 +304,18 @@ type Column = {
   dataType: string;
   default: string;
   options: number; // Constants: ColumnOption
+  logicalName?: string;
+  domainId?: string;
   ui: ColumnUI; // runtime only
 };
 
 type ColumnUI = {
   keys: number; // Constants: ColumnUIKey
   widthName: number;
+  widthLogicalName: number;
   widthComment: number;
   widthDataType: number;
+  widthDomain: number;
   widthDefault: number;
 };
 
@@ -273,6 +325,7 @@ const ColumnOption = {
   primaryKey: 2,
   unique: 4,
   notNull: 8,
+  nameDerived: 16,
 } as const;
 
 const ColumnUIKey = {
@@ -281,8 +334,12 @@ const ColumnUIKey = {
 } as const;
 ```
 
-Seit `4.0.0` schreibt die Speicherform kein Feld `ui` der Spalten. Bei jedem Laden wird `keys` abgeleitet, die Primärschlüsselmarkierung aus dem Bit `primaryKey` von `options` und die Fremdschlüsselmarkierung aus den Beziehungen, die an der Spalte enden, und die vier Breiten werden gemessen.  
+Seit `4.0.0` schreibt die Speicherform kein Feld `ui` der Spalten. Bei jedem Laden wird `keys` abgeleitet, die Primärschlüsselmarkierung aus dem Bit `primaryKey` von `options` und die Fremdschlüsselmarkierung aus den Beziehungen, die an der Spalte enden, und die sechs Breiten werden gemessen.  
 Ein Editor vor `4.0.0` zeigt die Spalten einer hier gespeicherten Datei ohne ihre Primärschlüsselsymbole an.
+
+Seit `4.2.0` trägt eine Spalte wie eine Tabelle das Feld `logicalName` sowie das Feld `domainId`, die ID der Domäne, mit der sie verknüpft ist, `''` für keine. Änderungen in einem Editor halten eine verknüpfte Spalte beim Datentyp ihrer Domäne, wie unter [Domänen und Datentypen](../../guide/guides/dictionary.md#domains-and-data-types) beschrieben. Beim Parsen wird jedoch kein Spaltentyp angepasst, daher kann eine anderswo geschriebene Datei eine verknüpfte Spalte bei einem anderen Typ belassen, ebenso zwei sich überkreuzende Änderungen zweier Mitbearbeiter; das Blatt Prüfungen listet jeden solchen Fall als [`Domain type mismatch`](../../guide/guides/dictionary.md#what-each-check-finds) auf. Beim Parsen wird ein Feld `domainId` geleert, das keine Domäne benennt, die das Dokument enthält. Eine entfernte Domäne zählt dabei mit, daher behält der Editor eine Verknüpfung mit ihr, solange ein Rückgängigmachen die Domäne zurückholen kann. Nach `options` schreibt die Speicherform `logicalName` nach der Regel für eine Tabelle und `domainId` nur, solange es eine Domäne benennt, die die Datei schreibt, also nie eine Verknüpfung mit einer entfernten Domäne.  
+`ColumnOption.nameDerived` (`16`) ist das Kennzeichen der Spalte für einen abgeleiteten Namen, das mit den anderen Bits in `options` gehalten wird und dasselbe bedeutet wie das Feld `nameDerived` einer Tabelle. Ein als Nicht NULL markierter Primärschlüssel, dessen Namen die Wörterbücher abgeleitet haben, hat zum Beispiel in `options` den Wert `26`.  
+Ein Editor vor `4.2.0` verwirft `logicalName` und `domainId`, wenn er ein Dokument lädt, sodass sie beim Speichern dort verloren gehen. Er behält `options` als ganze Zahl, sodass das Bit `nameDerived` ein Speichern dort übersteht.
 
 ### Collection: relationshipEntities {#collection-relationshipentities}
 
@@ -417,6 +474,89 @@ type TableGroupUI = {
 Seit `4.0.0` kann ein Dokument [Tabellengruppen](../../guide/guides/table-groups.md) enthalten: benannte, farbige Rechtecke, die hinter Tabellen gezeichnet werden. Eine Tabelle tritt einer Gruppe über ihr eigenes Feld `groupId` bei, daher enthält eine Gruppe keine Liste ihrer Mitglieder. Die Speicherform schreibt die Collection, wie `doc.tableGroupIds`, nur, solange eine Gruppe existiert, und ein Dokument ohne sie, etwa eines, das vor `4.0.0` gespeichert wurde, hat keine Gruppen. `Show.hideTableGroup` blendet sie aus.  
 Ein Editor vor `4.0.0` verwirft beim Laden eines Dokuments die Gruppen und das Feld `groupId` jeder Tabelle, sodass beim Speichern dort jede Gruppe verloren geht.
 
+### Wörterbuchzeilen {#dictionary-rows}
+
+Seit `4.2.0` enthält ein Dokument drei Wörterbücher, die Blätter `Words`, `Terms` und `Domains` der Registerkarte [Wörterbuch](../../guide/guides/dictionary.md), in `wordEntities`, `termEntities` und `domainEntities`. Jedes Feld eines Worts, eines Begriffs oder einer Domäne ist eine Zeichenkette, und keine dieser Entitäten hat ein Feld `ui`. Das Blatt `Checks` wird aus den Wörterbüchern und dem Diagramm ermittelt und nicht gespeichert.
+
+```ts
+type DictionaryRows = {
+  fields: string[];
+  rows: string[][];
+};
+```
+
+Keines der drei ist nach ID geschlüsselt. Jedes wird als Kopfzeile und Zeilen geschrieben: `fields` benennt die Felder der Entität einmal, die ID zuerst, und jede Zeile enthält die Werte einer Entität in dieser Reihenfolge. Die Typen unten listen die Felder jeder Entität in der Reihenfolge der Kopfzeile des Laufzeitwerts auf. Eine Zeile behält immer ihre ID und ihren Namen, aber ihre leeren Werte am Ende nach dem Namen entfallen, sodass ein leerer Wert vor einem, der erhalten bleibt, `''` bleibt, und beim Parsen wird ein Wert, der einer Zeile fehlt, als `''` gelesen. Beide Formen schreiben jede Zeile als kompaktes JSON in eine eigene Textzeile, wie in diesen beiden Wörtern aus einer Datei:
+
+```json
+"wordEntities": {
+  "fields": [
+    "id",
+    "name",
+    "abbreviation",
+    "englishName",
+    "description",
+    "synonyms",
+    "forbiddenWords"
+  ],
+  "rows": [
+    ["w1","Customer","CUST","customer"],
+    ["w2","Number","NO","number","","No, Num","Nbr"]
+  ]
+}
+```
+
+Die Speicherform schreibt die aufgeführten Zeilen in der Reihenfolge des Blatts und lässt `order` weg, daher nennen ihre Kopfzeilen es nicht. Sie lässt eine Zeile weg, deren Werte nach der ID alle leer sind oder nur aus Leerraum bestehen, etwa eine, die hinzugefügt und nie ausgefüllt oder die geleert wurde, sowie jede Verknüpfung mit einer solchen oder einer entfernten Domäne: Das Feld `domainId` einer Spalte entfällt, und das eines Begriffs wird als `''` geschrieben, wobei der Begriff selbst entfällt, wenn er sonst nichts enthält.  
+Die Kopfzeilen des Laufzeitwerts nennen `"order"` direkt nach `"name"`. Er schreibt jede Zeile, die die jeweilige Collection enthält, entfernte eingeschlossen, in der Reihenfolge, in der die Collection sie enthält; sortieren Sie daher für die Reihenfolge eines Blatts nach `order`, verglichen in der Reihenfolge der Codeeinheiten. Beim Parsen erhalten die Zeilen einer Datei Schlüssel für `order` in der Reihenfolge, in der die Zeilen stehen, sodass sie in der Reihenfolge zurückgelesen werden, in der die Datei sie geschrieben hat.  
+Ein Dokument ohne die Wörterbücher, etwa eines, das vor `4.2.0` gespeichert wurde, hat keine. Ein Editor vor `4.2.0` verwirft alle drei, wenn er ein Dokument lädt, sodass beim Speichern dort jedes Wort, jeder Begriff und jede Domäne verloren geht.
+
+### Collection: wordEntities {#collection-wordentities}
+
+```ts
+type Word = {
+  id: string;
+  name: string;
+  order: string; // runtime only
+  abbreviation: string;
+  englishName: string;
+  description: string;
+  synonyms: string;
+  forbiddenWords: string;
+};
+```
+
+Ein Wort ist eines der Wörter, aus denen ein logischer Name besteht, und `abbreviation` ist das, was es in einem physischen Namen vertritt. `synonyms` listet andere Schreibweisen des Worts auf und `forbiddenWords` Wörter, die nicht an seiner Stelle verwendet werden dürfen, jeweils durch Kommas getrennt.
+
+### Collection: termEntities {#collection-termentities}
+
+```ts
+type Term = {
+  id: string;
+  name: string;
+  order: string; // runtime only
+  physicalName: string;
+  domainId: string;
+  description: string;
+  synonyms: string;
+};
+```
+
+Ein Begriff ist ein vollständiger logischer Name. Eine Tabelle oder Spalte, deren `logicalName` mit `name` übereinstimmt, leitet `physicalName` ab oder, solange dieses Feld leer ist, einen aus den Abkürzungen der Wörter zusammengesetzten Namen, und eine Spalte übernimmt außerdem die Domäne, die `domainId` benennt, `''` für keine (siehe [Physische Namen ableiten](../../guide/guides/dictionary.md#deriving-physical-names)). `synonyms` ist durch Kommas getrennt. Beim Parsen wird ein Feld `domainId` geleert, das keine Domäne benennt, wie bei einer Spalte.
+
+### Collection: domainEntities {#collection-domainentities}
+
+```ts
+type Domain = {
+  id: string;
+  name: string;
+  order: string; // runtime only
+  category: string;
+  dataType: string;
+  description: string;
+};
+```
+
+Eine Domäne ist ein benannter Datentyp, den `dataType` so enthält wie bei einer Spalte, die Länge eingeschlossen, etwa `NUMERIC(10)`. Eine Spalte oder ein Begriff verknüpft eine Domäne über ihre ID, und der Editor gibt jeder verknüpften Spalte den Datentyp der Domäne (siehe [Domänen und Datentypen](../../guide/guides/dictionary.md#domains-and-data-types)).
+
 ## JSON Schema {#json-schema}
 
 Die kanonische Schemadatei ist unter [json-schema/schema.json](https://raw.githubusercontent.com/dineug/erd-editor/main/json-schema/schema.json) veröffentlicht und kann mit `$schema` direkt referenziert werden.
@@ -430,14 +570,16 @@ Die kanonische Schemadatei ist unter [json-schema/schema.json](https://raw.githu
 
 Setzen Sie `$schema` an den Anfang einer Datei `.erd.json`, dann validieren Editoren, die JSON Schema verstehen, etwa VS Code, das Dokument und vervollständigen seine Felder automatisch, während Sie es bearbeiten.
 
-Seit `4.0.0` beschreibt das Schema nur die Speicherform. Jedes Objekt mit benannten Feldern ist geschlossen (`additionalProperties: false`), jedes Feld, das die Speicherform immer schreibt, ist erforderlich, und kein Feld, das sie weglässt, ist aufgeführt. Daher lehnt es den Laufzeitwert ab. Es lehnt auch eine vor `4.0.0` gespeicherte Datei mit ihrem `meta`, ihren Breiten, `zIndex`, `ignoreSaveSettings` und dem Rest ab, bis ein Editor der Version `4.0.0` oder neuer diese Datei erneut speichert. Eine Datei, die von `3.2.0` oder neuer gespeichert wurde, nennt bereits die URL dieses Schemas, die auf den Branch `main` zeigt, sodass ein Editor, der dagegen validiert, die Datei jetzt beanstandet. Eine von `3.0.0` oder `3.1.0` gespeicherte Datei oder ein v2-Dokument nennt kein `$schema`.
+Seit `4.0.0` beschreibt das Schema nur die Speicherform. Jedes Objekt mit benannten Feldern ist geschlossen (`additionalProperties: false`), jedes Feld, das die Speicherform immer schreibt, ist erforderlich, ein Feld, das sie weglässt, solange es nichts enthält, ist aufgeführt, aber nicht erforderlich, und kein Feld, das sie immer weglässt, ist aufgeführt. Daher lehnt es den Laufzeitwert ab. Es lehnt auch eine vor `4.0.0` gespeicherte Datei mit ihrem `meta`, ihren Breiten, `zIndex`, `ignoreSaveSettings` und dem Rest ab, bis ein Editor der Version `4.0.0` oder neuer diese Datei erneut speichert. Eine Datei, die von `3.2.0` oder neuer gespeichert wurde, nennt bereits die URL dieses Schemas, die auf den Branch `main` zeigt, sodass ein Editor, der dagegen validiert, die Datei jetzt beanstandet. Eine von `3.0.0` oder `3.1.0` gespeicherte Datei oder ein v2-Dokument nennt kein `$schema`.
+
+Seit `4.2.0` verlangt das Schema weder die Textfelder einer Entität noch eine Liste in `doc`, eine Collection oder `collections` selbst, die die Speicherform weglässt, solange sie nichts enthalten. Es akzeptiert weiterhin eine von `4.0.0` oder `4.1.0` gespeicherte Datei. Es benennt die neuen Felder: `nameViewMode`, das nur `"logical"` und `"both"` annimmt; `logicalName` und `nameDerived` einer Tabelle, wobei `nameDerived` nur `true` annimmt; `logicalName` und `domainId` einer Spalte; und die drei Wörterbücher, jedes mit seiner Kopfzeile und Zeilen aus Zeichenketten. `canvasType` führt die Registerkarte Wörterbuch auf, `columnOrder` akzeptiert sieben oder neun ganze Zahlen, und die Beschreibungen von `show`, `columnOrder`, `lockSettings` und `options` nennen die neuen Bits.
 
 ```json
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://raw.githubusercontent.com/dineug/erd-editor/main/json-schema/schema.json",
   "title": "ERD Editor document",
-  "description": "The storage form an ERD Editor file holds (.erd, .erd.json, .vuerd, .vuerd.json): the live entities alone, each collection keyed in id order, without what an editor derives on load or keeps while it is open",
+  "description": "The storage form an ERD Editor file holds (.erd, .erd.json, .vuerd, .vuerd.json): the live entities alone, each collection keyed in id order but the dictionaries, a header and one row per entry in document order, without what an editor derives on load or keeps while it is open, without an entity's text field while it is empty, which reads as the empty string, and without an empty list or collection, which reads as none",
   "type": "object",
   "properties": {
     "$schema": {
@@ -454,6 +596,7 @@ Seit `4.0.0` beschreibt das Schema nur die Speicherform. Jedes Objekt mit benann
       "$ref": "#/$defs/doc"
     },
     "collections": {
+      "description": "The entities of each kind, a kind with none left out",
       "type": "object",
       "properties": {
         "tableEntities": {
@@ -476,20 +619,21 @@ Seit `4.0.0` beschreibt das Schema nur die Speicherform. Jedes Objekt mit benann
         },
         "tableGroupEntities": {
           "$ref": "#/$defs/tableGroupEntities"
+        },
+        "wordEntities": {
+          "$ref": "#/$defs/wordEntities"
+        },
+        "termEntities": {
+          "$ref": "#/$defs/termEntities"
+        },
+        "domainEntities": {
+          "$ref": "#/$defs/domainEntities"
         }
       },
-      "required": [
-        "tableEntities",
-        "tableColumnEntities",
-        "relationshipEntities",
-        "indexEntities",
-        "indexColumnEntities",
-        "memoEntities"
-      ],
       "additionalProperties": false
     }
   },
-  "required": ["$schema", "version", "settings", "doc", "collections"],
+  "required": ["$schema", "version", "settings", "doc"],
   "additionalProperties": false,
   "$defs": {
     "settings": {
@@ -507,7 +651,7 @@ Seit `4.0.0` beschreibt das Schema nur die Speicherform. Jedes Objekt mit benann
           "maximum": 1.5
         },
         "show": {
-          "description": "bit value (tableComment: 1) | (columnComment: 2) | (columnDataType: 4) | (columnDefault: 8) | (columnAutoIncrement: 16) | (columnPrimaryKey: 32) | (columnUnique: 64) | (columnNotNull: 128) | (relationship: 256) | (columnAlternateKey: 512) | (hideReferentialAction: 1024) | (hideTableGroup: 2048) | (hideMemo: 4096); the three hide bits hide what they name while set",
+          "description": "bit value (tableComment: 1) | (columnComment: 2) | (columnDataType: 4) | (columnDefault: 8) | (columnAutoIncrement: 16) | (columnPrimaryKey: 32) | (columnUnique: 64) | (columnNotNull: 128) | (relationship: 256) | (columnAlternateKey: 512) | (hideReferentialAction: 1024) | (hideTableGroup: 2048) | (hideMemo: 4096) | (columnDomain: 8192); the three hide bits hide what they name while set",
           "type": "integer"
         },
         "database": {
@@ -524,7 +668,8 @@ Seit `4.0.0` beschreibt das Schema nur die Speicherform. Jedes Objekt mit benann
             "@dineug/erd-editor/builtin-visualization",
             "@dineug/erd-editor/builtin-schema-sql",
             "@dineug/erd-editor/builtin-generator-code",
-            "settings"
+            "settings",
+            "@dineug/erd-editor/builtin-dictionary"
           ]
         },
         "language": {
@@ -551,7 +696,7 @@ Seit `4.0.0` beschreibt das Schema nur die Speicherform. Jedes Objekt mit benann
           "type": "boolean"
         },
         "columnOrder": {
-          "description": "bit value (columnName: 1) | (columnDataType: 2) | (columnNotNull: 4) | (columnUnique: 8) | (columnAutoIncrement: 16) | (columnDefault: 32) | (columnComment: 64)",
+          "description": "bit value (columnName: 1) | (columnDataType: 2) | (columnNotNull: 4) | (columnUnique: 8) | (columnAutoIncrement: 16) | (columnDefault: 32) | (columnComment: 64) | (columnLogicalName: 128) | (columnDomain: 256); seven entries without the last two while the logical name stands just before the name and the domain just after the data type, all nine otherwise",
           "type": "array",
           "prefixItems": [
             { "type": "integer" },
@@ -560,16 +705,20 @@ Seit `4.0.0` beschreibt das Schema nur die Speicherform. Jedes Objekt mit benann
             { "type": "integer" },
             { "type": "integer" },
             { "type": "integer" },
+            { "type": "integer" },
+            { "type": "integer" },
             { "type": "integer" }
           ],
-          "minItems": 7,
-          "maxItems": 7
+          "anyOf": [
+            { "minItems": 7, "maxItems": 7 },
+            { "minItems": 9, "maxItems": 9 }
+          ]
         },
         "maxWidthComment": {
           "type": "integer"
         },
         "lockSettings": {
-          "description": "bit value (viewport: 1) | (canvasType: 2) | (language: 4) | (tableNameCase: 8) | (columnNameCase: 16) | (bracketType: 32); a locked setting is saved as it stood when locked, the viewport being originX, originY and zoomLevel",
+          "description": "bit value (viewport: 1) | (canvasType: 2) | (language: 4) | (tableNameCase: 8) | (columnNameCase: 16) | (bracketType: 32) | (unlockNameViewMode: 64); a locked setting is saved as it stood when locked, the viewport being originX, originY and zoomLevel. The last bit reads the other way round: set, the name view mode is unlocked, and clear, as in a file saved before it, locked",
           "type": "integer"
         },
         "ddlScripts": {
@@ -581,6 +730,10 @@ Seit `4.0.0` beschreibt das Schema nur die Speicherform. Jedes Objekt mit benann
           },
           "required": ["before", "after"],
           "additionalProperties": false
+        },
+        "nameViewMode": {
+          "description": "The names the diagram shows: the logical ones, or both the physical and the logical. Absent while it shows the physical names, the default",
+          "enum": ["logical", "both"]
         }
       },
       "required": [
@@ -603,7 +756,7 @@ Seit `4.0.0` beschreibt das Schema nur die Speicherform. Jedes Objekt mit benann
       "additionalProperties": false
     },
     "doc": {
-      "description": "The order of each kind of entity, which the DDL, the sort and the draw order read",
+      "description": "The order of each kind of entity, which the DDL, the sort and the draw order read, a kind with none left out. A list goes out whenever its collection holds an entity, since a reader that finds none lists none",
       "type": "object",
       "properties": {
         "tableIds": {
@@ -638,7 +791,6 @@ Seit `4.0.0` beschreibt das Schema nur die Speicherform. Jedes Objekt mit benann
           }
         }
       },
-      "required": ["tableIds", "relationshipIds", "indexIds", "memoIds"],
       "additionalProperties": false
     },
     "tableEntities": {
@@ -650,6 +802,10 @@ Seit `4.0.0` beschreibt das Schema nur die Speicherform. Jedes Objekt mit benann
             "type": "string"
           },
           "name": {
+            "type": "string"
+          },
+          "logicalName": {
+            "description": "The name the logical view shows; absent means none",
             "type": "string"
           },
           "comment": {
@@ -665,6 +821,11 @@ Seit `4.0.0` beschreibt das Schema nur die Speicherform. Jedes Objekt mit benann
             "description": "Id of the table group in doc.tableGroupIds the table belongs to; absent means none",
             "type": "string"
           },
+          "nameDerived": {
+            "description": "The dictionaries filled the name, so a new logical name derives it again; absent means a name someone wrote",
+            "type": "boolean",
+            "const": true
+          },
           "ui": {
             "type": "object",
             "properties": {
@@ -678,11 +839,11 @@ Seit `4.0.0` beschreibt das Schema nur die Speicherform. Jedes Objekt mit benann
                 "type": "string"
               }
             },
-            "required": ["x", "y", "color"],
+            "required": ["x", "y"],
             "additionalProperties": false
           }
         },
-        "required": ["id", "name", "comment", "columnIds", "ui"],
+        "required": ["id", "columnIds", "ui"],
         "additionalProperties": false
       }
     },
@@ -710,19 +871,19 @@ Seit `4.0.0` beschreibt das Schema nur die Speicherform. Jedes Objekt mit benann
             "type": "string"
           },
           "options": {
-            "description": "bit value (autoIncrement: 1) | (primaryKey: 2) | (unique: 4) | (notNull: 8)",
+            "description": "bit value (autoIncrement: 1) | (primaryKey: 2) | (unique: 4) | (notNull: 8) | (nameDerived: 16); nameDerived is set while the dictionaries filled the name",
             "type": "integer"
+          },
+          "logicalName": {
+            "description": "The name the logical view shows; absent means none",
+            "type": "string"
+          },
+          "domainId": {
+            "description": "Id of the domain in domainEntities that governs the data type; absent means none",
+            "type": "string"
           }
         },
-        "required": [
-          "id",
-          "tableId",
-          "name",
-          "comment",
-          "dataType",
-          "default",
-          "options"
-        ],
+        "required": ["id", "tableId", "options"],
         "additionalProperties": false
       }
     },
@@ -788,7 +949,7 @@ Seit `4.0.0` beschreibt das Schema nur die Speicherform. Jedes Objekt mit benann
             "type": "boolean"
           }
         },
-        "required": ["id", "name", "tableId", "indexColumnIds", "unique"],
+        "required": ["id", "tableId", "indexColumnIds", "unique"],
         "additionalProperties": false
       }
     },
@@ -845,11 +1006,11 @@ Seit `4.0.0` beschreibt das Schema nur die Speicherform. Jedes Objekt mit benann
                 "type": "string"
               }
             },
-            "required": ["x", "y", "width", "height", "color"],
+            "required": ["x", "y", "width", "height"],
             "additionalProperties": false
           }
         },
-        "required": ["id", "value", "ui"],
+        "required": ["id", "ui"],
         "additionalProperties": false
       }
     },
@@ -888,9 +1049,93 @@ Seit `4.0.0` beschreibt das Schema nur die Speicherform. Jedes Objekt mit benann
             "additionalProperties": false
           }
         },
-        "required": ["id", "name", "color", "ui"],
+        "required": ["id", "ui"],
         "additionalProperties": false
       }
+    },
+    "wordEntities": {
+      "description": "The words of the dictionary, the parts a logical name is composed of, each with its abbreviation in a physical name. Written while a word exists; absent means none",
+      "type": "object",
+      "properties": {
+        "fields": {
+          "const": ["id", "name", "abbreviation", "englishName", "description", "synonyms", "forbiddenWords"]
+        },
+        "rows": {
+          "description": "One row per entry in document order, its values in the order fields names them; values past the name are left out from the last empty one back",
+          "type": "array",
+          "items": {
+            "type": "array",
+            "prefixItems": [
+              { "type": "string" },
+              { "type": "string" },
+              { "type": "string" },
+              { "type": "string" },
+              { "type": "string" },
+              { "type": "string" },
+              { "type": "string" }
+            ],
+            "items": false,
+            "minItems": 2
+          }
+        }
+      },
+      "required": ["fields", "rows"],
+      "additionalProperties": false
+    },
+    "termEntities": {
+      "description": "The terms of the dictionary, logical names a column matches by its text, each with its physical name and domain id. Written while a term exists; absent means none",
+      "type": "object",
+      "properties": {
+        "fields": {
+          "const": ["id", "name", "physicalName", "domainId", "description", "synonyms"]
+        },
+        "rows": {
+          "description": "One row per entry in document order, its values in the order fields names them; values past the name are left out from the last empty one back",
+          "type": "array",
+          "items": {
+            "type": "array",
+            "prefixItems": [
+              { "type": "string" },
+              { "type": "string" },
+              { "type": "string" },
+              { "type": "string" },
+              { "type": "string" },
+              { "type": "string" }
+            ],
+            "items": false,
+            "minItems": 2
+          }
+        }
+      },
+      "required": ["fields", "rows"],
+      "additionalProperties": false
+    },
+    "domainEntities": {
+      "description": "The domains of the dictionary, named data types a column or a term links to by id. Written while a domain exists; absent means none",
+      "type": "object",
+      "properties": {
+        "fields": {
+          "const": ["id", "name", "category", "dataType", "description"]
+        },
+        "rows": {
+          "description": "One row per entry in document order, its values in the order fields names them; values past the name are left out from the last empty one back",
+          "type": "array",
+          "items": {
+            "type": "array",
+            "prefixItems": [
+              { "type": "string" },
+              { "type": "string" },
+              { "type": "string" },
+              { "type": "string" },
+              { "type": "string" }
+            ],
+            "items": false,
+            "minItems": 2
+          }
+        }
+      },
+      "required": ["fields", "rows"],
+      "additionalProperties": false
     },
     "RelationshipPoint": {
       "type": "object",

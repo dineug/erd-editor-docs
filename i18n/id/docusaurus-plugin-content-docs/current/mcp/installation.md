@@ -53,7 +53,8 @@ Jendela VS Code melayani diagram di folder workspace-nya dan setiap diagram yang
 2. Buka folder proyek dan percayai workspace-nya. Ekstensi hanya melayani agen di workspace tepercaya.
 3. Biarkan pengaturan `dineug.erd-editor.agentHub.enabled` tetap aktif. Pengaturan ini aktif secara default.
 
-Ekstensi `3.0.0` hingga `3.1.0` dan server `1.0.0` saling menolak, dan ekstensi sebelum `3.0.0` tidak melayani agen — lihat [Memperbarui](#updating).
+Ekstensi `3.0.0` hingga `3.1.0` dan server `1.0.0` atau yang lebih baru saling menolak, dan ekstensi sebelum `3.0.0` tidak melayani agen.
+Ekstensi `4.0.0` atau `4.1.0` terhubung, tetapi tidak menampilkan maupun mempertahankan nama logis, tautan domain, dan baris kamus yang ditulis agen — lihat [Memperbarui](#updating).
 
 Ekstensi mulai berjalan di workspace yang berisi file `.erd`, `.erd.json`, `.vuerd`, atau `.vuerd.json`, sehingga agen dapat menjangkau diagram tersebut sebelum Anda membuka diagram apa pun.
 Di workspace yang tidak berisi satu pun file tersebut, ekstensi mulai berjalan saat Anda membuka diagram, dan hingga saat itu agen mengedit di disk.
@@ -69,7 +70,8 @@ Jendela vault Obsidian melayani diagram di vault-nya.
 1. Instal [plugin ERD Editor](https://community.obsidian.md/plugins/erd-editor) `1.0.0` atau yang lebih baru dari Community plugins, dan aktifkan. Plugin ini hanya berjalan di aplikasi desktop, dan memerlukan Obsidian `1.5.7` atau yang lebih baru.
 2. Biarkan Settings → ERD Editor → Coding agents tetap aktif. Pengaturan ini aktif secara default, dan setiap vault menyimpan pengaturannya sendiri.
 
-Plugin versi sebelumnya dan server `1.0.0` saling menolak — lihat [Memperbarui](#updating).
+Plugin sebelum `1.0.0` dan server `1.0.0` atau yang lebih baru saling menolak.
+Plugin `1.0.0` atau `1.1.0` terhubung, tetapi tidak menampilkan maupun mempertahankan nama logis, tautan domain, dan baris kamus yang ditulis agen — lihat [Memperbarui](#updating).
 
 Jendela vault melayani agen sejak plugin dimuat, sehingga agen dapat menjangkau diagram vault sebelum Anda membuka diagram apa pun.
 Tidak ada langkah pemberian kepercayaan.
@@ -95,7 +97,8 @@ IDE JetBrains melayani diagram dari setiap proyek yang terbuka di dalamnya, sert
 2. Buka proyek dan percayai proyek tersebut. Di proyek yang tidak dipercayai IDE, seperti proyek yang dibuka dalam mode aman, agen membaca diagram tetapi tidak pernah mengubahnya.
 3. Biarkan Settings | Tools | ERD Editor → Coding agents tetap dicentang. Pengaturan ini aktif secara default dan berlaku untuk seluruh IDE.
 
-Plugin `0.9.0` atau `0.10.0` dan server `1.0.0` saling menolak, dan plugin sebelum `0.9.0` tidak melayani agen — lihat [Memperbarui](#updating).
+Plugin `0.9.0` atau `0.10.0` dan server `1.0.0` atau yang lebih baru saling menolak, dan plugin sebelum `0.9.0` tidak melayani agen.
+Plugin `1.0.0` atau `1.1.0` terhubung, tetapi tidak menampilkan maupun mempertahankan nama logis, tautan domain, dan baris kamus yang ditulis agen — lihat [Memperbarui](#updating).
 
 IDE melayani agen sejak proyek pertama dibuka, sehingga agen dapat menjangkau diagram proyek sebelum Anda membuka diagram apa pun.
 
@@ -125,19 +128,26 @@ Server memeriksa versi protokol yang digunakan editor sebelum terhubung.
 Jika keduanya berbeda, setiap panggilan yang mencapai editor tersebut ditolak dengan `protocolMismatch`, termasuk pembacaan dan `erd_list_documents`, dan tidak ada yang ditulis.
 Pesan tersebut menyebutkan sisi yang perlu diperbarui: server, atau ERD Editor di editor, yaitu ekstensi di VS Code serta plugin di Obsidian dan IDE JetBrains.
 
-Server `1.0.0`, ekstensi VS Code `4.0.0` atau yang lebih baru, plugin Obsidian `1.0.0` atau yang lebih baru, dan plugin JetBrains `1.0.0` atau yang lebih baru menggunakan protokol 2.
+Server `1.0.0` atau yang lebih baru, ekstensi VS Code `4.0.0` atau yang lebih baru, plugin Obsidian `1.0.0` atau yang lebih baru, dan plugin JetBrains `1.0.0` atau yang lebih baru menggunakan protokol 2.
 Setiap server versi sebelumnya menggunakan protokol 1, begitu pula setiap rilis editor sebelumnya yang melayani agen: ekstensi VS Code `3.0.0` hingga `3.1.0`, plugin Obsidian `0.1.0` dan `0.2.0`, serta plugin JetBrains `0.9.0` dan `0.10.0`.
-Editor seperti itu dan server `1.0.0` saling menolak, begitu pula server versi sebelumnya dan editor yang menggunakan protokol 2.
+Editor seperti itu dan server `1.0.0` atau yang lebih baru saling menolak, begitu pula server versi sebelumnya dan editor yang menggunakan protokol 2.
 Ekstensi VS Code sebelum `3.0.0` atau plugin JetBrains sebelum `0.9.0` sama sekali tidak melayani agen, sehingga agen mengedit file di disk, bahkan diagram yang terbuka di dalamnya.
 
 | Kombinasi | Akhir pesan |
 | --- | --- |
-| Server `1.0.0` dengan ekstensi atau plugin yang menggunakan protokol 1 | `Update the ERD Editor extension or plugin in the editor until its hub speaks protocol 2.` |
+| Server `1.0.0` atau yang lebih baru dengan ekstensi atau plugin yang menggunakan protokol 1 | `Update the ERD Editor extension or plugin in the editor until its hub speaks protocol 2.` |
 | Server versi sebelumnya dengan ekstensi atau plugin yang menggunakan protokol 2 | `Update the MCP server (npx -y @dineug/erd-editor-mcp@latest) until it speaks protocol 2.` |
 
 Perbarui server dan ekstensi atau plugin secara bersamaan.
+Server dan editor yang menggunakan protokol yang sama terhubung, mana pun di antara keduanya yang lebih lama, tetapi hanya server `1.1.0` atau yang lebih baru yang memiliki alat untuk nama logis, domain, dan kamus — lihat [Kamus](./tools.md#dictionaries).
+Hanya ekstensi VS Code `4.2.0` atau yang lebih baru serta plugin Obsidian dan JetBrains `1.2.0` atau yang lebih baru yang menampilkan dan mempertahankan nama logis, tautan domain, dan baris kamus yang ditulis alat-alat tersebut.
+Ekstensi atau plugin versi sebelumnya yang terhubung mengabaikannya, meskipun panggilan agen berhasil.
+Ekstensi atau plugin tersebut tetap menerapkan nama fisik yang dihasilkan kamus dan tipe data yang diberikan domain.
+Server sebelum `1.1.0` membaca file tanpa nama logis, tautan domain, dan baris kamusnya, dan tidak menyertakannya saat mengedit file di disk — lihat [Headless](./live-and-headless.md#headless).
+
 Perbarui juga ERD Editor di mana pun diagram dibuka.
-Ekstensi VS Code sebelum `4.0.0`, plugin Obsidian sebelum `1.0.0`, dan plugin JetBrains sebelum `1.0.0` menampilkan diagram yang disimpan oleh rilis yang lebih baru, atau yang diedit agen di disk, tanpa ikon kunci utamanya.
-Saat menyimpan file, rilis tersebut membuang grup tabel dan skrip Skema SQL di dalamnya.
+Ekstensi VS Code sebelum `4.2.0`, plugin Obsidian sebelum `1.2.0`, dan plugin JetBrains sebelum `1.2.0` membuka diagram yang disimpan oleh rilis yang lebih baru, atau yang diedit agen di disk, tanpa nama logis tabel dan kolomnya, tautan domain kolomnya, serta kata, istilah, dan domainnya.
+Saat menyimpan file, rilis tersebut tidak menyertakannya.
+Ekstensi VS Code sebelum `4.0.0`, plugin Obsidian sebelum `1.0.0`, dan plugin JetBrains sebelum `1.0.0` juga menampilkan diagram seperti itu tanpa ikon kunci utamanya, dan membuang grup tabel serta skrip Skema SQL di dalamnya saat menyimpan file.
 Ekstensi VS Code sebelum `3.1.0`, plugin Obsidian sebelum `0.2.0`, dan plugin JetBrains sebelum `0.10.0` juga membuang tindakan ON DELETE dan ON UPDATE milik diagram saat menyimpan file.
 Di Obsidian, mulai ulang aplikasi setelah memperbarui plugin: hingga saat itu, jendela vault tetap menjalankan ERD Editor dari versi plugin yang pertama kali dimuatnya.

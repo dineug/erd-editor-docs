@@ -38,7 +38,8 @@ Panel ma szerokość co najmniej `200px` i zostawia kanwie co najmniej `320px`, 
 
 Wywołanie `setInitialValue('')` rozpoczyna nowy, pusty dokument. Przypisanie właściwości `value` wczytuje natomiast dokument jako zmianę, więc trafia on do historii cofania.
 Od wersji `4.0.0` właściwość `editor.value` to dokument w postaci, w jakiej przechowuje go plik, i to właśnie ją należy zapisywać. Właściwość `editor.runtimeValue` to dokument w postaci, w jakiej przechowuje go edytor, łącznie z usuniętymi encjami: służy do zainicjowania edytora współpracownika i nigdy nie trafia do pliku – zobacz sekcję [runtimeValue](./erd-editor-element.md#runtimevalue).
-Od wersji `4.0.0` nowy dokument ma też włączone wszystkie [blokady ustawień](../guide/guides/settings.md#lock): obszaru widoku, karty, języka Generatora kodu, obu stylów nazw i typu cudzysłowu. Przewijanie, zmiana powiększenia, przełączanie kart lub zmiana jednego z tych ustawień pozostawia `editor.value` bez zmian i nie wywołuje zdarzenia `change`. Dokument wczytany z tekstu zachowuje blokady, które w nim określono. Dokument, który nie określa żadnych blokad, taki jak każdy plik zapisany przed wersją `4.0.0`, otwiera się ze wszystkimi blokadami włączonymi, przy powiększeniu 100% i na karcie ERD, niezależnie od tego, jaki widok i jaką kartę zapisano. Jego widok jest zablokowany w punkcie początkowym `0, 0`, a jeśli w tym miejscu nie jest narysowana żadna część diagramu, widok otwiera się zamiast tego na diagramie – zobacz sekcję [setInitialValue](./erd-editor-element.md#setinitialvalue).
+Od wersji `4.0.0` nowy dokument ma też włączone wszystkie [blokady ustawień](../guide/guides/settings.md#lock): obszaru widoku, karty, języka Generatora kodu, obu stylów nazw, typu cudzysłowu oraz, od wersji `4.2.0`, ustawienia [Widok nazw](../guide/guides/logical-names.md#name-view). Przewijanie, zmiana powiększenia, przełączanie kart, przełączanie Widoku nazw lub zmiana jednego z pozostałych ustawień pozostawia `editor.value` bez zmian i nie wywołuje zdarzenia `change`. Dokument wczytany z tekstu zachowuje blokady, które w nim określono. Dokument, który nie określa żadnych blokad, taki jak każdy plik zapisany przed wersją `4.0.0`, otwiera się ze wszystkimi blokadami włączonymi, przy powiększeniu 100% i na karcie ERD, niezależnie od tego, jaki obszar widoku i jaką kartę zapisano. Jego obszar widoku jest zablokowany w punkcie początkowym `0, 0`, a jeśli w tym miejscu nie jest narysowana żadna część diagramu, widok otwiera się zamiast tego na diagramie – zobacz sekcję [setInitialValue](./erd-editor-element.md#setinitialvalue).
+Plik zapisany przed wersją `4.2.0` otwiera się z Widokiem nazw zablokowanym na widoku `Physical Names`, nawet jeśli wszystkie pozostałe blokady są w nim wyłączone. Edytor w wersji `4.0.0` lub `4.1.0` przy zapisie zachowuje blokadę Widoku nazw w niezmienionym stanie, ale pomija sam widok, więc plik z wersji `4.2.0` zapisany z odblokowanym Widokiem nazw pozostaje odblokowany, lecz ponownie otwiera się w widoku `Physical Names`.
 Resztę interfejsu API opisano na stronie [ErdEditorElement](./erd-editor-element.md).
 
 ### CDN {#cdn}
@@ -56,7 +57,7 @@ Resztę interfejsu API opisano na stronie [ErdEditorElement](./erd-editor-elemen
 ```
 
 Usługa `esm.run` sama rozwiązuje zewnętrzne zależności pakietu, więc ten sposób działa bez bundlera.
-Adres URL bez numeru wersji zawsze udostępnia najnowszą wersję. Przypnij wersję – `https://esm.run/@dineug/erd-editor@4.1.0` – jeśli nie chcesz, aby aktualizacja do nowej wersji głównej trafiła na stronę bez zapowiedzi.
+Adres URL bez numeru wersji zawsze udostępnia najnowszą wersję. Przypnij wersję – `https://esm.run/@dineug/erd-editor@4.2.0` – jeśli nie chcesz, aby aktualizacja do nowej wersji głównej trafiła na stronę bez zapowiedzi.
 Wersja `4.0.0` sama jest taką aktualizacją: strona, która musi pozostać przy wersji 3.x, przypina `@3.10.0` – zobacz sekcję [Aktualizacja z wersji 3.x](#upgrading-from-3x).
 
 ### Znacznik script {#script-tag}
@@ -66,14 +67,14 @@ To na nią wskazują pola `unpkg` i `jsdelivr`, więc w obu sieciach CDN udostę
 
 ```html
 <erd-editor></erd-editor>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@4.1.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@4.2.0"></script>
 <script>
   const editor = document.querySelector('erd-editor');
   editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
 </script>
 ```
 
-Wczytanie tego pliku rejestruje element `<erd-editor>` w ten sam sposób; obiekt `window.ErdEditor` zawiera dwie funkcje zwrotne plików, `ErdEditor.setExportFileCallback` i `ErdEditor.setImportFileCallback`, a od wersji `3.9.2` także `ErdEditor.createKeyBindingMap`.
+Wczytanie tego pliku rejestruje element `<erd-editor>` w ten sam sposób; obiekt `window.ErdEditor` zawiera dwie funkcje zwrotne plików, `ErdEditor.setExportFileCallback` i `ErdEditor.setImportFileCallback`, a od wersji `3.9.2` także `ErdEditor.createKeyBindingMap`. Od wersji `4.2.0` obiekt ten zawiera też `ErdEditor.dictionaryRowChords` – zobacz sekcję [dictionaryRowChords](./erd-editor-element.md#dictionaryrowchords).
 Mapa eksportów nadal kieruje bundler do modułów ES, więc instalacja z npm nigdy nie korzysta z tego pliku.
 
 ### HTML {#html}
@@ -166,17 +167,18 @@ W kompilacji dla [znacznika script](#script-tag) wszystkie trzy są zawarte w pl
 
 ## Punkty wejścia {#entry-points}
 
-Zaimportowanie pakietu `@dineug/erd-editor` rejestruje element `<erd-editor>` jako efekt uboczny. Poza tym pakiet eksportuje typ elementu, dwa settery funkcji zwrotnych, od wersji `3.9.2` domyślne powiązania klawiszy wraz z ich typami, a od wersji `4.0.0` typy języków wyświetlania i typ opcji `getSchemaSQL()`.
+Zaimportowanie pakietu `@dineug/erd-editor` rejestruje element `<erd-editor>` jako efekt uboczny. Poza tym pakiet eksportuje typ elementu, dwa settery funkcji zwrotnych, od wersji `3.9.2` domyślne powiązania klawiszy wraz z ich typami, od wersji `4.0.0` typy języków wyświetlania i typ opcji `getSchemaSQL()`, a od wersji `4.2.0` kombinacje klawiszy wierszy karty Słownik.
 
 | Eksport | Opis |
 | --- | --- |
 | `ErdEditorElement` (typ) | Interfejs elementu – zobacz stronę [ErdEditorElement](./erd-editor-element.md). |
 | `setExportFileCallback(cb)` | Zastępuje pobieranie przez przeglądarkę, `(blob, { fileName }) => void`. |
-| `setImportFileCallback(cb)` | Zastępuje okno wyboru pliku przeglądarki, `({ type, op, accept, mode }) => void`; pole `mode` od wersji `4.0.0`. |
+| `setImportFileCallback(cb)` | Zastępuje okno wyboru pliku przeglądarki, `({ type, op, accept, mode }) => void`; pole `mode` od wersji `4.0.0`. Od wersji `4.2.0` przycisk `Import CSV` na karcie Słownik otwiera okno wyboru pliku przeglądarki nawet przy ustawionej funkcji zwrotnej – zobacz sekcję [Okna dialogowe plików](#file-dialogs). |
 | `createKeyBindingMap()` | Przy każdym wywołaniu zwraca domyślne powiązania klawiszy jako nowy obiekt `KeyBindingMap` – zobacz sekcję [createKeyBindingMap](./erd-editor-element.md#createkeybindingmap). |
 | `KeyBindingMap`, `KeyBindingName`, `ShortcutOption` (typy) | Mapa powiązań, unia nazw jej poleceń i pojedyncze powiązanie. |
+| `dictionaryRowChords(map)` | Od wersji `4.2.0`. Przy każdym wywołaniu zwraca, jako nową tablicę `ShortcutOption[]`, kombinacje klawiszy, którymi siatka karty [Słownik](../guide/guides/dictionary.md#adding-and-deleting-rows) wstawia i usuwa wiersze przy przekazanej mapie `KeyBindingMap`. Kombinacja wstawiająca wiersze powyżej, przy ustawieniach domyślnych `Alt+Shift+Enter`, nie należy do żadnego powiązania – zobacz sekcję [dictionaryRowChords](./erd-editor-element.md#dictionaryrowchords). |
 | `LocaleCode`, `LocaleOption` (typy) | Od wersji `4.0.0`. Kody 25 języków wyświetlania oraz te same kody z dodatkiem `'system'`, przyjmowane przez `setLocale()` – zobacz sekcję [Język wyświetlania](./erd-editor-element.md#display-language). |
-| `SchemaSQLOptions` (typ) | Od wersji `4.0.0`. Opcje `statements` i `header`, które przyjmuje `getSchemaSQL()` – zobacz sekcję [getSchemaSQL](./erd-editor-element.md#getschemasql). |
+| `SchemaSQLOptions` (typ) | Od wersji `4.0.0`. Opcje przyjmowane przez `getSchemaSQL()`: `statements`, `header` oraz, od wersji `4.2.0`, `logicalNameAsComment` – zobacz sekcję [getSchemaSQL](./erd-editor-element.md#getschemasql). |
 
 Drugim punktem wejścia jest `@dineug/erd-editor/engine.js`. Uruchamia on magazyn dokumentu bez drzewa DOM, więc działa w wątku Web Worker – zobacz stronę [Zdalne przechowywanie](./advanced/remote-storage.md).
 Eksportuje funkcję `createReplicationStore` i typ `ReplicationStore`. Od wersji `3.10.0` eksportuje też typ `ReplicationChange`, `{ value: string; changed: boolean }`, który otrzymuje funkcja nasłuchująca zdarzenia `change` repliki – zobacz sekcję [on@change](./advanced/remote-storage.md#onchange).
@@ -188,6 +190,7 @@ Od wersji `3.9.1` istnieje trzeci punkt wejścia, `@dineug/erd-editor/peer.js`: 
 
 Import i eksport korzystają z funkcji zwrotnych, które można wstrzyknąć, więc host bez przeglądarkowego okna dialogowego plików – na przykład widok webview w IDE – może dostarczyć własne.
 Nie są one symetryczne: eksport przekazuje gotowy plik, import natomiast tylko o niego prosi, a jego zawartość trzeba samodzielnie przekazać z powrotem do edytora.
+Od wersji `4.2.0` przycisk `Import CSV` na karcie Słownik to jedyny import, który nigdy nie wywołuje funkcji zwrotnej importu, której pole `type` nie ma wartości dla plików CSV. Zawsze otwiera on własne okno wyboru pliku przeglądarki, dla plików `.csv` – zobacz sekcję [Importowanie i eksportowanie plików CSV](../guide/guides/dictionary.md#importing-and-exporting-csv).
 
 Pole `op` ma wartość `set` lub `diff` – żądanie `diff` trafia do metody `setDiffValue()` niezależnie od wartości `type`. W przeciwnym razie pole `type` wybiera metodę, a pole `accept` zawiera rozszerzenia tego typu, gotowe do przekazania oknu dialogowemu plików hosta.
 Od wersji `4.0.0` żądanie `set` zawiera `mode: 'append'`, gdy użytkownik wybrał operację [Importuj i dodaj](../guide/guides/file-import-export.md#import-and-add), a przy zwykłym imporcie nie zawiera pola `mode`. Przekaż tę wartość dalej: funkcja zwrotna, która ją pomija, zastępuje diagram, do którego użytkownik chciał dodać zawartość.
@@ -229,8 +232,8 @@ setImportFileCallback(async ({ type, op, accept, mode }) => {
 Dla każdej obsługiwanej wartości `type` wywołuj odpowiednią metodę, a pozostałe ignoruj.
 Wywołanie `setSchemaJSON()` w trybie zastępowania, tak jak przypisanie `value`, czyści dokument przed parsowaniem, więc skierowanie tam danych, które nie są dokumentem `.erd.json` – przez ogólną gałąź `else` albo dlatego, że dodana później wartość `type` nie miała własnej gałęzi – opróżnia diagram, zamiast cokolwiek zaimportować.
 
-Generowana przez edytor wartość `fileName` ma postać `<database name>-<timestamp>` z dopisanym rozszerzeniem pliku, gdzie znacznik czasu to czas lokalny w formacie `yyyy-MM-dd'T'HH_mm_ss`. Pusta nazwa bazy danych zostaje zastąpiona przez `unnamed`.
-Funkcja zwrotna eksportu otrzymuje poniższe pliki. Od wersji `4.0.0` są wśród nich plik SVG i pliki z Generatora kodu, a plik `.sql` pochodzi nie bezpośrednio z pozycji `Export`, lecz z przycisku `Save file` na karcie Schemat SQL.
+Generowana przez edytor wartość `fileName` ma postać `<database name>-<timestamp>` z dopisanym rozszerzeniem pliku, gdzie znacznik czasu to czas lokalny w formacie `yyyy-MM-dd'T'HH_mm_ss`. Pusta nazwa bazy danych zostaje zastąpiona przez `unnamed`. Plik CSV z karty Słownik ma przed rozszerzeniem nazwę swojego arkusza, na przykład `<database name>-<timestamp>-words.csv`.
+Funkcja zwrotna eksportu otrzymuje poniższe pliki. Od wersji `4.0.0` są wśród nich plik SVG i pliki z Generatora kodu, a plik `.sql` pochodzi nie bezpośrednio z pozycji `Export`, lecz z przycisku `Save file` na karcie Schemat SQL. Od wersji `4.2.0` jest wśród nich także plik CSV z karty Słownik.
 
 | Plik | Rozszerzenie | `type` obiektu Blob |
 | --- | --- | --- |
@@ -238,6 +241,7 @@ Funkcja zwrotna eksportu otrzymuje poniższe pliki. Od wersji `4.0.0` są wśró
 | Przycisk `Save file` na karcie Schemat SQL, zapisujący tekst wyświetlany na tej karcie – zobacz stronę [Schemat SQL](../guide/guides/schema-sql.md) | `.sql` | brak |
 | Okno dialogowe [Export image](../guide/guides/file-import-export.md#image) | `.png` lub `.svg` | `image/png` lub `image/svg+xml` |
 | Przycisk `Save file` na karcie Generator kodu – zobacz stronę [Generator kodu](../guide/guides/code-generator.md) | Rozszerzenie języka: `.cs`, `.go`, `.java`, `.kt`, `.php`, `.rs`, `.scala`, `.swift`, `.ts`, `.py`, `.aml`, `.dbml`, `.graphql`, `.json` lub `.mmd` | brak |
+| Przycisk `Export CSV` na karcie Słownik, zapisujący wszystkie wiersze wyświetlanego arkusza niezależnie od tego, które z nich pokazuje wyszukiwanie – zobacz sekcję [Importowanie i eksportowanie plików CSV](../guide/guides/dictionary.md#importing-and-exporting-csv) | `.csv` | `text/csv` |
 
 Host, który wybiera procedurę obsługi według rozszerzenia, potrzebuje jej dla każdego z nich.
 
@@ -261,5 +265,5 @@ Wersja `4.0.0` to nowa wersja główna. Przenosząc stronę z wersji 3.x, sprawd
 - Funkcja zwrotna importu otrzymuje `mode: 'append'` dla operacji Importuj i dodaj, a każda funkcja zwrotna musi tę wartość przekazać dalej. Funkcja zwrotna eksportu otrzymuje teraz także pliki `.svg` i pliki z Generatora kodu, a pozycja `Export` ▸ `Schema SQL`, zamiast zapisywać, otwiera kartę Schemat SQL, więc plik `.sql` przychodzi tylko z przycisku `Save file` tej karty – zobacz sekcję [Okna dialogowe plików](#file-dialogs).
 - Klawisze `Delete` i `Backspace` są powiązane z nowym poleceniem `removeSelection`. Gdy edytor ma fokus poza polem tekstowym, domyślne działanie klawisza jest blokowane na każdej karcie, a na karcie ERD edytor usuwa zaznaczone elementy. Typy `KeyBindingName` i `KeyBindingMap` zyskują to polecenie, a `setKeyBindingMap({ removeSelection: [] })` pozostawia oba klawisze stronie – zobacz sekcję [setKeyBindingMap](./erd-editor-element.md#setkeybindingmap).
 - Właściwość `ThemeOptions.appearance` przyjmuje też wartość `'system'`, odpowiadającą opcji `System` w kreatorze motywu, którą ustawia włączenie `systemDarkMode`. Zdarzenie `changePresetTheme` zgłasza `'system'`, dopóki ta opcja jest wybrana, więc zapisuj tę wartość bez zmian i przekazuj ją z powrotem do `setPresetTheme`. Przy włączonym `systemDarkMode` motyw ustawiony przez `setPresetTheme()` z `'light'` lub `'dark'` teraz pozostaje, zamiast zostać nadpisany przy następnej zmianie w systemie operacyjnym – zobacz sekcje [systemDarkMode](./erd-editor-element.md#systemdarkmode) i [changePresetTheme](./erd-editor-element.md#changepresettheme).
-- Serwer `@dineug/erd-editor-mcp` `1.0.0`, rozszerzenie VS Code w wersji `4.0.0` lub nowszej oraz wtyczki Obsidian i JetBrains w wersji `1.0.0` lub nowszej posługują się protokołem huba w wersji 2. Serwer `1.0.0` i wcześniejsza wersja edytora obsługująca agentów albo wcześniejszy serwer i jeden z tych edytorów odrzucają się nawzajem z kodem `protocolMismatch`, wskazując, którą stronę należy zaktualizować – zobacz sekcję [Aktualizacja](../mcp/installation.md#updating).
+- Serwer `@dineug/erd-editor-mcp` w wersji `1.0.0` lub nowszej, rozszerzenie VS Code w wersji `4.0.0` lub nowszej oraz wtyczki Obsidian i JetBrains w wersji `1.0.0` lub nowszej posługują się protokołem huba w wersji 2. Serwer w wersji `1.0.0` lub nowszej i wcześniejsza wersja edytora obsługująca agentów albo wcześniejszy serwer i jeden z tych edytorów odrzucają się nawzajem z kodem `protocolMismatch`, wskazując, którą stronę należy zaktualizować – zobacz sekcję [Aktualizacja](../mcp/installation.md#updating).
 - Adres URL CDN bez numeru wersji udostępnia teraz najnowszą wersję 4.x. Przypnij `@3.10.0`, aby pozostać przy wersji 3.x – zobacz sekcję [CDN](#cdn).

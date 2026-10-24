@@ -13,9 +13,9 @@ Det som servern hittar avgör vart redigeringen går.
 | Vad den hittar | Vad en redigering gör |
 | --- | --- |
 | En editor vars arbetsområde, valv eller öppna projekt innehåller dokumentet, eller som har det öppet | **Live.** Öppnar dokumentet i ERD Editor vid behov, ansluter till redigeringssessionen och tillämpar ändringen där. Redigeringarna visas direkt och sparas på samma sätt som editorn sparar dina egna – se [Spara](#saving). |
-| Ingen editor | **Headless.** Läser in filen, tillämpar ändringen och ersätter filen. `erd_save` har ingenting att göra. |
+| Ingen editor | **Headless.** Läser in filen, tillämpar ändringen och ersätter filen innan den svarar, så resultatet anger `saved: true` och `erd_save` har ingenting att göra. |
 | En editor med hubben avstängd | **Nekad.** Läsningar fungerar fortfarande, från disken. En ändring som skrivs till filen medan en editor har den öppen kan skrivas över när editorn sparar nästa gång, så servern skriver ingenting. |
-| En editor vars hubb är på men som använder ett annat protokoll än serverns: med servern i version `1.0.0` ett VS Code-tillägg `3.x`, ett Obsidian-plugin `0.x` eller ett JetBrains-plugin `0.9.0` eller `0.10.0`; med en server före `1.0.0` tillägget `4.0.0` eller senare, eller ett plugin `1.0.0` eller senare | **Nekad**, även för läsningar, med `protocolMismatch`. Meddelandet anger vilken sida som ska uppdateras: tillägget eller pluginet, eller servern – se [Uppdatera](./installation.md#updating). |
+| En editor vars hubb är på men som använder ett annat protokoll än serverns: med servern i version `1.0.0` eller senare ett VS Code-tillägg `3.x`, ett Obsidian-plugin `0.x` eller ett JetBrains-plugin `0.9.0` eller `0.10.0`; med en server före `1.0.0` tillägget `4.0.0` eller senare, eller ett plugin `1.0.0` eller senare | **Nekad**, även för läsningar, med `protocolMismatch`. Meddelandet anger vilken sida som ska uppdateras: tillägget eller pluginet, eller servern – se [Uppdatera](./installation.md#updating). |
 | En editor i Windows som har dokumentet under en annan sökväg till samma fil: agenten angav det via en nätverksresurs eller en mappad enhet på den här datorn, som `\\localhost\C$\…`, och editorn har det under dess enhetssökväg, eller tvärtom | **Nekad**, även för läsningar, med `invalidPath`. Meddelandet anger den sökväg som editorn har dokumentet under; anropa igen med den sökvägen. |
 | En editor i Windows som Windows håller agenten borta från: en som startades som administratör men inte agenten, eller vilken editor som helst när agenten körs i en sandlåda | **Nekad**, även för läsningar, med `hubUnreachable` och ett meddelande som anger varför. Kör editorn och agenten med samma behörigheter, till exempel genom att starta editorn igen utan administratörsbehörighet. |
 
@@ -35,6 +35,8 @@ Dess redigeringar når direkt varje editor som har dokumentet öppet, och dess f
 
 En läsning öppnar aldrig en editor. En redigering öppnar dokumentet i ERD Editor när det ännu inte är öppet, utan att ta tangentbordsfokus.
 
+En editor med ett VS Code-tillägg före `4.2.0`, eller ett Obsidian- eller JetBrains-plugin före `1.2.0`, tar fortfarande emot agentens redigeringar live, men den varken visar eller behåller de logiska namn, domänkopplingar och rader i ordlistorna som agenten skriver – se [Uppdatera](./installation.md#updating).
+
 ### Spara {#saving}
 
 Varje editor sparar agentens redigeringar på samma sätt som den sparar dina egna.
@@ -51,7 +53,7 @@ I båda skriver `erd_save` dem direkt.
 Det nekas med `notSaved` när editorn inte kunde bekräfta det, eller inte skrev filen: VS Code låter en flik förbli osparad när filen har ändrats på disken, och en JetBrains-IDE kunde inte skriva den, till exempel medan en dialogruta var öppen eller när det inte går att skriva till filen.
 
 I VS Code och en JetBrains-IDE lyckas `erd_save` för ett dokument som inte har något kvar att spara, och filen lämnas som den är.
-Så är det när varje redigering har sparats, vilket en JetBrains-IDE gör på egen hand, och det fortsätter att gälla medan varje senare ändring är en som ett [lås](../guide/guides/settings.md#lock) håller utanför filen, som att rulla eller zooma när `Viewport` är låst, eller byta flik när `Canvas Type` är låst. Alla lås är på som standard.
+Så är det när varje redigering har sparats, vilket en JetBrains-IDE gör på egen hand, och det fortsätter att gälla medan varje senare ändring är en som ett [lås](../guide/guides/settings.md#lock) håller utanför filen, som att rulla eller zooma när `Viewport` är låst, byta flik när `Canvas Type` är låst eller byta [namnvisning](../guide/guides/logical-names.md#name-view) när `Name View` är låst. Alla lås är på som standard.
 En fil som en JetBrains-IDE inte kan skriva till nekas även då.
 
 När editorn stänger dokumentet efter agentens senaste redigering får agentens nästa anrop en notering om att de redigeringarna bara finns i filen om de sparades innan editorn stängdes.
@@ -63,7 +65,7 @@ Editorns eget kommando [Ångra](../guide/guides/undo-redo.md) fungerar tvärtom:
 
 Några redigeringar skapar inget steg i editorns ångrahistorik: `erd_set_database` och `erd_set_database_name` bland [inställningsverktygen](./tools.md#settings), samt `erd_resize_memo`.
 Det gör inte heller ett anrop till `erd_move_table_group` som flyttar gruppen mindre än 20 pixlar totalt, vågrätt och lodrätt sammanlagt, även om gruppen stannar kvar där den flyttades.
-Ett anrop som inte ändrar något skapar inte heller något steg: `erd_set_column_primary_key`, `erd_set_column_unique`, `erd_set_column_not_null`, `erd_set_column_auto_increment`, `erd_set_index_unique` eller `erd_set_index_column_order` som anger ett värde som dokumentet redan har; `erd_add_index_column` med en kolumn som redan finns i indexet; `erd_set_table_group` med tabeller som redan finns i den gruppen (eller som redan saknar grupp, med `groupId` `null`); `erd_move_table_group` till den punkt där gruppen redan står; `erd_resize_table_group` till den rektangel som gruppen redan har; `erd_sort_tables` på ett dokument utan tabeller; eller en import med `mode` `append` som inte tillför någon tabell (för `erd_import_json` ingen tabell och ingen anteckning).
+Ett anrop som inte ändrar något skapar inte heller något steg: `erd_set_column_primary_key`, `erd_set_column_unique`, `erd_set_column_not_null`, `erd_set_column_auto_increment`, `erd_set_index_unique` eller `erd_set_index_column_order` som anger ett värde som dokumentet redan har; `erd_add_index_column` med en kolumn som redan finns i indexet; `erd_set_table_group` med tabeller som redan finns i den gruppen (eller som redan saknar grupp, med `groupId` `null`); `erd_move_table_group` till den punkt där gruppen redan står; `erd_resize_table_group` till den rektangel som gruppen redan har; `erd_sort_tables` på ett dokument utan tabeller; `erd_set_table_logical_name` eller `erd_set_column_logical_name` med det logiska namn som tabellen eller kolumnen redan har, när en härledning från det inte skulle ändra något; `erd_set_column_domain` med den domän som kolumnen redan är kopplad till, när kolumnen redan har den domänens typ och [Synkronisera datatyp i relationer](../guide/guides/settings.md#relationship-datatype-sync) inte skulle ändra typ på någon kolumn längs dess relationer; `erd_update_word`, `erd_update_term` eller `erd_update_domain` med bara värden som raden redan har, om inte `name` anges för en term som saknar fysiskt namn och termens ord bildar ett; `erd_derive_physical_names` när varje namn som anropet omfattar och som har ett logiskt namn redan har det som [ordlistorna](./tools.md#dictionaries) ger det och är märkt som härlett; eller en import med `mode` `append` som inte tillför någon tabell (för `erd_import_json` ingen tabell och ingen anteckning).
 `erd_undo` hoppar över dessa och nämner dem i sitt resultat.
 Andra redigeringar, som `erd_change_relationship_type`, `erd_change_relationship_on_delete`, `erd_change_relationship_on_update`, `erd_change_table_group_name`, `erd_change_table_group_color` och `erd_set_ddl_script`, skapar ett steg även när de anger ett värde som dokumentet redan har.
 
@@ -91,7 +93,7 @@ En läsning som inte kan ansluta till en editors hubb nekas med `hubUnreachable`
 
 ## Headless {#headless}
 
-När ingen editor betjänar dokumentet läser varje redigering in filen, tillämpar ändringen och skriver tillbaka filen.
+När ingen editor betjänar dokumentet läser varje redigering in filen, tillämpar ändringen och skriver tillbaka filen innan den svarar, så dess resultat anger `saved: true` – se [Resultat](./tools.md#results).
 Skrivningen görs till en temporär fil bredvid dokumentet, med namnet `.<name>.<id>.tmp`, som sedan ersätter det, så att dokumentet aldrig blir halvskrivet, utom i Windows i fallet med skrivning på plats som beskrivs nedan.
 
 Före det sista steget kontrollerar servern om filen har ändrats på disken under anropet.
@@ -107,6 +109,8 @@ I Windows gäller ytterligare två regler:
 
 - Ett dokument med egna behörigheter, som skiljer sig från mappens, skrivs på plats i stället för att ersättas, så att det behåller dem, och den temporära filen tas bort efteråt. Ett program som läser dokumentet under den skrivningen kan hitta text som inte går att tolka.
 - En fil som ett annat program håller öppen kan inte ersättas, så servern försöker igen i upp till två sekunder. Varje försök letar först efter en editor igen, och en editor som har börjat betjäna dokumentet under tiden nekar skrivningen med `hubAppeared`, eller med `blocked` när dess hubb är avstängd. Om filen fortfarande hålls öppen efter två sekunder skrivs ingenting, filen läses in igen och anropet misslyckas med ett meddelande som citerar systemfelet.
+
+En server före `1.1.0` läser ett dokument utan dess logiska namn, kolumnernas domänkopplingar och dokumentets ord, termer och domäner, så den första redigering som den skriver till filen utelämnar dem. Uppdatera servern – se [Uppdatera](./installation.md#updating).
 
 ## Nekad {#refused}
 
@@ -130,7 +134,7 @@ Ett VS Code-tillägg före `3.0.0` och ett JetBrains-plugin före `0.9.0` har in
 
 Ett dokument anges med `path`, absolut eller relativ till serverns arbetskatalog.
 
-- Nya dokument är `.erd.json`. `erd_open_document` med `create` skapar filen och lägger till `.erd.json` till ett namn som saknar filändelse. Precis som ett nytt diagram i editorn har det nya dokumentet alla [lås](../guide/guides/settings.md#lock) på, så att filen aldrig ändras när du rullar, zoomar, byter flik eller väljer ett annat språk, skiftläge eller en annan typ av citattecken i kodgeneratorn i en editor. Inget verktyg slår på eller av ett enskilt lås: det gör du på fliken Inställningar i editorn. `erd_import_json` i läget `replace` ersätter dem alla med låsen i dokumentet som det läser in – se [Import](./tools.md#import).
+- Nya dokument är `.erd.json`. `erd_open_document` med `create` skapar filen och lägger till `.erd.json` till ett namn som saknar filändelse. Precis som ett nytt diagram i editorn har det nya dokumentet alla [lås](../guide/guides/settings.md#lock) på, så att filen aldrig ändras när du rullar, zoomar, byter flik, byter namnvisning eller väljer ett annat språk, skiftläge eller en annan typ av citattecken i kodgeneratorn i en editor. Inget verktyg slår på eller av ett enskilt lås: det gör du på fliken Inställningar i editorn. `erd_import_json` i läget `replace` ersätter dem alla med låsen i dokumentet som det läser in – se [Import](./tools.md#import).
 - Befintliga `.erd`-, `.vuerd`- och `.vuerd.json`-filer går också att öppna. En sökväg med någon annan filändelse nekas med `invalidPath`.
 - I Windows nekas med `invalidPath` en sökväg som innehåller ett namn som Windows inte lagrar så som det är skrivet, innan dokumentet läses eller skrivs, även för läsningar: ett namn med kolon eller ett annat tecken som Windows inte godtar, som `orders:v2.erd`; ett enhetsnamn som `NUL.erd` eller `CON.erd`, oavsett skiftläge; eller ett namn som slutar med punkt eller blanksteg. Byt namn på filen, till exempel med `-` i stället för `:`.
 - En fil som inte är ett dokument som editorn kan läsa, till exempel en som har kvar markörer från en sammanslagningskonflikt, nekas med `invalidDocument` och lämnas som den är. Den läses aldrig in som ett tomt diagram och skrivs tillbaka.

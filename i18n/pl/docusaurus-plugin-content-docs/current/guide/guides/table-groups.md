@@ -1,5 +1,5 @@
 ---
-sidebar_position: 5
+sidebar_position: 6
 description: Grupowanie powiązanych tabel w nazwanej, kolorowej ramce rysowanej za nimi; tworzenie, nazywanie, kolorowanie, przenoszenie, zmiana rozmiaru i usuwanie grup, przechodzenie do nich z Eksploratora, zmiana należących do nich tabel, ukrywanie ich oraz zachowywanie ich w Automatycznym układzie, Schemacie SQL i formacie DBML.
 ---
 

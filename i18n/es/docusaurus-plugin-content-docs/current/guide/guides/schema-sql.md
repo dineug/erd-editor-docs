@@ -1,6 +1,6 @@
 ---
-sidebar_position: 11
-description: Lee el DDL del diagrama en la pestaña Esquema SQL, elige la base de datos, el entrecomillado, las sentencias, la cabecera y las tablas en su panel de opciones, añade tus propios scripts antes y después de las tablas y guarda o copia el SQL.
+sidebar_position: 12
+description: Lee el DDL del diagrama en la pestaña Esquema SQL, elige la base de datos, el entrecomillado, las sentencias, la cabecera, los nombres lógicos en los comentarios vacíos y las tablas en su panel de opciones, añade tus propios scripts antes y después de las tablas y guarda o copia el SQL.
 ---
 
 # Esquema SQL
@@ -20,24 +20,25 @@ Haz clic con el botón derecho en el SQL para abrir su menú contextual:
 - `Options panel`, marcada mientras el panel está visible, que lo contrae o lo abre.
 - `Save file`
 
-Mientras esta pestaña está abierta, la búsqueda rápida ofrece `Database` y `Bracket`; `Schema SQL: Statements` y `Schema SQL: Header`, que solo enumeran las opciones que tiene la base de datos; y `Schema SQL: Options panel`, que contrae o abre el panel.
+Mientras esta pestaña está abierta, la búsqueda rápida ofrece `Database` y `Bracket`; `Schema SQL: Statements` y `Schema SQL: Header`, que solo enumeran las opciones que tiene la base de datos; y `Schema SQL: Options panel`, que contrae o abre el panel.  
+Ni el menú contextual ni la búsqueda rápida ofrecen `Write logical names into empty comments`, que solo está en el panel de opciones; consulta [Nombres lógicos como comentarios](#logical-names-as-comments).
 
 El SQL se escribe al abrirse la pestaña y de nuevo cada vez que cambia una de las opciones del panel, el nombre de la base de datos o un script. Una edición de las tablas hecha mientras la pestaña está abierta, como la de un colaborador o la de un agente de programación, se muestra cuando sales de la pestaña y vuelves, o cuando cambia alguno de esos elementos.
 
-El panel [Propiedades de la tabla](./table-related-functions.md#table-properties) tiene su propia pestaña `Schema SQL`, que muestra el DDL de una sola tabla. Siempre escribe sentencias `CREATE` simples, sin cabecera ni scripts, no tiene panel de opciones y su menú contextual solo ofrece `Database` y `Bracket`.
+El panel [Propiedades de la tabla](./table-related-functions.md#table-properties) tiene su propia pestaña `Schema SQL`, que muestra el DDL de una sola tabla. Siempre escribe sentencias `CREATE` simples, sin cabecera ni scripts, nunca escribe un nombre lógico en un comentario vacío, no tiene panel de opciones y su menú contextual solo ofrece `Database` y `Bracket`.
 
 ## Panel de opciones {#options-panel}
 
 El panel reúne tres grupos, cada uno bajo un rótulo:
 
 1. `Saved in the document`: `Database` y `Bracket`; consulta [Base de datos y delimitador](#database-and-bracket).
-2. `This window only`: `Statements`, `Header` y, mientras el diagrama tenga un [grupo de tablas](./table-groups.md), `Tables`; consulta [Sentencias](#statements), [Cabecera](#header) y [Tablas](#tables).
+2. `This window only`: `Statements`, `Header`, `Write logical names into empty comments` y, mientras el diagrama tenga un [grupo de tablas](./table-groups.md), `Tables`; consulta [Sentencias](#statements), [Cabecera](#header), [Nombres lógicos como comentarios](#logical-names-as-comments) y [Tablas](#tables).
 3. `Saved in the document · written as is for every database`: los scripts `Before tables` y `After tables`; consulta [Scripts previos y posteriores](#before-and-after-scripts).
 
 `Save file` y `Copy` están al pie del panel; consulta [Guardar o copiar el SQL](#saving-or-copying-the-sql).
 
 Las opciones de `This window only` pertenecen a la ventana del editor en la que las eliges. No se guardan en el documento, no se comparten con los colaboradores ni se registran para deshacer, y se restablecen cuando el editor se cierra o se recarga; al cambiar de pestaña se conservan.  
-`Statements` empieza en `If not exists` y `Header` en `CREATE + USE`. En cambio, el SQL que lee con [`getSchemaSQL()`](../../api/erd-editor-element.md#getschemasql) una página que integra el editor, y el SQL que lee un agente de programación, empiezan en `Create` y sin cabecera.
+`Statements` empieza en `If not exists`, `Header` en `CREATE + USE` y `Write logical names into empty comments`, desactivado. En cambio, el SQL que lee con [`getSchemaSQL()`](../../api/erd-editor-element.md#getschemasql) una página que integra el editor, y el SQL que [lee un agente de programación](../../mcp/tools.md#reading-a-document), empiezan en `Create` y sin cabecera, y no escriben nombres lógicos salvo que se les pida.
 
 Una opción que la base de datos seleccionada no tiene sigue en el panel, atenuada, con la descripción emergente `Not in <database>`, como `Not in Oracle`, y pulsarla no hace nada.  
 El SQL usa entonces la forma más cercana que tiene la base de datos, y el botón de esa forma aparece pulsado: `If not exists` recurre a `Create`; `CREATE + USE`, a `USE`, o a `None` si la base de datos tampoco tiene `USE`; y `USE`, a `None`. Tu elección se conserva, así que al cambiar a una base de datos que la tiene se recupera.
@@ -92,6 +93,21 @@ Solo se escribe una cabecera mientras el nombre de la base de datos es un identi
 Cualquier otro nombre, incluido uno vacío, no escribe ninguna cabecera, y el `DROP TABLE` de PostgreSQL no nombra entonces ningún esquema. Mientras está vigente una cabecera distinta de `None`, una nota bajo `Header` lo indica: `Database name "<name>" is not a valid identifier.`  
 El nombre de la base de datos de un diagrama nuevo está vacío, así que, hasta que le des nombre, el panel muestra `Database name "" is not a valid identifier.`
 
+## Nombres lógicos como comentarios {#logical-names-as-comments}
+
+`Write logical names into empty comments`, un interruptor de `This window only`, escribe en el DDL el [nombre lógico](./logical-names.md) de una tabla o columna donde su comentario está vacío, en todas las bases de datos.
+
+![Activar Write logical names into empty comments en el panel Schema SQL, lo que escribe el nombre lógico de cada columna de order_items en su COMMENT vacío mientras se mantienen los comentarios de members](/img/demo-schema-sql-logical-names.webp)
+
+- Un comentario con texto siempre prevalece: el nombre lógico nunca lo reemplaza ni se le añade.
+- Un comentario formado solo por espacios en blanco cuenta como vacío, así que el nombre lógico se escribe en su lugar. Un nombre lógico vacío o formado solo por espacios en blanco no escribe nada, y esa tabla o columna sigue sin recibir ningún comentario.
+- El nombre lógico se escribe donde y como la base de datos escribe un comentario, con sus comillas escapadas del mismo modo; consulta [Comentarios](#comments).
+
+En MySQL, por ejemplo, una columna `id` con el nombre lógico `Member ID` y sin comentario se escribe con `COMMENT 'Member ID'`, mientras que una columna `email` con el nombre lógico `Email` y el comentario `Sign-in address` conserva `COMMENT 'Sign-in address'`.
+
+Como `Statements` y `Header`, el interruptor pertenece a la ventana y empieza desactivado; consulta [Panel de opciones](#options-panel).  
+Una importación nunca vuelve a leer un comentario así como nombre lógico; consulta [Comentarios](./file-import-export.md#comments).
+
 ## Tablas {#tables}
 
 Mientras el diagrama tiene al menos un [grupo de tablas](./table-groups.md), visible u oculto, `Tables` aparece en `This window only` con una casilla por cada opción:
@@ -125,22 +141,24 @@ Un campo sin el foco del teclado refleja un cambio que un colaborador o un [agen
 
 ## Guardar o copiar el SQL {#saving-or-copying-the-sql}
 
-`Save file`, al pie del panel o en el menú contextual, guarda exactamente el SQL que muestra la pestaña, con su base de datos, delimitador, sentencias, cabecera, tablas y scripts actuales, como `<database name>-<timestamp>.sql`. Recibe su nombre y se guarda como cualquier otra exportación; consulta [Exportar](./file-import-export.md#exporting).
+`Save file`, al pie del panel o en el menú contextual, guarda exactamente el SQL que muestra la pestaña, con su base de datos, delimitador, sentencias, cabecera, comentarios con nombres lógicos, tablas y scripts actuales, como `<database name>-<timestamp>.sql`. Recibe su nombre y se guarda como cualquier otra exportación; consulta [Exportar](./file-import-export.md#exporting).
 
 `Export` ▸ `Schema SQL`, en el menú contextual del lienzo o en la búsqueda rápida, no guarda nada por sí solo.  
 Cambia a esta pestaña, abre el panel de opciones aunque estuviera contraído y pone el foco del teclado en `Save file`, de modo que al pulsar `Enter` se guarda el archivo.
 
 `Copy`, al pie del panel, o el botón de copiar que aparece arriba a la derecha del código al pasar el puntero por encima, copia el SQL.  
-Una notificación `Copied!` con una marca de verificación lo confirma durante dos segundos. Si el navegador o el host deniega el acceso al portapapeles, una notificación `Couldn't copy to the clipboard` con un icono de advertencia lo indica en su lugar. Volver a copiar reemplaza la notificación en lugar de añadir otra.  
+Una notificación `Copied!` con una marca de verificación lo confirma durante dos segundos. Si el navegador o el host deniega el acceso al portapapeles, una notificación `Couldn't copy to the clipboard` con un icono de advertencia lo indica en su lugar, durante cinco segundos. Volver a copiar reemplaza la notificación en lugar de añadir otra.  
 El SQL también se puede seleccionar, así que puedes tomar solo una parte.
 
 ## Qué escribe el DDL {#what-the-ddl-writes}
 
 Estas reglas se aplican dondequiera que el editor escriba Esquema SQL: en esta pestaña y en su archivo, y en el SQL que lee una página que integra el editor o un agente de programación.  
-La pestaña `Schema SQL` del panel Propiedades de la tabla las sigue para la única tabla que muestra. No escribe claves externas, salvo las de SQLite, que están dentro de su `CREATE TABLE`, ni secuencias ni disparadores de Oracle.
+La pestaña `Schema SQL` del panel Propiedades de la tabla las sigue para la única tabla que muestra. No escribe secuencias ni disparadores de Oracle, ni claves externas, salvo las de SQLite, que están dentro de su `CREATE TABLE`. Tampoco escribe las sentencias de comentario que PostgreSQL, Oracle y MSSQL ponen después de una tabla, así que en esas tres no muestra ningún comentario.
 
 Las partes aparecen en este orden, separadas por una línea en blanco: la cabecera, el script previo, las sentencias `DROP`, las tablas y el script posterior. Las tablas se escriben por orden de nombre.  
 Un diagrama sin tablas ni scripts no escribe nada, aunque se haya elegido una cabecera.
+
+Las tablas y las columnas se escriben con sus nombres físicos, sea lo que sea lo que muestre la [vista de nombres](./logical-names.md#name-view). Una columna vinculada a un dominio se escribe con su propio tipo de datos, que establece el dominio; consulta [Dominios y tipos de datos](./dictionary.md#domains-and-data-types).
 
 ### Incremento automático {#auto-increment}
 
@@ -181,7 +199,28 @@ El valor predeterminado de una columna se escribe tal como lo introdujiste, pero
 - PostgreSQL solo pone entre paréntesis una expresión con una palabra como `AT TIME ZONE`, `AND`, `OR`, `IS`, `IN`, `LIKE`, `COLLATE` o `= ANY` fuera de paréntesis, como `(now() AT TIME ZONE 'utc')`.
 - MSSQL, Oracle, Snowflake y Databricks escriben todos los valores predeterminados tal como se introdujeron.
 
+### Comentarios {#comments}
+
+El comentario de una tabla o columna que no está en blanco, o el nombre lógico que [`Write logical names into empty comments`](#logical-names-as-comments) escribe en su lugar, se escribe como cada base de datos escribe los comentarios:
+
+- MySQL y MariaDB lo escriben en línea: una columna termina con `COMMENT 'Member ID'`, y la tabla se cierra con `) COMMENT 'Members';`, también en el lote `If not exists` de MySQL.
+- Snowflake escribe el de una columna en línea, `COMMENT 'Member ID'`, y el de la tabla en una línea propia después del paréntesis de cierre, `COMMENT = 'Members';`.
+- Databricks escribe el de una columna en línea, y el de la tabla como `COMMENT 'Members';` después de `USING DELTA`.
+- PostgreSQL escribe `COMMENT ON TABLE member IS 'Members';` y `COMMENT ON COLUMN member.id IS 'Member ID';` justo después del `CREATE TABLE` de la tabla. Oracle escribe las mismas sentencias después de la tabla, sus restricciones únicas y su secuencia y disparador de incremento automático.
+- MSSQL escribe una llamada por tabla y por columna, después de la tabla y sus restricciones únicas, cada una seguida de `GO`: `EXECUTE sys.sp_addextendedproperty 'MS_Description', N'Members', 'schema', 'dbo', 'table', 'member'`, con `'column', 'id'` añadido en el caso de una columna.  
+  El texto es un literal nacional, `N'…'`, así que SQL Server conserva el texto que queda fuera de la página de códigos de la base de datos, como el coreano, en lugar de guardar signos de interrogación.  
+  Con `Bracket` en `None`, una tabla llamada `sales.users` da el esquema `sales` y la tabla `users`, igual que `[sales].[users]` y `"sales"."users"`, cuyos corchetes y comillas dobles se descartan. Un nombre sin esquema está en `dbo`. Una parte delante del esquema, como en `shop.sales.users`, ejecuta el procedimiento de esa base de datos, `shop.sys.sp_addextendedproperty`. Con cualquier otro `Bracket`, el nombre completo es la tabla, en `dbo`.
+- SQLite no guarda comentarios, así que escribe cada uno como una línea `--` encima de lo que describe: `-- Members` encima de `CREATE TABLE member`, y `-- Member ID` encima de la columna.
+
+Una comilla dentro de un comentario entrecomillado se duplica, como en `'it''s'` y `N'it''s'`, y también una en los nombres que pasan las llamadas de MSSQL. Databricks, en cambio, escapa una comilla y una barra invertida con una barra invertida, como en `'it\'s'`, la forma que leen todas las versiones de Spark. Las líneas `--` de SQLite no van entrecomilladas, así que conservan una comilla tal como se escribió: `-- it's`.  
+Por lo demás, el texto se escribe tal como se introdujo, incluidos los saltos de línea, salvo en dos bases de datos:
+
+- Oracle omite las líneas en blanco, y una línea formada solo por espacios o tabulaciones cuenta como en blanco, porque SQL\*Plus termina una sentencia en una línea en blanco y se salta el resto. Un comentario de tabla formado por `Members`, una línea en blanco y `Active only` se escribe como `COMMENT ON TABLE member IS 'Members`, con `Active only';` en la línea siguiente.
+- SQLite escribe cada serie de saltos de línea como un solo espacio, porque un salto de línea terminaría la línea `--` y el resto se ejecutaría como SQL. El mismo comentario se escribe como `-- Members Active only`.
+
+Cómo se vuelven a leer estos comentarios al importar se explica en [Comentarios](./file-import-export.md#comments).
+
 ## Editores de solo lectura {#read-only-editors}
 
-En un editor `readonly`, la pestaña funciona como siempre: `Database` y `Bracket` siguen cambiando el SQL que se muestra, `Statements`, `Header` y `Tables` siguen funcionando, y `Save file` y `Copy` siguen guardándolo y copiándolo.  
+En un editor `readonly`, la pestaña funciona como siempre: `Database` y `Bracket` siguen cambiando el SQL que se muestra, `Statements`, `Header`, `Write logical names into empty comments` y `Tables` siguen funcionando, y `Save file` y `Copy` siguen guardándolo y copiándolo.  
 Solo los dos campos de script son de solo lectura.

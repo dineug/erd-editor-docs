@@ -53,7 +53,8 @@ VS Code leiho batek bere lan-eremuko karpetetako diagramak eta bertan irekitako 
 2. Ireki proiektuaren karpeta eta jo lan-eremua fidagarritzat. Luzapenak lan-eremu fidagarri batean soilik ematen die zerbitzua agenteei.
 3. Utzi `dineug.erd-editor.agentHub.enabled` ezarpena aktibatuta. Lehenespenez aktibatuta dago.
 
-`3.0.0` bertsiotik `3.1.0` bertsiora arteko luzapen batek eta `1.0.0` bertsioko zerbitzariak elkar ukatzen dute, eta `3.0.0` bertsioa baino lehenagoko luzapen batek ez die agenteei zerbitzurik ematen. Ikus [Eguneratzea](#updating).
+`3.0.0` bertsiotik `3.1.0` bertsiora arteko luzapen batek eta `1.0.0` edo berriagoa den zerbitzariak elkar ukatzen dute, eta `3.0.0` bertsioa baino lehenagoko luzapen batek ez die agenteei zerbitzurik ematen.
+`4.0.0` edo `4.1.0` bertsioko luzapen bat konektatu egiten da, baina ez ditu erakusten ez gordetzen agenteak idazten dituen izen logikoak, domeinu-loturak eta hiztegietako errenkadak. Ikus [Eguneratzea](#updating).
 
 Luzapena `.erd`, `.erd.json`, `.vuerd` edo `.vuerd.json` fitxategiak dituen lan-eremu batean abiarazten da; beraz, agente batek diagrama horiek eskura ditzake zuk bat ireki aurretik.
 Horietako bat ere ez duen lan-eremu batean, diagrama bat irekitzen duzunean abiarazten da, eta ordura arte agenteak diskoan editatzen du.
@@ -69,7 +70,8 @@ Obsidian biltegi baten leihoak bere biltegiko diagramak zerbitzatzen ditu.
 1. Instalatu [ERD Editor pluginaren](https://community.obsidian.md/plugins/erd-editor) `1.0.0` bertsioa edo berriagoa Community plugins ataletik, eta aktibatu. Mahaigaineko aplikazioan soilik exekutatzen da, eta Obsidian `1.5.7` edo berriagoa behar du.
 2. Utzi Settings → ERD Editor → Coding agents aukera aktibatuta. Lehenespenez aktibatuta dago, eta biltegi bakoitzak bere ezarpena gordetzen du.
 
-Aurreko bertsioko plugin batek eta `1.0.0` bertsioko zerbitzariak elkar ukatzen dute. Ikus [Eguneratzea](#updating).
+`1.0.0` bertsioa baino lehenagoko plugin batek eta `1.0.0` edo berriagoa den zerbitzariak elkar ukatzen dute.
+`1.0.0` edo `1.1.0` bertsioko plugin bat konektatu egiten da, baina ez ditu erakusten ez gordetzen agenteak idazten dituen izen logikoak, domeinu-loturak eta hiztegietako errenkadak. Ikus [Eguneratzea](#updating).
 
 Biltegi baten leihoak plugina kargatzen den unetik ematen die zerbitzua agenteei; beraz, agente batek biltegiko diagramak eskura ditzake zuk bat ireki aurretik.
 Ez dago fidatzeko urratsik.
@@ -95,7 +97,8 @@ JetBrains IDE batek bertan irekitako proiektu guztietako diagramak zerbitzatzen 
 2. Ireki proiektua eta jo fidagarritzat. IDEak fidagarritzat ez duen proiektu batean, hala nola modu seguruan irekitako batean, agenteek diagramak irakurtzen dituzte, baina ez dituzte inoiz aldatzen.
 3. Utzi Settings | Tools | ERD Editor → Coding agents aukera markatuta. Lehenespenez aktibatuta dago, eta IDE osoari aplikatzen zaio.
 
-`0.9.0` edo `0.10.0` bertsioko plugin batek eta `1.0.0` bertsioko zerbitzariak elkar ukatzen dute, eta `0.9.0` bertsioa baino lehenagoko plugin batek ez die agenteei zerbitzurik ematen. Ikus [Eguneratzea](#updating).
+`0.9.0` edo `0.10.0` bertsioko plugin batek eta `1.0.0` edo berriagoa den zerbitzariak elkar ukatzen dute, eta `0.9.0` bertsioa baino lehenagoko plugin batek ez die agenteei zerbitzurik ematen.
+`1.0.0` edo `1.1.0` bertsioko plugin bat konektatu egiten da, baina ez ditu erakusten ez gordetzen agenteak idazten dituen izen logikoak, domeinu-loturak eta hiztegietako errenkadak. Ikus [Eguneratzea](#updating).
 
 IDEak lehen proiektua irekitzen den unetik ematen die zerbitzua agenteei; beraz, agente batek proiektu bateko diagramak eskura ditzake zuk bat ireki aurretik.
 
@@ -125,19 +128,26 @@ Konektatu aurretik, zerbitzariak egiaztatzen du editoreak zer protokolo-bertsio 
 Biak desberdinak direnean, editore horretara iristen den dei oro `protocolMismatch` errorearekin ukatzen da, irakurketak eta `erd_list_documents` tresna barne, eta ez da ezer idazten.
 Mezuak eguneratu beharreko aldea izendatzen du: zerbitzaria, edo editoreko ERD Editor, hau da, VS Code editorean luzapena, eta Obsidian aplikazioan eta JetBrains IDE batean plugina.
 
-Protokoloaren 2. bertsioa erabiltzen dute `1.0.0` bertsioko zerbitzariak, `4.0.0` edo berriagoa den VS Code luzapenak, `1.0.0` edo berriagoa den Obsidian pluginak eta `1.0.0` edo berriagoa den JetBrains pluginak.
+Protokoloaren 2. bertsioa erabiltzen dute `1.0.0` edo berriagoa den zerbitzariak, `4.0.0` edo berriagoa den VS Code luzapenak, `1.0.0` edo berriagoa den Obsidian pluginak eta `1.0.0` edo berriagoa den JetBrains pluginak.
 Aurreko zerbitzari guztiek protokoloaren 1. bertsioa erabiltzen dute, baita agenteei zerbitzua ematen dien editoreen aurreko bertsio guztiek ere: VS Code luzapenaren `3.0.0` bertsiotik `3.1.0` bertsiora artekoek, Obsidian pluginaren `0.1.0` eta `0.2.0` bertsioek, eta JetBrains pluginaren `0.9.0` eta `0.10.0` bertsioek.
-Horrelako editore batek eta `1.0.0` bertsioko zerbitzariak elkar ukatzen dute, baita aurreko zerbitzari batek eta protokoloaren 2. bertsioa erabiltzen duen editore batek ere.
+Horrelako editore batek eta `1.0.0` edo berriagoa den zerbitzariak elkar ukatzen dute, baita aurreko zerbitzari batek eta protokoloaren 2. bertsioa erabiltzen duen editore batek ere.
 `3.0.0` bertsioa baino lehenagoko VS Code luzapen batek edo `0.9.0` bertsioa baino lehenagoko JetBrains plugin batek ez die agenteei inolako zerbitzurik ematen; beraz, agenteak diskoko fitxategiak editatzen ditu, baita bertan irekita dagoen diagrama bat ere.
 
 | Konbinazioa | Mezua honela amaitzen da |
 | --- | --- |
-| `1.0.0` bertsioko zerbitzaria, protokoloaren 1. bertsioa erabiltzen duen luzapen edo plugin batekin | `Update the ERD Editor extension or plugin in the editor until its hub speaks protocol 2.` |
+| `1.0.0` edo berriagoa den zerbitzaria, protokoloaren 1. bertsioa erabiltzen duen luzapen edo plugin batekin | `Update the ERD Editor extension or plugin in the editor until its hub speaks protocol 2.` |
 | Aurreko zerbitzari bat, protokoloaren 2. bertsioa erabiltzen duen luzapen edo plugin batekin | `Update the MCP server (npx -y @dineug/erd-editor-mcp@latest) until it speaks protocol 2.` |
 
 Eguneratu zerbitzaria eta luzapena edo plugina batera.
+Protokolo bera erabiltzen duten zerbitzari bat eta editore bat konektatu egiten dira, bietako zein den zaharragoa edozein dela ere, baina `1.1.0` edo berriagoa den zerbitzariak bakarrik ditu izen logikoetarako, domeinuetarako eta hiztegietarako tresnak. Ikus [Hiztegiak](./tools.md#dictionaries).
+`4.2.0` edo berriagoa den VS Code luzapenak eta `1.2.0` edo berriagoak diren Obsidian eta JetBrains pluginek bakarrik erakusten eta gordetzen dituzte tresna horiek idazten dituzten izen logikoak, domeinu-loturak eta hiztegietako errenkadak.
+Konektatzen den luzapen edo plugin zaharrago batek ez die jaramonik egiten, nahiz eta agentearen deiak arrakasta izan.
+Hala ere, hiztegiek eratortzen dituzten izen fisikoak eta domeinuek ematen dituzten datu motak aplikatzen ditu.
+`1.1.0` bertsioa baino lehenagoko zerbitzari batek fitxategi bat irakurtzen du haren izen logikoak, domeinu-loturak eta hiztegietako errenkadak gabe, eta kanpoan uzten ditu fitxategia diskoan editatzen duenean. Ikus [Editorerik gabe](./live-and-headless.md#headless).
+
 Eguneratu ERD Editor diagramak irekitzen diren leku guztietan ere.
-`4.0.0` bertsioa baino lehenagoko VS Code luzapenak, `1.0.0` bertsioa baino lehenagoko Obsidian pluginak eta `1.0.0` bertsioa baino lehenagoko JetBrains pluginak bertsio berriago batek gorde duen edo agenteak diskoan editatu duen diagrama bat erakusten dute, haren gako nagusien ikonorik gabe.
-Fitxategia gordetzean, haren taula-taldeak eta SQL eskemaren scriptak galtzen dituzte.
+`4.2.0` bertsioa baino lehenagoko VS Code luzapenak, `1.2.0` bertsioa baino lehenagoko Obsidian pluginak eta `1.2.0` bertsioa baino lehenagoko JetBrains pluginak bertsio berriago batek gorde duen edo agenteak diskoan editatu duen diagrama bat irekitzen dute, haren taulen eta zutabeen izen logikoak, haren zutabeen domeinu-loturak eta haren hitzak, terminoak eta domeinuak gabe.
+Fitxategia gordetzean, kanpoan uzten dituzte.
+`4.0.0` bertsioa baino lehenagoko VS Code luzapenak, `1.0.0` bertsioa baino lehenagoko Obsidian pluginak eta `1.0.0` bertsioa baino lehenagoko JetBrains pluginak, gainera, halako diagrama bat haren gako nagusien ikonorik gabe erakusten dute, eta fitxategia gordetzean haren taula-taldeak eta SQL eskemaren scriptak galtzen dituzte.
 `3.1.0` bertsioa baino lehenagoko VS Code luzapenak, `0.2.0` bertsioa baino lehenagoko Obsidian pluginak eta `0.10.0` bertsioa baino lehenagoko JetBrains pluginak diagrama baten ON DELETE eta ON UPDATE ekintzak ere galtzen dituzte fitxategia gordetzean.
 Obsidian aplikazioan, berrabiarazi aplikazioa plugina eguneratu ondoren: ordura arte, biltegi baten leihoak lehenengo kargatu zuen plugin-bertsioaren ERD Editor exekutatzen jarraitzen du.

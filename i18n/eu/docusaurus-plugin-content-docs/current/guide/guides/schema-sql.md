@@ -1,6 +1,6 @@
 ---
-sidebar_position: 11
-description: Irakurri diagramaren DDLa SQL eskema fitxan, aukeratu datu-basea, mugatzailea, sententziak, goiburua eta taulak haren aukeren panelean, gehitu zure scriptak taulen aurretik eta ondoren, eta gorde edo kopiatu SQLa.
+sidebar_position: 12
+description: Irakurri diagramaren DDLa SQL eskema fitxan, aukeratu datu-basea, mugatzailea, sententziak, goiburua, iruzkin hutsetako izen logikoak eta taulak haren aukeren panelean, gehitu zure scriptak taulen aurretik eta ondoren, eta gorde edo kopiatu SQLa.
 ---
 
 # SQL eskema
@@ -20,24 +20,25 @@ Egin eskuineko klik SQLan haren laster-menua irekitzeko:
 - `Options panel`, panela tolestu edo irekitzen duena; panela ikusgai dagoen bitartean markatuta dago.
 - `Save file`
 
-Fitxa hau irekita dagoen bitartean, Bilaketa azkarrak `Database` eta `Bracket` komandoak eskaintzen ditu; `Schema SQL: Statements` eta `Schema SQL: Header` komandoak, datu-baseak dituen aukerak soilik zerrendatzen dituztenak; eta `Schema SQL: Options panel` komandoa, panela tolestu edo irekitzen duena.
+Fitxa hau irekita dagoen bitartean, Bilaketa azkarrak `Database` eta `Bracket` komandoak eskaintzen ditu; `Schema SQL: Statements` eta `Schema SQL: Header` komandoak, datu-baseak dituen aukerak soilik zerrendatzen dituztenak; eta `Schema SQL: Options panel` komandoa, panela tolestu edo irekitzen duena.  
+Ez laster-menuak ez Bilaketa azkarrak ez dute eskaintzen `Write logical names into empty comments` etengailua, aukeren panelean bakarrik baitago. Ikus [Izen logikoak iruzkin gisa](#logical-names-as-comments).
 
 SQLa fitxa irekitzean idazten da, eta berriro panelaren aukeretako bat, datu-basearen izena edo script bat aldatzen den bakoitzean. Fitxa irekita dagoen bitartean tauletan egindako edizio bat, hala nola lankide batena edo kodetze-agente batena, fitxatik irten eta itzultzen zarenean agertzen da, edo horietako bat aldatzen denean.
 
-[Taularen propietateak](./table-related-functions.md#table-properties) panelak bere `Schema SQL` fitxa du, taula bakar baten DDLa erakusten duena. Beti `CREATE` sententzia arruntak idazten ditu, goibururik eta scriptik gabe, ez du aukeren panelik, eta haren laster-menuak `Database` eta `Bracket` soilik eskaintzen ditu.
+[Taularen propietateak](./table-related-functions.md#table-properties) panelak bere `Schema SQL` fitxa du, taula bakar baten DDLa erakusten duena. Beti `CREATE` sententzia arruntak idazten ditu, goibururik eta scriptik gabe, ez du inoiz izen logikorik idazten iruzkin huts batean, ez du aukeren panelik, eta haren laster-menuak `Database` eta `Bracket` soilik eskaintzen ditu.
 
 ## Aukeren panela {#options-panel}
 
 Panelak hiru talde ditu, bakoitza epigrafe baten azpian:
 
 1. `Saved in the document`: `Database` eta `Bracket`. Ikus [Datu-basea eta mugatzailea](#database-and-bracket).
-2. `This window only`: `Statements`, `Header` eta, diagramak [taula-talde bat](./table-groups.md) duen bitartean, `Tables`. Ikus [Sententziak](#statements), [Goiburua](#header) eta [Taulak](#tables).
+2. `This window only`: `Statements`, `Header`, `Write logical names into empty comments` eta, diagramak [taula-talde bat](./table-groups.md) duen bitartean, `Tables`. Ikus [Sententziak](#statements), [Goiburua](#header), [Izen logikoak iruzkin gisa](#logical-names-as-comments) eta [Taulak](#tables).
 3. `Saved in the document · written as is for every database`: `Before tables` eta `After tables` scriptak. Ikus [Taulen aurreko eta ondorengo scriptak](#before-and-after-scripts).
 
 `Save file` eta `Copy` botoiak panelaren oinean daude. Ikus [SQLa gordetzea edo kopiatzea](#saving-or-copying-the-sql).
 
 `This window only` taldeko aukerak egiten dituzun editore-leihoari dagozkio. Ez dira dokumentuan gordetzen, ez dira lankideekin partekatzen eta ez dira desegite-historian erregistratzen, eta editorea itxi edo berriro kargatzean berrezartzen dira; fitxaz aldatzean, berriz, mantendu egiten dira.  
-`Statements` aukera `If not exists` balioarekin hasten da, eta `Header` aukera `CREATE + USE` balioarekin. Editorea txertatzen duen orri batek [`getSchemaSQL()`](../../api/erd-editor-element.md#getschemasql) metodoarekin irakurtzen duen SQLa, eta kodetze-agente batek irakurtzen duena, ordea, `Create` balioarekin eta goibururik gabe hasten dira.
+`Statements` aukera `If not exists` balioarekin hasten da, `Header` aukera `CREATE + USE` balioarekin, eta `Write logical names into empty comments` etengailua desaktibatuta. Editorea txertatzen duen orri batek [`getSchemaSQL()`](../../api/erd-editor-element.md#getschemasql) metodoarekin irakurtzen duen SQLa, eta [kodetze-agente batek irakurtzen duena](../../mcp/tools.md#reading-a-document), ordea, `Create` balioarekin eta goibururik gabe hasten dira, eta ez dute izen logikorik idazten hala eskatzen ez bada.
 
 Hautatutako datu-baseak ez duen aukera bat panelean geratzen da, lausotuta, `Not in <database>` argibidearekin, adibidez `Not in Oracle`, eta sakatzeak ez du ezer egiten.  
 SQLak, orduan, datu-baseak duen formarik hurbilena erabiltzen du, eta forma horren botoia sakatuta agertzen da: `If not exists` aukeraren ordez `Create` erabiltzen da, `CREATE + USE` aukeraren ordez `USE`, edo `None` datu-baseak `USE` ere ez badu, eta `USE` aukeraren ordez `None`. Zure aukera gordetzen da; beraz, hura duen datu-base batera aldatzean berriro ezartzen da.
@@ -92,6 +93,21 @@ Goiburua datu-basearen izena identifikatzaile arrunt bat den bitartean soilik id
 Beste edozein izenekin, izen hutsa barne, ez da goibururik idazten, eta PostgreSQL datu-basearen `DROP TABLE` sententziak ez du orduan eskemarik aipatzen. `None` ez den goiburu bat indarrean dagoen bitartean, `Header` aukeraren azpiko azalpen batek hala dio: `Database name "<name>" is not a valid identifier.`  
 Diagrama berri baten datu-basearen izena hutsik dago; beraz, izena eman arte, panelak `Database name "" is not a valid identifier.` erakusten du.
 
+## Izen logikoak iruzkin gisa {#logical-names-as-comments}
+
+`Write logical names into empty comments` etengailuak, `This window only` taldean dagoenak, taula edo zutabe baten [izen logikoa](./logical-names.md) DDLan idazten du haren iruzkina hutsik dagoen lekuan, datu-base guztietan.
+
+![Write logical names into empty comments aktibatzea Schema SQL panelean; horrek order_items taulako zutabe bakoitzaren izen logikoa haren COMMENT hutsean idazten du, eta members taulako iruzkinak mantendu egiten dira](/img/demo-schema-sql-logical-names.webp)
+
+- Testua duen iruzkin bat nagusitzen da beti: izen logikoak ez du inoiz ordezten, eta ez zaio inoiz gehitzen.
+- Zuriunez soilik osatutako iruzkin bat hutsik dagoela jotzen da; beraz, izen logikoa haren lekuan idazten da. Hutsik dagoen edo zuriunez soilik osatuta dagoen izen logiko batek ez du ezer idazten, eta taula edo zutabe horrek iruzkinik gabe jarraitzen du.
+- Izen logikoa datu-baseak iruzkin bat idazten duen lekuan eta forman idazten da, eta haren komatxoei modu berean egiten zaie ihes. Ikus [Iruzkinak](#comments).
+
+MySQL datu-basean, adibidez, `Member ID` izen logikoa eta iruzkinik ez duen `id` zutabe bat `COMMENT 'Member ID'` klausularekin idazten da; `Email` izen logikoa eta `Sign-in address` iruzkina dituen `email` zutabe batek, berriz, `COMMENT 'Sign-in address'` mantentzen du.
+
+`Statements` eta `Header` aukerak bezala, etengailua leihoari dagokio eta desaktibatuta hasten da. Ikus [Aukeren panela](#options-panel).  
+Inportazio batek ez du inoiz halako iruzkinik izen logiko gisa irakurtzen. Ikus [Iruzkinak](./file-import-export.md#comments).
+
 ## Taulak {#tables}
 
 Diagramak gutxienez [taula-talde bat](./table-groups.md) duen bitartean, erakutsita edo ezkutatuta, `Tables` atala `This window only` taldean agertzen da, aukera bakoitzeko kontrol-lauki batekin:
@@ -125,22 +141,24 @@ Teklatuaren fokua ez duen eremu batek lankide batek edo [kodetze-agente batek](.
 
 ## SQLa gordetzea edo kopiatzea {#saving-or-copying-the-sql}
 
-`Save file` aukerak, panelaren oinean edo laster-menuan, fitxak erakusten duen SQLa gordetzen du zehazki, bere uneko datu-base, mugatzaile, sententzia, goiburu, taula eta scriptekin, `<database name>-<timestamp>.sql` gisa. Beste esportazio guztiak bezala izendatzen eta gordetzen da. Ikus [Esportatzea](./file-import-export.md#exporting).
+`Save file` aukerak, panelaren oinean edo laster-menuan, fitxak erakusten duen SQLa gordetzen du zehazki, bere uneko datu-base, mugatzaile, sententzia, goiburu, izen logikoen iruzkin, taula eta scriptekin, `<database name>-<timestamp>.sql` gisa. Beste esportazio guztiak bezala izendatzen eta gordetzen da. Ikus [Esportatzea](./file-import-export.md#exporting).
 
 `Export` ▸ `Schema SQL` aukerak, oihalaren laster-menuan edo Bilaketa azkarrean, ez du ezer gordetzen berez.  
 Fitxa honetara aldatzen da, aukeren panela irekitzen du tolestuta bazegoen ere, eta teklatuaren fokua `Save file` botoian jartzen du; beraz, `Enter` sakatzean fitxategia gordetzen da.
 
 Panelaren oineko `Copy` botoiak, edo kodearen gainetik sagua pasatzean haren goiko eskuinean agertzen den kopiatzeko botoiak, SQLa kopiatzen du.  
-Egiaztatze-marka bat duen `Copied!` jakinarazpen batek berresten du bi segundoz. Nabigatzaileak edo ostalariak arbela ukatzen badu, abisu-ikur bat duen `Couldn't copy to the clipboard` jakinarazpen batek adierazten du hori, haren ordez. Berriro kopiatzean, jakinarazpena ordezten da, beste bat gehitu beharrean.  
+Egiaztatze-marka bat duen `Copied!` jakinarazpen batek berresten du bi segundoz. Nabigatzaileak edo ostalariak arbela ukatzen badu, abisu-ikur bat duen `Couldn't copy to the clipboard` jakinarazpen batek adierazten du hori haren ordez, bost segundoz. Berriro kopiatzean, jakinarazpena ordezten da, beste bat gehitu beharrean.  
 SQLa hautatu ere egin daiteke; beraz, haren zati bat soilik har dezakezu.
 
 ## DDLak zer idazten duen {#what-the-ddl-writes}
 
 Arau hauek editoreak SQL eskema idazten duen leku guztietan betetzen dira: fitxa honetan eta haren fitxategian, eta editorea txertatzen duen orri batek edo kodetze-agente batek irakurtzen duen SQLan.  
-Taularen propietateak paneleko `Schema SQL` fitxak arau horiei jarraitzen die erakusten duen taula bakarrerako. Ez du gako arrotzik idazten, SQLite datu-basearenak izan ezik, haren `CREATE TABLE` sententziaren barruan baitaude, ezta Oracle sekuentziarik edo abiarazlerik ere.
+Taularen propietateak paneleko `Schema SQL` fitxak arau horiei jarraitzen die erakusten duen taula bakarrerako. Ez du Oracle sekuentziarik edo abiarazlerik idazten, ezta gako arrotzik ere, SQLite datu-basearenak izan ezik, haren `CREATE TABLE` sententziaren barruan baitaude. Ez ditu idazten, halaber, PostgreSQL, Oracle eta MSSQL datu-baseek taula baten ondoren jartzen dituzten iruzkin-sententziak; beraz, hiru horietan ez du iruzkinik erakusten.
 
 Zatiak ordena honetan datoz, lerro huts batez bereizita: goiburua, aurreko scripta, `DROP` sententziak, taulak eta ondorengo scripta. Taulak izenaren arabera ordenatuta idazten dira.  
 Taularik eta scriptik ez duen diagrama batek ez du ezer idazten, goiburu bat aukeratuta egon arren.
+
+Taulak eta zutabeak beren izen fisikoekin idazten dira, [Izenen ikuspegiak](./logical-names.md#name-view) erakusten duena edozein dela ere. Domeinu bati lotutako zutabe bat bere datu motarekin idazten da, domeinuak ezartzen duenarekin. Ikus [Domeinuak eta datu motak](./dictionary.md#domains-and-data-types).
 
 ### Gehikuntza automatikoa {#auto-increment}
 
@@ -181,7 +199,28 @@ Zutabe baten balio lehenetsia idatzi zenuen bezala idazten da, baina parentesi a
 - PostgreSQL datu-baseak parentesietatik kanpo `AT TIME ZONE`, `AND`, `OR`, `IS`, `IN`, `LIKE`, `COLLATE` edo `= ANY` bezalako hitz bat duen adierazpena soilik jartzen du parentesi artean, adibidez `(now() AT TIME ZONE 'utc')`.
 - MSSQL, Oracle, Snowflake eta Databricks datu-baseek balio lehenetsi guztiak idatzi bezala idazten dituzte.
 
+### Iruzkinak {#comments}
+
+Taula edo zutabe baten iruzkina, hutsik ez dagoenean, edo [`Write logical names into empty comments`](#logical-names-as-comments) etengailuak haren lekuan idazten duen izen logikoa, datu-base bakoitzak iruzkinak idazten dituen moduan idazten da:
+
+- MySQL eta MariaDB datu-baseek lerroan bertan idazten dute: zutabe bat `COMMENT 'Member ID'` klausularekin amaitzen da, eta taula `) COMMENT 'Members';` klausularekin ixten da, baita MySQL datu-basearen `If not exists` sortan ere.
+- Snowflake datu-baseak zutabearena lerroan bertan idazten du, `COMMENT 'Member ID'`, eta taularena bere lerroan, itxierako parentesiaren ondoren, `COMMENT = 'Members';`.
+- Databricks datu-baseak zutabearena lerroan bertan idazten du, eta taularena `COMMENT 'Members';` gisa, `USING DELTA` klausularen ondoren.
+- PostgreSQL datu-baseak `COMMENT ON TABLE member IS 'Members';` eta `COMMENT ON COLUMN member.id IS 'Member ID';` idazten ditu taularen `CREATE TABLE` sententziaren ondoren bertan. Oracle datu-baseak sententzia berberak idazten ditu taularen, haren bakartasun-murriztapenen eta haren gehikuntza automatikoko sekuentziaren eta abiarazlearen ondoren.
+- MSSQL datu-baseak dei bat idazten du taula bakoitzeko eta zutabe bakoitzeko, taularen eta haren bakartasun-murriztapenen ondoren, bakoitzaren ondoren `GO` lerro bat duela: `EXECUTE sys.sp_addextendedproperty 'MS_Description', N'Members', 'schema', 'dbo', 'table', 'member'`, eta zutabe baterako `'column', 'id'` gehituta.  
+  Testua literal nazional bat da, `N'…'`; beraz, SQL Serverrek datu-basearen kode-orritik kanpoko testua mantentzen du, adibidez koreera, galdera-ikurrak gorde beharrean.  
+  `Bracket` aukera `None` balioan dagoela, `sales.users` izeneko taula batek `sales` eskema eta `users` taula ematen ditu, baita `[sales].[users]` eta `"sales"."users"` izenek ere, haien kortxeteak eta komatxo bikoitzak kenduta. Eskemarik gabeko izen bat `dbo` eskeman dago. Eskemaren aurreko zati batek, `shop.sales.users` izenean bezala, datu-base horren prozedura exekutatzen du, `shop.sys.sp_addextendedproperty`. Beste edozein `Bracket` baliorekin, izen osoa taula da, `dbo` eskeman.
+- SQLite datu-baseak ez du iruzkinik gordetzen; beraz, bakoitza `--` lerro gisa idazten du deskribatzen duenaren gainean: `-- Members` `CREATE TABLE member` sententziaren gainean, eta `-- Member ID` zutabearen gainean.
+
+Komatxo arteko iruzkin baten barruko komatxo bat bikoiztu egiten da, `'it''s'` eta `N'it''s'` adibideetan bezala, baita MSSQL datu-basearen deiek pasatzen dituzten izenetakoa ere. Databricks datu-baseak, horren ordez, komatxoari eta alderantzizko barrari alderantzizko barra batekin egiten die ihes, `'it\'s'` adibidean bezala, Spark bertsio guztiek irakurtzen duten forman. SQLite datu-basearen `--` lerroak ez daude komatxo artean; beraz, komatxoa idatzi bezala mantentzen dute: `-- it's`.  
+Bestela, testua idatzi bezala idazten da, lerro-jauziak barne, bi datu-basetan izan ezik:
+
+- Oracle datu-baseak lerro hutsak kanpoan uzten ditu (zuriunez edo tabulazioz soilik osatutako lerroa hutsik dagoela jotzen da), SQL\*Plus tresnak lerro huts batean amaitzen baitu sententzia bat eta gainerakoa saltatu egiten baitu. `Members`, lerro huts bat eta `Active only` dituen taula-iruzkin bat `COMMENT ON TABLE member IS 'Members` gisa idazten da, eta `Active only';` hurrengo lerroan.
+- SQLite datu-baseak jarraian dauden lerro-jauzien multzo bakoitza zuriune bakar gisa idazten du, lerro-jauzi batek `--` lerroa amaituko lukeelako eta gainerakoa SQL gisa exekutatuko lukeelako. Iruzkin bera `-- Members Active only` gisa idazten da.
+
+Iruzkin hauek inportatzean nola irakurtzen diren [Iruzkinak](./file-import-export.md#comments) atalean azaltzen da.
+
 ## Irakurtzeko soilik dauden editoreak {#read-only-editors}
 
-`readonly` atributua duen editore batean, fitxak ohi bezala funtzionatzen du: `Database` eta `Bracket` aukerek erakutsitako SQLa aldatzen dute oraindik ere, `Statements`, `Header` eta `Tables` aukerek funtzionatzen dute oraindik ere, eta `Save file` eta `Copy` botoiek SQLa gordetzen eta kopiatzen dute oraindik ere.  
+`readonly` atributua duen editore batean, fitxak ohi bezala funtzionatzen du: `Database` eta `Bracket` aukerek erakutsitako SQLa aldatzen dute oraindik ere, `Statements`, `Header`, `Write logical names into empty comments` eta `Tables` aukerek funtzionatzen dute oraindik ere, eta `Save file` eta `Copy` botoiek SQLa gordetzen eta kopiatzen dute oraindik ere.  
 Bi script-eremuak dira irakurtzeko soilik dauden bakarrak.

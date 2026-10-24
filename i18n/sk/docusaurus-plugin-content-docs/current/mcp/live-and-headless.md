@@ -13,9 +13,9 @@ To, čo server nájde, rozhoduje o tom, kam úprava smeruje.
 | Čo nájde | Čo urobí úprava |
 | --- | --- |
 | Editor, ktorého pracovný priestor, trezor alebo otvorený projekt obsahuje dokument alebo ktorý ho má otvorený | **Live.** V prípade potreby otvorí dokument v editore ERD Editor, pripojí sa k relácii úprav a vykoná v nej zmenu. Úpravy sa zobrazia okamžite a ukladajú sa tak, ako editor ukladá vaše vlastné – pozrite si časť [Ukladanie](#saving). |
-| Žiadny editor | **Headless.** Načíta súbor, vykoná zmenu a súbor nahradí. Nástroj `erd_save` nemá čo robiť. |
+| Žiadny editor | **Headless.** Načíta súbor, vykoná zmenu a súbor nahradí ešte pred odpoveďou, takže výsledok uvádza `saved: true` a nástroj `erd_save` nemá čo robiť. |
 | Editor s vypnutým hubom | **Odmietnuté.** Čítanie stále funguje, a to z disku. Zmenu zapísanú do súboru, ktorý má otvorený editor, by mohlo prepísať ďalšie uloženie editora, preto server nezapíše nič. |
-| Editor so zapnutým hubom, ktorý však používa iný protokol ako server: so serverom vo verzii `1.0.0` rozšírenie pre VS Code vo verzii `3.x`, doplnok pre Obsidian vo verzii `0.x` alebo doplnok pre JetBrains vo verzii `0.9.0` alebo `0.10.0`; so serverom starším ako verzia `1.0.0` rozšírenie vo verzii `4.0.0` alebo novšej alebo doplnok vo verzii `1.0.0` alebo novšej | **Odmietnuté** vrátane čítania, s kódom `protocolMismatch`. Správa uvádza stranu, ktorú treba aktualizovať: buď rozšírenie či doplnok, alebo server – pozrite si časť [Aktualizácia](./installation.md#updating). |
+| Editor so zapnutým hubom, ktorý však používa iný protokol ako server: so serverom vo verzii `1.0.0` alebo novšej rozšírenie pre VS Code vo verzii `3.x`, doplnok pre Obsidian vo verzii `0.x` alebo doplnok pre JetBrains vo verzii `0.9.0` alebo `0.10.0`; so serverom starším ako verzia `1.0.0` rozšírenie vo verzii `4.0.0` alebo novšej alebo doplnok vo verzii `1.0.0` alebo novšej | **Odmietnuté** vrátane čítania, s kódom `protocolMismatch`. Správa uvádza stranu, ktorú treba aktualizovať: buď rozšírenie či doplnok, alebo server – pozrite si časť [Aktualizácia](./installation.md#updating). |
 | V systéme Windows editor, ktorý spravuje dokument pod inou cestou k tomu istému súboru: agent ho zadal cez sieťové zdieľanie alebo namapovanú jednotku tohto počítača, napríklad `\\localhost\C$\…`, a editor ho spravuje pod cestou s písmenom jednotky, alebo naopak | **Odmietnuté** vrátane čítania, s kódom `invalidPath`. Správa uvádza cestu, pod ktorou editor dokument spravuje; zavolajte znova s touto cestou. |
 | V systéme Windows editor, ku ktorému Windows agenta nepustí: editor spustený ako správca, zatiaľ čo agent nie, alebo akýkoľvek editor, keď agent beží v izolovanom prostredí (sandbox) | **Odmietnuté** vrátane čítania, s kódom `hubUnreachable` a so správou, ktorá uvádza dôvod. Spustite editor aj agenta s rovnakými právami, napríklad tak, že editor znova spustíte bez správcovských práv. |
 
@@ -35,6 +35,8 @@ Jeho úpravy sa okamžite dostanú do každého editora, v ktorom je dokument ot
 
 Čítanie nikdy neotvorí editor. Úprava otvorí dokument v editore ERD Editor, ak ešte nie je otvorený, a nezoberie pritom fokus klávesnice.
 
+Editor s rozšírením pre VS Code starším ako verzia `4.2.0` alebo s doplnkom pre Obsidian či JetBrains starším ako verzia `1.2.0` naďalej prijíma úpravy agenta naživo, ale logické názvy, prepojenia s doménami a riadky slovníkov, ktoré agent zapíše, nezobrazuje ani neuchováva – pozrite si časť [Aktualizácia](./installation.md#updating).
+
 ### Ukladanie {#saving}
 
 Každý editor ukladá úpravy agenta rovnakým spôsobom ako vaše vlastné.
@@ -51,7 +53,7 @@ Nástroj `erd_save` najprv čaká až dve sekundy, kým editor neprevezme všetk
 Odmietne sa s kódom `notSaved`, keď to editor nedokázal potvrdiť alebo súbor nezapísal: VS Code ponechá kartu neuloženú, keď sa súbor zmenil na disku, a IDE od JetBrains ho nedokázalo zapísať, napríklad kým bolo otvorené dialógové okno alebo keď do súboru nemožno zapisovať.
 
 Vo VS Code a v IDE od JetBrains nástroj `erd_save` pri dokumente, v ktorom nezostalo nič na uloženie, uspeje a súbor ponechá tak, ako je.
-Tak je to vtedy, keď je uložená každá úprava, čo IDE od JetBrains robí samo, a zostáva to tak, kým je každá neskoršia zmena taká, ktorú [zamknutie](../guide/guides/settings.md#lock) nepustí do súboru, napríklad posúvanie alebo zmena priblíženia pri zamknutom nastavení `Viewport` alebo prepínanie kariet pri zamknutom nastavení `Canvas Type`. Každé zamknutie je predvolene zapnuté.
+Tak je to vtedy, keď je uložená každá úprava, čo IDE od JetBrains robí samo, a zostáva to tak, kým je každá neskoršia zmena taká, ktorú [zamknutie](../guide/guides/settings.md#lock) nepustí do súboru, napríklad posúvanie alebo zmena priblíženia pri zamknutom nastavení `Viewport`, prepínanie kariet pri zamknutom nastavení `Canvas Type` alebo prepínanie [Zobrazenia názvov](../guide/guides/logical-names.md#name-view) pri zamknutom nastavení `Name View`. Každé zamknutie je predvolene zapnuté.
 Súbor, do ktorého IDE od JetBrains nemôže zapisovať, sa odmietne aj vtedy.
 
 Keď editor po poslednej úprave agenta dokument zatvorí, ďalšie volanie agenta obsahuje upozornenie, že tieto úpravy sú v súbore iba vtedy, ak sa uložili pred zatvorením editora.
@@ -63,7 +65,7 @@ Vlastné [vrátenie späť](../guide/guides/undo-redo.md) v editore funguje naop
 
 Niekoľko úprav nevytvára v editore žiadny záznam v histórii zmien: `erd_set_database` a `erd_set_database_name` spomedzi [nástrojov nastavení](./tools.md#settings) a `erd_resize_memo`.
 Nevytvára ho ani volanie `erd_move_table_group`, ktoré presunie skupinu celkovo o menej ako 20 pixelov, pričom sa sčíta posun vodorovne a zvislo, hoci skupina zostane tam, kam sa presunula.
-Nevytvára ho ani volanie, ktoré nič nezmení: `erd_set_column_primary_key`, `erd_set_column_unique`, `erd_set_column_not_null`, `erd_set_column_auto_increment`, `erd_set_index_unique` alebo `erd_set_index_column_order`, ak nastavuje hodnotu, ktorú dokument už obsahuje; `erd_add_index_column` so stĺpcom, ktorý už v indexe je; `erd_set_table_group` s tabuľkami, ktoré už v danej skupine sú (alebo už nie sú v žiadnej, s hodnotou `null` argumentu `groupId`); `erd_move_table_group` do bodu, kde skupina už je; `erd_resize_table_group` na obdĺžnik, ktorý skupina už má; `erd_sort_tables` pri dokumente bez tabuliek; alebo import s hodnotou `append` argumentu `mode`, ktorý neprinesie žiadnu tabuľku (pri `erd_import_json` žiadnu tabuľku ani poznámku).
+Nevytvára ho ani volanie, ktoré nič nezmení: `erd_set_column_primary_key`, `erd_set_column_unique`, `erd_set_column_not_null`, `erd_set_column_auto_increment`, `erd_set_index_unique` alebo `erd_set_index_column_order`, ak nastavuje hodnotu, ktorú dokument už obsahuje; `erd_add_index_column` so stĺpcom, ktorý už v indexe je; `erd_set_table_group` s tabuľkami, ktoré už v danej skupine sú (alebo už nie sú v žiadnej, s hodnotou `null` argumentu `groupId`); `erd_move_table_group` do bodu, kde skupina už je; `erd_resize_table_group` na obdĺžnik, ktorý skupina už má; `erd_sort_tables` pri dokumente bez tabuliek; `erd_set_table_logical_name` alebo `erd_set_column_logical_name` s logickým názvom, ktorý tabuľka alebo stĺpec už má, keď by odvodenie z neho nič nezmenilo; `erd_set_column_domain` s doménou, s ktorou je stĺpec už prepojený, keď už stĺpec má typ tejto domény a [synchronizácia typu údajov vo vzťahoch](../guide/guides/settings.md#relationship-datatype-sync) by nezmenila typ žiadneho stĺpca pozdĺž jeho vzťahov; `erd_update_word`, `erd_update_term` alebo `erd_update_domain` iba s hodnotami, ktoré riadok už obsahuje, s výnimkou prípadu, keď sa termínu bez fyzického názvu odovzdá argument `name` a jeho slová zložia fyzický názov; `erd_derive_physical_names`, keď každý názov, na ktorý sa vzťahuje a ktorý má logický názov, už obsahuje to, čo mu dávajú [slovníky](./tools.md#dictionaries), a je označený ako odvodený; alebo import s hodnotou `append` argumentu `mode`, ktorý neprinesie žiadnu tabuľku (pri `erd_import_json` žiadnu tabuľku ani poznámku).
 Nástroj `erd_undo` tieto volania preskočí a vo svojom výsledku ich vymenuje.
 Iné úpravy, napríklad `erd_change_relationship_type`, `erd_change_relationship_on_delete`, `erd_change_relationship_on_update`, `erd_change_table_group_name`, `erd_change_table_group_color` a `erd_set_ddl_script`, vytvoria záznam aj vtedy, keď nastavia hodnotu, ktorú dokument už obsahuje.
 
@@ -91,7 +93,7 @@ Správa uvádza, čo dokument uvoľní: vo VS Code znova načítajte dané okno 
 
 ## Headless {#headless}
 
-Keď dokument neobsluhuje žiadny editor, každá úprava načíta súbor, vykoná zmenu a súbor zapíše späť.
+Keď dokument neobsluhuje žiadny editor, každá úprava načíta súbor, vykoná zmenu a súbor zapíše späť ešte pred odpoveďou, takže jej výsledok uvádza `saved: true` – pozrite si časť [Výsledky](./tools.md#results).
 Zápis smeruje do dočasného súboru vedľa dokumentu s názvom `.<name>.<id>.tmp`, ktorý ho potom nahradí, takže dokument nikdy nezostane zapísaný iba napoly, s výnimkou zápisu na mieste v systéme Windows opísaného nižšie.
 
 Pred týmto posledným krokom server skontroluje, či sa súbor počas volania na disku nezmenil.
@@ -107,6 +109,8 @@ V systéme Windows platia ešte dve pravidlá:
 
 - Dokument s vlastnými povoleniami, odlišnými od povolení jeho priečinka, sa namiesto nahradenia zapíše na mieste, aby si ich zachoval, a dočasný súbor sa potom odstráni. Program, ktorý dokument počas tohto zápisu číta, môže nájsť text, ktorý sa nedá syntakticky spracovať.
 - Súbor, ktorý má otvorený iný program, nemožno nahradiť, preto to server skúša znova až dve sekundy. Každý pokus najprv znova hľadá editor a editor, ktorý medzitým začal dokument obsluhovať, odmietne zápis s kódom `hubAppeared` alebo, ak má vypnutý hub, s kódom `blocked`. Ak je súbor po dvoch sekundách stále otvorený, nič sa nezapíše, súbor sa načíta znova a volanie zlyhá so správou, ktorá cituje systémovú chybu.
+
+Server pred verziou `1.1.0` číta dokument bez jeho logických názvov, bez prepojení jeho stĺpcov s doménami a bez jeho slov, termínov a domén, takže prvá úprava, ktorú zapíše do súboru, ich vynechá. Aktualizujte server – pozrite si časť [Aktualizácia](./installation.md#updating).
 
 ## Odmietnuté {#refused}
 
@@ -130,7 +134,7 @@ Tak je to pri aplikácii Obsidian alebo IDE od JetBrains nainštalovaných ako F
 
 Dokument sa určuje argumentom `path`, absolútnou cestou alebo cestou relatívnou k pracovnému adresáru servera.
 
-- Nové dokumenty majú príponu `.erd.json`. Nástroj `erd_open_document` s argumentom `create` vytvorí súbor a názvu bez prípony pridá príponu `.erd.json`. Rovnako ako nový diagram v editore má nový dokument zapnuté každé [zamknutie](../guide/guides/settings.md#lock), takže posúvanie, zmena priblíženia, prepínanie kariet ani výber iného cieľového jazyka na karte Generátor kódu, štýlu názvov alebo typu úvodzoviek v editore nikdy nezmení súbor. Žiadny nástroj nezapína ani nevypína jednotlivé zamknutie: to urobíte na karte Nastavenia v editore. Nástroj `erd_import_json` v režime `replace` ich všetky nahradí zamknutiami dokumentu, ktorý načíta – pozrite si časť [Import](./tools.md#import).
+- Nové dokumenty majú príponu `.erd.json`. Nástroj `erd_open_document` s argumentom `create` vytvorí súbor a názvu bez prípony pridá príponu `.erd.json`. Rovnako ako nový diagram v editore má nový dokument zapnuté každé [zamknutie](../guide/guides/settings.md#lock), takže posúvanie, zmena priblíženia, prepínanie kariet, prepínanie Zobrazenia názvov ani výber iného cieľového jazyka na karte Generátor kódu, štýlu názvov alebo typu úvodzoviek v editore nikdy nezmení súbor. Žiadny nástroj nezapína ani nevypína jednotlivé zamknutie: to urobíte na karte Nastavenia v editore. Nástroj `erd_import_json` v režime `replace` ich všetky nahradí zamknutiami dokumentu, ktorý načíta – pozrite si časť [Import](./tools.md#import).
 - Otvoria sa aj existujúce súbory `.erd`, `.vuerd` a `.vuerd.json`. Cesta s akoukoľvek inou príponou sa odmietne s kódom `invalidPath`.
 - V systéme Windows sa cesta obsahujúca názov, ktorý Windows neuloží tak, ako je napísaný, odmietne s kódom `invalidPath` ešte pred čítaním alebo zápisom dokumentu, a to aj pri čítaní: názov s dvojbodkou alebo iným znakom, ktorý Windows odmieta, napríklad `orders:v2.erd`; názov zariadenia, napríklad `NUL.erd` alebo `CON.erd`, bez ohľadu na veľkosť písmen; alebo názov končiaci bodkou alebo medzerou. Premenujte súbor, napríklad so znakom `-` namiesto `:`.
 - Súbor, ktorý nie je dokumentom, ktorý editor dokáže prečítať, napríklad súbor, v ktorom zostali značky konfliktu zlúčenia, sa odmietne s kódom `invalidDocument` a ponechá sa tak, ako je. Nikdy sa nenačíta ako prázdny diagram a nezapíše sa späť.

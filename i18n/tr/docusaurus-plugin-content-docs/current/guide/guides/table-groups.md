@@ -1,5 +1,5 @@
 ---
-sidebar_position: 5
+sidebar_position: 6
 description: İlgili tabloları arkalarında çizilen adlı, renkli bir kutuda toplama; grupları oluşturma, adlandırma, renklendirme, taşıma, yeniden boyutlandırma ve kaldırma, Gezginden gruplara gitme, grupların tuttuğu tabloları değiştirme, grupları gizleme ve Otomatik düzende, Şema SQL'de ve DBML'de koruma.
 ---
 

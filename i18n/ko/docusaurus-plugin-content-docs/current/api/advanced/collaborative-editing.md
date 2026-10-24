@@ -44,19 +44,26 @@ const sharedStore = editor.getSharedStore();
 
 에디터에서 하는 일 중 일부는 그 에디터에만 머뭅니다.  
 테이블, 메모, 테이블 그룹을 맨 앞으로 가져오는 동작은 전송되지 않으며, 선택할 때 맨 앞으로 오는 것도 마찬가지입니다.  
-[Schema SQL](../../guide/guides/schema-sql.md) 탭의 `Statements`, `Header`, `Tables` 선택도 그 선택을 한 창에 속하므로 전송되지 않습니다.  
+[Schema SQL](../../guide/guides/schema-sql.md) 탭의 `Statements`, `Header`, `Write logical names into empty comments`(`4.2.0`부터), `Tables` 선택도 그 선택을 한 창에 속하므로 전송되지 않습니다.  
 `4.1.0`부터는 [탐색기](../../guide/guides/explorer.md)도 그 에디터에만 머뭅니다. 탐색기가 열려 있는지 여부, 너비, 접힌 행, 키보드 포커스가 있는 행, 트리의 스크롤 위치, 검색과 옵션은 전송되지 않습니다.  
 foreign key로 이동할 때 그 관계의 연결선에 표시되는 [강조](../../guide/guides/relationship-editing.md#연결선-읽기)도 전송되지 않습니다.  
-스크롤, 확대/축소, 탭 전환은 전송되지만, 다른 사용자의 화면이나 탭을 움직이지는 않습니다. 탐색기에서 이동할 때 일어나는 스크롤과, 다른 탭에서 탐색기를 열 때 일어나는 ERD 탭 전환도 마찬가지입니다.
+`4.2.0`부터는 [사전](../../guide/guides/dictionary.md) 탭도 그 에디터에만 머뭅니다. 어떤 시트가 표시되는지와 각 시트의 검색, 선택, 스크롤, 열 너비는 전송되지 않습니다. 사전 탭의 편집, 정렬, CSV 가져오기는 전송됩니다.  
+스크롤, 확대/축소, 탭 전환은 전송되지만, 다른 사용자의 화면이나 탭을 움직이지는 않습니다. 탐색기에서 이동할 때 일어나는 스크롤, 다른 탭에서 탐색기를 열 때 일어나는 ERD 탭 전환, 사전 탭의 [`Checks`](../../guide/guides/dictionary.md#the-checks-sheet) 시트에서 테이블이나 컬럼으로 이동할 때 일어나는 탭 전환과 스크롤도 마찬가지입니다. 그 시트에서 단어, 용어, 도메인으로 이동하는 것은 사전 탭 안에 머물므로 아무것도 전송되지 않습니다.
+
+`4.2.0`부터는 [이름 표시](../../guide/guides/logical-names.md#switching-the-view) 전환도 전송되며, 다른 에디터가 이 전환을 어떻게 처리할지는 그 [잠금](../../guide/guides/settings.md#잠금)이 정합니다. `Name View` 잠금은 새 다이어그램과 `4.2.0` 이전의 모든 문서에서 켜져 있습니다.  
+잠금이 켜져 있는 동안에는 전환이 전환한 에디터에만 표시됩니다. 전환은 여전히 전송되지만 다른 모든 에디터와 모든 복제본이 이를 버리므로, `value`가 잠긴 보기를 유지하는 동안 사용자마다 다른 보기를 볼 수 있습니다. 언어, 이름 케이스, 괄호 타입 변경은 다릅니다. 이 변경은 잠금이 켜져 있든 아니든 모든 에디터에 반영됩니다.  
+잠금이 꺼져 있는 동안에는 편집할 수 있는 에디터에서 한 전환이 모든 에디터와 복제본의 이름 표시를 바꾸며, 가장 나중에 한 전환이 우선하고, 모든 에디터와 복제본이 이를 저장합니다.  
+읽기 전용 에디터에서 직접 한 전환은 항상 그 에디터에만 머물며, 그 에디터도 다른 에디터들이 공유하는 전환은 그대로 따릅니다.
 
 [잠금](../../guide/guides/settings.md#잠금)은 공유됩니다. 한 설정에 대해서는 가장 나중에 한 잠금이나 잠금 해제가 모든 에디터에서 우선하며, 잠금은 그 잠금을 켠 에디터의 값을 담고 있으므로 모든 에디터와 복제본이 같은 값을 저장합니다.  
 따라서 `Viewport` 잠금은 잠금을 켠 에디터의 화면을 저장하고, `Canvas Type` 잠금은 잠금을 켜는 곳인 설정 탭으로 오기 전에 그 에디터가 마지막으로 있던 탭을 저장합니다.  
-`Language`, `Table Name Case`, `Column Name Case`, `Bracket Type` 잠금을 끄면 모든 에디터의 해당 설정도 잠금을 끈 에디터에 표시된 값으로 바뀌므로, 모든 에디터가 계속 하나의 값을 저장합니다. `Viewport`나 `Canvas Type` 잠금을 꺼도 누구의 화면이나 탭도 움직이지 않습니다.
+`Language`, `Table Name Case`, `Column Name Case`, `Bracket Type`, 또는 `4.2.0`부터는 `Name View` 잠금을 끄면 모든 에디터의 해당 설정도 잠금을 끈 에디터에 표시된 값으로 바뀌므로, 모든 에디터가 계속 하나의 값을 저장합니다. `Viewport`나 `Canvas Type` 잠금을 꺼도 누구의 화면이나 탭도 움직이지 않습니다.
 
 `Before tables`나 `After tables` 스크립트를 편집하면 입력란이 포커스를 잃을 때 스크립트 전체가 전송됩니다. 두 스크립트의 결과는 따로 결정되므로, 공동 편집자가 한쪽을 편집해도 다른 쪽을 덮어쓰지 않습니다.
 
 Visualization 탭의 [Flow 모드](../../guide/guides/visualization.md#flow는-문서를-편집하지-않음)에서 하는 어떤 동작도 문서 변경이 아니므로, Flow에 있는 에디터는 다른 에디터에 변경 사항을 보내지 않고, 그동안에도 다른 에디터가 보낸 변경 사항은 계속 반영됩니다.  
-유일한 예외는 Flow를 떠나 다른 탭으로 이동하는 경우입니다. 이 탭 전환은 다른 탭 전환과 똑같이 전송됩니다.  
+예외는 두 가지입니다. Flow를 떠나 다른 탭으로 이동하는 것은 탭 전환이며, 다른 탭 전환과 똑같이 전송됩니다. `4.2.0`부터 Flow 툴바의 이름 표시 목록에서 고르는 것은 이름 표시 전환이며, 캔버스에서 한 전환과 똑같이 전송되고 반영됩니다.  
+Flow에서 [좁힌 범위를 한 단계씩 오가는](../../guide/guides/visualization.md#previous-table-and-next-table) `Previous table`, `Next table`, Undo와 Redo 키는 전송되지 않습니다.  
 외부 링크 카드 버튼, `#`, `@`, `:` 접두사로 검색해 고른 [빠른 검색](../../guide/guides/quick-search.md#다이어그램-검색) 결과, [탐색기](../../guide/guides/explorer.md#열기와-닫기) 열기는 모두 Flow를 떠나 ERD 탭으로 이동합니다. 카드 버튼이나 빠른 검색 결과가 그곳에서 일으키는 스크롤도 전송됩니다.
 
 ## 한 페이지의 두 에디터
@@ -99,6 +106,7 @@ const sharedStore2 = editor2.getSharedStore();
 
 런타임 값에는 문서를 연 이후 삭제된 항목이 아직 남아 있으므로, 나중에 다른 에디터가 삭제를 되돌리면 참여한 에디터도 그 테이블을 이름과 컬럼까지 그대로 되살립니다.  
 [`value`](../erd-editor-element.md#value)는 파일에 담기는 형태이며 삭제된 엔티티가 없으므로, 이 값이나 파일로 초기화한 에디터는 대신 이름 없는 빈 테이블을 되살리게 됩니다.  
+`4.2.0`부터는 [사전](../../guide/guides/dictionary.md) 시트에서 삭제한 단어, 용어, 도메인도 마찬가지입니다. 다른 에디터가 그 삭제를 되돌리면 `runtimeValue`로 초기화한 참여 에디터는 그 행을 온전히 다시 나열하고, `value`로 초기화한 참여 에디터는 빈 행을 나열하며, 그 에디터 자신의 `value`는 이 빈 행을 생략합니다.  
 저장소에는 계속 `value`를 기록하세요. `runtimeValue`는 다른 에디터, 두 번째 뷰, [replicationStore](./remote-storage.md)를 초기화하는 용도로만 사용합니다.  
 VS Code, Obsidian, JetBrains IDE, 웹 앱의 에디터는 열려 있는 문서의 두 번째 뷰를 이 방식으로 초기화합니다.
 
@@ -134,6 +142,31 @@ VS Code, Obsidian, JetBrains IDE, 웹 앱의 에디터는 열려 있는 문서�
 `4.1.0` 에디터는 새 액션 타입을 보내지 않으므로, `4.0.0`과 `4.1.0`의 에디터와 복제본은 놓치는 변경 없이 한 세션을 함께 사용합니다.  
 `4.1.0` 에디터의 [찾기와 바꾸기](../../guide/guides/find-and-replace.md#바꾸기)는 인덱스 이름과 테이블 그룹 이름도 검색하며, `Replace`와 `Replace All`은 `4.0.0` 에디터가 이미 반영하는 `index.changeName`과 `tableGroup.changeName` 액션으로 이들의 이름을 바꿉니다.
 
+`4.2.0`부터 다음 변경 사항은 새 액션 타입으로 전달되며, 액션을 그대로 전달하는 중계자라면 이를 위해 새로 할 일이 없습니다.
+
+- 테이블이나 컬럼의 [논리명](../../guide/guides/logical-names.md): `table.changeLogicalName`, `column.changeLogicalName`. 그 이름이 [사전에서 생성되었는지](../../guide/guides/dictionary.md#deriving-physical-names) 여부: `table.changeNameDerived`, `column.changeNameDerived`
+- 컬럼을 [도메인](../../guide/guides/dictionary.md#domains-and-data-types)에 연결하거나 연결을 해제하는 것: `column.changeDomain`
+- [사전](../../guide/guides/dictionary.md) 탭에서 단어, 용어, 도메인을 추가, 변경(정렬이 정하는 시트 안의 위치 포함), 삭제하는 것: `dictionary.add`, `dictionary.update`, `dictionary.remove`
+- [이름 표시](../../guide/guides/logical-names.md#switching-the-view) 전환: `settings.changeNameViewMode`
+
+`Name View` 잠금은 기존의 `settings.changeLockSettings` 액션으로, `Domain` 보기 옵션은 `settings.changeShow`로, [컬럼 순서](../../guide/guides/settings.md#컬럼-순서-조정)에서 `Logical Name`이나 `Domain`을 옮기는 것은 `settings.changeColumnOrder`로 전달됩니다.  
+`Import`로 하는 Schema SQL, GraphQL, DBML, AML 가져오기의 `editor.clear`와 `editor.loadJson`에는 `keepDictionaries: true`가 담기며, 이 값이 모든 에디터의 단어, 용어, 도메인을 유지합니다. 문서를 대체하는 [setSchemaSQL](../erd-editor-element.md#setschemasql), `setSchemaGraphQL`, `setSchemaDBML`, `setSchemaAML`의 액션도 마찬가지입니다.  
+사전이 생성하는 물리명은 `table.changeName`이나 `column.changeName`으로, 도메인이 자신의 컬럼에 주는 데이터 타입은 `column.changeDataType`으로 전달되며, 둘 다 직접 편집할 때 보내는 것과 같은 액션입니다.
+
+`4.2.0` 이전의 에디터는 새 액션 타입을 무시합니다. 그 에디터에는 논리명, 도메인 연결, 사전, 이름 표시가 없습니다. 그 에디터에서는 `Name View`의 잠금이나 잠금 해제가 아무것도 바꾸지 않으며, `Logical Name`이나 `Domain`을 옮기거나 그 둘 중 하나의 자리로 옮기는 컬럼 순서 이동도 마찬가지입니다. 사전 탭에서 설정 탭으로 온 에디터가 켠 `Canvas Type` 잠금도 마찬가지입니다. 이전 에디터는 사전 탭을 모르므로 `Canvas Type`의 잠금을 해제된 상태로 유지합니다. 그래도 사전이 생성하는 물리명과 도메인이 주는 데이터 타입은 표시합니다.  
+이전 에디터 자신의 편집은 논리명, 도메인, 사전을 전혀 알지 못하므로, 새 에디터에 다음과 같은 영향을 줍니다.
+
+- 이전 에디터가 직접 이름을 바꾼 테이블이나 컬럼은 이름이 생성된 것으로 표시된 채 남으므로, 나중에 새 에디터에서 그 테이블이나 컬럼에 논리명을 쓰면 이전 에디터에서 입력한 이름 위에 이름이 다시 생성될 수 있습니다.
+- 이전 에디터가 도메인에 연결된 컬럼에 지정한 데이터 타입은 연결을 그대로 두므로, `Checks` 시트에 `Domain type mismatch`가 나열되고, 도메인의 타입이 다음에 바뀔 때 컬럼에 다시 도메인의 타입이 지정됩니다.
+- 이전 에디터가 추가한 관계의 foreign key 컬럼은 그 키에서 논리명이나 도메인을 받지 않습니다.
+- 이전 에디터가 붙여넣거나 복제한 테이블은 논리명이나 도메인 연결 없이 도착합니다.
+- 이전 에디터에서 한 Schema SQL, GraphQL, DBML, AML 가져오기는 `keepDictionaries`를 보내지 않으므로 모든 에디터의 단어, 용어, 도메인을 비웁니다.
+- 이전 에디터에서 불러오기, 가져오기, `clear()`를 되돌리면 모든 에디터에 그 에디터 자신이 가진 문서 사본을 불러오며, 그 사본에는 논리명, 도메인 연결, 사전이 없습니다.
+- 그 사본과, 이전 에디터에서 한 Schema SQL, GraphQL, DBML, AML 가져오기가 불러오는 문서는 모든 에디터의 `Name View` 잠금도 그 에디터가 받았을 때의 상태로 되돌립니다. 그러면 모든 에디터가 이름 표시로 `Physical Names`를 저장하며, 잠금이 꺼져 있으면 `Physical Names`를 표시하기도 합니다.
+
+이전 에디터에서 저장한 문서에는 논리명, 도메인 연결, 사전, 이름 표시가 없으므로, `4.2.0` 에디터는 그 문서를 `Physical Names`로 엽니다. 다만 이전 에디터도 `Name View` 잠금은 받았을 때의 상태 그대로 저장하므로, `4.2.0` 에디터에서 잠금을 해제한 문서는 잠금이 해제된 상태로 남습니다.  
+세션의 모든 에디터와, 그 문서를 저장하는 [replicationStore](./remote-storage.md#dispatch-dispatchsync)는 모두 `4.2.0` 이상으로 유지하세요.
+
 ## SharedStoreConfig
 
 ### getNickname
@@ -161,6 +194,7 @@ editor.getSharedStore({ mouseTracker: false });
 이 사용자가 작업 중인 내용을 전송합니다. 기본값은 `true`입니다.  
 포커스한 테이블과 셀, 선택한 테이블, 메모, 테이블 그룹, 캔버스에서 드래그한 박스가 다른 에디터로 전송되어 그곳에 그려집니다.  
 사용자마다 고유한 색상이 지정되어 서로 구분할 수 있습니다. 포커스한 테이블에는 외곽선, 포커스한 셀에는 밑줄, 선택한 테이블, 메모, 테이블 그룹에는 테두리, 드래그 박스에는 점선 사각형이 표시됩니다.  
+`4.2.0`부터는 잠금이 켜져 있는 동안이나 읽기 전용 에디터에서 직접 전환한 뒤에는 사용자마다 다른 [이름 표시](../../guide/guides/logical-names.md#collaborators)를 보고 있을 수 있습니다. 자신의 보기가 그리지 않는 셀에 있는 포커스는 그 보기가 대신 그리는 셀에 밑줄로 표시됩니다. 이름과 논리명이 서로를 대신하며, 데이터 타입과 도메인도 마찬가지입니다.  
 다른 사용자에게서 도착한 presence 정보는 이 옵션을 켜든 끄든 항상 캔버스에 그려집니다.  
 Visualization 탭의 Flow 모드에서는 다른 사용자의 포커스와 선택이 테이블 카드에 그려지지만 드래그 박스는 그려지지 않습니다. 그곳에서 선택한 테이블은 그대로 전송되지만, 그곳에서 드래그한 박스는 전송되지 않습니다.
 

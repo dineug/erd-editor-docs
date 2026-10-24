@@ -1,5 +1,5 @@
 ---
-sidebar_position: 8
+sidebar_position: 9
 description: Navegar pelas tabelas do diagrama, com suas colunas, índices e chaves estrangeiras, pelos seus grupos de tabelas e pelas suas notas em uma árvore encaixada ao lado do canvas ERD, e ir para qualquer um deles com um clique.
 ---
 
@@ -26,11 +26,11 @@ Abra-o de qualquer uma destas formas:
 - `Toggle Explorer` no menu de contexto do canvas: clique com o botão direito em um ponto vazio do canvas ERD, fora de qualquer [grupo de tabelas](./table-groups.md). Ele fica depois de `New Table`, `New Memo` e `New Table Group` e antes de `Relationship`.
 
 Os dois itens `Toggle Explorer` mostram o atalho à direita.  
-O botão da barra de ferramentas, o atalho e o item da pesquisa rápida funcionam em todas as abas. Nas abas Visualização, Esquema SQL, Gerador de código ou Configurações, eles primeiro mudam para a aba ERD, já que o explorador só aparece nela.
+O botão da barra de ferramentas, o atalho e o item da pesquisa rápida funcionam em todas as abas. Nas abas Visualização, Esquema SQL, Gerador de código, Dicionário ou Configurações, eles primeiro mudam para a aba ERD, já que o explorador só aparece nela.
 
 O botão da barra de ferramentas apenas abre e fecha o painel. Ele não coloca o cursor de texto no campo Localizar e deixa abertos o painel Propriedades da tabela, o construtor de temas e o seletor `Display Language`.  
 O atalho e os dois itens `Toggle Explorer` abrem o explorador já na pesquisa: o cursor de texto vai para o campo Localizar com o texto selecionado, e qualquer uma das cinco caixas de diálogo descritas em [Caixas de diálogo ao lado dele](#dialogs-beside-it) se fecha. O que a pesquisa mantém entre uma abertura e outra está em [Abrir e fechar](./find-and-replace.md#opening-and-closing), em Localizar e substituir.  
-O atalho não faz nada enquanto uma célula de tabela, uma nota ou o nome de um grupo de tabelas está sendo editado.
+O atalho não faz nada enquanto uma célula de tabela, uma nota ou o nome de um grupo de tabelas está sendo editado, ou enquanto uma edição de célula está aberta na aba [Dicionário](./dictionary.md#keys-on-the-tab), inclusive a lista de domínios de um termo.
 
 O botão da barra de ferramentas aparece pressionado enquanto o explorador está aberto na aba ERD e não está oculto pelo [modo zen](#when-it-stands-aside). Nesse estado, o botão, o atalho e qualquer um dos itens `Toggle Explorer` fecham o explorador, e o teclado, se estava no painel, volta para o editor.  
 O atalho nunca o fecha enquanto a pesquisa rápida ou uma das cinco caixas de diálogo está aberta. Em vez disso, ele fecha a paleta ou a caixa de diálogo e leva o teclado ao campo Localizar, com o texto selecionado e, se o explorador já estava visível, mantendo a correspondência atual. O item `Toggle Explorer` da pesquisa rápida não faz essa exceção: executá-lo fecha a paleta e, em seguida, um explorador aberto.
@@ -84,22 +84,27 @@ A barra de título mostra `Explorer` e tem dois botões: `Collapse All` e o `x` 
 
 O nível superior contém três pastas, nesta ordem: `Tables`, `Table Groups` e `Memos`. Sob cada tabela ficam suas próprias pastas `Columns`, `Indexes` e `Foreign Keys`.  
 Uma pasta sem nada dentro não é mostrada, então um diagrama vazio não mostra nenhuma linha. A pasta `Table Groups` também fica de fora enquanto [View Option](./table-related-functions.md#table-view-options) → `Table Groups` oculta os grupos, e a pasta `Memos`, enquanto View Option → `Memos` oculta as notas.  
-A linha de uma pasta mostra um ícone de pasta, o nome e, na extremidade oposta, um contador das linhas diretamente abaixo dela, então o contador ao lado de `Tables` é o número de tabelas do diagrama.
+A linha de uma pasta mostra um ícone de pasta, o nome e, na extremidade oposta, um contador das linhas diretamente abaixo dela, então o contador ao lado de `Tables` é o número de tabelas do diagrama. O contador agrupa os milhares como faz o idioma de exibição, sempre com os algarismos de 0 a 9, como `1,234` em inglês e `1.234` em alemão.
 
 As tabelas são listadas por nome, sem diferenciar maiúsculas de minúsculas, e tabelas com o mesmo nome mantêm a ordem do documento. Os grupos de tabelas são listados da mesma forma, assim como as tabelas sob cada grupo. As colunas de uma tabela mantêm a ordem da própria tabela, e seus índices, suas chaves estrangeiras e as notas mantêm a do documento.  
-A árvore acompanha o diagrama à medida que ele muda, seja por uma edição no canvas, por um desfazer ou refazer, por uma importação ou por um colaborador ou agente de codificação, então renomear uma tabela move a linha dela.
+A árvore acompanha o diagrama à medida que ele muda, seja por uma edição no canvas, por um desfazer ou refazer, por uma importação ou por um colaborador ou agente de codificação, então renomear uma tabela move a linha dela.  
+A ordem segue o nome qualquer que seja a [exibição de nomes](./logical-names.md#name-view), nunca o nome lógico. Trocar a exibição muda o rótulo das linhas de tabela e de coluna sem mover nenhuma delas, e o mesmo acontece ao dar um nome lógico a uma tabela ou coluna na exibição `Logical Names` ou `Both Names`. Um nome físico [derivado](./dictionary.md#deriving-physical-names) de um novo nome lógico, porém, é uma renomeação como qualquer outra, então pode mover a linha de uma tabela.
 
 Cada tipo de linha mostra:
 
 - Uma tabela: um ícone de tabela e o nome dela.
-- Uma coluna: um ícone de chave para uma coluna de chave primária ou de chave estrangeira, colorido como a própria célula de chave da tabela colore uma chave primária, uma chave estrangeira ou ambas, e um ícone de lista para qualquer outra coluna. Depois, o nome dela e, esmaecido, seu tipo de dados seguido de `PK`, `FK` ou ambos, como `id` `BIGINT PK` ou `user_id` `BIGINT FK`.
+- Uma coluna: um ícone de chave para uma coluna de chave primária ou de chave estrangeira, colorido como a própria célula de chave da tabela colore uma chave primária, uma chave estrangeira ou ambas, e um ícone de lista para qualquer outra coluna. Depois, o nome dela e, esmaecido, seu tipo de dados seguido de `PK`, `FK` ou ambos, como `id` `BIGINT PK` ou `user_id` `BIGINT FK`. O tipo que ela mostra é sempre o tipo de dados da coluna, nunca o [domínio](./logical-names.md#the-domain-cell) dela, seja qual for a exibição de nomes.
 - Um índice: um ícone de índice e o nome dele. Depois, esmaecidos, `UNIQUE` para um índice único e suas colunas entre parênteses na ordem do índice, com `DESC` depois de uma coluna decrescente, como `orders_user_idx` `UNIQUE (user_id DESC, total)`, ou apenas `(total)`.
 - Uma chave estrangeira: listada apenas sob a tabela filha, a que contém as colunas de chave estrangeira, e apenas enquanto a tabela pai está no diagrama. Seu ícone de chave assume a cor do conector: a cor de chave primária e de chave estrangeira para um [relacionamento identificador](./relationship-editing.md#identifying-relationships) e, nos demais casos, a cor de chave estrangeira. Ela mostra as colunas de chave da tabela filha, separadas por vírgula, e depois, esmaecidos, `→` com a tabela pai e suas colunas, como `user_id` `→ users(id)`.
 - Um grupo de tabelas: um ponto na cor do grupo, cinza para um grupo sem cor, e o nome dele. Suas tabelas são listadas abaixo dele por nome, e cada uma leva à sua tabela. Um grupo sem tabelas não tem nada para expandir.
 - Uma nota: um ícone de nota adesiva e a primeira linha da nota.
 
-Um nome em branco, ou uma nota cuja primeira linha está em branco, aparece como `unnamed` em itálico.  
-Em um painel estreito, o texto esmaecido é cortado com `…` antes que o nome seja cortado. Passe o ponteiro sobre um nome ou sobre seu texto esmaecido para vê-lo por inteiro.
+As linhas de tabela, as tabelas listadas sob um grupo e as linhas de coluna acompanham a exibição de nomes — consulte [Além do canvas](./logical-names.md#beyond-the-canvas). Na exibição `Both Names`, por exemplo, a linha de uma coluna mostra `Total Amount` `total` `NUMERIC`: o nome lógico e depois o nome e o tipo de dados, ambos esmaecidos.  
+Em todas as exibições, as linhas de índice e de chave estrangeira mostram suas colunas pelo nome, e a linha de uma chave estrangeira também mostra a tabela pai pelo nome.  
+Enquanto o campo Localizar contém texto, uma linha encontrada só no nome que a exibição deixa de fora também mostra esse nome, esmaecido — consulte [Os resultados](./find-and-replace.md#the-results).
+
+Um nome em branco, ou uma nota cuja primeira linha está em branco, aparece como `unnamed` em itálico. Nas exibições `Logical Names` e `Both Names`, uma tabela ou coluna só aparece como `unnamed` quando o nome lógico dela também está em branco.  
+Em um painel estreito, o texto esmaecido é cortado com `…` antes que o nome com que a linha começa seja cortado. Passe o ponteiro sobre um nome ou sobre seu texto esmaecido para vê-lo por inteiro.
 
 No início, apenas a pasta `Tables` está expandida. Clique na linha de uma pasta, ou pressione `Enter` ou `Space` nela, para recolhê-la ou expandi-la.  
 A seta no início de uma linha recolhe ou expande essa linha sem ir a lugar nenhum. Toda linha de tabela tem uma, mesmo a de uma tabela sem nada abaixo dela. `→` e `←` também recolhem e expandem — consulte [Teclas no explorador](#keys-in-the-explorer).  
@@ -110,8 +115,8 @@ Edições, desfazer e refazer, bem como alterações de colaboradores ou de um a
 
 Clique em uma linha, ou pressione `Enter` ou `Space` com o teclado nela, para ir até o que ela representa no canvas ERD. A linha de uma pasta apenas recolhe ou expande, e as teclas de seta apenas navegam pela árvore.
 
-- A linha de uma tabela, ou uma tabela listada sob um grupo, seleciona apenas essa tabela e a traz para a frente. A célula em foco vai para o nome da tabela, a menos que já esteja nessa tabela.
-- A linha de uma coluna seleciona apenas a tabela dela e coloca a célula em foco no nome da coluna.
+- A linha de uma tabela, ou uma tabela listada sob um grupo, seleciona apenas essa tabela e a traz para a frente. A menos que a célula em foco já esteja nessa tabela, ela vai para a primeira célula do cabeçalho da tabela: o nome ou, nas exibições `Logical Names` e `Both Names`, o nome lógico.
+- A linha de uma coluna seleciona apenas a tabela dela e coloca a célula em foco no nome da coluna ou, na exibição `Logical Names`, no nome lógico desenhado no lugar dele.
 - A linha de um índice seleciona a tabela dele, como faz a linha de uma tabela. O índice em si não é destacado individualmente; os índices são editados no painel [Propriedades da tabela](./table-related-functions.md#indexes).
 - A linha de uma chave estrangeira traz as duas tabelas do relacionamento juntas para a área visível, ou a tabela filha quando as duas estão afastadas demais para aparecer juntas. Ela seleciona apenas a tabela filha com suas colunas de chave estrangeira, com a célula em foco na primeira delas, e ilumina o conector do relacionamento — consulte [Como ler um conector](./relationship-editing.md#reading-a-connector).
 - A linha de um grupo de tabelas traz a caixa do grupo para a área visível pela barra de título, seleciona apenas o grupo e o traz para a frente junto com suas tabelas.
@@ -119,7 +124,7 @@ Clique em uma linha, ou pressione `Enter` ou `Space` com o teclado nela, para ir
 
 A área visível se move pela regra comum a todos os saltos: o zoom nunca muda, e o canvas só rola quando o destino ainda não está bem visível — consulte [Onde um salto termina](./table-related-functions.md#where-a-jump-lands).  
 Ir para uma linha primeiro fecha o painel Propriedades da tabela, se estiver aberto, e nunca inicia nem conclui um relacionamento que esteja sendo desenhado.  
-Enquanto o campo Localizar contém texto, uma linha cujo próprio nome contém uma correspondência, ou uma que mostra um trecho de um comentário ou de uma nota, leva, em vez disso, a essa correspondência — consulte [Ir para uma correspondência](./find-and-replace.md#going-to-a-match).
+Enquanto o campo Localizar contém texto, uma linha cujo nome ou nome lógico contém uma correspondência, ou uma que mostra um trecho de um comentário ou de uma nota, leva, em vez disso, à primeira correspondência dela — consulte [Ir para uma correspondência](./find-and-replace.md#going-to-a-match).
 
 Depois de um clique, o teclado permanece na árvore, então `Delete`, `Backspace` e as outras teclas de edição não chegam à nova seleção até que você pressione `Escape` ou clique no canvas — consulte [Teclas no explorador](#keys-in-the-explorer).
 

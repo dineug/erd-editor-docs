@@ -1,5 +1,5 @@
 ---
-sidebar_position: 8
+sidebar_position: 9
 description: Explora las tablas del diagrama con sus columnas, índices y claves externas, sus grupos de tablas y sus notas en un árbol acoplado junto al lienzo ERD, y ve a cualquiera de ellos con un clic.
 ---
 
@@ -26,11 +26,11 @@ Nada de ello se guarda en el archivo, se registra en el historial de deshacer, s
 - `Toggle Explorer` en el menú contextual del lienzo: haz clic con el botón derecho en un espacio vacío del lienzo ERD, fuera de cualquier [grupo de tablas](./table-groups.md). Está después de `New Table`, `New Memo` y `New Table Group`, y antes de `Relationship`.
 
 Las dos opciones `Toggle Explorer` muestran el atajo a la derecha.  
-El botón de la barra de herramientas, el atajo y la entrada de la búsqueda rápida funcionan desde cualquier pestaña. Desde las pestañas Visualización, Esquema SQL, Generador de código o Configuración, primero cambian a la pestaña ERD, ya que el explorador solo se muestra allí.
+El botón de la barra de herramientas, el atajo y la entrada de la búsqueda rápida funcionan desde cualquier pestaña. Desde las pestañas Visualización, Esquema SQL, Generador de código, Diccionario o Configuración, primero cambian a la pestaña ERD, ya que el explorador solo se muestra allí.
 
 El botón de la barra de herramientas solo abre y cierra el panel. No pone el cursor de texto en el campo Buscar y deja abiertos el panel Propiedades de la tabla, el generador de temas y el selector `Display Language`.  
 El atajo y las dos opciones `Toggle Explorer` abren el explorador en su búsqueda: el cursor de texto va al campo Buscar con su texto seleccionado, y se cierra cualquiera de los cinco cuadros de diálogo de [Cuadros de diálogo a su lado](#dialogs-beside-it). Lo que la búsqueda conserva entre una apertura y otra se explica en [Abrir y cerrar](./find-and-replace.md#opening-and-closing) de Buscar y reemplazar.  
-El atajo no hace nada mientras se edita una celda de una tabla, una nota o el nombre de un grupo de tablas.
+El atajo no hace nada mientras se edita una celda de una tabla, una nota o el nombre de un grupo de tablas, ni mientras hay una edición de celda abierta en la pestaña [Diccionario](./dictionary.md#keys-on-the-tab), incluida la lista de dominios de un término.
 
 El botón de la barra de herramientas aparece pulsado mientras el explorador está abierto en la pestaña ERD y no lo oculta el [modo zen](#when-it-stands-aside). Mientras es así, el botón, el atajo y cualquiera de las dos opciones `Toggle Explorer` cierran el explorador, y el teclado, si estaba en el panel, vuelve al editor.  
 El atajo nunca lo cierra mientras está abierta la búsqueda rápida o uno de los cinco cuadros de diálogo. En su lugar, cierra la paleta o el cuadro de diálogo y lleva el teclado al campo Buscar, con su texto seleccionado y, si el explorador ya se mostraba, con la coincidencia actual intacta. La entrada `Toggle Explorer` de la búsqueda rápida no hace esa excepción: al ejecutarla se cierra la paleta y, después, un explorador abierto.
@@ -84,22 +84,27 @@ La barra de título muestra `Explorer` y contiene dos botones: `Collapse All` y 
 
 El nivel superior contiene tres carpetas, en este orden: `Tables`, `Table Groups` y `Memos`. Bajo cada tabla están sus propias carpetas `Columns`, `Indexes` y `Foreign Keys`.  
 Una carpeta vacía no se muestra, así que un diagrama vacío no muestra ninguna fila. `Table Groups` también se omite mientras [Opciones de vista](./table-related-functions.md#table-view-options) → `Table Groups` oculta los grupos, y `Memos`, mientras Opciones de vista → `Memos` oculta las notas.  
-Una fila de carpeta muestra un icono de carpeta, su nombre y, al final de la fila, el número de filas que tiene directamente debajo, así que el número junto a `Tables` es el número de tablas del diagrama.
+Una fila de carpeta muestra un icono de carpeta, su nombre y, al final de la fila, el número de filas que tiene directamente debajo, así que el número junto a `Tables` es el número de tablas del diagrama. El número agrupa sus millares como lo hace el idioma de la interfaz, siempre con los dígitos del 0 al 9, como `1,234` en inglés y `1.234` en alemán.
 
 Las tablas se ordenan por nombre, sin distinguir mayúsculas y minúsculas, y las tablas con el mismo nombre mantienen el orden del documento. Los grupos de tablas se ordenan del mismo modo, igual que las tablas de cada grupo. Las columnas de una tabla mantienen el orden de la propia tabla, y sus índices, sus claves externas y las notas, el del documento.  
-El árbol sigue al diagrama a medida que cambia, ya sea por una edición en el lienzo, un deshacer o rehacer, una importación, un colaborador o un agente de programación, así que al cambiar el nombre de una tabla su fila se mueve.
+El árbol sigue al diagrama a medida que cambia, ya sea por una edición en el lienzo, un deshacer o rehacer, una importación, un colaborador o un agente de programación, así que al cambiar el nombre de una tabla su fila se mueve.  
+El orden es por nombre en todas las [vistas de nombres](./logical-names.md#name-view), nunca por nombre lógico. Cambiar la vista cambia las etiquetas de las filas de tabla y de columna sin mover ninguna, igual que dar un nombre lógico a una tabla o columna en `Logical Names` o `Both Names`. Sin embargo, un nombre físico [derivado](./dictionary.md#deriving-physical-names) de un nombre lógico nuevo es un cambio de nombre como cualquier otro, así que puede mover la fila de una tabla.
 
 Cada tipo de fila muestra:
 
 - Una tabla: un icono de tabla y su nombre.
-- Una columna: un icono de llave para una columna de clave principal o de clave externa, con el color que usa la celda de clave de la propia tabla para una clave principal, una clave externa o ambas, y un icono de lista para cualquier otra columna. Después, su nombre y, atenuado, su tipo de datos seguido de `PK`, `FK` o ambos, como `id` `BIGINT PK` o `user_id` `BIGINT FK`.
+- Una columna: un icono de llave para una columna de clave principal o de clave externa, con el color que usa la celda de clave de la propia tabla para una clave principal, una clave externa o ambas, y un icono de lista para cualquier otra columna. Después, su nombre y, atenuado, su tipo de datos seguido de `PK`, `FK` o ambos, como `id` `BIGINT PK` o `user_id` `BIGINT FK`. El tipo que muestra es siempre el tipo de datos de la columna, nunca su [dominio](./logical-names.md#the-domain-cell), sea cual sea la vista de nombres.
 - Un índice: un icono de índice y su nombre. Después, atenuado, `UNIQUE` para un índice único y sus columnas entre paréntesis en el orden del índice, con `DESC` tras una columna descendente, como `orders_user_idx` `UNIQUE (user_id DESC, total)`, o solo `(total)`.
 - Una clave externa: solo aparece bajo la tabla hija, la que contiene las columnas de clave externa, y solo mientras la tabla padre está en el diagrama. Su icono de llave toma el color del conector: el color de clave principal y clave externa para una [relación identificadora](./relationship-editing.md#identifying-relationships) y, en caso contrario, el color de clave externa. Muestra las columnas de clave de la tabla hija, separadas por comas, y después, atenuado, `→` con la tabla padre y sus columnas, como `user_id` `→ users(id)`.
 - Un grupo de tablas: un punto con el color del grupo, gris para un grupo sin color, y su nombre. Sus tablas aparecen debajo por nombre, y cada una lleva a su tabla. Un grupo sin tablas no tiene nada que expandir.
 - Una nota: un icono de nota adhesiva y la primera línea de la nota.
 
-Un nombre en blanco, o una nota cuya primera línea está en blanco, se muestra como `unnamed` en cursiva.  
-En un panel estrecho, el texto atenuado se recorta con `…` antes que el nombre. Pasa el puntero por encima de un nombre o de su texto atenuado para verlo completo.
+Las filas de tabla, las tablas que aparecen bajo un grupo y las filas de columna siguen la vista de nombres; consulta [Más allá del lienzo](./logical-names.md#beyond-the-canvas). En `Both Names`, por ejemplo, una fila de columna muestra `Total Amount` `total` `NUMERIC`: el nombre lógico y después el nombre y el tipo de datos, ambos atenuados.  
+En todas las vistas, las filas de índice y de clave externa muestran sus columnas por su nombre, y una fila de clave externa también muestra su tabla padre por su nombre.  
+Mientras el campo Buscar contiene texto, una fila encontrada solo en el nombre que su vista omite también muestra ese nombre, atenuado; consulta [Los resultados](./find-and-replace.md#the-results).
+
+Un nombre en blanco, o una nota cuya primera línea está en blanco, se muestra como `unnamed` en cursiva. En `Logical Names` y `Both Names`, una tabla o columna solo se muestra como `unnamed` cuando su nombre lógico también está en blanco.  
+En un panel estrecho, el texto atenuado se recorta con `…` antes que el nombre con el que empieza la fila. Pasa el puntero por encima de un nombre o de su texto atenuado para verlo completo.
 
 Al principio solo está expandida la carpeta `Tables`. Haz clic en una fila de carpeta, o pulsa `Enter` o `Space` sobre ella, para contraerla o expandirla.  
 La flecha al principio de una fila contrae o expande esa fila sin ir a ninguna parte. Todas las filas de tabla tienen una, incluso las de una tabla sin nada debajo. `→` y `←` también contraen y expanden; consulta [Teclas en el explorador](#keys-in-the-explorer).  
@@ -110,8 +115,8 @@ Las ediciones, deshacer y rehacer, y los cambios de colaboradores o de un agente
 
 Haz clic en una fila, o pulsa `Enter` o `Space` con el teclado sobre ella, para ir a lo que representa en el lienzo ERD. Una fila de carpeta solo se contrae o se expande, y las teclas de flecha solo permiten moverse dentro del árbol.
 
-- Una fila de tabla, o una tabla que aparece bajo un grupo, selecciona solo esa tabla y la trae al frente. La celda con el foco pasa al nombre de la tabla, salvo que ya esté en esa tabla.
-- Una fila de columna selecciona solo su tabla y pone la celda con el foco en el nombre de la columna.
+- Una fila de tabla, o una tabla que aparece bajo un grupo, selecciona solo esa tabla y la trae al frente. Salvo que la celda con el foco ya esté en esa tabla, pasa a la primera celda del encabezado de la tabla: el nombre o, en `Logical Names` y `Both Names`, el nombre lógico.
+- Una fila de columna selecciona solo su tabla y pone la celda con el foco en el nombre de la columna o, en `Logical Names`, en el nombre lógico dibujado en su lugar.
 - Una fila de índice selecciona su tabla, como una fila de tabla. El índice en sí no se destaca; los índices se editan en el panel [Propiedades de la tabla](./table-related-functions.md#indexes).
 - Una fila de clave externa hace visibles a la vez las dos tablas de la relación, o la tabla hija cuando las dos están demasiado lejos para mostrarse juntas. Selecciona solo la tabla hija con sus columnas de clave externa, con la celda con el foco en la primera de ellas, e ilumina el conector de la relación; consulta [Cómo leer un conector](./relationship-editing.md#reading-a-connector).
 - Una fila de grupo de tablas hace visible el recuadro del grupo tomando como referencia su barra de título, selecciona solo el grupo y lo trae al frente con sus tablas.
@@ -119,7 +124,7 @@ Haz clic en una fila, o pulsa `Enter` o `Space` con el teclado sobre ella, para 
 
 La vista se mueve según la regla común a todos los saltos: el zoom nunca cambia, y el lienzo solo se desplaza cuando aquello a lo que vas no se ve ya bien; consulta [Dónde termina un salto](./table-related-functions.md#where-a-jump-lands).  
 Ir a una fila cierra antes el panel Propiedades de la tabla si está abierto, y nunca inicia ni termina una relación que se esté dibujando.  
-Mientras el campo Buscar contiene texto, una fila cuyo propio nombre contiene una coincidencia, o una que muestra un fragmento de un comentario o de una nota, va a esa coincidencia en su lugar; consulta [Ir a una coincidencia](./find-and-replace.md#going-to-a-match).
+Mientras el campo Buscar contiene texto, una fila cuyo nombre o nombre lógico contiene una coincidencia, o una que muestra un fragmento de un comentario o de una nota, va en su lugar a su primera coincidencia; consulta [Ir a una coincidencia](./find-and-replace.md#going-to-a-match).
 
 Tras un clic, el teclado se queda en el árbol, así que `Delete`, `Backspace` y las demás teclas de edición no llegan a la nueva selección hasta que pulsas `Escape` o haces clic en el lienzo; consulta [Teclas en el explorador](#keys-in-the-explorer).
 

@@ -44,19 +44,26 @@ Behandel een actie als ondoorzichtig en geef hem ongewijzigd door in plaats van 
 
 Een deel van wat een editor doet, blijft op die editor.  
 Het naar voren halen van een tabel, memo of tabelgroep, wat ook gebeurt wanneer je er een selecteert, wordt niet verstuurd.  
-Ook de keuzes `Statements`, `Header` en `Tables` op het tabblad [Schema SQL](../../guide/guides/schema-sql.md) worden niet verstuurd, want ze horen bij het venster waarin ze zijn gemaakt.  
+Ook de keuzes `Statements`, `Header`, `Write logical names into empty comments` (sinds `4.2.0`) en `Tables` op het tabblad [Schema SQL](../../guide/guides/schema-sql.md) worden niet verstuurd, want ze horen bij het venster waarin ze zijn gemaakt.  
 Sinds `4.1.0` blijft ook de [Verkenner](../../guide/guides/explorer.md) op zijn eigen editor: of hij open is, zijn breedte, zijn samengevouwen rijen, de rij waarop de toetsenbordfocus staat, de scrollpositie van zijn boomstructuur en zijn zoekopdracht en opties worden niet verstuurd.  
 Ook het [oplichten](../../guide/guides/relationship-editing.md#reading-a-connector) van de verbindingslijn van de bijbehorende relatie wanneer je naar een refererende sleutel gaat, wordt niet verstuurd.  
-Scrollen, zoomen of van tabblad wisselen wordt wel verstuurd, maar verandert nooit de weergave of het tabblad van een andere gebruiker. Dat geldt ook voor het scrollen door een sprong vanuit de Verkenner en voor de wissel naar het ERD-tabblad wanneer de Verkenner vanaf een ander tabblad wordt geopend.
+Sinds `4.2.0` blijft ook het tabblad [Woordenboek](../../guide/guides/dictionary.md) op zijn eigen editor: welk blad wordt getoond en van elk blad de zoekopdracht, de selectie, de scrollpositie en de kolombreedtes worden niet verstuurd. Bewerkingen, sorteringen en CSV-imports op het tabblad worden wel verstuurd.  
+Scrollen, zoomen of van tabblad wisselen wordt wel verstuurd, maar verandert nooit de weergave of het tabblad van een andere gebruiker. Dat geldt ook voor het scrollen door een sprong vanuit de Verkenner, voor de wissel naar het ERD-tabblad wanneer de Verkenner vanaf een ander tabblad wordt geopend, en voor de tabbladwissel en het scrollen bij een sprong vanaf het blad [`Checks`](../../guide/guides/dictionary.md#the-checks-sheet) van het tabblad Woordenboek naar een tabel of kolom. Een sprong vanaf dat blad naar een woord, term of domein blijft op het tabblad Woordenboek, dus daarvan wordt niets verstuurd.
+
+Sinds `4.2.0` wordt ook een wissel van [naamweergave](../../guide/guides/logical-names.md#switching-the-view) verstuurd, en de [vergrendeling](../../guide/guides/settings.md#lock) ervan bepaalt wat de andere editors ermee doen. De vergrendeling `Name View` staat aan in een nieuw diagram en in elk document van vóór `4.2.0`.  
+Zolang de vergrendeling aanstaat, is de wissel alleen zichtbaar op de editor waarop hij is gemaakt: hij wordt nog steeds verstuurd, maar elke andere editor en elke replica laat hem vallen, zodat elke gebruiker naar een andere weergave kan kijken terwijl `value` de vergrendelde weergave behoudt. Een wijziging van de taal, een naamnotatie of het type aanhalingstekens werkt anders: die bereikt elke editor, of de vergrendeling ervan nu aanstaat of niet.  
+Zolang de vergrendeling uitstaat, verandert een wissel in een editor die kan bewerken, de naamweergave op elke editor en replica, waarbij de laatste wissel de doorslag geeft, en slaan ze die allemaal op.  
+Een wissel die een editor in alleen-lezenmodus zelf maakt, blijft altijd op die editor, en die editor volgt nog steeds de gedeelde wissels van de andere editors.
 
 [Vergrendelingen](../../guide/guides/settings.md#lock) worden gedeeld: de laatste vergrendeling of ontgrendeling van een instelling geeft op elke editor de doorslag, en een vergrendeling neemt de waarden mee van de editor die haar heeft ingeschakeld, zodat elke editor en replica dezelfde waarde opslaat.  
 Een vergrendeling `Viewport` slaat daarom de weergave op van de editor die haar heeft ingeschakeld, en een vergrendeling `Canvas Type` het laatste tabblad waarop die editor was vóór het tabblad Instellingen, waar vergrendelingen worden ingeschakeld.  
-Het uitschakelen van de vergrendeling `Language`, `Table Name Case`, `Column Name Case` of `Bracket Type` zet die instelling op elke editor ook op de waarde die wordt getoond op de editor die de vergrendeling heeft uitgeschakeld, zodat ze één waarde blijven opslaan. Het uitschakelen van `Viewport` of `Canvas Type` verandert bij niemand de weergave of het tabblad.
+Het uitschakelen van de vergrendeling `Language`, `Table Name Case`, `Column Name Case`, `Bracket Type` of, sinds `4.2.0`, `Name View` zet die instelling op elke editor ook op de waarde die wordt getoond op de editor die de vergrendeling heeft uitgeschakeld, zodat ze één waarde blijven opslaan. Het uitschakelen van `Viewport` of `Canvas Type` verandert bij niemand de weergave of het tabblad.
 
 Een bewerking van het script `Before tables` of `After tables` wordt in zijn geheel verstuurd wanneer het veld ervan de focus verliest. De twee scripts worden los van elkaar afgehandeld, zodat de bewerking van een medebewerker in het ene script nooit het andere overschrijft.
 
 Niets wat je in de [stroommodus](../../guide/guides/visualization.md#flow-never-edits-the-document) van het tabblad Visualisatie doet, is een wijziging in het document, dus een editor in de stroomweergave stuurt de andere editors geen wijzigingen, en de wijzigingen die zij sturen, worden nog steeds toegepast zolang hij daar is.  
-De enige uitzondering is het wisselen van de stroomweergave naar een ander tabblad: die wissel van tabblad wordt verstuurd zoals elke andere.  
+Er zijn twee uitzonderingen. Het verlaten van de stroomweergave voor een ander tabblad is een wissel van tabblad, die wordt verstuurd zoals elke andere. Sinds `4.2.0` is een keuze in de lijst voor de naamweergave op de werkbalk van de stroomweergave een wissel van naamweergave, die wordt verstuurd en toegepast zoals een wissel op het canvas.  
+`Previous table`, `Next table` en de toetsen voor ongedaan maken en opnieuw uitvoeren, die in de stroomweergave [door de weergaven stappen](../../guide/guides/visualization.md#previous-table-and-next-table), worden niet verstuurd.  
 De kaartknop voor een externe link, een resultaat van [Snel zoeken](../../guide/guides/quick-search.md#searching-the-diagram) dat na `#`, `@` of `:` is gekozen, en het openen van de [Verkenner](../../guide/guides/explorer.md#opening-and-closing) verlaten allemaal de stroomweergave en gaan naar het ERD-tabblad. Ook het scrollen dat de kaartknop of een resultaat van Snel zoeken daar veroorzaakt, wordt verstuurd.
 
 ## Twee editors op één pagina {#two-editors-on-one-page}
@@ -99,6 +106,7 @@ const sharedStore2 = editor2.getSharedStore();
 
 De runtimewaarde bevat nog wat er sinds het openen van het document is verwijderd, dus als een andere editor later een verwijdering ongedaan maakt, brengt de nieuwe deelnemer de tabel terug met naam en kolommen.  
 [`value`](../erd-editor-element.md#value) is de vorm die een bestand bevat, zonder verwijderde entiteiten, dus een nieuwe deelnemer die daarmee of met het bestand is geïnitialiseerd, zou in plaats daarvan een lege tabel zonder naam terugbrengen.  
+Sinds `4.2.0` geldt hetzelfde voor een woord, term of domein dat van een blad van het [Woordenboek](../../guide/guides/dictionary.md) is verwijderd: wanneer een andere editor de verwijdering ongedaan maakt, toont een nieuwe deelnemer die met `runtimeValue` is geïnitialiseerd, de rij weer volledig, en een deelnemer die met `value` is geïnitialiseerd, een lege rij, die zijn eigen `value` vervolgens weglaat.  
 Blijf `value` naar de opslag schrijven: `runtimeValue` is alleen bedoeld om een andere editor, een tweede weergave of een [replicationStore](./remote-storage.md) te initialiseren.  
 De editors in VS Code, Obsidian, een JetBrains-IDE en de webapp initialiseren zo een tweede weergave van een geopend document.
 
@@ -134,6 +142,31 @@ Houd elke editor in een sessie, en elke [replicationStore](./remote-storage.md#d
 Een editor van `4.1.0` verstuurt geen nieuw actietype, dus editors en replica's van `4.0.0` en `4.1.0` delen een sessie zonder dat er iets wordt gemist.  
 In die editor doorzoekt de functie [Zoeken en vervangen](../../guide/guides/find-and-replace.md#replacing) ook indexnamen en tabelgroepnamen, en `Replace` en `Replace All` hernoemen ze via de acties `index.changeName` en `tableGroup.changeName`, die een editor van `4.0.0` al toepast.
 
+Sinds `4.2.0` gaan deze wijzigingen via nieuwe actietypen, en een relay die acties ongewijzigd doorstuurt, heeft daarvoor niets nieuws nodig:
+
+- de [logische naam](../../guide/guides/logical-names.md) van een tabel of kolom: `table.changeLogicalName` en `column.changeLogicalName`; of de naam ervan [uit de woordenboeken is afgeleid](../../guide/guides/dictionary.md#deriving-physical-names): `table.changeNameDerived` en `column.changeNameDerived`;
+- een kolom die aan een [domein](../../guide/guides/dictionary.md#domains-and-data-types) wordt gekoppeld of ervan wordt ontkoppeld: `column.changeDomain`;
+- een woord, term of domein dat op het tabblad [Woordenboek](../../guide/guides/dictionary.md) wordt toegevoegd, gewijzigd (inclusief de plaats ervan op het blad, zoals een sortering die bepaalt) of verwijderd: `dictionary.add`, `dictionary.update` en `dictionary.remove`;
+- een wissel van [naamweergave](../../guide/guides/logical-names.md#switching-the-view): `settings.changeNameViewMode`.
+
+De vergrendeling `Name View` gaat via de bestaande actie `settings.changeLockSettings`, de weergaveoptie `Domain` via `settings.changeShow` en een verplaatsing van `Logical Name` of `Domain` in de [kolomvolgorde](../../guide/guides/settings.md#adjusting-column-order) via `settings.changeColumnOrder`.  
+De acties `editor.clear` en `editor.loadJson` van een import van Schema SQL, GraphQL, DBML of AML via `Import` bevatten `keepDictionaries: true`, waardoor de woorden, termen en domeinen op elke editor behouden blijven. Dat geldt ook voor die van een vervangende [setSchemaSQL](../erd-editor-element.md#setschemasql), `setSchemaGraphQL`, `setSchemaDBML` of `setSchemaAML`.  
+Een fysieke naam die de woordenboeken afleiden, gaat via `table.changeName` of `column.changeName`, en het gegevenstype dat een domein zijn kolommen geeft via `column.changeDataType`: de acties die een handmatige bewerking verstuurt.
+
+Een editor van vóór `4.2.0` negeert de nieuwe actietypen: hij heeft geen logische namen, domeinkoppelingen, woordenboeken of naamweergave. Het vergrendelen of ontgrendelen van `Name View` verandert daar niets, en ook een verplaatsing van `Logical Name` of `Domain` in de kolomvolgorde, of een verplaatsing naar een van beide, verandert daar niets. Ook een vergrendeling `Canvas Type` die is ingeschakeld door een editor die vanaf het tabblad Woordenboek naar het tabblad Instellingen ging, verandert daar niets: de oudere editor kent dat tabblad niet en laat `Canvas Type` dus ontgrendeld. Hij toont nog wel de fysieke namen die de woordenboeken afleiden en de gegevenstypen die domeinen geven.  
+Zijn eigen bewerkingen weten niets van logische namen, domeinen of de woordenboeken, met deze gevolgen voor de nieuwere editors:
+
+- Een tabel of kolom die hij handmatig hernoemt, houdt haar naam gemarkeerd als afgeleid, zodat een logische naam die er later op een nieuwere editor voor wordt ingevoerd, de naam die hij typte kan vervangen door een opnieuw afgeleide naam.
+- Een gegevenstype dat hij geeft aan een kolom die aan een domein is gekoppeld, laat de koppeling staan, zodat het blad `Checks` `Domain type mismatch` vermeldt en de volgende typewijziging van het domein de kolom weer het type van het domein geeft.
+- De kolommen met refererende sleutel van een relatie die hij toevoegt, krijgen geen logische naam of domein van hun sleutel.
+- Een tabel die hij plakt of dupliceert, komt binnen zonder logische namen of domeinkoppelingen.
+- Een import van Schema SQL, GraphQL, DBML of AML op die editor verstuurt geen `keepDictionaries` en maakt dus de woorden, termen en domeinen op elke editor leeg.
+- Wanneer hij een laadactie, een import of `clear()` ongedaan maakt, laadt hij zijn eigen kopie van het document op elke editor, en die kopie heeft geen logische namen, domeinkoppelingen of woordenboeken.
+- Die kopie, en het document dat een import van Schema SQL, GraphQL, DBML of AML op die editor laadt, zetten ook de vergrendeling `Name View` op elke editor terug naar de stand waarin die editor haar aantrof. Elke editor slaat dan `Physical Names` op als naamweergave en toont die ook als de vergrendeling uitstaat.
+
+Een document dat vanuit zo'n editor is opgeslagen, heeft geen logische namen, domeinkoppelingen, woordenboeken of naamweergave, dus een editor van `4.2.0` opent het in de weergave `Physical Names`. De oudere editor slaat de vergrendeling `Name View` wel op zoals hij haar aantrof, zodat een document dat in een editor van `4.2.0` is ontgrendeld, ontgrendeld blijft.  
+Houd elke editor in een sessie, en elke [replicationStore](./remote-storage.md#dispatch-dispatchsync) die het document ervan opslaat, op `4.2.0` of later.
+
 ## SharedStoreConfig {#sharedstoreconfig}
 
 ### getNickname {#getnickname}
@@ -161,6 +194,7 @@ editor.getSharedStore({ mouseTracker: false });
 Zendt uit waar deze gebruiker mee bezig is. De standaardwaarde is `true`.  
 De tabel en cel waarop je de focus hebt, de tabellen, memo's en tabelgroepen die je hebt geselecteerd en het kader dat je over het canvas sleept, worden naar de andere editors verstuurd en daar getekend.  
 Elke gebruiker krijgt een eigen kleur, zodat je ze uit elkaar kunt houden: een omlijning om de tabel met focus, een onderstreping onder de cel met focus, een ring om de geselecteerde tabellen, memo's en tabelgroepen en een gestreepte rechthoek voor het sleepkader.  
+Sinds `4.2.0` kunnen gebruikers elk een andere [naamweergave](../../guide/guides/logical-names.md#collaborators) voor zich hebben zolang de vergrendeling ervan aanstaat, of nadat een editor in alleen-lezenmodus zelf heeft gewisseld. Een cel met focus die jouw weergave niet toont, wordt onderstreept op de cel die jouw weergave op haar plaats toont: de naam en de logische naam vervangen elkaar, net als het gegevenstype en het domein.  
 Aanwezigheid die van andere gebruikers binnenkomt, wordt altijd op je canvas getekend, of deze optie nu aanstaat of niet.  
 In de stroommodus van het tabblad Visualisatie worden de focus en selectie van andere gebruikers op de tabelkaarten getekend, maar hun sleepkaders niet. De tabellen die je daar selecteert, worden nog steeds verstuurd; het kader dat je daar sleept, niet.
 

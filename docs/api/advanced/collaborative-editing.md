@@ -44,19 +44,26 @@ Treat an action as opaque and pass it through verbatim rather than reading or re
 
 Some of what an editor does stays on that editor.  
 Bringing a table, memo, or table group to the front, as selecting one does, is not sent.  
-Neither are the [Schema SQL](../../guide/guides/schema-sql.md) tab's `Statements`, `Header`, and `Tables` choices, which belong to the window they are made in.  
+Neither are the [Schema SQL](../../guide/guides/schema-sql.md) tab's `Statements`, `Header`, `Write logical names into empty comments` (since `4.2.0`), and `Tables` choices, which belong to the window they are made in.  
 Since `4.1.0` the [Explorer](../../guide/guides/explorer.md) stays on its editor too: whether it is open, its width, its folded rows, the row the keyboard is on, where its tree is scrolled, and its search and options are not sent.  
 Nor is the [light](../../guide/guides/relationship-editing.md#reading-a-connector) that going to a foreign key puts on its relationship's connector.  
-A scroll, a zoom, or a tab switch is sent, but it never moves another user's view or tab. That includes the scroll a jump from the Explorer makes and the switch to the ERD tab when the Explorer opens from another tab.
+Since `4.2.0` the [Dictionary](../../guide/guides/dictionary.md) tab stays on its editor as well: which sheet shows, and each sheet's search, selection, scroll, and column widths are not sent. Its edits, sorts, and CSV imports are.  
+A scroll, a zoom, or a tab switch is sent, but it never moves another user's view or tab. That includes the scroll a jump from the Explorer makes, the switch to the ERD tab when the Explorer opens from another tab, and the tab switch and scroll of a jump from the Dictionary tab's [`Checks`](../../guide/guides/dictionary.md#the-checks-sheet) sheet to a table or column. A jump from that sheet to a word, term, or domain stays on the Dictionary tab, so none of it is sent.
+
+Since `4.2.0` a [Name View](../../guide/guides/logical-names.md#switching-the-view) switch is sent too, and its [lock](../../guide/guides/settings.md#lock) decides what the other editors do with it. The `Name View` lock is on in a new diagram and in any document from before `4.2.0`.  
+While the lock is on, the switch shows only on the editor that made it: it is still sent, but every other editor and every replica drops it, so each user can look at a different view while `value` keeps the locked one. A language, name case, or bracket type change is different: it reaches every editor whether or not its lock is on.  
+While the lock is off, a switch made in an editor that can edit changes the Name View on every editor and replica, the latest switch winning, and every one of them saves it.  
+A read-only editor's own switch always stays on that editor, and the editor still follows the shared switches of the others.
 
 [Locks](../../guide/guides/settings.md#lock) are shared: the latest lock or unlock of a setting wins on every editor, and a lock carries the values of the editor that turned it on, so every editor and replica saves the same value.  
 A `Viewport` lock therefore saves the view of the editor that turned it on, and a `Canvas Type` lock the last tab that editor was on before the Settings tab, where locks are turned on.  
-Turning off the `Language`, `Table Name Case`, `Column Name Case`, or `Bracket Type` lock also sets that setting on every editor to the value shown on the editor that turned it off, so they keep saving one value. Turning off `Viewport` or `Canvas Type` moves no one's view or tab.
+Turning off the `Language`, `Table Name Case`, `Column Name Case`, `Bracket Type`, or, since `4.2.0`, `Name View` lock also sets that setting on every editor to the value shown on the editor that turned it off, so they keep saving one value. Turning off `Viewport` or `Canvas Type` moves no one's view or tab.
 
 An edit to the `Before tables` or `After tables` script is sent whole when its field loses focus. The two scripts settle separately, so a collaborator's edit of one never overwrites the other.
 
 Nothing done in the Visualization tab's [Flow mode](../../guide/guides/visualization.md#flow-never-edits-the-document) is a document change, so an editor in Flow sends the others no changes, and the changes they send keep applying while it is there.  
-The one exception is leaving Flow for another tab: that tab switch is sent like any other.  
+There are two exceptions. Leaving Flow for another tab is a tab switch, sent like any other. Since `4.2.0` a pick in the Flow bar's Name View list is a Name View switch, sent and applied like one made on the canvas.  
+`Previous table`, `Next table`, and the undo and redo keys, which [step through the views](../../guide/guides/visualization.md#previous-table-and-next-table) in Flow, are not sent.  
 The external-link card button, a [quick search](../../guide/guides/quick-search.md#searching-the-diagram) result chosen after `#`, `@`, or `:`, and opening the [Explorer](../../guide/guides/explorer.md#opening-and-closing) all leave Flow for the ERD tab. A scroll the card button or a quick search result makes there is sent too.
 
 ## Two Editors on One Page
@@ -99,6 +106,7 @@ const sharedStore2 = editor2.getSharedStore();
 
 The runtime value still holds what has been removed since the document was opened, so when another editor later undoes a removal, the joiner brings the table back with its name and columns.  
 [`value`](../erd-editor-element.md#value) is the form a file holds, without removed entities, so a joiner seeded from it, or from the file, would bring back an empty, nameless table instead.  
+Since `4.2.0` the same goes for a word, term, or domain removed from a [Dictionary](../../guide/guides/dictionary.md) sheet: when another editor undoes the removal, a joiner seeded from `runtimeValue` lists the row again whole, and one seeded from `value` lists an empty row, which its own `value` then leaves out.  
 Keep writing `value` to storage: `runtimeValue` is only for seeding another editor, a second view, or a [replicationStore](./remote-storage.md).  
 The editors in VS Code, Obsidian, a JetBrains IDE, and the web app seed a second view of an open document this way.
 
@@ -134,6 +142,31 @@ Keep every editor in a session, and any [replicationStore](./remote-storage.md#d
 A `4.1.0` editor sends no new action type, so `4.0.0` and `4.1.0` editors and replicas share a session with nothing missed.  
 Its [Find and Replace](../../guide/guides/find-and-replace.md#replacing) also searches index names and table group names, and `Replace` and `Replace All` rename them on the `index.changeName` and `tableGroup.changeName` actions a `4.0.0` editor already applies.
 
+Since `4.2.0` these changes travel on new action types, and a relay that passes actions through verbatim needs nothing new for them:
+
+- a table's or column's [logical name](../../guide/guides/logical-names.md): `table.changeLogicalName` and `column.changeLogicalName`; whether its name was [derived from the dictionaries](../../guide/guides/dictionary.md#deriving-physical-names): `table.changeNameDerived` and `column.changeNameDerived`;
+- a column linked to a [domain](../../guide/guides/dictionary.md#domains-and-data-types) or unlinked: `column.changeDomain`;
+- a word, term, or domain added, changed (its place in the sheet included, as a sort sets it), or removed on the [Dictionary](../../guide/guides/dictionary.md) tab: `dictionary.add`, `dictionary.update`, and `dictionary.remove`;
+- a [Name View](../../guide/guides/logical-names.md#switching-the-view) switch: `settings.changeNameViewMode`.
+
+The `Name View` lock travels on the existing `settings.changeLockSettings` action, the `Domain` view option on `settings.changeShow`, and a [Column Order](../../guide/guides/settings.md#adjusting-column-order) move of `Logical Name` or `Domain` on `settings.changeColumnOrder`.  
+The `editor.clear` and `editor.loadJson` of a Schema SQL, GraphQL, DBML, or AML import from `Import` carry `keepDictionaries: true`, which keeps the words, terms, and domains on every editor. So do those of a replacing [setSchemaSQL](../erd-editor-element.md#setschemasql), `setSchemaGraphQL`, `setSchemaDBML`, or `setSchemaAML`.  
+A physical name the dictionaries derive travels on `table.changeName` or `column.changeName`, and the data type a domain gives its columns on `column.changeDataType`, the actions an edit by hand sends.
+
+An editor from before `4.2.0` ignores the new action types: it has no logical names, domain links, dictionaries, or Name View. A lock or unlock of `Name View` changes nothing there, and neither does a Column Order move of `Logical Name` or `Domain`, or one onto either of them. Nor does a `Canvas Type` lock turned on by an editor that came to the Settings tab from the Dictionary tab: the older editor does not know that tab, so it keeps `Canvas Type` unlocked. It still shows the physical names the dictionaries derive and the data types domains give.  
+Its own edits know nothing of logical names, domains, or the dictionaries, with these effects on the newer editors:
+
+- A table or column it renames by hand keeps its name marked as derived, so a logical name written for it later on a newer editor can derive the name again over the one it typed.
+- A data type it gives a column linked to a domain leaves the link, so the `Checks` sheet lists `Domain type mismatch` and the domain's next type change gives the column the domain's type again.
+- The foreign key columns of a relationship it adds get no logical name or domain from their key.
+- A table it pastes or duplicates arrives with no logical names or domain links.
+- A Schema SQL, GraphQL, DBML, or AML import on it sends no `keepDictionaries`, so it empties the words, terms, and domains on every editor.
+- Its undo of a load, an import, or `clear()` loads its own copy of the document on every editor, and that copy has no logical names, domain links, or dictionaries.
+- That copy, and the document a Schema SQL, GraphQL, DBML, or AML import on it loads, also set the `Name View` lock on every editor back to how that editor found it. Every editor then saves `Physical Names` as the Name View, and shows it too if the lock is off.
+
+A document saved from one has no logical names, domain links, dictionaries, or Name View, so a `4.2.0` editor opens it in `Physical Names`. The older editor does save the `Name View` lock as it found it, so a document unlocked in a `4.2.0` editor stays unlocked.  
+Keep every editor in a session, and any [replicationStore](./remote-storage.md#dispatch-dispatchsync) that stores its document, on `4.2.0` or later.
+
 ## SharedStoreConfig
 
 ### getNickname
@@ -161,6 +194,7 @@ editor.getSharedStore({ mouseTracker: false });
 Broadcasts what this user is working on. Default is `true`.  
 The table and cell you have focused, the tables, memos, and table groups you have selected, and the box you drag on the canvas are sent to the other editors and drawn there.  
 Each user gets a color of their own, so you can tell them apart: an outline on the focused table, an underline on the focused cell, a ring around the selected tables, memos, and table groups, and a dashed rectangle for the drag box.  
+Since `4.2.0` users can each be looking at a different [Name View](../../guide/guides/logical-names.md#collaborators) while its lock is on, or after a read-only editor's own switch. A focused cell your view does not draw is underlined on the cell it draws in its place: the name and the logical name stand in for each other, as the data type and the domain do.  
 Presence arriving from other users is always drawn on your canvas, whether or not this option is on.  
 In the Visualization tab's Flow mode, other users' focus and selection are drawn on the table cards but their drag boxes are not. The tables you select there are still sent; the box you drag there is not.
 
