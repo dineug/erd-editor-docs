@@ -56,7 +56,7 @@
     "description": "The label of footer link with label=Issues linking to https://github.com/dineug/erd-editor/issues"
   },
   "copyright": {
-    "message": "Copyright © 2026 SeungHwan-Lee. Лицензия MIT.",
+    "message": "Copyright © 2023-present SeungHwan-Lee. Лицензия MIT.",
     "description": "The footer copyright"
   }
 }

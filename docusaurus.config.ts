@@ -228,7 +228,7 @@ const config: Config = {
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} SeungHwan-Lee. MIT Licensed.`,
+      copyright: 'Copyright © 2023-present SeungHwan-Lee. MIT Licensed.',
     },
   } satisfies Preset.ThemeConfig,
 };
