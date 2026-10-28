@@ -37,7 +37,7 @@ Un fișier JSON își păstrează pozițiile. Tabelele unui fișier Schemă SQL,
 
 Diagrama este apoi înlocuită într-un singur pas, așa că nu apare nicio stare intermediară. O setare pe care o schimbați în timp ce tabelele sunt plasate, de exemplu fila, se păstrează, iar dacă importați între timp un alt fișier, câștigă importul pornit ultimul.
 
-Un editor doar în citire nu încarcă nimic prin `Import` și nu oferă nici elementul `Import and Add`, nici comanda `Import CSV` din fila Dicționar.
+Un editor doar în citire nu importă nimic. Meniul contextual al pânzei și căutarea rapidă nu oferă nici `Import`, nici `Import and Add`, nu afișează ecranul de bun venit, iar fila Dicționar nu oferă `Import CSV`.
 
 ### Import și adăugare {#import-and-add}
 
@@ -215,7 +215,7 @@ Submeniul `Export` al meniului contextual al pânzei are trei elemente:
 - Schema SQL: deschide fila [Schemă SQL](./schema-sql.md#saving-or-copying-the-sql) cu panoul de opțiuni deschis și cu focusul pe butonul `Save file`, așa că apăsarea tastei `Enter` salvează ca `.sql` codul SQL afișat în filă. Până atunci nu se salvează nimic.
 - Image: deschide caseta de dialog `Export image`, care salvează diagrama ca `.png` sau `.svg` ori o copiază în clipboard ca PNG (consultați [Imagine](#image)).
 
-Toate trei funcționează într-un editor doar în citire.  
+Toate trei funcționează într-un editor doar în citire, unde `Export` este unul dintre puținele rânduri pe care le păstrează meniul său al pânzei. Acolo, json scrie setările pe care le conține fișierul, nu vizualizarea, fila, Name View, baza de date, setările de cod sau comutatoarele `View Option` schimbate doar pe acel ecran (consultați [Editoare doar în citire](./settings.md#read-only-editors) din Setări).  
 Comanda `Export CSV` proprie filei Dicționar, care nu se află în acest submeniu, salvează foaia `Domains`, `Words` sau `Terms` a acesteia ca fișier CSV. Spre deosebire de cele trei, nu este oferită într-un editor doar în citire (consultați [Importarea și exportarea fișierelor CSV](./dictionary.md#importing-and-exporting-csv)).
 
 Fila Schemă SQL scrie ON DELETE și ON UPDATE ale fiecărei relații după clauza `REFERENCES`, întâi ON DELETE. Valoarea `Not set` nu scrie nimic, iar o acțiune pe care baza de date selectată nu o acceptă este omisă. Pentru a afla ce acțiuni acceptă fiecare bază de date, consultați [Editarea relațiilor](./relationship-editing.md#on-delete-and-on-update).

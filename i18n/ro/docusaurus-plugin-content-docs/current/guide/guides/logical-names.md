@@ -61,7 +61,7 @@ Tastarea scrie doar numele logic. Numele fizic se derivă din acesta după ce ed
 - În modul `Logical Names`, numele logic din antet, apoi comentariul acestuia, apoi celulele fiecărui rând în ordinea coloanelor, cu numele logic în locul numelui.
 - În modul `Both Names`, numele logic, numele și comentariul din antet, apoi celulele fiecărui rând în ordinea coloanelor, implicit cu celula `Logical Name` prima.
 
-`Alt + Enter` (Windows/Linux) sau `⌥ + Enter` (Mac) adaugă o coloană și mută focusul pe celula numelui acesteia, care în modul `Logical Names` este numele logic.
+`Alt + Enter` (Windows/Linux) sau `⌥ + Enter` (Mac) adaugă o coloană și mută focusul pe prima celulă pe care o desenează rândul ei. În ordinea implicită a coloanelor, aceasta este celula numelui acesteia, care în modul `Logical Names` este numele logic, iar în `Both Names` celula sa `Logical Name`, așa că puteți începe cu numele logic (consultați [Adăugarea coloanelor](./table-editing.md#adding-columns)).
 
 O coloană cheie străină adăugată de o relație copiază numele logic și domeniul cheii, împreună cu tipul acesteia (consultați [Relații identificatoare](./relationship-editing.md#identifying-relationships)).  
 Copierea coloanelor într-o foaie de calcul și lipirea coloanelor dintr-una folosesc celulele pe care le desenează modul de afișare, inclusiv celulele numelui logic și celulele Domeniu (consultați [Copierea/lipirea coloanelor](./table-editing.md#copyingpasting-columns)).
@@ -143,5 +143,7 @@ Un agent de programare care lucrează prin serverul MCP setează nume logice și
 
 ## Editoare doar în citire {#read-only-editors}
 
-Într-un editor [`readonly`](../../api/erd-editor-element.md#readonly), fiecare selector al modului de afișare funcționează, iar o schimbare modifică doar acel ecran, indiferent de blocare.  
-Numele logice și domeniile nu pot fi editate acolo, așa că nu se deschide nicio listă a termenilor și niciun selector de domeniu, iar niciunul dintre elementele `Derive Physical Name Again` și `Derive Physical Names Again` nu este oferit. Opțiunea View Option → `Domain` nu schimbă nimic acolo, așa cum nu schimbă nicio [opțiune de afișare](./table-related-functions.md#table-view-options).
+Într-un editor [`readonly`](../../api/erd-editor-element.md#readonly), fiecare selector al modului de afișare funcționează: butonul `Name View` din bara de instrumente a pânzei, `Name View` din meniul contextual al pânzei și din căutarea rapidă, precum și lista din bara de instrumente Flow.  
+O schimbare de acolo modifică doar acel ecran, indiferent de blocare: fișierul, colaboratorii și istoricul anulărilor păstrează modul de afișare așa cum era. Când editorul devine din nou editabil, modul ales rămâne pe acel ecran până la următoarea schimbare de acolo sau, cât timp blocarea este dezactivată, până când un colaborator îl schimbă sau documentul este încărcat din nou.  
+Numele logice și domeniile nu pot fi editate acolo, așa că nu se deschide niciun editor de celulă, nicio listă a termenilor și niciun selector de domeniu, iar niciunul dintre elementele `Derive Physical Name Again` și `Derive Physical Names Again` nu este oferit.  
+Opțiunea View Option → `Domain` afișează sau ascunde celula Domain doar pe acel ecran, așa cum face orice [opțiune de afișare](./table-related-functions.md#table-view-options) acolo, iar când editorul devine din nou editabil, revin opțiunile de afișare ale documentului.

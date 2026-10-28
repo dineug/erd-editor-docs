@@ -12,7 +12,7 @@ História uchováva až `2048` zmien.
 - Znova vykonať: `Ctrl + Shift + Z` (Windows/Linux) alebo `⌘ + Shift + Z` (Mac)
 
 Na karte ERD ponúka panel nástrojov tie isté dva príkazy ako tlačidlá `Undo` a `Redo` vedľa tlačidla `Time Travel`. Na karte Slovník zobrazuje tlačidlá `Undo` a `Redo` bez tlačidla `Time Travel` a žiadna iná karta ich nezobrazuje.  
-Zvýraznia sa, iba keď je čo vrátiť späť alebo znova vykonať. Editor s atribútom `readonly` ich skryje a klávesové skratky nič nevrátia späť ani znova nevykonajú.
+Zvýraznia sa, iba keď je čo vrátiť späť alebo znova vykonať. Editor s atribútom `readonly` skryje ich aj `Time Travel` a klávesové skratky nič nevrátia späť ani znova nevykonajú.
 
 Príkazy Vrátiť späť a Znova vykonať pôsobia na históriu diagramu iba na karte ERD.  
 Klávesové skratky sú tam neaktívne vtedy, keď je otvorené rýchle vyhľadávanie, `Table Properties`, `Diff Viewer`, ukážka `Auto Layout`, dialógové okno [`Export image`](./file-import-export.md#image), dialógové okno [Mapovať stĺpce](./relationship-editing.md#map-columns) alebo cestovanie v čase.  
@@ -58,6 +58,8 @@ Nezaznamenáva sa:
 - Zobrazený hárok karty Slovník a vyhľadávanie, výber, posunutie a šírky stĺpcov každého hárka – pozrite si časť [Otvorenie karty](./dictionary.md#opening-the-tab).
 
 Zmenu čohokoľvek z toho nemožno vrátiť späť.
+
+Editor iba na čítanie nezaznamenáva vôbec nič. Poloha zobrazenia, priblíženie a prepínače `View Option` sa tam stále menia spolu s kartou, Zobrazením názvov, databázou a nastaveniami kódu, ale iba na tej obrazovke, takže nie je čo vrátiť späť – pozrite si časť [Editory iba na čítanie](./settings.md#read-only-editors) v Nastaveniach.
 
 Úpravy vykonané na karte Slovník sa dajú vrátiť späť, ale patria do histórie svojho hárka, a nie do tejto histórie, takže príkaz Vrátiť späť na karte ERD žiadnu z nich nevráti, a to ani novú hodnotu `Data Type` domény a typy stĺpcov, ktoré zmení – pozrite si časť [Hárky karty Slovník](#dictionary-sheets).
 
@@ -136,7 +138,7 @@ História každého hárka sa vyprázdni, keď sa slovníky nahradia: importom s
 ## Cestovanie v čase {#time-travel}
 
 Otvára sa tlačidlom `Time Travel` na paneli nástrojov vedľa tlačidiel Vrátiť späť a Znova vykonať na karte ERD.  
-Tlačidlo nemá žiadny účinok, kým história diagramu neobsahuje aspoň jednu zaznamenanú zmenu.
+Tlačidlo nemá žiadny účinok, kým história diagramu neobsahuje aspoň jednu zaznamenanú zmenu. Editor iba na čítanie takéto tlačidlo nezobrazuje a editor, ktorý sa prepne do režimu iba na čítanie, zatvorí Cestovanie v čase bez použitia.
 
 Cestovanie v čase otvorí samostatnú kópiu diagramu iba na čítanie s polohou zobrazenia, úrovňou priblíženia a [Zobrazením názvov](./logical-names.md#name-view), ktoré plátno práve ukazuje, bez ohľadu na to, či je zamknutie `Viewport` alebo `Name View` zapnuté.  
 Prechádza iba históriou diagramu, takže úpravy hárkov karty Slovník nie sú medzi jeho bodmi.  

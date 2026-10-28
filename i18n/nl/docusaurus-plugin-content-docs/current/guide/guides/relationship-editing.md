@@ -1,6 +1,6 @@
 ---
 sidebar_position: 7
-description: Verwijder een relatie, wijzig het type ervan, stel de acties voor ON DELETE en ON UPDATE in, wijs de relatie toe aan bestaande kolommen met het dialoogvenster Kolommen toewijzen, lees de notatie van verbindingslijnen, werk met N:M- en identificerende relaties en bekijk wat nieuwe kolommen met refererende sleutel van hun sleutel overnemen en hoe ze worden benoemd.
+description: Verwijder een relatie, wijzig het type ervan, stel de acties voor ON DELETE en ON UPDATE in, wijs de relatie toe aan bestaande kolommen met het dialoogvenster Kolommen toewijzen, lees de notatie van verbindingslijnen en hoe ze om tabellen heen worden gerouteerd, werk met N:M- en identificerende relaties en bekijk wat nieuwe kolommen met refererende sleutel van hun sleutel overnemen en hoe ze worden benoemd.
 ---
 
 # Relaties bewerken
@@ -81,7 +81,7 @@ Elke rij gebruikt een kolom die de kindtabel al heeft of voegt een nieuwe kolom 
 Het dialoogvenster opent op twee manieren:
 
 - Tijdens het tekenen van een relatie, via `Map to existing columns` naast de kindtabel — zie [Relaties maken](./editing-start.md#relationship-creation). `Map` voegt dan een relatie toe van het type dat wordt getekend.
-- Via `Map Columns` in het contextmenu van de relatie, om de kolommen van een bestaande relatie te wijzigen. `Save` schrijft dan de wijziging. Een editor in alleen-lezenmodus laat dit item weg.
+- Via `Map Columns` in het contextmenu van de relatie, om de kolommen van een bestaande relatie te wijzigen. `Save` schrijft dan de wijziging. Een editor in alleen-lezenmodus opent geen contextmenu van een relatie, dus Kolommen toewijzen kan daar niet worden geopend.
 
 De ondertitel van het dialoogvenster noemt de twee tabellen en het relatietype, zoals `users → posts · One N`. Het type wordt hier getoond maar niet gewijzigd — gebruik [Type wijzigen](#type-change).
 
@@ -226,6 +226,9 @@ Het oplichten verdwijnt bij de volgende druk op de linker- of rechtermuisknop op
 Pannen met de middelste muisknop of het handgereedschap laat het oplichten intact, net als een rij samenvouwen of uitvouwen in de Verkenner of de Verschilweergave, de selectie opheffen met `Escape` en een sprong vanuit [Snel zoeken](./quick-search.md) of de [kaartknop](./visualization.md#card-buttons) voor een externe link in de stroomweergave.  
 Het oplichten wordt niet opgeslagen en staat niet in de geschiedenis, en medebewerkers zien het niet.
 
+In een editor met [`readonly`](../../api/erd-editor-element.md#readonly) laat de aanwijzer ook verbindingslijnen oplichten, in plaats van het licht dat een sprong achterliet. Rust hij op een tabel, dan licht hij elke verbindingslijn van die tabel op in de kleur bij aanwijzen totdat hij van de tabel af beweegt.  
+Een klik die niet beweegt, laat een licht aan tot de volgende zulke klik: op een tabel licht hij de verbindingslijnen van die tabel op, op een verbindingslijn die verbindingslijn, en overal anders niets. Een sleepbeweging daar pant het canvas en laat dat licht zoals het was.
+
 Verberg verbindingslijnen op het ERD-canvas met de weergaveoptie `Relationship`, of alleen hun labels met de weergaveoptie `Referential Actions`, die standaard aanstaat — zie [Weergaveopties voor tabellen](./table-related-functions.md#table-view-options).  
 Bij `70%` en lager, waar tabellen tot hun naam inklappen, worden geen labels getekend.  
 Een [export als afbeelding](./file-import-export.md#image) wordt altijd op 100% getekend, dus de labels worden getekend ongeacht het zoomniveau van het canvas, tenzij een weergaveoptie ze verbergt. Als `Background` uitstaat, is ook het vak achter elk label transparant.  
@@ -233,9 +236,10 @@ Een [export als afbeelding](./file-import-export.md#image) wordt altijd op 100% 
 
 ## Routering van verbindingslijnen {#connector-routing}
 
-Verbindingslijnen worden orthogonaal gerouteerd.  
-Een route buigt om de tabellen heen die tussen de twee uiteinden ervan liggen in plaats van ze te kruisen, en de hoeken ervan zijn afgerond.  
-Elk uiteinde verlaat zijn tabel met een kort recht stuk voordat het afbuigt, zodat twee tabellen op korte afstand van elkaar waarvan de uiteinden van de verbindingslijn op één lijn liggen, worden verbonden door één rechte lijn in plaats van een omweg.  
+Verbindingslijnen worden orthogonaal gerouteerd, en hun hoeken zijn afgerond.  
+Een route gaat om de tabellen in de weg heen in plaats van erdoorheen. Waar elke route met een paar bochten tussen de twee uiteinden een tabel zou kruisen, zoals in een druk diagram, neemt de verbindingslijn een omweg met zoveel bochten als nodig is. Alleen waar geen omweg wordt gevonden, kruist hij nog een tabel.  
+Een verbindingslijn verlaat zijn twee tabellen vanaf een paar zijden die naar elkaar toe wijzen waar die er zijn, en elk uiteinde verlaat zijn tabel met een kort recht stuk voordat het afbuigt, zodat twee tabellen op korte afstand van elkaar waarvan de uiteinden van de verbindingslijn op één lijn liggen, worden verbonden door één rechte lijn in plaats van een omweg.  
+Twee tabellen die naar elkaar toe wijzen en dichterbij staan dan dat, zelfs minder dan `40px` van elkaar, behouden hun zijden die naar elkaar wijzen, en waar hun uiteinden niet op één lijn liggen, maakt de verbindingslijn een zijsprong over de ruimte ertussen in plaats van onder een van beide tabellen door te lopen.  
 Routes die dezelfde kant van een tabel verlaten, worden over aparte corridors verdeeld, zodat ze niet over elkaar heen lopen.  
 Alleen tabellen worden ontweken: een verbindingslijn mag een memo of het kader van een tabelgroep kruisen, en wordt boven tabelgroepen en onder tabellen en memo's getekend.
 
@@ -243,6 +247,9 @@ Een relatie van een tabel naar zichzelf wordt getekend als één curve om de rec
 Verdere zelfverwijzingen op dezelfde tabel worden buiten de eerste genest, zodat hun curves elkaar en de tabel niet kruisen.
 
 Er valt niets in te stellen.  
-Routes worden automatisch opnieuw berekend wanneer er iets op het canvas wordt verplaatst of van grootte verandert, zodat je ze nooit met de hand hoeft aan te passen.
+Routes worden automatisch opnieuw berekend wanneer er iets op het canvas wordt verplaatst of van grootte verandert, zodat je ze nooit met de hand hoeft aan te passen.  
+Terwijl je sleept, volgen de verbindingslijnen van de tabellen die je verplaatst hen, en elke andere verbindingslijn behoudt de route die hij had toen het slepen begon. Als je loslaat, wordt elke verbindingslijn die de verplaatsing opnieuw routeert, opnieuw getekend, zoals een die nu om een tabel heen gaat die in zijn weg is neergezet, of een die rechttrekt zodra een tabel van zijn pad af is verplaatst.
+
+Een diagram tekent dezelfde routes in elk venster dat het in dezelfde naamweergave toont: een dat openbleef terwijl de tabellen verschoven, een dat het diagram net opende, en dat van een medebewerker evengoed, en een [geëxporteerde afbeelding](./file-import-export.md#image) tekent ze ook. De naamweergave telt mee omdat ze verandert hoe breed de tabellen zijn — zie [Naamweergave](./logical-names.md#name-view).
 
 ![De tabel members omlaag en weer terug slepen terwijl de verbindingslijn vanaf orders wisselt tussen rechts langs categories en links eromheen, met elke hoek afgerond](/img/demo-connector-routing.webp)

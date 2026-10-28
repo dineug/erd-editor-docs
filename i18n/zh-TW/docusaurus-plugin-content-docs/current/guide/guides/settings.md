@@ -1,6 +1,6 @@
 ---
 sidebar_position: 16
-description: 關聯資料類型同步與定義域、註解寬度上限、重新計算資料表寬度、設定鎖定（檢視、索引標籤、程式碼設定和「名稱顯示」）、欄位顯示順序和快速鍵清單。
+description: 關聯資料類型同步與定義域、註解寬度上限、設定鎖定（檢視、索引標籤、程式碼設定和「名稱顯示」）、欄位顯示順序、快速鍵清單，以及唯讀編輯器的「設定」索引標籤。
 ---
 
 # 設定
@@ -33,13 +33,6 @@ description: 關聯資料類型同步與定義域、註解寬度上限、重新�
 
 ![開啟 Maximum comment width 並輸入 120，ERD 索引標籤中的註解隨之截斷為該寬度](/img/demo-settings-comment-width.webp)
 
-## 重新計算資料表寬度 {#recalculation-table-width}
-
-按 `Sync` 即可依目前的文字重新計算每個資料表和欄位儲存格的寬度，並依新的大小重新繪製關聯連接線。
-完成後會顯示 `Recalculated table width` 快顯通知加以確認。
-每次載入文件時，寬度都會自動重新計算，因此只有在字型或轉譯方式的變更使寬度不再正確時，才需要執行此操作。
-寬度不會儲存在檔案中，因此 `Sync` 永遠不會變更檔案。
-
 ## 鎖定 {#lock}
 
 `Lock` 清單包含七項設定。某項設定的鎖定開啟期間，檔案會保留鎖定時的值，因此在畫面上變更該設定時，檔案會保持原樣。
@@ -68,8 +61,9 @@ description: 關聯資料類型同步與定義域、註解寬度上限、重新�
 
 ![解除鎖定 Viewport、捲動並縮放圖表，再以其列所顯示的新檢視重新鎖定](/img/demo-settings-locks.webp)
 
-開啟或關閉鎖定會變更檔案，因為檔案會儲存哪些鎖定是開啟的；但與「設定」索引標籤中的其他項目一樣，這項操作不會記錄在[復原歷程記錄](./undo-redo.md#what-the-history-records)中。無論是否鎖定，切換「名稱顯示」也不會記錄。在唯讀編輯器中，鎖定按鈕不會有任何作用，而無論其鎖定狀態為何，切換「名稱顯示」都只會變更該畫面。
+開啟或關閉鎖定會變更檔案，因為檔案會儲存哪些鎖定是開啟的；但與「設定」索引標籤中的其他項目一樣，這項操作不會記錄在[復原歷程記錄](./undo-redo.md#what-the-history-records)中。無論是否鎖定，切換「名稱顯示」也不會記錄。
 其他所有設定都會依目前狀態儲存：資料庫、[`View Option`](./table-related-functions.md#table-view-options) 的切換按鈕，以及 `Preferences` 索引標籤中的其餘設定。
+無論鎖定如何設定，唯讀編輯器都不會透過其中任何一項變更檔案：它的鎖定按鈕和 `Preferences` 的其他控制項都已停用，而它仍允許您變更的設定只會留在該畫面上，請參閱[唯讀編輯器](#read-only-editors)。
 
 新圖表（也就是從無到有建立的圖表）的所有鎖定都是開啟的：在 VS Code、Obsidian 或 JetBrains IDE 中開啟的空白檔案（Obsidian 的 `ERD Editor: Create new diagram` 和 `New ERD` 會建立這種檔案）、網頁應用程式中的新結構描述、從 Google Drive 的 New 選單建立的檔案，或未被賦予值的 `<erd-editor>`。
 網頁應用程式透過匯入 SQL、DBML、AML 或 GraphQL 檔案所建立的結構描述或 Google Drive 檔案，一開始也是所有鎖定都開啟。從 JSON 檔案建立的則會保留該檔案所記錄的鎖定。
@@ -98,6 +92,7 @@ description: 關聯資料類型同步與定義域、註解寬度上限、重新�
 `Logical Name` 決定在 `Both Names` 中，每一列所繪製之邏輯名稱儲存格的位置。在 `Logical Names` 中，邏輯名稱會改為佔據 `Name` 列的位置，而 `Physical Names` 則不會繪製邏輯名稱儲存格，請參閱[名稱顯示](./logical-names.md#name-view)。`Domain` 決定 View Option → `Domain` 所顯示之定義域儲存格的位置，請參閱[定義域儲存格](./logical-names.md#the-domain-cell)。
 被[資料表檢視選項](./table-related-functions.md#table-view-options)隱藏或被「名稱顯示」省略的儲存格仍會保留其在清單中的位置，因此此順序會套用至實際顯示的儲存格。
 若圖表的順序是在 `Logical Name` 和 `Domain` 成為列之前設定的，`Logical Name` 會排在 `Name` 的正前方，而 `Domain` 會排在 `DataType` 的正後方，無論這兩者在其順序中位於何處。
+由較新版本儲存的圖表也會保留其順序，即使該版本有此版本所沒有的列：此版本有的列會依檔案所給的順序排列，未知的列則被省略。在這裡儲存圖表會寫出不含該列的順序，而較新版本會依其自己的預設順序，把該列放回其相鄰列的旁邊。
 [替代鍵](./table-related-functions.md#alternate-keys)標記（`AK1.1` 等）不屬於這些列。它在每一列中一律排在最後，位於此順序排在最後的儲存格之後。
 
 ![向下捲動到 Column Order，將 Comment 列向上拖曳到 Name 下方，讓每個註解緊接在其欄位名稱之後](/img/demo-settings-column-order.webp)
@@ -146,6 +141,7 @@ description: 關聯資料類型同步與定義域、註解寬度上限、重新�
 開啟中的物件總管、佈景主題建立器或 `Display Language` 選擇器不會讓畫布上的任何快速鍵暫時停用。`Stop` 永遠不會關閉物件總管。關於 `Stop` 和其他按鍵在物件總管中的作用，請參閱[物件總管中的按鍵](./explorer.md#keys-in-the-explorer)；關於在選擇器中的作用，請參閱[選擇語言](./language-and-theme.md#picking-a-language)。
 `Delete Selection` 會移除所有選取的資料表、備忘錄和資料表群組；若只選取了一個資料表及其部分欄位，且縮放比例高於 `70%`，則會移除這些欄位，請參閱[刪除資料表與備忘錄](./table-related-functions.md#table-and-memo-deletion)。`Remove Table, Memo` 也會移除選取的資料表群組。
 `Add Table Group` 會開始繪製 [`New Table Group`](./table-groups.md#drawing-a-group)，與[畫布工具列](./table-related-functions.md#canvas-toolbar)的 `New Table Group` 按鈕相同，再按一次則會取消繪製。`Group Selected Tables` 是兩次不帶輔助按鍵的按鍵：先按 `T`，並在一秒內再按 `G`。它會將選取的資料表放入新群組並開啟其名稱輸入框，與資料表右鍵選單中的 `Group selected tables` 相同，未選取任何資料表時則不會有任何作用，請參閱[將所選資料表組成群組](./table-groups.md#grouping-selected-tables)。在唯讀編輯器中或群組被[隱藏](./table-groups.md#hiding-groups)期間，兩者都不會有任何作用。
+在唯讀編輯器中，只有可供閱讀的按鍵能運作：`Search`、`Toggle Explorer`、`Stop`、對跳至目標所選取之資料表的 `Table Properties` 和 `Focus on this table`、三個縮放按鍵、`Zen Mode`、複製，以及會移動焦點儲存格的方向鍵。`Editing`、每個 `Add` 和 `Remove` 按鍵、`Delete Selection`、`Primary Key`、兩個全選按鍵、四個關聯按鍵、`Add Table Group`、`Group Selected Tables`、`Hand Tool` 和貼上都不會有任何作用，而 `Undo` 和 `Redo` 不會復原或重做任何東西，請參閱[唯讀編輯器](./table-related-functions.md#read-only-editors)。
 `Zoom In`、`Zoom Out` 和 `Zoom Reset` 也可以縮放「[視覺化](./visualization.md#toolbar)」索引標籤，`Graph` 和 `Flow` 皆適用，但快速搜尋開啟時除外。
 在 `Flow` 中，`Undo` 和 `Redo` 會在流程模式曾縮小到的範圍之間返回上一步和前進到下一步，與其 `Previous table` 和 `Next table` 按鈕相同，但快速搜尋開啟時除外。它們在該處永遠不會復原圖表，而在 `Graph` 中則不會有任何作用，請參閱[上一個資料表與下一個資料表](./visualization.md#previous-table-and-next-table)。
 在「視覺化」索引標籤中，`Stop` 也會關閉[列顯示](./visualization.md#row-display)選單，並取消仍在執行中的[流程模式版面配置](./visualization.md#how-flow-is-placed)；但它不會讓以 `Focus on this table` 縮小範圍的檢視恢復完整範圍。
@@ -160,3 +156,13 @@ description: 關聯資料類型同步與定義域、註解寬度上限、重新�
 「字典」索引標籤的列按鍵會跟隨 `Add Column` 和 `Remove Column`，因此重新對應其中任一個都會移動這些按鍵，請參閱 [`dictionaryRowChords`](../../api/erd-editor-element.md#dictionaryrowchords)。
 
 在 Obsidian 中，只要圖表所在的 Obsidian 分頁處於作用中，這些按鍵就會傳到編輯器，即使 Obsidian 的某個快速鍵使用相同的按鍵也是如此，例如 `Alt + Enter`、`Ctrl + K` 和 `Ctrl + F` (Windows/Linux) 或 `⌥ + Enter`、`⌘ + K` 和 `⌘ + F` (Mac)。「字典」索引標籤的 `Alt + Shift + Enter` (Windows/Linux) 或 `⌥ + Shift + Enter` (Mac) 也是如此，此按鍵不在此清單的任何一列中。在該分頁中，其他所有 Obsidian 快速鍵仍然有效。關於 `Ctrl + F` 或 `⌘ + F`，請參閱[瀏覽器的尋找列](./find-and-replace.md#the-browsers-find-bar)。
+
+## 唯讀編輯器 {#read-only-editors}
+
+在 [`readonly`](../../api/erd-editor-element.md#readonly) 編輯器中，「設定」索引標籤會顯示圖表的設定，但不會變更其中任何一項。`Preferences` 和 `Shortcuts` 兩個頁面的標題旁各有一個 `Read only` 徽章。
+`Relationship DataType Sync` 和 `Maximum comment width` 開關以及寬度欄位都已停用，每個鎖定按鈕也一樣。`Column Order` 的列不顯示握把，也無法拖曳。
+每個 `Lock` 列仍會顯示其值。已鎖定的列顯示檔案所保留的值，未鎖定的列則顯示該畫面目前的設定，它可能與檔案的不同，如下所述。
+
+決定畫面顯示內容的設定仍可在那裡變更：檢視位置和縮放比例、索引標籤、「名稱顯示」、資料庫、程式碼產生器語言、兩種名稱大小寫、引號，以及 [`View Option`](./table-related-functions.md#table-view-options) 的切換按鈕。
+每一項都只會變更該畫面，無論其鎖定如何設定。它不會儲存到檔案或由 JSON 匯出寫出，不會記錄到復原歷程記錄，不會算作變更，也絕不會傳到協作者。[結構描述 SQL](./schema-sql.md#options-panel) 和[程式碼產生器](./code-generator.md#options-panel)索引標籤的選項面板會在那裡將這些選擇標示為 `This window only`，取代 `Saved in the document`。
+編輯器再次轉為可寫入後，資料庫、語言、名稱大小寫、引號和 View Option 切換按鈕會回到檔案的值。檢視、索引標籤和「名稱顯示」則維持您離開時的狀態，而檔案會在您下一次變更它們時，依其鎖定的允許範圍採用每一項。

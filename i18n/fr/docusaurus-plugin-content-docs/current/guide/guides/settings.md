@@ -1,6 +1,6 @@
 ---
 sidebar_position: 16
-description: Synchronisation du type de données des relations et domaines, largeur maximale des commentaires, recalcul de la largeur des tables, verrouillage des paramètres (vue, onglet, paramètres de code et affichage des noms), ordre d’affichage des colonnes et liste des raccourcis.
+description: Synchronisation du type de données des relations et domaines, largeur maximale des commentaires, verrouillage des paramètres (vue, onglet, paramètres de code et affichage des noms), ordre d’affichage des colonnes, liste des raccourcis et onglet Paramètres d’un éditeur en lecture seule.
 ---
 
 # Paramètres
@@ -33,13 +33,6 @@ Désactiver l’interrupteur supprime la limite, et le champ de saisie reste ina
 
 ![Activation de Maximum comment width, saisie de 120, et l’onglet ERD affichant les commentaires tronqués à cette largeur](/img/demo-settings-comment-width.webp)
 
-## Recalcul de la largeur des tables {#recalculation-table-width}
-
-Appuyez sur `Sync` pour recalculer la largeur de chaque table et de chaque cellule de colonne en fonction de son texte actuel, et pour retracer les connecteurs de relation autour des nouvelles tailles.
-Une notification `Recalculated table width` le confirme.
-Les largeurs sont recalculées d’elles-mêmes à chaque chargement d’un document, si bien que cette action n’est nécessaire que lorsqu’un changement de police ou de rendu les a rendues obsolètes.
-Les largeurs ne sont pas enregistrées dans le fichier, donc `Sync` ne le modifie jamais.
-
 ## Verrouillage {#lock}
 
 La liste `Lock` contient sept paramètres. Tant que le verrou d’un paramètre est activé, le fichier conserve la valeur qu’avait ce paramètre au moment du verrouillage, si bien que le modifier à l’écran laisse le fichier tel qu’il était.
@@ -68,8 +61,9 @@ Si la vue verrouillée ne montre aucune partie du diagramme à l’ouverture du 
 
 ![Déverrouillage de Viewport, défilement et zoom du diagramme, puis nouveau verrouillage sur la nouvelle vue qu’affiche sa ligne](/img/demo-settings-locks.webp)
 
-Activer ou désactiver un verrou modifie le fichier, puisque celui-ci enregistre quels verrous sont activés, mais, comme le reste de l’onglet Paramètres, cette action n’est pas inscrite dans l’[historique d’annulation](./undo-redo.md#what-the-history-records). Un changement de vue de l’affichage des noms ne l’est pas non plus, verrouillé ou non. Dans un éditeur en lecture seule, les boutons de verrou sont sans effet, et un changement de vue de l’affichage des noms ne modifie que cet écran, quel que soit son verrou.
+Activer ou désactiver un verrou modifie le fichier, puisque celui-ci enregistre quels verrous sont activés, mais, comme le reste de l’onglet Paramètres, cette action n’est pas inscrite dans l’[historique d’annulation](./undo-redo.md#what-the-history-records). Un changement de vue de l’affichage des noms ne l’est pas non plus, verrouillé ou non.
 Tous les autres paramètres sont enregistrés tels quels : la base de données, les options de [`View Option`](./table-related-functions.md#table-view-options) et le reste de l’onglet `Preferences`.
+Un éditeur en lecture seule ne modifie le fichier par aucun d’eux, quels que soient les verrous : ses boutons de verrou et les autres commandes de `Preferences` sont désactivés, et les paramètres qu’il laisse encore modifier restent sur cet écran (voir [Éditeurs en lecture seule](#read-only-editors)).
 
 Tous les verrous sont activés dans un nouveau diagramme, c’est-à-dire créé à partir de rien : un fichier vide ouvert dans VS Code, Obsidian ou un IDE JetBrains (dans Obsidian, `ERD Editor: Create new diagram` et `New ERD` en créent un), un nouveau schéma dans l’application web, un fichier créé depuis le menu New de Google Drive, ou un `<erd-editor>` sans valeur.
 Un schéma ou un fichier Google Drive que l’application web crée en important un fichier SQL, DBML, AML ou GraphQL démarre lui aussi avec tous les verrous activés. Celui créé à partir d’un fichier JSON conserve les verrous que ce fichier enregistre.
@@ -98,6 +92,7 @@ Faites glisser une ligne pour la déplacer : toute la ligne peut être déplac�
 `Logical Name` place la cellule du nom logique qu’une ligne affiche dans la vue `Both Names`. Dans la vue `Logical Names`, le nom logique prend plutôt la place de la ligne `Name`, et la vue `Physical Names` n’en affiche aucune (voir [Affichage des noms](./logical-names.md#name-view)). `Domain` place la cellule Domaine qu’affiche View Option → `Domain` (voir [La cellule Domaine](./logical-names.md#the-domain-cell)).
 Une cellule masquée par une [option d’affichage des tables](./table-related-functions.md#table-view-options) ou omise par l’affichage des noms garde sa place dans la liste, si bien que l’ordre s’applique aux cellules affichées, quelles qu’elles soient.
 Un diagramme dont l’ordre a été défini avant que `Logical Name` et `Domain` ne soient des lignes reçoit `Logical Name` juste avant `Name` et `Domain` juste après `DataType`, où que ceux-ci se trouvent dans son ordre.
+Un diagramme enregistré par une version ultérieure conserve lui aussi son ordre, même lorsque cette version a une ligne que celle-ci n’a pas : les lignes que connaît cette version se placent dans l’ordre que donne le fichier, et la ligne inconnue est omise. Enregistrer le diagramme ici écrit l’ordre sans elle, et la version ultérieure remet cette ligne à côté de sa voisine dans son propre ordre par défaut.
 La marque de [clé alternative](./table-related-functions.md#alternate-keys) (`AK1.1` et ainsi de suite) ne fait pas partie de ces lignes. Elle se place toujours en dernier dans une ligne, après la cellule que cet ordre place en dernier, quelle qu’elle soit.
 
 ![Défilement jusqu’à Column Order et glissement de la ligne Comment vers le haut sous Name, ce qui place chaque commentaire juste après le nom de sa colonne](/img/demo-settings-column-order.webp)
@@ -146,6 +141,7 @@ Dans une cellule du nom logique dont la liste des termes est ouverte, le premier
 Un explorateur, un configurateur de thème ou un sélecteur `Display Language` ouvert ne suspend aucun des raccourcis sur le canevas. `Stop` ne ferme jamais l’explorateur. Pour ce que font `Stop` et les autres touches dans l’explorateur, voir [Touches dans l’explorateur](./explorer.md#keys-in-the-explorer), et dans le sélecteur, voir [Choisir une langue](./language-and-theme.md#picking-a-language).
 `Delete Selection` supprime toutes les tables, tous les mémos et tous les groupes de tables sélectionnés, ou, lorsqu’une seule table est sélectionnée avec certaines de ses colonnes et que le zoom dépasse `70%`, ces colonnes (voir [Suppression de tables et de mémos](./table-related-functions.md#table-and-memo-deletion)). `Remove Table, Memo` supprime aussi les groupes de tables sélectionnés.
 `Add Table Group` commence le tracé d’un [`New Table Group`](./table-groups.md#drawing-a-group), comme le fait le bouton `New Table Group` de la [barre d’outils du canevas](./table-related-functions.md#canvas-toolbar), et un second appui annule le tracé. `Group Selected Tables` consiste en deux appuis sans touche de modification, `T` puis `G` en moins d’une seconde. Il place les tables sélectionnées dans un nouveau groupe et ouvre son éditeur de nom, comme le fait `Group selected tables` dans le menu contextuel d’une table, et ne fait rien lorsqu’aucune table n’est sélectionnée (voir [Grouper les tables sélectionnées](./table-groups.md#grouping-selected-tables)). Aucun des deux n’a d’effet dans un éditeur en lecture seule ni lorsque les groupes sont [masqués](./table-groups.md#hiding-groups).
+Dans un éditeur en lecture seule, seules les touches de lecture fonctionnent : `Search`, `Toggle Explorer`, `Stop`, `Table Properties` et `Focus on this table` sur la table qu’un saut a sélectionnée, les trois touches de zoom, `Zen Mode`, la copie et les flèches, qui déplacent la cellule active. `Editing`, chaque touche `Add` et `Remove`, `Delete Selection`, `Primary Key`, les deux touches de sélection totale, les quatre touches de relation, `Add Table Group`, `Group Selected Tables`, `Hand Tool` et le collage ne font rien, et `Undo` et `Redo` n’annulent ni ne rétablissent rien (voir [Éditeurs en lecture seule](./table-related-functions.md#read-only-editors)).
 `Zoom In`, `Zoom Out` et `Zoom Reset` agissent aussi sur le zoom de l’onglet [Visualisation](./visualization.md#toolbar), en mode `Graph` comme en mode `Flow`, sauf si la recherche rapide est ouverte.
 En mode `Flow`, `Undo` et `Redo` reviennent en arrière et avancent parmi les vues restreintes successives du mode Flux, comme le font ses boutons `Previous table` et `Next table`, sauf si la recherche rapide est ouverte. Ils n’y annulent jamais les modifications du diagramme, et en mode `Graph` ils ne font rien (voir [Table précédente et table suivante](./visualization.md#previous-table-and-next-table)).
 Dans l’onglet Visualisation, `Stop` ferme aussi le menu d’[affichage des lignes](./visualization.md#row-display) et annule une [disposition en mode Flux](./visualization.md#how-flow-is-placed) encore en cours ; il n’élargit pas une vue restreinte avec `Focus on this table`.
@@ -160,3 +156,13 @@ L’onglet `Shortcuts` liste alors les raccourcis clavier de l’hôte : une co
 Les touches de ligne de l’onglet Dictionnaire suivent `Add Column` et `Remove Column`, si bien que réaffecter l’un ou l’autre les déplace (voir [`dictionaryRowChords`](../../api/erd-editor-element.md#dictionaryrowchords)).
 
 Dans Obsidian, ces touches parviennent à l’éditeur dès que l’onglet Obsidian du diagramme est actif, même lorsqu’un raccourci Obsidian utilise la même touche, comme `Alt + Enter`, `Ctrl + K` et `Ctrl + F` (Windows/Linux) ou `⌥ + Enter`, `⌘ + K` et `⌘ + F` (Mac). Il en va de même pour le raccourci `Alt + Shift + Enter` (Windows/Linux) ou `⌥ + Shift + Enter` (Mac) de l’onglet Dictionnaire, qui ne figure sur aucune ligne de cette liste. Tous les autres raccourcis Obsidian continuent d’y fonctionner. Pour `Ctrl + F` ou `⌘ + F`, voir [La barre de recherche du navigateur](./find-and-replace.md#the-browsers-find-bar).
+
+## Éditeurs en lecture seule {#read-only-editors}
+
+Dans un éditeur [`readonly`](../../api/erd-editor-element.md#readonly), l’onglet Paramètres affiche les paramètres du diagramme et n’en modifie aucun. Un badge `Read only` se tient à côté du titre de chaque page, `Preferences` et `Shortcuts`.
+Les interrupteurs `Relationship DataType Sync` et `Maximum comment width` ainsi que le champ de largeur sont désactivés, tout comme chaque bouton de verrou. Les lignes de `Column Order` n’affichent aucune poignée et ne se font pas glisser.
+Chaque ligne de `Lock` affiche toujours sa valeur. Une ligne verrouillée montre la valeur que conserve le fichier, et une ligne déverrouillée le paramètre tel que cet écran l’a, ce qui peut différer de celui du fichier, comme ci-dessous.
+
+Les paramètres qui décident de ce que l’écran affiche changent encore à cet endroit : la position de la vue et le zoom, l’onglet, l’affichage des noms, le SGBD, le langage du générateur de code, les deux casses des noms, le délimiteur et les bascules de [`View Option`](./table-related-functions.md#table-view-options).
+Chacun ne change que cet écran, quel que soit son verrou. Il n’est ni enregistré dans le fichier ni écrit par une exportation JSON, ni consigné dans l’historique d’annulation, ni compté comme une modification, et n’atteint jamais les collaborateurs. Les panneaux d’options des onglets [Schéma SQL](./schema-sql.md#options-panel) et [Générateur de code](./code-generator.md#options-panel) légendent ces choix `This window only`, à la place de `Saved in the document`.
+Quand l’éditeur redevient modifiable, le SGBD, le langage, les casses des noms, le délimiteur et les bascules de View Option reviennent aux valeurs du fichier. La vue, l’onglet et l’affichage des noms restent tels que vous les avez laissés, et le fichier prend chacun d’eux, comme son verrou le permet, à votre prochain changement.

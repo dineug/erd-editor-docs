@@ -37,7 +37,7 @@ JSON 檔案會保留其原有的位置。結構描述 SQL、GraphQL、DBML 或 A
 
 接著圖表會一次完成取代，因此中間不會顯示任何過渡狀態。在排列資料表期間變更的設定（例如索引標籤）會保留下來；若在此期間匯入另一個檔案，則以最後開始的匯入為準。
 
-唯讀編輯器不會從 `Import` 載入任何內容，也不提供 `Import and Add` 或「字典」索引標籤的 `Import CSV`。
+唯讀編輯器不會匯入任何內容。它的畫布右鍵選單和快速搜尋都不提供 `Import` 或 `Import and Add`，也不顯示歡迎畫面，而「字典」索引標籤不提供 `Import CSV`。
 
 ### 匯入並加入 {#import-and-add}
 
@@ -215,7 +215,7 @@ DBML 也會在兩個方向保留資料表顏色（不含任何透明度）和每
 - Schema SQL：開啟「[結構描述 SQL](./schema-sql.md#saving-or-copying-the-sql)」索引標籤，同時開啟其選項面板，並讓 `Save file` 按鈕取得焦點，因此按 `Enter` 即可將該索引標籤所顯示的 SQL 儲存為 `.sql`。在此之前不會儲存任何內容。
 - Image：開啟 `Export image` 對話方塊，可將圖表儲存為 `.png` 或 `.svg`，或以 PNG 格式複製到剪貼簿，請參閱[圖片](#image)。
 
-這三個項目在唯讀編輯器中都能使用。  
+這三個項目在唯讀編輯器中都能使用，而 `Export` 是其畫布選單所保留的少數項目之一。在那裡，json 寫出的是檔案所持有的設定，而不是只在該畫面上變更的檢視、索引標籤、名稱顯示、資料庫、程式碼設定或 `View Option` 切換，請參閱設定中的[唯讀編輯器](./settings.md#read-only-editors)。  
 「字典」索引標籤自己的 `Export CSV` 不在此子選單中，它會將其 `Domains`、`Words` 或 `Terms` 工作表儲存為 CSV 檔案。與這三個項目不同，唯讀編輯器中不提供此項目，請參閱[匯入與匯出 CSV](./dictionary.md#importing-and-exporting-csv)。
 
 結構描述 SQL 會在每個關聯的 `REFERENCES` 之後寫出其 ON DELETE 和 ON UPDATE，ON DELETE 在前。`Not set` 不會寫出任何內容，而選取的資料庫不接受的動作會被省略。關於各資料庫接受哪些動作，請參閱[編輯關聯](./relationship-editing.md#on-delete-and-on-update)。

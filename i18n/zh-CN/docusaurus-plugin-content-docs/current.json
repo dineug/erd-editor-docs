@@ -8,7 +8,7 @@
     "description": "The label for category 'Guides' in sidebar 'docs'"
   },
   "sidebar.docs.category.Guides.link.generated-index.description": {
-    "message": "绘制和编辑图的方法：创建表与关系、导入和导出文件，以及编辑器的显示选项。",
+    "message": "绘制和编辑图的方法，从创建表与关系到导入和导出文件以及编辑器的显示选项，还有如何在其他网站上以只读方式显示图。",
     "description": "The generated-index page description for category 'Guides' in sidebar 'docs'"
   },
   "sidebar.api.category.Advanced": {

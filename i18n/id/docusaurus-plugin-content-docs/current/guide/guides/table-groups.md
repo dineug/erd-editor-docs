@@ -167,7 +167,7 @@ Selama grup disembunyikan:
 - Penjelajah tidak menampilkan folder `Table Groups`, dan Temukan dan Ganti tidak menemukan maupun mengganti nama grup, bahkan saat `Table group names` aktif.
 - [Tata Letak Otomatis](#auto-layout) masih menjaga tabel setiap grup tetap bersama, tab Skema SQL masih menawarkan [grup untuk dipilih](#schema-sql-by-group), DBML masih menuliskannya, dan [Impor dan Tambahkan](./file-import-export.md#import-and-add) masih menempatkan hasilnya di bawah kotak yang tersembunyi.
 
-Pilihan ini disimpan di dokumen dan dicatat di [riwayat pembatalan](./undo-redo.md#what-the-history-records), seperti sakelar opsi tampilan lainnya.
+Pilihan ini disimpan di dokumen dan dicatat di [riwayat pembatalan](./undo-redo.md#what-the-history-records), seperti sakelar opsi tampilan lainnya. Di editor hanya baca, pilihan ini tetap berada di layar itu — lihat [Editor hanya baca](#read-only-editors).
 
 ## Tata Letak Otomatis {#auto-layout}
 
@@ -197,11 +197,13 @@ Pilihan ini milik jendela editor dan tidak disimpan di dokumen.
 
 ## Editor hanya baca {#read-only-editors}
 
-Di editor [`readonly`](../../api/erd-editor-element.md#readonly), grup digambar dan dicantumkan di Penjelajah seperti biasa serta dapat dipilih dan dituju, tetapi tidak dapat diubah:
+Di editor [`readonly`](../../api/erd-editor-element.md#readonly), grup digambar dan dicantumkan di Penjelajah seperti biasa serta dapat dituju, tetapi tidak dapat diubah:
 
-- Menekan bilah judul memilih grup dan tidak memindahkan apa pun. Tidak ada pegangan ubah ukuran dan tidak ada `x`.
-- Klik dua kali pada bilah judul tidak membuka editor nama, dan menu grup hanya berisi `Select tables`.
-- Menu kanvas tidak memiliki `New Table Group`, menu tabel tidak memiliki `Group selected tables` maupun `Remove from group`, dan Pencarian Cepat tidak mencantumkan kedua perintah grup tersebut. Penggambaran `New Table Group` berakhir saat editor menjadi hanya baca.
-- [Bilah alat kanvas](./table-related-functions.md#canvas-toolbar) tidak menampilkan satu pun tombol tambahnya, termasuk `New Table Group`, dan `Alt + G` (Windows/Linux) atau `⌥ + G` (Mac) dan `T` lalu `G` tidak melakukan apa pun.
-- Opsi tampilan `Table Groups` tidak mengubah apa pun, seperti halnya semua opsi tampilan.
+- [Menuju grup](#going-to-a-group) memilihnya, dan itulah satu-satunya cara grup dipilih di sana. Menekan bilah judul tidak memilih apa pun dan tidak memindahkan apa pun: jika diseret, ia menggeser kanvas, dan klik yang tidak bergerak menghapus pilihan yang ditinggalkan sebuah lompatan.
+- Tidak ada pegangan ubah ukuran dan tidak ada `x`, dan klik dua kali pada bilah judul tidak membuka editor nama.
+- Klik kanan pada grup tidak membuka menu apa pun, dan menu tabel hanya berisi `Table Properties`.
+- Menu kanvas tidak memiliki `New Table Group`, dan Pencarian Cepat tidak mencantumkan kedua perintah grup tersebut. Penggambaran `New Table Group` berakhir saat editor menjadi hanya baca.
+- [Bilah alat kanvas](./table-related-functions.md#canvas-toolbar) hanya mempertahankan kontrol tampilannya, sehingga tidak memiliki tombol `New Table Group`, dan `Alt + G` (Windows/Linux) atau `⌥ + G` (Mac) dan `T` lalu `G` tidak melakukan apa pun.
+- Seretan tabel atau grup yang sedang berlangsung saat editor menjadi hanya baca berhenti di tempatnya dan tidak mengubah grup mana pun, dan perubahan ukuran grup yang sedang berlangsung berakhir tanpa mengubah ukurannya.
+- `View Option` → `Table Groups` menampilkan atau menyembunyikan grup di layar itu saja, seperti setiap View Option di sana: dokumen, kolaborator, dan riwayat pembatalan mempertahankan pilihan seperti semula, dan saat editor dapat menulis lagi, pilihan dokumen dikembalikan.
 - Pilihan `Tables` di tab Skema SQL tetap berfungsi.

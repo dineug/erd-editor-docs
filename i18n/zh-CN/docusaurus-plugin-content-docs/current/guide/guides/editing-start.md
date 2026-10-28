@@ -10,7 +10,8 @@ description: 从欢迎界面开始，并通过画布右键菜单、画布工具�
 ![右键点击画布，打开 Relationship 子菜单，新建表后再打开该表自身的菜单](/img/demo-context-menu.webp)
 
 在表、备注、表分组或关系上右键则会打开该项自身的菜单。  
-在已经选中的表、备注或表分组上右键点击时，整个选中范围都会保留，因此 `Color` 和 `Delete selected` 等条目会作用于所有选中的对象，参见[多选](./table-related-functions.md#多选)。
+在已经选中的表、备注或表分组上右键点击时，整个选中范围都会保留，因此 `Color` 和 `Delete selected` 等条目会作用于所有选中的对象，参见[多选](./table-related-functions.md#多选)。  
+只读编辑器不创建任何内容，因此本页所述的内容在那里都不提供：画布菜单只保留 `View Option`、`Name View`、`Export` 和 `Diff Viewer`，表的菜单只保留 `Table Properties`，备注、表分组或关系都不会打开菜单，参见[只读编辑器](./table-related-functions.md#read-only-editors)。
 
 ## 欢迎界面
 

@@ -167,7 +167,7 @@ Cât timp grupurile sunt ascunse:
 - Exploratorul omite folderul `Table Groups`, iar funcția Găsire și înlocuire nici nu găsește, nici nu înlocuiește numele grupurilor, chiar dacă butonul `Table group names` este activat.
 - [Aranjarea automată](#auto-layout) păstrează în continuare împreună tabelele fiecărui grup, fila Schemă SQL oferă în continuare [grupurile din care puteți alege](#schema-sql-by-group), DBML le include în continuare, iar [Import și adăugare](./file-import-export.md#import-and-add) plasează în continuare conținutul adăugat sub chenarele ascunse.
 
-Alegerea se salvează în document și se înregistrează în [istoricul anulărilor](./undo-redo.md#what-the-history-records), la fel ca celelalte opțiuni de afișare.
+Alegerea se salvează în document și se înregistrează în [istoricul anulărilor](./undo-redo.md#what-the-history-records), la fel ca celelalte opțiuni de afișare. Într-un editor doar în citire rămâne în schimb pe acel ecran (consultați [Editoare doar în citire](#read-only-editors)).
 
 ## Aranjare automată {#auto-layout}
 
@@ -197,11 +197,13 @@ Alegerea aparține ferestrei editorului și nu se salvează în document.
 
 ## Editoare doar în citire {#read-only-editors}
 
-Într-un editor cu atributul [`readonly`](../../api/erd-editor-element.md#readonly), grupurile sunt desenate și listate în explorator ca de obicei și pot fi selectate, iar la ele se poate face salt, dar nu pot fi modificate:
+Într-un editor cu atributul [`readonly`](../../api/erd-editor-element.md#readonly), grupurile sunt desenate și listate în explorator ca de obicei și se poate face salt la ele, dar nu pot fi modificate:
 
-- O apăsare pe o bară de titlu selectează grupul și nu mută nimic. Nu există mânere de redimensionare și nici buton `x`.
-- Un dublu clic pe bara de titlu nu deschide editorul numelui, iar meniul grupului conține doar `Select tables`.
-- Meniul pânzei nu are `New Table Group`, meniul tabelului nu are `Group selected tables` sau `Remove from group`, iar căutarea rapidă nu listează niciuna dintre comenzile de grup. O trasare pornită cu `New Table Group` se încheie când editorul trece în modul doar în citire.
-- [Bara de instrumente a pânzei](./table-related-functions.md#canvas-toolbar) nu afișează niciunul dintre butoanele sale de adăugare, inclusiv `New Table Group`, iar `Alt + G` (Windows/Linux) sau `⌥ + G` (Mac) și `T` apoi `G` nu au niciun efect.
-- Opțiunea de afișare `Table Groups` nu schimbă nimic, ca toate opțiunile de afișare.
+- [Saltul la un grup](#going-to-a-group) îl selectează, iar acesta este singurul mod în care un grup este selectat acolo. O apăsare pe o bară de titlu nu selectează nimic și nu mută nimic: trasă, deplasează pânza, iar un clic fără mișcare șterge selecția lăsată de un salt.
+- Nu există mânere de redimensionare și nici buton `x`, iar un dublu clic pe bara de titlu nu deschide editorul numelui.
+- Un clic dreapta pe un grup nu deschide niciun meniu, iar meniul tabelului conține doar `Table Properties`.
+- Meniul pânzei nu are `New Table Group`, iar căutarea rapidă nu listează niciuna dintre comenzile de grup. O trasare pornită cu `New Table Group` se încheie când editorul trece în modul doar în citire.
+- [Bara de instrumente a pânzei](./table-related-functions.md#canvas-toolbar) păstrează doar controalele de vizualizare, așa că nu are butonul `New Table Group`, iar `Alt + G` (Windows/Linux) sau `⌥ + G` (Mac) și `T` apoi `G` nu au niciun efect.
+- O tragere de tabele sau de grup în curs în momentul în care editorul devine doar în citire se oprește unde se află și nu schimbă niciun grup, iar o redimensionare de grup în curs se încheie fără să schimbe dimensiunea.
+- `View Option` → `Table Groups` afișează sau ascunde grupurile doar pe acel ecran, ca orice View Option de acolo: documentul, colaboratorii și istoricul anulărilor păstrează alegerea așa cum era, iar când editorul devine din nou editabil, revine alegerea documentului.
 - Alegerea `Tables` din fila Schemă SQL funcționează în continuare.

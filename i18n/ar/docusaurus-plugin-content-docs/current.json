@@ -8,7 +8,7 @@
     "description": "The label for category 'Guides' in sidebar 'docs'"
   },
   "sidebar.docs.category.Guides.link.generated-index.description": {
-    "message": "طريقة رسم المخطط وتحريره: إنشاء الجداول والعلاقات، واستيراد الملفات وتصديرها، وخيارات العرض في المحرر.",
+    "message": "طريقة رسم المخطط وتحريره، من إنشاء الجداول والعلاقات إلى استيراد الملفات وتصديرها وخيارات العرض في المحرر، وطريقة عرضه للقراءة فقط في موقع آخر.",
     "description": "The generated-index page description for category 'Guides' in sidebar 'docs'"
   },
   "sidebar.api.category.Advanced": {

@@ -167,7 +167,7 @@ Enquanto os grupos estão ocultos:
 - O explorador omite a sua pasta `Table Groups`, e Localizar e substituir não localiza nem substitui nomes de grupos, mesmo com o botão `Table group names` ativado.
 - A [disposição automática](#auto-layout) continua a manter juntas as tabelas de cada grupo, o separador Esquema SQL continua a propor os [grupos à escolha](#schema-sql-by-group), o DBML continua a escrevê-los e [Importar e adicionar](./file-import-export.md#import-and-add) continua a colocar o conteúdo importado abaixo das caixas ocultas.
 
-A escolha é guardada no documento e registada no [histórico de anulação](./undo-redo.md#what-the-history-records), tal como os outros interruptores do menu Opções de vista.
+A escolha é guardada no documento e registada no [histórico de anulação](./undo-redo.md#what-the-history-records), tal como os outros interruptores do menu Opções de vista. Num editor só de leitura, fica antes nesse ecrã — consulte [Editores só de leitura](#read-only-editors).
 
 ## Disposição automática {#auto-layout}
 
@@ -197,11 +197,13 @@ A escolha pertence à janela do editor e não é guardada no documento.
 
 ## Editores só de leitura {#read-only-editors}
 
-Num editor [`readonly`](../../api/erd-editor-element.md#readonly), os grupos são desenhados e listados no explorador como habitualmente, e é possível selecioná-los e ir para eles, mas não alterá-los:
+Num editor [`readonly`](../../api/erd-editor-element.md#readonly), os grupos são desenhados e listados no explorador como habitualmente e é possível ir para eles, mas não alterá-los:
 
-- Premir uma barra de título seleciona o grupo e não move nada. Não há pegas de redimensionamento nem `x`.
-- Um duplo clique na barra de título não abre o editor de nome, e o menu do grupo só contém a opção `Select tables`.
-- O menu da tela não tem a opção `New Table Group`, o menu da tabela não tem as opções `Group selected tables` nem `Remove from group`, e a pesquisa rápida não lista nenhum dos dois comandos de grupo. Um desenho iniciado com `New Table Group` termina quando o editor passa a só de leitura.
-- A [barra de ferramentas da tela](./table-related-functions.md#canvas-toolbar) não mostra nenhum dos seus botões de adicionar, incluindo o botão `New Table Group`, e `Alt + G` (Windows/Linux) ou `⌥ + G` (Mac), bem como `T` e depois `G`, não fazem nada.
-- A opção de vista `Table Groups` não altera nada, tal como todas as opções do menu Opções de vista.
+- [Ir para um grupo](#going-to-a-group) seleciona-o, e essa é a única forma de selecionar um grupo aí. Premir uma barra de título não seleciona nada nem move nada: arrastada, desloca a tela, e um clique que não se move retira a seleção que um salto deixou.
+- Não há pegas de redimensionamento nem `x`, e um duplo clique na barra de título não abre o editor de nome.
+- Um clique com o botão direito num grupo não abre nenhum menu, e o menu da tabela só contém `Table Properties`.
+- O menu da tela não tem a opção `New Table Group`, e a pesquisa rápida não lista nenhum dos dois comandos de grupo. Um desenho iniciado com `New Table Group` termina quando o editor passa a só de leitura.
+- A [barra de ferramentas da tela](./table-related-functions.md#canvas-toolbar) mantém apenas os seus controlos de vista, pelo que não tem o botão `New Table Group`, e `Alt + G` (Windows/Linux) ou `⌥ + G` (Mac), bem como `T` e depois `G`, não fazem nada.
+- Um arrastamento de tabelas ou de um grupo em curso quando o editor passa a só de leitura pára onde está e não altera nenhum grupo, e um redimensionamento de grupo em curso termina sem alterar o tamanho.
+- `View Option` → `Table Groups` mostra ou oculta os grupos apenas nesse ecrã, tal como toda a opção de View Option aí: o documento, os colaboradores e o histórico de anulação mantêm a escolha como estava, e, quando o editor volta a ser editável, a escolha do documento é reposta.
 - A escolha `Tables` do separador Esquema SQL continua a funcionar.

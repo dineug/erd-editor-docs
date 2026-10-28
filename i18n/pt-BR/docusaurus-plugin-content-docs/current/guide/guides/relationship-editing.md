@@ -1,6 +1,6 @@
 ---
 sidebar_position: 7
-description: Excluir um relacionamento, alterar seu tipo, definir suas ações ON DELETE e ON UPDATE, mapeá-lo para colunas existentes com Mapear colunas, ler a notação dos conectores, trabalhar com relacionamentos N:M e identificadores e ver o que as novas colunas de chave estrangeira copiam da sua chave e como são nomeadas.
+description: Excluir um relacionamento, alterar seu tipo, definir suas ações ON DELETE e ON UPDATE, mapeá-lo para colunas existentes com Mapear colunas, ler a notação dos conectores e como eles são traçados em volta das tabelas, trabalhar com relacionamentos N:M e identificadores e ver o que as novas colunas de chave estrangeira copiam da sua chave e como são nomeadas.
 ---
 
 # Edição de relacionamentos
@@ -81,7 +81,7 @@ Cada linha usa uma coluna que a tabela filha já tem ou adiciona uma nova coluna
 Ela se abre de duas formas:
 
 - Ao desenhar um relacionamento, pelo botão `Map to existing columns` ao lado da tabela filha — consulte [Criação de relacionamentos](./editing-start.md#relationship-creation). `Map` então adiciona um relacionamento do tipo que está sendo desenhado.
-- Pelo item `Map Columns` do menu de contexto do relacionamento, para alterar as colunas de um relacionamento existente. `Save` então grava a alteração. Um editor somente leitura omite esse item.
+- Pelo item `Map Columns` do menu de contexto do relacionamento, para alterar as colunas de um relacionamento existente. `Save` então grava a alteração. Um editor somente leitura não abre o menu de contexto de relacionamento, então Mapear colunas não pode ser aberto ali.
 
 O subtítulo da caixa de diálogo indica as duas tabelas e o tipo de relacionamento, como `users → posts · One N`. O tipo é mostrado aqui, mas não é alterado — use [Alteração de tipo](#type-change).
 
@@ -226,6 +226,9 @@ A iluminação se apaga no próximo pressionamento do botão esquerdo ou direito
 Deslocar a área visível com o botão do meio ou com a ferramenta mão a mantém acesa, assim como recolher ou expandir uma linha no explorador ou no visualizador de diferenças, limpar a seleção com `Escape` e um salto a partir da [pesquisa rápida](./quick-search.md) ou do [botão do cartão](./visualization.md#card-buttons) de link externo do Flow.  
 A iluminação não é salva e não entra no histórico de desfazer, e os colaboradores não a veem.
 
+Em um editor [`readonly`](../../api/erd-editor-element.md#readonly), o ponteiro também acende conectores, no lugar do realce que um salto deixou. Parado sobre uma tabela, ele acende todos os conectores dessa tabela na cor de hover até sair da tabela.  
+Um clique sem movimento deixa um realce aceso até o próximo clique desse tipo: sobre uma tabela, acende os conectores dela; sobre um conector, esse conector; em qualquer outro lugar, nada. Um arrasto ali desloca o canvas e deixa esse realce como estava.
+
 Oculte os conectores no canvas ERD com a opção de exibição `Relationship`, ou só os rótulos com a opção de exibição `Referential Actions`, que está ativada por padrão — consulte [Opções de exibição da tabela](./table-related-functions.md#table-view-options).  
 Os rótulos não são desenhados em `70%` ou menos, quando as tabelas se reduzem ao nome.  
 Uma [exportação de imagem](./file-import-export.md#image) é sempre desenhada em 100%, então desenha os rótulos qualquer que seja o zoom do canvas, a menos que uma opção de exibição os oculte. Com `Background` desativado, a caixa atrás de cada rótulo também fica transparente.  
@@ -233,9 +236,10 @@ O [modo Flow](./visualization.md#flow-mode) da aba Visualização desenha os con
 
 ## Traçado dos conectores {#connector-routing}
 
-Os conectores são traçados ortogonalmente.  
-Um traçado contorna as tabelas que ficam entre suas duas extremidades em vez de cruzá-las, e seus cantos são arredondados.  
-Cada extremidade sai da sua tabela em um trecho reto curto antes de virar, então duas tabelas próximas cujas extremidades do conector se alinham são unidas por uma única linha reta em vez de um desvio.  
+Os conectores são traçados ortogonalmente, e seus cantos são arredondados.  
+Um traçado contorna as tabelas que estão no seu caminho em vez de atravessá-las. Onde todo traçado de poucas curvas entre suas duas extremidades cruzaria uma tabela, como em um diagrama cheio, o conector faz um caminho em volta com quantas curvas forem necessárias. Somente onde nenhum caminho em volta é encontrado ele ainda cruza uma tabela.  
+Um conector sai de suas duas tabelas por um par de lados voltados um para o outro sempre que existir um, e cada extremidade sai da sua tabela em um trecho reto curto antes de virar, então duas tabelas próximas cujas extremidades do conector se alinham são unidas por uma única linha reta em vez de um desvio.  
+Duas tabelas frente a frente a uma distância menor que essa, mesmo a menos de `40px`, mantêm os lados voltados um para o outro, e onde suas extremidades não se alinham o conector faz um desvio lateral através do vão entre elas em vez de correr por baixo de qualquer uma.  
 Os traçados que saem do mesmo lado de uma tabela são distribuídos em corredores separados para que não corram uns sobre os outros.  
 Só as tabelas são evitadas: um conector pode cruzar uma nota ou a caixa de um grupo de tabelas, e é desenhado acima dos grupos de tabelas e abaixo das tabelas e das notas.
 
@@ -243,6 +247,9 @@ Um relacionamento de uma tabela com ela mesma é desenhado como uma única curva
 Outras autorreferências na mesma tabela se aninham por fora da primeira, de modo que suas curvas não se cruzam nem cruzam a tabela.
 
 Não há nada a configurar.  
-Os traçados são recalculados automaticamente sempre que algo no canvas é movido ou redimensionado, então nunca precisam ser ajustados manualmente.
+Os traçados são recalculados automaticamente sempre que algo no canvas é movido ou redimensionado, então nunca precisam ser ajustados manualmente.  
+Enquanto você arrasta, os conectores das tabelas que você move as acompanham, e todos os outros conectores mantêm o traçado que tinham quando o arrasto começou. Ao soltar, cada conector que o movimento faz mudar de traçado é redesenhado, como um que agora contorna uma tabela solta no caminho dele ou um que se endireita depois que uma tabela saiu do seu caminho.
+
+Um diagrama desenha os mesmos traçados em toda janela que o mostra na mesma exibição de nomes: uma que ficou aberta enquanto as tabelas se moviam, uma que abriu o diagrama agora há pouco e a de um colaborador, e uma [imagem exportada](./file-import-export.md#image) também os desenha. A exibição de nomes conta porque ela muda a largura das tabelas — consulte [Exibição de nomes](./logical-names.md#name-view).
 
 ![Arrasto da tabela members para baixo e de volta enquanto o conector de orders alterna entre passar à direita de categories e contorná-la pela esquerda, com todos os cantos arredondados](/img/demo-connector-routing.webp)

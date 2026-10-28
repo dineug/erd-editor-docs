@@ -8,7 +8,7 @@
     "description": "The label for category 'Guides' in sidebar 'docs'"
   },
   "sidebar.docs.category.Guides.link.generated-index.description": {
-    "message": "Jak rysować i edytować diagram: tworzenie tabel i relacji, importowanie i eksportowanie plików oraz opcje widoku edytora.",
+    "message": "Jak rysować i edytować diagram, od tworzenia tabel i relacji po importowanie i eksportowanie plików oraz opcje widoku edytora, a także jak pokazać go tylko do odczytu na innej stronie.",
     "description": "The generated-index page description for category 'Guides' in sidebar 'docs'"
   },
   "sidebar.api.category.Advanced": {

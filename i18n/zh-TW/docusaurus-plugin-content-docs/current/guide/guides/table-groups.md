@@ -167,7 +167,7 @@ description: 將相關的資料表收進繪製於其後方、具有名稱和顏�
 - 物件總管會省略其 `Table Groups` 資料夾，即使開啟了 `Table group names`，尋找與取代也不會尋找或取代群組名稱。
 - [自動版面配置](#auto-layout)仍會讓各群組的資料表保持在一起，「結構描述 SQL」索引標籤仍會提供[可供選擇的群組](#schema-sql-by-group)，DBML 仍會寫出群組，[匯入並加入](./file-import-export.md#import-and-add)仍會將內容放置在隱藏的方框下方。
 
-與其他檢視選項的切換按鈕一樣，此選擇會儲存在文件中，並記錄在[復原歷程記錄](./undo-redo.md#what-the-history-records)中。
+與其他檢視選項的切換按鈕一樣，此選擇會儲存在文件中，並記錄在[復原歷程記錄](./undo-redo.md#what-the-history-records)中。在唯讀編輯器中，此選擇改為只留在該畫面上，請參閱[唯讀編輯器](#read-only-editors)。
 
 ## 自動版面配置 {#auto-layout}
 
@@ -197,11 +197,13 @@ description: 將相關的資料表收進繪製於其後方、具有名稱和顏�
 
 ## 唯讀編輯器 {#read-only-editors}
 
-在 [`readonly`](../../api/erd-editor-element.md#readonly) 編輯器中，群組會照常繪製並列在物件總管中，也可以選取和前往，但無法變更：
+在 [`readonly`](../../api/erd-editor-element.md#readonly) 編輯器中，群組會照常繪製並列在物件總管中，也可以前往，但無法變更：
 
-- 在標題列上按下會選取群組，但不會移動任何項目。沒有調整大小控點，也沒有 `x`。
-- 在標題列上按兩下不會開啟名稱輸入框，群組選單中只有 `Select tables`。
-- 畫布選單中沒有 `New Table Group`，資料表選單中沒有 `Group selected tables` 或 `Remove from group`，快速搜尋也不會列出這兩個群組命令。編輯器變為唯讀時，`New Table Group` 的繪製會結束。
-- [畫布工具列](./table-related-functions.md#canvas-toolbar)不會顯示任何新增按鈕（包括 `New Table Group`），`Alt + G` (Windows/Linux) 或 `⌥ + G` (Mac)，以及先按 `T` 再按 `G`，都不會有任何作用。
-- 與所有檢視選項一樣，`Table Groups` 檢視選項不會變更任何內容。
+- [前往群組](#going-to-a-group)會選取它，而這是群組在那裡被選取的唯一方式。在標題列上按下不會選取任何東西，也不會移動任何項目：拖曳它會平移畫布，而單擊（不移動）會取消跳至目標所留下的選取範圍。
+- 沒有調整大小控點，也沒有 `x`，在標題列上按兩下不會開啟名稱輸入框。
+- 在群組上按滑鼠右鍵不會開啟任何選單，而資料表選單中只有 `Table Properties`。
+- 畫布選單中沒有 `New Table Group`，快速搜尋也不會列出這兩個群組命令。編輯器變為唯讀時，`New Table Group` 的繪製會結束。
+- [畫布工具列](./table-related-functions.md#canvas-toolbar)只保留其檢視控制項，因此沒有 `New Table Group` 按鈕，`Alt + G` (Windows/Linux) 或 `⌥ + G` (Mac)，以及先按 `T` 再按 `G`，都不會有任何作用。
+- 編輯器變為唯讀時，進行中的資料表或群組拖曳會停在原處且不變更任何群組，進行中的群組調整大小則會結束且不變更大小。
+- `View Option` → `Table Groups` 會只在該畫面上顯示或隱藏群組，在那裡所有 View Option 都是如此：文件、協作者和復原歷程記錄會保留原來的選擇，而編輯器再次轉為可寫入後，會恢復文件的選擇。
 - 「結構描述 SQL」索引標籤的 `Tables` 選擇仍可正常運作。

@@ -237,4 +237,5 @@ Pritisk na kartico nikoli ne doda relacije. Če ste zavihek ERD zapustili med ri
 Spremembe sodelavcev dosežejo diagram tudi, medtem ko ste v načinu Tok, kartice pa sledijo tabelam in relacijam, ki jih dodajo ali odstranijo – glejte razdelek [Kako način Tok razporedi kartice](#how-flow-is-placed).  
 Njihovi obroči izbora in fokusa se narišejo na karticah, njihovi kazalci in okvirji vlečenja pa ne – glejte stran [Sodelovalno urejanje](../../api/advanced/collaborative-editing.md).
 
-Oba načina, vključno z osredotočanjem in koraki, delujeta tudi v urejevalniku z lastnostjo `readonly`, prav tako pa tudi seznam `Name View`, ki tam preklopi samo vaš zaslon.
+Oba načina, vključno z osredotočanjem in koraki, delujeta tudi v urejevalniku z lastnostjo [`readonly`](../../api/erd-editor-element.md#readonly), prav tako pa tudi seznam `Name View`, ki tam preklopi samo vaš zaslon.  
+Na zavihku ERD urejevalnika samo za branje meni tabele vsebuje samo `Table Properties`, pritisk pa ne izbere nobene tabele, zato se osredotočite z `Alt + F` (Windows/Linux) ali `⌥ + F` (Mac) na tabeli, ki jo je izbral skok iz [raziskovalca](./explorer.md#going-to-a-row) ali [hitrega iskanja](./quick-search.md).

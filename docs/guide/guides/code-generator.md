@@ -25,7 +25,8 @@ When the selected language ignores `Database` or the name cases, they stay in th
 `Save file` and `Copy` sit at the foot of the panel — see [Saving or Copying the Result](#saving-or-copying-the-result).
 
 These are the diagram's own settings, the ones the context menu and Quick Search change too. `Database` is saved in the file like any edit.  
-`Language`, `Table Name Case`, `Column Name Case`, and `Bracket` are saved only while their lock on the Settings tab is off (`Bracket Type` for `Bracket`), and a new diagram has every lock on. While a lock is on, a change rewrites the code on your screen, but the file keeps the locked value and the diagram reopens with it. The panel shows no sign of a lock; to keep a choice in the file, turn its lock off — see [Lock](./settings.md#lock).
+`Language`, `Table Name Case`, `Column Name Case`, and `Bracket` are saved only while their lock on the Settings tab is off (`Bracket Type` for `Bracket`), and a new diagram has every lock on. While a lock is on, a change rewrites the code on your screen, but the file keeps the locked value and the diagram reopens with it. The panel shows no sign of a lock; to keep a choice in the file, turn its lock off — see [Lock](./settings.md#lock).  
+In a read-only editor the caption reads `This window only` instead, since a change there reaches only that window — see [Read-only Editors](#read-only-editors).
 
 ## Language
 
@@ -138,3 +139,10 @@ The Export menu has no Code Generator entry, and the `Code Generator` tab of Tab
 To copy the code, click `Copy` at the foot of the panel, or hover the code and click the copy button at its top right, the only way in Table Properties.  
 A `Copied!` toast with a check mark confirms for two seconds. If the browser or host refuses the clipboard, a `Couldn't copy to the clipboard` toast with a warning sign says so instead, for five seconds. Copying again replaces the toast rather than adding another.  
 The text is selectable as well, so you can take only the part you need.
+
+## Read-only Editors
+
+In a [`readonly`](../../api/erd-editor-element.md#readonly) editor the panel's lists, the context menu, and Quick Search still change `Language`, `Database`, `Table Name Case`, `Column Name Case`, and `Bracket`, but only in that window, so the panel captions them `This window only` rather than `Saved in the document`.  
+A change rewrites the code on that screen and is not saved in the file, shared with collaborators, or recorded for undo, whatever the locks say, and a collaborator's change to a setting you picked leaves your pick on the screen. `Database` and `Bracket` are the Schema SQL tab's settings too, so a pick here shows there in the same window — see [Read-only Editors](./schema-sql.md#read-only-editors).  
+Once the editor turns writable again, the document's settings come back and the code is written for them.  
+`Save file` and `Copy` save and copy the code shown.

@@ -55,6 +55,10 @@ Zolang de vergrendeling aanstaat, is de wissel alleen zichtbaar op de editor waa
 Zolang de vergrendeling uitstaat, verandert een wissel in een editor die kan bewerken, de naamweergave op elke editor en replica, waarbij de laatste wissel de doorslag geeft, en slaan ze die allemaal op.  
 Een wissel die een editor in alleen-lezenmodus zelf maakt, blijft altijd op die editor, en die editor volgt nog steeds de gedeelde wissels van de andere editors.
 
+Sinds `5.0.0` verstuurt een editor in [alleen-lezenmodus](../erd-editor-element.md#readonly) helemaal geen wijzigingen. Het scrollen, zoomen, wisselen van tabblad, de naamweergave, het databasesysteem, de taal van de Codegenerator, de naamnotaties, het type aanhalingstekens en de rijen `View Option` die zijn lezer wijzigt, blijven op zijn scherm, wat hun vergrendelingen ook aangeven; vóór `5.0.0` werden zijn scrolls, zooms, tabbladwissels, databasesysteem en code-instellingen verstuurd als die van een bewerkbare editor.  
+Zijn store verstuurt nog steeds wat zijn trackers versturen van de cursor, de focus, de selectie en het selectiekader van de lezer, beantwoordt de registers waar een editor die erbij komt om vraagt, en past elke wijziging toe die de anderen sturen. Een wijziging van het databasesysteem, van een instelling van de Codegenerator of van een rij `View Option` bereikt zijn document, en ook zijn scherm tenzij zijn lezer die instelling daar heeft gewijzigd, en een gedeelde wissel van de naamweergave verschijnt hoe dan ook op zijn scherm.  
+Op het moment dat de editor in alleen-lezenmodus gaat, verstuurt hij eerst wat de store nog achterhoudt van een sleepbeweging of een scroll, zoals [flushStreamBuffers](#flushstreambuffers) dat doet, zodat de anderen het laatste ervan houden.
+
 [Vergrendelingen](../../guide/guides/settings.md#lock) worden gedeeld: de laatste vergrendeling of ontgrendeling van een instelling geeft op elke editor de doorslag, en een vergrendeling neemt de waarden mee van de editor die haar heeft ingeschakeld, zodat elke editor en replica dezelfde waarde opslaat.  
 Een vergrendeling `Viewport` slaat daarom de weergave op van de editor die haar heeft ingeschakeld, en een vergrendeling `Canvas Type` het laatste tabblad waarop die editor was vóór het tabblad Instellingen, waar vergrendelingen worden ingeschakeld.  
 Het uitschakelen van de vergrendeling `Language`, `Table Name Case`, `Column Name Case`, `Bracket Type` of, sinds `4.2.0`, `Name View` zet die instelling op elke editor ook op de waarde die wordt getoond op de editor die de vergrendeling heeft uitgeschakeld, zodat ze één waarde blijven opslaan. Het uitschakelen van `Viewport` of `Canvas Type` verandert bij niemand de weergave of het tabblad.
@@ -71,6 +75,8 @@ De kaartknop voor een externe link, een resultaat van [Snel zoeken](../../guide/
 De koppeling van subscribe aan dispatch neemt hier de plaats van het netwerk in, zodat je de opzet van een sessie kunt zien zonder dat er een transport in de weg zit.
 
 ```js
+import '@dineug/erd-editor/erd-editor.js';
+
 const editor1 = document.createElement('erd-editor');
 const editor2 = document.createElement('erd-editor');
 

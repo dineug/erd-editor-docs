@@ -1,11 +1,20 @@
 ---
 sidebar_position: 2
-description: erd-editor 元素的 API：屬性、value 與 runtimeValue、事件、佈景主題、顯示語言、歡迎畫面、按鍵繫結，以及結構描述的匯入與匯出。
+description: erd-editor 元素的 API：註冊方式、屬性、value 與 runtimeValue、事件、佈景主題、顯示語言、歡迎畫面、按鍵繫結，以及結構描述的匯入與匯出。
 ---
 
 # ErdEditorElement
 
-編輯器是一個普通的 `HTMLElement`。  
+編輯器是一個普通的 `HTMLElement`，也就是匯入 `@dineug/erd-editor/erd-editor.js` 所定義的 `<erd-editor>` 標籤。  
+自 `5.0.0` 起，匯入套件根目錄不會定義任何標籤。根目錄將 `ErdEditorElement` 同時匯出為該元素的型別與類別，並匯出 `defineErdEditor()`，在您呼叫之處定義該標籤，請參閱[註冊元素](./installation.md#registering-the-elements)。  
+若頁面只需顯示圖表，[`<erd-viewer>`](./erd-viewer-element.md) 是另一個獨立的唯讀元素。
+
+```js
+import '@dineug/erd-editor/erd-editor.js';
+
+const editor = document.createElement('erd-editor');
+```
+
 其型別定義如下。
 
 ```ts
@@ -80,14 +89,26 @@ interface ErdEditorElement extends HTMLElement {
 
 設定編輯器是否可編輯。  
 設定此屬性期間，指派 `value`、`clear()`、`setSchemaSQL()`、`setSchemaGraphQL()`、`setSchemaDBML()`、`setSchemaAML()`、`setSchemaJSON()`、復原和重做（自 `4.2.0` 起也包括字典工作表的復原和重做）都會被忽略，也絕不會觸發 `change` 事件。請改用 [setInitialValue](#setinitialvalue) 載入文件。  
-檢視功能仍可使用：縮放、平移、手形工具、禪模式、畫布索引標籤、[視覺化](../guide/guides/visualization.md)索引標籤的兩種模式（包括聚焦資料表）、資料庫廠商，以及 SQL 與程式碼產生器的輸出設定都仍然有效，因此唯讀檢視器仍可匯出其他廠商的 SQL，或閱讀產生的程式碼。  
-自 `4.1.0` 起，[物件總管](../guide/guides/explorer.md#read-only-editors)也能開啟，選擇其中一列會前往該列所代表的項目，與在可編輯的編輯器中相同。其頂端的[尋找與取代](../guide/guides/find-and-replace.md#read-only-editors)只能尋找，沒有 `Toggle Replace` 箭頭，也沒有「取代」列，前往相符項目時仍會將其捲動到可見範圍內並加以選取。在所有編輯器中，此面板的標題都是 `Explorer`，工具列按鈕的工具提示則是 `Explorer (Ctrl + F)` (Windows/Linux) 或 `Explorer (⌘ + F)` (Mac)。從 `3.10.0` 到 `4.0.0`，尋找與取代會以標題為 `Find`、僅供尋找的浮動面板形式開啟。  
-「資料表屬性」仍可開啟，且自 `3.10.0` 起，其標題旁會顯示 `Read only` 徽章，其 `Indexes` 索引標籤也不提供任何編輯，請參閱[資料表屬性](../guide/guides/table-related-functions.md#table-properties)。  
-自 `4.0.0` 起，唯讀編輯器不提供 [`Import and Add`](../guide/guides/file-import-export.md#import-and-add)、`New Table Group`、`Group selected tables`、`Remove from group`（請參閱[資料表群組](../guide/guides/table-groups.md#read-only-editors)）或 [`Map Columns`](../guide/guides/relationship-editing.md#map-columns)，也不會顯示[歡迎畫面](#enablewelcomescreen)。「設定」索引標籤上的鎖定按鈕不會改變任何內容，「結構描述 SQL」索引標籤的 `Before tables` 和 `After tables` 指令碼也無法編輯。  
-自 `4.1.0` 起，它的[畫布工具列](../guide/guides/table-related-functions.md#canvas-toolbar)上也不會顯示 `New Table`、`New Memo` 或 `New Table Group` 按鈕，`addTableGroup` 和 `groupSelectedTables` 按鍵繫結也不會有任何作用。  
-自 `4.2.0` 起，[名稱顯示](../guide/guides/logical-names.md#read-only-editors)仍可從其每個選擇器切換，但只會作用於該編輯器自己的畫面：無論其鎖定為何，切換都絕不會傳到協作者。流程模式的 `Previous table` 和 `Next table` 仍可透過其按鈕或復原和重做按鍵逐步移動。  
-[字典](../guide/guides/dictionary.md#read-only-editors)索引標籤仍可開啟：其工作表仍可切換、搜尋、選取、捲動和複製，`Checks` 工作表的列也仍會前往其所指的項目。任何儲存格都不接受編輯、貼上或清除，該索引標籤不會顯示 `Add Row`、`Delete Rows`、`Import CSV` 或 `Export CSV` 工具，網格上也沒有選單，其列按鍵組合也不會插入或刪除任何列。資料表選單、畫布選單和快速搜尋都不提供 [`Derive Physical Names Again`](../guide/guides/dictionary.md#derive-physical-names-again) 或 `Derive Physical Name Again`。  
-「結構描述 SQL」索引標籤中標示為 `This window only` 的選項（`Statements`、`Header`、自 `4.2.0` 起的 `Write logical names into empty comments` 和 `Tables`）從不儲存，且仍然有效；[`Export image`](../guide/guides/file-import-export.md#image) 對話方塊、佈景主題建立器和顯示語言選擇器也同樣仍可使用。在佈景主題建立器或顯示語言選擇器中進行選擇，仍會觸發 [changePresetTheme](#changepresettheme) 或 [changeLocale](#changelocale)。  
+自 `5.0.0` 起，唯讀編輯器是讀者，而不是控制項被停用的編輯器。它保留六個索引標籤、[物件總管](../guide/guides/explorer.md#read-only-editors)、小地圖、快速搜尋、資料表屬性、[Diff Viewer](../guide/guides/table-related-functions.md#diff-viewer)、`Export`、禪模式，以及協作者的游標、焦點與選取範圍，而每個會編輯圖表的控制項都直接省略，不會繪製成停用狀態。在 `5.0.0` 之前，它仍會繪製許多編輯控制項，而編輯器會捨棄它們送出的內容。
+
+在 ERD 索引標籤上，無論從何處開始，拖曳都會平移，在資料表上也一樣，而按下不會選取、移動或開啟任何東西。指標停在資料表上時，會點亮其關聯；在資料表或關聯上單擊（不移動）會維持該點亮，在其他任何位置單擊（不移動）則會熄滅，與 [`<erd-viewer>`](./erd-viewer-element.md) 相同。唯一的選取範圍是跳至目標所留下的外框：前往物件總管的某一列、其尋找的某個相符項目，或 `#`、`@`、`:` 之後的快速搜尋結果，會選取它所到達的項目，下一次單擊（不移動）會將其清除。複製會複製該選取範圍所持有的內容。  
+[畫布工具列](../guide/guides/table-related-functions.md#canvas-toolbar)保留 `Zoom out`、縮放比例 (`Reset zoom`)、`Zoom in`、「名稱顯示」清單、`Zen Mode` 和指南針，沒有 `Hand` 或 `Select`，沒有 `New Table`、`New Memo` 或 `New Table Group`，也沒有關聯按鈕。畫布選單保留 `View Option`、`Name View`、`Export` 和 `Diff Viewer`，資料表選單保留 `Table Properties`，備忘錄、關聯或資料表群組不會開啟任何選單。ERD 索引標籤上的快速搜尋不會列出任何會寫入圖表的列：它保留 `Tab`、`Name View`、`Database`、`Export`、`Toggle Explorer`、由 [enableThemeBuilder](#enablethemebuilder) 和 [enableLocalePicker](#enablelocalepicker) 開啟的 `Theme` 與 `Display Language` 列，以及 `#`、`@` 和 `:` 搜尋。在其他索引標籤上，它列出的內容與可編輯的編輯器相同。工具列將資料庫名稱顯示為文字，沒有 `Undo`、`Redo` 或 `Time Travel` 按鈕。  
+沒有任何地方提供 `Import`、[`Import and Add`](../guide/guides/file-import-export.md#import-and-add)、`Auto Layout`、資料表群組列（請參閱[資料表群組](../guide/guides/table-groups.md#read-only-editors)）或 [`Map Columns`](../guide/guides/relationship-editing.md#map-columns)，也不會顯示[歡迎畫面](#enablewelcomescreen)。  
+會新增、移除或編輯的按鍵繫結都不會有任何作用：`edit`、`addTable`、`addColumn`、`addMemo`、`addTableGroup`、`groupSelectedTables`、`removeTable`、`removeColumn`、`removeSelection`、`primaryKey`、`selectAllTable`、`selectAllColumn`、四個關聯繫結和 `handTool`，每一個仍依其選項所述阻止預設行為。貼上和 `Tab` 也不會有任何作用，且會不被阻止地傳到頁面。縮放繫結、`zenMode`、`focusView`、對跳至目標所選取之資料表的 `tableProperties`、`search`、`findReplace`、複製、`Escape` 和方向鍵仍可使用。不會開啟任何儲存格、備忘錄或資料表群組名稱編輯器，也不會繪製任何關聯。
+
+位於物件總管頂端的[尋找與取代](../guide/guides/find-and-replace.md#read-only-editors)只能尋找，沒有 `Toggle Replace` 箭頭，也沒有「取代」列。在所有編輯器中，此面板的標題都是 `Explorer`，工具列按鈕的工具提示則是 `Explorer (Ctrl + F)` (Windows/Linux) 或 `Explorer (⌘ + F)` (Mac)。物件總管自 `4.1.0` 起即可在唯讀編輯器中開啟；從 `3.10.0` 到 `4.0.0`，尋找與取代會在那裡以標題為 `Find`、僅供尋找的浮動面板形式開啟。  
+「資料表屬性」可從資料表選單或 `tableProperties` 按鍵繫結開啟，且自 `3.10.0` 起，其標題旁會顯示 `Read only` 徽章，其 `Indexes` 索引標籤也不提供任何編輯，請參閱[資料表屬性](../guide/guides/table-related-functions.md#table-properties)。  
+「設定」索引標籤帶有相同的 `Read only` 徽章，並以不接受按下的控制項顯示每項設定：它的兩個開關、`Maximum comment width` 欄位和七個 `Lock` 按鈕都已停用，`Column Order` 的列也無法拖曳。「結構描述 SQL」索引標籤的 `Before tables` 和 `After tables` 指令碼無法輸入。[視覺化](../guide/guides/visualization.md)索引標籤的運作與可編輯的編輯器相同，因為那裡沒有任何操作會編輯文件；流程模式的 `Previous table` 和 `Next table` 仍可透過其按鈕或復原和重做按鍵逐步移動。  
+[字典](../guide/guides/dictionary.md#read-only-editors)索引標籤仍可開啟：其工作表仍可切換、搜尋、選取、捲動和複製，`Checks` 工作表的列也仍會前往其所指的項目。任何儲存格都不接受編輯、貼上或清除，該索引標籤不會顯示 `Add Row`、`Delete Rows`、`Import CSV` 或 `Export CSV` 工具，網格上也沒有選單，其列按鍵組合也不會插入或刪除任何列。資料表選單、畫布選單和快速搜尋都不提供 [`Derive Physical Names Again`](../guide/guides/dictionary.md#derive-physical-names-again) 或 `Derive Physical Name Again`。
+
+自 `5.0.0` 起，讀者仍可變更的設定只會留在該編輯器的畫面上：捲動和縮放、索引標籤、資料庫、程式碼產生器語言、兩種名稱大小寫、引號類型、`View Option` 各列，以及從其每個選擇器切換的[名稱顯示](../guide/guides/logical-names.md#read-only-editors)（自 `4.2.0` 起即留在畫面上）。無論其[鎖定](../guide/guides/settings.md#lock)為何，這些設定都不會傳到 `value`、`runtimeValue`、`json` 匯出、復原歷程記錄、[change](#change) 事件或共用存放區，因此無論讀者如何檢視，`value` 都保有文件的設定。設定 `readonly` 期間，[結構描述 SQL](../guide/guides/schema-sql.md#read-only-editors) 和程式碼產生器的選項面板會將這些設定標示為 `This window only`，而可編輯的編輯器則標示為 `Saved in the document`。這兩個索引標籤所顯示、複製和儲存的內容都跟隨畫面，未指定廠商而呼叫的 [getSchemaSQL](#getschemasql) 也是如此。  
+在 `5.0.0` 之前，讀者的捲動、縮放、索引標籤切換、資料庫和程式碼設定，在沒有鎖定保持它們時（資料庫從來沒有）會進入 `value`，而共用存放區會將它們送給其他編輯器。  
+「結構描述 SQL」索引標籤自己標示為 `This window only` 的選項（`Statements`、`Header`、自 `4.2.0` 起的 `Write logical names into empty comments` 和 `Tables`）在任何編輯器中都從不儲存，且仍然有效；[`Export image`](../guide/guides/file-import-export.md#image) 對話方塊、佈景主題建立器和顯示語言選擇器也同樣仍可使用。在佈景主題建立器或顯示語言選擇器中進行選擇，仍會觸發 [changePresetTheme](#changepresettheme) 或 [changeLocale](#changelocale)。
+
+設定此屬性期間，沒有任何內容會進入復原歷程記錄（包括捲動或縮放），編輯器的[共用存放區](#getsharedstore)也不會送出任何變更：只會送出其追蹤器所送出的讀者游標、焦點、選取範圍和拖曳框，以及其他編輯器加入時所要求的暫存器（請參閱[協作編輯](./advanced/collaborative-editing.md)）。它仍會套用其他編輯器送來的每一項變更。資料庫、程式碼產生器設定或 `View Option` 列的變更會送達文件，也會送達畫面（除非讀者已在該處變更了該設定），而共用的「名稱顯示」切換無論如何都會顯示在畫面上。
+
+開啟它會結束原本開著的內容：儲存格、備忘錄或資料表群組名稱編輯器、正在繪製的關聯、資料表、備忘錄、資料表群組或欄位的拖曳、Alt 拖曳的副本、備忘錄或資料表群組的調整大小、仍在執行的 Auto Layout 預覽或配置、`Map Columns`、Time Travel 和色彩選擇器。它會清除選取範圍、收起手形工具，並先送出每個共用存放區對拖曳或捲動仍保留未送的部分，如同 [flushStreamBuffers](./advanced/collaborative-editing.md#flushstreambuffers) 所做的。已轉為唯讀的「資料表屬性」、Diff Viewer 和 `Export image` 對話方塊會保持開啟，而捲動、縮放、索引標籤和「名稱顯示」維持原樣。首次掛載時就是唯讀的元素會以相同方式啟動，而由主機在頁面中移動的元素會保留跳至目標所留下的外框。  
+關閉它會帶回編輯控制項，且沒有任何選取或開啟的內容。資料庫、程式碼產生器語言、兩種名稱大小寫、引號類型和 `View Option` 各列會回到文件的設定，而捲動、縮放、索引標籤和「名稱顯示」維持讀者離開時的狀態，`value` 在讀者再次變更它們之前一直保有文件的設定。兩種切換都不會觸發 `change`。  
 只寫屬性名稱、`=""` 和 `="true"` 都會讀取為 `true`。`="false"` 會讀取為 `false`，其他任何字串也一樣，包括 HTML 慣用寫法 `readonly="readonly"`。
 
 ```js
@@ -182,6 +203,7 @@ editor.setAttribute('enable-welcome-screen', 'true');
 自 `4.0.0` 起，它是儲存形式，也就是檔案所保存的文件形式，這也是 `json` 匯出所寫出和官方主應用程式所儲存的內容。它只保存現存的實體，不含已移除的實體、堆疊順序，以及編輯器自行計算出的資訊，例如測得的寬度、鍵標記和關聯錨點。其實體的鍵依固定順序排列，以兩個空格縮排，並以換行字元結尾，因此同一份文件一律會產生相同的位元組。  
 自 `4.2.0` 起，它也會省略空的內容：空的 `doc` 清單、空的集合、不含任何內容的字典列，以及實體中空的文字屬性，例如名稱、註解、資料類型、預設值或顏色。實體內的清單（例如資料表的 `columnIds`）即使為空也仍會寫出。新文件的 `doc` 為 `{}`，且沒有 `collections`，因此請將缺少的屬性、清單或集合視為空的。它保存資料表和欄位的邏輯名稱與標示名稱是否由字典產生的旗標、欄位的定義域連結，以及詞彙、術語和定義域；每個字典都寫成一個由屬性名稱組成的標頭，後接其各列，每列佔一行，依工作表中的順序排列。請參閱[儲存形式與執行階段值](./advanced/schema.md#storage-form-and-runtime-value)。  
 [鎖定](../guide/guides/settings.md#lock)為開啟的每項設定，都會以其鎖定的值寫出，而非畫面上顯示的值。`Viewport` 鎖定保存 `originX`、`originY` 和 `zoomLevel`，`Canvas Type`、`Language`、`Table Name Case`、`Column Name Case`、`Bracket Type`，以及自 `4.2.0` 起的 `Name View`，則各自保存其對應的設定。「名稱顯示」會寫成 `nameViewMode`，且只在其值不是 `'physical'` 時寫出。其他所有設定都會依目前狀態寫出，且一律會寫出 `lockSettings`。關於各個位元，請參閱 [Settings](./advanced/schema.md#settings)；`Name View` 鎖定的位元含義正好相反。  
+自 `5.0.0` 起，[唯讀](#readonly)編輯器的讀者所變更的設定，無論是否鎖定，也都會以文件的值寫出，因為它們只會留在該畫面上。  
 新文件的所有鎖定都是開啟的，不論是元素在被賦予值之前顯示的文件，或是從空白值載入的文件。在關閉對應的鎖定之前，其 `value` 會將原點保持在 `0, 0`、縮放比例保持在 `1`，並維持 ERD 索引標籤、預設的程式碼產生器語言、名稱大小寫和引號類型，以及自 `4.2.0` 起的 `Physical Names`。  
 在 `4.0.0` 之前，它會傳回編輯器所保存的完整文件，並套用 `ignoreSaveSettings`。編輯器所保存的文件現在是 [runtimeValue](#runtimevalue)，且不再讀取或寫入 `ignoreSaveSettings`。
 
@@ -230,7 +252,7 @@ otherEditor.setInitialValue(editor.runtimeValue);
 不論哪種情況，檢視都會開啟在文件的檢視位置（文字指定了鎖定時為文字所儲存的檢視位置，未指定時為原點 `0, 0`、縮放比例 `1`），若該處未繪製任何圖表內容，則開啟在圖表上。鎖定的 `Viewport` 仍會在 `value` 中保留其鎖定的值。  
 自 `4.0.0` 起，它也會捨棄先前所保存文件的協作狀態，而此編輯器中已訂閱的[共用存放區](#getsharedstore)會再次向其他編輯器要求它們的狀態，因此在執行中工作階段裡重新載入的編輯器能夠跟上進度。以另一個編輯器的 [runtimeValue](#runtimevalue) 初始化這類編輯器。  
 非 JSON 的文字也不會引發錯誤：文件會被清空，其設定維持原樣，剖析錯誤則會記錄到主控台。  
-與指派 `value` 不同，它不受 `readonly` 阻擋，因此要將文件載入唯讀檢視器時，就是使用它。
+與指派 `value` 不同，它不受 `readonly` 阻擋，因此要將文件載入唯讀編輯器時，就是使用它。唯讀編輯器接著會顯示所載入文字持有的設定，並捨棄其讀者已在畫面上變更的設定。
 
 ```js
 editor.setInitialValue('json...');
@@ -1058,8 +1080,8 @@ editor.setSchemaJSON('json...', { mode: 'append' });
 ## getSchemaSQL {#getschemasql}
 
 將目前的編輯器狀態匯出為結構描述 SQL。  
-若未指定 `databaseVendor`，則會依目前設定的廠商運作。不在下方清單中的名稱也會以相同方式處理，且不會引發錯誤。  
-名稱會以編輯器顯示的引號類型加上引號。`Bracket Type` [鎖定](../guide/guides/settings.md#lock)期間，這可能與 `value` 儲存的引號類型不同，而程式碼代理程式的 [`erd_read`](../mcp/tools.md#reading-a-document) 使用的是後者。無論「名稱顯示」為何，寫出的名稱一律是物理名稱。  
+若未指定 `databaseVendor`，則會為編輯器所顯示的資料庫寫出：除非[唯讀](#readonly)編輯器的讀者挑選了另一個資料庫（自 `5.0.0` 起，該選擇只會留在該畫面上，也是其結構描述 SQL 索引標籤所顯示的內容），否則就是文件的資料庫。不在下方清單中的名稱也會以相同方式處理，且不會引發錯誤。  
+名稱會以編輯器顯示的引號類型加上引號。`Bracket Type` [鎖定](../guide/guides/settings.md#lock)期間，或自 `5.0.0` 起在讀者挑選了另一種引號類型的唯讀編輯器中，這可能與 `value` 儲存的引號類型不同，而程式碼代理程式的 [`erd_read`](../mcp/tools.md#reading-a-document) 使用的是後者。無論「名稱顯示」為何，寫出的名稱一律是物理名稱。  
 自 `4.0.0` 起，選用的 `options` 引數可選擇陳述式和標頭，與[結構描述 SQL](../guide/guides/schema-sql.md) 索引標籤的選項相同，自 `4.2.0` 起還可選擇是否以邏輯名稱填入空白註解。`SchemaSQLOptions` 以型別形式匯出。
 
 - `statements`：`'create'` 為預設值；`'ifNotExists'` 會在 MySQL、MariaDB、PostgreSQL、SQLite 和 Databricks 上寫出 `IF NOT EXISTS`，在其他資料庫上則退回為 `'create'`；或 `'recreate'`，會在建立資料表之前先刪除資料表，Snowflake 則改為寫出 `CREATE OR REPLACE TABLE`。
@@ -1108,6 +1130,7 @@ const commentedSQL = editor.getSchemaSQL('PostgreSQL', {
 
 傳回用於即時協作編輯的存放區。  
 `config` 為 `{ getNickname?, mouseTracker?, focusTracker? }`。兩個追蹤器皆預設為 `true`：`mouseTracker` 會將此編輯器的游標廣播給其他人，`focusTracker` 則會廣播其焦點儲存格、選取範圍和拖曳框。  
+自 `5.0.0` 起，設定 [readonly](#readonly) 期間，存放區不會送出任何變更，只會送出其追蹤器所送出的內容和加入的編輯器所要求的暫存器，但仍會套用其他編輯器送來的內容。  
 請參閱[協作編輯](./advanced/collaborative-editing.md)。
 
 ```js

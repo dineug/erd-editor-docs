@@ -4,7 +4,7 @@
     "description": "The label for category 'Guides' in sidebar 'docs'"
   },
   "sidebar.docs.category.Guides.link.generated-index.description": {
-    "message": "ダイアグラムを描いて編集する方法: テーブルとリレーションシップの作成、ファイルの読み込みと書き出し、そしてエディタの表示オプション。",
+    "message": "ダイアグラムを描いて編集する方法（テーブルとリレーションシップの作成から、ファイルの読み込みと書き出し、エディタの表示オプションまで）と、それを別のサイトで読み取り専用で表示する方法。",
     "description": "The generated-index page description for category 'Guides' in sidebar 'docs'"
   },
   "sidebar.api.category.Advanced": {

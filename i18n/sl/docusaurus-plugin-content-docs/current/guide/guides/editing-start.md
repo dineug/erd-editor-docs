@@ -10,7 +10,8 @@ Urejanje se začne v priročnem meniju, ki ga odprete s klikom z desno tipko mi�
 ![Klik z desno tipko miške na platno, odpiranje podmenija Relationship, dodajanje tabele in nato odpiranje njenega lastnega menija](/img/demo-context-menu.webp)
 
 Klik z desno tipko miške na tabelo, beležko, skupino tabel ali relacijo namesto tega odpre lastni meni tega elementa.  
-Klik z desno tipko miške na tabelo, beležko ali skupino tabel, ki je že izbrana, ohrani celoten izbor, zato postavke, kot sta `Color` in `Delete selected`, delujejo na ves izbor – glejte razdelek [Večkratni izbor](./table-related-functions.md#multiple-selection).
+Klik z desno tipko miške na tabelo, beležko ali skupino tabel, ki je že izbrana, ohrani celoten izbor, zato postavke, kot sta `Color` in `Delete selected`, delujejo na ves izbor – glejte razdelek [Večkratni izbor](./table-related-functions.md#multiple-selection).  
+Urejevalnik samo za branje ničesar ne ustvarja, zato mu nič od opisanega na tej strani ni ponujeno: meni platna ohrani samo `View Option`, `Name View`, `Export` in `Diff Viewer`, meni tabele samo `Table Properties`, beležka, skupina tabel ali relacija pa ne odprejo nobenega menija – glejte razdelek [Urejevalniki samo za branje](./table-related-functions.md#read-only-editors).
 
 ## Pozdravni zaslon {#welcome-screen}
 

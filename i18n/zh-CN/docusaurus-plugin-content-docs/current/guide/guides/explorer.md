@@ -23,7 +23,7 @@ description: 在停靠于 ERD 画布旁的树中浏览图中的表及其列、�
 - 工具栏中紧跟在 `Search` 之后、带有树形图标的 `Explorer` 按钮。其提示为 `Explorer (Ctrl + F)` (Windows/Linux) 或 `Explorer (⌘ + F)` (Mac)。
 - `Ctrl + F` (Windows/Linux) 或 `⌘ + F` (Mac)，在设置的[快捷键](./settings.md#快捷键)标签页中名为 `Toggle Explorer`。
 - [快速搜索](./quick-search.md)中的 `Toggle Explorer`，每个标签页的列表中都有。输入 `find`、`replace`、`rename`、`tree`、`outline` 或 `objects` 即可找到它。
-- 画布右键菜单中的 `Toggle Explorer`：在 ERD 画布上任何[表分组](./table-groups.md)之外的空白处点击右键。它位于 `New Table`、`New Memo` 和 `New Table Group` 之后、`Relationship` 之前。
+- 画布右键菜单中的 `Toggle Explorer`：在 ERD 画布上任何[表分组](./table-groups.md)之外的空白处点击右键。它位于 `New Table`、`New Memo` 和 `New Table Group` 之后、`Relationship` 之前。只读编辑器的画布菜单没有这一行，参见[只读编辑器](#read-only-editors)。
 
 这两个 `Toggle Explorer` 条目会在右侧显示快捷键。  
 工具栏按钮、快捷键和快速搜索中的条目在每个标签页中都有效。在 Visualization、Schema SQL、Code Generator、Dictionary 或 Settings 标签页中使用时，会先切换到 ERD 标签页，因为资源管理器只在那里显示。
@@ -168,5 +168,8 @@ Diff Viewer 也以同一类树列出其变更，参见 [Diff Viewer](./table-rel
 
 ## 只读编辑器 {#read-only-editors}
 
-在 [`readonly`](../../api/erd-editor-element.md#readonly) 编辑器中，资源管理器的使用方式与在其他编辑器中相同：提示相同的工具栏按钮、快捷键、两个 `Toggle Explorer` 条目、树、折叠、`Collapse All`，以及跳转到行，跳转时会照常选中目标。其标题同样为 `Explorer`。  
+在 [`readonly`](../../api/erd-editor-element.md#readonly) 编辑器中，资源管理器的使用方式与在其他编辑器中相同：提示相同的工具栏按钮、快捷键、快速搜索中的 `Toggle Explorer` 条目、树、折叠和 `Collapse All`。其标题同样为 `Explorer`。画布右键菜单在那里没有 `Toggle Explorer`，因为它只保留用于阅读的条目，参见[只读编辑器](./table-related-functions.md#read-only-editors)。
+
+跳转到行的方式与[跳转到行](#going-to-a-row)相同：视图按同样的规则移动，并且该行的表、表分组或备注会被选中，在画布上绘制轮廓，焦点单元格位于该行所指定的位置。  
+这是只读编辑器选中任何内容的唯一方式。在画布上按下不会选中任何内容，而不移动的点击会清除跳转到行所留下的选中。被它选中的表可以用 `Alt + Space` (Windows/Linux) 或 `⌥ + Space` (Mac) 在[表属性](./table-related-functions.md#table-properties)中以只读方式打开，`Ctrl + C` (Windows/Linux) 或 `⌘ + C` (Mac) 则像在任何编辑器中一样复制所选中的内容。  
 其搜索只能查找，参见查找与替换中的[只读编辑器](./find-and-replace.md#read-only-editors)。

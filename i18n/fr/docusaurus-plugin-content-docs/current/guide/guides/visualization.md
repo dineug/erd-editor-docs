@@ -237,4 +237,5 @@ Le [bouton de carte](#card-buttons) de lien externe va plus loin, car il vous fa
 Les modifications des collaborateurs continuent d’atteindre le diagramme pendant que vous êtes en mode Flux, et les cartes suivent les tables et les relations qu’ils ajoutent ou suppriment (voir [Disposition en mode Flux](#how-flow-is-placed)).  
 Leurs contours de sélection et de focus sont dessinés sur les cartes, mais pas leurs curseurs ni leurs rectangles de sélection (voir [Édition collaborative](../../api/advanced/collaborative-editing.md)).
 
-Les deux modes, y compris la concentration sur des tables et le parcours des étapes, fonctionnent aussi dans un éditeur `readonly`, de même que la liste `Name View`, qui n’y change que votre propre écran.
+Les deux modes, y compris la concentration sur des tables et le parcours des étapes, fonctionnent aussi dans un éditeur [`readonly`](../../api/erd-editor-element.md#readonly), de même que la liste `Name View`, qui n’y change que votre propre écran.  
+Sur l’onglet ERD d’un éditeur en lecture seule, le menu de la table ne contient que `Table Properties` et un appui ne sélectionne aucune table : concentrez-vous donc avec `Alt + F` (Windows/Linux) ou `⌥ + F` (Mac) sur la table qu’un saut depuis l’[explorateur](./explorer.md#going-to-a-row) ou la [recherche rapide](./quick-search.md) a sélectionnée.

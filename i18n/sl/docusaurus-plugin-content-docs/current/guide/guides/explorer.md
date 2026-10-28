@@ -23,7 +23,7 @@ Odprite ga na enega od teh načinov:
 - Gumb `Explorer` v orodni vrstici, takoj za gumbom `Search`, z ikono drevesa. Njegov opis orodja je `Explorer (Ctrl + F)` (Windows/Linux) ali `Explorer (⌘ + F)` (Mac).
 - `Ctrl + F` (Windows/Linux) ali `⌘ + F` (Mac), ki se na zavihku [Bližnjice](./settings.md#shortcuts) v nastavitvah imenuje `Toggle Explorer`.
 - Postavka `Toggle Explorer` v [hitrem iskanju](./quick-search.md), navedena na vsakem zavihku. Prikaže se, ko vnesete `find`, `replace`, `rename`, `tree`, `outline` ali `objects`.
-- Postavka `Toggle Explorer` v priročnem meniju platna: z desno tipko miške kliknite prazno mesto na platnu ERD, zunaj katere koli [skupine tabel](./table-groups.md). Je za postavkami `New Table`, `New Memo` in `New Table Group`, pred postavko `Relationship`.
+- Postavka `Toggle Explorer` v priročnem meniju platna: z desno tipko miške kliknite prazno mesto na platnu ERD, zunaj katere koli [skupine tabel](./table-groups.md). Je za postavkami `New Table`, `New Memo` in `New Table Group`, pred postavko `Relationship`. Meni platna urejevalnika samo za branje te vrstice nima – glejte razdelek [Urejevalniki samo za branje](#read-only-editors).
 
 Obe postavki `Toggle Explorer` prikazujeta bližnjico na desni.  
 Gumb v orodni vrstici, bližnjica in postavka v hitrem iskanju delujejo na vsakem zavihku. Z zavihka Vizualizacija, Shema SQL, Generator kode, Slovar ali Nastavitve najprej preklopijo na zavihek ERD, ker je raziskovalec prikazan samo tam.
@@ -168,5 +168,8 @@ Tudi [hitro iskanje](./quick-search.md) pusti raziskovalca odprtega, tipka `Esca
 
 ## Urejevalniki samo za branje {#read-only-editors}
 
-V urejevalniku z lastnostjo [`readonly`](../../api/erd-editor-element.md#readonly) raziskovalec deluje tako kot v vsakem drugem: gumb v orodni vrstici z enakim opisom orodja, bližnjica, obe postavki `Toggle Explorer`, drevo, strnjevanje, gumb `Collapse All` in prehod na vrstico, ki kot običajno izbere cilj prehoda. Tudi tam je njegov naslov `Explorer`.  
+V urejevalniku z lastnostjo [`readonly`](../../api/erd-editor-element.md#readonly) raziskovalec deluje tako kot v vsakem drugem: gumb v orodni vrstici z enakim opisom orodja, bližnjica, postavka `Toggle Explorer` v hitrem iskanju, drevo, strnjevanje in gumb `Collapse All`. Tudi tam je njegov naslov `Explorer`. Priročni meni platna tam nima postavke `Toggle Explorer`, saj ohrani samo vrstice, ki berejo – glejte razdelek [Urejevalniki samo za branje](./table-related-functions.md#read-only-editors).
+
+Prehod na vrstico deluje kot v razdelku [Prehod na vrstico](#going-to-a-row): pogled se premakne po istem pravilu, tabela, skupina tabel ali beležka vrstice pa se izbere, na platnu obrobi, s celico v fokusu tam, kamor jo postavi vrstica.  
+To je edini način, na katerega urejevalnik samo za branje kar koli izbere. Pritisk na platno ne izbere ničesar, klik, ki se ne premakne, pa počisti izbor, ki ga je pustila vrstica. Tabela, ki jo je izbral, se odpre v oknu [Lastnosti tabele](./table-related-functions.md#table-properties) z `Alt + Space` (Windows/Linux) ali `⌥ + Space` (Mac), samo za branje, `Ctrl + C` (Windows/Linux) ali `⌘ + C` (Mac) pa kopira, kar je izbral, kot v vsakem urejevalniku.  
 Njegovo iskanje samo išče – glejte razdelek [Urejevalniki samo za branje](./find-and-replace.md#read-only-editors) na strani o iskanju in zamenjavi.

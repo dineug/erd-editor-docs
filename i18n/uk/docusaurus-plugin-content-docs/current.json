@@ -8,7 +8,7 @@
     "description": "The label for category 'Guides' in sidebar 'docs'"
   },
   "sidebar.docs.category.Guides.link.generated-index.description": {
-    "message": "Як малювати й редагувати діаграму: створення таблиць і зв’язків, імпорт і експорт файлів та параметри відображення редактора.",
+    "message": "Як малювати й редагувати діаграму, від створення таблиць і зв’язків до імпорту й експорту файлів та параметрів відображення редактора, а також як показати її лише для читання на іншому сайті.",
     "description": "The generated-index page description for category 'Guides' in sidebar 'docs'"
   },
   "sidebar.api.category.Advanced": {

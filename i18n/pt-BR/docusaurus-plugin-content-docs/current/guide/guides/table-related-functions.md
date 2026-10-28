@@ -6,7 +6,7 @@ description: Selecionar, mover, copiar, duplicar e excluir tabelas e notas, conf
 # Funções relacionadas a tabelas
 
 Tudo o que você faz com tabelas e notas depois que elas existem — selecionar, mover, copiar, excluir, colorir e definir o que o canvas mostra — e também os controles do canvas ao redor delas.  
-Primeiro vêm os comandos de tabelas e notas; depois, as propriedades da tabela, o foco em tabelas, os índices e as chaves alternativas, o layout automático e o fornecedor de banco de dados; e, por último, o próprio canvas: a barra de ferramentas do canvas, o zoom, o deslocamento da área visível e onde um salto termina, e o visualizador de diferenças.  
+Primeiro vêm os comandos de tabelas e notas; depois, as propriedades da tabela, o foco em tabelas, os índices e as chaves alternativas, o layout automático e o fornecedor de banco de dados; depois, o próprio canvas: a barra de ferramentas do canvas, o zoom, o deslocamento da área visível e onde um salto termina, e o visualizador de diferenças; e, por último, o que um editor somente leitura mantém de tudo isso.  
 Os grupos de tabelas, as caixas que reúnem tabelas, têm uma página própria — consulte [Grupos de tabelas](./table-groups.md).  
 O mesmo vale para os nomes lógicos e para a exibição de nomes, que decide os nomes que as tabelas mostram — consulte [Nomes lógicos](./logical-names.md).
 
@@ -23,7 +23,8 @@ Os [grupos de tabelas](./table-groups.md#selecting-groups) são adicionados à s
 `Ctrl + A` dá preferência ao cursor de texto, então seleciona o texto, e não o diagrama, enquanto você edita uma célula.  
 Um retângulo de seleção marca uma tabela ou nota quando cobre o meio dela, e não quando apenas toca uma borda. Ele só inclui um grupo de tabelas quando envolve a caixa inteira do grupo, então um retângulo desenhado dentro de um grupo seleciona tabelas sem o grupo.  
 Um clique com o botão direito em algo já selecionado mantém toda a seleção, então itens do menu como `Color`, `Group selected tables` e `Delete selected` atuam sobre ela inteira. Um clique com o botão direito em qualquer outra tabela, nota ou grupo de tabelas seleciona só esse item, mesmo com `Ctrl` ou `⌘` pressionado, e um clique com o botão direito em um relacionamento ou em uma área vazia do canvas limpa a seleção.  
-`Escape` limpa a seleção. Enquanto o editor de uma célula, de uma nota ou do nome de um grupo de tabelas está aberto, ou enquanto um relacionamento ou um `New Table Group` está sendo desenhado, o primeiro `Escape` encerra isso e um segundo limpa a seleção.
+`Escape` limpa a seleção. Enquanto o editor de uma célula, de uma nota ou do nome de um grupo de tabelas está aberto, ou enquanto um relacionamento ou um `New Table Group` está sendo desenhado, o primeiro `Escape` encerra isso e um segundo limpa a seleção.  
+Um editor somente leitura não tem nenhuma dessas formas de selecionar: ali só um salto seleciona — consulte [Editores somente leitura](#read-only-editors).
 
 ![Seleção de tabelas com ⌘ + drag e ⌘ + click e, depois, de todas as tabelas e notas com ⌘ + A](/img/demo-table-select.webp)
 
@@ -145,7 +146,7 @@ Os nomes que as tabelas mostram não são uma opção de exibição: `Name View`
 `Table Groups` mostra os [grupos de tabelas](./table-groups.md) e as cores dos grupos nos cabeçalhos de suas tabelas. Desativá-la oculta os grupos no canvas, no minimapa e nas exportações de imagem, não move nenhuma tabela e mantém cada tabela em seu grupo — consulte [Ocultar grupos](./table-groups.md#hiding-groups). Também tira a pasta `Table Groups` do [explorador](./explorer.md#the-tree) e `New Table Group` da [barra de ferramentas do canvas](#canvas-toolbar), e a pesquisa do explorador deixa de encontrar nomes de grupos.  
 `Memos` mostra as notas. Desativá-la oculta todas as notas no canvas, no minimapa e nas exportações de imagem, e não move nenhuma tabela nem conector. Notas ocultas não ocupam espaço, então as barras de rolagem, o minimapa e a bússola `Go to content` as deixam de fora.  
 Ocultar as notas as remove da seleção e fecha um editor de nota aberto. O [explorador](./explorer.md#the-tree) deixa de mostrar a pasta `Memos`, e sua pesquisa de [Localizar e substituir](./find-and-replace.md) e o `:` da pesquisa rápida não pesquisam as notas. Enquanto elas estão ocultas, `New Memo` sai do menu de contexto, da [barra de ferramentas do canvas](#canvas-toolbar), da pesquisa rápida e da [tela de boas-vindas](./editing-start.md#welcome-screen), e `Alt + M` não adiciona nenhuma nota. Uma colagem ou um [Importar e adicionar](./file-import-export.md#import-and-add) ainda adiciona as notas que traz, ocultas e não selecionadas.  
-Em um editor `readonly`, alternar essas opções não muda nada.
+Em um editor somente leitura, as opções ainda funcionam, mas apenas naquela tela: não são salvas, registradas no histórico de desfazer nem compartilhadas, e voltam às do arquivo quando o editor volta a ser editável — consulte [Editores somente leitura](./settings.md#read-only-editors) em Configurações.
 
 ![Alternância de itens de View Option enquanto as tabelas se reorganizam, marcação de um índice único composto com AK1.1 e AK1.2 por Alternate Key e, depois, desativação e reativação de Memos](/img/demo-view-options.webp)
 
@@ -164,14 +165,15 @@ A aba `Indexes` é abordada em [Índices](#indexes).
 A aba `Schema SQL` mostra o DDL da tabela para o [banco de dados](#databases) selecionado: seu `CREATE TABLE`, as restrições separadas que alguns bancos de dados escrevem para suas colunas únicas, e seus índices. Ela sempre escreve instruções `CREATE` simples, sem cabeçalho, sem scripts antes ou depois das tabelas e sem nomes lógicos nos comentários vazios, seja qual for a configuração da aba [Esquema SQL](./schema-sql.md) da barra de ferramentas — consulte [Nomes lógicos como comentários](./schema-sql.md#logical-names-as-comments). Ela não tem painel de opções, e seu menu de contexto oferece só `Database` e `Bracket`.  
 A aba `Code Generator` gera código só para esta tabela — consulte [Gerador de código](./code-generator.md).
 
-Em um editor `readonly`, o painel ainda abre, com um selo `Read only` ao lado do título, mas a aba `Indexes` não permite edições.
+Em um editor somente leitura, o painel ainda abre, por `Table Properties`, a única linha do menu de contexto de uma tabela ali, ou com `Alt + Space` na tabela que um salto selecionou. Ele mostra um selo `Read only` ao lado do título, e sua aba `Indexes` não permite edições.  
+Um painel aberto quando o editor passa a ser somente leitura continua aberto e passa a ser somente leitura com ele — consulte [Editores somente leitura](#read-only-editors).
 
 ## Focar em tabelas {#focusing-on-tables}
 
 Abre a aba Visualização no modo `Flow`, restrita às tabelas escolhidas e a todas as tabelas a um relacionamento de distância delas.  
 Comece pelo menu de contexto da tabela com `Focus on this table`, ou selecione uma ou mais tabelas e pressione `Alt + F`.  
 Quando a tabela em que você clica com o botão direito é uma de várias tabelas selecionadas, o item passa a ser `Focus on selected tables` e foca toda a seleção. Clicar com o botão direito em uma tabela fora da seleção foca só essa tabela.  
-O atalho usa as tabelas selecionadas, deixa as notas de fora e não faz nada quando nenhuma tabela está selecionada.  
+O atalho usa as tabelas selecionadas, deixa as notas de fora e não faz nada quando nenhuma tabela está selecionada. O menu da tabela de um editor somente leitura não tem `Focus on this table`, e o atalho usa a tabela que um salto selecionou ali — consulte [Editores somente leitura](#read-only-editors).  
 Um [grupo de tabelas](./table-groups.md) selecionado não conta para nada aqui, tanto no atalho quanto no item do menu: suas tabelas só são usadas quando elas mesmas estão selecionadas, o que o item `Select tables` do menu do grupo faz.  
 O que a exibição restrita mostra, e como voltar ao diagrama inteiro, é abordado em [Visualização](./visualization.md#focusing-on-tables), e como voltar e avançar pelo que o Flow mostrou antes, em [Tabela anterior e próxima tabela](./visualization.md#previous-table-and-next-table).
 
@@ -187,7 +189,7 @@ O lado direito lista as colunas da tabela em `Columns`, cada uma com uma caixa d
 Marque uma coluna para adicioná-la ao índice selecionado e desmarque-a para removê-la. Selecionar uma chave mostra suas colunas marcadas, mas as caixas continuam desabilitadas.  
 As colunas do índice selecionado são listadas abaixo, em `Index order`, cada uma nomeada como a exibição de nomes a nomeia, com o nome entre parênteses depois do nome lógico na exibição `Both Names`, como `Member Number (member_no)`. Arraste-as pela alça de arrastar para reordená-las e clique no chip `ASC` ou `DESC` de uma linha para inverter sua ordem de classificação. Em uma chave alternativa, cada linha termina com sua marca `AK<n>.<m>`. A lista mostra três linhas por vez e rola o restante.
 
-Em um editor `readonly`, selecionar uma chave ou um índice ainda mostra suas colunas, mas não há `Add Index` nem `x`, e nada mais na aba pode ser alterado.
+Em um editor somente leitura, selecionar uma chave ou um índice ainda mostra suas colunas, mas não há `Add Index` nem `x`, e nada mais na aba pode ser alterado: os nomes não aceitam digitação, todas as caixas de seleção ficam desabilitadas, e as linhas de `Index order` não são arrastadas nem invertem a ordenação.
 
 O [explorador](./explorer.md#the-tree) lista os índices de cada tabela na pasta `Indexes` da tabela, e escolher um deles ali leva à sua tabela. A pesquisa dele também encontra nomes de índices e pode renomeá-los — consulte [O que é pesquisado](./find-and-replace.md#what-it-searches).
 
@@ -233,7 +235,8 @@ Os outros três são calculados de uma só vez, fora da thread principal, então
 
 Seja qual for a escolha, as tabelas e os grupos de tabelas são movidos, e as notas ficam onde estão. As tabelas são posicionadas com as larguras que têm na exibição de nomes que você está olhando. Um relacionamento de uma tabela consigo mesma é ignorado, e vários relacionamentos entre as mesmas duas tabelas contam uma só vez.  
 Todos os layouts mantêm juntas as tabelas de cada grupo, estejam os grupos visíveis ou não, e ajustam cada grupo que contém tabelas ao redor delas — consulte [Grupos de tabelas](./table-groups.md#auto-layout).  
-O resultado é registrado como uma única entrada do histórico, então um único desfazer traz todas as tabelas e grupos de volta para onde estavam.
+O resultado é registrado como uma única entrada do histórico, então um único desfazer traz todas as tabelas e grupos de volta para onde estavam.  
+Um editor somente leitura não oferece `Auto Layout`. Um que ainda esteja em andamento quando o editor passa a ser somente leitura termina ali: a prévia `Force` fecha com o seu aviso e não guarda nenhuma de suas posições, e um layout ainda sendo calculado é descartado com o seu aviso, então nenhuma tabela se move, nem naquele momento nem quando o editor voltar a ser editável.
 
 ![Organização de um amontoado de tabelas com o layout automático Flow pelo menu de contexto do canvas, que as alinha da esquerda para a direita ao longo dos relacionamentos](/img/demo-automatic-table-placement.webp)
 
@@ -250,7 +253,7 @@ Os bancos de dados compatíveis incluem:
 - Snowflake
 - SQLite
 
-Escolha um em `Database` no menu de contexto do canvas, no painel de opções ou no menu de contexto das abas Esquema SQL e Gerador de código, ou na pesquisa rápida. Todos eles alteram a mesma configuração.
+Escolha um em `Database` no menu de contexto do canvas, no painel de opções ou no menu de contexto das abas Esquema SQL e Gerador de código, ou na pesquisa rápida. Todos eles alteram a mesma configuração. O menu do canvas de um editor somente leitura não tem `Database`, e uma escolha nos outros altera apenas aquela tela — consulte [Editores somente leitura](#read-only-editors).
 
 Essas opções determinam a sintaxe do Esquema SQL na exportação, o preenchimento automático do tipo de dados e os tipos para os quais o código gerado e os esquemas importados são resolvidos.  
 Elas decidem quais opções de `Statements` e `Header` a aba [Esquema SQL](./schema-sql.md#options-panel) pode escrever. Uma opção que o banco de dados não tem continua no painel de opções, esmaecida, e o SQL recorre à mais próxima que ele tem.  
@@ -266,15 +269,16 @@ A importação de Esquema SQL mantém o tipo de dados de uma coluna, incluindo a
 Uma pequena barra de ferramentas flutua sobre o meio da borda inferior do canvas e contém, da esquerda para a direita, as ferramentas que atuam sobre o próprio canvas e os comandos que adicionam itens a ele:
 
 - A mão e o ponteiro. O ponteiro é o padrão; a mão transforma todo arrasto em deslocamento da área visível, tanto sobre tabelas quanto sobre espaço vazio. `Space` alterna entre os dois. Enquanto um desenho de [`New Table Group`](./table-groups.md#drawing-a-group) está preparado, o botão `New Table Group` fica marcado no lugar de qualquer um deles, e clicar em qualquer um dos dois, pressionar `Space` ou escolher uma notação de relacionamento encerra o desenho sem adicionar um grupo.
-- `New Table`, `New Memo` e `New Table Group`. `New Table` adiciona uma tabela como `Alt + N` faz, e `New Memo` adiciona uma nota como `Alt + M` faz. `New Table Group` prepara o [desenho de grupo](./table-groups.md#drawing-a-group) como `Alt + G` faz e desativa a mão; um segundo clique, como um segundo `Alt + G`, encerra o desenho sem adicionar um grupo. `New Memo` fica de fora enquanto View Option → `Memos` oculta as notas, e `New Table Group`, enquanto View Option → `Table Groups` oculta os grupos. Um editor `readonly` não mostra nenhum dos três.
+- `New Table`, `New Memo` e `New Table Group`. `New Table` adiciona uma tabela como `Alt + N` faz, e `New Memo` adiciona uma nota como `Alt + M` faz. `New Table Group` prepara o [desenho de grupo](./table-groups.md#drawing-a-group) como `Alt + G` faz e desativa a mão; um segundo clique, como um segundo `Alt + G`, encerra o desenho sem adicionar um grupo. `New Memo` fica de fora enquanto View Option → `Memos` oculta as notas, e `New Table Group`, enquanto View Option → `Table Groups` oculta os grupos.
 - O zoom: `Zoom out`, o zoom atual em porcentagem e `Zoom in`. Os dois botões alteram o zoom em etapas da mesma forma que os atalhos de zoom, e clicar na porcentagem o redefine para `100%`.
 - As quatro notações de relacionamento, as mesmas quatro com que você inicia um relacionamento — consulte [Começar a editar](./editing-start.md). Escolher uma volta para o ponteiro, pois um relacionamento é desenhado clicando em duas tabelas.
-- `Name View`, um botão com uma seta para baixo que mostra o nome da exibição em vigor: `Physical Names`, `Logical Names` ou `Both Names`. Ele mantém a mesma largura qualquer que seja a exibição que mostra, então uma troca nunca desloca a barra de ferramentas. Um clique abre, acima da barra de ferramentas, uma lista com as três, com a que está em vigor marcada. Escolher uma delas troca para ela e fecha a lista; um segundo clique no botão, um pressionamento em qualquer outro lugar ou `Escape` fecha a lista sem trocar. Um editor `readonly` também o mostra. O que cada exibição desenha é abordado em [Exibição de nomes](./logical-names.md#name-view), e se uma troca é salva, em [Trocar a exibição](./logical-names.md#switching-the-view).
+- `Name View`, um botão com uma seta para baixo que mostra o nome da exibição em vigor: `Physical Names`, `Logical Names` ou `Both Names`. Ele mantém a mesma largura qualquer que seja a exibição que mostra, então uma troca nunca desloca a barra de ferramentas. Um clique abre, acima da barra de ferramentas, uma lista com as três, com a que está em vigor marcada. Escolher uma delas troca para ela e fecha a lista; um segundo clique no botão, um pressionamento em qualquer outro lugar ou `Escape` fecha a lista sem trocar. O que cada exibição desenha é abordado em [Exibição de nomes](./logical-names.md#name-view), e se uma troca é salva, em [Trocar a exibição](./logical-names.md#switching-the-view).
 - O modo zen, `Alt + Z`, que tira tudo da tela, exceto o canvas e esta barra de ferramentas. `Alt + Z` de novo, ou o botão, traz o restante de volta. Um explorador aberto é ocultado junto com o restante, sem ser fechado, e volta com ele. Ele ainda pode ser aberto durante o modo zen — consulte [Quando ele fica oculto](./explorer.md#when-it-stands-aside).
 - A bússola `Go to content`, que aparece no fim da barra de ferramentas só enquanto nenhuma tabela, nota visível ou grupo de tabelas visível está na tela — consulte [Navegar pelo canvas](#getting-around-the-canvas).
 
 Todo botão com atalho o indica na dica de ferramenta, como `New Table (Alt + N)` (Windows/Linux) ou `New Table (⌥ + N)` (Mac).  
-A barra de ferramentas fica oculta enquanto a pré-visualização do layout automático `Force`, o painel Propriedades da tabela, a viagem no tempo ou o visualizador de diferenças está aberto, e volta assim que ele fecha.
+A barra de ferramentas fica oculta enquanto a pré-visualização do layout automático `Force`, o painel Propriedades da tabela, a viagem no tempo ou o visualizador de diferenças está aberto, e volta assim que ele fecha.  
+A barra de ferramentas de um editor somente leitura mantém o zoom, `Name View`, o modo zen e a bússola `Go to content`. Ela não tem a mão nem o ponteiro, nem `New Table`, `New Memo` ou `New Table Group`, nem as notações, e os recupera quando o editor volta a ser editável.
 
 ![Adição de uma tabela e uma nota pela barra de ferramentas, preparação e cancelamento de New Table Group, deslocamento com a mão, zoom em etapas e alternância do modo zen com ⌥ + Z](/img/demo-canvas-toolbar.webp)
 
@@ -339,7 +343,7 @@ O que um salto traz para a área visível, e a parte principal que precisa apare
 - Um grupo de tabelas: sua caixa, pela barra de título.
 - Uma nota, ou o bloco que um Importar e adicionar insere: por inteiro.
 
-Quando nenhuma das direções se moveria, não há rolagem, então ir para o mesmo lugar duas vezes seguidas não move nada na segunda vez. Um salto que rola o canvas registra a rolagem no [histórico de desfazer](./undo-redo.md#what-the-history-records) como qualquer outra mudança de posição da área visível, e um que não move nada não deixa nada para desfazer. Em um Importar e adicionar, a rolagem faz parte da mesma etapa que a adição. Uma linha da lista do visualizador de diferenças move só os lados somente leitura do visualizador, então nada é registrado.  
+Quando nenhuma das direções se moveria, não há rolagem, então ir para o mesmo lugar duas vezes seguidas não move nada na segunda vez. Um salto que rola o canvas registra a rolagem no [histórico de desfazer](./undo-redo.md#what-the-history-records) como qualquer outra mudança de posição da área visível, e um que não move nada não deixa nada para desfazer. Em um Importar e adicionar, a rolagem faz parte da mesma etapa que a adição. Uma linha da lista do visualizador de diferenças move só os lados somente leitura do visualizador, então nada é registrado, e um editor somente leitura não registra nenhum salto.  
 Nenhum salto inicia nem conclui um relacionamento que está sendo desenhado. A bússola `Go to content` não é um salto: ela centraliza aquilo para onde aponta.
 
 ## Visualizador de diferenças {#diff-viewer}
@@ -351,7 +355,8 @@ O visualizador abre sobre o canvas: o que mudou à esquerda e, depois, o documen
 O documento atual é comparado como está quando o visualizador abre; as alterações feitas depois disso, inclusive as de um colaborador, não chegam ao visualizador. Os dois lados se abrem, e permanecem, na exibição de nomes que você está olhando, qualquer que seja a exibição que cada arquivo mantém — consulte [Além do canvas](./logical-names.md#beyond-the-canvas). Um [explorador](./explorer.md#when-it-stands-aside) aberto fica oculto enquanto o visualizador está aberto, então o visualizador ocupa toda a largura do editor.  
 Cada lado se desloca com a roda do mouse, arrastando uma área vazia ou o corpo de um grupo de tabelas, ou arrastando com o botão do meio em qualquer lugar sobre ele, e aplica zoom com `Ctrl + Wheel` (Windows/Linux), `⌘ + Wheel` (Mac) ou pinçando. Em `70%` ou menos, suas tabelas se reduzem como no canvas — consulte [Marcas nos dois lados](#marks-on-the-two-sides).  
 Os dois lados são somente leitura, então nada no seu documento é modificado. Cada um mantém sua própria seleção, e um clique em uma tabela ali a seleciona só naquele lado.  
-Feche o visualizador com o botão `Close` do aviso `Diff Viewer` que aparece quando ele abre, ou com `Escape`.
+Feche o visualizador com o botão `Close` do aviso `Diff Viewer` que aparece quando ele abre, ou com `Escape`.  
+Um editor somente leitura também oferece `Diff Viewer`, e o visualizador funciona ali como em qualquer editor, com um clique em uma tabela de um lado ainda a selecionando só naquele lado. Um visualizador aberto quando o editor passa a ser somente leitura continua aberto.
 
 ![Abertura do visualizador de diferenças com um arquivo .json salvo, cliques em linhas marcadas com A, M, D e R na árvore, filtragem por nome e fechamento](/img/demo-diff-viewer.webp)
 
@@ -423,3 +428,26 @@ Cada lado segue as opções de exibição do seu próprio documento. Uma altera�
 Na exibição `Logical Names`, que não desenha nenhuma célula de nome, o azul de uma renomeação e o âmbar de uma alteração em uma célula que o lado não desenha vão para o nome lógico desenhado no lugar do nome. Uma alteração de tipo de dados deixa a célula de tipo em âmbar em qualquer exibição de nomes, mesmo onde a célula mostra o nome de um domínio. Nenhum dos lados desenha as cores que as verificações da aba Dicionário dão aos nomes no canvas — consulte [Marcas no canvas](./dictionary.md#marks-on-the-canvas).
 
 Em `70%` ou menos, as tabelas reduzidas mantêm o contorno. O nome mantém o verde ou o vermelho de uma tabela adicionada ou removida, ou o azul de uma renomeação, e, caso contrário, assume o âmbar de uma alteração de comentário. As alterações de coluna não são desenhadas até você aumentar o zoom de novo; a árvore ainda as lista.
+
+## Editores somente leitura {#read-only-editors}
+
+Um editor [`readonly`](../../api/erd-editor-element.md#readonly), como uma revisão do Git reaberta como diagrama no VS Code, é um leitor. Suas seis abas, o [explorador](./explorer.md#read-only-editors), o minimapa, as barras de rolagem e os cursores e seleções dos colaboradores continuam, e todo controle que alteraria o diagrama some em vez de ficar esmaecido.
+
+No canvas ERD:
+
+- Um arrasto desloca a área visível, onde quer que comece: em um canvas vazio, em uma tabela, em uma nota ou em um grupo de tabelas, igualmente. O botão do meio, a roda, o gesto de pinça e as teclas de zoom funcionam como em qualquer editor.
+- O ponteiro parado sobre uma tabela acende os relacionamentos dela. Um clique sem movimento acende os relacionamentos da tabela em que cai, ou o relacionamento em que cai, e um clique em outro lugar apaga o realce.
+- Nada é selecionado por um pressionamento, por uma caixa de seleção nem por uma tecla de selecionar tudo. Só um salto seleciona: uma linha do [explorador](./explorer.md#going-to-a-row), uma correspondência do [Localizar e substituir](./find-and-replace.md#going-to-a-match) dele ou um resultado `#`, `@` ou `:` da [pesquisa rápida](./quick-search.md#searching-the-diagram) seleciona o que alcança, com contorno como toda seleção, e a célula em foco fica onde o salto a coloca. Um clique sem movimento limpa essa seleção.
+- As teclas de seta movem a célula em foco. Copiar, `Table Properties` e `Focus on this table` funcionam sobre o que um salto selecionou, por suas teclas, e uma colagem não adiciona nada. As outras teclas estão listadas em [Atalhos](./settings.md#shortcuts).
+- Nenhum nome de célula, de nota ou de grupo de tabelas se abre para edição. Não há botões `+` nem `x` em tabelas, notas e grupos, nem bordas de redimensionamento em notas e grupos, nem alça de arrasto de coluna, nem seletor de cores.
+
+O menu de contexto do canvas mantém `View Option`, `Name View`, `Export` e `Diff Viewer`. Ele não tem `New Table`, `New Memo`, `New Table Group`, `Toggle Explorer`, `Relationship`, `Derive Physical Names Again`, `Database`, `Import`, `Import and Add` nem `Auto Layout`.  
+O menu de uma tabela mantém apenas `Table Properties`, que abre o painel somente leitura para essa tabela — consulte [Propriedades da tabela](#table-properties). Uma nota, um relacionamento e um grupo de tabelas não abrem menu.  
+A [barra de ferramentas do canvas](#canvas-toolbar) mantém o zoom, `Name View`, o modo zen e a bússola `Go to content`. A barra de ferramentas superior mostra o nome do banco de dados como texto que não pode ser editado, e nenhum `Undo`, `Redo` nem `Time Travel`.  
+A [exportação](./file-import-export.md#exporting), com as suas três opções, e o [visualizador de diferenças](#diff-viewer) funcionam como em qualquer editor.
+
+[`View Option`](#table-view-options), a exibição de nomes, o banco de dados, a aba, a posição da área visível e o zoom ainda mudam ali, mas apenas naquela tela: nada os salva, registra ou compartilha — consulte [Editores somente leitura](./settings.md#read-only-editors) em Configurações.
+
+Passar um editor para somente leitura encerra o que estava aberto para edição: um editor de célula, de nota ou de nome de grupo de tabelas, um relacionamento ou `New Table Group` sendo desenhado, a seleção e a célula em foco, a ferramenta mão, o seletor de cores, [Mapear colunas](./relationship-editing.md#map-columns) e a [viagem no tempo](./undo-redo.md#time-travel). A área visível, o zoom, a aba e a exibição de nomes ficam como estavam, e as Propriedades da tabela, o visualizador de diferenças e a caixa de diálogo `Export image` continuam abertos.  
+Um gesto em andamento também termina ali. Um arrasto de tabelas ou notas para onde está, um arrasto com `Alt` não solta nenhuma cópia, um arrasto de coluna termina, o redimensionamento de uma nota para onde está, o de um grupo de tabelas é descartado, e um [layout automático](#auto-layout) é descartado com o seu aviso, então nenhuma tabela se move.  
+Quando o editor volta a ser editável, ele devolve os controles acima, e nada do que a mudança fechou se abre de novo.

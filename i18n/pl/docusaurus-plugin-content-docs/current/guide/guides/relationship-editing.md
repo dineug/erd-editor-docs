@@ -1,6 +1,6 @@
 ---
 sidebar_position: 7
-description: Usuwanie relacji, zmiana jej typu, ustawianie akcji ON DELETE i ON UPDATE, mapowanie relacji na istniejące kolumny w oknie dialogowym „Mapuj kolumny”, odczytywanie notacji łącznika, praca z relacjami N:M i identyfikującymi oraz sprawdzanie, co nowe kolumny kluczy obcych kopiują ze swojego klucza i jak są nazywane.
+description: Usuwanie relacji, zmiana jej typu, ustawianie akcji ON DELETE i ON UPDATE, mapowanie relacji na istniejące kolumny w oknie dialogowym „Mapuj kolumny”, odczytywanie notacji łącznika i sposobu prowadzenia łączników wokół tabel, praca z relacjami N:M i identyfikującymi oraz sprawdzanie, co nowe kolumny kluczy obcych kopiują ze swojego klucza i jak są nazywane.
 ---
 
 # Edycja relacji
@@ -81,7 +81,7 @@ Każdy wiersz albo korzysta z kolumny, którą tabela podrzędna już ma, albo d
 Okno dialogowe można otworzyć na dwa sposoby:
 
 - Podczas rysowania relacji, za pomocą przycisku `Map to existing columns` obok tabeli podrzędnej – zobacz sekcję [Tworzenie relacji](./editing-start.md#relationship-creation). Przycisk `Map` dodaje wtedy relację rysowanego typu.
-- Za pomocą pozycji `Map Columns` w menu kontekstowym relacji, aby zmienić kolumny istniejącej relacji. Przycisk `Save` zapisuje wtedy zmianę. W edytorze tylko do odczytu ta pozycja nie jest dostępna.
+- Za pomocą pozycji `Map Columns` w menu kontekstowym relacji, aby zmienić kolumny istniejącej relacji. Przycisk `Save` zapisuje wtedy zmianę. Edytor tylko do odczytu nie otwiera menu kontekstowego relacji, więc nie można tam otworzyć okna Mapuj kolumny.
 
 Podtytuł okna dialogowego podaje obie tabele i typ relacji, na przykład `users → posts · One N`. Typ jest tu widoczny, ale nie da się go tu zmienić – aby go zmienić, zobacz sekcję [Zmiana typu](#type-change).
 
@@ -226,6 +226,9 @@ Podświetlenie gaśnie przy następnym naciśnięciu lewego lub prawego przycisk
 Podświetlenie pozostaje przy przesuwaniu widoku środkowym przyciskiem myszy lub narzędziem Rączka, a także przy zwijaniu lub rozwijaniu wiersza w Eksploratorze lub Podglądzie różnic, anulowaniu zaznaczenia klawiszem `Escape` oraz przejściu z funkcji [Szybkie wyszukiwanie](./quick-search.md) lub z [przycisku kafelka](./visualization.md#card-buttons) z łączem zewnętrznym w trybie Przepływ.  
 Podświetlenie nie jest zapisywane ani nie trafia do historii cofania, a współpracownicy go nie widzą.
 
+W edytorze z atrybutem [`readonly`](../../api/erd-editor-element.md#readonly) wskaźnik myszy również podświetla łączniki, w miejsce podświetlenia pozostawionego przez przejście. Spoczywając na tabeli, podświetla w kolorze najechania wszystkie łączniki tej tabeli, dopóki nie zjedzie z tabeli.  
+Kliknięcie, które nie przesuwa widoku, pozostawia podświetlenie do następnego takiego kliknięcia: na tabeli podświetla jej łączniki, na łączniku ten łącznik, a gdziekolwiek indziej nic. Przeciągnięcie przesuwa tam kanwę i pozostawia to podświetlenie bez zmian.
+
 Ukryj łączniki na kanwie ERD opcją widoku `Relationship` albo tylko ich etykiety opcją widoku `Referential Actions`, która jest domyślnie włączona – zobacz sekcję [Opcje widoku tabel](./table-related-functions.md#table-view-options).  
 Etykiety nie są rysowane przy powiększeniu `70%` i mniejszym, przy którym tabele zwijają się do samej nazwy.  
 [Eksport obrazu](./file-import-export.md#image) jest zawsze rysowany w skali 100%, więc zawiera etykiety niezależnie od powiększenia kanwy, chyba że ukrywa je opcja widoku. Gdy opcja `Background` jest wyłączona, prostokąt za każdą etykietą również jest przezroczysty.  
@@ -233,9 +236,10 @@ Etykiety nie są rysowane przy powiększeniu `70%` i mniejszym, przy którym tab
 
 ## Prowadzenie łączników {#connector-routing}
 
-Łączniki są prowadzone ortogonalnie.  
-Trasa okrąża tabele, które leżą między jej dwoma końcami, zamiast przez nie przechodzić, a jej narożniki są zaokrąglone.  
-Każdy koniec wychodzi ze swojej tabeli krótkim prostym odcinkiem, zanim skręci, więc dwie niedaleko od siebie położone tabele, których końce łącznika są w jednej linii, łączy jedna prosta linia zamiast okrężnej trasy.  
+Łączniki są prowadzone ortogonalnie, a ich narożniki są zaokrąglone.  
+Trasa okrąża tabele stojące jej na drodze, zamiast przez nie przechodzić. Gdy każda trasa o kilku zakrętach między jej dwoma końcami przecięłaby tabelę, jak w zatłoczonym diagramie, łącznik obiera drogę okrężną z tyloma zakrętami, ile potrzebuje. Tylko gdy nie znajdzie drogi okrężnej, nadal przecina tabelę.  
+Łącznik wychodzi z dwóch swoich tabel z pary boków zwróconych ku sobie, wszędzie tam, gdzie taka para istnieje, a każdy koniec wychodzi ze swojej tabeli krótkim prostym odcinkiem, zanim skręci, więc dwie niedaleko od siebie położone tabele, których końce łącznika są w jednej linii, łączy jedna prosta linia zamiast okrężnej trasy.  
+Dwie zwrócone ku sobie tabele stojące bliżej niż ten odcinek, nawet mniej niż `40px` od siebie, zachowują zwrócone ku sobie boki, a tam, gdzie ich końce nie są w jednej linii, łącznik przeskakuje przez przerwę między nimi, zamiast biec pod którąś z tabel.  
 Trasy wychodzące z tego samego boku tabeli są rozkładane na osobne korytarze, aby nie nakładały się na siebie.  
 Omijane są tylko tabele: łącznik może przecinać notatkę lub ramkę grupy tabel i jest rysowany nad grupami tabel, a pod tabelami i notatkami.
 
@@ -243,6 +247,9 @@ Relacja tabeli z samą sobą jest rysowana jako jedna krzywa wokół prawego gó
 Kolejne relacje zwrotne w tej samej tabeli układają się na zewnątrz pierwszej, więc ich krzywe nie przecinają się wzajemnie ani nie przecinają tabeli.
 
 Nie ma tu nic do skonfigurowania.  
-Trasy są automatycznie przeliczane za każdym razem, gdy coś na kanwie się przesunie lub zmieni rozmiar, więc nigdy nie trzeba ich poprawiać ręcznie.
+Trasy są automatycznie przeliczane za każdym razem, gdy coś na kanwie się przesunie lub zmieni rozmiar, więc nigdy nie trzeba ich poprawiać ręcznie.  
+Podczas przeciągania łączniki przesuwanych tabel podążają za nimi, a każdy inny łącznik zachowuje trasę, którą miał na początku przeciągania. Gdy puścisz, każdy łącznik, którego trasę zmienia przesunięcie, jest rysowany na nowo, na przykład taki, który teraz okrąża upuszczoną na jego drodze tabelę, albo taki, który prostuje się, gdy tabela zeszła mu z drogi.
+
+Diagram rysuje te same trasy w każdym oknie, które pokazuje go w tym samym Widoku nazw: w oknie, które pozostało otwarte, gdy tabele się przesuwały, w oknie, które dopiero co otworzyło diagram, i w oknie współpracownika, a [wyeksportowany obraz](./file-import-export.md#image) rysuje je również. Widok nazw ma znaczenie, ponieważ zmienia szerokość tabel – zobacz sekcję [Widok nazw](./logical-names.md#name-view).
 
 ![Przeciąganie tabeli members w dół i z powrotem, podczas gdy łącznik od orders przełącza się między trasą na prawo od categories a trasą wokół jej lewej strony, ze wszystkimi narożnikami zaokrąglonymi](/img/demo-connector-routing.webp)

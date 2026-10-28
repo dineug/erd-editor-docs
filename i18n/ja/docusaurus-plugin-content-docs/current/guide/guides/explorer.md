@@ -23,7 +23,7 @@ description: ERD キャンバスの横にドッキングされたツリーで、
 - ツールバーで `Search` のすぐ後にある、ツリーのアイコンの `Explorer` ボタン。ツールチップには `Explorer (Ctrl + F)` (Windows/Linux) または `Explorer (⌘ + F)` (Mac) と表示されます。
 - `Ctrl + F` (Windows/Linux) または `⌘ + F` (Mac)。設定の[ショートカット](./settings.md#ショートカット)タブでは `Toggle Explorer` という名前です。
 - [クイック検索](./quick-search.md)の `Toggle Explorer`。どのタブでも一覧に表示され、`find`、`replace`、`rename`、`tree`、`outline`、`objects` と入力すると見つかります。
-- キャンバスのコンテキストメニューの `Toggle Explorer`。ERD キャンバスの空いている場所を、[テーブルグループ](./table-groups.md)の外側で右クリックすると表示されます。`New Table`、`New Memo`、`New Table Group` の後、`Relationship` の前にあります。
+- キャンバスのコンテキストメニューの `Toggle Explorer`。ERD キャンバスの空いている場所を、[テーブルグループ](./table-groups.md)の外側で右クリックすると表示されます。`New Table`、`New Memo`、`New Table Group` の後、`Relationship` の前にあります。読み取り専用のエディタのキャンバスメニューにはこの項目はありません。[読み取り専用のエディタ](#read-only-editors)を参照してください。
 
 2 つの `Toggle Explorer` の項目は、右側にショートカットを表示します。  
 ツールバーのボタン、ショートカット、クイック検索の項目は、どのタブからでも使えます。エクスプローラーは ERD タブでのみ表示されるため、Visualization、Schema SQL、Code Generator、辞書、設定の各タブから使うと、まず ERD タブに切り替わります。
@@ -168,5 +168,8 @@ IME の変換を終える `Escape` は、変換を終えるだけです。エク
 
 ## 読み取り専用のエディタ {#read-only-editors}
 
-[`readonly`](../../api/erd-editor-element.md#readonly) のエディタでも、エクスプローラーはほかのエディタと同じように動作します。同じツールチップのツールバーのボタン、ショートカット、両方の `Toggle Explorer` の項目、ツリー、折りたたみ、`Collapse All`、行への移動がすべて使え、行へ移動すると通常どおり移動先が選択されます。タイトルも同じく `Explorer` と表示されます。  
+[`readonly`](../../api/erd-editor-element.md#readonly) のエディタでも、エクスプローラーはほかのエディタと同じように動作します。同じツールチップのツールバーのボタン、ショートカット、クイック検索の `Toggle Explorer` の項目、ツリー、折りたたみ、`Collapse All` がすべて使えます。タイトルも同じく `Explorer` と表示されます。キャンバスのコンテキストメニューには、読み取れる項目しか残らないため、そこに `Toggle Explorer` はありません。[読み取り専用のエディタ](./table-related-functions.md#read-only-editors)を参照してください。
+
+行への移動は[行への移動](#going-to-a-row)と同じように動作します。同じ規則で表示位置が動き、その行のテーブル、テーブルグループ、メモが選択されてキャンバス上で外枠が付き、フォーカスされたセルはその行が示す位置に置かれます。  
+読み取り専用のエディタで何かが選択されるのは、これだけです。キャンバス上の押下は何も選択せず、動かさずにクリックすると、行が残した選択が解除されます。選択されたテーブルは、`Alt + Space` (Windows/Linux) または `⌥ + Space` (Mac) で[テーブルのプロパティ](./table-related-functions.md#table-properties)に読み取り専用で開き、`Ctrl + C` (Windows/Linux) または `⌘ + C` (Mac) は、どのエディタとも同じく選択されたものをコピーします。  
 検索と置換は検索だけを行います。検索と置換の[読み取り専用のエディタ](./find-and-replace.md#read-only-editors)を参照してください。

@@ -10,7 +10,8 @@ Edizioa laster-menutik hasten da, eskuineko klik eginez.
 ![Oihalean eskuineko klik egitea, Relationship azpimenua irekitzea, taula bat gehitzea eta ondoren haren menu propioa irekitzea](/img/demo-context-menu.webp)
 
 Taula, ohar, taula-talde edo erlazio batean eskuineko klik egiteak elementu horren menu propioa irekitzen du horren ordez.  
-Dagoeneko hautatuta dagoen taula, ohar edo taula-talde batean egindako eskuineko klik batek hautapen osoa mantentzen du; beraz, `Color` eta `Delete selected` bezalako aukerek hautapen osoan eragiten dute. Ikus [Hautapen anitza](./table-related-functions.md#multiple-selection).
+Dagoeneko hautatuta dagoen taula, ohar edo taula-talde batean egindako eskuineko klik batek hautapen osoa mantentzen du; beraz, `Color` eta `Delete selected` bezalako aukerek hautapen osoan eragiten dute. Ikus [Hautapen anitza](./table-related-functions.md#multiple-selection).  
+Irakurtzeko soilik dagoen editore batek ez du ezer sortzen; beraz, orri honek deskribatzen duen ezer ez da hor eskaintzen: oihalaren menuak `View Option`, `Name View`, `Export` eta `Diff Viewer` baino ez ditu mantentzen, taula baten menuak `Table Properties` baino ez, eta ohar, taula-talde edo erlazio batek ez du menurik irekitzen. Ikus [Irakurtzeko soilik dauden editoreak](./table-related-functions.md#read-only-editors).
 
 ## Ongietorri-pantaila {#welcome-screen}
 

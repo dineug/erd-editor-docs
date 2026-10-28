@@ -237,4 +237,5 @@ Die [Kartenschaltfläche](#card-buttons) für externe Links geht weiter, weil si
 Änderungen von Mitbearbeitern erreichen das Diagramm weiterhin, während Sie in Flow sind, und die Karten folgen den Tabellen und Beziehungen, die diese hinzufügen oder entfernen – siehe [Wie Flow die Karten anordnet](#how-flow-is-placed).  
 Deren Auswahl- und Fokusringe werden auf den Karten gezeichnet, ihre Mauszeiger und Auswahlrahmen jedoch nicht – siehe [Gemeinsame Bearbeitung](../../api/advanced/collaborative-editing.md).
 
-Beide Modi, einschließlich des Fokussierens und des Zurück- und Vorgehens, funktionieren auch in einem Editor mit `readonly`, ebenso die Liste `Name View`, die dort nur Ihren eigenen Bildschirm umschaltet.
+Beide Modi, einschließlich des Fokussierens und des Zurück- und Vorgehens, funktionieren auch in einem [`readonly`](../../api/erd-editor-element.md#readonly)-Editor, ebenso die Liste `Name View`, die dort nur Ihren eigenen Bildschirm umschaltet.  
+Auf der Registerkarte ERD eines schreibgeschützten Editors enthält das Tabellenmenü nur `Table Properties`, und ein Druck wählt keine Tabelle aus; fokussieren Sie daher mit `Alt + F` (Windows/Linux) oder `⌥ + F` (Mac) auf die Tabelle, die ein Sprung aus dem [Explorer](./explorer.md#going-to-a-row) oder der [Schnellsuche](./quick-search.md) ausgewählt hat.

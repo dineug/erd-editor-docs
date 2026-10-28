@@ -61,7 +61,7 @@ Yazdıklarınız yalnızca mantıksal adı değiştirir. Hücre düzenleyicisi d
 - `Logical Names` görünümünde başlığın mantıksal adı, ardından açıklaması, ardından her satırın hücreleri sütun sırasıyla, adın yerinde mantıksal adla.
 - `Both Names` görünümünde başlığın mantıksal adı, adı ve açıklaması, ardından her satırın hücreleri sütun sırasıyla, varsayılan olarak önce `Logical Name` hücresi.
 
-`Alt + Enter` (Windows/Linux) veya `⌥ + Enter` (Mac) tuşları bir sütun ekler ve ad hücresini odağa alır, `Logical Names` görünümünde bu hücre sütunun mantıksal adıdır.
+`Alt + Enter` (Windows/Linux) veya `⌥ + Enter` (Mac) tuşları bir sütun ekler ve satırının çizdiği ilk hücreyi odağa alır. Varsayılan sütun sırasında bu, ad hücresidir; `Logical Names` görünümünde sütunun mantıksal adı, `Both Names` görünümünde ise `Logical Name` hücresi olur, böylece mantıksal adla başlayabilirsiniz. [Sütun ekleme](./table-editing.md#adding-columns) bölümüne bakın.
 
 Bir ilişkinin eklediği yabancı anahtar sütunu, anahtarının türüyle birlikte mantıksal adını ve değer alanını da kopyalar. [Tanımlayıcı ilişkiler](./relationship-editing.md#identifying-relationships) bölümüne bakın.  
 Sütunları bir elektronik tabloya kopyalama ve bir elektronik tablodan sütun yapıştırma, mantıksal ad ve değer alanı hücreleri dahil, görünümün gösterdiği hücreleri kullanır. [Sütunları kopyalama/yapıştırma](./table-editing.md#copyingpasting-columns) bölümüne bakın.
@@ -143,5 +143,7 @@ MCP sunucusu üzerinden çalışan bir kodlama ajanı, hangi görünüme bakıyo
 
 ## Salt okunur düzenleyiciler {#read-only-editors}
 
-[`readonly`](../../api/erd-editor-element.md#readonly) bir düzenleyicide Ad görünümü seçicilerinin hepsi çalışır ve bir görünüm değişikliği, kilit ne durumda olursa olsun yalnızca o ekranı değiştirir.  
-Orada mantıksal adlar ve değer alanları düzenlenemez, bu yüzden hiçbir terim listesi veya değer alanı seçici açılmaz ve `Derive Physical Name Again` ile `Derive Physical Names Again` öğelerinin hiçbiri sunulmaz. Hiçbir [görünüm seçeneğinin](./table-related-functions.md#table-view-options) değiştirmediği gibi, View Option → `Domain` de orada hiçbir şeyi değiştirmez.
+[`readonly`](../../api/erd-editor-element.md#readonly) bir düzenleyicide Ad görünümü seçicilerinin hepsi çalışır: tuval araç çubuğunun `Name View` düğmesi, tuval bağlam menüsündeki ve Hızlı aramadaki `Name View` ve Akış araç çubuğundaki liste.  
+Orada yapılan bir değişiklik, kilit ne durumda olursa olsun yalnızca o ekranı değiştirir: dosya, ortak çalışanlar ve geri alma geçmişi görünümü olduğu gibi korur. Düzenleyici yeniden yazılabilir olduğunda seçilen görünüm, orada bir sonraki değişikliğe kadar ya da kilit devre dışıyken bir ortak çalışan onu değiştirene veya belge yeniden yüklenene kadar o ekranda kalır.  
+Orada mantıksal adlar ve değer alanları düzenlenemez, bu yüzden hiçbir hücre düzenleyicisi, terim listesi veya değer alanı seçici açılmaz ve `Derive Physical Name Again` ile `Derive Physical Names Again` öğelerinin hiçbiri sunulmaz.  
+View Option → `Domain`, her [görünüm seçeneğinin](./table-related-functions.md#table-view-options) orada yaptığı gibi Değer alanı hücresini yalnızca o ekranda gösterir veya gizler ve düzenleyiciyi yeniden yazılabilir yapmak belgenin tuttuğu görünüm seçeneklerini geri koyar.

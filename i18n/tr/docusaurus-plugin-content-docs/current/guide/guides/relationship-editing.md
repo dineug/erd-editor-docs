@@ -1,6 +1,6 @@
 ---
 sidebar_position: 7
-description: Bir ilişkiyi silme, türünü değiştirme, ON DELETE ve ON UPDATE eylemlerini ayarlama, “Sütunları eşle” iletişim kutusuyla mevcut sütunlara eşleme, bağlantı çizgisi gösterimini okuma, N:M ve tanımlayıcı ilişkilerle çalışma ve yeni yabancı anahtar sütunlarının anahtarlarından neleri kopyaladığını ve nasıl adlandırıldığını görme.
+description: Bir ilişkiyi silme, türünü değiştirme, ON DELETE ve ON UPDATE eylemlerini ayarlama, “Sütunları eşle” iletişim kutusuyla mevcut sütunlara eşleme, bağlantı çizgisi gösterimini ve bağlantı çizgilerinin tabloların çevresinden nasıl yönlendirildiğini okuma, N:M ve tanımlayıcı ilişkilerle çalışma ve yeni yabancı anahtar sütunlarının anahtarlarından neleri kopyaladığını ve nasıl adlandırıldığını görme.
 ---
 
 # İlişki düzenleme
@@ -81,7 +81,7 @@ Her satır ya alt tablonun zaten sahip olduğu bir sütunu kullanır ya da yeni 
 İki şekilde açılır:
 
 - Bir ilişki çizerken, alt tablonun yanındaki `Map to existing columns` öğesinden. [İlişki oluşturma](./editing-start.md#relationship-creation) bölümüne bakın. Bu durumda `Map` düğmesi, çizilmekte olan türde bir ilişki ekler.
-- Mevcut bir ilişkinin sütunlarını değiştirmek için, ilişkinin bağlam menüsündeki `Map Columns` öğesinden. Bu durumda `Save` düğmesi değişikliği yazar. Salt okunur bir düzenleyicide bu öğe yer almaz.
+- Mevcut bir ilişkinin sütunlarını değiştirmek için, ilişkinin bağlam menüsündeki `Map Columns` öğesinden. Bu durumda `Save` düğmesi değişikliği yazar. Salt okunur bir düzenleyici hiçbir ilişki bağlam menüsü açmaz, bu yüzden orada Map Columns açılamaz.
 
 İletişim kutusunun alt başlığı, `users → posts · One N` gibi, iki tabloyu ve ilişki türünü belirtir. Tür burada gösterilir ancak değiştirilmez. Türü değiştirmek için [Tür değiştirme](#type-change) bölümüne bakın.
 
@@ -226,6 +226,9 @@ Vurgu, tuvalde farenin sol veya sağ düğmesine bir sonraki basışta söner. B
 Farenin orta düğmesiyle veya el aracıyla kaydırmak vurguyu söndürmez. Gezginde veya Fark görüntüleyicide bir satırı daraltmak ya da genişletmek, seçimi `Escape` tuşuyla kaldırmak ve [Hızlı aramadan](./quick-search.md) ya da Akış modunun dış bağlantı [kart düğmesinden](./visualization.md#card-buttons) yapılan bir atlama da vurguyu söndürmez.  
 Vurgu kaydedilmez, geri alma geçmişinde yer almaz ve ortak çalışanlar onu görmez.
 
+[`readonly`](../../api/erd-editor-element.md#readonly) bir düzenleyicide imleç, bir atlamanın bıraktığı vurgunun yerine bağlantı çizgilerini de aydınlatır. Bir tablonun üzerinde durduğunda, imleç tablodan ayrılana kadar o tablonun her bağlantı çizgisini üzerine gelme renginde aydınlatır.  
+Hareketsiz bir tıklama, bir sonraki böyle tıklamaya kadar bir ışığı açık bırakır: bir tabloda o tablonun bağlantı çizgilerini, bir bağlantı çizgisinde o bağlantı çizgisini, başka her yerde hiçbir şeyi aydınlatır. Orada sürükleme tuvali kaydırır ve ışığı olduğu gibi bırakır.
+
 ERD tuvalindeki bağlantı çizgilerini `Relationship` görünüm seçeneğiyle, yalnızca etiketlerini ise varsayılan olarak açık olan `Referential Actions` görünüm seçeneğiyle gizleyin. [Tablo görünüm seçenekleri](./table-related-functions.md#table-view-options) bölümüne bakın.  
 Tabloların yalnızca adlarına daraldığı `70%` ve altındaki yakınlaştırmada etiketler çizilmez.  
 [Görüntü dışa aktarma](./file-import-export.md#image) her zaman %100'de çizilir, bu nedenle bir görünüm seçeneği onları gizlemedikçe, tuvalin yakınlaştırma düzeyi ne olursa olsun etiketleri çizer. `Background` seçeneği kapalıyken her etiketin arkasındaki kutu da saydam olur.  
@@ -233,9 +236,10 @@ Görselleştirme sekmesindeki [Akış modu](./visualization.md#flow-mode), `Rela
 
 ## Bağlantı çizgisi yönlendirme {#connector-routing}
 
-Bağlantı çizgileri dik açılı olarak yönlendirilir.  
-Bir rota, iki ucu arasında duran tabloları kesmek yerine onların çevresinden dolanır ve köşeleri yuvarlatılmıştır.  
-Her uç, dönmeden önce tablosundan kısa, düz bir parçayla çıkar, bu nedenle birbirine yakın olan ve bağlantı çizgisi uçları aynı hizaya gelen iki tablo, dolambaçlı bir yol yerine tek bir düz çizgiyle birleştirilir.  
+Bağlantı çizgileri dik açılı olarak yönlendirilir ve köşeleri yuvarlatılmıştır.  
+Bir rota, yoluna çıkan tabloların içinden geçmek yerine onların çevresinden dolanır. İki ucu arasındaki birkaç dönüşlü her rotanın bir tabloyu keseceği yerde, örneğin kalabalık bir diyagramda, bağlantı çizgisi ihtiyaç duyduğu sayıda dönüşü olan bir dolambaçlı yol izler. Yalnızca dolambaçlı bir yol bulunamadığında yine bir tabloyu keser.  
+Bir bağlantı çizgisi, mümkün olan her yerde birbirine bakan bir çift kenardan iki tablosundan da çıkar ve her uç, dönmeden önce tablosundan kısa, düz bir parçayla çıkar, bu nedenle birbirine yakın olan ve bağlantı çizgisi uçları aynı hizaya gelen iki tablo, dolambaçlı bir yol yerine tek bir düz çizgiyle birleştirilir.  
+Aralarındaki uzaklık bundan da kısa olan, hatta `40px` altında olan birbirine bakan iki tablo bakan kenarlarını korur ve uçları aynı hizaya gelmiyorsa bağlantı çizgisi, ikisinin de altından geçmek yerine aralarındaki boşlukta bir basamakla yan yer değiştirir.  
 Bir tablonun aynı kenarından çıkan rotalar, üst üste binmemeleri için ayrı koridorlara dağıtılır.  
 Yalnızca tablolardan kaçınılır: Bir bağlantı çizgisi bir notu veya bir tablo grubunun kutusunu kesebilir ve tablo gruplarının üstünde, tabloların ve notların altında çizilir.
 
@@ -243,6 +247,9 @@ Bir tablodan kendisine giden bir ilişki, üst tablo ucunda tablonun üst kenar�
 Aynı tablodaki diğer kendine başvuran ilişkiler ilkinin dışına iç içe yerleşir, böylece eğrileri ne birbirini ne de tabloyu keser.
 
 Yapılandırılacak bir şey yoktur.  
-Tuvaldeki herhangi bir şey taşındığında veya yeniden boyutlandırıldığında rotalar otomatik olarak yeniden hesaplanır, bu nedenle hiçbir zaman elle düzeltilmeleri gerekmez.
+Tuvaldeki herhangi bir şey taşındığında veya yeniden boyutlandırıldığında rotalar otomatik olarak yeniden hesaplanır, bu nedenle hiçbir zaman elle düzeltilmeleri gerekmez.  
+Sürüklerken taşıdığınız tabloların bağlantı çizgileri onları izler, diğer her bağlantı çizgisi ise sürükleme başladığında sahip olduğu rotayı korur. Bıraktığınızda, taşımanın yeniden yönlendirdiği her bağlantı çizgisi yeniden çizilir; örneğin yoluna bırakılan bir tablonun çevresinden dolanan ya da bir tablo yolundan çekildikten sonra düzleşen bir bağlantı çizgisi.
+
+Bir diyagram aynı rotaları, onu aynı Ad görünümünde gösteren her pencerede aynı çizer: tablolar taşınırken açık kalmış olanda, diyagramı şimdi açanda ve bir ortak çalışanınkinde; [dışa aktarılan bir görüntü](./file-import-export.md#image) de onları çizer. Ad görünümü önemlidir, çünkü tabloların ne kadar geniş olduğunu değiştirir. [Ad görünümü](./logical-names.md#name-view) bölümüne bakın.
 
 ![members tablosunu aşağı sürükleyip geri getirme, bu sırada orders tablosundan gelen bağlantı çizgisinin categories tablosunun sağından geçmekle solundan dolanmak arasında değişmesi, tüm köşelerin yuvarlatılmış olması](/img/demo-connector-routing.webp)

@@ -237,4 +237,5 @@ Il [pulsante della card](#card-buttons) del collegamento esterno va oltre, perch
 Le modifiche dei collaboratori continuano a raggiungere il diagramma mentre si è nella modalità Flusso, e le card seguono le tabelle e le relazioni che essi aggiungono o rimuovono — vedere [Come la modalità Flusso dispone le card](#how-flow-is-placed).  
 I loro anelli di selezione e di focus vengono disegnati sulle card, ma i loro cursori e riquadri di trascinamento no — vedere [Modifica collaborativa](../../api/advanced/collaborative-editing.md).
 
-Entrambe le modalità, focalizzazione e passi inclusi, funzionano anche in un editor `readonly`, e lo stesso vale per l’elenco `Name View`, che lì cambia solo il proprio schermo.
+Entrambe le modalità, focalizzazione e passi inclusi, funzionano anche in un editor [`readonly`](../../api/erd-editor-element.md#readonly), e lo stesso vale per l’elenco `Name View`, che lì cambia solo il proprio schermo.  
+Nella scheda ERD di un editor di sola lettura il menu della tabella contiene solo `Table Properties` e una pressione non seleziona alcuna tabella, quindi la focalizzazione si fa con `Alt + F` (Windows/Linux) o `⌥ + F` (Mac) sulla tabella selezionata da un salto dal pannello [Esplora](./explorer.md#going-to-a-row) o dalla [Ricerca rapida](./quick-search.md).

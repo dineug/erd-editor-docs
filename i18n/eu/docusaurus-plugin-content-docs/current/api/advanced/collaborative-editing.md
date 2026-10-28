@@ -55,6 +55,10 @@ Blokeoa aktibatuta dagoen bitartean, aldaketa hura egin duen editorean bakarrik 
 Blokeoa desaktibatuta dagoen bitartean, edita dezakeen editore batean egindako aldaketa batek editore eta erreplika guztietako Izenen ikuspegia aldatzen du, azken aldaketak irabazten duela, eta guztiek gordetzen dute.  
 Irakurtzeko soilik dagoen editore batek berak egindako aldaketa editore horretan geratzen da beti, eta editoreak besteen aldaketa partekatuei jarraitzen die oraindik.
 
+`5.0.0` bertsiotik aurrera, [irakurtzeko soilik](../erd-editor-element.md#readonly) dagoen editore batek ez du aldaketarik bidaltzen. Irakurleak aldatzen dituen korritzea, zooma, fitxa, Izenen ikuspegia, datu-basea, Code Generator hizkuntza, izenen idazkera, mugatzaile mota eta `View Option` errenkadak bere pantailan geratzen dira, haien blokeoek zer esaten duten axola gabe; `5.0.0` bertsioa baino lehen, haren korritzeak, zoomak, fitxa-aldaketak, datu-basea eta kode-ezarpenak editatu daitekeen editore batenak bezala bidaltzen ziren.  
+Haren biltegiak bidaltzen du oraindik jarraitzaileek irakurlearen kurtsoreaz, fokuaz, hautapenaz eta arrastatze-koadroaz bidaltzen dutena, elkarlanera sartzen den editore batek eskatzen dituen erregistroei erantzuten die, eta besteek bidaltzen duten aldaketa guztiak aplikatzen ditu. Datu-basearen, Code Generator ezarpen baten edo `View Option` errenkada baten aldaketa batek haren dokumentura iristen da, eta pantailara ere bai, irakurleak ezarpen hori bertan aldatu ez badu behintzat; eta partekatutako Izenen ikuspegiaren aldaketa bat pantailan ikusten da edonola.  
+Editorea irakurtzeko soilik jartzen denean, lehenik biltegiak arrastatze edo korritze batetik oraindik atxikita duena bidaltzen du, [flushStreamBuffers](#flushstreambuffers) metodoak bezala; horrela, besteek azkenak mantentzen dituzte.
+
 [Blokeoak](../../guide/guides/settings.md#lock) partekatuak dira: ezarpen bat azkenekoz blokeatzeak edo desblokeatzeak irabazten du editore guztietan, eta blokeo batek hura aktibatu zuen editorearen balioak daramatza; horrela, editore eta erreplika guztiek balio bera gordetzen dute.  
 Beraz, `Viewport` blokeoak hura aktibatu zuen editorearen ikuspegia gordetzen du, eta `Canvas Type` blokeoak editore horrek Ezarpenak fitxaren aurretik irekita izan zuen azken fitxa; Ezarpenak fitxan aktibatzen dira blokeoak.  
 `Language`, `Table Name Case`, `Column Name Case`, `Bracket Type` edo, `4.2.0` bertsiotik aurrera, `Name View` blokeoa desaktibatzeak, gainera, ezarpen hori editore guztietan hura desaktibatu zuen editorean erakusten den baliora ezartzen du, eta horrela balio bakarra gordetzen jarraitzen dute. `Viewport` edo `Canvas Type` blokeoa desaktibatzeak ez du inoren ikuspegia edo fitxa mugitzen.
@@ -71,6 +75,8 @@ Txarteleko kanpo-estekaren botoiak, `#`, `@` edo `:` ikurraren ondoren aukeratut
 Hemen, subscribe eta dispatch lotzen dituen kableatzeak sarearen lekua hartzen du; horrela, saio baten egitura ikus dezakezu garraiorik tartean izan gabe.
 
 ```js
+import '@dineug/erd-editor/erd-editor.js';
+
 const editor1 = document.createElement('erd-editor');
 const editor2 = document.createElement('erd-editor');
 

@@ -1,6 +1,6 @@
 ---
 sidebar_position: 16
-description: Sinkronisasi tipe data hubungan dan domain, lebar komentar maksimum, penghitungan ulang lebar tabel, penguncian pengaturan (area pandang, tab, pengaturan kode, dan Tampilan Nama), urutan tampilan kolom, dan daftar pintasan.
+description: Sinkronisasi tipe data hubungan dan domain, lebar komentar maksimum, penguncian pengaturan (area pandang, tab, pengaturan kode, dan Tampilan Nama), urutan tampilan kolom, daftar pintasan, dan tab Pengaturan pada editor hanya baca.
 ---
 
 # Pengaturan
@@ -33,13 +33,6 @@ Saat sakelar diaktifkan, nilainya dimulai dari `60px`. Nilai yang diketik di lua
 
 ![Mengaktifkan Maximum comment width, memasukkan 120, dan tab ERD yang menampilkan komentar terpotong sesuai lebar itu](/img/demo-settings-comment-width.webp)
 
-## Hitung ulang lebar tabel {#recalculation-table-width}
-
-Tekan `Sync` untuk menghitung ulang lebar setiap tabel dan sel kolom agar sesuai dengan teksnya saat ini, serta untuk menggambar ulang konektor hubungan mengikuti ukuran yang baru.
-Notifikasi `Recalculated table width` mengonfirmasinya.
-Lebar dihitung ulang dengan sendirinya setiap kali dokumen dimuat, sehingga hal ini hanya diperlukan saat perubahan font atau rendering membuat lebar tersebut tidak lagi sesuai.
-Lebar tidak disimpan di file, sehingga `Sync` tidak pernah mengubah file.
-
 ## Penguncian {#lock}
 
 Daftar `Lock` memuat tujuh pengaturan. Selama penguncian suatu pengaturan aktif, file mempertahankan nilai yang dimiliki pengaturan itu saat dikunci, sehingga mengubahnya di layar membiarkan file tetap seperti semula.
@@ -68,8 +61,9 @@ Jika area pandang terkunci tidak menampilkan bagian mana pun dari diagram saat f
 
 ![Membuka kunci Viewport, menggulir dan memperbesar/memperkecil diagram, dan menguncinya kembali pada area pandang baru yang ditampilkan barisnya](/img/demo-settings-locks.webp)
 
-Mengaktifkan atau menonaktifkan penguncian mengubah file, karena file menyimpan penguncian mana yang aktif, tetapi seperti bagian lain tab Pengaturan, hal ini tidak dicatat dalam [riwayat pembatalan](./undo-redo.md#what-the-history-records). Begitu pula penggantian Tampilan Nama, terkunci atau tidak. Di editor hanya baca, tombol penguncian tidak melakukan apa pun, dan penggantian Tampilan Nama hanya mengubah layar tersebut, apa pun keadaan pengunciannya.
+Mengaktifkan atau menonaktifkan penguncian mengubah file, karena file menyimpan penguncian mana yang aktif, tetapi seperti bagian lain tab Pengaturan, hal ini tidak dicatat dalam [riwayat pembatalan](./undo-redo.md#what-the-history-records). Begitu pula penggantian Tampilan Nama, terkunci atau tidak.
 Setiap pengaturan lain disimpan sebagaimana adanya: database, sakelar [`View Option`](./table-related-functions.md#table-view-options), dan bagian lain tab `Preferences`.
+Editor hanya baca tidak mengubah file lewat satu pun dari pengaturan itu, apa pun penguncian miliknya: tombol penguncian dan kontrol `Preferences` lainnya dinonaktifkan, dan pengaturan yang masih dapat Anda ubah tetap berada di layar itu — lihat [Editor hanya baca](#read-only-editors).
 
 Setiap penguncian aktif di diagram baru, yaitu diagram yang dimulai dari nol: file kosong yang dibuka di VS Code, Obsidian, atau IDE JetBrains (`ERD Editor: Create new diagram` dan `New ERD` di Obsidian membuatnya), skema baru di aplikasi web, file yang dibuat dari menu New di Google Drive, atau `<erd-editor>` yang tidak diberi nilai.
 Skema atau file Google Drive yang dibuat aplikasi web dengan mengimpor file SQL, DBML, AML, atau GraphQL juga dimulai dengan setiap penguncian aktif. Yang dibuat dari file JSON mempertahankan penguncian yang dicatat file tersebut.
@@ -98,6 +92,7 @@ Seret baris untuk memindahkannya — seluruh baris dapat diseret, dan ikon pegan
 `Logical Name` menempatkan sel nama logis yang ditampilkan baris kolom dalam tampilan `Both Names`. Dalam tampilan `Logical Names`, nama logis menempati posisi baris `Name` sebagai gantinya, dan tampilan `Physical Names` tidak menampilkannya — lihat [Tampilan Nama](./logical-names.md#name-view). `Domain` menempatkan sel Domain yang ditampilkan View Option → `Domain` — lihat [Sel Domain](./logical-names.md#the-domain-cell).
 Sel yang disembunyikan oleh [opsi tampilan tabel](./table-related-functions.md#table-view-options) atau tidak disertakan oleh Tampilan Nama tetap menempati posisinya di daftar, sehingga urutan berlaku untuk sel mana pun yang ditampilkan.
 Diagram yang urutannya diatur sebelum `Logical Name` dan `Domain` menjadi baris mendapatkan `Logical Name` tepat sebelum `Name` dan `Domain` tepat setelah `DataType`, di mana pun posisi keduanya dalam urutannya.
+Diagram yang disimpan rilis yang lebih baru juga mempertahankan urutannya, bahkan ketika rilis itu memiliki baris yang tidak dimiliki rilis ini: baris yang dimiliki rilis ini berada dalam urutan yang diberikan file, dan baris yang tidak dikenal dibuang. Menyimpan diagram di sini menulis urutan tanpa baris itu, dan rilis yang lebih baru menaruh kembali baris tersebut di sebelah tetangganya dalam urutan defaultnya sendiri.
 Tanda [kunci alternatif](./table-related-functions.md#alternate-keys) (`AK1.1` dan seterusnya) bukan salah satu dari baris ini. Tanda ini selalu berada paling akhir dalam baris, setelah sel mana pun yang ditempatkan terakhir oleh urutan ini.
 
 ![Menggulir ke bawah ke Column Order dan menyeret baris Comment ke atas di bawah Name, yang menempatkan setiap komentar tepat setelah nama kolomnya](/img/demo-settings-column-order.webp)
@@ -146,6 +141,7 @@ Di sel nama logis yang daftar istilahnya terbuka, penekanan pertama `Stop` hanya
 Penjelajah, pembuat tema, atau pemilih `Display Language` yang terbuka tidak menahan satu pun pintasan di kanvas. `Stop` tidak pernah menutup Penjelajah. Untuk apa yang dilakukan `Stop` dan tombol lain di dalam Penjelajah, lihat [Tombol di Penjelajah](./explorer.md#keys-in-the-explorer), dan di dalam pemilih, lihat [Memilih bahasa](./language-and-theme.md#picking-a-language).
 `Delete Selection` menghapus setiap tabel, memo, dan grup tabel yang dipilih, atau, saat satu tabel dipilih bersama beberapa kolomnya dan zoom di atas `70%`, kolom-kolom tersebut — lihat [Penghapusan tabel dan memo](./table-related-functions.md#table-and-memo-deletion). `Remove Table, Memo` juga menghapus grup tabel yang dipilih.
 `Add Table Group` mulai menggambar [`New Table Group`](./table-groups.md#drawing-a-group), seperti yang dilakukan tombol `New Table Group` di [bilah alat kanvas](./table-related-functions.md#canvas-toolbar), dan penekanan kedua membatalkan penggambaran. `Group Selected Tables` terdiri atas dua penekanan tanpa tombol pengubah, `T` lalu `G` dalam satu detik. Pintasan ini memasukkan tabel yang dipilih ke grup baru dan membuka editor namanya, seperti yang dilakukan `Group selected tables` di menu konteks tabel, dan tidak melakukan apa pun saat tidak ada tabel yang dipilih — lihat [Mengelompokkan tabel yang dipilih](./table-groups.md#grouping-selected-tables). Keduanya tidak melakukan apa pun di editor hanya baca atau selama grup [disembunyikan](./table-groups.md#hiding-groups).
+Di editor hanya baca, hanya tombol yang membaca yang berfungsi: `Search`, `Toggle Explorer`, `Stop`, `Table Properties` dan `Focus on this table` pada tabel yang dipilih sebuah lompatan, ketiga tombol zoom, `Zen Mode`, salin, dan tombol panah, yang memindahkan sel terfokus. `Editing`, setiap tombol `Add` dan `Remove`, `Delete Selection`, `Primary Key`, kedua tombol pilih semua, keempat tombol hubungan, `Add Table Group`, `Group Selected Tables`, `Hand Tool`, dan tempel tidak melakukan apa pun, dan `Undo` serta `Redo` tidak membatalkan atau mengulang apa pun — lihat [Editor hanya baca](./table-related-functions.md#read-only-editors).
 `Zoom In`, `Zoom Out`, dan `Zoom Reset` juga mengubah zoom tab [Visualisasi](./visualization.md#toolbar), baik di `Graph` maupun `Flow`, kecuali jika Pencarian Cepat terbuka.
 Di `Flow`, `Undo` dan `Redo` mundur dan maju melalui apa yang pernah menjadi tujuan penyempitan Alur, seperti yang dilakukan tombol `Previous table` dan `Next table` milik Alur, kecuali jika Pencarian Cepat terbuka. Di sana keduanya tidak pernah membatalkan perubahan pada diagram, dan di `Graph` keduanya tidak melakukan apa pun — lihat [Tabel sebelumnya dan berikutnya](./visualization.md#previous-table-and-next-table).
 Di tab Visualisasi, `Stop` juga menutup menu [tampilan baris](./visualization.md#row-display) dan membatalkan [tata letak Alur](./visualization.md#how-flow-is-placed) yang masih berjalan; pintasan ini tidak memperluas area pandang yang dipersempit dengan `Focus on this table`.
@@ -160,3 +156,13 @@ Tab `Shortcuts` kemudian mencantumkan kombinasi tombol dari host: perintah yang 
 Tombol baris di tab Kamus mengikuti `Add Column` dan `Remove Column`, sehingga memetakan ulang salah satunya memindahkan tombol tersebut — lihat [`dictionaryRowChords`](../../api/erd-editor-element.md#dictionaryrowchords).
 
 Di Obsidian, tombol-tombol ini sampai ke editor setiap kali tab Obsidian milik diagram aktif, bahkan saat hotkey Obsidian menggunakan tombol yang sama, seperti `Alt + Enter`, `Ctrl + K`, dan `Ctrl + F` (Windows/Linux) atau `⌥ + Enter`, `⌘ + K`, dan `⌘ + F` (Mac). Begitu pula `Alt + Shift + Enter` (Windows/Linux) atau `⌥ + Shift + Enter` (Mac) milik tab Kamus, yang tidak ada di baris mana pun dalam daftar ini. Setiap hotkey Obsidian lainnya tetap berfungsi di sana. Untuk `Ctrl + F` atau `⌘ + F`, lihat [Bilah pencarian browser](./find-and-replace.md#the-browsers-find-bar).
+
+## Editor hanya baca {#read-only-editors}
+
+Di editor [`readonly`](../../api/erd-editor-element.md#readonly), tab Pengaturan menampilkan pengaturan diagram dan tidak mengubah satu pun. Lencana `Read only` berada di samping judul setiap halaman, `Preferences` dan `Shortcuts`.
+Sakelar `Relationship DataType Sync` dan `Maximum comment width` serta kotak lebarnya dinonaktifkan, begitu pula setiap tombol penguncian. Baris `Column Order` tidak menampilkan pegangan dan tidak dapat diseret.
+Setiap baris `Lock` tetap menampilkan nilainya. Baris yang terkunci menampilkan nilai yang dipegang file, dan yang tidak terkunci menampilkan pengaturan sebagaimana layar itu memilikinya, yang dapat berbeda dari milik file, seperti di bawah.
+
+Pengaturan yang menentukan apa yang ditampilkan layar tetap dapat diubah di sana: posisi dan zoom tampilan, tab, Tampilan Nama, database, bahasa Code Generator, kedua konvensi penamaan, tanda kutip, dan sakelar [`View Option`](./table-related-functions.md#table-view-options).
+Masing-masing hanya mengubah layar itu, apa pun penguncian miliknya. Perubahan tidak disimpan di file atau ditulis oleh ekspor JSON, tidak dicatat dalam riwayat pembatalan, tidak dihitung sebagai perubahan, dan tidak pernah sampai ke kolaborator. Panel opsi tab [Skema SQL](./schema-sql.md#options-panel) dan [Generator Kode](./code-generator.md#options-panel) memberi keterangan `This window only` pada pilihan ini di sana, menggantikan `Saved in the document`.
+Saat editor dapat menulis lagi, database, bahasa, konvensi penamaan, tanda kutip, dan sakelar View Option kembali ke nilai file. Tampilan, tab, dan Tampilan Nama tetap seperti yang Anda tinggalkan, dan file mengambil masing-masingnya, sebagaimana diizinkan penguncian miliknya, pada perubahan berikutnya.

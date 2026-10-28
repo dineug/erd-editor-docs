@@ -1,6 +1,6 @@
 ---
 sidebar_position: 16
-description: 관계 데이터 타입 동기화와 도메인, 코멘트 최대 너비, 테이블 너비 재계산, 설정 잠금(화면, 탭, 코드 설정, 이름 표시), 컬럼 순서와 단축키 목록.
+description: 관계 데이터 타입 동기화와 도메인, 코멘트 최대 너비, 설정 잠금(화면, 탭, 코드 설정, 이름 표시), 컬럼 순서, 단축키 목록, 읽기 전용 에디터의 설정 탭.
 ---
 
 # 설정
@@ -33,13 +33,6 @@ foreign key에서 그 키로 거슬러 갈 때는 타입이 작성된 그대로 
 
 ![코멘트 최대 너비를 켜고 120을 입력한 뒤 ERD 탭에서 그 너비로 잘린 코멘트](/img/demo-settings-comment-width.webp)
 
-## 테이블 너비 재계산
-
-`Sync`를 누르면 모든 테이블과 컬럼 셀의 너비를 현재 텍스트에 맞게 다시 계산하고, 새로운 크기에 맞춰 관계 연결선을 다시 그립니다.
-완료되면 `Recalculated table width` 토스트로 알려 줍니다.
-문서를 불러올 때마다 너비는 자동으로 다시 계산되므로, 폰트나 렌더링이 바뀌어 너비가 어긋난 경우에만 필요합니다.
-너비는 파일에 저장되지 않으므로 `Sync`는 파일을 바꾸지 않습니다.
-
 ## 잠금
 
 `Lock` 목록에는 7개의 설정이 있습니다. 설정의 잠금이 켜져 있는 동안 파일은 잠글 때의 값을 유지하므로, 화면에서 그 설정을 바꿔도 파일은 그대로 유지됩니다.
@@ -68,8 +61,9 @@ foreign key에서 그 키로 거슬러 갈 때는 타입이 작성된 그대로 
 
 ![Viewport 잠금을 해제하고 다이어그램을 스크롤하고 확대/축소한 뒤, 행에 표시된 새 화면으로 다시 잠그는 모습](/img/demo-settings-locks.webp)
 
-파일에는 어떤 잠금이 켜져 있는지가 저장되므로 잠금을 켜거나 끄면 파일이 바뀌지만, 설정 탭의 다른 항목과 마찬가지로 [Undo 히스토리](./undo-redo.md#히스토리에-기록되는-내용)에는 기록되지 않습니다. 잠겨 있든 아니든 이름 표시 전환도 마찬가지입니다. 읽기 전용 에디터에서는 잠금 버튼이 아무 동작도 하지 않으며, 이름 표시 전환은 잠금에 상관없이 그 화면만 바꿉니다.
+파일에는 어떤 잠금이 켜져 있는지가 저장되므로 잠금을 켜거나 끄면 파일이 바뀌지만, 설정 탭의 다른 항목과 마찬가지로 [Undo 히스토리](./undo-redo.md#히스토리에-기록되는-내용)에는 기록되지 않습니다. 잠겨 있든 아니든 이름 표시 전환도 마찬가지입니다.
 그 밖의 설정은 모두 현재 상태 그대로 저장됩니다. 데이터베이스, [`View Option`](./table-related-functions.md#테이블-보기-옵션) 토글, `Preferences` 탭의 나머지 항목이 여기에 해당합니다.
+읽기 전용 에디터는 잠금과 상관없이 이 중 어느 것으로도 파일을 바꾸지 않습니다. 잠금 버튼과 `Preferences`의 다른 컨트롤은 비활성화되고, 여전히 바꿀 수 있는 설정은 그 화면에만 머뭅니다. [읽기 전용 에디터](#read-only-editors) 항목을 참고하세요.
 
 새 다이어그램, 즉 아무것도 없는 상태에서 시작한 다이어그램에서는 모든 잠금이 켜져 있습니다. VS Code, Obsidian, JetBrains IDE에서 연 빈 파일(Obsidian의 `ERD Editor: Create new diagram`과 `New ERD`가 이런 파일을 만듭니다), 웹 앱의 새 스키마, Google Drive의 New 메뉴로 만든 파일, 값을 지정하지 않은 `<erd-editor>`가 여기에 해당합니다.
 웹 앱이 SQL, DBML, AML, GraphQL 파일을 가져와 만드는 스키마나 Google Drive 파일도 모든 잠금이 켜진 상태로 시작합니다. JSON 파일로 만든 경우에는 그 파일에 기록된 잠금을 유지합니다.
@@ -98,6 +92,7 @@ MCP 서버로 작업하는 코딩 에이전트에는 잠금이나 잠금이 담�
 `Logical Name`은 `Both Names` 보기에서 행에 그려지는 논리명 셀의 위치를 정합니다. `Logical Names` 보기에서는 대신 논리명이 `Name` 행의 자리에 놓이며, `Physical Names` 보기에서는 논리명 셀이 그려지지 않습니다. [이름 표시](./logical-names.md#name-view) 문서를 참고하세요. `Domain`은 View Option → `Domain`이 표시하는 도메인 셀의 위치를 정합니다. [도메인 셀](./logical-names.md#the-domain-cell) 문서를 참고하세요.
 [테이블 보기 옵션](./table-related-functions.md#테이블-보기-옵션)으로 숨겨지거나 이름 표시에서 제외된 셀도 목록에서 자리를 유지하므로, 순서는 표출되는 셀에 적용됩니다.
 `Logical Name`과 `Domain`이 행이 되기 전에 순서를 정한 다이어그램에서는, `Name`과 `DataType`이 순서의 어디에 있든 `Logical Name`이 `Name` 바로 앞에, `Domain`이 `DataType` 바로 뒤에 들어갑니다.
+이후 릴리스가 저장한 다이어그램도, 그 릴리스에는 있고 이 릴리스에는 없는 행이 있더라도 순서를 유지합니다. 이 릴리스에 있는 행은 파일이 준 순서대로 놓이고 알 수 없는 행은 빠집니다. 여기서 다이어그램을 저장하면 그 행을 뺀 순서가 기록되고, 이후 릴리스는 자신의 기본 순서에서 그 행의 이웃 옆에 그 행을 다시 넣습니다.
 [대체 키](./table-related-functions.md#대체-키) 표시(`AK1.1` 등)는 이 목록의 행이 아닙니다. 표시는 항상 행의 맨 끝, 이 순서가 마지막에 두는 셀보다 뒤에 놓입니다.
 
 ![Column Order까지 스크롤한 뒤 Comment 행을 Name 아래로 드래그해 코멘트가 컬럼 이름 바로 뒤에 표출되는 모습](/img/demo-settings-column-order.webp)
@@ -146,6 +141,7 @@ ERD 탭에서 `Stop`은 열려 있는 셀이나 메모의 편집모드를 끝내
 탐색기, 테마 빌더, `Display Language` 선택기가 열려 있어도 캔버스의 단축키는 모두 그대로 동작합니다. `Stop`은 탐색기를 닫지 않습니다. 탐색기 안에서 `Stop`과 다른 키가 하는 일은 [탐색기의 키](./explorer.md#탐색기의-키) 문서를, 선택기 안에서 누르는 키는 [언어 선택](./language-and-theme.md#언어-선택) 문서를 참고하세요.
 `Delete Selection`은 선택된 테이블, 메모, 테이블 그룹을 모두 삭제하며, 일부 컬럼이 선택된 테이블 하나만 선택되어 있고 배율이 `70%`보다 크면 대신 그 컬럼을 삭제합니다. [테이블, 메모 삭제](./table-related-functions.md#테이블-메모-삭제) 문서를 참고하세요. `Remove Table, Memo`도 선택된 테이블 그룹을 함께 삭제합니다.
 `Add Table Group`은 [캔버스 툴바](./table-related-functions.md#캔버스-툴바)의 `New Table Group` 버튼처럼 [`New Table Group`](./table-groups.md#그룹-그리기) 그리기를 시작하며, 한 번 더 누르면 그리기가 취소됩니다. `Group Selected Tables`는 보조 키 없이 두 번 누르는 단축키로, `T` 다음 `G`를 1초 안에 누릅니다. 테이블 컨텍스트 메뉴의 `Group selected tables`처럼 선택된 테이블을 새 그룹에 넣고 그 그룹의 이름 입력란을 열며, 선택된 테이블이 없으면 아무 동작도 하지 않습니다. [선택한 테이블 그룹화](./table-groups.md#선택한-테이블-그룹화) 문서를 참고하세요. 둘 다 읽기 전용 에디터에서나 그룹이 [숨겨진](./table-groups.md#그룹-숨기기) 동안에는 아무 동작도 하지 않습니다.
+읽기 전용 에디터에서는 읽는 키만 동작합니다. `Search`, `Toggle Explorer`, `Stop`, 이동이 선택한 테이블에 대한 `Table Properties`와 `Focus on this table`, 세 가지 확대/축소 키, `Zen Mode`, 복사, 포커스된 셀을 옮기는 방향키입니다. `Editing`, 모든 `Add`와 `Remove` 키, `Delete Selection`, `Primary Key`, 두 가지 모두 선택 키, 네 가지 관계선 키, `Add Table Group`, `Group Selected Tables`, `Hand Tool`, 붙여넣기는 아무 동작도 하지 않으며, `Undo`와 `Redo`는 아무것도 되돌리거나 다시 실행하지 않습니다. [읽기 전용 에디터](./table-related-functions.md#read-only-editors) 문서를 참고하세요.
 `Zoom In`, `Zoom Out`, `Zoom Reset`은 [Visualization](./visualization.md#툴바) 탭에서도 `Graph`와 `Flow` 모두 확대/축소하며, 빠른 검색이 열려 있을 때는 동작하지 않습니다.
 `Flow`에서 `Undo`와 `Redo`는 `Previous table`과 `Next table` 버튼처럼 Flow가 좁혀 온 범위를 따라 한 단계 뒤로, 한 단계 앞으로 이동하며, 빠른 검색이 열려 있을 때는 동작하지 않습니다. 그곳에서는 다이어그램을 되돌리지 않으며, `Graph`에서는 아무 동작도 하지 않습니다. [이전 테이블과 다음 테이블](./visualization.md#previous-table-and-next-table) 문서를 참고하세요.
 Visualization 탭에서 `Stop`은 [행 표시](./visualization.md#행-표시) 메뉴도 닫고 아직 진행 중인 [Flow 배치](./visualization.md#flow-배치-방식)를 취소하지만, `Focus on this table`로 좁힌 화면을 넓히지는 않습니다.
@@ -160,3 +156,13 @@ Visualization 탭에서 `Stop`은 [행 표시](./visualization.md#행-표시) �
 사전 탭의 행 키는 `Add Column`과 `Remove Column`을 따르므로, 둘 중 하나를 다시 지정하면 행 키도 함께 바뀝니다. [`dictionaryRowChords`](../../api/erd-editor-element.md#dictionaryrowchords) 문서를 참고하세요.
 
 Obsidian에서는 다이어그램의 Obsidian 탭이 활성화되어 있으면 `Alt + Enter`, `Ctrl + K`, `Ctrl + F` (Windows/Linux) or `⌥ + Enter`, `⌘ + K`, `⌘ + F` (Mac)처럼 Obsidian 단축키가 같은 키를 쓰는 경우에도 위 표의 단축키가 에디터로 전달됩니다. 이 목록의 어느 행에도 없는 사전 탭의 `Alt + Shift + Enter` (Windows/Linux) or `⌥ + Shift + Enter` (Mac)도 마찬가지입니다. 그 밖의 Obsidian 단축키는 그 탭에서도 그대로 동작합니다. `Ctrl + F` 또는 `⌘ + F`에 대해서는 [브라우저의 찾기 막대](./find-and-replace.md#브라우저의-찾기-막대) 문서를 참고하세요.
+
+## 읽기 전용 에디터 {#read-only-editors}
+
+[`readonly`](../../api/erd-editor-element.md#readonly) 에디터에서 설정 탭은 다이어그램의 설정을 보여 주기만 하고 하나도 바꾸지 않습니다. `Read only` 배지가 `Preferences`와 `Shortcuts` 각 페이지의 제목 옆에 표시됩니다.
+`Relationship DataType Sync`와 `Maximum comment width` 스위치와 너비 입력란은 비활성화되며, 모든 잠금 버튼도 마찬가지입니다. `Column Order` 행은 손잡이가 표시되지 않고 드래그되지 않습니다.
+각 `Lock` 행은 여전히 자신의 값을 표시합니다. 잠긴 행은 파일이 유지하는 값을, 잠기지 않은 행은 아래에서 설명하듯 파일의 값과 다를 수 있는 그 화면의 설정을 표시합니다.
+
+화면에 보이는 것을 정하는 설정은 거기서도 여전히 바꿀 수 있습니다. 화면의 위치와 확대/축소, 탭, 이름 표시, 데이터베이스, Code Generator 언어, 두 이름 케이스, 괄호, [`View Option`](./table-related-functions.md#테이블-보기-옵션) 토글입니다.
+각각 잠금과 상관없이 그 화면만 바꿉니다. 파일에 저장되거나 JSON 내보내기로 기록되지 않고, Undo 히스토리에 기록되지 않으며, 변경으로 집계되지 않고, 공동 편집자에게도 닿지 않습니다. [Schema SQL](./schema-sql.md#옵션-패널)과 [Code Generator](./code-generator.md#옵션-패널) 탭의 옵션 패널은 거기서 이 선택들에 `Saved in the document` 대신 `This window only` 캡션을 표시합니다.
+에디터가 다시 편집 가능해지면 데이터베이스, 언어, 이름 케이스, 괄호, View Option 토글은 파일의 값으로 돌아갑니다. 화면, 탭, 이름 표시는 두고 간 그대로 남으며, 파일은 다음에 그것을 바꿀 때 잠금이 허용하는 만큼 각각의 값을 받습니다.

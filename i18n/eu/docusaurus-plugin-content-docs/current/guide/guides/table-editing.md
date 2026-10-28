@@ -16,13 +16,14 @@ Idazketa-metodo bat oraindik konposatzen ari den bitartean, `Escape` teklak ediz
 
 ## Zutabeak gehitzea {#adding-columns}
 
-`Alt + Enter` (Windows/Linux) edo `⌥ + Enter` (Mac) lasterbidearekin sortzen da.  
-Hautatutako taula guztiei zutabe bat gehitzen zaie.
+`Alt + Enter` (Windows/Linux) edo `⌥ + Enter` (Mac) lasterbidearekin sortzen da, zeinak hautatutako taula guztiei zutabe bat gehitzen dien, edo taula baten goiburuko `+` botoiarekin, zeinak taula horri bat gehitzen dion.  
+Zutabe berriaren lehen gelaxkak hartzen du fokua, hau da, bere errenkadak [zutabeen ordenan](./settings.md#adjusting-column-order) marrazten duen lehena. Ordena lehenetsiarekin hori da haren izena, `Logical Names` ikuspegian haren izen logikoa dena, eta `Both Names` ikuspegian haren `Logical Name` gelaxka. Ikus [Izenen ikuspegia](./logical-names.md#name-view).  
+Azken gelaxkatik `Tab` teklarekin gehitutako zutabeak, eta gurasoaren taulak ez duenean erlazio bat marrazteak gehitzen duen gako nagusiak, gelaxka horretan hasten dira ere.
 
 ## Tab tekla {#tab-key}
 
 Sakatu `Tab` hurrengo gelaxkaren edizio modura zuzenean igarotzeko.  
-Azken gelaxkan `Tab` sakatzeak zutabe berri bat sortzen du.  
+Azken gelaxkan `Tab` sakatzeak zutabe berri bat sortzen du eta bere lehen gelaxka edizio-moduan irekitzen du. Ikus [Zutabeak gehitzea](#adding-columns).  
 Erabili `Shift + Tab` aurreko gelaxkaren edizio modura joateko.  
 `Tab` eta `Shift + Tab` teklak taulak marrazten dituen gelaxketatik igarotzen dira, haien ordenan; beraz, Izenen ikuspegiak eta View Option → `Domain` aukerak erabakitzen dute izen logikoaren gelaxkak eta Domain gelaxkak haien artean dauden ala ez. Ikus [Izen logiko bat idaztea](./logical-names.md#writing-a-logical-name).  
 Errenkada baten azken gelaxkaren ondoren marrazten diren [gako alternatiboen](./table-related-functions.md#alternate-keys) markak ez dira gelaxkak; beraz, teklatuaren fokuak gainetik saltatzen ditu, eta ez dira inoiz editatzeko irekitzen.
@@ -96,7 +97,8 @@ Ez da tekla aldatzailerik behar. Heldulekuan `Alt` (Windows/Linux) edo `⌥` (Ma
 ![Hiru zutabe hautatzea, eta ondoren fokuratutakoaren ondoko heldulekua beste taula batera arrastatzea, hautatutako beste zutabeak harekin batera mugitzen direla](/img/demo-column-multi-move.webp)
 
 Zutabe baten errenkadan, eta ez haren heldulekuan, hasten den arrastatze batek taula mugitzen du, haren goiburuko arrastatze batek bezala. Ikus [Hainbat taula mugitzea](./table-related-functions.md#moving-multiple-tables). Errenkada batean `Alt + drag` (Windows/Linux) edo `⌥ + drag` (Mac) eginez gero, taula bikoizten da. Ikus [Taulak eta oharrak bikoiztea](./table-related-functions.md#duplicating-tables-and-memos).  
-Ez da heldulekurik marrazten `70%` edo gutxiagoko zoomean, taulek beren izenak bakarrik erakusten dituztenean, ezta irakurtzeko soilik dagoen editore batean ere; beraz, bertan ezin da zutabeen ordena aldatu.
+Ez da heldulekurik marrazten `70%` edo gutxiagoko zoomean, taulek beren izenak bakarrik erakusten dituztenean, ezta irakurtzeko soilik dagoen editore batean ere; beraz, bertan ezin da zutabeen ordena aldatu.  
+Editorea irakurtzeko soilik bihurtzen denean abian dagoen zutabe-arrastatze bat bat-batean amaitzen da: erakuslearen atzetik doan kopia eta heltzeko esku-kurtsorea desagertzen dira, eta askatzeak ez du zutaberik mugitzen. Arrastatzeak lehendik mugitutako errenkadak mugitu zituen tokian geratzen dira.
 
 ## Zutabeak ezabatzea {#column-deletion}
 
@@ -174,3 +176,10 @@ Errenkadako gako-ikonoa erakusteko soilik da; beraz, haren gainean klik egiteak 
 Hainbat zutabe gako konposatu bakar bihurtzeko, [hautatu zutabeak](#selecting-multiple-columns), eta ondoren sakatu `Alt + K` (Windows/Linux) edo `⌥ + K` (Mac), edo egin eskuineko klik hautatutako errenkadetako batean eta aukeratu `Primary Key on selected columns` aukera. Txandaketa bakoitza desegite-urrats bat da.
 
 ![Shift + Arrow Down erabiliz bi zutabe hautatzea, eta ondoren biak gako nagusi bihurtzea ⌥ + K lasterbidearekin eta biak garbitzea bigarren sakatze batekin](/img/demo-column-pk.webp)
+
+## Irakurtzeko soilik dauden editoreak {#read-only-editors}
+
+[`readonly`](../../api/erd-editor-element.md#readonly) atributua duen editore batean, ez da gelaxkarik irekitzen edizioarako eta ez da zutaberik aldatzen.  
+Gelaxka batean klik egiteak ez du ezer fokuratzen eta jauzi batek utzitako hautapena kentzen du. `Enter` teklak eta klik bikoitzak ez dute editorerik irekitzen eta ez dute etengailurik aldatzen, `Tab` orriaren esku geratzen da, eta zutabeak gehitzen, denak hautatzen edo ezabatzen dituzten lasterbideek, gako nagusiaren etengailuak eta itsasteak ez dute ezer egiten.  
+[Arakatzailetik](./explorer.md#going-to-a-row) edo [Bilaketa azkarretik](./quick-search.md) zutabe batera joateak haren gelaxka fokuratzen du. Gezi-teklek orduan fokua gelaxkatik gelaxkara mugitzen dute, iristen diren zutabea bakarrik hautatuta, `Shift` teklak ez baitu zutaberik gehitzen bertan.  
+`Ctrl + C` (Windows/Linux) edo `⌘ + C` (Mac) lasterbideak hautatutako zutabea, edo jauzi batek hautatutako taula, kopiatzen du oraindik. Ikus [Zutabeak kopiatzea/itsastea](#copyingpasting-columns).

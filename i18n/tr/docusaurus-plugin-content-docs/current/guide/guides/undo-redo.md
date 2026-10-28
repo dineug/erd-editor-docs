@@ -12,7 +12,7 @@ Geçmiş en fazla `2048` değişiklik tutar.
 - Yinele: `Ctrl + Shift + Z` (Windows/Linux) veya `⌘ + Shift + Z` (Mac)
 
 ERD sekmesinde araç çubuğu aynı iki komutu `Time Travel` düğmesinin yanında `Undo` ve `Redo` düğmeleri olarak sunar. Sözlük sekmesinde `Undo` ve `Redo` düğmelerini `Time Travel` olmadan gösterir; başka hiçbir sekme bunları göstermez.  
-Bu düğmeler yalnızca geri alınacak veya yinelenecek bir şey olduğunda etkinleşir. `readonly` bir düzenleyici bunları gizler ve kısayollar hiçbir şeyi geri almaz ya da yinelemez.
+Bu düğmeler yalnızca geri alınacak veya yinelenecek bir şey olduğunda etkinleşir. `readonly` bir düzenleyici bunları ve `Time Travel` düğmesini gizler ve kısayollar hiçbir şeyi geri almaz ya da yinelemez.
 
 Geri al ve Yinele yalnızca ERD sekmesinde diyagramın geçmişi üzerinde çalışır.  
 Orada Hızlı arama, `Table Properties`, `Diff Viewer`, `Auto Layout` önizlemesi, [`Export image`](./file-import-export.md#image) iletişim kutusu, [Sütunları eşle](./relationship-editing.md#map-columns) iletişim kutusu veya Zaman yolculuğu açıkken kısayollar çalışmaz.  
@@ -58,6 +58,8 @@ Kaydedilmeyenler:
 - Sözlük sekmesinde gösterilen sayfa ve her sayfanın araması, seçimi, kaydırma konumu ve sütun genişlikleri. [Sekmeyi açma](./dictionary.md#opening-the-tab) bölümüne bakın.
 
 Bunlardan herhangi birinde yapılan değişiklik geri alınamaz.
+
+Salt okunur bir düzenleyici hiçbir şey kaydetmez. Görünüm konumu, yakınlaştırma ve `View Option` aç/kapat düğmeleri sekme, Ad görünümü, veritabanı ve kod ayarlarıyla birlikte orada yine değişir, ancak yalnızca o ekranda; bu yüzden geri alınacak bir şey yoktur. Ayarlardaki [Salt okunur düzenleyiciler](./settings.md#read-only-editors) bölümüne bakın.
 
 Sözlük sekmesinde yapılan düzenlemeler geri alınabilir, ancak bu geçmişe değil kendi sayfalarının geçmişine girer; bu nedenle ERD sekmesindeki Geri al bunların hiçbirini, bir değer alanının yeni `Data Type` değerini ve bunun değiştirdiği sütun türlerini bile asla geri almaz. [Sözlük sayfaları](#dictionary-sheets) bölümüne bakın.
 
@@ -136,7 +138,7 @@ Sözlüklerin yerini başkaları aldığında her sayfanın geçmişi boşaltıl
 ## Zaman yolculuğu {#time-travel}
 
 Araç çubuğunda, ERD sekmesindeki Geri al ve Yinele düğmelerinin yanında bulunan `Time Travel` düğmesinden açılır.  
-Diyagramın geçmişinde en az bir kaydedilmiş değişiklik olana kadar düğme hiçbir şey yapmaz.
+Diyagramın geçmişinde en az bir kaydedilmiş değişiklik olana kadar düğme hiçbir şey yapmaz. Salt okunur bir düzenleyici böyle bir düğme göstermez ve salt okunur olan bir düzenleyici Time Travel'ı uygulamadan kapatır.
 
 Zaman yolculuğu, `Viewport` veya `Name View` kilidi etkin olsun ya da olmasın, diyagramın ayrı ve salt okunur bir kopyasını tuvalin gösterdiği kaydırma konumunda, yakınlaştırma düzeyinde ve [Ad görünümünde](./logical-names.md#name-view) açar.  
 Yalnızca diyagramın geçmişinde ilerler; bu nedenle Sözlük sayfalarındaki düzenlemeler noktaları arasında yer almaz.  

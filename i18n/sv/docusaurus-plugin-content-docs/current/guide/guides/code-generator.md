@@ -25,7 +25,8 @@ När det valda språket ignorerar `Database` eller skiftlägena för namn står 
 `Save file` och `Copy` finns längst ned i panelen – se [Spara eller kopiera resultatet](#saving-or-copying-the-result).
 
 Det här är diagrammets egna inställningar, samma som snabbmenyn och snabbsökningen också ändrar. `Database` sparas i filen som vilken ändring som helst.  
-`Language`, `Table Name Case`, `Column Name Case` och `Bracket` sparas bara medan deras lås på fliken Inställningar är av (`Bracket Type` för `Bracket`), och i ett nytt diagram är alla lås på. Medan ett lås är på skriver en ändring om koden på din skärm, men filen behåller det låsta värdet och diagrammet öppnas igen med det. Panelen visar inget tecken på något lås; slå av låset för ett val om du vill behålla valet i filen – se [Lås](./settings.md#lock).
+`Language`, `Table Name Case`, `Column Name Case` och `Bracket` sparas bara medan deras lås på fliken Inställningar är av (`Bracket Type` för `Bracket`), och i ett nytt diagram är alla lås på. Medan ett lås är på skriver en ändring om koden på din skärm, men filen behåller det låsta värdet och diagrammet öppnas igen med det. Panelen visar inget tecken på något lås; slå av låset för ett val om du vill behålla valet i filen – se [Lås](./settings.md#lock).  
+I en skrivskyddad editor lyder rubriken `This window only` i stället, eftersom en ändring där bara når det fönstret – se [Skrivskyddade editorer](#read-only-editors).
 
 ## Språk {#language}
 
@@ -138,3 +139,10 @@ Menyn Export har inget alternativ för kodgeneratorn, och fliken `Code Generator
 Klicka på `Copy` längst ned i panelen för att kopiera koden, eller håll pekaren över koden och klicka på kopieringsknappen längst upp till höger i den, vilket är det enda sättet i panelen Tabellegenskaper.  
 Meddelandet `Copied!` med en bock bekräftar kopieringen i två sekunder. Om webbläsaren eller värdprogrammet nekar åtkomst till Urklipp talar meddelandet `Couldn't copy to the clipboard` med en varningssymbol om det i stället, i fem sekunder. En ny kopiering ersätter meddelandet i stället för att lägga till ett till.  
 Texten går också att markera, så du kan ta bara den del du behöver.
+
+## Skrivskyddade editorer {#read-only-editors}
+
+I en editor med [`readonly`](../../api/erd-editor-element.md#readonly) ändrar panelens listor, snabbmenyn och snabbsökningen fortfarande `Language`, `Database`, `Table Name Case`, `Column Name Case` och `Bracket`, men bara i det fönstret, så panelen rubricerar dem `This window only` i stället för `Saved in the document`.  
+En ändring skriver om koden på den skärmen och sparas inte i filen, delas inte med medarbetare och registreras inte för ångra, oavsett lås, och en medarbetares ändring av en inställning som du har valt lämnar ditt val kvar på skärmen. `Database` och `Bracket` är också inställningar på fliken Schema SQL, så ett val här visas där i samma fönster – se [Skrivskyddade editorer](./schema-sql.md#read-only-editors).  
+När editorn blir skrivbar igen kommer dokumentets inställningar tillbaka och koden skrivs för dem.  
+`Save file` och `Copy` sparar och kopierar koden som visas.

@@ -23,7 +23,7 @@ Buka Penjelajah dengan salah satu cara berikut:
 - Tombol `Explorer` di bilah alat, tepat setelah `Search`, dengan ikon pohon. Tooltipnya bertuliskan `Explorer (Ctrl + F)` (Windows/Linux) atau `Explorer (⌘ + F)` (Mac).
 - `Ctrl + F` (Windows/Linux) atau `⌘ + F` (Mac), yang bernama `Toggle Explorer` di tab [Pintasan](./settings.md#shortcuts) di Pengaturan.
 - `Toggle Explorer` di [Pencarian Cepat](./quick-search.md), yang tercantum di setiap tab. Mengetik `find`, `replace`, `rename`, `tree`, `outline`, atau `objects` memunculkannya.
-- `Toggle Explorer` di menu konteks kanvas: klik kanan tempat kosong di kanvas ERD, di luar [grup tabel](./table-groups.md) mana pun. Item ini berada setelah `New Table`, `New Memo`, dan `New Table Group`, sebelum `Relationship`.
+- `Toggle Explorer` di menu konteks kanvas: klik kanan tempat kosong di kanvas ERD, di luar [grup tabel](./table-groups.md) mana pun. Item ini berada setelah `New Table`, `New Memo`, dan `New Table Group`, sebelum `Relationship`. Menu kanvas editor hanya baca tidak memiliki baris seperti itu — lihat [Editor hanya baca](#read-only-editors).
 
 Kedua item `Toggle Explorer` menampilkan pintasan di sebelah kanan.  
 Tombol bilah alat, pintasan, dan item Pencarian Cepat berfungsi dari setiap tab. Dari tab Visualisasi, Skema SQL, Generator Kode, Kamus, atau Pengaturan, ketiganya beralih ke tab ERD lebih dahulu, karena Penjelajah hanya tampil di sana.
@@ -168,5 +168,8 @@ Membuka pencarian dengan pintasan atau item `Toggle Explorer` menutup kelimanya,
 
 ## Editor hanya baca {#read-only-editors}
 
-Di editor [`readonly`](../../api/erd-editor-element.md#readonly), Penjelajah berfungsi seperti di editor lainnya: tombol bilah alat dengan tooltip yang sama, pintasan, kedua item `Toggle Explorer`, pohon, penciutan, `Collapse All`, dan menuju baris, yang memilih apa yang dituju seperti biasa. Judulnya juga bertuliskan `Explorer` di sana.  
+Di editor [`readonly`](../../api/erd-editor-element.md#readonly), Penjelajah berfungsi seperti di editor lainnya: tombol bilah alat dengan tooltip yang sama, pintasan, item `Toggle Explorer` di Pencarian Cepat, pohon, penciutan, dan `Collapse All`. Judulnya juga bertuliskan `Explorer` di sana. Menu konteks kanvas tidak memiliki `Toggle Explorer` di sana, karena hanya mempertahankan baris yang membaca — lihat [Editor hanya baca](./table-related-functions.md#read-only-editors).
+
+Menuju baris berfungsi seperti pada [Menuju baris](#going-to-a-row): tampilan bergerak menurut aturan yang sama, dan tabel, grup tabel, atau memo milik baris itu dipilih, diberi garis tepi di kanvas, dengan sel terfokus di tempat baris itu meletakkannya.  
+Itulah satu-satunya cara editor hanya baca memilih sesuatu. Penekanan di kanvas tidak memilih apa pun, dan klik yang tidak bergerak menghapus pilihan yang ditinggalkan sebuah baris. Tabel yang dipilihnya terbuka di [Properti Tabel](./table-related-functions.md#table-properties) dengan `Alt + Space` (Windows/Linux) atau `⌥ + Space` (Mac), hanya baca, dan `Ctrl + C` (Windows/Linux) atau `⌘ + C` (Mac) menyalin apa yang dipilihnya seperti di editor mana pun.  
 Pencariannya hanya menemukan — lihat [Editor hanya baca](./find-and-replace.md#read-only-editors) di Temukan dan Ganti.

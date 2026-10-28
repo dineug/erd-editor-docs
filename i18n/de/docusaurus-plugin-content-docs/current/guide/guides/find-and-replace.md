@@ -192,7 +192,8 @@ Was `Escape`, die weiterhin funktionierenden Tastenkombinationen des Editors und
 ## Schreibgeschützte Editoren {#read-only-editors}
 
 In einem Editor mit [`readonly`](../../api/erd-editor-element.md#readonly) findet die Suche nur. Es gibt keinen Pfeil `Toggle Replace` und keine Zeile `Replace`, also kein Ersetzungsfeld, kein `Preserve Case`, kein `Replace` und kein `Replace All`.  
-Das Suchfeld, seine drei Optionen, die Textarten, der Zähler, die Ergebnisse und der Wechsel zu einem Treffer funktionieren alle. Der Explorer um die Suche herum funktioniert wie in jedem anderen Editor – siehe [Schreibgeschützte Editoren](./explorer.md#read-only-editors).
+Das Suchfeld, seine drei Optionen, die Textarten, der Zähler, die Ergebnisse und der Wechsel zu einem Treffer funktionieren alle. Der Wechsel zu einem Treffer wählt aus, worauf er landet, wie unter [Zu einem Treffer wechseln](#going-to-a-match), und diese Auswahl ist die einzige, die ein schreibgeschützter Editor vornimmt: Ein Klick auf die Zeichenfläche ohne Bewegung hebt sie auf.  
+Öffnen Sie die Suche mit der Taste oder mit `Toggle Explorer` in der Schnellsuche, da das Kontextmenü der Zeichenfläche dort kein `Toggle Explorer` hat. Der Rest des Explorers wird unter [Schreibgeschützte Editoren](./explorer.md#read-only-editors) auf der Seite zum Explorer behandelt.
 
 In VS Code wird eine Revision eines Diagramms, etwa eine Git-Revision oder ein Eintrag aus Local History, als JSON-Text geöffnet. Mit `Reopen Editor With...` als Diagramm erneut geöffnet, ist sie schreibgeschützt und erhält diese Suche ohne Ersetzen.
 

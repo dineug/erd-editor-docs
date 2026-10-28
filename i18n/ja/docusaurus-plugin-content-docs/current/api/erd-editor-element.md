@@ -1,11 +1,20 @@
 ---
 sidebar_position: 2
-description: erd-editor 要素の API。属性、value と runtimeValue、イベント、テーマ、表示言語、ウェルカム画面、キーバインディング、スキーマの読み込みと書き出し。
+description: erd-editor 要素の API。登録方法、属性、value と runtimeValue、イベント、テーマ、表示言語、ウェルカム画面、キーバインディング、スキーマの読み込みと書き出し。
 ---
 
 # ErdEditorElement
 
-エディタは単なる `HTMLElement` です。  
+エディタは単なる `HTMLElement` で、`@dineug/erd-editor/erd-editor.js` を読み込むと定義される `<erd-editor>` タグです。  
+`5.0.0` からは、パッケージのルートを読み込んでもタグは定義されません。ルートは、要素の型とクラスの両方として `ErdEditorElement` を、そして呼び出した場所でタグを定義する `defineErdEditor()` をエクスポートします。[要素の登録](./installation.md#registering-the-elements)を参照してください。  
+ダイアグラムを表示するだけのページには、読み取り専用の専用要素である [`<erd-viewer>`](./erd-viewer-element.md) があります。
+
+```js
+import '@dineug/erd-editor/erd-editor.js';
+
+const editor = document.createElement('erd-editor');
+```
+
 型定義は次のとおりです。
 
 ```ts
@@ -80,14 +89,26 @@ interface ErdEditorElement extends HTMLElement {
 
 エディタの編集可否を設定します。  
 設定されている間は、`value` への代入、`clear()`、`setSchemaSQL()`、`setSchemaGraphQL()`、`setSchemaDBML()`、`setSchemaAML()`、`setSchemaJSON()`、Undo、Redo（`4.2.0` からは辞書のシートのものを含みます）がすべて無視され、`change` イベントも発行されません。ドキュメントの読み込みには [setInitialValue](#setinitialvalue) を使用します。  
-表示は引き続き動作します。拡大・縮小、表示位置の移動、ハンドツール、Zen モード、キャンバスのタブ、テーブルへのフォーカスを含む [Visualization](../guide/guides/visualization.md) タブの両方のモード、データベースベンダー、SQL とコード生成の出力設定はそのまま適用されるため、読み取り専用のビューアーでも別のベンダー向けの SQL を書き出したり、生成されたコードを読んだりできます。  
-`4.1.0` からは[エクスプローラー](../guide/guides/explorer.md#read-only-editors)も開き、その行を選ぶと、編集できるエディタと同じように、その行が表す対象へ移動します。上部の[検索と置換](../guide/guides/find-and-replace.md#read-only-editors)は検索だけを行い、`Toggle Replace` の矢印も Replace の行もありません。一致箇所へ移動すると、引き続きその一致箇所が表示され、選択されます。パネルのタイトルは `Explorer` で、ツールバーのボタンのツールチップは、どのエディタでも `Explorer (Ctrl + F)` (Windows/Linux) または `Explorer (⌘ + F)` (Mac) です。`3.10.0` から `4.0.0` までは、検索と置換は、ヘッダーに `Find` と表示される検索専用のフローティングパネルとして開きました。  
-テーブルのプロパティも引き続き開きます。`3.10.0` からは、タイトルの横に `Read only` のバッジが表示され、`Indexes` タブでは何も編集できません。[テーブルのプロパティ](../guide/guides/table-related-functions.md#table-properties)を参照してください。  
-`4.0.0` からは、読み取り専用のエディタには [`Import and Add`](../guide/guides/file-import-export.md#import-and-add)、`New Table Group`、`Group selected tables`、`Remove from group`（[テーブルグループ](../guide/guides/table-groups.md#読み取り専用のエディタ)を参照してください）、[`Map Columns`](../guide/guides/relationship-editing.md#map-columns) がなく、[ウェルカム画面](#enablewelcomescreen)も表示されません。設定タブのロックのボタンを押しても何も変わらず、Schema SQL タブの `Before tables` と `After tables` のスクリプトは編集できません。  
-`4.1.0` からは、[キャンバスツールバー](../guide/guides/table-related-functions.md#canvas-toolbar)にも `New Table`、`New Memo`、`New Table Group` のボタンが表示されず、`addTableGroup` と `groupSelectedTables` のバインディングは何もしません。  
-`4.2.0` からは、[名前の表示](../guide/guides/logical-names.md#read-only-editors)は引き続きどのピッカーからも切り替えられますが、変わるのはそのエディタの画面だけです。ロックの状態にかかわらず、切り替えが共同編集者に届くことはありません。Flow の `Previous table` と `Next table` は、そのボタンでも Undo と Redo のキーでも、引き続き前後に移動します。  
-[辞書](../guide/guides/dictionary.md#read-only-editors)タブも引き続き開きます。シートの切り替え、検索、選択、スクロール、コピーができ、`Checks` シートの行は引き続きその行が示す対象へ移動します。どのセルも編集、貼り付け、消去を受け付けず、タブには `Add Row`、`Delete Rows`、`Import CSV`、`Export CSV` のツールもグリッドのメニューも表示されず、行のキーの組み合わせを押しても、行は挿入も削除もされません。テーブルのメニュー、キャンバスのメニュー、クイック検索には [`Derive Physical Names Again`](../guide/guides/dictionary.md#derive-physical-names-again) も `Derive Physical Name Again` もありません。  
-Schema SQL タブの `This window only` の選択、つまり `Statements`、`Header`、`4.2.0` からは `Write logical names into empty comments`、`Tables` は保存されることがなく、引き続き適用されます。[`Export image`](../guide/guides/file-import-export.md#画像) ダイアログ、テーマビルダー、Display Language のピッカーも同様です。テーマビルダーや Display Language のピッカーで選ぶと、引き続き [changePresetTheme](#changepresettheme) または [changeLocale](#changelocale) が発行されます。  
+`5.0.0` からは、読み取り専用のエディタは、コントロールを無効にした編集用エディタではなく、閲覧用のエディタです。6 つのタブ、[エクスプローラー](../guide/guides/explorer.md#read-only-editors)、ミニマップ、クイック検索、テーブルのプロパティ、[Diff Viewer](../guide/guides/table-related-functions.md#diff-viewer)、`Export`、Zen モード、共同編集者のカーソル、フォーカス、選択はそのまま残り、ダイアグラムを編集するコントロールは、無効の状態で描画されるのではなく、取り除かれます。`5.0.0` より前は、編集用のコントロールの多くが描画されたままで、エディタはそれらが送る内容を破棄していました。
+
+ERD タブでは、ドラッグはどこから始めても、テーブルの上でも、表示位置の移動になり、押下は何も選択せず、移動せず、開きません。ポインターをテーブルの上に置くとそのリレーションシップが強調され、テーブルやリレーションシップを動かさずにクリックするとその強調が保たれ、それ以外の場所を動かさずにクリックすると消えます。これは [`<erd-viewer>`](./erd-viewer-element.md) と同じです。選択は、移動が残す外枠だけです。エクスプローラーの行、検索の一致箇所、`#`、`@`、`:` の後に選んだクイック検索の結果へ移動すると、その到達先が選択され、次に動かさずにクリックすると選択が解除されます。コピーは、その選択が保持するものをコピーします。  
+[キャンバスツールバー](../guide/guides/table-related-functions.md#canvas-toolbar)には `Zoom out`、拡大・縮小のレベル（`Reset zoom`）、`Zoom in`、名前の表示の一覧、`Zen Mode`、コンパスが残り、`Hand` と `Select`、`New Table`、`New Memo`、`New Table Group`、リレーションシップのボタンはありません。キャンバスのメニューには `View Option`、`Name View`、`Export`、`Diff Viewer` が残り、テーブルのメニューには `Table Properties` が残り、メモ、リレーションシップ、テーブルグループではメニューが開きません。ERD タブのクイック検索には、ダイアグラムに書き込む行は表示されません。`Tab`、`Name View`、`Database`、`Export`、`Toggle Explorer`、[enableThemeBuilder](#enablethemebuilder) と [enableLocalePicker](#enablelocalepicker) がオンにする `Theme` と `Display Language` の行、そして `#`、`@`、`:` の検索が残ります。ほかのタブでは、編集できるエディタと同じものが表示されます。ツールバーにはデータベース名がテキストで表示され、`Undo`、`Redo`、`Time Travel` のボタンはありません。  
+`Import`、[`Import and Add`](../guide/guides/file-import-export.md#import-and-add)、`Auto Layout`、テーブルグループの行（[テーブルグループ](../guide/guides/table-groups.md#読み取り専用のエディタ)を参照してください）、[`Map Columns`](../guide/guides/relationship-editing.md#map-columns) はどこにもなく、[ウェルカム画面](#enablewelcomescreen)も表示されません。  
+追加、削除、編集を行うバインディングは何もしません。`edit`、`addTable`、`addColumn`、`addMemo`、`addTableGroup`、`groupSelectedTables`、`removeTable`、`removeColumn`、`removeSelection`、`primaryKey`、`selectAllTable`、`selectAllColumn`、4 つのリレーションシップのバインディング、`handTool` で、どれもオプションの指定どおり、引き続きデフォルトの動作は抑止されます。貼り付けと `Tab` も何もせず、抑止されずにページに届きます。拡大・縮小のバインディング、`zenMode`、`focusView`、移動で選択されたテーブルに対する `tableProperties`、`search`、`findReplace`、コピー、`Escape`、矢印キーは引き続き動作します。セル、メモ、テーブルグループの名前のエディタは開かず、リレーションシップも描画されません。
+
+エクスプローラー上部の[検索と置換](../guide/guides/find-and-replace.md#read-only-editors)は検索だけを行い、`Toggle Replace` の矢印も Replace の行もありません。パネルのタイトルは `Explorer` で、ツールバーのボタンのツールチップは、どのエディタでも `Explorer (Ctrl + F)` (Windows/Linux) または `Explorer (⌘ + F)` (Mac) です。読み取り専用のエディタでエクスプローラーが開くのは `4.1.0` からで、`3.10.0` から `4.0.0` までは、検索と置換は、ヘッダーに `Find` と表示される検索専用のフローティングパネルとして開きました。  
+テーブルのプロパティは、テーブルのメニューまたは `tableProperties` バインディングから開きます。`3.10.0` からは、タイトルの横に `Read only` のバッジが表示され、`Indexes` タブでは何も編集できません。[テーブルのプロパティ](../guide/guides/table-related-functions.md#table-properties)を参照してください。  
+設定タブにも同じ `Read only` のバッジが表示され、すべての設定が押せないコントロールで表示されます。2 つのスイッチ、`Maximum comment width` のフィールド、7 つの `Lock` ボタンは無効になり、`Column Order` の行はドラッグできません。Schema SQL タブの `Before tables` と `After tables` のスクリプトは入力を受け付けません。[Visualization](../guide/guides/visualization.md) タブは、そこにはドキュメントを編集するものがないため、編集できるエディタと同じように動作します。Flow の `Previous table` と `Next table` は、そのボタンでも Undo と Redo のキーでも、引き続き前後に移動します。  
+[辞書](../guide/guides/dictionary.md#read-only-editors)タブも引き続き開きます。シートの切り替え、検索、選択、スクロール、コピーができ、`Checks` シートの行は引き続きその行が示す対象へ移動します。どのセルも編集、貼り付け、消去を受け付けず、タブには `Add Row`、`Delete Rows`、`Import CSV`、`Export CSV` のツールもグリッドのメニューも表示されず、行のキーの組み合わせを押しても、行は挿入も削除もされません。テーブルのメニュー、キャンバスのメニュー、クイック検索には [`Derive Physical Names Again`](../guide/guides/dictionary.md#derive-physical-names-again) も `Derive Physical Name Again` もありません。
+
+`5.0.0` からは、閲覧者が引き続き変更できる設定は、そのエディタの画面にとどまります。スクロールと拡大・縮小、タブ、データベース、Code Generator の言語、2 つの名前のケース、括弧の種類、`View Option` の行、そして各ピッカーから切り替える[名前の表示](../guide/guides/logical-names.md#read-only-editors)で、名前の表示は `4.2.0` から画面にとどまっています。それらの[ロック](../guide/guides/settings.md#ロック)の状態にかかわらず、どれも `value`、`runtimeValue`、`json` の書き出し、Undo の履歴、[change](#change) イベント、shared store には届かないため、閲覧者がどのようにダイアグラムを見ても、`value` はドキュメントの設定を保ちます。[Schema SQL](../guide/guides/schema-sql.md#読み取り専用のエディタ)と Code Generator のオプションパネルは、`readonly` が設定されている間、それらの設定に `This window only` と表示します。編集できるエディタでは `Saved in the document` と表示されます。この 2 つのタブが表示、コピー、保存する内容は画面に従い、ベンダーを指定せずに呼び出した [getSchemaSQL](#getschemasql) も同様です。  
+`5.0.0` より前は、閲覧者のスクロール、拡大・縮小、タブの切り替え、データベース、コード設定は、ロックがそれらを保持していない間、つまりデータベースでは常に `value` に届き、shared store はそれを他のエディタに送っていました。  
+Schema SQL タブ自身の `This window only` の選択、つまり `Statements`、`Header`、`4.2.0` からは `Write logical names into empty comments`、`Tables` は、どのエディタでも保存されることがなく、引き続き適用されます。[`Export image`](../guide/guides/file-import-export.md#画像) ダイアログ、テーマビルダー、Display Language のピッカーも同様です。テーマビルダーや Display Language のピッカーで選ぶと、引き続き [changePresetTheme](#changepresettheme) または [changeLocale](#changelocale) が発行されます。
+
+設定されている間は、スクロールや拡大・縮小を含め、Undo の履歴には何も入らず、エディタの [shared store](#getsharedstore) は変更を送信しません。送信するのは、トラッカーが送る閲覧者のカーソル、フォーカス、選択、ドラッグ範囲と、他のエディタが参加するときに求めるレジスターだけです（[共同編集](./advanced/collaborative-editing.md)を参照してください）。他のエディタが送るすべての変更は引き続き適用します。データベース、Code Generator の設定、`View Option` の行の変更はドキュメントに届き、閲覧者がその画面でその設定を変更していなければ画面にも届きます。共有された名前の表示の切り替えは、どちらの場合も画面に反映されます。
+
+オンにすると、開いていたものが終了します。セル、メモ、テーブルグループの名前のエディタ、描画中のリレーションシップ、テーブル、メモ、テーブルグループ、カラムのドラッグ、Alt ドラッグのコピー、メモやテーブルグループのサイズ変更、実行中の Auto Layout のプレビューや配置、`Map Columns`、Time Travel、カラーピッカーです。選択が解除され、ハンドツールが解除され、その前に、各 shared store がドラッグやスクロールについてまだ保留している分を、[flushStreamBuffers](./advanced/collaborative-editing.md#flushstreambuffers) と同じように送信します。読み取り専用になったテーブルのプロパティ、Diff Viewer、`Export image` ダイアログは開いたままで、スクロール、拡大・縮小、タブ、名前の表示もそのままです。最初のマウント時にすでに読み取り専用の要素も同じ状態で始まり、ホストがページ内で移動した要素は、移動が残した外枠を保ちます。  
+オフにすると、何も選択されず何も開いていない状態で編集用のコントロールが戻ります。データベース、Code Generator の言語、2 つの名前のケース、括弧の種類、`View Option` の行はドキュメントの値に戻り、スクロール、拡大・縮小、タブ、名前の表示は閲覧者が残した位置のままで、閲覧者が再び変更するまで `value` はドキュメントの値を保ちます。どちらの切り替えでも `change` は発行されません。  
 属性名のみの指定、`=""`、`="true"` はいずれも `true` として扱われます。`="false"` は `false` として扱われ、HTML の慣用表現である `readonly="readonly"` を含むその他の文字列も同様です。
 
 ```js
@@ -182,6 +203,7 @@ editor.setAttribute('enable-welcome-screen', 'true');
 `4.0.0` からは、保存形式、つまりファイルが保持する形式のドキュメントです。これは `json` の書き出しが書き込む内容であり、公式のホストが保存する内容でもあります。含まれるのは現存するエンティティだけで、削除したエンティティ、重なり順、そして計測した幅、キーのマーク、リレーションシップの接続位置のようにエディタが自分で求めるものは含まれません。エンティティは決まった順序のキーで並び、2 つのスペースでインデントされ、改行で終わるため、同じドキュメントからは常に同じバイト列が得られます。  
 `4.2.0` からは、空のものも含みません。つまり、空の `doc` のリスト、空のコレクション、何も持たない辞書の行、そして名前、コメント、データ型、既定値、色のようなエンティティの空のテキストフィールドです。テーブルの `columnIds` のようなエンティティ内のリストは、空でも書き出されます。新しいドキュメントの `doc` は `{}` で、`collections` はないため、存在しないフィールド、リスト、コレクションは空として読み取ります。テーブルとカラムの論理名と、名前を生成したかどうかのフラグ、カラムのドメインの紐付け、そして単語、用語、ドメインを含み、各辞書は、フィールド名を並べた 1 つのヘッダーの後に、シートの順で 1 行に 1 つずつ行を続けて書き出されます。[保存形式とランタイム値](./advanced/schema.md#保存形式とランタイム値)を参照してください。  
 [ロック](../guide/guides/settings.md#ロック)がオンの設定は、画面の表示ではなく、ロックされた値で書き出されます。`Viewport` のロックは `originX`、`originY`、`zoomLevel` を保持し、`Canvas Type`、`Language`、`Table Name Case`、`Column Name Case`、`Bracket Type`、そして `4.2.0` からは `Name View` がそれぞれ自身の設定を保持します。名前の表示は `nameViewMode` として、`'physical'` でない間だけ書き出されます。それ以外の設定は現在の値のまま書き出され、`lockSettings` は常に書き出されます。ビットについては [Settings](./advanced/schema.md#settings) を参照してください。`Name View` のロックのビットは、ほかとは逆の意味になります。  
+`5.0.0` からは、[読み取り専用](#readonly)のエディタの閲覧者が変更する設定も、その画面にとどまるため、ロックの有無にかかわらずドキュメントの値で書き出されます。  
 要素に値を渡す前に表示されるドキュメントでも、空の値から読み込んだドキュメントでも、新しいドキュメントではすべてのロックがオンです。その `value` は、対応するロックをオフにするまで、表示の原点を `0, 0`、拡大・縮小のレベルを `1`、タブを ERD タブ、Code Generator の言語、名前のケース、括弧の種類を既定値、そして `4.2.0` からは名前の表示を `Physical Names` のまま保ちます。  
 `4.0.0` より前は、`ignoreSaveSettings` を適用した、エディタが保持しているとおりのドキュメント全体を返していました。エディタが保持しているとおりのドキュメントは [runtimeValue](#runtimevalue) になり、`ignoreSaveSettings` は読み取りも書き込みもされなくなりました。
 
@@ -230,7 +252,7 @@ otherEditor.setInitialValue(editor.runtimeValue);
 どちらの場合も、表示はドキュメントの表示位置で開きます。テキストがロックを指定している場合はテキストが保存した表示位置、指定していない場合は拡大・縮小のレベル `1` の原点 `0, 0` です。そこにダイアグラムが何も描かれていない場合は、ダイアグラムが見える位置で開きます。ロックされた `Viewport` は、引き続きロックされた値を `value` に保ちます。  
 `4.0.0` からは、それまで保持していたドキュメントの共同編集の状態も破棄し、このエディタの [shared store](#getsharedstore) がすでに購読されている場合は、ほかのエディタにそれぞれの状態を改めて要求するため、進行中のセッションで読み込み直したエディタも追いつきます。そのようなエディタには、別のエディタの [runtimeValue](#runtimevalue) で初期値を設定します。  
 JSON でないテキストもエラーにはなりません。ドキュメントは空になり、設定はそのまま保たれ、パースエラーがコンソールに出力されます。  
-`value` への代入とは異なり `readonly` の影響を受けないため、読み取り専用のビューアーにドキュメントを読み込む方法になります。
+`value` への代入とは異なり `readonly` の影響を受けないため、読み取り専用のエディタにドキュメントを読み込む方法になります。読み取り専用のエディタには、読み込んだテキストが持つ設定が表示され、閲覧者が画面上で変更していた設定は破棄されます。
 
 ```js
 editor.setInitialValue('json...');
@@ -1058,8 +1080,8 @@ editor.setSchemaJSON('json...', { mode: 'append' });
 ## getSchemaSQL
 
 現在のエディタの状態を Schema SQL として書き出します。  
-`databaseVendor` を指定しない場合は、現在設定されているベンダーに従って動作します。次の一覧にない名前を指定した場合も、エラーにならず同じように動作します。  
-名前は、エディタが表示している括弧の種類で囲まれます。`Bracket Type` が[ロック](../guide/guides/settings.md#ロック)されている間は、これが `value` に保存される括弧の種類と異なることがあります。コーディングエージェントの [`erd_read`](../mcp/tools.md#reading-a-document) が名前を囲むのは、`value` に保存されるほうです。名前の表示にかかわらず、書き出される名前は常に物理名です。  
+`databaseVendor` を指定しない場合は、エディタが表示しているデータベース向けに書き出します。それはドキュメントのデータベースですが、[読み取り専用](#readonly)のエディタの閲覧者が別のものを選んだ場合は、`5.0.0` からはそれがその画面にとどまり、Schema SQL タブに表示されるものになります。次の一覧にない名前を指定した場合も、エラーにならず同じように動作します。  
+名前は、エディタが表示している括弧の種類で囲まれます。`Bracket Type` が[ロック](../guide/guides/settings.md#ロック)されている間、または読み取り専用のエディタで閲覧者が `5.0.0` から別のものを選んだ場合は、これが `value` に保存される括弧の種類と異なることがあります。コーディングエージェントの [`erd_read`](../mcp/tools.md#reading-a-document) が名前を囲むのは、`value` に保存されるほうです。名前の表示にかかわらず、書き出される名前は常に物理名です。  
 `4.0.0` からは、省略可能な `options` 引数で、[Schema SQL](../guide/guides/schema-sql.md) タブのオプションと同じようにステートメントとヘッダーを、`4.2.0` からは論理名で空のコメントを埋めるかどうかを選べます。`SchemaSQLOptions` は型としてエクスポートされています。
 
 - `statements`: 既定値の `'create'`、MySQL、MariaDB、PostgreSQL、SQLite、Databricks では `IF NOT EXISTS` を書き出し、それ以外では `'create'` として扱われる `'ifNotExists'`、テーブルを作成する前に削除する `'recreate'` のいずれかです。`'recreate'` では、Snowflake は代わりに `CREATE OR REPLACE TABLE` を書き出します。
@@ -1108,6 +1130,7 @@ const commentedSQL = editor.getSchemaSQL('PostgreSQL', {
 
 リアルタイム共同編集のための store を返します。  
 `config` は `{ getNickname?, mouseTracker?, focusTracker? }` です。どちらのトラッカーも既定値は `true` で、`mouseTracker` はこのエディタのマウスカーソルを他のエディタに配信し、`focusTracker` はフォーカスしているセル、選択範囲、ドラッグの範囲を配信します。  
+`5.0.0` からは、[readonly](#readonly) が設定されている間、store は変更を送信せず、トラッカーが送る内容と、参加するエディタが求めるレジスターだけを送信し、他のエディタが送る内容は引き続き適用します。  
 [共同編集](./advanced/collaborative-editing.md)を参照してください。
 
 ```js

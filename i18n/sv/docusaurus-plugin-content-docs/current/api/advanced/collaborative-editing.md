@@ -55,6 +55,10 @@ När låset är på syns bytet bara i den editor som gjorde det: det skickas än
 När låset är av ändrar ett byte som görs i en redigerbar editor namnvisningen i alla editorer och repliker, där det senaste bytet vinner, och var och en av dem sparar den.  
 En skrivskyddad editors eget byte stannar alltid i den editorn, och editorn följer ändå de andras delade byten.
 
+Sedan `5.0.0` skickar en [skrivskyddad](../erd-editor-element.md#readonly) editor inga ändringar alls. Rullningen, zoomningen, fliken, namnvisningen, databasen, kodgeneratorns språk, skiftlägena, typen av citattecken och raderna under `View Option` som läsaren ändrar stannar på dess skärm, oavsett vad deras lås anger. Före `5.0.0` skickades dess rullningar, zoomningar, flikbyten, databas och kodinställningar som en redigerbar editors.  
+Dess store skickar ändå det som dess spårare skickar av läsarens markör, fokus, markering och dragruta, svarar på de register som en editor som ansluter ber om och tillämpar varje ändring som de andra skickar. En ändring av databasen, av en inställning i kodgeneratorn eller av en rad under `View Option` når dess dokument, och dess skärm också om inte läsaren har ändrat den inställningen där, och ett delat byte av namnvisning syns på dess skärm i båda fallen.  
+När editorn blir skrivskyddad skickar den först det som storen ännu håller tillbaka av ett drag eller en rullning, så som [flushStreamBuffers](#flushstreambuffers) gör, så att de andra behåller det sista av det.
+
 [Lås](../../guide/guides/settings.md#lock) delas: den senaste låsningen eller upplåsningen av en inställning vinner i alla editorer, och ett lås bär med sig värdena från editorn som slog på det, så att alla editorer och repliker sparar samma värde.  
 Låset `Viewport` sparar därför vyn i editorn som slog på det, och låset `Canvas Type` den sista flik som den editorn var på före fliken Inställningar, där lås slås på.  
 Att slå av låset `Language`, `Table Name Case`, `Column Name Case`, `Bracket Type` eller, sedan `4.2.0`, `Name View` ställer också in den inställningen i alla editorer på det värde som visas i editorn som slog av det, så att de fortsätter att spara ett och samma värde. Att slå av `Viewport` eller `Canvas Type` flyttar ingens vy eller flik.
@@ -71,6 +75,8 @@ Kortknappen för extern länk, öppnandet av [utforskaren](../../guide/guides/ex
 Kopplingen från subscribe till dispatch här står i stället för nätverket, så att du kan se hur en session är uppbyggd utan att en transport står i vägen.
 
 ```js
+import '@dineug/erd-editor/erd-editor.js';
+
 const editor1 = document.createElement('erd-editor');
 const editor2 = document.createElement('erd-editor');
 

@@ -37,7 +37,7 @@ Datoteka JSON ohrani položaje, ki jih ima. Tabele iz datoteke Sheme SQL, GraphQ
 
 Diagram se nato nadomesti v enem koraku, zato vmes ni prikazano nič. Nastavitev, ki jo spremenite med razporejanjem tabel, kot je zavihek, se ohrani, če pa medtem uvozite drugo datoteko, obvelja uvoz, ki se je začel zadnji.
 
-Urejevalnik samo za branje z ukazom `Import` ne naloži ničesar in ne ponuja niti ukaza `Import and Add` niti ukaza `Import CSV` na zavihku Slovar.
+Urejevalnik samo za branje ne uvozi ničesar. Njegov priročni meni platna in hitro iskanje ne ponujata ne ukaza `Import` ne ukaza `Import and Add`, ne prikaže pozdravnega zaslona, zavihek Slovar pa ne ponuja ukaza `Import CSV`.
 
 ### Uvozi in dodaj {#import-and-add}
 
@@ -215,7 +215,7 @@ Podmeni `Export` v priročnem meniju platna ima tri postavke:
 - Schema SQL: odpre zavihek [Shema SQL](./schema-sql.md#saving-or-copying-the-sql) z odprto ploščo z možnostmi in fokusom na gumbu `Save file`, tako da pritisk tipke `Enter` shrani kodo SQL, ki jo prikazuje zavihek, kot datoteko `.sql`. Do takrat se ne shrani nič.
 - Image: odpre pogovorno okno `Export image`, ki diagram shrani kot datoteko `.png` ali `.svg` ali ga kopira v odložišče kot PNG – glejte razdelek [Slika](#image).
 
-Vse tri delujejo v urejevalniku samo za branje.  
+Vse tri delujejo v urejevalniku samo za branje, kjer je `Export` ena redkih vrstic, ki jih ohrani njegov meni platna. Tam json zapiše nastavitve, ki jih vsebuje datoteka, ne pa pogleda, zavihka, prikaza imen, zbirke podatkov, nastavitev kode ali preklopov `View Option`, spremenjenih samo na tistem zaslonu – glejte razdelek [Urejevalniki samo za branje](./settings.md#read-only-editors) v Nastavitvah.  
 Lastni ukaz `Export CSV` zavihka Slovar, ki ga v tem podmeniju ni, shrani list `Domains`, `Words` ali `Terms` kot datoteko CSV. Za razliko od teh treh v urejevalniku samo za branje ni na voljo – glejte razdelek [Uvoz in izvoz CSV](./dictionary.md#importing-and-exporting-csv).
 
 Shema SQL zapiše ON DELETE in ON UPDATE vsake relacije za njenim določilom `REFERENCES`, najprej ON DELETE. Vrednost `Not set` ne zapiše ničesar, dejanje, ki ga izbrana zbirka podatkov ne sprejema, pa je izpuščeno. Katera zbirka podatkov sprejema katero dejanje, je opisano na strani [Urejanje relacij](./relationship-editing.md#on-delete-and-on-update).

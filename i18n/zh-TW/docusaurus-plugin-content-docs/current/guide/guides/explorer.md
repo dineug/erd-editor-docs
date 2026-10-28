@@ -23,7 +23,7 @@ description: 在停駐於 ERD 畫布旁的樹狀結構中，瀏覽圖表的資�
 - 工具列的 `Explorer` 按鈕，緊接在 `Search` 之後，帶有樹狀圖示。其工具提示為 `Explorer (Ctrl + F)` (Windows/Linux) 或 `Explorer (⌘ + F)` (Mac)。
 - `Ctrl + F` (Windows/Linux) 或 `⌘ + F` (Mac)，在設定的「[快速鍵](./settings.md#shortcuts)」索引標籤中名為 `Toggle Explorer`。
 - [快速搜尋](./quick-search.md)中的 `Toggle Explorer`，在每個索引標籤中都會列出。輸入 `find`、`replace`、`rename`、`tree`、`outline` 或 `objects` 即可找到它。
-- 畫布的右鍵選單中的 `Toggle Explorer`：在 ERD 畫布上任何[資料表群組](./table-groups.md)以外的空白處按滑鼠右鍵。它位於 `New Table`、`New Memo` 和 `New Table Group` 之後、`Relationship` 之前。
+- 畫布的右鍵選單中的 `Toggle Explorer`：在 ERD 畫布上任何[資料表群組](./table-groups.md)以外的空白處按滑鼠右鍵。它位於 `New Table`、`New Memo` 和 `New Table Group` 之後、`Relationship` 之前。唯讀編輯器的畫布選單沒有這個項目，請參閱[唯讀編輯器](#read-only-editors)。
 
 這兩個 `Toggle Explorer` 項目會在右側顯示快速鍵。  
 工具列按鈕、快速鍵和快速搜尋中的項目在每個索引標籤中都有效。在「視覺化」、「結構描述 SQL」、「程式碼產生器」、「字典」或「設定」索引標籤中使用時，它們會先切換到 ERD 索引標籤，因為物件總管只會顯示在該處。
@@ -168,5 +168,8 @@ description: 在停駐於 ERD 畫布旁的樹狀結構中，瀏覽圖表的資�
 
 ## 唯讀編輯器 {#read-only-editors}
 
-在 [`readonly`](../../api/erd-editor-element.md#readonly) 編輯器中，物件總管的運作方式與在其他編輯器中相同：工具提示相同的工具列按鈕、快速鍵、兩個 `Toggle Explorer` 項目、樹狀結構、摺疊、`Collapse All`，以及前往某一列，而前往時會照常選取目標。其標題在該處也顯示為 `Explorer`。  
+在 [`readonly`](../../api/erd-editor-element.md#readonly) 編輯器中，物件總管的運作方式與在其他編輯器中相同：工具提示相同的工具列按鈕、快速鍵、快速搜尋中的 `Toggle Explorer` 項目、樹狀結構、摺疊和 `Collapse All`。其標題在該處也顯示為 `Explorer`。畫布右鍵選單在該處沒有 `Toggle Explorer`，因為它只保留可供閱讀的項目，請參閱[唯讀編輯器](./table-related-functions.md#read-only-editors)。
+
+前往某一列的運作方式與[前往某一列](#going-to-a-row)相同：檢視依相同的規則移動，而該列的資料表、資料表群組或備忘錄會被選取，並在畫布上以外框標示，焦點儲存格則在該列所指定的位置。  
+這是唯讀編輯器選取任何東西的唯一方式。在畫布上按下不會選取任何東西，而單擊（不移動）會清除某一列所留下的選取範圍。被它選取的資料表可用 `Alt + Space` (Windows/Linux) 或 `⌥ + Space` (Mac) 在[資料表屬性](./table-related-functions.md#table-properties)中開啟（唯讀），而 `Ctrl + C` (Windows/Linux) 或 `⌘ + C` (Mac) 會像在任何編輯器中一樣複製它所選取的內容。  
 其搜尋只能尋找，請參閱尋找與取代中的[唯讀編輯器](./find-and-replace.md#read-only-editors)。

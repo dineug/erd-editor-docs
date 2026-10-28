@@ -55,6 +55,10 @@ Kilit etkinken görünüm değişikliği yalnızca onu yapan düzenleyicide gör
 Kilit devre dışıyken düzenleme yapabilen bir düzenleyicide yapılan görünüm değişikliği, her düzenleyicide ve replikada Ad görünümünü değiştirir; en son değişiklik geçerli olur ve hepsi onu kaydeder.  
 Salt okunur bir düzenleyicinin kendi görünüm değişikliği her zaman o düzenleyicide kalır ve düzenleyici diğerlerinin paylaşılan değişikliklerini yine izler.
 
+`5.0.0` sürümünden itibaren [salt okunur](../erd-editor-element.md#readonly) bir düzenleyici hiçbir değişiklik göndermez. Okuyucusunun değiştirdiği kaydırma, yakınlaştırma, sekme, Ad görünümü, veritabanı, Kod oluşturucu dili, ad biçimleri, tırnak türü ve `View Option` satırları, kilitleri ne derse desin kendi ekranında kalır; `5.0.0` sürümünden önce kaydırmaları, yakınlaştırmaları, sekme geçişleri, veritabanı ve kod ayarları düzenlenebilir bir düzenleyicininkiler gibi gönderiliyordu.  
+Yine de deposu, izleyicilerinin okuyucunun imleci, odağı, seçimi ve sürükleme kutusu hakkında gönderdiklerini gönderir, katılan bir düzenleyicinin istediği yazmaçları yanıtlar ve diğerlerinin gönderdiği her değişikliği uygular. Veritabanında, bir Kod oluşturucu ayarında veya bir `View Option` satırında yapılan değişiklik belgesine ulaşır; okuyucusu o ayarı orada değiştirmediyse ekranına da ulaşır. Paylaşılan bir Ad görünümü değişikliği ise her iki durumda da ekranında görünür.  
+Düzenleyici salt okunur olurken önce, [flushStreamBuffers](#flushstreambuffers) işlevinin yaptığı gibi, deponun bir sürükleme veya kaydırmadan hâlâ elinde tuttuğunu gönderir; böylece diğerleri bunun son kısmını korur.
+
 [Kilitler](../../guide/guides/settings.md#lock) paylaşılır: Bir ayarın en son kilitlenmesi ya da kilidinin açılması her düzenleyicide geçerli olur ve kilit, onu etkinleştiren düzenleyicinin değerlerini taşır, böylece her düzenleyici ve replika aynı değeri kaydeder.  
 Bu nedenle `Viewport` kilidi onu etkinleştiren düzenleyicinin görünümünü, `Canvas Type` kilidi ise o düzenleyicinin, kilitlerin etkinleştirildiği Ayarlar sekmesinden önce bulunduğu son sekmeyi kaydeder.  
 `Language`, `Table Name Case`, `Column Name Case`, `Bracket Type` veya `4.2.0` sürümünden itibaren `Name View` kilidini devre dışı bırakmak, her düzenleyicideki o ayarı da kilidi devre dışı bırakan düzenleyicide gösterilen değere getirir, böylece tümü tek bir değeri kaydetmeye devam eder. `Viewport` veya `Canvas Type` kilidini devre dışı bırakmak kimsenin görünümünü ya da sekmesini değiştirmez.
@@ -71,6 +75,8 @@ Dış bağlantı kart düğmesi, `#`, `@` veya `:` önekinden sonra seçilen bir
 Buradaki subscribe ile dispatch arasındaki bağlantı ağın yerini tutar, böylece araya bir taşıma katmanı girmeden bir oturumun yapısını görebilirsiniz.
 
 ```js
+import '@dineug/erd-editor/erd-editor.js';
+
 const editor1 = document.createElement('erd-editor');
 const editor2 = document.createElement('erd-editor');
 

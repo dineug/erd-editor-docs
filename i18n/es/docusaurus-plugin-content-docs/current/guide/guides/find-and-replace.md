@@ -192,7 +192,8 @@ Lo que hacen en estos campos `Escape`, los atajos de teclado del editor que sigu
 ## Editores de solo lectura {#read-only-editors}
 
 En un editor [`readonly`](../../api/erd-editor-element.md#readonly), la búsqueda solo encuentra. No hay flecha `Toggle Replace` ni fila `Replace`, así que tampoco hay campo Reemplazar, `Preserve Case`, `Replace` ni `Replace All`.  
-El campo Buscar, sus tres opciones, los tipos de texto, el recuento, los resultados y el salto a una coincidencia funcionan todos. El explorador que la rodea funciona como en cualquier otro editor; consulta [Editores de solo lectura](./explorer.md#read-only-editors).
+El campo Buscar, sus tres opciones, los tipos de texto, el recuento, los resultados y el salto a una coincidencia funcionan todos. Ir a una coincidencia selecciona aquello a lo que llega, como en [Ir a una coincidencia](#going-to-a-match), y esa selección es la única que hace un editor de solo lectura: un clic en el lienzo sin movimiento la borra.  
+Abre la búsqueda con la tecla o con `Toggle Explorer` en la búsqueda rápida, ya que el menú contextual del lienzo no tiene allí `Toggle Explorer`. El resto del explorador se explica en [Editores de solo lectura](./explorer.md#read-only-editors) en la página del explorador.
 
 En VS Code, una revisión de un diagrama, como una revisión de Git o una entrada de Local History, se abre como texto JSON. Si se vuelve a abrir como diagrama con `Reopen Editor With...`, es de solo lectura y tiene esta búsqueda que solo encuentra.
 

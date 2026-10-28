@@ -1,12 +1,13 @@
 ---
 sidebar_position: 1
-description: erd-editor is an Entity-Relationship Diagram editor for the browser, Google Drive, VS Code, IntelliJ, Obsidian, and your own page.
+description: erd-editor is an Entity-Relationship Diagram editor for the browser, Google Drive, VS Code, IntelliJ, Obsidian, and your own page, with a read-only viewer for showing a diagram on any site.
 ---
 
 # Introduction
 
 erd-editor is an Entity-Relationship Diagram editor.
-It is available as a web app, a Google Drive app, a VS Code extension, an IntelliJ plugin, an Obsidian plugin, and as an `<erd-editor>` custom element you can embed in your own page.
+It is available as a web app, a Google Drive app, a VS Code extension, an IntelliJ plugin, an Obsidian plugin, and as an `<erd-editor>` custom element you can embed in your own page, with `<erd-viewer>` beside it to show a diagram read-only.
+A site that loads no script of its own can frame a read-only diagram from erd-editor.io/embed instead.
 It is one editor and one document format across all of them.
 
 ![A shop diagram: hovering a relationship, adding a column, and focusing on orders in Flow](/img/demo-overview.webp)
@@ -20,7 +21,8 @@ It is one editor and one document format across all of them.
 | VS Code | [Marketplace](https://marketplace.visualstudio.com/items?itemName=dineug.vuerd-vscode) | Opens `.erd.json` files in a custom editor |
 | IntelliJ | [JetBrains Marketplace](https://plugins.jetbrains.com/plugin/23594-erd-editor) | The same editor, for IntelliJ-based IDEs |
 | Obsidian | [Community plugins](https://community.obsidian.md/plugins/erd-editor) | Opens `.erd` and `.erd.json` files in a vault tab, desktop only |
-| Your page | `npm install @dineug/erd-editor` | The framework-free `<erd-editor>` custom element — see [Install](../api/installation.md) |
+| Your page | `npm install @dineug/erd-editor` | The framework-free `<erd-editor>` custom element, and `<erd-viewer>`, which shows a diagram read-only — see [Install](../api/installation.md) and [ErdViewerElement](../api/erd-viewer-element.md) |
+| Any site | [erd-editor.io/embed](https://erd-editor.io/embed) | A read-only diagram in an iframe, from a document's URL, with no code — see [Embedding](./guides/embedding.md) |
 | Coding agents | [`@dineug/erd-editor-mcp`](../mcp/installation.md) | An MCP server that lets Claude Code, Codex, or another client edit a diagram live in VS Code, a JetBrains IDE, or Obsidian, or in the file itself |
 
 To try it in an IDE, create an empty file with a `.erd.json` extension and open it.
@@ -45,6 +47,7 @@ A file an earlier release saved is rewritten in the current form on the first ch
 - Keep the diagram's naming standard on the [Dictionary](./guides/dictionary.md) tab. Its `Domains`, `Words`, and `Terms` sheets are searched, sorted, and edited like a spreadsheet, each with an undo history of its own. The sheets import and export CSV: an import reads the editor's own layout or that of Korea's public data standard, in UTF-8 or EUC-KR, and an export writes the editor's own. The logical name cell completes term names. A logical name gives its table or column a physical name from the matching term, or from the abbreviations of the words it splits into, until you write the name yourself. After a word or term changes, [`Derive Physical Names Again`](./guides/dictionary.md#derive-physical-names-again) derives the names again, names you wrote yourself included. A column linked to a domain, by hand or by its term, [takes the domain's data type](./guides/dictionary.md#domains-and-data-types) and follows its changes, and the `Domain` view option shows each column's domain. The [`Checks`](./guides/dictionary.md#the-checks-sheet) sheet lists forbidden, unregistered, and synonym words, duplicate names, unknown domains, physical names that differ from their term's, and column types that differ from their domain's. The canvas colors the logical and physical names that the word and term checks flag.
 - Import an existing schema from `json`, `Schema SQL`, `GraphQL`, `DBML`, or `AML`. See [Importing or Exporting Files](./guides/file-import-export.md). A Schema SQL, GraphQL, DBML, or AML file arrives with its tables laid out along their relationships, or in rows when it has none. [`Import and Add`](./guides/file-import-export.md#import-and-add) adds a file below the diagram instead of replacing it.
 - Export the diagram as `json`; as Schema SQL from the [Schema SQL](./guides/schema-sql.md#saving-or-copying-the-sql) tab, saved as a `.sql` file or copied; or from the [`Export image`](./guides/file-import-export.md#image) dialog as a PNG or SVG image, or a PNG on the clipboard.
+- Show a diagram read-only on another site: frame [erd-editor.io/embed](./guides/embedding.md) with the URL of a file, one on GitHub included, or load the [`<erd-viewer>`](../api/erd-viewer-element.md) element in your own page. A reader pans, zooms, searches, and lights relationships, and nothing edits the diagram.
 - Write Schema SQL in the syntax of eight database vendors: Databricks, MSSQL, MariaDB, MySQL, Oracle, PostgreSQL, Snowflake, and SQLite. See [Table-related Functions](./guides/table-related-functions.md#databases). The [Schema SQL](./guides/schema-sql.md) tab's options panel picks the statements, the header, and the table groups to write, can [write logical names into empty comments](./guides/schema-sql.md#logical-names-as-comments), and keeps SQL of your own, saved in the diagram, to write before and after the tables.
 - Generate code for twenty-two targets: the languages C#, Go, Java, Kotlin, PHP, Rust, Scala, Swift, and TypeScript; the ORMs Doctrine, Drizzle, JPA, SeaORM, Sequelize, SQLAlchemy, and TypeORM; and AML, DBML, GraphQL, JSON Schema, Mermaid, and Zod. The Code Generator tab's options panel picks the language, the database, and the name cases, and the code is saved as a file with the language's extension or copied. See [Code Generator](./guides/code-generator.md).
 - Read the schema in [Visualization](./guides/visualization.md), as a force-directed `Graph` or as a `Flow` of table cards laid out along their relationships, where hovering a table lights up everything it touches. Press `Alt + F` on the ERD tab to [focus on the selected tables](./guides/visualization.md#focusing-on-tables) and the tables related to them. In `Flow`, [`Previous table` and `Next table`](./guides/visualization.md#previous-table-and-next-table) step back and forward through what Flow has been narrowed to, as the undo and redo keys do there.

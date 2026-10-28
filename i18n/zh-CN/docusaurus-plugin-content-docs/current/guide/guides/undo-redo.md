@@ -12,7 +12,7 @@ description: Undo 与 Redo、历史记录的内容、词典工作表各自的历
 - Redo: `Ctrl + Shift + Z` (Windows/Linux) 或 `⌘ + Shift + Z` (Mac)
 
 在 ERD 标签页中，工具栏同样提供这两个命令，即 `Time Travel` 旁边的 `Undo` 与 `Redo` 按钮。在 Dictionary 标签页中，工具栏显示 `Undo` 与 `Redo`，但不显示 `Time Travel`；其他标签页都不显示它们。  
-只有在存在可 Undo 或 Redo 的内容时按钮才会亮起。`readonly` 编辑器会隐藏这些按钮，快捷键也不会撤回或重做任何内容。
+只有在存在可 Undo 或 Redo 的内容时按钮才会亮起。`readonly` 编辑器会隐藏这些按钮和 `Time Travel`，快捷键也不会撤回或重做任何内容。
 
 Undo 与 Redo 仅在 ERD 标签页中作用于图的历史记录。  
 在该标签页中，快速搜索、`Table Properties`、`Diff Viewer`、`Auto Layout` 预览、[`Export image`](./file-import-export.md#image) 对话框、[映射列](./relationship-editing.md#map-columns)或 Time Travel 打开时，快捷键不生效。  
@@ -58,6 +58,8 @@ Undo 与 Redo 仅在 ERD 标签页中作用于图的历史记录。
 - Dictionary 标签页当前显示的工作表，以及每个工作表的搜索、选中范围、滚动位置和列宽，参见[打开标签页](./dictionary.md#opening-the-tab)。
 
 这些内容的变更无法 Undo。
+
+只读编辑器完全不记录任何内容。视图位置、缩放和 `View Option` 开关，以及标签页、名称显示、数据库和代码设置，在那里仍可更改，但只作用于该屏幕，因此没有任何内容可以 Undo，参见设置中的[只读编辑器](./settings.md#read-only-editors)。
 
 在 Dictionary 标签页中所做的编辑可以 Undo，但它们进入的是其所属工作表的历史记录，而不是这里的历史记录，因此 ERD 标签页中的 Undo 永远不会撤回这些编辑，即使是域的新 `Data Type` 及其所修改的列类型也不会，参见[词典工作表](#dictionary-sheets)。
 
@@ -136,7 +138,7 @@ Dictionary 标签页的 `Domains`、`Words` 和 `Terms` 工作表各自保留独
 ## Time Travel
 
 从 ERD 标签页工具栏中 Undo 与 Redo 旁边的 `Time Travel` 按钮打开。  
-在图的历史记录中至少有一条记录的变更之前，该按钮不会有任何反应。
+在图的历史记录中至少有一条记录的变更之前，该按钮不会有任何反应。只读编辑器不显示这个按钮，而变为只读的编辑器会关闭 Time Travel 且不应用它。
 
 Time Travel 会以画布当前显示的滚动位置、缩放级别和[名称显示](./logical-names.md#name-view)打开图的一份独立只读副本，无论 `Viewport` 或 `Name View` 锁定是否开启。  
 它只浏览图的历史记录，因此词典工作表的编辑不在其时间点之中。  

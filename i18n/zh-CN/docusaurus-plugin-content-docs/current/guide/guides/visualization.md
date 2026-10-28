@@ -237,4 +237,5 @@ Flow 只读取图。缩放、平移、移动卡片、`Tidy Up`、行显示、固
 你在 Flow 中时，协作者的编辑仍会反映到图上，卡片也会随他们添加或删除的表与关系而变化，参见 [Flow 的排布方式](#how-flow-is-placed)。  
 他们的选中与焦点环形边框会绘制在卡片上，但他们的光标和选择框不会，参见[协同编辑](../../api/advanced/collaborative-editing.md)。
 
-两种模式（包括聚焦以及后退和前进）在 `readonly` 编辑器中同样可用，`Name View` 列表也是如此，在那里它只会切换你自己的屏幕。
+两种模式（包括聚焦以及后退和前进）在 [`readonly`](../../api/erd-editor-element.md#readonly) 编辑器中同样可用，`Name View` 列表也是如此，在那里它只会切换你自己的屏幕。  
+在只读编辑器的 ERD 标签页上，表菜单中只有 `Table Properties`，按下也不会选中任何表，因此请在从[资源管理器](./explorer.md#going-to-a-row)或[快速搜索](./quick-search.md)跳转所选中的表上，用 `Alt + F` (Windows/Linux) 或 `⌥ + F` (Mac) 聚焦。

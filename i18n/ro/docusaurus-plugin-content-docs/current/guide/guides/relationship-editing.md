@@ -1,6 +1,6 @@
 ---
 sidebar_position: 7
-description: Ștergeți o relație, schimbați-i tipul, setați-i acțiunile ON DELETE și ON UPDATE, mapați-o pe coloane existente cu caseta de dialog Mapare coloane, citiți notația conectorului, lucrați cu relații N:M și identificatoare și aflați ce copiază noile coloane cheie străină de la cheia lor și cum se denumesc.
+description: Ștergeți o relație, schimbați-i tipul, setați-i acțiunile ON DELETE și ON UPDATE, mapați-o pe coloane existente cu caseta de dialog Mapare coloane, citiți notația conectorului și modul în care conectorii ocolesc tabelele, lucrați cu relații N:M și identificatoare și aflați ce copiază noile coloane cheie străină de la cheia lor și cum se denumesc.
 ---
 
 # Editarea relațiilor
@@ -81,7 +81,7 @@ Fiecare rând fie folosește o coloană pe care tabelul copil o are deja, fie ad
 Se deschide în două moduri:
 
 - În timpul trasării unei relații, din butonul `Map to existing columns` de lângă tabelul copil (consultați [Crearea relațiilor](./editing-start.md#relationship-creation)). Butonul `Map` adaugă apoi o relație de tipul care se trasează.
-- Din elementul `Map Columns` al meniului contextual al relației, pentru a schimba coloanele unei relații existente. Butonul `Save` scrie apoi modificarea. Un editor doar în citire nu afișează acest element.
+- Din elementul `Map Columns` al meniului contextual al relației, pentru a schimba coloanele unei relații existente. Butonul `Save` scrie apoi modificarea. Un editor doar în citire nu deschide niciun meniu contextual al relației, așa că Map Columns nu poate fi deschis acolo.
 
 Subtitlul casetei de dialog numește cele două tabele și tipul relației, de exemplu `users → posts · One N`. Aici tipul este doar afișat, nu și schimbat (folosiți [Schimbarea tipului](#type-change)).
 
@@ -226,6 +226,9 @@ Evidențierea dispare la următoarea apăsare cu butonul stâng sau drept pe pâ
 Deplasarea pânzei cu butonul din mijloc sau cu instrumentul mână o lasă activă, la fel ca restrângerea sau extinderea unui rând în explorator sau în vizualizatorul de diferențe, deselectarea totală cu `Escape` și un salt din [căutarea rapidă](./quick-search.md) sau din [butonul cardului](./visualization.md#card-buttons) cu link extern din Flux.  
 Evidențierea nu se salvează și nu apare în istoricul anulărilor, iar colaboratorii nu o văd.
 
+Într-un editor [`readonly`](../../api/erd-editor-element.md#readonly), cursorul luminează și el conectorii, în locul evidențierii lăsate de un salt. Oprit pe un tabel, luminează toți conectorii acelui tabel în culoarea de hover până când părăsește tabelul.  
+Un clic fără mișcare lasă o evidențiere activă până la următorul astfel de clic: pe un tabel luminează conectorii acelui tabel, pe un conector acel conector, iar în altă parte nimic. O tragere de acolo deplasează pânza și lasă acea evidențiere așa cum era.
+
 Ascundeți conectorii de pe pânza ERD cu opțiunea de afișare `Relationship` sau doar etichetele lor cu opțiunea de afișare `Referential Actions`, care este activată implicit (consultați [Opțiuni de afișare a tabelelor](./table-related-functions.md#table-view-options)).  
 Etichetele nu sunt desenate la un zoom de `70%` sau mai mic, unde tabelele se restrâng la nume.  
 Un [export de imagine](./file-import-export.md#image) este desenat întotdeauna la 100%, astfel încât desenează etichetele indiferent de zoomul pânzei, cu excepția cazului în care o opțiune de afișare le ascunde. Cu opțiunea `Background` dezactivată, și dreptunghiul din spatele fiecărei etichete este transparent.  
@@ -233,9 +236,10 @@ Un [export de imagine](./file-import-export.md#image) este desenat întotdeauna 
 
 ## Rutarea conectorilor {#connector-routing}
 
-Conectorii sunt rutați ortogonal.  
-Un traseu ocolește tabelele aflate între cele două capete ale sale în loc să le traverseze, iar colțurile lui sunt rotunjite.  
-Fiecare capăt iese din tabelul său printr-un segment drept scurt înainte de a coti, astfel încât două tabele aflate la mică distanță, ale căror capete de conector sunt aliniate, sunt unite printr-o singură linie dreaptă, nu printr-un ocol.  
+Conectorii sunt rutați ortogonal, iar colțurile lor sunt rotunjite.  
+Un traseu ocolește tabelele care îi stau în cale în loc să le traverseze. Acolo unde fiecare traseu cu câteva cotituri între cele două capete ale sale ar traversa un tabel, ca într-o diagramă aglomerată, conectorul alege un ocol cu atâtea cotituri câte are nevoie. Doar acolo unde nu se găsește niciun ocol traversează totuși un tabel.  
+Un conector iese din cele două tabele ale sale dintr-o pereche de laturi orientate una spre alta oriunde există una, iar fiecare capăt iese din tabelul său printr-un segment drept scurt înainte de a coti, astfel încât două tabele aflate la mică distanță, ale căror capete de conector sunt aliniate, sunt unite printr-o singură linie dreaptă, nu printr-un ocol.  
+Două tabele orientate unul spre celălalt, aflate la o distanță mai mică decât aceasta, chiar și sub `40px`, își păstrează laturile orientate una spre alta, iar acolo unde capetele lor nu sunt aliniate, conectorul face un salt peste spațiul dintre ele, în loc să treacă pe sub vreunul dintre tabele.  
 Traseele care ies pe aceeași latură a unui tabel sunt distribuite pe culoare separate, astfel încât să nu se suprapună.  
 Sunt ocolite doar tabelele: un conector poate traversa o notă sau chenarul unui grup de tabele și este desenat deasupra grupurilor de tabele și sub tabele și note.
 
@@ -243,6 +247,9 @@ O relație de la un tabel la el însuși este desenată ca o singură curbă în
 Celelalte relații autoreferențiale ale aceluiași tabel se așază în afara primei, astfel încât curbele lor nu se intersectează nici între ele, nici cu tabelul.
 
 Nu există nimic de configurat.  
-Traseele se recalculează automat ori de câte ori ceva de pe pânză se mută sau se redimensionează, astfel încât nu trebuie niciodată ajustate manual.
+Traseele se recalculează automat ori de câte ori ceva de pe pânză se mută sau se redimensionează, astfel încât nu trebuie niciodată ajustate manual.  
+În timpul tragerii, conectorii tabelelor pe care le mutați le urmează, iar toți ceilalți conectori păstrează traseul pe care îl aveau când a început tragerea. Când dați drumul, fiecare conector pe care mutarea îl reorientează este desenat din nou, cum ar fi unul care ocolește acum un tabel lăsat în calea lui sau unul care se îndreaptă după ce un tabel s-a mutat de pe traseul lui.
+
+O diagramă desenează aceleași trasee în fiecare fereastră care o afișează în același mod de afișare a numelor: una care a rămas deschisă în timp ce tabelele se mutau, una care a deschis diagrama chiar acum și una a unui colaborator, la fel, iar un [export de imagine](./file-import-export.md#image) le desenează și el. Modul de afișare a numelor contează pentru că schimbă lățimea tabelelor (consultați [Afișare nume](./logical-names.md#name-view)).
 
 ![Glisarea tabelului members în jos și înapoi, în timp ce conectorul de la orders alternează între trecerea pe la dreapta tabelului categories și ocolirea lui pe la stânga, cu toate colțurile rotunjite](/img/demo-connector-routing.webp)

@@ -16,13 +16,14 @@ Mentre un metodo di input sta ancora componendo il testo, `Escape` lascia attiva
 
 ## Aggiungere colonne {#adding-columns}
 
-Si creano con il tasto di scelta rapida `Alt + Enter` (Windows/Linux) o `⌥ + Enter` (Mac).  
-Viene aggiunta una colonna a ogni tabella selezionata.
+Si creano con il tasto di scelta rapida `Alt + Enter` (Windows/Linux) o `⌥ + Enter` (Mac), che aggiunge una colonna a ogni tabella selezionata, oppure con il pulsante `+` nell’intestazione di una tabella, che ne aggiunge una a quella tabella.  
+La prima cella della nuova colonna riceve il focus, la prima che la sua riga disegna nell’[ordine delle colonne](./settings.md#adjusting-column-order). Con l’ordine predefinito è il suo nome, che nella vista `Logical Names` è il suo nome logico e nella vista `Both Names` la sua cella `Logical Name` — vedere [Visualizzazione nomi](./logical-names.md#name-view).  
+Anche una colonna aggiunta con `Tab` dall’ultima cella, e la chiave primaria che il disegno di una relazione aggiunge a una tabella padre che ne è priva, iniziano da quella cella.
 
 ## Tasto Tab {#tab-key}
 
 Premere `Tab` per passare direttamente alla modalità di modifica della cella successiva.  
-Premendo `Tab` nell’ultima cella si crea una nuova colonna.  
+Premendo `Tab` nell’ultima cella si crea una nuova colonna e si apre la sua prima cella per la modifica — vedere [Aggiungere colonne](#adding-columns).  
 Usare `Shift + Tab` per spostarsi alla modalità di modifica della cella precedente.  
 `Tab` e `Shift + Tab` passano per le celle che la tabella disegna, nel loro ordine, quindi la Visualizzazione nomi e View Option → `Domain` determinano se tra queste ci sono le celle del nome logico e le celle Dominio — vedere [Scrivere un nome logico](./logical-names.md#writing-a-logical-name).  
 Gli indicatori di [chiave alternativa](./table-related-functions.md#alternate-keys) disegnati dopo l’ultima cella di una riga non sono celle, quindi il focus della tastiera li salta e non si aprono mai per la modifica.
@@ -96,7 +97,8 @@ Non serve alcun tasto modificatore. Tenendo premuto `Alt` (Windows/Linux) o `⌥
 ![Selezione di tre colonne, poi trascinamento della maniglia accanto a quella con il focus in un’altra tabella, con le altre colonne selezionate che si spostano insieme a essa](/img/demo-column-multi-move.webp)
 
 Un trascinamento che inizia sulla riga di una colonna anziché sulla sua maniglia sposta la tabella, come fa un trascinamento sulla sua intestazione — vedere [Spostare più tabelle](./table-related-functions.md#moving-multiple-tables). `Alt + drag` (Windows/Linux) o `⌥ + drag` (Mac) su una riga duplica la tabella — vedere [Duplicare tabelle e memo](./table-related-functions.md#duplicating-tables-and-memos).  
-Con lo zoom al `70%` o meno, dove le tabelle mostrano solo il loro nome, o in un editor di sola lettura, non viene disegnata alcuna maniglia, quindi lì le colonne non possono essere riordinate.
+Con lo zoom al `70%` o meno, dove le tabelle mostrano solo il loro nome, o in un editor di sola lettura, non viene disegnata alcuna maniglia, quindi lì le colonne non possono essere riordinate.  
+Un trascinamento di colonna in corso quando l’editor diventa di sola lettura termina subito: la copia che segue il puntatore e la mano che afferra scompaiono, e il rilascio non sposta alcuna colonna. Le righe che il trascinamento aveva già spostato restano dove le ha spostate.
 
 ## Eliminazione delle colonne {#column-deletion}
 
@@ -174,3 +176,10 @@ L’icona della chiave nella riga serve solo da indicazione visiva, quindi facen
 Per fare di più colonne un’unica chiave composta, [selezionarle](#selecting-multiple-columns), poi premere `Alt + K` (Windows/Linux) o `⌥ + K` (Mac), oppure fare clic con il pulsante destro su una delle righe selezionate e scegliere `Primary Key on selected columns`. Ogni attivazione o disattivazione costituisce un solo passo di annullamento.
 
 ![Selezione di due colonne con Shift + Arrow Down, poi impostazione di entrambe come chiave primaria con ⌥ + K e rimozione della chiave da entrambe con una seconda pressione](/img/demo-column-pk.webp)
+
+## Editor di sola lettura {#read-only-editors}
+
+In un editor [`readonly`](../../api/erd-editor-element.md#readonly) nessuna cella si apre per la modifica e nessuna colonna cambia.  
+Un clic su una cella non dà il focus a nulla e toglie la selezione lasciata da un salto. `Enter` e un doppio clic non aprono alcun editor e non commutano alcun interruttore, `Tab` è lasciato alla pagina, e i tasti di scelta rapida che aggiungono colonne, selezionano tutto o le eliminano, l’interruttore della chiave primaria e l’incolla non fanno nulla.  
+Andare a una colonna dal pannello [Esplora](./explorer.md#going-to-a-row) o dalla [Ricerca rapida](./quick-search.md) dà il focus alla sua cella. I tasti freccia spostano poi il focus da una cella all’altra, con la colonna raggiunta selezionata da sola, poiché lì `Shift` non aggiunge alcuna colonna.  
+`Ctrl + C` (Windows/Linux) o `⌘ + C` (Mac) copia comunque la colonna selezionata, o la tabella selezionata da un salto — vedere [Copiare e incollare colonne](#copyingpasting-columns).

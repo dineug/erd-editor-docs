@@ -1,6 +1,6 @@
 ---
 sidebar_position: 16
-description: 关系数据类型同步与域、注释最大宽度、重新计算表宽度、设置锁定（视图、标签页、代码设置与名称显示）、列显示顺序以及快捷键列表。
+description: 关系数据类型同步与域、注释最大宽度、设置锁定（视图、标签页、代码设置与名称显示）、列显示顺序、快捷键列表，以及只读编辑器的 Settings 标签页。
 ---
 
 # 设置
@@ -33,13 +33,6 @@ description: 关系数据类型同步与域、注释最大宽度、重新计算�
 
 ![开启注释最大宽度并输入 120，回到 ERD 标签页后注释按该宽度截断](/img/demo-settings-comment-width.webp)
 
-## 重新计算表宽度
-
-按 `Sync` 会根据当前文本重新计算所有表和列单元格的宽度，并按照新的尺寸重新绘制关系连接线。
-完成后会显示 `Recalculated table width` 提示。
-每次加载文档时都会自动重新计算宽度，因此只有在字体或渲染发生变化导致宽度过时时才需要使用。
-宽度不会保存到文件中，因此 `Sync` 永远不会改动文件。
-
 ## 锁定
 
 `Lock` 列表包含七项设置。某项设置的锁定开启期间，文件会保留锁定时的值，因此在屏幕上更改该设置不会改动文件。
@@ -68,8 +61,9 @@ description: 关系数据类型同步与域、注释最大宽度、重新计算�
 
 ![解锁 Viewport，滚动并缩放图，再以该行显示的新视图重新锁定](/img/demo-settings-locks.webp)
 
-开启或关闭锁定会改动文件，因为文件中记录着哪些锁定处于开启状态；但与 Settings 标签页中的其他内容一样，它不会记录在 [Undo 历史记录](./undo-redo.md#what-the-history-records)中。无论是否锁定，切换名称显示同样不会被记录。在只读编辑器中，锁定按钮不起作用，而无论锁定状态如何，切换名称显示都只会改变该屏幕上的显示。
+开启或关闭锁定会改动文件，因为文件中记录着哪些锁定处于开启状态；但与 Settings 标签页中的其他内容一样，它不会记录在 [Undo 历史记录](./undo-redo.md#what-the-history-records)中。无论是否锁定，切换名称显示同样不会被记录。
 其他所有设置都按其当前状态保存：数据库、[`View Option`](./table-related-functions.md#table-view-options) 开关，以及 `Preferences` 标签页中的其余设置。
+无论锁定如何，只读编辑器都不会通过其中任何一项改动文件：它的锁定按钮和 `Preferences` 的其他控件都被禁用，而它仍允许更改的设置只保留在该屏幕上，参见[只读编辑器](#read-only-editors)。
 
 新建的图（即从零开始的图）中所有锁定都处于开启状态：在 VS Code、Obsidian 或 JetBrains IDE 中打开的空文件（Obsidian 的 `ERD Editor: Create new diagram` 和 `New ERD` 会创建这样的文件）、Web 应用中新建的 schema、通过 Google Drive 的 New 菜单创建的文件，或未赋值的 `<erd-editor>`。
 Web 应用通过导入 SQL、DBML、AML 或 GraphQL 文件创建的 schema 或 Google Drive 文件，所有锁定同样处于开启状态。由 JSON 文件创建的则沿用该文件中记录的锁定。
@@ -98,6 +92,7 @@ Web 应用通过导入 SQL、DBML、AML 或 GraphQL 文件创建的 schema 或 G
 `Logical Name` 决定 `Both Names` 下每行绘制的逻辑名单元格的位置。在 `Logical Names` 下，逻辑名改为占据 `Name` 行的位置，而 `Physical Names` 不绘制逻辑名，参见[名称显示](./logical-names.md#name-view)。`Domain` 决定 View Option → `Domain` 所显示的域单元格的位置，参见[域单元格](./logical-names.md#the-domain-cell)。
 被[表显示选项](./table-related-functions.md#table-view-options)隐藏或被名称显示略去的单元格仍会在列表中保留位置，因此该顺序适用于实际显示的单元格。
 在 `Logical Name` 和 `Domain` 成为行之前就已设置过顺序的图，会把 `Logical Name` 紧挨着放在 `Name` 之前，把 `Domain` 紧挨着放在 `DataType` 之后，无论这两者在其顺序中处于什么位置。
+后续版本保存的图同样会保留它的顺序，即使该版本有本版本所没有的行：本版本所具有的行按文件给出的顺序排列，未知的行则被省略。在此保存该图时会写出不含它的顺序，而后续版本会按它自己的默认顺序，把该行放回到其相邻行旁边。
 [备用键](./table-related-functions.md#alternate-keys)标记（`AK1.1` 等）不属于这些行。它始终位于行的最后，排在此顺序中最后一个单元格之后。
 
 ![向下滚动到 Column Order，将 Comment 行拖到 Name 下方，注释随即显示在列名之后](/img/demo-settings-column-order.webp)
@@ -146,6 +141,7 @@ Web 应用通过导入 SQL、DBML、AML 或 GraphQL 文件创建的 schema 或 G
 资源管理器、主题构建器或 `Display Language` 选择器打开期间，画布上的快捷键仍会照常触发。`Stop` 永远不会关闭资源管理器。关于 `Stop` 和其他按键在资源管理器中的作用，参见[资源管理器中的按键](./explorer.md#keys-in-the-explorer)；关于在选择器中按下的按键，参见[选择语言](./language-and-theme.md#picking-a-language)。
 `Delete Selection` 会删除所有选中的表、备注和表分组；当单独选中一个表及其中的部分列，并且缩放级别高于 `70%` 时，则会删除这些列，参见[删除表与备注](./table-related-functions.md#删除表与备注)。`Remove Table, Memo` 同样会删除选中的表分组。
 `Add Table Group` 会开始绘制 [`New Table Group`](./table-groups.md#drawing-a-group)，与[画布工具栏](./table-related-functions.md#canvas-toolbar)中的 `New Table Group` 按钮相同，再按一次则会取消绘制。`Group Selected Tables` 是不带修饰键的两次按键：在一秒内先按 `T` 再按 `G`。它会把选中的表放入一个新分组并打开该分组的名称编辑器，与表的右键菜单中的 `Group selected tables` 相同；没有选中任何表时不起作用，参见[为选中的表分组](./table-groups.md#grouping-selected-tables)。在只读编辑器中，以及分组被[隐藏](./table-groups.md#hiding-groups)期间，两者都不起作用。
+在只读编辑器中，只有用于阅读的按键起作用：`Search`、`Toggle Explorer`、`Stop`、对跳转所选中的表生效的 `Table Properties` 和 `Focus on this table`、三个缩放按键、`Zen Mode`、复制，以及移动焦点单元格的方向键。`Editing`、所有 `Add` 和 `Remove` 按键、`Delete Selection`、`Primary Key`、两个全选按键、四个关系按键、`Add Table Group`、`Group Selected Tables`、`Hand Tool` 和粘贴都不起作用，`Undo` 与 `Redo` 也不会撤销或重做任何内容，参见[只读编辑器](./table-related-functions.md#read-only-editors)。
 `Zoom In`、`Zoom Out` 与 `Zoom Reset` 同样可以缩放 [Visualization](./visualization.md#toolbar) 标签页，`Graph` 与 `Flow` 均适用，快速搜索打开期间除外。
 在 `Flow` 中，`Undo` 与 `Redo` 会在 Flow 先后缩小到的范围之间后退和前进，与其 `Previous table` 和 `Next table` 按钮相同，快速搜索打开期间除外。它们在那里永远不会撤回图的修改，在 `Graph` 中则不起作用，参见[上一个表与下一个表](./visualization.md#previous-table-and-next-table)。
 在 Visualization 标签页中，`Stop` 还会关闭[行显示](./visualization.md#row-display)菜单，并取消仍在进行中的 [Flow 布局](./visualization.md#how-flow-is-placed)；但它不会扩大通过 `Focus on this table` 缩小的视图范围。
@@ -160,3 +156,13 @@ Web 应用通过导入 SQL、DBML、AML 或 GraphQL 文件创建的 schema 或 G
 Dictionary 标签页的行按键跟随 `Add Column` 与 `Remove Column`，因此重新映射其中任意一个，这些按键也会随之改变，参见 [`dictionaryRowChords`](../../api/erd-editor-element.md#dictionaryrowchords)。
 
 在 Obsidian 中，只要该图所在的 Obsidian 标签页处于活动状态，这些按键就会传给编辑器，即使某个 Obsidian 快捷键使用了相同的按键也是如此，例如 `Alt + Enter`、`Ctrl + K` 和 `Ctrl + F` (Windows/Linux) 或 `⌥ + Enter`、`⌘ + K` 和 `⌘ + F` (Mac)。Dictionary 标签页的 `Alt + Shift + Enter` (Windows/Linux) 或 `⌥ + Shift + Enter` (Mac) 也是如此，它不在此列表的任何一行中。在该 Obsidian 标签页中，其他所有 Obsidian 快捷键仍然有效。关于 `Ctrl + F` 或 `⌘ + F`，参见[浏览器的查找栏](./find-and-replace.md#the-browsers-find-bar)。
+
+## 只读编辑器 {#read-only-editors}
+
+在 [`readonly`](../../api/erd-editor-element.md#readonly) 编辑器中，Settings 标签页显示图的设置，但不会更改其中任何一项。`Preferences` 和 `Shortcuts` 每一页的标题旁都有一个 `Read only` 徽标。
+`Relationship DataType Sync` 与 `Maximum comment width` 开关以及宽度字段都被禁用，每个锁定按钮也是如此。`Column Order` 的各行不显示拖动手柄，也无法拖动。
+每个 `Lock` 行仍显示其值。已锁定的行显示文件所保留的值，未锁定的行则显示该屏幕上的设置，它可能与文件中的不同，如下所述。
+
+决定屏幕显示内容的设置在那里仍然可以更改：视图位置和缩放、标签页、名称显示、数据库、Code Generator 的语言、两种名称大小写、括号，以及 [`View Option`](./table-related-functions.md#table-view-options) 开关。
+无论锁定如何，每一项都只改变该屏幕。它不会保存到文件，也不会由 JSON 导出写出，不会记录到 Undo 历史记录中，不算作一次更改，也永远不会传到协作者那里。[Schema SQL](./schema-sql.md#options-panel) 与 [Code Generator](./code-generator.md#options-panel) 标签页的选项面板在那里把这些选择标注为 `This window only`，取代 `Saved in the document`。
+编辑器再次变为可写后，数据库、语言、名称大小写、括号和 View Option 开关会恢复为文件的值。视图、标签页和名称显示保持你离开时的样子，文件会在你下一次更改它们时，按其锁定所允许的方式取用其中的每一项。

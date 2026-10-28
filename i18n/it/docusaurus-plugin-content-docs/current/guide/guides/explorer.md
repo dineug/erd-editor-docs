@@ -23,7 +23,7 @@ Si apre in uno qualsiasi di questi modi:
 - Il pulsante `Explorer` della barra degli strumenti, subito dopo `Search`, con un’icona ad albero. Il suo tooltip riporta `Explorer (Ctrl + F)` (Windows/Linux) o `Explorer (⌘ + F)` (Mac).
 - `Ctrl + F` (Windows/Linux) o `⌘ + F` (Mac), con il nome `Toggle Explorer` nella scheda [Tasti di scelta rapida](./settings.md#shortcuts) delle Impostazioni.
 - La voce `Toggle Explorer` nella [Ricerca rapida](./quick-search.md), presente in ogni scheda. Digitando `find`, `replace`, `rename`, `tree`, `outline` o `objects` la si fa comparire.
-- La voce `Toggle Explorer` nel menu contestuale dell’area di disegno: fare clic con il pulsante destro su un punto vuoto dell’area di disegno ERD, al di fuori di qualsiasi [gruppo di tabelle](./table-groups.md). Si trova dopo `New Table`, `New Memo` e `New Table Group`, prima di `Relationship`.
+- La voce `Toggle Explorer` nel menu contestuale dell’area di disegno: fare clic con il pulsante destro su un punto vuoto dell’area di disegno ERD, al di fuori di qualsiasi [gruppo di tabelle](./table-groups.md). Si trova dopo `New Table`, `New Memo` e `New Table Group`, prima di `Relationship`. Il menu dell’area di disegno di un editor di sola lettura non ha una riga simile — vedere [Editor di sola lettura](#read-only-editors).
 
 Le due voci `Toggle Explorer` mostrano il tasto di scelta rapida a destra.  
 Il pulsante della barra degli strumenti, il tasto di scelta rapida e la voce della Ricerca rapida funzionano da ogni scheda. Dalla scheda Visualizzazione, Schema SQL, Generatore di codice, Dizionario o Impostazioni passano prima alla scheda ERD, poiché il pannello Esplora compare solo lì.
@@ -168,5 +168,8 @@ Anche la [Ricerca rapida](./quick-search.md) lascia aperto il pannello Esplora, 
 
 ## Editor di sola lettura {#read-only-editors}
 
-In un editor [`readonly`](../../api/erd-editor-element.md#readonly) il pannello Esplora funziona come in qualsiasi altro: il pulsante della barra degli strumenti con lo stesso tooltip, il tasto di scelta rapida, entrambe le voci `Toggle Explorer`, l’albero, la compressione delle righe, `Collapse All` e il salto a una riga, che seleziona come di consueto l’elemento raggiunto. Anche lì il suo titolo riporta `Explorer`.  
+In un editor [`readonly`](../../api/erd-editor-element.md#readonly) il pannello Esplora funziona come in qualsiasi altro: il pulsante della barra degli strumenti con lo stesso tooltip, il tasto di scelta rapida, la voce `Toggle Explorer` nella Ricerca rapida, l’albero, la compressione delle righe e `Collapse All`. Anche lì il suo titolo riporta `Explorer`. Il menu contestuale dell’area di disegno non ha lì `Toggle Explorer`, perché mantiene solo le righe che leggono — vedere [Editor di sola lettura](./table-related-functions.md#read-only-editors).
+
+Andare a una riga funziona come in [Andare a una riga](#going-to-a-row): la vista si sposta con la stessa regola, e la tabella, il gruppo di tabelle o il memo della riga viene selezionato, con il contorno sull’area di disegno e la cella con il focus dove la riga la mette.  
+È l’unico modo in cui un editor di sola lettura seleziona qualcosa. Una pressione sull’area di disegno non seleziona nulla, e un clic che non sposta cancella la selezione lasciata da una riga. Una tabella così selezionata si apre in [Proprietà tabella](./table-related-functions.md#table-properties) con `Alt + Space` (Windows/Linux) o `⌥ + Space` (Mac), in sola lettura, e `Ctrl + C` (Windows/Linux) o `⌘ + C` (Mac) copia ciò che ha selezionato come in qualsiasi editor.  
 La sua ricerca si limita a trovare — vedere [Editor di sola lettura](./find-and-replace.md#read-only-editors) nella pagina Trova e sostituisci.

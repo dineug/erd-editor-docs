@@ -31,7 +31,7 @@ Panelen [Tabellegenskaper](./table-related-functions.md#table-properties) har en
 
 Panelen innehåller tre grupper, var och en under en rubrik:
 
-1. `Saved in the document`: `Database` och `Bracket` – se [Databas och citattecken](#database-and-bracket).
+1. `Saved in the document`: `Database` och `Bracket` – se [Databas och citattecken](#database-and-bracket). En skrivskyddad editor rubricerar dem `This window only` – se [Skrivskyddade editorer](#read-only-editors).
 2. `This window only`: `Statements`, `Header`, `Write logical names into empty comments` och, medan diagrammet har en [tabellgrupp](./table-groups.md), `Tables` – se [Satser](#statements), [Inledning](#header), [Logiska namn som kommentarer](#logical-names-as-comments) och [Tabeller](#tables).
 3. `Saved in the document · written as is for every database`: skripten `Before tables` och `After tables` – se [Skript före och efter tabellerna](#before-and-after-scripts).
 
@@ -222,5 +222,9 @@ Hur de här kommentarerna läses in igen vid import beskrivs i [Kommentarer](./f
 
 ## Skrivskyddade editorer {#read-only-editors}
 
-I en editor med `readonly` fungerar fliken som vanligt: `Database` och `Bracket` ändrar fortfarande den SQL-kod som visas, `Statements`, `Header`, `Write logical names into empty comments` och `Tables` fungerar fortfarande, och `Save file` och `Copy` sparar och kopierar den fortfarande.  
-Bara de två skriptfälten är skrivskyddade.
+I en editor med [`readonly`](../../api/erd-editor-element.md#readonly) fungerar fliken för läsaren, och ingenting som görs på den når dokumentet:
+
+- `Database` och `Bracket` skriver fortfarande om SQL-koden, men bara i det fönstret, så panelen rubricerar dem också `This window only`. Ett val sparas inte i filen, delas inte med medarbetare och registreras inte för ångra, oavsett lås, och en medarbetares ändring av en inställning som du har valt lämnar ditt val kvar på skärmen. Fliken Kodgenerator visar samma val, och [`getSchemaSQL()`](../../api/erd-editor-element.md#getschemasql) som anropas utan databas skriver det också. När editorn blir skrivbar igen kommer dokumentets databas och citattecken tillbaka.
+- `Statements`, `Header`, `Write logical names into empty comments` och `Tables` fungerar som överallt annars, eftersom de redan hör till fönstret.
+- De två skriptfälten är skrivskyddade: de visar dokumentets skript, som SQL-koden fortfarande skriver, och tar inte emot någon inmatning.
+- `Save file` och `Copy` sparar och kopierar den SQL-kod som fliken visar.

@@ -31,7 +31,7 @@ SQL はタブを開いたときに書き出され、その後はパネルの選�
 
 パネルには、それぞれ見出しの付いた 3 つのグループがあります。
 
-1. `Saved in the document`: `Database` と `Bracket`。[データベースと Bracket](#データベースと-bracket) を参照してください。
+1. `Saved in the document`: `Database` と `Bracket`。[データベースと Bracket](#データベースと-bracket) を参照してください。読み取り専用のエディタでは、これらに `This window only` と表示されます。[読み取り専用のエディタ](#読み取り専用のエディタ)を参照してください。
 2. `This window only`: `Statements`、`Header`、`Write logical names into empty comments`、そしてダイアグラムに[テーブルグループ](./table-groups.md)がある間は `Tables`。[ステートメント](#ステートメント)、[ヘッダー](#ヘッダー)、[コメントとしての論理名](#logical-names-as-comments)、[テーブル](#テーブル)を参照してください。
 3. `Saved in the document · written as is for every database`: `Before tables` と `After tables` のスクリプト。[前後のスクリプト](#前後のスクリプト)を参照してください。
 
@@ -222,5 +222,9 @@ Snowflake がアクションを省く場合は、その外部キーの `ALTER TA
 
 ## 読み取り専用のエディタ
 
-`readonly` のエディタでも、タブは通常どおり動作します。`Database` と `Bracket` は表示される SQL を変え、`Statements`、`Header`、`Write logical names into empty comments`、`Tables` も機能し、`Save file` と `Copy` で SQL を保存、コピーできます。  
-読み取り専用になるのは、2 つのスクリプトのフィールドだけです。
+[`readonly`](../../api/erd-editor-element.md#readonly) のエディタでは、タブは閲覧者のために動作し、そこで行ったことがドキュメントに届くことはありません。
+
+- `Database` と `Bracket` は引き続き SQL を書き直しますが、変わるのはそのウィンドウの中だけなので、パネルはこれらにも `This window only` と表示します。選択はファイルに保存されず、共同編集者とも共有されず、Undo にも記録されず、ロックの状態によっても変わりません。また、自分が選んだ設定を共同編集者が変更しても、画面には自分の選択が残ります。Code Generator タブにも同じ選択が表示され、データベースを指定せずに呼び出した [`getSchemaSQL()`](../../api/erd-editor-element.md#getschemasql) もそれを書き出します。エディタが再び編集可能になると、ドキュメントのデータベースと括弧の種類が戻ります。
+- `Statements`、`Header`、`Write logical names into empty comments`、`Tables` は、もともとそのウィンドウに属するため、どこでも同じように動作します。
+- 2 つのスクリプトのフィールドは読み取り専用です。ドキュメントのスクリプトを表示し、SQL は引き続きそれを書き出しますが、入力は受け付けません。
+- `Save file` と `Copy` は、タブに表示されている SQL を保存し、コピーします。

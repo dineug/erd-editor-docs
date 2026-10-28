@@ -55,6 +55,10 @@ Cât timp blocarea este activată, schimbarea apare doar pe editorul care a făc
 Cât timp blocarea este dezactivată, o schimbare făcută într-un editor care poate edita modifică modul de afișare a numelor pe toate editoarele și replicile, cea mai recentă schimbare impunându-se, iar fiecare dintre ele îl salvează.  
 Schimbarea proprie a unui editor doar în citire rămâne întotdeauna pe acel editor, iar editorul urmează în continuare schimbările partajate ale celorlalte.
 
+Începând cu versiunea `5.0.0`, un editor [doar în citire](../erd-editor-element.md#readonly) nu trimite nicio schimbare. Derularea, zoom-ul, fila, modul de afișare a numelor (`Name View`), baza de date, limbajul Code Generator, stilurile de denumire, tipul de delimitator și rândurile `View Option` pe care le schimbă cititorul rămân pe ecranul lui, indiferent de ce spun blocările lor; înainte de `5.0.0`, derulările, zoom-urile, comutările de filă, baza de date și setările de cod ale unui astfel de editor erau trimise ca ale unui editor care poate edita.  
+Store-ul său trimite în continuare ce trimit trackerele sale despre cursorul, focusul, selecția și chenarul de tragere ale cititorului, răspunde la registrele pe care le cere un editor care se alătură și aplică orice schimbare trimisă de ceilalți. O schimbare a bazei de date, a unei setări Code Generator sau a unui rând `View Option` ajunge în documentul său, iar pe ecran ajunge și ea, cu excepția cazului în care cititorul a schimbat acolo setarea respectivă, iar o schimbare partajată a modului de afișare a numelor apare pe ecran în ambele cazuri.  
+Când editorul devine doar în citire, trimite mai întâi ce mai ține store-ul din tragere sau din derulare, așa cum face [flushStreamBuffers](#flushstreambuffers), astfel încât ceilalți să păstreze ultima parte.
+
 [Blocările](../../guide/guides/settings.md#lock) sunt partajate: cea mai recentă blocare sau deblocare a unei setări se impune pe toate editoarele, iar o blocare transportă valorile editorului care a activat-o, astfel încât fiecare editor și fiecare replică salvează aceeași valoare.  
 Prin urmare, o blocare `Viewport` salvează vizualizarea editorului care a activat-o, iar o blocare `Canvas Type`, ultima filă pe care s-a aflat acel editor înainte de fila Setări, unde se activează blocările.  
 Dezactivarea blocării `Language`, `Table Name Case`, `Column Name Case`, `Bracket Type` sau, începând cu versiunea `4.2.0`, `Name View` setează totodată acea setare, pe fiecare editor, la valoarea afișată pe editorul care a dezactivat-o, astfel încât toate continuă să salveze o singură valoare. Dezactivarea blocării `Viewport` sau `Canvas Type` nu mută vizualizarea sau fila nimănui.
@@ -71,6 +75,8 @@ Butonul de link extern al cardului, un rezultat al [căutării rapide](../../gui
 Conectarea de la subscribe la dispatch de aici ține locul rețelei, astfel încât puteți vedea forma unei sesiuni fără să vă încurce un mecanism de transport.
 
 ```js
+import '@dineug/erd-editor/erd-editor.js';
+
 const editor1 = document.createElement('erd-editor');
 const editor2 = document.createElement('erd-editor');
 

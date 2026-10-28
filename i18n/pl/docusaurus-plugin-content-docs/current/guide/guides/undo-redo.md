@@ -12,7 +12,7 @@ Historia przechowuje maksymalnie `2048` zmian.
 - Ponów: `Ctrl + Shift + Z` (Windows/Linux) lub `⌘ + Shift + Z` (Mac)
 
 Na karcie ERD te same dwa polecenia są dostępne na pasku narzędzi jako przyciski `Undo` i `Redo`, obok przycisku `Time Travel`. Na karcie Słownik pasek narzędzi pokazuje przyciski `Undo` i `Redo` bez przycisku `Time Travel`, a żadna inna karta ich nie pokazuje.  
-Są podświetlone tylko wtedy, gdy jest co cofnąć lub ponowić. Edytor z atrybutem `readonly` je ukrywa, a skróty klawiaturowe niczego nie cofają ani nie ponawiają.
+Są podświetlone tylko wtedy, gdy jest co cofnąć lub ponowić. Edytor z atrybutem `readonly` ukrywa je oraz przycisk `Time Travel`, a skróty klawiaturowe niczego nie cofają ani nie ponawiają.
 
 Polecenia Cofnij i Ponów działają na historii diagramu tylko na karcie ERD.  
 Skróty są tam nieaktywne, gdy otwarte jest Szybkie wyszukiwanie, panel `Table Properties`, widok `Diff Viewer`, podgląd `Auto Layout`, okno dialogowe [`Export image`](./file-import-export.md#image), okno dialogowe [Mapuj kolumny](./relationship-editing.md#map-columns) lub Podróż w czasie.  
@@ -58,6 +58,8 @@ Nie są rejestrowane:
 - Wyświetlany arkusz karty Słownik oraz wyszukiwanie, zaznaczenie, przewinięcie i szerokości kolumn każdego arkusza – zobacz sekcję [Otwieranie karty](./dictionary.md#opening-the-tab).
 
 Żadnej z tych zmian nie można cofnąć.
+
+Edytor tylko do odczytu nie rejestruje niczego. Położenie widoku, powiększenie i przełączniki `View Option` nadal się tam zmieniają, podobnie jak karta, Widok nazw, baza danych i ustawienia kodu, ale tylko na tym ekranie, więc nie ma nic do cofnięcia – zobacz sekcję [Edytory tylko do odczytu](./settings.md#read-only-editors) w Ustawieniach.
 
 Zmiany wprowadzone na karcie Słownik można cofnąć, ale trafiają one do historii własnego arkusza, a nie do tej historii, więc polecenie Cofnij na karcie ERD nigdy żadnej z nich nie wycofuje, nawet nowej wartości `Data Type` domeny i zmienionych przez nią typów kolumn – zobacz sekcję [Arkusze karty Słownik](#dictionary-sheets).
 
@@ -136,7 +138,7 @@ Historia każdego arkusza jest czyszczona, gdy słowniki zostają zastąpione: p
 ## Podróż w czasie {#time-travel}
 
 Podróż w czasie otwiera się przyciskiem `Time Travel` na pasku narzędzi, obok przycisków Cofnij i Ponów na karcie ERD.  
-Przycisk nic nie robi, dopóki w historii diagramu nie zostanie zarejestrowana co najmniej jedna zmiana.
+Przycisk nic nie robi, dopóki w historii diagramu nie zostanie zarejestrowana co najmniej jedna zmiana. Edytor tylko do odczytu nie pokazuje takiego przycisku, a edytor, który przechodzi w tryb tylko do odczytu, zamyka Podróż w czasie bez jej zastosowania.
 
 Podróż w czasie otwiera osobną kopię diagramu tylko do odczytu, w położeniu przewinięcia, przy poziomie powiększenia i z ustawieniem [Widok nazw](./logical-names.md#name-view), które pokazuje kanwa, niezależnie od tego, czy blokada `Viewport` lub `Name View` jest włączona.  
 Przechodzi wyłącznie przez historię diagramu, więc zmiany wprowadzone w arkuszach karty Słownik nie należą do jej punktów.  

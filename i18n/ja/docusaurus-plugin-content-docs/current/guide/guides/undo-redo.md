@@ -12,7 +12,7 @@ description: 編集の Undo と Redo、履歴に記録される内容、辞書�
 - Redo: `Ctrl + Shift + Z` (Windows/Linux) または `⌘ + Shift + Z` (Mac)
 
 ERD タブでは、ツールバーには同じ 2 つのコマンドが `Undo` と `Redo` のボタンとして、`Time Travel` の隣に並んでいます。辞書タブでは `Time Travel` なしで `Undo` と `Redo` が表示され、ほかのタブには表示されません。  
-これらは Undo または Redo できる変更があるときにのみ有効になります。`readonly` のエディタではこれらは表示されず、ショートカットを押しても何も Undo、Redo されません。
+これらは Undo または Redo できる変更があるときにのみ有効になります。`readonly` のエディタではこれらと `Time Travel` は表示されず、ショートカットを押しても何も Undo、Redo されません。
 
 Undo と Redo がダイアグラムの履歴に対して働くのは、ERD タブだけです。  
 ERD タブでも、クイック検索、`Table Properties`、`Diff Viewer`、`Auto Layout` のプレビュー、[`Export image`](./file-import-export.md#画像) ダイアログ、[Map Columns](./relationship-editing.md#map-columns)、Time Travel のいずれかが開いている間は、ショートカットは動作しません。  
@@ -58,6 +58,8 @@ ERD タブでも、クイック検索、`Table Properties`、`Diff Viewer`、`Au
 - 辞書タブで表示しているシートと、各シートの検索、選択、スクロール、列幅。[タブの開き方](./dictionary.md#opening-the-tab)を参照してください。
 
 これらの変更は Undo できません。
+
+読み取り専用のエディタは何も記録しません。表示位置、拡大・縮小、`View Option` の切り替えは、タブ、名前の表示、データベース、コード設定とともにそこでも変更できますが、変わるのはその画面だけなので、Undo するものはありません。設定の[読み取り専用のエディタ](./settings.md#read-only-editors)を参照してください。
 
 辞書タブで行った編集は Undo できますが、この履歴ではなくそれぞれのシートの履歴に入るため、ERD タブでの Undo で取り消されることはありません。ドメインの新しい `Data Type` と、それによって変わるカラムの型も同様です。[辞書のシート](#dictionary-sheets)を参照してください。
 
@@ -136,7 +138,7 @@ ERD タブでの Undo や Redo によって、カラムが再びドメインに�
 ## Time Travel
 
 ERD タブで、ツールバーの Undo と Redo の隣にある `Time Travel` ボタンから開きます。  
-ダイアグラムの履歴に記録された変更が 1 件もない場合、ボタンは動作しません。
+ダイアグラムの履歴に記録された変更が 1 件もない場合、ボタンは動作しません。読み取り専用のエディタにこのボタンはなく、エディタが読み取り専用になると、Time Travel は適用されずに閉じます。
 
 Time Travel は読み取り専用のダイアグラムのコピーを別に開きます。`Viewport` や `Name View` のロックがオンかどうかにかかわらず、コピーはキャンバスに表示中の表示位置、拡大・縮小のレベル、[名前の表示](./logical-names.md#name-view)で開きます。  
 Time Travel がたどるのはダイアグラムの履歴だけなので、辞書のシートの編集はたどる時点に含まれません。  

@@ -25,7 +25,8 @@ Lorsque le langage sélectionné ignore `Database` ou les casses des noms, ces p
 `Save file` et `Copy` se trouvent en bas du panneau (voir [Enregistrer ou copier le résultat](#saving-or-copying-the-result)).
 
 Ce sont les paramètres propres au diagramme, ceux que modifient aussi le menu contextuel et la recherche rapide. `Database` est enregistré dans le fichier comme toute modification.  
-`Language`, `Table Name Case`, `Column Name Case` et `Bracket` ne sont enregistrés que tant que leur verrou de l’onglet Paramètres est désactivé (`Bracket Type` pour `Bracket`), et un nouveau diagramme a tous ses verrous activés. Tant qu’un verrou est activé, une modification réécrit le code à l’écran, mais le fichier conserve la valeur verrouillée et le diagramme se rouvre avec elle. Le panneau n’affiche aucun signe de verrou ; pour conserver un choix dans le fichier, désactivez son verrou (voir [Verrouillage](./settings.md#lock)).
+`Language`, `Table Name Case`, `Column Name Case` et `Bracket` ne sont enregistrés que tant que leur verrou de l’onglet Paramètres est désactivé (`Bracket Type` pour `Bracket`), et un nouveau diagramme a tous ses verrous activés. Tant qu’un verrou est activé, une modification réécrit le code à l’écran, mais le fichier conserve la valeur verrouillée et le diagramme se rouvre avec elle. Le panneau n’affiche aucun signe de verrou ; pour conserver un choix dans le fichier, désactivez son verrou (voir [Verrouillage](./settings.md#lock)).  
+Dans un éditeur en lecture seule, la légende indique plutôt `This window only`, puisqu’un changement n’y atteint que cette fenêtre (voir [Éditeurs en lecture seule](#read-only-editors)).
 
 ## Langage {#language}
 
@@ -138,3 +139,10 @@ Le menu Export ne propose aucune entrée pour le générateur de code, et l’on
 Pour copier le code, cliquez sur `Copy` en bas du panneau, ou survolez le code et cliquez sur le bouton de copie en haut à droite, seul moyen possible dans la boîte de dialogue Propriétés de la table.  
 Une notification `Copied!` accompagnée d’une coche confirme la copie pendant deux secondes. Si le navigateur ou l’hôte refuse l’accès au Presse-papiers, une notification `Couldn't copy to the clipboard` accompagnée d’un signe d’avertissement le signale à la place, pendant cinq secondes. Copier de nouveau remplace la notification au lieu d’en ajouter une autre.  
 Le texte peut aussi être sélectionné, si bien que vous pouvez n’en prendre que la partie dont vous avez besoin.
+
+## Éditeurs en lecture seule {#read-only-editors}
+
+Dans un éditeur [`readonly`](../../api/erd-editor-element.md#readonly), les listes du panneau, le menu contextuel et la recherche rapide changent encore `Language`, `Database`, `Table Name Case`, `Column Name Case` et `Bracket`, mais dans cette fenêtre seulement, si bien que le panneau les légende `This window only` plutôt que `Saved in the document`.  
+Un changement réécrit le code sur cet écran et n’est ni enregistré dans le fichier, ni partagé avec les collaborateurs, ni consigné pour l’annulation, quels que soient les verrous, et le changement d’un collaborateur sur un paramètre que vous avez choisi laisse votre choix à l’écran. `Database` et `Bracket` sont aussi des paramètres de l’onglet Schéma SQL, si bien qu’un choix fait ici s’y affiche dans la même fenêtre (voir [Éditeurs en lecture seule](./schema-sql.md#read-only-editors)).  
+Quand l’éditeur redevient modifiable, les paramètres du document reviennent et le code est écrit pour eux.  
+`Save file` et `Copy` enregistrent et copient le code affiché.

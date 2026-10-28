@@ -61,7 +61,7 @@ Typing writes only the logical name. The physical name is derived from it once t
 - In `Logical Names`, the header's logical name, then its comment, then each row's cells in the column order, with the logical name in the name's place.
 - In `Both Names`, the header's logical name, name, and comment, then each row's cells in the column order, its `Logical Name` cell first by default.
 
-`Alt + Enter` (Windows/Linux) or `⌥ + Enter` (Mac) adds a column and focuses its name cell, which in `Logical Names` is its logical name.
+`Alt + Enter` (Windows/Linux) or `⌥ + Enter` (Mac) adds a column and focuses the first cell its row draws. Under the default column order that is its name cell, which in `Logical Names` is its logical name, and in `Both Names` its `Logical Name` cell, so you can start with the logical name — see [Adding Columns](./table-editing.md#adding-columns).
 
 A foreign key column that a relationship adds copies its key's logical name and domain, along with its type — see [Identifying Relationships](./relationship-editing.md#identifying-relationships).  
 Copying columns to a spreadsheet, and pasting columns from one, use the cells the view draws, logical name and Domain cells included — see [Copying/Pasting Columns](./table-editing.md#copyingpasting-columns).
@@ -143,5 +143,7 @@ A coding agent working through the MCP server sets logical names and links domai
 
 ## Read-only Editors
 
-In a [`readonly`](../../api/erd-editor-element.md#readonly) editor every Name View picker works, and a switch changes only that screen, whatever the lock.  
-Logical names and domains cannot be edited there, so no term list or domain picker opens, and none of the `Derive Physical Name Again` and `Derive Physical Names Again` rows is offered. View Option → `Domain` changes nothing there, as no [view option](./table-related-functions.md#table-view-options) does.
+In a [`readonly`](../../api/erd-editor-element.md#readonly) editor every Name View picker works: the canvas toolbar's `Name View` button, `Name View` in the canvas context menu and in Quick Search, and the list on Flow's toolbar.  
+A switch there changes only that screen, whatever the lock: the file, collaborators, and the undo history keep the view as it was. Once the editor turns writable again, the view picked stays on that screen until the next switch there, or, while the lock is off, until a collaborator switches it or the document is loaded again.  
+Logical names and domains cannot be edited there, so no cell editor, term list, or domain picker opens, and none of the `Derive Physical Name Again` and `Derive Physical Names Again` rows is offered.  
+View Option → `Domain` shows or hides the Domain cell on that screen alone, as every [view option](./table-related-functions.md#table-view-options) does there, and turning the editor writable again puts back the view options the document holds.

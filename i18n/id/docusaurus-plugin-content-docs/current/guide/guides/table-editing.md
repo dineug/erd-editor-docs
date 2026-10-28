@@ -16,13 +16,14 @@ Selama metode input masih menyusun teks, `Escape` membiarkan mode pengeditan tet
 
 ## Menambahkan kolom {#adding-columns}
 
-Dibuat menggunakan pintasan `Alt + Enter` (Windows/Linux) atau `⌥ + Enter` (Mac).  
-Kolom ditambahkan ke setiap tabel yang dipilih.
+Dibuat menggunakan pintasan `Alt + Enter` (Windows/Linux) atau `⌥ + Enter` (Mac), yang menambahkan kolom ke setiap tabel yang dipilih, atau dengan tombol `+` pada header tabel, yang menambahkannya ke tabel itu.  
+Sel pertama kolom baru mendapat fokus, yaitu sel pertama yang digambar barisnya dalam [urutan kolom](./settings.md#adjusting-column-order). Dengan urutan default, itu adalah namanya, yang dalam `Logical Names` adalah nama logisnya, dan dalam `Both Names` sel `Logical Name`-nya — lihat [Tampilan Nama](./logical-names.md#name-view).  
+Kolom yang ditambahkan dengan `Tab` dari sel terakhir, dan kunci utama yang ditambahkan penggambaran hubungan ke tabel induk yang belum memilikinya, juga dimulai pada sel itu.
 
 ## Tombol Tab {#tab-key}
 
 Tekan `Tab` untuk langsung masuk ke mode pengeditan sel berikutnya.  
-Menekan `Tab` di sel terakhir membuat kolom baru.  
+Menekan `Tab` di sel terakhir membuat kolom baru dan membuka sel pertamanya untuk diedit — lihat [Menambahkan kolom](#adding-columns).  
 Gunakan `Shift + Tab` untuk berpindah ke mode pengeditan sel sebelumnya.  
 `Tab` dan `Shift + Tab` menelusuri sel yang ditampilkan tabel, sesuai urutannya, sehingga Tampilan Nama dan View Option → `Domain` menentukan apakah sel nama logis dan sel Domain termasuk di antaranya — lihat [Menulis nama logis](./logical-names.md#writing-a-logical-name).  
 Tanda [kunci alternatif](./table-related-functions.md#alternate-keys) yang digambar setelah sel terakhir sebuah baris bukanlah sel, sehingga fokus keyboard melewatinya dan tanda itu tidak pernah terbuka untuk diedit.
@@ -96,7 +97,8 @@ Tidak diperlukan tombol pengubah. Menahan `Alt` (Windows/Linux) atau `⌥` (Mac)
 ![Memilih tiga kolom, lalu menyeret pegangan di samping kolom yang difokuskan ke tabel lain, dengan kolom lain yang dipilih ikut berpindah](/img/demo-column-multi-move.webp)
 
 Seretan yang dimulai pada baris kolom, bukan pada pegangannya, memindahkan tabel, seperti seretan pada headernya — lihat [Memindahkan beberapa tabel](./table-related-functions.md#moving-multiple-tables). `Alt + drag` (Windows/Linux) atau `⌥ + drag` (Mac) pada baris menduplikasi tabel — lihat [Menduplikasi tabel dan memo](./table-related-functions.md#duplicating-tables-and-memos).  
-Pegangan tidak ditampilkan pada zoom `70%` ke bawah, saat tabel hanya menampilkan namanya, maupun di editor hanya baca, sehingga urutan kolom tidak dapat diubah di sana.
+Pegangan tidak ditampilkan pada zoom `70%` ke bawah, saat tabel hanya menampilkan namanya, maupun di editor hanya baca, sehingga urutan kolom tidak dapat diubah di sana.  
+Seretan kolom yang sedang berlangsung saat editor menjadi hanya baca berakhir seketika: salinan yang mengikuti penunjuk dan tangan menggenggam hilang, dan melepas tidak memindahkan kolom. Baris yang sudah dipindahkan seretan tetap berada di tempat pemindahannya.
 
 ## Penghapusan kolom {#column-deletion}
 
@@ -174,3 +176,10 @@ Ikon kunci di baris hanya untuk tampilan, sehingga mengekliknya tidak menetapkan
 Untuk menjadikan beberapa kolom satu kunci komposit, [pilih kolom-kolom tersebut](#selecting-multiple-columns), lalu tekan `Alt + K` (Windows/Linux) atau `⌥ + K` (Mac), atau klik kanan salah satu baris yang dipilih dan pilih `Primary Key on selected columns`. Setiap pengaktifan atau penonaktifan merupakan satu langkah pembatalan.
 
 ![Memilih dua kolom dengan Shift + Arrow Down, lalu menjadikan keduanya kunci utama dengan ⌥ + K dan menghapus kunci keduanya dengan penekanan kedua](/img/demo-column-pk.webp)
+
+## Editor hanya baca {#read-only-editors}
+
+Di editor [`readonly`](../../api/erd-editor-element.md#readonly), tidak ada sel yang terbuka untuk diedit dan tidak ada kolom yang berubah.  
+Klik pada sel tidak memfokuskan apa pun dan menghapus pilihan yang ditinggalkan sebuah lompatan. `Enter` dan klik ganda tidak membuka editor dan tidak membalik sakelar apa pun, `Tab` diserahkan kepada halaman, dan pintasan yang menambah, memilih semua, atau menghapus kolom, sakelar kunci utama, serta tempel tidak melakukan apa pun.  
+Menuju kolom dari [Penjelajah](./explorer.md#going-to-a-row) atau [Pencarian Cepat](./quick-search.md) memfokuskan selnya. Tombol panah kemudian memindahkan fokus dari sel ke sel, dengan kolom yang dicapainya dipilih sendirian, karena `Shift` tidak menambah kolom di sana.  
+`Ctrl + C` (Windows/Linux) atau `⌘ + C` (Mac) tetap menyalin kolom yang dipilih, atau tabel yang dipilih sebuah lompatan — lihat [Menyalin/menempel kolom](#copyingpasting-columns).

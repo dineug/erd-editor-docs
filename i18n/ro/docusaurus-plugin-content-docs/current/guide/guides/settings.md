@@ -1,6 +1,6 @@
 ---
 sidebar_position: 16
-description: Sincronizarea tipului de date în relații și domeniile, lățimea maximă a comentariilor, recalcularea lățimii tabelelor, blocarea setărilor (vizualizare, filă, setări de cod și modul de afișare a numelor), ordinea de afișare a coloanelor și lista comenzilor rapide.
+description: Sincronizarea tipului de date în relații și domeniile, lățimea maximă a comentariilor, blocarea setărilor (vizualizare, filă, setări de cod și modul de afișare a numelor), ordinea de afișare a coloanelor, lista comenzilor rapide și fila Setări a unui editor doar în citire.
 ---
 
 # Setări
@@ -33,13 +33,6 @@ La activare, valoarea pornește de la `60px`. O valoare tastată în afara inter
 
 ![Activarea opțiunii Maximum comment width, introducerea valorii 120 și fila ERD cu comentariile trunchiate la această lățime](/img/demo-settings-comment-width.webp)
 
-## Recalculare lățime tabele {#recalculation-table-width}
-
-Apăsați butonul `Sync` pentru a recalcula lățimea fiecărui tabel și a fiecărei celule de coloană după textul său actual și pentru a redesena conectorii relațiilor în jurul noilor dimensiuni.
-Notificarea `Recalculated table width` confirmă acest lucru.
-Lățimile se recalculează automat de fiecare dată când se încarcă un document, așa că acest pas este necesar doar când o schimbare de font sau de redare le-a lăsat neactualizate.
-Lățimile nu se salvează în fișier, așa că butonul `Sync` nu îl modifică niciodată.
-
 ## Blocare {#lock}
 
 Lista `Lock` conține șapte setări. Cât timp blocarea unei setări este activată, fișierul păstrează valoarea pe care setarea o avea în momentul blocării, așa că modificarea ei pe ecran lasă fișierul neschimbat.
@@ -68,8 +61,9 @@ Rândul `Canvas Type` nu păstrează niciodată fila Setări. Blocarea lui reți
 
 ![Deblocarea rândului Viewport, derularea diagramei și modificarea zoomului, apoi blocarea lui din nou la noua vizualizare afișată de rând](/img/demo-settings-locks.webp)
 
-Activarea sau dezactivarea unei blocări modifică fișierul, deoarece fișierul stochează ce blocări sunt activate, dar, ca restul filei Setări, nu se înregistrează în [istoricul anulărilor](./undo-redo.md#what-the-history-records). Nici schimbarea modului de afișare a numelor nu se înregistrează, fie că este blocat, fie că nu. Într-un editor doar în citire, butoanele de blocare nu au niciun efect, iar o schimbare a modului de afișare a numelor modifică doar acel ecran, indiferent de blocarea sa.
+Activarea sau dezactivarea unei blocări modifică fișierul, deoarece fișierul stochează ce blocări sunt activate, dar, ca restul filei Setări, nu se înregistrează în [istoricul anulărilor](./undo-redo.md#what-the-history-records). Nici schimbarea modului de afișare a numelor nu se înregistrează, fie că este blocat, fie că nu.
 Orice altă setare se salvează așa cum este: baza de date, comutatoarele din [`View Option`](./table-related-functions.md#table-view-options) și restul filei `Preferences`.
+Un editor doar în citire nu schimbă fișierul prin niciuna dintre ele, indiferent de blocări: butoanele sale de blocare și celelalte controale `Preferences` sunt dezactivate, iar setările pe care le lasă să le schimbați rămân pe acel ecran (consultați [Editoare doar în citire](#read-only-editors)).
 
 Toate blocările sunt activate într-o diagramă nouă, una pornită de la zero: un fișier gol deschis în VS Code, Obsidian sau un IDE JetBrains (în Obsidian, `ERD Editor: Create new diagram` și `New ERD` creează un astfel de fișier), o schemă nouă în aplicația web, un fișier creat din meniul New din Google Drive sau un element `<erd-editor>` căruia nu i s-a dat nicio valoare.
 O schemă sau un fișier Google Drive pe care aplicația web îl creează importând un fișier SQL, DBML, AML sau GraphQL pornește, de asemenea, cu toate blocările activate. Cele create dintr-un fișier JSON păstrează blocările înregistrate în acel fișier.
@@ -98,6 +92,7 @@ Glisați un rând pentru a-l muta: întregul rând poate fi glisat, iar pictogra
 Rândul `Logical Name` stabilește locul celulei numelui logic pe care o desenează rândul unei coloane în modul `Both Names`. În modul `Logical Names`, numele logic ocupă în schimb locul rândului `Name`, iar modul `Physical Names` nu desenează nicio celulă a numelui logic (consultați [Afișare nume](./logical-names.md#name-view)). Rândul `Domain` stabilește locul celulei Domeniu pe care o afișează View Option → `Domain` (consultați [Celula Domeniu](./logical-names.md#the-domain-cell)).
 O celulă ascunsă de o [opțiune de afișare a tabelelor](./table-related-functions.md#table-view-options) sau omisă de modul de afișare a numelor își păstrează locul în listă, așa că ordinea se aplică celulelor afișate, oricare ar fi acestea.
 O diagramă a cărei ordine a fost stabilită înainte ca `Logical Name` și `Domain` să existe ca rânduri primește rândul `Logical Name` imediat înaintea rândului `Name` și rândul `Domain` imediat după rândul `DataType`, oriunde s-ar afla acestea în ordinea ei.
+O diagramă salvată de o versiune ulterioară își păstrează și ea ordinea, chiar dacă acea versiune are un rând pe care această versiune nu îl are: rândurile pe care le are această versiune apar în ordinea dată de fișier, iar rândul necunoscut este lăsat deoparte. Salvarea diagramei aici scrie ordinea fără el, iar versiunea ulterioară pune rândul înapoi lângă vecinul lui, în propria ei ordine implicită.
 Marcajul de [cheie alternativă](./table-related-functions.md#alternate-keys) (`AK1.1` și așa mai departe) nu este unul dintre aceste rânduri. Se află mereu ultimul într-un rând, după celula pe care această ordine o pune ultima, oricare ar fi ea.
 
 ![Derularea în jos până la Column Order și glisarea rândului Comment în sus, sub Name, ceea ce pune fiecare comentariu imediat după numele coloanei sale](/img/demo-settings-column-order.webp)
@@ -146,6 +141,7 @@ Comanda `Toggle Explorer` nu are niciun efect cât timp se editează o celulă, 
 Un explorator, un configurator de teme sau un selector `Display Language` deschis nu suspendă niciuna dintre comenzile rapide de pe pânză. Comanda `Stop` nu închide niciodată exploratorul. Pentru ce fac `Stop` și celelalte taste în explorator, consultați [Taste în explorator](./explorer.md#keys-in-the-explorer), iar pentru selector, consultați [Alegerea unei limbi](./language-and-theme.md#picking-a-language).
 Comanda `Delete Selection` elimină fiecare tabel, notă și grup de tabele selectat sau, când este selectat un singur tabel împreună cu unele dintre coloanele sale și zoomul depășește `70%`, acele coloane (consultați [Ștergerea tabelelor și notelor](./table-related-functions.md#table-and-memo-deletion)). Comanda `Remove Table, Memo` elimină și grupurile de tabele selectate.
 Comanda `Add Table Group` pornește trasarea unui grup [`New Table Group`](./table-groups.md#drawing-a-group), la fel ca butonul `New Table Group` din [bara de instrumente a pânzei](./table-related-functions.md#canvas-toolbar), iar o a doua apăsare anulează trasarea. Comanda `Group Selected Tables` constă în două apăsări fără tastă de modificare, `T` apoi `G`, la cel mult o secundă după `T`. Ea pune tabelele selectate într-un grup nou și îi deschide editorul de nume, la fel ca elementul `Group selected tables` din meniul contextual al unui tabel, și nu are niciun efect când nu este selectat niciun tabel (consultați [Gruparea tabelelor selectate](./table-groups.md#grouping-selected-tables)). Niciuna dintre ele nu are vreun efect într-un editor doar în citire sau cât timp grupurile sunt [ascunse](./table-groups.md#hiding-groups).
+Într-un editor doar în citire funcționează doar tastele care citesc: `Search`, `Toggle Explorer`, `Stop`, `Table Properties` și `Focus on this table` pe tabelul selectat de un salt, cele trei taste de zoom, `Zen Mode`, copierea și tastele săgeți, care mută celula activă. `Editing`, fiecare tastă `Add` și `Remove`, `Delete Selection`, `Primary Key`, ambele taste de selectare a tuturor, cele patru taste pentru relații, `Add Table Group`, `Group Selected Tables`, `Hand Tool` și lipirea nu fac nimic, iar `Undo` și `Redo` nu anulează și nu refac nimic (consultați [Editoare doar în citire](./table-related-functions.md#read-only-editors)).
 Comenzile `Zoom In`, `Zoom Out` și `Zoom Reset` modifică zoomul și în fila [Vizualizare](./visualization.md#toolbar), atât în modul `Graph`, cât și în `Flow`, cu excepția cazului în care este deschisă căutarea rapidă.
 În modul `Flow`, comenzile `Undo` și `Redo` fac un pas înapoi și un pas înainte prin vizualizările la care a fost restrâns modul Flux, la fel ca butoanele sale `Previous table` și `Next table`, cu excepția cazului în care este deschisă căutarea rapidă. Acolo nu anulează niciodată modificări ale diagramei, iar în modul `Graph` nu au niciun efect (consultați [Tabelul anterior și tabelul următor](./visualization.md#previous-table-and-next-table)).
 În fila Vizualizare, comanda `Stop` închide și meniul de [afișare a rândurilor](./visualization.md#row-display) și anulează o [aranjare în modul Flux](./visualization.md#how-flow-is-placed) care încă rulează; nu lărgește o vizualizare restrânsă cu `Focus on this table`.
@@ -160,3 +156,13 @@ Fila `Shortcuts` listează atunci combinațiile aplicației gazdă: o comandă p
 Tastele pentru rânduri din fila Dicționar urmează comenzile `Add Column` și `Remove Column`, așa că reasocierea oricăreia dintre ele le mută (consultați [`dictionaryRowChords`](../../api/erd-editor-element.md#dictionaryrowchords)).
 
 În Obsidian, aceste taste ajung la editor de fiecare dată când fila Obsidian a diagramei este activă, chiar și acolo unde o comandă rapidă din Obsidian folosește aceeași tastă, de exemplu `Alt + Enter`, `Ctrl + K` și `Ctrl + F` (Windows/Linux) sau `⌥ + Enter`, `⌘ + K` și `⌘ + F` (Mac). La fel ajunge și combinația `Alt + Shift + Enter` (Windows/Linux) sau `⌥ + Shift + Enter` (Mac) a filei Dicționar, care nu apare în niciun rând al acestei liste. Toate celelalte comenzi rapide din Obsidian funcționează în continuare acolo. Pentru `Ctrl + F` sau `⌘ + F`, consultați [Bara de căutare a browserului](./find-and-replace.md#the-browsers-find-bar).
+
+## Editoare doar în citire {#read-only-editors}
+
+Într-un editor [`readonly`](../../api/erd-editor-element.md#readonly), fila Setări arată setările diagramei și nu schimbă niciuna. O insignă `Read only` stă lângă titlul fiecărei pagini, `Preferences` și `Shortcuts`.  
+Comutatoarele `Relationship DataType Sync` și `Maximum comment width` și câmpul de lățime sunt dezactivate, la fel ca fiecare buton de blocare. Rândurile `Column Order` nu arată mânerul de prindere și nu pot fi trase.  
+Fiecare rând `Lock` își arată în continuare valoarea. Un rând blocat arată valoarea pe care o păstrează fișierul, iar unul deblocat setarea așa cum o are acel ecran, care poate diferi de cea a fișierului, ca mai jos.
+
+Setările care decid ce arată ecranul se schimbă totuși acolo: poziția și zoomul vizualizării, fila, modul de afișare a numelor, baza de date, limbajul Code Generator, ambele stiluri de denumire, delimitatorul și comutatoarele [`View Option`](./table-related-functions.md#table-view-options).  
+Fiecare schimbă doar acel ecran, indiferent de blocarea sa. Nu este salvată în fișier și nu este scrisă de un export JSON, nu este înregistrată în istoricul anulărilor, nu este numărată ca schimbare și nu ajunge niciodată la colaboratori. Panourile de opțiuni ale filelor [Schemă SQL](./schema-sql.md#options-panel) și [Generator de cod](./code-generator.md#options-panel) denumesc acolo aceste alegeri `This window only`, în locul lui `Saved in the document`.  
+Când editorul devine din nou editabil, baza de date, limbajul, stilurile de denumire, delimitatorul și comutatoarele View Option revin la valorile fișierului. Vizualizarea, fila și modul de afișare a numelor rămân așa cum le-ați lăsat, iar fișierul preia fiecare dintre ele, în limitele blocării sale, la următoarea dumneavoastră schimbare a acesteia.

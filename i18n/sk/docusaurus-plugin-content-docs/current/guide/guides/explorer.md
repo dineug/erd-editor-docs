@@ -23,7 +23,7 @@ Otvoriť ho môžete ktorýmkoľvek z týchto spôsobov:
 - Tlačidlo `Explorer` na paneli nástrojov, hneď za tlačidlom `Search`, s ikonou stromu. Jeho bublinový popis znie `Explorer (Ctrl + F)` (Windows/Linux) alebo `Explorer (⌘ + F)` (Mac).
 - Klávesová skratka `Ctrl + F` (Windows/Linux) alebo `⌘ + F` (Mac), ktorá sa na karte [Klávesové skratky](./settings.md#shortcuts) karty Nastavenia nazýva `Toggle Explorer`.
 - Položka `Toggle Explorer` v [rýchlom vyhľadávaní](./quick-search.md), uvedená na každej karte. Zobrazí sa po zadaní `find`, `replace`, `rename`, `tree`, `outline` alebo `objects`.
-- Položka `Toggle Explorer` v kontextovej ponuke plátna: kliknite pravým tlačidlom na prázdne miesto na plátne ERD mimo akejkoľvek [skupiny tabuliek](./table-groups.md). Nachádza sa za položkami `New Table`, `New Memo` a `New Table Group` a pred položkou `Relationship`.
+- Položka `Toggle Explorer` v kontextovej ponuke plátna: kliknite pravým tlačidlom na prázdne miesto na plátne ERD mimo akejkoľvek [skupiny tabuliek](./table-groups.md). Nachádza sa za položkami `New Table`, `New Memo` a `New Table Group` a pred položkou `Relationship`. Kontextová ponuka plátna editora iba na čítanie takýto riadok nemá – pozrite si časť [Editory iba na čítanie](#read-only-editors).
 
 Obe položky `Toggle Explorer` zobrazujú vpravo klávesovú skratku.  
 Tlačidlo na paneli nástrojov, klávesová skratka a položka rýchleho vyhľadávania fungujú na každej karte. Z karty Vizualizácia, Schéma SQL, Generátor kódu, Slovník alebo Nastavenia najprv prepnú na kartu ERD, pretože prieskumník sa zobrazuje iba tam.
@@ -168,5 +168,8 @@ Aj pri otvorení [rýchleho vyhľadávania](./quick-search.md) zostane prieskumn
 
 ## Editory iba na čítanie {#read-only-editors}
 
-V editore s atribútom [`readonly`](../../api/erd-editor-element.md#readonly) funguje prieskumník rovnako ako v ktoromkoľvek inom: tlačidlo na paneli nástrojov s rovnakým bublinovým popisom, klávesová skratka, obe položky `Toggle Explorer`, strom, zbaľovanie, tlačidlo `Collapse All` a prechod na riadok, ktorý ako zvyčajne vyberie to, na čo prechádza. Aj tam je jeho nadpis `Explorer`.  
+V editore s atribútom [`readonly`](../../api/erd-editor-element.md#readonly) funguje prieskumník rovnako ako v ktoromkoľvek inom: tlačidlo na paneli nástrojov s rovnakým bublinovým popisom, klávesová skratka, položka `Toggle Explorer` v rýchlom vyhľadávaní, strom, zbaľovanie a tlačidlo `Collapse All`. Aj tam je jeho nadpis `Explorer`. Kontextová ponuka plátna tam položku `Toggle Explorer` nemá, pretože si ponecháva iba riadky, ktoré slúžia na čítanie – pozrite si časť [Editory iba na čítanie](./table-related-functions.md#read-only-editors).
+
+Prechod na riadok funguje ako v časti [Prechod na riadok](#going-to-a-row): zobrazenie sa posunie podľa rovnakého pravidla a tabuľka, skupina tabuliek alebo poznámka daného riadka sa vyberie, obrysom na plátne, s aktívnou bunkou tam, kam ju riadok umiestni.  
+Je to jediný spôsob, ako editor iba na čítanie čokoľvek vyberie. Stlačenie na plátne nevyberie nič a kliknutie bez pohybu zruší výber, ktorý zanechal riadok. Tabuľka, ktorú vybral, sa otvorí vo [Vlastnostiach tabuľky](./table-related-functions.md#table-properties) klávesmi `Alt + Space` (Windows/Linux) alebo `⌥ + Space` (Mac), iba na čítanie, a `Ctrl + C` (Windows/Linux) alebo `⌘ + C` (Mac) skopíruje to, čo vybral, ako v ktoromkoľvek editore.  
 Jeho vyhľadávanie iba hľadá – pozrite si časť [Editory iba na čítanie](./find-and-replace.md#read-only-editors) na stránke Hľadanie a nahrádzanie.

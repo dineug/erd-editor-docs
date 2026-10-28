@@ -37,7 +37,7 @@ En JSON-fil behåller sina positioner. Tabellerna i en Schema SQL-, GraphQL-, DB
 
 Diagrammet ersätts sedan i ett enda steg, så ingenting visas däremellan. En inställning som du ändrar medan tabellerna placeras, till exempel fliken, behålls, och om du importerar en annan fil under tiden vinner den import som startades sist.
 
-En skrivskyddad editor läser inte in något från `Import` och erbjuder varken `Import and Add` eller `Import CSV` på fliken Ordlista.
+En skrivskyddad editor importerar ingenting. Dess snabbmeny för arbetsytan och dess snabbsökning erbjuder varken `Import` eller `Import and Add`, den visar ingen välkomstskärm, och fliken Ordlista erbjuder ingen `Import CSV`.
 
 ### Importera och lägg till {#import-and-add}
 
@@ -215,7 +215,7 @@ Undermenyn `Export` i arbetsytans snabbmeny har tre alternativ:
 - Schema SQL: Öppnar fliken [Schema SQL](./schema-sql.md#saving-or-copying-the-sql) med dess alternativpanel öppen och dess knapp `Save file` i fokus, så att ett tryck på `Enter` sparar den SQL-kod som fliken visar som en `.sql`-fil. Ingenting sparas innan dess.
 - Image: Öppnar dialogrutan `Export image`, som sparar diagrammet som `.png` eller `.svg` eller kopierar det till Urklipp som PNG – se [Bild](#image).
 
-Alla tre fungerar i en skrivskyddad editor.  
+Alla tre fungerar i en skrivskyddad editor, där `Export` är en av de få rader som snabbmenyn för arbetsytan behåller. Där skriver json de inställningar som filen innehåller, inte vyn, fliken, namnvisningen, databasen, kodinställningarna eller de växlar under `View Option` som ändrats bara på den skärmen – se [Skrivskyddade editorer](./settings.md#read-only-editors) i Inställningar.  
 `Export CSV` på fliken Ordlista, som inte finns i den här undermenyn, sparar bladet `Domains`, `Words` eller `Terms` som en CSV-fil. Till skillnad från de här tre erbjuds den inte i en skrivskyddad editor – se [Importera och exportera CSV](./dictionary.md#importing-and-exporting-csv).
 
 Schema SQL skriver varje relations ON DELETE och ON UPDATE efter dess `REFERENCES`, med ON DELETE först. `Not set` skriver ingenting, och en åtgärd som den valda databasen inte godtar utelämnas. Se [Redigera relationer](./relationship-editing.md#on-delete-and-on-update) för vilken databas som godtar vilken åtgärd.

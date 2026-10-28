@@ -61,7 +61,7 @@ View Option → `Domain` 开启期间，域有自己的单元格，类型单元�
 - 在 `Logical Names` 中，先是表头的逻辑名，然后是其注释，再按列顺序依次是每一行的单元格，其中逻辑名位于名称的位置。
 - 在 `Both Names` 中，先是表头的逻辑名、名称和注释，再按列顺序依次是每一行的单元格，默认以其 `Logical Name` 单元格为首。
 
-`Alt + Enter` (Windows/Linux) 或 `⌥ + Enter` (Mac) 会添加一列并将焦点移到其名称单元格，在 `Logical Names` 中即其逻辑名。
+`Alt + Enter` (Windows/Linux) 或 `⌥ + Enter` (Mac) 会添加一列并将焦点移到其行所绘制的第一个单元格。在默认的列顺序下，那就是它的名称单元格，在 `Logical Names` 中即其逻辑名，在 `Both Names` 中则是它的 `Logical Name` 单元格，因此可以从逻辑名开始输入，参见[添加列](./table-editing.md#添加列)。
 
 关系添加的外键列会复制其所引用键的逻辑名和域，以及其类型，参见[识别关系](./relationship-editing.md#识别关系)。  
 将列复制到电子表格以及从电子表格粘贴列时，使用的是当前显示方式所绘制的单元格，包括逻辑名单元格和域单元格，参见[复制/粘贴列](./table-editing.md#复制粘贴列)。
@@ -143,5 +143,7 @@ Diff Viewer、[Time Travel](./undo-redo.md#time-travel)、[自动布局](./table
 
 ## 只读编辑器 {#read-only-editors}
 
-在 [`readonly`](../../api/erd-editor-element.md#readonly) 编辑器中，所有名称显示选择器都可以使用，并且无论锁定如何，切换都只会改变该屏幕。  
-在其中无法编辑逻辑名和域，因此不会打开术语列表或域选择器，也不会提供 `Derive Physical Name Again` 和 `Derive Physical Names Again` 条目。View Option → `Domain` 在其中不会产生任何效果，与所有 [View Option](./table-related-functions.md#table-view-options) 一样。
+在 [`readonly`](../../api/erd-editor-element.md#readonly) 编辑器中，所有名称显示选择器都可以使用：画布工具栏的 `Name View` 按钮、画布右键菜单和快速搜索中的 `Name View`，以及 Flow 工具栏上的列表。  
+无论锁定如何，那里的切换都只会改变该屏幕：文件、协作者和 Undo 历史记录都保持原来的显示方式。编辑器再次变为可写后，所选的显示方式会一直保留在该屏幕上，直到在那里再次切换，或者在锁定关闭时，直到协作者切换它或文档被重新加载。  
+在其中无法编辑逻辑名和域，因此不会打开单元格编辑器、术语列表或域选择器，也不会提供 `Derive Physical Name Again` 和 `Derive Physical Names Again` 条目。  
+View Option → `Domain` 只在该屏幕上显示或隐藏 Domain 单元格，与那里的所有 [View Option](./table-related-functions.md#table-view-options) 一样，编辑器再次变为可写后，会恢复文档所持有的 View Option。

@@ -25,7 +25,8 @@ Keď vybratý jazyk ignoruje možnosť `Database` alebo štýly názvov, zostáv
 V dolnej časti panela sú tlačidlá `Save file` a `Copy` – pozrite si časť [Uloženie alebo kopírovanie výsledku](#saving-or-copying-the-result).
 
 Sú to vlastné nastavenia diagramu, tie isté, ktoré menia aj kontextová ponuka a rýchle vyhľadávanie. Možnosť `Database` sa ukladá do súboru ako každá úprava.  
-Možnosti `Language`, `Table Name Case`, `Column Name Case` a `Bracket` sa ukladajú iba vtedy, keď je ich zamknutie na karte Nastavenia vypnuté (pre `Bracket` je to zamknutie `Bracket Type`), a nový diagram má zapnuté všetky zamknutia. Kým je zamknutie zapnuté, zmena prepíše kód na obrazovke, no súbor si ponechá zamknutú hodnotu a diagram sa s ňou znova otvorí. Panel zamknutie nijako neoznačuje; ak chcete voľbu zachovať v súbore, vypnite jej zamknutie – pozrite si časť [Zamknutie](./settings.md#lock).
+Možnosti `Language`, `Table Name Case`, `Column Name Case` a `Bracket` sa ukladajú iba vtedy, keď je ich zamknutie na karte Nastavenia vypnuté (pre `Bracket` je to zamknutie `Bracket Type`), a nový diagram má zapnuté všetky zamknutia. Kým je zamknutie zapnuté, zmena prepíše kód na obrazovke, no súbor si ponechá zamknutú hodnotu a diagram sa s ňou znova otvorí. Panel zamknutie nijako neoznačuje; ak chcete voľbu zachovať v súbore, vypnite jej zamknutie – pozrite si časť [Zamknutie](./settings.md#lock).  
+V editore iba na čítanie tam namiesto toho stojí `This window only`, pretože zmena tam zasiahne iba toto okno – pozrite si časť [Editory iba na čítanie](#read-only-editors).
 
 ## Jazyk {#language}
 
@@ -138,3 +139,10 @@ Ponuka Export nemá položku pre Generátor kódu a karta `Code Generator` v pan
 Ak chcete kód skopírovať, kliknite na tlačidlo `Copy` v dolnej časti panela alebo podržte ukazovateľ nad kódom a kliknite na tlačidlo kopírovania v jeho pravom hornom rohu, čo je v paneli Vlastnosti tabuľky jediný spôsob.  
 Na dve sekundy to potvrdí oznámenie `Copied!` so značkou začiarknutia. Ak prehliadač alebo hostiteľská aplikácia odmietne prístup do schránky, upozorní na to namiesto toho na päť sekúnd oznámenie `Couldn't copy to the clipboard` s výstražným symbolom. Opätovné kopírovanie oznámenie nahradí, namiesto aby pridalo ďalšie.  
 Text sa dá aj vyberať, takže si môžete vziať iba tú časť, ktorú potrebujete.
+
+## Editory iba na čítanie {#read-only-editors}
+
+V editore s atribútom [`readonly`](../../api/erd-editor-element.md#readonly) zoznamy panela, kontextová ponuka a rýchle vyhľadávanie stále menia `Language`, `Database`, `Table Name Case`, `Column Name Case` a `Bracket`, ale iba v tomto okne, preto ich panel označuje popisom `This window only` namiesto `Saved in the document`.  
+Zmena prepíše kód na tejto obrazovke a neuloží sa do súboru, nezdieľa sa so spolupracovníkmi ani sa nezaznamená pre vrátenie späť, nech hovoria zamknutia čokoľvek, a zmena nastavenia, ktoré ste vybrali, urobená spolupracovníkom ponechá váš výber na obrazovke. `Database` a `Bracket` sú aj nastavenia karty Schéma SQL, takže výber tu sa tam zobrazí v tom istom okne – pozrite si časť [Editory iba na čítanie](./schema-sql.md#read-only-editors).  
+Keď sa editor znova prepne na úpravy, nastavenia dokumentu sa vrátia a kód sa zapíše pre ne.  
+`Save file` a `Copy` uložia a skopírujú zobrazený kód.

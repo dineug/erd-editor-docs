@@ -31,7 +31,7 @@ description: قراءة نص DDL للمخطط في علامة تبويب مخط�
 
 تضم اللوحة ثلاثة أقسام، كل منها تحت عنوان:
 
-1. `Saved in the document`: `Database` و`Bracket`، راجع [قاعدة البيانات وعلامات الاقتباس](#database-and-bracket).
+1. `Saved in the document`: `Database` و`Bracket`، راجع [قاعدة البيانات وعلامات الاقتباس](#database-and-bracket). ويعنونهما المحرر للقراءة فقط بـ`This window only`، راجع [وضع القراءة فقط](#read-only-editors).
 2. `This window only`: `Statements` و`Header` و`Write logical names into empty comments`، و`Tables` ما دام المخطط يحتوي على [مجموعة جداول](./table-groups.md)، راجع [العبارات](#statements) و[الترويسة](#header) و[الأسماء المنطقية كتعليقات](#logical-names-as-comments) و[الجداول](#tables).
 3. `Saved in the document · written as is for every database`: السكربتان `Before tables` و`After tables`، راجع [السكربتات قبل الجداول وبعدها](#before-and-after-scripts).
 
@@ -222,5 +222,9 @@ description: قراءة نص DDL للمخطط في علامة تبويب مخط�
 
 ## وضع القراءة فقط {#read-only-editors}
 
-في محرر بالسمة `readonly`، تعمل علامة التبويب كالمعتاد: لا يزال `Database` و`Bracket` يغيّران نص SQL المعروض، ولا يزال كل من `Statements` و`Header` و`Write logical names into empty comments` و`Tables` يعمل، ولا يزال `Save file` و`Copy` يحفظانه وينسخانه.  
-حقلا السكربت وحدهما للقراءة فقط.
+في محرر بالسمة [`readonly`](../../api/erd-editor-element.md#readonly) تعمل علامة التبويب للقارئ، ولا يصل شيء مما يُجرى عليها إلى المستند:
+
+- لا يزال `Database` و`Bracket` يعيدان كتابة SQL، لكن في تلك النافذة وحدها، لذا تعنونهما اللوحة بـ`This window only` أيضًا. ولا يُحفظ الاختيار في الملف ولا يُشارَك مع المتعاونين ولا يُسجَّل للتراجع، أيًّا كانت الأقفال، ولا يغيّر تغيير أي متعاون لإعداد اخترتَه ما اخترتَه على الشاشة. وتعرض علامة تبويب منشئ التعليمات البرمجية الاختيار نفسه، وتكتبه [`getSchemaSQL()`](../../api/erd-editor-element.md#getschemasql) حين تُستدعى دون قاعدة بيانات. وحين يعود المحرر قابلًا للكتابة تعود قاعدة بيانات المستند وعلامات الاقتباس فيه.
+- يعمل `Statements` و`Header` و`Write logical names into empty comments` و`Tables` كما تعمل في أي مكان، لأنها تخص النافذة أصلًا.
+- حقلا السكربت للقراءة فقط: يعرضان سكربتَي المستند، اللذين يكتبهما SQL ما زال، ولا يقبلان كتابة.
+- يحفظ `Save file` و`Copy` نص SQL الذي تعرضه علامة التبويب وينسخانه.

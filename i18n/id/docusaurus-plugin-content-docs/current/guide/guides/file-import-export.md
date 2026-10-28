@@ -37,7 +37,7 @@ File JSON mempertahankan posisi yang dimilikinya. Tabel dari file Skema SQL, Gra
 
 Diagram kemudian diganti dalam satu langkah, sehingga tidak ada yang terlihat di tengah prosesnya. Pengaturan yang Anda ubah selama tabel ditempatkan, seperti tab, tetap dipertahankan, dan jika Anda mengimpor file lain sementara itu, impor yang dimulai paling akhir yang berlaku.
 
-Editor hanya baca tidak memuat apa pun dari `Import` dan tidak menawarkan `Import and Add` maupun `Import CSV` di tab Kamus.
+Editor hanya baca tidak mengimpor apa pun. Menu konteks kanvas dan Pencarian Cepat-nya tidak menawarkan `Import` maupun `Import and Add`, tidak menampilkan layar sambutan, dan tab Kamus tidak menawarkan `Import CSV`.
 
 ### Impor dan Tambahkan {#import-and-add}
 
@@ -215,7 +215,7 @@ Submenu `Export` pada menu konteks kanvas memiliki tiga item:
 - Skema SQL: Membuka tab [Skema SQL](./schema-sql.md#saving-or-copying-the-sql) dengan panel opsinya terbuka dan tombol `Save file` mendapat fokus, sehingga menekan `Enter` menyimpan SQL yang ditampilkan tab sebagai `.sql`. Tidak ada yang disimpan hingga saat itu.
 - Gambar: Membuka dialog `Export image`, yang menyimpan diagram sebagai `.png` atau `.svg`, atau menyalinnya ke papan klip sebagai PNG — lihat [Gambar](#image).
 
-Ketiganya berfungsi di editor hanya baca.  
+Ketiganya berfungsi di editor hanya baca, tempat `Export` menjadi salah satu dari sedikit baris yang dipertahankan menu kanvasnya. Di sana, json menulis pengaturan yang dipegang file, bukan tampilan, tab, Tampilan Nama, database, pengaturan kode, atau sakelar `View Option` yang diubah hanya di layar itu — lihat [Editor hanya baca](./settings.md#read-only-editors) di Pengaturan.  
 `Export CSV` milik tab Kamus, yang tidak ada di submenu ini, menyimpan lembar `Domains`, `Words`, atau `Terms` sebagai file CSV. Tidak seperti ketiga item ini, item tersebut tidak ditawarkan di editor hanya baca — lihat [Mengimpor dan mengekspor CSV](./dictionary.md#importing-and-exporting-csv).
 
 Skema SQL menulis ON DELETE dan ON UPDATE setiap hubungan setelah `REFERENCES`-nya, dengan ON DELETE lebih dulu. `Not set` tidak menulis apa pun, dan tindakan yang tidak diterima database yang dipilih tidak disertakan. Lihat [Pengeditan hubungan](./relationship-editing.md#on-delete-and-on-update) untuk mengetahui database mana yang menerima tindakan mana.

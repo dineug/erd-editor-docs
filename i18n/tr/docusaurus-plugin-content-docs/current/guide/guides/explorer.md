@@ -23,7 +23,7 @@ Gezgini şunlardan herhangi biriyle açın:
 - Araç çubuğunda `Search` düğmesinin hemen ardından gelen, ağaç simgeli `Explorer` düğmesi. Araç ipucunda `Explorer (Ctrl + F)` (Windows/Linux) veya `Explorer (⌘ + F)` (Mac) yazar.
 - Ayarlardaki [Kısayollar](./settings.md#shortcuts) sekmesinde `Toggle Explorer` adıyla yer alan `Ctrl + F` (Windows/Linux) veya `⌘ + F` (Mac).
 - [Hızlı aramada](./quick-search.md) her sekmede listelenen `Toggle Explorer` öğesi. `find`, `replace`, `rename`, `tree`, `outline` veya `objects` yazmak onu sonuçlara getirir.
-- Tuvalin bağlam menüsündeki `Toggle Explorer` öğesi: ERD tuvalinde herhangi bir [tablo grubunun](./table-groups.md) dışındaki boş bir noktaya sağ tıklayın. `New Table`, `New Memo` ve `New Table Group` öğelerinden sonra, `Relationship` öğesinden önce yer alır.
+- Tuvalin bağlam menüsündeki `Toggle Explorer` öğesi: ERD tuvalinde herhangi bir [tablo grubunun](./table-groups.md) dışındaki boş bir noktaya sağ tıklayın. `New Table`, `New Memo` ve `New Table Group` öğelerinden sonra, `Relationship` öğesinden önce yer alır. Salt okunur bir düzenleyicinin tuval menüsünde böyle bir öğe yoktur. [Salt okunur düzenleyiciler](#read-only-editors) bölümüne bakın.
 
 İki `Toggle Explorer` öğesi de kısayolu sağ tarafta gösterir.  
 Araç çubuğu düğmesi, kısayol ve Hızlı aramadaki öğe her sekmeden çalışır. Gezgin yalnızca ERD sekmesinde göründüğü için Görselleştirme, Şema SQL, Kod oluşturucu, Sözlük veya Ayarlar sekmesinden kullanıldıklarında önce ERD sekmesine geçerler.
@@ -168,5 +168,8 @@ Aramayı kısayolla veya bir `Toggle Explorer` öğesiyle açmak bu beşini de k
 
 ## Salt okunur düzenleyiciler {#read-only-editors}
 
-[`readonly`](../../api/erd-editor-element.md#readonly) bir düzenleyicide Gezgin diğer düzenleyicilerde olduğu gibi çalışır: aynı araç ipucuna sahip araç çubuğu düğmesi, kısayol, iki `Toggle Explorer` öğesi, ağaç, daraltma, `Collapse All` ve her zamanki gibi gittiği öğeyi seçen satıra gitme. Orada da başlığında `Explorer` yazar.  
+[`readonly`](../../api/erd-editor-element.md#readonly) bir düzenleyicide Gezgin diğer düzenleyicilerde olduğu gibi çalışır: aynı araç ipucuna sahip araç çubuğu düğmesi, kısayol, Hızlı aramadaki `Toggle Explorer` öğesi, ağaç, daraltma ve `Collapse All`. Orada da başlığında `Explorer` yazar. Tuval bağlam menüsünde orada `Toggle Explorer` öğesi yoktur, çünkü yalnızca okuyan satırları korur. [Salt okunur düzenleyiciler](./table-related-functions.md#read-only-editors) bölümüne bakın.
+
+Bir satıra gitme, [Bir satıra gitme](#going-to-a-row) bölümündeki gibi çalışır: Görünüm aynı kurala göre hareket eder ve satırın tablosu, tablo grubu veya notu seçilir, tuvalde dış çizgiyle belirtilir ve odaklı hücre satırın koyduğu yerde olur.  
+Bir salt okunur düzenleyicinin herhangi bir şeyi seçmesinin tek yolu budur. Tuvale basmak hiçbir şeyi seçmez ve hareketsiz bir tıklama, bir satırın bıraktığı seçimi temizler. Seçtiği bir tablo, `Alt + Space` (Windows/Linux) veya `⌥ + Space` (Mac) ile salt okunur olarak [Tablo özelliklerinde](./table-related-functions.md#table-properties) açılır ve `Ctrl + C` (Windows/Linux) veya `⌘ + C` (Mac) seçtiğini her düzenleyicideki gibi kopyalar.  
 Araması yalnızca bulur. Bul ve değiştir sayfasındaki [Salt okunur düzenleyiciler](./find-and-replace.md#read-only-editors) bölümüne bakın.

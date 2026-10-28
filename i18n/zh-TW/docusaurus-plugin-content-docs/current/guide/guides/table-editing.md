@@ -16,13 +16,14 @@ description: 新增、選取、重新排序與刪除欄位，切換欄位選項�
 
 ## 新增欄位 {#adding-columns}
 
-使用快速鍵 `Alt + Enter` (Windows/Linux) 或 `⌥ + Enter` (Mac) 建立。  
-每個選取的資料表都會新增一個欄位。
+使用快速鍵 `Alt + Enter` (Windows/Linux) 或 `⌥ + Enter` (Mac) 建立，它會為每個選取的資料表新增一個欄位；或使用資料表標題上的 `+` 按鈕，它會為該資料表新增一個。  
+新欄位的第一個儲存格會取得焦點，也就是其資料列在[欄位順序](./settings.md#adjusting-column-order)中繪製的第一個儲存格。在預設順序下，那是其名稱，在 `Logical Names` 中即為其邏輯名稱，在 `Both Names` 中則是其 `Logical Name` 儲存格，請參閱[名稱顯示](./logical-names.md#name-view)。  
+從最後一個儲存格以 `Tab` 新增的欄位，以及關聯繪製時為沒有主鍵的父資料表新增的主鍵，也都從該儲存格開始。
 
 ## Tab 鍵 {#tab-key}
 
 按 `Tab` 即可直接進入下一個儲存格的編輯模式。  
-在最後一個儲存格按 `Tab` 會建立新的欄位。  
+在最後一個儲存格按 `Tab` 會建立新的欄位並開啟其第一個儲存格進行編輯，請參閱[新增欄位](#adding-columns)。  
 使用 `Shift + Tab` 即可移至上一個儲存格的編輯模式。  
 `Tab` 和 `Shift + Tab` 會依序經過資料表所繪製的儲存格，因此「名稱顯示」和 View Option → `Domain` 會決定其中是否包含邏輯名稱儲存格和定義域儲存格，請參閱[輸入邏輯名稱](./logical-names.md#writing-a-logical-name)。  
 繪製在列的最後一個儲存格之後的[替代鍵](./table-related-functions.md#alternate-keys)標記不是儲存格，因此鍵盤焦點會略過它們，它們也永遠不會進入編輯模式。
@@ -96,7 +97,8 @@ Not Null 儲存格在設定時顯示 `N-N`，未設定時顯示 `NULL`。
 ![選取三個欄位，再將焦點欄位旁的拖曳控點拖曳到另一個資料表中，其他選取的欄位也隨之移動](/img/demo-column-multi-move.webp)
 
 從欄位的列上（而不是其拖曳控點上）開始的拖曳，會像在表頭上拖曳一樣移動資料表，請參閱[移動多個資料表](./table-related-functions.md#moving-multiple-tables)。在列上使用 `Alt + drag` (Windows/Linux) 或 `⌥ + drag` (Mac) 會建立資料表的副本，請參閱[建立資料表與備忘錄的副本](./table-related-functions.md#duplicating-tables-and-memos)。  
-在縮放比例為 `70%` 或更低、資料表只顯示名稱時，或在唯讀編輯器中，都不會繪製拖曳控點，因此在這些情況下無法重新排列欄位。
+在縮放比例為 `70%` 或更低、資料表只顯示名稱時，或在唯讀編輯器中，都不會繪製拖曳控點，因此在這些情況下無法重新排列欄位。  
+編輯器轉為唯讀時，進行中的欄位拖曳會立即結束：跟隨指標的副本和抓取中的手形都會消失，放開也不會移動任何欄位。拖曳已移動的列會留在其被移動到的位置。
 
 ## 刪除欄位 {#column-deletion}
 
@@ -174,3 +176,10 @@ Unique 和 Auto Increment 預設為隱藏，因此只有在顯示這些儲存格
 若要將多個欄位設為一個複合鍵，先[選取這些欄位](#selecting-multiple-columns)，然後按 `Alt + K` (Windows/Linux) 或 `⌥ + K` (Mac)，或在其中一個已選取的列上按滑鼠右鍵並選擇 `Primary Key on selected columns`。每次切換都算作一個復原步驟。
 
 ![以 Shift + Arrow Down 選取兩個欄位，接著以 ⌥ + K 將兩者都設為主鍵，再按一次將兩者都清除](/img/demo-column-pk.webp)
+
+## 唯讀編輯器 {#read-only-editors}
+
+在 [`readonly`](../../api/erd-editor-element.md#readonly) 編輯器中，不會有任何儲存格開啟編輯，也不會有任何欄位變更。  
+在儲存格上按一下不會讓任何東西取得焦點，並會取消跳至目標所留下的選取範圍。`Enter` 和按兩下既不會開啟編輯器，也不會切換任何開關，`Tab` 交由頁面處理，而新增、全選或刪除欄位的快速鍵、主鍵切換和貼上都不會有任何作用。  
+從[物件總管](./explorer.md#going-to-a-row)或[快速搜尋](./quick-search.md)前往某個欄位會讓其儲存格取得焦點。方向鍵接著會在儲存格之間移動焦點，到達的欄位會單獨被選取，因為在那裡 `Shift` 不會加選任何欄位。  
+`Ctrl + C` (Windows/Linux) 或 `⌘ + C` (Mac) 仍會複製所選的欄位，或跳至目標所選取的資料表，請參閱[複製/貼上欄位](#copyingpasting-columns)。

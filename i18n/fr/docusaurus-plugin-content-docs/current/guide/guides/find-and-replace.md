@@ -192,7 +192,8 @@ Ce que font `Escape`, les raccourcis de l’éditeur qui restent actifs et toute
 ## Éditeurs en lecture seule {#read-only-editors}
 
 Dans un éditeur [`readonly`](../../api/erd-editor-element.md#readonly), la recherche ne fait que trouver. Il n’y a ni flèche `Toggle Replace` ni ligne `Replace`, donc ni champ Remplacer, ni `Preserve Case`, ni `Replace`, ni `Replace All`.  
-Le champ Rechercher, ses trois options, les types de texte, le compteur, les résultats et l’accès à une correspondance fonctionnent tous. L’explorateur qui l’entoure fonctionne comme dans tout autre éditeur (voir [Éditeurs en lecture seule](./explorer.md#read-only-editors)).
+Le champ Rechercher, ses trois options, les types de texte, le compteur, les résultats et l’accès à une correspondance fonctionnent tous. Aller à une correspondance sélectionne ce qu’elle atteint, comme dans [Aller à une correspondance](#going-to-a-match), et cette sélection est la seule qu’un éditeur en lecture seule fasse : un clic immobile sur le canevas l’efface.  
+Ouvrez la recherche avec la touche ou avec `Toggle Explorer` dans la recherche rapide, puisque le menu contextuel du canevas n’a pas `Toggle Explorer` dans cet éditeur. Le reste de l’explorateur est décrit dans [Éditeurs en lecture seule](./explorer.md#read-only-editors), sur la page de l’explorateur.
 
 Dans VS Code, une révision d’un diagramme, comme une révision Git ou une entrée de Local History, s’ouvre en texte JSON. Rouverte comme diagramme avec `Reopen Editor With...`, elle est en lecture seule et dispose de cette recherche sans remplacement.
 

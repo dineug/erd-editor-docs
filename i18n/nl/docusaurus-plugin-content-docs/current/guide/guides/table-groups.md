@@ -167,7 +167,7 @@ Zolang groepen verborgen zijn:
 - De Verkenner laat de map `Table Groups` weg, en de functie Zoeken en vervangen vindt en vervangt geen groepsnamen, ook niet als `Table group names` aanstaat.
 - [Automatische indeling](#auto-layout) houdt de tabellen van elke groep nog steeds bij elkaar, het tabblad Schema SQL biedt nog steeds de [groepen om uit te kiezen](#schema-sql-by-group), DBML schrijft ze nog steeds weg en wat [Importeren en toevoegen](./file-import-export.md#import-and-add) toevoegt, komt nog steeds onder de verborgen kaders terecht.
 
-De keuze wordt in het document opgeslagen en in de [geschiedenis](./undo-redo.md#what-the-history-records) vastgelegd, net als de andere weergaveopties.
+De keuze wordt in het document opgeslagen en in de [geschiedenis](./undo-redo.md#what-the-history-records) vastgelegd, net als de andere weergaveopties. In een editor in alleen-lezenmodus blijft ze in plaats daarvan op dat scherm — zie [Editors in alleen-lezenmodus](#read-only-editors).
 
 ## Automatische indeling {#auto-layout}
 
@@ -197,11 +197,13 @@ De keuze hoort bij het editorvenster en wordt niet in het document opgeslagen.
 
 ## Editors in alleen-lezenmodus {#read-only-editors}
 
-In een editor met [`readonly`](../../api/erd-editor-element.md#readonly) worden groepen zoals gewoonlijk getekend en in de Verkenner vermeld, en kun je ze selecteren en ernaartoe gaan, maar ze niet wijzigen:
+In een editor met [`readonly`](../../api/erd-editor-element.md#readonly) worden groepen zoals gewoonlijk getekend en in de Verkenner vermeld, en kun je ernaartoe gaan, maar ze niet wijzigen:
 
-- Een druk op een titelbalk selecteert de groep en verplaatst niets. Er zijn geen grepen om de grootte te wijzigen en er is geen `x`.
-- Een dubbelklik op de titelbalk opent geen naamveld, en het groepsmenu bevat alleen `Select tables`.
-- Het menu van het canvas heeft geen `New Table Group`, het menu van een tabel heeft geen `Group selected tables` of `Remove from group` en Snel zoeken toont geen van beide groepsopdrachten. Het tekenen met `New Table Group` eindigt wanneer de editor overschakelt naar alleen-lezen.
-- De [canvaswerkbalk](./table-related-functions.md#canvas-toolbar) toont geen van zijn toevoegknoppen, `New Table Group` inbegrepen, en `Alt + G` (Windows/Linux) of `⌥ + G` (Mac) en `T` en daarna `G` doen niets.
-- De weergaveoptie `Table Groups` wijzigt niets, zoals bij elke weergaveoptie.
+- [Naar een groep gaan](#going-to-a-group) selecteert haar, en dat is de enige manier waarop daar een groep wordt geselecteerd. Een druk op een titelbalk selecteert niets en verplaatst niets: gesleept pant hij het canvas, en een klik die niet beweegt haalt de selectie weg die een sprong achterliet.
+- Er zijn geen grepen om de grootte te wijzigen en er is geen `x`, en een dubbelklik op de titelbalk opent geen naamveld.
+- Een rechtsklik op een groep opent geen menu, en het menu van een tabel bevat alleen `Table Properties`.
+- Het menu van het canvas heeft geen `New Table Group`, en Snel zoeken toont geen van beide groepsopdrachten. Het tekenen met `New Table Group` eindigt wanneer de editor overschakelt naar alleen-lezen.
+- De [canvaswerkbalk](./table-related-functions.md#canvas-toolbar) behoudt alleen zijn weergavebesturingen, dus hij heeft geen knop `New Table Group`, en `Alt + G` (Windows/Linux) of `⌥ + G` (Mac) en `T` en daarna `G` doen niets.
+- Een sleepbeweging van tabellen of van een groep die bezig is wanneer de editor overschakelt naar alleen-lezen, stopt waar ze is en wijzigt geen groep, en het wijzigen van de grootte van een groep dat bezig is, eindigt zonder de grootte te wijzigen.
+- `View Option` → `Table Groups` toont of verbergt de groepen alleen op dat scherm, zoals elke View Option daar doet: het document, medebewerkers en de ongedaanmakingsgeschiedenis behouden de keuze zoals ze was, en als de editor weer bewerkbaar wordt, komt de keuze van het document terug.
 - De keuze `Tables` op het tabblad Schema SQL werkt nog steeds.

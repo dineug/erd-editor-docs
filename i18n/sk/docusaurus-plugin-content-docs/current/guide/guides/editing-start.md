@@ -10,7 +10,8 @@ description: Začiatok na uvítacej obrazovke a vytváranie tabuliek, poznámok,
 ![Kliknutie pravým tlačidlom na plátno, otvorenie podponuky Relationship, pridanie tabuľky a potom jej vlastná ponuka](/img/demo-context-menu.webp)
 
 Kliknutie pravým tlačidlom na tabuľku, poznámku, skupinu tabuliek alebo vzťah namiesto toho otvorí vlastnú ponuku daného objektu.  
-Kliknutie pravým tlačidlom na tabuľku, poznámku alebo skupinu tabuliek, ktorá je už vybratá, zachová celý výber, takže položky, napríklad `Color` a `Delete selected`, sa vzťahujú na celý výber – pozrite si časť [Viacnásobný výber](./table-related-functions.md#multiple-selection).
+Kliknutie pravým tlačidlom na tabuľku, poznámku alebo skupinu tabuliek, ktorá je už vybratá, zachová celý výber, takže položky, napríklad `Color` a `Delete selected`, sa vzťahujú na celý výber – pozrite si časť [Viacnásobný výber](./table-related-functions.md#multiple-selection).  
+Editor iba na čítanie nič nevytvára, takže sa v ňom neponúka nič z toho, čo táto stránka opisuje: ponuka plátna si ponecháva iba `View Option`, `Name View`, `Export` a `Diff Viewer`, ponuka tabuľky iba `Table Properties` a poznámka, skupina tabuliek ani vzťah neotvorí žiadnu ponuku – pozrite si časť [Editory iba na čítanie](./table-related-functions.md#read-only-editors).
 
 ## Uvítacia obrazovka {#welcome-screen}
 

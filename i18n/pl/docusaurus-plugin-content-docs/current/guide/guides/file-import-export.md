@@ -37,7 +37,7 @@ Plik JSON zachowuje zapisane w nim położenia. Tabele z pliku w formacie Schema
 
 Następnie diagram jest zastępowany w jednym kroku, więc nie widać żadnego stanu pośredniego. Ustawienie zmienione w trakcie rozmieszczania tabel, na przykład karta, zostaje zachowane, a jeśli w tym czasie zaimportujesz inny plik, wygrywa import rozpoczęty jako ostatni.
 
-Edytor tylko do odczytu nic nie wczytuje przez pozycję `Import` i nie oferuje ani pozycji `Import and Add`, ani przycisku `Import CSV` na karcie Słownik.
+Edytor tylko do odczytu niczego nie importuje. Jego menu kontekstowe kanwy i Szybkie wyszukiwanie nie oferują ani pozycji `Import`, ani `Import and Add`, nie pokazuje ekranu powitalnego, a karta Słownik nie oferuje przycisku `Import CSV`.
 
 ### Importuj i dodaj {#import-and-add}
 
@@ -215,7 +215,7 @@ Podmenu `Export` w menu kontekstowym kanwy ma trzy pozycje:
 - Schema SQL: Otwiera kartę [Schemat SQL](./schema-sql.md#saving-or-copying-the-sql) z otwartym panelem opcji i fokusem na przycisku `Save file`, więc naciśnięcie klawisza `Enter` zapisuje kod SQL wyświetlany na karcie jako `.sql`. Do tego momentu nic nie jest zapisywane.
 - Image: Otwiera okno dialogowe `Export image`, które zapisuje diagram jako plik `.png` lub `.svg` albo kopiuje go do schowka jako obraz PNG – zobacz sekcję [Obraz](#image).
 
-Wszystkie trzy działają w edytorze tylko do odczytu.  
+Wszystkie trzy działają w edytorze tylko do odczytu, gdzie `Export` jest jedną z nielicznych pozycji, które zachowuje jego menu kanwy. Plik json zapisuje tam ustawienia, które przechowuje plik, a nie widok, kartę, Widok nazw, bazę danych, ustawienia kodu ani przełączniki `View Option` zmienione tylko na tym ekranie – zobacz sekcję [Edytory tylko do odczytu](./settings.md#read-only-editors) w Ustawieniach.  
 Własny przycisk `Export CSV` karty Słownik, którego nie ma w tym podmenu, zapisuje arkusz `Domains`, `Words` lub `Terms` jako plik CSV. W przeciwieństwie do tych trzech pozycji nie jest dostępny w edytorze tylko do odczytu – zobacz sekcję [Importowanie i eksportowanie plików CSV](./dictionary.md#importing-and-exporting-csv).
 
 Schemat SQL zapisuje ON DELETE i ON UPDATE każdej relacji po jej klauzuli `REFERENCES`, najpierw ON DELETE. Wartość `Not set` niczego nie zapisuje, a akcja, której wybrana baza danych nie akceptuje, jest pomijana. Informacje o tym, która baza danych przyjmuje które akcje, znajdziesz na stronie [Edycja relacji](./relationship-editing.md#on-delete-and-on-update).

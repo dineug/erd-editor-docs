@@ -6,7 +6,7 @@ description: Tabloları ve notları seçme, taşıma, kopyalama, çoğaltma ve s
 # Tabloyla ilgili işlevler
 
 Tablolar ve notlar oluşturulduktan sonra onlarla yaptığınız her şey – seçme, taşıma, kopyalama, silme, renklendirme ve tuvalin neyi göstereceğini ayarlama – ile çevrelerindeki tuval denetimleri.  
-Önce tablo ve not komutları gelir; ardından Tablo özellikleri, tablolara odaklanma, dizinler ve alternatif anahtarlar, Otomatik düzen ve veritabanı sistemi; en son da tuvalin kendisi: tuval araç çubuğu, yakınlaştırma, kaydırma ile atlamanın varış noktası ve Fark görüntüleyici.  
+Önce tablo ve not komutları gelir; ardından Tablo özellikleri, tablolara odaklanma, dizinler ve alternatif anahtarlar, Otomatik düzen ve veritabanı sistemi; ardından tuvalin kendisi: tuval araç çubuğu, yakınlaştırma, kaydırma ile atlamanın varış noktası ve Fark görüntüleyici; en son da salt okunur bir düzenleyicinin bunların hepsinden neyi koruduğu.  
 Tabloları bir araya toplayan kutular olan tablo gruplarının kendi sayfası vardır. [Tablo grupları](./table-groups.md) sayfasına bakın.  
 Tabloların göstereceği adlara karar veren Ad görünümünün ve mantıksal adların da kendi sayfası vardır. [Mantıksal adlar](./logical-names.md) sayfasına bakın.
 
@@ -23,7 +23,8 @@ Notlar da aynı şekilde seçilir ve tümünü seçme kısayollarının ikisi de
 `Ctrl + A` tuşları metin imlecine öncelik tanır, bu yüzden bir hücreyi düzenlerken diyagram yerine metni seçer.  
 Seçim kutusu bir tabloyu veya notu ortasını kapladığında işaretler, kenarına değmesi tek başına yetmez. Bir tablo grubunu ise yalnızca grubun kutusunun tamamını içine aldığında seçer, bu yüzden bir grubun içinde çizilen kutu grubu dışarıda bırakarak tabloları seçer.  
 Zaten seçili bir öğeye sağ tıklamak seçimin tamamını korur, bu yüzden `Color`, `Group selected tables` ve `Delete selected` gibi menü satırları seçimin tümüne uygulanır. Başka bir tabloya, nota veya tablo grubuna sağ tıklamak `Ctrl` veya `⌘` tuşu basılıyken bile yalnızca onu seçer, bir ilişkiye ya da tuvalin boş alanına sağ tıklamak ise seçimi kaldırır.  
-`Escape` tuşu seçimi kaldırır. Bir hücre düzenleyicisi, not düzenleyicisi veya tablo grubu ad alanı açıkken ya da bir ilişki veya `New Table Group` çizimi sürerken `Escape` tuşuna ilk basış bunu sonlandırır, ikinci basış ise seçimi kaldırır.
+`Escape` tuşu seçimi kaldırır. Bir hücre düzenleyicisi, not düzenleyicisi veya tablo grubu ad alanı açıkken ya da bir ilişki veya `New Table Group` çizimi sürerken `Escape` tuşuna ilk basış bunu sonlandırır, ikinci basış ise seçimi kaldırır.  
+Salt okunur bir düzenleyicide bu seçme yollarının hiçbiri yoktur: orada yalnızca bir atlama seçer. [Salt okunur düzenleyiciler](#read-only-editors) bölümüne bakın.
 
 ![⌘ + drag ve ⌘ + click ile tabloları, ardından ⌘ + A ile her tabloyu ve notu seçme](/img/demo-table-select.webp)
 
@@ -145,7 +146,7 @@ Tabloların hangi adları göstereceği bir görünüm seçeneği değildir: Tuv
 `Table Groups`, [tablo gruplarını](./table-groups.md) ve tablolarının başlıklarındaki grup renklerini gösterir. Kapatmak bunları tuvalde, mini haritada ve görüntü dışa aktarmalarında gizler, hiçbir tabloyu taşımaz ve her tabloyu kendi grubunda tutar. [Grupları gizleme](./table-groups.md#hiding-groups) bölümüne bakın. Ayrıca `Table Groups` klasörünü [Gezginden](./explorer.md#the-tree), `New Table Group` düğmesini de [tuval araç çubuğundan](#canvas-toolbar) kaldırır ve Gezginin araması artık grup adlarını bulmaz.  
 `Memos` notları gösterir. Kapatmak tuvaldeki, mini haritadaki ve görüntü dışa aktarmalarındaki tüm notları gizler ve hiçbir tabloyu ya da bağlantı çizgisini taşımaz. Gizli notlar yer kaplamaz, bu yüzden kaydırma çubukları, mini harita ve `Go to content` pusulası onları hesaba katmaz.  
 Notları gizlemek onların seçimini kaldırır ve açık bir not düzenleyicisini kapatır. [Gezgin](./explorer.md#the-tree) `Memos` klasörünü kaldırır, Gezginin [Bul ve değiştir](./find-and-replace.md) araması ve Hızlı aramanın `:` öneki de bu notlarda arama yapmaz. Notlar gizliyken `New Memo` öğesi bağlam menüsünden, [tuval araç çubuğundan](#canvas-toolbar), Hızlı aramadan ve [karşılama ekranından](./editing-start.md#welcome-screen) kalkar ve `Alt + M` not eklemez. Yapıştırma veya [İçe aktar ve ekle](./file-import-export.md#import-and-add) taşıdığı notları yine de gizli ve seçilmemiş olarak ekler.  
-`readonly` bir düzenleyicide seçenekleri açıp kapatmak hiçbir şeyi değiştirmez.
+Salt okunur bir düzenleyicide aç/kapat düğmeleri yine çalışır, ancak yalnızca o ekranda: kaydedilmezler, geri alma geçmişine işlenmezler ya da paylaşılmazlar ve düzenleyici yeniden yazılabilir olduğunda dosyanınkilere dönerler. Ayarlardaki [Salt okunur düzenleyiciler](./settings.md#read-only-editors) bölümüne bakın.
 
 ![Tablolar yeniden yerleşirken Görünüm seçenekleri girdilerini açıp kapatma, Alternate Key ile bileşik bir benzersiz dizini AK1.1 ve AK1.2 olarak işaretleme, ardından Memos seçeneğini kapatıp açma](/img/demo-view-options.webp)
 
@@ -164,14 +165,15 @@ Gezginde klasör dışında bir satır seçmek veya Gezginin aramasındaki bir e
 `Schema SQL` sekmesi, tablonun DDL'ini seçili [veritabanına](#databases) göre gösterir: `CREATE TABLE` ifadesini, bazı veritabanlarının Benzersiz sütunlar için yazdığı ayrı kısıtlamaları ve dizinlerini. Araç çubuğundaki [Şema SQL](./schema-sql.md) sekmesi nasıl ayarlanmış olursa olsun, her zaman başlık, tablolardan önceki ya da sonraki betik ve boş açıklamalarda mantıksal adlar olmadan düz `CREATE` ifadeleri yazar. [Açıklama olarak mantıksal adlar](./schema-sql.md#logical-names-as-comments) bölümüne bakın. Seçenekler paneli yoktur ve bağlam menüsünde yalnızca `Database` ve `Bracket` bulunur.  
 `Code Generator` sekmesi yalnızca bu tablo için kod oluşturur. [Kod oluşturucu](./code-generator.md) sayfasına bakın.
 
-`readonly` bir düzenleyicide panel yine açılır ve başlığının yanında `Read only` rozeti görünür, ancak `Indexes` sekmesinde hiçbir düzenleme yapılamaz.
+Salt okunur bir düzenleyicide panel yine açılır; `Table Properties` öğesinden, orada bir tablonun bağlam menüsünün tek satırından ya da bir atlamanın seçtiği tabloda `Alt + Space` ile. Başlığının yanında bir `Read only` rozeti gösterir ve `Indexes` sekmesinde hiçbir düzenleme yapılamaz.  
+Düzenleyici salt okunur olurken açık olan bir panel açık kalır ve onunla birlikte salt okunur olur. [Salt okunur düzenleyiciler](#read-only-editors) bölümüne bakın.
 
 ## Tablolara odaklanma {#focusing-on-tables}
 
 Görselleştirme sekmesini, seçilen tablolara ve onlardan bir ilişki uzaklıktaki her tabloya daraltılmış olarak `Flow` modunda açar.  
 Tablo bağlam menüsündeki `Focus on this table` öğesiyle başlayın ya da bir veya daha fazla tablo seçip `Alt + F` tuşlarına basın.  
 Sağ tıkladığınız tablo seçili birkaç tablodan biriyse menü öğesinde `Focus on selected tables` yazar ve öğe seçimin tamamına odaklanır. Seçimin dışındaki bir tabloya sağ tıklamak yalnızca o tabloya odaklanır.  
-Kısayol seçili tabloları alır, notları dışarıda bırakır ve hiçbir tablo seçili değilse hiçbir şey yapmaz.  
+Kısayol seçili tabloları alır, notları dışarıda bırakır ve hiçbir tablo seçili değilse hiçbir şey yapmaz. Salt okunur bir düzenleyicinin tablo menüsünde `Focus on this table` yoktur ve kısayol orada bir atlamanın seçtiği tabloyu alır. [Salt okunur düzenleyiciler](#read-only-editors) bölümüne bakın.  
 Seçili bir [tablo grubu](./table-groups.md) burada, kısayolda da menü öğesinde de hiçbir şey ifade etmez: Grubun tabloları yalnızca kendileri seçiliyse alınır, grubun menüsündeki `Select tables` öğesi de tam olarak bunu yapar.  
 Daraltılmış görünümün neyi gösterdiği ve diyagramın tamamına nasıl dönüleceği [Görselleştirme](./visualization.md#focusing-on-tables) bölümünde, Akış modunun daha önce gösterdikleri arasında nasıl bir adım geri ve ileri gidileceği ise [Önceki tablo ve sonraki tablo](./visualization.md#previous-table-and-next-table) bölümünde anlatılır.
 
@@ -187,7 +189,7 @@ Sağ taraf tablonun sütunlarını, her birinin yanında bir onay kutusuyla `Col
 Bir sütunu seçili dizine eklemek için işaretleyin, kaldırmak için işaretini kaldırın. Bir anahtar seçmek sütunlarını işaretli gösterir, ancak kutular devre dışı kalır.  
 Seçili dizinin sütunları aşağıda `Index order` başlığı altında, her biri Ad görünümünün adlandırdığı gibi adlandırılarak listelenir; `Both Names` görünümünde ad, mantıksal addan sonra parantez içinde yer alır, örneğin `Member Number (member_no)`. Yeniden sıralamak için onları tutamaçtan sürükleyin ve sıralama yönünü tersine çevirmek için bir satırdaki `ASC` veya `DESC` çipine tıklayın. Alternatif anahtarda her satır kendi `AK<n>.<m>` işaretiyle biter. Liste aynı anda üç satır gösterir, gerisi kaydırılır.
 
-`readonly` bir düzenleyicide bir anahtarı veya dizini seçmek yine sütunlarını gösterir, ancak `Add Index` ve `x` bulunmaz ve sekmedeki başka hiçbir şey değiştirilemez.
+Salt okunur bir düzenleyicide bir anahtarı veya dizini seçmek yine sütunlarını gösterir, ancak `Add Index` ve `x` bulunmaz ve sekmedeki başka hiçbir şey değiştirilemez: adlar yazı kabul etmez, her onay kutusu devre dışıdır ve `Index order` satırları ne sürüklenir ne de sıralama yönlerini çevirir.
 
 [Gezgin](./explorer.md#the-tree) her tablonun dizinlerini tablonun `Indexes` klasöründe listeler ve orada birini seçmek onun tablosuna gider. Gezginin araması dizin adlarını da bulur ve onları yeniden adlandırabilir. [Neleri arar](./find-and-replace.md#what-it-searches) bölümüne bakın.
 
@@ -233,7 +235,8 @@ Diğer üçü ana iş parçacığının dışında tek seferde hesaplanır, bu y
 
 Hangisini seçerseniz seçin tablolar ve tablo grupları taşınır, notlar ise yerinde kalır. Tablolar, baktığınız Ad görünümünde aldıkları genişliklerle yerleştirilir. Bir tablodan kendisine giden ilişki yok sayılır ve aynı iki tablo arasındaki birden çok ilişki bir kez sayılır.  
 Her düzen, gruplar gösterilsin ya da gösterilmesin her grubun tablolarını bir arada tutar ve tablo içeren her grubu tablolarının çevresine oturtur. [Tablo grupları](./table-groups.md#auto-layout) bölümüne bakın.  
-Sonuç tek bir geçmiş kaydı olarak eklenir, bu yüzden tek bir geri alma her tabloyu ve grubu eski yerine döndürür.
+Sonuç tek bir geçmiş kaydı olarak eklenir, bu yüzden tek bir geri alma her tabloyu ve grubu eski yerine döndürür.  
+Salt okunur bir düzenleyici `Auto Layout` sunmaz. Düzenleyici salt okunur olurken hâlâ süren biri orada sona erer: `Force` önizlemesi bildirimiyle birlikte kapanır ve konumlarından hiçbirini korumaz, hâlâ hesaplanmakta olan bir düzen ise bildirimiyle birlikte bırakılır; böylece o sırada da düzenleyici yeniden yazılabilir olduğunda da hiçbir tablo taşınmaz.
 
 ![Tuvalin bağlam menüsünden Otomatik düzenin Flow seçeneğiyle bir yığın tabloyu ilişkileri boyunca soldan sağa dizerek toparlama](/img/demo-automatic-table-placement.webp)
 
@@ -250,7 +253,7 @@ Desteklenen veritabanları şunlardır:
 - Snowflake
 - SQLite
 
-Birini tuvalin bağlam menüsündeki, Şema SQL ve Kod oluşturucu sekmelerinin seçenekler panelindeki veya bağlam menüsündeki ya da Hızlı aramadaki `Database` öğesinden seçin. Hepsi aynı ayarı değiştirir.
+Birini tuvalin bağlam menüsündeki, Şema SQL ve Kod oluşturucu sekmelerinin seçenekler panelindeki veya bağlam menüsündeki ya da Hızlı aramadaki `Database` öğesinden seçin. Hepsi aynı ayarı değiştirir. Salt okunur bir düzenleyicinin tuval menüsünde `Database` yoktur ve diğerlerinde yapılan bir seçim yalnızca o ekranı değiştirir. [Salt okunur düzenleyiciler](#read-only-editors) bölümüne bakın.
 
 Bu seçenekler dışa aktarma için Şema SQL söz dizimini, DataType otomatik tamamlamasını ve oluşturulan kodun ve içe aktarılan şemaların karşılık geldiği türleri belirler.  
 Bunlar, [Şema SQL](./schema-sql.md#options-panel) sekmesinin hangi `Statements` ve `Header` seçeneklerini yazabileceğini belirler. Veritabanında bulunmayan bir seçenek seçenekler panelinde soluk olarak kalır ve SQL, veritabanının sahip olduğu en yakın seçeneğe geri döner.  
@@ -266,15 +269,16 @@ Ayrıca Şema SQL'in ve Kod oluşturucunun ORM hedeflerinin hangi ON DELETE ve O
 Tuvalin alt kenarının ortasında yüzen küçük bir araç çubuğu, soldan sağa doğru tuvalin kendisi üzerinde çalışan araçları ve tuvale öğe ekleyen komutları barındırır:
 
 - El aracı ve seçim aracı. Varsayılan araç seçim aracıdır; el aracı ise boş alanda olduğu kadar tabloların üzerinde de her sürüklemeyi kaydırmaya dönüştürür. `Space` tuşu ikisi arasında geçiş yapar. Bir [`New Table Group`](./table-groups.md#drawing-a-group) çizimi hazırken ikisinin yerine `New Table Group` düğmesi işaretli görünür ve ikisinden birine tıklamak, `Space` tuşuna basmak veya bir ilişki gösterimi seçmek grup eklemeden çizimi sonlandırır.
-- `New Table`, `New Memo` ve `New Table Group`. `New Table`, `Alt + N` tuşlarının yaptığı gibi tablo ekler, `New Memo` da `Alt + M` tuşlarının yaptığı gibi not ekler. `New Table Group`, `Alt + G` tuşlarının yaptığı gibi [grup çizimini](./table-groups.md#drawing-a-group) hazırlar ve el aracını kapatır; ikinci bir tıklama, tıpkı `Alt + G` tuşlarına ikinci kez basmak gibi, grup eklemeden çizimi sonlandırır. View Option → `Memos` notları gizlerken `New Memo`, View Option → `Table Groups` grupları gizlerken de `New Table Group` yer almaz. `readonly` bir düzenleyici üçünden hiçbirini göstermez.
+- `New Table`, `New Memo` ve `New Table Group`. `New Table`, `Alt + N` tuşlarının yaptığı gibi tablo ekler, `New Memo` da `Alt + M` tuşlarının yaptığı gibi not ekler. `New Table Group`, `Alt + G` tuşlarının yaptığı gibi [grup çizimini](./table-groups.md#drawing-a-group) hazırlar ve el aracını kapatır; ikinci bir tıklama, tıpkı `Alt + G` tuşlarına ikinci kez basmak gibi, grup eklemeden çizimi sonlandırır. View Option → `Memos` notları gizlerken `New Memo`, View Option → `Table Groups` grupları gizlerken de `New Table Group` yer almaz.
 - Yakınlaştırma: `Zoom out`, yüzde olarak geçerli yakınlaştırma ve `Zoom in`. İki düğme yakınlaştırmayı yakınlaştırma kısayollarıyla aynı şekilde adım adım değiştirir ve yüzdeye tıklamak yakınlaştırmayı `100%` değerine geri getirir.
 - Dört ilişki gösterimi, bir ilişkiye başlarken kullandığınız dördün aynısı. [Düzenlemeye başlama](./editing-start.md) sayfasına bakın. İlişki iki tabloya tıklanarak çizildiğinden, birini seçmek seçim aracına geri geçer.
-- Geçerli görünümü adlandıran, aşağı oklu bir düğme olan `Name View`: `Physical Names`, `Logical Names` veya `Both Names`. Hangi görünümü adlandırırsa adlandırsın aynı genişliği korur, bu yüzden bir görünüm değişikliği araç çubuğunu asla kaydırmaz. Bir tıklama, araç çubuğunun üstünde geçerli olanı işaretli olarak üç görünümün listesini açar. Birini seçmek o görünüme geçer ve listeyi kapatır; düğmeye ikinci kez tıklamak, başka herhangi bir yere basmak veya `Escape` listeyi görünümü değiştirmeden kapatır. `readonly` bir düzenleyici de bu düğmeyi gösterir. Her görünümün neyi gösterdiği [Ad görünümü](./logical-names.md#name-view) bölümünde, bir görünüm değişikliğinin kaydedilip kaydedilmediği ise [Görünümü değiştirme](./logical-names.md#switching-the-view) bölümünde anlatılır.
+- Geçerli görünümü adlandıran, aşağı oklu bir düğme olan `Name View`: `Physical Names`, `Logical Names` veya `Both Names`. Hangi görünümü adlandırırsa adlandırsın aynı genişliği korur, bu yüzden bir görünüm değişikliği araç çubuğunu asla kaydırmaz. Bir tıklama, araç çubuğunun üstünde geçerli olanı işaretli olarak üç görünümün listesini açar. Birini seçmek o görünüme geçer ve listeyi kapatır; düğmeye ikinci kez tıklamak, başka herhangi bir yere basmak veya `Escape` listeyi görünümü değiştirmeden kapatır. Her görünümün neyi gösterdiği [Ad görünümü](./logical-names.md#name-view) bölümünde, bir görünüm değişikliğinin kaydedilip kaydedilmediği ise [Görünümü değiştirme](./logical-names.md#switching-the-view) bölümünde anlatılır.
 - Tuval ve bu araç çubuğu dışındaki her şeyi kaldıran Zen modu, `Alt + Z`. `Alt + Z` tuşlarına yeniden basmak veya düğme geri kalanını geri getirir. Açık bir Gezgin kapatılmadan geri kalanıyla birlikte gizlenir ve onlarla birlikte geri gelir. Zen modu sırasında da açılabilir. [Kenara çekildiğinde](./explorer.md#when-it-stands-aside) bölümüne bakın.
 - Yalnızca ekranda hiçbir tablo, gösterilen not veya gösterilen tablo grubu yokken araç çubuğunun sonuna eklenen `Go to content` pusulası. [Tuvalde gezinme](#getting-around-the-canvas) bölümüne bakın.
 
 Kısayolu olan her düğme kısayolunu araç ipucunda gösterir, örneğin `New Table (Alt + N)` (Windows/Linux) veya `New Table (⌥ + N)` (Mac).  
-Araç çubuğu, Otomatik düzenin `Force` önizlemesi, Tablo özellikleri, Zaman yolculuğu veya Fark görüntüleyici açıkken kenara çekilir ve bunlar kapandığında geri gelir.
+Araç çubuğu, Otomatik düzenin `Force` önizlemesi, Tablo özellikleri, Zaman yolculuğu veya Fark görüntüleyici açıkken kenara çekilir ve bunlar kapandığında geri gelir.  
+Salt okunur bir düzenleyicinin araç çubuğu yakınlaştırmayı, `Name View` düğmesini, Zen modunu ve `Go to content` pusulasını korur. El ya da işaretçi, `New Table`, `New Memo` veya `New Table Group` ve gösterimler yoktur; düzenleyici yeniden yazılabilir olduğunda bunlar geri gelir.
 
 ![Araç çubuğundan bir tablo ve bir not ekleme, New Table Group çizimini hazırlayıp iptal etme, el aracıyla kaydırma, yakınlaştırmayı adım adım değiştirme ve ⌥ + Z ile Zen modunu açıp kapatma](/img/demo-canvas-toolbar.webp)
 
@@ -339,7 +343,7 @@ Bir atlamanın görünüme getirdiği şey ve tamamı sığmadığında görünm
 - Tablo grubu: grubun kutusu, ana kısmı başlık çubuğu.
 - Not ya da İçe aktar ve ekle işleminin yerleştirdiği blok: tamamı.
 
-İki yön de hareket etmeyecekse kaydırma yapılmaz, bu yüzden aynı yere art arda iki kez gitmek ikinci seferde hiçbir şeyi hareket ettirmez. Tuvali kaydıran bir atlama, kaydırmayı görünüm konumundaki diğer her değişiklik gibi [geri alma geçmişine](./undo-redo.md#what-the-history-records) kaydeder, hiçbir şeyi hareket ettirmeyen bir atlama ise geri alınacak bir şey bırakmaz. İçe aktar ve ekle işleminde kaydırma, eklemeyle aynı adımın parçasıdır. Fark görüntüleyicinin listesindeki bir satır yalnızca görünümün salt okunur taraflarını hareket ettirir, bu yüzden hiçbir şey kaydetmez.  
+İki yön de hareket etmeyecekse kaydırma yapılmaz, bu yüzden aynı yere art arda iki kez gitmek ikinci seferde hiçbir şeyi hareket ettirmez. Tuvali kaydıran bir atlama, kaydırmayı görünüm konumundaki diğer her değişiklik gibi [geri alma geçmişine](./undo-redo.md#what-the-history-records) kaydeder, hiçbir şeyi hareket ettirmeyen bir atlama ise geri alınacak bir şey bırakmaz. İçe aktar ve ekle işleminde kaydırma, eklemeyle aynı adımın parçasıdır. Fark görüntüleyicinin listesindeki bir satır yalnızca görünümün salt okunur taraflarını hareket ettirir, bu yüzden hiçbir şey kaydetmez ve salt okunur bir düzenleyici hiçbir atlamayı kaydetmez.  
 Hiçbir atlama çizilmekte olan bir ilişkiyi başlatmaz veya tamamlamaz. `Go to content` pusulası bir atlama değildir: Gösterdiği öğeyi ortalar.
 
 ## Fark görüntüleyici {#diff-viewer}
@@ -351,7 +355,8 @@ Görünüm tuvalin üzerinde açılır: solda değişenler, ardından yan yana k
 Geçerli belge, görünüm açıldığı andaki hâliyle karşılaştırılır; bundan sonra yapılan değişiklikler, bir ortak çalışanınkiler dahil, görünüme yansımaz. İki taraf da, iki dosyadan herhangi biri hangi görünümü korursa korusun, baktığınız Ad görünümünde açılır ve öyle kalır. [Tuvalin ötesinde](./logical-names.md#beyond-the-canvas) bölümüne bakın. Görünüm açıkken açık bir [Gezgin](./explorer.md#when-it-stands-aside) gizlenir, bu yüzden görünüm düzenleyicinin tüm genişliğini kaplar.  
 Her taraf fare tekerleğiyle, boş bir alanı ya da bir tablo grubunun gövdesini sürükleyerek veya üzerinde herhangi bir yerde orta düğmeyle sürükleyerek kaydırılır ve `Ctrl + Wheel` (Windows/Linux), `⌘ + Wheel` (Mac) ya da kıstırma hareketiyle yakınlaştırılır. `70%` ve altındaki yakınlaştırmada tabloları tuvaldeki gibi daralır. [İki taraftaki işaretler](#marks-on-the-two-sides) bölümüne bakın.  
 İki taraf da salt okunurdur, bu yüzden belgenizdeki hiçbir şey değişmez. Her taraf kendi seçimini korur ve orada bir tabloya tıklamak onu yalnızca o tarafta seçer.  
-Görünümü, açılışta gösterdiği `Diff Viewer` bilgi kutusundaki `Close` düğmesiyle ya da `Escape` tuşuyla kapatın.
+Görünümü, açılışta gösterdiği `Diff Viewer` bilgi kutusundaki `Close` düğmesiyle ya da `Escape` tuşuyla kapatın.  
+Salt okunur bir düzenleyici de `Diff Viewer` sunar ve görünüm orada her düzenleyicideki gibi çalışır; bir tarafın tablosuna tıklamak yine onu o tarafta seçer. Düzenleyici salt okunur olurken açık olan bir görünüm açık kalır.
 
 ![Fark görüntüleyiciyi kaydedilmiş bir .json dosyasıyla açma, ağacında A, M, D ve R ile işaretli satırlara tıklama, ada göre süzme ve kapatma](/img/demo-diff-viewer.webp)
 
@@ -423,3 +428,26 @@ Her taraf kendi belgesinin Görünüm seçeneklerini izler. O tarafın çizmedi�
 Ad hücresi çizmeyen `Logical Names` görünümünde, yeniden adlandırmanın mavisi ve tarafın çizmediği bir hücredeki değişikliğin kehribar rengi, adın yerine çizilen mantıksal adda görünür. Bir veri türü değişikliği, hücre bir değer alanının adını gösterse bile her Ad görünümünde tür hücresini kehribar rengine çevirir. İki taraf da Sözlük denetimlerinin tuvaldeki adlara verdiği renkleri çizmez. [Tuvaldeki işaretler](./dictionary.md#marks-on-the-canvas) bölümüne bakın.
 
 `70%` ve altındaki yakınlaştırmada daraltılmış tablolar dış çizgilerini korur. Ad, eklenmiş veya kaldırılmış bir tablonun yeşilini ya da kırmızısını veya yeniden adlandırmanın mavisini korur, aksi hâlde bir açıklama değişikliğinin kehribar rengini alır. Sütun değişiklikleri yeniden yakınlaştırana kadar çizilmez; ağaç onları yine de listeler.
+
+## Salt okunur düzenleyiciler {#read-only-editors}
+
+Bir Git revizyonunun VS Code'da diyagram olarak yeniden açılması gibi bir [`readonly`](../../api/erd-editor-element.md#readonly) düzenleyici bir okuyucudur. Altı sekmesi, [Gezgin](./explorer.md#read-only-editors), mini harita, kaydırma çubukları ve ortak çalışanların imleçleri ile seçimleri kalır; diyagramı değiştirecek her kontrol soluklaştırılmak yerine kalkar.
+
+ERD tuvalinde:
+
+- Sürükleme nerede başlarsa başlasın kaydırır: boş tuvalde, bir tabloda, bir notta ya da bir tablo grubunda. Orta düğme, tekerlek, çimdikleme ve yakınlaştırma tuşları her düzenleyicideki gibi çalışır.
+- İşaretçiyi bir tablonun üzerinde tutmak onun ilişkilerini aydınlatır. Hareketsiz bir tıklama indiği tablonun ilişkilerini ya da indiği ilişkiyi aydınlatır, başka bir yere tıklamak ışığı söndürür.
+- Hiçbir şey bir basışla, bir seçim kutusuyla ya da hepsini seç tuşuyla seçilmez. Yalnızca bir atlama seçer: [Gezgin](./explorer.md#going-to-a-row) satırı, [Bul ve değiştir](./find-and-replace.md#going-to-a-match) eşleşmesi ya da [Hızlı aramanın](./quick-search.md#searching-the-diagram) `#`, `@` veya `:` sonucu indiği öğeyi, her seçimin olduğu gibi dış çizgiyle ve odaklı hücre atlamanın koyduğu yerde olacak biçimde seçer. Hareketsiz bir tıklama bu seçimi temizler.
+- Ok tuşları odaktaki hücreyi taşır. Kopyalama, `Table Properties` ve `Focus on this table` bir atlamanın seçtiği öğe üzerinde kendi tuşlarıyla çalışır ve yapıştırma hiçbir şey eklemez. Diğer tuşlar [Kısayollar](./settings.md#shortcuts) bölümünde listelenir.
+- Hiçbir hücre, not ya da tablo grubu adı düzenleme için açılmaz. Tablolarda, notlarda ve gruplarda `+` ya da `x` düğmeleri, notlarda ve gruplarda yeniden boyutlandırma kenarları, sütun sürükleme tutamağı ve renk seçici yoktur.
+
+Tuval bağlam menüsü `View Option`, `Name View`, `Export` ve `Diff Viewer` öğelerini korur. `New Table`, `New Memo`, `New Table Group`, `Toggle Explorer`, `Relationship`, `Derive Physical Names Again`, `Database`, `Import`, `Import and Add` ve `Auto Layout` öğeleri yoktur.  
+Bir tablonun menüsü, paneli o tablo için salt okunur açan [Tablo özellikleri](#table-properties) öğesini tek başına korur. Bir not, bir ilişki ve bir tablo grubu hiçbir menü açmaz.  
+[Tuval araç çubuğu](#canvas-toolbar) yakınlaştırmayı, `Name View` düğmesini, Zen modunu ve `Go to content` pusulasını korur. Üst araç çubuğu düzenlenemeyen metin olarak veritabanı adını gösterir ve `Undo`, `Redo` veya `Time Travel` göstermez.  
+[Export](./file-import-export.md#exporting), üç öğesiyle birlikte, ve [Fark görüntüleyici](#diff-viewer) her düzenleyicideki gibi çalışır.
+
+[`View Option`](#table-view-options), `Name View`, veritabanı, sekme, görünüm konumu ve yakınlaştırma orada yine değişir, ancak yalnızca o ekranda: hiçbir şey onları kaydetmez, işlemez ya da paylaşmaz. Ayarlardaki [Salt okunur düzenleyiciler](./settings.md#read-only-editors) bölümüne bakın.
+
+Bir düzenleyiciyi salt okunur yapmak düzenleme için açık duranları sona erdirir: bir hücre, not ya da tablo grubu adı düzenleyicisi, çizilmekte olan bir ilişki ya da `New Table Group`, seçim ve odaklı hücre, el aracı, renk seçici, [Map Columns](./relationship-editing.md#map-columns) ve [Time Travel](./undo-redo.md#time-travel). Görünüm, yakınlaştırma, sekme ve Ad görünümü olduğu gibi kalır; Tablo özellikleri, Fark görüntüleyici ve `Export image` iletişim kutusu açık kalır.  
+Süren bir hareket de orada sona erer. Tablo ya da not sürüklemesi olduğu yerde durur, bir `Alt + drag` hiçbir kopya bırakmaz, sütun sürüklemesi sona erer, not yeniden boyutlandırması olduğu yerde durur, tablo grubu yeniden boyutlandırması bırakılır ve bir [Otomatik düzen](#auto-layout) bildirimiyle birlikte bırakılır; böylece hiçbir tablo taşınmaz.  
+Yeniden yazılabilir yapıldığında düzenleyici yukarıdaki kontrolleri geri verir ve o geçişin kapattığı hiçbir şey yeniden açılmaz.

@@ -10,7 +10,8 @@ Editarea începe din meniul contextual, deschis cu un clic dreapta.
 ![Clicul dreapta pe pânză, deschiderea submeniului Relationship, adăugarea unui tabel, apoi meniul propriu al acestuia](/img/demo-context-menu.webp)
 
 Un clic dreapta pe un tabel, pe o notă, pe un grup de tabele sau pe o relație deschide în schimb meniul propriu al elementului respectiv.  
-Un clic dreapta pe un tabel, pe o notă sau pe un grup de tabele deja selectat păstrează întreaga selecție, așa că elementele de meniu, de exemplu `Color` și `Delete selected`, acționează asupra întregii selecții (consultați [Selecție multiplă](./table-related-functions.md#multiple-selection)).
+Un clic dreapta pe un tabel, pe o notă sau pe un grup de tabele deja selectat păstrează întreaga selecție, așa că elementele de meniu, de exemplu `Color` și `Delete selected`, acționează asupra întregii selecții (consultați [Selecție multiplă](./table-related-functions.md#multiple-selection)).  
+Un editor doar în citire nu creează nimic, așa că nimic din ce descrie această pagină nu se oferă acolo: meniul pânzei păstrează doar `View Option`, `Name View`, `Export` și `Diff Viewer`, meniul unui tabel doar `Table Properties`, iar o notă, un grup de tabele sau o relație nu deschide niciun meniu (consultați [Editoare doar în citire](./table-related-functions.md#read-only-editors)).
 
 ## Ecranul de bun venit {#welcome-screen}
 

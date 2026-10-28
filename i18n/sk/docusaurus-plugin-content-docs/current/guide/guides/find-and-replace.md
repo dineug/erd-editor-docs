@@ -192,7 +192,8 @@ Keď jedno použitie `Replace All` prepíše logický názov aj názov tej istej
 ## Editory iba na čítanie {#read-only-editors}
 
 V editore s atribútom [`readonly`](../../api/erd-editor-element.md#readonly) hľadanie iba vyhľadáva. Nie je tam šípka `Toggle Replace` ani riadok `Replace`, takže chýba aj pole nahradenia, `Preserve Case`, `Replace` a `Replace All`.  
-Pole hľadania, jeho tri možnosti, druhy textu, počet, výsledky aj prechod na zhodu fungujú. Prieskumník, v ktorom sa hľadanie nachádza, funguje ako v ktoromkoľvek inom editore – pozrite si časť [Editory iba na čítanie](./explorer.md#read-only-editors).
+Pole hľadania, jeho tri možnosti, druhy textu, počet, výsledky aj prechod na zhodu fungujú. Prechod na zhodu vyberie to, na čom pristane, ako v časti [Prechod na zhodu](#going-to-a-match), a tento výber je jediný, ktorý editor iba na čítanie vytvorí: kliknutie na plátno bez pohybu ho zruší.  
+Vyhľadávanie otvorte klávesom alebo položkou `Toggle Explorer` v rýchlom vyhľadávaní, keďže kontextová ponuka plátna tam položku `Toggle Explorer` nemá. Zvyšok prieskumníka opisuje časť [Editory iba na čítanie](./explorer.md#read-only-editors) na stránke Prieskumník.
 
 Vo VS Code sa revízia diagramu, napríklad revízia v systéme Git alebo položka Local History, otvorí ako text JSON. Keď ju znova otvoríte ako diagram pomocou `Reopen Editor With...`, je iba na čítanie a má k dispozícii toto hľadanie bez nahrádzania.
 

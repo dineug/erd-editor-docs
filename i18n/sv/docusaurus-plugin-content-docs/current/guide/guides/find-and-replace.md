@@ -192,7 +192,8 @@ Vad `Escape`, de kortkommandon i editorn som fortfarande fungerar och alla andra
 ## Skrivskyddade editorer {#read-only-editors}
 
 I en editor med [`readonly`](../../api/erd-editor-element.md#readonly) används sökningen bara för att hitta. Det finns ingen pil `Toggle Replace` och ingen rad `Replace`, och därför inget ersättningsfält, `Preserve Case`, `Replace` eller `Replace All`.  
-Sökfältet, dess tre alternativ, texttyperna, räknaren, resultaten och att gå till en träff fungerar alla. Utforskaren runt den fungerar som i vilken annan editor som helst – se [Skrivskyddade editorer](./explorer.md#read-only-editors).
+Sökfältet, dess tre alternativ, texttyperna, räknaren, resultaten och att gå till en träff fungerar alla. Att gå till en träff markerar det som den landar på, som i [Gå till en träff](#going-to-a-match), och den markeringen är den enda som en skrivskyddad editor gör: ett klick på arbetsytan som inte flyttar sig tar bort den.  
+Öppna sökningen med tangenten eller med `Toggle Explorer` i snabbsökningen, eftersom arbetsytans snabbmeny inte har någon `Toggle Explorer` där. Resten av utforskaren behandlas i [Skrivskyddade editorer](./explorer.md#read-only-editors) på sidan Utforskaren.
 
 I VS Code öppnas en revision av ett diagram, som en Git-revision eller en post i Local History, som JSON-text. När den öppnas igen som diagram med `Reopen Editor With...` är den skrivskyddad och får den här sökningen som bara hittar.
 

@@ -37,7 +37,7 @@ Um arquivo JSON mantém as posições que tem. As tabelas de um arquivo de Esque
 
 Em seguida, o diagrama é substituído em uma única etapa, de modo que nenhum estado intermediário é exibido. Uma configuração que você alterar enquanto as tabelas estão sendo posicionadas, como a aba, é mantida, e, se você importar outro arquivo nesse meio-tempo, prevalece a importação iniciada por último.
 
-Um editor somente leitura não carrega nada por `Import` e não oferece `Import and Add` nem o `Import CSV` da aba Dicionário.
+Um editor somente leitura não importa nada. O menu de contexto do canvas e a pesquisa rápida dele não oferecem `Import` nem `Import and Add`, ele não mostra tela de boas-vindas, e a aba Dicionário não oferece `Import CSV`.
 
 ### Importar e adicionar {#import-and-add}
 
@@ -215,7 +215,7 @@ O submenu `Export` do menu de contexto do canvas tem três itens:
 - Schema SQL: Abre a aba [Esquema SQL](./schema-sql.md#saving-or-copying-the-sql) com o painel de opções aberto e o botão `Save file` em foco, de modo que pressionar `Enter` salva como `.sql` o SQL exibido na aba. Nada é salvo até lá.
 - Image: Abre a caixa de diálogo `Export image`, que salva o diagrama como `.png` ou `.svg` ou o copia para a área de transferência como PNG — consulte [Imagem](#image).
 
-Os três funcionam em um editor somente leitura.  
+Os três funcionam em um editor somente leitura, onde `Export` é uma das poucas linhas que o menu do canvas mantém. Ali, json escreve as configurações que o arquivo contém, e não a área visível, a aba, a exibição de nomes, o banco de dados, as configurações de código nem os interruptores de `View Option` alterados apenas naquela tela — consulte [Editores somente leitura](./settings.md#read-only-editors) em Configurações.  
 O `Export CSV` da própria aba Dicionário, que não está nesse submenu, salva a planilha `Domains`, `Words` ou `Terms` dela como um arquivo CSV. Ao contrário desses três, ele não é oferecido em um editor somente leitura — consulte [Importar e exportar CSV](./dictionary.md#importing-and-exporting-csv).
 
 O Esquema SQL escreve o ON DELETE e o ON UPDATE de cada relacionamento depois do seu `REFERENCES`, primeiro o ON DELETE. `Not set` não escreve nada, e uma ação que o banco de dados selecionado não aceita é omitida. Consulte [Edição de relacionamentos](./relationship-editing.md#on-delete-and-on-update) para saber qual banco de dados aceita qual ação.

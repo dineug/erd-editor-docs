@@ -22,7 +22,7 @@ description: 開啟命令選擇區，以切換索引標籤或「名稱顯示」�
 輸入文字即可篩選清單。每次按鍵都會重新搜尋目前顯示的整個清單，因此刪除字元，或將找不到任何結果的字詞改為輸入新的字詞，都會讓相符的項目重新出現。  
 比對採用模糊比對，同時涵蓋項目的名稱和其旁邊顯示的關鍵字。例如在 `Import` 子選單中，`sdl` 可找到 `GraphQL`，`dbdiagram` 可找到 `DBML`，`azimutt` 可找到 `AML`。輕微的拼字錯誤仍能找到對應的項目，例如 `tabel` 可找到 `New Table`，`imprt` 可找到 `Import`，但與輸入內容只是大略相似的項目會被省略：`memo` 只會列出 `New Memo`。名稱或關鍵字包含輸入內容（不區分大小寫）的項目一律會列出，模糊比對遺漏的這類項目則會排在模糊比對的結果之後。項目中凡是包含輸入內容之處都會醒目顯示，不區分大小寫。  
 在英文以外的顯示語言中，命令和子選單項目也能以其英文名稱和關鍵字找到，清單不會顯示這些英文名稱和關鍵字，因此無論 `New Table` 以哪種語言顯示，`new table` 都能找到它。  
-使用 `↑` 和 `↓` 在清單中移動（到達兩端時會循環），並按 `Enter` 執行醒目顯示的項目。具有專屬快速鍵的命令會在其列的末端顯示該快速鍵：位於右側，在由右至左的顯示語言中則位於左側。輸入法仍在組字時（例如輸入韓文音節到一半時），`↑`、`↓` 和 `Enter` 會交由輸入法處理，既不會移動醒目顯示的位置，也不會執行項目。
+使用 `↑` 和 `↓` 在清單中移動（到達兩端時會循環），並按 `Enter` 執行醒目顯示的項目。清單會捲動以讓醒目顯示的項目保持在可見範圍內，而在較短的編輯器窗格中，清單會縮小為搜尋框下方的剩餘空間，因此每個項目仍可到達，且醒目顯示的項目會保持可見。具有專屬快速鍵的命令會在其列的末端顯示該快速鍵：位於右側，在由右至左的顯示語言中則位於左側。輸入法仍在組字時（例如輸入韓文音節到一半時），`↑`、`↓` 和 `Enter` 會交由輸入法處理，既不會移動醒目顯示的位置，也不會執行項目。
 
 例如 `Database`、`Import` 或 `Auto Layout` 等項目會開啟子選單：其項目會取代清單，搜尋輸入框也會清空。`Name View`、`Database`、`Bracket`、`Language`、兩種名稱大小寫、`Schema SQL: Statements`、`Schema SQL: Header`、`Theme` 和 `Display Language` 的子選單會勾選目前的選擇，並在開啟時醒目顯示該項，因此按 `Enter` 即可保留它；其他子選單開啟時不會醒目顯示任何項目。  
 篩選永遠只套用於目前顯示的清單，且無法返回上一層，因此要重新開始時，關閉命令選擇區再重新開啟即可。在子選單中，`#`、`@`、`:` 和 `?` 是一般文字，而不是[前置詞](#searching-the-diagram)。
@@ -34,7 +34,7 @@ description: 開啟命令選擇區，以切換索引標籤或「名稱顯示」�
 在 ERD 索引標籤中：`Name View` 和最多四個[重新產生物理名稱](./dictionary.md#derive-physical-names-again)的項目，接著是 `Database`、`Import`、`Import and Add` 和 `Export`，然後是 `New Table`、`New Memo`、`New Table Group` 和 `Group Selected Tables`，再來是四種關聯類型和 `Auto Layout`。這裡不會列出資料表；輸入 `#` 即可[前往資料表](#searching-the-diagram)。  
 `Name View` 會開啟 `Physical Names`、`Logical Names` 和 `Both Names`，並勾選目前的顯示方式，選擇其中一項會像畫布右鍵選單中的 `Name View` 一樣切換顯示方式，請參閱[切換顯示方式](./logical-names.md#switching-the-view)。它只會在 ERD 索引標籤中列出，唯讀編輯器中也是如此。  
 這些重新產生物理名稱的項目以其旁邊的關鍵字區分。旁邊顯示 `column` 的 `Derive Physical Name Again` 會為焦點欄位重新產生物理名稱。`Derive Physical Names Again` 有三列：旁邊顯示 `table` 的一列適用於焦點所在的資料表，包括其名稱和每個欄位；旁邊顯示 `selected tables` 的一列，在選取兩個或更多資料表時適用於所選的資料表；旁邊顯示 `whole document` 的一列則適用於圖表中的每個資料表。每一列只有在有內容可處理時才會列出，唯讀編輯器中則全都不會列出。  
-唯讀編輯器中不會列出 `Import and Add`；[View Option](./table-related-functions.md#table-view-options) → `Memos` 隱藏備忘錄時，則不會列出 `New Memo`。`New Table Group` 會開始在畫布上繪製[資料表群組](./table-groups.md)，`Group Selected Tables` 則會將所選資料表放入新群組，並開啟其名稱輸入框以供輸入名稱。在唯讀編輯器中，以及 View Option → `Table Groups` 隱藏群組時，兩者都不會列出，而 `Group Selected Tables` 還需要至少選取一個資料表。它們的列會顯示按鍵：[繪製群組](./table-groups.md#drawing-a-group)為 `Alt + G` (Windows/Linux) 或 `⌥ + G` (Mac)，[將所選資料表組成群組](./table-groups.md#grouping-selected-tables)為先按 `T` 再按 `G`。  
+[View Option](./table-related-functions.md#table-view-options) → `Memos` 隱藏備忘錄時，不會列出 `New Memo`。`New Table Group` 會開始在畫布上繪製[資料表群組](./table-groups.md)，`Group Selected Tables` 則會將所選資料表放入新群組，並開啟其名稱輸入框以供輸入名稱。View Option → `Table Groups` 隱藏群組時，兩者都不會列出，而 `Group Selected Tables` 還需要至少選取一個資料表。它們的列會顯示按鍵：[繪製群組](./table-groups.md#drawing-a-group)為 `Alt + G` (Windows/Linux) 或 `⌥ + G` (Mac)，[將所選資料表組成群組](./table-groups.md#grouping-selected-tables)為先按 `T` 再按 `G`。  
 這些項目執行的命令與畫布的右鍵選單相同，但部分項目執行的是資料表選單的命令：`Group Selected Tables` 執行其 `Group selected tables`，而 `column`、`table` 和 `selected tables` 這幾個重新產生物理名稱的項目則執行其 `Derive Physical Name Again` 或 `Derive Physical Names Again`，並作用於焦點或選取範圍，而不是按滑鼠右鍵的位置。`View Option` 和 `Diff Viewer` 只在右鍵選單中提供。`Export` 提供與右鍵選單相同的 `json`、`Schema SQL` 和 `Image`，在其中輸入 `png` 或 `svg` 即可找到 `Image`。  
 關於各格式、[匯入並加入](./file-import-export.md#import-and-add)和[圖片匯出](./file-import-export.md#image)的作用，請參閱[匯入或匯出檔案](./file-import-export.md)；關於資料庫的選擇會影響什麼，請參閱[資料表相關功能](./table-related-functions.md#databases)。
 
@@ -54,6 +54,15 @@ description: 開啟命令選擇區，以切換索引標籤或「名稱顯示」�
 `Theme` 會開啟 `System`、`Light` 和 `Dark`，目前的外觀會被勾選。選擇其中一項只會變更外觀，並保留灰色調和強調色，與佈景主題建立器的 `Appearance` 按鈕相同。  
 `Display Language` 會開啟 `System`，接著是 25 種語言，每種語言都以其本身的名稱顯示，並依選擇器中的順序排列，目前的選項會被勾選。在這裡也可以用語言的英文名稱或代碼找到該語言：`german` 或 `de-DE` 可找到 `Deutsch`，`korean` 可找到 `한국어`。  
 在兩者中所做的選擇都會立即生效、關閉命令選擇區，並與在佈景主題建立器或 `Display Language` 選擇器中所做的選擇一樣儲存下來。若命令選擇區開啟期間顯示語言有所變更，清單會切換為該語言，並保留已輸入的內容和目前所在的子選單。
+
+### 唯讀編輯器 {#read-only-editors}
+
+[`readonly`](../../api/erd-editor-element.md#readonly) 編輯器不會列出任何會變更圖表的命令，而不是將它們列為淡化狀態。  
+在 ERD 索引標籤中，它保留 `Tab`、`Name View`、`Database`、含三個項目的 `Export`、`Toggle Explorer`、`Theme` 和 `Display Language`。它不列出 `Import`、`Import and Add`、重新產生物理名稱的項目、`New Table`、`New Memo`、`New Table Group`、`Group Selected Tables`、四種關聯類型和 `Auto Layout`。  
+其他索引標籤列出的內容與在任何編輯器中相同。無論列在何處，`Tab`、`Name View`、`Database`、`Bracket`、`Language` 和兩種名稱大小寫都只會變更該畫面，且從不儲存，請參閱設定中的[唯讀編輯器](./settings.md#read-only-editors)。  
+若命令選擇區開啟期間，編輯器轉為唯讀或再次轉為可寫入，清單會依編輯器當時提供的項目重新繪製，並依您輸入的內容重新搜尋。項目已消失的子選單會讓位給最上層。
+
+`#`、`@` 和 `:` 前置字元與在任何編輯器中一樣搜尋圖表，而跳至目標會選取它所到達的項目，如[搜尋圖表](#searching-the-diagram)所述。在唯讀編輯器中，那是選取任何東西的唯一方式：在畫布上按下不會選取任何東西，而單擊（不移動）會清除跳至目標所選取的內容，請參閱[唯讀編輯器](./table-related-functions.md#read-only-editors)。
 
 ## 搜尋圖表 {#searching-the-diagram}
 

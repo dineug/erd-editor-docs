@@ -61,7 +61,7 @@ Idatzitakoa izen logikoan bakarrik idazten da. Izen fisikoa hartatik eratortzen 
 - `Logical Names` ikuspegian, goiburuko izen logikoa, ondoren haren iruzkina, eta ondoren errenkada bakoitzaren gelaxkak zutabeen ordenan, izen logikoa izenaren lekuan duela.
 - `Both Names` ikuspegian, goiburuko izen logikoa, izena eta iruzkina, eta ondoren errenkada bakoitzaren gelaxkak zutabeen ordenan, lehenespenez haren `Logical Name` gelaxka lehenengo dela.
 
-`Alt + Enter` (Windows/Linux) edo `⌥ + Enter` (Mac) lasterbideak zutabe bat gehitzen du eta haren izen-gelaxka fokuratzen du, `Logical Names` ikuspegian haren izen logikoa dena.
+`Alt + Enter` (Windows/Linux) edo `⌥ + Enter` (Mac) lasterbideak zutabe bat gehitzen du eta haren errenkadak marrazten duen lehen gelaxka fokuratzen du. Zutabeen ordena lehenetsiarekin hori da haren izen-gelaxka, `Logical Names` ikuspegian haren izen logikoa dena, eta `Both Names` ikuspegian haren `Logical Name` gelaxka; beraz, izen logikoarekin has zaitezke. Ikus [Zutabeak gehitzea](./table-editing.md#adding-columns).
 
 Erlazio batek gehitzen duen gako arrotzeko zutabe batek bere gakoaren izen logikoa eta domeinua kopiatzen ditu, motarekin batera. Ikus [Erlazio identifikatzaileak](./relationship-editing.md#identifying-relationships).  
 Zutabeak kalkulu-orri batera kopiatzeak eta kalkulu-orri batetik zutabeak itsasteak ikuspegiak marrazten dituen gelaxkak erabiltzen dituzte, izen logikoaren gelaxkak eta Domain gelaxkak barne. Ikus [Zutabeak kopiatzea/itsastea](./table-editing.md#copyingpasting-columns).
@@ -143,5 +143,7 @@ MCP zerbitzariaren bidez lan egiten duen kodetze-agente batek izen logikoak ezar
 
 ## Irakurtzeko soilik dauden editoreak {#read-only-editors}
 
-[`readonly`](../../api/erd-editor-element.md#readonly) atributua duen editore batean, Izenen ikuspegiaren hautatzaile guztiek funtzionatzen dute, eta ikuspegi-aldaketa batek pantaila hori bakarrik aldatzen du, blokeoa edozein dela ere.  
-Bertan ezin dira izen logikoak eta domeinuak editatu; beraz, ez da terminoen zerrendarik ez domeinu-hautatzailerik irekitzen, eta ez da eskaintzen `Derive Physical Name Again` eta `Derive Physical Names Again` aukeretako bat ere. View Option → `Domain` aukerak ez du ezer aldatzen bertan, beste ezein [ikuspegi-aukerak](./table-related-functions.md#table-view-options) aldatzen ez duen bezala.
+[`readonly`](../../api/erd-editor-element.md#readonly) atributua duen editore batean, Izenen ikuspegiaren hautatzaile guztiek funtzionatzen dute: oihaleko tresna-barrako `Name View` botoiak, oihalaren laster-menuko eta Bilaketa azkarreko `Name View` aukerak, eta Fluxuaren tresna-barrako zerrendak.  
+Han egindako aldaketa batek pantaila hori bakarrik aldatzen du, blokeoa edozein dela ere: fitxategiak, lankideek eta desegite-historiak ikuspegia lehen zegoen bezala mantentzen dute. Editorea berriro idazgarri bihurtzen denean, aukeratutako ikuspegia pantaila horretan geratzen da hango hurrengo aldaketa arte, edo, blokeoa desaktibatuta dagoen bitartean, lankide batek aldatu arte edo dokumentua berriro kargatu arte.  
+Bertan ezin dira izen logikoak eta domeinuak editatu; beraz, ez da gelaxka-editorerik, terminoen zerrendarik ez domeinu-hautatzailerik irekitzen, eta ez da eskaintzen `Derive Physical Name Again` eta `Derive Physical Names Again` aukeretako bat ere.  
+View Option → `Domain` aukerak Domain gelaxka pantaila horretan bakarrik erakusten edo ezkutatzen du, bertan [ikuspegi-aukera](./table-related-functions.md#table-view-options) guztiek egiten duten bezala, eta editorea berriro idazgarri bihurtzeak dokumentuak dituen ikuspegi-aukerak itzultzen ditu.

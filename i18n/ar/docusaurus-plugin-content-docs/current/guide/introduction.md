@@ -1,12 +1,13 @@
 ---
 sidebar_position: 1
-description: erd-editor محرر لمخططات الكيانات والعلاقات في المتصفح وGoogle Drive وVS Code وIntelliJ وObsidian وصفحتك الخاصة.
+description: erd-editor محرر لمخططات الكيانات والعلاقات في المتصفح وGoogle Drive وVS Code وIntelliJ وObsidian وصفحتك الخاصة، مع عارض للقراءة فقط لعرض مخطط في أي موقع.
 ---
 
 # مقدمة
 
 erd-editor محرر لمخططات الكيانات والعلاقات.
-يتوفر على هيئة تطبيق ويب، وتطبيق Google Drive، وإضافة VS Code، ومكوّن IntelliJ الإضافي، ومكوّن Obsidian الإضافي، وعنصر مخصص `<erd-editor>` يمكنك تضمينه في صفحتك الخاصة.
+يتوفر على هيئة تطبيق ويب، وتطبيق Google Drive، وإضافة VS Code، ومكوّن IntelliJ الإضافي، ومكوّن Obsidian الإضافي، وعنصر مخصص `<erd-editor>` يمكنك تضمينه في صفحتك الخاصة، ومعه `<erd-viewer>` لعرض مخطط للقراءة فقط.
+ويمكن للموقع الذي لا يحمّل سكربتًا خاصًا به أن يُطر مخططًا للقراءة فقط من erd-editor.io/embed بدلًا من ذلك.
 وهو محرر واحد وتنسيق مستند واحد في جميعها.
 
 ![مخطط متجر: وضع المؤشر فوق علاقة، وإضافة عمود، والتركيز على orders في وضع التدفق](/img/demo-overview.webp)
@@ -20,7 +21,8 @@ erd-editor محرر لمخططات الكيانات والعلاقات.
 | VS Code | [Marketplace](https://marketplace.visualstudio.com/items?itemName=dineug.vuerd-vscode) | يفتح ملفات `.erd.json` في محرر مخصص |
 | IntelliJ | [JetBrains Marketplace](https://plugins.jetbrains.com/plugin/23594-erd-editor) | المحرر نفسه، لبيئات التطوير المبنية على IntelliJ |
 | Obsidian | [Community plugins](https://community.obsidian.md/plugins/erd-editor) | يفتح ملفات `.erd` و`.erd.json` في علامة تبويب داخل الخزنة، على سطح المكتب فقط |
-| صفحتك الخاصة | `npm install @dineug/erd-editor` | العنصر المخصص `<erd-editor>` المستقل عن أطر العمل، راجع [التثبيت](../api/installation.md) |
+| صفحتك الخاصة | `npm install @dineug/erd-editor` | العنصر المخصص `<erd-editor>` المستقل عن أطر العمل، و`<erd-viewer>` الذي يعرض مخططًا للقراءة فقط، راجع [التثبيت](../api/installation.md) و[ErdViewerElement](../api/erd-viewer-element.md) |
+| أي موقع | [erd-editor.io/embed](https://erd-editor.io/embed) | مخطط للقراءة فقط في iframe، من عنوان URL لمستند، دون أي شيفرة، راجع [التضمين](./guides/embedding.md) |
 | وكلاء البرمجة | [`@dineug/erd-editor-mcp`](../mcp/installation.md) | خادم MCP يمكّن Claude Code أو Codex أو أي عميل آخر من تحرير مخطط تحريرًا مباشرًا في VS Code أو بيئة تطوير JetBrains أو Obsidian، أو في الملف نفسه |
 
 لتجربته في بيئة تطوير، أنشئ ملفًا فارغًا بالامتداد `.erd.json` وافتحه.
@@ -45,6 +47,7 @@ erd-editor محرر لمخططات الكيانات والعلاقات.
 - احتفظ بمعيار التسمية الخاص بالمخطط في علامة تبويب [القاموس](./guides/dictionary.md). يُبحث في أوراقها `Domains` و`Words` و`Terms` وتُفرز وتُحرَّر كما في جدول البيانات، ولكل منها سجل تراجع خاص بها. وتستورد الأوراق ملفات CSV وتصدّرها: يقرأ الاستيراد بنية المحرر الخاصة أو بنية معيار البيانات العامة الكوري، بترميز UTF-8 أو EUC-KR، ويكتب التصدير بنية المحرر الخاصة. وتُكمل خلية الاسم المنطقي أسماء المصطلحات. ويمنح الاسم المنطقي جدوله أو عموده اسمًا ماديًا من المصطلح المطابق، أو من اختصارات الكلمات التي يُقسَّم إليها، إلى أن تكتب الاسم بنفسك. وبعد تغيّر كلمة أو مصطلح، يعيد [`Derive Physical Names Again`](./guides/dictionary.md#derive-physical-names-again) اشتقاق الأسماء، بما فيها الأسماء التي كتبتها بنفسك. ويأخذ العمود المرتبط بمجال، يدويًا أو عبر مصطلحه، [نوع بيانات المجال](./guides/dictionary.md#domains-and-data-types) ويتبع تغييراته، ويعرض خيار العرض `Domain` مجال كل عمود. وتسرد الورقة [`Checks`](./guides/dictionary.md#the-checks-sheet) الكلمات المحظورة وغير المسجلة والمرادفة، والأسماء المكررة، والمجالات غير المعروفة، والأسماء المادية التي تختلف عن اسم مصطلحها، وأنواع الأعمدة التي تختلف عن نوع مجالها. وتلوّن لوحة الرسم الأسماء المنطقية والمادية التي ترصدها فحوصات الكلمات والمصطلحات.
 - استورد مخططًا موجودًا من `json` أو `Schema SQL` أو `GraphQL` أو `DBML` أو `AML`. راجع [استيراد الملفات وتصديرها](./guides/file-import-export.md). تصل جداول ملف مخطط SQL أو GraphQL أو DBML أو AML مرتبةً على امتداد علاقاتها، أو في صفوف إن لم تكن فيه علاقات. ويضيف [`Import and Add`](./guides/file-import-export.md#import-and-add) ملفًا أسفل المخطط بدلًا من استبداله.
 - صدّر المخطط بصيغة `json`؛ أو بصيغة مخطط SQL من علامة تبويب [مخطط SQL](./guides/schema-sql.md#saving-or-copying-the-sql)، محفوظًا في ملف `.sql` أو منسوخًا؛ أو من مربع الحوار [`Export image`](./guides/file-import-export.md#image) كصورة PNG أو SVG، أو كصورة PNG في الحافظة.
+- اعرض مخططًا للقراءة فقط في موقع آخر: أطِّر [erd-editor.io/embed](./guides/embedding.md) بعنوان URL لملف، ومنه ملف على GitHub، أو حمّل العنصر [`<erd-viewer>`](../api/erd-viewer-element.md) في صفحتك. يحرّك القارئ العرض ويكبّر ويبحث ويُبرز العلاقات، ولا شيء يعدّل المخطط.
 - اكتب مخطط SQL بصياغة ثمانية أنظمة لقواعد البيانات: Databricks وMSSQL وMariaDB وMySQL وOracle وPostgreSQL وSnowflake وSQLite. راجع [وظائف الجداول](./guides/table-related-functions.md#databases). تختار لوحة الخيارات في علامة تبويب [مخطط SQL](./guides/schema-sql.md) العبارات والترويسة ومجموعات الجداول التي تُكتب، ويمكنها [كتابة الأسماء المنطقية في التعليقات الفارغة](./guides/schema-sql.md#logical-names-as-comments)، وتحتفظ بنص SQL الخاص بك، محفوظًا في المخطط، ليُكتب قبل الجداول وبعدها.
 - أنشئ التعليمات البرمجية لأيٍّ من 22 هدفًا: اللغات C# وGo وJava وKotlin وPHP وRust وScala وSwift وTypeScript؛ وأطر ORM، وهي Doctrine وDrizzle وJPA وSeaORM وSequelize وSQLAlchemy وTypeORM؛ وكذلك AML وDBML وGraphQL وJSON Schema وMermaid وZod. تختار لوحة الخيارات في علامة تبويب منشئ التعليمات البرمجية اللغةَ وقاعدة البيانات وأنماط التسمية، وتُحفظ التعليمات البرمجية في ملف بامتداد اللغة أو تُنسخ. راجع [منشئ التعليمات البرمجية](./guides/code-generator.md).
 - اقرأ المخطط في [التصور المرئي](./guides/visualization.md)، على هيئة `Graph` موجّه بالقوى أو `Flow` من بطاقات الجداول المرتبة على امتداد علاقاتها، حيث يؤدي وضع المؤشر فوق جدول إلى إبراز كل ما يتصل به. اضغط `Alt + F` في علامة تبويب ERD [للتركيز على الجداول المحددة](./guides/visualization.md#focusing-on-tables) والجداول المرتبطة بها. وفي `Flow`، يتيح [`Previous table` و`Next table`](./guides/visualization.md#previous-table-and-next-table) الرجوع خطوة والتقدم خطوة عبر ما قُصر عليه التدفق، كما تفعل مفاتيح التراجع والإعادة هناك.

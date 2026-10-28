@@ -1,6 +1,6 @@
 ---
 sidebar_position: 16
-description: Sincronización del tipo de datos en las relaciones y dominios, ancho máximo de comentario, recálculo del ancho de las tablas, bloqueos de ajustes (vista, pestaña, ajustes de código y vista de nombres), orden de visualización de las columnas y lista de atajos de teclado.
+description: Sincronización del tipo de datos en las relaciones y dominios, ancho máximo de comentario, bloqueos de ajustes (vista, pestaña, ajustes de código y vista de nombres), orden de visualización de las columnas, lista de atajos de teclado y la pestaña Configuración de un editor de solo lectura.
 ---
 
 # Configuración
@@ -33,13 +33,6 @@ Al activarlo, empieza en `60px`. Un valor escrito fuera del rango se ajusta al e
 
 ![Activar Maximum comment width, escribir 120 y la pestaña ERD con los comentarios recortados a ese ancho](/img/demo-settings-comment-width.webp)
 
-## Recalcular el ancho de las tablas {#recalculation-table-width}
-
-Pulsa `Sync` para recalcular el ancho de todas las tablas y celdas de columna según su texto actual, y para volver a dibujar los conectores de las relaciones en torno a los nuevos tamaños.
-Una notificación `Recalculated table width` lo confirma.
-Los anchos se recalculan solos cada vez que se carga un documento, así que esto solo hace falta cuando un cambio de fuente o de renderizado los ha dejado desactualizados.
-Los anchos no se guardan en el archivo, así que `Sync` nunca lo modifica.
-
 ## Bloqueo {#lock}
 
 La lista `Lock` contiene siete ajustes. Mientras el bloqueo de un ajuste está activado, el archivo conserva el valor que tenía el ajuste cuando se bloqueó, así que cambiarlo en pantalla deja el archivo como estaba.
@@ -68,8 +61,9 @@ Si la vista bloqueada no muestra nada del diagrama cuando se abre el archivo, la
 
 ![Desbloquear Viewport, desplazar el diagrama y hacer zoom en él, y volver a bloquearlo en la nueva vista que muestra su fila](/img/demo-settings-locks.webp)
 
-Activar o desactivar un bloqueo modifica el archivo, ya que el archivo guarda qué bloqueos están activados, pero, como el resto de la pestaña Configuración, no se registra en el [historial de deshacer](./undo-redo.md#what-the-history-records). Tampoco se registra un cambio de vista de nombres, esté bloqueada o no. En un editor de solo lectura, los botones de bloqueo no hacen nada, y un cambio de vista de nombres solo modifica esa pantalla, sea cual sea su bloqueo.
+Activar o desactivar un bloqueo modifica el archivo, ya que el archivo guarda qué bloqueos están activados, pero, como el resto de la pestaña Configuración, no se registra en el [historial de deshacer](./undo-redo.md#what-the-history-records). Tampoco se registra un cambio de vista de nombres, esté bloqueada o no.
 Todos los demás ajustes se guardan tal como están: la base de datos, los interruptores de [`View Option`](./table-related-functions.md#table-view-options) y el resto de la pestaña `Preferences`.
+Un editor de solo lectura no cambia el archivo con ninguno de ellos, digan lo que digan los bloqueos: sus botones de bloqueo y los demás controles de `Preferences` están desactivados, y los ajustes que aún deja cambiar se quedan en esa pantalla; consulta [Editores de solo lectura](#read-only-editors).
 
 En un diagrama nuevo, uno empezado desde cero, todos los bloqueos están activados: un archivo vacío abierto en VS Code, Obsidian o un IDE de JetBrains (`ERD Editor: Create new diagram` y `New ERD` de Obsidian crean uno), un esquema nuevo en la aplicación web, un archivo creado desde el menú New de Google Drive o un `<erd-editor>` al que no se da ningún valor.
 Un esquema o un archivo de Google Drive que la aplicación web crea al importar un archivo SQL, DBML, AML o GraphQL también empieza con todos los bloqueos activados. Uno creado a partir de un archivo JSON conserva los bloqueos que registra ese archivo.
@@ -98,6 +92,7 @@ Arrastra una fila para moverla: toda la fila se puede arrastrar, y el icono del 
 `Logical Name` coloca la celda del nombre lógico que dibuja una fila en `Both Names`. En `Logical Names`, el nombre lógico ocupa en cambio el lugar de la fila `Name`, y la vista `Physical Names` no dibuja ninguna; consulta [Vista de nombres](./logical-names.md#name-view). `Domain` coloca la celda Dominio que muestra Opciones de vista → `Domain`; consulta [La celda Dominio](./logical-names.md#the-domain-cell).
 Una celda oculta por una [opción de vista de tabla](./table-related-functions.md#table-view-options) u omitida por la vista de nombres conserva su lugar en la lista, así que el orden se aplica a las celdas que se muestren.
 Un diagrama cuyo orden se estableció antes de que `Logical Name` y `Domain` fueran filas recibe `Logical Name` justo antes de `Name` y `Domain` justo después de `DataType`, estén donde estén esas filas en su orden.
+Un diagrama guardado por una versión posterior conserva también su orden, aunque esa versión tenga una fila que esta no tiene: las filas que tiene esta versión quedan en el orden que da el archivo, y la fila desconocida se omite. Guardar el diagrama aquí escribe el orden sin ella, y la versión posterior vuelve a poner esa fila junto a su vecina en su propio orden predeterminado.
 La marca de [clave alternativa](./table-related-functions.md#alternate-keys) (`AK1.1`, etc.) no es una de estas filas. Siempre va al final de una fila, después de la celda que este orden ponga en último lugar.
 
 ![Desplazarse hasta Column Order y arrastrar la fila Comment hacia arriba, bajo Name, lo que coloca cada comentario justo después del nombre de su columna](/img/demo-settings-column-order.webp)
@@ -146,6 +141,7 @@ En una celda del nombre lógico con su lista de términos abierta, la primera pu
 Un explorador, un generador de temas o un selector `Display Language` abiertos no dejan inactivo ninguno de los atajos del lienzo. `Stop` nunca cierra el explorador. Para saber qué hacen `Stop` y las demás teclas dentro del explorador, consulta [Teclas en el explorador](./explorer.md#keys-in-the-explorer), y dentro del selector, consulta [Elegir un idioma](./language-and-theme.md#picking-a-language).
 `Delete Selection` elimina todas las tablas, notas y grupos de tablas seleccionados o, cuando hay una sola tabla seleccionada con algunas de sus columnas y el zoom es superior al `70%`, esas columnas; consulta [Eliminación de tablas y notas](./table-related-functions.md#table-and-memo-deletion). `Remove Table, Memo` también elimina los grupos de tablas seleccionados.
 `Add Table Group` empieza a dibujar un [`New Table Group`](./table-groups.md#drawing-a-group), como hace el botón `New Table Group` de la [barra de herramientas del lienzo](./table-related-functions.md#canvas-toolbar), y una segunda pulsación cancela el dibujo. `Group Selected Tables` consiste en dos pulsaciones sin tecla modificadora, `T` y luego `G` en menos de un segundo. Pone las tablas seleccionadas en un grupo nuevo y abre su editor de nombre, como hace `Group selected tables` en el menú contextual de una tabla, y no hace nada cuando no hay ninguna tabla seleccionada; consulta [Agrupar las tablas seleccionadas](./table-groups.md#grouping-selected-tables). Ninguno de los dos hace nada en un editor de solo lectura ni mientras los grupos están [ocultos](./table-groups.md#hiding-groups).
+En un editor de solo lectura solo funcionan las teclas que leen: `Search`, `Toggle Explorer`, `Stop`, `Table Properties` y `Focus on this table` sobre la tabla que seleccionó un salto, las tres teclas de zoom, `Zen Mode`, copiar y las teclas de flecha, que mueven la celda con el foco. `Editing`, todas las teclas `Add` y `Remove`, `Delete Selection`, `Primary Key`, las dos teclas de seleccionar todo, las cuatro teclas de relación, `Add Table Group`, `Group Selected Tables`, `Hand Tool` y pegar no hacen nada, y `Undo` y `Redo` no deshacen ni rehacen nada; consulta [Editores de solo lectura](./table-related-functions.md#read-only-editors).
 `Zoom In`, `Zoom Out` y `Zoom Reset` también hacen zoom en la pestaña [Visualización](./visualization.md#toolbar), tanto en `Graph` como en `Flow`, salvo que esté abierta la búsqueda rápida.
 En `Flow`, `Undo` y `Redo` retroceden y avanzan por las vistas a las que se ha acotado Flow, como hacen sus botones `Previous table` y `Next table`, salvo que esté abierta la búsqueda rápida. Allí nunca deshacen cambios del diagrama, y en `Graph` no hacen nada; consulta [Tabla anterior y tabla siguiente](./visualization.md#previous-table-and-next-table).
 En la pestaña Visualización, `Stop` también cierra el menú de [vista de filas](./visualization.md#row-display) y cancela una [disposición de Flow](./visualization.md#how-flow-is-placed) que todavía está en curso; no amplía una vista acotada con `Focus on this table`.
@@ -160,3 +156,13 @@ La pestaña `Shortcuts` muestra entonces las combinaciones del host: un comando 
 Las teclas de filas de la pestaña Diccionario siguen a `Add Column` y `Remove Column`, así que reasignar cualquiera de los dos las cambia; consulta [`dictionaryRowChords`](../../api/erd-editor-element.md#dictionaryrowchords).
 
 En Obsidian, estas teclas llegan al editor siempre que la pestaña de Obsidian del diagrama está activa, incluso cuando un atajo de Obsidian usa la misma tecla, como `Alt + Enter`, `Ctrl + K` y `Ctrl + F` (Windows/Linux) o `⌥ + Enter`, `⌘ + K` y `⌘ + F` (Mac). También llega `Alt + Shift + Enter` (Windows/Linux) o `⌥ + Shift + Enter` (Mac) de la pestaña Diccionario, que no figura en ninguna fila de esta lista. Todos los demás atajos de Obsidian siguen funcionando allí. Para `Ctrl + F` o `⌘ + F`, consulta [La barra de búsqueda del navegador](./find-and-replace.md#the-browsers-find-bar).
+
+## Editores de solo lectura {#read-only-editors}
+
+En un editor [`readonly`](../../api/erd-editor-element.md#readonly), la pestaña Configuración muestra los ajustes del diagrama y no cambia ninguno. Un distintivo `Read only` está junto al encabezado de cada página, `Preferences` y `Shortcuts`.
+Los interruptores `Relationship DataType Sync` y `Maximum comment width` y el campo de ancho están desactivados, y también lo está cada botón de bloqueo. Las filas de `Column Order` no muestran ningún agarre y no se pueden arrastrar.
+Cada fila de `Lock` sigue mostrando su valor. Una fila bloqueada muestra el valor que conserva el archivo, y una desbloqueada el ajuste tal como lo tiene esa pantalla, que puede diferir del del archivo, como se explica abajo.
+
+Los ajustes que deciden lo que muestra la pantalla siguen cambiando allí: la posición de la vista y el zoom, la pestaña, la vista de nombres, la base de datos, el lenguaje del Generador de código, los dos estilos de nombres, el delimitador y los interruptores de [`View Option`](./table-related-functions.md#table-view-options).
+Cada uno cambia solo esa pantalla, sea cual sea su bloqueo. No se guarda en el archivo ni lo escribe una exportación JSON, no se registra en el historial de deshacer, no cuenta como un cambio y nunca llega a los colaboradores. Los paneles de opciones de las pestañas [Esquema SQL](./schema-sql.md#options-panel) y [Generador de código](./code-generator.md#options-panel) rotulan estas elecciones `This window only` allí, en lugar de `Saved in the document`.
+Cuando el editor vuelve a ser editable, la base de datos, el lenguaje, los estilos de nombres, el delimitador y los interruptores de View Option regresan a los valores del archivo. La vista, la pestaña y la vista de nombres se quedan como las dejaste, y el archivo toma cada uno de ellos, según lo que permita su bloqueo, con tu siguiente cambio de él.

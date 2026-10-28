@@ -12,7 +12,7 @@ De geschiedenis bewaart tot `2048` wijzigingen.
 - Opnieuw uitvoeren: `Ctrl + Shift + Z` (Windows/Linux) of `⌘ + Shift + Z` (Mac)
 
 Op het ERD-tabblad biedt de werkbalk dezelfde twee opdrachten in de vorm van de knoppen `Undo` en `Redo`, naast `Time Travel`. Op het tabblad Woordenboek toont de werkbalk `Undo` en `Redo` zonder `Time Travel`, en geen enkel ander tabblad toont ze.  
-Ze lichten alleen op als er iets is om ongedaan te maken of opnieuw uit te voeren. Een editor met `readonly` verbergt ze, en de sneltoetsen maken dan niets ongedaan en voeren niets opnieuw uit.
+Ze lichten alleen op als er iets is om ongedaan te maken of opnieuw uit te voeren. Een editor met `readonly` verbergt ze en `Time Travel`, en de sneltoetsen maken dan niets ongedaan en voeren niets opnieuw uit.
 
 Alleen op het ERD-tabblad werken ongedaan maken en opnieuw uitvoeren op de geschiedenis van het diagram.  
 De sneltoetsen werken daar niet zolang Snel zoeken, `Table Properties`, `Diff Viewer`, het voorbeeld van `Auto Layout`, het dialoogvenster [`Export image`](./file-import-export.md#image), het dialoogvenster [Kolommen toewijzen](./relationship-editing.md#map-columns) of Tijdreizen open is.  
@@ -58,6 +58,8 @@ Niet vastgelegd:
 - Het getoonde blad van het tabblad Woordenboek, en de zoekopdracht, selectie, scrollpositie en kolombreedtes van elk blad — zie [Het tabblad openen](./dictionary.md#opening-the-tab).
 
 Wijzigingen hierin kun je niet ongedaan maken.
+
+Een editor in alleen-lezenmodus legt helemaal niets vast. De positie en zoom van de weergave en de schakelaars van `View Option` veranderen daar nog steeds, samen met het tabblad, de naamweergave, het databasesysteem en de code-instellingen, maar alleen op dat scherm, dus er is niets ongedaan te maken — zie [Editors in alleen-lezenmodus](./settings.md#read-only-editors) bij Instellingen.
 
 Bewerkingen op het tabblad Woordenboek kun je ongedaan maken, maar ze komen terecht in de geschiedenis van hun eigen blad in plaats van in deze, dus ongedaan maken op het ERD-tabblad draait er nooit een terug, zelfs niet het nieuwe `Data Type` van een domein en de kolomtypen die het wijzigt — zie [Woordenboekbladen](#dictionary-sheets).
 
@@ -136,7 +138,7 @@ De geschiedenis van elk blad wordt geleegd wanneer de woordenboeken worden verva
 ## Tijdreizen {#time-travel}
 
 Je opent Tijdreizen met de knop `Time Travel` op de werkbalk, naast de knoppen voor ongedaan maken en opnieuw uitvoeren op het ERD-tabblad.  
-De knop doet niets zolang er in de geschiedenis van het diagram nog geen enkele wijziging is vastgelegd.
+De knop doet niets zolang er in de geschiedenis van het diagram nog geen enkele wijziging is vastgelegd. Een editor in alleen-lezenmodus toont zo'n knop niet, en een editor die in alleen-lezenmodus gaat, sluit Tijdreizen zonder het toe te passen.
 
 Tijdreizen opent een aparte alleen-lezenkopie van het diagram, op de scrollpositie, het zoomniveau en de [naamweergave](./logical-names.md#name-view) die het canvas toont, of de vergrendeling `Viewport` of `Name View` nu aanstaat of niet.  
 Tijdreizen doorloopt alleen de geschiedenis van het diagram, dus de bewerkingen van de woordenboekbladen horen niet bij de punten ervan.  

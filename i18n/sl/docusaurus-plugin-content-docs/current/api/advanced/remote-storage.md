@@ -16,7 +16,7 @@ npm install @dineug/erd-editor
 
 Shramba za replikacijo je na podpoti `@dineug/erd-editor/engine.js`, ne v korenu paketa.  
 Ta vstopna točka ne dostopa do modela DOM, zato deluje v niti Web Worker ali kjer koli drugje zunaj glavne niti.  
-Uvoz korena paketa namesto tega registrira element po meri `<erd-editor>`, ki potrebuje dokument.
+Uvoz korena paketa namesto tega potrebuje dokument: od različice `5.0.0` ne definira nobenega elementa, vendar ob vrednotenju zgradi oba razreda elementov. Pred različico `5.0.0` je registriral element po meri `<erd-editor>`.
 
 ## Uporaba {#usage}
 

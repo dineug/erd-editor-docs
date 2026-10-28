@@ -16,7 +16,7 @@ npm install @dineug/erd-editor
 
 Store replikasi berada di subpath `@dineug/erd-editor/engine.js`, bukan di root paket.  
 Titik masuk itu tidak menyentuh DOM, sehingga berjalan di Web Worker atau di mana pun di luar thread utama.  
-Sebaliknya, mengimpor root paket mendaftarkan elemen kustom `<erd-editor>`, yang memerlukan dokumen.
+Sebaliknya, mengimpor root paket memerlukan dokumen: sejak `5.0.0` root tidak mendefinisikan elemen apa pun, tetapi mengevaluasinya membangun kedua kelas elemen. Sebelum `5.0.0`, root mendaftarkan elemen kustom `<erd-editor>`.
 
 ## Penggunaan {#usage}
 

@@ -16,13 +16,14 @@ Mientras un método de entrada todavía está componiendo texto, `Escape` mantie
 
 ## Añadir columnas {#adding-columns}
 
-Se crean con el atajo de teclado `Alt + Enter` (Windows/Linux) o `⌥ + Enter` (Mac).  
-Se añade una columna a cada tabla seleccionada.
+Se crean con el atajo de teclado `Alt + Enter` (Windows/Linux) o `⌥ + Enter` (Mac), que añade una columna a cada tabla seleccionada, o con el botón `+` del encabezado de una tabla, que la añade a esa tabla.  
+La primera celda de la columna nueva recibe el foco: la primera que dibuja su fila en el [orden de columnas](./settings.md#adjusting-column-order). Con el orden predeterminado es su nombre, que en `Logical Names` es su nombre lógico y en `Both Names` su celda `Logical Name`; consulta [Vista de nombres](./logical-names.md#name-view).  
+Una columna añadida con `Tab` desde la última celda, y la clave principal que añade el dibujo de una relación a una tabla padre que no tiene ninguna, también empiezan en esa celda.
 
 ## Tecla Tab {#tab-key}
 
 Pulsa `Tab` para pasar directamente al modo de edición de la celda siguiente.  
-Al pulsar `Tab` en la última celda se crea una columna nueva.  
+Al pulsar `Tab` en la última celda se crea una columna nueva y se abre su primera celda para editarla; consulta [Añadir columnas](#adding-columns).  
 Usa `Shift + Tab` para ir al modo de edición de la celda anterior.  
 `Tab` y `Shift + Tab` pasan por las celdas que dibuja la tabla, en su orden, así que la vista de nombres y Opciones de vista → `Domain` deciden si las celdas del nombre lógico y Dominio están entre ellas; consulta [Escribir un nombre lógico](./logical-names.md#writing-a-logical-name).  
 Las marcas de [clave alternativa](./table-related-functions.md#alternate-keys) que se dibujan tras la última celda de una fila no son celdas, así que el foco del teclado las salta y nunca entran en modo de edición.
@@ -96,7 +97,8 @@ No hace falta ninguna tecla modificadora. Mantener pulsada `Alt` (Windows/Linux)
 ![Seleccionar tres columnas y, después, arrastrar a otra tabla el asa junto a la que tiene el foco, con las demás columnas seleccionadas moviéndose con ella](/img/demo-column-multi-move.webp)
 
 Un arrastre que empieza en la fila de una columna en lugar de en su asa mueve la tabla, como un arrastre en su encabezado; consulta [Mover varias tablas](./table-related-functions.md#moving-multiple-tables). `Alt + drag` (Windows/Linux) o `⌥ + drag` (Mac) sobre una fila duplica la tabla; consulta [Duplicar tablas y notas](./table-related-functions.md#duplicating-tables-and-memos).  
-No se dibuja ningún asa con el zoom al `70%` o menos, donde las tablas solo muestran su nombre, ni en un editor de solo lectura, así que ahí no se pueden reordenar las columnas.
+No se dibuja ningún asa con el zoom al `70%` o menos, donde las tablas solo muestran su nombre, ni en un editor de solo lectura, así que ahí no se pueden reordenar las columnas.  
+Un arrastre de columna en curso cuando el editor pasa a solo lectura termina al instante: la copia que seguía al puntero y la mano que agarra desaparecen, y soltar no mueve ninguna columna. Las filas que el arrastre ya había movido se quedan donde las movió.
 
 ## Eliminación de columnas {#column-deletion}
 
@@ -174,3 +176,10 @@ El icono de clave de la fila es solo informativo, así que hacer clic en él no 
 Para convertir varias columnas en una sola clave compuesta, [selecciónalas](#selecting-multiple-columns) y luego pulsa `Alt + K` (Windows/Linux) o `⌥ + K` (Mac), o haz clic con el botón derecho en una de las filas seleccionadas y elige `Primary Key on selected columns`. Cada cambio es un paso de deshacer.
 
 ![Seleccionar dos columnas con Shift + Arrow Down y, después, convertir ambas en clave principal con ⌥ + K y quitarles la clave a ambas con una segunda pulsación](/img/demo-column-pk.webp)
+
+## Editores de solo lectura {#read-only-editors}
+
+En un editor [`readonly`](../../api/erd-editor-element.md#readonly) no se abre ninguna celda para editar y ninguna columna cambia.  
+Un clic en una celda no da el foco a nada y quita la selección que dejó un salto. `Enter` y un doble clic no abren ningún editor ni cambian ningún interruptor, `Tab` se deja a la página, y los atajos que añaden, seleccionan todas o eliminan columnas, el interruptor de clave principal y un pegado no hacen nada.  
+Ir a una columna desde el [explorador](./explorer.md#going-to-a-row) o la [búsqueda rápida](./quick-search.md) da el foco a su celda. Las teclas de flecha mueven entonces el foco de celda en celda, y la columna a la que llegan queda seleccionada sola, ya que `Shift` no añade ninguna columna allí.  
+`Ctrl + C` (Windows/Linux) o `⌘ + C` (Mac) sigue copiando la columna seleccionada, o la tabla que seleccionó un salto; consulta [Copiar y pegar columnas](#copyingpasting-columns).

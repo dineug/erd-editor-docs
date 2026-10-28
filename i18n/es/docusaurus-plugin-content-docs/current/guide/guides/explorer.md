@@ -23,7 +23,7 @@ Nada de ello se guarda en el archivo, se registra en el historial de deshacer, s
 - El botón `Explorer` de la barra de herramientas, justo después de `Search`, con un icono de árbol. Su descripción emergente indica `Explorer (Ctrl + F)` (Windows/Linux) o `Explorer (⌘ + F)` (Mac).
 - `Ctrl + F` (Windows/Linux) o `⌘ + F` (Mac), denominado `Toggle Explorer` en la pestaña [Atajos de teclado](./settings.md#shortcuts) de Configuración.
 - `Toggle Explorer` en la [búsqueda rápida](./quick-search.md), disponible en todas las pestañas. Escribir `find`, `replace`, `rename`, `tree`, `outline` u `objects` lo hace aparecer.
-- `Toggle Explorer` en el menú contextual del lienzo: haz clic con el botón derecho en un espacio vacío del lienzo ERD, fuera de cualquier [grupo de tablas](./table-groups.md). Está después de `New Table`, `New Memo` y `New Table Group`, y antes de `Relationship`.
+- `Toggle Explorer` en el menú contextual del lienzo: haz clic con el botón derecho en un espacio vacío del lienzo ERD, fuera de cualquier [grupo de tablas](./table-groups.md). Está después de `New Table`, `New Memo` y `New Table Group`, y antes de `Relationship`. El menú del lienzo de un editor de solo lectura no tiene esa fila; consulta [Editores de solo lectura](#read-only-editors).
 
 Las dos opciones `Toggle Explorer` muestran el atajo a la derecha.  
 El botón de la barra de herramientas, el atajo y la entrada de la búsqueda rápida funcionan desde cualquier pestaña. Desde las pestañas Visualización, Esquema SQL, Generador de código, Diccionario o Configuración, primero cambian a la pestaña ERD, ya que el explorador solo se muestra allí.
@@ -168,5 +168,8 @@ La [búsqueda rápida](./quick-search.md) también deja abierto el explorador, y
 
 ## Editores de solo lectura {#read-only-editors}
 
-En un editor [`readonly`](../../api/erd-editor-element.md#readonly), el explorador funciona como en cualquier otro: el botón de la barra de herramientas con la misma descripción emergente, el atajo, las dos opciones `Toggle Explorer`, el árbol, contraer y expandir, `Collapse All` e ir a una fila, que selecciona como siempre aquello a lo que va. Su título también muestra `Explorer` en ese caso.  
+En un editor [`readonly`](../../api/erd-editor-element.md#readonly), el explorador funciona como en cualquier otro: el botón de la barra de herramientas con la misma descripción emergente, el atajo, la opción `Toggle Explorer` de la búsqueda rápida, el árbol, contraer y expandir, y `Collapse All`. Su título también muestra `Explorer` en ese caso. El menú contextual del lienzo no tiene allí `Toggle Explorer`, ya que conserva solo las filas que leen; consulta [Editores de solo lectura](./table-related-functions.md#read-only-editors).
+
+Ir a una fila funciona como en [Ir a una fila](#going-to-a-row): la vista se mueve con la misma regla, y la tabla, el grupo de tablas o la nota de la fila queda seleccionada, con contorno en el lienzo, con la celda con el foco donde la pone la fila.  
+Es la única forma en que un editor de solo lectura selecciona algo. Una pulsación en el lienzo no selecciona nada, y un clic sin movimiento borra la selección que dejó una fila. Una tabla que seleccionó se abre en [Propiedades de la tabla](./table-related-functions.md#table-properties) con `Alt + Space` (Windows/Linux) o `⌥ + Space` (Mac), en solo lectura, y `Ctrl + C` (Windows/Linux) o `⌘ + C` (Mac) copia lo que seleccionó, como en cualquier editor.  
 Su búsqueda solo encuentra; consulta [Editores de solo lectura](./find-and-replace.md#read-only-editors) de Buscar y reemplazar.

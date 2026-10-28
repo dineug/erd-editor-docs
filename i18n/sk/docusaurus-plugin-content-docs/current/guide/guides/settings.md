@@ -1,6 +1,6 @@
 ---
 sidebar_position: 16
-description: Synchronizácia typu údajov vo vzťahoch a domény, maximálna šírka komentára, prepočítanie šírky tabuliek, zamknutie nastavení (zobrazenie, karta, nastavenia kódu a Zobrazenie názvov), poradie zobrazenia stĺpcov a zoznam klávesových skratiek.
+description: Synchronizácia typu údajov vo vzťahoch a domény, maximálna šírka komentára, zamknutie nastavení (zobrazenie, karta, nastavenia kódu a Zobrazenie názvov), poradie zobrazenia stĺpcov, zoznam klávesových skratiek a karta Nastavenia editora iba na čítanie.
 ---
 
 # Nastavenia
@@ -33,13 +33,6 @@ Po zapnutí sa začína hodnotou `60px`. Hodnota zadaná mimo rozsahu sa nahrad�
 
 ![Zapnutie možnosti Maximum comment width, zadanie hodnoty 120 a karta ERD s komentármi skrátenými na túto šírku](/img/demo-settings-comment-width.webp)
 
-## Prepočítanie šírky tabuliek {#recalculation-table-width}
-
-Stlačte tlačidlo `Sync`, ak chcete prepočítať šírku každej tabuľky a bunky stĺpca podľa jej aktuálneho textu a prekresliť spojnice vzťahov podľa nových rozmerov.
-Potvrdí to oznámenie `Recalculated table width`.
-Šírky sa prepočítavajú samy pri každom načítaní dokumentu, takže toto prepočítanie je potrebné iba vtedy, keď sa po zmene písma alebo vykresľovania stali neaktuálnymi.
-Šírky sa do súboru neukladajú, takže tlačidlo `Sync` ho nikdy nezmení.
-
 ## Zamknutie {#lock}
 
 Zoznam `Lock` obsahuje sedem nastavení. Kým je zamknutie nastavenia zapnuté, súbor uchováva hodnotu, ktorú nastavenie malo v čase zamknutia, takže zmena nastavenia na obrazovke súbor nezmení.
@@ -68,8 +61,9 @@ Zamknutie `Canvas Type` nikdy neuchováva kartu Nastavenia. Jeho zapnutím sa za
 
 ![Odomknutie nastavenia Viewport, posúvanie a zmena priblíženia diagramu a opätovné zamknutie v novom zobrazení, ktoré ukazuje jeho riadok](/img/demo-settings-locks.webp)
 
-Zapnutie alebo vypnutie zamknutia mení súbor, pretože súbor ukladá, ktoré zamknutia sú zapnuté, ale rovnako ako zvyšok karty Nastavenia sa nezaznamenáva do [histórie zmien](./undo-redo.md#what-the-history-records). Nezaznamenáva sa ani prepnutie Zobrazenia názvov, či už je zamknuté, alebo nie. V editore iba na čítanie nemajú tlačidlá zámkov žiadny účinok a prepnutie Zobrazenia názvov zmení iba danú obrazovku bez ohľadu na jeho zamknutie.
+Zapnutie alebo vypnutie zamknutia mení súbor, pretože súbor ukladá, ktoré zamknutia sú zapnuté, ale rovnako ako zvyšok karty Nastavenia sa nezaznamenáva do [histórie zmien](./undo-redo.md#what-the-history-records). Nezaznamenáva sa ani prepnutie Zobrazenia názvov, či už je zamknuté, alebo nie.
 Všetky ostatné nastavenia sa ukladajú v aktuálnom stave: databáza, prepínače ponuky [`View Option`](./table-related-functions.md#table-view-options) a zvyšok karty `Preferences`.
+Editor iba na čítanie nemení súbor žiadnym z nich, nech hovoria zamknutia čokoľvek: jeho tlačidlá zámkov a ostatné ovládacie prvky karty `Preferences` sú vypnuté a nastavenia, ktoré ešte dovoľuje zmeniť, zostávajú na tejto obrazovke – pozrite si časť [Editory iba na čítanie](#read-only-editors).
 
 V novom diagrame, teda v diagrame začatom od nuly, sú zapnuté všetky zamknutia: v prázdnom súbore otvorenom vo VS Code, v aplikácii Obsidian alebo v IDE od JetBrains (v aplikácii Obsidian taký súbor vytvorí príkaz `ERD Editor: Create new diagram` aj položka `New ERD`), v novej schéme vo webovej aplikácii, v súbore vytvorenom z ponuky New v službe Google Drive alebo v elemente `<erd-editor>` bez zadanej hodnoty.
 Aj schéma alebo súbor v službe Google Drive, ktoré webová aplikácia vytvorí importom súboru SQL, DBML, AML alebo GraphQL, začínajú so všetkými zamknutiami zapnutými. Pri vytvorení zo súboru JSON sa zachovajú zamknutia, ktoré tento súbor zaznamenáva.
@@ -98,6 +92,7 @@ Presuňte riadok myšou na nové miesto – ťahať sa dá za celý riadok a ozn
 Riadok `Logical Name` určuje miesto bunky logického názvu, ktorú riadok tabuľky vykresľuje v zobrazení `Both Names`. V zobrazení `Logical Names` stojí logický názov namiesto toho na mieste riadka `Name` a zobrazenie `Physical Names` ho nevykresľuje vôbec – pozrite si časť [Zobrazenie názvov](./logical-names.md#name-view). Riadok `Domain` určuje miesto bunky domény, ktorú zobrazuje možnosť View Option → `Domain` – pozrite si časť [Bunka domény](./logical-names.md#the-domain-cell).
 Bunka skrytá [možnosťou zobrazenia tabuliek](./table-related-functions.md#table-view-options) alebo vynechaná Zobrazením názvov si zachová svoje miesto v zozname, takže poradie platí pre tie bunky, ktoré sa práve zobrazujú.
 Diagram, ktorého poradie sa nastavilo predtým, ako pribudli riadky `Logical Name` a `Domain`, dostane riadok `Logical Name` tesne pred riadok `Name` a riadok `Domain` tesne za riadok `DataType` bez ohľadu na to, kde v jeho poradí stoja.
+Diagram uložený neskorším vydaním si poradie tiež ponechá, aj keď toto vydanie má riadok, ktorý tomuto chýba: riadky, ktoré toto vydanie má, stoja v poradí, aké im súbor dáva, a neznámy riadok sa vynechá. Uloženie diagramu tu zapíše poradie bez neho a neskoršie vydanie ten riadok vráti vedľa jeho suseda vo svojom predvolenom poradí.
 Označenie [alternatívneho kľúča](./table-related-functions.md#alternate-keys) (`AK1.1` a tak ďalej) nie je jedným z týchto riadkov. V riadku stojí vždy na konci, za tou bunkou, ktorú toto poradie dá na posledné miesto.
 
 ![Posunutie nadol k Column Order a presunutie riadka Comment nahor pod Name, čím sa každý komentár dostane hneď za názov svojho stĺpca](/img/demo-settings-column-order.webp)
@@ -146,6 +141,7 @@ V bunke logického názvu s otvoreným zoznamom termínov prvé stlačenie skrat
 Otvorený prieskumník, výber motívu ani výber jazyka `Display Language` nepotláčajú na plátne žiadnu z klávesových skratiek. Klávesová skratka `Stop` prieskumníka nikdy nezatvorí. Informácie o tom, čo skratka `Stop` a ostatné klávesy robia v prieskumníkovi, nájdete v časti [Klávesy v prieskumníkovi](./explorer.md#keys-in-the-explorer) a o tom, čo robia vo výbere jazyka, v časti [Výber jazyka](./language-and-theme.md#picking-a-language).
 Klávesová skratka `Delete Selection` odstráni každú vybratú tabuľku, poznámku a skupinu tabuliek alebo, keď je vybratá jediná tabuľka s niektorými svojimi stĺpcami a priblíženie je nad `70%`, tieto stĺpce – pozrite si časť [Odstraňovanie tabuliek a poznámok](./table-related-functions.md#table-and-memo-deletion). Klávesová skratka `Remove Table, Memo` odstraňuje aj vybraté skupiny tabuliek.
 Klávesová skratka `Add Table Group` spustí kreslenie skupiny [`New Table Group`](./table-groups.md#drawing-a-group) rovnako ako tlačidlo `New Table Group` na [paneli nástrojov plátna](./table-related-functions.md#canvas-toolbar) a druhé stlačenie kreslenie zruší. Klávesová skratka `Group Selected Tables` pozostáva z dvoch stlačení bez modifikačného klávesu, `T` a potom `G` do jednej sekundy. Vloží vybraté tabuľky do novej skupiny a otvorí editor jej názvu rovnako ako položka `Group selected tables` v kontextovej ponuke tabuľky a keď nie je vybratá žiadna tabuľka, nemá žiadny účinok – pozrite si časť [Zoskupenie vybratých tabuliek](./table-groups.md#grouping-selected-tables). Ani jedna z nich nemá žiadny účinok v editore iba na čítanie ani vtedy, keď sú skupiny [skryté](./table-groups.md#hiding-groups).
+V editore iba na čítanie fungujú iba klávesy, ktoré slúžia na čítanie: `Search`, `Toggle Explorer`, `Stop`, `Table Properties` a `Focus on this table` na tabuľke, ktorú vybral skok, tri klávesy priblíženia, `Zen Mode`, kopírovanie a klávesy so šípkami, ktoré presúvajú aktívnu bunku. `Editing`, každý kláves `Add` a `Remove`, `Delete Selection`, `Primary Key`, oba klávesy výberu všetkého, štyri klávesy vzťahov, `Add Table Group`, `Group Selected Tables`, `Hand Tool` a prilepenie nič nerobia a `Undo` a `Redo` nevrátia späť ani nevykonajú znova nič – pozrite si časť [Editory iba na čítanie](./table-related-functions.md#read-only-editors).
 Klávesové skratky `Zoom In`, `Zoom Out` a `Zoom Reset` menia priblíženie aj na karte [Vizualizácia](./visualization.md#toolbar), v režime `Graph` aj `Flow`, pokiaľ nie je otvorené rýchle vyhľadávanie.
 V režime `Flow` klávesové skratky `Undo` a `Redo` prechádzajú o krok späť a dopredu cez to, na čo bol režim Flow zúžený, rovnako ako jeho tlačidlá `Previous table` a `Next table`, pokiaľ nie je otvorené rýchle vyhľadávanie. Zmeny diagramu tam nikdy nevracajú späť a v režime `Graph` nemajú žiadny účinok – pozrite si časť [Predchádzajúca a nasledujúca tabuľka](./visualization.md#previous-table-and-next-table).
 Na karte Vizualizácia klávesová skratka `Stop` zatvorí aj ponuku [zobrazenia riadkov](./visualization.md#row-display) a zruší [rozloženie Flow](./visualization.md#how-flow-is-placed), ktoré ešte prebieha; zobrazenie zúžené skratkou `Focus on this table` nerozšíri.
@@ -160,3 +156,13 @@ Karta `Shortcuts` potom uvádza klávesové skratky hostiteľa: príkaz, ktorý 
 Klávesy pre riadky na karte Slovník sa riadia skratkami `Add Column` a `Remove Column`, takže zmenou priradenia ktorejkoľvek z nich sa zmenia aj tieto klávesy – pozrite si časť [`dictionaryRowChords`](../../api/erd-editor-element.md#dictionaryrowchords).
 
 V aplikácii Obsidian sa tieto klávesy dostanú do editora vždy, keď je aktívna karta diagramu v aplikácii Obsidian, a to aj tam, kde rovnaký kláves používa niektorá klávesová skratka aplikácie Obsidian, napríklad `Alt + Enter`, `Ctrl + K` a `Ctrl + F` (Windows/Linux) alebo `⌥ + Enter`, `⌘ + K` a `⌘ + F` (Mac). Rovnako sa do editora dostane klávesová skratka `Alt + Shift + Enter` (Windows/Linux) alebo `⌥ + Shift + Enter` (Mac) karty Slovník, ktorá nie je v žiadnom riadku tohto zoznamu. Všetky ostatné klávesové skratky aplikácie Obsidian tam naďalej fungujú. Informácie o skratke `Ctrl + F` alebo `⌘ + F` nájdete v časti [Panel hľadania v prehliadači](./find-and-replace.md#the-browsers-find-bar).
+
+## Editory iba na čítanie {#read-only-editors}
+
+V editore s atribútom [`readonly`](../../api/erd-editor-element.md#readonly) karta Nastavenia zobrazuje nastavenia diagramu a žiadne z nich nemení. Vedľa nadpisu každej stránky, `Preferences` a `Shortcuts`, stojí odznak `Read only`.
+Prepínače `Relationship DataType Sync` a `Maximum comment width` a pole šírky sú vypnuté, rovnako ako každé tlačidlo zámku. Riadky `Column Order` nemajú úchyt a nedajú sa ťahať.
+Každý riadok `Lock` stále zobrazuje svoju hodnotu. Zamknutý riadok zobrazuje hodnotu, ktorú uchováva súbor, a odomknutý nastavenie tak, ako ho má táto obrazovka, čo sa môže líšiť od súboru, ako je uvedené nižšie.
+
+Nastavenia, ktoré určujú, čo obrazovka zobrazuje, sa tam stále menia: poloha a priblíženie zobrazenia, karta, Zobrazenie názvov, databáza, jazyk Generátora kódu, oba štýly názvov, úvodzovky a prepínače [`View Option`](./table-related-functions.md#table-view-options).
+Každé z nich mení iba danú obrazovku, nech hovorí jeho zamknutie čokoľvek. Neukladá sa do súboru ani sa nezapisuje exportom JSON, nezaznamenáva sa v histórii vrátenia späť, nepočíta sa ako zmena a nikdy sa nedostane k spolupracovníkom. Panely možností kariet [Schéma SQL](./schema-sql.md#options-panel) a [Generátor kódu](./code-generator.md#options-panel) označujú tieto voľby `This window only` namiesto `Saved in the document`.
+Keď sa editor znova prepne na úpravy, databáza, jazyk, štýly názvov, úvodzovky a prepínače View Option sa vrátia na hodnoty súboru. Zobrazenie, karta a Zobrazenie názvov zostanú také, aké ste ich nechali, a súbor si každé z nich prevezme, ako to dovolí jeho zamknutie, pri vašej ďalšej zmene.

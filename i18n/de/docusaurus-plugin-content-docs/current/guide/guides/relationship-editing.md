@@ -1,6 +1,6 @@
 ---
 sidebar_position: 7
-description: Eine Beziehung löschen, ihren Typ ändern, ihre Aktionen für ON DELETE und ON UPDATE festlegen, sie im Dialog „Spalten zuordnen“ vorhandenen Spalten zuordnen, die Notation der Verbindungslinien lesen, mit N:M- und identifizierenden Beziehungen arbeiten und sehen, was neue Fremdschlüsselspalten von ihrem Schlüssel übernehmen und wie sie benannt werden.
+description: Eine Beziehung löschen, ihren Typ ändern, ihre Aktionen für ON DELETE und ON UPDATE festlegen, sie im Dialog „Spalten zuordnen“ vorhandenen Spalten zuordnen, die Notation der Verbindungslinien und ihre Führung um Tabellen herum lesen, mit N:M- und identifizierenden Beziehungen arbeiten und sehen, was neue Fremdschlüsselspalten von ihrem Schlüssel übernehmen und wie sie benannt werden.
 ---
 
 # Beziehungen bearbeiten
@@ -81,7 +81,7 @@ Jede Zeile verwendet entweder eine Spalte, die die Kindtabelle bereits hat, oder
 Er lässt sich auf zwei Arten öffnen:
 
 - Beim Zeichnen einer Beziehung über `Map to existing columns` neben der Kindtabelle – siehe [Beziehungen erstellen](./editing-start.md#relationship-creation). `Map` fügt dann eine Beziehung des gerade gezeichneten Typs hinzu.
-- Über `Map Columns` im Kontextmenü der Beziehung, um die Spalten einer vorhandenen Beziehung zu ändern. `Save` schreibt dann die Änderung. In einem schreibgeschützten Editor entfällt dieser Eintrag.
+- Über `Map Columns` im Kontextmenü der Beziehung, um die Spalten einer vorhandenen Beziehung zu ändern. `Save` schreibt dann die Änderung. Ein schreibgeschützter Editor öffnet kein Kontextmenü für Beziehungen, daher lässt sich Map Columns dort nicht öffnen.
 
 Der Untertitel des Dialogs nennt die beiden Tabellen und den Beziehungstyp, etwa `users → posts · One N`. Der Typ wird hier angezeigt, aber nicht geändert – verwenden Sie dafür [Typ ändern](#type-change).
 
@@ -226,6 +226,9 @@ Die Hervorhebung endet beim nächsten Drücken der linken oder rechten Maustaste
 Das Verschieben der Ansicht mit der mittleren Maustaste oder dem Hand-Werkzeug lässt sie bestehen, ebenso das Ein- oder Ausklappen einer Zeile im Explorer oder in der Diff-Ansicht, das Aufheben der Auswahl mit `Escape` und ein Sprung aus der [Schnellsuche](./quick-search.md) oder über die [Kartenschaltfläche](./visualization.md#card-buttons) für externe Links in Flow.  
 Die Hervorhebung wird nicht gespeichert, erscheint nicht im Verlauf, und Mitbearbeiter sehen sie nicht.
 
+In einem [`readonly`](../../api/erd-editor-element.md#readonly)-Editor leuchten auch Verbindungslinien unter dem Zeiger auf, anstelle der Hervorhebung, die ein Sprung hinterlässt. Ruht der Zeiger auf einer Tabelle, bringt er jede Verbindungslinie dieser Tabelle in der Hover-Farbe zum Leuchten, bis er die Tabelle verlässt.  
+Ein Klick ohne Bewegung lässt eine Hervorhebung bis zum nächsten solchen Klick bestehen: Auf einer Tabelle bringt er deren Verbindungslinien zum Leuchten, auf einer Verbindungslinie diese Linie und an jeder anderen Stelle nichts. Ein Ziehen dort verschiebt die Zeichenfläche und lässt diese Hervorhebung, wie sie war.
+
 Blenden Sie Verbindungslinien auf der ERD-Zeichenfläche mit der Ansichtsoption `Relationship` aus oder nur ihre Beschriftungen mit der Ansichtsoption `Referential Actions`, die standardmäßig eingeschaltet ist – siehe [Ansichtsoptionen für Tabellen](./table-related-functions.md#table-view-options).  
 Bei `70%` und darunter, wo Tabellen auf ihren Namen eingeklappt werden, werden keine Beschriftungen gezeichnet.  
 Ein [Bildexport](./file-import-export.md#image) wird immer mit 100 % gezeichnet, daher enthält er die Beschriftungen unabhängig vom Zoom der Zeichenfläche, sofern keine Ansichtsoption sie ausblendet. Ist `Background` ausgeschaltet, ist auch der Kasten hinter jeder Beschriftung transparent.  
@@ -233,9 +236,10 @@ Der [Flow-Modus](./visualization.md#flow-mode) auf der Registerkarte Visualisier
 
 ## Verlauf der Verbindungslinien {#connector-routing}
 
-Verbindungslinien verlaufen orthogonal.  
-Eine Linie führt um die Tabellen herum, die zwischen ihren beiden Enden liegen, statt sie zu kreuzen, und ihre Ecken sind abgerundet.  
-Jedes Ende verlässt seine Tabelle mit einem kurzen geraden Stück, bevor es abbiegt, sodass zwei nah beieinanderliegende Tabellen, deren Linienenden auf einer Höhe liegen, durch eine einzige gerade Linie statt durch einen Umweg verbunden werden.  
+Verbindungslinien verlaufen orthogonal, und ihre Ecken sind abgerundet.  
+Eine Linie führt um die Tabellen herum, die ihr im Weg stehen, statt durch sie hindurch. Wo jede Linie mit wenigen Knicken zwischen ihren beiden Enden eine Tabelle kreuzen würde, etwa in einem dicht gedrängten Diagramm, nimmt die Verbindungslinie einen Weg außen herum mit so vielen Knicken, wie sie braucht. Nur wo kein Weg außen herum gefunden wird, kreuzt sie weiterhin eine Tabelle.  
+Eine Verbindungslinie verlässt ihre beiden Tabellen, wo immer es möglich ist, an einem Paar einander zugewandter Seiten, und jedes Ende verlässt seine Tabelle mit einem kurzen geraden Stück, bevor es abbiegt, sodass zwei nah beieinanderliegende Tabellen, deren Linienenden auf einer Höhe liegen, durch eine einzige gerade Linie statt durch einen Umweg verbunden werden.  
+Zwei einander zugewandte Tabellen, die näher beieinanderstehen, auch weniger als `40px` voneinander entfernt, behalten ihre zugewandten Seiten, und wo ihre Enden nicht auf einer Höhe liegen, springt die Verbindungslinie über die Lücke zwischen ihnen, statt unter einer der beiden Tabellen zu verlaufen.  
 Linien, die dieselbe Seite einer Tabelle verlassen, werden auf getrennte Bahnen verteilt, damit sie nicht übereinander verlaufen.  
 Nur Tabellen werden umgangen: Eine Verbindungslinie darf eine Notiz oder den Rahmen einer Tabellengruppe kreuzen und wird über Tabellengruppen sowie unter Tabellen und Notizen gezeichnet.
 
@@ -243,6 +247,9 @@ Eine Beziehung von einer Tabelle zu sich selbst wird als eine Kurve um die obere
 Weitere Selbstreferenzen auf derselben Tabelle liegen verschachtelt außerhalb der ersten, sodass sich ihre Kurven weder gegenseitig noch die Tabelle kreuzen.
 
 Es gibt nichts zu konfigurieren.  
-Die Linienführung wird automatisch neu berechnet, sobald sich etwas auf der Zeichenfläche bewegt oder seine Größe ändert, sodass sie nie von Hand angepasst werden muss.
+Die Linienführung wird automatisch neu berechnet, sobald sich etwas auf der Zeichenfläche bewegt oder seine Größe ändert, sodass sie nie von Hand angepasst werden muss.  
+Während Sie ziehen, folgen die Verbindungslinien der Tabellen, die Sie bewegen, diesen, und jede andere Verbindungslinie behält die Linienführung, die sie bei Beginn des Ziehens hatte. Beim Loslassen wird jede Verbindungslinie neu gezeichnet, die die Bewegung neu führt, etwa eine, die nun um eine ihr in den Weg gesetzte Tabelle herumführt, oder eine, die sich begradigt, sobald eine Tabelle von ihrem Weg weggerückt ist.
+
+Ein Diagramm zeichnet in jedem Fenster, das es in derselben Namensansicht zeigt, dieselben Linienführungen: in einem, das geöffnet blieb, während sich die Tabellen bewegten, in einem, das das Diagramm gerade erst geöffnet hat, und ebenso im Fenster eines Mitbearbeiters, und auch ein [exportiertes Bild](./file-import-export.md#image) zeichnet sie. Die Namensansicht zählt, weil sie ändert, wie breit die Tabellen sind – siehe [Namensansicht](./logical-names.md#name-view).
 
 ![Die Tabelle members nach unten und zurück ziehen, während die Verbindungslinie von orders zwischen einem Verlauf rechts an categories vorbei und einem links um die Tabelle herum wechselt, alle Ecken abgerundet](/img/demo-connector-routing.webp)

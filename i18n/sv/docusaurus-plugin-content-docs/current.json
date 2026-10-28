@@ -8,7 +8,7 @@
     "description": "The label for category 'Guides' in sidebar 'docs'"
   },
   "sidebar.docs.category.Guides.link.generated-index.description": {
-    "message": "Så ritar och redigerar du ett diagram: skapa tabeller och relationer, importera och exportera filer och använda editorns visningsalternativ.",
+    "message": "Så ritar och redigerar du ett diagram, från att skapa tabeller och relationer till att importera och exportera filer och använda editorns visningsalternativ, och hur du visar det skrivskyddat på en annan webbplats.",
     "description": "The generated-index page description for category 'Guides' in sidebar 'docs'"
   },
   "sidebar.api.category.Advanced": {

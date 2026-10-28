@@ -192,7 +192,8 @@ Tek bir `Replace All` aynı tablonun veya sütunun hem mantıksal adını hem de
 ## Salt okunur düzenleyiciler {#read-only-editors}
 
 [`readonly`](../../api/erd-editor-element.md#readonly) bir düzenleyicide arama yalnızca bulur. `Toggle Replace` oku ve `Replace` satırı yoktur, dolayısıyla Değiştir alanı, `Preserve Case`, `Replace` ve `Replace All` de yoktur.  
-Bul alanı, üç seçeneği, metin türleri, sayaç, sonuçlar ve eşleşmeye gitme, hepsi çalışır. Çevresindeki Gezgin diğer her düzenleyicideki gibi çalışır. [Salt okunur düzenleyiciler](./explorer.md#read-only-editors) bölümüne bakın.
+Bul alanı, üç seçeneği, metin türleri, sayaç, sonuçlar ve eşleşmeye gitme, hepsi çalışır. Bir eşleşmeye gitmek, [Bir eşleşmeye gitme](#going-to-a-match) bölümündeki gibi indiği öğeyi seçer ve salt okunur bir düzenleyicinin yaptığı tek seçim budur: Tuval üzerinde hareket etmeyen bir tıklama onu temizler.  
+Aramayı tuşla ya da Hızlı aramadaki `Toggle Explorer` ile açın, çünkü tuval bağlam menüsünde orada `Toggle Explorer` yoktur. Gezginin geri kalanı Gezgin sayfasındaki [Salt okunur düzenleyiciler](./explorer.md#read-only-editors) bölümünde anlatılır.
 
 VS Code'da bir diyagramın Git revizyonu veya Local History kaydı gibi bir revizyonu JSON metni olarak açılır. `Reopen Editor With...` komutuyla diyagram olarak yeniden açıldığında salt okunurdur ve yalnızca bulan bu aramayı kullanır.
 

@@ -167,7 +167,7 @@ description: 把相关的表归入位于它们后面、带有名称和颜色的�
 - 资源管理器不再显示其 `Table Groups` 文件夹，查找与替换也不会查找或替换分组名称，即使开启了 `Table group names` 也是如此。
 - [自动布局](#auto-layout)仍会让每个分组中的表聚在一起，Schema SQL 标签页仍会提供[可供选择的分组](#schema-sql-by-group)，DBML 仍会写出分组，[Import and Add](./file-import-export.md#import-and-add) 添加的内容仍会落在这些隐藏的框下方。
 
-与其他 View Option 开关一样，该选择会保存在文档中，并记录到 [Undo 历史记录](./undo-redo.md#what-the-history-records)中。
+与其他 View Option 开关一样，该选择会保存在文档中，并记录到 [Undo 历史记录](./undo-redo.md#what-the-history-records)中。在只读编辑器中，它改为只保留在该屏幕上，参见[只读编辑器](#read-only-editors)。
 
 ## 自动布局 {#auto-layout}
 
@@ -197,11 +197,13 @@ DBML 导入同样会让每个分组围住其中的表，无论这些表被放在
 
 ## 只读编辑器 {#read-only-editors}
 
-在 [`readonly`](../../api/erd-editor-element.md#readonly) 编辑器中，分组照常绘制，也照常在资源管理器中列出，可以被选中，也可以跳转到它们，但无法修改：
+在 [`readonly`](../../api/erd-editor-element.md#readonly) 编辑器中，分组照常绘制，也照常在资源管理器中列出，可以跳转到它们，但无法修改：
 
-- 在标题栏上按下会选中分组，但不会移动任何内容。没有调整大小的手柄，也没有 `x`。
-- 双击标题栏不会打开名称编辑器，分组菜单中只有 `Select tables`。
-- 画布菜单中没有 `New Table Group`，表的菜单中没有 `Group selected tables` 和 `Remove from group`，快速搜索也不会列出这两个分组命令。编辑器变为只读时，正在进行的 `New Table Group` 绘制会结束。
-- [画布工具栏](./table-related-functions.md#canvas-toolbar)不显示任何添加按钮，包括 `New Table Group`，`Alt + G` (Windows/Linux) 或 `⌥ + G` (Mac) 以及先按 `T` 再按 `G` 也都不起作用。
-- 与所有 View Option 一样，`Table Groups` 显示选项不起作用。
+- [跳转到分组](#going-to-a-group)会选中它，这是那里选中分组的唯一方式。在标题栏上按下既不选中也不移动任何内容：拖动会平移画布，而不移动的点击会去掉跳转留下的选中。
+- 没有调整大小的手柄，也没有 `x`，双击标题栏不会打开名称编辑器。
+- 在分组上右键点击不会打开任何菜单，表的菜单中只有 `Table Properties`。
+- 画布菜单中没有 `New Table Group`，快速搜索也不会列出这两个分组命令。编辑器变为只读时，正在进行的 `New Table Group` 绘制会结束。
+- [画布工具栏](./table-related-functions.md#canvas-toolbar)只保留其视图控件，因此没有 `New Table Group` 按钮，`Alt + G` (Windows/Linux) 或 `⌥ + G` (Mac) 以及先按 `T` 再按 `G` 也都不起作用。
+- 编辑器变为只读时正在进行的表或分组的拖动会停在当前位置，且不改变任何分组；正在进行的分组调整大小会结束，且不改变大小。
+- `View Option` → `Table Groups` 只在该屏幕上显示或隐藏分组，与那里的所有 View Option 一样：文档、协作者和 Undo 历史记录都保持原来的选择，编辑器再次变为可写后会恢复文档的选择。
 - Schema SQL 标签页的 `Tables` 选择仍然有效。

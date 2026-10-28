@@ -31,7 +31,7 @@ SQLa fitxa irekitzean idazten da, eta berriro panelaren aukeretako bat, datu-bas
 
 Panelak hiru talde ditu, bakoitza epigrafe baten azpian:
 
-1. `Saved in the document`: `Database` eta `Bracket`. Ikus [Datu-basea eta mugatzailea](#database-and-bracket).
+1. `Saved in the document`: `Database` eta `Bracket`. Ikus [Datu-basea eta mugatzailea](#database-and-bracket). Irakurtzeko soilik dagoen editore batek `This window only` jartzen du haien epigrafean. Ikus [Irakurtzeko soilik dauden editoreak](#read-only-editors).
 2. `This window only`: `Statements`, `Header`, `Write logical names into empty comments` eta, diagramak [taula-talde bat](./table-groups.md) duen bitartean, `Tables`. Ikus [Sententziak](#statements), [Goiburua](#header), [Izen logikoak iruzkin gisa](#logical-names-as-comments) eta [Taulak](#tables).
 3. `Saved in the document · written as is for every database`: `Before tables` eta `After tables` scriptak. Ikus [Taulen aurreko eta ondorengo scriptak](#before-and-after-scripts).
 
@@ -222,5 +222,9 @@ Iruzkin hauek inportatzean nola irakurtzen diren [Iruzkinak](./file-import-expor
 
 ## Irakurtzeko soilik dauden editoreak {#read-only-editors}
 
-`readonly` atributua duen editore batean, fitxak ohi bezala funtzionatzen du: `Database` eta `Bracket` aukerek erakutsitako SQLa aldatzen dute oraindik ere, `Statements`, `Header`, `Write logical names into empty comments` eta `Tables` aukerek funtzionatzen dute oraindik ere, eta `Save file` eta `Copy` botoiek SQLa gordetzen eta kopiatzen dute oraindik ere.  
-Bi script-eremuak dira irakurtzeko soilik dauden bakarrak.
+[`readonly`](../../api/erd-editor-element.md#readonly) atributua duen editore batean, fitxak irakurlearentzat funtzionatzen du, eta bertan egindako ezerk ez du dokumentura iristen:
+
+- `Database` eta `Bracket` aukerek SQLa berridazten dute oraindik, baina leiho horretan bakarrik; beraz, panelak `This window only` jartzen du haien epigrafean ere. Aukera bat ez da fitxategian gordetzen, ez lankideekin partekatzen, ez desegiteko erregistratzen, blokeoek dioten guztia gorabehera, eta lankide batek zuk aukeratutako ezarpen bati egindako aldaketak zure aukera pantailan uzten du. Code Generator fitxak aukera bera erakusten du, eta datu-baserik gabe deitutako [`getSchemaSQL()`](../../api/erd-editor-element.md#getschemasql) metodoak ere hura idazten du. Editorea berriro idazgarri bihurtzen denean, dokumentuaren datu-basea eta mugatzailea itzultzen dira.
+- `Statements`, `Header`, `Write logical names into empty comments` eta `Tables` aukerek edonon bezala funtzionatzen dute, leihoarenak baitira dagoeneko.
+- Bi script-eremuak irakurtzeko soilik daude: dokumentuaren scriptak erakusten dituzte, SQLak oraindik idazten dituenak, eta ez dute idazterik onartzen.
+- `Save file` eta `Copy` aukerek fitxak erakusten duen SQLa gordetzen eta kopiatzen dute.

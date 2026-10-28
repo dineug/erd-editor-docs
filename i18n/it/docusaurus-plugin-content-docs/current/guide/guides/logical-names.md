@@ -61,7 +61,7 @@ La digitazione scrive solo il nome logico. Il nome fisico ne viene derivato quan
 - Nella vista `Logical Names`, il nome logico dell’intestazione, poi il suo commento, poi le celle di ogni riga nell’ordine delle colonne, con il nome logico al posto del nome.
 - Nella vista `Both Names`, il nome logico, il nome e il commento dell’intestazione, poi le celle di ogni riga nell’ordine delle colonne, con la cella `Logical Name` per prima per impostazione predefinita.
 
-`Alt + Enter` (Windows/Linux) o `⌥ + Enter` (Mac) aggiunge una colonna e porta il focus sulla sua cella del nome, che nella vista `Logical Names` è il suo nome logico.
+`Alt + Enter` (Windows/Linux) o `⌥ + Enter` (Mac) aggiunge una colonna e porta il focus sulla prima cella che la sua riga disegna. Con l’ordine predefinito delle colonne è la sua cella del nome, che nella vista `Logical Names` è il suo nome logico e nella vista `Both Names` la sua cella `Logical Name`, quindi si può iniziare dal nome logico — vedere [Aggiungere colonne](./table-editing.md#adding-columns).
 
 Una colonna chiave esterna aggiunta da una relazione copia il nome logico e il dominio della sua chiave, insieme al tipo — vedere [Relazioni identificanti](./relationship-editing.md#identifying-relationships).  
 Quando si copiano colonne verso un foglio di calcolo e quando si incollano colonne da esso, vengono usate le celle che la vista disegna, comprese le celle del nome logico e le celle Dominio — vedere [Copiare e incollare colonne](./table-editing.md#copyingpasting-columns).
@@ -143,5 +143,7 @@ Un agente di programmazione che lavora tramite il server MCP imposta i nomi logi
 
 ## Editor di sola lettura {#read-only-editors}
 
-In un editor [`readonly`](../../api/erd-editor-element.md#readonly) ogni selettore della Visualizzazione nomi funziona, e un cambio di vista modifica solo quello schermo, qualunque sia il blocco.  
-Lì i nomi logici e i domini non possono essere modificati, quindi non si apre né l’elenco dei termini né il selettore del dominio, e non viene proposta nessuna delle voci `Derive Physical Name Again` e `Derive Physical Names Again`. Lì View Option → `Domain` non modifica nulla, come del resto nessuna [opzione di visualizzazione](./table-related-functions.md#table-view-options).
+In un editor [`readonly`](../../api/erd-editor-element.md#readonly) ogni selettore della Visualizzazione nomi funziona: il pulsante `Name View` della barra degli strumenti dell’area di disegno, `Name View` nel menu contestuale dell’area di disegno e nella Ricerca rapida, e l’elenco nella barra degli strumenti di Flow.  
+Un cambio di vista modifica solo quello schermo, qualunque sia il blocco: il file, i collaboratori e la cronologia di annullamento mantengono la vista com’era. Quando l’editor torna modificabile, la vista scelta resta su quello schermo fino al successivo cambio lì o, mentre il blocco è disattivato, fino a quando un collaboratore la cambia o il documento viene caricato di nuovo.  
+Lì i nomi logici e i domini non possono essere modificati, quindi non si apre né un editor di celle né l’elenco dei termini né il selettore del dominio, e non viene proposta nessuna delle voci `Derive Physical Name Again` e `Derive Physical Names Again`.  
+View Option → `Domain` mostra o nasconde la cella Dominio solo su quello schermo, come fa lì ogni [opzione di visualizzazione](./table-related-functions.md#table-view-options), e quando l’editor torna modificabile tornano le opzioni di visualizzazione contenute nel documento.

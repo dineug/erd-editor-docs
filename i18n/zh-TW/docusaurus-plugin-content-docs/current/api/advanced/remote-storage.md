@@ -16,7 +16,7 @@ npm install @dineug/erd-editor
 
 複寫存放區位於 `@dineug/erd-editor/engine.js` 子路徑，而非套件根目錄。  
 該進入點完全不存取 DOM，因此可以在 Web Worker 或主執行緒之外的任何其他地方執行。  
-若改為匯入套件根目錄，則會註冊 `<erd-editor>` 自訂元素，而該元素需要 DOM 文件。
+若改為匯入套件根目錄，則需要 DOM 文件：自 `5.0.0` 起它不會定義任何元素，但載入時會建立兩個元素類別。在 `5.0.0` 之前，它會註冊 `<erd-editor>` 自訂元素。
 
 ## 使用方式 {#usage}
 

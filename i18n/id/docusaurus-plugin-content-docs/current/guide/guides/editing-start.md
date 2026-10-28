@@ -10,7 +10,8 @@ Pengeditan dimulai melalui menu konteks dengan klik kanan.
 ![Mengeklik kanan kanvas, membuka submenu Relationship, menambahkan tabel, lalu menu milik tabel tersebut](/img/demo-context-menu.webp)
 
 Klik kanan pada tabel, memo, grup tabel, atau hubungan justru membuka menu milik item tersebut.  
-Klik kanan pada tabel, memo, atau grup tabel yang sudah dipilih mempertahankan seluruh pilihan, sehingga item seperti `Color` dan `Delete selected` berlaku untuk semuanya — lihat [Pemilihan jamak](./table-related-functions.md#multiple-selection).
+Klik kanan pada tabel, memo, atau grup tabel yang sudah dipilih mempertahankan seluruh pilihan, sehingga item seperti `Color` dan `Delete selected` berlaku untuk semuanya — lihat [Pemilihan jamak](./table-related-functions.md#multiple-selection).  
+Editor hanya baca tidak membuat apa pun, sehingga tidak ada yang dijelaskan halaman ini yang ditawarkan di sana: menu kanvas hanya mempertahankan `View Option`, `Name View`, `Export`, dan `Diff Viewer`, menu tabel hanya `Table Properties`, dan memo, grup tabel, atau hubungan tidak membuka menu — lihat [Editor hanya baca](./table-related-functions.md#read-only-editors).
 
 ## Layar sambutan {#welcome-screen}
 

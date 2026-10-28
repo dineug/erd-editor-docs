@@ -6,7 +6,7 @@ description: Výber, presúvanie, kopírovanie, duplikovanie a odstraňovanie ta
 # Funkcie pre tabuľky
 
 Všetko, čo s tabuľkami a poznámkami robíte, keď už existujú – výber, presúvanie, kopírovanie, odstraňovanie, nastavenie farby a toho, čo plátno zobrazuje –, a k tomu ovládacie prvky plátna okolo nich.  
-Najprv prídu na rad príkazy pre tabuľky a poznámky; potom Vlastnosti tabuľky, zameranie na tabuľky, indexy a alternatívne kľúče, automatické rozloženie a databázový systém; a nakoniec samotné plátno: panel nástrojov plátna, priblíženie, posúvanie a miesto, kam vedie skok, a prehliadač rozdielov.  
+Najprv prídu na rad príkazy pre tabuľky a poznámky; potom Vlastnosti tabuľky, zameranie na tabuľky, indexy a alternatívne kľúče, automatické rozloženie a databázový systém; potom samotné plátno: panel nástrojov plátna, priblíženie, posúvanie a miesto, kam vedie skok, a prehliadač rozdielov; a nakoniec to, čo si z toho všetkého ponecháva editor iba na čítanie.  
 Skupiny tabuliek, teda rámce, ktoré zoskupujú tabuľky, majú vlastnú stránku – pozrite si stránku [Skupiny tabuliek](./table-groups.md).  
 Vlastnú stránku majú aj logické názvy a Zobrazenie názvov, ktoré určuje, aké názvy tabuľky zobrazujú – pozrite si stránku [Logické názvy](./logical-names.md).
 
@@ -23,7 +23,8 @@ Poznámky sa vyberajú rovnako a obe klávesové skratky na výber všetkého vy
 Klávesová skratka `Ctrl + A` ustupuje textovému kurzoru, takže počas úpravy bunky vyberie text, a nie diagram.  
 Výberový rámec označí tabuľku alebo poznámku, keď prekryje jej stred, nie keď sa iba dotkne jej okraja. Skupinu tabuliek vyberie, iba keď obklopí celý rámec skupiny, takže rámec nakreslený vnútri skupiny vyberie tabuľky bez skupiny.  
 Kliknutie pravým tlačidlom na niečo, čo už je vybraté, zachová celý výber, takže položky ponuky, napríklad `Color`, `Group selected tables` a `Delete selected`, sa použijú na celý výber. Kliknutie pravým tlačidlom na akúkoľvek inú tabuľku, poznámku alebo skupinu tabuliek vyberie iba ju, aj keď držíte `Ctrl` alebo `⌘`, a kliknutie pravým tlačidlom na vzťah alebo na prázdne plátno zruší výber.  
-Kláves `Escape` zruší výber. Keď je otvorený editor bunky, poznámky alebo názvu skupiny tabuliek alebo keď sa kreslí vzťah či skupina pomocou `New Table Group`, prvé stlačenie klávesu `Escape` to ukončí a druhé zruší výber.
+Kláves `Escape` zruší výber. Keď je otvorený editor bunky, poznámky alebo názvu skupiny tabuliek alebo keď sa kreslí vzťah či skupina pomocou `New Table Group`, prvé stlačenie klávesu `Escape` to ukončí a druhé zruší výber.  
+Editor iba na čítanie nemá žiadny z týchto spôsobov výberu: vyberá tam iba skok – pozrite si časť [Editory iba na čítanie](#read-only-editors).
 
 ![Výber tabuliek pomocou ⌘ + drag a ⌘ + click, potom všetkých tabuliek a poznámok pomocou ⌘ + A](/img/demo-table-select.webp)
 
@@ -145,7 +146,7 @@ Možnosť `Referential Actions` zobrazuje popisky `D:` a `U:`, ktoré akcie ON D
 Možnosť `Table Groups` zobrazuje [skupiny tabuliek](./table-groups.md) a farby skupín na hlavičkách ich tabuliek. Jej vypnutím sa skupiny skryjú na plátne, v minimape a v exportoch obrázkov, žiadna tabuľka sa nepresunie a každá tabuľka zostane vo svojej skupine – pozrite si časť [Skrytie skupín](./table-groups.md#hiding-groups). Zároveň sa z [prieskumníka](./explorer.md#the-tree) odstráni priečinok `Table Groups` a z [panela nástrojov plátna](#canvas-toolbar) tlačidlo `New Table Group` a vyhľadávanie v prieskumníkovi prestane nachádzať názvy skupín.  
 Možnosť `Memos` zobrazuje poznámky. Jej vypnutím sa skryjú všetky poznámky na plátne, v minimape a v exportoch obrázkov a nepresunie sa žiadna tabuľka ani spojnica. Skryté poznámky nezaberajú miesto, takže posúvacie pruhy, minimapa a kompas `Go to content` ich vynechávajú.  
 Skrytím poznámok sa zruší ich výber a zatvorí sa otvorený editor poznámky. [Prieskumník](./explorer.md#the-tree) vynechá svoj priečinok `Memos` a jeho [hľadanie a nahrádzanie](./find-and-replace.md) ani predpona `:` v rýchlom vyhľadávaní ich neprehľadávajú. Kým sú skryté, položka `New Memo` zmizne z kontextovej ponuky, [panela nástrojov plátna](#canvas-toolbar), rýchleho vyhľadávania a [uvítacej obrazovky](./editing-start.md#welcome-screen) a `Alt + M` nepridá žiadnu poznámku. Prilepenie alebo príkaz [Importovať a pridať](./file-import-export.md#import-and-add) aj tak pridá poznámky, ktoré obsahuje, skryté a nevybraté.  
-V editore s atribútom `readonly` prepínače nič nezmenia.
+V editore iba na čítanie prepínače stále fungujú, ale iba na tej obrazovke: neukladajú sa, nezaznamenávajú sa v histórii vrátenia späť ani sa nezdieľajú a keď sa editor znova prepne na úpravy, vrátia sa na hodnoty súboru – pozrite si časť [Editory iba na čítanie](./settings.md#read-only-editors) v Nastaveniach.
 
 ![Prepínanie položiek View Option, pri ktorom sa tabuľky prekresľujú, označenie zloženého jedinečného indexu ako AK1.1 a AK1.2 pomocou Alternate Key, potom vypnutie a zapnutie Memos](/img/demo-view-options.webp)
 
@@ -164,14 +165,15 @@ Kartu `Indexes` opisuje časť [Indexy](#indexes).
 Karta `Schema SQL` zobrazuje kód DDL tabuľky pre vybratú [databázu](#databases): jej príkaz `CREATE TABLE`, samostatné obmedzenia, ktoré niektoré databázy zapisujú pre jej stĺpce s príznakom Jedinečný, a jej indexy. Vždy zapisuje obyčajné príkazy `CREATE` bez hlavičky, bez skriptu pred tabuľkami alebo za tabuľkami a bez logických názvov v prázdnych komentároch, bez ohľadu na nastavenie karty [Schéma SQL](./schema-sql.md) na paneli nástrojov – pozrite si časť [Logické názvy ako komentáre](./schema-sql.md#logical-names-as-comments). Nemá panel možností a jej kontextová ponuka ponúka iba položky `Database` a `Bracket`.  
 Karta `Code Generator` generuje kód iba pre túto tabuľku – pozrite si stránku [Generátor kódu](./code-generator.md).
 
-V editore s atribútom `readonly` sa panel aj tak otvorí, s odznakom `Read only` vedľa nadpisu, no jeho karta `Indexes` neumožňuje žiadne úpravy.
+V editore iba na čítanie sa panel aj tak otvorí, z položky `Table Properties`, jedinej položky ponuky tabuľky, alebo klávesmi `Alt + Space` na tabuľke, ktorú vybral skok. Zobrazuje odznak `Read only` vedľa nadpisu a jeho karta `Indexes` neponúka žiadne úpravy.  
+Panel otvorený v čase, keď sa editor prepne do režimu iba na čítanie, zostane otvorený a prepne sa do režimu iba na čítanie spolu s ním – pozrite si časť [Editory iba na čítanie](#read-only-editors).
 
 ## Zameranie na tabuľky {#focusing-on-tables}
 
 Otvorí kartu Vizualizácia v režime `Flow` zúženú na vybraté tabuľky a všetky tabuľky, ktoré sú od nich vzdialené o jeden vzťah.  
 Začnite položkou `Focus on this table` v kontextovej ponuke tabuľky alebo vyberte jednu alebo viac tabuliek a stlačte `Alt + F`.  
 Keď je tabuľka, na ktorú kliknete pravým tlačidlom, jednou z viacerých vybratých tabuliek, položka znie `Focus on selected tables` a zameria zobrazenie na celý výber. Kliknutie pravým tlačidlom na tabuľku mimo výberu zameria zobrazenie iba na túto tabuľku.  
-Klávesová skratka použije vybraté tabuľky, poznámky vynechá a nemá žiadny účinok, keď nie je vybratá žiadna tabuľka.  
+Klávesová skratka použije vybraté tabuľky, poznámky vynechá a nemá žiadny účinok, keď nie je vybratá žiadna tabuľka. Ponuka tabuľky editora iba na čítanie nemá položku `Focus on this table` a skratka tam použije tabuľku, ktorú vybral skok – pozrite si časť [Editory iba na čítanie](#read-only-editors).  
 Vybratá [skupina tabuliek](./table-groups.md) sa tu nepočíta, pri klávesovej skratke ani pri položke ponuky: jej tabuľky sa použijú, iba keď sú samy vybraté, čo urobí položka `Select tables` v ponuke skupiny.  
 Čo zúžené zobrazenie ukazuje a ako sa vrátiť k celému diagramu, opisuje stránka [Vizualizácia](./visualization.md#focusing-on-tables) a postup, ako prechádzať o krok späť a dopredu cez to, čo režim Flow zobrazoval predtým, opisuje časť [Predchádzajúca a nasledujúca tabuľka](./visualization.md#previous-table-and-next-table).
 
@@ -187,7 +189,7 @@ Pravá strana uvádza stĺpce tabuľky v časti `Columns`, každý so začiarkav
 Začiarknutím stĺpca ho pridáte do vybratého indexu a zrušením začiarknutia ho odstránite. Po výbere kľúča sa jeho stĺpce zobrazia začiarknuté, ale políčka zostanú neaktívne.  
 Stĺpce vybratého indexu sú uvedené nižšie v časti `Index order`, každý pomenovaný tak, ako ho pomenúva Zobrazenie názvov, pričom v zobrazení `Both Names` nasleduje za logickým názvom fyzický názov v zátvorkách, napríklad `Member Number (member_no)`. Ich poradie zmeníte presunutím myšou za úchyt a kliknutím na štítok `ASC` alebo `DESC` v riadku prepnete jeho smer zoradenia. V alternatívnom kľúči sa každý riadok končí svojím označením `AK<n>.<m>`. Zoznam zobrazuje tri riadky naraz a ostatné sú dostupné posúvaním.
 
-V editore s atribútom `readonly` sa po výbere kľúča alebo indexu jeho stĺpce stále zobrazia, ale nie je k dispozícii tlačidlo `Add Index` ani `x` a nič iné na karte sa nedá zmeniť.
+V editore iba na čítanie sa po výbere kľúča alebo indexu jeho stĺpce stále zobrazia, ale nie je k dispozícii tlačidlo `Add Index` ani `x` a nič iné na karte sa nedá zmeniť: názvy neprijímajú písanie, každé políčko je vypnuté a riadky `Index order` sa nedajú ani ťahať, ani sa nimi nedá prevrátiť poradie zoradenia.
 
 [Prieskumník](./explorer.md#the-tree) uvádza indexy každej tabuľky v jej priečinku `Indexes` a výberom indexu v ňom prejdete na jeho tabuľku. Jeho vyhľadávanie nájde aj názvy indexov a dokáže ich premenovať – pozrite si časť [Čo sa prehľadáva](./find-and-replace.md#what-it-searches).
 
@@ -233,7 +235,8 @@ Ostatné tri sa vypočítajú naraz mimo hlavného vlákna, takže nie je čo sl
 
 Nech vyberiete ktorékoľvek, presunú sa tabuľky a skupiny tabuliek a poznámky zostanú na svojom mieste. Tabuľky sa umiestnia v šírkach, aké majú v Zobrazení názvov, na ktoré sa pozeráte. Vzťah tabuľky so sebou samou sa ignoruje a viac vzťahov medzi tými istými dvoma tabuľkami sa počíta ako jeden.  
 Každé rozloženie drží tabuľky každej skupiny pohromade bez ohľadu na to, či sú skupiny zobrazené, a každú skupinu, ktorá obsahuje tabuľky, prispôsobí tak, aby ich obklopovala – pozrite si stránku [Skupiny tabuliek](./table-groups.md#auto-layout).  
-Výsledok sa zapíše ako jediný záznam histórie, takže jedno vrátenie späť vráti každú tabuľku a skupinu na pôvodné miesto.
+Výsledok sa zapíše ako jediný záznam histórie, takže jedno vrátenie späť vráti každú tabuľku a skupinu na pôvodné miesto.  
+Editor iba na čítanie `Auto Layout` neponúka. Ten, ktorý ešte beží, keď sa editor prepne do režimu iba na čítanie, sa tam skončí: ukážka `Force` sa zatvorí spolu s oznámením a nezachová žiadnu zo svojich pozícií a rozloženie, ktoré sa ešte počíta, sa zahodí spolu s oznámením, takže sa nepresunie žiadna tabuľka, ani vtedy, ani keď sa editor znova prepne na úpravy.
 
 ![Upratanie kopy tabuliek automatickým rozložením Flow z kontextovej ponuky plátna, ktoré ich zoradí zľava doprava pozdĺž ich vzťahov](/img/demo-automatic-table-placement.webp)
 
@@ -250,7 +253,7 @@ Medzi podporované databázy patria:
 - Snowflake
 - SQLite
 
-Databázu vyberte v položke `Database` v kontextovej ponuke plátna, v paneli možností alebo v kontextovej ponuke kariet Schéma SQL a Generátor kódu alebo v rýchlom vyhľadávaní. Všetky menia to isté nastavenie.
+Databázu vyberte v položke `Database` v kontextovej ponuke plátna, v paneli možností alebo v kontextovej ponuke kariet Schéma SQL a Generátor kódu alebo v rýchlom vyhľadávaní. Všetky menia to isté nastavenie. Ponuka plátna editora iba na čítanie nemá položku `Database` a výber v ostatných mení iba danú obrazovku – pozrite si časť [Editory iba na čítanie](#read-only-editors).
 
 Tieto možnosti určujú syntax schémy SQL pri exporte, automatické dopĺňanie typu údajov a typy, na ktoré sa prevedú vygenerovaný kód a importované schémy.  
 Určujú, ktoré voľby `Statements` a `Header` dokáže karta [Schéma SQL](./schema-sql.md#options-panel) zapísať. Voľba, ktorú databáza nemá, zostane v paneli možností stlmená a SQL sa vráti k najbližšej voľbe, ktorú databáza má.  
@@ -266,15 +269,16 @@ Import schémy SQL zachová typ údajov stĺpca vrátane zoznamu argumentov bez 
 Nad stredom dolného okraja plátna sa vznáša malý panel nástrojov, ktorý zľava doprava obsahuje nástroje pôsobiace na samotné plátno a príkazy, ktoré doň pridávajú obsah:
 
 - Ruka a ukazovateľ. Predvolený je ukazovateľ; ruka zmení každé ťahanie na posúvanie, nad tabuľkami aj nad prázdnym priestorom. Kláves `Space` medzi nimi prepína. Keď je aktivované kreslenie [`New Table Group`](./table-groups.md#drawing-a-group), namiesto nich je označené tlačidlo `New Table Group` a kliknutie na ruku alebo ukazovateľ, stlačenie klávesu `Space` alebo výber notácie vzťahu ukončí kreslenie bez pridania skupiny.
-- `New Table`, `New Memo` a `New Table Group`. Tlačidlo `New Table` pridá tabuľku rovnako ako `Alt + N` a tlačidlo `New Memo` pridá poznámku rovnako ako `Alt + M`. Tlačidlo `New Table Group` aktivuje [kreslenie skupiny](./table-groups.md#drawing-a-group) rovnako ako `Alt + G` a vypne ruku; druhé kliknutie, rovnako ako druhé stlačenie `Alt + G`, ukončí kreslenie bez pridania skupiny. Tlačidlo `New Memo` nie je k dispozícii, kým View Option → `Memos` skrýva poznámky, a tlačidlo `New Table Group`, kým View Option → `Table Groups` skrýva skupiny. Editor s atribútom `readonly` nezobrazuje ani jedno z týchto troch tlačidiel.
+- `New Table`, `New Memo` a `New Table Group`. Tlačidlo `New Table` pridá tabuľku rovnako ako `Alt + N` a tlačidlo `New Memo` pridá poznámku rovnako ako `Alt + M`. Tlačidlo `New Table Group` aktivuje [kreslenie skupiny](./table-groups.md#drawing-a-group) rovnako ako `Alt + G` a vypne ruku; druhé kliknutie, rovnako ako druhé stlačenie `Alt + G`, ukončí kreslenie bez pridania skupiny. Tlačidlo `New Memo` nie je k dispozícii, kým View Option → `Memos` skrýva poznámky, a tlačidlo `New Table Group`, kým View Option → `Table Groups` skrýva skupiny.
 - Priblíženie: `Zoom out`, aktuálne priblíženie v percentách a `Zoom in`. Obe tlačidlá menia priblíženie po krokoch rovnako ako klávesové skratky priblíženia a kliknutie na percentuálnu hodnotu ho vráti na `100%`.
 - Štyri notácie vzťahu, tie isté štyri, ktorými začínate vzťah – pozrite si stránku [Začíname s úpravami](./editing-start.md). Výber jednej z nich prepne späť na ukazovateľ, pretože vzťah sa kreslí kliknutím na dve tabuľky.
-- `Name View`, tlačidlo so šípkou nadol, ktoré uvádza aktuálne zobrazenie: `Physical Names`, `Logical Names` alebo `Both Names`. Má rovnakú šírku bez ohľadu na to, ktoré zobrazenie uvádza, takže prepnutie nikdy neposunie panel nástrojov. Kliknutím sa nad panelom nástrojov otvorí zoznam týchto troch zobrazení so začiarknutým aktuálnym zobrazením. Výber niektorého z nich naň prepne a zoznam zatvorí; druhé kliknutie na tlačidlo, stlačenie kdekoľvek inde alebo `Escape` zoznam zatvorí bez prepnutia. Zobrazuje ho aj editor s atribútom `readonly`. Čo jednotlivé zobrazenia vykresľujú, opisuje časť [Zobrazenie názvov](./logical-names.md#name-view) a či sa prepnutie ukladá, opisuje časť [Prepnutie zobrazenia](./logical-names.md#switching-the-view).
+- `Name View`, tlačidlo so šípkou nadol, ktoré uvádza aktuálne zobrazenie: `Physical Names`, `Logical Names` alebo `Both Names`. Má rovnakú šírku bez ohľadu na to, ktoré zobrazenie uvádza, takže prepnutie nikdy neposunie panel nástrojov. Kliknutím sa nad panelom nástrojov otvorí zoznam týchto troch zobrazení so začiarknutým aktuálnym zobrazením. Výber niektorého z nich naň prepne a zoznam zatvorí; druhé kliknutie na tlačidlo, stlačenie kdekoľvek inde alebo `Escape` zoznam zatvorí bez prepnutia. Čo jednotlivé zobrazenia vykresľujú, opisuje časť [Zobrazenie názvov](./logical-names.md#name-view) a či sa prepnutie ukladá, opisuje časť [Prepnutie zobrazenia](./logical-names.md#switching-the-view).
 - Režim Zen, `Alt + Z`, ktorý skryje všetko okrem plátna a tohto panela nástrojov. Opätovné stlačenie `Alt + Z` alebo tlačidlo vráti zvyšok späť. Otvorený prieskumník sa skryje spolu so zvyškom bez toho, aby sa zatvoril, a spolu s ním sa aj vráti. V režime Zen ho možno stále otvoriť – pozrite si časť [Kedy sa prieskumník nezobrazuje](./explorer.md#when-it-stands-aside).
 - Kompas `Go to content`, ktorý sa na koniec panela nástrojov pridá iba vtedy, keď na obrazovke nie je žiadna tabuľka, zobrazená poznámka ani zobrazená skupina tabuliek – pozrite si časť [Pohyb po plátne](#getting-around-the-canvas).
 
 Každé tlačidlo s klávesovou skratkou ju uvádza vo svojom bublinovom popise, napríklad `New Table (Alt + N)` (Windows/Linux) alebo `New Table (⌥ + N)` (Mac).  
-Panel nástrojov sa skryje, kým je otvorená ukážka automatického rozloženia `Force`, panel Vlastnosti tabuľky, cestovanie v čase alebo prehliadač rozdielov, a keď sa zatvoria, vráti sa.
+Panel nástrojov sa skryje, kým je otvorená ukážka automatického rozloženia `Force`, panel Vlastnosti tabuľky, cestovanie v čase alebo prehliadač rozdielov, a keď sa zatvoria, vráti sa.  
+Panel nástrojov editora iba na čítanie si ponecháva priblíženie, `Name View`, režim Zen a kompas `Go to content`. Nemá ruku ani ukazovateľ, `New Table`, `New Memo` ani `New Table Group` a žiadne notácie a keď sa editor znova prepne na úpravy, dostane ich späť.
 
 ![Pridanie tabuľky a poznámky z panela nástrojov, aktivácia a deaktivácia New Table Group, posúvanie rukou, postupná zmena priblíženia a prepínanie režimu Zen pomocou ⌥ + Z](/img/demo-canvas-toolbar.webp)
 
@@ -339,7 +343,7 @@ Pri malej tabuľke pri ľavom okraji plátna v polovici výšky sa teda zobrazen
 - Skupina tabuliek: jej rámec, podľa jej záhlavia.
 - Poznámka alebo blok, ktorý umiestni príkaz Importovať a pridať: celý objekt.
 
-Keď by sa zobrazenie nemalo pohnúť v žiadnom smere, k posunu nedôjde, takže pri dvoch prechodoch na to isté miesto za sebou sa druhýkrát nič nepohne. Skok, ktorý posunie plátno, zaznamená posun do [histórie zmien](./undo-redo.md#what-the-history-records) ako každú inú zmenu polohy zobrazenia, a skok, ktorý nič nepohne, nezanechá nič na vrátenie späť. Pri príkaze Importovať a pridať je posun súčasťou toho istého kroku ako pridanie. Riadok zoznamu prehliadača rozdielov posúva len strany zobrazenia, ktoré sú iba na čítanie, takže nič nezaznamená.  
+Keď by sa zobrazenie nemalo pohnúť v žiadnom smere, k posunu nedôjde, takže pri dvoch prechodoch na to isté miesto za sebou sa druhýkrát nič nepohne. Skok, ktorý posunie plátno, zaznamená posun do [histórie zmien](./undo-redo.md#what-the-history-records) ako každú inú zmenu polohy zobrazenia, a skok, ktorý nič nepohne, nezanechá nič na vrátenie späť. Pri príkaze Importovať a pridať je posun súčasťou toho istého kroku ako pridanie. Riadok zoznamu prehliadača rozdielov posúva len strany zobrazenia, ktoré sú iba na čítanie, takže nič nezaznamená, a editor iba na čítanie nezaznamená žiadny skok.  
 Žiadny skok nezačne ani nedokončí kreslenie vzťahu. Kompas `Go to content` nie je skok: vycentruje to, na čo ukazuje.
 
 ## Prehliadač rozdielov {#diff-viewer}
@@ -351,7 +355,8 @@ Zobrazenie sa otvorí nad plátnom: vľavo to, čo sa zmenilo, potom vedľa seba
 Aktuálny dokument sa porovnáva v stave, v akom je pri otvorení zobrazenia; zmeny vykonané potom, vrátane zmien spolupracovníka, sa do zobrazenia nedostanú. Obe strany sa otvoria a zostanú v Zobrazení názvov, na ktoré sa pozeráte, bez ohľadu na to, aké zobrazenie uchováva ktorýkoľvek zo súborov – pozrite si časť [Mimo plátna](./logical-names.md#beyond-the-canvas). Otvorený [prieskumník](./explorer.md#when-it-stands-aside) je skrytý, kým je zobrazenie otvorené, takže zobrazenie zaberá celú šírku editora.  
 Každú stranu možno posúvať kolieskom myši, ťahaním prázdnej oblasti alebo tela skupiny tabuliek alebo ťahaním stredným tlačidlom kdekoľvek nad ňou a priblíženie sa na nej mení pomocou `Ctrl + Wheel` (Windows/Linux), `⌘ + Wheel` (Mac) alebo stiahnutím prstov. Pri `70%` a menej sa jej tabuľky zbalia rovnako ako na plátne – pozrite si časť [Označenia na oboch stranách](#marks-on-the-two-sides).  
 Obe strany sú iba na čítanie, takže vo vašom dokumente sa nič nezmení. Každá má vlastný výber a kliknutie na tabuľku na niektorej strane ju vyberie iba na tejto strane.  
-Zobrazenie zatvorte tlačidlom `Close` v upozornení `Diff Viewer`, ktoré sa zobrazí pri jeho otvorení, alebo klávesom `Escape`.
+Zobrazenie zatvorte tlačidlom `Close` v upozornení `Diff Viewer`, ktoré sa zobrazí pri jeho otvorení, alebo klávesom `Escape`.  
+Editor iba na čítanie ponúka `Diff Viewer` tiež a zobrazenie tam funguje ako v ktoromkoľvek editore, pričom kliknutie na tabuľku strany ju na tejto strane stále vyberie. Zobrazenie otvorené v čase, keď sa editor prepne do režimu iba na čítanie, zostane otvorené.
 
 ![Otvorenie prehliadača rozdielov pre uložený súbor .json, klikanie na riadky označené A, M, D a R v jeho strome, filtrovanie podľa názvu a jeho zatvorenie](/img/demo-diff-viewer.webp)
 
@@ -423,3 +428,26 @@ Každá strana sa riadi možnosťami zobrazenia svojho dokumentu. Zmena v bunke,
 V zobrazení `Logical Names`, ktoré nevykresľuje bunku názvu, sa modrá farba premenovania a jantárová farba zmeny v bunke, ktorú strana nevykresľuje, prejavia na logickom názve vykreslenom na mieste názvu. Zmena typu údajov zafarbí bunku typu jantárovou v každom zobrazení, aj tam, kde bunka zobrazuje názov domény. Žiadna strana nevykresľuje farby, ktoré kontroly karty Slovník dávajú názvom na plátne – pozrite si časť [Označenia na plátne](./dictionary.md#marks-on-the-canvas).
 
 Pri `70%` a menej si zbalené tabuľky ponechávajú obrys. Názov si ponecháva zelenú alebo červenú farbu pridanej alebo odstránenej tabuľky, prípadne modrú farbu premenovania, a inak preberá jantárovú farbu zmeny komentára. Zmeny stĺpcov sa nevykresľujú, kým zobrazenie znova nepriblížite; strom ich stále uvádza.
+
+## Editory iba na čítanie {#read-only-editors}
+
+Editor s atribútom [`readonly`](../../api/erd-editor-element.md#readonly), napríklad revízia v systéme Git znova otvorená ako diagram vo VS Code, je čitateľ. Zostáva jeho šesť kariet, [prieskumník](./explorer.md#read-only-editors), minimapa, posúvacie lišty a kurzory a výbery spolupracovníkov a každý ovládací prvok, ktorý by zmenil diagram, zmizne namiesto toho, aby bol stlmený.
+
+Na plátne ERD:
+
+- Ťahanie posúva plátno, kdekoľvek sa začne: na prázdnom plátne, na tabuľke, poznámke aj na skupine tabuliek. Stredné tlačidlo, koliesko, stiahnutie prstov a klávesy priblíženia fungujú ako v ktoromkoľvek editore.
+- Ukazovateľ spočívajúci na tabuľke zvýrazní jej vzťahy. Kliknutie bez pohybu zvýrazní vzťahy tabuľky, na ktorej pristane, alebo vzťah, na ktorom pristane, a kliknutie inde zvýraznenie zhasne.
+- Nič sa nevyberie stlačením, výberovým rámcom ani klávesom na výber všetkého. Vyberá iba skok: riadok [prieskumníka](./explorer.md#going-to-a-row), zhoda jeho [hľadania a nahrádzania](./find-and-replace.md#going-to-a-match) alebo výsledok `#`, `@` či `:` v [rýchlom vyhľadávaní](./quick-search.md#searching-the-diagram) vyberie to, na čom pristane, s obrysom ako každý výber, s aktívnou bunkou tam, kam ju skok umiestni. Kliknutie bez pohybu tento výber zruší.
+- Klávesy so šípkami presúvajú aktívnu bunku. Kopírovanie, `Table Properties` a `Focus on this table` fungujú na tom, čo vybral skok, svojimi klávesmi a prilepenie nič nepridá. Ostatné klávesy sú uvedené v časti [Klávesové skratky](./settings.md#shortcuts).
+- Žiadna bunka, názov poznámky ani skupiny tabuliek sa neotvorí na úpravy. Tabuľky, poznámky a skupiny nemajú tlačidlá `+` ani `x`, poznámky a skupiny nemajú okraje na zmenu veľkosti a nie je tam úchyt na ťahanie stĺpcov ani výber farby.
+
+Kontextová ponuka plátna si ponecháva `View Option`, `Name View`, `Export` a `Diff Viewer`. Nemá `New Table`, `New Memo`, `New Table Group`, `Toggle Explorer`, `Relationship`, `Derive Physical Names Again`, `Database`, `Import`, `Import and Add` ani `Auto Layout`.  
+Ponuka tabuľky si ponecháva iba `Table Properties`, ktoré otvorí panel pre túto tabuľku iba na čítanie – pozrite si časť [Vlastnosti tabuľky](#table-properties). Poznámka, vzťah a skupina tabuliek nevyvolajú žiadnu ponuku.  
+[Panel nástrojov plátna](#canvas-toolbar) si ponecháva priblíženie, `Name View`, režim Zen a kompas `Go to content`. Horný panel nástrojov zobrazuje názov databázy ako text, ktorý sa nedá upraviť, a nemá `Undo`, `Redo` ani `Time Travel`.  
+[Export](./file-import-export.md#exporting) so všetkými tromi položkami a [Prehliadač rozdielov](#diff-viewer) fungujú ako v ktoromkoľvek editore.
+
+[`View Option`](#table-view-options), `Name View`, databáza, karta, poloha zobrazenia a priblíženie sa tam stále menia, ale iba na tej obrazovke: nič z toho sa neukladá, nezaznamenáva ani nezdieľa – pozrite si časť [Editory iba na čítanie](./settings.md#read-only-editors) v Nastaveniach.
+
+Prepnutie editora do režimu iba na čítanie ukončí to, čo bolo otvorené na úpravy: editor bunky, názvu poznámky alebo skupiny tabuliek, kreslený vzťah alebo `New Table Group`, výber a aktívnu bunku, nástroj Ruka, výber farby, [Mapovať stĺpce](./relationship-editing.md#map-columns) a [Cestovanie v čase](./undo-redo.md#time-travel). Zobrazenie, priblíženie, karta a Zobrazenie názvov zostanú také, aké boli, a Vlastnosti tabuľky, Prehliadač rozdielov a dialógové okno `Export image` zostanú otvorené.  
+Skončí sa aj gesto, ktoré prebieha. Ťahanie tabuliek alebo poznámok sa zastaví tam, kde je, ťahanie s `Alt` nepustí žiadnu kópiu, ťahanie stĺpca sa skončí, zmena veľkosti poznámky sa zastaví tam, kde je, zmena veľkosti skupiny tabuliek sa zahodí a [Automatické rozloženie](#auto-layout) sa zahodí spolu s oznámením, takže sa nepresunie žiadna tabuľka.  
+Keď sa editor znova prepne na úpravy, vráti ovládacie prvky vyššie a nič z toho, čo prepnutie zatvorilo, sa znova neotvorí.

@@ -37,7 +37,7 @@ Bir JSON dosyası içerdiği konumları korur. Bir Şema SQL, GraphQL, DBML veya
 
 Ardından diyagram tek adımda değiştirilir, böylece arada hiçbir şey görünmez. Tablolar yerleştirilirken değiştirdiğiniz sekme gibi bir ayar korunur ve bu sırada başka bir dosya içe aktarırsanız en son başlatılan içe aktarma geçerli olur.
 
-Salt okunur bir düzenleyici `Import` öğesinden hiçbir şey yüklemez ve ne `Import and Add` öğesini ne de Sözlük sekmesinin `Import CSV` öğesini sunar.
+Salt okunur bir düzenleyici hiçbir şey içe aktarmaz. Tuval bağlam menüsü ve Hızlı arama ne `Import` ne de `Import and Add` öğesini sunar, karşılama ekranı gösterilmez ve Sözlük sekmesi `Import CSV` öğesini sunmaz.
 
 ### İçe aktar ve ekle {#import-and-add}
 
@@ -215,7 +215,7 @@ Tuvalin bağlam menüsündeki `Export` alt menüsünde üç öğe bulunur:
 - Schema SQL: [Şema SQL](./schema-sql.md#saving-or-copying-the-sql) sekmesini, seçenekler paneli açık ve `Save file` düğmesi odakta olacak şekilde açar; böylece `Enter` tuşuna basmak, sekmenin gösterdiği SQL'i `.sql` olarak kaydeder. O ana kadar hiçbir şey kaydedilmez.
 - Image: Diyagramı `.png` ya da `.svg` olarak kaydeden veya PNG olarak panoya kopyalayan `Export image` iletişim kutusunu açar. [Görüntü](#image) bölümüne bakın.
 
-Üçü de salt okunur bir düzenleyicide çalışır.  
+Üçü de salt okunur bir düzenleyicide çalışır; orada `Export`, tuval menüsünün koruduğu az sayıdaki satırdan biridir. Orada json, dosyanın tuttuğu ayarları yazar; yalnızca o ekranda değiştirilen görünümü, sekmeyi, Ad görünümünü, veritabanını, kod ayarlarını veya `View Option` anahtarlarını yazmaz. Ayarlardaki [Salt okunur düzenleyiciler](./settings.md#read-only-editors) bölümüne bakın.  
 Sözlük sekmesinin bu alt menüde bulunmayan kendi `Export CSV` öğesi, sekmenin `Domains`, `Words` veya `Terms` sayfasını bir CSV dosyası olarak kaydeder. Bu üçünün aksine salt okunur bir düzenleyicide sunulmaz. [CSV içe ve dışa aktarma](./dictionary.md#importing-and-exporting-csv) bölümüne bakın.
 
 Şema SQL, her ilişkinin ON DELETE ve ON UPDATE değerlerini, önce ON DELETE olmak üzere `REFERENCES` yan tümcesinden sonra yazar. `Not set` hiçbir şey yazmaz ve seçili veritabanının kabul etmediği bir eylem yer almaz. Hangi veritabanının hangi eylemi kabul ettiği için [İlişki düzenleme](./relationship-editing.md#on-delete-and-on-update) bölümüne bakın.

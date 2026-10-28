@@ -1,6 +1,6 @@
 ---
 sidebar_position: 16
-description: リレーションシップのデータ型同期とドメイン、コメントの最大幅、テーブル幅の再計算、設定のロック（表示、タブ、コードの設定、名前の表示）、カラムの表示順、ショートカット一覧。
+description: リレーションシップのデータ型同期とドメイン、コメントの最大幅、設定のロック（表示、タブ、コードの設定、名前の表示）、カラムの表示順、ショートカット一覧、読み取り専用のエディタの設定タブ。
 ---
 
 # 設定
@@ -33,13 +33,6 @@ description: リレーションシップのデータ型同期とドメイン、�
 
 ![コメントの最大幅をオンにして 120 を入力し、ERD タブでコメントがその幅で切り詰められる様子](/img/demo-settings-comment-width.webp)
 
-## テーブル幅の再計算
-
-`Sync` を押すと、すべてのテーブルとカラムのセルの幅を現在のテキストに合わせて再計算し、新しいサイズに合わせてリレーションシップのコネクタを描き直します。
-完了すると `Recalculated table width` のトーストが表示されます。
-幅はドキュメントを読み込むたびに自動で再計算されるため、フォントや描画の変更で古い状態になったときにだけ必要になります。
-幅はファイルに保存されないため、`Sync` でファイルが変わることはありません。
-
 ## ロック
 
 `Lock` のリストには 7 つの設定が並びます。設定のロックがオンの間は、ファイルにはロックした時点の値が残るため、画面上で変更してもファイルは変わりません。
@@ -68,8 +61,9 @@ description: リレーションシップのデータ型同期とドメイン、�
 
 ![Viewport のロックを解除してダイアグラムをスクロール、拡大・縮小し、行に表示される新しい表示位置で再びロックする様子](/img/demo-settings-locks.webp)
 
-どのロックがオンかはファイルに保存されるため、ロックのオンとオフを切り替えるとファイルが変わりますが、設定タブのほかの項目と同じく、[Undo の履歴](./undo-redo.md#what-the-history-records)には記録されません。名前の表示の切り替えも、ロックの有無にかかわらず記録されません。読み取り専用のエディタでは、ロックのボタンは何もせず、名前の表示を切り替えても、ロックの状態にかかわらず、その画面だけが変わります。
+どのロックがオンかはファイルに保存されるため、ロックのオンとオフを切り替えるとファイルが変わりますが、設定タブのほかの項目と同じく、[Undo の履歴](./undo-redo.md#what-the-history-records)には記録されません。名前の表示の切り替えも、ロックの有無にかかわらず記録されません。
 それ以外の設定は、そのときの状態のまま保存されます。データベース、[`View Option`](./table-related-functions.md#table-view-options) の切り替え、`Preferences` タブのほかの項目がこれにあたります。
+読み取り専用のエディタは、ロックの状態にかかわらず、そのどれを通してもファイルを変更しません。ロックのボタンと `Preferences` のほかのコントロールは無効になり、引き続き変更できる設定はその画面にとどまります。[読み取り専用のエディタ](#read-only-editors)を参照してください。
 
 新しいダイアグラム、つまり何もない状態から始めたダイアグラムでは、すべてのロックがオンです。VS Code、Obsidian、JetBrains IDE で開いた空のファイル（Obsidian の `ERD Editor: Create new diagram` と `New ERD` はこれを作成します）、Web アプリの新しいスキーマ、Google Drive の New メニューから作成したファイル、値を渡していない `<erd-editor>` がこれにあたります。
 Web アプリが SQL、DBML、AML、GraphQL のファイルを読み込んで作成するスキーマや Google Drive のファイルも、すべてのロックがオンで始まります。JSON ファイルから作成したものは、そのファイルが記録しているロックを保ちます。
@@ -98,6 +92,7 @@ MCP サーバーを通じて編集するコーディングエージェントに�
 `Logical Name` は、`Both Names` で各行に表示される論理名のセルの位置を決めます。`Logical Names` では、代わりに論理名が `Name` 行の位置に表示され、`Physical Names` では論理名のセルは表示されません。[名前の表示](./logical-names.md#name-view)を参照してください。`Domain` は、View Option → `Domain` で表示されるドメインのセルの位置を決めます。[ドメインのセル](./logical-names.md#the-domain-cell)を参照してください。
 [テーブルの表示オプション](./table-related-functions.md#table-view-options)で非表示にしたセルや、名前の表示によって表示されないセルもリスト上の位置は保持されるため、順序は表示されているセルに対して適用されます。
 `Logical Name` と `Domain` が行として加わる前に順序を設定したダイアグラムでは、`Name` と `DataType` が順序のどこにあっても、`Logical Name` は `Name` の直前に、`Domain` は `DataType` の直後に入ります。
+後のリリースが保存したダイアグラムも、そのリリースにこのリリースにはない行があっても、順序を保ちます。このリリースにある行はファイルが示す順序に並び、知らない行は除かれます。ここでダイアグラムを保存すると、その行を除いた順序が書き出され、後のリリースは、その行を自身の既定の順序での隣の行の隣に戻します。
 [代替キー](./table-related-functions.md#alternate-keys)のマーク（`AK1.1` など）は、これらの行には含まれません。マークは常に行の最後、この順序で最後になるセルのさらに後ろに表示されます。
 
 ![Column Order までスクロールして Comment 行を Name の下へドラッグし、コメントがカラム名のすぐ後に表示される様子](/img/demo-settings-column-order.webp)
@@ -146,6 +141,7 @@ ERD タブでは、`Stop` は開いているセルやメモの編集を終了す
 エクスプローラー、テーマビルダー、`Display Language` のピッカーが開いていても、キャンバス上のショートカットが無効になることはありません。`Stop` がエクスプローラーを閉じることはありません。エクスプローラー内で `Stop` やほかのキーが何をするかについては[エクスプローラー内のキー](./explorer.md#keys-in-the-explorer)を、ピッカー内で押したキーについては[言語の選択](./language-and-theme.md#言語の選択)を参照してください。
 `Delete Selection` は、選択しているすべてのテーブル、メモ、テーブルグループを削除します。ただし、選択しているのがテーブル 1 つだけで、そのテーブルのカラムをいくつか選択していて、拡大・縮小のレベルが `70%` より大きい場合は、そのカラムを削除します。[テーブルとメモの削除](./table-related-functions.md#テーブルとメモの削除)を参照してください。`Remove Table, Memo` も、選択しているテーブルグループを削除します。
 `Add Table Group` は、[キャンバスツールバー](./table-related-functions.md#canvas-toolbar)の `New Table Group` ボタンと同じように [`New Table Group`](./table-groups.md#グループの描画) の描画を始め、もう一度押すと描画をキャンセルします。`Group Selected Tables` は修飾キーを使わずに 2 回押すキーで、`T` に続けて 1 秒以内に `G` を押します。テーブルのコンテキストメニューの `Group selected tables` と同じように、選択しているテーブルを新しいグループに入れてその名前の入力欄を開き、テーブルを選択していない場合は何もしません。[選択したテーブルのグループ化](./table-groups.md#選択したテーブルのグループ化)を参照してください。どちらも、読み取り専用のエディタや、グループを[非表示](./table-groups.md#グループの非表示)にしている間は何もしません。
+読み取り専用のエディタで動作するのは、読み取るキーだけです。`Search`、`Toggle Explorer`、`Stop`、移動で選択されたテーブルに対する `Table Properties` と `Focus on this table`、3 つの拡大・縮小のキー、`Zen Mode`、コピー、そしてフォーカスしたセルを動かす矢印キーです。`Editing`、`Add` と `Remove` のすべてのキー、`Delete Selection`、`Primary Key`、2 つのすべて選択のキー、4 つのリレーションシップのキー、`Add Table Group`、`Group Selected Tables`、`Hand Tool`、貼り付けは何もせず、`Undo` と `Redo` は何も元に戻さず、やり直しません。[読み取り専用のエディタ](./table-related-functions.md#read-only-editors)を参照してください。
 `Zoom In`、`Zoom Out`、`Zoom Reset` は、クイック検索が開いていなければ [Visualization](./visualization.md#toolbar) タブでも、`Graph` と `Flow` のどちらでも拡大・縮小します。
 `Flow` では、クイック検索が開いていなければ、`Undo` と `Redo` は、Flow の `Previous table` ボタンと `Next table` ボタンと同じように、Flow がこれまでに絞り込んだ表示の間を、1 つ戻ったり 1 つ進んだりします。そこでダイアグラムを Undo することはなく、`Graph` では何もしません。[前のテーブルと次のテーブル](./visualization.md#previous-table-and-next-table)を参照してください。
 Visualization タブでは、`Stop` は[行の表示](./visualization.md#row-display)のメニューも閉じ、実行中の [Flow のレイアウト](./visualization.md#how-flow-is-placed)をキャンセルします。`Focus on this table` で絞り込んだビューは広げません。
@@ -160,3 +156,13 @@ Visualization タブでは、`Stop` は[行の表示](./visualization.md#row-dis
 辞書タブの行のキーは `Add Column` と `Remove Column` に従うため、どちらかの割り当てを変更すると行のキーも移ります。[`dictionaryRowChords`](../../api/erd-editor-element.md#dictionaryrowchords) を参照してください。
 
 Obsidian では、ダイアグラムの Obsidian タブがアクティブな間、`Alt + Enter`、`Ctrl + K`、`Ctrl + F` (Windows/Linux) または `⌥ + Enter`、`⌘ + K`、`⌘ + F` (Mac) のように Obsidian のホットキーが同じキーを使っている場合でも、これらのキーはエディタに届きます。この一覧のどの行にもない、辞書タブの `Alt + Shift + Enter` (Windows/Linux) または `⌥ + Shift + Enter` (Mac) も同様です。それ以外の Obsidian のホットキーは、そのタブでも引き続き使えます。`Ctrl + F` または `⌘ + F` については、[ブラウザの検索バー](./find-and-replace.md#the-browsers-find-bar)を参照してください。
+
+## 読み取り専用のエディタ {#read-only-editors}
+
+[`readonly`](../../api/erd-editor-element.md#readonly) のエディタでは、設定タブはダイアグラムの設定を表示し、そのどれも変更しません。`Preferences` と `Shortcuts` の各ページの見出しの横に、`Read only` のバッジが表示されます。
+`Relationship DataType Sync` と `Maximum comment width` のスイッチと幅のフィールドは無効になり、すべてのロックのボタンも同様です。`Column Order` の行にはグリップが表示されず、ドラッグできません。
+各 `Lock` の行は引き続きその値を表示します。ロックされた行にはファイルが保持する値が、ロックされていない行にはその画面での設定が表示され、次のとおり、ファイルの値と異なることがあります。
+
+画面に何を表示するかを決める設定は、そこでも変更できます。表示位置と拡大・縮小、タブ、名前の表示、データベース、Code Generator の言語、2 つの名前のケース、括弧の種類、[`View Option`](./table-related-functions.md#table-view-options) の切り替えです。
+どれも、ロックにかかわらず、その画面だけを変えます。ファイルに保存されることも、JSON の書き出しに書き込まれることも、Undo の履歴に記録されることも、変更として数えられることもなく、共同編集者に届くこともありません。[Schema SQL](./schema-sql.md#オプションパネル) と [Code Generator](./code-generator.md#オプションパネル) のオプションパネルは、これらの選択に、`Saved in the document` の代わりに `This window only` と表示します。
+エディタが再び編集可能になると、データベース、言語、名前のケース、括弧の種類、View Option の切り替えはファイルの値に戻ります。表示、タブ、名前の表示は残したままで、ファイルは、ロックが許す範囲で、それぞれを次にその設定を変更したときに取り込みます。

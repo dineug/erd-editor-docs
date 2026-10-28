@@ -31,7 +31,7 @@ The SQL is written when the tab opens, and again whenever one of the panel's cho
 
 The panel holds three groups, each under a caption:
 
-1. `Saved in the document`: `Database` and `Bracket` — see [Database and Bracket](#database-and-bracket).
+1. `Saved in the document`: `Database` and `Bracket` — see [Database and Bracket](#database-and-bracket). A read-only editor captions them `This window only` — see [Read-only Editors](#read-only-editors).
 2. `This window only`: `Statements`, `Header`, `Write logical names into empty comments`, and, while the diagram has a [table group](./table-groups.md), `Tables` — see [Statements](#statements), [Header](#header), [Logical Names as Comments](#logical-names-as-comments), and [Tables](#tables).
 3. `Saved in the document · written as is for every database`: the `Before tables` and `After tables` scripts — see [Before and After Scripts](#before-and-after-scripts).
 
@@ -222,5 +222,9 @@ How these comments read back on import is described in [Comments](./file-import-
 
 ## Read-only Editors
 
-In a `readonly` editor the tab works as usual: `Database` and `Bracket` still change the SQL shown, `Statements`, `Header`, `Write logical names into empty comments`, and `Tables` still work, and `Save file` and `Copy` still save and copy it.  
-Only the two script fields are read-only.
+In a [`readonly`](../../api/erd-editor-element.md#readonly) editor the tab works for the reader, and nothing done on it reaches the document:
+
+- `Database` and `Bracket` still rewrite the SQL, but only in that window, so the panel captions them `This window only` as well. A pick is not saved in the file, shared with collaborators, or recorded for undo, whatever the locks say, and a collaborator's change to a setting you picked leaves your pick on the screen. The Code Generator tab shows the same pick, and [`getSchemaSQL()`](../../api/erd-editor-element.md#getschemasql) called without a database writes it too. Once the editor turns writable again, the document's database and bracket come back.
+- `Statements`, `Header`, `Write logical names into empty comments`, and `Tables` work as they do anywhere, since they belong to the window already.
+- The two script fields are read-only: they show the document's scripts, which the SQL still writes, and take no typing.
+- `Save file` and `Copy` save and copy the SQL the tab shows.

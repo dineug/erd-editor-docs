@@ -6,7 +6,7 @@ description: Markera, flytta, kopiera, duplicera och ta bort tabeller och anteck
 # Tabellfunktioner
 
 Allt du gör med tabeller och anteckningar när de väl finns – markera, flytta, kopiera, ta bort, färglägga och ställa in vad arbetsytan visar – samt arbetsytans kontroller runt dem.  
-Först kommer kommandona för tabeller och anteckningar; sedan panelen Tabellegenskaper, fokusering på tabeller, index och alternativa nycklar, automatisk layout och databassystemet; och sist själva arbetsytan: arbetsytans verktygsfält, zoom, panorering och var ett hopp hamnar samt diff-visaren.  
+Först kommer kommandona för tabeller och anteckningar; sedan panelen Tabellegenskaper, fokusering på tabeller, index och alternativa nycklar, automatisk layout och databassystemet; därefter själva arbetsytan: arbetsytans verktygsfält, zoom, panorering och var ett hopp hamnar samt diff-visaren; och sist vad en skrivskyddad editor behåller av allt detta.  
 Tabellgrupper, rutorna som samlar tabeller, har en egen sida – se [Tabellgrupper](./table-groups.md).  
 Det gör även logiska namn och namnvisningen, som avgör vilka namn tabellerna visar – se [Logiska namn](./logical-names.md).
 
@@ -23,7 +23,8 @@ Anteckningar markeras på samma sätt, och båda kortkommandona för att markera
 `Ctrl + A` ger företräde åt textmarkören, så medan du redigerar en cell markerar kortkommandot texten i stället för diagrammet.  
 En markeringsram markerar en tabell eller anteckning när den täcker dess mitt, inte när den bara nuddar en kant. Den tar med en tabellgrupp bara när den omsluter gruppens hela ruta, så en ram som dras inuti en grupp markerar tabeller utan gruppen.  
 Ett högerklick på något som redan är markerat behåller hela markeringen, så menyalternativ som `Color`, `Group selected tables` och `Delete selected` verkar på allt som är markerat. Ett högerklick på någon annan tabell, anteckning eller tabellgrupp markerar enbart den, även med `Ctrl` eller `⌘` nedtryckt, och ett högerklick på en relation eller på tom arbetsyta avmarkerar allt.  
-`Escape` avmarkerar allt. Medan en cell, en anteckning eller namnet på en tabellgrupp redigeras, eller medan en relation eller en `New Table Group` ritas, avslutar ett första tryck på `Escape` detta, och ett andra tryck avmarkerar allt.
+`Escape` avmarkerar allt. Medan en cell, en anteckning eller namnet på en tabellgrupp redigeras, eller medan en relation eller en `New Table Group` ritas, avslutar ett första tryck på `Escape` detta, och ett andra tryck avmarkerar allt.  
+En skrivskyddad editor har inget av de här sätten att markera: bara ett hopp markerar där – se [Skrivskyddade editorer](#read-only-editors).
 
 ![Tabeller markeras med ⌘ + drag och ⌘ + click, och sedan varje tabell och anteckning med ⌘ + A](/img/demo-table-select.webp)
 
@@ -145,7 +146,7 @@ Vilka namn tabellerna visar är inget visningsalternativ: `Name View`, direkt ef
 `Table Groups` visar [tabellgrupperna](./table-groups.md) och gruppfärgerna på deras tabellers tabellhuvuden. Om du slår av alternativet döljs de på arbetsytan, i minikartan och i bildexporter, ingen tabell flyttas och varje tabell stannar i sin grupp – se [Dölja grupper](./table-groups.md#hiding-groups). Det tar också bort mappen `Table Groups` från [utforskaren](./explorer.md#the-tree) och `New Table Group` från [arbetsytans verktygsfält](#canvas-toolbar), och utforskarens sökning slutar hitta gruppnamn.  
 `Memos` visar anteckningarna. Om du slår av alternativet döljs varje anteckning på arbetsytan, i minikartan och i bildexporter, och ingen tabell eller relationslinje flyttas. Dolda anteckningar tar ingen plats, så rullningslisterna, minikartan och kompassen `Go to content` bortser från dem.  
 Om du döljer anteckningarna avmarkeras de, och ett öppet redigeringsfält för en anteckning stängs. [Utforskaren](./explorer.md#the-tree) tar bort sin mapp `Memos`, och varken dess sökning med [Sök och ersätt](./find-and-replace.md) eller snabbsökningens `:` söker i dem. Medan de är dolda försvinner `New Memo` från snabbmenyn, [arbetsytans verktygsfält](#canvas-toolbar), snabbsökningen och [välkomstskärmen](./editing-start.md#welcome-screen), och `Alt + M` lägger inte till någon anteckning. En inklistring eller [Importera och lägg till](./file-import-export.md#import-and-add) lägger ändå till de anteckningar den innehåller, dolda och omarkerade.  
-I en editor med `readonly` ändrar alternativen ingenting.
+I en skrivskyddad editor fungerar växlarna fortfarande, men bara på den skärmen: de sparas inte, registreras inte i ångrahistoriken och delas inte, och de går tillbaka till filens värden när editorn blir skrivbar igen – se [Skrivskyddade editorer](./settings.md#read-only-editors) i Inställningar.
 
 ![Alternativ i View Option slås på och av medan tabellerna ordnas om, ett sammansatt unikt index märks AK1.1 och AK1.2 med Alternate Key, och sedan slås Memos av och på](/img/demo-view-options.webp)
 
@@ -164,14 +165,15 @@ Fliken `Indexes` beskrivs i [Index](#indexes).
 Fliken `Schema SQL` visar tabellens DDL-kod för den valda [databasen](#databases): dess `CREATE TABLE`, de separata begränsningar som vissa databaser skriver för dess kolumner med flaggan Unik och dess index. Den skriver alltid vanliga satser av typen `CREATE`, utan inledning, utan skript före eller efter och utan logiska namn i tomma kommentarer, oavsett hur fliken [Schema SQL](./schema-sql.md) i verktygsfältet är inställd – se [Logiska namn som kommentarer](./schema-sql.md#logical-names-as-comments). Den har ingen alternativpanel, och dess snabbmeny erbjuder bara `Database` och `Bracket`.  
 Fliken `Code Generator` genererar kod för enbart den här tabellen – se [Kodgenerator](./code-generator.md).
 
-I en editor med `readonly` öppnas panelen ändå, med etiketten `Read only` bredvid titeln, men fliken `Indexes` erbjuder inga redigeringsmöjligheter.
+I en skrivskyddad editor öppnas panelen ändå, från `Table Properties`, den enda raden i en tabells snabbmeny där, eller med `Alt + Space` på den tabell som ett hopp markerade. Den visar etiketten `Read only` bredvid titeln, och dess flik `Indexes` erbjuder inga redigeringsmöjligheter.  
+En panel som är öppen när editorn blir skrivskyddad förblir öppen och blir skrivskyddad med den – se [Skrivskyddade editorer](#read-only-editors).
 
 ## Fokusera på tabeller {#focusing-on-tables}
 
 Öppnar fliken Visualisering i läget `Flow`, begränsad till de valda tabellerna och varje tabell som ligger en relation bort från dem.  
 Börja i tabellens snabbmeny med `Focus on this table`, eller markera en eller flera tabeller och tryck på `Alt + F`.  
 När tabellen du högerklickar på är en av flera markerade tabeller visar menyalternativet `Focus on selected tables` och fokuserar på hela markeringen. Ett högerklick på en tabell utanför markeringen fokuserar enbart på den tabellen.  
-Kortkommandot tar de markerade tabellerna, utelämnar anteckningar och gör ingenting när ingen tabell är markerad.  
+Kortkommandot tar de markerade tabellerna, utelämnar anteckningar och gör ingenting när ingen tabell är markerad. En skrivskyddad editors tabellmeny har inget `Focus on this table`, och kortkommandot tar den tabell som ett hopp markerade där – se [Skrivskyddade editorer](#read-only-editors).  
 En markerad [tabellgrupp](./table-groups.md) räknas inte alls här, varken i kortkommandot eller i menyalternativet: gruppens tabeller tas med bara när de själva är markerade, vilket `Select tables` i gruppens meny åstadkommer.  
 Vad den begränsade vyn visar, och hur du kommer tillbaka till hela diagrammet, beskrivs i [Visualisering](./visualization.md#focusing-on-tables), och hur du går bakåt och framåt genom det som flödet har visat tidigare i [Föregående och nästa tabell](./visualization.md#previous-table-and-next-table).
 
@@ -187,7 +189,7 @@ Den högra sidan listar tabellens kolumner under `Columns`, var och en med en kr
 Kryssa i en kolumn för att lägga till den i det markerade indexet, och kryssa ur den för att ta bort den. Om du markerar en nyckel visas dess kolumner ikryssade, men rutorna förblir inaktiverade.  
 Kolumnerna i det markerade indexet listas nedanför under `Index order`, var och en med det namn som namnvisningen ger den, med namnet inom parentes efter det logiska namnet i `Both Names`, till exempel `Member Number (member_no)`. Dra dem i draghandtaget för att ändra ordning på dem, och klicka på brickan `ASC` eller `DESC` på en rad för att vända dess sorteringsordning. I en alternativ nyckel slutar varje rad med sitt märke `AK<n>.<m>`. Listan visar tre rader åt gången, och resten nås genom att rulla.
 
-I en editor med `readonly` visas fortfarande kolumnerna när du markerar en nyckel eller ett index, men det finns inget `Add Index` och inget `x`, och ingenting annat på fliken kan ändras.
+I en skrivskyddad editor visas fortfarande kolumnerna när du markerar en nyckel eller ett index, men det finns inget `Add Index` och inget `x`, och ingenting annat på fliken kan ändras: namnen tar emot ingen inmatning, varje kryssruta är inaktiverad och raderna under `Index order` varken dras eller byter sorteringsordning.
 
 [Utforskaren](./explorer.md#the-tree) listar varje tabells index i tabellens mapp `Indexes`, och om du väljer ett där går du till dess tabell. Dess sökning hittar också indexnamn och kan byta namn på dem – se [Vad som söks](./find-and-replace.md#what-it-searches).
 
@@ -233,7 +235,8 @@ De andra tre beräknas i ett svep, utanför huvudtråden, så det finns inget at
 
 Vilken du än väljer flyttas tabeller och tabellgrupper, medan anteckningar stannar där de är. Tabellerna placeras med de bredder som de har i den namnvisning du tittar på. En relation från en tabell till sig själv ignoreras, och flera relationer mellan samma två tabeller räknas som en.  
 Varje layout håller ihop varje grupps tabeller, oavsett om grupperna visas eller inte, och anpassar varje grupp som innehåller tabeller så att den omsluter dem – se [Tabellgrupper](./table-groups.md#auto-layout).  
-Resultatet blir ett enda steg i historiken, så en enda ångring flyttar tillbaka varje tabell och grupp dit den var.
+Resultatet blir ett enda steg i historiken, så en enda ångring flyttar tillbaka varje tabell och grupp dit den var.  
+En skrivskyddad editor erbjuder ingen `Auto Layout`. En som fortfarande pågår när editorn blir skrivskyddad avslutas där: förhandsgranskningen `Force` stängs med sitt meddelande och behåller inga av sina positioner, och en layout som fortfarande beräknas kastas tillsammans med sitt meddelande, så ingen tabell flyttas, varken då eller när editorn blir skrivbar igen.
 
 ![En hög med tabeller städas upp med den automatiska layouten Flow från arbetsytans snabbmeny, som ställer upp dem från vänster till höger längs deras relationer](/img/demo-automatic-table-placement.webp)
 
@@ -250,7 +253,7 @@ Databaser som stöds är bland annat:
 - Snowflake
 - SQLite
 
-Välj en via `Database` i arbetsytans snabbmeny, i snabbsökningen eller i alternativpanelen eller snabbmenyn på flikarna Schema SQL och Kodgenerator. Alla ändrar samma inställning.
+Välj en via `Database` i arbetsytans snabbmeny, i snabbsökningen eller i alternativpanelen eller snabbmenyn på flikarna Schema SQL och Kodgenerator. Alla ändrar samma inställning. En skrivskyddad editors snabbmeny för arbetsytan har ingen `Database`, och ett val i de andra ändrar bara den skärmen – se [Skrivskyddade editorer](#read-only-editors).
 
 De här alternativen avgör syntaxen för Schema SQL vid export, autokompletteringen av datatyp och de typer som genererad kod och importerade scheman löses upp till.  
 De avgör vilka val under `Statements` och `Header` som fliken [Schema SQL](./schema-sql.md#options-panel) kan skriva. Ett val som databasen saknar finns kvar i alternativpanelen, nedtonat, och SQL-koden faller tillbaka på det närmaste val som databasen har.  
@@ -266,15 +269,16 @@ Import av Schema SQL behåller en kolumns datatyp, inklusive argumentlistan, oav
 Ett litet verktygsfält svävar över mitten av arbetsytans nederkant och innehåller, från vänster till höger, verktygen som verkar på själva arbetsytan och kommandona som lägger till saker på den:
 
 - Handen och pekaren. Pekaren är standard; handen gör varje dragning till en panorering, över tabeller såväl som över tom yta. `Space` växlar mellan dem. Medan ritläget för [`New Table Group`](./table-groups.md#drawing-a-group) är aktivt är knappen `New Table Group` framhävd i stället för någon av dem, och om du klickar på någon av dem, trycker på `Space` eller väljer en relationsnotation avslutas ritläget utan att någon grupp läggs till.
-- `New Table`, `New Memo` och `New Table Group`. `New Table` lägger till en tabell som `Alt + N` gör, och `New Memo` lägger till en anteckning som `Alt + M` gör. `New Table Group` aktiverar [ritläget för grupper](./table-groups.md#drawing-a-group) som `Alt + G` gör och slår av handen; ett andra klick avslutar, liksom ett andra `Alt + G`, ritläget utan att lägga till någon grupp. `New Memo` visas inte medan View Option → `Memos` döljer anteckningarna, och `New Table Group` inte medan View Option → `Table Groups` döljer grupperna. En editor med `readonly` visar ingen av de tre.
+- `New Table`, `New Memo` och `New Table Group`. `New Table` lägger till en tabell som `Alt + N` gör, och `New Memo` lägger till en anteckning som `Alt + M` gör. `New Table Group` aktiverar [ritläget för grupper](./table-groups.md#drawing-a-group) som `Alt + G` gör och slår av handen; ett andra klick avslutar, liksom ett andra `Alt + G`, ritläget utan att lägga till någon grupp. `New Memo` visas inte medan View Option → `Memos` döljer anteckningarna, och `New Table Group` inte medan View Option → `Table Groups` döljer grupperna.
 - Zoomen: `Zoom out`, den aktuella zoomen i procent och `Zoom in`. De två knapparna ändrar zoomen i steg på samma sätt som zoomkortkommandona, och ett klick på procenttalet återställer den till `100%`.
 - De fyra relationsnotationerna, samma fyra som du startar en relation med – se [Börja redigera](./editing-start.md). Om du väljer en växlar du tillbaka till pekaren, eftersom en relation ritas genom att du klickar på två tabeller.
-- `Name View`, en knapp med en nedåtpil som visar den aktuella visningen: `Physical Names`, `Logical Names` eller `Both Names`. Den har samma bredd oavsett vilken visning den visar, så ett byte flyttar aldrig verktygsfältet. Ett klick öppnar en lista med de tre ovanför verktygsfältet, med en bock vid den aktuella. Om du väljer en byts visningen till den och listan stängs; ett andra klick på knappen, ett tryck någon annanstans eller `Escape` stänger listan utan att byta. En editor med `readonly` visar den också. Vad varje visning ritar beskrivs i [Namnvisning](./logical-names.md#name-view), och om ett byte sparas beskrivs i [Byta visning](./logical-names.md#switching-the-view).
+- `Name View`, en knapp med en nedåtpil som visar den aktuella visningen: `Physical Names`, `Logical Names` eller `Both Names`. Den har samma bredd oavsett vilken visning den visar, så ett byte flyttar aldrig verktygsfältet. Ett klick öppnar en lista med de tre ovanför verktygsfältet, med en bock vid den aktuella. Om du väljer en byts visningen till den och listan stängs; ett andra klick på knappen, ett tryck någon annanstans eller `Escape` stänger listan utan att byta. Vad varje visning ritar beskrivs i [Namnvisning](./logical-names.md#name-view), och om ett byte sparas beskrivs i [Byta visning](./logical-names.md#switching-the-view).
 - Zenläget, `Alt + Z`, som rensar bort allt utom arbetsytan och det här verktygsfältet. `Alt + Z` igen, eller knappen, tar tillbaka resten. En öppen utforskare döljs med resten, utan att stängas, och kommer tillbaka med den. Den kan fortfarande öppnas i zenläget – se [När den viker undan](./explorer.md#when-it-stands-aside).
 - Kompassen `Go to content`, som läggs till i slutet av verktygsfältet bara när ingen tabell, synlig anteckning eller synlig tabellgrupp finns på skärmen – se [Navigera på arbetsytan](#getting-around-the-canvas).
 
 Varje knapp med ett kortkommando anger det i sin knappbeskrivning, till exempel `New Table (Alt + N)` (Windows/Linux) eller `New Table (⌥ + N)` (Mac).  
-Verktygsfältet viker undan medan förhandsgranskningen av den automatiska layouten `Force`, panelen Tabellegenskaper, tidsresan eller diff-visaren är öppen, och kommer tillbaka när den stängs.
+Verktygsfältet viker undan medan förhandsgranskningen av den automatiska layouten `Force`, panelen Tabellegenskaper, tidsresan eller diff-visaren är öppen, och kommer tillbaka när den stängs.  
+En skrivskyddad editors verktygsfält behåller zoomen, `Name View`, zenläget och kompassen `Go to content`. Det har varken hand eller pekare, inget `New Table`, `New Memo` eller `New Table Group` och inga notationer, och får tillbaka dem när editorn blir skrivbar igen.
 
 ![En tabell och en anteckning läggs till från verktygsfältet, New Table Group aktiveras och avaktiveras, arbetsytan panoreras med handen, zoomen ändras i steg och zenläget slås på och av med ⌥ + Z](/img/demo-canvas-toolbar.webp)
 
@@ -339,7 +343,7 @@ Vad ett hopp visar, och den huvuddel som måste synas när helheten inte får pl
 - En tabellgrupp: dess ruta, med namnlisten som huvuddel.
 - En anteckning, eller blocket som Importera och lägg till placerar: hela objektet.
 
-När ingen av riktningarna skulle flyttas sker ingen rullning, så om du går till samma ställe två gånger i rad flyttas ingenting den andra gången. Ett hopp som rullar arbetsytan registrerar rullningen i [ångrahistoriken](./undo-redo.md#what-the-history-records) som alla andra ändringar av vypositionen, och ett hopp som inte flyttar något lämnar inget att ångra. Vid Importera och lägg till ingår rullningen i samma steg som tillägget. En rad i diff-visarens lista flyttar bara vyns skrivskyddade sidor, så den registrerar ingenting.  
+När ingen av riktningarna skulle flyttas sker ingen rullning, så om du går till samma ställe två gånger i rad flyttas ingenting den andra gången. Ett hopp som rullar arbetsytan registrerar rullningen i [ångrahistoriken](./undo-redo.md#what-the-history-records) som alla andra ändringar av vypositionen, och ett hopp som inte flyttar något lämnar inget att ångra. Vid Importera och lägg till ingår rullningen i samma steg som tillägget. En rad i diff-visarens lista flyttar bara vyns skrivskyddade sidor, så den registrerar ingenting, och en skrivskyddad editor registrerar inget hopp alls.  
 Inget hopp startar eller slutför ritningen av en relation. Kompassen `Go to content` är inget hopp: den centrerar det den pekar på.
 
 ## Diff-visaren {#diff-viewer}
@@ -351,7 +355,8 @@ Vyn öppnas över arbetsytan: det som har ändrats till vänster, sedan det spar
 Det aktuella dokumentet jämförs som det ser ut när vyn öppnas; ändringar som görs efter det, även en medarbetares, når inte vyn. Båda sidorna öppnas, och förblir, i den namnvisning du tittar på, oavsett vilken visning någon av filerna behåller – se [Utanför arbetsytan](./logical-names.md#beyond-the-canvas). En öppen [utforskare](./explorer.md#when-it-stands-aside) döljs medan vyn är öppen, så att vyn tar editorns hela bredd.  
 Varje sida panoreras med mushjulet, genom att dra på ett tomt område eller en tabellgrupps yta, eller genom att dra med mittenknappen var som helst över den, och zoomas med `Ctrl + Wheel` (Windows/Linux), `⌘ + Wheel` (Mac) eller en nypgest. Vid `70%` och lägre fälls dess tabeller ihop som på arbetsytan – se [Märkningar på båda sidorna](#marks-on-the-two-sides).  
 Båda sidorna är skrivskyddade, så ingenting i ditt dokument ändras. Varje sida har sin egen markering, och ett klick på en tabell där markerar den enbart på den sidan.  
-Stäng vyn med knappen `Close` i meddelandet `Diff Viewer` som den öppnas med, eller med `Escape`.
+Stäng vyn med knappen `Close` i meddelandet `Diff Viewer` som den öppnas med, eller med `Escape`.  
+En skrivskyddad editor erbjuder också `Diff Viewer`, och vyn fungerar där som i vilken editor som helst, och ett klick på en sidas tabell markerar den fortfarande på den sidan. En vy som är öppen när editorn blir skrivskyddad förblir öppen.
 
 ![Diff-visaren öppnas för en sparad .json-fil, rader märkta A, M, D och R klickas i dess träd, raderna filtreras efter namn och vyn stängs](/img/demo-diff-viewer.webp)
 
@@ -423,3 +428,26 @@ Varje sida följer sitt eget dokuments visningsalternativ. En ändring i en cell
 I `Logical Names`, som inte ritar någon namncell, hamnar ett namnbytes blå färg och det bärnstensgula från en ändring i en cell som sidan inte ritar på det logiska namn som ritas i namnets ställe. En ändring av datatypen gör typcellen bärnstensgul i varje namnvisning, även där cellen visar en domäns namn. Ingen av sidorna ritar de färger som ordlistornas kontroller ger namn på arbetsytan – se [Märkningar på arbetsytan](./dictionary.md#marks-on-the-canvas).
 
 Vid `70%` och lägre behåller hopfällda tabeller sin kontur. Namnet behåller det gröna eller röda för en tillagd eller borttagen tabell, eller ett namnbytes blå, och får annars det bärnstensgula från en kommentarsändring. Kolumnändringar ritas inte förrän du zoomar in igen; trädet listar dem ändå.
+
+## Skrivskyddade editorer {#read-only-editors}
+
+En editor med [`readonly`](../../api/erd-editor-element.md#readonly), till exempel en Git-revision som öppnats igen som diagram i VS Code, är en läsare. Dess sex flikar, [utforskaren](./explorer.md#read-only-editors), minikartan, rullningslisterna och medarbetarnas markörer och markeringar finns kvar, och varje kontroll som skulle ändra diagrammet är borta i stället för nedtonad.
+
+På ERD-arbetsytan:
+
+- Ett drag panorerar, var det än börjar: på tom arbetsyta, en tabell, en anteckning eller en tabellgrupp lika. Mittenknappen, mushjulet, en nypning och zoomtangenterna fungerar som i vilken editor som helst.
+- När pekaren vilar på en tabell lyser dess relationer upp. Ett klick som inte flyttar sig lyser upp relationerna för tabellen det landar på, eller relationen det landar på, och ett klick någon annanstans släcker ljuset.
+- Ingenting markeras av ett tryck, en markeringsram eller en tangent för att markera allt. Bara ett hopp markerar: en rad i [utforskaren](./explorer.md#going-to-a-row), en träff i dess [Sök och ersätt](./find-and-replace.md#going-to-a-match) eller ett resultat efter `#`, `@` eller `:` i [snabbsökningen](./quick-search.md#searching-the-diagram) markerar det som det landar på, med kontur som vilken markering som helst, med den fokuserade cellen där hoppet lägger den. Ett klick som inte flyttar sig tar bort den markeringen.
+- Piltangenterna flyttar den fokuserade cellen. Kopiering, `Table Properties` och `Focus on this table` fungerar på det som ett hopp markerade, med sina tangenter, och en inklistring lägger inte till något. De andra tangenterna finns i [Kortkommandon](./settings.md#shortcuts).
+- Inget namn på en cell, en anteckning eller en tabellgrupp öppnas för redigering. Det finns inga knappar `+` eller `x` på tabeller, anteckningar och grupper, inga kanter att ändra storlek med på anteckningar och grupper, inget handtag för att dra kolumner och ingen färgväljare.
+
+Arbetsytans snabbmeny behåller `View Option`, `Name View`, `Export` och `Diff Viewer`. Den har inget `New Table`, `New Memo`, `New Table Group`, `Toggle Explorer`, `Relationship`, `Derive Physical Names Again`, `Database`, `Import`, `Import and Add` eller `Auto Layout`.  
+En tabells meny behåller enbart `Table Properties`, som öppnar panelen skrivskyddad för den tabellen – se [Tabellegenskaper](#table-properties). En anteckning, en relation och en tabellgrupp öppnar ingen meny.  
+[Arbetsytans verktygsfält](#canvas-toolbar) behåller zoomen, `Name View`, zenläget och kompassen `Go to content`. Det översta verktygsfältet visar databasens namn som text som inte går att redigera, och ingen `Undo`, `Redo` eller `Time Travel`.  
+[Export](./file-import-export.md#exporting), med alla tre sina poster, och [diff-visaren](#diff-viewer) fungerar som i vilken editor som helst.
+
+[`View Option`](#table-view-options), `Name View`, databasen, fliken, vyns position och zoomen ändras fortfarande där, men bara på den skärmen: ingenting sparar, registrerar eller delar dem – se [Skrivskyddade editorer](./settings.md#read-only-editors) i Inställningar.
+
+Att göra en editor skrivskyddad avslutar det som stod öppet för redigering: en redigerare för en cell, en anteckning eller en tabellgrupps namn, en relation eller `New Table Group` som ritas, markeringen och den fokuserade cellen, handverktyget, färgväljaren, [Map Columns](./relationship-editing.md#map-columns) och [Time Travel](./undo-redo.md#time-travel). Vyn, zoomen, fliken och namnvisningen förblir som de var, och Tabellegenskaper, diff-visaren och dialogrutan `Export image` förblir öppna.  
+En rörelse som pågår avslutas också där. Ett drag av tabeller eller anteckningar stannar där det är, ett `Alt + drag` släpper ingen kopia, ett kolumndrag avslutas, en storleksändring av en anteckning stannar där den är, en storleksändring av en tabellgrupp kastas och en [automatisk layout](#auto-layout) kastas med sitt meddelande, så ingen tabell flyttas.  
+När editorn blir skrivbar igen ger den tillbaka kontrollerna ovan, och inget av det som flytten stängde öppnas igen.

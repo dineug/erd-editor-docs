@@ -61,7 +61,7 @@ View Option → `Domain` 開啟期間，定義域會有自己的儲存格，類�
 - 在 `Logical Names` 中，先是表頭的邏輯名稱，接著是其註解，然後依欄位順序走訪每一列的儲存格，邏輯名稱位於名稱的位置。
 - 在 `Both Names` 中，先是表頭的邏輯名稱、名稱和註解，然後依欄位順序走訪每一列的儲存格，預設以其 `Logical Name` 儲存格為第一個。
 
-`Alt + Enter` (Windows/Linux) 或 `⌥ + Enter` (Mac) 會新增欄位，並將焦點移至其名稱儲存格，在 `Logical Names` 中即為其邏輯名稱。
+`Alt + Enter` (Windows/Linux) 或 `⌥ + Enter` (Mac) 會新增欄位，並將焦點移至其資料列所繪製的第一個儲存格。在預設的欄位順序下，那是其名稱儲存格，在 `Logical Names` 中即為其邏輯名稱，在 `Both Names` 中則是其 `Logical Name` 儲存格，因此您可以從邏輯名稱開始，請參閱[新增欄位](./table-editing.md#adding-columns)。
 
 關聯所加入的外鍵欄位會複製其鍵的邏輯名稱和定義域，以及其類型，請參閱[識別關聯](./relationship-editing.md#identifying-relationships)。  
 將欄位複製到試算表，以及從試算表貼上欄位時，會使用該顯示方式所繪製的儲存格，包括邏輯名稱儲存格和定義域儲存格，請參閱[複製/貼上欄位](./table-editing.md#copyingpasting-columns)。
@@ -143,5 +143,7 @@ View Option → `Domain` 預設為關閉，開啟後會在每種顯示方式下�
 
 ## 唯讀編輯器 {#read-only-editors}
 
-在 [`readonly`](../../api/erd-editor-element.md#readonly) 編輯器中，每個「名稱顯示」選擇器都能使用，且無論鎖定如何設定，切換都只會變更該畫面。  
-在其中無法編輯邏輯名稱和定義域，因此不會開啟術語清單或定義域選擇器，也不會提供 `Derive Physical Name Again` 和 `Derive Physical Names Again` 項目。View Option → `Domain` 在其中不會有任何作用，所有[檢視選項](./table-related-functions.md#table-view-options)都是如此。
+在 [`readonly`](../../api/erd-editor-element.md#readonly) 編輯器中，每個「名稱顯示」選擇器都能使用：畫布工具列的 `Name View` 按鈕、畫布右鍵選單和快速搜尋中的 `Name View`，以及流程模式工具列上的清單。  
+在那裡的切換只會變更該畫面，無論鎖定如何設定：檔案、協作者和復原歷程記錄都會保留原來的顯示方式。編輯器再次轉為可寫入後，所挑選的顯示方式會留在該畫面上，直到下一次在該處切換，或者在鎖定關閉期間，直到協作者切換它或重新載入文件為止。  
+在其中無法編輯邏輯名稱和定義域，因此不會開啟儲存格編輯器、術語清單或定義域選擇器，也不會提供 `Derive Physical Name Again` 和 `Derive Physical Names Again` 項目。  
+View Option → `Domain` 會只在該畫面上顯示或隱藏「定義域」儲存格，在那裡所有[檢視選項](./table-related-functions.md#table-view-options)都是如此，而編輯器再次轉為可寫入後，會恢復文件所持有的檢視選項。

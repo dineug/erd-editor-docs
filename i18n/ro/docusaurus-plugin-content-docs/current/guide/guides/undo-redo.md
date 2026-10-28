@@ -12,7 +12,7 @@ Istoricul păstrează până la `2048` de modificări.
 - Refacere: `Ctrl + Shift + Z` (Windows/Linux) sau `⌘ + Shift + Z` (Mac)
 
 În fila ERD, bara de instrumente oferă aceleași două comenzi sub forma butoanelor `Undo` și `Redo`, lângă butonul `Time Travel`. În fila Dicționar, afișează butoanele `Undo` și `Redo` fără butonul `Time Travel`, iar nicio altă filă nu le afișează.  
-Ele devin active doar când există ceva de anulat sau de refăcut. Un editor cu atributul `readonly` le ascunde, iar comenzile rapide nu anulează și nu refac nimic.
+Ele devin active doar când există ceva de anulat sau de refăcut. Un editor cu atributul `readonly` le ascunde, împreună cu `Time Travel`, iar comenzile rapide nu anulează și nu refac nimic.
 
 Anularea și refacerea acționează asupra istoricului diagramei doar în fila ERD.  
 Comenzile rapide sunt inactive acolo cât timp este deschisă căutarea rapidă, panoul `Table Properties`, vizualizatorul `Diff Viewer`, previzualizarea `Auto Layout`, caseta de dialog [`Export image`](./file-import-export.md#image), caseta de dialog [Mapare coloane](./relationship-editing.md#map-columns) sau călătoria în timp.  
@@ -58,6 +58,8 @@ Nu se înregistrează:
 - Foaia afișată în fila Dicționar, precum și căutarea, selecția, derularea și lățimile coloanelor fiecărei foi (consultați [Deschiderea filei](./dictionary.md#opening-the-tab)).
 
 Modificarea oricăruia dintre acestea nu poate fi anulată.
+
+Un editor doar în citire nu înregistrează nimic. Poziția vizualizării, zoomul și comutatoarele `View Option` se schimbă totuși acolo, împreună cu fila, modul de afișare a numelor, baza de date și setările de cod, dar doar pe acel ecran, așa că nu există nimic de anulat (consultați [Editoare doar în citire](./settings.md#read-only-editors) din Setări).
 
 Editările făcute în fila Dicționar pot fi anulate, dar ajung în istoricul propriei foi, nu în cel al diagramei, așa că anularea din fila ERD nu inversează niciodată vreuna dintre ele, nici măcar noua valoare `Data Type` a unui domeniu și tipurile de coloane pe care le modifică (consultați [Foile din fila Dicționar](#dictionary-sheets)).
 
@@ -136,7 +138,7 @@ Istoricul fiecărei foi se golește când dicționarele sunt înlocuite: prin im
 ## Călătorie în timp {#time-travel}
 
 Se deschide cu butonul `Time Travel` din bara de instrumente, aflat lângă butoanele de anulare și refacere în fila ERD.  
-Butonul nu are niciun efect cât timp istoricul diagramei nu are încă nicio modificare înregistrată.
+Butonul nu are niciun efect cât timp istoricul diagramei nu are încă nicio modificare înregistrată. Un editor doar în citire nu afișează un astfel de buton, iar un editor care devine doar în citire închide Time Travel fără să îl aplice.
 
 Călătoria în timp deschide o copie separată a diagramei, doar în citire, la poziția de derulare, nivelul de zoom și [modul de afișare a numelor](./logical-names.md#name-view) pe care le afișează pânza, indiferent dacă blocarea `Viewport` sau `Name View` este activată sau nu.  
 Parcurge doar istoricul diagramei, așa că editările foilor din fila Dicționar nu se numără printre punctele sale.  

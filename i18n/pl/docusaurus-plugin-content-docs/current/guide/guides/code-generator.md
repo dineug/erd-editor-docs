@@ -25,7 +25,8 @@ Gdy wybrany język ignoruje opcję `Database` lub style nazw, pozostają one w p
 Przyciski `Save file` i `Copy` znajdują się u dołu panelu – zobacz sekcję [Zapisywanie lub kopiowanie wyniku](#saving-or-copying-the-result).
 
 Są to własne ustawienia diagramu, te same, które zmieniają również menu kontekstowe i Szybkie wyszukiwanie. Opcja `Database` jest zapisywana w pliku jak każda zmiana.  
-Opcje `Language`, `Table Name Case`, `Column Name Case` i `Bracket` są zapisywane tylko wtedy, gdy ich blokada na karcie Ustawienia jest wyłączona (dla opcji `Bracket` jest to blokada `Bracket Type`), a nowy diagram ma włączone wszystkie blokady. Gdy blokada jest włączona, zmiana generuje na nowo kod widoczny na ekranie, ale plik zachowuje zablokowaną wartość i diagram ponownie otwiera się właśnie z nią. Panel w żaden sposób nie sygnalizuje blokady; aby zachować wybór w pliku, wyłącz jego blokadę – zobacz sekcję [Blokada](./settings.md#lock).
+Opcje `Language`, `Table Name Case`, `Column Name Case` i `Bracket` są zapisywane tylko wtedy, gdy ich blokada na karcie Ustawienia jest wyłączona (dla opcji `Bracket` jest to blokada `Bracket Type`), a nowy diagram ma włączone wszystkie blokady. Gdy blokada jest włączona, zmiana generuje na nowo kod widoczny na ekranie, ale plik zachowuje zablokowaną wartość i diagram ponownie otwiera się właśnie z nią. Panel w żaden sposób nie sygnalizuje blokady; aby zachować wybór w pliku, wyłącz jego blokadę – zobacz sekcję [Blokada](./settings.md#lock).  
+W edytorze tylko do odczytu podpis brzmi zamiast tego `This window only`, ponieważ zmiana dociera tam tylko do tego okna – zobacz sekcję [Edytory tylko do odczytu](#read-only-editors).
 
 ## Język {#language}
 
@@ -138,3 +139,10 @@ W menu Export nie ma pozycji Code Generator, a karta `Code Generator` we Właśc
 Aby skopiować kod, kliknij przycisk `Copy` u dołu panelu albo najedź wskaźnikiem na kod i kliknij przycisk kopiowania w jego prawym górnym rogu, co jest jedynym sposobem we Właściwościach tabeli.  
 Powiadomienie `Copied!` ze znacznikiem wyboru potwierdza to przez dwie sekundy. Jeśli przeglądarka lub host odmówi dostępu do schowka, zamiast tego przez pięć sekund informuje o tym powiadomienie `Couldn't copy to the clipboard` ze znakiem ostrzeżenia. Ponowne skopiowanie zastępuje powiadomienie, zamiast dodawać kolejne.  
 Tekst można też zaznaczyć, więc możesz skopiować tylko potrzebną część.
+
+## Edytory tylko do odczytu {#read-only-editors}
+
+W edytorze z atrybutem [`readonly`](../../api/erd-editor-element.md#readonly) listy panelu, menu kontekstowe i Szybkie wyszukiwanie nadal zmieniają `Language`, `Database`, `Table Name Case`, `Column Name Case` i `Bracket`, ale tylko w tym oknie, więc panel podpisuje je `This window only`, a nie `Saved in the document`.  
+Zmiana generuje na nowo kod na tym ekranie i nie jest zapisywana w pliku, współdzielona ze współpracownikami ani rejestrowana do cofania, niezależnie od blokad, a zmiana ustawienia, które wybrałeś, wprowadzona przez współpracownika pozostawia na ekranie Twój wybór. Opcje `Database` i `Bracket` są też ustawieniami karty Schemat SQL, więc wybór tutaj widać tam w tym samym oknie – zobacz sekcję [Edytory tylko do odczytu](./schema-sql.md#read-only-editors).  
+Gdy edytor znów umożliwi zapis, wracają ustawienia dokumentu i kod jest zapisywany dla nich.  
+Przyciski `Save file` i `Copy` zapisują i kopiują wyświetlany kod.

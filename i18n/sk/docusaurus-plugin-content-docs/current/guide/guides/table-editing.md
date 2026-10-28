@@ -16,13 +16,14 @@ Kým metóda vstupu ešte skladá znaky, kláves `Escape` režim úprav neukonč
 
 ## Pridávanie stĺpcov {#adding-columns}
 
-Vytvárajú sa klávesovou skratkou `Alt + Enter` (Windows/Linux) alebo `⌥ + Enter` (Mac).  
-Stĺpec sa pridá do každej vybratej tabuľky.
+Vytvárajú sa klávesovou skratkou `Alt + Enter` (Windows/Linux) alebo `⌥ + Enter` (Mac), ktorá pridá stĺpec do každej vybratej tabuľky, alebo tlačidlom `+` v záhlaví tabuľky, ktoré ho pridá do tejto tabuľky.  
+Prvá bunka nového stĺpca získa fokus, a to prvá, ktorú jeho riadok vykresľuje v [poradí stĺpcov](./settings.md#adjusting-column-order). V predvolenom poradí je to jeho názov, ktorým je v zobrazení `Logical Names` jeho logický názov a v zobrazení `Both Names` jeho bunka `Logical Name` – pozrite si časť [Zobrazenie názvov](./logical-names.md#name-view).  
+Stĺpec pridaný klávesom `Tab` z poslednej bunky a primárny kľúč, ktorý pridá nakreslenie vzťahu do nadradenej tabuľky, ktorá žiadny nemá, začínajú tiež na tejto bunke.
 
 ## Kláves Tab {#tab-key}
 
 Stlačením klávesu `Tab` prejdete priamo do režimu úprav nasledujúcej bunky.  
-Stlačenie klávesu `Tab` v poslednej bunke vytvorí nový stĺpec.  
+Stlačenie klávesu `Tab` v poslednej bunke vytvorí nový stĺpec a otvorí jeho prvú bunku na úpravy – pozrite si časť [Pridávanie stĺpcov](#adding-columns).  
 Pomocou `Shift + Tab` prejdete do režimu úprav predchádzajúcej bunky.  
 Klávesy `Tab` a `Shift + Tab` prechádzajú bunkami, ktoré tabuľka vykresľuje, v ich poradí, takže to, či sú medzi nimi aj bunky logického názvu a bunky domény, určujú Zobrazenie názvov a možnosť View Option → `Domain` – pozrite si časť [Zápis logického názvu](./logical-names.md#writing-a-logical-name).  
 Označenia [alternatívneho kľúča](./table-related-functions.md#alternate-keys) vykreslené za poslednou bunkou riadka nie sú bunky, takže ich fokus klávesnice preskočí a nikdy sa neotvoria na úpravu.
@@ -96,7 +97,8 @@ Nie je potrebný žiadny modifikačný kláves. Podržanie klávesu `Alt` (Windo
 ![Výber troch stĺpcov a potom presunutie úchytu vedľa aktívneho stĺpca do inej tabuľky, pričom sa s ním presúvajú aj ostatné vybraté stĺpce](/img/demo-column-multi-move.webp)
 
 Presúvanie, ktoré sa začne na riadku stĺpca, a nie na jeho úchyte, presúva tabuľku rovnako ako presúvanie za jej hlavičku – pozrite si časť [Presúvanie viacerých tabuliek](./table-related-functions.md#moving-multiple-tables). `Alt + drag` (Windows/Linux) alebo `⌥ + drag` (Mac) na riadku duplikuje tabuľku – pozrite si časť [Duplikovanie tabuliek a poznámok](./table-related-functions.md#duplicating-tables-and-memos).  
-Pri priblížení `70%` a nižšom, pri ktorom tabuľky zobrazujú iba svoje názvy, ani v editore iba na čítanie sa úchyt nevykresľuje, takže poradie stĺpcov sa tam zmeniť nedá.
+Pri priblížení `70%` a nižšom, pri ktorom tabuľky zobrazujú iba svoje názvy, ani v editore iba na čítanie sa úchyt nevykresľuje, takže poradie stĺpcov sa tam zmeniť nedá.  
+Ťahanie stĺpca, ktoré prebieha, keď sa editor prepne do režimu iba na čítanie, sa okamžite skončí: kópia sledujúca ukazovateľ a zatvorená ruka zmiznú a pustenie neprenesie žiadny stĺpec. Riadky, ktoré ťahanie už presunulo, zostanú tam, kam ich presunulo.
 
 ## Odstraňovanie stĺpcov {#column-deletion}
 
@@ -174,3 +176,10 @@ Ikona kľúča v riadku slúži iba na zobrazenie, takže kliknutím na ňu kľ�
 Ak chcete z viacerých stĺpcov vytvoriť jeden zložený kľúč, [vyberte ich](#selecting-multiple-columns), potom stlačte `Alt + K` (Windows/Linux) alebo `⌥ + K` (Mac) alebo kliknite pravým tlačidlom na jeden z vybratých riadkov a vyberte položku `Primary Key on selected columns`. Každé prepnutie je jeden krok histórie zmien.
 
 ![Výber dvoch stĺpcov pomocou Shift + Arrow Down, potom nastavenie oboch ako primárneho kľúča pomocou ⌥ + K a zrušenie oboch druhým stlačením](/img/demo-column-pk.webp)
+
+## Editory iba na čítanie {#read-only-editors}
+
+V editore s atribútom [`readonly`](../../api/erd-editor-element.md#readonly) sa žiadna bunka neotvorí na úpravy a nezmení sa žiadny stĺpec.  
+Kliknutie na bunku nič nezaostrí a zruší výber, ktorý zanechal skok. `Enter` a dvojité kliknutie neotvoria žiadny editor ani neprepnú žiadny prepínač, `Tab` sa ponechá stránke a klávesové skratky, ktoré pridávajú, vyberajú všetky alebo odstraňujú stĺpce, prepínač primárneho kľúča a prilepenie nič nerobia.  
+Prechod na stĺpec z [prieskumníka](./explorer.md#going-to-a-row) alebo [rýchleho vyhľadávania](./quick-search.md) zaostrí jeho bunku. Klávesy so šípkami potom presúvajú fokus z bunky na bunku, pričom stĺpec, ku ktorému sa dostanú, sa vyberie samostatne, keďže `Shift` tam nepridáva žiadny stĺpec.  
+`Ctrl + C` (Windows/Linux) alebo `⌘ + C` (Mac) naďalej kopíruje vybraný stĺpec alebo tabuľku, ktorú vybral skok – pozrite si časť [Kopírovanie/prilepovanie stĺpcov](#copyingpasting-columns).

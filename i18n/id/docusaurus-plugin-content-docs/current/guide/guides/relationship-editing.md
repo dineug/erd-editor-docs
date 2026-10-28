@@ -1,6 +1,6 @@
 ---
 sidebar_position: 7
-description: Menghapus hubungan, mengubah tipenya, mengatur tindakan ON DELETE dan ON UPDATE-nya, memetakannya ke kolom yang sudah ada dengan Petakan Kolom, membaca notasi konektor, bekerja dengan hubungan N:M dan hubungan pengidentifikasi, serta melihat apa yang disalin kolom kunci asing baru dari kuncinya dan cara kolom tersebut diberi nama.
+description: Menghapus hubungan, mengubah tipenya, mengatur tindakan ON DELETE dan ON UPDATE-nya, memetakannya ke kolom yang sudah ada dengan Petakan Kolom, membaca notasi konektor dan cara konektor dirutekan mengitari tabel, bekerja dengan hubungan N:M dan hubungan pengidentifikasi, serta melihat apa yang disalin kolom kunci asing baru dari kuncinya dan cara kolom tersebut diberi nama.
 ---
 
 # Pengeditan hubungan
@@ -81,7 +81,7 @@ Setiap baris menggunakan kolom yang sudah dimiliki tabel anak atau menambahkan k
 Dialog ini dibuka dengan dua cara:
 
 - Saat menggambar hubungan, dari `Map to existing columns` di samping tabel anak — lihat [Pembuatan hubungan](./editing-start.md#relationship-creation). `Map` kemudian menambahkan hubungan dengan tipe yang sedang digambar.
-- Dari `Map Columns` di menu konteks hubungan, untuk mengubah kolom hubungan yang sudah ada. `Save` kemudian menulis perubahan tersebut. Editor hanya baca tidak menampilkan item ini.
+- Dari `Map Columns` di menu konteks hubungan, untuk mengubah kolom hubungan yang sudah ada. `Save` kemudian menulis perubahan tersebut. Editor hanya baca tidak membuka menu konteks hubungan, sehingga Petakan Kolom tidak dapat dibuka di sana.
 
 Subjudul dialog menyebutkan kedua tabel dan tipe hubungan, seperti `users → posts · One N`. Tipe ditampilkan di sini tetapi tidak diubah — gunakan [Perubahan tipe](#type-change).
 
@@ -226,6 +226,9 @@ Sorotan padam pada tekanan tombol kiri atau kanan mouse berikutnya di kanvas, ba
 Menggeser dengan tombol tengah mouse atau alat tangan membiarkannya tetap tersorot, begitu pula menciutkan atau membentangkan baris di Penjelajah atau Penampil Perbedaan, mengosongkan pilihan dengan `Escape`, dan lompatan dari [Pencarian Cepat](./quick-search.md) atau dari [tombol kartu](./visualization.md#card-buttons) tautan eksternal di Alur.  
 Sorotan tidak disimpan dan tidak masuk ke riwayat pembatalan, dan kolaborator tidak melihatnya.
 
+Di editor [`readonly`](../../api/erd-editor-element.md#readonly), penunjuk juga menyorot konektor, menggantikan sorotan yang ditinggalkan sebuah lompatan. Saat berada di atas tabel, penunjuk menyorot setiap konektor tabel itu dengan warna hover sampai bergerak keluar dari tabel.  
+Klik yang tidak bergerak membiarkan sorotan menyala sampai klik serupa berikutnya: pada tabel, ia menyorot konektor tabel itu, pada konektor, konektor itu, dan di tempat lain, tidak ada. Seretan di sana menggeser kanvas dan membiarkan sorotan itu seperti semula.
+
 Sembunyikan konektor di kanvas ERD dengan opsi tampilan `Relationship`, atau hanya labelnya dengan opsi tampilan `Referential Actions`, yang aktif secara default — lihat [Opsi tampilan tabel](./table-related-functions.md#table-view-options).  
 Label tidak digambar pada `70%` dan di bawahnya, saat tabel menciut hingga hanya menampilkan namanya.  
 [Ekspor gambar](./file-import-export.md#image) selalu digambar pada 100%, sehingga label tetap digambar berapa pun zoom kanvas, kecuali jika opsi tampilan menyembunyikannya. Saat `Background` nonaktif, kotak di belakang setiap label juga transparan.  
@@ -233,9 +236,10 @@ Label tidak digambar pada `70%` dan di bawahnya, saat tabel menciut hingga hanya
 
 ## Perutean konektor {#connector-routing}
 
-Konektor dirutekan secara ortogonal.  
-Rute berbelok mengitari tabel yang berada di antara kedua ujungnya alih-alih melintasinya, dan sudut-sudutnya dibulatkan.  
-Setiap ujung keluar dari tabelnya dengan ruas lurus pendek sebelum berbelok, sehingga dua tabel yang berjarak dekat dan ujung konektornya sejajar dihubungkan oleh satu garis lurus alih-alih jalan memutar.  
+Konektor dirutekan secara ortogonal, dan sudut-sudutnya dibulatkan.  
+Rute mengitari tabel yang menghalanginya alih-alih menembusnya. Jika setiap rute dengan beberapa belokan di antara kedua ujungnya akan melintasi tabel, seperti pada diagram yang padat, konektor mengambil jalan memutar dengan sebanyak mungkin belokan yang diperlukan. Hanya jika tidak ditemukan jalan memutar, konektor tetap melintasi tabel.  
+Konektor keluar dari kedua tabelnya melalui sepasang sisi yang saling berhadapan di mana pun ada, dan setiap ujung keluar dari tabelnya dengan ruas lurus pendek sebelum berbelok, sehingga dua tabel yang berjarak dekat dan ujung konektornya sejajar dihubungkan oleh satu garis lurus alih-alih jalan memutar.  
+Dua tabel yang berhadapan dan berjarak lebih dekat dari itu, bahkan di bawah `40px`, mempertahankan sisi yang berhadapan, dan jika ujungnya tidak sejajar, konektor berbelok melintasi celah di antara keduanya alih-alih berjalan di bawah salah satu tabel.  
 Rute yang keluar dari sisi tabel yang sama disebar ke koridor terpisah agar tidak saling berimpit.  
 Hanya tabel yang dihindari: konektor dapat melintasi memo atau kotak grup tabel, dan digambar di atas grup tabel serta di bawah tabel dan memo.
 
@@ -243,6 +247,9 @@ Hubungan dari sebuah tabel ke tabel itu sendiri digambar sebagai satu kurva yang
 Hubungan berikutnya yang merujuk dirinya sendiri pada tabel yang sama bersarang di luar hubungan pertama, sehingga kurvanya tidak saling bersilangan maupun melintasi tabel.
 
 Tidak ada yang perlu dikonfigurasi.  
-Rute dihitung ulang secara otomatis setiap kali sesuatu di kanvas berpindah atau berubah ukuran, sehingga rute tidak pernah perlu disentuh secara manual.
+Rute dihitung ulang secara otomatis setiap kali sesuatu di kanvas berpindah atau berubah ukuran, sehingga rute tidak pernah perlu disentuh secara manual.  
+Selama Anda menyeret, konektor tabel yang Anda pindahkan mengikutinya, dan setiap konektor lain mempertahankan rute yang dimilikinya saat seretan dimulai. Saat Anda melepas, setiap konektor yang rutenya berubah karena perpindahan itu digambar ulang, seperti konektor yang kini mengitari tabel yang dijatuhkan di jalurnya, atau yang menjadi lurus setelah tabel berpindah dari jalurnya.
+
+Diagram menggambar rute yang sama di setiap jendela yang menampilkannya dalam Tampilan Nama yang sama: jendela yang tetap terbuka saat tabel berpindah, jendela yang baru membuka diagram, dan jendela kolaborator, dan [gambar yang diekspor](./file-import-export.md#image) juga menggambarnya. Tampilan Nama berpengaruh karena mengubah lebar tabel — lihat [Tampilan Nama](./logical-names.md#name-view).
 
 ![Menyeret tabel members ke bawah lalu kembali sementara konektor dari orders berganti antara melewati sisi kanan categories dan mengitari sisi kirinya, dengan setiap sudut dibulatkan](/img/demo-connector-routing.webp)

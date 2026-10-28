@@ -16,7 +16,7 @@ npm install @dineug/erd-editor
 
 Replikeringsstoren finns under undersökvägen `@dineug/erd-editor/engine.js`, inte i paketets rot.  
 Den ingångspunkten rör inte DOM, så den körs i en Web Worker eller någon annanstans utanför huvudtråden.  
-Om du i stället importerar paketets rot registreras det anpassade elementet `<erd-editor>`, som behöver ett dokument.
+Om du i stället importerar paketets rot behövs ett dokument: sedan `5.0.0` definierar den inget element, men när den utvärderas byggs båda elementklasserna. Före `5.0.0` registrerade den det anpassade elementet `<erd-editor>`.
 
 ## Användning {#usage}
 

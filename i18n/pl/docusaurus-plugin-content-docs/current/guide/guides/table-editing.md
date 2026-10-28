@@ -16,13 +16,14 @@ Dopóki edytor metody wprowadzania (IME) jeszcze składa znaki, klawisz `Escape`
 
 ## Dodawanie kolumn {#adding-columns}
 
-Kolumnę tworzy się skrótem `Alt + Enter` (Windows/Linux) lub `⌥ + Enter` (Mac).  
-Kolumna jest dodawana do każdej zaznaczonej tabeli.
+Kolumnę tworzy się skrótem `Alt + Enter` (Windows/Linux) lub `⌥ + Enter` (Mac), który dodaje kolumnę do każdej zaznaczonej tabeli, albo przyciskiem `+` w nagłówku tabeli, który dodaje ją do tej tabeli.  
+Fokus przyjmuje pierwsza komórka nowej kolumny, czyli pierwsza, którą jej wiersz rysuje w [kolejności kolumn](./settings.md#adjusting-column-order). Przy kolejności domyślnej jest to jej nazwa, którą w widoku `Logical Names` jest nazwa logiczna, a w widoku `Both Names` jej komórka `Logical Name` – zobacz sekcję [Widok nazw](./logical-names.md#name-view).  
+Od tej komórki zaczyna się też kolumna dodana klawiszem `Tab` z ostatniej komórki oraz klucz podstawowy, który rysowanie relacji dodaje do tabeli nadrzędnej bez takiego klucza.
 
 ## Klawisz Tab {#tab-key}
 
 Naciśnij klawisz `Tab`, aby przejść od razu do trybu edycji następnej komórki.  
-Naciśnięcie klawisza `Tab` w ostatniej komórce tworzy nową kolumnę.  
+Naciśnięcie klawisza `Tab` w ostatniej komórce tworzy nową kolumnę i otwiera jej pierwszą komórkę do edycji – zobacz sekcję [Dodawanie kolumn](#adding-columns).  
 Użyj skrótu `Shift + Tab`, aby przejść do trybu edycji poprzedniej komórki.  
 Klawisz `Tab` i skrót `Shift + Tab` przechodzą po kolei przez komórki wyświetlane w tabeli, więc to Widok nazw i opcja View Option → `Domain` decydują o tym, czy są wśród nich komórki nazwy logicznej i domeny – zobacz sekcję [Wpisywanie nazwy logicznej](./logical-names.md#writing-a-logical-name).  
 Oznaczenia [kluczy alternatywnych](./table-related-functions.md#alternate-keys) rysowane za ostatnią komórką wiersza nie są komórkami, więc fokus klawiatury je pomija i nigdy nie otwierają się one do edycji.
@@ -96,7 +97,8 @@ Klawisz modyfikujący nie jest potrzebny. Przytrzymanie klawisza `Alt` (Windows/
 ![Zaznaczanie trzech kolumn, a potem przeciąganie uchwytu obok kolumny z fokusem do innej tabeli, przy czym pozostałe zaznaczone kolumny przesuwają się razem z nią](/img/demo-column-multi-move.webp)
 
 Przeciąganie rozpoczęte na wierszu kolumny, a nie na jej uchwycie, przenosi tabelę, tak jak przeciąganie jej nagłówka – zobacz sekcję [Przenoszenie wielu tabel](./table-related-functions.md#moving-multiple-tables). Skrót `Alt + drag` (Windows/Linux) lub `⌥ + drag` (Mac) na wierszu duplikuje tabelę – zobacz sekcję [Duplikowanie tabel i notatek](./table-related-functions.md#duplicating-tables-and-memos).  
-Uchwyt nie jest wyświetlany przy powiększeniu `70%` i mniejszym, przy którym tabele pokazują tylko swoje nazwy, ani w edytorze tylko do odczytu, więc nie można tam zmieniać kolejności kolumn.
+Uchwyt nie jest wyświetlany przy powiększeniu `70%` i mniejszym, przy którym tabele pokazują tylko swoje nazwy, ani w edytorze tylko do odczytu, więc nie można tam zmieniać kolejności kolumn.  
+Przeciąganie kolumny trwające w chwili, gdy edytor przechodzi w tryb tylko do odczytu, kończy się natychmiast: znikają kopia podążająca za wskaźnikiem i dłoń chwytająca, a puszczenie nie przenosi żadnej kolumny. Wiersze, które przeciąganie zdążyło już przesunąć, pozostają tam, gdzie je przesunęło.
 
 ## Usuwanie kolumn {#column-deletion}
 
@@ -174,3 +176,10 @@ Ikona klucza w wierszu służy tylko do wyświetlania, więc kliknięcie jej nie
 Aby utworzyć z kilku kolumn jeden klucz złożony, [zaznacz je](#selecting-multiple-columns), a potem naciśnij `Alt + K` (Windows/Linux) lub `⌥ + K` (Mac) albo kliknij prawym przyciskiem myszy jeden z zaznaczonych wierszy i wybierz `Primary Key on selected columns`. Każde przełączenie stanowi jeden krok cofania.
 
 ![Zaznaczanie dwóch kolumn za pomocą Shift + Arrow Down, a potem ustawianie klucza podstawowego na obu za pomocą ⌥ + K i usuwanie go z obu drugim naciśnięciem](/img/demo-column-pk.webp)
+
+## Edytory tylko do odczytu {#read-only-editors}
+
+W edytorze z atrybutem [`readonly`](../../api/erd-editor-element.md#readonly) żadna komórka nie otwiera się do edycji i żadna kolumna się nie zmienia.  
+Kliknięcie komórki niczego nie fokusuje i zdejmuje zaznaczenie pozostawione przez przejście. Klawisz `Enter` i dwukrotne kliknięcie nie otwierają edytora ani nie przełączają żadnego przełącznika, klawisz `Tab` zostaje stronie, a skróty, które dodają kolumny, zaznaczają wszystko lub je usuwają, przełącznik klucza podstawowego i wklejanie nic nie robią.  
+Przejście do kolumny z [Eksploratora](./explorer.md#going-to-a-row) lub [Szybkiego wyszukiwania](./quick-search.md) fokusuje jej komórkę. Klawisze strzałek przesuwają wtedy fokus z komórki do komórki, a kolumna, do której dotrą, jest zaznaczana samodzielnie, ponieważ `Shift` nie dodaje tam żadnej kolumny.  
+Skrót `Ctrl + C` (Windows/Linux) lub `⌘ + C` (Mac) nadal kopiuje zaznaczoną kolumnę albo tabelę zaznaczoną przez przejście – zobacz sekcję [Kopiowanie/wklejanie kolumn](#copyingpasting-columns).

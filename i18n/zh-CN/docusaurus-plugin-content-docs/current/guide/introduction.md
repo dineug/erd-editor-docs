@@ -1,12 +1,13 @@
 ---
 sidebar_position: 1
-description: erd-editor 是一款面向浏览器、Google Drive、VS Code、IntelliJ、Obsidian 以及自有页面的实体关系图编辑器。
+description: erd-editor 是一款面向浏览器、Google Drive、VS Code、IntelliJ、Obsidian 以及自有页面的实体关系图编辑器，另有一个用于在任何网站上显示图的只读查看器。
 ---
 
 # 简介
 
 erd-editor 是一款实体关系图（Entity-Relationship Diagram）编辑器。
-提供 Web 应用、Google Drive 应用、VS Code 扩展、IntelliJ 插件、Obsidian 插件，以及可嵌入自有页面的 `<erd-editor>` 自定义元素等多种形式。
+提供 Web 应用、Google Drive 应用、VS Code 扩展、IntelliJ 插件、Obsidian 插件，以及可嵌入自有页面的 `<erd-editor>` 自定义元素等多种形式，旁边还有以只读方式显示图的 `<erd-viewer>`。
+不加载任何自有脚本的网站，可以改为从 erd-editor.io/embed 嵌入只读的图。
 所有形式都是同一个编辑器，并使用相同的文档格式。
 
 ![在网店关系图中悬停在关系上、添加列，并在 Flow 中聚焦 orders 表](/img/demo-overview.webp)
@@ -20,7 +21,8 @@ erd-editor 是一款实体关系图（Entity-Relationship Diagram）编辑器。
 | VS Code | [Marketplace](https://marketplace.visualstudio.com/items?itemName=dineug.vuerd-vscode) | 在自定义编辑器中打开 `.erd.json` 文件 |
 | IntelliJ | [JetBrains Marketplace](https://plugins.jetbrains.com/plugin/23594-erd-editor) | 同一个编辑器，适用于基于 IntelliJ 的 IDE |
 | Obsidian | [Community plugins](https://community.obsidian.md/plugins/erd-editor) | 在仓库的标签页中打开 `.erd` 和 `.erd.json` 文件，仅限桌面端 |
-| 自有页面 | `npm install @dineug/erd-editor` | 不依赖框架的 `<erd-editor>` 自定义元素，参见[安装](../api/installation.md) |
+| 自有页面 | `npm install @dineug/erd-editor` | 不依赖框架的 `<erd-editor>` 自定义元素，以及以只读方式显示图的 `<erd-viewer>`，参见[安装](../api/installation.md)和 [ErdViewerElement](../api/erd-viewer-element.md) |
+| 任何网站 | [erd-editor.io/embed](https://erd-editor.io/embed) | 在 iframe 中根据文档的 URL 显示只读的图，无需代码，参见[嵌入](./guides/embedding.md) |
 | 编码智能体 | [`@dineug/erd-editor-mcp`](../mcp/installation.md) | 一个 MCP 服务器，让 Claude Code、Codex 或其他客户端在 VS Code、JetBrains IDE 或 Obsidian 中实时编辑图，或者直接编辑文件本身 |
 
 若要在 IDE 中试用，创建一个扩展名为 `.erd.json` 的空文件并打开即可。
@@ -45,6 +47,7 @@ VS Code 在 Source Control、Local History、Compare with Saved 中，在 VS Cod
 - 在 [Dictionary](./guides/dictionary.md) 标签页中维护图的命名标准。其 `Domains`、`Words` 和 `Terms` 工作表可以像电子表格一样搜索、排序和编辑，每个工作表都有各自的 Undo 历史记录。这些工作表可以导入和导出 CSV：导入时可以读取编辑器自身的格式或韩国公共数据标准的格式，编码为 UTF-8 或 EUC-KR，导出时写出编辑器自身的格式。逻辑名单元格会补全术语名称。逻辑名会根据匹配的术语，或根据其切分出的各个词根的缩写，为其表或列提供物理名，直到你自己填写该名称为止。词根或术语更改后，[`Derive Physical Names Again`](./guides/dictionary.md#derive-physical-names-again) 会重新生成这些名称，包括你自己填写的名称。关联到域的列（无论是手动关联还是通过其术语关联）会[采用该域的数据类型](./guides/dictionary.md#domains-and-data-types)并跟随其更改，`Domain` 显示选项会显示每一列的域。[`Checks`](./guides/dictionary.md#the-checks-sheet) 工作表会列出禁用词、未登记的词根和同义词、重复的名称、未知的域、与其术语不一致的物理名，以及与其域不一致的列类型。画布会为词根检查和术语检查所标出的逻辑名和物理名着色。
 - 支持从 `json`、`Schema SQL`、`GraphQL`、`DBML` 或 `AML` 导入已有的 schema。参见[导入与导出文件](./guides/file-import-export.md)。导入 Schema SQL、GraphQL、DBML 或 AML 文件时，其中的表会沿着关系排布；没有关系时则逐行排列。[`Import and Add`](./guides/file-import-export.md#import-and-add) 会把文件添加到图的下方，而不是替换当前的图。
 - 将图导出为 `json`；在 [Schema SQL](./guides/schema-sql.md#saving-or-copying-the-sql) 标签页中导出 Schema SQL，可保存为 `.sql` 文件或复制；或者通过 [`Export image`](./guides/file-import-export.md#image) 对话框导出为 PNG 或 SVG 图片，或以 PNG 复制到剪贴板。
+- 在其他网站上以只读方式显示图：用文件的 URL（包括 GitHub 上的文件）嵌入 [erd-editor.io/embed](./guides/embedding.md)，或者在自己的页面中加载 [`<erd-viewer>`](../api/erd-viewer-element.md) 元素。阅读者可以平移、缩放、搜索并点亮关系，但无法编辑图。
 - 按照 Databricks、MSSQL、MariaDB、MySQL、Oracle、PostgreSQL、Snowflake 和 SQLite 八种数据库厂商的语法编写 Schema SQL。参见[表相关功能](./guides/table-related-functions.md#databases)。[Schema SQL](./guides/schema-sql.md) 标签页的选项面板可以选择要写出的语句、头部和表分组，可以[将逻辑名写入空注释](./guides/schema-sql.md#logical-names-as-comments)，还可以保存你自己编写的 SQL，这些 SQL 保存在图中，会写在各表之前和之后。
 - 为二十二种目标生成代码：语言 C#、Go、Java、Kotlin、PHP、Rust、Scala、Swift 和 TypeScript；ORM Doctrine、Drizzle、JPA、SeaORM、Sequelize、SQLAlchemy 和 TypeORM；以及 AML、DBML、GraphQL、JSON Schema、Mermaid 和 Zod。Code Generator 标签页的选项面板可以选择语言、数据库和名称大小写，生成的代码可以保存为带有该语言扩展名的文件，也可以复制。参见[代码生成](./guides/code-generator.md)。
 - 在[可视化](./guides/visualization.md)中查看 schema，既可以是力导向的 `Graph`，也可以是沿着关系排布表卡片的 `Flow`，悬停在某个表上即可点亮它所触及的一切。在 ERD 标签页中按 `Alt + F`，即可[聚焦选中的表](./guides/visualization.md#focusing-on-tables)以及与它们相关的表。在 `Flow` 中，[`Previous table` 和 `Next table`](./guides/visualization.md#previous-table-and-next-table) 会在 Flow 曾缩小到的各个范围之间后退和前进，与 Undo 和 Redo 按键在那里的作用相同。

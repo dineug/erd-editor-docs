@@ -61,7 +61,7 @@ Die Eingabe schreibt nur den logischen Namen. Der physische Name wird daraus abg
 - In der Ansicht `Logical Names` den logischen Namen des Tabellenkopfs, dann seinen Kommentar, dann die Zellen jeder Zeile in der Spaltenreihenfolge, mit dem logischen Namen an der Stelle des Namens.
 - In der Ansicht `Both Names` den logischen Namen, den Namen und den Kommentar des Tabellenkopfs, dann die Zellen jeder Zeile in der Spaltenreihenfolge, standardmäßig beginnend mit ihrer Zelle `Logical Name`.
 
-`Alt + Enter` (Windows/Linux) oder `⌥ + Enter` (Mac) fügt eine Spalte hinzu und fokussiert ihre Namenszelle, die in der Ansicht `Logical Names` ihr logischer Name ist.
+`Alt + Enter` (Windows/Linux) oder `⌥ + Enter` (Mac) fügt eine Spalte hinzu und fokussiert die erste Zelle, die ihre Zeile zeichnet. Bei der Standardspaltenreihenfolge ist das ihre Namenszelle, die in der Ansicht `Logical Names` ihr logischer Name ist und in `Both Names` ihre Zelle `Logical Name`, sodass Sie mit dem logischen Namen beginnen können – siehe [Spalten hinzufügen](./table-editing.md#adding-columns).
 
 Eine Fremdschlüsselspalte, die eine Beziehung hinzufügt, übernimmt zusammen mit dem Typ den logischen Namen und die Domäne ihres Schlüssels – siehe [Identifizierende Beziehungen](./relationship-editing.md#identifying-relationships).  
 Das Kopieren von Spalten in eine Tabellenkalkulation und das Einfügen von Spalten aus einer solchen verwenden die Zellen, die die Ansicht zeigt, einschließlich der Zellen des logischen Namens und der Domänenzellen – siehe [Spalten kopieren/einfügen](./table-editing.md#copyingpasting-columns).
@@ -143,5 +143,7 @@ Ein Coding-Agent, der über den MCP-Server arbeitet, setzt logische Namen und ve
 
 ## Schreibgeschützte Editoren {#read-only-editors}
 
-In einem Editor mit [`readonly`](../../api/erd-editor-element.md#readonly) funktioniert jede Auswahl der Namensansicht, und ein Wechsel ändert unabhängig von der Sperre nur diesen Bildschirm.  
-Logische Namen und Domänen lassen sich dort nicht bearbeiten, sodass sich weder eine Begriffsliste noch eine Domänenauswahl öffnet und keiner der Einträge `Derive Physical Name Again` und `Derive Physical Names Again` angeboten wird. View Option → `Domain` ändert dort ebenso wenig etwas wie jede andere [Ansichtsoption](./table-related-functions.md#table-view-options).
+In einem Editor mit [`readonly`](../../api/erd-editor-element.md#readonly) funktioniert jede Auswahl der Namensansicht: die Schaltfläche `Name View` der Symbolleiste der Zeichenfläche, `Name View` im Kontextmenü der Zeichenfläche und in der Schnellsuche sowie die Liste in der Symbolleiste von Flow.  
+Ein Wechsel dort ändert unabhängig von der Sperre nur diesen Bildschirm: Die Datei, Mitbearbeiter und der Verlauf behalten die Ansicht, wie sie war. Sobald der Editor wieder beschreibbar wird, bleibt die gewählte Ansicht auf diesem Bildschirm bis zum nächsten Wechsel dort oder, solange die Sperre ausgeschaltet ist, bis ein Mitbearbeiter sie wechselt oder das Dokument neu geladen wird.  
+Logische Namen und Domänen lassen sich dort nicht bearbeiten, sodass sich weder ein Zelleneditor noch eine Begriffsliste oder Domänenauswahl öffnet und keiner der Einträge `Derive Physical Name Again` und `Derive Physical Names Again` angeboten wird.  
+View Option → `Domain` blendet die Domänenzelle nur auf diesem Bildschirm ein oder aus, wie jede [Ansichtsoption](./table-related-functions.md#table-view-options) dort, und wenn der Editor wieder beschreibbar wird, kommen die Ansichtsoptionen zurück, die das Dokument enthält.

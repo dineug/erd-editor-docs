@@ -10,7 +10,8 @@ Editing begins through the context menu by right-clicking.
 ![Right-clicking the canvas, opening the Relationship submenu, adding a table, then its own menu](/img/demo-context-menu.webp)
 
 Right-clicking a table, a memo, a table group, or a relationship opens that item's own menu instead.  
-A right-click on a table, memo, or table group that is already selected keeps the whole selection, so rows such as `Color` and `Delete selected` act on all of it — see [Multiple Selection](./table-related-functions.md#multiple-selection).
+A right-click on a table, memo, or table group that is already selected keeps the whole selection, so rows such as `Color` and `Delete selected` act on all of it — see [Multiple Selection](./table-related-functions.md#multiple-selection).  
+A read-only editor creates nothing, so none of what this page describes is offered there: the canvas menu keeps only `View Option`, `Name View`, `Export`, and `Diff Viewer`, a table's menu only `Table Properties`, and a memo, a table group, or a relationship opens no menu — see [Read-only Editors](./table-related-functions.md#read-only-editors).
 
 ## Welcome Screen
 

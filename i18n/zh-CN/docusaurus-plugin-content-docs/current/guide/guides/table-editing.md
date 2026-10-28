@@ -16,13 +16,14 @@ description: 添加、选择、调整顺序与删除列，切换列选项，以�
 
 ## 添加列
 
-使用快捷键 `Alt + Enter` (Windows/Linux) 或 `⌥ + Enter` (Mac) 创建。  
-会向所有已选中的表添加一列。
+使用快捷键 `Alt + Enter` (Windows/Linux) 或 `⌥ + Enter` (Mac) 创建，它会向所有已选中的表添加一列；也可以使用表头上的 `+` 按钮，它会向该表添加一列。  
+新列的第一个单元格获得焦点，即它的行按[列顺序](./settings.md#adjusting-column-order)绘制的第一个单元格。在默认顺序下，那就是它的名称，在 `Logical Names` 中即其逻辑名，在 `Both Names` 中则是它的 `Logical Name` 单元格，参见[名称显示](./logical-names.md#name-view)。  
+在最后一个单元格按 `Tab` 添加的列，以及绘制关系时为没有主键的父表添加的主键，也从该单元格开始。
 
 ## Tab 键
 
 按 `Tab` 可直接进入下一个单元格的编辑模式。  
-在最后一个单元格按 `Tab` 会创建新的列。  
+在最后一个单元格按 `Tab` 会创建新的列并打开其第一个单元格进行编辑，参见[添加列](#添加列)。  
 使用 `Shift + Tab` 移动到上一个单元格的编辑模式。  
 `Tab` 与 `Shift + Tab` 会按顺序经过表所绘制的单元格，因此逻辑名单元格和域单元格是否在其中，取决于名称显示和 View Option → `Domain`，参见[输入逻辑名](./logical-names.md#writing-a-logical-name)。  
 绘制在行的最后一个单元格之后的[备用键](./table-related-functions.md#alternate-keys)标记不是单元格，因此键盘焦点会跳过它们，它们也不会进入编辑模式。
@@ -96,7 +97,8 @@ Not Null 单元格在设置后显示 `N-N`，未设置时显示 `NULL`。
 ![选中三列，然后将焦点所在列旁边的手柄拖到另一个表中，其他选中的列随之一起移动](/img/demo-column-multi-move.webp)
 
 从列所在的行而不是从其手柄开始的拖动会移动表，与拖动表头相同，参见[移动多个表](./table-related-functions.md#移动多个表)。在行上 `Alt + drag` (Windows/Linux) 或 `⌥ + drag` (Mac) 会创建表的副本，参见[创建表与备注的副本](./table-related-functions.md#创建表与备注的副本)。  
-缩放级别在 `70%` 及以下（表只显示名称）时，以及在只读编辑器中，不会绘制手柄，因此在这些情况下无法调整列的顺序。
+缩放级别在 `70%` 及以下（表只显示名称）时，以及在只读编辑器中，不会绘制手柄，因此在这些情况下无法调整列的顺序。  
+编辑器变为只读时正在进行的列拖动会立即结束：跟随指针的副本和抓取的手形光标都会消失，松开后不会移动任何列。拖动已经移动过的行则保留在被移动到的位置。
 
 ## 删除列
 
@@ -174,3 +176,10 @@ Unique 与 Auto Increment 默认隐藏，因此只有显示这两个单元格后
 要将多个列设为一个复合主键，请先[选中这些列](#多选列)，然后按 `Alt + K` (Windows/Linux) 或 `⌥ + K` (Mac)，或者右键点击选中的行之一并选择 `Primary Key on selected columns`。每次切换都算一步 Undo。
 
 ![使用 Shift + Arrow Down 选中两列，按 ⌥ + K 将两列都设为主键，再按一次将两者都取消](/img/demo-column-pk.webp)
+
+## 只读编辑器 {#read-only-editors}
+
+在 [`readonly`](../../api/erd-editor-element.md#readonly) 编辑器中，没有任何单元格会打开编辑，也没有任何列会改变。  
+点击单元格不会让任何内容获得焦点，并且会去掉跳转留下的选中。`Enter` 和双击既不打开编辑器，也不切换开关，`Tab` 交给页面处理，添加列、全选或删除列的快捷键、主键开关和粘贴都不起作用。  
+从[资源管理器](./explorer.md#going-to-a-row)或[快速搜索](./quick-search.md)跳转到某一列会让它的单元格获得焦点。之后方向键会在单元格之间移动焦点，所到达的列单独被选中，因为那里 `Shift` 不会再添加列。  
+`Ctrl + C` (Windows/Linux) 或 `⌘ + C` (Mac) 仍会复制所选中的列，或跳转所选中的表，参见[复制/粘贴列](#复制粘贴列)。

@@ -16,7 +16,7 @@ npm install @dineug/erd-editor
 
 복제 store는 패키지 루트가 아니라 `@dineug/erd-editor/engine.js` 하위 경로에 있습니다.  
 이 진입점은 DOM을 사용하지 않으므로 Web Worker를 비롯해 메인 스레드 밖 어디에서도 동작합니다.  
-반면 패키지 루트를 import하면 document가 필요한 `<erd-editor>` 커스텀 엘리먼트가 등록됩니다.
+반면 패키지 루트를 import하려면 document가 필요합니다. `5.0.0`부터는 엘리먼트를 정의하지 않지만 평가하면서 두 엘리먼트 클래스를 만들기 때문입니다. `5.0.0` 이전에는 `<erd-editor>` 커스텀 엘리먼트를 등록했습니다.
 
 ## 사용
 

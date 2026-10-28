@@ -1,6 +1,6 @@
 ---
 sidebar_position: 16
-description: Synchronizacja typu danych w relacjach i domeny, maksymalna szerokość komentarza, przeliczanie szerokości tabel, blokady ustawień (widoku, karty, ustawień kodu i Widoku nazw), kolejność wyświetlania kolumn i lista skrótów klawiaturowych.
+description: Synchronizacja typu danych w relacjach i domeny, maksymalna szerokość komentarza, blokady ustawień (widoku, karty, ustawień kodu i Widoku nazw), kolejność wyświetlania kolumn, lista skrótów klawiaturowych oraz karta Ustawienia edytora tylko do odczytu.
 ---
 
 # Ustawienia
@@ -33,13 +33,6 @@ Po włączeniu przełącznika wartość początkowa to `60px`. Wpisana wartość
 
 ![Włączanie opcji Maximum comment width, wpisywanie wartości 120 i karta ERD z komentarzami przyciętymi do tej szerokości](/img/demo-settings-comment-width.webp)
 
-## Przeliczanie szerokości tabel {#recalculation-table-width}
-
-Naciśnij przycisk `Sync`, aby przeliczyć szerokość każdej tabeli i komórki kolumny tak, by pasowała do jej bieżącego tekstu, oraz przerysować łączniki relacji zgodnie z nowymi rozmiarami.
-Potwierdza to powiadomienie `Recalculated table width`.
-Szerokości są przeliczane automatycznie przy każdym wczytaniu dokumentu, więc jest to potrzebne tylko wtedy, gdy po zmianie czcionki lub sposobu renderowania stały się nieaktualne.
-Szerokości nie są zapisywane w pliku, więc przycisk `Sync` nigdy go nie zmienia.
-
 ## Blokada {#lock}
 
 Lista `Lock` zawiera siedem ustawień. Dopóki blokada ustawienia jest włączona, plik zachowuje wartość, którą ustawienie miało w chwili zablokowania, więc zmiana tego ustawienia na ekranie pozostawia plik w niezmienionym stanie.
@@ -68,8 +61,9 @@ Blokada `Canvas Type` nigdy nie zachowuje karty Ustawienia. Jej włączenie blok
 
 ![Odblokowywanie opcji Viewport, przewijanie i powiększanie diagramu oraz ponowne blokowanie jej przy nowym widoku pokazanym w jej wierszu](/img/demo-settings-locks.webp)
 
-Włączenie lub wyłączenie blokady zmienia plik, ponieważ plik przechowuje informację, które blokady są włączone, ale podobnie jak reszta karty Ustawienia nie jest rejestrowane w [historii cofania](./undo-redo.md#what-the-history-records). Nie trafia do niej również przełączenie Widoku nazw, zablokowanego czy nie. W edytorze tylko do odczytu przyciski blokad nic nie robią, a przełączenie Widoku nazw zmienia tylko ten ekran, niezależnie od jego blokady.
+Włączenie lub wyłączenie blokady zmienia plik, ponieważ plik przechowuje informację, które blokady są włączone, ale podobnie jak reszta karty Ustawienia nie jest rejestrowane w [historii cofania](./undo-redo.md#what-the-history-records). Nie trafia do niej również przełączenie Widoku nazw, zablokowanego czy nie.
 Każde inne ustawienie jest zapisywane w bieżącym stanie: baza danych, przełączniki [`View Option`](./table-related-functions.md#table-view-options) i reszta karty `Preferences`.
+Edytor tylko do odczytu nie zmienia pliku żadnym z nich, niezależnie od blokad: jego przyciski blokad i pozostałe kontrolki `Preferences` są wyłączone, a ustawienia, które nadal pozwala zmienić, pozostają na tym ekranie – zobacz sekcję [Edytory tylko do odczytu](#read-only-editors).
 
 W nowym diagramie, czyli rozpoczętym od zera, wszystkie blokady są włączone. Taki diagram to pusty plik otwarty w VS Code, aplikacji Obsidian lub IDE JetBrains (w aplikacji Obsidian taki plik tworzą polecenia `ERD Editor: Create new diagram` i `New ERD`), nowy schemat w aplikacji internetowej, plik utworzony z menu New w Google Drive lub element `<erd-editor>` bez nadanej wartości.
 Schemat lub plik Google Drive, który aplikacja internetowa tworzy przez zaimportowanie pliku SQL, DBML, AML lub GraphQL, również zaczyna z włączonymi wszystkimi blokadami. Schemat lub plik utworzony z pliku JSON zachowuje blokady zapisane w tym pliku.
@@ -97,6 +91,7 @@ Ustala kolejność wyświetlania kolumn w tabelach.
 Przeciągnij wiersz, aby go przenieść – można przeciągać cały wiersz, a oznacza go ikona uchwytu. Dziewięć wierszy w domyślnej kolejności to `Logical Name`, `Name`, `DataType`, `Domain`, `Not Null`, `Unique`, `Auto Increment`, `Default` i `Comment`.
 Wiersz `Logical Name` ustala miejsce komórki nazwy logicznej, którą wiersz tabeli wyświetla w widoku `Both Names`. W widoku `Logical Names` nazwa logiczna zajmuje natomiast miejsce wiersza `Name`, a widok `Physical Names` nie wyświetla jej wcale – zobacz sekcję [Widok nazw](./logical-names.md#name-view). Wiersz `Domain` ustala miejsce komórki domeny, którą pokazuje View Option → `Domain` – zobacz sekcję [Komórka domeny](./logical-names.md#the-domain-cell).
 Komórka ukryta przez [opcję widoku tabeli](./table-related-functions.md#table-view-options) lub pominięta przez Widok nazw zachowuje swoje miejsce na liście, więc kolejność dotyczy tych komórek, które są akurat widoczne.
+Diagram zapisany przez późniejsze wydanie zachowuje swoją kolejność również wtedy, gdy to wydanie ma wiersz, którego brakuje w tym: wiersze znane temu wydaniu stoją w kolejności podanej przez plik, a nieznany wiersz jest pomijany. Zapisanie diagramu tutaj zapisuje kolejność bez niego, a późniejsze wydanie przywraca ten wiersz obok jego sąsiada w swojej domyślnej kolejności.
 Diagram, którego kolejność ustawiono, zanim dodano wiersze `Logical Name` i `Domain`, otrzymuje wiersz `Logical Name` tuż przed wierszem `Name`, a wiersz `Domain` tuż za wierszem `DataType`, niezależnie od tego, gdzie stoją one w jego kolejności.
 Oznaczenie [klucza alternatywnego](./table-related-functions.md#alternate-keys) (`AK1.1` itd.) nie jest jednym z tych wierszy. Zawsze znajduje się na końcu wiersza, za komórką, którą ta kolejność umieszcza jako ostatnią.
 
@@ -146,6 +141,7 @@ W komórce nazwy logicznej z otwartą listą terminów polecenie `Stop` przy pie
 Otwarty Eksplorator, kreator motywu lub selektor `Display Language` nie wstrzymuje na kanwie żadnego ze skrótów. Polecenie `Stop` nigdy nie zamyka Eksploratora. Informacje o tym, co robią w Eksploratorze `Stop` i inne klawisze, znajdziesz w sekcji [Klawisze w Eksploratorze](./explorer.md#keys-in-the-explorer), a o ich działaniu w selektorze – w sekcji [Wybieranie języka](./language-and-theme.md#picking-a-language).
 Polecenie `Delete Selection` usuwa wszystkie zaznaczone tabele, notatki i grupy tabel albo, gdy zaznaczona jest jedna tabela wraz z częścią jej kolumn, a powiększenie przekracza `70%`, te kolumny – zobacz sekcję [Usuwanie tabel i notatek](./table-related-functions.md#table-and-memo-deletion). Polecenie `Remove Table, Memo` usuwa również zaznaczone grupy tabel.
 Polecenie `Add Table Group` rozpoczyna rysowanie grupy [`New Table Group`](./table-groups.md#drawing-a-group), tak jak przycisk `New Table Group` na [pasku narzędzi kanwy](./table-related-functions.md#canvas-toolbar), a drugie naciśnięcie anuluje rysowanie. Polecenie `Group Selected Tables` to dwa naciśnięcia bez klawisza modyfikującego: `T`, a potem `G` w ciągu sekundy. Umieszcza zaznaczone tabele w nowej grupie i otwiera edytor jej nazwy, tak jak pozycja `Group selected tables` w menu kontekstowym tabeli, a gdy żadna tabela nie jest zaznaczona, nic nie robi – zobacz sekcję [Grupowanie zaznaczonych tabel](./table-groups.md#grouping-selected-tables). Żadne z nich nic nie robi w edytorze tylko do odczytu ani wtedy, gdy grupy są [ukryte](./table-groups.md#hiding-groups).
+W edytorze tylko do odczytu działają tylko klawisze, które służą do czytania: `Search`, `Toggle Explorer`, `Stop`, `Table Properties` i `Focus on this table` na tabeli zaznaczonej przez przejście, trzy klawisze powiększenia, `Zen Mode`, kopiowanie oraz klawisze strzałek, które przesuwają aktywną komórkę. `Editing`, każdy klawisz `Add` i `Remove`, `Delete Selection`, `Primary Key`, oba klawisze zaznaczania wszystkiego, cztery klawisze relacji, `Add Table Group`, `Group Selected Tables`, `Hand Tool` i wklejanie nic nie robią, a `Undo` i `Redo` niczego nie cofają ani nie ponawiają – zobacz sekcję [Edytory tylko do odczytu](./table-related-functions.md#read-only-editors).
 Polecenia `Zoom In`, `Zoom Out` i `Zoom Reset` zmieniają też powiększenie na karcie [Wizualizacja](./visualization.md#toolbar), zarówno w trybie `Graph`, jak i `Flow`, chyba że otwarte jest szybkie wyszukiwanie.
 W trybie `Flow` polecenia `Undo` i `Redo` cofają się o krok i przechodzą o krok do przodu po kolejnych zawężeniach trybu Przepływ, tak jak jego przyciski `Previous table` i `Next table`, chyba że otwarte jest szybkie wyszukiwanie. Nigdy nie cofają tam zmian w diagramie, a w trybie `Graph` nic nie robią – zobacz sekcję [Poprzednia i następna tabela](./visualization.md#previous-table-and-next-table).
 Na karcie Wizualizacja polecenie `Stop` zamyka też menu [wyświetlania wierszy](./visualization.md#row-display) i anuluje wciąż trwające [rozmieszczanie kafelków w trybie Przepływ](./visualization.md#how-flow-is-placed); nie poszerza natomiast widoku zawężonego poleceniem `Focus on this table`.
@@ -160,3 +156,13 @@ Karta `Shortcuts` pokazuje wtedy powiązania hosta: polecenie, którego host nie
 Klawisze wierszy karty Słownik podążają za poleceniami `Add Column` i `Remove Column`, więc zmiana powiązania któregoś z nich zmienia również te klawisze – zobacz [`dictionaryRowChords`](../../api/erd-editor-element.md#dictionaryrowchords).
 
 W aplikacji Obsidian te klawisze trafiają do edytora zawsze, gdy aktywna jest karta diagramu w aplikacji Obsidian, nawet jeśli skrót klawiaturowy aplikacji Obsidian używa tego samego klawisza, na przykład `Alt + Enter`, `Ctrl + K` i `Ctrl + F` (Windows/Linux) lub `⌥ + Enter`, `⌘ + K` i `⌘ + F` (Mac). Dotyczy to również skrótu `Alt + Shift + Enter` (Windows/Linux) lub `⌥ + Shift + Enter` (Mac) na karcie Słownik, którego nie ma w żadnym wierszu tej listy. Wszystkie pozostałe skróty klawiaturowe aplikacji Obsidian nadal tam działają. Informacje o skrócie `Ctrl + F` lub `⌘ + F` znajdziesz w sekcji [Pasek wyszukiwania przeglądarki](./find-and-replace.md#the-browsers-find-bar).
+
+## Edytory tylko do odczytu {#read-only-editors}
+
+W edytorze z atrybutem [`readonly`](../../api/erd-editor-element.md#readonly) karta Ustawienia pokazuje ustawienia diagramu i żadnego z nich nie zmienia. Obok nagłówka każdej ze stron, `Preferences` i `Shortcuts`, stoi plakietka `Read only`.
+Przełączniki `Relationship DataType Sync` i `Maximum comment width` oraz pole szerokości są wyłączone, tak samo jak każdy przycisk blokady. Wiersze `Column Order` nie pokazują uchwytu i nie można ich przeciągać.
+Każdy wiersz `Lock` nadal pokazuje swoją wartość. Zablokowany wiersz pokazuje wartość, którą przechowuje plik, a odblokowany – ustawienie w takim stanie, w jakim ma je ten ekran, które może różnić się od wartości z pliku, jak poniżej.
+
+Ustawienia, które decydują o tym, co pokazuje ekran, nadal można tam zmieniać: położenie i powiększenie widoku, kartę, Widok nazw, bazę danych, język Generatora kodu, oba style nazw, cudzysłów oraz przełączniki [`View Option`](./table-related-functions.md#table-view-options).
+Każde z nich zmienia tylko ten ekran, niezależnie od swojej blokady. Nie jest zapisywane w pliku ani w eksporcie JSON, nie trafia do historii cofania, nie jest liczone jako zmiana i nigdy nie dociera do współpracowników. Panele opcji kart [Schemat SQL](./schema-sql.md#options-panel) i [Code Generator](./code-generator.md#options-panel) podpisują te wybory `This window only`, zamiast `Saved in the document`.
+Gdy edytor znów umożliwi zapis, baza danych, język, style nazw, cudzysłów i przełączniki View Option wracają do wartości z pliku. Widok, karta i Widok nazw pozostają takie, jak je zostawiłeś, a plik przyjmuje każde z nich, w granicach jego blokady, przy następnej zmianie tego ustawienia.

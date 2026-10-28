@@ -22,7 +22,7 @@ description: コマンドパレットでのタブや名前の表示の切り替�
 入力すると一覧が絞り込まれます。キーを押すたびに表示中の一覧全体をあらためて検索するため、文字を削除したり、何も見つからなかった語の上から新しい語を入力したりすると、一致する項目が再び表示されます。  
 マッチングはあいまい検索で、項目名と横に表示されるキーワードの両方を対象にします。例えば `Import` サブメニューでは、`sdl` で `GraphQL`、`dbdiagram` で `DBML`、`azimutt` で `AML` が見つかります。多少の入力ミスがあっても項目は見つかり、`tabel` で `New Table`、`imprt` で `Import` が見つかりますが、入力した内容にわずかに似ているだけの項目は除外されます。`memo` で表示されるのは `New Memo` だけです。名前またはキーワードに入力した文字列を大文字と小文字を区別せずに含む項目は必ず表示され、そのうちあいまい検索で一致しなかった項目は、あいまい検索で一致した項目の後に並びます。入力した文字列は、大文字と小文字を区別せずに、項目に含まれている箇所がすべてハイライトされます。  
 英語以外の表示言語では、コマンドとサブメニューの項目は、一覧には表示されない英語の名前とキーワードでも見つかります。そのため、どの言語で表示されていても、`new table` で `New Table` が見つかります。  
-一覧の移動は `↑` と `↓` で行い、両端で折り返します。選択中の項目は `Enter` で実行します。独自のショートカットを持つコマンドは、そのショートカットを行の末尾に表示します。通常は右側で、右から左に書く表示言語では左側です。韓国語の音節の入力途中など IME の変換中は、`↑`、`↓`、`Enter` は IME が受け取るため、選択も移動せず、項目も実行されません。
+一覧の移動は `↑` と `↓` で行い、両端で折り返します。選択中の項目は `Enter` で実行します。一覧は選択中の項目が見える位置にスクロールし、高さの低いエディタのペインでは検索ボックスの下の余白に収まるように縮むため、すべての項目に届き、選択中の項目も見えたままです。独自のショートカットを持つコマンドは、そのショートカットを行の末尾に表示します。通常は右側で、右から左に書く表示言語では左側です。韓国語の音節の入力途中など IME の変換中は、`↑`、`↓`、`Enter` は IME が受け取るため、選択も移動せず、項目も実行されません。
 
 `Database`、`Import`、`Auto Layout` などの項目はサブメニューを開きます。サブメニューの項目が一覧を置き換え、検索ボックスはクリアされます。`Name View`、`Database`、`Bracket`、`Language`、2 つの名前のケース、`Schema SQL: Statements`、`Schema SQL: Header`、`Theme`、`Display Language` のサブメニューは、現在の選択にチェックを付け、その項目を選択した状態で開くため、`Enter` を押すと現在の選択のままになります。それ以外のサブメニューは、何も選択していない状態で開きます。  
 絞り込みは常に表示中の一覧だけに適用され、上の階層へ戻る方法はありません。最初からやり直すにはパレットを閉じて開き直します。サブメニューの中では、`#`、`@`、`:`、`?` は[プレフィックス](#searching-the-diagram)ではなく、ただの文字として扱われます。
@@ -34,7 +34,7 @@ description: コマンドパレットでのタブや名前の表示の切り替�
 ERD タブでは、`Name View` と[物理名を再生成する](./dictionary.md#derive-physical-names-again)最大 4 つの行、次に `Database`、`Import`、`Import and Add`、`Export`、続いて `New Table`、`New Memo`、`New Table Group`、`Group Selected Tables`、4 種類のリレーションシップ、`Auto Layout` を表示します。テーブルはここには表示されません。テーブルへ[移動する](#searching-the-diagram)には `#` を入力します。  
 `Name View` は、現在の表示にチェックを付けて `Physical Names`、`Logical Names`、`Both Names` を開き、選ぶとキャンバスのコンテキストメニューの `Name View` と同じように表示が切り替わります。[表示の切り替え](./logical-names.md#switching-the-view)を参照してください。ERD タブにだけ表示され、読み取り専用のエディタでも表示されます。  
 再生成の行は、横に表示されるキーワードで区別します。横に `column` がある `Derive Physical Name Again` は、フォーカスしているカラムの物理名を再生成します。`Derive Physical Names Again` には 3 つの行があります。`table` の行はフォーカスがあるテーブルの名前とすべてのカラム、`selected tables` の行は 2 つ以上のテーブルを選択している間の選択しているテーブル、`whole document` の行はダイアグラムのすべてのテーブルが対象です。どの行も対象がある間だけ表示され、読み取り専用のエディタではどれも表示されません。  
-`Import and Add` は読み取り専用のエディタでは表示されず、`New Memo` は [View Option](./table-related-functions.md#table-view-options) → `Memos` でメモを非表示にしている間は表示されません。`New Table Group` はキャンバス上で[テーブルグループ](./table-groups.md)の描画を始め、`Group Selected Tables` は選択しているテーブルを新しいグループに入れて、その名前を入力できる状態にします。どちらも読み取り専用のエディタと、View Option → `Table Groups` でグループを非表示にしている間は表示されず、`Group Selected Tables` はさらにテーブルを 1 つ以上選択している必要があります。どちらの行にもキーが表示され、[グループの描画](./table-groups.md#グループの描画)は `Alt + G` (Windows/Linux) または `⌥ + G` (Mac)、[選択したテーブルのグループ化](./table-groups.md#選択したテーブルのグループ化)は `T` に続けて `G` です。  
+`New Memo` は [View Option](./table-related-functions.md#table-view-options) → `Memos` でメモを非表示にしている間は表示されません。`New Table Group` はキャンバス上で[テーブルグループ](./table-groups.md)の描画を始め、`Group Selected Tables` は選択しているテーブルを新しいグループに入れて、その名前を入力できる状態にします。どちらも View Option → `Table Groups` でグループを非表示にしている間は表示されず、`Group Selected Tables` はさらにテーブルを 1 つ以上選択している必要があります。どちらの行にもキーが表示され、[グループの描画](./table-groups.md#グループの描画)は `Alt + G` (Windows/Linux) または `⌥ + G` (Mac)、[選択したテーブルのグループ化](./table-groups.md#選択したテーブルのグループ化)は `T` に続けて `G` です。  
 これらはキャンバスのコンテキストメニューと同じコマンドを実行しますが、テーブルのコンテキストメニューのコマンドを実行するものもあります。`Group Selected Tables` はその `Group selected tables` を実行し、`column`、`table`、`selected tables` の再生成の行はその `Derive Physical Name Again` または `Derive Physical Names Again` を、右クリックした位置ではなくフォーカスや選択に対して実行します。`View Option` と `Diff Viewer` はコンテキストメニューにしかありません。`Export` はコンテキストメニューと同じ `json`、`Schema SQL`、`Image` を提供し、その中で `png` や `svg` と入力すると `Image` が見つかります。  
 各形式、[Import and Add](./file-import-export.md#import-and-add)、[画像の書き出し](./file-import-export.md#画像)の内容は[ファイルの読み込みと書き出し](./file-import-export.md)を、データベースの選択が何に影響するかは[テーブル関連機能](./table-related-functions.md#databases)を参照してください。
 
@@ -54,6 +54,15 @@ Visualization タブ、辞書タブ、設定タブには独自のコマンドは
 `Theme` は `System`、`Light`、`Dark` を開き、現在の外観にチェックが付いています。選ぶと外観だけが変わり、グレーカラーとアクセントカラーはそのまま残ります。テーマビルダーの `Appearance` ボタンと同じです。  
 `Display Language` は `System` と、続いて 25 の言語を開きます。各言語はその言語自身の名前で、ピッカーと同じ順序で並び、現在の選択にチェックが付いています。ここでは英語名やコードでも言語が見つかり、`german` や `de-DE` で `Deutsch` が、`korean` で `한국어` が見つかります。  
 どちらでも、選んだ内容はすぐに反映されてパレットが閉じ、テーマビルダーや `Display Language` のピッカーで選んだ場合と同じように保持されます。パレットを開いている間に表示言語が変わると、一覧はその言語に切り替わり、入力した内容と現在のサブメニューはそのまま残ります。
+
+### 読み取り専用のエディタ {#read-only-editors}
+
+[`readonly`](../../api/erd-editor-element.md#readonly) のエディタは、ダイアグラムを変更するコマンドを、薄く表示するのではなく、一覧に表示しません。  
+ERD タブでは、`Tab`、`Name View`、`Database`、3 つの項目をすべて持つ `Export`、`Toggle Explorer`、`Theme`、`Display Language` が残ります。`Import`、`Import and Add`、再生成の行、`New Table`、`New Memo`、`New Table Group`、`Group Selected Tables`、4 種類のリレーションシップ、`Auto Layout` は表示されません。  
+ほかのタブは、どのエディタとも同じものを表示します。表示される場所によらず、`Tab`、`Name View`、`Database`、`Bracket`、`Language`、2 つの名前のケースは、その画面だけを変え、保存されることはありません。設定の[読み取り専用のエディタ](./settings.md#read-only-editors)を参照してください。  
+パレットを開いている間にエディタが読み取り専用になった場合、または再び編集可能になった場合は、そのときエディタが提供する内容で一覧が描き直され、入力した内容で検索し直されます。項目がなくなったサブメニューは、最上位に戻ります。
+
+`#`、`@`、`:` のプレフィックスは、どのエディタとも同じようにダイアグラムを検索し、移動すると、[ダイアグラムの検索](#searching-the-diagram)で説明しているとおり、移動先が選択されます。読み取り専用のエディタで何かが選択されるのは、これだけです。キャンバス上の押下は何も選択せず、動かさずにクリックすると、移動が選択したものが解除されます。[読み取り専用のエディタ](./table-related-functions.md#read-only-editors)を参照してください。
 
 ## ダイアグラムの検索 {#searching-the-diagram}
 

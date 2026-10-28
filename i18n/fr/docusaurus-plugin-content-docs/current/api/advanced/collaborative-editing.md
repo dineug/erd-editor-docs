@@ -55,6 +55,10 @@ Tant que le verrou est activé, le changement n’apparaît que sur l’éditeur
 Tant que le verrou est désactivé, un changement fait dans un éditeur qui peut modifier le document change l’affichage des noms sur tous les éditeurs et toutes les répliques, le dernier changement l’emportant, et chacun d’eux l’enregistre.  
 Le changement propre à un éditeur en lecture seule reste toujours sur cet éditeur, et cet éditeur suit tout de même les changements partagés des autres.
 
+Depuis la version `5.0.0`, un éditeur en [lecture seule](../erd-editor-element.md#readonly) n’envoie aucun changement. Le défilement, le zoom, l’onglet, l’affichage des noms, le SGBD, le langage du générateur de code, la casse des noms, le type de délimiteur et les lignes de `View Option` que modifie son lecteur restent sur son écran, quels que soient leurs verrous ; avant la version `5.0.0`, ses défilements, ses zooms, ses changements d’onglet, son SGBD et ses paramètres de code étaient envoyés comme ceux d’un éditeur modifiable.  
+Son store envoie tout de même ce que ses suiveurs envoient du curseur, du focus, de la sélection et du cadre de glissement du lecteur, répond aux registres que demande un éditeur qui rejoint la session et applique tous les changements envoyés par les autres. Un changement de SGBD, un paramètre du générateur de code ou une ligne de `View Option` atteint son document, et son écran aussi sauf si son lecteur a modifié ce paramètre à cet endroit ; un changement partagé de l’affichage des noms s’affiche de toute façon sur son écran.  
+Quand l’éditeur passe en lecture seule, il envoie d’abord ce que le store retient encore d’un glissement ou d’un défilement, comme le fait [flushStreamBuffers](#flushstreambuffers), si bien que les autres conservent la fin du geste.
+
 Les [verrous](../../guide/guides/settings.md#lock) sont partagés : le dernier verrouillage ou déverrouillage d’un paramètre l’emporte sur tous les éditeurs, et un verrou porte les valeurs de l’éditeur qui a verrouillé le paramètre, si bien que chaque éditeur et chaque réplique enregistrent la même valeur.  
 Un verrou `Viewport` enregistre donc la vue de l’éditeur qui a verrouillé ce paramètre, et un verrou `Canvas Type` le dernier onglet ouvert sur cet éditeur avant l’onglet Paramètres, où se fait le verrouillage.  
 Déverrouiller `Language`, `Table Name Case`, `Column Name Case`, `Bracket Type` ou, depuis la version `4.2.0`, `Name View` donne aussi à ce paramètre, sur tous les éditeurs, la valeur affichée sur l’éditeur qui l’a déverrouillé, si bien qu’ils continuent d’enregistrer une seule et même valeur. Déverrouiller `Viewport` ou `Canvas Type` ne change ni la vue ni l’onglet de personne.
@@ -71,6 +75,8 @@ Le bouton de lien externe d’une carte, un résultat de [recherche rapide](../.
 Ici, le raccordement de subscribe à dispatch tient lieu de réseau, si bien que vous voyez la forme d’une session sans qu’un transport vienne l’encombrer.
 
 ```js
+import '@dineug/erd-editor/erd-editor.js';
+
 const editor1 = document.createElement('erd-editor');
 const editor2 = document.createElement('erd-editor');
 

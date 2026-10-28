@@ -61,7 +61,7 @@ Typen wijzigt alleen de logische naam. De fysieke naam wordt daaruit afgeleid zo
 - In de weergave `Logical Names` de logische naam van de kop, daarna de opmerking ervan en daarna de cellen van elke rij in de kolomvolgorde, met de logische naam op de plaats van de naam.
 - In de weergave `Both Names` de logische naam, de naam en de opmerking van de kop, daarna de cellen van elke rij in de kolomvolgorde, standaard met de cel `Logical Name` als eerste.
 
-`Alt + Enter` (Windows/Linux) of `⌥ + Enter` (Mac) voegt een kolom toe en focust haar naamcel, die in de weergave `Logical Names` haar logische naam is.
+`Alt + Enter` (Windows/Linux) of `⌥ + Enter` (Mac) voegt een kolom toe en focust de eerste cel die haar rij tekent. Onder de standaardkolomvolgorde is dat haar naamcel, die in de weergave `Logical Names` haar logische naam is, en in `Both Names` haar cel `Logical Name`, zodat je met de logische naam kunt beginnen — zie [Kolommen toevoegen](./table-editing.md#adding-columns).
 
 Een kolom met refererende sleutel die een relatie toevoegt, neemt naast het type ook de logische naam en het domein van haar sleutel over — zie [Identificerende relaties](./relationship-editing.md#identifying-relationships).  
 Kolommen naar een spreadsheet kopiëren en kolommen vanuit een spreadsheet plakken gebruiken de cellen die de weergave toont, inclusief de cellen van de logische naam en de domeincellen — zie [Kolommen kopiëren/plakken](./table-editing.md#copyingpasting-columns).
@@ -143,5 +143,7 @@ Een codeeragent die via de MCP-server werkt, stelt logische namen in en koppelt 
 
 ## Editors in alleen-lezenmodus {#read-only-editors}
 
-In een editor met [`readonly`](../../api/erd-editor-element.md#readonly) werkt elke kiezer voor de naamweergave, en verandert het wisselen alleen dat scherm, hoe de vergrendeling ook staat.  
-Logische namen en domeinen kunnen daar niet worden bewerkt, dus er opent geen termenlijst of domeinkiezer, en geen van de items `Derive Physical Name Again` en `Derive Physical Names Again` wordt aangeboden. View Option → `Domain` verandert daar niets, net zoals geen enkele [weergaveoptie](./table-related-functions.md#table-view-options) dat doet.
+In een editor met [`readonly`](../../api/erd-editor-element.md#readonly) werkt elke kiezer voor de naamweergave: de knop `Name View` op de canvaswerkbalk, `Name View` in het contextmenu van het canvas en in Snel zoeken, en de lijst op de werkbalk van de stroomweergave.  
+Een wissel daar verandert alleen dat scherm, hoe de vergrendeling ook staat: het bestand, medebewerkers en de ongedaanmakingsgeschiedenis behouden de weergave zoals ze was. Zodra de editor weer bewerkbaar wordt, blijft de gekozen weergave op dat scherm staan tot de volgende wissel daar, of, zolang de vergrendeling uitstaat, tot een medebewerker haar wisselt of het document opnieuw wordt geladen.  
+Logische namen en domeinen kunnen daar niet worden bewerkt, dus er opent geen celeditor, termenlijst of domeinkiezer, en geen van de items `Derive Physical Name Again` en `Derive Physical Names Again` wordt aangeboden.  
+View Option → `Domain` toont of verbergt de cel Domain alleen op dat scherm, zoals elke [weergaveoptie](./table-related-functions.md#table-view-options) daar doet, en als de editor weer bewerkbaar wordt, komen de weergaveopties van het document terug.

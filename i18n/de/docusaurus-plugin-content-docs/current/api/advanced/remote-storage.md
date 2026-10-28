@@ -16,7 +16,7 @@ npm install @dineug/erd-editor
 
 Der Replikations-Store liegt unter dem Unterpfad `@dineug/erd-editor/engine.js`, nicht im Paketstamm.  
 Dieser Einstiegspunkt greift nicht auf das DOM zu, daher läuft er in einem Web Worker oder an jeder anderen Stelle außerhalb des Hauptthreads.  
-Ein Import des Paketstamms registriert dagegen das Custom Element `<erd-editor>`, das ein Dokument benötigt.
+Ein Import des Paketstamms benötigt dagegen ein Dokument: Seit `5.0.0` definiert er kein Element, aber seine Auswertung erzeugt beide Elementklassen. Vor `5.0.0` registrierte er das Custom Element `<erd-editor>`.
 
 ## Verwendung {#usage}
 

@@ -31,7 +31,7 @@ description: קריאת ה-DDL של התרשים בכרטיסיית סכמת SQL
 
 החלונית מכילה שלוש קבוצות, כל אחת תחת כיתוב:
 
-1. `Saved in the document`: `Database` ו-`Bracket` – ראו [מסד נתונים ומירכאות](#database-and-bracket).
+1. `Saved in the document`: `Database` ו-`Bracket` – ראו [מסד נתונים ומירכאות](#database-and-bracket). עורך לקריאה בלבד נותן להם את הכותרת `This window only` – ראו [עורכים לקריאה בלבד](#read-only-editors).
 2. `This window only`: `Statements`, `Header`, `Write logical names into empty comments`, וכל עוד יש בתרשים [קבוצת טבלאות](./table-groups.md), גם `Tables` – ראו [משפטים](#statements), [כותרת](#header), [שמות לוגיים כהערות](#logical-names-as-comments) ו[טבלאות](#tables).
 3. `Saved in the document · written as is for every database`: הסקריפטים `Before tables` ו-`After tables` – ראו [סקריפטים לפני הטבלאות ואחריהן](#before-and-after-scripts).
 
@@ -222,5 +222,9 @@ Snowflake, שתוחם שמות רק במירכאות כפולות, משתמש ב
 
 ## עורכים לקריאה בלבד {#read-only-editors}
 
-בעורך `readonly` הכרטיסייה פועלת כרגיל: `Database` ו-`Bracket` עדיין משנים את ה-SQL המוצג, `Statements`, `Header`, `Write logical names into empty comments` ו-`Tables` עדיין פועלים, ו-`Save file` ו-`Copy` עדיין שומרים ומעתיקים אותו.  
-רק שני שדות הסקריפטים הם לקריאה בלבד.
+בעורך [`readonly`](../../api/erd-editor-element.md#readonly) הכרטיסייה פועלת עבור הקורא, ודבר שנעשה בה אינו מגיע אל המסמך:
+
+- `Database` ו-`Bracket` עדיין כותבים מחדש את ה-SQL, אבל רק באותו חלון, ולכן הלוח נותן גם להם את הכותרת `This window only`. בחירה אינה נשמרת בקובץ, אינה משותפת עם שותפים לעריכה ואינה נרשמת לביטול, יהיו הנעילות אשר יהיו, ושינוי של שותף בהגדרה שבחרתם משאיר את הבחירה שלכם על המסך. כרטיסיית מחולל הקוד מציגה את אותה בחירה, ו-[`getSchemaSQL()`](../../api/erd-editor-element.md#getschemasql) הנקראת בלי מסד נתונים כותבת אותה גם כן. ברגע שהעורך חוזר להיות ניתן לכתיבה, מסד הנתונים והמירכאות של המסמך חוזרים.
+- `Statements`, `Header`, `Write logical names into empty comments` ו-`Tables` פועלים כמו בכל מקום, כי הם שייכים לחלון כבר.
+- שני שדות הסקריפטים הם לקריאה בלבד: הם מציגים את הסקריפטים של המסמך, שה-SQL עדיין כותב, ואינם מקבלים הקלדה.
+- `Save file` ו-`Copy` שומרים ומעתיקים את ה-SQL שהכרטיסייה מציגה.

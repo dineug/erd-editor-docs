@@ -237,4 +237,5 @@ Naciśnięcie kafelka nigdy nie dodaje relacji. Jeśli opuścisz kartę ERD w tr
 Zmiany współpracowników nadal docierają do diagramu, gdy jesteś w trybie Przepływ, a kafelki nadążają za dodawanymi lub usuwanymi przez nich tabelami i relacjami – zobacz sekcję [Jak tryb Przepływ rozmieszcza kafelki](#how-flow-is-placed).  
 Ich zaznaczenie i obwódki fokusu są rysowane na kafelkach, ale ich kursory i ramki przeciągania już nie – zobacz stronę [Wspólna edycja](../../api/advanced/collaborative-editing.md).
 
-Oba tryby, łącznie ze skupianiem widoku i przechodzeniem o krok, działają również w edytorze z atrybutem `readonly`, podobnie jak lista `Name View`, która przełącza tam tylko twój własny ekran.
+Oba tryby, łącznie ze skupianiem widoku i przechodzeniem o krok, działają również w edytorze z atrybutem [`readonly`](../../api/erd-editor-element.md#readonly), podobnie jak lista `Name View`, która przełącza tam tylko twój własny ekran.  
+Na karcie ERD edytora tylko do odczytu menu tabeli zawiera tylko pozycję `Table Properties`, a naciśnięcie nie zaznacza żadnej tabeli, więc skupiaj widok skrótem `Alt + F` (Windows/Linux) lub `⌥ + F` (Mac) na tabeli zaznaczonej przez przejście z [Eksploratora](./explorer.md#going-to-a-row) lub [Szybkiego wyszukiwania](./quick-search.md).

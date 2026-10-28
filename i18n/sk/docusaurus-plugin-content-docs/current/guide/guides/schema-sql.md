@@ -31,7 +31,7 @@ Kód SQL sa vygeneruje pri otvorení karty a znova vždy, keď sa zmení niektor
 
 Panel obsahuje tri skupiny, každú pod vlastným nadpisom:
 
-1. `Saved in the document`: `Database` a `Bracket` – pozrite si časť [Databáza a úvodzovky](#database-and-bracket).
+1. `Saved in the document`: `Database` a `Bracket` – pozrite si časť [Databáza a úvodzovky](#database-and-bracket). Editor iba na čítanie ich označuje `This window only` – pozrite si časť [Editory iba na čítanie](#read-only-editors).
 2. `This window only`: `Statements`, `Header`, `Write logical names into empty comments` a, kým má diagram nejakú [skupinu tabuliek](./table-groups.md), `Tables` – pozrite si časti [Príkazy](#statements), [Hlavička](#header), [Logické názvy ako komentáre](#logical-names-as-comments) a [Tabuľky](#tables).
 3. `Saved in the document · written as is for every database`: skripty `Before tables` a `After tables` – pozrite si časť [Skripty pred tabuľkami a za nimi](#before-and-after-scripts).
 
@@ -222,5 +222,9 @@ Ako sa tieto komentáre pri importe načítajú späť, opisuje časť [Komentá
 
 ## Editory iba na čítanie {#read-only-editors}
 
-V editore s atribútom `readonly` funguje karta ako zvyčajne: `Database` a `Bracket` naďalej menia zobrazený kód SQL, `Statements`, `Header`, `Write logical names into empty comments` a `Tables` naďalej fungujú a `Save file` a `Copy` ho naďalej ukladajú a kopírujú.  
-Len dve polia skriptov sú iba na čítanie.
+V editore s atribútom [`readonly`](../../api/erd-editor-element.md#readonly) karta slúži čitateľovi a nič, čo sa na nej urobí, sa nedostane do dokumentu:
+
+- `Database` a `Bracket` naďalej prepisujú SQL, ale iba v tomto okne, takže ich panel tiež označuje `This window only`. Výber sa neukladá do súboru, nezdieľa sa so spolupracovníkmi ani sa nezaznamenáva pre vrátenie späť, nech hovoria zamknutia čokoľvek, a zmena nastavenia, ktoré ste vybrali, urobená spolupracovníkom ponechá váš výber na obrazovke. Karta Generátor kódu zobrazuje ten istý výber a zapíše ho aj [`getSchemaSQL()`](../../api/erd-editor-element.md#getschemasql) zavolané bez databázy. Keď sa editor znova prepne na úpravy, vrátia sa databáza a úvodzovky dokumentu.
+- `Statements`, `Header`, `Write logical names into empty comments` a `Tables` fungujú ako všade inde, keďže už patria oknu.
+- Obe polia skriptov sú iba na čítanie: zobrazujú skripty dokumentu, ktoré SQL naďalej zapisuje, a neprijímajú písanie.
+- `Save file` a `Copy` uložia a skopírujú SQL, ktoré karta zobrazuje.

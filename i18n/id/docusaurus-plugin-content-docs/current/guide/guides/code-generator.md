@@ -25,7 +25,8 @@ Saat bahasa yang dipilih mengabaikan `Database` atau konvensi penamaan, pengatur
 `Save file` dan `Copy` berada di bagian bawah panel — lihat [Menyimpan atau menyalin hasil](#saving-or-copying-the-result).
 
 Semua ini adalah pengaturan milik diagram itu sendiri, yang juga diubah oleh menu konteks dan Pencarian Cepat. `Database` disimpan di file seperti perubahan lainnya.  
-`Language`, `Table Name Case`, `Column Name Case`, dan `Bracket` hanya disimpan selama penguncian masing-masing di tab Pengaturan nonaktif (`Bracket Type` untuk `Bracket`), dan diagram baru memiliki semua penguncian dalam keadaan aktif. Selama penguncian aktif, perubahan menulis ulang kode di layar Anda, tetapi file mempertahankan nilai terkunci dan diagram dibuka kembali dengan nilai tersebut. Panel tidak menampilkan tanda penguncian apa pun; untuk mempertahankan suatu pilihan di file, nonaktifkan penguncian pilihan tersebut — lihat [Penguncian](./settings.md#lock).
+`Language`, `Table Name Case`, `Column Name Case`, dan `Bracket` hanya disimpan selama penguncian masing-masing di tab Pengaturan nonaktif (`Bracket Type` untuk `Bracket`), dan diagram baru memiliki semua penguncian dalam keadaan aktif. Selama penguncian aktif, perubahan menulis ulang kode di layar Anda, tetapi file mempertahankan nilai terkunci dan diagram dibuka kembali dengan nilai tersebut. Panel tidak menampilkan tanda penguncian apa pun; untuk mempertahankan suatu pilihan di file, nonaktifkan penguncian pilihan tersebut — lihat [Penguncian](./settings.md#lock).  
+Di editor hanya baca, keterangannya berbunyi `This window only`, karena perubahan di sana hanya sampai ke jendela itu — lihat [Editor hanya baca](#read-only-editors).
 
 ## Bahasa {#language}
 
@@ -138,3 +139,10 @@ Menu Ekspor tidak memiliki item Generator Kode, dan tab `Code Generator` di Prop
 Untuk menyalin kode, klik `Copy` di bagian bawah panel, atau arahkan penunjuk ke kode lalu klik tombol salin di kanan atasnya, satu-satunya cara di Properti Tabel.  
 Notifikasi `Copied!` dengan tanda centang mengonfirmasinya selama dua detik. Jika browser atau host menolak akses ke papan klip, notifikasi `Couldn't copy to the clipboard` dengan tanda peringatan memberitahukannya sebagai gantinya, selama lima detik. Menyalin lagi menggantikan notifikasi tersebut alih-alih menambahkan notifikasi lain.  
 Teks juga dapat dipilih, sehingga Anda dapat mengambil hanya bagian yang dibutuhkan.
+
+## Editor hanya baca {#read-only-editors}
+
+Di editor [`readonly`](../../api/erd-editor-element.md#readonly), daftar pada panel, menu konteks, dan Pencarian Cepat tetap mengubah `Language`, `Database`, `Table Name Case`, `Column Name Case`, dan `Bracket`, tetapi hanya di jendela itu, sehingga panel memberi keterangan `This window only`, bukan `Saved in the document`.  
+Perubahan menulis ulang kode di layar itu dan tidak disimpan di file, dibagikan kepada kolaborator, atau dicatat untuk pembatalan, apa pun penguncian miliknya, dan perubahan kolaborator pada pengaturan yang Anda pilih membiarkan pilihan Anda tetap di layar. `Database` dan `Bracket` juga merupakan pengaturan tab Skema SQL, sehingga pilihan di sini tampil di sana pada jendela yang sama — lihat [Editor hanya baca](./schema-sql.md#read-only-editors).  
+Setelah editor dapat menulis lagi, pengaturan dokumen kembali dan kode ditulis untuknya.  
+`Save file` dan `Copy` menyimpan dan menyalin kode yang ditampilkan.

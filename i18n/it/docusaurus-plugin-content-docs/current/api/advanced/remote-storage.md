@@ -16,7 +16,7 @@ npm install @dineug/erd-editor
 
 Lo store di replica si trova nel sottopercorso `@dineug/erd-editor/engine.js`, non nella radice del pacchetto.  
 Questo punto di ingresso non accede al DOM, quindi funziona in un Web Worker o in qualsiasi altro contesto fuori dal thread principale.  
-Importando invece la radice del pacchetto si registra l’elemento personalizzato `<erd-editor>`, che richiede un documento.
+Importando invece la radice del pacchetto serve un documento: dalla versione `5.0.0` non definisce alcun elemento, ma la sua valutazione costruisce entrambe le classi degli elementi. Prima della versione `5.0.0` registrava l’elemento personalizzato `<erd-editor>`.
 
 ## Utilizzo {#usage}
 

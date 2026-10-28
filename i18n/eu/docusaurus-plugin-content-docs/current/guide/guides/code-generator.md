@@ -25,7 +25,8 @@ Hautatutako lengoaiak `Database` aukera edo izenen idazkerak alde batera uzten d
 `Save file` eta `Copy` botoiak panelaren oinean daude. Ikus [Emaitza gordetzea edo kopiatzea](#saving-or-copying-the-result).
 
 Diagramaren beraren ezarpenak dira, laster-menuak eta Bilaketa azkarrak ere aldatzen dituztenak. `Database` aukera fitxategian gordetzen da beste edozein edizio bezala.  
-`Language`, `Table Name Case`, `Column Name Case` eta `Bracket` aukerak Ezarpenak fitxako beren blokeoa desaktibatuta dagoen bitartean soilik gordetzen dira (`Bracket Type` blokeoa `Bracket` aukerarako), eta diagrama berri batek blokeo guztiak aktibatuta ditu. Blokeo bat aktibatuta dagoen bitartean, aldaketa batek zure pantailako kodea berridazten du, baina fitxategiak balio blokeatua mantentzen du, eta diagrama balio horrekin irekitzen da berriro. Panelak ez du blokeoaren inolako zantzurik erakusten; aukera bat fitxategian gordetzeko, desaktibatu haren blokeoa. Ikus [Blokeoa](./settings.md#lock).
+`Language`, `Table Name Case`, `Column Name Case` eta `Bracket` aukerak Ezarpenak fitxako beren blokeoa desaktibatuta dagoen bitartean soilik gordetzen dira (`Bracket Type` blokeoa `Bracket` aukerarako), eta diagrama berri batek blokeo guztiak aktibatuta ditu. Blokeo bat aktibatuta dagoen bitartean, aldaketa batek zure pantailako kodea berridazten du, baina fitxategiak balio blokeatua mantentzen du, eta diagrama balio horrekin irekitzen da berriro. Panelak ez du blokeoaren inolako zantzurik erakusten; aukera bat fitxategian gordetzeko, desaktibatu haren blokeoa. Ikus [Blokeoa](./settings.md#lock).  
+Irakurtzeko soilik dagoen editore batean epigrafeak `This window only` dio horren ordez, bertako aldaketa batek leiho horretara bakarrik iristen baita. Ikus [Irakurtzeko soilik dauden editoreak](#read-only-editors).
 
 ## Lengoaia {#language}
 
@@ -138,3 +139,10 @@ Export menuak ez du Kode-sortzailearen aukerarik, eta Taularen propietateak pane
 Kodea kopiatzeko, egin klik panelaren oineko `Copy` botoian, edo pasatu sagua kodearen gainetik eta egin klik haren goiko eskuineko kopiatzeko botoian; Taularen propietateak panelean, hori da modu bakarra.  
 Egiaztatze-marka bat duen `Copied!` jakinarazpen batek berresten du bi segundoz. Nabigatzaileak edo ostalariak arbela ukatzen badu, abisu-ikur bat duen `Couldn't copy to the clipboard` jakinarazpen batek adierazten du hori haren ordez, bost segundoz. Berriro kopiatzean, jakinarazpena ordezten da, beste bat gehitu beharrean.  
 Testua hautatu ere egin daiteke; beraz, behar duzun zatia soilik har dezakezu.
+
+## Irakurtzeko soilik dauden editoreak {#read-only-editors}
+
+[`readonly`](../../api/erd-editor-element.md#readonly) atributua duen editore batean, panelaren zerrendek, laster-menuak eta Bilaketa azkarrak `Language`, `Database`, `Table Name Case`, `Column Name Case` eta `Bracket` aukerak aldatzen dituzte oraindik, baina leiho horretan bakarrik; beraz, panelak `Saved in the document` ordez `This window only` jartzen du haien epigrafean.  
+Aldaketa batek pantaila horretako kodea berridazten du, eta ez da fitxategian gordetzen, ez lankideekin partekatzen, ez desegiteko erregistratzen, blokeoek dioten guztia gorabehera; eta lankide batek zuk aukeratutako ezarpen bati egindako aldaketak zure aukera pantailan uzten du. `Database` eta `Bracket` SQL eskema fitxako ezarpenak ere badira; beraz, hemen egindako aukera batek leiho berean agertzen da han. Ikus [Irakurtzeko soilik dauden editoreak](./schema-sql.md#read-only-editors).  
+Editorea berriro idazgarri bihurtzen denean, dokumentuaren ezarpenak itzultzen dira eta kodea haientzat idazten da.  
+`Save file` eta `Copy` aukerek erakusten den kodea gordetzen eta kopiatzen dute.

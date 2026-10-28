@@ -12,7 +12,7 @@ Riwayat menyimpan hingga `2048` perubahan.
 - Ulangi: `Ctrl + Shift + Z` (Windows/Linux) atau `⌘ + Shift + Z` (Mac)
 
 Di tab ERD, bilah alat menyediakan kedua perintah yang sama sebagai tombol `Undo` dan `Redo`, di samping `Time Travel`. Di tab Kamus, bilah alat menampilkan `Undo` dan `Redo` tanpa `Time Travel`, dan tidak ada tab lain yang menampilkannya.  
-Keduanya hanya aktif saat ada sesuatu yang dapat dibatalkan atau diulangi. Editor `readonly` menyembunyikannya, dan pintasannya tidak membatalkan maupun mengulangi apa pun.
+Keduanya hanya aktif saat ada sesuatu yang dapat dibatalkan atau diulangi. Editor `readonly` menyembunyikannya dan `Time Travel`, dan pintasannya tidak membatalkan maupun mengulangi apa pun.
 
 Batalkan dan Ulangi bekerja pada riwayat diagram hanya di tab ERD.  
 Di sana, pintasan tidak aktif selama Pencarian Cepat, `Table Properties`, `Diff Viewer`, pratinjau `Auto Layout`, dialog [`Export image`](./file-import-export.md#image), [Petakan Kolom](./relationship-editing.md#map-columns), atau Perjalanan Waktu terbuka.  
@@ -58,6 +58,8 @@ Tidak dicatat:
 - Lembar yang ditampilkan di tab Kamus, serta pencarian, pilihan, guliran, dan lebar kolom setiap lembar — lihat [Membuka tab](./dictionary.md#opening-the-tab).
 
 Perubahan apa pun pada hal-hal ini tidak dapat dibatalkan.
+
+Editor hanya baca tidak mencatat apa pun sama sekali. Posisi tampilan, zoom, dan sakelar `View Option` tetap berubah di sana, bersama tab, Tampilan Nama, database, dan pengaturan kode, tetapi hanya di layar itu, sehingga tidak ada yang dibatalkan — lihat [Editor hanya baca](./settings.md#read-only-editors) di Pengaturan.
 
 Perubahan yang dibuat di tab Kamus dapat dibatalkan, tetapi masuk ke riwayat lembarnya sendiri, bukan riwayat ini, sehingga Batalkan di tab ERD tidak pernah mengembalikannya, bahkan `Data Type` baru suatu domain beserta tipe kolom yang diubahnya pun tidak — lihat [Lembar kamus](#dictionary-sheets).
 
@@ -136,7 +138,7 @@ Riwayat setiap lembar dikosongkan saat kamus diganti: oleh `Import` file JSON, m
 ## Perjalanan Waktu {#time-travel}
 
 Dibuka dari tombol `Time Travel` di bilah alat, di samping Batalkan dan Ulangi di tab ERD.  
-Tombol ini tidak melakukan apa pun hingga riwayat diagram memiliki setidaknya satu perubahan yang tercatat.
+Tombol ini tidak melakukan apa pun hingga riwayat diagram memiliki setidaknya satu perubahan yang tercatat. Editor hanya baca tidak menampilkan tombol seperti itu, dan editor yang menjadi hanya baca menutup Perjalanan Waktu tanpa menerapkannya.
 
 Perjalanan Waktu membuka salinan diagram yang terpisah dan hanya baca, pada posisi gulir, tingkat zoom, dan [Tampilan Nama](./logical-names.md#name-view) yang sedang ditampilkan kanvas, baik penguncian `Viewport` atau `Name View` aktif maupun tidak.  
 Perjalanan Waktu hanya menelusuri riwayat diagram, sehingga perubahan pada lembar kamus tidak termasuk dalam titik-titiknya.  

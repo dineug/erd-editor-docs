@@ -25,7 +25,8 @@ Kadar izbrani jezik ne upošteva nastavitve `Database` ali zapisov imen, ti osta
 Gumba `Save file` in `Copy` sta na dnu plošče – glejte razdelek [Shranjevanje ali kopiranje rezultata](#saving-or-copying-the-result).
 
 To so nastavitve samega diagrama, iste, ki jih spreminjata tudi priročni meni in hitro iskanje. Nastavitev `Database` se shrani v datoteko kot vsaka druga sprememba.  
-Nastavitve `Language`, `Table Name Case`, `Column Name Case` in `Bracket` se shranijo samo, dokler je njihov zaklep na zavihku Nastavitve izklopljen (za `Bracket` je to `Bracket Type`), nov diagram pa ima vklopljene vse zaklepe. Dokler je zaklep vklopljen, sprememba prepiše kodo na vašem zaslonu, datoteka pa obdrži zaklenjeno vrednost in diagram se znova odpre z njo. Plošča z ničimer ne nakazuje zaklepa; če želite izbiro ohraniti v datoteki, izklopite njen zaklep – glejte razdelek [Zaklepanje](./settings.md#lock).
+Nastavitve `Language`, `Table Name Case`, `Column Name Case` in `Bracket` se shranijo samo, dokler je njihov zaklep na zavihku Nastavitve izklopljen (za `Bracket` je to `Bracket Type`), nov diagram pa ima vklopljene vse zaklepe. Dokler je zaklep vklopljen, sprememba prepiše kodo na vašem zaslonu, datoteka pa obdrži zaklenjeno vrednost in diagram se znova odpre z njo. Plošča z ničimer ne nakazuje zaklepa; če želite izbiro ohraniti v datoteki, izklopite njen zaklep – glejte razdelek [Zaklepanje](./settings.md#lock).  
+V urejevalniku samo za branje je napis namesto tega `This window only`, saj sprememba tam doseže samo to okno – glejte razdelek [Urejevalniki samo za branje](#read-only-editors).
 
 ## Jezik {#language}
 
@@ -138,3 +139,10 @@ Meni Izvozi nima postavke za generator kode, zavihek `Code Generator` v oknu Las
 Če želite kodo kopirati, kliknite `Copy` na dnu plošče ali pa premaknite kazalec nad kodo in kliknite gumb za kopiranje v njenem zgornjem desnem kotu, kar je v oknu Lastnosti tabele edini način.  
 Pojavno obvestilo `Copied!` s kljukico to za dve sekundi potrdi. Če brskalnik ali gostitelj zavrne dostop do odložišča, to namesto tega za pet sekund sporoči pojavno obvestilo `Couldn't copy to the clipboard` z opozorilnim znakom. Ponovno kopiranje nadomesti pojavno obvestilo, namesto da bi dodalo novo.  
 Besedilo je mogoče tudi izbrati, zato lahko vzamete samo del, ki ga potrebujete.
+
+## Urejevalniki samo za branje {#read-only-editors}
+
+V urejevalniku [`readonly`](../../api/erd-editor-element.md#readonly) seznami na plošči, priročni meni in hitro iskanje še vedno spreminjajo `Language`, `Database`, `Table Name Case`, `Column Name Case` in `Bracket`, vendar samo v tistem oknu, zato plošča te nastavitve opisuje z `This window only` namesto `Saved in the document`.  
+Sprememba prepiše kodo na tistem zaslonu in ni shranjena v datoteko, deljena s sodelavci ali zabeležena za razveljavitev, ne glede na zaklepe, sprememba sodelavca nastavitve, ki ste jo izbrali, pa vaše izbire na zaslonu ne spremeni. `Database` in `Bracket` sta tudi nastavitvi zavihka Shema SQL, zato se izbira tu pokaže tam v istem oknu – glejte razdelek [Urejevalniki samo za branje](./schema-sql.md#read-only-editors).  
+Ko je urejevalnik spet mogoče urejati, se nastavitve dokumenta vrnejo in koda se zapiše zanje.  
+`Save file` in `Copy` shranita in kopirata prikazano kodo.

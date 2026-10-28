@@ -61,7 +61,7 @@ O que escreve altera apenas o nome lógico. O nome físico é derivado dele quan
 - Na vista `Logical Names`, o nome lógico do cabeçalho, depois o seu comentário e depois as células de cada linha pela ordem das colunas, com o nome lógico no lugar do nome.
 - Na vista `Both Names`, o nome lógico, o nome e o comentário do cabeçalho e depois as células de cada linha pela ordem das colunas, com a célula `Logical Name` em primeiro lugar por predefinição.
 
-`Alt + Enter` (Windows/Linux) ou `⌥ + Enter` (Mac) adiciona uma coluna e dá o foco à sua célula do nome, que, na vista `Logical Names`, é o seu nome lógico.
+`Alt + Enter` (Windows/Linux) ou `⌥ + Enter` (Mac) adiciona uma coluna e dá o foco à primeira célula que a sua linha desenha. Com a ordem de colunas predefinida, é a sua célula do nome, que, na vista `Logical Names`, é o seu nome lógico e, na vista `Both Names`, a sua célula `Logical Name`, pelo que pode começar pelo nome lógico — consulte [Adicionar colunas](./table-editing.md#adding-columns).
 
 Uma coluna de chave externa adicionada por uma relação copia o nome lógico e o domínio da sua chave, juntamente com o tipo — consulte [Relações identificadoras](./relationship-editing.md#identifying-relationships).  
 Copiar colunas para uma folha de cálculo e colar colunas a partir de uma utilizam as células que a vista desenha, incluindo as células do nome lógico e as células Domínio — consulte [Copiar e colar colunas](./table-editing.md#copyingpasting-columns).
@@ -143,5 +143,7 @@ Um agente de programação que trabalhe através do servidor MCP define nomes l�
 
 ## Editores só de leitura {#read-only-editors}
 
-Num editor [`readonly`](../../api/erd-editor-element.md#readonly), todos os seletores da vista de nomes funcionam, e uma mudança de vista altera apenas esse ecrã, seja qual for o bloqueio.  
-Os nomes lógicos e os domínios não podem ser editados aí, pelo que não se abre nenhuma lista de termos nem nenhum seletor de domínios, e não é proposta nenhuma das entradas `Derive Physical Name Again` e `Derive Physical Names Again`. Opções de vista → `Domain` não altera nada aí, tal como nenhuma [opção de vista](./table-related-functions.md#table-view-options) altera.
+Num editor [`readonly`](../../api/erd-editor-element.md#readonly), todos os seletores da vista de nomes funcionam: o botão `Name View` da barra de ferramentas da tela, a opção `Name View` do menu de contexto da tela e da pesquisa rápida e a lista da barra de ferramentas do Flow.  
+Uma mudança aí altera apenas esse ecrã, seja qual for o bloqueio: o ficheiro, os colaboradores e o histórico de anulação mantêm a vista como estava. Quando o editor volta a ser editável, a vista escolhida fica nesse ecrã até à mudança seguinte aí ou, enquanto o bloqueio está desativado, até um colaborador a mudar ou o documento voltar a ser carregado.  
+Os nomes lógicos e os domínios não podem ser editados aí, pelo que não se abre nenhum editor de células, nenhuma lista de termos nem nenhum seletor de domínios, e não é proposta nenhuma das entradas `Derive Physical Name Again` e `Derive Physical Names Again`.  
+Opções de vista → `Domain` mostra ou oculta a célula Domain apenas nesse ecrã, tal como faz aí toda a [opção de vista](./table-related-functions.md#table-view-options), e, quando o editor volta a ser editável, repõe as opções de vista que o documento contém.

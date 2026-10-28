@@ -55,6 +55,10 @@ Selama penguncian itu aktif, penggantian hanya tampil di editor yang melakukanny
 Selama penguncian itu nonaktif, penggantian yang dilakukan di editor yang dapat mengedit mengubah Tampilan Nama di setiap editor dan replika, dengan penggantian terakhir yang berlaku, dan semuanya menyimpannya.  
 Penggantian yang dilakukan sendiri oleh editor hanya baca selalu tetap berada di editor itu, dan editor tersebut tetap mengikuti penggantian bersama dari editor lain.
 
+Sejak `5.0.0`, editor [hanya baca](../erd-editor-element.md#readonly) tidak mengirim perubahan sama sekali. Guliran, zoom, tab, Tampilan Nama, database, bahasa Code Generator, konvensi penamaan, tipe tanda kutip, dan baris `View Option` yang diubah pembacanya tetap berada di layarnya, apa pun penguncian miliknya; sebelum `5.0.0`, guliran, zoom, perpindahan tab, database, dan pengaturan kodenya dikirim seperti pada editor yang dapat diedit.  
+Store-nya tetap mengirim apa yang dikirim pelacaknya tentang kursor, fokus, pilihan, dan kotak seret pembaca, menjawab register yang diminta editor yang baru bergabung, dan menerapkan setiap perubahan yang dikirim editor lain. Perubahan database, pengaturan Code Generator, atau baris `View Option` mencapai dokumennya, dan layarnya juga kecuali pembacanya telah mengubah pengaturan itu di sana, sedangkan penggantian Tampilan Nama bersama tampil di layarnya dalam kedua kasus.  
+Saat editor menjadi hanya baca, editor lebih dulu mengirim apa yang masih ditahan store dari sebuah seretan atau guliran, seperti yang dilakukan [flushStreamBuffers](#flushstreambuffers), sehingga editor lain mempertahankan bagian terakhirnya.
+
 [Penguncian](../../guide/guides/settings.md#lock) dibagikan: penguncian atau pembukaan kunci terakhir pada sebuah pengaturan berlaku di setiap editor, dan penguncian membawa nilai dari editor yang mengaktifkannya, sehingga setiap editor dan replika menyimpan nilai yang sama.  
 Karena itu, penguncian `Viewport` menyimpan area pandang editor yang mengaktifkannya, dan penguncian `Canvas Type` menyimpan tab terakhir yang dibuka editor tersebut sebelum tab Pengaturan, tempat penguncian diaktifkan.  
 Menonaktifkan penguncian `Language`, `Table Name Case`, `Column Name Case`, `Bracket Type`, atau, sejak `4.2.0`, `Name View` juga menetapkan pengaturan itu di setiap editor ke nilai yang ditampilkan di editor yang menonaktifkannya, sehingga semua editor tetap menyimpan satu nilai. Menonaktifkan `Viewport` atau `Canvas Type` tidak memindahkan area pandang atau tab siapa pun.
@@ -71,6 +75,8 @@ Tombol tautan eksternal pada kartu, hasil [Pencarian Cepat](../../guide/guides/q
 Sambungan dari subscribe ke dispatch di sini menggantikan jaringan, sehingga Anda dapat melihat bentuk sebuah sesi tanpa transport yang menghalangi.
 
 ```js
+import '@dineug/erd-editor/erd-editor.js';
+
 const editor1 = document.createElement('erd-editor');
 const editor2 = document.createElement('erd-editor');
 

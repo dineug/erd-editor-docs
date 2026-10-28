@@ -31,7 +31,7 @@ SQL 會在此索引標籤開啟時寫出，之後每當面板中的某個選項�
 
 面板包含三組選項，每組各有一個標題：
 
-1. `Saved in the document`：`Database` 和 `Bracket`，請參閱[資料庫與引號](#database-and-bracket)。
+1. `Saved in the document`：`Database` 和 `Bracket`，請參閱[資料庫與引號](#database-and-bracket)。唯讀編輯器將它們標示為 `This window only`，請參閱[唯讀編輯器](#read-only-editors)。
 2. `This window only`：`Statements`、`Header`、`Write logical names into empty comments`，以及圖表中有[資料表群組](./table-groups.md)時出現的 `Tables`，請參閱[陳述式](#statements)、[標頭](#header)、[以邏輯名稱作為註解](#logical-names-as-comments)和[資料表](#tables)。
 3. `Saved in the document · written as is for every database`：`Before tables` 和 `After tables` 指令碼，請參閱[前置與後置指令碼](#before-and-after-scripts)。
 
@@ -222,5 +222,9 @@ Oracle 則會得到序列 `SEQ_<table>`，以及從該序列填入欄位值的�
 
 ## 唯讀編輯器 {#read-only-editors}
 
-在 `readonly` 編輯器中，此索引標籤會照常運作：`Database` 和 `Bracket` 仍會變更顯示的 SQL，`Statements`、`Header`、`Write logical names into empty comments` 和 `Tables` 仍可使用，`Save file` 和 `Copy` 也仍可儲存和複製 SQL。  
-只有兩個指令碼輸入框是唯讀的。
+在 [`readonly`](../../api/erd-editor-element.md#readonly) 編輯器中，此索引標籤是為讀者運作的，在其上所做的任何操作都不會影響文件：
+
+- `Database` 和 `Bracket` 仍會重寫 SQL，但只作用於該視窗，因此面板同樣將它們標示為 `This window only`。挑選的結果不會儲存到檔案、與協作者共用，或記錄到復原歷程記錄，無論鎖定如何設定，而協作者對您所挑選之設定的變更，也會讓您的選擇留在畫面上。程式碼產生器索引標籤會顯示相同的挑選結果，未指定資料庫而呼叫的 [`getSchemaSQL()`](../../api/erd-editor-element.md#getschemasql) 也會寫出它。編輯器再次轉為可寫入後，文件的資料庫和引號會恢復。
+- `Statements`、`Header`、`Write logical names into empty comments` 和 `Tables` 的運作與在任何地方相同，因為它們本來就屬於該視窗。
+- 兩個指令碼輸入框是唯讀的：它們顯示文件的指令碼（SQL 仍會寫出這些指令碼），無法輸入。
+- `Save file` 和 `Copy` 會儲存和複製此索引標籤所顯示的 SQL。

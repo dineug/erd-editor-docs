@@ -12,7 +12,7 @@ The history keeps up to `2048` changes.
 - Redo: `Ctrl + Shift + Z` (Windows/Linux) or `⌘ + Shift + Z` (Mac)
 
 On the ERD tab, the toolbar carries the same two commands as `Undo` and `Redo` buttons, next to `Time Travel`. On the Dictionary tab it shows `Undo` and `Redo` without `Time Travel`, and no other tab shows them.  
-They light up only when there is something to undo or redo. A `readonly` editor hides them, and the shortcuts undo and redo nothing.
+They light up only when there is something to undo or redo. A `readonly` editor hides them and `Time Travel`, and the shortcuts undo and redo nothing.
 
 Undo and Redo act on the diagram's history only on the ERD tab.  
 The shortcuts are inactive there while Quick Search, `Table Properties`, `Diff Viewer`, the `Auto Layout` preview, the [`Export image`](./file-import-export.md#image) dialog, [Map Columns](./relationship-editing.md#map-columns), or Time Travel is open.  
@@ -58,6 +58,8 @@ Not recorded:
 - The Dictionary tab's sheet shown, and each sheet's search, selection, scroll, and column widths — see [Opening the Tab](./dictionary.md#opening-the-tab).
 
 Changing any of these cannot be undone.
+
+A read-only editor records nothing at all. The view position, the zoom, and the `View Option` toggles still change there, along with the tab, the Name View, the database, and the code settings, but on that screen alone, so there is nothing to undo — see [Read-only Editors](./settings.md#read-only-editors) in Settings.
 
 Edits made on the Dictionary tab can be undone, but they go into the history of their own sheet rather than this one, so Undo on the ERD tab never takes one back, not even a domain's new `Data Type` and the column types it changes — see [Dictionary Sheets](#dictionary-sheets).
 
@@ -136,7 +138,7 @@ Every sheet's history is emptied when the dictionaries are replaced: by an `Impo
 ## Time Travel
 
 Opens from the `Time Travel` button in the toolbar, next to Undo and Redo on the ERD tab.  
-The button does nothing until the diagram's history has at least one recorded change.
+The button does nothing until the diagram's history has at least one recorded change. A read-only editor shows no such button, and an editor that turns read-only closes Time Travel without applying it.
 
 Time Travel opens a separate, read-only copy of the diagram, at the scroll position, zoom level, and [Name View](./logical-names.md#name-view) the canvas is showing, whether or not the `Viewport` or `Name View` lock is on.  
 It steps through the diagram's history alone, so the Dictionary sheets' edits are not among its points.  

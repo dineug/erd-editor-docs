@@ -1,11 +1,20 @@
 ---
 sidebar_position: 2
-description: erd-editor 元素的 API：属性、value 与 runtimeValue、事件、主题、显示语言、欢迎界面、按键绑定，以及 schema 的导入与导出。
+description: erd-editor 元素的 API：注册元素、属性、value 与 runtimeValue、事件、主题、显示语言、欢迎界面、按键绑定，以及 schema 的导入与导出。
 ---
 
 # ErdEditorElement
 
-编辑器就是一个普通的 `HTMLElement`。  
+编辑器就是一个普通的 `HTMLElement`，即导入 `@dineug/erd-editor/erd-editor.js` 所定义的 `<erd-editor>` 标签。  
+从 `5.0.0` 起，导入包的根入口不会定义任何标签。根入口导出的 `ErdEditorElement` 既是元素的类型也是它的类，另外还导出 `defineErdEditor()`，它在你调用的位置定义该标签，参见[注册元素](./installation.md#registering-the-elements)。  
+对于只显示图的页面，[`<erd-viewer>`](./erd-viewer-element.md) 是另一个独立的只读元素。
+
+```js
+import '@dineug/erd-editor/erd-editor.js';
+
+const editor = document.createElement('erd-editor');
+```
+
 其类型定义如下。
 
 ```ts
@@ -80,14 +89,26 @@ interface ErdEditorElement extends HTMLElement {
 
 设置编辑器是否可编辑。  
 在其生效期间，为 `value` 赋值、`clear()`、`setSchemaSQL()`、`setSchemaGraphQL()`、`setSchemaDBML()`、`setSchemaAML()`、`setSchemaJSON()`、Undo 和 Redo（从 `4.2.0` 起也包括词典工作表的 Undo 和 Redo）都会被忽略，并且不会发出 `change` 事件。此时改用 [setInitialValue](#setinitialvalue) 加载文档。  
-查看功能仍然可用：缩放、平移、抓手工具、禅模式、画布标签页、[Visualization](../guide/guides/visualization.md) 标签页的两种模式（包括聚焦于表）、数据库厂商，以及 SQL 与代码生成的输出设置都仍然生效，因此只读的查看者依然可以导出其他厂商的 SQL 或阅读生成的代码。  
-从 `4.1.0` 起，[资源管理器](../guide/guides/explorer.md#read-only-editors)也可以打开，选择其中的某一行会跳转到该行所代表的对象，与在可编辑的编辑器中相同。其顶部的[查找与替换](../guide/guides/find-and-replace.md#read-only-editors)只能查找，没有 `Toggle Replace` 箭头，也没有 Replace 行；跳转到匹配项时，仍会将其带入视野并选中它。在任何编辑器中，该面板的标题都是 `Explorer`，工具栏按钮的提示都是 `Explorer (Ctrl + F)` (Windows/Linux) 或 `Explorer (⌘ + F)` (Mac)。从 `3.10.0` 到 `4.0.0`，查找与替换以标题为 `Find`、只能查找的浮动面板形式打开。  
-表属性仍然可以打开，并且从 `3.10.0` 起，其标题旁会显示 `Read only` 徽标，其 `Indexes` 标签页也不提供任何编辑功能，参见[表属性](../guide/guides/table-related-functions.md#table-properties)。  
-从 `4.0.0` 起，只读编辑器不提供 [`Import and Add`](../guide/guides/file-import-export.md#import-and-add)、`New Table Group`、`Group selected tables`、`Remove from group`（参见[表分组](../guide/guides/table-groups.md#read-only-editors)）以及 [`Map Columns`](../guide/guides/relationship-editing.md#map-columns)，也不显示[欢迎界面](#enablewelcomescreen)。Settings 标签页上的锁定按钮不会改变任何内容，Schema SQL 标签页的 `Before tables` 和 `After tables` 脚本也无法编辑。  
-从 `4.1.0` 起，它的[画布工具栏](../guide/guides/table-related-functions.md#canvas-toolbar)上也不显示 `New Table`、`New Memo` 和 `New Table Group` 按钮，`addTableGroup` 和 `groupSelectedTables` 绑定也不起作用。  
-从 `4.2.0` 起，[名称显示](../guide/guides/logical-names.md#read-only-editors)仍可通过它的每个选择器切换，但只作用于该编辑器自己的屏幕：无论其锁定如何，切换都永远不会传到协作者那里。Flow 中的 `Previous table` 和 `Next table` 仍可通过其按钮或 Undo 与 Redo 的按键后退和前进。  
-[Dictionary](../guide/guides/dictionary.md#read-only-editors) 标签页仍然可以打开：可以切换、搜索、选中和滚动其工作表，也可以从中复制，`Checks` 工作表中的行也仍会跳转到它所指的对象。任何单元格都不接受编辑、粘贴或清除，该标签页不显示 `Add Row`、`Delete Rows`、`Import CSV` 或 `Export CSV` 工具，网格上也没有菜单，其行组合键既不会插入也不会删除任何行。表菜单、画布菜单和快速搜索都不提供 [`Derive Physical Names Again`](../guide/guides/dictionary.md#derive-physical-names-again) 或 `Derive Physical Name Again`。  
-Schema SQL 标签页中 `This window only` 下的选择，即 `Statements`、`Header`、从 `4.2.0` 起的 `Write logical names into empty comments` 和 `Tables`，从不保存，并且仍然生效；[`Export image`](../guide/guides/file-import-export.md#image) 对话框、主题构建器和 Display Language 选择器也同样可用。在主题构建器或 Display Language 选择器中做出选择时，仍会发出 [changePresetTheme](#changepresettheme) 或 [changeLocale](#changelocale)。  
+从 `5.0.0` 起，只读编辑器是阅读者，而不是控件被禁用的编辑器。它保留六个标签页、[资源管理器](../guide/guides/explorer.md#read-only-editors)、小地图、快速搜索、表属性、[Diff Viewer](../guide/guides/table-related-functions.md#diff-viewer)、`Export`、禅模式，以及协作者的光标、焦点和选中状态；所有会编辑图的控件都被直接去掉，而不是绘制成禁用状态。在 `5.0.0` 之前，它仍会绘制许多编辑控件，并丢弃这些控件发出的内容。
+
+在 ERD 标签页上，无论从哪里开始，拖动都会平移，在表上拖动也一样，按下不会选中、移动或打开任何内容。指针停在表上会点亮它的关系；在表或关系上静止点击会保持这一点亮，在其他任何位置静止点击则会将其熄灭，与 [`<erd-viewer>`](./erd-viewer-element.md) 相同。唯一的选中是跳转留下的轮廓：跳转到资源管理器中的一行、其查找的某个匹配项，或 `#`、`@`、`:` 之后的快速搜索结果，会选中其所到达的对象，下一次静止点击会将其清除。复制会复制该选中所包含的内容。  
+[画布工具栏](../guide/guides/table-related-functions.md#canvas-toolbar)保留 `Zoom out`、缩放级别（`Reset zoom`）、`Zoom in`、名称显示列表、`Zen Mode` 和指南针，没有 `Hand` 或 `Select`，没有 `New Table`、`New Memo` 或 `New Table Group`，也没有关系按钮。画布菜单保留 `View Option`、`Name View`、`Export` 和 `Diff Viewer`，表菜单保留 `Table Properties`，备忘录、关系或表分组都不会弹出菜单。ERD 标签页上的快速搜索不列出任何会写入图的行：它保留 `Tab`、`Name View`、`Database`、`Export`、`Toggle Explorer`、由 [enableThemeBuilder](#enablethemebuilder) 和 [enableLocalePicker](#enablelocalepicker) 开启的 `Theme` 与 `Display Language` 行，以及 `#`、`@` 和 `:` 搜索。在其他标签页上，它列出的内容与可编辑的编辑器相同。工具栏把数据库名显示为文本，没有 `Undo`、`Redo` 或 `Time Travel` 按钮。  
+没有任何地方提供 `Import`、[`Import and Add`](../guide/guides/file-import-export.md#import-and-add)、`Auto Layout`、表分组行（参见[表分组](../guide/guides/table-groups.md#read-only-editors)）或 [`Map Columns`](../guide/guides/relationship-editing.md#map-columns)，也不显示[欢迎界面](#enablewelcomescreen)。  
+添加、删除或编辑的绑定都不起作用：`edit`、`addTable`、`addColumn`、`addMemo`、`addTableGroup`、`groupSelectedTables`、`removeTable`、`removeColumn`、`removeSelection`、`primaryKey`、`selectAllTable`、`selectAllColumn`、四个关系绑定和 `handTool`，各自仍按其选项所述阻止默认行为。粘贴和 `Tab` 同样不起作用，并且会不被阻止地交给页面。缩放绑定、`zenMode`、`focusView`、对跳转所选中的表生效的 `tableProperties`、`search`、`findReplace`、复制、`Escape` 和方向键仍然有效。不会打开任何单元格、备忘录或表分组名称编辑器，也不会绘制任何关系。
+
+资源管理器顶部的[查找与替换](../guide/guides/find-and-replace.md#read-only-editors)只能查找，没有 `Toggle Replace` 箭头，也没有 Replace 行。在任何编辑器中，该面板的标题都是 `Explorer`，工具栏按钮的提示都是 `Explorer (Ctrl + F)` (Windows/Linux) 或 `Explorer (⌘ + F)` (Mac)。资源管理器从 `4.1.0` 起就可以在只读编辑器中打开；从 `3.10.0` 到 `4.0.0`，查找与替换在那里以标题为 `Find`、只能查找的浮动面板形式打开。  
+表属性可以从表菜单或 `tableProperties` 绑定打开，并且从 `3.10.0` 起，其标题旁会显示 `Read only` 徽标，其 `Indexes` 标签页也不提供任何编辑功能，参见[表属性](../guide/guides/table-related-functions.md#table-properties)。  
+Settings 标签页带有同样的 `Read only` 徽标，并且以不接受按下的控件显示每项设置：两个开关、`Maximum comment width` 字段和七个 `Lock` 按钮都被禁用，`Column Order` 的各行也不能拖动。Schema SQL 标签页的 `Before tables` 和 `After tables` 脚本不接受输入。[Visualization](../guide/guides/visualization.md) 标签页的工作方式与可编辑的编辑器相同，因为那里的任何操作都不会编辑文档；Flow 中的 `Previous table` 和 `Next table` 仍可通过其按钮或 Undo 与 Redo 的按键后退和前进。  
+[Dictionary](../guide/guides/dictionary.md#read-only-editors) 标签页仍然可以打开：可以切换、搜索、选中和滚动其工作表，也可以从中复制，`Checks` 工作表中的行也仍会跳转到它所指的对象。任何单元格都不接受编辑、粘贴或清除，该标签页不显示 `Add Row`、`Delete Rows`、`Import CSV` 或 `Export CSV` 工具，网格上也没有菜单，其行组合键既不会插入也不会删除任何行。表菜单、画布菜单和快速搜索都不提供 [`Derive Physical Names Again`](../guide/guides/dictionary.md#derive-physical-names-again) 或 `Derive Physical Name Again`。
+
+从 `5.0.0` 起，阅读者仍可更改的设置只保留在该编辑器的屏幕上：滚动和缩放、标签页、数据库、Code Generator 的语言、两种名称大小写、括号类型、`View Option` 各行，以及通过其每个选择器切换的[名称显示](../guide/guides/logical-names.md#read-only-editors)，后者从 `4.2.0` 起就一直只保留在屏幕上。无论它们的[锁定](../guide/guides/settings.md#锁定)如何，其中任何一项都不会传到 `value`、`runtimeValue`、`json` 导出、Undo 历史记录、[change](#change) 事件或共享 store，因此无论阅读者如何查看，`value` 都保持文档的设置。设置了 `readonly` 期间，[Schema SQL](../guide/guides/schema-sql.md#read-only-editors) 与 Code Generator 选项面板把这些设置标注为 `This window only`，而可编辑的编辑器中标注的是 `Saved in the document`。这两个标签页所显示、复制和保存的内容跟随屏幕，不带厂商调用的 [getSchemaSQL](#getschemasql) 也一样。  
+在 `5.0.0` 之前，阅读者的滚动、缩放、标签页切换、数据库和代码设置，在没有锁定掌管它们时会进入 `value`（数据库从来没有锁定），共享 store 还会把它们发给其他编辑器。  
+Schema SQL 标签页自身 `This window only` 下的选择，即 `Statements`、`Header`、从 `4.2.0` 起的 `Write logical names into empty comments` 和 `Tables`，在任何编辑器中都从不保存，并且仍然生效；[`Export image`](../guide/guides/file-import-export.md#image) 对话框、主题构建器和 Display Language 选择器也同样可用。在主题构建器或 Display Language 选择器中做出选择时，仍会发出 [changePresetTheme](#changepresettheme) 或 [changeLocale](#changelocale)。
+
+设置了 `readonly` 期间，任何内容都不会进入 Undo 历史记录，滚动或缩放也不例外；编辑器的[共享 store](#getsharedstore) 也不发出任何更改，只发出它的 tracker 发出的阅读者的光标、焦点、选中状态和拖动框，以及另一个编辑器加入时所请求的寄存器（参见[协同编辑](./advanced/collaborative-editing.md)）。它仍会应用其他编辑器发来的每项更改。数据库、Code Generator 设置或 `View Option` 某行的变化会到达文档，除非阅读者在该屏幕上更改了该设置，否则也会到达屏幕；共享的名称显示切换则无论如何都会显示在屏幕上。
+
+开启它会结束正在打开的内容：单元格、备忘录或表分组的名称编辑器、正在绘制的关系、表、备忘录、表分组或列的拖动、Alt 拖动的副本、备忘录或表分组的调整大小、仍在进行的自动布局预览或排布、`Map Columns`、Time Travel 和取色器。它会清除选中状态，放下手形工具，并首先发出每个共享 store 仍扣留的拖动或滚动内容，与 [flushStreamBuffers](./advanced/collaborative-editing.md#flushstreambuffers) 的做法相同。已变为只读的表属性、Diff Viewer 和 `Export image` 对话框保持打开，滚动、缩放、标签页和名称显示保持原样。首次挂载时就是只读的元素以同样的方式启动，被宿主在页面中移动的元素则保留跳转留下的轮廓。  
+关闭它会让编辑控件回来，且没有任何内容被选中或打开。数据库、Code Generator 的语言、两种名称大小写、括号类型和 `View Option` 各行会恢复为文档的值，而滚动、缩放、标签页和名称显示保持在阅读者离开时的位置，`value` 也保持文档的设置，直到阅读者再次更改它们。两种切换都不会发出 `change`。  
 仅写属性名、`=""` 和 `="true"` 都会被读作 `true`。`="false"` 会被读作 `false`，其他任何字符串也一样，包括 HTML 惯用写法 `readonly="readonly"`。
 
 ```js
@@ -182,6 +203,7 @@ editor.setAttribute('enable-welcome-screen', 'true');
 从 `4.0.0` 起，它是存储形式，即文件所保存形式的文档，也就是 `json` 导出写出的内容以及官方宿主保存的内容。它只包含现存的实体，不含已删除的实体、叠放顺序，以及编辑器自行推算的内容，例如测量得到的宽度、键标记和关系的连接线锚点。其中的实体按固定顺序排列键，以两个空格缩进，并以换行符结尾，因此同一个文档总是得到相同的字节。  
 从 `4.2.0` 起，它还会省略空的内容：空的 `doc` 列表、空的集合、不含任何内容的词典行，以及实体中为空的文本字段，例如名称、注释、数据类型、默认值或颜色。实体内部的列表（例如表的 `columnIds`）即使为空也仍会写出。新文档的 `doc` 为 `{}`，并且没有 `collections`，因此应把缺失的字段、列表或集合读作空。它包含表和列的逻辑名以及标明名称是否由词典生成的标记、列的域关联，以及词根、术语和域；每个词典都先写出一个由字段名组成的标题行，再按工作表中的顺序写出其各行，每行占一行。参见[存储形式与运行时值](./advanced/schema.md#存储形式与运行时值)。  
 [锁定](../guide/guides/settings.md#锁定)处于开启状态的每项设置，都按其锁定的值写出，而不是按屏幕上显示的值写出。`Viewport` 锁定掌管 `originX`、`originY` 和 `zoomLevel`，`Canvas Type`、`Language`、`Table Name Case`、`Column Name Case`、`Bracket Type` 以及从 `4.2.0` 起的 `Name View` 则各自掌管对应的设置。名称显示写为 `nameViewMode`，并且只在其不为 `'physical'` 时才写出。其他所有设置都按其当前的值写出，`lockSettings` 总会写出。各个位的说明参见 [Settings](./advanced/schema.md#settings)；`Name View` 锁定的位含义相反。  
+从 `5.0.0` 起，[只读](#readonly)编辑器的阅读者所更改的设置，无论是否锁定，也都按文档的值写出，因为它们只保留在该屏幕上。  
 新文档的所有锁定都处于开启状态，无论是元素在被赋予值之前显示的文档，还是从空白值加载的文档。在相应的锁定关闭之前，其 `value` 会一直把原点写为 `0, 0`、缩放级别写为 `1`、标签页写为 ERD 标签页，写出默认的 Code Generator 语言、名称大小写和括号类型，并且从 `4.2.0` 起把名称显示写为 `Physical Names`。  
 在 `4.0.0` 之前，它返回的是编辑器所持有形式的完整文档，并应用了 `ignoreSaveSettings`。编辑器所持有形式的文档现在是 [runtimeValue](#runtimevalue)，`ignoreSaveSettings` 也已不再被读取或写入。
 
@@ -230,7 +252,7 @@ otherEditor.setInitialValue(editor.runtimeValue);
 无论哪种情况，视图都会在文档的视图处打开（文本写明了锁定时为它保存的视图，一个都没有写明时为原点 `0, 0`、缩放级别 `1`）；如果那里没有绘制图的任何部分，则在图上打开。锁定的 `Viewport` 仍会在 `value` 中保留其锁定的值。  
 从 `4.0.0` 起，它还会丢弃此前所持有文档的协同状态，并且该编辑器已经订阅的 [shared store](#getsharedstore) 会再次向其他编辑器请求它们的协同状态，因此在进行中的会话里重新加载的编辑器能够跟上进度。请用另一个编辑器的 [runtimeValue](#runtimevalue) 为这样的编辑器载入初始文档。  
 不是 JSON 的文本同样不会报错：文档会被清空，设置保持原样，解析错误则会输出到控制台。  
-与为 `value` 赋值不同，它不受 `readonly` 限制，因此可以用它把文档加载到只读的查看器中。
+与为 `value` 赋值不同，它不受 `readonly` 限制，因此可以用它把文档加载到只读编辑器中。只读编辑器随后会显示所加载文本中的设置，丢弃阅读者在屏幕上更改过的那些。
 
 ```js
 editor.setInitialValue('json...');
@@ -1058,8 +1080,8 @@ editor.setSchemaJSON('json...', { mode: 'append' });
 ## getSchemaSQL
 
 将当前编辑器状态导出为 Schema SQL。  
-若未指定 `databaseVendor`，则按当前已设置的厂商执行。不在下面列表中的名称也按相同方式处理，不会报错。  
-名称会使用编辑器所显示的括号类型加引号。`Bracket Type` [锁定](../guide/guides/settings.md#锁定)期间，它可能与 `value` 保存的括号类型不同，而编码智能体的 [`erd_read`](../mcp/tools.md#reading-a-document) 使用的是后者。写出的名称始终是物理名，无论名称显示如何。  
+若未指定 `databaseVendor`，则按编辑器所显示的数据库写出：即文档的数据库，除非[只读](#readonly)编辑器的阅读者选了另一个，该选择从 `5.0.0` 起只保留在那个屏幕上，也是其 Schema SQL 标签页所显示的。不在下面列表中的名称也按相同方式处理，不会报错。  
+名称会使用编辑器所显示的括号类型加引号。`Bracket Type` [锁定](../guide/guides/settings.md#锁定)期间，或者从 `5.0.0` 起在阅读者选了另一种括号类型的只读编辑器中，它可能与 `value` 保存的括号类型不同，而编码智能体的 [`erd_read`](../mcp/tools.md#reading-a-document) 使用的是后者。写出的名称始终是物理名，无论名称显示如何。  
 从 `4.0.0` 起，可选的 `options` 参数会像 [Schema SQL](../guide/guides/schema-sql.md) 标签页的选项那样，选择语句和头部，从 `4.2.0` 起还可以选择是否用逻辑名填充空注释。`SchemaSQLOptions` 作为类型导出。
 
 - `statements`：`'create'` 为默认值；`'ifNotExists'` 会在 MySQL、MariaDB、PostgreSQL、SQLite 和 Databricks 上写出 `IF NOT EXISTS`，在其他数据库上退回为 `'create'`；`'recreate'` 会先删除表再创建，Snowflake 则改为写出 `CREATE OR REPLACE TABLE`。
@@ -1108,6 +1130,7 @@ const commentedSQL = editor.getSchemaSQL('PostgreSQL', {
 
 返回用于实时协同编辑的 store。  
 `config` 为 `{ getNickname?, mouseTracker?, focusTracker? }`。两个 tracker 的默认值均为 `true`：`mouseTracker` 会把当前编辑器的鼠标光标广播给其他编辑器，`focusTracker` 会广播它获得焦点的单元格、选中状态和选择框。  
+从 `5.0.0` 起，设置了 [readonly](#readonly) 期间，该 store 不发出任何更改，只发出它的 tracker 发出的内容和加入的编辑器所请求的寄存器，并且仍会应用其他编辑器发来的内容。  
 参见[协同编辑](./advanced/collaborative-editing.md)。
 
 ```js

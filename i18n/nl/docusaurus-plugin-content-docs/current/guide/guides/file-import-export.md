@@ -37,7 +37,7 @@ Een JSON-bestand behoudt de posities die het heeft. De tabellen van een Schema S
 
 Daarna wordt het diagram in één stap vervangen, zodat er tussendoor niets te zien is. Een instelling die je wijzigt terwijl de tabellen worden geplaatst, zoals het tabblad, blijft behouden, en als je intussen een ander bestand importeert, wint de import die als laatste is gestart.
 
-Een editor in alleen-lezenmodus laadt niets via `Import` en biedt `Import and Add` noch `Import CSV` van het tabblad Woordenboek aan.
+Een editor in alleen-lezenmodus importeert niets. Zijn contextmenu van het canvas en Snel zoeken bieden noch `Import` noch `Import and Add` aan, hij toont geen welkomstscherm, en het tabblad Woordenboek biedt geen `Import CSV` aan.
 
 ### Importeren en toevoegen {#import-and-add}
 
@@ -215,7 +215,7 @@ Het submenu `Export` van het contextmenu van het canvas heeft drie items:
 - Schema SQL: Opent het tabblad [Schema SQL](./schema-sql.md#saving-or-copying-the-sql) met het optiepaneel open en de focus op de knop `Save file`, zodat een druk op `Enter` de SQL die het tabblad toont opslaat als `.sql`. Tot dan wordt er niets opgeslagen.
 - Image: Opent het dialoogvenster `Export image`, dat het diagram opslaat als `.png` of `.svg`, of het als PNG naar het klembord kopieert — zie [Afbeelding](#image).
 
-Alle drie werken in een editor in alleen-lezenmodus.  
+Alle drie werken in een editor in alleen-lezenmodus, waar `Export` een van de weinige rijen is die het contextmenu van het canvas behoudt. Daar schrijft json de instellingen die het bestand bevat, niet de weergave, het tabblad, de naamweergave, het databasesysteem, de code-instellingen of de schakelaars van `View Option` die alleen op dat scherm zijn gewijzigd — zie [Editors in alleen-lezenmodus](./settings.md#read-only-editors) bij Instellingen.  
 De eigen knop `Export CSV` van het tabblad Woordenboek, die niet in dit submenu staat, slaat het blad `Domains`, `Words` of `Terms` op als CSV-bestand. Anders dan deze drie wordt die knop niet aangeboden in een editor in alleen-lezenmodus — zie [CSV importeren en exporteren](./dictionary.md#importing-and-exporting-csv).
 
 Schema SQL schrijft ON DELETE en ON UPDATE van elke relatie na de `REFERENCES` ervan, ON DELETE eerst. `Not set` schrijft niets, en een actie die de geselecteerde database niet accepteert, wordt weggelaten. Zie [Relaties bewerken](./relationship-editing.md#on-delete-and-on-update) voor welke database welke actie accepteert.

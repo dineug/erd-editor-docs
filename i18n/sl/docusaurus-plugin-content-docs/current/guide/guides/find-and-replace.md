@@ -192,7 +192,8 @@ Kaj v teh poljih naredijo `Escape`, bližnjice urejevalnika, ki še delujejo, in
 ## Urejevalniki samo za branje {#read-only-editors}
 
 V urejevalniku z lastnostjo [`readonly`](../../api/erd-editor-element.md#readonly) iskanje samo išče. Ni puščice `Toggle Replace` in ni vrstice `Replace`, zato tudi ni polja za zamenjavo, `Preserve Case`, `Replace` ali `Replace All`.  
-Iskalno polje, njegove tri možnosti, vrste besedila, števec, rezultati in prehod na zadetek – vse to deluje. Raziskovalec okoli njega deluje kot v vsakem drugem urejevalniku – glejte razdelek [Urejevalniki samo za branje](./explorer.md#read-only-editors).
+Iskalno polje, njegove tri možnosti, vrste besedila, števec, rezultati in prehod na zadetek – vse to deluje. Prehod na zadetek izbere, kar doseže, kot v razdelku [Prehod na zadetek](#going-to-a-match), ta izbor pa je edini, ki ga naredi urejevalnik samo za branje: klik na platno, ki se ne premakne, ga počisti.  
+Iskanje odprite s tipko ali s postavko `Toggle Explorer` v hitrem iskanju, saj priročni meni platna tam nima postavke `Toggle Explorer`. Preostanek raziskovalca je opisan v razdelku [Urejevalniki samo za branje](./explorer.md#read-only-editors) na strani o raziskovalcu.
 
 V VS Code se revizija diagrama, kot je revizija Git ali vnos v Local History, odpre kot besedilo JSON. Ko jo z ukazom `Reopen Editor With...` znova odprete kot diagram, je samo za branje in dobi to iskanje brez zamenjave.
 

@@ -25,7 +25,8 @@ Quando il linguaggio selezionato ignora `Database` o gli stili dei nomi, questi 
 `Save file` e `Copy` si trovano in fondo al pannello — vedere [Salvare o copiare il risultato](#saving-or-copying-the-result).
 
 Sono le impostazioni proprie del diagramma, le stesse che modificano anche il menu contestuale e la Ricerca rapida. `Database` viene salvato nel file come qualsiasi modifica.  
-`Language`, `Table Name Case`, `Column Name Case` e `Bracket` vengono salvati solo finché il rispettivo blocco nella scheda Impostazioni è disattivato (`Bracket Type` per `Bracket`), e un nuovo diagramma ha tutti i blocchi attivi. Mentre un blocco è attivo, una modifica riscrive il codice sullo schermo, ma il file mantiene il valore bloccato e il diagramma si riapre con quel valore. Il pannello non mostra alcun segno di un blocco; per conservare una scelta nel file, disattivarne il blocco — vedere [Blocco](./settings.md#lock).
+`Language`, `Table Name Case`, `Column Name Case` e `Bracket` vengono salvati solo finché il rispettivo blocco nella scheda Impostazioni è disattivato (`Bracket Type` per `Bracket`), e un nuovo diagramma ha tutti i blocchi attivi. Mentre un blocco è attivo, una modifica riscrive il codice sullo schermo, ma il file mantiene il valore bloccato e il diagramma si riapre con quel valore. Il pannello non mostra alcun segno di un blocco; per conservare una scelta nel file, disattivarne il blocco — vedere [Blocco](./settings.md#lock).  
+In un editor di sola lettura la didascalia riporta invece `This window only`, poiché una modifica lì raggiunge solo quella finestra — vedere [Editor di sola lettura](#read-only-editors).
 
 ## Linguaggio {#language}
 
@@ -138,3 +139,10 @@ Il menu Esporta non ha una voce per il Generatore di codice, e la scheda `Code G
 Per copiare il codice, fare clic su `Copy` in fondo al pannello, oppure passare il puntatore sul codice e fare clic sul pulsante di copia in alto a destra, l’unico modo in Proprietà tabella.  
 Lo conferma per due secondi la notifica `Copied!` con un segno di spunta. Se il browser o l’host rifiuta l’accesso agli Appunti, lo segnala invece per cinque secondi la notifica `Couldn't copy to the clipboard` con un simbolo di avviso. Una nuova copia sostituisce la notifica anziché aggiungerne un’altra.  
 Il testo è anche selezionabile, quindi è possibile prenderne solo la parte che serve.
+
+## Editor di sola lettura {#read-only-editors}
+
+In un editor [`readonly`](../../api/erd-editor-element.md#readonly) gli elenchi del pannello, il menu contestuale e la Ricerca rapida cambiano ancora `Language`, `Database`, `Table Name Case`, `Column Name Case` e `Bracket`, ma solo in quella finestra, quindi il pannello li indica con `This window only` anziché con `Saved in the document`.  
+Una modifica riscrive il codice su quello schermo e non viene salvata nel file, condivisa con i collaboratori né registrata per l’annullamento, qualunque sia il loro blocco, e una modifica di un collaboratore a un’impostazione che avete scelto lascia sullo schermo la vostra scelta. `Database` e `Bracket` sono anche le impostazioni della scheda Schema SQL, quindi una scelta fatta qui compare lì nella stessa finestra — vedere [Editor di sola lettura](./schema-sql.md#read-only-editors).  
+Quando l’editor torna modificabile, tornano le impostazioni del documento e il codice viene scritto per esse.  
+`Save file` e `Copy` salvano e copiano il codice mostrato.

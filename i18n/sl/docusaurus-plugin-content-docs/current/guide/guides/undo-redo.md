@@ -12,7 +12,7 @@ Zgodovina hrani do `2048` sprememb.
 - Uveljavitev: `Ctrl + Shift + Z` (Windows/Linux) ali `⌘ + Shift + Z` (Mac)
 
 Na zavihku ERD orodna vrstica ponuja ista dva ukaza kot gumba `Undo` in `Redo`, ob gumbu `Time Travel`. Na zavihku Slovar prikazuje gumba `Undo` in `Redo` brez gumba `Time Travel`, noben drug zavihek pa ju ne prikazuje.  
-Osvetlita se samo, kadar je na voljo kaj za razveljavitev ali uveljavitev. Urejevalnik z lastnostjo `readonly` ju skrije, bližnjice pa ne razveljavijo in ne uveljavijo ničesar.
+Osvetlita se samo, kadar je na voljo kaj za razveljavitev ali uveljavitev. Urejevalnik z lastnostjo `readonly` ju skrije skupaj z gumbom `Time Travel`, bližnjice pa ne razveljavijo in ne uveljavijo ničesar.
 
 Razveljavitev in uveljavitev delujeta na zgodovino diagrama samo na zavihku ERD.  
 Bližnjice so tam neaktivne, dokler je odprto hitro iskanje, okno `Table Properties`, `Diff Viewer`, predogled `Auto Layout`, pogovorno okno [`Export image`](./file-import-export.md#image), okno [Preslikaj stolpce](./relationship-editing.md#map-columns) ali potovanje skozi čas.  
@@ -58,6 +58,8 @@ Ni zabeleženo:
 - Prikazani list zavihka Slovar ter iskanje, izbor, položaj pomika in širine stolpcev posameznega lista – glejte razdelek [Odpiranje zavihka](./dictionary.md#opening-the-tab).
 
 Sprememb česar koli od naštetega ni mogoče razveljaviti.
+
+Urejevalnik samo za branje sploh ničesar ne beleži. Položaj pogleda, povečava in stikala `View Option` se tam še vedno spreminjajo, skupaj z zavihkom, prikazom imen, zbirko podatkov in nastavitvami kode, vendar samo na tistem zaslonu, zato ni ničesar za razveljavitev – glejte razdelek [Urejevalniki samo za branje](./settings.md#read-only-editors) v Nastavitvah.
 
 Spremembe na zavihku Slovar je mogoče razveljaviti, vendar gredo v zgodovino svojega lista, ne v to zgodovino, zato razveljavitev na zavihku ERD nikoli ne odpravi nobene od njih, niti nove vrednosti `Data Type` domene in tipov stolpcev, ki jih ta spremeni – glejte razdelek [Listi zavihka Slovar](#dictionary-sheets).
 
@@ -136,7 +138,7 @@ Zgodovina vsakega lista se izprazni, ko se slovarji nadomestijo: z ukazom `Impor
 ## Potovanje skozi čas {#time-travel}
 
 Odpre se z gumbom `Time Travel` v orodni vrstici, ob gumbih za razveljavitev in uveljavitev na zavihku ERD.  
-Gumb ne naredi ničesar, dokler zgodovina diagrama nima vsaj ene zabeležene spremembe.
+Gumb ne naredi ničesar, dokler zgodovina diagrama nima vsaj ene zabeležene spremembe. Urejevalnik samo za branje takega gumba ne prikaže, urejevalnik, ki postane samo za branje, pa zapre Time Travel, ne da bi ga uveljavil.
 
 Potovanje skozi čas odpre ločeno kopijo diagrama samo za branje, na položaju pomika, pri stopnji povečave in v [prikazu imen](./logical-names.md#name-view), ki jih prikazuje platno, ne glede na to, ali je zaklep `Viewport` ali `Name View` vklopljen.  
 Premika se samo po zgodovini diagrama, zato spremembe na listih zavihka Slovar niso med njegovimi točkami.  

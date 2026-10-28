@@ -23,7 +23,7 @@ Deschideți exploratorul în oricare dintre aceste moduri:
 - Butonul `Explorer` din bara de instrumente, imediat după `Search`, cu o pictogramă de arbore. Sfatul ecran al acestuia afișează `Explorer (Ctrl + F)` (Windows/Linux) sau `Explorer (⌘ + F)` (Mac).
 - `Ctrl + F` (Windows/Linux) sau `⌘ + F` (Mac), comanda rapidă numită `Toggle Explorer` în fila [Comenzi rapide](./settings.md#shortcuts) din setări.
 - Comanda `Toggle Explorer` din [căutarea rapidă](./quick-search.md), listată în fiecare filă. Tastarea cuvintelor `find`, `replace`, `rename`, `tree`, `outline` sau `objects` o afișează.
-- Elementul `Toggle Explorer` din meniul contextual al pânzei: faceți clic dreapta pe un loc liber al pânzei ERD, în afara oricărui [grup de tabele](./table-groups.md). Se află după `New Table`, `New Memo` și `New Table Group`, înainte de `Relationship`.
+- Elementul `Toggle Explorer` din meniul contextual al pânzei: faceți clic dreapta pe un loc liber al pânzei ERD, în afara oricărui [grup de tabele](./table-groups.md). Se află după `New Table`, `New Memo` și `New Table Group`, înainte de `Relationship`. Meniul pânzei al unui editor doar în citire nu are un astfel de rând (consultați [Editoare doar în citire](#read-only-editors)).
 
 Cele două elemente `Toggle Explorer` afișează comanda rapidă în dreapta.  
 Butonul din bara de instrumente, comanda rapidă și elementul din căutarea rapidă funcționează din orice filă. Din fila Vizualizare, Schemă SQL, Generator de cod, Dicționar sau Setări, acestea trec mai întâi la fila ERD, deoarece exploratorul apare doar acolo.
@@ -168,5 +168,8 @@ Deschiderea căutării cu comanda rapidă sau cu un element `Toggle Explorer` le
 
 ## Editoare doar în citire {#read-only-editors}
 
-Într-un editor cu atributul [`readonly`](../../api/erd-editor-element.md#readonly), exploratorul funcționează ca în oricare altul: butonul din bara de instrumente, cu același sfat ecran, comanda rapidă, ambele elemente `Toggle Explorer`, arborele, restrângerea rândurilor, butonul `Collapse All` și saltul la un rând, care selectează ca de obicei elementul la care duce. Și acolo titlul său afișează `Explorer`.  
+Într-un editor cu atributul [`readonly`](../../api/erd-editor-element.md#readonly), exploratorul funcționează ca în oricare altul: butonul din bara de instrumente, cu același sfat ecran, comanda rapidă, elementul `Toggle Explorer` din căutarea rapidă, arborele, restrângerea rândurilor și butonul `Collapse All`. Și acolo titlul său afișează `Explorer`. Meniul contextual al pânzei nu are acolo `Toggle Explorer`, deoarece păstrează doar rândurile care citesc (consultați [Editoare doar în citire](./table-related-functions.md#read-only-editors)).
+
+Saltul la un rând funcționează ca în [Salt la un rând](#going-to-a-row): vizualizarea se mută după aceeași regulă, iar tabelul, grupul de tabele sau nota rândului este selectat, cu contur pe pânză, cu celula activă acolo unde o pune rândul.  
+Aceasta este singura modalitate prin care un editor doar în citire selectează ceva. O apăsare pe pânză nu selectează nimic, iar un clic fără mișcare șterge selecția lăsată de un rând. Un tabel selectat astfel se deschide în [Proprietăți tabel](./table-related-functions.md#table-properties) cu `Alt + Space` (Windows/Linux) sau `⌥ + Space` (Mac), doar în citire, iar `Ctrl + C` (Windows/Linux) sau `⌘ + C` (Mac) copiază ce a selectat, ca în orice editor.  
 Căutarea sa doar găsește (consultați [Editoare doar în citire](./find-and-replace.md#read-only-editors) din Găsire și înlocuire).

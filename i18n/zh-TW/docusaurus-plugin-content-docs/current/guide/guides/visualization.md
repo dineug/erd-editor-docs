@@ -237,4 +237,5 @@ description: 以力導向的關係圖或由資料表卡片組成的流程瀏覽�
 位於流程模式中時，協作者的編輯仍會反映到圖表上，卡片也會隨著他們新增或移除的資料表與關聯而變化，請參閱[流程模式的排列方式](#how-flow-is-placed)。  
 他們的選取框線與焦點框線會繪製在卡片上，但他們的游標和拖曳框不會，請參閱[協作編輯](../../api/advanced/collaborative-editing.md)。
 
-兩種模式（包括聚焦和逐步移動）在 `readonly` 編輯器中也都能使用，`Name View` 清單也是如此，但在該處只會切換您自己的畫面。
+兩種模式（包括聚焦和逐步移動）在 [`readonly`](../../api/erd-editor-element.md#readonly) 編輯器中也都能使用，`Name View` 清單也是如此，但在該處只會切換您自己的畫面。  
+在唯讀編輯器的 ERD 索引標籤上，資料表選單只有 `Table Properties`，而在畫布上按下不會選取任何資料表，因此請對從[物件總管](./explorer.md#going-to-a-row)或[快速搜尋](./quick-search.md)跳至目標所選取的資料表，使用 `Alt + F` (Windows/Linux) 或 `⌥ + F` (Mac) 聚焦。

@@ -8,7 +8,7 @@
     "description": "The label for category 'Guides' in sidebar 'docs'"
   },
   "sidebar.docs.category.Guides.link.generated-index.description": {
-    "message": "Cum se desenează și se editează o diagramă: crearea tabelelor și a relațiilor, importarea și exportarea fișierelor și opțiunile de afișare ale editorului.",
+    "message": "Cum se desenează și se editează o diagramă, de la crearea tabelelor și a relațiilor până la importarea și exportarea fișierelor și opțiunile de afișare ale editorului, și cum se arată doar în citire pe alt site.",
     "description": "The generated-index page description for category 'Guides' in sidebar 'docs'"
   },
   "sidebar.api.category.Advanced": {

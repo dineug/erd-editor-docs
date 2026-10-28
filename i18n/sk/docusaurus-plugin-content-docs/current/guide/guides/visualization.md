@@ -237,4 +237,5 @@ Stlačenie kartičky nikdy nepridá vzťah. Ak ste kartu ERD opustili počas kre
 Úpravy spolupracovníkov sa do diagramu dostanú aj vtedy, keď ste v režime Flow, a kartičky sledujú tabuľky a vzťahy, ktoré pridajú alebo odstránia – pozrite si časť [Ako režim Flow rozmiestňuje kartičky](#how-flow-is-placed).  
 Ich obrysy výberu a fokusu sa na kartičkách vykresľujú, ich kurzory a ťahané rámce však nie – pozrite si stránku [Spoločné úpravy](../../api/advanced/collaborative-editing.md).
 
-Oba režimy vrátane zamerania na tabuľky a prechádzania po krokoch fungujú aj v editore s atribútom `readonly` a rovnako aj zoznam `Name View`, ktorý tam prepína iba vašu vlastnú obrazovku.
+Oba režimy vrátane zamerania na tabuľky a prechádzania po krokoch fungujú aj v editore s atribútom [`readonly`](../../api/erd-editor-element.md#readonly) a rovnako aj zoznam `Name View`, ktorý tam prepína iba vašu vlastnú obrazovku.  
+Na karte ERD editora iba na čítanie obsahuje ponuka tabuľky iba `Table Properties` a stlačenie nevyberie žiadnu tabuľku, takže zameranie urobte klávesmi `Alt + F` (Windows/Linux) alebo `⌥ + F` (Mac) na tabuľke, ktorú vybral skok z [prieskumníka](./explorer.md#going-to-a-row) alebo [rýchleho vyhľadávania](./quick-search.md).

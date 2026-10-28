@@ -10,7 +10,8 @@ L’édition commence par le menu contextuel, qui s’ouvre d’un clic droit.
 ![Clic droit sur le canevas, ouverture du sous-menu Relationship, ajout d’une table, puis ouverture de son propre menu](/img/demo-context-menu.webp)
 
 Un clic droit sur une table, un mémo, un groupe de tables ou une relation ouvre plutôt le menu propre à cet élément.  
-Un clic droit sur une table, un mémo ou un groupe de tables déjà sélectionné conserve toute la sélection, si bien que les entrées comme `Color` et `Delete selected` s’appliquent à l’ensemble (voir [Sélection multiple](./table-related-functions.md#multiple-selection)).
+Un clic droit sur une table, un mémo ou un groupe de tables déjà sélectionné conserve toute la sélection, si bien que les entrées comme `Color` et `Delete selected` s’appliquent à l’ensemble (voir [Sélection multiple](./table-related-functions.md#multiple-selection)).  
+Un éditeur en lecture seule ne crée rien : rien de ce que décrit cette page n’y est proposé, le menu du canevas ne conserve que `View Option`, `Name View`, `Export` et `Diff Viewer`, le menu d’une table que `Table Properties`, et un mémo, un groupe de tables ou une relation n’ouvre aucun menu (voir [Éditeurs en lecture seule](./table-related-functions.md#read-only-editors)).
 
 ## Écran d’accueil {#welcome-screen}
 

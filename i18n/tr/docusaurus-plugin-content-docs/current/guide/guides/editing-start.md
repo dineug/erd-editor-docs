@@ -10,7 +10,8 @@ Düzenleme, sağ tıklayarak açılan bağlam menüsüyle başlar.
 ![Tuvale sağ tıklama, Relationship alt menüsünü açma, bir tablo ekleme, ardından tablonun kendi menüsünü açma](/img/demo-context-menu.webp)
 
 Bir tabloya, nota, tablo grubuna veya ilişkiye sağ tıklamak bunun yerine o öğenin kendi menüsünü açar.  
-Zaten seçili olan bir tabloya, nota veya tablo grubuna sağ tıklamak seçimin tamamını korur, bu yüzden `Color` ve `Delete selected` gibi satırlar seçimin tümüne uygulanır. [Çoklu seçim](./table-related-functions.md#multiple-selection) bölümüne bakın.
+Zaten seçili olan bir tabloya, nota veya tablo grubuna sağ tıklamak seçimin tamamını korur, bu yüzden `Color` ve `Delete selected` gibi satırlar seçimin tümüne uygulanır. [Çoklu seçim](./table-related-functions.md#multiple-selection) bölümüne bakın.  
+Salt okunur bir düzenleyici hiçbir şey oluşturmaz, bu yüzden bu sayfanın anlattığı hiçbir şey orada sunulmaz: Tuval menüsü yalnızca `View Option`, `Name View`, `Export` ve `Diff Viewer` öğelerini, bir tablonun menüsü yalnızca `Table Properties` öğesini korur; bir not, bir tablo grubu veya bir ilişki hiçbir menü açmaz. [Salt okunur düzenleyiciler](./table-related-functions.md#read-only-editors) bölümüne bakın.
 
 ## Karşılama ekranı {#welcome-screen}
 

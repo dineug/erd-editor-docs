@@ -10,7 +10,8 @@ La edición empieza en el menú contextual, que se abre con un clic derecho.
 ![Hacer clic con el botón derecho en el lienzo, abrir el submenú Relationship, añadir una tabla y abrir después su propio menú](/img/demo-context-menu.webp)
 
 Un clic derecho sobre una tabla, una nota, un grupo de tablas o una relación abre en su lugar el menú propio de ese elemento.  
-Un clic derecho sobre una tabla, una nota o un grupo de tablas que ya está seleccionado conserva toda la selección, de modo que opciones como `Color` y `Delete selected` actúan sobre toda ella; consulta [Selección múltiple](./table-related-functions.md#multiple-selection).
+Un clic derecho sobre una tabla, una nota o un grupo de tablas que ya está seleccionado conserva toda la selección, de modo que opciones como `Color` y `Delete selected` actúan sobre toda ella; consulta [Selección múltiple](./table-related-functions.md#multiple-selection).  
+Un editor de solo lectura no crea nada, así que no ofrece nada de lo que describe esta página: el menú del lienzo conserva solo `View Option`, `Name View`, `Export` y `Diff Viewer`, el menú de una tabla solo `Table Properties`, y una nota, un grupo de tablas o una relación no abre ningún menú; consulta [Editores de solo lectura](./table-related-functions.md#read-only-editors).
 
 ## Pantalla de bienvenida {#welcome-screen}
 

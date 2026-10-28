@@ -16,13 +16,14 @@ Medtem ko vnosna metoda še sestavlja besedilo, tipka `Escape` pusti način urej
 
 ## Dodajanje stolpcev {#adding-columns}
 
-Stolpec ustvarite z bližnjico `Alt + Enter` (Windows/Linux) ali `⌥ + Enter` (Mac).  
-Vsaki izbrani tabeli se doda stolpec.
+Stolpec ustvarite z bližnjico `Alt + Enter` (Windows/Linux) ali `⌥ + Enter` (Mac), ki doda stolpec vsaki izbrani tabeli, ali z gumbom `+` v glavi tabele, ki ga doda tej tabeli.  
+Prva celica novega stolpca prevzame fokus, in sicer prva, ki jo njegova vrstica nariše v [vrstnem redu stolpcev](./settings.md#adjusting-column-order). Pri privzetem vrstnem redu je to njegovo ime, ki je v prikazu `Logical Names` njegovo logično ime, v prikazu `Both Names` pa njegova celica `Logical Name` – glejte razdelek [Prikaz imen](./logical-names.md#name-view).  
+Stolpec, dodan s tipko `Tab` iz zadnje celice, in primarni ključ, ki ga risanje relacije doda nadrejeni tabeli brez njega, se začneta na tej celici prav tako.
 
 ## Tipka Tab {#tab-key}
 
 Pritisnite `Tab`, da preidete neposredno v način urejanja naslednje celice.  
-Pritisk tipke `Tab` v zadnji celici ustvari nov stolpec.  
+Pritisk tipke `Tab` v zadnji celici ustvari nov stolpec in odpre njegovo prvo celico za urejanje – glejte razdelek [Dodajanje stolpcev](#adding-columns).  
 Z bližnjico `Shift + Tab` se pomaknete v način urejanja prejšnje celice.  
 `Tab` in `Shift + Tab` se po vrsti premikata po celicah, ki jih izriše tabela, zato prikaz imen in možnost View Option → `Domain` določata, ali so med njimi celice logičnega imena in celice domene – glejte razdelek [Vnos logičnega imena](./logical-names.md#writing-a-logical-name).  
 Oznake [alternativnih ključev](./table-related-functions.md#alternate-keys), ki so narisane za zadnjo celico vrstice, niso celice, zato jih fokus tipkovnice preskoči in se nikoli ne odprejo za urejanje.
@@ -96,7 +97,8 @@ Modifikatorska tipka ni potrebna. Če na ročici držite `Alt` (Windows/Linux) a
 ![Izbiranje treh stolpcev, nato vlečenje ročice ob stolpcu s fokusom v drugo tabelo, pri čemer se z njim premaknejo tudi drugi izbrani stolpci](/img/demo-column-multi-move.webp)
 
 Vlečenje, ki se začne na vrstici stolpca in ne na njegovi ročici, premakne tabelo, tako kot vlečenje njene glave – glejte razdelek [Premikanje več tabel](./table-related-functions.md#moving-multiple-tables). `Alt + drag` (Windows/Linux) ali `⌥ + drag` (Mac) na vrstici podvoji tabelo – glejte razdelek [Podvajanje tabel in beležk](./table-related-functions.md#duplicating-tables-and-memos).  
-Pri povečavi `70%` in manj, kjer tabele prikazujejo le svoja imena, in v urejevalniku samo za branje ročica ni izrisana, zato tam vrstnega reda stolpcev ni mogoče spreminjati.
+Pri povečavi `70%` in manj, kjer tabele prikazujejo le svoja imena, in v urejevalniku samo za branje ročica ni izrisana, zato tam vrstnega reda stolpcev ni mogoče spreminjati.  
+Vlečenje stolpca, ki poteka, ko urejevalnik postane samo za branje, se konča takoj: kopija, ki sledi kazalcu, in roka za prijemanje izgineta, spust pa ne premakne nobenega stolpca. Vrstice, ki jih je vlečenje že premaknilo, ostanejo tam, kamor jih je premaknilo.
 
 ## Brisanje stolpcev {#column-deletion}
 
@@ -174,3 +176,10 @@ Ikona ključa v vrstici je le prikazna, zato klik nanjo ključa ne nastavi.
 Če želite iz več stolpcev narediti en sestavljeni ključ, jih [izberite](#selecting-multiple-columns) in nato pritisnite `Alt + K` (Windows/Linux) ali `⌥ + K` (Mac) ali pa kliknite z desno tipko miške na eno od izbranih vrstic in izberite `Primary Key on selected columns`. Vsak preklop je en korak razveljavitve.
 
 ![Izbiranje dveh stolpcev s Shift + Arrow Down, nato nastavitev obeh kot primarnega ključa z ⌥ + K in izklop obeh z drugim pritiskom](/img/demo-column-pk.webp)
+
+## Urejevalniki samo za branje {#read-only-editors}
+
+V urejevalniku [`readonly`](../../api/erd-editor-element.md#readonly) se nobena celica ne odpre za urejanje in noben stolpec se ne spremeni.  
+Klik na celico ne postavi fokusa nikamor in odstrani izbor, ki ga je pustil skok. `Enter` in dvoklik ne odpreta nobenega urejevalnika in ne preklopita nobenega stikala, `Tab` je prepuščen strani, bližnjice, ki dodajo, izberejo vse ali izbrišejo stolpce, preklop primarnega ključa in lepljenje pa ne naredijo ničesar.  
+Prehod na stolpec iz [raziskovalca](./explorer.md#going-to-a-row) ali [hitrega iskanja](./quick-search.md) postavi fokus na njegovo celico. Smerne tipke nato premikajo fokus od celice do celice, stolpec, ki ga dosežejo, pa je izbran sam, saj `Shift` tam ne doda nobenega stolpca.  
+`Ctrl + C` (Windows/Linux) ali `⌘ + C` (Mac) še vedno kopira izbrani stolpec ali tabelo, ki jo je izbral skok – glejte razdelek [Kopiranje/lepljenje stolpcev](#copyingpasting-columns).

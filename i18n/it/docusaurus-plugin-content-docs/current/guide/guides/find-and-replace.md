@@ -192,7 +192,8 @@ L’effetto di `Escape`, dei tasti di scelta rapida dell’editor che continuano
 ## Editor di sola lettura {#read-only-editors}
 
 In un editor [`readonly`](../../api/erd-editor-element.md#readonly) la ricerca si limita a trovare. Mancano la freccia `Toggle Replace` e la riga `Replace`, quindi anche il campo Sostituisci, `Preserve Case`, `Replace` e `Replace All`.  
-Il campo Trova, le sue tre opzioni, i tipi di testo, il contatore, i risultati e lo spostamento a una corrispondenza funzionano tutti. Il pannello Esplora che la contiene funziona come in qualsiasi altro editor — vedere [Editor di sola lettura](./explorer.md#read-only-editors).
+Il campo Trova, le sue tre opzioni, i tipi di testo, il contatore, i risultati e lo spostamento a una corrispondenza funzionano tutti. Lo spostamento a una corrispondenza seleziona ciò su cui arriva, come in [Andare a una corrispondenza](#going-to-a-match), e quella selezione è l’unica che un editor di sola lettura faccia: un clic sull’area di disegno che non sposta la cancella.  
+Aprire la ricerca con il tasto o con `Toggle Explorer` nella Ricerca rapida, poiché il menu contestuale dell’area di disegno non ha lì `Toggle Explorer`. Il resto del pannello Esplora è trattato in [Editor di sola lettura](./explorer.md#read-only-editors) nella pagina Esplora.
 
 In VS Code, una revisione di un diagramma, come una revisione Git o una voce di Local History, si apre come testo JSON. Riaperta come diagramma con `Reopen Editor With...`, è di sola lettura e ha questa ricerca che si limita a trovare.
 

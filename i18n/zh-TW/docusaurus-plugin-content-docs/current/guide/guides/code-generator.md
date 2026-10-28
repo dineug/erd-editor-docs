@@ -25,7 +25,8 @@ description: 從圖表為二十二種目標產生程式碼，在選項面板中�
 `Save file` 和 `Copy` 位於面板底部，請參閱[儲存或複製結果](#saving-or-copying-the-result)。
 
 這些是圖表本身的設定，右鍵選單和快速搜尋變更的也是這些設定。`Database` 會像任何編輯一樣儲存在檔案中。  
-只有在「設定」索引標籤中對應的鎖定為關閉時，`Language`、`Table Name Case`、`Column Name Case` 和 `Bracket` 才會儲存（`Bracket` 對應的是 `Bracket Type`），而新圖表的所有鎖定都是開啟的。鎖定開啟期間，變更會重寫畫面上的程式碼，但檔案會保留鎖定的值，圖表重新開啟時也會使用該值。面板不會顯示任何鎖定的跡象；若要讓檔案保留某項選擇，須關閉其鎖定，請參閱[鎖定](./settings.md#lock)。
+只有在「設定」索引標籤中對應的鎖定為關閉時，`Language`、`Table Name Case`、`Column Name Case` 和 `Bracket` 才會儲存（`Bracket` 對應的是 `Bracket Type`），而新圖表的所有鎖定都是開啟的。鎖定開啟期間，變更會重寫畫面上的程式碼，但檔案會保留鎖定的值，圖表重新開啟時也會使用該值。面板不會顯示任何鎖定的跡象；若要讓檔案保留某項選擇，須關閉其鎖定，請參閱[鎖定](./settings.md#lock)。  
+在唯讀編輯器中，標題改為顯示 `This window only`，因為在那裡的變更只會作用於該視窗，請參閱[唯讀編輯器](#read-only-editors)。
 
 ## 語言 {#language}
 
@@ -138,3 +139,10 @@ ORM 目標會保留哪些動作取決於所選的資料庫，而 `AML` 和 `DBML
 若要複製程式碼，可按一下面板底部的 `Copy`，或將指標停留在程式碼上，再按一下其右上角的複製按鈕，後者是「資料表屬性」中唯一的方式。  
 帶有勾號的 `Copied!` 快顯通知會顯示兩秒以示確認。若瀏覽器或主應用程式拒絕存取剪貼簿，則會改為顯示帶有警告符號的 `Couldn't copy to the clipboard` 快顯通知，持續五秒。再次複製會取代原本的快顯通知，而不會再新增一則。  
 文字也可以選取，因此可以只取用需要的部分。
+
+## 唯讀編輯器 {#read-only-editors}
+
+在 [`readonly`](../../api/erd-editor-element.md#readonly) 編輯器中，面板的清單、右鍵選單和快速搜尋仍可變更 `Language`、`Database`、`Table Name Case`、`Column Name Case` 和 `Bracket`，但只作用於該視窗，因此面板將它們標示為 `This window only`，而不是 `Saved in the document`。  
+變更會重寫該畫面上的程式碼，無論鎖定如何設定，都不會儲存到檔案、與協作者共用，或記錄到復原歷程記錄，而協作者對您所挑選之設定的變更，也會讓您的選擇留在畫面上。`Database` 和 `Bracket` 同時也是「結構描述 SQL」索引標籤的設定，因此在這裡的挑選會在同一視窗中顯示在那裡，請參閱[唯讀編輯器](./schema-sql.md#read-only-editors)。  
+編輯器再次轉為可寫入後，文件的設定會恢復，程式碼也會依這些設定重新寫出。  
+`Save file` 和 `Copy` 會儲存和複製所顯示的程式碼。

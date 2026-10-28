@@ -25,7 +25,8 @@ Cuando el lenguaje seleccionado ignora `Database` o los estilos de nombres, esto
 `Save file` y `Copy` están al pie del panel; consulta [Guardar o copiar el resultado](#saving-or-copying-the-result).
 
 Son los ajustes propios del diagrama, los mismos que cambian también el menú contextual y la búsqueda rápida. `Database` se guarda en el archivo como cualquier edición.  
-`Language`, `Table Name Case`, `Column Name Case` y `Bracket` solo se guardan mientras su bloqueo de la pestaña Configuración está desactivado (`Bracket Type` para `Bracket`), y un diagrama nuevo tiene todos los bloqueos activados. Mientras un bloqueo está activado, un cambio reescribe el código de tu pantalla, pero el archivo conserva el valor bloqueado y el diagrama se vuelve a abrir con él. El panel no muestra ninguna señal de bloqueo: para conservar una elección en el archivo, desactiva su bloqueo; consulta [Bloqueo](./settings.md#lock).
+`Language`, `Table Name Case`, `Column Name Case` y `Bracket` solo se guardan mientras su bloqueo de la pestaña Configuración está desactivado (`Bracket Type` para `Bracket`), y un diagrama nuevo tiene todos los bloqueos activados. Mientras un bloqueo está activado, un cambio reescribe el código de tu pantalla, pero el archivo conserva el valor bloqueado y el diagrama se vuelve a abrir con él. El panel no muestra ninguna señal de bloqueo: para conservar una elección en el archivo, desactiva su bloqueo; consulta [Bloqueo](./settings.md#lock).  
+En un editor de solo lectura el rótulo dice en cambio `This window only`, ya que un cambio allí solo llega a esa ventana; consulta [Editores de solo lectura](#read-only-editors).
 
 ## Lenguaje {#language}
 
@@ -138,3 +139,10 @@ El menú Exportar no tiene ninguna opción para el Generador de código, y la pe
 Para copiar el código, haz clic en `Copy` al pie del panel, o pasa el puntero por encima del código y haz clic en el botón de copiar de su esquina superior derecha, que es la única forma en el panel Propiedades de la tabla.  
 Una notificación `Copied!` con una marca de verificación lo confirma durante dos segundos. Si el navegador o el host deniega el acceso al portapapeles, una notificación `Couldn't copy to the clipboard` con un icono de advertencia lo indica en su lugar, durante cinco segundos. Volver a copiar reemplaza la notificación en lugar de añadir otra.  
 El texto también se puede seleccionar, así que puedes tomar solo la parte que necesitas.
+
+## Editores de solo lectura {#read-only-editors}
+
+En un editor [`readonly`](../../api/erd-editor-element.md#readonly), las listas del panel, el menú contextual y la búsqueda rápida siguen cambiando `Language`, `Database`, `Table Name Case`, `Column Name Case` y `Bracket`, pero solo en esa ventana, así que el panel los rotula `This window only` en lugar de `Saved in the document`.  
+Un cambio reescribe el código de esa pantalla y no se guarda en el archivo, ni se comparte con los colaboradores, ni se registra para deshacer, digan lo que digan los bloqueos, y un cambio de un colaborador en un ajuste que tú elegiste deja tu elección en la pantalla. `Database` y `Bracket` son también ajustes de la pestaña Esquema SQL, así que una elección aquí se ve allí en la misma ventana; consulta [Editores de solo lectura](./schema-sql.md#read-only-editors).  
+Cuando el editor vuelve a ser editable, regresan los ajustes del documento y el código se escribe para ellos.  
+`Save file` y `Copy` guardan y copian el código mostrado.

@@ -55,6 +55,10 @@ Enquanto o bloqueio está ativado, a troca aparece apenas no editor que a fez: e
 Enquanto o bloqueio está desativado, uma troca feita em um editor que pode editar altera a exibição de nomes em todos os editores e réplicas, prevalecendo a troca mais recente, e todos eles a salvam.  
 Uma troca feita por um editor somente leitura sempre fica restrita a esse editor, e o editor continua seguindo as trocas compartilhadas dos outros.
 
+A partir da `5.0.0`, um editor [somente leitura](../erd-editor-element.md#readonly) não envia nenhuma alteração. A rolagem, o zoom, a aba, a exibição de nomes, o banco de dados, a linguagem do Gerador de código, os estilos de nome, o tipo de delimitador e as linhas de `View Option` que quem lê altera ficam na tela dele, quaisquer que sejam os bloqueios; antes da `5.0.0`, as rolagens, os zooms, as trocas de aba, o banco de dados e as configurações de código dele eram enviados como os de um editor editável.  
+O store dele continua enviando o que seus rastreadores enviam do cursor, do foco, da seleção e da caixa de arrasto de quem lê, responde aos registros que um editor que está entrando pede e aplica todas as alterações que os outros enviam. Uma alteração do banco de dados, de uma configuração do Gerador de código ou de uma linha de `View Option` chega ao documento dele, e à tela também, a menos que quem lê tenha alterado essa configuração ali, e uma troca compartilhada da exibição de nomes aparece na tela de qualquer forma.  
+Quando o editor passa a ser somente leitura, ele primeiro envia o que o store ainda retém de um arrasto ou de uma rolagem, como faz [flushStreamBuffers](#flushstreambuffers), para que os outros fiquem com o último trecho.
+
 Os [bloqueios](../../guide/guides/settings.md#lock) são compartilhados: o bloqueio ou desbloqueio mais recente de uma configuração prevalece em todos os editores, e um bloqueio carrega os valores do editor que o ativou, então todos os editores e réplicas salvam o mesmo valor.  
 Portanto, um bloqueio `Viewport` salva a área visível do editor que o ativou, e um bloqueio `Canvas Type`, a última aba em que esse editor estava antes da aba Configurações, onde os bloqueios são ativados.  
 Desativar o bloqueio `Language`, `Table Name Case`, `Column Name Case`, `Bracket Type` ou, a partir da `4.2.0`, `Name View` também define essa configuração, em todos os editores, com o valor mostrado no editor que o desativou, para que todos continuem salvando um único valor. Desativar `Viewport` ou `Canvas Type` não move a área visível nem a aba de ninguém.
@@ -71,6 +75,8 @@ O botão de link externo do cartão, um resultado da [pesquisa rápida](../../gu
 Aqui, a ligação de subscribe a dispatch faz o papel da rede, para que seja possível ver a forma de uma sessão sem um transporte no caminho.
 
 ```js
+import '@dineug/erd-editor/erd-editor.js';
+
 const editor1 = document.createElement('erd-editor');
 const editor2 = document.createElement('erd-editor');
 

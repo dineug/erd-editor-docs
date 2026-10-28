@@ -8,7 +8,7 @@
     "description": "The label for category 'Guides' in sidebar 'docs'"
   },
   "sidebar.docs.category.Guides.link.generated-index.description": {
-    "message": "Hoe je een diagram tekent en bewerkt: tabellen en relaties maken, bestanden importeren en exporteren en de weergaveopties van de editor instellen.",
+    "message": "Hoe je een diagram tekent en bewerkt, van het maken van tabellen en relaties tot het importeren en exporteren van bestanden en de weergaveopties van de editor, en hoe je het in alleen-lezenmodus op een andere site toont.",
     "description": "The generated-index page description for category 'Guides' in sidebar 'docs'"
   },
   "sidebar.api.category.Advanced": {

@@ -31,7 +31,7 @@ Panoul [Proprietăți tabel](./table-related-functions.md#table-properties) are 
 
 Panoul conține trei grupuri, fiecare sub un titlu:
 
-1. `Saved in the document`: `Database` și `Bracket` (consultați [Bază de date și delimitator](#database-and-bracket)).
+1. `Saved in the document`: `Database` și `Bracket` (consultați [Bază de date și delimitator](#database-and-bracket)). Un editor doar în citire le denumește `This window only` (consultați [Editoare doar în citire](#read-only-editors)).
 2. `This window only`: `Statements`, `Header`, `Write logical names into empty comments` și, cât timp diagrama are un [grup de tabele](./table-groups.md), `Tables` (consultați [Instrucțiuni](#statements), [Antet](#header), [Nume logice drept comentarii](#logical-names-as-comments) și [Tabele](#tables)).
 3. `Saved in the document · written as is for every database`: scripturile `Before tables` și `After tables` (consultați [Scripturi înainte și după tabele](#before-and-after-scripts)).
 
@@ -222,5 +222,9 @@ Modul în care aceste comentarii sunt citite înapoi la import este descris în 
 
 ## Editoare doar în citire {#read-only-editors}
 
-Într-un editor cu atributul `readonly`, fila funcționează ca de obicei: `Database` și `Bracket` schimbă în continuare codul SQL afișat, `Statements`, `Header`, `Write logical names into empty comments` și `Tables` funcționează în continuare, iar `Save file` și `Copy` îl salvează și îl copiază în continuare.  
-Singurele elemente doar în citire sunt cele două câmpuri pentru scripturi.
+Într-un editor [`readonly`](../../api/erd-editor-element.md#readonly), fila funcționează pentru cititor, iar nimic din ce se face pe ea nu ajunge în document:
+
+- `Database` și `Bracket` rescriu în continuare codul SQL, dar doar în acea fereastră, așa că panoul le denumește și el `This window only`. O alegere nu este salvată în fișier, nu este partajată cu colaboratorii și nu este înregistrată pentru anulare, indiferent de blocări, iar schimbarea de către un colaborator a unei setări pe care ați ales-o dumneavoastră lasă pe ecran alegerea dumneavoastră. Fila Generator de cod arată aceeași alegere, iar [`getSchemaSQL()`](../../api/erd-editor-element.md#getschemasql) apelată fără o bază de date o scrie și ea. Când editorul devine din nou editabil, revin baza de date și delimitatorul documentului.
+- `Statements`, `Header`, `Write logical names into empty comments` și `Tables` funcționează ca oriunde, deoarece aparțin deja ferestrei.
+- Cele două câmpuri pentru scripturi sunt doar în citire: afișează scripturile documentului, pe care codul SQL le scrie în continuare, și nu primesc text.
+- `Save file` și `Copy` salvează și copiază codul SQL afișat de filă.

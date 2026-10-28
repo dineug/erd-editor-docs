@@ -1,6 +1,6 @@
 ---
 sidebar_position: 16
-description: Synchronisatie van gegevenstypen via relaties en domeinen, maximale breedte van opmerkingen, herberekening van de tabelbreedte, instellingsvergrendelingen (weergave-, tabblad- en code-instellingen en naamweergave), weergavevolgorde van kolommen en de lijst met sneltoetsen.
+description: Synchronisatie van gegevenstypen via relaties en domeinen, maximale breedte van opmerkingen, instellingsvergrendelingen (weergave-, tabblad- en code-instellingen en naamweergave), weergavevolgorde van kolommen, de lijst met sneltoetsen en het tabblad Instellingen van een editor in alleen-lezenmodus.
 ---
 
 # Instellingen
@@ -33,13 +33,6 @@ Als je hem inschakelt, begint de waarde op `60px`. Een getypte waarde buiten het
 
 ![Maximum comment width inschakelen, 120 invoeren en het ERD-tabblad dat de opmerkingen op die breedte afkapt](/img/demo-settings-comment-width.webp)
 
-## Tabelbreedte opnieuw berekenen {#recalculation-table-width}
-
-Druk op `Sync` om de breedte van elke tabel en elke kolomcel opnieuw te berekenen zodat de huidige tekst erin past, en om de verbindingslijnen van de relaties rond de nieuwe afmetingen opnieuw te tekenen.
-De melding `Recalculated table width` bevestigt dat.
-Breedtes worden vanzelf opnieuw berekend telkens wanneer een document wordt geladen, dus dit is alleen nodig als ze door een wijziging in het lettertype of de weergave verouderd zijn.
-Breedtes worden niet in het bestand opgeslagen, dus `Sync` wijzigt het bestand nooit.
-
 ## Vergrendeling {#lock}
 
 De lijst `Lock` bevat zeven instellingen. Zolang de vergrendeling van een instelling aanstaat, behoudt het bestand de waarde die de instelling had toen ze werd vergrendeld, dus als je haar op het scherm wijzigt, blijft het bestand zoals het was.
@@ -68,8 +61,9 @@ Als de vergrendelde weergave bij het openen van het bestand niets van het diagra
 
 ![Viewport ontgrendelen, in het diagram scrollen en zoomen en het opnieuw vergrendelen op de nieuwe weergave die de rij toont](/img/demo-settings-locks.webp)
 
-Een vergrendeling in- of uitschakelen wijzigt het bestand, omdat het bestand opslaat welke vergrendelingen aanstaan, maar net als de rest van het tabblad Instellingen wordt het niet vastgelegd in de [geschiedenis](./undo-redo.md#what-the-history-records). Het wisselen van de naamweergave wordt evenmin vastgelegd, vergrendeld of niet. In een editor in alleen-lezenmodus doen de vergrendelknoppen niets, en verandert het wisselen van de naamweergave alleen dat scherm, ongeacht de vergrendeling ervan.
+Een vergrendeling in- of uitschakelen wijzigt het bestand, omdat het bestand opslaat welke vergrendelingen aanstaan, maar net als de rest van het tabblad Instellingen wordt het niet vastgelegd in de [geschiedenis](./undo-redo.md#what-the-history-records). Het wisselen van de naamweergave wordt evenmin vastgelegd, vergrendeld of niet.
 Elke andere instelling wordt opgeslagen zoals ze is: de database, de opties in [`View Option`](./table-related-functions.md#table-view-options) en de rest van het tabblad `Preferences`.
+Een editor in alleen-lezenmodus wijzigt het bestand via geen van beide, wat de vergrendelingen ook aangeven: zijn vergrendelknoppen en de andere bedieningselementen van `Preferences` zijn uitgeschakeld, en de instellingen die je nog wel kunt wijzigen, blijven op dat scherm — zie [Editors in alleen-lezenmodus](#read-only-editors).
 
 Elke vergrendeling staat aan in een nieuw diagram, een diagram dat vanaf niets is begonnen: een leeg bestand dat is geopend in VS Code, Obsidian of een JetBrains-IDE (`ERD Editor: Create new diagram` en `New ERD` van Obsidian maken er een), een nieuw schema in de webapp, een bestand dat is gemaakt via het menu New van Google Drive of een `<erd-editor>` zonder waarde.
 Een schema of Google Drive-bestand dat de webapp maakt door een SQL-, DBML-, AML- of GraphQL-bestand te importeren, begint ook met elke vergrendeling aan. Een schema of bestand dat uit een JSON-bestand is gemaakt, behoudt de vergrendelingen die dat bestand vastlegt.
@@ -98,6 +92,7 @@ Sleep een rij om haar te verplaatsen — de hele rij is versleepbaar, en het gre
 `Logical Name` bepaalt de plaats van de cel van de logische naam die een rij in de weergave `Both Names` toont. In de weergave `Logical Names` staat de logische naam in plaats daarvan op de plaats van de rij `Name`, en de weergave `Physical Names` toont er geen — zie [Naamweergave](./logical-names.md#name-view). `Domain` bepaalt de plaats van de domeincel die View Option → `Domain` toont — zie [De domeincel](./logical-names.md#the-domain-cell).
 Een cel die door een [weergaveoptie voor tabellen](./table-related-functions.md#table-view-options) is verborgen of door de naamweergave wordt weggelaten, behoudt haar plaats in de lijst, zodat de volgorde geldt voor welke cellen er ook worden getoond.
 Een diagram waarvan de volgorde is ingesteld voordat `Logical Name` en `Domain` rijen waren, krijgt `Logical Name` direct vóór `Name` en `Domain` direct na `DataType`, waar die ook in de volgorde staan.
+Een diagram dat een latere release heeft opgeslagen, behoudt zijn volgorde ook, zelfs als die release een rij heeft die deze mist: de rijen die deze release heeft, staan in de volgorde die het bestand geeft, en de onbekende rij blijft weg. Het diagram hier opslaan schrijft de volgorde zonder die rij, en de latere release zet die rij weer naast zijn buurman in haar eigen standaardvolgorde.
 De markering van de [alternatieve sleutel](./table-related-functions.md#alternate-keys) (`AK1.1` enzovoort) is geen van deze rijen. Ze staat altijd als laatste in een rij, na welke cel deze volgorde ook als laatste zet.
 
 ![Omlaag scrollen naar Column Order en de rij Comment omhoog slepen tot onder Name, waardoor elke opmerking direct na de kolomnaam komt te staan](/img/demo-settings-column-order.webp)
@@ -146,6 +141,7 @@ In een cel van een logische naam waarvan de termenlijst open is, sluit de eerste
 Een geopende Verkenner, themabouwer of taalkiezer `Display Language` onderdrukt geen enkele sneltoets op het canvas. `Stop` sluit de Verkenner nooit. Zie [Toetsen in de Verkenner](./explorer.md#keys-in-the-explorer) voor wat `Stop` en de andere toetsen in de Verkenner doen, en [Een taal kiezen](./language-and-theme.md#picking-a-language) voor wat ze in de kiezer doen.
 `Delete Selection` verwijdert elke geselecteerde tabel, memo en tabelgroep, of, als één tabel is geselecteerd samen met enkele van haar kolommen en het zoomniveau boven `70%` ligt, die kolommen — zie [Tabellen en memo's verwijderen](./table-related-functions.md#table-and-memo-deletion). `Remove Table, Memo` verwijdert ook geselecteerde tabelgroepen.
 `Add Table Group` start het tekenen van een [`New Table Group`](./table-groups.md#drawing-a-group), zoals de knop `New Table Group` op de [canvaswerkbalk](./table-related-functions.md#canvas-toolbar) doet, en een tweede toetsaanslag annuleert het tekenen. `Group Selected Tables` bestaat uit twee toetsaanslagen zonder modificatietoets, `T` en daarna binnen een seconde `G`. De opdracht zet de geselecteerde tabellen in een nieuwe groep en opent het naamveld ervan, zoals `Group selected tables` in het contextmenu van een tabel doet, en doet niets als er geen tabel is geselecteerd — zie [Geselecteerde tabellen groeperen](./table-groups.md#grouping-selected-tables). Geen van beide doet iets in een editor in alleen-lezenmodus of zolang de groepen [verborgen](./table-groups.md#hiding-groups) zijn.
+In een editor in alleen-lezenmodus werken alleen de toetsen die lezen: `Search`, `Toggle Explorer`, `Stop`, `Table Properties` en `Focus on this table` op de tabel die een sprong selecteerde, de drie zoomtoetsen, `Zen Mode`, kopiëren en de pijltoetsen, die de gefocuste cel verplaatsen. `Editing`, elke toets `Add` en `Remove`, `Delete Selection`, `Primary Key`, beide toetsen voor alles selecteren, de vier relatietoetsen, `Add Table Group`, `Group Selected Tables`, `Hand Tool` en plakken doen niets, en `Undo` en `Redo` maken niets ongedaan of opnieuw — zie [Editors in alleen-lezenmodus](./table-related-functions.md#read-only-editors).
 `Zoom In`, `Zoom Out` en `Zoom Reset` zoomen ook op het tabblad [Visualisatie](./visualization.md#toolbar), zowel in `Graph` als in `Flow`, tenzij Snel zoeken open is.
 In `Flow` gaan `Undo` en `Redo` een stap terug en vooruit door de tabellen waartoe de stroomweergave is beperkt, zoals de knoppen `Previous table` en `Next table` ervan doen, tenzij Snel zoeken open is. Ze maken daar nooit iets in het diagram ongedaan, en in `Graph` doen ze niets — zie [Vorige en volgende tabel](./visualization.md#previous-table-and-next-table).
 Op het tabblad Visualisatie sluit `Stop` ook het menu voor de [rijweergave](./visualization.md#row-display) en annuleert een [stroomindeling](./visualization.md#how-flow-is-placed) die nog loopt; een weergave die met `Focus on this table` is beperkt, wordt er niet mee verruimd.
@@ -160,3 +156,13 @@ Het tabblad `Shortcuts` toont dan de toetscombinaties van de host: een opdracht 
 De rijtoetsen van het tabblad Woordenboek volgen `Add Column` en `Remove Column`, dus als je een van beide opnieuw toewijst, verschuiven ze mee — zie [`dictionaryRowChords`](../../api/erd-editor-element.md#dictionaryrowchords).
 
 In Obsidian bereiken deze toetsen de editor zolang het Obsidian-tabblad van het diagram actief is, ook waar een Obsidian-sneltoets dezelfde toets gebruikt, zoals `Alt + Enter`, `Ctrl + K` en `Ctrl + F` (Windows/Linux) of `⌥ + Enter`, `⌘ + K` en `⌘ + F` (Mac). Dat geldt ook voor `Alt + Shift + Enter` (Windows/Linux) of `⌥ + Shift + Enter` (Mac) van het tabblad Woordenboek, dat in geen enkele rij van deze lijst staat. Elke andere Obsidian-sneltoets werkt daar nog steeds. Zie [De zoekbalk van de browser](./find-and-replace.md#the-browsers-find-bar) voor `Ctrl + F` of `⌘ + F`.
+
+## Editors in alleen-lezenmodus {#read-only-editors}
+
+In een editor met [`readonly`](../../api/erd-editor-element.md#readonly) toont het tabblad Instellingen de instellingen van het diagram en wijzigt het er geen. Een badge `Read only` staat naast de kop van elke pagina, `Preferences` en `Shortcuts`.
+De schakelaars `Relationship DataType Sync` en `Maximum comment width` en het breedteveld zijn uitgeschakeld, en elke vergrendelknop ook. De rijen van `Column Order` tonen geen greep en laten zich niet slepen.
+Elke rij `Lock` toont nog steeds haar waarde. Een vergrendelde rij toont de waarde die het bestand bewaart, en een ontgrendelde de instelling zoals dat scherm haar heeft, wat van die van het bestand kan verschillen, zoals hieronder.
+
+De instellingen die bepalen wat het scherm toont, veranderen daar nog steeds: de positie en zoom van de weergave, het tabblad, de naamweergave, het databasesysteem, de taal van de Codegenerator, beide naamnotaties, het type aanhalingstekens en de schakelaars van [`View Option`](./table-related-functions.md#table-view-options).
+Elk verandert alleen dat scherm, wat zijn vergrendeling ook aangeeft. Het wordt niet in het bestand opgeslagen of door een JSON-export geschreven, niet in de ongedaanmakingsgeschiedenis vastgelegd, niet als wijziging geteld en bereikt nooit medebewerkers. De optiepanelen van de tabbladen [Schema SQL](./schema-sql.md#options-panel) en [Codegenerator](./code-generator.md#options-panel) duiden deze keuzes daar aan met `This window only`, in plaats van `Saved in the document`.
+Wanneer de editor weer bewerkbaar wordt, gaan het databasesysteem, de taal, de naamnotaties, het type aanhalingstekens en de schakelaars van View Option terug naar de waarden van het bestand. De weergave, het tabblad en de naamweergave blijven zoals je ze achterliet, en het bestand neemt elk ervan over, voor zover zijn vergrendeling dat toestaat, bij je volgende wijziging ervan.

@@ -55,6 +55,10 @@ Dokler je zaklep vklopljen, se preklop pokaže samo v urejevalniku, v katerem je
 Dokler je zaklep izklopljen, preklop v urejevalniku, ki lahko ureja, spremeni prikaz imen v vseh urejevalnikih in replikah, pri čemer obvelja zadnji preklop, vsi pa ga tudi shranijo.  
 Lastni preklop urejevalnika samo za branje vedno ostane v tem urejevalniku, ta pa še vedno sledi skupnim preklopom drugih.
 
+Od različice `5.0.0` urejevalnik [samo za branje](../erd-editor-element.md#readonly) sploh ne pošilja sprememb. Pomik, povečava, zavihek, prikaz imen, zbirka podatkov, jezik generatorja kode, zapisi imen, vrsta narekovajev in vrstice `View Option`, ki jih spremeni njegov bralec, ostanejo na njegovem zaslonu, ne glede na njihove zaklepe; pred različico `5.0.0` so se njegovi pomiki, povečave, preklopi zavihkov, zbirka podatkov in nastavitve kode pošiljali kot pri urejevalniku, ki ga je mogoče urejati.  
+Njegova shramba še vedno pošilja, kar pošiljajo njeni sledilniki kazalca, fokusa, izbire in okvirja za vlečenje bralca, odgovarja na registre, ki jih zahteva urejevalnik, ki se pridruži, in uveljavi vsako spremembo, ki jo pošljejo drugi. Sprememba zbirke podatkov, nastavitve generatorja kode ali vrstice `View Option` doseže njegov dokument, in njegov zaslon, razen če je njegov bralec to nastavitev tam spremenil, skupni preklop prikaza imen pa se na njegovem zaslonu pokaže v vsakem primeru.  
+Ko urejevalnik postane samo za branje, najprej pošlje, kar shramba še zadržuje od vlečenja ali pomika, kot to naredi [flushStreamBuffers](#flushstreambuffers), da drugi obdržijo zadnji del.
+
 [Zaklepi](../../guide/guides/settings.md#lock) so skupni: v vseh urejevalnikih obvelja zadnje zaklepanje ali odklepanje nastavitve, zaklep pa nosi vrednosti urejevalnika, ki ga je vklopil, zato vsi urejevalniki in replike shranijo isto vrednost.  
 Zaklep `Viewport` zato shrani pogled urejevalnika, ki ga je vklopil, zaklep `Canvas Type` pa zadnji zavihek, na katerem je bil ta urejevalnik pred zavihkom Nastavitve, kjer se zaklepi vklapljajo.  
 Izklop zaklepa `Language`, `Table Name Case`, `Column Name Case`, `Bracket Type` ali od različice `4.2.0` zaklepa `Name View` to nastavitev v vseh urejevalnikih postavi tudi na vrednost, prikazano v urejevalniku, ki ga je izklopil, tako da vsi še naprej shranjujejo eno samo vrednost. Izklop zaklepa `Viewport` ali `Canvas Type` nikomur ne premakne pogleda in ne zamenja zavihka.
@@ -71,6 +75,8 @@ Gumb na kartici za zunanjo povezavo, rezultat [hitrega iskanja](../../guide/guid
 Povezava od subscribe do dispatch tu nadomešča omrežje, tako da lahko vidite zgradbo seje, ne da bi vam bil v napoto prenos.
 
 ```js
+import '@dineug/erd-editor/erd-editor.js';
+
 const editor1 = document.createElement('erd-editor');
 const editor2 = document.createElement('erd-editor');
 

@@ -167,7 +167,7 @@ Gruplar gizliyken:
 - Gezginde `Table Groups` klasörü yer almaz; Bul ve değiştir de `Table group names` açık olsa bile grup adlarını ne bulur ne de değiştirir.
 - [Otomatik düzen](#auto-layout) her grubun tablolarını yine bir arada tutar, Şema SQL sekmesi [seçilebilecek grupları](#schema-sql-by-group) yine sunar, DBML grupları yine yazar ve [İçe aktar ve ekle](./file-import-export.md#import-and-add) ile eklenenler yine gizli kutuların altına yerleşir.
 
-Bu seçim, Görünüm seçeneklerindeki diğer aç/kapat düğmeleri gibi belgeye kaydedilir ve [geri alma geçmişine](./undo-redo.md#what-the-history-records) işlenir.
+Bu seçim, Görünüm seçeneklerindeki diğer aç/kapat düğmeleri gibi belgeye kaydedilir ve [geri alma geçmişine](./undo-redo.md#what-the-history-records) işlenir. Salt okunur bir düzenleyicide bunun yerine o ekranda kalır. [Salt okunur düzenleyiciler](#read-only-editors) bölümüne bakın.
 
 ## Otomatik düzen {#auto-layout}
 
@@ -197,11 +197,13 @@ Bu seçim düzenleyici penceresine aittir ve belgeye kaydedilmez.
 
 ## Salt okunur düzenleyiciler {#read-only-editors}
 
-[`readonly`](../../api/erd-editor-element.md#readonly) bir düzenleyicide gruplar her zamanki gibi çizilir ve Gezginde listelenir; seçilebilir ve gruplara gidilebilir, ancak değiştirilemez:
+[`readonly`](../../api/erd-editor-element.md#readonly) bir düzenleyicide gruplar her zamanki gibi çizilir ve Gezginde listelenir; gruplara gidilebilir, ancak değiştirilemez:
 
-- Başlık çubuğuna basmak grubu seçer ve hiçbir şeyi taşımaz. Yeniden boyutlandırma tutamaçları ve `x` bulunmaz.
-- Başlık çubuğuna çift tıklamak ad alanını açmaz ve grup menüsünde yalnızca `Select tables` öğesi bulunur.
-- Tuval menüsünde `New Table Group`, tablo menüsünde `Group selected tables` ve `Remove from group` öğeleri bulunmaz; Hızlı arama da iki grup komutundan hiçbirini listelemez. Düzenleyici salt okunur duruma geçtiğinde bir `New Table Group` çizimi sona erer.
-- [Tuval araç çubuğu](./table-related-functions.md#canvas-toolbar), `New Table Group` dahil ekleme düğmelerinin hiçbirini göstermez; `Alt + G` (Windows/Linux) veya `⌥ + G` (Mac) ile `T`, ardından `G` hiçbir şey yapmaz.
-- Tüm Görünüm seçeneklerinde olduğu gibi `Table Groups` görünüm seçeneği hiçbir şeyi değiştirmez.
+- [Bir gruba gitmek](#going-to-a-group) onu seçer ve orada bir grubun seçilmesinin tek yolu budur. Başlık çubuğuna basmak hiçbir şeyi seçmez ve hiçbir şeyi taşımaz: sürüklendiğinde tuvali kaydırır ve hareketsiz bir tıklama bir atlamanın bıraktığı seçimi kaldırır.
+- Yeniden boyutlandırma tutamaçları ve `x` bulunmaz ve başlık çubuğuna çift tıklamak ad alanını açmaz.
+- Bir gruba sağ tıklamak hiçbir menü açmaz ve tablo menüsünde yalnızca `Table Properties` öğesi bulunur.
+- Tuval menüsünde `New Table Group` bulunmaz ve Hızlı arama iki grup komutundan hiçbirini listelemez. Düzenleyici salt okunur duruma geçtiğinde bir `New Table Group` çizimi sona erer.
+- [Tuval araç çubuğu](./table-related-functions.md#canvas-toolbar) yalnızca görünüm kontrollerini korur, bu yüzden `New Table Group` düğmesi yoktur; `Alt + G` (Windows/Linux) veya `⌥ + G` (Mac) ile `T`, ardından `G` hiçbir şey yapmaz.
+- Düzenleyici salt okunur duruma geçerken süren bir tablo ya da grup sürüklemesi olduğu yerde durur ve hiçbir grubu değiştirmez, süren bir grup yeniden boyutlandırması ise boyutu değiştirmeden sona erer.
+- `View Option` → `Table Groups`, her View Option'ın orada yaptığı gibi grupları yalnızca o ekranda gösterir veya gizler: belge, ortak çalışanlar ve geri alma geçmişi seçimi olduğu gibi korur ve düzenleyiciyi yeniden yazılabilir yapmak belgenin seçimini geri koyar.
 - Şema SQL sekmesindeki `Tables` seçimi yine çalışır.

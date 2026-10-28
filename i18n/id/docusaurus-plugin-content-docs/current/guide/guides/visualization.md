@@ -237,4 +237,5 @@ Menekan kartu tidak pernah menambahkan hubungan. Jika Anda meninggalkan tab ERD 
 Perubahan dari kolaborator tetap sampai ke diagram selama Anda berada di Alur, dan kartu mengikuti tabel dan hubungan yang mereka tambahkan atau hapus — lihat [Cara Alur menata kartu](#how-flow-is-placed).  
 Cincin pilihan dan cincin fokus mereka digambar pada kartu, tetapi kursor dan kotak seret mereka tidak — lihat [Pengeditan kolaboratif](../../api/advanced/collaborative-editing.md).
 
-Kedua mode, termasuk pemfokusan dan langkah, juga berfungsi di editor `readonly`, begitu pula daftar `Name View`, yang di sana hanya mengganti tampilan di layar Anda sendiri.
+Kedua mode, termasuk pemfokusan dan langkah, juga berfungsi di editor [`readonly`](../../api/erd-editor-element.md#readonly), begitu pula daftar `Name View`, yang di sana hanya mengganti tampilan di layar Anda sendiri.  
+Di tab ERD editor hanya baca, menu tabel hanya berisi `Table Properties` dan penekanan tidak memilih tabel mana pun, jadi fokuskan dengan `Alt + F` (Windows/Linux) atau `⌥ + F` (Mac) pada tabel yang dipilih lompatan dari [Penjelajah](./explorer.md#going-to-a-row) atau [Pencarian Cepat](./quick-search.md).

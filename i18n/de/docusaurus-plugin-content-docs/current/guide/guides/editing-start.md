@@ -10,7 +10,8 @@ Das Bearbeiten beginnt über das Kontextmenü, das Sie mit einem Rechtsklick öf
 ![Mit der rechten Maustaste auf die Zeichenfläche klicken, das Untermenü Relationship öffnen, eine Tabelle hinzufügen und dann ihr eigenes Menü öffnen](/img/demo-context-menu.webp)
 
 Ein Rechtsklick auf eine Tabelle, eine Notiz, eine Tabellengruppe oder eine Beziehung öffnet stattdessen das eigene Menü dieses Elements.  
-Ein Rechtsklick auf eine bereits ausgewählte Tabelle, Notiz oder Tabellengruppe behält die gesamte Auswahl bei, sodass Einträge wie `Color` und `Delete selected` auf die ganze Auswahl wirken – siehe [Mehrfachauswahl](./table-related-functions.md#multiple-selection).
+Ein Rechtsklick auf eine bereits ausgewählte Tabelle, Notiz oder Tabellengruppe behält die gesamte Auswahl bei, sodass Einträge wie `Color` und `Delete selected` auf die ganze Auswahl wirken – siehe [Mehrfachauswahl](./table-related-functions.md#multiple-selection).  
+Ein schreibgeschützter Editor erstellt nichts, daher wird dort nichts von dem angeboten, was diese Seite beschreibt: Das Zeichenflächenmenü behält nur `View Option`, `Name View`, `Export` und `Diff Viewer`, das Menü einer Tabelle nur `Table Properties`, und eine Notiz, eine Tabellengruppe oder eine Beziehung öffnet kein Menü – siehe [Schreibgeschützte Editoren](./table-related-functions.md#read-only-editors).
 
 ## Willkommensbildschirm {#welcome-screen}
 

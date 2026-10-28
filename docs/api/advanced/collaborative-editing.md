@@ -55,6 +55,10 @@ While the lock is on, the switch shows only on the editor that made it: it is st
 While the lock is off, a switch made in an editor that can edit changes the Name View on every editor and replica, the latest switch winning, and every one of them saves it.  
 A read-only editor's own switch always stays on that editor, and the editor still follows the shared switches of the others.
 
+Since `5.0.0` a [read-only](../erd-editor-element.md#readonly) editor sends no change at all. The scroll, zoom, tab, Name View, database, Code Generator language, name cases, bracket type, and `View Option` rows its reader changes stay on its screen, whatever their locks say; before `5.0.0` its scrolls, zooms, tab switches, database, and code settings were sent like an editable editor's.  
+Its store still sends what its trackers send of the reader's cursor, focus, selection, and drag box, answers the registers a joining editor asks for, and applies every change the others send. A change of the database, a Code Generator setting, or a `View Option` row reaches its document, and its screen too unless its reader changed that setting there, and a shared Name View switch shows on its screen either way.  
+As the editor turns read-only it first sends what the store still holds back of a drag or a scroll, as [flushStreamBuffers](#flushstreambuffers) does, so the others keep the last of it.
+
 [Locks](../../guide/guides/settings.md#lock) are shared: the latest lock or unlock of a setting wins on every editor, and a lock carries the values of the editor that turned it on, so every editor and replica saves the same value.  
 A `Viewport` lock therefore saves the view of the editor that turned it on, and a `Canvas Type` lock the last tab that editor was on before the Settings tab, where locks are turned on.  
 Turning off the `Language`, `Table Name Case`, `Column Name Case`, `Bracket Type`, or, since `4.2.0`, `Name View` lock also sets that setting on every editor to the value shown on the editor that turned it off, so they keep saving one value. Turning off `Viewport` or `Canvas Type` moves no one's view or tab.
@@ -71,6 +75,8 @@ The external-link card button, a [quick search](../../guide/guides/quick-search.
 The subscribe-to-dispatch wiring here stands in for the network, so you can see the shape of a session without a transport in the way.
 
 ```js
+import '@dineug/erd-editor/erd-editor.js';
+
 const editor1 = document.createElement('erd-editor');
 const editor2 = document.createElement('erd-editor');
 

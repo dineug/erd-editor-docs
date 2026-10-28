@@ -37,7 +37,7 @@ A JSON file keeps the positions it has. The tables of a Schema SQL, GraphQL, DBM
 
 The diagram is then replaced in one step, so nothing shows in between. A setting you change while the tables are being placed, such as the tab, is kept, and if you import another file meanwhile, the import started last wins.
 
-A read-only editor loads nothing from `Import` and offers neither `Import and Add` nor the Dictionary tab's `Import CSV`.
+A read-only editor imports nothing. Its canvas context menu and Quick Search offer neither `Import` nor `Import and Add`, it shows no welcome screen, and the Dictionary tab offers no `Import CSV`.
 
 ### Import and Add
 
@@ -215,7 +215,7 @@ The `Export` submenu of the canvas context menu has three entries:
 - Schema SQL: Opens the [Schema SQL](./schema-sql.md#saving-or-copying-the-sql) tab with its options panel open and its `Save file` button focused, so pressing `Enter` saves the SQL the tab shows as `.sql`. Nothing is saved until then.
 - Image: Opens the `Export image` dialog, which saves the diagram as a `.png` or `.svg`, or copies it to the clipboard as a PNG — see [Image](#image).
 
-All three work in a read-only editor.  
+All three work in a read-only editor, where `Export` is one of the few rows its canvas menu keeps. There, json writes the settings the file holds, not the view, tab, Name View, database, code settings, or `View Option` toggles changed on that screen alone — see [Read-only Editors](./settings.md#read-only-editors) in Settings.  
 The Dictionary tab's own `Export CSV`, which is not in this submenu, saves its `Domains`, `Words`, or `Terms` sheet as a CSV file. Unlike these three, it is not offered in a read-only editor — see [Importing and Exporting CSV](./dictionary.md#importing-and-exporting-csv).
 
 Schema SQL writes each relationship's ON DELETE and ON UPDATE after its `REFERENCES`, ON DELETE first. `Not set` writes nothing, and an action the selected database does not accept is left out. See [Relationship Editing](./relationship-editing.md#on-delete-and-on-update) for which database takes which.

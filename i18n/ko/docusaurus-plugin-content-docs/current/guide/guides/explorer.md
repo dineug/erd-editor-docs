@@ -23,7 +23,7 @@ description: 다이어그램의 테이블과 각 테이블의 컬럼·인덱스�
 - 툴바에서 `Search` 바로 다음에 있는 트리 아이콘의 `Explorer` 버튼. 툴팁에 `Explorer (Ctrl + F)` (Windows/Linux) or `Explorer (⌘ + F)` (Mac)가 표시됩니다.
 - `Ctrl + F` (Windows/Linux) or `⌘ + F` (Mac). 설정의 [단축키](./settings.md#단축키) 탭에는 `Toggle Explorer`라는 이름으로 표시됩니다.
 - [빠른 검색](./quick-search.md)의 `Toggle Explorer`. 모든 탭의 목록에 표시되며, `find`, `replace`, `rename`, `tree`, `outline`, `objects`를 입력해도 찾을 수 있습니다.
-- 캔버스 컨텍스트 메뉴의 `Toggle Explorer`. ERD 캔버스에서 [테이블 그룹](./table-groups.md) 바깥의 빈 곳을 마우스 오른쪽 클릭하면 나타나는 메뉴에서 `New Table`, `New Memo`, `New Table Group` 다음, `Relationship` 앞에 있습니다.
+- 캔버스 컨텍스트 메뉴의 `Toggle Explorer`. ERD 캔버스에서 [테이블 그룹](./table-groups.md) 바깥의 빈 곳을 마우스 오른쪽 클릭하면 나타나는 메뉴에서 `New Table`, `New Memo`, `New Table Group` 다음, `Relationship` 앞에 있습니다. 읽기 전용 에디터의 캔버스 메뉴에는 이 항목이 없습니다. [읽기 전용 에디터](#읽기-전용-에디터) 항목을 참고하세요.
 
 두 `Toggle Explorer` 항목은 오른쪽에 단축키를 표시합니다.  
 툴바 버튼, 단축키, 빠른 검색의 항목은 모든 탭에서 동작합니다. 탐색기는 ERD 탭에만 표시되므로, Visualization, Schema SQL, Code Generator, 사전, 설정 탭에서 사용하면 먼저 ERD 탭으로 전환됩니다.
@@ -168,5 +168,8 @@ Find와 Replace 입력란 자체의 키는 [검색 입력란의 키](./find-and-
 
 ## 읽기 전용 에디터
 
-[`readonly`](../../api/erd-editor-element.md#readonly) 에디터에서도 탐색기는 다른 에디터에서와 똑같이 동작합니다. 같은 툴팁의 툴바 버튼, 단축키, 두 `Toggle Explorer` 항목, 트리, 접기와 펼치기, `Collapse All`, 행으로 이동이 모두 동작하며, 행으로 이동하면 평소처럼 이동한 대상이 선택됩니다. 제목에도 마찬가지로 `Explorer`가 표시됩니다.  
+[`readonly`](../../api/erd-editor-element.md#readonly) 에디터에서도 탐색기는 다른 에디터에서와 똑같이 동작합니다. 같은 툴팁의 툴바 버튼, 단축키, 빠른 검색의 `Toggle Explorer` 항목, 트리, 접기와 펼치기, `Collapse All`이 모두 동작합니다. 제목에도 마찬가지로 `Explorer`가 표시됩니다. 캔버스 컨텍스트 메뉴에는 읽는 항목만 남으므로 여기에는 `Toggle Explorer`가 없습니다. [읽기 전용 에디터](./table-related-functions.md#read-only-editors) 문서를 참고하세요.
+
+행으로 이동은 [행으로 이동](#행으로-이동)과 같습니다. 같은 규칙으로 화면이 이동하고, 그 행의 테이블, 테이블 그룹, 메모가 선택되어 캔버스에서 외곽선으로 표시되며, 행이 지정하는 위치의 셀에 포커스가 놓입니다.  
+읽기 전용 에디터가 무언가를 선택하는 방법은 이것뿐입니다. 캔버스를 눌러도 아무것도 선택되지 않으며, 움직이지 않는 클릭은 행이 남긴 선택을 지웁니다. 선택된 테이블은 `Alt + Space` (Windows/Linux) 또는 `⌥ + Space` (Mac)로 [테이블 속성](./table-related-functions.md#테이블-속성)에서 읽기 전용으로 열 수 있고, `Ctrl + C` (Windows/Linux) 또는 `⌘ + C` (Mac)는 어느 에디터에서나처럼 선택된 것을 복사합니다.  
 검색은 찾기만 합니다. 찾기와 바꾸기의 [읽기 전용 에디터](./find-and-replace.md#읽기-전용-에디터) 문서를 참고하세요.

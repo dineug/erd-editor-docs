@@ -16,7 +16,7 @@ npm install @dineug/erd-editor
 
 Erreplikazio-biltegia `@dineug/erd-editor/engine.js` azpibidean dago, ez paketearen erroan.  
 Sarrera-puntu horrek ez du DOMa ukitzen; beraz, Web Worker batean edo hari nagusitik kanpoko beste edozein lekutan exekutatzen da.  
-Paketearen erroa inportatzen bada, berriz, `<erd-editor>` elementu pertsonalizatua erregistratzen da, eta horrek dokumentu bat behar du.
+Paketearen erroa inportatzen bada, berriz, dokumentu bat behar da: `5.0.0` bertsiotik aurrera ez du elementurik definitzen, baina hura ebaluatzean bi elementu-klaseak eraikitzen dira. `5.0.0` bertsioa baino lehen, `<erd-editor>` elementu pertsonalizatua erregistratzen zuen.
 
 ## Erabilera {#usage}
 

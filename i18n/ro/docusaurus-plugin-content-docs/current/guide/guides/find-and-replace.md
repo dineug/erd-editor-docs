@@ -192,7 +192,8 @@ Ce fac în aceste câmpuri tasta `Escape`, comenzile rapide ale editorului care 
 ## Editoare doar în citire {#read-only-editors}
 
 Într-un editor cu atributul [`readonly`](../../api/erd-editor-element.md#readonly), căutarea doar găsește. Nu există săgeata `Toggle Replace` și nici rândul `Replace`, deci nici câmpul Înlocuire, `Preserve Case`, `Replace` sau `Replace All`.  
-Câmpul Găsire, cele trei opțiuni ale sale, tipurile de text, contorul, rezultatele și saltul la o potrivire funcționează toate. Exploratorul din jurul căutării funcționează ca în orice alt editor (consultați [Editoare doar în citire](./explorer.md#read-only-editors)).
+Câmpul Găsire, cele trei opțiuni ale sale, tipurile de text, contorul, rezultatele și saltul la o potrivire funcționează toate. Saltul la o potrivire selectează ceea ce atinge, ca în [Salt la o potrivire](#going-to-a-match), iar acea selecție este singura pe care o face un editor doar în citire: un clic pe pânză fără mișcare o șterge.  
+Deschideți căutarea cu tasta sau cu `Toggle Explorer` din căutarea rapidă, deoarece meniul contextual al pânzei nu are acolo `Toggle Explorer`. Restul exploratorului este tratat în [Editoare doar în citire](./explorer.md#read-only-editors), pe pagina Explorator.
 
 În VS Code, o revizie a unei diagrame, de exemplu o revizie Git sau o intrare din Local History, se deschide ca text JSON. Redeschisă ca diagramă cu `Reopen Editor With...`, este doar în citire și primește această căutare care doar găsește.
 

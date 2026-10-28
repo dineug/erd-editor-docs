@@ -16,7 +16,7 @@ npm install @dineug/erd-editor
 
 Le store de réplication se trouve dans le sous-chemin `@dineug/erd-editor/engine.js`, et non à la racine du paquet.  
 Ce point d’entrée ne touche à aucun DOM, il s’exécute donc dans un Web Worker ou n’importe où ailleurs hors du thread principal.  
-Importer plutôt la racine du paquet enregistre l’élément personnalisé `<erd-editor>`, qui a besoin d’un document.
+Importer plutôt la racine du paquet a besoin d’un document : depuis la version `5.0.0`, elle ne définit aucun élément, mais son évaluation construit les deux classes d’éléments. Avant la version `5.0.0`, elle enregistrait l’élément personnalisé `<erd-editor>`.
 
 ## Utilisation {#usage}
 

@@ -192,7 +192,8 @@ description: 從物件總管頂端搜尋資料表、欄位、索引和資料表�
 ## 唯讀編輯器 {#read-only-editors}
 
 在 [`readonly`](../../api/erd-editor-element.md#readonly) 編輯器中，搜尋只能尋找。沒有 `Toggle Replace` 箭頭，也沒有 `Replace` 列，因此也沒有「取代」輸入框、`Preserve Case`、`Replace` 或 `Replace All`。  
-「尋找」輸入框、其三個選項、文字種類、計數、搜尋結果，以及前往相符項目都能正常使用。其周圍的物件總管則與在其他任何編輯器中的運作方式相同，請參閱[唯讀編輯器](./explorer.md#read-only-editors)。
+「尋找」輸入框、其三個選項、文字種類、計數、搜尋結果，以及前往相符項目都能正常使用。前往相符項目會選取它所到達的項目，與[前往相符項目](#going-to-a-match)相同，而該選取範圍是唯讀編輯器唯一會產生的選取範圍：在畫布上單擊（不移動）會將其清除。  
+請以按鍵或快速搜尋中的 `Toggle Explorer` 開啟搜尋，因為畫布右鍵選單在該處沒有 `Toggle Explorer`。物件總管的其餘部分請參閱物件總管頁面的[唯讀編輯器](./explorer.md#read-only-editors)。
 
 在 VS Code 中，圖表的修訂版本（例如 Git 修訂版本或 Local History 項目）會以 JSON 文字開啟。以 `Reopen Editor With...` 重新以圖表開啟時，它會是唯讀的，並提供這種僅能尋找的搜尋。
 

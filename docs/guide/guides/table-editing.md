@@ -16,13 +16,14 @@ While an input method is still composing, `Escape` leaves editing mode open.
 
 ## Adding Columns
 
-Created using the shortcut `Alt + Enter` (Windows/Linux) or `⌥ + Enter` (Mac).  
-A column is added to every selected table.
+Created using the shortcut `Alt + Enter` (Windows/Linux) or `⌥ + Enter` (Mac), which adds a column to every selected table, or with the `+` button on a table's header, which adds one to that table.  
+The new column's first cell takes the focus, the first its row draws in the [column order](./settings.md#adjusting-column-order). Under the default order that is its name, which in `Logical Names` is its logical name, and in `Both Names` its `Logical Name` cell — see [Name View](./logical-names.md#name-view).  
+A column added with `Tab` from the last cell, and the primary key a relationship draw adds to a parent table that has none, start on that cell too.
 
 ## Tab Key
 
 Press `Tab` to move straight into the next cell's editing mode.  
-Pressing `Tab` in the last cell creates a new column.  
+Pressing `Tab` in the last cell creates a new column and opens its first cell for editing — see [Adding Columns](#adding-columns).  
 Use `Shift + Tab` to navigate to the previous cell's editing mode.  
 `Tab` and `Shift + Tab` pass through the cells the table draws, in their order, so the Name View and View Option → `Domain` decide whether logical name and Domain cells are among them — see [Writing a Logical Name](./logical-names.md#writing-a-logical-name).  
 The [alternate key](./table-related-functions.md#alternate-keys) marks drawn after a row's last cell are not cells, so keyboard focus passes over them and they never open for editing.
@@ -96,7 +97,8 @@ No modifier key is needed. Holding `Alt` (Windows/Linux) or `⌥` (Mac) on the h
 ![Selecting three columns, then dragging the handle beside the focused one into another table, the other selected columns moving with it](/img/demo-column-multi-move.webp)
 
 A drag that starts on a column's row rather than on its handle moves the table, as a drag on its header does — see [Moving Multiple Tables](./table-related-functions.md#moving-multiple-tables). `Alt + drag` (Windows/Linux) or `⌥ + drag` (Mac) on a row duplicates the table — see [Duplicating Tables and Memos](./table-related-functions.md#duplicating-tables-and-memos).  
-No handle is drawn at `70%` zoom and below, where tables show only their names, or in a read-only editor, so columns cannot be reordered there.
+No handle is drawn at `70%` zoom and below, where tables show only their names, or in a read-only editor, so columns cannot be reordered there.  
+A column drag under way when the editor turns read-only ends at once: the copy following the pointer and the grabbing hand go, and letting go moves no column. Rows the drag had already moved stay where it moved them.
 
 ## Column Deletion
 
@@ -174,3 +176,10 @@ The key icon in the row is display only, so clicking it does not set the key.
 To make several columns one composite key, [select them](#selecting-multiple-columns), then press `Alt + K` (Windows/Linux) or `⌥ + K` (Mac), or right-click one of the selected rows and choose `Primary Key on selected columns`. Each toggle is one undo step.
 
 ![Selecting two columns with Shift + Arrow Down, then making both the primary key with ⌥ + K and clearing both with a second press](/img/demo-column-pk.webp)
+
+## Read-only Editors
+
+In a [`readonly`](../../api/erd-editor-element.md#readonly) editor no cell opens for editing and no column changes.  
+A click on a cell focuses nothing and takes off the selection a jump left. `Enter` and a double-click open no editor and flip no toggle, `Tab` is left to the page, and the shortcuts that add, select all, or delete columns, the primary key toggle, and a paste do nothing.  
+Going to a column from the [Explorer](./explorer.md#going-to-a-row) or [Quick Search](./quick-search.md) focuses its cell. The arrow keys then move the focus from cell to cell, the column they reach selected alone, since `Shift` adds no column there.  
+`Ctrl + C` (Windows/Linux) or `⌘ + C` (Mac) still copies the selected column, or the table a jump selected — see [Copying/Pasting Columns](#copyingpasting-columns).

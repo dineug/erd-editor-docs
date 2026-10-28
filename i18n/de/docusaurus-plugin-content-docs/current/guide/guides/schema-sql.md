@@ -31,7 +31,7 @@ Die [Tabelleneigenschaften](./table-related-functions.md#table-properties) haben
 
 Der Bereich enthält drei Gruppen, jede unter einer Beschriftung:
 
-1. `Saved in the document`: `Database` und `Bracket` – siehe [Datenbank und Begrenzer](#database-and-bracket).
+1. `Saved in the document`: `Database` und `Bracket` – siehe [Datenbank und Begrenzer](#database-and-bracket). Ein schreibgeschützter Editor beschriftet sie mit `This window only` – siehe [Schreibgeschützte Editoren](#read-only-editors).
 2. `This window only`: `Statements`, `Header`, `Write logical names into empty comments` und, solange das Diagramm eine [Tabellengruppe](./table-groups.md) hat, `Tables` – siehe [Anweisungen](#statements), [Vorspann](#header), [Logische Namen als Kommentare](#logical-names-as-comments) und [Tabellen](#tables).
 3. `Saved in the document · written as is for every database`: die Skripte `Before tables` und `After tables` – siehe [Skripte vor und nach den Tabellen](#before-and-after-scripts).
 
@@ -222,5 +222,9 @@ Wie diese Kommentare beim Import zurückgelesen werden, wird in [Kommentare](./f
 
 ## Schreibgeschützte Editoren {#read-only-editors}
 
-In einem Editor mit `readonly` funktioniert die Registerkarte wie gewohnt: `Database` und `Bracket` ändern weiterhin das angezeigte SQL, `Statements`, `Header`, `Write logical names into empty comments` und `Tables` funktionieren weiterhin, und `Save file` und `Copy` speichern und kopieren es weiterhin.  
-Nur die beiden Skriptfelder sind schreibgeschützt.
+In einem [`readonly`](../../api/erd-editor-element.md#readonly)-Editor funktioniert die Registerkarte für den Leser, und nichts, was dort getan wird, erreicht das Dokument:
+
+- `Database` und `Bracket` schreiben das SQL weiterhin neu, aber nur in diesem Fenster; deshalb beschriftet der Bereich sie ebenfalls mit `This window only`. Eine Wahl wird nicht in der Datei gespeichert, nicht mit Mitbearbeitern geteilt und nicht für Rückgängig aufgezeichnet, was auch immer die Sperren sagen, und die Änderung eines Mitbearbeiters an einer Einstellung, die Sie gewählt haben, lässt Ihre Wahl auf dem Bildschirm stehen. Die Registerkarte Code Generator zeigt dieselbe Wahl, und [`getSchemaSQL()`](../../api/erd-editor-element.md#getschemasql), ohne Datenbank aufgerufen, schreibt sie ebenfalls. Sobald der Editor wieder beschreibbar wird, kommen die Datenbank und der Begrenzer des Dokuments zurück.
+- `Statements`, `Header`, `Write logical names into empty comments` und `Tables` funktionieren wie überall, da sie schon zum Fenster gehören.
+- Die beiden Skriptfelder sind schreibgeschützt: Sie zeigen die Skripte des Dokuments, die das SQL weiterhin schreibt, und nehmen keine Eingabe an.
+- `Save file` und `Copy` speichern und kopieren das SQL, das die Registerkarte zeigt.

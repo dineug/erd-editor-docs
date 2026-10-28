@@ -12,7 +12,7 @@ Historiak `2048` aldaketa gordetzen ditu gehienez.
 - Berregin: `Ctrl + Shift + Z` (Windows/Linux) edo `⌘ + Shift + Z` (Mac)
 
 ERD fitxan, tresna-barrak bi komando berberak ditu `Undo` eta `Redo` botoi gisa, `Time Travel` botoiaren ondoan. Hiztegia fitxan `Undo` eta `Redo` erakusten ditu, `Time Travel` botoirik gabe, eta beste ezein fitxak ez ditu erakusten.  
-Desegiteko edo berregiteko zerbait dagoenean bakarrik agertzen dira aktibo. `readonly` atributua duen editore batek ezkutatu egiten ditu, eta lasterbideek ez dute ezer desegiten ez berregiten.
+Desegiteko edo berregiteko zerbait dagoenean bakarrik agertzen dira aktibo. `readonly` atributua duen editore batek ezkutatu egiten ditu eta `Time Travel` botoia ere bai, eta lasterbideek ez dute ezer desegiten ez berregiten.
 
 Desegiteak eta berregiteak ERD fitxan bakarrik eragiten dute diagramaren historian.  
 Lasterbideek ez dute han funtzionatzen Bilaketa azkarra, `Table Properties`, `Diff Viewer`, `Auto Layout` aurrebista, [`Export image`](./file-import-export.md#image) elkarrizketa-koadroa, [Mapatu zutabeak](./relationship-editing.md#map-columns) edo Denbora-bidaia irekita dagoen bitartean.  
@@ -58,6 +58,8 @@ Ez dira erregistratzen:
 - Hiztegia fitxan erakusten den orria, eta orri bakoitzaren bilaketa, hautapena, korritzea eta zutabeen zabalerak. Ikus [Fitxa irekitzea](./dictionary.md#opening-the-tab).
 
 Hauetako edozein aldatzea ezin da desegin.
+
+Irakurtzeko soilik dagoen editore batek ez du ezer erregistratzen. Ikuspegiaren kokapena, zooma eta `View Option` etengailuak aldatzen jarraitzen dute bertan, fitxarekin, Izenen ikuspegiarekin, datu-basearekin eta kode-ezarpenekin batera, baina pantaila horretan bakarrik; beraz, ez dago ezer desegiteko. Ikus Ezarpenetako [Irakurtzeko soilik dauden editoreak](./settings.md#read-only-editors).
 
 Hiztegia fitxan egindako edizioak desegin daitezke, baina beren orriaren historiara joaten dira, ez honetara; beraz, ERD fitxako desegiteak ez du inoiz halakorik leheneratzen, ezta domeinu baten `Data Type` berria eta horrek aldatzen dituen zutabe-motak ere. Ikus [Hiztegiaren orriak](#dictionary-sheets).
 
@@ -136,7 +138,7 @@ Orri guztien historia hustu egiten da hiztegiak ordezten direnean: JSON fitxateg
 ## Denbora-bidaia {#time-travel}
 
 Tresna-barrako `Time Travel` botoitik irekitzen da, ERD fitxan Undo eta Redo botoien ondoan.  
-Botoiak ez du ezer egiten diagramaren historiak gutxienez erregistratutako aldaketa bat izan arte.
+Botoiak ez du ezer egiten diagramaren historiak gutxienez erregistratutako aldaketa bat izan arte. Irakurtzeko soilik dagoen editore batek ez du halako botoirik erakusten, eta irakurtzeko soilik bihurtzen den editore batek Denbora-bidaia ixten du hura aplikatu gabe.
 
 Denbora-bidaiak diagramaren kopia bereizi bat irekitzen du, irakurtzeko soilik, oihalak erakusten duen korritze-kokapenean, zoom-mailan eta [Izenen ikuspegian](./logical-names.md#name-view), `Viewport` edo `Name View` blokeoa aktibatuta egon ala ez.  
 Diagramaren historian bakarrik ibiltzen da urratsez urrats; beraz, Hiztegiaren orrietako edizioak ez daude haren puntuen artean.  

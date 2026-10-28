@@ -31,7 +31,7 @@ SQL генерується під час відкриття вкладки й з
 
 Панель містить три групи, кожна з яких має свій підпис:
 
-1. `Saved in the document`: `Database` і `Bracket` — див. [база даних і лапки](#database-and-bracket).
+1. `Saved in the document`: `Database` і `Bracket` — див. [база даних і лапки](#database-and-bracket). Редактор лише для читання підписує їх `This window only` — див. [режим лише для читання](#read-only-editors).
 2. `This window only`: `Statements`, `Header`, `Write logical names into empty comments` і, поки діаграма має [групу таблиць](./table-groups.md), `Tables` — див. [оператори](#statements), [заголовок](#header), [логічні назви як коментарі](#logical-names-as-comments) і [таблиці](#tables).
 3. `Saved in the document · written as is for every database`: скрипти `Before tables` і `After tables` — див. [скрипти перед таблицями й після них](#before-and-after-scripts).
 
@@ -222,5 +222,9 @@ SQL також можна виділяти, щоб узяти лише його 
 
 ## Режим лише для читання {#read-only-editors}
 
-У редакторі з атрибутом `readonly` вкладка працює як зазвичай: `Database` і `Bracket` так само змінюють показаний SQL, `Statements`, `Header`, `Write logical names into empty comments` і `Tables` так само працюють, а `Save file` і `Copy`, як і раніше, зберігають і копіюють його.  
-Доступними лише для читання стають тільки два поля скриптів.
+У редакторі з атрибутом [`readonly`](../../api/erd-editor-element.md#readonly) вкладка працює для читача, і ніщо, зроблене на ній, не потрапляє в документ:
+
+- `Database` і `Bracket` так само переписують SQL, але лише в цьому вікні, тож панель підписує їх теж `This window only`. Вибір не зберігається у файлі, не передається співавторам і не записується для відміни незалежно від блокувань, а зміна співавтора в налаштуванні, яке ви вибрали, залишає на екрані ваш вибір. Вкладка Code Generator показує той самий вибір, і [`getSchemaSQL()`](../../api/erd-editor-element.md#getschemasql), викликаний без бази даних, теж записує його. Щойно редактор знову стає доступним для запису, повертаються база даних і лапки документа.
+- `Statements`, `Header`, `Write logical names into empty comments` і `Tables` працюють так само, як усюди, бо вже належать вікну.
+- Два поля скриптів доступні лише для читання: вони показують скрипти документа, які SQL і далі записує, і не приймають введення.
+- `Save file` і `Copy` зберігають і копіюють SQL, який показує вкладка.

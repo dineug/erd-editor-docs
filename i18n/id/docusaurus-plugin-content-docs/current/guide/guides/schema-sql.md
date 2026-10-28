@@ -31,7 +31,7 @@ SQL ditulis saat tab dibuka, dan ditulis lagi setiap kali salah satu pilihan pan
 
 Panel memuat tiga kelompok, masing-masing di bawah sebuah keterangan:
 
-1. `Saved in the document`: `Database` dan `Bracket` — lihat [Database dan tanda kutip](#database-and-bracket).
+1. `Saved in the document`: `Database` dan `Bracket` — lihat [Database dan tanda kutip](#database-and-bracket). Editor hanya baca memberi keterangan `This window only` pada keduanya — lihat [Editor hanya baca](#read-only-editors).
 2. `This window only`: `Statements`, `Header`, `Write logical names into empty comments`, dan, selama diagram memiliki [grup tabel](./table-groups.md), `Tables` — lihat [Pernyataan](#statements), [Pembuka](#header), [Nama logis sebagai komentar](#logical-names-as-comments), dan [Tabel](#tables).
 3. `Saved in the document · written as is for every database`: skrip `Before tables` dan `After tables` — lihat [Skrip sebelum dan setelah tabel](#before-and-after-scripts).
 
@@ -222,5 +222,9 @@ Cara komentar ini dibaca kembali saat impor dijelaskan di [Komentar](./file-impo
 
 ## Editor hanya baca {#read-only-editors}
 
-Di editor `readonly`, tab bekerja seperti biasa: `Database` dan `Bracket` tetap mengubah SQL yang ditampilkan, `Statements`, `Header`, `Write logical names into empty comments`, dan `Tables` tetap berfungsi, serta `Save file` dan `Copy` tetap menyimpan dan menyalinnya.  
-Hanya kedua kotak skrip yang bersifat hanya baca.
+Di editor [`readonly`](../../api/erd-editor-element.md#readonly), tab bekerja untuk pembaca, dan tidak ada yang dilakukan di tab ini yang sampai ke dokumen:
+
+- `Database` dan `Bracket` tetap menulis ulang SQL, tetapi hanya di jendela itu, sehingga panel juga memberi keterangan `This window only` pada keduanya. Pilihan tidak disimpan di file, dibagikan kepada kolaborator, atau dicatat untuk pembatalan, apa pun penguncian miliknya, dan perubahan kolaborator pada pengaturan yang Anda pilih membiarkan pilihan Anda tetap di layar. Tab Generator Kode menampilkan pilihan yang sama, dan [`getSchemaSQL()`](../../api/erd-editor-element.md#getschemasql) yang dipanggil tanpa database juga menulisnya. Setelah editor dapat menulis lagi, database dan tanda kutip dokumen kembali.
+- `Statements`, `Header`, `Write logical names into empty comments`, dan `Tables` berfungsi seperti di mana pun, karena sudah menjadi milik jendela.
+- Kedua kotak skrip bersifat hanya baca: keduanya menampilkan skrip dokumen, yang tetap ditulis SQL, dan tidak menerima pengetikan.
+- `Save file` dan `Copy` menyimpan dan menyalin SQL yang ditampilkan tab.

@@ -55,6 +55,10 @@ Solange die Sperre eingeschaltet ist, zeigt sich der Wechsel nur in dem Editor, 
 Solange die Sperre ausgeschaltet ist, ändert ein Wechsel in einem Editor, der bearbeiten kann, die Namensansicht in jedem Editor und jedem Replikat, wobei sich der letzte Wechsel durchsetzt, und jeder von ihnen speichert sie.  
 Der eigene Wechsel eines schreibgeschützten Editors bleibt immer in diesem Editor, und der Editor folgt weiterhin den gemeinsamen Wechseln der anderen.
 
+Seit `5.0.0` sendet ein [schreibgeschützter](../erd-editor-element.md#readonly) Editor überhaupt keine Änderung mehr. Die Zeilen für Scrollen, Zoom, Registerkarte, Namensansicht, Datenbank, Sprache des Code-Generators, Schreibweisen, Begrenzertyp und `View Option`, die sein Leser ändert, bleiben auf seinem Bildschirm, was auch immer ihre Sperren sagen; vor `5.0.0` wurden seine Scrollvorgänge, Zoomänderungen, Registerkartenwechsel, die Datenbank und die Code-Einstellungen wie die eines bearbeitbaren Editors gesendet.  
+Sein Store sendet weiterhin, was seine Tracker vom Cursor, Fokus, der Auswahl und dem Ziehrahmen des Lesers senden, beantwortet die Register, die ein beitretender Editor anfordert, und wendet jede Änderung an, die die anderen senden. Eine Änderung der Datenbank, einer Einstellung des Code-Generators oder einer Zeile von `View Option` erreicht sein Dokument und auch seinen Bildschirm, es sei denn, sein Leser hat diese Einstellung dort geändert; ein gemeinsamer Wechsel der Namensansicht ist in jedem Fall auf seinem Bildschirm zu sehen.  
+Wenn der Editor schreibgeschützt wird, sendet er zuerst, was der Store von einem Ziehen oder Scrollen noch zurückhält, so wie es [flushStreamBuffers](#flushstreambuffers) tut, damit die anderen das Letzte davon behalten.
+
 [Sperren](../../guide/guides/settings.md#lock) werden gemeinsam genutzt: Das letzte Sperren oder Entsperren einer Einstellung setzt sich in jedem Editor durch, und eine Sperre trägt die Werte des Editors mit, der sie eingeschaltet hat, sodass jeder Editor und jedes Replikat denselben Wert speichert.  
 Eine Sperre `Viewport` speichert daher die Ansicht des Editors, der sie eingeschaltet hat, und eine Sperre `Canvas Type` die letzte Registerkarte, auf der dieser Editor vor der Registerkarte Einstellungen war, auf der Sperren eingeschaltet werden.  
 Das Ausschalten der Sperre `Language`, `Table Name Case`, `Column Name Case`, `Bracket Type` oder seit `4.2.0` `Name View` setzt diese Einstellung außerdem in jedem Editor auf den Wert, den der Editor anzeigt, der sie ausgeschaltet hat, sodass alle weiterhin einen einzigen Wert speichern. Das Ausschalten von `Viewport` oder `Canvas Type` verändert bei niemandem die Ansicht oder die Registerkarte.
@@ -71,6 +75,8 @@ Die Kartenschaltfläche für den externen Link, ein nach `#`, `@` oder `:` gewä
 Die Verdrahtung von subscribe zu dispatch steht hier für das Netzwerk, sodass Sie den Aufbau einer Sitzung sehen können, ohne dass ein Transport dazwischensteht.
 
 ```js
+import '@dineug/erd-editor/erd-editor.js';
+
 const editor1 = document.createElement('erd-editor');
 const editor2 = document.createElement('erd-editor');
 

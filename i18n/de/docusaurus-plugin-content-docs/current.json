@@ -8,7 +8,7 @@
     "description": "The label for category 'Guides' in sidebar 'docs'"
   },
   "sidebar.docs.category.Guides.link.generated-index.description": {
-    "message": "So zeichnen und bearbeiten Sie ein Diagramm: Tabellen und Beziehungen erstellen, Dateien importieren und exportieren sowie die Ansichtsoptionen des Editors.",
+    "message": "So zeichnen und bearbeiten Sie ein Diagramm, von Tabellen und Beziehungen über das Importieren und Exportieren von Dateien bis zu den Ansichtsoptionen des Editors, und wie Sie es schreibgeschützt auf einer anderen Website zeigen.",
     "description": "The generated-index page description for category 'Guides' in sidebar 'docs'"
   },
   "sidebar.api.category.Advanced": {

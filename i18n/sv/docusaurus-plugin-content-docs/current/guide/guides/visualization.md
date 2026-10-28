@@ -237,4 +237,5 @@ Ett tryck på ett kort lägger aldrig till en relation. Om du lämnade ERD-flike
 Medarbetarnas ändringar når fortfarande diagrammet medan du är i flödet, och korten följer de tabeller och relationer som de lägger till eller tar bort – se [Hur flödet placeras](#how-flow-is-placed).  
 Deras markerings- och fokusringar ritas på korten, men inte deras markörer och dragrutor – se [Gemensam redigering](../../api/advanced/collaborative-editing.md).
 
-Båda lägena, inklusive fokusering och stegning, fungerar även i en editor med `readonly`, och det gör även listan `Name View`, som där bara byter visning på din egen skärm.
+Båda lägena, inklusive fokusering och stegning, fungerar även i en editor med [`readonly`](../../api/erd-editor-element.md#readonly), och det gör även listan `Name View`, som där bara byter visning på din egen skärm.  
+På ERD-fliken i en skrivskyddad editor innehåller tabellmenyn enbart `Table Properties` och ett tryck markerar ingen tabell, så fokusera med `Alt + F` (Windows/Linux) eller `⌥ + F` (Mac) på den tabell som ett hopp från [utforskaren](./explorer.md#going-to-a-row) eller [snabbsökningen](./quick-search.md) markerade.

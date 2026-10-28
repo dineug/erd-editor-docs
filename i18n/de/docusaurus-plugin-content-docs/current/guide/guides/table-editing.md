@@ -16,13 +16,14 @@ Solange eine Eingabemethode noch Zeichen zusammensetzt, lässt `Escape` den Bear
 
 ## Spalten hinzufügen {#adding-columns}
 
-Spalten werden mit der Tastenkombination `Alt + Enter` (Windows/Linux) oder `⌥ + Enter` (Mac) erstellt.  
-Jeder ausgewählten Tabelle wird eine Spalte hinzugefügt.
+Spalten werden mit der Tastenkombination `Alt + Enter` (Windows/Linux) oder `⌥ + Enter` (Mac) erstellt, die jeder ausgewählten Tabelle eine Spalte hinzufügt, oder mit der Schaltfläche `+` im Kopf einer Tabelle, die dieser Tabelle eine hinzufügt.  
+Die erste Zelle der neuen Spalte erhält den Fokus, und zwar die erste, die ihre Zeile in der [Spaltenreihenfolge](./settings.md#adjusting-column-order) zeichnet. Bei der Standardreihenfolge ist das ihr Name, der in der Ansicht `Logical Names` ihr logischer Name ist und in `Both Names` ihre Zelle `Logical Name` – siehe [Namensansicht](./logical-names.md#name-view).  
+Eine Spalte, die mit `Tab` aus der letzten Zelle hinzugefügt wird, und der Primärschlüssel, den das Zeichnen einer Beziehung einer Elterntabelle hinzufügt, die keinen hat, beginnen ebenfalls in dieser Zelle.
 
 ## Tab-Taste {#tab-key}
 
 Drücken Sie `Tab`, um direkt in den Bearbeitungsmodus der nächsten Zelle zu wechseln.  
-Wenn Sie in der letzten Zelle `Tab` drücken, wird eine neue Spalte erstellt.  
+Wenn Sie in der letzten Zelle `Tab` drücken, wird eine neue Spalte erstellt und ihre erste Zelle zur Bearbeitung geöffnet – siehe [Spalten hinzufügen](#adding-columns).  
 Mit `Shift + Tab` wechseln Sie in den Bearbeitungsmodus der vorherigen Zelle.  
 `Tab` und `Shift + Tab` durchlaufen die Zellen, die die Tabelle zeigt, in ihrer Reihenfolge, sodass die Namensansicht und View Option → `Domain` darüber entscheiden, ob Zellen des logischen Namens und Domänenzellen dazugehören – siehe [Logischen Namen eingeben](./logical-names.md#writing-a-logical-name).  
 Die Markierungen für [Alternativschlüssel](./table-related-functions.md#alternate-keys), die hinter der letzten Zelle einer Zeile gezeichnet werden, sind keine Zellen, sodass der Tastaturfokus sie überspringt und sie nie zur Bearbeitung geöffnet werden.
@@ -96,7 +97,8 @@ Eine Zusatztaste ist nicht nötig. Wenn Sie auf dem Ziehgriff `Alt` (Windows/Lin
 ![Drei Spalten auswählen, dann den Ziehgriff neben der fokussierten in eine andere Tabelle ziehen, wobei die anderen ausgewählten Spalten mitwandern](/img/demo-column-multi-move.webp)
 
 Ein Ziehen, das auf der Zeile einer Spalte statt auf ihrem Ziehgriff beginnt, verschiebt die Tabelle wie ein Ziehen an ihrem Tabellenkopf – siehe [Mehrere Tabellen verschieben](./table-related-functions.md#moving-multiple-tables). `Alt + drag` (Windows/Linux) oder `⌥ + drag` (Mac) auf einer Zeile dupliziert die Tabelle – siehe [Tabellen und Notizen duplizieren](./table-related-functions.md#duplicating-tables-and-memos).  
-Bei einer Zoomstufe von `70%` und darunter, wo Tabellen nur ihre Namen zeigen, und in einem schreibgeschützten Editor wird kein Ziehgriff gezeichnet, sodass sich Spalten dort nicht neu anordnen lassen.
+Bei einer Zoomstufe von `70%` und darunter, wo Tabellen nur ihre Namen zeigen, und in einem schreibgeschützten Editor wird kein Ziehgriff gezeichnet, sodass sich Spalten dort nicht neu anordnen lassen.  
+Ein Ziehen einer Spalte, das gerade läuft, wenn der Editor schreibgeschützt wird, endet sofort: Die Kopie, die dem Zeiger folgt, und die greifende Hand verschwinden, und das Loslassen verschiebt keine Spalte. Zeilen, die das Ziehen schon verschoben hatte, bleiben, wo es sie hingeschoben hat.
 
 ## Spalten löschen {#column-deletion}
 
@@ -174,3 +176,10 @@ Das Schlüsselsymbol in der Zeile dient nur der Anzeige, sodass ein Klick darauf
 Um mehrere Spalten zu einem zusammengesetzten Schlüssel zu machen, [wählen Sie sie aus](#selecting-multiple-columns), und drücken Sie dann `Alt + K` (Windows/Linux) oder `⌥ + K` (Mac), oder klicken Sie mit der rechten Maustaste auf eine der ausgewählten Zeilen und wählen Sie `Primary Key on selected columns`. Jedes Umschalten ist ein Rückgängig-Schritt.
 
 ![Zwei Spalten mit Shift + Arrow Down auswählen, dann beide mit ⌥ + K zum Primärschlüssel machen und mit einem zweiten Tastendruck bei beiden wieder aufheben](/img/demo-column-pk.webp)
+
+## Schreibgeschützte Editoren {#read-only-editors}
+
+In einem [`readonly`](../../api/erd-editor-element.md#readonly)-Editor öffnet sich keine Zelle zur Bearbeitung, und keine Spalte ändert sich.  
+Ein Klick auf eine Zelle fokussiert nichts und hebt die Auswahl auf, die ein Sprung hinterlassen hat. `Enter` und ein Doppelklick öffnen keinen Editor und schalten nichts um, `Tab` bleibt der Seite überlassen, und die Tastenkombinationen, die Spalten hinzufügen, alle auswählen oder löschen, der Umschalter für den Primärschlüssel und ein Einfügen bewirken nichts.  
+Das Wechseln zu einer Spalte aus dem [Explorer](./explorer.md#going-to-a-row) oder der [Schnellsuche](./quick-search.md) fokussiert deren Zelle. Die Pfeiltasten bewegen den Fokus dann von Zelle zu Zelle, wobei die erreichte Spalte allein ausgewählt ist, da `Shift` dort keine Spalte hinzufügt.  
+`Ctrl + C` (Windows/Linux) oder `⌘ + C` (Mac) kopiert weiterhin die ausgewählte Spalte oder die Tabelle, die ein Sprung ausgewählt hat – siehe [Spalten kopieren/einfügen](#copyingpasting-columns).

@@ -61,7 +61,7 @@ View Option → `Domain`이 켜져 있는 동안에는 도메인이 자신만의
 - `Logical Names` 보기에서는 헤더의 논리명, 헤더의 코멘트, 그다음 각 행의 셀을 컬럼 순서대로 지나며, 이름 자리에는 논리명이 옵니다.
 - `Both Names` 보기에서는 헤더의 논리명, 이름, 코멘트, 그다음 각 행의 셀을 컬럼 순서대로 지나며, 기본적으로 각 행의 `Logical Name` 셀이 맨 처음입니다.
 
-`Alt + Enter` (Windows/Linux) or `⌥ + Enter` (Mac)를 누르면 컬럼이 추가되고 그 이름 셀에 포커스가 놓이며, `Logical Names` 보기에서는 이 셀이 논리명입니다.
+`Alt + Enter` (Windows/Linux) or `⌥ + Enter` (Mac)를 누르면 컬럼이 추가되고 그 행이 그리는 첫 번째 셀에 포커스가 놓입니다. 기본 컬럼 순서에서는 이름 셀이며 `Logical Names` 보기에서는 이 셀이 논리명이고, `Both Names` 보기에서는 `Logical Name` 셀이므로 논리명부터 입력할 수 있습니다. [Column 추가](./table-editing.md#column-추가) 문서를 참고하세요.
 
 관계가 추가하는 foreign key 컬럼은 키의 타입과 함께 논리명과 도메인도 복사합니다. [식별 관계](./relationship-editing.md#식별-관계) 문서를 참고하세요.  
 컬럼을 스프레드시트로 복사하거나 스프레드시트에서 붙여넣을 때는 논리명 셀과 도메인 셀을 포함해 보기가 그리는 셀을 사용합니다. [Column 복사/붙여넣기](./table-editing.md#column-복사붙여넣기) 문서를 참고하세요.
@@ -143,5 +143,7 @@ MCP 서버를 통해 작업하는 코딩 에이전트는 지금 보고 있는 �
 
 ## 읽기 전용 에디터 {#read-only-editors}
 
-[`readonly`](../../api/erd-editor-element.md#readonly) 에디터에서는 모든 이름 표시 선택기가 동작하며, 잠금과 상관없이 전환은 그 화면만 바꿉니다.  
-이 에디터에서는 논리명과 도메인을 편집할 수 없으므로 용어 목록도 도메인 선택기도 열리지 않으며, `Derive Physical Name Again`과 `Derive Physical Names Again` 항목은 어느 것도 표시되지 않습니다. 다른 모든 [보기 옵션](./table-related-functions.md#테이블-보기-옵션)과 마찬가지로 View Option → `Domain`도 이 에디터에서는 아무것도 바꾸지 않습니다.
+[`readonly`](../../api/erd-editor-element.md#readonly) 에디터에서는 모든 이름 표시 선택기가 동작합니다. 캔버스 툴바의 `Name View` 버튼, 캔버스 컨텍스트 메뉴와 빠른 검색의 `Name View`, Flow 툴바의 목록입니다.  
+잠금과 상관없이 전환은 그 화면만 바꿉니다. 파일, 공동 편집자, Undo 히스토리는 보기를 그대로 유지합니다. 에디터가 다시 편집 가능해지면 고른 보기는 그 화면에서 다음 전환이 있을 때까지, 또는 잠금이 꺼져 있다면 공동 편집자가 전환하거나 문서를 다시 불러올 때까지 유지됩니다.  
+이 에디터에서는 논리명과 도메인을 편집할 수 없으므로 셀 편집기도 용어 목록도 도메인 선택기도 열리지 않으며, `Derive Physical Name Again`과 `Derive Physical Names Again` 항목은 어느 것도 표시되지 않습니다.  
+View Option → `Domain`은 이 에디터에서 모든 [보기 옵션](./table-related-functions.md#테이블-보기-옵션)과 마찬가지로 그 화면에서만 Domain 셀을 표시하거나 숨기며, 에디터가 다시 편집 가능해지면 문서가 담은 보기 옵션이 돌아옵니다.

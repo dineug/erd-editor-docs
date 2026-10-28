@@ -6,7 +6,7 @@ description: Zaznaczanie, przenoszenie, kopiowanie, duplikowanie i usuwanie tabe
 # Operacje na tabelach
 
 Wszystko, co robisz z tabelami i notatkami, gdy już istnieją – zaznaczanie, przenoszenie, kopiowanie, usuwanie, kolorowanie i ustawianie tego, co pokazuje kanwa – oraz otaczające je elementy sterowania kanwą.  
-Najpierw opisano polecenia dotyczące tabel i notatek; potem właściwości tabeli, skupianie widoku na tabelach, indeksy i klucze alternatywne, automatyczny układ i system bazy danych; na końcu samą kanwę: pasek narzędzi kanwy, powiększenie, przesuwanie widoku i to, dokąd prowadzi przejście, oraz podgląd różnic.  
+Najpierw opisano polecenia dotyczące tabel i notatek; potem właściwości tabeli, skupianie widoku na tabelach, indeksy i klucze alternatywne, automatyczny układ i system bazy danych; potem samą kanwę: pasek narzędzi kanwy, powiększenie, przesuwanie widoku i to, dokąd prowadzi przejście, oraz podgląd różnic; a na końcu to, co z tego wszystkiego zachowuje edytor tylko do odczytu.  
 Grupy tabel, czyli ramki skupiające tabele, mają własną stronę – zobacz stronę [Grupy tabel](./table-groups.md).  
 Własną stronę mają też nazwy logiczne i Widok nazw, który określa, jakie nazwy pokazują tabele – zobacz stronę [Nazwy logiczne](./logical-names.md).
 
@@ -23,7 +23,8 @@ Notatki zaznacza się w ten sam sposób, a każdy z obu skrótów zaznaczania ws
 Skrót `Ctrl + A` ustępuje kursorowi tekstowemu, więc podczas edycji komórki zaznacza tekst, a nie diagram.  
 Ramka zaznaczenia dodaje tabelę lub notatkę do zaznaczenia, gdy zakrywa jej środek, a nie gdy tylko dotyka jej krawędzi. Grupę tabel zaznacza tylko wtedy, gdy obejmuje całą ramkę grupy, więc ramka narysowana wewnątrz grupy wybiera tabele bez grupy.  
 Kliknięcie prawym przyciskiem myszy czegoś, co jest już zaznaczone, zachowuje całe zaznaczenie, więc pozycje menu takie jak `Color`, `Group selected tables` i `Delete selected` działają na całość. Kliknięcie prawym przyciskiem myszy dowolnej innej tabeli, notatki lub grupy tabel zaznacza tylko ten element, nawet przy przytrzymanym klawiszu `Ctrl` lub `⌘`, a kliknięcie prawym przyciskiem myszy relacji lub pustej kanwy anuluje zaznaczenie.  
-Klawisz `Escape` anuluje zaznaczenie. Gdy otwarty jest edytor komórki, notatki lub nazwy grupy tabel albo trwa rysowanie relacji lub grupy poleceniem `New Table Group`, pierwsze naciśnięcie klawisza `Escape` kończy tę czynność, a drugie anuluje zaznaczenie.
+Klawisz `Escape` anuluje zaznaczenie. Gdy otwarty jest edytor komórki, notatki lub nazwy grupy tabel albo trwa rysowanie relacji lub grupy poleceniem `New Table Group`, pierwsze naciśnięcie klawisza `Escape` kończy tę czynność, a drugie anuluje zaznaczenie.  
+Edytor tylko do odczytu nie ma żadnego z tych sposobów zaznaczania: zaznacza tam tylko przejście – zobacz sekcję [Edytory tylko do odczytu](#read-only-editors).
 
 ![Zaznaczanie tabel za pomocą ⌘ + drag i ⌘ + click, a potem wszystkich tabel i notatek za pomocą ⌘ + A](/img/demo-table-select.webp)
 
@@ -145,7 +146,7 @@ Opcja `Referential Actions` pokazuje etykiety `D:` i `U:`, które akcje ON DELET
 Opcja `Table Groups` pokazuje [grupy tabel](./table-groups.md) i kolory grup na nagłówkach ich tabel. Jej wyłączenie ukrywa je na kanwie, minimapie i w eksportowanych obrazach, nie przesuwa żadnej tabeli i pozostawia każdą tabelę w jej grupie – zobacz sekcję [Ukrywanie grup](./table-groups.md#hiding-groups). Usuwa też folder `Table Groups` z [Eksploratora](./explorer.md#the-tree) i przycisk `New Table Group` z [paska narzędzi kanwy](#canvas-toolbar), a wyszukiwanie w Eksploratorze przestaje znajdować nazwy grup.  
 Opcja `Memos` pokazuje notatki. Jej wyłączenie ukrywa wszystkie notatki na kanwie, minimapie i w eksportowanych obrazach oraz nie przesuwa żadnej tabeli ani łącznika. Ukryte notatki nie zajmują miejsca, więc paski przewijania, minimapa i kompas `Go to content` je pomijają.  
 Ukrycie notatek anuluje ich zaznaczenie i zamyka otwarty edytor notatki. [Eksplorator](./explorer.md#the-tree) usuwa swój folder `Memos`, a jego wyszukiwanie [Znajdź i zamień](./find-and-replace.md) i prefiks `:` szybkiego wyszukiwania ich nie przeszukują. Gdy są ukryte, polecenie `New Memo` znika z menu kontekstowego, [paska narzędzi kanwy](#canvas-toolbar), szybkiego wyszukiwania i [ekranu powitalnego](./editing-start.md#welcome-screen), a skrót `Alt + M` nie dodaje notatki. Wklejenie lub operacja [Importuj i dodaj](./file-import-export.md#import-and-add) nadal dodaje zawarte w nich notatki, ukryte i niezaznaczone.  
-W edytorze z atrybutem `readonly` przełączniki niczego nie zmieniają.
+W edytorze tylko do odczytu przełączniki nadal działają, ale tylko na tym ekranie: nie są zapisywane, rejestrowane w historii cofania ani współdzielone, a gdy edytor znów umożliwi zapis, wracają do wartości z pliku – zobacz sekcję [Edytory tylko do odczytu](./settings.md#read-only-editors) w Ustawieniach.
 
 ![Przełączanie pozycji Opcji widoku przy zmieniającym się układzie tabel, oznaczanie złożonego indeksu unikatowego jako AK1.1 i AK1.2 za pomocą Alternate Key, a potem wyłączanie i włączanie Memos](/img/demo-view-options.webp)
 
@@ -164,14 +165,15 @@ Kartę `Indexes` opisano w sekcji [Indeksy](#indexes).
 Karta `Schema SQL` pokazuje kod DDL tabeli dla wybranej [bazy danych](#databases): jej instrukcję `CREATE TABLE`, osobne ograniczenia, które niektóre bazy danych zapisują dla jej kolumn oznaczonych jako unikatowe, oraz jej indeksy. Zawsze zapisuje zwykłe instrukcje `CREATE`, bez nagłówka, bez skryptów przed tabelami i po nich oraz bez nazw logicznych w pustych komentarzach, niezależnie od ustawień karty [Schemat SQL](./schema-sql.md) na pasku narzędzi – zobacz sekcję [Nazwy logiczne jako komentarze](./schema-sql.md#logical-names-as-comments). Nie ma panelu opcji, a jej menu kontekstowe oferuje tylko `Database` i `Bracket`.  
 Karta `Code Generator` generuje kod tylko dla tej tabeli – zobacz stronę [Generator kodu](./code-generator.md).
 
-W edytorze z atrybutem `readonly` panel nadal się otwiera, z plakietką `Read only` obok tytułu, ale jego karta `Indexes` nie pozwala na żadne zmiany.
+W edytorze tylko do odczytu panel nadal się otwiera, z pozycji `Table Properties`, jedynej w menu kontekstowym tabeli, albo skrótem `Alt + Space` na tabeli zaznaczonej przez przejście. Obok tytułu pokazuje plakietkę `Read only`, a jego karta `Indexes` nie pozwala na żadne zmiany.  
+Panel otwarty w chwili, gdy edytor przechodzi w tryb tylko do odczytu, pozostaje otwarty i przechodzi w ten tryb razem z nim – zobacz sekcję [Edytory tylko do odczytu](#read-only-editors).
 
 ## Skupianie widoku na tabelach {#focusing-on-tables}
 
 Otwiera kartę Wizualizacja w trybie `Flow`, zawężoną do wybranych tabel i wszystkich tabel oddalonych od nich o jedną relację.  
 Wybierz `Focus on this table` w menu kontekstowym tabeli albo zaznacz jedną lub więcej tabel i naciśnij `Alt + F`.  
 Gdy tabela kliknięta prawym przyciskiem myszy jest jedną z kilku zaznaczonych tabel, pozycja brzmi `Focus on selected tables` i skupia widok na całym zaznaczeniu. Kliknięcie prawym przyciskiem myszy tabeli spoza zaznaczenia skupia widok tylko na tej tabeli.  
-Skrót uwzględnia zaznaczone tabele, pomija notatki i nic nie robi, gdy żadna tabela nie jest zaznaczona.  
+Skrót uwzględnia zaznaczone tabele, pomija notatki i nic nie robi, gdy żadna tabela nie jest zaznaczona. Menu tabeli edytora tylko do odczytu nie ma pozycji `Focus on this table`, a skrót bierze tam tabelę zaznaczoną przez przejście – zobacz sekcję [Edytory tylko do odczytu](#read-only-editors).  
 Zaznaczona [grupa tabel](./table-groups.md) nie ma tu znaczenia, zarówno dla skrótu, jak i dla pozycji menu: jej tabele są uwzględniane tylko wtedy, gdy same są zaznaczone, co robi pozycja `Select tables` w menu grupy.  
 To, co pokazuje zawężony widok i jak wrócić do całego diagramu, opisano na stronie [Wizualizacja](./visualization.md#focusing-on-tables), a to, jak cofać się i przechodzić do przodu po tym, co tryb Przepływ pokazywał wcześniej – w sekcji [Poprzednia i następna tabela](./visualization.md#previous-table-and-next-table).
 
@@ -187,7 +189,7 @@ Prawa strona zawiera kolumny tabeli pod nagłówkiem `Columns`, każdą z polem 
 Zaznacz kolumnę, aby dodać ją do wybranego indeksu, a odznacz ją, aby ją usunąć. Wybranie klucza pokazuje jego kolumny jako zaznaczone, ale pola wyboru pozostają nieaktywne.  
 Kolumny wybranego indeksu są wymienione niżej pod nagłówkiem `Index order`, każda nazwana tak, jak nazywa ją Widok nazw, a w widoku `Both Names` z nazwą fizyczną w nawiasie po nazwie logicznej, na przykład `Member Number (member_no)`. Przeciągnij je za uchwyt, aby zmienić ich kolejność, i kliknij etykietę `ASC` lub `DESC` w wierszu, aby odwrócić kierunek sortowania. W kluczu alternatywnym każdy wiersz kończy się oznaczeniem `AK<n>.<m>`. Lista pokazuje naraz trzy wiersze, a pozostałe są dostępne po przewinięciu.
 
-W edytorze z atrybutem `readonly` wybranie klucza lub indeksu nadal pokazuje jego kolumny, ale nie ma przycisków `Add Index` ani `x` i nic innego na karcie nie da się zmienić.
+W edytorze tylko do odczytu wybranie klucza lub indeksu nadal pokazuje jego kolumny, ale nie ma przycisków `Add Index` ani `x` i nic innego na karcie nie da się zmienić: nazwy nie przyjmują wpisywania, każde pole wyboru jest wyłączone, a wiersze `Index order` nie dają się przeciągać ani nie zmieniają kierunku sortowania.
 
 [Eksplorator](./explorer.md#the-tree) wymienia indeksy każdej tabeli w jej folderze `Indexes`, a wybranie tam indeksu przechodzi do jego tabeli. Jego wyszukiwanie znajduje też nazwy indeksów i może je zmieniać – zobacz sekcję [Co jest przeszukiwane](./find-and-replace.md#what-it-searches).
 
@@ -233,7 +235,8 @@ Pozostałe trzy są obliczane za jednym razem, poza wątkiem głównym, więc ni
 
 Niezależnie od wybranego układu przenoszone są tabele i grupy tabel, a notatki pozostają na miejscu. Tabele są rozmieszczane z szerokościami, jakie mają w bieżącym Widoku nazw. Relacja zwrotna jest ignorowana, a kilka relacji między tymi samymi dwiema tabelami liczy się jako jedna.  
 Każdy układ utrzymuje tabele każdej grupy razem, niezależnie od tego, czy grupy są widoczne, i dopasowuje każdą grupę zawierającą tabele tak, aby je obejmowała – zobacz stronę [Grupy tabel](./table-groups.md#auto-layout).  
-Wynik trafia do historii jako jeden wpis, więc jedno cofnięcie przywraca każdą tabelę i grupę na jej poprzednie miejsce.
+Wynik trafia do historii jako jeden wpis, więc jedno cofnięcie przywraca każdą tabelę i grupę na jej poprzednie miejsce.  
+Edytor tylko do odczytu nie oferuje `Auto Layout`. Układ trwający w chwili, gdy edytor przechodzi w tryb tylko do odczytu, kończy się tam: podgląd `Force` zamyka się wraz ze swoim komunikatem i nie zachowuje żadnych swoich położeń, a układ wciąż obliczany jest odrzucany wraz ze swoim komunikatem, więc żadna tabela się nie przesuwa, ani wtedy, ani gdy edytor znów umożliwi zapis.
 
 ![Porządkowanie stosu tabel automatycznym układem Flow z menu kontekstowego kanwy, który ustawia je od lewej do prawej wzdłuż ich relacji](/img/demo-automatic-table-placement.webp)
 
@@ -250,7 +253,7 @@ Obsługiwane bazy danych to:
 - Snowflake
 - SQLite
 
-Wybierz jedną z nich w pozycji `Database` w menu kontekstowym kanwy, w panelu opcji lub menu kontekstowym kart Schemat SQL i Generator kodu albo w szybkim wyszukiwaniu. Wszystkie te miejsca zmieniają to samo ustawienie.
+Wybierz jedną z nich w pozycji `Database` w menu kontekstowym kanwy, w panelu opcji lub menu kontekstowym kart Schemat SQL i Generator kodu albo w szybkim wyszukiwaniu. Wszystkie te miejsca zmieniają to samo ustawienie. Menu kanwy edytora tylko do odczytu nie ma pozycji `Database`, a wybór w pozostałych zmienia tylko ten ekran – zobacz sekcję [Edytory tylko do odczytu](#read-only-editors).
 
 Te opcje określają składnię Schematu SQL używaną przy eksporcie, autouzupełnianie typu danych oraz typy, jakie otrzymują wygenerowany kod i importowane schematy.  
 Decydują, które wybory `Statements` i `Header` może zapisać karta [Schemat SQL](./schema-sql.md#options-panel). Wybór, którego baza danych nie obsługuje, pozostaje w panelu opcji jako przyciemniony, a kod SQL korzysta z najbliższego obsługiwanego.  
@@ -266,15 +269,16 @@ Import Schematu SQL zachowuje typ danych kolumny wraz z listą argumentów nieza
 Nad środkiem dolnej krawędzi kanwy unosi się mały pasek narzędzi, który zawiera od lewej do prawej narzędzia działające na samą kanwę i polecenia dodające do niej elementy:
 
 - Rączka i wskaźnik. Domyślnie aktywny jest wskaźnik; Rączka zmienia każde przeciągnięcie w przesuwanie widoku, zarówno nad tabelami, jak i nad pustym obszarem. Klawisz `Space` przełącza między nimi. Gdy włączony jest tryb rysowania grupy [`New Table Group`](./table-groups.md#drawing-a-group), zamiast któregokolwiek z nich wyróżniony jest przycisk `New Table Group`, a kliknięcie któregoś z nich, naciśnięcie klawisza `Space` lub wybór notacji relacji kończy rysowanie bez dodawania grupy.
-- `New Table`, `New Memo` i `New Table Group`. Przycisk `New Table` dodaje tabelę tak jak `Alt + N`, a przycisk `New Memo` dodaje notatkę tak jak `Alt + M`. Przycisk `New Table Group` włącza [rysowanie grupy](./table-groups.md#drawing-a-group) tak jak `Alt + G` i wyłącza Rączkę; drugie kliknięcie, podobnie jak drugie naciśnięcie `Alt + G`, kończy rysowanie bez dodawania grupy. Przycisk `New Memo` nie jest dostępny, gdy View Option → `Memos` ukrywa notatki, a przycisk `New Table Group`, gdy View Option → `Table Groups` ukrywa grupy. Edytor z atrybutem `readonly` nie pokazuje żadnego z tych trzech przycisków.
+- `New Table`, `New Memo` i `New Table Group`. Przycisk `New Table` dodaje tabelę tak jak `Alt + N`, a przycisk `New Memo` dodaje notatkę tak jak `Alt + M`. Przycisk `New Table Group` włącza [rysowanie grupy](./table-groups.md#drawing-a-group) tak jak `Alt + G` i wyłącza Rączkę; drugie kliknięcie, podobnie jak drugie naciśnięcie `Alt + G`, kończy rysowanie bez dodawania grupy. Przycisk `New Memo` nie jest dostępny, gdy View Option → `Memos` ukrywa notatki, a przycisk `New Table Group`, gdy View Option → `Table Groups` ukrywa grupy.
 - Powiększenie: `Zoom out`, bieżące powiększenie w procentach i `Zoom in`. Oba przyciski zmieniają powiększenie skokowo tak samo jak skróty powiększenia, a kliknięcie wartości procentowej przywraca je do `100%`.
 - Cztery notacje relacji, te same cztery, od których zaczynasz tworzenie relacji – zobacz stronę [Rozpoczęcie edycji](./editing-start.md). Wybranie jednej z nich przełącza z powrotem na wskaźnik, ponieważ relację rysuje się, klikając dwie tabele.
-- `Name View`, przycisk ze strzałką w dół, który podaje bieżący widok: `Physical Names`, `Logical Names` lub `Both Names`. Ma stałą szerokość niezależnie od podawanego widoku, więc przełączenie nigdy nie przesuwa paska narzędzi. Kliknięcie otwiera nad paskiem narzędzi listę tych trzech widoków z zaznaczonym bieżącym widokiem. Wybranie jednego z nich przełącza na ten widok i zamyka listę; drugie kliknięcie przycisku, naciśnięcie w dowolnym innym miejscu lub klawisz `Escape` zamyka listę bez przełączania. Edytor z atrybutem `readonly` również go pokazuje. To, co wyświetla każdy widok, opisano w sekcji [Widok nazw](./logical-names.md#name-view), a to, czy przełączenie jest zapisywane – w sekcji [Przełączanie widoku](./logical-names.md#switching-the-view).
+- `Name View`, przycisk ze strzałką w dół, który podaje bieżący widok: `Physical Names`, `Logical Names` lub `Both Names`. Ma stałą szerokość niezależnie od podawanego widoku, więc przełączenie nigdy nie przesuwa paska narzędzi. Kliknięcie otwiera nad paskiem narzędzi listę tych trzech widoków z zaznaczonym bieżącym widokiem. Wybranie jednego z nich przełącza na ten widok i zamyka listę; drugie kliknięcie przycisku, naciśnięcie w dowolnym innym miejscu lub klawisz `Escape` zamyka listę bez przełączania. To, co wyświetla każdy widok, opisano w sekcji [Widok nazw](./logical-names.md#name-view), a to, czy przełączenie jest zapisywane – w sekcji [Przełączanie widoku](./logical-names.md#switching-the-view).
 - Tryb zen, `Alt + Z`, który ukrywa wszystko oprócz kanwy i tego paska narzędzi. Ponowne naciśnięcie `Alt + Z` lub kliknięcie przycisku przywraca resztę. Otwarty Eksplorator jest ukrywany razem z resztą, bez zamykania, i wraca razem z nią. Nadal można go otworzyć w trybie zen – zobacz sekcję [Kiedy Eksplorator ustępuje miejsca](./explorer.md#when-it-stands-aside).
 - Kompas `Go to content`, który pojawia się na końcu paska narzędzi tylko wtedy, gdy na ekranie nie ma żadnej tabeli, widocznej notatki ani widocznej grupy tabel – zobacz sekcję [Poruszanie się po kanwie](#getting-around-the-canvas).
 
 Każdy przycisk, który ma skrót klawiaturowy, podaje go w podpowiedzi, na przykład `New Table (Alt + N)` (Windows/Linux) lub `New Table (⌥ + N)` (Mac).  
-Pasek narzędzi ustępuje miejsca na czas otwarcia podglądu Automatycznego układu `Force`, właściwości tabeli, podróży w czasie lub podglądu różnic i wraca po ich zamknięciu.
+Pasek narzędzi ustępuje miejsca na czas otwarcia podglądu Automatycznego układu `Force`, właściwości tabeli, podróży w czasie lub podglądu różnic i wraca po ich zamknięciu.  
+Pasek narzędzi edytora tylko do odczytu zachowuje powiększenie, `Name View`, tryb zen i kompas `Go to content`. Nie ma Rączki ani wskaźnika, przycisków `New Table`, `New Memo` i `New Table Group` ani notacji, a gdy edytor znów umożliwi zapis, odzyskuje je.
 
 ![Dodawanie tabeli i notatki z paska narzędzi, włączanie i wyłączanie New Table Group, przesuwanie widoku Rączką, skokowa zmiana powiększenia oraz włączanie i wyłączanie trybu zen za pomocą ⌥ + Z](/img/demo-canvas-toolbar.webp)
 
@@ -339,7 +343,7 @@ Co przejście pokazuje w widoku i jaka kluczowa część musi być widoczna, gdy
 - Grupa tabel: jej ramka, z paskiem tytułu jako kluczową częścią.
 - Notatka lub blok umieszczony przez operację Importuj i dodaj: całość.
 
-Gdy żaden kierunek nie wymaga przesunięcia, nie ma przewinięcia, więc dwukrotne przejście z rzędu do tego samego miejsca za drugim razem niczego nie przesuwa. Przejście, które przewija kanwę, zapisuje przewinięcie w [historii cofania](./undo-redo.md#what-the-history-records) tak jak każdą inną zmianę położenia widoku, a przejście, które niczego nie przesuwa, nie zostawia niczego do cofnięcia. W przypadku operacji Importuj i dodaj przewinięcie należy do tego samego kroku co dodanie. Wiersz listy Podglądu różnic przesuwa tylko strony widoku, które są tylko do odczytu, więc niczego nie zapisuje.  
+Gdy żaden kierunek nie wymaga przesunięcia, nie ma przewinięcia, więc dwukrotne przejście z rzędu do tego samego miejsca za drugim razem niczego nie przesuwa. Przejście, które przewija kanwę, zapisuje przewinięcie w [historii cofania](./undo-redo.md#what-the-history-records) tak jak każdą inną zmianę położenia widoku, a przejście, które niczego nie przesuwa, nie zostawia niczego do cofnięcia. W przypadku operacji Importuj i dodaj przewinięcie należy do tego samego kroku co dodanie. Wiersz listy Podglądu różnic przesuwa tylko strony widoku, które są tylko do odczytu, więc niczego nie zapisuje, a edytor tylko do odczytu nie zapisuje żadnego przejścia.  
 Żadne przejście nie rozpoczyna ani nie kończy rysowania relacji. Kompas `Go to content` nie jest przejściem: wyśrodkowuje to, na co wskazuje.
 
 ## Podgląd różnic {#diff-viewer}
@@ -351,7 +355,8 @@ Widok otwiera się nad kanwą: po lewej to, co się zmieniło, a obok zapisany i
 Bieżący dokument jest porównywany w stanie z chwili otwarcia widoku; późniejsze zmiany, w tym zmiany współpracownika, do widoku nie docierają. Obie strony otwierają się w bieżącym Widoku nazw i w nim pozostają, niezależnie od widoku zachowanego w którymkolwiek z plików – zobacz sekcję [Poza kanwą](./logical-names.md#beyond-the-canvas). Otwarty [Eksplorator](./explorer.md#when-it-stands-aside) jest ukryty, dopóki widok jest otwarty, więc widok zajmuje całą szerokość edytora.  
 Widok każdej strony przesuwa się kółkiem myszy, przeciąganiem pustego obszaru lub wnętrza grupy tabel albo przeciąganiem środkowym przyciskiem w dowolnym jej miejscu, a powiększenie zmienia się skrótem `Ctrl + Wheel` (Windows/Linux), `⌘ + Wheel` (Mac) lub gestem szczypania. Przy powiększeniu `70%` i mniejszym jej tabele zwijają się tak jak na kanwie – zobacz sekcję [Oznaczenia po obu stronach](#marks-on-the-two-sides).  
 Obie strony są tylko do odczytu, więc nic w dokumencie nie zostaje zmienione. Każda ma własne zaznaczenie, a kliknięcie tam tabeli zaznacza ją tylko po tej stronie.  
-Zamknij widok przyciskiem `Close` w komunikacie `Diff Viewer`, który pojawia się przy jego otwarciu, lub klawiszem `Escape`.
+Zamknij widok przyciskiem `Close` w komunikacie `Diff Viewer`, który pojawia się przy jego otwarciu, lub klawiszem `Escape`.  
+Edytor tylko do odczytu również oferuje `Diff Viewer`, a widok działa tam jak w każdym edytorze: kliknięcie tabeli po jednej ze stron nadal zaznacza ją tylko po tej stronie. Widok otwarty w chwili, gdy edytor przechodzi w tryb tylko do odczytu, pozostaje otwarty.
 
 ![Otwieranie Podglądu różnic dla zapisanego pliku .json, klikanie w jego drzewie wierszy oznaczonych A, M, D i R, filtrowanie według nazwy i zamykanie go](/img/demo-diff-viewer.webp)
 
@@ -423,3 +428,26 @@ Każda strona stosuje Opcje widoku swojego dokumentu. Zmiana w komórce, której
 W widoku `Logical Names`, który nie wyświetla komórki nazwy, niebieski kolor zmiany nazwy i bursztynowy kolor zmiany w komórce, której strona nie wyświetla, trafiają na nazwę logiczną wyświetlaną w miejscu nazwy. Zmiana typu danych zmienia kolor komórki typu na bursztynowy niezależnie od Widoku nazw, nawet tam, gdzie komórka pokazuje nazwę domeny. Żadna ze stron nie rysuje kolorów, które kontrole Słownika nadają nazwom na kanwie – zobacz sekcję [Oznaczenia na kanwie](./dictionary.md#marks-on-the-canvas).
 
 Przy powiększeniu `70%` i mniejszym zwinięte tabele zachowują obrys. Nazwa zachowuje zielony lub czerwony kolor dodanej lub usuniętej tabeli albo niebieski kolor zmiany nazwy, a w pozostałych przypadkach przyjmuje bursztynowy kolor zmiany komentarza. Zmiany kolumn nie są rysowane, dopóki ponownie nie powiększysz widoku; drzewo nadal je wymienia.
+
+## Edytory tylko do odczytu {#read-only-editors}
+
+Edytor z atrybutem [`readonly`](../../api/erd-editor-element.md#readonly), na przykład rewizja Git ponownie otwarta jako diagram w VS Code, jest czytelnikiem. Jego sześć kart, [Eksplorator](./explorer.md#read-only-editors), minimapa, paski przewijania oraz kursory i zaznaczenia współpracowników pozostają, a każda kontrolka, która zmieniłaby diagram, zniknęła, zamiast być przyciemniona.
+
+Na kanwie ERD:
+
+- Przeciągnięcie przesuwa kanwę, niezależnie od tego, gdzie się zaczyna: na pustej kanwie, na tabeli, notatce czy grupie tabel. Środkowy przycisk myszy, kółko, szczypnięcie i klawisze powiększenia działają jak w każdym edytorze.
+- Zatrzymanie wskaźnika na tabeli podświetla jej relacje. Kliknięcie, które nie przesuwa widoku, podświetla relacje tabeli, na której ląduje, albo relację, na której ląduje, a kliknięcie gdzie indziej gasi podświetlenie.
+- Niczego nie zaznacza naciśnięcie, ramka zaznaczenia ani klawisz zaznaczenia wszystkiego. Zaznacza tylko przejście: wiersz [Eksploratora](./explorer.md#going-to-a-row), dopasowanie jego wyszukiwania [Znajdź i zamień](./find-and-replace.md#going-to-a-match) albo wynik `#`, `@` lub `:` funkcji [Szybkie wyszukiwanie](./quick-search.md#searching-the-diagram) zaznacza to, na czym ląduje, z obrysem jak każde zaznaczenie i z aktywną komórką tam, gdzie umieszcza ją przejście. Kliknięcie, które nie przesuwa widoku, czyści to zaznaczenie.
+- Klawisze strzałek przesuwają aktywną komórkę. Kopiowanie, `Table Properties` i `Focus on this table` działają na tym, co zaznaczyło przejście, swoimi klawiszami, a wklejanie niczego nie dodaje. Pozostałe klawisze wymieniono w sekcji [Skróty klawiaturowe](./settings.md#shortcuts).
+- Żadna nazwa komórki, notatki ani grupy tabel nie otwiera się do edycji. Tabele, notatki i grupy nie mają przycisków `+` ani `x`, notatki i grupy nie mają krawędzi zmiany rozmiaru, nie ma uchwytu przeciągania kolumny ani selektora kolorów.
+
+Menu kontekstowe kanwy zachowuje `View Option`, `Name View`, `Export` i `Diff Viewer`. Nie ma w nim pozycji `New Table`, `New Memo`, `New Table Group`, `Toggle Explorer`, `Relationship`, `Derive Physical Names Again`, `Database`, `Import`, `Import and Add` ani `Auto Layout`.  
+Menu tabeli zachowuje tylko `Table Properties`, które otwiera panel tylko do odczytu dla tej tabeli – zobacz sekcję [Właściwości tabeli](#table-properties). Notatka, relacja i grupa tabel nie wywołują żadnego menu.  
+[Pasek narzędzi kanwy](#canvas-toolbar) zachowuje powiększenie, `Name View`, tryb zen i kompas `Go to content`. Górny pasek narzędzi pokazuje nazwę bazy danych jako tekst, którego nie można edytować, i nie ma przycisków `Undo`, `Redo` ani `Time Travel`.  
+[Eksport](./file-import-export.md#exporting) ze wszystkimi trzema pozycjami i [Diff Viewer](#diff-viewer) działają jak w każdym edytorze.
+
+[`View Option`](#table-view-options), `Name View`, baza danych, karta, położenie widoku i powiększenie nadal się tam zmieniają, ale tylko na tym ekranie: nic ich nie zapisuje, nie rejestruje ani nie współdzieli – zobacz sekcję [Edytory tylko do odczytu](./settings.md#read-only-editors) w Ustawieniach.
+
+Przełączenie edytora w tryb tylko do odczytu kończy to, co było otwarte do edycji: edytor komórki, notatki lub nazwy grupy tabel, rysowanie relacji lub `New Table Group`, zaznaczenie i aktywną komórkę, narzędzie Rączka, selektor kolorów, [Mapuj kolumny](./relationship-editing.md#map-columns) i [Podróż w czasie](./undo-redo.md#time-travel). Widok, powiększenie, karta i Widok nazw pozostają takie, jakie były, a Właściwości tabeli, Diff Viewer i okno `Export image` pozostają otwarte.  
+Kończy się też gest w toku. Przeciąganie tabel lub notatek zatrzymuje się tam, gdzie jest, `Alt + drag` nie upuszcza kopii, przeciąganie kolumny się kończy, zmiana rozmiaru notatki zatrzymuje się tam, gdzie jest, zmiana rozmiaru grupy tabel jest odrzucana, a [Automatyczny układ](#auto-layout) jest odrzucany wraz ze swoim komunikatem, więc żadna tabela się nie przesuwa.  
+Gdy edytor znów umożliwi zapis, kontrolki powyżej wracają i nic z tego, co zamknęło przełączenie, nie otwiera się ponownie.

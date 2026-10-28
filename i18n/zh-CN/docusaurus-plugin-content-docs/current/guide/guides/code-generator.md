@@ -25,7 +25,8 @@ description: 根据图为二十二种目标生成代码，在选项面板中选�
 `Save file` 和 `Copy` 位于面板底部，参见[保存或复制结果](#saving-or-copying-the-result)。
 
 这些是图本身的设置，右键菜单和快速搜索修改的也是它们。`Database` 与其他编辑一样保存到文件中。  
-`Language`、`Table Name Case`、`Column Name Case` 和 `Bracket` 只有在 Settings 标签页上对应的锁定关闭时才会保存（`Bracket` 对应的是 `Bracket Type`），而新建的图中所有锁定都处于开启状态。锁定开启期间，更改会重写屏幕上的代码，但文件保留锁定的值，图再次打开时也使用该值。面板不会显示任何锁定的迹象；要将某项选择保留在文件中，请关闭其锁定，参见[锁定](./settings.md#锁定)。
+`Language`、`Table Name Case`、`Column Name Case` 和 `Bracket` 只有在 Settings 标签页上对应的锁定关闭时才会保存（`Bracket` 对应的是 `Bracket Type`），而新建的图中所有锁定都处于开启状态。锁定开启期间，更改会重写屏幕上的代码，但文件保留锁定的值，图再次打开时也使用该值。面板不会显示任何锁定的迹象；要将某项选择保留在文件中，请关闭其锁定，参见[锁定](./settings.md#锁定)。  
+在只读编辑器中，标注改为 `This window only`，因为那里的更改只作用于该窗口，参见[只读编辑器](#read-only-editors)。
 
 ## 语言
 
@@ -138,3 +139,10 @@ Export 菜单中没有 Code Generator 条目，表属性的 `Code Generator` 标
 要复制代码，可以点击面板底部的 `Copy`，也可以将鼠标悬停在代码上并点击右上角的复制按钮，后者是表属性中唯一的复制方式。  
 带有勾选标记的 `Copied!` 提示会显示两秒以示确认。如果浏览器或宿主拒绝访问剪贴板，则会改为显示带有警告标志的 `Couldn't copy to the clipboard` 提示，持续五秒。再次复制会替换当前提示，而不会再添加一条。  
 文本也可以直接选中，因此可以只取需要的部分。
+
+## 只读编辑器 {#read-only-editors}
+
+在 [`readonly`](../../api/erd-editor-element.md#readonly) 编辑器中，面板的列表、右键菜单和快速搜索仍可更改 `Language`、`Database`、`Table Name Case`、`Column Name Case` 和 `Bracket`，但只作用于该窗口，因此面板把它们标注为 `This window only`，而不是 `Saved in the document`。  
+更改会重写该屏幕上的代码，但无论锁定如何，都不会保存到文件、与协作者共享或记录到 Undo，并且协作者对你所选设置的更改会让你的选择保留在屏幕上。`Database` 和 `Bracket` 同时也是 Schema SQL 标签页的设置，因此在这里的选择会在同一窗口的那里显示，参见[只读编辑器](./schema-sql.md#read-only-editors)。  
+编辑器再次变为可写后，文档的设置会恢复，并按这些设置写出代码。  
+`Save file` 和 `Copy` 保存和复制的是所显示的代码。

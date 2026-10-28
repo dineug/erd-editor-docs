@@ -1,12 +1,13 @@
 ---
 sidebar_position: 1
-description: ブラウザ、Google Drive、VS Code、IntelliJ、Obsidian、自分のページで動作する ER 図エディタ。
+description: ブラウザ、Google Drive、VS Code、IntelliJ、Obsidian、自分のページで動作する ER 図エディタ。どのサイトにもダイアグラムを表示できる読み取り専用のビューアーもあります。
 ---
 
 # はじめに
 
 erd-editor は ER 図（Entity-Relationship Diagram）エディタです。
-Web アプリ、Google Drive アプリ、VS Code 拡張機能、IntelliJ プラグイン、Obsidian プラグイン、そして自分のページに組み込める `<erd-editor>` カスタム要素として提供しています。
+Web アプリ、Google Drive アプリ、VS Code 拡張機能、IntelliJ プラグイン、Obsidian プラグイン、そして自分のページに組み込める `<erd-editor>` カスタム要素として提供しており、その隣の `<erd-viewer>` でダイアグラムを読み取り専用で表示できます。
+独自のスクリプトを読み込まないサイトは、代わりに erd-editor.io/embed から読み取り専用のダイアグラムをフレームで表示できます。
 どれも同じエディタで、ドキュメント形式も共通です。
 
 ![ショップのダイアグラムで、リレーションシップにマウスを重ね、カラムを追加し、Flow で orders にフォーカスする様子](/img/demo-overview.webp)
@@ -20,7 +21,8 @@ Web アプリ、Google Drive アプリ、VS Code 拡張機能、IntelliJ プラ�
 | VS Code | [Marketplace](https://marketplace.visualstudio.com/items?itemName=dineug.vuerd-vscode) | `.erd.json` ファイルを開く専用エディタ |
 | IntelliJ | [JetBrains Marketplace](https://plugins.jetbrains.com/plugin/23594-erd-editor) | IntelliJ ベースの IDE で使える同じエディタ |
 | Obsidian | [Community plugins](https://community.obsidian.md/plugins/erd-editor) | `.erd` と `.erd.json` ファイルを保管庫のタブで開く（デスクトップ版のみ） |
-| 自分のページ | `npm install @dineug/erd-editor` | フレームワークに依存しない `<erd-editor>` カスタム要素 — [インストール](../api/installation.md)を参照 |
+| 自分のページ | `npm install @dineug/erd-editor` | フレームワークに依存しない `<erd-editor>` カスタム要素と、ダイアグラムを読み取り専用で表示する `<erd-viewer>` — [インストール](../api/installation.md)と [ErdViewerElement](../api/erd-viewer-element.md) を参照 |
+| どのサイトでも | [erd-editor.io/embed](https://erd-editor.io/embed) | ドキュメントの URL から、コードなしで iframe に読み取り専用のダイアグラムを表示 — [埋め込み](./guides/embedding.md)を参照 |
 | コーディングエージェント | [`@dineug/erd-editor-mcp`](../mcp/installation.md) | Claude Code、Codex などのクライアントが、VS Code、JetBrains IDE、Obsidian でライブで、またはファイルそのものに対して、ダイアグラムを編集できるようにする MCP サーバー |
 
 IDE で試すには、拡張子が `.erd.json` の空ファイルを作成して開きます。
@@ -45,6 +47,7 @@ Obsidian プラグインを更新したら、Obsidian を再起動してくだ�
 - ダイアグラムの命名標準を[辞書](./guides/dictionary.md)タブで管理できます。`Domains`、`Words`、`Terms` のシートは、スプレッドシートのように検索、並べ替え、編集でき、それぞれが独自の Undo の履歴を持ちます。シートは CSV の読み込みと書き出しに対応し、読み込みではエディタ独自のレイアウトか韓国の公共データ共通標準のレイアウトを UTF-8 または EUC-KR で読み取り、書き出しではエディタ独自のレイアウトで書き出します。論理名のセルは用語名を補完します。論理名は、自分で名前を付けるまで、一致する用語から、またはそれを分割した単語の英略語から、そのテーブルやカラムの物理名を生成します。単語や用語を変更した後は、[`Derive Physical Names Again`](./guides/dictionary.md#derive-physical-names-again) で、自分で付けた名前も含めて名前を再生成します。手動で、または用語によってドメインに紐付いたカラムは、[ドメインのデータ型を持ち](./guides/dictionary.md#domains-and-data-types)、その変更に従います。`Domain` の表示オプションは各カラムのドメインを表示します。[`Checks`](./guides/dictionary.md#the-checks-sheet) シートは、禁止語、未登録の単語、同義語、名前の重複、不明なドメイン、用語の物理名と異なる物理名、ドメインのデータ型と異なるカラムの型を一覧表示します。キャンバスは、単語と用語のチェックが検出した論理名と物理名に色を付けます。
 - 既存のスキーマを `json`、`Schema SQL`、`GraphQL`、`DBML`、`AML` から読み込めます。[ファイルの読み込みと書き出し](./guides/file-import-export.md)を参照してください。Schema SQL、GraphQL、DBML、AML のファイルは、テーブルがリレーションシップに沿って配置された状態で読み込まれ、リレーションシップがない場合は複数の行に並べて配置されます。[`Import and Add`](./guides/file-import-export.md#import-and-add) は、ダイアグラムを置き換えずに、ダイアグラムの下にファイルを追加します。
 - ダイアグラムを `json` として書き出せるほか、[Schema SQL](./guides/schema-sql.md#sql-の保存とコピー) タブから Schema SQL を `.sql` ファイルとして保存またはコピーでき、[`Export image`](./guides/file-import-export.md#画像) ダイアログから PNG または SVG の画像として、あるいはクリップボードへの PNG として書き出せます。
+- 別のサイトでダイアグラムを読み取り専用で表示できます。[erd-editor.io/embed](./guides/embedding.md) にファイルの URL（GitHub 上のものも可）を指定してフレームで表示するか、自分のページで [`<erd-viewer>`](../api/erd-viewer-element.md) 要素を読み込みます。閲覧者はパン、拡大・縮小、検索、リレーションシップの強調ができ、ダイアグラムを編集するものは何もありません。
 - Databricks、MSSQL、MariaDB、MySQL、Oracle、PostgreSQL、Snowflake、SQLite の 8 つのデータベースベンダーの構文で Schema SQL を記述します。[テーブル関連機能](./guides/table-related-functions.md#databases)を参照してください。[Schema SQL](./guides/schema-sql.md) タブのオプションパネルでは、書き出すステートメント、ヘッダー、テーブルグループを選べるほか、[空のコメントに論理名を書き出す](./guides/schema-sql.md#logical-names-as-comments)こともでき、テーブルの前後に書き出す独自の SQL をダイアグラムに保存しておけます。
 - 22 種類のターゲット向けにコードを生成します。言語は C#、Go、Java、Kotlin、PHP、Rust、Scala、Swift、TypeScript、ORM は Doctrine、Drizzle、JPA、SeaORM、Sequelize、SQLAlchemy、TypeORM、そのほかに AML、DBML、GraphQL、JSON Schema、Mermaid、Zod があります。Code Generator タブのオプションパネルでは言語、データベース、名前のケースを選び、コードはその言語の拡張子を付けたファイルとして保存するか、コピーします。[コード生成](./guides/code-generator.md)を参照してください。
 - [可視化](./guides/visualization.md)では、スキーマを力学モデルの `Graph` として、またはリレーションシップに沿って並べたテーブルのカードの `Flow` として読み取れます。テーブルにマウスを重ねると、そのテーブルにつながっているものがすべて強調表示されます。ERD タブで `Alt + F` を押すと、[選択しているテーブルにフォーカス](./guides/visualization.md#focusing-on-tables)し、それに関連するテーブルと合わせて表示できます。`Flow` では、Flow で絞り込んできた対象を、そこでの Undo と Redo のキーと同じように [`Previous table` と `Next table`](./guides/visualization.md#previous-table-and-next-table) で戻ったり進んだりできます。

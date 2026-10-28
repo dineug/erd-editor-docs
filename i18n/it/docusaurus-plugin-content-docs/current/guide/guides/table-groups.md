@@ -167,7 +167,7 @@ Mentre i gruppi sono nascosti:
 - Il pannello Esplora omette la cartella `Table Groups`, e Trova e sostituisci non trova né sostituisce i nomi dei gruppi, nemmeno con `Table group names` attivo.
 - Il [Layout automatico](#auto-layout) mantiene comunque insieme le tabelle di ogni gruppo, la scheda Schema SQL propone ancora i [gruppi tra cui scegliere](#schema-sql-by-group), DBML li scrive ancora, e [Importa e aggiungi](./file-import-export.md#import-and-add) colloca ancora quanto aggiunto sotto i riquadri nascosti.
 
-La scelta viene salvata nel documento e registrata nella [cronologia delle modifiche](./undo-redo.md#what-the-history-records), come gli altri interruttori delle Opzioni di visualizzazione.
+La scelta viene salvata nel documento e registrata nella [cronologia delle modifiche](./undo-redo.md#what-the-history-records), come gli altri interruttori delle Opzioni di visualizzazione. In un editor di sola lettura resta invece su quello schermo — vedere [Editor di sola lettura](#read-only-editors).
 
 ## Layout automatico {#auto-layout}
 
@@ -197,11 +197,13 @@ La scelta appartiene alla finestra dell’editor e non viene salvata nel documen
 
 ## Editor di sola lettura {#read-only-editors}
 
-In un editor [`readonly`](../../api/erd-editor-element.md#readonly), i gruppi vengono disegnati ed elencati nel pannello Esplora come di consueto e possono essere selezionati e raggiunti, ma non modificati:
+In un editor [`readonly`](../../api/erd-editor-element.md#readonly), i gruppi vengono disegnati ed elencati nel pannello Esplora come di consueto e possono essere raggiunti, ma non modificati:
 
-- Una pressione su una barra del titolo seleziona il gruppo e non sposta nulla. Non ci sono maniglie di ridimensionamento né `x`.
-- Un doppio clic sulla barra del titolo non apre alcun campo del nome, e il menu del gruppo contiene solo `Select tables`.
-- Il menu dell’area di disegno non ha `New Table Group`, il menu della tabella non ha `Group selected tables` né `Remove from group`, e la Ricerca rapida non elenca nessuno dei due comandi di gruppo. Il disegno di un `New Table Group` termina quando l’editor diventa di sola lettura.
-- La [barra degli strumenti dell’area di disegno](./table-related-functions.md#canvas-toolbar) non mostra nessuno dei suoi pulsanti di aggiunta, `New Table Group` incluso, e `Alt + G` (Windows/Linux) o `⌥ + G` (Mac), così come `T` e poi `G`, non hanno effetto.
-- L’opzione di visualizzazione `Table Groups` non cambia nulla, come tutte le Opzioni di visualizzazione.
+- [Andare a un gruppo](#going-to-a-group) lo seleziona, ed è l’unico modo in cui lì si seleziona un gruppo. Una pressione su una barra del titolo non seleziona nulla e non sposta nulla: se trascinata, sposta la vista dell’area di disegno, e un clic che non sposta cancella la selezione lasciata da un salto.
+- Non ci sono maniglie di ridimensionamento né `x`, e un doppio clic sulla barra del titolo non apre alcun campo del nome.
+- Un clic con il pulsante destro su un gruppo non apre alcun menu, e il menu della tabella contiene solo `Table Properties`.
+- Il menu dell’area di disegno non ha `New Table Group`, e la Ricerca rapida non elenca nessuno dei due comandi di gruppo. Il disegno di un `New Table Group` termina quando l’editor diventa di sola lettura.
+- La [barra degli strumenti dell’area di disegno](./table-related-functions.md#canvas-toolbar) conserva solo i suoi controlli di vista, quindi non ha il pulsante `New Table Group`, e `Alt + G` (Windows/Linux) o `⌥ + G` (Mac), così come `T` e poi `G`, non hanno effetto.
+- Un trascinamento di tabelle o di un gruppo in corso quando l’editor diventa di sola lettura si ferma dov’è e non modifica alcun gruppo, e il ridimensionamento di un gruppo in corso termina senza cambiare la dimensione.
+- `View Option` → `Table Groups` mostra o nasconde i gruppi solo su quello schermo, come ogni Opzione di visualizzazione lì: il documento, i collaboratori e la cronologia di annullamento mantengono la scelta com’era, e quando l’editor torna modificabile viene ripristinata la scelta del documento.
 - La scelta `Tables` della scheda Schema SQL funziona ancora.

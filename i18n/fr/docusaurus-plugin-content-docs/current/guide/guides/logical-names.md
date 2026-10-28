@@ -61,7 +61,7 @@ La saisie n’écrit que le nom logique. Le nom physique en est dérivé une foi
 - Dans la vue `Logical Names`, le nom logique de l’en-tête, puis son commentaire, puis les cellules de chaque ligne dans l’ordre des colonnes, avec le nom logique à la place du nom.
 - Dans la vue `Both Names`, le nom logique, le nom et le commentaire de l’en-tête, puis les cellules de chaque ligne dans l’ordre des colonnes, sa cellule `Logical Name` en premier par défaut.
 
-`Alt + Enter` (Windows/Linux) ou `⌥ + Enter` (Mac) ajoute une colonne et donne le focus à sa cellule du nom, qui, dans la vue `Logical Names`, est son nom logique.
+`Alt + Enter` (Windows/Linux) ou `⌥ + Enter` (Mac) ajoute une colonne et donne le focus à la première cellule que dessine sa ligne. Avec l’ordre des colonnes par défaut, c’est sa cellule du nom, qui, dans la vue `Logical Names`, est son nom logique, et dans la vue `Both Names` sa cellule `Logical Name`, si bien que vous pouvez commencer par le nom logique (voir [Ajouter des colonnes](./table-editing.md#adding-columns)).
 
 Une colonne de clé étrangère qu’ajoute une relation copie le nom logique et le domaine de sa clé, ainsi que son type (voir [Relations identifiantes](./relationship-editing.md#identifying-relationships)).  
 La copie de colonnes vers un tableur et le collage de colonnes depuis un tableur utilisent les cellules que dessine la vue, y compris les cellules du nom logique et les cellules Domaine (voir [Copier-coller des colonnes](./table-editing.md#copyingpasting-columns)).
@@ -143,5 +143,7 @@ Un agent de codage qui passe par le serveur MCP définit des noms logiques et li
 
 ## Éditeurs en lecture seule {#read-only-editors}
 
-Dans un éditeur [`readonly`](../../api/erd-editor-element.md#readonly), chaque sélecteur d’affichage des noms fonctionne, et un changement de vue ne modifie que cet écran, quel que soit le verrou.  
-Les noms logiques et les domaines n’y sont pas modifiables, si bien qu’aucune liste des termes ni aucun sélecteur de domaine ne s’ouvre, et aucune des entrées `Derive Physical Name Again` et `Derive Physical Names Again` n’est proposée. View Option → `Domain` n’y change rien, pas plus qu’aucune autre [option d’affichage](./table-related-functions.md#table-view-options).
+Dans un éditeur [`readonly`](../../api/erd-editor-element.md#readonly), chaque sélecteur d’affichage des noms fonctionne : le bouton `Name View` de la barre d’outils du canevas, `Name View` dans le menu contextuel du canevas et dans la recherche rapide, et la liste de la barre d’outils de Flow.  
+Un changement de vue ne modifie que cet écran, quel que soit le verrou : le fichier, les collaborateurs et l’historique d’annulation conservent la vue telle qu’elle était. Quand l’éditeur redevient modifiable, la vue choisie reste sur cet écran jusqu’au prochain changement fait là ou, tant que le verrou est désactivé, jusqu’à ce qu’un collaborateur la change ou que le document soit chargé de nouveau.  
+Les noms logiques et les domaines n’y sont pas modifiables, si bien qu’aucun éditeur de cellule, aucune liste des termes ni aucun sélecteur de domaine ne s’ouvre, et aucune des entrées `Derive Physical Name Again` et `Derive Physical Names Again` n’est proposée.  
+View Option → `Domain` affiche ou masque la cellule Domaine sur cet écran seulement, comme le fait là toute [option d’affichage](./table-related-functions.md#table-view-options), et quand l’éditeur redevient modifiable, les options d’affichage que contient le document reviennent.

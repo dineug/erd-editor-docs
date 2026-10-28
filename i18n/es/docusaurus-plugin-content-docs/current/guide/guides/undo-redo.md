@@ -12,7 +12,7 @@ El historial conserva hasta `2048` cambios.
 - Redo: `Ctrl + Shift + Z` (Windows/Linux) o `⌘ + Shift + Z` (Mac)
 
 En la pestaña ERD, la barra de herramientas incluye esos mismos dos comandos como los botones `Undo` y `Redo`, junto a `Time Travel`. En la pestaña Diccionario muestra `Undo` y `Redo` sin `Time Travel`, y ninguna otra pestaña los muestra.  
-Solo se habilitan cuando hay algo que deshacer o rehacer. Un editor `readonly` los oculta, y los atajos de teclado no deshacen ni rehacen nada.
+Solo se habilitan cuando hay algo que deshacer o rehacer. Un editor `readonly` los oculta, junto con `Time Travel`, y los atajos de teclado no deshacen ni rehacen nada.
 
 Deshacer y rehacer actúan sobre el historial del diagrama solo en la pestaña ERD.  
 Allí, los atajos quedan inactivos mientras está abierta la búsqueda rápida, `Table Properties`, `Diff Viewer`, la vista previa de `Auto Layout`, el cuadro de diálogo [`Export image`](./file-import-export.md#image), [Asignar columnas](./relationship-editing.md#map-columns) o el viaje en el tiempo.  
@@ -58,6 +58,8 @@ No se registra:
 - La hoja que se muestra en la pestaña Diccionario, y la búsqueda, la selección, el desplazamiento y los anchos de columna de cada hoja; consulta [Abrir la pestaña](./dictionary.md#opening-the-tab).
 
 Los cambios en cualquiera de estos elementos no se pueden deshacer.
+
+Un editor de solo lectura no registra nada en absoluto. La posición de la vista, el zoom y los interruptores de `View Option` siguen cambiando allí, junto con la pestaña, la vista de nombres, la base de datos y los ajustes de código, pero solo en esa pantalla, así que no hay nada que deshacer; consulta [Editores de solo lectura](./settings.md#read-only-editors) de Configuración.
 
 Las ediciones hechas en la pestaña Diccionario se pueden deshacer, pero van al historial de su propia hoja y no a este, así que deshacer en la pestaña ERD nunca revierte ninguna, ni siquiera el nuevo `Data Type` de un dominio y los tipos de columna que cambia; consulta [Hojas del diccionario](#dictionary-sheets).
 
@@ -136,7 +138,7 @@ El historial de cada hoja se vacía cuando se sustituyen los diccionarios: con u
 ## Viaje en el tiempo {#time-travel}
 
 Se abre con el botón `Time Travel` de la barra de herramientas, junto a los botones de deshacer y rehacer en la pestaña ERD.  
-El botón no hace nada hasta que el historial del diagrama tenga al menos un cambio registrado.
+El botón no hace nada hasta que el historial del diagrama tenga al menos un cambio registrado. Un editor de solo lectura no muestra ese botón, y un editor que pasa a solo lectura cierra el viaje en el tiempo sin aplicarlo.
 
 El viaje en el tiempo abre una copia aparte y de solo lectura del diagrama, en la posición de desplazamiento, el nivel de zoom y la [vista de nombres](./logical-names.md#name-view) que muestra el lienzo, esté o no activado el bloqueo `Viewport` o `Name View`.  
 Solo recorre el historial del diagrama, así que las ediciones de las hojas del diccionario no están entre sus puntos.  

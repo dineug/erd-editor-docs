@@ -31,7 +31,7 @@ SQL, sekme açıldığında yazılır ve panelin seçimlerinden biri, veritaban�
 
 Panel, her biri kendi başlık yazısının altında olan üç grup tutar:
 
-1. `Saved in the document`: `Database` ve `Bracket`. [Veritabanı ve tırnak](#database-and-bracket) bölümüne bakın.
+1. `Saved in the document`: `Database` ve `Bracket`. [Veritabanı ve tırnak](#database-and-bracket) bölümüne bakın. Salt okunur bir düzenleyici bunların başlığına `This window only` yazar. [Salt okunur düzenleyiciler](#read-only-editors) bölümüne bakın.
 2. `This window only`: `Statements`, `Header`, `Write logical names into empty comments` ve diyagramda bir [tablo grubu](./table-groups.md) olduğu sürece `Tables`. [İfadeler](#statements), [Başlık](#header), [Açıklama olarak mantıksal adlar](#logical-names-as-comments) ve [Tablolar](#tables) bölümlerine bakın.
 3. `Saved in the document · written as is for every database`: `Before tables` ve `After tables` betikleri. [Önceki ve sonraki betikler](#before-and-after-scripts) bölümüne bakın.
 
@@ -222,5 +222,9 @@ Bu açıklamaların içe aktarmada nasıl geri okunduğu [Açıklamalar](./file-
 
 ## Salt okunur düzenleyiciler {#read-only-editors}
 
-`readonly` bir düzenleyicide sekme her zamanki gibi çalışır: `Database` ve `Bracket` gösterilen SQL'i yine değiştirir, `Statements`, `Header`, `Write logical names into empty comments` ve `Tables` yine çalışır, `Save file` ve `Copy` de SQL'i yine kaydeder ve kopyalar.  
-Yalnızca iki betik alanı salt okunurdur.
+[`readonly`](../../api/erd-editor-element.md#readonly) bir düzenleyicide sekme okuyucu için çalışır ve üzerinde yapılan hiçbir şey belgeye ulaşmaz:
+
+- `Database` ve `Bracket` SQL'i yine yeniden yazar, ancak yalnızca o pencerede; bu yüzden panel bunların başlığına da `This window only` yazar. Bir seçim kilitler ne derse desin dosyaya kaydedilmez, ortak çalışanlarla paylaşılmaz ve geri alma için kaydedilmez; bir ortak çalışanın, sizin seçtiğiniz bir ayarda yaptığı değişiklik ise sizin seçiminizi ekranda bırakır. Kod oluşturucu sekmesi aynı seçimi gösterir ve veritabanı verilmeden çağrılan [`getSchemaSQL()`](../../api/erd-editor-element.md#getschemasql) da onu yazar. Düzenleyici yeniden yazılabilir olduğunda belgenin veritabanı ve tırnak türü geri gelir.
+- `Statements`, `Header`, `Write logical names into empty comments` ve `Tables` zaten pencereye ait oldukları için her yerdeki gibi çalışır.
+- İki betik alanı salt okunurdur: SQL'in yine yazdığı belgenin betiklerini gösterir ve yazı kabul etmez.
+- `Save file` ve `Copy` sekmenin gösterdiği SQL'i kaydeder ve kopyalar.

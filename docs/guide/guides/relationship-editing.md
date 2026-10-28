@@ -1,6 +1,6 @@
 ---
 sidebar_position: 7
-description: Delete a relationship, change its type, set its ON DELETE and ON UPDATE actions, map it onto existing columns with Map Columns, read the connector notation, work with N:M and identifying relationships, and see what new foreign key columns copy from their key and how they are named.
+description: Delete a relationship, change its type, set its ON DELETE and ON UPDATE actions, map it onto existing columns with Map Columns, read the connector notation and how connectors are routed round tables, work with N:M and identifying relationships, and see what new foreign key columns copy from their key and how they are named.
 ---
 
 # Relationship Editing
@@ -81,7 +81,7 @@ Each row either uses a column the child already has or adds a new foreign key co
 It opens in two ways:
 
 - While drawing a relationship, from `Map to existing columns` beside the child table — see [Relationship Creation](./editing-start.md#relationship-creation). `Map` then adds a relationship of the type being drawn.
-- From `Map Columns` in the relationship context menu, to change the columns of a relationship that exists. `Save` then writes the change. A read-only editor leaves this item out.
+- From `Map Columns` in the relationship context menu, to change the columns of a relationship that exists. `Save` then writes the change. A read-only editor opens no relationship context menu, so Map Columns cannot be opened there.
 
 The dialog's subtitle names the two tables and the relationship type, such as `users → posts · One N`. The type is shown here but not changed — use [Type Change](#type-change).
 
@@ -226,6 +226,9 @@ The light goes out at the next left or right press on the canvas, whether on an 
 Panning with the middle button or the hand tool leaves it lit, and so do folding or unfolding a row in the Explorer or the Diff Viewer, clearing the selection with `Escape`, and a jump from [Quick Search](./quick-search.md) or Flow's external-link [card button](./visualization.md#card-buttons).  
 The light is not saved and is not in the undo history, and collaborators do not see it.
 
+In a [`readonly`](../../api/erd-editor-element.md#readonly) editor the pointer lights connectors too, in place of the light a jump left. Resting on a table, it lights every connector of that table in the hover color until it moves off the table.  
+A click that does not move leaves a light on until the next such click: on a table it lights that table's connectors, on a connector that connector, and anywhere else nothing. A drag there pans the canvas and leaves that light as it was.
+
 Hide connectors on the ERD canvas with the `Relationship` view option, or only their labels with the `Referential Actions` view option, which is on by default — see [Table View Options](./table-related-functions.md#table-view-options).  
 Labels are not drawn at `70%` and below, where tables collapse to their name.  
 An [image export](./file-import-export.md#image) is always drawn at 100%, so it draws the labels whatever the canvas zoom, unless a view option hides them. With `Background` off, the box behind each label is transparent too.  
@@ -233,9 +236,10 @@ An [image export](./file-import-export.md#image) is always drawn at 100%, so it 
 
 ## Connector Routing
 
-Connectors are routed orthogonally.  
-A route bends around the tables that sit between its two ends instead of crossing them, and its corners are rounded.  
-Each end leaves its table in a short straight run before it turns, so two tables a short way apart whose connector ends line up are joined by one straight line rather than a detour.  
+Connectors are routed orthogonally, and their corners are rounded.  
+A route goes round the tables in its way instead of through them. Where every route of a few bends between its two ends would cross a table, as in a crowded diagram, the connector takes a way round with as many bends as it needs. Only where no way round is found does it still cross a table.  
+A connector leaves its two tables from a pair of sides that face each other wherever there is one, and each end leaves its table in a short straight run before it turns, so two tables a short way apart whose connector ends line up are joined by one straight line rather than a detour.  
+Two facing tables standing closer than that, even under `40px` apart, keep their facing sides, and where their ends do not line up the connector jogs across the gap between them rather than running under either table.  
 Routes leaving the same side of a table are spread onto separate corridors so they do not run down one another.  
 Only tables are avoided: a connector may cross a memo or a table group's box, and is drawn above table groups and below tables and memos.
 
@@ -243,6 +247,9 @@ A relationship from a table to itself is drawn as one curve round the table's to
 Further self-references on the same table nest outside the first, so their curves do not cross one another or the table.
 
 There is nothing to configure.  
-Routes are recalculated automatically whenever anything on the canvas moves or resizes, so they never need touching by hand.
+Routes are recalculated automatically whenever anything on the canvas moves or resizes, so they never need touching by hand.  
+While you drag, the connectors of the tables you move follow them, and every other connector keeps the route it had when the drag began. When you let go, each connector the move reroutes is redrawn, such as one that now goes round a table dropped in its way, or one that straightens out once a table has moved off its path.
+
+A diagram draws the same routes in every window that shows it in the same Name View: one that stayed open while the tables moved, one that opened the diagram just now, and a collaborator's alike, and an [exported image](./file-import-export.md#image) draws them too. The Name View counts because it changes how wide the tables are — see [Name View](./logical-names.md#name-view).
 
 ![Dragging the members table down and back while the connector from orders swaps between passing right of categories and round its left, every corner rounded](/img/demo-connector-routing.webp)

@@ -31,7 +31,7 @@ SQL هنگام باز شدن زبانه نوشته می‌شود و هر بار 
 
 پنل سه دسته را در خود دارد که هر کدام زیر یک عنوان قرار دارد:
 
-1. `Saved in the document`: `Database` و `Bracket`؛ [پایگاه داده و علامت نقل‌قول](#database-and-bracket) را ببینید.
+1. `Saved in the document`: `Database` و `Bracket`؛ [پایگاه داده و علامت نقل‌قول](#database-and-bracket) را ببینید. ویرایشگر فقط خواندنی آن‌ها را `This window only` عنوان‌گذاری می‌کند؛ [ویرایشگرهای فقط خواندنی](#read-only-editors) را ببینید.
 2. `This window only`: `Statements`، `Header`، `Write logical names into empty comments` و، تا وقتی نمودار یک [گروه جدول](./table-groups.md) دارد، `Tables`؛ [دستورها](#statements)، [سرآیند](#header)، [نام‌های منطقی به‌عنوان توضیح](#logical-names-as-comments) و [جدول‌ها](#tables) را ببینید.
 3. `Saved in the document · written as is for every database`: اسکریپت‌های `Before tables` و `After tables`؛ [اسکریپت‌های پیش و پس از جدول‌ها](#before-and-after-scripts) را ببینید.
 
@@ -222,5 +222,9 @@ SQL قابل انتخاب نیز هست، بنابراین می‌توانید �
 
 ## ویرایشگرهای فقط خواندنی {#read-only-editors}
 
-در ویرایشگری با `readonly`، زبانه مانند همیشه کار می‌کند: `Database` و `Bracket` همچنان SQL نمایش‌داده‌شده را تغییر می‌دهند، `Statements`، `Header`، `Write logical names into empty comments` و `Tables` همچنان کار می‌کنند و `Save file` و `Copy` همچنان آن را ذخیره و کپی می‌کنند.  
-تنها دو فیلد اسکریپت فقط خواندنی هستند.
+در ویرایشگری با [`readonly`](../../api/erd-editor-element.md#readonly) زبانه برای خواننده کار می‌کند و هیچ‌چیزی که در آن انجام شود به سند نمی‌رسد:
+
+- `Database` و `Bracket` همچنان SQL را دوباره می‌نویسند، اما فقط در همان پنجره، بنابراین پنل آن‌ها را هم `This window only` عنوان‌گذاری می‌کند. انتخاب، قفل‌ها هرچه بگویند، در فایل ذخیره نمی‌شود، با همکاران به اشتراک گذاشته نمی‌شود و برای واگرد ثبت نمی‌شود، و تغییر یک همکار در تنظیمی که شما انتخاب کرده‌اید انتخاب شما را روی صفحه می‌گذارد. زبانهٔ Code Generator همان انتخاب را نشان می‌دهد و [`getSchemaSQL()`](../../api/erd-editor-element.md#getschemasql) هم بدون پایگاه داده آن را می‌نویسد. وقتی ویرایشگر دوباره قابل نوشتن شود، پایگاه داده و علامت نقل‌قول سند برمی‌گردند.
+- `Statements`، `Header`، `Write logical names into empty comments` و `Tables` مانند هر جای دیگر کار می‌کنند، چون از پیش به همان پنجره تعلق دارند.
+- دو فیلد اسکریپت فقط خواندنی هستند: اسکریپت‌های سند را نشان می‌دهند، که SQL همچنان آن‌ها را می‌نویسد، و تایپ را نمی‌پذیرند.
+- `Save file` و `Copy` SQLی را که زبانه نشان می‌دهد ذخیره و کپی می‌کنند.

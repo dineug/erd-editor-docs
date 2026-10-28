@@ -16,7 +16,7 @@ npm install @dineug/erd-editor
 
 Replikasyon deposu paketin kökünde değil, `@dineug/erd-editor/engine.js` alt yolunda bulunur.  
 Bu giriş noktası DOM'a hiç dokunmaz; bu yüzden bir Web Worker'da ya da ana iş parçacığı dışındaki herhangi bir yerde çalışır.  
-Bunun yerine paketin kökünü içe aktarmak, bir belge gerektiren `<erd-editor>` özel öğesini kaydeder.
+Bunun yerine paketin kökünü içe aktarmak bir belge gerektirir: `5.0.0` sürümünden itibaren hiçbir öğe tanımlamaz, ancak değerlendirilirken her iki öğe sınıfını da oluşturur. `5.0.0` sürümünden önce `<erd-editor>` özel öğesini kaydediyordu.
 
 ## Kullanım {#usage}
 

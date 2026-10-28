@@ -8,7 +8,7 @@
     "description": "The label for category 'Guides' in sidebar 'docs'"
   },
   "sidebar.docs.category.Guides.link.generated-index.description": {
-    "message": "Kako narisati in urediti diagram: ustvarjanje tabel in relacij, uvoz in izvoz datotek ter možnosti pogleda urejevalnika.",
+    "message": "Kako narisati in urediti diagram, od ustvarjanja tabel in relacij do uvoza in izvoza datotek ter možnosti pogleda urejevalnika, in kako ga prikazati samo za branje na drugem spletnem mestu.",
     "description": "The generated-index page description for category 'Guides' in sidebar 'docs'"
   },
   "sidebar.api.category.Advanced": {

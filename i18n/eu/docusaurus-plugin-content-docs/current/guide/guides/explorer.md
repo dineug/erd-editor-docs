@@ -23,7 +23,7 @@ Ireki honako hauetako edozeinekin:
 - Tresna-barrako `Explorer` botoia, `Search` botoiaren jarraian, zuhaitz-ikono batekin. Argibideak `Explorer (Ctrl + F)` (Windows/Linux) edo `Explorer (⌘ + F)` (Mac) dio.
 - `Ctrl + F` (Windows/Linux) edo `⌘ + F` (Mac), Ezarpenetako [Lasterbideak](./settings.md#shortcuts) fitxan `Toggle Explorer` izena duena.
 - [Bilaketa azkarreko](./quick-search.md) `Toggle Explorer` aukera, fitxa guztietan zerrendatzen dena. `find`, `replace`, `rename`, `tree`, `outline` edo `objects` idazteak agerrarazten du.
-- Oihalaren laster-menuko `Toggle Explorer` aukera: egin eskuineko klik ERD oihaleko leku huts batean, edozein [taula-taldetatik](./table-groups.md) kanpo. `New Table`, `New Memo` eta `New Table Group` aukeren ondoren dago, `Relationship` aukeraren aurretik.
+- Oihalaren laster-menuko `Toggle Explorer` aukera: egin eskuineko klik ERD oihaleko leku huts batean, edozein [taula-taldetatik](./table-groups.md) kanpo. `New Table`, `New Memo` eta `New Table Group` aukeren ondoren dago, `Relationship` aukeraren aurretik. Irakurtzeko soilik dagoen editore baten oihal-menuak ez du errenkada hori. Ikus [Irakurtzeko soilik dauden editoreak](#read-only-editors).
 
 Bi `Toggle Explorer` aukerek lasterbidea erakusten dute eskuinean.  
 Tresna-barrako botoiak, lasterbideak eta Bilaketa azkarreko aukerak fitxa guztietatik funtzionatzen dute. Bisualizazioa, SQL eskema, Kode-sortzailea, Hiztegia edo Ezarpenak fitxatik, lehenik ERD fitxara aldatzen dira, Arakatzailea han bakarrik erakusten baita.
@@ -168,5 +168,8 @@ Bilaketa lasterbidearekin edo `Toggle Explorer` aukera batekin irekitzeak bost h
 
 ## Irakurtzeko soilik dauden editoreak {#read-only-editors}
 
-[`readonly`](../../api/erd-editor-element.md#readonly) atributua duen editore batean, Arakatzaileak beste edozeinetan bezala funtzionatzen du: tresna-barrako botoia argibide berarekin, lasterbidea, bi `Toggle Explorer` aukerak, zuhaitza, tolestea, `Collapse All` botoia eta errenkada batera joatea, helmuga ohi bezala hautatzen duena. Bertan ere, haren tituluak `Explorer` dio.  
+[`readonly`](../../api/erd-editor-element.md#readonly) atributua duen editore batean, Arakatzaileak beste edozeinetan bezala funtzionatzen du: tresna-barrako botoia argibide berarekin, lasterbidea, Bilaketa azkarreko `Toggle Explorer` aukera, zuhaitza, tolestea eta `Collapse All` botoia. Bertan ere, haren tituluak `Explorer` dio. Oihalaren laster-menuak ez du bertan `Toggle Explorer` aukerarik, irakurten duten errenkadak bakarrik mantentzen baititu. Ikus [Irakurtzeko soilik dauden editoreak](./table-related-functions.md#read-only-editors).
+
+Errenkada batera joatea [Errenkada batera joatea](#going-to-a-row) atalean bezala funtzionatzen du: ikuspegia arau berberarekin mugitzen da, eta errenkadaren taula, taula-talde edo oharra hautatzen da, oihalean ingeradaz markatuta, errenkadak jartzen duen tokian fokuratutako gelaxkarekin.  
+Hori da irakurtzeko soilik dagoen editore batek ezer hautatzeko duen modu bakarra. Oihaleko sakatzeak ez du ezer hautatzen, eta mugitzen ez den klik batek errenkada batek utzitako hautapena garbitzen du. Hark hautatutako taula bat [Taularen propietateak](./table-related-functions.md#table-properties) panelean irekitzen da `Alt + Space` (Windows/Linux) edo `⌥ + Space` (Mac) lasterbidearekin, irakurtzeko soilik, eta `Ctrl + C` (Windows/Linux) edo `⌘ + C` (Mac) lasterbideak hark hautatutakoa kopiatzen du edozein editoretan bezala.  
 Haren bilaketak aurkitu baino ez du egiten. Ikus Bilatu eta ordeztu orriko [Irakurtzeko soilik dauden editoreak](./find-and-replace.md#read-only-editors).

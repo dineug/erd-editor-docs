@@ -16,7 +16,7 @@ npm install @dineug/erd-editor
 
 O armazenamento de replicação está no subcaminho `@dineug/erd-editor/engine.js`, não na raiz do pacote.  
 Esse ponto de entrada não toca no DOM, pelo que funciona num Web Worker ou em qualquer outro lugar fora da thread principal.  
-Importar a raiz do pacote, em vez disso, regista o elemento personalizado `<erd-editor>`, que precisa de um documento.
+Importar a raiz do pacote, em vez disso, precisa de um documento: a partir da `5.0.0` não define nenhum elemento, mas avaliá-la constrói as duas classes de elemento. Antes da `5.0.0` registava o elemento personalizado `<erd-editor>`.
 
 ## Utilização {#usage}
 

@@ -1,6 +1,6 @@
 ---
 sidebar_position: 16
-description: Sinhronizacija tipa podatkov v relacijah in domene, največja širina komentarja, ponovni izračun širine tabel, zaklepi nastavitev (pogled, zavihek, nastavitve kode in prikaz imen), vrstni red prikaza stolpcev in seznam bližnjic.
+description: Sinhronizacija tipa podatkov v relacijah in domene, največja širina komentarja, zaklepi nastavitev (pogled, zavihek, nastavitve kode in prikaz imen), vrstni red prikaza stolpcev, seznam bližnjic in zavihek Nastavitve v urejevalniku samo za branje.
 ---
 
 # Nastavitve
@@ -33,13 +33,6 @@ Ob vklopu je začetna vrednost `60px`. Vrednost, vnesena zunaj obsega, se omeji 
 
 ![Vklop možnosti Maximum comment width, vnos vrednosti 120 in zavihek ERD s komentarji, skrajšanimi na to širino](/img/demo-settings-comment-width.webp)
 
-## Ponovni izračun širine tabel {#recalculation-table-width}
-
-Pritisnite gumb `Sync`, da se širina vsake tabele in vsake celice stolpca ponovno izračuna tako, da ustreza trenutnemu besedilu, in da se povezovalne črte relacij znova narišejo okoli novih velikosti.
-To potrdi pojavno obvestilo `Recalculated table width`.
-Širine se samodejno ponovno izračunajo ob vsakem nalaganju dokumenta, zato je to potrebno le, kadar so zaradi spremembe pisave ali izrisovanja zastarele.
-Širine se ne shranijo v datoteko, zato je gumb `Sync` nikoli ne spremeni.
-
 ## Zaklepanje {#lock}
 
 Seznam `Lock` vsebuje sedem nastavitev. Dokler je zaklep nastavitve vklopljen, datoteka ohrani vrednost, ki jo je imela nastavitev ob zaklepanju, zato njena sprememba na zaslonu pusti datoteko nespremenjeno.
@@ -68,8 +61,9 @@ Zaklep `Canvas Type` nikoli ne ohrani zavihka Nastavitve. Njegov vklop zaklene z
 
 ![Odklepanje vrstice Viewport, pomikanje in povečevanje diagrama ter ponovno zaklepanje pri novem pogledu, ki ga prikazuje vrstica](/img/demo-settings-locks.webp)
 
-Vklop ali izklop zaklepa spremeni datoteko, saj datoteka shranjuje, kateri zaklepi so vklopljeni, vendar se tako kot preostanek zavihka Nastavitve ne zabeleži v [zgodovino razveljavitev](./undo-redo.md#what-the-history-records). Prav tako se ne zabeleži preklop prikaza imen, ne glede na to, ali je zaklenjen. V urejevalniku samo za branje gumbi za zaklep ne naredijo ničesar, preklop prikaza imen pa spremeni samo ta zaslon, ne glede na njegov zaklep.
+Vklop ali izklop zaklepa spremeni datoteko, saj datoteka shranjuje, kateri zaklepi so vklopljeni, vendar se tako kot preostanek zavihka Nastavitve ne zabeleži v [zgodovino razveljavitev](./undo-redo.md#what-the-history-records). Prav tako se ne zabeleži preklop prikaza imen, ne glede na to, ali je zaklenjen.
 Vse druge nastavitve se shranijo takšne, kot so: zbirka podatkov, stikala [`View Option`](./table-related-functions.md#table-view-options) in preostanek zavihka `Preferences`.
+Urejevalnik samo za branje datoteke ne spremeni z nobeno od njih, ne glede na zaklepe: njegovi gumbi za zaklep in drugi kontrolniki zavihka `Preferences` so onemogočeni, nastavitve, ki jih še dovoljuje spremeniti, pa ostanejo na tistem zaslonu – glejte razdelek [Urejevalniki samo za branje](#read-only-editors).
 
 V novem diagramu, torej takem, ki ga začnete iz nič, so vklopljeni vsi zaklepi: v prazni datoteki, odprti v VS Code, v aplikaciji Obsidian ali v razvojnem okolju JetBrains (takšno datoteko ustvarita ukaza `ERD Editor: Create new diagram` in `New ERD` v aplikaciji Obsidian), v novi shemi v spletni aplikaciji, v datoteki, ustvarjeni iz menija New v storitvi Google Drive, ali v elementu `<erd-editor>` brez vrednosti.
 Z vsemi vklopljenimi zaklepi se začne tudi shema ali datoteka v storitvi Google Drive, ki jo spletna aplikacija ustvari z uvozom datoteke SQL, DBML, AML ali GraphQL. Tista, ki nastane iz datoteke JSON, ohrani zaklepe, ki jih beleži ta datoteka.
@@ -98,6 +92,7 @@ Povlecite vrstico, da jo premaknete – vlečete lahko celotno vrstico, označuj
 Vrstica `Logical Name` določa mesto celice logičnega imena, ki jo v prikazu `Both Names` izriše vsaka vrstica stolpca. V prikazu `Logical Names` logično ime namesto tega stoji na mestu vrstice `Name`, prikaz `Physical Names` pa ga ne izriše – glejte razdelek [Prikaz imen](./logical-names.md#name-view). Vrstica `Domain` določa mesto celice domene, ki jo prikaže View Option → `Domain` – glejte razdelek [Celica domene](./logical-names.md#the-domain-cell).
 Celica, ki jo skrije [možnost pogleda tabel](./table-related-functions.md#table-view-options) ali izpusti prikaz imen, ohrani svoje mesto na seznamu, zato vrstni red velja za tiste celice, ki so prikazane.
 Diagram, katerega vrstni red je bil nastavljen, preden sta bili na seznamu vrstici `Logical Name` in `Domain`, dobi vrstico `Logical Name` tik pred vrstico `Name` in vrstico `Domain` tik za vrstico `DataType`, kjer koli že ti dve stojita v njegovem vrstnem redu.
+Diagram, ki ga je shranila poznejša izdaja, prav tako ohrani svoj vrstni red, tudi kadar ima ta izdaja vrstico, ki je ta nima: vrstice, ki jih ima ta izdaja, stojijo v vrstnem redu, ki ga daje datoteka, neznana vrstica pa je izpuščena. Shranjevanje diagrama tu zapiše vrstni red brez nje, poznejša izdaja pa vrstico vrne ob njenega soseda v svojem privzetem vrstnem redu.
 Oznaka [alternativnega ključa](./table-related-functions.md#alternate-keys) (`AK1.1` itd.) ni ena od teh vrstic. Vedno stoji zadnja v vrstici, za celico, ki jo ta vrstni red postavi na konec.
 
 ![Pomikanje navzdol do Column Order in vlečenje vrstice Comment navzgor pod Name, kar vsak komentar postavi takoj za ime njegovega stolpca](/img/demo-settings-column-order.webp)
@@ -146,6 +141,7 @@ V celici logičnega imena z odprtim seznamom izrazov prvi pritisk bližnjice `St
 Odprt raziskovalec, izbirnik teme ali izbirnik `Display Language` na platnu ne onemogoči nobene bližnjice. `Stop` nikoli ne zapre raziskovalca. Za to, kaj `Stop` in druge tipke naredijo v raziskovalcu, glejte razdelek [Tipke v raziskovalcu](./explorer.md#keys-in-the-explorer), za to, kaj naredijo v izbirniku, pa razdelek [Izbira jezika](./language-and-theme.md#picking-a-language).
 `Delete Selection` odstrani vse izbrane tabele, beležke in skupine tabel ali, kadar je izbrana ena sama tabela z nekaterimi svojimi stolpci in je povečava večja od `70%`, te stolpce – glejte razdelek [Brisanje tabel in beležk](./table-related-functions.md#table-and-memo-deletion). `Remove Table, Memo` odstrani tudi izbrane skupine tabel.
 Bližnjica `Add Table Group` začne risanje skupine [`New Table Group`](./table-groups.md#drawing-a-group), tako kot gumb `New Table Group` v [orodni vrstici platna](./table-related-functions.md#canvas-toolbar), drugi pritisk pa risanje prekliče. Bližnjica `Group Selected Tables` je zaporedje dveh pritiskov brez modifikatorske tipke, `T` in nato `G` v eni sekundi. Izbrane tabele postavi v novo skupino in odpre njeno polje za ime, tako kot postavka `Group selected tables` v priročnem meniju tabele, in ne naredi ničesar, če ni izbrana nobena tabela – glejte razdelek [Združevanje izbranih tabel v skupino](./table-groups.md#grouping-selected-tables). Nobena od obeh bližnjic ne naredi ničesar v urejevalniku samo za branje ali dokler so skupine [skrite](./table-groups.md#hiding-groups).
+V urejevalniku samo za branje delujejo samo tipke, ki berejo: `Search`, `Toggle Explorer`, `Stop`, `Table Properties` in `Focus on this table` na tabeli, ki jo je izbral skok, tri tipke za povečavo, `Zen Mode`, kopiranje in smerne tipke, ki premikajo celico v fokusu. `Editing`, vse tipke `Add` in `Remove`, `Delete Selection`, `Primary Key`, obe tipki za izbor vsega, štiri tipke za relacije, `Add Table Group`, `Group Selected Tables`, `Hand Tool` in lepljenje ne naredijo ničesar, `Undo` in `Redo` pa ničesar ne razveljavita in ne uveljavita – glejte razdelek [Urejevalniki samo za branje](./table-related-functions.md#read-only-editors).
 `Zoom In`, `Zoom Out` in `Zoom Reset` spreminjajo povečavo tudi na zavihku [Vizualizacija](./visualization.md#toolbar), tako v načinu `Graph` kot v načinu `Flow`, razen če je odprto hitro iskanje.
 V načinu `Flow` bližnjici `Undo` in `Redo` naredita korak nazaj in naprej po tem, na kar je bil zožen način Tok, tako kot njegova gumba `Previous table` in `Next table`, razen če je odprto hitro iskanje. Tam diagrama nikoli ne razveljavita, v načinu `Graph` pa ne naredita ničesar – glejte razdelek [Prejšnja in naslednja tabela](./visualization.md#previous-table-and-next-table).
 Na zavihku Vizualizacija `Stop` zapre tudi meni [prikaza vrstic](./visualization.md#row-display) in prekliče [razporejanje v načinu Tok](./visualization.md#how-flow-is-placed), ki se še izvaja; pogleda, zoženega z bližnjico `Focus on this table`, ne razširi.
@@ -160,3 +156,13 @@ Zavihek `Shortcuts` nato navaja dodelitve gostitelja: ukaz, ki ga gostitelj ne d
 Tipke za vrstice na zavihku Slovar sledijo ukazoma `Add Column` in `Remove Column`, zato jih ponovna dodelitev katerega koli od obeh premakne – glejte razdelek [`dictionaryRowChords`](../../api/erd-editor-element.md#dictionaryrowchords).
 
 V aplikaciji Obsidian te tipke dosežejo urejevalnik vedno, ko je aktiven zavihek diagrama v aplikaciji Obsidian, tudi kadar isto tipko uporablja bližnjica aplikacije Obsidian, kot so `Alt + Enter`, `Ctrl + K` in `Ctrl + F` (Windows/Linux) ali `⌥ + Enter`, `⌘ + K` in `⌘ + F` (Mac). Enako velja za bližnjico `Alt + Shift + Enter` (Windows/Linux) ali `⌥ + Shift + Enter` (Mac) zavihka Slovar, ki je ni v nobeni vrstici tega seznama. Vse druge bližnjice aplikacije Obsidian tam še vedno delujejo. Za bližnjico `Ctrl + F` ali `⌘ + F` glejte razdelek [Iskalna vrstica brskalnika](./find-and-replace.md#the-browsers-find-bar).
+
+## Urejevalniki samo za branje {#read-only-editors}
+
+V urejevalniku [`readonly`](../../api/erd-editor-element.md#readonly) zavihek Nastavitve prikazuje nastavitve diagrama in nobene ne spremeni. Značka `Read only` stoji ob naslovu vsake strani, `Preferences` in `Shortcuts`.
+Stikali `Relationship DataType Sync` in `Maximum comment width` ter polje za širino so onemogočena, prav tako vsak gumb za zaklep. Vrstice `Column Order` ne kažejo ročaja in jih ni mogoče vleči.
+Vsaka vrstica `Lock` še vedno prikazuje svojo vrednost. Zaklenjena vrstica prikazuje vrednost, ki jo ohrani datoteka, odklenjena pa nastavitev, kakršno ima ta zaslon, ki se lahko razlikuje od datoteke, kot je opisano spodaj.
+
+Nastavitve, ki določajo, kaj prikazuje zaslon, se tam še vedno spreminjajo: položaj in povečava pogleda, zavihek, prikaz imen, zbirka podatkov, jezik generatorja kode, oba zapisa imen, narekovaji in stikala [`View Option`](./table-related-functions.md#table-view-options).
+Vsaka spremeni samo ta zaslon, ne glede na svoj zaklep. Ni shranjena v datoteko ali zapisana z izvozom JSON, ni zabeležena v zgodovino razveljavitev, ni šteta kot sprememba in nikoli ne doseže sodelavcev. Plošči z možnostmi zavihkov [Shema SQL](./schema-sql.md#options-panel) in [Generator kode](./code-generator.md#options-panel) te izbire tam opisujeta z `This window only` namesto `Saved in the document`.
+Ko je urejevalnik spet mogoče urejati, se zbirka podatkov, jezik, zapisa imen, narekovaji in stikala View Option vrnejo na vrednosti datoteke. Pogled, zavihek in prikaz imen ostanejo, kakršne ste jih pustili, datoteka pa vsako od njih prevzame, kolikor dovoljuje njen zaklep, z vašo naslednjo spremembo.

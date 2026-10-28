@@ -25,7 +25,8 @@ Când limbajul selectat ignoră `Database` sau stilurile de denumire, acestea r�
 Butoanele `Save file` și `Copy` se află în partea de jos a panoului (consultați [Salvarea sau copierea rezultatului](#saving-or-copying-the-result)).
 
 Acestea sunt setările proprii ale diagramei, aceleași pe care le schimbă și meniul contextual, și căutarea rapidă. Opțiunea `Database` se salvează în fișier ca orice editare.  
-Opțiunile `Language`, `Table Name Case`, `Column Name Case` și `Bracket` se salvează doar cât timp blocarea lor din fila Setări este dezactivată (`Bracket Type` pentru `Bracket`), iar o diagramă nouă are toate blocările activate. Cât timp o blocare este activată, o modificare rescrie codul de pe ecran, dar fișierul păstrează valoarea blocată, iar diagrama se redeschide cu ea. Panoul nu arată niciun semn al blocării; pentru a păstra o alegere în fișier, dezactivați-i blocarea (consultați [Blocare](./settings.md#lock)).
+Opțiunile `Language`, `Table Name Case`, `Column Name Case` și `Bracket` se salvează doar cât timp blocarea lor din fila Setări este dezactivată (`Bracket Type` pentru `Bracket`), iar o diagramă nouă are toate blocările activate. Cât timp o blocare este activată, o modificare rescrie codul de pe ecran, dar fișierul păstrează valoarea blocată, iar diagrama se redeschide cu ea. Panoul nu arată niciun semn al blocării; pentru a păstra o alegere în fișier, dezactivați-i blocarea (consultați [Blocare](./settings.md#lock)).  
+Într-un editor doar în citire, titlul indică în schimb `This window only`, deoarece o schimbare de acolo ajunge doar în acea fereastră (consultați [Editoare doar în citire](#read-only-editors)).
 
 ## Limbaj {#language}
 
@@ -138,3 +139,10 @@ Meniul Export nu are niciun element pentru generatorul de cod, iar fila `Code Ge
 Pentru a copia codul, faceți clic pe butonul `Copy` din partea de jos a panoului sau treceți cu indicatorul peste cod și faceți clic pe butonul de copiere din dreapta sus a acestuia, singura modalitate din panoul Proprietăți tabel.  
 O notificare `Copied!` cu o bifă confirmă copierea timp de două secunde. Dacă browserul sau aplicația gazdă refuză accesul la clipboard, o notificare `Couldn't copy to the clipboard` cu un semn de avertizare semnalează în schimb acest lucru, timp de cinci secunde. O nouă copiere înlocuiește notificarea, în loc să adauge alta.  
 Textul poate fi și selectat, astfel încât puteți prelua doar partea de care aveți nevoie.
+
+## Editoare doar în citire {#read-only-editors}
+
+Într-un editor [`readonly`](../../api/erd-editor-element.md#readonly), listele panoului, meniul contextual și căutarea rapidă schimbă în continuare `Language`, `Database`, `Table Name Case`, `Column Name Case` și `Bracket`, dar doar în acea fereastră, așa că panoul le denumește `This window only`, nu `Saved in the document`.  
+O schimbare rescrie codul de pe acel ecran și nu este salvată în fișier, nu este partajată cu colaboratorii și nu este înregistrată pentru anulare, indiferent de blocări, iar schimbarea de către un colaborator a unei setări pe care ați ales-o dumneavoastră lasă pe ecran alegerea dumneavoastră. `Database` și `Bracket` sunt și setările filei Schemă SQL, așa că o alegere de aici apare și acolo, în aceeași fereastră (consultați [Editoare doar în citire](./schema-sql.md#read-only-editors)).  
+Când editorul devine din nou editabil, setările documentului revin, iar codul este scris pentru ele.  
+Butoanele `Save file` și `Copy` salvează și copiază codul afișat.

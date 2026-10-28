@@ -10,7 +10,8 @@ A edição começa no menu de contexto, que se abre com um clique com o botão d
 ![Clicar com o botão direito na tela, abrir o submenu Relationship, adicionar uma tabela e depois abrir o menu da própria tabela](/img/demo-context-menu.webp)
 
 Clicar com o botão direito numa tabela, numa nota, num grupo de tabelas ou numa relação abre, em vez disso, o menu próprio desse elemento.  
-Um clique com o botão direito numa tabela, nota ou grupo de tabelas que já esteja selecionado mantém toda a seleção, pelo que opções como `Color` e `Delete selected` atuam sobre toda ela — consulte [Seleção múltipla](./table-related-functions.md#multiple-selection).
+Um clique com o botão direito numa tabela, nota ou grupo de tabelas que já esteja selecionado mantém toda a seleção, pelo que opções como `Color` e `Delete selected` atuam sobre toda ela — consulte [Seleção múltipla](./table-related-functions.md#multiple-selection).  
+Um editor só de leitura não cria nada, pelo que nada do que esta página descreve é oferecido aí: o menu da tela mantém apenas `View Option`, `Name View`, `Export` e `Diff Viewer`, o menu de uma tabela apenas `Table Properties`, e uma nota, um grupo de tabelas ou uma relação não abre nenhum menu — consulte [Editores só de leitura](./table-related-functions.md#read-only-editors).
 
 ## Ecrã de boas-vindas {#welcome-screen}
 

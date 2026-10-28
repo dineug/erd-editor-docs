@@ -12,7 +12,7 @@ O histórico guarda até `2048` alterações.
 - Redo: `Ctrl + Shift + Z` (Windows/Linux) ou `⌘ + Shift + Z` (Mac)
 
 No separador ERD, a barra de ferramentas disponibiliza os mesmos dois comandos nos botões `Undo` e `Redo`, ao lado do botão `Time Travel`. No separador Dicionário, mostra os botões `Undo` e `Redo` sem o botão `Time Travel`, e nenhum outro separador os mostra.  
-Só ficam ativos quando há algo para anular ou refazer. Um editor `readonly` oculta-os, e os atalhos não anulam nem refazem nada.
+Só ficam ativos quando há algo para anular ou refazer. Um editor `readonly` oculta-os e o `Time Travel`, e os atalhos não anulam nem refazem nada.
 
 Só no separador ERD é que anular e refazer atuam sobre o histórico do diagrama.  
 Aí, os atalhos ficam inativos enquanto a pesquisa rápida, o painel `Table Properties`, o visualizador `Diff Viewer`, a pré-visualização de `Auto Layout`, a caixa de diálogo [`Export image`](./file-import-export.md#image), a caixa de diálogo [Mapear colunas](./relationship-editing.md#map-columns) ou a viagem no tempo estão abertos.  
@@ -58,6 +58,8 @@ O que não é registado:
 - A folha apresentada no separador Dicionário e a pesquisa, a seleção, o deslocamento e as larguras das colunas de cada folha — consulte [Abrir o separador](./dictionary.md#opening-the-tab).
 
 As alterações a qualquer um destes elementos não podem ser anuladas.
+
+Um editor só de leitura não regista nada. A posição da vista, o zoom e as opções de `View Option` continuam a mudar aí, tal como o separador, a vista de nomes, a base de dados e as definições de código, mas apenas nesse ecrã, pelo que não há nada para anular — consulte [Editores só de leitura](./settings.md#read-only-editors) em Definições.
 
 As edições feitas no separador Dicionário podem ser anuladas, mas entram no histórico da sua própria folha e não neste, pelo que a anulação no separador ERD nunca reverte nenhuma delas, nem sequer o novo valor `Data Type` de um domínio e os tipos das colunas que este altera — consulte [Folhas do dicionário](#dictionary-sheets).
 
@@ -136,7 +138,7 @@ O histórico de todas as folhas é esvaziado quando os dicionários são substit
 ## Viagem no tempo {#time-travel}
 
 Abre-se com o botão `Time Travel` da barra de ferramentas, ao lado dos botões de anular e refazer no separador ERD.  
-O botão não faz nada enquanto o histórico do diagrama não tiver pelo menos uma alteração registada.
+O botão não faz nada enquanto o histórico do diagrama não tiver pelo menos uma alteração registada. Um editor só de leitura não mostra esse botão, e um editor que passa a só de leitura fecha a Viagem no tempo sem a aplicar.
 
 A viagem no tempo abre uma cópia separada e só de leitura do diagrama, na posição de deslocamento, no nível de zoom e na [vista de nomes](./logical-names.md#name-view) que a tela está a mostrar, esteja ou não ativado o bloqueio `Viewport` ou `Name View`.  
 Percorre apenas o histórico do diagrama, pelo que as edições das folhas do dicionário não estão entre os seus pontos.  

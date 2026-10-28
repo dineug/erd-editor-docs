@@ -61,7 +61,7 @@ Klawisz `Tab` i skrót `Shift + Tab` przechodzą po kolei przez komórki wyświe
 - W widoku `Logical Names` kolejno: nazwa logiczna nagłówka, potem jego komentarz, a potem komórki każdego wiersza w kolejności kolumn, z nazwą logiczną w miejscu nazwy.
 - W widoku `Both Names` kolejno: nazwa logiczna, nazwa i komentarz nagłówka, a potem komórki każdego wiersza w kolejności kolumn, domyślnie zaczynając od komórki `Logical Name`.
 
-Skrót `Alt + Enter` (Windows/Linux) lub `⌥ + Enter` (Mac) dodaje kolumnę i ustawia fokus na jej komórce nazwy, którą w widoku `Logical Names` jest jej nazwa logiczna.
+Skrót `Alt + Enter` (Windows/Linux) lub `⌥ + Enter` (Mac) dodaje kolumnę i ustawia fokus na pierwszej komórce, którą rysuje jej wiersz. Przy domyślnej kolejności kolumn jest to jej komórka nazwy, którą w widoku `Logical Names` jest nazwa logiczna, a w widoku `Both Names` jej komórka `Logical Name`, więc możesz zacząć od nazwy logicznej – zobacz sekcję [Dodawanie kolumn](./table-editing.md#adding-columns).
 
 Kolumna klucza obcego dodana przez relację kopiuje razem z typem nazwę logiczną i domenę swojego klucza – zobacz sekcję [Relacje identyfikujące](./relationship-editing.md#identifying-relationships).  
 Kopiowanie kolumn do arkusza kalkulacyjnego i wklejanie kolumn z niego korzystają z komórek wyświetlanych w danym widoku, łącznie z komórkami nazwy logicznej i domeny – zobacz sekcję [Kopiowanie/wklejanie kolumn](./table-editing.md#copyingpasting-columns).
@@ -143,5 +143,7 @@ Agent kodujący działający przez serwer MCP ustawia nazwy logiczne i wiąże d
 
 ## Edytory tylko do odczytu {#read-only-editors}
 
-W edytorze z atrybutem [`readonly`](../../api/erd-editor-element.md#readonly) działa każdy selektor Widoku nazw, a przełączenie zmienia tylko ten ekran, niezależnie od blokady.  
-Nie można w nim edytować nazw logicznych ani domen, więc nie otwiera się lista terminów ani selektor domen, a żadna z pozycji `Derive Physical Name Again` i `Derive Physical Names Again` nie jest dostępna. Opcja View Option → `Domain` niczego w nim nie zmienia, tak jak żadna [opcja widoku](./table-related-functions.md#table-view-options).
+W edytorze z atrybutem [`readonly`](../../api/erd-editor-element.md#readonly) działa każdy selektor Widoku nazw: przycisk `Name View` na pasku narzędzi kanwy, pozycja `Name View` w menu kontekstowym kanwy i w Szybkim wyszukiwaniu oraz lista na pasku narzędzi trybu Przepływ.  
+Przełączenie zmienia tam tylko ten ekran, niezależnie od blokady: plik, współpracownicy i historia cofania zachowują widok bez zmian. Gdy edytor znów umożliwi zapis, wybrany widok pozostaje na tym ekranie do następnego przełączenia w nim albo, przy wyłączonej blokadzie, do przełączenia przez współpracownika lub ponownego wczytania dokumentu.  
+Nie można w nim edytować nazw logicznych ani domen, więc nie otwiera się edytor komórki, lista terminów ani selektor domen, a żadna z pozycji `Derive Physical Name Again` i `Derive Physical Names Again` nie jest dostępna.  
+Opcja View Option → `Domain` pokazuje lub ukrywa tam komórkę domeny tylko na tym ekranie, tak jak każda [opcja widoku](./table-related-functions.md#table-view-options), a gdy edytor znów umożliwi zapis, wracają opcje widoku, które przechowuje dokument.

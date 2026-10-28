@@ -237,4 +237,5 @@ The external-link [card button](#card-buttons) goes further, because it takes yo
 Collaborators' edits still reach the diagram while you are in Flow, and cards follow the tables and relationships they add or remove — see [How Flow Is Placed](#how-flow-is-placed).  
 Their selection and focus rings are drawn on the cards, but their cursors and drag boxes are not — see [Collaborative Editing](../../api/advanced/collaborative-editing.md).
 
-Both modes, focusing and stepping included, work in a `readonly` editor too, and so does the `Name View` list, which there switches only your own screen.
+Both modes, focusing and stepping included, work in a [`readonly`](../../api/erd-editor-element.md#readonly) editor too, and so does the `Name View` list, which there switches only your own screen.  
+On the ERD tab of a read-only editor the table menu holds `Table Properties` alone and a press selects no table, so focus with `Alt + F` (Windows/Linux) or `⌥ + F` (Mac) on the table a jump from the [Explorer](./explorer.md#going-to-a-row) or [Quick Search](./quick-search.md) selected.

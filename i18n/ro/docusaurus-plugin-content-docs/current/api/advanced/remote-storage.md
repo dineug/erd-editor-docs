@@ -16,7 +16,7 @@ npm install @dineug/erd-editor
 
 Store-ul de replicare se află la subcalea `@dineug/erd-editor/engine.js`, nu la rădăcina pachetului.  
 Acest punct de intrare nu accesează DOM-ul, așa că rulează într-un Web Worker sau oriunde altundeva în afara firului principal.  
-Importarea rădăcinii pachetului înregistrează în schimb elementul personalizat `<erd-editor>`, care are nevoie de un document.
+Importarea rădăcinii pachetului are în schimb nevoie de un document: începând cu versiunea `5.0.0` nu definește niciun element, dar evaluarea ei construiește ambele clase de elemente. Înainte de `5.0.0` înregistra elementul personalizat `<erd-editor>`.
 
 ## Utilizare {#usage}
 

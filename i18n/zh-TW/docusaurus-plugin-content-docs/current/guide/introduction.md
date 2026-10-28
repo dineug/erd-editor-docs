@@ -1,12 +1,13 @@
 ---
 sidebar_position: 1
-description: erd-editor 是實體關聯圖編輯器，可用於瀏覽器、Google Drive、VS Code、IntelliJ、Obsidian 和您自己的網頁。
+description: erd-editor 是實體關聯圖編輯器，可用於瀏覽器、Google Drive、VS Code、IntelliJ、Obsidian 和您自己的網頁，並提供唯讀檢視器，可在任何網站上顯示圖表。
 ---
 
 # 簡介
 
 erd-editor 是實體關聯圖編輯器。
-它以網頁應用程式、Google Drive 應用程式、VS Code 擴充功能、IntelliJ 外掛程式和 Obsidian 外掛程式的形式提供，也可作為 `<erd-editor>` 自訂元素嵌入您自己的網頁。
+它以網頁應用程式、Google Drive 應用程式、VS Code 擴充功能、IntelliJ 外掛程式和 Obsidian 外掛程式的形式提供，也可作為 `<erd-editor>` 自訂元素嵌入您自己的網頁，旁邊還有以唯讀方式顯示圖表的 `<erd-viewer>`。
+不自行載入任何 script 的網站，則可改為嵌入 erd-editor.io/embed 上的唯讀圖表。
 所有形式都使用同一個編輯器和同一種文件格式。
 
 ![商店圖表：將指標停留在關聯上、新增欄位，並在流程模式中聚焦 orders](/img/demo-overview.webp)
@@ -20,7 +21,8 @@ erd-editor 是實體關聯圖編輯器。
 | VS Code | [Marketplace](https://marketplace.visualstudio.com/items?itemName=dineug.vuerd-vscode) | 在自訂編輯器中開啟 `.erd.json` 檔案 |
 | IntelliJ | [JetBrains Marketplace](https://plugins.jetbrains.com/plugin/23594-erd-editor) | 同一個編輯器，適用於以 IntelliJ 為基礎的 IDE |
 | Obsidian | [Community plugins](https://community.obsidian.md/plugins/erd-editor) | 在儲存庫的分頁中開啟 `.erd` 和 `.erd.json` 檔案，僅限桌面版 |
-| 您的網頁 | `npm install @dineug/erd-editor` | 不依賴框架的 `<erd-editor>` 自訂元素，請參閱[安裝](../api/installation.md) |
+| 您的網頁 | `npm install @dineug/erd-editor` | 不依賴框架的 `<erd-editor>` 自訂元素，以及以唯讀方式顯示圖表的 `<erd-viewer>`，請參閱[安裝](../api/installation.md)和 [ErdViewerElement](../api/erd-viewer-element.md) |
+| 任何網站 | [erd-editor.io/embed](https://erd-editor.io/embed) | 以文件的 URL 在 iframe 中顯示唯讀圖表，不需撰寫程式碼，請參閱[嵌入](./guides/embedding.md) |
 | 程式碼代理程式 | [`@dineug/erd-editor-mcp`](../mcp/installation.md) | 一個 MCP 伺服器，可讓 Claude Code、Codex 或其他用戶端在 VS Code、JetBrains IDE 或 Obsidian 中即時編輯圖表，或直接編輯檔案本身 |
 
 若要在 IDE 中試用，建立一個副檔名為 `.erd.json` 的空白檔案並將其開啟。
@@ -45,6 +47,7 @@ VS Code 會在 Source Control、Local History 和 Compare with Saved 中，在 V
 - 在[字典](./guides/dictionary.md)索引標籤中保存圖表的命名標準。其 `Domains`、`Words` 和 `Terms` 工作表可以像試算表一樣搜尋、排序和編輯，且各有自己的復原歷程記錄。這些工作表可匯入和匯出 CSV：匯入時可讀取編輯器自己的格式或韓國公共資料標準（공통표준）的格式，編碼為 UTF-8 或 EUC-KR，匯出時則寫出編輯器自己的格式。邏輯名稱儲存格會自動完成術語名稱。在您自行撰寫名稱之前，邏輯名稱會依相符的術語，或依其切分出的詞彙的英文縮寫，為其資料表或欄位提供物理名稱。詞彙或術語變更後，[`Derive Physical Names Again`](./guides/dictionary.md#derive-physical-names-again) 會重新產生名稱，包括自行撰寫的名稱。以手動方式或透過其術語連結到定義域的欄位，會[採用該定義域的資料類型](./guides/dictionary.md#domains-and-data-types)並隨其變更，`Domain` 檢視選項則會顯示每個欄位的定義域。[`Checks`](./guides/dictionary.md#the-checks-sheet) 工作表會列出禁用詞、未登錄的詞彙和同義詞、重複的名稱、未知的定義域、與其術語不同的物理名稱，以及與其定義域不同的欄位類型。畫布會為詞彙和術語檢查所標出的邏輯名稱和物理名稱上色。
 - 從 `json`、`Schema SQL`、`GraphQL`、`DBML` 或 `AML` 匯入現有的結構描述。請參閱[匯入或匯出檔案](./guides/file-import-export.md)。匯入結構描述 SQL、GraphQL、DBML 或 AML 檔案時，其資料表會沿著關聯配置，沒有關聯時則逐列排列。[`Import and Add`](./guides/file-import-export.md#import-and-add) 會將檔案加到圖表下方，而不是取代圖表。
 - 將圖表匯出為 `json`；從「[結構描述 SQL](./guides/schema-sql.md#saving-or-copying-the-sql)」索引標籤匯出為結構描述 SQL，可儲存為 `.sql` 檔案或複製；或從 [`Export image`](./guides/file-import-export.md#image) 對話方塊匯出為 PNG 或 SVG 圖片，或以 PNG 複製到剪貼簿。
+- 在其他網站上以唯讀方式顯示圖表：以檔案的 URL（包括 GitHub 上的檔案）嵌入 [erd-editor.io/embed](./guides/embedding.md)，或在您自己的網頁中載入 [`<erd-viewer>`](../api/erd-viewer-element.md) 元素。讀者可以平移、縮放、搜尋並點亮關聯，但沒有任何東西能編輯圖表。
 - 以八種資料庫廠商的語法寫出結構描述 SQL：Databricks、MSSQL、MariaDB、MySQL、Oracle、PostgreSQL、Snowflake 和 SQLite。請參閱[資料表相關功能](./guides/table-related-functions.md#databases)。「[結構描述 SQL](./guides/schema-sql.md)」索引標籤的選項面板可選擇要寫出的陳述式、標頭和資料表群組，可[將邏輯名稱寫入空白註解](./guides/schema-sql.md#logical-names-as-comments)，並保留您自己的 SQL，這些 SQL 會儲存在圖表中，寫在資料表之前和之後。
 - 為二十二種目標產生程式碼：語言有 C#、Go、Java、Kotlin、PHP、Rust、Scala、Swift 和 TypeScript；ORM 有 Doctrine、Drizzle、JPA、SeaORM、Sequelize、SQLAlchemy 和 TypeORM；此外還有 AML、DBML、GraphQL、JSON Schema、Mermaid 和 Zod。「程式碼產生器」索引標籤的選項面板可選擇語言、資料庫和名稱大小寫，程式碼可儲存為使用該語言副檔名的檔案，或加以複製。請參閱[程式碼產生器](./guides/code-generator.md)。
 - 在[視覺化](./guides/visualization.md)中檢視結構描述，可呈現為力導向的 `Graph`，或沿著關聯配置資料表卡片的 `Flow`；將指標停留在資料表上時，與其相連的一切都會亮起。在 ERD 索引標籤上按 `Alt + F`，即可[聚焦所選資料表](./guides/visualization.md#focusing-on-tables)以及與其相關的資料表。在 `Flow` 中，[`Previous table` 和 `Next table`](./guides/visualization.md#previous-table-and-next-table) 會在流程模式所縮小到的各個範圍之間返回上一步或前進到下一步，作用與該處的復原和重做按鍵相同。

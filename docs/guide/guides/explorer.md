@@ -23,7 +23,7 @@ Open it with any of these:
 - The toolbar's `Explorer` button, right after `Search`, with a tree icon. Its tooltip reads `Explorer (Ctrl + F)` (Windows/Linux) or `Explorer (⌘ + F)` (Mac).
 - `Ctrl + F` (Windows/Linux) or `⌘ + F` (Mac), named `Toggle Explorer` on the [Shortcuts](./settings.md#shortcuts) tab of Settings.
 - `Toggle Explorer` in [Quick Search](./quick-search.md), listed on every tab. Typing `find`, `replace`, `rename`, `tree`, `outline`, or `objects` brings it up.
-- `Toggle Explorer` in the canvas context menu: right-click an empty spot on the ERD canvas, outside any [table group](./table-groups.md). It sits after `New Table`, `New Memo`, and `New Table Group`, before `Relationship`.
+- `Toggle Explorer` in the canvas context menu: right-click an empty spot on the ERD canvas, outside any [table group](./table-groups.md). It sits after `New Table`, `New Memo`, and `New Table Group`, before `Relationship`. A read-only editor's canvas menu has no such row — see [Read-only Editors](#read-only-editors).
 
 The two `Toggle Explorer` entries show the shortcut on the right.  
 The toolbar button, the shortcut, and the Quick Search entry work from every tab. From the Visualization, Schema SQL, Code Generator, Dictionary, or Settings tab they switch to the ERD tab first, since the Explorer shows only there.
@@ -168,5 +168,8 @@ Opening the search with the shortcut or a `Toggle Explorer` entry closes all fiv
 
 ## Read-only Editors
 
-In a [`readonly`](../../api/erd-editor-element.md#readonly) editor the Explorer works as in any other: the toolbar button with the same tooltip, the shortcut, both `Toggle Explorer` entries, the tree, folding, `Collapse All`, and going to a row, which selects what it goes to as usual. Its title reads `Explorer` there too.  
+In a [`readonly`](../../api/erd-editor-element.md#readonly) editor the Explorer works as in any other: the toolbar button with the same tooltip, the shortcut, the `Toggle Explorer` entry in Quick Search, the tree, folding, and `Collapse All`. Its title reads `Explorer` there too. The canvas context menu has no `Toggle Explorer` there, since it keeps only the rows that read — see [Read-only Editors](./table-related-functions.md#read-only-editors).
+
+Going to a row works as in [Going to a Row](#going-to-a-row): the view moves by the same rule, and the row's table, table group, or memo is selected, outlined on the canvas, with the focused cell where the row puts it.  
+That is the only way a read-only editor selects anything. A press on the canvas selects nothing, and a click that does not move clears the selection a row left. A table it selected opens in [Table Properties](./table-related-functions.md#table-properties) with `Alt + Space` (Windows/Linux) or `⌥ + Space` (Mac), read only, and `Ctrl + C` (Windows/Linux) or `⌘ + C` (Mac) copies what it selected as in any editor.  
 Its search only finds — see [Read-only Editors](./find-and-replace.md#read-only-editors) in Find and Replace.

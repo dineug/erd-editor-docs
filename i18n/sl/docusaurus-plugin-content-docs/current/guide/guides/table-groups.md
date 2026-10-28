@@ -167,7 +167,7 @@ Dokler so skupine skrite:
 - Raziskovalec izpusti svojo mapo `Table Groups`, iskanje in zamenjava pa imen skupin ne najde niti ne zamenja, tudi ko je možnost `Table group names` vklopljena.
 - [Samodejna postavitev](#auto-layout) še vedno ohrani tabele vsake skupine skupaj, zavihek Shema SQL še vedno ponuja [skupine za izbiro](#schema-sql-by-group), DBML jih še vedno zapiše, ukaz [Uvozi in dodaj](./file-import-export.md#import-and-add) pa še vedno postavi dodano pod skrite okvirje.
 
-Izbira se shrani v dokument in zabeleži v [zgodovino razveljavitev](./undo-redo.md#what-the-history-records), tako kot druga stikala v možnostih pogleda.
+Izbira se shrani v dokument in zabeleži v [zgodovino razveljavitev](./undo-redo.md#what-the-history-records), tako kot druga stikala v možnostih pogleda. V urejevalniku samo za branje ostane namesto tega na tistem zaslonu – glejte razdelek [Urejevalniki samo za branje](#read-only-editors).
 
 ## Samodejna postavitev {#auto-layout}
 
@@ -197,11 +197,13 @@ Izbira pripada oknu urejevalnika in se ne shrani v dokument.
 
 ## Urejevalniki samo za branje {#read-only-editors}
 
-V urejevalniku z lastnostjo [`readonly`](../../api/erd-editor-element.md#readonly) se skupine kot običajno narišejo in navedejo v raziskovalcu, lahko jih izberete in preidete nanje, ne morete pa jih spremeniti:
+V urejevalniku z lastnostjo [`readonly`](../../api/erd-editor-element.md#readonly) se skupine kot običajno narišejo in navedejo v raziskovalcu, nanje lahko preidete, ne morete pa jih spremeniti:
 
-- Pritisk na naslovno vrstico izbere skupino in ne premakne ničesar. Ni ročic za spreminjanje velikosti in ni znaka `x`.
-- Dvoklik na naslovno vrstico ne odpre polja za ime, meni skupine pa vsebuje samo `Select tables`.
-- Meni platna nima postavke `New Table Group`, meni tabele nima postavk `Group selected tables` in `Remove from group`, hitro iskanje pa ne navaja nobenega od obeh ukazov za skupine. Risanje `New Table Group` se konča, ko urejevalnik preklopi v način samo za branje.
-- [Orodna vrstica platna](./table-related-functions.md#canvas-toolbar) ne prikaže nobenega od svojih gumbov za dodajanje, vključno z gumbom `New Table Group`, bližnjici `Alt + G` (Windows/Linux) ali `⌥ + G` (Mac) ter `T` in nato `G` pa ne naredita ničesar.
-- Možnost pogleda `Table Groups` ne spremeni ničesar, kot velja za vse možnosti pogleda.
+- [Prehod na skupino](#going-to-a-group) jo izbere in to je edini način, na katerega je tam skupina izbrana. Pritisk na naslovno vrstico ne izbere ničesar in ne premakne ničesar: povlečena premika platno, klik, ki se ne premakne, pa odstrani izbor, ki ga je pustil skok.
+- Ni ročic za spreminjanje velikosti in ni znaka `x`, dvoklik na naslovno vrstico pa ne odpre polja za ime.
+- Desni klik na skupino ne odpre nobenega menija, meni tabele pa vsebuje samo `Table Properties`.
+- Meni platna nima postavke `New Table Group`, hitro iskanje pa ne navaja nobenega od obeh ukazov za skupine. Risanje `New Table Group` se konča, ko urejevalnik preklopi v način samo za branje.
+- [Orodna vrstica platna](./table-related-functions.md#canvas-toolbar) ohrani samo svoje kontrolnike pogleda, zato nima gumba `New Table Group`, bližnjici `Alt + G` (Windows/Linux) ali `⌥ + G` (Mac) ter `T` in nato `G` pa ne naredita ničesar.
+- Vlečenje tabel ali skupine, ki poteka, ko urejevalnik preklopi v način samo za branje, se ustavi, kjer je, in ne spremeni nobene skupine, spreminjanje velikosti skupine, ki poteka, pa se konča brez spremembe velikosti.
+- `View Option` → `Table Groups` prikaže ali skrije skupine samo na tistem zaslonu, kot to tam velja za vsako možnost View Option: dokument, sodelavci in zgodovina razveljavitev ohranijo izbiro, kakršna je bila, ko pa je urejevalnik spet mogoče urejati, se izbira dokumenta vrne.
 - Izbira `Tables` na zavihku Shema SQL še vedno deluje.

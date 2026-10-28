@@ -16,13 +16,14 @@ Bir giriş yönteminde birleştirme hâlâ sürerken `Escape` tuşu düzenleme m
 
 ## Sütun ekleme {#adding-columns}
 
-`Alt + Enter` (Windows/Linux) veya `⌥ + Enter` (Mac) kısayoluyla oluşturulur.  
-Seçili her tabloya bir sütun eklenir.
+Seçili her tabloya bir sütun ekleyen `Alt + Enter` (Windows/Linux) veya `⌥ + Enter` (Mac) kısayoluyla ya da yalnızca o tabloya bir sütun ekleyen tablo başlığındaki `+` düğmesiyle oluşturulur.  
+Yeni sütunun ilk hücresi odağı alır; bu, satırının [sütun sırasında](./settings.md#adjusting-column-order) çizdiği ilk hücredir. Varsayılan sırada bu, adıdır; `Logical Names` görünümünde mantıksal adı, `Both Names` görünümünde ise `Logical Name` hücresidir. [Ad görünümü](./logical-names.md#name-view) bölümüne bakın.  
+Son hücrede `Tab` ile eklenen bir sütun ve bir ilişkinin çiziminin, birincil anahtarı olmayan bir üst tabloya eklediği birincil anahtar da o hücrede başlar.
 
 ## Tab tuşu {#tab-key}
 
 Doğrudan sonraki hücrenin düzenleme moduna geçmek için `Tab` tuşuna basın.  
-Son hücrede `Tab` tuşuna basmak yeni bir sütun oluşturur.  
+Son hücrede `Tab` tuşuna basmak yeni bir sütun oluşturur ve ilk hücresini düzenlemeye açar. [Sütun ekleme](#adding-columns) bölümüne bakın.  
 Önceki hücrenin düzenleme moduna gitmek için `Shift + Tab` tuşlarını kullanın.  
 `Tab` ve `Shift + Tab` tuşları tablonun gösterdiği hücrelerden sırasıyla geçer, bu yüzden mantıksal ad ve değer alanı hücrelerinin bunlar arasında olup olmadığına Ad görünümü ve View Option → `Domain` karar verir. [Mantıksal ad yazma](./logical-names.md#writing-a-logical-name) bölümüne bakın.  
 Bir satırın son hücresinden sonra çizilen [alternatif anahtar](./table-related-functions.md#alternate-keys) işaretleri hücre değildir, bu yüzden klavye odağı onların üzerinden atlar ve hiçbir zaman düzenleme için açılmazlar.
@@ -96,7 +97,8 @@ Değiştirici tuş gerekmez. Tutamaç üzerinde `Alt` (Windows/Linux) veya `⌥`
 ![Üç sütunu seçme, ardından odaktaki sütunun yanındaki tutamacı başka bir tabloya sürükleme ve diğer seçili sütunların da onunla birlikte taşınması](/img/demo-column-multi-move.webp)
 
 Tutamaçta değil de bir sütunun satırında başlayan sürükleme, tablonun başlığındaki bir sürükleme gibi tabloyu taşır. [Birden çok tabloyu taşıma](./table-related-functions.md#moving-multiple-tables) bölümüne bakın. Bir satırda `Alt + drag` (Windows/Linux) veya `⌥ + drag` (Mac) tabloyu çoğaltır. [Tabloları ve notları çoğaltma](./table-related-functions.md#duplicating-tables-and-memos) bölümüne bakın.  
-Tabloların yalnızca adlarını gösterdiği `70%` ve altındaki yakınlaştırmada ya da salt okunur bir düzenleyicide tutamaç çizilmez, bu yüzden orada sütunlar yeniden sıralanamaz.
+Tabloların yalnızca adlarını gösterdiği `70%` ve altındaki yakınlaştırmada ya da salt okunur bir düzenleyicide tutamaç çizilmez, bu yüzden orada sütunlar yeniden sıralanamaz.  
+Düzenleyici salt okunur olurken süren bir sütun sürüklemesi hemen sona erer: İmleci izleyen kopya ve tutan el kaybolur ve bırakmak hiçbir sütunu taşımaz. Sürüklemenin zaten taşıdığı satırlar taşındığı yerde kalır.
 
 ## Sütun silme {#column-deletion}
 
@@ -174,3 +176,10 @@ Satırdaki anahtar simgesi yalnızca gösterim amaçlıdır, bu yüzden ona tık
 Birkaç sütunu tek bir bileşik anahtar yapmak için [onları seçin](#selecting-multiple-columns), ardından `Alt + K` (Windows/Linux) veya `⌥ + K` (Mac) tuşlarına basın ya da seçili satırlardan birine sağ tıklayıp `Primary Key on selected columns` öğesini seçin. Her açma/kapatma tek bir geri alma adımıdır.
 
 ![Shift + Arrow Down ile iki sütunu seçme, ardından ⌥ + K ile ikisini birden birincil anahtar yapma ve ikinci basışla ikisinin de anahtarını kaldırma](/img/demo-column-pk.webp)
+
+## Salt okunur düzenleyiciler {#read-only-editors}
+
+[`readonly`](../../api/erd-editor-element.md#readonly) bir düzenleyicide hiçbir hücre düzenleme için açılmaz ve hiçbir sütun değişmez.  
+Bir hücreye tıklamak hiçbir şeye odaklanmaz ve bir atlamanın bıraktığı seçimi kaldırır. `Enter` ve çift tıklama hiçbir düzenleyici açmaz ve hiçbir anahtarı çevirmez, `Tab` sayfaya bırakılır; sütun ekleyen, hepsini seçen ya da silen kısayollar, birincil anahtar anahtarı ve yapıştırma hiçbir şey yapmaz.  
+[Gezgin](./explorer.md#going-to-a-row) veya [Hızlı aramadan](./quick-search.md) bir sütuna gitmek hücresine odaklanır. Ok tuşları ardından odağı hücreden hücreye taşır ve ulaştıkları sütun tek başına seçilir, çünkü orada `Shift` hiçbir sütun eklemez.  
+`Ctrl + C` (Windows/Linux) veya `⌘ + C` (Mac) seçili sütunu ya da bir atlamanın seçtiği tabloyu yine kopyalar. [Sütunları kopyalama/yapıştırma](#copyingpasting-columns) bölümüne bakın.

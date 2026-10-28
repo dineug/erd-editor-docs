@@ -6,7 +6,7 @@ description: Sélectionner, déplacer, copier, dupliquer et supprimer des tables
 # Fonctions liées aux tables
 
 Tout ce que vous faites sur les tables et les mémos une fois créés (sélection, déplacement, copie, suppression, couleur et choix de ce qu’affiche le canevas), ainsi que les commandes du canevas qui les entourent.  
-Les commandes des tables et des mémos viennent d’abord ; puis les propriétés de la table, la fonction Se concentrer sur des tables, les index et les clés alternatives, la disposition automatique et le SGBD ; et enfin le canevas lui-même : la barre d’outils du canevas, le zoom, le déplacement de la vue et l’endroit où aboutit un saut, et la visionneuse de différences.  
+Les commandes des tables et des mémos viennent d’abord ; puis les propriétés de la table, la fonction Se concentrer sur des tables, les index et les clés alternatives, la disposition automatique et le SGBD ; et ensuite le canevas lui-même : la barre d’outils du canevas, le zoom, le déplacement de la vue et l’endroit où aboutit un saut, et la visionneuse de différences ; et enfin ce qu’un éditeur en lecture seule en conserve.  
 Les groupes de tables, ces cadres qui rassemblent des tables, ont leur propre page (voir [Groupes de tables](./table-groups.md)).  
 Il en va de même des noms logiques et de l’affichage des noms, qui détermine les noms que montrent les tables (voir [Noms logiques](./logical-names.md)).
 
@@ -23,7 +23,8 @@ Les [groupes de tables](./table-groups.md#selecting-groups) s’ajoutent à la s
 `Ctrl + A` cède le pas au point d’insertion, si bien qu’il sélectionne le texte plutôt que le diagramme pendant que vous modifiez une cellule.  
 Un rectangle de sélection marque une table ou un mémo lorsqu’il en couvre le milieu, et non lorsqu’il en touche seulement un bord. Il ne prend un groupe de tables que lorsqu’il englobe tout le cadre du groupe, si bien qu’un rectangle tracé à l’intérieur d’un groupe sélectionne des tables sans le groupe.  
 Un clic droit sur un élément déjà sélectionné conserve toute la sélection, si bien que les entrées de menu comme `Color`, `Group selected tables` et `Delete selected` s’appliquent à l’ensemble. Un clic droit sur toute autre table, tout autre mémo ou tout autre groupe de tables sélectionne cet élément seul, même avec `Ctrl` ou `⌘` enfoncé, et un clic droit sur une relation ou sur une zone vide du canevas efface la sélection.  
-`Escape` efface la sélection. Lorsqu’un éditeur de cellule, de mémo ou de nom de groupe de tables est ouvert, ou qu’une relation ou un `New Table Group` est en cours de tracé, le premier `Escape` y met fin et un second efface la sélection.
+`Escape` efface la sélection. Lorsqu’un éditeur de cellule, de mémo ou de nom de groupe de tables est ouvert, ou qu’une relation ou un `New Table Group` est en cours de tracé, le premier `Escape` y met fin et un second efface la sélection.  
+Un éditeur en lecture seule n’a aucun de ces moyens de sélectionner : seul un saut y sélectionne (voir [Éditeurs en lecture seule](#read-only-editors)).
 
 ![Sélection de tables avec ⌘ + drag et ⌘ + click, puis de toutes les tables et de tous les mémos avec ⌘ + A](/img/demo-table-select.webp)
 
@@ -145,7 +146,7 @@ Les noms que montrent les tables ne relèvent pas d’une option d’affichage 
 `Table Groups` affiche les [groupes de tables](./table-groups.md) et les couleurs des groupes sur les en-têtes de leurs tables. La désactiver les masque sur le canevas, la minicarte et les exportations d’images, ne déplace aucune table et laisse chaque table dans son groupe (voir [Masquer les groupes](./table-groups.md#hiding-groups)). Cela retire aussi le dossier `Table Groups` de l’[explorateur](./explorer.md#the-tree) et `New Table Group` de la [barre d’outils du canevas](#canvas-toolbar), et la recherche de l’explorateur cesse de trouver les noms de groupe.  
 `Memos` affiche les mémos. La désactiver masque tous les mémos sur le canevas, la minicarte et les exportations d’images, et ne déplace ni table ni connecteur. Les mémos masqués n’occupent aucune place, si bien que les barres de défilement, la minicarte et la boussole `Go to content` n’en tiennent pas compte.  
 Masquer les mémos les désélectionne et ferme un éditeur de mémo ouvert. L’[explorateur](./explorer.md#the-tree) retire son dossier `Memos`, et sa fonction [Rechercher et remplacer](./find-and-replace.md) ainsi que le `:` de la recherche rapide ne cherchent pas dans les mémos. Tant qu’ils sont masqués, `New Memo` disparaît du menu contextuel, de la [barre d’outils du canevas](#canvas-toolbar), de la recherche rapide et de l’[écran d’accueil](./editing-start.md#welcome-screen), et `Alt + M` n’ajoute aucun mémo. Un collage ou une opération [Importer et ajouter](./file-import-export.md#import-and-add) ajoute quand même les mémos qu’il contient, masqués et non sélectionnés.  
-Dans un éditeur `readonly`, activer ou désactiver ces options ne change rien.
+Dans un éditeur en lecture seule, ces options fonctionnent encore, sur cet écran seulement : elles ne sont ni enregistrées, ni consignées dans l’historique d’annulation, ni partagées, et elles reviennent à celles du fichier quand l’éditeur redevient modifiable (voir [Éditeurs en lecture seule](./settings.md#read-only-editors) dans Paramètres).
 
 ![Activation et désactivation d’entrées de View Option pendant que les tables se réorganisent, marquage d’un index unique composite AK1.1 et AK1.2 avec Alternate Key, puis désactivation et réactivation de Memos](/img/demo-view-options.webp)
 
@@ -164,14 +165,15 @@ L’onglet `Indexes` est décrit dans [Index](#indexes).
 L’onglet `Schema SQL` affiche le DDL de la table pour la [base de données](#databases) sélectionnée : son `CREATE TABLE`, les contraintes distinctes que certaines bases de données écrivent pour ses colonnes uniques, et ses index. Il écrit toujours de simples instructions `CREATE`, sans en-tête, sans script avant ou après les tables et sans noms logiques dans les commentaires vides, quel que soit le réglage de l’onglet [Schéma SQL](./schema-sql.md) de la barre d’outils (voir [Noms logiques en commentaire](./schema-sql.md#logical-names-as-comments)). Il n’a pas de panneau des options, et son menu contextuel ne propose que `Database` et `Bracket`.  
 L’onglet `Code Generator` génère du code pour cette seule table (voir [Générateur de code](./code-generator.md)).
 
-Dans un éditeur `readonly`, le panneau s’ouvre toujours, avec un badge `Read only` à côté de son titre, mais son onglet `Indexes` ne permet aucune modification.
+Dans un éditeur en lecture seule, le panneau s’ouvre toujours, depuis `Table Properties`, la seule entrée du menu contextuel d’une table à cet endroit, ou avec `Alt + Space` sur la table qu’un saut a sélectionnée. Il affiche un badge `Read only` à côté de son titre, et son onglet `Indexes` ne permet aucune modification.  
+Un panneau ouvert au moment où l’éditeur passe en lecture seule reste ouvert et passe en lecture seule avec lui (voir [Éditeurs en lecture seule](#read-only-editors)).
 
 ## Se concentrer sur des tables {#focusing-on-tables}
 
 Ouvre l’onglet Visualisation en mode `Flow`, restreint aux tables choisies et à toutes les tables situées à une relation d’elles.  
 Choisissez `Focus on this table` dans le menu contextuel de la table, ou sélectionnez une ou plusieurs tables et appuyez sur `Alt + F`.  
 Lorsque la table sur laquelle vous cliquez avec le bouton droit fait partie de plusieurs tables sélectionnées, l’entrée indique `Focus on selected tables` et concentre la vue sur toute la sélection. Un clic droit sur une table hors de la sélection concentre la vue sur cette seule table.  
-Le raccourci prend les tables sélectionnées, laisse de côté les mémos et ne fait rien lorsqu’aucune table n’est sélectionnée.  
+Le raccourci prend les tables sélectionnées, laisse de côté les mémos et ne fait rien lorsqu’aucune table n’est sélectionnée. Le menu de la table d’un éditeur en lecture seule n’a pas `Focus on this table`, et le raccourci y prend la table qu’un saut a sélectionnée (voir [Éditeurs en lecture seule](#read-only-editors)).  
 Un [groupe de tables](./table-groups.md) sélectionné ne compte pas ici, pour le raccourci comme pour l’entrée de menu : ses tables ne sont prises que si elles sont elles-mêmes sélectionnées, ce que fait `Select tables` dans le menu du groupe.  
 Ce qu’affiche la vue restreinte, et comment revenir au diagramme entier, est décrit dans [Visualisation](./visualization.md#focusing-on-tables), et comment revenir en arrière et avancer parmi ce que le mode Flux a affiché auparavant, dans [Table précédente et table suivante](./visualization.md#previous-table-and-next-table).
 
@@ -187,7 +189,7 @@ La partie droite liste les colonnes de la table sous `Columns`, chacune avec une
 Cochez une colonne pour l’ajouter à l’index sélectionné, et décochez-la pour l’en retirer. Sélectionner une clé affiche ses colonnes cochées, mais les cases restent désactivées.  
 Les colonnes de l’index sélectionné sont listées en dessous, sous `Index order`, chacune nommée comme la nomme l’affichage des noms, avec le nom entre parenthèses après le nom logique dans la vue `Both Names`, par exemple `Member Number (member_no)`. Faites-les glisser par leur poignée pour les réorganiser, et cliquez sur la puce `ASC` ou `DESC` d’une ligne pour inverser son ordre de tri. Dans une clé alternative, chaque ligne se termine par sa marque `AK<n>.<m>`. La liste affiche trois lignes à la fois et fait défiler le reste.
 
-Dans un éditeur `readonly`, sélectionner une clé ou un index affiche toujours ses colonnes, mais il n’y a ni `Add Index` ni `x`, et rien d’autre dans l’onglet ne peut être modifié.
+Dans un éditeur en lecture seule, sélectionner une clé ou un index affiche toujours ses colonnes, mais il n’y a ni `Add Index` ni `x`, et rien d’autre dans l’onglet ne peut être modifié : les noms n’acceptent aucune saisie, chaque case à cocher est désactivée, et les lignes de `Index order` ne se font ni glisser ni inverser leur ordre de tri.
 
 L’[explorateur](./explorer.md#the-tree) liste les index de chaque table dans le dossier `Indexes` de la table, et choisir l’un d’eux à cet endroit mène à sa table. Sa recherche trouve aussi les noms d’index et peut les renommer (voir [Ce qui est recherché](./find-and-replace.md#what-it-searches)).
 
@@ -233,7 +235,8 @@ Les trois autres sont calculées en une seule fois, hors du thread principal, si
 
 Quelle que soit la disposition choisie, les tables et les groupes de tables sont déplacés, et les mémos restent où ils sont. Les tables sont placées avec les largeurs qu’elles prennent dans la vue de l’affichage des noms que vous regardez. Une relation d’une table vers elle-même est ignorée, et plusieurs relations entre les deux mêmes tables comptent pour une.  
 Chaque disposition garde ensemble les tables de chaque groupe, que les groupes soient affichés ou non, et ajuste chaque groupe contenant des tables autour de celles-ci (voir [Groupes de tables](./table-groups.md#auto-layout)).  
-Le résultat constitue une seule entrée d’historique, si bien qu’une seule annulation remet chaque table et chaque groupe à sa place d’origine.
+Le résultat constitue une seule entrée d’historique, si bien qu’une seule annulation remet chaque table et chaque groupe à sa place d’origine.  
+Un éditeur en lecture seule ne propose pas `Auto Layout`. Une disposition encore en cours quand l’éditeur passe en lecture seule s’arrête là : l’aperçu `Force` se ferme avec sa notification et ne conserve aucune de ses positions, et une disposition encore en cours de calcul est abandonnée avec sa notification, si bien qu’aucune table ne bouge, ni alors ni quand l’éditeur redevient modifiable.
 
 ![Rangement d’un amas de tables avec la disposition automatique Flow depuis le menu contextuel du canevas, qui les aligne de gauche à droite le long de leurs relations](/img/demo-automatic-table-placement.webp)
 
@@ -250,7 +253,7 @@ Les bases de données prises en charge comprennent :
 - Snowflake
 - SQLite
 
-Choisissez-en une avec `Database` dans le menu contextuel du canevas, dans le panneau des options ou le menu contextuel des onglets Schéma SQL et Générateur de code, ou dans la recherche rapide. Tous ces choix modifient le même paramètre.
+Choisissez-en une avec `Database` dans le menu contextuel du canevas, dans le panneau des options ou le menu contextuel des onglets Schéma SQL et Générateur de code, ou dans la recherche rapide. Tous ces choix modifient le même paramètre. Le menu du canevas d’un éditeur en lecture seule n’a pas `Database`, et un choix dans les autres ne change que cet écran (voir [Éditeurs en lecture seule](#read-only-editors)).
 
 Ces options déterminent la syntaxe du Schéma SQL à l’exportation, la saisie semi-automatique du type de données, et les types auxquels se résolvent le code généré et les schémas importés.  
 Elles déterminent les choix `Statements` et `Header` que l’onglet [Schéma SQL](./schema-sql.md#options-panel) peut écrire. Un choix dont la base de données ne dispose pas reste dans le panneau des options, grisé, et le SQL se rabat sur le choix le plus proche dont elle dispose.  
@@ -266,15 +269,16 @@ L’importation de Schéma SQL conserve le type de données d’une colonne, lis
 Une petite barre d’outils flotte au milieu du bord inférieur du canevas et contient, de gauche à droite, les outils qui agissent sur le canevas lui-même et les commandes qui y ajoutent des éléments :
 
 - La main et le pointeur. Le pointeur est la valeur par défaut ; la main transforme tout glissement en déplacement de la vue, sur les tables comme sur les zones vides. `Space` bascule entre les deux. Tant qu’un tracé [`New Table Group`](./table-groups.md#drawing-a-group) est actif, c’est le bouton `New Table Group` qui est marqué à leur place, et cliquer sur l’un ou l’autre, appuyer sur `Space` ou choisir une notation de relation met fin au tracé sans ajouter de groupe.
-- `New Table`, `New Memo` et `New Table Group`. `New Table` ajoute une table comme le fait `Alt + N`, et `New Memo` ajoute un mémo comme le fait `Alt + M`. `New Table Group` active le [tracé de groupe](./table-groups.md#drawing-a-group) comme le fait `Alt + G` et désactive la main ; un second clic, comme un second `Alt + G`, met fin au tracé sans ajouter de groupe. `New Memo` est absent tant que View Option → `Memos` masque les mémos, et `New Table Group` tant que View Option → `Table Groups` masque les groupes. Un éditeur `readonly` n’affiche aucun des trois.
+- `New Table`, `New Memo` et `New Table Group`. `New Table` ajoute une table comme le fait `Alt + N`, et `New Memo` ajoute un mémo comme le fait `Alt + M`. `New Table Group` active le [tracé de groupe](./table-groups.md#drawing-a-group) comme le fait `Alt + G` et désactive la main ; un second clic, comme un second `Alt + G`, met fin au tracé sans ajouter de groupe. `New Memo` est absent tant que View Option → `Memos` masque les mémos, et `New Table Group` tant que View Option → `Table Groups` masque les groupes.
 - Le zoom : `Zoom out`, le zoom actuel en pourcentage, et `Zoom in`. Les deux boutons modifient le zoom par paliers de la même manière que les raccourcis de zoom, et cliquer sur le pourcentage le ramène à `100%`.
 - Les quatre notations de relation, les mêmes que celles qui servent à commencer une relation (voir [Commencer l’édition](./editing-start.md)). Choisir l’une d’elles ramène au pointeur, puisqu’une relation se trace en cliquant sur deux tables.
-- `Name View`, un bouton avec une flèche vers le bas qui indique la vue active : `Physical Names`, `Logical Names` ou `Both Names`. Il garde la même largeur quelle que soit la vue qu’il indique, si bien qu’un changement de vue ne décale jamais la barre d’outils. Un clic ouvre au-dessus de la barre d’outils une liste des trois vues, la vue active étant cochée. En choisir une passe à cette vue et ferme la liste ; un second clic sur le bouton, un appui n’importe où ailleurs ou `Escape` ferme la liste sans changer de vue. Un éditeur `readonly` l’affiche aussi. Ce que dessine chaque vue est décrit dans [Affichage des noms](./logical-names.md#name-view), et si un changement de vue est enregistré, dans [Changer de vue](./logical-names.md#switching-the-view).
+- `Name View`, un bouton avec une flèche vers le bas qui indique la vue active : `Physical Names`, `Logical Names` ou `Both Names`. Il garde la même largeur quelle que soit la vue qu’il indique, si bien qu’un changement de vue ne décale jamais la barre d’outils. Un clic ouvre au-dessus de la barre d’outils une liste des trois vues, la vue active étant cochée. En choisir une passe à cette vue et ferme la liste ; un second clic sur le bouton, un appui n’importe où ailleurs ou `Escape` ferme la liste sans changer de vue. Ce que dessine chaque vue est décrit dans [Affichage des noms](./logical-names.md#name-view), et si un changement de vue est enregistré, dans [Changer de vue](./logical-names.md#switching-the-view).
 - Le mode zen, `Alt + Z`, qui masque tout sauf le canevas et cette barre d’outils. Un nouvel `Alt + Z`, ou le bouton, fait réapparaître le reste. Un explorateur ouvert est masqué avec le reste, sans être fermé, et réapparaît avec lui. Il peut quand même être ouvert pendant le mode zen (voir [Quand l’explorateur s’efface](./explorer.md#when-it-stands-aside)).
 - La boussole `Go to content`, qui rejoint l’extrémité de la barre d’outils uniquement lorsqu’aucune table, aucun mémo affiché ni aucun groupe de tables affiché n’est à l’écran (voir [Se déplacer sur le canevas](#getting-around-the-canvas)).
 
 Chaque bouton doté d’un raccourci l’indique dans son info-bulle, par exemple `New Table (Alt + N)` (Windows/Linux) ou `New Table (⌥ + N)` (Mac).  
-La barre d’outils s’efface pendant l’affichage de l’aperçu de la disposition automatique `Force`, des propriétés de la table, du voyage dans le temps ou de la visionneuse de différences, et réapparaît à leur fermeture.
+La barre d’outils s’efface pendant l’affichage de l’aperçu de la disposition automatique `Force`, des propriétés de la table, du voyage dans le temps ou de la visionneuse de différences, et réapparaît à leur fermeture.  
+La barre d’outils d’un éditeur en lecture seule conserve le zoom, `Name View`, le mode zen et la boussole `Go to content`. Elle n’a ni main ni pointeur, ni `New Table`, `New Memo` ou `New Table Group`, ni notations, et les retrouve quand l’éditeur redevient modifiable.
 
 ![Ajout d’une table et d’un mémo depuis la barre d’outils, activation et désactivation de New Table Group, déplacement de la vue avec la main, zoom par paliers et activation ou désactivation du mode zen avec ⌥ + Z](/img/demo-canvas-toolbar.webp)
 
@@ -339,7 +343,7 @@ Ce qu’un saut rend visible, et la partie clé qui doit s’afficher lorsque l�
 - Un groupe de tables : son cadre, repéré par sa barre de titre.
 - Un mémo, ou le bloc que dépose une opération Importer et ajouter : en entier.
 
-Lorsqu’aucune direction ne bougerait, il n’y a pas de défilement, si bien qu’aller deux fois de suite au même endroit ne déplace rien la seconde fois. Un saut qui fait défiler le canevas enregistre le défilement dans l’[historique d’annulation](./undo-redo.md#what-the-history-records) comme tout autre changement de position de la vue, et un saut qui ne déplace rien ne laisse rien à annuler. Pour une opération Importer et ajouter, le défilement fait partie de la même étape que l’ajout. Une ligne de la liste de la visionneuse de différences ne déplace que les côtés en lecture seule de la visionneuse, si bien qu’elle n’enregistre rien.  
+Lorsqu’aucune direction ne bougerait, il n’y a pas de défilement, si bien qu’aller deux fois de suite au même endroit ne déplace rien la seconde fois. Un saut qui fait défiler le canevas enregistre le défilement dans l’[historique d’annulation](./undo-redo.md#what-the-history-records) comme tout autre changement de position de la vue, et un saut qui ne déplace rien ne laisse rien à annuler. Pour une opération Importer et ajouter, le défilement fait partie de la même étape que l’ajout. Une ligne de la liste de la visionneuse de différences ne déplace que les côtés en lecture seule de la visionneuse, si bien qu’elle n’enregistre rien, et qu’un éditeur en lecture seule n’enregistre aucun saut.  
 Aucun saut ne commence ni ne termine le tracé d’une relation. La boussole `Go to content` n’est pas un saut : elle centre ce qu’elle désigne.
 
 ## Visionneuse de différences {#diff-viewer}
@@ -351,7 +355,8 @@ La visionneuse s’ouvre par-dessus le canevas : ce qui a changé à gauche, pu
 Le document actuel est comparé tel qu’il est à l’ouverture de la visionneuse ; les modifications faites ensuite, y compris celles d’un collaborateur, n’atteignent pas la visionneuse. Les deux côtés s’ouvrent, et restent, dans la vue de l’affichage des noms que vous regardez, quelle que soit celle que conserve chaque fichier (voir [Au-delà du canevas](./logical-names.md#beyond-the-canvas)). Un [explorateur](./explorer.md#when-it-stands-aside) ouvert est masqué tant que la visionneuse est ouverte, si bien que celle-ci occupe toute la largeur de l’éditeur.  
 Sur chaque côté, la vue se déplace avec la molette, en faisant glisser une zone vide ou le corps d’un groupe de tables, ou en faisant glisser avec le bouton central n’importe où sur ce côté, et le zoom s’effectue avec `Ctrl + Wheel` (Windows/Linux), `⌘ + Wheel` (Mac) ou un pincement. À `70%` et en dessous, les tables d’un côté se réduisent comme sur le canevas (voir [Marques des deux côtés](#marks-on-the-two-sides)).  
 Les deux côtés sont en lecture seule, si bien que rien n’est modifié dans votre document. Chacun garde sa propre sélection, et un clic sur une table y sélectionne celle-ci de ce seul côté.  
-Fermez la visionneuse avec le bouton `Close` de la notification `Diff Viewer` qui s’affiche à son ouverture, ou avec `Escape`.
+Fermez la visionneuse avec le bouton `Close` de la notification `Diff Viewer` qui s’affiche à son ouverture, ou avec `Escape`.  
+Un éditeur en lecture seule propose lui aussi `Diff Viewer`, et la vue y fonctionne comme dans n’importe quel éditeur, un clic sur une table d’un côté la sélectionnant toujours de ce côté. Une vue ouverte au moment où l’éditeur passe en lecture seule reste ouverte.
 
 ![Ouverture de la visionneuse de différences sur un fichier .json enregistré, clic sur des lignes marquées A, M, D et R dans son arborescence, filtrage par nom, puis fermeture](/img/demo-diff-viewer.webp)
 
@@ -423,3 +428,26 @@ Chaque côté suit les options d’affichage de son propre document. Une modific
 Dans la vue `Logical Names`, qui ne dessine pas de cellule du nom, le bleu d’un renommage et l’ambre d’une modification dans une cellule que le côté ne dessine pas se placent sur le nom logique dessiné à la place du nom. Une modification du type de données fait passer la cellule du type en ambre dans toutes les vues, même là où la cellule affiche le nom d’un domaine. Aucun des deux côtés ne dessine les couleurs que les vérifications du dictionnaire donnent aux noms sur le canevas (voir [Marques sur le canevas](./dictionary.md#marks-on-the-canvas)).
 
 À `70%` et en dessous, les tables réduites gardent leur contour. Le nom garde le vert ou le rouge d’une table ajoutée ou supprimée, ou le bleu d’un renommage, et prend sinon l’ambre d’une modification de commentaire. Les modifications de colonnes ne sont pas dessinées tant que vous ne refaites pas un zoom avant ; l’arborescence les liste quand même.
+
+## Éditeurs en lecture seule {#read-only-editors}
+
+Un éditeur [`readonly`](../../api/erd-editor-element.md#readonly), comme une révision Git rouverte en diagramme dans VS Code, est un lecteur. Ses six onglets, l’[explorateur](./explorer.md#read-only-editors), la minicarte, les barres de défilement ainsi que les curseurs et les sélections des collaborateurs restent, et chaque commande qui modifierait le diagramme disparaît au lieu d’être grisée.
+
+Sur le canevas ERD :
+
+- Un glissement déplace la vue, où qu’il commence : sur le canevas vide, sur une table, un mémo ou un groupe de tables indifféremment. Le bouton central, la molette, un pincement et les touches de zoom fonctionnent comme dans n’importe quel éditeur.
+- Poser le pointeur sur une table éclaire ses relations. Un clic immobile éclaire les relations de la table sur laquelle il tombe, ou la relation sur laquelle il tombe, et un clic ailleurs éteint l’éclairage.
+- Rien n’est sélectionné par un appui, un rectangle de sélection ou une touche de sélection totale. Seul un saut sélectionne : une ligne de l’[explorateur](./explorer.md#going-to-a-row), une correspondance de son [Rechercher et remplacer](./find-and-replace.md#going-to-a-match), ou un résultat `#`, `@` ou `:` de la [recherche rapide](./quick-search.md#searching-the-diagram) sélectionne ce qu’il atteint, avec un contour comme toute sélection, la cellule active étant là où le saut la place. Un clic immobile efface cette sélection.
+- Les flèches déplacent la cellule active. La copie, `Table Properties` et `Focus on this table` fonctionnent sur ce qu’un saut a sélectionné, par leurs raccourcis, et un collage n’ajoute rien. Les autres touches sont listées dans [Raccourcis](./settings.md#shortcuts).
+- Aucun nom de cellule, de mémo ou de groupe de tables ne s’ouvre en modification. Les tables, les mémos et les groupes n’ont aucun bouton `+` ou `x`, les mémos et les groupes aucun bord de redimensionnement, et il n’y a aucune poignée de glissement de colonne ni aucun sélecteur de couleur.
+
+Le menu contextuel du canevas conserve `View Option`, `Name View`, `Export` et `Diff Viewer`. Il n’a ni `New Table`, `New Memo`, `New Table Group`, `Toggle Explorer`, `Relationship`, `Derive Physical Names Again`, `Database`, `Import`, `Import and Add` ni `Auto Layout`.  
+Le menu d’une table ne conserve que `Table Properties`, qui ouvre le panneau en lecture seule pour cette table (voir [Propriétés de la table](#table-properties)). Un mémo, une relation et un groupe de tables ne font apparaître aucun menu.  
+La [barre d’outils du canevas](#canvas-toolbar) conserve le zoom, `Name View`, le mode zen et la boussole `Go to content`. La barre d’outils supérieure affiche le nom du SGBD sous forme de texte non modifiable, et n’a ni `Undo`, ni `Redo`, ni `Time Travel`.  
+[Export](./file-import-export.md#exporting), avec ses trois entrées, et la [visionneuse de différences](#diff-viewer) fonctionnent comme dans n’importe quel éditeur.
+
+[`View Option`](#table-view-options), l’affichage des noms, le SGBD, l’onglet, la position de la vue et le zoom changent encore, mais sur cet écran seulement : rien ne les enregistre, ne les consigne ni ne les partage (voir [Éditeurs en lecture seule](./settings.md#read-only-editors) dans Paramètres).
+
+Faire passer un éditeur en lecture seule met fin à ce qui était ouvert pour la modification : un éditeur de cellule, de mémo ou de nom de groupe de tables, une relation ou un `New Table Group` en cours de tracé, la sélection et la cellule active, l’outil Main, le sélecteur de couleur, [Map Columns](./relationship-editing.md#map-columns) et le [voyage dans le temps](./undo-redo.md#time-travel). La vue, le zoom, l’onglet et l’affichage des noms restent tels qu’ils étaient, et les propriétés de la table, la visionneuse de différences et la boîte de dialogue `Export image` restent ouvertes.  
+Un geste en cours se termine lui aussi. Un glissement de tables ou de mémos s’arrête là où il est, un `Alt + drag` ne dépose aucune copie, un glissement de colonne prend fin, un redimensionnement de mémo s’arrête là où il est, un redimensionnement de groupe de tables est abandonné, et une [disposition automatique](#auto-layout) est abandonnée avec sa notification, si bien qu’aucune table ne bouge.  
+Quand l’éditeur redevient modifiable, il rend les commandes ci-dessus, et rien de ce que le passage en lecture seule avait fermé ne se rouvre.

@@ -16,13 +16,14 @@ Medan en inmatningsmetod fortfarande sätter samman tecken håller `Escape` redi
 
 ## Lägga till kolumner {#adding-columns}
 
-Kolumner skapas med kortkommandot `Alt + Enter` (Windows/Linux) eller `⌥ + Enter` (Mac).  
-En kolumn läggs till i varje markerad tabell.
+Kolumner skapas med kortkommandot `Alt + Enter` (Windows/Linux) eller `⌥ + Enter` (Mac), som lägger till en kolumn i varje markerad tabell, eller med knappen `+` i en tabells rubrik, som lägger till en i just den tabellen.  
+Den nya kolumnens första cell får fokus, den första som dess rad ritar i [kolumnordningen](./settings.md#adjusting-column-order). Med standardordningen är det dess namn, som i `Logical Names` är dess logiska namn och i `Both Names` dess cell `Logical Name` – se [Namnvisning](./logical-names.md#name-view).  
+En kolumn som läggs till med `Tab` från den sista cellen, och den primärnyckel som en relationsritning lägger till i en föräldratabell som saknar en, börjar också på den cellen.
 
 ## Tabbtangenten {#tab-key}
 
 Tryck på `Tab` för att gå direkt till redigeringsläget i nästa cell.  
-Ett tryck på `Tab` i den sista cellen skapar en ny kolumn.  
+Ett tryck på `Tab` i den sista cellen skapar en ny kolumn och öppnar dess första cell för redigering – se [Lägga till kolumner](#adding-columns).  
 Använd `Shift + Tab` för att gå till redigeringsläget i föregående cell.  
 `Tab` och `Shift + Tab` går igenom de celler som tabellen ritar, i deras ordning, så namnvisningen och View Option → `Domain` avgör om celler för logiskt namn och domänceller finns bland dem – se [Skriva ett logiskt namn](./logical-names.md#writing-a-logical-name).  
 Märkena för [alternativa nycklar](./table-related-functions.md#alternate-keys) som ritas efter en rads sista cell är inga celler, så tangentbordsfokus hoppar över dem och de öppnas aldrig för redigering.
@@ -96,7 +97,8 @@ Ingen modifierartangent behövs. Om du håller ned `Alt` (Windows/Linux) eller `
 ![Tre kolumner markeras, och sedan dras handtaget bredvid den fokuserade in i en annan tabell medan de andra markerade kolumnerna följer med](/img/demo-column-multi-move.webp)
 
 En dragning som börjar på en kolumns rad i stället för på dess handtag flyttar tabellen, som en dragning i tabellhuvudet gör – se [Flytta flera tabeller](./table-related-functions.md#moving-multiple-tables). `Alt + drag` (Windows/Linux) eller `⌥ + drag` (Mac) på en rad duplicerar tabellen – se [Duplicera tabeller och anteckningar](./table-related-functions.md#duplicating-tables-and-memos).  
-Inget handtag ritas vid en zoom på `70%` och lägre, där tabellerna bara visar sina namn, eller i en skrivskyddad editor, så kolumner kan inte ordnas om där.
+Inget handtag ritas vid en zoom på `70%` och lägre, där tabellerna bara visar sina namn, eller i en skrivskyddad editor, så kolumner kan inte ordnas om där.  
+Ett kolumndrag som pågår när editorn blir skrivskyddad avslutas direkt: kopian som följer pekaren och greppande handen försvinner, och att släppa flyttar ingen kolumn. Rader som draget redan hade flyttat stannar där det flyttade dem.
 
 ## Ta bort kolumner {#column-deletion}
 
@@ -174,3 +176,10 @@ Nyckelikonen på raden är endast till för visning, så ett klick på den sätt
 Om du vill göra flera kolumner till en sammansatt nyckel [markerar du dem](#selecting-multiple-columns) och trycker sedan på `Alt + K` (Windows/Linux) eller `⌥ + K` (Mac), eller högerklickar på en av de markerade raderna och väljer `Primary Key on selected columns`. Varje växling ångras i ett steg.
 
 ![Två kolumner markeras med Shift + Arrow Down, sedan görs båda till primärnyckel med ⌥ + K, och ett andra tryck tar bort nyckeln från båda](/img/demo-column-pk.webp)
+
+## Skrivskyddade editorer {#read-only-editors}
+
+I en editor med [`readonly`](../../api/erd-editor-element.md#readonly) öppnas ingen cell för redigering och ingen kolumn ändras.  
+Ett klick på en cell fokuserar ingenting och tar bort den markering som ett hopp lämnade. `Enter` och ett dubbelklick öppnar ingen redigerare och växlar ingen omkopplare, `Tab` överlåts åt sidan, och kortkommandona som lägger till, markerar eller tar bort kolumner, växlingen av primärnyckel och en inklistring gör ingenting.  
+Att gå till en kolumn från [utforskaren](./explorer.md#going-to-a-row) eller [snabbsökningen](./quick-search.md) fokuserar dess cell. Piltangenterna flyttar sedan fokus från cell till cell, och kolumnen de når markeras ensam, eftersom `Shift` inte lägger till någon kolumn där.  
+`Ctrl + C` (Windows/Linux) eller `⌘ + C` (Mac) kopierar fortfarande den markerade kolumnen, eller den tabell som ett hopp markerade – se [Kopiera/klistra in kolumner](#copyingpasting-columns).

@@ -12,7 +12,7 @@ L’historique conserve jusqu’à `2048` modifications.
 - Rétablir : `Ctrl + Shift + Z` (Windows/Linux) ou `⌘ + Shift + Z` (Mac)
 
 Dans l’onglet ERD, la barre d’outils propose les deux mêmes commandes sous la forme des boutons `Undo` et `Redo`, à côté de `Time Travel`. Dans l’onglet Dictionnaire, elle affiche `Undo` et `Redo` sans `Time Travel`, et aucun autre onglet ne les affiche.  
-Ils ne sont actifs que lorsqu’il y a quelque chose à annuler ou à rétablir. Un éditeur `readonly` les masque, et les raccourcis n’y annulent ni ne rétablissent rien.
+Ils ne sont actifs que lorsqu’il y a quelque chose à annuler ou à rétablir. Un éditeur `readonly` les masque, ainsi que `Time Travel`, et les raccourcis n’y annulent ni ne rétablissent rien.
 
 Annuler et Rétablir n’agissent sur l’historique du diagramme que dans l’onglet ERD.  
 Les raccourcis y sont inactifs tant que la recherche rapide, `Table Properties`, `Diff Viewer`, l’aperçu de `Auto Layout`, la boîte de dialogue [`Export image`](./file-import-export.md#image), [Associer les colonnes](./relationship-editing.md#map-columns) ou le voyage dans le temps est ouvert.  
@@ -58,6 +58,8 @@ Ne sont pas enregistrés :
 - La feuille affichée de l’onglet Dictionnaire, ainsi que la recherche, la sélection, le défilement et les largeurs de colonne de chaque feuille (voir [Ouvrir l’onglet](./dictionary.md#opening-the-tab)).
 
 Aucun de ces changements ne peut être annulé.
+
+Un éditeur en lecture seule n’enregistre rien du tout. La position de la vue, le zoom et les bascules de `View Option` y changent encore, de même que l’onglet, l’affichage des noms, le SGBD et les paramètres de code, mais sur cet écran seulement, si bien qu’il n’y a rien à annuler (voir [Éditeurs en lecture seule](./settings.md#read-only-editors) dans Paramètres).
 
 Les modifications effectuées dans l’onglet Dictionnaire peuvent être annulées, mais elles vont dans l’historique de leur propre feuille plutôt que dans celui-ci, si bien qu’Annuler dans l’onglet ERD n’en défait jamais aucune, pas même le nouveau `Data Type` d’un domaine et les types de colonne qu’il modifie (voir [Feuilles du dictionnaire](#dictionary-sheets)).
 
@@ -136,7 +138,7 @@ L’historique de chaque feuille est vidé lorsque les dictionnaires sont rempla
 ## Voyage dans le temps {#time-travel}
 
 Le voyage dans le temps s’ouvre avec le bouton `Time Travel` de la barre d’outils, à côté d’Annuler et de Rétablir dans l’onglet ERD.  
-Le bouton est sans effet tant que l’historique du diagramme ne compte aucune modification enregistrée.
+Le bouton est sans effet tant que l’historique du diagramme ne compte aucune modification enregistrée. Un éditeur en lecture seule n’affiche pas ce bouton, et un éditeur qui passe en lecture seule ferme le voyage dans le temps sans l’appliquer.
 
 Le voyage dans le temps ouvre une copie distincte du diagramme, en lecture seule, à la position de défilement, au niveau de zoom et dans l’[affichage des noms](./logical-names.md#name-view) qu’affiche le canevas, que le verrou `Viewport` ou `Name View` soit activé ou non.  
 Il ne parcourt que l’historique du diagramme, si bien que les modifications des feuilles du dictionnaire ne figurent pas parmi ses points.  

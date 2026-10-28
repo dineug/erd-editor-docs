@@ -23,7 +23,7 @@ Abra-o de qualquer uma destas formas:
 - O botão `Explorer` da barra de ferramentas, logo depois de `Search`, com um ícone de árvore. Sua dica de ferramenta diz `Explorer (Ctrl + F)` (Windows/Linux) ou `Explorer (⌘ + F)` (Mac).
 - `Ctrl + F` (Windows/Linux) ou `⌘ + F` (Mac), chamado `Toggle Explorer` na aba [Atalhos](./settings.md#shortcuts) das Configurações.
 - `Toggle Explorer` na [pesquisa rápida](./quick-search.md), listado em todas as abas. Digitar `find`, `replace`, `rename`, `tree`, `outline` ou `objects` faz com que ele apareça.
-- `Toggle Explorer` no menu de contexto do canvas: clique com o botão direito em um ponto vazio do canvas ERD, fora de qualquer [grupo de tabelas](./table-groups.md). Ele fica depois de `New Table`, `New Memo` e `New Table Group` e antes de `Relationship`.
+- `Toggle Explorer` no menu de contexto do canvas: clique com o botão direito em um ponto vazio do canvas ERD, fora de qualquer [grupo de tabelas](./table-groups.md). Ele fica depois de `New Table`, `New Memo` e `New Table Group` e antes de `Relationship`. O menu do canvas de um editor somente leitura não tem essa linha — consulte [Editores somente leitura](#read-only-editors).
 
 Os dois itens `Toggle Explorer` mostram o atalho à direita.  
 O botão da barra de ferramentas, o atalho e o item da pesquisa rápida funcionam em todas as abas. Nas abas Visualização, Esquema SQL, Gerador de código, Dicionário ou Configurações, eles primeiro mudam para a aba ERD, já que o explorador só aparece nela.
@@ -168,5 +168,8 @@ A [pesquisa rápida](./quick-search.md) também deixa o explorador aberto, e `Es
 
 ## Editores somente leitura {#read-only-editors}
 
-Em um editor [`readonly`](../../api/erd-editor-element.md#readonly), o explorador funciona como em qualquer outro: o botão da barra de ferramentas com a mesma dica de ferramenta, o atalho, os dois itens `Toggle Explorer`, a árvore, o recolhimento, `Collapse All` e o salto para uma linha, que seleciona o destino como de costume. Ali, o título dele também mostra `Explorer`.  
+Em um editor [`readonly`](../../api/erd-editor-element.md#readonly), o explorador funciona como em qualquer outro: o botão da barra de ferramentas com a mesma dica de ferramenta, o atalho, o item `Toggle Explorer` da pesquisa rápida, a árvore, o recolhimento e `Collapse All`. Ali, o título dele também mostra `Explorer`. O menu de contexto do canvas não tem `Toggle Explorer` ali, pois mantém apenas as linhas que leem — consulte [Editores somente leitura](./table-related-functions.md#read-only-editors).
+
+Ir para uma linha funciona como em [Ir para uma linha](#going-to-a-row): a área visível se move pela mesma regra, e a tabela, o grupo de tabelas ou a nota da linha é selecionado, com contorno no canvas, e a célula em foco fica onde a linha a coloca.  
+Essa é a única forma de um editor somente leitura selecionar algo. Pressionar no canvas não seleciona nada, e um clique sem movimento limpa a seleção que uma linha deixou. Uma tabela que ele selecionou abre nas [Propriedades da tabela](./table-related-functions.md#table-properties) com `Alt + Space` (Windows/Linux) ou `⌥ + Space` (Mac), somente leitura, e `Ctrl + C` (Windows/Linux) ou `⌘ + C` (Mac) copia o que ele selecionou, como em qualquer editor.  
 A pesquisa dele apenas localiza — consulte [Editores somente leitura](./find-and-replace.md#read-only-editors) em Localizar e substituir.

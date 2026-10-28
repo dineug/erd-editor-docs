@@ -12,7 +12,7 @@ O histórico guarda até `2048` alterações.
 - Redo: `Ctrl + Shift + Z` (Windows/Linux) ou `⌘ + Shift + Z` (Mac)
 
 Na aba ERD, a barra de ferramentas oferece os mesmos dois comandos nos botões `Undo` e `Redo`, ao lado de `Time Travel`. Na aba Dicionário, ela mostra `Undo` e `Redo` sem `Time Travel`, e nenhuma outra aba os mostra.  
-Eles só ficam ativos quando há algo para desfazer ou refazer. Um editor `readonly` os oculta, e os atalhos não desfazem nem refazem nada.
+Eles só ficam ativos quando há algo para desfazer ou refazer. Um editor `readonly` os oculta e oculta também `Time Travel`, e os atalhos não desfazem nem refazem nada.
 
 Desfazer e refazer atuam sobre o histórico do diagrama apenas na aba ERD.  
 Ali, os atalhos ficam inativos enquanto a pesquisa rápida, o painel `Table Properties`, o `Diff Viewer`, a pré-visualização do `Auto Layout`, a caixa de diálogo [`Export image`](./file-import-export.md#image), [Mapear colunas](./relationship-editing.md#map-columns) ou a viagem no tempo está aberta.  
@@ -58,6 +58,8 @@ Não são registrados:
 - A planilha exibida na aba Dicionário e a pesquisa, a seleção, a rolagem e as larguras de coluna de cada planilha — consulte [Abrir a aba](./dictionary.md#opening-the-tab).
 
 Alterações em qualquer um desses itens não podem ser desfeitas.
+
+Um editor somente leitura não registra absolutamente nada. A posição da área visível, o zoom e os botões de `View Option` ainda mudam ali, junto com a aba, a exibição de nomes, o banco de dados e as configurações de código, mas apenas naquela tela, então não há nada para desfazer — consulte [Editores somente leitura](./settings.md#read-only-editors) em Configurações.
 
 As edições feitas na aba Dicionário podem ser desfeitas, mas vão para o histórico da própria planilha, e não para este, então o desfazer na aba ERD nunca reverte nenhuma delas, nem mesmo o novo `Data Type` de um domínio e os tipos de coluna que ele altera — consulte [Planilhas do dicionário](#dictionary-sheets).
 
@@ -136,7 +138,7 @@ O histórico de todas as planilhas é esvaziado quando os dicionários são subs
 ## Viagem no tempo {#time-travel}
 
 É aberta pelo botão `Time Travel` na barra de ferramentas, ao lado dos botões de desfazer e refazer na aba ERD.  
-O botão não faz nada até que o histórico do diagrama tenha pelo menos uma alteração registrada.
+O botão não faz nada até que o histórico do diagrama tenha pelo menos uma alteração registrada. Um editor somente leitura não mostra esse botão, e um editor que passa a ser somente leitura fecha a viagem no tempo sem aplicá-la.
 
 A viagem no tempo abre uma cópia separada e somente leitura do diagrama, na posição de rolagem, no nível de zoom e na [exibição de nomes](./logical-names.md#name-view) que o canvas está mostrando, esteja o bloqueio `Viewport` ou `Name View` ativado ou não.  
 Ela percorre apenas o histórico do diagrama, então as edições das planilhas do dicionário não estão entre os seus pontos.  

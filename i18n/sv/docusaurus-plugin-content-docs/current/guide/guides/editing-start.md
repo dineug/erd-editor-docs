@@ -10,7 +10,8 @@ Redigeringen börjar i snabbmenyn, som du öppnar med ett högerklick.
 ![Arbetsytan högerklickas, undermenyn Relationship öppnas, en tabell läggs till och sedan öppnas tabellens egen meny](/img/demo-context-menu.webp)
 
 Om du högerklickar på en tabell, en anteckning, en tabellgrupp eller en relation öppnas i stället objektets egen meny.  
-Ett högerklick på en tabell, anteckning eller tabellgrupp som redan är markerad behåller hela markeringen, så menyalternativ som `Color` och `Delete selected` gäller för hela markeringen – se [Markera flera objekt](./table-related-functions.md#multiple-selection).
+Ett högerklick på en tabell, anteckning eller tabellgrupp som redan är markerad behåller hela markeringen, så menyalternativ som `Color` och `Delete selected` gäller för hela markeringen – se [Markera flera objekt](./table-related-functions.md#multiple-selection).  
+En skrivskyddad editor skapar ingenting, så inget av det som den här sidan beskriver erbjuds där: arbetsytans snabbmeny behåller bara `View Option`, `Name View`, `Export` och `Diff Viewer`, en tabells meny bara `Table Properties`, och en anteckning, en tabellgrupp eller en relation öppnar ingen meny – se [Skrivskyddade editorer](./table-related-functions.md#read-only-editors).
 
 ## Välkomstskärmen {#welcome-screen}
 

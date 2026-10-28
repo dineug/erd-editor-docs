@@ -55,6 +55,10 @@ Kým je zamknutie zapnuté, prepnutie sa prejaví iba v editore, ktorý ho urobi
 Kým je zamknutie vypnuté, prepnutie urobené v editore, ktorý môže upravovať, zmení Zobrazenie názvov v každom editore a replike, pričom platí posledné prepnutie, a každý z nich ho uloží.  
 Vlastné prepnutie v editore iba na čítanie vždy zostane v tomto editore a tento editor sa naďalej riadi zdieľanými prepnutiami ostatných.
 
+Od verzie `5.0.0` editor [iba na čítanie](../erd-editor-element.md#readonly) neodosiela žiadnu zmenu. Posunutie, priblíženie, karta, Zobrazenie názvov, databáza, jazyk Generátora kódu, štýly názvov, typ úvodzoviek a riadky `View Option`, ktoré jeho čitateľ zmení, zostanú na jeho obrazovke bez ohľadu na ich zamknutia; pred verziou `5.0.0` sa jeho posunutia, priblíženia, prepnutia kariet, databáza a nastavenia kódu odosielali ako v editore, ktorý možno upravovať.  
+Jeho store naďalej odosiela to, čo odosielajú jeho sledovače kurzora, fokusu, výberu a rámika presúvania čitateľa, odpovedá na registre, o ktoré žiada pripájajúci sa editor, a aplikuje každú zmenu, ktorú pošlú ostatné. Zmena databázy, nastavenia Generátora kódu alebo riadku `View Option` sa dostane do jeho dokumentu a aj na jeho obrazovku, pokiaľ tam čitateľ toto nastavenie nezmenil, a zdieľané prepnutie Zobrazenia názvov sa na jeho obrazovke prejaví tak či onak.  
+Keď sa editor prepne do režimu iba na čítanie, najprv odošle to, čo store ešte drží z presúvania alebo posunutia, tak ako to robí [flushStreamBuffers](#flushstreambuffers), takže ostatné si ponechajú jeho posledný stav.
+
 [Zamknutia](../../guide/guides/settings.md#lock) sú zdieľané: v každom editore platí posledné zamknutie alebo odomknutie nastavenia a zamknutie nesie hodnoty editora, ktorý ho zapol, takže každý editor aj každá replika ukladá rovnakú hodnotu.  
 Zamknutie `Viewport` preto uloží zobrazenie editora, ktorý ho zapol, a zamknutie `Canvas Type` poslednú kartu, na ktorej bol tento editor pred kartou Nastavenia, kde sa zamknutia zapínajú.  
 Vypnutie zamknutia `Language`, `Table Name Case`, `Column Name Case`, `Bracket Type` alebo od verzie `4.2.0` `Name View` zároveň zmení toto nastavenie v každom editore na hodnotu zobrazenú v editore, ktorý ho vypol, takže všetky editory naďalej ukladajú jednu hodnotu. Vypnutie zamknutia `Viewport` alebo `Canvas Type` nikomu neposunie zobrazenie ani neprepne kartu.
@@ -71,6 +75,8 @@ Tlačidlo externého odkazu na kartičke, výsledok [rýchleho vyhľadávania](.
 Prepojenie subscribe s dispatch tu zastupuje sieť, takže vidíte podobu relácie bez toho, aby jej prekážal prenos.
 
 ```js
+import '@dineug/erd-editor/erd-editor.js';
+
 const editor1 = document.createElement('erd-editor');
 const editor2 = document.createElement('erd-editor');
 

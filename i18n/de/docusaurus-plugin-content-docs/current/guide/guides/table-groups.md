@@ -167,7 +167,7 @@ Solange Gruppen ausgeblendet sind:
 - Im Explorer entfällt der Ordner `Table Groups`, und Suchen und Ersetzen findet und ersetzt keine Gruppennamen, auch wenn `Table group names` eingeschaltet ist.
 - [Automatisches Layout](#auto-layout) hält die Tabellen jeder Gruppe weiterhin zusammen, die Registerkarte Schema SQL bietet weiterhin die [Gruppen zur Auswahl](#schema-sql-by-group) an, DBML schreibt sie weiterhin, und [Importieren und hinzufügen](./file-import-export.md#import-and-add) legt seine Inhalte weiterhin unterhalb der ausgeblendeten Rahmen ab.
 
-Die Einstellung wird im Dokument gespeichert und im [Verlauf](./undo-redo.md#what-the-history-records) aufgezeichnet, wie die anderen Schalter der Ansichtsoptionen.
+Die Einstellung wird im Dokument gespeichert und im [Verlauf](./undo-redo.md#what-the-history-records) aufgezeichnet, wie die anderen Schalter der Ansichtsoptionen. In einem schreibgeschützten Editor bleibt sie stattdessen auf diesem Bildschirm – siehe [Schreibgeschützte Editoren](#read-only-editors).
 
 ## Automatisches Layout {#auto-layout}
 
@@ -197,11 +197,13 @@ Die Auswahl gehört zum Editorfenster und wird nicht im Dokument gespeichert.
 
 ## Schreibgeschützte Editoren {#read-only-editors}
 
-In einem Editor mit [`readonly`](../../api/erd-editor-element.md#readonly) werden Gruppen wie gewohnt gezeichnet und im Explorer aufgeführt und können ausgewählt und angesprungen, aber nicht geändert werden:
+In einem Editor mit [`readonly`](../../api/erd-editor-element.md#readonly) werden Gruppen wie gewohnt gezeichnet und im Explorer aufgeführt und können angesprungen, aber nicht geändert werden:
 
-- Ein Druck auf eine Titelleiste wählt die Gruppe aus und verschiebt nichts. Es gibt keine Ziehpunkte zum Ändern der Größe und kein `x`.
-- Ein Doppelklick auf die Titelleiste öffnet kein Namensfeld, und das Gruppenmenü enthält nur `Select tables`.
-- Das Kontextmenü der Zeichenfläche enthält keinen Eintrag `New Table Group`, das Tabellenmenü weder `Group selected tables` noch `Remove from group`, und die Schnellsuche führt keinen der beiden Gruppenbefehle auf. Ein Zeichnen mit `New Table Group` endet, wenn der Editor schreibgeschützt wird.
-- Die [Symbolleiste der Zeichenfläche](./table-related-functions.md#canvas-toolbar) zeigt keine ihrer Schaltflächen zum Hinzufügen, `New Table Group` eingeschlossen, und `Alt + G` (Windows/Linux) oder `⌥ + G` (Mac) sowie `T` und dann `G` bewirken nichts.
-- Die Ansichtsoption `Table Groups` ändert nichts, wie bei allen Ansichtsoptionen.
+- Das [Wechseln zu einer Gruppe](#going-to-a-group) wählt sie aus, und das ist dort der einzige Weg, eine Gruppe auszuwählen. Ein Druck auf eine Titelleiste wählt nichts aus und verschiebt nichts: Gezogen, verschiebt er die Zeichenfläche, und ein Klick ohne Bewegung hebt die Auswahl auf, die ein Sprung hinterlassen hat.
+- Es gibt keine Ziehpunkte zum Ändern der Größe und kein `x`, und ein Doppelklick auf die Titelleiste öffnet kein Namensfeld.
+- Ein Rechtsklick auf eine Gruppe öffnet kein Menü, und das Tabellenmenü enthält nur `Table Properties`.
+- Das Kontextmenü der Zeichenfläche enthält keinen Eintrag `New Table Group`, und die Schnellsuche führt keinen der beiden Gruppenbefehle auf. Ein Zeichnen mit `New Table Group` endet, wenn der Editor schreibgeschützt wird.
+- Die [Symbolleiste der Zeichenfläche](./table-related-functions.md#canvas-toolbar) behält nur ihre Ansichtssteuerung, hat also keine Schaltfläche `New Table Group`, und `Alt + G` (Windows/Linux) oder `⌥ + G` (Mac) sowie `T` und dann `G` bewirken nichts.
+- Ein Ziehen von Tabellen oder einer Gruppe, das gerade läuft, wenn der Editor schreibgeschützt wird, bleibt stehen, wo es ist, und ändert keine Gruppe, und eine laufende Größenänderung einer Gruppe endet, ohne die Größe zu ändern.
+- `View Option` → `Table Groups` blendet die Gruppen nur auf diesem Bildschirm ein oder aus, wie jede View Option dort: Das Dokument, Mitbearbeiter und der Verlauf behalten die Wahl, wie sie war, und wenn der Editor wieder beschreibbar wird, kommt die Wahl des Dokuments zurück.
 - Die Auswahl `Tables` auf der Registerkarte Schema SQL funktioniert weiterhin.

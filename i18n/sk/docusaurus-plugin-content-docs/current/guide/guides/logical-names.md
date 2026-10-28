@@ -61,7 +61,7 @@ Klávesy `Tab` a `Shift + Tab` prechádzajú bunkami, ktoré zobrazenie vykresľ
 - V zobrazení `Logical Names` logický názov v hlavičke, potom jej komentár a potom bunky každého riadka v poradí stĺpcov, pričom logický názov je na mieste názvu.
 - V zobrazení `Both Names` logický názov, názov a komentár v hlavičke a potom bunky každého riadka v poradí stĺpcov, predvolene s bunkou `Logical Name` na prvom mieste.
 
-Klávesová skratka `Alt + Enter` (Windows/Linux) alebo `⌥ + Enter` (Mac) pridá stĺpec a presunie fokus na jeho bunku názvu, ktorou je v zobrazení `Logical Names` jeho logický názov.
+Klávesová skratka `Alt + Enter` (Windows/Linux) alebo `⌥ + Enter` (Mac) pridá stĺpec a presunie fokus na prvú bunku, ktorú jeho riadok vykresľuje. V predvolenom poradí stĺpcov je to jeho bunka názvu, ktorou je v zobrazení `Logical Names` jeho logický názov a v zobrazení `Both Names` jeho bunka `Logical Name`, takže môžete začať logickým názvom – pozrite si časť [Pridávanie stĺpcov](./table-editing.md#adding-columns).
 
 Stĺpec cudzieho kľúča, ktorý pridá vzťah, skopíruje spolu s typom aj logický názov a doménu svojho kľúča – pozrite si časť [Identifikujúce vzťahy](./relationship-editing.md#identifying-relationships).  
 Kopírovanie stĺpcov do tabuľkového hárka a prilepovanie stĺpcov z neho používajú bunky, ktoré zobrazenie vykresľuje, vrátane buniek logického názvu a buniek domény – pozrite si časť [Kopírovanie/prilepovanie stĺpcov](./table-editing.md#copyingpasting-columns).
@@ -143,5 +143,7 @@ Programovací agent, ktorý pracuje cez server MCP, nastavuje logické názvy a 
 
 ## Editory iba na čítanie {#read-only-editors}
 
-V editore s atribútom [`readonly`](../../api/erd-editor-element.md#readonly) funguje každý výber Zobrazenia názvov a prepnutie zmení iba danú obrazovku bez ohľadu na zamknutie.  
-Logické názvy a domény sa tam nedajú upravovať, takže sa neotvorí žiadny zoznam termínov ani výber domény a neponúka sa ani jedna z položiek `Derive Physical Name Again` a `Derive Physical Names Again`. Možnosť View Option → `Domain` tam nič nemení, rovnako ako žiadna iná [možnosť zobrazenia](./table-related-functions.md#table-view-options).
+V editore s atribútom [`readonly`](../../api/erd-editor-element.md#readonly) funguje každý výber Zobrazenia názvov: tlačidlo `Name View` na paneli nástrojov plátna, položka `Name View` v kontextovej ponuke plátna aj v rýchlom vyhľadávaní a zoznam na paneli nástrojov režimu Flow.  
+Prepnutie tam zmení iba danú obrazovku bez ohľadu na zamknutie: súbor, spolupracovníci a história vrátenia späť si ponechajú zobrazenie, aké bolo. Keď sa editor znova prepne na úpravy, vybrané zobrazenie zostane na tejto obrazovke až do ďalšieho prepnutia tam alebo, kým je zamknutie vypnuté, kým ho nezmení spolupracovník alebo kým sa dokument znova nenačíta.  
+Logické názvy a domény sa tam nedajú upravovať, takže sa neotvorí žiadny editor bunky, zoznam termínov ani výber domény a neponúka sa ani jedna z položiek `Derive Physical Name Again` a `Derive Physical Names Again`.  
+Možnosť View Option → `Domain` tam zobrazí alebo skryje bunku domény iba na tejto obrazovke, rovnako ako každá [možnosť zobrazenia](./table-related-functions.md#table-view-options), a prepnutie editora späť na úpravy vráti možnosti zobrazenia, ktoré uchováva dokument.

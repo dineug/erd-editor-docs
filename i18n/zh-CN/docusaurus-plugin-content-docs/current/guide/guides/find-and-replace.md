@@ -192,7 +192,8 @@ Diff Viewer、Time Travel 或自动布局预览打开期间，以及焦点位于
 ## 只读编辑器 {#read-only-editors}
 
 在 [`readonly`](../../api/erd-editor-element.md#readonly) 编辑器中，搜索只能查找。没有 `Toggle Replace` 箭头和 `Replace` 行，因此也没有替换输入框、`Preserve Case`、`Replace` 和 `Replace All`。  
-查找输入框及其三个选项、文本类型、计数、结果以及跳转到匹配项均可正常使用。其周围的资源管理器与在其他任何编辑器中一样正常工作，参见[只读编辑器](./explorer.md#read-only-editors)。
+查找输入框及其三个选项、文本类型、计数、结果以及跳转到匹配项均可正常使用。跳转到匹配项会像[跳转到匹配项](#going-to-a-match)所述那样选中其所到达的对象，而该选中是只读编辑器做出的唯一选中：画布上不移动的点击会将其清除。  
+请用按键或快速搜索中的 `Toggle Explorer` 打开搜索，因为画布右键菜单在那里没有 `Toggle Explorer`。资源管理器的其余部分，参见资源管理器页面的[只读编辑器](./explorer.md#read-only-editors)。
 
 在 VS Code 中，图的修订版本，例如 Git 修订版本或 Local History 条目，会以 JSON 文本打开。通过 `Reopen Editor With...` 重新以图的形式打开后，它是只读的，使用的就是这种只能查找的搜索。
 

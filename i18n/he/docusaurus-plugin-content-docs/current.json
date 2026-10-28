@@ -8,7 +8,7 @@
     "description": "The label for category 'Guides' in sidebar 'docs'"
   },
   "sidebar.docs.category.Guides.link.generated-index.description": {
-    "message": "איך לשרטט ולערוך תרשים: יצירת טבלאות וקשרים, ייבוא וייצוא של קבצים ואפשרויות התצוגה של העורך.",
+    "message": "איך לשרטט ולערוך תרשים, מיצירת טבלאות וקשרים ועד ייבוא וייצוא של קבצים ואפשרויות התצוגה של העורך, ואיך להציג אותו לקריאה בלבד באתר אחר.",
     "description": "The generated-index page description for category 'Guides' in sidebar 'docs'"
   },
   "sidebar.api.category.Advanced": {

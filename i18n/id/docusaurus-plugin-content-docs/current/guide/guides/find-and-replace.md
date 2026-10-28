@@ -192,7 +192,8 @@ Apa yang dilakukan `Escape`, pintasan editor yang tetap berfungsi, dan setiap to
 ## Editor hanya baca {#read-only-editors}
 
 Di editor [`readonly`](../../api/erd-editor-element.md#readonly), pencarian hanya menemukan. Tidak ada panah `Toggle Replace` dan tidak ada baris `Replace`, sehingga tidak ada kotak Ganti, `Preserve Case`, `Replace`, maupun `Replace All`.  
-Kotak Temukan, tiga opsinya, jenis teks, penghitung, hasil, dan menuju kecocokan semuanya berfungsi. Penjelajah di sekitarnya berfungsi seperti di editor lain mana pun — lihat [Editor hanya baca](./explorer.md#read-only-editors).
+Kotak Temukan, tiga opsinya, jenis teks, penghitung, hasil, dan menuju kecocokan semuanya berfungsi. Menuju kecocokan memilih apa yang didaratinya, seperti pada [Menuju kecocokan](#going-to-a-match), dan pilihan itu adalah satu-satunya yang dibuat editor hanya baca: klik di kanvas yang tidak bergerak menghapusnya.  
+Buka pencarian dengan tombolnya atau dengan `Toggle Explorer` di Pencarian Cepat, karena menu konteks kanvas tidak memiliki `Toggle Explorer` di sana. Bagian Penjelajah lainnya dibahas di [Editor hanya baca](./explorer.md#read-only-editors) pada halaman Penjelajah.
 
 Di VS Code, revisi diagram, seperti revisi Git atau entri Local History, terbuka sebagai teks JSON. Jika dibuka kembali sebagai diagram dengan `Reopen Editor With...`, revisi tersebut hanya baca dan mendapatkan pencarian ini, yang hanya menemukan.
 

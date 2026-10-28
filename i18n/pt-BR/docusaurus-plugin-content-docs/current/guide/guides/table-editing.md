@@ -16,13 +16,14 @@ Enquanto um método de entrada ainda está compondo, `Escape` mantém o modo de 
 
 ## Adicionar colunas {#adding-columns}
 
-As colunas são criadas com o atalho `Alt + Enter` (Windows/Linux) ou `⌥ + Enter` (Mac).  
-Uma coluna é adicionada a cada tabela selecionada.
+As colunas são criadas com o atalho `Alt + Enter` (Windows/Linux) ou `⌥ + Enter` (Mac), que adiciona uma coluna a cada tabela selecionada, ou com o botão `+` no cabeçalho de uma tabela, que adiciona uma a essa tabela.  
+A primeira célula da nova coluna recebe o foco, a primeira que a linha desenha na [ordem das colunas](./settings.md#adjusting-column-order). Na ordem padrão, essa é o nome dela, que na exibição `Logical Names` é o nome lógico e, em `Both Names`, a célula `Logical Name` — consulte [Exibição de nomes](./logical-names.md#name-view).  
+Uma coluna adicionada com `Tab` a partir da última célula e a chave primária que o desenho de um relacionamento adiciona a uma tabela pai que não tem nenhuma também começam nessa célula.
 
 ## Tecla Tab {#tab-key}
 
 Pressione `Tab` para passar direto ao modo de edição da próxima célula.  
-Pressionar `Tab` na última célula cria uma nova coluna.  
+Pressionar `Tab` na última célula cria uma nova coluna e abre a primeira célula dela para edição — consulte [Adicionar colunas](#adding-columns).  
 Use `Shift + Tab` para ir ao modo de edição da célula anterior.  
 `Tab` e `Shift + Tab` passam pelas células que a tabela desenha, na ordem delas, então a exibição de nomes e View Option → `Domain` decidem se as células de nome lógico e as células Domínio estão entre elas — consulte [Escrever um nome lógico](./logical-names.md#writing-a-logical-name).  
 As marcas de [chave alternativa](./table-related-functions.md#alternate-keys) desenhadas após a última célula de uma linha não são células, então o foco do teclado passa por cima delas e elas nunca se abrem para edição.
@@ -96,7 +97,8 @@ Nenhuma tecla modificadora é necessária. Manter `Alt` (Windows/Linux) ou `⌥`
 ![Seleção de três colunas e, depois, arrasto da alça ao lado da coluna em foco para outra tabela, com as outras colunas selecionadas acompanhando-a](/img/demo-column-multi-move.webp)
 
 Um arrasto que começa na linha de uma coluna, e não na alça dela, move a tabela, como faz um arrasto no cabeçalho — consulte [Mover várias tabelas](./table-related-functions.md#moving-multiple-tables). `Alt + drag` (Windows/Linux) ou `⌥ + drag` (Mac) em uma linha duplica a tabela — consulte [Duplicar tabelas e notas](./table-related-functions.md#duplicating-tables-and-memos).  
-Nenhuma alça é desenhada com zoom de `70%` ou menos, em que as tabelas mostram apenas o nome, nem em um editor somente leitura, então as colunas não podem ser reordenadas nesses casos.
+Nenhuma alça é desenhada com zoom de `70%` ou menos, em que as tabelas mostram apenas o nome, nem em um editor somente leitura, então as colunas não podem ser reordenadas nesses casos.  
+Um arrasto de coluna em andamento quando o editor passa a ser somente leitura termina na hora: a cópia que seguia o ponteiro e a mão de agarrar somem, e soltar não move nenhuma coluna. As linhas que o arrasto já havia movido ficam onde ele as colocou.
 
 ## Exclusão de colunas {#column-deletion}
 
@@ -174,3 +176,10 @@ O ícone de chave na linha serve apenas para exibição, então clicar nele não
 Para transformar várias colunas em uma única chave composta, [selecione-as](#selecting-multiple-columns) e depois pressione `Alt + K` (Windows/Linux) ou `⌥ + K` (Mac), ou clique com o botão direito em uma das linhas selecionadas e escolha `Primary Key on selected columns`. Cada alternância é uma única etapa de desfazer.
 
 ![Seleção de duas colunas com Shift + Arrow Down e, depois, transformação das duas em chave primária com ⌥ + K e remoção da chave das duas com um segundo pressionamento](/img/demo-column-pk.webp)
+
+## Editores somente leitura {#read-only-editors}
+
+Em um editor [`readonly`](../../api/erd-editor-element.md#readonly), nenhuma célula se abre para edição e nenhuma coluna muda.  
+Um clique em uma célula não coloca o foco em nada e tira a seleção que um salto deixou. `Enter` e um clique duplo não abrem nenhum editor nem alternam nenhum interruptor, `Tab` fica para a página, e os atalhos que adicionam, selecionam tudo ou excluem colunas, o de alternar a chave primária e uma colagem não fazem nada.  
+Ir para uma coluna a partir do [explorador](./explorer.md#going-to-a-row) ou da [pesquisa rápida](./quick-search.md) coloca o foco na célula dela. As teclas de seta então movem o foco de célula em célula, com a coluna que alcançam selecionada sozinha, já que `Shift` não adiciona nenhuma coluna ali.  
+`Ctrl + C` (Windows/Linux) ou `⌘ + C` (Mac) ainda copia a coluna selecionada, ou a tabela que um salto selecionou — consulte [Copiar e colar colunas](#copyingpasting-columns).

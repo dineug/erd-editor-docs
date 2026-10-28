@@ -31,7 +31,7 @@ Il codice SQL viene scritto all’apertura della scheda e di nuovo ogni volta ch
 
 Il pannello contiene tre gruppi, ciascuno sotto un’etichetta:
 
-1. `Saved in the document`: `Database` e `Bracket` — vedere [Database e delimitatore](#database-and-bracket).
+1. `Saved in the document`: `Database` e `Bracket` — vedere [Database e delimitatore](#database-and-bracket). Un editor di sola lettura li indica con `This window only` — vedere [Editor di sola lettura](#read-only-editors).
 2. `This window only`: `Statements`, `Header`, `Write logical names into empty comments` e, finché il diagramma contiene un [gruppo di tabelle](./table-groups.md), `Tables` — vedere [Istruzioni](#statements), [Intestazione](#header), [Nomi logici come commenti](#logical-names-as-comments) e [Tabelle](#tables).
 3. `Saved in the document · written as is for every database`: gli script `Before tables` e `After tables` — vedere [Script prima e dopo le tabelle](#before-and-after-scripts).
 
@@ -222,5 +222,9 @@ Il modo in cui questi commenti vengono riletti in fase di importazione è descri
 
 ## Editor di sola lettura {#read-only-editors}
 
-In un editor `readonly` la scheda funziona come di consueto: `Database` e `Bracket` cambiano comunque il codice SQL mostrato, `Statements`, `Header`, `Write logical names into empty comments` e `Tables` continuano a funzionare, e `Save file` e `Copy` continuano a salvarlo e copiarlo.  
-Solo i due campi degli script sono di sola lettura.
+In un editor [`readonly`](../../api/erd-editor-element.md#readonly) la scheda funziona per il lettore, e nulla di ciò che vi si fa raggiunge il documento:
+
+- `Database` e `Bracket` riscrivono comunque il codice SQL, ma solo in quella finestra, quindi il pannello li indica anch’esso con `This window only`. Una scelta non viene salvata nel file, condivisa con i collaboratori né registrata per l’annullamento, qualunque sia il blocco, e una modifica di un collaboratore a un’impostazione che avete scelto lascia sullo schermo la vostra scelta. La scheda Generatore di codice mostra la stessa scelta, e la scrive anche [`getSchemaSQL()`](../../api/erd-editor-element.md#getschemasql) chiamato senza un database. Quando l’editor torna modificabile, tornano il database e il delimitatore del documento.
+- `Statements`, `Header`, `Write logical names into empty comments` e `Tables` funzionano come ovunque, poiché appartengono già alla finestra.
+- I due campi degli script sono di sola lettura: mostrano gli script del documento, che il codice SQL scrive comunque, e non accettano digitazione.
+- `Save file` e `Copy` salvano e copiano il codice SQL mostrato nella scheda.

@@ -31,7 +31,7 @@ SQL 在标签页打开时写出，之后每当面板中的某项选择、数据�
 
 面板包含三组内容，每组各有一个标题：
 
-1. `Saved in the document`：`Database` 和 `Bracket`，参见[数据库与括号](#database-and-bracket)。
+1. `Saved in the document`：`Database` 和 `Bracket`，参见[数据库与括号](#database-and-bracket)。只读编辑器把它们标注为 `This window only`，参见[只读编辑器](#read-only-editors)。
 2. `This window only`：`Statements`、`Header`、`Write logical names into empty comments`，以及图中有[表分组](./table-groups.md)时显示的 `Tables`，参见[语句](#statements)、[头部](#header)、[将逻辑名作为注释](#logical-names-as-comments)和[表](#tables)。
 3. `Saved in the document · written as is for every database`：`Before tables` 和 `After tables` 脚本，参见[前置与后置脚本](#before-and-after-scripts)。
 
@@ -222,5 +222,9 @@ Snowflake 省略某个操作时，会在该外键的 `ALTER TABLE` 上方写一�
 
 ## 只读编辑器 {#read-only-editors}
 
-在 `readonly` 编辑器中，该标签页照常工作：`Database` 和 `Bracket` 仍会改变显示的 SQL，`Statements`、`Header`、`Write logical names into empty comments` 和 `Tables` 仍然有效，`Save file` 和 `Copy` 仍可保存和复制 SQL。  
-只有两个脚本输入框是只读的。
+在 [`readonly`](../../api/erd-editor-element.md#readonly) 编辑器中，该标签页为阅读者工作，并且在其上所做的任何操作都不会到达文档：
+
+- `Database` 和 `Bracket` 仍会重写 SQL，但只作用于该窗口，因此面板同样把它们标注为 `This window only`。无论锁定如何，所选内容都不会保存到文件、与协作者共享或记录到 Undo，并且协作者对你所选设置的更改会让你的选择保留在屏幕上。Code Generator 标签页会显示同样的选择，不带数据库调用的 [`getSchemaSQL()`](../../api/erd-editor-element.md#getschemasql) 写出的也是它。编辑器再次变为可写后，文档的数据库和括号会恢复。
+- `Statements`、`Header`、`Write logical names into empty comments` 和 `Tables` 与在任何地方一样工作，因为它们本来就属于该窗口。
+- 两个脚本输入框是只读的：它们显示文档的脚本，SQL 仍会写出这些脚本，但不接受输入。
+- `Save file` 和 `Copy` 保存和复制的是该标签页所显示的 SQL。

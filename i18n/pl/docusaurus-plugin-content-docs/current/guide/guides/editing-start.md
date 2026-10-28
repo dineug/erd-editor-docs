@@ -10,7 +10,8 @@ Edycja zaczyna się od menu kontekstowego otwieranego kliknięciem prawym przyci
 ![Klikanie kanwy prawym przyciskiem myszy, otwieranie podmenu Relationship, dodawanie tabeli, a następnie jej własne menu](/img/demo-context-menu.webp)
 
 Kliknięcie prawym przyciskiem myszy tabeli, notatki, grupy tabel lub relacji otwiera zamiast tego własne menu danego elementu.  
-Kliknięcie prawym przyciskiem myszy już zaznaczonej tabeli, notatki lub grupy tabel zachowuje całe zaznaczenie, więc pozycje takie jak `Color` i `Delete selected` dotyczą wszystkich zaznaczonych elementów – zobacz sekcję [Zaznaczanie wielu elementów](./table-related-functions.md#multiple-selection).
+Kliknięcie prawym przyciskiem myszy już zaznaczonej tabeli, notatki lub grupy tabel zachowuje całe zaznaczenie, więc pozycje takie jak `Color` i `Delete selected` dotyczą wszystkich zaznaczonych elementów – zobacz sekcję [Zaznaczanie wielu elementów](./table-related-functions.md#multiple-selection).  
+Edytor tylko do odczytu niczego nie tworzy, więc nic z tego, co opisuje ta strona, nie jest tam oferowane: menu kanwy zachowuje tylko `View Option`, `Name View`, `Export` i `Diff Viewer`, menu tabeli tylko `Table Properties`, a notatka, grupa tabel lub relacja nie otwiera żadnego menu – zobacz sekcję [Edytory tylko do odczytu](./table-related-functions.md#read-only-editors).
 
 ## Ekran powitalny {#welcome-screen}
 

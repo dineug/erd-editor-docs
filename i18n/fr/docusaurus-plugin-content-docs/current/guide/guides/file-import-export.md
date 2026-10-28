@@ -37,7 +37,7 @@ Un fichier JSON conserve les positions qu’il contient. Les tables d’un fichi
 
 Le diagramme est ensuite remplacé en une seule étape, si bien qu’aucun état intermédiaire ne s’affiche. Un paramètre que vous modifiez pendant le placement des tables, comme l’onglet, est conservé, et si vous importez un autre fichier entre-temps, c’est la dernière importation lancée qui l’emporte.
 
-Un éditeur en lecture seule ne charge rien depuis `Import` et ne propose ni `Import and Add` ni l’outil `Import CSV` de l’onglet Dictionnaire.
+Un éditeur en lecture seule n’importe rien. Son menu contextuel du canevas et sa recherche rapide ne proposent ni `Import` ni `Import and Add`, il n’affiche aucun écran d’accueil, et l’onglet Dictionnaire ne propose pas `Import CSV`.
 
 ### Importer et ajouter {#import-and-add}
 
@@ -215,7 +215,7 @@ Le sous-menu `Export` du menu contextuel du canevas comporte trois entrées :
 - Schema SQL : ouvre l’onglet [Schéma SQL](./schema-sql.md#saving-or-copying-the-sql) avec son panneau des options ouvert et le focus sur son bouton `Save file`, si bien qu’un appui sur `Enter` enregistre en `.sql` le SQL qu’affiche l’onglet. Rien n’est enregistré avant cela.
 - Image : ouvre la boîte de dialogue `Export image`, qui enregistre le diagramme en `.png` ou en `.svg`, ou le copie dans le Presse-papiers au format PNG (voir [Image](#image)).
 
-Les trois entrées fonctionnent dans un éditeur en lecture seule.  
+Les trois entrées fonctionnent dans un éditeur en lecture seule, où `Export` est l’une des rares entrées que conserve son menu du canevas. Là, json écrit les paramètres que contient le fichier, et non la vue, l’onglet, l’affichage des noms, le SGBD, les paramètres de code ni les bascules de `View Option` modifiés sur cet écran seulement (voir [Éditeurs en lecture seule](./settings.md#read-only-editors) dans Paramètres).  
 L’outil `Export CSV` propre à l’onglet Dictionnaire, qui ne figure pas dans ce sous-menu, enregistre sa feuille `Domains`, `Words` ou `Terms` dans un fichier CSV. Contrairement à ces trois entrées, il n’est pas proposé dans un éditeur en lecture seule (voir [Importer et exporter des fichiers CSV](./dictionary.md#importing-and-exporting-csv)).
 
 Le Schéma SQL écrit les ON DELETE et ON UPDATE de chaque relation après son `REFERENCES`, ON DELETE en premier. `Not set` n’écrit rien, et une action que la base de données sélectionnée n’accepte pas est omise. Pour savoir quelle base de données accepte quelle action, voir [Modification des relations](./relationship-editing.md#on-delete-and-on-update).

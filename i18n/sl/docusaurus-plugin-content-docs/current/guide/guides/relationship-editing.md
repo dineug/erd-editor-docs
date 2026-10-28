@@ -1,6 +1,6 @@
 ---
 sidebar_position: 7
-description: Brisanje relacije, sprememba njene vrste, nastavitev njenih dejanj ON DELETE in ON UPDATE, preslikava na obstoječe stolpce z oknom Preslikaj stolpce, branje notacije povezovalne črte, delo z relacijami N:M in identifikacijskimi relacijami ter pregled, kaj novi stolpci tujega ključa kopirajo iz svojega ključa in kako so poimenovani.
+description: Brisanje relacije, sprememba njene vrste, nastavitev njenih dejanj ON DELETE in ON UPDATE, preslikava na obstoječe stolpce z oknom Preslikaj stolpce, branje notacije povezovalne črte in kako so povezovalne črte usmerjene okoli tabel, delo z relacijami N:M in identifikacijskimi relacijami ter pregled, kaj novi stolpci tujega ključa kopirajo iz svojega ključa in kako so poimenovani.
 ---
 
 # Urejanje relacij
@@ -81,7 +81,7 @@ Vsaka vrstica bodisi uporabi stolpec, ki ga podrejena tabela že ima, bodisi dod
 Okno se odpre na dva načina:
 
 - Med risanjem relacije z gumbom `Map to existing columns` ob podrejeni tabeli – glejte razdelek [Ustvarjanje relacije](./editing-start.md#relationship-creation). Gumb `Map` nato doda relacijo vrste, ki jo rišete.
-- S postavko `Map Columns` v priročnem meniju relacije, da spremenite stolpce obstoječe relacije. Gumb `Save` nato zapiše spremembo. V urejevalniku samo za branje je ta postavka izpuščena.
+- S postavko `Map Columns` v priročnem meniju relacije, da spremenite stolpce obstoječe relacije. Gumb `Save` nato zapiše spremembo. Urejevalnik samo za branje ne odpre priročnega menija relacije, zato se tam okno Preslikaj stolpce ne more odpreti.
 
 Podnaslov okna navaja obe tabeli in vrsto relacije, na primer `users → posts · One N`. Vrsta je tu prikazana, ne pa tudi spremenjena – za spremembo glejte razdelek [Sprememba vrste](#type-change).
 
@@ -226,6 +226,9 @@ Osvetlitev ugasne ob naslednjem pritisku levega ali desnega gumba miške na plat
 Premikanje pogleda s srednjim gumbom miške ali z orodjem Roka osvetlitev ohrani, prav tako jo ohranijo strnitev ali razširitev vrstice v raziskovalcu ali pregledovalniku razlik, počistitev izbora s tipko `Escape` ter skok iz [hitrega iskanja](./quick-search.md) ali z [gumba na kartici](./visualization.md#card-buttons) za zunanjo povezavo v načinu Tok.  
 Osvetlitev se ne shrani in ni v zgodovini razveljavitev, sodelavci pa je ne vidijo.
 
+V urejevalniku [`readonly`](../../api/erd-editor-element.md#readonly) kazalec osvetli povezovalne črte tudi sam, namesto osvetlitve, ki jo je pustil skok. Če počiva na tabeli, osvetli vsako povezovalno črto te tabele v barvi pri lebdenju, dokler se ne premakne s tabele.  
+Klik, ki se ne premakne, pusti osvetlitev do naslednjega takega klika: na tabeli osvetli povezovalne črte te tabele, na povezovalni črti to povezovalno črto, kjer koli drugje pa nič. Vlečenje tam premika platno in pusti to osvetlitev, kot je bila.
+
 Skrijte povezovalne črte na platnu ERD z možnostjo pogleda `Relationship` ali le njihove oznake z možnostjo pogleda `Referential Actions`, ki je privzeto vklopljena – glejte razdelek [Možnosti pogleda tabel](./table-related-functions.md#table-view-options).  
 Oznake se ne rišejo pri povečavi `70%` in manj, kjer se tabele strnejo na svoje ime.  
 [Izvoz slike](./file-import-export.md#image) se vedno nariše pri 100 %, zato oznake nariše ne glede na povečavo platna, razen če jih skrije možnost pogleda. Ko je možnost `Background` izklopljena, je prozoren tudi pravokotnik za vsako oznako.  
@@ -233,9 +236,10 @@ Oznake se ne rišejo pri povečavi `70%` in manj, kjer se tabele strnejo na svoj
 
 ## Usmerjanje povezovalnih črt {#connector-routing}
 
-Povezovalne črte se usmerjajo pravokotno.  
-Pot obide tabele, ki ležijo med njenima koncema, namesto da bi jih prečkala, njeni vogali pa so zaobljeni.  
-Vsak konec zapusti svojo tabelo s kratkim ravnim odsekom, preden zavije, zato dve tabeli, ki sta blizu skupaj in katerih konca povezovalne črte sta poravnana, poveže ena ravna črta namesto obvoza.  
+Povezovalne črte se usmerjajo pravokotno, njihovi vogali pa so zaobljeni.  
+Pot obide tabele, ki so ji v napoto, namesto da bi šla skoznje. Kjer bi vsaka pot z nekaj ovinki med njenima koncema prečkala tabelo, na primer v natrpanem diagramu, povezovalna črta zavije po poti s toliko ovinki, kolikor jih potrebuje. Samo kjer ni najdena nobena pot okoli, še vedno prečka tabelo.  
+Povezovalna črta zapusti obe tabeli s para strani, ki sta si nasproti, kjer koli tak par obstaja, vsak konec pa zapusti svojo tabelo s kratkim ravnim odsekom, preden zavije, zato dve tabeli, ki sta blizu skupaj in katerih konca povezovalne črte sta poravnana, poveže ena ravna črta namesto obvoza.  
+Dve tabeli, ki si stojita nasproti na manjši razdalji od te, tudi pod `40px`, obdržita nasprotni strani, kjer pa njuna konca nista poravnana, povezovalna črta preskoči čez vrzel med njima, namesto da bi tekla pod eno od njiju.  
 Poti, ki zapuščajo isto stran tabele, se razporedijo v ločene koridorje, da se ne prekrivajo.  
 Izogibajo se le tabelam: povezovalna črta lahko prečka beležko ali okvir skupine tabel in je narisana nad skupinami tabel ter pod tabelami in beležkami.
 
@@ -243,6 +247,9 @@ Relacija iz tabele v isto tabelo je narisana kot ena krivulja okoli zgornjega de
 Nadaljnje rekurzivne relacije na isti tabeli se gnezdijo zunaj prve, zato njihove krivulje ne sekajo ne druga druge ne tabele.
 
 Nastavljati ni treba ničesar.  
-Poti se samodejno znova izračunajo, kadar koli se kar koli na platnu premakne ali spremeni velikost, zato jih nikoli ni treba popravljati ročno.
+Poti se samodejno znova izračunajo, kadar koli se kar koli na platnu premakne ali spremeni velikost, zato jih nikoli ni treba popravljati ročno.  
+Med vlečenjem povezovalne črte tabel, ki jih premikate, sledijo tabelam, vse druge pa obdržijo pot, ki so jo imele, ko se je vlečenje začelo. Ko spustite, se vsaka povezovalna črta, ki jo premik preusmeri, znova nariše, na primer tista, ki zdaj obide tabelo, ki ste jo spustili na njeno pot, ali tista, ki se zravna, ko se je tabela umaknila z njene poti.
+
+Diagram nariše enake poti v vsakem oknu, ki ga prikazuje v istem prikazu imen: v tistem, ki je ostalo odprto, medtem ko so se tabele premikale, v tistem, ki je diagram odprlo pravkar, in v sodelavčevem, enako pa jih nariše tudi [izvožena slika](./file-import-export.md#image). Prikaz imen šteje, ker spremeni širino tabel – glejte razdelek [Prikaz imen](./logical-names.md#name-view).
 
 ![Vlečenje tabele members navzdol in nazaj, medtem ko povezovalna črta iz orders izmenično poteka desno od categories in okoli njene leve strani, vsi vogali pa so zaobljeni](/img/demo-connector-routing.webp)

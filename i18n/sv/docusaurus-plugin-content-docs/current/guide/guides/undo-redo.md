@@ -12,7 +12,7 @@ Historiken rymmer upp till `2048` ändringar.
 - Gör om: `Ctrl + Shift + Z` (Windows/Linux) eller `⌘ + Shift + Z` (Mac)
 
 På ERD-fliken finns samma två kommandon i verktygsfältet i form av knapparna `Undo` och `Redo`, bredvid `Time Travel`. På fliken Ordlista visar verktygsfältet `Undo` och `Redo` utan `Time Travel`, och ingen annan flik visar dem.  
-De lyser bara upp när det finns något att ångra eller göra om. En editor med `readonly` döljer dem, och kortkommandona varken ångrar eller gör om något.
+De lyser bara upp när det finns något att ångra eller göra om. En editor med `readonly` döljer dem och `Time Travel`, och kortkommandona varken ångrar eller gör om något.
 
 Ångra och Gör om verkar på diagrammets historik bara på ERD-fliken.  
 Kortkommandona är inaktiva där medan snabbsökningen, `Table Properties`, `Diff Viewer`, förhandsgranskningen av `Auto Layout`, dialogrutan [`Export image`](./file-import-export.md#image), [Mappa kolumner](./relationship-editing.md#map-columns) eller tidsresan är öppen.  
@@ -58,6 +58,8 @@ Registreras inte:
 - Det visade bladet på fliken Ordlista samt varje blads sökning, markering, rullning och kolumnbredder – se [Öppna fliken](./dictionary.md#opening-the-tab).
 
 Ändringar av något av detta kan inte ångras.
+
+En skrivskyddad editor registrerar ingenting alls. Vyns position, zoomen och växlarna under `View Option` kan fortfarande ändras där, tillsammans med fliken, namnvisningen, databasen och kodinställningarna, men bara på den skärmen, så det finns inget att ångra – se [Skrivskyddade editorer](./settings.md#read-only-editors) i Inställningar.
 
 Redigeringar som görs på fliken Ordlista kan ångras, men de hamnar i historiken för sitt eget blad i stället för i den här, så Ångra på ERD-fliken tar aldrig tillbaka någon av dem, inte ens en domäns nya `Data Type` och de kolumntyper den ändrar – se [Ordlistans blad](#dictionary-sheets).
 
@@ -136,7 +138,7 @@ Varje blads historik töms när ordlistorna ersätts: av en `Import` av en JSON-
 ## Tidsresa {#time-travel}
 
 Tidsresan öppnas med knappen `Time Travel` i verktygsfältet, bredvid Ångra och Gör om på ERD-fliken.  
-Knappen gör ingenting förrän diagrammets historik har minst en registrerad ändring.
+Knappen gör ingenting förrän diagrammets historik har minst en registrerad ändring. En skrivskyddad editor visar ingen sådan knapp, och en editor som blir skrivskyddad stänger Time Travel utan att tillämpa det.
 
 Tidsresan öppnar en separat, skrivskyddad kopia av diagrammet, med den rullningsposition, zoomnivå och [namnvisning](./logical-names.md#name-view) som arbetsytan visar, oavsett om låset `Viewport` eller `Name View` är på eller inte.  
 Den stegar bara igenom diagrammets historik, så redigeringarna på bladen på fliken Ordlista finns inte bland dess punkter.  

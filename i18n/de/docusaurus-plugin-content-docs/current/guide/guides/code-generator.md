@@ -25,7 +25,8 @@ Wenn die ausgewählte Sprache `Database` oder die Schreibweisen ignoriert, bleib
 `Save file` und `Copy` befinden sich am unteren Rand des Bereichs – siehe [Ergebnis speichern oder kopieren](#saving-or-copying-the-result).
 
 Dies sind die eigenen Einstellungen des Diagramms, dieselben, die auch das Kontextmenü und die Schnellsuche ändern. `Database` wird wie jede Änderung in der Datei gespeichert.  
-`Language`, `Table Name Case`, `Column Name Case` und `Bracket` werden nur so lange gespeichert, wie ihre Sperre auf der Registerkarte Einstellungen ausgeschaltet ist (`Bracket Type` für `Bracket`), und in einem neuen Diagramm sind alle Sperren eingeschaltet. Solange eine Sperre eingeschaltet ist, schreibt eine Änderung den Code auf Ihrem Bildschirm neu, aber die Datei behält den gesperrten Wert, und das Diagramm wird mit ihm wieder geöffnet. Der Bereich zeigt keine Sperre an; um eine Auswahl in der Datei zu behalten, schalten Sie ihre Sperre aus – siehe [Sperren](./settings.md#lock).
+`Language`, `Table Name Case`, `Column Name Case` und `Bracket` werden nur so lange gespeichert, wie ihre Sperre auf der Registerkarte Einstellungen ausgeschaltet ist (`Bracket Type` für `Bracket`), und in einem neuen Diagramm sind alle Sperren eingeschaltet. Solange eine Sperre eingeschaltet ist, schreibt eine Änderung den Code auf Ihrem Bildschirm neu, aber die Datei behält den gesperrten Wert, und das Diagramm wird mit ihm wieder geöffnet. Der Bereich zeigt keine Sperre an; um eine Auswahl in der Datei zu behalten, schalten Sie ihre Sperre aus – siehe [Sperren](./settings.md#lock).  
+In einem schreibgeschützten Editor lautet die Beschriftung stattdessen `This window only`, da eine Änderung dort nur dieses Fenster erreicht – siehe [Schreibgeschützte Editoren](#read-only-editors).
 
 ## Sprache {#language}
 
@@ -138,3 +139,10 @@ Das Menü Export hat keinen Eintrag für den Codegenerator, und die Registerkart
 Um den Code zu kopieren, klicken Sie am unteren Rand des Bereichs auf `Copy` oder zeigen Sie mit dem Zeiger auf den Code und klicken Sie oben rechts auf die Schaltfläche zum Kopieren, was in den Tabelleneigenschaften der einzige Weg ist.  
 Eine Meldung `Copied!` mit einem Häkchen bestätigt das Kopieren zwei Sekunden lang. Verweigert der Browser oder Host den Zugriff auf die Zwischenablage, weist stattdessen fünf Sekunden lang eine Meldung `Couldn't copy to the clipboard` mit einem Warnsymbol darauf hin. Erneutes Kopieren ersetzt die Meldung, statt eine weitere hinzuzufügen.  
 Der Text lässt sich auch auswählen, sodass Sie nur den Teil übernehmen können, den Sie benötigen.
+
+## Schreibgeschützte Editoren {#read-only-editors}
+
+In einem [`readonly`](../../api/erd-editor-element.md#readonly)-Editor ändern die Listen des Bereichs, das Kontextmenü und die Schnellsuche weiterhin `Language`, `Database`, `Table Name Case`, `Column Name Case` und `Bracket`, aber nur in diesem Fenster; deshalb beschriftet der Bereich sie mit `This window only` statt mit `Saved in the document`.  
+Eine Änderung schreibt den Code auf diesem Bildschirm neu und wird weder in der Datei gespeichert noch mit Mitbearbeitern geteilt noch für Rückgängig aufgezeichnet, was auch immer die Sperren sagen, und die Änderung eines Mitbearbeiters an einer Einstellung, die Sie gewählt haben, lässt Ihre Wahl auf dem Bildschirm stehen. `Database` und `Bracket` sind auch Einstellungen der Registerkarte Schema SQL, sodass eine Wahl hier dort im selben Fenster zu sehen ist – siehe [Schreibgeschützte Editoren](./schema-sql.md#read-only-editors).  
+Sobald der Editor wieder beschreibbar wird, kommen die Einstellungen des Dokuments zurück, und der Code wird für sie geschrieben.  
+`Save file` und `Copy` speichern und kopieren den angezeigten Code.

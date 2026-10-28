@@ -237,4 +237,5 @@ Dış bağlantı [kart düğmesi](#card-buttons) ise sizi Akış modundan çıka
 Siz Akış modundayken ortak çalışanların düzenlemeleri diyagrama ulaşmaya devam eder ve kartlar onların eklediği ya da kaldırdığı tabloları ve ilişkileri izler. [Akış modunun yerleşimi](#how-flow-is-placed) bölümüne bakın.  
 Ortak çalışanların seçim ve odak halkaları kartlarda çizilir, ancak imleçleri ve sürükleme kutuları çizilmez. [Ortak düzenleme](../../api/advanced/collaborative-editing.md) sayfasına bakın.
 
-Odaklanma ve adım adım ilerleme de dahil olmak üzere her iki mod `readonly` bir düzenleyicide de çalışır; orada yalnızca kendi ekranınızı değiştiren `Name View` listesi de öyle.
+Odaklanma ve adım adım ilerleme de dahil olmak üzere her iki mod [`readonly`](../../api/erd-editor-element.md#readonly) bir düzenleyicide de çalışır; orada yalnızca kendi ekranınızı değiştiren `Name View` listesi de öyle.  
+Salt okunur bir düzenleyicinin ERD sekmesinde tablo menüsünde yalnızca `Table Properties` bulunur ve bir basış hiçbir tabloyu seçmez; bu yüzden [Gezgin](./explorer.md#going-to-a-row) veya [Hızlı aramadan](./quick-search.md) yapılan bir atlamanın seçtiği tabloda `Alt + F` (Windows/Linux) veya `⌥ + F` (Mac) ile odaklanın.

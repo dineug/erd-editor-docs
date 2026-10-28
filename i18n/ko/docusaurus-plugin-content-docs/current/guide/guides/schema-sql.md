@@ -31,7 +31,7 @@ SQL은 탭이 열릴 때 작성되며, 패널의 선택, 데이터베이스 이�
 
 패널에는 각각 캡션 아래에 놓인 세 묶음이 있습니다.
 
-1. `Saved in the document`: `Database`와 `Bracket`. [데이터베이스와 Bracket](#데이터베이스와-bracket) 항목을 참고하세요.
+1. `Saved in the document`: `Database`와 `Bracket`. [데이터베이스와 Bracket](#데이터베이스와-bracket) 항목을 참고하세요. 읽기 전용 에디터는 이 둘의 캡션을 `This window only`로 표시합니다. [읽기 전용 에디터](#읽기-전용-에디터) 항목을 참고하세요.
 2. `This window only`: `Statements`, `Header`, `Write logical names into empty comments`, 그리고 다이어그램에 [테이블 그룹](./table-groups.md)이 있는 동안의 `Tables`. [Statements](#statements), [Header](#header), [논리명을 코멘트로 쓰기](#logical-names-as-comments), [Tables](#tables) 항목을 참고하세요.
 3. `Saved in the document · written as is for every database`: `Before tables`와 `After tables` 스크립트. [앞뒤 스크립트](#앞뒤-스크립트) 항목을 참고하세요.
 
@@ -222,5 +222,9 @@ Snowflake가 동작을 생략하면, 그 foreign key의 `ALTER TABLE` 위에 `--
 
 ## 읽기 전용 에디터
 
-`readonly` 에디터에서도 탭은 평소처럼 동작합니다. `Database`와 `Bracket`은 여전히 표시되는 SQL을 바꾸고, `Statements`, `Header`, `Write logical names into empty comments`, `Tables`도 여전히 동작하며, `Save file`과 `Copy`도 여전히 SQL을 저장하고 복사합니다.  
-두 스크립트 입력란만 읽기 전용입니다.
+[`readonly`](../../api/erd-editor-element.md#readonly) 에디터에서 탭은 읽는 사람을 위해 동작하며, 거기서 하는 어떤 것도 문서에 닿지 않습니다.
+
+- `Database`와 `Bracket`은 여전히 SQL을 다시 작성하지만 그 창에서만 바뀌므로, 패널은 이 둘에도 `This window only` 캡션을 표시합니다. 고른 값은 잠금과 상관없이 파일에 저장되거나 공동 편집자와 공유되거나 Undo에 기록되지 않으며, 직접 고른 설정에 대한 공동 편집자의 변경은 화면에서 고른 값을 그대로 둡니다. Code Generator 탭도 같은 선택을 표시하고, 데이터베이스 없이 호출한 [`getSchemaSQL()`](../../api/erd-editor-element.md#getschemasql)도 그 선택으로 작성합니다. 에디터가 다시 편집 가능해지면 문서의 데이터베이스와 Bracket이 돌아옵니다.
+- `Statements`, `Header`, `Write logical names into empty comments`, `Tables`는 이미 그 창에 속하므로 어디서와 똑같이 동작합니다.
+- 두 스크립트 입력란은 읽기 전용입니다. 문서의 스크립트를 보여 주며 SQL에는 여전히 그 스크립트가 쓰이지만, 입력할 수는 없습니다.
+- `Save file`과 `Copy`는 탭이 표시하는 SQL을 저장하고 복사합니다.

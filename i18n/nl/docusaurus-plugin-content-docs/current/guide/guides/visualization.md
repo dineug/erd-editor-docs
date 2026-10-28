@@ -237,4 +237,5 @@ De [kaartknop](#card-buttons) voor een externe link gaat verder, omdat die je ui
 Bewerkingen van medebewerkers bereiken het diagram nog steeds terwijl je in de stroomweergave bent, en kaarten volgen de tabellen en relaties die zij toevoegen of verwijderen — zie [Hoe de stroomweergave wordt ingedeeld](#how-flow-is-placed).  
 Hun selectie- en focusringen worden op de kaarten getekend, maar hun cursors en selectiekaders niet — zie [Gezamenlijk bewerken](../../api/advanced/collaborative-editing.md).
 
-Beide modi, focussen en stappen inbegrepen, werken ook in een editor met `readonly`, en dat geldt ook voor de lijst `Name View`, die daar alleen je eigen scherm wisselt.
+Beide modi, focussen en stappen inbegrepen, werken ook in een editor met [`readonly`](../../api/erd-editor-element.md#readonly), en dat geldt ook voor de lijst `Name View`, die daar alleen je eigen scherm wisselt.  
+Op het ERD-tabblad van een editor in alleen-lezenmodus bevat het menu van een tabel alleen `Table Properties` en selecteert een druk geen tabel, dus focus met `Alt + F` (Windows/Linux) of `⌥ + F` (Mac) op de tabel die een sprong vanuit de [Verkenner](./explorer.md#going-to-a-row) of [Snel zoeken](./quick-search.md) selecteerde.

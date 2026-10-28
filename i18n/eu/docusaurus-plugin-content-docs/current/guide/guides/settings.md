@@ -1,6 +1,6 @@
 ---
 sidebar_position: 16
-description: Erlazioen datu moten sinkronizazioa eta domeinuak, iruzkinen gehienezko zabalera, taulen zabalera birkalkulatzea, ezarpen-blokeoak (ikuspegia, fitxa, kode-ezarpenak eta Izenen ikuspegia), zutabeen bistaratze-ordena eta lasterbideen zerrenda.
+description: Erlazioen datu moten sinkronizazioa eta domeinuak, iruzkinen gehienezko zabalera, ezarpen-blokeoak (ikuspegia, fitxa, kode-ezarpenak eta Izenen ikuspegia), zutabeen bistaratze-ordena, lasterbideen zerrenda eta irakurtzeko soilik dagoen editore baten Ezarpenak fitxa.
 ---
 
 # Ezarpenak
@@ -33,13 +33,6 @@ Aktibatzean, `60px` baliotik hasten da. Barrutitik kanpo idatzitako balio bat mu
 
 ![Maximum comment width aktibatzea, 120 idaztea, eta ERD fitxak zabalera horretara moztutako iruzkinak erakustea](/img/demo-settings-comment-width.webp)
 
-## Taulen zabalera birkalkulatzea {#recalculation-table-width}
-
-Sakatu `Sync` botoia taula eta zutabe-gelaxka guztien zabalera birkalkulatzeko, bakoitza bere uneko testura egokituz, eta erlazioen konektoreak tamaina berrien arabera berriro marrazteko.
-`Recalculated table width` jakinarazpen batek baieztatzen du.
-Zabalerak berez birkalkulatzen dira dokumentu bat kargatzen den bakoitzean; beraz, letra-tipoaren edo errendatzearen aldaketa batek zaharkituta utzi dituenean bakarrik behar da hau.
-Zabalerak ez dira fitxategian gordetzen; beraz, `Sync` botoiak ez du inoiz fitxategia aldatzen.
-
 ## Blokeoa {#lock}
 
 `Lock` zerrendak zazpi ezarpen ditu. Ezarpen baten blokeoa aktibatuta dagoen bitartean, fitxategiak blokeatu zenean zuen balioa mantentzen du; beraz, pantailan aldatzeak fitxategia zegoen bezala uzten du.
@@ -68,8 +61,9 @@ Fitxategia irekitzean ikuspegi blokeatuak diagramaren zatirik ere erakusten ez b
 
 ![Viewport desblokeatzea, diagrama korritzea eta zooma aldatzea, eta berriro blokeatzea haren errenkadak erakusten duen ikuspegi berrian](/img/demo-settings-locks.webp)
 
-Blokeo bat aktibatzeak edo desaktibatzeak fitxategia aldatzen du, fitxategiak zein blokeo dauden aktibatuta gordetzen baitu, baina, Ezarpenak fitxako gainerakoa bezala, ez da [desegite-historian](./undo-redo.md#what-the-history-records) erregistratzen. Izenen ikuspegiaren aldaketa bat ere ez, blokeatuta egon ala ez. Irakurtzeko soilik dagoen editore batean, blokeo-botoiek ez dute ezer egiten, eta Izenen ikuspegiaren aldaketa batek pantaila hori bakarrik aldatzen du, haren blokeoa edozein dela ere.
+Blokeo bat aktibatzeak edo desaktibatzeak fitxategia aldatzen du, fitxategiak zein blokeo dauden aktibatuta gordetzen baitu, baina, Ezarpenak fitxako gainerakoa bezala, ez da [desegite-historian](./undo-redo.md#what-the-history-records) erregistratzen. Izenen ikuspegiaren aldaketa bat ere ez, blokeatuta egon ala ez.
 Gainerako ezarpen guztiak dauden bezala gordetzen dira: datu-basea, [`View Option`](./table-related-functions.md#table-view-options) menuko etengailuak eta `Preferences` fitxako gainerakoa.
+Irakurtzeko soilik dagoen editore batek ez du fitxategia haietako ezertatik aldatzen, blokeoek dioten guztia gorabehera: haren blokeo-botoiak eta `Preferences` fitxako gainerako kontrolak desgaituta daude, eta oraindik aldatzen uzten dituen ezarpenak pantaila horretan geratzen dira. Ikus [Irakurtzeko soilik dauden editoreak](#read-only-editors).
 
 Blokeo guztiak aktibatuta daude diagrama berri batean, hau da, ezerezetik hasitako batean: VS Code editorean, Obsidian aplikazioan edo JetBrains IDE batean irekitako fitxategi huts bat (Obsidianen `ERD Editor: Create new diagram` eta `New ERD` komandoek sortzen dute halakoa), web aplikazioko eskema berri bat, Google Drive zerbitzuko New menutik sortutako fitxategi bat, edo baliorik jaso ez duen `<erd-editor>` elementu bat.
 Web aplikazioak SQL, DBML, AML edo GraphQL fitxategi bat inportatuz sortzen duen eskema edo Google Drive fitxategi bat ere blokeo guztiak aktibatuta hasten da. JSON fitxategi batetik sortutakoak fitxategi horrek erregistratzen dituen blokeoak mantentzen ditu.
@@ -98,6 +92,7 @@ Arrastatu errenkada bat mugitzeko: errenkada osoa arrasta daiteke, eta helduleku
 `Logical Name` errenkadak `Both Names` ikuspegian errenkada batek marrazten duen izen logikoaren gelaxka kokatzen du. `Logical Names` ikuspegian, izen logikoa `Name` errenkadaren lekuan dago horren ordez, eta `Physical Names` ikuspegiak ez du halakorik marrazten. Ikus [Izenen ikuspegia](./logical-names.md#name-view). `Domain` errenkadak View Option → `Domain` aukerak erakusten duen Domain gelaxka kokatzen du. Ikus [Domain gelaxka](./logical-names.md#the-domain-cell).
 [Taulen ikuspegi-aukera](./table-related-functions.md#table-view-options) batek ezkutatutako edo Izenen ikuspegiak kanpoan utzitako gelaxka batek zerrendan bere lekua mantentzen du; beraz, ordena erakusten diren gelaxkei aplikatzen zaie, direnak direla.
 `Logical Name` eta `Domain` errenkadak izan aurretik ordena ezarrita zuen diagrama batek `Logical Name` errenkada `Name` errenkadaren aurrean jasotzen du, eta `Domain` errenkada `DataType` errenkadaren ondoren, horiek bere ordenan non dauden ere.
+Geroko bertsio batek gordetako diagrama batek ere bere ordena mantentzen du, bertsio horrek bertsio honek ez duen errenkada bat izan arren: bertsio honek dituen errenkadak fitxategiak ematen duen ordenan geratzen dira, eta errenkada ezezaguna kanpoan uzten da. Diagrama hemen gordetzeak ordena hura gabe idazten du, eta geroko bertsioak errenkada hori bere ordena lehenetsian bere ondoko errenkadaren ondoan jartzen du berriro.
 [Gako alternatiboaren](./table-related-functions.md#alternate-keys) marka (`AK1.1` eta abar) ez da errenkada hauetako bat. Beti errenkada baten amaieran dago, ordena honek azkenik jartzen duen gelaxkaren ondoren, edozein dela ere.
 
 ![Column Order ataleraino behera korritzea eta Comment errenkada gora arrastatzea Name errenkadaren azpira, iruzkin bakoitza bere zutabearen izenaren ondoren jarriz](/img/demo-settings-column-order.webp)
@@ -146,6 +141,7 @@ Izen logikoaren gelaxka batean terminoen zerrenda irekita dagoela, `Stop` komand
 Arakatzailea, gai-sortzailea edo `Display Language` hautatzailea irekita egoteak ez du oihaleko lasterbideetako bat ere eragozten. `Stop` komandoak ez du inoiz Arakatzailea ixten. `Stop` komandoak eta beste teklek Arakatzailearen barruan zer egiten duten jakiteko, ikus [Arakatzaileko teklak](./explorer.md#keys-in-the-explorer), eta hautatzailearen barruan, ikus [Hizkuntza bat aukeratzea](./language-and-theme.md#picking-a-language).
 `Delete Selection` komandoak hautatutako taula, ohar eta taula-talde guztiak kentzen ditu, edo, taula bakar bat bere zutabe batzuekin hautatuta dagoenean eta zooma `70%` baino handiagoa denean, zutabe horiek. Ikus [Taulak eta oharrak ezabatzea](./table-related-functions.md#table-and-memo-deletion). `Remove Table, Memo` komandoak hautatutako taula-taldeak ere kentzen ditu.
 `Add Table Group` komandoak [`New Table Group`](./table-groups.md#drawing-a-group) talde baten marrazketa hasten du, [oihaleko tresna-barrako](./table-related-functions.md#canvas-toolbar) `New Table Group` botoiak egiten duen bezala, eta bigarren sakatze batek marrazketa bertan behera uzten du. `Group Selected Tables` komandoa tekla aldatzailerik gabeko bi sakatzez osatzen da: `T` eta ondoren `G`, segundo bateko epean. Hautatutako taulak talde berri batean jartzen ditu eta haren izen-editorea irekitzen du, taula baten laster-menuko `Group selected tables` aukerak egiten duen bezala, eta ez du ezer egiten taularik hautatuta ez dagoenean. Ikus [Hautatutako taulak taldekatzea](./table-groups.md#grouping-selected-tables). Bietako batek ere ez du ezer egiten irakurtzeko soilik dagoen editore batean edo taldeak [ezkutatuta](./table-groups.md#hiding-groups) dauden bitartean.
+Irakurtzeko soilik dagoen editore batean, irakurtzen duten teklek bakarrik funtzionatzen dute: `Search`, `Toggle Explorer`, `Stop`, jauzi batek hautatutako taulako `Table Properties` eta `Focus on this table`, hiru zoom-teklak, `Zen Mode`, kopiatzea eta gezi-teklak, fokuratutako gelaxka mugitzen dutenak. `Editing`, `Add` eta `Remove` tekla guztiek, `Delete Selection`, `Primary Key`, hautatu-guztia bi teklek, lau erlazio-teklek, `Add Table Group`, `Group Selected Tables`, `Hand Tool` eta itsasteak ez dute ezer egiten, eta `Undo` eta `Redo` teklek ez dute ezer desegiten edo berregiten. Ikus [Irakurtzeko soilik dauden editoreak](./table-related-functions.md#read-only-editors).
 `Zoom In`, `Zoom Out` eta `Zoom Reset` komandoek [Bisualizazioa](./visualization.md#toolbar) fitxako zooma ere aldatzen dute, `Graph` zein `Flow` moduan, Bilaketa azkarra irekita dagoenean izan ezik.
 `Flow` moduan, `Undo` eta `Redo` komandoek atzera eta aurrera egiten dute Fluxua mugatu izan den ikuspegietan zehar, haren `Previous table` eta `Next table` botoiek egiten duten bezala, Bilaketa azkarra irekita dagoenean izan ezik. Han ez dute inoiz diagrama desegiten, eta `Graph` moduan ez dute ezer egiten. Ikus [Aurreko taula eta hurrengo taula](./visualization.md#previous-table-and-next-table).
 Bisualizazioa fitxan, `Stop` komandoak [errenkaden bistaratzearen](./visualization.md#row-display) menua ere ixten du, eta oraindik abian dagoen [Fluxuaren antolaketa](./visualization.md#how-flow-is-placed) bat bertan behera uzten du; ez du zabaltzen `Focus on this table` komandoarekin mugatutako ikuspegi bat.
@@ -160,3 +156,13 @@ Orduan, `Shortcuts` fitxak ostalariaren tekla-konbinazioak zerrendatzen ditu: os
 Hiztegia fitxako errenkaden teklek `Add Column` eta `Remove Column` komandoei jarraitzen diete; beraz, horietako bat berriro esleitzeak haiek ere mugitzen ditu. Ikus [`dictionaryRowChords`](../../api/erd-editor-element.md#dictionaryrowchords).
 
 Obsidian aplikazioan, tekla hauek editorera iristen dira diagramaren Obsidian fitxa aktibo dagoen bakoitzean, baita Obsidianen lasterbide batek tekla bera erabiltzen duenean ere, adibidez `Alt + Enter`, `Ctrl + K` eta `Ctrl + F` (Windows/Linux) edo `⌥ + Enter`, `⌘ + K` eta `⌘ + F` (Mac). Gauza bera gertatzen da Hiztegia fitxako `Alt + Shift + Enter` (Windows/Linux) edo `⌥ + Shift + Enter` (Mac) lasterbidearekin, zerrenda honetako inongo errenkadatan ez dagoena. Obsidianen beste lasterbide guztiek bertan funtzionatzen jarraitzen dute. `Ctrl + F` edo `⌘ + F` lasterbideari buruz, ikus [Nabigatzailearen bilaketa-barra](./find-and-replace.md#the-browsers-find-bar).
+
+## Irakurtzeko soilik dauden editoreak {#read-only-editors}
+
+[`readonly`](../../api/erd-editor-element.md#readonly) atributua duen editore batean, Ezarpenak fitxak diagramaren ezarpenak erakusten ditu eta ez du bat ere aldatzen. `Read only` etiketa bat dago `Preferences` eta `Shortcuts` orrietako bakoitzaren goiburuaren ondoan.
+`Relationship DataType Sync` eta `Maximum comment width` etengailuak eta zabalera-eremua desgaituta daude, eta baita blokeo-botoi guztiak ere. `Column Order` errenkadek ez dute heldulekurik erakusten eta ezin dira arrastatu.
+`Lock` errenkada bakoitzak bere balioa erakusten du oraindik. Blokeatutako errenkada batek fitxategiak mantentzen duen balioa erakusten du, eta blokeatu gabeko batek pantaila horrek duen ezarpena, fitxategiarenaren desberdina izan daitekeena, behean azaltzen den bezala.
+
+Pantailak erakusten duena erabakitzen duten ezarpenek bertan aldatzen jarraitzen dute: ikuspegiaren kokapena eta zooma, fitxa, Izenen ikuspegia, datu-basea, Code Generator hizkuntza, bi izenen idazkerak, mugatzailea eta [`View Option`](./table-related-functions.md#table-view-options) etengailuak.
+Bakoitzak pantaila hori bakarrik aldatzen du, blokeoa edozein dela ere. Ez da fitxategian gordetzen ez JSON esportazio batean idazten, ez da desegite-historian erregistratzen, ez da aldaketa gisa kontatzen, eta ez da inoiz lankideengana iristen. [SQL eskema](./schema-sql.md#options-panel) eta [Code Generator](./code-generator.md#options-panel) fitxetako aukera-panelek hautu horiek `This window only` izendatzen dituzte bertan, `Saved in the document` ordez.
+Editorea berriro idazgarri bihurtzen denean, datu-basea, hizkuntza, izenen idazkerak, mugatzailea eta View Option etengailuak fitxategiaren balioetara itzultzen dira. Ikuspegia, fitxa eta Izenen ikuspegia utzi zenituen bezala geratzen dira, eta fitxategiak horietako bakoitza hartzen du, haren blokeoak uzten duen heinean, hurrengo aldaketarekin.

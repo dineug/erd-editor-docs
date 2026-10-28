@@ -31,7 +31,7 @@ Kod SQL jest generowany przy otwarciu karty i ponownie przy każdej zmianie jedn
 
 Panel zawiera trzy grupy, każdą pod własnym podpisem:
 
-1. `Saved in the document`: `Database` i `Bracket` – zobacz sekcję [Baza danych i cudzysłów](#database-and-bracket).
+1. `Saved in the document`: `Database` i `Bracket` – zobacz sekcję [Baza danych i cudzysłów](#database-and-bracket). Edytor tylko do odczytu podpisuje je `This window only` – zobacz sekcję [Edytory tylko do odczytu](#read-only-editors).
 2. `This window only`: `Statements`, `Header`, `Write logical names into empty comments` oraz, gdy diagram ma [grupę tabel](./table-groups.md), `Tables` – zobacz sekcje [Instrukcje](#statements), [Nagłówek](#header), [Nazwy logiczne jako komentarze](#logical-names-as-comments) i [Tabele](#tables).
 3. `Saved in the document · written as is for every database`: skrypty `Before tables` i `After tables` – zobacz sekcję [Skrypty przed tabelami i po nich](#before-and-after-scripts).
 
@@ -222,5 +222,9 @@ To, jak te komentarze są odczytywane przy imporcie, opisano w sekcji [Komentarz
 
 ## Edytory tylko do odczytu {#read-only-editors}
 
-W edytorze z atrybutem `readonly` karta działa jak zwykle: `Database` i `Bracket` nadal zmieniają wyświetlany kod SQL, `Statements`, `Header`, `Write logical names into empty comments` i `Tables` nadal działają, a `Save file` i `Copy` nadal go zapisują i kopiują.  
-Jedynie oba pola skryptów są tylko do odczytu.
+W edytorze z atrybutem [`readonly`](../../api/erd-editor-element.md#readonly) karta działa dla czytelnika i nic, co na niej zrobi, nie trafia do dokumentu:
+
+- `Database` i `Bracket` nadal zmieniają kod SQL, ale tylko w tym oknie, więc panel podpisuje je również `This window only`. Wybór nie jest zapisywany w pliku, współdzielony ze współpracownikami ani rejestrowany do cofania, niezależnie od blokad, a zmiana ustawienia, które wybrałeś, wprowadzona przez współpracownika pozostawia na ekranie Twój wybór. Karta Code Generator pokazuje ten sam wybór, a [`getSchemaSQL()`](../../api/erd-editor-element.md#getschemasql) wywołane bez bazy danych również go zapisuje. Gdy edytor znów umożliwi zapis, wracają baza danych i cudzysłów z dokumentu.
+- `Statements`, `Header`, `Write logical names into empty comments` i `Tables` działają jak wszędzie, ponieważ należą już do okna.
+- Oba pola skryptów są tylko do odczytu: pokazują skrypty dokumentu, które kod SQL nadal zapisuje, i nie przyjmują wpisywania.
+- `Save file` i `Copy` zapisują i kopiują kod SQL wyświetlany na karcie.

@@ -192,7 +192,8 @@ What `Escape`, the editor shortcuts that still work, and every other key do in t
 ## Read-only Editors
 
 In a [`readonly`](../../api/erd-editor-element.md#readonly) editor the search only finds. There is no `Toggle Replace` arrow and no `Replace` row, so no Replace field, `Preserve Case`, `Replace`, or `Replace All`.  
-The Find field, its three options, the kinds of text, the count, the results, and going to a match all work. The Explorer around it works as in any other editor — see [Read-only Editors](./explorer.md#read-only-editors).
+The Find field, its three options, the kinds of text, the count, the results, and going to a match all work. Going to a match selects what it lands on, as in [Going to a Match](#going-to-a-match), and that selection is the only one a read-only editor makes: a click on the canvas that does not move clears it.  
+Open the search with the key or with `Toggle Explorer` in Quick Search, since the canvas context menu has no `Toggle Explorer` there. The rest of the Explorer is covered in [Read-only Editors](./explorer.md#read-only-editors) on the Explorer page.
 
 In VS Code, a revision of a diagram, such as a Git revision or a Local History entry, opens as JSON text. Reopened as a diagram with `Reopen Editor With...`, it is read-only and gets this find-only search.
 

@@ -10,7 +10,8 @@ La modifica inizia dal menu contestuale, con un clic con il pulsante destro.
 ![Clic con il pulsante destro sull’area di disegno, apertura del sottomenu Relationship, aggiunta di una tabella e poi apertura del suo menu](/img/demo-context-menu.webp)
 
 Un clic con il pulsante destro su una tabella, un memo, un gruppo di tabelle o una relazione apre invece il menu specifico di quell’elemento.  
-Un clic con il pulsante destro su una tabella, un memo o un gruppo di tabelle già selezionato mantiene l’intera selezione, quindi voci come `Color` e `Delete selected` agiscono su tutta la selezione — vedere [Selezione multipla](./table-related-functions.md#multiple-selection).
+Un clic con il pulsante destro su una tabella, un memo o un gruppo di tabelle già selezionato mantiene l’intera selezione, quindi voci come `Color` e `Delete selected` agiscono su tutta la selezione — vedere [Selezione multipla](./table-related-functions.md#multiple-selection).  
+Un editor di sola lettura non crea nulla, quindi nulla di ciò che descrive questa pagina vi viene offerto: il menu dell’area di disegno mantiene solo `View Option`, `Name View`, `Export` e `Diff Viewer`, il menu di una tabella solo `Table Properties`, e un memo, un gruppo di tabelle o una relazione non apre alcun menu — vedere [Editor di sola lettura](./table-related-functions.md#read-only-editors).
 
 ## Schermata di benvenuto {#welcome-screen}
 

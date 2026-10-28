@@ -1,6 +1,6 @@
 ---
 sidebar_position: 16
-description: İlişkilerde veri türü eşitleme ve değer alanları, en fazla açıklama genişliği, tablo genişliklerini yeniden hesaplama, ayar kilitleri (görünüm, sekme, kod ayarları ve Ad görünümü), sütunların görüntülenme sırası ve kısayol listesi.
+description: İlişkilerde veri türü eşitleme ve değer alanları, en fazla açıklama genişliği, ayar kilitleri (görünüm, sekme, kod ayarları ve Ad görünümü), sütunların görüntülenme sırası, kısayol listesi ve salt okunur bir düzenleyicinin Ayarlar sekmesi.
 ---
 
 # Ayarlar
@@ -33,13 +33,6 @@ Anahtar açıldığında değer `60px` olarak başlar. Aralığın dışında ya
 
 ![Maximum comment width ayarını açma, 120 girme ve ERD sekmesinin açıklamaları bu genişlikte kesilmiş olarak göstermesi](/img/demo-settings-comment-width.webp)
 
-## Tablo genişliklerini yeniden hesaplama {#recalculation-table-width}
-
-Her tablonun ve sütun hücresinin genişliğini geçerli metnine sığacak şekilde yeniden hesaplamak ve ilişkilerin bağlantı çizgilerini yeni boyutlara göre yeniden çizmek için `Sync` düğmesine basın.
-İşlemi `Recalculated table width` bildirimi onaylar.
-Genişlikler bir belge her yüklendiğinde kendiliğinden yeniden hesaplanır; bu nedenle bu işlem yalnızca yazı tipindeki veya görüntü oluşturmadaki bir değişiklik genişliklerin güncelliğini yitirmesine yol açtığında gerekir.
-Genişlikler dosyaya kaydedilmez; bu nedenle `Sync` dosyayı hiçbir zaman değiştirmez.
-
 ## Kilit {#lock}
 
 `Lock` listesinde yedi ayar bulunur. Bir ayarın kilidi etkinken dosya, ayarın kilitlendiği andaki değerini korur; bu nedenle ayarı ekranda değiştirmek dosyayı olduğu gibi bırakır.
@@ -68,8 +61,9 @@ Dosya açıldığında kilitli görünümde diyagramın hiçbir kısmı görünm
 
 ![Viewport kilidini açma, diyagramı kaydırma ve yakınlaştırma, ardından satırının gösterdiği yeni görünümde yeniden kilitleme](/img/demo-settings-locks.webp)
 
-Dosya hangi kilitlerin etkin olduğunu sakladığı için bir kilidi etkinleştirmek veya devre dışı bırakmak dosyayı değiştirir; ancak Ayarlar sekmesinin geri kalanı gibi bu da [geri alma geçmişine](./undo-redo.md#what-the-history-records) kaydedilmez. Kilitli olsun ya da olmasın, bir Ad görünümü değişikliği de kaydedilmez. Salt okunur bir düzenleyicide kilit düğmeleri hiçbir şey yapmaz ve bir Ad görünümü değişikliği, kilidi ne durumda olursa olsun yalnızca o ekranı değiştirir.
+Dosya hangi kilitlerin etkin olduğunu sakladığı için bir kilidi etkinleştirmek veya devre dışı bırakmak dosyayı değiştirir; ancak Ayarlar sekmesinin geri kalanı gibi bu da [geri alma geçmişine](./undo-redo.md#what-the-history-records) kaydedilmez. Kilitli olsun ya da olmasın, bir Ad görünümü değişikliği de kaydedilmez.
 Diğer her ayar o anki hâliyle kaydedilir: veritabanı, [`View Option`](./table-related-functions.md#table-view-options) aç/kapat düğmeleri ve `Preferences` sekmesinin geri kalanı.
+Salt okunur bir düzenleyici dosyayı bunların hiçbiriyle değiştirmez, kilitler ne derse desin: kilit düğmeleri ve diğer `Preferences` kontrolleri devre dışıdır ve değiştirmenize hâlâ izin verdiği ayarlar o ekranda kalır. [Salt okunur düzenleyiciler](#read-only-editors) bölümüne bakın.
 
 Sıfırdan başlatılan yeni bir diyagramda tüm kilitler etkindir: VS Code'da, Obsidian'da veya bir JetBrains IDE'sinde açılan boş bir dosya (Obsidian'ın `ERD Editor: Create new diagram` ve `New ERD` komutları böyle bir dosya oluşturur), web uygulamasında yeni bir şema, Google Drive'ın New menüsünden oluşturulan bir dosya veya kendisine değer verilmemiş bir `<erd-editor>` öğesi.
 Web uygulamasının bir SQL, DBML, AML veya GraphQL dosyasını içe aktararak oluşturduğu bir şema ya da Google Drive dosyası da tüm kilitler etkin olarak başlar. Bir JSON dosyasından oluşturulan ise o dosyanın kaydettiği kilitleri korur.
@@ -98,6 +92,7 @@ Bir satırı taşımak için sürükleyin – satırın tamamı sürüklenebilir
 `Logical Name`, bir satırın `Both Names` görünümünde gösterdiği mantıksal ad hücresinin yerini belirler. `Logical Names` görünümünde mantıksal ad bunun yerine `Name` satırının yerinde durur, `Physical Names` görünümü ise mantıksal ad göstermez. [Ad görünümü](./logical-names.md#name-view) bölümüne bakın. `Domain`, View Option → `Domain` seçeneğinin gösterdiği değer alanı hücresinin yerini belirler. [Değer alanı hücresi](./logical-names.md#the-domain-cell) bölümüne bakın.
 Bir [tablo görünüm seçeneğiyle](./table-related-functions.md#table-view-options) gizlenen veya Ad görünümünde yer almayan bir hücre listedeki yerini korur; bu nedenle sıra, hangi hücreler gösteriliyorsa onlara uygulanır.
 Sırası `Logical Name` ve `Domain` satırları gelmeden önce belirlenmiş bir diyagramda, `Name` ve `DataType` sırada nerede olursa olsun, `Logical Name` satırı `Name` satırının hemen önüne, `Domain` satırı da `DataType` satırının hemen ardına eklenir.
+Sonraki bir sürümün kaydettiği bir diyagram da sırasını korur; o sürümün bu sürümde olmayan bir satırı olsa bile: bu sürümde olan satırlar dosyanın verdiği sırada durur ve bilinmeyen satır dışarıda bırakılır. Diyagramı burada kaydetmek sırayı onsuz yazar ve sonraki sürüm o satırı, kendi varsayılan sırasında komşusunun yanına geri koyar.
 [Alternatif anahtar](./table-related-functions.md#alternate-keys) işareti (`AK1.1` vb.) bu satırlardan biri değildir. Bu işaret bir satırda her zaman en sonda, bu sıranın en sona koyduğu hücre hangisiyse onun ardından yer alır.
 
 ![Column Order bölümüne kadar aşağı kaydırma ve Comment satırını yukarıya, Name satırının altına sürükleyerek her açıklamayı kendi sütun adının hemen ardına koyma](/img/demo-settings-column-order.webp)
@@ -146,6 +141,7 @@ Terim listesi açık olan bir mantıksal ad hücresinde `Stop` tuşuna ilk bası
 Açık bir Gezgin, tema oluşturucu veya `Display Language` seçicisi tuvaldeki kısayolların hiçbirini engellemez. `Stop` Gezgini hiçbir zaman kapatmaz. `Stop` ve diğer tuşların Gezginin içinde ne yaptığı için [Gezgindeki tuşlar](./explorer.md#keys-in-the-explorer) bölümüne, seçicinin içinde ne yaptığı için [Dil seçme](./language-and-theme.md#picking-a-language) bölümüne bakın.
 `Delete Selection` seçili her tabloyu, notu ve tablo grubunu kaldırır; tek bir tablo bazı sütunlarıyla birlikte seçiliyse ve yakınlaştırma `70%` değerinin üzerindeyse bunun yerine o sütunları kaldırır. [Tablo ve not silme](./table-related-functions.md#table-and-memo-deletion) bölümüne bakın. `Remove Table, Memo` seçili tablo gruplarını da kaldırır.
 `Add Table Group`, bir [`New Table Group`](./table-groups.md#drawing-a-group) çizimini [tuval araç çubuğundaki](./table-related-functions.md#canvas-toolbar) `New Table Group` düğmesinin yaptığı gibi başlatır; ikinci bir basış çizimi iptal eder. `Group Selected Tables`, değiştirici tuş olmadan yapılan iki basıştır: `T` tuşundan sonra bir saniye içinde `G`. Bir tablonun bağlam menüsündeki `Group selected tables` öğesinin yaptığı gibi seçili tabloları yeni bir gruba koyar ve grubun ad alanını açar; hiçbir tablo seçili değilse hiçbir şey yapmaz. [Seçili tabloları gruplama](./table-groups.md#grouping-selected-tables) bölümüne bakın. İkisi de salt okunur bir düzenleyicide veya gruplar [gizliyken](./table-groups.md#hiding-groups) hiçbir şey yapmaz.
+Salt okunur bir düzenleyicide yalnızca okuyan tuşlar çalışır: `Search`, `Toggle Explorer`, `Stop`, bir atlamanın seçtiği tablodaki `Table Properties` ve `Focus on this table`, üç yakınlaştırma tuşu, `Zen Mode`, kopyalama ve odaktaki hücreyi taşıyan ok tuşları. `Editing`, her `Add` ve `Remove` tuşu, `Delete Selection`, `Primary Key`, iki tümünü seç tuşu, dört ilişki tuşu, `Add Table Group`, `Group Selected Tables`, `Hand Tool` ve yapıştırma hiçbir şey yapmaz; `Undo` ve `Redo` da hiçbir şeyi geri almaz ve yinelemez. [Salt okunur düzenleyiciler](./table-related-functions.md#read-only-editors) bölümüne bakın.
 `Zoom In`, `Zoom Out` ve `Zoom Reset`, Hızlı arama açık olmadığı sürece [Görselleştirme](./visualization.md#toolbar) sekmesinde de hem `Graph` hem `Flow` modunda yakınlaştırma düzeyini değiştirir.
 `Flow` modunda `Undo` ve `Redo`, Hızlı arama açık olmadığı sürece, bu modun `Previous table` ve `Next table` düğmelerinin yaptığı gibi Akış modunun daraltıldığı tablolar arasında bir adım geri ve ileri gider. Orada diyagramı hiçbir zaman geri almazlar, `Graph` modunda ise hiçbir şey yapmazlar. [Önceki tablo ve sonraki tablo](./visualization.md#previous-table-and-next-table) bölümüne bakın.
 Görselleştirme sekmesinde `Stop`, [satır görünümü](./visualization.md#row-display) menüsünü de kapatır ve hâlâ sürmekte olan bir [Akış modu yerleşimini](./visualization.md#how-flow-is-placed) iptal eder; `Focus on this table` ile daraltılmış bir görünümü ise genişletmez.
@@ -160,3 +156,13 @@ Bu durumda `Shortcuts` sekmesi ana uygulamanın bağlamalarını listeler: Ana u
 Sözlük sekmesinin satır tuşları `Add Column` ve `Remove Column` kısayollarını izler; bu nedenle ikisinden birini yeniden bağlamak bu tuşları da taşır. [`dictionaryRowChords`](../../api/erd-editor-element.md#dictionaryrowchords) bölümüne bakın.
 
 Obsidian'da diyagramın Obsidian sekmesi etkin olduğu sürece bu tuşlar, `Alt + Enter`, `Ctrl + K` ve `Ctrl + F` (Windows/Linux) veya `⌥ + Enter`, `⌘ + K` ve `⌘ + F` (Mac) gibi bir Obsidian kısayol tuşunun aynı tuşu kullandığı durumlarda bile düzenleyiciye ulaşır. Bu listenin hiçbir satırında yer almayan, Sözlük sekmesinin `Alt + Shift + Enter` (Windows/Linux) veya `⌥ + Shift + Enter` (Mac) tuşları da düzenleyiciye ulaşır. Diğer tüm Obsidian kısayol tuşları orada çalışmaya devam eder. `Ctrl + F` veya `⌘ + F` için [Tarayıcının bulma çubuğu](./find-and-replace.md#the-browsers-find-bar) bölümüne bakın.
+
+## Salt okunur düzenleyiciler {#read-only-editors}
+
+[`readonly`](../../api/erd-editor-element.md#readonly) bir düzenleyicide Ayarlar sekmesi diyagramın ayarlarını gösterir ve hiçbirini değiştirmez. `Preferences` ve `Shortcuts` sayfalarının her birinin başlığının yanında bir `Read only` rozeti durur.  
+`Relationship DataType Sync` ve `Maximum comment width` anahtarları ile genişlik alanı devre dışıdır, her kilit düğmesi de öyle. `Column Order` satırları tutamaç göstermez ve sürüklenemez.  
+Her `Lock` satırı değerini yine gösterir. Kilitli bir satır dosyanın tuttuğu değeri, kilidi açık bir satır ise o ekranın sahip olduğu hâliyle ayarı gösterir; bu, aşağıda anlatıldığı gibi dosyanınkinden farklı olabilir.
+
+Ekranın ne göstereceğine karar veren ayarlar orada yine değişir: görünüm konumu ve yakınlaştırma, sekme, Ad görünümü, veritabanı, Kod oluşturucu dili, iki ad biçimi, tırnak türü ve [`View Option`](./table-related-functions.md#table-view-options) aç/kapat düğmeleri.  
+Her biri kilidi ne derse desin yalnızca o ekranı değiştirir. Dosyaya kaydedilmez ya da bir JSON dışa aktarma tarafından yazılmaz, geri alma geçmişine kaydedilmez, değişiklik sayılmaz ve ortak çalışanlara asla ulaşmaz. [Şema SQL](./schema-sql.md#options-panel) ve [Kod oluşturucu](./code-generator.md#options-panel) sekmelerinin seçenek panelleri bu seçimlerin başlığına orada `Saved in the document` yerine `This window only` yazar.  
+Düzenleyici yeniden yazılabilir olduğunda veritabanı, dil, ad biçimleri, tırnak türü ve View Option aç/kapat düğmeleri dosyanın değerlerine döner. Görünüm, sekme ve Ad görünümü bıraktığınız yerde kalır ve dosya, kilidinin izin verdiği ölçüde her birini onda yapacağınız bir sonraki değişiklikle alır.

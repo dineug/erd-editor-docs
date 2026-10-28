@@ -55,6 +55,10 @@ Gdy blokada jest włączona, przełączenie widać tylko w edytorze, który go d
 Gdy blokada jest wyłączona, przełączenie dokonane w edytorze, który może edytować, zmienia Widok nazw w każdym edytorze i każdej replice, przy czym obowiązuje ostatnie przełączenie, a każdy z nich ten widok zapisuje.  
 Własne przełączenie edytora tylko do odczytu zawsze pozostaje w tym edytorze, a edytor nadal podąża za współdzielonymi przełączeniami pozostałych.
 
+Od wersji `5.0.0` edytor [tylko do odczytu](../erd-editor-element.md#readonly) w ogóle nie wysyła zmian. Przewinięcie, powiększenie, karta, Widok nazw, baza danych, język Generatora kodu, style nazw, typ cudzysłowu i wiersze `View Option`, które zmienia jego czytelnik, pozostają na jego ekranie niezależnie od ich blokad; przed wersją `5.0.0` jego przewinięcia, powiększenia, przełączenia kart, baza danych i ustawienia kodu były wysyłane tak jak w edytorze z możliwością edycji.  
+Jego magazyn nadal wysyła to, co wysyłają jego mechanizmy śledzące kursora, fokusu, zaznaczenia i ramki przeciągania czytelnika, odpowiada na rejestry, o które prosi dołączający edytor, i stosuje każdą zmianę wysłaną przez pozostałych. Zmiana bazy danych, ustawienia Generatora kodu lub wiersza `View Option` trafia do jego dokumentu, a także na jego ekran, chyba że jego czytelnik zmienił to ustawienie właśnie tam, a współdzielone przełączenie Widoku nazw widać na jego ekranie w obu przypadkach.  
+Gdy edytor przechodzi w tryb tylko do odczytu, najpierw wysyła to, co magazyn wciąż wstrzymuje z przeciągania lub przewinięcia, tak jak robi to [flushStreamBuffers](#flushstreambuffers), dzięki czemu pozostałe edytory zachowują jego ostatni stan.
+
 [Blokady](../../guide/guides/settings.md#lock) są współdzielone: w każdym edytorze obowiązuje ostatnie zablokowanie lub odblokowanie danego ustawienia, a blokada przenosi wartości edytora, który ją włączył, więc każdy edytor i każda replika zapisują tę samą wartość.  
 Blokada `Viewport` zapisuje więc widok edytora, który ją włączył, a blokada `Canvas Type` – ostatnią kartę otwartą w tym edytorze przed kartą Ustawienia, na której włącza się blokady.  
 Wyłączenie blokady `Language`, `Table Name Case`, `Column Name Case`, `Bracket Type` lub, od wersji `4.2.0`, `Name View` zmienia też to ustawienie w każdym edytorze na wartość wyświetlaną w edytorze, który ją wyłączył, więc edytory nadal zapisują jedną wartość. Wyłączenie blokady `Viewport` lub `Canvas Type` nie przesuwa niczyjego widoku ani nie przełącza niczyjej karty.
@@ -71,6 +75,8 @@ Przycisk kafelka z łączem zewnętrznym, wynik [szybkiego wyszukiwania](../../g
 Bezpośrednie połączenie subscribe z dispatch zastępuje tu sieć, dzięki czemu widać strukturę sesji bez zasłaniającego ją transportu.
 
 ```js
+import '@dineug/erd-editor/erd-editor.js';
+
 const editor1 = document.createElement('erd-editor');
 const editor2 = document.createElement('erd-editor');
 

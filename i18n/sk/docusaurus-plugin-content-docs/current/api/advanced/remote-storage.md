@@ -16,7 +16,7 @@ npm install @dineug/erd-editor
 
 Replikačné úložisko sa nachádza v podceste `@dineug/erd-editor/engine.js`, nie v koreni balíka.  
 Tento vstupný bod nepoužíva DOM, takže beží v prostredí Web Worker alebo kdekoľvek inde mimo hlavného vlákna.  
-Ak namiesto toho importujete koreň balíka, zaregistruje sa vlastný element `<erd-editor>`, ktorý potrebuje dokument.
+Ak namiesto toho importujete koreň balíka, potrebuje dokument: od verzie `5.0.0` nedefinuje žiadny element, ale jeho vyhodnotenie vytvorí triedy oboch elementov. Pred verziou `5.0.0` registroval vlastný element `<erd-editor>`.
 
 ## Použitie {#usage}
 

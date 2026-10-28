@@ -22,7 +22,7 @@ description: 打开命令面板，切换标签页或名称显示、执行当前�
 输入文字即可过滤列表。每次按键都会对当前显示的整个列表重新搜索，因此删除字符，或者用新词替换没有找到任何结果的词，都会让匹配的条目重新出现。  
 匹配为模糊匹配，涵盖条目名称及其旁边显示的关键字。例如在 `Import` 子菜单中，`sdl` 可以找到 `GraphQL`，`dbdiagram` 可以找到 `DBML`，`azimutt` 可以找到 `AML`。轻微的拼写错误仍能找到对应的条目，例如 `tabel` 可以找到 `New Table`，`imprt` 可以找到 `Import`；但与输入内容只是大致相似的条目会被排除：`memo` 只会列出 `New Memo`。名称或关键字中包含输入内容（不区分大小写）的条目总会被列出，模糊匹配漏掉的这类条目排在模糊匹配的结果之后。条目中凡是包含输入内容的地方都会高亮显示，不区分大小写。  
 当显示语言不是英语时，命令和子菜单条目也可以通过其英文名称和关键字找到，列表中不会显示这些英文名称和关键字，因此无论 `New Table` 以哪种语言显示，`new table` 都能找到它。  
-使用 `↑` 和 `↓` 在列表中移动，到达两端时会循环，按 `Enter` 执行高亮的条目。带有独立快捷键的命令会在其所在行的末端显示该快捷键：位于右侧；在从右到左书写的显示语言中则位于左侧。输入法仍在组字时（例如正在输入一个韩文音节），`↑`、`↓` 和 `Enter` 归输入法处理，既不会移动高亮，也不会执行条目。
+使用 `↑` 和 `↓` 在列表中移动，到达两端时会循环，按 `Enter` 执行高亮的条目。列表会滚动以让高亮的条目保持在视野内；在较矮的编辑器窗格中，它会缩小到搜索框下方的剩余空间，因此每个条目仍然可以到达，高亮的条目也保持在视野内。带有独立快捷键的命令会在其所在行的末端显示该快捷键：位于右侧；在从右到左书写的显示语言中则位于左侧。输入法仍在组字时（例如正在输入一个韩文音节），`↑`、`↓` 和 `Enter` 归输入法处理，既不会移动高亮，也不会执行条目。
 
 `Database`、`Import` 或 `Auto Layout` 之类的条目会打开子菜单，其条目会替换当前列表，搜索框也会被清空。`Name View`、`Database`、`Bracket`、`Language`、两种名称大小写、`Schema SQL: Statements`、`Schema SQL: Header`、`Theme` 和 `Display Language` 的子菜单会勾选当前的选择，并在打开时将高亮置于该项上，因此直接按 `Enter` 会保留当前选择；其他子菜单打开时没有任何条目处于高亮状态。  
 过滤始终只作用于当前显示的列表，并且无法返回上一级，因此需要关闭并重新打开命令面板才能重新开始。在子菜单中，`#`、`@`、`:` 和 `?` 只是普通文本，而不是[前缀](#searching-the-diagram)。
@@ -34,7 +34,7 @@ description: 打开命令面板，切换标签页或名称显示、执行当前�
 在 ERD 标签页中，列表先是 `Name View` 和最多四个用于[重新生成物理名](./dictionary.md#derive-physical-names-again)的行，然后依次是 `Database`、`Import`、`Import and Add` 与 `Export`，接着是 `New Table`、`New Memo`、`New Table Group` 与 `Group Selected Tables`，以及四种关系类型和 `Auto Layout`。这里不会列出表，输入 `#` 即可[跳转到表](#searching-the-diagram)。  
 `Name View` 会打开 `Physical Names`、`Logical Names` 和 `Both Names`，并勾选当前的显示方式，选择其中一项会像画布右键菜单中的 `Name View` 一样切换显示方式，参见[切换显示方式](./logical-names.md#switching-the-view)。它只在 ERD 标签页的列表中出现，在只读编辑器中也是如此。  
 这些重新生成的行通过其旁边的关键字区分。`Derive Physical Name Again` 旁边显示 `column`，用于重新生成焦点所在列的物理名。`Derive Physical Names Again` 有三行：旁边显示 `table` 的一行作用于焦点所在的表，包括其名称和每一列；旁边显示 `selected tables` 的一行在选中两个或更多表时作用于选中的表；旁边显示 `whole document` 的一行作用于图中的每个表。每一行只在有可作用的对象时才会列出，在只读编辑器中则都不会列出。  
-在只读编辑器中不会列出 `Import and Add`；当 [View Option](./table-related-functions.md#table-view-options) → `Memos` 隐藏了备注时，不会列出 `New Memo`。`New Table Group` 会开始在画布上绘制一个[表分组](./table-groups.md)，`Group Selected Tables` 会把选中的表放入一个新分组，并打开该分组的名称编辑器以便输入名称。在只读编辑器中，以及当 View Option → `Table Groups` 隐藏了表分组时，这两项都不会列出；此外，`Group Selected Tables` 还要求至少选中一个表。这两行会显示各自的按键：[绘制分组](./table-groups.md#drawing-a-group)为 `Alt + G` (Windows/Linux) 或 `⌥ + G` (Mac)，[为选中的表分组](./table-groups.md#grouping-selected-tables)为先按 `T` 再按 `G`。  
+当 [View Option](./table-related-functions.md#table-view-options) → `Memos` 隐藏了备注时，不会列出 `New Memo`。`New Table Group` 会开始在画布上绘制一个[表分组](./table-groups.md)，`Group Selected Tables` 会把选中的表放入一个新分组，并打开该分组的名称编辑器以便输入名称。当 View Option → `Table Groups` 隐藏了表分组时，这两项都不会列出；此外，`Group Selected Tables` 还要求至少选中一个表。这两行会显示各自的按键：[绘制分组](./table-groups.md#drawing-a-group)为 `Alt + G` (Windows/Linux) 或 `⌥ + G` (Mac)，[为选中的表分组](./table-groups.md#grouping-selected-tables)为先按 `T` 再按 `G`。  
 这些条目执行的命令与画布右键菜单相同，但以下条目执行的是表的右键菜单中的命令：`Group Selected Tables` 执行其中的 `Group selected tables`，旁边显示 `column`、`table` 和 `selected tables` 的重新生成行执行其中的 `Derive Physical Name Again` 或 `Derive Physical Names Again`，作用于焦点或选中范围，而不是右键点击的位置。`View Option` 和 `Diff Viewer` 仅存在于右键菜单中。此处的 `Export` 提供与右键菜单相同的 `json`、`Schema SQL` 和 `Image`，在其中输入 `png` 或 `svg` 即可找到 `Image`。  
 各格式、[Import and Add](./file-import-export.md#import-and-add) 以及[图片导出](./file-import-export.md#image)的作用参见[导入与导出文件](./file-import-export.md)，数据库选择的影响参见[表相关功能](./table-related-functions.md#databases)。
 
@@ -54,6 +54,15 @@ Visualization、Dictionary 和 Settings 标签页没有自己专属的命令，�
 `Theme` 会打开 `System`、`Light` 和 `Dark`，当前的外观处于勾选状态。选择其中一项只会改变外观，灰阶色和强调色保持不变，与主题构建器的 `Appearance` 按钮相同。  
 `Display Language` 会打开 `System`，其后是 25 种语言，每种语言都以其自身的名称显示，并按选择器中的顺序排列，当前选项处于勾选状态。在这里还可以通过语言的英文名称或代码找到它：`german` 或 `de-DE` 可以找到 `Deutsch`，`korean` 可以找到 `한국어`。  
 在这两者中所做的选择都会立即生效并关闭命令面板，并且与在主题构建器或 `Display Language` 选择器中所做的选择一样被保存下来。如果在命令面板打开期间显示语言发生了变化，列表会切换为该语言，同时保留已输入的内容和当前所在的子菜单。
+
+### 只读编辑器 {#read-only-editors}
+
+[`readonly`](../../api/erd-editor-element.md#readonly) 编辑器不会列出任何会改变图的命令，而不是把它们列为变暗的状态。  
+在 ERD 标签页上，它保留 `Tab`、`Name View`、`Database`、带有全部三个条目的 `Export`、`Toggle Explorer`、`Theme` 和 `Display Language`。它不列出 `Import`、`Import and Add`、重新生成的各行、`New Table`、`New Memo`、`New Table Group`、`Group Selected Tables`、四种关系类型和 `Auto Layout`。  
+其他标签页列出的内容与在任何编辑器中相同。无论列在哪里，`Tab`、`Name View`、`Database`、`Bracket`、`Language` 和两种名称大小写都只改变该屏幕，从不保存，参见设置中的[只读编辑器](./settings.md#read-only-editors)。  
+如果在命令面板打开期间编辑器变为只读，或者再次变为可写，列表会按编辑器此时所提供的内容重新绘制，并按你已输入的内容重新搜索。其行已消失的子菜单会让位给顶层。
+
+`#`、`@` 和 `:` 前缀与在任何编辑器中一样搜索图，跳转会选中其所到达的对象，参见[搜索图](#searching-the-diagram)。在只读编辑器中，这是选中任何内容的唯一方式：在画布上按下不会选中任何内容，而不移动的点击会清除跳转所选中的内容，参见[只读编辑器](./table-related-functions.md#read-only-editors)。
 
 ## 搜索图 {#searching-the-diagram}
 

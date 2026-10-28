@@ -23,7 +23,7 @@ Otwórz go jednym z tych sposobów:
 - Przycisk `Explorer` na pasku narzędzi, tuż za przyciskiem `Search`, z ikoną drzewa. Jego podpowiedź brzmi `Explorer (Ctrl + F)` (Windows/Linux) lub `Explorer (⌘ + F)` (Mac).
 - Skrót `Ctrl + F` (Windows/Linux) lub `⌘ + F` (Mac), który na karcie [Skróty klawiaturowe](./settings.md#shortcuts) w Ustawieniach nosi nazwę `Toggle Explorer`.
 - Polecenie `Toggle Explorer` w palecie [Szybkie wyszukiwanie](./quick-search.md), dostępne na każdej karcie. Pojawia się po wpisaniu `find`, `replace`, `rename`, `tree`, `outline` lub `objects`.
-- Pozycja `Toggle Explorer` w menu kontekstowym kanwy: kliknij prawym przyciskiem myszy puste miejsce na kanwie ERD poza jakąkolwiek [grupą tabel](./table-groups.md). Znajduje się za pozycjami `New Table`, `New Memo` i `New Table Group`, przed pozycją `Relationship`.
+- Pozycja `Toggle Explorer` w menu kontekstowym kanwy: kliknij prawym przyciskiem myszy puste miejsce na kanwie ERD poza jakąkolwiek [grupą tabel](./table-groups.md). Znajduje się za pozycjami `New Table`, `New Memo` i `New Table Group`, przed pozycją `Relationship`. Menu kanwy edytora tylko do odczytu nie ma takiej pozycji – zobacz sekcję [Edytory tylko do odczytu](#read-only-editors).
 
 Obie pozycje `Toggle Explorer` pokazują skrót po prawej stronie.  
 Przycisk na pasku narzędzi, skrót i pozycja w Szybkim wyszukiwaniu działają na każdej karcie. Na karcie Wizualizacja, Schemat SQL, Generator kodu, Słownik lub Ustawienia najpierw przełączają na kartę ERD, ponieważ Eksplorator jest widoczny tylko tam.
@@ -168,5 +168,8 @@ Otwarcie wyszukiwania skrótem lub pozycją `Toggle Explorer` zamyka każde z ty
 
 ## Edytory tylko do odczytu {#read-only-editors}
 
-W edytorze z atrybutem [`readonly`](../../api/erd-editor-element.md#readonly) Eksplorator działa tak jak w każdym innym: przycisk na pasku narzędzi z tą samą podpowiedzią, skrót, obie pozycje `Toggle Explorer`, drzewo, zwijanie, przycisk `Collapse All` oraz przechodzenie do wiersza, które jak zwykle zaznacza element docelowy. Jego tytuł brzmi tam również `Explorer`.  
+W edytorze z atrybutem [`readonly`](../../api/erd-editor-element.md#readonly) Eksplorator działa tak jak w każdym innym: przycisk na pasku narzędzi z tą samą podpowiedzią, skrót, pozycja `Toggle Explorer` w Szybkim wyszukiwaniu, drzewo, zwijanie i przycisk `Collapse All`. Jego tytuł brzmi tam również `Explorer`. Menu kontekstowe kanwy nie ma tam pozycji `Toggle Explorer`, ponieważ zachowuje tylko pozycje, które służą do czytania – zobacz sekcję [Edytory tylko do odczytu](./table-related-functions.md#read-only-editors).
+
+Przechodzenie do wiersza działa tak jak w sekcji [Przechodzenie do wiersza](#going-to-a-row): widok przesuwa się według tej samej reguły, a tabela, grupa tabel lub notatka danego wiersza jest zaznaczona, obrysowana na kanwie, z aktywną komórką w miejscu, które wyznacza wiersz.  
+To jedyny sposób, w jaki edytor tylko do odczytu cokolwiek zaznacza. Naciśnięcie na kanwie niczego nie zaznacza, a kliknięcie, które nie przesuwa widoku, czyści zaznaczenie pozostawione przez wiersz. Zaznaczona w ten sposób tabela otwiera się we [Właściwościach tabeli](./table-related-functions.md#table-properties) klawiszami `Alt + Space` (Windows/Linux) lub `⌥ + Space` (Mac), tylko do odczytu, a `Ctrl + C` (Windows/Linux) lub `⌘ + C` (Mac) kopiuje zaznaczone elementy jak w każdym edytorze.  
 Jego wyszukiwanie tylko znajduje dopasowania – zobacz sekcję [Edytory tylko do odczytu](./find-and-replace.md#read-only-editors) na stronie Znajdź i zamień.

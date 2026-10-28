@@ -1,11 +1,20 @@
 ---
 sidebar_position: 2
-description: erd-editor 엘리먼트 API의 속성, value와 runtimeValue, 이벤트, 테마, 표시 언어, 시작 화면, 단축키와 스키마 가져오기, 내보내기.
+description: erd-editor 엘리먼트 API의 등록 방법, 속성, value와 runtimeValue, 이벤트, 테마, 표시 언어, 시작 화면, 단축키와 스키마 가져오기, 내보내기.
 ---
 
 # ErdEditorElement
 
-에디터는 단순한 `HTMLElement`입니다.  
+에디터는 단순한 `HTMLElement`이며, `@dineug/erd-editor/erd-editor.js`를 import하면 정의되는 `<erd-editor>` 태그입니다.  
+`5.0.0`부터 패키지 루트를 import해도 태그가 정의되지 않습니다. 루트는 엘리먼트의 타입이자 클래스인 `ErdEditorElement`와, 호출한 곳에서 태그를 정의하는 `defineErdEditor()`를 export합니다. [엘리먼트 등록](./installation.md#registering-the-elements)을 참고하세요.  
+다이어그램만 보여 주는 페이지에는 읽기 전용의 별도 엘리먼트인 [`<erd-viewer>`](./erd-viewer-element.md)가 있습니다.
+
+```js
+import '@dineug/erd-editor/erd-editor.js';
+
+const editor = document.createElement('erd-editor');
+```
+
 타입 정의는 다음과 같습니다.
 
 ```ts
@@ -80,14 +89,26 @@ interface ErdEditorElement extends HTMLElement {
 
 에디터 편집 가능 여부를 설정합니다.  
 설정된 동안에는 `value` 할당, `clear()`, `setSchemaSQL()`, `setSchemaGraphQL()`, `setSchemaDBML()`, `setSchemaAML()`, `setSchemaJSON()`, Undo, Redo(`4.2.0`부터는 사전 시트의 Undo, Redo 포함)가 모두 무시되고 `change` 이벤트도 발행되지 않습니다. 문서를 불러올 때는 [setInitialValue](#setinitialvalue)를 사용하세요.  
-보기는 그대로 동작합니다. 확대/축소, 화면 이동, 손 도구, Zen 모드, 캔버스 탭, 두 모드와 테이블 포커스를 포함한 [Visualization](../guide/guides/visualization.md) 탭, 데이터베이스 벤더, SQL과 코드 생성 출력 설정이 모두 적용되므로, 읽기 전용 뷰어에서도 다른 벤더의 SQL을 내보내거나 생성된 코드를 확인할 수 있습니다.  
-`4.1.0`부터는 [탐색기](../guide/guides/explorer.md#읽기-전용-에디터)도 열리며, 탐색기의 행을 고르면 편집 가능한 에디터에서와 마찬가지로 그 행이 나타내는 대상으로 이동합니다. 탐색기 맨 위의 [찾기와 바꾸기](../guide/guides/find-and-replace.md#읽기-전용-에디터)는 `Toggle Replace` 화살표와 Replace 줄 없이 찾기만 하며, 일치 항목으로 이동하면 여전히 그 항목을 화면에 표시하고 선택합니다. 패널의 제목은 `Explorer`이고, 툴바 버튼의 툴팁은 모든 에디터에서 `Explorer (Ctrl + F)` (Windows/Linux) or `Explorer (⌘ + F)` (Mac)입니다. `3.10.0`부터 `4.0.0`까지는 찾기와 바꾸기가 제목이 `Find`인 찾기 전용의 떠 있는 패널로 열렸습니다.  
-테이블 속성도 그대로 열리며, `3.10.0`부터는 제목 옆에 `Read only` 배지가 표시되고 `Indexes` 탭에서는 아무것도 편집할 수 없습니다. [테이블 속성](../guide/guides/table-related-functions.md#테이블-속성) 문서를 참고하세요.  
-`4.0.0`부터 읽기 전용 에디터는 [`Import and Add`](../guide/guides/file-import-export.md#가져와서-추가), `New Table Group`, `Group selected tables`, `Remove from group`([테이블 그룹](../guide/guides/table-groups.md#읽기-전용-에디터) 문서 참고), [`Map Columns`](../guide/guides/relationship-editing.md#컬럼-매핑)를 제공하지 않으며, [시작 화면](#enablewelcomescreen)도 표시하지 않습니다. 설정 탭의 잠금 버튼은 아무것도 바꾸지 않으며, Schema SQL 탭의 `Before tables`와 `After tables` 스크립트는 편집할 수 없습니다.  
-`4.1.0`부터는 [캔버스 툴바](../guide/guides/table-related-functions.md#캔버스-툴바)에 `New Table`, `New Memo`, `New Table Group` 버튼도 표시하지 않으며, `addTableGroup`과 `groupSelectedTables` 바인딩은 아무 동작도 하지 않습니다.  
-`4.2.0`부터 [이름 표시](../guide/guides/logical-names.md#read-only-editors)는 각 선택기에서 여전히 전환되지만, 그 에디터의 화면에서만 바뀝니다. 잠금 설정과 상관없이 이 전환은 공동 편집자에게 전달되지 않습니다. Flow의 `Previous table`과 `Next table`은 버튼으로든 Undo, Redo 키로든 여전히 한 단계씩 이동합니다.  
-[사전](../guide/guides/dictionary.md#read-only-editors) 탭도 그대로 열립니다. 시트를 전환하고, 검색하고, 선택하고, 스크롤하고, 복사할 수 있으며, `Checks` 시트의 행은 여전히 그 행이 가리키는 대상으로 이동합니다. 어떤 셀도 편집하거나 붙여넣거나 지울 수 없고, 탭에는 `Add Row`, `Delete Rows`, `Import CSV`, `Export CSV` 도구와 그리드 메뉴가 표시되지 않으며, 행 키 조합은 아무것도 삽입하거나 삭제하지 않습니다. 테이블 메뉴, 캔버스 메뉴, 빠른 검색은 [`Derive Physical Names Again`](../guide/guides/dictionary.md#derive-physical-names-again)이나 `Derive Physical Name Again`을 제공하지 않습니다.  
-저장되지 않는 Schema SQL 탭의 `This window only` 선택인 `Statements`, `Header`, `4.2.0`부터 추가된 `Write logical names into empty comments`, `Tables`는 그대로 적용되며, [`Export image`](../guide/guides/file-import-export.md#이미지) 대화 상자, 테마 빌더, Display Language 선택기도 마찬가지입니다. 테마 빌더나 Display Language 선택기에서 고르면 여전히 [changePresetTheme](#changepresettheme)이나 [changeLocale](#changelocale)을 발행합니다.  
+`5.0.0`부터 읽기 전용 에디터는 컨트롤만 비활성화한 에디터가 아니라 읽는 사람을 위한 에디터입니다. 여섯 개의 탭, [탐색기](../guide/guides/explorer.md#읽기-전용-에디터), 미니맵, 빠른 검색, 테이블 속성, [Diff Viewer](../guide/guides/table-related-functions.md#diff-viewer), `Export`, Zen 모드, 공동 편집자의 커서, 포커스, 선택은 그대로 두고, 다이어그램을 편집하는 컨트롤은 비활성화된 채로 그리지 않고 아예 빼 둡니다. `5.0.0` 이전에는 편집 컨트롤 중 상당수가 그대로 그려졌고, 에디터는 그 컨트롤이 보낸 것을 버렸습니다.
+
+ERD 탭에서는 드래그가 어디서 시작하든, 테이블 위에서도 화면을 이동시키고, 누르기는 아무것도 선택하거나 옮기거나 열지 않습니다. 포인터가 테이블 위에 있으면 그 관계선이 강조되고, 테이블이나 관계선을 움직이지 않고 클릭하면 강조가 유지되며, 다른 곳을 움직이지 않고 클릭하면 강조가 꺼집니다. [`<erd-viewer>`](./erd-viewer-element.md)와 같습니다. 유일한 선택은 이동이 남기는 외곽선입니다. 탐색기의 행, 찾기 일치 항목, `#`, `@`, `:` 뒤의 빠른 검색 결과로 이동하면 도착한 대상이 선택되고, 다음 클릭에서 지워집니다. 복사하면 그 선택이 담은 것이 복사됩니다.  
+[캔버스 툴바](../guide/guides/table-related-functions.md#캔버스-툴바)에는 `Zoom out`, 확대/축소 수준(`Reset zoom`), `Zoom in`, 이름 표시 목록, `Zen Mode`, 나침반만 남고, `Hand`와 `Select`, `New Table`, `New Memo`, `New Table Group`, 관계선 버튼은 없습니다. 캔버스 메뉴에는 `View Option`, `Name View`, `Export`, `Diff Viewer`가, 테이블 메뉴에는 `Table Properties`가 남고, 메모, 관계선, 테이블 그룹은 메뉴를 열지 않습니다. ERD 탭의 빠른 검색에는 다이어그램을 쓰는 행이 없습니다. `Tab`, `Name View`, `Database`, `Export`, `Toggle Explorer`, [enableThemeBuilder](#enablethemebuilder)와 [enableLocalePicker](#enablelocalepicker)가 켜는 `Theme`과 `Display Language` 행, `#`, `@`, `:` 검색만 남습니다. 다른 탭에서는 편집 가능한 에디터와 같은 항목이 나열됩니다. 툴바는 데이터베이스 이름을 텍스트로 보여 주며 `Undo`, `Redo`, `Time Travel` 버튼은 없습니다.  
+`Import`, [`Import and Add`](../guide/guides/file-import-export.md#가져와서-추가), `Auto Layout`, 테이블 그룹 행([테이블 그룹](../guide/guides/table-groups.md#읽기-전용-에디터) 문서 참고), [`Map Columns`](../guide/guides/relationship-editing.md#컬럼-매핑)는 어디서도 제공하지 않으며, [시작 화면](#enablewelcomescreen)도 표시되지 않습니다.  
+추가, 삭제, 편집하는 바인딩은 아무 동작도 하지 않습니다. `edit`, `addTable`, `addColumn`, `addMemo`, `addTableGroup`, `groupSelectedTables`, `removeTable`, `removeColumn`, `removeSelection`, `primaryKey`, `selectAllTable`, `selectAllColumn`, 네 개의 관계선 바인딩, `handTool`이며, 각각 옵션에 적힌 대로 기본 동작은 여전히 막습니다. 붙여넣기와 `Tab`도 아무 동작을 하지 않으며, 막지 않고 페이지로 넘깁니다. 확대/축소 바인딩, `zenMode`, `focusView`, 이동이 선택한 테이블에 대한 `tableProperties`, `search`, `findReplace`, 복사, `Escape`, 방향키는 계속 동작합니다. 셀, 메모, 테이블 그룹 이름 편집기는 열리지 않고 관계선도 그려지지 않습니다.
+
+탐색기 맨 위의 [찾기와 바꾸기](../guide/guides/find-and-replace.md#읽기-전용-에디터)는 `Toggle Replace` 화살표와 Replace 줄 없이 찾기만 합니다. 패널의 제목은 `Explorer`이고, 툴바 버튼의 툴팁은 모든 에디터에서 `Explorer (Ctrl + F)` (Windows/Linux) 또는 `Explorer (⌘ + F)` (Mac)입니다. 읽기 전용 에디터에서 탐색기는 `4.1.0`부터 열리며, `3.10.0`부터 `4.0.0`까지는 찾기와 바꾸기가 제목이 `Find`인 찾기 전용의 떠 있는 패널로 열렸습니다.  
+테이블 속성은 테이블 메뉴나 `tableProperties` 바인딩으로 열리며, `3.10.0`부터는 제목 옆에 `Read only` 배지가 표시되고 `Indexes` 탭에서는 아무것도 편집할 수 없습니다. [테이블 속성](../guide/guides/table-related-functions.md#테이블-속성) 문서를 참고하세요.  
+설정 탭에도 같은 `Read only` 배지가 있으며, 모든 설정이 눌러도 반응하지 않는 컨트롤로 표시됩니다. 두 스위치, `Maximum comment width` 필드, 일곱 개의 `Lock` 버튼은 비활성화되고, `Column Order` 행은 드래그되지 않습니다. Schema SQL 탭의 `Before tables`와 `After tables` 스크립트에는 입력할 수 없습니다. [Visualization](../guide/guides/visualization.md) 탭은 문서를 편집하는 것이 없으므로 편집 가능한 에디터와 똑같이 동작하며, Flow의 `Previous table`과 `Next table`은 버튼으로든 Undo, Redo 키로든 여전히 한 단계씩 이동합니다.  
+[사전](../guide/guides/dictionary.md#read-only-editors) 탭도 그대로 열립니다. 시트를 전환하고, 검색하고, 선택하고, 스크롤하고, 복사할 수 있으며, `Checks` 시트의 행은 여전히 그 행이 가리키는 대상으로 이동합니다. 어떤 셀도 편집하거나 붙여넣거나 지울 수 없고, 탭에는 `Add Row`, `Delete Rows`, `Import CSV`, `Export CSV` 도구와 그리드 메뉴가 표시되지 않으며, 행 키 조합은 아무것도 삽입하거나 삭제하지 않습니다. 테이블 메뉴, 캔버스 메뉴, 빠른 검색은 [`Derive Physical Names Again`](../guide/guides/dictionary.md#derive-physical-names-again)이나 `Derive Physical Name Again`을 제공하지 않습니다.
+
+`5.0.0`부터 읽는 사람이 여전히 바꿀 수 있는 설정은 그 에디터의 화면에만 머뭅니다. 스크롤과 확대/축소, 탭, 데이터베이스, 코드 생성 언어, 두 이름 표기 규칙, 대괄호 유형, `View Option` 행, 그리고 각 선택기에서 바꾸는 [이름 표시](../guide/guides/logical-names.md#read-only-editors)가 그렇고, 이름 표시는 `4.2.0`부터 이미 화면에만 머물렀습니다. [잠금](../guide/guides/settings.md#잠금) 설정과 상관없이 이 중 어느 것도 `value`, `runtimeValue`, `json` 내보내기, Undo 히스토리, [change](#change) 이벤트, shared store에 닿지 않으므로, 읽는 사람이 어떻게 보든 `value`는 문서의 설정을 유지합니다. [Schema SQL](../guide/guides/schema-sql.md#읽기-전용-에디터)과 Code Generator의 옵션 패널은 `readonly`가 설정된 동안 이 설정들에 `This window only`라고 표시하며, 편집 가능한 에디터에서는 `Saved in the document`라고 표시합니다. 두 탭이 보여 주고, 복사하고, 저장하는 것은 화면을 따르며, 벤더 없이 호출한 [getSchemaSQL](#getschemasql)도 마찬가지입니다.  
+`5.0.0` 이전에는 읽는 사람의 스크롤, 확대/축소, 탭 전환, 데이터베이스, 코드 설정이 잠금이 잡고 있지 않는 한(데이터베이스는 잠금이 없습니다) `value`로 들어갔고, shared store가 이를 다른 에디터에 보냈습니다.  
+Schema SQL 탭 자체의 `This window only` 선택인 `Statements`, `Header`, `4.2.0`부터 추가된 `Write logical names into empty comments`, `Tables`는 어떤 에디터에서도 저장되지 않으며 그대로 적용되고, [`Export image`](../guide/guides/file-import-export.md#이미지) 대화 상자, 테마 빌더, Display Language 선택기도 마찬가지입니다. 테마 빌더나 Display Language 선택기에서 고르면 여전히 [changePresetTheme](#changepresettheme)이나 [changeLocale](#changelocale)을 발행합니다.
+
+설정된 동안에는 스크롤이나 확대/축소를 포함해 아무것도 Undo 히스토리에 들어가지 않으며, 에디터의 [shared store](#getsharedstore)는 어떤 변경도 보내지 않습니다. 보내는 것은 트래커가 보내는 읽는 사람의 커서, 포커스, 선택, 드래그 상자와, 다른 에디터가 합류할 때 요청하는 레지스터뿐입니다([공동 편집](./advanced/collaborative-editing.md) 참고). 다른 에디터가 보내는 모든 변경은 계속 적용합니다. 데이터베이스, Code Generator 설정, `View Option` 행의 변경은 문서에 반영되며, 읽는 사람이 그 화면에서 그 설정을 바꾸지 않았다면 화면에도 반영됩니다. 공유된 이름 표시 전환은 어느 쪽이든 화면에 표시됩니다.
+
+켜면 열려 있던 것이 끝납니다. 셀, 메모, 테이블 그룹 이름 편집기, 그리는 중인 관계선, 테이블, 메모, 테이블 그룹, 컬럼의 드래그, Alt 드래그의 복사본, 메모나 테이블 그룹의 크기 조절, 진행 중인 Auto Layout 미리보기나 배치, `Map Columns`, Time Travel, 컬러 피커입니다. 선택은 지워지고 손 도구는 내려놓으며, 먼저 각 shared store가 드래그나 스크롤에서 아직 쥐고 있는 것을 [flushStreamBuffers](./advanced/collaborative-editing.md#flushstreambuffers)가 하는 것처럼 보냅니다. 이제 읽기 전용이 된 테이블 속성, Diff Viewer, `Export image` 대화 상자는 열린 채로 남고, 스크롤, 확대/축소, 탭, 이름 표시도 그대로입니다. 처음 마운트될 때부터 읽기 전용인 엘리먼트도 같은 상태로 시작하며, 호스트가 페이지 안에서 옮긴 엘리먼트는 이동이 남긴 외곽선을 유지합니다.  
+끄면 아무것도 선택되거나 열려 있지 않은 상태로 편집 컨트롤이 돌아옵니다. 데이터베이스, 코드 생성 언어, 두 이름 표기 규칙, 대괄호 유형, `View Option` 행은 문서의 값으로 돌아가고, 스크롤, 확대/축소, 탭, 이름 표시는 읽는 사람이 둔 자리에 남으며, `value`는 읽는 사람이 다시 바꿀 때까지 문서의 값을 유지합니다. 켜고 끄는 것 모두 `change`를 발행하지 않습니다.  
 값 없이 쓴 속성, `=""`, `="true"`는 모두 `true`로 읽힙니다. `="false"`는 `false`로 읽히고, HTML 관용 표기인 `readonly="readonly"`를 포함해 그 밖의 문자열도 마찬가지입니다.
 
 ```js
@@ -182,6 +203,7 @@ editor.setAttribute('enable-welcome-screen', 'true');
 `4.0.0`부터 이 값은 파일에 담기는 형태의 문서이며, `json` 내보내기가 작성하고 공식 호스트가 저장하는 것도 이 값입니다. 살아 있는 엔티티만 담으며, 삭제된 엔티티, 쌓임 순서, 그리고 측정된 너비, 키 표시, 관계 앵커처럼 에디터가 스스로 계산하는 정보는 담지 않습니다. 엔티티는 고정된 순서로 키가 놓이고, 두 칸으로 들여쓰며, 줄바꿈으로 끝나므로 같은 문서는 항상 같은 바이트가 됩니다.  
 `4.2.0`부터는 비어 있는 것도 생략합니다. 빈 `doc` 목록, 빈 컬렉션, 아무것도 담지 않은 사전 행, 그리고 이름, 코멘트, 데이터 타입, 기본값, 색상처럼 엔티티의 비어 있는 텍스트 필드가 해당합니다. 테이블의 `columnIds`처럼 엔티티 안의 목록은 비어 있어도 기록됩니다. 새 문서의 `doc`은 `{}`이고 `collections`가 없으므로, 없는 필드, 목록, 컬렉션은 비어 있는 것으로 읽으세요. 또한 테이블과 컬럼의 논리명과 이름 생성 여부 플래그, 컬럼의 도메인 연결, 그리고 단어, 용어, 도메인을 담으며, 각 사전은 필드 이름으로 된 헤더 하나 뒤에 행을 시트의 순서대로 한 줄에 하나씩 기록합니다. [저장 형태와 런타임 값](./advanced/schema.md#저장-형태와-런타임-값) 문서를 참고하세요.  
 [잠금](../guide/guides/settings.md#잠금)이 켜진 설정은 화면에 보이는 값이 아니라 잠긴 값으로 기록됩니다. `Viewport` 잠금은 `originX`, `originY`, `zoomLevel`을 담고, `Canvas Type`, `Language`, `Table Name Case`, `Column Name Case`, `Bracket Type`, 그리고 `4.2.0`부터는 `Name View`가 각각 자신의 설정을 담습니다. 이름 표시는 `nameViewMode`로 기록되며, `'physical'`이 아닐 때만 기록됩니다. 그 밖의 설정은 현재 값 그대로 기록되며, `lockSettings`는 항상 기록됩니다. 각 비트는 [Settings](./advanced/schema.md#settings) 문서를 참고하세요. `Name View` 잠금의 비트는 반대로 읽힙니다.  
+`5.0.0`부터 [읽기 전용](#readonly) 에디터에서 읽는 사람이 바꾼 설정도 화면에만 머물므로, 잠겨 있든 아니든 문서의 값으로 기록됩니다.  
 새 문서는 값을 전달받기 전에 엘리먼트가 표시하는 문서든 빈 값으로 불러온 문서든 모든 잠금이 켜져 있습니다. 이런 문서의 `value`는 해당 잠금을 끄기 전까지 원점 `0, 0`, 확대/축소 레벨 `1`, ERD 탭, 기본 Code Generator 언어, 이름 케이스, 괄호 타입, 그리고 `4.2.0`부터는 `Physical Names`를 유지합니다.  
 `4.0.0` 이전에는 `ignoreSaveSettings`를 적용한 문서 전체를 에디터가 가지고 있는 그대로 반환했습니다. 에디터가 가지고 있는 그대로의 문서는 이제 [runtimeValue](#runtimevalue)이며, `ignoreSaveSettings`는 더 이상 읽지도 쓰지도 않습니다.
 
@@ -230,7 +252,7 @@ otherEditor.setInitialValue(editor.runtimeValue);
 어느 쪽이든 화면은 문서의 화면, 즉 잠금이 기록된 텍스트는 텍스트에 저장된 화면, 잠금이 기록되지 않은 텍스트는 확대/축소 레벨 `1`의 원점 `0, 0`에서 열리며, 그 위치에 다이어그램이 전혀 그려져 있지 않으면 다이어그램이 있는 곳에서 열립니다. 잠긴 `Viewport`는 그래도 `value`에 잠긴 값을 유지합니다.  
 `4.0.0`부터는 이전에 가지고 있던 문서의 공동 편집 상태도 버리며, 이미 구독 중인 이 에디터의 [shared store](#getsharedstore)는 다른 에디터에게 그 상태를 다시 요청하므로, 실행 중인 세션에서 다시 불러온 에디터도 따라잡습니다. 이런 에디터는 다른 에디터의 [runtimeValue](#runtimevalue)로 초기화하세요.  
 JSON이 아닌 텍스트도 에러를 발생시키지 않습니다. 문서는 비워지고 설정은 그대로 유지되며, 파싱 에러는 콘솔에 기록됩니다.  
-`value` 할당과 달리 `readonly`에 막히지 않기 때문에, 읽기 전용 뷰어에 문서를 불러오는 방법입니다.
+`value` 할당과 달리 `readonly`에 막히지 않기 때문에, 읽기 전용 에디터에 문서를 불러오는 방법입니다. 이후 읽기 전용 에디터는 불러온 텍스트가 담은 설정을 보여 주며, 읽는 사람이 화면에서 바꿔 둔 설정은 버려집니다.
 
 ```js
 editor.setInitialValue('json...');
@@ -1058,8 +1080,8 @@ editor.setSchemaJSON('json...', { mode: 'append' });
 ## getSchemaSQL
 
 현재 에디터 상태를 Schema SQL로 추출합니다.  
-`databaseVendor`가 없으면 현재 에디터에 설정된 벤더로 동작합니다. 아래 목록에 없는 이름도 에러 없이 동일하게 처리됩니다.  
-이름은 에디터에 표시되는 괄호 타입으로 감쌉니다. `Bracket Type`이 [잠겨](../guide/guides/settings.md#잠금) 있는 동안에는 이 값이 `value`가 저장하는 괄호 타입과 다를 수 있으며, 코딩 에이전트의 [`erd_read`](../mcp/tools.md#문서-읽기)가 이름을 감쌀 때 사용하는 것은 `value`가 저장하는 쪽입니다. 이름 표시와 상관없이 작성되는 이름은 항상 물리명입니다.  
+`databaseVendor`가 없으면 에디터가 보여 주는 데이터베이스에 맞춰 작성합니다. 문서의 데이터베이스이며, [읽기 전용](#readonly) 에디터에서 읽는 사람이 다른 것을 골랐다면 `5.0.0`부터 그 화면에만 머물고 Schema SQL 탭에 보이는 그 데이터베이스입니다. 아래 목록에 없는 이름도 에러 없이 동일하게 처리됩니다.  
+이름은 에디터에 표시되는 괄호 타입으로 감쌉니다. `Bracket Type`이 [잠겨](../guide/guides/settings.md#잠금) 있는 동안, 또는 읽기 전용 에디터에서 읽는 사람이 `5.0.0`부터 다른 것을 골랐다면 이 값이 `value`가 저장하는 괄호 타입과 다를 수 있으며, 코딩 에이전트의 [`erd_read`](../mcp/tools.md#문서-읽기)가 이름을 감쌀 때 사용하는 것은 `value`가 저장하는 쪽입니다. 이름 표시와 상관없이 작성되는 이름은 항상 물리명입니다.  
 `4.0.0`부터 선택적인 `options` 인자로 [Schema SQL](../guide/guides/schema-sql.md) 탭의 옵션처럼 구문과 헤더를 고르며, `4.2.0`부터는 논리명으로 빈 코멘트를 채울지도 고릅니다. `SchemaSQLOptions`는 타입으로 export됩니다.
 
 - `statements`: 기본값인 `'create'`, MySQL, MariaDB, PostgreSQL, SQLite, Databricks에서 `IF NOT EXISTS`를 작성하고 그 외에서는 `'create'`로 대체되는 `'ifNotExists'`, 또는 테이블을 생성하기 전에 삭제하는 `'recreate'` 중 하나입니다. `'recreate'`에서 Snowflake는 대신 `CREATE OR REPLACE TABLE`을 작성합니다.
@@ -1108,6 +1130,7 @@ const commentedSQL = editor.getSchemaSQL('PostgreSQL', {
 
 실시간 공동 편집을 위한 store를 반환합니다.  
 `config`는 `{ getNickname?, mouseTracker?, focusTracker? }`입니다. 두 tracker의 기본값은 모두 `true`이며, `mouseTracker`는 이 에디터의 커서를, `focusTracker`는 포커스된 셀, 선택 영역, 드래그 박스를 다른 참여자에게 전송합니다.  
+`5.0.0`부터 shared store는 [readonly](#readonly)가 설정된 동안 어떤 변경도 보내지 않고, tracker가 보내는 것과 합류하는 에디터가 요청하는 레지스터만 보내며, 다른 에디터가 보내는 것은 계속 적용합니다.  
 [공동 편집](./advanced/collaborative-editing.md) 문서를 참고하세요.
 
 ```js

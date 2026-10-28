@@ -1,6 +1,6 @@
 ---
 sidebar_position: 7
-description: Elimina una relación, cambia su tipo, define sus acciones ON DELETE y ON UPDATE, asígnala a columnas existentes con Asignar columnas, interpreta la notación de los conectores, trabaja con relaciones N:M e identificadoras y consulta qué copian de su clave las nuevas columnas de clave externa y cómo se nombran.
+description: Elimina una relación, cambia su tipo, define sus acciones ON DELETE y ON UPDATE, asígnala a columnas existentes con Asignar columnas, interpreta la notación de los conectores y cómo se trazan alrededor de las tablas, trabaja con relaciones N:M e identificadoras y consulta qué copian de su clave las nuevas columnas de clave externa y cómo se nombran.
 ---
 
 # Edición de relaciones
@@ -81,7 +81,7 @@ Cada fila usa una columna que la tabla hija ya tiene o añade una nueva columna 
 Se abre de dos maneras:
 
 - Al dibujar una relación, desde `Map to existing columns` junto a la tabla hija; consulta [Creación de relaciones](./editing-start.md#relationship-creation). Después, `Map` añade una relación del tipo que se está dibujando.
-- Desde `Map Columns` en el menú contextual de la relación, para cambiar las columnas de una relación que ya existe. Después, `Save` escribe el cambio. Un editor de solo lectura no muestra esta opción.
+- Desde `Map Columns` en el menú contextual de la relación, para cambiar las columnas de una relación que ya existe. Después, `Save` escribe el cambio. Un editor de solo lectura no abre ningún menú contextual de relación, así que allí no se puede abrir Asignar columnas.
 
 El subtítulo del cuadro de diálogo indica las dos tablas y el tipo de relación, como `users → posts · One N`. Aquí el tipo se muestra, pero no se cambia; recurre a [Cambio de tipo](#type-change).
 
@@ -226,6 +226,9 @@ La iluminación se apaga con la siguiente pulsación del botón izquierdo o dere
 Desplazar la vista con el botón central o con la herramienta Mano la deja iluminada, y lo mismo ocurre al contraer o expandir una fila en el explorador o en el visor de diferencias, al anular la selección con `Escape` y con un salto desde la [búsqueda rápida](./quick-search.md) o desde el [botón de la tarjeta](./visualization.md#card-buttons) de Flow con el icono de enlace externo.  
 La iluminación no se guarda ni figura en el historial de deshacer, y los colaboradores no la ven.
 
+En un editor [`readonly`](../../api/erd-editor-element.md#readonly), el puntero también ilumina los conectores, en lugar de la iluminación que dejaba un salto. Al descansar sobre una tabla, ilumina todos los conectores de esa tabla con el color de hover hasta que se aparta de ella.  
+Un clic sin movimiento deja una iluminación hasta el siguiente clic de ese tipo: sobre una tabla ilumina los conectores de esa tabla, sobre un conector ese conector, y en cualquier otro sitio nada. Un arrastre allí desplaza el lienzo y deja esa iluminación como estaba.
+
 Oculta los conectores en el lienzo ERD con la opción de vista `Relationship`, o solo sus etiquetas con la opción de vista `Referential Actions`, que está activada de forma predeterminada; consulta [Opciones de vista de tabla](./table-related-functions.md#table-view-options).  
 Las etiquetas no se dibujan al `70%` ni por debajo, donde las tablas se reducen a su nombre.  
 Una [exportación de imagen](./file-import-export.md#image) siempre se dibuja al 100 %, así que dibuja las etiquetas sea cual sea el zoom del lienzo, salvo que una opción de vista las oculte. Con `Background` desactivado, el recuadro que hay detrás de cada etiqueta también es transparente.  
@@ -233,9 +236,10 @@ El [modo Flow](./visualization.md#flow-mode) de la pestaña Visualización dibuj
 
 ## Trazado de los conectores {#connector-routing}
 
-Los conectores se trazan en ángulo recto.  
-Un trazado rodea las tablas que hay entre sus dos extremos en lugar de cruzarlas, y sus esquinas son redondeadas.  
-Cada extremo sale de su tabla con un breve tramo recto antes de girar, así que dos tablas a poca distancia cuyos extremos de conector están alineados se unen con una sola línea recta en lugar de con un rodeo.  
+Los conectores se trazan en ángulo recto, y sus esquinas son redondeadas.  
+Un trazado rodea las tablas que le estorban en lugar de atravesarlas. Cuando todo trazado de pocos giros entre sus dos extremos cruzaría una tabla, como en un diagrama muy poblado, el conector toma un rodeo con tantos giros como necesite. Solo cuando no se encuentra ningún rodeo sigue cruzando una tabla.  
+Un conector sale de sus dos tablas por un par de lados que se miran siempre que lo haya, y cada extremo sale de su tabla con un breve tramo recto antes de girar, así que dos tablas a poca distancia cuyos extremos de conector están alineados se unen con una sola línea recta en lugar de con un rodeo.  
+Dos tablas enfrentadas a menos distancia que esa, incluso a menos de `40px`, conservan sus lados enfrentados, y donde sus extremos no están alineados el conector zigzaguea por el hueco que las separa en lugar de pasar por debajo de cualquiera de las dos.  
 Los trazados que salen por el mismo lado de una tabla se reparten en pasillos separados para que no discurran unos sobre otros.  
 Solo se evitan las tablas: un conector puede cruzar una nota o el recuadro de un grupo de tablas, y se dibuja por encima de los grupos de tablas y por debajo de las tablas y las notas.
 
@@ -243,6 +247,9 @@ Una relación de una tabla consigo misma se dibuja como una única curva alreded
 Las demás autorreferencias de la misma tabla se anidan por fuera de la primera, así que sus curvas no se cruzan entre sí ni con la tabla.
 
 No hay nada que configurar.  
-Los trazados se recalculan automáticamente cada vez que algo del lienzo se mueve o cambia de tamaño, así que nunca hace falta retocarlos a mano.
+Los trazados se recalculan automáticamente cada vez que algo del lienzo se mueve o cambia de tamaño, así que nunca hace falta retocarlos a mano.  
+Mientras arrastras, los conectores de las tablas que mueves las siguen, y todos los demás conectores conservan el trazado que tenían al empezar el arrastre. Al soltar, se vuelve a dibujar cada conector que el movimiento reencamina, como uno que ahora rodea una tabla soltada en su camino, o uno que se endereza cuando una tabla se ha apartado de su trazado.
+
+Un diagrama dibuja los mismos trazados en cada ventana que lo muestra con la misma vista de nombres: una que siguió abierta mientras las tablas se movían, una que acaba de abrir el diagrama y la de un colaborador por igual, y una [imagen exportada](./file-import-export.md#image) también los dibuja. La vista de nombres cuenta porque cambia lo anchas que son las tablas; consulta [Vista de nombres](./logical-names.md#name-view).
 
 ![Arrastrar la tabla members hacia abajo y de vuelta mientras el conector desde orders alterna entre pasar a la derecha de categories y rodearla por la izquierda, con todas las esquinas redondeadas](/img/demo-connector-routing.webp)

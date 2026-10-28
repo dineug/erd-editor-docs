@@ -61,7 +61,7 @@ Tipkanje vnese samo logično ime. Ko se urejanje spremenjenega logičnega imena 
 - V prikazu `Logical Names`: logično ime v glavi, nato komentar, nato celice vsake vrstice v vrstnem redu stolpcev, z logičnim imenom na mestu imena.
 - V prikazu `Both Names`: logično ime, ime in komentar v glavi, nato celice vsake vrstice v vrstnem redu stolpcev, privzeto najprej celica `Logical Name`.
 
-`Alt + Enter` (Windows/Linux) ali `⌥ + Enter` (Mac) doda stolpec in postavi fokus na njegovo celico imena, ki je v prikazu `Logical Names` njegovo logično ime.
+`Alt + Enter` (Windows/Linux) ali `⌥ + Enter` (Mac) doda stolpec in postavi fokus na prvo celico, ki jo njegova vrstica nariše. Pri privzetem vrstnem redu stolpcev je to njegova celica imena, ki je v prikazu `Logical Names` njegovo logično ime, v prikazu `Both Names` pa njegova celica `Logical Name`, tako da lahko začnete z logičnim imenom – glejte razdelek [Dodajanje stolpcev](./table-editing.md#adding-columns).
 
 Stolpec tujega ključa, ki ga doda relacija, skupaj s tipom kopira tudi logično ime in domeno svojega ključa – glejte razdelek [Identifikacijske relacije](./relationship-editing.md#identifying-relationships).  
 Kopiranje stolpcev v preglednico in lepljenje stolpcev iz nje uporabljata celice, ki jih izriše prikaz, vključno s celicami logičnega imena in celicami domene – glejte razdelek [Kopiranje/lepljenje stolpcev](./table-editing.md#copyingpasting-columns).
@@ -143,5 +143,7 @@ Agent za kodiranje, ki deluje prek strežnika MCP, nastavlja logična imena in p
 
 ## Urejevalniki samo za branje {#read-only-editors}
 
-V urejevalniku z lastnostjo [`readonly`](../../api/erd-editor-element.md#readonly) deluje vsak izbirnik prikaza imen, preklop pa ne glede na zaklep spremeni samo ta zaslon.  
-Logičnih imen in domen tam ni mogoče urejati, zato se ne odpre noben seznam izrazov ali izbirnik domene, nobena od postavk `Derive Physical Name Again` in `Derive Physical Names Again` pa ni na voljo. View Option → `Domain` tam ne spremeni ničesar, tako kot nobena [možnost pogleda](./table-related-functions.md#table-view-options).
+V urejevalniku z lastnostjo [`readonly`](../../api/erd-editor-element.md#readonly) deluje vsak izbirnik prikaza imen: gumb `Name View` v orodni vrstici platna, `Name View` v priročnem meniju platna in v hitrem iskanju ter seznam v orodni vrstici načina Tok.  
+Preklop tam ne glede na zaklep spremeni samo ta zaslon: datoteka, sodelavci in zgodovina razveljavitev ohranijo prikaz, kakršen je bil. Ko je urejevalnik spet mogoče urejati, izbrani prikaz ostane na tistem zaslonu do naslednjega preklopa tam ali, dokler je zaklep izklopljen, dokler ga sodelavec ne preklopi ali dokumenta ne naložite znova.  
+Logičnih imen in domen tam ni mogoče urejati, zato se ne odpre noben urejevalnik celice, seznam izrazov ali izbirnik domene, nobena od postavk `Derive Physical Name Again` in `Derive Physical Names Again` pa ni na voljo.  
+View Option → `Domain` tam prikaže ali skrije celico Domain samo na tistem zaslonu, kot to tam velja za vsako [možnost pogleda](./table-related-functions.md#table-view-options), ko pa je urejevalnik spet mogoče urejati, se vrnejo možnosti pogleda, ki jih vsebuje dokument.

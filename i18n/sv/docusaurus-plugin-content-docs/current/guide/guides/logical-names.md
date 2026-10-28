@@ -61,7 +61,7 @@ Det du skriver hamnar bara i det logiska namnet. Det fysiska namnet härleds fr�
 - I `Logical Names` tabellhuvudets logiska namn, sedan dess kommentar och sedan varje rads celler i kolumnordningen, med det logiska namnet på namnets plats.
 - I `Both Names` tabellhuvudets logiska namn, namn och kommentar och sedan varje rads celler i kolumnordningen, som standard med radens cell `Logical Name` först.
 
-`Alt + Enter` (Windows/Linux) eller `⌥ + Enter` (Mac) lägger till en kolumn och fokuserar dess namncell, som i `Logical Names` är dess logiska namn.
+`Alt + Enter` (Windows/Linux) eller `⌥ + Enter` (Mac) lägger till en kolumn och fokuserar den första cell som dess rad ritar. Med standardkolumnordningen är det dess namncell, som i `Logical Names` är dess logiska namn och i `Both Names` dess cell `Logical Name`, så du kan börja med det logiska namnet – se [Lägga till kolumner](./table-editing.md#adding-columns).
 
 En sekundärnyckelkolumn som en relation lägger till kopierar sin nyckels logiska namn och domän, tillsammans med dess typ – se [Identifierande relationer](./relationship-editing.md#identifying-relationships).  
 När du kopierar kolumner till ett kalkylblad och klistrar in kolumner från ett används de celler som visningen ritar, även cellerna för logiskt namn och domäncellerna – se [Kopiera/klistra in kolumner](./table-editing.md#copyingpasting-columns).
@@ -143,5 +143,7 @@ En kodagent som arbetar via MCP-servern sätter logiska namn och kopplar domäne
 
 ## Skrivskyddade editorer {#read-only-editors}
 
-I en editor med [`readonly`](../../api/erd-editor-element.md#readonly) fungerar varje väljare för namnvisning, och ett byte ändrar bara den skärmen, oavsett lås.  
-Logiska namn och domäner kan inte redigeras där, så ingen termlista eller domänväljare öppnas, och ingen av raderna `Derive Physical Name Again` och `Derive Physical Names Again` erbjuds. View Option → `Domain` ändrar ingenting där, precis som inget [visningsalternativ](./table-related-functions.md#table-view-options) gör.
+I en editor med [`readonly`](../../api/erd-editor-element.md#readonly) fungerar varje väljare för namnvisning: knappen `Name View` i arbetsytans verktygsfält, `Name View` i arbetsytans snabbmeny och i snabbsökningen samt listan i flödets verktygsfält.  
+Ett byte där ändrar bara den skärmen, oavsett lås: filen, medarbetarna och ångra-historiken behåller vyn som den var. När editorn blir skrivbar igen stannar den valda vyn på den skärmen tills nästa byte där, eller, medan låset är av, tills en medarbetare byter den eller dokumentet läses in igen.  
+Logiska namn och domäner kan inte redigeras där, så ingen cellredigerare, termlista eller domänväljare öppnas, och ingen av raderna `Derive Physical Name Again` och `Derive Physical Names Again` erbjuds.  
+View Option → `Domain` visar eller döljer domäncellen bara på den skärmen, som varje [visningsalternativ](./table-related-functions.md#table-view-options) gör där, och när editorn blir skrivbar igen kommer de visningsalternativ som dokumentet innehåller tillbaka.

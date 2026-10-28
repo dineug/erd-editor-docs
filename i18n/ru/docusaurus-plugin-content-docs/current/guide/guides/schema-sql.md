@@ -31,7 +31,7 @@ SQL формируется при открытии вкладки и занов�
 
 Панель содержит три раздела, каждый под своей подписью:
 
-1. `Saved in the document`: `Database` и `Bracket` — см. [База данных и кавычки](#database-and-bracket).
+1. `Saved in the document`: `Database` и `Bracket` — см. [База данных и кавычки](#database-and-bracket). Редактор только для чтения подписывает их `This window only` — см. [Режим только для чтения](#read-only-editors).
 2. `This window only`: `Statements`, `Header`, `Write logical names into empty comments` и, пока в диаграмме есть [группа таблиц](./table-groups.md), `Tables` — см. [Операторы](#statements), [Заголовок](#header), [Логические имена в комментариях](#logical-names-as-comments) и [Таблицы](#tables).
 3. `Saved in the document · written as is for every database`: скрипты `Before tables` и `After tables` — см. [Скрипты перед таблицами и после них](#before-and-after-scripts).
 
@@ -222,5 +222,9 @@ SQL также доступен для выделения, поэтому мож
 
 ## Режим только для чтения {#read-only-editors}
 
-В редакторе с атрибутом `readonly` вкладка работает как обычно: `Database` и `Bracket` по-прежнему меняют показанный SQL, `Statements`, `Header`, `Write logical names into empty comments` и `Tables` по-прежнему работают, а `Save file` и `Copy` по-прежнему сохраняют и копируют его.  
-Только для чтения доступны лишь два поля скриптов.
+В редакторе с атрибутом [`readonly`](../../api/erd-editor-element.md#readonly) вкладка работает для читателя, и ничто из сделанного на ней не доходит до документа:
+
+- `Database` и `Bracket` по-прежнему переписывают SQL, но только в этом окне, поэтому панель подписывает их тоже `This window only`. Выбор не сохраняется в файле, не передается соавторам и не записывается для отмены, какими бы ни были блокировки, а изменение соавтором настройки, которую вы выбрали, оставляет на экране ваш выбор. Вкладка «Генератор кода» показывает тот же выбор, и [`getSchemaSQL()`](../../api/erd-editor-element.md#getschemasql), вызванный без указания СУБД, записывает ее тоже. Когда редактор снова становится доступным для записи, возвращаются СУБД и кавычки документа.
+- `Statements`, `Header`, `Write logical names into empty comments` и `Tables` работают так же, как везде, поскольку они и без того принадлежат окну.
+- Два поля скриптов доступны только для чтения: они показывают скрипты документа, которые SQL по-прежнему записывает, и не принимают ввод.
+- `Save file` и `Copy` сохраняют и копируют SQL, показанный на вкладке.

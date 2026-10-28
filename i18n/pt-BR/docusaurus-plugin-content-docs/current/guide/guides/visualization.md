@@ -237,4 +237,5 @@ O [botão do cartão](#card-buttons) de link externo vai além, porque leva voc�
 As edições dos colaboradores continuam chegando ao diagrama enquanto você está no Flow, e os cartões acompanham as tabelas e os relacionamentos que eles adicionam ou removem — consulte [Como o Flow posiciona os cartões](#how-flow-is-placed).  
 Os contornos de seleção e de foco deles são desenhados nos cartões, mas os cursores e os retângulos de arrasto deles não — consulte [Edição colaborativa](../../api/advanced/collaborative-editing.md).
 
-Os dois modos, inclusive o foco em tabelas e os passos, também funcionam em um editor `readonly`, assim como a lista `Name View`, que ali troca apenas a sua própria tela.
+Os dois modos, inclusive o foco em tabelas e os passos, também funcionam em um editor [`readonly`](../../api/erd-editor-element.md#readonly), assim como a lista `Name View`, que ali troca apenas a sua própria tela.  
+Na aba ERD de um editor somente leitura, o menu da tabela contém só `Table Properties` e pressionar não seleciona nenhuma tabela, então foque com `Alt + F` (Windows/Linux) ou `⌥ + F` (Mac) na tabela que um salto a partir do [explorador](./explorer.md#going-to-a-row) ou da [pesquisa rápida](./quick-search.md) selecionou.

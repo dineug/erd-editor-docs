@@ -6,7 +6,7 @@ description: Izbiranje, premikanje, kopiranje, podvajanje in brisanje tabel in b
 # Funkcije za tabele
 
 Vse, kar počnete s tabelami in beležkami, ko že obstajajo – izbiranje, premikanje, kopiranje, brisanje, barvanje in nastavljanje tega, kaj prikazuje platno –, ter kontrolniki platna okoli njih.  
-Najprej so na vrsti ukazi za tabele in beležke; nato lastnosti tabele, osredotočanje na tabele, indeksi in alternativni ključi, samodejna postavitev in vrsta zbirke podatkov; na koncu pa še samo platno: orodna vrstica platna, povečava, premikanje pogleda in to, kam pripelje skok, ter pregledovalnik razlik.  
+Najprej so na vrsti ukazi za tabele in beležke; nato lastnosti tabele, osredotočanje na tabele, indeksi in alternativni ključi, samodejna postavitev in vrsta zbirke podatkov; nato še samo platno: orodna vrstica platna, povečava, premikanje pogleda in to, kam pripelje skok, ter pregledovalnik razlik; na koncu pa to, kar od vsega tega ohrani urejevalnik samo za branje.  
 Skupine tabel, okvirji, ki združujejo tabele, imajo svojo stran – glejte stran [Skupine tabel](./table-groups.md).  
 Svojo stran imajo tudi logična imena in prikaz imen, ki določa, katera imena prikazujejo tabele – glejte stran [Logična imena](./logical-names.md).
 
@@ -23,7 +23,8 @@ Beležke izbirate na enak način, vsaka od obeh bližnjic za izbor vsega pa naen
 Bližnjica `Ctrl + A` se umakne kazalki, zato med urejanjem celice izbere besedilo in ne diagrama.  
 Okvir izbora označi tabelo ali beležko, ko prekrije njeno sredino, in ne že takrat, ko se le dotakne njenega roba. Skupino tabel zajame samo, če obkroža celoten okvir skupine, zato okvir, narisan znotraj skupine, izbere tabele brez skupine.  
 Klik z desno tipko miške na nekaj, kar je že izbrano, ohrani celoten izbor, zato postavke menija, kot so `Color`, `Group selected tables` in `Delete selected`, delujejo na celoten izbor. Klik z desno tipko miške na katero koli drugo tabelo, beležko ali skupino tabel izbere samo to, tudi če držite `Ctrl` ali `⌘`, klik z desno tipko miške na relacijo ali na prazno platno pa počisti izbor.  
-Tipka `Escape` počisti izbor. Medtem ko je odprto urejanje celice, urejanje beležke ali polje za ime skupine tabel oziroma medtem ko rišete relacijo ali skupino z `New Table Group`, prvi pritisk tipke `Escape` to konča, drugi pa počisti izbor.
+Tipka `Escape` počisti izbor. Medtem ko je odprto urejanje celice, urejanje beležke ali polje za ime skupine tabel oziroma medtem ko rišete relacijo ali skupino z `New Table Group`, prvi pritisk tipke `Escape` to konča, drugi pa počisti izbor.  
+Urejevalnik samo za branje nima nobenega od teh načinov izbiranja: tam izbere samo skok – glejte razdelek [Urejevalniki samo za branje](#read-only-editors).
 
 ![Izbiranje tabel s ⌘ + drag in ⌘ + click, nato vseh tabel in beležk s ⌘ + A](/img/demo-table-select.webp)
 
@@ -145,7 +146,7 @@ Možnost `Referential Actions` prikaže oznaki `D:` in `U:`, ki ju dejanji ON DE
 Možnost `Table Groups` prikaže [skupine tabel](./table-groups.md) in barve skupin na glavah njihovih tabel. Izklop jih skrije na platnu, na mini zemljevidu in v izvoženih slikah, ne premakne nobene tabele in vsako tabelo ohrani v njeni skupini – glejte razdelek [Skrivanje skupin](./table-groups.md#hiding-groups). Odstrani tudi mapo `Table Groups` iz [raziskovalca](./explorer.md#the-tree) in gumb `New Table Group` iz [orodne vrstice platna](#canvas-toolbar), iskanje v raziskovalcu pa ne najde več imen skupin.  
 Možnost `Memos` prikaže beležke. Izklop skrije vse beležke na platnu, na mini zemljevidu in v izvoženih slikah ter ne premakne nobene tabele ali povezovalne črte. Skrite beležke ne zavzemajo prostora, zato jih drsna trakova, mini zemljevid in kompas `Go to content` ne upoštevajo.  
 Skrivanje beležk prekliče njihov izbor in zapre odprto urejanje beležke. [Raziskovalec](./explorer.md#the-tree) odstrani svojo mapo `Memos`, [iskanje in zamenjava](./find-and-replace.md) v njem in predpona `:` hitrega iskanja pa jih ne preiskujeta. Medtem ko so skrite, ukaz `New Memo` izgine iz priročnega menija, [orodne vrstice platna](#canvas-toolbar), hitrega iskanja in [pozdravnega zaslona](./editing-start.md#welcome-screen), `Alt + M` pa ne doda beležke. Lepljenje ali ukaz [Uvozi in dodaj](./file-import-export.md#import-and-add) še vedno doda beležke, ki jih prinaša, skrite in neizbrane.  
-V urejevalniku z lastnostjo `readonly` stikala ne spremenijo ničesar.
+V urejevalniku samo za branje stikala še vedno delujejo, vendar samo na tistem zaslonu: niso shranjena, zabeležena v zgodovino razveljavitev ali deljena, ko pa je urejevalnik spet mogoče urejati, se vrnejo na vrednosti datoteke – glejte razdelek [Urejevalniki samo za branje](./settings.md#read-only-editors) v Nastavitvah.
 
 ![Preklapljanje postavk View Option, ob katerem se tabele prerazporedijo, označevanje sestavljenega enoličnega indeksa kot AK1.1 in AK1.2 z Alternate Key, nato izklop in vklop Memos](/img/demo-view-options.webp)
 
@@ -164,14 +165,15 @@ Zavihek `Indexes` je opisan v razdelku [Indeksi](#indexes).
 Zavihek `Schema SQL` prikaže DDL tabele za izbrano [zbirko podatkov](#databases): njen stavek `CREATE TABLE`, ločene omejitve, ki jih nekatere zbirke podatkov zapišejo za njene stolpce z zastavico Enolično, in njene indekse. Vedno zapiše navadne stavke `CREATE`, brez glave, brez skripta pred tabelami ali za njimi in brez logičnih imen v praznih komentarjih, ne glede na to, kako je nastavljen zavihek [Shema SQL](./schema-sql.md) v orodni vrstici – glejte razdelek [Logična imena kot komentarji](./schema-sql.md#logical-names-as-comments). Nima plošče z možnostmi, njegov priročni meni pa ponuja samo `Database` in `Bracket`.  
 Zavihek `Code Generator` ustvari kodo samo za to tabelo – glejte stran [Generator kode](./code-generator.md).
 
-V urejevalniku z lastnostjo `readonly` se okno še vedno odpre, z značko `Read only` ob naslovu, vendar njegov zavihek `Indexes` ne omogoča sprememb.
+V urejevalniku samo za branje se okno še vedno odpre, in sicer s postavko `Table Properties`, edino vrstico tamkajšnjega menija tabele, ali z `Alt + Space` na tabeli, ki jo je izbral skok. Ob naslovu prikazuje značko `Read only`, njegov zavihek `Indexes` pa ne omogoča sprememb.  
+Okno, odprto, ko urejevalnik postane samo za branje, ostane odprto in postane samo za branje z njim – glejte razdelek [Urejevalniki samo za branje](#read-only-editors).
 
 ## Osredotočanje na tabele {#focusing-on-tables}
 
 Odpre zavihek Vizualizacija v načinu `Flow`, zožen na izbrane tabele in vse tabele, ki so od njih oddaljene za eno relacijo.  
 Začnite v priročnem meniju tabele s postavko `Focus on this table` ali izberite eno ali več tabel in pritisnite `Alt + F`.  
 Kadar je tabela, ki jo kliknete z desno tipko miške, ena od več izbranih tabel, se postavka glasi `Focus on selected tables` in se osredotoči na celoten izbor. Če z desno tipko miške kliknete tabelo zunaj izbora, se osredotočite samo na to tabelo.  
-Bližnjica upošteva izbrane tabele, beležke izpusti in ne naredi ničesar, če ni izbrana nobena tabela.  
+Bližnjica upošteva izbrane tabele, beležke izpusti in ne naredi ničesar, če ni izbrana nobena tabela. Meni tabele v urejevalniku samo za branje nima postavke `Focus on this table`, bližnjica pa tam vzame tabelo, ki jo je izbral skok – glejte razdelek [Urejevalniki samo za branje](#read-only-editors).  
 Izbrana [skupina tabel](./table-groups.md) tu ne šteje, ne pri bližnjici ne pri postavki menija: njene tabele se upoštevajo samo, če so izbrane same, kar naredi postavka `Select tables` v meniju skupine.  
 Kaj prikazuje zoženi pogled in kako se vrnete k celotnemu diagramu, je opisano na strani [Vizualizacija](./visualization.md#focusing-on-tables), kako se korak nazaj in naprej pomikate po tem, kar je način Tok prikazoval prej, pa v razdelku [Prejšnja in naslednja tabela](./visualization.md#previous-table-and-next-table).
 
@@ -187,7 +189,7 @@ Desna stran navaja stolpce tabele pod `Columns`, vsakega s potrditvenim poljem. 
 Označite stolpec, da ga dodate v izbrani indeks, in počistite njegovo oznako, da ga odstranite. Ko izberete ključ, so njegovi stolpci prikazani kot označeni, vendar polja ostanejo onemogočena.  
 Stolpci izbranega indeksa so navedeni spodaj pod `Index order`, vsak poimenovan tako, kot ga poimenuje prikaz imen, pri čemer je v prikazu `Both Names` fizično ime v oklepaju za logičnim imenom, na primer `Member Number (member_no)`. Povlecite jih za ročico za vlečenje, da spremenite njihov vrstni red, in kliknite ploščico `ASC` ali `DESC` v vrstici, da obrnete njen vrstni red razvrščanja. Pri alternativnem ključu se vsaka vrstica konča z oznako `AK<n>.<m>`. Seznam prikazuje tri vrstice hkrati, ostale pa so dosegljive s pomikanjem.
 
-V urejevalniku z lastnostjo `readonly` izbira ključa ali indeksa še vedno prikaže njegove stolpce, vendar ni gumbov `Add Index` in `x`, ničesar drugega na zavihku pa ni mogoče spremeniti.
+V urejevalniku samo za branje izbira ključa ali indeksa še vedno prikaže njegove stolpce, vendar ni gumbov `Add Index` in `x`, ničesar drugega na zavihku pa ni mogoče spremeniti: imena ne sprejmejo tipkanja, vsa potrditvena polja so onemogočena, vrstice `Index order` pa se ne vlečejo in ne obračajo vrstnega reda razvrščanja.
 
 [Raziskovalec](./explorer.md#the-tree) navaja indekse vsake tabele v njeni mapi `Indexes`, izbira indeksa tam pa vas pripelje do njegove tabele. Njegovo iskanje najde tudi imena indeksov in jih lahko preimenuje – glejte razdelek [Kaj preiskuje](./find-and-replace.md#what-it-searches).
 
@@ -233,7 +235,8 @@ Druge tri se izračunajo v enem koraku, zunaj glavne niti, zato ni česa opazova
 
 Ne glede na to, katero izberete, se premaknejo tabele in skupine tabel, beležke pa ostanejo, kjer so. Tabele se razporedijo pri širinah, ki jih imajo v prikazu imen, ki ga gledate. Rekurzivna relacija se ne upošteva, več relacij med istima dvema tabelama pa šteje kot ena.  
 Vsaka postavitev ohrani tabele vsake skupine skupaj, ne glede na to, ali so skupine prikazane, in vsako skupino, ki vsebuje tabele, prilagodi okoli njih – glejte stran [Skupine tabel](./table-groups.md#auto-layout).  
-Rezultat se zapiše kot en sam vnos v zgodovini, zato ena razveljavitev vrne vse tabele in skupine tja, kjer so bile.
+Rezultat se zapiše kot en sam vnos v zgodovini, zato ena razveljavitev vrne vse tabele in skupine tja, kjer so bile.  
+Urejevalnik samo za branje ne ponuja ukaza `Auto Layout`. Tisti, ki še teče, ko urejevalnik postane samo za branje, se tam konča: predogled `Force` se zapre skupaj z obvestilom in ne obdrži nobenega svojega položaja, postavitev, ki se še izračunava, pa se zavrže skupaj z obvestilom, zato se nobena tabela ne premakne, ne takrat ne potem, ko je urejevalnik spet mogoče urejati.
 
 ![Urejanje kupa tabel s samodejno postavitvijo Tok iz priročnega menija platna, ki jih poravna od leve proti desni vzdolž njihovih relacij](/img/demo-automatic-table-placement.webp)
 
@@ -250,7 +253,7 @@ Med podprtimi zbirkami podatkov so:
 - Snowflake
 - SQLite
 
-Zbirko podatkov izberete s postavko `Database` v priročnem meniju platna, na plošči z možnostmi ali v priročnem meniju zavihkov Shema SQL in Generator kode ali v hitrem iskanju. Vsa ta mesta spremenijo isto nastavitev.
+Zbirko podatkov izberete s postavko `Database` v priročnem meniju platna, na plošči z možnostmi ali v priročnem meniju zavihkov Shema SQL in Generator kode ali v hitrem iskanju. Vsa ta mesta spremenijo isto nastavitev. Meni platna urejevalnika samo za branje nima postavke `Database`, izbira v drugih pa spremeni samo ta zaslon – glejte razdelek [Urejevalniki samo za branje](#read-only-editors).
 
 Te možnosti določajo sintakso Sheme SQL za izvoz, samodokončanje podatkovnega tipa in tipe, v katere se razrešijo ustvarjena koda in uvožene sheme.  
 Odločajo, katere izbire `Statements` in `Header` lahko zapiše zavihek [Shema SQL](./schema-sql.md#options-panel). Izbira, ki je zbirka podatkov nima, ostane na plošči z možnostmi, zatemnjena, koda SQL pa uporabi najbližjo izbiro, ki jo zbirka ima.  
@@ -266,15 +269,16 @@ Uvoz Sheme SQL ohrani podatkovni tip stolpca, vključno s seznamom argumentov, n
 Nad sredino spodnjega roba platna lebdi majhna orodna vrstica, ki od leve proti desni vsebuje orodja, ki delujejo na samo platno, in ukaze, ki mu dodajajo vsebino:
 
 - Orodji Roka in Izbira. Privzeto je orodje Izbira; orodje Roka vsako vlečenje spremeni v premikanje pogleda, tako nad tabelami kot nad praznim prostorom. Tipka `Space` preklaplja med njima. Medtem ko je vklopljeno risanje [`New Table Group`](./table-groups.md#drawing-a-group), je namesto njiju označen gumb `New Table Group`, klik na katero koli od njiju, pritisk tipke `Space` ali izbira notacije relacije pa konča risanje, ne da bi se dodala skupina.
-- `New Table`, `New Memo` in `New Table Group`. Gumb `New Table` doda tabelo tako kot `Alt + N`, gumb `New Memo` pa doda beležko tako kot `Alt + M`. Gumb `New Table Group` vklopi [risanje skupine](./table-groups.md#drawing-a-group) tako kot `Alt + G` in izklopi orodje Roka; drugi klik, tako kot drugi `Alt + G`, konča risanje, ne da bi se dodala skupina. Gumb `New Memo` je izpuščen, medtem ko View Option → `Memos` skriva beležke, gumb `New Table Group` pa, medtem ko View Option → `Table Groups` skriva skupine. Urejevalnik z lastnostjo `readonly` ne prikaže nobenega od teh treh gumbov.
+- `New Table`, `New Memo` in `New Table Group`. Gumb `New Table` doda tabelo tako kot `Alt + N`, gumb `New Memo` pa doda beležko tako kot `Alt + M`. Gumb `New Table Group` vklopi [risanje skupine](./table-groups.md#drawing-a-group) tako kot `Alt + G` in izklopi orodje Roka; drugi klik, tako kot drugi `Alt + G`, konča risanje, ne da bi se dodala skupina. Gumb `New Memo` je izpuščen, medtem ko View Option → `Memos` skriva beležke, gumb `New Table Group` pa, medtem ko View Option → `Table Groups` skriva skupine.
 - Povečava: `Zoom out`, trenutna povečava v odstotkih in `Zoom in`. Gumba spreminjata povečavo v korakih na enak način kot bližnjice za povečavo, klik na odstotek pa jo ponastavi na `100%`.
 - Štiri notacije relacij, iste štiri, s katerimi začnete relacijo – glejte stran [Začetek urejanja](./editing-start.md). Izbira ene preklopi nazaj na orodje Izbira, saj relacijo narišete s klikom na dve tabeli.
-- `Name View`, gumb s puščico navzdol, ki ima za napis trenutni prikaz: `Physical Names`, `Logical Names` ali `Both Names`. Ne glede na to, kateri prikaz navaja, ohrani enako širino, zato preklop nikoli ne premakne orodne vrstice. Klik odpre nad orodno vrstico seznam vseh treh, pri čemer je trenutni označen s kljukico. Izbira enega preklopi nanj in zapre seznam; drugi klik na gumb, pritisk kjer koli drugje ali tipka `Escape` zapre seznam brez preklopa. Prikaže ga tudi urejevalnik z lastnostjo `readonly`. Kaj izriše posamezni prikaz, je opisano v razdelku [Prikaz imen](./logical-names.md#name-view), ali se preklop shrani, pa v razdelku [Preklapljanje prikaza](./logical-names.md#switching-the-view).
+- `Name View`, gumb s puščico navzdol, ki ima za napis trenutni prikaz: `Physical Names`, `Logical Names` ali `Both Names`. Ne glede na to, kateri prikaz navaja, ohrani enako širino, zato preklop nikoli ne premakne orodne vrstice. Klik odpre nad orodno vrstico seznam vseh treh, pri čemer je trenutni označen s kljukico. Izbira enega preklopi nanj in zapre seznam; drugi klik na gumb, pritisk kjer koli drugje ali tipka `Escape` zapre seznam brez preklopa. Kaj izriše posamezni prikaz, je opisano v razdelku [Prikaz imen](./logical-names.md#name-view), ali se preklop shrani, pa v razdelku [Preklapljanje prikaza](./logical-names.md#switching-the-view).
 - Način zen, `Alt + Z`, ki odstrani vse razen platna in te orodne vrstice. Ponovni `Alt + Z` ali gumb vrne vse ostalo. Odprt raziskovalec se skrije skupaj z ostalim, ne da bi se zaprl, in se vrne skupaj z njim. V načinu zen ga je še vedno mogoče odpreti – glejte razdelek [Ko se umakne](./explorer.md#when-it-stands-aside).
 - Kompas `Go to content`, ki se pridruži koncu orodne vrstice samo, kadar na zaslonu ni nobene tabele, prikazane beležke ali prikazane skupine tabel – glejte razdelek [Premikanje po platnu](#getting-around-the-canvas).
 
 Vsak gumb z bližnjico jo navede v svojem opisu orodja, na primer `New Table (Alt + N)` (Windows/Linux) ali `New Table (⌥ + N)` (Mac).  
-Orodna vrstica se umakne, medtem ko je odprt predogled samodejne postavitve `Force`, okno Lastnosti tabele, potovanje skozi čas ali pregledovalnik razlik, in se vrne, ko se ta zapre.
+Orodna vrstica se umakne, medtem ko je odprt predogled samodejne postavitve `Force`, okno Lastnosti tabele, potovanje skozi čas ali pregledovalnik razlik, in se vrne, ko se ta zapre.  
+Orodna vrstica urejevalnika samo za branje ohrani povečavo, `Name View`, način zen in kompas `Go to content`. Nima orodja Roka ali kazalca, gumbov `New Table`, `New Memo` ali `New Table Group` in zapisov relacij, ko pa je urejevalnik spet mogoče urejati, jih dobi nazaj.
 
 ![Dodajanje tabele in beležke iz orodne vrstice, vklop in izklop New Table Group, premikanje pogleda z orodjem Roka, spreminjanje povečave v korakih in preklop načina zen z ⌥ + Z](/img/demo-canvas-toolbar.webp)
 
@@ -339,7 +343,7 @@ Kaj skok prikaže in kateri ključni del mora biti viden, kadar se celota ne pri
 - Skupina tabel: njen okvir, ključni del pa je naslovna vrstica.
 - Beležka ali blok, ki ga postavi ukaz Uvozi in dodaj: v celoti.
 
-Kadar se pogled ne bi premaknil v nobeni smeri, pomika ni, zato drugi zaporedni prehod na isto mesto ne premakne ničesar. Skok, ki pomakne platno, zabeleži pomik v [zgodovino razveljavitev](./undo-redo.md#what-the-history-records) tako kot vsako drugo spremembo položaja pogleda, skok, ki ne premakne ničesar, pa ne pusti ničesar za razveljavitev. Pri ukazu Uvozi in dodaj je pomik del istega koraka kot dodajanje. Vrstica seznama pregledovalnika razlik premakne samo strani pregledovalnika, ki sta samo za branje, zato ne zabeleži ničesar.  
+Kadar se pogled ne bi premaknil v nobeni smeri, pomika ni, zato drugi zaporedni prehod na isto mesto ne premakne ničesar. Skok, ki pomakne platno, zabeleži pomik v [zgodovino razveljavitev](./undo-redo.md#what-the-history-records) tako kot vsako drugo spremembo položaja pogleda, skok, ki ne premakne ničesar, pa ne pusti ničesar za razveljavitev. Pri ukazu Uvozi in dodaj je pomik del istega koraka kot dodajanje. Vrstica seznama pregledovalnika razlik premakne samo strani pregledovalnika, ki sta samo za branje, zato ne zabeleži ničesar, urejevalnik samo za branje pa ne zabeleži nobenega skoka.  
 Noben skok ne začne ali konča risanja relacije. Kompas `Go to content` ni skok: usredini tisto, na kar kaže.
 
 ## Pregledovalnik razlik {#diff-viewer}
@@ -351,7 +355,8 @@ Pogled se odpre čez platno: na levi to, kar se je spremenilo, nato pa shranjeni
 Trenutni dokument se primerja v stanju ob odprtju pogleda; spremembe, narejene pozneje, vključno s spremembami sodelavca, se v pogledu ne pokažejo. Obe strani se odpreta in ostaneta v prikazu imen, ki ga gledate, ne glede na to, kateri prikaz hrani katera koli od obeh datotek – glejte razdelek [Zunaj platna](./logical-names.md#beyond-the-canvas). Odprt [raziskovalec](./explorer.md#when-it-stands-aside) se skrije, medtem ko je pogled odprt, zato pogled zavzame celotno širino urejevalnika.  
 Pogled na vsaki strani premikate s kolescem miške, z vlečenjem praznega območja ali notranjosti skupine tabel ali z vlečenjem s srednjim gumbom kjer koli nad njo, povečavo pa spreminjate z bližnjico `Ctrl + Wheel` (Windows/Linux), `⌘ + Wheel` (Mac) ali s stiskom prstov. Pri `70%` in manj se njene tabele strnejo tako kot na platnu – glejte razdelek [Oznake na obeh straneh](#marks-on-the-two-sides).  
 Obe strani sta samo za branje, zato se v vašem dokumentu nič ne spremeni. Vsaka ima svoj izbor, klik na tabelo na njej pa jo izbere samo na tej strani.  
-Pogled zaprete z gumbom `Close` v obvestilu `Diff Viewer`, ki se prikaže ob njegovem odprtju, ali s tipko `Escape`.
+Pogled zaprete z gumbom `Close` v obvestilu `Diff Viewer`, ki se prikaže ob njegovem odprtju, ali s tipko `Escape`.  
+Urejevalnik samo za branje ponuja tudi `Diff Viewer`, pogled pa tam deluje kot v vsakem urejevalniku, klik na tabelo strani jo še vedno izbere na tej strani. Pogled, odprt, ko urejevalnik postane samo za branje, ostane odprt.
 
 ![Odpiranje pregledovalnika razlik za shranjeno datoteko .json, klikanje vrstic z oznakami A, M, D in R v njegovem drevesu, filtriranje po imenu in zapiranje](/img/demo-diff-viewer.webp)
 
@@ -423,3 +428,26 @@ Vsaka stran upošteva možnosti pogleda svojega dokumenta. Sprememba v celici, k
 V prikazu `Logical Names`, ki ne izriše celice imena, gresta modra barva preimenovanja in jantarna barva spremembe v celici, ki je stran ne izriše, na logično ime, izrisano na mestu imena. Sprememba podatkovnega tipa obarva celico tipa jantarno v vsakem prikazu imen, tudi kjer celica prikazuje ime domene. Nobena stran ne izriše barv, ki jih preverjanja zavihka Slovar dajo imenom na platnu – glejte razdelek [Oznake na platnu](./dictionary.md#marks-on-the-canvas).
 
 Pri `70%` in manj strnjene tabele ohranijo obrobo. Ime ohrani zeleno ali rdečo barvo dodane ali odstranjene tabele ali modro barvo preimenovanja, sicer pa prevzame jantarno barvo spremembe komentarja. Spremembe stolpcev se ne narišejo, dokler znova ne povečate pogleda; drevo jih še vedno navaja.
+
+## Urejevalniki samo za branje {#read-only-editors}
+
+Urejevalnik [`readonly`](../../api/erd-editor-element.md#readonly), na primer revizija Git, ponovno odprta kot diagram v VS Code, je bralnik. Njegovih šest zavihkov, [raziskovalec](./explorer.md#read-only-editors), mini zemljevid, drsniki ter kazalci in izbori sodelavcev ostanejo, vsak kontrolnik, ki bi spremenil diagram, pa je izginil in ne zatemnjen.
+
+Na platnu ERD:
+
+- Vlečenje premika pogled, kjer koli se začne: na praznem platnu, tabeli, beležki ali skupini tabel. Srednji gumb, kolesce, ščip in tipke za povečavo delujejo kot v vsakem urejevalniku.
+- Kazalec, ki počiva na tabeli, osvetli njene relacije. Klik, ki se ne premakne, osvetli relacije tabele, na katero pade, ali relacijo, na katero pade, klik kjer koli drugje pa osvetlitev ugasne.
+- Nič ni izbrano s pritiskom, okvirjem za izbiro ali tipko za izbor vsega. Izbere samo skok: vrstica [raziskovalca](./explorer.md#going-to-a-row), zadetek njegovega [iskanja in zamenjave](./find-and-replace.md#going-to-a-match) ali rezultat `#`, `@` ali `:` v [hitrem iskanju](./quick-search.md#searching-the-diagram) izbere, kar doseže, obrobljeno kot vsak izbor, s celico v fokusu tam, kamor jo postavi skok. Klik, ki se ne premakne, ta izbor počisti.
+- Smerne tipke premikajo celico v fokusu. Kopiranje, `Table Properties` in `Focus on this table` delujejo na tem, kar je izbral skok, s svojimi tipkami, lepljenje pa ne doda ničesar. Druge tipke so navedene v razdelku [Bližnjice](./settings.md#shortcuts).
+- Nobeno ime celice, beležke ali skupine tabel se ne odpre za urejanje. Na tabelah, beležkah in skupinah ni gumbov `+` ali `x`, na beležkah in skupinah ni robov za spreminjanje velikosti, ni ročice za vlečenje stolpcev in ni izbirnika barv.
+
+Meni platna ohrani `View Option`, `Name View`, `Export` in `Diff Viewer`. Nima postavk `New Table`, `New Memo`, `New Table Group`, `Toggle Explorer`, `Relationship`, `Derive Physical Names Again`, `Database`, `Import`, `Import and Add` ali `Auto Layout`.  
+Meni tabele ohrani samo `Table Properties`, ki odpre okno samo za branje za to tabelo – glejte razdelek [Lastnosti tabele](#table-properties). Beležka, relacija in skupina tabel ne sprožijo nobenega menija.  
+[Orodna vrstica platna](#canvas-toolbar) ohrani povečavo, `Name View`, način zen in kompas `Go to content`. Zgornja orodna vrstica prikazuje ime zbirke podatkov kot besedilo, ki ga ni mogoče urejati, in nima gumbov `Undo`, `Redo` ali `Time Travel`.  
+[Izvoz](./file-import-export.md#exporting) z vsemi tremi postavkami in [pregledovalnik razlik](#diff-viewer) delujeta kot v vsakem urejevalniku.
+
+[`View Option`](#table-view-options), `Name View`, zbirka podatkov, zavihek, položaj pogleda in povečava se tam še vedno spreminjajo, vendar samo na tistem zaslonu: nič jih ne shrani, zabeleži ali deli – glejte razdelek [Urejevalniki samo za branje](./settings.md#read-only-editors) v Nastavitvah.
+
+Ko urejevalnik postane samo za branje, se konča, kar je bilo odprto za urejanje: urejevalnik imena celice, beležke ali skupine tabel, relacija ali `New Table Group`, ki se riše, izbor in celica v fokusu, orodje Roka, izbirnik barv, [Map Columns](./relationship-editing.md#map-columns) in [Time Travel](./undo-redo.md#time-travel). Pogled, povečava, zavihek in prikaz imen ostanejo, kakršni so bili, okno Lastnosti tabele, pregledovalnik razlik in okno `Export image` pa ostanejo odprti.  
+Tudi poteza, ki poteka, se tam konča. Vlečenje tabel ali beležk se ustavi, kjer je, vlečenje z `Alt` ne spusti kopije, vlečenje stolpca se konča, spreminjanje velikosti beležke se ustavi, kjer je, spreminjanje velikosti skupine tabel se zavrže, [samodejna postavitev](#auto-layout) pa se zavrže skupaj z obvestilom, zato se nobena tabela ne premakne.  
+Ko je urejevalnik spet mogoče urejati, vrne zgornje kontrolnike, nič od tega, kar je zaprl preklop, pa se ne odpre znova.

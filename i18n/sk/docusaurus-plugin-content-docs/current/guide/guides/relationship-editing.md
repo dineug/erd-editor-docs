@@ -1,6 +1,6 @@
 ---
 sidebar_position: 7
-description: Odstránenie vzťahu, zmena jeho typu, nastavenie jeho akcií ON DELETE a ON UPDATE, jeho namapovanie na existujúce stĺpce v dialógovom okne Mapovať stĺpce, čítanie notácie spojníc, práca so vzťahmi N:M a identifikujúcimi vzťahmi a prehľad toho, čo nové stĺpce cudzích kľúčov preberajú zo svojho kľúča a ako sa pomenúvajú.
+description: Odstránenie vzťahu, zmena jeho typu, nastavenie jeho akcií ON DELETE a ON UPDATE, jeho namapovanie na existujúce stĺpce v dialógovom okne Mapovať stĺpce, čítanie notácie spojníc a spôsob vedenia spojníc okolo tabuliek, práca so vzťahmi N:M a identifikujúcimi vzťahmi a prehľad toho, čo nové stĺpce cudzích kľúčov preberajú zo svojho kľúča a ako sa pomenúvajú.
 ---
 
 # Úprava vzťahov
@@ -81,7 +81,7 @@ Každý riadok buď použije stĺpec, ktorý podradená tabuľka už má, alebo 
 Otvára sa dvoma spôsobmi:
 
 - Počas kreslenia vzťahu cez tlačidlo `Map to existing columns` vedľa podradenej tabuľky – pozrite si časť [Vytvorenie vzťahu](./editing-start.md#relationship-creation). Tlačidlo `Map` potom pridá vzťah kresleného typu.
-- Cez položku `Map Columns` v kontextovej ponuke vzťahu, ak chcete zmeniť stĺpce existujúceho vzťahu. Tlačidlo `Save` potom zmenu zapíše. V editore iba na čítanie táto položka nie je k dispozícii.
+- Cez položku `Map Columns` v kontextovej ponuke vzťahu, ak chcete zmeniť stĺpce existujúceho vzťahu. Tlačidlo `Save` potom zmenu zapíše. Editor iba na čítanie neotvára kontextovú ponuku vzťahu, takže sa v ňom dialógové okno Mapovať stĺpce otvoriť nedá.
 
 Podnadpis dialógového okna uvádza obe tabuľky a typ vzťahu, napríklad `users → posts · One N`. Typ sa tu zobrazuje, ale nemení – typ zmeníte podľa časti [Zmena typu](#type-change).
 
@@ -226,6 +226,9 @@ Zvýraznenie zmizne pri ďalšom stlačení ľavého alebo pravého tlačidla na
 Posúvanie zobrazenia stredným tlačidlom myši alebo nástrojom Ruka zvýraznenie ponechá, rovnako ako zbalenie alebo rozbalenie riadka v prieskumníkovi alebo prehliadači rozdielov, zrušenie výberu klávesom `Escape` a skok z [rýchleho vyhľadávania](./quick-search.md) alebo cez [tlačidlo na kartičke](./visualization.md#card-buttons) pre externý odkaz v režime Flow.  
 Zvýraznenie sa neukladá, nie je v histórii zmien a spolupracovníci ho nevidia.
 
+V editore s atribútom [`readonly`](../../api/erd-editor-element.md#readonly) zvýrazňuje spojnice aj ukazovateľ, namiesto zvýraznenia, ktoré zanechal skok. Kým spočíva na tabuľke, zvýrazní všetky spojnice tejto tabuľky farbou prechodu myšou, dokiaľ sa z tabuľky nepresunie.  
+Kliknutie bez pohybu ponechá zvýraznenie až do ďalšieho takého kliknutia: na tabuľke zvýrazní spojnice tejto tabuľky, na spojnici túto spojnicu a kdekoľvek inde nič. Ťahanie tam posúva plátno a toto zvýraznenie ponechá, aké bolo.
+
 Skryte spojnice na plátne ERD možnosťou zobrazenia `Relationship` alebo iba ich menovky možnosťou zobrazenia `Referential Actions`, ktorá je predvolene zapnutá – pozrite si časť [Možnosti zobrazenia tabuliek](./table-related-functions.md#table-view-options).  
 Pri úrovni priblíženia `70%` a nižšej, pri ktorej sa tabuľky zbalia na svoj názov, sa menovky nekreslia.  
 [Export obrázka](./file-import-export.md#image) sa vždy kreslí pri 100 %, takže menovky vykreslí bez ohľadu na priblíženie plátna, pokiaľ ich neskryje možnosť zobrazenia. Pri vypnutej možnosti `Background` je priehľadný aj obdĺžnik za každou menovkou.  
@@ -233,9 +236,10 @@ Pri úrovni priblíženia `70%` a nižšej, pri ktorej sa tabuľky zbalia na svo
 
 ## Vedenie spojníc {#connector-routing}
 
-Spojnice sa vedú ortogonálne.  
-Trasa obchádza tabuľky, ktoré ležia medzi jej dvoma koncami, namiesto toho, aby ich pretínala, a jej rohy sú zaoblené.  
-Každý koniec vychádza zo svojej tabuľky krátkym rovným úsekom, než sa zalomí, takže dve neďaleko od seba ležiace tabuľky, ktorých konce spojnice sú zarovnané, spája jedna rovná čiara namiesto obchádzky.  
+Spojnice sa vedú ortogonálne a ich rohy sú zaoblené.  
+Trasa obchádza tabuľky, ktoré jej stoja v ceste, namiesto toho, aby cez ne prechádzala. Ak by každá trasa s niekoľkými zalomeniami medzi jej dvoma koncami pretínala tabuľku, ako v preplnenom diagrame, spojnica zvolí cestu okolo s toľkými zalomeniami, koľko potrebuje. Iba tam, kde sa nenájde žiadna cesta okolo, tabuľku stále pretína.  
+Spojnica vychádza zo svojich dvoch tabuliek z dvojice strán, ktoré sú obrátené k sebe, kdekoľvek taká dvojica existuje, a každý koniec vychádza zo svojej tabuľky krátkym rovným úsekom, než sa zalomí, takže dve neďaleko od seba ležiace tabuľky, ktorých konce spojnice sú zarovnané, spája jedna rovná čiara namiesto obchádzky.  
+Dve tabuľky obrátené k sebe, ktoré stoja bližšie ako toto, dokonca aj menej ako `40px` od seba, si ponechajú strany obrátené k sebe a tam, kde ich konce nie sú zarovnané, spojnica preskočí cez medzeru medzi nimi, namiesto aby viedla pod niektorou z nich.  
 Trasy vychádzajúce z tej istej strany tabuľky sa rozložia do samostatných koridorov, aby sa navzájom neprekrývali.  
 Obchádzajú sa iba tabuľky: spojnica môže pretínať poznámku alebo rámec skupiny tabuliek a kreslí sa nad skupinami tabuliek a pod tabuľkami a poznámkami.
 
@@ -243,6 +247,9 @@ Vzťah z tabuľky na seba samu sa kreslí ako jedna krivka okolo pravého horné
 Ďalšie rekurzívne vzťahy na tej istej tabuľke sa ukladajú zvonka okolo prvého, takže ich krivky nepretínajú jedna druhú ani tabuľku.
 
 Nie je čo nastavovať.  
-Trasy sa prepočítajú automaticky vždy, keď sa čokoľvek na plátne presunie alebo zmení veľkosť, takže ich nikdy netreba upravovať ručne.
+Trasy sa prepočítajú automaticky vždy, keď sa čokoľvek na plátne presunie alebo zmení veľkosť, takže ich nikdy netreba upravovať ručne.  
+Počas ťahania spojnice presúvaných tabuliek ich sledujú a každá iná spojnica si ponechá trasu, akú mala na začiatku ťahania. Keď ťahanie pustíte, každá spojnica, ktorú presun zmení, sa nakreslí znova, napríklad tá, ktorá teraz obchádza tabuľku položenú jej do cesty, alebo tá, ktorá sa vyrovná, keď sa tabuľka z jej cesty odsunula.
+
+Diagram kreslí rovnaké trasy v každom okne, ktoré ho zobrazuje v rovnakom Zobrazení názvov: v tom, ktoré zostalo otvorené, kým sa tabuľky presúvali, v tom, ktoré diagram práve otvorilo, aj v okne spolupracovníka, a kreslí ich aj [exportovaný obrázok](./file-import-export.md#image). Zobrazenie názvov sa počíta, pretože mení šírku tabuliek – pozrite si časť [Zobrazenie názvov](./logical-names.md#name-view).
 
 ![Presúvanie tabuľky members myšou nadol a späť, pričom spojnica z orders sa prepína medzi vedením vpravo od categories a okolo jej ľavej strany, každý roh zaoblený](/img/demo-connector-routing.webp)

@@ -237,4 +237,5 @@ O apăsare pe un card nu adaugă niciodată o relație. Dacă ați părăsit fil
 Editările colaboratorilor ajung în continuare în diagramă cât timp sunteți în Flux, iar cardurile urmează tabelele și relațiile pe care aceștia le adaugă sau le elimină (consultați [Cum se plasează cardurile în Flux](#how-flow-is-placed)).  
 Inelele lor de selecție și de focus sunt desenate pe carduri, dar cursoarele și casetele lor de selecție nu (consultați [Editare colaborativă](../../api/advanced/collaborative-editing.md)).
 
-Ambele moduri, inclusiv focalizarea și pașii, funcționează și într-un editor cu atributul `readonly`, la fel ca lista `Name View`, care acolo schimbă doar ecranul dumneavoastră.
+Ambele moduri, inclusiv focalizarea și pașii, funcționează și într-un editor cu atributul [`readonly`](../../api/erd-editor-element.md#readonly), la fel ca lista `Name View`, care acolo schimbă doar ecranul dumneavoastră.  
+În fila ERD a unui editor doar în citire, meniul tabelului conține doar `Table Properties`, iar o apăsare nu selectează niciun tabel, așa că focalizați cu `Alt + F` (Windows/Linux) sau `⌥ + F` (Mac) pe tabelul selectat de un salt din [Explorator](./explorer.md#going-to-a-row) sau din [Căutarea rapidă](./quick-search.md).

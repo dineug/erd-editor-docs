@@ -37,7 +37,7 @@ JSON fitxategi batek dituen kokapenak gordetzen ditu. SQL eskema, GraphQL, DBML 
 
 Ondoren, diagrama urrats bakarrean ordezten da, eta, beraz, tartean ez da ezer ikusten. Taulak kokatzen diren bitartean aldatzen duzun ezarpen bat, fitxa adibidez, gorde egiten da, eta bitartean beste fitxategi bat inportatzen baduzu, azken hasitako inportazioa nagusitzen da.
 
-Irakurtzeko soilik dagoen editore batek ez du ezer kargatzen `Import` aukeratik, eta ez du eskaintzen ez `Import and Add` aukera, ez Hiztegia fitxako `Import CSV` aukera.
+Irakurtzeko soilik dagoen editore batek ez du ezer inportatzen. Haren oihal-laster-menuak eta Bilaketa azkarrak ez dute eskaintzen ez `Import`, ez `Import and Add`; ez du ongietorri-pantailarik erakusten, eta Hiztegia fitxak ez du `Import CSV` eskaintzen.
 
 ### Inportatu eta gehitu {#import-and-add}
 
@@ -215,7 +215,7 @@ Oihalaren laster-menuko `Export` azpimenuak hiru aukera ditu:
 - Schema SQL: [SQL eskema](./schema-sql.md#saving-or-copying-the-sql) fitxa irekitzen du, aukeren panela irekita eta `Save file` botoia fokuratuta dituela; beraz, `Enter` sakatzean fitxak erakusten duen SQLa `.sql` gisa gordetzen da. Ordura arte ez da ezer gordetzen.
 - Image: `Export image` elkarrizketa-koadroa irekitzen du; horrek diagrama `.png` edo `.svg` gisa gordetzen du, edo arbelean kopiatzen du PNG gisa. Ikus [Irudia](#image).
 
-Hirurek irakurtzeko soilik dagoen editore batean funtzionatzen dute.  
+Hirurek irakurtzeko soilik dagoen editore batean funtzionatzen dute, non `Export` haren oihal-menuak mantentzen dituen errenkada gutxietako bat den. Bertan, json aukerak dokumentuak dituen ezarpenak idazten ditu, ez ikuspegia, fitxa, Izenen ikuspegia, datu-basea, kode-ezarpenak edo pantaila horretan bakarrik aldatutako `View Option` etengailuak. Ikus Ezarpenetako [Irakurtzeko soilik dauden editoreak](./settings.md#read-only-editors).  
 Hiztegia fitxaren beraren `Export CSV` aukerak, azpimenu honetan ez dagoenak, haren `Domains`, `Words` edo `Terms` orria CSV fitxategi gisa gordetzen du. Hiru horiek ez bezala, ez da eskaintzen irakurtzeko soilik dagoen editore batean. Ikus [CSV fitxategiak inportatzea eta esportatzea](./dictionary.md#importing-and-exporting-csv).
 
 SQL eskemak erlazio bakoitzaren ON DELETE eta ON UPDATE haren `REFERENCES` klausularen ondoren idazten ditu, ON DELETE lehenik. `Not set` balioak ez du ezer idazten, eta hautatutako datu-baseak onartzen ez duen ekintza bat kanpoan uzten da. Datu-base bakoitzak zein onartzen duen jakiteko, ikus [Erlazioak editatzea](./relationship-editing.md#on-delete-and-on-update).

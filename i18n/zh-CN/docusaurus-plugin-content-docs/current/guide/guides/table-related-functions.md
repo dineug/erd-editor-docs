@@ -6,7 +6,7 @@ description: 选中、移动、复制、删除表与备注并创建其副本，�
 # 表相关功能
 
 表与备注创建之后的所有操作，包括选中、移动、复制、删除、着色，以及设置画布显示哪些内容，还包括围绕它们的画布控制。  
-先是表与备注的相关命令；然后是表属性、聚焦于表、索引与备用键、自动布局和数据库厂商；最后是画布本身：画布工具栏、缩放、平移与跳转的落点，以及 Diff Viewer。  
+先是表与备注的相关命令；然后是表属性、聚焦于表、索引与备用键、自动布局和数据库厂商；接着是画布本身：画布工具栏、缩放、平移与跳转的落点，以及 Diff Viewer；最后是只读编辑器对这一切保留了什么。  
 表分组是容纳表的框，有单独的一页介绍，参见[表分组](./table-groups.md)。  
 逻辑名和决定表显示哪些名称的名称显示也是如此，参见[逻辑名](./logical-names.md)。
 
@@ -23,7 +23,8 @@ description: 选中、移动、复制、删除表与备注并创建其副本，�
 有文本光标时，`Ctrl + A` 会优先作用于光标所在的文本，因此在编辑单元格时它选中的是文本而不是图。  
 选择框覆盖到表或备注的中心时才会将其选中，仅接触边缘不会选中。只有当选择框包住表分组的整个框时才会选中该分组，因此在分组内部画出的选择框只会选中其中的表，而不会选中分组。  
 在已经选中的对象上右键点击时，整个选中范围都会保留，因此 `Color`、`Group selected tables` 和 `Delete selected` 等菜单条目会作用于所有选中的对象。在其他任何表、备注或表分组上右键点击时，即使按住了 `Ctrl` 或 `⌘`，也只会选中该对象；在关系或空白画布上右键点击则会清除选中状态。  
-`Escape` 会清除选中状态。当单元格、备注或表分组名称的编辑器处于打开状态，或正在绘制关系或 `New Table Group` 时，第一次按 `Escape` 会结束该操作，第二次才会清除选中状态。
+`Escape` 会清除选中状态。当单元格、备注或表分组名称的编辑器处于打开状态，或正在绘制关系或 `New Table Group` 时，第一次按 `Escape` 会结束该操作，第二次才会清除选中状态。  
+只读编辑器没有这些选中方式：那里只有跳转才会选中，参见[只读编辑器](#read-only-editors)。
 
 ![用 ⌘ + drag 和 ⌘ + click 选中表，再用 ⌘ + A 选中所有表与备注](/img/demo-table-select.webp)
 
@@ -145,7 +146,7 @@ description: 选中、移动、复制、删除表与备注并创建其副本，�
 `Table Groups` 显示[表分组](./table-groups.md)，以及分组中各表表头上的分组颜色。关闭它会在画布、小地图和导出的图片中隐藏这些内容，不会移动任何表，每个表也仍留在其分组中，参见[隐藏分组](./table-groups.md#hiding-groups)。关闭它还会从[资源管理器](./explorer.md#the-tree)中移除 `Table Groups` 文件夹，从[画布工具栏](#canvas-toolbar)中移除 `New Table Group`，资源管理器的搜索也不再查找分组名称。  
 `Memos` 显示备注。关闭它会在画布、小地图和导出的图片中隐藏所有备注，不会移动任何表或连接线。隐藏的备注不占用空间，因此滚动条、小地图和 `Go to content` 指南针都不会将其计算在内。  
 隐藏备注时会取消对它们的选中，并关闭已打开的备注编辑器。[资源管理器](./explorer.md#the-tree)会去掉其 `Memos` 文件夹，其[查找与替换](./find-and-replace.md)搜索和快速搜索的 `:` 都不会搜索它们。备注隐藏期间，右键菜单、[画布工具栏](#canvas-toolbar)、快速搜索和[欢迎界面](./editing-start.md#欢迎界面)中都不再提供 `New Memo`，`Alt + M` 也不会添加备注。粘贴或 [Import and Add](./file-import-export.md#import-and-add) 仍会添加其中携带的备注，这些备注处于隐藏且未选中的状态。  
-在 `readonly` 编辑器中，切换这些选项不起作用。
+在只读编辑器中，这些开关仍然有效，但只作用于该屏幕：它们不会被保存、记录到 Undo 历史记录或共享，并且在编辑器再次变为可写时会恢复为文件的值，参见设置中的[只读编辑器](./settings.md#read-only-editors)。
 
 ![切换 View Option 中的条目时表的显示随之变化，用 Alternate Key 将复合唯一索引的两列标记为 AK1.1 和 AK1.2，然后关闭再开启 Memos](/img/demo-view-options.webp)
 
@@ -164,14 +165,15 @@ Visualization 标签页 `Flow` 模式中的卡片不遵循这些选项，包括 
 `Schema SQL` 标签页按所选[数据库](#databases)显示该表的 DDL：它的 `CREATE TABLE`、部分数据库为其 Unique 列单独写出的约束，以及它的索引。无论工具栏中的 [Schema SQL](./schema-sql.md) 标签页如何设置，它始终只写出普通的 `CREATE` 语句，不带头部语句，不带前置或后置脚本，也不会把逻辑名写入空注释，参见[将逻辑名作为注释](./schema-sql.md#logical-names-as-comments)。它没有选项面板，其右键菜单只提供 `Database` 和 `Bracket`。  
 `Code Generator` 标签页只为这一张表生成代码，参见[代码生成](./code-generator.md)。
 
-在 `readonly` 编辑器中，面板仍然可以打开，标题旁会显示 `Read only` 徽标，但其 `Indexes` 标签页不提供任何编辑功能。
+在只读编辑器中，面板仍然可以打开，可以通过 `Table Properties`（那里表右键菜单中的唯一一项），或在跳转所选中的表上按 `Alt + Space` 打开。标题旁会显示 `Read only` 徽标，但其 `Indexes` 标签页不提供任何编辑功能。  
+编辑器变为只读时已经打开的面板会保持打开，并随之变为只读，参见[只读编辑器](#read-only-editors)。
 
 ## 聚焦于表 {#focusing-on-tables}
 
 以 `Flow` 模式打开 Visualization 标签页，范围缩小到选中的表以及与它们相隔一条关系的所有表。  
 通过表的右键菜单中的 `Focus on this table` 打开，或者选中一个或多个表后按 `Alt + F`。  
 当你右键点击的表是多个选中表中的一个时，该条目会显示为 `Focus on selected tables`，并聚焦整个选中范围。在选中范围之外的表上右键，则只聚焦该表。  
-快捷键作用于选中的表，不包括备注，没有选中任何表时不起作用。  
+快捷键作用于选中的表，不包括备注，没有选中任何表时不起作用。只读编辑器的表菜单中没有 `Focus on this table`，快捷键作用于那里跳转所选中的表，参见[只读编辑器](#read-only-editors)。  
 选中的[表分组](./table-groups.md)在这里不起任何作用，快捷键和菜单条目都是如此：分组中的表只有在其本身被选中时才会被纳入，分组菜单中的 `Select tables` 可以选中它们。  
 缩小后的视图显示哪些内容，以及如何回到整张图，参见[可视化](./visualization.md#focusing-on-tables)；如何在 Flow 之前显示过的内容之间后退和前进，参见[上一个表与下一个表](./visualization.md#previous-table-and-next-table)。
 
@@ -187,7 +189,7 @@ Visualization 标签页 `Flow` 模式中的卡片不遵循这些选项，包括 
 勾选某一列会将其添加到选中的索引中，取消勾选则将其移除。选中键时，其列会显示为已勾选，但复选框保持禁用。  
 选中索引所包含的列显示在下方的 `Index order` 下，每一列都按名称显示命名；在 `Both Names` 下，名称以括号形式写在逻辑名之后，例如 `Member Number (member_no)`。通过拖动手柄可以调整它们的顺序，点击某一行的 `ASC` 或 `DESC` 标记可以切换排序方向。在备用键中，每一行的末尾都带有其 `AK<n>.<m>` 标记。该列表一次显示三行，其余的可以滚动查看。
 
-在 `readonly` 编辑器中，选中键或索引时仍会显示其列，但没有 `Add Index` 和 `x`，标签页中的其他内容也都无法更改。
+在只读编辑器中，选中键或索引时仍会显示其列，但没有 `Add Index` 和 `x`，标签页中的其他内容也都无法更改：名称不接受输入，所有复选框都被禁用，`Index order` 的各行既不能拖动，也不能翻转其排序。
 
 [资源管理器](./explorer.md#the-tree)会在每个表的 `Indexes` 文件夹中列出该表的索引，在那里选择某个索引会跳转到其所在的表。资源管理器的搜索也会查找索引名，并且可以重命名索引，参见[搜索的内容](./find-and-replace.md#what-it-searches)。
 
@@ -233,7 +235,8 @@ Visualization 标签页 `Flow` 模式中的卡片不遵循这些选项，包括 
 
 无论选择哪一种，移动的都是表和表分组，备注留在原处。表按其在你当前所用的显示方式下的宽度排布。指向自身的关系会被忽略，同两个表之间的多条关系只算一条。  
 无论分组是否显示，每种布局都会让每个分组中的表聚在一起，并调整每个含有表的分组，使其围住这些表，参见[表分组](./table-groups.md#auto-layout)。  
-结果只会记录为一条历史记录，因此一次 Undo 就能把所有表和分组恢复原位。
+结果只会记录为一条历史记录，因此一次 Undo 就能把所有表和分组恢复原位。  
+只读编辑器不提供 `Auto Layout`。编辑器变为只读时仍在运行的自动布局会在那里结束：`Force` 预览会连同其提示一起关闭，且不保留其任何位置；仍在计算的布局会连同其提示一起被丢弃，因此无论是当时还是编辑器再次变为可写之后，都不会有任何表移动。
 
 ![通过画布右键菜单的 Flow 自动布局整理散乱的表，表沿着关系从左到右排列](/img/demo-automatic-table-placement.webp)
 
@@ -250,7 +253,7 @@ Visualization 标签页 `Flow` 模式中的卡片不遵循这些选项，包括 
 - Snowflake
 - SQLite
 
-可以通过画布右键菜单、Schema SQL 与 Code Generator 标签页的选项面板或右键菜单，或快速搜索中的 `Database` 选择数据库。这些入口修改的都是同一个设置。
+可以通过画布右键菜单、Schema SQL 与 Code Generator 标签页的选项面板或右键菜单，或快速搜索中的 `Database` 选择数据库。这些入口修改的都是同一个设置。只读编辑器的画布菜单中没有 `Database`，在其他入口中的选择只会改变该屏幕，参见[只读编辑器](#read-only-editors)。
 
 该选项决定导出 Schema SQL 的语法、DataType 的自动补全，以及生成的代码和导入的 schema 所解析出的类型。  
 该选项也决定 [Schema SQL](./schema-sql.md#options-panel) 标签页可以写出哪些 `Statements` 与 `Header` 选项。数据库不具备的选项仍会留在选项面板中，但会变暗显示，SQL 则会退回到该数据库具备的最接近的选项。  
@@ -266,15 +269,16 @@ Visualization 标签页 `Flow` 模式中的卡片不遵循这些选项，包括 
 画布底部边缘的中间浮着一个小工具栏，从左到右依次放置作用于画布本身的工具，以及向画布添加内容的命令：
 
 - 抓手与指针。默认是指针；切换到抓手后，无论在空白处还是在表的上方，拖动都会变成平移视图。用 `Space` 在两者之间切换。[`New Table Group`](./table-groups.md#drawing-a-group) 处于绘制状态时，显示为选中状态的是 `New Table Group` 按钮，而不是两者之一；此时点击其中任意一个、按 `Space` 或选择一种关系表示法，都会结束绘制而不添加分组。
-- `New Table`、`New Memo` 和 `New Table Group`。`New Table` 与 `Alt + N` 一样添加一个表，`New Memo` 与 `Alt + M` 一样添加一个备注。`New Table Group` 与 `Alt + G` 一样进入[分组绘制](./table-groups.md#drawing-a-group)状态，并关闭抓手工具；与再按一次 `Alt + G` 相同，再点击一次会结束绘制而不添加分组。View Option → `Memos` 隐藏备注期间不显示 `New Memo`，View Option → `Table Groups` 隐藏分组期间不显示 `New Table Group`。`readonly` 编辑器中这三个按钮都不显示。
+- `New Table`、`New Memo` 和 `New Table Group`。`New Table` 与 `Alt + N` 一样添加一个表，`New Memo` 与 `Alt + M` 一样添加一个备注。`New Table Group` 与 `Alt + G` 一样进入[分组绘制](./table-groups.md#drawing-a-group)状态，并关闭抓手工具；与再按一次 `Alt + G` 相同，再点击一次会结束绘制而不添加分组。View Option → `Memos` 隐藏备注期间不显示 `New Memo`，View Option → `Table Groups` 隐藏分组期间不显示 `New Table Group`。
 - 缩放：`Zoom out`、以百分比显示的当前缩放级别，以及 `Zoom in`。这两个按钮与缩放快捷键一样逐级调整缩放，点击百分比则会把缩放恢复为 `100%`。
 - 四种关系表示法，与开始绘制关系时使用的相同。参见[开始编辑](./editing-start.md)。绘制关系需要依次点击两个表，因此选择一种表示法后工具会切回指针。
-- `Name View`，一个带向下箭头的按钮，显示当前的显示方式：`Physical Names`、`Logical Names` 或 `Both Names`。无论显示的是哪种方式，它都保持同一宽度，因此切换时工具栏永远不会移位。点击它会在工具栏上方打开列出这三种方式的列表，当前的方式带有勾选标记。选择其中一种即可切换到该方式并关闭列表；再次点击该按钮、在其他任意位置按下或按 `Escape` 则会关闭列表而不切换。`readonly` 编辑器中同样会显示它。各显示方式绘制的内容参见[名称显示](./logical-names.md#name-view)，切换是否会被保存参见[切换显示方式](./logical-names.md#switching-the-view)。
+- `Name View`，一个带向下箭头的按钮，显示当前的显示方式：`Physical Names`、`Logical Names` 或 `Both Names`。无论显示的是哪种方式，它都保持同一宽度，因此切换时工具栏永远不会移位。点击它会在工具栏上方打开列出这三种方式的列表，当前的方式带有勾选标记。选择其中一种即可切换到该方式并关闭列表；再次点击该按钮、在其他任意位置按下或按 `Escape` 则会关闭列表而不切换。各显示方式绘制的内容参见[名称显示](./logical-names.md#name-view)，切换是否会被保存参见[切换显示方式](./logical-names.md#switching-the-view)。
 - 禅模式 `Alt + Z`，只保留画布和这个工具栏，隐藏其余界面。再次按 `Alt + Z` 或点击按钮即可恢复。已打开的资源管理器会与其余界面一起隐藏，但不会被关闭，并会随其余界面一起恢复。禅模式下仍然可以打开资源管理器，参见[何时让位](./explorer.md#when-it-stands-aside)。
 - `Go to content` 指南针，仅在屏幕上没有任何表、显示的备注或显示的表分组时才会出现在工具栏末尾。参见[浏览画布](#getting-around-the-canvas)。
 
 每个带有快捷键的按钮都会在提示中标出该快捷键，例如 `New Table (Alt + N)` (Windows/Linux) 或 `New Table (⌥ + N)` (Mac)。  
-在 `Force` 自动布局预览、表属性、Time Travel 或 Diff Viewer 打开期间，工具栏会暂时隐藏，关闭后再重新出现。
+在 `Force` 自动布局预览、表属性、Time Travel 或 Diff Viewer 打开期间，工具栏会暂时隐藏，关闭后再重新出现。  
+只读编辑器的工具栏保留缩放、`Name View`、禅模式和 `Go to content` 指南针。它没有抓手或指针，没有 `New Table`、`New Memo` 或 `New Table Group`，也没有各种表示法，编辑器再次变为可写后它们会回来。
 
 ![用工具栏添加一个表和一个备注，进入再退出 New Table Group 绘制状态，用抓手平移，逐级缩放，然后用 ⌥ + Z 切换禅模式](/img/demo-canvas-toolbar.webp)
 
@@ -339,7 +343,7 @@ Visualization 标签页 `Flow` 模式中的卡片不遵循这些选项，包括 
 - 表分组：其框，关键部分是其标题栏。
 - 备注，或 Import and Add 落下的内容块：整个备注或内容块。
 
-两个方向都不需要移动时不会滚动，因此连续两次跳转到同一位置时，第二次不会移动任何内容。滚动了画布的跳转会像其他任何视图位置的变化一样，把这次滚动记录到 [Undo 历史记录](./undo-redo.md#what-the-history-records)中；没有移动任何内容的跳转则不会留下可撤回的内容。对于 Import and Add，滚动与添加属于同一步。Diff Viewer 列表中的行只会移动该视图的只读两侧，因此不会记录任何内容。  
+两个方向都不需要移动时不会滚动，因此连续两次跳转到同一位置时，第二次不会移动任何内容。滚动了画布的跳转会像其他任何视图位置的变化一样，把这次滚动记录到 [Undo 历史记录](./undo-redo.md#what-the-history-records)中；没有移动任何内容的跳转则不会留下可撤回的内容。对于 Import and Add，滚动与添加属于同一步。Diff Viewer 列表中的行只会移动该视图的只读两侧，因此不会记录任何内容，而只读编辑器完全不记录跳转。  
 任何跳转都不会开始或完成正在绘制的关系。`Go to content` 指南针不是跳转：它会把所指的对象移到中央。
 
 ## Diff Viewer
@@ -351,7 +355,8 @@ Visualization 标签页 `Flow` 模式中的卡片不遵循这些选项，包括 
 当前文档按视图打开时的状态进行比较；此后所做的更改，包括协作者所做的更改，都不会反映到视图中。无论两个文件各自保留的是哪种显示方式，两侧都会以你当前所用的显示方式打开并保持该方式，参见[画布之外](./logical-names.md#beyond-the-canvas)。视图打开期间，已打开的[资源管理器](./explorer.md#when-it-stands-aside)会被隐藏，因此视图会占据编辑器的整个宽度。  
 每一侧都可以通过滚轮、拖动空白区域或表分组的主体，或在其上任意位置用中键拖动来平移，并通过 `Ctrl + Wheel` (Windows/Linux)、`⌘ + Wheel` (Mac) 或捏合手势缩放。在 `70%` 及以下，表会像在画布上一样折叠，参见[两侧的标记](#marks-on-the-two-sides)。  
 两侧都是只读的，不会修改文档中的任何内容。每一侧都有各自的选中状态，在某一侧点击表只会在该侧选中它。  
-可以通过打开时出现的 `Diff Viewer` 提示上的 `Close` 按钮或 `Escape` 关闭该视图。
+可以通过打开时出现的 `Diff Viewer` 提示上的 `Close` 按钮或 `Escape` 关闭该视图。  
+只读编辑器同样提供 `Diff Viewer`，该视图在那里的工作方式与在任何编辑器中相同，点击某一侧的表仍只在该侧选中它。编辑器变为只读时已经打开的视图会保持打开。
 
 ![用保存的 .json 文件打开 Diff Viewer，在其树中点击标记为 A、M、D 和 R 的行，按名称过滤，然后将其关闭](/img/demo-diff-viewer.webp)
 
@@ -423,3 +428,26 @@ Visualization 标签页 `Flow` 模式中的卡片不遵循这些选项，包括 
 `Logical Names` 不绘制名称单元格，因此重命名的蓝色，以及变更位于该侧未绘制的单元格中时的琥珀色，都会显示在代替名称绘制的逻辑名上。在每种显示方式下，数据类型的变更都会使类型单元格变为琥珀色，即使该单元格显示的是域的名称。两侧都不会绘制词典的检查在画布上为名称添加的颜色，参见[画布上的标记](./dictionary.md#marks-on-the-canvas)。
 
 在 `70%` 及以下，折叠的表会保留其轮廓。已添加或已删除的表，其名称保留绿色或红色，已重命名的表保留蓝色；否则，注释发生变更时名称会变为琥珀色。列的变更在重新放大之前不会绘制，但树中仍会列出。
+
+## 只读编辑器 {#read-only-editors}
+
+[`readonly`](../../api/erd-editor-element.md#readonly) 编辑器（例如在 VS Code 中重新以图的形式打开的 Git 修订版本）是阅读者。它的六个标签页、[资源管理器](./explorer.md#read-only-editors)、小地图、滚动条以及协作者的光标和选中状态都保留，所有会改变图的控件都被去掉，而不是变暗显示。
+
+在 ERD 画布上：
+
+- 无论从哪里开始，拖动都会平移：空白画布、表、备注或表分组上都一样。鼠标中键、滚轮、捏合和缩放按键的工作方式与在任何编辑器中相同。
+- 指针停在表上会点亮它的关系。不移动的点击会点亮其所点中的表的关系，或其所点中的关系，在其他位置点击则会将点亮熄灭。
+- 按下、选择框或全选按键都不会选中任何内容。只有跳转才会选中：[资源管理器](./explorer.md#going-to-a-row)的一行、其[查找与替换](./find-and-replace.md#going-to-a-match)的一个匹配项，或[快速搜索](./quick-search.md#searching-the-diagram)的 `#`、`@` 或 `:` 结果，会选中其所到达的对象，像任何选中一样绘制轮廓，焦点单元格位于跳转所指定的位置。不移动的点击会清除该选中。
+- 方向键会移动焦点单元格。复制、`Table Properties` 和 `Focus on this table` 通过各自的按键作用于跳转所选中的对象，粘贴不会添加任何内容。其他按键列在[快捷键](./settings.md#快捷键)中。
+- 没有任何单元格、备注或表分组名称会打开编辑。表、备注和分组上没有 `+` 或 `x` 按钮，备注和分组没有调整大小的边缘，没有列拖动手柄，也没有取色器。
+
+画布右键菜单保留 `View Option`、`Name View`、`Export` 和 `Diff Viewer`。它没有 `New Table`、`New Memo`、`New Table Group`、`Toggle Explorer`、`Relationship`、`Derive Physical Names Again`、`Database`、`Import`、`Import and Add` 或 `Auto Layout`。  
+表的菜单只保留 `Table Properties`，它会以只读方式为该表打开面板，参见[表属性](#table-properties)。备注、关系和表分组都不会弹出菜单。  
+[画布工具栏](#canvas-toolbar)保留缩放、`Name View`、禅模式和 `Go to content` 指南针。顶部工具栏把数据库名显示为无法编辑的文本，没有 `Undo`、`Redo` 或 `Time Travel`。  
+[Export](./file-import-export.md#exporting)（带有它的全部三个条目）和 [Diff Viewer](#diff-viewer) 的工作方式与在任何编辑器中相同。
+
+[`View Option`](#table-view-options)、`Name View`、数据库、标签页、视图位置和缩放在那里仍可更改，但只作用于该屏幕：没有任何内容会被保存、记录或共享，参见设置中的[只读编辑器](./settings.md#read-only-editors)。
+
+把编辑器变为只读会结束所有正在打开的编辑：单元格、备注或表分组名称的编辑器、正在绘制的关系或 `New Table Group`、选中状态和焦点单元格、抓手工具、取色器、[Map Columns](./relationship-editing.md#map-columns) 和 [Time Travel](./undo-redo.md#time-travel)。视图、缩放、标签页和名称显示保持原样，表属性、Diff Viewer 和 `Export image` 对话框保持打开。  
+正在进行的手势也会在那里结束。表或备注的拖动会停在当前位置，`Alt + drag` 不会放下副本，列拖动会结束，备注的调整大小会停在当前位置，表分组的调整大小会被丢弃，[自动布局](#auto-layout)会连同其提示一起被丢弃，因此没有任何表移动。  
+再次变为可写后，编辑器会还回上述控件，而被这次转换关闭的内容不会重新打开。

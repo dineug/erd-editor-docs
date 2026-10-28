@@ -10,7 +10,8 @@ description: 從歡迎畫面開始，並透過畫布的右鍵選單、畫布工�
 ![在畫布上按滑鼠右鍵、開啟 Relationship 子選單、新增資料表，然後開啟該資料表本身的選單](/img/demo-context-menu.webp)
 
 在資料表、備忘錄、資料表群組或關聯上按滑鼠右鍵，則會改為開啟該項目本身的選單。  
-在已選取的資料表、備忘錄或資料表群組上按滑鼠右鍵時，會保留整個選取範圍，因此 `Color` 和 `Delete selected` 等項目會作用於所有選取的項目，請參閱[多重選取](./table-related-functions.md#multiple-selection)。
+在已選取的資料表、備忘錄或資料表群組上按滑鼠右鍵時，會保留整個選取範圍，因此 `Color` 和 `Delete selected` 等項目會作用於所有選取的項目，請參閱[多重選取](./table-related-functions.md#multiple-selection)。  
+唯讀編輯器不會建立任何東西，因此本頁所述的內容在那裡都不提供：畫布選單只保留 `View Option`、`Name View`、`Export` 和 `Diff Viewer`，資料表的選單只保留 `Table Properties`，而備忘錄、資料表群組或關聯不會開啟任何選單，請參閱[唯讀編輯器](./table-related-functions.md#read-only-editors)。
 
 ## 歡迎畫面 {#welcome-screen}
 

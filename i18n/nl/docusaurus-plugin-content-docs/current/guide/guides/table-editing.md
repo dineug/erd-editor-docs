@@ -16,13 +16,14 @@ Zolang een invoermethode nog aan het samenstellen is, houdt `Escape` de bewerkmo
 
 ## Kolommen toevoegen {#adding-columns}
 
-Je maakt een kolom met de sneltoets `Alt + Enter` (Windows/Linux) of `⌥ + Enter` (Mac).  
-Er wordt een kolom toegevoegd aan elke geselecteerde tabel.
+Je maakt een kolom met de sneltoets `Alt + Enter` (Windows/Linux) of `⌥ + Enter` (Mac), die een kolom toevoegt aan elke geselecteerde tabel, of met de knop `+` op de kop van een tabel, die er een aan die tabel toevoegt.  
+De eerste cel van de nieuwe kolom krijgt de focus, de eerste die haar rij tekent in de [kolomvolgorde](./settings.md#adjusting-column-order). Onder de standaardvolgorde is dat haar naam, die in `Logical Names` haar logische naam is, en in `Both Names` haar cel `Logical Name` — zie [Naamweergave](./logical-names.md#name-view).  
+Een kolom die met `Tab` vanuit de laatste cel wordt toegevoegd, en de primaire sleutel die het tekenen van een relatie toevoegt aan een bovenliggende tabel die er geen heeft, beginnen ook op die cel.
 
 ## De Tab-toets {#tab-key}
 
 Druk op `Tab` om direct naar de bewerkmodus van de volgende cel te gaan.  
-Als je in de laatste cel op `Tab` drukt, wordt er een nieuwe kolom gemaakt.  
+Als je in de laatste cel op `Tab` drukt, wordt er een nieuwe kolom gemaakt en opent haar eerste cel voor bewerken — zie [Kolommen toevoegen](#adding-columns).  
 Gebruik `Shift + Tab` om naar de bewerkmodus van de vorige cel te gaan.  
 `Tab` en `Shift + Tab` gaan langs de cellen die de tabel toont, in hun volgorde, dus de naamweergave en View Option → `Domain` bepalen of cellen van de logische naam en domeincellen daartoe behoren — zie [Een logische naam invoeren](./logical-names.md#writing-a-logical-name).  
 De markeringen voor [alternatieve sleutels](./table-related-functions.md#alternate-keys) die na de laatste cel van een rij worden getekend, zijn geen cellen, dus de toetsenbordfocus slaat ze over en ze worden nooit geopend om te bewerken.
@@ -96,7 +97,8 @@ Er is geen modificatietoets nodig. Als je `Alt` (Windows/Linux) of `⌥` (Mac) i
 ![Drie kolommen selecteren en daarna de greep naast de gefocuste kolom naar een andere tabel slepen, waarbij de andere geselecteerde kolommen meegaan](/img/demo-column-multi-move.webp)
 
 Slepen dat op de rij van een kolom begint in plaats van op haar greep, verplaatst de tabel, net als slepen aan de kop — zie [Meerdere tabellen verplaatsen](./table-related-functions.md#moving-multiple-tables). `Alt + drag` (Windows/Linux) of `⌥ + drag` (Mac) op een rij dupliceert de tabel — zie [Tabellen en memo's dupliceren](./table-related-functions.md#duplicating-tables-and-memos).  
-Bij een zoomniveau van `70%` en lager, waarbij tabellen alleen hun naam tonen, en in een editor in alleen-lezenmodus wordt geen greep getekend, dus daar kunnen kolommen niet worden herschikt.
+Bij een zoomniveau van `70%` en lager, waarbij tabellen alleen hun naam tonen, en in een editor in alleen-lezenmodus wordt geen greep getekend, dus daar kunnen kolommen niet worden herschikt.  
+Een kolomsleepbeweging die bezig is wanneer de editor in alleen-lezenmodus gaat, eindigt direct: de kopie die de aanwijzer volgt en de grijpende hand verdwijnen, en loslaten verplaatst geen kolom. Rijen die de sleepbeweging al had verplaatst, blijven waar ze die zette.
 
 ## Kolommen verwijderen {#column-deletion}
 
@@ -174,3 +176,10 @@ Het sleutelpictogram in de rij dient alleen ter weergave, dus als je erop klikt,
 Om van meerdere kolommen één samengestelde sleutel te maken, [selecteer je ze](#selecting-multiple-columns) en druk je daarna op `Alt + K` (Windows/Linux) of `⌥ + K` (Mac), of klik je met de rechtermuisknop op een van de geselecteerde rijen en kies je `Primary Key on selected columns`. Elke omschakeling is één stap in de geschiedenis.
 
 ![Twee kolommen selecteren met Shift + Arrow Down, ze daarna allebei tot primaire sleutel maken met ⌥ + K en met een tweede druk bij allebei de primaire sleutel weer uitschakelen](/img/demo-column-pk.webp)
+
+## Editors in alleen-lezenmodus {#read-only-editors}
+
+In een editor met [`readonly`](../../api/erd-editor-element.md#readonly) opent geen cel voor bewerken en verandert geen kolom.  
+Een klik op een cel focust niets en haalt de selectie weg die een sprong achterliet. `Enter` en een dubbelklik openen geen editor en schakelen geen toggle om, `Tab` blijft aan de pagina, en de sneltoetsen die kolommen toevoegen, alles selecteren of verwijderen, de wisseling van de primaire sleutel en plakken doen niets.  
+Naar een kolom gaan vanuit de [Verkenner](./explorer.md#going-to-a-row) of [Snel zoeken](./quick-search.md) focust haar cel. De pijltoetsen verplaatsen de focus dan van cel naar cel, waarbij de kolom die ze bereiken alleen wordt geselecteerd, omdat `Shift` daar geen kolom toevoegt.  
+`Ctrl + C` (Windows/Linux) of `⌘ + C` (Mac) kopieert nog steeds de geselecteerde kolom, of de tabel die een sprong selecteerde — zie [Kolommen kopiëren/plakken](#copyingpasting-columns).

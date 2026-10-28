@@ -37,7 +37,7 @@ Súbor JSON si zachová pozície, ktoré obsahuje. Tabuľky zo súboru Schéma S
 
 Diagram sa potom nahradí v jednom kroku, takže sa medzitým nič nezobrazí. Nastavenie, ktoré zmeníte počas umiestňovania tabuliek, napríklad karta, sa zachová, a ak medzitým importujete ďalší súbor, platí import, ktorý sa spustil ako posledný.
 
-Editor iba na čítanie cez položku `Import` nič nenačíta a neponúka položku `Import and Add` ani tlačidlo `Import CSV` karty Slovník.
+Editor iba na čítanie nič neimportuje. Jeho kontextová ponuka plátna a rýchle vyhľadávanie neponúkajú ani `Import`, ani `Import and Add`, nezobrazuje uvítaciu obrazovku a karta Slovník neponúka `Import CSV`.
 
 ### Importovať a pridať {#import-and-add}
 
@@ -215,7 +215,7 @@ Podponuka `Export` v kontextovej ponuke plátna má tri položky:
 - Schema SQL: Otvorí kartu [Schéma SQL](./schema-sql.md#saving-or-copying-the-sql) s otvoreným panelom možností a s fokusom na tlačidle `Save file`, takže stlačením klávesu `Enter` sa kód SQL zobrazený na karte uloží ako `.sql`. Dovtedy sa nič neuloží.
 - Image: Otvorí dialógové okno `Export image`, ktoré diagram uloží ako `.png` alebo `.svg` alebo ho skopíruje do schránky ako PNG – pozrite si časť [Obrázok](#image).
 
-Všetky tri fungujú aj v editore iba na čítanie.  
+Všetky tri fungujú aj v editore iba na čítanie, kde je `Export` jedným z mála riadkov, ktoré si jeho ponuka plátna ponecháva. Json tam zapíše nastavenia, ktoré súbor uchováva, nie zobrazenie, kartu, Zobrazenie názvov, databázu, nastavenia kódu ani prepínače `View Option` zmenené iba na tejto obrazovke – pozrite si časť [Editory iba na čítanie](./settings.md#read-only-editors) v Nastaveniach.  
 Vlastné tlačidlo `Export CSV` karty Slovník, ktoré v tejto podponuke nie je, uloží jej hárok `Domains`, `Words` alebo `Terms` ako súbor CSV. Na rozdiel od týchto troch položiek sa v editore iba na čítanie neponúka – pozrite si časť [Import a export CSV](./dictionary.md#importing-and-exporting-csv).
 
 Schéma SQL zapisuje ON DELETE a ON UPDATE každého vzťahu za jeho `REFERENCES`, najprv ON DELETE. Hodnota `Not set` nezapíše nič a akcia, ktorú vybratá databáza neprijíma, sa vynechá. Informácie o tom, ktorá databáza prijíma ktoré akcie, nájdete na stránke [Úprava vzťahov](./relationship-editing.md#on-delete-and-on-update).

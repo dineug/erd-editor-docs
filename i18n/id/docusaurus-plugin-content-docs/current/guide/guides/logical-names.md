@@ -61,7 +61,7 @@ Mengetik hanya menulis nama logis. Nama fisik dihasilkan darinya begitu editor d
 - Dalam tampilan `Logical Names`, nama logis header, lalu komentarnya, lalu sel setiap baris sesuai urutan kolom, dengan nama logis di tempat nama.
 - Dalam tampilan `Both Names`, nama logis, nama, dan komentar header, lalu sel setiap baris sesuai urutan kolom, dengan sel `Logical Name`-nya lebih dulu secara default.
 
-`Alt + Enter` (Windows/Linux) atau `⌥ + Enter` (Mac) menambahkan kolom dan memfokuskan sel namanya, yang dalam tampilan `Logical Names` adalah nama logisnya.
+`Alt + Enter` (Windows/Linux) atau `⌥ + Enter` (Mac) menambahkan kolom dan memfokuskan sel pertama yang digambar barisnya. Dengan urutan kolom default, itu adalah sel namanya, yang dalam tampilan `Logical Names` adalah nama logisnya, dan dalam `Both Names` sel `Logical Name`-nya, sehingga Anda dapat mulai dengan nama logis — lihat [Menambah kolom](./table-editing.md#adding-columns).
 
 Kolom kunci asing yang ditambahkan oleh hubungan menyalin nama logis dan domain kuncinya, beserta tipenya — lihat [Hubungan pengidentifikasi](./relationship-editing.md#identifying-relationships).  
 Menyalin kolom ke spreadsheet, dan menempel kolom dari spreadsheet, menggunakan sel yang ditampilkan dalam tampilan tersebut, termasuk sel nama logis dan sel Domain — lihat [Menyalin/menempel kolom](./table-editing.md#copyingpasting-columns).
@@ -143,5 +143,7 @@ Agen pemrograman yang bekerja melalui server MCP menetapkan nama logis dan menau
 
 ## Editor hanya baca {#read-only-editors}
 
-Di editor [`readonly`](../../api/erd-editor-element.md#readonly), setiap pemilih Tampilan Nama berfungsi, dan penggantian tampilan hanya mengubah layar itu, apa pun keadaan penguncian.  
-Nama logis dan domain tidak dapat diedit di sana, sehingga daftar istilah maupun pemilih domain tidak terbuka, dan tidak satu pun item `Derive Physical Name Again` dan `Derive Physical Names Again` ditawarkan. View Option → `Domain` tidak mengubah apa pun di sana, sebagaimana tidak ada [opsi tampilan](./table-related-functions.md#table-view-options) yang mengubah apa pun.
+Di editor [`readonly`](../../api/erd-editor-element.md#readonly), setiap pemilih Tampilan Nama berfungsi: tombol `Name View` di bilah alat kanvas, `Name View` di menu konteks kanvas dan di Pencarian Cepat, serta daftar di bilah alat Alur.  
+Penggantian di sana hanya mengubah layar itu, apa pun keadaan penguncian: file, kolaborator, dan riwayat pembatalan mempertahankan tampilan seperti semula. Setelah editor dapat menulis lagi, tampilan yang dipilih tetap di layar itu sampai penggantian berikutnya di sana, atau, selama penguncian nonaktif, sampai kolaborator menggantinya atau dokumen dimuat lagi.  
+Nama logis dan domain tidak dapat diedit di sana, sehingga tidak ada editor sel, daftar istilah, maupun pemilih domain yang terbuka, dan tidak satu pun item `Derive Physical Name Again` dan `Derive Physical Names Again` ditawarkan.  
+View Option → `Domain` menampilkan atau menyembunyikan sel Domain di layar itu saja, sebagaimana setiap [opsi tampilan](./table-related-functions.md#table-view-options) di sana, dan saat editor dapat menulis lagi, opsi tampilan yang dipegang dokumen dikembalikan.

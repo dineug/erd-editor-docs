@@ -192,7 +192,8 @@ Działanie klawisza `Escape`, nadal dostępnych skrótów edytora i wszystkich p
 ## Edytory tylko do odczytu {#read-only-editors}
 
 W edytorze z atrybutem [`readonly`](../../api/erd-editor-element.md#readonly) wyszukiwanie tylko znajduje. Nie ma strzałki `Toggle Replace` ani wiersza `Replace`, więc nie ma też pola zamiany, przełącznika `Preserve Case` ani przycisków `Replace` i `Replace All`.  
-Działają pole wyszukiwania, jego trzy opcje, rodzaje tekstu, licznik, wyniki i przechodzenie do dopasowania. Eksplorator wokół wyszukiwania działa tak jak w każdym innym edytorze – zobacz sekcję [Edytory tylko do odczytu](./explorer.md#read-only-editors).
+Działają pole wyszukiwania, jego trzy opcje, rodzaje tekstu, licznik, wyniki i przechodzenie do dopasowania. Przejście do dopasowania zaznacza to, na czym ląduje, jak w sekcji [Przechodzenie do dopasowania](#going-to-a-match), i jest to jedyne zaznaczenie, jakie wykonuje edytor tylko do odczytu: kliknięcie na kanwie, które nie przesuwa widoku, je czyści.  
+Otwieraj wyszukiwanie klawiszem lub pozycją `Toggle Explorer` w Szybkim wyszukiwaniu, ponieważ menu kontekstowe kanwy nie ma tam pozycji `Toggle Explorer`. Resztę Eksploratora opisuje strona Eksplorator w sekcji [Edytory tylko do odczytu](./explorer.md#read-only-editors).
 
 W VS Code rewizja diagramu, taka jak rewizja Git lub wpis Local History, otwiera się jako tekst JSON. Po ponownym otwarciu jako diagram poleceniem `Reopen Editor With...` jest tylko do odczytu i otrzymuje opisane tu wyszukiwanie bez zamiany.
 

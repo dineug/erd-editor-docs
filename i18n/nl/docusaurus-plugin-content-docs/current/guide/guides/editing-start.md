@@ -10,7 +10,8 @@ Bewerken begint via het contextmenu, door met de rechtermuisknop te klikken.
 ![Met de rechtermuisknop op het canvas klikken, het submenu Relationship openen, een tabel toevoegen en daarna het eigen menu van de tabel openen](/img/demo-context-menu.webp)
 
 Een klik met de rechtermuisknop op een tabel, een memo, een tabelgroep of een relatie opent in plaats daarvan het eigen menu van dat item.  
-Een klik met de rechtermuisknop op een tabel, memo of tabelgroep die al geselecteerd is, behoudt de hele selectie, zodat menu-items zoals `Color` en `Delete selected` op de hele selectie werken — zie [Meervoudige selectie](./table-related-functions.md#multiple-selection).
+Een klik met de rechtermuisknop op een tabel, memo of tabelgroep die al geselecteerd is, behoudt de hele selectie, zodat menu-items zoals `Color` en `Delete selected` op de hele selectie werken — zie [Meervoudige selectie](./table-related-functions.md#multiple-selection).  
+Een editor in alleen-lezenmodus maakt niets aan, dus niets van wat deze pagina beschrijft, wordt daar aangeboden: het contextmenu van het canvas behoudt alleen `View Option`, `Name View`, `Export` en `Diff Viewer`, het menu van een tabel alleen `Table Properties`, en een memo, een tabelgroep of een relatie opent geen menu — zie [Editors in alleen-lezenmodus](./table-related-functions.md#read-only-editors).
 
 ## Welkomstscherm {#welcome-screen}
 

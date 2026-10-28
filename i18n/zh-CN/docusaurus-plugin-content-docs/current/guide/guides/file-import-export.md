@@ -37,7 +37,7 @@ JSON 文件会保留其中已有的位置。Schema SQL、GraphQL、DBML 或 AML 
 
 随后图会一步替换完成，因此中间不会显示任何过渡状态。排布期间你更改的设置（例如标签页）会被保留；如果在此期间又导入了另一个文件，则以最后开始的导入为准。
 
-只读编辑器不会从 `Import` 载入任何内容，既不提供 `Import and Add`，也不提供 Dictionary 标签页的 `Import CSV`。
+只读编辑器不导入任何内容。它的画布右键菜单和快速搜索既不提供 `Import`，也不提供 `Import and Add`，不显示欢迎界面，Dictionary 标签页也不提供 `Import CSV`。
 
 ### Import and Add
 
@@ -215,7 +215,7 @@ DBML 还会在两个方向上保留表的颜色（透明度除外）以及每个
 - Schema SQL：打开 [Schema SQL](./schema-sql.md#saving-or-copying-the-sql) 标签页，同时打开其选项面板并让 `Save file` 按钮获得焦点，因此按 `Enter` 即可将该标签页显示的 SQL 保存为 `.sql`。在此之前不会保存任何内容。
 - Image：打开 `Export image` 对话框，可将图保存为 `.png` 或 `.svg`，或以 PNG 格式复制到剪贴板，参见[图片](#image)。
 
-三者在只读编辑器中均可使用。  
+三者在只读编辑器中均可使用，其中 `Export` 是它的画布菜单所保留的少数几个条目之一。在那里，json 写出的是文件所持有的设置，而不是只在该屏幕上更改的视图、标签页、名称显示、数据库、代码设置或 `View Option` 开关，参见设置中的[只读编辑器](./settings.md#read-only-editors)。  
 Dictionary 标签页自己的 `Export CSV` 不在此子菜单中，它会将其 `Domains`、`Words` 或 `Terms` 工作表保存为 CSV 文件。与这三者不同，它在只读编辑器中不提供，参见[导入与导出 CSV](./dictionary.md#importing-and-exporting-csv)。
 
 Schema SQL 会在每个关系的 `REFERENCES` 之后写出其 ON DELETE 与 ON UPDATE，ON DELETE 在前。`Not set` 不会写出任何内容，所选数据库不接受的操作会被省略。各数据库接受哪些操作参见[编辑关系](./relationship-editing.md#on-delete-and-on-update)。

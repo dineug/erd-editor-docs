@@ -16,7 +16,7 @@ npm install @dineug/erd-editor
 
 用于数据复制的 store 位于 `@dineug/erd-editor/engine.js` 子路径，而不是包的根路径。  
 该入口点不接触 DOM，因此可以在 Web Worker 或主线程之外的任何地方运行。  
-若改为导入包的根路径，则会注册 `<erd-editor>` 自定义元素，而它需要 DOM。
+若改为导入包的根路径，则同样需要 document：从 `5.0.0` 起它不定义任何元素，但对它求值会构建两个元素类。在 `5.0.0` 之前，它会注册 `<erd-editor>` 自定义元素。
 
 ## 使用
 

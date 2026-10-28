@@ -12,7 +12,7 @@ La cronologia conserva fino a `2048` modifiche.
 - Ripeti: `Ctrl + Shift + Z` (Windows/Linux) o `⌘ + Shift + Z` (Mac)
 
 Nella scheda ERD, la barra degli strumenti offre gli stessi due comandi come pulsanti `Undo` e `Redo`, accanto a `Time Travel`. Nella scheda Dizionario mostra `Undo` e `Redo` senza `Time Travel`, e nessun’altra scheda li mostra.  
-Si attivano solo quando c’è qualcosa da annullare o ripetere. Un editor `readonly` li nasconde, e i tasti di scelta rapida non annullano né ripetono nulla.
+Si attivano solo quando c’è qualcosa da annullare o ripetere. Un editor `readonly` li nasconde insieme a `Time Travel`, e i tasti di scelta rapida non annullano né ripetono nulla.
 
 Annulla e Ripeti agiscono sulla cronologia del diagramma solo nella scheda ERD.  
 Lì i tasti di scelta rapida restano inattivi mentre sono aperti la Ricerca rapida, `Table Properties`, `Diff Viewer`, l’anteprima di `Auto Layout`, la finestra di dialogo [`Export image`](./file-import-export.md#image), [Associa colonne](./relationship-editing.md#map-columns) o il Viaggio nel tempo.  
@@ -58,6 +58,8 @@ Non vengono registrati:
 - Il foglio mostrato nella scheda Dizionario, e la ricerca, la selezione, lo scorrimento e le larghezze delle colonne di ciascun foglio — vedere [Aprire la scheda](./dictionary.md#opening-the-tab).
 
 Le modifiche a questi elementi non possono essere annullate.
+
+Un editor di sola lettura non registra assolutamente nulla. La posizione della vista, lo zoom e gli interruttori di `View Option` cambiano comunque lì, insieme alla scheda, alla Visualizzazione nomi, al database e alle impostazioni del codice, ma solo su quello schermo, quindi non c’è nulla da annullare — vedere [Editor di sola lettura](./settings.md#read-only-editors) in Impostazioni.
 
 Le modifiche apportate nella scheda Dizionario possono essere annullate, ma finiscono nella cronologia del proprio foglio anziché in questa, quindi Annulla nella scheda ERD non ne revoca mai nessuna, nemmeno il nuovo `Data Type` di un dominio e i tipi di colonna che modifica — vedere [Fogli della scheda Dizionario](#dictionary-sheets).
 
@@ -136,7 +138,7 @@ La cronologia di ogni foglio viene svuotata quando i dizionari vengono sostituit
 ## Viaggio nel tempo {#time-travel}
 
 Si apre dal pulsante `Time Travel` nella barra degli strumenti, accanto ad Annulla e Ripeti nella scheda ERD.  
-Il pulsante non ha effetto finché la cronologia del diagramma non contiene almeno una modifica registrata.
+Il pulsante non ha effetto finché la cronologia del diagramma non contiene almeno una modifica registrata. Un editor di sola lettura non mostra questo pulsante, e un editor che diventa di sola lettura chiude il Viaggio nel tempo senza applicarlo.
 
 Il Viaggio nel tempo apre una copia separata e di sola lettura del diagramma, alla posizione di scorrimento, al livello di zoom e nella [Visualizzazione nomi](./logical-names.md#name-view) mostrati dall’area di disegno, che il blocco `Viewport` o `Name View` sia attivo o meno.  
 Percorre solo la cronologia del diagramma, quindi le modifiche dei fogli della scheda Dizionario non sono tra i suoi punti.  

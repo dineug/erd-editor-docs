@@ -23,7 +23,7 @@ Inget av det sparas i filen, registreras i ångrahistoriken, delas med medarbeta
 - Knappen `Explorer` i verktygsfältet, direkt efter `Search`, med en trädikon. Dess knappbeskrivning visar `Explorer (Ctrl + F)` (Windows/Linux) eller `Explorer (⌘ + F)` (Mac).
 - `Ctrl + F` (Windows/Linux) eller `⌘ + F` (Mac), med namnet `Toggle Explorer` på fliken [Kortkommandon](./settings.md#shortcuts) i Inställningar.
 - `Toggle Explorer` i [snabbsökningen](./quick-search.md), listad på varje flik. Om du skriver `find`, `replace`, `rename`, `tree`, `outline` eller `objects` visas posten.
-- `Toggle Explorer` i arbetsytans snabbmeny: högerklicka på en tom plats på ERD-arbetsytan, utanför alla [tabellgrupper](./table-groups.md). Det ligger efter `New Table`, `New Memo` och `New Table Group`, före `Relationship`.
+- `Toggle Explorer` i arbetsytans snabbmeny: högerklicka på en tom plats på ERD-arbetsytan, utanför alla [tabellgrupper](./table-groups.md). Det ligger efter `New Table`, `New Memo` och `New Table Group`, före `Relationship`. En skrivskyddad editors snabbmeny för arbetsytan har ingen sådan rad – se [Skrivskyddade editorer](#read-only-editors).
 
 De två posterna `Toggle Explorer` visar kortkommandot till höger.  
 Knappen i verktygsfältet, kortkommandot och posten i snabbsökningen fungerar från varje flik. Från fliken Visualisering, Schema SQL, Kodgenerator, Ordlista eller Inställningar växlar de först till ERD-fliken, eftersom utforskaren bara visas där.
@@ -168,5 +168,8 @@ Om du öppnar sökningen med kortkommandot eller en post `Toggle Explorer` stän
 
 ## Skrivskyddade editorer {#read-only-editors}
 
-I en editor med [`readonly`](../../api/erd-editor-element.md#readonly) fungerar utforskaren som i alla andra: knappen i verktygsfältet med samma knappbeskrivning, kortkommandot, båda posterna `Toggle Explorer`, trädet, ihopfällningen, `Collapse All` och att gå till en rad, som markerar det den går till som vanligt. Dess titel visar `Explorer` även där.  
+I en editor med [`readonly`](../../api/erd-editor-element.md#readonly) fungerar utforskaren som i alla andra: knappen i verktygsfältet med samma knappbeskrivning, kortkommandot, posten `Toggle Explorer` i snabbsökningen, trädet, ihopfällningen och `Collapse All`. Dess titel visar `Explorer` även där. Arbetsytans snabbmeny har ingen `Toggle Explorer` där, eftersom den bara behåller de rader som läser – se [Skrivskyddade editorer](./table-related-functions.md#read-only-editors).
+
+Att gå till en rad fungerar som i [Gå till en rad](#going-to-a-row): vyn flyttas enligt samma regel, och radens tabell, tabellgrupp eller anteckning markeras, med kontur på arbetsytan, och den fokuserade cellen hamnar där raden lägger den.  
+Det är det enda sättet på vilket en skrivskyddad editor markerar något. Ett tryck på arbetsytan markerar ingenting, och ett klick som inte flyttar sig tar bort den markering som en rad lämnade. En tabell som den markerade öppnas i [Tabellegenskaper](./table-related-functions.md#table-properties) med `Alt + Space` (Windows/Linux) eller `⌥ + Space` (Mac), skrivskyddad, och `Ctrl + C` (Windows/Linux) eller `⌘ + C` (Mac) kopierar det som den markerade, som i vilken editor som helst.  
 Dess sökning hittar bara – se [Skrivskyddade editorer](./find-and-replace.md#read-only-editors) i Sök och ersätt.

@@ -1,6 +1,6 @@
 ---
 sidebar_position: 7
-description: "Supprimer une relation, changer son type, définir ses actions ON DELETE et ON UPDATE, l’associer à des colonnes existantes avec Associer les colonnes, lire la notation des connecteurs, travailler avec les relations N:M et identifiantes, et voir ce que les nouvelles colonnes de clé étrangère copient de leur clé et comment elles sont nommées."
+description: "Supprimer une relation, changer son type, définir ses actions ON DELETE et ON UPDATE, l’associer à des colonnes existantes avec Associer les colonnes, lire la notation des connecteurs et leur tracé autour des tables, travailler avec les relations N:M et identifiantes, et voir ce que les nouvelles colonnes de clé étrangère copient de leur clé et comment elles sont nommées."
 ---
 
 # Modification des relations
@@ -81,7 +81,7 @@ Chaque ligne utilise une colonne que la table enfant possède déjà ou ajoute u
 Elle s’ouvre de deux façons :
 
 - Pendant le tracé d’une relation, depuis `Map to existing columns` à côté de la table enfant (voir [Création de relations](./editing-start.md#relationship-creation)). `Map` ajoute alors une relation du type en cours de tracé.
-- Depuis `Map Columns` dans le menu contextuel de la relation, pour changer les colonnes d’une relation existante. `Save` écrit alors la modification. Un éditeur en lecture seule omet cette entrée.
+- Depuis `Map Columns` dans le menu contextuel de la relation, pour changer les colonnes d’une relation existante. `Save` écrit alors la modification. Un éditeur en lecture seule n’ouvre aucun menu contextuel de relation, si bien que Associer les colonnes ne peut pas y être ouvert.
 
 Le sous-titre de la boîte de dialogue nomme les deux tables et le type de relation, comme `users → posts · One N`. Le type y est affiché mais ne s’y modifie pas : utilisez [Changement de type](#type-change).
 
@@ -226,6 +226,9 @@ La surbrillance s’éteint au prochain appui du bouton gauche ou droit sur le c
 Déplacer la vue avec le bouton central ou l’outil Main la laisse allumée, tout comme réduire ou développer une ligne dans l’explorateur ou la visionneuse de différences, effacer la sélection avec `Escape`, et un saut depuis la [recherche rapide](./quick-search.md) ou le [bouton de carte](./visualization.md#card-buttons) de lien externe du mode Flux.  
 La surbrillance n’est pas enregistrée et ne figure pas dans l’historique d’annulation, et les collaborateurs ne la voient pas.
 
+Dans un éditeur [`readonly`](../../api/erd-editor-element.md#readonly), le pointeur éclaire aussi les connecteurs, à la place de l’éclairage qu’un saut a laissé. Posé sur une table, il éclaire chaque connecteur de cette table avec la couleur de survol jusqu’à ce qu’il quitte la table.  
+Un clic immobile laisse un éclairage allumé jusqu’au prochain clic de ce genre : sur une table, il éclaire les connecteurs de cette table, sur un connecteur, ce connecteur, et ailleurs, rien. Un glissement déplace alors la vue et laisse cet éclairage tel qu’il était.
+
 Masquez les connecteurs sur le canevas ERD avec l’option d’affichage `Relationship`, ou seulement leurs étiquettes avec l’option d’affichage `Referential Actions`, activée par défaut (voir [Options d’affichage des tables](./table-related-functions.md#table-view-options)).  
 Les étiquettes ne sont pas dessinées à `70%` et en dessous, où les tables se réduisent à leur nom.  
 Une [exportation en image](./file-import-export.md#image) est toujours dessinée à 100 %, si bien qu’elle dessine les étiquettes quel que soit le zoom du canevas, sauf si une option d’affichage les masque. Avec `Background` désactivé, le cadre derrière chaque étiquette est aussi transparent.  
@@ -233,9 +236,10 @@ Le [mode Flux](./visualization.md#flow-mode) de l’onglet Visualisation dessine
 
 ## Tracé des connecteurs {#connector-routing}
 
-Les connecteurs suivent un tracé orthogonal.  
-Un tracé contourne les tables situées entre ses deux extrémités au lieu de les traverser, et ses angles sont arrondis.  
-Chaque extrémité quitte sa table par un court segment droit avant de tourner, si bien que deux tables proches dont les extrémités du connecteur sont alignées sont reliées par une seule ligne droite plutôt que par un détour.  
+Les connecteurs suivent un tracé orthogonal, et leurs angles sont arrondis.  
+Un tracé contourne les tables qui lui barrent la route au lieu de les traverser. Lorsque tout tracé de quelques coudes entre ses deux extrémités traverserait une table, comme dans un diagramme encombré, le connecteur prend un chemin de contournement avec autant de coudes qu’il en faut. Il ne traverse encore une table que lorsqu’aucun chemin de contournement n’est trouvé.  
+Un connecteur quitte ses deux tables par une paire de côtés qui se font face partout où il en existe une, et chaque extrémité quitte sa table par un court segment droit avant de tourner, si bien que deux tables proches dont les extrémités du connecteur sont alignées sont reliées par une seule ligne droite plutôt que par un détour.  
+Deux tables qui se font face et sont plus rapprochées que cela, même à moins de `40px` l’une de l’autre, gardent leurs côtés en regard, et lorsque leurs extrémités ne sont pas alignées, le connecteur fait un décrochement dans l’intervalle qui les sépare plutôt que de passer sous l’une d’elles.  
 Les tracés qui quittent le même côté d’une table sont répartis dans des couloirs distincts afin de ne pas se chevaucher.  
 Seules les tables sont évitées : un connecteur peut traverser un mémo ou le cadre d’un groupe de tables, et il est dessiné au-dessus des groupes de tables et en dessous des tables et des mémos.
 
@@ -243,6 +247,9 @@ Une relation d’une table vers elle-même est dessinée sous la forme d’une s
 Les autoréférences supplémentaires sur la même table s’emboîtent à l’extérieur de la première, si bien que leurs courbes ne se croisent ni entre elles ni avec la table.
 
 Il n’y a rien à configurer.  
-Les tracés sont recalculés automatiquement chaque fois qu’un élément du canevas est déplacé ou redimensionné, si bien qu’il n’est jamais nécessaire d’y toucher à la main.
+Les tracés sont recalculés automatiquement chaque fois qu’un élément du canevas est déplacé ou redimensionné, si bien qu’il n’est jamais nécessaire d’y toucher à la main.  
+Pendant un glissement, les connecteurs des tables que vous déplacez les suivent, et tous les autres conservent le tracé qu’ils avaient au début du glissement. Quand vous relâchez, chaque connecteur que le déplacement fait changer de tracé est redessiné, par exemple celui qui contourne désormais une table déposée sur son chemin, ou celui qui se redresse une fois qu’une table s’est écartée de son trajet.
+
+Un diagramme dessine les mêmes tracés dans toutes les fenêtres qui l’affichent dans le même affichage des noms : celle qui est restée ouverte pendant que les tables bougeaient, celle qui vient d’ouvrir le diagramme et celle d’un collaborateur, et une [image exportée](./file-import-export.md#image) les dessine aussi. L’affichage des noms compte parce qu’il change la largeur des tables (voir [Affichage des noms](./logical-names.md#name-view)).
 
 ![Glissement de la table members vers le bas puis retour, pendant que le connecteur venant d’orders alterne entre un passage à droite de categories et un contournement par sa gauche, tous les angles arrondis](/img/demo-connector-routing.webp)

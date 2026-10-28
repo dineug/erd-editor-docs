@@ -1,6 +1,6 @@
 ---
 sidebar_position: 16
-description: Synkronisering av datatyp i relationer och domäner, maximal kommentarsbredd, omberäkning av tabellbredd, inställningslås (vy, flik, kodinställningar och namnvisning), kolumnernas visningsordning och listan över kortkommandon.
+description: Synkronisering av datatyp i relationer och domäner, maximal kommentarsbredd, inställningslås (vy, flik, kodinställningar och namnvisning), kolumnernas visningsordning, listan över kortkommandon och fliken Inställningar i en skrivskyddad editor.
 ---
 
 # Inställningar
@@ -33,13 +33,6 @@ När du slår på den börjar värdet på `60px`. Ett inskrivet värde utanför 
 
 ![Maximum comment width slås på, 120 anges och ERD-fliken visar kommentarerna avkortade till den bredden](/img/demo-settings-comment-width.webp)
 
-## Beräkna om tabellbredd {#recalculation-table-width}
-
-Tryck på `Sync` för att beräkna om bredden på varje tabell och kolumncell så att den passar den aktuella texten och för att rita om relationslinjerna efter de nya storlekarna.
-Meddelandet `Recalculated table width` bekräftar det.
-Bredderna beräknas om automatiskt varje gång ett dokument läses in, så det här behövs bara när en ändring av typsnitt eller rendering har gjort dem inaktuella.
-Bredderna sparas inte i filen, så `Sync` ändrar den aldrig.
-
 ## Lås {#lock}
 
 Listan `Lock` innehåller sju inställningar. Medan en inställnings lås är på behåller filen det värde som inställningen hade när den låstes, så en ändring på skärmen lämnar filen som den var.
@@ -68,8 +61,9 @@ Om den låsta vyn inte visar någon del av diagrammet när filen öppnas flyttas
 
 ![Viewport låses upp, diagrammet rullas och zoomas, och Viewport låses igen vid den nya vy som raden visar](/img/demo-settings-locks.webp)
 
-Att slå på eller av ett lås ändrar filen, eftersom filen lagrar vilka lås som är på, men liksom resten av fliken Inställningar registreras det inte i [ångrahistoriken](./undo-redo.md#what-the-history-records). Det gör inte heller ett byte av namnvisning, låst eller inte. I en skrivskyddad editor gör låsknapparna ingenting, och ett byte av namnvisning ändrar bara den skärmen, oavsett låset.
+Att slå på eller av ett lås ändrar filen, eftersom filen lagrar vilka lås som är på, men liksom resten av fliken Inställningar registreras det inte i [ångrahistoriken](./undo-redo.md#what-the-history-records). Det gör inte heller ett byte av namnvisning, låst eller inte.
 Alla andra inställningar sparas så som de är: databasen, alternativen i [`View Option`](./table-related-functions.md#table-view-options) och resten av fliken `Preferences`.
+En skrivskyddad editor ändrar filen genom ingen av dem, oavsett lås: dess låsknappar och de andra kontrollerna under `Preferences` är inaktiverade, och de inställningar som den ändå låter dig ändra stannar på den skärmen – se [Skrivskyddade editorer](#read-only-editors).
 
 Alla lås är på i ett nytt diagram, ett som startas från grunden: en tom fil som öppnas i VS Code, Obsidian eller en JetBrains-IDE (`ERD Editor: Create new diagram` och `New ERD` i Obsidian skapar en sådan), ett nytt schema i webbappen, en fil som skapas från menyn New i Google Drive eller ett `<erd-editor>` som inte får något värde.
 Ett schema eller en Google Drive-fil som webbappen skapar genom att importera en SQL-, DBML-, AML- eller GraphQL-fil startar också med alla lås på. Ett schema eller en fil som skapas från en JSON-fil behåller de lås som den filen anger.
@@ -98,6 +92,7 @@ Dra en rad för att flytta den – hela raden går att dra, och ikonen med dragh
 `Logical Name` placerar den cell för logiskt namn som en rad ritar i `Both Names`. I `Logical Names` står det logiska namnet i stället på platsen för raden `Name`, och `Physical Names` ritar ingen – se [Namnvisning](./logical-names.md#name-view). `Domain` placerar den domäncell som View Option → `Domain` visar – se [Domäncellen](./logical-names.md#the-domain-cell).
 En cell som döljs av ett [visningsalternativ för tabeller](./table-related-functions.md#table-view-options) eller utelämnas av namnvisningen behåller sin plats i listan, så ordningen gäller de celler som visas.
 Ett diagram vars ordning ställdes in innan `Logical Name` och `Domain` fanns som rader får `Logical Name` direkt före `Name` och `Domain` direkt efter `DataType`, var de än står i dess ordning.
+Ett diagram som sparats av en senare version behåller också sin ordning, även när den versionen har en rad som den här saknar: de rader som den här versionen har står i den ordning som filen anger, och den okända raden utelämnas. Att spara diagrammet här skriver ordningen utan den, och den senare versionen lägger tillbaka den raden bredvid sin granne i sin egen standardordning.
 Märket för en [alternativ nyckel](./table-related-functions.md#alternate-keys) (`AK1.1` och så vidare) är inte någon av de här raderna. Det står alltid sist på en rad, efter den cell som den här ordningen placerar sist.
 
 ![Sidan rullas ned till Column Order och raden Comment dras upp under Name, vilket placerar varje kommentar direkt efter namnet på dess kolumn](/img/demo-settings-column-order.webp)
@@ -146,6 +141,7 @@ I en cell för logiskt namn med termlistan öppen stänger det första trycket p
 Om utforskaren, temaverktyget eller väljaren `Display Language` är öppen spärras inget av kortkommandona på arbetsytan. `Stop` stänger aldrig utforskaren. Se [Tangenter i utforskaren](./explorer.md#keys-in-the-explorer) för vad `Stop` och de andra tangenterna gör i utforskaren och [Välja ett språk](./language-and-theme.md#picking-a-language) för vad de gör i väljaren.
 `Delete Selection` tar bort alla markerade tabeller, anteckningar och tabellgrupper, eller, när en enda tabell är markerad tillsammans med några av sina kolumner och zoomnivån är över `70%`, de kolumnerna – se [Ta bort tabeller och anteckningar](./table-related-functions.md#table-and-memo-deletion). `Remove Table, Memo` tar också bort markerade tabellgrupper.
 `Add Table Group` startar ritläget för en [`New Table Group`](./table-groups.md#drawing-a-group), så som knappen `New Table Group` i [arbetsytans verktygsfält](./table-related-functions.md#canvas-toolbar) gör, och ett andra tryck avbryter ritläget. `Group Selected Tables` är två tryck utan modifierartangent, `T` och sedan `G` inom en sekund. Kortkommandot lägger de markerade tabellerna i en ny grupp och öppnar dess namnfält, så som `Group selected tables` i en tabells snabbmeny gör, och gör ingenting när ingen tabell är markerad – se [Gruppera markerade tabeller](./table-groups.md#grouping-selected-tables). Inget av dem gör något i en skrivskyddad editor eller medan grupperna är [dolda](./table-groups.md#hiding-groups).
+I en skrivskyddad editor fungerar bara de tangenter som läser: `Search`, `Toggle Explorer`, `Stop`, `Table Properties` och `Focus on this table` på den tabell som ett hopp markerade, de tre zoomtangenterna, `Zen Mode`, kopiering och piltangenterna, som flyttar den fokuserade cellen. `Editing`, varje tangent för `Add` och `Remove`, `Delete Selection`, `Primary Key`, båda tangenterna för att markera allt, de fyra relationstangenterna, `Add Table Group`, `Group Selected Tables`, `Hand Tool` och inklistring gör ingenting, och `Undo` och `Redo` ångrar och gör om ingenting – se [Skrivskyddade editorer](./table-related-functions.md#read-only-editors).
 `Zoom In`, `Zoom Out` och `Zoom Reset` zoomar också fliken [Visualisering](./visualization.md#toolbar), i både `Graph` och `Flow`, utom när snabbsökningen är öppen.
 I `Flow` går `Undo` och `Redo` bakåt och framåt genom det som flödet har avgränsats till, så som knapparna `Previous table` och `Next table` i flödet gör, utom när snabbsökningen är öppen. De ångrar aldrig något i diagrammet där, och i `Graph` gör de ingenting – se [Föregående och nästa tabell](./visualization.md#previous-table-and-next-table).
 På fliken Visualisering stänger `Stop` också menyn för [radvisning](./visualization.md#row-display) och avbryter en [layout av flödet](./visualization.md#how-flow-is-placed) som fortfarande pågår; en vy som har avgränsats med `Focus on this table` vidgas inte.
@@ -160,3 +156,13 @@ Fliken `Shortcuts` listar då värdprogrammets bindningar: ett kommando som vär
 Radtangenterna på fliken Ordlista följer `Add Column` och `Remove Column`, så om du mappar om något av dem flyttas de – se [`dictionaryRowChords`](../../api/erd-editor-element.md#dictionaryrowchords).
 
 I Obsidian når de här tangenterna editorn så länge diagrammets flik i Obsidian är aktiv, även där ett kortkommando i Obsidian använder samma tangent, som `Alt + Enter`, `Ctrl + K` och `Ctrl + F` (Windows/Linux) eller `⌥ + Enter`, `⌘ + K` och `⌘ + F` (Mac). Det gör även `Alt + Shift + Enter` (Windows/Linux) eller `⌥ + Shift + Enter` (Mac) på fliken Ordlista, som inte finns på någon rad i den här listan. Alla andra kortkommandon i Obsidian fungerar fortfarande där. Se [Webbläsarens sökruta](./find-and-replace.md#the-browsers-find-bar) för `Ctrl + F` eller `⌘ + F`.
+
+## Skrivskyddade editorer {#read-only-editors}
+
+I en editor med [`readonly`](../../api/erd-editor-element.md#readonly) visar fliken Inställningar diagrammets inställningar och ändrar ingen av dem. En etikett `Read only` står bredvid rubriken på varje sida, `Preferences` och `Shortcuts`.
+Reglagen `Relationship DataType Sync` och `Maximum comment width` och breddfältet är inaktiverade, och det är varje låsknapp också. Raderna under `Column Order` visar inget grepp och går inte att dra.
+Varje rad under `Lock` visar fortfarande sitt värde. En låst rad visar det värde som filen behåller, och en upplåst den inställning som den skärmen har, vilket kan skilja sig från filens, som nedan.
+
+De inställningar som avgör vad skärmen visar går fortfarande att ändra där: vyns position och zoom, fliken, namnvisningen, databasen, kodgeneratorns språk, båda skiftlägena för namn, citattecknen och växlarna under [`View Option`](./table-related-functions.md#table-view-options).
+Var och en ändrar bara den skärmen, oavsett lås. Ändringen sparas inte i filen eller skrivs av en JSON-export, registreras inte i ångra-historiken, räknas inte som en ändring och når aldrig medarbetare. Alternativpanelerna på flikarna [Schema SQL](./schema-sql.md#options-panel) och [Kodgenerator](./code-generator.md#options-panel) rubricerar de valen `This window only` där, i stället för `Saved in the document`.
+När editorn blir skrivbar igen går databasen, språket, skiftlägena, citattecknen och växlarna under View Option tillbaka till filens värden. Vyn, fliken och namnvisningen stannar som du lämnade dem, och filen tar emot var och en av dem, så långt dess lås tillåter, med din nästa ändring av den.

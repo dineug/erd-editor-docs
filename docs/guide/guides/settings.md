@@ -1,6 +1,6 @@
 ---
 sidebar_position: 16
-description: Relationship data type sync and domains, maximum comment width, table width recalculation, setting locks (view, tab, code settings, and Name View), column display order, and the shortcut list.
+description: Relationship data type sync and domains, maximum comment width, setting locks (view, tab, code settings, and Name View), column display order, the shortcut list, and the Settings tab of a read-only editor.
 ---
 
 # Settings
@@ -33,13 +33,6 @@ Turning it on starts at `60px`. A value typed outside the range is clamped to th
 
 ![Turning on Maximum comment width, entering 120, and the ERD tab showing comments cut to it](/img/demo-settings-comment-width.webp)
 
-## Recalculation Table Width
-
-Press `Sync` to recalculate the width of every table and column cell to fit its current text, and to redraw the relationship connectors around the new sizes.
-A `Recalculated table width` toast confirms it.
-Widths are recalculated on their own whenever a document is loaded, so this is only needed when a font or rendering change has left them stale.
-Widths are not saved in the file, so `Sync` never changes it.
-
 ## Lock
 
 The `Lock` list holds seven settings. While a setting's lock is on, the file keeps the value it had when locked, so changing it on screen leaves the file as it was.
@@ -68,8 +61,9 @@ If the locked view shows none of the diagram when the file opens, the screen sti
 
 ![Unlocking Viewport, scrolling and zooming the diagram, and locking it again at the new view its row shows](/img/demo-settings-locks.webp)
 
-Turning a lock on or off changes the file, since the file stores which locks are on, but like the rest of the Settings tab it is not recorded in the [undo history](./undo-redo.md#what-the-history-records). Neither is a Name View switch, locked or not. In a read-only editor the lock buttons do nothing, and a Name View switch changes only that screen, whatever its lock.
+Turning a lock on or off changes the file, since the file stores which locks are on, but like the rest of the Settings tab it is not recorded in the [undo history](./undo-redo.md#what-the-history-records). Neither is a Name View switch, locked or not.
 Every other setting is saved as it stands: the database, the [`View Option`](./table-related-functions.md#table-view-options) toggles, and the rest of the `Preferences` tab.
+A read-only editor changes the file through none of them, whatever the locks say: its lock buttons and the other `Preferences` controls are disabled, and the settings it still lets you change stay on that screen — see [Read-only Editors](#read-only-editors).
 
 Every lock is on in a new diagram, one started from nothing: an empty file opened in VS Code, Obsidian, or a JetBrains IDE (Obsidian's `ERD Editor: Create new diagram` and `New ERD` make one), a new schema in the web app, a file made from Google Drive's New menu, or an `<erd-editor>` given no value.
 A schema or Google Drive file that the web app makes by importing a SQL, DBML, AML, or GraphQL file starts with every lock on as well. One made from a JSON file keeps the locks that file records.
@@ -98,6 +92,7 @@ Drag a row to move it — the whole row is draggable, and the grip icon marks it
 `Logical Name` places the logical name cell a row draws in `Both Names`. In `Logical Names` the logical name stands in the `Name` row's place instead, and `Physical Names` draws none — see [Name View](./logical-names.md#name-view). `Domain` places the Domain cell that View Option → `Domain` shows — see [The Domain Cell](./logical-names.md#the-domain-cell).
 A cell hidden by a [table view option](./table-related-functions.md#table-view-options) or left out by the Name View keeps its place in the list, so the order applies to whichever cells are shown.
 A diagram whose order was set before `Logical Name` and `Domain` were rows gets `Logical Name` just before `Name` and `Domain` just after `DataType`, wherever those stand in its order.
+A diagram saved by a later release keeps its order too, even when that release has a row this one lacks: the rows this release has stand in the order the file gives them, and the unknown row is left out. Saving the diagram here writes the order without it, and the later release puts that row back next to its neighbour in its own default order.
 The [alternate key](./table-related-functions.md#alternate-keys) mark (`AK1.1` and so on) is not one of these rows. It always stands last in a row, after whichever cell this order puts last.
 
 ![Scrolling down to Column Order and dragging the Comment row up under Name, which puts each comment right after its column name](/img/demo-settings-column-order.webp)
@@ -146,6 +141,7 @@ In a logical name cell with its term list open, the first press of `Stop` closes
 An open Explorer, theme builder, or `Display Language` picker holds none of the shortcuts back on the canvas. `Stop` never closes the Explorer. For what `Stop` and the other keys do inside the Explorer, see [Keys in the Explorer](./explorer.md#keys-in-the-explorer), and inside the picker, see [Picking a Language](./language-and-theme.md#picking-a-language).
 `Delete Selection` removes every selected table, memo, and table group, or, when a single table is selected with some of its columns and the zoom is above `70%`, those columns — see [Table and Memo Deletion](./table-related-functions.md#table-and-memo-deletion). `Remove Table, Memo` removes selected table groups too.
 `Add Table Group` starts drawing a [`New Table Group`](./table-groups.md#drawing-a-group), as the [canvas toolbar](./table-related-functions.md#canvas-toolbar)'s `New Table Group` button does, and a second press cancels the draw. `Group Selected Tables` is two presses with no modifier, `T` then `G` within a second. It puts the selected tables in a new group and opens its name editor, as `Group selected tables` in a table's context menu does, and does nothing when no table is selected — see [Grouping Selected Tables](./table-groups.md#grouping-selected-tables). Neither does anything in a read-only editor or while the groups are [hidden](./table-groups.md#hiding-groups).
+In a read-only editor only the keys that read work: `Search`, `Toggle Explorer`, `Stop`, `Table Properties` and `Focus on this table` on the table a jump selected, the three zoom keys, `Zen Mode`, copy, and the arrow keys, which move the focused cell. `Editing`, every `Add` and `Remove` key, `Delete Selection`, `Primary Key`, both select-all keys, the four relationship keys, `Add Table Group`, `Group Selected Tables`, `Hand Tool`, and paste do nothing, and `Undo` and `Redo` undo and redo nothing — see [Read-only Editors](./table-related-functions.md#read-only-editors).
 `Zoom In`, `Zoom Out`, and `Zoom Reset` also zoom the [Visualization](./visualization.md#toolbar) tab, in `Graph` and `Flow` alike, unless quick search is open.
 In `Flow`, `Undo` and `Redo` step back and forward through what Flow has been narrowed to, as its `Previous table` and `Next table` buttons do, unless quick search is open. They never undo the diagram there, and in `Graph` they do nothing — see [Previous Table and Next Table](./visualization.md#previous-table-and-next-table).
 On the Visualization tab, `Stop` also closes the [row display](./visualization.md#row-display) menu and cancels a [Flow layout](./visualization.md#how-flow-is-placed) that is still running; it does not widen a view narrowed with `Focus on this table`.
@@ -160,3 +156,13 @@ The `Shortcuts` tab then lists the host's bindings: a command the host does not 
 The Dictionary tab's row keys follow `Add Column` and `Remove Column`, so remapping either moves them — see [`dictionaryRowChords`](../../api/erd-editor-element.md#dictionaryrowchords).
 
 In Obsidian these keys reach the editor whenever the diagram's Obsidian tab is active, even where an Obsidian hotkey uses the same key, such as `Alt + Enter`, `Ctrl + K`, and `Ctrl + F` (Windows/Linux) or `⌥ + Enter`, `⌘ + K`, and `⌘ + F` (Mac). So does the Dictionary tab's `Alt + Shift + Enter` (Windows/Linux) or `⌥ + Shift + Enter` (Mac), which is on no row of this list. Every other Obsidian hotkey still works there. For `Ctrl + F` or `⌘ + F`, see [The Browser's Find Bar](./find-and-replace.md#the-browsers-find-bar).
+
+## Read-only Editors
+
+In a [`readonly`](../../api/erd-editor-element.md#readonly) editor the Settings tab shows the diagram's settings and changes none of them. A `Read only` badge stands beside the heading of each page, `Preferences` and `Shortcuts`.
+The `Relationship DataType Sync` and `Maximum comment width` switches and the width field are disabled, and so is every lock button. The `Column Order` rows show no grip and cannot be dragged.
+Each `Lock` row still shows its value. A locked row shows the value the file keeps, and an unlocked one the setting as that screen has it, which can differ from the file's, as below.
+
+The settings that decide what the screen shows still change there: the view position and zoom, the tab, the Name View, the database, the Code Generator language, both name cases, the bracket, and the [`View Option`](./table-related-functions.md#table-view-options) toggles.
+Each changes that screen alone, whatever its lock. It is not saved in the file or written by a JSON export, not recorded in the undo history, not counted as a change, and never reaches collaborators. The options panels of the [Schema SQL](./schema-sql.md#options-panel) and [Code Generator](./code-generator.md#options-panel) tabs caption these choices `This window only` there, in place of `Saved in the document`.
+When the editor turns writable again, the database, the language, the name cases, the bracket, and the View Option toggles go back to the file's values. The view, the tab, and the Name View stay as you left them, and the file takes each of them, as its lock allows, with your next change of it.

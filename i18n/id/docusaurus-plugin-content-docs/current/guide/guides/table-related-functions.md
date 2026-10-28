@@ -6,7 +6,7 @@ description: Memilih, memindahkan, menyalin, menduplikasi, dan menghapus tabel d
 # Fungsi terkait tabel
 
 Semua yang Anda lakukan pada tabel dan memo setelah keduanya ada — memilih, memindahkan, menyalin, menghapus, memberi warna, dan mengatur apa yang ditampilkan kanvas — beserta kontrol kanvas di sekitarnya.  
-Perintah tabel dan memo dibahas lebih dahulu; lalu Properti Tabel, memfokuskan tabel, indeks dan kunci alternatif, Tata Letak Otomatis, dan vendor database; dan terakhir kanvas itu sendiri: bilah alat kanvas, zoom, penggeseran dan tempat lompatan berakhir, serta Penampil Perbedaan.  
+Perintah tabel dan memo dibahas lebih dahulu; lalu Properti Tabel, memfokuskan tabel, indeks dan kunci alternatif, Tata Letak Otomatis, dan vendor database; lalu kanvas itu sendiri: bilah alat kanvas, zoom, penggeseran dan tempat lompatan berakhir, serta Penampil Perbedaan; dan terakhir apa yang dipertahankan editor hanya baca dari semua ini.  
 Grup tabel, yaitu kotak yang menghimpun tabel, memiliki halamannya sendiri — lihat [Grup tabel](./table-groups.md).  
 Begitu pula nama logis dan Tampilan Nama, yang menentukan nama yang ditampilkan tabel — lihat [Nama logis](./logical-names.md).
 
@@ -23,7 +23,8 @@ Memo dipilih dengan cara yang sama, dan kedua pintasan pilih semua sama-sama men
 `Ctrl + A` mengalah pada kursor teks, sehingga pintasan ini memilih teks, bukan diagram, selama Anda mengedit sel.  
 Kotak seleksi menandai tabel atau memo saat kotak itu menutupi bagian tengahnya, bukan saat hanya menyentuh tepinya. Kotak seleksi mengambil grup tabel hanya jika melingkupi seluruh kotak grup, sehingga kotak yang digambar di dalam grup memilih tabel tanpa grupnya.  
 Klik kanan pada sesuatu yang sudah dipilih mempertahankan seluruh pilihan, sehingga item menu seperti `Color`, `Group selected tables`, dan `Delete selected` berlaku pada semuanya. Klik kanan pada tabel, memo, atau grup tabel lain memilih objek itu saja, bahkan saat `Ctrl` atau `⌘` ditahan, dan klik kanan pada hubungan atau pada area kanvas yang kosong mengosongkan pilihan.  
-`Escape` mengosongkan pilihan. Selama editor sel, memo, atau nama grup tabel terbuka, atau hubungan maupun `New Table Group` sedang digambar, `Escape` pertama mengakhirinya dan `Escape` kedua mengosongkan pilihan.
+`Escape` mengosongkan pilihan. Selama editor sel, memo, atau nama grup tabel terbuka, atau hubungan maupun `New Table Group` sedang digambar, `Escape` pertama mengakhirinya dan `Escape` kedua mengosongkan pilihan.  
+Editor hanya baca tidak memiliki satu pun cara memilih ini: hanya lompatan yang memilih di sana — lihat [Editor hanya baca](#read-only-editors).
 
 ![Memilih tabel dengan ⌘ + drag dan ⌘ + click, lalu semua tabel dan memo dengan ⌘ + A](/img/demo-table-select.webp)
 
@@ -145,7 +146,7 @@ Nama yang ditampilkan tabel bukan opsi tampilan: `Name View`, tepat setelah `Vie
 `Table Groups` menampilkan [grup tabel](./table-groups.md) dan warna grup di header tabel-tabelnya. Menonaktifkannya menyembunyikan grup di kanvas, minimap, dan ekspor gambar, tidak memindahkan tabel apa pun, dan mempertahankan setiap tabel di grupnya — lihat [Menyembunyikan grup](./table-groups.md#hiding-groups). Opsi ini juga mengeluarkan folder `Table Groups` dari [Penjelajah](./explorer.md#the-tree) dan `New Table Group` dari [bilah alat kanvas](#canvas-toolbar), dan pencarian Penjelajah berhenti menemukan nama grup.  
 `Memos` menampilkan memo. Menonaktifkannya menyembunyikan semua memo di kanvas, minimap, dan ekspor gambar, serta tidak memindahkan tabel maupun konektor. Memo yang tersembunyi tidak memakan ruang, sehingga bilah gulir, minimap, dan kompas `Go to content` tidak memperhitungkannya.  
 Menyembunyikan memo membatalkan pilihannya dan menutup editor memo yang terbuka. [Penjelajah](./explorer.md#the-tree) menghilangkan folder `Memos`, dan pencarian [Temukan dan Ganti](./find-and-replace.md) di dalamnya serta `:` di Pencarian Cepat tidak mencari memo. Selama memo tersembunyi, `New Memo` hilang dari menu konteks, [bilah alat kanvas](#canvas-toolbar), Pencarian Cepat, dan [layar sambutan](./editing-start.md#welcome-screen), dan `Alt + M` tidak menambahkan memo. Penempelan atau [Impor dan Tambahkan](./file-import-export.md#import-and-add) tetap menambahkan memo yang dibawanya, dalam keadaan tersembunyi dan tidak dipilih.  
-Di editor `readonly`, mengaktifkan atau menonaktifkan opsi ini tidak mengubah apa pun.
+Di editor hanya baca, sakelar tetap berfungsi, hanya di layar itu: sakelar tidak disimpan, dicatat di riwayat pembatalan, atau dibagikan, dan kembali ke nilai file saat editor dapat menulis lagi — lihat [Editor hanya baca](./settings.md#read-only-editors) di Pengaturan.
 
 ![Mengaktifkan dan menonaktifkan entri View Option sementara tampilan tabel menyesuaikan diri, menandai indeks unik komposit dengan AK1.1 dan AK1.2 melalui Alternate Key, lalu menonaktifkan dan mengaktifkan kembali Memos](/img/demo-view-options.webp)
 
@@ -164,14 +165,15 @@ Tab `Indexes` dibahas di [Indeks](#indexes).
 Tab `Schema SQL` menampilkan DDL tabel untuk [database](#databases) yang dipilih: `CREATE TABLE`-nya, constraint terpisah yang ditulis beberapa database untuk kolom uniknya, dan indeksnya. Tab ini selalu menulis pernyataan `CREATE` biasa, tanpa pembuka, tanpa skrip sebelum atau setelah tabel, dan tanpa nama logis di komentar kosong, apa pun pengaturan tab [Skema SQL](./schema-sql.md) di bilah alat — lihat [Nama logis sebagai komentar](./schema-sql.md#logical-names-as-comments). Tab ini tidak memiliki panel opsi, dan menu konteksnya hanya menawarkan `Database` dan `Bracket`.  
 Tab `Code Generator` menghasilkan kode hanya untuk tabel ini — lihat [Generator Kode](./code-generator.md).
 
-Di editor `readonly`, panel tetap terbuka, dengan lencana `Read only` di samping judulnya, tetapi tab `Indexes` tidak menyediakan pengeditan apa pun.
+Di editor hanya baca, panel tetap terbuka, dari `Table Properties`, satu-satunya baris menu konteks tabel di sana, atau dengan `Alt + Space` pada tabel yang dipilih sebuah lompatan. Panel menampilkan lencana `Read only` di samping judulnya, dan tab `Indexes`-nya tidak menyediakan pengeditan apa pun.  
+Panel yang terbuka saat editor menjadi hanya baca tetap terbuka dan menjadi hanya baca bersamanya — lihat [Editor hanya baca](#read-only-editors).
 
 ## Memfokuskan tabel {#focusing-on-tables}
 
 Membuka tab Visualisasi dalam mode `Flow`, dipersempit ke tabel yang dipilih dan setiap tabel yang berjarak satu hubungan darinya.  
 Mulai dari menu konteks tabel dengan `Focus on this table`, atau pilih satu tabel atau lebih dan tekan `Alt + F`.  
 Saat tabel yang Anda klik kanan merupakan salah satu dari beberapa tabel yang dipilih, item itu bertuliskan `Focus on selected tables` dan memfokuskan seluruh pilihan. Klik kanan pada tabel di luar pilihan hanya memfokuskan tabel itu.  
-Pintasan ini mengambil tabel yang dipilih, mengabaikan memo, dan tidak melakukan apa pun jika tidak ada tabel yang dipilih.  
+Pintasan ini mengambil tabel yang dipilih, mengabaikan memo, dan tidak melakukan apa pun jika tidak ada tabel yang dipilih. Menu tabel editor hanya baca tidak memiliki `Focus on this table`, dan pintasan mengambil tabel yang dipilih sebuah lompatan di sana — lihat [Editor hanya baca](#read-only-editors).  
 [Grup tabel](./table-groups.md) yang dipilih tidak dihitung di sini, baik pada pintasan maupun item menu: tabel-tabelnya hanya diambil jika tabel itu sendiri dipilih, seperti yang dilakukan `Select tables` di menu grup.  
 Apa yang ditampilkan area pandang yang dipersempit, dan cara kembali ke seluruh diagram, dibahas di [Visualisasi](./visualization.md#focusing-on-tables), dan cara mundur dan maju melalui apa yang pernah ditampilkan Alur sebelumnya, di [Tabel sebelumnya dan berikutnya](./visualization.md#previous-table-and-next-table).
 
@@ -187,7 +189,7 @@ Sisi kanan mencantumkan kolom tabel di bawah `Columns`, masing-masing dengan kot
 Centang kolom untuk menambahkannya ke indeks yang dipilih, dan hapus centangnya untuk mengeluarkannya. Memilih kunci menampilkan kolomnya dalam keadaan tercentang, tetapi kotak centangnya tetap nonaktif.  
 Kolom indeks yang dipilih dicantumkan di bawahnya, pada `Index order`, masing-masing dinamai seperti cara Tampilan Nama menamainya, dengan nama di dalam tanda kurung setelah nama logis dalam tampilan `Both Names`, misalnya `Member Number (member_no)`. Seret kolom melalui pegangan seretnya untuk mengubah urutannya, dan klik chip `ASC` atau `DESC` pada baris untuk membalik arah pengurutannya. Pada kunci alternatif, setiap baris diakhiri dengan tandanya, `AK<n>.<m>`. Daftar ini menampilkan tiga baris sekaligus dan sisanya dapat digulir.
 
-Di editor `readonly`, memilih kunci atau indeks tetap menampilkan kolomnya, tetapi tidak ada `Add Index` dan tidak ada `x`, dan tidak ada hal lain di tab ini yang dapat diubah.
+Di editor hanya baca, memilih kunci atau indeks tetap menampilkan kolomnya, tetapi tidak ada `Add Index` dan tidak ada `x`, dan tidak ada hal lain di tab ini yang dapat diubah: nama tidak menerima pengetikan, setiap kotak centang dinonaktifkan, dan baris `Index order` tidak dapat diseret maupun membalik urutan pengurutannya.
 
 [Penjelajah](./explorer.md#the-tree) mencantumkan indeks setiap tabel di folder `Indexes` tabel tersebut, dan memilih salah satunya di sana menuju tabelnya. Pencariannya juga menemukan nama indeks, dan dapat mengganti namanya — lihat [Apa yang dicari](./find-and-replace.md#what-it-searches).
 
@@ -233,7 +235,8 @@ Tiga tata letak lainnya dihitung sekaligus, di luar thread utama, sehingga tidak
 
 Apa pun yang Anda pilih, tabel dan grup tabel dipindahkan, sedangkan memo tetap di tempatnya. Tabel ditempatkan dengan lebar yang dimilikinya dalam Tampilan Nama yang sedang Anda lihat. Hubungan dari suatu tabel ke dirinya sendiri diabaikan, dan beberapa hubungan antara dua tabel yang sama dihitung satu kali.  
 Setiap tata letak menjaga tabel setiap grup tetap bersama, baik grup ditampilkan maupun tidak, dan menyesuaikan setiap grup yang berisi tabel agar melingkupi tabel-tabelnya — lihat [Grup tabel](./table-groups.md#auto-layout).  
-Hasilnya tercatat sebagai satu entri riwayat, sehingga satu kali pembatalan mengembalikan setiap tabel dan grup ke tempat semula.
+Hasilnya tercatat sebagai satu entri riwayat, sehingga satu kali pembatalan mengembalikan setiap tabel dan grup ke tempat semula.  
+Editor hanya baca tidak menawarkan `Auto Layout`. Tata Letak Otomatis yang masih berjalan saat editor menjadi hanya baca berakhir di sana: pratinjau `Force` ditutup bersama pemberitahuannya dan tidak mempertahankan posisinya, dan tata letak yang masih dihitung dibuang bersama pemberitahuannya, sehingga tidak ada tabel yang bergerak, saat itu maupun setelah editor dapat menulis lagi.
 
 ![Merapikan tumpukan tabel dengan Tata Letak Otomatis Flow dari menu konteks kanvas, yang menjajarkannya dari kiri ke kanan mengikuti hubungannya](/img/demo-automatic-table-placement.webp)
 
@@ -250,7 +253,7 @@ Database yang didukung meliputi:
 - Snowflake
 - SQLite
 
-Pilih salah satu dari `Database` di menu konteks kanvas, di panel opsi atau menu konteks tab Skema SQL dan Generator Kode, atau di Pencarian Cepat. Semuanya mengubah pengaturan yang sama.
+Pilih salah satu dari `Database` di menu konteks kanvas, di panel opsi atau menu konteks tab Skema SQL dan Generator Kode, atau di Pencarian Cepat. Semuanya mengubah pengaturan yang sama. Menu kanvas editor hanya baca tidak memiliki `Database`, dan pilihan di yang lain hanya mengubah layar itu — lihat [Editor hanya baca](#read-only-editors).
 
 Opsi ini menentukan sintaksis Skema SQL untuk ekspor, pelengkapan otomatis tipe data, dan tipe yang digunakan oleh kode yang dihasilkan dan skema yang diimpor.  
 Opsi ini menentukan pilihan `Statements` dan `Header` mana yang dapat ditulis tab [Skema SQL](./schema-sql.md#options-panel). Pilihan yang tidak dimiliki database tetap ada di panel opsi, dalam keadaan redup, dan SQL beralih ke pilihan terdekat yang dimiliki database itu.  
@@ -266,15 +269,16 @@ Impor Skema SQL mempertahankan tipe data kolom, termasuk daftar argumennya, baik
 Bilah alat kecil melayang di tengah tepi bawah kanvas, berisi, dari kiri ke kanan, alat yang bekerja pada kanvas itu sendiri dan perintah yang menambahkan sesuatu ke kanvas:
 
 - Tangan dan alat penunjuk. Alat penunjuk adalah default; tangan mengubah setiap seretan menjadi penggeseran, di atas tabel maupun ruang kosong. `Space` beralih di antara keduanya. Selama penggambaran [`New Table Group`](./table-groups.md#drawing-a-group) dalam keadaan siap, yang ditandai adalah tombol `New Table Group`, bukan salah satu dari keduanya, dan mengeklik salah satu dari keduanya, menekan `Space`, atau memilih notasi hubungan mengakhiri penggambaran tanpa menambahkan grup.
-- `New Table`, `New Memo`, dan `New Table Group`. `New Table` menambahkan tabel seperti `Alt + N`, dan `New Memo` menambahkan memo seperti `Alt + M`. `New Table Group` menyiapkan [penggambaran grup](./table-groups.md#drawing-a-group) seperti `Alt + G` dan menonaktifkan tangan; klik kedua, seperti `Alt + G` kedua, mengakhiri penggambaran tanpa menambahkan grup. `New Memo` tidak ditampilkan selama View Option → `Memos` menyembunyikan memo, begitu pula `New Table Group` selama View Option → `Table Groups` menyembunyikan grup. Editor `readonly` tidak menampilkan satu pun dari ketiganya.
+- `New Table`, `New Memo`, dan `New Table Group`. `New Table` menambahkan tabel seperti `Alt + N`, dan `New Memo` menambahkan memo seperti `Alt + M`. `New Table Group` menyiapkan [penggambaran grup](./table-groups.md#drawing-a-group) seperti `Alt + G` dan menonaktifkan tangan; klik kedua, seperti `Alt + G` kedua, mengakhiri penggambaran tanpa menambahkan grup. `New Memo` tidak ditampilkan selama View Option → `Memos` menyembunyikan memo, begitu pula `New Table Group` selama View Option → `Table Groups` menyembunyikan grup.
 - Zoom: `Zoom out`, zoom saat ini dalam persentase, dan `Zoom in`. Kedua tombol mengubah zoom secara bertahap dengan cara yang sama seperti pintasan zoom, dan mengeklik persentase mengembalikannya ke `100%`.
 - Empat notasi hubungan, sama dengan empat notasi yang Anda gunakan untuk memulai hubungan — lihat [Memulai pengeditan](./editing-start.md). Memilih salah satunya beralih kembali ke alat penunjuk, karena hubungan digambar dengan mengeklik dua tabel.
-- `Name View`, tombol dengan panah ke bawah yang menyebutkan tampilan yang sedang berlaku: `Physical Names`, `Logical Names`, atau `Both Names`. Lebarnya tetap sama, tampilan mana pun yang disebutkannya, sehingga penggantian tidak pernah menggeser bilah alat. Klik membuka daftar ketiga tampilan tersebut di atas bilah alat, dengan tampilan yang sedang berlaku dicentang. Memilih salah satunya beralih ke tampilan itu dan menutup daftar; klik kedua pada tombol, tekanan di tempat lain mana pun, atau `Escape` menutup daftar tanpa mengganti tampilan. Editor `readonly` juga menampilkannya. Apa yang ditampilkan setiap tampilan dibahas di [Tampilan Nama](./logical-names.md#name-view), dan apakah penggantian disimpan dibahas di [Mengganti tampilan](./logical-names.md#switching-the-view).
+- `Name View`, tombol dengan panah ke bawah yang menyebutkan tampilan yang sedang berlaku: `Physical Names`, `Logical Names`, atau `Both Names`. Lebarnya tetap sama, tampilan mana pun yang disebutkannya, sehingga penggantian tidak pernah menggeser bilah alat. Klik membuka daftar ketiga tampilan tersebut di atas bilah alat, dengan tampilan yang sedang berlaku dicentang. Memilih salah satunya beralih ke tampilan itu dan menutup daftar; klik kedua pada tombol, tekanan di tempat lain mana pun, atau `Escape` menutup daftar tanpa mengganti tampilan. Apa yang ditampilkan setiap tampilan dibahas di [Tampilan Nama](./logical-names.md#name-view), dan apakah penggantian disimpan dibahas di [Mengganti tampilan](./logical-names.md#switching-the-view).
 - Mode Zen, `Alt + Z`, yang menyembunyikan semuanya kecuali kanvas dan bilah alat ini. `Alt + Z` sekali lagi, atau tombolnya, memunculkan kembali sisanya. Penjelajah yang terbuka ikut disembunyikan bersama sisanya, tanpa ditutup, dan muncul kembali bersamanya. Penjelajah tetap dapat dibuka selama mode Zen — lihat [Saat Penjelajah menyingkir](./explorer.md#when-it-stands-aside).
 - Kompas `Go to content`, yang muncul di ujung bilah alat hanya selama tidak ada tabel, memo yang ditampilkan, atau grup tabel yang ditampilkan di layar — lihat [Navigasi di kanvas](#getting-around-the-canvas).
 
 Setiap tombol yang memiliki pintasan menyebutkannya di tooltip, misalnya `New Table (Alt + N)` (Windows/Linux) atau `New Table (⌥ + N)` (Mac).  
-Bilah alat menyingkir selama pratinjau Tata Letak Otomatis `Force`, Properti Tabel, Perjalanan Waktu, atau Penampil Perbedaan terbuka, dan kembali setelah ditutup.
+Bilah alat menyingkir selama pratinjau Tata Letak Otomatis `Force`, Properti Tabel, Perjalanan Waktu, atau Penampil Perbedaan terbuka, dan kembali setelah ditutup.  
+Bilah alat editor hanya baca mempertahankan zoom, `Name View`, mode Zen, dan kompas `Go to content`. Bilah alat itu tidak memiliki tangan atau penunjuk, tidak ada `New Table`, `New Memo`, atau `New Table Group`, dan tidak ada notasi, dan mendapatkannya kembali setelah editor dapat menulis lagi.
 
 ![Menambahkan tabel dan memo dari bilah alat, menyiapkan dan membatalkan New Table Group, menggeser dengan tangan, mengubah zoom secara bertahap, dan mengaktifkan atau menonaktifkan mode Zen dengan ⌥ + Z](/img/demo-canvas-toolbar.webp)
 
@@ -339,7 +343,7 @@ Apa yang ditampilkan lompatan di layar, dan bagian inti yang harus tampil jika k
 - Grup tabel: kotaknya, berpatokan pada bilah judulnya.
 - Memo, atau blok yang ditempatkan Impor dan Tambahkan: seluruhnya.
 
-Jika tidak ada arah yang perlu bergerak, tidak ada guliran, sehingga menuju tempat yang sama dua kali berturut-turut tidak menggerakkan apa pun pada kali kedua. Lompatan yang menggulir kanvas mencatat guliran itu di [riwayat pembatalan](./undo-redo.md#what-the-history-records) seperti perubahan posisi area pandang lainnya, dan lompatan yang tidak menggerakkan apa pun tidak meninggalkan apa pun untuk dibatalkan. Untuk Impor dan Tambahkan, guliran merupakan bagian dari langkah yang sama dengan penambahan. Baris di daftar Penampil Perbedaan hanya menggerakkan sisi-sisi hanya baca milik Penampil Perbedaan, sehingga tidak mencatat apa pun.  
+Jika tidak ada arah yang perlu bergerak, tidak ada guliran, sehingga menuju tempat yang sama dua kali berturut-turut tidak menggerakkan apa pun pada kali kedua. Lompatan yang menggulir kanvas mencatat guliran itu di [riwayat pembatalan](./undo-redo.md#what-the-history-records) seperti perubahan posisi area pandang lainnya, dan lompatan yang tidak menggerakkan apa pun tidak meninggalkan apa pun untuk dibatalkan. Untuk Impor dan Tambahkan, guliran merupakan bagian dari langkah yang sama dengan penambahan. Baris di daftar Penampil Perbedaan hanya menggerakkan sisi-sisi hanya baca milik Penampil Perbedaan, sehingga tidak mencatat apa pun, dan editor hanya baca sama sekali tidak mencatat lompatan.  
 Tidak ada lompatan yang memulai atau menyelesaikan hubungan yang sedang digambar. Kompas `Go to content` bukan lompatan: kompas ini memusatkan apa yang ditunjuknya.
 
 ## Penampil Perbedaan {#diff-viewer}
@@ -351,7 +355,8 @@ Penampil Perbedaan terbuka di atas kanvas: apa yang berubah di sebelah kiri, lal
 Dokumen saat ini dibandingkan sebagaimana keadaannya saat penampil terbuka; perubahan yang dibuat setelahnya, termasuk dari kolaborator, tidak sampai ke penampil. Kedua sisi dibuka, dan tetap, dalam Tampilan Nama yang sedang Anda lihat, apa pun tampilan yang dipertahankan masing-masing file — lihat [Di luar kanvas](./logical-names.md#beyond-the-canvas). [Penjelajah](./explorer.md#when-it-stands-aside) yang terbuka disembunyikan selama penampil terbuka, sehingga penampil memakai seluruh lebar editor.  
 Setiap sisi digeser dengan roda mouse, dengan menyeret area kosong atau badan grup tabel, atau dengan menyeret menggunakan tombol tengah di mana saja di atasnya, dan di-zoom dengan `Ctrl + Wheel` (Windows/Linux), `⌘ + Wheel` (Mac), atau gerakan cubit. Pada `70%` ke bawah, tabelnya menciut seperti di kanvas — lihat [Tanda di kedua sisi](#marks-on-the-two-sides).  
 Kedua sisi hanya baca, sehingga tidak ada yang diubah di dokumen Anda. Masing-masing mempertahankan pilihannya sendiri, dan klik pada tabel di sana memilihnya hanya di sisi itu.  
-Tutup penampil dengan tombol `Close` pada pemberitahuan `Diff Viewer` yang muncul saat penampil dibuka, atau dengan `Escape`.
+Tutup penampil dengan tombol `Close` pada pemberitahuan `Diff Viewer` yang muncul saat penampil dibuka, atau dengan `Escape`.  
+Editor hanya baca juga menawarkan `Diff Viewer`, dan tampilannya bekerja di sana seperti di editor mana pun, dengan klik pada tabel sebuah sisi tetap memilihnya hanya di sisi itu. Tampilan yang terbuka saat editor menjadi hanya baca tetap terbuka.
 
 ![Membuka Penampil Perbedaan pada file .json yang disimpan, mengeklik baris bertanda A, M, D, dan R di pohonnya, menyaring menurut nama, lalu menutupnya](/img/demo-diff-viewer.webp)
 
@@ -423,3 +428,26 @@ Setiap sisi mengikuti opsi tampilan dokumennya sendiri. Perubahan pada sel yang 
 Dalam tampilan `Logical Names`, yang tidak menampilkan sel nama, warna biru penggantian nama dan warna ambar dari perubahan pada sel yang tidak digambar sisi itu ditempatkan pada nama logis yang ditampilkan di tempat nama. Perubahan tipe data membuat sel tipe berwarna ambar di setiap tampilan, bahkan saat sel tersebut menampilkan nama domain. Kedua sisi tidak menggambar warna yang diberikan pemeriksaan tab Kamus pada nama di kanvas — lihat [Tanda di kanvas](./dictionary.md#marks-on-the-canvas).
 
 Pada `70%` ke bawah, tabel yang menciut mempertahankan garis tepinya. Nama tetap berwarna hijau atau merah untuk tabel yang ditambahkan atau dihapus, atau biru untuk penggantian nama, dan jika tidak, mengambil warna ambar dari perubahan komentar. Perubahan kolom tidak digambar hingga Anda memperbesar kembali; pohon tetap mencantumkannya.
+
+## Editor hanya baca {#read-only-editors}
+
+Editor [`readonly`](../../api/erd-editor-element.md#readonly), seperti revisi Git yang dibuka kembali sebagai diagram di VS Code, adalah pembaca. Keenam tabnya, [Penjelajah](./explorer.md#read-only-editors), minimap, bilah gulir, serta kursor dan pilihan kolaborator tetap ada, dan setiap kontrol yang akan mengubah diagram dihilangkan, bukan diredupkan.
+
+Di kanvas ERD:
+
+- Seretan menggeser kanvas, dari mana pun dimulai: di kanvas kosong, tabel, memo, atau grup tabel. Tombol tengah, roda, cubitan, dan tombol zoom berfungsi seperti di editor mana pun.
+- Penunjuk yang berada di atas tabel menyorot hubungannya. Klik yang tidak bergerak menyorot hubungan tabel yang didaratinya, atau hubungan yang didaratinya, dan klik di tempat lain memadamkan sorotan.
+- Tidak ada yang dipilih oleh penekanan, kotak seleksi, atau tombol pilih semua. Hanya lompatan yang memilih: baris [Penjelajah](./explorer.md#going-to-a-row), kecocokan [Temukan dan Ganti](./find-and-replace.md#going-to-a-match)-nya, atau hasil `#`, `@`, atau `:` dari [Pencarian Cepat](./quick-search.md#searching-the-diagram) memilih apa yang didaratinya, diberi garis tepi seperti setiap pilihan, dengan sel terfokus di tempat lompatan meletakkannya. Klik yang tidak bergerak menghapus pilihan itu.
+- Tombol panah memindahkan sel terfokus. Salin, `Table Properties`, dan `Focus on this table` berfungsi pada apa yang dipilih sebuah lompatan, dengan tombolnya, dan tempel tidak menambahkan apa pun. Tombol lainnya tercantum di [Pintasan](./settings.md#shortcuts).
+- Tidak ada nama sel, memo, atau grup tabel yang terbuka untuk diedit. Tidak ada tombol `+` atau `x` pada tabel, memo, dan grup, tidak ada tepi ubah ukuran pada memo dan grup, tidak ada pegangan seret kolom, dan tidak ada pemilih warna.
+
+Menu konteks kanvas mempertahankan `View Option`, `Name View`, `Export`, dan `Diff Viewer`. Menu ini tidak memiliki `New Table`, `New Memo`, `New Table Group`, `Toggle Explorer`, `Relationship`, `Derive Physical Names Again`, `Database`, `Import`, `Import and Add`, atau `Auto Layout`.  
+Menu sebuah tabel hanya mempertahankan `Table Properties`, yang membuka panel hanya baca untuk tabel itu — lihat [Properti Tabel](#table-properties). Memo, hubungan, dan grup tabel tidak memunculkan menu.  
+[Bilah alat kanvas](#canvas-toolbar) mempertahankan zoom, `Name View`, mode Zen, dan kompas `Go to content`. Bilah alat atas menampilkan nama database sebagai teks yang tidak dapat diedit, dan tidak ada `Undo`, `Redo`, atau `Time Travel`.  
+[Ekspor](./file-import-export.md#exporting), dengan ketiga itemnya, dan [Penampil Perbedaan](#diff-viewer) berfungsi seperti di editor mana pun.
+
+[`View Option`](#table-view-options), `Name View`, database, tab, posisi tampilan, dan zoom tetap berubah di sana, tetapi hanya di layar itu: tidak ada yang menyimpan, mencatat, atau membagikannya — lihat [Editor hanya baca](./settings.md#read-only-editors) di Pengaturan.
+
+Menjadikan editor hanya baca mengakhiri apa yang sedang terbuka untuk pengeditan: editor nama sel, memo, atau grup tabel, hubungan atau `New Table Group` yang sedang digambar, pilihan dan sel terfokus, alat tangan, pemilih warna, [Petakan Kolom](./relationship-editing.md#map-columns), dan [Perjalanan Waktu](./undo-redo.md#time-travel). Tampilan, zoom, tab, dan Tampilan Nama tetap seperti semula, dan Properti Tabel, Penampil Perbedaan, dan dialog `Export image` tetap terbuka.  
+Gerakan yang sedang berlangsung juga berakhir di sana. Seretan tabel atau memo berhenti di tempatnya, `Alt + drag` tidak menjatuhkan salinan, seretan kolom berakhir, perubahan ukuran memo berhenti di tempatnya, perubahan ukuran grup tabel dibuang, dan [Tata Letak Otomatis](#auto-layout) dibuang bersama pemberitahuannya, sehingga tidak ada tabel yang bergerak.  
+Setelah dapat menulis lagi, editor mengembalikan kontrol di atas, dan apa pun yang ditutup tidak terbuka lagi.

@@ -167,7 +167,7 @@ While groups are hidden:
 - The Explorer leaves out its `Table Groups` folder, and Find and Replace neither finds nor replaces group names, even with `Table group names` on.
 - [Auto Layout](#auto-layout) still keeps each group's tables together, the Schema SQL tab still offers the [groups to choose from](#schema-sql-by-group), DBML still writes them, and [Import and Add](./file-import-export.md#import-and-add) still lands below the hidden boxes.
 
-The choice is saved in the document and recorded in the [undo history](./undo-redo.md#what-the-history-records), like the other View Option toggles.
+The choice is saved in the document and recorded in the [undo history](./undo-redo.md#what-the-history-records), like the other View Option toggles. In a read-only editor it stays on that screen instead — see [Read-only Editors](#read-only-editors).
 
 ## Auto Layout
 
@@ -197,11 +197,13 @@ The choice belongs to the editor window and is not saved in the document.
 
 ## Read-only Editors
 
-In a [`readonly`](../../api/erd-editor-element.md#readonly) editor, groups are drawn and listed in the Explorer as usual and can be selected and gone to, but not changed:
+In a [`readonly`](../../api/erd-editor-element.md#readonly) editor, groups are drawn and listed in the Explorer as usual and can be gone to, but not changed:
 
-- A press on a title bar selects the group and moves nothing. There are no resize handles and no `x`.
-- A double-click on the title bar opens no name editor, and the group menu holds `Select tables` alone.
-- The canvas menu has no `New Table Group`, the table menu has no `Group selected tables` or `Remove from group`, and Quick Search lists neither group command. A `New Table Group` draw ends when the editor turns read-only.
-- The [canvas toolbar](./table-related-functions.md#canvas-toolbar) shows none of its add buttons, `New Table Group` included, and `Alt + G` (Windows/Linux) or `⌥ + G` (Mac) and `T` then `G` do nothing.
-- The `Table Groups` view option changes nothing, as with every View Option.
+- [Going to a group](#going-to-a-group) selects it, and that is the only way a group is selected there. A press on a title bar selects nothing and moves nothing: dragged, it pans the canvas, and a click that does not move takes off the selection a jump left.
+- There are no resize handles and no `x`, and a double-click on the title bar opens no name editor.
+- A right-click on a group opens no menu, and the table menu holds `Table Properties` alone.
+- The canvas menu has no `New Table Group`, and Quick Search lists neither group command. A `New Table Group` draw ends when the editor turns read-only.
+- The [canvas toolbar](./table-related-functions.md#canvas-toolbar) keeps only its view controls, so it has no `New Table Group` button, and `Alt + G` (Windows/Linux) or `⌥ + G` (Mac) and `T` then `G` do nothing.
+- A drag of tables or of a group under way when the editor turns read-only stops where it is and changes no group, and a group resize under way ends without changing the size.
+- `View Option` → `Table Groups` shows or hides the groups on that screen alone, as every View Option does there: the document, collaborators, and the undo history keep the choice as it was, and turning the editor writable again puts the document's choice back.
 - The Schema SQL tab's `Tables` choice still works.

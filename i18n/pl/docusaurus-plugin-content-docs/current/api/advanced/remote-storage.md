@@ -16,7 +16,7 @@ npm install @dineug/erd-editor
 
 Magazyn replikacji jest dostępny pod ścieżką podrzędną `@dineug/erd-editor/engine.js`, a nie w głównym module pakietu.  
 Ten punkt wejścia nie korzysta z drzewa DOM, więc działa w wątku Web Worker lub w dowolnym innym miejscu poza wątkiem głównym.  
-Import głównego modułu pakietu rejestruje natomiast element niestandardowy `<erd-editor>`, który wymaga dokumentu.
+Import głównego modułu pakietu wymaga natomiast dokumentu: od wersji `5.0.0` nie definiuje żadnego elementu, ale jego wykonanie buduje obie klasy elementów. Przed wersją `5.0.0` rejestrował element niestandardowy `<erd-editor>`.
 
 ## Użycie {#usage}
 

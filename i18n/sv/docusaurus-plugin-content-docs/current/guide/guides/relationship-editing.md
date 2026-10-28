@@ -1,6 +1,6 @@
 ---
 sidebar_position: 7
-description: Ta bort en relation, ändra dess typ, ange dess ON DELETE- och ON UPDATE-åtgärder, mappa den till befintliga kolumner med Mappa kolumner, läs relationslinjens notation, arbeta med N:M-relationer och identifierande relationer och se vad nya sekundärnyckelkolumner kopierar från sin nyckel och hur de namnges.
+description: Ta bort en relation, ändra dess typ, ange dess ON DELETE- och ON UPDATE-åtgärder, mappa den till befintliga kolumner med Mappa kolumner, läs relationslinjens notation och hur relationslinjer dras runt tabeller, arbeta med N:M-relationer och identifierande relationer och se vad nya sekundärnyckelkolumner kopierar från sin nyckel och hur de namnges.
 ---
 
 # Redigera relationer
@@ -81,7 +81,7 @@ Varje rad använder antingen en kolumn som barntabellen redan har eller lägger 
 Den öppnas på två sätt:
 
 - Medan du ritar en relation, via `Map to existing columns` bredvid barntabellen – se [Skapa relationer](./editing-start.md#relationship-creation). `Map` lägger då till en relation av den typ som ritas.
-- Via `Map Columns` i relationens snabbmeny, för att ändra kolumnerna i en befintlig relation. `Save` skriver då ändringen. En skrivskyddad editor utelämnar det här menyalternativet.
+- Via `Map Columns` i relationens snabbmeny, för att ändra kolumnerna i en befintlig relation. `Save` skriver då ändringen. En skrivskyddad editor öppnar ingen snabbmeny för relationer, så Map Columns kan inte öppnas där.
 
 Dialogrutans underrubrik namnger de två tabellerna och relationstypen, till exempel `users → posts · One N`. Typen visas här men ändras inte – använd [Ändra typ](#type-change).
 
@@ -226,6 +226,9 @@ Ljuset slocknar vid nästa tryck med vänster eller höger musknapp på arbetsyt
 Relationen förblir upplyst när du panorerar med mittenknappen eller handverktyget, och likaså när du fäller ihop eller fäller ut en rad i utforskaren eller diff-visaren, när du avmarkerar allt med `Escape` och vid ett hopp från [snabbsökningen](./quick-search.md) eller [kortknappen](./visualization.md#card-buttons) för extern länk i flödet.  
 Ljuset sparas inte och finns inte i ångrahistoriken, och medarbetare ser det inte.
 
+I en editor med [`readonly`](../../api/erd-editor-element.md#readonly) lyser pekaren upp relationslinjer också, i stället för det ljus som ett hopp lämnar. När den vilar på en tabell lyser den upp varje relationslinje som hör till tabellen i hovringsfärgen tills den flyttas bort från tabellen.  
+Ett klick som inte flyttar sig lämnar ett ljus på till nästa sådana klick: på en tabell lyser det upp den tabellens relationslinjer, på en relationslinje den relationslinjen och på alla andra ställen ingenting. Ett drag där panorerar arbetsytan och lämnar det ljuset som det var.
+
 Dölj relationslinjer på ERD-arbetsytan med visningsalternativet `Relationship`, eller bara deras etiketter med visningsalternativet `Referential Actions`, som är på som standard – se [Visningsalternativ för tabeller](./table-related-functions.md#table-view-options).  
 Etiketter ritas inte vid `70%` och lägre, där tabellerna fälls ihop till sitt namn.  
 En [bildexport](./file-import-export.md#image) ritas alltid i 100 %, så den ritar etiketterna oavsett arbetsytans zoomnivå, om inte ett visningsalternativ döljer dem. När `Background` är av är rutan bakom varje etikett också genomskinlig.  
@@ -233,9 +236,10 @@ En [bildexport](./file-import-export.md#image) ritas alltid i 100 %, så den rit
 
 ## Dragning av relationslinjer {#connector-routing}
 
-Relationslinjer dras vinkelrätt.  
-En dragning går runt de tabeller som ligger mellan dess två ändar i stället för att korsa dem, och dess hörn är rundade.  
-Varje ände lämnar sin tabell med en kort rak sträcka innan den svänger, så två tabeller en kort bit ifrån varandra vars relationslinjeändar ligger i linje förbinds med en enda rak linje i stället för en omväg.  
+Relationslinjer dras vinkelrätt, och deras hörn är rundade.  
+En dragning går runt de tabeller som ligger i dess väg i stället för genom dem. Där varje dragning med några få svängar mellan dess två ändar skulle korsa en tabell, som i ett trångt diagram, tar relationslinjen en väg runt med så många svängar som behövs. Bara där ingen väg runt hittas korsar den fortfarande en tabell.  
+En relationslinje lämnar sina två tabeller från ett par sidor som vetter mot varandra där det finns ett, och varje ände lämnar sin tabell med en kort rak sträcka innan den svänger, så två tabeller en kort bit ifrån varandra vars relationslinjeändar ligger i linje förbinds med en enda rak linje i stället för en omväg.  
+Två tabeller som vetter mot varandra och står närmare än så, även under `40px` ifrån varandra, behåller sina sidor som vetter mot varandra, och där deras ändar inte ligger i linje gör relationslinjen en förskjutning över gapet mellan dem i stället för att löpa under någon av dem.  
 Dragningar som lämnar samma sida av en tabell sprids ut i separata korridorer så att de inte löper ovanpå varandra.  
 Bara tabeller undviks: en relationslinje kan korsa en anteckning eller en tabellgrupps ruta och ritas ovanför tabellgrupper och under tabeller och anteckningar.
 
@@ -243,6 +247,9 @@ En relation från en tabell till sig själv ritas som en enda kurva runt tabelle
 Ytterligare självreferenser på samma tabell läggs utanför den första, så att deras kurvor inte korsar varandra eller tabellen.
 
 Det finns ingenting att konfigurera.  
-Dragningarna beräknas om automatiskt när något på arbetsytan flyttas eller ändrar storlek, så de behöver aldrig justeras för hand.
+Dragningarna beräknas om automatiskt när något på arbetsytan flyttas eller ändrar storlek, så de behöver aldrig justeras för hand.  
+Medan du drar följer relationslinjerna för de tabeller du flyttar med dem, och varje annan relationslinje behåller den dragning den hade när draget började. När du släpper ritas varje relationslinje som flytten ger en ny dragning om, till exempel en som nu går runt en tabell som släppts i dess väg, eller en som rätas ut när en tabell har flyttats bort från dess väg.
+
+Ett diagram ritar samma dragningar i varje fönster som visar det i samma namnvisning: ett som stod öppet medan tabellerna flyttades, ett som öppnade diagrammet alldeles nyss och en medarbetares, och en [exporterad bild](./file-import-export.md#image) ritar dem också. Namnvisningen räknas eftersom den ändrar hur breda tabellerna är – se [Namnvisning](./logical-names.md#name-view).
 
 ![Tabellen members dras nedåt och tillbaka medan relationslinjen från orders växlar mellan att passera till höger om categories och runt dess vänstra sida, med alla hörn rundade](/img/demo-connector-routing.webp)

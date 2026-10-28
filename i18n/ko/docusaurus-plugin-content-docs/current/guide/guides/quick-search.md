@@ -22,7 +22,7 @@ description: 명령 팔레트에서 탭이나 이름 표시 전환, 현재 탭�
 입력하면 목록이 필터링됩니다. 키를 입력할 때마다 현재 보이는 목록 전체를 처음부터 다시 검색하므로, 글자를 지우거나 아무것도 찾지 못한 단어 위에 새 단어를 입력하면 일치하는 항목이 다시 나타납니다.  
 퍼지 매칭으로 동작하며 항목 이름과 옆에 표시된 키워드를 함께 검색합니다. 예를 들어 `Import` 하위 메뉴에서는 `sdl`로 `GraphQL`을, `dbdiagram`으로 `DBML`을, `azimutt`로 `AML`을 찾을 수 있습니다. 오타가 조금 있어도 해당 항목을 찾으므로 `tabel`로 `New Table`을, `imprt`로 `Import`를 찾을 수 있지만, 입력한 내용과 어렴풋이 닮기만 한 항목은 제외되므로 `memo`를 입력하면 `New Memo`만 표시됩니다. 대소문자와 상관없이 입력한 내용이 이름이나 키워드에 포함된 항목은 항상 표시되며, 퍼지 매칭이 놓친 항목은 퍼지 매칭으로 찾은 항목 뒤에 옵니다. 입력한 내용은 대소문자와 상관없이 항목에 포함된 모든 위치에서 강조됩니다.  
 영어가 아닌 표시 언어에서는 명령과 하위 메뉴 항목을 목록에 표시되지 않는 영어 이름과 키워드로도 찾을 수 있으므로, 어떤 언어로 표시되든 `new table`로 `New Table`을 찾습니다.  
-`↑`와 `↓`로 목록을 이동하며 양 끝에서 순환하고, `Enter`로 선택된 항목을 실행합니다. 자체 단축키가 있는 명령은 행의 끝에 단축키를 표시합니다. 보통은 오른쪽이고, 오른쪽에서 왼쪽으로 쓰는 표시 언어에서는 왼쪽입니다. 한글 음절을 입력하는 도중처럼 IME가 아직 조합 중일 때는 `↑`, `↓`, `Enter`가 조합에 속하므로, 선택된 항목을 옮기지도 항목을 실행하지도 않습니다.
+`↑`와 `↓`로 목록을 이동하며 양 끝에서 순환하고, `Enter`로 선택된 항목을 실행합니다. 목록은 선택된 항목이 보이도록 스크롤되며, 높이가 낮은 에디터 창에서는 검색 상자 아래의 남은 공간만큼 줄어들어 모든 항목에 닿을 수 있고 선택된 항목은 계속 보입니다. 자체 단축키가 있는 명령은 행의 끝에 단축키를 표시합니다. 보통은 오른쪽이고, 오른쪽에서 왼쪽으로 쓰는 표시 언어에서는 왼쪽입니다. 한글 음절을 입력하는 도중처럼 IME가 아직 조합 중일 때는 `↑`, `↓`, `Enter`가 조합에 속하므로, 선택된 항목을 옮기지도 항목을 실행하지도 않습니다.
 
 `Database`, `Import`, `Auto Layout` 같은 항목은 하위 메뉴를 엽니다. 하위 메뉴 항목이 기존 목록을 대체하고 검색어는 비워집니다. `Name View`, `Database`, `Bracket`, `Language`, 두 가지 이름 케이스, `Schema SQL: Statements`, `Schema SQL: Header`, `Theme`, `Display Language`의 하위 메뉴는 현재 고른 항목에 체크 표시를 하고 그 항목이 선택된 채로 열리므로, `Enter`를 누르면 그대로 유지됩니다. 그 밖의 하위 메뉴는 아무 항목도 선택되지 않은 채로 열립니다.  
 필터링은 항상 현재 보이는 목록에만 적용되며 상위 단계로 돌아가는 방법은 없으므로, 처음부터 다시 하려면 팔레트를 닫았다가 다시 엽니다. 하위 메뉴 안에서는 `#`, `@`, `:`, `?`가 [접두사](#다이어그램-검색)가 아닌 일반 텍스트입니다.
@@ -34,7 +34,7 @@ description: 명령 팔레트에서 탭이나 이름 표시 전환, 현재 탭�
 ERD 탭에서는 `Name View`와 [물리명을 다시 생성](./dictionary.md#derive-physical-names-again)하는 최대 4개의 행, 이어서 `Database`, `Import`, `Import and Add`, `Export`, 이어서 `New Table`, `New Memo`, `New Table Group`, `Group Selected Tables`, 4가지 관계 타입, `Auto Layout`이 표시됩니다. 테이블은 여기에 표시되지 않으므로, `#`을 입력해 [테이블로 이동](#다이어그램-검색)합니다.  
 `Name View`는 현재 보기에 체크 표시가 된 `Physical Names`, `Logical Names`, `Both Names`를 열며, 하나를 고르면 캔버스 컨텍스트 메뉴의 `Name View`와 같은 방식으로 보기가 전환됩니다. [보기 전환](./logical-names.md#switching-the-view) 문서를 참고하세요. ERD 탭에서만 표시되며, 읽기 전용 에디터에서도 표시됩니다.  
 물리명을 다시 생성하는 행은 옆에 표시되는 키워드로 구분합니다. 옆에 `column`이 표시되는 `Derive Physical Name Again`은 포커스된 컬럼의 물리명을 생성합니다. `Derive Physical Names Again`은 세 행으로 나옵니다. `table`이 붙은 행은 포커스가 있는 테이블의 이름과 모든 컬럼을, `selected tables`가 붙은 행은 두 개 이상 선택되어 있는 동안 선택된 테이블을, `whole document`가 붙은 행은 다이어그램의 모든 테이블을 대상으로 합니다. 각 행은 대상이 있는 동안에만 표시되며, 읽기 전용 에디터에서는 어느 것도 표시되지 않습니다.  
-`Import and Add`는 읽기 전용 에디터에서 제외되고, `New Memo`는 [View Option](./table-related-functions.md#테이블-보기-옵션) → `Memos`로 메모를 숨긴 동안 제외됩니다. `New Table Group`은 캔버스에 [테이블 그룹](./table-groups.md)을 그리기 시작하고, `Group Selected Tables`는 선택한 테이블을 새 그룹에 넣은 뒤 그 이름을 입력할 수 있게 엽니다. 둘 다 읽기 전용 에디터에서, 그리고 View Option → `Table Groups`로 그룹을 숨긴 동안 제외되며, `Group Selected Tables`는 테이블이 하나 이상 선택되어 있어야 표시됩니다. 두 항목의 행에는 키가 표시됩니다. [그룹을 그리는](./table-groups.md#그룹-그리기) 키는 `Alt + G` (Windows/Linux) or `⌥ + G` (Mac)이고, [선택한 테이블을 그룹으로 묶는](./table-groups.md#선택한-테이블-그룹화) 키는 `T` 다음 `G`입니다.  
+`New Memo`는 [View Option](./table-related-functions.md#테이블-보기-옵션) → `Memos`로 메모를 숨긴 동안 제외됩니다. `New Table Group`은 캔버스에 [테이블 그룹](./table-groups.md)을 그리기 시작하고, `Group Selected Tables`는 선택한 테이블을 새 그룹에 넣은 뒤 그 이름을 입력할 수 있게 엽니다. 둘 다 View Option → `Table Groups`로 그룹을 숨긴 동안 제외되며, `Group Selected Tables`는 테이블이 하나 이상 선택되어 있어야 표시됩니다. 두 항목의 행에는 키가 표시됩니다. [그룹을 그리는](./table-groups.md#그룹-그리기) 키는 `Alt + G` (Windows/Linux) or `⌥ + G` (Mac)이고, [선택한 테이블을 그룹으로 묶는](./table-groups.md#선택한-테이블-그룹화) 키는 `T` 다음 `G`입니다.  
 이 항목들은 캔버스 컨텍스트 메뉴와 같은 명령을 실행하지만, 테이블 메뉴의 명령을 실행하는 경우는 예외입니다. `Group Selected Tables`는 테이블 메뉴의 `Group selected tables`를 실행하고, `column`, `table`, `selected tables` 행은 마우스 오른쪽 클릭한 위치가 아니라 포커스나 선택을 대상으로 테이블 메뉴의 `Derive Physical Name Again`이나 `Derive Physical Names Again`을 실행합니다. `View Option`과 `Diff Viewer`는 컨텍스트 메뉴에서만 사용 가능합니다. `Export`는 컨텍스트 메뉴와 같은 `json`, `Schema SQL`, `Image`를 제공하며, 그 안에서 `png`나 `svg`를 입력하면 `Image`를 찾습니다.  
 각 형식, [가져와서 추가](./file-import-export.md#가져와서-추가), [이미지 내보내기](./file-import-export.md#이미지)의 동작은 [파일 가져오기와 내보내기](./file-import-export.md) 문서를, 데이터베이스 선택이 영향을 주는 범위는 [테이블 관련 기능](./table-related-functions.md#데이터베이스) 문서를 참고하세요.
 
@@ -54,6 +54,15 @@ Visualization, 사전, 설정 탭에는 자체 명령이 없으며, `Tab`과 아
 `Theme`은 `System`, `Light`, `Dark`를 열며, 현재 적용 중인 외관에 체크 표시가 됩니다. 하나를 고르면 테마 빌더의 `Appearance` 버튼과 마찬가지로 외관만 바뀌고 회색 색상과 강조 색상은 유지됩니다.  
 `Display Language`는 `System`과 그 뒤의 25개 언어를 엽니다. 각 언어는 그 언어로 쓴 이름으로 선택기와 같은 순서로 표시되며, 현재 옵션에 체크 표시가 됩니다. 여기서는 언어를 영어 이름이나 코드로도 찾을 수 있습니다. `german`이나 `de-DE`로 `Deutsch`를, `korean`으로 `한국어`를 찾습니다.  
 어느 쪽이든 고르면 바로 적용되고 팔레트가 닫히며, 테마 빌더나 `Display Language` 선택기에서 고른 것과 똑같이 유지됩니다. 팔레트가 열려 있는 동안 표시 언어가 바뀌면 목록도 그 언어로 바뀌며, 입력한 내용과 현재 하위 메뉴는 그대로 유지됩니다.
+
+### 읽기 전용 에디터 {#read-only-editors}
+
+[`readonly`](../../api/erd-editor-element.md#readonly) 에디터는 다이어그램을 바꾸는 명령을 흐리게 표시하지 않고 아예 나열하지 않습니다.  
+ERD 탭에는 `Tab`, `Name View`, `Database`, 세 항목이 모두 있는 `Export`, `Toggle Explorer`, `Theme`, `Display Language`가 남습니다. `Import`, `Import and Add`, 물리명을 다시 생성하는 행, `New Table`, `New Memo`, `New Table Group`, `Group Selected Tables`, 네 가지 관계선 타입, `Auto Layout`은 나열되지 않습니다.  
+다른 탭은 어느 에디터에서나와 같은 항목을 나열합니다. 어디에 나열되든 `Tab`, `Name View`, `Database`, `Bracket`, `Language`, 두 이름 케이스는 그 화면만 바꾸며 저장되지 않습니다. 설정의 [읽기 전용 에디터](./settings.md#read-only-editors) 문서를 참고하세요.  
+팔레트가 열려 있는 동안 에디터가 읽기 전용이 되거나 다시 편집 가능해지면, 목록은 그때 에디터가 제공하는 항목으로 다시 그려지고 입력한 내용으로 다시 검색됩니다. 항목이 사라진 하위 메뉴는 최상위 목록으로 물러납니다.
+
+`#`, `@`, `:` 접두사는 어느 에디터에서나처럼 다이어그램을 검색하며, 이동하면 [다이어그램 검색](#다이어그램-검색)에 설명된 대로 도착한 대상이 선택됩니다. 읽기 전용 에디터에서 무언가가 선택되는 방법은 이것뿐입니다. 캔버스를 눌러도 아무것도 선택되지 않으며, 움직이지 않는 클릭은 이동이 선택한 것을 지웁니다. [읽기 전용 에디터](./table-related-functions.md#read-only-editors) 문서를 참고하세요.
 
 ## 다이어그램 검색
 

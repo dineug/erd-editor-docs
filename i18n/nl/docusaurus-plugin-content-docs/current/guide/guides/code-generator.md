@@ -25,7 +25,8 @@ Als de geselecteerde taal `Database` of de naamnotaties negeert, blijven die ged
 `Save file` en `Copy` staan onder aan het paneel — zie [Het resultaat opslaan of kopiëren](#saving-or-copying-the-result).
 
 Dit zijn de eigen instellingen van het diagram, dezelfde die het contextmenu en Snel zoeken ook wijzigen. `Database` wordt net als elke bewerking in het bestand opgeslagen.  
-`Language`, `Table Name Case`, `Column Name Case` en `Bracket` worden alleen opgeslagen zolang hun vergrendeling op het tabblad Instellingen uitstaat (`Bracket Type` voor `Bracket`), en in een nieuw diagram staan alle vergrendelingen aan. Zolang een vergrendeling aanstaat, herschrijft een wijziging de code op je scherm, maar het bestand behoudt de vergrendelde waarde en het diagram opent daarmee opnieuw. Het paneel geeft een vergrendeling op geen enkele manier aan; zet de vergrendeling van een keuze uit om die keuze in het bestand te bewaren — zie [Vergrendeling](./settings.md#lock).
+`Language`, `Table Name Case`, `Column Name Case` en `Bracket` worden alleen opgeslagen zolang hun vergrendeling op het tabblad Instellingen uitstaat (`Bracket Type` voor `Bracket`), en in een nieuw diagram staan alle vergrendelingen aan. Zolang een vergrendeling aanstaat, herschrijft een wijziging de code op je scherm, maar het bestand behoudt de vergrendelde waarde en het diagram opent daarmee opnieuw. Het paneel geeft een vergrendeling op geen enkele manier aan; zet de vergrendeling van een keuze uit om die keuze in het bestand te bewaren — zie [Vergrendeling](./settings.md#lock).  
+In een editor in alleen-lezenmodus staat in plaats daarvan het opschrift `This window only`, omdat een wijziging daar alleen dat venster bereikt — zie [Editors in alleen-lezenmodus](#read-only-editors).
 
 ## Taal {#language}
 
@@ -138,3 +139,10 @@ Het exportmenu heeft geen item voor de Codegenerator, en het tabblad `Code Gener
 Om de code te kopiëren, klik je op `Copy` onder aan het paneel, of houd je de aanwijzer boven de code en klik je rechtsboven op de kopieerknop, de enige manier in Tabeleigenschappen.  
 De melding `Copied!` met een vinkje bevestigt dit twee seconden lang. Als de browser of host het klembord weigert, verschijnt in plaats daarvan de melding `Couldn't copy to the clipboard` met een waarschuwingsteken, vijf seconden lang. Opnieuw kopiëren vervangt de melding in plaats van er nog een toe te voegen.  
 De tekst is ook selecteerbaar, zodat je alleen het deel kunt overnemen dat je nodig hebt.
+
+## Editors in alleen-lezenmodus {#read-only-editors}
+
+In een editor met [`readonly`](../../api/erd-editor-element.md#readonly) wijzigen de lijsten van het paneel, het contextmenu en Snel zoeken nog steeds `Language`, `Database`, `Table Name Case`, `Column Name Case` en `Bracket`, maar alleen in dat venster, dus het paneel duidt ze aan met `This window only` in plaats van `Saved in the document`.  
+Een wijziging herschrijft de code op dat scherm en wordt niet in het bestand opgeslagen, niet met medebewerkers gedeeld en niet voor ongedaan maken vastgelegd, wat de vergrendelingen ook aangeven, en een wijziging van een medebewerker in een instelling die je koos, laat jouw keuze op het scherm staan. `Database` en `Bracket` zijn ook instellingen van het tabblad Schema SQL, dus een keuze hier verschijnt daar in hetzelfde venster — zie [Editors in alleen-lezenmodus](./schema-sql.md#read-only-editors).  
+Zodra de editor weer bewerkbaar wordt, komen de instellingen van het document terug en wordt de code ervoor geschreven.  
+`Save file` en `Copy` slaan de getoonde code op en kopiëren die.

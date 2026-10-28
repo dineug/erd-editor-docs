@@ -31,7 +31,7 @@ Okno [Lastnosti tabele](./table-related-functions.md#table-properties) ima svoj 
 
 Plošča vsebuje tri skupine, vsako pod svojim napisom:
 
-1. `Saved in the document`: `Database` in `Bracket` – glejte razdelek [Zbirka podatkov in narekovaji](#database-and-bracket).
+1. `Saved in the document`: `Database` in `Bracket` – glejte razdelek [Zbirka podatkov in narekovaji](#database-and-bracket). Urejevalnik samo za branje ju opisuje z `This window only` – glejte razdelek [Urejevalniki samo za branje](#read-only-editors).
 2. `This window only`: `Statements`, `Header`, `Write logical names into empty comments` in, dokler ima diagram [skupino tabel](./table-groups.md), `Tables` – glejte razdelke [Stavki](#statements), [Glava](#header), [Logična imena kot komentarji](#logical-names-as-comments) in [Tabele](#tables).
 3. `Saved in the document · written as is for every database`: skripta `Before tables` in `After tables` – glejte razdelek [Skripti pred tabelami in za njimi](#before-and-after-scripts).
 
@@ -222,5 +222,9 @@ Kako se ti komentarji preberejo nazaj pri uvozu, je opisano v razdelku [Komentar
 
 ## Urejevalniki samo za branje {#read-only-editors}
 
-V urejevalniku z lastnostjo `readonly` zavihek deluje kot običajno: `Database` in `Bracket` še vedno spremenita prikazano kodo SQL, `Statements`, `Header`, `Write logical names into empty comments` in `Tables` še vedno delujejo, `Save file` in `Copy` pa jo še vedno shranita in kopirata.  
-Le polji za skripta sta samo za branje.
+V urejevalniku [`readonly`](../../api/erd-editor-element.md#readonly) zavihek deluje za bralca in nič, kar se naredi na njem, ne doseže dokumenta:
+
+- `Database` in `Bracket` še vedno prepišeta kodo SQL, vendar samo v tistem oknu, zato plošča tudi ju opisuje z `This window only`. Izbira ni shranjena v datoteko, deljena s sodelavci ali zabeležena za razveljavitev, ne glede na zaklepe, sprememba sodelavca nastavitve, ki ste jo izbrali, pa vaše izbire na zaslonu ne spremeni. Zavihek Generator kode prikazuje isto izbiro, [`getSchemaSQL()`](../../api/erd-editor-element.md#getschemasql), poklican brez zbirke podatkov, pa jo prav tako zapiše. Ko je urejevalnik spet mogoče urejati, se zbirka podatkov in narekovaji dokumenta vrnejo.
+- `Statements`, `Header`, `Write logical names into empty comments` in `Tables` delujejo kot kjer koli, saj že pripadajo oknu.
+- Polji za skripta sta samo za branje: prikazujeta skripta dokumenta, ki ju SQL še vedno zapiše, in ne sprejmeta tipkanja.
+- `Save file` in `Copy` shranita in kopirata kodo SQL, ki jo prikazuje zavihek.

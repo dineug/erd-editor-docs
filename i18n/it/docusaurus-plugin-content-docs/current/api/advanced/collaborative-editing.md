@@ -55,6 +55,10 @@ Mentre il blocco è attivo, il cambio compare solo nell’editor che lo ha effet
 Mentre il blocco è disattivato, un cambio effettuato in un editor che può modificare il documento cambia la Visualizzazione nomi su ogni editor e su ogni replica, dove prevale l’ultimo cambio, e ognuno di essi la salva.  
 Il cambio effettuato da un editor di sola lettura resta sempre su quell’editor, che continua comunque a seguire i cambi condivisi degli altri.
 
+Dalla versione `5.0.0` un editor [di sola lettura](../erd-editor-element.md#readonly) non invia alcun cambio. Lo scorrimento, lo zoom, la scheda, la Visualizzazione nomi, il database, il linguaggio del Generatore di codice, gli stili dei nomi, il tipo di delimitatore e le righe di `View Option` che il suo lettore cambia restano sul suo schermo, qualunque sia il loro blocco; prima della versione `5.0.0` i suoi scorrimenti, zoom, cambi di scheda, database e impostazioni del codice venivano inviati come quelli di un editor modificabile.  
+Il suo store continua a inviare ciò che inviano i suoi tracker del cursore, del focus, della selezione e del riquadro di trascinamento del lettore, risponde ai registri richiesti da un editor che si unisce e applica ogni cambio inviato dagli altri. Un cambio del database, di un’impostazione del Generatore di codice o di una riga di `View Option` raggiunge il suo documento, e anche il suo schermo a meno che il lettore non abbia cambiato quell’impostazione proprio lì, e un cambio condiviso della Visualizzazione nomi compare comunque sul suo schermo.  
+Quando l’editor diventa di sola lettura, invia prima ciò che lo store trattiene ancora di un trascinamento o di uno scorrimento, come fa [flushStreamBuffers](#flushstreambuffers), così gli altri conservano l’ultima parte.
+
 I [blocchi](../../guide/guides/settings.md#lock) sono condivisi: l’ultimo blocco o sblocco di un’impostazione prevale su ogni editor e un blocco porta con sé i valori dell’editor che lo ha attivato, quindi ogni editor e ogni replica salvano lo stesso valore.  
 Il blocco `Viewport` salva quindi la vista dell’editor che lo ha attivato e il blocco `Canvas Type` l’ultima scheda in cui si trovava quell’editor prima della scheda Impostazioni, dove i blocchi vengono attivati.  
 La disattivazione del blocco `Language`, `Table Name Case`, `Column Name Case`, `Bracket Type` o, dalla versione `4.2.0`, `Name View` porta anche quell’impostazione, su ogni editor, al valore mostrato nell’editor che lo ha disattivato, così tutti continuano a salvare un unico valore. La disattivazione di `Viewport` o `Canvas Type` non sposta la vista né la scheda di nessuno.
@@ -71,6 +75,8 @@ Il pulsante di link esterno della card, un risultato della [Ricerca rapida](../.
 Qui il collegamento da subscribe a dispatch fa le veci della rete, così si può vedere la struttura di una sessione senza un trasporto di mezzo.
 
 ```js
+import '@dineug/erd-editor/erd-editor.js';
+
 const editor1 = document.createElement('erd-editor');
 const editor2 = document.createElement('erd-editor');
 

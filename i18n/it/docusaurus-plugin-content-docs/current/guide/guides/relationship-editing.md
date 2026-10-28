@@ -1,6 +1,6 @@
 ---
 sidebar_position: 7
-description: Eliminare una relazione, cambiarne il tipo, impostarne le azioni ON DELETE e ON UPDATE, associarla a colonne esistenti con Associa colonne, leggere la notazione dei connettori, lavorare con le relazioni N:M e identificanti e vedere cosa copiano le nuove colonne chiave esterna dalla loro chiave e come vengono denominate.
+description: Eliminare una relazione, cambiarne il tipo, impostarne le azioni ON DELETE e ON UPDATE, associarla a colonne esistenti con Associa colonne, leggere la notazione dei connettori e il modo in cui vengono instradati attorno alle tabelle, lavorare con le relazioni N:M e identificanti e vedere cosa copiano le nuove colonne chiave esterna dalla loro chiave e come vengono denominate.
 ---
 
 # Modifica delle relazioni
@@ -81,7 +81,7 @@ Ogni riga usa una colonna già presente nella tabella figlia oppure aggiunge una
 Si apre in due modi:
 
 - Durante il disegno di una relazione, da `Map to existing columns` accanto alla tabella figlia — vedere [Creazione di relazioni](./editing-start.md#relationship-creation). `Map` aggiunge quindi una relazione del tipo che si sta disegnando.
-- Dalla voce `Map Columns` del menu contestuale della relazione, per cambiare le colonne di una relazione esistente. `Save` scrive quindi la modifica. Un editor di sola lettura non mostra questa voce.
+- Dalla voce `Map Columns` del menu contestuale della relazione, per cambiare le colonne di una relazione esistente. `Save` scrive quindi la modifica. Un editor di sola lettura non apre alcun menu contestuale della relazione, quindi lì Associa colonne non può essere aperto.
 
 Il sottotitolo della finestra di dialogo indica le due tabelle e il tipo di relazione, come `users → posts · One N`. Il tipo qui viene mostrato ma non modificato — usare [Cambio di tipo](#type-change).
 
@@ -226,6 +226,9 @@ L’evidenziazione si spegne alla successiva pressione del pulsante sinistro o d
 Spostare la vista con il pulsante centrale o con lo strumento Mano la lascia accesa, così come comprimere o espandere una riga nel pannello Esplora o nel Visualizzatore differenze, annullare la selezione con `Escape` e un salto dalla [Ricerca rapida](./quick-search.md) o dal [pulsante della card](./visualization.md#card-buttons) per il collegamento esterno della modalità Flusso.  
 L’evidenziazione non viene salvata né compare nella cronologia delle modifiche, e i collaboratori non la vedono.
 
+In un editor [`readonly`](../../api/erd-editor-element.md#readonly) il puntatore evidenzia i connettori anche al posto dell’evidenziazione lasciata da un salto. Fermo su una tabella, evidenzia ogni connettore di quella tabella con il colore di evidenziazione al passaggio del puntatore finché non si sposta fuori dalla tabella.  
+Un clic che non sposta lascia un’evidenziazione fino al successivo clic di questo tipo: su una tabella evidenzia i connettori di quella tabella, su un connettore quel connettore, e altrove nulla. Un trascinamento lì sposta la vista dell’area di disegno e lascia quell’evidenziazione com’era.
+
 Per nascondere i connettori nell’area di disegno ERD usare l’opzione di visualizzazione `Relationship`, o per nasconderne solo le etichette l’opzione di visualizzazione `Referential Actions`, attiva per impostazione predefinita — vedere [Opzioni di visualizzazione delle tabelle](./table-related-functions.md#table-view-options).  
 Le etichette non vengono disegnate al `70%` o meno, dove le tabelle si riducono al solo nome.  
 Un’[esportazione come immagine](./file-import-export.md#image) viene sempre disegnata al 100%, quindi disegna le etichette qualunque sia lo zoom dell’area di disegno, a meno che un’opzione di visualizzazione non le nasconda. Con `Background` disattivato, anche il riquadro dietro ogni etichetta è trasparente.  
@@ -233,9 +236,10 @@ La [modalità Flusso](./visualization.md#flow-mode) nella scheda Visualizzazione
 
 ## Instradamento dei connettori {#connector-routing}
 
-I connettori seguono un instradamento ortogonale.  
-Un percorso aggira le tabelle che si trovano tra le sue due estremità invece di attraversarle, e i suoi angoli sono arrotondati.  
-Ogni estremità esce dalla sua tabella con un breve tratto rettilineo prima di svoltare, quindi due tabelle poco distanti le cui estremità del connettore sono allineate vengono unite da un’unica linea retta anziché da una deviazione.  
+I connettori seguono un instradamento ortogonale e i loro angoli sono arrotondati.  
+Un percorso aggira le tabelle che gli sbarrano la strada invece di attraversarle. Dove ogni percorso di poche svolte tra le sue due estremità attraverserebbe una tabella, come in un diagramma affollato, il connettore prende una via di aggiramento con tutte le svolte che servono. Solo dove non si trova alcuna via di aggiramento attraversa comunque una tabella.  
+Un connettore esce dalle sue due tabelle da una coppia di lati che si fronteggiano, dove ce n’è una, e ogni estremità esce dalla sua tabella con un breve tratto rettilineo prima di svoltare, quindi due tabelle poco distanti le cui estremità del connettore sono allineate vengono unite da un’unica linea retta anziché da una deviazione.  
+Due tabelle che si fronteggiano a una distanza inferiore, anche sotto i `40px`, mantengono i loro lati affacciati, e dove le loro estremità non sono allineate il connettore compie uno scarto attraverso lo spazio tra di esse anziché passare sotto una delle due.  
 I percorsi che escono dallo stesso lato di una tabella vengono distribuiti su corridoi separati, così da non sovrapporsi l’uno all’altro.  
 Vengono evitate solo le tabelle: un connettore può attraversare un memo o il riquadro di un gruppo di tabelle, e viene disegnato sopra i gruppi di tabelle e sotto le tabelle e i memo.
 
@@ -243,6 +247,9 @@ Una relazione da una tabella a sé stessa viene disegnata come un’unica curva 
 Ulteriori autoriferimenti sulla stessa tabella si annidano all’esterno del primo, così le loro curve non si incrociano tra loro né attraversano la tabella.
 
 Non c’è nulla da configurare.  
-I percorsi vengono ricalcolati automaticamente ogni volta che qualcosa nell’area di disegno si sposta o cambia dimensione, quindi non serve mai ritoccarli a mano.
+I percorsi vengono ricalcolati automaticamente ogni volta che qualcosa nell’area di disegno si sposta o cambia dimensione, quindi non serve mai ritoccarli a mano.  
+Mentre si trascina, i connettori delle tabelle spostate le seguono, e ogni altro connettore mantiene il percorso che aveva all’inizio del trascinamento. Quando si rilascia, ogni connettore che lo spostamento instrada di nuovo viene ridisegnato, come uno che ora aggira una tabella lasciata sul suo percorso, o uno che si raddrizza una volta che una tabella si è spostata dal suo percorso.
+
+Un diagramma disegna gli stessi percorsi in ogni finestra che lo mostra con la stessa Visualizzazione nomi: una rimasta aperta mentre le tabelle si spostavano, una che ha aperto il diagramma proprio ora e quella di un collaboratore, e li disegna anche un’[immagine esportata](./file-import-export.md#image). La Visualizzazione nomi conta perché cambia la larghezza delle tabelle — vedere [Visualizzazione nomi](./logical-names.md#name-view).
 
 ![Trascinamento della tabella members verso il basso e di nuovo indietro mentre il connettore da orders passa alternativamente a destra di categories e attorno al suo lato sinistro, con tutti gli angoli arrotondati](/img/demo-connector-routing.webp)

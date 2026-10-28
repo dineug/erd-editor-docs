@@ -237,4 +237,5 @@ El [botón de la tarjeta](#card-buttons) con el icono de enlace externo va más 
 Las ediciones de los colaboradores siguen llegando al diagrama mientras estás en Flow, y las tarjetas reflejan las tablas y relaciones que añaden o eliminan; consulta [Cómo coloca Flow las tarjetas](#how-flow-is-placed).  
 Sus marcos de selección y de foco se dibujan en las tarjetas, pero sus cursores y cuadros de arrastre no; consulta [Edición colaborativa](../../api/advanced/collaborative-editing.md).
 
-Los dos modos, incluidos el centrado en tablas y los pasos, funcionan también en un editor `readonly`, y también la lista `Name View`, que allí solo cambia tu propia pantalla.
+Los dos modos, incluidos el centrado en tablas y los pasos, funcionan también en un editor [`readonly`](../../api/erd-editor-element.md#readonly), y también la lista `Name View`, que allí solo cambia tu propia pantalla.  
+En la pestaña ERD de un editor de solo lectura, el menú de la tabla contiene solo `Table Properties` y una pulsación no selecciona ninguna tabla, así que centra la vista con `Alt + F` (Windows/Linux) o `⌥ + F` (Mac) sobre la tabla que seleccionó un salto desde el [explorador](./explorer.md#going-to-a-row) o la [búsqueda rápida](./quick-search.md).

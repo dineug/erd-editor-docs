@@ -192,7 +192,8 @@ O que a tecla `Escape`, os atalhos do editor que continuam a funcionar e todas a
 ## Editores só de leitura {#read-only-editors}
 
 Num editor [`readonly`](../../api/erd-editor-element.md#readonly), a pesquisa apenas localiza. Não há a seta `Toggle Replace` nem a linha `Replace`, pelo que não há campo Substituir, `Preserve Case`, `Replace` nem `Replace All`.  
-O campo Localizar, as suas três opções, os tipos de texto, a contagem, os resultados e a ida para uma correspondência funcionam todos. O explorador à sua volta funciona como em qualquer outro editor — consulte [Editores só de leitura](./explorer.md#read-only-editors).
+O campo Localizar, as suas três opções, os tipos de texto, a contagem, os resultados e a ida para uma correspondência funcionam todos. Ir para uma correspondência seleciona o ponto onde chega, como em [Ir para uma correspondência](#going-to-a-match), e essa seleção é a única que um editor só de leitura faz: um clique na tela que não se move limpa-a.  
+Abra a pesquisa com a tecla ou com `Toggle Explorer` na pesquisa rápida, uma vez que o menu de contexto da tela não tem aí `Toggle Explorer`. O resto do explorador está descrito em [Editores só de leitura](./explorer.md#read-only-editors), na página do explorador.
 
 No VS Code, uma revisão de um diagrama, como uma revisão do Git ou uma entrada de Local History, abre-se como texto JSON. Reaberta como diagrama com `Reopen Editor With...`, é só de leitura e tem esta pesquisa que apenas localiza.
 

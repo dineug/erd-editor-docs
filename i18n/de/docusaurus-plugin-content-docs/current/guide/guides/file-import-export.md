@@ -37,7 +37,7 @@ Eine JSON-Datei behält die Positionen, die sie enthält. Die Tabellen einer Dat
 
 Danach wird das Diagramm in einem Schritt ersetzt, sodass kein Zwischenstand zu sehen ist. Eine Einstellung, die Sie ändern, während die Tabellen angeordnet werden, etwa die Registerkarte, bleibt erhalten, und wenn Sie währenddessen eine andere Datei importieren, setzt sich der zuletzt gestartete Import durch.
 
-Ein schreibgeschützter Editor lädt über `Import` nichts und bietet weder `Import and Add` noch die Schaltfläche `Import CSV` der Registerkarte Wörterbuch an.
+Ein schreibgeschützter Editor importiert nichts. Sein Kontextmenü der Zeichenfläche und die Schnellsuche bieten weder `Import` noch `Import and Add` an, er zeigt keinen Willkommensbildschirm, und die Registerkarte Wörterbuch bietet kein `Import CSV` an.
 
 ### Importieren und hinzufügen {#import-and-add}
 
@@ -215,7 +215,7 @@ Das Untermenü `Export` des Kontextmenüs der Zeichenfläche hat drei Einträge:
 - Schema SQL: Öffnet die Registerkarte [Schema SQL](./schema-sql.md#saving-or-copying-the-sql) mit geöffnetem Optionsbereich und fokussierter Schaltfläche `Save file`, sodass das Drücken von `Enter` das SQL, das die Registerkarte zeigt, als `.sql` speichert. Bis dahin wird nichts gespeichert.
 - Image: Öffnet den Dialog `Export image`, der das Diagramm als `.png` oder `.svg` speichert oder es als PNG in die Zwischenablage kopiert – siehe [Bild](#image).
 
-Alle drei funktionieren in einem schreibgeschützten Editor.  
+Alle drei funktionieren in einem schreibgeschützten Editor, in dem `Export` einer der wenigen Einträge ist, die sein Zeichenflächenmenü behält. Dort schreibt json die Einstellungen, die die Datei enthält, nicht die Ansicht, die Registerkarte, die Namensansicht, die Datenbank, die Code-Einstellungen oder die Schalter von `View Option`, die nur auf diesem Bildschirm geändert wurden – siehe [Schreibgeschützte Editoren](./settings.md#read-only-editors) unter Einstellungen.  
 Die eigene Schaltfläche `Export CSV` der Registerkarte Wörterbuch, die nicht in diesem Untermenü steht, speichert deren Blatt `Domains`, `Words` oder `Terms` als CSV-Datei. Anders als diese drei wird sie in einem schreibgeschützten Editor nicht angeboten – siehe [CSV importieren und exportieren](./dictionary.md#importing-and-exporting-csv).
 
 Schema SQL schreibt ON DELETE und ON UPDATE jeder Beziehung nach ihrem `REFERENCES`, ON DELETE zuerst. `Not set` schreibt nichts, und eine Aktion, die die ausgewählte Datenbank nicht akzeptiert, entfällt. Zu den Aktionen, die jede Datenbank akzeptiert, siehe [Beziehungen bearbeiten](./relationship-editing.md#on-delete-and-on-update).

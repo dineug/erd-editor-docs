@@ -12,7 +12,7 @@ Der Verlauf umfasst bis zu `2048` Änderungen.
 - Wiederholen: `Ctrl + Shift + Z` (Windows/Linux) oder `⌘ + Shift + Z` (Mac)
 
 Auf der Registerkarte ERD enthält die Symbolleiste dieselben beiden Befehle als Schaltflächen `Undo` und `Redo` neben `Time Travel`. Auf der Registerkarte Wörterbuch zeigt sie `Undo` und `Redo` ohne `Time Travel`, und keine andere Registerkarte zeigt sie.  
-Sie werden nur hervorgehoben, wenn es etwas rückgängig zu machen oder zu wiederholen gibt. Ein Editor mit `readonly` blendet sie aus, und die Tastenkombinationen machen nichts rückgängig und wiederholen nichts.
+Sie werden nur hervorgehoben, wenn es etwas rückgängig zu machen oder zu wiederholen gibt. Ein Editor mit `readonly` blendet sie und `Time Travel` aus, und die Tastenkombinationen machen nichts rückgängig und wiederholen nichts.
 
 Rückgängig und Wiederholen wirken nur auf der Registerkarte ERD auf den Verlauf des Diagramms.  
 Die Tastenkombinationen sind dort inaktiv, solange die Schnellsuche, `Table Properties`, `Diff Viewer`, die Vorschau von `Auto Layout`, der Dialog [`Export image`](./file-import-export.md#image), der Dialog [Spalten zuordnen](./relationship-editing.md#map-columns) oder die Zeitreise geöffnet ist.  
@@ -58,6 +58,8 @@ Nicht aufgezeichnet werden:
 - Das angezeigte Blatt der Registerkarte Wörterbuch sowie Suche, Auswahl, Scrollposition und Spaltenbreiten jedes Blatts – siehe [Registerkarte öffnen](./dictionary.md#opening-the-tab).
 
 Änderungen an diesen Punkten lassen sich nicht rückgängig machen.
+
+Ein schreibgeschützter Editor zeichnet überhaupt nichts auf. Die Ansichtsposition, der Zoom und die Schalter von `View Option` ändern sich dort weiterhin, ebenso die Registerkarte, die Namensansicht, die Datenbank und die Code-Einstellungen, aber nur auf diesem Bildschirm, sodass es nichts rückgängig zu machen gibt – siehe [Schreibgeschützte Editoren](./settings.md#read-only-editors) unter Einstellungen.
 
 Änderungen auf der Registerkarte Wörterbuch lassen sich rückgängig machen, landen aber im Verlauf ihres eigenen Blatts statt in diesem, sodass Rückgängig auf der Registerkarte ERD nie eine davon zurücknimmt, nicht einmal den neuen `Data Type` einer Domäne und die Spaltentypen, die er ändert – siehe [Wörterbuchblätter](#dictionary-sheets).
 
@@ -136,7 +138,7 @@ Der Verlauf jedes Blatts wird geleert, wenn die Wörterbücher ersetzt werden: d
 ## Zeitreise {#time-travel}
 
 Wird über die Schaltfläche `Time Travel` in der Symbolleiste neben Rückgängig und Wiederholen auf der Registerkarte ERD geöffnet.  
-Die Schaltfläche bewirkt nichts, bis der Verlauf des Diagramms mindestens eine aufgezeichnete Änderung enthält.
+Die Schaltfläche bewirkt nichts, bis der Verlauf des Diagramms mindestens eine aufgezeichnete Änderung enthält. Ein schreibgeschützter Editor zeigt keine solche Schaltfläche, und ein Editor, der schreibgeschützt wird, schließt die Zeitreise, ohne sie anzuwenden.
 
 Die Zeitreise öffnet eine separate, schreibgeschützte Kopie des Diagramms an der Scrollposition, mit der Zoomstufe und in der [Namensansicht](./logical-names.md#name-view), die die Zeichenfläche gerade zeigt, unabhängig davon, ob die Sperre `Viewport` oder `Name View` eingeschaltet ist.  
 Sie geht nur durch den Verlauf des Diagramms, daher gehören die Änderungen der Wörterbuchblätter nicht zu ihren Punkten.  

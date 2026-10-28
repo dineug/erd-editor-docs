@@ -192,7 +192,8 @@ Wat `Escape`, de sneltoetsen van de editor die nog werken en elke andere toets i
 ## Editors in alleen-lezenmodus {#read-only-editors}
 
 In een editor met [`readonly`](../../api/erd-editor-element.md#readonly) kan de zoekfunctie alleen zoeken. Er is geen pijl `Toggle Replace` en geen rij `Replace`, dus geen vervangveld, `Preserve Case`, `Replace` of `Replace All`.  
-Het zoekveld, de drie opties ervan, de soorten tekst, de teller, de resultaten en naar een overeenkomst gaan werken allemaal. De Verkenner eromheen werkt zoals in elke andere editor — zie [Editors in alleen-lezenmodus](./explorer.md#read-only-editors).
+Het zoekveld, de drie opties ervan, de soorten tekst, de teller, de resultaten en naar een overeenkomst gaan werken allemaal. Naar een overeenkomst gaan selecteert waar het terechtkomt, zoals in [Naar een overeenkomst gaan](#going-to-a-match), en die selectie is de enige die een editor in alleen-lezenmodus maakt: een klik op het canvas die niet beweegt, wist haar.  
+Open de zoekfunctie met de toets of met `Toggle Explorer` in Snel zoeken, omdat het contextmenu van het canvas daar geen `Toggle Explorer` heeft. De rest van de Verkenner komt aan bod in [Editors in alleen-lezenmodus](./explorer.md#read-only-editors) op de pagina Verkenner.
 
 In VS Code opent een revisie van een diagram, zoals een Git-revisie of een item uit Local History, als JSON-tekst. Als je zo'n revisie met `Reopen Editor With...` opnieuw als diagram opent, is ze alleen-lezen en krijgt ze deze zoekfunctie die alleen zoekt.
 

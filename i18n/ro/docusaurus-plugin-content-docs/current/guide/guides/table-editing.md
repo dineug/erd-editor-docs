@@ -16,13 +16,14 @@ Cât timp metoda de introducere (IME) încă compune textul, `Escape` lasă modu
 
 ## Adăugarea coloanelor {#adding-columns}
 
-Se creează cu comanda rapidă `Alt + Enter` (Windows/Linux) sau `⌥ + Enter` (Mac).  
-Se adaugă câte o coloană în fiecare tabel selectat.
+Se creează cu comanda rapidă `Alt + Enter` (Windows/Linux) sau `⌥ + Enter` (Mac), care adaugă o coloană în fiecare tabel selectat, sau cu butonul `+` din antetul unui tabel, care adaugă una în acel tabel.  
+Prima celulă a noii coloane primește focusul, adică prima pe care o desenează rândul ei în [ordinea coloanelor](./settings.md#adjusting-column-order). În ordinea implicită, aceasta este numele ei, care în modul `Logical Names` este numele logic, iar în `Both Names` celula ei `Logical Name` (consultați [Afișare nume](./logical-names.md#name-view)).  
+O coloană adăugată cu `Tab` din ultima celulă și cheia primară pe care o trasare de relație o adaugă unui tabel părinte care nu are una încep tot pe acea celulă.
 
 ## Tasta Tab {#tab-key}
 
 Apăsați `Tab` pentru a trece direct în modul de editare al celulei următoare.  
-Apăsarea tastei `Tab` în ultima celulă creează o coloană nouă.  
+Apăsarea tastei `Tab` în ultima celulă creează o coloană nouă și deschide prima ei celulă pentru editare (consultați [Adăugarea coloanelor](#adding-columns)).  
 Folosiți `Shift + Tab` pentru a trece în modul de editare al celulei anterioare.  
 `Tab` și `Shift + Tab` trec, în ordine, prin celulele pe care le desenează tabelul, așa că modul de afișare a numelor și opțiunea View Option → `Domain` stabilesc dacă printre ele se află celulele numelui logic și celulele Domeniu (consultați [Scrierea unui nume logic](./logical-names.md#writing-a-logical-name)).  
 Marcajele de [cheie alternativă](./table-related-functions.md#alternate-keys) desenate după ultima celulă a unui rând nu sunt celule, așa că focusul tastaturii trece peste ele și nu se deschid niciodată pentru editare.
@@ -96,7 +97,8 @@ Nu este necesară nicio tastă de modificare. Ținerea apăsată a tastei `Alt` 
 ![Selectarea a trei coloane, apoi glisarea mânerului de lângă coloana activă într-un alt tabel, celelalte coloane selectate mutându-se odată cu ea](/img/demo-column-multi-move.webp)
 
 O glisare care începe pe rândul unei coloane, și nu pe mânerul ei, mută tabelul, la fel ca o glisare pe antetul acestuia (consultați [Mutarea mai multor tabele](./table-related-functions.md#moving-multiple-tables)). `Alt + drag` (Windows/Linux) sau `⌥ + drag` (Mac) pe un rând duplică tabelul (consultați [Duplicarea tabelelor și notelor](./table-related-functions.md#duplicating-tables-and-memos)).  
-Niciun mâner nu este desenat la un zoom de `70%` sau mai mic, unde tabelele își afișează doar numele, și nici într-un editor doar în citire, așa că acolo coloanele nu pot fi reordonate.
+Niciun mâner nu este desenat la un zoom de `70%` sau mai mic, unde tabelele își afișează doar numele, și nici într-un editor doar în citire, așa că acolo coloanele nu pot fi reordonate.  
+O tragere de coloană în curs în momentul în care editorul devine doar în citire se încheie imediat: copia care urmărea cursorul și mâna de prindere dispar, iar eliberarea nu mută nicio coloană. Rândurile pe care tragerea le mutase deja rămân unde le-a mutat.
 
 ## Ștergerea coloanelor {#column-deletion}
 
@@ -174,3 +176,10 @@ Pictograma cheii de pe rând are doar rol de afișare, așa că un clic pe ea nu
 Pentru a face din mai multe coloane o singură cheie compusă, [selectați-le](#selecting-multiple-columns), apoi apăsați `Alt + K` (Windows/Linux) sau `⌥ + K` (Mac) ori faceți clic dreapta pe unul dintre rândurile selectate și alegeți `Primary Key on selected columns`. Fiecare comutare este un singur pas de anulare.
 
 ![Selectarea a două coloane cu Shift + Arrow Down, apoi transformarea ambelor în cheie primară cu ⌥ + K și eliminarea cheii de pe ambele cu o a doua apăsare](/img/demo-column-pk.webp)
+
+## Editoare doar în citire {#read-only-editors}
+
+Într-un editor [`readonly`](../../api/erd-editor-element.md#readonly), nicio celulă nu se deschide pentru editare și nicio coloană nu se schimbă.  
+Un clic pe o celulă nu dă focus nimănui și șterge selecția lăsată de un salt. `Enter` și un dublu clic nu deschid niciun editor și nu comută nimic, `Tab` este lăsat paginii, iar comenzile rapide care adaugă, selectează toate sau șterg coloane, comutarea cheii primare și o lipire nu fac nimic.  
+Saltul la o coloană din [Explorator](./explorer.md#going-to-a-row) sau din [Căutare rapidă](./quick-search.md) dă focus celulei ei. Tastele săgeți mută apoi focusul de la o celulă la alta, coloana la care ajung fiind selectată singură, deoarece `Shift` nu adaugă acolo nicio coloană.  
+`Ctrl + C` (Windows/Linux) sau `⌘ + C` (Mac) copiază în continuare coloana selectată sau tabelul selectat de un salt (consultați [Copierea/lipirea coloanelor](#copyingpasting-columns)).

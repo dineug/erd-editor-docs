@@ -16,7 +16,7 @@ npm install @dineug/erd-editor
 
 The replication store lives at the `@dineug/erd-editor/engine.js` subpath, not the package root.  
 That entry point touches no DOM, so it runs in a Web Worker or anywhere else off the main thread.  
-Importing the package root instead registers the `<erd-editor>` custom element, which needs a document.
+Importing the package root instead needs a document: since `5.0.0` it defines no element, but evaluating it builds both element classes. Before `5.0.0` it registered the `<erd-editor>` custom element.
 
 ## Usage
 

@@ -8,7 +8,7 @@
     "description": "The label for category 'Guides' in sidebar 'docs'"
   },
   "sidebar.docs.category.Guides.link.generated-index.description": {
-    "message": "Bir diyagramı nasıl çizip düzenleyeceğiniz: tablo ve ilişki oluşturma, dosyaları içe ve dışa aktarma ile düzenleyicinin görünüm seçenekleri.",
+    "message": "Bir diyagramı nasıl çizip düzenleyeceğiniz, tablo ve ilişki oluşturmadan dosyaları içe ve dışa aktarmaya ve düzenleyicinin görünüm seçeneklerine kadar, ve onu başka bir sitede salt okunur nasıl göstereceğiniz.",
     "description": "The generated-index page description for category 'Guides' in sidebar 'docs'"
   },
   "sidebar.api.category.Advanced": {

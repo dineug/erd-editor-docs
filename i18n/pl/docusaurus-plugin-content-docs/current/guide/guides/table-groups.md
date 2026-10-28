@@ -167,7 +167,7 @@ Gdy grupy są ukryte:
 - Eksplorator pomija folder `Table Groups`, a funkcja Znajdź i zamień ani nie znajduje, ani nie zamienia nazw grup, nawet z włączoną opcją `Table group names`.
 - [Automatyczny układ](#auto-layout) nadal utrzymuje razem tabele każdej grupy, karta Schemat SQL nadal oferuje [grupy do wyboru](#schema-sql-by-group), format DBML nadal je zapisuje, a operacja [Importuj i dodaj](./file-import-export.md#import-and-add) nadal umieszcza elementy poniżej ukrytych ramek.
 
-Wybór jest zapisywany w dokumencie i rejestrowany w [historii cofania](./undo-redo.md#what-the-history-records), tak jak inne przełączniki Opcji widoku.
+Wybór jest zapisywany w dokumencie i rejestrowany w [historii cofania](./undo-redo.md#what-the-history-records), tak jak inne przełączniki Opcji widoku. W edytorze tylko do odczytu pozostaje on zamiast tego na tym ekranie – zobacz sekcję [Edytory tylko do odczytu](#read-only-editors).
 
 ## Automatyczny układ {#auto-layout}
 
@@ -197,11 +197,13 @@ Wybór dotyczy okna edytora i nie jest zapisywany w dokumencie.
 
 ## Edytory tylko do odczytu {#read-only-editors}
 
-W edytorze z atrybutem [`readonly`](../../api/erd-editor-element.md#readonly) grupy są rysowane i wyświetlane w Eksploratorze jak zwykle, można je zaznaczać i do nich przechodzić, ale nie można ich zmieniać:
+W edytorze z atrybutem [`readonly`](../../api/erd-editor-element.md#readonly) grupy są rysowane i wyświetlane w Eksploratorze jak zwykle i można do nich przechodzić, ale nie można ich zmieniać:
 
-- Naciśnięcie paska tytułu zaznacza grupę i niczego nie przesuwa. Nie ma uchwytów zmiany rozmiaru ani przycisku `x`.
-- Dwukrotne kliknięcie paska tytułu nie otwiera edytora nazwy, a menu grupy zawiera tylko pozycję `Select tables`.
-- Menu kanwy nie zawiera pozycji `New Table Group`, menu tabeli nie zawiera pozycji `Group selected tables` ani `Remove from group`, a Szybkie wyszukiwanie nie wyświetla żadnego z dwóch poleceń dotyczących grup. Rysowanie rozpoczęte poleceniem `New Table Group` kończy się w chwili przełączenia edytora w tryb tylko do odczytu.
-- [Pasek narzędzi kanwy](./table-related-functions.md#canvas-toolbar) nie pokazuje żadnego ze swoich przycisków dodawania, w tym `New Table Group`, a skróty `Alt + G` (Windows/Linux) lub `⌥ + G` (Mac) oraz `T`, a potem `G` nic nie robią.
-- Opcja widoku `Table Groups` niczego nie zmienia, tak jak w przypadku wszystkich Opcji widoku.
+- [Przejście do grupy](#going-to-a-group) zaznacza ją i jest to jedyny sposób, w jaki grupa jest tam zaznaczana. Naciśnięcie paska tytułu niczego nie zaznacza i niczego nie przesuwa: przeciągnięty przesuwa kanwę, a kliknięcie, które nie przesuwa widoku, zdejmuje zaznaczenie pozostawione przez przejście.
+- Nie ma uchwytów zmiany rozmiaru ani przycisku `x`, a dwukrotne kliknięcie paska tytułu nie otwiera edytora nazwy.
+- Kliknięcie grupy prawym przyciskiem myszy nie otwiera żadnego menu, a menu tabeli zawiera tylko pozycję `Table Properties`.
+- Menu kanwy nie zawiera pozycji `New Table Group`, a Szybkie wyszukiwanie nie wyświetla żadnego z dwóch poleceń dotyczących grup. Rysowanie rozpoczęte poleceniem `New Table Group` kończy się w chwili przełączenia edytora w tryb tylko do odczytu.
+- [Pasek narzędzi kanwy](./table-related-functions.md#canvas-toolbar) zachowuje tylko swoje kontrolki widoku, więc nie ma przycisku `New Table Group`, a skróty `Alt + G` (Windows/Linux) lub `⌥ + G` (Mac) oraz `T`, a potem `G` nic nie robią.
+- Przeciąganie tabel lub grupy trwające w chwili przełączenia edytora w tryb tylko do odczytu zatrzymuje się tam, gdzie jest, i nie zmienia żadnej grupy, a zmiana rozmiaru grupy w toku kończy się bez zmiany rozmiaru.
+- `View Option` → `Table Groups` pokazuje lub ukrywa grupy tylko na tym ekranie, jak każda Opcja widoku: dokument, współpracownicy i historia cofania zachowują wybór bez zmian, a gdy edytor znów umożliwi zapis, wraca wybór dokumentu.
 - Wybór w wierszu `Tables` na karcie Schemat SQL nadal działa.

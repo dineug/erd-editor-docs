@@ -6,7 +6,7 @@ description: Select, move, copy, duplicate, and delete tables and memos, set col
 # Table-related Functions
 
 Everything you do to tables and memos once they exist — selecting, moving, copying, deleting, coloring, and setting what the canvas shows — plus the canvas controls around them.  
-The table and memo commands come first; then table properties, focusing on tables, indexes and alternate keys, auto layout, and the database vendor; and last the canvas itself: the canvas toolbar, zoom, panning and where a jump lands, and the diff viewer.  
+The table and memo commands come first; then table properties, focusing on tables, indexes and alternate keys, auto layout, and the database vendor; then the canvas itself: the canvas toolbar, zoom, panning and where a jump lands, and the diff viewer; and last what a read-only editor keeps of all this.  
 Table groups, the boxes that gather tables, have a page of their own — see [Table Groups](./table-groups.md).  
 So do logical names and the Name View, which decides the names the tables show — see [Logical Names](./logical-names.md).
 
@@ -23,7 +23,8 @@ Memos are selected the same way, and either select-all shortcut takes every tabl
 `Ctrl + A` gives way to a caret, so it selects the text rather than the diagram while you are editing a cell.  
 A selection box marks a table or memo when it covers the middle of it, not when it merely touches an edge. It takes a table group only when it encloses the group's whole box, so a box drawn inside a group picks out tables without the group.  
 A right-click on something already selected keeps the whole selection, so menu rows such as `Color`, `Group selected tables`, and `Delete selected` act on all of it. A right-click on any other table, memo, or table group selects that alone, even with `Ctrl` or `⌘` held, and a right-click on a relationship or on empty canvas clears the selection.  
-`Escape` clears the selection. While a cell, memo, or table group name editor is open, or a relationship or a `New Table Group` is being drawn, the first `Escape` ends that and a second one clears the selection.
+`Escape` clears the selection. While a cell, memo, or table group name editor is open, or a relationship or a `New Table Group` is being drawn, the first `Escape` ends that and a second one clears the selection.  
+A read-only editor has none of these ways to select: only a jump selects there — see [Read-only Editors](#read-only-editors).
 
 ![Selecting tables with ⌘ + drag and ⌘ + click, then every table and memo with ⌘ + A](/img/demo-table-select.webp)
 
@@ -145,7 +146,7 @@ Which names the tables show is not a view option: `Name View`, right after `View
 `Table Groups` shows the [table groups](./table-groups.md) and the group colors on their tables' headers. Turning it off hides them on the canvas, the minimap, and image exports, moves no table, and keeps every table in its group — see [Hiding Groups](./table-groups.md#hiding-groups). It also takes the `Table Groups` folder out of the [Explorer](./explorer.md#the-tree) and `New Table Group` off the [canvas toolbar](#canvas-toolbar), and the Explorer's search stops finding group names.  
 `Memos` shows the memos. Turning it off hides every memo on the canvas, the minimap, and image exports, and moves no table or connector. Hidden memos take up no room, so the scrollbars, the minimap, and the `Go to content` compass leave them out.  
 Hiding the memos deselects them and closes an open memo editor. The [Explorer](./explorer.md#the-tree) drops its `Memos` folder, and its [Find and Replace](./find-and-replace.md) search and quick search's `:` do not search them. While they are hidden, `New Memo` leaves the context menu, the [canvas toolbar](#canvas-toolbar), quick search, and the [welcome screen](./editing-start.md#welcome-screen), and `Alt + M` adds no memo. A paste or [Import and Add](./file-import-export.md#import-and-add) still adds the memos it carries, hidden and unselected.  
-In a `readonly` editor the toggles change nothing.
+In a read-only editor the toggles still work, on that screen alone: they are not saved, recorded in the undo history, or shared, and they go back to the file's as the editor turns writable again — see [Read-only Editors](./settings.md#read-only-editors) in Settings.
 
 ![Toggling View Option entries as the tables reflow, marking a composite unique index AK1.1 and AK1.2 with Alternate Key, then turning Memos off and on](/img/demo-view-options.webp)
 
@@ -164,14 +165,15 @@ The `Indexes` tab is covered in [Indexes](#indexes).
 The `Schema SQL` tab shows the table's DDL for the selected [database](#databases): its `CREATE TABLE`, the separate constraints some databases write for its Unique columns, and its indexes. It always writes plain `CREATE` statements, with no header, no before or after script, and no logical names in empty comments, whatever the toolbar's [Schema SQL](./schema-sql.md) tab is set to — see [Logical Names as Comments](./schema-sql.md#logical-names-as-comments). It has no options panel, and its context menu offers only `Database` and `Bracket`.  
 The `Code Generator` tab generates code for this table alone — see [Code Generator](./code-generator.md).
 
-In a `readonly` editor the panel still opens, with a `Read only` badge beside its title, but its `Indexes` tab offers no edits.
+In a read-only editor the panel still opens, from `Table Properties`, the one row of a table's context menu there, or with `Alt + Space` on the table a jump selected. It shows a `Read only` badge beside its title, and its `Indexes` tab offers no edits.  
+A panel open when the editor turns read-only stays open and turns read-only with it — see [Read-only Editors](#read-only-editors).
 
 ## Focusing on Tables
 
 Opens the Visualization tab in `Flow` mode, narrowed to the chosen tables and every table one relationship away from them.  
 Start from the table context menu with `Focus on this table`, or select one or more tables and press `Alt + F`.  
 When the table you right-click is one of several selected tables, the entry reads `Focus on selected tables` and focuses the whole selection. Right-clicking a table outside the selection focuses that table alone.  
-The shortcut takes the selected tables, leaves memos out, and does nothing when no table is selected.  
+The shortcut takes the selected tables, leaves memos out, and does nothing when no table is selected. A read-only editor's table menu has no `Focus on this table`, and the shortcut takes the table a jump selected there — see [Read-only Editors](#read-only-editors).  
 A selected [table group](./table-groups.md) counts for nothing here, in the shortcut and the menu entry alike: its tables are taken only when they are selected themselves, which `Select tables` in the group's menu does.  
 What the narrowed view shows, and how to get back to the whole diagram, is covered in [Visualization](./visualization.md#focusing-on-tables), and how to step back and forward through what Flow has shown before in [Previous Table and Next Table](./visualization.md#previous-table-and-next-table).
 
@@ -187,7 +189,7 @@ The right side lists the table's columns under `Columns`, with a checkbox each. 
 Tick a column to add it to the selected index, and untick it to remove it. Selecting a key shows its columns ticked, but the boxes stay disabled.  
 The columns of the selected index are listed below under `Index order`, each named as the Name View names it, with the name in brackets after the logical name in `Both Names`, such as `Member Number (member_no)`. Drag them by the grip handle to reorder them, and click the `ASC` or `DESC` chip on a row to flip its sort order. In an alternate key, each row ends in its `AK<n>.<m>` mark. The list shows three rows at a time and scrolls the rest.
 
-In a `readonly` editor, selecting a key or an index still shows its columns, but there is no `Add Index` and no `x`, and nothing else in the tab can be changed.
+In a read-only editor, selecting a key or an index still shows its columns, but there is no `Add Index` and no `x`, and nothing else in the tab can be changed: the names take no typing, every checkbox is disabled, and the `Index order` rows neither drag nor flip their sort order.
 
 The [Explorer](./explorer.md#the-tree) lists each table's indexes in the table's `Indexes` folder, and choosing one there goes to its table. Its search finds index names too, and can rename them — see [What It Searches](./find-and-replace.md#what-it-searches).
 
@@ -233,7 +235,8 @@ The other three are worked out in one go, off the main thread, so there is nothi
 
 Whichever you pick, tables and table groups are moved, and memos stay where they are. The tables are placed at the widths they take in the Name View you are looking at. A relationship from a table to itself is ignored, and several relationships between the same two tables count once.  
 Every layout keeps each group's tables together, whether or not the groups are shown, and fits each group that holds tables around them — see [Table Groups](./table-groups.md#auto-layout).  
-The result lands as a single history entry, so one undo puts every table and group back where it was.
+The result lands as a single history entry, so one undo puts every table and group back where it was.  
+A read-only editor offers no `Auto Layout`. One still running when the editor turns read-only ends there: the `Force` preview closes with its notice and keeps none of its positions, and a layout still being computed is dropped with its notice, so no table moves, then or once the editor is writable again.
 
 ![Tidying a heap of tables with the Flow auto layout from the canvas context menu, which lines them up left to right along their relationships](/img/demo-automatic-table-placement.webp)
 
@@ -250,7 +253,7 @@ Supported databases include:
 - Snowflake
 - SQLite
 
-Pick one from `Database` in the canvas context menu, in the options panel or context menu of the Schema SQL and Code Generator tabs, or in quick search. All of them change the same setting.
+Pick one from `Database` in the canvas context menu, in the options panel or context menu of the Schema SQL and Code Generator tabs, or in quick search. All of them change the same setting. A read-only editor's canvas menu has no `Database`, and a pick in the others changes that screen alone — see [Read-only Editors](#read-only-editors).
 
 These options determine the Schema SQL syntax for exporting, the DataType autocomplete, and the types that generated code and imported schemas resolve to.  
 They decide which `Statements` and `Header` choices the [Schema SQL](./schema-sql.md#options-panel) tab can write. A choice the database lacks stays in the options panel, dimmed, and the SQL falls back to the nearest one it has.  
@@ -266,15 +269,16 @@ Schema SQL import keeps a column's data type, argument list included, whether or
 A small toolbar floats over the middle of the bottom edge of the canvas, holding, from left to right, the tools that act on the canvas itself and the commands that add to it:
 
 - The hand and the pointer. The pointer is the default; the hand turns every drag into a pan, over tables as well as empty space. `Space` switches between them. While a [`New Table Group`](./table-groups.md#drawing-a-group) draw is armed, the `New Table Group` button is marked instead of either, and clicking either, pressing `Space`, or picking a relationship notation ends the draw without adding a group.
-- `New Table`, `New Memo`, and `New Table Group`. `New Table` adds a table as `Alt + N` does, and `New Memo` adds a memo as `Alt + M` does. `New Table Group` arms the [group draw](./table-groups.md#drawing-a-group) as `Alt + G` does and turns the hand off; a second click, like a second `Alt + G`, ends the draw without adding a group. `New Memo` is left out while View Option → `Memos` hides the memos, and `New Table Group` while View Option → `Table Groups` hides the groups. A `readonly` editor shows none of the three.
+- `New Table`, `New Memo`, and `New Table Group`. `New Table` adds a table as `Alt + N` does, and `New Memo` adds a memo as `Alt + M` does. `New Table Group` arms the [group draw](./table-groups.md#drawing-a-group) as `Alt + G` does and turns the hand off; a second click, like a second `Alt + G`, ends the draw without adding a group. `New Memo` is left out while View Option → `Memos` hides the memos, and `New Table Group` while View Option → `Table Groups` hides the groups.
 - The zoom: `Zoom out`, the current zoom as a percentage, and `Zoom in`. The two buttons step the zoom the same way the zoom shortcuts do, and clicking the percentage puts it back to `100%`.
 - The four relationship notations, the same four you start a relationship with — see [Editing Start](./editing-start.md). Picking one switches back to the pointer, since a relationship is drawn by clicking two tables.
-- `Name View`, a button with a down arrow that names the view in force: `Physical Names`, `Logical Names`, or `Both Names`. It keeps one width whichever view it names, so a switch never shifts the toolbar. A click opens a list of the three above the toolbar, the one in force checked. Picking one switches to it and closes the list; a second click on the button, a press anywhere else, or `Escape` closes the list without switching. A `readonly` editor shows it too. What each view draws is covered in [Name View](./logical-names.md#name-view), and whether a switch is saved in [Switching the View](./logical-names.md#switching-the-view).
+- `Name View`, a button with a down arrow that names the view in force: `Physical Names`, `Logical Names`, or `Both Names`. It keeps one width whichever view it names, so a switch never shifts the toolbar. A click opens a list of the three above the toolbar, the one in force checked. Picking one switches to it and closes the list; a second click on the button, a press anywhere else, or `Escape` closes the list without switching. What each view draws is covered in [Name View](./logical-names.md#name-view), and whether a switch is saved in [Switching the View](./logical-names.md#switching-the-view).
 - Zen mode, `Alt + Z`, which clears everything but the canvas and this toolbar. `Alt + Z` again, or the button, brings the rest back. An open Explorer is hidden with the rest, without being closed, and comes back with it. It can still be opened during zen mode — see [When It Stands Aside](./explorer.md#when-it-stands-aside).
 - The `Go to content` compass, which joins the end of the toolbar only while no table, shown memo, or shown table group is on screen — see [Getting Around the Canvas](#getting-around-the-canvas).
 
 Every button with a shortcut names it in its tooltip, such as `New Table (Alt + N)` (Windows/Linux) or `New Table (⌥ + N)` (Mac).  
-The toolbar steps aside while the `Force` Auto Layout preview, table properties, time travel, or the diff viewer is open, and comes back once it closes.
+The toolbar steps aside while the `Force` Auto Layout preview, table properties, time travel, or the diff viewer is open, and comes back once it closes.  
+A read-only editor's toolbar keeps the zoom, `Name View`, zen mode, and the `Go to content` compass. It has no hand or pointer, no `New Table`, `New Memo`, or `New Table Group`, and no notations, and gets them back once the editor is writable again.
 
 ![Adding a table and a memo from the toolbar, arming and disarming New Table Group, panning with the hand, stepping the zoom, and toggling zen mode with ⌥ + Z](/img/demo-canvas-toolbar.webp)
 
@@ -339,7 +343,7 @@ What a jump brings into view, and the key part that has to show when the whole d
 - A table group: its box, by its title bar.
 - A memo, or the block an Import and Add lands: the whole of it.
 
-When neither direction would move, there is no scroll, so going to the same place twice in a row moves nothing the second time. A jump that scrolls the canvas records the scroll in the [undo history](./undo-redo.md#what-the-history-records) like any other change of view position, and one that moves nothing leaves nothing to undo. For an Import and Add, the scroll is part of the same step as the addition. A row of the Diff Viewer's list moves only the view's read-only sides, so it records nothing.  
+When neither direction would move, there is no scroll, so going to the same place twice in a row moves nothing the second time. A jump that scrolls the canvas records the scroll in the [undo history](./undo-redo.md#what-the-history-records) like any other change of view position, and one that moves nothing leaves nothing to undo. For an Import and Add, the scroll is part of the same step as the addition. A row of the Diff Viewer's list moves only the view's read-only sides, so it records nothing, and a read-only editor records no jump at all.  
 No jump starts or finishes a relationship being drawn. The `Go to content` compass is not a jump: it centers what it points at.
 
 ## Diff Viewer
@@ -351,7 +355,8 @@ The view opens over the canvas: what changed on the left, then the saved documen
 The current document is compared as it stands when the view opens; changes made after that, a collaborator's included, do not reach the view. Both sides open, and stay, in the Name View you are looking at, whatever view either file keeps — see [Beyond the Canvas](./logical-names.md#beyond-the-canvas). An open [Explorer](./explorer.md#when-it-stands-aside) is hidden while the view is open, so the view takes the editor's whole width.  
 Each side pans with the wheel, by dragging an empty area or a table group's body, or by dragging with the middle button anywhere over it, and zooms with `Ctrl + Wheel` (Windows/Linux), `⌘ + Wheel` (Mac), or a pinch. At `70%` and below its tables collapse as they do on the canvas — see [Marks on the Two Sides](#marks-on-the-two-sides).  
 Both sides are read-only, so nothing in your document is modified. Each keeps its own selection, and a click on a table there selects it on that side alone.  
-Close the view with the `Close` button on the `Diff Viewer` notice it opens with, or with `Escape`.
+Close the view with the `Close` button on the `Diff Viewer` notice it opens with, or with `Escape`.  
+A read-only editor offers `Diff Viewer` too, and the view works there as in any editor, a click on a side's table still selecting it on that side. A view open when the editor turns read-only stays open.
 
 ![Opening the Diff Viewer on a saved .json file, clicking rows marked A, M, D, and R in its tree, filtering by name, and closing it](/img/demo-diff-viewer.webp)
 
@@ -423,3 +428,26 @@ Each side follows its own document's View Options. A change in a cell that side 
 In `Logical Names`, which draws no name cell, a rename's blue and the amber of a change in a cell the side does not draw go on the logical name drawn in the name's place. A data type change turns the type cell amber in every Name View, even where the cell shows a domain's name. Neither side draws the colors the Dictionary's checks give names on the canvas — see [Marks on the Canvas](./dictionary.md#marks-on-the-canvas).
 
 At `70%` and below, collapsed tables keep their outline. The name keeps the green or red of an added or removed table, or a rename's blue, and otherwise takes the amber of a comment change. Column changes are not drawn until you zoom back in; the tree still lists them.
+
+## Read-only Editors
+
+A [`readonly`](../../api/erd-editor-element.md#readonly) editor, such as a Git revision reopened as a diagram in VS Code, is a reader. Its six tabs, the [Explorer](./explorer.md#read-only-editors), the minimap, the scrollbars, and collaborators' cursors and selections stay, and every control that would change the diagram is gone rather than dimmed.
+
+On the ERD canvas:
+
+- A drag pans, wherever it starts: on empty canvas, a table, a memo, or a table group alike. The middle button, the wheel, a pinch, and the zoom keys work as in any editor.
+- Resting the pointer on a table lights its relationships. A click that does not move lights the relationships of the table it lands on, or the relationship it lands on, and a click elsewhere puts the light out.
+- Nothing is selected by a press, a selection box, or a select-all key. Only a jump selects: a row of the [Explorer](./explorer.md#going-to-a-row), a match of its [Find and Replace](./find-and-replace.md#going-to-a-match), or a `#`, `@`, or `:` result of [Quick Search](./quick-search.md#searching-the-diagram) selects what it lands on, outlined as any selection is, with the focused cell where the jump puts it. A click that does not move clears that selection.
+- The arrow keys move the focused cell. Copy, `Table Properties`, and `Focus on this table` work on what a jump selected, by their keys, and a paste adds nothing. The other keys are listed in [Shortcuts](./settings.md#shortcuts).
+- No cell, memo, or table group name opens for editing. There are no `+` or `x` buttons on tables, memos, and groups, no resize edges on memos and groups, no column drag handle, and no color picker.
+
+The canvas context menu keeps `View Option`, `Name View`, `Export`, and `Diff Viewer`. It has no `New Table`, `New Memo`, `New Table Group`, `Toggle Explorer`, `Relationship`, `Derive Physical Names Again`, `Database`, `Import`, `Import and Add`, or `Auto Layout`.  
+A table's menu keeps `Table Properties` alone, which opens the panel read only for that table — see [Table Properties](#table-properties). A memo, a relationship, and a table group raise no menu.  
+The [canvas toolbar](#canvas-toolbar) keeps the zoom, `Name View`, zen mode, and the `Go to content` compass. The top toolbar shows the database name as text that cannot be edited, and no `Undo`, `Redo`, or `Time Travel`.  
+[Export](./file-import-export.md#exporting), with all three of its entries, and the [Diff Viewer](#diff-viewer) work as in any editor.
+
+[`View Option`](#table-view-options), the `Name View`, the database, the tab, the view position, and the zoom still change there, but on that screen alone: nothing saves, records, or shares them — see [Read-only Editors](./settings.md#read-only-editors) in Settings.
+
+Turning an editor read-only ends what stood open for editing: a cell, memo, or table group name editor, a relationship or `New Table Group` being drawn, the selection and the focused cell, the hand tool, the color picker, [Map Columns](./relationship-editing.md#map-columns), and [Time Travel](./undo-redo.md#time-travel). The view, the zoom, the tab, and the Name View stay as they were, and Table Properties, the Diff Viewer, and the `Export image` dialog stay open.  
+A gesture under way ends there too. A drag of tables or memos stops where it stands, an `Alt + drag` drops no copy, a column drag ends, a memo resize stops where it stands, a table group resize is dropped, and an [Auto Layout](#auto-layout) is dropped with its notice, so no table moves.  
+Turned writable again, the editor gives back the controls above, and nothing the turn closed opens again.

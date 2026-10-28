@@ -16,7 +16,7 @@ npm install @dineug/erd-editor
 
 De replicatiestore staat in het subpad `@dineug/erd-editor/engine.js`, niet in de root van het pakket.  
 Dat ingangspunt raakt de DOM niet aan, dus het draait in een Web Worker of ergens anders buiten de hoofdthread.  
-Importeer je in plaats daarvan de root van het pakket, dan wordt het custom element `<erd-editor>` geregistreerd, dat een document nodig heeft.
+Importeer je in plaats daarvan de root van het pakket, dan is een document nodig: sinds `5.0.0` definieert die geen element, maar bij het evalueren worden beide elementklassen gebouwd. Vóór `5.0.0` registreerde die het custom element `<erd-editor>`.
 
 ## Gebruik {#usage}
 

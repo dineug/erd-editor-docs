@@ -23,7 +23,7 @@ Open de Verkenner op een van deze manieren:
 - De knop `Explorer` op de werkbalk, direct na `Search`, met een boompictogram. De knopinfo toont `Explorer (Ctrl + F)` (Windows/Linux) of `Explorer (⌘ + F)` (Mac).
 - `Ctrl + F` (Windows/Linux) of `⌘ + F` (Mac), met de naam `Toggle Explorer` op het tabblad [Sneltoetsen](./settings.md#shortcuts) van Instellingen.
 - `Toggle Explorer` in [Snel zoeken](./quick-search.md), dat op elk tabblad in de lijst staat. Als je `find`, `replace`, `rename`, `tree`, `outline` of `objects` typt, verschijnt het.
-- `Toggle Explorer` in het contextmenu van het canvas: klik met de rechtermuisknop op een lege plek op het ERD-canvas, buiten elke [tabelgroep](./table-groups.md). Het staat na `New Table`, `New Memo` en `New Table Group`, vóór `Relationship`.
+- `Toggle Explorer` in het contextmenu van het canvas: klik met de rechtermuisknop op een lege plek op het ERD-canvas, buiten elke [tabelgroep](./table-groups.md). Het staat na `New Table`, `New Memo` en `New Table Group`, vóór `Relationship`. Het contextmenu van het canvas van een editor in alleen-lezenmodus heeft zo'n rij niet — zie [Editors in alleen-lezenmodus](#read-only-editors).
 
 De twee items `Toggle Explorer` tonen de sneltoets aan de rechterkant.  
 De knop op de werkbalk, de sneltoets en het item in Snel zoeken werken vanaf elk tabblad. Vanaf het tabblad Visualisatie, Schema SQL, Codegenerator, Woordenboek of Instellingen schakelen ze eerst over naar het ERD-tabblad, omdat de Verkenner alleen daar wordt getoond.
@@ -168,5 +168,8 @@ De zoekfunctie openen met de sneltoets of een item `Toggle Explorer` sluit alle 
 
 ## Editors in alleen-lezenmodus {#read-only-editors}
 
-In een editor met [`readonly`](../../api/erd-editor-element.md#readonly) werkt de Verkenner zoals in elke andere: de knop op de werkbalk met dezelfde knopinfo, de sneltoets, beide items `Toggle Explorer`, de boom, het samen- en uitvouwen, `Collapse All` en naar een rij gaan, dat zoals gewoonlijk selecteert waar het naartoe gaat. De titel toont daar ook `Explorer`.  
+In een editor met [`readonly`](../../api/erd-editor-element.md#readonly) werkt de Verkenner zoals in elke andere: de knop op de werkbalk met dezelfde knopinfo, de sneltoets, het item `Toggle Explorer` in Snel zoeken, de boom, het samen- en uitvouwen en `Collapse All`. De titel toont daar ook `Explorer`. Het contextmenu van het canvas heeft daar geen `Toggle Explorer`, omdat het alleen de rijen behoudt die lezen — zie [Editors in alleen-lezenmodus](./table-related-functions.md#read-only-editors).
+
+Naar een rij gaan werkt zoals in [Naar een rij gaan](#going-to-a-row): de weergave verplaatst volgens dezelfde regel, en de tabel, tabelgroep of memo van de rij wordt geselecteerd, op het canvas omlijnd, met de gefocuste cel waar de rij die plaatst.  
+Dat is de enige manier waarop een editor in alleen-lezenmodus iets selecteert. Een druk op het canvas selecteert niets, en een klik die niet beweegt wist de selectie die een rij achterliet. Een tabel die ze selecteerde, opent in [Tabeleigenschappen](./table-related-functions.md#table-properties) met `Alt + Space` (Windows/Linux) of `⌥ + Space` (Mac), alleen-lezen, en `Ctrl + C` (Windows/Linux) of `⌘ + C` (Mac) kopieert wat ze selecteerde zoals in elke editor.  
 De zoekfunctie ervan zoekt alleen — zie [Editors in alleen-lezenmodus](./find-and-replace.md#read-only-editors) op de pagina Zoeken en vervangen.

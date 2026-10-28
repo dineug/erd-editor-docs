@@ -167,7 +167,7 @@ Taldeak ezkutatuta dauden bitartean:
 - Arakatzaileak ez du `Table Groups` karpeta erakusten, eta Bilatu eta ordeztu funtzioak ez ditu taldeen izenak ez bilatzen ez ordezten, `Table group names` aukera aktibatuta egonda ere.
 - [Antolaketa automatikoak](#auto-layout) talde bakoitzaren taulak elkarrekin mantentzen ditu oraindik, SQL eskema fitxak [aukeratzeko taldeak](#schema-sql-by-group) eskaintzen ditu oraindik, DBMLak taldeak idazten ditu oraindik, eta [Inportatu eta gehitu](./file-import-export.md#import-and-add) ekintzak edukia ezkutatutako koadroen azpian kokatzen du oraindik.
 
-Aukera dokumentuan gordetzen da eta [desegite-historian](./undo-redo.md#what-the-history-records) erregistratzen da, beste View Option etengailuak bezala.
+Aukera dokumentuan gordetzen da eta [desegite-historian](./undo-redo.md#what-the-history-records) erregistratzen da, beste View Option etengailuak bezala. Irakurtzeko soilik dagoen editore batean pantaila horretan geratzen da horren ordez. Ikus [Irakurtzeko soilik dauden editoreak](#read-only-editors).
 
 ## Antolaketa automatikoa {#auto-layout}
 
@@ -197,11 +197,13 @@ Aukera editorearen leihoari dagokio, eta ez da dokumentuan gordetzen.
 
 ## Irakurtzeko soilik dauden editoreak {#read-only-editors}
 
-[`readonly`](../../api/erd-editor-element.md#readonly) atributua duen editore batean, taldeak ohi bezala marrazten dira eta Arakatzailean zerrendatzen dira, eta hauta daitezke eta haietara joan daiteke, baina ezin dira aldatu:
+[`readonly`](../../api/erd-editor-element.md#readonly) atributua duen editore batean, taldeak ohi bezala marrazten dira eta Arakatzailean zerrendatzen dira, eta haietara joan daiteke, baina ezin dira aldatu:
 
-- Titulu-barra sakatzeak taldea hautatzen du eta ez du ezer mugitzen. Ez dago tamaina aldatzeko heldulekurik, ezta `x` ikurrik ere.
-- Titulu-barran klik bikoitza egiteak ez du izen-editorerik irekitzen, eta taldearen menuak `Select tables` aukera bakarrik du.
-- Oihalaren menuak ez du `New Table Group` aukerarik, taularen menuak ez du `Group selected tables` ez `Remove from group` aukerarik, eta Bilaketa azkarrak ez du talde-komandoetako bat ere zerrendatzen. `New Table Group` marrazketa bat amaitu egiten da editorea irakurtzeko soilik bihurtzen denean.
-- [Oihaleko tresna-barrak](./table-related-functions.md#canvas-toolbar) ez du bere gehitze-botoietako bat ere erakusten, `New Table Group` barne, eta `Alt + G` (Windows/Linux) edo `⌥ + G` (Mac) lasterbideak ez du ezer egiten, ezta `T` eta ondoren `G` lasterbideak ere.
-- `Table Groups` ikuspegi-aukerak ez du ezer aldatzen, View Option guztiekin gertatzen den bezala.
+- [Talde batera joateak](#going-to-a-group) hautatu egiten du, eta hori da bertan talde bat hautatzeko modu bakarra. Titulu-barra sakatzeak ez du ezer hautatzen ez mugitzen: arrastatuta, oihala mugitzen du, eta mugitzen ez den klik batek jauzi batek utzitako hautapena kentzen du.
+- Ez dago tamaina aldatzeko heldulekurik, ezta `x` ikurrik ere, eta titulu-barran klik bikoitza egiteak ez du izen-editorerik irekitzen.
+- Talde batean egindako eskuineko klik batek ez du menurik irekitzen, eta taularen menuak `Table Properties` aukera bakarrik du.
+- Oihalaren menuak ez du `New Table Group` aukerarik, eta Bilaketa azkarrak ez du talde-komandoetako bat ere zerrendatzen. `New Table Group` marrazketa bat amaitu egiten da editorea irakurtzeko soilik bihurtzen denean.
+- [Oihaleko tresna-barrak](./table-related-functions.md#canvas-toolbar) ikuspegi-kontrolak soilik mantentzen ditu; beraz, ez du `New Table Group` botoirik, eta `Alt + G` (Windows/Linux) edo `⌥ + G` (Mac) lasterbideak ez du ezer egiten, ezta `T` eta ondoren `G` lasterbideak ere.
+- Editorea irakurtzeko soilik bihurtzen denean abian dagoen taulen edo talde baten arrastatzea dagoen tokian gelditzen da eta ez du talderik aldatzen, eta abian dagoen talde baten tamaina-aldaketa tamaina aldatu gabe amaitzen da.
+- `View Option` → `Table Groups` aukerak taldeak pantaila horretan bakarrik erakusten edo ezkutatzen ditu, bertan View Option guztiek egiten duten bezala: dokumentuak, lankideek eta desegite-historiak aukera lehen zegoen bezala mantentzen dute, eta editorea berriro idazgarri bihurtzeak dokumentuaren aukera itzultzen du.
 - SQL eskema fitxako `Tables` aukeraketak funtzionatzen du oraindik.

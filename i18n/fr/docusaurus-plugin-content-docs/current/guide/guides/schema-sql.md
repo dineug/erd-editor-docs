@@ -31,7 +31,7 @@ La boîte de dialogue [Propriétés de la table](./table-related-functions.md#ta
 
 Le panneau contient trois groupes, chacun sous une légende :
 
-1. `Saved in the document` : `Database` et `Bracket` (voir [Base de données et délimiteur](#database-and-bracket)).
+1. `Saved in the document` : `Database` et `Bracket` (voir [Base de données et délimiteur](#database-and-bracket)). Un éditeur en lecture seule les légende `This window only` (voir [Éditeurs en lecture seule](#read-only-editors)).
 2. `This window only` : `Statements`, `Header`, `Write logical names into empty comments` et, tant que le diagramme comporte un [groupe de tables](./table-groups.md), `Tables` (voir [Instructions](#statements), [En-tête](#header), [Noms logiques en commentaire](#logical-names-as-comments) et [Tables](#tables)).
 3. `Saved in the document · written as is for every database` : les scripts `Before tables` et `After tables` (voir [Scripts avant et après les tables](#before-and-after-scripts)).
 
@@ -222,5 +222,9 @@ La façon dont ces commentaires sont relus à l’importation est décrite dans 
 
 ## Éditeurs en lecture seule {#read-only-editors}
 
-Dans un éditeur `readonly`, l’onglet fonctionne normalement : `Database` et `Bracket` modifient toujours le SQL affiché, `Statements`, `Header`, `Write logical names into empty comments` et `Tables` fonctionnent toujours, et `Save file` et `Copy` l’enregistrent et le copient toujours.  
-Seuls les deux champs de script sont en lecture seule.
+Dans un éditeur [`readonly`](../../api/erd-editor-element.md#readonly), l’onglet fonctionne pour le lecteur, et rien de ce qui s’y fait n’atteint le document :
+
+- `Database` et `Bracket` réécrivent toujours le SQL, mais dans cette fenêtre seulement, si bien que le panneau les légende lui aussi `This window only`. Un choix n’est ni enregistré dans le fichier, ni partagé avec les collaborateurs, ni consigné pour l’annulation, quels que soient les verrous, et le changement d’un collaborateur sur un paramètre que vous avez choisi laisse votre choix à l’écran. L’onglet Générateur de code affiche le même choix, et [`getSchemaSQL()`](../../api/erd-editor-element.md#getschemasql) appelé sans SGBD l’écrit lui aussi. Quand l’éditeur redevient modifiable, le SGBD et le délimiteur du document reviennent.
+- `Statements`, `Header`, `Write logical names into empty comments` et `Tables` fonctionnent comme partout, puisqu’ils appartiennent déjà à la fenêtre.
+- Les deux champs de script sont en lecture seule : ils affichent les scripts du document, que le SQL écrit toujours, et n’acceptent aucune saisie.
+- `Save file` et `Copy` enregistrent et copient le SQL que l’onglet affiche.

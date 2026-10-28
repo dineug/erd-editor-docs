@@ -1,12 +1,13 @@
 ---
 sidebar_position: 1
-description: erd-editor는 브라우저, Google Drive, VS Code, IntelliJ, Obsidian, 직접 만든 페이지에서 동작하는 ERD 에디터입니다.
+description: erd-editor는 브라우저, Google Drive, VS Code, IntelliJ, Obsidian, 직접 만든 페이지에서 동작하는 ERD 에디터이며, 어느 사이트에서나 다이어그램을 보여 주는 읽기 전용 뷰어도 있습니다.
 ---
 
 # 소개
 
 erd-editor는 ERD(Entity-Relationship Diagram) 에디터입니다.
-웹 앱, Google Drive 앱, VS Code 확장, IntelliJ 플러그인, Obsidian 플러그인, 그리고 직접 만든 페이지에 삽입할 수 있는 `<erd-editor>` 커스텀 엘리먼트로 제공됩니다.
+웹 앱, Google Drive 앱, VS Code 확장, IntelliJ 플러그인, Obsidian 플러그인, 그리고 직접 만든 페이지에 삽입할 수 있는 `<erd-editor>` 커스텀 엘리먼트로 제공되며, 그 옆의 `<erd-viewer>`는 다이어그램을 읽기 전용으로 보여 줍니다.
+자체 스크립트를 불러오지 않는 사이트는 대신 erd-editor.io/embed로 읽기 전용 다이어그램을 프레임으로 넣을 수 있습니다.
 모두 동일한 에디터이며 동일한 문서 형식을 사용합니다.
 
 ![쇼핑몰 다이어그램에서 관계에 마우스 올리기, 컬럼 추가, Flow에서 orders 테이블 포커스](/img/demo-overview.webp)
@@ -20,7 +21,8 @@ erd-editor는 ERD(Entity-Relationship Diagram) 에디터입니다.
 | VS Code | [Marketplace](https://marketplace.visualstudio.com/items?itemName=dineug.vuerd-vscode) | `.erd.json` 파일을 커스텀 에디터로 엽니다. |
 | IntelliJ | [JetBrains Marketplace](https://plugins.jetbrains.com/plugin/23594-erd-editor) | IntelliJ 기반 IDE에서 동작하는 동일한 에디터 |
 | Obsidian | [Community plugins](https://community.obsidian.md/plugins/erd-editor) | `.erd`와 `.erd.json` 파일을 볼트의 탭에서 엽니다. 데스크톱 전용입니다. |
-| 직접 만든 페이지 | `npm install @dineug/erd-editor` | 프레임워크 없이 동작하는 `<erd-editor>` 커스텀 엘리먼트 — [설치](../api/installation.md) 문서를 참고하세요. |
+| 직접 만든 페이지 | `npm install @dineug/erd-editor` | 프레임워크 없이 동작하는 `<erd-editor>` 커스텀 엘리먼트와, 다이어그램을 읽기 전용으로 보여 주는 `<erd-viewer>` — [설치](../api/installation.md)와 [ErdViewerElement](../api/erd-viewer-element.md) 문서를 참고하세요. |
+| 모든 사이트 | [erd-editor.io/embed](https://erd-editor.io/embed) | 문서의 URL로 코드 없이 iframe에 넣는 읽기 전용 다이어그램 — [임베드](./guides/embedding.md) 문서를 참고하세요. |
 | 코딩 에이전트 | [`@dineug/erd-editor-mcp`](../mcp/installation.md) | Claude Code, Codex 등의 클라이언트가 VS Code, JetBrains IDE, Obsidian에서 라이브로, 또는 파일 자체에서 다이어그램을 편집하게 하는 MCP 서버 |
 
 IDE에서 사용해 보려면 `.erd.json` 확장자로 빈 파일을 만들어 여세요.
@@ -45,6 +47,7 @@ Obsidian 플러그인을 업데이트한 뒤에는 Obsidian을 다시 시작하�
 - 다이어그램의 명명 표준을 [사전](./guides/dictionary.md) 탭에 둡니다. `Domains`, `Words`, `Terms` 시트는 스프레드시트처럼 검색하고 정렬하고 편집하며, 시트마다 자체 Undo 히스토리가 있습니다. 시트는 CSV를 가져오고 내보냅니다. 가져오기는 에디터 자체 형식이나 공공데이터 공통표준의 형식을 UTF-8 또는 EUC-KR로 읽고, 내보내기는 에디터 자체 형식으로 씁니다. 논리명 셀은 용어명을 자동완성합니다. 논리명은 이름을 직접 입력하기 전까지, 일치하는 용어나 논리명을 나눈 단어들의 약어로 테이블이나 컬럼에 물리명을 줍니다. 단어나 용어가 바뀐 뒤에는 [`Derive Physical Names Again`](./guides/dictionary.md#derive-physical-names-again)이 직접 입력한 이름을 포함해 이름을 다시 생성합니다. 직접 또는 용어를 통해 도메인에 연결된 컬럼은 [도메인의 데이터 타입을 가지며](./guides/dictionary.md#domains-and-data-types) 그 변경을 따르고, `Domain` 보기 옵션은 각 컬럼의 도메인을 표시합니다. [`Checks`](./guides/dictionary.md#the-checks-sheet) 시트는 금칙어, 미등록 단어, 이음동의어, 이름 중복, 알 수 없는 도메인, 용어와 다른 물리명, 도메인과 다른 컬럼 타입을 나열합니다. 캔버스는 단어와 용어 검사가 지적한 논리명과 물리명에 색을 칠합니다.
 - 기존 스키마를 `json`, `Schema SQL`, `GraphQL`, `DBML`, `AML`에서 가져옵니다. [파일 가져오기와 내보내기](./guides/file-import-export.md) 문서를 참고하세요. Schema SQL, GraphQL, DBML, AML 파일은 테이블이 관계를 따라 배치된 상태로 들어오며, 관계가 없으면 여러 행으로 배치됩니다. [`Import and Add`](./guides/file-import-export.md#가져와서-추가)는 다이어그램을 대체하지 않고 파일을 다이어그램 아래에 추가합니다.
 - 다이어그램을 `json`으로 내보내고, [Schema SQL](./guides/schema-sql.md#sql-저장과-복사) 탭에서 Schema SQL을 `.sql` 파일로 저장하거나 복사하며, [`Export image`](./guides/file-import-export.md#이미지) 대화 상자에서 PNG나 SVG 이미지로 내보내거나 PNG를 클립보드에 복사합니다.
+- 다이어그램을 다른 사이트에 읽기 전용으로 보여 줍니다. GitHub의 파일을 포함해 파일의 URL로 [erd-editor.io/embed](./guides/embedding.md)를 프레임으로 넣거나, 직접 만든 페이지에서 [`<erd-viewer>`](../api/erd-viewer-element.md) 엘리먼트를 불러옵니다. 읽는 사람은 화면을 이동하고, 확대/축소하고, 검색하고, 관계선을 강조할 수 있으며, 어떤 것도 다이어그램을 편집하지 않습니다.
 - Databricks, MSSQL, MariaDB, MySQL, Oracle, PostgreSQL, Snowflake, SQLite 8가지 데이터베이스 벤더의 문법으로 Schema SQL을 작성합니다. [테이블 관련 기능](./guides/table-related-functions.md#데이터베이스) 문서를 참고하세요. [Schema SQL](./guides/schema-sql.md) 탭의 옵션 패널에서는 작성할 구문, 헤더, 테이블 그룹을 고르고, [빈 코멘트에 논리명을 쓸](./guides/schema-sql.md#logical-names-as-comments) 수 있으며, 직접 작성한 SQL을 다이어그램에 저장해 두었다가 테이블 앞뒤에 작성합니다.
 - 22가지 대상으로 코드를 생성합니다. 언어로는 C#, Go, Java, Kotlin, PHP, Rust, Scala, Swift, TypeScript, ORM으로는 Doctrine, Drizzle, JPA, SeaORM, Sequelize, SQLAlchemy, TypeORM, 그리고 AML, DBML, GraphQL, JSON Schema, Mermaid, Zod를 지원합니다. Code Generator 탭의 옵션 패널에서 언어, 데이터베이스, 이름 케이스를 고르며, 코드는 언어에 맞는 확장자의 파일로 저장하거나 복사합니다. [코드 생성](./guides/code-generator.md) 문서를 참고하세요.
 - [시각화](./guides/visualization.md)에서 스키마를 force-directed `Graph` 또는 관계를 따라 배치된 테이블 카드의 `Flow`로 확인합니다. 테이블에 마우스를 올리면 그 테이블과 닿아 있는 모든 것이 강조됩니다. ERD 탭에서 `Alt + F`를 누르면 선택한 테이블과 그 테이블에 관계로 이어진 테이블에 [포커스](./guides/visualization.md#테이블-포커스)합니다. `Flow`에서는 [`Previous table`과 `Next table`](./guides/visualization.md#previous-table-and-next-table)이 그곳의 Undo 키, Redo 키와 마찬가지로 Flow가 좁혀 온 범위를 따라 한 단계 뒤로, 한 단계 앞으로 이동합니다.

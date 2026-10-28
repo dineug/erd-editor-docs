@@ -6,7 +6,7 @@ description: Selecteer, verplaats, kopieer, dupliceer en verwijder tabellen en m
 # Functies voor tabellen
 
 Alles wat je met tabellen en memo's doet zodra ze bestaan — selecteren, verplaatsen, kopiëren, verwijderen, kleuren en instellen wat het canvas toont — en daarnaast de bediening van het canvas eromheen.  
-Eerst komen de opdrachten voor tabellen en memo's; daarna Tabeleigenschappen, het focussen op tabellen, indexen en alternatieve sleutels, Automatische indeling en het databasesysteem; en als laatste het canvas zelf: de canvaswerkbalk, zoomen, pannen en waar een sprong terechtkomt, en de Verschilweergave.  
+Eerst komen de opdrachten voor tabellen en memo's; daarna Tabeleigenschappen, het focussen op tabellen, indexen en alternatieve sleutels, Automatische indeling en het databasesysteem; daarna het canvas zelf: de canvaswerkbalk, zoomen, pannen en waar een sprong terechtkomt, en de Verschilweergave; en als laatste wat een editor in alleen-lezenmodus van dit alles behoudt.  
 Tabelgroepen, de kaders die tabellen bundelen, hebben een eigen pagina — zie [Tabelgroepen](./table-groups.md).  
 Dat geldt ook voor logische namen en de naamweergave, die bepaalt welke namen de tabellen tonen — zie [Logische namen](./logical-names.md).
 
@@ -23,7 +23,8 @@ Memo's worden op dezelfde manier geselecteerd, en beide sneltoetsen voor alles s
 `Ctrl + A` wijkt voor een tekstcursor, dus terwijl je een cel bewerkt, selecteert de sneltoets de tekst in plaats van het diagram.  
 Een selectiekader markeert een tabel of memo wanneer het kader het midden ervan bedekt, niet wanneer het alleen een rand raakt. Een tabelgroep wordt alleen meegenomen als het selectiekader het volledige kader van de groep omsluit, dus een selectiekader dat binnen een groep wordt getekend, pikt er tabellen uit zonder de groep.  
 Een klik met de rechtermuisknop op iets wat al geselecteerd is, behoudt de hele selectie, zodat menu-items zoals `Color`, `Group selected tables` en `Delete selected` op de hele selectie werken. Een klik met de rechtermuisknop op een andere tabel, memo of tabelgroep selecteert alleen dat element, ook als je `Ctrl` of `⌘` ingedrukt houdt, en een klik met de rechtermuisknop op een relatie of op een leeg deel van het canvas heft de selectie op.  
-`Escape` heft de selectie op. Terwijl een editor voor een cel, memo of tabelgroepnaam open is, of terwijl een relatie of een `New Table Group` wordt getekend, beëindigt de eerste `Escape` dat en heft een tweede de selectie op.
+`Escape` heft de selectie op. Terwijl een editor voor een cel, memo of tabelgroepnaam open is, of terwijl een relatie of een `New Table Group` wordt getekend, beëindigt de eerste `Escape` dat en heft een tweede de selectie op.  
+Een editor in alleen-lezenmodus heeft geen van deze manieren om te selecteren: daar selecteert alleen een sprong — zie [Editors in alleen-lezenmodus](#read-only-editors).
 
 ![Tabellen selecteren met ⌘ + drag en ⌘ + click, daarna alle tabellen en memo's met ⌘ + A](/img/demo-table-select.webp)
 
@@ -145,7 +146,7 @@ Welke namen de tabellen tonen, is geen weergaveoptie: `Name View`, direct na `Vi
 `Table Groups` toont de [tabelgroepen](./table-groups.md) en de groepskleuren op de koppen van hun tabellen. Als je deze optie uitschakelt, worden ze verborgen op het canvas, op de minimap en in geëxporteerde afbeeldingen, wordt geen tabel verplaatst en blijft elke tabel in haar groep — zie [Groepen verbergen](./table-groups.md#hiding-groups). Ook verdwijnt de map `Table Groups` uit de [Verkenner](./explorer.md#the-tree) en `New Table Group` van de [canvaswerkbalk](#canvas-toolbar), en vindt de zoekfunctie van de Verkenner geen groepsnamen meer.  
 `Memos` toont de memo's. Als je deze optie uitschakelt, wordt elke memo verborgen op het canvas, op de minimap en in geëxporteerde afbeeldingen, en worden geen tabellen of verbindingslijnen verplaatst. Verborgen memo's nemen geen ruimte in, dus de schuifbalken, de minimap en het kompas `Go to content` laten ze buiten beschouwing.  
 Als je de memo's verbergt, worden ze gedeselecteerd en wordt een geopende memo-editor gesloten. De [Verkenner](./explorer.md#the-tree) laat de map `Memos` weg, en de functie [Zoeken en vervangen](./find-and-replace.md) ervan en het voorvoegsel `:` van Snel zoeken doorzoeken ze niet. Zolang ze verborgen zijn, verdwijnt `New Memo` uit het contextmenu, de [canvaswerkbalk](#canvas-toolbar), Snel zoeken en het [welkomstscherm](./editing-start.md#welcome-screen), en voegt `Alt + M` geen memo toe. Plakken of [Importeren en toevoegen](./file-import-export.md#import-and-add) voegt de meegebrachte memo's nog steeds toe, verborgen en niet geselecteerd.  
-In een editor met `readonly` verandert in- of uitschakelen niets.
+In een editor in alleen-lezenmodus werken de schakelaars nog steeds, maar alleen op dat scherm: ze worden niet opgeslagen, niet in de ongedaanmakingsgeschiedenis vastgelegd en niet gedeeld, en ze gaan terug naar die van het bestand als de editor weer bewerkbaar wordt — zie [Editors in alleen-lezenmodus](./settings.md#read-only-editors) bij Instellingen.
 
 ![Items van View Option in- en uitschakelen terwijl de tabellen zich opnieuw schikken, een samengestelde unieke index markeren als AK1.1 en AK1.2 met Alternate Key, daarna Memos uit- en weer inschakelen](/img/demo-view-options.webp)
 
@@ -164,14 +165,15 @@ Het tabblad `Indexes` staat beschreven in [Indexen](#indexes).
 Het tabblad `Schema SQL` toont de DDL van de tabel voor de geselecteerde [database](#databases): de `CREATE TABLE`, de aparte beperkingen die sommige databases voor de unieke kolommen schrijven, en de indexen. Het schrijft altijd kale `CREATE`-instructies, zonder kop, zonder script vóór of na de tabellen en zonder logische namen in lege opmerkingen, hoe het tabblad [Schema SQL](./schema-sql.md) op de werkbalk ook is ingesteld — zie [Logische namen als opmerkingen](./schema-sql.md#logical-names-as-comments). Het heeft geen optiepaneel, en het contextmenu biedt alleen `Database` en `Bracket`.  
 Het tabblad `Code Generator` genereert alleen code voor deze tabel — zie [Codegenerator](./code-generator.md).
 
-In een editor met `readonly` opent het paneel nog steeds, met een badge `Read only` naast de titel, maar het tabblad `Indexes` biedt geen bewerkingen.
+In een editor in alleen-lezenmodus opent het paneel nog steeds, via `Table Properties`, de enige rij van het contextmenu van een tabel daar, of met `Alt + Space` op de tabel die een sprong selecteerde. Het toont een badge `Read only` naast de titel, en het tabblad `Indexes` biedt geen bewerkingen.  
+Een paneel dat openstaat wanneer de editor in alleen-lezenmodus gaat, blijft open en gaat mee in alleen-lezenmodus — zie [Editors in alleen-lezenmodus](#read-only-editors).
 
 ## Focussen op tabellen {#focusing-on-tables}
 
 Opent het tabblad Visualisatie in de modus `Flow`, beperkt tot de gekozen tabellen en elke tabel die er één relatie van verwijderd is.  
 Kies `Focus on this table` in het contextmenu van een tabel, of selecteer een of meer tabellen en druk op `Alt + F`.  
 Als de tabel waarop je met de rechtermuisknop klikt een van meerdere geselecteerde tabellen is, toont het item `Focus on selected tables` en focust het op de hele selectie. Een klik met de rechtermuisknop op een tabel buiten de selectie focust alleen op die tabel.  
-De sneltoets gebruikt de geselecteerde tabellen, laat memo's weg en doet niets als er geen tabel is geselecteerd.  
+De sneltoets gebruikt de geselecteerde tabellen, laat memo's weg en doet niets als er geen tabel is geselecteerd. Het menu van een tabel in een editor in alleen-lezenmodus heeft geen `Focus on this table`, en de sneltoets gebruikt daar de tabel die een sprong selecteerde — zie [Editors in alleen-lezenmodus](#read-only-editors).  
 Een geselecteerde [tabelgroep](./table-groups.md) telt hier niet mee, bij de sneltoets en bij het menu-item: de tabellen ervan worden alleen meegenomen als ze zelf geselecteerd zijn, wat `Select tables` in het menu van de groep doet.  
 Wat de beperkte weergave toont en hoe je terugkeert naar het hele diagram, staat beschreven in [Visualisatie](./visualization.md#focusing-on-tables), en hoe je een stap terug en vooruit gaat door wat de stroomweergave eerder heeft getoond in [Vorige en volgende tabel](./visualization.md#previous-table-and-next-table).
 
@@ -187,7 +189,7 @@ De rechterkant toont de kolommen van de tabel onder `Columns`, elk met een selec
 Vink een kolom aan om die aan de geselecteerde index toe te voegen, en vink de kolom uit om die te verwijderen. Als je een sleutel selecteert, worden de kolommen ervan aangevinkt weergegeven, maar de selectievakjes blijven uitgeschakeld.  
 De kolommen van de geselecteerde index staan daaronder bij `Index order`, elk benoemd zoals de naamweergave haar benoemt, met in de weergave `Both Names` de naam tussen haakjes na de logische naam, zoals `Member Number (member_no)`. Sleep ze aan de greep om de volgorde te wijzigen, en klik op de chip `ASC` of `DESC` in een rij om de sorteervolgorde om te draaien. Bij een alternatieve sleutel eindigt elke rij op de bijbehorende markering `AK<n>.<m>`. De lijst toont drie rijen tegelijk; voor de rest scroll je.
 
-In een editor met `readonly` toont het selecteren van een sleutel of index nog steeds de kolommen ervan, maar er is geen `Add Index` en geen `x`, en verder kan niets op het tabblad worden gewijzigd.
+In een editor in alleen-lezenmodus toont het selecteren van een sleutel of index nog steeds de kolommen ervan, maar er is geen `Add Index` en geen `x`, en verder kan niets op het tabblad worden gewijzigd: de namen accepteren geen invoer, elk selectievakje is uitgeschakeld, en de rijen van `Index order` laten zich niet slepen en wisselen hun sorteervolgorde niet.
 
 De [Verkenner](./explorer.md#the-tree) toont de indexen van elke tabel in de map `Indexes` van die tabel, en als je er daar een kiest, ga je naar de tabel ervan. De zoekfunctie ervan vindt ook indexnamen en kan die wijzigen — zie [Wat er wordt doorzocht](./find-and-replace.md#what-it-searches).
 
@@ -233,7 +235,8 @@ De andere drie worden in één keer berekend, buiten de hoofdthread, dus er valt
 
 Welke je ook kiest, tabellen en tabelgroepen worden verplaatst en memo's blijven waar ze zijn. De tabellen worden geplaatst op de breedte die ze hebben in de naamweergave waarin je kijkt. Een relatie van een tabel naar zichzelf wordt genegeerd, en meerdere relaties tussen dezelfde twee tabellen tellen als één.  
 Elke indeling houdt de tabellen van elke groep bij elkaar, of de groepen nu worden weergegeven of niet, en past elke groep met tabellen om die tabellen heen aan — zie [Tabelgroepen](./table-groups.md#auto-layout).  
-Het resultaat komt als één stap in de geschiedenis terecht, dus één keer ongedaan maken zet elke tabel en groep terug waar die stond.
+Het resultaat komt als één stap in de geschiedenis terecht, dus één keer ongedaan maken zet elke tabel en groep terug waar die stond.  
+Een editor in alleen-lezenmodus biedt geen `Auto Layout` aan. Eén die nog loopt wanneer de editor in alleen-lezenmodus gaat, eindigt daar: het voorbeeld `Force` sluit met zijn melding en behoudt geen van zijn posities, en een indeling die nog wordt berekend, wordt met zijn melding weggegooid, dus er verplaatst geen tabel, noch toen noch als de editor weer bewerkbaar is.
 
 ![Een stapel tabellen opruimen met de automatische indeling Flow uit het contextmenu van het canvas, die ze van links naar rechts langs hun relaties op een rij zet](/img/demo-automatic-table-placement.webp)
 
@@ -250,7 +253,7 @@ Ondersteunde databases zijn onder meer:
 - Snowflake
 - SQLite
 
-Kies er een via `Database` in het contextmenu van het canvas, in het optiepaneel of het contextmenu van de tabbladen Schema SQL en Codegenerator, of in Snel zoeken. Ze wijzigen allemaal dezelfde instelling.
+Kies er een via `Database` in het contextmenu van het canvas, in het optiepaneel of het contextmenu van de tabbladen Schema SQL en Codegenerator, of in Snel zoeken. Ze wijzigen allemaal dezelfde instelling. Het contextmenu van het canvas van een editor in alleen-lezenmodus heeft geen `Database`, en een keuze in de andere wijzigt alleen dat scherm — zie [Editors in alleen-lezenmodus](#read-only-editors).
 
 Deze opties bepalen de Schema SQL-syntaxis voor het exporteren, de automatische aanvulling van gegevenstypen en de typen waarin gegenereerde code en geïmporteerde schema's worden omgezet.  
 Ze bepalen welke keuzes voor `Statements` en `Header` het tabblad [Schema SQL](./schema-sql.md#options-panel) kan schrijven. Een keuze die de database niet kent, blijft gedimd in het optiepaneel staan, en de SQL valt terug op de dichtstbijzijnde keuze die de database wel heeft.  
@@ -266,15 +269,16 @@ Bij een Schema SQL-import blijft het gegevenstype van een kolom behouden, inclus
 Een kleine werkbalk zweeft boven het midden van de onderrand van het canvas en bevat, van links naar rechts, de gereedschappen die op het canvas zelf werken en de opdrachten die er iets aan toevoegen:
 
 - De hand en de aanwijzer. De aanwijzer is de standaard; de hand maakt van elke sleepbeweging een panbeweging, over tabellen en over lege ruimte. `Space` wisselt tussen beide. Zolang het tekenen van een [`New Table Group`](./table-groups.md#drawing-a-group) actief is, is de knop `New Table Group` gemarkeerd in plaats van een van beide, en een klik op een van beide, een druk op `Space` of het kiezen van een relatienotatie beëindigt het tekenen zonder een groep toe te voegen.
-- `New Table`, `New Memo` en `New Table Group`. `New Table` voegt een tabel toe zoals `Alt + N`, en `New Memo` voegt een memo toe zoals `Alt + M`. `New Table Group` activeert het [tekenen van een groep](./table-groups.md#drawing-a-group) zoals `Alt + G` en schakelt de hand uit; een tweede klik beëindigt, net als een tweede `Alt + G`, het tekenen zonder een groep toe te voegen. `New Memo` ontbreekt zolang View Option → `Memos` de memo's verbergt, en `New Table Group` zolang View Option → `Table Groups` de groepen verbergt. Een editor met `readonly` toont geen van de drie.
+- `New Table`, `New Memo` en `New Table Group`. `New Table` voegt een tabel toe zoals `Alt + N`, en `New Memo` voegt een memo toe zoals `Alt + M`. `New Table Group` activeert het [tekenen van een groep](./table-groups.md#drawing-a-group) zoals `Alt + G` en schakelt de hand uit; een tweede klik beëindigt, net als een tweede `Alt + G`, het tekenen zonder een groep toe te voegen. `New Memo` ontbreekt zolang View Option → `Memos` de memo's verbergt, en `New Table Group` zolang View Option → `Table Groups` de groepen verbergt.
 - De zoom: `Zoom out`, het huidige zoomniveau als percentage en `Zoom in`. De twee knoppen wijzigen het zoomniveau stapsgewijs op dezelfde manier als de zoomsneltoetsen, en een klik op het percentage zet het terug op `100%`.
 - De vier relatienotaties, dezelfde vier waarmee je een relatie begint — zie [Beginnen met bewerken](./editing-start.md). Als je er een kiest, schakel je terug naar de aanwijzer, omdat je een relatie tekent door op twee tabellen te klikken.
-- `Name View`, een knop met een pijl omlaag die de weergave noemt die van kracht is: `Physical Names`, `Logical Names` of `Both Names`. De knop houdt één breedte, welke weergave hij ook noemt, zodat wisselen de werkbalk nooit verschuift. Een klik opent boven de werkbalk een lijst met de drie, met een vinkje bij de weergave die van kracht is. Als je er een kiest, wissel je naar die weergave en sluit de lijst; een tweede klik op de knop, een druk ergens anders of `Escape` sluit de lijst zonder te wisselen. Een editor met `readonly` toont de knop ook. Wat elke weergave toont, staat beschreven in [Naamweergave](./logical-names.md#name-view), en of wisselen wordt opgeslagen in [De weergave wisselen](./logical-names.md#switching-the-view).
+- `Name View`, een knop met een pijl omlaag die de weergave noemt die van kracht is: `Physical Names`, `Logical Names` of `Both Names`. De knop houdt één breedte, welke weergave hij ook noemt, zodat wisselen de werkbalk nooit verschuift. Een klik opent boven de werkbalk een lijst met de drie, met een vinkje bij de weergave die van kracht is. Als je er een kiest, wissel je naar die weergave en sluit de lijst; een tweede klik op de knop, een druk ergens anders of `Escape` sluit de lijst zonder te wisselen. Wat elke weergave toont, staat beschreven in [Naamweergave](./logical-names.md#name-view), en of wisselen wordt opgeslagen in [De weergave wisselen](./logical-names.md#switching-the-view).
 - De zen-modus, `Alt + Z`, die alles behalve het canvas en deze werkbalk verbergt. Nog een keer `Alt + Z`, of de knop, brengt de rest terug. Een geopende Verkenner wordt met de rest verborgen, zonder te worden gesloten, en komt ermee terug. De Verkenner kan tijdens de zen-modus nog steeds worden geopend — zie [Wanneer de Verkenner plaatsmaakt](./explorer.md#when-it-stands-aside).
 - Het kompas `Go to content`, dat alleen aan het einde van de werkbalk verschijnt zolang er geen tabel, weergegeven memo of weergegeven tabelgroep in beeld is — zie [Navigeren op het canvas](#getting-around-the-canvas).
 
 Elke knop met een sneltoets vermeldt die in de knopinfo, zoals `New Table (Alt + N)` (Windows/Linux) of `New Table (⌥ + N)` (Mac).  
-De werkbalk maakt plaats zolang het voorbeeld van Automatische indeling `Force`, Tabeleigenschappen, Tijdreizen of de Verschilweergave open is, en komt terug zodra dat sluit.
+De werkbalk maakt plaats zolang het voorbeeld van Automatische indeling `Force`, Tabeleigenschappen, Tijdreizen of de Verschilweergave open is, en komt terug zodra dat sluit.  
+De werkbalk van een editor in alleen-lezenmodus behoudt de zoom, `Name View`, de zen-modus en het kompas `Go to content`. Hij heeft geen hand of aanwijzer, geen `New Table`, `New Memo` of `New Table Group` en geen notaties, en krijgt ze terug zodra de editor weer bewerkbaar is.
 
 ![Een tabel en een memo toevoegen via de werkbalk, New Table Group activeren en deactiveren, pannen met de hand, het zoomniveau stapsgewijs wijzigen en de zen-modus in- en uitschakelen met ⌥ + Z](/img/demo-canvas-toolbar.webp)
 
@@ -339,7 +343,7 @@ Wat een sprong in beeld brengt, en het kerndeel dat zichtbaar moet zijn als het 
 - Een tabelgroep: het kader ervan, met als kerndeel de titelbalk.
 - Een memo, of het blok dat Importeren en toevoegen neerzet: het geheel.
 
-Als geen van beide richtingen zou bewegen, wordt er niet gescrold, dus als je twee keer achter elkaar naar dezelfde plek gaat, beweegt er de tweede keer niets. Een sprong die het canvas scrolt, legt de scroll vast in de [geschiedenis](./undo-redo.md#what-the-history-records), net als elke andere wijziging van de weergavepositie, en een sprong die niets verplaatst, laat niets achter om ongedaan te maken. Bij Importeren en toevoegen hoort de scroll bij dezelfde stap als de toevoeging. Een rij in de lijst van de Verschilweergave verplaatst alleen de kanten van de weergave, die alleen-lezen zijn, en legt dus niets vast.  
+Als geen van beide richtingen zou bewegen, wordt er niet gescrold, dus als je twee keer achter elkaar naar dezelfde plek gaat, beweegt er de tweede keer niets. Een sprong die het canvas scrolt, legt de scroll vast in de [geschiedenis](./undo-redo.md#what-the-history-records), net als elke andere wijziging van de weergavepositie, en een sprong die niets verplaatst, laat niets achter om ongedaan te maken. Bij Importeren en toevoegen hoort de scroll bij dezelfde stap als de toevoeging. Een rij in de lijst van de Verschilweergave verplaatst alleen de kanten van de weergave, die alleen-lezen zijn, en legt dus niets vast, en een editor in alleen-lezenmodus legt helemaal geen sprong vast.  
 Geen enkele sprong start of voltooit een relatie die wordt getekend. Het kompas `Go to content` is geen sprong: het centreert waar het naar wijst.
 
 ## Verschilweergave {#diff-viewer}
@@ -351,7 +355,8 @@ De weergave opent over het canvas: links wat er is gewijzigd, daarna het opgesla
 Het huidige document wordt vergeleken zoals het is wanneer de weergave opent; wijzigingen die daarna worden aangebracht, ook die van een medebewerker, komen niet in de weergave terecht. Beide kanten openen, en blijven, in de naamweergave waarin je kijkt, ongeacht welke weergave een van beide bestanden behoudt — zie [Buiten het canvas](./logical-names.md#beyond-the-canvas). Een geopende [Verkenner](./explorer.md#when-it-stands-aside) wordt verborgen zolang de weergave open is, zodat de weergave de volledige breedte van de editor inneemt.  
 Elke kant pant met het scrollwiel, door over een leeg gebied of het vlak van een tabelgroep te slepen, of door ergens op die kant met de middelste muisknop te slepen, en zoomt met `Ctrl + Wheel` (Windows/Linux), `⌘ + Wheel` (Mac) of een knijpbeweging. Bij `70%` en lager klappen de tabellen ervan in, zoals op het canvas — zie [Markeringen aan beide kanten](#marks-on-the-two-sides).  
 Beide kanten zijn alleen-lezen, dus er wordt niets in je document gewijzigd. Elke kant heeft een eigen selectie, en een klik op een tabel daar selecteert die alleen aan die kant.  
-Sluit de weergave met de knop `Close` in de melding `Diff Viewer` waarmee die opent, of met `Escape`.
+Sluit de weergave met de knop `Close` in de melding `Diff Viewer` waarmee die opent, of met `Escape`.  
+Een editor in alleen-lezenmodus biedt ook `Diff Viewer` aan, en de weergave werkt daar zoals in elke editor, waarbij een klik op een tabel van een kant die nog steeds alleen aan die kant selecteert. Een weergave die openstaat wanneer de editor in alleen-lezenmodus gaat, blijft open.
 
 ![De Verschilweergave openen voor een opgeslagen .json-bestand, op rijen gemarkeerd met A, M, D en R in de boomstructuur klikken, filteren op naam en de weergave sluiten](/img/demo-diff-viewer.webp)
 
@@ -423,3 +428,26 @@ Elke kant volgt de weergaveopties van het eigen document. Een wijziging in een c
 In de weergave `Logical Names`, die geen naamcel tekent, komen het blauw van een naamswijziging en het amber van een wijziging in een cel die de kant niet tekent op de logische naam die op de plaats van de naam wordt getekend. Een wijziging van het gegevenstype kleurt de typecel amber in elke naamweergave, ook waar de cel de naam van een domein toont. Geen van beide kanten tekent de kleuren die de controles van het Woordenboek namen op het canvas geven — zie [Markeringen op het canvas](./dictionary.md#marks-on-the-canvas).
 
 Bij `70%` en lager behouden ingeklapte tabellen hun omlijning. De naam behoudt het groen of rood van een toegevoegde of verwijderde tabel, of het blauw van een naamswijziging, en neemt anders het amber van een gewijzigde opmerking aan. Kolomwijzigingen worden pas getekend als je weer inzoomt; de boom vermeldt ze nog wel.
+
+## Editors in alleen-lezenmodus {#read-only-editors}
+
+Een editor met [`readonly`](../../api/erd-editor-element.md#readonly), zoals een Git-revisie die in VS Code opnieuw als diagram wordt geopend, is een lezer. Zijn zes tabbladen, de [Verkenner](./explorer.md#read-only-editors), de minimap, de schuifbalken en de cursors en selecties van medebewerkers blijven, en elk bedieningselement dat het diagram zou wijzigen is weg in plaats van gedimd.
+
+Op het ERD-canvas:
+
+- Een sleepbeweging pant, waar ze ook begint: op leeg canvas, een tabel, een memo of een tabelgroep. De middelste knop, het wiel, een knijpbeweging en de zoomtoetsen werken zoals in elke editor.
+- De aanwijzer op een tabel laat haar relaties oplichten. Een klik die niet beweegt, laat de relaties oplichten van de tabel waarop hij terechtkomt, of de relatie waarop hij terechtkomt, en een klik elders dooft het licht.
+- Een druk, een selectiekader of een toets voor alles selecteren selecteert niets. Alleen een sprong selecteert: een rij van de [Verkenner](./explorer.md#going-to-a-row), een overeenkomst van de bijbehorende [Zoeken en vervangen](./find-and-replace.md#going-to-a-match), of een resultaat met `#`, `@` of `:` van [Snel zoeken](./quick-search.md#searching-the-diagram) selecteert waar hij terechtkomt, omlijnd zoals elke selectie, met de gefocuste cel waar de sprong die plaatst. Een klik die niet beweegt, wist die selectie.
+- De pijltoetsen verplaatsen de gefocuste cel. Kopiëren, `Table Properties` en `Focus on this table` werken op wat een sprong selecteerde, met hun toetsen, en plakken voegt niets toe. De andere toetsen staan in [Sneltoetsen](./settings.md#shortcuts).
+- Er opent geen naam van een cel, memo of tabelgroep voor bewerken. Er zijn geen knoppen `+` of `x` op tabellen, memo's en groepen, geen randen om het formaat van memo's en groepen te wijzigen, geen sleephandvat voor kolommen en geen kleurkiezer.
+
+Het contextmenu van het canvas behoudt `View Option`, `Name View`, `Export` en `Diff Viewer`. Het heeft geen `New Table`, `New Memo`, `New Table Group`, `Toggle Explorer`, `Relationship`, `Derive Physical Names Again`, `Database`, `Import`, `Import and Add` of `Auto Layout`.  
+Het menu van een tabel behoudt alleen `Table Properties`, dat het paneel voor die tabel alleen-lezen opent — zie [Tabeleigenschappen](#table-properties). Een memo, een relatie en een tabelgroep roepen geen menu op.  
+De [canvaswerkbalk](#canvas-toolbar) behoudt de zoom, `Name View`, de zen-modus en het kompas `Go to content`. De bovenste werkbalk toont de naam van het databasesysteem als tekst die niet kan worden bewerkt, en geen `Undo`, `Redo` of `Time Travel`.  
+[Export](./file-import-export.md#exporting), met alle drie zijn items, en de [Verschilweergave](#diff-viewer) werken zoals in elke editor.
+
+[`View Option`](#table-view-options), de `Name View`, het databasesysteem, het tabblad, de positie van de weergave en de zoom veranderen daar nog steeds, maar alleen op dat scherm: niets slaat ze op, legt ze vast of deelt ze — zie [Editors in alleen-lezenmodus](./settings.md#read-only-editors) bij Instellingen.
+
+Een editor in alleen-lezenmodus zetten beëindigt wat openstond voor bewerken: een editor voor een cel, memo of tabelgroepnaam, een relatie of `New Table Group` die wordt getekend, de selectie en de gefocuste cel, het handgereedschap, de kleurkiezer, [Map Columns](./relationship-editing.md#map-columns) en [Tijdreizen](./undo-redo.md#time-travel). De weergave, de zoom, het tabblad en de naamweergave blijven zoals ze waren, en Tabeleigenschappen, de Verschilweergave en het dialoogvenster `Export image` blijven open.  
+Een gebaar dat bezig is, eindigt daar ook. Een sleepbeweging van tabellen of memo's stopt waar ze staat, een `Alt + drag` laat geen kopie vallen, een kolomsleepbeweging eindigt, het wijzigen van de grootte van een memo stopt waar het staat, het wijzigen van de grootte van een tabelgroep wordt weggegooid, en een [Automatische indeling](#auto-layout) wordt met zijn melding weggegooid, dus er verplaatst geen tabel.  
+Weer bewerkbaar gemaakt geeft de editor de bovenstaande bedieningselementen terug, en opent niets wat de omschakeling sloot opnieuw.

@@ -167,7 +167,7 @@ Medan grupper är dolda:
 - Utforskaren utelämnar sin mapp `Table Groups`, och funktionen Sök och ersätt varken hittar eller ersätter gruppnamn, även när `Table group names` är på.
 - [Automatisk layout](#auto-layout) håller fortfarande ihop varje grupps tabeller, fliken Schema SQL erbjuder fortfarande [grupperna att välja bland](#schema-sql-by-group), DBML skriver dem fortfarande och [Importera och lägg till](./file-import-export.md#import-and-add) lägger fortfarande till nedanför de dolda rutorna.
 
-Valet sparas i dokumentet och registreras i [ångrahistoriken](./undo-redo.md#what-the-history-records), liksom de andra visningsalternativen.
+Valet sparas i dokumentet och registreras i [ångrahistoriken](./undo-redo.md#what-the-history-records), liksom de andra visningsalternativen. I en skrivskyddad editor stannar det i stället på den skärmen – se [Skrivskyddade editorer](#read-only-editors).
 
 ## Automatisk layout {#auto-layout}
 
@@ -197,11 +197,13 @@ Valet hör till editorfönstret och sparas inte i dokumentet.
 
 ## Skrivskyddade editorer {#read-only-editors}
 
-I en editor med [`readonly`](../../api/erd-editor-element.md#readonly) ritas grupperna och listas i utforskaren som vanligt, och de går att markera och gå till men inte att ändra:
+I en editor med [`readonly`](../../api/erd-editor-element.md#readonly) ritas grupperna och listas i utforskaren som vanligt, och de går att gå till men inte att ändra:
 
-- Ett tryck på en namnlist markerar gruppen och flyttar ingenting. Det finns inga storlekshandtag och inget `x`.
-- Ett dubbelklick på namnlisten öppnar inget namnfält, och gruppmenyn innehåller enbart `Select tables`.
-- Arbetsytans meny har inget `New Table Group`, tabellmenyn har varken `Group selected tables` eller `Remove from group`, och snabbsökningen listar inget av de två gruppkommandona. Ritläget för `New Table Group` avslutas när editorn blir skrivskyddad.
-- [Arbetsytans verktygsfält](./table-related-functions.md#canvas-toolbar) visar ingen av sina knappar för att lägga till, `New Table Group` inräknad, och `Alt + G` (Windows/Linux) eller `⌥ + G` (Mac) samt `T` och sedan `G` gör ingenting.
-- Visningsalternativet `Table Groups` ändrar ingenting, liksom alla visningsalternativ.
+- [Att gå till en grupp](#going-to-a-group) markerar den, och det är det enda sättet på vilket en grupp markeras där. Ett tryck på en namnlist markerar ingenting och flyttar ingenting: när man drar panorerar det arbetsytan, och ett klick som inte flyttar sig tar bort den markering som ett hopp lämnade.
+- Det finns inga storlekshandtag och inget `x`, och ett dubbelklick på namnlisten öppnar inget namnfält.
+- Ett högerklick på en grupp öppnar ingen meny, och tabellmenyn innehåller enbart `Table Properties`.
+- Arbetsytans snabbmeny har inget `New Table Group`, och snabbsökningen listar inget av de två gruppkommandona. Ritläget för `New Table Group` avslutas när editorn blir skrivskyddad.
+- [Arbetsytans verktygsfält](./table-related-functions.md#canvas-toolbar) behåller bara sina vykontroller, så det har ingen knapp `New Table Group`, och `Alt + G` (Windows/Linux) eller `⌥ + G` (Mac) samt `T` och sedan `G` gör ingenting.
+- Ett drag av tabeller eller av en grupp som pågår när editorn blir skrivskyddad stannar där det är och ändrar ingen grupp, och en ändring av en grupps storlek som pågår avslutas utan att storleken ändras.
+- `View Option` → `Table Groups` visar eller döljer grupperna bara på den skärmen, som varje View Option gör där: dokumentet, medarbetarna och ångra-historiken behåller valet som det var, och när editorn blir skrivbar igen kommer dokumentets val tillbaka.
 - Valet `Tables` på fliken Schema SQL fungerar fortfarande.

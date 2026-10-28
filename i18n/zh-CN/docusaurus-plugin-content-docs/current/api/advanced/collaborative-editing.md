@@ -55,6 +55,10 @@ const sharedStore = editor.getSharedStore();
 该锁定关闭期间，在可编辑的编辑器中进行的切换会改变每个编辑器和副本上的名称显示，以最后一次切换为准，并且它们都会保存这一显示方式。  
 只读编辑器自身的切换始终只留在该编辑器上，而该编辑器仍会跟随其他编辑器共享的切换。
 
+从 `5.0.0` 起，[只读](../erd-editor-element.md#readonly)编辑器完全不发送任何更改。其阅读者更改的滚动、缩放、标签页、名称显示、数据库、Code Generator 的语言、名称大小写、括号类型和 `View Option` 各行，无论它们的锁定如何，都只保留在其屏幕上；在 `5.0.0` 之前，它的滚动、缩放、标签页切换、数据库和代码设置会像可编辑的编辑器那样发送出去。  
+它的 store 仍会发送其 tracker 发出的阅读者的光标、焦点、选中状态和拖动框，回答加入的编辑器所请求的寄存器，并应用其他编辑器发来的每项更改。数据库、Code Generator 设置或 `View Option` 某行的变化会到达它的文档，除非阅读者在那里更改了该设置，否则也会到达它的屏幕；共享的名称显示切换则无论如何都会显示在它的屏幕上。  
+在编辑器变为只读时，它会先发出 store 仍扣留的拖动或滚动内容，与 [flushStreamBuffers](#flushstreambuffers) 的做法相同，这样其他编辑器就能保留其最后的内容。
+
 [锁定](../../guide/guides/settings.md#锁定)是共享的：每个编辑器上都以对某项设置最后一次的锁定或解锁为准，而锁定会携带开启它的那个编辑器上的值，因此每个编辑器和副本保存的都是同一个值。  
 因此，`Viewport` 锁定保存的是开启它的那个编辑器的视图，`Canvas Type` 锁定保存的则是该编辑器在进入 Settings 标签页（锁定就在这里开启）之前所在的最后一个标签页。  
 关闭 `Language`、`Table Name Case`、`Column Name Case`、`Bracket Type` 或（从 `4.2.0` 起）`Name View` 锁定时，还会把每个编辑器上的该设置改为关闭它的那个编辑器上显示的值，因此它们保存的仍是同一个值。关闭 `Viewport` 或 `Canvas Type` 不会移动任何人的视图或标签页。
@@ -71,6 +75,8 @@ const sharedStore = editor.getSharedStore();
 这里从 subscribe 到 dispatch 的连接代替了网络，因此无需传输方式即可了解会话的结构。
 
 ```js
+import '@dineug/erd-editor/erd-editor.js';
+
 const editor1 = document.createElement('erd-editor');
 const editor2 = document.createElement('erd-editor');
 

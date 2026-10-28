@@ -1,12 +1,13 @@
 ---
 sidebar_position: 1
-description: erd-editor הוא עורך תרשימי ישויות-קשרים לדפדפן, ל-Google Drive, ל-VS Code, ל-IntelliJ, ל-Obsidian ולדף שמטמיע אותו.
+description: erd-editor הוא עורך תרשימי ישויות-קשרים לדפדפן, ל-Google Drive, ל-VS Code, ל-IntelliJ, ל-Obsidian ולדף שמטמיע אותו, עם מציג לקריאה בלבד להצגת תרשים בכל אתר.
 ---
 
 # מבוא
 
 erd-editor הוא עורך תרשימי ישויות-קשרים.
-הוא זמין כאפליקציית רשת, כאפליקציית Google Drive, כהרחבת VS Code, כתוסף ל-IntelliJ, כתוסף ל-Obsidian, וכאלמנט מותאם אישית `<erd-editor>` שניתן להטמיע בכל דף.
+הוא זמין כאפליקציית רשת, כאפליקציית Google Drive, כהרחבת VS Code, כתוסף ל-IntelliJ, כתוסף ל-Obsidian, וכאלמנט מותאם אישית `<erd-editor>` שניתן להטמיע בכל דף, ולצדו `<erd-viewer>` להצגת תרשים לקריאה בלבד.
+אתר שאינו טוען סקריפט משלו יכול במקום זאת למסגר תרשים לקריאה בלבד מ-erd-editor.io/embed.
 בכל אלה מדובר באותו עורך ובאותו פורמט מסמך.
 
 ![תרשים של חנות: ריחוף עם הסמן מעל קשר, הוספת עמודה והתמקדות ב-orders במצב Flow](/img/demo-overview.webp)
@@ -20,7 +21,8 @@ erd-editor הוא עורך תרשימי ישויות-קשרים.
 | VS Code | [Marketplace](https://marketplace.visualstudio.com/items?itemName=dineug.vuerd-vscode) | פתיחת קבצי `.erd.json` בעורך מותאם אישית |
 | IntelliJ | [JetBrains Marketplace](https://plugins.jetbrains.com/plugin/23594-erd-editor) | אותו עורך, עבור סביבות IDE מבוססות IntelliJ |
 | Obsidian | [Community plugins](https://community.obsidian.md/plugins/erd-editor) | פתיחת קבצי `.erd` ו-`.erd.json` בכרטיסייה של הכספת, במחשב שולחני בלבד |
-| דף שמטמיע את העורך | `npm install @dineug/erd-editor` | האלמנט המותאם אישית `<erd-editor>`, שאינו תלוי באף מסגרת עבודה – ראו [התקנה](../api/installation.md) |
+| דף שמטמיע את העורך | `npm install @dineug/erd-editor` | האלמנט המותאם אישית `<erd-editor>`, שאינו תלוי באף מסגרת עבודה, ו-`<erd-viewer>`, שמציג תרשים לקריאה בלבד – ראו [התקנה](../api/installation.md) ו-[ErdViewerElement](../api/erd-viewer-element.md) |
+| כל אתר | [erd-editor.io/embed](https://erd-editor.io/embed) | תרשים לקריאה בלבד ב-iframe, מכתובת ה-URL של מסמך, בלי קוד – ראו [הטמעה](./guides/embedding.md) |
 | סוכני קוד | [`@dineug/erd-editor-mcp`](../mcp/installation.md) | שרת MCP שמאפשר ל-Claude Code, ל-Codex או ללקוח אחר לערוך תרשים בזמן אמת ב-VS Code, ב-IDE של JetBrains או ב-Obsidian, או בקובץ עצמו |
 
 כדי לנסות את העורך ב-IDE, יש ליצור קובץ ריק עם הסיומת `.erd.json` ולפתוח אותו.
@@ -45,6 +47,7 @@ VS Code פותח קובץ ERD כטקסט JSON ב-Source Control, ב-Local Histor
 - שמירת תקן השמות של התרשים בכרטיסיית [מילון](./guides/dictionary.md). בגיליונות `Domains`, `Words` ו-`Terms` שלה ניתן לחפש, למיין ולערוך כמו בגיליון אלקטרוני, ולכל אחד מהם היסטוריית פעולות משלו. הגיליונות מייבאים ומייצאים CSV: ייבוא קורא את המבנה של העורך עצמו או את המבנה של תקן הנתונים הציבוריים של קוריאה, ב-UTF-8 או ב-EUC-KR, וייצוא כותב את המבנה של העורך עצמו. תא השם הלוגי משלים שמות של מונחים. שם לוגי נותן לטבלה או לעמודה שלו שם פיזי מהמונח התואם, או מהקיצורים של המילים שהוא מתפצל אליהן, עד שהשם נכתב ידנית. אחרי שמילה או מונח משתנים, [`Derive Physical Names Again`](./guides/dictionary.md#derive-physical-names-again) גוזר את השמות מחדש, כולל שמות שנכתבו ידנית. עמודה שמקושרת לתחום, ידנית או דרך המונח שלה, [מקבלת את סוג הנתונים של התחום](./guides/dictionary.md#domains-and-data-types) ועוקבת אחרי השינויים בו, ואפשרות התצוגה `Domain` מציגה את התחום של כל עמודה. הגיליון [`Checks`](./guides/dictionary.md#the-checks-sheet) מפרט מילים אסורות, מילים לא רשומות ומילים נרדפות, שמות כפולים, תחומים לא ידועים, שמות פיזיים ששונים מהשם של המונח שלהם, וסוגי עמודות ששונים מהסוג של התחום שלהן. בד הציור צובע את השמות הלוגיים והפיזיים שבדיקות המילים והמונחים מסמנות.
 - ייבוא סכמה קיימת מ-`json`, מ-`Schema SQL`, מ-`GraphQL`, מ-`DBML` או מ-`AML`. ראו [ייבוא וייצוא של קבצים](./guides/file-import-export.md). קובץ סכמת SQL, GraphQL, DBML או AML מיובא כשהטבלאות שלו פרוסות לאורך הקשרים שלהן, או בשורות כשאין בו קשרים. הפקודה [`Import and Add`](./guides/file-import-export.md#import-and-add) מוסיפה קובץ מתחת לתרשים במקום להחליף אותו.
 - ייצוא התרשים כ-`json`; כסכמת SQL מכרטיסיית [סכמת SQL](./guides/schema-sql.md#saving-or-copying-the-sql), שנשמרת כקובץ `.sql` או מועתקת; או מתיבת הדו-שיח [`Export image`](./guides/file-import-export.md#image) כתמונת PNG או SVG, או כ-PNG בלוח.
+- הצגת תרשים לקריאה בלבד באתר אחר: מסגור של [erd-editor.io/embed](./guides/embedding.md) עם כתובת ה-URL של קובץ, גם כזה ב-GitHub, או טעינה של האלמנט [`<erd-viewer>`](../api/erd-viewer-element.md) בדף שלכם. קורא מזיז את התצוגה, מתקרב, מחפש ומאיר קשרים, ודבר אינו עורך את התרשים.
 - כתיבת סכמת SQL בתחביר של שמונה מסדי נתונים: Databricks, MSSQL, MariaDB, MySQL, Oracle, PostgreSQL, Snowflake ו-SQLite. ראו [פעולות על טבלאות](./guides/table-related-functions.md#databases). חלונית האפשרויות של כרטיסיית [סכמת SQL](./guides/schema-sql.md) קובעת אילו משפטים, איזו כותרת ואילו קבוצות טבלאות ייכתבו, יכולה [לכתוב שמות לוגיים בהערות ריקות](./guides/schema-sql.md#logical-names-as-comments), ושומרת בתרשים SQL מותאם אישית שייכתב לפני הטבלאות ואחריהן.
 - יצירת קוד לעשרים ושניים יעדים: שפות הקוד C#, Go, Java, Kotlin, PHP, Rust, Scala, Swift ו-TypeScript; כלי ה-ORM Doctrine, Drizzle, JPA, SeaORM, Sequelize, SQLAlchemy ו-TypeORM; וכן AML, DBML, GraphQL, JSON Schema, Mermaid ו-Zod. חלונית האפשרויות של כרטיסיית מחולל קוד קובעת את שפת הקוד, את מסד הנתונים ואת סגנונות השמות, והקוד נשמר כקובץ עם הסיומת של שפת הקוד או מועתק. ראו [מחולל קוד](./guides/code-generator.md).
 - קריאת הסכמה ב[ויזואליזציה](./guides/visualization.md), כ-`Graph` מבוסס כוחות או כ-`Flow` של כרטיסי טבלאות שנפרסים לאורך הקשרים ביניהן, ושם ריחוף עם הסמן מעל טבלה מאיר את כל מה שהיא נוגעת בו. בכרטיסיית ERD, יש להקיש על `Alt + F` כדי [להתמקד בטבלאות שנבחרו](./guides/visualization.md#focusing-on-tables) ובטבלאות הקשורות אליהן. במצב `Flow`, [`Previous table` ו-`Next table`](./guides/visualization.md#previous-table-and-next-table) מבצעים צעד אחורה וצעד קדימה בין מה שמצב הזרימה צומצם אליו, כמו מקשי ביטול הפעולה והביצוע החוזר שם.

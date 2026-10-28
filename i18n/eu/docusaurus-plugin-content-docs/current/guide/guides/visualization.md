@@ -237,4 +237,5 @@ Kanpo-estekaren [txarteleko botoiak](#card-buttons) urrunago doa, Fluxutik atera
 Lankideen edizioak diagramara iristen jarraitzen dute Fluxuan zauden bitartean, eta txartelek haiek gehitzen edo kentzen dituzten taulei eta erlazioei jarraitzen diete. Ikus [Fluxua nola antolatzen den](#how-flow-is-placed).  
 Haien hautapen- eta foku-eraztunak txarteletan marrazten dira, baina ez haien kurtsoreak eta arrastatze-laukiak. Ikus [Elkarlaneko edizioa](../../api/advanced/collaborative-editing.md).
 
-Bi moduek, fokuratzea eta urratsez urrats ibiltzea barne, `readonly` atributua duen editore batean ere funtzionatzen dute, baita `Name View` zerrendak ere, han zure pantaila bakarrik aldatzen duena.
+Bi moduek, fokuratzea eta urratsez urrats ibiltzea barne, [`readonly`](../../api/erd-editor-element.md#readonly) atributua duen editore batean ere funtzionatzen dute, baita `Name View` zerrendak ere, han zure pantaila bakarrik aldatzen duena.  
+Irakurtzeko soilik dagoen editore baten ERD fitxan taularen menuak `Table Properties` aukera bakarrik du eta sakatzeak ez du taularik hautatzen; beraz, fokuratu `Alt + F` (Windows/Linux) edo `⌥ + F` (Mac) lasterbidearekin [Arakatzailetik](./explorer.md#going-to-a-row) edo [Bilaketa azkarretik](./quick-search.md) egindako jauzi batek hautatutako taulan.

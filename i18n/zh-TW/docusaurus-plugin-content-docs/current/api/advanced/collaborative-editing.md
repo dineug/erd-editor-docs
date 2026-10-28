@@ -55,6 +55,10 @@ const sharedStore = editor.getSharedStore();
 鎖定關閉期間，在可編輯的編輯器中做出的切換會變更每個編輯器和複本上的「名稱顯示」，以最後一次切換為準，而且它們每一個都會儲存該設定。  
 唯讀編輯器自身的切換一律只會留在該編輯器上，而該編輯器仍會跟隨其他編輯器共用的切換。
 
+自 `5.0.0` 起，[唯讀](../erd-editor-element.md#readonly)編輯器完全不會送出任何變更。其讀者所變更的捲動、縮放、索引標籤、名稱顯示、資料庫、程式碼產生器語言、名稱大小寫、引號類型和 `View Option` 各列，無論其鎖定為何，都只會留在它的畫面上；在 `5.0.0` 之前，其捲動、縮放、索引標籤切換、資料庫和程式碼設定會像可編輯的編輯器一樣送出。  
+它的存放區仍會送出其追蹤器所送出的讀者游標、焦點、選取範圍和拖曳框，回應加入的編輯器所要求的暫存器，並套用其他編輯器送來的每一項變更。資料庫、程式碼產生器設定或 `View Option` 列的變更會送達它的文件，也會送達它的畫面（除非其讀者已在該處變更了該設定），而共用的「名稱顯示」切換無論如何都會顯示在它的畫面上。  
+編輯器轉為唯讀時，會先送出存放區對拖曳或捲動仍保留未送的部分，如同 [flushStreamBuffers](#flushstreambuffers) 所做的，讓其他編輯器保有最後的內容。
+
 [鎖定](../../guide/guides/settings.md#lock)是共用的：每個編輯器都以對某項設定最後一次的鎖定或解除鎖定為準，而鎖定會攜帶開啟它的那個編輯器上的值，因此每個編輯器和複本都會儲存相同的值。  
 因此，`Viewport` 鎖定會儲存開啟它的那個編輯器的檢視，而 `Canvas Type` 鎖定會儲存該編輯器在切換到「設定」索引標籤（鎖定就是在此開啟）之前所在的最後一個索引標籤。  
 關閉 `Language`、`Table Name Case`、`Column Name Case`、`Bracket Type` 鎖定，或自 `4.2.0` 起的 `Name View` 鎖定時，也會將每個編輯器上的該項設定改為關閉它的那個編輯器上所顯示的值，因此各編輯器仍會儲存同一個值。關閉 `Viewport` 或 `Canvas Type` 的鎖定不會移動任何人的檢視或索引標籤。
@@ -71,6 +75,8 @@ const sharedStore = editor.getSharedStore();
 這裡從訂閱到分派的串接代替了網路，因此可以在沒有傳輸方式干擾的情況下看出工作階段的結構。
 
 ```js
+import '@dineug/erd-editor/erd-editor.js';
+
 const editor1 = document.createElement('erd-editor');
 const editor2 = document.createElement('erd-editor');
 

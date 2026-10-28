@@ -12,7 +12,7 @@ description: 편집 되돌리기와 다시 실행, 히스토리에 기록되는 
 - Redo: `Ctrl + Shift + Z` (Windows/Linux) or `⌘ + Shift + Z` (Mac)
 
 ERD 탭에서는 툴바에도 동일한 두 명령이 `Time Travel` 옆에 `Undo`, `Redo` 버튼으로 있습니다. 사전 탭에서는 `Time Travel` 없이 `Undo`와 `Redo`가 표시되며, 그 밖의 탭에서는 표시되지 않습니다.  
-되돌리거나 다시 실행할 내용이 있을 때만 활성화됩니다. `readonly` 에디터에서는 이 버튼들이 숨겨지고, 단축키도 아무것도 되돌리거나 다시 실행하지 않습니다.
+되돌리거나 다시 실행할 내용이 있을 때만 활성화됩니다. `readonly` 에디터에서는 이 버튼들과 `Time Travel`이 숨겨지고, 단축키도 아무것도 되돌리거나 다시 실행하지 않습니다.
 
 Undo와 Redo가 다이어그램의 히스토리에 적용되는 것은 ERD 탭에서뿐입니다.  
 ERD 탭에서는 빠른 검색, `Table Properties`, `Diff Viewer`, `Auto Layout` 미리보기, [`Export image`](./file-import-export.md#이미지) 대화 상자, [컬럼 매핑](./relationship-editing.md#컬럼-매핑), Time Travel이 열려 있는 동안 단축키가 동작하지 않습니다.  
@@ -58,6 +58,8 @@ ERD 탭에서는 빠른 검색, `Table Properties`, `Diff Viewer`, `Auto Layout`
 - 사전 탭에 표시된 시트, 그리고 각 시트의 검색, 선택, 스크롤, 열 너비. [탭 열기](./dictionary.md#opening-the-tab) 문서를 참고하세요.
 
 이 항목들의 변경은 되돌릴 수 없습니다.
+
+읽기 전용 에디터는 아무것도 기록하지 않습니다. 화면 위치, 확대/축소, `View Option` 토글은 탭, 이름 표시, 데이터베이스, 코드 설정과 함께 거기서도 바뀌지만 그 화면에서만 바뀌므로 되돌릴 것이 없습니다. 설정의 [읽기 전용 에디터](./settings.md#read-only-editors) 문서를 참고하세요.
 
 사전 탭에서 한 편집은 되돌릴 수 있지만, 이 히스토리가 아니라 그 편집이 속한 시트의 히스토리에 기록됩니다. 따라서 ERD 탭의 Undo는 도메인의 새 `Data Type`과 그 타입이 바꾼 컬럼 타입을 포함해 사전 탭의 편집을 하나도 되돌리지 않습니다. [사전 시트](#dictionary-sheets) 항목을 참고하세요.
 
@@ -136,7 +138,7 @@ ERD 탭에서 컬럼을 도메인에 다시 연결하거나 도메인에 연결�
 ## Time Travel
 
 툴바에서 ERD 탭의 Undo, Redo 옆에 있는 `Time Travel` 버튼으로 열 수 있습니다.  
-다이어그램의 히스토리에 기록된 변경이 하나도 없으면 버튼은 동작하지 않습니다.
+다이어그램의 히스토리에 기록된 변경이 하나도 없으면 버튼은 동작하지 않습니다. 읽기 전용 에디터에는 이 버튼이 없으며, 읽기 전용이 되는 에디터는 Time Travel을 적용하지 않고 닫습니다.
 
 Time Travel은 다이어그램의 읽기 전용 복사본을 별도로 열며, `Viewport`나 `Name View` 잠금이 켜져 있는지와 상관없이 캔버스에 현재 보이는 스크롤 위치, 확대/축소 레벨, [이름 표시](./logical-names.md#name-view)로 보여 줍니다.  
 다이어그램의 히스토리만 따라 이동하므로, 사전 시트의 편집은 Time Travel의 시점에 포함되지 않습니다.  

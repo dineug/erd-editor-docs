@@ -23,7 +23,7 @@ Ouvrez-le par l’un de ces moyens :
 - Le bouton `Explorer` de la barre d’outils, juste après `Search`, avec une icône d’arborescence. Son info-bulle indique `Explorer (Ctrl + F)` (Windows/Linux) ou `Explorer (⌘ + F)` (Mac).
 - `Ctrl + F` (Windows/Linux) ou `⌘ + F` (Mac), nommé `Toggle Explorer` dans l’onglet [Raccourcis](./settings.md#shortcuts) des paramètres.
 - `Toggle Explorer` dans la [recherche rapide](./quick-search.md), proposé dans tous les onglets. Saisir `find`, `replace`, `rename`, `tree`, `outline` ou `objects` le fait apparaître.
-- `Toggle Explorer` dans le menu contextuel du canevas : cliquez avec le bouton droit sur un emplacement vide du canevas ERD, en dehors de tout [groupe de tables](./table-groups.md). Il se trouve après `New Table`, `New Memo` et `New Table Group`, avant `Relationship`.
+- `Toggle Explorer` dans le menu contextuel du canevas : cliquez avec le bouton droit sur un emplacement vide du canevas ERD, en dehors de tout [groupe de tables](./table-groups.md). Il se trouve après `New Table`, `New Memo` et `New Table Group`, avant `Relationship`. Le menu du canevas d’un éditeur en lecture seule n’a pas cette entrée (voir [Éditeurs en lecture seule](#read-only-editors)).
 
 Les deux entrées `Toggle Explorer` affichent le raccourci à droite.  
 Le bouton de la barre d’outils, le raccourci et l’entrée de la recherche rapide fonctionnent depuis tous les onglets. Depuis l’onglet Visualisation, Schéma SQL, Générateur de code, Dictionnaire ou Paramètres, ils passent d’abord à l’onglet ERD, car l’explorateur ne s’affiche que là.
@@ -168,5 +168,8 @@ La [recherche rapide](./quick-search.md) laisse aussi l’explorateur ouvert, et
 
 ## Éditeurs en lecture seule {#read-only-editors}
 
-Dans un éditeur [`readonly`](../../api/erd-editor-element.md#readonly), l’explorateur fonctionne comme dans tout autre éditeur : le bouton de la barre d’outils avec la même info-bulle, le raccourci, les deux entrées `Toggle Explorer`, l’arborescence, le repli, `Collapse All` et l’accès à une ligne, qui sélectionne comme d’habitude l’élément visé. Son titre y affiche aussi `Explorer`.  
+Dans un éditeur [`readonly`](../../api/erd-editor-element.md#readonly), l’explorateur fonctionne comme dans tout autre éditeur : le bouton de la barre d’outils avec la même info-bulle, le raccourci, l’entrée `Toggle Explorer` de la recherche rapide, l’arborescence, le repli et `Collapse All`. Son titre y affiche aussi `Explorer`. Le menu contextuel du canevas n’y a pas `Toggle Explorer`, puisqu’il ne conserve que les entrées de lecture (voir [Éditeurs en lecture seule](./table-related-functions.md#read-only-editors)).
+
+Aller à une ligne fonctionne comme dans [Aller à une ligne](#going-to-a-row) : la vue se déplace selon la même règle, et la table, le groupe de tables ou le mémo de la ligne est sélectionné, entouré d’un contour sur le canevas, la cellule active se trouvant là où la ligne la place.  
+C’est la seule façon pour un éditeur en lecture seule de sélectionner quoi que ce soit. Un appui sur le canevas ne sélectionne rien, et un clic immobile efface la sélection qu’une ligne a laissée. Une table qu’il a sélectionnée s’ouvre dans les [Propriétés de la table](./table-related-functions.md#table-properties) avec `Alt + Space` (Windows/Linux) ou `⌥ + Space` (Mac), en lecture seule, et `Ctrl + C` (Windows/Linux) ou `⌘ + C` (Mac) copie ce qu’il a sélectionné comme dans n’importe quel éditeur.  
 Sa recherche ne fait que trouver (voir [Éditeurs en lecture seule](./find-and-replace.md#read-only-editors) dans la page Rechercher et remplacer).

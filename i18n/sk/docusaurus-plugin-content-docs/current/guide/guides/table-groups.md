@@ -167,7 +167,7 @@ Kým sú skupiny skryté:
 - Prieskumník vynechá svoj priečinok `Table Groups` a hľadanie a nahrádzanie názvy skupín nenájde ani nenahradí, ani keď je zapnutý druh textu `Table group names`.
 - [Automatické rozloženie](#auto-layout) naďalej drží tabuľky každej skupiny pohromade, karta Schéma SQL naďalej ponúka [skupiny na výber](#schema-sql-by-group), DBML ich naďalej zapisuje a príkaz [Importovať a pridať](./file-import-export.md#import-and-add) naďalej vkladá obsah pod skryté rámce.
 
-Voľba sa ukladá do dokumentu a zaznamenáva do [histórie zmien](./undo-redo.md#what-the-history-records) rovnako ako ostatné prepínače ponuky Možnosti zobrazenia.
+Voľba sa ukladá do dokumentu a zaznamenáva do [histórie zmien](./undo-redo.md#what-the-history-records) rovnako ako ostatné prepínače ponuky Možnosti zobrazenia. V editore iba na čítanie zostáva namiesto toho na tejto obrazovke – pozrite si časť [Editory iba na čítanie](#read-only-editors).
 
 ## Automatické rozloženie {#auto-layout}
 
@@ -197,11 +197,13 @@ Voľba patrí k oknu editora a neukladá sa do dokumentu.
 
 ## Editory iba na čítanie {#read-only-editors}
 
-V editore s atribútom [`readonly`](../../api/erd-editor-element.md#readonly) sa skupiny vykresľujú a v prieskumníkovi uvádzajú ako zvyčajne a možno ich vyberať a prechádzať na ne, ale nie meniť:
+V editore s atribútom [`readonly`](../../api/erd-editor-element.md#readonly) sa skupiny vykresľujú a v prieskumníkovi uvádzajú ako zvyčajne a možno na ne prechádzať, ale nemožno ich meniť:
 
-- Stlačenie tlačidla myši na záhlaví skupinu vyberie a nič nepresunie. Nie sú k dispozícii úchyty na zmenu veľkosti ani tlačidlo `x`.
-- Dvojité kliknutie na záhlavie neotvorí editor názvu a ponuka skupiny obsahuje iba položku `Select tables`.
-- Ponuka plátna neobsahuje položku `New Table Group`, ponuka tabuľky neobsahuje položky `Group selected tables` ani `Remove from group` a rýchle vyhľadávanie neuvádza ani jeden z príkazov pre skupiny. Kreslenie pomocou `New Table Group` sa ukončí pri prepnutí editora do režimu iba na čítanie.
-- [Panel nástrojov plátna](./table-related-functions.md#canvas-toolbar) nezobrazuje žiadne zo svojich tlačidiel na pridávanie vrátane tlačidla `New Table Group` a klávesové skratky `Alt + G` (Windows/Linux) alebo `⌥ + G` (Mac) ani `T` a potom `G` nemajú žiadny účinok.
-- Možnosť zobrazenia `Table Groups` nič nemení, rovnako ako všetky možnosti v ponuke Možnosti zobrazenia.
+- [Prechod na skupinu](#going-to-a-group) ju vyberie a je to jediný spôsob, ako sa tam skupina vyberie. Stlačenie na záhlaví nevyberie nič a nič nepresunie: pri ťahaní posúva plátno a kliknutie bez pohybu zruší výber, ktorý zanechal skok.
+- Nie sú k dispozícii úchyty na zmenu veľkosti ani tlačidlo `x` a dvojité kliknutie na záhlavie neotvorí editor názvu.
+- Kliknutie pravým tlačidlom na skupinu neotvorí žiadnu ponuku a ponuka tabuľky obsahuje iba položku `Table Properties`.
+- Ponuka plátna neobsahuje položku `New Table Group` a rýchle vyhľadávanie neuvádza ani jeden z príkazov pre skupiny. Kreslenie pomocou `New Table Group` sa ukončí pri prepnutí editora do režimu iba na čítanie.
+- [Panel nástrojov plátna](./table-related-functions.md#canvas-toolbar) si ponecháva iba ovládacie prvky zobrazenia, takže nemá tlačidlo `New Table Group`, a klávesové skratky `Alt + G` (Windows/Linux) alebo `⌥ + G` (Mac) ani `T` a potom `G` nemajú žiadny účinok.
+- Ťahanie tabuliek alebo skupiny, ktoré prebieha, keď sa editor prepne do režimu iba na čítanie, sa zastaví tam, kde je, a nezmení žiadnu skupinu, a zmena veľkosti skupiny, ktorá prebieha, sa skončí bez zmeny veľkosti.
+- `View Option` → `Table Groups` zobrazí alebo skryje skupiny iba na tejto obrazovke, ako každá možnosť View Option tam: dokument, spolupracovníci a história vrátenia späť si ponechajú voľbu, aká bola, a prepnutie editora späť na úpravy vráti voľbu dokumentu.
 - Voľba `Tables` na karte Schéma SQL naďalej funguje.

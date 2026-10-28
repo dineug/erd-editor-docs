@@ -1,6 +1,6 @@
 ---
 sidebar_position: 7
-description: Ezabatu erlazio bat, aldatu haren mota, ezarri haren ON DELETE eta ON UPDATE ekintzak, mapatu lehendik dauden zutabeetara Mapatu zutabeak erabiliz, irakurri konektorearen notazioa, landu N:M erlazioak eta erlazio identifikatzaileak, eta ikusi gako arrotzen zutabe berriek beren gakotik zer kopiatzen duten eta nola ematen zaien izena.
+description: Ezabatu erlazio bat, aldatu haren mota, ezarri haren ON DELETE eta ON UPDATE ekintzak, mapatu lehendik dauden zutabeetara Mapatu zutabeak erabiliz, irakurri konektorearen notazioa eta konektoreak taulen inguruan nola bideratzen diren, landu N:M erlazioak eta erlazio identifikatzaileak, eta ikusi gako arrotzen zutabe berriek beren gakotik zer kopiatzen duten eta nola ematen zaien izena.
 ---
 
 # Erlazioak editatzea
@@ -81,7 +81,7 @@ Errenkada bakoitzak taula umeak lehendik duen zutabe bat erabiltzen du edo gako 
 Bi modutara irekitzen da:
 
 - Erlazio bat marraztean, taula umearen ondoko `Map to existing columns` aukeratik. Ikus [Erlazioak sortzea](./editing-start.md#relationship-creation). Orduan, `Map` botoiak marrazten ari den motako erlazio bat gehitzen du.
-- Erlazioaren laster-menuko `Map Columns` aukeratik, lehendik dagoen erlazio baten zutabeak aldatzeko. Orduan, `Save` botoiak aldaketa idazten du. Irakurtzeko soilik dagoen editore batek ez du aukera hau erakusten.
+- Erlazioaren laster-menuko `Map Columns` aukeratik, lehendik dagoen erlazio baten zutabeak aldatzeko. Orduan, `Save` botoiak aldaketa idazten du. Irakurtzeko soilik dagoen editore batek ez du erlazioaren laster-menurik irekitzen; beraz, Mapatu zutabeak ezin da hor ireki.
 
 Elkarrizketa-koadroaren azpitituluak bi taulak eta erlazio mota aipatzen ditu, adibidez `users → posts · One N`. Mota hemen erakusten da, baina ez da aldatzen. Erabili [Mota aldatzea](#type-change).
 
@@ -226,6 +226,9 @@ Argia oihalean saguaren ezkerreko edo eskuineko botoiaren hurrengo sakatzean itz
 Erdiko botoiarekin edo esku-tresnarekin ikuspegia mugitzeak argiztatuta uzten du, eta baita Arakatzailean edo Diferentzia-ikustailean errenkada bat tolestu edo zabaltzeak, hautapena `Escape` teklarekin garbitzeak, eta [Bilaketa azkarra](./quick-search.md) edo Fluxuko kanpo-estekako [txartelaren botoia](./visualization.md#card-buttons) erabiliz egindako jauzi batek ere.  
 Argia ez da gordetzen eta ez dago desegite-historian, eta lankideek ez dute ikusten.
 
+[`readonly`](../../api/erd-editor-element.md#readonly) atributua duen editore batean, erakusleak ere konektoreak pizten ditu, jauzi batek utzitako argiaren ordez. Taula baten gainean geldi egonda, taula horren konektore guztiak pizten ditu hover kolorean, erakuslea taulatik atera arte.  
+Mugitzen ez den klik batek argi bat piztuta uzten du hurrengo horrelako klik arte: taula batean, taula horren konektoreak pizten ditu; konektore batean, konektore hori; eta beste edonon, ezer ez. Bertan arrastatzeak oihala mugitzen du eta argi hori dagoen bezala uzten du.
+
 Ezkutatu ERD oihaleko konektoreak `Relationship` ikuspegi-aukerarekin, edo haien etiketak soilik `Referential Actions` ikuspegi-aukerarekin, lehenespenez aktibatuta dagoena. Ikus [Taulen ikuspegi-aukerak](./table-related-functions.md#table-view-options).  
 Etiketak ez dira marrazten `70%` edo gutxiagoko zoomean, taulak beren izenera murrizten diren mailan.  
 [Irudi-esportazio bat](./file-import-export.md#image) beti % 100ean marrazten da; beraz, etiketak marrazten ditu oihalaren zooma edozein dela ere, ikuspegi-aukera batek ezkutatzen ez baditu behintzat. `Background` desaktibatuta dagoenean, etiketa bakoitzaren atzeko laukia ere gardena da.  
@@ -233,9 +236,10 @@ Bisualizazioa fitxako [Fluxu modua](./visualization.md#flow-mode) erabiliz, kone
 
 ## Konektoreen bideratzea {#connector-routing}
 
-Konektoreak ortogonalki bideratzen dira.  
-Ibilbide batek bere bi muturren artean dauden taulak inguratzen ditu, haiek zeharkatu beharrean, eta haren izkinak biribilduak dira.  
-Mutur bakoitza bere taulatik tarte zuzen labur batean irteten da biratu aurretik; beraz, elkarrengandik gertu dauden eta konektorearen muturrak lerrokatuta dituzten bi taula marra zuzen bakar batez lotzen dira, inguru bat egin beharrean.  
+Konektoreak ortogonalki bideratzen dira, eta haien izkinak biribilduak dira.  
+Ibilbide batek bere bideko taulak inguratzen ditu, haietatik igaro beharrean. Bere bi muturren artean bihurgune gutxi dituen ibilbide guztiek taula bat zeharkatuko luketen lekuan, diagrama pilatu batean bezala, konektoreak behar dituen bihurgune guztiak dituen inguruko bidea hartzen du. Inguruko biderik aurkitzen ez den lekuan bakarrik zeharkatzen du oraindik taula bat.  
+Konektore batek bere bi taulak elkarren aurrez aurre dauden alde-pare batetik uzten ditu halakorik dagoen guztietan, eta mutur bakoitza bere taulatik tarte zuzen labur batean irteten da biratu aurretik; beraz, elkarrengandik gertu dauden eta konektorearen muturrak lerrokatuta dituzten bi taula marra zuzen bakar batez lotzen dira, inguru bat egin beharrean.  
+Elkarren aurrez aurre dauden bi taula hori baino hurbilago egonda, `40px` baino gutxiagora ere, aurrez aurreko aldeak mantentzen dira, eta haien muturrak lerrokatuta ez daudenean konektoreak haien arteko tartea zeharka gurutzatzen du, bietako baten azpitik joan beharrean.  
 Taula baten alde beretik irteten diren ibilbideak korridore bereizietan banatzen dira, bata bestearen gainetik joan ez daitezen.  
 Taulak soilik saihesten dira: konektore batek ohar bat edo taula-talde baten koadroa zeharka dezake, eta taula-taldeen gainean eta taulen eta oharren azpian marrazten da.
 
@@ -243,6 +247,9 @@ Taula batetik bere buruarako erlazio bat taularen goiko eskuineko izkinaren ingu
 Taula bereko auto-erreferentzia gehiago lehenengoaren kanpoaldean habiaratzen dira; beraz, haien kurbek ez dute elkar zeharkatzen, ezta taula ere.
 
 Ez dago ezer konfiguratu beharrik.  
-Ibilbideak automatikoki birkalkulatzen dira oihaleko edozer mugitzen den edo tamainaz aldatzen den bakoitzean; beraz, ez dira inoiz eskuz ukitu behar.
+Ibilbideak automatikoki birkalkulatzen dira oihaleko edozer mugitzen den edo tamainaz aldatzen den bakoitzean; beraz, ez dira inoiz eskuz ukitu behar.  
+Arrastatzen ari zaren bitartean, mugitzen dituzun taulen konektoreek haiei jarraitzen diete, eta gainerako konektore guztiek arrastatzea hasi zenean zuten ibilbidea mantentzen dute. Askatzen duzunean, mugimenduak berriro bideratzen duen konektore bakoitza berriro marrazten da, adibidez bidean jarritako taula baten inguruan orain doan bat, edo taula bat bere bidetik atera ondoren zuzentzen den bat.
+
+Diagrama batek ibilbide berberak marrazten ditu Izenen ikuspegi berean erakusten duen leiho guztietan: taulak mugitu ziren bitartean irekita egon zenean, diagrama une honetan ireki duenean, eta lankide batenean, eta [esportatutako irudi batek](./file-import-export.md#image) ere marrazten ditu. Izenen ikuspegiak balio du, taulak zenbateko zabalak diren aldatzen baitu. Ikus [Izenen ikuspegia](./logical-names.md#name-view).
 
 ![members taula behera eta atzera arrastatzea, orders taulatik datorren konektorea categories taularen eskuinetik eta ezkerretik inguratuz igarotzearen artean txandakatzen den bitartean, izkina guztiak biribilduta](/img/demo-connector-routing.webp)

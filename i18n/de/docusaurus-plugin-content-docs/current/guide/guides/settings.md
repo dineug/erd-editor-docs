@@ -1,6 +1,6 @@
 ---
 sidebar_position: 16
-description: Datentyp-Synchronisierung für Beziehungen und Domänen, maximale Kommentarbreite, Neuberechnung der Tabellenbreite, Sperren von Einstellungen (Ansicht, Registerkarte, Codeeinstellungen und Namensansicht), Anzeigereihenfolge der Spalten und die Liste der Tastenkombinationen.
+description: Datentyp-Synchronisierung für Beziehungen und Domänen, maximale Kommentarbreite, Sperren von Einstellungen (Ansicht, Registerkarte, Codeeinstellungen und Namensansicht), Anzeigereihenfolge der Spalten, die Liste der Tastenkombinationen und die Registerkarte Einstellungen eines schreibgeschützten Editors.
 ---
 
 # Einstellungen
@@ -33,13 +33,6 @@ Beim Einschalten beginnt der Wert bei `60px`. Ein außerhalb des Bereichs eingeg
 
 ![Maximum comment width einschalten, 120 eingeben und die Registerkarte ERD mit den auf diese Breite gekürzten Kommentaren](/img/demo-settings-comment-width.webp)
 
-## Tabellenbreite neu berechnen {#recalculation-table-width}
-
-Drücken Sie `Sync`, um die Breite jeder Tabelle und jeder Spaltenzelle passend zu ihrem aktuellen Text neu zu berechnen und die Verbindungslinien der Beziehungen um die neuen Größen herum neu zu zeichnen.
-Eine Meldung `Recalculated table width` bestätigt dies.
-Die Breiten werden bei jedem Laden eines Dokuments von selbst neu berechnet, daher ist dies nur nötig, wenn sie nach einer Änderung der Schriftart oder der Darstellung nicht mehr stimmen.
-Die Breiten werden nicht in der Datei gespeichert, daher ändert `Sync` die Datei nie.
-
 ## Sperren {#lock}
 
 Die Liste `Lock` enthält sieben Einstellungen. Solange die Sperre einer Einstellung eingeschaltet ist, behält die Datei den Wert, den die Einstellung beim Sperren hatte, sodass eine Änderung auf dem Bildschirm die Datei unverändert lässt.
@@ -68,8 +61,9 @@ Zeigt die gesperrte Ansicht beim Öffnen der Datei nichts vom Diagramm, bewegt s
 
 ![Viewport entsperren, das Diagramm scrollen und zoomen und Viewport in der neuen Ansicht, die seine Zeile zeigt, wieder sperren](/img/demo-settings-locks.webp)
 
-Das Ein- oder Ausschalten einer Sperre ändert die Datei, da die Datei speichert, welche Sperren eingeschaltet sind, wird aber wie der Rest der Registerkarte Einstellungen nicht im [Verlauf](./undo-redo.md#what-the-history-records) aufgezeichnet. Auch ein Wechsel der Namensansicht wird nicht aufgezeichnet, ob gesperrt oder nicht. In einem schreibgeschützten Editor bewirken die Sperrschaltflächen nichts, und ein Wechsel der Namensansicht ändert unabhängig von ihrer Sperre nur diesen Bildschirm.
+Das Ein- oder Ausschalten einer Sperre ändert die Datei, da die Datei speichert, welche Sperren eingeschaltet sind, wird aber wie der Rest der Registerkarte Einstellungen nicht im [Verlauf](./undo-redo.md#what-the-history-records) aufgezeichnet. Auch ein Wechsel der Namensansicht wird nicht aufgezeichnet, ob gesperrt oder nicht.
 Jede andere Einstellung wird so gespeichert, wie sie ist: die Datenbank, die Schalter in [`View Option`](./table-related-functions.md#table-view-options) und der Rest der Registerkarte `Preferences`.
+Ein schreibgeschützter Editor ändert die Datei durch keine davon, was auch immer die Sperren sagen: Seine Sperrschaltflächen und die übrigen Bedienelemente von `Preferences` sind deaktiviert, und die Einstellungen, die er noch ändern lässt, bleiben auf diesem Bildschirm – siehe [Schreibgeschützte Editoren](#read-only-editors).
 
 In einem neuen Diagramm, also einem von Grund auf neu begonnenen, sind alle Sperren eingeschaltet: eine leere Datei, die in VS Code, Obsidian oder einer JetBrains-IDE geöffnet wird (`ERD Editor: Create new diagram` und `New ERD` in Obsidian erstellen eine solche), ein neues Schema in der Web-App, eine Datei, die über das Menü New von Google Drive erstellt wird, oder ein Element `<erd-editor>`, dem kein Wert übergeben wird.
 Auch ein Schema oder eine Datei in Google Drive, die die Web-App durch das Importieren einer SQL-, DBML-, AML- oder GraphQL-Datei erstellt, beginnt mit allen eingeschalteten Sperren. Was aus einer JSON-Datei erstellt wird, behält die Sperren, die diese Datei verzeichnet.
@@ -98,6 +92,7 @@ Ziehen Sie eine Zeile, um sie zu verschieben – die ganze Zeile lässt sich zie
 Die Zeile `Logical Name` legt fest, wo die Zelle des logischen Namens steht, die eine Zeile in der Ansicht `Both Names` zeigt. In der Ansicht `Logical Names` steht der logische Name stattdessen an der Stelle der Zeile `Name`, und die Ansicht `Physical Names` zeigt keinen – siehe [Namensansicht](./logical-names.md#name-view). Die Zeile `Domain` legt fest, wo die Domänenzelle steht, die View Option → `Domain` einblendet – siehe [Die Domänenzelle](./logical-names.md#the-domain-cell).
 Eine Zelle, die durch eine [Ansichtsoption für Tabellen](./table-related-functions.md#table-view-options) ausgeblendet ist oder die die Namensansicht weglässt, behält ihren Platz in der Liste, sodass die Reihenfolge für die jeweils angezeigten Zellen gilt.
 Ein Diagramm, dessen Reihenfolge festgelegt wurde, bevor `Logical Name` und `Domain` Zeilen waren, erhält `Logical Name` direkt vor `Name` und `Domain` direkt nach `DataType`, wo auch immer diese in seiner Reihenfolge stehen.
+Ein Diagramm, das eine spätere Version gespeichert hat, behält seine Reihenfolge ebenfalls, selbst wenn diese Version eine Zeile hat, die diese hier nicht kennt: Die Zeilen, die diese Version hat, stehen in der Reihenfolge, die die Datei vorgibt, und die unbekannte Zeile wird weggelassen. Das Speichern des Diagramms hier schreibt die Reihenfolge ohne sie, und die spätere Version setzt diese Zeile in ihrer eigenen Standardreihenfolge wieder neben ihren Nachbarn.
 Die Markierung für [Alternativschlüssel](./table-related-functions.md#alternate-keys) (`AK1.1` usw.) gehört nicht zu diesen Zeilen. Sie steht in einer Zeile immer ganz hinten, nach der Zelle, die diese Reihenfolge an die letzte Stelle setzt.
 
 ![Zu Column Order hinunterscrollen und die Zeile Comment nach oben unter Name ziehen, wodurch jeder Kommentar direkt hinter seinem Spaltennamen steht](/img/demo-settings-column-order.webp)
@@ -146,6 +141,7 @@ In einer Zelle des logischen Namens mit geöffneter Begriffsliste schließt der 
 Ein geöffneter Explorer, eine geöffnete Designauswahl oder Sprachauswahl `Display Language` unterdrückt keine der Tastenkombinationen auf der Zeichenfläche. `Stop` schließt den Explorer nie. Zur Wirkung von `Stop` und den anderen Tasten im Explorer siehe [Tasten im Explorer](./explorer.md#keys-in-the-explorer), zu ihrer Wirkung in der Sprachauswahl siehe [Sprache auswählen](./language-and-theme.md#picking-a-language).
 `Delete Selection` entfernt alle ausgewählten Tabellen, Notizen und Tabellengruppen oder, wenn eine einzelne Tabelle mit einigen ihrer Spalten ausgewählt ist und der Zoom über `70%` liegt, diese Spalten – siehe [Tabellen und Notizen löschen](./table-related-functions.md#table-and-memo-deletion). `Remove Table, Memo` entfernt auch ausgewählte Tabellengruppen.
 `Add Table Group` beginnt das Zeichnen einer Gruppe mit [`New Table Group`](./table-groups.md#drawing-a-group), wie die Schaltfläche `New Table Group` der [Symbolleiste der Zeichenfläche](./table-related-functions.md#canvas-toolbar), und ein zweiter Druck bricht das Zeichnen ab. `Group Selected Tables` besteht aus zwei Tastendrücken ohne Zusatztaste, `T` und dann `G` innerhalb einer Sekunde. Die Tastenkombination legt die ausgewählten Tabellen in eine neue Gruppe und öffnet deren Namensfeld, wie `Group selected tables` im Kontextmenü einer Tabelle, und bewirkt nichts, wenn keine Tabelle ausgewählt ist – siehe [Ausgewählte Tabellen gruppieren](./table-groups.md#grouping-selected-tables). Beide bewirken nichts in einem schreibgeschützten Editor oder solange die Gruppen [ausgeblendet](./table-groups.md#hiding-groups) sind.
+In einem schreibgeschützten Editor funktionieren nur die Tasten, die lesen: `Search`, `Toggle Explorer`, `Stop`, `Table Properties` und `Focus on this table` auf der Tabelle, die ein Sprung ausgewählt hat, die drei Zoom-Tasten, `Zen Mode`, Kopieren und die Pfeiltasten, die die fokussierte Zelle bewegen. `Editing`, jede Taste `Add` und `Remove`, `Delete Selection`, `Primary Key`, beide Tasten zum Auswählen aller Elemente, die vier Beziehungstasten, `Add Table Group`, `Group Selected Tables`, `Hand Tool` und Einfügen bewirken nichts, und `Undo` und `Redo` machen nichts rückgängig und stellen nichts wieder her – siehe [Schreibgeschützte Editoren](./table-related-functions.md#read-only-editors).
 `Zoom In`, `Zoom Out` und `Zoom Reset` zoomen auch die Registerkarte [Visualisierung](./visualization.md#toolbar), in `Graph` wie in `Flow`, sofern die Schnellsuche nicht geöffnet ist.
 In `Flow` gehen `Undo` und `Redo` durch das, worauf Flow eingegrenzt wurde, einen Schritt zurück und vor, wie die Schaltflächen `Previous table` und `Next table`, sofern die Schnellsuche nicht geöffnet ist. Dort machen sie nie eine Änderung am Diagramm rückgängig, und in `Graph` bewirken sie nichts – siehe [Vorherige und nächste Tabelle](./visualization.md#previous-table-and-next-table).
 Auf der Registerkarte Visualisierung schließt `Stop` außerdem das Menü der [Zeilenanzeige](./visualization.md#row-display) und bricht ein noch laufendes [Flow-Layout](./visualization.md#how-flow-is-placed) ab; eine mit `Focus on this table` eingeschränkte Ansicht erweitert `Stop` nicht.
@@ -160,3 +156,13 @@ Die Registerkarte `Shortcuts` listet dann die Belegungen des Hosts auf: Ein Befe
 Die Zeilentasten der Registerkarte Wörterbuch folgen `Add Column` und `Remove Column`, sodass sie mitwandern, wenn einer der beiden neu belegt wird – siehe [`dictionaryRowChords`](../../api/erd-editor-element.md#dictionaryrowchords).
 
 In Obsidian erreichen diese Tasten den Editor, solange die Obsidian-Registerkarte des Diagramms aktiv ist, auch dort, wo ein Obsidian-Hotkey dieselbe Taste verwendet, etwa `Alt + Enter`, `Ctrl + K` und `Ctrl + F` (Windows/Linux) oder `⌥ + Enter`, `⌘ + K` und `⌘ + F` (Mac). Ebenso erreicht ihn die Tastenkombination `Alt + Shift + Enter` (Windows/Linux) oder `⌥ + Shift + Enter` (Mac) der Registerkarte Wörterbuch, die in keiner Zeile dieser Liste steht. Alle anderen Obsidian-Hotkeys funktionieren dort weiterhin. Zu `Ctrl + F` oder `⌘ + F` siehe [Die Suchleiste des Browsers](./find-and-replace.md#the-browsers-find-bar).
+
+## Schreibgeschützte Editoren {#read-only-editors}
+
+In einem [`readonly`](../../api/erd-editor-element.md#readonly)-Editor zeigt die Registerkarte Einstellungen die Einstellungen des Diagramms und ändert keine davon. Ein Kennzeichen `Read only` steht neben der Überschrift jeder Seite, `Preferences` und `Shortcuts`.
+Die Schalter `Relationship DataType Sync` und `Maximum comment width` sowie das Breitenfeld sind deaktiviert, ebenso jede Sperrschaltfläche. Die Zeilen von `Column Order` zeigen keinen Griff und lassen sich nicht ziehen.
+Jede Zeile von `Lock` zeigt weiterhin ihren Wert. Eine gesperrte Zeile zeigt den Wert, den die Datei behält, und eine entsperrte die Einstellung, wie dieser Bildschirm sie hat, was von der der Datei abweichen kann, wie unten beschrieben.
+
+Die Einstellungen, die bestimmen, was der Bildschirm zeigt, lassen sich dort weiterhin ändern: die Ansichtsposition und der Zoom, die Registerkarte, die Namensansicht, die Datenbank, die Sprache des Code-Generators, beide Schreibweisen, der Begrenzer und die Schalter von [`View Option`](./table-related-functions.md#table-view-options).
+Jede ändert nur diesen Bildschirm, was auch immer ihre Sperre sagt. Sie wird nicht in der Datei gespeichert und nicht von einem JSON-Export geschrieben, nicht im Verlauf aufgezeichnet, nicht als Änderung gezählt und erreicht nie Mitbearbeiter. Die Optionsbereiche der Registerkarten [Schema SQL](./schema-sql.md#options-panel) und [Code Generator](./code-generator.md#options-panel) beschriften diese Auswahlen dort mit `This window only` anstelle von `Saved in the document`.
+Wenn der Editor wieder beschreibbar wird, kehren die Datenbank, die Sprache, die Schreibweisen, der Begrenzer und die Schalter von View Option zu den Werten der Datei zurück. Die Ansicht, die Registerkarte und die Namensansicht bleiben, wie Sie sie verlassen haben, und die Datei übernimmt jede davon, soweit ihre Sperre es erlaubt, mit Ihrer nächsten Änderung daran.

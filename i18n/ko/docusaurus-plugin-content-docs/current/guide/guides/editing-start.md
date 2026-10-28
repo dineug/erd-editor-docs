@@ -10,7 +10,8 @@ description: 시작 화면에서 편집 시작, 캔버스 컨텍스트 메뉴, �
 ![캔버스를 마우스 오른쪽 클릭해 Relationship 하위 메뉴를 열고, 테이블을 추가한 뒤 그 테이블의 메뉴 열기](/img/demo-context-menu.webp)
 
 테이블, 메모, 테이블 그룹이나 관계에서 마우스 오른쪽 클릭하면 해당 항목의 메뉴가 대신 열립니다.  
-이미 선택된 테이블, 메모, 테이블 그룹에서 마우스 오른쪽 클릭하면 선택 전체가 유지되므로, `Color`나 `Delete selected` 같은 항목이 선택 전체에 적용됩니다. [다중 선택](./table-related-functions.md#다중-선택) 문서를 참고하세요.
+이미 선택된 테이블, 메모, 테이블 그룹에서 마우스 오른쪽 클릭하면 선택 전체가 유지되므로, `Color`나 `Delete selected` 같은 항목이 선택 전체에 적용됩니다. [다중 선택](./table-related-functions.md#다중-선택) 문서를 참고하세요.  
+읽기 전용 에디터는 아무것도 만들지 않으므로 이 페이지가 설명하는 것은 하나도 제공되지 않습니다. 캔버스 메뉴에는 `View Option`, `Name View`, `Export`, `Diff Viewer`만 남고, 테이블 메뉴에는 `Table Properties`만 남으며, 메모, 테이블 그룹, 관계선은 메뉴를 열지 않습니다. [읽기 전용 에디터](./table-related-functions.md#read-only-editors) 문서를 참고하세요.
 
 ## 시작 화면
 

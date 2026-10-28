@@ -31,7 +31,7 @@ De SQL wordt geschreven wanneer het tabblad opent, en opnieuw telkens wanneer ee
 
 Het paneel bevat drie groepen, elk onder een opschrift:
 
-1. `Saved in the document`: `Database` en `Bracket` — zie [Database en aanhalingstekens](#database-and-bracket).
+1. `Saved in the document`: `Database` en `Bracket` — zie [Database en aanhalingstekens](#database-and-bracket). Een editor in alleen-lezenmodus duidt ze aan met `This window only` — zie [Editors in alleen-lezenmodus](#read-only-editors).
 2. `This window only`: `Statements`, `Header`, `Write logical names into empty comments` en, zolang het diagram een [tabelgroep](./table-groups.md) heeft, `Tables` — zie [Instructies](#statements), [Kop](#header), [Logische namen als opmerkingen](#logical-names-as-comments) en [Tabellen](#tables).
 3. `Saved in the document · written as is for every database`: de scripts `Before tables` en `After tables` — zie [Scripts vóór en na de tabellen](#before-and-after-scripts).
 
@@ -222,5 +222,9 @@ Hoe deze opmerkingen bij het importeren worden teruggelezen, staat beschreven in
 
 ## Editors in alleen-lezenmodus {#read-only-editors}
 
-In een editor met `readonly` werkt het tabblad zoals gewoonlijk: `Database` en `Bracket` wijzigen nog steeds de getoonde SQL, `Statements`, `Header`, `Write logical names into empty comments` en `Tables` werken nog steeds, en met `Save file` en `Copy` sla je die nog steeds op en kopieer je die.  
-Alleen de twee scriptvelden zijn alleen-lezen.
+In een editor met [`readonly`](../../api/erd-editor-element.md#readonly) werkt het tabblad voor de lezer, en bereikt niets wat erop wordt gedaan het document:
+
+- `Database` en `Bracket` herschrijven nog steeds de SQL, maar alleen in dat venster, dus het paneel duidt ze ook aan met `This window only`. Een keuze wordt niet in het bestand opgeslagen, niet met medebewerkers gedeeld en niet voor ongedaan maken vastgelegd, wat de vergrendelingen ook aangeven, en een wijziging van een medebewerker in een instelling die je koos, laat jouw keuze op het scherm staan. Het tabblad Codegenerator toont dezelfde keuze, en [`getSchemaSQL()`](../../api/erd-editor-element.md#getschemasql) zonder databasesysteem aangeroepen schrijft haar ook. Zodra de editor weer bewerkbaar wordt, komen het databasesysteem en het type aanhalingstekens van het document terug.
+- `Statements`, `Header`, `Write logical names into empty comments` en `Tables` werken zoals overal, omdat ze al bij het venster horen.
+- De twee scriptvelden zijn alleen-lezen: ze tonen de scripts van het document, die de SQL nog steeds schrijft, en accepteren geen invoer.
+- `Save file` en `Copy` slaan de SQL op die het tabblad toont en kopiëren die.

@@ -192,7 +192,8 @@ Taula edo zutabe baten izen fisikoa hutsik dagoen edo bera ere eratorria den bit
 ## Irakurtzeko soilik dauden editoreak {#read-only-editors}
 
 [`readonly`](../../api/erd-editor-element.md#readonly) atributua duen editore batean, bilaketak aurkitu besterik ez du egiten. Ez dago ez `Toggle Replace` geziarik, ez `Replace` errenkadarik; beraz, ez dago Ordeztu eremurik, ez `Preserve Case`, ez `Replace`, ez `Replace All`.  
-Bilatu eremuak, haren hiru aukerek, testu motek, kontagailuak, emaitzek eta bat-etortze batera joateak funtzionatzen dute. Inguruko Arakatzaileak beste edozein editoretan bezala funtzionatzen du. Ikus [Irakurtzeko soilik dauden editoreak](./explorer.md#read-only-editors).
+Bilatu eremuak, haren hiru aukerek, testu motek, kontagailuak, emaitzek eta bat-etortze batera joateak funtzionatzen dute. Bat-etortze batera joateak hautatzen du iristen den elementua, [Bat-etortze batera joatea](#going-to-a-match) atalean bezala, eta hautapen hori da irakurtzeko soilik dagoen editore batek egiten duen bakarra: oihaleko mugitzen ez den klik batek garbitu egiten du.  
+Ireki bilaketa tekla-konbinazioarekin edo Bilaketa azkarreko `Toggle Explorer` aukerarekin, oihalaren laster-menuak ez baitu bertan `Toggle Explorer` aukerarik. Arakatzailearen gainerakoa Arakatzailearen orriko [Irakurtzeko soilik dauden editoreak](./explorer.md#read-only-editors) atalean azaltzen da.
 
 VS Code editorean, diagrama baten berrikuspen bat, adibidez Git berrikuspen bat edo Local History sarrera bat, JSON testu gisa irekitzen da. `Reopen Editor With...` komandoarekin diagrama gisa berriro irekitzen denean, irakurtzeko soilik dago, eta aurkitu besterik egiten ez duen bilaketa hau du.
 
