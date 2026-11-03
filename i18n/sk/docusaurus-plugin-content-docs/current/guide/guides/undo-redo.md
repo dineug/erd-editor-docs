@@ -67,7 +67,8 @@ Nezaznamenávajú sa ani zmeny, ktoré prichádzajú z iného editora, takže pr
 
 Keď vrátite späť import cez položku `Import`, ktorý nahrádza celý diagram, obnoví sa predchádzajúci diagram v stave, v akom ho editor mal v čase importu, pričom každé [zamknutie](./settings.md#lock) je zapnuté alebo vypnuté a každá zamknutá hodnota nastavená tak, ako to bolo vtedy.  
 Ak mal tento diagram zamknuté nastavenie `Viewport`, zobrazenie a priblíženie sa vrátia na zamknuté zobrazenie, kde sa diagram otvára, a nie tam, kde ste boli. Pri odomknutom nastavení `Viewport` sa vrátia tam, kde ste boli v čase importu. Ostatné zamknuté nastavenia, napríklad karta, na ktorej sa nachádzate, jazyk na karte Generátor kódu alebo Zobrazenie názvov, zostanú tak, ako ich máte na obrazovke.  
-Nový diagram začína so všetkými zamknutiami zapnutými. Ak si chcete pri takomto vrátení späť zachovať svoje zobrazenie, pred importom odomknite nastavenie `Viewport`. Jeho neskoršie odomknutie ani import súboru JSON, ktorého vlastné zamknutie `Viewport` je vypnuté, nezmení, kam vás vrátenie späť presunie.
+Nový diagram začína so všetkými zamknutiami zapnutými. Ak si chcete pri takomto vrátení späť zachovať svoje zobrazenie, pred importom odomknite nastavenie `Viewport`. Jeho neskoršie odomknutie ani import súboru JSON, ktorého vlastné zamknutie `Viewport` je vypnuté, nezmení, kam vás vrátenie späť presunie.  
+Vrátenie späť alebo opätovné vykonanie položky `Import` tiež ukončí kreslenie vzťahu – pozrite si časť [Vytvorenie vzťahu](./editing-start.md#relationship-creation).
 
 Vrátenie importu súboru JSON späť obnoví aj slová, termíny a domény, ktoré mal predchádzajúci diagram. Import súboru Schéma SQL, GraphQL, DBML alebo AML slovníky zachová, takže jeho vrátenie späť a opätovné vykonanie ich ponechá v aktuálnom stave vrátane úprav, ktoré sa odvtedy vykonali na karte Slovník.
 

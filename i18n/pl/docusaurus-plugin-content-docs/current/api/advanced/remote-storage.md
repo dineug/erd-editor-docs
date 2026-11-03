@@ -1,5 +1,5 @@
 ---
-sidebar_position: 2
+sidebar_position: 3
 description: Replikowanie działającego edytora do magazynu bez interfejsu, poza wątkiem głównym, i serializowanie dokumentu do zapisu.
 ---
 
@@ -88,6 +88,11 @@ Od wersji `4.2.0` to samo dotyczy słowa, terminu lub domeny usuniętych z arkus
 Gdy edytor cofnie usunięcie, replika zainicjowana bez tego wiersza przywraca go jako pusty, a ponieważ `value` pomija pusty wiersz, replika zapisuje dokument bez niego.  
 W przypadku domeny kolumny i terminy, które były z nią powiązane, również pozostają w tej replice niepowiązane, ponieważ replika nigdy nie miała tych powiązań, a cofnięcie ich nie wysyła.
 
+Od wersji `5.1.0` pakiet [`@dineug/erd-editor-yjs`](./yjs.md) może też synchronizować edytory za pośrednictwem pokoju Yjs.  
+Replika zasilana jak powyżej z elementu powiązanego z pokojem otrzymuje tylko edycje wykonane na tym elemencie, nigdy te, które przynosi pokój: docierają one do elementu jako edycje innego edytora, a współdzielony magazyn nie przekazuje dalej tego, co otrzymał.  
+Aby przechować dokument pokoju, zapisz właściwość `value` powiązanego elementu lub powiązanego magazynu uczestnika, jak opisano w sekcji [Co zawiera pokój](./yjs.md#what-the-room-holds).  
+Dostawca trwałego przechowywania Yjs przechowuje sam pokój, który zawiera wartość czasu wykonania i edycje wykonane od jej powstania, a nie plik; zobacz sekcję [Ograniczenia](./yjs.md#limits).
+
 ## InjectEngineContext {#injectenginecontext}
 
 ### toWidth {#towidth}
@@ -154,7 +159,7 @@ Zawiera tylko nieusunięte encje, w ustalonej kolejności, bez encji usuniętych
 Od wersji `4.2.0` zawiera też nazwy logiczne, informację, czy każdą nazwę wygenerowano na podstawie słowników, powiązania z domenami oraz słowa, terminy i domeny karty [Słownik](../../guide/guides/dictionary.md).  
 Od wersji `4.2.0` pomija też każde puste pole tekstowe encji, każdą pustą listę `doc` i każdą pustą kolekcję, a także samo pole `collections`, gdy wszystkie kolekcje są puste.  
 Ma wcięcia o szerokości dwóch spacji, zapisuje każdy wiersz słownika w osobnej linii i kończy się znakiem nowego wiersza, więc ten sam dokument zawsze daje te same bajty.  
-Informacje o tym, co zawiera, znajdziesz w sekcji [Postać zapisu i wartość czasu wykonania](./schema.md#storage-form-and-runtime-value).
+Informacje o tym, co zawiera, znajdziesz w sekcji [Postać zapisu](./schema.md#storage-form).
 
 Każde ustawienie, którego [blokada](../../guide/guides/settings.md#lock) jest włączona, zapisuje się z wartością, przy której zostało zablokowane, a każde inne – z bieżącą wartością.  
 Blokada `Viewport` obejmuje łącznie położenie widoku i poziom powiększenia, a karta, język Generatora kodu, oba style nazw i typ cudzysłowu mają własne, osobne blokady.  
@@ -172,6 +177,7 @@ const snapshot = replicationStore.runtimeValue;
 ```
 
 Używaj tej wartości do inicjowania edytora lub innego magazynu, który dołącza później, za pomocą jego metody `setInitialValue`; zobacz stronę [Wspólna edycja](./collaborative-editing.md).  
+Replika nie ma metod [getLWW](./collaborative-editing.md#getlww) ani [getVersion](./collaborative-editing.md#getversion), więc wraz z `runtimeValue` nie przekazuje rejestrów współpracy: edytor zainicjowany na jej podstawie pobiera je od działających edytorów, jak opisano w sekcji [Inicjowanie edytora współpracownika](./collaborative-editing.md#seeding-a-collaborator).  
 Nigdy nie zapisuj jej jako pliku: zawiera usunięte encje, a opublikowany schemat [JSON Schema](./schema.md#json-schema) ją odrzuca.  
 To właśnie dzięki tym usuniętym encjom cofnięcie usunięcia, wysłane później, przywraca encję w całości w magazynie zainicjowanym na podstawie tej wartości.  
 Pozostają do czasu, aż dokument zostanie ponownie otwarty z pliku, którego postać ich nie zawiera.
@@ -230,7 +236,7 @@ Pole `value` to zserializowany dokument w postaci zapisu, ten sam ciąg znaków,
 Pole `changed` ma wartość `false`, gdy akcje od poprzedniego zdarzenia `change` lub od wczytania pozostawiły `value` bajt w bajt bez zmian.
 
 Zmiana, którą [blokada](../../guide/guides/settings.md#lock) pomija w `value`, nadal wywołuje zdarzenie `change` z polem `changed` ustawionym na `false`, więc zapisuj tylko wtedy, gdy `changed` ma wartość `true`.  
-Chodzi o przewinięcie lub zmianę powiększenia przy zablokowanym ustawieniu `Viewport`, przełączenie karty przy zablokowanym ustawieniu `Canvas Type` oraz zmianę języka Generatora kodu, stylu nazw lub typu cudzysłowu przy włączonej blokadzie danego ustawienia.  
+Chodzi o przewinięcie lub zmianę powiększenia przy zablokowanym ustawieniu `Viewport`, przełączenie karty przy zablokowanym ustawieniu `Canvas Type` oraz zmianę języka Generatora kodu, stylu nazw lub typu cudzysłowu przy włączonej blokadzie danego ustawienia, co od wersji `5.1.0` wysyła już tylko edytor w wersji starszej niż `5.1.0` (zobacz sekcję [dispatch, dispatchSync](#dispatch-dispatchsync)).  
 Od wersji `4.2.0` chodzi też o przełączenie Widoku nazw przy zablokowanym ustawieniu `Name View`: edytor nadal je wysyła, ale replika je pomija, tak jak robią to pozostałe edytory.  
 Przełączenie Widoku nazw wykonane w edytorze tylko do odczytu jest pomijane w ten sam sposób, niezależnie od stanu jego blokady.  
 Zdarzenie [change](../erd-editor-element.md#change) elementu pomija taką zmianę, ale replika nadal ją zgłasza.  
@@ -282,6 +288,23 @@ Edytor w wersji starszej niż `4.2.0` uczestniczący w sesji może nadal odebra�
 Operacja `Import` w formacie Schemat SQL, GraphQL, DBML lub AML wykonana w tym edytorze, choć już nie operacja `Import and Add`, opróżnia słowa, terminy i domeny repliki.  
 Cofnięcie przez niego wczytania, operacji `Import` lub wywołania `clear()` wczytuje do repliki jego własną kopię dokumentu, bez nazw logicznych, powiązań z domenami i słowników; zobacz sekcję [Mieszanie wersji](./collaborative-editing.md#mixing-releases).  
 Punkt wejścia `@dineug/erd-editor/engine.js` eksportuje te same elementy `createReplicationStore`, `ReplicationStore` i `ReplicationChange` co wcześniej, a funkcja `createReplicationStore` przyjmuje ten sam kontekst.
+
+Wersja `5.1.0` nie dodaje żadnego typu akcji i nie zmienia żadnego eksportu `@dineug/erd-editor/engine.js`, więc replika w wersji `4.2.0` lub nowszej nadal zachowuje każdą zmianę wysyłaną przez edytor w wersji `5.1.0`.  
+Od wersji `5.1.0` replika uzgadnia edycje wykonane w tej samej chwili tak jak edytory w wersji `5.1.0`; zobacz sekcję [Równoczesne edycje](./collaborative-editing.md#concurrent-edits).  
+Przechowuje wersję położenia tabeli, położenia i rozmiaru notatki oraz grupy tabel, a także położenia widoku i poziomu powiększenia.  
+Edytor w wersji `5.1.0` wysyła przeciągnięcie, przesunięcie widoku lub zmianę powiększenia jako miejsce, w którym się kończą, za pomocą akcji `table.moveTo`, `memo.moveTo`, `tableGroup.moveTo`, `settings.scrollTo` i `settings.changeZoomLevel`, a replika przyjmuje każdą z nich, podobnie jak każdą akcję `memo.resize` i `tableGroup.resize`, tylko wtedy, gdy jej wersja nie jest niższa od przechowywanej.  
+Dlatego gdy dwa takie edytory w tej samej chwili przesuwają jedną tabelę, notatkę lub grupę tabel albo zmieniają jej rozmiar, replika zapisuje ją w punkcie i o rozmiarze, które pokazują wszystkie z nich, niezależnie od kolejności, w jakiej je odbiera, a przeciągnięcie, przesunięcie widoku lub zmiana powiększenia dostarczone przez transport dwa razy nie przesuwa niczego dwa razy.  
+Gdy ustawienie `Viewport` jest odblokowane, replika zapisuje położenie widoku i poziom powiększenia, każde z zapisu o największej wersji, czyli w miejscu, w którym stał edytor, który go wykonał.  
+Zmiana powiększenia zmienia też położenie widoku, więc przesunięcie widoku i zmiana powiększenia wykonane przez dwa edytory w tej samej chwili mogą zostać zapisane jako położenie widoku jednego edytora z poziomem powiększenia drugiego.  
+Przed wersją `5.1.0` replika dodawała kroki przesuwania i powiększania wszystkich edytorów do jednego widoku.
+
+Odległości, które edytor w wersji starszej niż `5.1.0` wysyła dla przeciągnięcia, przesunięcia widoku lub zmiany powiększenia (`table.move`, `memo.move`, `tableGroup.move`, `settings.streamScrollTo` i `settings.streamZoomLevel`), są nadal dodawane do tego, co przechowuje replika, poza wersjami.  
+Zmiana koloru nadal dociera bez wersji: replika, podobnie jak każdy edytor, oznacza ją własną wersją i zachowuje kolor odebrany jako ostatni, więc dwie zmiany koloru jednej tabeli, notatki lub grupy tabel wykonane w tej samej chwili mogą zostać zapisane inaczej, niż pokazuje edytor.  
+Replika w wersji starszej niż `5.1.0` stosuje punkty i rozmiary w kolejności ich nadejścia, więc może zapisać tabelę w innym miejscu, niż pokazują ją edytory w wersji `5.1.0`.  
+Aby edycje wykonane w tej samej chwili kończyły tak samo, poza wyjątkami wymienionymi w sekcji [Równoczesne edycje](./collaborative-editing.md#concurrent-edits), utrzymuj wszystkie edytory w sesji oraz replikę w wersji `5.1.0` lub nowszej.
+
+Od wersji `5.1.0` edytor wysyła zmianę języka Generatora kodu, stylu nazw lub typu cudzysłowu tylko wtedy, gdy blokada tego ustawienia jest wyłączona, z oznaczeniem `shared: true` w ładunku, a replika stosuje każdą tak oznaczoną zmianę, tak jak edytory; zobacz stronę [Wspólna edycja](./collaborative-editing.md).  
+Replika stosuje zmianę bez oznaczenia, którą edytor w wersji starszej niż `5.1.0` wysyła niezależnie od blokady, tylko wtedy, gdy to ustawienie jest po jej stronie odblokowane, a gdy jest zablokowane, pomija ją (zobacz sekcję [on@change](#onchange)).
 
 Od wersji `4.0.0` obie metody stosują też akcję `editor.mergeLWW`, która przenosi rejestry współpracy wysyłane przez edytor w odpowiedzi na dołączenie innego edytora do sesji, więc replika uzgadnia równoczesne zmiany tak samo jak edytory.  
 Nie zmienia ani jednego bajtu `value` i nie wywołuje zdarzenia `change`.  

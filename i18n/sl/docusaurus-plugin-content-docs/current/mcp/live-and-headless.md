@@ -37,6 +37,38 @@ Branje nikoli ne odpre urejevalnika. Sprememba odpre dokument v urejevalniku ERD
 
 Urejevalnik z razširitvijo za VS Code pred različico `4.2.0` ali vtičnikom za Obsidian ali JetBrains pred različico `1.2.0` še vedno sprejema spremembe agenta v živo, vendar logičnih imen, povezav z domeno in vrstic slovarjev, ki jih zapiše agent, niti ne prikaže niti ne ohrani – glejte razdelek [Posodabljanje](./installation.md#updating).
 
+Z razširitvijo za VS Code različice `4.3.0` ali novejše ali vtičnikom za Obsidian ali JetBrains različice `1.3.0` ali novejše uvoz v načinu `replace` ter `erd_undo` ali `erd_redo` takšnega uvoza končajo risanje relacije, ki jo rišete v urejevalniku, ne glede na izdajo strežnika – glejte razdelek [Ustvarjanje relacije](../guide/guides/editing-start.md#relationship-creation).
+Pred temi izdajami je risanje ostalo vklopljeno, klik na tabelo pa je lahko dodal relacijo iz tabele, ki je ni bilo več v diagramu.
+Uvoz v načinu `append` pusti risanje vklopljeno.
+Odprto urejanje beležke, imena skupine tabel ali celice ostane odprto, dokler diagram še vsebuje in prikazuje tisto, kar se ureja.
+
+### Spremembe, narejene v istem trenutku {#edits-made-at-the-same-moment}
+
+S strežnikom `1.2.0` ali novejšim in, v urejevalniku, z razširitvijo za VS Code različice `4.3.0` ali novejše ali vtičnikom za Obsidian ali JetBrains različice `1.3.0` ali novejše se spremembe iste stvari, ki jih vi in agent naredite v istem trenutku, končajo enako v urejevalniku, v datoteki, ki jo shrani, in v tistem, kar agentu vrnejo `erd_list`, `erd_get` in `erd_read`.
+To zajema ime ali drugo polje tabele, stolpca, relacije, indeksa, beležke, skupine tabel ali vrstice slovarja, ime zbirke podatkov in [skripte pred tabelami in za njimi](../guide/guides/schema-sql.md#before-and-after-scripts) ter položaj ali velikost tabele, beležke ali skupine tabel, ne pa barve, vrstnega reda stolpcev v tabeli ali indeksu ali zbirke podatkov.
+Dve spremembi istega imena ali polja, dva premika ali dve spremembi velikosti se končata na eni od obeh, nikoli na mešanici: zmaga sprememba, narejena po tem, ko je druga dosegla njeno stran, od dveh, narejenih v povsem istem trenutku, pa zmaga ena, na vsaki strani ista, ne glede na to, katera prispe prva.
+
+Dve spremembi barve iste tabele, beležke ali skupine tabel, narejeni v istem trenutku, na primer vaša in agentova `erd_change_table_color`, se lahko končata različno ali celo z zamenjanima barvama, saj vsaka stran obdrži barvo, ki jo je prejela zadnjo.
+Premik stolpca, vaš ali agentov `erd_move_column` ali `erd_move_index_column`, se na vsaki strani uveljavi v vrstnem redu prihoda, zato lahko dva, narejena v istem trenutku v isti tabeli ali istem indeksu, pustita stolpce v različnem vrstnem redu.
+Sprememba zbirke podatkov, vaša ali agentova `erd_set_database`, se prav tako uveljavi v vrstnem redu prihoda, zato lahko dve, narejeni v istem trenutku, pustita urejevalnik in agenta pri različnih zbirkah podatkov.
+
+Vaše vlečenje ter agentovi `erd_move_table`, `erd_move_tables`, `erd_move_memo`, `erd_move_table_group` in `erd_sort_tables` potujejo kot točke, v katerih se končajo, zato se dva premika iste tabele, beležke ali skupine tabel končata tam, kamor jo je postavil eden od njiju, nikoli pri vsoti obeh.
+Orodje `erd_move_table_group` v enem paketu pošlje točko skupine in vsake njene tabele, tako kot vlečenje naslovne vrstice skupine.
+Sprememba velikosti zapiše položaj in velikost skupaj, zato se premik in sprememba velikosti iste beležke ali skupine tabel, narejena v istem trenutku, na primer `erd_resize_memo`, medtem ko vlečete to beležko, končata na enem pravokotniku na obeh straneh: na pravokotniku spremembe velikosti ali, kadar zmaga premik, na točki premika z velikostjo iz spremembe velikosti.
+Premik pod 20 slikovnih pik, ki ne ustvari vnosa za razveljavitev, prav tako odide kot točka, v kateri se konča, zato lahko zmaga nad premikom druge strani, naj bo to kratek `erd_move_table_group` ali kratko vaše vlečenje, na primer klik, ki tabelo premakne za nekaj slikovnih pik.
+
+Starejše izdaje se še vedno povežejo, saj strežnik `1.2.0` podpira protokol središča 2, tako kot različice od `1.0.0` do `1.1.1`.
+Pri strežniku pred različico `1.2.0` ali razširitvi pred različico `4.3.0` ali vtičniku pred različico `1.3.0` lahko premik ali sprememba velikosti iste tabele, beležke ali skupine tabel, narejena v istem trenutku, pusti urejevalnik in agenta z različnimi položaji.
+Starejši urejevalnik pošlje vaše vlečenje kot prepotovano razdaljo, strežnik pred različico `1.2.0` pa na ta način pošlje tudi `erd_move_table_group`.
+Druga stran to razdaljo prišteje točki, ki jo hrani.
+Starejša stran točke druge strani uveljavi tudi v vrstnem redu prihoda.
+Agent nato bere in ureja na podlagi lastnega položaja te tabele, beležke ali skupine tabel, ne na podlagi tistega, ki ga prikazuje in shranjuje urejevalnik.
+To traja, dokler poznejši premik tega elementa ne potuje kot točka, na primer vaše vlečenje v novejšem urejevalniku ali agentov `erd_move_table`, ali dokler se agent znova ne pridruži dokumentu, kot potem, ko ga je urejevalnik izključil iz dokumenta, ali po 30 minutah brez klica na dokumentu.
+Razen pri barvi, vrstnem redu stolpcev in zbirki podatkov se ime ali drugo polje, spremenjeno v istem trenutku, še vedno konča enako, tudi kadar je starejša samo ena stran, skoraj vedno pri spremembi novejše strani.
+Če sta starejši obe strani, se lahko obe spremembi še vedno končata različno.
+
+Nič od tega ne velja za urejanje brez vmesnika, ki zapiše samo datoteko.
+
 ### Shranjevanje {#saving}
 
 Vsak urejevalnik shranjuje spremembe agenta tako, kot shranjuje vaše.

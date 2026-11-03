@@ -49,7 +49,7 @@ The SQL then uses the nearest form the database has, and that form's button show
 
 `Bracket` sets the quote wrapped around table, column, constraint, and index names: `SingleQuote`, `DoubleQuote`, `Backtick`, or `None` for no quoting at all, which is the default. It is the same setting as the Code Generator's — see [Bracket](./code-generator.md#bracket).  
 Snowflake, which quotes names only with double quotes, uses them under any choice but `None`, and Databricks always quotes names with backticks.  
-`Bracket` is saved in the file only while the `Bracket Type` lock on the Settings tab is off, and a new diagram has every lock on. While the lock is on, a change rewrites the SQL on your screen, but the file keeps the locked value and the diagram reopens with it — see [Lock](./settings.md#lock).
+`Bracket` is saved in the file only while the `Bracket Type` lock on the Settings tab is off, and a new diagram has every lock on. While the lock is on, a change rewrites the SQL in your editor alone: the other editors open on the diagram keep their own bracket, and the file keeps the locked value, so the diagram reopens with it — see [Lock](./settings.md#lock).
 
 While the database is Oracle and the SQL holds a name longer than 30 bytes, which Oracle 12.1 and older refuse, a note under the two lists names each one: `Oracle 12.2+ for names over 30 bytes: <names>`. It checks table, column, schema, key, index, sequence, and trigger names. The SQL itself does not change.
 
@@ -224,7 +224,7 @@ How these comments read back on import is described in [Comments](./file-import-
 
 In a [`readonly`](../../api/erd-editor-element.md#readonly) editor the tab works for the reader, and nothing done on it reaches the document:
 
-- `Database` and `Bracket` still rewrite the SQL, but only in that window, so the panel captions them `This window only` as well. A pick is not saved in the file, shared with collaborators, or recorded for undo, whatever the locks say, and a collaborator's change to a setting you picked leaves your pick on the screen. The Code Generator tab shows the same pick, and [`getSchemaSQL()`](../../api/erd-editor-element.md#getschemasql) called without a database writes it too. Once the editor turns writable again, the document's database and bracket come back.
+- `Database` and `Bracket` still rewrite the SQL, but only in that window, so the panel captions them `This window only` as well. A pick is not saved in the file, shared with collaborators, or recorded for undo, whatever the locks say, and a collaborator's change to a setting you picked leaves your pick on the screen. The Code Generator tab shows the same pick, and [`getSchemaSQL()`](../../api/erd-editor-element.md#getschemasql) called without a database writes it too. Once the editor turns writable again, the database and bracket you picked go back to what the editor showed before, with any change a collaborator made since — see [Read-only Editors](./settings.md#read-only-editors) in Settings.
 - `Statements`, `Header`, `Write logical names into empty comments`, and `Tables` work as they do anywhere, since they belong to the window already.
 - The two script fields are read-only: they show the document's scripts, which the SQL still writes, and take no typing.
 - `Save file` and `Copy` save and copy the SQL the tab shows.

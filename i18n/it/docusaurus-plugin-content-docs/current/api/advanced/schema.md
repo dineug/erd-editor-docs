@@ -1,31 +1,32 @@
 ---
-sidebar_position: 3
-description: Il formato di documento .erd.json — la forma di archiviazione contenuta in un file e il valore di runtime mantenuto da un editor, i tipi TypeScript, le costanti alla base di ogni campo numerico e il JSON Schema pubblicato.
+sidebar_position: 4
+description: Il formato di documento .erd.json — la forma di archiviazione contenuta in un file, i tipi TypeScript, le costanti alla base di ogni campo numerico e il JSON Schema pubblicato.
 ---
 
 # Schema
 
 `.erd.json` è il formato di documento dell’editor. Leggere questa pagina se occorre generare, convalidare o migrare un documento al di fuori dell’editor.
 
-Dalla versione `4.0.0` un documento ha due serializzazioni, entrambe con `version` `'3.0.0'`. La forma di archiviazione è ciò che un file contiene: è ciò che restituisce [`editor.value`](../erd-editor-element.md#value), ciò che scrive l’esportazione JSON e l’unica forma accettata dal [JSON Schema](#json-schema) pubblicato. Il valore di runtime è l’intero documento così come lo mantiene un editor, ed è restituito da [`editor.runtimeValue`](../erd-editor-element.md#runtimevalue). `setInitialValue()`, il setter `value` e `setSchemaJSON()` leggono entrambe le forme, qualsiasi file salvato da una versione precedente e un documento `.vuerd` v2. Prima della versione `4.0.0` ne esisteva una sola: `value` restituiva l’intero documento così come lo manteneva l’editor, come fa ora `runtimeValue`.
+Questa pagina descrive la forma di archiviazione, il documento così come lo contiene un file, che ogni versione dalla `4.0.0` in poi scrive. È ciò che restituisce [`editor.value`](../erd-editor-element.md#value), ciò che scrive l’esportazione JSON e l’unica forma accettata dal [JSON Schema](#json-schema) pubblicato. La sua `version` è `'3.0.0'`, come in ogni file v3 salvato da una versione precedente, quindi `version` non distingue un file più vecchio da uno più nuovo. `setInitialValue()`, il setter `value` e `setSchemaJSON()` la leggono, insieme a qualsiasi file salvato da una versione precedente e a un documento `.vuerd` v2. Prima della versione `4.0.0` `value` restituiva l’intero documento così come lo manteneva l’editor, quindi un file salvato allora contiene di più (vedere [Forma di archiviazione](#storage-form)).  
+Il [`runtimeValue`](../erd-editor-element.md#runtimevalue) di un editor è un’altra serializzazione, che questa pagina non descrive. Serve a inizializzare un altro editor o una replica, e una [stanza Yjs](./yjs.md#what-the-room-holds) lo archivia nella propria istantanea; non deve mai finire in un file, e il JSON Schema rifiuta qualsiasi valore che contenga un’entità.
 
-## Forma di archiviazione e valore di runtime {#storage-form-and-runtime-value}
+## Forma di archiviazione {#storage-form}
 
-La forma di archiviazione contiene solo le entità attive: ogni tabella elencata in `doc.tableIds`, le colonne elencate da quelle tabelle, le relazioni tra due tabelle conservate, gli indici delle tabelle conservate con le colonne di indice la cui colonna è ancora elencata dalla tabella, i memo e i gruppi di tabelle elencati e, dalla versione `4.2.0`, le parole, i termini e i domini elencati che contengono un valore oltre al proprio id. Esclude ciò che un editor ricava al caricamento o mantiene mentre è aperto: le entità rimosse, `seqColumnIds` e `seqIndexColumnIds`, ogni `zIndex`, le larghezze misurate, il campo `ui` delle colonne, `identification`, `startRelationshipType` e i punti di ancoraggio di una relazione e, dalla versione `4.2.0`, il campo `order` di ogni riga dei dizionari e gli elenchi `doc.wordIds`, `doc.termIds` e `doc.domainIds`. I tipi riportati sotto contrassegnano ciascuno di questi campi con `// runtime only`.  
+La forma di archiviazione contiene solo le entità attive: ogni tabella elencata in `doc.tableIds`, le colonne elencate da quelle tabelle, le relazioni tra due tabelle conservate, gli indici delle tabelle conservate con le colonne di indice la cui colonna è ancora elencata dalla tabella, i memo e i gruppi di tabelle elencati e, dalla versione `4.2.0`, le parole, i termini e i domini dei fogli della scheda Dizionario, se contengono un valore oltre al proprio id. Non contiene nulla di ciò che un editor ricava al caricamento o mantiene solo mentre è aperto: né l’ordine di sovrapposizione, né le larghezze misurate o gli indicatori di chiave, né se una relazione è identificante, come viene disegnata la sua estremità padre o dove incontra le sue tabelle. Ogni caricamento li ricava di nuovo da ciò che il file contiene.  
 Ogni collezione tranne i dizionari è indicizzata per id nell’ordine delle unità di codice, con le colonne raggruppate prima per `tableId` e le colonne di indice prima per `indexId`. Dalla versione `4.2.0` `wordEntities`, `termEntities` e `domainEntities` vengono dopo ogni altra collezione, in quest’ordine, e ciascuna è scritta come un’intestazione seguita dalle righe, ognuna su una riga di testo propria (vedere [Righe dei dizionari](#dictionary-rows)). Ogni entità scrive i propri campi in un ordine fisso, e il testo è indentato con due spazi e termina con un carattere di nuova riga. Così lo stesso documento scrive sempre gli stessi byte, una modifica cambia solo ciò che tocca, e un file salvato su un computer con altri font si riapre con lo stesso `value`.  
 VS Code, Obsidian e il plugin JetBrains scrivono un file solo quando una modifica cambia `value`, quindi un file salvato da una versione precedente mantiene la vecchia forma fino alla prima modifica.
 
 Dalla versione `4.2.0` la forma di archiviazione esclude anche ciò che non contiene nulla: ogni campo di testo che un’entità o il suo `ui` contiene come `''` (`name`, `comment` e `ui.color` di una tabella, `name`, `comment`, `dataType` e `default` di una colonna, `name` di un indice, `value` e `ui.color` di un memo, `name` e `color` di un gruppo di tabelle), ogni elenco di `doc` e ogni collezione che non contiene alcun elemento, e `collections` stesso quando ogni collezione è vuota. Un testo composto solo da spazi viene scritto così com’è, tranne un nome logico, che in quel caso viene escluso, e una parola, un termine o un dominio i cui valori oltre all’id sono tutti vuoti o composti solo da spazi, che viene escluso per intero. Ogni id, ogni elenco all’interno di un’entità e ogni numero, `0` compreso, viene comunque scritto. `doc` viene sempre scritto, quindi il file di un nuovo documento contiene `$schema`, `version`, le sue impostazioni e `"doc": {}`.  
 L’analisi legge un campo di testo mancante come `''` e una collezione mancante come vuota, come fa ogni versione v3, e la forma di archiviazione esclude un elenco di `doc` solo mentre la sua collezione non contiene nulla (vedere [Doc](#doc)). Così anche un editor precedente alla versione `4.2.0` apre questi file, e un programma che legge da sé un file deve leggere allo stesso modo ciò che manca. Un file salvato da una versione precedente esce dal salvataggio successivo senza il testo, gli elenchi e le collezioni vuoti, una modifica che avviene una sola volta, e da quel momento in poi si salva identico byte per byte.
 
-Il valore di runtime mantiene ciò che la forma di archiviazione esclude: entità rimosse, sequenze, z-index, larghezze, indicatori di chiave, flag delle relazioni e punti di ancoraggio, i campi di testo vuoti, e i quattro elenchi `tableIds`, `relationshipIds`, `indexIds` e `memoIds` e le sei collezioni da `tableEntities` a `memoEntities` anche quando sono vuoti. Dalla versione `4.2.0` mantiene anche le parole, i termini e i domini rimossi, le righe che non contengono nulla, il campo `order` di ogni riga, i tre elenchi dei dizionari, un nome logico composto solo da spazi e un collegamento a un dominio rimosso. È indentato con due spazi, senza carattere di nuova riga finale. Usarlo solo per inizializzare un collaboratore o una seconda vista tramite `setInitialValue()`, in modo che l’annullamento di una rimozione inviato da un altro editor riporti lì l’entità per intero. Non scriverlo mai in un file; il JSON Schema lo rifiuta. Nessun meccanismo raccoglie più le entità rimosse, quindi il valore di runtime le mantiene finché il documento non viene riaperto dal suo file.
+La forma di archiviazione scrive ogni impostazione bloccata con il suo valore bloccato (vedere [`lockSettings`](#settings)), `settings.ddlScripts` solo mentre uno script contiene testo, e il `groupId` di una tabella solo mentre indica un gruppo di tabelle che il file scrive. Dalla versione `4.2.0` scrive inoltre `settings.nameViewMode` solo mentre il valore che scrive non è `'physical'`, `settings.columnOrder` in sette elementi dove possibile (vedere [Settings](#settings)) e il `nameDerived` di una tabella solo mentre è `true`.  
+Scrive `doc.tableGroupIds` e `tableGroupEntities` solo mentre esiste un gruppo di tabelle, un `logicalName` solo mentre contiene caratteri diversi dagli spazi, il `domainId` di una colonna solo mentre indica un dominio che il file scrive, e ogni dizionario solo mentre contiene una riga che il file scrive.
 
-Entrambe le forme scrivono ogni impostazione bloccata con il suo valore bloccato (vedere [`lockSettings`](#settings)), `settings.ddlScripts` solo mentre uno script contiene testo, e il `groupId` di una tabella solo mentre non è vuoto. Dalla versione `4.2.0` entrambe scrivono inoltre `settings.nameViewMode` solo mentre il valore che scrivono non è `'physical'`, `settings.columnOrder` in sette elementi dove possibile (vedere [Settings](#settings)) e il `nameDerived` di una tabella solo mentre è `true`.  
-La forma di archiviazione scrive `doc.tableGroupIds` e `tableGroupEntities` solo mentre esiste un gruppo di tabelle, un `logicalName` solo mentre contiene caratteri diversi dagli spazi, il `domainId` di una colonna solo mentre indica un dominio che il file scrive, e ogni dizionario solo mentre contiene una riga che il file scrive. Il valore di runtime scrive i campi dei gruppi di tabelle mentre il documento contiene un gruppo o un gruppo rimosso, `logicalName` e `domainId` mentre non sono `''`, e ogni dizionario con il suo elenco mentre l’uno o l’altro contiene un elemento, compresa una riga rimossa.
+Un file salvato prima della versione `4.0.0` contiene l’intero documento così come lo manteneva allora un editor, comprese le entità rimosse e ciò che ogni caricamento ricava. Un caricamento lo legge, conserva la posizione di ogni tabella e memo nella pila (vedere [Doc](#doc)) e ricava di nuovo il resto, e il salvataggio successivo scrive solo la forma di archiviazione.
 
 ## TypeScript {#typescript}
 
-I tipi descrivono il valore di runtime. Un campo contrassegnato con `// runtime only` è escluso dalla forma di archiviazione, e un campo contrassegnato con `?` viene scritto solo mentre contiene qualcosa. Il testo, gli elenchi e le collezioni vuoti che la forma di archiviazione esclude dalla versione `4.2.0` non sono contrassegnati.
+I tipi descrivono la forma di archiviazione, ciascuno con i campi elencati nell’ordine in cui un file li scrive. Un campo contrassegnato con `?` è uno che la forma di archiviazione può escludere, come descritto in [Forma di archiviazione](#storage-form), e l’analisi legge come privo di contenuto uno mancante: `''`, `false`, nessun gruppo di tabelle o dominio, una collezione vuota, `'physical'` per `nameViewMode` e due script vuoti per `ddlScripts`. L’eccezione è un elenco `doc` mancante, che l’analisi riempie dalla propria collezione (vedere [Doc](#doc)). In una riga di un dizionario, `?` contrassegna i valori prima dei quali una riga può terminare (vedere [Righe dei dizionari](#dictionary-rows)). Ogni altro campo viene sempre scritto.
 
 ### ERDEditorSchemaV3 {#erdeditorschemav3}
 
@@ -35,13 +36,13 @@ type ERDEditorSchemaV3 = {
   version: '3.0.0';
   settings: Settings;
   doc: Doc;
-  collections: {
-    tableEntities: Record<string, Table>;
-    tableColumnEntities: Record<string, Column>;
-    relationshipEntities: Record<string, Relationship>;
-    indexEntities: Record<string, Index>;
-    indexColumnEntities: Record<string, IndexColumn>;
-    memoEntities: Record<string, Memo>;
+  collections?: {
+    tableEntities?: Record<string, Table>;
+    tableColumnEntities?: Record<string, Column>;
+    relationshipEntities?: Record<string, Relationship>;
+    indexEntities?: Record<string, Index>;
+    indexColumnEntities?: Record<string, IndexColumn>;
+    memoEntities?: Record<string, Memo>;
     tableGroupEntities?: Record<string, TableGroup>;
     wordEntities?: DictionaryRows; // rows of Word
     termEntities?: DictionaryRows; // rows of Term
@@ -216,7 +217,7 @@ Dalla versione `4.2.0` c’è un altro flag `show`, `columnDomain` (`8192`), dis
 Un editor precedente alla versione `4.2.0` conserva `show` come numero intero, quindi il flag sopravvive a un salvataggio in quell’editor.
 
 Dalla versione `4.2.0` `ColumnType` ha nove valori. `columnLogicalName` (`128`) colloca la cella del nome logico, che la riga di una colonna disegna solo nella vista `Both Names`, e `columnDomain` (`256`) la cella Dominio. Sono le righe `Logical Name` e `Domain` dell’[ordine delle colonne](../../guide/guides/settings.md#adjusting-column-order) della scheda Impostazioni. Un editor mantiene un ordine di tutti e nove, e quello di un nuovo documento è `128, 1, 2, 256, 4, 8, 16, 32, 64`.  
-Entrambe le forme scrivono l’ordine in sette elementi, escludendo `128` e `256`, mentre `128` si trova subito prima di `columnName` e `256` subito dopo `columnDataType`. Così un nuovo documento scrive ancora `1, 2, 4, 8, 16, 32, 64`, e un file il cui ordine non li ha mai spostati conserva i suoi byte. Altrimenti scrivono tutti e nove.  
+La forma di archiviazione scrive l’ordine in sette elementi, escludendo `128` e `256`, mentre `128` si trova subito prima di `columnName` e `256` subito dopo `columnDataType`. Così un nuovo documento scrive ancora `1, 2, 4, 8, 16, 32, 64`, e un file il cui ordine non li ha mai spostati conserva i suoi byte. Altrimenti ne scrive tutti e nove.  
 L’analisi inserisce i due in quelle posizioni in un ordine di sette elementi, qualunque sia l’ordine dei sette, e accetta così come sono nove elementi che contengono ogni tipo.  
 Dalla versione `5.0.0` accetta anche qualsiasi altro ordine. Mantiene una sola volta ogni `ColumnType` che conosce, nell’ordine indicato, e scarta ogni altro elemento: un valore che nessun `ColumnType` nomina, come un tipo aggiunto da una versione successiva, e un secondo elemento dello stesso tipo. Ogni tipo che manca all’ordine va subito dopo il tipo più vicino che lo precede nell’ordine predefinito e che l’ordine contiene o, se non ce n’è nessuno prima, subito prima del più vicino che lo segue, ed è così che `128` e `256` trovano il loro posto in sette elementi. Solo un ordine che non nomina alcun tipo noto, o un valore che non è un array, viene letto come l’ordine predefinito.  
 Quindi un file salvato da una versione successiva si apre con il suo ordine dei tipi che questa versione conosce, e un salvataggio qui scrive quell’ordine senza gli altri. Prima della versione `5.0.0` l’analisi leggeva qualsiasi altro ordine come quello predefinito, quindi un file di questo tipo si apriva con l’ordine delle colonne azzerato. Il JSON Schema accetta sette o nove interi.
@@ -224,18 +225,18 @@ Quindi un file salvato da una versione successiva si apre con il suo ordine dei 
 Dalla versione `4.0.0` `Language` ha otto destinazioni del [Generatore di codice](../../guide/guides/code-generator.md) in più, da `Mermaid` a `JSONSchema`. Un `language` che il parser non conosce viene letto come `GraphQL`, quindi un editor precedente alla versione `4.0.0` apre su GraphQL un documento salvato con una di esse, e salvando in quell’editor si scrive GraphQL.
 
 Dalla versione `4.0.0` `lockSettings` prende il posto di `ignoreSaveSettings`, e `LockSettingType` quello di `SaveSettingType`, che è stato rimosso. `lockSettings` indica le impostazioni che un documento salva così com’erano al momento del blocco. `viewport` copre insieme `originX`, `originY` e `zoomLevel`, poiché un’origine salvata senza il suo zoom si apre altrove, e ogni altro bit copre il campo di cui porta il nome. Sono le righe [`Lock`](../../guide/guides/settings.md#lock) della scheda Impostazioni.  
-Un’impostazione bloccata viene scritta con il suo valore bloccato, qualunque cosa mostri l’editor, sia da `value` sia da `runtimeValue`, e ogni altra impostazione così com’è. Quindi, mentre il blocco corrispondente è attivo, il file resta invariato quando si scorre o si esegue lo zoom, si cambia scheda, si cambia il linguaggio del Generatore di codice, uno stile dei nomi o il tipo di delimitatore, o si cambia la Visualizzazione nomi. Il blocco prende il valore che l’impostazione ha in quel momento, e l’analisi prende il valore bloccato dal campo salvato.  
+Un file contiene ogni impostazione bloccata con il suo valore bloccato, qualunque cosa mostri l’editor, e ogni altra impostazione così com’è. Quindi, mentre il blocco corrispondente è attivo, il file resta invariato quando si scorre o si esegue lo zoom, si cambia scheda, si cambia il linguaggio del Generatore di codice, uno stile dei nomi o il tipo di delimitatore, o si cambia la Visualizzazione nomi. Il blocco prende il valore che l’impostazione ha in quel momento, e l’analisi prende il valore bloccato dal campo salvato.  
 Un documento creato da zero — un nuovo editor o store di replica, o un valore vuoto assegnato a `value` o passato a `setInitialValue()` — ha `lockSettings` impostato a `63`, con tutti i blocchi attivi. Anche un documento le cui `settings` non contengono `lockSettings` — ogni file salvato prima della versione `4.0.0`, qualunque sia il suo `ignoreSaveSettings`, e ogni documento v2 — si apre con tutti i blocchi attivi: vista e scheda dove si trovano quelle di un nuovo documento (`originX` e `originY` a `0`, `zoomLevel` a `1`, la scheda ERD), e linguaggio, stili dei nomi e tipo di delimitatore bloccati sui valori salvati. Un documento che indica i propri blocchi li conserva, `0` compreso, insieme a ogni valore salvato.  
 L’analisi conserva ogni bit di `lockSettings`, anche quelli sconosciuti, quindi un blocco aggiunto da una versione successiva sopravvive a un salvataggio in questo editor; il JSON Schema verifica solo che sia un intero. Un editor precedente alla versione `4.0.0` scarta `lockSettings` al salvataggio e scrive vista e scheda così come sono, quindi il file si riapre qui come un file salvato prima della versione `4.0.0`.
 
 Dalla versione `4.2.0` c’è un settimo blocco, `unlockNameViewMode` (`64`), la riga `Name View`, che copre `nameViewMode`. Il suo bit si legge al contrario rispetto agli altri bit di blocco, come fanno i bit di `Show` che nascondono ciò che nominano: se impostato, la Visualizzazione nomi è sbloccata, e se non impostato, bloccata. Così `63` significa ancora che tutti i blocchi sono attivi, e un nuovo documento contiene questo valore con la Visualizzazione nomi bloccata su `'physical'`. Un file salvato prima della versione `4.2.0` ha il bit non impostato, qualunque siano i suoi altri blocchi, `0` compreso, quindi si apre con la Visualizzazione nomi bloccata su `'physical'`. Un documento con tutti i blocchi disattivati contiene `64`, e uno con ogni altro blocco attivo e la Visualizzazione nomi sbloccata contiene `127`. Verificare questo blocco al contrario: è attivo mentre `(lockSettings & 64) === 0`.  
-Mentre è attivo, un cambio della Visualizzazione nomi modifica solo lo schermo dell’editor che lo ha effettuato, e il documento mantiene la vista bloccata. Mentre è disattivato, un cambio in un editor che può modificare il documento vale per il documento, e ogni collaboratore cambia vista con esso. Il cambio di un editor di sola lettura modifica solo il suo schermo in entrambi i casi. Vedere [`Lock`](../../guide/guides/settings.md#lock).  
+Mentre il bit non è impostato, un file contiene `nameViewMode` con la vista bloccata, qualunque cosa mostri un editor, e mentre è impostato la vista così com’è. Ciò che mostra ogni editor, con il blocco attivo o disattivato, è descritto in [`Lock`](../../guide/guides/settings.md#lock).  
 Un editor della versione `4.0.0` o `4.1.0` conserva il bit durante un salvataggio ma scarta `nameViewMode`, quindi il documento si riapre qui in `'physical'`, con il blocco com’era.
 
 Dalla versione `4.0.0` `ddlScripts` contiene i due script della scheda [Schema SQL](../../guide/guides/schema-sql.md), che il DDL di ogni database scrive: `before` dopo l’intestazione e prima delle tabelle, `after` dopo il DDL generato. Il DDL scrive ciascuno con interruzioni di riga LF, senza le righe vuote iniziali né gli spazi finali, e su MSSQL terminato da `GO`, come descritto in [Script prima e dopo le tabelle](../../guide/guides/schema-sql.md#before-and-after-scripts); `ddlScripts` di per sé conserva ogni script così come è stato digitato. La chiave viene scritta solo mentre uno dei due script contiene testo, e in quel caso con entrambi; una chiave mancante, o uno script che non è una stringa, viene letto come `''`. Le scelte `Statements`, `Header` e `Tables` della scheda e, dalla versione `4.2.0`, il suo interruttore [`Write logical names into empty comments`](../../guide/guides/schema-sql.md#logical-names-as-comments) non vengono salvati nel documento.  
 Un editor precedente alla versione `4.0.0` scarta gli script quando carica un documento, quindi salvando in quell’editor vanno persi.
 
-Dalla versione `4.2.0` `nameViewMode` è la [Visualizzazione nomi](../../guide/guides/logical-names.md#name-view), cioè i nomi che il diagramma disegna: `'physical'` il nome di ogni tabella e colonna, `'logical'` il suo nome logico al posto del nome, e `'both'` il nome logico e il nome. Nei menu si chiamano `Physical Names`, `Logical Names` e `Both Names`. Entrambe le forme lo scrivono per ultimo, dopo `ddlScripts`, e solo mentre il valore che scrivono non è `'physical'`; mentre il blocco `Name View` è attivo, quel valore è il valore bloccato, qualunque cosa mostri lo schermo. Un valore mancante, o uno che il parser non conosce, viene letto come `'physical'`, e il JSON Schema accetta solo `"logical"` e `"both"`.  
+Dalla versione `4.2.0` `nameViewMode` è la [Visualizzazione nomi](../../guide/guides/logical-names.md#name-view), cioè i nomi che il diagramma disegna: `'physical'` il nome di ogni tabella e colonna, `'logical'` il suo nome logico al posto del nome, e `'both'` il nome logico e il nome. Nei menu si chiamano `Physical Names`, `Logical Names` e `Both Names`. La forma di archiviazione lo scrive per ultimo, dopo `ddlScripts`, e solo mentre il valore che scrive non è `'physical'`. Un valore mancante, o uno che il parser non conosce, viene letto come `'physical'`, e il JSON Schema accetta solo `"logical"` e `"both"`.  
 Un editor precedente alla versione `4.2.0` scarta `nameViewMode` quando carica un documento.
 
 `Database`, `Language`, `Show`, `ColumnType`, `ColumnOption`, `LockSettingType` e `ReferentialAction` si estendono solo in coda. Un documento salvato memorizza il numero, quindi un nuovo fornitore di database, una nuova destinazione di generazione del codice, un nuovo flag, un nuovo tipo di colonna, una nuova opzione di colonna, un nuovo blocco o una nuova azione occupa il bit successivo anziché una posizione intermedia.
@@ -244,52 +245,42 @@ Un editor precedente alla versione `4.2.0` scarta `nameViewMode` quando carica u
 
 ```ts
 type Doc = {
-  tableIds: string[];
-  relationshipIds: string[];
-  indexIds: string[];
-  memoIds: string[];
+  tableIds?: string[];
+  relationshipIds?: string[];
+  indexIds?: string[];
+  memoIds?: string[];
   tableGroupIds?: string[];
-  wordIds?: string[]; // runtime only
-  termIds?: string[]; // runtime only
-  domainIds?: string[]; // runtime only
 };
 ```
 
-Ciascuno dei primi cinque elenchi è l’ordine di un tipo di entità, letto dal DDL, dall’ordinamento delle tabelle e dall’ordine di disegno. Nella forma di archiviazione ogni elenco contiene solo gli id delle entità conservate, ciascuno una sola volta, nell’ordine elencato, e dalla versione `4.2.0` un elenco che non ne contiene nessuno viene escluso. Dalla versione `4.0.0` `tableGroupIds` è l’ordine dei gruppi di tabelle.
+Ciascun elenco è l’ordine di un tipo di entità, letto dal DDL, dall’ordinamento delle tabelle e dall’ordine di disegno. Ognuno contiene solo gli id delle entità che il file scrive, ciascuno una sola volta, nell’ordine elencato, e dalla versione `4.2.0` un elenco che non ne contiene nessuno viene escluso. Dalla versione `4.0.0` `tableGroupIds` è l’ordine dei gruppi di tabelle. I dizionari qui non hanno alcun elenco, perché le loro righe seguono l’ordine di ogni foglio (vedere [Righe dei dizionari](#dictionary-rows)), e il JSON Schema non accetta alcun’altra chiave in `doc`.
 
-Dalla versione `4.2.0` `wordIds`, `termIds` e `domainIds` elencano le righe attive di ogni dizionario: una riga contenuta nella sua collezione ma non nel suo elenco è rimossa. Non sono l’ordine di un foglio, che è dato dal campo `order` di ogni riga. Solo il valore di runtime li scrive, ciascuno mentre esso o la sua collezione contiene un elemento. In un file sono le righe stesse a stabilire l’appartenenza e l’ordine, e il JSON Schema rifiuta gli elenchi.  
 Dalla versione `4.2.0` l’analisi legge un elenco che il documento esclude, o che contiene come qualcosa di diverso da un array, come tutti gli elementi contenuti nella sua collezione, ogni id una sola volta, nell’ordine in cui sono contenuti; un array vuoto resta vuoto, e ogni elemento della sua collezione viene allora letto come rimosso. Un editor precedente alla versione `4.2.0` legge un elenco mancante come vuoto, quindi la forma di archiviazione scrive comunque ogni elenco ogni volta che la sua collezione contiene un’entità.
 
-Dalla versione `4.0.0` l’ordine di sovrapposizione non viene salvato. L’analisi impila ogni tabella, memo e gruppo di tabelle elencato che non contiene uno `zIndex` in base alla sua posizione nel proprio elenco, con i successivi davanti: i gruppi di tabelle da `1`, le tabelle da `2` e i memo sopra ogni tabella. Un’entità che contiene uno `zIndex`, come in un valore di runtime o in un file salvato prima della versione `4.0.0`, lo conserva. Lo spostamento in primo piano di una tabella o di un memo va quindi perso alla riapertura del file.
+Dalla versione `4.0.0` un file non contiene alcun ordine di sovrapposizione. Un caricamento impila le tabelle e i memo elencati in base alla posizione nei rispettivi elenchi, con i successivi davanti e ogni memo sopra ogni tabella, e allo stesso modo tra loro i gruppi di tabelle, dietro le tabelle. Una tabella o un memo in un file salvato prima della versione `4.0.0` contiene uno `zIndex` nel proprio `ui`, che un caricamento conserva come posizione nella pila e che il salvataggio successivo esclude. Lo spostamento in primo piano di una tabella o di un memo va quindi perso alla riapertura del file.
 
 ### Collezione: tableEntities {#collection-tableentities}
 
 ```ts
 type Table = {
   id: string;
-  name: string;
+  name?: string;
   logicalName?: string;
-  comment: string;
+  comment?: string;
   columnIds: string[];
-  seqColumnIds: string[]; // runtime only
   groupId?: string;
-  nameDerived?: boolean;
+  nameDerived?: true;
   ui: TableUI;
 };
 
 type TableUI = {
   x: number;
   y: number;
-  zIndex: number; // runtime only
-  widthName: number; // runtime only
-  widthLogicalName: number; // runtime only
-  widthComment: number; // runtime only
-  color: string;
+  color?: string;
 };
 ```
 
-Dalla versione `4.0.0` una tabella contiene `groupId`, l’id del [gruppo di tabelle](../../guide/guides/table-groups.md) a cui appartiene. Un `groupId` mancante o vuoto, o che non indica alcun gruppo in `doc.tableGroupIds`, equivale a nessun gruppo, e la forma di archiviazione lo scrive solo mentre indica un gruppo conservato.  
-L’analisi inizializza `seqColumnIds` a `columnIds` quando è mancante o non contiene un id elencato, e un editor misura di nuovo `widthName`, `widthLogicalName` e `widthComment` con i propri font a ogni caricamento.
+Dalla versione `4.0.0` una tabella contiene `groupId`, l’id del [gruppo di tabelle](../../guide/guides/table-groups.md) a cui appartiene. Un `groupId` mancante o vuoto, o che non indica alcun gruppo in `doc.tableGroupIds`, equivale a nessun gruppo, e la forma di archiviazione lo scrive solo mentre indica un gruppo conservato.
 
 Dalla versione `4.2.0` una tabella contiene `logicalName`, il nome disegnato dalle [viste](../../guide/guides/logical-names.md#name-view) `Logical Names` e `Both Names`, `''` se non c’è, e `nameDerived`, `true` mentre i dizionari hanno [derivato](../../guide/guides/dictionary.md#deriving-physical-names) `name` dal nome logico. Mentre è impostato, un nuovo nome logico deriva di nuovo il nome; mentre non lo è, il nome è personalizzato, e un nuovo nome logico lo lascia invariato, a meno che il nome non sia vuoto o composto solo da spazi. Una rinomina manuale lo disattiva, e [`Derive Physical Names Again`](../../guide/guides/dictionary.md#derive-physical-names-again) riscrive anche un nome scritto dall’utente e lo attiva ovunque ci sia un nome logico.  
 La forma di archiviazione scrive `logicalName` dopo `name`, così come è stato digitato, solo mentre contiene caratteri diversi dagli spazi, e `nameDerived` dopo `groupId` solo mentre è `true`, l’unico valore accettato dal JSON Schema. Un `logicalName` mancante viene letto come `''` e un `nameDerived` mancante come `false`, quindi ogni nome in un file salvato prima della versione `4.2.0` conta come personalizzato.  
@@ -301,24 +292,13 @@ Un editor precedente alla versione `4.2.0` scarta entrambi quando carica un docu
 type Column = {
   id: string;
   tableId: string;
-  name: string;
-  comment: string;
-  dataType: string;
-  default: string;
+  name?: string;
+  comment?: string;
+  dataType?: string;
+  default?: string;
   options: number; // Constants: ColumnOption
   logicalName?: string;
   domainId?: string;
-  ui: ColumnUI; // runtime only
-};
-
-type ColumnUI = {
-  keys: number; // Constants: ColumnUIKey
-  widthName: number;
-  widthLogicalName: number;
-  widthComment: number;
-  widthDataType: number;
-  widthDomain: number;
-  widthDefault: number;
 };
 
 // Constants
@@ -329,17 +309,12 @@ const ColumnOption = {
   notNull: 8,
   nameDerived: 16,
 } as const;
-
-const ColumnUIKey = {
-  primaryKey: 1,
-  foreignKey: 2,
-} as const;
 ```
 
-Dalla versione `4.0.0` la forma di archiviazione non scrive il campo `ui` delle colonne. Ogni caricamento ricava `keys`, l’indicatore di chiave primaria dal bit `primaryKey` di `options` e l’indicatore di chiave esterna dalle relazioni che terminano sulla colonna, e misura le sei larghezze.  
+Dalla versione `4.0.0` un file non contiene indicatori di chiave: ogni caricamento contrassegna una colonna come chiave primaria dal bit `primaryKey` di `options`, e come chiave esterna finché una relazione termina su di essa nella sua tabella.  
 Un editor precedente alla versione `4.0.0` mostra le colonne di un file salvato qui senza le icone di chiave primaria.
 
-Dalla versione `4.2.0` una colonna contiene `logicalName`, come una tabella, e `domainId`, l’id del dominio a cui è collegata, `''` se non c’è. Le modifiche in un editor mantengono una colonna collegata al tipo di dati del suo dominio, come descritto in [Domini e tipi di dati](../../guide/guides/dictionary.md#domains-and-data-types). L’analisi, però, non cambia il tipo di nessuna colonna, quindi un file scritto altrove può lasciare una colonna collegata con un altro tipo, e lo stesso possono fare le modifiche incrociate di due collaboratori; il foglio Controlli elenca ciascun caso come [`Domain type mismatch`](../../guide/guides/dictionary.md#what-each-check-finds). L’analisi cancella un `domainId` che non indica alcun dominio contenuto nel documento. Un dominio rimosso conta comunque, quindi l’editor mantiene un collegamento a esso finché un annullamento può riportarlo. Dopo `options`, la forma di archiviazione scrive `logicalName` secondo la regola valida per una tabella, e `domainId` solo mentre indica un dominio che il file scrive, quindi mai un collegamento a un dominio rimosso.  
+Dalla versione `4.2.0` una colonna contiene `logicalName`, come una tabella, e `domainId`, l’id del dominio a cui è collegata, `''` se non c’è. Le modifiche in un editor mantengono una colonna collegata al tipo di dati del suo dominio, come descritto in [Domini e tipi di dati](../../guide/guides/dictionary.md#domains-and-data-types). L’analisi, però, non cambia il tipo di nessuna colonna, quindi un file scritto altrove può lasciare una colonna collegata con un altro tipo, e lo stesso possono fare le modifiche incrociate di due collaboratori; il foglio Controlli elenca ciascun caso come [`Domain type mismatch`](../../guide/guides/dictionary.md#what-each-check-finds). L’analisi cancella un `domainId` che non indica alcun dominio contenuto nel file. Dopo `options`, la forma di archiviazione scrive `logicalName` secondo la regola valida per una tabella, e `domainId` solo mentre indica un dominio che il file scrive, quindi una colonna collegata a un dominio rimosso, o a uno che il file esclude, viene scritta senza il collegamento e con il tipo di dati che contiene.  
 `ColumnOption.nameDerived` (`16`) è il flag del nome derivato della colonna, conservato in `options` con gli altri bit e con lo stesso significato del `nameDerived` di una tabella. Una chiave primaria NOT NULL il cui nome è stato derivato dai dizionari, ad esempio, contiene `options` `26`.  
 Un editor precedente alla versione `4.2.0` scarta `logicalName` e `domainId` quando carica un documento, quindi salvando in quell’editor vanno persi. Conserva `options` come numero intero, quindi il bit `nameDerived` sopravvive a un salvataggio in quell’editor.
 
@@ -348,9 +323,7 @@ Un editor precedente alla versione `4.2.0` scarta `logicalName` e `domainId` qua
 ```ts
 type Relationship = {
   id: string;
-  identification: boolean; // runtime only
   relationshipType: number; // Constants: RelationshipType
-  startRelationshipType: number; // Constants: StartRelationshipType; runtime only
   onDelete: number; // Constants: ReferentialAction
   onUpdate: number; // Constants: ReferentialAction
   start: RelationshipPoint;
@@ -360,9 +333,6 @@ type Relationship = {
 type RelationshipPoint = {
   tableId: string;
   columnIds: string[];
-  x: number; // runtime only
-  y: number; // runtime only
-  direction: number; // Constants: Direction; runtime only
 };
 
 // Constants
@@ -373,11 +343,6 @@ const RelationshipType = {
   OneN: 16,
 } as const;
 
-const StartRelationshipType = {
-  ring: 1,
-  dash: 2,
-} as const;
-
 const ReferentialAction = {
   none: 1,
   noAction: 2,
@@ -386,35 +351,25 @@ const ReferentialAction = {
   setDefault: 16,
   restrict: 32,
 } as const;
-
-const Direction = {
-  left: 1,
-  right: 2,
-  top: 4,
-  bottom: 8,
-} as const;
 ```
 
 Dalla versione `3.10.0` una relazione contiene `onDelete` e `onUpdate`, le sue [azioni ON DELETE e ON UPDATE](../../guide/guides/relationship-editing.md#on-delete-and-on-update). Ciascuno contiene esattamente un valore di `ReferentialAction`. `none`, il valore predefinito, non scrive alcuna clausola, quindi si applica il comportamento predefinito del database. Gli altri cinque corrispondono a `NO ACTION`, `CASCADE`, `SET NULL`, `SET DEFAULT` e `RESTRICT`. Schema SQL scrive una clausola solo per un database che accetta la sua azione.  
 La forma di archiviazione li scrive sempre entrambi, e dalla versione `4.0.0` il JSON Schema li richiede, verificando solo che ciascuno sia un intero. L’analisi legge ancora come `none` un campo mancante, come in ogni documento salvato prima della versione `3.10.0`, e lo stesso vale per un valore fuori dall’elenco.  
 Un editor precedente alla versione `3.10.0` non conosce questi campi e li scarta quando carica un documento, quindi salvando in quell’editor si perde ogni azione.
 
-Dalla versione `4.0.0` ogni caricamento ricava ciò che la forma di archiviazione esclude. Una relazione è identificante quando ogni colonna su cui termina è una chiave primaria, e il suo `startRelationshipType` è `dash` quando ognuna di queste colonne è NOT NULL e `ring` altrimenti; una relazione a cui non resta alcuna colonna di arrivo è non identificante e `dash`, come una nuova relazione appena creata. I punti di ancoraggio, `x`, `y` e `direction`, vengono posizionati di nuovo.
+Dalla versione `4.0.0` ogni caricamento legge se una relazione è identificante, e come viene disegnata la sua estremità padre, dalle colonne su cui termina che la tabella figlia elenca ancora. È identificante, una linea continua, finché ognuna di queste colonne è una chiave primaria, e la sua estremità padre è formata da due trattini finché ognuna di queste colonne è NOT NULL, mentre altrimenti è un cerchio e un trattino. Una relazione a cui non resta alcuna di queste colonne è non identificante con due trattini, come una nuova relazione appena creata. Vedere [Leggere un connettore](../../guide/guides/relationship-editing.md#reading-a-connector).
 
 ### Collezione: indexEntities {#collection-indexentities}
 
 ```ts
 type Index = {
   id: string;
-  name: string;
+  name?: string;
   tableId: string;
   indexColumnIds: string[];
-  seqIndexColumnIds: string[]; // runtime only
   unique: boolean;
 };
 ```
-
-L’analisi inizializza `seqIndexColumnIds` a `indexColumnIds` quando è mancante o non contiene un id elencato.
 
 ### Collezione: indexColumnEntities {#collection-indexcolumnentities}
 
@@ -438,7 +393,7 @@ const OrderType = {
 ```ts
 type Memo = {
   id: string;
-  value: string;
+  value?: string;
   ui: MemoUI;
 };
 
@@ -447,20 +402,19 @@ type MemoUI = {
   y: number;
   width: number;
   height: number;
-  zIndex: number; // runtime only
-  color: string;
+  color?: string;
 };
 ```
 
-Dalla versione `4.0.0` tabelle e memo [condividono un’unica pila](../../guide/guides/table-related-functions.md#moving-multiple-tables) ordinata per `zIndex`, quindi portare una tabella in primo piano può metterla sopra un memo. L’analisi impila un memo salvato senza `zIndex` sopra ogni tabella, come descritto in [Doc](#doc). Un memo in un file salvato prima della versione `4.0.0` conserva lo `zIndex` salvato, che proveniva dallo stesso contatore di quello delle tabelle, quindi un memo che una versione precedente disegnava sopra ogni tabella può aprirsi sotto una tabella portata in primo piano dopo di esso.
+Dalla versione `4.0.0` tabelle e memo [condividono un’unica pila](../../guide/guides/table-related-functions.md#moving-multiple-tables), quindi portare una tabella in primo piano può metterla sopra un memo. Un caricamento mette ogni memo sopra ogni tabella, come descritto in [Doc](#doc). Un memo in un file salvato prima della versione `4.0.0` conserva lo `zIndex` salvato, che proveniva dallo stesso contatore di quello delle tabelle, quindi un memo che una versione precedente disegnava sopra ogni tabella può aprirsi sotto una tabella portata in primo piano dopo di esso.
 
 ### Collezione: tableGroupEntities {#collection-tablegroupentities}
 
 ```ts
 type TableGroup = {
   id: string;
-  name: string;
-  color: string;
+  name?: string;
+  color?: string;
   ui: TableGroupUI;
 };
 
@@ -469,7 +423,6 @@ type TableGroupUI = {
   y: number;
   width: number;
   height: number;
-  zIndex: number; // runtime only
 };
 ```
 
@@ -487,7 +440,7 @@ type DictionaryRows = {
 };
 ```
 
-Nessuno dei tre è indicizzato per id. Ciascuno è scritto come un’intestazione e delle righe: `fields` indica una sola volta i campi dell’entità, a partire dall’id, e ogni riga contiene i valori di un’entità in quell’ordine. I tipi riportati sotto elencano i campi di ogni entità nell’ordine dell’intestazione del valore di runtime. Una riga mantiene sempre il proprio id e il proprio nome, ma i valori vuoti finali successivi al nome vengono esclusi, quindi un valore vuoto che precede uno conservato resta `''`, e l’analisi legge come `''` un valore che manca in una riga. Entrambe le forme scrivono ogni riga su una riga di testo propria come JSON compatto, come in queste due parole tratte da un file:
+Nessuno dei tre è indicizzato per id. Ciascuno è scritto come un’intestazione e delle righe: `fields` indica una sola volta i campi dell’entità, a partire dall’id, e ogni riga contiene i valori di un’entità in quell’ordine. I tipi riportati sotto elencano i campi di ogni entità in quell’ordine. Una riga mantiene sempre il proprio id e il proprio nome, ma i valori vuoti finali successivi al nome vengono esclusi, quindi un valore vuoto che precede uno conservato resta `''`, e l’analisi legge come `''` un valore che manca in una riga. Ogni riga è scritta su una riga di testo propria come JSON compatto, come in queste due parole tratte da un file:
 
 ```json
 "wordEntities": {
@@ -507,8 +460,8 @@ Nessuno dei tre è indicizzato per id. Ciascuno è scritto come un’intestazion
 }
 ```
 
-La forma di archiviazione scrive le righe elencate nell’ordine del foglio ed esclude `order`, quindi le sue intestazioni non lo indicano. Esclude una riga i cui valori oltre all’id sono tutti vuoti o composti solo da spazi, come una riga aggiunta e mai compilata, o svuotata, e ogni collegamento a un dominio di questo tipo o a uno rimosso: il `domainId` di una colonna viene escluso, e quello di un termine viene scritto come `''`, mentre il termine stesso viene escluso se non contiene nient’altro.  
-Le intestazioni del valore di runtime indicano `"order"` subito dopo `"name"`. Il valore di runtime scrive ogni riga contenuta nella sua collezione, comprese quelle rimosse, nell’ordine in cui la collezione le contiene, quindi per ottenere l’ordine di un foglio ordinare per `order`, confrontato nell’ordine delle unità di codice. L’analisi assegna alle righe di un file chiavi `order` nell’ordine in cui si trovano le righe, quindi vengono rilette nell’ordine in cui il file le ha scritte.  
+La forma di archiviazione scrive le righe di ogni foglio nell’ordine del foglio, senza alcun campo di ordine, quindi le righe di un file sono i membri di un dizionario e il loro ordine. Esclude una riga i cui valori oltre all’id sono tutti vuoti o composti solo da spazi, come una riga aggiunta e mai compilata, o svuotata, e ogni collegamento a un dominio di questo tipo o a uno rimosso: il `domainId` di una colonna viene escluso, e quello di un termine viene scritto come `''`, mentre il termine stesso viene escluso se non contiene nient’altro.  
+L’analisi legge le righe nell’ordine in cui si trovano, quindi ogni foglio le elenca nell’ordine in cui il file le ha scritte.  
 Un documento senza i dizionari, come uno salvato prima della versione `4.2.0`, non ne ha nessuno. Un editor precedente alla versione `4.2.0` scarta tutti e tre quando carica un documento, quindi salvando in quell’editor si perde ogni parola, termine e dominio.
 
 ### Collezione: wordEntities {#collection-wordentities}
@@ -517,12 +470,11 @@ Un documento senza i dizionari, come uno salvato prima della versione `4.2.0`, n
 type Word = {
   id: string;
   name: string;
-  order: string; // runtime only
-  abbreviation: string;
-  englishName: string;
-  description: string;
-  synonyms: string;
-  forbiddenWords: string;
+  abbreviation?: string;
+  englishName?: string;
+  description?: string;
+  synonyms?: string;
+  forbiddenWords?: string;
 };
 ```
 
@@ -534,15 +486,14 @@ Una parola è una delle parole di cui è composto un nome logico, e `abbreviatio
 type Term = {
   id: string;
   name: string;
-  order: string; // runtime only
-  physicalName: string;
-  domainId: string;
-  description: string;
-  synonyms: string;
+  physicalName?: string;
+  domainId?: string;
+  description?: string;
+  synonyms?: string;
 };
 ```
 
-Un termine è un nome logico intero. Una tabella o una colonna il cui `logicalName` corrisponde a `name` deriva `physicalName` o, mentre questo è vuoto, un nome composto dalle abbreviazioni delle parole, e una colonna assume anche il dominio indicato da `domainId`, `''` se non c’è (vedere [Derivare i nomi fisici](../../guide/guides/dictionary.md#deriving-physical-names)). `synonyms` è separato da virgole. L’analisi cancella un `domainId` che non indica alcun dominio, come su una colonna.
+Un termine è un nome logico intero. Una tabella o una colonna il cui `logicalName` corrisponde a `name` deriva `physicalName` o, mentre questo è vuoto, un nome composto dalle abbreviazioni delle parole, e una colonna assume anche il dominio indicato da `domainId`, `''` se non c’è (vedere [Derivare i nomi fisici](../../guide/guides/dictionary.md#deriving-physical-names)). `synonyms` è separato da virgole. L’analisi cancella un `domainId` che non indica alcun dominio contenuto nel file, come su una colonna.
 
 ### Collezione: domainEntities {#collection-domainentities}
 
@@ -550,10 +501,9 @@ Un termine è un nome logico intero. Una tabella o una colonna il cui `logicalNa
 type Domain = {
   id: string;
   name: string;
-  order: string; // runtime only
-  category: string;
-  dataType: string;
-  description: string;
+  category?: string;
+  dataType?: string;
+  description?: string;
 };
 ```
 
@@ -572,7 +522,7 @@ Il file canonico dello schema è pubblicato in [json-schema/schema.json](https:/
 
 Inserendo `$schema` all’inizio di un file `.erd.json`, gli editor che supportano JSON Schema, come VS Code, convalidano il documento e ne completano automaticamente i campi durante la modifica.
 
-Dalla versione `4.0.0` lo schema descrive solo la forma di archiviazione. Ogni oggetto con campi denominati è chiuso (`additionalProperties: false`), ogni campo che la forma di archiviazione scrive sempre è obbligatorio, un campo che essa esclude mentre non contiene nulla vi compare ma non è obbligatorio, e non vi compare alcun campo che essa esclude sempre. Per questo rifiuta il valore di runtime. Rifiuta anche un file salvato prima della versione `4.0.0`, con il suo `meta`, le larghezze, lo `zIndex`, `ignoreSaveSettings` e il resto, finché un editor della versione `4.0.0` o successiva non salva di nuovo quel file. Un file salvato con la versione `3.2.0` o successiva indica già l’URL di questo schema, che punta al branch `main`, quindi un editor che esegue la convalida rispetto a esso ora segnala il file. Un file salvato con la `3.0.0` o la `3.1.0`, o un documento v2, non indica alcun `$schema`.
+Dalla versione `4.0.0` lo schema descrive solo la forma di archiviazione. Ogni oggetto con campi denominati è chiuso (`additionalProperties: false`), ogni campo che la forma di archiviazione scrive sempre è obbligatorio, ogni campo contrassegnato con `?` nei tipi sopra vi compare ma non è obbligatorio, e non vi compare alcun altro campo. Rifiuta quindi un file salvato prima della versione `4.0.0`, con il suo `meta`, le larghezze, lo `zIndex`, `ignoreSaveSettings` e il resto, finché un editor della versione `4.0.0` o successiva non salva di nuovo quel file. Un file salvato con la versione `3.2.0` o successiva indica già l’URL di questo schema, che punta al branch `main`, quindi un editor che esegue la convalida rispetto a esso ora segnala il file. Un file salvato con la `3.0.0` o la `3.1.0`, o un documento v2, non indica alcun `$schema`.
 
 Dalla versione `4.2.0` lo schema non richiede più i campi di testo di un’entità, alcun elenco di `doc`, alcuna collezione né `collections` stesso, che la forma di archiviazione esclude mentre non contengono nulla. Accetta ancora un file salvato con la `4.0.0` o la `4.1.0`. Indica i nuovi campi: `nameViewMode`, che accetta solo `"logical"` e `"both"`; `logicalName` di una tabella e il suo `nameDerived`, che accetta solo `true`; `logicalName` e `domainId` di una colonna; e i tre dizionari, ciascuno con la propria intestazione e righe di stringhe. `canvasType` elenca la scheda Dizionario, `columnOrder` accetta sette o nove interi, e le descrizioni di `show`, `columnOrder`, `lockSettings` e `options` indicano i nuovi bit.
 

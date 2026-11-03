@@ -1,5 +1,5 @@
 ---
-sidebar_position: 2
+sidebar_position: 3
 description: Replicar um editor ao vivo em um armazenamento headless fora da thread principal e serializar o documento para armazená-lo.
 ---
 
@@ -88,6 +88,11 @@ A partir da `4.2.0`, o mesmo vale para uma palavra, um termo ou um domínio remo
 Quando um editor desfaz a remoção, uma réplica inicializada sem a linha volta a listá-la vazia, e, como `value` deixa de fora uma linha vazia, a réplica salva o documento sem ela.  
 No caso de um domínio, as colunas e os termos vinculados a ele também continuam desvinculados nessa réplica, já que ela nunca teve os vínculos e o desfazer não os envia.
 
+A partir da `5.1.0`, o [`@dineug/erd-editor-yjs`](./yjs.md) também pode manter editores em sincronia por meio de uma sala Yjs.  
+Alimentada como acima a partir de um elemento vinculado a uma sala, uma réplica recebe apenas as edições feitas naquele elemento, nunca as que a sala traz: essas chegam ao elemento como de outro editor, e um armazenamento compartilhado nunca repassa o que recebeu.  
+Para armazenar o documento de uma sala, salve o `value` do elemento vinculado, ou o de um armazenamento de pares vinculado, como descreve [O que a sala contém](./yjs.md#what-the-room-holds).  
+Um provider de persistência do Yjs armazena a própria sala, que contém um valor em tempo de execução e as edições feitas desde então, e não um arquivo; consulte [Limites](./yjs.md#limits).
+
 ## InjectEngineContext {#injectenginecontext}
 
 ### toWidth {#towidth}
@@ -154,7 +159,7 @@ Ele contém apenas as entidades ativas, em uma ordem fixa, sem as removidas, a o
 A partir da `4.2.0`, ele também contém os nomes lógicos, se cada nome foi derivado dos dicionários, os vínculos com domínios e as palavras, os termos e os domínios da aba [Dicionário](../../guide/guides/dictionary.md).  
 Ele também deixa de fora, a partir da `4.2.0`, cada campo de texto vazio de uma entidade, cada lista de `doc` e cada coleção que não contém nada e o próprio `collections` quando todas as coleções estão vazias.  
 Ele é indentado com dois espaços, com cada linha de dicionário em uma linha própria do texto, e termina com uma quebra de linha, então o mesmo documento sempre gera os mesmos bytes.  
-Consulte [Forma de armazenamento e valor em tempo de execução](./schema.md#storage-form-and-runtime-value) para saber o que ele contém.
+Consulte [Forma de armazenamento](./schema.md#storage-form) para saber o que ele contém.
 
 Cada configuração cujo [bloqueio](../../guide/guides/settings.md#lock) está ativado é gravada com o valor em que foi bloqueada, e todas as outras, como estão.  
 O bloqueio `Viewport` abrange a origem da área visível e o nível de zoom juntos, e a aba, a linguagem do Gerador de código, os dois estilos de nome e o tipo de delimitador têm, cada um, seu próprio bloqueio.  
@@ -172,6 +177,7 @@ const snapshot = replicationStore.runtimeValue;
 ```
 
 Use-o para inicializar um editor ou outro armazenamento que entre depois, por meio do `setInitialValue` dele; consulte [Edição colaborativa](./collaborative-editing.md).  
+Uma réplica não tem [getLWW](./collaborative-editing.md#getlww) nem [getVersion](./collaborative-editing.md#getversion), então não repassa registros de colaboração com `runtimeValue`: um editor inicializado a partir dela os obtém dos editores em execução, como descreve [Inicializar um colaborador](./collaborative-editing.md#seeding-a-collaborator).  
 Nunca o armazene como o arquivo: ele traz as entidades removidas, e o [JSON Schema](./schema.md#json-schema) publicado o recusa.  
 São essas entidades removidas que permitem que o desfazer de uma remoção, enviado depois, traga a entidade de volta inteira no armazenamento inicializado a partir dele.  
 Elas permanecem até a próxima vez que o documento for aberto a partir do seu arquivo, cuja forma as deixa de fora.
@@ -230,7 +236,7 @@ Antes da `3.10.0`, ele não recebia nada, e um listener que ignora o argumento c
 `changed` é `false` quando as ações desde o `change` anterior, ou desde o carregamento, deixaram `value` byte a byte como estava.
 
 Uma alteração que um [bloqueio](../../guide/guides/settings.md#lock) deixa fora do `value` ainda dispara `change`, com `changed` definido como `false`, então grave apenas quando `changed` for `true`.  
-É o caso de uma rolagem ou um zoom enquanto `Viewport` está bloqueado, de uma troca de aba enquanto `Canvas Type` está bloqueado e de uma alteração da linguagem do Gerador de código, de um estilo de nome ou do tipo de delimitador enquanto seu próprio bloqueio está ativado.  
+É o caso de uma rolagem ou um zoom enquanto `Viewport` está bloqueado, de uma troca de aba enquanto `Canvas Type` está bloqueado e de uma alteração da linguagem do Gerador de código, de um estilo de nome ou do tipo de delimitador enquanto seu próprio bloqueio está ativado, o que, a partir da `5.1.0`, só um editor anterior à `5.1.0` ainda envia (consulte [dispatch, dispatchSync](#dispatch-dispatchsync)).  
 A partir da `4.2.0`, o mesmo vale para uma troca da exibição de nomes enquanto `Name View` está bloqueado: o editor ainda a envia, mas a réplica a descarta, como fazem os outros editores.  
 Uma troca da exibição de nomes feita em um editor somente leitura é descartada da mesma forma, qualquer que seja seu bloqueio.  
 O evento [change](../erd-editor-element.md#change) do elemento deixa essa alteração de fora, mas a réplica ainda a informa.  
@@ -282,6 +288,23 @@ Um editor anterior à `4.2.0` na sessão ainda pode tirar parte disso de uma ré
 Um `Import` de Esquema SQL, GraphQL, DBML ou AML nesse editor, mas não um `Import and Add`, esvazia as palavras, os termos e os domínios da réplica.  
 Desfazer nele um carregamento, um `Import` ou um `clear()` carrega a própria cópia do documento dele na réplica, sem nomes lógicos, vínculos com domínios nem dicionários; consulte [Misturar versões](./collaborative-editing.md#mixing-releases).  
 `@dineug/erd-editor/engine.js` exporta os mesmos `createReplicationStore`, `ReplicationStore` e `ReplicationChange` de antes, e `createReplicationStore` recebe o mesmo contexto.
+
+A `5.1.0` não adiciona nenhum tipo de ação nem altera nenhuma exportação de `@dineug/erd-editor/engine.js`, então uma réplica da `4.2.0` em diante ainda mantém toda alteração que um editor `5.1.0` envia.  
+A partir da `5.1.0`, a réplica resolve as edições feitas no mesmo instante como fazem os editores `5.1.0`; consulte [Edições simultâneas](./collaborative-editing.md#concurrent-edits).  
+Ela mantém uma versão para a posição de uma tabela, para a posição e o tamanho de uma nota e de um grupo de tabelas e para a origem e o nível de zoom da área visível.  
+Um editor `5.1.0` envia um arrasto, um deslocamento ou um zoom como o ponto onde ele termina, por meio de `table.moveTo`, `memo.moveTo`, `tableGroup.moveTo`, `settings.scrollTo` e `settings.changeZoomLevel`, e a réplica aceita cada uma dessas ações, e cada `memo.resize` e `tableGroup.resize`, somente quando sua versão não é inferior à que ela mantém.  
+Assim, quando dois desses editores movem ou redimensionam a mesma tabela, nota ou grupo de tabelas no mesmo instante, a réplica a salva no ponto e no tamanho que todos eles mostram, em qualquer ordem em que os ouça, e um arrasto, um deslocamento ou um zoom que o transporte entrega duas vezes não move nada duas vezes.  
+Com `Viewport` desbloqueado, a réplica salva a origem e o nível de zoom cada um a partir da escrita com a maior versão, onde estava o editor que a fez.  
+Um zoom também move a origem, então um deslocamento e um zoom que dois editores fazem no mesmo instante podem ser salvos como a origem de um editor com o nível de zoom do outro.  
+Antes da `5.1.0`, a réplica somava os passos de deslocamento e de zoom de todos os editores em uma única área visível.
+
+As distâncias que um editor anterior à `5.1.0` envia para um arrasto, um deslocamento ou um zoom (`table.move`, `memo.move`, `tableGroup.move`, `settings.streamScrollTo` e `settings.streamZoomLevel`) continuam sendo somadas ao que a réplica mantém, fora das versões.  
+Uma mudança de cor continua chegando sem versão: a réplica, como cada editor, a marca com uma versão própria e mantém a cor que ouviu por último, então duas mudanças de cor de uma mesma tabela, nota ou grupo de tabelas feitas no mesmo instante podem ser salvas de forma diferente do que um editor mostra.  
+Uma réplica anterior à `5.1.0` aplica os pontos e os tamanhos na ordem em que chegam, então pode salvar uma tabela em um lugar diferente de onde os editores `5.1.0` a mostram.  
+Mantenha todos os editores da sessão, e a réplica, na `5.1.0` ou posterior para que as edições feitas no mesmo instante terminem iguais, salvo as exceções que [Edições simultâneas](./collaborative-editing.md#concurrent-edits) lista.
+
+A partir da `5.1.0`, um editor envia uma alteração da linguagem do Gerador de código, de um estilo de nome ou do tipo de delimitador somente enquanto o bloqueio dessa configuração está desativado, marcada com `shared: true` em seu payload, e a réplica aplica toda alteração marcada, como fazem os editores; consulte [Edição colaborativa](./collaborative-editing.md).  
+A réplica aplica uma alteração não marcada, que um editor anterior à `5.1.0` envia independentemente do bloqueio, somente enquanto essa configuração está desbloqueada do seu lado, e a descarta enquanto a configuração está bloqueada (consulte [on@change](#onchange)).
 
 A partir da `4.0.0`, os dois métodos também aplicam a ação `editor.mergeLWW`, que traz os registros de colaboração com que um editor responde quando outro entra na sessão, então a réplica resolve as edições simultâneas como os editores fazem.  
 Ela não altera nenhum byte de `value` e não dispara nenhum `change`.  

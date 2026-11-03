@@ -83,7 +83,9 @@ En nyckel av typen serial är undantaget: dess sekundärnyckel får den heltalst
 Varje sekundärnyckelkolumn namnges efter sin nyckel: ett namn på ett ord, som `id`, får föräldratabellens namn framför sig (`user_id`), ett namn på flera ord, som `member_id`, behålls och ett namn som barntabellen redan har numreras (`user_id_2`) – se [Namn på sekundärnyckelkolumner](./relationship-editing.md#foreign-key-column-names).  
 Om du klickar två gånger på samma tabell ritas en självrefererande relation.  
 En ny relation börjar med både `On Delete` och `On Update` inställda på `Not set`; ändra dem i relationens snabbmeny – se [ON DELETE och ON UPDATE](./relationship-editing.md#on-delete-and-on-update).  
-Tryck på `Escape`, eller tryck på samma kortkommando igen, för att avbryta. Om du avbryter förblir markeringen som den är, och nästa tryck på `Escape` avmarkerar allt.
+Tryck på `Escape`, eller tryck på samma kortkommando igen, för att avbryta. Om du avbryter förblir markeringen som den är, och nästa tryck på `Escape` avmarkerar allt.  
+Ritandet avslutas också, oavsett om bara typen är aktiv eller om föräldratabellen redan är vald, när diagrammet ersätts: av en `Import` i stället för diagrammet, av en ångring eller omgörning av en sådan, av en medarbetare eller en kodagent som gör något av detta, och av att diagrammet läses in i editorn på nytt, som Obsidian gör när filen ändras utanför den.  
+En import av Schema SQL, GraphQL, DBML eller AML avslutar det när dess tabeller har placerats, inte när filen väljs. [`Import and Add`](./file-import-export.md#import-and-add) lämnar ritandet aktivt.
 
 När föräldratabellen har valts och du pekar på en tabell som relationen kan sluta i, får den tabellen en kontur och två knappar visas bredvid den:
 

@@ -67,7 +67,8 @@ Non vengono registrate nemmeno le modifiche provenienti da un altro editor, quin
 
 Annullare un `Import`, che sostituisce l’intero diagramma, ripristina il diagramma precedente così com’era nell’editor al momento dell’importazione, con ogni [blocco](./settings.md#lock) attivo o disattivato e ogni valore bloccato com’erano allora.  
 Se quel diagramma aveva l’impostazione `Viewport` bloccata, la vista e lo zoom tornano alla vista bloccata, quella con cui il diagramma si apre, anziché al punto in cui ci si trovava. Con l’impostazione `Viewport` sbloccata, tornano al punto in cui ci si trovava al momento dell’importazione. Le altre impostazioni bloccate, come la scheda attiva, il linguaggio del Generatore di codice o la Visualizzazione nomi, restano come appaiono sullo schermo.  
-Un nuovo diagramma parte con tutti i blocchi attivi. Sbloccare `Viewport` prima di importare per conservare la propria vista attraverso un annullamento di questo tipo. Sbloccarlo in seguito, o importare un file JSON il cui blocco `Viewport` è disattivato, non cambia il punto a cui porta l’annullamento.
+Un nuovo diagramma parte con tutti i blocchi attivi. Sbloccare `Viewport` prima di importare per conservare la propria vista attraverso un annullamento di questo tipo. Sbloccarlo in seguito, o importare un file JSON il cui blocco `Viewport` è disattivato, non cambia il punto a cui porta l’annullamento.  
+Annullare o ripetere un `Import` termina anche il disegno di una relazione — vedere [Creazione di relazioni](./editing-start.md#relationship-creation).
 
 Annullare l’importazione di un file JSON ripristina anche le parole, i termini e i domini che aveva il diagramma precedente. Un’importazione di Schema SQL, GraphQL, DBML o AML mantiene i dizionari, quindi il suo annullamento e la sua ripetizione li lasciano come sono, comprese le modifiche apportate nel frattempo nella scheda Dizionario.
 

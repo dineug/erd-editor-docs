@@ -51,18 +51,18 @@ Za preostali API glejte stran [ErdEditorElement](./erd-editor-element.md).
 
 ```html
 <script type="module">
-  import 'https://esm.run/@dineug/erd-editor@5.0.0/erd-editor.js';
+  import 'https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js';
 
   const editor = document.createElement('erd-editor');
   editor.style.cssText = 'display: block; width: 100%; height: 100vh;';
   document.body.appendChild(editor);
 </script>
 <!-- or -->
-<script type="module" src="https://esm.run/@dineug/erd-editor@5.0.0/erd-editor.js"></script>
+<script type="module" src="https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js"></script>
 ```
 
 Storitev `esm.run` namesto vas razreši zunanje odvisnosti paketa, zato to deluje brez združevalnika.
-Do vsake vstopne točke pridete s potjo za različico: `…/erd-editor.js` definira urejevalnik, `…/erd-viewer.js` pa pregledovalnik, ki vsak jezik prikaza razen angleščine pridobi iz CDN, ko ga stran zahteva. Goli URL paketa, `https://esm.run/@dineug/erd-editor@5.0.0`, vrne koren, ki ne definira nobenega elementa.
+Do vsake vstopne točke pridete s potjo za različico: `…/erd-editor.js` definira urejevalnik, `…/erd-viewer.js` pa pregledovalnik, ki vsak jezik prikaza razen angleščine pridobi iz CDN, ko ga stran zahteva. Goli URL paketa, `https://esm.run/@dineug/erd-editor@5.1.0`, vrne koren, ki ne definira nobenega elementa.
 URL brez različice vedno vrne najnovejšo izdajo. Fiksirajte različico, kot zgoraj, če ne želite, da bi nadgradnja na novo glavno različico nenapovedano dosegla vašo stran.
 Tudi različica `5.0.0` je taka nadgradnja: stran, ki mora ostati na različici 4.x, fiksira `@4.2.0` – glejte razdelek [Nadgradnja z različice 4.x](#upgrading-from-4x).
 
@@ -75,7 +75,7 @@ Nanjo kažeta polji `unpkg` in `jsdelivr`, zato jo vrne goli URL paketa na kater
 
 ```html
 <erd-editor></erd-editor>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.0.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0"></script>
 <script>
   const editor = document.querySelector('erd-editor');
   editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
@@ -88,7 +88,7 @@ Od različice `5.0.0` druga datoteka, `dist/erd-viewer.umd.js`, definira `<erd-v
 
 ```html
 <erd-viewer src="diagram.erd.json" style="display: block; height: 480px"></erd-viewer>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.0.0/dist/erd-viewer.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0/dist/erd-viewer.umd.js"></script>
 ```
 
 Nobena datoteka ne definira oznake druge, vsaka pa na strani ne pusti nobenega globalnega objekta razen svojega in `window.Konva`.
@@ -100,7 +100,7 @@ Stran, ki ne more naložiti lastne skripte, lahko namesto tega vstavi gostovani 
 ```html
 <erd-editor system-dark-mode enable-theme-builder enable-locale-picker enable-welcome-screen></erd-editor>
 <script type="module">
-  import 'https://esm.run/@dineug/erd-editor@5.0.0/erd-editor.js';
+  import 'https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js';
 
   const editor = document.querySelector('erd-editor');
 </script>
@@ -161,7 +161,7 @@ const found = document.querySelector('erd-editor'); // ErdEditorElement | null
 ```
 
 Tip `ErdEditorElement` se izvaža za označevanje tipov vaših spremenljivk in lastnosti. Od različice `5.0.0` je tudi razred elementa, `ErdViewerElement` pa je vmesnik in razred pregledovalnika – glejte razdelek [Registracija elementov](#registering-the-elements).
-Od različice `4.0.0` paket izvaža tudi tipe `LocaleCode`, `LocaleOption` in `SchemaSQLOptions`, od različice `5.0.0` pa `ToImageOptions` – glejte razdelek [Vstopne točke](#entry-points). Možnosti, ki jih sprejemajo metode `setSchema*()`, nimajo izvoženega imena; izpeljite jih iz elementa, kot `Parameters<ErdEditorElement['setSchemaSQL']>[1]`.
+Od različice `4.0.0` paket izvaža tudi tipe `LocaleCode`, `LocaleOption` in `SchemaSQLOptions`, od različice `5.0.0` pa `ToImageOptions` – glejte razdelek [Vstopne točke](#entry-points). Možnosti, ki jih sprejemajo metode `setSchema*()`, nimajo izvoženega imena; izpeljite jih iz elementa, kot `Parameters<ErdEditorElement['setSchemaSQL']>[1]`. Enako velja za [skupno shrambo](./advanced/collaborative-editing.md) in njene tipe.
 Od različice `5.0.0` polje `typesVersions` v paketu tipizira tudi vsako vstopno točko podpoti pri `moduleResolution: "node10"`, ki ne bere preslikave izvozov.
 
 ## Registracija elementov {#registering-the-elements}
@@ -259,7 +259,7 @@ Paket ima pet vstopnih točk:
 | `@dineug/erd-editor/erd-editor.js` | Od različice `5.0.0`. Definira `<erd-editor>` in ničesar ne izvaža |
 | `@dineug/erd-editor/erd-viewer.js` | Od različice `5.0.0`. Definira `<erd-viewer>` in ničesar ne izvaža |
 | `@dineug/erd-editor/engine.js` | Shramba dokumenta brez DOM |
-| `@dineug/erd-editor/peer.js` | Od različice `3.9.1`. Udeleženec brez vmesnika strežnika MCP |
+| `@dineug/erd-editor/peer.js` | Od različice `3.9.1`. Udeleženec brez vmesnika strežnika MCP in od različice `5.1.0` tudi [vezave Yjs](./advanced/yjs.md) |
 
 Koren izvaža oba razreda elementov in njuni funkciji define, dve funkciji za nastavljanje povratnih klicev, od različice `3.9.2` privzete dodelitve tipk z njihovimi tipi, od različice `4.0.0` tipe za jezik prikaza in tip možnosti metode `getSchemaSQL()`, od različice `4.2.0` kombinacije tipk za vrstice na zavihku Slovar, od različice `5.0.0` pa `toImage`.
 
@@ -289,7 +289,9 @@ Od različice `5.0.0` mapa `dist` vsebuje eno nezmanjšano datoteko na modul, vs
 Izvaža funkcijo `createReplicationStore` in tip `ReplicationStore`. Od različice `3.10.0` izvaža tudi tip `ReplicationChange`, `{ value: string; changed: boolean }`, ki ga prejme poslušalec dogodka `change` replike – glejte razdelek [on@change](./advanced/remote-storage.md#onchange).
 Od različice `4.0.0` ima shramba `ReplicationStore` tudi lastnost `runtimeValue`. Njena lastnost `value` in vrednost, ki jo preda dogodek `change`, sta v obliki za shranjevanje, kakršno hrani datoteka, tako kot pri elementu – glejte razdelek [ReplicationStore](./advanced/remote-storage.md#replicationstore).
 
-`@dineug/erd-editor/peer.js` je udeleženec brez vmesnika, prek katerega [strežnik MCP](../mcp/introduction.md) ureja dokument. Namenjena je temu strežniku, te strani pa je ne dokumentirajo.
+`@dineug/erd-editor/peer.js` je udeleženec brez vmesnika, prek katerega [strežnik MCP](../mcp/introduction.md) ureja dokument.
+Od različice `5.1.0` je to tudi tisto, kar `bindPeerStore` paketa `@dineug/erd-editor-yjs` poveže z dokumentom `Y.Doc`: shramba udeleženca, ustvarjena s klicem `createPeerStore()` te vstopne točke, kot član sobe, ki deluje brez vmesnika, ali kot strnjevalnik, ki strne zgodovino sobe.
+Razen tistega, kar o njem prikazuje stran [Yjs](./advanced/yjs.md) – klica `createPeerStore()`, lastnosti `value` povezane shrambe udeleženca in njene metode `destroy()` –, te strani tega ne dokumentirajo.
 
 ### Pogovorna okna za datoteke {#file-dialogs}
 
@@ -369,11 +371,11 @@ Različica `5.0.0` je glavna izdaja. Ko stran prenašate z različice 4.x, preve
    import { setExportFileCallback } from '@dineug/erd-editor';
   ```
 
-- Na CDN velja enako za `https://esm.run/@dineug/erd-editor`, ki zdaj vrne koren in ne definira ničesar: uvozite `https://esm.run/@dineug/erd-editor@5.0.0/erd-editor.js`. Goli URL-ji jsDelivr in unpkg še vedno vrnejo gradnjo z oznako script, ki definira `<erd-editor>` kot prej. URL brez različice zdaj vrne najnovejšo izdajo 5.x; za ostanek na 4.x fiksirajte `@4.2.0` – glejte razdelka [CDN](#cdn) in [Oznaka script](#script-tag).
+- Na CDN velja enako za `https://esm.run/@dineug/erd-editor`, ki zdaj vrne koren in ne definira ničesar: uvozite `https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js`. Goli URL-ji jsDelivr in unpkg še vedno vrnejo gradnjo z oznako script, ki definira `<erd-editor>` kot prej. URL brez različice zdaj vrne najnovejšo izdajo 5.x; za ostanek na 4.x fiksirajte `@4.2.0` – glejte razdelka [CDN](#cdn) in [Oznaka script](#script-tag).
 - Koren ne definira ničesar, vendar še vedno potrebuje DOM, zato pri upodabljanju na strežniku imenovan uvoz iz njega, na primer `setExportFileCallback`, ostane na poti samo za odjemalca ob vstopni točki elementa – glejte razdelek [Upodabljanje na strežniku](#server-side-rendering).
 - `window.ErdEditor` dobi `ErdEditorElement` in `defineErdEditor`. Gradnja pregledovalnika z oznako script da `ErdViewerElement` in `defineErdViewer` na `window.ErdViewer`, nobeden od obeh globalnih objektov pa ne vsebuje `toImage`.
 - Urejevalnik `readonly` se odpre kot bralnik. Njegovih šest zavihkov, raziskovalec, hitro iskanje in prisotnost ostanejo, vsak kontrolnik, ki bi urejal diagram, pa je izginil in ne onemogočen: orodna vrstica prikazuje ime zbirke podatkov kot besedilo, zavihek Nastavitve prikazuje svoje nastavitve z vsemi onemogočenimi kontrolniki pod značko `Read only`, lebdeča orodna vrstica pa ohrani samo povečavo, prikaz imen, način zen in kompas, zato `Hand` in `Select` izgineta, vlečenje pa premika pogled. Pritisk ne izbere ničesar: edina izbira je obris, ki ga skok iz raziskovalca ali hitrega iskanja nariše okoli tistega, kar doseže, in ga miren klik počisti, tipke za izbiro vsega pa ničesar ne izberejo. Vklop `readonly` konča, kar je bilo odprto, na primer izbiro, orodje Roka, urejevalnik celice, vlečenje, Map Columns, predogled `Force` funkcije Auto Layout in Time Travel, ohrani pa pomik, povečavo, zavihek in prikaz imen – glejte [readonly](./erd-editor-element.md#readonly).
-- Nastavitve, ki jih bralec `readonly` spremeni, ostanejo na zaslonu tega urejevalnika, ne glede na njihove zaklepe: pomik in povečava, zavihek, prikaz imen, View Option, zbirka podatkov ter jezik, zapisi imen in vrsta narekovajev generatorja kode. `value`, `runtimeValue` in izvoz JSON ohranijo dokumentove lastne, do katerih so spremembe bralca v 4.x lahko prišle, `getSharedStore()` pa nobene od njih ne pošlje drugim urejevalnikom. `getSchemaSQL()` brez vrste zbirke podatkov zapiše zbirko podatkov, ki jo je izbral bralec. Izklop `readonly` vrne zbirko podatkov, nastavitve kode in View Option na dokumentove, pomik, povečavo, zavihek in prikaz imen pa pusti tam, kjer jih je pustil bralec.
+- Nastavitve, ki jih bralec `readonly` spremeni, ostanejo na zaslonu tega urejevalnika, ne glede na njihove zaklepe: pomik in povečava, zavihek, prikaz imen, View Option, zbirka podatkov ter jezik, zapisi imen in vrsta narekovajev generatorja kode. `value`, `runtimeValue` in izvoz JSON ohranijo dokumentove lastne, do katerih so spremembe bralca v 4.x lahko prišle, `getSharedStore()` pa nobene od njih ne pošlje drugim urejevalnikom. `getSchemaSQL()` brez vrste zbirke podatkov zapiše zbirko podatkov, ki jo je izbral bralec. Izklop `readonly` vrne zbirko podatkov, nastavitve kode in View Option na tisto, kar bi ta urejevalnik prikazoval, če bralec ne bi spremenil ničesar, pomik, povečavo, zavihek in prikaz imen pa pusti tam, kjer jih je pustil bralec.
 - Vrstice `Recalculation table width` na zavihku Nastavitve ni več. Nalaganje in lepljenje še vedno prilagodita širino vsake tabele njenemu besedilu.
 - Na Vite 8 odstranite `exclude: ['@dineug/erd-editor']` iz `optimizeDeps`, ki ga še potrebujejo samo Vite 7 in starejši, `include` za ELK pa obdržite – glejte razdelek [Vite](#vite).
 

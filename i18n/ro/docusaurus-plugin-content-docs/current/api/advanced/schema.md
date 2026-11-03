@@ -1,31 +1,32 @@
 ---
-sidebar_position: 3
-description: "Formatul de document .erd.json: forma de stocare pe care o conține un fișier și valoarea de execuție pe care o păstrează un editor, tipurile TypeScript, constantele din spatele fiecărui câmp numeric și JSON Schema publicată."
+sidebar_position: 4
+description: "Formatul de document .erd.json: forma de stocare pe care o conține un fișier, tipurile TypeScript, constantele din spatele fiecărui câmp numeric și JSON Schema publicată."
 ---
 
 # Schemă
 
 `.erd.json` este formatul de document al editorului. Citiți această pagină dacă trebuie să generați, să validați sau să migrați un document în afara editorului.
 
-Începând cu versiunea `4.0.0`, un document are două serializări, ambele cu câmpul `version` egal cu `'3.0.0'`. Forma de stocare este ceea ce conține un fișier: este ceea ce returnează [`editor.value`](../erd-editor-element.md#value), ceea ce scrie exportul JSON și singura formă pe care o acceptă [JSON Schema](#json-schema) publicată. Valoarea de execuție este întregul document așa cum îl păstrează un editor, pe care îl returnează [`editor.runtimeValue`](../erd-editor-element.md#runtimevalue). Metoda `setInitialValue()`, setterul `value` și metoda `setSchemaJSON()` citesc oricare dintre cele două forme, orice fișier salvat de o versiune anterioară și un document `.vuerd` v2. Înainte de versiunea `4.0.0`, exista una singură: proprietatea `value` returna întregul document așa cum îl păstra editorul, cum face acum proprietatea `runtimeValue`.
+Această pagină descrie forma de stocare, adică documentul așa cum îl conține un fișier, pe care o scrie fiecare versiune începând cu `4.0.0`. Este ceea ce returnează [`editor.value`](../erd-editor-element.md#value), ceea ce scrie exportul JSON și singura formă pe care o acceptă [JSON Schema](#json-schema) publicată. Câmpul ei `version` este `'3.0.0'`, ca în orice fișier v3 salvat de o versiune anterioară, deci `version` nu deosebește un fișier mai vechi de unul mai nou. Metoda `setInitialValue()`, setterul `value` și metoda `setSchemaJSON()` citesc această formă, orice fișier salvat de o versiune anterioară și un document `.vuerd` v2. Înainte de versiunea `4.0.0`, `value` returna întregul document așa cum îl păstra editorul, așa că un fișier salvat atunci conține mai mult (consultați [Forma de stocare](#storage-form)).  
+Proprietatea [`runtimeValue`](../erd-editor-element.md#runtimevalue) a unui editor este o altă serializare, pe care această pagină nu o descrie. Ea inițializează un alt editor sau o replică, iar o [cameră Yjs](./yjs.md#what-the-room-holds) o stochează în instantaneul ei; nu aparține niciodată unui fișier, iar JSON Schema refuză orice valoare care conține o entitate.
 
-## Forma de stocare și valoarea de execuție {#storage-form-and-runtime-value}
+## Forma de stocare {#storage-form}
 
-Forma de stocare conține doar entitățile existente: fiecare tabel listat în `doc.tableIds`, coloanele pe care le listează aceste tabele, relațiile dintre două tabele păstrate, indexurile tabelelor păstrate cu coloanele de index a căror coloană este încă listată de tabel, notele și grupurile de tabele listate, precum și, începând cu versiunea `4.2.0`, cuvintele, termenii și domeniile listate care conțin o valoare în afară de ID. Omite ceea ce un editor deduce la încărcare sau păstrează cât timp este deschis: entitățile eliminate, `seqColumnIds` și `seqIndexColumnIds`, fiecare câmp `zIndex`, lățimile măsurate, câmpul `ui` al coloanelor, `identification`, `startRelationshipType` și ancorele unei relații, precum și, începând cu versiunea `4.2.0`, câmpul `order` al fiecărui rând din dicționare și listele `doc.wordIds`, `doc.termIds` și `doc.domainIds`. Tipurile de mai jos marchează fiecare dintre aceste câmpuri cu `// runtime only`.  
+Forma de stocare conține doar entitățile existente: fiecare tabel listat în `doc.tableIds`, coloanele pe care le listează aceste tabele, relațiile dintre două tabele păstrate, indexurile tabelelor păstrate cu coloanele de index a căror coloană este încă listată de tabel, notele și grupurile de tabele listate, precum și, începând cu versiunea `4.2.0`, cuvintele, termenii și domeniile din foile filei Dicționar care conțin o valoare în afară de ID. Nu conține nimic din ce un editor deduce la încărcare sau păstrează doar cât timp este deschis: nici ordinea de suprapunere, nici lățimile măsurate sau marcajele de cheie, nici dacă o relație este identificatoare, cum este desenat capătul ei părinte sau unde se întâlnește cu tabelele sale. Fiecare încărcare deduce din nou aceste lucruri din ceea ce conține fișierul.  
 Cheile fiecărei colecții, cu excepția dicționarelor, sunt ID-urile, în ordinea unităților de cod, coloanele fiind grupate mai întâi după `tableId`, iar coloanele de index după `indexId`. Începând cu versiunea `4.2.0`, `wordEntities`, `termEntities` și `domainEntities` vin după toate celelalte colecții, în această ordine, fiecare scrisă ca un antet și rânduri, câte un rând pe linie (consultați [Rândurile dicționarelor](#dictionary-rows)). Fiecare entitate își scrie câmpurile într-o ordine fixă, iar textul este indentat cu două spații și se termină cu un caracter de linie nouă. Astfel, același document scrie mereu aceiași octeți, o editare modifică doar ceea ce atinge, iar un fișier salvat pe un calculator cu alte fonturi se redeschide cu aceeași valoare pentru `value`.  
 VS Code, Obsidian și pluginul pentru JetBrains scriu un fișier doar când o editare modifică proprietatea `value`, așa că un fișier salvat de o versiune anterioară își păstrează forma veche până la prima editare.
 
 Începând cu versiunea `4.2.0`, forma de stocare omite și ceea ce nu conține nimic: fiecare câmp de text pe care o entitate sau câmpul ei `ui` îl conține ca `''` (câmpurile `name`, `comment` și `ui.color` ale unui tabel, `name`, `comment`, `dataType` și `default` ale unei coloane, `name` al unui index, `value` și `ui.color` ale unei note, `name` și `color` ale unui grup de tabele), fiecare listă `doc` și fiecare colecție care nu conține nicio intrare, precum și obiectul `collections` însuși odată ce toate colecțiile sunt goale. Un text format doar din spații albe este scris așa cum este, cu excepția unui nume logic, care este atunci omis, și a unui cuvânt, termen sau domeniu ale cărui valori de după ID sunt toate goale sau formate doar din spații albe, care este omis în întregime. Fiecare ID, fiecare listă din interiorul unei entități și fiecare număr, inclusiv `0`, sunt scrise în continuare. Câmpul `doc` este scris întotdeauna, așa că fișierul unui document nou conține `$schema`, `version`, setările sale și `"doc": {}`.  
 Parsarea citește un câmp de text lipsă ca `''` și o colecție lipsă ca goală, la fel ca orice versiune v3, iar forma de stocare omite o listă `doc` doar cât timp colecția ei nu conține nimic (consultați [Doc](#doc)). Astfel, și un editor anterior versiunii `4.2.0` deschide aceste fișiere, iar un program care citește singur un fișier trebuie să citească în același mod ceea ce lipsește. Un fișier salvat de o versiune anterioară revine de la următoarea salvare cu textele, listele și colecțiile goale omise, o modificare care se face o singură dată, și de atunci se salvează octet cu octet la fel.
 
-Valoarea de execuție păstrează ceea ce omite forma de stocare: entitățile eliminate, secvențele, valorile z-index, lățimile, marcajele de cheie, indicatorii relațiilor și ancorele, câmpurile de text goale, precum și cele patru liste `tableIds`, `relationshipIds`, `indexIds` și `memoIds` și cele șase colecții de la `tableEntities` până la `memoEntities`, chiar și când sunt goale. Începând cu versiunea `4.2.0`, păstrează și cuvintele, termenii și domeniile eliminate, rândurile care nu conțin nimic, câmpul `order` al fiecărui rând, cele trei liste ale dicționarelor, un nume logic format doar din spații albe și o legătură cu un domeniu eliminat. Este indentată cu două spații, fără caracter de linie nouă la final. Folosiți-o doar pentru a inițializa un colaborator sau o a doua vizualizare prin metoda `setInitialValue()`, astfel încât, atunci când un alt editor trimite anularea unei eliminări, entitatea să revină acolo întreagă. Nu o scrieți niciodată într-un fișier; JSON Schema o refuză. Nimic nu mai colectează entitățile eliminate, așa că valoarea de execuție le păstrează până la următoarea deschidere a documentului din fișierul său.
+Forma de stocare scrie fiecare setare blocată cu valoarea ei blocată (consultați [`lockSettings`](#settings)), câmpul `settings.ddlScripts` doar cât timp un script conține text, iar câmpul `groupId` al unui tabel doar cât timp numește un grup de tabele pe care fișierul îl scrie. Începând cu versiunea `4.2.0`, scrie și câmpul `settings.nameViewMode` doar cât timp valoarea pe care o scrie nu este `'physical'`, câmpul `settings.columnOrder` cu șapte intrări acolo unde este posibil (consultați [Settings](#settings)), iar câmpul `nameDerived` al unui tabel doar cât timp este `true`.  
+Scrie `doc.tableGroupIds` și `tableGroupEntities` doar cât timp există un grup de tabele, un câmp `logicalName` doar cât timp conține alt text decât spații albe, câmpul `domainId` al unei coloane doar cât timp numește un domeniu pe care fișierul îl scrie, iar fiecare dicționar doar cât timp conține un rând pe care fișierul îl scrie.
 
-Ambele forme scriu fiecare setare blocată cu valoarea ei blocată (consultați [`lockSettings`](#settings)), câmpul `settings.ddlScripts` doar cât timp un script conține text, iar câmpul `groupId` al unui tabel doar cât timp nu este gol. Începând cu versiunea `4.2.0`, ambele scriu și câmpul `settings.nameViewMode` doar cât timp valoarea pe care o scriu nu este `'physical'`, câmpul `settings.columnOrder` cu șapte intrări acolo unde este posibil (consultați [Settings](#settings)), iar câmpul `nameDerived` al unui tabel doar cât timp este `true`.  
-Forma de stocare scrie `doc.tableGroupIds` și `tableGroupEntities` doar cât timp există un grup de tabele, un câmp `logicalName` doar cât timp conține alt text decât spații albe, câmpul `domainId` al unei coloane doar cât timp numește un domeniu pe care fișierul îl scrie, iar fiecare dicționar doar cât timp conține un rând pe care fișierul îl scrie. Valoarea de execuție scrie câmpurile grupurilor de tabele cât timp documentul conține un grup sau unul eliminat, câmpurile `logicalName` și `domainId` cât timp nu sunt `''`, iar fiecare dicționar împreună cu lista sa cât timp oricare dintre ele conține o intrare, inclusiv un rând eliminat.
+Un fișier salvat înainte de versiunea `4.0.0` conține întregul document așa cum îl păstra atunci un editor, inclusiv entitățile eliminate și ceea ce deduce fiecare încărcare. O încărcare îl citește, păstrează locul fiecărui tabel și al fiecărei note în stivă (consultați [Doc](#doc)) și deduce din nou restul, iar următoarea salvare scrie doar forma de stocare.
 
 ## TypeScript {#typescript}
 
-Tipurile descriu valoarea de execuție. Un câmp marcat cu `// runtime only` este omis din forma de stocare, iar un câmp marcat cu `?` este scris doar cât timp conține ceva. Textele, listele și colecțiile goale pe care forma de stocare le omite începând cu versiunea `4.2.0` nu sunt marcate.
+Tipurile descriu forma de stocare, fiecare listând câmpurile în ordinea în care le scrie un fișier. Un câmp marcat cu `?` este unul pe care forma de stocare îl poate omite, așa cum detaliază [Forma de stocare](#storage-form), iar parsarea citește un câmp lipsă ca și cum nu ar conține nimic: `''`, `false`, niciun grup de tabele sau domeniu, o colecție goală, `'physical'` pentru `nameViewMode` și două scripturi goale pentru `ddlScripts`. Excepția este o listă `doc` lipsă, pe care parsarea o completează din colecția ei (consultați [Doc](#doc)). Într-un rând de dicționar, `?` marchează valorile înaintea cărora se poate încheia un rând (consultați [Rândurile dicționarelor](#dictionary-rows)). Orice alt câmp este scris întotdeauna.
 
 ### ERDEditorSchemaV3 {#erdeditorschemav3}
 
@@ -35,13 +36,13 @@ type ERDEditorSchemaV3 = {
   version: '3.0.0';
   settings: Settings;
   doc: Doc;
-  collections: {
-    tableEntities: Record<string, Table>;
-    tableColumnEntities: Record<string, Column>;
-    relationshipEntities: Record<string, Relationship>;
-    indexEntities: Record<string, Index>;
-    indexColumnEntities: Record<string, IndexColumn>;
-    memoEntities: Record<string, Memo>;
+  collections?: {
+    tableEntities?: Record<string, Table>;
+    tableColumnEntities?: Record<string, Column>;
+    relationshipEntities?: Record<string, Relationship>;
+    indexEntities?: Record<string, Index>;
+    indexColumnEntities?: Record<string, IndexColumn>;
+    memoEntities?: Record<string, Memo>;
     tableGroupEntities?: Record<string, TableGroup>;
     wordEntities?: DictionaryRows; // rows of Word
     termEntities?: DictionaryRows; // rows of Term
@@ -216,7 +217,7 @@ Un editor anterior versiunii `4.0.0` păstrează câmpul `show` ca număr între
 Un editor anterior versiunii `4.2.0` păstrează câmpul `show` ca număr întreg, așa că indicatorul se păstrează și după o salvare acolo.
 
 Începând cu versiunea `4.2.0`, constanta `ColumnType` are nouă valori. Valoarea `columnLogicalName` (`128`) stabilește locul celulei numelui logic, pe care rândul unei coloane o desenează doar în modul `Both Names`, iar `columnDomain` (`256`) pe cel al celulei Domeniu. Acestea sunt rândurile `Logical Name` și `Domain` din [ordinea coloanelor](../../guide/guides/settings.md#adjusting-column-order) a filei Setări. Un editor păstrează o ordine cu toate cele nouă, iar cea a unui document nou este `128, 1, 2, 256, 4, 8, 16, 32, 64`.  
-Ambele forme scriu ordinea cu șapte intrări, omițând `128` și `256`, cât timp `128` se află imediat înainte de `columnName`, iar `256` imediat după `columnDataType`. Astfel, un document nou scrie în continuare `1, 2, 4, 8, 16, 32, 64`, iar un fișier a cărui ordine nu le-a mutat niciodată își păstrează octeții. Altfel, scriu toate cele nouă.  
+Forma de stocare scrie ordinea cu șapte intrări, omițând `128` și `256`, cât timp `128` se află imediat înainte de `columnName`, iar `256` imediat după `columnDataType`. Astfel, un document nou scrie în continuare `1, 2, 4, 8, 16, 32, 64`, iar un fișier a cărui ordine nu le-a mutat niciodată își păstrează octeții. Altfel, scrie toate cele nouă.  
 Parsarea inserează cele două în acele locuri ale unei ordini cu șapte intrări, indiferent de ordinea celor șapte, și preia așa cum sunt nouă intrări care conțin fiecare tip.  
 Începând cu versiunea `5.0.0`, preia și orice altă ordine. Păstrează o singură dată fiecare `ColumnType` pe care îl cunoaște, în ordinea dată, și elimină orice altă intrare: o valoare pe care niciun `ColumnType` nu o numește, cum ar fi un tip adăugat de o versiune ulterioară, și a doua intrare a aceluiași tip. Fiecare tip care lipsește din ordine este pus imediat după cel mai apropiat tip dinaintea lui, în ordinea implicită, pe care îl conține ordinea, sau, dacă nu există niciunul înainte, imediat înaintea celui mai apropiat tip de după el, adică exact modul în care `128` și `256` își găsesc locul într-o ordine cu șapte intrări. Doar o ordine care nu numește niciun tip cunoscut, sau o valoare care nu este un tablou, se citește ca ordinea implicită.  
 Astfel, un fișier salvat de o versiune ulterioară se deschide cu ordinea tipurilor pe care această versiune le cunoaște, iar o salvare aici scrie acea ordine fără celelalte. Înainte de `5.0.0`, parsarea citea orice altă ordine ca ordinea implicită, așa că un astfel de fișier se deschidea cu ordinea coloanelor resetată. JSON Schema acceptă șapte sau nouă numere întregi.
@@ -224,18 +225,18 @@ Astfel, un fișier salvat de o versiune ulterioară se deschide cu ordinea tipur
 Începând cu versiunea `4.0.0`, constanta `Language` are încă opt ținte ale [generatorului de cod](../../guide/guides/code-generator.md), de la `Mermaid` până la `JSONSchema`. O valoare `language` pe care parserul nu o cunoaște este citită ca `GraphQL`, așa că un editor anterior versiunii `4.0.0` deschide pe GraphQL un document salvat cu una dintre ele, iar o salvare acolo scrie GraphQL.
 
 Începând cu versiunea `4.0.0`, câmpul `lockSettings` ia locul câmpului `ignoreSaveSettings`, iar tipul `LockSettingType` pe cel al tipului `SaveSettingType`, care a fost eliminat. Câmpul `lockSettings` numește setările pe care un document le salvează așa cum erau în momentul blocării. Bitul `viewport` acoperă împreună `originX`, `originY` și `zoomLevel`, deoarece o origine salvată fără zoomul ei se deschide în alt loc, iar fiecare dintre ceilalți biți acoperă câmpul după care este numit. Acestea sunt rândurile [`Lock`](../../guide/guides/settings.md#lock) din fila Setări.  
-O setare blocată este scrisă cu valoarea ei blocată, indiferent ce afișează editorul, atât de `value`, cât și de `runtimeValue`, iar orice altă setare este scrisă așa cum este. Astfel, cât timp blocarea corespunzătoare este activată, derularea și zoomul, schimbarea filei, modificarea limbajului generatorului de cod, a unui stil de denumire ori a tipului de delimitator sau schimbarea modului de afișare a numelor lasă fișierul așa cum era. Blocarea preia valoarea pe care o are setarea în acel moment, iar parsarea preia valoarea blocată din câmpul salvat.  
+Un fișier conține fiecare setare blocată cu valoarea ei blocată, indiferent ce afișează editorul, iar orice altă setare așa cum este. Astfel, cât timp blocarea corespunzătoare este activată, derularea și zoomul, schimbarea filei, modificarea limbajului generatorului de cod, a unui stil de denumire ori a tipului de delimitator sau schimbarea modului de afișare a numelor lasă fișierul așa cum era. Blocarea preia valoarea pe care o are setarea în acel moment, iar parsarea preia valoarea blocată din câmpul salvat.  
 Un document pornit de la zero – un editor sau un store de replicare nou, ori o valoare goală transmisă proprietății `value` sau metodei `setInitialValue()` – are câmpul `lockSettings` egal cu `63`, adică toate blocările activate. Un document al cărui obiect `settings` nu conține câmpul `lockSettings` – orice fișier salvat înainte de versiunea `4.0.0`, indiferent de valoarea `ignoreSaveSettings`, și orice document v2 – se deschide de asemenea cu toate blocările activate: vizualizarea și fila sunt cele ale unui document nou (`originX` și `originY` la `0`, `zoomLevel` la `1`, fila ERD), iar limbajul, stilurile de denumire și tipul de delimitator sunt blocate la valorile salvate. Un document care își numește blocările le păstrează, inclusiv `0`, precum și fiecare valoare pe care a salvat-o.  
 Parsarea păstrează fiecare bit din `lockSettings`, inclusiv pe cei necunoscuți, așa că o blocare adăugată de o versiune ulterioară se păstrează după o salvare aici; JSON Schema verifică doar că este un număr întreg. Un editor anterior versiunii `4.0.0` renunță la `lockSettings` când salvează și scrie vizualizarea și fila așa cum sunt, astfel că fișierul se deschide din nou aici ca unul salvat înainte de versiunea `4.0.0`.
 
 Începând cu versiunea `4.2.0`, există o a șaptea blocare, `unlockNameViewMode` (`64`), rândul `Name View`, care acoperă câmpul `nameViewMode`. Bitul ei se citește invers față de ceilalți biți de blocare, la fel ca biții de ascundere din `Show`: setat, modul de afișare a numelor este deblocat, iar nesetat, blocat. Astfel, `63` înseamnă în continuare toate blocările activate, iar un document nou conține această valoare, cu modul de afișare blocat la `'physical'`. Un fișier salvat înainte de versiunea `4.2.0` are bitul nesetat, indiferent de celelalte blocări ale sale, inclusiv când valoarea este `0`, așa că se deschide cu modul de afișare blocat la `'physical'`. Un document cu toate blocările dezactivate conține `64`, iar unul cu toate celelalte blocări activate și modul de afișare deblocat conține `127`. Testați această blocare invers: este activată cât timp `(lockSettings & 64) === 0`.  
-Cât timp este activată, o schimbare a modului de afișare a numelor modifică doar ecranul editorului care a făcut-o, iar documentul păstrează modul blocat. Cât timp este dezactivată, o schimbare făcută într-un editor care poate edita aparține documentului, iar toți colaboratorii își schimbă modul odată cu ea. Schimbarea făcută într-un editor doar în citire modifică în ambele cazuri doar propriul ecran. Consultați [`Lock`](../../guide/guides/settings.md#lock).  
+Cât timp bitul nu este setat, un fișier conține `nameViewMode` cu modul blocat, indiferent ce afișează oricare editor, iar cât timp este setat, modul așa cum este. Ceea ce afișează fiecare editor, cu blocarea activată sau dezactivată, este descris în [`Lock`](../../guide/guides/settings.md#lock).  
 Un editor cu versiunea `4.0.0` sau `4.1.0` păstrează bitul la salvare, dar renunță la `nameViewMode`, așa că documentul se redeschide aici în `'physical'`, cu blocarea așa cum era.
 
 Începând cu versiunea `4.0.0`, câmpul `ddlScripts` conține cele două scripturi ale filei [Schemă SQL](../../guide/guides/schema-sql.md), pe care le scrie codul DDL pentru fiecare bază de date: `before` după antet și înaintea tabelelor, `after` după codul DDL generat. Codul DDL le scrie pe fiecare cu sfârșituri de linie LF, fără liniile goale de la început și fără spațiile albe de la final, iar pentru MSSQL le încheie cu `GO`, așa cum se descrie în [Scripturi înainte și după tabele](../../guide/guides/schema-sql.md#before-and-after-scripts); câmpul `ddlScripts` însuși păstrează fiecare script așa cum a fost tastat. Cheia este scrisă doar cât timp unul dintre scripturi conține text, și atunci cu ambele; o cheie lipsă sau un script care nu este un șir de caractere este citit ca `''`. Opțiunile `Statements`, `Header` și `Tables` ale filei, precum și, începând cu versiunea `4.2.0`, comutatorul ei [`Write logical names into empty comments`](../../guide/guides/schema-sql.md#logical-names-as-comments) nu se salvează în document.  
 Un editor anterior versiunii `4.0.0` renunță la scripturi când încarcă un document, așa că o salvare acolo le pierde.
 
-Începând cu versiunea `4.2.0`, câmpul `nameViewMode` este [modul de afișare a numelor](../../guide/guides/logical-names.md#name-view), adică numele pe care le desenează diagrama: `'physical'` numele fiecărui tabel și al fiecărei coloane, `'logical'` numele logic în locul numelui, iar `'both'` numele logic și numele. Meniurile le numesc `Physical Names`, `Logical Names` și `Both Names`. Ambele forme îl scriu ultimul, după `ddlScripts`, și doar cât timp valoarea pe care o scriu nu este `'physical'`; cât timp blocarea `Name View` este activată, aceasta este valoarea blocată, indiferent ce afișează ecranul. O valoare lipsă sau una pe care parserul nu o cunoaște este citită ca `'physical'`, iar JSON Schema acceptă doar `"logical"` și `"both"`.  
+Începând cu versiunea `4.2.0`, câmpul `nameViewMode` este [modul de afișare a numelor](../../guide/guides/logical-names.md#name-view), adică numele pe care le desenează diagrama: `'physical'` numele fiecărui tabel și al fiecărei coloane, `'logical'` numele logic în locul numelui, iar `'both'` numele logic și numele. Meniurile le numesc `Physical Names`, `Logical Names` și `Both Names`. Forma de stocare îl scrie ultimul, după `ddlScripts`, și doar cât timp valoarea pe care o scrie nu este `'physical'`. O valoare lipsă sau una pe care parserul nu o cunoaște este citită ca `'physical'`, iar JSON Schema acceptă doar `"logical"` și `"both"`.  
 Un editor anterior versiunii `4.2.0` renunță la `nameViewMode` când încarcă un document.
 
 Constantele `Database`, `Language`, `Show`, `ColumnType`, `ColumnOption`, `LockSettingType` și `ReferentialAction` se extind doar prin adăugare la final. Un document salvat stochează numărul, așa că un nou sistem de baze de date, o nouă țintă de generare de cod, un nou indicator, un nou tip de coloană, o nouă opțiune de coloană, o nouă blocare sau o nouă acțiune primește bitul următor, nu o poziție la mijloc.
@@ -244,52 +245,42 @@ Constantele `Database`, `Language`, `Show`, `ColumnType`, `ColumnOption`, `LockS
 
 ```ts
 type Doc = {
-  tableIds: string[];
-  relationshipIds: string[];
-  indexIds: string[];
-  memoIds: string[];
+  tableIds?: string[];
+  relationshipIds?: string[];
+  indexIds?: string[];
+  memoIds?: string[];
   tableGroupIds?: string[];
-  wordIds?: string[]; // runtime only
-  termIds?: string[]; // runtime only
-  domainIds?: string[]; // runtime only
 };
 ```
 
-Fiecare dintre primele cinci liste este ordinea unui tip de entitate, pe care o citesc codul DDL, sortarea tabelelor și ordinea de desenare. În forma de stocare, fiecare listă conține doar ID-urile entităților păstrate, fiecare o singură dată, în ordinea listată, iar, începând cu versiunea `4.2.0`, o listă care nu conține niciunul este omisă. Începând cu versiunea `4.0.0`, lista `tableGroupIds` este ordinea grupurilor de tabele.
+Fiecare listă este ordinea unui tip de entitate, pe care o citesc codul DDL, sortarea tabelelor și ordinea de desenare. Fiecare conține doar ID-urile entităților pe care fișierul le scrie, fiecare o singură dată, în ordinea listată, iar, începând cu versiunea `4.2.0`, o listă care nu conține niciunul este omisă. Începând cu versiunea `4.0.0`, lista `tableGroupIds` este ordinea grupurilor de tabele. Dicționarele nu au aici nicio listă, deoarece rândurile lor se află în ordinea fiecărei foi (consultați [Rândurile dicționarelor](#dictionary-rows)), iar JSON Schema nu acceptă nicio altă cheie în `doc`.
 
-Începând cu versiunea `4.2.0`, listele `wordIds`, `termIds` și `domainIds` enumeră rândurile existente ale fiecărui dicționar: un rând pe care colecția sa îl conține, dar lista sa nu, este eliminat. Ele nu sunt ordinea unei foi, pe care o dă câmpul `order` al fiecărui rând. Doar valoarea de execuție le scrie, pe fiecare cât timp ea sau colecția sa conține o intrare. Rândurile unui fișier sunt ele însele apartenența și ordinea, iar JSON Schema refuză listele.  
 Începând cu versiunea `4.2.0`, parsarea citește o listă pe care documentul o omite sau o conține sub altă formă decât un tablou ca fiind toate intrările pe care le conține colecția sa, fiecare ID o singură dată, în ordinea în care sunt păstrate; un tablou gol rămâne gol, iar fiecare intrare a colecției sale este atunci citită ca eliminată. Un editor anterior versiunii `4.2.0` citește o listă lipsă ca goală, așa că forma de stocare scrie în continuare fiecare listă ori de câte ori colecția sa conține o entitate.
 
-Începând cu versiunea `4.0.0`, ordinea de suprapunere nu se salvează. Parsarea așază în stivă fiecare tabel, notă și grup de tabele listat care nu are câmpul `zIndex` după poziția sa în listă, cele care urmează fiind în față: grupurile de tabele de la `1`, tabelele de la `2`, iar notele deasupra tuturor tabelelor. O entitate care are câmpul `zIndex`, ca într-o valoare de execuție sau într-un fișier salvat înainte de versiunea `4.0.0`, îl păstrează. Prin urmare, aducerea unui tabel sau a unei note în prim-plan se pierde la redeschiderea fișierului.
+Începând cu versiunea `4.0.0`, un fișier nu conține ordinea de suprapunere. O încărcare așază în stivă tabelele și notele listate după locul lor în liste, cele care urmează fiind în față și fiecare notă deasupra fiecărui tabel, iar grupurile de tabele la fel între ele, în spatele tabelelor. Un tabel sau o notă dintr-un fișier salvat înainte de versiunea `4.0.0` are un `zIndex` în `ui`, pe care o încărcare îl păstrează drept loc în stivă, iar următoarea salvare îl omite. Prin urmare, aducerea unui tabel sau a unei note în prim-plan se pierde la redeschiderea fișierului.
 
 ### Colecție: tableEntities {#collection-tableentities}
 
 ```ts
 type Table = {
   id: string;
-  name: string;
+  name?: string;
   logicalName?: string;
-  comment: string;
+  comment?: string;
   columnIds: string[];
-  seqColumnIds: string[]; // runtime only
   groupId?: string;
-  nameDerived?: boolean;
+  nameDerived?: true;
   ui: TableUI;
 };
 
 type TableUI = {
   x: number;
   y: number;
-  zIndex: number; // runtime only
-  widthName: number; // runtime only
-  widthLogicalName: number; // runtime only
-  widthComment: number; // runtime only
-  color: string;
+  color?: string;
 };
 ```
 
-Începând cu versiunea `4.0.0`, un tabel are câmpul `groupId`, ID-ul [grupului de tabele](../../guide/guides/table-groups.md) căruia îi aparține. Un câmp `groupId` lipsă sau gol, ori unul care nu numește niciun grup din `doc.tableGroupIds`, înseamnă că tabelul nu are grup, iar forma de stocare îl scrie doar cât timp numește un grup păstrat.  
-Parsarea inițializează `seqColumnIds` cu `columnIds` când acesta lipsește sau nu conține un ID listat, iar un editor măsoară din nou `widthName`, `widthLogicalName` și `widthComment` cu propriile fonturi la fiecare încărcare.
+Începând cu versiunea `4.0.0`, un tabel are câmpul `groupId`, ID-ul [grupului de tabele](../../guide/guides/table-groups.md) căruia îi aparține. Un câmp `groupId` lipsă sau gol, ori unul care nu numește niciun grup din `doc.tableGroupIds`, înseamnă că tabelul nu are grup, iar forma de stocare îl scrie doar cât timp numește un grup păstrat.
 
 Începând cu versiunea `4.2.0`, un tabel are câmpul `logicalName`, numele pe care îl desenează [modurile de afișare](../../guide/guides/logical-names.md#name-view) `Logical Names` și `Both Names`, `''` dacă nu există, și câmpul `nameDerived`, `true` cât timp dicționarele au [derivat](../../guide/guides/dictionary.md#deriving-physical-names) câmpul `name` din numele logic. Cât timp este setat, un nou nume logic derivă din nou numele; cât timp nu este, numele este unul personalizat, iar un nou nume logic nu îl modifică, decât dacă numele este gol sau format doar din spații albe. O redenumire manuală îl dezactivează, iar comanda [`Derive Physical Names Again`](../../guide/guides/dictionary.md#derive-physical-names-again) rescrie chiar și un nume scris de cineva și îl activează oriunde există un nume logic.  
 Forma de stocare scrie `logicalName` după `name`, așa cum a fost tastat, doar cât timp conține alt text decât spații albe, iar `nameDerived` după `groupId` doar cât timp este `true`, singura valoare pe care o acceptă JSON Schema. Un câmp `logicalName` lipsă este citit ca `''`, iar un câmp `nameDerived` lipsă ca `false`, așa că fiecare nume dintr-un fișier salvat înainte de versiunea `4.2.0` este considerat personalizat.  
@@ -301,24 +292,13 @@ Un editor anterior versiunii `4.2.0` renunță la ambele când încarcă un docu
 type Column = {
   id: string;
   tableId: string;
-  name: string;
-  comment: string;
-  dataType: string;
-  default: string;
+  name?: string;
+  comment?: string;
+  dataType?: string;
+  default?: string;
   options: number; // Constants: ColumnOption
   logicalName?: string;
   domainId?: string;
-  ui: ColumnUI; // runtime only
-};
-
-type ColumnUI = {
-  keys: number; // Constants: ColumnUIKey
-  widthName: number;
-  widthLogicalName: number;
-  widthComment: number;
-  widthDataType: number;
-  widthDomain: number;
-  widthDefault: number;
 };
 
 // Constants
@@ -329,17 +309,12 @@ const ColumnOption = {
   notNull: 8,
   nameDerived: 16,
 } as const;
-
-const ColumnUIKey = {
-  primaryKey: 1,
-  foreignKey: 2,
-} as const;
 ```
 
-Începând cu versiunea `4.0.0`, forma de stocare nu scrie câmpul `ui` al coloanelor. Fiecare încărcare deduce câmpul `keys` – marcajul de cheie primară din bitul `primaryKey` al câmpului `options`, iar marcajul de cheie străină din relațiile care se termină pe coloană – și măsoară cele șase lățimi.  
+Începând cu versiunea `4.0.0`, un fișier nu conține marcaje de cheie: fiecare încărcare marchează o coloană drept cheie primară din bitul `primaryKey` al câmpului `options` și drept cheie străină cât timp o relație se termină pe ea în tabelul ei.  
 Un editor anterior versiunii `4.0.0` afișează coloanele unui fișier salvat aici fără pictogramele de cheie primară.
 
-Începând cu versiunea `4.2.0`, o coloană are câmpul `logicalName`, la fel ca un tabel, și câmpul `domainId`, ID-ul domeniului de care este legată, `''` dacă nu există. Editările făcute într-un editor mențin o coloană legată la tipul de date al domeniului ei, așa cum se descrie în [Domenii și tipuri de date](../../guide/guides/dictionary.md#domains-and-data-types). Totuși, parsarea nu schimbă tipul niciunei coloane, așa că un fișier scris în altă parte poate lăsa o coloană legată la alt tip, la fel cum pot face și editările încrucișate a doi colaboratori; foaia Verificări listează fiecare astfel de caz ca [`Domain type mismatch`](../../guide/guides/dictionary.md#what-each-check-finds). Parsarea golește un câmp `domainId` care nu numește niciun domeniu conținut de document. Un domeniu eliminat contează în continuare, așa că editorul păstrează o legătură cu el cât timp o anulare poate readuce domeniul. După `options`, forma de stocare scrie `logicalName` după regula de la tabel, iar `domainId` doar cât timp numește un domeniu pe care fișierul îl scrie, deci niciodată o legătură cu un domeniu eliminat.  
+Începând cu versiunea `4.2.0`, o coloană are câmpul `logicalName`, la fel ca un tabel, și câmpul `domainId`, ID-ul domeniului de care este legată, `''` dacă nu există. Editările făcute într-un editor mențin o coloană legată la tipul de date al domeniului ei, așa cum se descrie în [Domenii și tipuri de date](../../guide/guides/dictionary.md#domains-and-data-types). Totuși, parsarea nu schimbă tipul niciunei coloane, așa că un fișier scris în altă parte poate lăsa o coloană legată la alt tip, la fel cum pot face și editările încrucișate a doi colaboratori; foaia Verificări listează fiecare astfel de caz ca [`Domain type mismatch`](../../guide/guides/dictionary.md#what-each-check-finds). Parsarea golește un câmp `domainId` care nu numește niciun domeniu pe care îl conține fișierul. După `options`, forma de stocare scrie `logicalName` după regula de la tabel, iar `domainId` doar cât timp numește un domeniu pe care fișierul îl scrie, așa că o coloană legată de un domeniu eliminat, sau de unul pe care fișierul îl omite, este scrisă fără legătură și cu tipul de date pe care îl are.  
 Bitul `ColumnOption.nameDerived` (`16`) este indicatorul de nume derivat al coloanei, păstrat în `options` împreună cu ceilalți biți, cu aceeași semnificație ca și câmpul `nameDerived` al unui tabel. De exemplu, o cheie primară non-NULL al cărei nume l-au derivat dicționarele are `options` egal cu `26`.  
 Un editor anterior versiunii `4.2.0` renunță la `logicalName` și `domainId` când încarcă un document, așa că o salvare acolo le pierde. Păstrează câmpul `options` ca număr întreg, așa că bitul `nameDerived` se păstrează și după o salvare acolo.
 
@@ -348,9 +323,7 @@ Un editor anterior versiunii `4.2.0` renunță la `logicalName` și `domainId` c
 ```ts
 type Relationship = {
   id: string;
-  identification: boolean; // runtime only
   relationshipType: number; // Constants: RelationshipType
-  startRelationshipType: number; // Constants: StartRelationshipType; runtime only
   onDelete: number; // Constants: ReferentialAction
   onUpdate: number; // Constants: ReferentialAction
   start: RelationshipPoint;
@@ -360,9 +333,6 @@ type Relationship = {
 type RelationshipPoint = {
   tableId: string;
   columnIds: string[];
-  x: number; // runtime only
-  y: number; // runtime only
-  direction: number; // Constants: Direction; runtime only
 };
 
 // Constants
@@ -373,11 +343,6 @@ const RelationshipType = {
   OneN: 16,
 } as const;
 
-const StartRelationshipType = {
-  ring: 1,
-  dash: 2,
-} as const;
-
 const ReferentialAction = {
   none: 1,
   noAction: 2,
@@ -386,35 +351,25 @@ const ReferentialAction = {
   setDefault: 16,
   restrict: 32,
 } as const;
-
-const Direction = {
-  left: 1,
-  right: 2,
-  top: 4,
-  bottom: 8,
-} as const;
 ```
 
 Începând cu versiunea `3.10.0`, o relație are câmpurile `onDelete` și `onUpdate`, [acțiunile sale ON DELETE și ON UPDATE](../../guide/guides/relationship-editing.md#on-delete-and-on-update). Fiecare conține exact o valoare `ReferentialAction`. Valoarea `none`, cea implicită, nu scrie nicio clauză, așa că se aplică valoarea implicită a bazei de date. Celelalte cinci corespund acțiunilor `NO ACTION`, `CASCADE`, `SET NULL`, `SET DEFAULT` și `RESTRICT`. Fila Schemă SQL scrie o clauză doar pentru o bază de date care acceptă acțiunea respectivă.  
 Forma de stocare le scrie întotdeauna pe amândouă, iar, începând cu versiunea `4.0.0`, JSON Schema le cere, verificând doar că fiecare este un număr întreg. Parsarea citește în continuare un câmp lipsă, ca în orice document salvat înainte de versiunea `3.10.0`, ca `none`, la fel și o valoare din afara listei.  
 Un editor anterior versiunii `3.10.0` nu cunoaște aceste câmpuri și renunță la ele când încarcă un document, așa că o salvare acolo pierde toate acțiunile.
 
-Începând cu versiunea `4.0.0`, fiecare încărcare deduce ceea ce omite forma de stocare. O relație este identificatoare când fiecare coloană pe care se termină este o cheie primară, iar câmpul ei `startRelationshipType` este `dash` când fiecare astfel de coloană este NOT NULL și `ring` în caz contrar; o relație căreia nu i-a mai rămas nicio coloană de capăt este neidentificatoare și `dash`, așa cum pornește o relație nouă. Ancorele, `x`, `y` și `direction`, sunt plasate din nou.
+Începând cu versiunea `4.0.0`, fiecare încărcare citește dacă o relație este identificatoare și cum este desenat capătul ei părinte din coloanele pe care se termină și pe care tabelul copil le listează încă. Este identificatoare, cu linie continuă, cât timp fiecare astfel de coloană este cheie primară, iar capătul ei părinte este format din două bare cât timp fiecare astfel de coloană este NOT NULL, altfel dintr-un cerc și o bară. O relație fără nicio astfel de coloană este neidentificatoare, cu două bare, așa cum pornește o relație nouă. Consultați [Citirea unui conector](../../guide/guides/relationship-editing.md#reading-a-connector).
 
 ### Colecție: indexEntities {#collection-indexentities}
 
 ```ts
 type Index = {
   id: string;
-  name: string;
+  name?: string;
   tableId: string;
   indexColumnIds: string[];
-  seqIndexColumnIds: string[]; // runtime only
   unique: boolean;
 };
 ```
-
-Parsarea inițializează `seqIndexColumnIds` cu `indexColumnIds` când acesta lipsește sau nu conține un ID listat.
 
 ### Colecție: indexColumnEntities {#collection-indexcolumnentities}
 
@@ -438,7 +393,7 @@ const OrderType = {
 ```ts
 type Memo = {
   id: string;
-  value: string;
+  value?: string;
   ui: MemoUI;
 };
 
@@ -447,20 +402,19 @@ type MemoUI = {
   y: number;
   width: number;
   height: number;
-  zIndex: number; // runtime only
-  color: string;
+  color?: string;
 };
 ```
 
-Începând cu versiunea `4.0.0`, tabelele și notele [împart aceeași stivă](../../guide/guides/table-related-functions.md#moving-multiple-tables), ordonată după `zIndex`, așa că aducerea unui tabel în prim-plan îl poate plasa peste o notă. Parsarea plasează o notă salvată fără `zIndex` deasupra tuturor tabelelor, așa cum se descrie în [Doc](#doc). O notă dintr-un fișier salvat înainte de versiunea `4.0.0` își păstrează valoarea `zIndex` salvată, care provenea din același contor ca valorile tabelelor, așa că o notă pe care o versiune anterioară a desenat-o peste toate tabelele se poate deschide sub un tabel adus în prim-plan după ea.
+Începând cu versiunea `4.0.0`, tabelele și notele [împart aceeași stivă](../../guide/guides/table-related-functions.md#moving-multiple-tables), așa că aducerea unui tabel în prim-plan îl poate plasa peste o notă. O încărcare plasează fiecare notă deasupra fiecărui tabel, așa cum se descrie în [Doc](#doc). O notă dintr-un fișier salvat înainte de versiunea `4.0.0` își păstrează valoarea `zIndex` salvată, care provenea din același contor ca valorile tabelelor, așa că o notă pe care o versiune anterioară a desenat-o peste toate tabelele se poate deschide sub un tabel adus în prim-plan după ea.
 
 ### Colecție: tableGroupEntities {#collection-tablegroupentities}
 
 ```ts
 type TableGroup = {
   id: string;
-  name: string;
-  color: string;
+  name?: string;
+  color?: string;
   ui: TableGroupUI;
 };
 
@@ -469,7 +423,6 @@ type TableGroupUI = {
   y: number;
   width: number;
   height: number;
-  zIndex: number; // runtime only
 };
 ```
 
@@ -487,7 +440,7 @@ type DictionaryRows = {
 };
 ```
 
-Niciunul dintre cele trei nu are ID-uri drept chei. Fiecare este scris ca un antet și rânduri: `fields` numește o singură dată câmpurile entității, mai întâi ID-ul, iar fiecare rând conține valorile unei entități în această ordine. Tipurile de mai jos listează câmpurile fiecărei entități în ordinea antetului din valoarea de execuție. Un rând își păstrează întotdeauna ID-ul și numele, dar valorile goale de la final, de după nume, sunt omise, așa că o valoare goală aflată înaintea uneia păstrate rămâne `''`, iar parsarea citește ca `''` o valoare care lipsește dintr-un rând. Ambele forme scriu fiecare rând pe o linie separată, ca JSON compact, ca în aceste două cuvinte dintr-un fișier:
+Niciunul dintre cele trei nu are ID-uri drept chei. Fiecare este scris ca un antet și rânduri: `fields` numește o singură dată câmpurile entității, mai întâi ID-ul, iar fiecare rând conține valorile unei entități în această ordine. Tipurile de mai jos listează câmpurile fiecărei entități în această ordine. Un rând își păstrează întotdeauna ID-ul și numele, dar valorile goale de la final, de după nume, sunt omise, așa că o valoare goală aflată înaintea uneia păstrate rămâne `''`, iar parsarea citește ca `''` o valoare care lipsește dintr-un rând. Fiecare rând este scris pe o linie separată, ca JSON compact, ca în aceste două cuvinte dintr-un fișier:
 
 ```json
 "wordEntities": {
@@ -507,8 +460,8 @@ Niciunul dintre cele trei nu are ID-uri drept chei. Fiecare este scris ca un ant
 }
 ```
 
-Forma de stocare scrie rândurile listate în ordinea foii și omite `order`, așa că antetele ei nu îl numesc. Omite un rând ale cărui valori de după ID sunt toate goale sau formate doar din spații albe, de exemplu unul adăugat și niciodată completat sau unul golit, precum și orice legătură cu un astfel de domeniu sau cu unul eliminat: câmpul `domainId` al unei coloane este omis, iar cel al unui termen este scris `''`, termenul însuși fiind omis dacă nu conține nimic altceva.  
-Antetele valorii de execuție numesc `"order"` imediat după `"name"`. Aceasta scrie fiecare rând pe care îl conține colecția sa, inclusiv pe cele eliminate, în ordinea în care le conține colecția, așa că, pentru ordinea unei foi, sortați după `order`, comparat în ordinea unităților de cod. Parsarea dă rândurilor unui fișier chei `order` în ordinea în care se află rândurile, așa că acestea sunt citite înapoi în ordinea în care le-a scris fișierul.  
+Forma de stocare scrie rândurile fiecărei foi în ordinea foii, fără câmp de ordine, așa că rândurile unui fișier sunt membrii unui dicționar și ordinea lor. Omite un rând ale cărui valori de după ID sunt toate goale sau formate doar din spații albe, de exemplu unul adăugat și niciodată completat sau unul golit, precum și orice legătură cu un astfel de domeniu sau cu unul eliminat: câmpul `domainId` al unei coloane este omis, iar cel al unui termen este scris `''`, termenul însuși fiind omis dacă nu conține nimic altceva.  
+Parsarea citește rândurile în ordinea în care se află, așa că fiecare foaie le listează în ordinea în care le-a scris fișierul.  
 Un document care nu conține dicționarele, de exemplu unul salvat înainte de versiunea `4.2.0`, nu are niciunul. Un editor anterior versiunii `4.2.0` renunță la toate trei când încarcă un document, așa că o salvare acolo pierde toate cuvintele, termenii și domeniile.
 
 ### Colecție: wordEntities {#collection-wordentities}
@@ -517,12 +470,11 @@ Un document care nu conține dicționarele, de exemplu unul salvat înainte de v
 type Word = {
   id: string;
   name: string;
-  order: string; // runtime only
-  abbreviation: string;
-  englishName: string;
-  description: string;
-  synonyms: string;
-  forbiddenWords: string;
+  abbreviation?: string;
+  englishName?: string;
+  description?: string;
+  synonyms?: string;
+  forbiddenWords?: string;
 };
 ```
 
@@ -534,15 +486,14 @@ Un cuvânt este unul dintre cuvintele din care se compune un nume logic, iar `ab
 type Term = {
   id: string;
   name: string;
-  order: string; // runtime only
-  physicalName: string;
-  domainId: string;
-  description: string;
-  synonyms: string;
+  physicalName?: string;
+  domainId?: string;
+  description?: string;
+  synonyms?: string;
 };
 ```
 
-Un termen este un nume logic întreg. Un tabel sau o coloană al cărui câmp `logicalName` se potrivește cu `name` derivă `physicalName` sau, cât timp acesta este gol, un nume compus din abrevierile cuvintelor, iar o coloană preia și domeniul pe care îl numește `domainId`, `''` dacă nu există (consultați [Derivarea numelor fizice](../../guide/guides/dictionary.md#deriving-physical-names)). Câmpul `synonyms` este separat prin virgule. Parsarea golește un câmp `domainId` care nu numește niciun domeniu, la fel ca la o coloană.
+Un termen este un nume logic întreg. Un tabel sau o coloană al cărui câmp `logicalName` se potrivește cu `name` derivă `physicalName` sau, cât timp acesta este gol, un nume compus din abrevierile cuvintelor, iar o coloană preia și domeniul pe care îl numește `domainId`, `''` dacă nu există (consultați [Derivarea numelor fizice](../../guide/guides/dictionary.md#deriving-physical-names)). Câmpul `synonyms` este separat prin virgule. Parsarea golește un câmp `domainId` care nu numește niciun domeniu pe care îl conține fișierul, la fel ca la o coloană.
 
 ### Colecție: domainEntities {#collection-domainentities}
 
@@ -550,10 +501,9 @@ Un termen este un nume logic întreg. Un tabel sau o coloană al cărui câmp `l
 type Domain = {
   id: string;
   name: string;
-  order: string; // runtime only
-  category: string;
-  dataType: string;
-  description: string;
+  category?: string;
+  dataType?: string;
+  description?: string;
 };
 ```
 
@@ -572,7 +522,7 @@ Fișierul de schemă canonic este publicat la [json-schema/schema.json](https://
 
 Puneți câmpul `$schema` la începutul unui fișier `.erd.json`, iar editoarele care înțeleg JSON Schema, de exemplu VS Code, validează documentul și completează automat câmpurile pe măsură ce editați.
 
-Începând cu versiunea `4.0.0`, schema descrie doar forma de stocare. Fiecare obiect cu câmpuri denumite este închis (`additionalProperties: false`), fiecare câmp pe care forma de stocare îl scrie întotdeauna este obligatoriu, un câmp pe care îl omite cât timp nu conține nimic este numit, dar nu este obligatoriu, iar niciun câmp pe care îl omite întotdeauna nu este numit. Prin urmare, refuză valoarea de execuție. Refuză și un fișier salvat înainte de versiunea `4.0.0`, cu câmpul său `meta`, lățimile, `zIndex`, `ignoreSaveSettings` și celelalte, până când un editor cu versiunea `4.0.0` sau o versiune ulterioară salvează din nou acel fișier. Un fișier salvat de versiunea `3.2.0` sau de o versiune ulterioară numește deja URL-ul acestei scheme, care indică ramura `main`, așa că un editor care validează pe baza ei semnalează acum fișierul. Un fișier salvat de versiunea `3.0.0` sau `3.1.0`, ori un document v2, nu conține niciun câmp `$schema`.
+Începând cu versiunea `4.0.0`, schema descrie doar forma de stocare. Fiecare obiect cu câmpuri denumite este închis (`additionalProperties: false`), fiecare câmp pe care forma de stocare îl scrie întotdeauna este obligatoriu, fiecare câmp marcat cu `?` în tipurile de mai sus este numit, dar nu este obligatoriu, iar niciun alt câmp nu este numit. Așadar refuză un fișier salvat înainte de versiunea `4.0.0`, cu câmpul său `meta`, lățimile, `zIndex`, `ignoreSaveSettings` și celelalte, până când un editor cu versiunea `4.0.0` sau o versiune ulterioară salvează din nou acel fișier. Un fișier salvat de versiunea `3.2.0` sau de o versiune ulterioară numește deja URL-ul acestei scheme, care indică ramura `main`, așa că un editor care validează pe baza ei semnalează acum fișierul. Un fișier salvat de versiunea `3.0.0` sau `3.1.0`, ori un document v2, nu conține niciun câmp `$schema`.
 
 Începând cu versiunea `4.2.0`, schema nu mai cere câmpurile de text ale unei entități, nicio listă `doc`, nicio colecție și nici obiectul `collections` însuși, pe care forma de stocare le omite cât timp nu conțin nimic. Acceptă în continuare un fișier salvat de versiunea `4.0.0` sau `4.1.0`. Numește noile câmpuri: `nameViewMode`, care acceptă doar `"logical"` și `"both"`; câmpurile `logicalName` și `nameDerived` ale unui tabel, acesta din urmă acceptând doar `true`; câmpurile `logicalName` și `domainId` ale unei coloane; precum și cele trei dicționare, fiecare cu antetul său și rânduri de șiruri de caractere. Câmpul `canvasType` listează fila Dicționar, `columnOrder` acceptă șapte sau nouă numere întregi, iar descrierile `show`, `columnOrder`, `lockSettings` și `options` numesc noii biți.
 

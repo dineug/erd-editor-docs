@@ -54,7 +54,8 @@ La vista `Physical Names` non disegna alcun nome logico, quindi per scriverne un
 - Nella vista `Both Names`, le celle del nome logico contengono i nomi logici e le celle del nome i nomi fisici.
 
 Una cella del nome logico si modifica come ogni altra cella: si inizia con `Enter` o con un doppio clic — vedere [Modifica delle tabelle](./table-editing.md). Aperto su un nome logico vuoto, l’editor mostra come testo segnaposto ciò che la cella disegnava: il nome nella vista `Logical Names`, `logical` nella vista `Both Names`.  
-La digitazione scrive solo il nome logico. Il nome fisico ne viene derivato quando l’editor si chiude (`Enter`, `Tab`, `Escape` o un clic altrove) su un nome logico modificato, come un passo di annullamento a sé dopo la digitazione. Un nome fisico scritto dall’utente resta com’è — vedere [Derivare i nomi fisici](./dictionary.md#deriving-physical-names).
+La digitazione scrive solo il nome logico. Il nome fisico ne viene derivato quando l’editor si chiude (`Enter`, `Tab`, `Escape` o un clic altrove) su un nome logico modificato, come un passo di annullamento a sé dopo la digitazione. Un nome fisico scritto dall’utente resta com’è — vedere [Derivare i nomi fisici](./dictionary.md#deriving-physical-names).  
+Quando un collaboratore o un agente di programmazione sostituisce il diagramma mentre una cella del nome logico è aperta, l’editor della cella resta aperto finché il nuovo diagramma contiene ancora quella tabella o colonna e la propria Visualizzazione nomi disegna ancora la cella. Caricare di nuovo il diagramma nell’editor, come fa Obsidian quando il file cambia all’esterno, chiude subito l’editor della cella. In entrambi i casi la chiusura deriva un nome fisico solo se la tabella o la colonna contiene il nome logico digitato dall’utente, mai da uno portato dal nuovo diagramma.
 
 `Tab` e `Shift + Tab` percorrono le celle che la vista disegna, nel loro ordine — vedere [Tasto Tab](./table-editing.md#tab-key):
 

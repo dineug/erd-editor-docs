@@ -55,9 +55,12 @@ Grup ve içine aldığı tablolar tek bir geri alma adımıdır; yazdığınız 
 ## Grubu adlandırma {#naming-a-group}
 
 Grubun adı, başlık çubuğunun üzerinde açılan bir alanda düzenlenir. Bu alan bir grup oluşturulduğunda kendiliğinden, başlık çubuğuna çift tıklandığında ve grubun bağlam menüsündeki `Rename` öğesinden açılır.  
-`Enter` tuşu veya başka bir yere tıklamak adı kaydeder. `Escape` tuşu adı değiştirmeden alanı kapatır ve grubu seçili bırakır; `Escape` tuşuna ikinci kez basmak ise seçimi temizler.  
+`Enter` tuşu, başka bir yere tıklamak veya grupları gizlemek, gizleyen siz de olsanız bir ortak çalışan da olsa, adı kaydeder. `Escape` tuşu adı değiştirmeden alanı kapatır ve grubu seçili bırakır; `Escape` tuşuna ikinci kez basmak ise seçimi temizler.  
 Değiştirilen bir ad tek bir geri alma adımıdır; adı değiştirmeden kaydetmek hiçbir kayıt oluşturmaz. Boş veya yalnızca boşluklardan oluşan bir ad `unnamed` olarak görünür.  
-Alan açıkken, bir tablo hücresi düzenlenirken olduğu gibi tuval kısayolları devre dışı kalır, Hızlı arama ve `Toggle Explorer` kısayolları da hiçbir şey yapmaz.
+Alan açıkken, bir tablo hücresi düzenlenirken olduğu gibi tuval kısayolları devre dışı kalır, Hızlı arama ve `Toggle Explorer` kısayolları da hiçbir şey yapmaz.  
+Bir ortak çalışan veya bir kodlama ajanı alan açıkken diyagramı değiştirirse, alan yeni diyagram grubu hâlâ tuttuğu ve grupları gösterdiği sürece açık kalır.  
+Bu diyagram artık grubu tutmuyorsa alan kapanır ve hiçbir şey kaydetmez; grubu tutuyor ama grupları gizliyorsa alan kapanır ve değişmiş bir adı kaydeder.  
+Obsidian'ın dosya dışarıdan değiştiğinde yaptığı gibi diyagramın düzenleyiciye yeniden yüklenmesi alanı kapatır ve yazılan adı atar. Bundan sonra basılan tuşlar siz düzenleyiciye tıklayana kadar hiçbir yere gitmez; bu nedenle ad için basılan bir `Delete` veya `Backspace` hiçbir şeyi kaldırmaz.
 
 [Bul ve değiştir](./find-and-replace.md#what-it-searches), gruplar gösterilirken grup adlarında `Table group names` altında arama yapar; `Replace` ve `Replace All` düğmeleri de grupları yeniden adlandırır. [Değiştirme](./find-and-replace.md#replacing) bölümüne bakın. [Hızlı arama](./quick-search.md#searching-the-diagram) grup adlarında arama yapmaz.
 
@@ -157,7 +160,7 @@ Bir tablonun bağlam menüsü, `Color` ve `Remove color` öğelerinden sonra ve 
 
 Tuvalin bağlam menüsündeki `View Option` → `Table Groups` seçeneği tüm grupları gösterir veya gizler. Varsayılan olarak işaretlidir. [Tablo görünüm seçenekleri](./table-related-functions.md#table-view-options) bölümüne bakın.  
 İşareti kaldırıldığında grup kutuları ve tablo başlıklarındaki grup renkleri tuvalden, mini haritadan ve dışa aktarılan görüntülerden kaybolur; kaydırma çubukları ve mini harita da artık gruplar için yer ayırmaz. Hiçbir şey taşınmaz veya yeniden boyutlandırılmaz ve her tablo kendi grubunda kalır.  
-Grupları gizlemek grupların seçimini kaldırır, bir `New Table Group` çizimini sona erdirir ve açık bir ad alanını kapatır.
+Grupları gizlemek grupların seçimini kaldırır, bir `New Table Group` çizimini sona erdirir ve açık bir ad alanını, başka bir yere tıklamanın yaptığı gibi kapatır. [Grubu adlandırma](#naming-a-group) bölümüne bakın.
 
 Gruplar gizliyken:
 

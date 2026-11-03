@@ -67,7 +67,8 @@ Zmiany docierające z innego edytora również nie są rejestrowane, więc polec
 
 Cofnięcie operacji `Import`, która zastępuje cały diagram, przywraca wcześniejszy diagram w stanie, w jakim edytor przechowywał go w chwili importu, a każda [blokada](./settings.md#lock) jest włączona lub wyłączona i każda zablokowana wartość jest taka jak wtedy.  
 Jeśli ten diagram miał włączoną blokadę `Viewport`, widok i powiększenie wracają do zablokowanego widoku, w którym diagram się otwiera, a nie do miejsca, w którym znajdował się widok. Przy wyłączonej blokadzie `Viewport` wracają do miejsca, w którym znajdował się widok w chwili importu. Inne zablokowane ustawienia, takie jak karta, na której jesteś, język w Generatorze kodu lub Widok nazw, pozostają takie, jakie są na ekranie.  
-Nowy diagram ma na początku włączone wszystkie blokady. Aby zachować swój widok po takim cofnięciu, wyłącz blokadę `Viewport` przed importem. Ani wyłączenie jej później, ani zaimportowanie pliku JSON z wyłączoną własną blokadą `Viewport` nie zmienia tego, dokąd prowadzi cofnięcie.
+Nowy diagram ma na początku włączone wszystkie blokady. Aby zachować swój widok po takim cofnięciu, wyłącz blokadę `Viewport` przed importem. Ani wyłączenie jej później, ani zaimportowanie pliku JSON z wyłączoną własną blokadą `Viewport` nie zmienia tego, dokąd prowadzi cofnięcie.  
+Cofnięcie lub ponowienie operacji `Import` kończy też rysowanie relacji – zobacz sekcję [Tworzenie relacji](./editing-start.md#relationship-creation).
 
 Cofnięcie importu pliku JSON przywraca również słowa, terminy i domeny, które miał wcześniejszy diagram. Import w formacie Schemat SQL, GraphQL, DBML lub AML zachowuje słowniki, więc jego cofnięcie i ponowienie pozostawiają je w obecnym stanie, łącznie ze zmianami wprowadzonymi od tego czasu na karcie Słownik.
 

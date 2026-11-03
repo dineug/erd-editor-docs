@@ -83,7 +83,9 @@ Kunci serial merupakan pengecualian: kunci asingnya mengambil tipe integer yang 
 Setiap kolom kunci asing diberi nama berdasarkan kuncinya: nama satu kata seperti `id` diberi nama tabel induk di depannya (`user_id`), nama beberapa kata seperti `member_id` dipertahankan, dan nama yang sudah dimiliki tabel anak diberi nomor (`user_id_2`) — lihat [Nama kolom kunci asing](./relationship-editing.md#foreign-key-column-names).  
 Mengeklik satu tabel dua kali menggambar hubungan yang merujuk dirinya sendiri.  
 Hubungan baru dimulai dengan `On Delete` dan `On Update` keduanya bernilai `Not set`; ubah keduanya dari menu konteksnya — lihat [ON DELETE dan ON UPDATE](./relationship-editing.md#on-delete-and-on-update).  
-Tekan `Escape`, atau tekan pintasan yang sama lagi, untuk membatalkan. Setelah dibatalkan, pilihan tetap apa adanya, dan `Escape` berikutnya mengosongkannya.
+Tekan `Escape`, atau tekan pintasan yang sama lagi, untuk membatalkan. Setelah dibatalkan, pilihan tetap apa adanya, dan `Escape` berikutnya mengosongkannya.  
+Penggambaran juga berakhir, baik hanya tipenya yang disiapkan maupun tabel induk sudah dipilih, saat diagram diganti: oleh `Import` sebagai pengganti diagram, oleh pembatalan atau pengulangan dari impor itu, oleh kolaborator atau agen pemrograman yang melakukan salah satunya, dan oleh pemuatan ulang diagram ke editor, seperti yang dilakukan Obsidian saat file berubah di luarnya.  
+Impor Skema SQL, GraphQL, DBML, atau AML mengakhirinya setelah tabelnya ditempatkan, bukan saat file dipilih. [`Import and Add`](./file-import-export.md#import-and-add) membiarkan penggambaran tetap aktif.
 
 Setelah tabel induk ditentukan, saat penunjuk diarahkan ke tabel tempat hubungan dapat berakhir, tabel tersebut diberi garis tepi dan dua tombol tampil di sampingnya:
 

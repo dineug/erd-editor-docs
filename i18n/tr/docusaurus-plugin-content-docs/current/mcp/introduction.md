@@ -66,4 +66,7 @@ Mantıksal adlar, değer alanları ve sözlükler için araçlar, sunucunun `1.1
 Yukarıdaki sürümlerden `4.2.0` sürümünden önceki bir uzantı veya `1.2.0` sürümünden önceki bir eklenti, protokol 2'yi kullandığı için ajanın canlı düzenleme yapmasına yine izin verir, ancak ajanın yazdığı mantıksal adları, değer alanı bağlantılarını ve sözlük satırlarını yok sayar ve dosyayı kaydettiğinde bunları dışarıda bırakır.
 Bir dosyayı diskte düzenleyen, `1.1.0` sürümünden önceki bir sunucu dosyayı mantıksal adları, değer alanı bağlantıları ve sözlük satırları olmadan geri yazar. [Güncelleme](./installation.md#updating) bölümüne bakın.
 
+Aynı ada veya alana ya da aynı tablonun, notun veya tablo grubunun konumuna ya da boyutuna sizin ve ajanın aynı anda yaptığı düzenlemeler, sunucunun `1.2.0` veya sonraki bir sürümüyle ve belgenin açık olduğu her yerde VS Code uzantısının `4.3.0` veya sonraki bir sürümüyle ya da Obsidian veya JetBrains eklentisinin `1.3.0` veya sonraki bir sürümüyle düzenleyicide ve ajan için aynı sonuçla biter.
+Bir renk, veritabanı ve bir tablodaki ya da dizindeki sütunların sırası istisnadır. [Aynı anda yapılan düzenlemeler](./live-and-headless.md#edits-made-at-the-same-moment) bölümüne bakın.
+
 Sonraki adım: [Kurulum](./installation.md).

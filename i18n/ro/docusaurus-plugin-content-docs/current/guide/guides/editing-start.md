@@ -83,7 +83,9 @@ O cheie de tip serial face excepție: cheia străină corespunzătoare primește
 Fiecare coloană cheie străină este denumită după cheia sa: un nume dintr-un singur cuvânt, de exemplu `id`, primește în față numele tabelului părinte (`user_id`), un nume din mai multe cuvinte, de exemplu `member_id`, se păstrează, iar un nume pe care tabelul copil îl are deja primește un număr, ca în `user_id_2` (consultați [Numele coloanelor cheie străină](./relationship-editing.md#foreign-key-column-names)).  
 Două clicuri pe același tabel trasează o relație autoreferențială.  
 O relație nouă pornește cu `On Delete` și `On Update` setate amândouă pe `Not set`; modificați-le din meniul ei contextual (consultați [ON DELETE și ON UPDATE](./relationship-editing.md#on-delete-and-on-update)).  
-Apăsați `Escape` sau apăsați din nou aceeași comandă rapidă pentru a renunța. Renunțarea lasă selecția neschimbată, iar următoarea apăsare pe `Escape` deselectează tot.
+Apăsați `Escape` sau apăsați din nou aceeași comandă rapidă pentru a renunța. Renunțarea lasă selecția neschimbată, iar următoarea apăsare pe `Escape` deselectează tot.  
+Trasarea se încheie, fie că doar tipul este activ, fie că părintele este deja ales, și când diagrama este înlocuită: de un `Import` în locul diagramei, de anularea sau refacerea unuia, de un colaborator sau de un agent de programare care face oricare dintre ele și de reîncărcarea diagramei în editor, așa cum face Obsidian când fișierul se schimbă din afara lui.  
+Importul unui fișier Schemă SQL, GraphQL, DBML sau AML o încheie după ce tabelele sale sunt plasate, nu când este ales fișierul. [`Import and Add`](./file-import-export.md#import-and-add) lasă trasarea activă.
 
 După ce ați ales tabelul părinte, trecerea indicatorului peste un tabel la care se poate încheia relația conturează tabelul respectiv și afișează lângă el două butoane:
 

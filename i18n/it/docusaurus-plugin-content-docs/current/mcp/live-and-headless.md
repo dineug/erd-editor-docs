@@ -37,6 +37,38 @@ Una lettura non apre mai un editor. Una modifica apre il documento nell’ERD Ed
 
 Un editor con un’estensione per VS Code precedente alla versione `4.2.0`, o un plugin per Obsidian o per JetBrains precedente alla versione `1.2.0`, accetta comunque le modifiche live dell’agente, ma non mostra né conserva i nomi logici, i collegamenti ai domini e le righe dei dizionari che l’agente scrive — vedere [Aggiornamento](./installation.md#updating).
 
+Con l’estensione per VS Code `4.3.0` o successiva, o con il plugin per Obsidian o per JetBrains `1.3.0` o successivo, un’importazione in modalità `replace`, e un `erd_undo` o un `erd_redo` di un’importazione di questo tipo, terminano una relazione che si sta disegnando nell’editor, qualunque sia la versione del server — vedere [Creazione di relazioni](../guide/guides/editing-start.md#relationship-creation).
+Prima di quelle versioni il disegno restava attivo, e un clic su una tabella poteva aggiungere una relazione da una tabella non più presente nel diagramma.
+Un’importazione in modalità `append` lascia attivo il disegno.
+Un editor di memo, del nome di un gruppo di tabelle o di una cella aperto resta aperto finché il diagramma contiene ancora, e mostra, ciò che modifica.
+
+### Modifiche fatte nello stesso istante {#edits-made-at-the-same-moment}
+
+Con il server `1.2.0` o successivo e, nell’editor, l’estensione per VS Code `4.3.0` o successiva o il plugin per Obsidian o per JetBrains `1.3.0` o successivo, le modifiche che l’utente e l’agente fanno alla stessa cosa nello stesso istante finiscono allo stesso modo nell’editor, nel file che salva e in ciò che `erd_list`, `erd_get` ed `erd_read` danno all’agente.
+Ciò comprende il nome o un altro campo di una tabella, colonna, relazione, indice, memo, gruppo di tabelle o riga di un dizionario, il nome del database e gli [script prima e dopo le tabelle](../guide/guides/schema-sql.md#before-and-after-scripts), e la posizione o la dimensione di una tabella, di un memo o di un gruppo di tabelle, ma non un colore, l’ordine delle colonne in una tabella o in un indice, né il database.
+Due modifiche dello stesso nome o campo, due spostamenti o due ridimensionamenti finiscono su una delle due, mai su una combinazione delle due: prevale una modifica fatta dopo che l’altra ha raggiunto il suo lato, e di due fatte esattamente nello stesso istante ne prevale una, la stessa su ogni lato, qualunque delle due arrivi per prima.
+
+Due cambi di colore della stessa tabella, dello stesso memo o dello stesso gruppo di tabelle fatti nello stesso istante, come quello dell’utente e l’`erd_change_table_color` dell’agente, possono finire diversi, o perfino scambiati, poiché ogni lato mantiene il colore che ha ricevuto per ultimo.
+Un riordino delle colonne, quello dell’utente o l’`erd_move_column` o l’`erd_move_index_column` dell’agente, viene applicato su ogni lato nell’ordine in cui arriva, quindi due fatti nello stesso istante nella stessa tabella o nello stesso indice possono lasciare le sue colonne in ordini diversi.
+Un cambio di database, quello dell’utente o l’`erd_set_database` dell’agente, viene applicato anch’esso nell’ordine in cui arriva, quindi due fatti nello stesso istante possono lasciare l’editor e l’agente su database diversi.
+
+Il trascinamento dell’utente e gli `erd_move_table`, `erd_move_tables`, `erd_move_memo`, `erd_move_table_group` e `erd_sort_tables` dell’agente viaggiano come i punti in cui terminano, quindi due spostamenti della stessa tabella, dello stesso memo o dello stesso gruppo di tabelle finiscono nella posizione data da uno dei due, mai nella somma dei due.
+`erd_move_table_group` invia in un unico gruppo di azioni il punto del gruppo e di ciascuna delle sue tabelle, come fa il trascinamento della barra del titolo del gruppo.
+Un ridimensionamento scrive insieme la posizione e la dimensione, quindi uno spostamento e un ridimensionamento dello stesso memo o gruppo di tabelle fatti nello stesso istante, come `erd_resize_memo` mentre l’utente trascina quel memo, finiscono su un unico rettangolo su entrambi i lati: quello del ridimensionamento oppure, quando prevale lo spostamento, il punto dello spostamento con la dimensione del ridimensionamento.
+Anche uno spostamento inferiore a 20 pixel, che non crea alcuna voce di annullamento, esce come il punto in cui termina, quindi può prevalere sullo spostamento dell’altro lato, sia che si tratti di un breve `erd_move_table_group` sia di un breve trascinamento dell’utente, come un clic che sposta una tabella di pochi pixel.
+
+Le versioni precedenti si connettono comunque, poiché il server `1.2.0` usa il protocollo 2 dell’hub, come fanno le versioni dalla `1.0.0` alla `1.1.1`.
+Con un server precedente alla versione `1.2.0`, o un’estensione precedente alla versione `4.3.0` o un plugin precedente alla versione `1.3.0`, uno spostamento o un ridimensionamento della stessa tabella, dello stesso memo o dello stesso gruppo di tabelle fatto nello stesso istante può lasciare l’editor e l’agente con posizioni diverse.
+Un editor precedente invia il trascinamento dell’utente come la distanza percorsa, e un server precedente alla versione `1.2.0` invia allo stesso modo `erd_move_table_group`.
+L’altro lato somma quella distanza al punto che possiede.
+Il lato meno recente applica inoltre i punti dell’altro lato nell’ordine in cui arrivano.
+L’agente legge e modifica quindi a partire dalla propria posizione per quella tabella, quel memo o quel gruppo di tabelle, non da quella che l’editor mostra e salva.
+Ciò dura finché un suo spostamento successivo viaggia come un punto, come il trascinamento dell’utente in un editor più recente o l’`erd_move_table` dell’agente, oppure finché l’agente si unisce di nuovo al documento, come dopo che l’editor lo ha escluso o dopo 30 minuti senza una chiamata sul documento.
+A parte un colore, l’ordine delle colonne e il database, un nome o un altro campo cambiato nello stesso istante finisce comunque allo stesso modo quando solo un lato è meno recente, quasi sempre sulla modifica del lato più recente.
+Se entrambi i lati sono meno recenti, i due possono comunque finire diversi.
+
+Nulla di tutto ciò vale per una modifica headless, che scrive solo il file.
+
 ### Salvataggio {#saving}
 
 Ogni editor salva le modifiche dell’agente nello stesso modo in cui salva quelle dell’utente.

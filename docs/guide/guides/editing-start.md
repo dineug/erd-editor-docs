@@ -83,7 +83,9 @@ A serial key is the exception: its foreign key takes the integer type the serial
 Each foreign key column is named after its key: a one-word name such as `id` gets the parent table's name in front (`user_id`), a name of several words such as `member_id` is kept, and a name the child already has is numbered (`user_id_2`) — see [Foreign Key Column Names](./relationship-editing.md#foreign-key-column-names).  
 Clicking one table twice draws a self-referencing relationship.  
 A new relationship starts with `On Delete` and `On Update` both `Not set`; change them from its context menu — see [ON DELETE and ON UPDATE](./relationship-editing.md#on-delete-and-on-update).  
-Press `Escape`, or press the same shortcut again, to cancel. Canceling leaves the selection as it is, and the next `Escape` clears it.
+Press `Escape`, or press the same shortcut again, to cancel. Canceling leaves the selection as it is, and the next `Escape` clears it.  
+The draw also ends, whether only the type is armed or the parent is already picked, when the diagram is replaced: by an `Import` in place of the diagram, by the undo or redo of one, by a collaborator or a coding agent doing either, and by the diagram being loaded into the editor again, as Obsidian does when the file changes outside it.  
+A Schema SQL, GraphQL, DBML, or AML import ends it once its tables are placed, not when the file is picked. [`Import and Add`](./file-import-export.md#import-and-add) leaves the draw armed.
 
 Once the parent is picked, pointing at a table the relationship can end on outlines that table and shows two buttons beside it:
 

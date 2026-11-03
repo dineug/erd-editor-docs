@@ -54,7 +54,8 @@ Uma janela do VS Code serve os diagramas das pastas da respetiva área de trabal
 3. Deixe a definição `dineug.erd-editor.agentHub.enabled` ativada. Está ativada por predefinição.
 
 Uma extensão da `3.0.0` à `3.1.0` e o servidor `1.0.0` ou posterior recusam-se mutuamente, e uma extensão anterior à `3.0.0` não serve agentes.
-Uma extensão `4.0.0` ou `4.1.0` liga-se, mas não mostra nem mantém os nomes lógicos, os vínculos a domínios e as linhas dos dicionários que o agente escreve — consulte [Atualizar](#updating).
+Uma extensão `4.0.0` ou `4.1.0` liga-se, mas não mostra nem mantém os nomes lógicos, os vínculos a domínios e as linhas dos dicionários que o agente escreve.
+Com uma extensão anterior à `4.3.0`, uma tabela, uma nota ou um grupo de tabelas que o utilizador e o agente movem ou redimensionam no mesmo instante pode acabar em sítios diferentes para cada um — consulte [Atualizar](#updating).
 
 A extensão inicia-se numa área de trabalho que contenha ficheiros `.erd`, `.erd.json`, `.vuerd` ou `.vuerd.json`, pelo que um agente chega a esses diagramas antes de algum deles ser aberto.
 Numa área de trabalho sem nenhum deles, inicia-se quando se abre um diagrama e, até lá, o agente edita no disco.
@@ -71,7 +72,8 @@ Uma janela de cofre do Obsidian serve os diagramas do respetivo cofre.
 2. Deixe Settings → ERD Editor → Coding agents ativado. Está ativado por predefinição e cada cofre mantém a sua própria definição.
 
 Um plugin anterior à `1.0.0` e o servidor `1.0.0` ou posterior recusam-se mutuamente.
-Um plugin `1.0.0` ou `1.1.0` liga-se, mas não mostra nem mantém os nomes lógicos, os vínculos a domínios e as linhas dos dicionários que o agente escreve — consulte [Atualizar](#updating).
+Um plugin `1.0.0` ou `1.1.0` liga-se, mas não mostra nem mantém os nomes lógicos, os vínculos a domínios e as linhas dos dicionários que o agente escreve.
+Com um plugin anterior à `1.3.0`, uma tabela, uma nota ou um grupo de tabelas que o utilizador e o agente movem ou redimensionam no mesmo instante pode acabar em sítios diferentes para cada um — consulte [Atualizar](#updating).
 
 Uma janela de cofre serve agentes a partir do momento em que o plugin é carregado, pelo que um agente chega aos diagramas do cofre antes de algum deles ser aberto.
 Não há nenhum passo de confiança.
@@ -98,7 +100,8 @@ Um IDE da JetBrains serve os diagramas de todos os projetos nele abertos e qualq
 3. Deixe Settings | Tools | ERD Editor → Coding agents marcado. Está ativado por predefinição e aplica-se a todo o IDE.
 
 Um plugin `0.9.0` ou `0.10.0` e o servidor `1.0.0` ou posterior recusam-se mutuamente, e um plugin anterior à `0.9.0` não serve agentes.
-Um plugin `1.0.0` ou `1.1.0` liga-se, mas não mostra nem mantém os nomes lógicos, os vínculos a domínios e as linhas dos dicionários que o agente escreve — consulte [Atualizar](#updating).
+Um plugin `1.0.0` ou `1.1.0` liga-se, mas não mostra nem mantém os nomes lógicos, os vínculos a domínios e as linhas dos dicionários que o agente escreve.
+Com um plugin anterior à `1.3.0`, uma tabela, uma nota ou um grupo de tabelas que o utilizador e o agente movem ou redimensionam no mesmo instante pode acabar em sítios diferentes para cada um — consulte [Atualizar](#updating).
 
 O IDE serve agentes a partir do momento em que o primeiro projeto é aberto, pelo que um agente chega aos diagramas de um projeto antes de algum deles ser aberto.
 
@@ -144,6 +147,11 @@ Só a extensão do VS Code `4.2.0` ou posterior e os plugins do Obsidian e da Je
 Uma extensão ou um plugin anterior que se ligue ignora-os, embora a chamada do agente tenha êxito.
 Continua a aplicar os nomes físicos que os dicionários derivam e os tipos de dados que os domínios dão.
 Um servidor anterior à `1.1.0` lê um ficheiro sem os respetivos nomes lógicos, vínculos a domínios e linhas dos dicionários, e deixa-os de fora quando edita o ficheiro no disco — consulte [Headless](./live-and-headless.md#headless).
+
+O servidor `1.2.0` também utiliza o protocolo 2 e não acrescenta, remove nem muda o nome de nenhuma ferramenta, nem altera nenhum argumento.
+Mas um movimento ou redimensionamento que o utilizador e o agente fazem no mesmo instante à mesma tabela, nota ou grupo de tabelas só termina igual no editor e para o agente quando o servidor é a `1.2.0` ou posterior e o editor tem a extensão do VS Code `4.3.0` ou posterior ou o plugin do Obsidian ou da JetBrains `1.3.0` ou posterior.
+Com qualquer dos lados mais antigo, o editor e o agente podem acabar com posições diferentes, e o agente continua a ler e a editar a partir da sua até um movimento posterior pôr ambos no mesmo ponto ou o agente voltar a juntar-se ao documento — consulte [Edições feitas no mesmo instante](./live-and-headless.md#edits-made-at-the-same-moment).
+Nenhuma destas versões altera o que um ficheiro contém.
 
 Atualize também o ERD Editor em todos os sítios onde os diagramas são abertos.
 A extensão do VS Code anterior à `4.2.0`, o plugin do Obsidian anterior à `1.2.0` e o plugin da JetBrains anterior à `1.2.0` abrem um diagrama que uma versão posterior guardou, ou que o agente editou no disco, sem os nomes lógicos das suas tabelas e colunas, sem os vínculos a domínios das suas colunas e sem as suas palavras, termos e domínios.

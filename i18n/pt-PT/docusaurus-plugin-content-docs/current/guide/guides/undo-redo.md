@@ -67,7 +67,8 @@ As alterações que chegam de outro editor também não são registadas, pelo qu
 
 Anular uma importação feita com a opção `Import`, que substitui o diagrama inteiro, repõe o diagrama anterior tal como o editor o tinha quando importou, com cada [bloqueio](./settings.md#lock) ativado ou desativado e cada valor bloqueado tal como estavam nessa altura.  
 Se esse diagrama tinha a definição `Viewport` bloqueada, a vista e o zoom voltam à vista bloqueada, onde o diagrama se abre, e não ao ponto onde estava. Com a sua definição `Viewport` desbloqueada, voltam ao ponto onde estava quando importou. As outras definições bloqueadas, como o separador em que está, a linguagem do Gerador de código ou a vista de nomes, ficam como estão no seu ecrã.  
-Um diagrama novo começa com todos os bloqueios ativados. Desative o bloqueio `Viewport` antes de importar para manter a sua vista numa anulação deste tipo. Desativá-lo depois, ou importar um ficheiro JSON cujo próprio bloqueio `Viewport` esteja desativado, não muda o ponto para onde a anulação o leva.
+Um diagrama novo começa com todos os bloqueios ativados. Desative o bloqueio `Viewport` antes de importar para manter a sua vista numa anulação deste tipo. Desativá-lo depois, ou importar um ficheiro JSON cujo próprio bloqueio `Viewport` esteja desativado, não muda o ponto para onde a anulação o leva.  
+Anular ou refazer uma importação com `Import` também termina uma relação em desenho — consulte [Criação de relações](./editing-start.md#relationship-creation).
 
 Anular a importação de um ficheiro JSON também repõe as palavras, os termos e os domínios que o diagrama anterior tinha. Uma importação de Esquema SQL, GraphQL, DBML ou AML mantém os dicionários, pelo que anulá-la e refazê-la os deixa como estão, incluindo as edições feitas entretanto no separador Dicionário.
 

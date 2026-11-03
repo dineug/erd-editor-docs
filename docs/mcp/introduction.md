@@ -66,4 +66,7 @@ The tools for logical names, domains, and the dictionaries need server `1.1.0` o
 Of the releases above, an extension before `4.2.0` or a plugin before `1.2.0` still lets the agent edit live, since it speaks protocol 2, but it ignores the logical names, domain links, and dictionary rows the agent writes, and leaves them out when it saves the file.
 A server before `1.1.0` that edits a file on disk writes it back without its logical names, domain links, and dictionary rows — see [Updating](./installation.md#updating).
 
+Edits you and the agent make at the same moment to the same name or field, or to the position or size of the same table, memo, or table group, end the same in the editor and for the agent with server `1.2.0` or later and, wherever the document is open, the VS Code extension `4.3.0` or later or the Obsidian or JetBrains plugin `1.3.0` or later.
+A color, the database, and the order of the columns in a table or an index are the exceptions — see [Edits Made at the Same Moment](./live-and-headless.md#edits-made-at-the-same-moment).
+
 Next: [Install](./installation.md).

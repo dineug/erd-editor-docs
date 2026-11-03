@@ -47,7 +47,7 @@ description: erd-editor MCP サーバーが提供するすべてのツール。�
 | --- | --- |
 | `snapshot` | すべてのエンティティとその ID を含むコンパクトな JSON です。テーブルグループと、単語、用語、ドメインの行も含まれ、設定も Schema SQL のスクリプトとともに含まれます。閲覧者ごとに異なるもの、つまり計測した幅、重なり順、表示、タブ、名前の表示は含まれません。大きなスキーマでは大きくなります。 |
 | `sql` | 8 つのデータベース `Databricks`、`MariaDB`、`MSSQL`、`MySQL`、`Oracle`、`PostgreSQL`、`Snowflake`、`SQLite` のいずれかの DDL です。`vendor` の既定値は、ドキュメントに設定されているデータベースです。ドキュメント全体の DDL には、その前後のスクリプトが含まれます。`tableIds`、`tableNames`、`groupNames` のいずれかを指定すると、それらのテーブルだけを、それらが持つ外部キーとともに、スクリプトなしで返します。外部キーには ON DELETE と ON UPDATE のアクションが付きますが、対象のデータベースが省くアクションは除きます。[ON DELETE と ON UPDATE](../guide/guides/relationship-editing.md#on-delete-and-on-update) を参照してください。 |
-| `json` | 保存でファイルに書き込まれるとおりのドキュメント全体です。エディタがまだ保存していない編集も含まれます。[保存形式とランタイム値](../api/advanced/schema.md#保存形式とランタイム値)を参照してください。 |
+| `json` | 保存でファイルに書き込まれるとおりのドキュメント全体です。エディタがまだ保存していない編集も含まれます。[保存形式](../api/advanced/schema.md#storage-form)を参照してください。 |
 | `scripts` | ドキュメントの前後のスクリプトだけを、`{"before":"…","after":"…"}` の形で返します。設定されていないスクリプトは空になり、スキーマがどれほど大きくても返すのはスクリプトだけです。 |
 
 `vendor`、`statements`、`header`、`logicalNameAsComment`、`tableIds`、`tableNames`、`groupNames` を受け取るのは `sql` 形式だけで、ほかの形式はこれらを拒否します。
@@ -205,7 +205,7 @@ ID は `erd_list` と `erd_get`、またはそのエンティティを作った�
 | `erd_remove_table_group` | `groupId` | グループを削除します。そのテーブルはその場に残り、どのグループにも属さなくなります。 |
 | `erd_change_table_group_name` | `groupId`、`value` | グループ名を変更します。空文字列では名前のないグループになります。 |
 | `erd_change_table_group_color` | `groupId`、`color` | グループの色を設定します。 |
-| `erd_move_table_group` | `groupId`、`x`、`y` | タイトルバーをドラッグしたときと同じように、矩形がその位置から始まるようにグループを移動し、そのテーブルも同じだけ移動します。横方向と縦方向の移動量の合計が 20 ピクセル未満の移動は、Undo の項目を作りません。 |
+| `erd_move_table_group` | `groupId`、`x`、`y` | タイトルバーをドラッグしたときと同じように、矩形がその位置から始まるようにグループを移動し、そのテーブルも同じだけ移動します。横方向と縦方向の移動量の合計が 20 ピクセル未満の移動は、Undo の項目を作りません。`1.2.0` 以降のサーバーでは、移動はグループとそのテーブルが終わる位置の点としてエディタに届くため、VS Code の拡張機能 `4.3.0` 以降または Obsidian か JetBrains のプラグイン `1.3.0` 以降では、そこで同時に行ったグループまたはそのテーブルの 1 つの移動は、2 つの位置のどちらか一方で終わり、合計になることはありません。[同時に行われた編集](./live-and-headless.md#edits-made-at-the-same-moment)を参照してください。 |
 | `erd_resize_table_group` | `groupId`、`x?`、`y?`、`width`、`height` | グループの矩形を設定します。そのテーブルはその場に残ります。`x` と `y` を省略すると、矩形の角はそのままです。グループのテーブルを余白とともに収められない矩形は拒否され、収める必要のある範囲がメッセージに示されます。 |
 | `erd_set_table_group` | `tableIds`、`groupId` | テーブルをグループに入れます。各テーブルは、それまで属していたグループを離れます。`groupId` が `null` または空文字列の場合は、テーブルをすべてのグループから外します。 |
 
@@ -295,6 +295,8 @@ ID は `erd_list` と `erd_get`、またはそのエンティティを作った�
 
 - `erd_import_sql`、`erd_import_graphql`、`erd_import_dbml`、`erd_import_aml` は、すべてのテーブル、リレーションシップ、インデックス、メモ、テーブルグループを置き換えます。ドキュメントの設定はロックも含めて維持しますが、表示だけはキャンバスの開始位置に 100% で戻ります。単語、用語、ドメインの辞書も維持します。これらが持ち込むテーブルは論理名を持たず、どのドメインにも紐付きません。
 - `erd_import_json` は、設定と辞書も含めてドキュメント全体を置き換えます。JSON の設定、ロック、単語、用語、ドメインがこのドキュメントのものに代わり、ロックを記録していない JSON では、すべてのロックがオンになり、表示がキャンバスの開始位置に移ります。各閲覧者は自分の名前の表示を保ちますが、JSON の `Name View` のロックがオフの場合は、その名前の表示が持ち込まれます。このドキュメントの設定を保つには、`erd_read` の `json` 形式が返すテキストから始めてください。空のテキストでは、`erd_open_document` が `create` で作成するものと同じ、新しいドキュメントになります。
+
+VS Code の拡張機能 `4.3.0` 以降または Obsidian か JetBrains のプラグイン `1.3.0` 以降のエディタでは、`replace` とその `erd_undo` または `erd_redo` も、描画中のリレーションシップを終了します。[ライブ](./live-and-headless.md#ライブ)を参照してください。
 
 `append` は、エディタの [Import and Add](../guide/guides/file-import-export.md#import-and-add) と同じように、読み込んだものをドキュメントに追加し、1 回の `erd_undo` で追加全体を取り消せます。
 

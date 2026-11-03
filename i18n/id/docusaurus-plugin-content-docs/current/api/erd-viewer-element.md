@@ -52,7 +52,7 @@ Build tag script, `dist/erd-viewer.umd.js`, hanya memuat viewer dengan semua dep
 
 ```html
 <erd-viewer src="diagram.erd.json" style="display: block; height: 480px"></erd-viewer>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.0.0/dist/erd-viewer.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0/dist/erd-viewer.umd.js"></script>
 ```
 
 ## src {#src}
@@ -221,7 +221,8 @@ Bahasa mengubah tooltip bilah kontrol, daftar `Name View`, palet, pemberitahuan 
 
 Bahasa Inggris menjadi bagian titik masuk viewer dan berlaku sebelum panggilan kembali. Setiap bahasa lain adalah modul tersendiri, yang dihasilkan bundler Anda sebagai chunk di samping viewer dan diambil viewer dari bundel Anda saat halaman pertama kali meminta bahasa itu, satu kali untuk semua viewer di halaman. Sampai modul itu mendarat, viewer terus menampilkan bahasa yang ditampilkannya, bahasa Inggris pada bingkai pertama. Jika gagal dimuat, viewer menampilkan bahasa Inggris, dan meminta bahasa itu lagi mencobanya kembali.  
 Build [tag script](./installation.md#script-tag) memuat semua 25 bahasa, jadi tidak mengambil apa pun. Bundel yang juga memuat editor memuat setiap bahasa bersama chunk editor — lihat [Mendaftarkan elemen](./installation.md#registering-the-elements).  
-`Promise` yang dikembalikannya selesai begitu bahasa itu mendarat atau gagal mendarat, dan tidak pernah ditolak. Bahasa itu, atau bahasa Inggris setelah kegagalan, kemudian berlaku, kecuali panggilan berikutnya meminta bahasa lain: panggilan yang lebih akhir menang, apa pun urutan bahasa-bahasa itu mendarat.  
+`Promise` yang dikembalikannya selesai begitu bahasa itu mendarat atau gagal mendarat, dan tidak pernah ditolak. Bahasa itu, atau bahasa Inggris setelah kegagalan, kemudian berlaku, kecuali panggilan berikutnya meminta bahasa lain: panggilan yang lebih akhir menang, apa pun urutan bahasa-bahasa itu mendarat.
+
 Bahasa Ibrani, Arab, dan Persia menata palet dan pemberitahuan pemuatan dari kanan ke kiri. Kanvas, minimap, bilah gulir, dan bilah kontrol beserta kompasnya tetap dari kiri ke kanan, seperti kanvas editor — lihat [Bahasa kanan ke kiri](../guide/guides/language-and-theme.md#right-to-left-languages).  
 Viewer menetapkan `lang` dan `dir` pada root-nya sendiri di dalam shadow root tertutup, tidak pernah pada elemen host atau halaman.  
 Ini tidak memancarkan apa pun, dan viewer tidak memiliki pemilih bahasa serta tidak menyimpan apa pun.

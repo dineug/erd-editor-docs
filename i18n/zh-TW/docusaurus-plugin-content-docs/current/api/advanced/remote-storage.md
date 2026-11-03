@@ -1,5 +1,5 @@
 ---
-sidebar_position: 2
+sidebar_position: 3
 description: 在主執行緒之外將執行中的編輯器複寫到無介面存放區，並將文件序列化以供儲存。
 ---
 
@@ -88,6 +88,11 @@ sharedStore.subscribe(actions => {
 當某個編輯器復原該次移除時，以不含該列的內容初始化的複本會再次列出該列，但內容是空的，而由於 `value` 會省略空的列，複本儲存的文件中便不含該列。  
 若是定義域，曾連結到它的欄位和術語在該複本中也會維持未連結，因為該複本從未保有這些連結，而復原也不會送出它們。
 
+自 `5.1.0` 起，[`@dineug/erd-editor-yjs`](./yjs.md) 也能透過 Yjs 房間讓各編輯器保持同步。  
+如上所述，從繫結至房間的元素饋入時，複本只會收到在該元素上所做的編輯，絕不會收到房間帶進來的編輯：這些編輯會以其他編輯器的編輯送達該元素，而共用存放區絕不會轉送它所接收的內容。  
+若要儲存房間的文件，請儲存已繫結元素的 `value`，或已繫結對等存放區的 `value`，如[房間所保存的內容](./yjs.md#what-the-room-holds)所述。  
+Yjs 持久化提供者儲存的是房間本身，其中保存的是執行階段值和在其之後所做的編輯，而不是檔案；請參閱[限制](./yjs.md#limits)。
+
 ## InjectEngineContext {#injectenginecontext}
 
 ### toWidth {#towidth}
@@ -154,7 +159,7 @@ const data = replicationStore.value;
 自 `4.2.0` 起，它也包含邏輯名稱、每個名稱是否由字典產生、定義域連結，以及[字典](../../guide/guides/dictionary.md)索引標籤的詞彙、術語和定義域。  
 自 `4.2.0` 起，它也會省略實體中每個空的文字屬性、每個沒有任何內容的 `doc` 清單和集合，以及在每個集合都為空時的 `collections` 本身。  
 它以兩個空格縮排，每個字典列各自佔一行，並以換行字元結尾，因此同一份文件一律會產生相同的位元組。  
-關於它包含的內容，請參閱[儲存形式與執行階段值](./schema.md#storage-form-and-runtime-value)。
+關於它包含的內容，請參閱[儲存形式](./schema.md#storage-form)。
 
 [鎖定](../../guide/guides/settings.md#lock)為開啟的每項設定，都會以鎖定時的值寫出，其他所有設定則以目前的值寫出。  
 `Viewport` 鎖定同時涵蓋檢視原點和縮放比例，而索引標籤、程式碼產生器的語言、兩種名稱大小寫和引號類型則各有自己的鎖定。  
@@ -172,6 +177,7 @@ const snapshot = replicationStore.runtimeValue;
 ```
 
 將它傳給稍後加入的編輯器或另一個存放區的 `setInitialValue`，以初始化對方；請參閱[協作編輯](./collaborative-editing.md)。  
+複本沒有 [getLWW](./collaborative-editing.md#getlww) 或 [getVersion](./collaborative-editing.md#getversion)，因此不會透過 `runtimeValue` 交出協作暫存器：以它初始化的編輯器會從執行中的編輯器取得暫存器，如[初始化協作者](./collaborative-editing.md#seeding-a-collaborator)所述。  
 請勿將它儲存為檔案：它帶有已移除的實體，且已發佈的 [JSON Schema](./schema.md#json-schema) 會拒絕它。  
 正因為有這些已移除的實體，稍後傳來的移除復原，才能在以它初始化的存放區中將該實體完整帶回。  
 它們會一直保留，直到下次從檔案開啟該文件為止，因為檔案的形式不包含它們。
@@ -230,7 +236,7 @@ const unsubscribe = replicationStore.on({
 若自上一次 `change`（或自載入）以來的動作讓 `value` 逐位元組維持原樣，`changed` 即為 `false`。
 
 被[鎖定](../../guide/guides/settings.md#lock)排除在 `value` 之外的變更仍會觸發 `change`，且 `changed` 為 `false`，因此只在 `changed` 為 `true` 時寫入。  
-也就是 `Viewport` 鎖定時的捲動或縮放、`Canvas Type` 鎖定時的索引標籤切換，以及在各自的鎖定開啟時，對程式碼產生器的語言、某種名稱大小寫或引號類型的變更。  
+也就是 `Viewport` 鎖定時的捲動或縮放、`Canvas Type` 鎖定時的索引標籤切換，以及在各自的鎖定開啟時，對程式碼產生器的語言、某種名稱大小寫或引號類型的變更，而自 `5.1.0` 起只有 `5.1.0` 之前的編輯器仍會傳送這類變更（請參閱 [dispatch, dispatchSync](#dispatch-dispatchsync)）。  
 自 `4.2.0` 起，`Name View` 鎖定時的「名稱顯示」切換也是如此：編輯器仍會送出它，但複本會像其他編輯器一樣捨棄它。  
 在唯讀編輯器中做出的「名稱顯示」切換，無論其鎖定為何，都會以同樣的方式被捨棄。  
 元素的 [change](../erd-editor-element.md#change) 事件會略過這類變更，但複本仍會回報它。  
@@ -283,7 +289,24 @@ replicationStore.dispatchSync(actions); // sync
 它對載入、`Import` 或 `clear()` 的復原，會將它自己的文件副本載入複本，其中不含邏輯名稱、定義域連結或字典；請參閱[混用不同版本](./collaborative-editing.md#mixing-releases)。  
 `@dineug/erd-editor/engine.js` 匯出的 `createReplicationStore`、`ReplicationStore` 和 `ReplicationChange` 與先前相同，而 `createReplicationStore` 接受的 context 物件也與先前相同。
 
-自 `4.0.0` 起，這兩個方法也會套用 `editor.mergeLWW`，其中帶有另一個編輯器加入工作階段時、某個編輯器作為回應所傳送的協作暫存器，因此複本會以與編輯器相同的方式裁定並行編輯。  
+`5.1.0` 沒有新增任何動作類型，也未變更 `@dineug/erd-editor/engine.js` 的任何匯出，因此 `4.2.0` 或更新版本的複本仍會保留 `5.1.0` 編輯器傳送的每一項變更。  
+自 `5.1.0` 起，複本裁定同一時刻進行的編輯，其方式與 `5.1.0` 編輯器相同；請參閱[同時進行的編輯](./collaborative-editing.md#concurrent-edits)。  
+它為資料表的位置、備忘錄和資料表群組的位置與大小，以及檢視原點和縮放比例各保留一個版本。  
+`5.1.0` 編輯器會將拖曳、平移或縮放以其結束的位置傳送，透過 `table.moveTo`、`memo.moveTo`、`tableGroup.moveTo`、`settings.scrollTo` 和 `settings.changeZoomLevel`，而複本只在這些動作，以及每個 `memo.resize` 和 `tableGroup.resize` 的版本不低於它所持有的版本時，才會採用它們。  
+因此，當這類編輯器中的兩個在同一時刻移動同一個資料表、備忘錄或資料表群組，或調整其大小時，無論複本以什麼順序收到它們，都會將它儲存在每個編輯器所顯示的位置和大小，而傳輸層重複送達的拖曳、平移或縮放也不會移動兩次。  
+`Viewport` 未鎖定時，複本會分別從版本最大的寫入儲存原點和縮放比例，也就是做出該寫入的編輯器所在的位置。  
+縮放也會移動原點，因此兩個編輯器在同一時刻進行的平移和縮放，可能會儲存成一個編輯器的原點加上另一個編輯器的縮放比例。  
+在 `5.1.0` 之前，複本會把每個編輯器的平移和縮放步驟累加到同一個檢視上。
+
+`5.1.0` 之前的編輯器為拖曳、平移或縮放所傳送的距離（`table.move`、`memo.move`、`tableGroup.move`、`settings.streamScrollTo` 和 `settings.streamZoomLevel`）仍會累加到複本所持有的內容上，不受版本影響。  
+顏色變更仍會不帶版本地送達：複本如同每個編輯器，會為它蓋上自己的版本，並保留最後收到的顏色，因此在同一時刻對同一個資料表、備忘錄或資料表群組所做的兩次重新著色，儲存的結果可能與編輯器所顯示的不同。  
+`5.1.0` 之前的複本會依到達的順序套用位置和大小，因此它儲存資料表的位置，可能與 `5.1.0` 編輯器所顯示的不同。  
+要讓同一時刻進行的編輯得到相同的結果，工作階段中的每個編輯器和複本都要保持在 `5.1.0` 或更新版本，但[同時進行的編輯](./collaborative-editing.md#concurrent-edits)所列出的例外除外。
+
+自 `5.1.0` 起，編輯器只在程式碼產生器的語言、某種名稱大小寫或引號類型的鎖定關閉期間，才會傳送對該設定的變更，並在其酬載中標記 `shared: true`，而複本會像各編輯器一樣套用每個有標記的變更；請參閱[協作編輯](./collaborative-editing.md)。  
+未標記的變更是 `5.1.0` 之前的編輯器無論鎖定狀態都會傳送的，複本只在該設定於它這一端未鎖定期間才套用，鎖定期間則捨棄（請參閱 [on@change](#onchange)）。
+
+自 `4.0.0` 起，這兩個方法也會套用 `editor.mergeLWW`，其中帶有另一個編輯器加入工作階段時、某個編輯器作為回應所傳送的協作暫存器，因此複本會以與編輯器相同的方式裁定同時進行的編輯。  
 它不會變更 `value` 的任何位元組，也不會觸發 `change`。  
 `4.0.0` 之前發佈的編輯器可能仍會傳送的 `settings.changeIgnoreSaveSettings` 會被保留，但不會變更任何內容：它會觸發 `change`，且 `changed` 為 `false`。
 

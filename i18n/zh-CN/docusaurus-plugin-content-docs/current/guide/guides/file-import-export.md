@@ -22,6 +22,7 @@ description: 导入 JSON、schema SQL、GraphQL、DBML 或 AML 以替换当前�
 扩展名的匹配不区分大小写。如果所选文件的扩展名与所选格式不符，导入会被取消并显示 `Only <format> files can be imported`，其中的格式写作 `json`、`sql`、`graphql`、`dbml` 或 `aml`，例如 `Only sql files can be imported`。
 
 `Import` 会替换当前文档，而不是合并到当前文档中，一次 Undo 即可恢复之前的图。  
+`Import`、对其执行的 Undo 与 Redo 会结束正在绘制的关系，而 [`Import and Add`](#import-and-add) 不会，参见[创建关系](./editing-start.md#创建关系)。  
 JSON 文件会带上自身的设置，其中也包括它的[锁定](./settings.md#锁定)。当文件锁定了标签页、Code Generator 的语言、某种名称大小写、括号类型或[名称显示](./logical-names.md#name-view)时，你看到的仍是原来的内容，但保存的是文件中锁定的值。无论是否锁定，缩放和视图位置都会采用文件所指定的值。在锁定功能出现之前保存的 JSON 文件导入后，所有锁定都处于开启状态，视图为 100%。在 `Name View` 锁定出现之前保存的文件导入后，无论其中记录了哪些其他锁定，该锁定都处于开启状态。  
 其他格式则保留你现有的设置，锁定也包括在内，只有视图除外，视图会从 100% 开始。  
 GraphQL、DBML 和 AML 解析器不会失败，无法读取的文件只会生成空白的图，而不会报错。
@@ -211,7 +212,7 @@ DBML 还会在两个方向上保留表的颜色（透明度除外）以及每个
 
 画布右键菜单的 `Export` 子菜单中有三个条目：
 
-- json：按图在文件中的保存形式，将图保存为 `.erd.json`：包括表及其列和索引、关系、备注和表分组，逻辑名和列的域关联，[Dictionary](./dictionary.md) 标签页中的词根、术语和域，以及设置，每个[锁定的设置](./settings.md#锁定)都按其锁定的值保存。不含任何内容的部分（例如空文本或空的词典行）会被省略，参见[存储形式与运行时值](../../api/advanced/schema.md#存储形式与运行时值)。
+- json：按图在文件中的保存形式，将图保存为 `.erd.json`：包括表及其列和索引、关系、备注和表分组，逻辑名和列的域关联，[Dictionary](./dictionary.md) 标签页中的词根、术语和域，以及设置，每个[锁定的设置](./settings.md#锁定)都按其锁定的值保存。不含任何内容的部分（例如空文本或空的词典行）会被省略，参见[存储形式](../../api/advanced/schema.md#storage-form)。
 - Schema SQL：打开 [Schema SQL](./schema-sql.md#saving-or-copying-the-sql) 标签页，同时打开其选项面板并让 `Save file` 按钮获得焦点，因此按 `Enter` 即可将该标签页显示的 SQL 保存为 `.sql`。在此之前不会保存任何内容。
 - Image：打开 `Export image` 对话框，可将图保存为 `.png` 或 `.svg`，或以 PNG 格式复制到剪贴板，参见[图片](#image)。
 

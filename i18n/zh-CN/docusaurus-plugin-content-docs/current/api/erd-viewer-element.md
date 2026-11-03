@@ -52,7 +52,7 @@ script 标签构建 `dist/erd-viewer.umd.js` 只包含查看器及其全部依�
 
 ```html
 <erd-viewer src="diagram.erd.json" style="display: block; height: 480px"></erd-viewer>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.0.0/dist/erd-viewer.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0/dist/erd-viewer.umd.js"></script>
 ```
 
 ## src {#src}

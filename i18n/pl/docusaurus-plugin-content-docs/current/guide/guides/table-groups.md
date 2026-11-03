@@ -55,9 +55,12 @@ Grupa wraz z tabelami, które obejmuje, stanowi jeden krok cofania, a wpisana na
 ## Nazywanie grupy {#naming-a-group}
 
 Nazwę grupy edytuje się w polu, które otwiera się nad jej paskiem tytułu. Pole otwiera się samo po utworzeniu grupy, po dwukrotnym kliknięciu paska tytułu oraz po wybraniu pozycji `Rename` w menu kontekstowym grupy.  
-Klawisz `Enter` lub kliknięcie w innym miejscu zapisuje nazwę. Klawisz `Escape` zamyka pole bez zmiany nazwy i pozostawia grupę zaznaczoną, a drugie naciśnięcie klawisza `Escape` anuluje zaznaczenie.  
+Klawisz `Enter`, kliknięcie w innym miejscu albo ukrycie grup, bez względu na to, czy to ty je ukryjesz, czy współpracownik, zapisuje nazwę. Klawisz `Escape` zamyka pole bez zmiany nazwy i pozostawia grupę zaznaczoną, a drugie naciśnięcie klawisza `Escape` anuluje zaznaczenie.  
 Zmiana nazwy stanowi jeden krok cofania; zapisanie niezmienionej nazwy niczego nie rejestruje. Pusta nazwa lub nazwa złożona z samych białych znaków wyświetla się jako `unnamed`.  
-Gdy pole jest otwarte, skróty kanwy są wstrzymane, a skróty Szybkiego wyszukiwania i polecenia `Toggle Explorer` nic nie robią, tak jak podczas edycji komórki tabeli.
+Gdy pole jest otwarte, skróty kanwy są wstrzymane, a skróty Szybkiego wyszukiwania i polecenia `Toggle Explorer` nic nie robią, tak jak podczas edycji komórki tabeli.  
+Gdy współpracownik lub agent kodujący zastępuje diagram, podczas gdy pole jest otwarte, pole pozostaje otwarte, dopóki nowy diagram nadal zawiera grupę i pokazuje grupy.  
+Jeśli nowy diagram nie zawiera już grupy, pole zamyka się i niczego nie zapisuje; jeśli zawiera grupę, ale ukrywa grupy, pole zamyka się i zapisuje zmienioną nazwę.  
+Ponowne wczytanie diagramu do edytora, jak robi to aplikacja Obsidian, gdy plik zmienia się poza nią, zamyka pole i odrzuca wpisaną nazwę. Klawisze naciśnięte potem nigdzie nie trafiają, dopóki nie klikniesz edytora, więc naciśnięcie klawisza `Delete` lub `Backspace` przeznaczone dla nazwy niczego nie usuwa.
 
 Funkcja [Znajdź i zamień](./find-and-replace.md#what-it-searches) przeszukuje nazwy grup w ramach opcji `Table group names`, gdy grupy są widoczne, a jej operacje `Replace` i `Replace All` zmieniają nazwy grup – zobacz sekcję [Zamiana](./find-and-replace.md#replacing). [Szybkie wyszukiwanie](./quick-search.md#searching-the-diagram) nie przeszukuje nazw grup.
 
@@ -157,7 +160,7 @@ Przy pozycji `Group selected tables` po prawej stronie widać jej klawisze, `T`,
 
 Pozycja `View Option` → `Table Groups` w menu kontekstowym kanwy pokazuje lub ukrywa wszystkie grupy. Domyślnie jest zaznaczona – zobacz sekcję [Opcje widoku tabel](./table-related-functions.md#table-view-options).  
 Gdy jest odznaczona, ramki grup i kolory grup na nagłówkach tabel znikają z kanwy, minimapy i eksportowanych obrazów, a paski przewijania i minimapa przestają uwzględniać miejsce zajmowane przez grupy. Nic się nie przesuwa ani nie zmienia rozmiaru, a każda tabela pozostaje w swojej grupie.  
-Ukrycie grup anuluje ich zaznaczenie, kończy rysowanie rozpoczęte poleceniem `New Table Group` i zamyka otwarty edytor nazwy.
+Ukrycie grup anuluje ich zaznaczenie, kończy rysowanie rozpoczęte poleceniem `New Table Group` i zamyka otwarty edytor nazwy tak jak kliknięcie w innym miejscu – zobacz sekcję [Nazywanie grupy](#naming-a-group).
 
 Gdy grupy są ukryte:
 

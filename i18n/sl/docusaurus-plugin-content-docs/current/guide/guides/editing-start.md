@@ -83,7 +83,9 @@ Izjema je ključ serial: njegov tuji ključ prevzame celoštevilski tip, ki ga h
 Vsak stolpec tujega ključa dobi ime po svojem ključu: enobesedno ime, kot je `id`, dobi pred seboj ime nadrejene tabele (`user_id`), ime iz več besed, kot je `member_id`, se ohrani, ime, ki ga podrejena tabela že ima, pa se oštevilči (`user_id_2`) – glejte razdelek [Imena stolpcev tujega ključa](./relationship-editing.md#foreign-key-column-names).  
 Če dvakrat kliknete isto tabelo, se nariše rekurzivna relacija.  
 Nova relacija ima na začetku obe možnosti, `On Delete` in `On Update`, nastavljeni na `Not set`; spremenite ju v njenem priročnem meniju – glejte razdelek [ON DELETE in ON UPDATE](./relationship-editing.md#on-delete-and-on-update).  
-Za preklic pritisnite tipko `Escape` ali znova pritisnite isto bližnjico. Preklic pusti izbor nespremenjen, naslednji pritisk tipke `Escape` pa ga počisti.
+Za preklic pritisnite tipko `Escape` ali znova pritisnite isto bližnjico. Preklic pusti izbor nespremenjen, naslednji pritisk tipke `Escape` pa ga počisti.  
+Risanje se konča tudi, ne glede na to, ali je vklopljena samo vrsta ali je nadrejena tabela že izbrana, ko se diagram zamenja: z ukazom `Import`, ki diagram nadomesti, z razveljavitvijo ali uveljavitvijo takšnega uvoza, s katerim koli od teh dejanj, ki ga naredi sodelavec ali agent za kodiranje, in s ponovnim nalaganjem diagrama v urejevalnik, kot to naredi Obsidian, kadar se datoteka spremeni zunaj njega.  
+Uvoz Sheme SQL, GraphQL, DBML ali AML ga konča, ko so njegove tabele razporejene, ne ko je datoteka izbrana. Ukaz [`Import and Add`](./file-import-export.md#import-and-add) pusti risanje vklopljeno.
 
 Ko je nadrejena tabela izbrana, se tabela, pri kateri se relacija lahko konča, obrobi, ko je kazalec nad njo, ob njej pa se prikažeta dva gumba:
 

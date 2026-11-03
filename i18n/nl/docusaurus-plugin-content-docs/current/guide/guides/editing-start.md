@@ -83,7 +83,9 @@ Een serial-sleutel is de uitzondering: de refererende sleutel ervan krijgt het i
 Elke kolom met refererende sleutel wordt vernoemd naar de bijbehorende sleutel: een naam van één woord, zoals `id`, krijgt de naam van de oudertabel ervoor (`user_id`), een naam van meerdere woorden, zoals `member_id`, blijft behouden en een naam die de kindtabel al heeft, wordt genummerd (`user_id_2`) — zie [Namen van kolommen met refererende sleutel](./relationship-editing.md#foreign-key-column-names).  
 Als je twee keer op dezelfde tabel klikt, wordt een zelfverwijzende relatie getekend.  
 Een nieuwe relatie begint met `On Delete` en `On Update` allebei op `Not set`; wijzig ze via het contextmenu van de relatie — zie [ON DELETE en ON UPDATE](./relationship-editing.md#on-delete-and-on-update).  
-Druk op `Escape`, of druk nogmaals op dezelfde sneltoets, om te annuleren. Annuleren laat de selectie zoals ze is, en de volgende `Escape` heft haar op.
+Druk op `Escape`, of druk nogmaals op dezelfde sneltoets, om te annuleren. Annuleren laat de selectie zoals ze is, en de volgende `Escape` heft haar op.  
+Het tekenen eindigt ook, of alleen het type nu actief is of de oudertabel al is gekozen, wanneer het diagram wordt vervangen: door een `Import` in plaats van het diagram, door het ongedaan maken of opnieuw uitvoeren daarvan, doordat een medebewerker of een codeeragent een van beide doet, en doordat het diagram opnieuw in de editor wordt geladen, zoals Obsidian doet wanneer het bestand buiten Obsidian verandert.  
+Een import van Schema SQL, GraphQL, DBML of AML beëindigt het tekenen zodra de tabellen zijn geplaatst, niet wanneer het bestand wordt gekozen. [`Import and Add`](./file-import-export.md#import-and-add) laat het tekenen actief.
 
 Als de oudertabel is gekozen en je een tabel aanwijst waarop de relatie kan eindigen, wordt die tabel omlijnd en verschijnen ernaast twee knoppen:
 

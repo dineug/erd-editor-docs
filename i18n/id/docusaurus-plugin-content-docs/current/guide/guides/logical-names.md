@@ -54,7 +54,8 @@ Tampilan `Physical Names` tidak menampilkan nama logis, jadi ganti ke tampilan `
 - Dalam tampilan `Both Names`, sel nama logis berisi nama logis dan sel nama berisi nama fisik.
 
 Sel nama logis diedit seperti sel lainnya: mulai dengan `Enter` atau klik dua kali — lihat [Pengeditan tabel](./table-editing.md). Saat dibuka pada nama logis yang kosong, editor menampilkan apa yang tadinya ditampilkan sel sebagai placeholder-nya: nama dalam tampilan `Logical Names`, `logical` dalam tampilan `Both Names`.  
-Mengetik hanya menulis nama logis. Nama fisik dihasilkan darinya begitu editor ditutup (`Enter`, `Tab`, `Escape`, atau klik di tempat lain) dengan nama logis yang telah berubah, sebagai langkah pembatalan tersendiri setelah ketikan Anda. Nama fisik yang Anda tulis sendiri dibiarkan apa adanya — lihat [Menghasilkan nama fisik](./dictionary.md#deriving-physical-names).
+Mengetik hanya menulis nama logis. Nama fisik dihasilkan darinya begitu editor ditutup (`Enter`, `Tab`, `Escape`, atau klik di tempat lain) dengan nama logis yang telah berubah, sebagai langkah pembatalan tersendiri setelah ketikan Anda. Nama fisik yang Anda tulis sendiri dibiarkan apa adanya — lihat [Menghasilkan nama fisik](./dictionary.md#deriving-physical-names).  
+Saat kolaborator atau agen pemrograman mengganti diagram selagi sel nama logis terbuka, editor sel tetap terbuka selama diagram baru masih memiliki tabel atau kolom itu dan Tampilan Nama Anda masih menampilkan sel tersebut. Memuat ulang diagram ke editor, seperti yang dilakukan Obsidian saat file berubah di luarnya, langsung menutup editor sel. Dalam kedua kasus, penutupan menghasilkan nama fisik hanya jika tabel atau kolom memuat nama logis yang Anda ketik, tidak pernah dari nama yang dibawa diagram baru.
 
 `Tab` dan `Shift + Tab` menelusuri sel yang ditampilkan dalam tampilan tersebut, sesuai urutannya — lihat [Tombol Tab](./table-editing.md#tab-key):
 

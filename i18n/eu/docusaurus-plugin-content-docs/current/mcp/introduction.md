@@ -66,4 +66,7 @@ Izen logikoetarako, domeinuetarako eta hiztegietarako tresnek `1.1.0` edo berria
 Goiko bertsioen artean, `4.2.0` bertsioa baino lehenagoko luzapen batek edo `1.2.0` bertsioa baino lehenagoko plugin batek agenteari zuzenean editatzen uzten dio oraindik, protokoloaren 2. bertsioa erabiltzen baitu, baina ez die jaramonik egiten agenteak idazten dituen izen logikoei, domeinu-loturei eta hiztegietako errenkadei, eta kanpoan uzten ditu fitxategia gordetzean.
 `1.1.0` bertsioa baino lehenagoko zerbitzari batek, fitxategi bat diskoan editatzen duenean, haren izen logikoak, domeinu-loturak eta hiztegietako errenkadak gabe idazten du berriro. Ikus [Eguneratzea](./installation.md#updating).
 
+Zuk eta agenteak une berean izen edo eremu berari, edo taula, ohar edo taula-talde beraren kokapenari edo tamainari egindako edizioak berdin amaitzen dira editorean eta agentearentzat, `1.2.0` edo berriagoa den zerbitzariarekin eta, dokumentua irekita dagoen tokian, VS Code luzapenaren `4.3.0` edo berriagoarekin edo Obsidian edo JetBrains pluginaren `1.3.0` edo berriagoarekin.
+Kolorea, datu-basea eta taula edo indize bateko zutabeen ordena salbuespenak dira. Ikus [Une berean egindako edizioak](./live-and-headless.md#edits-made-at-the-same-moment).
+
 Hurrengoa: [Instalazioa](./installation.md).

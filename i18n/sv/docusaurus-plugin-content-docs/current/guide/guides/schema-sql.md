@@ -49,7 +49,7 @@ SQL-koden använder då den närmaste form som databasen har, och knappen för d
 
 `Bracket` anger vilket citattecken som omger tabell-, kolumn-, begränsnings- och indexnamn: `SingleQuote`, `DoubleQuote`, `Backtick` eller `None` för inga citattecken alls, vilket är standard. Det är samma inställning som i kodgeneratorn – se [Citattecken](./code-generator.md#bracket).  
 Snowflake, som bara sätter namn inom dubbla citattecken, använder dem vid alla val utom `None`, och Databricks sätter alltid namn inom grava accenter.  
-`Bracket` sparas bara i filen medan låset `Bracket Type` på fliken Inställningar är av, och i ett nytt diagram är alla lås på. Medan låset är på skriver en ändring om SQL-koden på din skärm, men filen behåller det låsta värdet och diagrammet öppnas igen med det – se [Lås](./settings.md#lock).
+`Bracket` sparas bara i filen medan låset `Bracket Type` på fliken Inställningar är av, och i ett nytt diagram är alla lås på. Medan låset är på skriver en ändring om SQL-koden bara i din editor: de andra editorerna som är öppna på diagrammet behåller sina egna citattecken, och filen behåller det låsta värdet, så diagrammet öppnas igen med det – se [Lås](./settings.md#lock).
 
 Medan databasen är Oracle och SQL-koden innehåller ett namn som är längre än 30 byte, vilket Oracle 12.1 och äldre inte godtar, namnger en notering under de två listorna vart och ett av dem: `Oracle 12.2+ for names over 30 bytes: <names>`. Den kontrollerar tabell-, kolumn-, schema-, nyckel-, index-, sekvens- och triggernamn. Själva SQL-koden ändras inte.
 
@@ -224,7 +224,7 @@ Hur de här kommentarerna läses in igen vid import beskrivs i [Kommentarer](./f
 
 I en editor med [`readonly`](../../api/erd-editor-element.md#readonly) fungerar fliken för läsaren, och ingenting som görs på den når dokumentet:
 
-- `Database` och `Bracket` skriver fortfarande om SQL-koden, men bara i det fönstret, så panelen rubricerar dem också `This window only`. Ett val sparas inte i filen, delas inte med medarbetare och registreras inte för ångra, oavsett lås, och en medarbetares ändring av en inställning som du har valt lämnar ditt val kvar på skärmen. Fliken Kodgenerator visar samma val, och [`getSchemaSQL()`](../../api/erd-editor-element.md#getschemasql) som anropas utan databas skriver det också. När editorn blir skrivbar igen kommer dokumentets databas och citattecken tillbaka.
+- `Database` och `Bracket` skriver fortfarande om SQL-koden, men bara i det fönstret, så panelen rubricerar dem också `This window only`. Ett val sparas inte i filen, delas inte med medarbetare och registreras inte för ångra, oavsett lås, och en medarbetares ändring av en inställning som du har valt lämnar ditt val kvar på skärmen. Fliken Kodgenerator visar samma val, och [`getSchemaSQL()`](../../api/erd-editor-element.md#getschemasql) som anropas utan databas skriver det också. När editorn blir skrivbar igen går databasen och citattecknen som du valde tillbaka till det som editorn visade förut, med eventuella ändringar som en medarbetare har gjort sedan dess – se [Skrivskyddade editorer](./settings.md#read-only-editors) i Inställningar.
 - `Statements`, `Header`, `Write logical names into empty comments` och `Tables` fungerar som överallt annars, eftersom de redan hör till fönstret.
 - De två skriptfälten är skrivskyddade: de visar dokumentets skript, som SQL-koden fortfarande skriver, och tar inte emot någon inmatning.
 - `Save file` och `Copy` sparar och kopierar den SQL-kod som fliken visar.

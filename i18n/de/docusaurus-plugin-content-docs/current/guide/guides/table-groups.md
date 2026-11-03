@@ -55,9 +55,12 @@ Die Gruppe und die Tabellen, die sie aufnimmt, sind ein Rückgängig-Schritt, un
 ## Gruppe benennen {#naming-a-group}
 
 Der Name einer Gruppe wird in einem Feld bearbeitet, das sich über ihrer Titelleiste öffnet. Es öffnet sich von selbst, sobald eine Gruppe erstellt wird, bei einem Doppelklick auf die Titelleiste und über `Rename` im Kontextmenü der Gruppe.  
-`Enter` oder ein Klick an eine andere Stelle speichert den Namen. `Escape` schließt das Feld, ohne den Namen zu ändern, und lässt die Gruppe ausgewählt, und ein zweites `Escape` hebt die Auswahl auf.  
+`Enter`, ein Klick an eine andere Stelle oder das Ausblenden der Gruppen, ganz gleich, ob Sie oder ein Mitbearbeiter sie ausblenden, speichert den Namen. `Escape` schließt das Feld, ohne den Namen zu ändern, und lässt die Gruppe ausgewählt, und ein zweites `Escape` hebt die Auswahl auf.  
 Ein geänderter Name ist ein Rückgängig-Schritt; wird der Name unverändert gespeichert, wird nichts aufgezeichnet. Ein leerer oder nur aus Leerzeichen bestehender Name wird als `unnamed` angezeigt.  
-Solange das Feld geöffnet ist, sind die Tastenkombinationen der Zeichenfläche unterdrückt, und die Tastenkombinationen für die Schnellsuche und `Toggle Explorer` bewirken nichts, wie beim Bearbeiten einer Tabellenzelle.
+Solange das Feld geöffnet ist, sind die Tastenkombinationen der Zeichenfläche unterdrückt, und die Tastenkombinationen für die Schnellsuche und `Toggle Explorer` bewirken nichts, wie beim Bearbeiten einer Tabellenzelle.  
+Ersetzt ein Mitbearbeiter oder ein Coding-Agent das Diagramm, während das Feld geöffnet ist, bleibt das Feld offen, solange das neue Diagramm die Gruppe noch hat und die Gruppen zeigt.  
+Hat dieses Diagramm die Gruppe nicht mehr, schließt sich das Feld und speichert nichts; hat es die Gruppe, blendet aber die Gruppen aus, schließt sich das Feld und speichert einen geänderten Namen.  
+Wird das Diagramm erneut in den Editor geladen, wie es Obsidian tut, wenn sich die Datei außerhalb ändert, schließt sich das Feld und der getippte Name wird verworfen. Tasten, die danach gedrückt werden, gehen nirgendwohin, bis Sie in den Editor klicken, sodass ein `Delete` oder `Backspace`, das dem Namen galt, nichts entfernt.
 
 [Suchen und Ersetzen](./find-and-replace.md#what-it-searches) durchsucht Gruppennamen unter `Table group names`, solange Gruppen eingeblendet sind, und seine Schaltflächen `Replace` und `Replace All` benennen Gruppen um – siehe [Ersetzen](./find-and-replace.md#replacing). Die [Schnellsuche](./quick-search.md#searching-the-diagram) durchsucht keine Gruppennamen.
 
@@ -157,7 +160,7 @@ Das Kontextmenü einer Tabelle ergänzt `Group selected tables` und `Remove from
 
 `View Option` → `Table Groups` im Kontextmenü der Zeichenfläche blendet alle Gruppen ein oder aus. Die Option ist standardmäßig angehakt – siehe [Ansichtsoptionen für Tabellen](./table-related-functions.md#table-view-options).  
 Ohne Haken verschwinden die Gruppenrahmen und die Gruppenfarben auf den Tabellenköpfen von der Zeichenfläche, aus der Minimap und aus exportierten Bildern, und die Scrollleisten und die Minimap halten keinen Platz mehr für die Gruppen frei. Nichts wird verschoben oder in der Größe geändert, und jede Tabelle bleibt in ihrer Gruppe.  
-Das Ausblenden der Gruppen hebt ihre Auswahl auf, beendet ein Zeichnen mit `New Table Group` und schließt ein geöffnetes Namensfeld.
+Das Ausblenden der Gruppen hebt ihre Auswahl auf, beendet ein Zeichnen mit `New Table Group` und schließt ein geöffnetes Namensfeld, wie es ein Klick an eine andere Stelle tut – siehe [Gruppe benennen](#naming-a-group).
 
 Solange Gruppen ausgeblendet sind:
 

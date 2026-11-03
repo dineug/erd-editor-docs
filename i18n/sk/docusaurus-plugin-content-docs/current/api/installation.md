@@ -51,18 +51,18 @@ Zvyšok API opisuje stránka [ErdEditorElement](./erd-editor-element.md).
 
 ```html
 <script type="module">
-  import 'https://esm.run/@dineug/erd-editor@5.0.0/erd-editor.js';
+  import 'https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js';
 
   const editor = document.createElement('erd-editor');
   editor.style.cssText = 'display: block; width: 100%; height: 100vh;';
   document.body.appendChild(editor);
 </script>
 <!-- or -->
-<script type="module" src="https://esm.run/@dineug/erd-editor@5.0.0/erd-editor.js"></script>
+<script type="module" src="https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js"></script>
 ```
 
 Služba `esm.run` za vás rozrieši externé závislosti balíka, takže tento spôsob funguje bez bundlera.
-Každý vstupný bod sa dosiahne cestou za verziou: `…/erd-editor.js` definuje editor a `…/erd-viewer.js` prehliadač, ktorý stiahne každý jazyk zobrazenia okrem angličtiny z CDN, až keď si ho stránka vyžiada. Adresa URL samotného balíka, `https://esm.run/@dineug/erd-editor@5.0.0`, poskytuje koreň, ktorý nedefinuje žiadny element.
+Každý vstupný bod sa dosiahne cestou za verziou: `…/erd-editor.js` definuje editor a `…/erd-viewer.js` prehliadač, ktorý stiahne každý jazyk zobrazenia okrem angličtiny z CDN, až keď si ho stránka vyžiada. Adresa URL samotného balíka, `https://esm.run/@dineug/erd-editor@5.1.0`, poskytuje koreň, ktorý nedefinuje žiadny element.
 Adresa URL bez verzie vždy poskytuje najnovšie vydanie. Ak nechcete, aby sa na vašu stránku bez ohlásenia dostala nová hlavná verzia, pripnite si verziu, ako je uvedené vyššie.
 Verzia `5.0.0` je práve takou novou hlavnou verziou: stránka, ktorá musí zostať na verzii 4.x, si pripne `@4.2.0` – pozrite si časť [Prechod z verzie 4.x](#upgrading-from-4x).
 
@@ -75,7 +75,7 @@ Práve naň odkazujú polia `unpkg` a `jsdelivr`, takže ho na oboch CDN poskytu
 
 ```html
 <erd-editor></erd-editor>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.0.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0"></script>
 <script>
   const editor = document.querySelector('erd-editor');
   editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
@@ -88,7 +88,7 @@ Od verzie `5.0.0` druhý súbor, `dist/erd-viewer.umd.js`, definuje `<erd-viewer
 
 ```html
 <erd-viewer src="diagram.erd.json" style="display: block; height: 480px"></erd-viewer>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.0.0/dist/erd-viewer.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0/dist/erd-viewer.umd.js"></script>
 ```
 
 Ani jeden súbor nedefinuje značku toho druhého a každý nechá na stránke iba svoj vlastný globálny objekt a `window.Konva`.
@@ -100,7 +100,7 @@ Stránka, ktorá nemôže načítať vlastný skript, môže namiesto toho vlož
 ```html
 <erd-editor system-dark-mode enable-theme-builder enable-locale-picker enable-welcome-screen></erd-editor>
 <script type="module">
-  import 'https://esm.run/@dineug/erd-editor@5.0.0/erd-editor.js';
+  import 'https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js';
 
   const editor = document.querySelector('erd-editor');
 </script>
@@ -161,7 +161,7 @@ const found = document.querySelector('erd-editor'); // ErdEditorElement | null
 ```
 
 Typ `ErdEditorElement` sa exportuje na typové anotácie vašich vlastných premenných a vlastností (props). Od verzie `5.0.0` je to aj trieda elementu a `ErdViewerElement` je rozhranie a trieda prehliadača – pozrite si časť [Registrácia elementov](#registering-the-elements).
-Od verzie `4.0.0` balík exportuje aj typy `LocaleCode`, `LocaleOption` a `SchemaSQLOptions` a od verzie `5.0.0` `ToImageOptions` – pozrite si časť [Vstupné body](#entry-points). Možnosti, ktoré prijímajú metódy `setSchema*()`, nemajú exportovaný názov; odvoďte ich z elementu ako `Parameters<ErdEditorElement['setSchemaSQL']>[1]`.
+Od verzie `4.0.0` balík exportuje aj typy `LocaleCode`, `LocaleOption` a `SchemaSQLOptions` a od verzie `5.0.0` `ToImageOptions` – pozrite si časť [Vstupné body](#entry-points). Možnosti, ktoré prijímajú metódy `setSchema*()`, nemajú exportovaný názov; odvoďte ich z elementu ako `Parameters<ErdEditorElement['setSchemaSQL']>[1]`. To isté platí pre [zdieľané úložisko](./advanced/collaborative-editing.md) a jeho typy.
 Od verzie `5.0.0` pole `typesVersions` v balíku určuje typy každého vstupného bodu podcesty aj pri `moduleResolution: "node10"`, ktoré nečíta mapu exportov.
 
 ## Registrácia elementov {#registering-the-elements}
@@ -259,7 +259,7 @@ Balík má päť vstupných bodov:
 | `@dineug/erd-editor/erd-editor.js` | Od verzie `5.0.0`. Definuje `<erd-editor>` a nič neexportuje |
 | `@dineug/erd-editor/erd-viewer.js` | Od verzie `5.0.0`. Definuje `<erd-viewer>` a nič neexportuje |
 | `@dineug/erd-editor/engine.js` | Úložisko dokumentu bez DOM |
-| `@dineug/erd-editor/peer.js` | Od verzie `3.9.1`. Účastník bez používateľského rozhrania servera MCP |
+| `@dineug/erd-editor/peer.js` | Od verzie `3.9.1`. Účastník bez používateľského rozhrania servera MCP a od verzie `5.1.0` aj [väzby Yjs](./advanced/yjs.md) |
 
 Koreň exportuje obe triedy elementov a ich funkcie define, dva settery spätných volaní, od verzie `3.9.2` predvolené klávesové skratky s ich typmi, od verzie `4.0.0` typy jazykov zobrazenia a typ možností metódy `getSchemaSQL()`, od verzie `4.2.0` kombinácie klávesov pre riadky na karte Slovník a od verzie `5.0.0` `toImage`.
 
@@ -289,7 +289,9 @@ Od verzie `5.0.0` obsahuje `dist` jeden neminifikovaný súbor na modul, každý
 Exportuje funkciu `createReplicationStore` a typ `ReplicationStore`. Od verzie `3.10.0` exportuje aj typ `ReplicationChange`, `{ value: string; changed: boolean }`, ktorý dostáva poslucháč udalosti `change` repliky – pozrite si časť [on@change](./advanced/remote-storage.md#onchange).
 Od verzie `4.0.0` má objekt `ReplicationStore` aj vlastnosť `runtimeValue`. Jeho vlastnosť `value` a hodnota, ktorú odovzdá udalosť `change`, sú v úložnej forme, v akej ich uchováva súbor, rovnako ako v prípade elementu – pozrite si časť [ReplicationStore](./advanced/remote-storage.md#replicationstore).
 
-`@dineug/erd-editor/peer.js` je účastník bez používateľského rozhrania (headless), prostredníctvom ktorého [server MCP](../mcp/introduction.md) upravuje dokument. Existuje pre tento server a tieto stránky ho neopisujú.
+`@dineug/erd-editor/peer.js` je účastník bez používateľského rozhrania (headless), prostredníctvom ktorého [server MCP](../mcp/introduction.md) upravuje dokument.
+Od verzie `5.1.0` je to aj to, čo funkcia `bindPeerStore` z balíka `@dineug/erd-editor-yjs` previaže s dokumentom `Y.Doc`: úložisko účastníka vytvorené volaním `createPeerStore()` tohto vstupného bodu, ako člen miestnosti bez používateľského rozhrania alebo ako zhutňovač, ktorý zlučuje históriu miestnosti.
+Nad rámec toho, čo o ňom ukazuje stránka [Yjs](./advanced/yjs.md) – volanie `createPeerStore()`, vlastnosť `value` previazaného úložiska účastníka a jeho metóda `destroy()` –, ho tieto stránky neopisujú.
 
 ### Dialógové okná súborov {#file-dialogs}
 
@@ -369,11 +371,11 @@ Verzia `5.0.0` je novou hlavnou verziou. Pri prechode stránky z verzie 4.x skon
    import { setExportFileCallback } from '@dineug/erd-editor';
   ```
 
-- Na CDN platí to isté pre `https://esm.run/@dineug/erd-editor`, ktorá teraz poskytuje koreň a nič nedefinuje: importujte `https://esm.run/@dineug/erd-editor@5.0.0/erd-editor.js`. Holé adresy jsDelivr a unpkg naďalej poskytujú zostavenie pre značku script, ktoré definuje `<erd-editor>` ako predtým. Adresa URL bez verzie teraz poskytuje najnovšie vydanie 5.x; pripnite `@4.2.0`, ak chcete zostať na verzii 4.x – pozrite si časti [CDN](#cdn) a [Značka script](#script-tag).
+- Na CDN platí to isté pre `https://esm.run/@dineug/erd-editor`, ktorá teraz poskytuje koreň a nič nedefinuje: importujte `https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js`. Holé adresy jsDelivr a unpkg naďalej poskytujú zostavenie pre značku script, ktoré definuje `<erd-editor>` ako predtým. Adresa URL bez verzie teraz poskytuje najnovšie vydanie 5.x; pripnite `@4.2.0`, ak chcete zostať na verzii 4.x – pozrite si časti [CDN](#cdn) a [Značka script](#script-tag).
 - Koreň nedefinuje nič, ale stále potrebuje DOM, takže pri vykresľovaní na strane servera zostáva pomenovaný import z neho, napríklad `setExportFileCallback`, v kóde, ktorý beží iba na klientovi, vedľa vstupného bodu elementu – pozrite si časť [Vykresľovanie na strane servera](#server-side-rendering).
 - Objekt `window.ErdEditor` získal `ErdEditorElement` a `defineErdEditor`. Zostavenie prehliadača pre značku script vkladá `ErdViewerElement` a `defineErdViewer` do objektu `window.ErdViewer` a ani jeden globálny objekt neobsahuje `toImage`.
 - Editor s `readonly` sa otvorí ako čitateľ. Zostanú jeho šesť kariet, prieskumník, rýchle vyhľadávanie a prítomnosť a každý ovládací prvok, ktorý by upravoval diagram, zmizne namiesto toho, aby bol vypnutý: panel nástrojov zobrazuje názov databázy ako text, karta Nastavenia zobrazuje svoje nastavenia so všetkými ovládacími prvkami vypnutými pod odznakom `Read only` a plávajúci panel nástrojov si ponecháva iba priblíženie, Zobrazenie názvov, režim Zen a kompas, takže `Hand` a `Select` zmizli a ťahanie posúva plátno. Stlačenie nič nevyberie: jediným výberom je obrys, ktorý skok z prieskumníka alebo rýchleho vyhľadávania vloží okolo toho, k čomu sa dostane, a nehybné kliknutie ho zruší, a skratky na výber všetkého nič nevyberú. Zapnutie `readonly` ukončí všetko, čo bolo otvorené, napríklad výber, nástroj Ruka, editor bunky, ťahanie, Map Columns, náhľad `Force` automatického rozloženia a Time Travel, a ponechá posunutie, priblíženie, kartu a Zobrazenie názvov – pozrite si časť [readonly](./erd-editor-element.md#readonly).
-- Nastavenia, ktoré čitateľ s `readonly` zmení, zostávajú na obrazovke tohto editora bez ohľadu na ich zamknutia: posunutie a priblíženie, karta, Zobrazenie názvov, View Option, databáza a jazyk, štýly názvov a typ úvodzoviek Generátora kódu. `value`, `runtimeValue` a export JSON si ponechávajú vlastné hodnoty dokumentu, ku ktorým sa zmeny čitateľa vo verzii 4.x mohli dostať, a `getSharedStore()` žiadnu z nich neodosiela ostatným editorom. `getSchemaSQL()` bez databázového systému zapíše databázu, ktorú čitateľ vybral. Vypnutie `readonly` vráti databázu, nastavenia kódu a View Option na hodnoty dokumentu a posunutie, priblíženie, kartu a Zobrazenie názvov ponechá tam, kde ich čitateľ nechal.
+- Nastavenia, ktoré čitateľ s `readonly` zmení, zostávajú na obrazovke tohto editora bez ohľadu na ich zamknutia: posunutie a priblíženie, karta, Zobrazenie názvov, View Option, databáza a jazyk, štýly názvov a typ úvodzoviek Generátora kódu. `value`, `runtimeValue` a export JSON si ponechávajú vlastné hodnoty dokumentu, ku ktorým sa zmeny čitateľa vo verzii 4.x mohli dostať, a `getSharedStore()` žiadnu z nich neodosiela ostatným editorom. `getSchemaSQL()` bez databázového systému zapíše databázu, ktorú čitateľ vybral. Vypnutie `readonly` vráti databázu, nastavenia kódu a View Option na to, čo by tento editor ukazoval, keby čitateľ nič nezmenil, a posunutie, priblíženie, kartu a Zobrazenie názvov ponechá tam, kde ich čitateľ nechal.
 - Riadok `Recalculation table width` na karte Nastavenia zanikol. Načítanie a prilepenie naďalej prispôsobia šírku každej tabuľky jej textu.
 - Vo Vite 8 odstráňte `exclude: ['@dineug/erd-editor']` z `optimizeDeps`, ktoré ešte potrebuje iba Vite 7 a staršie, a ponechajte `include` pre ELK – pozrite si časť [Vite](#vite).
 

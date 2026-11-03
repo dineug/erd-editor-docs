@@ -54,7 +54,8 @@ O fereastră VS Code deservește diagramele din folderele spațiului său de luc
 3. Lăsați activată setarea `dineug.erd-editor.agentHub.enabled`. Este activată implicit.
 
 O extensie de la versiunea `3.0.0` până la versiunea `3.1.0` și versiunea `1.0.0` sau o versiune ulterioară a serverului se refuză reciproc, iar o extensie anterioară versiunii `3.0.0` nu deservește niciun agent.
-O extensie în versiunea `4.0.0` sau `4.1.0` se conectează, dar nici nu afișează, nici nu păstrează numele logice, legăturile cu domeniile și rândurile dicționarelor pe care le scrie agentul (consultați [Actualizarea](#updating)).
+O extensie în versiunea `4.0.0` sau `4.1.0` se conectează, dar nici nu afișează, nici nu păstrează numele logice, legăturile cu domeniile și rândurile dicționarelor pe care le scrie agentul.
+Cu o extensie anterioară versiunii `4.3.0`, un tabel, o notă sau un grup de tabele pe care dumneavoastră și agentul le mutați sau le redimensionați în același moment pot ajunge în locuri diferite la dumneavoastră și la agent (consultați [Actualizarea](#updating)).
 
 Extensia pornește într-un spațiu de lucru care conține fișiere `.erd`, `.erd.json`, `.vuerd` sau `.vuerd.json`, așa că un agent ajunge la acele diagrame înainte să deschideți vreuna.
 Într-un spațiu de lucru fără niciunul dintre ele, pornește când deschideți o diagramă, iar până atunci agentul editează pe disc.
@@ -71,7 +72,8 @@ Fereastra unui seif Obsidian deservește diagramele din seiful respectiv.
 2. Lăsați activată opțiunea Settings → ERD Editor → Coding agents. Este activată implicit, iar fiecare seif își păstrează propria setare.
 
 Un plugin anterior versiunii `1.0.0` și versiunea `1.0.0` sau o versiune ulterioară a serverului se refuză reciproc.
-Un plugin în versiunea `1.0.0` sau `1.1.0` se conectează, dar nici nu afișează, nici nu păstrează numele logice, legăturile cu domeniile și rândurile dicționarelor pe care le scrie agentul (consultați [Actualizarea](#updating)).
+Un plugin în versiunea `1.0.0` sau `1.1.0` se conectează, dar nici nu afișează, nici nu păstrează numele logice, legăturile cu domeniile și rândurile dicționarelor pe care le scrie agentul.
+Cu un plugin anterior versiunii `1.3.0`, un tabel, o notă sau un grup de tabele pe care dumneavoastră și agentul le mutați sau le redimensionați în același moment pot ajunge în locuri diferite la dumneavoastră și la agent (consultați [Actualizarea](#updating)).
 
 Fereastra unui seif deservește agenții din momentul în care se încarcă pluginul, așa că un agent ajunge la diagramele seifului înainte să deschideți vreuna.
 Nu există niciun pas de acordare a încrederii.
@@ -98,7 +100,8 @@ Un IDE JetBrains deservește diagramele fiecărui proiect deschis în el și ori
 3. Lăsați bifată opțiunea Settings | Tools | ERD Editor → Coding agents. Este activată implicit și se aplică întregului IDE.
 
 Un plugin în versiunea `0.9.0` sau `0.10.0` și versiunea `1.0.0` sau o versiune ulterioară a serverului se refuză reciproc, iar un plugin anterior versiunii `0.9.0` nu deservește niciun agent.
-Un plugin în versiunea `1.0.0` sau `1.1.0` se conectează, dar nici nu afișează, nici nu păstrează numele logice, legăturile cu domeniile și rândurile dicționarelor pe care le scrie agentul (consultați [Actualizarea](#updating)).
+Un plugin în versiunea `1.0.0` sau `1.1.0` se conectează, dar nici nu afișează, nici nu păstrează numele logice, legăturile cu domeniile și rândurile dicționarelor pe care le scrie agentul.
+Cu un plugin anterior versiunii `1.3.0`, un tabel, o notă sau un grup de tabele pe care dumneavoastră și agentul le mutați sau le redimensionați în același moment pot ajunge în locuri diferite la dumneavoastră și la agent (consultați [Actualizarea](#updating)).
 
 IDE-ul deservește agenții din momentul în care se deschide primul proiect, așa că un agent ajunge la diagramele unui proiect înainte să deschideți vreuna.
 
@@ -144,6 +147,11 @@ Doar extensia pentru VS Code `4.2.0` sau o versiune ulterioară și pluginurile 
 O extensie sau un plugin dintr-o versiune anterioară care se conectează le ignoră, deși apelul agentului reușește.
 Aplică totuși numele fizice pe care le derivă dicționarele și tipurile de date pe care le dau domeniile.
 Un server anterior versiunii `1.1.0` citește un fișier fără numele logice, legăturile cu domeniile și rândurile dicționarelor și le omite când editează fișierul pe disc (consultați [Fără interfață](./live-and-headless.md#headless)).
+
+Serverul `1.2.0` vorbește și el protocolul 2 și nu adaugă, nu elimină și nu redenumește niciun instrument și nu schimbă niciun argument.
+Dar o mutare sau o redimensionare pe care dumneavoastră și agentul o faceți în același moment aceluiași tabel, aceleiași note sau aceluiași grup de tabele ajunge la fel în editor și pentru agent doar când serverul este `1.2.0` sau o versiune ulterioară, iar editorul are extensia pentru VS Code `4.3.0` sau o versiune ulterioară ori pluginul pentru Obsidian sau JetBrains `1.3.0` sau o versiune ulterioară.
+Dacă oricare dintre părți este mai veche, editorul și agentul pot ajunge cu poziții diferite, iar agentul continuă să citească și să editeze de la propria poziție până când o mutare ulterioară pune ambele părți pe același punct sau agentul se alătură din nou documentului (consultați [Editări făcute în același moment](./live-and-headless.md#edits-made-at-the-same-moment)).
+Niciuna dintre aceste versiuni nu schimbă ce conține un fișier.
 
 Actualizați, de asemenea, ERD Editor oriunde sunt deschise diagramele.
 Extensia pentru VS Code anterioară versiunii `4.2.0`, pluginul pentru Obsidian anterior versiunii `1.2.0` și pluginul pentru JetBrains anterior versiunii `1.2.0` deschid o diagramă salvată de o versiune ulterioară, sau editată de agent pe disc, fără numele logice ale tabelelor și coloanelor, fără legăturile coloanelor cu domeniile și fără cuvintele, termenii și domeniile ei.

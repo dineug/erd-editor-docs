@@ -51,18 +51,18 @@ APIaren gainerakorako, ikus [ErdEditorElement](./erd-editor-element.md).
 
 ```html
 <script type="module">
-  import 'https://esm.run/@dineug/erd-editor@5.0.0/erd-editor.js';
+  import 'https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js';
 
   const editor = document.createElement('erd-editor');
   editor.style.cssText = 'display: block; width: 100%; height: 100vh;';
   document.body.appendChild(editor);
 </script>
 <!-- or -->
-<script type="module" src="https://esm.run/@dineug/erd-editor@5.0.0/erd-editor.js"></script>
+<script type="module" src="https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js"></script>
 ```
 
 `esm.run` zerbitzuak paketearen kanpoko mendekotasunak ebazten ditu zure ordez; beraz, honek paketatzailerik gabe funtzionatzen du.
-Sarrera bakoitza bertsioaren ondorengo bidearen bidez lortzen da: `…/erd-editor.js` bidez editorea definitzen da, eta `…/erd-viewer.js` bidez ikustailea, zeinak ingelesa ez diren bistaratze-hizkuntza bakoitza CDNtik eskuratzen baitu orri batek eskatzen duenean. Paketaren URL soilak, `https://esm.run/@dineug/erd-editor@5.0.0`, erroa zerbitzatzen du, eta honek ez du elementurik definitzen.
+Sarrera bakoitza bertsioaren ondorengo bidearen bidez lortzen da: `…/erd-editor.js` bidez editorea definitzen da, eta `…/erd-viewer.js` bidez ikustailea, zeinak ingelesa ez diren bistaratze-hizkuntza bakoitza CDNtik eskuratzen baitu orri batek eskatzen duenean. Paketaren URL soilak, `https://esm.run/@dineug/erd-editor@5.1.0`, erroa zerbitzatzen du, eta honek ez du elementurik definitzen.
 Bertsiorik gabeko URLak beti azken bertsioa zerbitzatzen du. Finkatu bertsio bat, goian bezala, ez baduzu nahi eguneratze nagusi bat abisurik gabe zure orrira iristea.
 `5.0.0` bertsioa bera da horietako bat: 4.x bertsioan geratu behar duen orri batek `@4.2.0` bertsioa finkatzen du. Ikus [4.x bertsiotik eguneratzea](#upgrading-from-4x).
 
@@ -75,7 +75,7 @@ Bertsiorik gabeko URLak beti azken bertsioa zerbitzatzen du. Finkatu bertsio bat
 
 ```html
 <erd-editor></erd-editor>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.0.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0"></script>
 <script>
   const editor = document.querySelector('erd-editor');
   editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
@@ -88,7 +88,7 @@ Hura kargatzeak `<erd-editor>` definitzen du. `window.ErdEditor` objektuak fitxa
 
 ```html
 <erd-viewer src="diagram.erd.json" style="display: block; height: 480px"></erd-viewer>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.0.0/dist/erd-viewer.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0/dist/erd-viewer.umd.js"></script>
 ```
 
 Fitxategi batek ere ez du besteren etiketa definitzen, eta bakoitzak ez du orrian bere globala eta `window.Konva` baizik uzten.
@@ -100,7 +100,7 @@ Bere script propioa kargatu ezin duen orri batek erd-editor.io/embed helbideko i
 ```html
 <erd-editor system-dark-mode enable-theme-builder enable-locale-picker enable-welcome-screen></erd-editor>
 <script type="module">
-  import 'https://esm.run/@dineug/erd-editor@5.0.0/erd-editor.js';
+  import 'https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js';
 
   const editor = document.querySelector('erd-editor');
 </script>
@@ -161,7 +161,7 @@ const found = document.querySelector('erd-editor'); // ErdEditorElement | null
 ```
 
 `ErdEditorElement` esportatzen da, zure aldagaiei eta propietateei mota esleitzeko. `5.0.0` bertsiotik aurrera elementuaren klasea ere bada, eta `ErdViewerElement` ikustailearen interfazea eta klasea da. Ikus [Elementuak erregistratzea](#registering-the-elements).
-`4.0.0` bertsiotik aurrera, paketeak `LocaleCode`, `LocaleOption` eta `SchemaSQLOptions` motak ere esportatzen ditu, eta `5.0.0` bertsiotik aurrera `ToImageOptions`. Ikus [Sarrera-puntuak](#entry-points). `setSchema*()` metodoek hartzen dituzten aukerek ez dute izen esportaturik; atera elementutik, `Parameters<ErdEditorElement['setSchemaSQL']>[1]` bezala.
+`4.0.0` bertsiotik aurrera, paketeak `LocaleCode`, `LocaleOption` eta `SchemaSQLOptions` motak ere esportatzen ditu, eta `5.0.0` bertsiotik aurrera `ToImageOptions`. Ikus [Sarrera-puntuak](#entry-points). `setSchema*()` metodoek hartzen dituzten aukerek ez dute izen esportaturik; atera elementutik, `Parameters<ErdEditorElement['setSchemaSQL']>[1]` bezala. Gauza bera gertatzen da [biltegi partekatuarekin](./advanced/collaborative-editing.md) eta haren motekin.
 `5.0.0` bertsiotik aurrera, paketearen `typesVersions` eremuak azpibide-sarrera bakoitzaren motak ere ematen ditu `moduleResolution: "node10"` konfigurazioan, zeinak ez baitu exports maparik irakurtzen.
 
 ## Elementuak erregistratzea {#registering-the-elements}
@@ -259,7 +259,7 @@ Paketeak bost sarrera ditu:
 | `@dineug/erd-editor/erd-editor.js` | `5.0.0` bertsiotik aurrera. `<erd-editor>` definitzen du eta ez du ezer esportatzen |
 | `@dineug/erd-editor/erd-viewer.js` | `5.0.0` bertsiotik aurrera. `<erd-viewer>` definitzen du eta ez du ezer esportatzen |
 | `@dineug/erd-editor/engine.js` | Dokumentu-biltegia DOMik gabe |
-| `@dineug/erd-editor/peer.js` | `3.9.1` bertsiotik aurrera. MCP zerbitzariaren editorerik gabeko parekoa |
+| `@dineug/erd-editor/peer.js` | `3.9.1` bertsiotik aurrera. MCP zerbitzariaren eta, `5.1.0` bertsiotik aurrera, [Yjs loturaren](./advanced/yjs.md) editorerik gabeko parekoa |
 
 Erroak bi elementu-klaseak eta haien define funtzioak esportatzen ditu, callback funtzioak ezartzeko bi funtzio, `3.9.2` bertsiotik aurrera tekla-konbinazio lehenetsiak beren motekin, `4.0.0` bertsiotik aurrera bistaratze-hizkuntzaren motak eta `getSchemaSQL()` metodoaren aukeren mota, `4.2.0` bertsiotik aurrera Hiztegia fitxako errenkaden tekla-konbinazioak, eta `5.0.0` bertsiotik aurrera `toImage`.
 
@@ -289,7 +289,9 @@ Erroak bi elementu-klaseak eta haien define funtzioak esportatzen ditu, callback
 `createReplicationStore` funtzioa eta `ReplicationStore` mota esportatzen ditu. `3.10.0` bertsiotik aurrera, `ReplicationChange` mota ere esportatzen du, `{ value: string; changed: boolean }`, erreplika baten `change` entzuleak jasotzen duena. Ikus [on@change](./advanced/remote-storage.md#onchange).
 `4.0.0` bertsiotik aurrera, `ReplicationStore` batek `runtimeValue` propietatea ere badu. Haren `value` propietatea eta `change` gertaera batek ematen duena fitxategi batek gordetzen duen biltegiratze-forma dira, elementuarenak bezala. Ikus [ReplicationStore](./advanced/remote-storage.md#replicationstore).
 
-`@dineug/erd-editor/peer.js` [MCP zerbitzariak](../mcp/introduction.md) dokumentu bat editatzeko bitarteko gisa erabiltzen duen editorerik gabeko parekoa da. Zerbitzari horrentzat dago, eta orri hauek ez dute dokumentatzen.
+`@dineug/erd-editor/peer.js` [MCP zerbitzariak](../mcp/introduction.md) dokumentu bat editatzeko bitarteko gisa erabiltzen duen editorerik gabeko parekoa da.
+`5.1.0` bertsiotik aurrera, `@dineug/erd-editor-yjs` paketeko `bindPeerStore` funtzioak `Y.Doc` batera lotzen duena ere bada: sarrera honen `createPeerStore()` deiak egindako pareko-biltegi bat, gela bateko editorerik gabeko kide gisa edo gelaren historia biltzen duen trinkotzaile gisa.
+[Yjs](./advanced/yjs.md) orriak horretaz erakusten duenaz harago — `createPeerStore()` deia, lotutako pareko-biltegi baten `value` eta haren `destroy()` —, orri hauek ez dute dokumentatzen.
 
 ### Fitxategi-elkarrizketak {#file-dialogs}
 
@@ -369,11 +371,11 @@ Ez da polyfillik paketatzen. Gehitu zureak, nabigatzaile zaharragoetara iritsi b
    import { setExportFileCallback } from '@dineug/erd-editor';
   ```
 
-- CDN batean gauza bera gertatzen da `https://esm.run/@dineug/erd-editor` helbidearekin, zeinak orain erroa zerbitzatzen duen eta ezer definitzen ez duen: inportatu `https://esm.run/@dineug/erd-editor@5.0.0/erd-editor.js`. jsDelivr eta unpkg zerbitzuen URL soilek script etiketako konpilazioa zerbitzatzen jarraitzen dute, lehen bezala `<erd-editor>` definitzen duena. Bertsiorik gabeko URL batek orain azken 5.x bertsioa zerbitzatzen du; finkatu `@4.2.0` 4.x bertsioan geratzeko. Ikus [CDN](#cdn) eta [Script etiketa](#script-tag).
+- CDN batean gauza bera gertatzen da `https://esm.run/@dineug/erd-editor` helbidearekin, zeinak orain erroa zerbitzatzen duen eta ezer definitzen ez duen: inportatu `https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js`. jsDelivr eta unpkg zerbitzuen URL soilek script etiketako konpilazioa zerbitzatzen jarraitzen dute, lehen bezala `<erd-editor>` definitzen duena. Bertsiorik gabeko URL batek orain azken 5.x bertsioa zerbitzatzen du; finkatu `@4.2.0` 4.x bertsioan geratzeko. Ikus [CDN](#cdn) eta [Script etiketa](#script-tag).
 - Erroak ezer definitzen ez badu ere DOM bat behar du; beraz, zerbitzari aldeko errendatzearekin, haren izendun inportazio bat, hala nola `setExportFileCallback`, bezeroan soilik exekutatzen den bidean geratzen da elementuaren sarreraren ondoan. Ikus [Zerbitzari aldeko errendatzea](#server-side-rendering).
 - `window.ErdEditor` objektuak `ErdEditorElement` eta `defineErdEditor` irabazten ditu. Ikustailearen script etiketako konpilazioak `ErdViewerElement` eta `defineErdViewer` jartzen ditu `window.ErdViewer` objektuan, eta bietako globalak ez du `toImage` daramanik.
 - `readonly` editore bat irakurle gisa irekitzen da. Haren sei fitxak, Arakatzailea, Bilaketa azkarra eta presentzia geratzen dira, eta diagrama editatuko lukeen kontrol oro desgaitu beharrean desagertzen da: tresna-barrak datu-basearen izena testu gisa erakusten du, Ezarpenak fitxak bere ezarpenak erakusten ditu kontrol guztiak desgaituta `Read only` etiketa baten azpian, eta tresna-barra flotatzaileak zooma, Izenen ikuspegia, zen modua eta iparrorratza baino ez ditu mantentzen; beraz, `Hand` eta `Select` desagertu dira eta arrastatze batek ikuspegia mugitzen du. Sakatzeak ez du ezer hautatzen: hautapen bakarra Arakatzailetik edo Bilaketa azkarretik egindako jauzi batek iristen den elementuaren inguruan jartzen duen ingerada da, klik geldi batek garbitzen duena, eta dena hautatzeko lasterbideek ez dute ezer hautatzen. `readonly` aktibatzeak irekita zegoena amaitzen du, hala nola hautapena, esku-tresna, gelaxka-editorea, arrastatze bat, Map Columns, Antolaketa automatikoaren `Force` aurreikuspena eta Time Travel, eta korritzea, zooma, fitxa eta Izenen ikuspegia mantentzen ditu. Ikus [readonly](./erd-editor-element.md#readonly).
-- `readonly` irakurle batek aldatzen dituen ezarpenak editore horren pantailan geratzen dira, haien blokeoek zer esaten duten axola gabe: korritzea eta zooma, fitxa, Izenen ikuspegia, View Option, datu-basea eta Code Generator hizkuntza, izenen idazkerak eta mugatzaile mota. `value`, `runtimeValue` eta JSON esportazioak dokumentuarenak mantentzen dituzte, 4.x bertsioko irakurle baten aldaketak iritsi zitezkeenak, eta `getSharedStore()` metodoak ez dio horietako bat ere bidaltzen beste editoreei. Bezerorik gabeko `getSchemaSQL()` deiak irakurleak aukeratu duen datu-basea idazten du. `readonly` desaktibatzeak datu-basea, kode-ezarpenak eta View Option dokumentuarenetara itzultzen ditu, eta korritzea, zooma, fitxa eta Izenen ikuspegia irakurleak utzi zituen tokian uzten ditu.
+- `readonly` irakurle batek aldatzen dituen ezarpenak editore horren pantailan geratzen dira, haien blokeoek zer esaten duten axola gabe: korritzea eta zooma, fitxa, Izenen ikuspegia, View Option, datu-basea eta Kode-sortzailearen lengoaia, izenen idazkerak eta mugatzaile mota. `value`, `runtimeValue` eta JSON esportazioak dokumentuarenak mantentzen dituzte, 4.x bertsioko irakurle baten aldaketak iritsi zitezkeenak, eta `getSharedStore()` metodoak ez dio horietako bat ere bidaltzen beste editoreei. Bezerorik gabeko `getSchemaSQL()` deiak irakurleak aukeratu duen datu-basea idazten du. `readonly` desaktibatzeak datu-basea, kode-ezarpenak eta View Option irakurleak ezer aldatu izango ez balu editore horrek erakutsiko lukeenera itzultzen ditu, eta korritzea, zooma, fitxa eta Izenen ikuspegia irakurleak utzi zituen tokian uzten ditu.
 - Ezarpenak fitxako `Recalculation table width` errenkada desagertu da. Kargatzeak eta itsasteak taula bakoitzaren zabalera bere testuari egokitzen diote oraindik.
 - Vite 8n kendu `optimizeDeps` eremuko `exclude: ['@dineug/erd-editor']`, Vite 7 eta zaharragoek soilik behar dutena, eta mantendu ELK `include`. Ikus [Vite](#vite).
 

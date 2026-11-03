@@ -1,31 +1,32 @@
 ---
-sidebar_position: 3
-description: Dokumentformatet .erd.json – lagringsformen som en fil innehåller och körtidsvärdet som en editor har, TypeScript-typerna, konstanterna bakom varje numeriskt fält och det publicerade JSON Schema.
+sidebar_position: 4
+description: Dokumentformatet .erd.json – lagringsformen som en fil innehåller, dess TypeScript-typer, konstanterna bakom varje numeriskt fält och det publicerade JSON Schema.
 ---
 
 # Schema
 
 `.erd.json` är editorns dokumentformat. Läs den här sidan om du behöver generera, validera eller migrera ett dokument utanför editorn.
 
-Sedan `4.0.0` har ett dokument två serialiseringar, båda med `version` `'3.0.0'`. Lagringsformen är det som en fil innehåller: det är vad [`editor.value`](../erd-editor-element.md#value) returnerar, vad JSON-exporten skriver och den enda form som det publicerade [JSON Schema](#json-schema) accepterar. Körtidsvärdet är hela dokumentet så som en editor har det, vilket [`editor.runtimeValue`](../erd-editor-element.md#runtimevalue) returnerar. `setInitialValue()`, settern för `value` och `setSchemaJSON()` läser båda formerna, alla filer som en tidigare version har sparat och ett `.vuerd`-dokument från v2. Före `4.0.0` fanns det bara en: `value` returnerade hela dokumentet så som editorn hade det, som `runtimeValue` gör nu.
+Den här sidan beskriver lagringsformen, dokumentet så som en fil innehåller det, vilket varje version sedan `4.0.0` skriver. Det är vad [`editor.value`](../erd-editor-element.md#value) returnerar, vad JSON-exporten skriver och den enda form som det publicerade [JSON Schema](#json-schema) accepterar. Dess `version` är `'3.0.0'`, som i varje v3-fil som en tidigare version har sparat, så `version` visar inte skillnaden mellan en äldre och en nyare fil. `setInitialValue()`, settern för `value` och `setSchemaJSON()` läser den, alla filer som en tidigare version har sparat och ett `.vuerd`-dokument från v2. Före `4.0.0` returnerade `value` hela dokumentet så som editorn hade det, så en fil som sparades då innehåller mer (se [Lagringsform](#storage-form)).  
+En editors [`runtimeValue`](../erd-editor-element.md#runtimevalue) är en annan serialisering, som den här sidan inte beskriver. Det initierar en annan editor eller en replik, och ett [Yjs-rum](./yjs.md#what-the-room-holds) lagrar det i sin ögonblicksbild; det hör aldrig hemma i en fil, och JSON Schema avvisar varje sådant som innehåller en entitet.
 
-## Lagringsform och körtidsvärde {#storage-form-and-runtime-value}
+## Lagringsform {#storage-form}
 
-Lagringsformen innehåller endast de befintliga entiteterna: varje tabell som listas i `doc.tableIds`, de kolumner som dessa tabeller listar, relationerna mellan två bevarade tabeller, indexen för bevarade tabeller med de indexkolumner vars kolumn tabellen fortfarande listar, de listade anteckningarna och tabellgrupperna samt sedan `4.2.0` de listade orden, termerna och domänerna som har ett värde utöver sitt id. Den utelämnar det som en editor härleder vid inläsning eller behåller medan den är öppen: borttagna entiteter, `seqColumnIds` och `seqIndexColumnIds`, varje `zIndex`, de uppmätta bredderna, kolumnernas `ui`, en relations `identification`, `startRelationshipType` och fästpunkter samt, sedan `4.2.0`, fältet `order` för varje rad i ordlistorna och listorna `doc.wordIds`, `doc.termIds` och `doc.domainIds`. Typerna nedan märker vart och ett av dessa fält med `// runtime only`.  
+Lagringsformen innehåller endast de befintliga entiteterna: varje tabell som listas i `doc.tableIds`, de kolumner som dessa tabeller listar, relationerna mellan två bevarade tabeller, indexen för bevarade tabeller med de indexkolumner vars kolumn tabellen fortfarande listar, de listade anteckningarna och tabellgrupperna samt sedan `4.2.0` orden, termerna och domänerna på ordlistans blad som har ett värde utöver sitt id. Den innehåller inget som en editor räknar fram vid inläsning eller behåller bara medan den är öppen: ingen staplingsordning, inga uppmätta bredder eller nyckelmärken, och inte om en relation är identifierande, hur dess föräldraände ritas eller var den möter sina tabeller. Varje inläsning räknar fram dem på nytt utifrån det som filen innehåller.  
 Varje samling utom ordlistorna har id:n som nycklar, i kodenhetsordning, där kolumnerna först grupperas efter `tableId` och indexkolumnerna efter `indexId`. Sedan `4.2.0` kommer `wordEntities`, `termEntities` och `domainEntities` efter alla andra samlingar, i den ordningen, och var och en skrivs som en rubrikrad och rader, en rad per textrad (se [Ordlistornas rader](#dictionary-rows)). Varje entitet skriver sina fält i en fast ordning, och texten är indragen med två blanksteg och slutar med en radbrytning. Därför skriver samma dokument alltid samma byte, en redigering ändrar bara det som den berör och en fil som har sparats på en dator med andra typsnitt öppnas igen med samma `value`.  
 VS Code, Obsidian och JetBrains-pluginet skriver en fil bara när en redigering ändrar `value`, så en fil som en tidigare version har sparat behåller sin gamla form fram till den första redigeringen.
 
 Sedan `4.2.0` utelämnar lagringsformen också det som inte innehåller något: varje textfält som en entitet eller dess `ui` har som `''` (en tabells `name`, `comment` och `ui.color`, en kolumns `name`, `comment`, `dataType` och `default`, ett index `name`, en antecknings `value` och `ui.color`, en tabellgrupps `name` och `color`), varje lista i `doc` och varje samling som saknar poster samt själva `collections` när alla samlingar är tomma. Text som bara består av blanksteg skrivs som den är, utom i ett logiskt namn, som då utelämnas, och i ett ord, en term eller en domän vars värden efter id:t alla är tomma eller bara består av blanksteg, som utelämnas i sin helhet. Varje id, varje lista inuti en entitet och varje tal, även `0`, skrivs fortfarande. `doc` skrivs alltid, så filen för ett nytt dokument innehåller `$schema`, `version`, dess inställningar och `"doc": {}`.  
 Vid tolkning läses ett saknat textfält som `''` och en saknad samling som tom, som i alla v3-versioner, och lagringsformen utelämnar en lista i `doc` bara när dess samling inte innehåller något (se [Doc](#doc)). Därför öppnar även en editor från före `4.2.0` de här filerna, och ett program som självt läser en fil måste läsa det som saknas på samma sätt. En fil som en tidigare version har sparat kommer tillbaka från sin nästa sparning med sin tomma text och sina tomma listor och samlingar utelämnade, en ändring som görs en gång, och sparas därefter likadant byte för byte.
 
-Körtidsvärdet behåller det som lagringsformen utelämnar: borttagna entiteter, sekvenser, z-index, bredder, nyckelmärken, relationsflaggor och fästpunkter, de tomma textfälten samt de fyra listorna `tableIds`, `relationshipIds`, `indexIds` och `memoIds` och de sex samlingarna `tableEntities` till och med `memoEntities` även när de är tomma. Sedan `4.2.0` behåller det också borttagna ord, termer och domäner, rader som inte innehåller något, varje rads `order`, ordlistornas tre listor, ett logiskt namn som bara består av blanksteg och en koppling till en borttagen domän. Det är indraget med två blanksteg utan avslutande radbrytning. Använd det bara för att initiera en medarbetare eller en andra vy via `setInitialValue()`, så att en ångrad borttagning som en annan editor skickar återställer hela entiteten där. Skriv det aldrig till en fil; JSON Schema avvisar det. Ingenting samlar längre in borttagna entiteter, så körtidsvärdet behåller dem tills dokumentet nästa gång öppnas från sin fil.
+Lagringsformen skriver varje låst inställning med dess låsta värde (se [`lockSettings`](#settings)), `settings.ddlScripts` bara när ett skript innehåller text och en tabells `groupId` bara när det anger en tabellgrupp som filen skriver. Sedan `4.2.0` skriver den också `settings.nameViewMode` bara när värdet den skriver inte är `'physical'`, `settings.columnOrder` med sju poster där det går (se [Settings](#settings)) och en tabells `nameDerived` bara när det är `true`.  
+Den skriver `doc.tableGroupIds` och `tableGroupEntities` bara när det finns en tabellgrupp, ett `logicalName` bara när det innehåller annan text än blanksteg, en kolumns `domainId` bara när det anger en domän som filen skriver och varje ordlista bara när den innehåller en rad som filen skriver.
 
-Båda formerna skriver varje låst inställning med dess låsta värde (se [`lockSettings`](#settings)), `settings.ddlScripts` bara när ett skript innehåller text och en tabells `groupId` bara när det inte är tomt. Sedan `4.2.0` skriver båda också `settings.nameViewMode` bara när värdet de skriver inte är `'physical'`, `settings.columnOrder` med sju poster där det går (se [Settings](#settings)) och en tabells `nameDerived` bara när det är `true`.  
-Lagringsformen skriver `doc.tableGroupIds` och `tableGroupEntities` bara när det finns en tabellgrupp, ett `logicalName` bara när det innehåller annan text än blanksteg, en kolumns `domainId` bara när det anger en domän som filen skriver och varje ordlista bara när den innehåller en rad som filen skriver. Körtidsvärdet skriver tabellgruppsfälten när dokumentet innehåller en grupp eller en borttagen grupp, `logicalName` och `domainId` när de inte är `''` och varje ordlista med sin lista när någon av dem innehåller en post, inklusive en borttagen rad.
+En fil som sparades före `4.0.0` innehåller hela dokumentet så som en editor då hade det, inklusive dess borttagna entiteter och det som varje inläsning räknar fram. En inläsning läser den, behåller varje tabells och antecknings plats i stapeln (se [Doc](#doc)) och räknar fram resten på nytt, och nästa sparning skriver bara lagringsformen.
 
 ## TypeScript {#typescript}
 
-Typerna beskriver körtidsvärdet. Ett fält som är märkt med `// runtime only` utelämnas i lagringsformen, och ett fält som är märkt med `?` skrivs bara när det innehåller något. Den tomma text och de tomma listor och samlingar som lagringsformen utelämnar sedan `4.2.0` är inte märkta.
+Typerna beskriver lagringsformen, och varje typ listar sina fält i den ordning som en fil skriver dem. Ett fält som är märkt med `?` är ett som lagringsformen kan utelämna, som [Lagringsform](#storage-form) beskriver närmare, och vid tolkning läses ett saknat sådant som att det inte innehåller något: `''`, `false`, ingen tabellgrupp eller domän, en tom samling, `'physical'` för `nameViewMode` och två tomma skript för `ddlScripts`. Undantaget är en saknad lista i `doc`, som tolkningen fyller från sin samling (se [Doc](#doc)). I en rad i en ordlista markerar `?` de värden som en rad kan sluta före (se [Ordlistornas rader](#dictionary-rows)). Varje annat fält skrivs alltid.
 
 ### ERDEditorSchemaV3 {#erdeditorschemav3}
 
@@ -35,13 +36,13 @@ type ERDEditorSchemaV3 = {
   version: '3.0.0';
   settings: Settings;
   doc: Doc;
-  collections: {
-    tableEntities: Record<string, Table>;
-    tableColumnEntities: Record<string, Column>;
-    relationshipEntities: Record<string, Relationship>;
-    indexEntities: Record<string, Index>;
-    indexColumnEntities: Record<string, IndexColumn>;
-    memoEntities: Record<string, Memo>;
+  collections?: {
+    tableEntities?: Record<string, Table>;
+    tableColumnEntities?: Record<string, Column>;
+    relationshipEntities?: Record<string, Relationship>;
+    indexEntities?: Record<string, Index>;
+    indexColumnEntities?: Record<string, IndexColumn>;
+    memoEntities?: Record<string, Memo>;
     tableGroupEntities?: Record<string, TableGroup>;
     wordEntities?: DictionaryRows; // rows of Word
     termEntities?: DictionaryRows; // rows of Term
@@ -216,7 +217,7 @@ Sedan `4.2.0` finns det ytterligare en flagga i `show`, `columnDomain` (`8192`),
 En editor från före `4.2.0` behåller hela talet i `show`, så flaggan finns kvar när dokumentet sparas där.
 
 Sedan `4.2.0` har `ColumnType` nio värden. `columnLogicalName` (`128`) placerar cellen för logiskt namn, som en kolumnrad bara ritar i visningen `Both Names`, och `columnDomain` (`256`) domäncellen. De är raderna `Logical Name` och `Domain` i [kolumnordningen](../../guide/guides/settings.md#adjusting-column-order) på fliken Inställningar. En editor har en ordning med alla nio, och ordningen i ett nytt dokument är `128, 1, 2, 256, 4, 8, 16, 32, 64`.  
-Båda formerna skriver ordningen med sju poster och utelämnar `128` och `256` så länge `128` står precis före `columnName` och `256` precis efter `columnDataType`. Därför skriver ett nytt dokument fortfarande `1, 2, 4, 8, 16, 32, 64`, och en fil vars ordning aldrig flyttade dem behåller sina byte. Annars skriver de alla nio.  
+Lagringsformen skriver ordningen med sju poster och utelämnar `128` och `256` så länge `128` står precis före `columnName` och `256` precis efter `columnDataType`. Därför skriver ett nytt dokument fortfarande `1, 2, 4, 8, 16, 32, 64`, och en fil vars ordning aldrig flyttade dem behåller sina byte. Annars skriver den alla nio.  
 Vid tolkning placeras de två på de platserna i en ordning med sju poster, oavsett i vilken ordning de sju står, och nio poster som innehåller varje typ tas som de är.  
 Sedan `5.0.0` tar tolkningen också emot varje annan ordning. Den behåller varje `ColumnType` den känner till en gång, i den ordning som ges, och släpper varje annan post: ett värde som ingen `ColumnType` anger, till exempel en typ som en senare version lägger till, och en andra post av samma typ. Varje typ som ordningen saknar hamnar precis efter den närmaste typen före den i standardordningen som ordningen innehåller, eller, om ingen finns före den, precis före den närmaste efter den, och så hittar `128` och `256` sina platser i sju poster. Bara en ordning som inte anger någon typ den känner till, eller ett värde som inte är en array, läses som standardordningen.  
 En fil som en senare version sparade öppnas alltså med sin ordning av de typer som den här versionen känner till, och en sparning här skriver den ordningen utan de andra. Före `5.0.0` läste en tolkning varje annan ordning som standardordningen, så en sådan fil öppnades med sin kolumnordning återställd. JSON Schema accepterar sju eller nio heltal.
@@ -224,18 +225,18 @@ En fil som en senare version sparade öppnas alltså med sin ordning av de typer
 Sedan `4.0.0` har `Language` ytterligare åtta mål för [kodgeneratorn](../../guide/guides/code-generator.md), `Mermaid` till och med `JSONSchema`. Ett värde i `language` som parsern inte känner till läses som `GraphQL`, så en editor från före `4.0.0` väljer GraphQL när den öppnar ett dokument som sparats med något av dem, och när dokumentet sparas där skrivs GraphQL.
 
 Sedan `4.0.0` har `lockSettings` ersatt `ignoreSaveSettings` och `LockSettingType` ersatt `SaveSettingType`, som har tagits bort. `lockSettings` anger vilka inställningar ett dokument sparar så som de var när de låstes. `viewport` omfattar `originX`, `originY` och `zoomLevel` tillsammans, eftersom ett origo som sparats utan sin zoomnivå öppnas någon annanstans, och varje annan bit omfattar det fält som den är uppkallad efter. Det här är raderna under [`Lock`](../../guide/guides/settings.md#lock) på fliken Inställningar.  
-En låst inställning skrivs med sitt låsta värde, oavsett vad editorn visar, av både `value` och `runtimeValue`, och alla andra inställningar skrivs så som de är. Så länge motsvarande lås är på förblir filen därför oförändrad när du rullar och zoomar, byter flik, ändrar kodgeneratorns språk, ett skiftläge för namn eller typen av citattecken eller byter namnvisning. Låsningen tar det värde som inställningen har i just det ögonblicket, och vid tolkning hämtas det låsta värdet från det sparade fältet.  
+En fil innehåller varje låst inställning med dess låsta värde, oavsett vad editorn visar, och alla andra inställningar så som de är. Så länge motsvarande lås är på förblir filen därför oförändrad när du rullar och zoomar, byter flik, ändrar kodgeneratorns språk, ett skiftläge för namn eller typen av citattecken eller byter namnvisning. Låsningen tar det värde som inställningen har i just det ögonblicket, och vid tolkning hämtas det låsta värdet från det sparade fältet.  
 Ett dokument som skapas från grunden – en ny editor eller en ny replikeringsstore, eller ett tomt värde som ges till `value` eller `setInitialValue()` – har `lockSettings` satt till `63`, med alla lås på. Ett dokument vars `settings` saknar `lockSettings` – varje fil som sparats före `4.0.0`, oavsett dess `ignoreSaveSettings`, och varje v2-dokument – öppnas också med alla lås på: med vyn och fliken där de är i ett nytt dokument (`originX` och `originY` `0`, `zoomLevel` `1`, ERD-fliken) och med språket, skiftlägena för namn och typen av citattecken låsta till det som dokumentet sparade. Ett dokument som anger sina lås behåller dem, även `0`, och alla värden som det sparade.  
 Vid tolkning behålls varje bit i `lockSettings`, även okända bitar, så ett lås som en senare version lägger till finns kvar när dokumentet sparas här; JSON Schema kontrollerar bara att värdet är ett heltal. En editor från före `4.0.0` tar bort `lockSettings` när den sparar och skriver vyn och fliken som de är, så filen öppnas här igen som en fil som sparats före `4.0.0`.
 
 Sedan `4.2.0` finns det ett sjunde lås, `unlockNameViewMode` (`64`), raden `Name View`, som omfattar `nameViewMode`. Dess bit läses tvärtom jämfört med de andra låsbitarna, som de döljande bitarna i `Show` gör: när den är satt är namnvisningen upplåst, och när den är nollställd är den låst. Därför betyder `63` fortfarande att alla lås är på, och ett nytt dokument har det värdet med namnvisningen låst på `'physical'`. En fil som sparats före `4.2.0` har biten nollställd, oavsett dess övriga lås, även med `0`, så den öppnas med namnvisningen låst på `'physical'`. Ett dokument med alla lås av har `64`, och ett med alla andra lås på och namnvisningen upplåst har `127`. Testa det här låset omvänt: det är på när `(lockSettings & 64) === 0`.  
-När låset är på ändrar ett byte av namnvisning bara skärmen i den editor som gjorde det, och dokumentet behåller den låsta visningen. När det är av gäller ett byte i en redigerbar editor hela dokumentet, och alla medarbetare byter med det. Ett byte i en skrivskyddad editor ändrar i båda fallen bara dess egen skärm. Se [`Lock`](../../guide/guides/settings.md#lock).  
+Så länge biten är nollställd innehåller en fil `nameViewMode` med den låsta visningen, oavsett vad någon editor visar, och när den är satt visningen så som den är. Vad varje editor visar, med låset på eller av, beskrivs i [`Lock`](../../guide/guides/settings.md#lock).  
 En editor i version `4.0.0` eller `4.1.0` behåller biten när den sparar men tar bort `nameViewMode`, så dokumentet öppnas här igen i `'physical'`, med låset som det var.
 
 Sedan `4.0.0` innehåller `ddlScripts` de två skripten på fliken [Schema SQL](../../guide/guides/schema-sql.md), som DDL-koden för varje databas skriver: `before` efter inledningen och före tabellerna, `after` efter den genererade DDL-koden. DDL-koden skriver vart och ett med LF-radbrytningar, utan inledande tomma rader och avslutande blanktecken, och för MSSQL avslutat med `GO`, som [Skript före och efter tabellerna](../../guide/guides/schema-sql.md#before-and-after-scripts) beskriver; `ddlScripts` behåller själv varje skript så som det skrevs. Nyckeln skrivs bara när något av skripten innehåller text, och då med båda; en saknad nyckel, eller ett skript som inte är en sträng, läses som `''`. Valen `Statements`, `Header` och `Tables` på fliken, och sedan `4.2.0` dess växlingsknapp [`Write logical names into empty comments`](../../guide/guides/schema-sql.md#logical-names-as-comments), sparas inte i dokumentet.  
 En editor från före `4.0.0` tar bort skripten när den läser in ett dokument, så de går förlorade om dokumentet sparas där.
 
-Sedan `4.2.0` är `nameViewMode` [namnvisningen](../../guide/guides/logical-names.md#name-view), de namn som diagrammet ritar: `'physical'` varje tabells och kolumns namn, `'logical'` dess logiska namn i namnets ställe och `'both'` det logiska namnet och namnet. Menyerna kallar dem `Physical Names`, `Logical Names` och `Both Names`. Båda formerna skriver det sist, efter `ddlScripts`, och bara när värdet de skriver inte är `'physical'`; när låset `Name View` är på är det det låsta värdet, oavsett vad skärmen visar. Ett saknat värde, eller ett som parsern inte känner till, läses som `'physical'`, och JSON Schema accepterar bara `"logical"` och `"both"`.  
+Sedan `4.2.0` är `nameViewMode` [namnvisningen](../../guide/guides/logical-names.md#name-view), de namn som diagrammet ritar: `'physical'` varje tabells och kolumns namn, `'logical'` dess logiska namn i namnets ställe och `'both'` det logiska namnet och namnet. Menyerna kallar dem `Physical Names`, `Logical Names` och `Both Names`. Lagringsformen skriver det sist, efter `ddlScripts`, och bara när värdet den skriver inte är `'physical'`. Ett saknat värde, eller ett som parsern inte känner till, läses som `'physical'`, och JSON Schema accepterar bara `"logical"` och `"both"`.  
 En editor från före `4.2.0` tar bort `nameViewMode` när den läser in ett dokument.
 
 `Database`, `Language`, `Show`, `ColumnType`, `ColumnOption`, `LockSettingType` och `ReferentialAction` kan bara utökas i slutet. Ett sparat dokument lagrar talet, så ett nytt databassystem, ett nytt kodgenereringsmål, en ny flagga, en ny kolumntyp, ett nytt kolumnalternativ, ett nytt lås eller en ny åtgärd tar nästa bit i stället för en plats i mitten.
@@ -244,52 +245,42 @@ En editor från före `4.2.0` tar bort `nameViewMode` när den läser in ett dok
 
 ```ts
 type Doc = {
-  tableIds: string[];
-  relationshipIds: string[];
-  indexIds: string[];
-  memoIds: string[];
+  tableIds?: string[];
+  relationshipIds?: string[];
+  indexIds?: string[];
+  memoIds?: string[];
   tableGroupIds?: string[];
-  wordIds?: string[]; // runtime only
-  termIds?: string[]; // runtime only
-  domainIds?: string[]; // runtime only
 };
 ```
 
-Var och en av de fem första listorna är ordningen för en typ av entitet, och den läses av DDL-koden, tabellsorteringen och ritordningen. I lagringsformen innehåller varje lista bara id:n för bevarade entiteter, vart och ett en gång, i den ordning de listas, och sedan `4.2.0` utelämnas en lista som inte innehåller några. Sedan `4.0.0` är `tableGroupIds` tabellgruppernas ordning.
+Varje lista är ordningen för en typ av entitet, och den läses av DDL-koden, tabellsorteringen och ritordningen. Var och en innehåller bara id:n för de entiteter som filen skriver, vart och ett en gång, i den ordning de listas, och sedan `4.2.0` utelämnas en lista som inte innehåller några. Sedan `4.0.0` är `tableGroupIds` tabellgruppernas ordning. Ordlistorna har ingen lista här, eftersom deras rader står i varje blads ordning (se [Ordlistornas rader](#dictionary-rows)), och JSON Schema accepterar ingen annan nyckel i `doc`.
 
-Sedan `4.2.0` listar `wordIds`, `termIds` och `domainIds` de befintliga raderna i varje ordlista: en rad som samlingen innehåller men listan inte innehåller är borttagen. De är inte ett blads ordning, som varje rads `order` anger. Bara körtidsvärdet skriver dem, var och en när den eller dess samling innehåller en post. I en fil är raderna själva medlemskapet och ordningen, och JSON Schema avvisar listorna.  
 Sedan `4.2.0` läses en lista som dokumentet utelämnar, eller har som något annat än en array, vid tolkning som alla poster som dess samling innehåller, varje id en gång, i den ordning de ligger; en tom array förblir tom, och alla poster i dess samling läses då som borttagna. En editor från före `4.2.0` läser en saknad lista som tom, så lagringsformen skriver fortfarande varje lista så snart dess samling innehåller en entitet.
 
-Sedan `4.0.0` sparas inte staplingsordningen. Vid tolkning staplas varje listad tabell, anteckning och tabellgrupp som saknar `zIndex` efter sin plats i listan, med senare poster framför: tabellgrupper från `1`, tabeller från `2` och anteckningar ovanför alla tabeller. En entitet som har ett `zIndex`, som i ett körtidsvärde eller en fil som sparats före `4.0.0`, behåller det. Att lägga en tabell eller anteckning överst går därför förlorat när filen öppnas igen.
+Sedan `4.0.0` innehåller en fil ingen staplingsordning. En inläsning staplar de listade tabellerna och anteckningarna efter deras platser i sina listor, med senare poster framför och varje anteckning ovanför varje tabell, och tabellgrupperna på samma sätt sinsemellan, bakom tabellerna. En tabell eller anteckning i en fil som sparats före `4.0.0` har ett `zIndex` i sitt `ui`, som en inläsning behåller som dess plats i stapeln och som nästa sparning utelämnar. Att lägga en tabell eller anteckning överst går därför förlorat när filen öppnas igen.
 
 ### Samling: tableEntities {#collection-tableentities}
 
 ```ts
 type Table = {
   id: string;
-  name: string;
+  name?: string;
   logicalName?: string;
-  comment: string;
+  comment?: string;
   columnIds: string[];
-  seqColumnIds: string[]; // runtime only
   groupId?: string;
-  nameDerived?: boolean;
+  nameDerived?: true;
   ui: TableUI;
 };
 
 type TableUI = {
   x: number;
   y: number;
-  zIndex: number; // runtime only
-  widthName: number; // runtime only
-  widthLogicalName: number; // runtime only
-  widthComment: number; // runtime only
-  color: string;
+  color?: string;
 };
 ```
 
-Sedan `4.0.0` har en tabell `groupId`, id:t för den [tabellgrupp](../../guide/guides/table-groups.md) som den tillhör. Ett saknat eller tomt `groupId`, eller ett som inte anger någon grupp i `doc.tableGroupIds`, betyder ingen grupp, och lagringsformen skriver det bara när det anger en bevarad grupp.  
-Vid tolkning sätts `seqColumnIds` till `columnIds` när det saknas eller inte innehåller ett listat id, och en editor mäter `widthName`, `widthLogicalName` och `widthComment` på nytt med sina egna typsnitt vid varje inläsning.
+Sedan `4.0.0` har en tabell `groupId`, id:t för den [tabellgrupp](../../guide/guides/table-groups.md) som den tillhör. Ett saknat eller tomt `groupId`, eller ett som inte anger någon grupp i `doc.tableGroupIds`, betyder ingen grupp, och lagringsformen skriver det bara när det anger en bevarad grupp.
 
 Sedan `4.2.0` har en tabell `logicalName`, det namn som [visningarna](../../guide/guides/logical-names.md#name-view) `Logical Names` och `Both Names` ritar, `''` om det saknas, och `nameDerived`, `true` när ordlistorna [härledde](../../guide/guides/dictionary.md#deriving-physical-names) `name` från det logiska namnet. När det är satt härleder ett nytt logiskt namn namnet igen; när det inte är det är namnet någons eget, och ett nytt logiskt namn lämnar det orört om inte namnet är tomt eller bara består av blanksteg. Ett namnbyte för hand slår av det, och [`Derive Physical Names Again`](../../guide/guides/dictionary.md#derive-physical-names-again) skriver om även ett namn som någon har skrivit och slår på det överallt där det finns ett logiskt namn.  
 Lagringsformen skriver `logicalName` efter `name`, så som det skrevs, bara när det innehåller annan text än blanksteg, och `nameDerived` efter `groupId` bara när det är `true`, det enda värde som JSON Schema accepterar. Ett saknat `logicalName` läses som `''` och ett saknat `nameDerived` som `false`, så varje namn i en fil som sparats före `4.2.0` räknas som någons eget.  
@@ -301,24 +292,13 @@ En editor från före `4.2.0` tar bort båda när den läser in ett dokument, s�
 type Column = {
   id: string;
   tableId: string;
-  name: string;
-  comment: string;
-  dataType: string;
-  default: string;
+  name?: string;
+  comment?: string;
+  dataType?: string;
+  default?: string;
   options: number; // Constants: ColumnOption
   logicalName?: string;
   domainId?: string;
-  ui: ColumnUI; // runtime only
-};
-
-type ColumnUI = {
-  keys: number; // Constants: ColumnUIKey
-  widthName: number;
-  widthLogicalName: number;
-  widthComment: number;
-  widthDataType: number;
-  widthDomain: number;
-  widthDefault: number;
 };
 
 // Constants
@@ -329,17 +309,12 @@ const ColumnOption = {
   notNull: 8,
   nameDerived: 16,
 } as const;
-
-const ColumnUIKey = {
-  primaryKey: 1,
-  foreignKey: 2,
-} as const;
 ```
 
-Sedan `4.0.0` skriver lagringsformen inget `ui` för kolumner. Varje inläsning härleder `keys`, primärnyckelmärket från biten `primaryKey` i `options` och sekundärnyckelmärket från de relationer som slutar på kolumnen, och mäter de sex bredderna.  
+Sedan `4.0.0` innehåller en fil inga nyckelmärken: varje inläsning märker en kolumn som primärnyckel utifrån biten `primaryKey` i `options`, och som sekundärnyckel så länge en relation slutar på den i dess tabell.  
 En editor från före `4.0.0` visar kolumnerna i en fil som sparats här utan deras primärnyckelikoner.
 
-Sedan `4.2.0` har en kolumn `logicalName`, liksom en tabell, och `domainId`, id:t för den domän som kolumnen är kopplad till, `''` om den saknas. Redigeringar i en editor håller en kopplad kolumn på sin domäns datatyp, som [Domäner och datatyper](../../guide/guides/dictionary.md#domains-and-data-types) beskriver. Vid tolkning ändras dock ingen kolumns typ, så en fil som skrivits någon annanstans kan lämna en kopplad kolumn med en annan typ, och det kan även två medarbetares korsande redigeringar; bladet Kontroller listar varje sådan kolumn som [`Domain type mismatch`](../../guide/guides/dictionary.md#what-each-check-finds). Vid tolkning rensas ett `domainId` som inte anger någon domän som dokumentet innehåller. En borttagen domän räknas fortfarande, så editorn behåller en koppling till den så länge en ångring kan återställa domänen. Efter `options` skriver lagringsformen `logicalName` enligt regeln för en tabell, och `domainId` bara när det anger en domän som filen skriver, så aldrig en koppling till en borttagen domän.  
+Sedan `4.2.0` har en kolumn `logicalName`, liksom en tabell, och `domainId`, id:t för den domän som kolumnen är kopplad till, `''` om den saknas. Redigeringar i en editor håller en kopplad kolumn på sin domäns datatyp, som [Domäner och datatyper](../../guide/guides/dictionary.md#domains-and-data-types) beskriver. Vid tolkning ändras dock ingen kolumns typ, så en fil som skrivits någon annanstans kan lämna en kopplad kolumn med en annan typ, och det kan även två medarbetares korsande redigeringar; bladet Kontroller listar varje sådan kolumn som [`Domain type mismatch`](../../guide/guides/dictionary.md#what-each-check-finds). Vid tolkning rensas ett `domainId` som inte anger någon domän som filen innehåller. Efter `options` skriver lagringsformen `logicalName` enligt regeln för en tabell, och `domainId` bara när det anger en domän som filen skriver, så en kolumn som är kopplad till en borttagen domän, eller till en som filen utelämnar, skrivs utan kopplingen och med den datatyp den har.  
 `ColumnOption.nameDerived` (`16`) är kolumnens flagga för härlett namn, som lagras i `options` tillsammans med de andra bitarna och betyder detsamma som en tabells `nameDerived`. En primärnyckel som är NOT NULL och vars namn ordlistorna härledde har till exempel `options` `26`.  
 En editor från före `4.2.0` tar bort `logicalName` och `domainId` när den läser in ett dokument, så de går förlorade om dokumentet sparas där. Den behåller hela talet i `options`, så biten `nameDerived` finns kvar när dokumentet sparas där.
 
@@ -348,9 +323,7 @@ En editor från före `4.2.0` tar bort `logicalName` och `domainId` när den lä
 ```ts
 type Relationship = {
   id: string;
-  identification: boolean; // runtime only
   relationshipType: number; // Constants: RelationshipType
-  startRelationshipType: number; // Constants: StartRelationshipType; runtime only
   onDelete: number; // Constants: ReferentialAction
   onUpdate: number; // Constants: ReferentialAction
   start: RelationshipPoint;
@@ -360,9 +333,6 @@ type Relationship = {
 type RelationshipPoint = {
   tableId: string;
   columnIds: string[];
-  x: number; // runtime only
-  y: number; // runtime only
-  direction: number; // Constants: Direction; runtime only
 };
 
 // Constants
@@ -373,11 +343,6 @@ const RelationshipType = {
   OneN: 16,
 } as const;
 
-const StartRelationshipType = {
-  ring: 1,
-  dash: 2,
-} as const;
-
 const ReferentialAction = {
   none: 1,
   noAction: 2,
@@ -386,35 +351,25 @@ const ReferentialAction = {
   setDefault: 16,
   restrict: 32,
 } as const;
-
-const Direction = {
-  left: 1,
-  right: 2,
-  top: 4,
-  bottom: 8,
-} as const;
 ```
 
 Sedan `3.10.0` har en relation `onDelete` och `onUpdate`, dess [åtgärder för ON DELETE och ON UPDATE](../../guide/guides/relationship-editing.md#on-delete-and-on-update). Vart och ett innehåller exakt ett värde i `ReferentialAction`. `none`, standardvärdet, skriver ingen klausul, så databasens eget standardbeteende gäller. De övriga fem står för `NO ACTION`, `CASCADE`, `SET NULL`, `SET DEFAULT` och `RESTRICT`. Schema SQL skriver en klausul bara för en databas som har stöd för dess åtgärd.  
 Lagringsformen skriver alltid båda, och sedan `4.0.0` kräver JSON Schema dem och kontrollerar bara att vart och ett är ett heltal. Vid tolkning läses fortfarande ett saknat fält, som i alla dokument som sparats före `3.10.0`, som `none`, och detsamma gäller ett värde utanför listan.  
 En editor från före `3.10.0` känner inte till fälten och tar bort dem när den läser in ett dokument, så alla åtgärder går förlorade om dokumentet sparas där.
 
-Sedan `4.0.0` härleder varje inläsning det som lagringsformen utelämnar. En relation är identifierande när varje kolumn som den slutar på är en primärnyckel, och dess `startRelationshipType` är `dash` när varje sådan kolumn är NOT NULL och annars `ring`; en relation utan någon kvarvarande slutkolumn är icke-identifierande och `dash`, så som en ny relation börjar. Fästpunkterna, `x`, `y` och `direction`, placeras på nytt.
+Sedan `4.0.0` läser varje inläsning av om en relation är identifierande, och hur dess föräldraände ritas, utifrån de kolumner som den slutar på och som barntabellen fortfarande listar. Den är identifierande, en heldragen linje, så länge varje sådan kolumn är en primärnyckel, och dess föräldraände är två streck så länge varje sådan kolumn är NOT NULL, annars en ring och ett streck. En relation utan någon sådan kolumn kvar är icke-identifierande med två streck, så som en ny relation börjar. Se [Läsa en relationslinje](../../guide/guides/relationship-editing.md#reading-a-connector).
 
 ### Samling: indexEntities {#collection-indexentities}
 
 ```ts
 type Index = {
   id: string;
-  name: string;
+  name?: string;
   tableId: string;
   indexColumnIds: string[];
-  seqIndexColumnIds: string[]; // runtime only
   unique: boolean;
 };
 ```
-
-Vid tolkning sätts `seqIndexColumnIds` till `indexColumnIds` när det saknas eller inte innehåller ett listat id.
 
 ### Samling: indexColumnEntities {#collection-indexcolumnentities}
 
@@ -438,7 +393,7 @@ const OrderType = {
 ```ts
 type Memo = {
   id: string;
-  value: string;
+  value?: string;
   ui: MemoUI;
 };
 
@@ -447,20 +402,19 @@ type MemoUI = {
   y: number;
   width: number;
   height: number;
-  zIndex: number; // runtime only
-  color: string;
+  color?: string;
 };
 ```
 
-Sedan `4.0.0` [delar tabeller och anteckningar på samma stapel](../../guide/guides/table-related-functions.md#moving-multiple-tables), som ordnas efter `zIndex`, så en tabell som läggs överst kan hamna över en anteckning. Vid tolkning staplas en anteckning som sparats utan `zIndex` ovanför alla tabeller, som [Doc](#doc) beskriver. En anteckning i en fil som sparats före `4.0.0` behåller det `zIndex` som den sparade, vilket kom från samma räknare som tabellernas, så en anteckning som en tidigare version ritade över alla tabeller kan öppnas under en tabell som lades överst efter den.
+Sedan `4.0.0` [delar tabeller och anteckningar på samma stapel](../../guide/guides/table-related-functions.md#moving-multiple-tables), så en tabell som läggs överst kan hamna över en anteckning. En inläsning lägger varje anteckning ovanför varje tabell, som [Doc](#doc) beskriver. En anteckning i en fil som sparats före `4.0.0` behåller det `zIndex` som den sparade, vilket kom från samma räknare som tabellernas, så en anteckning som en tidigare version ritade över alla tabeller kan öppnas under en tabell som lades överst efter den.
 
 ### Samling: tableGroupEntities {#collection-tablegroupentities}
 
 ```ts
 type TableGroup = {
   id: string;
-  name: string;
-  color: string;
+  name?: string;
+  color?: string;
   ui: TableGroupUI;
 };
 
@@ -469,7 +423,6 @@ type TableGroupUI = {
   y: number;
   width: number;
   height: number;
-  zIndex: number; // runtime only
 };
 ```
 
@@ -487,7 +440,7 @@ type DictionaryRows = {
 };
 ```
 
-Ingen av de tre har id:n som nycklar. Var och en skrivs som en rubrikrad och rader: `fields` anger entitetens fält en gång, med id först, och varje rad innehåller en entitets värden i den ordningen. Typerna nedan listar varje entitets fält i den ordning som rubrikraden i körtidsvärdet har. En rad behåller alltid sitt id och sitt namn, men dess avslutande tomma värden efter namnet utelämnas, så ett tomt värde före ett som behålls förblir `''`, och vid tolkning läses ett värde som en rad saknar som `''`. Båda formerna skriver varje rad på en egen textrad som kompakt JSON, som i de här två orden från en fil:
+Ingen av de tre har id:n som nycklar. Var och en skrivs som en rubrikrad och rader: `fields` anger entitetens fält en gång, med id först, och varje rad innehåller en entitets värden i den ordningen. Typerna nedan listar varje entitets fält i den ordningen. En rad behåller alltid sitt id och sitt namn, men dess avslutande tomma värden efter namnet utelämnas, så ett tomt värde före ett som behålls förblir `''`, och vid tolkning läses ett värde som en rad saknar som `''`. Varje rad skrivs på en egen textrad som kompakt JSON, som i de här två orden från en fil:
 
 ```json
 "wordEntities": {
@@ -507,8 +460,8 @@ Ingen av de tre har id:n som nycklar. Var och en skrivs som en rubrikrad och rad
 }
 ```
 
-Lagringsformen skriver de listade raderna i bladets ordning och utelämnar `order`, så dess rubrikrader nämner det inte. Den utelämnar en rad vars värden efter id:t alla är tomma eller bara består av blanksteg, till exempel en som lades till och aldrig fylldes i, eller som tömdes, och varje koppling till en sådan domän eller till en borttagen domän: en kolumns `domainId` utelämnas, och en terms skrivs som `''`, där själva termen utelämnas om den inte innehåller något annat.  
-Körtidsvärdets rubrikrader nämner `"order"` direkt efter `"name"`. Det skriver varje rad som samlingen innehåller, inklusive borttagna, i den ordning samlingen har dem, så sortera efter `order`, jämfört i kodenhetsordning, för att få ett blads ordning. Vid tolkning får raderna i en fil värden i `order` efter den ordning de står i, så de läses tillbaka i den ordning filen skrev dem.  
+Lagringsformen skriver varje blads rader i bladets ordning, utan något ordningsfält, så en fils rader är en ordlistas medlemmar och deras ordning. Den utelämnar en rad vars värden efter id:t alla är tomma eller bara består av blanksteg, till exempel en som lades till och aldrig fylldes i, eller som tömdes, och varje koppling till en sådan domän eller till en borttagen domän: en kolumns `domainId` utelämnas, och en terms skrivs som `''`, där själva termen utelämnas om den inte innehåller något annat.  
+Vid tolkning läses raderna i den ordning de står, så varje blad listar dem i den ordning filen skrev dem.  
 Ett dokument utan ordlistorna, till exempel ett som sparats före `4.2.0`, har inga. En editor från före `4.2.0` tar bort alla tre när den läser in ett dokument, så alla ord, termer och domäner går förlorade om dokumentet sparas där.
 
 ### Samling: wordEntities {#collection-wordentities}
@@ -517,12 +470,11 @@ Ett dokument utan ordlistorna, till exempel ett som sparats före `4.2.0`, har i
 type Word = {
   id: string;
   name: string;
-  order: string; // runtime only
-  abbreviation: string;
-  englishName: string;
-  description: string;
-  synonyms: string;
-  forbiddenWords: string;
+  abbreviation?: string;
+  englishName?: string;
+  description?: string;
+  synonyms?: string;
+  forbiddenWords?: string;
 };
 ```
 
@@ -534,15 +486,14 @@ Ett ord är ett av de ord som ett logiskt namn består av, och `abbreviation` ä
 type Term = {
   id: string;
   name: string;
-  order: string; // runtime only
-  physicalName: string;
-  domainId: string;
-  description: string;
-  synonyms: string;
+  physicalName?: string;
+  domainId?: string;
+  description?: string;
+  synonyms?: string;
 };
 ```
 
-En term är ett helt logiskt namn. En tabell eller kolumn vars `logicalName` matchar `name` härleder `physicalName` eller, när det är tomt, ett namn som bildas av ordens förkortningar, och en kolumn får också den domän som `domainId` anger, `''` om den saknas (se [Härleda fysiska namn](../../guide/guides/dictionary.md#deriving-physical-names)). `synonyms` är kommaseparerat. Vid tolkning rensas ett `domainId` som inte anger någon domän, som för en kolumn.
+En term är ett helt logiskt namn. En tabell eller kolumn vars `logicalName` matchar `name` härleder `physicalName` eller, när det är tomt, ett namn som bildas av ordens förkortningar, och en kolumn får också den domän som `domainId` anger, `''` om den saknas (se [Härleda fysiska namn](../../guide/guides/dictionary.md#deriving-physical-names)). `synonyms` är kommaseparerat. Vid tolkning rensas ett `domainId` som inte anger någon domän som filen innehåller, som för en kolumn.
 
 ### Samling: domainEntities {#collection-domainentities}
 
@@ -550,10 +501,9 @@ En term är ett helt logiskt namn. En tabell eller kolumn vars `logicalName` mat
 type Domain = {
   id: string;
   name: string;
-  order: string; // runtime only
-  category: string;
-  dataType: string;
-  description: string;
+  category?: string;
+  dataType?: string;
+  description?: string;
 };
 ```
 
@@ -572,7 +522,7 @@ Den kanoniska schemafilen publiceras på [json-schema/schema.json](https://raw.g
 
 Lägg `$schema` överst i en `.erd.json`-fil, så validerar editorer som förstår JSON Schema, till exempel VS Code, dokumentet och autokompletterar dess fält medan du redigerar.
 
-Sedan `4.0.0` beskriver schemat endast lagringsformen. Varje objekt med namngivna fält är stängt (`additionalProperties: false`), varje fält som lagringsformen alltid skriver är obligatoriskt, ett fält som den utelämnar när det inte innehåller något namnges men är inte obligatoriskt och inget fält som den alltid utelämnar namnges. Det avvisar därför körtidsvärdet. Det avvisar också en fil som sparats före `4.0.0`, med dess `meta`, bredder, `zIndex`, `ignoreSaveSettings` och resten, tills en editor i version `4.0.0` eller senare sparar filen igen. En fil som sparats av `3.2.0` eller senare anger redan URL:en till det här schemat, som pekar på grenen `main`, så en editor som validerar mot det flaggar filen nu. En fil som sparats av `3.0.0` eller `3.1.0`, eller ett v2-dokument, anger inget `$schema`.
+Sedan `4.0.0` beskriver schemat endast lagringsformen. Varje objekt med namngivna fält är stängt (`additionalProperties: false`), varje fält som lagringsformen alltid skriver är obligatoriskt, varje fält som är märkt med `?` i typerna ovan namnges men är inte obligatoriskt och inget annat fält namnges. Det avvisar därför en fil som sparats före `4.0.0`, med dess `meta`, bredder, `zIndex`, `ignoreSaveSettings` och resten, tills en editor i version `4.0.0` eller senare sparar filen igen. En fil som sparats av `3.2.0` eller senare anger redan URL:en till det här schemat, som pekar på grenen `main`, så en editor som validerar mot det flaggar filen nu. En fil som sparats av `3.0.0` eller `3.1.0`, eller ett v2-dokument, anger inget `$schema`.
 
 Sedan `4.2.0` kräver schemat inte längre en entitets textfält, någon lista i `doc`, någon samling eller själva `collections`, som lagringsformen utelämnar när de inte innehåller något. Det accepterar fortfarande en fil som sparats av `4.0.0` eller `4.1.0`. Det namnger de nya fälten: `nameViewMode`, som bara accepterar `"logical"` och `"both"`; en tabells `logicalName` och `nameDerived`, som bara accepterar `true`; en kolumns `logicalName` och `domainId`; och de tre ordlistorna, var och en med sin rubrikrad och sina rader av strängar. `canvasType` listar fliken Ordlista, `columnOrder` accepterar sju eller nio heltal och beskrivningarna av `show`, `columnOrder`, `lockSettings` och `options` namnger de nya bitarna.
 

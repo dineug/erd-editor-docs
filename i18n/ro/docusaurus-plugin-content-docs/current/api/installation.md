@@ -51,18 +51,18 @@ Pentru restul API-ului, consultați [ErdEditorElement](./erd-editor-element.md).
 
 ```html
 <script type="module">
-  import 'https://esm.run/@dineug/erd-editor@5.0.0/erd-editor.js';
+  import 'https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js';
 
   const editor = document.createElement('erd-editor');
   editor.style.cssText = 'display: block; width: 100%; height: 100vh;';
   document.body.appendChild(editor);
 </script>
 <!-- or -->
-<script type="module" src="https://esm.run/@dineug/erd-editor@5.0.0/erd-editor.js"></script>
+<script type="module" src="https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js"></script>
 ```
 
 Serviciul `esm.run` rezolvă în locul dumneavoastră dependențele externe ale pachetului, așa că acest cod funcționează fără bundler.
-Fiecare punct de intrare se atinge prin calea sa de după versiune: `…/erd-editor.js` definește editorul, iar `…/erd-viewer.js` viewerul, care preia de la CDN fiecare limbă de afișare în afară de engleză abia când o pagină o cere. URL-ul simplu al pachetului, `https://esm.run/@dineug/erd-editor@5.0.0`, servește rădăcina, care nu definește niciun element.
+Fiecare punct de intrare se atinge prin calea sa de după versiune: `…/erd-editor.js` definește editorul, iar `…/erd-viewer.js` viewerul, care preia de la CDN fiecare limbă de afișare în afară de engleză abia când o pagină o cere. URL-ul simplu al pachetului, `https://esm.run/@dineug/erd-editor@5.1.0`, servește rădăcina, care nu definește niciun element.
 Un URL fără versiune servește întotdeauna cea mai recentă versiune. Fixați o versiune, ca mai sus, dacă nu doriți ca o actualizare majoră să ajungă neanunțată pe pagina dumneavoastră.
 Versiunea `5.0.0` este ea însăși una: o pagină care trebuie să rămână pe 4.x fixează `@4.2.0` (consultați [Actualizarea de la 4.x](#upgrading-from-4x)).
 
@@ -75,7 +75,7 @@ Spre ea indică câmpurile `unpkg` și `jsdelivr`, așa că URL-ul simplu al pac
 
 ```html
 <erd-editor></erd-editor>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.0.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0"></script>
 <script>
   const editor = document.querySelector('erd-editor');
   editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
@@ -88,7 +88,7 @@ Spre ea indică câmpurile `unpkg` și `jsdelivr`, așa că URL-ul simplu al pac
 
 ```html
 <erd-viewer src="diagram.erd.json" style="display: block; height: 480px"></erd-viewer>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.0.0/dist/erd-viewer.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0/dist/erd-viewer.umd.js"></script>
 ```
 
 Niciunul dintre fișiere nu definește eticheta celuilalt, iar fiecare nu lasă pe pagină niciun global în afară de al său și de `window.Konva`.
@@ -100,7 +100,7 @@ O pagină care nu poate încărca un script propriu poate încadra viewerul găz
 ```html
 <erd-editor system-dark-mode enable-theme-builder enable-locale-picker enable-welcome-screen></erd-editor>
 <script type="module">
-  import 'https://esm.run/@dineug/erd-editor@5.0.0/erd-editor.js';
+  import 'https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js';
 
   const editor = document.querySelector('erd-editor');
 </script>
@@ -148,7 +148,6 @@ export default {
 };
 ```
 
-
 ### TypeScript {#typescript}
 
 Importarea `@dineug/erd-editor/erd-editor.js` îmbină `erd-editor` în `HTMLElementTagNameMap`, iar `@dineug/erd-editor/erd-viewer.js` îmbină `erd-viewer`, așa că elementul este tipizat fără conversie explicită de tip. Orice import din rădăcină, chiar și unul doar de tip, le aduce pe amândouă.
@@ -162,7 +161,7 @@ const found = document.querySelector('erd-editor'); // ErdEditorElement | null
 ```
 
 Tipul `ErdEditorElement` este exportat pentru adnotarea propriilor variabile și proprietăți (props). Începând cu versiunea `5.0.0`, este și clasa elementului, iar `ErdViewerElement` este interfața și clasa viewerului (consultați [Înregistrarea elementelor](#registering-the-elements)).
-Începând cu versiunea `4.0.0`, pachetul exportă și tipurile `LocaleCode`, `LocaleOption` și `SchemaSQLOptions`, iar începând cu versiunea `5.0.0` și `ToImageOptions` (consultați [Puncte de intrare](#entry-points)). Opțiunile pe care le primesc metodele `setSchema*()` nu au un nume exportat; deduceți-le din element, sub forma `Parameters<ErdEditorElement['setSchemaSQL']>[1]`.
+Începând cu versiunea `4.0.0`, pachetul exportă și tipurile `LocaleCode`, `LocaleOption` și `SchemaSQLOptions`, iar începând cu versiunea `5.0.0` și `ToImageOptions` (consultați [Puncte de intrare](#entry-points)). Opțiunile pe care le primesc metodele `setSchema*()` nu au un nume exportat; deduceți-le din element, sub forma `Parameters<ErdEditorElement['setSchemaSQL']>[1]`. Același lucru este valabil pentru [store-ul partajat](./advanced/collaborative-editing.md) și tipurile sale.
 Începând cu versiunea `5.0.0`, câmpul `typesVersions` al pachetului tipizează și fiecare punct de intrare de subcale sub `moduleResolution: "node10"`, care nu citește harta exporturilor.
 
 ## Înregistrarea elementelor {#registering-the-elements}
@@ -260,7 +259,7 @@ Pachetul are cinci puncte de intrare:
 | `@dineug/erd-editor/erd-editor.js` | Începând cu versiunea `5.0.0`. Definește `<erd-editor>` și nu exportă nimic |
 | `@dineug/erd-editor/erd-viewer.js` | Începând cu versiunea `5.0.0`. Definește `<erd-viewer>` și nu exportă nimic |
 | `@dineug/erd-editor/engine.js` | Store-ul documentului, fără DOM |
-| `@dineug/erd-editor/peer.js` | Începând cu versiunea `3.9.1`. Partenerul fără interfață al serverului MCP |
+| `@dineug/erd-editor/peer.js` | Începând cu versiunea `3.9.1`. Partenerul fără interfață al serverului MCP și, începând cu versiunea `5.1.0`, al [legăturii Yjs](./advanced/yjs.md) |
 
 Rădăcina exportă ambele clase de elemente și funcțiile lor de definire, două funcții de setare a funcțiilor callback, combinațiile de taste implicite împreună cu tipurile lor (începând cu versiunea `3.9.2`), tipurile pentru limba de afișare și tipul opțiunilor metodei `getSchemaSQL()` (începând cu versiunea `4.0.0`), combinațiile pentru rânduri ale filei Dicționar (începând cu versiunea `4.2.0`) și, începând cu versiunea `5.0.0`, `toImage`.
 
@@ -290,7 +289,9 @@ Subcalea `@dineug/erd-editor/engine.js` rulează store-ul documentului fără DO
 Exportă funcția `createReplicationStore` și tipul `ReplicationStore`. Începând cu versiunea `3.10.0`, exportă și tipul `ReplicationChange`, `{ value: string; changed: boolean }`, pe care îl primește ascultătorul `change` al unei replici (consultați [on@change](./advanced/remote-storage.md#onchange)).
 Începând cu versiunea `4.0.0`, un store `ReplicationStore` are și o proprietate `runtimeValue`. Proprietatea sa `value` și valoarea transmisă de un eveniment `change` sunt în forma de stocare pe care o are un fișier, la fel ca la element (consultați [ReplicationStore](./advanced/remote-storage.md#replicationstore)).
 
-Subcalea `@dineug/erd-editor/peer.js` este partenerul fără interfață prin care [serverul MCP](../mcp/introduction.md) editează un document. Există pentru acel server, iar aceste pagini nu îl documentează.
+Subcalea `@dineug/erd-editor/peer.js` este partenerul fără interfață prin care [serverul MCP](../mcp/introduction.md) editează un document.
+Începând cu versiunea `5.1.0`, este și ceea ce leagă funcția `bindPeerStore` din pachetul `@dineug/erd-editor-yjs` de un `Y.Doc`: un store partener creat de funcția `createPeerStore()` a acestui punct de intrare, ca membru fără interfață al unei camere sau ca compactor care restrânge în instantaneu istoricul camerei.
+În afara a ceea ce arată pagina [Yjs](./advanced/yjs.md) despre el – apelul `createPeerStore()`, proprietatea `value` a unui store partener legat și metoda sa `destroy()` –, aceste pagini nu îl documentează.
 
 ### Casete de dialog pentru fișiere {#file-dialogs}
 
@@ -370,14 +371,13 @@ Versiunea `5.0.0` este o versiune majoră. Verificați fiecare dintre aceste pun
    import { setExportFileCallback } from '@dineug/erd-editor';
   ```
 
-- Pe un CDN, același lucru este valabil pentru `https://esm.run/@dineug/erd-editor`, care acum servește rădăcina și nu definește nimic: importați `https://esm.run/@dineug/erd-editor@5.0.0/erd-editor.js`. URL-urile simple jsDelivr și unpkg servesc în continuare versiunea pentru eticheta script, care definește `<erd-editor>` ca înainte. Un URL fără versiune servește acum cea mai recentă versiune 5.x; fixați `@4.2.0` pentru a rămâne pe 4.x (consultați [CDN](#cdn) și [Eticheta script](#script-tag)).
+- Pe un CDN, același lucru este valabil pentru `https://esm.run/@dineug/erd-editor`, care acum servește rădăcina și nu definește nimic: importați `https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js`. URL-urile simple jsDelivr și unpkg servesc în continuare versiunea pentru eticheta script, care definește `<erd-editor>` ca înainte. Un URL fără versiune servește acum cea mai recentă versiune 5.x; fixați `@4.2.0` pentru a rămâne pe 4.x (consultați [CDN](#cdn) și [Eticheta script](#script-tag)).
 - Rădăcina nu definește nimic, dar tot are nevoie de un DOM, așa că la redarea pe server un import numit din ea, cum ar fi `setExportFileCallback`, rămâne pe calea doar pentru client, alături de punctul de intrare al elementului (consultați [Redare pe server](#server-side-rendering)).
 - `window.ErdEditor` primește `ErdEditorElement` și `defineErdEditor`. Versiunea pentru eticheta script a viewerului pune `ErdViewerElement` și `defineErdViewer` pe `window.ErdViewer`, iar niciun global nu conține `toImage`.
 - Un editor `readonly` se deschide ca un cititor. Cele șase file, exploratorul, Quick Search și prezența rămân, iar fiecare control care ar edita diagrama dispare în loc să fie dezactivat: bara de instrumente afișează numele bazei de date ca text, fila Setări își arată setările cu fiecare control dezactivat sub o insignă `Read only`, iar bara de instrumente plutitoare păstrează doar zoomul, Name View, modul Zen și busola, așa că `Hand` și `Select` dispar, iar o tragere deplasează pânza. O apăsare nu selectează nimic: singura selecție este conturul pe care îl pune un salt din Explorer sau din Quick Search în jurul a ceea ce ajunge acolo, pe care îl șterge un clic fără mișcare, iar tastele de selectare a tuturor nu selectează nimic. Activarea `readonly` încheie ce era deschis, cum ar fi selecția, instrumentul mână, un editor de celulă, o tragere, Map Columns, previzualizarea `Force` din Auto Layout și Time Travel, și păstrează derularea, zoomul, fila și Name View (consultați [readonly](./erd-editor-element.md#readonly)).
-- Setările pe care le schimbă un cititor `readonly` rămân pe ecranul acelui editor, indiferent de blocările lor: derularea și zoomul, fila, Name View, View Option, baza de date, precum și limbajul, stilurile de denumire și tipul de delimitator ale Code Generator. `value`, `runtimeValue` și exportul JSON le păstrează pe cele proprii ale documentului, la care puteau ajunge schimbările unui cititor 4.x, iar `getSharedStore()` nu trimite niciuna celorlalte editoare. `getSchemaSQL()` fără o bază de date indicată scrie baza de date aleasă de cititor. Dezactivarea `readonly` readuce baza de date, setările de cod și View Option la cele ale documentului și lasă derularea, zoomul, fila și Name View unde le-a lăsat cititorul.
+- Setările pe care le schimbă un cititor `readonly` rămân pe ecranul acelui editor, indiferent de blocările lor: derularea și zoomul, fila, Name View, View Option, baza de date, precum și limbajul, stilurile de denumire și tipul de delimitator ale Code Generator. `value`, `runtimeValue` și exportul JSON le păstrează pe cele proprii ale documentului, la care puteau ajunge schimbările unui cititor 4.x, iar `getSharedStore()` nu trimite niciuna celorlalte editoare. `getSchemaSQL()` fără o bază de date indicată scrie baza de date aleasă de cititor. Dezactivarea `readonly` readuce baza de date, setările de cod și View Option la ceea ce ar afișa acel editor dacă cititorul nu ar fi schimbat nimic și lasă derularea, zoomul, fila și Name View unde le-a lăsat cititorul.
 - Rândul `Recalculation table width` din fila Setări a dispărut. O încărcare și o lipire încă potrivesc lățimea fiecărui tabel la textul lui.
 - Pe Vite 8, eliminați `exclude: ['@dineug/erd-editor']` din `optimizeDeps`, de care au nevoie doar Vite 7 și cele mai vechi, și păstrați `include` pentru ELK (consultați [Vite](#vite)).
-
 
 ## Actualizarea de la 3.x {#upgrading-from-3x}
 

@@ -1,5 +1,5 @@
 ---
-sidebar_position: 2
+sidebar_position: 3
 description: Répliquer un éditeur en cours d’exécution dans un store sans interface hors du thread principal, et sérialiser le document pour le stockage.
 ---
 
@@ -88,6 +88,11 @@ Depuis la version `4.2.0`, il en va de même pour un mot, un terme ou un domaine
 Quand un éditeur annule la suppression, une réplique initialisée sans la ligne la fait réapparaître vide, et comme `value` omet une ligne vide, la réplique enregistre le document sans elle.  
 Pour un domaine, les colonnes et les termes qui y étaient liés restent aussi déliés dans cette réplique, puisqu’elle n’a jamais détenu les liens et que l’annulation ne les envoie pas.
 
+Depuis la version `5.1.0`, [`@dineug/erd-editor-yjs`](./yjs.md) peut aussi synchroniser des éditeurs au travers d’une salle Yjs.  
+Alimentée comme ci-dessus à partir d’un élément lié à une salle, une réplique ne reçoit que les modifications faites sur cet élément, jamais celles que la salle y apporte : celles-ci parviennent à l’élément comme celles d’un autre éditeur, et un store partagé ne retransmet jamais ce qu’il a reçu.  
+Pour stocker le document d’une salle, enregistrez le `value` de l’élément lié, ou celui d’un store pair lié, comme le décrit [Contenu de la salle](./yjs.md#what-the-room-holds).  
+Un fournisseur de persistance Yjs stocke la salle elle-même, qui contient une valeur d’exécution et les modifications faites depuis, plutôt qu’un fichier ; voir [Limites](./yjs.md#limits).
+
 ## InjectEngineContext {#injectenginecontext}
 
 ### toWidth {#towidth}
@@ -154,7 +159,7 @@ Il ne contient que les entités actives, dans un ordre fixe, sans les entités s
 Depuis la version `4.2.0`, il contient aussi les noms logiques, l’indication que chaque nom a été dérivé ou non des dictionnaires, les liens de domaine, ainsi que les mots, les termes et les domaines de l’onglet [Dictionnaire](../../guide/guides/dictionary.md).  
 Il omet aussi, depuis la version `4.2.0`, chaque champ de texte vide d’une entité, chaque liste de `doc` et chaque collection qui ne contient rien, et `collections` lui-même quand toutes les collections sont vides.  
 Il est indenté de deux espaces, avec chaque ligne de dictionnaire sur sa propre ligne de texte, et se termine par un saut de ligne, de sorte que le même document donne toujours les mêmes octets.  
-Pour son contenu, voir [Forme de stockage et valeur d’exécution](./schema.md#storage-form-and-runtime-value).
+Pour son contenu, voir [Forme de stockage](./schema.md#storage-form).
 
 Chaque paramètre dont le [verrou](../../guide/guides/settings.md#lock) est activé est écrit avec la valeur à laquelle il a été verrouillé, et tout autre paramètre tel qu’il est.  
 Le verrou `Viewport` couvre à la fois l’origine de la vue et le niveau de zoom, et l’onglet, le langage du générateur de code, les deux casses des noms et le type de délimiteur ont chacun leur propre verrou.  
@@ -172,6 +177,7 @@ const snapshot = replicationStore.runtimeValue;
 ```
 
 Utilisez-le pour initialiser un éditeur ou un autre store qui rejoint la session plus tard, via son `setInitialValue` (voir [Édition collaborative](./collaborative-editing.md)).  
+Une réplique n’a ni [getLWW](./collaborative-editing.md#getlww) ni [getVersion](./collaborative-editing.md#getversion) et ne transmet donc aucun registre de collaboration avec `runtimeValue` : un éditeur initialisé à partir d’elle les prend aux éditeurs en cours d’exécution, comme le décrit [Initialiser un collaborateur](./collaborative-editing.md#seeding-a-collaborator).  
 Ne le stockez jamais comme fichier : il contient les entités supprimées, et le [JSON Schema](./schema.md#json-schema) publié le refuse.  
 Ce sont ces entités supprimées qui permettent à l’annulation d’une suppression, envoyée plus tard, de faire revenir l’entité complète dans le store initialisé à partir de lui.  
 Elles restent jusqu’à la prochaine ouverture du document depuis son fichier, dont la forme les exclut.
@@ -230,7 +236,7 @@ Avant la version `3.10.0`, il ne recevait rien, et un écouteur qui ignore l’a
 `changed` vaut `false` quand les actions survenues depuis le `change` précédent, ou depuis le chargement, ont laissé `value` tel qu’il était, octet pour octet.
 
 Une modification qu’un [verrou](../../guide/guides/settings.md#lock) exclut de `value` déclenche quand même `change`, avec `changed` à `false` : n’écrivez donc que lorsque `changed` vaut `true`.  
-C’est le cas d’un défilement ou d’un zoom quand `Viewport` est verrouillé, d’un changement d’onglet quand `Canvas Type` est verrouillé, et d’une modification du langage du générateur de code, d’une casse des noms ou du type de délimiteur quand son propre verrou est activé.  
+C’est le cas d’un défilement ou d’un zoom quand `Viewport` est verrouillé, d’un changement d’onglet quand `Canvas Type` est verrouillé, et d’une modification du langage du générateur de code, d’une casse des noms ou du type de délimiteur quand son propre verrou est activé, ce que, depuis la version `5.1.0`, seul un éditeur antérieur à la version `5.1.0` envoie encore (voir [dispatch, dispatchSync](#dispatch-dispatchsync)).  
 Depuis la version `4.2.0`, c’est aussi le cas d’un changement de l’affichage des noms quand `Name View` est verrouillé : l’éditeur l’envoie quand même, mais la réplique l’écarte, comme le font les autres éditeurs.  
 Un changement de l’affichage des noms fait dans un éditeur en lecture seule est écarté de la même façon, quel que soit son verrou.  
 L’événement [change](../erd-editor-element.md#change) de l’élément ignore une telle modification, mais la réplique la signale quand même.  
@@ -282,6 +288,23 @@ Un éditeur antérieur à la version `4.2.0` présent dans la session peut tout 
 Un `Import` Schéma SQL, GraphQL, DBML ou AML sur cet éditeur, mais pas un `Import and Add`, vide les mots, les termes et les domaines de la réplique.  
 Son annulation d’un chargement, d’un `Import` ou de `clear()` charge dans la réplique sa propre copie du document, sans noms logiques, ni liens de domaine, ni dictionnaires (voir [Combiner des versions](./collaborative-editing.md#mixing-releases)).  
 `@dineug/erd-editor/engine.js` exporte les mêmes `createReplicationStore`, `ReplicationStore` et `ReplicationChange` qu’auparavant, et `createReplicationStore` prend le même contexte.
+
+La version `5.1.0` n’ajoute aucun type d’action et ne modifie aucune exportation de `@dineug/erd-editor/engine.js` : une réplique en version `4.2.0` ou ultérieure conserve donc toujours chaque modification qu’envoie un éditeur `5.1.0`.  
+Depuis la version `5.1.0`, la réplique départage les modifications faites au même moment comme le font les éditeurs `5.1.0` ; voir [Modifications concurrentes](./collaborative-editing.md#concurrent-edits).  
+Elle conserve une version pour la position d’une table, pour la position et la taille d’un mémo et d’un groupe de tables, ainsi que pour l’origine de la vue et le niveau de zoom.  
+Un éditeur `5.1.0` envoie un glissement, un déplacement de la vue ou un zoom sous la forme de l’endroit où il se termine, via `table.moveTo`, `memo.moveTo`, `tableGroup.moveTo`, `settings.scrollTo` et `settings.changeZoomLevel`, et la réplique ne prend chacune de ces actions, ainsi que chaque `memo.resize` et `tableGroup.resize`, que si sa version n’est pas inférieure à celle qu’elle détient.  
+Ainsi, quand deux de ces éditeurs déplacent ou redimensionnent une même table, un même mémo ou un même groupe de tables au même moment, la réplique l’enregistre à la position et à la taille que chacun d’eux affiche, quel que soit l’ordre dans lequel elle les reçoit, et un glissement, un déplacement de la vue ou un zoom que le transport livre deux fois ne déplace rien deux fois.  
+Avec `Viewport` déverrouillé, la réplique enregistre l’origine et le niveau de zoom chacun d’après l’écriture de version la plus élevée, là où se trouvait l’éditeur qui l’a faite.  
+Un zoom déplace aussi l’origine : un déplacement de la vue et un zoom que deux éditeurs font au même moment peuvent donc être enregistrés comme l’origine d’un éditeur avec le niveau de zoom de l’autre.  
+Avant la version `5.1.0`, la réplique additionnait les pas de déplacement de la vue et de zoom de chaque éditeur sur une seule vue.
+
+Les distances qu’envoie un éditeur antérieur à la version `5.1.0` pour un glissement, un déplacement de la vue ou un zoom (`table.move`, `memo.move`, `tableGroup.move`, `settings.streamScrollTo` et `settings.streamZoomLevel`) s’ajoutent toujours à ce que détient la réplique, hors des versions.  
+Un changement de couleur arrive toujours sans version : la réplique, comme chaque éditeur, l’estampille d’une version qui lui est propre et conserve la couleur reçue en dernier, si bien que deux changements de couleur d’une même table, d’un même mémo ou d’un même groupe de tables faits au même moment peuvent être enregistrés autrement que ce qu’affiche un éditeur.  
+Une réplique antérieure à la version `5.1.0` applique les positions et les tailles dans l’ordre où elles arrivent, et peut donc enregistrer une table ailleurs que là où l’affichent les éditeurs `5.1.0`.  
+Pour que les modifications faites au même moment aboutissent au même résultat, gardez chaque éditeur de la session, ainsi que la réplique, en version `5.1.0` ou ultérieure, hors les exceptions que liste [Modifications concurrentes](./collaborative-editing.md#concurrent-edits).
+
+Depuis la version `5.1.0`, un éditeur n’envoie une modification du langage du générateur de code, d’une casse des noms ou du type de délimiteur que tant que le verrou de ce paramètre est désactivé, marquée `shared: true` dans sa charge utile, et la réplique applique chaque modification marquée, comme le font les éditeurs (voir [Édition collaborative](./collaborative-editing.md)).  
+La réplique n’applique une modification non marquée, qu’envoie un éditeur antérieur à la version `5.1.0` quel que soit le verrou, que tant que ce paramètre est déverrouillé de son côté, et l’écarte tant qu’il est verrouillé (voir [on@change](#onchange)).
 
 Depuis la version `4.0.0`, les deux méthodes appliquent aussi `editor.mergeLWW`, qui transporte les registres de collaboration par lesquels un éditeur répond quand un autre rejoint la session, si bien que la réplique départage les modifications concurrentes comme le font les éditeurs.  
 Cette action ne modifie aucun octet de `value` et ne déclenche aucun `change`.  

@@ -22,6 +22,7 @@ Hárky karty [Slovník](./dictionary.md) tiež preberajú slová, termíny a dom
 Prípony sa porovnávajú bez ohľadu na veľkosť písmen. Ak vyberiete súbor, ktorého prípona nezodpovedá zvolenému formátu, import sa zruší a zobrazí sa hlásenie `Only <format> files can be imported`, pričom formát je zapísaný ako `json`, `sql`, `graphql`, `dbml` alebo `aml`, napríklad `Only sql files can be imported`.
 
 Položka `Import` nahradí aktuálny dokument namiesto toho, aby doň obsah zlúčila, a jedno vrátenie späť obnoví predchádzajúci diagram.  
+Položka `Import`, jej vrátenie späť a jej opätovné vykonanie ukončia kreslenie vzťahu, čo položka [`Import and Add`](#import-and-add) nerobí – pozrite si časť [Vytvorenie vzťahu](./editing-start.md#relationship-creation).  
 Súbor JSON so sebou prináša vlastné nastavenia vrátane [zamknutí](./settings.md#lock). Ak súbor zamyká kartu, jazyk na karte Generátor kódu, niektorý štýl názvov, typ úvodzoviek alebo [Zobrazenie názvov](./logical-names.md#name-view), naďalej vidíte to, čo ste mali, ale uloží sa zamknutá hodnota zo súboru. Priblíženie a poloha zobrazenia sa nastavia tak, ako ich určuje súbor, či už sú zamknuté, alebo nie. Súbor JSON uložený pred zavedením zamknutí sa načíta so všetkými zamknutiami zapnutými a s priblížením zobrazenia 100 %. Súbor uložený pred zavedením zamknutia `Name View` sa načíta s týmto zamknutím zapnutým bez ohľadu na to, aké iné zamknutia zaznamenáva.  
 Ostatné formáty zachovajú nastavenia, ktoré už máte, vrátane zamknutí, okrem zobrazenia, ktoré začína s priblížením 100 %.  
 Parsery GraphQL, DBML a AML nikdy nezlyhajú: zo súboru, ktorý nedokážu prečítať, vznikne namiesto chyby prázdny diagram.
@@ -211,7 +212,7 @@ DBML oboma smermi prenáša aj farby tabuliek, bez prípadnej priehľadnosti, a 
 
 Podponuka `Export` v kontextovej ponuke plátna má tri položky:
 
-- json: Uloží diagram v podobe, v akej ho obsahuje jeho súbor, ako `.erd.json`: tabuľky s ich stĺpcami a indexmi, vzťahy, poznámky a skupiny tabuliek, logické názvy a prepojenia stĺpcov s doménami, slová, termíny a domény karty [Slovník](./dictionary.md) a nastavenia, pričom každé [zamknuté nastavenie](./settings.md#lock) má svoju zamknutú hodnotu. To, čo nič neobsahuje, napríklad prázdny text alebo prázdny riadok slovníka, sa vynechá – pozrite si časť [Úložná forma a hodnota za behu](../../api/advanced/schema.md#storage-form-and-runtime-value).
+- json: Uloží diagram v podobe, v akej ho obsahuje jeho súbor, ako `.erd.json`: tabuľky s ich stĺpcami a indexmi, vzťahy, poznámky a skupiny tabuliek, logické názvy a prepojenia stĺpcov s doménami, slová, termíny a domény karty [Slovník](./dictionary.md) a nastavenia, pričom každé [zamknuté nastavenie](./settings.md#lock) má svoju zamknutú hodnotu. To, čo nič neobsahuje, napríklad prázdny text alebo prázdny riadok slovníka, sa vynechá – pozrite si časť [Úložná forma](../../api/advanced/schema.md#storage-form).
 - Schema SQL: Otvorí kartu [Schéma SQL](./schema-sql.md#saving-or-copying-the-sql) s otvoreným panelom možností a s fokusom na tlačidle `Save file`, takže stlačením klávesu `Enter` sa kód SQL zobrazený na karte uloží ako `.sql`. Dovtedy sa nič neuloží.
 - Image: Otvorí dialógové okno `Export image`, ktoré diagram uloží ako `.png` alebo `.svg` alebo ho skopíruje do schránky ako PNG – pozrite si časť [Obrázok](#image).
 

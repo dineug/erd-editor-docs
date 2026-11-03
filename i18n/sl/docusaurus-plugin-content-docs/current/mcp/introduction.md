@@ -66,4 +66,7 @@ Orodja za logična imena, domene in slovarje potrebujejo strežnik različice `1
 Med zgornjimi izdajami razširitev pred različico `4.2.0` ali vtičnik pred različico `1.2.0` agentu še vedno omogoča urejanje v živo, ker uporablja protokol 2, vendar logična imena, povezave z domeno in vrstice slovarjev, ki jih zapiše agent, prezre in jih ob shranjevanju datoteke izpusti.
 Strežnik pred različico `1.1.0`, ki ureja datoteko na disku, jo zapiše nazaj brez njenih logičnih imen, povezav z domeno in vrstic slovarjev – glejte razdelek [Posodabljanje](./installation.md#updating).
 
+Spremembe istega imena ali polja ali položaja oziroma velikosti iste tabele, beležke ali skupine tabel, ki jih vi in agent naredite v istem trenutku, se v urejevalniku in pri agentu končajo enako s strežnikom `1.2.0` ali novejšim in, kjer koli je dokument odprt, z razširitvijo za VS Code različice `4.3.0` ali novejše ali vtičnikom za Obsidian ali JetBrains različice `1.3.0` ali novejše.
+Izjeme so barva, zbirka podatkov in vrstni red stolpcev v tabeli ali indeksu – glejte razdelek [Spremembe, narejene v istem trenutku](./live-and-headless.md#edits-made-at-the-same-moment).
+
 Naprej: [Namestitev](./installation.md).

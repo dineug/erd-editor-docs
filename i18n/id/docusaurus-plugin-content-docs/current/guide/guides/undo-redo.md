@@ -67,7 +67,8 @@ Perubahan yang datang dari editor lain juga tidak dicatat, sehingga Batalkan han
 
 Membatalkan `Import`, yang mengganti seluruh diagram, mengembalikan diagram sebelumnya sebagaimana keadaannya di editor saat Anda mengimpor, dengan setiap [penguncian](./settings.md#lock) aktif atau nonaktif dan setiap nilai terkunci seperti saat itu.  
 Jika `Viewport` pada diagram tersebut terkunci, area pandang dan zoom kembali ke area pandang yang terkunci, tempat diagram terbuka, bukan ke tempat Anda berada sebelumnya. Dengan `Viewport` tidak terkunci, keduanya kembali ke tempat Anda berada saat mengimpor. Pengaturan terkunci lainnya, seperti tab yang sedang Anda buka, bahasa Generator Kode, atau Tampilan Nama, tetap seperti yang ada di layar Anda.  
-Diagram baru dimulai dengan setiap penguncian aktif. Buka kunci `Viewport` sebelum mengimpor agar area pandang Anda tetap sama saat pembatalan semacam itu. Membuka kuncinya setelahnya, atau mengimpor file JSON yang penguncian `Viewport`-nya sendiri nonaktif, tidak mengubah ke mana pembatalan itu membawa Anda.
+Diagram baru dimulai dengan setiap penguncian aktif. Buka kunci `Viewport` sebelum mengimpor agar area pandang Anda tetap sama saat pembatalan semacam itu. Membuka kuncinya setelahnya, atau mengimpor file JSON yang penguncian `Viewport`-nya sendiri nonaktif, tidak mengubah ke mana pembatalan itu membawa Anda.  
+Membatalkan atau mengulangi `Import` juga mengakhiri hubungan yang sedang digambar — lihat [Pembuatan hubungan](./editing-start.md#relationship-creation).
 
 Membatalkan impor file JSON juga mengembalikan kata, istilah, dan domain yang dimiliki diagram sebelumnya. Impor Skema SQL, GraphQL, DBML, atau AML mempertahankan kamus, sehingga pembatalan dan pengulangannya membiarkan kamus apa adanya, termasuk perubahan yang dibuat di tab Kamus sejak saat itu.
 

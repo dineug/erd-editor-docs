@@ -1,5 +1,5 @@
 ---
-sidebar_position: 2
+sidebar_position: 3
 description: Replicați un editor în funcțiune într-un store fără interfață, în afara firului principal, și serializați documentul pentru stocare.
 ---
 
@@ -88,6 +88,11 @@ Când un editor anulează eliminarea, o replică inițializată fără un tabel 
 Când un editor anulează eliminarea, o replică inițializată fără rândul respectiv îl listează din nou gol, iar, deoarece `value` omite un rând gol, replica salvează documentul fără el.  
 În cazul unui domeniu, coloanele și termenii legați de el rămân, de asemenea, fără această legătură în acea replică, deoarece replica nu a deținut niciodată legăturile, iar anularea nu le trimite.
 
+Începând cu versiunea `5.1.0`, [`@dineug/erd-editor-yjs`](./yjs.md) poate ține editoarele sincronizate și printr-o cameră Yjs.  
+O replică alimentată ca mai sus de la un element legat de o cameră primește doar editările făcute pe acel element, niciodată pe cele pe care le aduce camera: acestea ajung la element ca editări ale altui editor, iar un store partajat nu retransmite ce a primit.  
+Pentru a stoca documentul unei camere, salvați proprietatea `value` a elementului legat sau pe cea a unui store partener legat, așa cum descrie [Ce conține camera](./yjs.md#what-the-room-holds).  
+Un furnizor de persistență Yjs stochează camera însăși, care conține o valoare de execuție și editările făcute după aceasta, nu un fișier; consultați [Limite](./yjs.md#limits).
+
 ## InjectEngineContext {#injectenginecontext}
 
 ### toWidth {#towidth}
@@ -154,7 +159,7 @@ Conține doar entitățile existente, într-o ordine fixă, fără cele eliminat
 Începând cu versiunea `4.2.0`, conține și numele logice, informația dacă fiecare nume a fost derivat din dicționare, legăturile cu domeniile, precum și cuvintele, termenii și domeniile din fila [Dicționar](../../guide/guides/dictionary.md).  
 Tot începând cu versiunea `4.2.0`, omite fiecare câmp de text gol al unei entități, fiecare listă `doc` și fiecare colecție care nu conține nimic, precum și obiectul `collections` însuși când toate colecțiile sunt goale.  
 Textul are o indentare de două spații, cu fiecare rând al dicționarelor pe o linie separată, și se termină cu un caracter de linie nouă, astfel încât același document produce mereu aceiași octeți.  
-Consultați [Forma de stocare și valoarea de execuție](./schema.md#storage-form-and-runtime-value) pentru a vedea ce conține.
+Consultați [Forma de stocare](./schema.md#storage-form) pentru a vedea ce conține.
 
 Fiecare setare a cărei [blocare](../../guide/guides/settings.md#lock) este activată se scrie cu valoarea la care a fost blocată, iar orice altă setare, așa cum este în acel moment.  
 Blocarea `Viewport` acoperă împreună originea vizualizării și nivelul de zoom, iar fila, limbajul generatorului de cod, ambele stiluri de denumire și tipul de delimitator au fiecare propria blocare.  
@@ -172,6 +177,7 @@ const snapshot = replicationStore.runtimeValue;
 ```
 
 Folosiți valoarea de execuție pentru a inițializa un editor sau un alt store care se alătură mai târziu, prin metoda `setInitialValue` a acestuia; consultați [Editare colaborativă](./collaborative-editing.md).  
+O replică nu are [getLWW](./collaborative-editing.md#getlww) și nici [getVersion](./collaborative-editing.md#getversion), așa că nu transmite registrele de colaborare prin `runtimeValue`: un editor inițializat din ea le preia de la editoarele aflate în funcțiune, așa cum descrie [Inițializarea unui colaborator](./collaborative-editing.md#seeding-a-collaborator).  
 Nu o stocați niciodată ca fișier: conține entitățile eliminate, iar [JSON Schema](./schema.md#json-schema) publicată o respinge.  
 Datorită acestor entități eliminate, o anulare a unei eliminări, trimisă ulterior, readuce entitatea întreagă în store-ul inițializat din această valoare.  
 Ele rămân până la următoarea deschidere a documentului din fișierul său, a cărui formă le omite.
@@ -230,7 +236,7 @@ Proprietatea `value` este documentul serializat în forma de stocare, același �
 Proprietatea `changed` este `false` când acțiunile de la evenimentul `change` anterior sau de la încărcare au lăsat `value` octet cu octet așa cum era.
 
 O modificare pe care o [blocare](../../guide/guides/settings.md#lock) o lasă în afara proprietății `value` declanșează totuși evenimentul `change`, cu `changed` setat la `false`, așa că scrieți doar când `changed` este `true`.  
-Este vorba de o derulare sau un zoom cât timp setarea `Viewport` este blocată, de o comutare de filă cât timp setarea `Canvas Type` este blocată și de o modificare a limbajului generatorului de cod, a unui stil de denumire sau a tipului de delimitator cât timp propria sa blocare este activată.  
+Este vorba de o derulare sau un zoom cât timp setarea `Viewport` este blocată, de o comutare de filă cât timp setarea `Canvas Type` este blocată și de o modificare a limbajului generatorului de cod, a unui stil de denumire sau a tipului de delimitator cât timp propria sa blocare este activată, pe care, începând cu versiunea `5.1.0`, o mai trimite doar un editor anterior versiunii `5.1.0` (consultați [dispatch, dispatchSync](#dispatch-dispatchsync)).  
 Începând cu versiunea `4.2.0`, la fel este și o schimbare a modului de afișare a numelor cât timp setarea `Name View` este blocată: editorul o trimite în continuare, dar replica o elimină, la fel ca celelalte editoare.  
 O schimbare a modului de afișare făcută într-un editor doar în citire este eliminată la fel, indiferent dacă setarea `Name View` este blocată sau nu.  
 Evenimentul [change](../erd-editor-element.md#change) al elementului omite o astfel de modificare, dar replica o raportează totuși.  
@@ -282,6 +288,23 @@ Un editor anterior versiunii `4.2.0` aflat în sesiune poate totuși să elimine
 Un import Schemă SQL, GraphQL, DBML sau AML făcut cu `Import` în acel editor, dar nu unul făcut cu `Import and Add`, elimină cuvintele, termenii și domeniile replicii.  
 Anularea unei încărcări, a unui `Import` sau a unui apel `clear()` în acel editor încarcă în replică propria lui copie a documentului, fără nume logice, legături cu domeniile sau dicționare; consultați [Combinarea versiunilor](./collaborative-editing.md#mixing-releases).  
 Subcalea `@dineug/erd-editor/engine.js` exportă aceleași `createReplicationStore`, `ReplicationStore` și `ReplicationChange` ca înainte, iar funcția `createReplicationStore` primește același context.
+
+`5.1.0` nu adaugă niciun tip de acțiune și nu modifică niciun export din `@dineug/erd-editor/engine.js`, așa că o replică cu versiunea `4.2.0` sau o versiune ulterioară păstrează în continuare fiecare modificare pe care o trimite un editor `5.1.0`.  
+Începând cu versiunea `5.1.0`, replica rezolvă editările făcute în același moment la fel ca editoarele `5.1.0`; consultați [Editări simultane](./collaborative-editing.md#concurrent-edits).  
+Păstrează un marcaj de versiune pentru poziția unui tabel, pentru poziția și dimensiunea unei note și a unui grup de tabele, precum și pentru originea vizualizării și nivelul de zoom.  
+Un editor `5.1.0` trimite o glisare, o deplasare a vizualizării sau un zoom ca punctul în care se încheie, prin `table.moveTo`, `memo.moveTo`, `tableGroup.moveTo`, `settings.scrollTo` și `settings.changeZoomLevel`, iar replica preia fiecare dintre acestea, precum și fiecare `memo.resize` și `tableGroup.resize`, doar dacă marcajul său nu este mai mic decât cel pe care îl deține.  
+Așadar, când două dintre aceste editoare mută sau redimensionează același tabel, aceeași notă sau același grup de tabele în același moment, replica îl salvează în punctul și la dimensiunea pe care le arată fiecare dintre ele, indiferent de ordinea în care le primește, iar o glisare, o deplasare a vizualizării sau un zoom pe care transportul le livrează de două ori nu mută nimic de două ori.  
+Cu setarea `Viewport` deblocată, replica salvează originea și nivelul de zoom, fiecare din scrierea cu cel mai mare marcaj, adică acolo unde se afla editorul care a făcut-o.  
+Un zoom mută și originea, așa că o deplasare a vizualizării și un zoom făcute de două editoare în același moment pot fi salvate ca originea unui editor cu nivelul de zoom al celuilalt.  
+Înainte de versiunea `5.1.0`, replica aduna pașii de deplasare și de zoom ai tuturor editoarelor într-o singură vizualizare.
+
+Distanțele pe care un editor anterior versiunii `5.1.0` le trimite pentru o glisare, o deplasare a vizualizării sau un zoom (`table.move`, `memo.move`, `tableGroup.move`, `settings.streamScrollTo` și `settings.streamZoomLevel`) se adaugă în continuare la ceea ce deține replica, în afara marcajelor.  
+O schimbare de culoare sosește în continuare fără marcaj: replica, la fel ca fiecare editor, o marchează cu un marcaj propriu și păstrează culoarea auzită ultima, așa că două recolorări ale aceluiași tabel, ale aceleiași note sau ale aceluiași grup de tabele făcute în același moment pot fi salvate diferit de ceea ce arată un editor.  
+O replică anterioară versiunii `5.1.0` aplică punctele și dimensiunile în ordinea sosirii, așa că poate salva un tabel în alt loc decât îl arată editoarele `5.1.0`.  
+Păstrați toate editoarele din sesiune, precum și replica, pe versiunea `5.1.0` sau pe una mai nouă pentru ca editările făcute în același moment să ajungă la fel, cu excepțiile enumerate în [Editări simultane](./collaborative-editing.md#concurrent-edits).
+
+Începând cu versiunea `5.1.0`, un editor trimite o schimbare a limbajului generatorului de cod, a unui stil de denumire sau a tipului de delimitator doar cât timp blocarea acelei setări este dezactivată, marcată cu `shared: true` în conținutul acțiunii, iar replica le aplică pe toate cele marcate, ca editoarele; consultați [Editare colaborativă](./collaborative-editing.md).  
+Replica aplică o schimbare nemarcată, pe care o trimite un editor anterior versiunii `5.1.0` indiferent de blocare, doar cât timp acea setare este deblocată în replică și o elimină cât timp setarea este blocată (consultați [on@change](#onchange)).
 
 Începând cu versiunea `4.0.0`, ambele metode aplică și acțiunea `editor.mergeLWW`, care transportă registrele de colaborare cu care un editor răspunde când un altul se alătură sesiunii, astfel încât replica rezolvă editările simultane la fel ca editoarele.  
 Aceasta nu modifică niciun octet din `value` și nu declanșează niciun eveniment `change`.  

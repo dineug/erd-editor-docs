@@ -49,7 +49,7 @@ SQL 會在此索引標籤開啟時寫出，之後每當面板中的某個選項�
 
 `Bracket` 設定包住資料表、欄位、條件約束和索引名稱的引號：`SingleQuote`、`DoubleQuote`、`Backtick`，或表示完全不加引號的 `None`，後者為預設值。它和程式碼產生器使用的是同一個設定，請參閱[引號](./code-generator.md#bracket)。  
 只以雙引號括住名稱的 Snowflake，在 `None` 以外的任何選項下都會使用雙引號；Databricks 則一律以反引號括住名稱。  
-只有在「設定」索引標籤中的 `Bracket Type` 鎖定為關閉時，`Bracket` 才會儲存在檔案中，而新圖表的所有鎖定都是開啟的。鎖定開啟期間，變更會重寫畫面上的 SQL，但檔案會保留鎖定的值，圖表重新開啟時也會使用該值，請參閱[鎖定](./settings.md#lock)。
+只有在「設定」索引標籤中的 `Bracket Type` 鎖定為關閉時，`Bracket` 才會儲存在檔案中，而新圖表的所有鎖定都是開啟的。鎖定開啟期間，變更只會重寫您編輯器中的 SQL：開啟同一圖表的其他編輯器會保留各自的引號，而檔案會保留鎖定的值，因此圖表重新開啟時會使用該值，請參閱[鎖定](./settings.md#lock)。
 
 當資料庫為 Oracle 且 SQL 中含有超過 30 位元組的名稱（Oracle 12.1 及更早的版本會拒絕這類名稱）時，這兩個清單下方會出現一則註記，列出每個這類名稱：`Oracle 12.2+ for names over 30 bytes: <names>`。它會檢查資料表、欄位、結構描述、鍵、索引、序列和觸發程序的名稱。SQL 本身不會變更。
 
@@ -224,7 +224,7 @@ Oracle 則會得到序列 `SEQ_<table>`，以及從該序列填入欄位值的�
 
 在 [`readonly`](../../api/erd-editor-element.md#readonly) 編輯器中，此索引標籤是為讀者運作的，在其上所做的任何操作都不會影響文件：
 
-- `Database` 和 `Bracket` 仍會重寫 SQL，但只作用於該視窗，因此面板同樣將它們標示為 `This window only`。挑選的結果不會儲存到檔案、與協作者共用，或記錄到復原歷程記錄，無論鎖定如何設定，而協作者對您所挑選之設定的變更，也會讓您的選擇留在畫面上。程式碼產生器索引標籤會顯示相同的挑選結果，未指定資料庫而呼叫的 [`getSchemaSQL()`](../../api/erd-editor-element.md#getschemasql) 也會寫出它。編輯器再次轉為可寫入後，文件的資料庫和引號會恢復。
+- `Database` 和 `Bracket` 仍會重寫 SQL，但只作用於該視窗，因此面板同樣將它們標示為 `This window only`。挑選的結果不會儲存到檔案、與協作者共用，或記錄到復原歷程記錄，無論鎖定如何設定，而協作者對您所挑選之設定的變更，也會讓您的選擇留在畫面上。程式碼產生器索引標籤會顯示相同的挑選結果，未指定資料庫而呼叫的 [`getSchemaSQL()`](../../api/erd-editor-element.md#getschemasql) 也會寫出它。編輯器再次轉為可寫入後，您挑選的資料庫和引號會回到編輯器先前顯示的內容（含協作者此後所做的任何變更），請參閱「設定」中的[唯讀編輯器](./settings.md#read-only-editors)。
 - `Statements`、`Header`、`Write logical names into empty comments` 和 `Tables` 的運作與在任何地方相同，因為它們本來就屬於該視窗。
 - 兩個指令碼輸入框是唯讀的：它們顯示文件的指令碼（SQL 仍會寫出這些指令碼），無法輸入。
 - `Save file` 和 `Copy` 會儲存和複製此索引標籤所顯示的 SQL。

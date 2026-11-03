@@ -1,31 +1,32 @@
 ---
-sidebar_position: 3
-description: Het documentformaat .erd.json — de opslagvorm die een bestand bevat en de runtimewaarde die een editor vasthoudt, de TypeScript-typen, de constanten achter elk numeriek veld en het gepubliceerde JSON Schema.
+sidebar_position: 4
+description: Het documentformaat .erd.json — de opslagvorm die een bestand bevat, de TypeScript-typen, de constanten achter elk numeriek veld en het gepubliceerde JSON Schema.
 ---
 
 # Schema
 
 `.erd.json` is het documentformaat van de editor. Lees deze pagina als je een document buiten de editor moet genereren, valideren of migreren.
 
-Sinds `4.0.0` heeft een document twee serialisaties, beide met `version` `'3.0.0'`. De opslagvorm is wat een bestand bevat: het is wat [`editor.value`](../erd-editor-element.md#value) retourneert, wat de JSON-export schrijft en de enige vorm die het gepubliceerde [JSON Schema](#json-schema) accepteert. De runtimewaarde is het hele document zoals een editor het vasthoudt, en is wat [`editor.runtimeValue`](../erd-editor-element.md#runtimevalue) retourneert. `setInitialValue()`, de setter `value` en `setSchemaJSON()` lezen beide vormen, elk bestand dat een eerdere versie heeft opgeslagen en een `.vuerd`-document uit v2. Vóór `4.0.0` was er maar één: `value` retourneerde het hele document zoals de editor het vasthield, zoals `runtimeValue` dat nu doet.
+Deze pagina beschrijft de opslagvorm, het document zoals een bestand het bevat, die elke versie sinds `4.0.0` schrijft. Het is wat [`editor.value`](../erd-editor-element.md#value) retourneert, wat de JSON-export schrijft en de enige vorm die het gepubliceerde [JSON Schema](#json-schema) accepteert. De `version` ervan is `'3.0.0'`, zoals in elk v3-bestand dat een eerdere versie heeft opgeslagen, dus `version` onderscheidt een ouder bestand niet van een nieuwer. `setInitialValue()`, de setter `value` en `setSchemaJSON()` lezen ze, elk bestand dat een eerdere versie heeft opgeslagen en een `.vuerd`-document uit v2. Vóór `4.0.0` retourneerde `value` het hele document zoals de editor het vasthield, dus een bestand dat toen is opgeslagen, bevat meer (zie [Opslagvorm](#storage-form)).  
+De [`runtimeValue`](../erd-editor-element.md#runtimevalue) van een editor is een andere serialisatie, die deze pagina niet beschrijft. Ze initialiseert een andere editor of een replica, en een [Yjs-room](./yjs.md#what-the-room-holds) slaat ze op in zijn snapshot; ze hoort nooit in een bestand, en het JSON Schema weigert elke runtimewaarde die een entiteit bevat.
 
-## Opslagvorm en runtimewaarde {#storage-form-and-runtime-value}
+## Opslagvorm {#storage-form}
 
-De opslagvorm bevat alleen de niet-verwijderde entiteiten: elke tabel die in `doc.tableIds` vermeld staat, de kolommen die die tabellen vermelden, de relaties tussen twee behouden tabellen, de indexen van behouden tabellen met de indexkolommen waarvan de tabel de kolom nog vermeldt, de vermelde memo's en tabelgroepen en sinds `4.2.0` de vermelde woorden, termen en domeinen die naast hun id nog een waarde bevatten. Ze laat weg wat een editor bij het laden afleidt of bijhoudt zolang hij geopend is: verwijderde entiteiten, `seqColumnIds` en `seqIndexColumnIds`, elke `zIndex`, de gemeten breedtes, de `ui` van kolommen, van een relatie de `identification`, de `startRelationshipType` en de ankerpunten, en sinds `4.2.0` de `order` van elke woordenboekrij en de lijsten `doc.wordIds`, `doc.termIds` en `doc.domainIds`. De typen hieronder markeren elk van deze velden met `// runtime only`.  
+De opslagvorm bevat alleen de niet-verwijderde entiteiten: elke tabel die in `doc.tableIds` vermeld staat, de kolommen die die tabellen vermelden, de relaties tussen twee behouden tabellen, de indexen van behouden tabellen met de indexkolommen waarvan de tabel de kolom nog vermeldt, de vermelde memo's en tabelgroepen en sinds `4.2.0` de woorden, termen en domeinen van de bladen van het Woordenboek die naast hun id nog een waarde bevatten. Ze bevat niets wat een editor bij het laden afleidt of alleen bijhoudt zolang hij geopend is: geen stapelvolgorde, gemeten breedtes of sleutelmarkeringen, en ook niet of een relatie identificerend is, hoe haar ouderuiteinde wordt getekend of waar ze haar tabellen raakt. Bij elke keer laden wordt dit opnieuw afgeleid uit wat het bestand bevat.  
 Elke collectie behalve de woordenboeken gebruikt de id als sleutel, in volgorde van code-eenheden, waarbij kolommen eerst op `tableId` en indexkolommen eerst op `indexId` worden gegroepeerd. Sinds `4.2.0` komen `wordEntities`, `termEntities` en `domainEntities` na elke andere collectie, in die volgorde, elk geschreven als een koprij en rijen, één rij per regel (zie [Woordenboekrijen](#dictionary-rows)). Elke entiteit schrijft haar velden in een vaste volgorde, en de tekst wordt met twee spaties ingesprongen en eindigt met een regeleinde. Daardoor schrijft hetzelfde document altijd dezelfde bytes, verandert een bewerking alleen wat ze raakt en opent een bestand dat is opgeslagen op een computer met andere lettertypen opnieuw met dezelfde `value`.  
 VS Code, Obsidian en de JetBrains-plug-in schrijven een bestand alleen wanneer een bewerking `value` wijzigt, dus een bestand dat een eerdere versie heeft opgeslagen, behoudt zijn oude vorm tot de eerste bewerking.
 
 Sinds `4.2.0` laat de opslagvorm ook weg wat niets bevat: elk tekstveld dat een entiteit of haar `ui` als `''` bevat (van een tabel `name`, `comment` en `ui.color`, van een kolom `name`, `comment`, `dataType` en `default`, van een index `name`, van een memo `value` en `ui.color`, van een tabelgroep `name` en `color`), elke lijst in `doc` en elke collectie die geen enkel item bevat, en `collections` zelf zodra elke collectie leeg is. Tekst die alleen uit spaties bestaat, wordt geschreven zoals hij is opgeslagen, behalve een logische naam, die dan wordt weggelaten, en een woord, term of domein waarvan de waarden na de id allemaal leeg zijn of alleen uit spaties bestaan, dat in zijn geheel wordt weggelaten. Elke id, elke lijst binnen een entiteit en elk getal, `0` inbegrepen, wordt nog steeds geschreven. `doc` wordt altijd geschreven, dus het bestand van een nieuw document bevat `$schema`, `version`, de instellingen en `"doc": {}`.  
 Het parseren leest een ontbrekend tekstveld als `''` en een ontbrekende collectie als leeg, zoals elke v3-versie doet, en de opslagvorm laat een lijst in `doc` alleen weg zolang de collectie ervan niets bevat (zie [Doc](#doc)). Daardoor opent ook een editor vóór `4.2.0` deze bestanden, en een programma dat zelf een bestand leest, moet wat ontbreekt op dezelfde manier lezen. Een bestand dat een eerdere versie heeft opgeslagen, komt bij de volgende keer opslaan terug zonder zijn lege tekst, lijsten en collecties, een wijziging die eenmalig is, en wordt vanaf dan telkens byte voor byte hetzelfde opgeslagen.
 
-De runtimewaarde behoudt wat de opslagvorm weglaat: verwijderde entiteiten, volgordes, z-indexen, breedtes, sleutelmarkeringen, relatievlaggen en ankerpunten, de lege tekstvelden, en de vier lijsten `tableIds`, `relationshipIds`, `indexIds` en `memoIds` en de zes collecties `tableEntities` tot en met `memoEntities`, ook als ze leeg zijn. Sinds `4.2.0` behoudt ze ook verwijderde woorden, termen en domeinen, rijen die niets bevatten, de `order` van elke rij, de drie woordenboeklijsten, een logische naam die alleen uit spaties bestaat en een koppeling naar een verwijderd domein. Ze wordt met twee spaties ingesprongen, zonder regeleinde aan het eind. Gebruik de runtimewaarde alleen om via `setInitialValue()` een medebewerker of een tweede weergave te initialiseren, zodat het ongedaan maken van een verwijdering die een andere editor verstuurt, de entiteit daar volledig terugbrengt. Schrijf ze nooit naar een bestand; het JSON Schema weigert ze. Verwijderde entiteiten worden niet meer opgeruimd, dus de runtimewaarde behoudt ze tot het document de volgende keer vanuit zijn bestand wordt geopend.
+De opslagvorm schrijft elke vergrendelde instelling met haar vergrendelde waarde (zie [`lockSettings`](#settings)), `settings.ddlScripts` alleen zolang een script tekst bevat en de `groupId` van een tabel alleen zolang die een tabelgroep noemt die het bestand schrijft. Sinds `4.2.0` schrijft ze ook `settings.nameViewMode` alleen zolang de waarde die ze schrijft niet `'physical'` is, `settings.columnOrder` met zeven elementen waar dat kan (zie [Settings](#settings)) en de `nameDerived` van een tabel alleen zolang die `true` is.  
+Ze schrijft `doc.tableGroupIds` en `tableGroupEntities` alleen zolang er een tabelgroep bestaat, een `logicalName` alleen zolang die andere tekst dan spaties bevat, de `domainId` van een kolom alleen zolang die een domein noemt dat het bestand schrijft, en elk woordenboek alleen zolang het een rij bevat die het bestand schrijft.
 
-Beide vormen schrijven elke vergrendelde instelling met haar vergrendelde waarde (zie [`lockSettings`](#settings)), `settings.ddlScripts` alleen zolang een script tekst bevat en de `groupId` van een tabel alleen zolang die niet leeg is. Sinds `4.2.0` schrijven beide ook `settings.nameViewMode` alleen zolang de waarde die ze schrijven niet `'physical'` is, `settings.columnOrder` met zeven elementen waar dat kan (zie [Settings](#settings)) en de `nameDerived` van een tabel alleen zolang die `true` is.  
-De opslagvorm schrijft `doc.tableGroupIds` en `tableGroupEntities` alleen zolang er een tabelgroep bestaat, een `logicalName` alleen zolang die andere tekst dan spaties bevat, de `domainId` van een kolom alleen zolang die een domein noemt dat het bestand schrijft, en elk woordenboek alleen zolang het een rij bevat die het bestand schrijft. De runtimewaarde schrijft de velden voor tabelgroepen zolang het document een groep of een verwijderde groep bevat, `logicalName` en `domainId` zolang ze niet `''` zijn, en elk woordenboek met zijn lijst zolang een van beide een item bevat, een verwijderde rij inbegrepen.
+Een bestand dat vóór `4.0.0` is opgeslagen, bevat het hele document zoals een editor het toen vasthield, met zijn verwijderde entiteiten en alles wat bij elke keer laden wordt afgeleid. Bij het laden wordt het gelezen, blijft de plaats van elke tabel en memo in de stapel behouden (zie [Doc](#doc)) en wordt de rest opnieuw afgeleid, en bij de volgende keer opslaan wordt alleen de opslagvorm geschreven.
 
 ## TypeScript {#typescript}
 
-De typen beschrijven de runtimewaarde. Een veld met de markering `// runtime only` wordt in de opslagvorm weggelaten, en een veld met de markering `?` wordt alleen geschreven zolang het iets bevat. De lege tekst, lijsten en collecties die de opslagvorm sinds `4.2.0` weglaat, zijn niet gemarkeerd.
+De typen beschrijven de opslagvorm en vermelden de velden elk in de volgorde waarin een bestand ze schrijft. Een veld met de markering `?` is een veld dat de opslagvorm kan weglaten, zoals [Opslagvorm](#storage-form) in detail beschrijft, en het parseren leest een ontbrekend veld als leeg: `''`, `false`, geen tabelgroep of domein, een lege collectie, `'physical'` voor `nameViewMode` en twee lege scripts voor `ddlScripts`. De uitzondering is een ontbrekende lijst in `doc`, die het parseren aanvult vanuit haar collectie (zie [Doc](#doc)). In een woordenboekrij markeert `?` de waarden waar een rij vóór kan eindigen (zie [Woordenboekrijen](#dictionary-rows)). Elk ander veld wordt altijd geschreven.
 
 ### ERDEditorSchemaV3 {#erdeditorschemav3}
 
@@ -35,13 +36,13 @@ type ERDEditorSchemaV3 = {
   version: '3.0.0';
   settings: Settings;
   doc: Doc;
-  collections: {
-    tableEntities: Record<string, Table>;
-    tableColumnEntities: Record<string, Column>;
-    relationshipEntities: Record<string, Relationship>;
-    indexEntities: Record<string, Index>;
-    indexColumnEntities: Record<string, IndexColumn>;
-    memoEntities: Record<string, Memo>;
+  collections?: {
+    tableEntities?: Record<string, Table>;
+    tableColumnEntities?: Record<string, Column>;
+    relationshipEntities?: Record<string, Relationship>;
+    indexEntities?: Record<string, Index>;
+    indexColumnEntities?: Record<string, IndexColumn>;
+    memoEntities?: Record<string, Memo>;
     tableGroupEntities?: Record<string, TableGroup>;
     wordEntities?: DictionaryRows; // rows of Word
     termEntities?: DictionaryRows; // rows of Term
@@ -216,7 +217,7 @@ Sinds `4.2.0` is er nog een vlag voor `show`, `columnDomain` (`8192`), die uitst
 Een editor vóór `4.2.0` laat het getal in `show` intact, dus de vlag blijft bewaard als daar wordt opgeslagen.
 
 Sinds `4.2.0` heeft `ColumnType` negen waarden. `columnLogicalName` (`128`) plaatst de cel van de logische naam, die een kolomrij alleen in de weergave `Both Names` toont, en `columnDomain` (`256`) de domeincel. Het zijn de rijen `Logical Name` en `Domain` van de [kolomvolgorde](../../guide/guides/settings.md#adjusting-column-order) op het tabblad Instellingen. Een editor houdt een volgorde van alle negen bij, en die van een nieuw document is `128, 1, 2, 256, 4, 8, 16, 32, 64`.  
-Beide vormen schrijven de volgorde met zeven elementen, zonder `128` en `256`, zolang `128` direct vóór `columnName` staat en `256` direct na `columnDataType`. Daardoor schrijft een nieuw document nog steeds `1, 2, 4, 8, 16, 32, 64`, en behoudt een bestand waarvan de volgorde ze nooit heeft verplaatst, zijn bytes. Anders schrijven ze alle negen.  
+De opslagvorm schrijft de volgorde met zeven elementen, zonder `128` en `256`, zolang `128` direct vóór `columnName` staat en `256` direct na `columnDataType`. Daardoor schrijft een nieuw document nog steeds `1, 2, 4, 8, 16, 32, 64`, en behoudt een bestand waarvan de volgorde ze nooit heeft verplaatst, zijn bytes. Anders schrijft ze alle negen.  
 Het parseren voegt de twee op die plaatsen in een volgorde met zeven elementen in, in welke volgorde de zeven ook staan, en neemt negen elementen die elk type bevatten over zoals ze staan.  
 Sinds `5.0.0` accepteert het ook elke andere volgorde. Het behoudt elk `ColumnType` dat het kent één keer, in de gegeven volgorde, en laat elk ander element vallen: een waarde die geen `ColumnType` noemt, zoals een type dat een latere release toevoegt, en een tweede element van hetzelfde type. Elk type dat de volgorde mist, komt direct na het dichtstbijzijnde type ervoor in de standaardvolgorde dat de volgorde bevat, of, als er geen is, direct vóór het dichtstbijzijnde type erna, en zo vinden `128` en `256` hun plaats in zeven elementen. Alleen een volgorde die geen enkel bekend type noemt, of een waarde die geen array is, wordt gelezen als de standaardvolgorde.  
 Een bestand dat een latere release heeft opgeslagen, opent dus met zijn volgorde van de typen die deze release kent, en een opslag hier schrijft die volgorde zonder de andere. Vóór `5.0.0` las het parseren elke andere volgorde als de standaardvolgorde, zodat zo'n bestand opende met een teruggezette kolomvolgorde. Het JSON Schema accepteert zeven of negen gehele getallen.
@@ -224,18 +225,18 @@ Een bestand dat een latere release heeft opgeslagen, opent dus met zijn volgorde
 Sinds `4.0.0` heeft `Language` acht extra doelen voor de [Codegenerator](../../guide/guides/code-generator.md), `Mermaid` tot en met `JSONSchema`. Een `language` die de parser niet kent, wordt gelezen als `GraphQL`, dus een editor vóór `4.0.0` opent een document dat met een van deze doelen is opgeslagen op GraphQL, en opslaan schrijft daar GraphQL.
 
 Sinds `4.0.0` neemt `lockSettings` de plaats in van `ignoreSaveSettings`, en `LockSettingType` die van `SaveSettingType`, dat is verwijderd. `lockSettings` geeft de instellingen aan die een document opslaat zoals ze stonden toen ze werden vergrendeld. `viewport` omvat `originX`, `originY` en `zoomLevel` samen, omdat een oorsprong die zonder zijn zoomniveau is opgeslagen, ergens anders opent, en elke andere bit omvat het veld waarnaar hij is genoemd. Dit zijn de rijen onder [`Lock`](../../guide/guides/settings.md#lock) op het tabblad Instellingen.  
-`value` en `runtimeValue` schrijven allebei een vergrendelde instelling met haar vergrendelde waarde, wat de editor ook toont, en elke andere instelling met haar huidige waarde. Zolang de bijbehorende vergrendeling aanstaat, laten scrollen en zoomen, wisselen van tabblad, het wijzigen van de taal van de Codegenerator, een naamnotatie of het type aanhalingstekens of het wisselen van naamweergave het bestand dus ongewijzigd. Vergrendelen neemt de waarde over die de instelling op dat moment heeft, en het parseren haalt de vergrendelde waarde uit het opgeslagen veld.  
+Een bestand bevat elke vergrendelde instelling met haar vergrendelde waarde, wat de editor ook toont, en elke andere instelling met haar huidige waarde. Zolang de bijbehorende vergrendeling aanstaat, laten scrollen en zoomen, wisselen van tabblad, het wijzigen van de taal van de Codegenerator, een naamnotatie of het type aanhalingstekens of het wisselen van naamweergave het bestand dus ongewijzigd. Vergrendelen neemt de waarde over die de instelling op dat moment heeft, en het parseren haalt de vergrendelde waarde uit het opgeslagen veld.  
 Een document dat vanuit het niets is begonnen — een nieuwe editor of replicatiestore, of een lege waarde die aan `value` of `setInitialValue()` is gegeven — heeft `lockSettings` op `63` staan, met elke vergrendeling aan. Een document waarvan de `settings` geen `lockSettings` bevatten — elk bestand dat vóór `4.0.0` is opgeslagen, wat zijn `ignoreSaveSettings` ook is, en elk v2-document — opent eveneens met elke vergrendeling aan: de weergave en het tabblad staan waar die van een nieuw document staan (`originX` en `originY` `0`, `zoomLevel` `1`, het ERD-tabblad), en de taal, de naamnotaties en het type aanhalingstekens zijn vergrendeld op wat het heeft opgeslagen. Een document dat zijn vergrendelingen vermeldt, behoudt ze, `0` inbegrepen, en elke waarde die het heeft opgeslagen.  
 Het parseren behoudt elke bit van `lockSettings`, ook onbekende, dus een vergrendeling die een latere versie toevoegt, blijft hier bij opslaan bewaard; het JSON Schema controleert alleen of de waarde een geheel getal is. Een editor vóór `4.0.0` laat `lockSettings` bij het opslaan weg en schrijft de weergave en het tabblad zoals ze op dat moment zijn, dus het bestand opent hier daarna weer als een bestand dat vóór `4.0.0` is opgeslagen.
 
 Sinds `4.2.0` is er een zevende vergrendeling, `unlockNameViewMode` (`64`), de rij `Name View`, die `nameViewMode` omvat. De bit ervan werkt andersom dan de andere vergrendelingsbits, zoals de verbergbits van `Show`: is de bit gezet, dan is de naamweergave ontgrendeld, en is hij niet gezet, dan is ze vergrendeld. Daardoor betekent `63` nog steeds dat elke vergrendeling aanstaat, en een nieuw document bevat die waarde met de naamweergave vergrendeld op `'physical'`. Een bestand dat vóór `4.2.0` is opgeslagen, heeft de bit niet gezet, wat de andere vergrendelingen ook zijn, `0` inbegrepen, dus het opent met de naamweergave vergrendeld op `'physical'`. Een document met elke vergrendeling uit bevat `64`, en een document met elke andere vergrendeling aan en de naamweergave ontgrendeld bevat `127`. Test deze vergrendeling omgekeerd: ze staat aan zolang `(lockSettings & 64) === 0`.  
-Zolang ze aanstaat, verandert een wissel van naamweergave alleen het scherm van de editor waarin hij is gemaakt, en behoudt het document de vergrendelde weergave. Zolang ze uitstaat, hoort een wissel in een editor die kan bewerken bij het document, en wisselt elke medebewerker mee. Een wissel in een editor in alleen-lezenmodus verandert in beide gevallen alleen het scherm van die editor zelf. Zie [`Lock`](../../guide/guides/settings.md#lock).  
+Zolang de bit niet is gezet, bevat een bestand `nameViewMode` met de vergrendelde weergave, wat een editor ook toont, en zolang hij is gezet, de weergave zoals ze staat. Wat elke editor toont, met de vergrendeling aan of uit, beschrijft [`Lock`](../../guide/guides/settings.md#lock).  
 Een editor van `4.0.0` of `4.1.0` behoudt de bit bij het opslaan, maar laat `nameViewMode` weg, dus het document opent hier daarna weer in `'physical'`, met de vergrendeling zoals ze was.
 
 Sinds `4.0.0` bevat `ddlScripts` de twee scripts van het tabblad [Schema SQL](../../guide/guides/schema-sql.md), die de DDL van elke database schrijft: `before` na de kop en vóór de tabellen, `after` na de gegenereerde DDL. De DDL schrijft elk script met LF-regeleinden, zonder lege regels aan het begin en witruimte aan het eind, en op MSSQL afgesloten met `GO`, zoals [Scripts vóór en na de tabellen](../../guide/guides/schema-sql.md#before-and-after-scripts) beschrijft; `ddlScripts` zelf bewaart elk script zoals het is getypt. De sleutel wordt alleen geschreven zolang een van beide scripts tekst bevat, en dan met beide; een ontbrekende sleutel, of een script dat geen string is, wordt gelezen als `''`. De keuzes `Statements`, `Header` en `Tables` van het tabblad, en sinds `4.2.0` de schakelaar [`Write logical names into empty comments`](../../guide/guides/schema-sql.md#logical-names-as-comments) ervan, worden niet in het document opgeslagen.  
 Een editor vóór `4.0.0` laat de scripts weg wanneer hij een document laadt, dus als daar wordt opgeslagen, gaan ze verloren.
 
-Sinds `4.2.0` is `nameViewMode` de [naamweergave](../../guide/guides/logical-names.md#name-view), de namen die het diagram toont: `'physical'` de naam van elke tabel en kolom, `'logical'` de logische naam ervan op de plaats van de naam, en `'both'` de logische naam en de naam. De menu's noemen ze `Physical Names`, `Logical Names` en `Both Names`. Beide vormen schrijven de waarde als laatste, na `ddlScripts`, en alleen zolang de waarde die ze schrijven niet `'physical'` is; zolang de vergrendeling `Name View` aanstaat, is dat de vergrendelde waarde, wat het scherm ook toont. Een ontbrekende waarde, of een waarde die de parser niet kent, wordt gelezen als `'physical'`, en het JSON Schema accepteert alleen `"logical"` en `"both"`.  
+Sinds `4.2.0` is `nameViewMode` de [naamweergave](../../guide/guides/logical-names.md#name-view), de namen die het diagram toont: `'physical'` de naam van elke tabel en kolom, `'logical'` de logische naam ervan op de plaats van de naam, en `'both'` de logische naam en de naam. De menu's noemen ze `Physical Names`, `Logical Names` en `Both Names`. De opslagvorm schrijft de waarde als laatste, na `ddlScripts`, en alleen zolang de waarde die ze schrijft niet `'physical'` is. Een ontbrekende waarde, of een waarde die de parser niet kent, wordt gelezen als `'physical'`, en het JSON Schema accepteert alleen `"logical"` en `"both"`.  
 Een editor vóór `4.2.0` laat `nameViewMode` weg wanneer hij een document laadt.
 
 `Database`, `Language`, `Show`, `ColumnType`, `ColumnOption`, `LockSettingType` en `ReferentialAction` worden alleen aan het eind uitgebreid. Een opgeslagen document bewaart het getal, dus een nieuw databasesysteem, doel voor codegeneratie, vlag, kolomtype, kolomoptie, vergrendeling of actie krijgt de volgende bit in plaats van een plek in het midden.
@@ -244,52 +245,42 @@ Een editor vóór `4.2.0` laat `nameViewMode` weg wanneer hij een document laadt
 
 ```ts
 type Doc = {
-  tableIds: string[];
-  relationshipIds: string[];
-  indexIds: string[];
-  memoIds: string[];
+  tableIds?: string[];
+  relationshipIds?: string[];
+  indexIds?: string[];
+  memoIds?: string[];
   tableGroupIds?: string[];
-  wordIds?: string[]; // runtime only
-  termIds?: string[]; // runtime only
-  domainIds?: string[]; // runtime only
 };
 ```
 
-Elk van de eerste vijf lijsten is de volgorde van één soort entiteit, die de DDL, de tabelsortering en de tekenvolgorde lezen. In de opslagvorm bevat elke lijst alleen de id's van behouden entiteiten, elk één keer, in de vermelde volgorde, en sinds `4.2.0` wordt een lijst die er geen bevat, weggelaten. Sinds `4.0.0` is `tableGroupIds` de volgorde van de tabelgroepen.
+Elke lijst is de volgorde van één soort entiteit, die de DDL, de tabelsortering en de tekenvolgorde lezen. Elke lijst bevat alleen de id's van de entiteiten die het bestand schrijft, elk één keer, in de vermelde volgorde, en sinds `4.2.0` wordt een lijst die er geen bevat, weggelaten. Sinds `4.0.0` is `tableGroupIds` de volgorde van de tabelgroepen. De woordenboeken hebben hier geen lijst, omdat hun rijen in de volgorde van elk blad staan (zie [Woordenboekrijen](#dictionary-rows)), en het JSON Schema accepteert in `doc` geen andere sleutel.
 
-Sinds `4.2.0` vermelden `wordIds`, `termIds` en `domainIds` de niet-verwijderde rijen van elk woordenboek: een rij die de collectie wel bevat maar de lijst niet, is verwijderd. Ze zijn niet de volgorde van een blad; die geeft de `order` van elke rij. Alleen de runtimewaarde schrijft ze, elk zolang de lijst zelf of de collectie ervan een item bevat. De rijen van een bestand zijn zelf het lidmaatschap en de volgorde, en het JSON Schema weigert de lijsten.  
 Sinds `4.2.0` leest het parseren een lijst die het document weglaat, of als iets anders dan een array bevat, als elk item dat de collectie ervan bevat, elke id één keer, in de opgeslagen volgorde; een lege array blijft leeg, en elk item van de collectie wordt dan als verwijderd gelezen. Een editor vóór `4.2.0` leest een ontbrekende lijst als leeg, dus de opslagvorm schrijft nog steeds elke lijst zolang de collectie ervan een entiteit bevat.
 
-Sinds `4.0.0` wordt de stapelvolgorde niet opgeslagen. Het parseren stapelt elke vermelde tabel, memo en tabelgroep zonder `zIndex` op basis van de positie in de lijst, waarbij latere vooraan liggen: tabelgroepen vanaf `1`, tabellen vanaf `2` en memo's boven elke tabel. Een entiteit met een `zIndex`, zoals in een runtimewaarde of een bestand dat vóór `4.0.0` is opgeslagen, behoudt die. Een tabel of memo naar voren brengen gaat daardoor verloren wanneer het bestand opnieuw wordt geopend.
+Sinds `4.0.0` bevat een bestand geen stapelvolgorde. Bij het laden worden de vermelde tabellen en memo's gestapeld op basis van hun plaats in hun lijsten, waarbij latere vooraan liggen en elke memo boven elke tabel, en de tabelgroepen op dezelfde manier onderling, achter de tabellen. Een tabel of memo in een bestand dat vóór `4.0.0` is opgeslagen, heeft een `zIndex` in zijn `ui`, die bij het laden als zijn plaats in de stapel behouden blijft en bij de volgende keer opslaan wordt weggelaten. Een tabel of memo naar voren brengen gaat daardoor verloren wanneer het bestand opnieuw wordt geopend.
 
 ### Collectie: tableEntities {#collection-tableentities}
 
 ```ts
 type Table = {
   id: string;
-  name: string;
+  name?: string;
   logicalName?: string;
-  comment: string;
+  comment?: string;
   columnIds: string[];
-  seqColumnIds: string[]; // runtime only
   groupId?: string;
-  nameDerived?: boolean;
+  nameDerived?: true;
   ui: TableUI;
 };
 
 type TableUI = {
   x: number;
   y: number;
-  zIndex: number; // runtime only
-  widthName: number; // runtime only
-  widthLogicalName: number; // runtime only
-  widthComment: number; // runtime only
-  color: string;
+  color?: string;
 };
 ```
 
-Sinds `4.0.0` heeft een tabel een `groupId`, de id van de [tabelgroep](../../guide/guides/table-groups.md) waartoe ze behoort. Een ontbrekende of lege `groupId`, of een die geen groep in `doc.tableGroupIds` noemt, geldt als geen groep, en de opslagvorm schrijft hem alleen zolang hij een behouden groep noemt.  
-Het parseren zet `seqColumnIds` op `columnIds` als die ontbreekt of een vermelde id mist, en een editor meet `widthName`, `widthLogicalName` en `widthComment` bij elke keer laden opnieuw met zijn eigen lettertypen.
+Sinds `4.0.0` heeft een tabel een `groupId`, de id van de [tabelgroep](../../guide/guides/table-groups.md) waartoe ze behoort. Een ontbrekende of lege `groupId`, of een die geen groep in `doc.tableGroupIds` noemt, geldt als geen groep, en de opslagvorm schrijft hem alleen zolang hij een behouden groep noemt.
 
 Sinds `4.2.0` heeft een tabel een `logicalName`, de naam die de [weergaven](../../guide/guides/logical-names.md#name-view) `Logical Names` en `Both Names` tonen, `''` voor geen, en een `nameDerived`, `true` zolang de woordenboeken `name` uit de logische naam hebben [afgeleid](../../guide/guides/dictionary.md#deriving-physical-names). Zolang die vlag is gezet, leidt een nieuwe logische naam de naam opnieuw af; zolang ze niet is gezet, is de naam een eigen naam, en laat een nieuwe logische naam hem ongemoeid, tenzij de naam leeg is of alleen uit spaties bestaat. Een handmatige naamswijziging zet de vlag uit, en [`Derive Physical Names Again`](../../guide/guides/dictionary.md#derive-physical-names-again) herschrijft zelfs een naam die iemand zelf heeft ingevoerd en zet de vlag aan overal waar een logische naam is.  
 De opslagvorm schrijft `logicalName` na `name`, zoals getypt, alleen zolang het veld andere tekst dan spaties bevat, en `nameDerived` na `groupId` alleen zolang het veld `true` is, de enige waarde die het JSON Schema accepteert. Een ontbrekende `logicalName` wordt gelezen als `''` en een ontbrekende `nameDerived` als `false`, dus elke naam in een bestand dat vóór `4.2.0` is opgeslagen, geldt als een eigen naam.  
@@ -301,24 +292,13 @@ Een editor vóór `4.2.0` laat beide weg wanneer hij een document laadt, dus als
 type Column = {
   id: string;
   tableId: string;
-  name: string;
-  comment: string;
-  dataType: string;
-  default: string;
+  name?: string;
+  comment?: string;
+  dataType?: string;
+  default?: string;
   options: number; // Constants: ColumnOption
   logicalName?: string;
   domainId?: string;
-  ui: ColumnUI; // runtime only
-};
-
-type ColumnUI = {
-  keys: number; // Constants: ColumnUIKey
-  widthName: number;
-  widthLogicalName: number;
-  widthComment: number;
-  widthDataType: number;
-  widthDomain: number;
-  widthDefault: number;
 };
 
 // Constants
@@ -329,17 +309,12 @@ const ColumnOption = {
   notNull: 8,
   nameDerived: 16,
 } as const;
-
-const ColumnUIKey = {
-  primaryKey: 1,
-  foreignKey: 2,
-} as const;
 ```
 
-Sinds `4.0.0` schrijft de opslagvorm geen `ui` voor kolommen. Bij elke keer laden wordt `keys` afgeleid, de markering voor de primaire sleutel uit de bit `primaryKey` van `options` en de markering voor de refererende sleutel uit de relaties die op de kolom eindigen, en worden de zes breedtes gemeten.  
+Sinds `4.0.0` bevat een bestand geen sleutelmarkeringen: bij elke keer laden wordt een kolom als primaire sleutel gemarkeerd op basis van de bit `primaryKey` van `options`, en als refererende sleutel zolang een relatie in haar tabel op haar eindigt.  
 Een editor vóór `4.0.0` toont de kolommen van een bestand dat hier is opgeslagen, zonder hun pictogrammen voor de primaire sleutel.
 
-Sinds `4.2.0` heeft een kolom, net als een tabel, een `logicalName`, en een `domainId`, de id van het domein waaraan ze is gekoppeld, `''` voor geen. Bewerkingen in één editor houden een gekoppelde kolom op het gegevenstype van haar domein, zoals [Domeinen en gegevenstypen](../../guide/guides/dictionary.md#domains-and-data-types) beschrijft. Het parseren wijzigt echter het type van geen enkele kolom, dus een bestand dat elders is geschreven, kan een gekoppelde kolom op een ander type laten staan, en dat geldt ook voor gekruiste bewerkingen van twee medebewerkers; het blad Controles vermeldt elk geval als [`Domain type mismatch`](../../guide/guides/dictionary.md#what-each-check-finds). Het parseren wist een `domainId` die geen domein noemt dat het document bevat. Een verwijderd domein telt nog mee, dus de editor behoudt een koppeling ernaar zolang het ongedaan maken het domein kan terugbrengen. Na `options` schrijft de opslagvorm `logicalName` volgens de regel voor een tabel, en `domainId` alleen zolang die een domein noemt dat het bestand schrijft, dus nooit een koppeling naar een verwijderd domein.  
+Sinds `4.2.0` heeft een kolom, net als een tabel, een `logicalName`, en een `domainId`, de id van het domein waaraan ze is gekoppeld, `''` voor geen. Bewerkingen in één editor houden een gekoppelde kolom op het gegevenstype van haar domein, zoals [Domeinen en gegevenstypen](../../guide/guides/dictionary.md#domains-and-data-types) beschrijft. Het parseren wijzigt echter het type van geen enkele kolom, dus een bestand dat elders is geschreven, kan een gekoppelde kolom op een ander type laten staan, en dat geldt ook voor gekruiste bewerkingen van twee medebewerkers; het blad Controles vermeldt elk geval als [`Domain type mismatch`](../../guide/guides/dictionary.md#what-each-check-finds). Het parseren wist een `domainId` die geen domein noemt dat het bestand bevat. Na `options` schrijft de opslagvorm `logicalName` volgens de regel voor een tabel, en `domainId` alleen zolang die een domein noemt dat het bestand schrijft, dus een kolom die aan een verwijderd domein is gekoppeld, of aan een domein dat het bestand weglaat, wordt zonder de koppeling geschreven en met het gegevenstype dat ze bevat.  
 `ColumnOption.nameDerived` (`16`) is de vlag van de kolom voor een afgeleide naam, die met de andere bits in `options` staat en hetzelfde betekent als de `nameDerived` van een tabel. Een primaire sleutel met NOT NULL waarvan de woordenboeken de naam hebben afgeleid, heeft bijvoorbeeld `options` `26`.  
 Een editor vóór `4.2.0` laat `logicalName` en `domainId` weg wanneer hij een document laadt, dus als daar wordt opgeslagen, gaan ze verloren. Hij laat het getal in `options` intact, dus de bit `nameDerived` blijft bewaard als daar wordt opgeslagen.
 
@@ -348,9 +323,7 @@ Een editor vóór `4.2.0` laat `logicalName` en `domainId` weg wanneer hij een d
 ```ts
 type Relationship = {
   id: string;
-  identification: boolean; // runtime only
   relationshipType: number; // Constants: RelationshipType
-  startRelationshipType: number; // Constants: StartRelationshipType; runtime only
   onDelete: number; // Constants: ReferentialAction
   onUpdate: number; // Constants: ReferentialAction
   start: RelationshipPoint;
@@ -360,9 +333,6 @@ type Relationship = {
 type RelationshipPoint = {
   tableId: string;
   columnIds: string[];
-  x: number; // runtime only
-  y: number; // runtime only
-  direction: number; // Constants: Direction; runtime only
 };
 
 // Constants
@@ -373,11 +343,6 @@ const RelationshipType = {
   OneN: 16,
 } as const;
 
-const StartRelationshipType = {
-  ring: 1,
-  dash: 2,
-} as const;
-
 const ReferentialAction = {
   none: 1,
   noAction: 2,
@@ -386,35 +351,25 @@ const ReferentialAction = {
   setDefault: 16,
   restrict: 32,
 } as const;
-
-const Direction = {
-  left: 1,
-  right: 2,
-  top: 4,
-  bottom: 8,
-} as const;
 ```
 
 Sinds `3.10.0` heeft een relatie `onDelete` en `onUpdate`, haar [acties voor ON DELETE en ON UPDATE](../../guide/guides/relationship-editing.md#on-delete-and-on-update). Elk bevat precies één waarde van `ReferentialAction`. `none`, de standaardwaarde, schrijft geen clausule, zodat het eigen standaardgedrag van de database geldt. De andere vijf staan voor `NO ACTION`, `CASCADE`, `SET NULL`, `SET DEFAULT` en `RESTRICT`. Schema SQL schrijft een clausule alleen voor een database die de bijbehorende actie accepteert.  
 De opslagvorm schrijft altijd beide, en sinds `4.0.0` vereist het JSON Schema ze, waarbij het alleen controleert of elk een geheel getal is. Het parseren leest een ontbrekend veld, zoals in elk document dat vóór `3.10.0` is opgeslagen, nog steeds als `none`, en dat geldt ook voor een waarde buiten de lijst.  
 Een editor vóór `3.10.0` kent de velden niet en laat ze weg wanneer hij een document laadt, dus als daar wordt opgeslagen, gaat elke actie verloren.
 
-Sinds `4.0.0` wordt bij elke keer laden afgeleid wat de opslagvorm weglaat. Een relatie is identificerend wanneer elke kolom waarop ze eindigt een primaire sleutel is, en haar `startRelationshipType` is `dash` wanneer elke zodanige kolom NOT NULL is en anders `ring`; een relatie zonder overgebleven eindkolom is niet-identificerend en `dash`, zoals een nieuwe relatie begint. De ankerpunten, `x`, `y` en `direction`, worden opnieuw geplaatst.
+Sinds `4.0.0` wordt bij elke keer laden afgelezen of een relatie identificerend is, en hoe haar ouderuiteinde wordt getekend, uit de kolommen waarop ze eindigt en die de kindtabel nog vermeldt. Ze is identificerend, een doorgetrokken lijn, zolang elke zodanige kolom een primaire sleutel is, en haar ouderuiteinde is twee strepen zolang elke zodanige kolom NOT NULL is, en anders een ring en een streep. Een relatie zonder zo'n kolom is niet-identificerend met twee strepen, zoals een nieuwe relatie begint. Zie [Een verbindingslijn lezen](../../guide/guides/relationship-editing.md#reading-a-connector).
 
 ### Collectie: indexEntities {#collection-indexentities}
 
 ```ts
 type Index = {
   id: string;
-  name: string;
+  name?: string;
   tableId: string;
   indexColumnIds: string[];
-  seqIndexColumnIds: string[]; // runtime only
   unique: boolean;
 };
 ```
-
-Het parseren zet `seqIndexColumnIds` op `indexColumnIds` als die ontbreekt of een vermelde id mist.
 
 ### Collectie: indexColumnEntities {#collection-indexcolumnentities}
 
@@ -438,7 +393,7 @@ const OrderType = {
 ```ts
 type Memo = {
   id: string;
-  value: string;
+  value?: string;
   ui: MemoUI;
 };
 
@@ -447,20 +402,19 @@ type MemoUI = {
   y: number;
   width: number;
   height: number;
-  zIndex: number; // runtime only
-  color: string;
+  color?: string;
 };
 ```
 
-Sinds `4.0.0` staan tabellen en memo's in [één gedeelde stapel](../../guide/guides/table-related-functions.md#moving-multiple-tables), geordend op `zIndex`, dus als je een tabel naar voren brengt, kan die boven een memo komen te liggen. Het parseren stapelt een memo die zonder `zIndex` is opgeslagen boven elke tabel, zoals [Doc](#doc) beschrijft. Een memo in een bestand dat vóór `4.0.0` is opgeslagen, behoudt de opgeslagen `zIndex`, die uit dezelfde teller kwam als die van de tabellen, dus een memo die een eerdere versie boven elke tabel tekende, kan openen onder een tabel die daarna naar voren is gebracht.
+Sinds `4.0.0` staan tabellen en memo's in [één gedeelde stapel](../../guide/guides/table-related-functions.md#moving-multiple-tables), dus als je een tabel naar voren brengt, kan die boven een memo komen te liggen. Bij het laden komt elke memo boven elke tabel te liggen, zoals [Doc](#doc) beschrijft. Een memo in een bestand dat vóór `4.0.0` is opgeslagen, behoudt de opgeslagen `zIndex`, die uit dezelfde teller kwam als die van de tabellen, dus een memo die een eerdere versie boven elke tabel tekende, kan openen onder een tabel die daarna naar voren is gebracht.
 
 ### Collectie: tableGroupEntities {#collection-tablegroupentities}
 
 ```ts
 type TableGroup = {
   id: string;
-  name: string;
-  color: string;
+  name?: string;
+  color?: string;
   ui: TableGroupUI;
 };
 
@@ -469,7 +423,6 @@ type TableGroupUI = {
   y: number;
   width: number;
   height: number;
-  zIndex: number; // runtime only
 };
 ```
 
@@ -487,7 +440,7 @@ type DictionaryRows = {
 };
 ```
 
-Geen van de drie gebruikt de id als sleutel. Elk wordt geschreven als een koprij en rijen: `fields` noemt de velden van de entiteit één keer, de id eerst, en elke rij bevat de waarden van één entiteit in die volgorde. De typen hieronder geven de velden van elke entiteit in de volgorde van de koprij van de runtimewaarde. Een rij behoudt altijd haar id en naam, maar lege waarden aan het eind, na de naam, worden weggelaten, dus een lege waarde vóór een waarde die wordt behouden, blijft `''`, en het parseren leest een waarde die een rij mist als `''`. Beide vormen schrijven elke rij op een eigen regel als compacte JSON, zoals in deze twee woorden uit een bestand:
+Geen van de drie gebruikt de id als sleutel. Elk wordt geschreven als een koprij en rijen: `fields` noemt de velden van de entiteit één keer, de id eerst, en elke rij bevat de waarden van één entiteit in die volgorde. De typen hieronder geven de velden van elke entiteit in die volgorde. Een rij behoudt altijd haar id en naam, maar lege waarden aan het eind, na de naam, worden weggelaten, dus een lege waarde vóór een waarde die wordt behouden, blijft `''`, en het parseren leest een waarde die een rij mist als `''`. Elke rij wordt op een eigen regel als compacte JSON geschreven, zoals in deze twee woorden uit een bestand:
 
 ```json
 "wordEntities": {
@@ -507,8 +460,8 @@ Geen van de drie gebruikt de id als sleutel. Elk wordt geschreven als een koprij
 }
 ```
 
-De opslagvorm schrijft de vermelde rijen in de volgorde van het blad en laat `order` weg, dus de koprijen ervan noemen dat veld niet. Ze laat een rij weg waarvan de waarden na de id allemaal leeg zijn of alleen uit spaties bestaan, zoals een rij die is toegevoegd en nooit ingevuld, of die is leeggemaakt, en elke koppeling naar zo'n domein of naar een verwijderd domein: de `domainId` van een kolom wordt weggelaten, en die van een term wordt geschreven als `''`, waarbij de term zelf wordt weggelaten als hij verder niets bevat.  
-De koprijen van de runtimewaarde noemen `"order"` direct na `"name"`. De runtimewaarde schrijft elke rij die de collectie bevat, verwijderde inbegrepen, in de volgorde waarin de collectie ze bevat, dus sorteer op `order`, vergeleken in volgorde van code-eenheden, voor de volgorde van een blad. Het parseren geeft de rijen van een bestand `order`-sleutels in de volgorde waarin de rijen staan, zodat ze worden teruggelezen in de volgorde waarin het bestand ze schreef.  
+De opslagvorm schrijft de rijen van elk blad in de volgorde van het blad, zonder veld voor de volgorde, dus de rijen van een bestand zijn de leden van een woordenboek én hun volgorde. Ze laat een rij weg waarvan de waarden na de id allemaal leeg zijn of alleen uit spaties bestaan, zoals een rij die is toegevoegd en nooit ingevuld, of die is leeggemaakt, en elke koppeling naar zo'n domein of naar een verwijderd domein: de `domainId` van een kolom wordt weggelaten, en die van een term wordt geschreven als `''`, waarbij de term zelf wordt weggelaten als hij verder niets bevat.  
+Het parseren leest de rijen in de volgorde waarin ze staan, zodat elk blad ze weergeeft in de volgorde waarin het bestand ze schreef.  
 Een document zonder de woordenboeken, zoals een document dat vóór `4.2.0` is opgeslagen, heeft er geen. Een editor vóór `4.2.0` laat alle drie weg wanneer hij een document laadt, dus als daar wordt opgeslagen, gaat elk woord, elke term en elk domein verloren.
 
 ### Collectie: wordEntities {#collection-wordentities}
@@ -517,12 +470,11 @@ Een document zonder de woordenboeken, zoals een document dat vóór `4.2.0` is o
 type Word = {
   id: string;
   name: string;
-  order: string; // runtime only
-  abbreviation: string;
-  englishName: string;
-  description: string;
-  synonyms: string;
-  forbiddenWords: string;
+  abbreviation?: string;
+  englishName?: string;
+  description?: string;
+  synonyms?: string;
+  forbiddenWords?: string;
 };
 ```
 
@@ -534,15 +486,14 @@ Een woord is een van de woorden waaruit een logische naam bestaat, en `abbreviat
 type Term = {
   id: string;
   name: string;
-  order: string; // runtime only
-  physicalName: string;
-  domainId: string;
-  description: string;
-  synonyms: string;
+  physicalName?: string;
+  domainId?: string;
+  description?: string;
+  synonyms?: string;
 };
 ```
 
-Een term is een volledige logische naam. Een tabel of kolom waarvan de `logicalName` overeenkomt met `name`, leidt `physicalName` af of, zolang dat leeg is, een naam die uit de afkortingen van de woorden is samengesteld, en een kolom krijgt ook het domein dat `domainId` noemt, `''` voor geen (zie [Fysieke namen afleiden](../../guide/guides/dictionary.md#deriving-physical-names)). `synonyms` is door komma's gescheiden. Het parseren wist een `domainId` die geen domein noemt, net als bij een kolom.
+Een term is een volledige logische naam. Een tabel of kolom waarvan de `logicalName` overeenkomt met `name`, leidt `physicalName` af of, zolang dat leeg is, een naam die uit de afkortingen van de woorden is samengesteld, en een kolom krijgt ook het domein dat `domainId` noemt, `''` voor geen (zie [Fysieke namen afleiden](../../guide/guides/dictionary.md#deriving-physical-names)). `synonyms` is door komma's gescheiden. Het parseren wist een `domainId` die geen domein noemt dat het bestand bevat, net als bij een kolom.
 
 ### Collectie: domainEntities {#collection-domainentities}
 
@@ -550,10 +501,9 @@ Een term is een volledige logische naam. Een tabel of kolom waarvan de `logicalN
 type Domain = {
   id: string;
   name: string;
-  order: string; // runtime only
-  category: string;
-  dataType: string;
-  description: string;
+  category?: string;
+  dataType?: string;
+  description?: string;
 };
 ```
 
@@ -572,7 +522,7 @@ Het canonieke schemabestand is gepubliceerd op [json-schema/schema.json](https:/
 
 Zet `$schema` bovenaan een `.erd.json`-bestand, dan valideren editors die JSON Schema begrijpen, zoals VS Code, het document en vullen ze de velden automatisch aan terwijl je bewerkt.
 
-Sinds `4.0.0` beschrijft het schema alleen de opslagvorm. Elk object met benoemde velden is gesloten (`additionalProperties: false`), elk veld dat de opslagvorm altijd schrijft, is verplicht, een veld dat ze weglaat zolang het niets bevat, wordt genoemd maar is niet verplicht, en geen enkel veld dat ze altijd weglaat, wordt genoemd. Daarom weigert het schema de runtimewaarde. Het weigert ook een bestand dat vóór `4.0.0` is opgeslagen, met zijn `meta`, breedtes, `zIndex`, `ignoreSaveSettings` en de rest, totdat een editor van `4.0.0` of later dat bestand opnieuw opslaat. Een bestand dat door `3.2.0` of later is opgeslagen, noemt al de URL van dit schema, die naar de branch `main` wijst, dus een editor die ertegen valideert, markeert het bestand nu. Een bestand dat door `3.0.0` of `3.1.0` is opgeslagen, of een v2-document, noemt geen `$schema`.
+Sinds `4.0.0` beschrijft het schema alleen de opslagvorm. Elk object met benoemde velden is gesloten (`additionalProperties: false`), elk veld dat de opslagvorm altijd schrijft, is verplicht, elk veld dat in de typen hierboven met `?` is gemarkeerd, wordt genoemd maar is niet verplicht, en geen enkel ander veld wordt genoemd. Daarom weigert het schema een bestand dat vóór `4.0.0` is opgeslagen, met zijn `meta`, breedtes, `zIndex`, `ignoreSaveSettings` en de rest, totdat een editor van `4.0.0` of later dat bestand opnieuw opslaat. Een bestand dat door `3.2.0` of later is opgeslagen, noemt al de URL van dit schema, die naar de branch `main` wijst, dus een editor die ertegen valideert, markeert het bestand nu. Een bestand dat door `3.0.0` of `3.1.0` is opgeslagen, of een v2-document, noemt geen `$schema`.
 
 Sinds `4.2.0` vereist het schema niet langer de tekstvelden van een entiteit, een lijst in `doc`, een collectie of `collections` zelf, die de opslagvorm weglaat zolang ze niets bevatten. Het accepteert nog steeds een bestand dat door `4.0.0` of `4.1.0` is opgeslagen. Het noemt de nieuwe velden: `nameViewMode`, dat alleen `"logical"` en `"both"` accepteert; de `logicalName` en `nameDerived` van een tabel, waarbij `nameDerived` alleen `true` accepteert; de `logicalName` en `domainId` van een kolom; en de drie woordenboeken, elk met een koprij en rijen van strings. `canvasType` vermeldt het tabblad Woordenboek, `columnOrder` accepteert zeven of negen gehele getallen, en de beschrijvingen van `show`, `columnOrder`, `lockSettings` en `options` noemen de nieuwe bits.
 

@@ -51,18 +51,18 @@ editor.addEventListener('change', () => {
 
 ```html
 <script type="module">
-  import 'https://esm.run/@dineug/erd-editor@5.0.0/erd-editor.js';
+  import 'https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js';
 
   const editor = document.createElement('erd-editor');
   editor.style.cssText = 'display: block; width: 100%; height: 100vh;';
   document.body.appendChild(editor);
 </script>
 <!-- or -->
-<script type="module" src="https://esm.run/@dineug/erd-editor@5.0.0/erd-editor.js"></script>
+<script type="module" src="https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js"></script>
 ```
 
 يحلّ `esm.run` التبعيات الخارجية للحزمة نيابةً عنك، لذا يعمل هذا دون أداة تجميع.
-يصل كل مدخل بمساره بعد رقم الإصدار: فـ`…/erd-editor.js` يعرّف المحرر، و`…/erd-viewer.js` يعرّف العارض، الذي يجلب من CDN كل لغة عرض غير الإنجليزية حين تطلبها صفحة. أما عنوان الحزمة المجرد `https://esm.run/@dineug/erd-editor@5.0.0` فيقدّم الجذر الذي لا يعرّف أي عنصر.
+يصل كل مدخل بمساره بعد رقم الإصدار: فـ`…/erd-editor.js` يعرّف المحرر، و`…/erd-viewer.js` يعرّف العارض، الذي يجلب من CDN كل لغة عرض غير الإنجليزية حين تطلبها صفحة. أما عنوان الحزمة المجرد `https://esm.run/@dineug/erd-editor@5.1.0` فيقدّم الجذر الذي لا يعرّف أي عنصر.
 يقدّم عنوان URL غير المحدد بإصدار أحدث إصدار دائمًا. حدّد إصدارًا بعينه، كما في الأعلى، إذا كنت لا تريد أن تصل ترقية رئيسية إلى صفحتك دون سابق إنذار.
 والإصدار `5.0.0` نفسه ترقية من هذا النوع: فالصفحة التي يجب أن تبقى على الإصدار 4.x تحدّد `@4.2.0` في العنوان، راجع [الترقية من الإصدار 4.x](#upgrading-from-4x).
 
@@ -75,7 +75,7 @@ editor.addEventListener('change', () => {
 
 ```html
 <erd-editor></erd-editor>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.0.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0"></script>
 <script>
   const editor = document.querySelector('erd-editor');
   editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
@@ -88,7 +88,7 @@ editor.addEventListener('change', () => {
 
 ```html
 <erd-viewer src="diagram.erd.json" style="display: block; height: 480px"></erd-viewer>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.0.0/dist/erd-viewer.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0/dist/erd-viewer.umd.js"></script>
 ```
 
 لا يعرّف أي من الملفين وسم الآخر، ولا يترك أي منهما على الصفحة متغيرًا عامًا سوى متغيره و`window.Konva`.
@@ -100,7 +100,7 @@ editor.addEventListener('change', () => {
 ```html
 <erd-editor system-dark-mode enable-theme-builder enable-locale-picker enable-welcome-screen></erd-editor>
 <script type="module">
-  import 'https://esm.run/@dineug/erd-editor@5.0.0/erd-editor.js';
+  import 'https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js';
 
   const editor = document.querySelector('erd-editor');
 </script>
@@ -161,7 +161,7 @@ const found = document.querySelector('erd-editor'); // ErdEditorElement | null
 ```
 
 يُصدَّر النوع `ErdEditorElement` لتحديد أنواع متغيراتك وخصائص مكوناتك. ومنذ الإصدار `5.0.0` هو أيضًا فئة العنصر، و`ErdViewerElement` هو واجهة العارض وفئته، راجع [تسجيل العناصر](#registering-the-elements).
-منذ الإصدار `4.0.0`، تصدّر الحزمة أيضًا الأنواع `LocaleCode` و`LocaleOption` و`SchemaSQLOptions`، ومنذ الإصدار `5.0.0` النوع `ToImageOptions`، راجع [نقاط الدخول](#entry-points). أما الخيارات التي تقبلها الدوال `setSchema*()` فليس لها اسم مُصدَّر؛ استخرجها من العنصر، كما في `Parameters<ErdEditorElement['setSchemaSQL']>[1]`.
+منذ الإصدار `4.0.0`، تصدّر الحزمة أيضًا الأنواع `LocaleCode` و`LocaleOption` و`SchemaSQLOptions`، ومنذ الإصدار `5.0.0` النوع `ToImageOptions`، راجع [نقاط الدخول](#entry-points). أما الخيارات التي تقبلها الدوال `setSchema*()` فليس لها اسم مُصدَّر؛ استخرجها من العنصر، كما في `Parameters<ErdEditorElement['setSchemaSQL']>[1]`. والأمر نفسه ينطبق على [المخزن المشترك](./advanced/collaborative-editing.md) وأنواعه.
 ومنذ الإصدار `5.0.0` يكتب الحقل `typesVersions` في الحزمة أنواع كل نقطة دخول فرعية تحت `moduleResolution: "node10"` أيضًا، الذي لا يقرأ خريطة exports.
 
 ## تسجيل العناصر {#registering-the-elements}
@@ -259,7 +259,7 @@ declare global {
 | `@dineug/erd-editor/erd-editor.js` | منذ الإصدار `5.0.0`. يعرّف `<erd-editor>` ولا يصدّر شيئًا |
 | `@dineug/erd-editor/erd-viewer.js` | منذ الإصدار `5.0.0`. يعرّف `<erd-viewer>` ولا يصدّر شيئًا |
 | `@dineug/erd-editor/engine.js` | مخزن المستند دون DOM |
-| `@dineug/erd-editor/peer.js` | منذ الإصدار `3.9.1`. النظير بدون واجهة لخادم MCP |
+| `@dineug/erd-editor/peer.js` | منذ الإصدار `3.9.1`. النظير بدون واجهة لخادم MCP، ومنذ الإصدار `5.1.0` النظير بدون واجهة الخاص بـ [ربط Yjs](./advanced/yjs.md) أيضًا |
 
 يصدّر الجذر فئتَي العنصرين ودالتَي تعريفهما، ودالتين لتعيين دوال رد النداء، ومنذ الإصدار `3.9.2` اختصارات لوحة المفاتيح الافتراضية مع أنواعها، ومنذ الإصدار `4.0.0` أنواع لغة العرض ونوع خيارات الدالة `getSchemaSQL()`، ومنذ الإصدار `4.2.0` تركيبات مفاتيح الصفوف في علامة تبويب القاموس، ومنذ الإصدار `5.0.0` الدالة `toImage`.
 
@@ -289,7 +289,9 @@ declare global {
 وهي تصدّر `createReplicationStore` والنوع `ReplicationStore`. ومنذ الإصدار `3.10.0` تصدّر أيضًا النوع `ReplicationChange`، `{ value: string; changed: boolean }`، الذي يتلقاه مستمع الحدث `change` في النسخة المتماثلة، راجع [on@change](./advanced/remote-storage.md#onchange).
 منذ الإصدار `4.0.0`، يملك المخزن `ReplicationStore` أيضًا الخاصية `runtimeValue`. أما خاصيته `value` والقيمة التي يسلّمها الحدث `change` فهما بصيغة التخزين التي يحفظها الملف، مثل قيمة العنصر، راجع [ReplicationStore](./advanced/remote-storage.md#replicationstore).
 
-تمثل `@dineug/erd-editor/peer.js` النظير بدون واجهة الذي يحرّر [خادم MCP](../mcp/introduction.md) المستند من خلاله. وهي موجودة لأجل ذلك الخادم، ولا توثّقها هذه الصفحات.
+تمثل `@dineug/erd-editor/peer.js` النظير بدون واجهة الذي يحرّر [خادم MCP](../mcp/introduction.md) المستند من خلاله.
+ومنذ الإصدار `5.1.0`، هي أيضًا ما تربطه `bindPeerStore` من `@dineug/erd-editor-yjs` بـ `Y.Doc`: مخزن نظير ينشئه الاستدعاء `createPeerStore()` في نقطة الدخول هذه، بوصفه عضوًا بدون واجهة في غرفة أو بوصفه الضاغط الذي يضم سجل دفعات الغرفة.
+وما عدا ما تعرضه صفحة [Yjs](./advanced/yjs.md) منها — الاستدعاء `createPeerStore()` و`value` في مخزن نظير مربوط و`destroy()` فيه — لا توثّقها هذه الصفحات.
 
 ### مربعات حوار الملفات {#file-dialogs}
 
@@ -369,11 +371,11 @@ Chrome 91+ وEdge 94+ وFirefox 93+ وSafari 16.4+ — وهو خط الأساس 
    import { setExportFileCallback } from '@dineug/erd-editor';
   ```
 
-- على CDN ينطبق الأمر نفسه على `https://esm.run/@dineug/erd-editor`، الذي يقدّم الآن الجذر ولا يعرّف شيئًا: استورد `https://esm.run/@dineug/erd-editor@5.0.0/erd-editor.js`. وعنوانا jsDelivr وunpkg المجردان لا يزالان يقدّمان نسخة الوسم script، التي تعرّف `<erd-editor>` كما كانت. ويقدّم العنوان غير المحدد بإصدار الآن أحدث إصدار من 5.x؛ حدّد `@4.2.0` للبقاء على الإصدار 4.x، راجع [CDN](#cdn) و[الوسم script](#script-tag).
+- على CDN ينطبق الأمر نفسه على `https://esm.run/@dineug/erd-editor`، الذي يقدّم الآن الجذر ولا يعرّف شيئًا: استورد `https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js`. وعنوانا jsDelivr وunpkg المجردان لا يزالان يقدّمان نسخة الوسم script، التي تعرّف `<erd-editor>` كما كانت. ويقدّم العنوان غير المحدد بإصدار الآن أحدث إصدار من 5.x؛ حدّد `@4.2.0` للبقاء على الإصدار 4.x، راجع [CDN](#cdn) و[الوسم script](#script-tag).
 - لا يعرّف الجذر شيئًا لكنه لا يزال يحتاج إلى DOM، لذا يبقى الاستيراد المسمّى منه، مثل `setExportFileCallback`، في العرض من جانب الخادم على المسار الخاص بجانب العميل إلى جوار نقطة دخول العنصر، راجع [العرض من جانب الخادم](#server-side-rendering).
 - يكتسب `window.ErdEditor` العنصرين `ErdEditorElement` و`defineErdEditor`. وتضع نسخة الوسم script للعارض `ErdViewerElement` و`defineErdViewer` على `window.ErdViewer`، ولا يحمل أيٌّ من المتغيرين العامين `toImage`.
 - يُفتح المحرر `readonly` قارئًا. تبقى علامات تبويبه الست والمستكشف والبحث السريع والحضور، ويُحذف كل عنصر تحكم كان سيعدّل المخطط بدلًا من تعطيله: يعرض شريط الأدوات اسم قاعدة البيانات نصًا، وتعرض علامة تبويب الإعدادات إعداداتها وكل عنصر تحكم فيها معطّل تحت الشارة `Read only`، ويحتفظ شريط الأدوات العائم بالتكبير وعرض الأسماء ووضع الزن والبوصلة فقط، فتزول `Hand` و`Select` ويحرّك السحب العرض. ولا يحدد الضغط شيئًا: التحديد الوحيد هو الإطار الذي يضعه الانتقال من المستكشف أو البحث السريع حول ما يصل إليه، وتمحوه نقرة ثابتة، ولا يحدد اختصارا تحديد الكل شيئًا. ويُنهي تفعيل `readonly` ما كان مفتوحًا، مثل التحديد وأداة اليد ومحرر الخلية والسحب و`Map Columns` ومعاينة `Force` في التخطيط التلقائي والسفر عبر الزمن، ويُبقي التمرير والتكبير وعلامة التبويب وعرض الأسماء، راجع [readonly](./erd-editor-element.md#readonly).
-- تبقى الإعدادات التي يغيّرها قارئ `readonly` على شاشة ذلك المحرر أيًّا كانت أقفالها: التمرير والتكبير وعلامة التبويب وعرض الأسماء وView Option وقاعدة البيانات ولغة منشئ التعليمات البرمجية وأنماط التسمية ونوع علامات الاقتباس. ويحتفظ `value` و`runtimeValue` وتصدير JSON بإعدادات المستند نفسه، وهي التي كانت تغييرات القارئ في 4.x قد تصل إليها، ولا يرسل `getSharedStore()` شيئًا منها إلى المحررات الأخرى. وتكتب `getSchemaSQL()` دون نظام قاعدة بيانات القاعدة التي اختارها القارئ. ويعيد إيقاف `readonly` قاعدة البيانات وإعدادات الشيفرة وView Option إلى قيم المستند، ويترك التمرير والتكبير وعلامة التبويب وعرض الأسماء حيث تركها القارئ.
+- تبقى الإعدادات التي يغيّرها قارئ `readonly` على شاشة ذلك المحرر أيًّا كانت أقفالها: التمرير والتكبير وعلامة التبويب وعرض الأسماء وView Option وقاعدة البيانات ولغة منشئ التعليمات البرمجية وأنماط التسمية ونوع علامات الاقتباس. ويحتفظ `value` و`runtimeValue` وتصدير JSON بإعدادات المستند نفسه، وهي التي كانت تغييرات القارئ في 4.x قد تصل إليها، ولا يرسل `getSharedStore()` شيئًا منها إلى المحررات الأخرى. وتكتب `getSchemaSQL()` دون نظام قاعدة بيانات القاعدة التي اختارها القارئ. ويعيد إيقاف `readonly` قاعدة البيانات وإعدادات الشيفرة وView Option إلى ما كان ذلك المحرر سيعرضه لو لم يغيّر القارئ شيئًا، ويترك التمرير والتكبير وعلامة التبويب وعرض الأسماء حيث تركها القارئ.
 - زال الصف `Recalculation table width` من علامة تبويب الإعدادات. ولا يزال التحميل واللصق يلائمان عرض كل جدول مع نصه.
 - في Vite 8 احذف `exclude: ['@dineug/erd-editor']` من `optimizeDeps`، فهذا لا تحتاج إليه إلا Vite 7 وما قبلها، وأبقِ `include` الخاص بـ ELK، راجع [Vite](#vite).
 

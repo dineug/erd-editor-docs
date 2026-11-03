@@ -55,9 +55,12 @@ Grupul și tabelele pe care le preia formează un singur pas de anulare, iar num
 ## Denumirea unui grup {#naming-a-group}
 
 Numele unui grup se editează într-un câmp care se deschide peste bara sa de titlu. Câmpul se deschide automat după crearea unui grup, la un dublu clic pe bara de titlu și din elementul `Rename` al meniului contextual al grupului.  
-`Enter` sau un clic în altă parte salvează numele. `Escape` închide câmpul fără a modifica numele și lasă grupul selectat, iar o a doua apăsare pe `Escape` deselectează tot.  
+`Enter`, un clic în altă parte sau ascunderea grupurilor, fie că le ascundeți dumneavoastră, fie un colaborator, salvează numele. `Escape` închide câmpul fără a modifica numele și lasă grupul selectat, iar o a doua apăsare pe `Escape` deselectează tot.  
 Un nume modificat reprezintă un singur pas de anulare; salvarea numelui nemodificat nu înregistrează nimic. Un nume gol sau format doar din spații apare ca `unnamed`.  
-Cât timp câmpul este deschis, comenzile rapide ale pânzei sunt suspendate, iar comenzile rapide pentru căutarea rapidă și pentru `Toggle Explorer` nu au niciun efect, ca în timpul editării unei celule de tabel.
+Cât timp câmpul este deschis, comenzile rapide ale pânzei sunt suspendate, iar comenzile rapide pentru căutarea rapidă și pentru `Toggle Explorer` nu au niciun efect, ca în timpul editării unei celule de tabel.  
+Când un colaborator sau un agent de programare înlocuiește diagrama cât timp câmpul este deschis, câmpul rămâne deschis atâta timp cât noua diagramă are în continuare grupul și afișează grupurile.  
+Dacă acea diagramă nu mai are grupul, câmpul se închide și nu salvează nimic; dacă are grupul, dar ascunde grupurile, câmpul se închide și salvează un nume modificat.  
+Reîncărcarea diagramei în editor, așa cum face Obsidian când fișierul se schimbă din afara lui, închide câmpul și renunță la numele tastat. Tastele apăsate după aceea nu ajung nicăieri până când faceți clic pe editor, așa că o apăsare pe `Delete` sau `Backspace` destinată numelui nu elimină nimic.
 
 Funcția [Găsire și înlocuire](./find-and-replace.md#what-it-searches) caută în numele grupurilor prin butonul `Table group names` cât timp grupurile sunt afișate, iar butoanele sale `Replace` și `Replace All` redenumesc grupuri (consultați [Înlocuirea](./find-and-replace.md#replacing)). [Căutarea rapidă](./quick-search.md#searching-the-diagram) nu caută în numele grupurilor.
 
@@ -157,7 +160,7 @@ Elementul `Group selected tables` își afișează tastele, `T` apoi `G`, în dr
 
 Elementul `View Option` → `Table Groups` din meniul contextual al pânzei afișează sau ascunde toate grupurile. Opțiunea este bifată implicit (consultați [Opțiuni de afișare a tabelelor](./table-related-functions.md#table-view-options)).  
 Când este debifată, chenarele grupurilor și culorile de grup de pe antetele tabelelor dispar de pe pânză, din minihartă și din imaginile exportate, iar barele de derulare și miniharta nu mai lasă loc pentru grupuri. Nimic nu se mută și nu se redimensionează, iar fiecare tabel rămâne în grupul său.  
-Ascunderea grupurilor le deselectează, încheie o trasare pornită cu `New Table Group` și închide un editor de nume deschis.
+Ascunderea grupurilor le deselectează, încheie o trasare pornită cu `New Table Group` și închide un editor de nume deschis, ca un clic în altă parte (consultați [Denumirea unui grup](#naming-a-group)).
 
 Cât timp grupurile sunt ascunse:
 

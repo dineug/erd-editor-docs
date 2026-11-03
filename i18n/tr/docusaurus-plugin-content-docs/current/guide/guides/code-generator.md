@@ -25,7 +25,7 @@ Seçili dil `Database` ayarını veya ad biçimlerini yok saydığında, bunlar 
 `Save file` ve `Copy` düğmeleri panelin alt kısmında yer alır. [Sonucu kaydetme veya kopyalama](#saving-or-copying-the-result) bölümüne bakın.
 
 Bunlar, bağlam menüsünün ve Hızlı aramanın da değiştirdiği, diyagramın kendi ayarlarıdır. `Database` her düzenleme gibi dosyaya kaydedilir.  
-`Language`, `Table Name Case`, `Column Name Case` ve `Bracket` yalnızca Ayarlar sekmesindeki kendi kilitleri (`Bracket` için `Bracket Type`) devre dışıyken kaydedilir ve yeni bir diyagramda tüm kilitler etkindir. Kilit etkinken yapılan bir değişiklik ekranınızdaki kodu yeniden yazar, ancak dosya kilitli değeri korur ve diyagram bu değerle yeniden açılır. Panel bir kilide dair hiçbir işaret göstermez; bir seçimi dosyada tutmak için o seçimin kilidini devre dışı bırakın. [Kilit](./settings.md#lock) bölümüne bakın.  
+`Language`, `Table Name Case`, `Column Name Case` ve `Bracket` yalnızca Ayarlar sekmesindeki kendi kilitleri (`Bracket` için `Bracket Type`) devre dışıyken kaydedilir ve yeni bir diyagramda tüm kilitler etkindir. Kilit etkinken yapılan bir değişiklik kodu yalnızca sizin düzenleyicinizde yeniden yazar: diyagramı açan diğer düzenleyiciler kendi kodlarını korur ve dosya kilitli değeri korur, bu nedenle diyagram bu değerle yeniden açılır. Panel bir kilide dair hiçbir işaret göstermez; bir seçimi dosyada tutmak ve her düzenleyiciye vermek için o seçimin kilidini devre dışı bırakın. [Kilit](./settings.md#lock) bölümüne bakın.  
 Salt okunur bir düzenleyicide başlık bunun yerine `This window only` yazar, çünkü orada yapılan bir değişiklik yalnızca o pencereye ulaşır. [Salt okunur düzenleyiciler](#read-only-editors) bölümüne bakın.
 
 ## Dil {#language}
@@ -144,5 +144,5 @@ Metin ayrıca seçilebilir, böylece yalnızca ihtiyacınız olan kısmı alabil
 
 [`readonly`](../../api/erd-editor-element.md#readonly) bir düzenleyicide panelin listeleri, bağlam menüsü ve Hızlı arama `Language`, `Database`, `Table Name Case`, `Column Name Case` ve `Bracket` ayarlarını yine değiştirir, ancak yalnızca o pencerede; bu yüzden panel bunların başlığına `Saved in the document` yerine `This window only` yazar.  
 Bir değişiklik o ekrandaki kodu yeniden yazar ve kilitler ne derse desin dosyaya kaydedilmez, ortak çalışanlarla paylaşılmaz ve geri alma için kaydedilmez; bir ortak çalışanın, sizin seçtiğiniz bir ayarda yaptığı değişiklik ise sizin seçiminizi ekranda bırakır. `Database` ve `Bracket` Şema SQL sekmesinin de ayarlarıdır, bu yüzden burada yapılan bir seçim orada aynı pencerede görünür. [Salt okunur düzenleyiciler](./schema-sql.md#read-only-editors) bölümüne bakın.  
-Düzenleyici yeniden yazılabilir olduğunda belgenin ayarları geri gelir ve kod onlar için yazılır.  
+Düzenleyici yeniden yazılabilir olduğunda, orada değiştirdiğiniz her ayar, bu arada bir ortak çalışanın yaptığı değişikliklerle birlikte, düzenleyicinin daha önce gösterdiği değere döner ve kod onlar için yazılır. Ayarlardaki [Salt okunur düzenleyiciler](./settings.md#read-only-editors) bölümüne bakın.  
 `Save file` ve `Copy` gösterilen kodu kaydeder ve kopyalar.

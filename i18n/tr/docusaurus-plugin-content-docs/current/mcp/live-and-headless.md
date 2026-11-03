@@ -37,6 +37,38 @@ Bir okuma hiçbir zaman bir düzenleyici açmaz. Bir düzenleme, belge henüz a�
 
 `4.2.0` sürümünden önceki bir VS Code uzantısına ya da `1.2.0` sürümünden önceki bir Obsidian veya JetBrains eklentisine sahip bir düzenleyici ajanın düzenlemelerini yine canlı olarak alır, ancak ajanın yazdığı mantıksal adları, değer alanı bağlantılarını ve sözlük satırlarını ne gösterir ne de korur. [Güncelleme](./installation.md#updating) bölümüne bakın.
 
+VS Code uzantısının `4.3.0` veya sonraki bir sürümüyle ya da Obsidian veya JetBrains eklentisinin `1.3.0` veya sonraki bir sürümüyle, sunucunun sürümü ne olursa olsun, `replace` modundaki bir içe aktarma ile bunun bir `erd_undo` veya `erd_redo` işlemi, düzenleyicide çizmekte olduğunuz bir ilişkiyi sona erdirir. [İlişki oluşturma](../guide/guides/editing-start.md#relationship-creation) bölümüne bakın.
+Bu sürümlerden önce çizim hazır kalırdı ve bir tabloya tıklamak, artık diyagramda olmayan bir tablodan bir ilişki ekleyebilirdi.
+`append` modundaki bir içe aktarma çizimi hazır bırakır.
+Açık bıraktığınız bir not, tablo grubu adı veya hücre düzenleyicisi, diyagram düzenlediği şeyi hâlâ tuttuğu ve gösterdiği sürece açık kalır.
+
+### Aynı anda yapılan düzenlemeler {#edits-made-at-the-same-moment}
+
+Sunucunun `1.2.0` veya sonraki bir sürümüyle ve düzenleyicide VS Code uzantısının `4.3.0` veya sonraki bir sürümüyle ya da Obsidian veya JetBrains eklentisinin `1.3.0` veya sonraki bir sürümüyle, sizin ve ajanın aynı şeye aynı anda yaptığı düzenlemeler düzenleyicide, düzenleyicinin kaydettiği dosyada ve `erd_list`, `erd_get` ve `erd_read` araçlarının ajana verdiklerinde aynı sonuçla biter.
+Bu, bir tablonun, sütunun, ilişkinin, dizinin, notun, tablo grubunun veya sözlük satırının adını ya da başka bir alanını, veritabanı adını ve [tablolardan önceki ve sonraki betikleri](../guide/guides/schema-sql.md#before-and-after-scripts), bir tablonun, notun veya tablo grubunun konumunu ya da boyutunu kapsar; ancak bir rengi, bir tablodaki veya dizindeki sütunların sırasını ya da veritabanını kapsamaz.
+Aynı adın ya da alanın iki düzenlemesi, iki taşıma veya iki yeniden boyutlandırma ikisinden biriyle biter, asla bir karışımla bitmez: diğeri kendi tarafına ulaştıktan sonra yapılan düzenleme kazanır; tam olarak aynı anda yapılmış ikisinde ise biri kazanır ve hangisi önce gelirse gelsin her tarafta kazanan aynıdır.
+
+Aynı anda yapılan, bir tablonun, notun veya tablo grubunun iki renk değişikliği, örneğin sizinki ve ajanın `erd_change_table_color` çağrısı, farklı sonuçlarla bitebilir, hatta yer değiştirmiş olabilir, çünkü her taraf en son duyduğu rengi tutar.
+Bir sütun yeniden sıralaması, sizinki ya da ajanın `erd_move_column` veya `erd_move_index_column` çağrısı, her tarafta geldiği sırayla uygulanır; bu nedenle bir tabloda veya dizinde aynı anda yapılan ikisi sütunlarını farklı sıralarda bırakabilir.
+Bir veritabanı değişikliği, sizinki ya da ajanın `erd_set_database` çağrısı, o da geldiği sırayla uygulanır; bu nedenle aynı anda yapılan ikisi düzenleyiciyi ve ajanı farklı veritabanlarında bırakabilir.
+
+Sizin sürüklemeniz ile ajanın `erd_move_table`, `erd_move_tables`, `erd_move_memo`, `erd_move_table_group` ve `erd_sort_tables` çağrıları bittikleri noktalar olarak iletilir; bu nedenle bir tablonun, notun veya tablo grubunun iki taşıması, birinin onu koyduğu yerde biter, asla ikisinin toplamında bitmez.
+`erd_move_table_group`, grubun başlık çubuğunu sürüklemenin yaptığı gibi grubun ve her tablosunun noktasını tek bir pakette gönderir.
+Bir yeniden boyutlandırma konumu ve boyutu birlikte yazar; bu nedenle bir notun veya tablo grubunun aynı anda yapılan bir taşıması ile bir yeniden boyutlandırması, örneğin siz o notu sürüklerken `erd_resize_memo`, iki tarafta da tek bir dikdörtgenle biter: yeniden boyutlandırmanınkiyle ya da taşıma kazanırsa taşımanın noktası ve yeniden boyutlandırmanın boyutuyla.
+Geri alma kaydı oluşturmayan 20 pikselin altındaki bir taşıma da bittiği nokta olarak gider; bu nedenle, ister kısa bir `erd_move_table_group` ister sizin bir tabloyu birkaç piksel oynatan bir tıklama gibi kısa bir sürüklemeniz olsun, diğer tarafın taşımasına karşı kazanabilir.
+
+`1.2.0` sürümlü sunucu da `1.0.0` sürümünden `1.1.1` sürümüne kadarki sürümler gibi hub protokolü 2'yi kullandığından, eski sürümler yine bağlanır.
+`1.2.0` sürümünden önceki bir sunucuyla ya da `4.3.0` sürümünden önceki bir uzantı veya `1.3.0` sürümünden önceki bir eklentiyle, bir tablonun, notun veya tablo grubunun aynı anda yapılan bir taşıması ya da yeniden boyutlandırması düzenleyiciyi ve ajanı farklı konumlarla bırakabilir.
+Eski bir düzenleyici sürüklemenizi alınan mesafe olarak gönderir ve `1.2.0` sürümünden önceki bir sunucu `erd_move_table_group` çağrısını da öyle gönderir.
+Diğer taraf bu mesafeyi tuttuğu noktaya ekler.
+Eski taraf ayrıca diğer tarafın noktalarını geldikleri sırayla uygular.
+Ajan bu durumda o tablo, not veya tablo grubu için düzenleyicinin gösterdiği ve kaydettiği konumdan değil, kendi konumundan okur ve düzenler.
+Bu durum, o öğenin sonraki bir taşıması nokta olarak iletilene kadar (örneğin yeni bir düzenleyicideki sürüklemeniz ya da ajanın `erd_move_table` çağrısı) veya ajan belgeye yeniden katılana kadar (örneğin düzenleyici onu bıraktıktan sonra ya da belgede 30 dakika çağrı yapılmadıktan sonra) sürer.
+Bir renk, sütun sırası ve veritabanı dışında, aynı anda değiştirilen bir ad ya da başka bir alan, yalnızca bir taraf eskiyse yine aynı sonuçla biter, neredeyse her zaman yeni tarafın düzenlemesiyle.
+Her iki taraf da eskiyse ikisi yine farklı sonuçlarla bitebilir.
+
+Bunların hiçbiri, dosyayı tek başına yazan headless bir düzenleme için geçerli değildir.
+
 ### Kaydetme {#saving}
 
 Her düzenleyici, ajanın düzenlemelerini sizinkileri kaydettiği şekilde kaydeder.

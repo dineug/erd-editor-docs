@@ -83,7 +83,9 @@ serial 키는 예외로, 그 foreign key는 `serial4`에 대한 `integer`처럼 
 각 foreign key 컬럼의 이름은 해당 키의 이름을 따릅니다. `id`처럼 한 단어로 된 이름은 앞에 부모 테이블 이름이 붙고(`user_id`), `member_id`처럼 여러 단어로 된 이름은 그대로 유지되며, 자식 테이블에 이미 있는 이름에는 번호가 붙습니다(`user_id_2`). [Foreign Key 컬럼 이름](./relationship-editing.md#foreign-key-컬럼-이름) 문서를 참고하세요.  
 같은 테이블을 두 번 클릭하면 자기 참조 관계가 그려집니다.  
 새 관계는 `On Delete`와 `On Update`가 모두 `Not set`인 상태로 시작하며, 관계 컨텍스트 메뉴에서 변경합니다. [ON DELETE와 ON UPDATE](./relationship-editing.md#on-delete와-on-update) 문서를 참고하세요.  
-`Escape`를 누르거나 같은 단축키를 다시 누르면 취소됩니다. 취소해도 선택은 그대로 유지되며, 다음 `Escape`가 선택을 해제합니다.
+`Escape`를 누르거나 같은 단축키를 다시 누르면 취소됩니다. 취소해도 선택은 그대로 유지되며, 다음 `Escape`가 선택을 해제합니다.  
+그리기는 다이어그램이 교체될 때도 끝납니다. 종류만 선택해 둔 상태이든 부모를 이미 골랐든 마찬가지입니다. 다이어그램을 대체하는 `Import`, 그 Undo나 Redo, 공동 편집자나 코딩 에이전트가 그중 하나를 하는 경우, 그리고 Obsidian이 파일이 에디터 밖에서 바뀔 때 하듯이 다이어그램이 에디터에 다시 불러와지는 경우가 해당합니다.  
+Schema SQL, GraphQL, DBML, AML 가져오기는 파일을 고를 때가 아니라 테이블이 배치된 뒤에 그리기를 끝냅니다. [`Import and Add`](./file-import-export.md#가져와서-추가)는 그리기를 그대로 둡니다.
 
 부모 테이블을 고른 뒤 관계를 연결할 수 있는 테이블을 가리키면, 그 테이블에 외곽선이 표시되고 옆에 버튼 두 개가 나타납니다.
 

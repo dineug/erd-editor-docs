@@ -1,5 +1,5 @@
 ---
-sidebar_position: 2
+sidebar_position: 3
 description: Erreplikatu martxan dagoen editore bat hari nagusitik kanpoko editorerik gabeko biltegi batean, eta serializatu dokumentua gordetzeko.
 ---
 
@@ -88,6 +88,11 @@ Kendutako taula bat gabe hasieratutako erreplika batek, editore batek kentzea de
 Editore batek kentzea desegiten duenean, errenkada gabe hasieratutako erreplika batek hutsik zerrendatzen du berriro, eta `value` balioak errenkada huts bat kanpoan uzten duenez, erreplikak dokumentua hura gabe gordetzen du.  
 Domeinu baten kasuan, hari lotuta zeuden zutabeak eta terminoak ere loturarik gabe geratzen dira erreplika horretan, ez baitzituen inoiz loturak eduki eta desegiteak ez baititu bidaltzen.
 
+`5.1.0` bertsiotik aurrera, [`@dineug/erd-editor-yjs`](./yjs.md) paketeak editoreak Yjs gela baten bidez sinkronizatuta ere mantendu ditzake.  
+Goian bezala gela batera lotutako elementu batetik elikatuta, erreplikak elementu horretan egindako edizioak soilik jasotzen ditu, inoiz ez gelak ekartzen dituenak: horiek beste editore baten edizio gisa iristen dira elementura, eta biltegi partekatu batek ez du inoiz jasotakoa birbidaltzen.  
+Gela baten dokumentua gordetzeko, gorde lotutako elementuaren `value` propietatea, edo lotutako pareko-biltegi batena, [Gelak zer duen](./yjs.md#what-the-room-holds) atalean azaltzen den bezala.  
+Yjs iraunkortasun-hornitzaile batek gela bera gordetzen du, eta hark exekuzio-garaiko balio bat eta ondoren egindako edizioak ditu, ez fitxategi bat; ikus [Mugak](./yjs.md#limits).
+
 ## InjectEngineContext {#injectenginecontext}
 
 ### toWidth {#towidth}
@@ -154,7 +159,7 @@ Entitate biziak soilik ditu, ordena finko batean, kendutakoak, pilatze-ordena et
 `4.2.0` bertsiotik aurrera, izen logikoak, izen bakoitza hiztegietatik eratorria den ala ez, domeinu-loturak, eta [Hiztegia](../../guide/guides/dictionary.md) fitxako hitzak, terminoak eta domeinuak ere baditu.  
 `4.2.0` bertsiotik aurrera, kanpoan uzten ditu, halaber, entitate baten testu-eremu huts bakoitza, ezer ez duen `doc` zerrenda eta bilduma bakoitza, eta `collections` bera, bilduma guztiak hutsik daudenean.  
 Bi zuriuneko koska du, hiztegiko errenkada bakoitza bere lerroan, eta lerro-jauzi batekin amaitzen da; beraz, dokumentu berak beti byte berak ematen ditu.  
-Zer duen jakiteko, ikus [Biltegiratze-forma eta exekuzio-garaiko balioa](./schema.md#storage-form-and-runtime-value).
+Zer duen jakiteko, ikus [Biltegiratze-forma](./schema.md#storage-form).
 
 [Blokeoa](../../guide/guides/settings.md#lock) aktibatuta duen ezarpen bakoitza blokeatu zen balioarekin idazten da, eta gainerako ezarpen guztiak dauden bezala.  
 `Viewport` blokeoak ikuspegiaren jatorria eta zoom-maila batera hartzen ditu, eta fitxak, Kode-sortzailearen lengoaiak, izenen bi idazkerek eta mugatzaile motak blokeo bana dute.  
@@ -172,6 +177,7 @@ const snapshot = replicationStore.runtimeValue;
 ```
 
 Erabili geroago sartzen den editore bat edo beste biltegi bat hasieratzeko, haren `setInitialValue` metodoaren bidez; ikus [Elkarlaneko edizioa](./collaborative-editing.md).  
+Erreplika batek ez du [getLWW](./collaborative-editing.md#getlww) edo [getVersion](./collaborative-editing.md#getversion) metodorik; beraz, ez du elkarlan-erregistrorik ematen `runtimeValue` propietatearekin: hartatik hasieratutako editore batek erregistroak martxan dauden editoreengandik hartzen ditu, [Lankide bat hasieratzea](./collaborative-editing.md#seeding-a-collaborator) atalean azaltzen den bezala.  
 Ez gorde inoiz fitxategi gisa: kendutako entitateak ditu, eta argitaratutako [JSON Schema](./schema.md#json-schema) eskemak ukatu egiten du.  
 Kendutako entitate horiei esker, geroago bidalitako kentze baten desegiteak entitatea oso-osorik itzul dezake hartatik hasieratutako biltegian.  
 Dokumentua bere fitxategitik hurrengoz ireki arte geratzen dira, fitxategiaren formak kanpoan uzten baititu.
@@ -230,7 +236,7 @@ Harpidetza kentzeko, deitu itzulitako funtzioari.
 `changed` propietatea `false` da aurreko `change` gertaeraz geroztik, edo kargaz geroztik, izandako ekintzek `value` bytez byte zegoen bezala utzi dutenean.
 
 [Blokeo](../../guide/guides/settings.md#lock) batek `value` propietatetik kanpo uzten duen aldaketak ere `change` gertaera abiarazten du, `changed` propietatea `false` dela; beraz, idatzi soilik `changed` propietatea `true` denean.  
-Halakoak dira korritze bat edo zoom bat `Viewport` blokeatuta dagoen bitartean, fitxa-aldaketa bat `Canvas Type` blokeatuta dagoen bitartean, eta Kode-sortzailearen lengoaiaren, izenen idazkera baten edo mugatzaile motaren aldaketa bat bere blokeoa aktibatuta dagoen bitartean.  
+Halakoak dira korritze bat edo zoom bat `Viewport` blokeatuta dagoen bitartean, fitxa-aldaketa bat `Canvas Type` blokeatuta dagoen bitartean, eta Kode-sortzailearen lengoaiaren, izenen idazkera baten edo mugatzaile motaren aldaketa bat bere blokeoa aktibatuta dagoen bitartean, eta aldaketa hori `5.1.0` bertsiotik aurrera `5.1.0` baino lehenagoko editore batek soilik bidaltzen du oraindik (ikus [dispatch, dispatchSync](#dispatch-dispatchsync)).  
 `4.2.0` bertsiotik aurrera, halakoa da Izenen ikuspegiaren aldaketa bat ere `Name View` blokeatuta dagoen bitartean: editoreak bidali egiten du oraindik, baina erreplikak baztertu egiten du, beste editoreek bezala.  
 Irakurtzeko soilik dagoen editore batean egindako Izenen ikuspegiaren aldaketa bat modu berean baztertzen da, haren blokeoa edozein dela ere.  
 Elementuaren [change](../erd-editor-element.md#change) gertaerak halako aldaketa kanpoan uzten du, baina erreplikak jakinarazi egiten du hala ere.  
@@ -282,6 +288,23 @@ Saioan dagoen `4.2.0` bertsioa baino lehenagoko editore batek horren zati bat ke
 Editore horretan egindako SQL eskema, GraphQL, DBML edo AML `Import` ekintza batek, ez ordea `Import and Add` batek, erreplikaren hitzak, terminoak eta domeinuak husten ditu.  
 Editore horrek karga bat, `Import` ekintza bat edo `clear()` dei bat desegiteak dokumentuaren bere kopia kargatzen du erreplikan, izen logikorik, domeinu-loturarik eta hiztegirik gabe; ikus [Bertsioak nahastea](./collaborative-editing.md#mixing-releases).  
 `@dineug/erd-editor/engine.js` azpibideak lehen bezala esportatzen ditu `createReplicationStore`, `ReplicationStore` eta `ReplicationChange`, eta `createReplicationStore` funtzioak testuinguru bera hartzen du.
+
+`5.1.0` bertsioak ez du ekintza motarik gehitzen eta ez du `@dineug/erd-editor/engine.js` azpibideko esportaziorik aldatzen; beraz, `4.2.0` bertsiotik aurrerako erreplika batek `5.1.0` bertsioko editore batek bidaltzen duen aldaketa guztiak mantentzen ditu oraindik.  
+`5.1.0` bertsiotik aurrera, erreplikak une berean egindako edizioak `5.1.0` bertsioko editoreek bezala konpontzen ditu; ikus [Aldi bereko edizioak](./collaborative-editing.md#concurrent-edits).  
+Erregistro-bertsio bat mantentzen du taula baten kokapenerako, oharren eta taula-taldeen kokapenerako eta tamainarako, eta ikuspegiaren jatorrirako eta zoom-mailarako.  
+`5.1.0` bertsioko editore batek arrastatze bat, ikuspegiaren mugimendu bat edo zoom bat amaitzen den lekua bezala bidaltzen du, `table.moveTo`, `memo.moveTo`, `tableGroup.moveTo`, `settings.scrollTo` eta `settings.changeZoomLevel` bidez, eta erreplikak horietako bakoitza, eta `memo.resize` eta `tableGroup.resize` bakoitza, bere erregistro-bertsioa dagoeneko duenaren azpitik ez dagoenean soilik hartzen du.  
+Beraz, editore horietako bik taula, ohar edo taula-talde bat une berean mugitzen edo haren tamaina aldatzen dutenean, erreplikak guztiek erakusten duten kokapenean eta tamainan gordetzen du, edozein ordenatan entzuten dituela ere, eta garraioak bitan entregatzen duen arrastatze, ikuspegiaren mugimendu edo zoom batek ez du ezer bitan mugitzen.  
+`Viewport` desblokeatuta dagoela, erreplikak jatorria eta zoom-maila bakoitza erregistro-bertsio handieneko idazketatik gordetzen ditu, idazketa hori egin zuen editorea zegoen lekuan.  
+Zoomak jatorria ere mugitzen du; beraz, bi editorek une berean egindako ikuspegiaren mugimendu bat eta zoom bat editore baten jatorria eta bestearen zoom-maila gisa gorde daitezke.  
+`5.1.0` bertsioa baino lehen, erreplikak editore guztien ikuspegiaren mugimendu- eta zoom-urratsak gehitzen zituen ikuspegi bakar batera.
+
+`5.1.0` baino lehenagoko editore batek arrastatze, ikuspegiaren mugimendu edo zoom batean bidaltzen dituen distantziak (`table.move`, `memo.move`, `tableGroup.move`, `settings.streamScrollTo` eta `settings.streamZoomLevel`) erreplikak duenari gehitzen zaizkio oraindik, erregistro-bertsioetatik kanpo.  
+Kolore-aldaketa bat erregistro-bertsiorik gabe iristen da oraindik: erreplikak, editore bakoitzak bezala, bere erregistro-bertsio bat jartzen dio eta entzun duen azken kolorea mantentzen du; beraz, taula, ohar edo taula-talde baten une berean egindako bi kolore-aldaketa editore batek erakusten duenaz bestela gorde daitezke.  
+`5.1.0` baino lehenagoko erreplika batek puntuak eta tamainak iristen diren ordenan aplikatzen ditu; beraz, taula bat `5.1.0` bertsioko editoreek erakusten duten lekuan ez den beste batean gorde dezake.  
+Mantendu saioko editore guztiak, eta erreplika, `5.1.0` bertsioan edo berriagoan, une berean egindako edizioak berdin amaitzeko, [Aldi bereko edizioak](./collaborative-editing.md#concurrent-edits) atalak zerrendatzen dituen salbuespenak kenduta.
+
+`5.1.0` bertsiotik aurrera, editore batek Kode-sortzailearen lengoaiaren, izenen idazkera baten edo mugatzaile motaren aldaketa bat dagokion ezarpenaren blokeoa desaktibatuta dagoen bitartean soilik bidaltzen du, bere karga-datuetan `shared: true` markarekin, eta erreplikak marka duten guztiak aplikatzen ditu, editoreek bezala; ikus [Elkarlaneko edizioa](./collaborative-editing.md).  
+Markarik gabekoa, `5.1.0` baino lehenagoko editore batek blokeoa edozein dela ere bidaltzen duena, ezarpena bere aldean desblokeatuta dagoen bitartean soilik aplikatzen du erreplikak, eta baztertu egiten du ezarpena blokeatuta dagoen bitartean (ikus [on@change](#onchange)).
 
 `4.0.0` bertsiotik aurrera, bi metodoek `editor.mergeLWW` ere aplikatzen dute; ekintza horrek beste editore bat saiora sartzen denean editore batek erantzun gisa bidaltzen dituen elkarlaneko erregistroak daramatza, eta, horri esker, erreplikak editoreek bezala ebazten ditu aldi bereko edizioak.  
 Ez du `value` propietatearen byte bakar bat ere aldatzen, eta ez du `change` gertaerarik abiarazten.  

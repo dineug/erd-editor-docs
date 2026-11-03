@@ -55,9 +55,12 @@ Le groupe et les tables qu’il accueille forment une seule étape d’annulatio
 ## Nommer un groupe {#naming-a-group}
 
 Le nom d’un groupe se modifie dans un champ qui s’ouvre sur sa barre de titre. Ce champ s’ouvre de lui-même dès qu’un groupe est créé, lors d’un double-clic sur la barre de titre, et depuis `Rename` dans le menu contextuel du groupe.  
-`Enter`, ou un clic ailleurs, enregistre le nom. `Escape` ferme le champ sans modifier le nom et laisse le groupe sélectionné, et un second `Escape` efface la sélection.  
+`Enter`, un clic ailleurs ou le masquage des groupes, que ce soit vous ou un collaborateur qui les masque, enregistre le nom. `Escape` ferme le champ sans modifier le nom et laisse le groupe sélectionné, et un second `Escape` efface la sélection.  
 Un nom modifié constitue une étape d’annulation ; valider le nom inchangé n’enregistre rien. Un nom vide ou composé uniquement d’espaces s’affiche comme `unnamed`.  
-Tant que le champ est ouvert, les raccourcis du canevas sont suspendus, et les raccourcis de la recherche rapide et de `Toggle Explorer` sont sans effet, comme pendant la modification d’une cellule de table.
+Tant que le champ est ouvert, les raccourcis du canevas sont suspendus, et les raccourcis de la recherche rapide et de `Toggle Explorer` sont sans effet, comme pendant la modification d’une cellule de table.  
+Quand un collaborateur ou un agent de codage remplace le diagramme alors que le champ est ouvert, le champ reste ouvert tant que le nouveau diagramme contient encore le groupe et affiche les groupes.  
+Si ce diagramme ne contient plus le groupe, le champ se ferme et n’enregistre rien ; s’il contient le groupe mais masque les groupes, le champ se ferme et enregistre un nom modifié.  
+Recharger le diagramme dans l’éditeur, comme le fait Obsidian quand le fichier change en dehors de lui, ferme le champ et abandonne le nom saisi. Les touches pressées ensuite ne vont nulle part tant que vous ne cliquez pas sur l’éditeur, si bien qu’un `Delete` ou un `Backspace` destiné au nom ne supprime rien.
 
 La fonction [Rechercher et remplacer](./find-and-replace.md#what-it-searches) recherche les noms de groupe sous `Table group names` tant que les groupes sont affichés, et ses commandes `Replace` et `Replace All` renomment les groupes (voir [Remplacer](./find-and-replace.md#replacing)). La [recherche rapide](./quick-search.md#searching-the-diagram) ne recherche pas dans les noms de groupe.
 
@@ -157,7 +160,7 @@ Le menu contextuel d’une table ajoute `Group selected tables` et `Remove from 
 
 `View Option` → `Table Groups` dans le menu contextuel du canevas affiche ou masque tous les groupes. Cette option est cochée par défaut (voir [Options d’affichage des tables](./table-related-functions.md#table-view-options)).  
 Une fois l’option décochée, les cadres des groupes et les couleurs de groupe sur les en-têtes de table disparaissent du canevas, de la minicarte et des images exportées, et les barres de défilement et la minicarte ne réservent plus de place aux groupes. Rien n’est déplacé ni redimensionné, et chaque table reste dans son groupe.  
-Masquer les groupes les désélectionne, met fin à un tracé `New Table Group` et ferme un éditeur de nom ouvert.
+Masquer les groupes les désélectionne, met fin à un tracé `New Table Group` et ferme un éditeur de nom ouvert comme le fait un clic ailleurs (voir [Nommer un groupe](#naming-a-group)).
 
 Lorsque les groupes sont masqués :
 

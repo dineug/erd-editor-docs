@@ -66,4 +66,7 @@ Nástroje na logické názvy, domény a slovníky vyžadujú server vo verzii `1
 Z vyššie uvedených verzií rozšírenie staršie ako verzia `4.2.0` alebo doplnok starší ako verzia `1.2.0` stále umožňuje agentovi upravovať naživo, keďže používa protokol verzie 2, ale logické názvy, prepojenia s doménami a riadky slovníkov, ktoré agent zapíše, ignoruje a pri uložení súboru ich vynechá.
 Server starší ako verzia `1.1.0`, ktorý upravuje súbor na disku, ho zapíše späť bez jeho logických názvov, prepojení s doménami a riadkov slovníkov – pozrite si časť [Aktualizácia](./installation.md#updating).
 
+Úpravy rovnakého názvu alebo poľa alebo polohy či veľkosti tej istej tabuľky, poznámky alebo skupiny tabuliek, ktoré vy a agent urobíte v tom istom okamihu, skončia rovnako v editore aj pre agenta so serverom vo verzii `1.2.0` alebo novšej a všade, kde je dokument otvorený, s rozšírením pre VS Code vo verzii `4.3.0` alebo novšej alebo s doplnkom pre Obsidian či JetBrains vo verzii `1.3.0` alebo novšej.
+Farba, databáza a poradie stĺpcov v tabuľke alebo indexe sú výnimky – pozrite si časť [Úpravy urobené v tom istom okamihu](./live-and-headless.md#edits-made-at-the-same-moment).
+
 Ďalej: [Inštalácia](./installation.md).

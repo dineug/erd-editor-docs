@@ -67,7 +67,8 @@ Wijzigingen die uit een andere editor binnenkomen, worden evenmin vastgelegd, du
 
 Het ongedaan maken van een `Import`, die het hele diagram vervangt, brengt het eerdere diagram terug zoals de editor het had toen je importeerde, met elke [vergrendeling](./settings.md#lock) aan of uit en elke vergrendelde waarde zoals ze toen waren.  
 Als in dat diagram `Viewport` vergrendeld was, gaan de weergave en het zoomniveau terug naar de vergrendelde weergave, waarin het diagram opent, in plaats van naar waar je was. Was `Viewport` er ontgrendeld, dan gaan ze terug naar waar je was toen je importeerde. De andere vergrendelde instellingen, zoals het tabblad waarop je bent, de taal van de Codegenerator of de naamweergave, blijven zoals ze op je scherm staan.  
-Een nieuw diagram begint met elke vergrendeling aan. Ontgrendel `Viewport` voordat je importeert, zodat je weergave bij zo'n ongedaan maken behouden blijft. Als je die daarna ontgrendelt of een JSON-bestand importeert waarvan de eigen vergrendeling `Viewport` uitstaat, verandert dat niet waar het ongedaan maken je naartoe brengt.
+Een nieuw diagram begint met elke vergrendeling aan. Ontgrendel `Viewport` voordat je importeert, zodat je weergave bij zo'n ongedaan maken behouden blijft. Als je die daarna ontgrendelt of een JSON-bestand importeert waarvan de eigen vergrendeling `Viewport` uitstaat, verandert dat niet waar het ongedaan maken je naartoe brengt.  
+Het ongedaan maken of opnieuw uitvoeren van een `Import` beëindigt ook het tekenen van een relatie — zie [Relaties maken](./editing-start.md#relationship-creation).
 
 Het ongedaan maken van de import van een JSON-bestand brengt ook de woorden, termen en domeinen terug die het eerdere diagram had. Een import van Schema SQL, GraphQL, DBML of AML behoudt de woordenboeken, dus het ongedaan maken en opnieuw uitvoeren ervan laat ze zoals ze zijn, inclusief de bewerkingen die sindsdien op het tabblad Woordenboek zijn gedaan.
 

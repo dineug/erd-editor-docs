@@ -67,7 +67,8 @@ Tampoco se registran los cambios que llegan desde otro editor, así que deshacer
 
 Deshacer un `Import`, que sustituye todo el diagrama, recupera el diagrama anterior tal como lo tenía el editor cuando importaste, con cada [bloqueo](./settings.md#lock) activado o desactivado y cada valor bloqueado tal como estaban entonces.  
 Si ese diagrama tenía `Viewport` bloqueado, la vista y el zoom vuelven a la vista bloqueada, donde se abre el diagrama, en lugar de a donde estabas. Con su `Viewport` desbloqueado, vuelven a donde estabas cuando importaste. Los demás ajustes bloqueados, como la pestaña en la que estás, el lenguaje del Generador de código o la vista de nombres, se quedan como están en tu pantalla.  
-Un diagrama nuevo empieza con todos los bloqueos activados. Desbloquea `Viewport` antes de importar para que un deshacer así conserve tu vista. Desbloquearlo después, o importar un archivo JSON cuyo propio bloqueo `Viewport` esté desactivado, no cambia adónde te lleva el deshacer.
+Un diagrama nuevo empieza con todos los bloqueos activados. Desbloquea `Viewport` antes de importar para que un deshacer así conserve tu vista. Desbloquearlo después, o importar un archivo JSON cuyo propio bloqueo `Viewport` esté desactivado, no cambia adónde te lleva el deshacer.  
+Deshacer o rehacer un `Import` termina también una relación que se está dibujando; consulta [Creación de relaciones](./editing-start.md#relationship-creation).
 
 Deshacer la importación de un archivo JSON también recupera las palabras, los términos y los dominios que tenía el diagrama anterior. Una importación de Esquema SQL, GraphQL, DBML o AML conserva los diccionarios, así que deshacerla y rehacerla los deja como están, incluidas las ediciones hechas desde entonces en la pestaña Diccionario.
 

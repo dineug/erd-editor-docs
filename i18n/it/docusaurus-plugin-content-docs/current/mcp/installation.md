@@ -54,7 +54,8 @@ Una finestra di VS Code gestisce i diagrammi delle cartelle della sua area di la
 3. Lasciare attiva l’impostazione `dineug.erd-editor.agentHub.enabled`. È attiva per impostazione predefinita.
 
 Un’estensione dalla `3.0.0` alla `3.1.0` e il server `1.0.0` o successivo si rifiutano a vicenda, e un’estensione precedente alla versione `3.0.0` non serve gli agenti.
-Un’estensione `4.0.0` o `4.1.0` si connette, ma non mostra né conserva i nomi logici, i collegamenti ai domini e le righe dei dizionari che l’agente scrive — vedere [Aggiornamento](#updating).
+Un’estensione `4.0.0` o `4.1.0` si connette, ma non mostra né conserva i nomi logici, i collegamenti ai domini e le righe dei dizionari che l’agente scrive.
+Con un’estensione precedente alla versione `4.3.0`, una tabella, un memo o un gruppo di tabelle che l’utente e l’agente spostano o ridimensionano nello stesso istante possono finire in posizioni diverse per ciascuno dei due — vedere [Aggiornamento](#updating).
 
 L’estensione si avvia in un’area di lavoro che contiene file `.erd`, `.erd.json`, `.vuerd` o `.vuerd.json`, quindi un agente raggiunge quei diagrammi prima ancora che se ne apra uno.
 In un’area di lavoro che non ne contiene nessuno si avvia all’apertura di un diagramma, e fino ad allora l’agente modifica su disco.
@@ -71,7 +72,8 @@ Una finestra di un vault di Obsidian gestisce i diagrammi del suo vault.
 2. Lasciare attivo Settings → ERD Editor → Coding agents. È attivo per impostazione predefinita, e ogni vault mantiene la propria impostazione.
 
 Un plugin precedente alla versione `1.0.0` e il server `1.0.0` o successivo si rifiutano a vicenda.
-Un plugin `1.0.0` o `1.1.0` si connette, ma non mostra né conserva i nomi logici, i collegamenti ai domini e le righe dei dizionari che l’agente scrive — vedere [Aggiornamento](#updating).
+Un plugin `1.0.0` o `1.1.0` si connette, ma non mostra né conserva i nomi logici, i collegamenti ai domini e le righe dei dizionari che l’agente scrive.
+Con un plugin precedente alla versione `1.3.0`, una tabella, un memo o un gruppo di tabelle che l’utente e l’agente spostano o ridimensionano nello stesso istante possono finire in posizioni diverse per ciascuno dei due — vedere [Aggiornamento](#updating).
 
 Una finestra del vault serve gli agenti dal momento in cui il plugin viene caricato, quindi un agente raggiunge i diagrammi del vault prima ancora che se ne apra uno.
 Non c’è alcun passaggio di attendibilità.
@@ -98,7 +100,8 @@ Un IDE JetBrains gestisce i diagrammi di ogni progetto aperto al suo interno e q
 3. Lasciare selezionato Settings | Tools | ERD Editor → Coding agents. È attivo per impostazione predefinita e si applica all’intero IDE.
 
 Un plugin `0.9.0` o `0.10.0` e il server `1.0.0` o successivo si rifiutano a vicenda, e un plugin precedente alla versione `0.9.0` non serve gli agenti.
-Un plugin `1.0.0` o `1.1.0` si connette, ma non mostra né conserva i nomi logici, i collegamenti ai domini e le righe dei dizionari che l’agente scrive — vedere [Aggiornamento](#updating).
+Un plugin `1.0.0` o `1.1.0` si connette, ma non mostra né conserva i nomi logici, i collegamenti ai domini e le righe dei dizionari che l’agente scrive.
+Con un plugin precedente alla versione `1.3.0`, una tabella, un memo o un gruppo di tabelle che l’utente e l’agente spostano o ridimensionano nello stesso istante possono finire in posizioni diverse per ciascuno dei due — vedere [Aggiornamento](#updating).
 
 L’IDE serve gli agenti dal momento in cui si apre il primo progetto, quindi un agente raggiunge i diagrammi di un progetto prima ancora che se ne apra uno.
 
@@ -144,6 +147,11 @@ Solo l’estensione per VS Code `4.2.0` o successiva e i plugin per Obsidian e J
 Un’estensione o un plugin precedente che si connette li ignora, anche se la chiamata dell’agente va a buon fine.
 Applica comunque i nomi fisici che i dizionari derivano e i tipi di dati che danno i domini.
 Un server precedente alla versione `1.1.0` legge un file senza i suoi nomi logici, collegamenti ai domini e righe dei dizionari, e li omette quando modifica il file su disco — vedere [Headless](./live-and-headless.md#headless).
+
+Il server `1.2.0` usa anch’esso il protocollo 2, e non aggiunge, rimuove né rinomina alcuno strumento e non cambia alcun argomento.
+Ma uno spostamento o un ridimensionamento che l’utente e l’agente fanno nello stesso istante alla stessa tabella, allo stesso memo o allo stesso gruppo di tabelle finisce allo stesso modo nell’editor e per l’agente solo quando il server è `1.2.0` o successivo e l’editor ha l’estensione per VS Code `4.3.0` o successiva oppure il plugin per Obsidian o per JetBrains `1.3.0` o successivo.
+Se uno dei due lati è meno recente, l’editor e l’agente possono finire con posizioni diverse, e l’agente continua a leggere e modificare dalla propria finché uno spostamento successivo non porta entrambi sullo stesso punto o l’agente si unisce di nuovo al documento — vedere [Modifiche fatte nello stesso istante](./live-and-headless.md#edits-made-at-the-same-moment).
+Nessuna di queste versioni cambia ciò che contiene un file.
 
 Aggiornare anche ERD Editor ovunque vengano aperti i diagrammi.
 L’estensione per VS Code precedente alla versione `4.2.0`, il plugin per Obsidian precedente alla versione `1.2.0` e il plugin per JetBrains precedente alla versione `1.2.0` aprono un diagramma salvato da una versione successiva, o modificato su disco dall’agente, senza i nomi logici delle sue tabelle e colonne, i collegamenti ai domini delle sue colonne e le sue parole, i suoi termini e i suoi domini.

@@ -67,7 +67,8 @@ Beste editore batetik iristen diren aldaketak ere ez dira erregistratzen; beraz,
 
 Diagrama osoa ordezten duen `Import` ekintza bat desegiteak aurreko diagrama itzultzen du, editoreak inportatu zenuenean zuen bezala, [blokeo](./settings.md#lock) bakoitza aktibatuta edo desaktibatuta eta balio blokeatu bakoitza orduan zeuden bezala.  
 Diagrama horrek `Viewport` blokeatuta bazuen, ikuspegia eta zooma ikuspegi blokeatura itzultzen dira, diagrama irekitzen den lekura, zeunden lekura beharrean. `Viewport` desblokeatuta bazuen, inportatu zenuenean zeunden lekura itzultzen dira. Gainerako ezarpen blokeatuak, adibidez zauden fitxa, Kode-sortzailearen lengoaia edo Izenen ikuspegia, zure pantailan dauden bezala geratzen dira.  
-Diagrama berri bat blokeo guztiak aktibatuta dituela hasten da. Desblokeatu `Viewport` inportatu aurretik, horrelako desegite batean zure ikuspegia mantentzeko. Ondoren desblokeatzeak, edo bere `Viewport` blokeoa desaktibatuta duen JSON fitxategi bat inportatzeak, ez du aldatzen desegiteak nora eramaten zaituen.
+Diagrama berri bat blokeo guztiak aktibatuta dituela hasten da. Desblokeatu `Viewport` inportatu aurretik, horrelako desegite batean zure ikuspegia mantentzeko. Ondoren desblokeatzeak, edo bere `Viewport` blokeoa desaktibatuta duen JSON fitxategi bat inportatzeak, ez du aldatzen desegiteak nora eramaten zaituen.  
+`Import` baten desegiteak edo berregiteak ere amaitzen du marrazten ari den erlazio bat. Ikus [Erlazioak sortzea](./editing-start.md#relationship-creation).
 
 JSON fitxategi baten inportazioa desegiteak aurreko diagramak zituen hitzak, terminoak eta domeinuak ere itzultzen ditu. SQL eskema, GraphQL, DBML edo AML inportazio batek hiztegiak mantentzen ditu; beraz, haren desegiteak eta berregiteak dauden bezala uzten dituzte, ordutik Hiztegia fitxan egindako edizioak barne.
 

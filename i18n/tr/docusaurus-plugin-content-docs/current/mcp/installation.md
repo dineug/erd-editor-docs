@@ -54,7 +54,8 @@ Bir VS Code penceresi, çalışma alanı klasörlerindeki diyagramlara ve kendis
 3. `dineug.erd-editor.agentHub.enabled` ayarını açık bırakın. Bu ayar varsayılan olarak açıktır.
 
 `3.0.0` sürümünden `3.1.0` sürümüne kadar olan bir uzantı ile sunucunun `1.0.0` veya sonraki bir sürümü birbirini reddeder, `3.0.0` sürümünden önceki bir uzantı ise hiçbir ajana hizmet vermez.
-`4.0.0` veya `4.1.0` sürümlü bir uzantı bağlanır, ancak ajanın yazdığı mantıksal adları, değer alanı bağlantılarını ve sözlük satırlarını ne gösterir ne de korur. [Güncelleme](#updating) bölümüne bakın.
+`4.0.0` veya `4.1.0` sürümlü bir uzantı bağlanır, ancak ajanın yazdığı mantıksal adları, değer alanı bağlantılarını ve sözlük satırlarını ne gösterir ne de korur.
+`4.3.0` sürümünden önceki bir uzantıyla, sizin ve ajanın aynı anda taşıdığı ya da yeniden boyutlandırdığı bir tablo, not veya tablo grubu, ikiniz için farklı yerlerde bitebilir. [Güncelleme](#updating) bölümüne bakın.
 
 Uzantı, `.erd`, `.erd.json`, `.vuerd` veya `.vuerd.json` dosyaları içeren bir çalışma alanında başlar, bu yüzden ajan bu diyagramlara siz birini açmadan önce erişir.
 Bunlardan hiçbirini içermeyen bir çalışma alanında uzantı bir diyagram açtığınızda başlar ve o zamana kadar ajan dosyaları diskte düzenler.
@@ -71,7 +72,8 @@ Bir Obsidian kasa penceresi, kasasındaki diyagramlara hizmet verir.
 2. Settings → ERD Editor → Coding agents ayarını açık bırakın. Bu ayar varsayılan olarak açıktır ve her kasa kendi ayarını tutar.
 
 `1.0.0` sürümünden önceki bir eklenti ile sunucunun `1.0.0` veya sonraki bir sürümü birbirini reddeder.
-`1.0.0` veya `1.1.0` sürümlü bir eklenti bağlanır, ancak ajanın yazdığı mantıksal adları, değer alanı bağlantılarını ve sözlük satırlarını ne gösterir ne de korur. [Güncelleme](#updating) bölümüne bakın.
+`1.0.0` veya `1.1.0` sürümlü bir eklenti bağlanır, ancak ajanın yazdığı mantıksal adları, değer alanı bağlantılarını ve sözlük satırlarını ne gösterir ne de korur.
+`1.3.0` sürümünden önceki bir eklentiyle, sizin ve ajanın aynı anda taşıdığı ya da yeniden boyutlandırdığı bir tablo, not veya tablo grubu, ikiniz için farklı yerlerde bitebilir. [Güncelleme](#updating) bölümüne bakın.
 
 Bir kasa penceresi, eklenti yüklendiği andan itibaren ajanlara hizmet verir, bu yüzden ajan kasanın diyagramlarına siz birini açmadan önce erişir.
 Güvenme adımı yoktur.
@@ -98,7 +100,8 @@ Bir JetBrains IDE'si, içinde açık olan her projenin diyagramlarına ve içind
 3. Settings | Tools | ERD Editor → Coding agents ayarını işaretli bırakın. Bu ayar varsayılan olarak açıktır ve IDE'nin tamamı için geçerlidir.
 
 `0.9.0` veya `0.10.0` sürümlü bir eklenti ile sunucunun `1.0.0` veya sonraki bir sürümü birbirini reddeder, `0.9.0` sürümünden önceki bir eklenti ise hiçbir ajana hizmet vermez.
-`1.0.0` veya `1.1.0` sürümlü bir eklenti bağlanır, ancak ajanın yazdığı mantıksal adları, değer alanı bağlantılarını ve sözlük satırlarını ne gösterir ne de korur. [Güncelleme](#updating) bölümüne bakın.
+`1.0.0` veya `1.1.0` sürümlü bir eklenti bağlanır, ancak ajanın yazdığı mantıksal adları, değer alanı bağlantılarını ve sözlük satırlarını ne gösterir ne de korur.
+`1.3.0` sürümünden önceki bir eklentiyle, sizin ve ajanın aynı anda taşıdığı ya da yeniden boyutlandırdığı bir tablo, not veya tablo grubu, ikiniz için farklı yerlerde bitebilir. [Güncelleme](#updating) bölümüne bakın.
 
 IDE, ilk proje açıldığı andan itibaren ajanlara hizmet verir, bu yüzden ajan bir projenin diyagramlarına siz birini açmadan önce erişir.
 
@@ -144,6 +147,11 @@ Bu araçların yazdığı mantıksal adları, değer alanı bağlantılarını v
 Bağlanan daha eski bir uzantı veya eklenti bunları yok sayar, ancak ajanın çağrısı başarılı olur.
 Yine de sözlüklerin türettiği fiziksel adları ve değer alanlarının verdiği veri türlerini uygular.
 `1.1.0` sürümünden önceki bir sunucu bir dosyayı mantıksal adları, değer alanı bağlantıları ve sözlük satırları olmadan okur ve dosyayı diskte düzenlediğinde bunları dışarıda bırakır. [Headless](./live-and-headless.md#headless) bölümüne bakın.
+
+`1.2.0` sürümlü sunucu da protokol 2'yi kullanır; hiçbir araç eklemez, kaldırmaz veya yeniden adlandırmaz ve hiçbir argümanı değiştirmez.
+Ancak sizin ve ajanın aynı tablo, not veya tablo grubunda aynı anda yaptığı bir taşıma ya da yeniden boyutlandırma, düzenleyicide ve ajan için yalnızca sunucu `1.2.0` veya sonraki bir sürümdeyse ve düzenleyicide VS Code uzantısının `4.3.0` veya sonraki bir sürümü ya da Obsidian veya JetBrains eklentisinin `1.3.0` veya sonraki bir sürümü varsa aynı sonuçla biter.
+Taraflardan biri daha eskiyse düzenleyici ve ajan farklı konumlarla bitebilir ve ajan, sonraki bir taşıma ikisini aynı noktaya getirene veya ajan belgeye yeniden katılana kadar kendi konumundan okumaya ve düzenlemeye devam eder. [Aynı anda yapılan düzenlemeler](./live-and-headless.md#edits-made-at-the-same-moment) bölümüne bakın.
+Bu sürümlerin hiçbiri bir dosyanın tuttuklarını değiştirmez.
 
 Diyagramların açıldığı her yerde ERD Editor sürümünü de güncelleyin.
 VS Code uzantısının `4.2.0` sürümünden önceki, Obsidian eklentisinin `1.2.0` sürümünden önceki ve JetBrains eklentisinin `1.2.0` sürümünden önceki sürümleri, daha yeni bir sürümün kaydettiği ya da ajanın diskte düzenlediği bir diyagramı tablolarının ve sütunlarının mantıksal adları, sütunlarının değer alanı bağlantıları ve sözcükleri, terimleri ve değer alanları olmadan açar.

@@ -54,7 +54,8 @@ VS Code leiho batek bere lan-eremuko karpetetako diagramak eta bertan irekitako 
 3. Utzi `dineug.erd-editor.agentHub.enabled` ezarpena aktibatuta. Lehenespenez aktibatuta dago.
 
 `3.0.0` bertsiotik `3.1.0` bertsiora arteko luzapen batek eta `1.0.0` edo berriagoa den zerbitzariak elkar ukatzen dute, eta `3.0.0` bertsioa baino lehenagoko luzapen batek ez die agenteei zerbitzurik ematen.
-`4.0.0` edo `4.1.0` bertsioko luzapen bat konektatu egiten da, baina ez ditu erakusten ez gordetzen agenteak idazten dituen izen logikoak, domeinu-loturak eta hiztegietako errenkadak. Ikus [Eguneratzea](#updating).
+`4.0.0` edo `4.1.0` bertsioko luzapen bat konektatu egiten da, baina ez ditu erakusten ez gordetzen agenteak idazten dituen izen logikoak, domeinu-loturak eta hiztegietako errenkadak.
+`4.3.0` bertsioa baino lehenagoko luzapen batekin, zuk eta agenteak une berean mugitzen edo tamainaz aldatzen duzuen taula, ohar edo taula-talde bat leku desberdinetan amaitu daiteke zuretzat eta agentearentzat. Ikus [Eguneratzea](#updating).
 
 Luzapena `.erd`, `.erd.json`, `.vuerd` edo `.vuerd.json` fitxategiak dituen lan-eremu batean abiarazten da; beraz, agente batek diagrama horiek eskura ditzake zuk bat ireki aurretik.
 Horietako bat ere ez duen lan-eremu batean, diagrama bat irekitzen duzunean abiarazten da, eta ordura arte agenteak diskoan editatzen du.
@@ -71,7 +72,8 @@ Obsidian biltegi baten leihoak bere biltegiko diagramak zerbitzatzen ditu.
 2. Utzi Settings → ERD Editor → Coding agents aukera aktibatuta. Lehenespenez aktibatuta dago, eta biltegi bakoitzak bere ezarpena gordetzen du.
 
 `1.0.0` bertsioa baino lehenagoko plugin batek eta `1.0.0` edo berriagoa den zerbitzariak elkar ukatzen dute.
-`1.0.0` edo `1.1.0` bertsioko plugin bat konektatu egiten da, baina ez ditu erakusten ez gordetzen agenteak idazten dituen izen logikoak, domeinu-loturak eta hiztegietako errenkadak. Ikus [Eguneratzea](#updating).
+`1.0.0` edo `1.1.0` bertsioko plugin bat konektatu egiten da, baina ez ditu erakusten ez gordetzen agenteak idazten dituen izen logikoak, domeinu-loturak eta hiztegietako errenkadak.
+`1.3.0` bertsioa baino lehenagoko plugin batekin, zuk eta agenteak une berean mugitzen edo tamainaz aldatzen duzuen taula, ohar edo taula-talde bat leku desberdinetan amaitu daiteke zuretzat eta agentearentzat. Ikus [Eguneratzea](#updating).
 
 Biltegi baten leihoak plugina kargatzen den unetik ematen die zerbitzua agenteei; beraz, agente batek biltegiko diagramak eskura ditzake zuk bat ireki aurretik.
 Ez dago fidatzeko urratsik.
@@ -98,7 +100,8 @@ JetBrains IDE batek bertan irekitako proiektu guztietako diagramak zerbitzatzen 
 3. Utzi Settings | Tools | ERD Editor → Coding agents aukera markatuta. Lehenespenez aktibatuta dago, eta IDE osoari aplikatzen zaio.
 
 `0.9.0` edo `0.10.0` bertsioko plugin batek eta `1.0.0` edo berriagoa den zerbitzariak elkar ukatzen dute, eta `0.9.0` bertsioa baino lehenagoko plugin batek ez die agenteei zerbitzurik ematen.
-`1.0.0` edo `1.1.0` bertsioko plugin bat konektatu egiten da, baina ez ditu erakusten ez gordetzen agenteak idazten dituen izen logikoak, domeinu-loturak eta hiztegietako errenkadak. Ikus [Eguneratzea](#updating).
+`1.0.0` edo `1.1.0` bertsioko plugin bat konektatu egiten da, baina ez ditu erakusten ez gordetzen agenteak idazten dituen izen logikoak, domeinu-loturak eta hiztegietako errenkadak.
+`1.3.0` bertsioa baino lehenagoko plugin batekin, zuk eta agenteak une berean mugitzen edo tamainaz aldatzen duzuen taula, ohar edo taula-talde bat leku desberdinetan amaitu daiteke zuretzat eta agentearentzat. Ikus [Eguneratzea](#updating).
 
 IDEak lehen proiektua irekitzen den unetik ematen die zerbitzua agenteei; beraz, agente batek proiektu bateko diagramak eskura ditzake zuk bat ireki aurretik.
 
@@ -144,6 +147,11 @@ Protokolo bera erabiltzen duten zerbitzari bat eta editore bat konektatu egiten 
 Konektatzen den luzapen edo plugin zaharrago batek ez die jaramonik egiten, nahiz eta agentearen deiak arrakasta izan.
 Hala ere, hiztegiek eratortzen dituzten izen fisikoak eta domeinuek ematen dituzten datu motak aplikatzen ditu.
 `1.1.0` bertsioa baino lehenagoko zerbitzari batek fitxategi bat irakurtzen du haren izen logikoak, domeinu-loturak eta hiztegietako errenkadak gabe, eta kanpoan uzten ditu fitxategia diskoan editatzen duenean. Ikus [Editorerik gabe](./live-and-headless.md#headless).
+
+`1.2.0` zerbitzariak ere 2. protokoloa erabiltzen du, eta ez du tresnarik gehitzen, kentzen edo izenez aldatzen, ez argumenturik aldatzen.
+Baina zuk eta agenteak une berean taula, ohar edo taula-talde berari egindako mugimendu edo tamaina-aldaketa bat berdin amaitzen da editorean eta agentearentzat zerbitzaria `1.2.0` edo berriagoa denean eta editoreak VS Code luzapenaren `4.3.0` edo berriagoa, edo Obsidian edo JetBrains pluginaren `1.3.0` edo berriagoa duenean bakarrik.
+Alde bat zaharragoa bada, editorea eta agentea kokapen desberdinekin amai daitezke, eta agenteak bere kokapenetik irakurtzen eta editatzen jarraitzen du, geroko mugimendu batek biak puntu batean jarri arte edo agenteak dokumentura berriro sartu arte. Ikus [Une berean egindako edizioak](./live-and-headless.md#edits-made-at-the-same-moment).
+Bertsio hauetako batek ere ez du aldatzen fitxategi batek duena.
 
 Eguneratu ERD Editor diagramak irekitzen diren leku guztietan ere.
 `4.2.0` bertsioa baino lehenagoko VS Code luzapenak, `1.2.0` bertsioa baino lehenagoko Obsidian pluginak eta `1.2.0` bertsioa baino lehenagoko JetBrains pluginak bertsio berriago batek gorde duen edo agenteak diskoan editatu duen diagrama bat irekitzen dute, haren taulen eta zutabeen izen logikoak, haren zutabeen domeinu-loturak eta haren hitzak, terminoak eta domeinuak gabe.

@@ -37,6 +37,38 @@ Irakurketa batek ez du inoiz editorerik irekitzen. Edizio batek dokumentua ERD E
 
 `4.2.0` bertsioa baino lehenagoko VS Code luzapen bat edo `1.2.0` bertsioa baino lehenagoko Obsidian edo JetBrains plugin bat duen editore batek agentearen edizioak zuzenean jasotzen ditu oraindik, baina ez ditu erakusten ez gordetzen agenteak idazten dituen izen logikoak, domeinu-loturak eta hiztegietako errenkadak. Ikus [Eguneratzea](./installation.md#updating).
 
+VS Code luzapenaren `4.3.0` edo berriagoarekin, edo Obsidian edo JetBrains pluginaren `1.3.0` edo berriagoarekin, `replace` moduko inportazio batek, eta haren `erd_undo` edo `erd_redo` batek, editorean marrazten ari zaren erlazioa amaitzen dute, zerbitzariaren bertsioa edozein dela ere. Ikus [Erlazioak sortzea](../guide/guides/editing-start.md#relationship-creation).
+Bertsio horiek baino lehen marrazketa prest geratzen zen, eta taula batean klik egiteak diagraman jada ez zegoen taula batetik abiatutako erlazio bat gehitu zezakeen.
+`append` moduko inportazio batek marrazketa prest uzten du.
+Irekita duzun ohar-, taula-taldearen izen- edo gelaxka-editore bat irekita jarraitzen du diagramak editatzen duena oraindik badu eta erakusten badu.
+
+### Une berean egindako edizioak {#edits-made-at-the-same-moment}
+
+`1.2.0` edo berriagoa den zerbitzariarekin eta, editorean, VS Code luzapenaren `4.3.0` edo berriagoarekin edo Obsidian edo JetBrains pluginaren `1.3.0` edo berriagoarekin, zuk eta agenteak une berean gauza berari egindako edizioak berdin amaitzen dira editorean, hark gordetzen duen fitxategian eta `erd_list`, `erd_get` eta `erd_read` tresnek agenteari ematen diotenean.
+Honek barne hartzen ditu taula, zutabe, erlazio, indize, ohar, taula-talde edo hiztegi-errenkada baten izena edo beste eremu bat, datu-basearen izena eta [aurreko eta ondorengo scriptak](../guide/guides/schema-sql.md#before-and-after-scripts), eta taula, ohar edo taula-talde baten kokapena edo tamaina, baina ez kolorea, taula edo indize bateko zutabeen ordena, edo datu-basea.
+Izen edo eremu beraren bi edizio, bi mugimendu edo bi tamaina-aldaketa bi horietako batean amaitzen dira, inoiz ez nahasketa batean: bestea bere aldera iritsi ondoren egindako edizioak irabazten du, eta guztiz une berean egindako bietatik batek irabazten du, alde guztietan bera, zein lehenago iristen den gorabehera.
+
+Taula, ohar edo taula-talde bati une berean egindako bi kolore-aldaketak, adibidez zurea eta agentearen `erd_change_table_color`, bereizita amaitu daitezke, edo trukatuta ere, alde bakoitzak azkenekoz entzun duen kolorea mantentzen duelako.
+Zutabeen ordena-aldaketa bat, zurea edo agentearen `erd_move_column` edo `erd_move_index_column`, alde bakoitzean iristen den ordenan aplikatzen da; beraz, taula edo indize berean une berean egindako biek zutabeak ordena desberdinetan utz ditzakete.
+Datu-basearen aldaketa bat, zurea edo agentearen `erd_set_database`, ere iristen den ordenan aplikatzen da; beraz, une berean egindako biek editorea eta agentea datu-base desberdinetan utz ditzakete.
+
+Zure arrastatzea eta agentearen `erd_move_table`, `erd_move_tables`, `erd_move_memo`, `erd_move_table_group` eta `erd_sort_tables` amaitzen diren puntu gisa bidaltzen dira; beraz, taula, ohar edo taula-talde beraren bi mugimendu haietako batek jarri duen lekuan amaitzen dira, inoiz ez bien baturan.
+`erd_move_table_group` tresnak taldearen puntua eta haren taula bakoitzarena sorta batean bidaltzen ditu, taldearen titulu-barra arrastatzeak egiten duen bezala.
+Tamaina-aldaketa batek kokapena eta tamaina batera idazten ditu; beraz, ohar edo taula-talde berari une berean egindako mugimendu bat eta tamaina-aldaketa bat, adibidez ohar hori arrastatzen duzun bitartean `erd_resize_memo` tresna, laukizuzen bakar batean amaitzen dira bi aldeetan: tamaina-aldaketarenean, edo, mugimenduak irabazten duenean, mugimenduaren puntuan eta tamaina-aldaketaren tamainarekin.
+20 pixel baino gutxiagoko mugimendu bat, desegite-urratsik sortzen ez duena, amaitzen den puntu gisa ere bidaltzen da; beraz, beste aldearen mugimenduari irabaz diezaioke, `erd_move_table_group` labur bat izan zein zure arrastatze labur bat izan, adibidez taula bat pixel batzuk mugitzen duen klik bat.
+
+Bertsio zaharragoek konektatzen jarraitzen dute, `1.2.0` zerbitzariak gunearen protokoloaren 2. bertsioa erabiltzen baitu, `1.0.0` bertsiotik `1.1.1` bertsiora arteko zerbitzariek bezala.
+`1.2.0` bertsioa baino lehenagoko zerbitzari batekin, edo `4.3.0` bertsioa baino lehenagoko luzapen batekin edo `1.3.0` bertsioa baino lehenagoko plugin batekin, taula, ohar edo taula-talde berari une berean egindako mugimendu edo tamaina-aldaketa batek editorea eta agentea kokapen desberdinekin utz ditzake.
+Editore zahar batek zure arrastatzea mugitutako distantzia gisa bidaltzen du, eta `1.2.0` bertsioa baino lehenagoko zerbitzari batek `erd_move_table_group` ere horrela bidaltzen du.
+Beste aldeak distantzia hori daukan puntuari gehitzen dio.
+Alde zaharragoak, gainera, beste aldearen puntuak iristen diren ordenan aplikatzen ditu.
+Orduan agenteak bere kokapenetik irakurtzen eta editatzen du taula, ohar edo taula-talde hori, ez editoreak erakusten eta gordetzen duenetik.
+Horrek irauten du haren geroko mugimendu bat puntu gisa bidaltzen den arte, adibidez editore berriago batean zure arrastatzea edo agentearen `erd_move_table`, edo agentea dokumentura berriro sartzen den arte, editoreak hura dokumentutik kanpo utzi ondoren edo dokumentuan 30 minutuz deirik gabe egon ondoren bezala.
+Kolorea, zutabeen ordena eta datu-basea alde batera utzita, une berean aldatutako izen edo beste eremu bat berdin amaitzen da alde bakarra zaharragoa denean ere, ia beti alde berriagoaren edizioarekin.
+Bi aldeak zaharragoak direnean, biak bereizita amai daitezke oraindik.
+
+Hauetako ezer ez zaio aplikatzen editorerik gabeko edizio bati, fitxategia bakarrik idazten baitu.
+
 ### Gordetzea {#saving}
 
 Editore bakoitzak zure edizioak gordetzen dituen bezala gordetzen ditu agentearen edizioak.

@@ -49,7 +49,7 @@ Možnosť `Database` je databáza diagramu, rovnaké nastavenie ako položka `Da
 
 Možnosť `Bracket` určuje úvodzovky okolo názvov tabuliek, stĺpcov, obmedzení a indexov: `SingleQuote`, `DoubleQuote`, `Backtick` alebo `None` pre názvy úplne bez úvodzoviek, čo je predvolená hodnota. Je to rovnaké nastavenie ako na karte Generátor kódu – pozrite si časť [Úvodzovky](./code-generator.md#bracket).  
 Snowflake, ktorý názvy uzatvára iba do dvojitých úvodzoviek, ich použije pri každej voľbe okrem `None` a Databricks uzatvára názvy vždy do spätných apostrofov.  
-Možnosť `Bracket` sa ukladá do súboru iba vtedy, keď je zamknutie `Bracket Type` na karte Nastavenia vypnuté, a nový diagram má zapnuté všetky zamknutia. Kým je zamknutie zapnuté, zmena prepíše kód SQL na obrazovke, no súbor si ponechá zamknutú hodnotu a diagram sa s ňou znova otvorí – pozrite si časť [Zamknutie](./settings.md#lock).
+Možnosť `Bracket` sa ukladá do súboru iba vtedy, keď je zamknutie `Bracket Type` na karte Nastavenia vypnuté, a nový diagram má zapnuté všetky zamknutia. Kým je zamknutie zapnuté, zmena prepíše kód SQL iba vo vašom editore: ostatné editory otvorené na diagrame si ponechajú vlastné úvodzovky a súbor si ponechá zamknutú hodnotu, takže diagram sa s ňou znova otvorí – pozrite si časť [Zamknutie](./settings.md#lock).
 
 Kým je databáza Oracle a kód SQL obsahuje názov dlhší ako 30 bajtov, ktorý Oracle 12.1 a staršie verzie odmietajú, upozornenie pod oboma zoznamami vymenuje každý taký názov: `Oracle 12.2+ for names over 30 bytes: <names>`. Kontrolujú sa názvy tabuliek, stĺpcov, schém, kľúčov, indexov, sekvencií a spúšťačov. Samotný kód SQL sa nemení.
 
@@ -224,7 +224,7 @@ Ako sa tieto komentáre pri importe načítajú späť, opisuje časť [Komentá
 
 V editore s atribútom [`readonly`](../../api/erd-editor-element.md#readonly) karta slúži čitateľovi a nič, čo sa na nej urobí, sa nedostane do dokumentu:
 
-- `Database` a `Bracket` naďalej prepisujú SQL, ale iba v tomto okne, takže ich panel tiež označuje `This window only`. Výber sa neukladá do súboru, nezdieľa sa so spolupracovníkmi ani sa nezaznamenáva pre vrátenie späť, nech hovoria zamknutia čokoľvek, a zmena nastavenia, ktoré ste vybrali, urobená spolupracovníkom ponechá váš výber na obrazovke. Karta Generátor kódu zobrazuje ten istý výber a zapíše ho aj [`getSchemaSQL()`](../../api/erd-editor-element.md#getschemasql) zavolané bez databázy. Keď sa editor znova prepne na úpravy, vrátia sa databáza a úvodzovky dokumentu.
+- `Database` a `Bracket` naďalej prepisujú SQL, ale iba v tomto okne, takže ich panel tiež označuje `This window only`. Výber sa neukladá do súboru, nezdieľa sa so spolupracovníkmi ani sa nezaznamenáva pre vrátenie späť, nech hovoria zamknutia čokoľvek, a zmena nastavenia, ktoré ste vybrali, urobená spolupracovníkom ponechá váš výber na obrazovke. Karta Generátor kódu zobrazuje ten istý výber a zapíše ho aj [`getSchemaSQL()`](../../api/erd-editor-element.md#getschemasql) zavolané bez databázy. Keď sa editor znova prepne na úpravy, databáza a úvodzovky, ktoré ste vybrali, sa vrátia na to, čo editor ukazoval predtým, s prípadnou zmenou, ktorú medzitým urobil spolupracovník – pozrite si časť [Editory iba na čítanie](./settings.md#read-only-editors) v Nastaveniach.
 - `Statements`, `Header`, `Write logical names into empty comments` a `Tables` fungujú ako všade inde, keďže už patria oknu.
 - Obe polia skriptov sú iba na čítanie: zobrazujú skripty dokumentu, ktoré SQL naďalej zapisuje, a neprijímajú písanie.
 - `Save file` a `Copy` uložia a skopírujú SQL, ktoré karta zobrazuje.

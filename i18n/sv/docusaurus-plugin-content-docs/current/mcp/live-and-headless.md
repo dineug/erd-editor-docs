@@ -37,6 +37,38 @@ En läsning öppnar aldrig en editor. En redigering öppnar dokumentet i ERD Edi
 
 En editor med ett VS Code-tillägg före `4.2.0`, eller ett Obsidian- eller JetBrains-plugin före `1.2.0`, tar fortfarande emot agentens redigeringar live, men den varken visar eller behåller de logiska namn, domänkopplingar och rader i ordlistorna som agenten skriver – se [Uppdatera](./installation.md#updating).
 
+Med VS Code-tillägget `4.3.0` eller senare, eller Obsidian- eller JetBrains-pluginet `1.3.0` eller senare, avslutar en import i läget `replace`, och ett `erd_undo` eller `erd_redo` av en sådan, en relation som du ritar i editorn, oavsett serverns version – se [Skapa relationer](../guide/guides/editing-start.md#relationship-creation).
+Före de versionerna förblev ritandet aktivt, och ett klick på en tabell kunde lägga till en relation från en tabell som inte längre fanns i diagrammet.
+En import i läget `append` lämnar ritandet aktivt.
+En redigerare för en anteckning, ett tabellgruppsnamn eller en cell som du har öppen förblir öppen så länge diagrammet fortfarande innehåller och visar det som den redigerar.
+
+### Redigeringar som görs samtidigt {#edits-made-at-the-same-moment}
+
+Med server `1.2.0` eller senare och, i editorn, VS Code-tillägget `4.3.0` eller senare eller Obsidian- eller JetBrains-pluginet `1.3.0` eller senare slutar redigeringar som du och agenten gör av samma sak samtidigt lika i editorn, i filen som den sparar och i det som `erd_list`, `erd_get` och `erd_read` ger agenten.
+Det gäller ett namn eller ett annat fält i en tabell, kolumn, relation, index, anteckning, tabellgrupp eller ordlisterad, databasnamnet och [skripten före och efter tabellerna](../guide/guides/schema-sql.md#before-and-after-scripts), samt positionen eller storleken på en tabell, anteckning eller tabellgrupp, men inte en färg, ordningen på kolumnerna i en tabell eller ett index, eller databasen.
+Två redigeringar av samma namn eller fält, två flyttar eller två storleksändringar slutar på den ena av de två, aldrig en blandning: en redigering som görs efter att den andra har nått sin sida vinner, och av två som görs i exakt samma ögonblick vinner en, samma på varje sida, oavsett vilken som kommer först.
+
+Två färgändringar av samma tabell, anteckning eller tabellgrupp som görs samtidigt, som din och agentens `erd_change_table_color`, kan sluta olika, eller till och med ombytta, eftersom varje sida behåller den färg den hörde sist.
+En omordning av kolumner, din eller agentens `erd_move_column` eller `erd_move_index_column`, tillämpas på varje sida i den ordning den kommer, så två som görs samtidigt i en tabell eller ett index kan lämna dess kolumner i olika ordning.
+En ändring av databasen, din eller agentens `erd_set_database`, tillämpas också i den ordning den kommer, så två som görs samtidigt kan lämna editorn och agenten på olika databaser.
+
+Din dragning och agentens `erd_move_table`, `erd_move_tables`, `erd_move_memo`, `erd_move_table_group` och `erd_sort_tables` skickas som de punkter de slutar på, så två flyttar av samma tabell, anteckning eller tabellgrupp slutar där en av dem placerade den, aldrig på de två sammanlagda.
+`erd_move_table_group` skickar punkten för gruppen och för var och en av dess tabeller i en batch, som en dragning av gruppens namnlist gör.
+En storleksändring skriver positionen och storleken tillsammans, så en flytt och en storleksändring av samma anteckning eller tabellgrupp som görs samtidigt, som `erd_resize_memo` medan du drar den anteckningen, slutar på en rektangel på båda sidor: storleksändringens eller, när flytten vinner, flyttens punkt med storleksändringens storlek.
+En flytt under 20 pixlar, som inte ger något steg i ångrahistoriken, går också ut som den punkt den slutar på, så den kan vinna över den andra sidans flytt, vare sig det är en kort `erd_move_table_group` eller en kort dragning som du gör, som ett klick som knuffar en tabell några pixlar.
+
+Äldre versioner ansluter fortfarande, eftersom server `1.2.0` talar hubbprotokoll 2, som `1.0.0` till `1.1.1` gör.
+Med en server före `1.2.0`, eller ett tillägg före `4.3.0` eller ett plugin före `1.3.0`, kan en flytt eller storleksändring av en tabell, anteckning eller tabellgrupp som görs samtidigt lämna editorn och agenten med olika positioner.
+En äldre editor skickar din dragning som det flyttade avståndet, och en server före `1.2.0` skickar `erd_move_table_group` på det sättet också.
+Den andra sidan adderar det avståndet till den punkt den håller.
+Den äldre sidan tillämpar också den andra sidans punkter i den ordning de kommer.
+Agenten läser och redigerar då från sin egen position för den tabellen, anteckningen eller tabellgruppen, inte den som editorn visar och sparar.
+Det varar tills en senare flytt av den skickas som en punkt, som din dragning i en nyare editor eller agentens `erd_move_table`, eller tills agenten ansluter till dokumentet igen, som efter att editorn har kopplat bort den eller efter 30 minuter utan något anrop på dokumentet.
+Bortsett från en färg, kolumnordningen och databasen slutar ett namn eller ett annat fält som ändras samtidigt ändå lika när bara en sida är äldre, nästan alltid på den nyare sidans redigering.
+Med båda sidorna äldre kan de två fortfarande sluta olika.
+
+Inget av detta gäller en headless-redigering, som skriver filen på egen hand.
+
 ### Spara {#saving}
 
 Varje editor sparar agentens redigeringar på samma sätt som den sparar dina egna.

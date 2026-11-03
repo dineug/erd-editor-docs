@@ -66,4 +66,7 @@ De tools voor logische namen, domeinen en de woordenboeken hebben server `1.1.0`
 Van de versies hierboven laat een extensie vóór `4.2.0` of een plug-in vóór `1.2.0` de agent nog steeds live bewerken, omdat die protocol 2 gebruikt, maar ze negeert de logische namen, domeinkoppelingen en woordenboekrijen die de agent schrijft, en laat ze weg wanneer ze het bestand opslaat.
 Een server vóór `1.1.0` die een bestand op schijf bewerkt, schrijft het terug zonder de logische namen, domeinkoppelingen en woordenboekrijen ervan — zie [Bijwerken](./installation.md#updating).
 
+Bewerkingen die jij en de agent op hetzelfde moment maken aan dezelfde naam of hetzelfde veld, of aan de positie of grootte van dezelfde tabel, memo of tabelgroep, komen in de editor en voor de agent op hetzelfde uit met server `1.2.0` of later en, overal waar het document is geopend, de VS Code-extensie `4.3.0` of later of de Obsidian- of JetBrains-plug-in `1.3.0` of later.
+Een kleur, het databasesysteem en de volgorde van de kolommen in een tabel of een index zijn de uitzonderingen — zie [Bewerkingen op hetzelfde moment](./live-and-headless.md#edits-made-at-the-same-moment).
+
 Volgende: [Installeren](./installation.md).

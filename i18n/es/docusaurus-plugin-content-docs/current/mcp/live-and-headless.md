@@ -37,6 +37,38 @@ Una lectura nunca abre un editor. Una edición abre el documento en el ERD Edito
 
 Un editor con una extensión de VS Code anterior a la `4.2.0`, o con un plugin de Obsidian o de JetBrains anterior a la `1.2.0`, sigue recibiendo en vivo las ediciones del agente, pero no muestra ni conserva los nombres lógicos, los vínculos con dominios ni las filas de los diccionarios que escribe el agente; consulta [Actualizar](./installation.md#updating).
 
+Con la extensión de VS Code `4.3.0` o posterior, o el plugin de Obsidian o JetBrains `1.3.0` o posterior, una importación en modo `replace`, y un `erd_undo` o `erd_redo` de una, terminan una relación que estás dibujando en el editor, sea cual sea la versión del servidor; consulta [Creación de relaciones](../guide/guides/editing-start.md#relationship-creation).
+Antes de esas versiones, el dibujo seguía preparado, y un clic en una tabla podía añadir una relación desde una tabla que ya no estaba en el diagrama.
+Una importación en modo `append` deja preparado el dibujo.
+Un editor de nota, de nombre de grupo de tablas o de celda que tengas abierto sigue abierto mientras el diagrama todavía contenga, y muestre, lo que edita.
+
+### Ediciones hechas en el mismo momento {#edits-made-at-the-same-moment}
+
+Con el servidor `1.2.0` o posterior y, en el editor, la extensión de VS Code `4.3.0` o posterior o el plugin de Obsidian o JetBrains `1.3.0` o posterior, las ediciones que tú y el agente hacéis sobre lo mismo en el mismo momento terminan igual en el editor, en el archivo que guarda y en lo que `erd_list`, `erd_get` y `erd_read` entregan al agente.
+Eso abarca un nombre u otro campo de una tabla, una columna, una relación, un índice, una nota, un grupo de tablas o una fila de diccionario, el nombre de la base de datos y los [scripts previos y posteriores](../guide/guides/schema-sql.md#before-and-after-scripts), y la posición o el tamaño de una tabla, una nota o un grupo de tablas, pero no un color, el orden de las columnas de una tabla o de un índice ni la base de datos.
+Dos ediciones de un mismo nombre o campo, dos movimientos o dos cambios de tamaño terminan en una de las dos, nunca en una mezcla: gana la edición hecha después de que la otra llegara a su lado, y de dos hechas exactamente en el mismo momento gana una, la misma en todos los lados, llegue primero la que llegue.
+
+Dos cambios de color de una misma tabla, nota o grupo de tablas hechos en el mismo momento, como el tuyo y el `erd_change_table_color` del agente, pueden terminar distintos, o incluso intercambiados, ya que cada lado conserva el último color que recibió.
+Una reordenación de columnas, tuya o el `erd_move_column` o `erd_move_index_column` del agente, se aplica en cada lado en el orden en que llega, así que dos hechas en el mismo momento en una tabla o un índice pueden dejar sus columnas en órdenes distintos.
+Un cambio de base de datos, tuyo o el `erd_set_database` del agente, también se aplica en el orden en que llega, así que dos hechos en el mismo momento pueden dejar al editor y al agente en bases de datos distintas.
+
+Tu arrastre y los `erd_move_table`, `erd_move_tables`, `erd_move_memo`, `erd_move_table_group` y `erd_sort_tables` del agente viajan como los puntos donde terminan, así que dos movimientos de una misma tabla, nota o grupo de tablas terminan donde lo dejó uno de ellos, nunca en la suma de los dos.
+`erd_move_table_group` envía el punto del grupo y el de cada una de sus tablas en un solo lote, como hace un arrastre de la barra de título del grupo.
+Un cambio de tamaño escribe la posición y el tamaño juntos, así que un movimiento y un cambio de tamaño de una misma nota o grupo de tablas hechos en el mismo momento, como `erd_resize_memo` mientras arrastras esa nota, terminan en un solo rectángulo en ambos lados: el del cambio de tamaño o, cuando gana el movimiento, el punto del movimiento con el tamaño del cambio de tamaño.
+Un movimiento de menos de 20 píxeles, que no genera ninguna entrada de deshacer, también sale como el punto donde termina, así que puede ganar al movimiento del otro lado, sea un `erd_move_table_group` corto o un arrastre corto tuyo, como un clic que desplaza una tabla unos pocos píxeles.
+
+Las versiones anteriores siguen conectándose, ya que el servidor `1.2.0` usa el protocolo 2 del hub, como las versiones de la `1.0.0` a la `1.1.1`.
+Con un servidor anterior a la `1.2.0`, o una extensión anterior a la `4.3.0` o un plugin anterior a la `1.3.0`, un movimiento o un cambio de tamaño de una misma tabla, nota o grupo de tablas hecho en el mismo momento puede dejar al editor y al agente con posiciones distintas.
+Un editor anterior envía tu arrastre como la distancia recorrida, y un servidor anterior a la `1.2.0` envía así también `erd_move_table_group`.
+El otro lado suma esa distancia al punto que tiene.
+El lado anterior también aplica los puntos del otro lado en el orden en que llegan.
+El agente lee y edita entonces desde su propia posición de esa tabla, nota o grupo de tablas, no desde la que el editor muestra y guarda.
+Eso dura hasta que un movimiento posterior viaja como un punto, como tu arrastre en un editor más nuevo o el `erd_move_table` del agente, o hasta que el agente vuelve a unirse al documento, como después de que el editor lo haya sacado de él o tras 30 minutos sin ninguna llamada sobre el documento.
+Salvo por un color, el orden de las columnas y la base de datos, un nombre u otro campo cambiado en el mismo momento sigue terminando igual cuando solo un lado es anterior, casi siempre con la edición del lado más nuevo.
+Si ambos lados son anteriores, los dos pueden terminar distintos.
+
+Nada de esto se aplica a una edición headless, que escribe solo el archivo.
+
 ### Guardar {#saving}
 
 Cada editor guarda las ediciones del agente igual que guarda las tuyas.

@@ -83,7 +83,9 @@ Une clé serial fait exception : sa clé étrangère prend le type entier que s
 Chaque colonne de clé étrangère est nommée d’après sa clé : un nom d’un seul mot comme `id` est précédé du nom de la table parente (`user_id`), un nom de plusieurs mots comme `member_id` est conservé, et un nom que la table enfant possède déjà est numéroté, par exemple `user_id_2` (voir [Noms des colonnes de clé étrangère](./relationship-editing.md#foreign-key-column-names)).  
 Cliquer deux fois sur une même table trace une relation autoréférencée.  
 Une nouvelle relation commence avec `On Delete` et `On Update` tous deux à `Not set` ; modifiez-les depuis son menu contextuel (voir [ON DELETE et ON UPDATE](./relationship-editing.md#on-delete-and-on-update)).  
-Appuyez sur `Escape`, ou de nouveau sur le même raccourci, pour annuler. L’annulation laisse la sélection telle qu’elle est, et l’appui suivant sur `Escape` l’efface.
+Appuyez sur `Escape`, ou de nouveau sur le même raccourci, pour annuler. L’annulation laisse la sélection telle qu’elle est, et l’appui suivant sur `Escape` l’efface.  
+Le tracé prend fin aussi, que seul le type soit activé ou que le parent soit déjà choisi, quand le diagramme est remplacé : par un `Import` à la place du diagramme, par l’annulation ou le rétablissement d’une telle importation, par un collaborateur ou un agent de codage qui effectue l’un ou l’autre, et par le rechargement du diagramme dans l’éditeur, comme le fait Obsidian quand le fichier change en dehors de lui.  
+Une importation Schéma SQL, GraphQL, DBML ou AML y met fin une fois ses tables placées, et non quand le fichier est sélectionné. [`Import and Add`](./file-import-export.md#import-and-add) laisse le tracé activé.
 
 Une fois la table parente choisie, placer le pointeur sur une table où la relation peut aboutir entoure cette table et affiche deux boutons à côté d’elle :
 

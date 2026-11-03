@@ -54,7 +54,8 @@ När `Name View` är låst, som i ett nytt diagram, ändrar ett byte bara din eg
 - I `Both Names` innehåller cellerna för logiskt namn de logiska namnen och namncellerna de fysiska namnen.
 
 En cell för logiskt namn redigeras som alla andra celler: börja med `Enter` eller ett dubbelklick – se [Redigera tabeller](./table-editing.md). När redigeringsfältet öppnas på ett tomt logiskt namn visar fältet den text som cellen ritade, som platshållare: namnet i `Logical Names`, `logical` i `Both Names`.  
-Det du skriver hamnar bara i det logiska namnet. Det fysiska namnet härleds från det när redigeringsfältet stängs (`Enter`, `Tab`, `Escape` eller ett klick någon annanstans) på ett ändrat logiskt namn, som ett eget steg i ångrahistoriken efter det du skrev. Ett fysiskt namn som du själv har skrivit lämnas som det är – se [Härleda fysiska namn](./dictionary.md#deriving-physical-names).
+Det du skriver hamnar bara i det logiska namnet. Det fysiska namnet härleds från det när redigeringsfältet stängs (`Enter`, `Tab`, `Escape` eller ett klick någon annanstans) på ett ändrat logiskt namn, som ett eget steg i ångrahistoriken efter det du skrev. Ett fysiskt namn som du själv har skrivit lämnas som det är – se [Härleda fysiska namn](./dictionary.md#deriving-physical-names).  
+När en medarbetare eller en kodagent ersätter diagrammet medan en cell för logiskt namn är öppen förblir cellens redigeringsfält öppet så länge det nya diagrammet fortfarande har den tabellen eller kolumnen och din namnvisning fortfarande visar cellen. Om diagrammet läses in i editorn på nytt, som Obsidian gör när filen ändras utanför den, stängs cellens redigeringsfält direkt. I båda fallen härleder stängningen ett fysiskt namn bara där tabellen eller kolumnen innehåller det logiska namn som du skrev, aldrig från ett som det nya diagrammet förde med sig.
 
 `Tab` och `Shift + Tab` går igenom de celler som visningen ritar, i deras ordning – se [Tabbtangenten](./table-editing.md#tab-key):
 

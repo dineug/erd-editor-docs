@@ -37,6 +37,38 @@ Une lecture n’ouvre jamais d’éditeur. Une modification ouvre le document da
 
 Un éditeur doté d’une extension VS Code antérieure à la version `4.2.0`, ou d’un plugin Obsidian ou JetBrains antérieur à la version `1.2.0`, reçoit toujours en direct les modifications de l’agent, mais n’affiche ni ne conserve les noms logiques, les liens de domaine et les lignes des dictionnaires qu’écrit l’agent (voir [Mettre à jour](./installation.md#updating)).
 
+Avec l’extension VS Code `4.3.0` ou version ultérieure, ou le plugin Obsidian ou JetBrains `1.3.0` ou version ultérieure, une importation en mode `replace`, ainsi qu’un `erd_undo` ou un `erd_redo` d’une telle importation, mettent fin à une relation que vous tracez dans l’éditeur, quelle que soit la version du serveur (voir [Création de relations](../guide/guides/editing-start.md#relationship-creation)).
+Avant ces versions, le tracé restait activé, et un clic sur une table pouvait ajouter une relation à partir d’une table qui ne figurait plus dans le diagramme.
+Une importation en mode `append` laisse le tracé activé.
+Un éditeur de mémo, de nom de groupe de tables ou de cellule que vous avez ouvert reste ouvert tant que le diagramme contient encore et affiche encore ce qu’il modifie.
+
+### Modifications faites au même moment {#edits-made-at-the-same-moment}
+
+Avec le serveur `1.2.0` ou version ultérieure et, dans l’éditeur, l’extension VS Code `4.3.0` ou version ultérieure ou le plugin Obsidian ou JetBrains `1.3.0` ou version ultérieure, les modifications que vous et l’agent faites au même élément au même moment aboutissent au même résultat dans l’éditeur, dans le fichier qu’il enregistre et dans ce que `erd_list`, `erd_get` et `erd_read` donnent à l’agent.
+Cela couvre un nom ou un autre champ d’une table, d’une colonne, d’une relation, d’un index, d’un mémo, d’un groupe de tables ou d’une ligne de dictionnaire, le nom de la base de données et les [scripts avant et après les tables](../guide/guides/schema-sql.md#before-and-after-scripts), ainsi que la position ou la taille d’une table, d’un mémo ou d’un groupe de tables, mais ni une couleur, ni l’ordre des colonnes d’une table ou d’un index, ni le SGBD.
+Deux modifications d’un même nom ou champ, deux déplacements ou deux redimensionnements aboutissent à l’une des deux, jamais à un mélange : une modification faite après que l’autre est parvenue à son côté l’emporte, et de deux modifications faites exactement au même moment, l’une l’emporte, la même de chaque côté, quelle que soit celle qui arrive en premier.
+
+Deux changements de couleur d’une même table, d’un même mémo ou d’un même groupe de tables faits au même moment, comme le vôtre et le `erd_change_table_color` de l’agent, peuvent aboutir à des résultats différents, voire échangés, puisque chaque côté conserve la couleur qu’il a reçue en dernier.
+Un changement d’ordre des colonnes, le vôtre ou le `erd_move_column` ou `erd_move_index_column` de l’agent, est appliqué de chaque côté dans l’ordre où il arrive, si bien que deux changements faits au même moment dans une même table ou un même index peuvent laisser ses colonnes dans des ordres différents.
+Un changement de SGBD, le vôtre ou le `erd_set_database` de l’agent, est lui aussi appliqué dans l’ordre où il arrive, si bien que deux changements faits au même moment peuvent laisser l’éditeur et l’agent sur des SGBD différents.
+
+Votre glissement et les `erd_move_table`, `erd_move_tables`, `erd_move_memo`, `erd_move_table_group` et `erd_sort_tables` de l’agent voyagent sous la forme des points où ils se terminent, si bien que deux déplacements d’une même table, d’un même mémo ou d’un même groupe de tables aboutissent là où l’un d’eux l’a placé, jamais à la somme des deux.
+`erd_move_table_group` envoie le point du groupe et celui de chacune de ses tables en un seul lot, comme le fait le glissement de la barre de titre du groupe.
+Un redimensionnement écrit la position et la taille ensemble, si bien qu’un déplacement et un redimensionnement d’un même mémo ou groupe de tables faits au même moment, comme `erd_resize_memo` pendant que vous faites glisser ce mémo, aboutissent à un même rectangle des deux côtés : celui du redimensionnement ou, quand le déplacement l’emporte, le point du déplacement avec la taille du redimensionnement.
+Un déplacement de moins de 20 pixels, qui ne crée aucune entrée d’annulation, part lui aussi sous la forme du point où il se termine, si bien qu’il peut l’emporter sur le déplacement de l’autre côté, qu’il s’agisse d’un court `erd_move_table_group` ou d’un court glissement de votre part, comme un clic qui déplace une table de quelques pixels.
+
+Les versions plus anciennes se connectent toujours, puisque le serveur `1.2.0` parle le protocole 2 du hub, comme le font les serveurs `1.0.0` à `1.1.1`.
+Avec un serveur antérieur à la version `1.2.0`, une extension antérieure à la version `4.3.0` ou un plugin antérieur à la version `1.3.0`, un déplacement ou un redimensionnement d’une même table, d’un même mémo ou d’un même groupe de tables fait au même moment peut laisser l’éditeur et l’agent avec des positions différentes.
+Un éditeur plus ancien envoie votre glissement sous la forme de la distance parcourue, et un serveur antérieur à la version `1.2.0` envoie `erd_move_table_group` de la même façon.
+L’autre côté ajoute cette distance au point qu’il détient.
+Le côté plus ancien applique aussi les points de l’autre côté dans l’ordre où ils arrivent.
+L’agent lit et modifie alors à partir de sa propre position pour cette table, ce mémo ou ce groupe de tables, et non celle que l’éditeur affiche et enregistre.
+Cela dure jusqu’à ce qu’un déplacement ultérieur voyage sous la forme d’un point, comme votre glissement dans un éditeur plus récent ou le `erd_move_table` de l’agent, ou jusqu’à ce que l’agent rejoigne à nouveau le document, comme après que l’éditeur l’a abandonné ou après 30 minutes sans appel sur le document.
+Hormis une couleur, l’ordre des colonnes et le SGBD, un nom ou un autre champ changé au même moment aboutit tout de même au même résultat quand un seul côté est plus ancien, presque toujours en faveur de la modification du côté plus récent.
+Si les deux côtés sont plus anciens, les deux modifications peuvent encore aboutir à des résultats différents.
+
+Rien de cela ne s’applique à une modification sans interface, qui n’écrit que le fichier.
+
 ### Enregistrement {#saving}
 
 Chaque éditeur enregistre les modifications de l’agent comme il enregistre les vôtres.

@@ -47,7 +47,7 @@ description: erd-editor MCP 伺服器提供的每個工具：逐頁讀取文件�
 | --- | --- |
 | `snapshot` | 精簡的 JSON，包含每個實體及其 id（含資料表群組，以及詞彙、術語和定義域的各列），以及設定與結構描述 SQL 指令碼。它會省略因檢視者而異的內容：測量出的寬度、堆疊順序、檢視、索引標籤和「名稱顯示」。結構描述龐大時，內容也會很大。 |
 | `sql` | 八種資料庫之一的 DDL：`Databricks`、`MariaDB`、`MSSQL`、`MySQL`、`Oracle`、`PostgreSQL`、`Snowflake` 或 `SQLite`。`vendor` 預設為文件所設定的資料庫。整份文件的 DDL 包含其前置與後置指令碼。使用 `tableIds`、`tableNames` 或 `groupNames` 時，僅包含這些資料表及其所含的外鍵，且不含指令碼。外鍵會帶有其 ON DELETE 和 ON UPDATE 動作，但目標資料庫會省略的動作除外，請參閱 [ON DELETE 與 ON UPDATE](../guide/guides/relationship-editing.md#on-delete-and-on-update)。 |
-| `json` | 與儲存時寫入檔案的內容完全相同的整份文件，包含編輯器尚未儲存的任何編輯，請參閱[儲存形式與執行階段值](../api/advanced/schema.md#storage-form-and-runtime-value)。 |
+| `json` | 與儲存時寫入檔案的內容完全相同的整份文件，包含編輯器尚未儲存的任何編輯，請參閱[儲存形式](../api/advanced/schema.md#storage-form)。 |
 | `scripts` | 僅包含文件的前置與後置指令碼，格式為 `{"before":"…","after":"…"}`，未設定者為空，不論結構描述有多大。 |
 
 只有 `sql` 格式接受 `vendor`、`statements`、`header`、`logicalNameAsComment`、`tableIds`、`tableNames` 和 `groupNames`，其他格式會拒絕這些引數。
@@ -205,7 +205,7 @@ id 來自 `erd_list` 和 `erd_get`，或來自建立該實體之呼叫的 `creat
 | `erd_remove_table_group` | `groupId` | 移除群組。其資料表會留在原處，不屬於任何群組。 |
 | `erd_change_table_group_name` | `groupId`, `value` | 重新命名群組。空字串會讓群組變為未命名。 |
 | `erd_change_table_group_color` | `groupId`, `color` | 設定群組的顏色。 |
-| `erd_move_table_group` | `groupId`, `x`, `y` | 移動群組，使其矩形從該點開始，其資料表也會以相同的位移一起移動，如同拖曳其標題列一樣。水平與垂直位移相加不到 20 像素的移動不會產生復原步驟。 |
+| `erd_move_table_group` | `groupId`, `x`, `y` | 移動群組，使其矩形從該點開始，其資料表也會以相同的位移一起移動，如同拖曳其標題列一樣。水平與垂直位移相加不到 20 像素的移動不會產生復原步驟。自伺服器 `1.2.0` 起，此移動會以群組及其資料表結束的位置送達編輯器，因此使用 VS Code 擴充功能 `4.3.0` 或更新版本，或 Obsidian 或 JetBrains 外掛程式 `1.3.0` 或更新版本時，在該處於同一時刻對群組或其中一個資料表進行的移動，最後會落在兩個位置其中之一，絕不會是兩者之和，請參閱[同一時刻進行的編輯](./live-and-headless.md#edits-made-at-the-same-moment)。 |
 | `erd_resize_table_group` | `groupId`, `x?`, `y?`, `width`, `height` | 設定群組的矩形，其資料表會留在原處。省略 `x` 和 `y` 時會保留原本的角落位置。無法容納群組的資料表及其留白的矩形會被拒絕，並附上訊息指出它必須容納的方框。 |
 | `erd_set_table_group` | `tableIds`, `groupId` | 將資料表放入群組，每個資料表都會離開其原本所屬的群組。`groupId` 為 `null` 或空字串時，會將這些資料表移出所有群組。 |
 
@@ -295,6 +295,8 @@ id 來自 `erd_list` 和 `erd_get`，或來自建立該實體之呼叫的 `creat
 
 - `erd_import_sql`、`erd_import_graphql`、`erd_import_dbml` 和 `erd_import_aml` 會取代所有資料表、關聯、索引、備忘錄和資料表群組。它們會保留文件的設定（包括鎖定），但檢視除外，檢視會回到畫布的起點，縮放比例為 100%；它們也會保留文件的詞彙、術語和定義域字典。它們帶入的資料表沒有邏輯名稱，也不會連結任何定義域。
 - `erd_import_json` 會取代整份文件，包括其設定和字典：JSON 的設定、鎖定、詞彙、術語和定義域會取代此文件的對應內容，而未記錄鎖定的 JSON 會開啟所有鎖定，並將檢視放在畫布的起點。每位檢視者都會保留自己的「名稱顯示」，除非 JSON 的 `Name View` 鎖定為關閉，此時會帶入其「名稱顯示」。若要保留此文件的設定，可從 `erd_read` 的 `json` 格式所提供的文字著手。空文字會產生新文件，就像 `erd_open_document` 使用 `create` 建立的文件一樣。
+
+在 VS Code 擴充功能 `4.3.0` 或更新版本，或 Obsidian 或 JetBrains 外掛程式 `1.3.0` 或更新版本的編輯器中，`replace` 及其 `erd_undo` 或 `erd_redo` 也會結束您正在繪製的關聯，請參閱[即時](./live-and-headless.md#live)。
 
 `append` 會將匯入的內容加入文件，如同編輯器的[匯入並加入](../guide/guides/file-import-export.md#import-and-add)，而一次 `erd_undo` 即可移除所有加入的內容：
 

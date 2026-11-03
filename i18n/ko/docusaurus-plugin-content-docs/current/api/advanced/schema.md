@@ -1,31 +1,32 @@
 ---
-sidebar_position: 3
-description: .erd.json 문서 형식 — 파일에 담기는 저장 형태와 에디터가 가진 런타임 값, TypeScript 타입, 숫자 필드별 상수, 게시된 JSON Schema.
+sidebar_position: 4
+description: .erd.json 문서 형식 — 파일에 담기는 저장 형태, TypeScript 타입, 숫자 필드별 상수, 게시된 JSON Schema.
 ---
 
 # Schema
 
 `.erd.json`은 에디터의 문서 형식입니다. 에디터 밖에서 문서를 생성하거나 검증하거나 마이그레이션해야 한다면 이 문서를 참고하세요.
 
-`4.0.0`부터 문서에는 두 가지 직렬화 형태가 있으며, 둘 다 `version`은 `'3.0.0'`입니다. 저장 형태는 파일에 담기는 형태로, [`editor.value`](../erd-editor-element.md#value)가 반환하고 JSON 내보내기가 기록하며, 게시된 [JSON Schema](#json-schema)가 받아들이는 유일한 형태입니다. 런타임 값은 에디터가 가지고 있는 그대로의 문서 전체이며, [`editor.runtimeValue`](../erd-editor-element.md#runtimevalue)가 반환합니다. `setInitialValue()`, `value` setter, `setSchemaJSON()`은 두 형태와 이전 릴리스가 저장한 모든 파일, v2 `.vuerd` 문서를 모두 읽습니다. `4.0.0` 이전에는 한 가지뿐이었으며, 지금의 `runtimeValue`처럼 `value`가 에디터가 가지고 있는 그대로의 문서 전체를 반환했습니다.
+이 문서는 저장 형태, 즉 파일에 담기는 문서를 기술하며, `4.0.0` 이후의 모든 릴리스가 이 형태로 기록합니다. [`editor.value`](../erd-editor-element.md#value)가 반환하고 JSON 내보내기가 기록하는 형태이며, 게시된 [JSON Schema](#json-schema)가 받아들이는 유일한 형태입니다. `version`은 이전 릴리스가 저장한 모든 v3 파일과 마찬가지로 `'3.0.0'`이므로, `version`으로는 오래된 파일과 새 파일을 구별할 수 없습니다. `setInitialValue()`, `value` setter, `setSchemaJSON()`은 이 형태와 이전 릴리스가 저장한 모든 파일, v2 `.vuerd` 문서를 읽습니다. `4.0.0` 이전에는 `value`가 에디터가 가지고 있는 그대로의 문서 전체를 반환했으므로, 그때 저장된 파일에는 더 많은 것이 담겨 있습니다([저장 형태](#storage-form) 참고).  
+에디터의 [`runtimeValue`](../erd-editor-element.md#runtimevalue)는 이 문서가 기술하지 않는 또 다른 직렬화 형태입니다. 이 값은 다른 에디터나 복제본을 초기화하는 데 쓰이고 [Yjs 룸](./yjs.md#what-the-room-holds)은 이를 스냅샷에 저장하지만, 파일에 담아서는 안 되며 JSON Schema는 엔티티가 하나라도 담긴 런타임 값을 거부합니다.
 
-## 저장 형태와 런타임 값
+## 저장 형태 {#storage-form}
 
-저장 형태에는 삭제되지 않은 엔티티만 담깁니다. `doc.tableIds`에 나열된 각 테이블, 그 테이블들이 나열한 컬럼, 남아 있는 두 테이블 사이의 관계, 남아 있는 테이블의 인덱스와 그 테이블이 아직 나열하고 있는 컬럼을 가리키는 인덱스 컬럼, 나열된 메모와 테이블 그룹, 그리고 `4.2.0`부터는 id 외의 값을 하나라도 가진 나열된 단어, 용어, 도메인입니다. 에디터가 불러올 때 계산하거나 열려 있는 동안에만 가지고 있는 것은 제외됩니다. 삭제된 엔티티, `seqColumnIds`와 `seqIndexColumnIds`, 모든 `zIndex`, 측정된 너비, 컬럼 `ui`, 관계의 `identification`, `startRelationshipType`, 앵커, 그리고 `4.2.0`부터는 각 사전 행의 `order`와 `doc.wordIds`, `doc.termIds`, `doc.domainIds` 목록이 여기에 해당합니다. 아래 타입에서는 이 필드마다 `// runtime only`가 표시되어 있습니다.  
+저장 형태에는 삭제되지 않은 엔티티만 담깁니다. `doc.tableIds`에 나열된 각 테이블, 그 테이블들이 나열한 컬럼, 남아 있는 두 테이블 사이의 관계, 남아 있는 테이블의 인덱스와 그 테이블이 아직 나열하고 있는 컬럼을 가리키는 인덱스 컬럼, 나열된 메모와 테이블 그룹, 그리고 `4.2.0`부터는 사전 시트의 단어, 용어, 도메인 중 id 외의 값을 하나라도 가진 것입니다. 에디터가 불러올 때 계산하거나 열려 있는 동안에만 가지고 있는 것은 담기지 않습니다. 쌓임 순서, 측정된 너비, 키 표시는 물론, 관계가 식별 관계인지, 부모 쪽 끝이 어떻게 그려지는지, 관계가 테이블과 어디서 만나는지도 담기지 않습니다. 불러올 때마다 파일에 담긴 것으로부터 이것들을 다시 계산합니다.  
 사전을 제외한 모든 컬렉션은 id의 코드 유닛 순서로 키가 정렬되며, 컬럼은 먼저 `tableId`로, 인덱스 컬럼은 먼저 `indexId`로 묶입니다. `4.2.0`부터 `wordEntities`, `termEntities`, `domainEntities`는 다른 모든 컬렉션 뒤에 이 순서로 오며, 각각 헤더와 행으로, 한 줄에 행 하나씩 기록됩니다([사전 행](#dictionary-rows) 참고). 각 엔티티는 정해진 순서로 필드를 기록하며, 텍스트는 공백 두 칸으로 들여쓰고 줄바꿈으로 끝납니다. 따라서 같은 문서는 항상 같은 바이트로 기록되고, 편집은 그 편집이 닿는 부분만 바꾸며, 다른 폰트가 설치된 컴퓨터에서 저장한 파일도 같은 `value`로 다시 열립니다.  
 VS Code, Obsidian, JetBrains 플러그인은 편집으로 `value`가 바뀔 때만 파일을 기록하므로, 이전 릴리스가 저장한 파일은 첫 편집 전까지 예전 형태를 유지합니다.
 
 `4.2.0`부터 저장 형태는 아무것도 담지 않은 것도 제외합니다. 엔티티나 그 `ui`가 `''`로 가진 각 텍스트 필드(테이블의 `name`, `comment`, `ui.color`, 컬럼의 `name`, `comment`, `dataType`, `default`, 인덱스의 `name`, 메모의 `value`와 `ui.color`, 테이블 그룹의 `name`과 `color`), 항목이 하나도 없는 각 `doc` 목록과 컬렉션, 그리고 모든 컬렉션이 비면 `collections` 자체가 여기에 해당합니다. 공백만 있는 텍스트는 가진 그대로 기록됩니다. 다만 논리명은 이때 제외되며, id 외의 값이 모두 비어 있거나 공백뿐인 단어, 용어, 도메인은 통째로 제외됩니다. 모든 id, 엔티티 안의 모든 목록, `0`을 포함한 모든 숫자는 여전히 기록됩니다. `doc`은 항상 기록되므로, 새 문서의 파일에는 `$schema`, `version`, 설정, `"doc": {}`이 담깁니다.  
 파싱할 때는 모든 v3 릴리스와 마찬가지로 없는 텍스트 필드를 `''`로, 없는 컬렉션을 비어 있는 것으로 읽으며, 저장 형태는 컬렉션에 아무것도 없는 동안에만 `doc` 목록을 제외합니다([Doc](#doc) 참고). 따라서 `4.2.0` 이전 에디터도 이 파일을 열 수 있으며, 파일을 직접 읽는 프로그램도 없는 것을 같은 방식으로 읽어야 합니다. 이전 릴리스가 저장한 파일은 다음 저장에서 비어 있는 텍스트, 목록, 컬렉션이 제외된 형태로 돌아오며, 이 변경은 한 번만 일어나고 그 뒤로는 바이트 단위까지 같게 저장됩니다.
 
-런타임 값은 저장 형태가 제외하는 것, 즉 삭제된 엔티티, 시퀀스, z-index, 너비, 키 표시, 관계 플래그, 앵커, 비어 있는 텍스트 필드를 유지하며, `tableIds`, `relationshipIds`, `indexIds`, `memoIds` 네 목록과 `tableEntities`부터 `memoEntities`까지 여섯 컬렉션은 비어 있어도 유지합니다. `4.2.0`부터는 삭제된 단어, 용어, 도메인, 아무것도 담지 않은 행, 각 행의 `order`, 세 사전 목록, 공백뿐인 논리명, 삭제된 도메인으로의 연결도 유지합니다. 공백 두 칸으로 들여쓰며 끝에 줄바꿈이 없습니다. 런타임 값은 `setInitialValue()`로 공동 편집자나 두 번째 뷰를 초기화하는 데만 사용하세요. 그래야 다른 에디터가 보낸 삭제의 Undo가 그곳에서도 엔티티를 온전히 되살립니다. 파일에는 절대 기록하지 마세요. JSON Schema가 런타임 값을 거부합니다. 삭제된 엔티티는 더 이상 가비지 컬렉션되지 않으므로, 런타임 값은 다음에 파일에서 문서를 열 때까지 삭제된 엔티티를 유지합니다.
+저장 형태는 잠긴 설정을 잠긴 값으로 기록하고([`lockSettings`](#settings) 참고), `settings.ddlScripts`는 스크립트에 텍스트가 있을 때만, 테이블의 `groupId`는 파일이 기록하는 테이블 그룹을 가리킬 때만 기록합니다. `4.2.0`부터는 `settings.nameViewMode`를 기록하는 값이 `'physical'`이 아닐 때만, `settings.columnOrder`를 가능한 경우 7개 항목으로([Settings](#settings) 참고), 테이블의 `nameDerived`를 `true`일 때만 함께 기록합니다.  
+`doc.tableGroupIds`와 `tableGroupEntities`는 테이블 그룹이 있을 때만, `logicalName`은 공백 외의 텍스트가 있을 때만, 컬럼의 `domainId`는 파일이 기록하는 도메인을 가리킬 때만, 각 사전은 파일이 기록하는 행이 있을 때만 기록합니다.
 
-두 형태 모두 잠긴 설정은 잠긴 값으로 기록하고([`lockSettings`](#settings) 참고), `settings.ddlScripts`는 스크립트에 텍스트가 있을 때만, 테이블의 `groupId`는 비어 있지 않을 때만 기록합니다. `4.2.0`부터 두 형태는 `settings.nameViewMode`를 기록하는 값이 `'physical'`이 아닐 때만, `settings.columnOrder`를 가능한 경우 7개 항목으로([Settings](#settings) 참고), 테이블의 `nameDerived`를 `true`일 때만 기록합니다.  
-저장 형태는 `doc.tableGroupIds`와 `tableGroupEntities`를 테이블 그룹이 있을 때만, `logicalName`을 공백 외의 텍스트가 있을 때만, 컬럼의 `domainId`를 파일이 기록하는 도메인을 가리킬 때만, 각 사전을 파일이 기록하는 행이 있을 때만 기록합니다. 런타임 값은 테이블 그룹 필드를 문서에 그룹이나 삭제된 그룹이 있는 동안, `logicalName`과 `domainId`를 `''`가 아닌 동안, 각 사전을 그 목록과 함께 둘 중 하나에 삭제된 행을 포함해 항목이 있는 동안 기록합니다.
+`4.0.0` 이전에 저장된 파일에는 그 당시 에디터가 가지고 있던 문서 전체가 담겨 있으며, 삭제된 엔티티와 불러올 때마다 계산하는 것도 포함됩니다. 불러올 때는 이를 읽고 각 테이블과 메모의 쌓임 위치를 유지하며([Doc](#doc) 참고) 나머지는 다시 계산하고, 다음 저장에서는 저장 형태만 기록합니다.
 
 ## TypeScript
 
-타입은 런타임 값을 기술합니다. `// runtime only`가 표시된 필드는 저장 형태에서 제외되며, `?`가 표시된 필드는 값이 있을 때만 기록됩니다. `4.2.0`부터 저장 형태가 제외하는 비어 있는 텍스트, 목록, 컬렉션은 따로 표시되어 있지 않습니다.
+타입은 저장 형태를 기술하며, 각 타입은 파일이 기록하는 순서대로 필드를 나열합니다. `?`가 표시된 필드는 [저장 형태](#storage-form)에서 자세히 설명하듯이 저장 형태가 제외할 수 있는 필드이며, 파싱할 때 없는 필드는 아무것도 담지 않은 것으로 읽힙니다. 즉 `''`, `false`, 테이블 그룹이나 도메인 없음, 비어 있는 컬렉션, `nameViewMode`는 `'physical'`, `ddlScripts`는 비어 있는 스크립트 두 개입니다. 없는 `doc` 목록은 예외로, 파싱할 때 컬렉션에서 채워집니다([Doc](#doc) 참고). 사전 행에서 `?`는 행이 그 앞에서 끝날 수 있는 값을 나타냅니다([사전 행](#dictionary-rows) 참고). 그 밖의 모든 필드는 항상 기록됩니다.
 
 ### ERDEditorSchemaV3
 
@@ -35,13 +36,13 @@ type ERDEditorSchemaV3 = {
   version: '3.0.0';
   settings: Settings;
   doc: Doc;
-  collections: {
-    tableEntities: Record<string, Table>;
-    tableColumnEntities: Record<string, Column>;
-    relationshipEntities: Record<string, Relationship>;
-    indexEntities: Record<string, Index>;
-    indexColumnEntities: Record<string, IndexColumn>;
-    memoEntities: Record<string, Memo>;
+  collections?: {
+    tableEntities?: Record<string, Table>;
+    tableColumnEntities?: Record<string, Column>;
+    relationshipEntities?: Record<string, Relationship>;
+    indexEntities?: Record<string, Index>;
+    indexColumnEntities?: Record<string, IndexColumn>;
+    memoEntities?: Record<string, Memo>;
     tableGroupEntities?: Record<string, TableGroup>;
     wordEntities?: DictionaryRows; // rows of Word
     termEntities?: DictionaryRows; // rows of Term
@@ -216,7 +217,7 @@ const NameViewMode = {
 `4.2.0` 이전 에디터는 `show`를 숫자 그대로 유지하므로, 그 에디터에서 저장해도 이 플래그가 남아 있습니다.
 
 `4.2.0`부터 `ColumnType`에는 9개의 값이 있습니다. `columnLogicalName`(`128`)은 컬럼 행이 `Both Names` 보기에서만 그리는 논리명 셀의 위치를, `columnDomain`(`256`)은 도메인 셀의 위치를 정합니다. 둘은 설정 탭 [컬럼 순서](../../guide/guides/settings.md#컬럼-순서-조정)의 `Logical Name`과 `Domain` 행입니다. 에디터는 9개 값을 모두 담은 순서를 가지며, 새 문서의 순서는 `128, 1, 2, 256, 4, 8, 16, 32, 64`입니다.  
-두 형태 모두 `128`이 `columnName` 바로 앞에, `256`이 `columnDataType` 바로 뒤에 있는 동안에는 `128`과 `256`을 빼고 7개 항목으로 순서를 기록합니다. 따라서 새 문서는 여전히 `1, 2, 4, 8, 16, 32, 64`를 기록하며, 순서에서 두 값을 한 번도 옮기지 않은 파일은 바이트가 그대로 유지됩니다. 그 밖의 경우에는 9개 항목을 모두 기록합니다.  
+저장 형태는 `128`이 `columnName` 바로 앞에, `256`이 `columnDataType` 바로 뒤에 있는 동안에는 `128`과 `256`을 빼고 7개 항목으로 순서를 기록합니다. 따라서 새 문서는 여전히 `1, 2, 4, 8, 16, 32, 64`를 기록하며, 순서에서 두 값을 한 번도 옮기지 않은 파일은 바이트가 그대로 유지됩니다. 그 밖의 경우에는 9개 항목을 모두 기록합니다.  
 파싱할 때는 7개 항목으로 된 순서라면 7개 값이 어떤 순서로 되어 있든 두 값을 그 자리에 넣고, 모든 타입을 담은 9개 항목은 그대로 받습니다.  
 `5.0.0`부터는 그 밖의 순서도 받습니다. 알고 있는 `ColumnType`은 주어진 순서대로 한 번씩만 남기고 다른 항목은 모두 버립니다. 어떤 `ColumnType`도 가리키지 않는 값(이후 릴리스가 추가하는 타입 등)과 같은 타입의 두 번째 항목이 그렇습니다. 순서에 빠진 타입은 기본 순서에서 그 앞에 있는 타입 중 순서가 갖고 있는 가장 가까운 타입 바로 뒤에 들어가고, 앞에 있는 것이 없으면 뒤에 있는 가장 가까운 타입 바로 앞에 들어갑니다. 7개 항목에서 `128`과 `256`이 자리를 찾는 방식이 이것입니다. 아는 타입을 하나도 담지 않은 순서나 배열이 아닌 값만 기본 순서로 읽습니다.  
 그래서 이후 릴리스가 저장한 파일은 이 릴리스가 아는 타입의 순서로 열리고, 여기서 저장하면 나머지를 뺀 그 순서가 기록됩니다. `5.0.0` 이전에는 그 밖의 순서를 기본 순서로 읽었으므로 그런 파일은 컬럼 순서가 초기화되어 열렸습니다. JSON Schema는 7개 또는 9개의 정수를 받습니다.
@@ -224,18 +225,18 @@ const NameViewMode = {
 `4.0.0`부터 `Language`에는 `Mermaid`부터 `JSONSchema`까지 8개의 [Code Generator](../../guide/guides/code-generator.md) 대상이 더 있습니다. 파서가 알지 못하는 `language`는 `GraphQL`로 읽히므로, `4.0.0` 이전 에디터는 이 중 하나로 저장된 문서를 GraphQL로 열며, 그 에디터에서 저장하면 GraphQL이 기록됩니다.
 
 `4.0.0`부터 `lockSettings`가 `ignoreSaveSettings`를, `LockSettingType`이 제거된 `SaveSettingType`을 대신합니다. `lockSettings`는 문서가 잠글 때의 값 그대로 저장하는 설정을 나타냅니다. 원점을 확대/축소 레벨 없이 저장하면 다른 곳에서 열리므로 `viewport`는 `originX`, `originY`, `zoomLevel`을 함께 다루며, 나머지 비트는 각각 이름과 같은 필드를 다룹니다. 이 비트들은 설정 탭 [`Lock`](../../guide/guides/settings.md#잠금) 목록의 각 행에 해당합니다.  
-잠긴 설정은 에디터에 무엇이 표시되든 `value`와 `runtimeValue` 모두에서 잠긴 값으로 기록되며, 나머지 설정은 현재 상태 그대로 기록됩니다. 따라서 해당 잠금이 켜져 있는 동안에는 스크롤하거나 확대/축소하거나, 탭을 전환하거나, Code Generator 언어나 이름 케이스, 괄호 타입을 바꾸거나, 이름 표시를 전환해도 파일은 그대로 유지됩니다. 잠그면 그 순간 설정이 가진 값이 잠기며, 파싱할 때는 저장된 필드에서 잠긴 값을 가져옵니다.  
+파일에는 잠긴 설정이 에디터에 무엇이 표시되든 잠긴 값으로, 나머지 설정은 현재 상태 그대로 담깁니다. 따라서 해당 잠금이 켜져 있는 동안에는 스크롤하거나 확대/축소하거나, 탭을 전환하거나, Code Generator 언어나 이름 케이스, 괄호 타입을 바꾸거나, 이름 표시를 전환해도 파일은 그대로 유지됩니다. 잠그면 그 순간 설정이 가진 값이 잠기며, 파싱할 때는 저장된 필드에서 잠긴 값을 가져옵니다.  
 새 에디터나 복제 store, 또는 `value`에 할당하거나 `setInitialValue()`에 넘긴 빈 값처럼 아무것도 없는 상태에서 시작한 문서는 `lockSettings`가 `63`으로 설정되어 모든 잠금이 켜져 있습니다. `ignoreSaveSettings`와 상관없이 `4.0.0` 이전에 저장된 모든 파일과 모든 v2 문서처럼 `settings`에 `lockSettings`가 없는 문서도 모든 잠금이 켜진 상태로 열립니다. 화면과 탭은 새 문서와 같은 곳(`originX`와 `originY`는 `0`, `zoomLevel`은 `1`, ERD 탭)에 놓이며, 언어, 이름 케이스, 괄호 타입은 저장된 값으로 잠깁니다. 잠금을 명시한 문서는 `0`을 포함해 그 잠금과 저장된 모든 값을 유지합니다.  
 파싱할 때 `lockSettings`의 모든 비트는 알 수 없는 비트까지 유지되므로, 이후 릴리스가 추가하는 잠금도 여기서 저장할 때 남아 있습니다. JSON Schema는 정수인지만 검사합니다. `4.0.0` 이전 에디터는 저장할 때 `lockSettings`를 버리고 화면과 탭을 현재 상태 그대로 기록하므로, 그 파일을 여기서 다시 열면 `4.0.0` 이전에 저장된 파일로 열립니다.
 
 `4.2.0`부터 일곱 번째 잠금인 `unlockNameViewMode`(`64`)가 있습니다. `Name View` 행에 해당하며 `nameViewMode`를 다룹니다. 이 비트는 `Show`의 숨기기 비트처럼 다른 잠금 비트와 반대로 읽힙니다. 설정되어 있으면 이름 표시의 잠금이 해제된 것이고, 꺼져 있으면 잠긴 것입니다. 따라서 `63`은 여전히 모든 잠금이 켜져 있다는 뜻이며, 새 문서는 이름 표시가 `'physical'`로 잠긴 상태로 이 값을 가집니다. `4.2.0` 이전에 저장된 파일은 다른 잠금이 어떻든, `0`이더라도 이 비트가 꺼져 있으므로 이름 표시가 `'physical'`로 잠긴 상태로 열립니다. 모든 잠금이 꺼진 문서는 `64`를, 나머지 잠금이 모두 켜져 있고 이름 표시의 잠금만 해제된 문서는 `127`을 가집니다. 이 잠금은 반대로 검사하세요. `(lockSettings & 64) === 0`인 동안 켜져 있습니다.  
-이 잠금이 켜져 있는 동안에는 이름 표시를 전환해도 전환한 에디터의 화면만 바뀌며, 문서는 잠긴 보기를 유지합니다. 꺼져 있는 동안에는 편집할 수 있는 에디터에서 한 전환이 문서의 전환이 되며, 모든 공동 편집자가 함께 전환됩니다. 읽기 전용 에디터의 전환은 어느 쪽이든 그 에디터 자신의 화면만 바꿉니다. [`Lock`](../../guide/guides/settings.md#잠금) 문서를 참고하세요.  
+비트가 꺼져 있는 동안 파일은 어떤 에디터에 무엇이 표시되든 `nameViewMode`를 잠긴 보기로 담고, 켜져 있는 동안에는 현재 보기를 담습니다. 잠금이 켜져 있을 때와 꺼져 있을 때 각 에디터에 무엇이 표시되는지는 [`Lock`](../../guide/guides/settings.md#잠금) 문서를 참고하세요.  
 `4.0.0`이나 `4.1.0` 에디터는 저장할 때 이 비트는 유지하지만 `nameViewMode`는 버리므로, 그 문서를 여기서 다시 열면 잠금은 그대로인 채 `'physical'`로 열립니다.
 
 `4.0.0`부터 `ddlScripts`는 [Schema SQL](../../guide/guides/schema-sql.md) 탭의 두 스크립트를 담으며, 모든 데이터베이스의 DDL이 이를 작성합니다. `before`는 헤더 다음, 테이블 앞에, `after`는 생성된 DDL 뒤에 놓입니다. [앞뒤 스크립트](../../guide/guides/schema-sql.md#앞뒤-스크립트)에서 설명하듯이 DDL은 각 스크립트를 LF 줄바꿈으로, 앞의 빈 줄과 뒤의 공백을 제거하고, MSSQL에서는 `GO`로 끝맺어 작성합니다. `ddlScripts` 자체는 각 스크립트를 입력한 그대로 유지합니다. 이 키는 둘 중 하나의 스크립트에 텍스트가 있을 때만 기록되며, 그때는 두 스크립트가 모두 기록됩니다. 키가 없거나 스크립트가 문자열이 아니면 `''`로 읽힙니다. 탭의 `Statements`, `Header`, `Tables` 선택과, `4.2.0`부터는 [`Write logical names into empty comments`](../../guide/guides/schema-sql.md#logical-names-as-comments) 스위치도 문서에 저장되지 않습니다.  
 `4.0.0` 이전 에디터는 문서를 불러올 때 스크립트를 버리므로, 그 에디터에서 저장하면 스크립트가 사라집니다.
 
-`4.2.0`부터 `nameViewMode`는 [이름 표시](../../guide/guides/logical-names.md#name-view), 즉 다이어그램이 그리는 이름입니다. `'physical'`은 각 테이블과 컬럼의 이름을, `'logical'`은 이름 자리에 논리명을, `'both'`는 논리명과 이름을 그립니다. 메뉴에서는 이를 각각 `Physical Names`, `Logical Names`, `Both Names`라고 부릅니다. 두 형태 모두 이 값을 `ddlScripts` 뒤 마지막에, 기록하는 값이 `'physical'`이 아닐 때만 기록합니다. `Name View` 잠금이 켜져 있는 동안 기록하는 값은 화면에 무엇이 표시되든 잠긴 값입니다. 값이 없거나 파서가 알지 못하는 값이면 `'physical'`로 읽히며, JSON Schema는 `"logical"`과 `"both"`만 받습니다.  
+`4.2.0`부터 `nameViewMode`는 [이름 표시](../../guide/guides/logical-names.md#name-view), 즉 다이어그램이 그리는 이름입니다. `'physical'`은 각 테이블과 컬럼의 이름을, `'logical'`은 이름 자리에 논리명을, `'both'`는 논리명과 이름을 그립니다. 메뉴에서는 이를 각각 `Physical Names`, `Logical Names`, `Both Names`라고 부릅니다. 저장 형태는 이 값을 `ddlScripts` 뒤 마지막에, 기록하는 값이 `'physical'`이 아닐 때만 기록합니다. 값이 없거나 파서가 알지 못하는 값이면 `'physical'`로 읽히며, JSON Schema는 `"logical"`과 `"both"`만 받습니다.  
 `4.2.0` 이전 에디터는 문서를 불러올 때 `nameViewMode`를 버립니다.
 
 `Database`, `Language`, `Show`, `ColumnType`, `ColumnOption`, `LockSettingType`, `ReferentialAction`은 추가만 가능합니다. 저장된 문서에는 숫자가 기록되므로, 새로운 데이터베이스 벤더, 코드 생성 대상, 플래그, 컬럼 타입, 컬럼 옵션, 잠금, 동작은 중간 자리를 차지하지 않고 다음 비트를 사용합니다.
@@ -244,52 +245,42 @@ const NameViewMode = {
 
 ```ts
 type Doc = {
-  tableIds: string[];
-  relationshipIds: string[];
-  indexIds: string[];
-  memoIds: string[];
+  tableIds?: string[];
+  relationshipIds?: string[];
+  indexIds?: string[];
+  memoIds?: string[];
   tableGroupIds?: string[];
-  wordIds?: string[]; // runtime only
-  termIds?: string[]; // runtime only
-  domainIds?: string[]; // runtime only
 };
 ```
 
-처음 다섯 목록은 각각 한 종류 엔티티의 순서이며, DDL, 테이블 정렬, 그리기 순서가 이 순서를 읽습니다. 저장 형태에서 각 목록에는 남아 있는 엔티티의 id만 나열된 순서대로 한 번씩 담기며, `4.2.0`부터는 아무것도 담지 않은 목록은 제외됩니다. `4.0.0`부터 `tableGroupIds`는 테이블 그룹의 순서입니다.
+각 목록은 한 종류 엔티티의 순서이며, DDL, 테이블 정렬, 그리기 순서가 이 순서를 읽습니다. 각 목록에는 파일이 기록하는 엔티티의 id만 나열된 순서대로 한 번씩 담기며, `4.2.0`부터는 아무것도 담지 않은 목록은 제외됩니다. `4.0.0`부터 `tableGroupIds`는 테이블 그룹의 순서입니다. 사전의 행은 각 시트의 순서대로 놓이므로 사전에는 여기에 목록이 없으며([사전 행](#dictionary-rows) 참고), JSON Schema는 `doc`에 다른 키를 받지 않습니다.
 
-`4.2.0`부터 `wordIds`, `termIds`, `domainIds`는 각 사전의 삭제되지 않은 행을 나열합니다. 컬렉션에는 있지만 목록에는 없는 행은 삭제된 것입니다. 이 목록은 시트의 순서가 아니며, 시트의 순서는 각 행의 `order`가 정합니다. 이 목록은 런타임 값만 기록하며, 각 목록은 그 목록이나 컬렉션에 항목이 있는 동안 기록됩니다. 파일에서는 행 자체가 구성원과 순서를 나타내며, JSON Schema는 이 목록을 거부합니다.  
 `4.2.0`부터 파싱할 때 문서가 생략했거나 배열이 아닌 값으로 가진 목록은 그 컬렉션이 가진 모든 항목을, 각 id를 한 번씩, 담긴 순서대로 나열한 것으로 읽습니다. 빈 배열은 비어 있는 그대로 남으며, 이때 그 컬렉션의 모든 항목은 삭제된 것으로 읽힙니다. `4.2.0` 이전 에디터는 없는 목록을 비어 있는 것으로 읽으므로, 저장 형태는 컬렉션에 엔티티가 있으면 항상 각 목록을 기록합니다.
 
-`4.0.0`부터 쌓임 순서는 저장되지 않습니다. 파싱할 때 나열된 테이블, 메모, 테이블 그룹 중 `zIndex`가 없는 것은 각자의 목록에서의 위치에 따라, 뒤에 있는 것이 앞에 오도록 쌓입니다. 테이블 그룹은 `1`부터, 테이블은 `2`부터 시작하며, 메모는 모든 테이블 위에 놓입니다. 런타임 값이나 `4.0.0` 이전에 저장된 파일처럼 `zIndex`가 있는 엔티티는 그 값을 유지합니다. 따라서 테이블이나 메모를 맨 앞으로 가져온 것은 파일을 다시 열면 사라집니다.
+`4.0.0`부터 파일에는 쌓임 순서가 담기지 않습니다. 불러올 때 나열된 테이블과 메모는 각자의 목록에서의 위치에 따라, 뒤에 있는 것이 앞에 오고 모든 메모가 모든 테이블 위에 오도록 쌓이며, 테이블 그룹도 서로 같은 방식으로 쌓이되 테이블 뒤에 놓입니다. `4.0.0` 이전에 저장된 파일의 테이블이나 메모는 `ui`에 `zIndex`를 가지고 있는데, 불러올 때는 이를 쌓임 위치로 유지하고 다음 저장에서는 제외합니다. 따라서 테이블이나 메모를 맨 앞으로 가져온 것은 파일을 다시 열면 사라집니다.
 
 ### Collection: tableEntities
 
 ```ts
 type Table = {
   id: string;
-  name: string;
+  name?: string;
   logicalName?: string;
-  comment: string;
+  comment?: string;
   columnIds: string[];
-  seqColumnIds: string[]; // runtime only
   groupId?: string;
-  nameDerived?: boolean;
+  nameDerived?: true;
   ui: TableUI;
 };
 
 type TableUI = {
   x: number;
   y: number;
-  zIndex: number; // runtime only
-  widthName: number; // runtime only
-  widthLogicalName: number; // runtime only
-  widthComment: number; // runtime only
-  color: string;
+  color?: string;
 };
 ```
 
-`4.0.0`부터 테이블은 자신이 속한 [테이블 그룹](../../guide/guides/table-groups.md)의 id인 `groupId`를 가집니다. `groupId`가 없거나 비어 있거나 `doc.tableGroupIds`에 없는 그룹을 가리키면 그룹이 없는 것이며, 저장 형태는 남아 있는 그룹을 가리킬 때만 이 필드를 기록합니다.  
-파싱할 때 `seqColumnIds`가 없거나 나열된 id가 빠져 있으면 `columnIds`로 시작하며, 에디터는 불러올 때마다 자체 폰트로 `widthName`, `widthLogicalName`, `widthComment`를 다시 측정합니다.
+`4.0.0`부터 테이블은 자신이 속한 [테이블 그룹](../../guide/guides/table-groups.md)의 id인 `groupId`를 가집니다. `groupId`가 없거나 비어 있거나 `doc.tableGroupIds`에 없는 그룹을 가리키면 그룹이 없는 것이며, 저장 형태는 남아 있는 그룹을 가리킬 때만 이 필드를 기록합니다.
 
 `4.2.0`부터 테이블은 `logicalName`과 `nameDerived`를 가집니다. `logicalName`은 `Logical Names`와 `Both Names` [보기](../../guide/guides/logical-names.md#name-view)가 그리는 이름이며, 없으면 `''`입니다. `nameDerived`는 사전이 논리명에서 `name`을 [생성한](../../guide/guides/dictionary.md#deriving-physical-names) 동안 `true`입니다. 이 값이 설정되어 있는 동안에는 새 논리명이 이름을 다시 생성합니다. 설정되어 있지 않으면 이름은 직접 입력한 이름이며, 이름이 비어 있거나 공백뿐인 경우가 아니면 새 논리명은 이름을 그대로 둡니다. 직접 이름을 바꾸면 이 값이 꺼지며, [`Derive Physical Names Again`](../../guide/guides/dictionary.md#derive-physical-names-again)은 직접 입력한 이름까지 다시 쓰고 논리명이 있는 곳마다 이 값을 켭니다.  
 저장 형태는 `logicalName`을 `name` 뒤에 입력한 그대로, 공백 외의 텍스트가 있을 때만 기록하고, `nameDerived`를 `groupId` 뒤에 `true`일 때만 기록합니다. `true`는 JSON Schema가 받는 유일한 값입니다. 없는 `logicalName`은 `''`로, 없는 `nameDerived`는 `false`로 읽히므로, `4.2.0` 이전에 저장된 파일의 모든 이름은 직접 입력한 이름으로 간주됩니다.  
@@ -301,24 +292,13 @@ type TableUI = {
 type Column = {
   id: string;
   tableId: string;
-  name: string;
-  comment: string;
-  dataType: string;
-  default: string;
+  name?: string;
+  comment?: string;
+  dataType?: string;
+  default?: string;
   options: number; // Constants: ColumnOption
   logicalName?: string;
   domainId?: string;
-  ui: ColumnUI; // runtime only
-};
-
-type ColumnUI = {
-  keys: number; // Constants: ColumnUIKey
-  widthName: number;
-  widthLogicalName: number;
-  widthComment: number;
-  widthDataType: number;
-  widthDomain: number;
-  widthDefault: number;
 };
 
 // Constants
@@ -329,17 +309,12 @@ const ColumnOption = {
   notNull: 8,
   nameDerived: 16,
 } as const;
-
-const ColumnUIKey = {
-  primaryKey: 1,
-  foreignKey: 2,
-} as const;
 ```
 
-`4.0.0`부터 저장 형태에는 컬럼 `ui`가 기록되지 않습니다. 불러올 때마다 `keys`를 계산하며, primary key 표시는 `options`의 `primaryKey` 비트에서, foreign key 표시는 그 컬럼에서 끝나는 관계에서 가져옵니다. 여섯 가지 너비도 다시 측정합니다.  
+`4.0.0`부터 파일에는 키 표시가 담기지 않습니다. 불러올 때마다 `options`의 `primaryKey` 비트에 따라 컬럼을 primary key로 표시하고, 그 테이블에서 관계가 이 컬럼에서 끝나는 동안 foreign key로 표시합니다.  
 `4.0.0` 이전 에디터는 여기서 저장한 파일의 컬럼을 primary key 아이콘 없이 표시합니다.
 
-`4.2.0`부터 컬럼은 테이블과 마찬가지로 `logicalName`을 가지며, 컬럼이 연결한 도메인의 id인 `domainId`도 가집니다. 연결된 도메인이 없으면 `domainId`는 `''`입니다. 한 에디터 안의 편집은 [도메인과 데이터 타입](../../guide/guides/dictionary.md#domains-and-data-types)에서 설명하듯이 연결된 컬럼을 그 도메인의 데이터 타입으로 유지합니다. 하지만 파싱할 때는 어떤 컬럼의 타입도 바꾸지 않으므로, 다른 곳에서 작성한 파일이나 두 공동 편집자의 엇갈린 편집 때문에 연결된 컬럼이 다른 타입으로 남을 수 있습니다. 검사 시트는 이런 컬럼을 각각 [`Domain type mismatch`](../../guide/guides/dictionary.md#what-each-check-finds)로 나열합니다. 파싱할 때 문서에 없는 도메인을 가리키는 `domainId`는 지워집니다. 삭제된 도메인도 있는 것으로 치므로, 에디터는 Undo로 그 도메인을 되살릴 수 있는 동안 그 도메인으로의 연결을 유지합니다. 저장 형태는 `options` 뒤에 `logicalName`을 테이블과 같은 규칙으로 기록하고, `domainId`는 파일이 기록하는 도메인을 가리킬 때만 기록하므로, 삭제된 도메인으로의 연결은 절대 기록하지 않습니다.  
+`4.2.0`부터 컬럼은 테이블과 마찬가지로 `logicalName`을 가지며, 컬럼이 연결한 도메인의 id인 `domainId`도 가집니다. 연결된 도메인이 없으면 `domainId`는 `''`입니다. 한 에디터 안의 편집은 [도메인과 데이터 타입](../../guide/guides/dictionary.md#domains-and-data-types)에서 설명하듯이 연결된 컬럼을 그 도메인의 데이터 타입으로 유지합니다. 하지만 파싱할 때는 어떤 컬럼의 타입도 바꾸지 않으므로, 다른 곳에서 작성한 파일이나 두 공동 편집자의 엇갈린 편집 때문에 연결된 컬럼이 다른 타입으로 남을 수 있습니다. 검사 시트는 이런 컬럼을 각각 [`Domain type mismatch`](../../guide/guides/dictionary.md#what-each-check-finds)로 나열합니다. 파싱할 때 파일에 없는 도메인을 가리키는 `domainId`는 지워집니다. 저장 형태는 `options` 뒤에 `logicalName`을 테이블과 같은 규칙으로 기록하고, `domainId`는 파일이 기록하는 도메인을 가리킬 때만 기록하므로, 삭제된 도메인이나 파일이 제외하는 도메인에 연결된 컬럼은 연결 없이, 그 컬럼이 가진 데이터 타입과 함께 기록됩니다.  
 `ColumnOption.nameDerived`(`16`)는 컬럼의 이름 생성 여부 플래그로, 다른 비트와 함께 `options`에 담기며 테이블의 `nameDerived`와 같은 의미입니다. 예를 들어 사전이 이름을 생성한 NOT NULL primary key는 `options`가 `26`입니다.  
 `4.2.0` 이전 에디터는 문서를 불러올 때 `logicalName`과 `domainId`를 버리므로, 그 에디터에서 저장하면 둘이 사라집니다. `options`는 숫자 그대로 유지하므로, 그 에디터에서 저장해도 `nameDerived` 비트는 남아 있습니다.
 
@@ -348,9 +323,7 @@ const ColumnUIKey = {
 ```ts
 type Relationship = {
   id: string;
-  identification: boolean; // runtime only
   relationshipType: number; // Constants: RelationshipType
-  startRelationshipType: number; // Constants: StartRelationshipType; runtime only
   onDelete: number; // Constants: ReferentialAction
   onUpdate: number; // Constants: ReferentialAction
   start: RelationshipPoint;
@@ -360,9 +333,6 @@ type Relationship = {
 type RelationshipPoint = {
   tableId: string;
   columnIds: string[];
-  x: number; // runtime only
-  y: number; // runtime only
-  direction: number; // Constants: Direction; runtime only
 };
 
 // Constants
@@ -373,11 +343,6 @@ const RelationshipType = {
   OneN: 16,
 } as const;
 
-const StartRelationshipType = {
-  ring: 1,
-  dash: 2,
-} as const;
-
 const ReferentialAction = {
   none: 1,
   noAction: 2,
@@ -386,35 +351,25 @@ const ReferentialAction = {
   setDefault: 16,
   restrict: 32,
 } as const;
-
-const Direction = {
-  left: 1,
-  right: 2,
-  top: 4,
-  bottom: 8,
-} as const;
 ```
 
 `3.10.0`부터 관계는 [ON DELETE와 ON UPDATE 동작](../../guide/guides/relationship-editing.md#on-delete와-on-update)을 나타내는 `onDelete`와 `onUpdate`를 가집니다. 각각 정확히 하나의 `ReferentialAction` 값을 가집니다. 기본값인 `none`은 절을 작성하지 않으므로 데이터베이스 자체의 기본 동작이 적용됩니다. 나머지 5가지는 각각 `NO ACTION`, `CASCADE`, `SET NULL`, `SET DEFAULT`, `RESTRICT`를 나타냅니다. Schema SQL은 해당 동작을 받아들이는 데이터베이스에서만 절을 작성합니다.  
 저장 형태는 항상 두 필드를 모두 기록하며, `4.0.0`부터 JSON Schema는 두 필드를 필수로 요구하되 각 값이 정수인지만 검사합니다. 파싱할 때는 여전히 `3.10.0` 이전에 저장된 모든 문서처럼 필드가 없으면 `none`으로 읽으며, 목록에 없는 값도 마찬가지입니다.  
 `3.10.0` 이전 에디터는 이 필드를 알지 못해 문서를 불러올 때 버리므로, 그 에디터에서 저장하면 모든 동작이 사라집니다.
 
-`4.0.0`부터는 불러올 때마다 저장 형태가 제외하는 것을 계산합니다. 관계가 끝나는 컬럼이 모두 primary key이면 식별 관계이며, 그런 컬럼이 모두 NOT NULL이면 `startRelationshipType`은 `dash`, 아니면 `ring`입니다. 끝나는 컬럼이 하나도 남지 않은 관계는 새 관계가 시작할 때처럼 비식별 관계이며 `dash`입니다. 앵커인 `x`, `y`, `direction`은 다시 배치됩니다.
+`4.0.0`부터는 불러올 때마다 관계가 식별 관계인지, 부모 쪽 끝이 어떻게 그려지는지를 관계가 끝나는 컬럼 중 자식 테이블이 아직 나열하고 있는 것에서 읽습니다. 그런 컬럼이 모두 primary key인 동안은 식별 관계로 실선이며, 그런 컬럼이 모두 NOT NULL인 동안 부모 쪽 끝은 막대 2개이고 아니면 고리와 막대입니다. 그런 컬럼이 하나도 남지 않은 관계는 새 관계가 시작할 때처럼 막대 2개를 가진 비식별 관계입니다. [연결선 읽기](../../guide/guides/relationship-editing.md#연결선-읽기) 문서를 참고하세요.
 
 ### Collection: indexEntities
 
 ```ts
 type Index = {
   id: string;
-  name: string;
+  name?: string;
   tableId: string;
   indexColumnIds: string[];
-  seqIndexColumnIds: string[]; // runtime only
   unique: boolean;
 };
 ```
-
-파싱할 때 `seqIndexColumnIds`가 없거나 나열된 id가 빠져 있으면 `indexColumnIds`로 시작합니다.
 
 ### Collection: indexColumnEntities
 
@@ -438,7 +393,7 @@ const OrderType = {
 ```ts
 type Memo = {
   id: string;
-  value: string;
+  value?: string;
   ui: MemoUI;
 };
 
@@ -447,20 +402,19 @@ type MemoUI = {
   y: number;
   width: number;
   height: number;
-  zIndex: number; // runtime only
-  color: string;
+  color?: string;
 };
 ```
 
-`4.0.0`부터 테이블과 메모는 `zIndex`로 정렬되는 [하나의 쌓임 순서를 공유](../../guide/guides/table-related-functions.md#여러-테이블-이동)하므로, 테이블을 맨 앞으로 가져오면 메모 위에 놓일 수 있습니다. [Doc](#doc)에서 설명하듯이 파싱할 때 `zIndex` 없이 저장된 메모는 모든 테이블 위에 쌓입니다. `4.0.0` 이전에 저장된 파일의 메모는 저장된 `zIndex`를 유지하는데, 이 값은 테이블과 같은 카운터에서 나왔으므로 이전 릴리스가 모든 테이블 위에 그리던 메모가 그 뒤에 맨 앞으로 가져온 테이블 아래에서 열릴 수 있습니다.
+`4.0.0`부터 테이블과 메모는 [하나의 쌓임 순서를 공유](../../guide/guides/table-related-functions.md#여러-테이블-이동)하므로, 테이블을 맨 앞으로 가져오면 메모 위에 놓일 수 있습니다. [Doc](#doc)에서 설명하듯이 불러올 때 모든 메모가 모든 테이블 위에 놓입니다. `4.0.0` 이전에 저장된 파일의 메모는 저장된 `zIndex`를 유지하는데, 이 값은 테이블과 같은 카운터에서 나왔으므로 이전 릴리스가 모든 테이블 위에 그리던 메모가 그 뒤에 맨 앞으로 가져온 테이블 아래에서 열릴 수 있습니다.
 
 ### Collection: tableGroupEntities
 
 ```ts
 type TableGroup = {
   id: string;
-  name: string;
-  color: string;
+  name?: string;
+  color?: string;
   ui: TableGroupUI;
 };
 
@@ -469,7 +423,6 @@ type TableGroupUI = {
   y: number;
   width: number;
   height: number;
-  zIndex: number; // runtime only
 };
 ```
 
@@ -487,7 +440,7 @@ type DictionaryRows = {
 };
 ```
 
-세 사전은 모두 id를 키로 사용하지 않습니다. 각 사전은 헤더와 행으로 기록됩니다. `fields`는 엔티티의 필드를 id부터 한 번씩 나열하며, 각 행은 한 엔티티의 값을 그 순서로 담습니다. 아래 타입은 각 엔티티의 필드를 런타임 값의 헤더 순서로 나열합니다. 행은 항상 id와 이름을 유지하지만 이름 뒤의 값 중 끝에 이어진 빈 값은 생략되므로, 유지되는 값 앞에 있는 빈 값은 `''`로 남으며, 파싱할 때 행에 없는 값은 `''`로 읽힙니다. 두 형태 모두 각 행을 다음 파일의 두 단어처럼 압축된 JSON으로 한 줄에 하나씩 기록합니다.
+세 사전은 모두 id를 키로 사용하지 않습니다. 각 사전은 헤더와 행으로 기록됩니다. `fields`는 엔티티의 필드를 id부터 한 번씩 나열하며, 각 행은 한 엔티티의 값을 그 순서로 담습니다. 아래 타입은 각 엔티티의 필드를 그 순서로 나열합니다. 행은 항상 id와 이름을 유지하지만 이름 뒤의 값 중 끝에 이어진 빈 값은 생략되므로, 유지되는 값 앞에 있는 빈 값은 `''`로 남으며, 파싱할 때 행에 없는 값은 `''`로 읽힙니다. 각 행은 다음 파일의 두 단어처럼 압축된 JSON으로 한 줄에 하나씩 기록됩니다.
 
 ```json
 "wordEntities": {
@@ -507,8 +460,8 @@ type DictionaryRows = {
 }
 ```
 
-저장 형태는 나열된 행을 시트 순서대로 기록하고 `order`는 제외하므로, 헤더에도 `order`가 없습니다. 추가한 뒤 한 번도 채우지 않았거나 비운 행처럼 id 외의 값이 모두 비어 있거나 공백뿐인 행은 제외되며, 그런 도메인이나 삭제된 도메인으로의 모든 연결도 제외됩니다. 컬럼의 `domainId`는 생략되고, 용어의 `domainId`는 `''`로 기록되며, 그 용어에 다른 값이 없으면 용어 자체가 제외됩니다.  
-런타임 값의 헤더에는 `"name"` 바로 뒤에 `"order"`가 있습니다. 런타임 값은 삭제된 행을 포함해 컬렉션이 가진 모든 행을 컬렉션에 담긴 순서대로 기록하므로, 시트의 순서를 얻으려면 `order`를 코드 유닛 순서로 비교해 정렬하세요. 파싱할 때는 파일의 행이 놓인 순서대로 `order` 키를 부여하므로, 행은 파일이 기록한 순서대로 다시 읽힙니다.  
+저장 형태는 각 시트의 행을 시트의 순서대로 기록하고 순서 필드는 없으므로, 파일의 행이 곧 사전의 구성원이며 그 순서입니다. 추가한 뒤 한 번도 채우지 않았거나 비운 행처럼 id 외의 값이 모두 비어 있거나 공백뿐인 행은 제외되며, 그런 도메인이나 삭제된 도메인으로의 모든 연결도 제외됩니다. 컬럼의 `domainId`는 생략되고, 용어의 `domainId`는 `''`로 기록되며, 그 용어에 다른 값이 없으면 용어 자체가 제외됩니다.  
+파싱할 때는 행을 놓인 순서대로 읽으므로, 각 시트는 행을 파일이 기록한 순서대로 나열합니다.  
 `4.2.0` 이전에 저장된 문서처럼 사전이 기록되지 않은 문서에는 단어, 용어, 도메인이 하나도 없습니다. `4.2.0` 이전 에디터는 문서를 불러올 때 세 사전을 모두 버리므로, 그 에디터에서 저장하면 모든 단어, 용어, 도메인이 사라집니다.
 
 ### Collection: wordEntities {#collection-wordentities}
@@ -517,12 +470,11 @@ type DictionaryRows = {
 type Word = {
   id: string;
   name: string;
-  order: string; // runtime only
-  abbreviation: string;
-  englishName: string;
-  description: string;
-  synonyms: string;
-  forbiddenWords: string;
+  abbreviation?: string;
+  englishName?: string;
+  description?: string;
+  synonyms?: string;
+  forbiddenWords?: string;
 };
 ```
 
@@ -534,15 +486,14 @@ type Word = {
 type Term = {
   id: string;
   name: string;
-  order: string; // runtime only
-  physicalName: string;
-  domainId: string;
-  description: string;
-  synonyms: string;
+  physicalName?: string;
+  domainId?: string;
+  description?: string;
+  synonyms?: string;
 };
 ```
 
-용어는 논리명 전체입니다. `logicalName`이 `name`과 일치하는 테이블이나 컬럼에는 `physicalName`이, 그 값이 비어 있으면 단어의 약어로 조합한 이름이 생성되며, 컬럼은 `domainId`가 가리키는 도메인도 받습니다. 도메인이 없으면 `domainId`는 `''`입니다([물리명 생성](../../guide/guides/dictionary.md#deriving-physical-names) 참고). `synonyms`는 쉼표로 구분합니다. 파싱할 때 컬럼에서와 마찬가지로 없는 도메인을 가리키는 `domainId`는 지워집니다.
+용어는 논리명 전체입니다. `logicalName`이 `name`과 일치하는 테이블이나 컬럼에는 `physicalName`이, 그 값이 비어 있으면 단어의 약어로 조합한 이름이 생성되며, 컬럼은 `domainId`가 가리키는 도메인도 받습니다. 도메인이 없으면 `domainId`는 `''`입니다([물리명 생성](../../guide/guides/dictionary.md#deriving-physical-names) 참고). `synonyms`는 쉼표로 구분합니다. 파싱할 때 컬럼에서와 마찬가지로 파일에 없는 도메인을 가리키는 `domainId`는 지워집니다.
 
 ### Collection: domainEntities {#collection-domainentities}
 
@@ -550,10 +501,9 @@ type Term = {
 type Domain = {
   id: string;
   name: string;
-  order: string; // runtime only
-  category: string;
-  dataType: string;
-  description: string;
+  category?: string;
+  dataType?: string;
+  description?: string;
 };
 ```
 
@@ -572,7 +522,7 @@ type Domain = {
 
 `.erd.json` 파일 맨 위에 `$schema`를 넣으면 VS Code처럼 JSON Schema를 이해하는 에디터가 편집하는 동안 문서를 검증하고 필드를 자동완성합니다.
 
-`4.0.0`부터 스키마는 저장 형태만 기술합니다. 이름이 있는 필드를 가진 모든 객체는 닫혀 있고(`additionalProperties: false`), 저장 형태가 항상 기록하는 필드는 모두 필수이며, 아무것도 담지 않은 동안 저장 형태가 제외하는 필드는 명시되지만 필수는 아니고, 저장 형태가 항상 제외하는 필드는 하나도 명시되지 않습니다. 따라서 런타임 값은 거부됩니다. `4.0.0` 이전에 저장된 파일도 `meta`, 너비, `zIndex`, `ignoreSaveSettings` 등을 가지고 있으므로 `4.0.0` 이상의 에디터가 그 파일을 다시 저장하기 전까지 거부됩니다. `3.2.0` 이상에서 저장한 파일은 `main` 브랜치를 가리키는 이 스키마의 URL을 이미 지정하고 있으므로, 이 스키마로 검증하는 에디터는 이제 그 파일에 오류를 표시합니다. `3.0.0`이나 `3.1.0`에서 저장한 파일과 v2 문서는 `$schema`를 지정하지 않습니다.
+`4.0.0`부터 스키마는 저장 형태만 기술합니다. 이름이 있는 필드를 가진 모든 객체는 닫혀 있고(`additionalProperties: false`), 저장 형태가 항상 기록하는 필드는 모두 필수이며, 위 타입에서 `?`가 표시된 각 필드는 명시되지만 필수는 아니고, 그 밖의 필드는 명시되지 않습니다. 따라서 `4.0.0` 이전에 저장된 파일은 `meta`, 너비, `zIndex`, `ignoreSaveSettings` 등을 가지고 있으므로 `4.0.0` 이상의 에디터가 그 파일을 다시 저장하기 전까지 거부됩니다. `3.2.0` 이상에서 저장한 파일은 `main` 브랜치를 가리키는 이 스키마의 URL을 이미 지정하고 있으므로, 이 스키마로 검증하는 에디터는 이제 그 파일에 오류를 표시합니다. `3.0.0`이나 `3.1.0`에서 저장한 파일과 v2 문서는 `$schema`를 지정하지 않습니다.
 
 `4.2.0`부터 스키마는 엔티티의 텍스트 필드, `doc` 목록, 컬렉션, `collections` 자체를 더 이상 필수로 요구하지 않습니다. 저장 형태는 이들이 아무것도 담지 않은 동안 이들을 제외합니다. `4.0.0`이나 `4.1.0`이 저장한 파일도 여전히 받습니다. 새 필드도 명시합니다. `"logical"`과 `"both"`만 받는 `nameViewMode`, 테이블의 `logicalName`과 `true`만 받는 `nameDerived`, 컬럼의 `logicalName`과 `domainId`, 그리고 각각 헤더와 문자열 행을 가진 세 사전입니다. `canvasType`은 사전 탭을 나열하고, `columnOrder`는 7개 또는 9개의 정수를 받으며, `show`, `columnOrder`, `lockSettings`, `options`의 설명은 새 비트를 명시합니다.
 

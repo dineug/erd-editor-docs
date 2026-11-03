@@ -1,5 +1,5 @@
 ---
-sidebar_position: 2
+sidebar_position: 3
 description: Replicate a live editor into a headless store off the main thread, and serialize the document for storage.
 ---
 
@@ -88,6 +88,11 @@ Since `4.2.0` the same goes for a word, term, or domain removed from a [Dictiona
 When an editor undoes the removal, a replica seeded without the row lists it again empty, and since `value` leaves an empty row out, the replica saves the document without it.  
 For a domain, the columns and terms that linked it also stay unlinked in that replica, since it never held the links and the undo does not send them.
 
+Since `5.1.0`, [`@dineug/erd-editor-yjs`](./yjs.md) can also keep editors in step through a Yjs room.  
+Fed as above from an element bound to a room, a replica gets only the edits made on that element, never the ones the room brings in: those reach the element as another editor's, and a shared store never sends on what it received.  
+To store a room's document, save the bound element's `value`, or a bound peer store's, as [What the Room Holds](./yjs.md#what-the-room-holds) describes.  
+A Yjs persistence provider stores the room itself, which holds a runtime value and the edits made since it rather than a file; see [Limits](./yjs.md#limits).
+
 ## InjectEngineContext
 
 ### toWidth
@@ -154,7 +159,7 @@ It holds the live entities alone, in a fixed order, without the removed ones, th
 Since `4.2.0` it also holds the logical names, whether each name was derived from the dictionaries, the domain links, and the words, terms, and domains of the [Dictionary](../../guide/guides/dictionary.md) tab.  
 It also leaves out, since `4.2.0`, each empty text field of an entity, each `doc` list and collection that holds nothing, and `collections` itself when every collection is empty.  
 It is indented two spaces, with each dictionary row on a line of its own, and ends with a newline, so the same document always gives the same bytes.  
-See [Storage Form and Runtime Value](./schema.md#storage-form-and-runtime-value) for what it holds.
+See [Storage Form](./schema.md#storage-form) for what it holds.
 
 Each setting whose [lock](../../guide/guides/settings.md#lock) is on is written at the value it was locked at, and every other setting as it stands.  
 The `Viewport` lock covers the view origin and the zoom level together, and the tab, the Code Generator language, both name cases and the bracket type each have a lock of their own.  
@@ -172,6 +177,7 @@ const snapshot = replicationStore.runtimeValue;
 ```
 
 Use it to seed an editor or another store that joins later, through its `setInitialValue`; see [Collaborative Editing](./collaborative-editing.md).  
+A replica has no [getLWW](./collaborative-editing.md#getlww) or [getVersion](./collaborative-editing.md#getversion), so it hands no collaboration registers over with `runtimeValue`: an editor seeded from it takes them from the running editors, as [Seeding a Collaborator](./collaborative-editing.md#seeding-a-collaborator) describes.  
 Never store it as the file: it carries the removed entities, and the published [JSON Schema](./schema.md#json-schema) refuses it.  
 Those removed entities are what let an undo of a removal, sent later, bring the entity back whole in the store seeded from it.  
 They stay until the document is next opened from its file, whose form leaves them out.
@@ -230,7 +236,7 @@ Before `3.10.0` it received nothing, and a listener that ignores the argument ke
 `changed` is `false` when the actions since the previous `change`, or since the load, left `value` byte for byte as it was.
 
 A change that a [lock](../../guide/guides/settings.md#lock) leaves out of `value` still fires `change`, with `changed` set to `false`, so write only when `changed` is `true`.  
-That is a scroll or a zoom while `Viewport` is locked, a tab switch while `Canvas Type` is locked, and a change of the Code Generator language, a name case or the bracket type while its own lock is on.  
+That is a scroll or a zoom while `Viewport` is locked, a tab switch while `Canvas Type` is locked, and a change of the Code Generator language, a name case or the bracket type while its own lock is on, which since `5.1.0` only an editor before `5.1.0` still sends (see [dispatch, dispatchSync](#dispatch-dispatchsync)).  
 Since `4.2.0` so is a Name View switch while `Name View` is locked: the editor still sends it, but the replica drops it, as the other editors do.  
 A Name View switch made in a read-only editor is dropped the same way, whatever its lock.  
 The element's [change](../erd-editor-element.md#change) event leaves such a change out, but the replica still reports it.  
@@ -282,6 +288,23 @@ An editor before `4.2.0` in the session can still take some of this away from a 
 A Schema SQL, GraphQL, DBML, or AML `Import` on that editor, though not an `Import and Add`, empties the replica's words, terms, and domains.  
 Its undo of a load, an `Import`, or `clear()` loads its own copy of the document into the replica, without logical names, domain links, or dictionaries; see [Mixing Releases](./collaborative-editing.md#mixing-releases).  
 `@dineug/erd-editor/engine.js` exports the same `createReplicationStore`, `ReplicationStore` and `ReplicationChange` as before, and `createReplicationStore` takes the same context.
+
+`5.1.0` adds no action type and changes no export of `@dineug/erd-editor/engine.js`, so a replica from `4.2.0` on still keeps every change a `5.1.0` editor sends.  
+Since `5.1.0` the replica settles edits made at the same moment the way the `5.1.0` editors do; see [Concurrent Edits](./collaborative-editing.md#concurrent-edits).  
+It keeps a version for a table's position, for a memo's and a table group's position and size, and for the view origin and zoom level.  
+A `5.1.0` editor sends a drag, a pan, or a zoom as where it ends, through `table.moveTo`, `memo.moveTo`, `tableGroup.moveTo`, `settings.scrollTo` and `settings.changeZoomLevel`, and the replica takes each of those, and each `memo.resize` and `tableGroup.resize`, only when its version is not below the one it holds.  
+So when two of these editors move or resize one table, memo, or table group at the same moment, the replica saves it at the point and size every one of them shows, whatever order it hears them in, and a drag, pan, or zoom the transport delivers twice moves nothing twice.  
+With `Viewport` unlocked the replica saves the origin and the zoom level each from the write with the greatest version, where the editor that made it stood.  
+A zoom moves the origin as well, so a pan and a zoom that two editors make at the same moment can be saved as one editor's origin with the other's zoom level.  
+Before `5.1.0` the replica added every editor's pan and zoom steps onto one view.
+
+The distances an editor before `5.1.0` sends for a drag, a pan, or a zoom (`table.move`, `memo.move`, `tableGroup.move`, `settings.streamScrollTo` and `settings.streamZoomLevel`) are still added to what the replica holds, outside the versions.  
+A color change still arrives without a version: the replica, like each editor, stamps it with a version of its own and keeps the color it heard last, so two recolors of one table, memo, or table group made at the same moment can be saved apart from what an editor shows.  
+A replica before `5.1.0` applies the points and sizes in the order they arrive, so it can save a table elsewhere than the `5.1.0` editors show it.  
+Keep every editor in the session, and the replica, on `5.1.0` or later for edits made at the same moment to end alike, apart from the exceptions [Concurrent Edits](./collaborative-editing.md#concurrent-edits) lists.
+
+Since `5.1.0` an editor sends a change of the Code Generator language, a name case, or the bracket type only while that setting's lock is off, marked `shared: true` in its payload, and the replica applies every marked one, as the editors do; see [Collaborative Editing](./collaborative-editing.md).  
+The replica applies an unmarked one, which an editor before `5.1.0` sends whatever the lock, only while that setting is unlocked on its side, and drops it while the setting is locked (see [on@change](#onchange)).
 
 Since `4.0.0` both methods also apply `editor.mergeLWW`, which carries the collaboration registers an editor answers with when another one joins the session, so the replica settles concurrent edits the way the editors do.  
 It changes no byte of `value` and fires no `change`.  

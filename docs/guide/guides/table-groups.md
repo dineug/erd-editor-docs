@@ -55,9 +55,12 @@ The group and the tables it takes in are one undo step, and the name you type is
 ## Naming a Group
 
 A group's name is edited in a field that opens over its title bar. It opens on its own once a group is created, on a double-click on the title bar, and from `Rename` in the group's context menu.  
-`Enter`, or clicking elsewhere, saves the name. `Escape` closes the field without changing the name and leaves the group selected, and a second `Escape` clears the selection.  
+`Enter`, clicking elsewhere, or hiding the groups, whether you hide them or a collaborator does, saves the name. `Escape` closes the field without changing the name and leaves the group selected, and a second `Escape` clears the selection.  
 A changed name is one undo step; saving the name unchanged records nothing. An empty or blank name shows as `unnamed`.  
-While the field is open, the canvas shortcuts are held back, and the Quick Search and `Toggle Explorer` shortcuts do nothing, as while a table cell is edited.
+While the field is open, the canvas shortcuts are held back, and the Quick Search and `Toggle Explorer` shortcuts do nothing, as while a table cell is edited.  
+When a collaborator or a coding agent replaces the diagram while the field is open, the field stays open as long as the new diagram still has the group and shows the groups.  
+If that diagram no longer has the group, the field closes and saves nothing; if it has the group but hides the groups, the field closes and saves a changed name.  
+Loading the diagram into the editor again, as Obsidian does when the file changes outside it, closes the field and drops the name typed. Keys pressed after that go nowhere until you click the editor, so a `Delete` or `Backspace` meant for the name removes nothing.
 
 [Find and Replace](./find-and-replace.md#what-it-searches) searches group names under `Table group names` while groups are shown, and its `Replace` and `Replace All` rename groups — see [Replacing](./find-and-replace.md#replacing). [Quick Search](./quick-search.md#searching-the-diagram) does not search group names.
 
@@ -157,7 +160,7 @@ A table's context menu adds `Group selected tables` and `Remove from group` afte
 
 `View Option` → `Table Groups` in the canvas context menu shows or hides every group. It is checked by default — see [Table View Options](./table-related-functions.md#table-view-options).  
 Unchecked, the group boxes and the group colors on table headers disappear from the canvas, the minimap, and exported images, and the scrollbars and minimap no longer make room for the groups. Nothing moves or resizes, and every table stays in its group.  
-Hiding the groups deselects them, ends a `New Table Group` draw, and closes an open name editor.
+Hiding the groups deselects them, ends a `New Table Group` draw, and closes an open name editor as clicking elsewhere does — see [Naming a Group](#naming-a-group).
 
 While groups are hidden:
 

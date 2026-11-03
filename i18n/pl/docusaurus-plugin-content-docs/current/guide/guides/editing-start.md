@@ -83,7 +83,9 @@ Wyjątkiem jest klucz typu serial: jego klucz obcy przyjmuje typ całkowity prze
 Każda kolumna klucza obcego otrzymuje nazwę od swojego klucza: jednowyrazowa nazwa, taka jak `id`, otrzymuje na początku nazwę tabeli nadrzędnej (`user_id`), nazwa wielowyrazowa, taka jak `member_id`, pozostaje bez zmian, a nazwa, którą tabela podrzędna już ma, otrzymuje numer (`user_id_2`) – zobacz sekcję [Nazwy kolumn kluczy obcych](./relationship-editing.md#foreign-key-column-names).  
 Dwa kliknięcia tej samej tabeli rysują relację zwrotną.  
 Nowa relacja ma na początku obie akcje, `On Delete` i `On Update`, ustawione na `Not set`; zmień je w menu kontekstowym relacji – zobacz sekcję [ON DELETE i ON UPDATE](./relationship-editing.md#on-delete-and-on-update).  
-Aby anulować rysowanie, naciśnij klawisz `Escape` lub ponownie ten sam skrót. Anulowanie pozostawia zaznaczenie bez zmian, a kolejne naciśnięcie klawisza `Escape` je anuluje.
+Aby anulować rysowanie, naciśnij klawisz `Escape` lub ponownie ten sam skrót. Anulowanie pozostawia zaznaczenie bez zmian, a kolejne naciśnięcie klawisza `Escape` je anuluje.  
+Rysowanie kończy się także, niezależnie od tego, czy wybrano tylko typ, czy wskazano już tabelę nadrzędną, gdy diagram zostaje zastąpiony: przez operację `Import` wczytaną w miejsce diagramu, przez jej cofnięcie lub ponowienie, przez współpracownika lub agenta kodującego wykonującego którąś z tych czynności oraz przez ponowne wczytanie diagramu do edytora, jak robi to aplikacja Obsidian, gdy plik zmienia się poza nią.  
+Import w formacie Schemat SQL, GraphQL, DBML lub AML kończy je dopiero po rozmieszczeniu jego tabel, a nie po wybraniu pliku. Operacja [`Import and Add`](./file-import-export.md#import-and-add) pozostawia rysowanie aktywne.
 
 Po wybraniu tabeli nadrzędnej najechanie wskaźnikiem na tabelę, na której relacja może się zakończyć, obrysowuje ją i wyświetla obok niej dwa przyciski:
 

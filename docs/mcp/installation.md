@@ -54,7 +54,8 @@ A VS Code window serves the diagrams in its workspace folders and any diagram op
 3. Leave the `dineug.erd-editor.agentHub.enabled` setting on. It is on by default.
 
 An extension from `3.0.0` to `3.1.0` and server `1.0.0` or later refuse each other, and an extension before `3.0.0` serves no agents.
-An extension `4.0.0` or `4.1.0` connects, but neither shows nor keeps the logical names, domain links, and dictionary rows the agent writes — see [Updating](#updating).
+An extension `4.0.0` or `4.1.0` connects, but neither shows nor keeps the logical names, domain links, and dictionary rows the agent writes.
+With an extension before `4.3.0`, a table, memo, or table group that you and the agent move or resize at the same moment can end in different places for each of you — see [Updating](#updating).
 
 The extension starts in a workspace that contains `.erd`, `.erd.json`, `.vuerd`, or `.vuerd.json` files, so an agent reaches those diagrams before you open one.
 In a workspace with none of them it starts when you open a diagram, and until then the agent edits on disk.
@@ -71,7 +72,8 @@ An Obsidian vault window serves the diagrams in its vault.
 2. Leave Settings → ERD Editor → Coding agents on. It is on by default, and each vault keeps its own setting.
 
 A plugin before `1.0.0` and server `1.0.0` or later refuse each other.
-A plugin `1.0.0` or `1.1.0` connects, but neither shows nor keeps the logical names, domain links, and dictionary rows the agent writes — see [Updating](#updating).
+A plugin `1.0.0` or `1.1.0` connects, but neither shows nor keeps the logical names, domain links, and dictionary rows the agent writes.
+With a plugin before `1.3.0`, a table, memo, or table group that you and the agent move or resize at the same moment can end in different places for each of you — see [Updating](#updating).
 
 A vault window serves agents from the moment the plugin loads, so an agent reaches the vault's diagrams before you open one.
 There is no trust step.
@@ -98,7 +100,8 @@ A JetBrains IDE serves the diagrams of every project open in it, and any diagram
 3. Leave Settings | Tools | ERD Editor → Coding agents ticked. It is on by default and applies to the whole IDE.
 
 A plugin `0.9.0` or `0.10.0` and server `1.0.0` or later refuse each other, and a plugin before `0.9.0` serves no agents.
-A plugin `1.0.0` or `1.1.0` connects, but neither shows nor keeps the logical names, domain links, and dictionary rows the agent writes — see [Updating](#updating).
+A plugin `1.0.0` or `1.1.0` connects, but neither shows nor keeps the logical names, domain links, and dictionary rows the agent writes.
+With a plugin before `1.3.0`, a table, memo, or table group that you and the agent move or resize at the same moment can end in different places for each of you — see [Updating](#updating).
 
 The IDE serves agents from the moment the first project opens, so an agent reaches a project's diagrams before you open one.
 
@@ -144,6 +147,11 @@ Only the VS Code extension `4.2.0` or later and the Obsidian and JetBrains plugi
 An earlier extension or plugin that connects ignores them, though the agent's call succeeds.
 It still applies the physical names the dictionaries derive and the data types the domains give.
 A server before `1.1.0` reads a file without its logical names, domain links, and dictionary rows, and leaves them out when it edits the file on disk — see [Headless](./live-and-headless.md#headless).
+
+Server `1.2.0` speaks protocol 2 too, and adds, removes, or renames no tool and changes no argument.
+But a move or resize that you and the agent make at the same moment to the same table, memo, or table group ends the same in the editor and for the agent only when the server is `1.2.0` or later and the editor has the VS Code extension `4.3.0` or later or the Obsidian or JetBrains plugin `1.3.0` or later.
+With either side older, the editor and the agent can end with different positions, and the agent goes on reading and editing from its own until a later move puts both on one point or the agent joins the document again — see [Edits Made at the Same Moment](./live-and-headless.md#edits-made-at-the-same-moment).
+None of these releases changes what a file holds.
 
 Update ERD Editor wherever the diagrams are opened, too.
 The VS Code extension before `4.2.0`, the Obsidian plugin before `1.2.0`, and the JetBrains plugin before `1.2.0` open a diagram that a later release saved, or that the agent edited on disk, without its tables' and columns' logical names, its columns' domain links, and its words, terms, and domains.

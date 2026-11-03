@@ -66,4 +66,7 @@ Alat untuk nama logis, domain, dan kamus memerlukan server `1.1.0` atau yang leb
 Di antara rilis di atas, ekstensi sebelum `4.2.0` atau plugin sebelum `1.2.0` tetap memungkinkan agen mengedit secara live, karena menggunakan protokol 2, tetapi mengabaikan nama logis, tautan domain, dan baris kamus yang ditulis agen, dan tidak menyertakannya saat menyimpan file.
 Server sebelum `1.1.0` yang mengedit file di disk menulis kembali file tersebut tanpa nama logis, tautan domain, dan baris kamusnya — lihat [Memperbarui](./installation.md#updating).
 
+Edit yang Anda dan agen buat pada saat yang sama pada nama atau field yang sama, atau pada posisi atau ukuran tabel, memo, atau grup tabel yang sama, berakhir sama di editor dan bagi agen dengan server `1.2.0` atau yang lebih baru dan, di mana pun dokumen terbuka, ekstensi VS Code `4.3.0` atau yang lebih baru atau plugin Obsidian atau JetBrains `1.3.0` atau yang lebih baru.
+Warna, database, dan urutan kolom dalam tabel atau indeks merupakan pengecualian — lihat [Pengeditan pada saat yang sama](./live-and-headless.md#edits-made-at-the-same-moment).
+
 Berikutnya: [Instalasi](./installation.md).

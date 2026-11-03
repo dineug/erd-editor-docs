@@ -37,6 +37,38 @@ Ein Lesevorgang öffnet nie einen Editor. Eine Änderung öffnet das Dokument im
 
 Ein Editor mit einer Erweiterung für VS Code vor `4.2.0` oder einem Plugin für Obsidian oder JetBrains vor `1.2.0` übernimmt die Änderungen des Agenten weiterhin live, zeigt die logischen Namen, Domänenverknüpfungen und Wörterbuchzeilen, die der Agent schreibt, aber weder an, noch behält er sie – siehe [Aktualisieren](./installation.md#updating).
 
+Mit der Erweiterung für VS Code `4.3.0` oder neuer oder dem Plugin für Obsidian oder JetBrains `1.3.0` oder neuer beenden ein Import im Modus `replace` und ein `erd_undo` oder `erd_redo` davon eine Beziehung, die Sie gerade im Editor ziehen, gleich welche Version der Server hat – siehe [Beziehungen erstellen](../guide/guides/editing-start.md#relationship-creation).
+Vor diesen Versionen blieb das Ziehen aktiv, und ein Klick auf eine Tabelle konnte eine Beziehung von einer Tabelle hinzufügen, die nicht mehr im Diagramm war.
+Ein Import im Modus `append` lässt das Ziehen aktiv.
+Ein Editor für eine Notiz, den Namen einer Tabellengruppe oder eine Zelle, den Sie geöffnet haben, bleibt offen, solange das Diagramm weiterhin enthält und zeigt, was er bearbeitet.
+
+### Zeitgleich vorgenommene Bearbeitungen {#edits-made-at-the-same-moment}
+
+Mit dem Server `1.2.0` oder neuer und, im Editor, der Erweiterung für VS Code `4.3.0` oder neuer oder dem Plugin für Obsidian oder JetBrains `1.3.0` oder neuer enden Bearbeitungen, die Sie und der Agent zeitgleich an derselben Sache vornehmen, im Editor, in der Datei, die er speichert, und in dem, was `erd_list`, `erd_get` und `erd_read` dem Agenten liefern, gleich.
+Das gilt für einen Namen oder ein anderes Feld einer Tabelle, Spalte, Beziehung, eines Index, einer Notiz, Tabellengruppe oder Wörterbuchzeile, für den Datenbanknamen und die [Skripte vor und nach den Tabellen](../guide/guides/schema-sql.md#before-and-after-scripts) sowie für die Position oder Größe einer Tabelle, Notiz oder Tabellengruppe, nicht aber für eine Farbe, die Reihenfolge der Spalten in einer Tabelle oder einem Index oder die Datenbank.
+Zwei Änderungen desselben Namens oder Feldes, zwei Verschiebungen oder zwei Größenänderungen enden bei einer der beiden, nie bei einer Mischung: Eine Änderung, die vorgenommen wird, nachdem die andere ihre Seite erreicht hat, gewinnt, und von zwei genau im selben Moment vorgenommenen gewinnt eine, auf jeder Seite dieselbe, gleich welche zuerst eintrifft.
+
+Zwei Farbänderungen an derselben Tabelle, Notiz oder Tabellengruppe, die zeitgleich erfolgen, etwa Ihre und das `erd_change_table_color` des Agenten, können auseinanderlaufen oder sogar vertauscht enden, da jede Seite die Farbe behält, die sie zuletzt gehört hat.
+Eine Änderung der Spaltenreihenfolge, Ihre oder das `erd_move_column` oder `erd_move_index_column` des Agenten, wird auf jeder Seite in der Reihenfolge angewendet, in der sie eintrifft, sodass zwei zeitgleiche Änderungen in derselben Tabelle oder demselben Index deren Spalten in unterschiedlicher Reihenfolge hinterlassen können.
+Eine Änderung der Datenbank, Ihre oder das `erd_set_database` des Agenten, wird ebenfalls in der Reihenfolge angewendet, in der sie eintrifft, sodass zwei zeitgleiche Änderungen den Editor und den Agenten bei unterschiedlichen Datenbanken hinterlassen können.
+
+Ihr Ziehen und `erd_move_table`, `erd_move_tables`, `erd_move_memo`, `erd_move_table_group` und `erd_sort_tables` des Agenten werden als die Punkte übertragen, an denen sie enden, sodass zwei Verschiebungen derselben Tabelle, Notiz oder Tabellengruppe dort enden, wohin eine von ihnen sie gesetzt hat, nie bei der Summe beider.
+`erd_move_table_group` sendet den Punkt der Gruppe und jeder ihrer Tabellen in einem Stapel, wie es das Ziehen der Titelleiste der Gruppe tut.
+Eine Größenänderung schreibt Position und Größe zusammen, sodass eine Verschiebung und eine Größenänderung derselben Notiz oder Tabellengruppe zur selben Zeit, etwa `erd_resize_memo`, während Sie diese Notiz ziehen, auf beiden Seiten bei einem Rechteck enden: dem der Größenänderung oder, wenn die Verschiebung gewinnt, dem Punkt der Verschiebung mit der Größe der Größenänderung.
+Eine Verschiebung um weniger als 20 Pixel, die keinen Rückgängig-Eintrag erzeugt, geht ebenfalls als der Punkt hinaus, an dem sie endet, und kann daher über die Verschiebung der anderen Seite gewinnen, sei es ein kurzes `erd_move_table_group` oder ein kurzes Ziehen von Ihnen, etwa ein Klick, der eine Tabelle um ein paar Pixel verschiebt.
+
+Ältere Versionen verbinden sich weiterhin, da der Server `1.2.0` das Hub-Protokoll 2 spricht, wie `1.0.0` bis `1.1.1`.
+Mit einem Server vor `1.2.0` oder einer Erweiterung vor `4.3.0` oder einem Plugin vor `1.3.0` kann eine zeitgleiche Verschiebung oder Größenänderung einer Tabelle, Notiz oder Tabellengruppe den Editor und den Agenten mit unterschiedlichen Positionen zurücklassen.
+Ein älterer Editor sendet Ihr Ziehen als die zurückgelegte Distanz, und ein Server vor `1.2.0` sendet `erd_move_table_group` ebenso.
+Die andere Seite addiert diese Distanz zu dem Punkt, den sie hält.
+Die ältere Seite wendet außerdem die Punkte der anderen Seite in der Reihenfolge an, in der sie eintreffen.
+Der Agent liest und bearbeitet dann von seiner eigenen Position für diese Tabelle, Notiz oder Tabellengruppe aus, nicht von der, die der Editor zeigt und speichert.
+Das dauert, bis eine spätere Verschiebung desselben Elements als Punkt übertragen wird, etwa Ihr Ziehen in einem neueren Editor oder das `erd_move_table` des Agenten, oder bis der Agent dem Dokument erneut beitritt, etwa nachdem der Editor ihn verworfen hat oder nach 30 Minuten ohne Aufruf auf dem Dokument.
+Abgesehen von einer Farbe, der Spaltenreihenfolge und der Datenbank endet ein zeitgleich geänderter Name oder ein anderes Feld weiterhin gleich, wenn nur eine Seite älter ist, fast immer mit der Änderung der neueren Seite.
+Sind beide Seiten älter, können die beiden weiterhin auseinanderlaufen.
+
+Nichts davon gilt für eine Headless-Bearbeitung, die allein die Datei schreibt.
+
 ### Speichern {#saving}
 
 Jeder Editor speichert die Änderungen des Agenten so, wie er Ihre eigenen speichert.

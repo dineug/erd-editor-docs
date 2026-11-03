@@ -55,9 +55,12 @@ Skupina in tabele, ki jih zajame, so en korak razveljavitve, ime, ki ga vnesete,
 ## Poimenovanje skupine {#naming-a-group}
 
 Ime skupine se ureja v polju, ki se odpre nad njeno naslovno vrstico. Polje se odpre samodejno, ko se skupina ustvari, ob dvokliku na naslovno vrstico in s postavko `Rename` v priročnem meniju skupine.  
-Tipka `Enter` ali klik kamor koli drugam ime shrani. Tipka `Escape` zapre polje, ne da bi spremenila ime, in pusti skupino izbrano, drugi pritisk tipke `Escape` pa počisti izbor.  
+Tipka `Enter`, klik kamor koli drugam ali skritje skupin, pa naj jih skrijete vi ali sodelavec, ime shrani. Tipka `Escape` zapre polje, ne da bi spremenila ime, in pusti skupino izbrano, drugi pritisk tipke `Escape` pa počisti izbor.  
 Spremenjeno ime je en korak razveljavitve; shranjevanje nespremenjenega imena ne zabeleži ničesar. Prazno ime ali ime iz samih presledkov se prikaže kot `unnamed`.  
-Dokler je polje odprto, so bližnjice platna onemogočene, bližnjici za hitro iskanje in `Toggle Explorer` pa ne naredita ničesar, tako kot med urejanjem celice tabele.
+Dokler je polje odprto, so bližnjice platna onemogočene, bližnjici za hitro iskanje in `Toggle Explorer` pa ne naredita ničesar, tako kot med urejanjem celice tabele.  
+Ko sodelavec ali agent za kodiranje zamenja diagram, medtem ko je polje odprto, polje ostane odprto, dokler ima novi diagram še to skupino in prikazuje skupine.  
+Če novi diagram te skupine nima več, se polje zapre in ne shrani ničesar; če skupino ima, a skupine skriva, se polje zapre in shrani spremenjeno ime.  
+Ponovno nalaganje diagrama v urejevalnik, kot to naredi Obsidian, kadar se datoteka spremeni zunaj njega, polje zapre in vtipkano ime zavrže. Tipke, pritisnjene po tem, ne gredo nikamor, dokler ne kliknete urejevalnika, zato tipka `Delete` ali `Backspace`, namenjena imenu, ne odstrani ničesar.
 
 [Iskanje in zamenjava](./find-and-replace.md#what-it-searches) preiskuje imena skupin pod možnostjo `Table group names`, dokler so skupine prikazane, ukaza `Replace` in `Replace All` pa skupine preimenujeta – glejte razdelek [Zamenjevanje](./find-and-replace.md#replacing). [Hitro iskanje](./quick-search.md#searching-the-diagram) imen skupin ne preiskuje.
 
@@ -157,7 +160,7 @@ Postavka `Group selected tables` na desni prikazuje svoje tipke, `T` in nato `G`
 
 `View Option` → `Table Groups` v priročnem meniju platna prikaže ali skrije vse skupine. Možnost je privzeto označena – glejte razdelek [Možnosti pogleda tabel](./table-related-functions.md#table-view-options).  
 Ko ni označena, okvirji skupin in barve skupin na glavah tabel izginejo s platna, mini zemljevida in izvoženih slik, drsni trakovi in mini zemljevid pa ne puščajo več prostora za skupine. Nič se ne premakne ali spremeni velikosti, vsaka tabela pa ostane v svoji skupini.  
-Skritje skupin prekliče njihov izbor, konča risanje `New Table Group` in zapre odprto polje za ime.
+Skritje skupin prekliče njihov izbor, konča risanje `New Table Group` in zapre odprto polje za ime, kot ga zapre klik kamor koli drugam – glejte razdelek [Poimenovanje skupine](#naming-a-group).
 
 Dokler so skupine skrite:
 

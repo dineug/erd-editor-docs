@@ -1,5 +1,5 @@
 ---
-sidebar_position: 2
+sidebar_position: 3
 description: Einen laufenden Editor in einen Headless-Store außerhalb des Hauptthreads replizieren und das Dokument zur Speicherung serialisieren.
 ---
 
@@ -88,6 +88,11 @@ Seit `4.2.0` gilt dasselbe für ein Wort, einen Begriff oder eine Domäne, die v
 Macht ein Editor das Entfernen rückgängig, listet ein Replikat, das ohne die Zeile initialisiert wurde, sie wieder leer auf, und da `value` eine leere Zeile weglässt, speichert das Replikat das Dokument ohne sie.  
 Bei einer Domäne bleiben außerdem die Spalten und Begriffe, die mit ihr verknüpft waren, in diesem Replikat nicht verknüpft, da es die Verknüpfungen nie gehalten hat und das Rückgängigmachen sie nicht sendet.
 
+Seit `5.1.0` kann [`@dineug/erd-editor-yjs`](./yjs.md) Editoren auch über einen Yjs-Raum synchron halten.  
+Wird ein Replikat wie oben von einem Element gespeist, das an einen Raum gebunden ist, erhält es nur die Änderungen, die an diesem Element vorgenommen wurden, nie die, die der Raum hereinbringt: Diese erreichen das Element als die eines anderen Editors, und ein gemeinsamer Store gibt nichts weiter, was er empfangen hat.  
+Um das Dokument eines Raums zu speichern, speichern Sie den Wert von `value` des gebundenen Elements oder eines gebundenen Peer-Stores, wie unter [Was der Raum enthält](./yjs.md#what-the-room-holds) beschrieben.  
+Ein Yjs-Persistenz-Provider speichert den Raum selbst, der statt einer Datei einen Laufzeitwert und die seither vorgenommenen Änderungen enthält; siehe [Grenzen](./yjs.md#limits).
+
 ## InjectEngineContext {#injectenginecontext}
 
 ### toWidth {#towidth}
@@ -154,7 +159,7 @@ Die Speicherform enthält nur die nicht entfernten Entitäten in fester Reihenfo
 Seit `4.2.0` enthält sie außerdem die logischen Namen, die Angabe, ob jeder Name aus den Wörterbüchern abgeleitet wurde, die Domänenverknüpfungen sowie die Wörter, Begriffe und Domänen der Registerkarte [Wörterbuch](../../guide/guides/dictionary.md).  
 Seit `4.2.0` lässt sie außerdem jedes leere Textfeld einer Entität weg, jede Liste in `doc` und jede Collection, die nichts enthält, sowie `collections` selbst, wenn jede Collection leer ist.  
 Sie ist mit zwei Leerzeichen eingerückt, schreibt jede Wörterbuchzeile in eine eigene Textzeile und endet mit einem Zeilenumbruch, sodass dasselbe Dokument immer dieselben Bytes ergibt.  
-Zu ihrem Inhalt siehe [Speicherform und Laufzeitwert](./schema.md#storage-form-and-runtime-value).
+Zu ihrem Inhalt siehe [Speicherform](./schema.md#storage-form).
 
 Jede Einstellung, deren [Sperre](../../guide/guides/settings.md#lock) eingeschaltet ist, wird mit dem Wert geschrieben, mit dem sie gesperrt wurde, jede andere Einstellung so, wie sie gerade steht.  
 Die Sperre `Viewport` umfasst den Ursprung der Ansicht und die Zoomstufe gemeinsam, und die Registerkarte, die Sprache des Codegenerators, beide Schreibweisen und der Begrenzertyp haben jeweils eine eigene Sperre.  
@@ -172,6 +177,7 @@ const snapshot = replicationStore.runtimeValue;
 ```
 
 Verwenden Sie diesen Wert, um einen Editor oder einen weiteren Store, der später beitritt, über dessen Methode `setInitialValue` zu initialisieren; siehe [Gemeinsame Bearbeitung](./collaborative-editing.md).  
+Ein Replikat hat weder [getLWW](./collaborative-editing.md#getlww) noch [getVersion](./collaborative-editing.md#getversion) und gibt daher mit `runtimeValue` keine Kollaborationsregister weiter: Ein daraus initialisierter Editor übernimmt sie von den laufenden Editoren, wie unter [Einen Mitbearbeiter initialisieren](./collaborative-editing.md#seeding-a-collaborator) beschrieben.  
 Speichern Sie ihn nie als Datei: Er enthält die entfernten Entitäten, und das veröffentlichte [JSON Schema](./schema.md#json-schema) lehnt ihn ab.  
 Gerade diese entfernten Entitäten ermöglichen es, dass ein später gesendetes Rückgängigmachen einer Entfernung die Entität in dem damit initialisierten Store vollständig wiederherstellt.  
 Sie bleiben erhalten, bis das Dokument das nächste Mal aus seiner Datei geöffnet wird, deren Form sie nicht enthält.
@@ -230,7 +236,7 @@ Vor `3.10.0` erhielt er nichts, und ein Listener, der das Argument ignoriert, fu
 `changed` ist `false`, wenn die Aktionen seit dem vorherigen Ereignis `change` oder seit dem Laden den Wert von `value` Byte für Byte unverändert gelassen haben.
 
 Eine Änderung, die eine [Sperre](../../guide/guides/settings.md#lock) aus `value` heraushält, löst trotzdem das Ereignis `change` aus, wobei `changed` auf `false` gesetzt ist; schreiben Sie daher nur, wenn `changed` den Wert `true` hat.  
-Das sind ein Scrollen oder Zoomen, während `Viewport` gesperrt ist, ein Wechsel der Registerkarte, während `Canvas Type` gesperrt ist, sowie eine Änderung der Sprache des Codegenerators, einer Schreibweise oder des Begrenzertyps, während die jeweils eigene Sperre eingeschaltet ist.  
+Das sind ein Scrollen oder Zoomen, während `Viewport` gesperrt ist, ein Wechsel der Registerkarte, während `Canvas Type` gesperrt ist, sowie eine Änderung der Sprache des Codegenerators, einer Schreibweise oder des Begrenzertyps, während die jeweils eigene Sperre eingeschaltet ist, was seit `5.1.0` nur noch ein Editor vor `5.1.0` sendet (siehe [dispatch, dispatchSync](#dispatch-dispatchsync)).  
 Seit `4.2.0` gilt das auch für einen Wechsel der Namensansicht, während `Name View` gesperrt ist: Der Editor sendet ihn weiterhin, aber das Replikat verwirft ihn, wie es auch die anderen Editoren tun.  
 Ein Wechsel der Namensansicht in einem schreibgeschützten Editor wird auf dieselbe Weise verworfen, unabhängig vom Zustand der Sperre.  
 Das Ereignis [change](../erd-editor-element.md#change) des Elements lässt eine solche Änderung aus, das Replikat meldet sie aber trotzdem.  
@@ -282,6 +288,23 @@ Ein Editor einer Version vor `4.2.0` in der Sitzung kann einem Replikat der Vers
 Ein `Import` von Schema SQL, GraphQL, DBML oder AML in diesem Editor, nicht aber ein `Import and Add`, leert die Wörter, Begriffe und Domänen des Replikats.  
 Macht er ein Laden, einen `Import` oder `clear()` rückgängig, lädt er seine eigene Kopie des Dokuments in das Replikat, ohne logische Namen, Domänenverknüpfungen oder Wörterbücher; siehe [Gemischte Versionen](./collaborative-editing.md#mixing-releases).  
 `@dineug/erd-editor/engine.js` exportiert wie zuvor `createReplicationStore`, `ReplicationStore` und `ReplicationChange`, und `createReplicationStore` nimmt denselben Kontext an.
+
+`5.1.0` fügt keinen Aktionstyp hinzu und ändert keinen Export von `@dineug/erd-editor/engine.js`, daher behält ein Replikat ab `4.2.0` weiterhin jede Änderung, die ein Editor der Version `5.1.0` sendet.  
+Seit `5.1.0` entscheidet das Replikat über zeitgleich vorgenommene Bearbeitungen so wie die Editoren der Version `5.1.0`; siehe [Gleichzeitige Bearbeitungen](./collaborative-editing.md#concurrent-edits).  
+Es führt eine Version für die Position einer Tabelle, für Position und Größe einer Notiz und einer Tabellengruppe sowie für den Ursprung der Ansicht und die Zoomstufe.  
+Ein Editor der Version `5.1.0` sendet ein Ziehen, ein Verschieben der Ansicht oder einen Zoom als den Punkt, an dem es endet, über `table.moveTo`, `memo.moveTo`, `tableGroup.moveTo`, `settings.scrollTo` und `settings.changeZoomLevel`, und das Replikat übernimmt jede dieser Aktionen sowie jede Aktion `memo.resize` und `tableGroup.resize` nur, wenn deren Version nicht unter der liegt, die es hält.  
+Verschieben daher zwei dieser Editoren zeitgleich dieselbe Tabelle, Notiz oder Tabellengruppe oder ändern deren Größe, speichert das Replikat sie an dem Punkt und in der Größe, die jeder von ihnen zeigt, in welcher Reihenfolge es sie auch hört, und ein Ziehen, Verschieben der Ansicht oder Zoomen, das der Transport doppelt zustellt, bewegt nichts doppelt.  
+Ist `Viewport` entsperrt, speichert das Replikat den Ursprung und die Zoomstufe jeweils aus dem Schreibvorgang, dessen Version die größte ist, dort, wo der Editor stand, der ihn vorgenommen hat.  
+Ein Zoom verschiebt auch den Ursprung, daher können ein Verschieben der Ansicht und ein Zoom, die zwei Editoren zeitgleich vornehmen, als Ursprung des einen Editors mit der Zoomstufe des anderen gespeichert werden.  
+Vor `5.1.0` addierte das Replikat die Schritte der Verschiebungen und Zooms jedes Editors zu einer einzigen Ansicht.
+
+Die Abstände, die ein Editor vor `5.1.0` für ein Ziehen, ein Verschieben der Ansicht oder einen Zoom sendet (`table.move`, `memo.move`, `tableGroup.move`, `settings.streamScrollTo` und `settings.streamZoomLevel`), werden weiterhin zu dem addiert, was das Replikat hält, außerhalb der Versionen.  
+Eine Farbänderung kommt weiterhin ohne Version an: Das Replikat versieht sie, wie jeder Editor, mit einer eigenen Version und behält die Farbe, die es zuletzt gehört hat, daher können zwei Farbänderungen derselben Tabelle, Notiz oder Tabellengruppe, die zeitgleich vorgenommen werden, anders gespeichert werden, als ein Editor sie zeigt.  
+Ein Replikat vor `5.1.0` wendet die Punkte und Größen in der Reihenfolge an, in der sie eintreffen, daher kann es eine Tabelle an einer anderen Stelle speichern, als die Editoren der Version `5.1.0` sie zeigen.  
+Halten Sie jeden Editor der Sitzung und das Replikat auf `5.1.0` oder neuer, damit zeitgleich vorgenommene Bearbeitungen gleich enden, abgesehen von den Ausnahmen, die [Gleichzeitige Bearbeitungen](./collaborative-editing.md#concurrent-edits) nennt.
+
+Seit `5.1.0` sendet ein Editor eine Änderung der Sprache des Codegenerators, einer Schreibweise oder des Begrenzertyps nur, solange die Sperre dieser Einstellung ausgeschaltet ist, mit `shared: true` in ihrer Payload markiert, und das Replikat wendet jede markierte an, wie die Editoren; siehe [Gemeinsame Bearbeitung](./collaborative-editing.md).  
+Eine unmarkierte, die ein Editor vor `5.1.0` unabhängig von der Sperre sendet, wendet das Replikat nur an, solange diese Einstellung auf seiner Seite entsperrt ist, und verwirft sie, solange die Einstellung gesperrt ist (siehe [on@change](#onchange)).
 
 Seit `4.0.0` wenden beide Methoden außerdem die Aktion `editor.mergeLWW` an, die die Kollaborationsregister überträgt, mit denen ein Editor antwortet, wenn ein anderer der Sitzung beitritt, sodass das Replikat gleichzeitige Änderungen so abgleicht wie die Editoren.  
 Sie ändert kein Byte von `value` und löst kein Ereignis `change` aus.  

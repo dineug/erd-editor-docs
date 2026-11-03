@@ -83,7 +83,9 @@ Výnimkou je kľúč typu serial: jeho cudzí kľúč prevezme celočíselný ty
 Každý stĺpec cudzieho kľúča sa pomenuje podľa svojho kľúča: jednoslovný názov, napríklad `id`, dostane pred seba názov nadradenej tabuľky (`user_id`), viacslovný názov, napríklad `member_id`, sa zachová a názov, ktorý podradená tabuľka už má, sa očísluje (`user_id_2`) – pozrite si časť [Názvy stĺpcov cudzích kľúčov](./relationship-editing.md#foreign-key-column-names).  
 Dve kliknutia na tú istú tabuľku nakreslia rekurzívny vzťah.  
 Nový vzťah má na začiatku akcie `On Delete` aj `On Update` nastavené na `Not set`; zmeňte ich v jeho kontextovej ponuke – pozrite si časť [ON DELETE a ON UPDATE](./relationship-editing.md#on-delete-and-on-update).  
-Ak chcete kreslenie zrušiť, stlačte `Escape` alebo znova stlačte tú istú klávesovú skratku. Zrušenie ponechá výber tak, ako je, a ďalšie stlačenie klávesu `Escape` ho zruší.
+Ak chcete kreslenie zrušiť, stlačte `Escape` alebo znova stlačte tú istú klávesovú skratku. Zrušenie ponechá výber tak, ako je, a ďalšie stlačenie klávesu `Escape` ho zruší.  
+Kreslenie sa ukončí, či už je aktivovaný iba typ, alebo je už vybraná nadradená tabuľka, aj pri nahradení diagramu: importom položkou `Import` namiesto diagramu, vrátením späť alebo opätovným vykonaním takého importu, tým, že niečo z toho urobí spolupracovník alebo programovací agent, a opätovným načítaním diagramu do editora, ako to robí Obsidian, keď sa súbor zmení mimo neho.  
+Import schémy vo formáte SQL, GraphQL, DBML alebo AML ho ukončí, až keď sú jeho tabuľky umiestnené, nie keď sa vyberie súbor. Položka [`Import and Add`](./file-import-export.md#import-and-add) nechá kreslenie aktívne.
 
 Keď je nadradená tabuľka zvolená, podržanie ukazovateľa nad tabuľkou, na ktorej môže vzťah skončiť, túto tabuľku orámuje a zobrazí vedľa nej dve tlačidlá:
 

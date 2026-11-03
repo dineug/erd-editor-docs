@@ -66,4 +66,7 @@ As ferramentas de nomes lógicos, domínios e dicionários exigem o servidor `1.
 Das versões acima, uma extensão anterior à `4.2.0` ou um plugin anterior à `1.2.0` ainda permite que o agente edite ao vivo, já que usa o protocolo 2, mas ignora os nomes lógicos, os vínculos com domínios e as linhas do dicionário que o agente grava e os omite ao salvar o arquivo.
 Um servidor anterior à `1.1.0` que edita um arquivo em disco o grava de volta sem os nomes lógicos, os vínculos com domínios e as linhas do dicionário — consulte [Atualizar](./installation.md#updating).
 
+As edições que você e o agente fazem no mesmo instante no mesmo nome ou campo, ou na posição ou no tamanho da mesma tabela, nota ou grupo de tabelas, terminam iguais no editor e para o agente com o servidor `1.2.0` ou posterior e, onde quer que o documento esteja aberto, a extensão do VS Code `4.3.0` ou posterior ou o plugin do Obsidian ou da JetBrains `1.3.0` ou posterior.
+Uma cor, o banco de dados e a ordem das colunas em uma tabela ou em um índice são as exceções — consulte [Edições feitas no mesmo instante](./live-and-headless.md#edits-made-at-the-same-moment).
+
 Próximo: [Instalação](./installation.md).

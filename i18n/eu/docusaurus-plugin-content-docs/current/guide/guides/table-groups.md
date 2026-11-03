@@ -55,9 +55,12 @@ Taldea eta bertan sartzen diren taulak desegite-urrats bat dira, eta idazten duz
 ## Talde bati izena ematea {#naming-a-group}
 
 Talde baten izena titulu-barraren gainean irekitzen den eremu batean editatzen da. Eremua berez irekitzen da talde bat sortzen denean, eta titulu-barran klik bikoitza eginda eta taldearen laster-menuko `Rename` aukerarekin ere irekitzen da.  
-`Enter` teklak, edo beste nonbait klik egiteak, izena gordetzen du. `Escape` teklak eremua ixten du izena aldatu gabe eta taldea hautatuta uzten du, eta `Escape` berriro sakatzeak hautapena kentzen du.  
+`Enter` teklak, beste nonbait klik egiteak edo taldeak ezkutatzeak, zuk ezkutatu zein lankide batek, izena gordetzen du. `Escape` teklak eremua ixten du izena aldatu gabe eta taldea hautatuta uzten du, eta `Escape` berriro sakatzeak hautapena kentzen du.  
 Izen-aldaketa bat desegite-urrats bat da; izena aldatu gabe gordetzeak ez du ezer erregistratzen. Izena hutsik badago edo zuriuneak baino ez baditu, `unnamed` erakusten da.  
-Eremua irekita dagoen bitartean, oihaleko lasterbideek ez dute funtzionatzen, eta Bilaketa azkarraren eta `Toggle Explorer` komandoaren lasterbideek ez dute ezer egiten, taula-gelaxka bat editatzen den bitartean bezala.
+Eremua irekita dagoen bitartean, oihaleko lasterbideek ez dute funtzionatzen, eta Bilaketa azkarraren eta `Toggle Explorer` komandoaren lasterbideek ez dute ezer egiten, taula-gelaxka bat editatzen den bitartean bezala.  
+Lankide batek edo kodetze-agente batek diagrama ordezkatzen duenean eremua irekita dagoen bitartean, eremua irekita jarraitzen du diagrama berriak taldea oraindik badu eta taldeak erakusten baditu.  
+Diagrama horrek taldea jada ez badu, eremua itxi egiten da eta ez du ezer gordetzen; taldea badu baina taldeak ezkutatzen baditu, eremua itxi egiten da eta aldatutako izen bat gordetzen du.  
+Diagrama editorean berriro kargatzeak, Obsidian aplikazioak fitxategia hartatik kanpo aldatzen denean egiten duen bezala, eremua itxi eta idatzitako izena baztertzen du. Horren ondoren sakatutako teklak ez dira inora iristen editorean klik egin arte; beraz, izenerako zen `Delete` edo `Backspace` batek ez du ezer kentzen.
 
 [Bilatu eta ordeztu](./find-and-replace.md#what-it-searches) funtzioak taldeen izenak bilatzen ditu `Table group names` aukerarekin, taldeak erakusten diren bitartean, eta bertako `Replace` eta `Replace All` botoiek taldeei izena aldatzen diete. Ikus [Ordeztea](./find-and-replace.md#replacing). [Bilaketa azkarrak](./quick-search.md#searching-the-diagram) ez ditu taldeen izenak bilatzen.
 
@@ -157,7 +160,7 @@ Taula baten laster-menuak `Group selected tables` eta `Remove from group` aukera
 
 Oihalaren laster-menuko `View Option` → `Table Groups` aukerak talde guztiak erakusten edo ezkutatzen ditu. Lehenespenez markatuta dago. Ikus [Taulen ikuspegi-aukerak](./table-related-functions.md#table-view-options).  
 Markatu gabe dagoenean, taldeen koadroak eta taulen goiburuetako taldeen koloreak desagertu egiten dira oihaletik, minimapatik eta esportatutako irudietatik, eta korritze-barrek eta minimapak jada ez diete lekurik egiten taldeei. Ez da ezer mugitzen ezta tamainaz aldatzen ere, eta taula bakoitza bere taldean geratzen da.  
-Taldeak ezkutatzeak haien hautapena kentzen du, `New Table Group` marrazketa bat amaitzen du, eta irekita dagoen izen-editorea ixten du.
+Taldeak ezkutatzeak haien hautapena kentzen du, `New Table Group` marrazketa bat amaitzen du, eta irekita dagoen izen-editorea ixten du, beste nonbait klik egiteak bezala. Ikus [Talde bati izena ematea](#naming-a-group).
 
 Taldeak ezkutatuta dauden bitartean:
 

@@ -1,5 +1,5 @@
 ---
-sidebar_position: 2
+sidebar_position: 3
 description: Mereplikasi editor yang sedang berjalan ke store headless di luar thread utama, dan menserialisasi dokumen untuk penyimpanan.
 ---
 
@@ -88,6 +88,11 @@ Sejak `4.2.0`, hal yang sama berlaku untuk kata, istilah, atau domain yang dihap
 Saat sebuah editor membatalkan penghapusannya, replika yang data awalnya diisi tanpa baris tersebut mencantumkannya kembali dalam keadaan kosong, dan karena `value` tidak menyertakan baris kosong, replika menyimpan dokumen tanpa baris itu.  
 Untuk domain, kolom dan istilah yang tertaut ke domain itu juga tetap tidak tertaut di replika tersebut, karena replika tidak pernah memegang tautannya dan pembatalan tidak mengirimkannya.
 
+Sejak `5.1.0`, [`@dineug/erd-editor-yjs`](./yjs.md) juga dapat menjaga editor tetap selaras melalui room Yjs.  
+Jika diumpankan seperti di atas dari elemen yang terikat ke sebuah room, replika hanya menerima edit yang dibuat di elemen itu, tidak pernah edit yang dibawa masuk room: edit tersebut sampai ke elemen sebagai edit editor lain, dan shared store tidak pernah meneruskan apa yang diterimanya.  
+Untuk menyimpan dokumen sebuah room, simpan `value` elemen yang terikat, atau milik peer store yang terikat, seperti dijelaskan [Isi room](./yjs.md#what-the-room-holds).  
+Provider persistensi Yjs menyimpan room itu sendiri, yang memuat nilai runtime dan edit yang dibuat sesudahnya, bukan sebuah file; lihat [Batasan](./yjs.md#limits).
+
 ## InjectEngineContext {#injectenginecontext}
 
 ### toWidth {#towidth}
@@ -154,7 +159,7 @@ Isinya hanya entitas yang masih ada, dalam urutan tetap, tanpa entitas yang diha
 Sejak `4.2.0`, isinya juga mencakup nama logis, keterangan apakah setiap nama dihasilkan dari kamus, tautan domain, serta kata, istilah, dan domain di tab [Kamus](../../guide/guides/dictionary.md).  
 Sejak `4.2.0` pula, nilai ini tidak menyertakan setiap field teks entitas yang kosong, setiap daftar `doc` dan koleksi yang tidak berisi apa pun, serta `collections` itu sendiri jika setiap koleksi kosong.  
 Teksnya diindentasi dua spasi, dengan setiap baris kamus pada baris teksnya sendiri, dan diakhiri baris baru, sehingga dokumen yang sama selalu menghasilkan byte yang sama.  
-Lihat [Bentuk penyimpanan dan nilai runtime](./schema.md#storage-form-and-runtime-value) untuk mengetahui isinya.
+Lihat [Bentuk penyimpanan](./schema.md#storage-form) untuk mengetahui isinya.
 
 Setiap pengaturan dengan [penguncian](../../guide/guides/settings.md#lock) aktif ditulis dengan nilai saat pengaturan itu dikunci, dan setiap pengaturan lain ditulis sebagaimana adanya.  
 Penguncian `Viewport` mencakup titik asal area pandang dan tingkat zoom sekaligus, sedangkan tab, bahasa Generator Kode, kedua konvensi penamaan, dan tipe tanda kutip masing-masing memiliki penguncian sendiri.  
@@ -172,6 +177,7 @@ const snapshot = replicationStore.runtimeValue;
 ```
 
 Gunakan untuk mengisi data awal editor atau store lain yang bergabung belakangan, melalui `setInitialValue` miliknya; lihat [Pengeditan kolaboratif](./collaborative-editing.md).  
+Replika tidak memiliki [getLWW](./collaborative-editing.md#getlww) atau [getVersion](./collaborative-editing.md#getversion), sehingga tidak menyerahkan register kolaborasi melalui `runtimeValue`: editor yang data awalnya diisi darinya mengambil register itu dari editor yang sedang berjalan, seperti dijelaskan [Mengisi data awal kolaborator](./collaborative-editing.md#seeding-a-collaborator).  
 Jangan pernah menyimpannya sebagai file: nilai ini membawa entitas yang dihapus, dan [JSON Schema](./schema.md#json-schema) yang dipublikasikan menolaknya.  
 Entitas yang dihapus itulah yang memungkinkan pembatalan sebuah penghapusan, yang dikirim belakangan, mengembalikan entitas secara utuh di store yang data awalnya diisi dari nilai ini.  
 Entitas tersebut tetap ada hingga dokumen dibuka lagi dari filenya, yang bentuknya tidak menyertakan entitas itu.
@@ -230,7 +236,7 @@ Sebelum `3.10.0`, listener tidak menerima apa pun, dan listener yang mengabaikan
 `changed` bernilai `false` saat aksi sejak `change` sebelumnya, atau sejak pemuatan, membiarkan `value` tetap sama persis byte demi byte.
 
 Perubahan yang tidak dimasukkan ke `value` karena [penguncian](../../guide/guides/settings.md#lock) tetap memicu `change`, dengan `changed` bernilai `false`, jadi tulis hanya saat `changed` bernilai `true`.  
-Perubahan tersebut berupa guliran atau zoom selama `Viewport` terkunci, perpindahan tab selama `Canvas Type` terkunci, dan perubahan bahasa Generator Kode, konvensi penamaan, atau tipe tanda kutip selama penguncian miliknya sendiri aktif.  
+Perubahan tersebut berupa guliran atau zoom selama `Viewport` terkunci, perpindahan tab selama `Canvas Type` terkunci, dan perubahan bahasa Generator Kode, konvensi penamaan, atau tipe tanda kutip selama penguncian miliknya sendiri aktif, yang sejak `5.1.0` hanya masih dikirim oleh editor sebelum `5.1.0` (lihat [dispatch, dispatchSync](#dispatch-dispatchsync)).  
 Sejak `4.2.0`, begitu pula penggantian Tampilan Nama selama `Name View` terkunci: editor tetap mengirimkannya, tetapi replika membuangnya, seperti yang dilakukan editor lain.  
 Penggantian Tampilan Nama yang dilakukan di editor hanya baca dibuang dengan cara yang sama, apa pun keadaan penguncian Tampilan Nama.  
 Event [change](../erd-editor-element.md#change) milik elemen tidak menyertakan perubahan semacam itu, tetapi replika tetap melaporkannya.  
@@ -282,6 +288,23 @@ Editor sebelum `4.2.0` di dalam sesi masih dapat menghilangkan sebagian dari hal
 `Import` Skema SQL, GraphQL, DBML, atau AML di editor tersebut, tetapi bukan `Import and Add`, mengosongkan kata, istilah, dan domain milik replika.  
 Pembatalan pemuatan, `Import`, atau `clear()` oleh editor tersebut memuat salinan dokumennya sendiri ke replika, tanpa nama logis, tautan domain, atau kamus; lihat [Mencampur rilis](./collaborative-editing.md#mixing-releases).  
 `@dineug/erd-editor/engine.js` mengekspor `createReplicationStore`, `ReplicationStore`, dan `ReplicationChange` yang sama seperti sebelumnya, dan `createReplicationStore` menerima konteks yang sama.
+
+`5.1.0` tidak menambahkan tipe aksi dan tidak mengubah ekspor `@dineug/erd-editor/engine.js`, sehingga replika dari `4.2.0` ke atas tetap menyimpan setiap perubahan yang dikirim editor `5.1.0`.  
+Sejak `5.1.0`, replika menentukan hasil edit yang dibuat pada saat yang sama dengan cara yang sama seperti editor `5.1.0`; lihat [Pengeditan pada saat yang sama](./collaborative-editing.md#concurrent-edits).  
+Replika menyimpan sebuah versi untuk posisi tabel, untuk posisi dan ukuran memo serta grup tabel, dan untuk titik asal area pandang serta tingkat zoom.  
+Editor `5.1.0` mengirim seretan, geseran, atau zoom sebagai titik akhirnya, melalui `table.moveTo`, `memo.moveTo`, `tableGroup.moveTo`, `settings.scrollTo`, dan `settings.changeZoomLevel`, dan replika menerima masing-masing aksi itu, serta setiap `memo.resize` dan `tableGroup.resize`, hanya jika versinya tidak lebih rendah daripada versi yang dipegangnya.  
+Jadi, saat dua editor semacam ini memindahkan atau mengubah ukuran satu tabel, memo, atau grup tabel pada saat yang sama, replika menyimpannya pada titik dan ukuran yang ditampilkan setiap editor itu, apa pun urutan replika mendengarnya, dan seretan, geseran, atau zoom yang dikirimkan transport dua kali tidak menggerakkan apa pun dua kali.  
+Dengan `Viewport` tidak terkunci, replika menyimpan titik asal dan tingkat zoom masing-masing dari penulisan dengan versi terbesar, tempat editor yang membuatnya berada.  
+Zoom juga menggeser titik asal, sehingga geseran dan zoom yang dibuat dua editor pada saat yang sama dapat disimpan sebagai titik asal satu editor dengan tingkat zoom editor lainnya.  
+Sebelum `5.1.0`, replika menambahkan langkah geser dan zoom setiap editor ke satu area pandang.
+
+Jarak yang dikirim editor sebelum `5.1.0` untuk seretan, geseran, atau zoom (`table.move`, `memo.move`, `tableGroup.move`, `settings.streamScrollTo`, dan `settings.streamZoomLevel`) tetap ditambahkan ke apa yang dipegang replika, di luar versi.  
+Perubahan warna tetap tiba tanpa versi: replika, seperti setiap editor, menandainya dengan versi miliknya sendiri dan mempertahankan warna yang terakhir didengarnya, sehingga dua perubahan warna pada satu tabel, memo, atau grup tabel yang dibuat pada saat yang sama dapat disimpan berbeda dari apa yang ditampilkan editor.  
+Replika sebelum `5.1.0` menerapkan titik dan ukuran sesuai urutan kedatangannya, sehingga dapat menyimpan sebuah tabel di tempat yang berbeda dari tempat editor `5.1.0` menampilkannya.  
+Jaga setiap editor dalam sesi, dan replika, tetap di `5.1.0` atau yang lebih baru agar edit yang dibuat pada saat yang sama berakhir sama, kecuali pengecualian yang tercantum di [Pengeditan pada saat yang sama](./collaborative-editing.md#concurrent-edits).
+
+Sejak `5.1.0`, editor mengirim perubahan bahasa Generator Kode, konvensi penamaan, atau tipe tanda kutip hanya selama penguncian pengaturan itu nonaktif, ditandai `shared: true` di payload-nya, dan replika menerapkan setiap perubahan yang bertanda itu, seperti yang dilakukan editor; lihat [Pengeditan kolaboratif](./collaborative-editing.md).  
+Replika menerapkan perubahan tanpa tanda, yang dikirim editor sebelum `5.1.0` apa pun penguncian miliknya, hanya selama pengaturan itu tidak terkunci di sisinya, dan membuangnya selama pengaturan itu terkunci (lihat [on@change](#onchange)).
 
 Sejak `4.0.0`, kedua metode juga menerapkan `editor.mergeLWW`, yang membawa register kolaborasi yang dikirim sebuah editor sebagai jawaban saat editor lain bergabung ke sesi, sehingga replika menentukan hasil perubahan serentak dengan cara yang sama seperti editor.  
 Aksi ini tidak mengubah satu byte pun dari `value` dan tidak memicu `change`.  

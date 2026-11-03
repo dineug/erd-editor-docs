@@ -67,7 +67,8 @@ Nici modificările care sosesc de la un alt editor nu se înregistrează, așa c
 
 Anularea unui import prin elementul `Import`, care înlocuiește întreaga diagramă, readuce diagrama anterioară așa cum o avea editorul în momentul importului, cu fiecare [blocare](./settings.md#lock) activată sau dezactivată și cu fiecare valoare blocată așa cum erau atunci.  
 Dacă în acea diagramă setarea `Viewport` era blocată, vizualizarea și zoomul revin la vizualizarea blocată, cea în care se deschide diagrama, nu acolo unde erați. Dacă setarea `Viewport` a acesteia era deblocată, ele revin acolo unde erați în momentul importului. Celelalte setări blocate, de exemplu fila în care vă aflați, limbajul generatorului de cod sau modul de afișare a numelor, rămân așa cum sunt pe ecranul dumneavoastră.  
-O diagramă nouă pornește cu toate blocările activate. Deblocați setarea `Viewport` înainte de import pentru a vă păstra vizualizarea la o astfel de anulare. Deblocarea ei ulterioară sau importarea unui fișier JSON a cărui blocare `Viewport` proprie este dezactivată nu schimbă locul în care vă duce anularea.
+O diagramă nouă pornește cu toate blocările activate. Deblocați setarea `Viewport` înainte de import pentru a vă păstra vizualizarea la o astfel de anulare. Deblocarea ei ulterioară sau importarea unui fișier JSON a cărui blocare `Viewport` proprie este dezactivată nu schimbă locul în care vă duce anularea.  
+Anularea sau refacerea unui `Import` încheie și o relație în curs de trasare (consultați [Crearea relațiilor](./editing-start.md#relationship-creation)).
 
 Anularea importului unui fișier JSON readuce și cuvintele, termenii și domeniile pe care le avea diagrama anterioară. Importul unui fișier Schemă SQL, GraphQL, DBML sau AML păstrează dicționarele, așa că anularea și refacerea lui le lasă așa cum sunt, inclusiv editările făcute între timp în fila Dicționar.
 

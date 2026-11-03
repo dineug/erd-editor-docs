@@ -1,31 +1,32 @@
 ---
-sidebar_position: 3
-description: Format dokumentov .erd.json – oblika za shranjevanje, ki jo vsebuje datoteka, in vrednost med izvajanjem, ki jo hrani urejevalnik, tipi TypeScript, konstante za posamezna številska polja in objavljena JSON Schema.
+sidebar_position: 4
+description: Format dokumentov .erd.json – oblika za shranjevanje, ki jo vsebuje datoteka, njeni tipi TypeScript, konstante za posamezna številska polja in objavljena JSON Schema.
 ---
 
 # Shema
 
 Format `.erd.json` je format, v katerem urejevalnik zapisuje dokumente. To stran preberite, če morate dokument ustvariti, preveriti njegovo veljavnost ali ga migrirati zunaj urejevalnika.
 
-Od različice `4.0.0` ima dokument dve serializaciji, obe s poljem `version` z vrednostjo `'3.0.0'`. Oblika za shranjevanje je tisto, kar vsebuje datoteka: to vrne [`editor.value`](../erd-editor-element.md#value), to zapiše izvoz JSON in to je edina oblika, ki jo sprejme objavljena [JSON Schema](#json-schema). Vrednost med izvajanjem je celoten dokument, kot ga hrani urejevalnik, in jo vrne [`editor.runtimeValue`](../erd-editor-element.md#runtimevalue). Metoda `setInitialValue()`, setter `value` in metoda `setSchemaJSON()` preberejo obe obliki, vsako datoteko, ki jo je shranila starejša izdaja, in dokument `.vuerd` različice v2. Pred različico `4.0.0` je obstajala samo ena: lastnost `value` je vračala celoten dokument, kot ga je hranil urejevalnik, tako kot zdaj lastnost `runtimeValue`.
+Ta stran opisuje obliko za shranjevanje, ki jo zapiše vsaka izdaja od različice `4.0.0`, tj. dokument, kot ga vsebuje datoteka. To vrne [`editor.value`](../erd-editor-element.md#value), to zapiše izvoz JSON in to je edina oblika, ki jo sprejme objavljena [JSON Schema](#json-schema). Njeno polje `version` ima vrednost `'3.0.0'`, kot v vsaki datoteki v3, ki jo je shranila starejša izdaja, zato `version` ne loči starejše datoteke od novejše. Metoda `setInitialValue()`, setter `value` in metoda `setSchemaJSON()` jo preberejo, prav tako vsako datoteko, ki jo je shranila starejša izdaja, in dokument `.vuerd` različice v2. Pred različico `4.0.0` je lastnost `value` vračala celoten dokument, kot ga je hranil urejevalnik, zato datoteka, shranjena takrat, vsebuje več (glejte razdelek [Oblika za shranjevanje](#storage-form)).  
+Lastnost [`runtimeValue`](../erd-editor-element.md#runtimevalue) urejevalnika je druga serializacija, ki je ta stran ne opisuje. Z njo se inicializira drug urejevalnik ali replika, [soba Yjs](./yjs.md#what-the-room-holds) pa jo hrani v svojem posnetku; nikoli ne sodi v datoteko, JSON Schema pa zavrne vsako takšno vrednost, ki vsebuje entiteto.
 
-## Oblika za shranjevanje in vrednost med izvajanjem {#storage-form-and-runtime-value}
+## Oblika za shranjevanje {#storage-form}
 
-Oblika za shranjevanje vsebuje samo žive entitete: vsako tabelo, navedeno v `doc.tableIds`, stolpce, ki jih te tabele navajajo, relacije med dvema ohranjenima tabelama, indekse ohranjenih tabel s stolpci indeksa, katerih stolpec tabela še navaja, navedene beležke in skupine tabel ter od različice `4.2.0` navedene besede, izraze in domene, ki poleg identifikatorja vsebujejo še kakšno vrednost. Izpusti tisto, kar urejevalnik izpelje ob nalaganju ali hrani, dokler je odprt: odstranjene entitete, `seqColumnIds` in `seqIndexColumnIds`, vsak `zIndex`, izmerjene širine, polje `ui` stolpca, `identification`, `startRelationshipType` in sidrne točke relacije ter od različice `4.2.0` polje `order` vsake vrstice slovarja in sezname `doc.wordIds`, `doc.termIds` in `doc.domainIds`. V spodnjih tipih je vsako od teh polj označeno z `// runtime only`.  
+Oblika za shranjevanje vsebuje samo žive entitete: vsako tabelo, navedeno v `doc.tableIds`, stolpce, ki jih te tabele navajajo, relacije med dvema ohranjenima tabelama, indekse ohranjenih tabel s stolpci indeksa, katerih stolpec tabela še navaja, navedene beležke in skupine tabel ter od različice `4.2.0` besede, izraze in domene na listih zavihka Slovar, ki poleg identifikatorja vsebujejo še kakšno vrednost. Ne vsebuje ničesar, kar urejevalnik izračuna ob nalaganju ali hrani, samo dokler je odprt: ne vrstnega reda prekrivanja, izmerjenih širin ali oznak ključev, prav tako ne tega, ali je relacija identifikacijska, kako je narisan njen konec pri nadrejeni tabeli in kje se sreča s svojima tabelama. Vsako nalaganje to znova izračuna iz tistega, kar vsebuje datoteka.  
 Ključi vsake kolekcije razen slovarjev so identifikatorji v vrstnem redu kodnih enot, pri čemer so stolpci najprej združeni po `tableId`, stolpci indeksov pa po `indexId`. Od različice `4.2.0` so `wordEntities`, `termEntities` in `domainEntities` za vsemi drugimi kolekcijami, v tem vrstnem redu, vsaka pa je zapisana kot glava in vrstice, vsaka vrstica v svoji vrstici besedila (glejte razdelek [Vrstice slovarjev](#dictionary-rows)). Vsaka entiteta zapiše svoja polja v stalnem vrstnem redu, besedilo pa je zamaknjeno za dva presledka in se konča z znakom za novo vrstico. Zato je zapis istega dokumenta vedno bajtno enak, sprememba spremeni samo tisto, česar se dotakne, datoteka, shranjena na računalniku z drugimi pisavami, pa se znova odpre z enako vrednostjo lastnosti `value`.  
 VS Code, Obsidian in vtičnik za JetBrains zapišejo datoteko samo, ko se zaradi spremembe spremeni lastnost `value`, zato datoteka, ki jo je shranila starejša izdaja, ohrani staro obliko do svoje prve spremembe.
 
 Od različice `4.2.0` oblika za shranjevanje izpusti tudi tisto, kar ne vsebuje ničesar: vsako besedilno polje, ki ga entiteta ali njeno polje `ui` vsebuje kot `''` (pri tabeli `name`, `comment` in `ui.color`, pri stolpcu `name`, `comment`, `dataType` in `default`, pri indeksu `name`, pri beležki `value` in `ui.color`, pri skupini tabel `name` in `color`), vsak seznam v `doc` in vsako kolekcijo, ki ne vsebuje nobenega vnosa, ter samo polje `collections`, ko so vse kolekcije prazne. Besedilo iz samih presledkov se zapiše takšno, kot je shranjeno, razen pri logičnem imenu, ki se takrat izpusti, in pri besedi, izrazu ali domeni, katere vrednosti poleg identifikatorja so vse prazne ali iz samih presledkov, saj se ta izpusti v celoti. Vsak identifikator, vsak seznam znotraj entitete in vsako število, tudi `0`, se še vedno zapiše. Polje `doc` se zapiše vedno, zato datoteka novega dokumenta vsebuje `$schema`, `version`, njegove nastavitve in `"doc": {}`.  
 Razčlenjevanje manjkajoče besedilno polje prebere kot `''`, manjkajočo kolekcijo pa kot prazno, tako kot vsaka izdaja v3, oblika za shranjevanje pa seznam v `doc` izpusti samo, dokler njegova kolekcija ne vsebuje ničesar (glejte razdelek [Doc](#doc)). Zato te datoteke odpre tudi urejevalnik pred različico `4.2.0`, program, ki datoteko bere sam, pa mora manjkajoče prebrati na enak način. Datoteka, ki jo je shranila starejša izdaja, se ob naslednjem shranjevanju zapiše brez praznega besedila ter praznih seznamov in kolekcij, kar je enkratna sprememba, od takrat naprej pa se shranjuje bajtno enako.
 
-Vrednost med izvajanjem ohrani tisto, kar oblika za shranjevanje izpusti: odstranjene entitete, zaporedja, vrednosti z-index, širine, oznake ključev, zastavice relacij in sidrne točke, prazna besedilna polja ter štiri sezname `tableIds`, `relationshipIds`, `indexIds` in `memoIds` in šest kolekcij od `tableEntities` do `memoEntities`, tudi kadar so prazni. Od različice `4.2.0` ohrani tudi odstranjene besede, izraze in domene, vrstice, ki ne vsebujejo ničesar, polje `order` vsake vrstice, tri sezname slovarjev, logično ime iz samih presledkov in povezavo z odstranjeno domeno. Zamaknjena je za dva presledka in na koncu nima znaka za novo vrstico. Uporabite jo samo za inicializacijo sodelavca ali drugega pogleda prek metode `setInitialValue()`, tako da razveljavitev odstranitve, ki jo pošlje drug urejevalnik, tam povrne celotno entiteto. Nikoli je ne zapišite v datoteko; JSON Schema jo zavrne. Odstranjenih entitet nič več ne počisti, zato jih vrednost med izvajanjem hrani, dokler se dokument naslednjič ne odpre iz svoje datoteke.
+Oblika za shranjevanje zapiše vsako zaklenjeno nastavitev z njeno zaklenjeno vrednostjo (glejte polje [`lockSettings`](#settings)), `settings.ddlScripts` samo, dokler kateri od skriptov vsebuje besedilo, polje `groupId` tabele pa samo, dokler navaja skupino tabel, ki jo datoteka zapiše. Od različice `4.2.0` zapiše tudi `settings.nameViewMode` samo, dokler vrednost, ki jo zapiše, ni `'physical'`, `settings.columnOrder` s sedmimi vnosi, kjer je to mogoče (glejte razdelek [Settings](#settings)), in polje `nameDerived` tabele samo, dokler je `true`.  
+Zapiše `doc.tableGroupIds` in `tableGroupEntities` samo, dokler obstaja skupina tabel, polje `logicalName` samo, dokler vsebuje besedilo, ki ni iz samih presledkov, polje `domainId` stolpca samo, dokler navaja domeno, ki jo datoteka zapiše, vsak slovar pa samo, dokler vsebuje vrstico, ki jo datoteka zapiše.
 
-Obe obliki zapišeta vsako zaklenjeno nastavitev z njeno zaklenjeno vrednostjo (glejte polje [`lockSettings`](#settings)), `settings.ddlScripts` samo, dokler kateri od skriptov vsebuje besedilo, polje `groupId` tabele pa samo, dokler ni prazno. Od različice `4.2.0` obe zapišeta tudi `settings.nameViewMode` samo, dokler vrednost, ki jo zapišeta, ni `'physical'`, `settings.columnOrder` s sedmimi vnosi, kjer je to mogoče (glejte razdelek [Settings](#settings)), in polje `nameDerived` tabele samo, dokler je `true`.  
-Oblika za shranjevanje zapiše `doc.tableGroupIds` in `tableGroupEntities` samo, dokler obstaja kakšna skupina tabel, polje `logicalName` samo, dokler vsebuje besedilo, ki ni iz samih presledkov, polje `domainId` stolpca samo, dokler navaja domeno, ki jo datoteka zapiše, vsak slovar pa samo, dokler vsebuje vrstico, ki jo datoteka zapiše. Vrednost med izvajanjem zapiše polji skupin tabel, dokler dokument vsebuje skupino ali odstranjeno skupino, polji `logicalName` in `domainId`, dokler nista `''`, vsak slovar z njegovim seznamom pa, dokler kateri od njiju vsebuje vnos, vključno z odstranjeno vrstico.
+Datoteka, shranjena pred različico `4.0.0`, vsebuje celoten dokument, kot ga je takrat hranil urejevalnik, vključno z odstranjenimi entitetami in vsem, kar izračuna vsako nalaganje. Nalaganje jo prebere, ohrani mesto vsake tabele in beležke v vrstnem redu prekrivanja (glejte razdelek [Doc](#doc)) in vse drugo znova izračuna, naslednje shranjevanje pa zapiše samo obliko za shranjevanje.
 
 ## TypeScript {#typescript}
 
-Tipi opisujejo vrednost med izvajanjem. Polje, označeno z `// runtime only`, je v obliki za shranjevanje izpuščeno, polje, označeno z `?`, pa se zapiše samo, dokler nekaj vsebuje. Prazno besedilo ter prazni seznami in kolekcije, ki jih oblika za shranjevanje izpušča od različice `4.2.0`, niso označeni.
+Tipi opisujejo obliko za shranjevanje in vsak navaja svoja polja v vrstnem redu, v katerem jih zapiše datoteka. Polje, označeno z `?`, je polje, ki ga lahko oblika za shranjevanje izpusti, kot podrobneje opisuje razdelek [Oblika za shranjevanje](#storage-form), razčlenjevanje pa manjkajoče polje prebere kot polje, ki ne vsebuje ničesar: `''`, `false`, brez skupine tabel ali domene, prazno kolekcijo, `'physical'` za `nameViewMode` in dva prazna skripta za `ddlScripts`. Izjema je manjkajoč seznam v `doc`, ki ga razčlenjevanje izpolni iz njegove kolekcije (glejte razdelek [Doc](#doc)). V vrstici slovarja `?` označuje vrednosti, pred katerimi se lahko vrstica konča (glejte razdelek [Vrstice slovarjev](#dictionary-rows)). Vsako drugo polje je zapisano vedno.
 
 ### ERDEditorSchemaV3 {#erdeditorschemav3}
 
@@ -35,13 +36,13 @@ type ERDEditorSchemaV3 = {
   version: '3.0.0';
   settings: Settings;
   doc: Doc;
-  collections: {
-    tableEntities: Record<string, Table>;
-    tableColumnEntities: Record<string, Column>;
-    relationshipEntities: Record<string, Relationship>;
-    indexEntities: Record<string, Index>;
-    indexColumnEntities: Record<string, IndexColumn>;
-    memoEntities: Record<string, Memo>;
+  collections?: {
+    tableEntities?: Record<string, Table>;
+    tableColumnEntities?: Record<string, Column>;
+    relationshipEntities?: Record<string, Relationship>;
+    indexEntities?: Record<string, Index>;
+    indexColumnEntities?: Record<string, IndexColumn>;
+    memoEntities?: Record<string, Memo>;
     tableGroupEntities?: Record<string, TableGroup>;
     wordEntities?: DictionaryRows; // rows of Word
     termEntities?: DictionaryRows; // rows of Term
@@ -216,7 +217,7 @@ Od različice `4.2.0` obstaja še ena zastavica polja `show`, `columnDomain` (`8
 Urejevalnik pred različico `4.2.0` ohrani polje `show` kot celo število, zato se zastavica ob shranjevanju tam ohrani.
 
 Od različice `4.2.0` ima konstanta `ColumnType` devet vrednosti. `columnLogicalName` (`128`) določa mesto celice logičnega imena, ki jo vrstica stolpca izriše samo v prikazu `Both Names`, `columnDomain` (`256`) pa mesto celice domene. To sta vrstici `Logical Name` in `Domain` v [vrstnem redu stolpcev](../../guide/guides/settings.md#adjusting-column-order) na zavihku Nastavitve. Urejevalnik hrani vrstni red vseh devetih, vrstni red novega dokumenta pa je `128, 1, 2, 256, 4, 8, 16, 32, 64`.  
-Obe obliki zapišeta vrstni red s sedmimi vnosi, brez `128` in `256`, dokler `128` stoji tik pred `columnName` in `256` tik za `columnDataType`. Zato nov dokument še vedno zapiše `1, 2, 4, 8, 16, 32, 64`, datoteka, v katere vrstnem redu ju ni nihče premaknil, pa ohrani svoje bajte. Sicer zapišeta vseh devet.  
+Oblika za shranjevanje zapiše vrstni red s sedmimi vnosi, brez `128` in `256`, dokler `128` stoji tik pred `columnName` in `256` tik za `columnDataType`. Zato nov dokument še vedno zapiše `1, 2, 4, 8, 16, 32, 64`, datoteka, v katere vrstnem redu ju ni nihče premaknil, pa ohrani svoje bajte. Sicer zapiše vseh devet.  
 Razčlenjevanje obe vrednosti vstavi na ti mesti v vrstni red s sedmimi vnosi, ne glede na to, v kakšnem vrstnem redu je teh sedem, devet vnosov, ki vsebujejo vse tipe, prevzame takšne, kot so.  
 Od različice `5.0.0` prevzame tudi vsak drug vrstni red. Vsak `ColumnType`, ki ga pozna, ohrani enkrat, v podanem vrstnem redu, vsak drug vnos pa izpusti: vrednost, ki je noben `ColumnType` ne poimenuje, na primer tip, ki ga doda poznejša izdaja, in drugi vnos istega tipa. Vsak tip, ki ga vrstni red nima, pride tik za najbližji prejšnji tip v privzetem vrstnem redu, ki ga vrstni red vsebuje, ali, če ga ni, tik pred najbližji poznejši, kar je način, kako `128` in `256` najdeta svoji mesti v sedmih vnosih. Samo vrstni red, ki ne poimenuje nobenega tipa, ki ga pozna, ali vrednost, ki ni polje, se prebere kot privzeti vrstni red.  
 Datoteka, ki jo je shranila poznejša izdaja, se zato odpre z vrstnim redom tipov, ki jih ta izdaja pozna, shranjevanje tu pa zapiše ta vrstni red brez drugih. Pred različico `5.0.0` je razčlenjevanje vsak drug vrstni red prebralo kot privzeti, zato se je taka datoteka odprla z ponastavljenim vrstnim redom stolpcev. JSON Schema sprejme sedem ali devet celih števil.
@@ -224,18 +225,18 @@ Datoteka, ki jo je shranila poznejša izdaja, se zato odpre z vrstnim redom tipo
 Od različice `4.0.0` ima konstanta `Language` osem dodatnih ciljev [generatorja kode](../../guide/guides/code-generator.md), od `Mermaid` do `JSONSchema`. Vrednost `language`, ki je razčlenjevalnik ne pozna, se prebere kot `GraphQL`, zato urejevalnik pred različico `4.0.0` dokument, shranjen z enim od njih, odpre z jezikom GraphQL, shranjevanje tam pa zapiše GraphQL.
 
 Od različice `4.0.0` polje `lockSettings` nadomešča `ignoreSaveSettings`, konstanta `LockSettingType` pa konstanto `SaveSettingType`, ki je bila odstranjena. Polje `lockSettings` navaja nastavitve, ki jih dokument shrani takšne, kot so bile ob zaklepanju. Bit `viewport` hkrati zajema `originX`, `originY` in `zoomLevel`, saj se izhodišče, shranjeno brez pripadajoče povečave, odpre drugje, vsak drug bit pa zajema polje, po katerem je poimenovan. To so vrstice [`Lock`](../../guide/guides/settings.md#lock) na zavihku Nastavitve.  
-Tako `value` kot `runtimeValue` zapišeta zaklenjeno nastavitev z njeno zaklenjeno vrednostjo ne glede na to, kaj prikazuje urejevalnik, vsako drugo nastavitev pa takšno, kot je. Zato datoteka, dokler je vklopljen ustrezni zaklep, ostane nespremenjena ob pomikanju in povečevanju, preklapljanju med zavihki, spreminjanju jezika generatorja kode, zapisa imen ali vrste narekovajev ali preklapljanju prikaza imen. Zaklepanje prevzame vrednost, ki jo ima nastavitev v tistem trenutku, razčlenjevanje pa prevzame zaklenjeno vrednost iz shranjenega polja.  
+Datoteka vsebuje vsako zaklenjeno nastavitev z njeno zaklenjeno vrednostjo ne glede na to, kaj prikazuje urejevalnik, vsako drugo nastavitev pa takšno, kot je. Zato datoteka, dokler je vklopljen ustrezni zaklep, ostane nespremenjena ob pomikanju in povečevanju, preklapljanju med zavihki, spreminjanju jezika generatorja kode, zapisa imen ali vrste narekovajev ali preklapljanju prikaza imen. Zaklepanje prevzame vrednost, ki jo ima nastavitev v tistem trenutku, razčlenjevanje pa prevzame zaklenjeno vrednost iz shranjenega polja.  
 Dokument, ustvarjen iz nič – nov urejevalnik ali nova shramba za replikacijo ali prazna vrednost, podana lastnosti `value` ali metodi `setInitialValue()` –, ima polje `lockSettings` nastavljeno na `63`, s čimer so vklopljeni vsi zaklepi. Dokument, katerega polje `settings` ne vsebuje polja `lockSettings` – vsaka datoteka, shranjena pred različico `4.0.0`, ne glede na njeno polje `ignoreSaveSettings`, in vsak dokument v2 –, se prav tako odpre z vsemi vklopljenimi zaklepi: njegov pogled in zavihek sta tam, kjer sta pri novem dokumentu (`originX` in `originY` sta `0`, `zoomLevel` je `1`, zavihek ERD), njegov jezik, zapisa imen in vrsta narekovajev pa so zaklenjeni na vrednostih, ki jih je shranil. Dokument, ki navaja svoje zaklepe, ohrani te zaklepe, tudi vrednost `0`, in vse vrednosti, ki jih je shranil.  
 Razčlenjevanje ohrani vse bite polja `lockSettings`, tudi neznane, zato se zaklep, ki ga doda poznejša izdaja, tukaj ob shranjevanju ohrani; JSON Schema preveri le, da gre za celo število. Urejevalnik pred različico `4.0.0` ob shranjevanju izpusti polje `lockSettings` in zapiše pogled in zavihek takšna, kot sta, zato se datoteka tukaj znova odpre kot datoteka, shranjena pred različico `4.0.0`.
 
 Od različice `4.2.0` obstaja sedmi zaklep, `unlockNameViewMode` (`64`), vrstica `Name View`, ki zajema `nameViewMode`. Njegov bit se bere obratno kot drugi biti zaklepov, tako kot biti za skrivanje v `Show`: ko je nastavljen, je prikaz imen odklenjen, ko ni, pa zaklenjen. Zato `63` še vedno pomeni, da so vklopljeni vsi zaklepi, nov dokument pa to vrednost vsebuje s prikazom imen, zaklenjenim na `'physical'`. Datoteka, shranjena pred različico `4.2.0`, ima ta bit počiščen ne glede na druge zaklepe, tudi pri vrednosti `0`, zato se odpre s prikazom imen, zaklenjenim na `'physical'`. Dokument z vsemi izklopljenimi zaklepi vsebuje `64`, dokument z vsemi drugimi vklopljenimi zaklepi in odklenjenim prikazom imen pa `127`. Ta zaklep preverjajte obratno: vklopljen je, dokler velja `(lockSettings & 64) === 0`.  
-Dokler je vklopljen, preklop prikaza imen spremeni samo zaslon urejevalnika, v katerem je bil opravljen, dokument pa ohrani zaklenjeni prikaz. Dokler je izklopljen, je preklop v urejevalniku, ki lahko ureja, preklop dokumenta, z njim pa preklopijo tudi vsi sodelavci. Preklop v urejevalniku samo za branje v obeh primerih spremeni samo njegov zaslon. Glejte seznam [`Lock`](../../guide/guides/settings.md#lock).  
+Dokler je bit počiščen, datoteka vsebuje `nameViewMode` z zaklenjenim prikazom, ne glede na to, kaj prikazuje kateri koli urejevalnik, dokler pa je nastavljen, prikaz, kakršen je. Kaj prikazuje posamezni urejevalnik, ko je zaklep vklopljen ali izklopljen, je opisano v seznamu [`Lock`](../../guide/guides/settings.md#lock).  
 Urejevalnik različice `4.0.0` ali `4.1.0` bit ob shranjevanju ohrani, izpusti pa `nameViewMode`, zato se dokument tukaj znova odpre v prikazu `'physical'` z nespremenjenim zaklepom.
 
 Od različice `4.0.0` polje `ddlScripts` vsebuje dva skripta zavihka [Shema SQL](../../guide/guides/schema-sql.md), ki ju zapiše DDL vsake zbirke podatkov: `before` za glavo in pred tabelami, `after` za ustvarjeno DDL. DDL zapiše vsakega s prelomi vrstic LF, brez začetnih praznih vrstic in končnih praznih znakov ter pri MSSQL zaključenega z `GO`, kot je opisano v razdelku [Skripti pred tabelami in za njimi](../../guide/guides/schema-sql.md#before-and-after-scripts); polje `ddlScripts` pa vsak skript ohrani takšen, kot je bil vnesen. Ključ se zapiše samo, dokler kateri od skriptov vsebuje besedilo, in takrat z obema; manjkajoč ključ ali skript, ki ni niz, se prebere kot `''`. Izbire `Statements`, `Header` in `Tables` na zavihku in od različice `4.2.0` njegovo stikalo [`Write logical names into empty comments`](../../guide/guides/schema-sql.md#logical-names-as-comments) se ne shranijo v dokument.  
 Urejevalnik pred različico `4.0.0` ob nalaganju dokumenta izpusti skripta, zato se ob shranjevanju tam izgubita.
 
-Od različice `4.2.0` je polje `nameViewMode` [prikaz imen](../../guide/guides/logical-names.md#name-view), tj. imena, ki jih izriše diagram: `'physical'` ime vsake tabele in vsakega stolpca, `'logical'` logično ime na mestu imena, `'both'` pa logično ime in ime. Meniji jih imenujejo `Physical Names`, `Logical Names` in `Both Names`. Obe obliki ga zapišeta zadnjega, za `ddlScripts`, in samo, dokler vrednost, ki jo zapišeta, ni `'physical'`; dokler je zaklep `Name View` vklopljen, je to zaklenjena vrednost, ne glede na to, kaj prikazuje zaslon. Manjkajoča vrednost ali vrednost, ki je razčlenjevalnik ne pozna, se prebere kot `'physical'`, JSON Schema pa sprejme samo `"logical"` in `"both"`.  
+Od različice `4.2.0` je polje `nameViewMode` [prikaz imen](../../guide/guides/logical-names.md#name-view), tj. imena, ki jih izriše diagram: `'physical'` ime vsake tabele in vsakega stolpca, `'logical'` logično ime na mestu imena, `'both'` pa logično ime in ime. Meniji jih imenujejo `Physical Names`, `Logical Names` in `Both Names`. Oblika za shranjevanje ga zapiše zadnjega, za `ddlScripts`, in samo, dokler vrednost, ki jo zapiše, ni `'physical'`. Manjkajoča vrednost ali vrednost, ki je razčlenjevalnik ne pozna, se prebere kot `'physical'`, JSON Schema pa sprejme samo `"logical"` in `"both"`.  
 Urejevalnik pred različico `4.2.0` ob nalaganju dokumenta izpusti polje `nameViewMode`.
 
 Konstante `Database`, `Language`, `Show`, `ColumnType`, `ColumnOption`, `LockSettingType` in `ReferentialAction` dopuščajo samo dodajanje. Shranjeni dokument hrani število, zato nova vrsta zbirke podatkov, cilj ustvarjanja kode, zastavica, tip stolpca, možnost stolpca, zaklep ali dejanje dobi naslednji bit namesto mesta na sredini.
@@ -244,52 +245,42 @@ Konstante `Database`, `Language`, `Show`, `ColumnType`, `ColumnOption`, `LockSet
 
 ```ts
 type Doc = {
-  tableIds: string[];
-  relationshipIds: string[];
-  indexIds: string[];
-  memoIds: string[];
+  tableIds?: string[];
+  relationshipIds?: string[];
+  indexIds?: string[];
+  memoIds?: string[];
   tableGroupIds?: string[];
-  wordIds?: string[]; // runtime only
-  termIds?: string[]; // runtime only
-  domainIds?: string[]; // runtime only
 };
 ```
 
-Vsak od prvih petih seznamov je vrstni red ene vrste entitet, ki ga berejo DDL, razvrščanje tabel in vrstni red izrisa. V obliki za shranjevanje vsak seznam vsebuje samo identifikatorje ohranjenih entitet, vsakega enkrat, v navedenem vrstnem redu, od različice `4.2.0` pa se seznam, ki ne vsebuje nobenega identifikatorja, izpusti. Od različice `4.0.0` je polje `tableGroupIds` vrstni red skupin tabel.
+Vsak seznam je vrstni red ene vrste entitet, ki ga berejo DDL, razvrščanje tabel in vrstni red izrisa. Vsak vsebuje samo identifikatorje entitet, ki jih datoteka zapiše, vsakega enkrat, v navedenem vrstnem redu, od različice `4.2.0` pa se seznam, ki ne vsebuje nobenega identifikatorja, izpusti. Od različice `4.0.0` je polje `tableGroupIds` vrstni red skupin tabel. Slovarji tu nimajo seznama, saj njihove vrstice stojijo v vrstnem redu posameznega lista (glejte razdelek [Vrstice slovarjev](#dictionary-rows)), JSON Schema pa v `doc` ne sprejme nobenega drugega ključa.
 
-Od različice `4.2.0` seznami `wordIds`, `termIds` in `domainIds` navajajo žive vrstice posameznega slovarja: vrstica, ki jo vsebuje kolekcija, ne pa tudi seznam, je odstranjena. Niso vrstni red lista, saj tega določa polje `order` vsake vrstice. Zapiše jih samo vrednost med izvajanjem, vsakega, dokler on sam ali njegova kolekcija vsebuje kakšen vnos. V datoteki že same vrstice določajo pripadnost in vrstni red, JSON Schema pa sezname zavrne.  
 Od različice `4.2.0` razčlenjevanje seznam, ki ga dokument izpusti ali ga vsebuje kot nekaj drugega kot polje, prebere kot vse vnose, ki jih vsebuje njegova kolekcija, vsak identifikator enkrat, v shranjenem vrstnem redu; prazno polje ostane prazno, vsi vnosi njegove kolekcije pa se takrat preberejo kot odstranjeni. Urejevalnik pred različico `4.2.0` manjkajoč seznam prebere kot prazen, zato oblika za shranjevanje še vedno zapiše vsak seznam, kadar koli njegova kolekcija vsebuje entiteto.
 
-Od različice `4.0.0` se vrstni red prekrivanja ne shranjuje. Razčlenjevanje vsako navedeno tabelo, beležko in skupino tabel brez polja `zIndex` zloži glede na njeno mesto na seznamu, pri čemer so poznejše spredaj: skupine tabel od `1`, tabele od `2`, beležke pa nad vse tabele. Entiteta s poljem `zIndex`, kot v vrednosti med izvajanjem ali v datoteki, shranjeni pred različico `4.0.0`, to polje ohrani. Postavitev tabele ali beležke v ospredje se zato ob ponovnem odprtju datoteke izgubi.
+Od različice `4.0.0` datoteka ne vsebuje vrstnega reda prekrivanja. Nalaganje zloži navedene tabele in beležke glede na njihova mesta na seznamih, pri čemer so poznejše spredaj in je vsaka beležka nad vsako tabelo, skupine tabel pa na enak način med seboj, za tabelami. Tabela ali beležka v datoteki, shranjeni pred različico `4.0.0`, ima v polju `ui` polje `zIndex`, ki ga nalaganje ohrani kot njeno mesto v vrstnem redu prekrivanja, naslednje shranjevanje pa ga izpusti. Postavitev tabele ali beležke v ospredje se zato ob ponovnem odprtju datoteke izgubi.
 
 ### Kolekcija: tableEntities {#collection-tableentities}
 
 ```ts
 type Table = {
   id: string;
-  name: string;
+  name?: string;
   logicalName?: string;
-  comment: string;
+  comment?: string;
   columnIds: string[];
-  seqColumnIds: string[]; // runtime only
   groupId?: string;
-  nameDerived?: boolean;
+  nameDerived?: true;
   ui: TableUI;
 };
 
 type TableUI = {
   x: number;
   y: number;
-  zIndex: number; // runtime only
-  widthName: number; // runtime only
-  widthLogicalName: number; // runtime only
-  widthComment: number; // runtime only
-  color: string;
+  color?: string;
 };
 ```
 
-Od različice `4.0.0` ima tabela polje `groupId`, identifikator [skupine tabel](../../guide/guides/table-groups.md), ki ji pripada. Manjkajoče ali prazno polje `groupId` ali polje, ki ne navaja nobene skupine v `doc.tableGroupIds`, pomeni, da tabela ni v nobeni skupini, oblika za shranjevanje pa ga zapiše samo, dokler navaja ohranjeno skupino.  
-Razčlenjevanje polje `seqColumnIds` inicializira z `columnIds`, kadar manjka ali v njem ni katerega od navedenih identifikatorjev, urejevalnik pa ob vsakem nalaganju s svojimi pisavami znova izmeri `widthName`, `widthLogicalName` in `widthComment`.
+Od različice `4.0.0` ima tabela polje `groupId`, identifikator [skupine tabel](../../guide/guides/table-groups.md), ki ji pripada. Manjkajoče ali prazno polje `groupId` ali polje, ki ne navaja nobene skupine v `doc.tableGroupIds`, pomeni, da tabela ni v nobeni skupini, oblika za shranjevanje pa ga zapiše samo, dokler navaja ohranjeno skupino.
 
 Od različice `4.2.0` ima tabela polje `logicalName`, ime, ki ga izrišeta [prikaza](../../guide/guides/logical-names.md#name-view) `Logical Names` in `Both Names`, z vrednostjo `''`, kadar ga ni, in polje `nameDerived`, ki je `true`, kadar so slovarji polje `name` [izpeljali](../../guide/guides/dictionary.md#deriving-physical-names) iz logičnega imena. Dokler je nastavljeno, novo logično ime znova izpelje ime; dokler ni nastavljeno, je ime nekdo vnesel sam in novo logično ime ga pusti nespremenjenega, razen če je ime prazno ali iz samih presledkov. Ročno preimenovanje ga izklopi, postavka [`Derive Physical Names Again`](../../guide/guides/dictionary.md#derive-physical-names-again) pa znova zapiše celo ime, ki ga je nekdo vnesel sam, in ga vklopi povsod, kjer obstaja logično ime.  
 Oblika za shranjevanje zapiše `logicalName` za `name`, takšno, kot je bilo vneseno, samo, dokler vsebuje besedilo, ki ni iz samih presledkov, `nameDerived` pa za `groupId` samo, dokler je `true`, kar je edina vrednost, ki jo sprejme JSON Schema. Manjkajoče polje `logicalName` se prebere kot `''`, manjkajoče polje `nameDerived` pa kot `false`, zato vsako ime v datoteki, shranjeni pred različico `4.2.0`, šteje za ime, ki ga je nekdo vnesel sam.  
@@ -301,24 +292,13 @@ Urejevalnik pred različico `4.2.0` ob nalaganju dokumenta izpusti obe polji, za
 type Column = {
   id: string;
   tableId: string;
-  name: string;
-  comment: string;
-  dataType: string;
-  default: string;
+  name?: string;
+  comment?: string;
+  dataType?: string;
+  default?: string;
   options: number; // Constants: ColumnOption
   logicalName?: string;
   domainId?: string;
-  ui: ColumnUI; // runtime only
-};
-
-type ColumnUI = {
-  keys: number; // Constants: ColumnUIKey
-  widthName: number;
-  widthLogicalName: number;
-  widthComment: number;
-  widthDataType: number;
-  widthDomain: number;
-  widthDefault: number;
 };
 
 // Constants
@@ -329,17 +309,12 @@ const ColumnOption = {
   notNull: 8,
   nameDerived: 16,
 } as const;
-
-const ColumnUIKey = {
-  primaryKey: 1,
-  foreignKey: 2,
-} as const;
 ```
 
-Od različice `4.0.0` oblika za shranjevanje ne zapiše polja `ui` stolpca. Vsako nalaganje izpelje polje `keys`, oznako primarnega ključa iz bita `primaryKey` polja `options` in oznako tujega ključa iz relacij, ki se končajo pri stolpcu, ter izmeri šest širin.  
+Od različice `4.0.0` datoteka ne vsebuje oznak ključev: vsako nalaganje stolpec označi kot primarni ključ iz bita `primaryKey` polja `options` in kot tuji ključ, dokler se nanj v njegovi tabeli konča relacija.  
 Urejevalnik pred različico `4.0.0` stolpce datoteke, shranjene tukaj, prikaže brez ikon primarnega ključa.
 
-Od različice `4.2.0` ima stolpec tako kot tabela polje `logicalName` ter polje `domainId`, identifikator domene, s katero je povezan, z vrednostjo `''`, kadar povezave ni. Spremembe v enem urejevalniku ohranjajo povezan stolpec pri podatkovnem tipu njegove domene, kot je opisano v razdelku [Domene in podatkovni tipi](../../guide/guides/dictionary.md#domains-and-data-types). Razčlenjevanje pa nobenemu stolpcu ne spremeni tipa, zato lahko datoteka, zapisana drugje, pusti povezan stolpec pri drugem tipu, prav tako pa tudi navzkrižne spremembe dveh sodelavcev; list Preverjanja vsak tak stolpec navede kot preverjanje [`Domain type mismatch`](../../guide/guides/dictionary.md#what-each-check-finds). Razčlenjevanje počisti polje `domainId`, ki ne navaja nobene domene v dokumentu. Odstranjena domena še vedno šteje, zato urejevalnik povezavo z njo ohrani, dokler lahko razveljavitev domeno povrne. Za poljem `options` oblika za shranjevanje zapiše `logicalName` po enakem pravilu kot pri tabeli, `domainId` pa samo, dokler navaja domeno, ki jo datoteka zapiše, torej nikoli povezave z odstranjeno domeno.  
+Od različice `4.2.0` ima stolpec tako kot tabela polje `logicalName` ter polje `domainId`, identifikator domene, s katero je povezan, z vrednostjo `''`, kadar povezave ni. Spremembe v enem urejevalniku ohranjajo povezan stolpec pri podatkovnem tipu njegove domene, kot je opisano v razdelku [Domene in podatkovni tipi](../../guide/guides/dictionary.md#domains-and-data-types). Razčlenjevanje pa nobenemu stolpcu ne spremeni tipa, zato lahko datoteka, zapisana drugje, pusti povezan stolpec pri drugem tipu, prav tako pa tudi navzkrižne spremembe dveh sodelavcev; list Preverjanja vsak tak stolpec navede kot preverjanje [`Domain type mismatch`](../../guide/guides/dictionary.md#what-each-check-finds). Razčlenjevanje počisti polje `domainId`, ki ne navaja nobene domene v datoteki. Za poljem `options` oblika za shranjevanje zapiše `logicalName` po enakem pravilu kot pri tabeli, `domainId` pa samo, dokler navaja domeno, ki jo datoteka zapiše, zato je stolpec, povezan z odstranjeno domeno ali z domeno, ki jo datoteka izpusti, zapisan brez povezave in s podatkovnim tipom, ki ga ima.  
 `ColumnOption.nameDerived` (`16`) je zastavica izpeljanega imena stolpca, shranjena v `options` skupaj z drugimi biti, in pomeni isto kot polje `nameDerived` tabele. Primarni ključ NOT NULL, katerega ime so izpeljali slovarji, ima na primer polje `options` z vrednostjo `26`.  
 Urejevalnik pred različico `4.2.0` ob nalaganju dokumenta izpusti polji `logicalName` in `domainId`, zato se ob shranjevanju tam izgubita. Polje `options` ohrani kot celo število, zato se bit `nameDerived` ob shranjevanju tam ohrani.
 
@@ -348,9 +323,7 @@ Urejevalnik pred različico `4.2.0` ob nalaganju dokumenta izpusti polji `logica
 ```ts
 type Relationship = {
   id: string;
-  identification: boolean; // runtime only
   relationshipType: number; // Constants: RelationshipType
-  startRelationshipType: number; // Constants: StartRelationshipType; runtime only
   onDelete: number; // Constants: ReferentialAction
   onUpdate: number; // Constants: ReferentialAction
   start: RelationshipPoint;
@@ -360,9 +333,6 @@ type Relationship = {
 type RelationshipPoint = {
   tableId: string;
   columnIds: string[];
-  x: number; // runtime only
-  y: number; // runtime only
-  direction: number; // Constants: Direction; runtime only
 };
 
 // Constants
@@ -373,11 +343,6 @@ const RelationshipType = {
   OneN: 16,
 } as const;
 
-const StartRelationshipType = {
-  ring: 1,
-  dash: 2,
-} as const;
-
 const ReferentialAction = {
   none: 1,
   noAction: 2,
@@ -386,35 +351,25 @@ const ReferentialAction = {
   setDefault: 16,
   restrict: 32,
 } as const;
-
-const Direction = {
-  left: 1,
-  right: 2,
-  top: 4,
-  bottom: 8,
-} as const;
 ```
 
 Od različice `3.10.0` ima relacija polji `onDelete` in `onUpdate`, njeni [dejanji ON DELETE in ON UPDATE](../../guide/guides/relationship-editing.md#on-delete-and-on-update). Vsako vsebuje natanko eno vrednost `ReferentialAction`. Privzeta vrednost `none` ne zapiše nobenega določila, zato velja privzeto vedenje same zbirke podatkov. Preostalih pet vrednosti pomeni `NO ACTION`, `CASCADE`, `SET NULL`, `SET DEFAULT` in `RESTRICT`. Shema SQL zapiše določilo samo za zbirko podatkov, ki sprejema njegovo dejanje.  
 Oblika za shranjevanje vedno zapiše obe, od različice `4.0.0` pa ju JSON Schema zahteva in pri tem preveri le, da je vsako celo število. Manjkajoče polje, kakršno je v vsakem dokumentu, shranjenem pred različico `3.10.0`, razčlenjevanje še vedno prebere kot `none`, prav tako pa tudi vrednost zunaj seznama.  
 Urejevalnik pred različico `3.10.0` teh polj ne pozna in ju ob nalaganju dokumenta izpusti, zato se ob shranjevanju tam izgubijo vsa dejanja.
 
-Od različice `4.0.0` vsako nalaganje izpelje tisto, kar oblika za shranjevanje izpusti. Relacija je identifikacijska, kadar je vsak stolpec, na katerem se konča, primarni ključ, njeno polje `startRelationshipType` pa ima vrednost `dash`, kadar je vsak tak stolpec NOT NULL, sicer pa `ring`; relacija, ki ji ne ostane noben končni stolpec, je neidentifikacijska in ima `dash`, tako kot se začne nova relacija. Sidrne točke, `x`, `y` in `direction`, se znova postavijo.
+Od različice `4.0.0` vsako nalaganje iz stolpcev, na katerih se relacija konča in ki jih podrejena tabela še navaja, prebere, ali je relacija identifikacijska in kako je narisan njen konec pri nadrejeni tabeli. Identifikacijska je (polna črta), dokler je vsak tak stolpec primarni ključ, njen konec pri nadrejeni tabeli pa sta dve črtici, dokler je vsak tak stolpec NOT NULL, sicer pa krožec in črtica. Relacija, ki ji ne ostane noben tak stolpec, je neidentifikacijska z dvema črticama, tako kot se začne nova relacija. Glejte razdelek [Branje povezovalne črte](../../guide/guides/relationship-editing.md#reading-a-connector).
 
 ### Kolekcija: indexEntities {#collection-indexentities}
 
 ```ts
 type Index = {
   id: string;
-  name: string;
+  name?: string;
   tableId: string;
   indexColumnIds: string[];
-  seqIndexColumnIds: string[]; // runtime only
   unique: boolean;
 };
 ```
-
-Razčlenjevanje polje `seqIndexColumnIds` inicializira z `indexColumnIds`, kadar manjka ali v njem ni katerega od navedenih identifikatorjev.
 
 ### Kolekcija: indexColumnEntities {#collection-indexcolumnentities}
 
@@ -438,7 +393,7 @@ const OrderType = {
 ```ts
 type Memo = {
   id: string;
-  value: string;
+  value?: string;
   ui: MemoUI;
 };
 
@@ -447,20 +402,19 @@ type MemoUI = {
   y: number;
   width: number;
   height: number;
-  zIndex: number; // runtime only
-  color: string;
+  color?: string;
 };
 ```
 
-Od različice `4.0.0` si tabele in beležke [delijo en sklad](../../guide/guides/table-related-functions.md#moving-multiple-tables), urejen po polju `zIndex`, zato lahko postavitev tabele v ospredje to tabelo postavi nad beležko. Razčlenjevanje beležko, shranjeno brez polja `zIndex`, postavi nad vse tabele, kot je opisano v razdelku [Doc](#doc). Beležka v datoteki, shranjeni pred različico `4.0.0`, ohrani shranjeno vrednost `zIndex`, ki je izhajala iz istega števca kot vrednosti tabel, zato se beležka, ki jo je starejša izdaja izrisala nad vsemi tabelami, lahko odpre pod tabelo, ki je bila pozneje postavljena v ospredje.
+Od različice `4.0.0` si tabele in beležke [delijo en sklad](../../guide/guides/table-related-functions.md#moving-multiple-tables), zato lahko postavitev tabele v ospredje to tabelo postavi nad beležko. Nalaganje postavi vsako beležko nad vse tabele, kot je opisano v razdelku [Doc](#doc). Beležka v datoteki, shranjeni pred različico `4.0.0`, ohrani shranjeno vrednost `zIndex`, ki je izhajala iz istega števca kot vrednosti tabel, zato se beležka, ki jo je starejša izdaja izrisala nad vsemi tabelami, lahko odpre pod tabelo, ki je bila pozneje postavljena v ospredje.
 
 ### Kolekcija: tableGroupEntities {#collection-tablegroupentities}
 
 ```ts
 type TableGroup = {
   id: string;
-  name: string;
-  color: string;
+  name?: string;
+  color?: string;
   ui: TableGroupUI;
 };
 
@@ -469,7 +423,6 @@ type TableGroupUI = {
   y: number;
   width: number;
   height: number;
-  zIndex: number; // runtime only
 };
 ```
 
@@ -487,7 +440,7 @@ type DictionaryRows = {
 };
 ```
 
-Ključi nobenega od treh slovarjev niso identifikatorji. Vsak je zapisan kot glava in vrstice: `fields` enkrat navede polja entitete, najprej identifikator, vsaka vrstica pa vsebuje vrednosti ene entitete v tem vrstnem redu. Spodnji tipi navajajo polja vsake entitete v vrstnem redu glave vrednosti med izvajanjem. Vrstica vedno ohrani identifikator in ime, njene končne prazne vrednosti za imenom pa se izpustijo, zato prazna vrednost pred vrednostjo, ki se ohrani, ostane `''`, razčlenjevanje pa vrednost, ki je vrstica nima, prebere kot `''`. Obe obliki zapišeta vsako vrstico v svojo vrstico besedila kot kompakten JSON, kot v teh dveh besedah iz datoteke:
+Ključi nobenega od treh slovarjev niso identifikatorji. Vsak je zapisan kot glava in vrstice: `fields` enkrat navede polja entitete, najprej identifikator, vsaka vrstica pa vsebuje vrednosti ene entitete v tem vrstnem redu. Spodnji tipi navajajo polja vsake entitete v tem vrstnem redu. Vrstica vedno ohrani identifikator in ime, njene končne prazne vrednosti za imenom pa se izpustijo, zato prazna vrednost pred vrednostjo, ki se ohrani, ostane `''`, razčlenjevanje pa vrednost, ki je vrstica nima, prebere kot `''`. Vsaka vrstica je zapisana v svoji vrstici besedila kot kompakten JSON, kot v teh dveh besedah iz datoteke:
 
 ```json
 "wordEntities": {
@@ -507,8 +460,8 @@ Ključi nobenega od treh slovarjev niso identifikatorji. Vsak je zapisan kot gla
 }
 ```
 
-Oblika za shranjevanje zapiše navedene vrstice v vrstnem redu na listu in izpusti `order`, zato ga njene glave ne navajajo. Izpusti vrstico, katere vrednosti poleg identifikatorja so vse prazne ali iz samih presledkov, na primer vrstico, ki je bila dodana in nikoli izpolnjena, ali izpraznjeno vrstico, ter vsako povezavo s tako domeno ali z odstranjeno domeno: polje `domainId` stolpca se izpusti, pri izrazu pa se zapiše kot `''`, pri čemer se sam izraz izpusti, če ne vsebuje ničesar drugega.  
-Glave vrednosti med izvajanjem navajajo `"order"` takoj za `"name"`. Vrednost med izvajanjem zapiše vsako vrstico, ki jo vsebuje kolekcija, tudi odstranjene, v vrstnem redu, v katerem jih vsebuje kolekcija, zato za vrstni red lista razvrstite po polju `order`, pri čemer vrednosti primerjate v vrstnem redu kodnih enot. Razčlenjevanje da vrsticam datoteke ključe `order` v vrstnem redu, v katerem stojijo, zato se preberejo v vrstnem redu, v katerem jih je zapisala datoteka.  
+Oblika za shranjevanje zapiše vrstice vsakega lista v vrstnem redu lista in brez polja za vrstni red, zato so vrstice datoteke članice slovarja in njihov vrstni red. Izpusti vrstico, katere vrednosti poleg identifikatorja so vse prazne ali iz samih presledkov, na primer vrstico, ki je bila dodana in nikoli izpolnjena, ali izpraznjeno vrstico, ter vsako povezavo s tako domeno ali z odstranjeno domeno: polje `domainId` stolpca se izpusti, pri izrazu pa se zapiše kot `''`, pri čemer se sam izraz izpusti, če ne vsebuje ničesar drugega.  
+Razčlenjevanje prebere vrstice v vrstnem redu, v katerem stojijo, zato jih vsak list navaja v vrstnem redu, v katerem jih je zapisala datoteka.  
 Dokument brez slovarjev, na primer dokument, shranjen pred različico `4.2.0`, nima nobenega vnosa v slovarjih. Urejevalnik pred različico `4.2.0` ob nalaganju dokumenta izpusti vse tri, zato se ob shranjevanju tam izgubijo vse besede, izrazi in domene.
 
 ### Kolekcija: wordEntities {#collection-wordentities}
@@ -517,12 +470,11 @@ Dokument brez slovarjev, na primer dokument, shranjen pred različico `4.2.0`, n
 type Word = {
   id: string;
   name: string;
-  order: string; // runtime only
-  abbreviation: string;
-  englishName: string;
-  description: string;
-  synonyms: string;
-  forbiddenWords: string;
+  abbreviation?: string;
+  englishName?: string;
+  description?: string;
+  synonyms?: string;
+  forbiddenWords?: string;
 };
 ```
 
@@ -534,15 +486,14 @@ Beseda je ena od besed, iz katerih je sestavljeno logično ime, `abbreviation` p
 type Term = {
   id: string;
   name: string;
-  order: string; // runtime only
-  physicalName: string;
-  domainId: string;
-  description: string;
-  synonyms: string;
+  physicalName?: string;
+  domainId?: string;
+  description?: string;
+  synonyms?: string;
 };
 ```
 
-Izraz je celotno logično ime. Tabela ali stolpec, katerega `logicalName` se ujema z `name`, izpelje `physicalName` ali, dokler je to prazno, ime, sestavljeno iz okrajšav besed, stolpec pa prevzame tudi domeno, ki jo navaja `domainId`, pri čemer `''` pomeni, da je ni (glejte razdelek [Izpeljava fizičnih imen](../../guide/guides/dictionary.md#deriving-physical-names)). Vrednosti v polju `synonyms` so ločene z vejicami. Razčlenjevanje počisti polje `domainId`, ki ne navaja nobene domene, tako kot pri stolpcu.
+Izraz je celotno logično ime. Tabela ali stolpec, katerega `logicalName` se ujema z `name`, izpelje `physicalName` ali, dokler je to prazno, ime, sestavljeno iz okrajšav besed, stolpec pa prevzame tudi domeno, ki jo navaja `domainId`, pri čemer `''` pomeni, da je ni (glejte razdelek [Izpeljava fizičnih imen](../../guide/guides/dictionary.md#deriving-physical-names)). Vrednosti v polju `synonyms` so ločene z vejicami. Razčlenjevanje počisti polje `domainId`, ki ne navaja nobene domene v datoteki, tako kot pri stolpcu.
 
 ### Kolekcija: domainEntities {#collection-domainentities}
 
@@ -550,10 +501,9 @@ Izraz je celotno logično ime. Tabela ali stolpec, katerega `logicalName` se uje
 type Domain = {
   id: string;
   name: string;
-  order: string; // runtime only
-  category: string;
-  dataType: string;
-  description: string;
+  category?: string;
+  dataType?: string;
+  description?: string;
 };
 ```
 
@@ -572,7 +522,7 @@ Kanonična datoteka sheme je objavljena na [json-schema/schema.json](https://raw
 
 Polje `$schema` postavite na vrh datoteke `.erd.json` in urejevalniki, ki razumejo JSON Schema, kot je VS Code, bodo med urejanjem preverjali veljavnost dokumenta in samodejno dokončevali njegova polja.
 
-Od različice `4.0.0` shema opisuje samo obliko za shranjevanje. Vsak objekt z imenovanimi polji je zaprt (`additionalProperties: false`), vsako polje, ki ga oblika za shranjevanje vedno zapiše, je obvezno, polje, ki ga izpusti, dokler ne vsebuje ničesar, je navedeno, vendar ni obvezno, nobeno polje, ki ga vedno izpusti, pa ni navedeno. Zato zavrne vrednost med izvajanjem. Zavrne tudi datoteko, shranjeno pred različico `4.0.0`, z objektom `meta`, širinami, poljem `zIndex`, poljem `ignoreSaveSettings` in vsem drugim, dokler je urejevalnik različice `4.0.0` ali novejše znova ne shrani. Datoteka, ki jo je shranila različica `3.2.0` ali novejša, že navaja URL te sheme, ki kaže na vejo `main`, zato jo urejevalnik, ki preverja veljavnost po njej, zdaj označi kot neveljavno. Datoteka, ki jo je shranila različica `3.0.0` ali `3.1.0`, ali dokument v2 ne navaja polja `$schema`.
+Od različice `4.0.0` shema opisuje samo obliko za shranjevanje. Vsak objekt z imenovanimi polji je zaprt (`additionalProperties: false`), vsako polje, ki ga oblika za shranjevanje vedno zapiše, je obvezno, vsako polje, označeno z `?` v zgornjih tipih, je navedeno, vendar ni obvezno, nobeno drugo polje pa ni navedeno. Zato zavrne datoteko, shranjeno pred različico `4.0.0`, z objektom `meta`, širinami, poljem `zIndex`, poljem `ignoreSaveSettings` in vsem drugim, dokler je urejevalnik različice `4.0.0` ali novejše znova ne shrani. Datoteka, ki jo je shranila različica `3.2.0` ali novejša, že navaja URL te sheme, ki kaže na vejo `main`, zato jo urejevalnik, ki preverja veljavnost po njej, zdaj označi kot neveljavno. Datoteka, ki jo je shranila različica `3.0.0` ali `3.1.0`, ali dokument v2 ne navaja polja `$schema`.
 
 Od različice `4.2.0` shema ne zahteva več besedilnih polj entitete niti nobenega seznama v `doc`, nobene kolekcije ali samega polja `collections`, ki jih oblika za shranjevanje izpusti, dokler ne vsebujejo ničesar. Še vedno sprejme datoteko, ki jo je shranila različica `4.0.0` ali `4.1.0`. Navaja nova polja: `nameViewMode`, ki sprejme samo `"logical"` in `"both"`; polji `logicalName` in `nameDerived` tabele, pri čemer slednje sprejme samo `true`; polji `logicalName` in `domainId` stolpca; ter tri slovarje, vsakega z glavo in vrsticami nizov. Polje `canvasType` navaja zavihek Slovar, `columnOrder` sprejme sedem ali devet celih števil, opisi polj `show`, `columnOrder`, `lockSettings` in `options` pa navajajo nove bite.
 

@@ -55,9 +55,12 @@ De groep en de tabellen die hij opneemt, vormen één stap in de geschiedenis, e
 ## Een groep een naam geven {#naming-a-group}
 
 De naam van een groep wordt bewerkt in een veld dat over de titelbalk opent. Het opent vanzelf zodra een groep is gemaakt, bij een dubbelklik op de titelbalk en via `Rename` in het contextmenu van de groep.  
-`Enter`, of ergens anders klikken, slaat de naam op. `Escape` sluit het veld zonder de naam te wijzigen en laat de groep geselecteerd, en een tweede `Escape` heft de selectie op.  
+`Enter`, elders klikken of het verbergen van de groepen, of jij ze verbergt of een medebewerker, slaat de naam op. `Escape` sluit het veld zonder de naam te wijzigen en laat de groep geselecteerd, en een tweede `Escape` heft de selectie op.  
 Een gewijzigde naam is één stap in de geschiedenis; de naam ongewijzigd opslaan legt niets vast. Een lege naam of een naam met alleen spaties wordt weergegeven als `unnamed`.  
-Zolang het veld open is, worden de sneltoetsen van het canvas onderdrukt en doen de sneltoetsen voor Snel zoeken en `Toggle Explorer` niets, net als wanneer een tabelcel wordt bewerkt.
+Zolang het veld open is, worden de sneltoetsen van het canvas onderdrukt en doen de sneltoetsen voor Snel zoeken en `Toggle Explorer` niets, net als wanneer een tabelcel wordt bewerkt.  
+Wanneer een medebewerker of een codeeragent het diagram vervangt terwijl het veld open staat, blijft het veld open zolang het nieuwe diagram de groep nog heeft en de groepen toont.  
+Als dat diagram de groep niet meer heeft, sluit het veld en wordt er niets opgeslagen; als het de groep wel heeft maar de groepen verbergt, sluit het veld en wordt een gewijzigde naam opgeslagen.  
+Het diagram opnieuw in de editor laden, zoals Obsidian doet wanneer het bestand buiten Obsidian verandert, sluit het veld en gooit de getypte naam weg. Toetsen die daarna worden ingedrukt, gaan nergens heen totdat je op de editor klikt, zodat een `Delete` of `Backspace` bedoeld voor de naam niets verwijdert.
 
 [Zoeken en vervangen](./find-and-replace.md#what-it-searches) doorzoekt groepsnamen onder `Table group names` zolang groepen worden getoond, en `Replace` en `Replace All` van die functie wijzigen de naam van groepen — zie [Vervangen](./find-and-replace.md#replacing). [Snel zoeken](./quick-search.md#searching-the-diagram) doorzoekt geen groepsnamen.
 
@@ -157,7 +160,7 @@ Het contextmenu van een tabel voegt `Group selected tables` en `Remove from grou
 
 `View Option` → `Table Groups` in het contextmenu van het canvas toont of verbergt alle groepen. Deze optie is standaard aangevinkt — zie [Weergaveopties voor tabellen](./table-related-functions.md#table-view-options).  
 Uitgevinkt verdwijnen de groepskaders en de groepskleuren op tabelkoppen van het canvas, de minimap en geëxporteerde afbeeldingen, en maken de schuifbalken en de minimap geen ruimte meer voor de groepen. Niets verschuift of verandert van grootte, en elke tabel blijft in haar groep.  
-Het verbergen van de groepen deselecteert ze, beëindigt het tekenen met `New Table Group` en sluit een geopend naamveld.
+Het verbergen van de groepen deselecteert ze, beëindigt het tekenen met `New Table Group` en sluit een geopend naamveld zoals elders klikken dat doet — zie [Een groep een naam geven](#naming-a-group).
 
 Zolang groepen verborgen zijn:
 

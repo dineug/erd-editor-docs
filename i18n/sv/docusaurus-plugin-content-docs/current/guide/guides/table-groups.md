@@ -55,9 +55,12 @@ Gruppen och tabellerna den tar in är ett steg i ångrahistoriken, och namnet du
 ## Namnge en grupp {#naming-a-group}
 
 En grupps namn redigeras i ett fält som öppnas över dess namnlist. Fältet öppnas av sig självt när en grupp har skapats, vid ett dubbelklick på namnlisten och via `Rename` i gruppens snabbmeny.  
-`Enter`, eller ett klick någon annanstans, sparar namnet. `Escape` stänger fältet utan att ändra namnet och lämnar gruppen markerad, och ett andra tryck på `Escape` avmarkerar allt.  
+`Enter`, ett klick någon annanstans eller att grupperna döljs, oavsett om du döljer dem eller en medarbetare gör det, sparar namnet. `Escape` stänger fältet utan att ändra namnet och lämnar gruppen markerad, och ett andra tryck på `Escape` avmarkerar allt.  
 Ett ändrat namn är ett steg i ångrahistoriken; att spara namnet oförändrat registrerar ingenting. Ett tomt namn eller ett namn med enbart blanksteg visas som `unnamed`.  
-Medan fältet är öppet spärras arbetsytans kortkommandon, och kortkommandona för snabbsökningen och `Toggle Explorer` gör ingenting, liksom när en tabellcell redigeras.
+Medan fältet är öppet spärras arbetsytans kortkommandon, och kortkommandona för snabbsökningen och `Toggle Explorer` gör ingenting, liksom när en tabellcell redigeras.  
+När en medarbetare eller en kodagent ersätter diagrammet medan fältet är öppet förblir fältet öppet så länge det nya diagrammet fortfarande har gruppen och visar grupperna.  
+Om det diagrammet inte längre har gruppen stängs fältet och ingenting sparas; om det har gruppen men döljer grupperna stängs fältet och ett ändrat namn sparas.  
+Om diagrammet läses in i editorn på nytt, som Obsidian gör när filen ändras utanför den, stängs fältet och det inskrivna namnet kasseras. Tangenter som trycks därefter går ingenstans förrän du klickar på editorn, så en `Delete` eller `Backspace` avsedd för namnet tar inte bort något.
 
 Funktionen [Sök och ersätt](./find-and-replace.md#what-it-searches) söker i gruppnamn under `Table group names` medan grupper visas, och dess `Replace` och `Replace All` byter namn på grupper – se [Ersätta](./find-and-replace.md#replacing). [Snabbsökningen](./quick-search.md#searching-the-diagram) söker inte i gruppnamn.
 
@@ -157,7 +160,7 @@ En tabells snabbmeny lägger till `Group selected tables` och `Remove from group
 
 `View Option` → `Table Groups` i arbetsytans snabbmeny visar eller döljer alla grupper. Alternativet är ikryssat som standard – se [Visningsalternativ för tabeller](./table-related-functions.md#table-view-options).  
 När det är urkryssat försvinner grupprutorna och gruppfärgerna på tabellhuvudena från arbetsytan, minikartan och exporterade bilder, och rullningslisterna och minikartan lämnar inte längre plats åt grupperna. Ingenting flyttas eller ändrar storlek, och varje tabell stannar kvar i sin grupp.  
-Att dölja grupperna avmarkerar dem, avslutar ritläget för `New Table Group` och stänger ett öppet namnfält.
+Att dölja grupperna avmarkerar dem, avslutar ritläget för `New Table Group` och stänger ett öppet namnfält på samma sätt som ett klick någon annanstans – se [Namnge en grupp](#naming-a-group).
 
 Medan grupper är dolda:
 

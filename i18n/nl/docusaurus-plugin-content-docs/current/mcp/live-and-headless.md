@@ -37,6 +37,38 @@ Een leesopdracht opent nooit een editor. Een bewerking opent het document in de 
 
 Een editor met een VS Code-extensie vóór `4.2.0`, of een Obsidian- of JetBrains-plug-in vóór `1.2.0`, verwerkt de bewerkingen van de agent nog steeds live, maar toont noch behoudt de logische namen, domeinkoppelingen en woordenboekrijen die de agent schrijft — zie [Bijwerken](./installation.md#updating).
 
+Met de VS Code-extensie `4.3.0` of later, of de Obsidian- of JetBrains-plug-in `1.3.0` of later, beëindigen een import in de modus `replace` en een `erd_undo` of `erd_redo` ervan een relatie die je in de editor tekent, welke versie de server ook heeft — zie [Relaties maken](../guide/guides/editing-start.md#relationship-creation).
+Vóór die versies bleef het tekenen actief, en een klik op een tabel kon een relatie toevoegen vanuit een tabel die niet meer in het diagram stond.
+Een import in de modus `append` laat het tekenen actief.
+Een memo-, tabelgroepnaam- of celeditor die je open hebt, blijft open zolang het diagram nog bevat en toont wat de editor bewerkt.
+
+### Bewerkingen op hetzelfde moment {#edits-made-at-the-same-moment}
+
+Met server `1.2.0` of later en, in de editor, de VS Code-extensie `4.3.0` of later of de Obsidian- of JetBrains-plug-in `1.3.0` of later komen bewerkingen die jij en de agent op hetzelfde moment aan hetzelfde onderdeel maken, op hetzelfde uit in de editor, in het bestand dat hij opslaat en in wat `erd_list`, `erd_get` en `erd_read` de agent geven.
+Dat geldt voor een naam of een ander veld van een tabel, kolom, relatie, index, memo, tabelgroep of woordenboekrij, de databasenaam en de [scripts vóór en na de tabellen](../guide/guides/schema-sql.md#before-and-after-scripts), en de positie of grootte van een tabel, memo of tabelgroep, maar niet voor een kleur, de volgorde van de kolommen in een tabel of een index, of het databasesysteem.
+Twee bewerkingen van één naam of veld, twee verplaatsingen of twee formaatwijzigingen eindigen op een van de twee, nooit op een mengsel: een bewerking die wordt gemaakt nadat de andere haar kant heeft bereikt, wint, en van twee bewerkingen op precies hetzelfde moment wint er één, aan elke kant dezelfde, welke ook het eerst aankomt.
+
+Twee kleurwijzigingen van één tabel, memo of tabelgroep op hetzelfde moment, zoals die van jou en `erd_change_table_color` van de agent, kunnen uiteenlopen of zelfs van plaats wisselen, omdat elke kant de kleur behoudt die hij het laatst hoorde.
+Een herschikking van kolommen, die van jou of `erd_move_column` of `erd_move_index_column` van de agent, wordt aan elke kant toegepast in de volgorde waarin ze aankomt, dus twee op hetzelfde moment in één tabel of index kunnen de kolommen ervan in verschillende volgordes achterlaten.
+Een wijziging van het databasesysteem, die van jou of `erd_set_database` van de agent, wordt ook toegepast in de volgorde waarin ze aankomt, dus twee op hetzelfde moment kunnen de editor en de agent op verschillende databasesystemen achterlaten.
+
+Je sleepbeweging en `erd_move_table`, `erd_move_tables`, `erd_move_memo`, `erd_move_table_group` en `erd_sort_tables` van de agent worden verstuurd als de punten waar ze eindigen, dus twee verplaatsingen van één tabel, memo of tabelgroep eindigen waar een van de twee hem neerzette, nooit op de twee bij elkaar opgeteld.
+`erd_move_table_group` verstuurt het punt van de groep en van elk van haar tabellen in één batch, zoals het slepen van de titelbalk van de groep doet.
+Een formaatwijziging schrijft de positie en de grootte samen, dus een verplaatsing en een formaatwijziging van één memo of tabelgroep op hetzelfde moment, zoals `erd_resize_memo` terwijl jij die memo sleept, eindigen aan beide kanten op één rechthoek: die van de formaatwijziging, of, wanneer de verplaatsing wint, het punt van de verplaatsing met de grootte van de formaatwijziging.
+Een verplaatsing van minder dan 20 pixels, die geen stap in de geschiedenis oplevert, gaat ook uit als het punt waar ze eindigt, dus ze kan winnen van de verplaatsing van de andere kant, of het nu een korte `erd_move_table_group` is of een korte sleepbeweging van jou, zoals een klik die een tabel een paar pixels verschuift.
+
+Oudere versies maken nog steeds verbinding, omdat server `1.2.0` hubprotocol 2 spreekt, zoals `1.0.0` tot `1.1.1` doen.
+Met een server vóór `1.2.0`, of een extensie vóór `4.3.0` of een plug-in vóór `1.3.0`, kan een verplaatsing of formaatwijziging van één tabel, memo of tabelgroep op hetzelfde moment de editor en de agent met verschillende posities achterlaten.
+Een oudere editor verstuurt je sleepbeweging als de afgelegde afstand, en een server vóór `1.2.0` verstuurt `erd_move_table_group` ook zo.
+De andere kant telt die afstand op bij het punt dat hij heeft.
+De oudere kant past de punten van de andere kant ook toe in de volgorde waarin ze aankomen.
+De agent leest en bewerkt dan vanuit zijn eigen positie voor die tabel, memo of tabelgroep, niet vanuit de positie die de editor toont en opslaat.
+Dat duurt totdat een latere verplaatsing ervan als punt wordt verstuurd, zoals je sleepbeweging in een nieuwere editor of `erd_move_table` van de agent, of totdat de agent zich opnieuw bij het document aansluit, zoals nadat de editor hem losliet of na 30 minuten zonder aanroep op het document.
+Op een kleur, de kolomvolgorde en het databasesysteem na komt een naam of ander veld dat op hetzelfde moment wordt gewijzigd nog steeds op hetzelfde uit wanneer maar één kant ouder is, bijna altijd op de bewerking van de nieuwere kant.
+Als beide kanten ouder zijn, kunnen de twee nog steeds uiteenlopen.
+
+Niets hiervan geldt voor een headless bewerking, die alleen het bestand schrijft.
+
 ### Opslaan {#saving}
 
 Elke editor slaat de bewerkingen van de agent op zoals hij die van jou opslaat.

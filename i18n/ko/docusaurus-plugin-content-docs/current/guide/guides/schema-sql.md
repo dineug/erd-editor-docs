@@ -49,7 +49,7 @@ SQL은 탭이 열릴 때 작성되며, 패널의 선택, 데이터베이스 이�
 
 `Bracket`은 테이블, 컬럼, 제약 조건, 인덱스 이름을 감싸는 따옴표를 지정합니다. `SingleQuote`, `DoubleQuote`, `Backtick`, 또는 전혀 감싸지 않는 `None` 중 하나이며, 기본값은 `None`입니다. Code Generator에서 쓰는 것과 같은 설정입니다. [Bracket](./code-generator.md#bracket) 문서를 참고하세요.  
 이름을 큰따옴표로만 감싸는 Snowflake는 `None`이 아닌 모든 선택에서 큰따옴표를 사용하며, Databricks는 항상 이름을 백틱으로 감쌉니다.  
-`Bracket`은 설정 탭의 `Bracket Type` 잠금이 꺼져 있는 동안에만 파일에 저장되며, 새 다이어그램은 모든 잠금이 켜진 상태입니다. 잠금이 켜져 있는 동안 값을 바꾸면 화면의 SQL은 다시 작성되지만, 파일은 잠긴 값을 유지하고 다이어그램을 다시 열면 그 값으로 돌아옵니다. [잠금](./settings.md#잠금) 문서를 참고하세요.
+`Bracket`은 설정 탭의 `Bracket Type` 잠금이 꺼져 있는 동안에만 파일에 저장되며, 새 다이어그램은 모든 잠금이 켜진 상태입니다. 잠금이 켜져 있는 동안 값을 바꾸면 SQL은 값을 바꾼 에디터에서만 다시 작성됩니다. 그 다이어그램을 연 다른 에디터는 각자의 괄호를 유지하고, 파일은 잠긴 값을 유지하므로 다이어그램을 다시 열면 그 값으로 돌아옵니다. [잠금](./settings.md#잠금) 문서를 참고하세요.
 
 데이터베이스가 Oracle이고 SQL에 Oracle 12.1 이하가 거부하는 30바이트보다 긴 이름이 있으면, 두 목록 아래의 안내 문구가 `Oracle 12.2+ for names over 30 bytes: <names>`로 그 이름을 하나하나 밝힙니다. 테이블, 컬럼, 스키마, 키, 인덱스, 시퀀스, 트리거 이름을 검사합니다. SQL 자체는 바뀌지 않습니다.
 
@@ -224,7 +224,7 @@ Snowflake가 동작을 생략하면, 그 foreign key의 `ALTER TABLE` 위에 `--
 
 [`readonly`](../../api/erd-editor-element.md#readonly) 에디터에서 탭은 읽는 사람을 위해 동작하며, 거기서 하는 어떤 것도 문서에 닿지 않습니다.
 
-- `Database`와 `Bracket`은 여전히 SQL을 다시 작성하지만 그 창에서만 바뀌므로, 패널은 이 둘에도 `This window only` 캡션을 표시합니다. 고른 값은 잠금과 상관없이 파일에 저장되거나 공동 편집자와 공유되거나 Undo에 기록되지 않으며, 직접 고른 설정에 대한 공동 편집자의 변경은 화면에서 고른 값을 그대로 둡니다. Code Generator 탭도 같은 선택을 표시하고, 데이터베이스 없이 호출한 [`getSchemaSQL()`](../../api/erd-editor-element.md#getschemasql)도 그 선택으로 작성합니다. 에디터가 다시 편집 가능해지면 문서의 데이터베이스와 Bracket이 돌아옵니다.
+- `Database`와 `Bracket`은 여전히 SQL을 다시 작성하지만 그 창에서만 바뀌므로, 패널은 이 둘에도 `This window only` 캡션을 표시합니다. 고른 값은 잠금과 상관없이 파일에 저장되거나 공동 편집자와 공유되거나 Undo에 기록되지 않으며, 직접 고른 설정에 대한 공동 편집자의 변경은 화면에서 고른 값을 그대로 둡니다. Code Generator 탭도 같은 선택을 표시하고, 데이터베이스 없이 호출한 [`getSchemaSQL()`](../../api/erd-editor-element.md#getschemasql)도 그 선택으로 작성합니다. 에디터가 다시 편집 가능해지면 고른 데이터베이스와 괄호는 에디터가 전에 보여 주던 값으로 돌아가며, 그사이 공동 편집자가 바꾼 것이 있으면 그것이 반영됩니다. 설정의 [읽기 전용 에디터](./settings.md#read-only-editors) 문서를 참고하세요.
 - `Statements`, `Header`, `Write logical names into empty comments`, `Tables`는 이미 그 창에 속하므로 어디서와 똑같이 동작합니다.
 - 두 스크립트 입력란은 읽기 전용입니다. 문서의 스크립트를 보여 주며 SQL에는 여전히 그 스크립트가 쓰이지만, 입력할 수는 없습니다.
 - `Save file`과 `Copy`는 탭이 표시하는 SQL을 저장하고 복사합니다.

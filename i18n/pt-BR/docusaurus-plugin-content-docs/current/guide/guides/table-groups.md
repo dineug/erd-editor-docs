@@ -55,9 +55,12 @@ O grupo e as tabelas que ele recebe são uma única etapa de desfazer, e o nome 
 ## Nomear um grupo {#naming-a-group}
 
 O nome de um grupo é editado em um campo que se abre sobre a barra de título. Ele se abre sozinho quando um grupo é criado, com um clique duplo na barra de título e pelo item `Rename` no menu de contexto do grupo.  
-`Enter`, ou um clique em outro lugar, salva o nome. `Escape` fecha o campo sem alterar o nome e deixa o grupo selecionado, e um segundo `Escape` limpa a seleção.  
+`Enter`, um clique em outro lugar ou a ocultação dos grupos, seja por você ou por um colaborador, salva o nome. `Escape` fecha o campo sem alterar o nome e deixa o grupo selecionado, e um segundo `Escape` limpa a seleção.  
 Um nome alterado é uma única etapa de desfazer; salvar o nome sem alterá-lo não registra nada. Um nome vazio ou só com espaços aparece como `unnamed`.  
-Enquanto o campo está aberto, os atalhos do canvas ficam suspensos, e os atalhos da pesquisa rápida e de `Toggle Explorer` não fazem nada, como durante a edição de uma célula da tabela.
+Enquanto o campo está aberto, os atalhos do canvas ficam suspensos, e os atalhos da pesquisa rápida e de `Toggle Explorer` não fazem nada, como durante a edição de uma célula da tabela.  
+Quando um colaborador ou um agente de codificação substitui o diagrama enquanto o campo está aberto, o campo continua aberto enquanto o novo diagrama ainda tiver o grupo e mostrar os grupos.  
+Se esse diagrama não tiver mais o grupo, o campo fecha e não salva nada; se tiver o grupo mas ocultar os grupos, o campo fecha e salva um nome alterado.  
+Carregar o diagrama no editor de novo, como o Obsidian faz quando o arquivo muda fora dele, fecha o campo e descarta o nome digitado. As teclas pressionadas depois disso não vão a lugar nenhum até você clicar no editor, então um `Delete` ou `Backspace` destinado ao nome não remove nada.
 
 [Localizar e substituir](./find-and-replace.md#what-it-searches) pesquisa nomes de grupos em `Table group names` enquanto os grupos estão visíveis, e seus botões `Replace` e `Replace All` renomeiam grupos — consulte [Substituir](./find-and-replace.md#replacing). A [pesquisa rápida](./quick-search.md#searching-the-diagram) não pesquisa nomes de grupos.
 
@@ -157,7 +160,7 @@ O menu de contexto de uma tabela ganha `Group selected tables` e `Remove from gr
 
 `View Option` → `Table Groups` no menu de contexto do canvas mostra ou oculta todos os grupos. Ele vem marcado por padrão — consulte [Opções de exibição da tabela](./table-related-functions.md#table-view-options).  
 Com ele desmarcado, as caixas dos grupos e as cores de grupo nos cabeçalhos das tabelas desaparecem do canvas, do minimapa e das imagens exportadas, e as barras de rolagem e o minimapa deixam de reservar espaço para os grupos. Nada se move nem muda de tamanho, e toda tabela permanece em seu grupo.  
-Ocultar os grupos os retira da seleção, encerra um desenho de `New Table Group` e fecha um editor de nome aberto.
+Ocultar os grupos os retira da seleção, encerra um desenho de `New Table Group` e fecha um editor de nome aberto, como faz um clique em outro lugar — consulte [Nomear um grupo](#naming-a-group).
 
 Enquanto os grupos estão ocultos:
 

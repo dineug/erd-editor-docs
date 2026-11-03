@@ -66,4 +66,7 @@ Instrumentele pentru nume logice, domenii și dicționare necesită versiunea `1
 Dintre versiunile de mai sus, o extensie anterioară versiunii `4.2.0` sau un plugin anterior versiunii `1.2.0` permite în continuare agentului să editeze în direct, deoarece folosește protocolul 2, dar ignoră numele logice, legăturile cu domeniile și rândurile dicționarelor pe care le scrie agentul și le omite când salvează fișierul.
 Un server anterior versiunii `1.1.0` care editează un fișier pe disc îl rescrie fără numele logice, legăturile cu domeniile și rândurile dicționarelor (consultați [Actualizarea](./installation.md#updating)).
 
+Editările pe care dumneavoastră și agentul le faceți în același moment aceluiași nume sau câmp ori poziției sau dimensiunii aceluiași tabel, aceleiași note sau aceluiași grup de tabele ajung la fel în editor și pentru agent cu serverul `1.2.0` sau o versiune ulterioară și, oriunde este deschis documentul, cu extensia pentru VS Code `4.3.0` sau o versiune ulterioară ori cu pluginul pentru Obsidian sau JetBrains `1.3.0` sau o versiune ulterioară.
+O culoare, baza de date și ordinea coloanelor dintr-un tabel sau dintr-un index sunt excepțiile (consultați [Editări făcute în același moment](./live-and-headless.md#edits-made-at-the-same-moment)).
+
 Pasul următor: [Instalare](./installation.md).

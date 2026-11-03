@@ -1,5 +1,5 @@
 ---
-sidebar_position: 2
+sidebar_position: 3
 description: Replikera en live-editor till en headless store utanför huvudtråden och serialisera dokumentet för lagring.
 ---
 
@@ -88,6 +88,11 @@ Sedan `4.2.0` gäller samma sak för ett ord, en term eller en domän som tagits
 När en editor ångrar borttagningen listar en replik som initierats utan raden den på nytt, men tom, och eftersom `value` utelämnar en tom rad sparar repliken dokumentet utan den.  
 För en domän förblir också de kolumner och termer som var kopplade till den okopplade i den repliken, eftersom den aldrig hade kopplingarna och ångringen inte skickar dem.
 
+Sedan `5.1.0` kan [`@dineug/erd-editor-yjs`](./yjs.md) också hålla editorer i takt via ett Yjs-rum.  
+Matad som ovan från ett element som är bundet till ett rum får en replik bara de redigeringar som görs på det elementet, aldrig de som rummet för in: de når elementet som en annan editors, och en delad store skickar aldrig vidare det den har tagit emot.  
+Spara det bundna elementets `value`, eller en bunden peer-stores, för att lagra ett rums dokument, som [Vad rummet innehåller](./yjs.md#what-the-room-holds) beskriver.  
+En Yjs-provider för beständig lagring lagrar själva rummet, som innehåller ett körtidsvärde och de redigeringar som gjorts sedan dess i stället för en fil; se [Begränsningar](./yjs.md#limits).
+
 ## InjectEngineContext {#injectenginecontext}
 
 ### toWidth {#towidth}
@@ -154,7 +159,7 @@ Den innehåller bara de befintliga entiteterna, i en fast ordning, utan de bortt
 Sedan `4.2.0` innehåller den också de logiska namnen, om varje namn härleddes från ordlistorna, domänkopplingarna samt orden, termerna och domänerna på fliken [Ordlista](../../guide/guides/dictionary.md).  
 Den utelämnar också, sedan `4.2.0`, varje tomt textfält i en entitet, varje lista i `doc` och varje samling som inte innehåller något samt själva `collections` när alla samlingar är tomma.  
 Den är indragen med två blanksteg, med varje rad från ordlistorna på en egen textrad, och slutar med en radbrytning, så samma dokument ger alltid samma byte.  
-Se [Lagringsform och körtidsvärde](./schema.md#storage-form-and-runtime-value) för vad den innehåller.
+Se [Lagringsform](./schema.md#storage-form) för vad den innehåller.
 
 Varje inställning vars [lås](../../guide/guides/settings.md#lock) är på skrivs med det värde den låstes med, och varje annan inställning med sitt aktuella värde.  
 Låset `Viewport` omfattar vyns origo och zoomnivån tillsammans, och fliken, kodgeneratorns språk, båda skiftlägena för namn och typen av citattecken har vart och ett sitt eget lås.  
@@ -172,6 +177,7 @@ const snapshot = replicationStore.runtimeValue;
 ```
 
 Använd den för att initiera en editor eller en annan store som ansluter senare, via dess `setInitialValue`; se [Gemensam redigering](./collaborative-editing.md).  
+En replik har varken [getLWW](./collaborative-editing.md#getlww) eller [getVersion](./collaborative-editing.md#getversion), så den lämnar inte över några register för gemensam redigering med `runtimeValue`: en editor som initieras från den hämtar dem från de editorer som körs, som [Initiera en medarbetare](./collaborative-editing.md#seeding-a-collaborator) beskriver.  
 Lagra den aldrig som filen: den bär med sig de borttagna entiteterna, och det publicerade [JSON Schema](./schema.md#json-schema) avvisar den.  
 Det är de borttagna entiteterna som gör att en ångrad borttagning som skickas senare kan återställa entiteten i sin helhet i den store som initierats med den.  
 De finns kvar tills dokumentet nästa gång öppnas från sin fil, vars form utelämnar dem.
@@ -230,7 +236,7 @@ Före `3.10.0` tog den inte emot något, och en lyssnare som ignorerar argumente
 `changed` är `false` när åtgärderna sedan föregående `change`, eller sedan inläsningen, har lämnat `value` byte för byte som det var.
 
 En ändring som ett [lås](../../guide/guides/settings.md#lock) håller utanför `value` utlöser ändå `change`, med `changed` satt till `false`, så skriv bara när `changed` är `true`.  
-Det gäller en rullning eller zoomning när `Viewport` är låst, ett flikbyte när `Canvas Type` är låst och en ändring av kodgeneratorns språk, ett skiftläge för namn eller typen av citattecken när dess eget lås är på.  
+Det gäller en rullning eller zoomning när `Viewport` är låst, ett flikbyte när `Canvas Type` är låst och en ändring av kodgeneratorns språk, ett skiftläge för namn eller typen av citattecken när dess eget lås är på, vilket sedan `5.1.0` bara en editor från före `5.1.0` fortfarande skickar (se [dispatch, dispatchSync](#dispatch-dispatchsync)).  
 Sedan `4.2.0` gäller det även ett byte av namnvisning när `Name View` är låst: editorn skickar det ändå, men repliken kastar det, som de andra editorerna gör.  
 Ett byte av namnvisning som görs i en skrivskyddad editor kastas på samma sätt, oavsett låset.  
 Elementets händelse [change](../erd-editor-element.md#change) utelämnar en sådan ändring, men repliken rapporterar den ändå.  
@@ -282,6 +288,23 @@ En editor från före `4.2.0` i sessionen kan ändå ta bort en del av detta fr�
 En `Import` av Schema SQL, GraphQL, DBML eller AML i den editorn, dock inte en `Import and Add`, tömmer replikens ord, termer och domäner.  
 När den ångrar en inläsning, en `Import` eller `clear()` läser den in sin egen kopia av dokumentet i repliken, utan logiska namn, domänkopplingar eller ordlistor; se [Blanda versioner](./collaborative-editing.md#mixing-releases).  
 `@dineug/erd-editor/engine.js` exporterar samma `createReplicationStore`, `ReplicationStore` och `ReplicationChange` som tidigare, och `createReplicationStore` tar emot samma kontext.
+
+`5.1.0` lägger inte till någon åtgärdstyp och ändrar ingen export från `@dineug/erd-editor/engine.js`, så en replik från `4.2.0` och framåt behåller fortfarande varje ändring som en editor med `5.1.0` skickar.  
+Sedan `5.1.0` avgör repliken redigeringar som görs samtidigt på samma sätt som editorerna med `5.1.0` gör; se [Samtidiga redigeringar](./collaborative-editing.md#concurrent-edits).  
+Den håller en version för en tabells position, för en antecknings och en tabellgrupps position och storlek samt för vyns origo och zoomnivå.  
+En editor med `5.1.0` skickar en dragning, en panorering eller en zoomning som den punkt där den slutar, via `table.moveTo`, `memo.moveTo`, `tableGroup.moveTo`, `settings.scrollTo` och `settings.changeZoomLevel`, och repliken tar emot var och en av dem, samt varje `memo.resize` och `tableGroup.resize`, bara när dess version inte är lägre än den som repliken håller.  
+När två av dessa editorer flyttar eller ändrar storlek på samma tabell, anteckning eller tabellgrupp samtidigt sparar repliken den därför på den punkt och med den storlek som var och en av dem visar, oavsett i vilken ordning den får höra om dem, och en dragning, panorering eller zoomning som transporten levererar två gånger flyttar ingenting två gånger.  
+När `Viewport` är upplåst sparar repliken origo och zoomnivå var för sig från skrivningen med störst version, så som vyn stod hos den editor som gjorde den.  
+En zoomning flyttar också origo, så en panorering och en zoomning som två editorer gör samtidigt kan sparas som den ena editorns origo med den andras zoomnivå.  
+Före `5.1.0` lade repliken ihop varje editors panorerings- och zoomsteg till en enda vy.
+
+De avstånd som en editor från före `5.1.0` skickar för en dragning, en panorering eller en zoomning (`table.move`, `memo.move`, `tableGroup.move`, `settings.streamScrollTo` och `settings.streamZoomLevel`) läggs fortfarande till det som repliken håller, utanför versionerna.  
+En färgändring kommer fortfarande fram utan version: repliken stämplar den, liksom varje editor, med en egen version och behåller den färg den hörde sist, så två färgändringar av samma tabell, anteckning eller tabellgrupp som görs samtidigt kan sparas annorlunda än vad en editor visar.  
+En replik från före `5.1.0` tillämpar punkterna och storlekarna i den ordning de kommer, så den kan spara en tabell på en annan plats än den där editorerna med `5.1.0` visar den.  
+Håll varje editor i sessionen, och repliken, på `5.1.0` eller senare för att redigeringar som görs samtidigt ska sluta lika, bortsett från de undantag som [Samtidiga redigeringar](./collaborative-editing.md#concurrent-edits) listar.
+
+Sedan `5.1.0` skickar en editor en ändring av kodgeneratorns språk, ett skiftläge för namn eller typen av citattecken bara när den inställningens lås är av, markerad med `shared: true` i sin nyttolast, och repliken tillämpar varje markerad ändring, som editorerna gör; se [Gemensam redigering](./collaborative-editing.md).  
+Repliken tillämpar en omarkerad ändring, som en editor från före `5.1.0` skickar oavsett låset, bara medan den inställningen är upplåst hos den, och kastar den medan inställningen är låst (se [on@change](#onchange)).
 
 Sedan `4.0.0` tillämpar båda metoderna också `editor.mergeLWW`, som bär de samarbetsregister som en editor svarar med när en annan ansluter till sessionen, så repliken avgör samtidiga redigeringar på samma sätt som editorerna.  
 Den ändrar ingen byte i `value` och utlöser ingen `change`.  

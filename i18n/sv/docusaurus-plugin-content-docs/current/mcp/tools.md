@@ -47,7 +47,7 @@ Varje kolumn har sitt `domainId`, och det har även varje term: en tom sträng n
 | --- | --- |
 | `snapshot` | Kompakt JSON med varje entitet och dess id, tabellgrupper och raderna med ord, termer och domäner inräknade, samt inställningarna med skripten för Schema SQL. Det utelämnar det som skiljer sig mellan olika betraktare: uppmätta bredder, staplingsordningen, vyn, fliken och namnvisningen. Blir stort för ett stort schema. |
 | `sql` | DDL-kod för en av de åtta databaserna `Databricks`, `MariaDB`, `MSSQL`, `MySQL`, `Oracle`, `PostgreSQL`, `Snowflake` eller `SQLite`. Standardvärdet för `vendor` är den databas som dokumentet är inställt på. DDL-koden för hela dokumentet innehåller dess skript före och efter tabellerna. Med `tableIds`, `tableNames` eller `groupNames` bara de tabellerna, med de sekundärnycklar som de innehåller och utan skript. Sekundärnycklar skrivs med sina åtgärder för ON DELETE och ON UPDATE, utom de som måldatabasen utelämnar – se [ON DELETE och ON UPDATE](../guide/guides/relationship-editing.md#on-delete-and-on-update). |
-| `json` | Hela dokumentet exakt som en sparning skriver filen, inklusive redigeringar som editorn ännu inte har sparat – se [Lagringsform och körtidsvärde](../api/advanced/schema.md#storage-form-and-runtime-value). |
+| `json` | Hela dokumentet exakt som en sparning skriver filen, inklusive redigeringar som editorn ännu inte har sparat – se [Lagringsform](../api/advanced/schema.md#storage-form). |
 | `scripts` | Enbart dokumentets skript före och efter tabellerna, som `{"before":"…","after":"…"}`, vart och ett tomt när det inte är angivet, oavsett hur stort schemat är. |
 
 Bara formatet `sql` tar `vendor`, `statements`, `header`, `logicalNameAsComment`, `tableIds`, `tableNames` och `groupNames`, och andra format nekar dem.
@@ -205,7 +205,7 @@ En grupp lagrar en rektangel, minst `160` pixlar bred och `100` hög, namnlisten
 | `erd_remove_table_group` | `groupId` | Tar bort en grupp. Dess tabeller stannar där de är, utan grupp. |
 | `erd_change_table_group_name` | `groupId`, `value` | Byter namn på en grupp. En tom sträng gör den namnlös. |
 | `erd_change_table_group_color` | `groupId`, `color` | Anger färgen för en grupp. |
-| `erd_move_table_group` | `groupId`, `x`, `y` | Flyttar en grupp så att dess rektangel börjar i den punkten, med tabellerna förskjutna lika långt, så som att dra i gruppens namnlist gör. En förflyttning under 20 pixlar, vågrätt och lodrätt sammanlagt, skapar inget steg i ångrahistoriken. |
+| `erd_move_table_group` | `groupId`, `x`, `y` | Flyttar en grupp så att dess rektangel börjar i den punkten, med tabellerna förskjutna lika långt, så som att dra i gruppens namnlist gör. En förflyttning under 20 pixlar, vågrätt och lodrätt sammanlagt, skapar inget steg i ångrahistoriken. Sedan server `1.2.0` når flytten editorn som de punkter som gruppen och dess tabeller slutar på, så med VS Code-tillägget `4.3.0` eller senare eller Obsidian- eller JetBrains-pluginet `1.3.0` eller senare slutar en flytt av gruppen eller av en av dess tabeller som görs där samtidigt på en av de två positionerna, aldrig på deras summa – se [Redigeringar som görs samtidigt](./live-and-headless.md#edits-made-at-the-same-moment). |
 | `erd_resize_table_group` | `groupId`, `x?`, `y?`, `width`, `height` | Anger rektangeln för en grupp, medan dess tabeller stannar där de är. Utelämnas `x` och `y` behålls hörnet. En rektangel som inte skulle rymma gruppens tabeller med deras utfyllnad nekas, med ett meddelande som anger den ruta den måste rymma. |
 | `erd_set_table_group` | `tableIds`, `groupId` | Lägger tabeller i en grupp, där var och en lämnar den grupp den eventuellt låg i. Ett `groupId` som är `null` eller en tom sträng tar ut dem ur alla grupper. |
 
@@ -295,6 +295,8 @@ Vart och ett tar texten som `value` samt `mode`: `replace`, som är standard, el
 
 - `erd_import_sql`, `erd_import_graphql`, `erd_import_dbml` och `erd_import_aml` ersätter alla tabeller, relationer, index, anteckningar och tabellgrupper. De behåller dokumentets inställningar, låsen inräknade, utom vyn, som går tillbaka till början av arbetsytan vid 100 %, och de behåller dess ordlistor med ord, termer och domäner. De tabeller som de tar med har inga logiska namn och är inte kopplade till någon domän.
 - `erd_import_json` ersätter hela dokumentet, inställningarna och ordlistorna inräknade: JSON-dokumentets inställningar, lås, ord, termer och domäner ersätter det här dokumentets, och en JSON som inte anger några lås slår på alla lås och placerar vyn i början av arbetsytan. Varje betraktare behåller sin egen namnvisning, om inte JSON-dokumentet har låset `Name View` av, vilket tar med dess namnvisning. Utgå från texten som formatet `json` i `erd_read` ger om du vill behålla det här dokumentets inställningar. En tom text ger ett nytt dokument, som det som `erd_open_document` skapar med `create`.
+
+I en editor med VS Code-tillägget `4.3.0` eller senare eller Obsidian- eller JetBrains-pluginet `1.3.0` eller senare avslutar ett `replace`, och dess `erd_undo` eller `erd_redo`, också en relation som du ritar – se [Live](./live-and-headless.md#live).
 
 `append` lägger till importen i dokumentet, så som [Importera och lägg till](../guide/guides/file-import-export.md#import-and-add) i editorn gör, och ett enda `erd_undo` tar bort hela tillägget:
 

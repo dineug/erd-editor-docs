@@ -54,7 +54,8 @@ Zobrazenie `Physical Names` nevykresľuje žiadny logický názov, takže ak ho 
 - V zobrazení `Both Names` obsahujú bunky logického názvu logické názvy a bunky názvu fyzické názvy.
 
 Bunka logického názvu sa upravuje ako každá iná bunka: začnite klávesom `Enter` alebo dvojitým kliknutím – pozrite si stránku [Úprava tabuliek](./table-editing.md). Keď sa editor otvorí na prázdnom logickom názve, ako zástupný text zobrazí to, čo bunka vykresľovala: v zobrazení `Logical Names` názov, v zobrazení `Both Names` text `logical`.  
-Písanie zapisuje iba logický názov. Fyzický názov sa z neho odvodí, keď sa editor na zmenenom logickom názve zavrie (`Enter`, `Tab`, `Escape` alebo kliknutie inam), a to ako samostatný krok histórie zmien za vaším písaním. Fyzický názov, ktorý ste zapísali sami, zostane nezmenený – pozrite si časť [Odvodzovanie fyzických názvov](./dictionary.md#deriving-physical-names).
+Písanie zapisuje iba logický názov. Fyzický názov sa z neho odvodí, keď sa editor na zmenenom logickom názve zavrie (`Enter`, `Tab`, `Escape` alebo kliknutie inam), a to ako samostatný krok histórie zmien za vaším písaním. Fyzický názov, ktorý ste zapísali sami, zostane nezmenený – pozrite si časť [Odvodzovanie fyzických názvov](./dictionary.md#deriving-physical-names).  
+Keď spolupracovník alebo programovací agent nahradí diagram, kým je bunka logického názvu otvorená, editor bunky zostane otvorený, pokiaľ nový diagram stále obsahuje danú tabuľku alebo stĺpec a vaše Zobrazenie názvov bunku stále vykresľuje. Opätovné načítanie diagramu do editora, ako to robí Obsidian, keď sa súbor zmení mimo neho, zatvorí editor bunky okamžite. V oboch prípadoch zatvorenie odvodí fyzický názov iba tam, kde tabuľka alebo stĺpec obsahuje logický názov, ktorý ste napísali, nikdy z názvu, ktorý priniesol nový diagram.
 
 Klávesy `Tab` a `Shift + Tab` prechádzajú bunkami, ktoré zobrazenie vykresľuje, v ich poradí – pozrite si časť [Kláves Tab](./table-editing.md#tab-key):
 

@@ -55,9 +55,12 @@ Grup dan tabel yang dimasukkannya merupakan satu langkah pembatalan, dan nama ya
 ## Memberi nama grup {#naming-a-group}
 
 Nama grup diedit di kotak teks yang terbuka di atas bilah judulnya. Kotak ini terbuka dengan sendirinya setelah grup dibuat, saat bilah judul diklik dua kali, dan dari `Rename` di menu konteks grup.  
-`Enter`, atau mengeklik di tempat lain, menyimpan nama. `Escape` menutup kotak teks tanpa mengubah nama dan membiarkan grup tetap dipilih, dan `Escape` kedua mengosongkan pilihan.  
+`Enter`, mengeklik di tempat lain, atau menyembunyikan grup, baik Anda yang menyembunyikannya maupun kolaborator, menyimpan nama. `Escape` menutup kotak teks tanpa mengubah nama dan membiarkan grup tetap dipilih, dan `Escape` kedua mengosongkan pilihan.  
 Nama yang diubah merupakan satu langkah pembatalan; menyimpan nama tanpa perubahan tidak mencatat apa pun. Nama yang kosong atau hanya berisi spasi ditampilkan sebagai `unnamed`.  
-Selama kotak teks terbuka, pintasan kanvas ditahan, dan pintasan Pencarian Cepat serta `Toggle Explorer` tidak melakukan apa pun, seperti saat sel tabel sedang diedit.
+Selama kotak teks terbuka, pintasan kanvas ditahan, dan pintasan Pencarian Cepat serta `Toggle Explorer` tidak melakukan apa pun, seperti saat sel tabel sedang diedit.  
+Saat kolaborator atau agen pemrograman mengganti diagram selagi kotak teks terbuka, kotak teks tetap terbuka selama diagram baru masih memiliki grup itu dan menampilkan grup.  
+Jika diagram itu tidak lagi memiliki grup tersebut, kotak teks tertutup dan tidak menyimpan apa pun; jika diagram itu memiliki grup tetapi menyembunyikan grup, kotak teks tertutup dan menyimpan nama yang telah berubah.  
+Memuat ulang diagram ke editor, seperti yang dilakukan Obsidian saat file berubah di luarnya, menutup kotak teks dan membuang nama yang diketik. Tombol yang ditekan setelah itu tidak diteruskan ke mana pun hingga Anda mengeklik editor, sehingga `Delete` atau `Backspace` yang dimaksudkan untuk nama tidak menghapus apa pun.
 
 [Temukan dan Ganti](./find-and-replace.md#what-it-searches) mencari nama grup di bawah `Table group names` selama grup ditampilkan, dan `Replace` serta `Replace All` di dalamnya mengganti nama grup — lihat [Mengganti](./find-and-replace.md#replacing). [Pencarian Cepat](./quick-search.md#searching-the-diagram) tidak mencari nama grup.
 
@@ -157,7 +160,7 @@ Menu konteks tabel menambahkan `Group selected tables` dan `Remove from group` s
 
 `View Option` → `Table Groups` di menu konteks kanvas menampilkan atau menyembunyikan semua grup. Opsi ini dicentang secara default — lihat [Opsi tampilan tabel](./table-related-functions.md#table-view-options).  
 Jika tidak dicentang, kotak grup dan warna grup pada header tabel menghilang dari kanvas, minimap, dan gambar yang diekspor, dan bilah gulir serta minimap tidak lagi menyediakan ruang untuk grup. Tidak ada yang berpindah atau berubah ukuran, dan setiap tabel tetap berada di grupnya.  
-Menyembunyikan grup membatalkan pilihan grup, mengakhiri penggambaran `New Table Group`, dan menutup editor nama yang sedang terbuka.
+Menyembunyikan grup membatalkan pilihan grup, mengakhiri penggambaran `New Table Group`, dan menutup editor nama yang sedang terbuka seperti saat mengeklik di tempat lain — lihat [Memberi nama grup](#naming-a-group).
 
 Selama grup disembunyikan:
 

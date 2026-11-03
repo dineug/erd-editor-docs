@@ -54,7 +54,8 @@ Een VS Code-venster bedient de diagrammen in zijn werkruimtemappen en elk diagra
 3. Laat de instelling `dineug.erd-editor.agentHub.enabled` aanstaan. Die staat standaard aan.
 
 Een extensie van `3.0.0` tot en met `3.1.0` en server `1.0.0` of later weigeren elkaar, en een extensie vóór `3.0.0` bedient geen agents.
-Een extensie `4.0.0` of `4.1.0` maakt verbinding, maar toont noch behoudt de logische namen, domeinkoppelingen en woordenboekrijen die de agent schrijft — zie [Bijwerken](#updating).
+Een extensie `4.0.0` of `4.1.0` maakt verbinding, maar toont noch behoudt de logische namen, domeinkoppelingen en woordenboekrijen die de agent schrijft.
+Met een extensie vóór `4.3.0` kan een tabel, memo of tabelgroep die jij en de agent op hetzelfde moment verplaatsen of waarvan jullie de grootte wijzigen, voor ieder van jullie op een andere plaats eindigen — zie [Bijwerken](#updating).
 
 De extensie start in een werkruimte die `.erd`-, `.erd.json`-, `.vuerd`- of `.vuerd.json`-bestanden bevat, zodat een agent die diagrammen bereikt voordat je er een opent.
 In een werkruimte zonder zulke bestanden start de extensie wanneer je een diagram opent, en tot dan bewerkt de agent op schijf.
@@ -71,7 +72,8 @@ Een venster van een Obsidian-kluis bedient de diagrammen in die kluis.
 2. Laat Settings → ERD Editor → Coding agents aanstaan. Die staat standaard aan, en elke kluis heeft zijn eigen instelling.
 
 Een plug-in vóór `1.0.0` en server `1.0.0` of later weigeren elkaar.
-Een plug-in `1.0.0` of `1.1.0` maakt verbinding, maar toont noch behoudt de logische namen, domeinkoppelingen en woordenboekrijen die de agent schrijft — zie [Bijwerken](#updating).
+Een plug-in `1.0.0` of `1.1.0` maakt verbinding, maar toont noch behoudt de logische namen, domeinkoppelingen en woordenboekrijen die de agent schrijft.
+Met een plug-in vóór `1.3.0` kan een tabel, memo of tabelgroep die jij en de agent op hetzelfde moment verplaatsen of waarvan jullie de grootte wijzigen, voor ieder van jullie op een andere plaats eindigen — zie [Bijwerken](#updating).
 
 Een kluisvenster bedient agents vanaf het moment dat de plug-in wordt geladen, zodat een agent de diagrammen van de kluis bereikt voordat je er een opent.
 Er is geen vertrouwensstap.
@@ -98,7 +100,8 @@ Een JetBrains-IDE bedient de diagrammen van elk project dat erin geopend is, en 
 3. Laat Settings | Tools | ERD Editor → Coding agents aangevinkt. Die staat standaard aan en geldt voor de hele IDE.
 
 Een plug-in `0.9.0` of `0.10.0` en server `1.0.0` of later weigeren elkaar, en een plug-in vóór `0.9.0` bedient geen agents.
-Een plug-in `1.0.0` of `1.1.0` maakt verbinding, maar toont noch behoudt de logische namen, domeinkoppelingen en woordenboekrijen die de agent schrijft — zie [Bijwerken](#updating).
+Een plug-in `1.0.0` of `1.1.0` maakt verbinding, maar toont noch behoudt de logische namen, domeinkoppelingen en woordenboekrijen die de agent schrijft.
+Met een plug-in vóór `1.3.0` kan een tabel, memo of tabelgroep die jij en de agent op hetzelfde moment verplaatsen of waarvan jullie de grootte wijzigen, voor ieder van jullie op een andere plaats eindigen — zie [Bijwerken](#updating).
 
 De IDE bedient agents vanaf het moment dat het eerste project wordt geopend, zodat een agent de diagrammen van een project bereikt voordat je er een opent.
 
@@ -144,6 +147,11 @@ Alleen de VS Code-extensie `4.2.0` of later en de Obsidian- en JetBrains-plug-in
 Een eerdere extensie of plug-in die verbinding maakt, negeert ze, al slaagt de aanroep van de agent wel.
 Wel past die nog steeds de fysieke namen toe die de woordenboeken afleiden en de gegevenstypen die de domeinen geven.
 Een server vóór `1.1.0` leest een bestand zonder de logische namen, domeinkoppelingen en woordenboekrijen ervan, en laat ze weg wanneer hij het bestand op schijf bewerkt — zie [Headless](./live-and-headless.md#headless).
+
+Server `1.2.0` spreekt ook protocol 2 en voegt geen tool toe, verwijdert er geen en hernoemt er geen, en wijzigt geen argument.
+Maar een verplaatsing of formaatwijziging die jij en de agent op hetzelfde moment maken aan dezelfde tabel, memo of tabelgroep komt in de editor en voor de agent alleen op hetzelfde uit wanneer de server `1.2.0` of later is en de editor de VS Code-extensie `4.3.0` of later heeft of de Obsidian- of JetBrains-plug-in `1.3.0` of later.
+Als een van beide kanten ouder is, kunnen de editor en de agent met verschillende posities eindigen, en de agent blijft vanuit zijn eigen positie lezen en bewerken totdat een latere verplaatsing beide op één punt zet of de agent zich opnieuw bij het document aansluit — zie [Bewerkingen op hetzelfde moment](./live-and-headless.md#edits-made-at-the-same-moment).
+Geen van deze versies wijzigt wat een bestand bevat.
 
 Werk ERD Editor ook bij overal waar de diagrammen worden geopend.
 De VS Code-extensie vóór `4.2.0`, de Obsidian-plug-in vóór `1.2.0` en de JetBrains-plug-in vóór `1.2.0` openen een diagram dat een latere versie heeft opgeslagen, of dat de agent op schijf heeft bewerkt, zonder de logische namen van de tabellen en kolommen, de domeinkoppelingen van de kolommen en de woorden, termen en domeinen ervan.

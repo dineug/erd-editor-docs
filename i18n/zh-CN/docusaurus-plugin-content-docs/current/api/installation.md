@@ -51,18 +51,18 @@ editor.addEventListener('change', () => {
 
 ```html
 <script type="module">
-  import 'https://esm.run/@dineug/erd-editor@5.0.0/erd-editor.js';
+  import 'https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js';
 
   const editor = document.createElement('erd-editor');
   editor.style.cssText = 'display: block; width: 100%; height: 100vh;';
   document.body.appendChild(editor);
 </script>
 <!-- or -->
-<script type="module" src="https://esm.run/@dineug/erd-editor@5.0.0/erd-editor.js"></script>
+<script type="module" src="https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js"></script>
 ```
 
 `esm.run` 会替你解析该包的外部依赖，因此无需打包器也能工作。
-每个入口通过版本号之后的路径访问：`…/erd-editor.js` 定义编辑器，`…/erd-viewer.js` 定义查看器；查看器在页面请求英语以外的显示语言时，会从 CDN 获取该语言。仅含包名的 URL `https://esm.run/@dineug/erd-editor@5.0.0` 提供的是根入口，它不定义任何元素。
+每个入口通过版本号之后的路径访问：`…/erd-editor.js` 定义编辑器，`…/erd-viewer.js` 定义查看器；查看器在页面请求英语以外的显示语言时，会从 CDN 获取该语言。仅含包名的 URL `https://esm.run/@dineug/erd-editor@5.1.0` 提供的是根入口，它不定义任何元素。
 不带版本号的 URL 始终提供最新的发布版本。如果不希望大版本升级在毫无预告的情况下进入页面，请像上面那样固定版本。
 `5.0.0` 本身就是一次大版本升级：需要停留在 4.x 的页面应固定为 `@4.2.0`，参见[从 4.x 升级](#upgrading-from-4x)。
 
@@ -75,7 +75,7 @@ editor.addEventListener('change', () => {
 
 ```html
 <erd-editor></erd-editor>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.0.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0"></script>
 <script>
   const editor = document.querySelector('erd-editor');
   editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
@@ -88,7 +88,7 @@ editor.addEventListener('change', () => {
 
 ```html
 <erd-viewer src="diagram.erd.json" style="display: block; height: 480px"></erd-viewer>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.0.0/dist/erd-viewer.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0/dist/erd-viewer.umd.js"></script>
 ```
 
 两个文件都不会定义对方的标签，各自除了自己的全局变量和 `window.Konva` 之外，不在页面上留下任何全局变量。
@@ -100,7 +100,7 @@ exports 映射仍然指向 ES 模块，因此从 npm 安装时打包器不会用
 ```html
 <erd-editor system-dark-mode enable-theme-builder enable-locale-picker enable-welcome-screen></erd-editor>
 <script type="module">
-  import 'https://esm.run/@dineug/erd-editor@5.0.0/erd-editor.js';
+  import 'https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js';
 
   const editor = document.querySelector('erd-editor');
 </script>
@@ -161,7 +161,7 @@ const found = document.querySelector('erd-editor'); // ErdEditorElement | null
 ```
 
 `ErdEditorElement` 已导出，可用于为自己的变量和 props 标注类型。从 `5.0.0` 起它也是元素的类，而 `ErdViewerElement` 是查看器的接口和类，参见[注册元素](#registering-the-elements)。
-从 `4.0.0` 起，该包还导出 `LocaleCode`、`LocaleOption` 与 `SchemaSQLOptions` 类型，从 `5.0.0` 起还导出 `ToImageOptions`，参见[入口点](#入口点)。`setSchema*()` 方法所接受的选项没有导出的名称，可以像 `Parameters<ErdEditorElement['setSchemaSQL']>[1]` 这样从元素上取得。
+从 `4.0.0` 起，该包还导出 `LocaleCode`、`LocaleOption` 与 `SchemaSQLOptions` 类型，从 `5.0.0` 起还导出 `ToImageOptions`，参见[入口点](#入口点)。`setSchema*()` 方法所接受的选项没有导出的名称，可以像 `Parameters<ErdEditorElement['setSchemaSQL']>[1]` 这样从元素上取得。[共享 store](./advanced/collaborative-editing.md) 及其类型也是如此。
 从 `5.0.0` 起，该包的 `typesVersions` 也为 `moduleResolution: "node10"` 下的每个子路径入口提供类型，该解析方式不读取 exports 映射。
 
 ## 注册元素 {#registering-the-elements}
@@ -259,7 +259,7 @@ Vite、webpack 5 和 Rspack 会把 worker 作为文件输出到你的 chunk 旁�
 | `@dineug/erd-editor/erd-editor.js` | 从 `5.0.0` 起提供。定义 `<erd-editor>`，不导出任何内容 |
 | `@dineug/erd-editor/erd-viewer.js` | 从 `5.0.0` 起提供。定义 `<erd-viewer>`，不导出任何内容 |
 | `@dineug/erd-editor/engine.js` | 不需要 DOM 的文档 store |
-| `@dineug/erd-editor/peer.js` | 从 `3.9.1` 起提供。MCP 服务器的无头节点 |
+| `@dineug/erd-editor/peer.js` | 从 `3.9.1` 起提供。MCP 服务器的无头节点，从 `5.1.0` 起也是 [Yjs 绑定](./advanced/yjs.md)的无头节点 |
 
 根入口导出两个元素类及其 define 函数、两个回调 setter、从 `3.9.2` 起提供的默认按键绑定及其类型、从 `4.0.0` 起提供的显示语言类型和 `getSchemaSQL()` 的选项类型、从 `4.2.0` 起提供的 Dictionary 标签页的行组合键，以及从 `5.0.0` 起提供的 `toImage`。
 
@@ -289,7 +289,9 @@ Vite、webpack 5 和 Rspack 会把 worker 作为文件输出到你的 chunk 旁�
 它导出 `createReplicationStore` 与 `ReplicationStore` 类型。从 `3.10.0` 起还导出 `ReplicationChange` 类型 `{ value: string; changed: boolean }`，即副本的 `change` 监听器接收到的参数。参见 [on@change](./advanced/remote-storage.md#onchange)。
 从 `4.0.0` 起，`ReplicationStore` 还有 `runtimeValue`。它的 `value` 以及 `change` 交出的 `value` 都与元素的 `value` 一样，是文件所保存的存储形式。参见 [ReplicationStore](./advanced/remote-storage.md#replicationstore)。
 
-`@dineug/erd-editor/peer.js` 是 [MCP 服务器](../mcp/introduction.md)用来编辑文档的无头节点。它专为该服务器而存在，这里的文档不对它作说明。
+`@dineug/erd-editor/peer.js` 是 [MCP 服务器](../mcp/introduction.md)用来编辑文档的无头节点。
+从 `5.1.0` 起，它也是 `@dineug/erd-editor-yjs` 的 `bindPeerStore` 绑定到 `Y.Doc` 的对象：由该入口的 `createPeerStore()` 创建的对等存储，作为房间中的无头成员，或作为合并房间历史的压缩器。
+除 [Yjs](./advanced/yjs.md) 页面对它的说明（`createPeerStore()` 调用、已绑定对等存储的 `value` 及其 `destroy()`）之外，这里的文档不对它作说明。
 
 ### 文件对话框
 
@@ -369,11 +371,11 @@ setImportFileCallback(async ({ type, op, accept, mode }) => {
    import { setExportFileCallback } from '@dineug/erd-editor';
   ```
 
-- 在 CDN 上同样如此：`https://esm.run/@dineug/erd-editor` 现在提供的是根入口，不定义任何内容，请导入 `https://esm.run/@dineug/erd-editor@5.0.0/erd-editor.js`。仅含包名的 jsDelivr 与 unpkg URL 仍提供 script 标签构建，它会像以前一样定义 `<erd-editor>`。不带版本号的 URL 现在提供最新的 5.x 版本；要停留在 4.x，请固定为 `@4.2.0`。参见 [CDN](#cdn) 和 [script 标签](#script-标签)。
+- 在 CDN 上同样如此：`https://esm.run/@dineug/erd-editor` 现在提供的是根入口，不定义任何内容，请导入 `https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js`。仅含包名的 jsDelivr 与 unpkg URL 仍提供 script 标签构建，它会像以前一样定义 `<erd-editor>`。不带版本号的 URL 现在提供最新的 5.x 版本；要停留在 4.x，请固定为 `@4.2.0`。参见 [CDN](#cdn) 和 [script 标签](#script-标签)。
 - 根入口不定义任何内容，但仍然需要 DOM，因此使用服务端渲染时，从它按名称导入的内容（例如 `setExportFileCallback`）应与元素的入口一起放在仅在客户端执行的路径中，参见[服务端渲染](#服务端渲染)。
 - `window.ErdEditor` 新增 `ErdEditorElement` 与 `defineErdEditor`。查看器的 script 标签构建把 `ErdViewerElement` 与 `defineErdViewer` 放到 `window.ErdViewer` 上，两个全局对象都不带 `toImage`。
 - `readonly` 编辑器会以阅读者的方式打开。它的六个标签页、资源管理器、快速搜索和协作者的光标与选中状态都保留，所有会编辑图的控件都被移除而不是被禁用：工具栏把数据库名显示为文本，Settings 标签页在 `Read only` 徽章下显示其设置，所有控件均被禁用，浮动工具栏只保留缩放、名称显示、禅模式和指南针，因此 `Hand` 与 `Select` 都没有了，拖动即平移。按下不会选中任何内容：唯一的选中是从资源管理器或快速搜索跳转时在其到达的对象周围绘制的轮廓，一次不移动的点击会清除它，全选快捷键也不选中任何内容。开启 `readonly` 会结束正在进行的操作，例如选中、手形工具、单元格编辑器、拖动、Map Columns、自动布局的 `Force` 预览和 Time Travel，而滚动、缩放、标签页和名称显示保持不变，参见 [readonly](./erd-editor-element.md#readonly)。
-- `readonly` 阅读者更改的设置，无论其锁定如何，都只保留在该编辑器的屏幕上：滚动和缩放、标签页、名称显示、View Option、数据库，以及 Code Generator 的语言、名称大小写和括号类型。`value`、`runtimeValue` 与 JSON 导出保持文档自身的设置，而在 4.x 中阅读者的更改可能会影响到它们；`getSharedStore()` 也不会把其中任何一项发给其他编辑器。不带数据库调用 `getSchemaSQL()` 时，写出的是阅读者所选的数据库。关闭 `readonly` 会让数据库、代码设置和 View Option 恢复为文档的值，而滚动、缩放、标签页和名称显示留在阅读者离开时的位置。
+- `readonly` 阅读者更改的设置，无论其锁定如何，都只保留在该编辑器的屏幕上：滚动和缩放、标签页、名称显示、View Option、数据库，以及 Code Generator 的语言、名称大小写和括号类型。`value`、`runtimeValue` 与 JSON 导出保持文档自身的设置，而在 4.x 中阅读者的更改可能会影响到它们；`getSharedStore()` 也不会把其中任何一项发给其他编辑器。不带数据库调用 `getSchemaSQL()` 时，写出的是阅读者所选的数据库。关闭 `readonly` 会让数据库、代码设置和 View Option 恢复为该编辑器在阅读者没有做任何更改时本会显示的内容，而滚动、缩放、标签页和名称显示留在阅读者离开时的位置。
 - Settings 标签页的 `Recalculation table width` 一行已移除。加载和粘贴仍会让每张表的宽度适应其文本。
 - 在 Vite 8 上，请去掉 `optimizeDeps` 中的 `exclude: ['@dineug/erd-editor']`，只有 Vite 7 及更早版本仍然需要它，并保留 ELK 的 `include`，参见 [Vite](#vite)。
 

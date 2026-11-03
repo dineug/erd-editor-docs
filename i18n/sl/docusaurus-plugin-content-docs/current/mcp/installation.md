@@ -54,7 +54,8 @@ Okno VS Code streže diagrame v mapah svojega delovnega prostora in vsak diagram
 3. Pustite nastavitev `dineug.erd-editor.agentHub.enabled` vklopljeno. Privzeto je vklopljena.
 
 Razširitev od različice `3.0.0` do `3.1.0` in strežnik različice `1.0.0` ali novejše se med seboj zavračata, razširitev pred različico `3.0.0` pa ne streže nobenemu agentu.
-Razširitev različice `4.0.0` ali `4.1.0` se poveže, vendar logičnih imen, povezav z domeno in vrstic slovarjev, ki jih zapiše agent, niti ne prikaže niti ne ohrani – glejte razdelek [Posodabljanje](#updating).
+Razširitev različice `4.0.0` ali `4.1.0` se poveže, vendar logičnih imen, povezav z domeno in vrstic slovarjev, ki jih zapiše agent, niti ne prikaže niti ne ohrani.
+Z razširitvijo pred različico `4.3.0` se lahko tabela, beležka ali skupina tabel, ki jo vi in agent premaknete ali ji spremenite velikost v istem trenutku, pri vsakem od vas konča na drugem mestu – glejte razdelek [Posodabljanje](#updating).
 
 Razširitev se zažene v delovnem prostoru, ki vsebuje datoteke `.erd`, `.erd.json`, `.vuerd` ali `.vuerd.json`, zato agent do teh diagramov dostopa, še preden odprete katerega od njih.
 V delovnem prostoru brez takih datotek se zažene, ko odprete diagram, do takrat pa agent ureja na disku.
@@ -71,7 +72,8 @@ Okno trezorja v aplikaciji Obsidian streže diagrame v svojem trezorju.
 2. Pustite nastavitev Settings → ERD Editor → Coding agents vklopljeno. Privzeto je vklopljena, vsak trezor pa ima svojo nastavitev.
 
 Vtičnik pred različico `1.0.0` in strežnik različice `1.0.0` ali novejše se med seboj zavračata.
-Vtičnik različice `1.0.0` ali `1.1.0` se poveže, vendar logičnih imen, povezav z domeno in vrstic slovarjev, ki jih zapiše agent, niti ne prikaže niti ne ohrani – glejte razdelek [Posodabljanje](#updating).
+Vtičnik različice `1.0.0` ali `1.1.0` se poveže, vendar logičnih imen, povezav z domeno in vrstic slovarjev, ki jih zapiše agent, niti ne prikaže niti ne ohrani.
+Z vtičnikom pred različico `1.3.0` se lahko tabela, beležka ali skupina tabel, ki jo vi in agent premaknete ali ji spremenite velikost v istem trenutku, pri vsakem od vas konča na drugem mestu – glejte razdelek [Posodabljanje](#updating).
 
 Okno trezorja streže agentom od trenutka, ko se vtičnik naloži, zato agent do diagramov trezorja dostopa, še preden odprete katerega od njih.
 Koraka zaupanja ni.
@@ -98,7 +100,8 @@ Razvojno okolje JetBrains streže diagrame vseh projektov, ki so v njem odprti, 
 3. Pustite nastavitev Settings | Tools | ERD Editor → Coding agents označeno. Privzeto je vklopljena in velja za celotno razvojno okolje.
 
 Vtičnik različice `0.9.0` ali `0.10.0` in strežnik različice `1.0.0` ali novejše se med seboj zavračata, vtičnik pred različico `0.9.0` pa ne streže nobenemu agentu.
-Vtičnik različice `1.0.0` ali `1.1.0` se poveže, vendar logičnih imen, povezav z domeno in vrstic slovarjev, ki jih zapiše agent, niti ne prikaže niti ne ohrani – glejte razdelek [Posodabljanje](#updating).
+Vtičnik različice `1.0.0` ali `1.1.0` se poveže, vendar logičnih imen, povezav z domeno in vrstic slovarjev, ki jih zapiše agent, niti ne prikaže niti ne ohrani.
+Z vtičnikom pred različico `1.3.0` se lahko tabela, beležka ali skupina tabel, ki jo vi in agent premaknete ali ji spremenite velikost v istem trenutku, pri vsakem od vas konča na drugem mestu – glejte razdelek [Posodabljanje](#updating).
 
 Razvojno okolje streže agentom od trenutka, ko se odpre prvi projekt, zato agent do diagramov projekta dostopa, še preden odprete katerega od njih.
 
@@ -144,6 +147,11 @@ Logična imena, povezave z domeno in vrstice slovarjev, ki jih zapišejo ta orod
 Starejša razširitev ali vtičnik, ki se poveže, jih prezre, čeprav agentov klic uspe.
 Še vedno pa uporabi fizična imena, ki jih izpeljejo slovarji, in podatkovne tipe, ki jih dajo domene.
 Strežnik pred različico `1.1.0` prebere datoteko brez njenih logičnih imen, povezav z domeno in vrstic slovarjev, ko pa datoteko ureja na disku, jih izpusti – glejte razdelek [Brez vmesnika](./live-and-headless.md#headless).
+
+Strežnik `1.2.0` prav tako podpira protokol 2 ter ne doda, odstrani ali preimenuje nobenega orodja in ne spremeni nobenega argumenta.
+Vendar se premik ali sprememba velikosti iste tabele, beležke ali skupine tabel, ki ju vi in agent naredite v istem trenutku, v urejevalniku in pri agentu konča enako samo, kadar je strežnik `1.2.0` ali novejši, urejevalnik pa ima razširitev za VS Code različice `4.3.0` ali novejše ali vtičnik za Obsidian ali JetBrains različice `1.3.0` ali novejše.
+Če je katera koli stran starejša, se lahko urejevalnik in agent končata z različnimi položaji, agent pa še naprej bere in ureja na podlagi svojega, dokler oba ne pristaneta na isti točki zaradi poznejšega premika ali dokler se agent znova ne pridruži dokumentu – glejte razdelek [Spremembe, narejene v istem trenutku](./live-and-headless.md#edits-made-at-the-same-moment).
+Nobena od teh izdaj ne spremeni tistega, kar vsebuje datoteka.
 
 ERD Editor posodobite tudi povsod, kjer se diagrami odpirajo.
 Razširitev za VS Code pred različico `4.2.0`, vtičnik za Obsidian pred različico `1.2.0` in vtičnik za JetBrains pred različico `1.2.0` odprejo diagram, ki ga je shranila novejša izdaja ali ga je agent uredil na disku, brez logičnih imen njegovih tabel in stolpcev, povezav njegovih stolpcev z domeno ter njegovih besed, izrazov in domen.

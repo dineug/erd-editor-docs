@@ -37,6 +37,38 @@ A read never opens an editor. An edit opens the document in the ERD Editor when 
 
 An editor with a VS Code extension before `4.2.0`, or an Obsidian or JetBrains plugin before `1.2.0`, still takes the agent's edits live, but it neither shows nor keeps the logical names, domain links, and dictionary rows the agent writes — see [Updating](./installation.md#updating).
 
+With the VS Code extension `4.3.0` or later, or the Obsidian or JetBrains plugin `1.3.0` or later, an import in `replace` mode, and an `erd_undo` or `erd_redo` of one, end a relationship you are drawing in the editor, whatever the server's release — see [Relationship Creation](../guide/guides/editing-start.md#relationship-creation).
+Before those releases the draw stayed armed, and a click on a table could add a relationship from a table no longer in the diagram.
+An import in `append` mode leaves the draw armed.
+A memo, table group name, or cell editor you have open stays open while the diagram still holds and shows what it edits.
+
+### Edits Made at the Same Moment
+
+With server `1.2.0` or later and, in the editor, the VS Code extension `4.3.0` or later or the Obsidian or JetBrains plugin `1.3.0` or later, edits you and the agent make to the same thing at the same moment end the same in the editor, in the file it saves, and in what `erd_list`, `erd_get`, and `erd_read` give the agent.
+That covers a name or another field of a table, column, relationship, index, memo, table group, or dictionary row, the database name and the [before and after scripts](../guide/guides/schema-sql.md#before-and-after-scripts), and the position or size of a table, memo, or table group, but not a color, the order of the columns in a table or an index, or the database.
+Two edits of one name or field, two moves, or two resizes end on one of the two, never a mix: an edit made after the other reached its side wins, and of two made at the very same moment one wins, the same one on every side, whichever arrives first.
+
+Two color changes to one table, memo, or table group made at the same moment, such as yours and the agent's `erd_change_table_color`, can end apart, or even swapped, since each side keeps the color it heard last.
+A column reorder, yours or the agent's `erd_move_column` or `erd_move_index_column`, is applied on each side in the order it arrives, so two made at the same moment in one table or index can leave its columns in different orders.
+A database change, yours or the agent's `erd_set_database`, is applied in the order it arrives too, so two made at the same moment can leave the editor and the agent on different databases.
+
+Your drag and the agent's `erd_move_table`, `erd_move_tables`, `erd_move_memo`, `erd_move_table_group`, and `erd_sort_tables` travel as the points they end at, so two moves of one table, memo, or table group end where one of them put it, never at the two added together.
+`erd_move_table_group` sends the point of the group and of each of its tables in one batch, as a drag of the group's title bar does.
+A resize writes the position and the size together, so a move and a resize of one memo or table group made at the same moment, such as `erd_resize_memo` while you drag that memo, end on one rect on both sides: the resize's, or, when the move wins, the move's point with the resize's size.
+A move under 20 pixels, which makes no undo entry, also goes out as the point it ends at, so it can win over the other side's move, whether it is a short `erd_move_table_group` or a short drag of yours, such as a click that nudges a table a few pixels.
+
+Older releases still connect, since server `1.2.0` speaks hub protocol 2, as `1.0.0` to `1.1.1` do.
+With a server before `1.2.0`, or an extension before `4.3.0` or a plugin before `1.3.0`, a move or resize of one table, memo, or table group made at the same moment can leave the editor and the agent with different positions.
+An older editor sends your drag as the distance moved, and a server before `1.2.0` sends `erd_move_table_group` that way too.
+The other side adds that distance to the point it holds.
+The older side also applies the other side's points in the order they arrive.
+The agent then reads and edits from its own position for that table, memo, or table group, not the one the editor shows and saves.
+That lasts until a later move of it travels as a point, such as your drag in a newer editor or the agent's `erd_move_table`, or until the agent joins the document again, as after the editor dropped it or after 30 minutes without a call on the document.
+Apart from a color, the column order, and the database, a name or another field changed at the same moment still ends the same when only one side is older, nearly always on the newer side's edit.
+With both sides older, the two can still end apart.
+
+None of this applies to a headless edit, which writes the file alone.
+
 ### Saving
 
 Each editor saves the agent's edits the way it saves your own.

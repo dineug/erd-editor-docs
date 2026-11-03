@@ -67,7 +67,8 @@ Başka bir düzenleyiciden gelen değişiklikler de kaydedilmez; bu nedenle Geri
 
 Diyagramın tamamının yerini alan bir `Import` işlemini geri almak, önceki diyagramı içe aktardığınız anda düzenleyicide bulunduğu hâliyle geri getirir; her [kilit](./settings.md#lock) o zamanki gibi etkin ya da devre dışı, her kilitli değer de o zamanki gibi olur.  
 O diyagramda `Viewport` kilitliyse görünüm ve yakınlaştırma, bulunduğunuz yere değil, diyagramın açıldığı kilitli görünüme döner. `Viewport` kilidi devre dışıysa içe aktardığınız sırada bulunduğunuz yere dönerler. Bulunduğunuz sekme, Kod oluşturucu dili veya Ad görünümü gibi diğer kilitli ayarlar ekranınızda oldukları gibi kalır.  
-Yeni bir diyagram tüm kilitler etkin olarak başlar. Böyle bir geri almada görünümünüzü korumak için içe aktarmadan önce `Viewport` kilidini açın. Kilidi sonradan açmak veya kendi `Viewport` kilidi devre dışı olan bir JSON dosyasını içe aktarmak, geri almanın sizi götürdüğü yeri değiştirmez.
+Yeni bir diyagram tüm kilitler etkin olarak başlar. Böyle bir geri almada görünümünüzü korumak için içe aktarmadan önce `Viewport` kilidini açın. Kilidi sonradan açmak veya kendi `Viewport` kilidi devre dışı olan bir JSON dosyasını içe aktarmak, geri almanın sizi götürdüğü yeri değiştirmez.  
+Bir `Import` işlemini geri almak veya yinelemek de çizilmekte olan bir ilişkiyi sona erdirir. [İlişki oluşturma](./editing-start.md#relationship-creation) bölümüne bakın.
 
 Bir JSON dosyasının içe aktarılmasını geri almak, önceki diyagramın sahip olduğu sözcükleri, terimleri ve değer alanlarını da geri getirir. Bir Şema SQL, GraphQL, DBML veya AML içe aktarma işlemi sözlükleri korur; bu nedenle bu işlemi geri almak ve yinelemek, o zamandan beri Sözlük sekmesinde yapılan düzenlemeler dahil, sözlükleri oldukları gibi bırakır.
 

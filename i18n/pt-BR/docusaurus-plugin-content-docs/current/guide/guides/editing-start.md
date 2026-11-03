@@ -83,7 +83,9 @@ Uma chave serial é a exceção: sua chave estrangeira recebe o tipo inteiro que
 Cada coluna de chave estrangeira é nomeada a partir da sua chave: um nome de uma só palavra, como `id`, ganha na frente o nome da tabela pai (`user_id`), um nome de várias palavras, como `member_id`, é mantido e um nome que a tabela filha já tem é numerado (`user_id_2`) — consulte [Nomes das colunas de chave estrangeira](./relationship-editing.md#foreign-key-column-names).  
 Clicar na mesma tabela nas duas vezes desenha um relacionamento autorreferenciado.  
 Um relacionamento novo começa com `On Delete` e `On Update` ambos definidos como `Not set`; altere-os pelo menu de contexto dele — consulte [ON DELETE e ON UPDATE](./relationship-editing.md#on-delete-and-on-update).  
-Pressione `Escape`, ou pressione o mesmo atalho de novo, para cancelar. Cancelar deixa a seleção como está, e o `Escape` seguinte a limpa.
+Pressione `Escape`, ou pressione o mesmo atalho de novo, para cancelar. Cancelar deixa a seleção como está, e o `Escape` seguinte a limpa.  
+O desenho também termina, tanto quando apenas o tipo está preparado quanto quando o pai já foi escolhido, quando o diagrama é substituído: por um `Import` no lugar do diagrama, pelo desfazer ou refazer dele, por um colaborador ou um agente de codificação que faça um dos dois, e pelo recarregamento do diagrama no editor, como o Obsidian faz quando o arquivo muda fora dele.  
+Uma importação de Esquema SQL, GraphQL, DBML ou AML o encerra depois que suas tabelas são posicionadas, e não quando o arquivo é escolhido. [`Import and Add`](./file-import-export.md#import-and-add) mantém o desenho preparado.
 
 Depois que a tabela pai é escolhida, apontar para uma tabela em que o relacionamento pode terminar contorna essa tabela e mostra dois botões ao lado dela:
 

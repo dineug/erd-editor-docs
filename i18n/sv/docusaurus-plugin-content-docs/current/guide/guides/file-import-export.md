@@ -22,6 +22,7 @@ Bladen på fliken [Ordlista](./dictionary.md) tar också emot ord, termer och do
 Filändelser matchas oavsett skiftläge. Om du väljer en fil vars filändelse inte matchar det valda formatet avbryts importen och meddelandet `Only <format> files can be imported` visas, med formatet skrivet som `json`, `sql`, `graphql`, `dbml` eller `aml`, som i `Only sql files can be imported`.
 
 `Import` ersätter det aktuella dokumentet i stället för att slås samman med det, och om du ångrar ett steg kommer det tidigare diagrammet tillbaka.  
+`Import`, dess ångring och dess omgörning avslutar en relation som ritas, vilket [`Import and Add`](#import-and-add) inte gör – se [Skapa relationer](./editing-start.md#relationship-creation).  
 En JSON-fil tar med sig sina egna inställningar, inklusive sina [lås](./settings.md#lock). Där filen låser fliken, kodgeneratorns språk, ett skiftläge, typen av citattecken eller [namnvisningen](./logical-names.md#name-view) ser du fortfarande det du hade, men det är filens låsta värde som sparas. Zoomnivån och vypositionen hamnar, låsta eller inte, där filen anger. En JSON-fil som sparades innan låsen fanns importeras med alla lås påslagna och vyn på 100 %. En fil som sparades innan låset `Name View` fanns importeras med det låset påslaget, oavsett vilka andra lås den registrerar.  
 De andra formaten behåller de inställningar du redan har, inklusive låsen, utom vyn, som börjar på 100 %.  
 Parsrarna för GraphQL, DBML och AML misslyckas aldrig: en fil som de inte kan tolka ger ett tomt diagram i stället för ett fel.
@@ -211,7 +212,7 @@ Inget av de tre för över logiska namn, domänkopplingar eller ordlistorna, i n
 
 Undermenyn `Export` i arbetsytans snabbmeny har tre alternativ:
 
-- json: Sparar diagrammet så som dess fil innehåller det, som `.erd.json`: tabellerna med deras kolumner och index, relationerna, anteckningarna och tabellgrupperna, de logiska namnen och kolumnernas domänkopplingar, orden, termerna och domänerna på fliken [Ordlista](./dictionary.md) samt inställningarna, varje [låst inställning](./settings.md#lock) med sitt låsta värde. Det som inte innehåller något, som tom text eller en tom rad i en ordlista, utelämnas – se [Lagringsform och körtidsvärde](../../api/advanced/schema.md#storage-form-and-runtime-value).
+- json: Sparar diagrammet så som dess fil innehåller det, som `.erd.json`: tabellerna med deras kolumner och index, relationerna, anteckningarna och tabellgrupperna, de logiska namnen och kolumnernas domänkopplingar, orden, termerna och domänerna på fliken [Ordlista](./dictionary.md) samt inställningarna, varje [låst inställning](./settings.md#lock) med sitt låsta värde. Det som inte innehåller något, som tom text eller en tom rad i en ordlista, utelämnas – se [Lagringsform](../../api/advanced/schema.md#storage-form).
 - Schema SQL: Öppnar fliken [Schema SQL](./schema-sql.md#saving-or-copying-the-sql) med dess alternativpanel öppen och dess knapp `Save file` i fokus, så att ett tryck på `Enter` sparar den SQL-kod som fliken visar som en `.sql`-fil. Ingenting sparas innan dess.
 - Image: Öppnar dialogrutan `Export image`, som sparar diagrammet som `.png` eller `.svg` eller kopierar det till Urklipp som PNG – se [Bild](#image).
 

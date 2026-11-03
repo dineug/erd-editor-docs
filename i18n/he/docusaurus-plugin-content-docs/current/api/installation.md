@@ -51,18 +51,18 @@ editor.addEventListener('change', () => {
 
 ```html
 <script type="module">
-  import 'https://esm.run/@dineug/erd-editor@5.0.0/erd-editor.js';
+  import 'https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js';
 
   const editor = document.createElement('erd-editor');
   editor.style.cssText = 'display: block; width: 100%; height: 100vh;';
   document.body.appendChild(editor);
 </script>
 <!-- or -->
-<script type="module" src="https://esm.run/@dineug/erd-editor@5.0.0/erd-editor.js"></script>
+<script type="module" src="https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js"></script>
 ```
 
 `esm.run` מאתר בעצמו את התלויות החיצוניות של החבילה, ולכן הקוד הזה עובד בלי bundler.
-כל נקודת כניסה מושגת לפי הנתיב שאחרי הגרסה: `…/erd-editor.js` מגדיר את העורך, ו-`…/erd-viewer.js` את המציג, שמוריד מה-CDN כל שפת תצוגה מלבד אנגלית ברגע שדף מבקש אותה. כתובת החבילה החשופה, `https://esm.run/@dineug/erd-editor@5.0.0`, מגישה את השורש, שאינו מגדיר אלמנט.
+כל נקודת כניסה מושגת לפי הנתיב שאחרי הגרסה: `…/erd-editor.js` מגדיר את העורך, ו-`…/erd-viewer.js` את המציג, שמוריד מה-CDN כל שפת תצוגה מלבד אנגלית ברגע שדף מבקש אותה. כתובת החבילה החשופה, `https://esm.run/@dineug/erd-editor@5.1.0`, מגישה את השורש, שאינו מגדיר אלמנט.
 כתובת URL ללא גרסה מגישה תמיד את הגרסה האחרונה. יש לקבע גרסה, כמו למעלה, כדי ששדרוג לגרסה ראשית חדשה לא יגיע לדף בלי הודעה מראש.
 גרסה `5.0.0` היא בעצמה שדרוג כזה: דף שצריך להישאר בגרסה 4 מקבע את `@4.2.0` – ראו [שדרוג מגרסה 4](#upgrading-from-4x).
 
@@ -75,7 +75,7 @@ editor.addEventListener('change', () => {
 
 ```html
 <erd-editor></erd-editor>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.0.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0"></script>
 <script>
   const editor = document.querySelector('erd-editor');
   editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
@@ -88,7 +88,7 @@ editor.addEventListener('change', () => {
 
 ```html
 <erd-viewer src="diagram.erd.json" style="display: block; height: 480px"></erd-viewer>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.0.0/dist/erd-viewer.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0/dist/erd-viewer.umd.js"></script>
 ```
 
 אף אחד משני הקבצים אינו מגדיר את התגית של השני, וכל אחד מהם אינו משאיר בדף משתנה גלובלי מלבד שלו ו-`window.Konva`.
@@ -100,7 +100,7 @@ editor.addEventListener('change', () => {
 ```html
 <erd-editor system-dark-mode enable-theme-builder enable-locale-picker enable-welcome-screen></erd-editor>
 <script type="module">
-  import 'https://esm.run/@dineug/erd-editor@5.0.0/erd-editor.js';
+  import 'https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js';
 
   const editor = document.querySelector('erd-editor');
 </script>
@@ -161,7 +161,7 @@ const found = document.querySelector('erd-editor'); // ErdEditorElement | null
 ```
 
 `ErdEditorElement` מיוצא כדי לציין באמצעותו את הטיפוס של משתנים ו-props בקוד של המשתמש. החל מגרסה `5.0.0` הוא גם המחלקה של האלמנט, ו-`ErdViewerElement` הוא הממשק והמחלקה של המציג – ראו [רישום האלמנטים](#registering-the-elements).
-החל מגרסה `4.0.0`, החבילה מייצאת גם את הטיפוסים `LocaleCode`, `LocaleOption` ו-`SchemaSQLOptions`, והחל מגרסה `5.0.0` גם את `ToImageOptions` – ראו [נקודות כניסה](#entry-points). לאפשרויות שהמתודות `setSchema*()` מקבלות אין שם מיוצא; יש לחלץ אותן מהאלמנט, כמו ב-`Parameters<ErdEditorElement['setSchemaSQL']>[1]`.
+החל מגרסה `4.0.0`, החבילה מייצאת גם את הטיפוסים `LocaleCode`, `LocaleOption` ו-`SchemaSQLOptions`, והחל מגרסה `5.0.0` גם את `ToImageOptions` – ראו [נקודות כניסה](#entry-points). לאפשרויות שהמתודות `setSchema*()` מקבלות אין שם מיוצא; יש לחלץ אותן מהאלמנט, כמו ב-`Parameters<ErdEditorElement['setSchemaSQL']>[1]`. הדבר נכון גם לגבי ה[מאגר המשותף](./advanced/collaborative-editing.md) והטיפוסים שלו.
 החל מגרסה `5.0.0`, ה-`typesVersions` של החבילה מגדיר טיפוסים לכל נתיב משנה של נקודת כניסה גם תחת `moduleResolution: "node10"`, שאינו קורא מפת exports.
 
 ## רישום האלמנטים {#registering-the-elements}
@@ -186,7 +186,7 @@ defineErdEditor();
 קריאה אינה עושה דבר כל עוד התגית מחזיקה את המחלקה הזו, ולכן נקודת כניסה וקריאה להגדרה, או שתי קריאות להגדרה, יכולות להיפגש בדף אחד. היא זורקת `Error` שמציין את התגית כשמחלקה אחרת מחזיקה בה, כמו עותק שני של החבילה שנארז באותו דף: `Another element class already defines the custom element name erd-editor`.
 המחלקות של השורש הן אלה שנקודות הכניסה מגדירות, ולכן `customElements.get('erd-editor') === ErdEditorElement` מרגע שאחת מהן רצה. כל עוד התגית לא הוגדרה, `document.createElement('erd-editor')` יוצר `HTMLElement` רגיל בלי אף אחד מהאיברים של העורך, ו-`new ErdEditorElement()` זורק שגיאה.
 
-לתגית משלכם, יש להגדיר את המחלקה תחתיה בעצמכם ולהוסיף את התגית ל-`HTMLElementTagNameMap` בעצמכם. יש לעשות זאת בחלון שאינו טוען את נקודת הכניסה של האלמנט ההוא או את ה-build של [תגית script](#script-tag) שלו ואינו קורא לפונקציית ההגדרה שלו, כי מחלקה מקבלת שם אחד לכל חלון:
+לתגית בשם אחר, יש להגדיר את המחלקה תחתיה באופן ידני ולהוסיף את התגית ל-`HTMLElementTagNameMap` באופן ידני. יש לעשות זאת בחלון שאינו טוען את נקודת הכניסה של האלמנט ההוא או את ה-build של [תגית script](#script-tag) שלו ואינו קורא לפונקציית ההגדרה שלו, כי מחלקה מקבלת שם אחד לכל חלון:
 
 ```ts
 import { ErdEditorElement } from '@dineug/erd-editor';
@@ -237,7 +237,7 @@ declare global {
 פריסת הטבלאות היא היוצא מן הכלל: המנוע שמחשב פריסה כבד יותר מהעורך עצמו ולעולם אינו נטען בתוך התהליך, ולכן היא ממתינה שלושים שניות ל-worker שלה במיקום הראשון, ואחרי שה-worker ענה היא נותנת לכל פריסה שישים שניות לחזור.
 אם אחד מזמני ההמתנה פג, המיקום מסתיים כפי שהוא מסתיים בלי ה-worker. הפריסה האוטומטית מציגה את `Placing tables` מיד כשהיא מתחילה, ואילו מצב הזרימה וייבוא שממוקם בפריסת זרימה מציגים זאת רק אחרי שמיקום, כולל הפעלת ה-worker שלו, נמשך שש שניות.
 
-Vite, webpack 5 ו-Rspack מוציאים את ה-workers כקבצים לצד ה-chunks שלכם. esbuild, ו-Rolldown כשמשתמשים בו לבדו ולא דרך Vite, אינם מוציאים אף אחד, ולכן דף שהם בונים רץ בלי ה-workers.
+Vite, webpack 5 ו-Rspack מוציאים את ה-workers כקבצים לצד שאר ה-chunks. esbuild, ו-Rolldown כשמשתמשים בו לבדו ולא דרך Vite, אינם מוציאים אף אחד, ולכן דף שהם בונים רץ בלי ה-workers.
 תחת `experiments.outputModule` הניסיוני של webpack אף worker אינו מתחיל, כי כל אחד ממתין ל-chunk שפוצל ממנו ושדבר אינו טוען. יש להשאיר את פלט ברירת המחדל של webpack, או להגדיר `optimization.splitChunks: false`.
 
 ### מדיניות אבטחת תוכן {#content-security-policy}
@@ -259,7 +259,7 @@ Vite, webpack 5 ו-Rspack מוציאים את ה-workers כקבצים לצד ה-
 | `@dineug/erd-editor/erd-editor.js` | החל מגרסה `5.0.0`. מגדיר את `<erd-editor>` ואינו מייצא דבר |
 | `@dineug/erd-editor/erd-viewer.js` | החל מגרסה `5.0.0`. מגדיר את `<erd-viewer>` ואינו מייצא דבר |
 | `@dineug/erd-editor/engine.js` | מאגר המסמך בלי DOM |
-| `@dineug/erd-editor/peer.js` | החל מגרסה `3.9.1`. העמית ללא ממשק של שרת ה-MCP |
+| `@dineug/erd-editor/peer.js` | החל מגרסה `3.9.1`. העמית ללא ממשק של שרת ה-MCP והחל מגרסה `5.1.0` גם של [החיבור ל-Yjs](./advanced/yjs.md) |
 
 השורש מייצא את שתי מחלקות האלמנט ואת פונקציות ההגדרה שלהן, שתי פונקציות להגדרת callback, החל מגרסה `3.9.2` את צירופי המקשים של ברירת המחדל יחד עם הטיפוסים שלהם, החל מגרסה `4.0.0` את הטיפוסים של שפת התצוגה ואת טיפוס האפשרויות של `getSchemaSQL()`, החל מגרסה `4.2.0` את צירופי המקשים של השורות בכרטיסיית מילון, והחל מגרסה `5.0.0` את `toImage`.
 
@@ -289,7 +289,9 @@ Vite, webpack 5 ו-Rspack מוציאים את ה-workers כקבצים לצד ה-
 היא מייצאת את `createReplicationStore` ואת הטיפוס `ReplicationStore`. החל מגרסה `3.10.0`, היא מייצאת גם את הטיפוס `ReplicationChange`, `{ value: string; changed: boolean }`, שמאזין ה-`change` של רפליקה מקבל – ראו [on@change](./advanced/remote-storage.md#onchange).
 החל מגרסה `4.0.0`, ל-`ReplicationStore` יש גם `runtimeValue`. ה-`value` שלו וה-`value` שאירוע `change` מעביר הם צורת האחסון שקובץ מכיל, כמו אצל האלמנט – ראו [ReplicationStore](./advanced/remote-storage.md#replicationstore).
 
-`@dineug/erd-editor/peer.js` הוא העמית ללא ממשק ש[שרת ה-MCP](../mcp/introduction.md) עורך דרכו מסמך. היא קיימת עבור השרת הזה, והדפים האלה אינם מתעדים אותה.
+`@dineug/erd-editor/peer.js` הוא העמית ללא ממשק ש[שרת ה-MCP](../mcp/introduction.md) עורך דרכו מסמך.
+החל מגרסה `5.1.0`, זה גם מה ש-`bindPeerStore` של `@dineug/erd-editor-yjs` מחבר ל-`Y.Doc`: מאגר עמית שנוצר על ידי `createPeerStore()` של נקודת הכניסה הזאת, כחבר ללא ממשק בחדר או כדוחס שמקפל את ההיסטוריה של החדר.
+מעבר למה שדף [Yjs](./advanced/yjs.md) מראה ממנו – הקריאה ל-`createPeerStore()`, ה-`value` של מאגר עמית מחובר וה-`destroy()` שלו – הדפים האלה אינם מתעדים אותו.
 
 ### תיבות דו-שיח של קבצים {#file-dialogs}
 
@@ -338,7 +340,7 @@ setImportFileCallback(async ({ type, op, accept, mode }) => {
 קריאה ל-`setSchemaJSON()` במצב החלפה, כמו השמה ל-`value`, מנקה את המסמך לפני הניתוח, ולכן ניתוב לשם של תוכן שאינו מסמך `.erd.json` – דרך `else` שתופס הכול, או משום ש-`type` שנוסף מאוחר יותר נפל לשם – מרוקן את התרשים במקום לייבא משהו.
 
 ה-`fileName` שהעורך יוצר הוא `<database name>-<timestamp>` בתוספת סיומת הקובץ, כאשר חותמת הזמן היא השעה המקומית בתבנית `yyyy-MM-dd'T'HH_mm_ss`. שם מסד נתונים ריק מוחלף ב-`unnamed`. בקובץ CSV של המילון, שם הגיליון מופיע לפני הסיומת, כמו ב-`<database name>-<timestamp>-words.csv`.
-פונקציית ה-callback של הייצוא מקבלת את הקבצים האלה. החל מגרסה `4.0.0`, קובץ ה-SVG והקבצים של מחולל הקוד נמנים עליהם, וקובץ ה-`.sql` מגיע מהלחצן `Save file` בכרטיסיית סכמת SQL ולא ישירות מתפריט המשנה `Export`. החל מגרסה `4.2.0`, גם קובץ ה-CSV של כרטיסיית מילון נמנה עליהם. [toImage()](./to-image.md) אינה קוראת לאף אחת משתי פונקציות ה-callback של הקבצים: היא מחזירה לכם את התמונה שלה.
+פונקציית ה-callback של הייצוא מקבלת את הקבצים האלה. החל מגרסה `4.0.0`, קובץ ה-SVG והקבצים של מחולל הקוד נמנים עליהם, וקובץ ה-`.sql` מגיע מהלחצן `Save file` בכרטיסיית סכמת SQL ולא ישירות מתפריט המשנה `Export`. החל מגרסה `4.2.0`, גם קובץ ה-CSV של כרטיסיית מילון נמנה עליהם. [toImage()](./to-image.md) אינה קוראת לאף אחת משתי פונקציות ה-callback של הקבצים: היא מחזירה את התמונה שלה לקוד שקרא לה.
 
 | קובץ | סיומת | `type` של ה-Blob |
 | --- | --- | --- |
@@ -369,11 +371,11 @@ Chrome 91 ומעלה, Edge 94 ומעלה, Firefox 93 ומעלה, Safari 16.4 ו�
    import { setExportFileCallback } from '@dineug/erd-editor';
   ```
 
-- ב-CDN אותו דבר נכון לגבי `https://esm.run/@dineug/erd-editor`, שמגיש כעת את השורש ואינו מגדיר דבר: יש לייבא את `https://esm.run/@dineug/erd-editor@5.0.0/erd-editor.js`. כתובות jsDelivr ו-unpkg החשופות עדיין מגישות את ה-build של תגית script, שמגדיר את `<erd-editor>` כמקודם. כתובת URL ללא גרסה מגישה כעת את הגרסה האחרונה של גרסה 5; כדי להישאר בגרסה 4, יש לקבע את `@4.2.0` – ראו [CDN](#cdn) ו-[תגית script](#script-tag).
+- ב-CDN אותו דבר נכון לגבי `https://esm.run/@dineug/erd-editor`, שמגיש כעת את השורש ואינו מגדיר דבר: יש לייבא את `https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js`. כתובות jsDelivr ו-unpkg החשופות עדיין מגישות את ה-build של תגית script, שמגדיר את `<erd-editor>` כמקודם. כתובת URL ללא גרסה מגישה כעת את הגרסה האחרונה של גרסה 5; כדי להישאר בגרסה 4, יש לקבע את `@4.2.0` – ראו [CDN](#cdn) ו-[תגית script](#script-tag).
 - השורש אינו מגדיר דבר אבל עדיין צריך DOM, ולכן ברינדור בצד השרת ייבוא בשם ממנו, כמו `setExportFileCallback`, נשאר בנתיב הצד-לקוח לצד נקודת הכניסה של האלמנט – ראו [רינדור בצד השרת](#server-side-rendering).
 - ל-`window.ErdEditor` נוספים `ErdEditorElement` ו-`defineErdEditor`. ה-build של המציג בתגית script מציב את `ErdViewerElement` ואת `defineErdViewer` על `window.ErdViewer`, ואף אחד משני המשתנים הגלובליים אינו נושא את `toImage`.
 - עורך `readonly` נפתח כקורא. ששת הכרטיסיות שלו, הסייר, החיפוש המהיר והנוכחות של שותפים נשארים, וכל פקד שהיה עורך את התרשים מושמט ולא מושבת: סרגל הכלים מציג את שם מסד הנתונים כטקסט, כרטיסיית הגדרות מציגה את ההגדרות שלה עם כל הפקדים מושבתים תחת התג `Read only`, וסרגל הכלים הצף שומר רק את הזום, את תצוגת השמות, את מצב זן ואת המצפן, כך ש-`Hand` ו-`Select` נעלמים וגרירה מזיזה את התצוגה. לחיצה אינה בוחרת דבר: הבחירה היחידה היא המתאר שמעבר מהסייר או מהחיפוש המהיר מניח סביב מה שהוא מגיע אליו, ולחיצה ללא תנועה מנקה אותו, וצירופי המקשים לבחירת הכול אינם בוחרים דבר. הפעלת `readonly` מסיימת את מה שעמד פתוח, כמו הבחירה, כלי היד, עורך תא, גרירה, `Map Columns`, התצוגה המקדימה של `Force` בפריסה האוטומטית ומסע בזמן, ושומרת את הגלילה, הזום, הכרטיסייה ותצוגת השמות – ראו [readonly](./erd-editor-element.md#readonly).
-- ההגדרות שקורא של `readonly` משנה נשארות על המסך של אותו עורך יהיו הנעילות שלהן אשר יהיו: הגלילה והזום, הכרטיסייה, תצוגת השמות, View Option, מסד הנתונים, ושפת מחולל הקוד, סגנונות השמות וסוג המירכאות. `value`, `runtimeValue` וייצוא ה-JSON שומרים את אלה של המסמך עצמו, שהשינויים של קורא בגרסה 4 יכלו להגיע אליהם, ו-`getSharedStore()` אינו שולח אף אחת מהן לעורכים האחרים. `getSchemaSQL()` ללא מסד נתונים כותבת את מסד הנתונים שהקורא בחר. כיבוי `readonly` מחזיר את מסד הנתונים, הגדרות הקוד ו-View Option לאלה של המסמך, ומשאיר את הגלילה, הזום, הכרטיסייה ותצוגת השמות במקום שבו הקורא השאיר אותם.
+- ההגדרות שקורא של `readonly` משנה נשארות על המסך של אותו עורך יהיו הנעילות שלהן אשר יהיו: הגלילה והזום, הכרטיסייה, תצוגת השמות, View Option, מסד הנתונים, ושפת מחולל הקוד, סגנונות השמות וסוג המירכאות. `value`, `runtimeValue` וייצוא ה-JSON שומרים את אלה של המסמך עצמו, שהשינויים של קורא בגרסה 4 יכלו להגיע אליהם, ו-`getSharedStore()` אינו שולח אף אחת מהן לעורכים האחרים. `getSchemaSQL()` ללא מסד נתונים כותבת את מסד הנתונים שהקורא בחר. כיבוי `readonly` מחזיר את מסד הנתונים, הגדרות הקוד ו-View Option למה שהעורך הזה היה מציג אילו הקורא לא היה משנה דבר, ומשאיר את הגלילה, הזום, הכרטיסייה ותצוגת השמות במקום שבו הקורא השאיר אותם.
 - השורה `Recalculation table width` בכרטיסיית הגדרות הוסרה. טעינה והדבקה עדיין מתאימות את רוחב כל טבלה לטקסט שלה.
 - ב-Vite 8 יש להסיר מ-`optimizeDeps` את `exclude: ['@dineug/erd-editor']`, שרק Vite 7 ומטה עדיין צריכים, ולהשאיר את ה-`include` של ELK – ראו [Vite](#vite).
 

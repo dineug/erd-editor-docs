@@ -83,7 +83,9 @@ serial 类型的键是例外：它的外键会采用该 serial 所存储的整�
 每个外键列都以其对应的键命名：像 `id` 这样由一个单词组成的名称会在前面加上父表的名称（`user_id`），像 `member_id` 这样由多个单词组成的名称保持不变，子表中已有的名称则会加上编号（`user_id_2`），参见[外键列名](./relationship-editing.md#foreign-key-column-names)。  
 对同一张表点击两次会绘制自引用关系。  
 新建关系的 `On Delete` 与 `On Update` 起初均为 `Not set`，可通过该关系的右键菜单修改，参见 [ON DELETE 与 ON UPDATE](./relationship-editing.md#on-delete-and-on-update)。  
-按 `Escape` 或再次按下相同的快捷键即可取消。取消后选中状态保持不变，再按一次 `Escape` 才会将其清除。
+按 `Escape` 或再次按下相同的快捷键即可取消。取消后选中状态保持不变，再按一次 `Escape` 才会将其清除。  
+绘制也会在图被替换时结束，无论只是选定了关系类型还是已经选定了父表：包括用 `Import` 替换整张图、对其执行 Undo 或 Redo、协作者或编码智能体执行其中任何一项，以及图被再次载入编辑器时（例如 Obsidian 在文件于外部发生变化时所做的那样）。  
+Schema SQL、GraphQL、DBML 或 AML 导入在其表放置完成后才会结束绘制，而不是在选好文件时。[`Import and Add`](./file-import-export.md#import-and-add) 则不会结束绘制。
 
 选定父表之后，将指针指向关系可以连接到的表时，该表会显示轮廓，旁边还会出现两个按钮：
 

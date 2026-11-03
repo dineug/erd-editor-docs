@@ -22,6 +22,7 @@ description: 匯入 JSON、結構描述 SQL、GraphQL、DBML 或 AML 以取代�
 副檔名的比對不論大小寫。若選取的檔案副檔名與所選格式不符，匯入會取消並顯示 `Only <format> files can be imported`，其中的格式寫作 `json`、`sql`、`graphql`、`dbml` 或 `aml`，例如 `Only sql files can be imported`。
 
 `Import` 會取代目前的文件，而不是合併到其中，執行一次復原即可恢復先前的圖表。  
+`Import`、它的復原與重做會結束正在繪製的關聯，而 [`Import and Add`](#import-and-add) 不會，請參閱[建立關聯](./editing-start.md#relationship-creation)。  
 JSON 檔案會帶入自己的設定，包括其[鎖定](./settings.md#lock)。若檔案鎖定了索引標籤、程式碼產生器的語言、名稱大小寫、引號類型或[名稱顯示](./logical-names.md#name-view)，畫面上仍會顯示您原本的值，但儲存的是檔案中鎖定的值。無論是否鎖定，縮放比例和檢視位置都會採用檔案所指定的值。在鎖定功能推出之前儲存的 JSON 檔案，匯入後所有鎖定都會開啟，檢視則為 100%。在 `Name View` 鎖定推出之前儲存的檔案，無論其記錄了哪些其他鎖定，匯入後該鎖定都會開啟。  
 其他格式會保留您現有的設定（包括鎖定），但檢視除外，檢視會從 100% 開始。  
 GraphQL、DBML 和 AML 剖析器永遠不會失敗：無法讀取的檔案會產生空白圖表，而不是錯誤。
@@ -211,7 +212,7 @@ DBML 也會在兩個方向保留資料表顏色（不含任何透明度）和每
 
 畫布右鍵選單的 `Export` 子選單有三個項目：
 
-- json：將圖表依其檔案所含的內容儲存為 `.erd.json`：包括資料表及其欄位和索引、關聯、備忘錄和資料表群組、邏輯名稱和欄位的定義域連結、[字典](./dictionary.md)索引標籤的詞彙、術語和定義域，以及設定，每個[鎖定的設定](./settings.md#lock)都以其鎖定的值儲存。不含任何內容的項目（例如空白文字或空的字典列）會被省略，請參閱[儲存形式與執行階段值](../../api/advanced/schema.md#storage-form-and-runtime-value)。
+- json：將圖表依其檔案所含的內容儲存為 `.erd.json`：包括資料表及其欄位和索引、關聯、備忘錄和資料表群組、邏輯名稱和欄位的定義域連結、[字典](./dictionary.md)索引標籤的詞彙、術語和定義域，以及設定，每個[鎖定的設定](./settings.md#lock)都以其鎖定的值儲存。不含任何內容的項目（例如空白文字或空的字典列）會被省略，請參閱[儲存形式](../../api/advanced/schema.md#storage-form)。
 - Schema SQL：開啟「[結構描述 SQL](./schema-sql.md#saving-or-copying-the-sql)」索引標籤，同時開啟其選項面板，並讓 `Save file` 按鈕取得焦點，因此按 `Enter` 即可將該索引標籤所顯示的 SQL 儲存為 `.sql`。在此之前不會儲存任何內容。
 - Image：開啟 `Export image` 對話方塊，可將圖表儲存為 `.png` 或 `.svg`，或以 PNG 格式複製到剪貼簿，請參閱[圖片](#image)。
 

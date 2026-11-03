@@ -1,5 +1,5 @@
 ---
-sidebar_position: 2
+sidebar_position: 3
 description: 在主线程之外将实时编辑器复制到无 DOM 的 store，并将文档序列化以便存储。
 ---
 
@@ -88,6 +88,11 @@ sharedStore.subscribe(actions => {
 当某个编辑器对该删除执行 Undo 时，用不含该行的文档载入初始文档的副本会重新列出该行，但该行为空；由于 `value` 会省略空行，副本保存的文档中不含该行。  
 对于域，在该副本中，曾关联该域的列和术语也会保持未关联状态，因为副本从未持有这些关联，而 Undo 也不会发送它们。
 
+从 `5.1.0` 起，[`@dineug/erd-editor-yjs`](./yjs.md) 也可以通过 Yjs 房间让各编辑器保持同步。  
+如上所述，从绑定到房间的元素向副本馈送操作时，副本只会收到在该元素上进行的编辑，而不会收到房间带来的编辑：这些编辑到达该元素时被视为另一个编辑器的编辑，而 shared store 从不转发它所接收的内容。  
+要存储房间的文档，请保存绑定元素的 `value`，或绑定的对等存储的 `value`，参见[房间保存的内容](./yjs.md#what-the-room-holds)。  
+Yjs 持久化 provider 存储的是房间本身，其中保存的是运行时值以及此后进行的编辑，而不是文件，参见[限制](./yjs.md#limits)。
+
 ## InjectEngineContext
 
 ### toWidth
@@ -154,7 +159,7 @@ const data = replicationStore.value;
 从 `4.2.0` 起，它还包含逻辑名、每个名称是否由词典生成、域关联，以及 [Dictionary](../../guide/guides/dictionary.md) 标签页中的词根、术语和域。  
 从 `4.2.0` 起，它还会省略实体中每个空的文本字段、不含任何内容的每个 `doc` 列表和集合，以及所有集合都为空时的 `collections` 本身。  
 它以两个空格缩进，每个词典行单独占一行，并以换行符结尾，因此同一文档总是得到相同的字节。  
-关于它包含的内容，参见[存储形式与运行时值](./schema.md#存储形式与运行时值)。
+关于它包含的内容，参见[存储形式](./schema.md#storage-form)。
 
 [锁定](../../guide/guides/settings.md#锁定)开启的每项设置都按锁定时的值写出，其他所有设置则按其当前状态写出。  
 `Viewport` 锁定同时涵盖视图原点和缩放级别，标签页、Code Generator 的语言、两种名称大小写以及括号类型则各有自己的锁定。  
@@ -172,6 +177,7 @@ const snapshot = replicationStore.runtimeValue;
 ```
 
 将它传给之后加入的编辑器或另一个 store 的 `setInitialValue`，为其载入初始文档，参见[协同编辑](./collaborative-editing.md)。  
+副本没有 [getLWW](./collaborative-editing.md#getlww) 或 [getVersion](./collaborative-editing.md#getversion)，因此 `runtimeValue` 不会交出协同寄存器：以它载入初始文档的编辑器会从正在运行的编辑器获取这些寄存器，参见[为协作者载入初始文档](./collaborative-editing.md#seeding-a-collaborator)。  
 切勿把它作为文件存储：它携带已删除的实体，所发布的 [JSON Schema](./schema.md#json-schema) 会拒绝它。  
 正是这些已删除的实体，使之后发来的对删除的 Undo 能在以它载入初始文档的 store 中完整地恢复该实体。  
 它们会一直保留，直到下次从文件打开该文档为止，因为文件的形式不包含它们。
@@ -230,7 +236,7 @@ const unsubscribe = replicationStore.on({
 如果自上一次 `change`（或自加载）以来的操作使 `value` 逐字节保持原样，则 `changed` 为 `false`。
 
 被[锁定](../../guide/guides/settings.md#锁定)排除在 `value` 之外的变更仍会触发 `change`，此时 `changed` 为 `false`，因此只在 `changed` 为 `true` 时写入。  
-这类变更包括：`Viewport` 锁定时的滚动或缩放，`Canvas Type` 锁定时的标签页切换，以及在各自的锁定开启时对 Code Generator 的语言、某种名称大小写或括号类型的更改。  
+这类变更包括：`Viewport` 锁定时的滚动或缩放，`Canvas Type` 锁定时的标签页切换，以及在各自的锁定开启时对 Code Generator 的语言、某种名称大小写或括号类型的更改，从 `5.1.0` 起，只有 `5.1.0` 之前的编辑器还会发送这类更改（参见 [dispatch, dispatchSync](#dispatch-dispatchsync)）。  
 从 `4.2.0` 起，`Name View` 锁定时的名称显示切换也属于此类：编辑器仍会发送它，但副本会像其他编辑器一样丢弃它。  
 在只读编辑器中进行的名称显示切换同样会被丢弃，无论其锁定如何。  
 元素的 [change](../erd-editor-element.md#change) 事件会略过这类变更，但副本仍会报告它。  
@@ -282,6 +288,23 @@ replicationStore.dispatchSync(actions); // sync
 在该编辑器上进行的 Schema SQL、GraphQL、DBML 或 AML `Import`（但不包括 `Import and Add`）会清空副本中的词根、术语和域。  
 它对加载、`Import` 或 `clear()` 执行的 Undo 会把它自己持有的那份文档加载到副本中，其中不含逻辑名、域关联或词典；参见[混用不同版本](./collaborative-editing.md#mixing-releases)。  
 `@dineug/erd-editor/engine.js` 导出的 `createReplicationStore`、`ReplicationStore` 和 `ReplicationChange` 与之前相同，`createReplicationStore` 接受的上下文也相同。
+
+`5.1.0` 没有新增任何操作类型，也没有改动 `@dineug/erd-editor/engine.js` 的任何导出，因此 `4.2.0` 及以后的副本仍会保留 `5.1.0` 编辑器发送的每一项变更。  
+从 `5.1.0` 起，副本会像 `5.1.0` 编辑器一样处理同一时刻进行的编辑，参见[并发编辑](./collaborative-editing.md#concurrent-edits)。  
+它会为表的位置、备注和表分组的位置与大小，以及视图原点和缩放级别各保留一个版本。  
+`5.1.0` 编辑器会通过 `table.moveTo`、`memo.moveTo`、`tableGroup.moveTo`、`settings.scrollTo` 和 `settings.changeZoomLevel`，把拖动、平移或缩放发送为其结束时的位置，副本对其中每一项以及每个 `memo.resize` 和 `tableGroup.resize`，都只在其版本不低于自己所持有的版本时才接受。  
+因此，当两个这样的编辑器在同一时刻移动或调整同一个表、备注或表分组时，无论副本以什么顺序收到它们，保存的位置和大小都是每个编辑器所显示的位置和大小，而传输层重复投递的拖动、平移或缩放也不会移动两次。  
+`Viewport` 未锁定时，副本分别从版本最大的写入中保存原点和缩放级别，即做出该写入的编辑器所处的位置。  
+缩放也会移动原点，因此两个编辑器在同一时刻进行的平移和缩放，保存下来的可能是一个编辑器的原点加上另一个编辑器的缩放级别。  
+在 `5.1.0` 之前，副本会把每个编辑器的平移和缩放步骤累加到同一个视图上。
+
+`5.1.0` 之前的编辑器为拖动、平移或缩放发送的距离（`table.move`、`memo.move`、`tableGroup.move`、`settings.streamScrollTo` 和 `settings.streamZoomLevel`）仍会累加到副本所持有的值上，不经过版本。  
+颜色更改仍然不带版本到达：副本与每个编辑器一样，会为它盖上自己的版本，并保留最后收到的颜色，因此同一时刻对同一个表、备注或表分组进行的两次重新着色，保存下来的结果可能与编辑器所显示的不同。  
+`5.1.0` 之前的副本按位置和大小到达的顺序应用它们，因此保存的表位置可能与 `5.1.0` 编辑器所显示的不同。  
+要让同一时刻进行的编辑最终结果一致，请让会话中的每个编辑器和副本都运行在 `5.1.0` 或更高版本，[并发编辑](./collaborative-editing.md#concurrent-edits)列出的例外情况除外。
+
+从 `5.1.0` 起，编辑器只在 Code Generator 的语言、某种名称大小写或括号类型对应的锁定关闭时才发送对它们的更改，并在其载荷中标记 `shared: true`，副本会像编辑器一样应用每一项带标记的更改，参见[协同编辑](./collaborative-editing.md)。  
+`5.1.0` 之前的编辑器无论锁定如何都会发送不带标记的更改，副本只在该设置在其一侧未锁定时才应用它，在该设置被锁定时丢弃它（参见 [on@change](#onchange)）。
 
 从 `4.0.0` 起，两个方法还会应用 `editor.mergeLWW`，它携带的是另一个编辑器加入会话时，某个编辑器作为回应发送的协同寄存器，因此副本裁定并发编辑结果的方式与编辑器相同。  
 它不会改变 `value` 的任何字节，也不会触发 `change`。  

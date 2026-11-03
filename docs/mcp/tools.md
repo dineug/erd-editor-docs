@@ -47,7 +47,7 @@ Every column carries its `domainId`, and so does every term: an empty string for
 | --- | --- |
 | `snapshot` | Compact JSON with every entity and its id, table groups and the word, term, and domain rows included, and the settings with the Schema SQL scripts. It leaves out what differs from one viewer to another: measured widths, the stacking order, the view, the tab, and the Name View. Large on a big schema. |
 | `sql` | DDL for one of the eight databases, `Databricks`, `MariaDB`, `MSSQL`, `MySQL`, `Oracle`, `PostgreSQL`, `Snowflake`, or `SQLite`. `vendor` defaults to the database the document is set to. The DDL of the whole document includes its before and after scripts. With `tableIds`, `tableNames`, or `groupNames`, only those tables, with the foreign keys they hold, and no scripts. Foreign keys carry their ON DELETE and ON UPDATE actions, except those the target database leaves out — see [ON DELETE and ON UPDATE](../guide/guides/relationship-editing.md#on-delete-and-on-update). |
-| `json` | The whole document exactly as a save writes the file, any edits the editor has not saved yet included — see [Storage Form and Runtime Value](../api/advanced/schema.md#storage-form-and-runtime-value). |
+| `json` | The whole document exactly as a save writes the file, any edits the editor has not saved yet included — see [Storage Form](../api/advanced/schema.md#storage-form). |
 | `scripts` | The document's before and after scripts alone, as `{"before":"…","after":"…"}`, each empty when unset, however large the schema. |
 
 Only the `sql` format takes `vendor`, `statements`, `header`, `logicalNameAsComment`, `tableIds`, `tableNames`, and `groupNames`, and another format refuses them.
@@ -205,7 +205,7 @@ A group stores a rect, at least `160` pixels wide and `100` high, title bar incl
 | `erd_remove_table_group` | `groupId` | Removes a group. Its tables stay where they are, in no group. |
 | `erd_change_table_group_name` | `groupId`, `value` | Renames a group. An empty string leaves it unnamed. |
 | `erd_change_table_group_color` | `groupId`, `color` | Sets the color of a group. |
-| `erd_move_table_group` | `groupId`, `x`, `y` | Moves a group so its rect starts at that point, with its tables by the same step, as dragging its title bar does. A move under 20 pixels, across and down added together, makes no undo entry. |
+| `erd_move_table_group` | `groupId`, `x`, `y` | Moves a group so its rect starts at that point, with its tables by the same step, as dragging its title bar does. A move under 20 pixels, across and down added together, makes no undo entry. Since server `1.2.0` the move reaches the editor as the points the group and its tables end at, so with the VS Code extension `4.3.0` or later or the Obsidian or JetBrains plugin `1.3.0` or later, a move of the group or one of its tables made there at the same moment ends on one of the two positions, never their sum — see [Edits Made at the Same Moment](./live-and-headless.md#edits-made-at-the-same-moment). |
 | `erd_resize_table_group` | `groupId`, `x?`, `y?`, `width`, `height` | Sets the rect of a group, its tables staying where they are. `x` and `y` left out keep its corner. A rect that would not hold the group's tables with their padding is refused, with a message naming the box it must hold. |
 | `erd_set_table_group` | `tableIds`, `groupId` | Puts tables in a group, each leaving any group it was in. A `groupId` of `null` or an empty string takes them out of every group. |
 
@@ -295,6 +295,8 @@ Each takes the text as `value`, and `mode`: `replace`, the default, or `append`.
 
 - `erd_import_sql`, `erd_import_graphql`, `erd_import_dbml`, and `erd_import_aml` replace every table, relationship, index, memo, and table group. They keep the document's settings, its locks included, apart from the view, which goes back to the start of the canvas at 100%, and they keep its word, term, and domain dictionaries. The tables they bring have no logical names and link no domain.
 - `erd_import_json` replaces the whole document, its settings and dictionaries included: the settings, locks, words, terms, and domains of the JSON take this document's place, and a JSON that records no locks turns every lock on and puts the view at the start of the canvas. Each viewer keeps their own Name View, unless the JSON has the `Name View` lock off, which brings its Name View. To keep this document's settings, start from the text the `json` format of `erd_read` gives. An empty text gives a new document, like the one `erd_open_document` makes with `create`.
+
+In an editor with the VS Code extension `4.3.0` or later or the Obsidian or JetBrains plugin `1.3.0` or later, a `replace` and its `erd_undo` or `erd_redo` also end a relationship you are drawing — see [Live](./live-and-headless.md#live).
 
 `append` adds the import to the document, as the editor's [Import and Add](../guide/guides/file-import-export.md#import-and-add) does, and one `erd_undo` takes the whole addition away:
 

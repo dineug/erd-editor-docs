@@ -54,7 +54,8 @@ Prikaz `Physical Names` ne izriše nobenega logičnega imena, zato za vnos logi�
 - V prikazu `Both Names` celice logičnega imena vsebujejo logična imena, celice imena pa fizična imena.
 
 Celico logičnega imena urejate kot vsako drugo celico: začnite s tipko `Enter` ali z dvoklikom – glejte stran [Urejanje tabel](./table-editing.md). Ko urejanje odprete na praznem logičnem imenu, vnosno polje kot nadomestno besedilo prikaže, kar je izrisala celica: ime v prikazu `Logical Names`, `logical` v prikazu `Both Names`.  
-Tipkanje vnese samo logično ime. Ko se urejanje spremenjenega logičnega imena zapre (`Enter`, `Tab`, `Escape` ali klik drugam), se iz njega izpelje fizično ime, in sicer kot samostojen korak razveljavitve za vašim tipkanjem. Fizično ime, ki ste ga vnesli sami, ostane nespremenjeno – glejte razdelek [Izpeljava fizičnih imen](./dictionary.md#deriving-physical-names).
+Tipkanje vnese samo logično ime. Ko se urejanje spremenjenega logičnega imena zapre (`Enter`, `Tab`, `Escape` ali klik drugam), se iz njega izpelje fizično ime, in sicer kot samostojen korak razveljavitve za vašim tipkanjem. Fizično ime, ki ste ga vnesli sami, ostane nespremenjeno – glejte razdelek [Izpeljava fizičnih imen](./dictionary.md#deriving-physical-names).  
+Ko sodelavec ali agent za kodiranje zamenja diagram, medtem ko je celica logičnega imena odprta, urejanje celice ostane odprto, dokler ima novi diagram še to tabelo ali stolpec in jo vaš prikaz imen še izrisuje. Ponovno nalaganje diagrama v urejevalnik, kot to naredi Obsidian, kadar se datoteka spremeni zunaj njega, urejanje celice zapre takoj. V obeh primerih zaprtje izpelje fizično ime samo tam, kjer tabela ali stolpec vsebuje logično ime, ki ste ga vtipkali, nikoli iz imena, ki ga je prinesel novi diagram.
 
 `Tab` in `Shift + Tab` se po vrsti premikata po celicah, ki jih izriše prikaz – glejte razdelek [Tipka Tab](./table-editing.md#tab-key):
 

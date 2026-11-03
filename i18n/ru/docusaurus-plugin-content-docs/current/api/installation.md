@@ -51,18 +51,18 @@ editor.addEventListener('change', () => {
 
 ```html
 <script type="module">
-  import 'https://esm.run/@dineug/erd-editor@5.0.0/erd-editor.js';
+  import 'https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js';
 
   const editor = document.createElement('erd-editor');
   editor.style.cssText = 'display: block; width: 100%; height: 100vh;';
   document.body.appendChild(editor);
 </script>
 <!-- or -->
-<script type="module" src="https://esm.run/@dineug/erd-editor@5.0.0/erd-editor.js"></script>
+<script type="module" src="https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js"></script>
 ```
 
 Сервис `esm.run` сам разрешает внешние зависимости пакета, поэтому такой вариант работает без сборщика.
-Каждая точка входа выбирается путем после версии: `…/erd-editor.js` определяет редактор, а `…/erd-viewer.js` — просмотрщик, который загружает с CDN каждый язык интерфейса, кроме английского, когда страница его запрашивает. URL без точки входа, `https://esm.run/@dineug/erd-editor@5.0.0`, отдает корень, который не определяет ни одного элемента.
+Каждая точка входа выбирается путем после версии: `…/erd-editor.js` определяет редактор, а `…/erd-viewer.js` — просмотрщик, который загружает с CDN каждый язык интерфейса, кроме английского, когда страница его запрашивает. URL без точки входа, `https://esm.run/@dineug/erd-editor@5.1.0`, отдает корень, который не определяет ни одного элемента.
 URL без версии всегда отдает последнюю версию. Закрепите версию, как выше, если не хотите, чтобы новая мажорная версия попала на страницу без предупреждения.
 Версия `5.0.0` — как раз такая: страница, которой нужно остаться на 4.x, закрепляет версию `@4.2.0` — см. [Переход с версии 4.x](#upgrading-from-4x).
 
@@ -75,7 +75,7 @@ URL без версии всегда отдает последнюю верси�
 
 ```html
 <erd-editor></erd-editor>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.0.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0"></script>
 <script>
   const editor = document.querySelector('erd-editor');
   editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
@@ -88,7 +88,7 @@ URL без версии всегда отдает последнюю верси�
 
 ```html
 <erd-viewer src="diagram.erd.json" style="display: block; height: 480px"></erd-viewer>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.0.0/dist/erd-viewer.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0/dist/erd-viewer.umd.js"></script>
 ```
 
 Ни один из файлов не определяет тег другого, и каждый оставляет на странице только свой глобальный объект и `window.Konva`.
@@ -100,7 +100,7 @@ URL без версии всегда отдает последнюю верси�
 ```html
 <erd-editor system-dark-mode enable-theme-builder enable-locale-picker enable-welcome-screen></erd-editor>
 <script type="module">
-  import 'https://esm.run/@dineug/erd-editor@5.0.0/erd-editor.js';
+  import 'https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js';
 
   const editor = document.querySelector('erd-editor');
 </script>
@@ -161,7 +161,7 @@ const found = document.querySelector('erd-editor'); // ErdEditorElement | null
 ```
 
 Тип `ErdEditorElement` экспортируется для аннотирования собственных переменных и пропсов. Начиная с версии `5.0.0` это еще и класс элемента, а `ErdViewerElement` — интерфейс и класс просмотрщика, — см. [Регистрация элементов](#registering-the-elements).
-Начиная с версии `4.0.0` пакет также экспортирует типы `LocaleCode`, `LocaleOption` и `SchemaSQLOptions`, а начиная с версии `5.0.0` — и `ToImageOptions`, — см. [Точки входа](#entry-points). У параметров, которые принимают методы `setSchema*()`, нет экспортируемого имени; получайте их из типа элемента в виде `Parameters<ErdEditorElement['setSchemaSQL']>[1]`.
+Начиная с версии `4.0.0` пакет также экспортирует типы `LocaleCode`, `LocaleOption` и `SchemaSQLOptions`, а начиная с версии `5.0.0` — и `ToImageOptions`, — см. [Точки входа](#entry-points). У параметров, которые принимают методы `setSchema*()`, нет экспортируемого имени; получайте их из типа элемента в виде `Parameters<ErdEditorElement['setSchemaSQL']>[1]`. То же относится к [общему хранилищу](./advanced/collaborative-editing.md) и его типам.
 Начиная с версии `5.0.0` поле `typesVersions` пакета типизирует и каждую точку входа-подпуть при `moduleResolution: "node10"`, который не читает карту экспортов.
 
 ## Регистрация элементов {#registering-the-elements}
@@ -259,7 +259,7 @@ Vite, webpack 5 и Rspack выводят воркеры файлами рядо�
 | `@dineug/erd-editor/erd-editor.js` | Начиная с версии `5.0.0`. Определяет `<erd-editor>` и ничего не экспортирует |
 | `@dineug/erd-editor/erd-viewer.js` | Начиная с версии `5.0.0`. Определяет `<erd-viewer>` и ничего не экспортирует |
 | `@dineug/erd-editor/engine.js` | Хранилище документа без DOM |
-| `@dineug/erd-editor/peer.js` | Начиная с версии `3.9.1`. Участник без интерфейса для MCP-сервера |
+| `@dineug/erd-editor/peer.js` | Начиная с версии `3.9.1`. Участник без интерфейса для MCP-сервера и, начиная с версии `5.1.0`, для [привязки Yjs](./advanced/yjs.md) |
 
 Корень экспортирует оба класса элементов и их функции define, два сеттера колбэков, начиная с версии `3.9.2` — привязки клавиш по умолчанию с их типами, начиная с версии `4.0.0` — типы языка интерфейса и тип параметров `getSchemaSQL()`, начиная с версии `4.2.0` — сочетания клавиш для строк на вкладке «Словарь», а начиная с версии `5.0.0` — `toImage`.
 
@@ -289,7 +289,9 @@ Vite, webpack 5 и Rspack выводят воркеры файлами рядо�
 Она экспортирует `createReplicationStore` и тип `ReplicationStore`. Начиная с версии `3.10.0` она также экспортирует тип `ReplicationChange`, `{ value: string; changed: boolean }`, который получает обработчик события `change` реплики, — см. [on@change](./advanced/remote-storage.md#onchange).
 Начиная с версии `4.0.0` у `ReplicationStore` также есть свойство `runtimeValue`. Как и у элемента, его свойство `value` и значение, которое передает событие `change`, имеют форму хранения, как в файле, — см. [ReplicationStore](./advanced/remote-storage.md#replicationstore).
 
-`@dineug/erd-editor/peer.js` — это участник без интерфейса, через которого [MCP-сервер](../mcp/introduction.md) редактирует документ. Она существует для этого сервера, и на этих страницах она не описывается.
+`@dineug/erd-editor/peer.js` — это участник без интерфейса, через которого [MCP-сервер](../mcp/introduction.md) редактирует документ.
+Начиная с версии `5.1.0` это еще и то, что `bindPeerStore` из `@dineug/erd-editor-yjs` привязывает к `Y.Doc`: одноранговое хранилище, созданное вызовом `createPeerStore()` этой точки входа, как участник комнаты без интерфейса или как сжимающий процесс, который сворачивает историю комнаты.
+Помимо того, что показывает о нем страница [Yjs](./advanced/yjs.md) — вызова `createPeerStore()`, `value` привязанного однорангового хранилища и его `destroy()`, — эти страницы его не описывают.
 
 ### Диалоговые окна выбора файлов {#file-dialogs}
 
@@ -369,11 +371,11 @@ Chrome 91+, Edge 94+, Firefox 93+, Safari 16.4+ — базовый уровен�
    import { setExportFileCallback } from '@dineug/erd-editor';
   ```
 
-- То же относится к CDN: `https://esm.run/@dineug/erd-editor` теперь отдает корень и ничего не определяет, поэтому импортируйте `https://esm.run/@dineug/erd-editor@5.0.0/erd-editor.js`. URL jsDelivr и unpkg с одним лишь именем пакета по-прежнему отдают сборку для тега script, которая определяет `<erd-editor>`, как и раньше. URL без версии теперь отдает последнюю версию 5.x; чтобы остаться на 4.x, закрепите версию `@4.2.0` — см. [CDN](#cdn) и [Тег script](#script-tag).
+- То же относится к CDN: `https://esm.run/@dineug/erd-editor` теперь отдает корень и ничего не определяет, поэтому импортируйте `https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js`. URL jsDelivr и unpkg с одним лишь именем пакета по-прежнему отдают сборку для тега script, которая определяет `<erd-editor>`, как и раньше. URL без версии теперь отдает последнюю версию 5.x; чтобы остаться на 4.x, закрепите версию `@4.2.0` — см. [CDN](#cdn) и [Тег script](#script-tag).
 - Корень ничего не определяет, но ему по-прежнему нужен DOM, поэтому при серверном рендеринге именованный импорт из него, например `setExportFileCallback`, остается в коде только для клиента рядом с точкой входа элемента — см. [Серверный рендеринг](#server-side-rendering).
 - В `window.ErdEditor` появляются `ErdEditorElement` и `defineErdEditor`. Сборка просмотрщика для тега script помещает `ErdViewerElement` и `defineErdViewer` в `window.ErdViewer`, и ни один из глобальных объектов не содержит `toImage`.
 - Редактор с `readonly` открывается как читатель. Его шесть вкладок, Обозреватель, быстрый поиск и присутствие остаются, а каждый элемент управления, который изменял бы диаграмму, исчезает, а не отключается: панель инструментов показывает название СУБД текстом, вкладка «Настройки» показывает свои настройки с отключенными элементами управления под меткой `Read only`, а плавающая панель инструментов сохраняет только масштаб, режим отображения имен, режим дзен и компас, так что `Hand` и `Select` исчезают, а перетаскивание перемещает холст. Нажатие ничего не выделяет: единственное выделение — это контур, который переход из Обозревателя или быстрого поиска рисует вокруг того, к чему он ведет, и его снимает короткий щелчок без движения, а сочетания клавиш выделения всего ничего не выделяют. Включение `readonly` завершает все, что было открыто, например выделение, инструмент «Рука», редактор ячейки, перетаскивание, `Map Columns`, предварительный просмотр `Force` в Автоматическом размещении и Time Travel, и сохраняет прокрутку, масштаб, вкладку и режим отображения имен — см. [readonly](./erd-editor-element.md#readonly).
-- Настройки, которые меняет читатель `readonly`, остаются на экране этого редактора, какими бы ни были их блокировки: прокрутка и масштаб, вкладка, режим отображения имен, View Option, СУБД, а также язык, стили имен и тип кавычек Генератора кода. `value`, `runtimeValue` и экспорт JSON сохраняют собственные настройки документа, до которых изменения читателя в 4.x могли доходить, а `getSharedStore()` не отправляет их остальным редакторам. `getSchemaSQL()` без указания СУБД записывает ту, которую выбрал читатель. Выключение `readonly` возвращает СУБД, настройки кода и View Option к значениям документа, а прокрутку, масштаб, вкладку и режим отображения имен оставляет там, где их оставил читатель.
+- Настройки, которые меняет читатель `readonly`, остаются на экране этого редактора, какими бы ни были их блокировки: прокрутка и масштаб, вкладка, режим отображения имен, Параметры вида, СУБД, а также язык, стили имен и тип кавычек Генератора кода. `value`, `runtimeValue` и экспорт JSON сохраняют собственные настройки документа, до которых изменения читателя в 4.x могли доходить, а `getSharedStore()` не отправляет их остальным редакторам. `getSchemaSQL()` без указания СУБД записывает ту, которую выбрал читатель. Выключение `readonly` возвращает СУБД, настройки кода и Параметры вида к тому, что этот редактор показывал бы, если бы читатель ничего не менял, а прокрутку, масштаб, вкладку и режим отображения имен оставляет там, где их оставил читатель.
 - Строка `Recalculation table width` на вкладке «Настройки» исчезла. Загрузка и вставка по-прежнему подгоняют ширину каждой таблицы под ее текст.
 - В Vite 8 уберите `exclude: ['@dineug/erd-editor']` из `optimizeDeps`, который по-прежнему нужен лишь Vite 7 и более ранним, и оставьте `include` для ELK — см. [Vite](#vite).
 

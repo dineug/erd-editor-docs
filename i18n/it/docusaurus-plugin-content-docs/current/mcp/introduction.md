@@ -66,4 +66,7 @@ Gli strumenti per i nomi logici, i domini e i dizionari richiedono il server `1.
 Tra le versioni indicate sopra, un’estensione precedente alla versione `4.2.0` o un plugin precedente alla versione `1.2.0` permette comunque all’agente di modificare live, poiché usa il protocollo 2, ma ignora i nomi logici, i collegamenti ai domini e le righe dei dizionari che l’agente scrive, e li omette quando salva il file.
 Un server precedente alla versione `1.1.0` che modifica un file su disco lo riscrive senza i suoi nomi logici, collegamenti ai domini e righe dei dizionari — vedere [Aggiornamento](./installation.md#updating).
 
+Le modifiche che l’utente e l’agente fanno nello stesso istante allo stesso nome o campo, o alla posizione o alla dimensione della stessa tabella, dello stesso memo o dello stesso gruppo di tabelle, finiscono allo stesso modo nell’editor e per l’agente con il server `1.2.0` o successivo e, ovunque il documento sia aperto, l’estensione per VS Code `4.3.0` o successiva o il plugin per Obsidian o per JetBrains `1.3.0` o successivo.
+Un colore, il database e l’ordine delle colonne in una tabella o in un indice sono le eccezioni — vedere [Modifiche fatte nello stesso istante](./live-and-headless.md#edits-made-at-the-same-moment).
+
 Passo successivo: [Installazione](./installation.md).

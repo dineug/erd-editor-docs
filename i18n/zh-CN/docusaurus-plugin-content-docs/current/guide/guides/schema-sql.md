@@ -49,7 +49,7 @@ SQL 在标签页打开时写出，之后每当面板中的某项选择、数据�
 
 `Bracket` 用于设置包裹表名、列名、约束名和索引名的引号：`SingleQuote`、`DoubleQuote`、`Backtick`，或表示完全不加引号的 `None`，后者为默认值。它与 Code Generator 中的是同一个设置，参见[括号](./code-generator.md#bracket)。  
 Snowflake 只用双引号为名称加引号，因此在 `None` 以外的任何选择下都使用双引号；Databricks 则始终用反引号为名称加引号。  
-只有当 Settings 标签页中的 `Bracket Type` 锁定关闭时，`Bracket` 才会保存到文件中，而新建的图中所有锁定都处于开启状态。锁定开启期间，更改会重写屏幕上的 SQL，但文件保留锁定的值，图重新打开时也使用该值，参见[锁定](./settings.md#锁定)。
+只有当 Settings 标签页中的 `Bracket Type` 锁定关闭时，`Bracket` 才会保存到文件中，而新建的图中所有锁定都处于开启状态。锁定开启期间，更改只会重写你的编辑器中的 SQL：打开同一张图的其他编辑器保留各自的括号，而文件保留锁定的值，因此图重新打开时使用该值，参见[锁定](./settings.md#锁定)。
 
 当数据库为 Oracle 且 SQL 中含有超过 30 字节的名称（Oracle 12.1 及更早的版本会拒绝这样的名称）时，这两个列表下方会出现一条说明，列出每个这样的名称：`Oracle 12.2+ for names over 30 bytes: <names>`。它会检查表、列、schema、键、索引、序列和触发器的名称。SQL 本身不会改变。
 
@@ -224,7 +224,7 @@ Snowflake 省略某个操作时，会在该外键的 `ALTER TABLE` 上方写一�
 
 在 [`readonly`](../../api/erd-editor-element.md#readonly) 编辑器中，该标签页为阅读者工作，并且在其上所做的任何操作都不会到达文档：
 
-- `Database` 和 `Bracket` 仍会重写 SQL，但只作用于该窗口，因此面板同样把它们标注为 `This window only`。无论锁定如何，所选内容都不会保存到文件、与协作者共享或记录到 Undo，并且协作者对你所选设置的更改会让你的选择保留在屏幕上。Code Generator 标签页会显示同样的选择，不带数据库调用的 [`getSchemaSQL()`](../../api/erd-editor-element.md#getschemasql) 写出的也是它。编辑器再次变为可写后，文档的数据库和括号会恢复。
+- `Database` 和 `Bracket` 仍会重写 SQL，但只作用于该窗口，因此面板同样把它们标注为 `This window only`。无论锁定如何，所选内容都不会保存到文件、与协作者共享或记录到 Undo，并且协作者对你所选设置的更改会让你的选择保留在屏幕上。Code Generator 标签页会显示同样的选择，不带数据库调用的 [`getSchemaSQL()`](../../api/erd-editor-element.md#getschemasql) 写出的也是它。编辑器再次变为可写后，你所选的数据库和括号会恢复为编辑器此前显示的内容，并带上协作者此后所做的更改，参见 Settings 中的[只读编辑器](./settings.md#read-only-editors)。
 - `Statements`、`Header`、`Write logical names into empty comments` 和 `Tables` 与在任何地方一样工作，因为它们本来就属于该窗口。
 - 两个脚本输入框是只读的：它们显示文档的脚本，SQL 仍会写出这些脚本，但不接受输入。
 - `Save file` 和 `Copy` 保存和复制的是该标签页所显示的 SQL。

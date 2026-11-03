@@ -1,5 +1,5 @@
 ---
-sidebar_position: 2
+sidebar_position: 3
 description: Repliceer een live editor naar een headless store buiten de hoofdthread en serialiseer het document voor opslag.
 ---
 
@@ -88,6 +88,11 @@ Sinds `4.2.0` geldt hetzelfde voor een woord, term of domein dat van een blad va
 Wanneer een editor de verwijdering ongedaan maakt, toont een replica die zonder de rij is geïnitialiseerd, die rij weer leeg, en omdat `value` een lege rij weglaat, slaat de replica het document zonder die rij op.  
 Bij een domein blijven ook de kolommen en termen die eraan gekoppeld waren in die replica ontkoppeld, omdat de replica de koppelingen nooit had en het ongedaan maken ze niet verstuurt.
 
+Sinds `5.1.0` kan [`@dineug/erd-editor-yjs`](./yjs.md) editors ook via een Yjs-room met elkaar in de pas houden.  
+Een replica die zoals hierboven wordt gevoed vanuit een element dat aan een room is gebonden, krijgt alleen de bewerkingen die op dat element zijn gedaan, nooit die welke de room binnenbrengt: die bereiken het element als bewerkingen van een andere editor, en een gedeelde store stuurt nooit door wat hij heeft ontvangen.  
+Om het document van een room op te slaan, sla je de `value` van het gebonden element op, of die van een gebonden peerstore, zoals [Wat de room bevat](./yjs.md#what-the-room-holds) beschrijft.  
+Een Yjs-persistentieprovider slaat de room zelf op, die een runtimewaarde en de bewerkingen sindsdien bevat in plaats van een bestand; zie [Beperkingen](./yjs.md#limits).
+
 ## InjectEngineContext {#injectenginecontext}
 
 ### toWidth {#towidth}
@@ -154,7 +159,7 @@ De opslagvorm bevat alleen de niet-verwijderde entiteiten, in een vaste volgorde
 Sinds `4.2.0` bevat de opslagvorm ook de logische namen, of elke naam uit de woordenboeken is afgeleid, de domeinkoppelingen en de woorden, termen en domeinen van het tabblad [Woordenboek](../../guide/guides/dictionary.md).  
 Ook laat de opslagvorm sinds `4.2.0` elk leeg tekstveld van een entiteit weg, elke lijst in `doc` en elke collectie die niets bevat, en `collections` zelf wanneer elke collectie leeg is.  
 De tekst is met twee spaties ingesprongen, met elke woordenboekrij op een eigen regel, en eindigt met een regeleinde, zodat hetzelfde document altijd dezelfde bytes oplevert.  
-Zie [Opslagvorm en runtimewaarde](./schema.md#storage-form-and-runtime-value) voor wat erin staat.
+Zie [Opslagvorm](./schema.md#storage-form) voor wat erin staat.
 
 Elke instelling waarvan de [vergrendeling](../../guide/guides/settings.md#lock) aanstaat, wordt geschreven met de waarde waarop ze is vergrendeld, en elke andere instelling zoals ze op dat moment staat.  
 De vergrendeling `Viewport` omvat de oorsprong van de weergave en het zoomniveau samen, en het tabblad, de taal van de Codegenerator, beide naamnotaties en het type aanhalingstekens hebben elk een eigen vergrendeling.  
@@ -172,6 +177,7 @@ const snapshot = replicationStore.runtimeValue;
 ```
 
 Gebruik het om een editor of een andere store die later aansluit, via zijn `setInitialValue` te initialiseren; zie [Gezamenlijk bewerken](./collaborative-editing.md).  
+Een replica heeft geen [getLWW](./collaborative-editing.md#getlww) of [getVersion](./collaborative-editing.md#getversion), dus ze levert met `runtimeValue` geen samenwerkingsregisters mee: een editor die ermee wordt geïnitialiseerd, haalt ze bij de lopende editors op, zoals [Een medebewerker initialiseren](./collaborative-editing.md#seeding-a-collaborator) beschrijft.  
 Sla het nooit op als het bestand: het bevat de verwijderde entiteiten, en het gepubliceerde [JSON Schema](./schema.md#json-schema) weigert het.  
 Juist die verwijderde entiteiten zorgen ervoor dat het later verstuurde ongedaan maken van een verwijdering de entiteit volledig terugbrengt in de store die ermee is geïnitialiseerd.  
 Ze blijven bestaan tot het document de volgende keer vanuit zijn bestand wordt geopend, waarvan de vorm ze weglaat.
@@ -230,7 +236,7 @@ Vóór `3.10.0` ontving de listener niets, en een listener die het argument nege
 `changed` is `false` wanneer de acties sinds de vorige `change`, of sinds het laden, `value` byte voor byte ongewijzigd hebben gelaten.
 
 Een wijziging die een [vergrendeling](../../guide/guides/settings.md#lock) buiten `value` houdt, leidt toch tot `change`, met `changed` op `false`, dus schrijf alleen weg wanneer `changed` `true` is.  
-Het gaat om een scroll of zoom terwijl `Viewport` vergrendeld is, een tabbladwissel terwijl `Canvas Type` vergrendeld is en een wijziging van de taal van de Codegenerator, een naamnotatie of het type aanhalingstekens terwijl de eigen vergrendeling daarvan aanstaat.  
+Het gaat om een scroll of zoom terwijl `Viewport` vergrendeld is, een tabbladwissel terwijl `Canvas Type` vergrendeld is en een wijziging van de taal van de Codegenerator, een naamnotatie of het type aanhalingstekens terwijl de eigen vergrendeling daarvan aanstaat, wat sinds `5.1.0` alleen nog een editor van vóór `5.1.0` verstuurt (zie [dispatch, dispatchSync](#dispatch-dispatchsync)).  
 Sinds `4.2.0` geldt dat ook voor een wissel van naamweergave terwijl `Name View` vergrendeld is: de editor verstuurt hem nog steeds, maar de replica laat hem vallen, net als de andere editors.  
 Een wissel van naamweergave die in een editor in alleen-lezenmodus wordt gemaakt, laat de replica op dezelfde manier vallen, hoe de vergrendeling ook staat.  
 Het event [change](../erd-editor-element.md#change) van het element laat zo'n wijziging weg, maar de replica meldt die toch.  
@@ -282,6 +288,23 @@ Een editor van vóór `4.2.0` in de sessie kan een replica van `4.2.0` nog steed
 Een `Import` van Schema SQL, GraphQL, DBML of AML op die editor, al geldt dat niet voor een `Import and Add`, maakt de woorden, termen en domeinen van de replica leeg.  
 Wanneer die editor een laadactie, een `Import` of `clear()` ongedaan maakt, laadt hij zijn eigen kopie van het document in de replica, zonder logische namen, domeinkoppelingen of woordenboeken; zie [Versies combineren](./collaborative-editing.md#mixing-releases).  
 `@dineug/erd-editor/engine.js` exporteert dezelfde `createReplicationStore`, `ReplicationStore` en `ReplicationChange` als voorheen, en `createReplicationStore` accepteert dezelfde context.
+
+`5.1.0` voegt geen actietype toe en wijzigt geen export van `@dineug/erd-editor/engine.js`, dus een replica van `4.2.0` of later houdt nog steeds elke wijziging bij die een editor van `5.1.0` verstuurt.  
+Sinds `5.1.0` handelt de replica bewerkingen op hetzelfde moment af zoals de editors van `5.1.0` dat doen; zie [Gelijktijdige bewerkingen](./collaborative-editing.md#concurrent-edits).  
+Ze houdt een versie bij voor de positie van een tabel, voor de positie en grootte van een memo en een tabelgroep, en voor de oorsprong van de weergave en het zoomniveau.  
+Een editor van `5.1.0` verstuurt een sleep, een pan of een zoom als de plek waar die eindigt, via `table.moveTo`, `memo.moveTo`, `tableGroup.moveTo`, `settings.scrollTo` en `settings.changeZoomLevel`, en de replica neemt elk van die acties, en elke `memo.resize` en `tableGroup.resize`, alleen over wanneer de versie ervan niet onder de versie ligt die ze bijhoudt.  
+Als twee van deze editors dus op hetzelfde moment één tabel, memo of tabelgroep verplaatsen of van grootte wijzigen, slaat de replica die op met de positie en grootte die elk van hen toont, in welke volgorde ze de acties ook hoort, en verplaatst een sleep, pan of zoom die het transport twee keer aflevert niets twee keer.  
+Is `Viewport` ontgrendeld, dan slaat de replica de oorsprong en het zoomniveau elk op uit de schrijfactie met de grootste versie, waar de editor die haar uitvoerde, stond.  
+Een zoom verplaatst ook de oorsprong, dus een pan en een zoom die twee editors op hetzelfde moment doen, kunnen worden opgeslagen als de oorsprong van de ene editor met het zoomniveau van de andere.  
+Vóór `5.1.0` telde de replica de pan- en zoomstappen van alle editors op tot één weergave.
+
+De afstanden die een editor van vóór `5.1.0` voor een sleep, een pan of een zoom verstuurt (`table.move`, `memo.move`, `tableGroup.move`, `settings.streamScrollTo` en `settings.streamZoomLevel`) worden nog steeds opgeteld bij wat de replica bijhoudt, buiten de versies om.  
+Een kleurwijziging komt nog steeds zonder versie aan: de replica voorziet haar, net als elke editor, van een eigen versie en houdt de kleur die ze het laatst hoorde, dus twee kleurwijzigingen van één tabel, memo of tabelgroep op hetzelfde moment kunnen anders worden opgeslagen dan een editor toont.  
+Een replica van vóór `5.1.0` past de posities en groottes toe in de volgorde waarin ze aankomen, dus ze kan een tabel elders opslaan dan waar de editors van `5.1.0` haar tonen.  
+Houd elke editor in de sessie, en de replica, op `5.1.0` of later opdat bewerkingen op hetzelfde moment overal op hetzelfde uitkomen, op de uitzonderingen na die [Gelijktijdige bewerkingen](./collaborative-editing.md#concurrent-edits) opsomt.
+
+Sinds `5.1.0` verstuurt een editor een wijziging van de taal van de Codegenerator, een naamnotatie of het type aanhalingstekens alleen terwijl de vergrendeling van die instelling uitstaat, gemarkeerd met `shared: true` in de payload, en past de replica elke gemarkeerde toe, zoals de editors dat doen; zie [Gezamenlijk bewerken](./collaborative-editing.md).  
+Een niet-gemarkeerde, die een editor van vóór `5.1.0` ongeacht de vergrendeling verstuurt, past de replica alleen toe terwijl die instelling aan haar kant ontgrendeld is, en ze laat die vallen terwijl de instelling vergrendeld is (zie [on@change](#onchange)).
 
 Sinds `4.0.0` passen beide methoden ook `editor.mergeLWW` toe, dat de samenwerkingsregisters bevat waarmee een editor antwoordt wanneer een andere editor zich bij de sessie aansluit, zodat de replica gelijktijdige bewerkingen op dezelfde manier afhandelt als de editors.  
 Dat wijzigt geen enkele byte van `value` en leidt niet tot `change`.  

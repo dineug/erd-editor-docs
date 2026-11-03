@@ -54,7 +54,8 @@ Ein Fenster von VS Code bedient die Diagramme in seinen Arbeitsbereichsordnern u
 3. Lassen Sie die Einstellung `dineug.erd-editor.agentHub.enabled` eingeschaltet. Sie ist standardmäßig eingeschaltet.
 
 Eine Erweiterung von `3.0.0` bis `3.1.0` und der Server `1.0.0` oder neuer lehnen einander ab, und eine Erweiterung vor `3.0.0` bedient keine Agenten.
-Eine Erweiterung `4.0.0` oder `4.1.0` verbindet sich, zeigt die logischen Namen, Domänenverknüpfungen und Wörterbuchzeilen, die der Agent schreibt, aber weder an, noch behält sie sie – siehe [Aktualisieren](#updating).
+Eine Erweiterung `4.0.0` oder `4.1.0` verbindet sich, zeigt die logischen Namen, Domänenverknüpfungen und Wörterbuchzeilen, die der Agent schreibt, aber weder an, noch behält sie sie.
+Mit einer Erweiterung vor `4.3.0` kann eine Tabelle, Notiz oder Tabellengruppe, die Sie und der Agent zeitgleich verschieben oder in der Größe ändern, bei Ihnen beiden an unterschiedlichen Stellen enden – siehe [Aktualisieren](#updating).
 
 Die Erweiterung startet in einem Arbeitsbereich, der Dateien mit der Endung `.erd`, `.erd.json`, `.vuerd` oder `.vuerd.json` enthält, sodass ein Agent diese Diagramme erreicht, bevor Sie eines öffnen.
 In einem Arbeitsbereich ohne solche Dateien startet sie, wenn Sie ein Diagramm öffnen, und bis dahin arbeitet der Agent auf dem Datenträger.
@@ -71,7 +72,8 @@ Ein Vault-Fenster von Obsidian bedient die Diagramme in seinem Vault.
 2. Lassen Sie Settings → ERD Editor → Coding agents eingeschaltet. Die Einstellung ist standardmäßig eingeschaltet, und jeder Vault hat seine eigene.
 
 Ein Plugin vor `1.0.0` und der Server `1.0.0` oder neuer lehnen einander ab.
-Ein Plugin `1.0.0` oder `1.1.0` verbindet sich, zeigt die logischen Namen, Domänenverknüpfungen und Wörterbuchzeilen, die der Agent schreibt, aber weder an, noch behält es sie – siehe [Aktualisieren](#updating).
+Ein Plugin `1.0.0` oder `1.1.0` verbindet sich, zeigt die logischen Namen, Domänenverknüpfungen und Wörterbuchzeilen, die der Agent schreibt, aber weder an, noch behält es sie.
+Mit einem Plugin vor `1.3.0` kann eine Tabelle, Notiz oder Tabellengruppe, die Sie und der Agent zeitgleich verschieben oder in der Größe ändern, bei Ihnen beiden an unterschiedlichen Stellen enden – siehe [Aktualisieren](#updating).
 
 Ein Vault-Fenster bedient Agenten ab dem Moment, in dem das Plugin geladen wird, sodass ein Agent die Diagramme des Vaults erreicht, bevor Sie eines öffnen.
 Einen Vertrauensschritt gibt es nicht.
@@ -98,7 +100,8 @@ Eine JetBrains-IDE bedient die Diagramme jedes darin geöffneten Projekts und je
 3. Lassen Sie Settings | Tools | ERD Editor → Coding agents angehakt. Die Einstellung ist standardmäßig eingeschaltet und gilt für die gesamte IDE.
 
 Ein Plugin `0.9.0` oder `0.10.0` und der Server `1.0.0` oder neuer lehnen einander ab, und ein Plugin vor `0.9.0` bedient keine Agenten.
-Ein Plugin `1.0.0` oder `1.1.0` verbindet sich, zeigt die logischen Namen, Domänenverknüpfungen und Wörterbuchzeilen, die der Agent schreibt, aber weder an, noch behält es sie – siehe [Aktualisieren](#updating).
+Ein Plugin `1.0.0` oder `1.1.0` verbindet sich, zeigt die logischen Namen, Domänenverknüpfungen und Wörterbuchzeilen, die der Agent schreibt, aber weder an, noch behält es sie.
+Mit einem Plugin vor `1.3.0` kann eine Tabelle, Notiz oder Tabellengruppe, die Sie und der Agent zeitgleich verschieben oder in der Größe ändern, bei Ihnen beiden an unterschiedlichen Stellen enden – siehe [Aktualisieren](#updating).
 
 Die IDE bedient Agenten ab dem Moment, in dem das erste Projekt geöffnet wird, sodass ein Agent die Diagramme eines Projekts erreicht, bevor Sie eines öffnen.
 
@@ -144,6 +147,11 @@ Nur die Erweiterung für VS Code `4.2.0` oder neuer und die Plugins für Obsidia
 Eine ältere Erweiterung oder ein älteres Plugin, das sich verbindet, ignoriert sie, obwohl der Aufruf des Agenten gelingt.
 Die physischen Namen, die die Wörterbücher ableiten, und die Datentypen, die die Domänen geben, werden trotzdem übernommen.
 Ein Server vor `1.1.0` liest eine Datei ohne ihre logischen Namen, Domänenverknüpfungen und Wörterbuchzeilen und lässt sie weg, wenn er die Datei auf dem Datenträger bearbeitet – siehe [Headless](./live-and-headless.md#headless).
+
+Der Server `1.2.0` spricht ebenfalls Protokoll 2 und fügt kein Tool hinzu, entfernt oder benennt keines um und ändert kein Argument.
+Aber eine Verschiebung oder Größenänderung, die Sie und der Agent zeitgleich an derselben Tabelle, Notiz oder Tabellengruppe vornehmen, endet im Editor und für den Agenten nur dann gleich, wenn der Server `1.2.0` oder neuer ist und der Editor die Erweiterung für VS Code `4.3.0` oder neuer oder das Plugin für Obsidian oder JetBrains `1.3.0` oder neuer hat.
+Ist eine der beiden Seiten älter, können der Editor und der Agent mit unterschiedlichen Positionen enden, und der Agent liest und bearbeitet weiter von seiner eigenen, bis eine spätere Verschiebung beide auf einen Punkt setzt oder der Agent dem Dokument erneut beitritt – siehe [Zeitgleich vorgenommene Bearbeitungen](./live-and-headless.md#edits-made-at-the-same-moment).
+Keine dieser Versionen ändert, was eine Datei enthält.
 
 Aktualisieren Sie ERD Editor außerdem überall dort, wo die Diagramme geöffnet werden.
 Die Erweiterung für VS Code vor `4.2.0`, das Plugin für Obsidian vor `1.2.0` und das Plugin für JetBrains vor `1.2.0` öffnen ein Diagramm, das eine neuere Version gespeichert oder das der Agent auf dem Datenträger bearbeitet hat, ohne die logischen Namen seiner Tabellen und Spalten, die Domänenverknüpfungen seiner Spalten und seine Wörter, Begriffe und Domänen.

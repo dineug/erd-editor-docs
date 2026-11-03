@@ -51,18 +51,18 @@ editor.addEventListener('change', () => {
 
 ```html
 <script type="module">
-  import 'https://esm.run/@dineug/erd-editor@5.0.0/erd-editor.js';
+  import 'https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js';
 
   const editor = document.createElement('erd-editor');
   editor.style.cssText = 'display: block; width: 100%; height: 100vh;';
   document.body.appendChild(editor);
 </script>
 <!-- or -->
-<script type="module" src="https://esm.run/@dineug/erd-editor@5.0.0/erd-editor.js"></script>
+<script type="module" src="https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js"></script>
 ```
 
 `esm.run` وابستگی‌های خارجی بسته را برای شما مسیریابی می‌کند، بنابراین این روش بدون باندلر کار می‌کند.
-هر نقطهٔ ورود با مسیرش پس از نسخه به دست می‌آید: `…/erd-editor.js` ویرایشگر را تعریف می‌کند و `…/erd-viewer.js` نمایشگر را، که هر زبان نمایش جز انگلیسی را وقتی صفحه بخواهد از CDN دریافت می‌کند. نشانی بدون مسیر بسته، `https://esm.run/@dineug/erd-editor@5.0.0`، ریشه را ارائه می‌دهد که هیچ عنصری تعریف نمی‌کند.
+هر نقطهٔ ورود با مسیرش پس از نسخه به دست می‌آید: `…/erd-editor.js` ویرایشگر را تعریف می‌کند و `…/erd-viewer.js` نمایشگر را، که هر زبان نمایش جز انگلیسی را وقتی صفحه بخواهد از CDN دریافت می‌کند. نشانی بدون مسیر بسته، `https://esm.run/@dineug/erd-editor@5.1.0`، ریشه را ارائه می‌دهد که هیچ عنصری تعریف نمی‌کند.
 نشانی بدون نسخه همیشه آخرین نسخه را ارائه می‌دهد. اگر نمی‌خواهید یک ارتقای نسخهٔ اصلی بدون اطلاع قبلی به صفحهٔ شما برسد، نسخه را ثابت کنید، مانند بالا.
 خود `5.0.0` نیز یک ارتقای نسخهٔ اصلی است: صفحه‌ای که باید روی 4.x بماند، `@4.2.0` را ثابت می‌کند؛ [ارتقا از 4.x](#upgrading-from-4x) را ببینید.
 
@@ -75,7 +75,7 @@ editor.addEventListener('change', () => {
 
 ```html
 <erd-editor></erd-editor>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.0.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0"></script>
 <script>
   const editor = document.querySelector('erd-editor');
   editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
@@ -88,7 +88,7 @@ editor.addEventListener('change', () => {
 
 ```html
 <erd-viewer src="diagram.erd.json" style="display: block; height: 480px"></erd-viewer>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.0.0/dist/erd-viewer.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0/dist/erd-viewer.umd.js"></script>
 ```
 
 هیچ‌یک از این دو فایل تگ دیگری را تعریف نمی‌کند و هر کدام جز global خودش و `window.Konva` چیزی روی صفحه باقی نمی‌گذارد.
@@ -100,7 +100,7 @@ editor.addEventListener('change', () => {
 ```html
 <erd-editor system-dark-mode enable-theme-builder enable-locale-picker enable-welcome-screen></erd-editor>
 <script type="module">
-  import 'https://esm.run/@dineug/erd-editor@5.0.0/erd-editor.js';
+  import 'https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js';
 
   const editor = document.querySelector('erd-editor');
 </script>
@@ -161,7 +161,7 @@ const found = document.querySelector('erd-editor'); // ErdEditorElement | null
 ```
 
 `ErdEditorElement` برای مشخص کردن نوع متغیرها و props خودتان صادر می‌شود. از نسخهٔ `5.0.0` کلاس عنصر هم هست و `ErdViewerElement` رابط و کلاس نمایشگر است — [ثبت عنصرها](#registering-the-elements) را ببینید.
-از نسخهٔ `4.0.0`، بسته نوع‌های `LocaleCode`، `LocaleOption` و `SchemaSQLOptions` را نیز صادر می‌کند و از نسخهٔ `5.0.0` `ToImageOptions` را؛ [نقاط ورود](#entry-points) را ببینید. گزینه‌هایی که متدهای `setSchema*()` می‌گیرند با نامی صادر نمی‌شوند؛ آن‌ها را از خود عنصر بخوانید، مانند `Parameters<ErdEditorElement['setSchemaSQL']>[1]`.
+از نسخهٔ `4.0.0`، بسته نوع‌های `LocaleCode`، `LocaleOption` و `SchemaSQLOptions` را نیز صادر می‌کند و از نسخهٔ `5.0.0` `ToImageOptions` را؛ [نقاط ورود](#entry-points) را ببینید. گزینه‌هایی که متدهای `setSchema*()` می‌گیرند با نامی صادر نمی‌شوند؛ آن‌ها را از خود عنصر بخوانید، مانند `Parameters<ErdEditorElement['setSchemaSQL']>[1]`. همین در مورد [مخزن مشترک](./advanced/collaborative-editing.md) و نوع‌هایش هم صدق می‌کند.
 از نسخهٔ `5.0.0` فیلد `typesVersions` بسته نوع هر نقطهٔ ورود زیرمسیر را زیر `moduleResolution: "node10"` هم تعیین می‌کند، که نگاشت exports را نمی‌خواند.
 
 ## ثبت عنصرها {#registering-the-elements}
@@ -259,7 +259,7 @@ Vite، webpack 5 و Rspack ورکرها را به‌صورت فایل در کن�
 | `@dineug/erd-editor/erd-editor.js` | از نسخهٔ `5.0.0`. `<erd-editor>` را تعریف می‌کند و چیزی صادر نمی‌کند |
 | `@dineug/erd-editor/erd-viewer.js` | از نسخهٔ `5.0.0`. `<erd-viewer>` را تعریف می‌کند و چیزی صادر نمی‌کند |
 | `@dineug/erd-editor/engine.js` | مخزن سند بدون DOM |
-| `@dineug/erd-editor/peer.js` | از نسخهٔ `3.9.1`. همتای بدون رابط کاربری سرور MCP |
+| `@dineug/erd-editor/peer.js` | از نسخهٔ `3.9.1`. همتای بدون رابط کاربری سرور MCP و، از نسخهٔ `5.1.0`، [اتصال Yjs](./advanced/yjs.md) |
 
 ریشه هر دو کلاس عنصر و توابع define آن‌ها، دو تابع تنظیم callback، از نسخهٔ `3.9.2` کلیدهای میان‌بر پیش‌فرض همراه با نوع‌هایشان، از نسخهٔ `4.0.0` نوع‌های زبان نمایش و نوع گزینه‌های `getSchemaSQL()`، از نسخهٔ `4.2.0` ترکیب‌های کلید ردیف‌ها در زبانهٔ واژه‌نامه و از نسخهٔ `5.0.0` تابع `toImage` را صادر می‌کند.
 
@@ -289,7 +289,9 @@ Vite، webpack 5 و Rspack ورکرها را به‌صورت فایل در کن�
 این نقطهٔ ورود `createReplicationStore` و نوع `ReplicationStore` را صادر می‌کند. از نسخهٔ `3.10.0`، نوع `ReplicationChange` را نیز صادر می‌کند، یعنی `{ value: string; changed: boolean }`، که شنوندهٔ رویداد `change` یک رونوشت آن را دریافت می‌کند؛ [on@change](./advanced/remote-storage.md#onchange) را ببینید.
 از نسخهٔ `4.0.0`، هر `ReplicationStore` یک خاصیت `runtimeValue` نیز دارد. خاصیت `value` آن و مقداری که رویداد `change` تحویل می‌دهد، مانند مقادیر عنصر، همان شکل ذخیره‌سازی‌اند که فایل نگه می‌دارد؛ [ReplicationStore](./advanced/remote-storage.md#replicationstore) را ببینید.
 
-`@dineug/erd-editor/peer.js` همتای بدون رابط کاربری که [سرور MCP](../mcp/introduction.md) از طریق آن سند را ویرایش می‌کند. این نقطهٔ ورود برای همان سرور وجود دارد و این صفحه‌ها آن را مستند نمی‌کنند.
+`@dineug/erd-editor/peer.js` همتای بدون رابط کاربری‌ای است که [سرور MCP](../mcp/introduction.md) از طریق آن سند را ویرایش می‌کند.
+از نسخهٔ `5.1.0`، همین نقطهٔ ورود چیزی است که `bindPeerStore` از `@dineug/erd-editor-yjs` به یک `Y.Doc` متصل می‌کند: یک مخزن همتا که `createPeerStore()` این نقطهٔ ورود ساخته است، به‌عنوان عضوی بدون رابط کاربری از یک اتاق یا به‌عنوان فشرده‌ساز اتاق که تاریخچهٔ آن را تلفیق می‌کند.
+فراتر از آنچه صفحهٔ [Yjs](./advanced/yjs.md) از آن نشان می‌دهد — فراخوانی `createPeerStore()`، `value` یک مخزن همتای متصل‌شده و `destroy()` آن — این صفحه‌ها آن را مستند نمی‌کنند.
 
 ### کادرهای گفت‌وگوی فایل {#file-dialogs}
 
@@ -369,11 +371,11 @@ Chrome 91+، Edge 94+، Firefox 93+، Safari 16.4+ — خط پایهٔ ES2022 ک
    import { setExportFileCallback } from '@dineug/erd-editor';
   ```
 
-- در یک CDN همین در مورد `https://esm.run/@dineug/erd-editor` صدق می‌کند، که اکنون ریشه را ارائه می‌دهد و چیزی تعریف نمی‌کند: `https://esm.run/@dineug/erd-editor@5.0.0/erd-editor.js` را وارد کنید. نشانی‌های بدون مسیر jsDelivr و unpkg همچنان بیلد تگ script را ارائه می‌دهند، که `<erd-editor>` را مانند قبل تعریف می‌کند. نشانی بدون نسخه اکنون آخرین نسخهٔ 5.x را ارائه می‌دهد؛ برای ماندن روی 4.x، `@4.2.0` را ثابت کنید — [CDN](#cdn) و [تگ script](#script-tag) را ببینید.
+- در یک CDN همین در مورد `https://esm.run/@dineug/erd-editor` صدق می‌کند، که اکنون ریشه را ارائه می‌دهد و چیزی تعریف نمی‌کند: `https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js` را وارد کنید. نشانی‌های بدون مسیر jsDelivr و unpkg همچنان بیلد تگ script را ارائه می‌دهند، که `<erd-editor>` را مانند قبل تعریف می‌کند. نشانی بدون نسخه اکنون آخرین نسخهٔ 5.x را ارائه می‌دهد؛ برای ماندن روی 4.x، `@4.2.0` را ثابت کنید؛ [CDN](#cdn) و [تگ script](#script-tag) را ببینید.
 - ریشه چیزی تعریف نمی‌کند اما همچنان به DOM نیاز دارد، بنابراین در رندر سمت سرور یک import نام‌دار از آن، مانند `setExportFileCallback`، در کنار نقطهٔ ورود عنصر در مسیر فقط-کلاینت می‌ماند — [رندر سمت سرور](#server-side-rendering) را ببینید.
 - `window.ErdEditor` دو عضو `ErdEditorElement` و `defineErdEditor` را می‌گیرد. بیلد تگ script نمایشگر `ErdViewerElement` و `defineErdViewer` را روی `window.ErdViewer` می‌گذارد و هیچ‌یک از دو global تابع `toImage` را ندارد.
 - ویرایشگر `readonly` به‌صورت یک خواننده باز می‌شود. شش زبانه، کاوشگر، جست‌وجوی سریع و حضور دیگران می‌مانند و هر کنترلی که نمودار را ویرایش می‌کرد به‌جای غیرفعال شدن حذف می‌شود: نوار ابزار نام پایگاه داده را به‌صورت متن نشان می‌دهد، زبانهٔ تنظیمات تنظیم‌هایش را با هر کنترل غیرفعال زیر نشان `Read only` نشان می‌دهد و نوار ابزار شناور فقط بزرگ‌نمایی، نمایش نام‌ها، حالت ذن و قطب‌نما را نگه می‌دارد، بنابراین `Hand` و `Select` حذف می‌شوند و کشیدن بوم را جابه‌جا می‌کند. فشردن چیزی را انتخاب نمی‌کند: تنها انتخاب، خط دورنمایی است که پرش از کاوشگر یا جست‌وجوی سریع دور چیزی که به آن می‌رسد می‌گذارد و یک کلیک بی‌حرکت آن را پاک می‌کند، و کلیدهای انتخاب همه چیزی را انتخاب نمی‌کنند. روشن کردن `readonly` آنچه را باز بود می‌بندد، مانند انتخاب، ابزار دست، ویرایشگر خانه، یک کشیدن، Map Columns، پیش‌نمایش `Force` در چیدمان خودکار و سفر در زمان، و پیمایش، بزرگ‌نمایی، زبانه و نمایش نام‌ها را نگه می‌دارد — [readonly](./erd-editor-element.md#readonly) را ببینید.
-- تنظیم‌هایی که خوانندهٔ `readonly` تغییر می‌دهد، قفل‌هایشان هرچه باشد، روی صفحهٔ همان ویرایشگر می‌مانند: پیمایش و بزرگ‌نمایی، زبانه، نمایش نام‌ها، View Option، پایگاه داده، و زبان، شیوه‌های نگارش نام و نوع علامت نقل‌قول Code Generator. `value`، `runtimeValue` و خروجی JSON تنظیم‌های خود سند را نگه می‌دارند، که تغییرهای خوانندهٔ 4.x می‌توانست به آن‌ها برسد، و `getSharedStore()` هیچ‌کدام را به ویرایشگرهای دیگر نمی‌فرستد. `getSchemaSQL()` بدون سامانهٔ پایگاه داده برای پایگاه داده‌ای می‌نویسد که خواننده انتخاب کرده است. خاموش کردن `readonly` پایگاه داده، تنظیمات کد و View Option را به مقدار سند برمی‌گرداند و پیمایش، بزرگ‌نمایی، زبانه و نمایش نام‌ها را همان‌جا که خواننده رها کرده بود می‌گذارد.
+- تنظیم‌هایی که خوانندهٔ `readonly` تغییر می‌دهد، قفل‌هایشان هرچه باشد، روی صفحهٔ همان ویرایشگر می‌مانند: پیمایش و بزرگ‌نمایی، زبانه، نمایش نام‌ها، View Option، پایگاه داده، و زبان، شیوه‌های نگارش نام و نوع علامت نقل‌قول Code Generator. `value`، `runtimeValue` و خروجی JSON تنظیم‌های خود سند را نگه می‌دارند، که تغییرهای خوانندهٔ 4.x می‌توانست به آن‌ها برسد، و `getSharedStore()` هیچ‌کدام را به ویرایشگرهای دیگر نمی‌فرستد. `getSchemaSQL()` بدون سامانهٔ پایگاه داده برای پایگاه داده‌ای می‌نویسد که خواننده انتخاب کرده است. خاموش کردن `readonly` پایگاه داده، تنظیمات کد و View Option را به آنچه آن ویرایشگر اگر خواننده چیزی را تغییر نداده بود نشان می‌داد برمی‌گرداند و پیمایش، بزرگ‌نمایی، زبانه و نمایش نام‌ها را همان‌جا که خواننده رها کرده بود می‌گذارد.
 - ردیف `Recalculation table width` در زبانهٔ تنظیمات حذف شده است. بارگذاری و جای‌گذاری همچنان عرض هر جدول را با متن آن تنظیم می‌کنند.
 - در Vite 8 مقدار `exclude: ['@dineug/erd-editor']` را از `optimizeDeps` حذف کنید، که فقط Vite 7 و قدیمی‌تر هنوز به آن نیاز دارند، و `include` مربوط به ELK را نگه دارید — [Vite](#vite) را ببینید.
 

@@ -54,7 +54,8 @@ Okno VS Code obsluhuje diagramy v priečinkoch svojho pracovného priestoru a ka
 3. Nechajte nastavenie `dineug.erd-editor.agentHub.enabled` zapnuté. Predvolene je zapnuté.
 
 Rozšírenie od verzie `3.0.0` po verziu `3.1.0` a server vo verzii `1.0.0` alebo novšej sa navzájom odmietnu a rozšírenie pred verziou `3.0.0` neobsluhuje žiadnych agentov.
-Rozšírenie vo verzii `4.0.0` alebo `4.1.0` sa pripojí, ale logické názvy, prepojenia s doménami a riadky slovníkov, ktoré agent zapíše, nezobrazuje ani neuchováva – pozrite si časť [Aktualizácia](#updating).
+Rozšírenie vo verzii `4.0.0` alebo `4.1.0` sa pripojí, ale logické názvy, prepojenia s doménami a riadky slovníkov, ktoré agent zapíše, nezobrazuje ani neuchováva.
+S rozšírením starším ako verzia `4.3.0` môže tabuľka, poznámka alebo skupina tabuliek, ktorú vy a agent v tom istom okamihu presuniete alebo ktorej zmeníte veľkosť, skončiť pre každého z vás na inom mieste – pozrite si časť [Aktualizácia](#updating).
 
 Rozšírenie sa spustí v pracovnom priestore, ktorý obsahuje súbory `.erd`, `.erd.json`, `.vuerd` alebo `.vuerd.json`, takže agent sa k týmto diagramom dostane ešte predtým, ako niektorý z nich otvoríte.
 V pracovnom priestore bez takýchto súborov sa spustí, keď otvoríte diagram, a dovtedy agent vykonáva úpravy na disku.
@@ -71,7 +72,8 @@ Okno trezoru aplikácie Obsidian obsluhuje diagramy vo svojom trezore.
 2. Nechajte možnosť Settings → ERD Editor → Coding agents zapnutú. Predvolene je zapnutá a každý trezor má vlastné nastavenie.
 
 Doplnok pred verziou `1.0.0` a server vo verzii `1.0.0` alebo novšej sa navzájom odmietnu.
-Doplnok vo verzii `1.0.0` alebo `1.1.0` sa pripojí, ale logické názvy, prepojenia s doménami a riadky slovníkov, ktoré agent zapíše, nezobrazuje ani neuchováva – pozrite si časť [Aktualizácia](#updating).
+Doplnok vo verzii `1.0.0` alebo `1.1.0` sa pripojí, ale logické názvy, prepojenia s doménami a riadky slovníkov, ktoré agent zapíše, nezobrazuje ani neuchováva.
+S doplnkom starším ako verzia `1.3.0` môže tabuľka, poznámka alebo skupina tabuliek, ktorú vy a agent v tom istom okamihu presuniete alebo ktorej zmeníte veľkosť, skončiť pre každého z vás na inom mieste – pozrite si časť [Aktualizácia](#updating).
 
 Okno trezoru obsluhuje agentov od chvíle, keď sa doplnok načíta, takže agent sa k diagramom trezoru dostane ešte predtým, ako niektorý z nich otvoríte.
 Nie je tu žiadny krok udelenia dôvery.
@@ -98,7 +100,8 @@ IDE od JetBrains obsluhuje diagramy každého projektu, ktorý je v ňom otvoren
 3. Nechajte možnosť Settings | Tools | ERD Editor → Coding agents začiarknutú. Predvolene je zapnutá a platí pre celé IDE.
 
 Doplnok vo verzii `0.9.0` alebo `0.10.0` a server vo verzii `1.0.0` alebo novšej sa navzájom odmietnu a doplnok pred verziou `0.9.0` neobsluhuje žiadnych agentov.
-Doplnok vo verzii `1.0.0` alebo `1.1.0` sa pripojí, ale logické názvy, prepojenia s doménami a riadky slovníkov, ktoré agent zapíše, nezobrazuje ani neuchováva – pozrite si časť [Aktualizácia](#updating).
+Doplnok vo verzii `1.0.0` alebo `1.1.0` sa pripojí, ale logické názvy, prepojenia s doménami a riadky slovníkov, ktoré agent zapíše, nezobrazuje ani neuchováva.
+S doplnkom starším ako verzia `1.3.0` môže tabuľka, poznámka alebo skupina tabuliek, ktorú vy a agent v tom istom okamihu presuniete alebo ktorej zmeníte veľkosť, skončiť pre každého z vás na inom mieste – pozrite si časť [Aktualizácia](#updating).
 
 IDE obsluhuje agentov od chvíle, keď sa otvorí prvý projekt, takže agent sa k diagramom projektu dostane ešte predtým, ako niektorý z nich otvoríte.
 
@@ -144,6 +147,11 @@ Logické názvy, prepojenia s doménami a riadky slovníkov, ktoré tieto nástr
 Staršie rozšírenie alebo doplnok, ktorý sa pripojí, ich ignoruje, hoci volanie agenta uspeje.
 Fyzické názvy, ktoré odvodia slovníky, a typy údajov, ktoré dávajú domény, však naďalej použije.
 Server pred verziou `1.1.0` číta súbor bez jeho logických názvov, prepojení s doménami a riadkov slovníkov a pri úprave súboru na disku ich vynechá – pozrite si časť [Headless](./live-and-headless.md#headless).
+
+Server vo verzii `1.2.0` takisto používa protokol verzie 2 a nepridáva, neodstraňuje ani nepremenúva žiadny nástroj a nemení žiadny argument.
+Presun alebo zmena veľkosti tej istej tabuľky, poznámky alebo skupiny tabuliek, ktorú vy a agent urobíte v tom istom okamihu, však skončí rovnako v editore aj pre agenta iba vtedy, keď je server vo verzii `1.2.0` alebo novšej a editor má rozšírenie pre VS Code vo verzii `4.3.0` alebo novšej alebo doplnok pre Obsidian či JetBrains vo verzii `1.3.0` alebo novšej.
+Ak je ktorákoľvek strana staršia, editor a agent môžu skončiť s rôznymi polohami a agent pokračuje v čítaní a úpravách zo svojej vlastnej, kým obe polohy nezjednotí neskorší presun alebo kým sa agent znova nepripojí k dokumentu – pozrite si časť [Úpravy urobené v tom istom okamihu](./live-and-headless.md#edits-made-at-the-same-moment).
+Žiadna z týchto verzií nemení to, čo súbor obsahuje.
 
 ERD Editor aktualizujte aj všade, kde sa diagramy otvárajú.
 Rozšírenie pre VS Code pred verziou `4.2.0`, doplnok pre Obsidian pred verziou `1.2.0` a doplnok pre JetBrains pred verziou `1.2.0` otvoria diagram, ktorý uložila novšia verzia alebo ktorý agent upravil na disku, bez logických názvov jeho tabuliek a stĺpcov, bez prepojení jeho stĺpcov s doménami a bez jeho slov, termínov a domén.

@@ -37,6 +37,38 @@ Pembacaan tidak pernah membuka editor. Perubahan membuka dokumen di ERD Editor s
 
 Editor dengan ekstensi VS Code sebelum `4.2.0`, atau plugin Obsidian atau JetBrains sebelum `1.2.0`, tetap menerima perubahan agen secara live, tetapi tidak menampilkan maupun mempertahankan nama logis, tautan domain, dan baris kamus yang ditulis agen — lihat [Memperbarui](./installation.md#updating).
 
+Dengan ekstensi VS Code `4.3.0` atau yang lebih baru, atau plugin Obsidian atau JetBrains `1.3.0` atau yang lebih baru, impor dalam mode `replace`, beserta `erd_undo` atau `erd_redo`-nya, mengakhiri hubungan yang sedang Anda gambar di editor, apa pun rilis servernya — lihat [Pembuatan hubungan](../guide/guides/editing-start.md#relationship-creation).
+Sebelum rilis tersebut, penggambaran tetap aktif, dan klik pada tabel dapat menambahkan hubungan dari tabel yang tidak lagi ada di diagram.
+Impor dalam mode `append` membiarkan penggambaran tetap aktif.
+Editor memo, nama grup tabel, atau sel yang Anda buka tetap terbuka selama diagram masih memuat dan menampilkan apa yang diedit.
+
+### Pengeditan pada saat yang sama {#edits-made-at-the-same-moment}
+
+Dengan server `1.2.0` atau yang lebih baru dan, di editor, ekstensi VS Code `4.3.0` atau yang lebih baru atau plugin Obsidian atau JetBrains `1.3.0` atau yang lebih baru, edit yang Anda dan agen buat pada hal yang sama pada saat yang sama berakhir sama di editor, di file yang disimpannya, dan di apa yang diberikan `erd_list`, `erd_get`, dan `erd_read` kepada agen.
+Itu mencakup nama atau field lain milik tabel, kolom, hubungan, indeks, memo, grup tabel, atau baris kamus, nama database dan [skrip sebelum dan setelah tabel](../guide/guides/schema-sql.md#before-and-after-scripts), serta posisi atau ukuran tabel, memo, atau grup tabel, tetapi tidak warna, urutan kolom dalam tabel atau indeks, atau database.
+Dua edit pada satu nama atau field, dua perpindahan, atau dua perubahan ukuran berakhir pada salah satu dari keduanya, tidak pernah campuran: edit yang dibuat setelah yang lain sampai ke sisinya menang, dan dari dua edit yang dibuat pada saat yang persis sama, satu menang, yang sama di setiap sisi, mana pun yang tiba lebih dulu.
+
+Dua perubahan warna pada satu tabel, memo, atau grup tabel yang dibuat pada saat yang sama, seperti perubahan Anda dan `erd_change_table_color` milik agen, dapat berakhir berbeda, bahkan tertukar, karena setiap sisi mempertahankan warna yang terakhir didengarnya.
+Perubahan urutan kolom, oleh Anda atau `erd_move_column` atau `erd_move_index_column` milik agen, diterapkan di setiap sisi menurut urutan tibanya, sehingga dua yang dibuat pada saat yang sama dalam satu tabel atau indeks dapat membuat urutan kolomnya berbeda.
+Perubahan database, oleh Anda atau `erd_set_database` milik agen, juga diterapkan menurut urutan tibanya, sehingga dua yang dibuat pada saat yang sama dapat membuat editor dan agen berada pada database yang berbeda.
+
+Seretan Anda dan `erd_move_table`, `erd_move_tables`, `erd_move_memo`, `erd_move_table_group`, dan `erd_sort_tables` milik agen dikirim sebagai titik akhirnya, sehingga dua perpindahan satu tabel, memo, atau grup tabel berakhir di tempat salah satunya menaruhnya, tidak pernah di jumlah keduanya.
+`erd_move_table_group` mengirim titik grup dan setiap tabelnya dalam satu batch, seperti seretan bilah judul grup.
+Perubahan ukuran menulis posisi dan ukuran bersamaan, sehingga perpindahan dan perubahan ukuran satu memo atau grup tabel yang dibuat pada saat yang sama, seperti `erd_resize_memo` saat Anda menyeret memo itu, berakhir pada satu persegi panjang di kedua sisi: milik perubahan ukuran, atau, saat perpindahan menang, titik perpindahan dengan ukuran dari perubahan ukuran.
+Perpindahan di bawah 20 piksel, yang tidak membuat entri pembatalan, juga dikirim sebagai titik akhirnya, sehingga dapat mengalahkan perpindahan sisi lain, baik `erd_move_table_group` yang pendek maupun seretan pendek Anda, seperti klik yang menggeser tabel beberapa piksel.
+
+Rilis lama tetap terhubung, karena server `1.2.0` menggunakan protokol hub 2, seperti `1.0.0` hingga `1.1.1`.
+Dengan server sebelum `1.2.0`, atau ekstensi sebelum `4.3.0` atau plugin sebelum `1.3.0`, perpindahan atau perubahan ukuran satu tabel, memo, atau grup tabel yang dibuat pada saat yang sama dapat membuat editor dan agen memiliki posisi yang berbeda.
+Editor lama mengirim seretan Anda sebagai jarak yang ditempuh, dan server sebelum `1.2.0` mengirim `erd_move_table_group` dengan cara itu juga.
+Sisi lainnya menambahkan jarak itu ke titik yang dipegangnya.
+Sisi yang lebih lama juga menerapkan titik dari sisi lain menurut urutan tibanya.
+Agen lalu membaca dan mengedit dari posisinya sendiri untuk tabel, memo, atau grup tabel itu, bukan posisi yang ditampilkan dan disimpan editor.
+Itu berlangsung hingga perpindahannya yang berikutnya dikirim sebagai titik, seperti seretan Anda di editor yang lebih baru atau `erd_move_table` milik agen, atau hingga agen bergabung ke dokumen lagi, seperti setelah editor mengeluarkan agen atau setelah 30 menit tanpa panggilan pada dokumen.
+Selain warna, urutan kolom, dan database, nama atau field lain yang diubah pada saat yang sama tetap berakhir sama saat hanya satu sisi yang lebih lama, hampir selalu pada edit sisi yang lebih baru.
+Dengan kedua sisi lebih lama, keduanya masih dapat berakhir berbeda.
+
+Semua ini tidak berlaku untuk edit headless, yang menulis file saja.
+
 ### Menyimpan {#saving}
 
 Setiap editor menyimpan perubahan agen dengan cara yang sama seperti menyimpan perubahan Anda.

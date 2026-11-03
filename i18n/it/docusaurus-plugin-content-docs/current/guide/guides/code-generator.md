@@ -25,7 +25,7 @@ Quando il linguaggio selezionato ignora `Database` o gli stili dei nomi, questi 
 `Save file` e `Copy` si trovano in fondo al pannello — vedere [Salvare o copiare il risultato](#saving-or-copying-the-result).
 
 Sono le impostazioni proprie del diagramma, le stesse che modificano anche il menu contestuale e la Ricerca rapida. `Database` viene salvato nel file come qualsiasi modifica.  
-`Language`, `Table Name Case`, `Column Name Case` e `Bracket` vengono salvati solo finché il rispettivo blocco nella scheda Impostazioni è disattivato (`Bracket Type` per `Bracket`), e un nuovo diagramma ha tutti i blocchi attivi. Mentre un blocco è attivo, una modifica riscrive il codice sullo schermo, ma il file mantiene il valore bloccato e il diagramma si riapre con quel valore. Il pannello non mostra alcun segno di un blocco; per conservare una scelta nel file, disattivarne il blocco — vedere [Blocco](./settings.md#lock).  
+`Language`, `Table Name Case`, `Column Name Case` e `Bracket` vengono salvati solo finché il rispettivo blocco nella scheda Impostazioni è disattivato (`Bracket Type` per `Bracket`), e un nuovo diagramma ha tutti i blocchi attivi. Mentre un blocco è attivo, una modifica riscrive il codice solo nel proprio editor: gli altri editor aperti sul diagramma mantengono il proprio, e il file mantiene il valore bloccato, quindi il diagramma si riapre con quel valore. Il pannello non mostra alcun segno di un blocco; per conservare una scelta nel file e darla a ogni editor, disattivarne il blocco — vedere [Blocco](./settings.md#lock).  
 In un editor di sola lettura la didascalia riporta invece `This window only`, poiché una modifica lì raggiunge solo quella finestra — vedere [Editor di sola lettura](#read-only-editors).
 
 ## Linguaggio {#language}
@@ -144,5 +144,5 @@ Il testo è anche selezionabile, quindi è possibile prenderne solo la parte che
 
 In un editor [`readonly`](../../api/erd-editor-element.md#readonly) gli elenchi del pannello, il menu contestuale e la Ricerca rapida cambiano ancora `Language`, `Database`, `Table Name Case`, `Column Name Case` e `Bracket`, ma solo in quella finestra, quindi il pannello li indica con `This window only` anziché con `Saved in the document`.  
 Una modifica riscrive il codice su quello schermo e non viene salvata nel file, condivisa con i collaboratori né registrata per l’annullamento, qualunque sia il loro blocco, e una modifica di un collaboratore a un’impostazione che avete scelto lascia sullo schermo la vostra scelta. `Database` e `Bracket` sono anche le impostazioni della scheda Schema SQL, quindi una scelta fatta qui compare lì nella stessa finestra — vedere [Editor di sola lettura](./schema-sql.md#read-only-editors).  
-Quando l’editor torna modificabile, tornano le impostazioni del documento e il codice viene scritto per esse.  
+Quando l’editor torna modificabile, ciascuna impostazione cambiata lì torna a ciò che l’editor mostrava prima, con ogni cambio fatto nel frattempo da un collaboratore, e il codice viene scritto per esse — vedere [Editor di sola lettura](./settings.md#read-only-editors) in Impostazioni.  
 `Save file` e `Copy` salvano e copiano il codice mostrato.

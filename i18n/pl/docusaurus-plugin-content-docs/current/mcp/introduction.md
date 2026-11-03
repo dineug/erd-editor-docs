@@ -66,4 +66,7 @@ Narzędzia do nazw logicznych, domen i słowników wymagają serwera w wersji `1
 Spośród powyższych wersji rozszerzenie w wersji starszej niż `4.2.0` lub wtyczka w wersji starszej niż `1.2.0` nadal pozwala agentowi edytować na żywo, ponieważ posługuje się protokołem w wersji 2, ale ignoruje nazwy logiczne, powiązania z domeną i wiersze słowników zapisywane przez agenta i pomija je przy zapisywaniu pliku.
 Serwer w wersji starszej niż `1.1.0`, który edytuje plik na dysku, zapisuje go z powrotem bez nazw logicznych, powiązań z domeną i wierszy słowników – zobacz sekcję [Aktualizacja](./installation.md#updating).
 
+Edycje, które ty i agent wykonujecie w tej samej chwili na tej samej nazwie lub tym samym polu albo na położeniu lub rozmiarze tej samej tabeli, notatki lub grupy tabel, kończą tak samo w edytorze i dla agenta przy serwerze w wersji `1.2.0` lub nowszej oraz, wszędzie tam, gdzie dokument jest otwarty, rozszerzeniu VS Code w wersji `4.3.0` lub nowszej albo wtyczce Obsidian lub JetBrains w wersji `1.3.0` lub nowszej.
+Wyjątkami są kolor, baza danych i kolejność kolumn w tabeli lub indeksie – zobacz sekcję [Edycje wykonane w tej samej chwili](./live-and-headless.md#edits-made-at-the-same-moment).
+
 Dalej: [Instalacja](./installation.md).

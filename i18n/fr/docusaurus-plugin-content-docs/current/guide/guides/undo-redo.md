@@ -67,7 +67,8 @@ Les modifications provenant d’un autre éditeur ne sont pas enregistrées non 
 
 Annuler un `Import`, qui remplace tout le diagramme, ramène le diagramme précédent tel que l’éditeur le contenait au moment de l’importation, avec chaque [verrou](./settings.md#lock) activé ou désactivé et chaque valeur verrouillée tels qu’ils étaient alors.  
 Si `Viewport` était verrouillé dans ce diagramme, la vue et le zoom reviennent à la vue verrouillée, celle où s’ouvre le diagramme, plutôt qu’à l’endroit où vous vous trouviez. Si son `Viewport` était déverrouillé, ils reviennent à l’endroit où vous vous trouviez au moment de l’importation. Les autres paramètres verrouillés, comme l’onglet où vous vous trouvez, le langage du générateur de code ou l’affichage des noms, restent tels qu’ils sont sur votre écran.  
-Un nouveau diagramme démarre avec tous les verrous activés. Déverrouillez `Viewport` avant d’importer pour conserver votre vue lors d’une telle annulation. Le déverrouiller après coup, ou importer un fichier JSON dont le propre verrou `Viewport` est désactivé, ne change pas l’endroit où l’annulation vous ramène.
+Un nouveau diagramme démarre avec tous les verrous activés. Déverrouillez `Viewport` avant d’importer pour conserver votre vue lors d’une telle annulation. Le déverrouiller après coup, ou importer un fichier JSON dont le propre verrou `Viewport` est désactivé, ne change pas l’endroit où l’annulation vous ramène.  
+Annuler ou rétablir un `Import` met aussi fin à une relation en cours de tracé (voir [Création de relations](./editing-start.md#relationship-creation)).
 
 Annuler l’importation d’un fichier JSON fait aussi revenir les mots, les termes et les domaines du diagramme précédent. Une importation Schéma SQL, GraphQL, DBML ou AML conserve les dictionnaires, si bien que son annulation et son rétablissement les laissent tels qu’ils sont, modifications effectuées depuis dans l’onglet Dictionnaire comprises.
 

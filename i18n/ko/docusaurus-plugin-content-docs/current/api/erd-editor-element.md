@@ -101,14 +101,14 @@ ERD 탭에서는 드래그가 어디서 시작하든, 테이블 위에서도 화
 설정 탭에도 같은 `Read only` 배지가 있으며, 모든 설정이 눌러도 반응하지 않는 컨트롤로 표시됩니다. 두 스위치, `Maximum comment width` 필드, 일곱 개의 `Lock` 버튼은 비활성화되고, `Column Order` 행은 드래그되지 않습니다. Schema SQL 탭의 `Before tables`와 `After tables` 스크립트에는 입력할 수 없습니다. [Visualization](../guide/guides/visualization.md) 탭은 문서를 편집하는 것이 없으므로 편집 가능한 에디터와 똑같이 동작하며, Flow의 `Previous table`과 `Next table`은 버튼으로든 Undo, Redo 키로든 여전히 한 단계씩 이동합니다.  
 [사전](../guide/guides/dictionary.md#read-only-editors) 탭도 그대로 열립니다. 시트를 전환하고, 검색하고, 선택하고, 스크롤하고, 복사할 수 있으며, `Checks` 시트의 행은 여전히 그 행이 가리키는 대상으로 이동합니다. 어떤 셀도 편집하거나 붙여넣거나 지울 수 없고, 탭에는 `Add Row`, `Delete Rows`, `Import CSV`, `Export CSV` 도구와 그리드 메뉴가 표시되지 않으며, 행 키 조합은 아무것도 삽입하거나 삭제하지 않습니다. 테이블 메뉴, 캔버스 메뉴, 빠른 검색은 [`Derive Physical Names Again`](../guide/guides/dictionary.md#derive-physical-names-again)이나 `Derive Physical Name Again`을 제공하지 않습니다.
 
-`5.0.0`부터 읽는 사람이 여전히 바꿀 수 있는 설정은 그 에디터의 화면에만 머뭅니다. 스크롤과 확대/축소, 탭, 데이터베이스, 코드 생성 언어, 두 이름 표기 규칙, 대괄호 유형, `View Option` 행, 그리고 각 선택기에서 바꾸는 [이름 표시](../guide/guides/logical-names.md#read-only-editors)가 그렇고, 이름 표시는 `4.2.0`부터 이미 화면에만 머물렀습니다. [잠금](../guide/guides/settings.md#잠금) 설정과 상관없이 이 중 어느 것도 `value`, `runtimeValue`, `json` 내보내기, Undo 히스토리, [change](#change) 이벤트, shared store에 닿지 않으므로, 읽는 사람이 어떻게 보든 `value`는 문서의 설정을 유지합니다. [Schema SQL](../guide/guides/schema-sql.md#읽기-전용-에디터)과 Code Generator의 옵션 패널은 `readonly`가 설정된 동안 이 설정들에 `This window only`라고 표시하며, 편집 가능한 에디터에서는 `Saved in the document`라고 표시합니다. 두 탭이 보여 주고, 복사하고, 저장하는 것은 화면을 따르며, 벤더 없이 호출한 [getSchemaSQL](#getschemasql)도 마찬가지입니다.  
+`5.0.0`부터 읽는 사람이 여전히 바꿀 수 있는 설정은 그 에디터의 화면에만 머뭅니다. 스크롤과 확대/축소, 탭, 데이터베이스, Code Generator 언어, 두 이름 케이스, 괄호 타입, `View Option` 행, 그리고 각 선택기에서 바꾸는 [이름 표시](../guide/guides/logical-names.md#read-only-editors)가 그렇고, 이름 표시는 `4.2.0`부터 이미 화면에만 머물렀습니다. [잠금](../guide/guides/settings.md#잠금) 설정과 상관없이 이 중 어느 것도 `value`, `runtimeValue`, `json` 내보내기, Undo 히스토리, [change](#change) 이벤트, shared store에 닿지 않으므로, 읽는 사람이 어떻게 보든 `value`는 문서의 설정을 유지합니다. [Schema SQL](../guide/guides/schema-sql.md#읽기-전용-에디터)과 Code Generator의 옵션 패널은 `readonly`가 설정된 동안 이 설정들에 `This window only`라고 표시하며, 편집 가능한 에디터에서는 `Saved in the document`라고 표시합니다. 두 탭이 보여 주고, 복사하고, 저장하는 것은 화면을 따르며, 벤더 없이 호출한 [getSchemaSQL](#getschemasql)도 마찬가지입니다.  
 `5.0.0` 이전에는 읽는 사람의 스크롤, 확대/축소, 탭 전환, 데이터베이스, 코드 설정이 잠금이 잡고 있지 않는 한(데이터베이스는 잠금이 없습니다) `value`로 들어갔고, shared store가 이를 다른 에디터에 보냈습니다.  
 Schema SQL 탭 자체의 `This window only` 선택인 `Statements`, `Header`, `4.2.0`부터 추가된 `Write logical names into empty comments`, `Tables`는 어떤 에디터에서도 저장되지 않으며 그대로 적용되고, [`Export image`](../guide/guides/file-import-export.md#이미지) 대화 상자, 테마 빌더, Display Language 선택기도 마찬가지입니다. 테마 빌더나 Display Language 선택기에서 고르면 여전히 [changePresetTheme](#changepresettheme)이나 [changeLocale](#changelocale)을 발행합니다.
 
-설정된 동안에는 스크롤이나 확대/축소를 포함해 아무것도 Undo 히스토리에 들어가지 않으며, 에디터의 [shared store](#getsharedstore)는 어떤 변경도 보내지 않습니다. 보내는 것은 트래커가 보내는 읽는 사람의 커서, 포커스, 선택, 드래그 상자와, 다른 에디터가 합류할 때 요청하는 레지스터뿐입니다([공동 편집](./advanced/collaborative-editing.md) 참고). 다른 에디터가 보내는 모든 변경은 계속 적용합니다. 데이터베이스, Code Generator 설정, `View Option` 행의 변경은 문서에 반영되며, 읽는 사람이 그 화면에서 그 설정을 바꾸지 않았다면 화면에도 반영됩니다. 공유된 이름 표시 전환은 어느 쪽이든 화면에 표시됩니다.
+설정된 동안에는 스크롤이나 확대/축소를 포함해 아무것도 Undo 히스토리에 들어가지 않으며, 에디터의 [shared store](#getsharedstore)는 어떤 변경도 보내지 않습니다. 보내는 것은 트래커가 보내는 읽는 사람의 커서, 포커스, 선택, 드래그 박스와, 다른 에디터가 합류할 때 요청하는 레지스터뿐입니다([공동 편집](./advanced/collaborative-editing.md) 참고). 다른 에디터가 보내는 모든 변경은 계속 적용합니다. 데이터베이스, Code Generator 설정, `View Option` 행의 변경은 문서에 반영되며, 읽는 사람이 그 화면에서 그 설정을 바꾸지 않았다면 화면에도 반영됩니다. 공유된 이름 표시 전환은 어느 쪽이든 화면에 표시됩니다. `5.1.0`부터 Code Generator 언어, 이름 케이스, 괄호 타입을 해당 설정의 [잠금](../guide/guides/settings.md#잠금)이 켜져 있는 동안 바꾸면, 바꾼 에디터의 화면에만 남고 보내지지 않으므로 읽는 사람의 문서에도 화면에도 반영되지 않습니다. 잠금이 꺼진 상태에서 한 변경과 잠금 해제가 담은 값은 위와 같이 계속 반영됩니다.
 
 켜면 열려 있던 것이 끝납니다. 셀, 메모, 테이블 그룹 이름 편집기, 그리는 중인 관계선, 테이블, 메모, 테이블 그룹, 컬럼의 드래그, Alt 드래그의 복사본, 메모나 테이블 그룹의 크기 조절, 진행 중인 Auto Layout 미리보기나 배치, `Map Columns`, Time Travel, 컬러 피커입니다. 선택은 지워지고 손 도구는 내려놓으며, 먼저 각 shared store가 드래그나 스크롤에서 아직 쥐고 있는 것을 [flushStreamBuffers](./advanced/collaborative-editing.md#flushstreambuffers)가 하는 것처럼 보냅니다. 이제 읽기 전용이 된 테이블 속성, Diff Viewer, `Export image` 대화 상자는 열린 채로 남고, 스크롤, 확대/축소, 탭, 이름 표시도 그대로입니다. 처음 마운트될 때부터 읽기 전용인 엘리먼트도 같은 상태로 시작하며, 호스트가 페이지 안에서 옮긴 엘리먼트는 이동이 남긴 외곽선을 유지합니다.  
-끄면 아무것도 선택되거나 열려 있지 않은 상태로 편집 컨트롤이 돌아옵니다. 데이터베이스, 코드 생성 언어, 두 이름 표기 규칙, 대괄호 유형, `View Option` 행은 문서의 값으로 돌아가고, 스크롤, 확대/축소, 탭, 이름 표시는 읽는 사람이 둔 자리에 남으며, `value`는 읽는 사람이 다시 바꿀 때까지 문서의 값을 유지합니다. 켜고 끄는 것 모두 `change`를 발행하지 않습니다.  
+끄면 아무것도 선택되거나 열려 있지 않은 상태로 편집 컨트롤이 돌아옵니다. 데이터베이스, Code Generator 언어, 두 이름 케이스, 괄호 타입, `View Option` 행 중 읽는 사람이 바꾼 것은 각각 읽는 사람이 처음 바꾸기 전에 화면이 보여 주던 값으로 돌아갑니다. 그 값은 문서의 값에 그사이 다른 에디터가 보낸 변경을 반영한 것이거나, 설정의 잠금 아래에서 이 에디터가 자체적으로 보여 주던, `value`가 한 번도 가진 적 없는 값입니다. 스크롤, 확대/축소, 탭, 이름 표시는 읽는 사람이 둔 자리에 남고, `value`는 그 설정들이 다시 바뀔 때까지 문서의 설정을 유지합니다. 켜고 끄는 것 모두 `change`를 발행하지 않습니다.  
 값 없이 쓴 속성, `=""`, `="true"`는 모두 `true`로 읽힙니다. `="false"`는 `false`로 읽히고, HTML 관용 표기인 `readonly="readonly"`를 포함해 그 밖의 문자열도 마찬가지입니다.
 
 ```js
@@ -201,7 +201,7 @@ editor.setAttribute('enable-welcome-screen', 'true');
 
 현재 문서를 에디터가 정의한 [스키마](./advanced/schema.md) 형식의 JSON 문자열로 받아옵니다.  
 `4.0.0`부터 이 값은 파일에 담기는 형태의 문서이며, `json` 내보내기가 작성하고 공식 호스트가 저장하는 것도 이 값입니다. 살아 있는 엔티티만 담으며, 삭제된 엔티티, 쌓임 순서, 그리고 측정된 너비, 키 표시, 관계 앵커처럼 에디터가 스스로 계산하는 정보는 담지 않습니다. 엔티티는 고정된 순서로 키가 놓이고, 두 칸으로 들여쓰며, 줄바꿈으로 끝나므로 같은 문서는 항상 같은 바이트가 됩니다.  
-`4.2.0`부터는 비어 있는 것도 생략합니다. 빈 `doc` 목록, 빈 컬렉션, 아무것도 담지 않은 사전 행, 그리고 이름, 코멘트, 데이터 타입, 기본값, 색상처럼 엔티티의 비어 있는 텍스트 필드가 해당합니다. 테이블의 `columnIds`처럼 엔티티 안의 목록은 비어 있어도 기록됩니다. 새 문서의 `doc`은 `{}`이고 `collections`가 없으므로, 없는 필드, 목록, 컬렉션은 비어 있는 것으로 읽으세요. 또한 테이블과 컬럼의 논리명과 이름 생성 여부 플래그, 컬럼의 도메인 연결, 그리고 단어, 용어, 도메인을 담으며, 각 사전은 필드 이름으로 된 헤더 하나 뒤에 행을 시트의 순서대로 한 줄에 하나씩 기록합니다. [저장 형태와 런타임 값](./advanced/schema.md#저장-형태와-런타임-값) 문서를 참고하세요.  
+`4.2.0`부터는 비어 있는 것도 생략합니다. 빈 `doc` 목록, 빈 컬렉션, 아무것도 담지 않은 사전 행, 그리고 이름, 코멘트, 데이터 타입, 기본값, 색상처럼 엔티티의 비어 있는 텍스트 필드가 해당합니다. 테이블의 `columnIds`처럼 엔티티 안의 목록은 비어 있어도 기록됩니다. 새 문서의 `doc`은 `{}`이고 `collections`가 없으므로, 없는 필드, 목록, 컬렉션은 비어 있는 것으로 읽으세요. 또한 테이블과 컬럼의 논리명과 이름 생성 여부 플래그, 컬럼의 도메인 연결, 그리고 단어, 용어, 도메인을 담으며, 각 사전은 필드 이름으로 된 헤더 하나 뒤에 행을 시트의 순서대로 한 줄에 하나씩 기록합니다. [저장 형태](./advanced/schema.md#storage-form) 문서를 참고하세요.  
 [잠금](../guide/guides/settings.md#잠금)이 켜진 설정은 화면에 보이는 값이 아니라 잠긴 값으로 기록됩니다. `Viewport` 잠금은 `originX`, `originY`, `zoomLevel`을 담고, `Canvas Type`, `Language`, `Table Name Case`, `Column Name Case`, `Bracket Type`, 그리고 `4.2.0`부터는 `Name View`가 각각 자신의 설정을 담습니다. 이름 표시는 `nameViewMode`로 기록되며, `'physical'`이 아닐 때만 기록됩니다. 그 밖의 설정은 현재 값 그대로 기록되며, `lockSettings`는 항상 기록됩니다. 각 비트는 [Settings](./advanced/schema.md#settings) 문서를 참고하세요. `Name View` 잠금의 비트는 반대로 읽힙니다.  
 `5.0.0`부터 [읽기 전용](#readonly) 에디터에서 읽는 사람이 바꾼 설정도 화면에만 머물므로, 잠겨 있든 아니든 문서의 값으로 기록됩니다.  
 새 문서는 값을 전달받기 전에 엘리먼트가 표시하는 문서든 빈 값으로 불러온 문서든 모든 잠금이 켜져 있습니다. 이런 문서의 `value`는 해당 잠금을 끄기 전까지 원점 `0, 0`, 확대/축소 레벨 `1`, ERD 탭, 기본 Code Generator 언어, 이름 케이스, 괄호 타입, 그리고 `4.2.0`부터는 `Physical Names`를 유지합니다.  
@@ -215,6 +215,8 @@ const data = editor.value;
 
 이전에 저장했던 에디터 상태를 불러옵니다. 문서 전체를 교체하며, 현재 문서는 먼저 비워집니다. `4.2.0`부터는 단어, 용어, 도메인도 여기에 포함됩니다. 문서는 텍스트에 담긴 단어, 용어, 도메인을 가지거나, 담겨 있지 않으면 아무것도 가지지 않으며, 모든 사전 시트 자체의 Undo 히스토리가 비워집니다.  
 `clear()`, `setInitialValue()`, 기본값인 `mode: 'replace'`로 호출한 `setSchema*` 메서드와 마찬가지로 Visualization 탭의 Flow 뷰도 버립니다. 배치, 범위를 좁혀 둔 테이블, 행 표시, 확대/축소, 화면 이동 상태, 그리고 `4.2.0`부터는 `Previous table`과 `Next table`이 거쳐 가는 테이블이 모두 해당합니다. 추가(`mode: 'append'`)는 이를 버리지 않습니다.  
+`5.1.0`부터는 그리는 중인 관계를 끝냅니다. 종류만 선택해 둔 상태이든 부모 테이블을 이미 고른 상태이든 마찬가지입니다. [clear()](#clear), `mode: 'replace'`의 `setSchema*` 메서드, 에디터 자체의 `Import`, `clear()`의 Undo를 제외한 이들의 Undo나 Redo, 그리고 공동 편집자나 코딩 에이전트로부터 shared store를 통해 받은 이들 각각도 마찬가지입니다. `5.1.0` 이전에는 불러오는 동안에도 그리기가 그대로 유지되었고, Undo가 담은 런타임 값처럼 불러온 텍스트가 그리기를 시작한 테이블을 삭제된 엔티티로 가지고 있으면, 클릭했을 때 그 삭제된 테이블에서 시작하는 관계가 추가될 수 있었습니다. 추가는 그리기를 그대로 둡니다.  
+이전과 마찬가지로, 메모, 테이블 그룹 이름, 셀 편집기는 불러온 문서가 편집 대상을 여전히 가지고 있고 보여 주는 동안에는 열려 있고 그렇지 않으면 닫히며, 열려 있는 편집기에 입력하는 내용은 불러온 문서에 계속 반영됩니다. `5.1.0`부터는 불러오기로 닫힌 편집기가 키보드 포커스를 에디터로 되돌리지 않고 페이지에 남기므로, 닫힌 텍스트를 위한 `Delete`나 `Backspace`가 선택된 것을 아무것도 삭제하지 않습니다. 이런 불러오기 뒤에도 열린 채로 남은 논리명 셀은 닫힐 때 사용자가 입력한 논리명에서만 물리명을 생성하며, `5.1.0`부터는 불러온 논리명에서는 절대 생성하지 않습니다.  
 히스토리 목록에 기록되어 `Undo, Redo`가 가능하고, `change` 이벤트를 발행합니다.  
 파일에 담기는 형태, [runtimeValue](#runtimevalue), 이전 릴리스가 저장한 파일을 모두 받습니다.  
 빈 문자열이나 문자열이 아닌 값은 에러가 아니라 새 문서로 불러오므로, 할당하기 전에 값을 확인하세요.  
@@ -231,7 +233,10 @@ editor.value = 'json...';
 ## runtimeValue
 
 `4.0.0`부터 이 에디터가 가지고 있는 그대로의 문서를 JSON 문자열로 받아옵니다. setter가 없으므로 strict 모드 코드에서 값을 할당하면 에러가 발생합니다.  
-[value](#value)가 담지 않는 정보를 담습니다. 삭제된 엔티티와 그 순서, 쌓임 순서, 측정된 너비, 키 표시, 관계 앵커, 시퀀스, 그리고 `4.2.0`부터는 비어 있는 텍스트 필드, `doc` 목록, 컬렉션, 사전 시트에서 삭제된 행과 아무것도 담지 않은 행, 각 사전 행의 순서 키, 단어, 용어, 도메인의 `doc` 목록, 삭제된 도메인으로의 연결이 여기에 해당합니다. 잠긴 설정은 여기서도 잠긴 값으로 기록됩니다.  
+[value](#value)가 담지 않는 정보를 담습니다. 삭제된 엔티티와 그 순서, 쌓임 순서, 측정된 너비, 키 표시, 각 관계의 플래그(식별 관계인지 여부와 부모 쪽 끝이 그려지는 방식)와 앵커, 시퀀스입니다.  
+`4.2.0`부터는 `value`가 생략하는 비어 있는 것도 유지합니다. 이름, 코멘트, 데이터 타입, 기본값, 색상, 메모 텍스트처럼 엔티티의 비어 있는 텍스트, 비어 있어도 기록되는 `doc` 목록 `tableIds`, `relationshipIds`, `indexIds`, `memoIds`와 컬렉션 `tableEntities`부터 `memoEntities`까지, 문서가 그룹이나 삭제된 그룹을 가지고 있는 동안의 테이블 그룹 목록과 컬렉션, 그리고 둘 중 하나가 항목을 가지고 있는 동안의 각 사전과 그 `doc` 목록입니다. 공백만으로 된 논리명, 삭제된 도메인으로의 연결, 사전 시트에서 삭제된 행과 아무것도 담지 않은 행도 유지합니다. `value`와 마찬가지로 `''`인 논리명, 도메인 연결, 테이블의 그룹과, 꺼져 있는 테이블의 이름 생성 플래그는 생략됩니다.  
+각 사전은 파일과 같이 헤더와 행으로 이루어지지만, 헤더에는 각 행의 순서 키인 `"order"`가 `"name"` 바로 뒤에 들어가고, 행은 시트의 순서가 아니라 삭제된 행을 포함해 에디터가 가진 순서대로 놓입니다. 시트의 순서를 얻으려면 `doc` 목록이 가리키는 행을 가져와 `order`로 정렬하되 코드 유닛 순서로 비교하고, 키가 같은 행은 `id`로 정렬하세요.  
+설정은 `value`가 기록하는 방식대로 기록되며, 잠긴 각 설정은 잠긴 값으로 기록됩니다. 들여쓰기는 공백 두 칸이고 각 사전 행은 한 줄씩 차지하며, `value`와 달리 줄바꿈으로 끝나지 않습니다.  
 공동 편집자나 같은 문서의 두 번째 뷰처럼 이미 실행 중인 세션에 참여하는 다른 에디터를 초기화할 때, 그 에디터의 [setInitialValue](#setinitialvalue)에 전달해 사용합니다. 그러면 세션이 나중에 보내는 삭제의 Undo가 그 에디터에서 엔티티를 온전히 복원합니다. 반면 `value`로 초기화한 에디터에는 삭제된 엔티티가 없으므로 대신 비어 있고 이름 없는 테이블을, `4.2.0`부터는 빈 사전 행을 복원합니다. [공동 편집](./advanced/collaborative-editing.md) 문서를 참고하세요.  
 삭제된 엔티티를 수집하는 작업은 더 이상 없으므로, 삭제된 엔티티는 다음에 파일에서 문서를 열 때까지 이 값에 남아 있습니다.  
 파일에는 절대 기록하지 마세요. 저장할 것은 [JSON Schema](./advanced/schema.md#json-schema)가 받아들이는 `value`이며, 이 값은 받아들여지지 않습니다.
@@ -251,8 +256,15 @@ otherEditor.setInitialValue(editor.runtimeValue);
 `4.2.0`부터 잠금은 기록되어 있지만 `Name View` 잠금은 기록되지 않은 텍스트는 다른 모든 잠금이 꺼져 있더라도 이 잠금이 켜진 상태로 열립니다. `4.2.0` 이전에 저장한 파일은 `4.2.0` 에디터가 그 파일에서 이 잠금을 끄지 않은 한 이런 텍스트에 해당합니다([Settings](./advanced/schema.md#settings) 문서 참고). 잠금이 전혀 기록되지 않은 텍스트와 마찬가지로 `Physical Names`로 열립니다.  
 어느 쪽이든 화면은 문서의 화면, 즉 잠금이 기록된 텍스트는 텍스트에 저장된 화면, 잠금이 기록되지 않은 텍스트는 확대/축소 레벨 `1`의 원점 `0, 0`에서 열리며, 그 위치에 다이어그램이 전혀 그려져 있지 않으면 다이어그램이 있는 곳에서 열립니다. 잠긴 `Viewport`는 그래도 `value`에 잠긴 값을 유지합니다.  
 `4.0.0`부터는 이전에 가지고 있던 문서의 공동 편집 상태도 버리며, 이미 구독 중인 이 에디터의 [shared store](#getsharedstore)는 다른 에디터에게 그 상태를 다시 요청하므로, 실행 중인 세션에서 다시 불러온 에디터도 따라잡습니다. 이런 에디터는 다른 에디터의 [runtimeValue](#runtimevalue)로 초기화하세요.  
+`5.1.0`부터는 협업 레지스터를 다른 에디터에 요청하는 대신 초기화 값과 함께 넘겨줄 수도 있습니다. 응답할 실행 중인 에디터가 없을 때 저장된 스냅샷에는 이 방식이 필요합니다.  
+이 호출 뒤에만(그 전에는 안 됩니다) 다른 store의 [getLWW()](./advanced/collaborative-editing.md#getlww)와 [getVersion()](./advanced/collaborative-editing.md#getversion)을 이 에디터의 shared store의 [mergeLWW](./advanced/collaborative-editing.md#mergelww)에 전달하세요. 또는 그 store의 [reseed](./advanced/collaborative-editing.md#reseed)로 불러오세요. 한 번의 호출로 불러오기와 이를 받아들이는 일을 함께 하며 선택과 포커스도 버립니다. [공동 편집자 초기화](./advanced/collaborative-editing.md#공동-편집자-초기화) 문서를 참고하세요.  
 JSON이 아닌 텍스트도 에러를 발생시키지 않습니다. 문서는 비워지고 설정은 그대로 유지되며, 파싱 에러는 콘솔에 기록됩니다.  
 `value` 할당과 달리 `readonly`에 막히지 않기 때문에, 읽기 전용 에디터에 문서를 불러오는 방법입니다. 이후 읽기 전용 에디터는 불러온 텍스트가 담은 설정을 보여 주며, 읽는 사람이 화면에서 바꿔 둔 설정은 버려집니다.
+
+`5.1.0`부터는 그리는 중인 관계를 끝내고, 열려 있는 메모, 테이블 그룹 이름, 셀 편집기를 불러온 문서가 그 편집기가 편집하는 대상을 여전히 가지고 있는 경우에도 닫습니다. `5.1.0` 이전에는 그리기가 그대로 유지되었고, 각 편집기는 불러온 문서가 그 메모, 그룹, 또는 테이블과 컬럼을 여전히 가지고 있는 동안 열려 있었습니다.  
+닫아도 쓰거나 보내는 것이 없습니다. 메모의 텍스트와 셀의 값은 입력하는 대로 이전에 가지고 있던 문서에 이미 기록되었고, 도메인이 선택되기 전까지는 아무것도 기록하지 않는 도메인 셀의 검색과, 입력만 하고 아직 확정하지 않은 테이블 그룹 이름은 버려집니다.  
+유일한 예외는 사용자가 입력한 논리명 셀입니다. 불러온 문서가 그 셀에 마지막으로 입력한 논리명을 가지고 있으면, 그 셀을 닫을 때마다 그렇듯이 닫으면서 그 논리명에서 물리명이 생성됩니다. 이 생성은 다른 편집과 같은 편집이므로 shared store가 보내고, Undo 한 단계로 기록되며, `change`를 발행합니다.  
+선택과 포커스된 셀은 그대로 남고, 키보드 포커스는 페이지에 남습니다. 어떤 불러오기든 [setter](#setter)에서 설명하는 것과 같습니다. shared store의 [reseed](./advanced/collaborative-editing.md#reseed)도 똑같이 닫습니다.
 
 ```js
 editor.setInitialValue('json...');
@@ -276,7 +288,7 @@ editor.addEventListener('change', () => {
 
 에디터에 변경이 있을 때 이벤트를 발행합니다.  
 200ms 디바운스되며, `readonly`가 `true`인 동안에는 발행되지 않습니다.  
-UI 편집, `value` 할당, `clear()`, 각 `setSchema*` 메서드, 그리고 `4.0.0`부터는 `setSchemaJSON()`과 `Import and Add` 등 문서가 변경되는 모든 경우에 발행됩니다. `setInitialValue`는 발행하지 않습니다.  
+UI 편집, `value` 할당, `clear()`, 각 `setSchema*` 메서드, 그리고 `4.0.0`부터는 `setSchemaJSON()`과 `Import and Add` 등 문서가 변경되는 모든 경우에 발행됩니다. `setInitialValue`는 발행하지 않으며, `5.1.0`부터는 shared store의 [reseed](./advanced/collaborative-editing.md#reseed)도 발행하지 않습니다. 단, 둘 중 어느 쪽이든 사용자가 입력한 논리명 셀을 닫으면서 생성하는 물리명은 예외입니다([setInitialValue](#setinitialvalue) 참고).  
 `4.2.0`부터는 [사전](../guide/guides/dictionary.md) 탭의 모든 편집과 그 편집의 모든 Undo나 Redo, 논리명이나 도메인 연결의 변경, `Derive Physical Names Again`, 그리고 `Name View` 잠금이 꺼져 있는 동안의 이름 표시 전환도 여기에 해당합니다.  
 Visualization 탭의 Flow 모드 안에서 하는 확대/축소, 화면 이동, 카드 이동, `Tidy Up`, 행 표시 변경, 카드에서 뷰 범위 좁히기, 그리고 `4.2.0`부터는 `Previous table`과 `Next table` 또는 Undo, Redo 키로 한 단계씩 이동하는 것은 모두 문서 변경이 아니므로 어느 것도 이벤트를 발행하지 않습니다. 단, Flow 모드의 `Name View` 목록은 예외입니다. ERD 탭에서와 마찬가지로, 그 목록에서 전환하면 `Name View` 잠금이 꺼져 있는 동안 이벤트를 발행합니다.  
 `4.0.0`부터 [잠금](../guide/guides/settings.md#잠금)이 켜진 설정의 변경도 화면만 바꾸고 `value`는 바꾸지 않으므로 이벤트를 발행하지 않습니다. `Viewport`가 잠겨 있는 동안의 ERD 캔버스 스크롤이나 확대/축소, `Canvas Type`이 잠겨 있는 동안의 탭 전환, 각자의 잠금이 켜져 있는 동안의 Code Generator 언어, 테이블 이름 케이스, 컬럼 이름 케이스, 괄호 타입 변경, 그리고 `4.2.0`부터는 `Name View`가 잠겨 있는 동안의 이름 표시 전환이 해당합니다. 제외되는 것은 이런 변경뿐이므로, 문서도 함께 편집하는 묶음은 여전히 이벤트를 발행합니다. 설정을 잠그거나 잠금을 해제하면 이벤트를 발행합니다.  
@@ -335,7 +347,9 @@ editor.blur();
 
 모든 테이블, 컬럼, 관계, 인덱스, 메모, `4.0.0`부터는 모든 테이블 그룹, 그리고 `4.2.0`부터는 사전 탭의 단어, 용어, 도메인을 제거해 문서를 비우며, 모든 시트 자체의 Undo 히스토리도 비웁니다.  
 데이터베이스, 화면 위치, 확대/축소 레벨, 테이블 보기 옵션, 각 잠금과 그 잠금이 담은 값, Schema SQL 탭의 `Before tables`와 `After tables` 스크립트를 포함해 모든 설정이 유지되므로, 비운 파일은 이전에 저장하던 것을 계속 저장합니다. 대신 새 문서로 시작하려면 `value`에 `''`를 할당하거나 `setInitialValue('')`를 호출하세요.  
-히스토리 목록에 기록되어 Undo가 가능하고, `change` 이벤트를 발행합니다. Undo하면 문서가 단어, 용어, 도메인을 포함해 에디터가 가지고 있던 그대로, 잠긴 각 설정은 잠긴 값으로 돌아옵니다. `readonly`가 설정된 동안에는 무시됩니다.
+히스토리 목록에 기록되어 Undo가 가능하고, `change` 이벤트를 발행합니다. Undo하면 문서가 단어, 용어, 도메인을 포함해 에디터가 가지고 있던 그대로, 잠긴 각 설정은 잠긴 값으로 돌아옵니다. `readonly`가 설정된 동안에는 무시됩니다.  
+`5.1.0`부터는 [value setter](#setter)가 설명하는 대로 그리는 중인 관계를 끝내며, 그 Redo도 끝내지만 Undo는 끝내지 않습니다.  
+이전과 마찬가지로, 열려 있던 메모, 테이블 그룹 이름, 셀 편집기는 비워진 문서에 편집할 대상이 없으므로 닫힙니다. `5.1.0`부터는 닫힌 편집기가 불러오기 뒤와 같이 키보드 포커스를 페이지에 남깁니다.
 
 ```js
 editor.clear();
@@ -1007,7 +1021,7 @@ Schema SQL 파일을 불러옵니다.
 `4.0.0`부터 네 메서드 모두 선택적인 두 번째 인자 `{ placement, mode }`를 받습니다.
 
 - `placement: 'grid'`(기본값)는 이전과 마찬가지로 테이블을 바로 여러 행으로 배치하며, 호출은 아무것도 반환하지 않습니다.
-- `placement: 'auto'`는 에디터의 `Import`처럼 먼저 테이블을 관계에 따라 배치하며, 가져오기가 Undo 한 단계로 반영되면 resolve되는 `Promise`를 반환합니다. 테이블이 두 개 미만이거나, 관계가 없거나, 배치에 실패하거나, `SharedWorker`가 없는 페이지이거나, `Placing tables` 토스트에서 `Cancel`을 누르면 대신 여러 행으로 배치합니다. 그 사이에 다른 교체 가져오기, `value` 할당, `setInitialValue()`, `clear()`, 공동 편집자의 불러오기, 불러오기나 `clear()`의 Undo 또는 Redo 같은 불러오기가 일어나면 이 호출은 무효가 되며, `Promise`는 아무것도 불러오지 않은 채 resolve됩니다. 이 방식으로 배치한 가져오기는 시작한 순서대로 반영됩니다.
+- `placement: 'auto'`는 에디터의 `Import`처럼 먼저 테이블을 관계에 따라 배치하며, 가져오기가 Undo 한 단계로 반영되면 resolve되는 `Promise`를 반환합니다. 테이블이 두 개 미만이거나, 관계가 없거나, 배치에 실패하거나, `SharedWorker`가 없는 페이지이거나, `Placing tables` 토스트에서 `Cancel`을 누르면 대신 여러 행으로 배치합니다. 그 사이에 다른 교체 가져오기, `value` 할당, `setInitialValue()`, `5.1.0`부터는 shared store의 [reseed](./advanced/collaborative-editing.md#reseed), `clear()`, 공동 편집자의 불러오기, 불러오기나 `clear()`의 Undo 또는 Redo 같은 불러오기가 일어나면 이 호출은 무효가 되며, `Promise`는 아무것도 불러오지 않은 채 resolve됩니다. 이 방식으로 배치한 가져오기는 시작한 순서대로 반영됩니다.
 - `mode: 'replace'`(기본값)는 문서를 교체합니다. `mode: 'append'`는 [가져와서 추가](../guide/guides/file-import-export.md#가져와서-추가)처럼 파일을 다이어그램 아래에 추가하며, 이미 있던 모든 테이블과, 탭과 화면 위치를 제외한 모든 설정을 그대로 둡니다. 다른 탭에서는 먼저 ERD 탭으로 전환합니다. 새 테이블과, 테이블 그룹이 표시되는 동안 DBML 파일이 가져온 테이블 그룹이 선택되며, `4.1.0`부터 모든 이동이 따르는 규칙에 따라 이들이 이미 잘 보이는 상태가 아니면 화면이 그곳으로 스크롤됩니다. [이동 후 화면 위치](../guide/guides/table-related-functions.md#이동-후-화면-위치) 문서를 참고하세요. Undo 한 번으로 추가 전체가 제거됩니다. 읽을 수 없는 텍스트는 아무것도 추가하지 않고 문서를 그대로 둡니다.
 
 `readonly`가 설정된 동안에는 교체는 무시되고, 추가는 아무것도 추가하지 않으며, `placement: 'auto'` 호출은 바로 resolve됩니다.  
@@ -1131,6 +1145,9 @@ const commentedSQL = editor.getSchemaSQL('PostgreSQL', {
 실시간 공동 편집을 위한 store를 반환합니다.  
 `config`는 `{ getNickname?, mouseTracker?, focusTracker? }`입니다. 두 tracker의 기본값은 모두 `true`이며, `mouseTracker`는 이 에디터의 커서를, `focusTracker`는 포커스된 셀, 선택 영역, 드래그 박스를 다른 참여자에게 전송합니다.  
 `5.0.0`부터 shared store는 [readonly](#readonly)가 설정된 동안 어떤 변경도 보내지 않고, tracker가 보내는 것과 합류하는 에디터가 요청하는 레지스터만 보내며, 다른 에디터가 보내는 것은 계속 적용합니다.  
+`5.1.0`부터는 에디터의 협업 레지스터와 클록의 버전도 내줍니다([getLWW](./advanced/collaborative-editing.md#getlww), [getVersion](./advanced/collaborative-editing.md#getversion)). 다른 store의 것을 받아들이고([mergeLWW](./advanced/collaborative-editing.md#mergelww)), 떠난 공동 편집자의 커서, 포커스, 선택, 드래그 박스를 잊고([forgetPeer](./advanced/collaborative-editing.md#forgetpeer)), 문서 옆에 보관된 레지스터와 함께 세션의 문서를 다시 엽니다([reseed](./advanced/collaborative-editing.md#reseed)). [`@dineug/erd-editor-yjs`](./advanced/yjs.md)는 엘리먼트를 `Y.Doc`과 같은 상태로 유지하기 위해 이들을 사용합니다.  
+`5.1.0`부터는 두 사용자가 같은 순간에 하나의 이름이나 필드를 바꾸거나, 하나의 테이블을 옮기거나, 하나의 메모나 테이블 그룹을 옮기거나 크기를 바꾸면, `5.1.0` 이상의 모든 에디터와 복제본에서 같은 결과로 끝나며, 드래그, 화면 이동, 확대/축소는 끝난 위치로 전송됩니다.  
+색상, 테이블이나 인덱스 안에서 옮긴 컬럼, 데이터베이스 같은 몇몇 설정은 예외이며, 각 에디터와 복제본은 이를 여전히 듣는 순서대로 받아들입니다. [동시 편집](./advanced/collaborative-editing.md#concurrent-edits) 문서를 참고하세요.  
 [공동 편집](./advanced/collaborative-editing.md) 문서를 참고하세요.
 
 ```js

@@ -22,6 +22,7 @@ The [Dictionary](./dictionary.md) tab's sheets also take words, terms, and domai
 Extensions are matched in any letter case. Picking a file whose extension does not match the chosen format cancels the import and shows `Only <format> files can be imported`, with the format written `json`, `sql`, `graphql`, `dbml`, or `aml`, as in `Only sql files can be imported`.
 
 `Import` replaces the current document rather than merging into it, and one undo brings the previous diagram back.  
+`Import`, its undo, and its redo end a relationship being drawn, which [`Import and Add`](#import-and-add) does not — see [Relationship Creation](./editing-start.md#relationship-creation).  
 A JSON file brings its own settings with it, its [locks](./settings.md#lock) included. Where the file locks the tab, the Code Generator language, a name case, the bracket type, or the [Name View](./logical-names.md#name-view), you keep seeing what you had, but the file's locked value is the one saved. The zoom and view position, locked or not, go where the file puts them. A JSON file saved before the locks existed comes in with every lock on and the view at 100%. One saved before the `Name View` lock existed comes in with that lock on, whatever other locks it records.  
 The other formats keep the settings you already have, the locks included, apart from the view, which starts at 100%.  
 The GraphQL, DBML, and AML parsers never fail: a file they cannot read produces an empty diagram rather than an error.
@@ -211,7 +212,7 @@ None of the three carries logical names, domain links, or the dictionaries, eith
 
 The `Export` submenu of the canvas context menu has three entries:
 
-- json: Saves the diagram as its file holds it, as `.erd.json`: the tables with their columns and indexes, the relationships, memos, and table groups, the logical names and the columns' domain links, the [Dictionary](./dictionary.md) tab's words, terms, and domains, and the settings, each [locked setting](./settings.md#lock) at its locked value. What holds nothing, such as empty text or an empty dictionary row, is left out — see [Storage Form and Runtime Value](../../api/advanced/schema.md#storage-form-and-runtime-value).
+- json: Saves the diagram as its file holds it, as `.erd.json`: the tables with their columns and indexes, the relationships, memos, and table groups, the logical names and the columns' domain links, the [Dictionary](./dictionary.md) tab's words, terms, and domains, and the settings, each [locked setting](./settings.md#lock) at its locked value. What holds nothing, such as empty text or an empty dictionary row, is left out — see [Storage Form](../../api/advanced/schema.md#storage-form).
 - Schema SQL: Opens the [Schema SQL](./schema-sql.md#saving-or-copying-the-sql) tab with its options panel open and its `Save file` button focused, so pressing `Enter` saves the SQL the tab shows as `.sql`. Nothing is saved until then.
 - Image: Opens the `Export image` dialog, which saves the diagram as a `.png` or `.svg`, or copies it to the clipboard as a PNG — see [Image](#image).
 

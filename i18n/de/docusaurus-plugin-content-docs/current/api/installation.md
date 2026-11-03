@@ -51,18 +51,18 @@ Zur übrigen API siehe [ErdEditorElement](./erd-editor-element.md).
 
 ```html
 <script type="module">
-  import 'https://esm.run/@dineug/erd-editor@5.0.0/erd-editor.js';
+  import 'https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js';
 
   const editor = document.createElement('erd-editor');
   editor.style.cssText = 'display: block; width: 100%; height: 100vh;';
   document.body.appendChild(editor);
 </script>
 <!-- or -->
-<script type="module" src="https://esm.run/@dineug/erd-editor@5.0.0/erd-editor.js"></script>
+<script type="module" src="https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js"></script>
 ```
 
 `esm.run` löst die externen Abhängigkeiten des Pakets für Sie auf, daher funktioniert dies ohne Bundler.
-Jeder Einstiegspunkt wird über seinen Pfad hinter der Version erreicht: `…/erd-editor.js` definiert den Editor und `…/erd-viewer.js` den Viewer, der jede Anzeigesprache außer Englisch erst vom CDN holt, wenn eine Seite sie anfordert. Die einfache Paket-URL `https://esm.run/@dineug/erd-editor@5.0.0` liefert den Stamm, der kein Element definiert.
+Jeder Einstiegspunkt wird über seinen Pfad hinter der Version erreicht: `…/erd-editor.js` definiert den Editor und `…/erd-viewer.js` den Viewer, der jede Anzeigesprache außer Englisch erst vom CDN holt, wenn eine Seite sie anfordert. Die einfache Paket-URL `https://esm.run/@dineug/erd-editor@5.1.0` liefert den Stamm, der kein Element definiert.
 Eine URL ohne Versionsangabe liefert immer die neueste Version. Fixieren Sie eine Version, wie oben, wenn Sie nicht möchten, dass ein Major-Upgrade Ihre Seite unangekündigt erreicht.
 `5.0.0` ist selbst ein solches: Eine Seite, die bei 4.x bleiben muss, fixiert `@4.2.0` – siehe [Upgrade von 4.x](#upgrading-from-4x).
 
@@ -75,7 +75,7 @@ Auf ihn verweisen die Felder `unpkg` und `jsdelivr`, daher liefert ihn die einfa
 
 ```html
 <erd-editor></erd-editor>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.0.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0"></script>
 <script>
   const editor = document.querySelector('erd-editor');
   editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
@@ -88,7 +88,7 @@ Seit `5.0.0` definiert eine zweite Datei, `dist/erd-viewer.umd.js`, `<erd-viewer
 
 ```html
 <erd-viewer src="diagram.erd.json" style="display: block; height: 480px"></erd-viewer>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.0.0/dist/erd-viewer.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0/dist/erd-viewer.umd.js"></script>
 ```
 
 Keine der beiden Dateien definiert das Tag der anderen, und jede hinterlässt auf der Seite kein globales Objekt außer ihrem eigenen und `window.Konva`.
@@ -100,7 +100,7 @@ Eine Seite, die kein eigenes Skript laden kann, kann stattdessen den gehosteten 
 ```html
 <erd-editor system-dark-mode enable-theme-builder enable-locale-picker enable-welcome-screen></erd-editor>
 <script type="module">
-  import 'https://esm.run/@dineug/erd-editor@5.0.0/erd-editor.js';
+  import 'https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js';
 
   const editor = document.querySelector('erd-editor');
 </script>
@@ -161,7 +161,7 @@ const found = document.querySelector('erd-editor'); // ErdEditorElement | null
 ```
 
 `ErdEditorElement` wird exportiert, damit Sie Ihre eigenen Variablen und Props annotieren können. Seit `5.0.0` ist es auch die Klasse des Elements, und `ErdViewerElement` ist die Schnittstelle und Klasse des Viewers – siehe [Die Elemente registrieren](#registering-the-elements).
-Seit `4.0.0` exportiert das Paket außerdem die Typen `LocaleCode`, `LocaleOption` und `SchemaSQLOptions` und seit `5.0.0` `ToImageOptions` – siehe [Einstiegspunkte](#entry-points). Die Optionen, die die Methoden `setSchema*()` annehmen, haben keinen exportierten Namen; leiten Sie sie vom Element ab, als `Parameters<ErdEditorElement['setSchemaSQL']>[1]`.
+Seit `4.0.0` exportiert das Paket außerdem die Typen `LocaleCode`, `LocaleOption` und `SchemaSQLOptions` und seit `5.0.0` `ToImageOptions` – siehe [Einstiegspunkte](#entry-points). Die Optionen, die die Methoden `setSchema*()` annehmen, haben keinen exportierten Namen; leiten Sie sie vom Element ab, als `Parameters<ErdEditorElement['setSchemaSQL']>[1]`. Dasselbe gilt für den [gemeinsamen Store](./advanced/collaborative-editing.md) und seine Typen.
 Seit `5.0.0` typisiert `typesVersions` des Pakets jeden Einstiegspunkt eines Unterpfads auch unter `moduleResolution: "node10"`, das keine Exports-Map liest.
 
 ## Die Elemente registrieren {#registering-the-elements}
@@ -259,7 +259,7 @@ Das Paket hat fünf Einstiegspunkte:
 | `@dineug/erd-editor/erd-editor.js` | Seit `5.0.0`. Definiert `<erd-editor>` und exportiert nichts |
 | `@dineug/erd-editor/erd-viewer.js` | Seit `5.0.0`. Definiert `<erd-viewer>` und exportiert nichts |
 | `@dineug/erd-editor/engine.js` | Der Dokument-Store ohne DOM |
-| `@dineug/erd-editor/peer.js` | Seit `3.9.1`. Der Teilnehmer im Headless-Modus des MCP-Servers |
+| `@dineug/erd-editor/peer.js` | Seit `3.9.1`. Der Teilnehmer im Headless-Modus des MCP-Servers und seit `5.1.0` der [Yjs-Bindung](./advanced/yjs.md) |
 
 Der Stamm exportiert beide Elementklassen und ihre Define-Funktionen, zwei Callback-Setter, seit `3.9.2` die Standard-Tastenbelegungen mit ihren Typen, seit `4.0.0` die Typen für die Anzeigesprache und den Typ der Optionen von `getSchemaSQL()`, seit `4.2.0` die Tastenkombinationen für die Zeilen der Registerkarte Wörterbuch und seit `5.0.0` `toImage`.
 
@@ -289,7 +289,9 @@ Seit `5.0.0` enthält `dist` eine nicht minifizierte Datei pro Modul, jeweils mi
 Er exportiert `createReplicationStore` und den Typ `ReplicationStore`. Seit `3.10.0` exportiert er außerdem den Typ `ReplicationChange`, `{ value: string; changed: boolean }`, den der Listener für `change` eines Replikats erhält – siehe [on@change](./advanced/remote-storage.md#onchange).
 Seit `4.0.0` hat ein `ReplicationStore` außerdem eine Eigenschaft `runtimeValue`. Sein Wert `value` und der Wert, den ein Ereignis `change` übergibt, sind wie beim Element die Speicherform, die eine Datei enthält – siehe [ReplicationStore](./advanced/remote-storage.md#replicationstore).
 
-`@dineug/erd-editor/peer.js` ist der Teilnehmer im Headless-Modus, über den der [MCP-Server](../mcp/introduction.md) ein Dokument bearbeitet. Er existiert für diesen Server, und diese Seiten dokumentieren ihn nicht.
+`@dineug/erd-editor/peer.js` ist der Teilnehmer im Headless-Modus, über den der [MCP-Server](../mcp/introduction.md) ein Dokument bearbeitet.
+Seit `5.1.0` ist er außerdem das, was `bindPeerStore` aus `@dineug/erd-editor-yjs` an ein `Y.Doc` bindet: ein Peer-Store, den `createPeerStore()` dieses Einstiegspunkts erzeugt, als Teilnehmer im Headless-Modus eines Raums oder als Verdichter, der den Verlauf des Raums zusammenführt.
+Über das hinaus, was die Seite [Yjs](./advanced/yjs.md) davon zeigt – den Aufruf `createPeerStore()`, die Eigenschaft `value` eines gebundenen Peer-Stores und seine Methode `destroy()` –, dokumentieren diese Seiten ihn nicht.
 
 ### Dateidialoge {#file-dialogs}
 
@@ -369,11 +371,11 @@ Es werden keine Polyfills mitgebündelt. Fügen Sie eigene hinzu, wenn Sie älte
    import { setExportFileCallback } from '@dineug/erd-editor';
   ```
 
-- Auf einem CDN gilt dasselbe für `https://esm.run/@dineug/erd-editor`, das nun den Stamm liefert und nichts definiert: Importieren Sie `https://esm.run/@dineug/erd-editor@5.0.0/erd-editor.js`. Die einfachen URLs von jsDelivr und unpkg liefern weiterhin den Build für das Script-Tag, der `<erd-editor>` wie zuvor definiert. Eine URL ohne Versionsangabe liefert nun die neueste 5.x-Version; fixieren Sie `@4.2.0`, um bei 4.x zu bleiben – siehe [CDN](#cdn) und [Script-Tag](#script-tag).
+- Auf einem CDN gilt dasselbe für `https://esm.run/@dineug/erd-editor`, das nun den Stamm liefert und nichts definiert: Importieren Sie `https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js`. Die einfachen URLs von jsDelivr und unpkg liefern weiterhin den Build für das Script-Tag, der `<erd-editor>` wie zuvor definiert. Eine URL ohne Versionsangabe liefert nun die neueste 5.x-Version; fixieren Sie `@4.2.0`, um bei 4.x zu bleiben – siehe [CDN](#cdn) und [Script-Tag](#script-tag).
 - Der Stamm definiert nichts, braucht aber weiterhin ein DOM, daher bleibt bei serverseitigem Rendering ein benannter Import daraus, etwa `setExportFileCallback`, neben dem Einstiegspunkt des Elements auf dem Pfad nur für den Client – siehe [Serverseitiges Rendering](#server-side-rendering).
 - `window.ErdEditor` erhält `ErdEditorElement` und `defineErdEditor`. Der Script-Tag-Build des Viewers legt `ErdViewerElement` und `defineErdViewer` auf `window.ErdViewer`, und keines der beiden Globals enthält `toImage`.
 - Ein `readonly`-Editor öffnet sich als Leser. Seine sechs Registerkarten, der Explorer, die Schnellsuche und die Präsenz bleiben, und jedes Bedienelement, das das Diagramm bearbeiten würde, fehlt, statt deaktiviert zu sein: Die Symbolleiste zeigt den Namen der Datenbank als Text, die Registerkarte Einstellungen zeigt ihre Einstellungen mit deaktivierten Bedienelementen unter einem Badge `Read only`, und die schwebende Symbolleiste behält nur den Zoom, die Namensansicht, den Zen-Modus und den Kompass, sodass `Hand` und `Select` entfallen und ein Ziehen die Zeichenfläche verschiebt. Ein Druck wählt nichts aus: Die einzige Auswahl ist der Umriss, den ein Sprung aus dem Explorer oder der Schnellsuche um das legt, was er erreicht, den ein Klick ohne Bewegung aufhebt, und die Tastenkombinationen zum Alles-Auswählen wählen nichts aus. Das Einschalten von `readonly` beendet, was offen stand, etwa die Auswahl, das Hand-Werkzeug, einen Zelleneditor, ein Ziehen, Map Columns, die Vorschau `Force` von Auto Layout und Time Travel, und behält das Scrollen, den Zoom, die Registerkarte und die Namensansicht – siehe [readonly](./erd-editor-element.md#readonly).
-- Die Einstellungen, die der Leser eines `readonly`-Editors ändert, bleiben auf dem Bildschirm dieses Editors, was auch immer ihre Sperren besagen: das Scrollen und der Zoom, die Registerkarte, die Namensansicht, View Option, die Datenbank sowie Sprache, Schreibweisen und Begrenzertyp des Codegenerators. `value`, `runtimeValue` und der JSON-Export behalten die eigenen Einstellungen des Dokuments, die die Änderungen eines Lesers in 4.x erreichen konnten, und `getSharedStore()` sendet keine davon an die anderen Editoren. `getSchemaSQL()` ohne Datenbanksystem schreibt die Datenbank, die der Leser gewählt hat. Das Ausschalten von `readonly` setzt die Datenbank, die Code-Einstellungen und View Option auf die des Dokuments zurück und lässt das Scrollen, den Zoom, die Registerkarte und die Namensansicht dort, wo der Leser sie gelassen hat.
+- Die Einstellungen, die der Leser eines `readonly`-Editors ändert, bleiben auf dem Bildschirm dieses Editors, was auch immer ihre Sperren besagen: das Scrollen und der Zoom, die Registerkarte, die Namensansicht, View Option, die Datenbank sowie Sprache, Schreibweisen und Begrenzertyp des Codegenerators. `value`, `runtimeValue` und der JSON-Export behalten die eigenen Einstellungen des Dokuments, die die Änderungen eines Lesers in 4.x erreichen konnten, und `getSharedStore()` sendet keine davon an die anderen Editoren. `getSchemaSQL()` ohne Datenbanksystem schreibt die Datenbank, die der Leser gewählt hat. Das Ausschalten von `readonly` setzt die Datenbank, die Code-Einstellungen und View Option auf das zurück, was dieser Editor zeigen würde, hätte der Leser nichts geändert, und lässt das Scrollen, den Zoom, die Registerkarte und die Namensansicht dort, wo der Leser sie gelassen hat.
 - Die Zeile `Recalculation table width` der Registerkarte Einstellungen ist entfallen. Ein Laden und ein Einfügen passen die Breite jeder Tabelle weiterhin ihrem Text an.
 - Entfernen Sie bei Vite 8 ein `exclude: ['@dineug/erd-editor']` aus `optimizeDeps`, das nur Vite 7 und älter noch brauchen, und behalten Sie das `include` für ELK bei – siehe [Vite](#vite).
 

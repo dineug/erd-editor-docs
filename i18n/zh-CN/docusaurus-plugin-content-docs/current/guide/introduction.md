@@ -59,7 +59,7 @@ VS Code 在 Source Control、Local History、Compare with Saved 中，在 VS Cod
 - 以 25 种语言使用编辑器，可从工具栏的 `Display Language` 按钮或快速搜索中选择。`System` 跟随浏览器或宿主应用的语言；阿拉伯语、希伯来语和波斯语会让编辑器从右到左排布，而图仍保持从左到右。只有编辑器自身的文本会改变：名称、SQL 和生成的代码都保持原样。工具栏的主题构建器可以选择外观（`System`、`Light` 或 `Dark`）、灰阶色和强调色。参见[语言与主题](./guides/language-and-theme.md)。
 - 让 diff 保持干净：滚动位置与缩放、当前打开的标签页、Code Generator 的语言与名称大小写、括号类型以及名称显示，默认都处于[锁定](./guides/settings.md#锁定)状态，因此文件会保留它们被锁定时的值，滚动、缩放、切换标签页或切换名称显示都不会改变文件。文件按固定顺序写出，每个词典行占一行，并且不包含测量得到的宽度、叠放顺序、连接线锚点、已删除的项、项的空文本，以及图中没有任何该类内容的列表和集合，因此打开图后不做任何编辑就关闭，文件会保持原样。
 - 让 Claude Code 或 Codex 等编码智能体通过 [MCP 服务器](../mcp/introduction.md)编辑图：既可以在 VS Code、Obsidian 或 JetBrains IDE 中实时编辑，每处变更都会在发生的同时出现在画布上，也可以直接编辑文件本身。它还可以设置逻辑名和列的域、[编辑词典](../mcp/tools.md#dictionaries)、重新生成物理名，以及列出 `Checks` 工作表发现的问题。
-- 支持在 Web 应用中实时协同编辑（实验性）。会话基于点对点连接并进行端到端加密，因此不会有任何服务器保存 schema，参与者之间可以看到彼此的光标、焦点和选中内容。在自有页面中，[`getSharedStore()`](../api/advanced/collaborative-editing.md) 可以在任意传输方式上提供相同的操作流。
+- 支持在 Web 应用中实时协同编辑（实验性）。会话基于点对点连接并进行端到端加密，因此不会有任何服务器保存 schema，参与者之间可以看到彼此的光标、焦点和选中内容。在自有页面中，[`getSharedStore()`](../api/advanced/collaborative-editing.md) 可以在任意传输方式上提供相同的操作流，而 [`@dineug/erd-editor-yjs`](../api/advanced/yjs.md) 则通过 Yjs 文档和任何承载它的 provider 使图保持同步，离线编辑和在线状态也包括在内。
 
 建议从[编辑指南](/docs/category/guides)开始。
 

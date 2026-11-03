@@ -55,9 +55,12 @@ Skupina spolu s tabuľkami, ktoré zahrnie, je jeden krok histórie zmien a zada
 ## Pomenovanie skupiny {#naming-a-group}
 
 Názov skupiny sa upravuje v poli, ktoré sa otvorí nad jej záhlavím. Otvorí sa samo po vytvorení skupiny, po dvojitom kliknutí na záhlavie a cez položku `Rename` v kontextovej ponuke skupiny.  
-Kláves `Enter` alebo kliknutie inam názov uloží. Kláves `Escape` zatvorí pole bez zmeny názvu a ponechá skupinu vybratú, pričom druhé stlačenie klávesu `Escape` zruší výber.  
+Kláves `Enter`, kliknutie inam alebo skrytie skupín, či už ich skryjete vy, alebo spolupracovník, názov uloží. Kláves `Escape` zatvorí pole bez zmeny názvu a ponechá skupinu vybratú, pričom druhé stlačenie klávesu `Escape` zruší výber.  
 Zmenený názov je jeden krok histórie zmien; uloženie nezmeneného názvu sa nezaznamená. Prázdny názov alebo názov iba z medzier sa zobrazí ako `unnamed`.  
-Kým je pole otvorené, klávesové skratky plátna sú potlačené a klávesové skratky rýchleho vyhľadávania a `Toggle Explorer` nemajú žiadny účinok, rovnako ako pri úprave bunky tabuľky.
+Kým je pole otvorené, klávesové skratky plátna sú potlačené a klávesové skratky rýchleho vyhľadávania a `Toggle Explorer` nemajú žiadny účinok, rovnako ako pri úprave bunky tabuľky.  
+Keď spolupracovník alebo programovací agent nahradí diagram, kým je pole otvorené, pole zostane otvorené, pokiaľ nový diagram stále obsahuje skupinu a zobrazuje skupiny.  
+Ak tento diagram už skupinu neobsahuje, pole sa zatvorí a nič sa neuloží; ak skupinu obsahuje, ale skupiny skrýva, pole sa zatvorí a zmenený názov sa uloží.  
+Opätovné načítanie diagramu do editora, ako to robí Obsidian, keď sa súbor zmení mimo neho, zatvorí pole a napísaný názov zahodí. Klávesy stlačené potom nikam nesmerujú, kým nekliknete do editora, takže kláves `Delete` alebo `Backspace` určený pre názov nič neodstráni.
 
 [Hľadanie a nahrádzanie](./find-and-replace.md#what-it-searches) prehľadáva názvy skupín v rámci druhu textu `Table group names`, kým sú skupiny zobrazené, a jeho príkazy `Replace` a `Replace All` skupiny premenúvajú – pozrite si časť [Nahrádzanie](./find-and-replace.md#replacing). [Rýchle vyhľadávanie](./quick-search.md#searching-the-diagram) názvy skupín neprehľadáva.
 
@@ -157,7 +160,7 @@ Položka `Group selected tables` zobrazuje vpravo svoje klávesy, `T` a potom `G
 
 Položka `View Option` → `Table Groups` v kontextovej ponuke plátna zobrazí alebo skryje všetky skupiny. Predvolene je začiarknutá – pozrite si časť [Možnosti zobrazenia tabuliek](./table-related-functions.md#table-view-options).  
 Keď nie je začiarknutá, rámce skupín a farby skupín na hlavičkách tabuliek zmiznú z plátna, minimapy a exportovaných obrázkov a posúvacie pruhy a minimapa už pre skupiny nevyhradzujú miesto. Nič sa nepresunie ani nezmení veľkosť a každá tabuľka zostane vo svojej skupine.  
-Skrytie skupín zruší ich výber, ukončí kreslenie pomocou `New Table Group` a zatvorí otvorený editor názvu.
+Skrytie skupín zruší ich výber, ukončí kreslenie pomocou `New Table Group` a zatvorí otvorený editor názvu rovnako ako kliknutie inam – pozrite si časť [Pomenovanie skupiny](#naming-a-group).
 
 Kým sú skupiny skryté:
 

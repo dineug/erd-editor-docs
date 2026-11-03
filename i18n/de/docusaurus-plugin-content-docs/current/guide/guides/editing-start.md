@@ -83,7 +83,9 @@ Ein Serial-Schlüssel bildet die Ausnahme: Sein Fremdschlüssel erhält den Ganz
 Jede Fremdschlüsselspalte wird nach ihrem Schlüssel benannt: Einem Namen aus einem Wort wie `id` wird der Name der Elterntabelle vorangestellt (`user_id`), ein Name aus mehreren Wörtern wie `member_id` bleibt erhalten, und ein Name, den die Kindtabelle bereits hat, wird nummeriert (`user_id_2`) – siehe [Namen der Fremdschlüsselspalten](./relationship-editing.md#foreign-key-column-names).  
 Wenn Sie zweimal auf dieselbe Tabelle klicken, wird eine selbstreferenzierende Beziehung gezeichnet.  
 Bei einer neuen Beziehung stehen `On Delete` und `On Update` beide auf `Not set`; ändern Sie sie über das Kontextmenü der Beziehung – siehe [ON DELETE und ON UPDATE](./relationship-editing.md#on-delete-and-on-update).  
-Drücken Sie `Escape` oder erneut dieselbe Tastenkombination, um abzubrechen. Der Abbruch lässt die Auswahl, wie sie ist, und das nächste `Escape` hebt sie auf.
+Drücken Sie `Escape` oder erneut dieselbe Tastenkombination, um abzubrechen. Der Abbruch lässt die Auswahl, wie sie ist, und das nächste `Escape` hebt sie auf.  
+Das Ziehen der Beziehung endet auch, ganz gleich, ob erst der Typ aktiviert oder die Elterntabelle bereits gewählt ist, wenn das Diagramm ersetzt wird: durch einen `Import` anstelle des Diagramms, durch das Rückgängigmachen oder Wiederholen eines solchen, dadurch, dass ein Mitbearbeiter oder ein Coding-Agent eines von beiden tut, und dadurch, dass das Diagramm erneut in den Editor geladen wird, wie es Obsidian tut, wenn sich die Datei außerhalb ändert.  
+Ein Import von Schema SQL, GraphQL, DBML oder AML beendet es, sobald seine Tabellen platziert sind, nicht schon, wenn die Datei gewählt wird. [`Import and Add`](./file-import-export.md#import-and-add) lässt das Ziehen aktiv.
 
 Sobald die Elterntabelle gewählt ist und Sie mit dem Zeiger auf eine Tabelle zeigen, an der die Beziehung enden kann, wird diese Tabelle umrandet, und daneben erscheinen zwei Schaltflächen:
 

@@ -1,31 +1,32 @@
 ---
-sidebar_position: 3
-description: ".erd.json dokumentu-formatua: fitxategi batek duen biltegiratze-forma eta editore batek duen exekuzio-garaiko balioa, TypeScript motak, zenbakizko eremu bakoitzaren atzeko konstanteak eta argitaratutako JSON Schema."
+sidebar_position: 4
+description: ".erd.json dokumentu-formatua: fitxategi batek duen biltegiratze-forma, TypeScript motak, zenbakizko eremu bakoitzaren atzeko konstanteak eta argitaratutako JSON Schema."
 ---
 
 # Eskema
 
 `.erd.json` editorearen dokumentu-formatua da. Irakurri orri hau dokumentu bat editoretik kanpo sortu, balidatu edo migratu behar baduzu.
 
-`4.0.0` bertsiotik aurrera, dokumentu batek bi serializazio ditu, biak `version` eremuan `'3.0.0'` balioarekin. Biltegiratze-forma fitxategi batek duena da: [`editor.value`](../erd-editor-element.md#value) propietateak itzultzen duena, JSON esportazioak idazten duena eta argitaratutako [JSON Schema](#json-schema) eskemak onartzen duen forma bakarra. Exekuzio-garaiko balioa dokumentu osoa da editore batek duen bezala, eta [`editor.runtimeValue`](../erd-editor-element.md#runtimevalue) propietateak itzultzen du. `setInitialValue()` metodoak, `value` propietatea esleitzeak eta `setSchemaJSON()` metodoak bi formetako edozein irakurtzen dute, baita aurreko bertsio batek gordetako edozein fitxategi eta v2 `.vuerd` dokumentu bat ere. `4.0.0` bertsioa baino lehen bakarra zegoen: `value` propietateak dokumentu osoa itzultzen zuen editoreak zuen bezala, orain `runtimeValue` propietateak egiten duen moduan.
+Orri honek biltegiratze-forma deskribatzen du, hau da, fitxategi batek duen dokumentua, `4.0.0` bertsiotik aurrera argitaratutako bertsio guztiek idazten dutena. [`editor.value`](../erd-editor-element.md#value) propietateak itzultzen duena da, JSON esportazioak idazten duena eta argitaratutako [JSON Schema](#json-schema) eskemak onartzen duen forma bakarra. Haren `version` `'3.0.0'` da, aurreko bertsio batek gordetako v3 fitxategi guztietan bezala; beraz, `version` eremuak ez du bereizten fitxategi zahar bat berri batetik. `setInitialValue()` metodoak, `value` propietatea esleitzeak eta `setSchemaJSON()` metodoak hura irakurtzen dute, baita aurreko bertsio batek gordetako edozein fitxategi eta v2 `.vuerd` dokumentu bat ere. `4.0.0` bertsioa baino lehen `value` propietateak dokumentu osoa itzultzen zuen editoreak zuen bezala; beraz, orduan gordetako fitxategi batek gehiago du (ikus [Biltegiratze-forma](#storage-form)).  
+Editore baten [`runtimeValue`](../erd-editor-element.md#runtimevalue) propietatea beste serializazio bat da, eta orri honek ez du deskribatzen. Beste editore bat edo erreplika bat hasieratzen du, eta [Yjs gela](./yjs.md#what-the-room-holds) batek bere argazkian gordetzen du; ez da inoiz fitxategi batean egon behar, eta JSON Schema eskemak entitaterik duen edozein ukatu egiten du.
 
-## Biltegiratze-forma eta exekuzio-garaiko balioa {#storage-form-and-runtime-value}
+## Biltegiratze-forma {#storage-form}
 
-Biltegiratze-formak entitate biziak soilik ditu: `doc.tableIds` eremuan zerrendatutako taula bakoitza, taula horiek zerrendatzen dituzten zutabeak, mantendutako bi taulen arteko erlazioak, mantendutako taulen indizeak, taulak oraindik zerrendatzen duen zutabea duten indize-zutabeekin, zerrendatutako oharrak eta taula-taldeak, eta, `4.2.0` bertsiotik aurrera, id-az gain balioren bat duten zerrendatutako hitzak, terminoak eta domeinuak. Kanpoan uzten du editore batek kargatzean eratortzen duena edo irekita dagoen bitartean mantentzen duena: kendutako entitateak, `seqColumnIds` eta `seqIndexColumnIds`, `zIndex` balio guztiak, neurtutako zabalerak, zutabearen `ui` eremua, erlazio baten `identification`, `startRelationshipType` eta aingurak, eta, `4.2.0` bertsiotik aurrera, hiztegiko errenkada bakoitzaren `order` eremua eta `doc.wordIds`, `doc.termIds` eta `doc.domainIds` zerrendak. Beheko motek `// runtime only` marka jartzen diote eremu horietako bakoitzari.  
+Biltegiratze-formak entitate biziak soilik ditu: `doc.tableIds` eremuan zerrendatutako taula bakoitza, taula horiek zerrendatzen dituzten zutabeak, mantendutako bi taulen arteko erlazioak, mantendutako taulen indizeak, taulak oraindik zerrendatzen duen zutabea duten indize-zutabeekin, zerrendatutako oharrak eta taula-taldeak, eta, `4.2.0` bertsiotik aurrera, Hiztegia fitxako orrietako hitzak, terminoak eta domeinuak, id-az gain balioren bat dutenak. Ez du ezer ere editore batek kargatzean kalkulatzen duenik edo irekita dagoen bitartean soilik mantentzen duenik: ez pilatze-ordenarik, ez neurtutako zabalerarik edo gako-markarik, eta ez erlazio bat identifikatzailea den, bere gurasoaren muturra nola marrazten den edo bere taulekin non elkartzen den ere. Karga bakoitzak berriro kalkulatzen ditu horiek fitxategiak duenetik.  
 Hiztegiak ez beste bilduma bakoitzaren gakoak id-ak dira, kode-unitateen ordenan; zutabeak lehenik `tableId` eremuaren arabera taldekatzen dira, eta indize-zutabeak `indexId` eremuaren arabera. `4.2.0` bertsiotik aurrera, `wordEntities`, `termEntities` eta `domainEntities` beste bilduma guztien ondoren datoz, ordena horretan, bakoitza goiburu bat eta errenkadak gisa idatzita, errenkada bat lerro bakoitzeko (ikus [Hiztegien errenkadak](#dictionary-rows)). Entitate bakoitzak bere eremuak ordena finko batean idazten ditu, eta testua bi zuriunez koskatzen da eta lerro-jauzi batekin amaitzen da. Horrela, dokumentu berak beti byte berak idazten ditu, edizio batek ukitzen duena soilik aldatzen du, eta beste letra-tipo batzuk dituen makina batean gordetako fitxategi batek `value` bera ematen du berriro irekitzean.  
 VS Code editoreak, Obsidian aplikazioak eta JetBrains pluginak edizio batek `value` aldatzen duenean soilik idazten dute fitxategia; beraz, aurreko bertsio batek gordetako fitxategi batek bere forma zaharra mantentzen du lehen ediziora arte.
 
 `4.2.0` bertsiotik aurrera, biltegiratze-formak ezer ez duena ere kanpoan uzten du: entitate batek edo haren `ui` eremuak `''` gisa duen testu-eremu bakoitza (taula baten `name`, `comment` eta `ui.color`, zutabe baten `name`, `comment`, `dataType` eta `default`, indize baten `name`, ohar baten `value` eta `ui.color`, taula-talde baten `name` eta `color`), sarrerarik ez duen `doc` zerrenda eta bilduma bakoitza, eta `collections` bera, bilduma guztiak hutsik daudenean. Zuriunez soilik osatutako testua dagoen bezala idazten da, bi salbuespenekin: izen logiko bat, orduan kanpoan uzten dena, eta id-az gaindiko balio guztiak hutsik edo zuriunez soilik dituen hitz, termino edo domeinu bat, osorik kanpoan uzten dena. Id guztiak, entitate baten barruko zerrenda guztiak eta zenbaki guztiak, `0` barne, idazten dira oraindik. `doc` eremua beti idazten da; beraz, dokumentu berri baten fitxategiak `$schema`, `version`, bere ezarpenak eta `"doc": {}` ditu.  
 Analisi batek falta den testu-eremu bat `''` gisa irakurtzen du, eta falta den bilduma bat huts gisa, v3 bertsio guztiek egiten duten bezala, eta biltegiratze-formak `doc` zerrenda bat kanpoan uzten du haren bildumak ezer ez duen bitartean soilik (ikus [Doc](#doc)). Beraz, `4.2.0` bertsioa baino lehenagoko editore batek ere irekitzen ditu fitxategi hauek, eta fitxategi bat berak irakurtzen duen programa batek modu berean irakurri behar du falta dena. Aurreko bertsio batek gordetako fitxategi bat hurrengo gordetzean testu, zerrenda eta bilduma hutsak kanpoan utzita itzultzen da, behin bakarrik egiten den aldaketa bat, eta handik aurrera bytez byte gordetzen da.
 
-Exekuzio-garaiko balioak biltegiratze-formak kanpoan uzten duena mantentzen du: kendutako entitateak, sekuentziak, z-indizeak, zabalerak, gako-markak, erlazio-banderak eta aingurak, testu-eremu hutsak, eta `tableIds`, `relationshipIds`, `indexIds` eta `memoIds` lau zerrendak eta `tableEntities` bildumatik `memoEntities` bildumara arteko sei bildumak, hutsik daudenean ere. `4.2.0` bertsiotik aurrera, kendutako hitzak, terminoak eta domeinuak, ezer ez duten errenkadak, errenkada bakoitzaren `order` eremua, hiztegien hiru zerrendak, zuriunez soilik osatutako izen logiko bat eta kendutako domeinu baterako lotura bat ere mantentzen ditu. Bi zuriunez koskatzen da, amaieran lerro-jauzirik gabe. Erabili soilik lankide bat edo bigarren ikuspegi bat `setInitialValue()` metodoaren bidez hasieratzeko, beste editore batek bidaltzen duen kentze baten desegiteak entitatea osorik itzul dezan han. Ez idatzi inoiz fitxategi batean; JSON Schema eskemak ukatu egiten du. Kendutako entitateak jada ez ditu ezerk biltzen; beraz, exekuzio-garaiko balioak mantendu egiten ditu dokumentua hurrengoan bere fitxategitik ireki arte.
+Biltegiratze-formak ezarpen blokeatu bakoitza bere balio blokeatuan idazten du (ikus [`lockSettings`](#settings)), `settings.ddlScripts` script batek testua duen bitartean soilik, eta taula baten `groupId` fitxategiak idazten duen taula-talde bat izendatzen duen bitartean soilik. `4.2.0` bertsiotik aurrera, halaber, `settings.nameViewMode` idazten duen balioa `'physical'` ez den bitartean soilik idazten du, `settings.columnOrder` zazpi sarreratan, ahal den lekuan (ikus [Settings](#settings)), eta taula baten `nameDerived` `true` den bitartean soilik.  
+`doc.tableGroupIds` eta `tableGroupEntities` taula-talde bat dagoen bitartean soilik idazten ditu, `logicalName` bat zuriuneez bestelako testua duen bitartean soilik, zutabe baten `domainId` fitxategiak idazten duen domeinu bat izendatzen duen bitartean soilik, eta hiztegi bakoitza fitxategiak idazten duen errenkada bat duen bitartean soilik.
 
-Bi formek ezarpen blokeatu bakoitza bere balio blokeatuan idazten dute (ikus [`lockSettings`](#settings)), `settings.ddlScripts` script batek testua duen bitartean soilik, eta taula baten `groupId` hutsik ez dagoen bitartean soilik. `4.2.0` bertsiotik aurrera, biek idazten dute, halaber, `settings.nameViewMode` idazten duten balioa `'physical'` ez den bitartean soilik, `settings.columnOrder` zazpi sarreratan, ahal den lekuan (ikus [Settings](#settings)), eta taula baten `nameDerived` `true` den bitartean soilik.  
-Biltegiratze-formak `doc.tableGroupIds` eta `tableGroupEntities` taula-talde bat dagoen bitartean soilik idazten ditu, `logicalName` bat zuriuneez bestelako testua duen bitartean soilik, zutabe baten `domainId` fitxategiak idazten duen domeinu bat izendatzen duen bitartean soilik, eta hiztegi bakoitza fitxategiak idazten duen errenkada bat duen bitartean soilik. Exekuzio-garaiko balioak taula-taldeen eremuak dokumentuak talde bat edo kendutako bat duen bitartean idazten ditu, `logicalName` eta `domainId` `''` ez diren bitartean, eta hiztegi bakoitza bere zerrendarekin, bietako batek sarrera bat duen bitartean, kendutako errenkada bat barne.
+`4.0.0` bertsioa baino lehen gordetako fitxategi batek dokumentu osoa du editoreak orduan zuen bezala, kendutako entitateak eta karga bakoitzak kalkulatzen duena barne. Karga batek irakurri egiten du, taula eta ohar bakoitzaren tokia pilan mantentzen du (ikus [Doc](#doc)) eta gainerakoa berriro kalkulatzen du, eta hurrengo gordetzeak biltegiratze-forma soilik idazten du.
 
 ## TypeScript {#typescript}
 
-Motek exekuzio-garaiko balioa deskribatzen dute. `// runtime only` marka duen eremua biltegiratze-formatik kanpo geratzen da, eta `?` marka duen eremua zerbait duen bitartean soilik idazten da. Biltegiratze-formak `4.2.0` bertsiotik aurrera kanpoan uzten dituen testu, zerrenda eta bilduma hutsak ez daude markatuta.
+Motek biltegiratze-forma deskribatzen dute, bakoitzak bere eremuak fitxategi batek idazten dituen ordenan zerrendatuta. `?` marka duen eremua biltegiratze-formak kanpoan utz dezakeen bat da, [Biltegiratze-forma](#storage-form) atalak zehazten duen bezala, eta analisi batek falta den bat ezer ez duela irakurtzen du: `''`, `false`, taula-talderik edo domeinurik ez, bilduma huts bat, `nameViewMode` eremuan `'physical'`, eta `ddlScripts` eremuan bi script huts. Salbuespena falta den `doc` zerrenda da, eta analisi batek bere bildumatik betetzen du (ikus [Doc](#doc)). Hiztegiko errenkada batean, `?` markak errenkada bat aurretik amaitu daitekeen balioak adierazten ditu (ikus [Hiztegien errenkadak](#dictionary-rows)). Gainerako eremu guztiak beti idazten dira.
 
 ### ERDEditorSchemaV3 {#erdeditorschemav3}
 
@@ -35,13 +36,13 @@ type ERDEditorSchemaV3 = {
   version: '3.0.0';
   settings: Settings;
   doc: Doc;
-  collections: {
-    tableEntities: Record<string, Table>;
-    tableColumnEntities: Record<string, Column>;
-    relationshipEntities: Record<string, Relationship>;
-    indexEntities: Record<string, Index>;
-    indexColumnEntities: Record<string, IndexColumn>;
-    memoEntities: Record<string, Memo>;
+  collections?: {
+    tableEntities?: Record<string, Table>;
+    tableColumnEntities?: Record<string, Column>;
+    relationshipEntities?: Record<string, Relationship>;
+    indexEntities?: Record<string, Index>;
+    indexColumnEntities?: Record<string, IndexColumn>;
+    memoEntities?: Record<string, Memo>;
     tableGroupEntities?: Record<string, TableGroup>;
     wordEntities?: DictionaryRows; // rows of Word
     termEntities?: DictionaryRows; // rows of Term
@@ -216,7 +217,7 @@ Dokumentu berri baten `show` eremua `431` da: `tableComment`, `columnComment`, `
 `4.2.0` bertsioa baino lehenagoko editore batek `show` zenbaki oso gisa mantentzen du; beraz, banderak bizirik irauten du han gordetzean.
 
 `4.2.0` bertsiotik aurrera, `ColumnType` motak bederatzi balio ditu. `columnLogicalName` (`128`) balioak izen logikoaren gelaxka kokatzen du, zutabe-errenkada batek `Both Names` ikuspegian soilik marrazten duena, eta `columnDomain` (`256`) balioak Domain gelaxka. Ezarpenak fitxako [zutabeen ordenaren](../../guide/guides/settings.md#adjusting-column-order) `Logical Name` eta `Domain` errenkadak dira. Editore batek bederatziak dituen ordena bat du, eta dokumentu berri batena `128, 1, 2, 256, 4, 8, 16, 32, 64` da.  
-Bi formek ordena zazpi sarreratan idazten dute, `128` eta `256` kanpoan utzita, `128` `columnName` balioaren berehala aurretik eta `256` `columnDataType` balioaren berehala ondoren dauden bitartean. Beraz, dokumentu berri batek `1, 2, 4, 8, 16, 32, 64` idazten du oraindik, eta bere ordenan bi horiek inoiz mugitu ez dituen fitxategi batek bere byteak mantentzen ditu. Bestela, bederatziak idazten dituzte.  
+Biltegiratze-formak ordena zazpi sarreratan idazten du, `128` eta `256` kanpoan utzita, `128` `columnName` balioaren berehala aurretik eta `256` `columnDataType` balioaren berehala ondoren dauden bitartean. Beraz, dokumentu berri batek `1, 2, 4, 8, 16, 32, 64` idazten du oraindik, eta bere ordenan bi horiek inoiz mugitu ez dituen fitxategi batek bere byteak mantentzen ditu. Bestela, bederatziak idazten ditu.  
 Analisi batek bi horiek leku horietan jartzen ditu zazpi sarrerako ordena batean, zazpiak edozein ordenatan daudela ere, mota guztiak dituzten bederatzi sarrera dauden bezala hartzen ditu.  
 `5.0.0` bertsiotik aurrera, beste edozein ordena ere onartzen du. Ezagutzen duen `ColumnType` bakoitza behin gordetzen du, emandako ordenan, eta gainerako sarrera guztiak baztertzen ditu: `ColumnType` batek ere izendatzen ez duen balioa, adibidez geroko bertsio batek gehitzen duen mota bat, eta mota bereko bigarren sarrera. Ordenak falta duen mota bakoitza, ordena lehenetsian haren aurreko eta ordenak dituen mota hurbilenaren berehala ondoren jartzen da, edo, aurrekorik ez badago, haren ondoko mota hurbilenaren berehala aurretik; horrela aurkitzen dute `128` eta `256` balioek beren lekua zazpi sarreratan. Ordena lehenetsi gisa irakurtzen da ezagutzen duen mota bat ere izendatzen ez duen ordena bakarrik, edo array ez den balioa.  
 Beraz, geroko bertsio batek gordetako fitxategi bat bertsio honek ezagutzen dituen motekin irekitzen da, eta hemen gordetzeak ordena hori idazten du, besteak gabe. `5.0.0` bertsioa baino lehen, analisi batek beste edozein ordena lehenetsi gisa irakurtzen zuen; beraz, halako fitxategi bat zutabeen ordena berrezarrita irekitzen zen. JSON Schema eskemak zazpi edo bederatzi osoko zenbaki onartzen ditu.
@@ -224,18 +225,18 @@ Beraz, geroko bertsio batek gordetako fitxategi bat bertsio honek ezagutzen ditu
 `4.0.0` bertsiotik aurrera, `Language` motak [Kode-sortzailea](../../guide/guides/code-generator.md) fitxaren zortzi helburu gehiago ditu, `Mermaid` baliotik `JSONSchema` baliora arte. Analizatzaileak ezagutzen ez duen `language` balio bat `GraphQL` gisa irakurtzen da; beraz, `4.0.0` bertsioa baino lehenagoko editore batek horietako batekin gordetako dokumentua GraphQL lengoaian irekitzen du, eta han gordetzean GraphQL idazten du.
 
 `4.0.0` bertsiotik aurrera, `lockSettings` eremuak `ignoreSaveSettings` eremuaren lekua hartzen du, eta `LockSettingType` motak kendutako `SaveSettingType` motarena. `lockSettings` eremuak dokumentu batek blokeatu zirenean zeuden bezala gordetzen dituen ezarpenak adierazten ditu. `viewport` bitak `originX`, `originY` eta `zoomLevel` batera hartzen ditu, bere zoomik gabe gordetako jatorri bat beste nonbait irekitzen baita, eta beste bit bakoitzak izen bera duen eremua hartzen du. Hauek dira Ezarpenak fitxako [`Lock`](../../guide/guides/settings.md#lock) errenkadak.  
-`value` propietateak zein `runtimeValue` propietateak ezarpen blokeatu bat bere balio blokeatuan idazten dute, editoreak edozer erakutsita ere, eta gainerako ezarpen guztiak dauden bezala. Beraz, dagokion blokeoa aktibatuta dagoen bitartean, korritzeak eta zooma aldatzeak, fitxaz aldatzeak, Kode-sortzailearen lengoaia, izenen idazkera bat edo mugatzaile mota aldatzeak, edo Izenen ikuspegia aldatzeak fitxategia zegoen bezala uzten du. Blokeatzeak ezarpenak une horretan duen balioa hartzen du, eta analisi batek gordetako eremutik hartzen du balio blokeatua.  
+Fitxategi batek ezarpen blokeatu bakoitza bere balio blokeatuan du, editoreak edozer erakutsita ere, eta gainerako ezarpen guztiak dauden bezala. Beraz, dagokion blokeoa aktibatuta dagoen bitartean, korritzeak eta zooma aldatzeak, fitxaz aldatzeak, Kode-sortzailearen lengoaia, izenen idazkera bat edo mugatzaile mota aldatzeak, edo Izenen ikuspegia aldatzeak fitxategia zegoen bezala uzten du. Blokeatzeak ezarpenak une horretan duen balioa hartzen du, eta analisi batek gordetako eremutik hartzen du balio blokeatua.  
 Ezerezetik hasitako dokumentu batek — editore berri bat edo erreplikazio-biltegi berri bat, edo `value` propietateari edo `setInitialValue()` metodoari emandako balio huts bat — `lockSettings` eremua `63` balioarekin du, blokeo guztiak aktibatuta. `settings` eremuan `lockSettings` eremurik ez duen dokumentu bat — `4.0.0` bertsioa baino lehen gordetako fitxategi guztiak, bere `ignoreSaveSettings` edozein dela ere, eta v2 dokumentu guztiak — blokeo guztiak aktibatuta irekitzen da hura ere: ikuspegia eta fitxa dokumentu berri batenak dauden lekuan (`originX` eta `originY` `0`, `zoomLevel` `1`, ERD fitxa), eta lengoaia, izenen idazkerak eta mugatzaile mota gorde zituen balioetan blokeatuta. Bere blokeoak adierazten dituen dokumentu batek mantendu egiten ditu, `0` barne, baita gorde zituen balio guztiak ere.  
 Analisi batek `lockSettings` eremuaren bit guztiak mantentzen ditu, baita ezezagunak ere, eta, beraz, geroagoko bertsio batek gehitzen duen blokeo batek bizirik irauten du hemen gordetzean; JSON Schema eskemak osoko zenbakia dela soilik egiaztatzen du. `4.0.0` bertsioa baino lehenagoko editore batek alde batera uzten du `lockSettings` gordetzean, eta ikuspegia eta fitxa dauden bezala idazten ditu; beraz, fitxategia `4.0.0` bertsioa baino lehen gordetako bat bezala irekitzen da berriro hemen.
 
 `4.2.0` bertsiotik aurrera, zazpigarren blokeo bat dago, `unlockNameViewMode` (`64`), `Name View` errenkada, `nameViewMode` hartzen duena. Haren bitak beste blokeo-biten alderantziz funtzionatzen du, `Show` motaren ezkutatze-bitek bezala: ezarrita dagoenean, Izenen ikuspegia desblokeatuta dago, eta garbi dagoenean, blokeatuta. Beraz, `63` balioak blokeo guztiak aktibatuta esan nahi du oraindik, eta dokumentu berri batek balio hori du, Izenen ikuspegia `'physical'` balioan blokeatuta duela. `4.2.0` bertsioa baino lehen gordetako fitxategi batek bita garbi du, beste blokeoak edozein direla ere, `0` barne; beraz, Izenen ikuspegia `'physical'` balioan blokeatuta duela irekitzen da. Blokeo guztiak desaktibatuta dituen dokumentu batek `64` du, eta beste blokeo guztiak aktibatuta eta Izenen ikuspegia desblokeatuta dituenak `127`. Egiaztatu blokeo hau alderantziz: aktibatuta dago `(lockSettings & 64) === 0` den bitartean.  
-Aktibatuta dagoen bitartean, Izenen ikuspegiaren aldaketa batek hura egin duen editorearen pantaila soilik aldatzen du, eta dokumentuak ikuspegi blokeatua mantentzen du. Desaktibatuta dagoen bitartean, edita dezakeen editore batean egindako aldaketa dokumentuarena da, eta lankide guztiek harekin batera aldatzen dute ikuspegia. Irakurtzeko soilik dagoen editore baten aldaketak bere pantaila soilik aldatzen du, bi kasuetan. Ikus [`Lock`](../../guide/guides/settings.md#lock).  
+Bita garbi dagoen bitartean, fitxategi batek `nameViewMode` ikuspegi blokeatuan du, edozein editorek edozer erakutsita ere, eta ezarrita dagoenean, ikuspegia dagoen bezala. Editore bakoitzak zer erakusten duen, blokeoa aktibatuta zein desaktibatuta dagoela, [`Lock`](../../guide/guides/settings.md#lock) atalean azaltzen da.  
 `4.0.0` edo `4.1.0` bertsioko editore batek bita mantentzen du gordetzean, baina `nameViewMode` alde batera uzten du; beraz, dokumentua `'physical'` balioan irekitzen da berriro hemen, bere blokeoa zegoen bezala duela.
 
 `4.0.0` bertsiotik aurrera, `ddlScripts` eremuak [SQL eskema](../../guide/guides/schema-sql.md) fitxaren bi scriptak ditu, datu-base guztien DDLak idazten dituenak: `before` goiburuaren ondoren eta taulen aurretik, `after` sortutako DDLaren ondoren. DDLak bakoitza LF lerro-jauziekin idazten du, hasierako lerro hutsik eta amaierako zuriunerik gabe, eta MSSQL datu-basean `GO` komandoarekin amaituta, [Taulen aurreko eta ondorengo scriptak](../../guide/guides/schema-sql.md#before-and-after-scripts) atalean azaltzen den bezala; `ddlScripts` eremuak berak script bakoitza idatzi zen bezala mantentzen du. Gakoa scriptetako batek testua duen bitartean soilik idazten da, eta orduan biekin; falta den gako bat, edo katea ez den script bat, `''` gisa irakurtzen da. Fitxaren `Statements`, `Header` eta `Tables` aukerak, eta, `4.2.0` bertsiotik aurrera, haren [`Write logical names into empty comments`](../../guide/guides/schema-sql.md#logical-names-as-comments) etengailua, ez dira dokumentuan gordetzen.  
 `4.0.0` bertsioa baino lehenagoko editore batek alde batera uzten ditu scriptak dokumentu bat kargatzean; beraz, han gordetzean galdu egiten dira.
 
-`4.2.0` bertsiotik aurrera, `nameViewMode` [Izenen ikuspegia](../../guide/guides/logical-names.md#name-view) da, diagramak marrazten dituen izenak: `'physical'` taula eta zutabe bakoitzaren izena, `'logical'` haren izen logikoa izenaren lekuan, eta `'both'` izen logikoa eta izena. Menuek `Physical Names`, `Logical Names` eta `Both Names` deitzen diete. Bi formek azkenik idazten dute, `ddlScripts` eremuaren ondoren, eta idazten duten balioa `'physical'` ez den bitartean soilik; `Name View` blokeoa aktibatuta dagoen bitartean, balio hori balio blokeatua da, pantailak edozer erakutsita ere. Falta den balio bat, edo analizatzaileak ezagutzen ez duen bat, `'physical'` gisa irakurtzen da, eta JSON Schema eskemak `"logical"` eta `"both"` soilik onartzen ditu.  
+`4.2.0` bertsiotik aurrera, `nameViewMode` [Izenen ikuspegia](../../guide/guides/logical-names.md#name-view) da, diagramak marrazten dituen izenak: `'physical'` taula eta zutabe bakoitzaren izena, `'logical'` haren izen logikoa izenaren lekuan, eta `'both'` izen logikoa eta izena. Menuek `Physical Names`, `Logical Names` eta `Both Names` deitzen diete. Biltegiratze-formak azkenik idazten du, `ddlScripts` eremuaren ondoren, eta idazten duen balioa `'physical'` ez den bitartean soilik. Falta den balio bat, edo analizatzaileak ezagutzen ez duen bat, `'physical'` gisa irakurtzen da, eta JSON Schema eskemak `"logical"` eta `"both"` soilik onartzen ditu.  
 `4.2.0` bertsioa baino lehenagoko editore batek alde batera uzten du `nameViewMode` dokumentu bat kargatzean.
 
 `Database`, `Language`, `Show`, `ColumnType`, `ColumnOption`, `LockSettingType` eta `ReferentialAction` motei balioak amaieran soilik gehitzen zaizkie. Gordetako dokumentu batek zenbakia gordetzen du; beraz, hornitzaile, kode-sorkuntzako helburu, bandera, zutabe mota, zutabe-aukera, blokeo edo ekintza berri batek hurrengo bita hartzen du, erdiko toki bat hartu beharrean.
@@ -244,52 +245,42 @@ Aktibatuta dagoen bitartean, Izenen ikuspegiaren aldaketa batek hura egin duen e
 
 ```ts
 type Doc = {
-  tableIds: string[];
-  relationshipIds: string[];
-  indexIds: string[];
-  memoIds: string[];
+  tableIds?: string[];
+  relationshipIds?: string[];
+  indexIds?: string[];
+  memoIds?: string[];
   tableGroupIds?: string[];
-  wordIds?: string[]; // runtime only
-  termIds?: string[]; // runtime only
-  domainIds?: string[]; // runtime only
 };
 ```
 
-Lehen bost zerrendetako bakoitza entitate mota baten ordena da, eta DDLak, taulen ordenatzeak eta marrazte-ordenak irakurtzen dute. Biltegiratze-forman, zerrenda bakoitzak mantendutako entitateen id-ak soilik ditu, bakoitza behin, zerrendatutako ordenan, eta, `4.2.0` bertsiotik aurrera, bat ere ez duen zerrenda kanpoan uzten da. `4.0.0` bertsiotik aurrera, `tableGroupIds` taula-taldeen ordena da.
+Zerrenda bakoitza entitate mota baten ordena da, eta DDLak, taulen ordenatzeak eta marrazte-ordenak irakurtzen dute. Bakoitzak fitxategiak idazten dituen entitateen id-ak soilik ditu, bakoitza behin, zerrendatutako ordenan, eta, `4.2.0` bertsiotik aurrera, bat ere ez duen zerrenda kanpoan uzten da. `4.0.0` bertsiotik aurrera, `tableGroupIds` taula-taldeen ordena da. Hiztegiek ez dute zerrendarik hemen, haien errenkadak orri bakoitzaren ordenan baitaude (ikus [Hiztegien errenkadak](#dictionary-rows)), eta JSON Schema eskemak ez du `doc` eremuan beste gakorik onartzen.
 
-`4.2.0` bertsiotik aurrera, `wordIds`, `termIds` eta `domainIds` zerrendek hiztegi bakoitzaren errenkada biziak zerrendatzen dituzte: bildumak duen baina zerrendak ez duen errenkada bat kendutakoa da. Ez dira orri baten ordena; hori errenkada bakoitzaren `order` eremuak ematen du. Exekuzio-garaiko balioak soilik idazten ditu, bakoitza hark edo haren bildumak sarrera bat duen bitartean. Fitxategi baten errenkadak berak dira kidetza eta ordena, eta JSON Schema eskemak zerrendak ukatu egiten ditu.  
 `4.2.0` bertsiotik aurrera, analisi batek dokumentuak kanpoan uzten duen zerrenda bat, edo array ez den zerbait gisa duena, haren bildumak dituen sarrera guztiak balira bezala irakurtzen du, id bakoitza behin, dauden ordenan; array huts bat hutsik geratzen da, eta orduan haren bildumako sarrera guztiak kendutako gisa irakurtzen dira. `4.2.0` bertsioa baino lehenagoko editore batek falta den zerrenda bat huts gisa irakurtzen du; beraz, biltegiratze-formak zerrenda bakoitza idazten du oraindik haren bildumak entitate bat duen bakoitzean.
 
-`4.0.0` bertsiotik aurrera, pilatze-ordena ez da gordetzen. Analisi batek `zIndex` eremurik ez duen zerrendatutako taula, ohar eta taula-talde bakoitza bere zerrendako tokiaren arabera pilatzen du, ondorengoak aurrean: taula-taldeak `1` baliotik, taulak `2` baliotik, eta oharrak taula guztien gainetik. `zIndex` eremua duen entitate batek, exekuzio-garaiko balio batean edo `4.0.0` bertsioa baino lehen gordetako fitxategi batean bezala, mantendu egiten du. Beraz, taula edo ohar bat aurrera ekartzea galdu egiten da fitxategia berriro irekitzean.
+`4.0.0` bertsiotik aurrera, fitxategi batek ez du pilatze-ordenarik. Karga batek zerrendatutako taulak eta oharrak beren zerrendetako tokien arabera pilatzen ditu, ondorengoak aurrean eta ohar guztiak taula guztien gainetik, eta taula-taldeak bere artean modu berean, taulen atzean. `4.0.0` bertsioa baino lehen gordetako fitxategi bateko taula edo ohar batek `zIndex` eremua du bere `ui` objektuan; karga batek pilako toki gisa mantentzen du, eta hurrengo gordetzeak kanpoan uzten du. Beraz, taula edo ohar bat aurrera ekartzea galdu egiten da fitxategia berriro irekitzean.
 
 ### Bilduma: tableEntities {#collection-tableentities}
 
 ```ts
 type Table = {
   id: string;
-  name: string;
+  name?: string;
   logicalName?: string;
-  comment: string;
+  comment?: string;
   columnIds: string[];
-  seqColumnIds: string[]; // runtime only
   groupId?: string;
-  nameDerived?: boolean;
+  nameDerived?: true;
   ui: TableUI;
 };
 
 type TableUI = {
   x: number;
   y: number;
-  zIndex: number; // runtime only
-  widthName: number; // runtime only
-  widthLogicalName: number; // runtime only
-  widthComment: number; // runtime only
-  color: string;
+  color?: string;
 };
 ```
 
-`4.0.0` bertsiotik aurrera, taula batek `groupId` eremua du: kide den [taula-taldearen](../../guide/guides/table-groups.md) id-a. Falta den edo hutsik dagoen `groupId` batek, edo `doc.tableGroupIds` eremuko talderik izendatzen ez duen batek, ez duela talderik esan nahi du, eta biltegiratze-formak mantendutako talde bat izendatzen duen bitartean soilik idazten du.  
-Analisi batek `seqColumnIds` eremua `columnIds` eremuaren balioarekin hasieratzen du, falta denean edo zerrendatutako id bat falta zaionean, eta editore batek `widthName`, `widthLogicalName` eta `widthComment` berriro neurtzen ditu bere letra-tipoekin karga bakoitzean.
+`4.0.0` bertsiotik aurrera, taula batek `groupId` eremua du: kide den [taula-taldearen](../../guide/guides/table-groups.md) id-a. Falta den edo hutsik dagoen `groupId` batek, edo `doc.tableGroupIds` eremuko talderik izendatzen ez duen batek, ez duela talderik esan nahi du, eta biltegiratze-formak mantendutako talde bat izendatzen duen bitartean soilik idazten du.
 
 `4.2.0` bertsiotik aurrera, taula batek `logicalName` eremua du, `Logical Names` eta `Both Names` [ikuspegiek](../../guide/guides/logical-names.md#name-view) marrazten duten izena, `''` izenik ez badago, eta `nameDerived`, `true` hiztegiek `name` izen logikotik [eratorri](../../guide/guides/dictionary.md#deriving-physical-names) duten bitartean. Ezarrita dagoen bitartean, izen logiko berri batek izena berriro eratortzen du; ezarrita ez dagoen bitartean, izena norbaitek idatzitakoa da, eta izen logiko berri batek bere horretan uzten du, izena hutsik edo zuriunez soilik osatuta ez badago. Eskuz izena aldatzeak desaktibatu egiten du, eta [`Derive Physical Names Again`](../../guide/guides/dictionary.md#derive-physical-names-again) aukerak norbaitek idatzitako izena ere berridazten du eta izen logikoa dagoen leku guztietan aktibatzen du.  
 Biltegiratze-formak `logicalName` `name` eremuaren ondoren idazten du, idatzi zen bezala, zuriuneez bestelako testua duen bitartean soilik, eta `nameDerived` `groupId` eremuaren ondoren, `true` den bitartean soilik, JSON Schema eskemak onartzen duen balio bakarra baita. Falta den `logicalName` bat `''` gisa irakurtzen da, eta falta den `nameDerived` bat `false` gisa; beraz, `4.2.0` bertsioa baino lehen gordetako fitxategi bateko izen guztiak norbaitek idatzitakotzat hartzen dira.  
@@ -301,24 +292,13 @@ Biltegiratze-formak `logicalName` `name` eremuaren ondoren idazten du, idatzi ze
 type Column = {
   id: string;
   tableId: string;
-  name: string;
-  comment: string;
-  dataType: string;
-  default: string;
+  name?: string;
+  comment?: string;
+  dataType?: string;
+  default?: string;
   options: number; // Constants: ColumnOption
   logicalName?: string;
   domainId?: string;
-  ui: ColumnUI; // runtime only
-};
-
-type ColumnUI = {
-  keys: number; // Constants: ColumnUIKey
-  widthName: number;
-  widthLogicalName: number;
-  widthComment: number;
-  widthDataType: number;
-  widthDomain: number;
-  widthDefault: number;
 };
 
 // Constants
@@ -329,17 +309,12 @@ const ColumnOption = {
   notNull: 8,
   nameDerived: 16,
 } as const;
-
-const ColumnUIKey = {
-  primaryKey: 1,
-  foreignKey: 2,
-} as const;
 ```
 
-`4.0.0` bertsiotik aurrera, biltegiratze-formak ez du zutabeen `ui` eremurik idazten. Karga bakoitzak `keys` eratortzen du, hau da, gako nagusiaren marka `options` eremuaren `primaryKey` bitetik eta gako arrotzaren marka zutabean amaitzen diren erlazioetatik, eta sei zabalerak neurtzen ditu.  
+`4.0.0` bertsiotik aurrera, fitxategi batek ez du gako-markarik: karga bakoitzak zutabe bat gako nagusi gisa markatzen du `options` eremuaren `primaryKey` bitetik, eta gako arrotz gisa bere taulan erlazio bat haren gainean amaitzen den bitartean.  
 `4.0.0` bertsioa baino lehenagoko editore batek hemen gordetako fitxategi baten zutabeak gako nagusiaren ikonorik gabe erakusten ditu.
 
-`4.2.0` bertsiotik aurrera, zutabe batek `logicalName` eremua du, taula batek bezala, eta `domainId`, lotzen duen domeinuaren id-a, `''` domeinurik ez badago. Editore bakar bateko edizioek lotutako zutabe bat bere domeinuaren datu motan mantentzen dute, [Domeinuak eta datu motak](../../guide/guides/dictionary.md#domains-and-data-types) atalean azaltzen den bezala. Analisi batek, ordea, ez dio inongo zutaberi mota aldatzen; beraz, beste nonbait idatzitako fitxategi batek lotutako zutabe bat beste mota batean utz dezake, eta gauza bera gerta daiteke bi lankideren edizio gurutzatuekin; Egiaztapenak orriak horietako bakoitza [`Domain type mismatch`](../../guide/guides/dictionary.md#what-each-check-finds) egiaztapen gisa zerrendatzen du. Analisi batek dokumentuak duen domeinurik izendatzen ez duen `domainId` bat garbitzen du. Kendutako domeinu bat kontuan hartzen da oraindik; beraz, editoreak hartarako lotura mantentzen du desegite batek domeinua itzul dezakeen bitartean. `options` eremuaren ondoren, biltegiratze-formak `logicalName` taularen arauaren arabera idazten du, eta `domainId` fitxategiak idazten duen domeinu bat izendatzen duen bitartean soilik; beraz, inoiz ez kendutako domeinu baterako lotura bat.  
+`4.2.0` bertsiotik aurrera, zutabe batek `logicalName` eremua du, taula batek bezala, eta `domainId`, lotzen duen domeinuaren id-a, `''` domeinurik ez badago. Editore bakar bateko edizioek lotutako zutabe bat bere domeinuaren datu motan mantentzen dute, [Domeinuak eta datu motak](../../guide/guides/dictionary.md#domains-and-data-types) atalean azaltzen den bezala. Analisi batek, ordea, ez dio inongo zutaberi mota aldatzen; beraz, beste nonbait idatzitako fitxategi batek lotutako zutabe bat beste mota batean utz dezake, eta gauza bera gerta daiteke bi lankideren edizio gurutzatuekin; Egiaztapenak orriak horietako bakoitza [`Domain type mismatch`](../../guide/guides/dictionary.md#what-each-check-finds) egiaztapen gisa zerrendatzen du. Analisi batek fitxategiak duen domeinurik izendatzen ez duen `domainId` bat garbitzen du. `options` eremuaren ondoren, biltegiratze-formak `logicalName` taularen arauaren arabera idazten du, eta `domainId` fitxategiak idazten duen domeinu bat izendatzen duen bitartean soilik; beraz, kendutako domeinu batekin edo fitxategiak kanpoan uzten duen batekin lotutako zutabe bat loturarik gabe eta duen datu motarekin idazten da.  
 `ColumnOption.nameDerived` (`16`) zutabearen izen eratorriaren bandera da; `options` eremuan gordetzen da beste bitekin batera, eta taula baten `nameDerived` eremuak esan nahi duena esan nahi du. Adibidez, ez nulua den eta hiztegiek izena eratorri dioten gako nagusi batek `26` balioa du `options` eremuan.  
 `4.2.0` bertsioa baino lehenagoko editore batek `logicalName` eta `domainId` alde batera uzten ditu dokumentu bat kargatzean; beraz, han gordetzean galdu egiten dira. `options` zenbaki oso gisa mantentzen du; beraz, `nameDerived` bitak bizirik irauten du han gordetzean.
 
@@ -348,9 +323,7 @@ const ColumnUIKey = {
 ```ts
 type Relationship = {
   id: string;
-  identification: boolean; // runtime only
   relationshipType: number; // Constants: RelationshipType
-  startRelationshipType: number; // Constants: StartRelationshipType; runtime only
   onDelete: number; // Constants: ReferentialAction
   onUpdate: number; // Constants: ReferentialAction
   start: RelationshipPoint;
@@ -360,9 +333,6 @@ type Relationship = {
 type RelationshipPoint = {
   tableId: string;
   columnIds: string[];
-  x: number; // runtime only
-  y: number; // runtime only
-  direction: number; // Constants: Direction; runtime only
 };
 
 // Constants
@@ -373,11 +343,6 @@ const RelationshipType = {
   OneN: 16,
 } as const;
 
-const StartRelationshipType = {
-  ring: 1,
-  dash: 2,
-} as const;
-
 const ReferentialAction = {
   none: 1,
   noAction: 2,
@@ -386,35 +351,25 @@ const ReferentialAction = {
   setDefault: 16,
   restrict: 32,
 } as const;
-
-const Direction = {
-  left: 1,
-  right: 2,
-  top: 4,
-  bottom: 8,
-} as const;
 ```
 
 `3.10.0` bertsiotik aurrera, erlazio batek `onDelete` eta `onUpdate` eremuak ditu, bere [ON DELETE eta ON UPDATE ekintzak](../../guide/guides/relationship-editing.md#on-delete-and-on-update). Bakoitzak `ReferentialAction` balio bakar bat du zehazki. `none` balioak, lehenetsiak, ez du klausularik idazten; beraz, datu-basearen beraren balio lehenetsia aplikatzen da. Beste bostek `NO ACTION`, `CASCADE`, `SET NULL`, `SET DEFAULT` eta `RESTRICT` adierazten dituzte. SQL eskema fitxak klausula bat idazten du soilik haren ekintza onartzen duen datu-base baterako.  
 Biltegiratze-formak beti idazten ditu biak, eta `4.0.0` bertsiotik aurrera JSON Schema eskemak derrigorrezko egiten ditu, bakoitza osoko zenbakia dela soilik egiaztatuz. Analisi batek oraindik ere `none` gisa irakurtzen du falta den eremu bat, `3.10.0` bertsioa baino lehen gordetako dokumentu guztietan bezala, baita zerrendatik kanpoko balio bat ere.  
 `3.10.0` bertsioa baino lehenagoko editore batek ez ditu eremu horiek ezagutzen, eta alde batera uzten ditu dokumentu bat kargatzean; beraz, han gordetzean ekintza guztiak galtzen dira.
 
-`4.0.0` bertsiotik aurrera, karga bakoitzak biltegiratze-formak kanpoan uzten duena eratortzen du. Erlazio bat identifikatzailea da amaitzen den zutabe guztiak gako nagusiak direnean, eta bere `startRelationshipType` eremua `dash` da zutabe horiek guztiak NOT NULL direnean, eta `ring` bestela; amaierako zutaberik geratzen ez zaion erlazioa ez-identifikatzailea eta `dash` da, erlazio berri bat hasten den bezala. Aingurak, hau da, `x`, `y` eta `direction`, berriro kokatzen dira.
+`4.0.0` bertsiotik aurrera, karga bakoitzak erlazio bat identifikatzailea den ala ez, eta bere gurasoaren muturra nola marrazten den, amaitzen den eta taula umeak oraindik zerrendatzen dituen zutabeetatik irakurtzen du. Identifikatzailea da, marra jarraitua, amaitzen den zutabe horiek guztiak gako nagusiak diren bitartean, eta bere gurasoaren muturra bi barra da zutabe horiek guztiak NOT NULL diren bitartean, eraztun bat eta barra bat bestela. Halako zutaberik geratzen ez zaion erlazioa ez-identifikatzailea da, bi barrarekin, erlazio berri bat hasten den bezala. Ikus [Konektore bat irakurtzea](../../guide/guides/relationship-editing.md#reading-a-connector).
 
 ### Bilduma: indexEntities {#collection-indexentities}
 
 ```ts
 type Index = {
   id: string;
-  name: string;
+  name?: string;
   tableId: string;
   indexColumnIds: string[];
-  seqIndexColumnIds: string[]; // runtime only
   unique: boolean;
 };
 ```
-
-Analisi batek `seqIndexColumnIds` eremua `indexColumnIds` eremuaren balioarekin hasieratzen du, falta denean edo zerrendatutako id bat falta zaionean.
 
 ### Bilduma: indexColumnEntities {#collection-indexcolumnentities}
 
@@ -438,7 +393,7 @@ const OrderType = {
 ```ts
 type Memo = {
   id: string;
-  value: string;
+  value?: string;
   ui: MemoUI;
 };
 
@@ -447,20 +402,19 @@ type MemoUI = {
   y: number;
   width: number;
   height: number;
-  zIndex: number; // runtime only
-  color: string;
+  color?: string;
 };
 ```
 
-`4.0.0` bertsiotik aurrera, taulek eta oharrek `zIndex` eremuaren arabera ordenatutako [pila bakarra partekatzen dute](../../guide/guides/table-related-functions.md#moving-multiple-tables); beraz, taula bat aurrera ekartzeak ohar baten gainean jar dezake. Analisi batek `zIndex` eremurik gabe gordetako ohar bat taula guztien gainean pilatzen du, [Doc](#doc) atalean azaltzen den bezala. `4.0.0` bertsioa baino lehen gordetako fitxategi bateko ohar batek gorde zuen `zIndex` balioa mantentzen du, taulen kontagailu beretik zetorrena; beraz, aurreko bertsio batek taula guztien gainean marraztutako ohar bat haren ondoren aurrera ekarritako taula baten azpian ireki daiteke.
+`4.0.0` bertsiotik aurrera, taulek eta oharrek [pila bakarra partekatzen dute](../../guide/guides/table-related-functions.md#moving-multiple-tables); beraz, taula bat aurrera ekartzeak ohar baten gainean jar dezake. Karga batek ohar guztiak taula guztien gainean jartzen ditu, [Doc](#doc) atalean azaltzen den bezala. `4.0.0` bertsioa baino lehen gordetako fitxategi bateko ohar batek gorde zuen `zIndex` balioa mantentzen du, taulen kontagailu beretik zetorrena; beraz, aurreko bertsio batek taula guztien gainean marraztutako ohar bat haren ondoren aurrera ekarritako taula baten azpian ireki daiteke.
 
 ### Bilduma: tableGroupEntities {#collection-tablegroupentities}
 
 ```ts
 type TableGroup = {
   id: string;
-  name: string;
-  color: string;
+  name?: string;
+  color?: string;
   ui: TableGroupUI;
 };
 
@@ -469,7 +423,6 @@ type TableGroupUI = {
   y: number;
   width: number;
   height: number;
-  zIndex: number; // runtime only
 };
 ```
 
@@ -487,7 +440,7 @@ type DictionaryRows = {
 };
 ```
 
-Hiruretako batek ere ez du id-a gako gisa erabiltzen. Bakoitza goiburu bat eta errenkadak gisa idazten da: `fields` eremuak entitatearen eremuak behin izendatzen ditu, id-a lehenik, eta errenkada bakoitzak entitate baten balioak ditu ordena horretan. Beheko motek entitate bakoitzaren eremuak zerrendatzen dituzte, exekuzio-garaiko balioaren goiburuaren ordenan. Errenkada batek beti mantentzen ditu bere id-a eta izena, baina izenaz gaindiko amaierako balio hutsak kanpoan uzten dira; beraz, mantentzen den balio baten aurreko balio huts batek `''` izaten jarraitzen du, eta analisi batek errenkada bati falta zaion balio bat `''` gisa irakurtzen du. Bi formek errenkada bakoitza bere lerroan idazten dute, JSON trinko gisa, fitxategi bateko bi hitz hauetan bezala:
+Hiruretako batek ere ez du id-a gako gisa erabiltzen. Bakoitza goiburu bat eta errenkadak gisa idazten da: `fields` eremuak entitatearen eremuak behin izendatzen ditu, id-a lehenik, eta errenkada bakoitzak entitate baten balioak ditu ordena horretan. Beheko motek entitate bakoitzaren eremuak ordena horretan zerrendatzen dituzte. Errenkada batek beti mantentzen ditu bere id-a eta izena, baina izenaz gaindiko amaierako balio hutsak kanpoan uzten dira; beraz, mantentzen den balio baten aurreko balio huts batek `''` izaten jarraitzen du, eta analisi batek errenkada bati falta zaion balio bat `''` gisa irakurtzen du. Errenkada bakoitza bere lerroan idazten da, JSON trinko gisa, fitxategi bateko bi hitz hauetan bezala:
 
 ```json
 "wordEntities": {
@@ -507,8 +460,8 @@ Hiruretako batek ere ez du id-a gako gisa erabiltzen. Bakoitza goiburu bat eta e
 }
 ```
 
-Biltegiratze-formak zerrendatutako errenkadak orriaren ordenan idazten ditu eta `order` kanpoan uzten du; beraz, haren goiburuek ez dute izendatzen. Id-az gaindiko balio guztiak hutsik edo zuriunez soilik dituen errenkada bat kanpoan uzten du, adibidez gehitu eta inoiz bete ez dena, edo hustutakoa, eta halako domeinu baterako edo kendutako baterako lotura oro: zutabe baten `domainId` kanpoan uzten da, eta termino batena `''` gisa idazten da; terminoa bera kanpoan uzten da beste ezer ez badu.  
-Exekuzio-garaiko balioaren goiburuek `"order"` izendatzen dute `"name"` eremuaren berehala ondoren. Bildumak dituen errenkada guztiak idazten ditu, kendutakoak barne, bildumak dituen ordenan; beraz, orri baten ordena lortzeko, ordenatu `order` eremuaren arabera, kode-unitateen ordenan alderatuta. Analisi batek fitxategi baten errenkadei `order` gakoak ematen dizkie errenkadak dauden ordenan; beraz, fitxategiak idatzi zituen ordenan irakurtzen dira berriro.  
+Biltegiratze-formak orri bakoitzaren errenkadak orriaren ordenan idazten ditu, ordena-eremurik gabe; beraz, fitxategi bateko errenkadak dira hiztegi baten kideak eta haien ordena. Id-az gaindiko balio guztiak hutsik edo zuriunez soilik dituen errenkada bat kanpoan uzten du, adibidez gehitu eta inoiz bete ez dena, edo hustutakoa, eta halako domeinu baterako edo kendutako baterako lotura oro: zutabe baten `domainId` kanpoan uzten da, eta termino batena `''` gisa idazten da; terminoa bera kanpoan uzten da beste ezer ez badu.  
+Analisi batek errenkadak dauden ordenan irakurtzen ditu; beraz, orri bakoitzak fitxategiak idatzi zituen ordenan zerrendatzen ditu.  
 Hiztegiak ez dituen dokumentu batek, adibidez `4.2.0` bertsioa baino lehen gordetako batek, ez du hiztegirik. `4.2.0` bertsioa baino lehenagoko editore batek hirurak alde batera uzten ditu dokumentu bat kargatzean; beraz, han gordetzean hitz, termino eta domeinu guztiak galtzen dira.
 
 ### Bilduma: wordEntities {#collection-wordentities}
@@ -517,12 +470,11 @@ Hiztegiak ez dituen dokumentu batek, adibidez `4.2.0` bertsioa baino lehen gorde
 type Word = {
   id: string;
   name: string;
-  order: string; // runtime only
-  abbreviation: string;
-  englishName: string;
-  description: string;
-  synonyms: string;
-  forbiddenWords: string;
+  abbreviation?: string;
+  englishName?: string;
+  description?: string;
+  synonyms?: string;
+  forbiddenWords?: string;
 };
 ```
 
@@ -534,15 +486,14 @@ Hitz bat izen logiko bat osatzen duten hitzetako bat da, eta `abbreviation` izen
 type Term = {
   id: string;
   name: string;
-  order: string; // runtime only
-  physicalName: string;
-  domainId: string;
-  description: string;
-  synonyms: string;
+  physicalName?: string;
+  domainId?: string;
+  description?: string;
+  synonyms?: string;
 };
 ```
 
-Termino bat izen logiko oso bat da. `logicalName` eremua `name` balioarekin bat datorren taula edo zutabe batek `physicalName` eratortzen du edo, hura hutsik dagoen bitartean, hitzen laburduretatik osatutako izen bat, eta zutabe batek `domainId` eremuak izendatzen duen domeinua ere hartzen du, `''` domeinurik ez badago (ikus [Izen fisikoak eratortzea](../../guide/guides/dictionary.md#deriving-physical-names)). `synonyms` komaz bereizita dago. Analisi batek domeinurik izendatzen ez duen `domainId` bat garbitzen du, zutabe batean bezala.
+Termino bat izen logiko oso bat da. `logicalName` eremua `name` balioarekin bat datorren taula edo zutabe batek `physicalName` eratortzen du edo, hura hutsik dagoen bitartean, hitzen laburduretatik osatutako izen bat, eta zutabe batek `domainId` eremuak izendatzen duen domeinua ere hartzen du, `''` domeinurik ez badago (ikus [Izen fisikoak eratortzea](../../guide/guides/dictionary.md#deriving-physical-names)). `synonyms` komaz bereizita dago. Analisi batek fitxategiak duen domeinurik izendatzen ez duen `domainId` bat garbitzen du, zutabe batean bezala.
 
 ### Bilduma: domainEntities {#collection-domainentities}
 
@@ -550,10 +501,9 @@ Termino bat izen logiko oso bat da. `logicalName` eremua `name` balioarekin bat 
 type Domain = {
   id: string;
   name: string;
-  order: string; // runtime only
-  category: string;
-  dataType: string;
-  description: string;
+  category?: string;
+  dataType?: string;
+  description?: string;
 };
 ```
 
@@ -572,7 +522,7 @@ Eskema-fitxategi kanonikoa [json-schema/schema.json](https://raw.githubuserconte
 
 Jarri `$schema` eremua `.erd.json` fitxategi baten hasieran, eta JSON Schema ulertzen duten editoreek, VS Code esaterako, dokumentua balidatzen dute eta haren eremuak automatikoki osatzen dituzte editatu ahala.
 
-`4.0.0` bertsiotik aurrera, eskemak biltegiratze-forma soilik deskribatzen du. Izendun eremuak dituen objektu oro itxita dago (`additionalProperties: false`), biltegiratze-formak beti idazten duen eremu oro derrigorrezkoa da, ezer ez duen bitartean kanpoan uzten duen eremua aipatu egiten da baina ez da derrigorrezkoa, eta beti kanpoan uzten duen eremurik ez da aipatzen. Horregatik, exekuzio-garaiko balioa ukatu egiten du. `4.0.0` bertsioa baino lehen gordetako fitxategi bat ere ukatzen du, bere `meta` objektuarekin, zabalerekin, `zIndex` eta `ignoreSaveSettings` eremuekin eta gainerakoekin, `4.0.0` edo berriagoa den editore batek fitxategi hori berriro gorde arte. `3.2.0` edo bertsio berriago batek gordetako fitxategi batek dagoeneko eskema honen URLa aipatzen du, `main` adarrera seinalatzen duena; beraz, haren arabera balidatzen duen editore batek orain markatzen du fitxategia. `3.0.0` edo `3.1.0` bertsioek gordetako fitxategi batek, edo v2 dokumentu batek, ez du `$schema` eremurik aipatzen.
+`4.0.0` bertsiotik aurrera, eskemak biltegiratze-forma soilik deskribatzen du. Izendun eremuak dituen objektu oro itxita dago (`additionalProperties: false`), biltegiratze-formak beti idazten duen eremu oro derrigorrezkoa da, goiko moten arabera `?` marka duen eremu oro aipatu egiten da baina ez da derrigorrezkoa, eta beste eremurik ez da aipatzen. Beraz, `4.0.0` bertsioa baino lehen gordetako fitxategi bat ukatzen du, bere `meta` objektuarekin, zabalerekin, `zIndex` eta `ignoreSaveSettings` eremuekin eta gainerakoekin, `4.0.0` edo berriagoa den editore batek fitxategi hori berriro gorde arte. `3.2.0` edo bertsio berriago batek gordetako fitxategi batek dagoeneko eskema honen URLa aipatzen du, `main` adarrera seinalatzen duena; beraz, haren arabera balidatzen duen editore batek orain markatzen du fitxategia. `3.0.0` edo `3.1.0` bertsioek gordetako fitxategi batek, edo v2 dokumentu batek, ez du `$schema` eremurik aipatzen.
 
 `4.2.0` bertsiotik aurrera, eskemak ez ditu jada derrigorrezkotzat hartzen entitate baten testu-eremuak, `doc` zerrendarik, bildumarik edo `collections` bera, biltegiratze-formak ezer ez duten bitartean kanpoan uzten baititu. `4.0.0` edo `4.1.0` bertsioek gordetako fitxategi bat onartzen du oraindik. Eremu berriak aipatzen ditu: `nameViewMode`, `"logical"` eta `"both"` soilik onartzen dituena; taula baten `logicalName` eta `nameDerived`, azken honek `true` soilik onartzen duela; zutabe baten `logicalName` eta `domainId`; eta hiru hiztegiak, bakoitza bere goiburuarekin eta kate-errenkadekin. `canvasType` eremuak Hiztegia fitxa zerrendatzen du, `columnOrder` eremuak zazpi edo bederatzi osoko zenbaki onartzen ditu, eta `show`, `columnOrder`, `lockSettings` eta `options` eremuen deskribapenek bit berriak izendatzen dituzte.
 

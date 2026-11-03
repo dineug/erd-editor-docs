@@ -83,7 +83,9 @@ Una clave serial es la excepción: su clave externa toma el tipo entero que alma
 Cada columna de clave externa recibe su nombre a partir de su clave: a un nombre de una sola palabra, como `id`, se le antepone el nombre de la tabla padre (`user_id`), un nombre de varias palabras, como `member_id`, se conserva, y un nombre que la tabla hija ya tiene se numera (`user_id_2`); consulta [Nombres de las columnas de clave externa](./relationship-editing.md#foreign-key-column-names).  
 Al hacer clic dos veces en la misma tabla se dibuja una relación autorreferencial.  
 Una relación nueva empieza con `On Delete` y `On Update`, ambos en `Not set`: cámbialos desde su menú contextual; consulta [ON DELETE y ON UPDATE](./relationship-editing.md#on-delete-and-on-update).  
-Para cancelar, pulsa `Escape` o vuelve a pulsar el mismo atajo. Al cancelar, la selección queda como está, y el siguiente `Escape` la anula.
+Para cancelar, pulsa `Escape` o vuelve a pulsar el mismo atajo. Al cancelar, la selección queda como está, y el siguiente `Escape` la anula.  
+El dibujo termina también, tanto si solo está preparado el tipo como si ya se ha elegido el padre, cuando se sustituye el diagrama: con un `Import` en lugar del diagrama, con deshacer o rehacer uno, con un colaborador o un agente de programación que haga cualquiera de las dos cosas, y cuando el diagrama se vuelve a cargar en el editor, como hace Obsidian cuando el archivo cambia fuera de él.  
+Una importación de Esquema SQL, GraphQL, DBML o AML lo termina una vez colocadas sus tablas, no cuando se elige el archivo. [`Import and Add`](./file-import-export.md#import-and-add) deja preparado el dibujo.
 
 Una vez elegida la tabla padre, al señalar con el puntero una tabla en la que puede terminar la relación, esa tabla se marca con un contorno y aparecen dos botones a su lado:
 

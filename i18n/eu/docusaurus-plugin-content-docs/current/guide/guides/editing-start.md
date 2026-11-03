@@ -83,7 +83,9 @@ Serial motako gakoa da salbuespena: haren gako arrotzak serial motak gordetzen d
 Gako arrotzaren zutabe bakoitza bere gakoaren arabera izendatzen da: hitz bakarreko izen bati, `id` bezalakoari, taula gurasoaren izena jartzen zaio aurrean (`user_id`); hainbat hitzeko izen bat, `member_id` bezalakoa, mantendu egiten da, eta taula umeak dagoeneko duen izen bati zenbaki bat gehitzen zaio (`user_id_2`). Ikus [Gako arrotzen zutabeen izenak](./relationship-editing.md#foreign-key-column-names).  
 Taula berean bi aldiz klik egiteak auto-erreferentziazko erlazio bat marrazten du.  
 Erlazio berri bat `On Delete` eta `On Update` biak `Not set` balioan dituela hasten da; aldatu haren laster-menutik. Ikus [ON DELETE eta ON UPDATE](./relationship-editing.md#on-delete-and-on-update).  
-Bertan behera uzteko, sakatu `Escape`, edo sakatu berriro lasterbide bera. Bertan behera uzteak hautapena dagoen bezala uzten du, eta hurrengo `Escape` sakatzeak kendu egiten du.
+Bertan behera uzteko, sakatu `Escape`, edo sakatu berriro lasterbide bera. Bertan behera uzteak hautapena dagoen bezala uzten du, eta hurrengo `Escape` sakatzeak kendu egiten du.  
+Marrazketa ere amaitzen da, mota bakarrik prest egon edo gurasoa jada aukeratuta egon, diagrama ordezkatzen denean: diagramaren ordez egindako `Import` batekin, haren desegitearekin edo berregitearekin, lankide batek edo kodetze-agente batek horietako edozein egitearekin, eta diagrama editorean berriro kargatzearekin, Obsidian aplikazioak fitxategia hartatik kanpo aldatzen denean egiten duen bezala.  
+SQL eskemako, GraphQL, DBML edo AML inportazio batek taulak kokatu ondoren amaitzen du, ez fitxategia aukeratzen denean. [`Import and Add`](./file-import-export.md#import-and-add) aukerak marrazketa prest uzten du.
 
 Gurasoa aukeratu ondoren, erlazioa amai daitekeen taula bat erakusleaz seinalatzeak taula horren ingerua nabarmentzen du eta bi botoi erakusten ditu haren ondoan:
 

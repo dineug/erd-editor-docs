@@ -67,7 +67,8 @@ Redigeringar som görs på fliken Ordlista kan ångras, men de hamnar i historik
 
 Om du ångrar en `Import`, som ersätter hela diagrammet, kommer det tidigare diagrammet tillbaka så som editorn hade det när du importerade, med varje [lås](./settings.md#lock) på eller av och varje låst värde så som de var då.  
 Om det diagrammet hade `Viewport` låst går vyn och zoomen tillbaka till den låsta vyn, där diagrammet öppnas, i stället för dit du var. Om dess `Viewport` var upplåst går de tillbaka dit du var när du importerade. De andra låsta inställningarna, som fliken du är på, kodgeneratorns språk eller namnvisningen, förblir som de är på din skärm.  
-Ett nytt diagram börjar med alla lås på. Lås upp `Viewport` innan du importerar för att behålla din vy genom en sådan ångring. Att låsa upp det efteråt, eller att importera en JSON-fil vars eget lås `Viewport` är av, ändrar inte vart ångringen tar dig.
+Ett nytt diagram börjar med alla lås på. Lås upp `Viewport` innan du importerar för att behålla din vy genom en sådan ångring. Att låsa upp det efteråt, eller att importera en JSON-fil vars eget lås `Viewport` är av, ändrar inte vart ångringen tar dig.  
+Att ångra eller göra om en `Import` avslutar också en relation som ritas – se [Skapa relationer](./editing-start.md#relationship-creation).
 
 Om du ångrar importen av en JSON-fil kommer också de ord, termer och domäner som det tidigare diagrammet hade tillbaka. En import av Schema SQL, GraphQL, DBML eller AML behåller ordlistorna, så när den ångras eller görs om lämnas de som de är, inklusive redigeringar som har gjorts på fliken Ordlista sedan dess.
 

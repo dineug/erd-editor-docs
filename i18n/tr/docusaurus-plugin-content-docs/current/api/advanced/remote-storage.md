@@ -1,5 +1,5 @@
 ---
-sidebar_position: 2
+sidebar_position: 3
 description: Canlı bir düzenleyiciyi ana iş parçacığı dışında headless bir depoya replike etme ve belgeyi depolama için serileştirme.
 ---
 
@@ -88,6 +88,11 @@ Kaldırılan bir tablo olmadan başlatılan bir replika, bir düzenleyici bu kal
 Bir düzenleyici kaldırmayı geri aldığında, satır olmadan başlatılan bir replika onu yeniden boş olarak listeler ve `value` boş bir satırı dışarıda bıraktığı için replika belgeyi bu satır olmadan kaydeder.  
 Bir değer alanı söz konusu olduğunda, ona bağlanan sütunlar ve terimler de o replikada bağlantısız kalır, çünkü replika bu bağlantıları hiç tutmamıştır ve geri alma işlemi onları göndermez.
 
+`5.1.0` sürümünden itibaren [`@dineug/erd-editor-yjs`](./yjs.md) düzenleyicileri bir Yjs odası üzerinden de eşzamanlı tutabilir.  
+Yukarıdaki gibi bir odaya bağlı öğeden beslenen bir replika yalnızca o öğede yapılan düzenlemeleri alır, odanın getirdiklerini asla: bunlar öğeye başka bir düzenleyicinin düzenlemesi olarak ulaşır ve paylaşılan bir depo aldığını asla başkasına iletmez.  
+Bir odanın belgesini depolamak için, [Odanın tuttukları](./yjs.md#what-the-room-holds) bölümünün anlattığı gibi bağlı öğenin veya bağlı bir eş deposunun `value` değerini kaydedin.  
+Bir Yjs kalıcı depolama sağlayıcısı odanın kendisini depolar; bu bir dosya değil, bir çalışma zamanı değeri ve ondan sonra yapılan düzenlemeleri tutar. [Sınırlar](./yjs.md#limits) bölümüne bakın.
+
 ## InjectEngineContext {#injectenginecontext}
 
 ### toWidth {#towidth}
@@ -154,7 +159,7 @@ Yalnızca canlı varlıkları sabit bir sırayla tutar; kaldırılan varlıklar�
 `4.2.0` sürümünden itibaren mantıksal adları, her adın sözlüklerden türetilip türetilmediğini, değer alanı bağlantılarını ve [Sözlük](../../guide/guides/dictionary.md) sekmesinin sözcüklerini, terimlerini ve değer alanlarını da tutar.  
 `4.2.0` sürümünden itibaren bir varlığın her boş metin alanını, hiçbir şey tutmayan her `doc` listesini ve koleksiyonu ve tüm koleksiyonlar boş olduğunda `collections` alanının kendisini de dışarıda bırakır.  
 İki boşlukla girintilenir, her sözlük satırını ayrı bir satırda tutar ve bir satır sonuyla biter; böylece aynı belge her zaman aynı baytları verir.  
-Neleri tuttuğu için [Depolama biçimi ve çalışma zamanı değeri](./schema.md#storage-form-and-runtime-value) bölümüne bakın.
+Neleri tuttuğu için [Depolama biçimi](./schema.md#storage-form) bölümüne bakın.
 
 [Kilidi](../../guide/guides/settings.md#lock) etkin olan her ayar kilitlendiği değerle, diğer her ayar ise o anki hâliyle yazılır.  
 `Viewport` kilidi görünümün başlangıç noktasını ve yakınlaştırma düzeyini birlikte kapsar; sekmenin, Kod oluşturucu dilinin, her iki ad biçiminin ve tırnak türünün ise her birinin kendi kilidi vardır.  
@@ -172,6 +177,7 @@ const snapshot = replicationStore.runtimeValue;
 ```
 
 Sonradan katılan bir düzenleyiciyi veya başka bir depoyu, onun `setInitialValue` yöntemiyle başlatmak için bunu kullanın. [Ortak düzenleme](./collaborative-editing.md) sayfasına bakın.  
+Bir replikada [getLWW](./collaborative-editing.md#getlww) veya [getVersion](./collaborative-editing.md#getversion) yoktur, bu yüzden `runtimeValue` ile ortak çalışma kayıtlarını devretmez: ondan başlatılan bir düzenleyici bunları, [Ortak çalışanı başlatma](./collaborative-editing.md#seeding-a-collaborator) bölümünün anlattığı gibi çalışan düzenleyicilerden alır.  
 Bunu asla dosya olarak depolamayın: Kaldırılan varlıkları taşır ve yayımlanan [JSON Schema](./schema.md#json-schema) onu reddeder.  
 Sonradan gönderilen bir kaldırma geri alma işleminin, bu değerle başlatılan depoda varlığı eksiksiz geri getirmesini sağlayan da bu kaldırılan varlıklardır.  
 Bu varlıklar, belge bir sonraki sefer kendi dosyasından açılana kadar kalır; dosyanın biçimi onları içermez.
@@ -230,7 +236,7 @@ Aboneliği sonlandırmak için döndürülen işlevi çağırın.
 Önceki `change` olayından ya da yüklemeden bu yana gelen eylemler `value` değerini bayt bayt olduğu gibi bıraktığında `changed` değeri `false` olur.
 
 Bir [kilidin](../../guide/guides/settings.md#lock) `value` dışında bıraktığı bir değişiklik yine de `change` olayını tetikler ve `changed` değeri `false` olur; bu yüzden yalnızca `changed` değeri `true` olduğunda yazın.  
-Bunlar `Viewport` kilitliyken yapılan bir kaydırma veya yakınlaştırma, `Canvas Type` kilitliyken yapılan bir sekme değişikliği ve kendi kilidi etkinken Kod oluşturucu dilinin, bir ad biçiminin ya da tırnak türünün değiştirilmesidir.  
+Bunlar `Viewport` kilitliyken yapılan bir kaydırma veya yakınlaştırma, `Canvas Type` kilitliyken yapılan bir sekme değişikliği ve kendi kilidi etkinken Kod oluşturucu dilinin, bir ad biçiminin ya da tırnak türünün değiştirilmesidir; bu sonuncusunu `5.1.0` sürümünden itibaren yalnızca `5.1.0` sürümünden önceki bir düzenleyici hâlâ gönderir ([dispatch, dispatchSync](#dispatch-dispatchsync) bölümüne bakın).  
 `4.2.0` sürümünden itibaren `Name View` kilitliyken yapılan bir Ad görünümü değişikliği de bunlardandır: Düzenleyici onu yine gönderir, ancak replika onu diğer düzenleyicilerin yaptığı gibi atar.  
 Salt okunur bir düzenleyicide yapılan bir Ad görünümü değişikliği de, kilidi ne olursa olsun, aynı şekilde atılır.  
 Öğenin [change](../erd-editor-element.md#change) olayı böyle bir değişikliği dışarıda bırakır, ancak replika onu yine de bildirir.  
@@ -282,6 +288,23 @@ Oturumdaki `4.2.0` sürümünden önceki bir düzenleyici, `4.2.0` sürümlü bi
 O düzenleyicide Şema SQL, GraphQL, DBML veya AML ile yapılan bir `Import` işlemi – `Import and Add` değil – replikanın sözcüklerini, terimlerini ve değer alanlarını boşaltır.  
 Bu düzenleyicinin bir yüklemeyi, bir `Import` işlemini veya `clear()` çağrısını geri alması, belgenin kendi kopyasını mantıksal adlar, değer alanı bağlantıları ve sözlükler olmadan replikaya yükler. [Sürümleri karıştırma](./collaborative-editing.md#mixing-releases) bölümüne bakın.  
 `@dineug/erd-editor/engine.js` giriş noktası öncekiyle aynı `createReplicationStore`, `ReplicationStore` ve `ReplicationChange` öğelerini dışa aktarır; `createReplicationStore` de aynı bağlamı alır.
+
+`5.1.0` sürümü hiçbir eylem türü eklemez ve `@dineug/erd-editor/engine.js` dosyasının hiçbir dışa aktarımını değiştirmez; bu yüzden `4.2.0` veya sonraki bir sürümdeki bir replika, bir `5.1.0` düzenleyicisinin gönderdiği her değişikliği yine tutar.  
+`5.1.0` sürümünden itibaren replika, aynı anda yapılan düzenlemeleri `5.1.0` düzenleyicilerinin yaptığı gibi çözümler; [Eşzamanlı düzenlemeler](./collaborative-editing.md#concurrent-edits) bölümüne bakın.  
+Bir tablonun konumu, bir notun ve bir tablo grubunun konumu ile boyutu ve görünümün başlangıç noktası ile yakınlaştırma düzeyi için bir sürüm tutar.  
+Bir `5.1.0` düzenleyicisi sürüklemeyi, kaydırmayı veya yakınlaştırmayı bittiği yer olarak `table.moveTo`, `memo.moveTo`, `tableGroup.moveTo`, `settings.scrollTo` ve `settings.changeZoomLevel` aracılığıyla gönderir; replika bunların her birini ve her `memo.resize` ile `tableGroup.resize` eylemini yalnızca sürümü elindekinin altında olmadığında alır.  
+Bu yüzden bu düzenleyicilerden ikisi bir tabloyu, notu veya tablo grubunu aynı anda taşıdığında ya da yeniden boyutlandırdığında, replika onu hangi sırayla duyarsa duysun hepsinin gösterdiği noktada ve boyutta kaydeder; taşıma katmanının iki kez ilettiği bir sürükleme, kaydırma veya yakınlaştırma da hiçbir şeyi iki kez taşımaz.  
+`Viewport` kilitli değilken replika başlangıç noktasını ve yakınlaştırma düzeyini, her birini en büyük sürümlü yazmadan alarak, o yazmayı yapan düzenleyicinin durduğu yerde kaydeder.  
+Bir yakınlaştırma başlangıç noktasını da kaydırır, bu yüzden iki düzenleyicinin aynı anda yaptığı bir kaydırma ve bir yakınlaştırma, birinin başlangıç noktası ile diğerinin yakınlaştırma düzeyi olarak kaydedilebilir.  
+`5.1.0` sürümünden önce replika, her düzenleyicinin kaydırma ve yakınlaştırma adımlarını tek bir görünümün üzerine ekliyordu.
+
+`5.1.0` sürümünden önceki bir düzenleyicinin sürükleme, kaydırma veya yakınlaştırma için gönderdiği mesafeler (`table.move`, `memo.move`, `tableGroup.move`, `settings.streamScrollTo` ve `settings.streamZoomLevel`) sürümlerin dışında olmak üzere replikanın tuttuğuna hâlâ eklenir.  
+Bir renk değişikliği yine sürümsüz gelir: replika, her düzenleyici gibi, ona kendi sürümünü damgalar ve en son duyduğu rengi tutar; bu yüzden aynı tablonun, notun veya tablo grubunun aynı anda yapılan iki yeniden renklendirmesi, bir düzenleyicinin gösterdiğinden farklı kaydedilebilir.  
+`5.1.0` sürümünden önceki bir replika noktaları ve boyutları geldikleri sırayla uygular, bu yüzden bir tabloyu `5.1.0` düzenleyicilerinin gösterdiğinden başka bir yerde kaydedebilir.  
+Aynı anda yapılan düzenlemelerin aynı sonuçla bitmesi için, [Eşzamanlı düzenlemeler](./collaborative-editing.md#concurrent-edits) bölümünün saydığı istisnalar dışında, oturumdaki her düzenleyiciyi ve replikayı `5.1.0` veya sonraki bir sürümde tutun.
+
+`5.1.0` sürümünden itibaren bir düzenleyici Kod oluşturucu dilinin, bir ad biçiminin veya tırnak türünün değişikliğini yalnızca o ayarın kilidi devre dışıyken, eylem verisinde `shared: true` işaretiyle gönderir ve replika, düzenleyicilerin yaptığı gibi işaretli olanların hepsini uygular; [Ortak düzenleme](./collaborative-editing.md) sayfasına bakın.  
+Replika, `5.1.0` sürümünden önceki bir düzenleyicinin kilidi ne olursa olsun gönderdiği işaretsiz bir değişikliği yalnızca ayar kendi tarafında kilitli değilken uygular, ayar kilitliyken atar ([on@change](#onchange) bölümüne bakın).
 
 `4.0.0` sürümünden itibaren her iki yöntem, başka bir düzenleyici oturuma katıldığında bir düzenleyicinin yanıt olarak gönderdiği ortak çalışma kayıtlarını taşıyan `editor.mergeLWW` eylemini de uygular; böylece replika eşzamanlı düzenlemeleri düzenleyicilerin yaptığı gibi çözümler.  
 Bu eylem `value` değerinin hiçbir baytını değiştirmez ve `change` olayını tetiklemez.  

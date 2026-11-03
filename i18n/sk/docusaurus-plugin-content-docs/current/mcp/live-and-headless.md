@@ -37,6 +37,38 @@ Jeho úpravy sa okamžite dostanú do každého editora, v ktorom je dokument ot
 
 Editor s rozšírením pre VS Code starším ako verzia `4.2.0` alebo s doplnkom pre Obsidian či JetBrains starším ako verzia `1.2.0` naďalej prijíma úpravy agenta naživo, ale logické názvy, prepojenia s doménami a riadky slovníkov, ktoré agent zapíše, nezobrazuje ani neuchováva – pozrite si časť [Aktualizácia](./installation.md#updating).
 
+S rozšírením pre VS Code vo verzii `4.3.0` alebo novšej alebo s doplnkom pre Obsidian či JetBrains vo verzii `1.3.0` alebo novšej import v režime `replace` a jeho vrátenie späť nástrojom `erd_undo` či opätovné vykonanie nástrojom `erd_redo` ukončia vaše kreslenie vzťahu v editore bez ohľadu na verziu servera – pozrite si časť [Vytvorenie vzťahu](../guide/guides/editing-start.md#relationship-creation).
+Pred týmito verziami kreslenie zostalo aktívne a kliknutie na tabuľku mohlo pridať vzťah z tabuľky, ktorá už v diagrame nebola.
+Import v režime `append` kreslenie ponechá aktívne.
+Editor poznámky, názvu skupiny tabuliek alebo bunky, ktorý máte otvorený, zostane otvorený, kým diagram stále obsahuje a zobrazuje to, čo upravuje.
+
+### Úpravy urobené v tom istom okamihu {#edits-made-at-the-same-moment}
+
+So serverom vo verzii `1.2.0` alebo novšej a v editore s rozšírením pre VS Code vo verzii `4.3.0` alebo novšej alebo s doplnkom pre Obsidian či JetBrains vo verzii `1.3.0` alebo novšej úpravy tej istej veci, ktoré vy a agent urobíte v tom istom okamihu, skončia rovnako v editore, v súbore, ktorý ukladá, aj v tom, čo agentovi poskytujú nástroje `erd_list`, `erd_get` a `erd_read`.
+To zahŕňa názov alebo iné pole tabuľky, stĺpca, vzťahu, indexu, poznámky, skupiny tabuliek alebo riadka slovníka, názov databázy a [skripty pred tabuľkami a za tabuľkami](../guide/guides/schema-sql.md#before-and-after-scripts) a polohu alebo veľkosť tabuľky, poznámky alebo skupiny tabuliek, ale nie farbu, poradie stĺpcov v tabuľke alebo indexe ani databázu.
+Dve úpravy jedného názvu alebo poľa, dva presuny alebo dve zmeny veľkosti skončia na jednej z týchto dvoch hodnôt, nikdy na ich zmesi: vyhrá úprava urobená po tom, ako k jej strane dorazila druhá, a z dvoch úprav urobených v úplne rovnakom okamihu vyhrá jedna, na každej strane tá istá, nech dorazí ktorákoľvek ako prvá.
+
+Dve zmeny farby jednej tabuľky, poznámky alebo skupiny tabuliek urobené v tom istom okamihu, napríklad vaša zmena a zmena, ktorú agent urobí nástrojom `erd_change_table_color`, môžu skončiť rozdielne či dokonca navzájom vymenené, keďže každá strana si ponechá farbu, ktorú zaznamenala naposledy.
+Zmena poradia stĺpcov, vaša alebo agentova nástrojom `erd_move_column` či `erd_move_index_column`, sa na každej strane aplikuje v poradí, v akom dorazí, takže dve urobené v tom istom okamihu v jednej tabuľke alebo indexe môžu nechať stĺpce v rôznom poradí.
+Zmena databázy, vaša alebo agentova nástrojom `erd_set_database`, sa tiež aplikuje v poradí, v akom dorazí, takže dve urobené v tom istom okamihu môžu nechať editor a agenta na rôznych databázach.
+
+Vaše ťahanie a agentove volania nástrojov `erd_move_table`, `erd_move_tables`, `erd_move_memo`, `erd_move_table_group` a `erd_sort_tables` sa prenášajú ako body, v ktorých končia, takže dva presuny jednej tabuľky, poznámky alebo skupiny tabuliek skončia tam, kam ju umiestnil jeden z nich, nikdy na súčte oboch.
+Nástroj `erd_move_table_group` odošle bod skupiny a každej z jej tabuliek v jednej dávke, rovnako ako ťahanie za záhlavie skupiny.
+Zmena veľkosti zapíše polohu a veľkosť spolu, takže presun a zmena veľkosti jednej poznámky alebo skupiny tabuliek urobené v tom istom okamihu, napríklad nástroj `erd_resize_memo`, kým túto poznámku ťaháte, skončia na jednom obdĺžniku na oboch stranách: zo zmeny veľkosti alebo, keď vyhrá presun, s bodom presunu a veľkosťou zo zmeny veľkosti.
+Presun menší ako 20 pixelov, ktorý nevytvorí záznam v histórii zmien, sa tiež odošle ako bod, v ktorom končí, takže môže zvíťaziť nad presunom druhej strany, či už ide o krátky presun nástrojom `erd_move_table_group`, alebo o krátke ťahanie z vašej strany, napríklad kliknutie, ktoré posunie tabuľku o niekoľko pixelov.
+
+Staršie verzie sa naďalej pripájajú, keďže server vo verzii `1.2.0` používa protokol hubu verzie 2, rovnako ako verzie `1.0.0` až `1.1.1`.
+So serverom starším ako verzia `1.2.0`, rozšírením starším ako verzia `4.3.0` alebo doplnkom starším ako verzia `1.3.0` môže presun alebo zmena veľkosti jednej tabuľky, poznámky alebo skupiny tabuliek urobená v tom istom okamihu nechať editor a agenta s rôznymi polohami.
+Starší editor odošle vaše ťahanie ako prejdenú vzdialenosť a server starší ako verzia `1.2.0` tak odošle aj presun nástrojom `erd_move_table_group`.
+Druhá strana túto vzdialenosť pripočíta k bodu, ktorý uchováva.
+Staršia strana navyše aplikuje body druhej strany v poradí, v akom dorazia.
+Agent potom číta a upravuje z vlastnej polohy tejto tabuľky, poznámky alebo skupiny tabuliek, nie z tej, ktorú editor zobrazuje a ukladá.
+To trvá, kým sa neskorší presun tohto objektu neprenesie ako bod, napríklad vaše ťahanie v novšom editore alebo agentov presun nástrojom `erd_move_table`, alebo kým sa agent znova nepripojí k dokumentu, napríklad potom, čo ho editor odpojil, alebo po 30 minútach bez volania na dokument.
+Okrem farby, poradia stĺpcov a databázy skončí názov alebo iné pole zmenené v tom istom okamihu rovnako aj vtedy, keď je staršia iba jedna strana, takmer vždy s úpravou novšej strany.
+Ak sú staršie obe strany, môžu tieto dve úpravy naďalej skončiť rozdielne.
+
+Nič z toho sa netýka úpravy v režime Headless, ktorá zapisuje súbor samostatne.
+
 ### Ukladanie {#saving}
 
 Každý editor ukladá úpravy agenta rovnakým spôsobom ako vaše vlastné.

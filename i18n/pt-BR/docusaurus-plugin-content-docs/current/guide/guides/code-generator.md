@@ -25,7 +25,7 @@ Quando a linguagem selecionada ignora `Database` ou os estilos de nome, eles con
 `Save file` e `Copy` ficam no rodapé do painel — consulte [Salvar ou copiar o resultado](#saving-or-copying-the-result).
 
 Estas são as próprias configurações do diagrama, as mesmas que o menu de contexto e a pesquisa rápida também alteram. `Database` é salvo no arquivo como qualquer edição.  
-`Language`, `Table Name Case`, `Column Name Case` e `Bracket` só são salvos enquanto o respectivo bloqueio na aba Configurações está desativado (`Bracket Type` para `Bracket`), e um diagrama novo tem todos os bloqueios ativados. Enquanto um bloqueio está ativado, uma alteração reescreve o código na sua tela, mas o arquivo mantém o valor bloqueado e o diagrama é reaberto com ele. O painel não mostra nenhum sinal de bloqueio; para manter uma escolha no arquivo, desative o bloqueio dela — consulte [Bloqueio](./settings.md#lock).  
+`Language`, `Table Name Case`, `Column Name Case` e `Bracket` só são salvos enquanto o respectivo bloqueio na aba Configurações está desativado (`Bracket Type` para `Bracket`), e um diagrama novo tem todos os bloqueios ativados. Enquanto um bloqueio está ativado, uma alteração reescreve o código somente no seu editor: os outros editores abertos no diagrama mantêm o seu, e o arquivo mantém o valor bloqueado, então o diagrama é reaberto com ele. O painel não mostra nenhum sinal de bloqueio; para manter uma escolha no arquivo e dá-la a todos os editores, desative o bloqueio dela — consulte [Bloqueio](./settings.md#lock).  
 Em um editor somente leitura, a legenda é `This window only`, pois uma alteração ali chega apenas a essa janela — consulte [Editores somente leitura](#read-only-editors).
 
 ## Linguagem {#language}
@@ -144,5 +144,5 @@ O texto também pode ser selecionado, então é possível pegar só a parte de q
 
 Em um editor [`readonly`](../../api/erd-editor-element.md#readonly), as listas do painel, o menu de contexto e a pesquisa rápida ainda alteram `Language`, `Database`, `Table Name Case`, `Column Name Case` e `Bracket`, mas apenas naquela janela, então o painel dá a elas a legenda `This window only` em vez de `Saved in the document`.  
 Uma alteração reescreve o código naquela tela e não é salva no arquivo, nem compartilhada com colaboradores, nem registrada para desfazer, quaisquer que sejam os bloqueios, e uma alteração de um colaborador em uma configuração que você escolheu mantém a sua escolha na tela. `Database` e `Bracket` são também configurações da aba Esquema SQL, então uma escolha aqui aparece lá, na mesma janela — consulte [Editores somente leitura](./schema-sql.md#read-only-editors).  
-Quando o editor volta a ser editável, as configurações do documento retornam e o código é escrito para elas.  
+Quando o editor volta a ser editável, cada configuração que você alterou ali volta ao que o editor mostrava antes, com qualquer alteração que um colaborador tenha feito desde então, e o código é escrito para elas — consulte [Editores somente leitura](./settings.md#read-only-editors) em Configurações.  
 `Save file` e `Copy` salvam e copiam o código mostrado.

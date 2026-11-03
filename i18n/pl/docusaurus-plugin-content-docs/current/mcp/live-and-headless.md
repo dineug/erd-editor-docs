@@ -37,6 +37,38 @@ Odczyt nigdy nie otwiera edytora. Zmiana otwiera dokument w ERD Editor, jeśli n
 
 Edytor z rozszerzeniem VS Code w wersji starszej niż `4.2.0` albo z wtyczką Obsidian lub JetBrains w wersji starszej niż `1.2.0` nadal przyjmuje zmiany agenta na żywo, ale ani nie wyświetla, ani nie zachowuje nazw logicznych, powiązań z domeną i wierszy słowników zapisywanych przez agenta – zobacz sekcję [Aktualizacja](./installation.md#updating).
 
+Przy rozszerzeniu VS Code w wersji `4.3.0` lub nowszej albo wtyczce Obsidian lub JetBrains w wersji `1.3.0` lub nowszej import w trybie `replace` oraz cofnięcie lub ponowienie takiego importu wywołaniem `erd_undo` lub `erd_redo` kończą rysowanie relacji, którą tworzysz w edytorze, niezależnie od wersji serwera – zobacz sekcję [Tworzenie relacji](../guide/guides/editing-start.md#relationship-creation).
+Przed tymi wersjami rysowanie pozostawało aktywne, a kliknięcie tabeli mogło dodać relację z tabeli, której nie było już w diagramie.
+Import w trybie `append` pozostawia rysowanie aktywne.
+Pole edycji notatki, nazwy grupy tabel lub komórki, które masz otwarte, pozostaje otwarte, dopóki diagram nadal zawiera to, co ono edytuje, i to wyświetla.
+
+### Edycje wykonane w tej samej chwili {#edits-made-at-the-same-moment}
+
+Przy serwerze w wersji `1.2.0` lub nowszej oraz, w edytorze, rozszerzeniu VS Code w wersji `4.3.0` lub nowszej albo wtyczce Obsidian lub JetBrains w wersji `1.3.0` lub nowszej edycje, które ty i agent wykonujecie w tej samej chwili na tej samej rzeczy, kończą tak samo w edytorze, w zapisywanym przez niego pliku i w tym, co agentowi zwracają narzędzia `erd_list`, `erd_get` i `erd_read`.
+Dotyczy to nazwy lub innego pola tabeli, kolumny, relacji, indeksu, notatki, grupy tabel lub wiersza słownika, nazwy bazy danych i [skryptów przed tabelami i po nich](../guide/guides/schema-sql.md#before-and-after-scripts) oraz położenia lub rozmiaru tabeli, notatki lub grupy tabel, ale nie koloru, kolejności kolumn w tabeli lub indeksie ani bazy danych.
+Dwie edycje jednej nazwy lub jednego pola, dwa przesunięcia albo dwie zmiany rozmiaru kończą się na jednej z tych dwóch, nigdy na połączeniu obu: wygrywa edycja wykonana po tym, jak druga dotarła na jej stronę, a z dwóch wykonanych dokładnie w tej samej chwili wygrywa jedna, ta sama po każdej stronie, niezależnie od tego, która dotrze pierwsza.
+
+Dwie zmiany koloru tej samej tabeli, notatki lub grupy tabel wykonane w tej samej chwili, na przykład twoja i `erd_change_table_color` agenta, mogą zakończyć się różnie, a nawet zamienić miejscami, ponieważ każda strona zachowuje kolor, który otrzymała jako ostatni.
+Zmiana kolejności kolumn, twoja lub `erd_move_column` albo `erd_move_index_column` agenta, jest stosowana po każdej stronie w kolejności nadejścia, więc dwie wykonane w tej samej chwili w jednej tabeli lub jednym indeksie mogą pozostawić kolumny w różnej kolejności.
+Zmiana bazy danych, twoja lub `erd_set_database` agenta, również jest stosowana w kolejności nadejścia, więc dwie wykonane w tej samej chwili mogą pozostawić edytor i agenta przy różnych bazach danych.
+
+Twoje przeciągnięcie oraz `erd_move_table`, `erd_move_tables`, `erd_move_memo`, `erd_move_table_group` i `erd_sort_tables` agenta są przesyłane jako punkty, w których się kończą, więc dwa przesunięcia jednej tabeli, notatki lub grupy tabel kończą się tam, gdzie umieściło ją jedno z nich, a nigdy w sumie obu.
+Narzędzie `erd_move_table_group` wysyła punkt grupy i każdej z jej tabel w jednym pakiecie, tak jak przeciągnięcie paska tytułu grupy.
+Zmiana rozmiaru zapisuje położenie i rozmiar razem, więc przesunięcie i zmiana rozmiaru jednej notatki lub grupy tabel wykonane w tej samej chwili, na przykład `erd_resize_memo` podczas przeciągania tej notatki, kończą się jednym prostokątem po obu stronach: tym ze zmiany rozmiaru albo, gdy wygrywa przesunięcie, punktem przesunięcia z rozmiarem ze zmiany rozmiaru.
+Przesunięcie o mniej niż 20 pikseli, które nie tworzy wpisu w historii cofania, również jest wysyłane jako punkt, w którym się kończy, więc może wygrać z przesunięciem drugiej strony, czy to krótkie przesunięcie narzędziem `erd_move_table_group`, czy twoje krótkie przeciągnięcie, na przykład kliknięcie, które przesuwa tabelę o kilka pikseli.
+
+Starsze wersje nadal się łączą, ponieważ serwer w wersji `1.2.0` posługuje się protokołem huba w wersji 2, tak jak wersje od `1.0.0` do `1.1.1`.
+Przy serwerze w wersji starszej niż `1.2.0`, rozszerzeniu w wersji starszej niż `4.3.0` lub wtyczce w wersji starszej niż `1.3.0` przesunięcie lub zmiana rozmiaru jednej tabeli, notatki lub grupy tabel wykonane w tej samej chwili mogą pozostawić edytor i agenta z różnymi położeniami.
+Starszy edytor wysyła twoje przeciągnięcie jako przebytą odległość, a serwer w wersji starszej niż `1.2.0` w ten sam sposób wysyła przesunięcie narzędziem `erd_move_table_group`.
+Druga strona dodaje tę odległość do punktu, który przechowuje.
+Starsza strona stosuje też punkty drugiej strony w kolejności nadejścia.
+Agent odczytuje wtedy i edytuje tę tabelę, notatkę lub grupę tabel na podstawie własnego jej położenia, a nie tego, które pokazuje i zapisuje edytor.
+Trwa to do późniejszego przesunięcia, które jest przesyłane jako punkt, na przykład twojego przeciągnięcia w nowszym edytorze lub `erd_move_table` agenta, albo do ponownego dołączenia agenta do dokumentu, jak po odłączeniu go przez edytor lub po 30 minutach bez wywołania dotyczącego dokumentu.
+Poza kolorem, kolejnością kolumn i bazą danych nazwa lub inne pole zmienione w tej samej chwili nadal kończy tak samo, gdy starsza jest tylko jedna strona, prawie zawsze według edycji nowszej strony.
+Gdy starsze są obie strony, ich wyniki nadal mogą się różnić.
+
+Nic z tego nie dotyczy edycji w trybie Headless, która zapisuje wyłącznie plik.
+
 ### Zapisywanie {#saving}
 
 Każdy edytor zapisuje zmiany agenta tak, jak zapisuje twoje.

@@ -37,6 +37,38 @@ O citire nu deschide niciodată un editor. O editare deschide documentul în ERD
 
 Un editor cu o extensie pentru VS Code anterioară versiunii `4.2.0` sau cu un plugin pentru Obsidian ori JetBrains anterior versiunii `1.2.0` preia în continuare în direct editările agentului, dar nici nu afișează, nici nu păstrează numele logice, legăturile cu domeniile și rândurile dicționarelor pe care le scrie agentul (consultați [Actualizarea](./installation.md#updating)).
 
+Cu extensia pentru VS Code `4.3.0` sau o versiune ulterioară, ori cu pluginul pentru Obsidian sau JetBrains `1.3.0` sau o versiune ulterioară, un import în modul `replace` și un `erd_undo` sau `erd_redo` al unuia încheie o relație pe care o trasați în editor, indiferent de versiunea serverului (consultați [Crearea relațiilor](../guide/guides/editing-start.md#relationship-creation)).
+Înainte de acele versiuni, trasarea rămânea activă, iar un clic pe un tabel putea adăuga o relație de la un tabel care nu mai era în diagramă.
+Un import în modul `append` lasă trasarea activă.
+Un editor de notă, de nume de grup de tabele sau de celulă pe care îl aveți deschis rămâne deschis cât timp diagrama conține și arată în continuare ce editează.
+
+### Editări făcute în același moment {#edits-made-at-the-same-moment}
+
+Cu serverul `1.2.0` sau o versiune ulterioară și, în editor, cu extensia pentru VS Code `4.3.0` sau o versiune ulterioară ori cu pluginul pentru Obsidian sau JetBrains `1.3.0` sau o versiune ulterioară, editările pe care dumneavoastră și agentul le faceți aceluiași lucru în același moment ajung la fel în editor, în fișierul pe care îl salvează și în ceea ce îi oferă agentului `erd_list`, `erd_get` și `erd_read`.
+Aceasta cuprinde un nume sau un alt câmp al unui tabel, al unei coloane, al unei relații, al unui index, al unei note, al unui grup de tabele sau al unui rând de dicționar, numele bazei de date și [scripturile înainte și după tabele](../guide/guides/schema-sql.md#before-and-after-scripts), precum și poziția sau dimensiunea unui tabel, a unei note sau a unui grup de tabele, dar nu o culoare, ordinea coloanelor dintr-un tabel sau dintr-un index și nici baza de date.
+Două editări ale aceluiași nume sau câmp, două mutări ori două redimensionări ajung la una dintre cele două, niciodată la un amestec: câștigă editarea făcută după ce cealaltă a ajuns pe partea sa, iar dintre două făcute chiar în același moment câștigă una, aceeași pe fiecare parte, indiferent care sosește prima.
+
+Două schimbări de culoare ale aceluiași tabel, ale aceleiași note sau ale aceluiași grup de tabele, făcute în același moment, de exemplu a dumneavoastră și `erd_change_table_color` al agentului, pot ajunge diferit, chiar inversate, deoarece fiecare parte păstrează culoarea pe care a primit-o ultima.
+O reordonare a coloanelor, a dumneavoastră sau `erd_move_column` ori `erd_move_index_column` ale agentului, se aplică pe fiecare parte în ordinea în care sosește, așa că două reordonări făcute în același moment în același tabel sau index pot lăsa coloanele în ordini diferite.
+O schimbare a bazei de date, a dumneavoastră sau `erd_set_database` al agentului, se aplică tot în ordinea în care sosește, așa că două schimbări făcute în același moment pot lăsa editorul și agentul pe baze de date diferite.
+
+Tragerea dumneavoastră și `erd_move_table`, `erd_move_tables`, `erd_move_memo`, `erd_move_table_group` și `erd_sort_tables` ale agentului circulă ca punctele în care se încheie, așa că două mutări ale aceluiași tabel, ale aceleiași note sau ale aceluiași grup de tabele ajung acolo unde l-a pus una dintre ele, niciodată la suma celor două.
+`erd_move_table_group` trimite punctul grupului și pe cel al fiecăruia dintre tabelele sale într-un singur lot, așa cum face tragerea barei de titlu a grupului.
+O redimensionare scrie poziția și dimensiunea împreună, așa că o mutare și o redimensionare ale aceleiași note sau ale aceluiași grup de tabele făcute în același moment, de exemplu `erd_resize_memo` în timp ce trageți acea notă, ajung la același dreptunghi pe ambele părți: cel al redimensionării sau, când câștigă mutarea, punctul mutării cu dimensiunea redimensionării.
+O mutare sub 20 de pixeli, care nu creează nicio intrare de anulare, pleacă și ea ca punctul în care se încheie, așa că poate câștiga în fața mutării celeilalte părți, fie că este un `erd_move_table_group` scurt, fie o tragere scurtă a dumneavoastră, de exemplu un clic care mișcă un tabel cu câțiva pixeli.
+
+Versiunile mai vechi se conectează în continuare, deoarece serverul `1.2.0` vorbește protocolul 2 al hubului, ca versiunile de la `1.0.0` până la `1.1.1`.
+Cu un server anterior versiunii `1.2.0`, o extensie anterioară versiunii `4.3.0` sau un plugin anterior versiunii `1.3.0`, o mutare sau o redimensionare a aceluiași tabel, a aceleiași note sau a aceluiași grup de tabele făcută în același moment poate lăsa editorul și agentul cu poziții diferite.
+Un editor mai vechi trimite tragerea dumneavoastră ca distanța parcursă, iar un server anterior versiunii `1.2.0` trimite la fel și `erd_move_table_group`.
+Cealaltă parte adaugă acea distanță la punctul pe care îl deține.
+Partea mai veche aplică și punctele celeilalte părți în ordinea în care sosesc.
+Agentul citește și editează atunci de la propria poziție pentru acel tabel, acea notă sau acel grup de tabele, nu de la cea pe care o arată și o salvează editorul.
+Aceasta durează până când o mutare ulterioară a sa circulă ca punct, de exemplu tragerea dumneavoastră într-un editor mai nou sau `erd_move_table` al agentului, ori până când agentul se alătură din nou documentului, ca după ce editorul l-a eliminat sau după 30 de minute fără niciun apel asupra documentului.
+În afară de o culoare, de ordinea coloanelor și de baza de date, un nume sau un alt câmp schimbat în același moment ajunge în continuare la fel când doar una dintre părți este mai veche, aproape întotdeauna la editarea părții mai noi.
+Când ambele părți sunt mai vechi, cele două pot ajunge totuși diferit.
+
+Nimic din toate acestea nu se aplică unei editări fără interfață, care scrie doar fișierul.
+
 ### Salvarea {#saving}
 
 Fiecare editor salvează editările agentului așa cum le salvează pe ale dumneavoastră.

@@ -67,7 +67,8 @@ Changes that arrive from another editor are not recorded either, so Undo reverts
 
 Undoing an `Import`, which replaces the whole diagram, brings back the earlier diagram as the editor held it when you imported, with each [lock](./settings.md#lock) on or off and each locked value as they were then.  
 If that diagram had `Viewport` locked, the view and the zoom go back to the locked view, where the diagram opens, rather than to where you were. With its `Viewport` unlocked, they go back to where you were when you imported. The other locked settings, such as the tab you are on, the Code Generator language, or the Name View, stay as they are on your screen.  
-A new diagram starts with every lock on. Unlock `Viewport` before you import to keep your view through such an undo. Unlocking it afterwards, or importing a JSON file whose own `Viewport` lock is off, does not change where the undo takes you.
+A new diagram starts with every lock on. Unlock `Viewport` before you import to keep your view through such an undo. Unlocking it afterwards, or importing a JSON file whose own `Viewport` lock is off, does not change where the undo takes you.  
+Undoing or redoing an `Import` also ends a relationship being drawn — see [Relationship Creation](./editing-start.md#relationship-creation).
 
 Undoing the import of a JSON file also brings back the words, terms, and domains the earlier diagram had. A Schema SQL, GraphQL, DBML, or AML import keeps the dictionaries, so its undo and redo leave them as they stand, edits made on the Dictionary tab since included.
 

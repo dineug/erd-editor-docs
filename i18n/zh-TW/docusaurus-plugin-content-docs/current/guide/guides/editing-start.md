@@ -83,7 +83,9 @@ serial 鍵是例外：其外鍵會採用該 serial 所儲存的整數類型，�
 每個外鍵欄位都以其鍵命名：像 `id` 這樣只有一個單字的名稱，前面會加上父資料表的名稱（`user_id`），像 `member_id` 這樣由多個單字組成的名稱會保持不變，子資料表已有的名稱則會加上編號（`user_id_2`），請參閱[外鍵欄位名稱](./relationship-editing.md#foreign-key-column-names)。  
 在同一個資料表上按一下兩次，會繪製自我參照關聯。  
 新關聯的 `On Delete` 和 `On Update` 一開始都是 `Not set`；從關聯的右鍵選單即可變更，請參閱 [ON DELETE 與 ON UPDATE](./relationship-editing.md#on-delete-and-on-update)。  
-按 `Escape` 或再按一次相同的快速鍵即可取消。取消時選取範圍會保持不變，再按一次 `Escape` 才會將其清除。
+按 `Escape` 或再按一次相同的快速鍵即可取消。取消時選取範圍會保持不變，再按一次 `Escape` 才會將其清除。  
+在圖表被取代時，繪製也會結束，無論只是進入了某種類型的繪製狀態，還是已選取父資料表：包括 `Import` 取代圖表、對它的復原或重做、協作者或程式碼代理程式執行其中任一項，以及圖表被重新載入編輯器時，例如 Obsidian 在檔案於外部變更時所做的。  
+結構描述 SQL、GraphQL、DBML 或 AML 的匯入會在資料表放置完成後才結束繪製，而不是在選取檔案時。[`Import and Add`](./file-import-export.md#import-and-add) 則會讓繪製狀態維持。
 
 選定父資料表後，將指標指向可作為關聯終點的資料表時，會以外框標示該資料表，並在其旁邊顯示兩個按鈕：
 

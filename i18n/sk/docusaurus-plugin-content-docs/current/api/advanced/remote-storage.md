@@ -1,5 +1,5 @@
 ---
-sidebar_position: 2
+sidebar_position: 3
 description: Replikácia spusteného editora do úložiska bez používateľského rozhrania mimo hlavného vlákna a serializácia dokumentu na uloženie.
 ---
 
@@ -88,6 +88,11 @@ Od verzie `4.2.0` to isté platí pre slovo, termín alebo doménu odstránenú 
 Keď niektorý editor vráti odstránenie späť, replika inicializovaná bez tohto riadka ho znova uvedie prázdny, a keďže `value` prázdny riadok vynecháva, replika uloží dokument bez neho.  
 Pri doméne zostanú v tejto replike neprepojené aj stĺpce a termíny, ktoré s ňou boli prepojené, pretože replika tieto prepojenia nikdy neuchovávala a vrátenie späť ich neodošle.
 
+Od verzie `5.1.0` môže balík [`@dineug/erd-editor-yjs`](./yjs.md) udržiavať editory zosúladené aj prostredníctvom miestnosti Yjs.  
+Replika, ktorú ako vyššie napája element previazaný s miestnosťou, dostáva iba úpravy urobené v tomto elemente, nikdy nie tie, ktoré doň prinesie miestnosť: tie prídu do elementu ako úpravy iného editora a zdieľané úložisko nikdy neposiela ďalej to, čo prijalo.  
+Dokument miestnosti uložíte tak, že uložíte `value` previazaného elementu alebo previazaného úložiska účastníka, ako opisuje časť [Čo miestnosť obsahuje](./yjs.md#what-the-room-holds).  
+Poskytovateľ trvalého ukladania Yjs ukladá samotnú miestnosť, ktorá obsahuje hodnotu za behu a úpravy urobené od nej, nie súbor; pozrite si časť [Limity](./yjs.md#limits).
+
 ## InjectEngineContext {#injectenginecontext}
 
 ### toWidth {#towidth}
@@ -154,7 +159,7 @@ Obsahuje iba aktuálne entity v pevnom poradí, bez odstránených entít, bez p
 Od verzie `4.2.0` obsahuje aj logické názvy, informáciu o tom, či bol každý názov odvodený zo slovníkov, prepojenia s doménami a slová, termíny a domény z karty [Slovník](../../guide/guides/dictionary.md).  
 Od verzie `4.2.0` zároveň vynecháva každé prázdne textové pole entity, každý zoznam v objekte `doc` a každú kolekciu, ktoré nič neobsahujú, a samotné pole `collections`, keď sú všetky kolekcie prázdne.  
 Je odsadená o dve medzery, s každým riadkom slovníka na samostatnom riadku, a končí znakom nového riadka, takže rovnaký dokument vždy dá rovnaké bajty.  
-Informácie o tom, čo obsahuje, nájdete v časti [Úložná forma a hodnota za behu](./schema.md#storage-form-and-runtime-value).
+Informácie o tom, čo obsahuje, nájdete v časti [Úložná forma](./schema.md#storage-form).
 
 Každé nastavenie, ktorého [zamknutie](../../guide/guides/settings.md#lock) je zapnuté, sa zapíše s hodnotou, na ktorej bolo zamknuté, a každé iné nastavenie tak, ako práve je.  
 Zamknutie `Viewport` pokrýva počiatok zobrazenia a úroveň priblíženia spoločne a vlastné zamknutie má karta, jazyk na karte Generátor kódu, každý z oboch štýlov názvov aj typ úvodzoviek.  
@@ -172,6 +177,7 @@ const snapshot = replicationStore.runtimeValue;
 ```
 
 Pomocou tejto hodnoty inicializujte editor alebo ďalšie úložisko, ktoré sa pripojí neskôr, cez jeho metódu `setInitialValue`; pozrite si stránku [Spoločné úpravy](./collaborative-editing.md).  
+Replika nemá metódy [getLWW](./collaborative-editing.md#getlww) ani [getVersion](./collaborative-editing.md#getversion), preto pomocou `runtimeValue` neodovzdá registre spolupráce: editor inicializovaný z nej ich prevezme od bežiacich editorov, ako opisuje časť [Inicializácia spolupracovníka](./collaborative-editing.md#seeding-a-collaborator).  
 Nikdy ju neukladajte ako súbor: obsahuje odstránené entity a publikovaná [JSON Schema](./schema.md#json-schema) ju odmietne.  
 Práve vďaka týmto odstráneným entitám dokáže neskôr odoslané vrátenie odstránenia späť obnoviť celú entitu v úložisku, ktoré sa z nej inicializovalo.  
 Zostávajú tam, kým sa dokument nabudúce neotvorí zo svojho súboru, ktorého forma ich vynecháva.
@@ -230,7 +236,7 @@ Pole `value` je serializovaný dokument v úložnej forme, ten istý reťazec, a
 Pole `changed` má hodnotu `false`, keď akcie od predchádzajúcej udalosti `change` alebo od načítania ponechali pole `value` bajt po bajte bez zmeny.
 
 Zmena, ktorú [zamknutie](../../guide/guides/settings.md#lock) z hodnoty `value` vynechá, aj tak vyvolá udalosť `change` s poľom `changed` nastaveným na `false`, preto zapisujte iba vtedy, keď má pole `changed` hodnotu `true`.  
-Ide o posunutie alebo zmenu priblíženia, kým je zamknuté nastavenie `Viewport`, prepnutie karty, kým je zamknuté nastavenie `Canvas Type`, a zmenu jazyka na karte Generátor kódu, štýlu názvov alebo typu úvodzoviek, kým je zapnuté jeho vlastné zamknutie.  
+Ide o posunutie alebo zmenu priblíženia, kým je zamknuté nastavenie `Viewport`, prepnutie karty, kým je zamknuté nastavenie `Canvas Type`, a zmenu jazyka na karte Generátor kódu, štýlu názvov alebo typu úvodzoviek, kým je zapnuté jeho vlastné zamknutie, čo od verzie `5.1.0` posiela už iba editor starší ako verzia `5.1.0` (pozrite si časť [dispatch, dispatchSync](#dispatch-dispatchsync)).  
 Od verzie `4.2.0` ide aj o prepnutie Zobrazenia názvov, kým je zamknuté nastavenie `Name View`: editor ho síce naďalej odošle, ale replika ho zahodí, rovnako ako ostatné editory.  
 Prepnutie Zobrazenia názvov urobené v editore iba na čítanie sa zahodí rovnakým spôsobom bez ohľadu na jeho zamknutie.  
 Udalosť [change](../erd-editor-element.md#change) elementu takú zmenu vynechá, ale replika ju aj tak ohlási.  
@@ -282,6 +288,23 @@ Editor starší ako verzia `4.2.0` môže v relácii časť z toho replike verzi
 Import schémy vo formáte SQL, GraphQL, DBML alebo AML položkou `Import` v tomto editore, nie však položkou `Import and Add`, vyprázdni slová, termíny a domény repliky.  
 Keď sa v ňom vráti späť načítanie, import položkou `Import` alebo volanie `clear()`, načíta sa do repliky jeho vlastná kópia dokumentu bez logických názvov, prepojení s doménami a slovníkov; pozrite si časť [Kombinovanie verzií](./collaborative-editing.md#mixing-releases).  
 Vstupný bod `@dineug/erd-editor/engine.js` exportuje rovnakú funkciu `createReplicationStore` a rovnaké typy `ReplicationStore` a `ReplicationChange` ako predtým a funkcia `createReplicationStore` prijíma rovnaký kontext.
+
+Verzia `5.1.0` nepridáva žiadny typ akcie a nemení žiadny export vstupného bodu `@dineug/erd-editor/engine.js`, takže replika vo verzii `4.2.0` alebo novšej naďalej ponecháva každú zmenu, ktorú pošle editor verzie `5.1.0`.  
+Od verzie `5.1.0` replika rieši úpravy urobené v tom istom okamihu rovnako ako editory verzie `5.1.0`; pozrite si časť [Súbežné úpravy](./collaborative-editing.md#concurrent-edits).  
+Uchováva verziu pre polohu tabuľky, pre polohu a veľkosť poznámky a skupiny tabuliek a pre počiatok zobrazenia a úroveň priblíženia.  
+Editor verzie `5.1.0` posiela presunutie, posunutie plátna alebo zmenu priblíženia ako miesto, kde sa skončilo, prostredníctvom akcií `table.moveTo`, `memo.moveTo`, `tableGroup.moveTo`, `settings.scrollTo` a `settings.changeZoomLevel` a replika každú z nich, ako aj každú akciu `memo.resize` a `tableGroup.resize`, prevezme iba vtedy, keď jej verzia nie je nižšia ako verzia, ktorú drží.  
+Keď teda dva takéto editory v tom istom okamihu presunú alebo zmenia veľkosť jednej tabuľky, poznámky alebo skupiny tabuliek, replika ju uloží na mieste a vo veľkosti, ktoré zobrazuje každý z nich, bez ohľadu na to, v akom poradí ich zaznamená, a presunutie, posunutie plátna alebo zmena priblíženia, ktoré prenos doručí dvakrát, nič nepresunie dvakrát.  
+Kým nie je zamknuté nastavenie `Viewport`, replika uloží počiatok aj úroveň priblíženia, každý z nich zo zápisu s najvyššou verziou, tak ako ich mal editor, ktorý tento zápis urobil.  
+Priblíženie posúva aj počiatok, takže posunutie plátna a priblíženie, ktoré v tom istom okamihu urobia dva editory, sa môžu uložiť ako počiatok jedného editora s úrovňou priblíženia druhého.  
+Pred verziou `5.1.0` replika pripočítavala kroky posúvania a priblíženia každého editora k jedinému zobrazeniu.
+
+Vzdialenosti, ktoré editor starší ako verzia `5.1.0` posiela pri presunutí, posunutí plátna alebo zmene priblíženia (`table.move`, `memo.move`, `tableGroup.move`, `settings.streamScrollTo` a `settings.streamZoomLevel`), sa naďalej pripočítavajú k tomu, čo replika drží, mimo verzií.  
+Zmena farby naďalej prichádza bez verzie: replika ju, rovnako ako každý editor, opatrí vlastnou verziou a ponechá farbu, ktorú zaznamenala ako poslednú, takže dve zmeny farby jednej tabuľky, poznámky alebo skupiny tabuliek urobené v tom istom okamihu sa môžu uložiť inak, než ukazuje editor.  
+Replika staršia ako verzia `5.1.0` aplikuje polohy a veľkosti v poradí, v akom prídu, takže môže uložiť tabuľku inde, než ju zobrazujú editory verzie `5.1.0`.  
+Aby úpravy urobené v tom istom okamihu skončili rovnako, majte všetky editory v relácii aj repliku vo verzii `5.1.0` alebo novšej, okrem výnimiek, ktoré uvádza časť [Súbežné úpravy](./collaborative-editing.md#concurrent-edits).
+
+Od verzie `5.1.0` posiela editor zmenu jazyka na karte Generátor kódu, štýlu názvov alebo typu úvodzoviek iba vtedy, keď je zamknutie daného nastavenia vypnuté, s označením `shared: true` v údajoch akcie, a replika aplikuje každú takto označenú zmenu, rovnako ako editory; pozrite si stránku [Spoločné úpravy](./collaborative-editing.md).  
+Neoznačenú zmenu, ktorú posiela editor starší ako verzia `5.1.0` bez ohľadu na zamknutie, replika aplikuje iba vtedy, keď je dané nastavenie na jej strane odomknuté, a kým je zamknuté, zahodí ju (pozrite si časť [on@change](#onchange)).
 
 Od verzie `4.0.0` aplikujú obe metódy aj akciu `editor.mergeLWW`, ktorá nesie registre spolupráce, ktorými editor odpovedá, keď sa k relácii pripojí ďalší editor, takže replika zosúlaďuje súbežné úpravy rovnako ako editory.  
 Nezmení ani jeden bajt hodnoty `value` a nevyvolá žiadnu udalosť `change`.  

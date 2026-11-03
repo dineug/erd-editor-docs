@@ -1,13 +1,14 @@
 ---
 sidebar_position: 1
-description: Änderungen des Editors mit getSharedStore zwischen Instanzen weiterleiten, einen beitretenden Editor aus runtimeValue initialisieren und Mauszeiger, Fokus, Auswahl und Auswahlrahmen jedes Mitbearbeiters anzeigen.
+description: Änderungen des Editors mit getSharedStore zwischen Instanzen weiterleiten, einen beitretenden Editor aus runtimeValue und den Registern des Stores initialisieren, zeitgleich vorgenommene Bearbeitungen abgleichen und Mauszeiger, Fokus, Auswahl und Auswahlrahmen jedes Mitbearbeiters anzeigen.
 ---
 
 # Gemeinsame Bearbeitung
 
 `getSharedStore()` macht einen Editor zu einem Knoten in einer gemeinsamen Sitzung.  
 Der Editor gibt dann jede Änderung als Stream von Aktionen aus und wendet die Aktionen an, die andere Editoren zurücksenden – den Transport zwischen ihnen (WebSocket, WebRTC oder alles andere, was JSON übertragen kann) stellen Sie selbst bereit.  
-`getSharedStore()` ist eine der Methoden von [ErdEditorElement](../erd-editor-element.md) und lässt sich mit [Remote-Speicherung](./remote-storage.md) kombinieren, wenn die weitergeleiteten Änderungen auch gespeichert werden müssen.
+`getSharedStore()` ist eine der Methoden von [ErdEditorElement](../erd-editor-element.md) und lässt sich mit [Remote-Speicherung](./remote-storage.md) kombinieren, wenn die weitergeleiteten Änderungen auch gespeichert werden müssen.  
+Seit `5.1.0` binden Sie den Editor mit `@dineug/erd-editor-yjs`, wenn Sie ein Diagramm über ein Yjs-Dokument und einen beliebigen seiner Provider teilen wollen, statt den Transport selbst zu verdrahten; siehe [Yjs](./yjs.md).
 
 ```ts
 interface ErdEditorElement extends HTMLElement {
@@ -31,16 +32,34 @@ type SharedStore = {
   dispatchSync: (actions: Array<AnyAction> | AnyAction) => void;
   subscribe: (fn: (value: AnyAction[]) => void) => Unsubscribe;
   flushStreamBuffers: () => void;
+  getLWW: () => SharedRegisters;
+  mergeLWW: (lww: SharedRegisters, version: number) => void;
+  getVersion: () => number;
+  forgetPeer: (editorId: string) => void;
+  reseed: (value: string, options: ReseedOptions) => void;
   destroy: () => void;
+};
+
+// a JSON object whose shape is the editor's own: hand it on as it is
+type SharedRegisters = Record<string, unknown> & {
+  readonly [registersBrand]: true;
+};
+
+type ReseedOptions = {
+  lww: SharedRegisters;
+  version: number;
+  keepScreen?: boolean; // default false
 };
 
 // example
 const sharedStore = editor.getSharedStore();
 ```
 
+`@dineug/erd-editor` exportiert keinen dieser Typen unter seinem Namen. TypeScript-Code erreicht sie über `ErdEditorElement`, etwa mit `ReturnType<ErdEditorElement['getSharedStore']>`.
+
 Eine Aktion ist ein einfaches serialisierbares Objekt, das eine Änderung am Dokument beschreibt, sodass sie `JSON.stringify` auf dem Weg zum Transport übersteht.  
 Aktionen kommen in Stapeln an: `subscribe` übergibt Ihnen ein Array, und dieses Array ist eine Einheit – leiten Sie es als Ganzes weiter und übergeben Sie es auf der anderen Seite als Ganzes an `dispatch`.  
-Behandeln Sie eine Aktion als Blackbox und reichen Sie sie unverändert durch, statt sie zu lesen oder umzuschreiben, denn die Verwaltungsdaten, die sie mitführt, halten die Editoren synchron.
+Behandeln Sie eine Aktion als Blackbox und reichen Sie sie unverändert durch, statt sie zu lesen oder umzuschreiben, denn die Verwaltungsdaten, die sie mitführt, etwa ihre [Version](#concurrent-edits), halten die Editoren synchron.
 
 Einiges von dem, was ein Editor tut, bleibt in diesem Editor.  
 Wenn eine Tabelle, Notiz oder Tabellengruppe in den Vordergrund geholt wird, wie es beim Auswählen geschieht, wird das nicht gesendet.  
@@ -51,17 +70,22 @@ Seit `4.2.0` bleibt auch die Registerkarte [Wörterbuch](../../guide/guides/dict
 Scrollen, Zoomen oder ein Wechsel der Registerkarte wird gesendet, verschiebt aber nie die Ansicht eines anderen Benutzers und wechselt nie dessen Registerkarte. Das gilt auch für das Scrollen bei einem Sprung aus dem Explorer, für den Wechsel zur Registerkarte ERD, wenn der Explorer von einer anderen Registerkarte aus geöffnet wird, und für den Wechsel der Registerkarte und das Scrollen bei einem Sprung vom Blatt [`Checks`](../../guide/guides/dictionary.md#the-checks-sheet) der Registerkarte Wörterbuch zu einer Tabelle oder Spalte. Ein Sprung von diesem Blatt zu einem Wort, einem Begriff oder einer Domäne bleibt auf der Registerkarte Wörterbuch, daher wird nichts davon gesendet.
 
 Seit `4.2.0` wird auch ein Wechsel der [Namensansicht](../../guide/guides/logical-names.md#switching-the-view) gesendet, und ihre [Sperre](../../guide/guides/settings.md#lock) entscheidet, was die anderen Editoren damit tun. Die Sperre `Name View` ist in einem neuen Diagramm und in jedem Dokument aus einer Version vor `4.2.0` eingeschaltet.  
-Solange die Sperre eingeschaltet ist, zeigt sich der Wechsel nur in dem Editor, der ihn vorgenommen hat: Er wird zwar weiterhin gesendet, aber jeder andere Editor und jedes Replikat verwirft ihn, sodass jeder Benutzer eine andere Ansicht betrachten kann, während `value` die gesperrte behält. Bei einer Änderung der Sprache, einer Schreibweise oder des Begrenzertyps ist das anders: Sie erreicht jeden Editor, unabhängig davon, ob ihre Sperre eingeschaltet ist.  
+Solange die Sperre eingeschaltet ist, zeigt sich der Wechsel nur in dem Editor, der ihn vorgenommen hat: Er wird zwar weiterhin gesendet, aber jeder andere Editor und jedes Replikat verwirft ihn, sodass jeder Benutzer eine andere Ansicht betrachten kann, während `value` die gesperrte behält.  
 Solange die Sperre ausgeschaltet ist, ändert ein Wechsel in einem Editor, der bearbeiten kann, die Namensansicht in jedem Editor und jedem Replikat, wobei sich der letzte Wechsel durchsetzt, und jeder von ihnen speichert sie.  
 Der eigene Wechsel eines schreibgeschützten Editors bleibt immer in diesem Editor, und der Editor folgt weiterhin den gemeinsamen Wechseln der anderen.
 
+Seit `5.1.0` folgt eine Änderung der Sprache des [Codegenerators](../../guide/guides/code-generator.md), der Schreibweise der Tabellennamen, der Schreibweise der Spaltennamen oder des Begrenzertyps genauso ihrer eigenen Sperre (`Language`, `Table Name Case`, `Column Name Case` oder `Bracket Type`), mit einem Unterschied: Solange die Sperre eingeschaltet ist, wird die Änderung gar nicht gesendet.  
+Sie zeigt sich nur in dem Editor, der sie vorgenommen hat, dessen Registerkarten Codegenerator und Schema SQL ihr folgen, und kein anderer Editor und kein Replikat sieht sie. `value` und `runtimeValue` behalten den gesperrten Wert, sodass auch ein beitretender Editor, der aus einem beliebigen Editor initialisiert wurde, sie nicht sieht und jeder Benutzer bei eingeschalteter Sperre eine andere Sprache, Schreibweise oder einen anderen Begrenzertyp vor sich haben kann.  
+Solange die Sperre ausgeschaltet ist, wird eine Änderung, die in einem Editor vorgenommen wird, der bearbeiten kann, als gemeinsam markiert gesendet (`shared: true` in ihrer Payload). Sie ändert die Einstellung in jedem Editor und jedem Replikat, wobei sich die letzte Änderung durchsetzt, und jeder von ihnen speichert sie. Ein Editor oder Replikat der Version `5.1.0` wendet eine markierte Änderung an, was auch immer seine eigene Sperre sagt, sodass eine Änderung unmittelbar nach einem Entsperren überall übernommen wird, auch dort, wo sie vor dem Entsperren eintrifft.  
+Vor `5.1.0` erreichte eine solche Änderung jeden Editor und jedes Replikat, unabhängig davon, ob ihre Sperre eingeschaltet war, während die Datei den gesperrten Wert behielt.
+
 Seit `5.0.0` sendet ein [schreibgeschützter](../erd-editor-element.md#readonly) Editor überhaupt keine Änderung mehr. Die Zeilen für Scrollen, Zoom, Registerkarte, Namensansicht, Datenbank, Sprache des Code-Generators, Schreibweisen, Begrenzertyp und `View Option`, die sein Leser ändert, bleiben auf seinem Bildschirm, was auch immer ihre Sperren sagen; vor `5.0.0` wurden seine Scrollvorgänge, Zoomänderungen, Registerkartenwechsel, die Datenbank und die Code-Einstellungen wie die eines bearbeitbaren Editors gesendet.  
-Sein Store sendet weiterhin, was seine Tracker vom Cursor, Fokus, der Auswahl und dem Ziehrahmen des Lesers senden, beantwortet die Register, die ein beitretender Editor anfordert, und wendet jede Änderung an, die die anderen senden. Eine Änderung der Datenbank, einer Einstellung des Code-Generators oder einer Zeile von `View Option` erreicht sein Dokument und auch seinen Bildschirm, es sei denn, sein Leser hat diese Einstellung dort geändert; ein gemeinsamer Wechsel der Namensansicht ist in jedem Fall auf seinem Bildschirm zu sehen.  
+Sein Store sendet weiterhin, was seine Tracker vom Mauszeiger, Fokus, der Auswahl und dem Auswahlrahmen des Lesers senden, beantwortet die Register, die ein beitretender Editor anfordert, und wendet jede Änderung an, die die anderen senden. Eine Änderung der Datenbank, einer Einstellung des Codegenerators oder einer Zeile von `View Option` erreicht sein Dokument und auch seinen Bildschirm, es sei denn, sein Leser hat diese Einstellung dort geändert; ein gemeinsamer Wechsel der Namensansicht ist in jedem Fall auf seinem Bildschirm zu sehen. Seit `5.1.0` erhält er eine Einstellung des Codegenerators nur, wenn sie bei ausgeschalteter Sperre geändert wurde oder ein Entsperren sie mitbringt.  
 Wenn der Editor schreibgeschützt wird, sendet er zuerst, was der Store von einem Ziehen oder Scrollen noch zurückhält, so wie es [flushStreamBuffers](#flushstreambuffers) tut, damit die anderen das Letzte davon behalten.
 
 [Sperren](../../guide/guides/settings.md#lock) werden gemeinsam genutzt: Das letzte Sperren oder Entsperren einer Einstellung setzt sich in jedem Editor durch, und eine Sperre trägt die Werte des Editors mit, der sie eingeschaltet hat, sodass jeder Editor und jedes Replikat denselben Wert speichert.  
 Eine Sperre `Viewport` speichert daher die Ansicht des Editors, der sie eingeschaltet hat, und eine Sperre `Canvas Type` die letzte Registerkarte, auf der dieser Editor vor der Registerkarte Einstellungen war, auf der Sperren eingeschaltet werden.  
-Das Ausschalten der Sperre `Language`, `Table Name Case`, `Column Name Case`, `Bracket Type` oder seit `4.2.0` `Name View` setzt diese Einstellung außerdem in jedem Editor auf den Wert, den der Editor anzeigt, der sie ausgeschaltet hat, sodass alle weiterhin einen einzigen Wert speichern. Das Ausschalten von `Viewport` oder `Canvas Type` verändert bei niemandem die Ansicht oder die Registerkarte.
+Das Ausschalten der Sperre `Language`, `Table Name Case`, `Column Name Case`, `Bracket Type` oder seit `4.2.0` `Name View` setzt diese Einstellung außerdem in jedem Editor auf den Wert, den der Editor anzeigt, der sie ausgeschaltet hat, einschließlich seiner eigenen Änderung unter der Sperre, sodass alle weiterhin einen einzigen Wert speichern. Das Ausschalten von `Viewport` oder `Canvas Type` verändert bei niemandem die Ansicht oder die Registerkarte.
 
 Eine Änderung am Skript `Before tables` oder `After tables` wird als Ganzes gesendet, wenn sein Feld den Fokus verliert. Die beiden Skripte werden getrennt abgeglichen, sodass die Änderung eines Mitbearbeiters am einen nie das andere überschreibt.
 
@@ -102,7 +126,8 @@ Bei drei oder mehr Editoren senden Sie die Stapel jedes Editors an alle anderen:
 ## Einen Mitbearbeiter initialisieren {#seeding-a-collaborator}
 
 Ein gemeinsamer Store leitet Änderungen weiter, sobald sie vorgenommen werden, und übergibt einem beitretenden Editor nie das Dokument in seinem aktuellen Zustand, sodass ein Editor, der einer bereits laufenden Sitzung beitritt, zuerst das Dokument erhalten muss.  
-Seit `4.0.0` initialisieren Sie ihn mit [`runtimeValue`](../erd-editor-element.md#runtimevalue) eines Editors, der sich bereits in der Sitzung befindet, nicht mit `value` oder der gespeicherten Datei.
+Seit `4.0.0` initialisieren Sie ihn mit [`runtimeValue`](../erd-editor-element.md#runtimevalue) eines Editors, der sich bereits in der Sitzung befindet, nicht mit `value` oder der gespeicherten Datei.  
+Ein Raum, der mit [`@dineug/erd-editor-yjs`](./yjs.md) gebunden ist, enthält das Dokument selbst, sobald ein Client ihn [initialisiert](./yjs.md#seeding-a-room) hat, sodass jeder an ihn gebundene Editor dieses Dokument öffnet, ohne dass ein `runtimeValue` übergeben wird.
 
 ```js
 editor2.setInitialValue(editor1.runtimeValue);
@@ -117,8 +142,54 @@ Schreiben Sie weiterhin `value` in den Speicher: `runtimeValue` dient nur dazu, 
 Die Editoren in VS Code, Obsidian, einer JetBrains-IDE und der Web-App initialisieren auf diese Weise eine zweite Ansicht eines geöffneten Dokuments.
 
 `setInitialValue` wird nicht weitergeleitet, sodass das Initialisieren des beitretenden Editors bei den anderen nichts ändert.  
-Seit `4.0.0` verwirft die Methode außerdem die Kollaborationsregister des Editors, die gleichzeitige Änderungen abgleichen. Hat der gemeinsame Store des Editors bereits einen Abonnenten gehabt, fragt der Store die anderen Editoren erneut nach deren Registern, wie bei seinem ersten [subscribe](#subscribe), sodass ein mitten in einer Sitzung erneut geladener Editor Änderungen so abgleicht wie die anderen.  
+Seit `4.0.0` verwirft die Methode außerdem die Kollaborationsregister des Editors, die [gleichzeitige Bearbeitungen](#concurrent-edits) abgleichen. Hat der gemeinsame Store des Editors bereits einen Abonnenten gehabt, fragt der Store die anderen Editoren erneut nach deren Registern, wie bei seinem ersten [subscribe](#subscribe), sodass ein mitten in einer Sitzung erneut geladener Editor Bearbeitungen so abgleicht wie die anderen.  
 Eine Zuweisung an `value` behält die Register bei, wird aber anders als `setInitialValue` weitergeleitet: Sobald der Editor einen gemeinsamen Store hat, lädt jeder Editor in der Sitzung das zugewiesene Dokument. Initialisieren Sie einen beitretenden Editor daher nie auf diese Weise.
+
+Weder `value` noch `runtimeValue` enthält die Register oder die Version, die die Uhr des Editors erreicht hat, sodass ein Editor, der allein aus `runtimeValue` initialisiert wurde, sie der Antwort entnimmt, die die Editoren in der Sitzung auf sein erstes Abonnieren senden.  
+Bis diese Antwort eintrifft, kann eine Bearbeitung des beitretenden Editors eine niedrigere Version tragen als die der anderen, sodass diese sie ablehnen, während sie auf dem beitretenden Editor bleibt, und ein älterer Schreibvorgang, der noch unterwegs ist, überschreibt den neueren, den die Initialisierung enthält. Antwortet kein laufender Editor, etwa weil ein Server oder ein Dokumentspeicher das Dokument der Sitzung hält, erhält der beitretende Editor sie nie.  
+Seit `5.1.0` übergeben Sie sie zusammen mit dem Wert. Rufen Sie in einem Editor der Sitzung [`flushStreamBuffers()`](#flushstreambuffers) auf, damit ein Ziehen oder eine Farbänderung, die er noch zurückhält, zuerst hinausgeht, und lesen Sie dann im selben Moment `runtimeValue` sowie [`getLWW()`](#getlww) und [`getVersion()`](#getversion) seines Stores. Der beitretende Editor lädt den Wert mit `setInitialValue` und übernimmt den Rest dann mit [`mergeLWW`](#mergelww) seines eigenen Stores, in dieser Reihenfolge, da jedes `setInitialValue` die Register verwirft. Seine nächste Bearbeitung trägt dann eine Version, die über allen der Initialisierung liegt, sodass sie übernommen wird, ohne auf eine Antwort warten zu müssen. Bei einem Store, den es schon gibt, erledigt [`reseed`](#reseed) beides in einem Aufruf.
+
+```js
+// on an editor already in the session
+sharedStore1.flushStreamBuffers();
+const seed = {
+  value: editor1.runtimeValue,
+  lww: sharedStore1.getLWW(),
+  version: sharedStore1.getVersion(),
+};
+
+// on the joiner
+editor2.setInitialValue(seed.value);
+const sharedStore2 = editor2.getSharedStore();
+sharedStore2.mergeLWW(seed.lww, seed.version);
+```
+
+Eine so aufbewahrte Initialisierung, mit der später beitretende Editoren geöffnet werden, hält alle drei zusammen. Sie ist keine Datei: In den Speicher schreiben Sie weiterhin `value`.  
+Ein [replicationStore](./remote-storage.md#runtimevalue-getter) übergibt keine Register, sodass ein aus seinem `runtimeValue` initialisierter beitretender Editor sie weiterhin der Antwort der Editoren entnimmt.
+
+## Gleichzeitige Bearbeitungen {#concurrent-edits}
+
+Jeder Editor und jedes Replikat hält für jeden Namen und nahezu jedes andere Feld die Version des Schreibvorgangs, der es gesetzt hat: Das sind seine Kollaborationsregister. Ein Schreibvorgang wird nur übernommen, wenn seine Version nicht unter der gehaltenen liegt, sodass Editoren, die dieselben Änderungen in unterschiedlicher Reihenfolge hören, mit demselben Dokument enden.  
+Seit `5.1.0` trägt jede Version unter ihrem Zähler einen Platz des schreibenden Editors, der aus dessen ID stammt. Versionen wachsen daher in Schritten von 4.194.304 und übersteigen eine 32-Bit-Ganzzahl, sobald der Zähler 512 erreicht. `JSON.stringify` und `JSON.parse` übertragen sie unverändert, aber eine Weiterleitung oder ein Speicher, der sie in einer anderen Sprache parst, muss sie als 64-Bit-Zahlen halten, nie als 32-Bit-Ganzzahlen.
+
+Seit `5.1.0` enden zwei Editoren, die im selben Moment denselben Namen oder dasselbe Feld ändern, abgesehen von den unten genannten Ausnahmen, mit demselben Wert in jedem Editor und jedem Replikat: Sie schreiben mit demselben Zähler, stempeln aber zwei verschiedene Versionen, und die größere gewinnt überall. Vor `5.1.0` konnten beide dieselbe Version stempeln, und jeder Editor behielt die, die er zuletzt hörte, sodass sie auseinanderlaufen konnten. Zwei Editoren teilen sich einen Platz mit einer Wahrscheinlichkeit von 1 zu 4.194.304 je Paar, und dann herrscht wie zuvor Gleichstand.
+
+Seit `5.1.0` werden die Position einer Tabelle, die Position und Größe einer Notiz oder Tabellengruppe sowie der Ursprung und die Zoomstufe der Ansicht auf dieselbe Weise mit Versionen versehen, und was sie bewegt, wird als das Ziel gesendet, an dem sie enden:
+
+- ein Ziehen als ein `table.moveTo`, `memo.moveTo` oder `tableGroup.moveTo` je bewegter Entität in einem Stapel, sodass ein Ziehen einer Gruppe die Punkte ihrer Tabellen mit dem der Gruppe mitführt;
+- das Rückgängigmachen oder Wiederholen eines Ziehens als der Punkt, an den es jede Entität setzt;
+- ein Verschieben der Ansicht als `settings.scrollTo` und ein Zoomen als `settings.changeZoomLevel`;
+- eine Größenänderung einer Notiz oder Tabellengruppe als ihre Position und Größe zusammen.
+
+Zwei Benutzer, die im selben Moment eine Tabelle, Notiz oder Tabellengruppe verschieben oder verschieben und in der Größe ändern, enden daher mit ihr an einem Punkt und in einer Größe in jedem Editor und jedem Replikat. Der Punkt geht an den Schreibvorgang mit der größeren Version, beide Achsen zusammen. Ein Verschieben schreibt keine Größe, sodass eine Größenänderung ihre Größe behält, auch wenn ein gleichzeitig vorgenommenes Verschieben den Punkt übernimmt.  
+Vor `5.1.0` wurde ein Ziehen als zurückgelegte Entfernung gesendet, sodass sich zwei Ziehvorgänge derselben Tabelle addierten und ein gleichzeitiges Verschieben und Ändern der Größe derselben Notiz oder Tabellengruppe auseinanderlaufen konnte.  
+Ein Ziehen unter 20 px, das keinen Rückgängig-Eintrag hinterlässt, wird wie jedes andere gesendet, sodass es als Punkt ein Ziehen derselben Entität überschreiben kann, das ein anderer Benutzer im selben Moment vorgenommen hat. Ein Stapel eines Ziehens, Verschiebens der Ansicht oder Zoomens, den ein Transport doppelt zustellt, bewegt nichts doppelt.
+
+Eine Farbänderung ist eine Ausnahme. Sie geht ohne Version hinaus, und jeder Editor und jedes Replikat stempelt sie mit seiner eigenen Version und behält die Farbe, die er zuletzt hörte, sodass zwei Benutzer, die im selben Moment dieselbe Tabelle, Notiz oder Tabellengruppe umfärben, mit verschiedenen Farben enden können.  
+Für einige Änderungen wird überhaupt keine Version geführt, sodass jeder Editor und jedes Replikat sie in der Reihenfolge anwendet, in der er sie hört, und zwei im selben Moment vorgenommene ebenfalls auseinanderlaufen können: eine Spalte, die innerhalb ihrer Tabelle oder ihres Index verschoben wird (`column.move`, `indexColumn.move`), und eine Änderung der [Datenbank](../../guide/guides/table-related-functions.md#databases), einer Zeile von [`View Option`](../../guide/guides/table-related-functions.md#table-view-options) oder von `Relationship DataType Sync`, `Maximum comment width` oder `Column Order` auf der Registerkarte [Einstellungen](../../guide/guides/settings.md).  
+Entitäten, die zwei Benutzer im selben Moment hinzufügen, etwa zwei Tabellen oder zwei Spalten einer Tabelle, können außerdem in jedem Editor und jedem Replikat in einer anderen Reihenfolge stehen, und jeder speichert in seinem `value` seine eigene Reihenfolge.
+
+All das gilt unter Editoren und Replikaten der Version `5.1.0` oder neuer; [Gemischte Versionen](#mixing-releases) beschreibt, was ein älterer daran ändert.
 
 ## Gemischte Versionen {#mixing-releases}
 
@@ -140,7 +211,7 @@ Seit `4.0.0` werden diese Änderungen über neue Aktionstypen übertragen, und e
 Die Ansichtsoptionen `Table Groups` und `Memos` werden über die bestehende Aktion `settings.changeShow` übertragen.  
 Die Aktion `settings.changeIgnoreSaveSettings`, die die Schalter `Save Scroll Information` und `Save Zoom Information` sendeten, bevor die Sperren sie ersetzten, wird nicht mehr gesendet, und `settings.changeRelationshipOptimization` gibt es nicht mehr. Ein Editor der Version `4.0.0`, der eine der beiden empfängt, ändert nichts.
 
-Ein Editor einer Version vor `4.0.0` ignoriert die neuen Aktionstypen: Er sieht nie eine Tabellengruppe oder welche Tabellen zu ihr gehören, obwohl das Ziehen einer Gruppe die Tabellen der Gruppe dort trotzdem verschiebt, da es auch für sie `table.move` sendet.  
+Ein Editor einer Version vor `4.0.0` ignoriert die neuen Aktionstypen: Er sieht nie eine Tabellengruppe oder welche Tabellen zu ihr gehören, obwohl das Ziehen einer Gruppe die Tabellen der Gruppe dort trotzdem verschiebt, da es auch für jede dieser Tabellen eine Verschiebung sendet.  
 Er behält nach dem Speichern mit `Save` im Dialog „Spalten zuordnen“ die alten Spalten einer Beziehung, und wenn in ihm eine Spalte dieser alten Zuordnung entfernt wird, verschwindet die Beziehung in jedem Editor. Er hat keine Sperren und keine Skripte.  
 Ein mit einem solchen Editor gespeichertes Dokument enthält nichts davon, und ein Editor der Version `4.0.0` öffnet es mit allen Sperren im eingeschalteten Zustand.  
 Halten Sie jeden Editor einer Sitzung und jeden [replicationStore](./remote-storage.md#dispatch-dispatchsync), der ihr Dokument speichert, auf `4.0.0` oder neuer.
@@ -172,6 +243,16 @@ Seine eigenen Änderungen wissen nichts von logischen Namen, Domänen oder den W
 
 Ein mit einem solchen Editor gespeichertes Dokument hat keine logischen Namen, keine Domänenverknüpfungen, keine Wörterbücher und keine Namensansicht, daher öffnet ein Editor der Version `4.2.0` es in der Ansicht `Physical Names`. Die Sperre `Name View` speichert der ältere Editor dagegen so, wie er sie vorgefunden hat, sodass ein in einem Editor der Version `4.2.0` entsperrtes Dokument entsperrt bleibt.  
 Halten Sie jeden Editor einer Sitzung und jeden [replicationStore](./remote-storage.md#dispatch-dispatchsync), der ihr Dokument speichert, auf `4.2.0` oder neuer.
+
+Ein Editor der Version `5.1.0` sendet keinen neuen Aktionstyp, sodass Editoren und Replikate vor `5.1.0` weiterhin eine Sitzung mit ihm teilen und eine Weiterleitung, die Aktionen unverändert durchreicht, nichts Neues braucht. Was [Gleichzeitige Bearbeitungen](#concurrent-edits) beschreibt, gilt jedoch nur unter Editoren und Replikaten der Version `5.1.0`:
+
+- Das Ziehen eines Editors der Version `5.1.0` wird als Punkte über `table.moveTo`, `memo.moveTo` und `tableGroup.moveTo` übertragen, die ältere Editoren bereits anwenden, sein Verschieben der Ansicht und Zoomen als Punkte über `settings.scrollTo` und `settings.changeZoomLevel`, die, wie jedes Verschieben der Ansicht und Zoomen, kein anderer Editor anwendet und nur Replikate übernehmen. Ein älterer Editor wendet jeden Punkt eines Ziehens in der Reihenfolge an, in der er eintrifft, außerhalb jedes Registers, und ein älteres Replikat tut dasselbe mit jedem Punkt eines Ziehens, Verschiebens der Ansicht oder Zoomens, sodass zwei Punkte, die im selben Moment für eine Entität oder für die Ansicht gesendet werden, dort auseinanderlaufen können.
+- Das Ziehen eines älteren Editors wird weiterhin als zurückgelegte Entfernung übertragen, die jeder Editor und jedes Replikat außerhalb seiner Register addiert, sein Verschieben der Ansicht oder Zoomen ebenfalls als Entfernung, die jedes Replikat auf dieselbe Weise addiert. Eine Entfernung und ein Punkt, die im selben Moment für eine Entität entstehen, können in Editoren und Replikaten, die sie in unterschiedlicher Reihenfolge hören, auseinanderlaufen, und eine Entfernung, die ein Transport doppelt zustellt, wird doppelt addiert.
+- Außerhalb der Ausnahmen, die [Gleichzeitige Bearbeitungen](#concurrent-edits) nennt, setzt sich der Schreibvorgang eines Editors der Version `5.1.0` für einen Namen oder ein Feld, der im selben Moment wie der eines älteren Editors erfolgt, fast immer durch, mit demselben Ergebnis in jedem Editor und jedem Replikat. Zwei ältere Editoren können über ein im selben Moment geschriebenes Feld weiterhin auseinanderlaufen.
+- Ein Editor der Version `5.1.0` sendet eine Änderung der Sprache des Codegenerators, der Schreibweise oder des Begrenzertyps nur, solange ihre Sperre ausgeschaltet ist, mit der Markierung `shared: true`, die ein älterer Editor ignoriert, indem er die Änderung wie bisher anwendet. Ein älterer Editor sendet eine, die er unter der Sperre vornimmt, weiterhin unmarkiert: Ein Editor oder Replikat der Version `5.1.0` verwirft sie, solange diese Einstellung dort gesperrt ist, und ältere Editoren wenden sie an. Unter einer Sperre folgen die älteren Editoren daher den Auswahlen der jeweils anderen, während die Editoren der Version `5.1.0` ihre eigenen behalten, und die Datei behält in beiden Fällen den gesperrten Wert. Ein Entsperren in einer der beiden Versionen bringt den Wert des Entsperrenden in jeden Editor und jedes Replikat.
+- Ein Laden, das das Dokument ersetzt, etwa ein zugewiesenes `value`, `clear()` oder ein ersetzender Import, beendet in jedem Editor der Version `5.1.0` das Ziehen einer Beziehung, sowohl in dem, der es vorgenommen hat, als auch in jedem, der es empfängt. Ein älterer Editor hält sein Ziehen dabei aktiv.
+
+Halten Sie jeden Editor einer Sitzung und jeden [replicationStore](./remote-storage.md#dispatch-dispatchsync), der ihr Dokument speichert, auf `5.1.0` oder neuer, damit im selben Moment vorgenommene Bearbeitungen überall gleich enden, abgesehen von den Ausnahmen, die [Gleichzeitige Bearbeitungen](#concurrent-edits) nennt; `4.2.0` oder neuer erhält weiterhin die logischen Namen und Wörterbücher. Ein [MCP-Server](../../mcp/live-and-headless.md#edits-made-at-the-same-moment) vor `1.2.0` zählt hier als Editor vor `5.1.0`, und ein Editor vor `5.1.0` lässt sich überhaupt nicht an einen [Yjs](./yjs.md)-Raum binden.
 
 ## SharedStoreConfig {#sharedstoreconfig}
 
@@ -235,7 +316,9 @@ sharedStore.disconnect();
 
 ### dispatch, dispatchSync {#dispatch-dispatchsync}
 
-Wendet Änderungen anderer Editorinstanzen auf die aktuelle Editorinstanz an.
+Wendet Änderungen anderer Editorinstanzen auf die aktuelle Editorinstanz an.  
+Enthält ein Stapel die Anforderung der Register durch einen anderen Editor, wie sie das erste [subscribe](#subscribe) eines beitretenden Editors sendet, antwortet der Store über seine Abonnenten mit seinen Registern und seiner Version, es sei denn, er hält keine Register.  
+Seit `5.1.0` sendet er dabei zuerst jeden Stream-Stapel, den er noch zurückhält, so wie es [flushStreamBuffers](#flushstreambuffers) tut, sodass jede Version, die seine Antwort trägt, auf einem Schreibvorgang beruht, der den anderen gesendet wurde. Das Eintreffen eines beitretenden Editors lässt daher jeden Editor der Sitzung sofort ein Ziehen, Verschieben der Ansicht, Zoomen, eine Farbänderung oder Größenänderung einer Notiz senden, die er noch zurückhält.
 
 ```js
 sharedStore.dispatch(actions); // async
@@ -246,9 +329,9 @@ sharedStore.dispatchSync(actions); // sync
 
 Abonniert Änderungen im Editor.  
 Nichts verlässt den Editor, solange es nicht mindestens einen Abonnenten gibt, und vorher vorgenommene Änderungen werden gepuffert.  
-Beim ersten Abonnieren werden außerdem die anderen Editoren nach ihren Kollaborationsregistern gefragt, die gleichzeitige Änderungen abgleichen, sodass ein später beitretender Editor sie auf dieselbe Weise abgleicht.  
-Das Dokument wird dabei nicht übertragen. [Initialisieren](#seeding-a-collaborator) Sie einen später beitretenden Editor daher zuerst.  
-Seit `4.0.0` fragt der Store jedes Mal erneut, wenn `setInitialValue` nach diesem ersten Abonnieren ein Dokument in seinen Editor lädt.
+Beim ersten Abonnieren werden außerdem die anderen Editoren nach ihren Kollaborationsregistern gefragt, die [gleichzeitige Bearbeitungen](#concurrent-edits) abgleichen, sodass ein später beitretender Editor sie auf dieselbe Weise abgleicht.  
+Das Dokument wird dabei nicht übertragen. [Initialisieren](#seeding-a-collaborator) Sie einen später beitretenden Editor daher zuerst; seit `5.1.0` kann die Initialisierung auch die Register mitführen.  
+Seit `4.0.0` fragt der Store jedes Mal erneut, wenn `setInitialValue`, seit `5.1.0` auch [reseed](#reseed), nach diesem ersten Abonnieren ein Dokument in seinen Editor lädt.
 
 ```js
 const unsubscribe = sharedStore.subscribe(actions => {
@@ -260,8 +343,8 @@ const unsubscribe = sharedStore.subscribe(actions => {
 
 Sendet die Stream-Stapel, die dieser Store noch zurückhält, sofort statt nach ihrer Ruhephase.  
 Seit `3.9.2` funktioniert die Methode bei einem Store aus `getSharedStore`; in `3.9.1` ist sie im Typ vorhanden, bewirkt aber nichts.  
-Das Verschieben einer Tabelle, Notiz oder Tabellengruppe, das Ändern ihrer Farbe, das Ändern der Größe einer Notiz sowie das Scrollen oder Zoomen der Ansicht kommen jeweils als Stream kleiner Änderungen an. Bei der Größenänderung einer Tabellengruppe ist das nicht so: Sie wird einmal gesendet, wenn das Ziehen endet.  
-Der Store sammelt jeden Stream in einem Stapel und hält ihn zurück, bis der Stream 200 ms lang ruhig war. Er tut dies in zwei Stufen, sodass der Stapel etwa 400 ms nach der letzten Änderung gesendet wird.  
+Das Verschieben einer Tabelle, Notiz oder Tabellengruppe, das Ändern ihrer Farbe, das Ändern der Größe einer Notiz sowie das Scrollen oder Zoomen der Ansicht entstehen jeweils als Stream kleiner Änderungen. Bei der Größenänderung einer Tabellengruppe ist das nicht so: Sie wird einmal gesendet, wenn das Ziehen endet.  
+Der Store sammelt jeden Stream in einem Stapel und hält ihn zurück, bis der Stream 200 ms lang ruhig war, in zwei Stufen. Eine Farbänderung oder Größenänderung einer Notiz durchläuft beide und wird daher etwa 400 ms nach der letzten Änderung gesendet, so wie es vor `5.1.0` bei jedem Stream war. Seit `5.1.0` geht ein Ziehen, ein Verschieben der Ansicht oder ein Zoomen nach der ersten Stufe hinaus, etwa 200 ms nach seinem letzten Schritt, als das Ziel, an dem es endet (siehe [Gleichzeitige Bearbeitungen](#concurrent-edits)).  
 Ein Aufruf beendet diese Wartezeit in beiden Stufen. Solange der Store verbunden ist, erhält ein Abonnent den Stapel, bevor der Aufruf zurückkehrt. Ein Aufruf, bei dem nichts zurückgehalten wird, sendet nichts.  
 Die Methode `destroy`, ob die des Stores oder die des Editors, verwirft einen noch zurückgehaltenen Stapel. Rufen Sie daher zuerst diese Methode auf, wenn Sie einen Store aufgeben und die anderen die letzte Änderung behalten sollen, etwa wenn eine Registerkarte geschlossen wird.
 
@@ -270,12 +353,83 @@ sharedStore.flushStreamBuffers();
 sharedStore.destroy();
 ```
 
+### getLWW {#getlww}
+
+Seit `5.1.0` gibt die Methode eine Kopie der Kollaborationsregister des Editors zurück (siehe [Gleichzeitige Bearbeitungen](#concurrent-edits)).  
+Die Kopie wird über JSON erstellt, ist also ein einfaches Objekt, das für `JSON.stringify` bereit ist, und eine Änderung daran lässt die Register des Stores, wie sie waren.  
+Übergeben Sie sie unverändert an [mergeLWW](#mergelww) oder [reseed](#reseed) eines anderen Stores. Ihre Form bestimmt allein der Editor, lesen Sie daher kein Feld daraus.  
+Lesen Sie sie im selben Moment mit [getVersion](#getversion) und dem `runtimeValue` des Editors, um [einen beitretenden Editor zu initialisieren](#seeding-a-collaborator).
+
+```js
+const lww = sharedStore.getLWW();
+```
+
+### mergeLWW {#mergelww}
+
+Seit `5.1.0` übernimmt die Methode Register, die ein anderer Store mit [getLWW](#getlww) herausgegeben hat, in die Register dieses Stores und behält dabei von jedem die größere Version, und sie übernimmt `version` in die Uhr des Editors, die die größere aus ihrer eigenen und der übergebenen behält.  
+Sie ändert nichts am Dokument: kein Byte von `value` oder `runtimeValue`, keinen Rückgängig-Eintrag und kein Ereignis `change`. Sie hebt nur die Versionen an, die ein späterer Schreibvorgang übertreffen muss, sodass ein Schreibvorgang, der älter ist als die übergebenen Register, danach abgelehnt wird und die nächste Bearbeitung des Editors eine Version über `version` trägt.  
+Sie sendet nichts und beantwortet nichts. Sie nimmt direkt auf, was ein beitretender Editor bei seinem ersten Abonnieren aus der Antwort der anderen erhält.  
+Rufen Sie sie nach `setInitialValue` auf, nie davor: Jedes `setInitialValue` und jedes [reseed](#reseed) verwirft die gehaltenen Register und mit ihnen, was ein `mergeLWW` davor aufgenommen hat.
+
+```js
+sharedStore.mergeLWW(lww, version);
+```
+
+### getVersion {#getversion}
+
+Seit `5.1.0` gibt die Methode die höchste Version zurück, die die Uhr des Editors zusammengeführt hat: die größte aus den Versionen der Änderungen, die er vorgenommen oder aufgenommen hat, der Anforderungen von Registern und der Antworten, die ein Beitritt austauscht, sowie jeder `version`, die an `mergeLWW` oder `reseed` übergeben wurde.  
+Mauszeiger, Fokus, Auswahlen und Auswahlrahmen, seine eigenen oder die eines anderen Editors, verändern sie nicht.  
+Übergeben Sie sie zusammen mit [getLWW()](#getlww), im selben Moment gelesen, an [mergeLWW](#mergelww) oder [reseed](#reseed) eines beitretenden Editors. Sie ist eine [Version](#concurrent-edits) wie die, die die Aktionen des Stores tragen.
+
+```js
+const version = sharedStore.getVersion();
+```
+
+### forgetPeer {#forgetpeer}
+
+Seit `5.1.0` entfernt die Methode sofort den Mauszeiger, den Fokus, die Auswahl und den Auswahlrahmen, die der Editor mit der angegebenen ID gesendet hat, sowie den Ablauf, auf den jedes davon wartete. Die aller anderen Editoren bleiben.  
+Die ID ist die `meta.editorId`, die jede Aktion trägt, die der gemeinsame Store dieses Editors sendet. Eine ID, von der dieser Editor nichts hält, ändert nichts.  
+Rufen Sie sie auf, wenn Ihr Transport erfährt, dass ein Teilnehmer gegangen ist. Andernfalls bleibt angezeigt, was der Teilnehmer gesendet hat, bis es abläuft: sein Mauszeiger 30 Sekunden nach dem zuletzt empfangenen, sein Fokus und seine Auswahl 90 Sekunden danach und sein Auswahlrahmen 3 Sekunden danach.
+
+```js
+sharedStore.forgetPeer(editorId);
+```
+
+### reseed {#reseed}
+
+Seit `5.1.0` öffnet die Methode das Dokument einer Sitzung im Editor erneut, wie es ein Wiedereinstieg tut. Die [Yjs](./yjs.md)-Bindung ruft sie auf, um das Dokument eines Raums zu öffnen, wenn sie sich an einen Raum bindet, der initialisiert wurde, und bei jedem Wiedereinstieg wieder, wobei sie die Ansicht behält, sobald der Editor dem Raum beigetreten war.  
+Sie lädt `value` wie [setInitialValue](../erd-editor-element.md#setinitialvalue) und übernimmt `lww` und `version` wie [mergeLWW](#mergelww), sodass der Store danach genau die übergebenen Register hält und seine Uhr die größere aus ihrer eigenen Version und `version`. Sie leert außerdem den Rückgängig-Verlauf und verwirft anders als `setInitialValue` die Auswahl und den Fokus, da sie benennen könnten, was der Wert nicht mehr enthält.  
+Abgesehen vom unten genannten Ableiten aus einem logischen Namen erzeugt sie keinen Rückgängig-Eintrag, löst kein Ereignis `change` aus und sendet keine Änderung. Sobald der Store einen Abonnenten hatte, sendet sie die Anforderung der Register, die jedes solche Laden sendet und die ein Transport, der die Register schon übergeben hat, verwerfen darf, und, bei eingeschaltetem [focusTracker](#focustracker), die geleerte Auswahl und den geleerten Fokus.  
+Wie `setInitialValue` funktioniert sie, solange [readonly](../erd-editor-element.md#readonly) gesetzt ist, verwirft eine Flow-Ansicht, beendet das Ziehen einer Beziehung und schließt die Editoren für Notizen, Tabellengruppennamen und Zellen, wobei sie das Eingetippte auf dieselbe Weise behält oder verwirft; ein Name, den eine sich schließende Zelle des logischen Namens aus dem ableitet, was ihr Leser eingetippt hat, ist eine gewöhnliche Bearbeitung: gesendet, rückgängig zu machen und als Ereignis `change` ausgelöst.
+
+Ohne `keepScreen` zeigt der Bildschirm, was der Wert enthält, wie nach `setInitialValue`. Mit `keepScreen: true` wird der Bildschirm des Lesers wieder über das geladene Dokument gelegt, und zwar nur auf diesem Bildschirm:
+
+- die Scrollposition und die Zoomstufe, sobald das Element sie gezeigt hat; eine, die nie gezeigt wurde, oder eine, die verborgen geladen und seither nicht gezeigt wurde, öffnet sich dort, wo der Wert sie hinsetzt, wie bei einem später beitretenden Editor;
+- die Registerkarte, wenn das Laden sie verschoben hat, und auf der Registerkarte Einstellungen auch die Registerkarte, von der der Leser kam, die eine dort eingeschaltete Sperre `Canvas Type` nennt;
+- die Namensansicht und jede Einstellung des Codegenerators, die der Leser unter ihrer Sperre für sich selbst zeigte, aber nur, wenn diese Sperre vor dem Laden eingeschaltet war, nach ihm weiterhin eingeschaltet ist und denselben gesperrten Wert hält. Hat also ein Teilnehmer inzwischen eine Einstellung entsperrt, geändert und mit einem anderen Wert wieder gesperrt, öffnet sich der Editor mit dem neuen gesperrten Wert, und wo die Sperre vor oder nach dem Laden ausgeschaltet ist, zeigt er den geladenen Wert;
+- jede Einstellung, die ein schreibgeschützter Leser auf seinem eigenen Bildschirm geändert hat, was auch immer die Sperren sagen.
+
+Nichts davon wird gesendet, und `value` und `runtimeValue` melden weiterhin das geladene Dokument. Ein späteres Entsperren durch einen Teilnehmer ersetzt eine so behaltene Einstellung des Codegenerators, wie es jedes Entsperren tut.  
+Das nächste Scrollen oder Zoomen des Lesers, während der Editor bearbeiten kann, macht die behaltene Scrollposition und Zoomstufe wieder zu denen des Dokuments und geht hinaus, angeführt vom aktuellen Stand des Bildschirms, sodass Replikate diese Zoomstufe ebenfalls übernehmen.
+
+Das Neuinitialisieren lässt, was der Store zurückhält, unverändert. Ein noch zurückgehaltenes Ziehen, Verschieben der Ansicht oder Zoomen geht danach hinaus, aus dem neu initialisierten Dokument gelesen; eine Farbänderung oder Größenänderung einer Notiz geht so hinaus, wie sie vorgenommen wurde, obwohl der Editor sie nicht mehr zeigt; und was `disconnect()` zurückhielt, geht bei `connection()` hinaus.  
+Rufen Sie daher zuerst [flushStreamBuffers](#flushstreambuffers) auf, senden Sie, was dabei ausgegeben wird, und initialisieren Sie neu mit einem Wert, der es enthält. Initialisieren Sie nie neu, solange die Verbindung getrennt ist.
+
+```js
+sharedStore.reseed(seed.value, {
+  lww: seed.lww,
+  version: seed.version,
+  keepScreen: true,
+});
+```
+
 ### destroy {#destroy}
 
 Zerstört die sharedStore-Instanz vollständig.  
 Der Editor selbst bleibt unberührt, sodass das Dokument nach dem Verlassen einer Sitzung bearbeitbar bleibt.  
 Die Maus- und Fokus-Tracker werden beendet, sobald der letzte sharedStore, den der Editor ausgegeben hat, zerstört ist.  
-Ein Stream-Stapel, den der Store noch zurückhält, wird mit ihm verworfen; rufen Sie zuerst [flushStreamBuffers](#flushstreambuffers) auf, um ihn zu senden.
+Ein Stream-Stapel, den der Store noch zurückhält, wird mit ihm verworfen; rufen Sie zuerst [flushStreamBuffers](#flushstreambuffers) auf, um ihn zu senden.  
+Die Mauszeiger, der Fokus, die Auswahlen und die Auswahlrahmen, die andere Editoren gesendet haben, bleiben angezeigt, bis sie ablaufen; seit `5.1.0` entfernt [forgetPeer](#forgetpeer) die eines Editors sofort.
 
 ```js
 sharedStore.destroy();

@@ -54,7 +54,8 @@ While the `Name View` lock is on, as it is in a new diagram, a switch changes on
 - In `Both Names`, the logical name cells hold the logical names and the name cells the physical names.
 
 A logical name cell edits like any other cell: start with `Enter` or a double-click — see [Table Editing](./table-editing.md). Opened on a blank logical name, the editor shows what the cell drew as its placeholder: the name in `Logical Names`, `logical` in `Both Names`.  
-Typing writes only the logical name. The physical name is derived from it once the editor closes (`Enter`, `Tab`, `Escape`, or a click elsewhere) on a changed logical name, as an undo step of its own after your typing. A physical name you wrote yourself is left as it is — see [Deriving Physical Names](./dictionary.md#deriving-physical-names).
+Typing writes only the logical name. The physical name is derived from it once the editor closes (`Enter`, `Tab`, `Escape`, or a click elsewhere) on a changed logical name, as an undo step of its own after your typing. A physical name you wrote yourself is left as it is — see [Deriving Physical Names](./dictionary.md#deriving-physical-names).  
+When a collaborator or a coding agent replaces the diagram while a logical name cell is open, the cell editor stays open as long as the new diagram still has that table or column and your Name View still draws the cell. Loading the diagram into the editor again, as Obsidian does when the file changes outside it, closes the cell editor at once. Either way, the close derives a physical name only where the table or column holds the logical name you typed, never from one the new diagram brought.
 
 `Tab` and `Shift + Tab` walk the cells the view draws, in their order — see [Tab Key](./table-editing.md#tab-key):
 

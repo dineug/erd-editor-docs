@@ -67,7 +67,8 @@ Tudi spremembe, ki prispejo iz drugega urejevalnika, se ne zabeležijo, zato raz
 
 Razveljavitev ukaza `Import`, ki nadomesti celoten diagram, povrne prejšnji diagram takšen, kakršen je bil v urejevalniku ob uvozu: vsak [zaklep](./settings.md#lock) je vklopljen ali izklopljen tako kot takrat, vsaka zaklenjena vrednost pa je enaka takratni.  
 Če je bila v tem diagramu nastavitev `Viewport` zaklenjena, se pogled in povečava vrneta na zaklenjeni pogled, v katerem se diagram odpre, ne pa tja, kjer ste bili. Če je bila njegova nastavitev `Viewport` odklenjena, se vrneta tja, kjer ste bili ob uvozu. Druge zaklenjene nastavitve, kot so zavihek, na katerem ste, jezik generatorja kode ali prikaz imen, ostanejo takšne, kot so na vašem zaslonu.  
-V novem diagramu so vsi zaklepi vklopljeni. Če želite ob taki razveljavitvi ohraniti svoj pogled, pred uvozom odklenite `Viewport`. Če ga odklenete pozneje ali uvozite datoteko JSON, katere lastni zaklep `Viewport` je izklopljen, se mesto, kamor vas pripelje razveljavitev, ne spremeni.
+V novem diagramu so vsi zaklepi vklopljeni. Če želite ob taki razveljavitvi ohraniti svoj pogled, pred uvozom odklenite `Viewport`. Če ga odklenete pozneje ali uvozite datoteko JSON, katere lastni zaklep `Viewport` je izklopljen, se mesto, kamor vas pripelje razveljavitev, ne spremeni.  
+Razveljavitev ali uveljavitev ukaza `Import` konča tudi risanje relacije – glejte razdelek [Ustvarjanje relacije](./editing-start.md#relationship-creation).
 
 Razveljavitev uvoza datoteke JSON povrne tudi besede, izraze in domene, ki jih je imel prejšnji diagram. Uvoz Sheme SQL, GraphQL, DBML ali AML ohrani slovarje, zato jih njegova razveljavitev in uveljavitev pustita takšne, kot so, vključno s spremembami, ki so bile od tedaj narejene na zavihku Slovar.
 

@@ -83,7 +83,9 @@ Una chiave serial è l’eccezione: la sua chiave esterna assume il tipo intero 
 Ogni colonna chiave esterna prende il nome dalla sua chiave: un nome di una sola parola come `id` riceve davanti il nome della tabella padre (`user_id`), un nome di più parole come `member_id` viene mantenuto, e un nome già presente nella tabella figlia viene numerato (`user_id_2`) — vedere [Nomi delle colonne chiave esterna](./relationship-editing.md#foreign-key-column-names).  
 Facendo clic due volte sulla stessa tabella si disegna una relazione autoreferenziale.  
 Una nuova relazione parte con `On Delete` e `On Update` entrambi su `Not set`; modificarli dal suo menu contestuale — vedere [ON DELETE e ON UPDATE](./relationship-editing.md#on-delete-and-on-update).  
-Per interrompere, premere `Escape` oppure premere di nuovo lo stesso tasto di scelta rapida. L’interruzione lascia la selezione com’è, e il successivo `Escape` la annulla.
+Per interrompere, premere `Escape` oppure premere di nuovo lo stesso tasto di scelta rapida. L’interruzione lascia la selezione com’è, e il successivo `Escape` la annulla.  
+Il disegno termina anche, sia che sia stato attivato solo il tipo sia che la tabella padre sia già stata scelta, quando il diagramma viene sostituito: da un `Import` al posto del diagramma, dall’annullamento o dalla ripetizione di uno, da un collaboratore o da un agente di programmazione che fa l’una o l’altra cosa, e dal nuovo caricamento del diagramma nell’editor, come fa Obsidian quando il file cambia all’esterno.  
+Un’importazione di Schema SQL, GraphQL, DBML o AML lo termina una volta disposte le sue tabelle, non quando il file viene scelto. [`Import and Add`](./file-import-export.md#import-and-add) lascia attivo il disegno.
 
 Una volta scelta la tabella padre, passando il puntatore su una tabella su cui la relazione può terminare, quella tabella viene evidenziata con un contorno e accanto a essa compaiono due pulsanti:
 

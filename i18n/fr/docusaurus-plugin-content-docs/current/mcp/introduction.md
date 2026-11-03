@@ -66,4 +66,7 @@ Les outils des noms logiques, des domaines et des dictionnaires nécessitent le 
 Parmi les versions ci-dessus, une extension antérieure à la version `4.2.0` ou un plugin antérieur à la version `1.2.0` permet toujours à l’agent de modifier en direct, puisqu’il utilise le protocole 2, mais il ignore les noms logiques, les liens de domaine et les lignes des dictionnaires qu’écrit l’agent, et les omet lorsqu’il enregistre le fichier.
 Un serveur antérieur à la version `1.1.0` qui modifie un fichier sur le disque le réécrit sans ses noms logiques, ses liens de domaine et ses lignes des dictionnaires (voir [Mettre à jour](./installation.md#updating)).
 
+Les modifications que vous et l’agent faites au même moment au même nom ou champ, ou à la position ou à la taille d’une même table, d’un même mémo ou d’un même groupe de tables, aboutissent au même résultat dans l’éditeur et pour l’agent avec le serveur `1.2.0` ou version ultérieure et, partout où le document est ouvert, l’extension VS Code `4.3.0` ou version ultérieure ou le plugin Obsidian ou JetBrains `1.3.0` ou version ultérieure.
+Une couleur, le SGBD et l’ordre des colonnes d’une table ou d’un index font exception (voir [Modifications faites au même moment](./live-and-headless.md#edits-made-at-the-same-moment)).
+
 Étape suivante : [Installation](./installation.md).

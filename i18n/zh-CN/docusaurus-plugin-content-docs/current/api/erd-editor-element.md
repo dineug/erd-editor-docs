@@ -105,10 +105,10 @@ Settings 标签页带有同样的 `Read only` 徽标，并且以不接受按下�
 在 `5.0.0` 之前，阅读者的滚动、缩放、标签页切换、数据库和代码设置，在没有锁定掌管它们时会进入 `value`（数据库从来没有锁定），共享 store 还会把它们发给其他编辑器。  
 Schema SQL 标签页自身 `This window only` 下的选择，即 `Statements`、`Header`、从 `4.2.0` 起的 `Write logical names into empty comments` 和 `Tables`，在任何编辑器中都从不保存，并且仍然生效；[`Export image`](../guide/guides/file-import-export.md#image) 对话框、主题构建器和 Display Language 选择器也同样可用。在主题构建器或 Display Language 选择器中做出选择时，仍会发出 [changePresetTheme](#changepresettheme) 或 [changeLocale](#changelocale)。
 
-设置了 `readonly` 期间，任何内容都不会进入 Undo 历史记录，滚动或缩放也不例外；编辑器的[共享 store](#getsharedstore) 也不发出任何更改，只发出它的 tracker 发出的阅读者的光标、焦点、选中状态和拖动框，以及另一个编辑器加入时所请求的寄存器（参见[协同编辑](./advanced/collaborative-editing.md)）。它仍会应用其他编辑器发来的每项更改。数据库、Code Generator 设置或 `View Option` 某行的变化会到达文档，除非阅读者在该屏幕上更改了该设置，否则也会到达屏幕；共享的名称显示切换则无论如何都会显示在屏幕上。
+设置了 `readonly` 期间，任何内容都不会进入 Undo 历史记录，滚动或缩放也不例外；编辑器的[共享 store](#getsharedstore) 也不发出任何更改，只发出它的 tracker 发出的阅读者的光标、焦点、选中状态和拖动框，以及另一个编辑器加入时所请求的寄存器（参见[协同编辑](./advanced/collaborative-editing.md)）。它仍会应用其他编辑器发来的每项更改。数据库、Code Generator 设置或 `View Option` 某行的变化会到达文档，除非阅读者在该屏幕上更改了该设置，否则也会到达屏幕；共享的名称显示切换则无论如何都会显示在屏幕上。从 `5.1.0` 起，在该设置的[锁定](../guide/guides/settings.md#锁定)开启期间更改的 Code Generator 语言、名称大小写或括号类型，只保留在更改它的那个编辑器的屏幕上，永远不会被发送，因此它既不会到达阅读者的文档，也不会到达其屏幕。锁定关闭时所做的更改，以及解锁所带来的值，仍按上述方式到达。
 
 开启它会结束正在打开的内容：单元格、备忘录或表分组的名称编辑器、正在绘制的关系、表、备忘录、表分组或列的拖动、Alt 拖动的副本、备忘录或表分组的调整大小、仍在进行的自动布局预览或排布、`Map Columns`、Time Travel 和取色器。它会清除选中状态，放下手形工具，并首先发出每个共享 store 仍扣留的拖动或滚动内容，与 [flushStreamBuffers](./advanced/collaborative-editing.md#flushstreambuffers) 的做法相同。已变为只读的表属性、Diff Viewer 和 `Export image` 对话框保持打开，滚动、缩放、标签页和名称显示保持原样。首次挂载时就是只读的元素以同样的方式启动，被宿主在页面中移动的元素则保留跳转留下的轮廓。  
-关闭它会让编辑控件回来，且没有任何内容被选中或打开。数据库、Code Generator 的语言、两种名称大小写、括号类型和 `View Option` 各行会恢复为文档的值，而滚动、缩放、标签页和名称显示保持在阅读者离开时的位置，`value` 也保持文档的设置，直到阅读者再次更改它们。两种切换都不会发出 `change`。  
+关闭它会让编辑控件回来，且没有任何内容被选中或打开。数据库、Code Generator 的语言、两种名称大小写、括号类型和 `View Option` 各行中，阅读者更改过的每一项，都会恢复为阅读者第一次更改它之前屏幕上显示的内容：文档的值（带上其他编辑器在此期间发来的更改），或者该编辑器在该设置的锁定下自行显示的值，而 `value` 从未持有这个值。滚动、缩放、标签页和名称显示保持在阅读者离开时的位置，`value` 保持文档的设置，直到它们再次被更改。两种切换都不会发出 `change`。  
 仅写属性名、`=""` 和 `="true"` 都会被读作 `true`。`="false"` 会被读作 `false`，其他任何字符串也一样，包括 HTML 惯用写法 `readonly="readonly"`。
 
 ```js
@@ -201,7 +201,7 @@ editor.setAttribute('enable-welcome-screen', 'true');
 
 以 JSON 字符串的形式获取当前文档，采用编辑器定义的 [schema](./advanced/schema.md)。  
 从 `4.0.0` 起，它是存储形式，即文件所保存形式的文档，也就是 `json` 导出写出的内容以及官方宿主保存的内容。它只包含现存的实体，不含已删除的实体、叠放顺序，以及编辑器自行推算的内容，例如测量得到的宽度、键标记和关系的连接线锚点。其中的实体按固定顺序排列键，以两个空格缩进，并以换行符结尾，因此同一个文档总是得到相同的字节。  
-从 `4.2.0` 起，它还会省略空的内容：空的 `doc` 列表、空的集合、不含任何内容的词典行，以及实体中为空的文本字段，例如名称、注释、数据类型、默认值或颜色。实体内部的列表（例如表的 `columnIds`）即使为空也仍会写出。新文档的 `doc` 为 `{}`，并且没有 `collections`，因此应把缺失的字段、列表或集合读作空。它包含表和列的逻辑名以及标明名称是否由词典生成的标记、列的域关联，以及词根、术语和域；每个词典都先写出一个由字段名组成的标题行，再按工作表中的顺序写出其各行，每行占一行。参见[存储形式与运行时值](./advanced/schema.md#存储形式与运行时值)。  
+从 `4.2.0` 起，它还会省略空的内容：空的 `doc` 列表、空的集合、不含任何内容的词典行，以及实体中为空的文本字段，例如名称、注释、数据类型、默认值或颜色。实体内部的列表（例如表的 `columnIds`）即使为空也仍会写出。新文档的 `doc` 为 `{}`，并且没有 `collections`，因此应把缺失的字段、列表或集合读作空。它包含表和列的逻辑名以及标明名称是否由词典生成的标记、列的域关联，以及词根、术语和域；每个词典都先写出一个由字段名组成的标题行，再按工作表中的顺序写出其各行，每行占一行。参见[存储形式](./advanced/schema.md#storage-form)。  
 [锁定](../guide/guides/settings.md#锁定)处于开启状态的每项设置，都按其锁定的值写出，而不是按屏幕上显示的值写出。`Viewport` 锁定掌管 `originX`、`originY` 和 `zoomLevel`，`Canvas Type`、`Language`、`Table Name Case`、`Column Name Case`、`Bracket Type` 以及从 `4.2.0` 起的 `Name View` 则各自掌管对应的设置。名称显示写为 `nameViewMode`，并且只在其不为 `'physical'` 时才写出。其他所有设置都按其当前的值写出，`lockSettings` 总会写出。各个位的说明参见 [Settings](./advanced/schema.md#settings)；`Name View` 锁定的位含义相反。  
 从 `5.0.0` 起，[只读](#readonly)编辑器的阅读者所更改的设置，无论是否锁定，也都按文档的值写出，因为它们只保留在该屏幕上。  
 新文档的所有锁定都处于开启状态，无论是元素在被赋予值之前显示的文档，还是从空白值加载的文档。在相应的锁定关闭之前，其 `value` 会一直把原点写为 `0, 0`、缩放级别写为 `1`、标签页写为 ERD 标签页，写出默认的 Code Generator 语言、名称大小写和括号类型，并且从 `4.2.0` 起把名称显示写为 `Physical Names`。  
@@ -215,6 +215,8 @@ const data = editor.value;
 
 加载此前保存的编辑器状态。它会替换整个文档，先清空当前文档。从 `4.2.0` 起，这也包括词根、术语和域：文档会采用文本中的词根、术语和域，文本中没有时则一个都没有，并且每个词典工作表自己的 Undo 历史记录都会被清空。  
 与 `clear()`、`setInitialValue()` 以及处于默认 `mode: 'replace'` 的各个 `setSchema*` 方法一样，它也会丢弃 Visualization 标签页的 Flow 视图：包括它的布局、视图范围所缩小到的表、行显示、缩放和平移，以及从 `4.2.0` 起其 `Previous table` 和 `Next table` 所依次经过的表。追加（`mode: 'append'`）则不会丢弃它。  
+从 `5.1.0` 起，它会结束正在绘制的关系，无论只是选定了关系类型还是已经选定了它的父表。[clear()](#clear)、处于 `mode: 'replace'` 的 `setSchema*` 方法、编辑器自身的 `Import`、对其中任何一项的 Undo 或 Redo（`clear()` 的 Undo 除外），以及通过 shared store 收到的其中每一项（来自协作者或编码智能体）也是如此。在 `5.1.0` 之前，绘制在加载期间一直保持选定状态，而当加载的文本（例如 Undo 所带的运行时值）把绘制起点的表作为已删除的实体持有时，一次点击就可能添加一条来自该已删除表的关系。追加不会结束绘制。  
+和以前一样，只要加载后的文档仍持有并显示备注、表分组名称或单元格编辑器所编辑的内容，该编辑器就会保持打开，否则关闭；在保持打开的编辑器中输入的内容会继续进入加载后的文档。从 `5.1.0` 起，被任何一次加载关闭的编辑器会把键盘交还给页面，而不是交回编辑器，因此针对已关闭文本的 `Delete` 或 `Backspace` 不会删除选中的任何内容。加载期间保持打开的逻辑名单元格在关闭时，只会根据用户输入的逻辑名生成物理名，从 `5.1.0` 起绝不会根据加载带来的逻辑名生成。  
 会记录到 Undo 历史记录中，因此可以 `Undo, Redo`，并且会发出 `change`。  
 它接受存储形式、[runtimeValue](#runtimevalue)，或较早发布版本保存的文件。  
 空字符串或非字符串的值不会报错，而是加载一个新文档，因此赋值前需要先做好校验。  
@@ -231,7 +233,10 @@ editor.value = 'json...';
 ## runtimeValue
 
 从 `4.0.0` 起，以 JSON 字符串的形式获取该编辑器所持有形式的文档。它没有 setter，因此在严格模式的代码中为其赋值会抛出错误。  
-它包含 [value](#value) 所省略的内容：已删除的实体及其顺序、叠放顺序、测量得到的宽度、键标记、关系的连接线锚点以及序列，并且从 `4.2.0` 起还包括空的文本字段、`doc` 列表和集合；从词典工作表中删除的行以及不含任何内容的行；每个词典行的排序键；词根、术语和域的 `doc` 列表；以及指向已删除的域的关联。锁定的设置在这里同样按其锁定的值写出。  
+它包含 [value](#value) 所省略的内容：已删除的实体及其顺序、叠放顺序、测量得到的宽度、键标记、每个关系的标志（是否为识别关系，以及其父端的绘制方式）和连接线锚点，以及序列。  
+从 `4.2.0` 起，它还会保留 `value` 所省略的空内容：实体中为空的文本，例如名称、注释、数据类型、默认值、颜色或备注文本；`doc` 列表 `tableIds`、`relationshipIds`、`indexIds` 和 `memoIds`，以及从 `tableEntities` 到 `memoEntities` 的集合，即使为空也会写出；文档持有分组或已删除的分组时的表分组列表和集合；以及词典及其 `doc` 列表，只要其中任何一个持有条目。它保留只含空白的逻辑名、指向已删除的域的关联、从词典工作表中删除的行，以及不含任何内容的行。与 `value` 中一样，值为 `''` 的逻辑名、域关联或表的分组，以及表中处于关闭状态的名称生成标记，都会被省略。  
+每个词典与文件中一样是一个标题行加各行，但其标题行在 `"name"` 之后紧接着写出 `"order"`，即每行的排序键，并且各行按编辑器持有它们的顺序排列（包括已删除的行），而不是工作表的顺序。要得到工作表的顺序，取其 `doc` 列表所列出的各行，按 `order` 排序（按码元顺序比较），排序键相同的行再按 `id` 排序。  
+其设置按 `value` 写出的方式写出，每个锁定的设置按其锁定的值。它以两个空格缩进，每个词典行单独占一行，并且与 `value` 不同，末尾没有换行符。  
 可以用它通过 [setInitialValue](#setinitialvalue)，为加入已在进行中的会话的另一个编辑器（例如协作者，或同一文档的第二个视图）载入初始文档。这样，会话之后发来的对删除操作的 Undo 会在那里完整地恢复该实体；而用 `value` 载入初始文档的编辑器不持有任何已删除的实体，恢复出来的会是一个空的、没有名称的表，或者从 `4.2.0` 起是一个空的词典行。参见[协同编辑](./advanced/collaborative-editing.md)。  
 已不再有任何机制回收已删除的实体，因此它们会一直留在其中，直到下次从文件打开该文档。  
 切勿将它写入文件：请保存 `value`，[JSON Schema](./advanced/schema.md#json-schema) 接受 `value`，而不接受它。
@@ -251,8 +256,15 @@ otherEditor.setInitialValue(editor.runtimeValue);
 从 `4.2.0` 起，写明了锁定但没有写明 `Name View` 锁定的文本，打开时该锁定同样处于开启状态，即使其他所有锁定都处于关闭状态。`4.2.0` 之前保存的文件就是这样的文本，除非有 `4.2.0` 的编辑器在其中关闭了该锁定（参见 [Settings](./advanced/schema.md#settings)）。它会以 `Physical Names` 打开，与一个锁定都没有写明的文本相同。  
 无论哪种情况，视图都会在文档的视图处打开（文本写明了锁定时为它保存的视图，一个都没有写明时为原点 `0, 0`、缩放级别 `1`）；如果那里没有绘制图的任何部分，则在图上打开。锁定的 `Viewport` 仍会在 `value` 中保留其锁定的值。  
 从 `4.0.0` 起，它还会丢弃此前所持有文档的协同状态，并且该编辑器已经订阅的 [shared store](#getsharedstore) 会再次向其他编辑器请求它们的协同状态，因此在进行中的会话里重新加载的编辑器能够跟上进度。请用另一个编辑器的 [runtimeValue](#runtimevalue) 为这样的编辑器载入初始文档。  
+从 `5.1.0` 起，协同寄存器也可以改为随初始文档一起提供；没有正在运行的编辑器可以应答时，已存储的快照就需要这样做。  
+在此调用之后（绝不是之前），把另一个 store 的 [getLWW()](./advanced/collaborative-editing.md#getlww) 和 [getVersion()](./advanced/collaborative-editing.md#getversion) 传给该编辑器的 shared store 的 [mergeLWW](./advanced/collaborative-editing.md#mergelww)。或者通过该 store 的 [reseed](./advanced/collaborative-editing.md#reseed) 载入，它在一次调用中完成载入并接收这些内容，同时还会丢弃选中状态和焦点。参见[为协作者载入初始文档](./advanced/collaborative-editing.md#seeding-a-collaborator)。  
 不是 JSON 的文本同样不会报错：文档会被清空，设置保持原样，解析错误则会输出到控制台。  
 与为 `value` 赋值不同，它不受 `readonly` 限制，因此可以用它把文档加载到只读编辑器中。只读编辑器随后会显示所加载文本中的设置，丢弃阅读者在屏幕上更改过的那些。
+
+从 `5.1.0` 起，它会结束正在绘制的关系，并关闭已打开的备注、表分组名称或单元格编辑器，即使加载后的文档仍持有该编辑器所编辑的内容。在 `5.1.0` 之前，绘制一直保持选定状态，而每个编辑器在加载后的文档仍持有其备注、分组，或表和列时都会保持打开。  
+关闭它们不会写入也不会发送任何内容：备注的文本和单元格的值在输入时就已写入此前所持有的文档，而 Domain 单元格的搜索（在选定域之前不写入任何内容）和已输入但尚未提交的表分组名称则会被丢弃。  
+唯一的例外是用户输入过的逻辑名单元格：当加载后的文档持有最后在那里输入的逻辑名时，关闭操作会据此生成物理名，与该单元格的任何一次关闭相同。这次生成与其他任何编辑一样，shared store 会发送它，它会产生一条 Undo 记录，并发出 `change`。  
+选中状态和获得焦点的单元格保持不变，键盘交还给页面，与 [setter](#setter) 对任何加载的说明相同。shared store 的 [reseed](./advanced/collaborative-editing.md#reseed) 也会以同样的方式关闭它们。
 
 ```js
 editor.setInitialValue('json...');
@@ -276,7 +288,7 @@ editor.addEventListener('change', () => {
 
 编辑器发生变更时会发出事件。  
 该事件有 200ms 的防抖，并且在 `readonly` 为 `true` 期间不会发出。  
-任何文档变更都会触发它：在 UI 中编辑、为 `value` 赋值、`clear()`、各个 `setSchema*` 方法，以及从 `4.0.0` 起的 `setSchemaJSON()` 和 `Import and Add`。`setInitialValue` 不会触发它。  
+任何文档变更都会触发它：在 UI 中编辑、为 `value` 赋值、`clear()`、各个 `setSchema*` 方法，以及从 `4.0.0` 起的 `setSchemaJSON()` 和 `Import and Add`。`setInitialValue` 不会触发它，从 `5.1.0` 起 shared store 的 [reseed](./advanced/collaborative-editing.md#reseed) 也不会，但两者在关闭用户输入过的逻辑名单元格时生成的物理名除外（参见 [setInitialValue](#setinitialvalue)）。  
 从 `4.2.0` 起，这包括 [Dictionary](../guide/guides/dictionary.md) 标签页上的每次编辑及其每次 Undo 或 Redo、逻辑名或域关联的更改、`Derive Physical Names Again`，以及 `Name View` 锁定关闭期间的名称显示切换。  
 在 Visualization 标签页的 Flow 模式中所做的任何操作都不会触发它，包括缩放、平移、移动卡片、`Tidy Up`、行显示、从卡片缩小视图范围，以及从 `4.2.0` 起通过 `Previous table` 和 `Next table` 或 Undo 与 Redo 的按键后退和前进，因为这些都不是文档变更。其 `Name View` 列表是例外：在 `Name View` 锁定关闭期间，在那里切换会触发它，与在 ERD 标签页上切换相同。  
 从 `4.0.0` 起，对[锁定](../guide/guides/settings.md#锁定)处于开启状态的设置所做的更改也不会触发它，因为这类更改只会移动屏幕，而永远不会改变 `value`：在 `Viewport` 锁定期间滚动或缩放 ERD 画布，在 `Canvas Type` 锁定期间切换标签页，在各自的锁定开启期间更改 Code Generator 的语言、表名大小写、列名大小写或括号类型，以及从 `4.2.0` 起在 `Name View` 锁定期间切换名称显示。只有这些更改会被排除，因此同时编辑了文档的批次仍会触发它。锁定或解锁某项设置会触发它。  
@@ -335,7 +347,9 @@ editor.blur();
 
 清空文档，移除所有表、列、关系、索引和备注，从 `4.0.0` 起还会移除所有表分组，从 `4.2.0` 起还会移除 Dictionary 标签页的词根、术语和域，并清空每个工作表自己的 Undo 历史记录。  
 所有设置都会保留，包括数据库、视图位置、缩放级别、表显示选项、每个锁定及其持有的值，以及 Schema SQL 标签页的 `Before tables` 和 `After tables` 脚本，因此清空后的文件仍会保存它原先保存的那些信息。如果想改为开始一个新文档，请为 `value` 赋值 `''`，或调用 `setInitialValue('')`。  
-会记录到 Undo 历史记录中，因此可以 Undo，并且会发出 `change`。Undo 会按编辑器所持有的形式恢复文档（包括其词根、术语和域），每项锁定的设置都处于其锁定的值。在 `readonly` 生效期间会被忽略。
+会记录到 Undo 历史记录中，因此可以 Undo，并且会发出 `change`。Undo 会按编辑器所持有的形式恢复文档（包括其词根、术语和域），每项锁定的设置都处于其锁定的值。在 `readonly` 生效期间会被忽略。  
+从 `5.1.0` 起，它会结束正在绘制的关系，如 [value setter](#setter) 所述，它的 Redo 也是如此；它的 Undo 则不会。  
+和以前一样，已打开的备注、表分组名称或单元格编辑器会关闭，因为清空后的文档没有可编辑的内容。从 `5.1.0` 起，关闭后的编辑器把键盘交还给页面，与加载之后相同。
 
 ```js
 editor.clear();
@@ -1007,7 +1021,7 @@ editor.setSystemLocale('pt-PT'); // null follows the browser again
 从 `4.0.0` 起，这四个方法都接受可选的第二个参数 `{ placement, mode }`：
 
 - `placement: 'grid'` 为默认值，会与以前一样立即将表逐行排列，调用不返回任何值。
-- `placement: 'auto'` 会像编辑器中的 `Import` 那样，先按关系排布这些表，并返回一个 `Promise`，该 `Promise` 会在导入作为一步 Undo 落下之后 resolve。表少于两个、没有关系、布局失败、页面没有 `SharedWorker`，或在 `Placing tables` 提示上按下 `Cancel` 时，会改为逐行排列。在此期间发生的加载（另一个替换式导入、为 `value` 赋值、`setInitialValue()`、`clear()`、协作者的加载，或对某次加载或 `clear()` 的 Undo 或 Redo）会取代它，此时 `Promise` 会 resolve，且不加载任何内容。以这种方式排布的多个导入，会按开始的顺序落下。
+- `placement: 'auto'` 会像编辑器中的 `Import` 那样，先按关系排布这些表，并返回一个 `Promise`，该 `Promise` 会在导入作为一步 Undo 落下之后 resolve。表少于两个、没有关系、布局失败、页面没有 `SharedWorker`，或在 `Placing tables` 提示上按下 `Cancel` 时，会改为逐行排列。在此期间发生的加载（另一个替换式导入、为 `value` 赋值、`setInitialValue()`、从 `5.1.0` 起 shared store 的 [reseed](./advanced/collaborative-editing.md#reseed)、`clear()`、协作者的加载，或对某次加载或 `clear()` 的 Undo 或 Redo）会取代它，此时 `Promise` 会 resolve，且不加载任何内容。以这种方式排布的多个导入，会按开始的顺序落下。
 - `mode: 'replace'` 为默认值，会替换文档。`mode: 'append'` 会像 [Import and Add](../guide/guides/file-import-export.md#import-and-add) 那样把文件添加到图的下方，图中已有的每个表都保持原样，除标签页和视图位置之外的所有设置也保持原样。在其他标签页中调用时，会先切换到 ERD 标签页。新的表，以及表分组处于显示状态时 DBML 文件带来的表分组，会成为选中对象；除非它们已经显示得足够清楚，否则视图会滚动到它们，这遵循从 `4.1.0` 起所有跳转共用的规则，参见[跳转的落点](../guide/guides/table-related-functions.md#where-a-jump-lands)。一次 Undo 即可撤回整个添加。无法读取的文本不会添加任何内容，文档保持原样。
 
 在 `readonly` 生效期间，替换会被忽略，追加不会添加任何内容，`placement: 'auto'` 的调用会立即 resolve。  
@@ -1131,6 +1145,9 @@ const commentedSQL = editor.getSchemaSQL('PostgreSQL', {
 返回用于实时协同编辑的 store。  
 `config` 为 `{ getNickname?, mouseTracker?, focusTracker? }`。两个 tracker 的默认值均为 `true`：`mouseTracker` 会把当前编辑器的鼠标光标广播给其他编辑器，`focusTracker` 会广播它获得焦点的单元格、选中状态和选择框。  
 从 `5.0.0` 起，设置了 [readonly](#readonly) 期间，该 store 不发出任何更改，只发出它的 tracker 发出的内容和加入的编辑器所请求的寄存器，并且仍会应用其他编辑器发来的内容。  
+从 `5.1.0` 起，它还会交出编辑器的协同寄存器及其时钟的版本（[getLWW](./advanced/collaborative-editing.md#getlww)、[getVersion](./advanced/collaborative-editing.md#getversion)），接收另一个 store 的寄存器（[mergeLWW](./advanced/collaborative-editing.md#mergelww)），忘记已离开的协作者的光标、焦点、选中状态和选择框（[forgetPeer](./advanced/collaborative-editing.md#forgetpeer)），并连同其旁保存的寄存器重新打开会话的文档（[reseed](./advanced/collaborative-editing.md#reseed)）。[`@dineug/erd-editor-yjs`](./advanced/yjs.md) 依靠这些使元素与 Yjs 文档保持同步。  
+从 `5.1.0` 起，两个用户在同一时刻更改同一个名称或字段、移动同一个表，或移动同一个备注或表分组或调整其大小时，在 `5.1.0` 或更高版本的每个编辑器和副本上最终结果一致，并且拖动、平移或缩放会以其终点的形式发送。  
+颜色、表或索引内部的列移动，以及数据库等少数设置是例外，每个编辑器和副本仍按收到的顺序采用它们。参见[并发编辑](./advanced/collaborative-editing.md#concurrent-edits)。  
 参见[协同编辑](./advanced/collaborative-editing.md)。
 
 ```js

@@ -54,7 +54,8 @@ A exibição `Physical Names` não desenha nenhum nome lógico, então troque pa
 - Na exibição `Both Names`, as células de nome lógico contêm os nomes lógicos, e as células de nome, os nomes físicos.
 
 Uma célula de nome lógico é editada como qualquer outra célula: comece com `Enter` ou um clique duplo — consulte [Edição de tabelas](./table-editing.md). Aberto em um nome lógico em branco, o editor mostra como texto de espaço reservado o que a célula desenhava: o nome na exibição `Logical Names`, `logical` na exibição `Both Names`.  
-Digitar escreve apenas o nome lógico. O nome físico é derivado dele quando o editor se fecha (`Enter`, `Tab`, `Escape` ou um clique em outro lugar) sobre um nome lógico alterado, como uma etapa de desfazer própria, depois da sua digitação. Um nome físico escrito por você fica como está — consulte [Derivar nomes físicos](./dictionary.md#deriving-physical-names).
+Digitar escreve apenas o nome lógico. O nome físico é derivado dele quando o editor se fecha (`Enter`, `Tab`, `Escape` ou um clique em outro lugar) sobre um nome lógico alterado, como uma etapa de desfazer própria, depois da sua digitação. Um nome físico escrito por você fica como está — consulte [Derivar nomes físicos](./dictionary.md#deriving-physical-names).  
+Quando um colaborador ou um agente de codificação substitui o diagrama enquanto uma célula de nome lógico está aberta, o editor da célula continua aberto enquanto o novo diagrama ainda tiver essa tabela ou coluna e a sua exibição de nomes ainda desenhar a célula. Carregar o diagrama no editor de novo, como o Obsidian faz quando o arquivo muda fora dele, fecha o editor da célula na hora. De qualquer forma, o fechamento deriva um nome físico somente quando a tabela ou coluna contém o nome lógico que você digitou, nunca de um que o novo diagrama trouxe.
 
 `Tab` e `Shift + Tab` percorrem as células que a exibição desenha, na ordem delas — consulte [Tecla Tab](./table-editing.md#tab-key):
 

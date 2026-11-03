@@ -1,5 +1,5 @@
 ---
-sidebar_position: 2
+sidebar_position: 3
 description: Replicirajte delujoč urejevalnik v shrambo brez vmesnika zunaj glavne niti in serializirajte dokument za shranjevanje.
 ---
 
@@ -88,6 +88,11 @@ Od različice `4.2.0` enako velja za besedo, izraz ali domeno, odstranjeno z lis
 Ko urejevalnik razveljavi odstranitev, replika, inicializirana brez vrstice, to vrstico znova navede prazno, in ker lastnost `value` prazno vrstico izpusti, replika dokument shrani brez nje.  
 Pri domeni v tej repliki tudi stolpci in izrazi, ki so bili povezani z njo, ostanejo brez povezave z domeno, saj replika povezav ni nikoli hranila, razveljavitev pa jih ne pošlje.
 
+Od različice `5.1.0` lahko urejevalnike usklajuje tudi paket [`@dineug/erd-editor-yjs`](./yjs.md), in sicer prek sobe Yjs.  
+Če repliko napajate kot zgoraj iz elementa, povezanega s sobo, prejme samo spremembe, narejene v tem elementu, nikoli pa tistih, ki jih soba prinese: te v element prispejo kot spremembe drugega urejevalnika, skupna shramba pa tega, kar je prejela, ne pošilja naprej.  
+Če želite shraniti dokument sobe, shranite lastnost `value` povezanega elementa ali povezane shrambe udeleženca brez vmesnika, kot opisuje razdelek [Kaj hrani soba](./yjs.md#what-the-room-holds).  
+Ponudnik trajne shrambe za Yjs shrani sobo kot tako, ki hrani vrednost med izvajanjem in spremembe, narejene po njej, ne pa datoteke; glejte razdelek [Omejitve](./yjs.md#limits).
+
 ## InjectEngineContext {#injectenginecontext}
 
 ### toWidth {#towidth}
@@ -154,7 +159,7 @@ Vsebuje samo žive entitete v stalnem vrstnem redu, brez odstranjenih, brez vrst
 Od različice `4.2.0` vsebuje tudi logična imena, podatek, ali je bilo posamezno ime izpeljano iz slovarjev, povezave z domenami ter besede, izraze in domene z zavihka [Slovar](../../guide/guides/dictionary.md).  
 Od različice `4.2.0` izpusti tudi vsako prazno besedilno polje entitete, vsak seznam v `doc` in vsako kolekcijo, ki ne vsebuje ničesar, ter samo polje `collections`, kadar so vse kolekcije prazne.  
 Zamaknjena je za dva presledka, vsaka vrstica slovarja je v svoji vrstici besedila, konča pa se z znakom za novo vrstico, zato isti dokument vedno da enake bajte.  
-Za njeno vsebino glejte razdelek [Oblika za shranjevanje in vrednost med izvajanjem](./schema.md#storage-form-and-runtime-value).
+Za njeno vsebino glejte razdelek [Oblika za shranjevanje](./schema.md#storage-form).
 
 Vsaka nastavitev z vklopljenim [zaklepom](../../guide/guides/settings.md#lock) se zapiše z vrednostjo, pri kateri je bila zaklenjena, vsaka druga nastavitev pa takšna, kot je.  
 Zaklep `Viewport` hkrati zajema izhodišče pogleda in stopnjo povečave, zavihek, jezik generatorja kode, oba zapisa imen in vrsta narekovajev pa imajo vsak svoj zaklep.  
@@ -172,6 +177,7 @@ const snapshot = replicationStore.runtimeValue;
 ```
 
 Vrednost uporabite, da prek metode `setInitialValue` inicializirate urejevalnik ali drugo shrambo, ki se pridruži pozneje; glejte stran [Sodelovalno urejanje](./collaborative-editing.md).  
+Replika nima metod [getLWW](./collaborative-editing.md#getlww) ali [getVersion](./collaborative-editing.md#getversion), zato z lastnostjo `runtimeValue` ne preda registrov sodelovanja: urejevalnik, inicializiran iz nje, jih prevzame od delujočih urejevalnikov, kot opisuje razdelek [Inicializacija sodelavca](./collaborative-editing.md#seeding-a-collaborator).  
 Nikoli je ne shranjujte kot datoteko: vsebuje odstranjene entitete, objavljena shema [JSON Schema](./schema.md#json-schema) pa jo zavrne.  
 Prav te odstranjene entitete omogočajo, da pozneje poslana razveljavitev odstranitve v shrambi, inicializirani iz nje, povrne celotno entiteto.  
 Ostanejo, dokler se dokument naslednjič ne odpre iz svoje datoteke, katere oblika jih izpušča.
@@ -230,7 +236,7 @@ Lastnost `value` je serializiran dokument v obliki za shranjevanje, isti niz, ki
 Lastnost `changed` ima vrednost `false`, ko so dejanja od prejšnjega dogodka `change` ali od nalaganja pustila lastnost `value` bajt za bajtom nespremenjeno.
 
 Sprememba, ki jo [zaklep](../../guide/guides/settings.md#lock) izpusti iz lastnosti `value`, vseeno sproži dogodek `change` z lastnostjo `changed`, nastavljeno na `false`, zato zapisujte samo, ko ima lastnost `changed` vrednost `true`.  
-Takšne spremembe so pomik ali sprememba povečave, ko je nastavitev `Viewport` zaklenjena, preklop zavihka, ko je nastavitev `Canvas Type` zaklenjena, ter sprememba jezika generatorja kode, zapisa imen ali vrste narekovajev, ko je vklopljen zaklep te nastavitve.  
+Takšne spremembe so pomik ali sprememba povečave, ko je nastavitev `Viewport` zaklenjena, preklop zavihka, ko je nastavitev `Canvas Type` zaklenjena, ter sprememba jezika generatorja kode, zapisa imen ali vrste narekovajev, ko je vklopljen zaklep te nastavitve, kar od različice `5.1.0` še pošilja samo urejevalnik pred različico `5.1.0` (glejte razdelek [dispatch, dispatchSync](#dispatch-dispatchsync)).  
 Od različice `4.2.0` je takšna sprememba tudi preklop prikaza imen, ko je nastavitev `Name View` zaklenjena: urejevalnik ga še vedno pošlje, replika pa ga zavrže, tako kot drugi urejevalniki.  
 Preklop prikaza imen, opravljen v urejevalniku samo za branje, se zavrže na enak način, ne glede na njegov zaklep.  
 Dogodek [change](../erd-editor-element.md#change) elementa takšno spremembo izpusti, vendar jo replika vseeno sporoči.  
@@ -282,6 +288,23 @@ Urejevalnik pred različico `4.2.0` v seji lahko repliki različice `4.2.0` še 
 Uvoz Sheme SQL, GraphQL, DBML ali AML z ukazom `Import` v tem urejevalniku, ne pa tudi z ukazom `Import and Add`, izprazni besede, izraze in domene replike.  
 Njegova razveljavitev nalaganja, ukaza `Import` ali metode `clear()` v repliko naloži njegovo lastno kopijo dokumenta brez logičnih imen, povezav z domenami ali slovarjev; glejte razdelek [Mešanje izdaj](./collaborative-editing.md#mixing-releases).  
 Modul `@dineug/erd-editor/engine.js` izvaža iste `createReplicationStore`, `ReplicationStore` in `ReplicationChange` kot prej, `createReplicationStore` pa sprejme isti kontekst.
+
+Različica `5.1.0` ne doda nobene vrste dejanja in ne spremeni nobenega izvoza modula `@dineug/erd-editor/engine.js`, zato replika od različice `4.2.0` naprej še vedno obdrži vsako spremembo, ki jo pošlje urejevalnik različice `5.1.0`.  
+Od različice `5.1.0` replika spremembe, narejene v istem trenutku, razreši tako kot urejevalniki različice `5.1.0`; glejte razdelek [Sočasne spremembe](./collaborative-editing.md#concurrent-edits).  
+Hrani različico za položaj tabele, za položaj in velikost beležke in skupine tabel ter za izhodišče pogleda in stopnjo povečave.  
+Urejevalnik različice `5.1.0` vlečenje, premik pogleda ali povečavo pošlje kot mesto, kjer se konča, prek dejanj `table.moveTo`, `memo.moveTo`, `tableGroup.moveTo`, `settings.scrollTo` in `settings.changeZoomLevel`, replika pa vsako od teh ter vsako dejanje `memo.resize` in `tableGroup.resize` prevzame samo, če njegova različica ni nižja od tiste, ki jo hrani.  
+Ko torej dva taka urejevalnika v istem trenutku premakneta ali spremenita velikost iste tabele, beležke ali skupine tabel, jo replika shrani na točki in z velikostjo, ki ju prikazujejo vsi urejevalniki, ne glede na vrstni red, v katerem prejme njihove spremembe, vlečenje, premik pogleda ali povečava, ki ju prenos dostavi dvakrat, pa ne premakne ničesar dvakrat.  
+Dokler je nastavitev `Viewport` odklenjena, replika shrani izhodišče in stopnjo povečave vsako iz zapisa z največjo različico, torej tam, kjer je stal urejevalnik, ki ga je naredil.  
+Povečava premakne tudi izhodišče, zato se lahko premik pogleda in povečava, ki ju dva urejevalnika naredita v istem trenutku, shranita kot izhodišče enega urejevalnika s stopnjo povečave drugega.  
+Pred različico `5.1.0` je replika korake premika pogleda in povečave vseh urejevalnikov seštevala v en pogled.
+
+Razdalje, ki jih urejevalnik pred različico `5.1.0` pošlje za vlečenje, premik pogleda ali povečavo (`table.move`, `memo.move`, `tableGroup.move`, `settings.streamScrollTo` in `settings.streamZoomLevel`), se še vedno prištejejo temu, kar hrani replika, zunaj različic.  
+Sprememba barve še vedno prispe brez različice: replika jo tako kot vsak urejevalnik opremi z lastno različico in obdrži barvo, ki jo je prejela zadnjo, zato se lahko dve spremembi barve iste tabele, beležke ali skupine tabel, narejeni v istem trenutku, shranita drugače, kot ju prikazuje urejevalnik.  
+Replika pred različico `5.1.0` točke in velikosti uporabi v vrstnem redu prispetja, zato lahko tabelo shrani drugje, kot jo prikazujejo urejevalniki različice `5.1.0`.  
+Vse urejevalnike v seji in repliko obdržite na različici `5.1.0` ali novejši, da spremembe, narejene v istem trenutku, končajo enako, razen izjem, ki jih navaja razdelek [Sočasne spremembe](./collaborative-editing.md#concurrent-edits).
+
+Od različice `5.1.0` urejevalnik spremembo jezika generatorja kode, zapisa imen ali vrste narekovajev pošlje samo, dokler je zaklep te nastavitve izklopljen, in sicer z oznako `shared: true` v njenih podatkih, replika pa uporabi vsako tako označeno spremembo, tako kot urejevalniki; glejte stran [Sodelovalno urejanje](./collaborative-editing.md).  
+Neoznačeno spremembo, ki jo urejevalnik pred različico `5.1.0` pošlje ne glede na zaklep, replika uporabi samo, dokler je ta nastavitev pri njej odklenjena, dokler je zaklenjena, pa jo zavrže (glejte razdelek [on@change](#onchange)).
 
 Od različice `4.0.0` obe metodi uporabita tudi dejanje `editor.mergeLWW`, ki prenaša registre sodelovanja, s katerimi urejevalnik odgovori, ko se seji pridruži drug urejevalnik, zato replika sočasne spremembe razreši tako kot urejevalniki.  
 Ne spremeni niti enega bajta lastnosti `value` in ne sproži dogodka `change`.  

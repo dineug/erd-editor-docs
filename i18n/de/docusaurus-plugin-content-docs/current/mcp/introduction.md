@@ -66,4 +66,7 @@ Die Tools für logische Namen, Domänen und die Wörterbücher benötigen den Se
 Von den oben genannten Versionen lässt eine Erweiterung vor `4.2.0` oder ein Plugin vor `1.2.0` den Agenten weiterhin live bearbeiten, da diese Versionen Protokoll 2 sprechen, ignoriert aber die logischen Namen, Domänenverknüpfungen und Wörterbuchzeilen, die der Agent schreibt, und lässt sie beim Speichern der Datei weg.
 Ein Server vor `1.1.0`, der eine Datei auf dem Datenträger bearbeitet, schreibt sie ohne ihre logischen Namen, Domänenverknüpfungen und Wörterbuchzeilen zurück – siehe [Aktualisieren](./installation.md#updating).
 
+Bearbeitungen, die Sie und der Agent zeitgleich am selben Namen oder Feld oder an der Position oder Größe derselben Tabelle, Notiz oder Tabellengruppe vornehmen, enden im Editor und für den Agenten gleich, mit dem Server `1.2.0` oder neuer und, wo auch immer das Dokument geöffnet ist, der Erweiterung für VS Code `4.3.0` oder neuer oder dem Plugin für Obsidian oder JetBrains `1.3.0` oder neuer.
+Eine Farbe, die Datenbank und die Reihenfolge der Spalten in einer Tabelle oder einem Index sind die Ausnahmen – siehe [Zeitgleich vorgenommene Bearbeitungen](./live-and-headless.md#edits-made-at-the-same-moment).
+
 Weiter: [Installation](./installation.md).

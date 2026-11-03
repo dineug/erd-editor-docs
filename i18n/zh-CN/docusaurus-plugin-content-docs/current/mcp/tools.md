@@ -47,7 +47,7 @@ description: erd-editor MCP 服务器提供的所有工具：一次一页地读�
 | --- | --- |
 | `snapshot` | 包含每个实体及其 id 的紧凑 JSON，其中包括表分组和词根、术语、域的各行，以及设置和 Schema SQL 脚本。它省略因查看者而异的内容：测量出的宽度、叠放顺序、视图、标签页和名称显示。schema 较大时体积也较大。 |
 | `sql` | 八种数据库之一的 DDL：`Databricks`、`MariaDB`、`MSSQL`、`MySQL`、`Oracle`、`PostgreSQL`、`Snowflake` 或 `SQLite`。`vendor` 默认为文档所设置的数据库。整个文档的 DDL 包含其前置脚本和后置脚本。指定 `tableIds`、`tableNames` 或 `groupNames` 时，只返回这些表，以及它们持有的外键，不包含脚本。外键会带有其 ON DELETE 与 ON UPDATE 操作，目标数据库省略的操作除外，参见 [ON DELETE 与 ON UPDATE](../guide/guides/relationship-editing.md#on-delete-and-on-update)。 |
-| `json` | 与保存时写出的文件完全相同的整个文档，包括编辑器尚未保存的编辑，参见[存储形式与运行时值](../api/advanced/schema.md#存储形式与运行时值)。 |
+| `json` | 与保存时写出的文件完全相同的整个文档，包括编辑器尚未保存的编辑，参见[存储形式](../api/advanced/schema.md#storage-form)。 |
 | `scripts` | 只返回文档的前置脚本和后置脚本，形式为 `{"before":"…","after":"…"}`，未设置的脚本为空，无论 schema 有多大。 |
 
 只有 `sql` 格式接受 `vendor`、`statements`、`header`、`logicalNameAsComment`、`tableIds`、`tableNames` 和 `groupNames`，其他格式会拒绝它们。
@@ -205,7 +205,7 @@ id 来自 `erd_list` 和 `erd_get`，或者来自创建该实体的那次调用�
 | `erd_remove_table_group` | `groupId` | 删除分组。其中的表留在原处，不再属于任何分组。 |
 | `erd_change_table_group_name` | `groupId`, `value` | 重命名分组。空字符串会让分组没有名称。 |
 | `erd_change_table_group_color` | `groupId`, `color` | 设置分组的颜色。 |
-| `erd_move_table_group` | `groupId`, `x`, `y` | 移动分组，使其矩形从该点开始，其中的表也移动相同的距离，与拖动其标题栏时相同。移动总计不足 20 像素（横向与纵向的距离相加）时不产生 Undo 记录。 |
+| `erd_move_table_group` | `groupId`, `x`, `y` | 移动分组，使其矩形从该点开始，其中的表也移动相同的距离，与拖动其标题栏时相同。移动总计不足 20 像素（横向与纵向的距离相加）时不产生 Undo 记录。从服务器 `1.2.0` 起，该移动会以分组及其表最终到达的点传到编辑器，因此对于 VS Code 扩展 `4.3.0` 或更高版本，或 Obsidian 或 JetBrains 插件 `1.3.0` 或更高版本，在那里于同一时刻对该分组或其中某个表进行的移动，最终落在两个位置之一，绝不会是两者之和，参见[同一时刻进行的编辑](./live-and-headless.md#edits-made-at-the-same-moment)。 |
 | `erd_resize_table_group` | `groupId`, `x?`, `y?`, `width`, `height` | 设置分组的矩形，其中的表保持原位。省略 `x` 和 `y` 时保留其左上角的位置。无法连同四周留白容纳分组中各表的矩形会被拒绝，消息会指出矩形必须容纳的范围。 |
 | `erd_set_table_group` | `tableIds`, `groupId` | 把表放入分组，每个表都会离开其原来所在的分组。`groupId` 为 `null` 或空字符串时，会把这些表移出所有分组。 |
 
@@ -295,6 +295,8 @@ Dictionary 标签页出现之前的 ERD Editor 发布版本在保存文件时会
 
 - `erd_import_sql`、`erd_import_graphql`、`erd_import_dbml` 和 `erd_import_aml` 会替换所有表、关系、索引、备注和表分组。它们保留文档的设置（包括锁定），只有视图除外，视图会回到画布的起点并恢复为 100%；它们还会保留文档的词根、术语和域词典。它们带来的表没有逻辑名，也不关联任何域。
 - `erd_import_json` 会替换整个文档，包括其设置和词典：JSON 中的设置、锁定、词根、术语和域会取代当前文档的这些内容，未记录任何锁定的 JSON 会开启所有锁定，并把视图放在画布的起点。每个查看者都保留自己的名称显示，除非该 JSON 的 `Name View` 锁定处于关闭状态，此时会带入该 JSON 的名称显示。要保留当前文档的设置，请以 `erd_read` 的 `json` 格式给出的文本为基础。空文本会得到一个新文档，与 `erd_open_document` 带 `create` 时创建的文档相同。
+
+对于 VS Code 扩展 `4.3.0` 或更高版本，或 Obsidian 或 JetBrains 插件 `1.3.0` 或更高版本的编辑器，`replace` 及其 `erd_undo` 或 `erd_redo` 也会结束你正在绘制的关系，参见[实时模式](./live-and-headless.md#实时模式)。
 
 `append` 会像编辑器的 [Import and Add](../guide/guides/file-import-export.md#import-and-add) 一样，把导入的内容添加到文档中，一次 `erd_undo` 即可撤回整个添加：
 

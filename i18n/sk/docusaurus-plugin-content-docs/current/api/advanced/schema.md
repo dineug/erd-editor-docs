@@ -1,31 +1,32 @@
 ---
-sidebar_position: 3
-description: Formát dokumentu .erd.json – úložná forma, ktorú obsahuje súbor, a hodnota za behu, ktorú drží editor, typy TypeScript, konštanty za každým číselným poľom a zverejnená JSON Schema.
+sidebar_position: 4
+description: Formát dokumentu .erd.json – úložná forma, ktorú obsahuje súbor, jej typy TypeScript, konštanty za každým číselným poľom a zverejnená JSON Schema.
 ---
 
 # Schéma
 
 `.erd.json` je formát dokumentov editora. Túto stránku si prečítajte, ak potrebujete dokument generovať, overovať alebo migrovať mimo editora.
 
-Od verzie `4.0.0` má dokument dve serializácie, obe s hodnotou `'3.0.0'` v poli `version`. Úložná forma je to, čo obsahuje súbor: vracia ju [`editor.value`](../erd-editor-element.md#value), zapisuje ju export JSON a je jedinou formou, ktorú prijíma zverejnená [JSON Schema](#json-schema). Hodnota za behu je celý dokument tak, ako ho drží editor, a vracia ju [`editor.runtimeValue`](../erd-editor-element.md#runtimevalue). Metóda `setInitialValue()`, setter `value` a metóda `setSchemaJSON()` načítajú obe formy, akýkoľvek súbor uložený staršou verziou a dokument `.vuerd` vo formáte v2. Pred verziou `4.0.0` existovala iba jedna: vlastnosť `value` vracala celý dokument tak, ako ho držal editor, rovnako ako teraz vlastnosť `runtimeValue`.
+Táto stránka opisuje úložnú formu, ktorú zapisuje každé vydanie od verzie `4.0.0`, teda dokument tak, ako ho obsahuje súbor. Vracia ju [`editor.value`](../erd-editor-element.md#value), zapisuje ju export JSON a je jedinou formou, ktorú prijíma zverejnená [JSON Schema](#json-schema). Jej pole `version` má hodnotu `'3.0.0'`, ako v každom súbore vo formáte v3, ktorý uložilo staršie vydanie, takže podľa `version` nerozoznáte starší súbor od novšieho. Metóda `setInitialValue()`, setter `value` a metóda `setSchemaJSON()` ju načítajú, rovnako ako akýkoľvek súbor uložený staršou verziou a dokument `.vuerd` vo formáte v2. Pred verziou `4.0.0` vracala vlastnosť `value` celý dokument tak, ako ho držal editor, takže súbor uložený vtedy obsahuje viac (pozrite si časť [Úložná forma](#storage-form)).  
+Vlastnosť [`runtimeValue`](../erd-editor-element.md#runtimevalue) editora je iná serializácia, ktorú táto stránka neopisuje. Inicializuje sa ňou iný editor alebo replika a [miestnosť Yjs](./yjs.md#what-the-room-holds) ju ukladá do svojej snímky stavu; do súboru nikdy nepatrí a JSON Schema odmietne každú, ktorá obsahuje entitu.
 
-## Úložná forma a hodnota za behu {#storage-form-and-runtime-value}
+## Úložná forma {#storage-form}
 
-Úložná forma obsahuje iba aktuálne entity: každú tabuľku uvedenú v `doc.tableIds`, stĺpce, ktoré tieto tabuľky uvádzajú, vzťahy medzi dvoma zachovanými tabuľkami, indexy zachovaných tabuliek so stĺpcami indexu, ktorých stĺpec tabuľka stále uvádza, uvedené poznámky a skupiny tabuliek a od verzie `4.2.0` uvedené slová, termíny a domény, ktoré okrem svojho identifikátora obsahujú aj nejakú hodnotu. Vynecháva to, čo editor odvodí pri načítaní alebo drží, kým je otvorený: odstránené entity, polia `seqColumnIds` a `seqIndexColumnIds`, všetky polia `zIndex`, namerané šírky, pole `ui` stĺpca, `identification`, `startRelationshipType` a body ukotvenia vzťahu a od verzie `4.2.0` pole `order` každého riadka slovníka a zoznamy `doc.wordIds`, `doc.termIds` a `doc.domainIds`. Nižšie uvedené typy označujú každé z týchto polí ako `// runtime only`.  
+Úložná forma obsahuje iba aktuálne entity: každú tabuľku uvedenú v `doc.tableIds`, stĺpce, ktoré tieto tabuľky uvádzajú, vzťahy medzi dvoma zachovanými tabuľkami, indexy zachovaných tabuliek so stĺpcami indexu, ktorých stĺpec tabuľka stále uvádza, uvedené poznámky a skupiny tabuliek a od verzie `4.2.0` slová, termíny a domény z hárkov karty Slovník, ktoré okrem svojho identifikátora obsahujú aj nejakú hodnotu. Neobsahuje nič, čo editor odvodí pri načítaní alebo drží, iba kým je otvorený: žiadne poradie prekrývania, namerané šírky ani značky kľúčov a ani to, či je vzťah identifikujúci, ako sa kreslí jeho koniec pri nadradenej tabuľke alebo kde sa stretáva so svojimi tabuľkami. Každé načítanie to odvodí znova z toho, čo súbor obsahuje.  
 Každá kolekcia okrem slovníkov má ako kľúče identifikátory zoradené v poradí kódových jednotiek, pričom stĺpce sú najprv zoskupené podľa `tableId` a stĺpce indexov podľa `indexId`. Od verzie `4.2.0` nasledujú kolekcie `wordEntities`, `termEntities` a `domainEntities` v tomto poradí za všetkými ostatnými kolekciami a každá sa zapisuje ako hlavička a riadky, jeden riadok na riadku textu (pozrite si časť [Riadky slovníkov](#dictionary-rows)). Každá entita zapisuje svoje polia v pevnom poradí a text je odsadený dvoma medzerami a končí znakom nového riadka. Rovnaký dokument sa preto vždy zapíše do rovnakých bajtov, úprava zmení iba to, čoho sa týka, a súbor uložený na počítači s inými písmami sa znova otvorí s rovnakou hodnotou `value`.  
 VS Code, Obsidian a doplnok pre JetBrains zapisujú súbor iba vtedy, keď úprava zmení hodnotu `value`, takže súbor uložený staršou verziou si zachová svoju starú formu až do prvej úpravy.
 
 Od verzie `4.2.0` úložná forma vynecháva aj to, čo nič neobsahuje: každé textové pole, ktoré entita alebo jej pole `ui` obsahuje ako `''` (pri tabuľke `name`, `comment` a `ui.color`, pri stĺpci `name`, `comment`, `dataType` a `default`, pri indexe `name`, pri poznámke `value` a `ui.color`, pri skupine tabuliek `name` a `color`), každý zoznam v objekte `doc` a každú kolekciu bez jedinej položky, ako aj samotné pole `collections`, keď sú všetky kolekcie prázdne. Text zložený iba z medzier sa zapíše tak, ako je, okrem logického názvu, ktorý sa vtedy vynechá, a okrem slova, termínu alebo domény, ktorých hodnoty okrem identifikátora sú všetky prázdne alebo zložené iba z medzier a ktoré sa vynechajú celé. Každý identifikátor, každý zoznam vnútri entity a každé číslo vrátane `0` sa naďalej zapisuje. Objekt `doc` sa zapisuje vždy, takže súbor nového dokumentu obsahuje `$schema`, `version`, jeho nastavenia a `"doc": {}`.  
 Pri parsovaní sa chýbajúce textové pole načíta ako `''` a chýbajúca kolekcia ako prázdna, ako to robí každá verzia pracujúca s formátom v3, a úložná forma vynechá zoznam v objekte `doc` iba vtedy, keď jeho kolekcia nič neobsahuje (pozrite si časť [Doc](#doc)). Editor starší ako verzia `4.2.0` preto otvorí aj tieto súbory a program, ktorý súbor číta sám, musí chýbajúce údaje čítať rovnako. Súbor uložený staršou verziou sa pri najbližšom uložení zapíše s vynechanými prázdnymi textami, zoznamami a kolekciami, čo je jednorazová zmena, a odvtedy sa ukladá bajt po bajte rovnako.
 
-Hodnota za behu zachováva to, čo úložná forma vynecháva: odstránené entity, sekvencie, z-indexy, šírky, značky kľúčov, príznaky vzťahov a body ukotvenia, prázdne textové polia a štyri zoznamy `tableIds`, `relationshipIds`, `indexIds` a `memoIds` a šesť kolekcií od `tableEntities` po `memoEntities`, aj keď sú prázdne. Od verzie `4.2.0` zachováva aj odstránené slová, termíny a domény, riadky, ktoré nič neobsahujú, pole `order` každého riadka, tri zoznamy slovníkov, logický názov zložený iba z medzier a prepojenie s odstránenou doménou. Je odsadená dvoma medzerami a nekončí znakom nového riadka. Používajte ju iba na inicializáciu spolupracovníka alebo druhého zobrazenia pomocou metódy `setInitialValue()`, aby vrátenie späť odstránenia, ktoré pošle iný editor, tam obnovilo celú entitu. Nikdy ju nezapisujte do súboru; JSON Schema ju odmietne. Na odstránené entity sa už nevzťahuje zber nepotrebných údajov (garbage collection), takže hodnota za behu ich zachováva, kým sa dokument nabudúce neotvorí zo svojho súboru.
+Úložná forma zapisuje každé zamknuté nastavenie s jeho zamknutou hodnotou (pozrite si pole [`lockSettings`](#settings)), pole `settings.ddlScripts` iba vtedy, keď niektorý skript obsahuje text, a pole `groupId` tabuľky iba vtedy, keď označuje skupinu tabuliek, ktorú súbor zapisuje. Od verzie `4.2.0` zapisuje aj pole `settings.nameViewMode` iba vtedy, keď hodnota, ktorú zapisuje, nie je `'physical'`, pole `settings.columnOrder` so siedmimi položkami tam, kde je to možné (pozrite si časť [Settings](#settings)), a pole `nameDerived` tabuľky iba vtedy, keď má hodnotu `true`.  
+Zapisuje `doc.tableGroupIds` a `tableGroupEntities` iba vtedy, keď existuje skupina tabuliek, pole `logicalName` iba vtedy, keď obsahuje iný text ako medzery, pole `domainId` stĺpca iba vtedy, keď označuje doménu, ktorú súbor zapisuje, a každý slovník iba vtedy, keď obsahuje riadok, ktorý súbor zapisuje.
 
-Obe formy zapisujú každé zamknuté nastavenie s jeho zamknutou hodnotou (pozrite si pole [`lockSettings`](#settings)), pole `settings.ddlScripts` iba vtedy, keď niektorý skript obsahuje text, a pole `groupId` tabuľky iba vtedy, keď nie je prázdne. Od verzie `4.2.0` obe zapisujú aj pole `settings.nameViewMode` iba vtedy, keď hodnota, ktorú zapisujú, nie je `'physical'`, pole `settings.columnOrder` so siedmimi položkami tam, kde je to možné (pozrite si časť [Settings](#settings)), a pole `nameDerived` tabuľky iba vtedy, keď má hodnotu `true`.  
-Úložná forma zapisuje `doc.tableGroupIds` a `tableGroupEntities` iba vtedy, keď existuje skupina tabuliek, pole `logicalName` iba vtedy, keď obsahuje iný text ako medzery, pole `domainId` stĺpca iba vtedy, keď označuje doménu, ktorú súbor zapisuje, a každý slovník iba vtedy, keď obsahuje riadok, ktorý súbor zapisuje. Hodnota za behu zapisuje polia skupín tabuliek, kým dokument obsahuje skupinu alebo odstránenú skupinu, polia `logicalName` a `domainId`, kým nie sú `''`, a každý slovník s jeho zoznamom, kým niektorý z nich obsahuje položku, a to aj odstránený riadok.
+Súbor uložený pred verziou `4.0.0` obsahuje celý dokument tak, ako ho vtedy držal editor, vrátane odstránených entít a toho, čo odvodí každé načítanie. Načítanie ho prečíta, ponechá miesto každej tabuľky a poznámky v poradí prekrývania (pozrite si časť [Doc](#doc)), zvyšok odvodí znova a nasledujúce uloženie zapíše iba úložnú formu.
 
 ## TypeScript {#typescript}
 
-Typy opisujú hodnotu za behu. Pole označené `// runtime only` sa v úložnej forme vynecháva a pole označené `?` sa zapisuje iba vtedy, keď niečo obsahuje. Prázdne texty, zoznamy a kolekcie, ktoré úložná forma od verzie `4.2.0` vynecháva, označené nie sú.
+Typy opisujú úložnú formu, pričom každý uvádza svoje polia v poradí, v akom ich zapisuje súbor. Pole označené `?` je pole, ktoré úložná forma môže vynechať, ako podrobne opisuje časť [Úložná forma](#storage-form), a pri parsovaní sa chýbajúce pole načíta ako nič neobsahujúce: `''`, `false`, žiadna skupina tabuliek ani doména, prázdna kolekcia, `'physical'` pri `nameViewMode` a dva prázdne skripty pri `ddlScripts`. Výnimkou je chýbajúci zoznam v objekte `doc`, ktorý parsovanie doplní z jeho kolekcie (pozrite si časť [Doc](#doc)). V riadku slovníka `?` označuje hodnoty, pred ktorými môže riadok skončiť (pozrite si časť [Riadky slovníkov](#dictionary-rows)). Každé ďalšie pole sa zapisuje vždy.
 
 ### ERDEditorSchemaV3 {#erdeditorschemav3}
 
@@ -35,13 +36,13 @@ type ERDEditorSchemaV3 = {
   version: '3.0.0';
   settings: Settings;
   doc: Doc;
-  collections: {
-    tableEntities: Record<string, Table>;
-    tableColumnEntities: Record<string, Column>;
-    relationshipEntities: Record<string, Relationship>;
-    indexEntities: Record<string, Index>;
-    indexColumnEntities: Record<string, IndexColumn>;
-    memoEntities: Record<string, Memo>;
+  collections?: {
+    tableEntities?: Record<string, Table>;
+    tableColumnEntities?: Record<string, Column>;
+    relationshipEntities?: Record<string, Relationship>;
+    indexEntities?: Record<string, Index>;
+    indexColumnEntities?: Record<string, IndexColumn>;
+    memoEntities?: Record<string, Memo>;
     tableGroupEntities?: Record<string, TableGroup>;
     wordEntities?: DictionaryRows; // rows of Word
     termEntities?: DictionaryRows; // rows of Term
@@ -216,7 +217,7 @@ Od verzie `4.2.0` existuje ďalší príznak `show`, `columnDomain` (`8192`), vy
 Editor starší ako verzia `4.2.0` uchováva `show` ako celé číslo, takže pri uložení v ňom sa príznak zachová.
 
 Od verzie `4.2.0` má `ColumnType` deväť hodnôt. `columnLogicalName` (`128`) určuje miesto bunky logického názvu, ktorú riadok stĺpca vykresľuje iba v zobrazení `Both Names`, a `columnDomain` (`256`) miesto bunky domény. Sú to riadky `Logical Name` a `Domain` v [poradí stĺpcov](../../guide/guides/settings.md#adjusting-column-order) na karte Nastavenia. Editor uchováva poradie všetkých deviatich a poradie nového dokumentu je `128, 1, 2, 256, 4, 8, 16, 32, 64`.  
-Obe formy zapisujú poradie so siedmimi položkami a vynechávajú `128` a `256`, kým `128` stojí tesne pred `columnName` a `256` tesne za `columnDataType`. Nový dokument preto naďalej zapisuje `1, 2, 4, 8, 16, 32, 64` a súbor, v ktorého poradí sa tieto dve hodnoty nikdy nepresunuli, si zachová svoje bajty. Inak zapisujú všetkých deväť.  
+Úložná forma zapisuje poradie so siedmimi položkami a vynecháva `128` a `256`, kým `128` stojí tesne pred `columnName` a `256` tesne za `columnDataType`. Nový dokument preto naďalej zapisuje `1, 2, 4, 8, 16, 32, 64` a súbor, v ktorého poradí sa tieto dve hodnoty nikdy nepresunuli, si zachová svoje bajty. Inak zapisuje všetkých deväť.  
 Pri parsovaní sa tieto dve hodnoty vložia do poradia so siedmimi položkami na uvedené miesta bez ohľadu na to, v akom poradí je týchto sedem hodnôt, a deväť položiek, ktoré obsahujú každý typ, sa prevezme tak, ako sú.  
 Od verzie `5.0.0` prijme aj akékoľvek iné poradie. Každý `ColumnType`, ktorý pozná, ponechá raz v danom poradí a každú inú položku zahodí: hodnotu, ktorú nepomenúva žiadny `ColumnType`, napríklad typ pridaný neskorším vydaním, aj druhú položku rovnakého typu. Každý typ, ktorý v poradí chýba, sa umiestni tesne za najbližší typ pred ním v predvolenom poradí, ktorý poradie obsahuje, alebo, ak taký nie je, tesne pred najbližší nasledujúci, čím nachádzajú svoje miesta `128` a `256` v siedmich položkách. Ako predvolené poradie sa načíta iba poradie, ktoré nepomenúva žiadny známy typ, alebo hodnota, ktorá nie je pole.  
 Súbor uložený neskorším vydaním sa preto otvorí s poradím typov, ktoré toto vydanie pozná, a uloženie tu zapíše toto poradie bez ostatných. Pred verziou `5.0.0` parsovanie čítalo každé iné poradie ako predvolené, takže sa takýto súbor otvoril s vynulovaným poradím stĺpcov. JSON Schema prijme sedem alebo deväť celých čísel.
@@ -224,18 +225,18 @@ Súbor uložený neskorším vydaním sa preto otvorí s poradím typov, ktoré 
 Od verzie `4.0.0` má konštanta `Language` osem ďalších cieľových jazykov pre [Generátor kódu](../../guide/guides/code-generator.md), od `Mermaid` po `JSONSchema`. Hodnota `language`, ktorú parser nepozná, sa načíta ako `GraphQL`, takže editor starší ako verzia `4.0.0` otvorí dokument, ktorý bol uložený s jedným z nich, s jazykom GraphQL a uložením v ňom sa zapíše GraphQL.
 
 Od verzie `4.0.0` zaujíma pole `lockSettings` miesto poľa `ignoreSaveSettings` a konštanta `LockSettingType` miesto konštanty `SaveSettingType`, ktorá bola odstránená. Pole `lockSettings` určuje nastavenia, ktoré dokument ukladá v stave, v akom boli v čase zamknutia. Bit `viewport` pokrýva polia `originX`, `originY` a `zoomLevel` spoločne, pretože počiatok uložený bez svojho priblíženia sa otvorí inde, a každý ďalší bit pokrýva pole, podľa ktorého je pomenovaný. Zodpovedajú riadkom [`Lock`](../../guide/guides/settings.md#lock) na karte Nastavenia.  
-Vlastnosti `value` aj `runtimeValue` zapisujú zamknuté nastavenie s jeho zamknutou hodnotou bez ohľadu na to, čo editor zobrazuje, a každé ďalšie nastavenie v jeho aktuálnom stave. Kým je teda zapnuté príslušné zamknutie, posúvanie a zmena priblíženia, prepínanie kariet, zmena jazyka na karte Generátor kódu, štýlu názvov či typu úvodzoviek alebo prepnutie Zobrazenia názvov ponechá súbor bez zmeny. Zamknutie prevezme hodnotu, ktorú má nastavenie v tej chvíli, a pri parsovaní sa zamknutá hodnota prevezme z uloženého poľa.  
+Súbor obsahuje každé zamknuté nastavenie s jeho zamknutou hodnotou bez ohľadu na to, čo editor zobrazuje, a každé ďalšie nastavenie v jeho aktuálnom stave. Kým je teda zapnuté príslušné zamknutie, posúvanie a zmena priblíženia, prepínanie kariet, zmena jazyka na karte Generátor kódu, štýlu názvov či typu úvodzoviek alebo prepnutie Zobrazenia názvov ponechá súbor bez zmeny. Zamknutie prevezme hodnotu, ktorú má nastavenie v tej chvíli, a pri parsovaní sa zamknutá hodnota prevezme z uloženého poľa.  
 Dokument začatý od nuly – nový editor alebo replikačné úložisko či prázdna hodnota zadaná do `value` alebo `setInitialValue()` – má pole `lockSettings` nastavené na `63`, čiže všetky zamknutia sú zapnuté. Dokument, ktorého `settings` neobsahujú `lockSettings` – každý súbor uložený pred verziou `4.0.0` bez ohľadu na jeho `ignoreSaveSettings` a každý dokument vo formáte v2 –, sa takisto otvorí so všetkými zamknutiami zapnutými: jeho zobrazenie a karta sú rovnaké ako v novom dokumente (`originX` a `originY` `0`, `zoomLevel` `1`, karta ERD) a jeho jazyk, štýly názvov a typ úvodzoviek sú zamknuté na uložených hodnotách. Dokument, ktorý svoje zamknutia uvádza, si ich zachová vrátane `0` a takisto všetky hodnoty, ktoré uložil.  
 Pri parsovaní sa zachová každý bit poľa `lockSettings` vrátane neznámych, takže zamknutie, ktoré pridá novšia verzia, sa pri uložení v tejto verzii zachová; JSON Schema overuje iba to, či ide o celé číslo. Editor starší ako verzia `4.0.0` pri ukladaní pole `lockSettings` zahodí a zobrazenie a kartu zapíše v aktuálnom stave, takže súbor sa v tejto verzii znova otvorí ako súbor uložený pred verziou `4.0.0`.
 
 Od verzie `4.2.0` existuje siedme zamknutie, `unlockNameViewMode` (`64`), riadok `Name View`, ktoré pokrýva `nameViewMode`. Jeho bit sa číta opačne ako ostatné bity zamknutí, podobne ako bity skrytia v `Show`: ak je nastavený, Zobrazenie názvov je odomknuté, a ak je vynulovaný, je zamknuté. Hodnota `63` preto naďalej znamená, že sú zapnuté všetky zamknutia, a nový dokument ju má so Zobrazením názvov zamknutým na `'physical'`. Súbor uložený pred verziou `4.2.0` má tento bit vynulovaný bez ohľadu na ostatné zamknutia, a to aj pri hodnote `0`, takže sa otvorí so Zobrazením názvov zamknutým na `'physical'`. Dokument so všetkými zamknutiami vypnutými má hodnotu `64` a dokument so všetkými ostatnými zamknutiami zapnutými a odomknutým Zobrazením názvov má hodnotu `127`. Toto zamknutie testujte obrátene: je zapnuté, kým platí `(lockSettings & 64) === 0`.  
-Kým je zapnuté, prepnutie Zobrazenia názvov zmení iba obrazovku editora, ktorý ho urobil, a dokument si ponechá zamknuté zobrazenie. Kým je vypnuté, prepnutie v editore, ktorý môže upravovať, patrí dokumentu a každý spolupracovník sa prepne spolu s ním. Prepnutie v editore iba na čítanie v oboch prípadoch zmení iba jeho vlastnú obrazovku. Pozrite si časť [`Lock`](../../guide/guides/settings.md#lock).  
+Kým je bit vynulovaný, súbor obsahuje v poli `nameViewMode` zamknuté zobrazenie bez ohľadu na to, čo ukazuje ktorýkoľvek editor, a kým je nastavený, aktuálne zobrazenie. Čo ukazuje každý editor pri zapnutom aj vypnutom zamknutí, opisuje časť [`Lock`](../../guide/guides/settings.md#lock).  
 Editor verzie `4.0.0` alebo `4.1.0` pri uložení tento bit zachová, ale pole `nameViewMode` zahodí, takže sa dokument v tejto verzii znova otvorí so zobrazením `'physical'` a so zamknutím v pôvodnom stave.
 
 Od verzie `4.0.0` obsahuje pole `ddlScripts` dva skripty z karty [Schéma SQL](../../guide/guides/schema-sql.md), ktoré DDL zapisuje pre každú databázu: `before` za hlavičku a pred tabuľky, `after` za vygenerovaný kód DDL. DDL zapíše každý z nich so zalomeniami riadkov LF, bez úvodných prázdnych riadkov a koncových prázdnych znakov a pri MSSQL ukončený príkazom `GO`, ako opisuje časť [Skripty pred tabuľkami a za nimi](../../guide/guides/schema-sql.md#before-and-after-scripts); samotné pole `ddlScripts` uchováva každý skript tak, ako bol zadaný. Kľúč sa zapisuje iba vtedy, keď niektorý zo skriptov obsahuje text, a vtedy s oboma; chýbajúci kľúč alebo skript, ktorý nie je reťazcom, sa načíta ako `''`. Voľby `Statements`, `Header` a `Tables` na tejto karte a od verzie `4.2.0` aj jej prepínač [`Write logical names into empty comments`](../../guide/guides/schema-sql.md#logical-names-as-comments) sa v dokumente neukladajú.  
 Editor starší ako verzia `4.0.0` pri načítaní dokumentu skripty zahodí, takže uložením v ňom sa stratia.
 
-Od verzie `4.2.0` je `nameViewMode` [Zobrazenie názvov](../../guide/guides/logical-names.md#name-view), teda názvy, ktoré diagram vykresľuje: `'physical'` fyzický názov každej tabuľky a stĺpca, `'logical'` ich logický názov na mieste fyzického názvu a `'both'` logický aj fyzický názov. Ponuky ich nazývajú `Physical Names`, `Logical Names` a `Both Names`. Obe formy ho zapisujú ako posledné, za `ddlScripts`, a iba vtedy, keď hodnota, ktorú zapisujú, nie je `'physical'`; kým je zapnuté zamknutie `Name View`, ide o zamknutú hodnotu bez ohľadu na to, čo ukazuje obrazovka. Chýbajúca hodnota alebo hodnota, ktorú parser nepozná, sa načíta ako `'physical'` a JSON Schema prijme iba `"logical"` a `"both"`.  
+Od verzie `4.2.0` je `nameViewMode` [Zobrazenie názvov](../../guide/guides/logical-names.md#name-view), teda názvy, ktoré diagram vykresľuje: `'physical'` fyzický názov každej tabuľky a stĺpca, `'logical'` ich logický názov na mieste fyzického názvu a `'both'` logický aj fyzický názov. Ponuky ich nazývajú `Physical Names`, `Logical Names` a `Both Names`. Úložná forma ho zapisuje ako posledné, za `ddlScripts`, a iba vtedy, keď hodnota, ktorú zapisuje, nie je `'physical'`. Chýbajúca hodnota alebo hodnota, ktorú parser nepozná, sa načíta ako `'physical'` a JSON Schema prijme iba `"logical"` a `"both"`.  
 Editor starší ako verzia `4.2.0` pri načítaní dokumentu pole `nameViewMode` zahodí.
 
 Do konštánt `Database`, `Language`, `Show`, `ColumnType`, `ColumnOption`, `LockSettingType` a `ReferentialAction` sa hodnoty iba pridávajú. Uložený dokument uchováva číslo, takže nový databázový systém, cieľ generovania kódu, príznak, typ stĺpca, možnosť stĺpca, zamknutie alebo akcia dostane nasledujúci bit namiesto miesta uprostred.
@@ -244,52 +245,42 @@ Do konštánt `Database`, `Language`, `Show`, `ColumnType`, `ColumnOption`, `Loc
 
 ```ts
 type Doc = {
-  tableIds: string[];
-  relationshipIds: string[];
-  indexIds: string[];
-  memoIds: string[];
+  tableIds?: string[];
+  relationshipIds?: string[];
+  indexIds?: string[];
+  memoIds?: string[];
   tableGroupIds?: string[];
-  wordIds?: string[]; // runtime only
-  termIds?: string[]; // runtime only
-  domainIds?: string[]; // runtime only
 };
 ```
 
-Každý z prvých piatich zoznamov určuje poradie jedného druhu entít, z ktorého vychádzajú DDL, triedenie tabuliek a poradie vykresľovania. V úložnej forme obsahuje každý zoznam iba identifikátory zachovaných entít, každý raz, v uvedenom poradí, a od verzie `4.2.0` sa zoznam, ktorý žiadne neobsahuje, vynechá. Od verzie `4.0.0` určuje pole `tableGroupIds` poradie skupín tabuliek.
+Každý zoznam určuje poradie jedného druhu entít, z ktorého vychádzajú DDL, triedenie tabuliek a poradie vykresľovania. Každý obsahuje iba identifikátory entít, ktoré súbor zapisuje, každý raz, v uvedenom poradí, a od verzie `4.2.0` sa zoznam, ktorý žiadne neobsahuje, vynechá. Od verzie `4.0.0` určuje pole `tableGroupIds` poradie skupín tabuliek. Slovníky tu nemajú zoznam, pretože ich riadky stoja v poradí hárka (pozrite si časť [Riadky slovníkov](#dictionary-rows)), a JSON Schema v objekte `doc` neprijíma žiadny iný kľúč.
 
-Od verzie `4.2.0` uvádzajú `wordIds`, `termIds` a `domainIds` aktuálne riadky každého slovníka: riadok, ktorý jeho kolekcia obsahuje, ale jeho zoznam nie, je odstránený. Neurčujú poradie v hárku, ktoré udáva pole `order` každého riadka. Zapisuje ich iba hodnota za behu, každý z nich vtedy, keď zoznam alebo jeho kolekcia obsahuje položku. Samotné riadky súboru určujú členstvo aj poradie a JSON Schema tieto zoznamy odmietne.  
 Od verzie `4.2.0` sa pri parsovaní zoznam, ktorý dokument vynecháva alebo ktorý obsahuje ako niečo iné než pole, načíta ako všetky položky, ktoré obsahuje jeho kolekcia, každý identifikátor raz, v uloženom poradí; prázdne pole zostane prázdne a každá položka jeho kolekcie sa potom načíta ako odstránená. Editor starší ako verzia `4.2.0` načíta chýbajúci zoznam ako prázdny, preto úložná forma naďalej zapisuje každý zoznam vždy, keď jeho kolekcia obsahuje entitu.
 
-Od verzie `4.0.0` sa poradie prekrývania neukladá. Pri parsovaní sa každá uvedená tabuľka, poznámka a skupina tabuliek, ktorá nemá pole `zIndex`, zaradí do poradia prekrývania podľa svojho miesta vo svojom zozname, pričom neskoršie sú vpredu: skupiny tabuliek od `1`, tabuľky od `2` a poznámky nad všetkými tabuľkami. Entita, ktorá má pole `zIndex`, ako v hodnote za behu alebo v súbore uloženom pred verziou `4.0.0`, si ho ponechá. Presunutie tabuľky alebo poznámky dopredu sa preto pri opätovnom otvorení súboru stratí.
+Od verzie `4.0.0` súbor neobsahuje poradie prekrývania. Načítanie zaradí uvedené tabuľky a poznámky do poradia prekrývania podľa ich miesta vo svojich zoznamoch, pričom neskoršie sú vpredu a každá poznámka je nad každou tabuľkou, a skupiny tabuliek rovnako medzi sebou, za tabuľkami. Tabuľka alebo poznámka v súbore uloženom pred verziou `4.0.0` má v poli `ui` hodnotu `zIndex`, ktorú načítanie ponechá ako jej miesto v poradí a nasledujúce uloženie ju vynechá. Presunutie tabuľky alebo poznámky dopredu sa preto pri opätovnom otvorení súboru stratí.
 
 ### Kolekcia: tableEntities {#collection-tableentities}
 
 ```ts
 type Table = {
   id: string;
-  name: string;
+  name?: string;
   logicalName?: string;
-  comment: string;
+  comment?: string;
   columnIds: string[];
-  seqColumnIds: string[]; // runtime only
   groupId?: string;
-  nameDerived?: boolean;
+  nameDerived?: true;
   ui: TableUI;
 };
 
 type TableUI = {
   x: number;
   y: number;
-  zIndex: number; // runtime only
-  widthName: number; // runtime only
-  widthLogicalName: number; // runtime only
-  widthComment: number; // runtime only
-  color: string;
+  color?: string;
 };
 ```
 
-Od verzie `4.0.0` má tabuľka pole `groupId`, identifikátor [skupiny tabuliek](../../guide/guides/table-groups.md), do ktorej patrí. Chýbajúce alebo prázdne pole `groupId` alebo také, ktoré neoznačuje žiadnu skupinu v `doc.tableGroupIds`, znamená, že tabuľka nemá skupinu, a úložná forma ho zapisuje iba vtedy, keď označuje zachovanú skupinu.  
-Ak pole `seqColumnIds` chýba alebo v ňom chýba niektorý uvedený identifikátor, pri parsovaní sa nastaví na `columnIds` a editor pri každom načítaní znova zmeria `widthName`, `widthLogicalName` a `widthComment` pomocou vlastných písiem.
+Od verzie `4.0.0` má tabuľka pole `groupId`, identifikátor [skupiny tabuliek](../../guide/guides/table-groups.md), do ktorej patrí. Chýbajúce alebo prázdne pole `groupId` alebo také, ktoré neoznačuje žiadnu skupinu v `doc.tableGroupIds`, znamená, že tabuľka nemá skupinu, a úložná forma ho zapisuje iba vtedy, keď označuje zachovanú skupinu.
 
 Od verzie `4.2.0` má tabuľka pole `logicalName`, teda názov, ktorý vykresľujú [zobrazenia](../../guide/guides/logical-names.md#name-view) `Logical Names` a `Both Names` (`''` znamená žiadny), a pole `nameDerived` s hodnotou `true`, kým je `name` [odvodený](../../guide/guides/dictionary.md#deriving-physical-names) z logického názvu pomocou slovníkov. Kým je príznak nastavený, nový logický názov znova odvodí fyzický názov; kým nie je, fyzický názov sa považuje za vlastný a nový logický názov ho ponechá, pokiaľ nie je prázdny alebo zložený iba z medzier. Ručné premenovanie príznak vypne a príkaz [`Derive Physical Names Again`](../../guide/guides/dictionary.md#derive-physical-names-again) prepíše aj názov, ktorý niekto zapísal sám, a zapne príznak všade, kde existuje logický názov.  
 Úložná forma zapisuje pole `logicalName` za pole `name` tak, ako bolo zadané, iba vtedy, keď obsahuje iný text ako medzery, a pole `nameDerived` za pole `groupId` iba vtedy, keď má hodnotu `true`, jedinú hodnotu, ktorú JSON Schema prijme. Chýbajúce pole `logicalName` sa načíta ako `''` a chýbajúce pole `nameDerived` ako `false`, takže každý názov v súbore uloženom pred verziou `4.2.0` sa považuje za vlastný.  
@@ -301,24 +292,13 @@ Editor starší ako verzia `4.2.0` pri načítaní dokumentu obe polia zahodí, 
 type Column = {
   id: string;
   tableId: string;
-  name: string;
-  comment: string;
-  dataType: string;
-  default: string;
+  name?: string;
+  comment?: string;
+  dataType?: string;
+  default?: string;
   options: number; // Constants: ColumnOption
   logicalName?: string;
   domainId?: string;
-  ui: ColumnUI; // runtime only
-};
-
-type ColumnUI = {
-  keys: number; // Constants: ColumnUIKey
-  widthName: number;
-  widthLogicalName: number;
-  widthComment: number;
-  widthDataType: number;
-  widthDomain: number;
-  widthDefault: number;
 };
 
 // Constants
@@ -329,17 +309,12 @@ const ColumnOption = {
   notNull: 8,
   nameDerived: 16,
 } as const;
-
-const ColumnUIKey = {
-  primaryKey: 1,
-  foreignKey: 2,
-} as const;
 ```
 
-Od verzie `4.0.0` úložná forma nezapisuje pole `ui` stĺpca. Pri každom načítaní sa odvodí pole `keys`, značka primárneho kľúča z bitu `primaryKey` poľa `options` a značka cudzieho kľúča zo vzťahov, ktoré končia na danom stĺpci, a zmeria sa šesť šírok.  
+Od verzie `4.0.0` súbor neobsahuje značky kľúčov: každé načítanie označí stĺpec ako primárny kľúč podľa bitu `primaryKey` poľa `options` a ako cudzí kľúč, kým na ňom v jeho tabuľke končí vzťah.  
 Editor starší ako verzia `4.0.0` zobrazí stĺpce súboru uloženého v tejto verzii bez ikon primárneho kľúča.
 
-Od verzie `4.2.0` má stĺpec pole `logicalName`, rovnako ako tabuľka, a pole `domainId`, identifikátor domény, s ktorou je prepojený (`''` znamená žiadnu). Úpravy v jednom editore udržiavajú prepojený stĺpec na type údajov jeho domény, ako opisuje časť [Domény a typy údajov](../../guide/guides/dictionary.md#domains-and-data-types). Pri parsovaní sa však typ žiadneho stĺpca nezmení, takže súbor zapísaný inde môže ponechať prepojený stĺpec s iným typom a rovnako aj skrížené úpravy dvoch spolupracovníkov; hárok Kontroly každý taký prípad uvedie ako [`Domain type mismatch`](../../guide/guides/dictionary.md#what-each-check-finds). Pri parsovaní sa vymaže pole `domainId`, ktoré neoznačuje žiadnu doménu v dokumente. Odstránená doména sa stále počíta, takže editor si prepojenie s ňou ponechá, kým ju vrátenie späť môže obnoviť. Za pole `options` úložná forma zapisuje pole `logicalName` podľa pravidla pre tabuľku a pole `domainId` iba vtedy, keď označuje doménu, ktorú súbor zapisuje, takže nikdy nezapíše prepojenie s odstránenou doménou.  
+Od verzie `4.2.0` má stĺpec pole `logicalName`, rovnako ako tabuľka, a pole `domainId`, identifikátor domény, s ktorou je prepojený (`''` znamená žiadnu). Úpravy v jednom editore udržiavajú prepojený stĺpec na type údajov jeho domény, ako opisuje časť [Domény a typy údajov](../../guide/guides/dictionary.md#domains-and-data-types). Pri parsovaní sa však typ žiadneho stĺpca nezmení, takže súbor zapísaný inde môže ponechať prepojený stĺpec s iným typom a rovnako aj skrížené úpravy dvoch spolupracovníkov; hárok Kontroly každý taký prípad uvedie ako [`Domain type mismatch`](../../guide/guides/dictionary.md#what-each-check-finds). Pri parsovaní sa vymaže pole `domainId`, ktoré neoznačuje žiadnu doménu, ktorú súbor obsahuje. Za pole `options` úložná forma zapisuje pole `logicalName` podľa pravidla pre tabuľku a pole `domainId` iba vtedy, keď označuje doménu, ktorú súbor zapisuje, takže stĺpec prepojený s odstránenou doménou alebo s doménou, ktorú súbor vynecháva, sa zapíše bez prepojenia a s typom údajov, ktorý obsahuje.  
 `ColumnOption.nameDerived` (`16`) je príznak odvodeného názvu stĺpca, ktorý sa uchováva v poli `options` spolu s ostatnými bitmi a znamená to isté ako `nameDerived` tabuľky. Napríklad primárny kľúč s NOT NULL, ktorého názov sa odvodil zo slovníkov, má v poli `options` hodnotu `26`.  
 Editor starší ako verzia `4.2.0` pri načítaní dokumentu polia `logicalName` a `domainId` zahodí, takže uložením v ňom sa stratia. Pole `options` uchováva ako celé číslo, takže bit `nameDerived` sa pri uložení v ňom zachová.
 
@@ -348,9 +323,7 @@ Editor starší ako verzia `4.2.0` pri načítaní dokumentu polia `logicalName`
 ```ts
 type Relationship = {
   id: string;
-  identification: boolean; // runtime only
   relationshipType: number; // Constants: RelationshipType
-  startRelationshipType: number; // Constants: StartRelationshipType; runtime only
   onDelete: number; // Constants: ReferentialAction
   onUpdate: number; // Constants: ReferentialAction
   start: RelationshipPoint;
@@ -360,9 +333,6 @@ type Relationship = {
 type RelationshipPoint = {
   tableId: string;
   columnIds: string[];
-  x: number; // runtime only
-  y: number; // runtime only
-  direction: number; // Constants: Direction; runtime only
 };
 
 // Constants
@@ -373,11 +343,6 @@ const RelationshipType = {
   OneN: 16,
 } as const;
 
-const StartRelationshipType = {
-  ring: 1,
-  dash: 2,
-} as const;
-
 const ReferentialAction = {
   none: 1,
   noAction: 2,
@@ -386,35 +351,25 @@ const ReferentialAction = {
   setDefault: 16,
   restrict: 32,
 } as const;
-
-const Direction = {
-  left: 1,
-  right: 2,
-  top: 4,
-  bottom: 8,
-} as const;
 ```
 
 Od verzie `3.10.0` má vzťah polia `onDelete` a `onUpdate`, ktoré predstavujú jeho [akcie ON DELETE a ON UPDATE](../../guide/guides/relationship-editing.md#on-delete-and-on-update). Každé z nich obsahuje práve jednu hodnotu `ReferentialAction`. Predvolená hodnota `none` nezapisuje žiadnu klauzulu, takže platí predvolené správanie samotnej databázy. Ostatných päť zodpovedá `NO ACTION`, `CASCADE`, `SET NULL`, `SET DEFAULT` a `RESTRICT`. Schéma SQL zapíše klauzulu iba pre databázu, ktorá danú akciu prijíma.  
 Úložná forma vždy zapisuje obe polia a od verzie `4.0.0` ich JSON Schema vyžaduje, pričom overuje iba to, či je každé z nich celé číslo. Pri parsovaní sa chýbajúce pole, ako v každom dokumente uloženom pred verziou `3.10.0`, stále načíta ako `none`, a rovnako aj hodnota mimo zoznamu.  
 Editor starší ako verzia `3.10.0` tieto polia nepozná a pri načítaní dokumentu ich zahodí, takže uložením v ňom sa stratia všetky akcie.
 
-Od verzie `4.0.0` sa pri každom načítaní odvodí to, čo úložná forma vynecháva. Vzťah je identifikujúci, keď je každý stĺpec, na ktorom končí, primárnym kľúčom, a jeho pole `startRelationshipType` má hodnotu `dash`, keď je každý takýto stĺpec NOT NULL, inak `ring`; vzťah, ktorému nezostal žiadny koncový stĺpec, je neidentifikujúci a má hodnotu `dash`, tak ako začína nový vzťah. Body ukotvenia `x`, `y` a `direction` sa umiestnia znova.
+Od verzie `4.0.0` každé načítanie zistí, či je vzťah identifikujúci a ako sa kreslí jeho koniec pri nadradenej tabuľke, podľa stĺpcov, na ktorých končí a ktoré podradená tabuľka stále uvádza. Je identifikujúci, čiže má plnú čiaru, kým je každý takýto stĺpec primárnym kľúčom, a jeho koniec pri nadradenej tabuľke tvoria dve čiarky, kým je každý takýto stĺpec NOT NULL, inak krúžok a čiarka. Vzťah, ktorému nezostal žiadny takýto stĺpec, je neidentifikujúci s dvoma čiarkami, tak ako začína nový vzťah. Pozrite si časť [Čítanie spojnice](../../guide/guides/relationship-editing.md#reading-a-connector).
 
 ### Kolekcia: indexEntities {#collection-indexentities}
 
 ```ts
 type Index = {
   id: string;
-  name: string;
+  name?: string;
   tableId: string;
   indexColumnIds: string[];
-  seqIndexColumnIds: string[]; // runtime only
   unique: boolean;
 };
 ```
-
-Ak pole `seqIndexColumnIds` chýba alebo v ňom chýba niektorý uvedený identifikátor, pri parsovaní sa nastaví na `indexColumnIds`.
 
 ### Kolekcia: indexColumnEntities {#collection-indexcolumnentities}
 
@@ -438,7 +393,7 @@ const OrderType = {
 ```ts
 type Memo = {
   id: string;
-  value: string;
+  value?: string;
   ui: MemoUI;
 };
 
@@ -447,20 +402,19 @@ type MemoUI = {
   y: number;
   width: number;
   height: number;
-  zIndex: number; // runtime only
-  color: string;
+  color?: string;
 };
 ```
 
-Od verzie `4.0.0` tabuľky a poznámky [zdieľajú jedno poradie prekrývania](../../guide/guides/table-related-functions.md#moving-multiple-tables) určené hodnotou `zIndex`, takže tabuľka sa po presunutí dopredu môže dostať nad poznámku. Pri parsovaní sa poznámka uložená bez poľa `zIndex` zaradí nad všetky tabuľky, ako opisuje časť [Doc](#doc). Poznámka v súbore uloženom pred verziou `4.0.0` si ponechá uložený `zIndex`, ktorý pochádzal z rovnakého počítadla ako pri tabuľkách, takže poznámka, ktorú staršia verzia vykreslila nad všetkými tabuľkami, sa môže otvoriť pod tabuľkou, ktorá bola po nej presunutá dopredu.
+Od verzie `4.0.0` tabuľky a poznámky [zdieľajú jedno poradie prekrývania](../../guide/guides/table-related-functions.md#moving-multiple-tables), takže tabuľka sa po presunutí dopredu môže dostať nad poznámku. Načítanie zaradí každú poznámku nad každú tabuľku, ako opisuje časť [Doc](#doc). Poznámka v súbore uloženom pred verziou `4.0.0` si ponechá uložený `zIndex`, ktorý pochádzal z rovnakého počítadla ako pri tabuľkách, takže poznámka, ktorú staršia verzia vykreslila nad všetkými tabuľkami, sa môže otvoriť pod tabuľkou, ktorá bola po nej presunutá dopredu.
 
 ### Kolekcia: tableGroupEntities {#collection-tablegroupentities}
 
 ```ts
 type TableGroup = {
   id: string;
-  name: string;
-  color: string;
+  name?: string;
+  color?: string;
   ui: TableGroupUI;
 };
 
@@ -469,7 +423,6 @@ type TableGroupUI = {
   y: number;
   width: number;
   height: number;
-  zIndex: number; // runtime only
 };
 ```
 
@@ -487,7 +440,7 @@ type DictionaryRows = {
 };
 ```
 
-Ani jeden z nich nemá ako kľúče identifikátory. Každý sa zapisuje ako hlavička a riadky: `fields` raz pomenuje polia entity, identifikátor ako prvý, a každý riadok obsahuje hodnoty jednej entity v tomto poradí. Nižšie uvedené typy uvádzajú polia každej entity v poradí hlavičky hodnoty za behu. Riadok si vždy ponechá svoj identifikátor a názov, ale jeho prázdne hodnoty na konci, za názvom, sa vynechajú, takže prázdna hodnota pred hodnotou, ktorá sa ponechá, zostane `''`, a pri parsovaní sa hodnota, ktorá v riadku chýba, načíta ako `''`. Obe formy zapisujú každý riadok na samostatný riadok ako kompaktný JSON, ako v týchto dvoch slovách zo súboru:
+Ani jeden z nich nemá ako kľúče identifikátory. Každý sa zapisuje ako hlavička a riadky: `fields` raz pomenuje polia entity, identifikátor ako prvý, a každý riadok obsahuje hodnoty jednej entity v tomto poradí. Nižšie uvedené typy uvádzajú polia každej entity v tomto poradí. Riadok si vždy ponechá svoj identifikátor a názov, ale jeho prázdne hodnoty na konci, za názvom, sa vynechajú, takže prázdna hodnota pred hodnotou, ktorá sa ponechá, zostane `''`, a pri parsovaní sa hodnota, ktorá v riadku chýba, načíta ako `''`. Každý riadok sa zapisuje na samostatný riadok ako kompaktný JSON, ako v týchto dvoch slovách zo súboru:
 
 ```json
 "wordEntities": {
@@ -507,8 +460,8 @@ Ani jeden z nich nemá ako kľúče identifikátory. Každý sa zapisuje ako hla
 }
 ```
 
-Úložná forma zapisuje uvedené riadky v poradí v hárku a vynecháva `order`, takže ho jej hlavičky neuvádzajú. Vynecháva riadok, ktorého hodnoty okrem identifikátora sú všetky prázdne alebo zložené iba z medzier, napríklad riadok pridaný a nikdy nevyplnený alebo vyprázdnený, a každé prepojenie s takou doménou alebo s odstránenou doménou: pole `domainId` stĺpca sa vynechá a pole `domainId` termínu sa zapíše ako `''`, pričom samotný termín sa vynechá, ak nič iné neobsahuje.  
-Hlavičky hodnoty za behu uvádzajú `"order"` hneď za `"name"`. Zapisuje všetky riadky kolekcie vrátane odstránených v poradí, v akom ich kolekcia obsahuje, preto poradie v hárku získate zoradením podľa `order` v poradí kódových jednotiek. Pri parsovaní dostanú riadky súboru kľúče `order` v poradí, v akom riadky stoja, takže sa načítajú v poradí, v akom ich súbor zapísal.  
+Úložná forma zapisuje riadky každého hárka v poradí hárka bez poľa na poradie, takže riadky súboru predstavujú členov slovníka aj ich poradie. Vynecháva riadok, ktorého hodnoty okrem identifikátora sú všetky prázdne alebo zložené iba z medzier, napríklad riadok pridaný a nikdy nevyplnený alebo vyprázdnený, a každé prepojenie s takou doménou alebo s odstránenou doménou: pole `domainId` stĺpca sa vynechá a pole `domainId` termínu sa zapíše ako `''`, pričom samotný termín sa vynechá, ak nič iné neobsahuje.  
+Pri parsovaní sa riadky čítajú v poradí, v akom stoja, takže každý hárok ich uvádza v poradí, v akom ich súbor zapísal.  
 Dokument bez slovníkov, napríklad dokument uložený pred verziou `4.2.0`, nemá žiadne slová, termíny ani domény. Editor starší ako verzia `4.2.0` pri načítaní dokumentu zahodí všetky tri slovníky, takže uložením v ňom sa stratia všetky slová, termíny a domény.
 
 ### Kolekcia: wordEntities {#collection-wordentities}
@@ -517,12 +470,11 @@ Dokument bez slovníkov, napríklad dokument uložený pred verziou `4.2.0`, nem
 type Word = {
   id: string;
   name: string;
-  order: string; // runtime only
-  abbreviation: string;
-  englishName: string;
-  description: string;
-  synonyms: string;
-  forbiddenWords: string;
+  abbreviation?: string;
+  englishName?: string;
+  description?: string;
+  synonyms?: string;
+  forbiddenWords?: string;
 };
 ```
 
@@ -534,15 +486,14 @@ Slovo je jedno zo slov, z ktorých sa skladá logický názov, a `abbreviation` 
 type Term = {
   id: string;
   name: string;
-  order: string; // runtime only
-  physicalName: string;
-  domainId: string;
-  description: string;
-  synonyms: string;
+  physicalName?: string;
+  domainId?: string;
+  description?: string;
+  synonyms?: string;
 };
 ```
 
-Termín je celý logický názov. Tabuľka alebo stĺpec, ktorých `logicalName` sa zhoduje s `name`, odvodí `physicalName` alebo, kým je toto pole prázdne, názov zložený zo skratiek slov a stĺpec navyše prevezme doménu, ktorú označuje `domainId`, pričom `''` znamená žiadnu (pozrite si časť [Odvodzovanie fyzických názvov](../../guide/guides/dictionary.md#deriving-physical-names)). Hodnoty v `synonyms` sú oddelené čiarkami. Pri parsovaní sa vymaže pole `domainId`, ktoré neoznačuje žiadnu doménu, rovnako ako pri stĺpci.
+Termín je celý logický názov. Tabuľka alebo stĺpec, ktorých `logicalName` sa zhoduje s `name`, odvodí `physicalName` alebo, kým je toto pole prázdne, názov zložený zo skratiek slov a stĺpec navyše prevezme doménu, ktorú označuje `domainId`, pričom `''` znamená žiadnu (pozrite si časť [Odvodzovanie fyzických názvov](../../guide/guides/dictionary.md#deriving-physical-names)). Hodnoty v `synonyms` sú oddelené čiarkami. Pri parsovaní sa vymaže pole `domainId`, ktoré neoznačuje žiadnu doménu, ktorú súbor obsahuje, rovnako ako pri stĺpci.
 
 ### Kolekcia: domainEntities {#collection-domainentities}
 
@@ -550,10 +501,9 @@ Termín je celý logický názov. Tabuľka alebo stĺpec, ktorých `logicalName`
 type Domain = {
   id: string;
   name: string;
-  order: string; // runtime only
-  category: string;
-  dataType: string;
-  description: string;
+  category?: string;
+  dataType?: string;
+  description?: string;
 };
 ```
 
@@ -572,7 +522,7 @@ Kanonický súbor schémy je zverejnený na adrese [json-schema/schema.json](htt
 
 Uveďte pole `$schema` na začiatku súboru `.erd.json` a editory, ktoré rozumejú JSON Schema, napríklad VS Code, budú počas úprav dokument overovať a automaticky dopĺňať jeho polia.
 
-Od verzie `4.0.0` schéma opisuje iba úložnú formu. Každý objekt s pomenovanými poľami je uzavretý (`additionalProperties: false`), každé pole, ktoré úložná forma vždy zapisuje, je povinné, pole, ktoré vynecháva, kým nič neobsahuje, je uvedené, ale nie je povinné, a žiadne pole, ktoré vynecháva vždy, nie je uvedené. Hodnotu za behu preto odmietne. Odmietne aj súbor uložený pred verziou `4.0.0` s jeho `meta`, šírkami, `zIndex`, `ignoreSaveSettings` a ďalšími poľami, kým tento súbor znova neuloží editor vo verzii `4.0.0` alebo novšej. Súbor uložený verziou `3.2.0` alebo novšou už uvádza adresu URL tejto schémy, ktorá odkazuje na vetvu `main`, takže editor, ktorý podľa nej overuje, teraz súbor označí ako chybný. Súbor uložený verziou `3.0.0` či `3.1.0` alebo dokument vo formáte v2 neuvádza `$schema`.
+Od verzie `4.0.0` schéma opisuje iba úložnú formu. Každý objekt s pomenovanými poľami je uzavretý (`additionalProperties: false`), každé pole, ktoré úložná forma vždy zapisuje, je povinné, každé pole označené `?` v typoch vyššie je uvedené, ale nie je povinné, a žiadne iné pole nie je uvedené. Preto odmietne súbor uložený pred verziou `4.0.0` s jeho `meta`, šírkami, `zIndex`, `ignoreSaveSettings` a ďalšími poľami, kým tento súbor znova neuloží editor vo verzii `4.0.0` alebo novšej. Súbor uložený verziou `3.2.0` alebo novšou už uvádza adresu URL tejto schémy, ktorá odkazuje na vetvu `main`, takže editor, ktorý podľa nej overuje, teraz súbor označí ako chybný. Súbor uložený verziou `3.0.0` či `3.1.0` alebo dokument vo formáte v2 neuvádza `$schema`.
 
 Od verzie `4.2.0` schéma už nevyžaduje textové polia entít, zoznamy v objekte `doc`, kolekcie ani samotné pole `collections`, ktoré úložná forma vynecháva, kým nič neobsahujú. Naďalej prijíma súbor uložený verziou `4.0.0` alebo `4.1.0`. Uvádza nové polia: `nameViewMode`, ktoré prijíma iba `"logical"` a `"both"`; `logicalName` a `nameDerived` tabuľky, pričom `nameDerived` prijíma iba `true`; `logicalName` a `domainId` stĺpca; a tri slovníky, každý s hlavičkou a riadkami reťazcov. `canvasType` uvádza kartu Slovník, `columnOrder` prijíma sedem alebo deväť celých čísel a popisy polí `show`, `columnOrder`, `lockSettings` a `options` uvádzajú nové bity.
 

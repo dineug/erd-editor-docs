@@ -67,7 +67,8 @@ As alterações que chegam de outro editor também não são registradas, então
 
 Desfazer um `Import`, que substitui o diagrama inteiro, traz de volta o diagrama anterior tal como o editor o mantinha quando você importou, com cada [bloqueio](./settings.md#lock) ativado ou desativado e cada valor bloqueado como estavam naquele momento.  
 Se esse diagrama tinha `Viewport` bloqueado, a área visível e o zoom voltam para a área visível bloqueada, onde o diagrama se abre, e não para onde você estava. Com o `Viewport` dele desbloqueado, eles voltam para onde você estava quando importou. As outras configurações bloqueadas, como a aba em que você está, a linguagem do Gerador de código ou a exibição de nomes, ficam como estão na sua tela.  
-Um diagrama novo começa com todos os bloqueios ativados. Desbloqueie `Viewport` antes de importar para manter sua área visível em um desfazer desse tipo. Desbloqueá-lo depois, ou importar um arquivo JSON cujo próprio bloqueio `Viewport` esteja desativado, não altera o lugar para onde o desfazer leva você.
+Um diagrama novo começa com todos os bloqueios ativados. Desbloqueie `Viewport` antes de importar para manter sua área visível em um desfazer desse tipo. Desbloqueá-lo depois, ou importar um arquivo JSON cujo próprio bloqueio `Viewport` esteja desativado, não altera o lugar para onde o desfazer leva você.  
+Desfazer ou refazer um `Import` também encerra um relacionamento sendo desenhado — consulte [Criação de relacionamentos](./editing-start.md#relationship-creation).
 
 Desfazer a importação de um arquivo JSON também traz de volta as palavras, os termos e os domínios que o diagrama anterior tinha. Uma importação de Esquema SQL, GraphQL, DBML ou AML mantém os dicionários, então desfazê-la e refazê-la os deixa como estão, inclusive com as edições feitas na aba Dicionário desde então.
 

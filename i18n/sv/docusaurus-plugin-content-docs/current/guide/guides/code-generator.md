@@ -25,7 +25,7 @@ När det valda språket ignorerar `Database` eller skiftlägena för namn står 
 `Save file` och `Copy` finns längst ned i panelen – se [Spara eller kopiera resultatet](#saving-or-copying-the-result).
 
 Det här är diagrammets egna inställningar, samma som snabbmenyn och snabbsökningen också ändrar. `Database` sparas i filen som vilken ändring som helst.  
-`Language`, `Table Name Case`, `Column Name Case` och `Bracket` sparas bara medan deras lås på fliken Inställningar är av (`Bracket Type` för `Bracket`), och i ett nytt diagram är alla lås på. Medan ett lås är på skriver en ändring om koden på din skärm, men filen behåller det låsta värdet och diagrammet öppnas igen med det. Panelen visar inget tecken på något lås; slå av låset för ett val om du vill behålla valet i filen – se [Lås](./settings.md#lock).  
+`Language`, `Table Name Case`, `Column Name Case` och `Bracket` sparas bara medan deras lås på fliken Inställningar är av (`Bracket Type` för `Bracket`), och i ett nytt diagram är alla lås på. Medan ett lås är på skriver en ändring om koden bara i din editor: de andra editorerna som är öppna på diagrammet behåller sina egna, och filen behåller det låsta värdet, så diagrammet öppnas igen med det. Panelen visar inget tecken på något lås; slå av låset för ett val om du vill behålla valet i filen och ge det till varje editor – se [Lås](./settings.md#lock).  
 I en skrivskyddad editor lyder rubriken `This window only` i stället, eftersom en ändring där bara når det fönstret – se [Skrivskyddade editorer](#read-only-editors).
 
 ## Språk {#language}
@@ -144,5 +144,5 @@ Texten går också att markera, så du kan ta bara den del du behöver.
 
 I en editor med [`readonly`](../../api/erd-editor-element.md#readonly) ändrar panelens listor, snabbmenyn och snabbsökningen fortfarande `Language`, `Database`, `Table Name Case`, `Column Name Case` och `Bracket`, men bara i det fönstret, så panelen rubricerar dem `This window only` i stället för `Saved in the document`.  
 En ändring skriver om koden på den skärmen och sparas inte i filen, delas inte med medarbetare och registreras inte för ångra, oavsett lås, och en medarbetares ändring av en inställning som du har valt lämnar ditt val kvar på skärmen. `Database` och `Bracket` är också inställningar på fliken Schema SQL, så ett val här visas där i samma fönster – se [Skrivskyddade editorer](./schema-sql.md#read-only-editors).  
-När editorn blir skrivbar igen kommer dokumentets inställningar tillbaka och koden skrivs för dem.  
+När editorn blir skrivbar igen går varje inställning som du ändrade där tillbaka till det som editorn visade förut, med eventuella ändringar som en medarbetare har gjort sedan dess, och koden skrivs för dem – se [Skrivskyddade editorer](./settings.md#read-only-editors) i Inställningar.  
 `Save file` och `Copy` sparar och kopierar koden som visas.

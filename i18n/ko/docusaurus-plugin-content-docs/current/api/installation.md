@@ -51,18 +51,18 @@ editor.addEventListener('change', () => {
 
 ```html
 <script type="module">
-  import 'https://esm.run/@dineug/erd-editor@5.0.0/erd-editor.js';
+  import 'https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js';
 
   const editor = document.createElement('erd-editor');
   editor.style.cssText = 'display: block; width: 100%; height: 100vh;';
   document.body.appendChild(editor);
 </script>
 <!-- or -->
-<script type="module" src="https://esm.run/@dineug/erd-editor@5.0.0/erd-editor.js"></script>
+<script type="module" src="https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js"></script>
 ```
 
 `esm.run`이 패키지의 외부 의존성을 대신 해석해 주므로 번들러 없이도 동작합니다.
-각 진입점은 버전 뒤의 경로로 가져옵니다. `…/erd-editor.js`는 에디터를, `…/erd-viewer.js`는 뷰어를 정의하며, 뷰어는 영어를 제외한 각 표시 언어를 페이지가 요청할 때 CDN에서 가져옵니다. 패키지 기본 URL인 `https://esm.run/@dineug/erd-editor@5.0.0`은 루트를 제공하며, 루트는 엘리먼트를 정의하지 않습니다.
+각 진입점은 버전 뒤의 경로로 가져옵니다. `…/erd-editor.js`는 에디터를, `…/erd-viewer.js`는 뷰어를 정의하며, 뷰어는 영어를 제외한 각 표시 언어를 페이지가 요청할 때 CDN에서 가져옵니다. 패키지 기본 URL인 `https://esm.run/@dineug/erd-editor@5.1.0`은 루트를 제공하며, 루트는 엘리먼트를 정의하지 않습니다.
 버전이 없는 URL은 항상 최신 릴리스를 제공합니다. 메이저 업그레이드가 예고 없이 페이지에 반영되는 것을 원하지 않는다면 위처럼 버전을 고정하세요.
 `5.0.0` 자체가 메이저 업그레이드입니다. 4.x에 머물러야 하는 페이지는 `@4.2.0`으로 고정하세요. [4.x에서 업그레이드](#upgrading-from-4x) 항목을 참고하세요.
 
@@ -75,7 +75,7 @@ editor.addEventListener('change', () => {
 
 ```html
 <erd-editor></erd-editor>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.0.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0"></script>
 <script>
   const editor = document.querySelector('erd-editor');
   editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
@@ -88,7 +88,7 @@ editor.addEventListener('change', () => {
 
 ```html
 <erd-viewer src="diagram.erd.json" style="display: block; height: 480px"></erd-viewer>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.0.0/dist/erd-viewer.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0/dist/erd-viewer.umd.js"></script>
 ```
 
 어느 파일도 상대의 태그를 정의하지 않으며, 각 파일은 자신의 전역과 `window.Konva` 외에는 페이지에 전역을 남기지 않습니다.
@@ -100,7 +100,7 @@ exports 맵은 여전히 ES 모듈을 가리키므로 npm으로 설치하면 번
 ```html
 <erd-editor system-dark-mode enable-theme-builder enable-locale-picker enable-welcome-screen></erd-editor>
 <script type="module">
-  import 'https://esm.run/@dineug/erd-editor@5.0.0/erd-editor.js';
+  import 'https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js';
 
   const editor = document.querySelector('erd-editor');
 </script>
@@ -161,7 +161,7 @@ const found = document.querySelector('erd-editor'); // ErdEditorElement | null
 ```
 
 직접 선언한 변수나 props에 타입을 지정할 수 있도록 `ErdEditorElement`를 export하고 있습니다. `5.0.0`부터는 이것이 엘리먼트의 클래스이기도 하며, `ErdViewerElement`는 뷰어의 인터페이스이자 클래스입니다. [엘리먼트 등록](#registering-the-elements) 항목을 참고하세요.
-`4.0.0`부터는 `LocaleCode`, `LocaleOption`, `SchemaSQLOptions` 타입도, `5.0.0`부터는 `ToImageOptions`도 export합니다. [진입점](#진입점) 항목을 참고하세요. `setSchema*()` 메서드가 받는 옵션에는 export된 이름이 없으므로, `Parameters<ErdEditorElement['setSchemaSQL']>[1]`처럼 엘리먼트에서 읽어 오세요.
+`4.0.0`부터는 `LocaleCode`, `LocaleOption`, `SchemaSQLOptions` 타입도, `5.0.0`부터는 `ToImageOptions`도 export합니다. [진입점](#진입점) 항목을 참고하세요. `setSchema*()` 메서드가 받는 옵션에는 export된 이름이 없으므로, `Parameters<ErdEditorElement['setSchemaSQL']>[1]`처럼 엘리먼트에서 읽어 오세요. 이 규칙은 [shared store](./advanced/collaborative-editing.md)와 그 타입에도 똑같이 적용됩니다.
 `5.0.0`부터 패키지의 `typesVersions`는 exports 맵을 읽지 않는 `moduleResolution: "node10"`에서도 각 하위 경로 진입점의 타입을 지정합니다.
 
 ## 엘리먼트 등록 {#registering-the-elements}
@@ -259,7 +259,7 @@ CSP가 엄격한 페이지에는 엘리먼트를 위해 다음 지시문이 필�
 | `@dineug/erd-editor/erd-editor.js` | `5.0.0`부터 제공됩니다. `<erd-editor>`를 정의하며 아무것도 export하지 않습니다 |
 | `@dineug/erd-editor/erd-viewer.js` | `5.0.0`부터 제공됩니다. `<erd-viewer>`를 정의하며 아무것도 export하지 않습니다 |
 | `@dineug/erd-editor/engine.js` | DOM 없는 문서 store입니다 |
-| `@dineug/erd-editor/peer.js` | `3.9.1`부터 제공됩니다. MCP 서버의 헤드리스 피어입니다 |
+| `@dineug/erd-editor/peer.js` | `3.9.1`부터 제공됩니다. MCP 서버와, `5.1.0`부터는 [Yjs 바인딩](./advanced/yjs.md)의 헤드리스 피어입니다 |
 
 루트는 두 엘리먼트 클래스와 그 define 함수, 2개의 콜백 setter, `3.9.2`부터는 기본 키 바인딩과 그 타입, `4.0.0`부터는 표시 언어 타입과 `getSchemaSQL()` 옵션 타입, `4.2.0`부터는 사전 탭의 행 키 조합, `5.0.0`부터는 `toImage`를 export합니다.
 
@@ -289,7 +289,9 @@ CSP가 엄격한 페이지에는 엘리먼트를 위해 다음 지시문이 필�
 이 진입점은 `createReplicationStore`와 `ReplicationStore` 타입을 export합니다. `3.10.0`부터는 복제본의 `change` 리스너가 받는 `ReplicationChange` 타입(`{ value: string; changed: boolean }`)도 export합니다. [on@change](./advanced/remote-storage.md#onchange) 문서를 참고하세요.
 `4.0.0`부터 `ReplicationStore`에는 `runtimeValue`도 있습니다. 그 `value`와 `change`가 넘겨주는 `value`는 엘리먼트와 마찬가지로 파일에 담기는 형태입니다. [ReplicationStore](./advanced/remote-storage.md#replicationstore) 문서를 참고하세요.
 
-`@dineug/erd-editor/peer.js`는 [MCP 서버](../mcp/introduction.md)가 문서를 편집할 때 거치는 헤드리스 피어입니다. 이 서버를 위한 진입점이며, 이 문서에서는 다루지 않습니다.
+`@dineug/erd-editor/peer.js`는 [MCP 서버](../mcp/introduction.md)가 문서를 편집할 때 거치는 헤드리스 피어입니다.
+`5.1.0`부터는 `@dineug/erd-editor-yjs`의 `bindPeerStore`가 `Y.Doc`에 바인딩하는 대상이기도 합니다. 이 진입점의 `createPeerStore()`로 만든 피어 store를 룸의 헤드리스 구성원으로, 또는 룸의 히스토리를 접는 압축기로 바인딩합니다.
+[Yjs](./advanced/yjs.md) 문서가 보여 주는 `createPeerStore()` 호출, 바인딩된 피어 store의 `value`, `destroy()` 외에는 이 문서들에서 다루지 않습니다.
 
 ### 파일 다이얼로그
 
@@ -369,11 +371,11 @@ Chrome 91+, Edge 94+, Firefox 93+, Safari 16.4+ — 배포되는 번들이 빌�
    import { setExportFileCallback } from '@dineug/erd-editor';
   ```
 
-- CDN에서도 마찬가지입니다. `https://esm.run/@dineug/erd-editor`는 이제 루트를 제공하며 아무것도 정의하지 않습니다. `https://esm.run/@dineug/erd-editor@5.0.0/erd-editor.js`를 import하세요. 버전 없는 jsDelivr와 unpkg의 패키지 기본 URL은 여전히 script 태그 빌드를 제공하며, 이 빌드는 전과 같이 `<erd-editor>`를 정의합니다. 버전이 없는 URL은 이제 최신 5.x 릴리스를 제공하므로, 4.x에 머물려면 `@4.2.0`으로 고정하세요. [CDN](#cdn)과 [script 태그](#script-태그) 항목을 참고하세요.
+- CDN에서도 마찬가지입니다. `https://esm.run/@dineug/erd-editor`는 이제 루트를 제공하며 아무것도 정의하지 않습니다. `https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js`를 import하세요. 버전 없는 jsDelivr와 unpkg의 패키지 기본 URL은 여전히 script 태그 빌드를 제공하며, 이 빌드는 전과 같이 `<erd-editor>`를 정의합니다. 버전이 없는 URL은 이제 최신 5.x 릴리스를 제공하므로, 4.x에 머물려면 `@4.2.0`으로 고정하세요. [CDN](#cdn)과 [script 태그](#script-태그) 항목을 참고하세요.
 - 루트는 아무것도 정의하지 않지만 여전히 DOM이 필요하므로, 서버 사이드 렌더링에서는 `setExportFileCallback`처럼 루트에서 이름으로 가져오는 import도 엘리먼트의 진입점과 함께 클라이언트에서만 실행되는 경로에 두세요. [서버 사이드 렌더링](#서버-사이드-렌더링) 항목을 참고하세요.
 - `window.ErdEditor`에 `ErdEditorElement`와 `defineErdEditor`가 추가됩니다. 뷰어의 script 태그 빌드는 `ErdViewerElement`와 `defineErdViewer`를 `window.ErdViewer`에 올리며, 어느 전역에도 `toImage`는 없습니다.
 - `readonly` 에디터는 읽는 사람을 위한 모습으로 열립니다. 여섯 개의 탭, 탐색기, 빠른 검색, 프레즌스는 남고, 다이어그램을 편집하는 컨트롤은 비활성화되는 대신 사라집니다. 툴바는 데이터베이스 이름을 텍스트로 보여 주고, 설정 탭은 `Read only` 배지 아래에서 모든 컨트롤이 비활성화된 채로 설정을 보여 주며, 떠 있는 툴바에는 확대/축소, 이름 표시, Zen 모드, 나침반만 남으므로 `Hand`와 `Select`는 없어지고 드래그는 화면을 이동시킵니다. 누르기는 아무것도 선택하지 않습니다. 유일한 선택은 탐색기나 빠른 검색에서 이동했을 때 도착한 대상 둘레에 생기는 외곽선이며, 움직이지 않는 클릭이 이를 지우고, 모두 선택 단축키는 아무것도 선택하지 않습니다. `readonly`를 켜면 선택, 손 도구, 셀 편집기, 드래그, Map Columns, 자동 배치의 `Force` 미리보기, Time Travel처럼 열려 있던 것이 끝나고, 스크롤, 확대/축소, 탭, 이름 표시는 유지됩니다. [readonly](./erd-editor-element.md#readonly) 문서를 참고하세요.
-- `readonly` 상태에서 읽는 사람이 바꾼 설정은 잠금과 상관없이 그 에디터의 화면에만 머뭅니다. 스크롤과 확대/축소, 탭, 이름 표시, View Option, 데이터베이스, Code Generator의 언어, 이름 케이스, 괄호 타입이 그렇습니다. `value`, `runtimeValue`, JSON 내보내기는 문서 자체의 설정을 유지하는데, 4.x에서는 읽는 사람의 변경이 여기에 닿을 수 있었습니다. `getSharedStore()`도 이 중 어느 것도 다른 에디터에 보내지 않습니다. 벤더 없이 호출한 `getSchemaSQL()`은 읽는 사람이 고른 데이터베이스로 작성합니다. `readonly`를 끄면 데이터베이스, 코드 설정, View Option은 문서의 값으로 돌아가고, 스크롤, 확대/축소, 탭, 이름 표시는 읽는 사람이 둔 자리에 남습니다.
+- `readonly` 상태에서 읽는 사람이 바꾼 설정은 잠금과 상관없이 그 에디터의 화면에만 머뭅니다. 스크롤과 확대/축소, 탭, 이름 표시, View Option, 데이터베이스, Code Generator의 언어, 이름 케이스, 괄호 타입이 그렇습니다. `value`, `runtimeValue`, JSON 내보내기는 문서 자체의 설정을 유지하는데, 4.x에서는 읽는 사람의 변경이 여기에 닿을 수 있었습니다. `getSharedStore()`도 이 중 어느 것도 다른 에디터에 보내지 않습니다. 벤더 없이 호출한 `getSchemaSQL()`은 읽는 사람이 고른 데이터베이스로 작성합니다. `readonly`를 끄면 데이터베이스, 코드 설정, View Option은 읽는 사람이 아무것도 바꾸지 않았다면 그 에디터가 보여 주었을 값으로 돌아가고, 스크롤, 확대/축소, 탭, 이름 표시는 읽는 사람이 둔 자리에 남습니다.
 - 설정 탭의 `Recalculation table width` 행은 없어졌습니다. 불러오기와 붙여넣기는 여전히 각 테이블의 너비를 텍스트에 맞춥니다.
 - Vite 8에서는 `optimizeDeps`의 `exclude: ['@dineug/erd-editor']`를 빼세요. 이것이 필요한 것은 Vite 7 이하뿐이며, ELK `include`는 그대로 두세요. [Vite](#vite) 항목을 참고하세요.
 

@@ -55,9 +55,12 @@ Il gruppo e le tabelle che accoglie costituiscono un solo passo di annullamento,
 ## Assegnare un nome a un gruppo {#naming-a-group}
 
 Il nome di un gruppo si modifica in un campo che si apre sopra la sua barra del titolo. Si apre da solo quando viene creato un gruppo, con un doppio clic sulla barra del titolo e dalla voce `Rename` nel menu contestuale del gruppo.  
-`Enter`, o un clic altrove, salva il nome. `Escape` chiude il campo senza modificare il nome e lascia il gruppo selezionato, e un secondo `Escape` annulla la selezione.  
+`Enter`, un clic altrove o il fatto di nascondere i gruppi, da parte dell’utente o di un collaboratore, salva il nome. `Escape` chiude il campo senza modificare il nome e lascia il gruppo selezionato, e un secondo `Escape` annulla la selezione.  
 Un nome modificato è un solo passo di annullamento; salvare il nome invariato non registra nulla. Un nome vuoto o composto solo da spazi viene mostrato come `unnamed`.  
-Mentre il campo è aperto, i tasti di scelta rapida dell’area di disegno vengono sospesi, e i tasti di scelta rapida della Ricerca rapida e di `Toggle Explorer` non hanno effetto, come durante la modifica di una cella di una tabella.
+Mentre il campo è aperto, i tasti di scelta rapida dell’area di disegno vengono sospesi, e i tasti di scelta rapida della Ricerca rapida e di `Toggle Explorer` non hanno effetto, come durante la modifica di una cella di una tabella.  
+Quando un collaboratore o un agente di programmazione sostituisce il diagramma mentre il campo è aperto, il campo resta aperto finché il nuovo diagramma contiene ancora il gruppo e mostra i gruppi.  
+Se quel diagramma non contiene più il gruppo, il campo si chiude e non salva nulla; se contiene il gruppo ma nasconde i gruppi, il campo si chiude e salva un nome modificato.  
+Caricare di nuovo il diagramma nell’editor, come fa Obsidian quando il file cambia all’esterno, chiude il campo e scarta il nome digitato. I tasti premuti dopo non vanno da nessuna parte finché non si fa clic sull’editor, quindi un `Delete` o un `Backspace` destinato al nome non rimuove nulla.
 
 [Trova e sostituisci](./find-and-replace.md#what-it-searches) cerca nei nomi dei gruppi con `Table group names` mentre i gruppi sono visibili, e i suoi pulsanti `Replace` e `Replace All` rinominano i gruppi — vedere [Sostituzione](./find-and-replace.md#replacing). La [Ricerca rapida](./quick-search.md#searching-the-diagram) non cerca nei nomi dei gruppi.
 
@@ -157,7 +160,7 @@ La voce `Group selected tables` mostra a destra i suoi tasti, `T` e poi `G`, e l
 
 La voce `View Option` → `Table Groups` del menu contestuale dell’area di disegno mostra o nasconde tutti i gruppi. È selezionata per impostazione predefinita — vedere [Opzioni di visualizzazione delle tabelle](./table-related-functions.md#table-view-options).  
 Se è deselezionata, i riquadri dei gruppi e i colori dei gruppi sulle intestazioni delle tabelle scompaiono dall’area di disegno, dalla minimappa e dalle immagini esportate, e le barre di scorrimento e la minimappa non riservano più spazio ai gruppi. Nulla si sposta o si ridimensiona, e ogni tabella resta nel suo gruppo.  
-Nascondere i gruppi li deseleziona, termina il disegno di un `New Table Group` e chiude un campo del nome aperto.
+Nascondere i gruppi li deseleziona, termina il disegno di un `New Table Group` e chiude un campo del nome aperto come fa un clic altrove — vedere [Assegnare un nome a un gruppo](#naming-a-group).
 
 Mentre i gruppi sono nascosti:
 

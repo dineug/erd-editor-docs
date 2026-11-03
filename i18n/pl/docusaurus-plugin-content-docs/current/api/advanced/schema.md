@@ -1,31 +1,32 @@
 ---
-sidebar_position: 3
-description: Format dokumentu .erd.json – postać zapisu przechowywana w pliku i wartość czasu wykonania przechowywana przez edytor, typy TypeScript, stałe stojące za każdym polem liczbowym i opublikowany schemat JSON Schema.
+sidebar_position: 4
+description: "Format dokumentu .erd.json – postać zapisu przechowywana w pliku, jej typy TypeScript, stałe stojące za każdym polem liczbowym i opublikowany schemat JSON Schema."
 ---
 
 # Schemat
 
 `.erd.json` to format dokumentu edytora. Przeczytaj tę stronę, jeśli musisz wygenerować, zwalidować lub zmigrować dokument poza edytorem.
 
-Od wersji `4.0.0` dokument ma dwie serializacje, obie z polem `version` o wartości `'3.0.0'`. Postać zapisu to zawartość pliku: zwraca ją [`editor.value`](../erd-editor-element.md#value), zapisuje ją eksport JSON i jest to jedyna postać akceptowana przez opublikowany schemat [JSON Schema](#json-schema). Wartość czasu wykonania to cały dokument w takiej postaci, w jakiej przechowuje go edytor; zwraca ją [`editor.runtimeValue`](../erd-editor-element.md#runtimevalue). `setInitialValue()`, setter `value` i `setSchemaJSON()` odczytują obie postacie, każdy plik zapisany przez wcześniejszą wersję i dokument v2 `.vuerd`. Przed wersją `4.0.0` istniała tylko jedna: właściwość `value` zwracała cały dokument w takiej postaci, w jakiej przechowywał go edytor, tak jak teraz robi to `runtimeValue`.
+Ta strona opisuje postać zapisu, czyli dokument w takiej postaci, w jakiej przechowuje go plik; zapisuje ją każda wersja od `4.0.0`. Zwraca ją [`editor.value`](../erd-editor-element.md#value), zapisuje ją eksport JSON i jest to jedyna postać akceptowana przez opublikowany schemat [JSON Schema](#json-schema). Jej pole `version` ma wartość `'3.0.0'`, tak jak w każdym pliku v3 zapisanym przez wcześniejszą wersję, więc `version` nie pozwala odróżnić starszego pliku od nowszego. `setInitialValue()`, setter `value` i `setSchemaJSON()` odczytują ją, każdy plik zapisany przez wcześniejszą wersję i dokument v2 `.vuerd`. Przed wersją `4.0.0` właściwość `value` zwracała cały dokument w takiej postaci, w jakiej przechowywał go edytor, więc plik zapisany wtedy zawiera więcej (zobacz sekcję [Postać zapisu](#storage-form)).  
+Właściwość [`runtimeValue`](../erd-editor-element.md#runtimevalue) edytora to inna serializacja, której ta strona nie opisuje. Inicjuje ona inny edytor lub replikę, a [pokój Yjs](./yjs.md#what-the-room-holds) przechowuje ją w swojej migawce; nigdy nie powinna trafiać do pliku, a JSON Schema odrzuca każdą, która zawiera encję.
 
-## Postać zapisu i wartość czasu wykonania {#storage-form-and-runtime-value}
+## Postać zapisu {#storage-form}
 
-Postać zapisu zawiera wyłącznie nieusunięte encje: każdą tabelę wymienioną w `doc.tableIds`, kolumny wymienione przez te tabele, relacje między dwiema zachowanymi tabelami, indeksy zachowanych tabel wraz z kolumnami indeksów, których kolumnę tabela nadal wymienia, wymienione notatki i grupy tabel, a od wersji `4.2.0` także wymienione słowa, terminy i domeny, które poza identyfikatorem zawierają jakąś wartość. Pomija to, co edytor wylicza przy wczytywaniu lub przechowuje, dopóki jest otwarty: usunięte encje, `seqColumnIds` i `seqIndexColumnIds`, każdą wartość `zIndex`, zmierzone szerokości, pole `ui` kolumn, pola `identification`, `startRelationshipType` i punkty zaczepienia relacji, a od wersji `4.2.0` także pole `order` każdego wiersza słownika oraz listy `doc.wordIds`, `doc.termIds` i `doc.domainIds`. Typy poniżej oznaczają każde z tych pól komentarzem `// runtime only`.  
+Postać zapisu zawiera wyłącznie nieusunięte encje: każdą tabelę wymienioną w `doc.tableIds`, kolumny wymienione przez te tabele, relacje między dwiema zachowanymi tabelami, indeksy zachowanych tabel wraz z kolumnami indeksów, których kolumnę tabela nadal wymienia, wymienione notatki i grupy tabel, a od wersji `4.2.0` także słowa, terminy i domeny arkuszy karty Słownik, które poza identyfikatorem zawierają jakąś wartość. Nie zawiera niczego, co edytor wylicza przy wczytywaniu lub przechowuje tylko wtedy, gdy jest otwarty: ani kolejności warstw, zmierzonych szerokości i oznaczeń kluczy, ani informacji, czy relacja jest identyfikująca, jak rysowany jest jej koniec przy tabeli nadrzędnej i gdzie łączy się ze swoimi tabelami. Każde wczytanie wylicza to ponownie na podstawie zawartości pliku.  
 Każda kolekcja oprócz słowników ma klucze w postaci identyfikatorów uporządkowanych w kolejności jednostek kodu, przy czym kolumny są najpierw grupowane według `tableId`, a kolumny indeksów według `indexId`. Od wersji `4.2.0` kolekcje `wordEntities`, `termEntities` i `domainEntities` występują po wszystkich pozostałych kolekcjach, w tej kolejności, a każda z nich jest zapisywana jako nagłówek i wiersze, po jednym wierszu w linii (zobacz sekcję [Wiersze słowników](#dictionary-rows)). Każda encja zapisuje swoje pola w stałej kolejności, a tekst ma wcięcie o szerokości dwóch spacji i kończy się znakiem nowego wiersza. Dlatego ten sam dokument zawsze zapisuje się jako te same bajty, zmiana modyfikuje tylko to, czego dotyczy, a plik zapisany na komputerze z innymi czcionkami po ponownym otwarciu daje tę samą wartość `value`.  
 VS Code, aplikacja Obsidian i wtyczka JetBrains zapisują plik tylko wtedy, gdy zmiana modyfikuje właściwość `value`, więc plik zapisany przez wcześniejszą wersję zachowuje dawną postać aż do pierwszej zmiany.
 
 Od wersji `4.2.0` postać zapisu pomija też to, co niczego nie zawiera: każde pole tekstowe, które encja lub jej obiekt `ui` przechowuje jako `''` (pola `name`, `comment` i `ui.color` tabeli, pola `name`, `comment`, `dataType` i `default` kolumny, pole `name` indeksu, pola `value` i `ui.color` notatki oraz pola `name` i `color` grupy tabel), każdą listę `doc` i kolekcję bez żadnego wpisu, a także samo pole `collections`, gdy wszystkie kolekcje są puste. Tekst złożony wyłącznie ze spacji jest zapisywany w przechowywanej postaci, z wyjątkiem nazwy logicznej, która jest wtedy pomijana, oraz słowa, terminu lub domeny, których wszystkie wartości poza identyfikatorem są puste lub składają się tylko ze spacji: taki wpis jest pomijany w całości. Każdy identyfikator, każda lista wewnątrz encji i każda liczba, łącznie z `0`, są nadal zapisywane. Pole `doc` jest zapisywane zawsze, więc plik nowego dokumentu zawiera `$schema`, `version`, jego ustawienia i `"doc": {}`.  
 Parsowanie odczytuje brakujące pole tekstowe jako `''`, a brakującą kolekcję jako pustą, tak jak robi to każda wersja v3, a postać zapisu pomija listę `doc` tylko wtedy, gdy jej kolekcja niczego nie zawiera (zobacz sekcję [Doc](#doc)). Dlatego edytor w wersji starszej niż `4.2.0` również otwiera takie pliki, a program, który sam odczytuje plik, musi w ten sam sposób interpretować brakujące elementy. Plik zapisany przez wcześniejszą wersję po następnym zapisie nie zawiera już pustych pól tekstowych, list ani kolekcji – to jednorazowa zmiana – a od tej pory zapisuje się bajt w bajt tak samo.
 
-Wartość czasu wykonania zachowuje to, co pomija postać zapisu: usunięte encje, sekwencje, wartości z-index, szerokości, oznaczenia kluczy, flagi relacji i punkty zaczepienia, puste pola tekstowe, cztery listy `tableIds`, `relationshipIds`, `indexIds` i `memoIds` oraz sześć kolekcji od `tableEntities` do `memoEntities`, nawet gdy są puste. Od wersji `4.2.0` zachowuje też usunięte słowa, terminy i domeny, wiersze, które niczego nie zawierają, pole `order` każdego wiersza, trzy listy słowników, nazwę logiczną złożoną wyłącznie ze spacji i powiązanie z usuniętą domeną. Ma wcięcie o szerokości dwóch spacji i nie kończy się znakiem nowego wiersza. Używaj jej wyłącznie do zainicjowania edytora współpracownika lub drugiego widoku przez `setInitialValue()`, aby cofnięcie usunięcia, które wysyła inny edytor, przywracało tam encję w całości. Nigdy nie zapisuj jej do pliku; JSON Schema ją odrzuca. Usuniętych encji nic już nie odśmieca, więc wartość czasu wykonania przechowuje je do następnego otwarcia dokumentu z pliku.
+Postać zapisu zapisuje każde zablokowane ustawienie z jego zablokowaną wartością (zobacz [`lockSettings`](#settings)), pole `settings.ddlScripts` tylko wtedy, gdy któryś skrypt zawiera tekst, a pole `groupId` tabeli tylko wtedy, gdy wskazuje grupę tabel zapisywaną w pliku. Od wersji `4.2.0` zapisuje też pole `settings.nameViewMode` tylko wtedy, gdy zapisywana wartość jest inna niż `'physical'`, pole `settings.columnOrder` jako siedem wpisów, gdy to możliwe (zobacz sekcję [Settings](#settings)), a pole `nameDerived` tabeli tylko wtedy, gdy ma wartość `true`.  
+Zapisuje `doc.tableGroupIds` i `tableGroupEntities` tylko wtedy, gdy istnieje grupa tabel, pole `logicalName` tylko wtedy, gdy zawiera tekst inny niż same spacje, pole `domainId` kolumny tylko wtedy, gdy wskazuje domenę zapisywaną w pliku, a każdy słownik tylko wtedy, gdy zawiera wiersz zapisywany w pliku.
 
-Obie postacie zapisują każde zablokowane ustawienie z jego zablokowaną wartością (zobacz [`lockSettings`](#settings)), pole `settings.ddlScripts` tylko wtedy, gdy któryś skrypt zawiera tekst, a pole `groupId` tabeli tylko wtedy, gdy nie jest puste. Od wersji `4.2.0` obie zapisują też pole `settings.nameViewMode` tylko wtedy, gdy zapisywana wartość jest inna niż `'physical'`, pole `settings.columnOrder` jako siedem wpisów, gdy to możliwe (zobacz sekcję [Settings](#settings)), a pole `nameDerived` tabeli tylko wtedy, gdy ma wartość `true`.  
-Postać zapisu zawiera `doc.tableGroupIds` i `tableGroupEntities` tylko wtedy, gdy istnieje grupa tabel, pole `logicalName` tylko wtedy, gdy zawiera tekst inny niż same spacje, pole `domainId` kolumny tylko wtedy, gdy wskazuje domenę zapisywaną w pliku, a każdy słownik tylko wtedy, gdy zawiera wiersz zapisywany w pliku. Wartość czasu wykonania zawiera pola grup tabel, gdy dokument ma grupę lub usuniętą grupę, pola `logicalName` i `domainId`, gdy są różne od `''`, a każdy słownik wraz z jego listą, gdy którekolwiek z nich zawiera wpis, łącznie z usuniętym wierszem.
+Plik zapisany przed wersją `4.0.0` zawiera cały dokument w takiej postaci, w jakiej przechowywał go wtedy edytor, łącznie z usuniętymi encjami i tym, co wyliczało każde wczytanie. Wczytanie odczytuje go, zachowuje miejsce każdej tabeli i notatki w stosie warstw (zobacz sekcję [Doc](#doc)) i wylicza resztę ponownie, a następny zapis zapisuje już tylko postać zapisu.
 
 ## TypeScript {#typescript}
 
-Typy opisują wartość czasu wykonania. Pole oznaczone komentarzem `// runtime only` jest pomijane w postaci zapisu, a pole oznaczone znakiem `?` jest zapisywane tylko wtedy, gdy coś zawiera. Puste teksty, listy i kolekcje, które postać zapisu pomija od wersji `4.2.0`, nie są oznaczone.
+Typy opisują postać zapisu, a każdy wymienia swoje pola w kolejności, w jakiej zapisuje je plik. Pole oznaczone znakiem `?` to takie, które postać zapisu może pominąć, jak opisano w sekcji [Postać zapisu](#storage-form), a parsowanie odczytuje brakujące pole jako niezawierające niczego: `''`, `false`, brak grupy tabel lub domeny, pustą kolekcję, `'physical'` dla `nameViewMode` i dwa puste skrypty dla `ddlScripts`. Wyjątkiem jest brakująca lista `doc`, którą parsowanie uzupełnia na podstawie jej kolekcji (zobacz sekcję [Doc](#doc)). W wierszu słownika `?` oznacza wartości, przed którymi wiersz może się kończyć (zobacz sekcję [Wiersze słowników](#dictionary-rows)). Każde inne pole jest zawsze zapisywane.
 
 ### ERDEditorSchemaV3 {#erdeditorschemav3}
 
@@ -35,13 +36,13 @@ type ERDEditorSchemaV3 = {
   version: '3.0.0';
   settings: Settings;
   doc: Doc;
-  collections: {
-    tableEntities: Record<string, Table>;
-    tableColumnEntities: Record<string, Column>;
-    relationshipEntities: Record<string, Relationship>;
-    indexEntities: Record<string, Index>;
-    indexColumnEntities: Record<string, IndexColumn>;
-    memoEntities: Record<string, Memo>;
+  collections?: {
+    tableEntities?: Record<string, Table>;
+    tableColumnEntities?: Record<string, Column>;
+    relationshipEntities?: Record<string, Relationship>;
+    indexEntities?: Record<string, Index>;
+    indexColumnEntities?: Record<string, IndexColumn>;
+    memoEntities?: Record<string, Memo>;
     tableGroupEntities?: Record<string, TableGroup>;
     wordEntities?: DictionaryRows; // rows of Word
     termEntities?: DictionaryRows; // rows of Term
@@ -216,7 +217,7 @@ Od wersji `4.2.0` istnieje jeszcze jedna flaga pola `show`, `columnDomain` (`819
 Edytor w wersji starszej niż `4.2.0` zachowuje wartość `show` w całości jako liczbę, więc flaga przetrwa zapis w tym edytorze.
 
 Od wersji `4.2.0` stała `ColumnType` ma dziewięć wartości. `columnLogicalName` (`128`) ustala miejsce komórki nazwy logicznej, którą wiersz kolumny wyświetla tylko w widoku `Both Names`, a `columnDomain` (`256`) – miejsce komórki domeny. Są to wiersze `Logical Name` i `Domain` [kolejności kolumn](../../guide/guides/settings.md#adjusting-column-order) na karcie Ustawienia. Edytor przechowuje kolejność wszystkich dziewięciu wartości, a w nowym dokumencie jest to `128, 1, 2, 256, 4, 8, 16, 32, 64`.  
-Obie postacie zapisują kolejność jako siedem wpisów, pomijając `128` i `256`, dopóki `128` stoi tuż przed `columnName`, a `256` tuż po `columnDataType`. Dlatego nowy dokument nadal zapisuje `1, 2, 4, 8, 16, 32, 64`, a plik, w którego kolejności nigdy ich nie przeniesiono, zachowuje swoje bajty. W przeciwnym razie zapisują wszystkie dziewięć.  
+Postać zapisu zapisuje kolejność jako siedem wpisów, pomijając `128` i `256`, dopóki `128` stoi tuż przed `columnName`, a `256` tuż po `columnDataType`. Dlatego nowy dokument nadal zapisuje `1, 2, 4, 8, 16, 32, 64`, a plik, w którego kolejności nigdy ich nie przeniesiono, zachowuje swoje bajty. W przeciwnym razie zapisuje wszystkie dziewięć.  
 Parsowanie wstawia te dwie wartości w opisane miejsca kolejności złożonej z siedmiu wpisów, niezależnie od kolejności tych siedmiu, przyjmuje bez zmian dziewięć wpisów zawierających każdy typ.  
 Od wersji `5.0.0` przyjmuje też każdą inną kolejność. Zachowuje każdy znany sobie `ColumnType` raz, w podanej kolejności, i odrzuca każdy inny wpis: wartość, której nie nazywa żaden `ColumnType`, na przykład typ dodany w późniejszym wydaniu, oraz drugi wpis tego samego typu. Każdy typ, którego w kolejności brakuje, trafia tuż za najbliższy wcześniejszy typ w kolejności domyślnej, jaki ta kolejność zawiera, a gdy żadnego takiego nie ma – tuż przed najbliższy późniejszy; w ten sposób `128` i `256` znajdują swoje miejsca w siedmiu wpisach. Za kolejność domyślną jest odczytywana tylko kolejność, która nie nazywa żadnego znanego typu, lub wartość niebędąca tablicą.  
 Plik zapisany w późniejszym wydaniu otwiera się więc z kolejnością typów znanych temu wydaniu, a zapis tutaj zapisuje tę kolejność bez pozostałych. Przed wersją `5.0.0` parsowanie odczytywało każdą inną kolejność jako domyślną, więc taki plik otwierał się z zresetowaną kolejnością kolumn. JSON Schema przyjmuje siedem lub dziewięć liczb całkowitych.
@@ -224,18 +225,18 @@ Plik zapisany w późniejszym wydaniu otwiera się więc z kolejnością typów 
 Od wersji `4.0.0` stała `Language` ma osiem kolejnych formatów docelowych karty [Generator kodu](../../guide/guides/code-generator.md), od `Mermaid` do `JSONSchema`. Wartość `language` nieznana parserowi jest odczytywana jako `GraphQL`, więc edytor w wersji starszej niż `4.0.0` otwiera dokument, w którym zapisano jeden z nich, z językiem GraphQL, a przy zapisie w tym edytorze do pliku trafia GraphQL.
 
 Od wersji `4.0.0` pole `lockSettings` zastępuje pole `ignoreSaveSettings`, a typ `LockSettingType` – usunięty typ `SaveSettingType`. `lockSettings` wskazuje ustawienia, które dokument zapisuje w stanie z chwili ich zablokowania. `viewport` obejmuje razem `originX`, `originY` i `zoomLevel`, ponieważ położenie widoku zapisane bez poziomu powiększenia otwiera się w innym miejscu, a każdy pozostały bit obejmuje pole, od którego pochodzi jego nazwa. Są to wiersze listy [`Lock`](../../guide/guides/settings.md#lock) na karcie Ustawienia.  
-Zarówno `value`, jak i `runtimeValue` zapisują zablokowane ustawienie z jego zablokowaną wartością, niezależnie od tego, co pokazuje edytor, a każde inne ustawienie w bieżącym stanie. Dlatego, dopóki odpowiednia blokada jest włączona, przewijanie i powiększanie, przełączanie kart, zmiana języka w Generatorze kodu, stylu nazw lub typu cudzysłowu czy przełączanie Widoku nazw pozostawia plik bez zmian. Zablokowanie zapamiętuje wartość, którą ustawienie ma w tej chwili, a parsowanie odczytuje zablokowaną wartość z zapisanego pola.  
+Plik zawiera każde zablokowane ustawienie z jego zablokowaną wartością, niezależnie od tego, co pokazuje edytor, a każde inne ustawienie w bieżącym stanie. Dlatego, dopóki odpowiednia blokada jest włączona, przewijanie i powiększanie, przełączanie kart, zmiana języka w Generatorze kodu, stylu nazw lub typu cudzysłowu czy przełączanie Widoku nazw pozostawia plik bez zmian. Zablokowanie zapamiętuje wartość, którą ustawienie ma w tej chwili, a parsowanie odczytuje zablokowaną wartość z zapisanego pola.  
 Dokument utworzony od zera – nowy edytor lub magazyn replikacji albo pusta wartość przekazana do `value` lub `setInitialValue()` – ma pole `lockSettings` ustawione na `63`, czyli wszystkie blokady włączone. Dokument, którego pole `settings` nie zawiera pola `lockSettings` – każdy plik zapisany przed wersją `4.0.0`, niezależnie od wartości `ignoreSaveSettings`, i każdy dokument v2 – również otwiera się ze wszystkimi blokadami włączonymi: z położeniem widoku i kartą takimi jak w nowym dokumencie (`originX` i `originY` równe `0`, `zoomLevel` równe `1`, karta ERD) oraz z językiem, stylami nazw i typem cudzysłowu zablokowanymi na zapisanych wartościach. Dokument, który określa swoje blokady, zachowuje je, także gdy jest to `0`, oraz każdą zapisaną wartość.  
 Parsowanie zachowuje wszystkie bity pola `lockSettings`, także nieznane, więc blokada dodana w późniejszej wersji przetrwa tutaj zapis; JSON Schema sprawdza tylko, czy wartość jest liczbą całkowitą. Edytor w wersji starszej niż `4.0.0` przy zapisie pomija `lockSettings` i zapisuje położenie widoku oraz kartę w bieżącym stanie, więc plik otwiera się tutaj ponownie jak plik zapisany przed wersją `4.0.0`.
 
 Od wersji `4.2.0` istnieje siódma blokada, `unlockNameViewMode` (`64`), czyli wiersz `Name View`, która obejmuje `nameViewMode`. Jej bit działa odwrotnie niż pozostałe bity blokad, tak jak bity ukrywania w `Show`: gdy jest ustawiony, Widok nazw jest odblokowany, a gdy jest wyzerowany – zablokowany. Dlatego `63` nadal oznacza wszystkie blokady włączone, a nowy dokument ma tę wartość z Widokiem nazw zablokowanym na `'physical'`. Plik zapisany przed wersją `4.2.0` ma ten bit wyzerowany niezależnie od pozostałych blokad, także przy wartości `0`, więc otwiera się z Widokiem nazw zablokowanym na `'physical'`. Dokument ze wszystkimi blokadami wyłączonymi ma wartość `64`, a dokument z włączonymi wszystkimi pozostałymi blokadami i odblokowanym Widokiem nazw – `127`. Sprawdzaj tę blokadę odwrotnie: jest włączona, gdy `(lockSettings & 64) === 0`.  
-Gdy jest włączona, przełączenie Widoku nazw zmienia tylko ekran edytora, w którym go dokonano, a dokument zachowuje zablokowany widok. Gdy jest wyłączona, przełączenie w edytorze, który może edytować, należy do dokumentu, a każdy współpracownik przełącza widok razem z nim. Przełączenie w edytorze tylko do odczytu w obu przypadkach zmienia tylko jego własny ekran. Zobacz [`Lock`](../../guide/guides/settings.md#lock).  
+Gdy ten bit jest wyzerowany, plik zawiera w polu `nameViewMode` zablokowany widok, niezależnie od tego, co pokazuje którykolwiek edytor, a gdy jest ustawiony – widok w bieżącym stanie. To, co pokazuje każdy edytor przy włączonej i wyłączonej blokadzie, opisano w sekcji [`Lock`](../../guide/guides/settings.md#lock).  
 Edytor w wersji `4.0.0` lub `4.1.0` zachowuje ten bit przy zapisie, ale pomija `nameViewMode`, więc dokument otwiera się tutaj ponownie w widoku `'physical'`, z blokadą w niezmienionym stanie.
 
 Od wersji `4.0.0` pole `ddlScripts` przechowuje dwa skrypty karty [Schemat SQL](../../guide/guides/schema-sql.md), które trafiają do kodu DDL każdej bazy danych: `before` po nagłówku i przed tabelami, `after` za wygenerowanym kodem DDL. W kodzie DDL każdy z nich ma końce wierszy LF, jest pozbawiony początkowych pustych wierszy i końcowych białych znaków, a dla MSSQL kończy się `GO`, jak opisano w sekcji [Skrypty przed tabelami i po nich](../../guide/guides/schema-sql.md#before-and-after-scripts); samo pole `ddlScripts` przechowuje każdy skrypt w takiej postaci, w jakiej go wpisano. Klucz jest zapisywany tylko wtedy, gdy któryś skrypt zawiera tekst, i wówczas obejmuje oba; brak klucza lub skrypt, który nie jest ciągiem znaków, jest odczytywany jako `''`. Opcje `Statements`, `Header` i `Tables` tej karty, a od wersji `4.2.0` także jej przełącznik [`Write logical names into empty comments`](../../guide/guides/schema-sql.md#logical-names-as-comments), nie są zapisywane w dokumencie.  
 Edytor w wersji starszej niż `4.0.0` pomija skrypty przy wczytywaniu dokumentu, więc zapis w tym edytorze powoduje ich utratę.
 
-Od wersji `4.2.0` pole `nameViewMode` to [Widok nazw](../../guide/guides/logical-names.md#name-view), czyli nazwy wyświetlane przez diagram: `'physical'` – nazwa każdej tabeli i kolumny, `'logical'` – jej nazwa logiczna w miejscu nazwy, a `'both'` – nazwa logiczna i nazwa. Menu nazywają je `Physical Names`, `Logical Names` i `Both Names`. Obie postacie zapisują to pole na końcu, po `ddlScripts`, i tylko wtedy, gdy zapisywana wartość jest inna niż `'physical'`; gdy blokada `Name View` jest włączona, jest to zablokowana wartość, niezależnie od tego, co pokazuje ekran. Brakująca wartość lub wartość nieznana parserowi jest odczytywana jako `'physical'`, a JSON Schema przyjmuje tylko `"logical"` i `"both"`.  
+Od wersji `4.2.0` pole `nameViewMode` to [Widok nazw](../../guide/guides/logical-names.md#name-view), czyli nazwy wyświetlane przez diagram: `'physical'` – nazwa każdej tabeli i kolumny, `'logical'` – jej nazwa logiczna w miejscu nazwy, a `'both'` – nazwa logiczna i nazwa. Menu nazywają je `Physical Names`, `Logical Names` i `Both Names`. Postać zapisu zapisuje to pole na końcu, po `ddlScripts`, i tylko wtedy, gdy zapisywana wartość jest inna niż `'physical'`. Brakująca wartość lub wartość nieznana parserowi jest odczytywana jako `'physical'`, a JSON Schema przyjmuje tylko `"logical"` i `"both"`.  
 Edytor w wersji starszej niż `4.2.0` pomija `nameViewMode` przy wczytywaniu dokumentu.
 
 Stałe `Database`, `Language`, `Show`, `ColumnType`, `ColumnOption`, `LockSettingType` i `ReferentialAction` można jedynie rozszerzać na końcu. Zapisany dokument przechowuje liczbę, więc nowy system bazy danych, format docelowy generowania kodu, flaga, typ kolumny, opcja kolumny, blokada lub akcja zajmuje następny bit, a nie miejsce pośrodku.
@@ -244,52 +245,42 @@ Stałe `Database`, `Language`, `Show`, `ColumnType`, `ColumnOption`, `LockSettin
 
 ```ts
 type Doc = {
-  tableIds: string[];
-  relationshipIds: string[];
-  indexIds: string[];
-  memoIds: string[];
+  tableIds?: string[];
+  relationshipIds?: string[];
+  indexIds?: string[];
+  memoIds?: string[];
   tableGroupIds?: string[];
-  wordIds?: string[]; // runtime only
-  termIds?: string[]; // runtime only
-  domainIds?: string[]; // runtime only
 };
 ```
 
-Każda z pierwszych pięciu list określa kolejność encji jednego rodzaju, z której korzystają kod DDL, sortowanie tabel i kolejność rysowania. W postaci zapisu każda lista zawiera tylko identyfikatory zachowanych encji, każdy jeden raz, w kolejności z listy, a od wersji `4.2.0` lista, która nie zawiera żadnego, jest pomijana. Od wersji `4.0.0` pole `tableGroupIds` określa kolejność grup tabel.
+Każda lista określa kolejność encji jednego rodzaju, z której korzystają kod DDL, sortowanie tabel i kolejność rysowania. Każda zawiera tylko identyfikatory encji zapisywanych w pliku, każdy jeden raz, w kolejności z listy, a od wersji `4.2.0` lista, która nie zawiera żadnego, jest pomijana. Od wersji `4.0.0` pole `tableGroupIds` określa kolejność grup tabel. Słowniki nie mają tu listy, ponieważ ich wiersze występują w kolejności arkusza (zobacz sekcję [Wiersze słowników](#dictionary-rows)), a JSON Schema nie przyjmuje w `doc` żadnego innego klucza.
 
-Od wersji `4.2.0` pola `wordIds`, `termIds` i `domainIds` wymieniają nieusunięte wiersze każdego słownika: wiersz, który kolekcja zawiera, ale którego nie ma na liście, jest usunięty. Nie są kolejnością arkusza, którą wyznacza pole `order` każdego wiersza. Zapisuje je tylko wartość czasu wykonania, każdą wtedy, gdy ona lub jej kolekcja zawiera wpis. W pliku przynależność i kolejność wyznaczają same wiersze, a JSON Schema odrzuca te listy.  
 Od wersji `4.2.0` parsowanie odczytuje listę, którą dokument pomija lub przechowuje jako coś innego niż tablica, jako wszystkie wpisy jej kolekcji, każdy identyfikator jeden raz, w kolejności przechowywania; pusta tablica pozostaje pusta, a wszystkie wpisy jej kolekcji są wtedy odczytywane jako usunięte. Edytor w wersji starszej niż `4.2.0` odczytuje brakującą listę jako pustą, więc postać zapisu nadal zapisuje każdą listę, gdy jej kolekcja zawiera encję.
 
-Od wersji `4.0.0` kolejność warstw nie jest zapisywana. Parsowanie układa w warstwy każdą wymienioną tabelę, notatkę i grupę tabel bez wartości `zIndex` według jej miejsca na liście, przy czym późniejsze trafiają na wierzch: grupy tabel od `1`, tabele od `2`, a notatki nad wszystkimi tabelami. Encja z wartością `zIndex`, jak w wartości czasu wykonania lub w pliku zapisanym przed wersją `4.0.0`, zachowuje ją. Dlatego przeniesienie tabeli lub notatki na wierzch przepada po ponownym otwarciu pliku.
+Od wersji `4.0.0` plik nie zawiera kolejności warstw. Wczytanie układa w warstwy wymienione tabele i notatki według ich miejsc na listach, przy czym późniejsze trafiają na wierzch, a każda notatka leży nad każdą tabelą; grupy tabel układa tak samo między sobą, za tabelami. Tabela lub notatka w pliku zapisanym przed wersją `4.0.0` ma w obiekcie `ui` pole `zIndex`, które wczytanie zachowuje jako jej miejsce w stosie, a następny zapis je pomija. Dlatego przeniesienie tabeli lub notatki na wierzch przepada po ponownym otwarciu pliku.
 
 ### Kolekcja: tableEntities {#collection-tableentities}
 
 ```ts
 type Table = {
   id: string;
-  name: string;
+  name?: string;
   logicalName?: string;
-  comment: string;
+  comment?: string;
   columnIds: string[];
-  seqColumnIds: string[]; // runtime only
   groupId?: string;
-  nameDerived?: boolean;
+  nameDerived?: true;
   ui: TableUI;
 };
 
 type TableUI = {
   x: number;
   y: number;
-  zIndex: number; // runtime only
-  widthName: number; // runtime only
-  widthLogicalName: number; // runtime only
-  widthComment: number; // runtime only
-  color: string;
+  color?: string;
 };
 ```
 
-Od wersji `4.0.0` tabela ma pole `groupId`, czyli identyfikator [grupy tabel](../../guide/guides/table-groups.md), do której należy. Brakujące lub puste pole `groupId` albo takie, które nie wskazuje żadnej grupy z `doc.tableGroupIds`, oznacza brak grupy, a w postaci zapisu pojawia się ono tylko wtedy, gdy wskazuje zachowaną grupę.  
-Gdy pole `seqColumnIds` nie istnieje lub brakuje w nim któregoś z wymienionych identyfikatorów, parsowanie inicjuje je wartością `columnIds`, a edytor przy każdym wczytaniu ponownie mierzy `widthName`, `widthLogicalName` i `widthComment` własnymi czcionkami.
+Od wersji `4.0.0` tabela ma pole `groupId`, czyli identyfikator [grupy tabel](../../guide/guides/table-groups.md), do której należy. Brakujące lub puste pole `groupId` albo takie, które nie wskazuje żadnej grupy z `doc.tableGroupIds`, oznacza brak grupy, a w postaci zapisu pojawia się ono tylko wtedy, gdy wskazuje zachowaną grupę.
 
 Od wersji `4.2.0` tabela ma pole `logicalName`, czyli nazwę wyświetlaną przez [widoki](../../guide/guides/logical-names.md#name-view) `Logical Names` i `Both Names`, z wartością `''` oznaczającą brak, oraz pole `nameDerived`, które ma wartość `true`, gdy słowniki [wygenerowały](../../guide/guides/dictionary.md#deriving-physical-names) pole `name` na podstawie nazwy logicznej. Dopóki jest ustawione, nowa nazwa logiczna ponownie generuje nazwę; gdy nie jest, nazwa jest traktowana jako własna i nowa nazwa logiczna jej nie zmienia, chyba że nazwa jest pusta lub składa się tylko ze spacji. Ręczna zmiana nazwy wyłącza to pole, a polecenie [`Derive Physical Names Again`](../../guide/guides/dictionary.md#derive-physical-names-again) nadpisuje nawet nazwę wpisaną samodzielnie i włącza je wszędzie tam, gdzie istnieje nazwa logiczna.  
 Postać zapisu zapisuje pole `logicalName` po polu `name`, w takiej postaci, w jakiej je wpisano, tylko wtedy, gdy zawiera tekst inny niż same spacje, a pole `nameDerived` po polu `groupId` tylko wtedy, gdy ma wartość `true`, jedyną, którą przyjmuje JSON Schema. Brakujące pole `logicalName` jest odczytywane jako `''`, a brakujące pole `nameDerived` jako `false`, więc każda nazwa w pliku zapisanym przed wersją `4.2.0` jest traktowana jako własna.  
@@ -301,24 +292,13 @@ Edytor w wersji starszej niż `4.2.0` pomija oba pola przy wczytywaniu dokumentu
 type Column = {
   id: string;
   tableId: string;
-  name: string;
-  comment: string;
-  dataType: string;
-  default: string;
+  name?: string;
+  comment?: string;
+  dataType?: string;
+  default?: string;
   options: number; // Constants: ColumnOption
   logicalName?: string;
   domainId?: string;
-  ui: ColumnUI; // runtime only
-};
-
-type ColumnUI = {
-  keys: number; // Constants: ColumnUIKey
-  widthName: number;
-  widthLogicalName: number;
-  widthComment: number;
-  widthDataType: number;
-  widthDomain: number;
-  widthDefault: number;
 };
 
 // Constants
@@ -329,17 +309,12 @@ const ColumnOption = {
   notNull: 8,
   nameDerived: 16,
 } as const;
-
-const ColumnUIKey = {
-  primaryKey: 1,
-  foreignKey: 2,
-} as const;
 ```
 
-Od wersji `4.0.0` postać zapisu nie zawiera pola `ui` kolumn. Każde wczytanie wylicza `keys` – oznaczenie klucza podstawowego z bitu `primaryKey` pola `options`, a oznaczenie klucza obcego z relacji kończących się na kolumnie – i mierzy sześć szerokości.  
+Od wersji `4.0.0` plik nie zawiera oznaczeń kluczy: każde wczytanie oznacza kolumnę jako klucz podstawowy na podstawie bitu `primaryKey` pola `options`, a jako klucz obcy, gdy w jej tabeli kończy się na niej relacja.  
 Edytor w wersji starszej niż `4.0.0` wyświetla kolumny pliku zapisanego tutaj bez ikon klucza podstawowego.
 
-Od wersji `4.2.0` kolumna ma pole `logicalName`, tak jak tabela, oraz pole `domainId`, czyli identyfikator domeny, z którą jest powiązana, z wartością `''` oznaczającą brak. Zmiany w jednym edytorze utrzymują powiązaną kolumnę przy typie danych jej domeny, jak opisano w sekcji [Domeny i typy danych](../../guide/guides/dictionary.md#domains-and-data-types). Parsowanie nie zmienia jednak typu żadnej kolumny, więc plik zapisany gdzie indziej może pozostawić powiązaną kolumnę z innym typem, podobnie jak krzyżujące się zmiany dwóch współpracowników; arkusz Kontrole wyświetla każdy taki przypadek jako kontrolę [`Domain type mismatch`](../../guide/guides/dictionary.md#what-each-check-finds). Parsowanie czyści pole `domainId`, które nie wskazuje żadnej domeny zawartej w dokumencie. Usunięta domena nadal się liczy, więc edytor zachowuje powiązanie z nią, dopóki cofnięcie może ją przywrócić. Po polu `options` postać zapisu zapisuje pole `logicalName` według reguły dla tabeli, a pole `domainId` tylko wtedy, gdy wskazuje domenę zapisywaną w pliku, więc nigdy nie zapisuje powiązania z usuniętą domeną.  
+Od wersji `4.2.0` kolumna ma pole `logicalName`, tak jak tabela, oraz pole `domainId`, czyli identyfikator domeny, z którą jest powiązana, z wartością `''` oznaczającą brak. Zmiany w jednym edytorze utrzymują powiązaną kolumnę przy typie danych jej domeny, jak opisano w sekcji [Domeny i typy danych](../../guide/guides/dictionary.md#domains-and-data-types). Parsowanie nie zmienia jednak typu żadnej kolumny, więc plik zapisany gdzie indziej może pozostawić powiązaną kolumnę z innym typem, podobnie jak krzyżujące się zmiany dwóch współpracowników; arkusz Kontrole wyświetla każdy taki przypadek jako kontrolę [`Domain type mismatch`](../../guide/guides/dictionary.md#what-each-check-finds). Parsowanie czyści pole `domainId`, które nie wskazuje żadnej domeny zawartej w pliku. Po polu `options` postać zapisu zapisuje pole `logicalName` według reguły dla tabeli, a pole `domainId` tylko wtedy, gdy wskazuje domenę zapisywaną w pliku, więc kolumna powiązana z usuniętą domeną lub z domeną, której plik nie zapisuje, jest zapisywana bez powiązania i z typem danych, który ma.  
 `ColumnOption.nameDerived` (`16`) to flaga wygenerowanej nazwy kolumny, przechowywana w `options` razem z pozostałymi bitami i oznaczająca to samo co pole `nameDerived` tabeli. Na przykład klucz podstawowy z ograniczeniem NOT NULL, którego nazwę wygenerowały słowniki, ma `options` równe `26`.  
 Edytor w wersji starszej niż `4.2.0` pomija pola `logicalName` i `domainId` przy wczytywaniu dokumentu, więc zapis w tym edytorze powoduje ich utratę. Zachowuje wartość `options` w całości jako liczbę, więc bit `nameDerived` przetrwa zapis w tym edytorze.
 
@@ -348,9 +323,7 @@ Edytor w wersji starszej niż `4.2.0` pomija pola `logicalName` i `domainId` prz
 ```ts
 type Relationship = {
   id: string;
-  identification: boolean; // runtime only
   relationshipType: number; // Constants: RelationshipType
-  startRelationshipType: number; // Constants: StartRelationshipType; runtime only
   onDelete: number; // Constants: ReferentialAction
   onUpdate: number; // Constants: ReferentialAction
   start: RelationshipPoint;
@@ -360,9 +333,6 @@ type Relationship = {
 type RelationshipPoint = {
   tableId: string;
   columnIds: string[];
-  x: number; // runtime only
-  y: number; // runtime only
-  direction: number; // Constants: Direction; runtime only
 };
 
 // Constants
@@ -373,11 +343,6 @@ const RelationshipType = {
   OneN: 16,
 } as const;
 
-const StartRelationshipType = {
-  ring: 1,
-  dash: 2,
-} as const;
-
 const ReferentialAction = {
   none: 1,
   noAction: 2,
@@ -386,35 +351,25 @@ const ReferentialAction = {
   setDefault: 16,
   restrict: 32,
 } as const;
-
-const Direction = {
-  left: 1,
-  right: 2,
-  top: 4,
-  bottom: 8,
-} as const;
 ```
 
 Od wersji `3.10.0` relacja ma pola `onDelete` i `onUpdate`, czyli swoje [akcje ON DELETE i ON UPDATE](../../guide/guides/relationship-editing.md#on-delete-and-on-update). Każde z nich zawiera dokładnie jedną wartość `ReferentialAction`. Domyślna wartość `none` nie zapisuje klauzuli, więc obowiązuje domyślne zachowanie samej bazy danych. Pozostałych pięć wartości oznacza `NO ACTION`, `CASCADE`, `SET NULL`, `SET DEFAULT` i `RESTRICT`. Schemat SQL zapisuje klauzulę tylko dla bazy danych, która obsługuje daną akcję.  
 Postać zapisu zawsze zawiera oba pola, a od wersji `4.0.0` JSON Schema ich wymaga, sprawdzając tylko, czy każde jest liczbą całkowitą. Parsowanie nadal odczytuje brakujące pole, jak w każdym dokumencie zapisanym przed wersją `3.10.0`, jako `none`, podobnie jak wartość spoza listy.  
 Edytor w wersji starszej niż `3.10.0` nie zna tych pól i pomija je przy wczytywaniu dokumentu, więc zapis w tym edytorze powoduje utratę wszystkich akcji.
 
-Od wersji `4.0.0` każde wczytanie wylicza to, co pomija postać zapisu. Relacja jest identyfikująca, gdy każda kolumna, na której się kończy, jest kluczem podstawowym, a jej pole `startRelationshipType` ma wartość `dash`, gdy każda taka kolumna ma ustawione NOT NULL, a w przeciwnym razie `ring`; relacja, w której nie pozostała żadna kolumna końcowa, jest nieidentyfikująca i ma wartość `dash`, tak jak nowo utworzona relacja. Punkty zaczepienia, czyli `x`, `y` i `direction`, są rozmieszczane ponownie.
+Od wersji `4.0.0` każde wczytanie odczytuje, czy relacja jest identyfikująca i jak rysowany jest jej koniec przy tabeli nadrzędnej, z kolumn, na których się kończy i które tabela podrzędna nadal wymienia. Jest identyfikująca, rysowana linią ciągłą, dopóki każda taka kolumna jest kluczem podstawowym, a jej koniec przy tabeli nadrzędnej to dwie kreski, dopóki każda taka kolumna ma ustawione NOT NULL, a w przeciwnym razie kółko i kreska. Relacja, w której nie pozostała żadna taka kolumna, jest nieidentyfikująca i ma dwie kreski, tak jak nowo utworzona relacja. Zobacz sekcję [Odczytywanie łącznika](../../guide/guides/relationship-editing.md#reading-a-connector).
 
 ### Kolekcja: indexEntities {#collection-indexentities}
 
 ```ts
 type Index = {
   id: string;
-  name: string;
+  name?: string;
   tableId: string;
   indexColumnIds: string[];
-  seqIndexColumnIds: string[]; // runtime only
   unique: boolean;
 };
 ```
-
-Gdy pole `seqIndexColumnIds` nie istnieje lub brakuje w nim któregoś z wymienionych identyfikatorów, parsowanie inicjuje je wartością `indexColumnIds`.
 
 ### Kolekcja: indexColumnEntities {#collection-indexcolumnentities}
 
@@ -438,7 +393,7 @@ const OrderType = {
 ```ts
 type Memo = {
   id: string;
-  value: string;
+  value?: string;
   ui: MemoUI;
 };
 
@@ -447,20 +402,19 @@ type MemoUI = {
   y: number;
   width: number;
   height: number;
-  zIndex: number; // runtime only
-  color: string;
+  color?: string;
 };
 ```
 
-Od wersji `4.0.0` tabele i notatki [współdzielą jeden stos warstw](../../guide/guides/table-related-functions.md#moving-multiple-tables) uporządkowany według `zIndex`, więc przeniesienie tabeli na wierzch może umieścić ją nad notatką. Parsowanie umieszcza notatkę zapisaną bez wartości `zIndex` nad wszystkimi tabelami, jak opisano w sekcji [Doc](#doc). Notatka w pliku zapisanym przed wersją `4.0.0` zachowuje zapisaną wartość `zIndex`, która pochodziła z tego samego licznika co wartości tabel, więc notatka, którą wcześniejsza wersja rysowała nad wszystkimi tabelami, może otworzyć się pod tabelą przeniesioną na wierzch później niż ona.
+Od wersji `4.0.0` tabele i notatki [współdzielą jeden stos warstw](../../guide/guides/table-related-functions.md#moving-multiple-tables), więc przeniesienie tabeli na wierzch może umieścić ją nad notatką. Wczytanie umieszcza każdą notatkę nad każdą tabelą, jak opisano w sekcji [Doc](#doc). Notatka w pliku zapisanym przed wersją `4.0.0` zachowuje zapisaną wartość `zIndex`, która pochodziła z tego samego licznika co wartości tabel, więc notatka, którą wcześniejsza wersja rysowała nad wszystkimi tabelami, może otworzyć się pod tabelą przeniesioną na wierzch później niż ona.
 
 ### Kolekcja: tableGroupEntities {#collection-tablegroupentities}
 
 ```ts
 type TableGroup = {
   id: string;
-  name: string;
-  color: string;
+  name?: string;
+  color?: string;
   ui: TableGroupUI;
 };
 
@@ -469,7 +423,6 @@ type TableGroupUI = {
   y: number;
   width: number;
   height: number;
-  zIndex: number; // runtime only
 };
 ```
 
@@ -487,7 +440,7 @@ type DictionaryRows = {
 };
 ```
 
-Żaden z trzech słowników nie ma kluczy w postaci identyfikatorów. Każdy jest zapisywany jako nagłówek i wiersze: `fields` raz wymienia pola encji, zaczynając od identyfikatora, a każdy wiersz zawiera wartości jednej encji w tej kolejności. Typy poniżej wymieniają pola każdej encji w kolejności nagłówka wartości czasu wykonania. Wiersz zawsze zachowuje identyfikator i nazwę, ale jego końcowe puste wartości po nazwie są pomijane, więc pusta wartość przed wartością zachowaną pozostaje `''`, a parsowanie odczytuje wartość, której brakuje w wierszu, jako `''`. Obie postacie zapisują każdy wiersz w osobnej linii w zwartym formacie JSON, jak w tych dwóch słowach z pliku:
+Żaden z trzech słowników nie ma kluczy w postaci identyfikatorów. Każdy jest zapisywany jako nagłówek i wiersze: `fields` raz wymienia pola encji, zaczynając od identyfikatora, a każdy wiersz zawiera wartości jednej encji w tej kolejności. Typy poniżej wymieniają pola każdej encji w tej kolejności. Wiersz zawsze zachowuje identyfikator i nazwę, ale jego końcowe puste wartości po nazwie są pomijane, więc pusta wartość przed wartością zachowaną pozostaje `''`, a parsowanie odczytuje wartość, której brakuje w wierszu, jako `''`. Każdy wiersz jest zapisywany w osobnej linii w zwartym formacie JSON, jak w tych dwóch słowach z pliku:
 
 ```json
 "wordEntities": {
@@ -507,8 +460,8 @@ type DictionaryRows = {
 }
 ```
 
-Postać zapisu zapisuje wymienione wiersze w kolejności arkusza i pomija pole `order`, więc jej nagłówki go nie wymieniają. Pomija wiersz, którego wszystkie wartości poza identyfikatorem są puste lub składają się tylko ze spacji, na przykład dodany i nigdy niewypełniony albo opróżniony, oraz każde powiązanie z taką domeną lub z domeną usuniętą: pole `domainId` kolumny jest pomijane, a pole `domainId` terminu jest zapisywane jako `''`, przy czym sam termin jest pomijany, jeśli nie zawiera niczego innego.  
-Nagłówki wartości czasu wykonania wymieniają `"order"` tuż po `"name"`. Wartość czasu wykonania zapisuje każdy wiersz, który zawiera jej kolekcja, łącznie z usuniętymi, w kolejności, w jakiej przechowuje je kolekcja, więc aby uzyskać kolejność arkusza, sortuj według `order`, porównując w kolejności jednostek kodu. Parsowanie nadaje wierszom pliku klucze `order` w kolejności, w jakiej wiersze występują, więc po odczycie mają kolejność, w jakiej zapisał je plik.  
+Postać zapisu zapisuje wiersze każdego arkusza w kolejności arkusza, bez pola kolejności, więc wiersze pliku wyznaczają zarówno członków słownika, jak i ich kolejność. Pomija wiersz, którego wszystkie wartości poza identyfikatorem są puste lub składają się tylko ze spacji, na przykład dodany i nigdy niewypełniony albo opróżniony, oraz każde powiązanie z taką domeną lub z domeną usuniętą: pole `domainId` kolumny jest pomijane, a pole `domainId` terminu jest zapisywane jako `''`, przy czym sam termin jest pomijany, jeśli nie zawiera niczego innego.  
+Parsowanie odczytuje wiersze w kolejności, w jakiej występują, więc każdy arkusz wyświetla je w kolejności, w jakiej zapisał je plik.  
 Dokument bez słowników, taki jak zapisany przed wersją `4.2.0`, nie ma żadnych słów, terminów ani domen. Edytor w wersji starszej niż `4.2.0` pomija wszystkie trzy słowniki przy wczytywaniu dokumentu, więc zapis w tym edytorze powoduje utratę wszystkich słów, terminów i domen.
 
 ### Kolekcja: wordEntities {#collection-wordentities}
@@ -517,12 +470,11 @@ Dokument bez słowników, taki jak zapisany przed wersją `4.2.0`, nie ma żadny
 type Word = {
   id: string;
   name: string;
-  order: string; // runtime only
-  abbreviation: string;
-  englishName: string;
-  description: string;
-  synonyms: string;
-  forbiddenWords: string;
+  abbreviation?: string;
+  englishName?: string;
+  description?: string;
+  synonyms?: string;
+  forbiddenWords?: string;
 };
 ```
 
@@ -534,15 +486,14 @@ Słowo to jedno ze słów, z których składa się nazwa logiczna, a `abbreviati
 type Term = {
   id: string;
   name: string;
-  order: string; // runtime only
-  physicalName: string;
-  domainId: string;
-  description: string;
-  synonyms: string;
+  physicalName?: string;
+  domainId?: string;
+  description?: string;
+  synonyms?: string;
 };
 ```
 
-Termin to cała nazwa logiczna. Tabela lub kolumna, której pole `logicalName` jest zgodne z polem `name`, otrzymuje jako wygenerowaną nazwę wartość pola `physicalName` albo, dopóki to pole jest puste, nazwę złożoną ze skrótów słów, a kolumna przyjmuje też domenę wskazaną przez `domainId`, gdzie `''` oznacza brak (zobacz sekcję [Generowanie nazw fizycznych](../../guide/guides/dictionary.md#deriving-physical-names)). Pole `synonyms` jest listą rozdzielaną przecinkami. Parsowanie czyści pole `domainId`, które nie wskazuje żadnej domeny, tak jak w przypadku kolumny.
+Termin to cała nazwa logiczna. Tabela lub kolumna, której pole `logicalName` jest zgodne z polem `name`, otrzymuje jako wygenerowaną nazwę wartość pola `physicalName` albo, dopóki to pole jest puste, nazwę złożoną ze skrótów słów, a kolumna przyjmuje też domenę wskazaną przez `domainId`, gdzie `''` oznacza brak (zobacz sekcję [Generowanie nazw fizycznych](../../guide/guides/dictionary.md#deriving-physical-names)). Pole `synonyms` jest listą rozdzielaną przecinkami. Parsowanie czyści pole `domainId`, które nie wskazuje żadnej domeny zawartej w pliku, tak jak w przypadku kolumny.
 
 ### Kolekcja: domainEntities {#collection-domainentities}
 
@@ -550,10 +501,9 @@ Termin to cała nazwa logiczna. Tabela lub kolumna, której pole `logicalName` j
 type Domain = {
   id: string;
   name: string;
-  order: string; // runtime only
-  category: string;
-  dataType: string;
-  description: string;
+  category?: string;
+  dataType?: string;
+  description?: string;
 };
 ```
 
@@ -572,7 +522,7 @@ Kanoniczny plik schematu jest opublikowany pod adresem [json-schema/schema.json]
 
 Umieść pole `$schema` na początku pliku `.erd.json`, a edytory obsługujące JSON Schema, takie jak VS Code, będą walidować dokument i autouzupełniać jego pola podczas edycji.
 
-Od wersji `4.0.0` schemat opisuje wyłącznie postać zapisu. Każdy obiekt z nazwanymi polami jest zamknięty (`additionalProperties: false`), każde pole, które postać zapisu zawsze zawiera, jest wymagane, pole, które pomija, gdy niczego nie zawiera, jest wymienione, ale nie jest wymagane, a żadne pole, które pomija zawsze, nie jest wymienione. Schemat odrzuca więc wartość czasu wykonania. Odrzuca też plik zapisany przed wersją `4.0.0`, z jego polem `meta`, szerokościami, `zIndex`, `ignoreSaveSettings` i resztą, dopóki edytor w wersji `4.0.0` lub nowszej nie zapisze tego pliku ponownie. Plik zapisany przez wersję `3.2.0` lub nowszą już wskazuje adres URL tego schematu, który prowadzi do gałęzi `main`, więc edytor walidujący względem niego teraz zgłasza błędy w tym pliku. Plik zapisany przez wersję `3.0.0` lub `3.1.0` albo dokument v2 nie zawiera pola `$schema`.
+Od wersji `4.0.0` schemat opisuje wyłącznie postać zapisu. Każdy obiekt z nazwanymi polami jest zamknięty (`additionalProperties: false`), każde pole, które postać zapisu zawsze zawiera, jest wymagane, każde pole oznaczone w powyższych typach znakiem `?` jest wymienione, ale nie jest wymagane, a żadne inne pole nie jest wymienione. Schemat odrzuca więc plik zapisany przed wersją `4.0.0`, z jego polem `meta`, szerokościami, `zIndex`, `ignoreSaveSettings` i resztą, dopóki edytor w wersji `4.0.0` lub nowszej nie zapisze tego pliku ponownie. Plik zapisany przez wersję `3.2.0` lub nowszą już wskazuje adres URL tego schematu, który prowadzi do gałęzi `main`, więc edytor walidujący względem niego teraz zgłasza błędy w tym pliku. Plik zapisany przez wersję `3.0.0` lub `3.1.0` albo dokument v2 nie zawiera pola `$schema`.
 
 Od wersji `4.2.0` schemat nie wymaga już pól tekstowych encji, żadnej listy `doc`, żadnej kolekcji ani samego pola `collections`, które postać zapisu pomija, gdy niczego nie zawierają. Nadal przyjmuje plik zapisany przez wersję `4.0.0` lub `4.1.0`. Wymienia nowe pola: pole `nameViewMode`, które przyjmuje tylko `"logical"` i `"both"`; pola `logicalName` i `nameDerived` tabeli, z których drugie przyjmuje tylko `true`; pola `logicalName` i `domainId` kolumny; oraz trzy słowniki, każdy z nagłówkiem i wierszami ciągów znaków. Pole `canvasType` wymienia kartę Słownik, pole `columnOrder` przyjmuje siedem lub dziewięć liczb całkowitych, a opisy pól `show`, `columnOrder`, `lockSettings` i `options` wymieniają nowe bity.
 

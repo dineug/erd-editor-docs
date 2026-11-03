@@ -47,7 +47,7 @@ description: erd-editor MCP 서버가 제공하는 모든 도구. 문서를 한 
 | --- | --- |
 | `snapshot` | 테이블 그룹과 단어, 용어, 도메인 행을 포함한 모든 엔티티와 그 id, 그리고 Schema SQL 스크립트를 포함한 설정을 담은 간결한 JSON입니다. 측정된 너비, 쌓임 순서, 화면, 탭, 이름 표시처럼 보는 사람마다 달라지는 것은 빠집니다. 스키마가 크면 커집니다. |
 | `sql` | 8가지 데이터베이스 `Databricks`, `MariaDB`, `MSSQL`, `MySQL`, `Oracle`, `PostgreSQL`, `Snowflake`, `SQLite` 중 하나의 DDL입니다. `vendor`의 기본값은 문서에 설정된 데이터베이스입니다. 문서 전체의 DDL에는 문서의 앞뒤 스크립트가 포함됩니다. `tableIds`, `tableNames`, `groupNames`를 주면 해당 테이블만, 그 테이블이 가진 foreign key와 함께, 스크립트 없이 돌려줍니다. foreign key에는 ON DELETE와 ON UPDATE 동작이 함께 작성되며, 대상 데이터베이스가 생략하는 동작은 빠집니다. [ON DELETE와 ON UPDATE](../guide/guides/relationship-editing.md#on-delete와-on-update) 문서를 참고하세요. |
-| `json` | 저장할 때 파일에 쓰이는 그대로의 문서 전체이며, 에디터가 아직 저장하지 않은 편집도 포함됩니다. [저장 형태와 런타임 값](../api/advanced/schema.md#저장-형태와-런타임-값) 문서를 참고하세요. |
+| `json` | 저장할 때 파일에 쓰이는 그대로의 문서 전체이며, 에디터가 아직 저장하지 않은 편집도 포함됩니다. [저장 형태](../api/advanced/schema.md#storage-form) 문서를 참고하세요. |
 | `scripts` | 스키마의 크기와 상관없이 문서의 앞뒤 스크립트만 `{"before":"…","after":"…"}` 형태로 돌려주며, 설정되지 않은 스크립트는 비어 있습니다. |
 
 `vendor`, `statements`, `header`, `logicalNameAsComment`, `tableIds`, `tableNames`, `groupNames`는 `sql` 형식만 받으며, 다른 형식은 이 인자를 거부합니다.
@@ -205,7 +205,7 @@ id는 `erd_list`와 `erd_get`에서, 또는 엔티티를 만든 호출의 `creat
 | `erd_remove_table_group` | `groupId` | 그룹을 삭제합니다. 그 테이블은 어느 그룹에도 속하지 않은 채 제자리에 남습니다. |
 | `erd_change_table_group_name` | `groupId`, `value` | 그룹 이름을 바꿉니다. 빈 문자열을 주면 이름이 없는 그룹이 됩니다. |
 | `erd_change_table_group_color` | `groupId`, `color` | 그룹 색상을 설정합니다. |
-| `erd_move_table_group` | `groupId`, `x`, `y` | 제목 표시줄을 드래그할 때처럼, 그룹의 영역이 그 지점에서 시작하도록 그룹을 옮기며 그 테이블도 같은 거리만큼 옮깁니다. 가로와 세로로 움직인 거리를 합해 20픽셀이 안 되는 이동은 Undo 항목을 만들지 않습니다. |
+| `erd_move_table_group` | `groupId`, `x`, `y` | 제목 표시줄을 드래그할 때처럼, 그룹의 영역이 그 지점에서 시작하도록 그룹을 옮기며 그 테이블도 같은 거리만큼 옮깁니다. 가로와 세로로 움직인 거리를 합해 20픽셀이 안 되는 이동은 Undo 항목을 만들지 않습니다. 서버 `1.2.0`부터는 이동이 그룹과 그 테이블이 끝나는 지점으로 에디터에 전달되므로, `4.3.0` 이상의 VS Code 확장이나 `1.3.0` 이상의 Obsidian 또는 JetBrains 플러그인에서는 그곳에서 같은 순간에 그룹이나 그 테이블 하나를 옮기면 두 위치의 합이 아니라 둘 중 한 위치로 끝납니다. [같은 순간에 한 편집](./live-and-headless.md#edits-made-at-the-same-moment) 문서를 참고하세요. |
 | `erd_resize_table_group` | `groupId`, `x?`, `y?`, `width`, `height` | 그룹의 영역을 설정하며, 그 테이블은 제자리에 남습니다. `x`와 `y`를 생략하면 그룹의 모서리가 유지됩니다. 그룹의 테이블을 여유 공간과 함께 담지 못하는 영역은 거부되며, 메시지에 영역이 담아야 하는 박스가 표시됩니다. |
 | `erd_set_table_group` | `tableIds`, `groupId` | 테이블을 그룹에 넣으며, 각 테이블은 원래 속해 있던 그룹에서 빠집니다. `groupId`를 `null`이나 빈 문자열로 주면 테이블을 모든 그룹에서 뺍니다. |
 
@@ -295,6 +295,8 @@ id는 `erd_list`와 `erd_get`에서, 또는 엔티티를 만든 호출의 `creat
 
 - `erd_import_sql`, `erd_import_graphql`, `erd_import_dbml`, `erd_import_aml`은 모든 테이블, 관계, 인덱스, 메모, 테이블 그룹을 대체합니다. 잠금을 포함한 문서의 설정은 유지하지만, 화면은 확대/축소 100%로 캔버스의 시작 위치로 돌아갑니다. 문서의 단어 사전, 용어 사전, 도메인 사전도 유지합니다. 가져온 테이블에는 논리명이 없고 도메인에도 연결되지 않습니다.
 - `erd_import_json`은 설정과 사전을 포함해 문서 전체를 대체합니다. JSON의 설정, 잠금, 단어, 용어, 도메인이 이 문서의 것을 대신하며, 잠금이 기록되지 않은 JSON은 모든 잠금을 켜고 화면을 캔버스의 시작 위치에 둡니다. 보는 사람은 각자 자신의 이름 표시를 유지하지만, JSON의 `Name View` 잠금이 꺼져 있으면 JSON의 이름 표시를 가져옵니다. 이 문서의 설정을 유지하려면 `erd_read`의 `json` 형식이 돌려주는 텍스트에서 시작하세요. 빈 텍스트를 주면 `erd_open_document`가 `create`로 만드는 문서와 같은 새 문서가 됩니다.
+
+에디터가 `4.3.0` 이상의 VS Code 확장이나 `1.3.0` 이상의 Obsidian 또는 JetBrains 플러그인을 가지고 있으면, `replace`와 그 `erd_undo`, `erd_redo`가 사용자가 그리는 중인 관계도 끝냅니다. [라이브](./live-and-headless.md#라이브) 문서를 참고하세요.
 
 `append`는 에디터의 [가져와서 추가](../guide/guides/file-import-export.md#가져와서-추가)처럼 가져온 내용을 문서에 추가하며, `erd_undo` 한 번으로 추가한 내용 전체를 되돌립니다.
 

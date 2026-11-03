@@ -1,31 +1,32 @@
 ---
-sidebar_position: 3
-description: Das Dokumentformat .erd.json – die Speicherform, die eine Datei enthält, und der Laufzeitwert, der in einem Editor vorliegt, die TypeScript-Typen, die Konstanten hinter jedem numerischen Feld und das veröffentlichte JSON Schema.
+sidebar_position: 4
+description: Das Dokumentformat .erd.json – die Speicherform, die eine Datei enthält, ihre TypeScript-Typen, die Konstanten hinter jedem numerischen Feld und das veröffentlichte JSON Schema.
 ---
 
 # Schema
 
 `.erd.json` ist das Dokumentformat des Editors. Lesen Sie diese Seite, wenn Sie ein Dokument außerhalb des Editors erzeugen, validieren oder migrieren müssen.
 
-Seit `4.0.0` hat ein Dokument zwei Serialisierungen, beide mit dem Wert `'3.0.0'` in `version`. Die Speicherform ist das, was eine Datei enthält: Sie ist das, was [`editor.value`](../erd-editor-element.md#value) zurückgibt, was der JSON-Export schreibt, und die einzige Form, die das veröffentlichte [JSON Schema](#json-schema) akzeptiert. Der Laufzeitwert ist das gesamte Dokument, wie es in einem Editor vorliegt, und wird von [`editor.runtimeValue`](../erd-editor-element.md#runtimevalue) zurückgegeben. `setInitialValue()`, der Setter `value` und `setSchemaJSON()` lesen beide Formen, jede Datei, die eine frühere Version gespeichert hat, und ein v2-Dokument im Format `.vuerd`. Vor `4.0.0` gab es nur eine: `value` gab das gesamte Dokument zurück, wie es im Editor vorlag, so wie es jetzt `runtimeValue` tut.
+Diese Seite beschreibt die Speicherform, das Dokument, wie es eine Datei enthält und wie es jede Version seit `4.0.0` schreibt. Sie ist das, was [`editor.value`](../erd-editor-element.md#value) zurückgibt, was der JSON-Export schreibt, und die einzige Form, die das veröffentlichte [JSON Schema](#json-schema) akzeptiert. Ihr Wert `version` ist `'3.0.0'`, wie in jeder v3-Datei, die eine frühere Version gespeichert hat; `version` unterscheidet daher eine ältere Datei nicht von einer neueren. `setInitialValue()`, der Setter `value` und `setSchemaJSON()` lesen sie, jede Datei, die eine frühere Version gespeichert hat, und ein v2-Dokument im Format `.vuerd`. Vor `4.0.0` gab `value` das gesamte Dokument zurück, wie es im Editor vorlag; eine damals gespeicherte Datei enthält daher mehr (siehe [Speicherform](#storage-form)).  
+Der [`runtimeValue`](../erd-editor-element.md#runtimevalue) eines Editors ist eine andere Serialisierung, die diese Seite nicht beschreibt. Er initialisiert einen anderen Editor oder ein Replikat, und ein [Yjs-Raum](./yjs.md#what-the-room-holds) speichert ihn in seinem Snapshot; er gehört nie in eine Datei, und das JSON Schema lehnt jeden ab, der eine Entität enthält.
 
-## Speicherform und Laufzeitwert {#storage-form-and-runtime-value}
+## Speicherform {#storage-form}
 
-Die Speicherform enthält nur die nicht entfernten Entitäten: jede in `doc.tableIds` aufgeführte Tabelle, die Spalten, die diese Tabellen aufführen, die Beziehungen zwischen zwei verbleibenden Tabellen, die Indizes verbleibender Tabellen mit den Indexspalten, deren Spalte die Tabelle noch aufführt, die aufgeführten Notizen und Tabellengruppen sowie seit `4.2.0` die aufgeführten Wörter, Begriffe und Domänen, die über ihre ID hinaus einen Wert enthalten. Sie lässt weg, was ein Editor beim Laden ableitet oder vorhält, solange er geöffnet ist: entfernte Entitäten, `seqColumnIds` und `seqIndexColumnIds`, jeden `zIndex`, die gemessenen Breiten, das Feld `ui` der Spalten, `identification`, `startRelationshipType` und die Ankerpunkte einer Beziehung sowie seit `4.2.0` das Feld `order` jeder Wörterbuchzeile und die Listen `doc.wordIds`, `doc.termIds` und `doc.domainIds`. Die Typen unten markieren jedes dieser Felder mit `// runtime only`.  
+Die Speicherform enthält nur die nicht entfernten Entitäten: jede in `doc.tableIds` aufgeführte Tabelle, die Spalten, die diese Tabellen aufführen, die Beziehungen zwischen zwei verbleibenden Tabellen, die Indizes verbleibender Tabellen mit den Indexspalten, deren Spalte die Tabelle noch aufführt, die aufgeführten Notizen und Tabellengruppen sowie seit `4.2.0` die Wörter, Begriffe und Domänen der Blätter des Wörterbuchs, die über ihre ID hinaus einen Wert enthalten. Sie enthält nichts, was ein Editor beim Laden ermittelt oder nur vorhält, solange er geöffnet ist: keine Stapelreihenfolge, keine gemessenen Breiten und keine Schlüsselmarkierungen, und auch nicht, ob eine Beziehung identifizierend ist, wie ihr Ende an der Elterntabelle dargestellt wird oder wo sie auf ihre Tabellen trifft. Jedes Laden ermittelt dies aus dem, was die Datei enthält, neu.  
 Die Einträge jeder Collection außer den Wörterbüchern sind nach ID geschlüsselt und in der Reihenfolge der Codeeinheiten sortiert, wobei Spalten zuerst nach `tableId` und Indexspalten zuerst nach `indexId` gruppiert sind. Seit `4.2.0` folgen `wordEntities`, `termEntities` und `domainEntities` in dieser Reihenfolge auf alle anderen Collections, jeweils als Kopfzeile und Zeilen geschrieben, jede Zeile in einer eigenen Textzeile (siehe [Wörterbuchzeilen](#dictionary-rows)). Jede Entität schreibt ihre Felder in einer festen Reihenfolge, und der Text ist mit zwei Leerzeichen eingerückt und endet mit einem Zeilenumbruch. Dadurch ergibt dasselbe Dokument immer dieselben Bytes, eine Änderung verändert nur, was sie betrifft, und eine Datei, die auf einem Rechner mit anderen Schriftarten gespeichert wurde, wird mit demselben Wert von `value` wieder geöffnet.  
 VS Code, Obsidian und das JetBrains-Plugin schreiben eine Datei nur, wenn eine Änderung `value` verändert, sodass eine Datei, die eine frühere Version gespeichert hat, ihre alte Form bis zu ihrer ersten Änderung behält.
 
 Seit `4.2.0` lässt die Speicherform außerdem weg, was nichts enthält: jedes Textfeld, das eine Entität oder ihr `ui` als `''` enthält (bei einer Tabelle `name`, `comment` und `ui.color`, bei einer Spalte `name`, `comment`, `dataType` und `default`, bei einem Index `name`, bei einer Notiz `value` und `ui.color`, bei einer Tabellengruppe `name` und `color`), jede Liste in `doc` und jede Collection, die keinen Eintrag enthält, sowie `collections` selbst, sobald jede Collection leer ist. Text, der nur aus Leerraum besteht, wird so geschrieben, wie er vorliegt, außer bei einem logischen Namen, der dann entfällt; ein Wort, ein Begriff oder eine Domäne, deren Werte nach der ID alle leer sind oder nur aus Leerraum bestehen, entfällt ganz. Jede ID, jede Liste innerhalb einer Entität und jede Zahl, `0` eingeschlossen, wird weiterhin geschrieben. `doc` wird immer geschrieben, daher enthält die Datei eines neuen Dokuments `$schema`, `version`, seine Einstellungen und `"doc": {}`.  
 Beim Parsen wird ein fehlendes Textfeld als `''` und eine fehlende Collection als leer gelesen, wie es jede v3-Version tut, und die Speicherform lässt eine Liste in `doc` nur weg, solange ihre Collection nichts enthält (siehe [Doc](#doc)). Daher öffnet auch ein Editor vor `4.2.0` diese Dateien, und ein Programm, das eine Datei selbst liest, muss Fehlendes auf dieselbe Weise lesen. Eine Datei, die eine frühere Version gespeichert hat, kommt aus ihrem nächsten Speichern ohne ihren leeren Text, ihre leeren Listen und Collections zurück, eine einmalige Änderung, und wird von da an Byte für Byte gleich gespeichert.
 
-Der Laufzeitwert behält, was die Speicherform weglässt: entfernte Entitäten, Sequenzen, Z-Indizes, Breiten, Schlüsselmarkierungen, Beziehungs-Flags und Ankerpunkte, die leeren Textfelder sowie die vier Listen `tableIds`, `relationshipIds`, `indexIds` und `memoIds` und die sechs Collections von `tableEntities` bis `memoEntities`, auch wenn sie leer sind. Seit `4.2.0` behält er außerdem entfernte Wörter, Begriffe und Domänen, Zeilen, die nichts enthalten, das Feld `order` jeder Zeile, die drei Listen der Wörterbücher, einen logischen Namen, der nur aus Leerraum besteht, und eine Verknüpfung mit einer entfernten Domäne. Er ist mit zwei Leerzeichen eingerückt und hat keinen abschließenden Zeilenumbruch. Verwenden Sie ihn nur, um über `setInitialValue()` einen Mitbearbeiter oder eine zweite Ansicht zu initialisieren, damit das Rückgängigmachen einer Entfernung, das ein anderer Editor sendet, die Entität dort vollständig wiederherstellt. Schreiben Sie ihn nie in eine Datei; das JSON Schema lehnt ihn ab. Entfernte Entitäten werden nicht mehr aufgeräumt, daher behält der Laufzeitwert sie, bis das Dokument das nächste Mal aus seiner Datei geöffnet wird.
+Die Speicherform schreibt jede gesperrte Einstellung mit ihrem gesperrten Wert (siehe [`lockSettings`](#settings)), `settings.ddlScripts` nur, solange ein Skript Text enthält, und das Feld `groupId` einer Tabelle nur, solange es eine Tabellengruppe benennt, die die Datei schreibt. Seit `4.2.0` schreibt sie außerdem `settings.nameViewMode` nur, solange der geschriebene Wert nicht `'physical'` ist, `settings.columnOrder` nach Möglichkeit mit sieben Einträgen (siehe [Settings](#settings)) und das Feld `nameDerived` einer Tabelle nur, solange es `true` ist.  
+Sie schreibt `doc.tableGroupIds` und `tableGroupEntities` nur, solange eine Tabellengruppe existiert, ein Feld `logicalName` nur, solange es anderen Text als Leerraum enthält, das Feld `domainId` einer Spalte nur, solange es eine Domäne benennt, die die Datei schreibt, und jedes Wörterbuch nur, solange es eine Zeile enthält, die die Datei schreibt.
 
-Beide Formen schreiben jede gesperrte Einstellung mit ihrem gesperrten Wert (siehe [`lockSettings`](#settings)), `settings.ddlScripts` nur, solange ein Skript Text enthält, und das Feld `groupId` einer Tabelle nur, solange es nicht leer ist. Seit `4.2.0` schreiben beide außerdem `settings.nameViewMode` nur, solange der geschriebene Wert nicht `'physical'` ist, `settings.columnOrder` nach Möglichkeit mit sieben Einträgen (siehe [Settings](#settings)) und das Feld `nameDerived` einer Tabelle nur, solange es `true` ist.  
-Die Speicherform schreibt `doc.tableGroupIds` und `tableGroupEntities` nur, solange eine Tabellengruppe existiert, ein Feld `logicalName` nur, solange es anderen Text als Leerraum enthält, das Feld `domainId` einer Spalte nur, solange es eine Domäne benennt, die die Datei schreibt, und jedes Wörterbuch nur, solange es eine Zeile enthält, die die Datei schreibt. Der Laufzeitwert schreibt die Felder der Tabellengruppen, solange das Dokument eine Gruppe oder eine entfernte Gruppe enthält, `logicalName` und `domainId`, solange sie nicht `''` sind, und jedes Wörterbuch mit seiner Liste, solange eines von beiden einen Eintrag enthält, eine entfernte Zeile eingeschlossen.
+Eine Datei, die vor `4.0.0` gespeichert wurde, enthält das gesamte Dokument, wie ein Editor es damals hielt, einschließlich seiner entfernten Entitäten und dessen, was jedes Laden ermittelt. Ein Laden liest sie, behält den Platz jeder Tabelle und jeder Notiz in der Stapelreihenfolge (siehe [Doc](#doc)) und ermittelt den Rest neu, und das nächste Speichern schreibt nur die Speicherform.
 
 ## TypeScript {#typescript}
 
-Die Typen beschreiben den Laufzeitwert. Ein mit `// runtime only` markiertes Feld entfällt in der Speicherform, und ein mit `?` markiertes Feld wird nur geschrieben, solange es etwas enthält. Der leere Text sowie die leeren Listen und Collections, die die Speicherform seit `4.2.0` weglässt, sind nicht markiert.
+Die Typen beschreiben die Speicherform und führen ihre Felder jeweils in der Reihenfolge auf, in der eine Datei sie schreibt. Ein mit `?` markiertes Feld kann die Speicherform weglassen, wie unter [Speicherform](#storage-form) beschrieben, und beim Parsen wird ein fehlendes als leer gelesen: `''`, `false`, keine Tabellengruppe und keine Domäne, eine leere Collection, `'physical'` für `nameViewMode` und zwei leere Skripte für `ddlScripts`. Die Ausnahme ist eine fehlende Liste in `doc`, die beim Parsen aus ihrer Collection gefüllt wird (siehe [Doc](#doc)). In einer Wörterbuchzeile markiert `?` die Werte, vor denen eine Zeile enden kann (siehe [Wörterbuchzeilen](#dictionary-rows)). Jedes andere Feld wird immer geschrieben.
 
 ### ERDEditorSchemaV3 {#erdeditorschemav3}
 
@@ -35,13 +36,13 @@ type ERDEditorSchemaV3 = {
   version: '3.0.0';
   settings: Settings;
   doc: Doc;
-  collections: {
-    tableEntities: Record<string, Table>;
-    tableColumnEntities: Record<string, Column>;
-    relationshipEntities: Record<string, Relationship>;
-    indexEntities: Record<string, Index>;
-    indexColumnEntities: Record<string, IndexColumn>;
-    memoEntities: Record<string, Memo>;
+  collections?: {
+    tableEntities?: Record<string, Table>;
+    tableColumnEntities?: Record<string, Column>;
+    relationshipEntities?: Record<string, Relationship>;
+    indexEntities?: Record<string, Index>;
+    indexColumnEntities?: Record<string, IndexColumn>;
+    memoEntities?: Record<string, Memo>;
     tableGroupEntities?: Record<string, TableGroup>;
     wordEntities?: DictionaryRows; // rows of Word
     termEntities?: DictionaryRows; // rows of Term
@@ -216,7 +217,7 @@ Seit `4.2.0` gibt es ein weiteres Flag in `show`, `columnDomain` (`8192`), das i
 Ein Editor vor `4.2.0` behält `show` als ganze Zahl, sodass das Flag ein Speichern dort übersteht.
 
 Seit `4.2.0` hat `ColumnType` neun Werte. `columnLogicalName` (`128`) platziert die Zelle des logischen Namens, die eine Spaltenzeile nur in der Ansicht `Both Names` zeigt, und `columnDomain` (`256`) die Domänenzelle. Es sind die Zeilen `Logical Name` und `Domain` der [Spaltenreihenfolge](../../guide/guides/settings.md#adjusting-column-order) auf der Registerkarte Einstellungen. Ein Editor hält eine Reihenfolge aller neun Werte, und die eines neuen Dokuments ist `128, 1, 2, 256, 4, 8, 16, 32, 64`.  
-Beide Formen schreiben die Reihenfolge mit sieben Einträgen und lassen `128` und `256` weg, solange `128` direkt vor `columnName` und `256` direkt nach `columnDataType` stehen. Daher schreibt ein neues Dokument weiterhin `1, 2, 4, 8, 16, 32, 64`, und eine Datei, in deren Reihenfolge die beiden nie verschoben wurden, behält ihre Bytes. Andernfalls schreiben sie alle neun.  
+Die Speicherform schreibt die Reihenfolge mit sieben Einträgen und lässt `128` und `256` weg, solange `128` direkt vor `columnName` und `256` direkt nach `columnDataType` stehen. Daher schreibt ein neues Dokument weiterhin `1, 2, 4, 8, 16, 32, 64`, und eine Datei, in deren Reihenfolge die beiden nie verschoben wurden, behält ihre Bytes. Andernfalls schreibt sie alle neun.  
 Beim Parsen werden die beiden in eine Reihenfolge mit sieben Einträgen an diesen Stellen eingefügt, unabhängig davon, in welcher Reihenfolge die sieben stehen, und neun Einträge, die jeden Typ enthalten, werden so übernommen, wie sie stehen.  
 Seit `5.0.0` nimmt das Parsen auch jede andere Reihenfolge an. Es behält jeden bekannten `ColumnType` einmal, in der angegebenen Reihenfolge, und verwirft jeden anderen Eintrag: einen Wert, den kein `ColumnType` benennt, etwa einen Typ, den eine spätere Version hinzufügt, und einen zweiten Eintrag desselben Typs. Jeder Typ, der in der Reihenfolge fehlt, kommt direkt hinter den nächsten Typ davor in der Standardreihenfolge, den die Reihenfolge enthält, oder, wenn keiner davor steht, direkt vor den nächsten danach; so finden `128` und `256` bei sieben Einträgen ihre Plätze. Nur eine Reihenfolge, die keinen bekannten Typ nennt, oder ein Wert, der kein Array ist, wird als Standardreihenfolge gelesen.  
 Eine Datei, die eine spätere Version gespeichert hat, öffnet sich also mit ihrer Reihenfolge der Typen, die diese Version kennt, und ein Speichern hier schreibt diese Reihenfolge ohne die anderen. Vor `5.0.0` las das Parsen jede andere Reihenfolge als Standard, sodass eine solche Datei mit zurückgesetzter Spaltenreihenfolge geöffnet wurde. Das JSON Schema akzeptiert sieben oder neun ganze Zahlen.
@@ -224,18 +225,18 @@ Eine Datei, die eine spätere Version gespeichert hat, öffnet sich also mit ihr
 Seit `4.0.0` hat `Language` acht weitere Ziele des [Codegenerators](../../guide/guides/code-generator.md), von `Mermaid` bis `JSONSchema`. Ein Wert von `language`, den der Parser nicht kennt, wird als `GraphQL` gelesen, daher öffnet ein Editor vor `4.0.0` ein Dokument, das mit einem davon gespeichert wurde, mit GraphQL, und ein Speichern dort schreibt GraphQL.
 
 Seit `4.0.0` tritt `lockSettings` an die Stelle von `ignoreSaveSettings` und `LockSettingType` an die Stelle von `SaveSettingType`, das entfernt wurde. `lockSettings` benennt die Einstellungen, die ein Dokument so speichert, wie sie beim Sperren standen. `viewport` umfasst `originX`, `originY` und `zoomLevel` zusammen, da sich ein ohne seinen Zoom gespeicherter Ursprung an anderer Stelle öffnet, und jedes andere Bit umfasst das Feld, nach dem es benannt ist. Dies sind die Zeilen unter [`Lock`](../../guide/guides/settings.md#lock) auf der Registerkarte Einstellungen.  
-Eine gesperrte Einstellung wird von `value` und `runtimeValue` gleichermaßen mit ihrem gesperrten Wert geschrieben, unabhängig davon, was der Editor anzeigt, und jede andere Einstellung so, wie sie gerade steht. Solange die passende Sperre eingeschaltet ist, lassen daher Scrollen und Zoomen, ein Wechsel der Registerkarte, das Ändern der Sprache des Codegenerators, einer Schreibweise oder des Begrenzertyps oder ein Wechsel der Namensansicht die Datei unverändert. Beim Sperren wird der Wert übernommen, den die Einstellung in diesem Moment hat, und beim Parsen wird der gesperrte Wert aus dem gespeicherten Feld übernommen.  
+Eine Datei enthält jede gesperrte Einstellung mit ihrem gesperrten Wert, unabhängig davon, was der Editor anzeigt, und jede andere Einstellung so, wie sie gerade steht. Solange die passende Sperre eingeschaltet ist, lassen daher Scrollen und Zoomen, ein Wechsel der Registerkarte, das Ändern der Sprache des Codegenerators, einer Schreibweise oder des Begrenzertyps oder ein Wechsel der Namensansicht die Datei unverändert. Beim Sperren wird der Wert übernommen, den die Einstellung in diesem Moment hat, und beim Parsen wird der gesperrte Wert aus dem gespeicherten Feld übernommen.  
 Ein von Grund auf neu begonnenes Dokument – ein neuer Editor oder Replikations-Store oder ein leerer Wert, der `value` zugewiesen oder an `setInitialValue()` übergeben wird – hat `lockSettings` auf `63` gesetzt, also jede Sperre eingeschaltet. Ein Dokument, dessen `settings` kein `lockSettings` enthalten – jede vor `4.0.0` gespeicherte Datei, unabhängig von ihrem Wert für `ignoreSaveSettings`, und jedes v2-Dokument –, öffnet sich ebenfalls mit allen Sperren eingeschaltet: Ansicht und Registerkarte dort, wo sie bei einem neuen Dokument sind (`originX` und `originY` auf `0`, `zoomLevel` auf `1`, die Registerkarte ERD), und Sprache, Schreibweisen und Begrenzertyp auf dem gespeicherten Stand gesperrt. Ein Dokument, das seine Sperren benennt, behält sie, `0` eingeschlossen, sowie jeden gespeicherten Wert.  
 Beim Parsen bleibt jedes Bit von `lockSettings` erhalten, auch unbekannte, sodass eine Sperre, die eine spätere Version hinzufügt, ein Speichern hier übersteht; das JSON Schema prüft nur, ob der Wert eine ganze Zahl ist. Ein Editor vor `4.0.0` verwirft `lockSettings` beim Speichern und schreibt Ansicht und Registerkarte so, wie sie gerade stehen, sodass sich die Datei hier wieder wie eine vor `4.0.0` gespeicherte öffnet.
 
 Seit `4.2.0` gibt es eine siebte Sperre, `unlockNameViewMode` (`64`), die Zeile `Name View`, die `nameViewMode` umfasst. Ihr Bit wird umgekehrt zu den anderen Sperrbits gelesen, wie die Ausblende-Bits von `Show`: Ist es gesetzt, ist die Namensansicht entsperrt, ist es nicht gesetzt, ist sie gesperrt. Daher bedeutet `63` weiterhin, dass jede Sperre eingeschaltet ist, und ein neues Dokument enthält diesen Wert, wobei die Namensansicht auf `'physical'` gesperrt ist. Eine vor `4.2.0` gespeicherte Datei hat das Bit nicht gesetzt, unabhängig von ihren anderen Sperren, `0` eingeschlossen, daher öffnet sie sich mit einer auf `'physical'` gesperrten Namensansicht. Ein Dokument, in dem alle Sperren ausgeschaltet sind, enthält `64`, und eines, in dem alle anderen Sperren eingeschaltet sind und die Namensansicht entsperrt ist, enthält `127`. Prüfen Sie diese Sperre umgekehrt: Sie ist eingeschaltet, solange `(lockSettings & 64) === 0` gilt.  
-Solange sie eingeschaltet ist, ändert ein Wechsel der Namensansicht nur den Bildschirm des Editors, der ihn vorgenommen hat, und das Dokument behält die gesperrte Ansicht. Solange sie ausgeschaltet ist, gehört ein Wechsel in einem Editor, der bearbeiten kann, zum Dokument, und jeder Mitbearbeiter wechselt mit. Der Wechsel eines schreibgeschützten Editors ändert in beiden Fällen nur dessen eigenen Bildschirm. Siehe [`Lock`](../../guide/guides/settings.md#lock).  
+Solange das Bit nicht gesetzt ist, enthält eine Datei `nameViewMode` mit der gesperrten Ansicht, unabhängig davon, was ein Editor zeigt, und solange es gesetzt ist, mit der Ansicht, wie sie gerade steht. Was jeder Editor bei eingeschalteter und bei ausgeschalteter Sperre zeigt, beschreibt [`Lock`](../../guide/guides/settings.md#lock).  
 Ein Editor der Version `4.0.0` oder `4.1.0` behält das Bit beim Speichern bei, verwirft aber `nameViewMode`, daher öffnet sich das Dokument hier wieder mit `'physical'`, die Sperre unverändert.
 
 Seit `4.0.0` enthält `ddlScripts` die beiden Skripte der Registerkarte [Schema SQL](../../guide/guides/schema-sql.md), die die DDL jeder Datenbank schreibt: `before` nach dem Vorspann und vor den Tabellen, `after` nach der generierten DDL. Die DDL schreibt jedes Skript mit LF-Zeilenumbrüchen, ohne führende Leerzeilen und ohne abschließenden Leerraum und bei MSSQL mit `GO` abgeschlossen, wie unter [Skripte vor und nach den Tabellen](../../guide/guides/schema-sql.md#before-and-after-scripts) beschrieben; `ddlScripts` selbst behält jedes Skript so, wie es eingegeben wurde. Der Schlüssel wird nur geschrieben, solange eines der beiden Skripte Text enthält, und dann mit beiden; ein fehlender Schlüssel oder ein Skript, das keine Zeichenkette ist, wird als `''` gelesen. Die Auswahl bei `Statements`, `Header` und `Tables` auf der Registerkarte und seit `4.2.0` ihr Schalter [`Write logical names into empty comments`](../../guide/guides/schema-sql.md#logical-names-as-comments) werden nicht im Dokument gespeichert.  
 Ein Editor vor `4.0.0` verwirft die Skripte, wenn er ein Dokument lädt, sodass sie beim Speichern dort verloren gehen.
 
-Seit `4.2.0` ist `nameViewMode` die [Namensansicht](../../guide/guides/logical-names.md#name-view), also die Namen, die das Diagramm zeigt: `'physical'` den Namen jeder Tabelle und Spalte, `'logical'` ihren logischen Namen an der Stelle des Namens und `'both'` den logischen Namen und den Namen. Die Menüs nennen sie `Physical Names`, `Logical Names` und `Both Names`. Beide Formen schreiben das Feld zuletzt, nach `ddlScripts`, und nur, solange der geschriebene Wert nicht `'physical'` ist; solange die Sperre `Name View` eingeschaltet ist, ist das der gesperrte Wert, unabhängig davon, was der Bildschirm zeigt. Ein fehlender Wert oder einer, den der Parser nicht kennt, wird als `'physical'` gelesen, und das JSON Schema akzeptiert nur `"logical"` und `"both"`.  
+Seit `4.2.0` ist `nameViewMode` die [Namensansicht](../../guide/guides/logical-names.md#name-view), also die Namen, die das Diagramm zeigt: `'physical'` den Namen jeder Tabelle und Spalte, `'logical'` ihren logischen Namen an der Stelle des Namens und `'both'` den logischen Namen und den Namen. Die Menüs nennen sie `Physical Names`, `Logical Names` und `Both Names`. Die Speicherform schreibt das Feld zuletzt, nach `ddlScripts`, und nur, solange der geschriebene Wert nicht `'physical'` ist. Ein fehlender Wert oder einer, den der Parser nicht kennt, wird als `'physical'` gelesen, und das JSON Schema akzeptiert nur `"logical"` und `"both"`.  
 Ein Editor vor `4.2.0` verwirft `nameViewMode`, wenn er ein Dokument lädt.
 
 `Database`, `Language`, `Show`, `ColumnType`, `ColumnOption`, `LockSettingType` und `ReferentialAction` werden nur am Ende erweitert. Ein gespeichertes Dokument enthält die Zahl, daher erhält ein neues Datenbanksystem, ein neues Ziel der Codegenerierung, ein neues Flag, ein neuer Spaltentyp, eine neue Spaltenoption, eine neue Sperre oder eine neue Aktion das nächste Bit statt eines Platzes in der Mitte.
@@ -244,52 +245,42 @@ Ein Editor vor `4.2.0` verwirft `nameViewMode`, wenn er ein Dokument lädt.
 
 ```ts
 type Doc = {
-  tableIds: string[];
-  relationshipIds: string[];
-  indexIds: string[];
-  memoIds: string[];
+  tableIds?: string[];
+  relationshipIds?: string[];
+  indexIds?: string[];
+  memoIds?: string[];
   tableGroupIds?: string[];
-  wordIds?: string[]; // runtime only
-  termIds?: string[]; // runtime only
-  domainIds?: string[]; // runtime only
 };
 ```
 
-Jede der ersten fünf Listen ist die Reihenfolge einer Art von Entität, nach der sich die DDL, die Tabellensortierung und die Zeichenreihenfolge richten. In der Speicherform enthält jede Liste nur die IDs verbleibender Entitäten, jeweils einmal, in der aufgeführten Reihenfolge, und seit `4.2.0` entfällt eine Liste, die keine enthält. Seit `4.0.0` ist `tableGroupIds` die Reihenfolge der Tabellengruppen.
+Jede Liste ist die Reihenfolge einer Art von Entität, nach der sich die DDL, die Tabellensortierung und die Zeichenreihenfolge richten. Jede enthält nur die IDs der Entitäten, die die Datei schreibt, jeweils einmal, in der aufgeführten Reihenfolge, und seit `4.2.0` entfällt eine Liste, die keine enthält. Seit `4.0.0` ist `tableGroupIds` die Reihenfolge der Tabellengruppen. Die Wörterbücher haben hier keine Liste, da ihre Zeilen in der Reihenfolge ihres Blatts stehen (siehe [Wörterbuchzeilen](#dictionary-rows)), und das JSON Schema akzeptiert in `doc` keinen anderen Schlüssel.
 
-Seit `4.2.0` listen `wordIds`, `termIds` und `domainIds` die nicht entfernten Zeilen jedes Wörterbuchs auf: Eine Zeile, die ihre Collection enthält, ihre Liste aber nicht, ist entfernt. Sie sind nicht die Reihenfolge eines Blatts, die das Feld `order` jeder Zeile angibt. Nur der Laufzeitwert schreibt sie, jede, solange sie oder ihre Collection einen Eintrag enthält. Die Zeilen einer Datei sind selbst die Zugehörigkeit und die Reihenfolge, und das JSON Schema lehnt die Listen ab.  
 Seit `4.2.0` wird beim Parsen eine Liste, die das Dokument weglässt oder als etwas anderes als ein Array enthält, so gelesen, als enthielte sie jeden Eintrag ihrer Collection, jede ID einmal, in der Reihenfolge, in der die Collection sie enthält; ein leeres Array bleibt leer, und jeder Eintrag seiner Collection gilt dann als entfernt. Ein Editor vor `4.2.0` liest eine fehlende Liste als leer, daher schreibt die Speicherform weiterhin jede Liste, sobald ihre Collection eine Entität enthält.
 
-Seit `4.0.0` wird die Stapelreihenfolge nicht gespeichert. Beim Parsen wird jede aufgeführte Tabelle, Notiz und Tabellengruppe ohne `zIndex` nach ihrem Platz in ihrer Liste gestapelt, spätere weiter vorn: Tabellengruppen ab `1`, Tabellen ab `2` und Notizen über allen Tabellen. Eine Entität mit `zIndex`, wie in einem Laufzeitwert oder einer vor `4.0.0` gespeicherten Datei, behält ihn. Wird eine Tabelle oder Notiz in den Vordergrund geholt, geht das daher verloren, wenn die Datei erneut geöffnet wird.
+Seit `4.0.0` enthält eine Datei keine Stapelreihenfolge. Beim Laden werden die aufgeführten Tabellen und Notizen nach ihren Plätzen in ihren Listen gestapelt, spätere weiter vorn und jede Notiz über jeder Tabelle, und die Tabellengruppen ebenso untereinander, hinter den Tabellen. Eine Tabelle oder Notiz in einer vor `4.0.0` gespeicherten Datei trägt in ihrem `ui` einen `zIndex`, den ein Laden als ihren Platz in der Stapelreihenfolge behält und das nächste Speichern weglässt. Wird eine Tabelle oder Notiz in den Vordergrund geholt, geht das daher verloren, wenn die Datei erneut geöffnet wird.
 
 ### Collection: tableEntities {#collection-tableentities}
 
 ```ts
 type Table = {
   id: string;
-  name: string;
+  name?: string;
   logicalName?: string;
-  comment: string;
+  comment?: string;
   columnIds: string[];
-  seqColumnIds: string[]; // runtime only
   groupId?: string;
-  nameDerived?: boolean;
+  nameDerived?: true;
   ui: TableUI;
 };
 
 type TableUI = {
   x: number;
   y: number;
-  zIndex: number; // runtime only
-  widthName: number; // runtime only
-  widthLogicalName: number; // runtime only
-  widthComment: number; // runtime only
-  color: string;
+  color?: string;
 };
 ```
 
-Seit `4.0.0` trägt eine Tabelle das Feld `groupId`, die ID der [Tabellengruppe](../../guide/guides/table-groups.md), zu der sie gehört. Ein fehlendes oder leeres Feld `groupId` oder eines, das keine Gruppe in `doc.tableGroupIds` benennt, bedeutet keine Gruppe, und die Speicherform schreibt es nur, solange es eine verbleibende Gruppe benennt.  
-Beim Parsen wird `seqColumnIds` auf `columnIds` gesetzt, wenn es fehlt oder eine aufgeführte ID nicht enthält, und ein Editor misst `widthName`, `widthLogicalName` und `widthComment` bei jedem Laden mit seinen eigenen Schriftarten neu.
+Seit `4.0.0` trägt eine Tabelle das Feld `groupId`, die ID der [Tabellengruppe](../../guide/guides/table-groups.md), zu der sie gehört. Ein fehlendes oder leeres Feld `groupId` oder eines, das keine Gruppe in `doc.tableGroupIds` benennt, bedeutet keine Gruppe, und die Speicherform schreibt es nur, solange es eine verbleibende Gruppe benennt.
 
 Seit `4.2.0` trägt eine Tabelle das Feld `logicalName`, den Namen, den die [Ansichten](../../guide/guides/logical-names.md#name-view) `Logical Names` und `Both Names` zeigen, `''` für keinen, und das Feld `nameDerived`, das `true` ist, solange die Wörterbücher `name` aus dem logischen Namen [abgeleitet](../../guide/guides/dictionary.md#deriving-physical-names) haben. Solange es gesetzt ist, leitet ein neuer logischer Name den Namen erneut ab; solange nicht, ist der Name ein eigener Name, und ein neuer logischer Name lässt ihn unverändert, es sei denn, der Name ist leer oder besteht nur aus Leerraum. Eine Umbenennung von Hand schaltet es aus, und [`Derive Physical Names Again`](../../guide/guides/dictionary.md#derive-physical-names-again) schreibt sogar einen Namen neu, den jemand selbst geschrieben hat, und schaltet es überall ein, wo es einen logischen Namen gibt.  
 Die Speicherform schreibt `logicalName` nach `name`, so wie eingegeben, nur, solange es anderen Text als Leerraum enthält, und `nameDerived` nach `groupId` nur, solange es `true` ist, der einzige Wert, den das JSON Schema akzeptiert. Ein fehlendes Feld `logicalName` wird als `''` gelesen und ein fehlendes Feld `nameDerived` als `false`, daher gilt jeder Name in einer vor `4.2.0` gespeicherten Datei als eigener Name.  
@@ -301,24 +292,13 @@ Ein Editor vor `4.2.0` verwirft beide, wenn er ein Dokument lädt, sodass beim S
 type Column = {
   id: string;
   tableId: string;
-  name: string;
-  comment: string;
-  dataType: string;
-  default: string;
+  name?: string;
+  comment?: string;
+  dataType?: string;
+  default?: string;
   options: number; // Constants: ColumnOption
   logicalName?: string;
   domainId?: string;
-  ui: ColumnUI; // runtime only
-};
-
-type ColumnUI = {
-  keys: number; // Constants: ColumnUIKey
-  widthName: number;
-  widthLogicalName: number;
-  widthComment: number;
-  widthDataType: number;
-  widthDomain: number;
-  widthDefault: number;
 };
 
 // Constants
@@ -329,17 +309,12 @@ const ColumnOption = {
   notNull: 8,
   nameDerived: 16,
 } as const;
-
-const ColumnUIKey = {
-  primaryKey: 1,
-  foreignKey: 2,
-} as const;
 ```
 
-Seit `4.0.0` schreibt die Speicherform kein Feld `ui` der Spalten. Bei jedem Laden wird `keys` abgeleitet, die Primärschlüsselmarkierung aus dem Bit `primaryKey` von `options` und die Fremdschlüsselmarkierung aus den Beziehungen, die an der Spalte enden, und die sechs Breiten werden gemessen.  
+Seit `4.0.0` enthält eine Datei keine Schlüsselmarkierungen: Bei jedem Laden wird eine Spalte als Primärschlüssel markiert, wenn das Bit `primaryKey` von `options` gesetzt ist, und als Fremdschlüssel, solange eine Beziehung in ihrer Tabelle an ihr endet.  
 Ein Editor vor `4.0.0` zeigt die Spalten einer hier gespeicherten Datei ohne ihre Primärschlüsselsymbole an.
 
-Seit `4.2.0` trägt eine Spalte wie eine Tabelle das Feld `logicalName` sowie das Feld `domainId`, die ID der Domäne, mit der sie verknüpft ist, `''` für keine. Änderungen in einem Editor halten eine verknüpfte Spalte beim Datentyp ihrer Domäne, wie unter [Domänen und Datentypen](../../guide/guides/dictionary.md#domains-and-data-types) beschrieben. Beim Parsen wird jedoch kein Spaltentyp angepasst, daher kann eine anderswo geschriebene Datei eine verknüpfte Spalte bei einem anderen Typ belassen, ebenso zwei sich überkreuzende Änderungen zweier Mitbearbeiter; das Blatt Prüfungen listet jeden solchen Fall als [`Domain type mismatch`](../../guide/guides/dictionary.md#what-each-check-finds) auf. Beim Parsen wird ein Feld `domainId` geleert, das keine Domäne benennt, die das Dokument enthält. Eine entfernte Domäne zählt dabei mit, daher behält der Editor eine Verknüpfung mit ihr, solange ein Rückgängigmachen die Domäne zurückholen kann. Nach `options` schreibt die Speicherform `logicalName` nach der Regel für eine Tabelle und `domainId` nur, solange es eine Domäne benennt, die die Datei schreibt, also nie eine Verknüpfung mit einer entfernten Domäne.  
+Seit `4.2.0` trägt eine Spalte wie eine Tabelle das Feld `logicalName` sowie das Feld `domainId`, die ID der Domäne, mit der sie verknüpft ist, `''` für keine. Änderungen in einem Editor halten eine verknüpfte Spalte beim Datentyp ihrer Domäne, wie unter [Domänen und Datentypen](../../guide/guides/dictionary.md#domains-and-data-types) beschrieben. Beim Parsen wird jedoch kein Spaltentyp angepasst, daher kann eine anderswo geschriebene Datei eine verknüpfte Spalte bei einem anderen Typ belassen, ebenso zwei sich überkreuzende Änderungen zweier Mitbearbeiter; das Blatt Prüfungen listet jeden solchen Fall als [`Domain type mismatch`](../../guide/guides/dictionary.md#what-each-check-finds) auf. Beim Parsen wird ein Feld `domainId` geleert, das keine Domäne benennt, die die Datei enthält. Nach `options` schreibt die Speicherform `logicalName` nach der Regel für eine Tabelle und `domainId` nur, solange es eine Domäne benennt, die die Datei schreibt; eine Spalte, die mit einer entfernten oder mit einer Domäne verknüpft ist, die die Datei weglässt, wird ohne die Verknüpfung und mit dem Datentyp geschrieben, den sie enthält.  
 `ColumnOption.nameDerived` (`16`) ist das Kennzeichen der Spalte für einen abgeleiteten Namen, das mit den anderen Bits in `options` gehalten wird und dasselbe bedeutet wie das Feld `nameDerived` einer Tabelle. Ein als Nicht NULL markierter Primärschlüssel, dessen Namen die Wörterbücher abgeleitet haben, hat zum Beispiel in `options` den Wert `26`.  
 Ein Editor vor `4.2.0` verwirft `logicalName` und `domainId`, wenn er ein Dokument lädt, sodass sie beim Speichern dort verloren gehen. Er behält `options` als ganze Zahl, sodass das Bit `nameDerived` ein Speichern dort übersteht.
 
@@ -348,9 +323,7 @@ Ein Editor vor `4.2.0` verwirft `logicalName` und `domainId`, wenn er ein Dokume
 ```ts
 type Relationship = {
   id: string;
-  identification: boolean; // runtime only
   relationshipType: number; // Constants: RelationshipType
-  startRelationshipType: number; // Constants: StartRelationshipType; runtime only
   onDelete: number; // Constants: ReferentialAction
   onUpdate: number; // Constants: ReferentialAction
   start: RelationshipPoint;
@@ -360,9 +333,6 @@ type Relationship = {
 type RelationshipPoint = {
   tableId: string;
   columnIds: string[];
-  x: number; // runtime only
-  y: number; // runtime only
-  direction: number; // Constants: Direction; runtime only
 };
 
 // Constants
@@ -373,11 +343,6 @@ const RelationshipType = {
   OneN: 16,
 } as const;
 
-const StartRelationshipType = {
-  ring: 1,
-  dash: 2,
-} as const;
-
 const ReferentialAction = {
   none: 1,
   noAction: 2,
@@ -386,35 +351,25 @@ const ReferentialAction = {
   setDefault: 16,
   restrict: 32,
 } as const;
-
-const Direction = {
-  left: 1,
-  right: 2,
-  top: 4,
-  bottom: 8,
-} as const;
 ```
 
 Seit `3.10.0` trägt eine Beziehung `onDelete` und `onUpdate`, ihre [Aktionen für ON DELETE und ON UPDATE](../../guide/guides/relationship-editing.md#on-delete-and-on-update). Jedes der beiden Felder enthält genau einen Wert von `ReferentialAction`. `none`, der Standardwert, schreibt keine Klausel, sodass das eigene Standardverhalten der Datenbank gilt. Die anderen fünf stehen für `NO ACTION`, `CASCADE`, `SET NULL`, `SET DEFAULT` und `RESTRICT`. Schema SQL schreibt eine Klausel nur für eine Datenbank, die ihre Aktion akzeptiert.  
 Die Speicherform schreibt immer beide, und seit `4.0.0` verlangt das JSON Schema sie, wobei es nur prüft, ob jedes davon eine ganze Zahl ist. Beim Parsen wird ein fehlendes Feld, wie in jedem vor `3.10.0` gespeicherten Dokument, weiterhin als `none` gelesen, ebenso ein Wert außerhalb der Liste.  
 Ein Editor vor `3.10.0` kennt die Felder nicht und verwirft sie, wenn er ein Dokument lädt, sodass beim Speichern dort jede Aktion verloren geht.
 
-Seit `4.0.0` wird bei jedem Laden abgeleitet, was die Speicherform weglässt. Eine Beziehung ist identifizierend, wenn jede Spalte, an der sie endet, ein Primärschlüssel ist, und ihr `startRelationshipType` ist `dash`, wenn jede solche Spalte NOT NULL ist, und sonst `ring`; eine Beziehung ohne verbliebene Endspalte ist nicht identifizierend und `dash`, so wie eine neue Beziehung beginnt. Die Ankerpunkte, `x`, `y` und `direction`, werden neu platziert.
+Seit `4.0.0` wird bei jedem Laden anhand der Spalten, an denen eine Beziehung endet und die die Kindtabelle noch aufführt, ermittelt, ob sie identifizierend ist und wie ihr Ende an der Elterntabelle gezeichnet wird. Sie ist identifizierend, eine durchgezogene Linie, solange jede solche Spalte ein Primärschlüssel ist, und ihr Ende an der Elterntabelle besteht aus zwei Strichen, solange jede solche Spalte NOT NULL ist, sonst aus einem Kreis und einem Strich. Bleibt keine solche Spalte übrig, ist die Beziehung nicht identifizierend und hat zwei Striche, so wie eine neue Beziehung beginnt. Siehe [Verbindungslinien lesen](../../guide/guides/relationship-editing.md#reading-a-connector).
 
 ### Collection: indexEntities {#collection-indexentities}
 
 ```ts
 type Index = {
   id: string;
-  name: string;
+  name?: string;
   tableId: string;
   indexColumnIds: string[];
-  seqIndexColumnIds: string[]; // runtime only
   unique: boolean;
 };
 ```
-
-Beim Parsen wird `seqIndexColumnIds` auf `indexColumnIds` gesetzt, wenn es fehlt oder eine aufgeführte ID nicht enthält.
 
 ### Collection: indexColumnEntities {#collection-indexcolumnentities}
 
@@ -438,7 +393,7 @@ const OrderType = {
 ```ts
 type Memo = {
   id: string;
-  value: string;
+  value?: string;
   ui: MemoUI;
 };
 
@@ -447,20 +402,19 @@ type MemoUI = {
   y: number;
   width: number;
   height: number;
-  zIndex: number; // runtime only
-  color: string;
+  color?: string;
 };
 ```
 
-Seit `4.0.0` teilen sich Tabellen und Notizen [einen gemeinsamen Stapel](../../guide/guides/table-related-functions.md#moving-multiple-tables), der nach `zIndex` geordnet ist, sodass eine Tabelle, die in den Vordergrund geholt wird, über einer Notiz liegen kann. Beim Parsen wird eine ohne `zIndex` gespeicherte Notiz über allen Tabellen gestapelt, wie unter [Doc](#doc) beschrieben. Eine Notiz in einer vor `4.0.0` gespeicherten Datei behält ihren gespeicherten `zIndex`, der aus demselben Zähler stammte wie der der Tabellen, sodass eine Notiz, die eine frühere Version über allen Tabellen gezeichnet hat, beim Öffnen unter einer Tabelle liegen kann, die nach ihr in den Vordergrund geholt wurde.
+Seit `4.0.0` teilen sich Tabellen und Notizen [einen gemeinsamen Stapel](../../guide/guides/table-related-functions.md#moving-multiple-tables), sodass eine Tabelle, die in den Vordergrund geholt wird, über einer Notiz liegen kann. Beim Laden wird jede Notiz über alle Tabellen gelegt, wie unter [Doc](#doc) beschrieben. Eine Notiz in einer vor `4.0.0` gespeicherten Datei behält ihren gespeicherten `zIndex`, der aus demselben Zähler stammte wie der der Tabellen, sodass eine Notiz, die eine frühere Version über allen Tabellen gezeichnet hat, beim Öffnen unter einer Tabelle liegen kann, die nach ihr in den Vordergrund geholt wurde.
 
 ### Collection: tableGroupEntities {#collection-tablegroupentities}
 
 ```ts
 type TableGroup = {
   id: string;
-  name: string;
-  color: string;
+  name?: string;
+  color?: string;
   ui: TableGroupUI;
 };
 
@@ -469,7 +423,6 @@ type TableGroupUI = {
   y: number;
   width: number;
   height: number;
-  zIndex: number; // runtime only
 };
 ```
 
@@ -487,7 +440,7 @@ type DictionaryRows = {
 };
 ```
 
-Keines der drei ist nach ID geschlüsselt. Jedes wird als Kopfzeile und Zeilen geschrieben: `fields` benennt die Felder der Entität einmal, die ID zuerst, und jede Zeile enthält die Werte einer Entität in dieser Reihenfolge. Die Typen unten listen die Felder jeder Entität in der Reihenfolge der Kopfzeile des Laufzeitwerts auf. Eine Zeile behält immer ihre ID und ihren Namen, aber ihre leeren Werte am Ende nach dem Namen entfallen, sodass ein leerer Wert vor einem, der erhalten bleibt, `''` bleibt, und beim Parsen wird ein Wert, der einer Zeile fehlt, als `''` gelesen. Beide Formen schreiben jede Zeile als kompaktes JSON in eine eigene Textzeile, wie in diesen beiden Wörtern aus einer Datei:
+Keines der drei ist nach ID geschlüsselt. Jedes wird als Kopfzeile und Zeilen geschrieben: `fields` benennt die Felder der Entität einmal, die ID zuerst, und jede Zeile enthält die Werte einer Entität in dieser Reihenfolge. Die Typen unten listen die Felder jeder Entität in dieser Reihenfolge auf. Eine Zeile behält immer ihre ID und ihren Namen, aber ihre leeren Werte am Ende nach dem Namen entfallen, sodass ein leerer Wert vor einem, der erhalten bleibt, `''` bleibt, und beim Parsen wird ein Wert, der einer Zeile fehlt, als `''` gelesen. Jede Zeile wird als kompaktes JSON in eine eigene Textzeile geschrieben, wie in diesen beiden Wörtern aus einer Datei:
 
 ```json
 "wordEntities": {
@@ -507,8 +460,8 @@ Keines der drei ist nach ID geschlüsselt. Jedes wird als Kopfzeile und Zeilen g
 }
 ```
 
-Die Speicherform schreibt die aufgeführten Zeilen in der Reihenfolge des Blatts und lässt `order` weg, daher nennen ihre Kopfzeilen es nicht. Sie lässt eine Zeile weg, deren Werte nach der ID alle leer sind oder nur aus Leerraum bestehen, etwa eine, die hinzugefügt und nie ausgefüllt oder die geleert wurde, sowie jede Verknüpfung mit einer solchen oder einer entfernten Domäne: Das Feld `domainId` einer Spalte entfällt, und das eines Begriffs wird als `''` geschrieben, wobei der Begriff selbst entfällt, wenn er sonst nichts enthält.  
-Die Kopfzeilen des Laufzeitwerts nennen `"order"` direkt nach `"name"`. Er schreibt jede Zeile, die die jeweilige Collection enthält, entfernte eingeschlossen, in der Reihenfolge, in der die Collection sie enthält; sortieren Sie daher für die Reihenfolge eines Blatts nach `order`, verglichen in der Reihenfolge der Codeeinheiten. Beim Parsen erhalten die Zeilen einer Datei Schlüssel für `order` in der Reihenfolge, in der die Zeilen stehen, sodass sie in der Reihenfolge zurückgelesen werden, in der die Datei sie geschrieben hat.  
+Die Speicherform schreibt die Zeilen jedes Blatts in der Reihenfolge des Blatts, ohne Feld für die Reihenfolge, daher sind die Zeilen einer Datei die Mitglieder eines Wörterbuchs und ihre Reihenfolge. Sie lässt eine Zeile weg, deren Werte nach der ID alle leer sind oder nur aus Leerraum bestehen, etwa eine, die hinzugefügt und nie ausgefüllt oder die geleert wurde, sowie jede Verknüpfung mit einer solchen oder einer entfernten Domäne: Das Feld `domainId` einer Spalte entfällt, und das eines Begriffs wird als `''` geschrieben, wobei der Begriff selbst entfällt, wenn er sonst nichts enthält.  
+Beim Parsen werden die Zeilen in der Reihenfolge gelesen, in der sie stehen, daher listet jedes Blatt sie in der Reihenfolge auf, in der die Datei sie geschrieben hat.  
 Ein Dokument ohne die Wörterbücher, etwa eines, das vor `4.2.0` gespeichert wurde, hat keine. Ein Editor vor `4.2.0` verwirft alle drei, wenn er ein Dokument lädt, sodass beim Speichern dort jedes Wort, jeder Begriff und jede Domäne verloren geht.
 
 ### Collection: wordEntities {#collection-wordentities}
@@ -517,12 +470,11 @@ Ein Dokument ohne die Wörterbücher, etwa eines, das vor `4.2.0` gespeichert wu
 type Word = {
   id: string;
   name: string;
-  order: string; // runtime only
-  abbreviation: string;
-  englishName: string;
-  description: string;
-  synonyms: string;
-  forbiddenWords: string;
+  abbreviation?: string;
+  englishName?: string;
+  description?: string;
+  synonyms?: string;
+  forbiddenWords?: string;
 };
 ```
 
@@ -534,15 +486,14 @@ Ein Wort ist eines der Wörter, aus denen ein logischer Name besteht, und `abbre
 type Term = {
   id: string;
   name: string;
-  order: string; // runtime only
-  physicalName: string;
-  domainId: string;
-  description: string;
-  synonyms: string;
+  physicalName?: string;
+  domainId?: string;
+  description?: string;
+  synonyms?: string;
 };
 ```
 
-Ein Begriff ist ein vollständiger logischer Name. Eine Tabelle oder Spalte, deren `logicalName` mit `name` übereinstimmt, leitet `physicalName` ab oder, solange dieses Feld leer ist, einen aus den Abkürzungen der Wörter zusammengesetzten Namen, und eine Spalte übernimmt außerdem die Domäne, die `domainId` benennt, `''` für keine (siehe [Physische Namen ableiten](../../guide/guides/dictionary.md#deriving-physical-names)). `synonyms` ist durch Kommas getrennt. Beim Parsen wird ein Feld `domainId` geleert, das keine Domäne benennt, wie bei einer Spalte.
+Ein Begriff ist ein vollständiger logischer Name. Eine Tabelle oder Spalte, deren `logicalName` mit `name` übereinstimmt, leitet `physicalName` ab oder, solange dieses Feld leer ist, einen aus den Abkürzungen der Wörter zusammengesetzten Namen, und eine Spalte übernimmt außerdem die Domäne, die `domainId` benennt, `''` für keine (siehe [Physische Namen ableiten](../../guide/guides/dictionary.md#deriving-physical-names)). `synonyms` ist durch Kommas getrennt. Beim Parsen wird ein Feld `domainId` geleert, das keine Domäne benennt, die die Datei enthält, wie bei einer Spalte.
 
 ### Collection: domainEntities {#collection-domainentities}
 
@@ -550,10 +501,9 @@ Ein Begriff ist ein vollständiger logischer Name. Eine Tabelle oder Spalte, der
 type Domain = {
   id: string;
   name: string;
-  order: string; // runtime only
-  category: string;
-  dataType: string;
-  description: string;
+  category?: string;
+  dataType?: string;
+  description?: string;
 };
 ```
 
@@ -572,7 +522,7 @@ Die kanonische Schemadatei ist unter [json-schema/schema.json](https://raw.githu
 
 Setzen Sie `$schema` an den Anfang einer Datei `.erd.json`, dann validieren Editoren, die JSON Schema verstehen, etwa VS Code, das Dokument und vervollständigen seine Felder automatisch, während Sie es bearbeiten.
 
-Seit `4.0.0` beschreibt das Schema nur die Speicherform. Jedes Objekt mit benannten Feldern ist geschlossen (`additionalProperties: false`), jedes Feld, das die Speicherform immer schreibt, ist erforderlich, ein Feld, das sie weglässt, solange es nichts enthält, ist aufgeführt, aber nicht erforderlich, und kein Feld, das sie immer weglässt, ist aufgeführt. Daher lehnt es den Laufzeitwert ab. Es lehnt auch eine vor `4.0.0` gespeicherte Datei mit ihrem `meta`, ihren Breiten, `zIndex`, `ignoreSaveSettings` und dem Rest ab, bis ein Editor der Version `4.0.0` oder neuer diese Datei erneut speichert. Eine Datei, die von `3.2.0` oder neuer gespeichert wurde, nennt bereits die URL dieses Schemas, die auf den Branch `main` zeigt, sodass ein Editor, der dagegen validiert, die Datei jetzt beanstandet. Eine von `3.0.0` oder `3.1.0` gespeicherte Datei oder ein v2-Dokument nennt kein `$schema`.
+Seit `4.0.0` beschreibt das Schema nur die Speicherform. Jedes Objekt mit benannten Feldern ist geschlossen (`additionalProperties: false`), jedes Feld, das die Speicherform immer schreibt, ist erforderlich, jedes oben mit `?` markierte Feld ist aufgeführt, aber nicht erforderlich, und kein anderes Feld ist aufgeführt. Daher lehnt es eine vor `4.0.0` gespeicherte Datei mit ihrem `meta`, ihren Breiten, `zIndex`, `ignoreSaveSettings` und dem Rest ab, bis ein Editor der Version `4.0.0` oder neuer diese Datei erneut speichert. Eine Datei, die von `3.2.0` oder neuer gespeichert wurde, nennt bereits die URL dieses Schemas, die auf den Branch `main` zeigt, sodass ein Editor, der dagegen validiert, die Datei jetzt beanstandet. Eine von `3.0.0` oder `3.1.0` gespeicherte Datei oder ein v2-Dokument nennt kein `$schema`.
 
 Seit `4.2.0` verlangt das Schema weder die Textfelder einer Entität noch eine Liste in `doc`, eine Collection oder `collections` selbst, die die Speicherform weglässt, solange sie nichts enthalten. Es akzeptiert weiterhin eine von `4.0.0` oder `4.1.0` gespeicherte Datei. Es benennt die neuen Felder: `nameViewMode`, das nur `"logical"` und `"both"` annimmt; `logicalName` und `nameDerived` einer Tabelle, wobei `nameDerived` nur `true` annimmt; `logicalName` und `domainId` einer Spalte; und die drei Wörterbücher, jedes mit seiner Kopfzeile und Zeilen aus Zeichenketten. `canvasType` führt die Registerkarte Wörterbuch auf, `columnOrder` akzeptiert sieben oder neun ganze Zahlen, und die Beschreibungen von `show`, `columnOrder`, `lockSettings` und `options` nennen die neuen Bits.
 

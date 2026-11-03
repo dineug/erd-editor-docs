@@ -1,5 +1,5 @@
 ---
-sidebar_position: 2
+sidebar_position: 3
 description: 메인 스레드 밖의 헤드리스 복제 store로 실행 중인 에디터 복제, 저장을 위한 문서 직렬화.
 ---
 
@@ -88,6 +88,11 @@ sharedStore.subscribe(actions => {
 에디터가 그 삭제를 되돌리면 그 행 없이 초기화된 복제본은 그 행을 빈 행으로 다시 나열하며, `value`는 빈 행을 생략하므로 복제본은 그 행이 없는 문서를 저장합니다.  
 도메인이라면 그 도메인을 연결했던 컬럼과 용어도 그 복제본에서는 연결이 해제된 채로 남습니다. 복제본은 그 연결을 가진 적이 없고, 삭제를 되돌릴 때 연결은 전송되지 않기 때문입니다.
 
+`5.1.0`부터 [`@dineug/erd-editor-yjs`](./yjs.md)도 Yjs 룸을 통해 에디터들을 같은 상태로 유지할 수 있습니다.  
+위와 같이 룸에 바인딩된 엘리먼트에서 입력을 받는 복제본은 그 엘리먼트에서 한 편집만 받고, 룸이 가져오는 편집은 받지 않습니다. 그 편집은 다른 에디터의 편집으로 엘리먼트에 도달하며, 공유 store는 받은 것을 다시 보내지 않기 때문입니다.  
+룸의 문서를 저장하려면 [룸이 담고 있는 것](./yjs.md#what-the-room-holds)에서 설명하듯이 바인딩된 엘리먼트의 `value`나 바인딩된 피어 store의 `value`를 저장하세요.  
+Yjs 영속화 프로바이더는 파일이 아니라 런타임 값과 그 이후의 편집을 담은 룸 자체를 저장합니다. [제한](./yjs.md#limits) 문서를 참고하세요.
+
 ## InjectEngineContext
 
 ### toWidth
@@ -154,7 +159,7 @@ const data = replicationStore.value;
 `4.2.0`부터는 논리명, 각 이름이 사전에서 생성되었는지 여부, 도메인 연결, 그리고 [사전](../../guide/guides/dictionary.md) 탭의 단어, 용어, 도메인도 담습니다.  
 또한 `4.2.0`부터는 엔티티의 비어 있는 텍스트 필드, 아무것도 담지 않은 `doc` 목록과 컬렉션, 그리고 모든 컬렉션이 비어 있을 때는 `collections` 자체를 생략합니다.  
 공백 두 칸으로 들여쓰고, 사전의 각 행을 한 줄에 하나씩 기록하며, 줄바꿈으로 끝나므로, 같은 문서는 항상 같은 바이트가 됩니다.  
-담기는 내용은 [저장 형태와 런타임 값](./schema.md#저장-형태와-런타임-값) 문서를 참고하세요.
+담기는 내용은 [저장 형태](./schema.md#storage-form) 문서를 참고하세요.
 
 [잠금](../../guide/guides/settings.md#잠금)이 켜진 설정은 잠근 시점의 값으로, 나머지 설정은 현재 상태 그대로 기록됩니다.  
 `Viewport` 잠금은 화면 원점과 확대/축소 레벨을 함께 다루며, 탭, Code Generator 언어, 두 이름 케이스, 괄호 타입에는 각각 별도의 잠금이 있습니다.  
@@ -172,6 +177,7 @@ const snapshot = replicationStore.runtimeValue;
 ```
 
 나중에 참여하는 에디터나 다른 store를 `setInitialValue`로 초기화할 때 사용하세요. [공동 편집](./collaborative-editing.md) 문서를 참고하세요.  
+복제본에는 [getLWW](./collaborative-editing.md#getlww)나 [getVersion](./collaborative-editing.md#getversion)이 없으므로 `runtimeValue`로 협업 레지스터를 넘기지 않습니다. 이 값으로 초기화한 에디터는 [공동 편집자 초기화](./collaborative-editing.md#공동-편집자-초기화)에서 설명하듯이 실행 중인 에디터에서 레지스터를 가져옵니다.  
 파일로는 절대 저장하지 마세요. 삭제된 엔티티가 들어 있으며, 게시된 [JSON Schema](./schema.md#json-schema)도 이 값을 거부합니다.  
 이 삭제된 엔티티 덕분에, 나중에 전달된 삭제 되돌리기가 이 값으로 초기화한 store에서 엔티티를 온전히 되살릴 수 있습니다.  
 삭제된 엔티티는 파일에 담기는 형태에서 빠지므로, 다음에 파일에서 문서를 열 때까지만 남아 있습니다.
@@ -230,7 +236,7 @@ const unsubscribe = replicationStore.on({
 `changed`는 이전 `change` 이후, 또는 불러온 이후의 액션이 `value`를 바이트 단위까지 그대로 두었을 때 `false`입니다.
 
 [잠금](../../guide/guides/settings.md#잠금) 때문에 `value`에 반영되지 않는 변경도 `change`를 발생시키며, 이때 `changed`는 `false`이므로 `changed`가 `true`일 때만 저장하세요.  
-`Viewport`가 잠긴 동안의 스크롤이나 확대/축소, `Canvas Type`이 잠긴 동안의 탭 전환, 그리고 각각의 잠금이 켜진 동안의 Code Generator 언어, 이름 케이스, 괄호 타입 변경이 여기에 해당합니다.  
+`Viewport`가 잠긴 동안의 스크롤이나 확대/축소, `Canvas Type`이 잠긴 동안의 탭 전환, 그리고 각각의 잠금이 켜진 동안의 Code Generator 언어, 이름 케이스, 괄호 타입 변경이 여기에 해당합니다. 이 중 마지막 변경은 `5.1.0`부터 `5.1.0` 이전 에디터만 여전히 보냅니다. [dispatch, dispatchSync](#dispatch-dispatchsync) 항목을 참고하세요.  
 `4.2.0`부터는 `Name View`가 잠긴 동안의 이름 표시 전환도 여기에 해당합니다. 에디터는 이 전환을 여전히 보내지만, 다른 에디터와 마찬가지로 복제본도 이를 버립니다.  
 읽기 전용 에디터에서 한 이름 표시 전환도 잠금과 상관없이 같은 방식으로 버려집니다.  
 엘리먼트의 [change](../erd-editor-element.md#change) 이벤트는 이런 변경을 제외하지만, 복제본은 여전히 보고합니다.  
@@ -282,6 +288,23 @@ shared store의 스트림을 필터링 없이 그대로 전달해도 됩니다.
 그 에디터에서 한 Schema SQL, GraphQL, DBML, AML `Import`는 복제본의 단어, 용어, 도메인을 비웁니다. `Import and Add`는 비우지 않습니다.  
 그 에디터에서 불러오기, `Import`, `clear()`를 되돌리면 그 에디터 자신이 가진 문서 사본을 논리명, 도메인 연결, 사전 없이 복제본에 불러옵니다. [릴리스 혼용](./collaborative-editing.md#릴리스-혼용) 문서를 참고하세요.  
 `@dineug/erd-editor/engine.js`는 이전과 같은 `createReplicationStore`, `ReplicationStore`, `ReplicationChange`를 export하며, `createReplicationStore`는 같은 컨텍스트를 받습니다.
+
+`5.1.0`은 액션 타입을 추가하지 않고 `@dineug/erd-editor/engine.js`의 export도 바꾸지 않으므로, `4.2.0` 이상의 복제본은 `5.1.0` 에디터가 보내는 모든 변경을 여전히 유지합니다.  
+`5.1.0`부터 복제본은 같은 순간에 한 편집의 결과를 `5.1.0` 에디터와 같은 방식으로 결정합니다. [동시 편집](./collaborative-editing.md#concurrent-edits) 문서를 참고하세요.  
+복제본은 테이블의 위치, 메모와 테이블 그룹의 위치와 크기, 화면 원점과 확대/축소 레벨에 대해 버전을 유지합니다.  
+`5.1.0` 에디터는 드래그, 화면 이동, 확대/축소를 끝난 지점으로 `table.moveTo`, `memo.moveTo`, `tableGroup.moveTo`, `settings.scrollTo`, `settings.changeZoomLevel`을 통해 보내며, 복제본은 이들과 각 `memo.resize`, `tableGroup.resize`를 그 버전이 자신이 가진 버전보다 낮지 않을 때만 받습니다.  
+따라서 이런 에디터 둘이 같은 순간에 테이블, 메모, 테이블 그룹 하나를 옮기거나 크기를 바꾸면, 복제본은 어떤 순서로 듣더라도 모든 에디터에 표시되는 위치와 크기로 저장하며, 전송 계층이 두 번 전달한 드래그, 화면 이동, 확대/축소가 두 번 적용되는 일은 없습니다.  
+`Viewport`의 잠금이 꺼져 있으면 복제본은 원점과 확대/축소 레벨을 각각 버전이 가장 큰 쓰기에서 가져와 저장하며, 이는 그 쓰기를 한 에디터가 있던 위치와 레벨입니다.  
+확대/축소는 원점도 움직이므로, 두 에디터가 같은 순간에 한 화면 이동과 확대/축소는 한 에디터의 원점과 다른 에디터의 확대/축소 레벨로 저장될 수 있습니다.  
+`5.1.0` 이전에는 복제본이 모든 에디터의 화면 이동과 확대/축소 단계를 하나의 화면에 더했습니다.
+
+`5.1.0` 이전 에디터가 드래그, 화면 이동, 확대/축소로 보내는 거리(`table.move`, `memo.move`, `tableGroup.move`, `settings.streamScrollTo`, `settings.streamZoomLevel`)는 버전과 상관없이 복제본이 가진 값에 여전히 더해집니다.  
+색상 변경은 여전히 버전 없이 도착합니다. 복제본은 각 에디터와 마찬가지로 자신의 버전을 매기고 마지막으로 들은 색상을 유지하므로, 테이블, 메모, 테이블 그룹 하나의 색상을 같은 순간에 두 번 바꾸면 에디터에 표시되는 것과 다르게 저장될 수 있습니다.  
+`5.1.0` 이전 복제본은 위치와 크기를 도착한 순서대로 적용하므로, `5.1.0` 에디터에 표시되는 것과 다른 곳에 테이블을 저장할 수 있습니다.  
+같은 순간에 한 편집이 같은 결과로 끝나게 하려면 세션의 모든 에디터와 복제본을 `5.1.0` 이상으로 유지하세요. 다만 [동시 편집](./collaborative-editing.md#concurrent-edits)에 나열된 예외는 제외됩니다.
+
+`5.1.0`부터 에디터는 Code Generator 언어, 이름 케이스, 괄호 타입의 변경을 그 설정의 잠금이 꺼져 있을 때만, 페이로드에 `shared: true`를 표시해 보내며, 복제본은 표시된 변경을 에디터와 마찬가지로 모두 적용합니다. [공동 편집](./collaborative-editing.md) 문서를 참고하세요.  
+표시되지 않은 변경은 `5.1.0` 이전 에디터가 잠금과 상관없이 보내는 것으로, 복제본은 자기 쪽에서 그 설정이 잠기지 않은 동안만 적용하고 설정이 잠긴 동안에는 버립니다. [on@change](#onchange) 항목을 참고하세요.
 
 `4.0.0`부터 두 메서드는 `editor.mergeLWW`도 반영합니다. 이 액션은 다른 에디터가 세션에 참여할 때 에디터가 응답으로 보내는 협업 레지스터를 담고 있으므로, 복제본도 에디터와 같은 방식으로 동시 편집의 결과를 결정합니다.  
 `value`의 바이트를 하나도 바꾸지 않으며 `change`도 발생시키지 않습니다.  

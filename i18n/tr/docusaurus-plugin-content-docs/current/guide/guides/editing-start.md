@@ -83,7 +83,9 @@ Bir tür hazırlandığında imleç değişir. Önce üst tabloya, ardından alt
 Her yabancı anahtar sütunu kendi anahtarına göre adlandırılır: `id` gibi tek sözcüklü bir adın önüne üst tablonun adı eklenir (`user_id`), `member_id` gibi birkaç sözcükten oluşan bir ad korunur ve alt tablonun zaten sahip olduğu bir ad numaralandırılır (`user_id_2`). [Yabancı anahtar sütun adları](./relationship-editing.md#foreign-key-column-names) bölümüne bakın.  
 Bir tabloya iki kez tıklamak kendine başvuran bir ilişki çizer.  
 Yeni bir ilişki, `On Delete` ve `On Update` ayarlarının ikisi de `Not set` olacak şekilde başlar; bunları ilişkinin bağlam menüsünden değiştirin. [ON DELETE ve ON UPDATE](./relationship-editing.md#on-delete-and-on-update) bölümüne bakın.  
-İptal etmek için `Escape` tuşuna ya da aynı kısayola yeniden basın. İptal etmek seçimi olduğu gibi bırakır ve `Escape` tuşuna bir kez daha basmak seçimi temizler.
+İptal etmek için `Escape` tuşuna ya da aynı kısayola yeniden basın. İptal etmek seçimi olduğu gibi bırakır ve `Escape` tuşuna bir kez daha basmak seçimi temizler.  
+Çizim, yalnızca türü hazırlanmış olsa da üst tablo zaten seçilmiş olsa da, diyagram değiştirildiğinde de sona erer: diyagramın yerini alan bir `Import` ile, bunun geri alınması veya yinelenmesiyle, bir ortak çalışanın ya da kodlama ajanının bunlardan birini yapmasıyla ve Obsidian'ın dosya dışarıdan değiştiğinde yaptığı gibi diyagramın düzenleyiciye yeniden yüklenmesiyle.  
+Bir Şema SQL, GraphQL, DBML veya AML içe aktarması, dosya seçildiğinde değil, tabloları yerleştirildikten sonra çizimi sona erdirir. [`Import and Add`](./file-import-export.md#import-and-add) çizimi hazır bırakır.
 
 Üst tablo seçildikten sonra, ilişkinin bitebileceği bir tablonun üzerine gelmek o tabloyu bir dış çizgiyle çevreler ve yanında iki düğme gösterir:
 

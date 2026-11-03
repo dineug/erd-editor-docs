@@ -66,4 +66,7 @@ Verktygen för logiska namn, domäner och ordlistorna kräver servern i version 
 Bland versionerna ovan låter ett tillägg före `4.2.0` eller ett plugin före `1.2.0` fortfarande agenten redigera live, eftersom det använder protokoll 2, men det ignorerar de logiska namn, domänkopplingar och rader i ordlistorna som agenten skriver och utelämnar dem när det sparar filen.
 En server före `1.1.0` som redigerar en fil på disken skriver tillbaka den utan dess logiska namn, domänkopplingar och rader i ordlistorna – se [Uppdatera](./installation.md#updating).
 
+Redigeringar som du och agenten gör samtidigt av samma namn eller fält, eller av positionen eller storleken på samma tabell, anteckning eller tabellgrupp, slutar lika i editorn och för agenten med server `1.2.0` eller senare och, överallt där dokumentet är öppet, VS Code-tillägget `4.3.0` eller senare eller Obsidian- eller JetBrains-pluginet `1.3.0` eller senare.
+En färg, databasen och ordningen på kolumnerna i en tabell eller ett index är undantagen – se [Redigeringar som görs samtidigt](./live-and-headless.md#edits-made-at-the-same-moment).
+
 Nästa steg: [Installera](./installation.md).

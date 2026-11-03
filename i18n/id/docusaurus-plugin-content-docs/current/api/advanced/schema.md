@@ -1,31 +1,32 @@
 ---
-sidebar_position: 3
-description: Format dokumen .erd.json — bentuk penyimpanan yang tersimpan di file dan nilai runtime yang dipegang editor, tipe TypeScript, konstanta di balik setiap field numerik, dan JSON Schema yang dipublikasikan.
+sidebar_position: 4
+description: Format dokumen .erd.json — bentuk penyimpanan yang tersimpan di file, tipe TypeScript-nya, konstanta di balik setiap field numerik, dan JSON Schema yang dipublikasikan.
 ---
 
 # Skema
 
 `.erd.json` adalah format dokumen editor. Baca halaman ini jika Anda perlu membuat, memvalidasi, atau memigrasikan dokumen di luar editor.
 
-Sejak `4.0.0`, dokumen memiliki dua bentuk serialisasi, keduanya dengan `version` `'3.0.0'`. Bentuk penyimpanan adalah isi sebuah file: bentuk inilah yang dikembalikan [`editor.value`](../erd-editor-element.md#value), yang ditulis ekspor JSON, dan satu-satunya bentuk yang diterima [JSON Schema](#json-schema) yang dipublikasikan. Nilai runtime adalah seluruh dokumen sebagaimana dipegang editor, yang dikembalikan [`editor.runtimeValue`](../erd-editor-element.md#runtimevalue). `setInitialValue()`, setter `value`, dan `setSchemaJSON()` membaca kedua bentuk, file apa pun yang disimpan rilis sebelumnya, dan dokumen v2 `.vuerd`. Sebelum `4.0.0`, hanya ada satu: `value` mengembalikan seluruh dokumen sebagaimana dipegang editor, seperti yang kini dilakukan `runtimeValue`.
+Halaman ini menggambarkan bentuk penyimpanan, yaitu dokumen sebagaimana tersimpan di file, yang ditulis setiap rilis sejak `4.0.0`. Bentuk inilah yang dikembalikan [`editor.value`](../erd-editor-element.md#value), yang ditulis ekspor JSON, dan satu-satunya bentuk yang diterima [JSON Schema](#json-schema) yang dipublikasikan. `version`-nya adalah `'3.0.0'`, seperti pada setiap file v3 yang disimpan rilis sebelumnya, sehingga `version` tidak membedakan file lama dari file baru. `setInitialValue()`, setter `value`, dan `setSchemaJSON()` membacanya, file apa pun yang disimpan rilis sebelumnya, dan dokumen v2 `.vuerd`. Sebelum `4.0.0`, `value` mengembalikan seluruh dokumen sebagaimana dipegang editor, sehingga file yang disimpan saat itu memuat lebih banyak (lihat [Bentuk penyimpanan](#storage-form)).  
+[`runtimeValue`](../erd-editor-element.md#runtimevalue) sebuah editor adalah serialisasi lain, yang tidak digambarkan halaman ini. Nilai ini mengisi data awal editor lain atau replika, dan [room Yjs](./yjs.md#what-the-room-holds) menyimpannya di cuplikannya; nilai ini tidak pernah boleh dimasukkan ke file, dan JSON Schema menolak nilai mana pun yang memuat entitas.
 
-## Bentuk penyimpanan dan nilai runtime {#storage-form-and-runtime-value}
+## Bentuk penyimpanan {#storage-form}
 
-Bentuk penyimpanan hanya memuat entitas yang masih ada: setiap tabel yang tercantum di `doc.tableIds`, kolom yang dicantumkan tabel-tabel tersebut, hubungan antara dua tabel yang dipertahankan, indeks dari tabel yang dipertahankan beserta kolom indeks yang kolomnya masih dicantumkan tabelnya, memo dan grup tabel yang tercantum, serta, sejak `4.2.0`, kata, istilah, dan domain tercantum yang memiliki nilai selain id-nya. Bentuk ini menghilangkan apa yang dihitung editor saat memuat atau dipegangnya selama terbuka: entitas yang dihapus, `seqColumnIds` dan `seqIndexColumnIds`, setiap `zIndex`, lebar hasil pengukuran, `ui` kolom, `identification`, `startRelationshipType`, dan jangkar sebuah hubungan, serta, sejak `4.2.0`, `order` setiap baris kamus dan daftar `doc.wordIds`, `doc.termIds`, dan `doc.domainIds`. Tipe di bawah menandai setiap field ini dengan `// runtime only`.  
+Bentuk penyimpanan hanya memuat entitas yang masih ada: setiap tabel yang tercantum di `doc.tableIds`, kolom yang dicantumkan tabel-tabel tersebut, hubungan antara dua tabel yang dipertahankan, indeks dari tabel yang dipertahankan beserta kolom indeks yang kolomnya masih dicantumkan tabelnya, memo dan grup tabel yang tercantum, serta, sejak `4.2.0`, kata, istilah, dan domain dari lembar kamus yang memiliki nilai selain id-nya. Bentuk ini tidak memuat apa yang dihitung editor saat memuat atau dipegangnya hanya selama terbuka: tidak ada urutan tumpukan, lebar hasil pengukuran, atau tanda kunci, dan tidak ada keterangan apakah sebuah hubungan bersifat pengidentifikasi, bagaimana ujung induknya digambar, atau di mana hubungan itu bertemu tabelnya. Setiap pemuatan menghitung ulang semuanya dari apa yang dimuat file.  
 Setiap koleksi kecuali kamus memakai id sebagai kunci, diurutkan menurut unit kode, dengan kolom dikelompokkan lebih dulu menurut `tableId` dan kolom indeks menurut `indexId`. Sejak `4.2.0`, `wordEntities`, `termEntities`, dan `domainEntities` muncul setelah semua koleksi lainnya, dalam urutan tersebut, masing-masing ditulis sebagai header dan baris, satu baris kamus per baris teks (lihat [Baris kamus](#dictionary-rows)). Setiap entitas menulis field-nya dalam urutan tetap, dan teksnya diindentasi dua spasi serta diakhiri baris baru. Jadi, dokumen yang sama selalu ditulis menjadi byte yang sama, sebuah perubahan hanya mengubah apa yang disentuhnya, dan file yang disimpan di mesin dengan font lain dibuka kembali dengan `value` yang sama.  
 VS Code, Obsidian, dan plugin JetBrains menulis file hanya saat sebuah perubahan mengubah `value`, sehingga file yang disimpan rilis sebelumnya mempertahankan bentuk lamanya hingga pertama kali diedit.
 
 Sejak `4.2.0`, bentuk penyimpanan juga menghilangkan apa yang tidak berisi apa pun: setiap field teks yang dimiliki entitas atau `ui`-nya sebagai `''` (`name`, `comment`, dan `ui.color` tabel, `name`, `comment`, `dataType`, dan `default` kolom, `name` indeks, `value` dan `ui.color` memo, `name` dan `color` grup tabel), setiap daftar `doc` dan koleksi yang tidak memuat entri apa pun, serta `collections` itu sendiri begitu setiap koleksi kosong. Teks yang hanya berisi spasi ditulis sebagaimana adanya, kecuali nama logis, yang dalam hal itu dihilangkan, dan kata, istilah, atau domain yang semua nilainya selain id kosong atau hanya berisi spasi, yang dihilangkan seluruhnya. Setiap id, setiap daftar di dalam entitas, dan setiap angka, termasuk `0`, tetap ditulis. `doc` selalu ditulis, sehingga file dokumen baru memuat `$schema`, `version`, pengaturannya, dan `"doc": {}`.  
 Penguraian membaca field teks yang tidak ada sebagai `''` dan koleksi yang tidak ada sebagai kosong, seperti yang dilakukan setiap rilis v3, dan bentuk penyimpanan hanya menghilangkan daftar `doc` selama koleksinya tidak berisi apa pun (lihat [Doc](#doc)). Jadi, editor sebelum `4.2.0` juga membuka file ini, dan program yang membaca file sendiri harus membaca apa yang tidak ada dengan cara yang sama. File yang disimpan rilis sebelumnya kembali dari penyimpanan berikutnya dengan teks, daftar, dan koleksi kosongnya dihilangkan, sebuah perubahan yang terjadi sekali, lalu disimpan sama persis byte demi byte sejak saat itu.
 
-Nilai runtime mempertahankan apa yang dihilangkan bentuk penyimpanan: entitas yang dihapus, sequence, z-index, lebar, tanda kunci, flag hubungan, dan jangkar, field teks yang kosong, serta keempat daftar `tableIds`, `relationshipIds`, `indexIds`, dan `memoIds` beserta keenam koleksi dari `tableEntities` hingga `memoEntities`, bahkan saat kosong. Sejak `4.2.0`, nilai ini juga mempertahankan kata, istilah, dan domain yang dihapus, baris yang tidak berisi apa pun, `order` setiap baris, ketiga daftar kamus, nama logis yang hanya berisi spasi, dan tautan ke domain yang dihapus. Nilai ini diindentasi dua spasi tanpa baris baru di akhir. Gunakan nilai ini hanya untuk mengisi data awal kolaborator atau tampilan kedua melalui `setInitialValue()`, agar pembatalan penghapusan yang dikirim editor lain mengembalikan entitas itu secara utuh di sana. Jangan pernah menulisnya ke file; JSON Schema menolaknya. Tidak ada lagi yang membersihkan entitas yang dihapus, sehingga nilai runtime menyimpannya hingga dokumen dibuka lagi dari filenya.
+Bentuk penyimpanan menulis setiap pengaturan yang terkunci pada nilai terkuncinya (lihat [`lockSettings`](#settings)), `settings.ddlScripts` hanya selama sebuah skrip berisi teks, dan `groupId` sebuah tabel hanya selama menunjuk grup tabel yang ditulis file. Sejak `4.2.0`, bentuk ini juga menulis `settings.nameViewMode` hanya selama nilai yang ditulisnya bukan `'physical'`, `settings.columnOrder` dalam tujuh entri jika memungkinkan (lihat [Settings](#settings)), dan `nameDerived` sebuah tabel hanya selama bernilai `true`.  
+Bentuk ini menulis `doc.tableGroupIds` dan `tableGroupEntities` hanya selama ada grup tabel, `logicalName` hanya selama berisi teks selain spasi, `domainId` sebuah kolom hanya selama menunjuk domain yang ditulis file, dan setiap kamus hanya selama memuat baris yang ditulis file.
 
-Kedua bentuk menulis setiap pengaturan yang terkunci pada nilai terkuncinya (lihat [`lockSettings`](#settings)), `settings.ddlScripts` hanya selama sebuah skrip berisi teks, dan `groupId` sebuah tabel hanya selama tidak kosong. Sejak `4.2.0`, kedua bentuk juga menulis `settings.nameViewMode` hanya selama nilai yang ditulisnya bukan `'physical'`, `settings.columnOrder` dalam tujuh entri jika memungkinkan (lihat [Settings](#settings)), dan `nameDerived` sebuah tabel hanya selama bernilai `true`.  
-Bentuk penyimpanan menulis `doc.tableGroupIds` dan `tableGroupEntities` hanya selama ada grup tabel, `logicalName` hanya selama berisi teks selain spasi, `domainId` sebuah kolom hanya selama menunjuk domain yang ditulis file, dan setiap kamus hanya selama memuat baris yang ditulis file. Nilai runtime menulis field grup tabel selama dokumen memuat sebuah grup atau grup yang dihapus, `logicalName` dan `domainId` selama tidak bernilai `''`, dan setiap kamus beserta daftarnya selama salah satunya memuat entri, termasuk baris yang dihapus.
+File yang disimpan sebelum `4.0.0` memuat seluruh dokumen sebagaimana dipegang editor saat itu, termasuk entitas yang dihapus dan apa yang dihitung setiap pemuatan. Pemuatan membacanya, mempertahankan tempat setiap tabel dan memo dalam tumpukan (lihat [Doc](#doc)) dan menghitung ulang sisanya, dan penyimpanan berikutnya hanya menulis bentuk penyimpanan.
 
 ## TypeScript {#typescript}
 
-Tipe berikut menggambarkan nilai runtime. Field yang ditandai `// runtime only` dihilangkan dari bentuk penyimpanan, dan field yang ditandai `?` hanya ditulis selama berisi sesuatu. Teks, daftar, dan koleksi kosong yang dihilangkan bentuk penyimpanan sejak `4.2.0` tidak ditandai.
+Tipe berikut menggambarkan bentuk penyimpanan, masing-masing mencantumkan field-nya dalam urutan yang ditulis file. Field yang ditandai `?` adalah field yang dapat dihilangkan bentuk penyimpanan, seperti dirinci [Bentuk penyimpanan](#storage-form), dan penguraian membaca field yang tidak ada sebagai tidak berisi apa pun: `''`, `false`, tanpa grup tabel atau domain, koleksi kosong, `'physical'` untuk `nameViewMode`, dan dua skrip kosong untuk `ddlScripts`. Pengecualiannya adalah daftar `doc` yang tidak ada, yang diisi penguraian dari koleksinya (lihat [Doc](#doc)). Pada baris kamus, `?` menandai nilai yang dapat dihilangkan dari ujung sebuah baris (lihat [Baris kamus](#dictionary-rows)). Setiap field lainnya selalu ditulis.
 
 ### ERDEditorSchemaV3 {#erdeditorschemav3}
 
@@ -35,13 +36,13 @@ type ERDEditorSchemaV3 = {
   version: '3.0.0';
   settings: Settings;
   doc: Doc;
-  collections: {
-    tableEntities: Record<string, Table>;
-    tableColumnEntities: Record<string, Column>;
-    relationshipEntities: Record<string, Relationship>;
-    indexEntities: Record<string, Index>;
-    indexColumnEntities: Record<string, IndexColumn>;
-    memoEntities: Record<string, Memo>;
+  collections?: {
+    tableEntities?: Record<string, Table>;
+    tableColumnEntities?: Record<string, Column>;
+    relationshipEntities?: Record<string, Relationship>;
+    indexEntities?: Record<string, Index>;
+    indexColumnEntities?: Record<string, IndexColumn>;
+    memoEntities?: Record<string, Memo>;
     tableGroupEntities?: Record<string, TableGroup>;
     wordEntities?: DictionaryRows; // rows of Word
     termEntities?: DictionaryRows; // rows of Term
@@ -216,7 +217,7 @@ Sejak `4.2.0`, ada satu flag `show` tambahan, `columnDomain` (`8192`), yang nona
 Editor sebelum `4.2.0` mempertahankan `show` sebagai satu bilangan bulat, sehingga flag ini tetap ada saat disimpan di sana.
 
 Sejak `4.2.0`, `ColumnType` memiliki sembilan nilai. `columnLogicalName` (`128`) menempatkan sel nama logis, yang hanya ditampilkan baris kolom dalam tampilan `Both Names`, dan `columnDomain` (`256`) menempatkan sel Domain. Keduanya adalah baris `Logical Name` dan `Domain` di [urutan kolom](../../guide/guides/settings.md#adjusting-column-order) tab Pengaturan. Editor menyimpan urutan berisi kesembilan nilai, dan urutan dokumen baru adalah `128, 1, 2, 256, 4, 8, 16, 32, 64`.  
-Kedua bentuk menulis urutan dalam tujuh entri, tanpa `128` dan `256`, selama `128` berada tepat sebelum `columnName` dan `256` tepat setelah `columnDataType`. Jadi, dokumen baru tetap menulis `1, 2, 4, 8, 16, 32, 64`, dan file yang urutannya tidak pernah memindahkan keduanya mempertahankan byte-nya. Jika tidak, kedua bentuk menulis kesembilan nilai.  
+Bentuk penyimpanan menulis urutan dalam tujuh entri, tanpa `128` dan `256`, selama `128` berada tepat sebelum `columnName` dan `256` tepat setelah `columnDataType`. Jadi, dokumen baru tetap menulis `1, 2, 4, 8, 16, 32, 64`, dan file yang urutannya tidak pernah memindahkan keduanya mempertahankan byte-nya. Jika tidak, bentuk ini menulis kesembilan nilai.  
 Penguraian menyisipkan kedua nilai itu ke urutan tujuh entri di posisi tersebut, apa pun urutan ketujuh nilai lainnya, menerima sembilan entri yang memuat setiap tipe sebagaimana adanya.  
 Sejak `5.0.0`, penguraian menerima urutan lain apa pun juga. Setiap `ColumnType` yang dikenalnya dipertahankan satu kali, sesuai urutan yang diberikan, dan setiap entri lain dibuang: nilai yang tidak disebut `ColumnType` mana pun, seperti tipe yang ditambahkan rilis yang lebih baru, dan entri kedua dari satu tipe. Setiap tipe yang tidak ada dalam urutan ditempatkan tepat setelah tipe terdekat sebelumnya dalam urutan default yang dimuat urutan itu, atau, jika tidak ada yang mendahuluinya, tepat sebelum tipe terdekat sesudahnya, sebagaimana `128` dan `256` menemukan tempatnya dalam tujuh entri. Hanya urutan yang tidak menyebut tipe yang dikenalnya, atau nilai yang bukan array, dibaca sebagai urutan default.  
 Jadi file yang disimpan rilis yang lebih baru terbuka dengan urutan tipe yang dikenal rilis ini, dan penyimpanan di sini menulis urutan itu tanpa tipe lainnya. Sebelum `5.0.0`, penguraian membaca urutan lain apa pun sebagai urutan default, sehingga file seperti itu terbuka dengan urutan kolom yang direset. JSON Schema menerima tujuh atau sembilan bilangan bulat.
@@ -224,18 +225,18 @@ Jadi file yang disimpan rilis yang lebih baru terbuka dengan urutan tipe yang di
 Sejak `4.0.0`, `Language` memiliki delapan target [Generator Kode](../../guide/guides/code-generator.md) tambahan, dari `Mermaid` hingga `JSONSchema`. `language` yang tidak dikenal parser dibaca sebagai `GraphQL`, sehingga editor sebelum `4.0.0` membuka dokumen yang disimpan dengan salah satunya pada GraphQL, dan menyimpan di sana menulis GraphQL.
 
 Sejak `4.0.0`, `lockSettings` menggantikan `ignoreSaveSettings`, dan `LockSettingType` menggantikan `SaveSettingType`, yang telah dihapus. `lockSettings` menyebutkan pengaturan yang disimpan dokumen sebagaimana keadaannya saat dikunci. `viewport` mencakup `originX`, `originY`, dan `zoomLevel` sekaligus, karena titik asal yang disimpan tanpa zoomnya terbuka di tempat lain, dan setiap bit lainnya mencakup field yang menjadi asal namanya. Inilah baris [`Lock`](../../guide/guides/settings.md#lock) di tab Pengaturan.  
-Pengaturan yang terkunci ditulis pada nilai terkuncinya, apa pun yang ditampilkan editor, baik oleh `value` maupun `runtimeValue`, dan setiap pengaturan lainnya sebagaimana adanya. Jadi, selama penguncian yang sesuai aktif, menggulir dan melakukan zoom, berpindah tab, mengubah bahasa Generator Kode, sebuah konvensi penamaan, atau tipe tanda kutip, atau mengganti Tampilan Nama membiarkan file seperti semula. Mengunci mengambil nilai yang dimiliki pengaturan pada saat itu, dan penguraian mengambil nilai terkunci dari field yang disimpan.  
+File memuat setiap pengaturan yang terkunci pada nilai terkuncinya, apa pun yang ditampilkan editor, dan setiap pengaturan lainnya sebagaimana adanya. Jadi, selama penguncian yang sesuai aktif, menggulir dan melakukan zoom, berpindah tab, mengubah bahasa Generator Kode, sebuah konvensi penamaan, atau tipe tanda kutip, atau mengganti Tampilan Nama membiarkan file seperti semula. Mengunci mengambil nilai yang dimiliki pengaturan pada saat itu, dan penguraian mengambil nilai terkunci dari field yang disimpan.  
 Dokumen yang dimulai dari nol — editor atau store replikasi baru, atau nilai kosong yang diberikan ke `value` atau `setInitialValue()` — memiliki `lockSettings` bernilai `63`, dengan semua penguncian aktif. Dokumen yang `settings`-nya tidak membawa `lockSettings` — setiap file yang disimpan sebelum `4.0.0`, apa pun `ignoreSaveSettings`-nya, dan setiap dokumen v2 — juga dibuka dengan semua penguncian aktif: area pandang dan tabnya sama dengan milik dokumen baru (`originX` dan `originY` `0`, `zoomLevel` `1`, tab ERD), dan bahasa, konvensi penamaan, serta tipe tanda kutipnya dikunci pada nilai yang disimpannya. Dokumen yang menyebutkan penguncian miliknya mempertahankannya, termasuk `0`, beserta setiap nilai yang disimpannya.  
 Penguraian mempertahankan setiap bit `lockSettings`, termasuk yang tidak dikenal, sehingga penguncian yang ditambahkan rilis yang lebih baru tetap ada saat disimpan di sini; JSON Schema hanya memeriksa bahwa nilainya bilangan bulat. Editor sebelum `4.0.0` membuang `lockSettings` saat menyimpan dan menulis area pandang serta tab sebagaimana adanya, sehingga file tersebut dibuka lagi di sini sebagai file yang disimpan sebelum `4.0.0`.
 
 Sejak `4.2.0`, ada penguncian ketujuh, `unlockNameViewMode` (`64`), yaitu baris `Name View`, yang mencakup `nameViewMode`. Bitnya dibaca terbalik dari bit penguncian lainnya, seperti halnya bit penyembunyi pada `Show`: saat disetel, Tampilan Nama tidak terkunci, dan saat tidak disetel, terkunci. Jadi, `63` tetap berarti semua penguncian aktif, dan dokumen baru memuat nilai itu dengan Tampilan Nama terkunci pada `'physical'`. File yang disimpan sebelum `4.2.0` memuat bit ini dalam keadaan tidak disetel, apa pun penguncian lainnya, termasuk `0`, sehingga file itu dibuka dengan Tampilan Nama terkunci pada `'physical'`. Dokumen dengan semua penguncian nonaktif memuat `64`, dan dokumen dengan semua penguncian lain aktif dan Tampilan Nama tidak terkunci memuat `127`. Uji penguncian ini secara terbalik: penguncian aktif selama `(lockSettings & 64) === 0`.  
-Selama penguncian ini aktif, penggantian Tampilan Nama hanya mengubah layar editor yang melakukannya, dan dokumen mempertahankan tampilan yang terkunci. Selama penguncian nonaktif, penggantian di editor yang dapat mengedit menjadi milik dokumen, dan setiap kolaborator ikut berganti bersamanya. Penggantian oleh editor hanya baca hanya mengubah layarnya sendiri dalam kedua keadaan. Lihat [`Lock`](../../guide/guides/settings.md#lock).  
+Selama bit ini tidak disetel, file memuat `nameViewMode` pada tampilan yang terkunci, apa pun yang ditampilkan editor mana pun, dan selama bit ini disetel, tampilan sebagaimana adanya. Apa yang ditampilkan setiap editor, dengan penguncian aktif maupun nonaktif, dijelaskan di [`Lock`](../../guide/guides/settings.md#lock).  
 Editor `4.0.0` atau `4.1.0` mempertahankan bit ini saat menyimpan, tetapi membuang `nameViewMode`, sehingga dokumen dibuka kembali di sini dalam `'physical'`, dengan penguncian seperti semula.
 
 Sejak `4.0.0`, `ddlScripts` memuat dua skrip tab [Skema SQL](../../guide/guides/schema-sql.md), yang ditulis DDL setiap database: `before` setelah pembuka dan sebelum tabel, `after` setelah DDL yang dihasilkan. DDL menulis masing-masing dengan jeda baris LF, tanpa baris kosong di awal dan spasi kosong di akhir, dan pada MSSQL diakhiri dengan `GO`, seperti yang dijelaskan [Skrip sebelum dan setelah tabel](../../guide/guides/schema-sql.md#before-and-after-scripts); `ddlScripts` sendiri menyimpan setiap skrip sebagaimana diketik. Kunci ini hanya ditulis selama salah satu skrip berisi teks, dan saat itu ditulis bersama kedua skrip; kunci yang tidak ada, atau skrip yang bukan string, dibaca sebagai `''`. Pilihan `Statements`, `Header`, dan `Tables` di tab tersebut, serta, sejak `4.2.0`, sakelar [`Write logical names into empty comments`](../../guide/guides/schema-sql.md#logical-names-as-comments) di tab itu, tidak disimpan di dokumen.  
 Editor sebelum `4.0.0` membuang skrip tersebut saat memuat dokumen, sehingga menyimpan di sana menghilangkannya.
 
-Sejak `4.2.0`, `nameViewMode` adalah [Tampilan Nama](../../guide/guides/logical-names.md#name-view), yaitu nama yang ditampilkan diagram: `'physical'` menampilkan nama setiap tabel dan kolom, `'logical'` nama logisnya di tempat nama, dan `'both'` nama logis dan nama. Menu menyebutnya `Physical Names`, `Logical Names`, dan `Both Names`. Kedua bentuk menulisnya paling akhir, setelah `ddlScripts`, dan hanya selama nilai yang ditulisnya bukan `'physical'`; selama penguncian `Name View` aktif, nilai itu adalah nilai yang terkunci, apa pun yang ditampilkan layar. Nilai yang tidak ada, atau yang tidak dikenal parser, dibaca sebagai `'physical'`, dan JSON Schema hanya menerima `"logical"` dan `"both"`.  
+Sejak `4.2.0`, `nameViewMode` adalah [Tampilan Nama](../../guide/guides/logical-names.md#name-view), yaitu nama yang ditampilkan diagram: `'physical'` menampilkan nama setiap tabel dan kolom, `'logical'` nama logisnya di tempat nama, dan `'both'` nama logis dan nama. Menu menyebutnya `Physical Names`, `Logical Names`, dan `Both Names`. Bentuk penyimpanan menulisnya paling akhir, setelah `ddlScripts`, dan hanya selama nilai yang ditulisnya bukan `'physical'`. Nilai yang tidak ada, atau yang tidak dikenal parser, dibaca sebagai `'physical'`, dan JSON Schema hanya menerima `"logical"` dan `"both"`.  
 Editor sebelum `4.2.0` membuang `nameViewMode` saat memuat dokumen.
 
 `Database`, `Language`, `Show`, `ColumnType`, `ColumnOption`, `LockSettingType`, dan `ReferentialAction` hanya bertambah di akhir. Dokumen yang tersimpan memuat angkanya, sehingga vendor, target pembuatan kode, flag, tipe kolom, opsi kolom, penguncian, atau tindakan baru mengambil bit berikutnya, bukan slot di tengah.
@@ -244,52 +245,42 @@ Editor sebelum `4.2.0` membuang `nameViewMode` saat memuat dokumen.
 
 ```ts
 type Doc = {
-  tableIds: string[];
-  relationshipIds: string[];
-  indexIds: string[];
-  memoIds: string[];
+  tableIds?: string[];
+  relationshipIds?: string[];
+  indexIds?: string[];
+  memoIds?: string[];
   tableGroupIds?: string[];
-  wordIds?: string[]; // runtime only
-  termIds?: string[]; // runtime only
-  domainIds?: string[]; // runtime only
 };
 ```
 
-Masing-masing dari lima daftar pertama adalah urutan satu jenis entitas, yang dibaca oleh DDL, pengurutan tabel, dan urutan penggambaran. Dalam bentuk penyimpanan, setiap daftar hanya memuat id entitas yang dipertahankan, masing-masing sekali, dalam urutan tercantum, dan sejak `4.2.0`, daftar yang tidak memuat id apa pun dihilangkan. Sejak `4.0.0`, `tableGroupIds` adalah urutan grup tabel.
+Setiap daftar adalah urutan satu jenis entitas, yang dibaca oleh DDL, pengurutan tabel, dan urutan penggambaran. Masing-masing hanya memuat id entitas yang ditulis file, masing-masing sekali, dalam urutan tercantum, dan sejak `4.2.0`, daftar yang tidak memuat id apa pun dihilangkan. Sejak `4.0.0`, `tableGroupIds` adalah urutan grup tabel. Kamus tidak memiliki daftar di sini, karena barisnya tersusun menurut urutan setiap lembar (lihat [Baris kamus](#dictionary-rows)), dan JSON Schema tidak menerima kunci lain di `doc`.
 
-Sejak `4.2.0`, `wordIds`, `termIds`, dan `domainIds` mencantumkan baris setiap kamus yang masih ada: baris yang dimuat koleksinya tetapi tidak dimuat daftarnya telah dihapus. Daftar ini bukan urutan lembar, yang diberikan oleh `order` setiap baris. Hanya nilai runtime yang menulisnya, masing-masing selama daftar itu atau koleksinya memuat entri. Baris file itu sendiri merupakan keanggotaan sekaligus urutannya, dan JSON Schema menolak daftar tersebut.  
 Sejak `4.2.0`, penguraian membaca daftar yang dihilangkan dokumen, atau yang dimuat sebagai sesuatu selain array, sebagai setiap entri yang dimuat koleksinya, setiap id sekali, dalam urutan penyimpanannya; array kosong tetap kosong, sehingga setiap entri koleksinya dibaca sebagai telah dihapus. Editor sebelum `4.2.0` membaca daftar yang tidak ada sebagai kosong, sehingga bentuk penyimpanan tetap menulis setiap daftar selama koleksinya memuat entitas.
 
-Sejak `4.0.0`, urutan tumpukan tidak disimpan. Penguraian menumpuk setiap tabel, memo, dan grup tabel tercantum yang tidak membawa `zIndex` menurut posisinya dalam daftarnya, dengan yang lebih akhir di depan: grup tabel mulai dari `1`, tabel mulai dari `2`, dan memo di atas setiap tabel. Entitas yang membawa `zIndex`, seperti dalam nilai runtime atau file yang disimpan sebelum `4.0.0`, mempertahankannya. Karena itu, efek membawa tabel atau memo ke depan hilang saat file dibuka kembali.
+Sejak `4.0.0`, file tidak memuat urutan tumpukan. Pemuatan menumpuk tabel dan memo yang tercantum menurut posisinya dalam daftarnya, dengan yang lebih akhir di depan dan setiap memo di atas setiap tabel, dan grup tabel dengan cara yang sama di antara mereka sendiri, di belakang tabel. Tabel atau memo dalam file yang disimpan sebelum `4.0.0` membawa `zIndex` di `ui`-nya, yang dipertahankan pemuatan sebagai tempatnya dalam tumpukan dan dihilangkan penyimpanan berikutnya. Karena itu, efek membawa tabel atau memo ke depan hilang saat file dibuka kembali.
 
 ### Koleksi: tableEntities {#collection-tableentities}
 
 ```ts
 type Table = {
   id: string;
-  name: string;
+  name?: string;
   logicalName?: string;
-  comment: string;
+  comment?: string;
   columnIds: string[];
-  seqColumnIds: string[]; // runtime only
   groupId?: string;
-  nameDerived?: boolean;
+  nameDerived?: true;
   ui: TableUI;
 };
 
 type TableUI = {
   x: number;
   y: number;
-  zIndex: number; // runtime only
-  widthName: number; // runtime only
-  widthLogicalName: number; // runtime only
-  widthComment: number; // runtime only
-  color: string;
+  color?: string;
 };
 ```
 
-Sejak `4.0.0`, tabel membawa `groupId`, yaitu id [grup tabel](../../guide/guides/table-groups.md) tempat tabel itu berada. `groupId` yang tidak ada atau kosong, atau yang tidak menunjuk grup mana pun di `doc.tableGroupIds`, berarti tidak ada grup, dan bentuk penyimpanan hanya menuliskannya selama field itu menunjuk grup yang dipertahankan.  
-Penguraian menginisialisasi `seqColumnIds` dengan `columnIds` saat field itu tidak ada atau tidak memuat salah satu id yang tercantum, dan editor mengukur ulang `widthName`, `widthLogicalName`, dan `widthComment` dengan fontnya sendiri pada setiap pemuatan.
+Sejak `4.0.0`, tabel membawa `groupId`, yaitu id [grup tabel](../../guide/guides/table-groups.md) tempat tabel itu berada. `groupId` yang tidak ada atau kosong, atau yang tidak menunjuk grup mana pun di `doc.tableGroupIds`, berarti tidak ada grup, dan bentuk penyimpanan hanya menuliskannya selama field itu menunjuk grup yang dipertahankan.
 
 Sejak `4.2.0`, tabel membawa `logicalName`, yaitu nama yang ditampilkan [tampilan](../../guide/guides/logical-names.md#name-view) `Logical Names` dan `Both Names`, `''` jika tidak ada, dan `nameDerived`, `true` selama kamus [menghasilkan](../../guide/guides/dictionary.md#deriving-physical-names) `name` dari nama logis. Selama flag ini disetel, nama logis baru menghasilkan nama lagi; selama tidak disetel, nama tersebut adalah nama buatan seseorang sendiri, dan nama logis baru membiarkannya kecuali jika nama itu kosong atau hanya berisi spasi. Penggantian nama secara manual menonaktifkannya, dan [`Derive Physical Names Again`](../../guide/guides/dictionary.md#derive-physical-names-again) menulis ulang bahkan nama yang ditulis seseorang dan mengaktifkannya di mana pun ada nama logis.  
 Bentuk penyimpanan menulis `logicalName` setelah `name`, sebagaimana diketik, hanya selama berisi teks selain spasi, dan `nameDerived` setelah `groupId` hanya selama bernilai `true`, satu-satunya nilai yang diterima JSON Schema. `logicalName` yang tidak ada dibaca sebagai `''` dan `nameDerived` yang tidak ada sebagai `false`, sehingga setiap nama di file yang disimpan sebelum `4.2.0` dianggap nama buatan seseorang sendiri.  
@@ -301,24 +292,13 @@ Editor sebelum `4.2.0` membuang keduanya saat memuat dokumen, sehingga menyimpan
 type Column = {
   id: string;
   tableId: string;
-  name: string;
-  comment: string;
-  dataType: string;
-  default: string;
+  name?: string;
+  comment?: string;
+  dataType?: string;
+  default?: string;
   options: number; // Constants: ColumnOption
   logicalName?: string;
   domainId?: string;
-  ui: ColumnUI; // runtime only
-};
-
-type ColumnUI = {
-  keys: number; // Constants: ColumnUIKey
-  widthName: number;
-  widthLogicalName: number;
-  widthComment: number;
-  widthDataType: number;
-  widthDomain: number;
-  widthDefault: number;
 };
 
 // Constants
@@ -329,17 +309,12 @@ const ColumnOption = {
   notNull: 8,
   nameDerived: 16,
 } as const;
-
-const ColumnUIKey = {
-  primaryKey: 1,
-  foreignKey: 2,
-} as const;
 ```
 
-Sejak `4.0.0`, bentuk penyimpanan tidak menulis `ui` kolom. Setiap pemuatan menghitung `keys`, yaitu tanda kunci utama dari bit `primaryKey` pada `options` dan tanda kunci asing dari hubungan yang berakhir pada kolom tersebut, serta mengukur keenam lebar.  
+Sejak `4.0.0`, file tidak memuat tanda kunci: setiap pemuatan menandai kolom sebagai kunci utama dari bit `primaryKey` pada `options`, dan sebagai kunci asing selama sebuah hubungan berakhir padanya di tabelnya.  
 Editor sebelum `4.0.0` menampilkan kolom dari file yang disimpan di sini tanpa ikon kunci utamanya.
 
-Sejak `4.2.0`, kolom membawa `logicalName`, seperti tabel, dan `domainId`, yaitu id domain yang ditautkan kolom itu, `''` jika tidak ada. Perubahan di satu editor mempertahankan kolom yang tertaut pada tipe data domainnya, seperti dijelaskan [Domain dan tipe data](../../guide/guides/dictionary.md#domains-and-data-types). Namun, penguraian tidak mengubah tipe kolom mana pun, sehingga file yang ditulis di tempat lain dapat membiarkan kolom yang tertaut pada tipe lain, begitu pula perubahan dua kolaborator yang bersilangan; lembar Pemeriksaan mencantumkan masing-masing sebagai [`Domain type mismatch`](../../guide/guides/dictionary.md#what-each-check-finds). Penguraian mengosongkan `domainId` yang tidak menunjuk domain apa pun yang dimuat dokumen. Domain yang dihapus tetap dihitung, sehingga editor mempertahankan tautan ke domain itu selama pembatalan dapat mengembalikan domain tersebut. Setelah `options`, bentuk penyimpanan menulis `logicalName` menurut aturan untuk tabel, dan `domainId` hanya selama menunjuk domain yang ditulis file, sehingga tidak pernah menulis tautan ke domain yang dihapus.  
+Sejak `4.2.0`, kolom membawa `logicalName`, seperti tabel, dan `domainId`, yaitu id domain yang ditautkan kolom itu, `''` jika tidak ada. Perubahan di satu editor mempertahankan kolom yang tertaut pada tipe data domainnya, seperti dijelaskan [Domain dan tipe data](../../guide/guides/dictionary.md#domains-and-data-types). Namun, penguraian tidak mengubah tipe kolom mana pun, sehingga file yang ditulis di tempat lain dapat membiarkan kolom yang tertaut pada tipe lain, begitu pula perubahan dua kolaborator yang bersilangan; lembar Pemeriksaan mencantumkan masing-masing sebagai [`Domain type mismatch`](../../guide/guides/dictionary.md#what-each-check-finds). Penguraian mengosongkan `domainId` yang tidak menunjuk domain apa pun yang dimuat file. Setelah `options`, bentuk penyimpanan menulis `logicalName` menurut aturan untuk tabel, dan `domainId` hanya selama menunjuk domain yang ditulis file, sehingga kolom yang tertaut ke domain yang dihapus, atau ke domain yang dihilangkan file, ditulis tanpa tautan dan dengan tipe data yang dimilikinya.  
 `ColumnOption.nameDerived` (`16`) adalah flag nama hasil kamus milik kolom, yang disimpan di `options` bersama bit lainnya dan memiliki arti yang sama dengan `nameDerived` milik tabel. Misalnya, kunci utama yang tidak boleh NULL dan namanya dihasilkan kamus memuat `options` `26`.  
 Editor sebelum `4.2.0` membuang `logicalName` dan `domainId` saat memuat dokumen, sehingga menyimpan di sana menghilangkannya. Editor itu mempertahankan `options` sebagai satu bilangan bulat, sehingga bit `nameDerived` tetap ada saat disimpan di sana.
 
@@ -348,9 +323,7 @@ Editor sebelum `4.2.0` membuang `logicalName` dan `domainId` saat memuat dokumen
 ```ts
 type Relationship = {
   id: string;
-  identification: boolean; // runtime only
   relationshipType: number; // Constants: RelationshipType
-  startRelationshipType: number; // Constants: StartRelationshipType; runtime only
   onDelete: number; // Constants: ReferentialAction
   onUpdate: number; // Constants: ReferentialAction
   start: RelationshipPoint;
@@ -360,9 +333,6 @@ type Relationship = {
 type RelationshipPoint = {
   tableId: string;
   columnIds: string[];
-  x: number; // runtime only
-  y: number; // runtime only
-  direction: number; // Constants: Direction; runtime only
 };
 
 // Constants
@@ -373,11 +343,6 @@ const RelationshipType = {
   OneN: 16,
 } as const;
 
-const StartRelationshipType = {
-  ring: 1,
-  dash: 2,
-} as const;
-
 const ReferentialAction = {
   none: 1,
   noAction: 2,
@@ -386,35 +351,25 @@ const ReferentialAction = {
   setDefault: 16,
   restrict: 32,
 } as const;
-
-const Direction = {
-  left: 1,
-  right: 2,
-  top: 4,
-  bottom: 8,
-} as const;
 ```
 
 Sejak `3.10.0`, hubungan membawa `onDelete` dan `onUpdate`, yaitu [tindakan ON DELETE dan ON UPDATE](../../guide/guides/relationship-editing.md#on-delete-and-on-update) miliknya. Masing-masing memuat tepat satu nilai `ReferentialAction`. `none`, nilai default, tidak menulis klausa apa pun, sehingga nilai default milik database itu sendiri yang berlaku. Lima lainnya mewakili `NO ACTION`, `CASCADE`, `SET NULL`, `SET DEFAULT`, dan `RESTRICT`. Skema SQL hanya menulis klausa untuk database yang menerima tindakannya.  
 Bentuk penyimpanan selalu menulis keduanya, dan sejak `4.0.0` JSON Schema mewajibkannya, dengan hanya memeriksa bahwa masing-masing adalah bilangan bulat. Penguraian tetap membaca field yang tidak ada, seperti pada setiap dokumen yang disimpan sebelum `3.10.0`, sebagai `none`, begitu pula nilai di luar daftar.  
 Editor sebelum `3.10.0` tidak mengenal field ini dan membuangnya saat memuat dokumen, sehingga menyimpan di sana menghilangkan setiap tindakan.
 
-Sejak `4.0.0`, setiap pemuatan menghitung apa yang dihilangkan bentuk penyimpanan. Hubungan menjadi hubungan pengidentifikasi saat setiap kolom tempatnya berakhir adalah kunci utama, dan `startRelationshipType`-nya adalah `dash` saat setiap kolom tersebut NOT NULL dan `ring` jika tidak; hubungan yang tidak lagi memiliki kolom akhir menjadi non-pengidentifikasi dan `dash`, seperti hubungan baru saat dibuat. Jangkar, yaitu `x`, `y`, dan `direction`, ditempatkan ulang.
+Sejak `4.0.0`, setiap pemuatan membaca apakah sebuah hubungan bersifat pengidentifikasi, dan bagaimana ujung induknya digambar, dari kolom tempatnya berakhir yang masih dicantumkan tabel anak. Hubungan bersifat pengidentifikasi, berupa garis solid, selama setiap kolom tersebut adalah kunci utama, dan ujung induknya berupa dua garis selama setiap kolom tersebut NOT NULL, serta lingkaran dan garis jika tidak. Hubungan yang tidak lagi memiliki kolom semacam itu bersifat non-pengidentifikasi dengan dua garis, seperti hubungan baru saat dibuat. Lihat [Membaca konektor](../../guide/guides/relationship-editing.md#reading-a-connector).
 
 ### Koleksi: indexEntities {#collection-indexentities}
 
 ```ts
 type Index = {
   id: string;
-  name: string;
+  name?: string;
   tableId: string;
   indexColumnIds: string[];
-  seqIndexColumnIds: string[]; // runtime only
   unique: boolean;
 };
 ```
-
-Penguraian menginisialisasi `seqIndexColumnIds` dengan `indexColumnIds` saat field itu tidak ada atau tidak memuat salah satu id yang tercantum.
 
 ### Koleksi: indexColumnEntities {#collection-indexcolumnentities}
 
@@ -438,7 +393,7 @@ const OrderType = {
 ```ts
 type Memo = {
   id: string;
-  value: string;
+  value?: string;
   ui: MemoUI;
 };
 
@@ -447,20 +402,19 @@ type MemoUI = {
   y: number;
   width: number;
   height: number;
-  zIndex: number; // runtime only
-  color: string;
+  color?: string;
 };
 ```
 
-Sejak `4.0.0`, tabel dan memo [berbagi satu tumpukan](../../guide/guides/table-related-functions.md#moving-multiple-tables) yang diurutkan menurut `zIndex`, sehingga membawa tabel ke depan dapat menempatkannya di atas memo. Penguraian menumpuk memo yang disimpan tanpa `zIndex` di atas setiap tabel, seperti yang dijelaskan [Doc](#doc). Memo dalam file yang disimpan sebelum `4.0.0` mempertahankan `zIndex` yang disimpannya, yang berasal dari penghitung yang sama dengan milik tabel, sehingga memo yang digambar rilis sebelumnya di atas setiap tabel dapat terbuka di bawah tabel yang dibawa ke depan setelahnya.
+Sejak `4.0.0`, tabel dan memo [berbagi satu tumpukan](../../guide/guides/table-related-functions.md#moving-multiple-tables), sehingga membawa tabel ke depan dapat menempatkannya di atas memo. Pemuatan menempatkan setiap memo di atas setiap tabel, seperti yang dijelaskan [Doc](#doc). Memo dalam file yang disimpan sebelum `4.0.0` mempertahankan `zIndex` yang disimpannya, yang berasal dari penghitung yang sama dengan milik tabel, sehingga memo yang digambar rilis sebelumnya di atas setiap tabel dapat terbuka di bawah tabel yang dibawa ke depan setelahnya.
 
 ### Koleksi: tableGroupEntities {#collection-tablegroupentities}
 
 ```ts
 type TableGroup = {
   id: string;
-  name: string;
-  color: string;
+  name?: string;
+  color?: string;
   ui: TableGroupUI;
 };
 
@@ -469,7 +423,6 @@ type TableGroupUI = {
   y: number;
   width: number;
   height: number;
-  zIndex: number; // runtime only
 };
 ```
 
@@ -487,7 +440,7 @@ type DictionaryRows = {
 };
 ```
 
-Tidak satu pun dari ketiganya memakai id sebagai kunci. Masing-masing ditulis sebagai header dan baris: `fields` menyebutkan field entitas satu kali, dimulai dengan id, dan setiap baris memuat nilai satu entitas dalam urutan tersebut. Tipe di bawah mencantumkan field setiap entitas dalam urutan header nilai runtime. Baris selalu mempertahankan id dan namanya, tetapi nilai kosong di bagian akhirnya setelah nama dihilangkan, sehingga nilai kosong sebelum nilai yang dipertahankan tetap `''`, dan penguraian membaca nilai yang tidak dimiliki baris sebagai `''`. Kedua bentuk menulis setiap baris pada baris teksnya sendiri sebagai JSON ringkas, seperti pada dua kata dari sebuah file berikut:
+Tidak satu pun dari ketiganya memakai id sebagai kunci. Masing-masing ditulis sebagai header dan baris: `fields` menyebutkan field entitas satu kali, dimulai dengan id, dan setiap baris memuat nilai satu entitas dalam urutan tersebut. Tipe di bawah mencantumkan field setiap entitas dalam urutan itu. Baris selalu mempertahankan id dan namanya, tetapi nilai kosong di bagian akhirnya setelah nama dihilangkan, sehingga nilai kosong sebelum nilai yang dipertahankan tetap `''`, dan penguraian membaca nilai yang tidak dimiliki baris sebagai `''`. Setiap baris ditulis pada baris teksnya sendiri sebagai JSON ringkas, seperti pada dua kata dari sebuah file berikut:
 
 ```json
 "wordEntities": {
@@ -507,8 +460,8 @@ Tidak satu pun dari ketiganya memakai id sebagai kunci. Masing-masing ditulis se
 }
 ```
 
-Bentuk penyimpanan menulis baris yang tercantum dalam urutan lembar dan menghilangkan `order`, sehingga headernya tidak menyebutkannya. Bentuk ini menghilangkan baris yang semua nilainya selain id kosong atau hanya berisi spasi, seperti baris yang ditambahkan dan tidak pernah diisi, atau yang dikosongkan, beserta setiap tautan ke domain semacam itu atau ke domain yang dihapus: `domainId` kolom dihilangkan, dan `domainId` istilah ditulis `''`, dengan istilah itu sendiri dihilangkan jika tidak memuat apa pun selain itu.  
-Header nilai runtime menyebutkan `"order"` tepat setelah `"name"`. Nilai ini menulis setiap baris yang dimuat koleksinya, termasuk yang dihapus, dalam urutan koleksi memuatnya, jadi urutkan menurut `order`, yang dibandingkan dalam urutan unit kode, untuk mendapatkan urutan lembar. Penguraian memberi baris file kunci `order` sesuai urutan letak baris, sehingga baris terbaca kembali dalam urutan file menuliskannya.  
+Bentuk penyimpanan menulis baris setiap lembar dalam urutan lembar itu, tanpa field urutan, sehingga baris sebuah file merupakan anggota kamus sekaligus urutannya. Bentuk ini menghilangkan baris yang semua nilainya selain id kosong atau hanya berisi spasi, seperti baris yang ditambahkan dan tidak pernah diisi, atau yang dikosongkan, beserta setiap tautan ke domain semacam itu atau ke domain yang dihapus: `domainId` kolom dihilangkan, dan `domainId` istilah ditulis `''`, dengan istilah itu sendiri dihilangkan jika tidak memuat apa pun selain itu.  
+Penguraian membaca baris dalam urutan letaknya, sehingga setiap lembar mencantumkannya dalam urutan file menuliskannya.  
 Dokumen tanpa kamus, seperti yang disimpan sebelum `4.2.0`, tidak memiliki kamus apa pun. Editor sebelum `4.2.0` membuang ketiganya saat memuat dokumen, sehingga menyimpan di sana menghilangkan setiap kata, istilah, dan domain.
 
 ### Koleksi: wordEntities {#collection-wordentities}
@@ -517,12 +470,11 @@ Dokumen tanpa kamus, seperti yang disimpan sebelum `4.2.0`, tidak memiliki kamus
 type Word = {
   id: string;
   name: string;
-  order: string; // runtime only
-  abbreviation: string;
-  englishName: string;
-  description: string;
-  synonyms: string;
-  forbiddenWords: string;
+  abbreviation?: string;
+  englishName?: string;
+  description?: string;
+  synonyms?: string;
+  forbiddenWords?: string;
 };
 ```
 
@@ -534,15 +486,14 @@ Kata adalah salah satu kata penyusun nama logis, dan `abbreviation` adalah yang 
 type Term = {
   id: string;
   name: string;
-  order: string; // runtime only
-  physicalName: string;
-  domainId: string;
-  description: string;
-  synonyms: string;
+  physicalName?: string;
+  domainId?: string;
+  description?: string;
+  synonyms?: string;
 };
 ```
 
-Istilah adalah nama logis utuh. Tabel atau kolom yang `logicalName`-nya cocok dengan `name` menghasilkan `physicalName` atau, selama field itu kosong, nama yang disusun dari singkatan kata, dan kolom juga mengambil domain yang ditunjuk `domainId`, `''` jika tidak ada (lihat [Menghasilkan nama fisik](../../guide/guides/dictionary.md#deriving-physical-names)). `synonyms` dipisahkan koma. Penguraian mengosongkan `domainId` yang tidak menunjuk domain apa pun, seperti pada kolom.
+Istilah adalah nama logis utuh. Tabel atau kolom yang `logicalName`-nya cocok dengan `name` menghasilkan `physicalName` atau, selama field itu kosong, nama yang disusun dari singkatan kata, dan kolom juga mengambil domain yang ditunjuk `domainId`, `''` jika tidak ada (lihat [Menghasilkan nama fisik](../../guide/guides/dictionary.md#deriving-physical-names)). `synonyms` dipisahkan koma. Penguraian mengosongkan `domainId` yang tidak menunjuk domain apa pun yang dimuat file, seperti pada kolom.
 
 ### Koleksi: domainEntities {#collection-domainentities}
 
@@ -550,10 +501,9 @@ Istilah adalah nama logis utuh. Tabel atau kolom yang `logicalName`-nya cocok de
 type Domain = {
   id: string;
   name: string;
-  order: string; // runtime only
-  category: string;
-  dataType: string;
-  description: string;
+  category?: string;
+  dataType?: string;
+  description?: string;
 };
 ```
 
@@ -572,7 +522,7 @@ File skema kanonis dipublikasikan di [json-schema/schema.json](https://raw.githu
 
 Letakkan `$schema` di bagian atas file `.erd.json`, dan editor yang memahami JSON Schema, seperti VS Code, memvalidasi dokumen dan melengkapi field-nya secara otomatis saat Anda mengedit.
 
-Sejak `4.0.0`, skema hanya menggambarkan bentuk penyimpanan. Setiap objek dengan field bernama bersifat tertutup (`additionalProperties: false`), setiap field yang selalu ditulis bentuk penyimpanan bersifat wajib, field yang dihilangkannya selama tidak berisi apa pun disebutkan tetapi tidak wajib, dan tidak ada field yang selalu dihilangkannya yang disebutkan. Karena itu, skema menolak nilai runtime. Skema juga menolak file yang disimpan sebelum `4.0.0`, dengan `meta`, lebar, `zIndex`, `ignoreSaveSettings`, dan seterusnya, hingga editor `4.0.0` atau yang lebih baru menyimpan file tersebut lagi. File yang disimpan oleh `3.2.0` atau yang lebih baru sudah menyebutkan URL skema ini, yang menunjuk ke cabang `main`, sehingga editor yang memvalidasi terhadapnya kini menandai file tersebut. File yang disimpan oleh `3.0.0` atau `3.1.0`, atau dokumen v2, tidak menyebutkan `$schema`.
+Sejak `4.0.0`, skema hanya menggambarkan bentuk penyimpanan. Setiap objek dengan field bernama bersifat tertutup (`additionalProperties: false`), setiap field yang selalu ditulis bentuk penyimpanan bersifat wajib, setiap field yang ditandai `?` pada tipe di atas disebutkan tetapi tidak wajib, dan tidak ada field lain yang disebutkan. Jadi, skema menolak file yang disimpan sebelum `4.0.0`, dengan `meta`, lebar, `zIndex`, `ignoreSaveSettings`, dan seterusnya, hingga editor `4.0.0` atau yang lebih baru menyimpan file tersebut lagi. File yang disimpan oleh `3.2.0` atau yang lebih baru sudah menyebutkan URL skema ini, yang menunjuk ke cabang `main`, sehingga editor yang memvalidasi terhadapnya kini menandai file tersebut. File yang disimpan oleh `3.0.0` atau `3.1.0`, atau dokumen v2, tidak menyebutkan `$schema`.
 
 Sejak `4.2.0`, skema tidak lagi mewajibkan field teks entitas, daftar `doc` mana pun, koleksi mana pun, atau `collections` itu sendiri, yang dihilangkan bentuk penyimpanan selama tidak berisi apa pun. Skema tetap menerima file yang disimpan oleh `4.0.0` atau `4.1.0`. Skema menyebutkan field baru: `nameViewMode`, yang hanya menerima `"logical"` dan `"both"`; `logicalName` tabel dan `nameDerived`-nya, yang hanya menerima `true`; `logicalName` dan `domainId` kolom; serta ketiga kamus, masing-masing dengan header dan baris string-nya. `canvasType` mencantumkan tab Kamus, `columnOrder` menerima tujuh atau sembilan bilangan bulat, dan deskripsi `show`, `columnOrder`, `lockSettings`, dan `options` menyebutkan bit barunya.
 
