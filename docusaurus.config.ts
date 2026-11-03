@@ -68,6 +68,15 @@ const config: Config = {
       {
         docs: {
           sidebarPath: './sidebars.ts',
+          // Docusaurus's default exclude list (GlobExcludeDefault in @docusaurus/utils), plus the
+          // AGENTS.md notes for coding agents, which would otherwise become pages in the sidebars.
+          exclude: [
+            '**/_*.{js,jsx,ts,tsx,md,mdx}',
+            '**/_*/**',
+            '**/*.test.{js,jsx,ts,tsx}',
+            '**/__tests__/**',
+            '**/AGENTS.md',
+          ],
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl: 'https://github.com/dineug/erd-editor-docs/blob/main/',
