@@ -157,6 +157,7 @@ const data = replicationStore.value;
 Dalla versione `4.0.0`, `value` è la forma di archiviazione: il documento come lo contiene un file, lo stesso testo restituito dal [value](../erd-editor-element.md#value) dell’elemento.  
 Contiene solo le entità attive, in un ordine fisso, senza quelle rimosse, senza l’ordine di sovrapposizione e senza nulla di ciò che un caricamento ricalcola, come le larghezze misurate da [toWidth](#towidth).  
 Dalla versione `4.2.0` contiene anche i nomi logici, l’indicazione se ogni nome è stato derivato dai dizionari, i collegamenti ai domini e le parole, i termini e i domini della scheda [Dizionario](../../guide/guides/dictionary.md).  
+Dalla versione `5.1.1` contiene anche il gruppo di tabelle in cui si trova ogni memo.  
 Esclude inoltre, dalla versione `4.2.0`, ogni campo di testo vuoto di un’entità, ogni elenco di `doc` e ogni collezione che non contiene nulla, e `collections` stesso quando ogni collezione è vuota.  
 È indentato con due spazi, con ogni riga dei dizionari su una riga di testo propria, e termina con un carattere di nuova riga, quindi lo stesso documento produce sempre gli stessi byte.  
 Per ciò che contiene, vedere [Forma di archiviazione](./schema.md#storage-form).
@@ -305,6 +306,10 @@ Mantenere ogni editor della sessione, e la replica, alla versione `5.1.0` o succ
 
 Dalla versione `5.1.0` un editor invia un cambio del linguaggio del Generatore di codice, di uno stile dei nomi o del tipo di delimitatore solo mentre il blocco di quell’impostazione è disattivato, contrassegnato con `shared: true` nel proprio payload, e la replica applica ogni cambio contrassegnato, come fanno gli editor; vedere [Modifica collaborativa](./collaborative-editing.md).  
 La replica applica un cambio non contrassegnato, che un editor precedente alla versione `5.1.0` invia qualunque sia il blocco, solo mentre quell’impostazione è sbloccata dal suo lato, e lo scarta mentre l’impostazione è bloccata (vedere [on@change](#onchange)).
+
+Dalla versione `5.1.1` le azioni mantenute includono anche `memo.changeGroup`, che mette un memo in un [gruppo di tabelle](../../guide/guides/table-groups.md) o lo toglie, e `value` scrive il gruppo in cui si trova ogni memo (vedere [Forma di archiviazione](./schema.md#storage-form)).  
+La versione `5.1.1` non cambia alcuna esportazione di `@dineug/erd-editor/engine.js`.  
+Uno store di una versione precedente scarta `memo.changeGroup` e il `groupId` di ogni memo, quindi non salva alcun memo in un gruppo, e un editor precedente alla versione `5.1.1` nella sessione può comunque togliere i memo dai loro gruppi su una replica `5.1.1`; vedere [Combinare versioni diverse](./collaborative-editing.md#mixing-releases).
 
 Dalla versione `4.0.0` entrambi i metodi applicano anche `editor.mergeLWW`, che trasporta i registri di collaborazione con cui un editor risponde quando un altro si unisce alla sessione, così la replica risolve le modifiche simultanee come fanno gli editor.  
 Non modifica alcun byte di `value` e non emette alcun `change`.  

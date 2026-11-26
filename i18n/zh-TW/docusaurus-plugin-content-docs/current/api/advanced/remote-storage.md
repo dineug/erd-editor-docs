@@ -157,6 +157,7 @@ const data = replicationStore.value;
 自 `4.0.0` 起，`value` 是儲存形式：也就是文件在檔案中的樣貌，與元素的 [value](../erd-editor-element.md#value) 傳回的文字相同。  
 它只包含現存的實體，並依固定順序排列，不包含已移除的實體、堆疊順序，或任何在載入時會重新推算的內容，例如 [toWidth](#towidth) 測量的寬度。  
 自 `4.2.0` 起，它也包含邏輯名稱、每個名稱是否由字典產生、定義域連結，以及[字典](../../guide/guides/dictionary.md)索引標籤的詞彙、術語和定義域。  
+自 `5.1.1` 起，它也包含每個備忘錄所屬的資料表群組。  
 自 `4.2.0` 起，它也會省略實體中每個空的文字屬性、每個沒有任何內容的 `doc` 清單和集合，以及在每個集合都為空時的 `collections` 本身。  
 它以兩個空格縮排，每個字典列各自佔一行，並以換行字元結尾，因此同一份文件一律會產生相同的位元組。  
 關於它包含的內容，請參閱[儲存形式](./schema.md#storage-form)。
@@ -305,6 +306,10 @@ replicationStore.dispatchSync(actions); // sync
 
 自 `5.1.0` 起，編輯器只在程式碼產生器的語言、某種名稱大小寫或引號類型的鎖定關閉期間，才會傳送對該設定的變更，並在其酬載中標記 `shared: true`，而複本會像各編輯器一樣套用每個有標記的變更；請參閱[協作編輯](./collaborative-editing.md)。  
 未標記的變更是 `5.1.0` 之前的編輯器無論鎖定狀態都會傳送的，複本只在該設定於它這一端未鎖定期間才套用，鎖定期間則捨棄（請參閱 [on@change](#onchange)）。
+
+自 `5.1.1` 起，保留的動作還包括 `memo.changeGroup`，它會將備忘錄放入[資料表群組](../../guide/guides/table-groups.md)或移出群組，而 `value` 會寫出每個備忘錄所屬的群組（請參閱[儲存形式](./schema.md#storage-form)）。  
+`5.1.1` 沒有變更 `@dineug/erd-editor/engine.js` 的任何匯出。  
+先前版本的存放區會捨棄 `memo.changeGroup` 和每個備忘錄的 `groupId`，因此它不會儲存任何屬於群組的備忘錄，而工作階段中 `5.1.1` 之前的編輯器，仍可在 `5.1.1` 複本上將備忘錄移出其群組；請參閱[混用不同版本](./collaborative-editing.md#mixing-releases)。
 
 自 `4.0.0` 起，這兩個方法也會套用 `editor.mergeLWW`，其中帶有另一個編輯器加入工作階段時、某個編輯器作為回應所傳送的協作暫存器，因此複本會以與編輯器相同的方式裁定同時進行的編輯。  
 它不會變更 `value` 的任何位元組，也不會觸發 `change`。  

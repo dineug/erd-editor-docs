@@ -56,6 +56,7 @@ Una ventana de VS Code sirve los diagramas de las carpetas de su área de trabaj
 Una extensión de la `3.0.0` a la `3.1.0` y el servidor `1.0.0` o posterior se rechazan mutuamente, y una extensión anterior a la `3.0.0` no da servicio a ningún agente.
 Una extensión `4.0.0` o `4.1.0` se conecta, pero no muestra ni conserva los nombres lógicos, los vínculos con dominios ni las filas de los diccionarios que escribe el agente.
 Con una extensión anterior a la `4.3.0`, una tabla, nota o grupo de tablas que tú y el agente movéis o cambiáis de tamaño en el mismo momento puede terminar en lugares distintos para cada uno; consulta [Actualizar](#updating).
+Una extensión anterior a la `4.3.1` no muestra ni conserva en qué grupo de tablas está una nota.
 
 La extensión se inicia en un área de trabajo que contiene archivos `.erd`, `.erd.json`, `.vuerd` o `.vuerd.json`, así que un agente llega a esos diagramas antes de que abras uno.
 En un área de trabajo sin ninguno de ellos, se inicia cuando abres un diagrama, y hasta entonces el agente edita en disco.
@@ -74,6 +75,7 @@ Una ventana de bóveda de Obsidian sirve los diagramas de su bóveda.
 Un plugin anterior a la `1.0.0` y el servidor `1.0.0` o posterior se rechazan mutuamente.
 Un plugin `1.0.0` o `1.1.0` se conecta, pero no muestra ni conserva los nombres lógicos, los vínculos con dominios ni las filas de los diccionarios que escribe el agente.
 Con un plugin anterior a la `1.3.0`, una tabla, nota o grupo de tablas que tú y el agente movéis o cambiáis de tamaño en el mismo momento puede terminar en lugares distintos para cada uno; consulta [Actualizar](#updating).
+Un plugin anterior a la `1.3.1` no muestra ni conserva en qué grupo de tablas está una nota.
 
 Una ventana de bóveda da servicio a agentes desde el momento en que se carga el plugin, así que un agente llega a los diagramas de la bóveda antes de que abras uno.
 No hay ningún paso de confianza.
@@ -102,6 +104,7 @@ Un IDE de JetBrains sirve los diagramas de todos los proyectos abiertos en él y
 Un plugin `0.9.0` o `0.10.0` y el servidor `1.0.0` o posterior se rechazan mutuamente, y un plugin anterior a la `0.9.0` no da servicio a ningún agente.
 Un plugin `1.0.0` o `1.1.0` se conecta, pero no muestra ni conserva los nombres lógicos, los vínculos con dominios ni las filas de los diccionarios que escribe el agente.
 Con un plugin anterior a la `1.3.0`, una tabla, nota o grupo de tablas que tú y el agente movéis o cambiáis de tamaño en el mismo momento puede terminar en lugares distintos para cada uno; consulta [Actualizar](#updating).
+Un plugin anterior a la `1.3.1` no muestra ni conserva en qué grupo de tablas está una nota.
 
 El IDE da servicio a agentes desde el momento en que se abre el primer proyecto, así que un agente llega a los diagramas de un proyecto antes de que abras uno.
 
@@ -153,7 +156,14 @@ Pero un movimiento o un cambio de tamaño que tú y el agente hacéis en el mism
 Si cualquiera de los dos lados es anterior, el editor y el agente pueden terminar con posiciones distintas, y el agente sigue leyendo y editando desde la suya hasta que un movimiento posterior deja a ambos en un mismo punto o el agente vuelve a unirse al documento; consulta [Ediciones hechas en el mismo momento](./live-and-headless.md#edits-made-at-the-same-moment).
 Ninguna de estas versiones cambia lo que contiene un archivo.
 
+El servidor `1.2.1` también usa el protocolo 2. Añade dos herramientas, `erd_set_memo_group` y `erd_export_svg`, y el argumento `memoIds` de `erd_add_table_group`, y no quita ni renombra ninguna; consulta [Grupos de tablas](./tools.md#table-groups) y [Exportación SVG](./tools.md#svg-export).
+Las notas en grupos de tablas necesitan el servidor `1.2.1` o posterior y, allí donde esté abierto el documento, la extensión de VS Code `4.3.1` o posterior o el plugin de Obsidian o JetBrains `1.3.1` o posterior.
+Una extensión o un plugin anterior que se conecta ignora en qué grupo está una nota, aunque la llamada del agente tenga éxito, y omite los grupos de las notas cuando guarda el archivo.
+Un servidor anterior a la `1.2.1` no tiene herramientas para ellas y lee cada nota como si no estuviera en ningún grupo, y un archivo que edita en disco se vuelve a escribir con todas las notas fuera de su grupo; consulta [Headless](./live-and-headless.md#headless).
+`erd_export_svg` solo necesita el servidor `1.2.1` o posterior, con cualquier versión de la extensión o del plugin que se conecte, ya que el servidor dibuja la imagen él mismo.
+
 Actualiza también ERD Editor allí donde se abran los diagramas.
+La extensión de VS Code anterior a la `4.3.1`, el plugin de Obsidian anterior a la `1.3.1` y el plugin de JetBrains anterior a la `1.3.1` abren un diagrama que guardó una versión posterior, o que el agente editó en disco, con todas las notas fuera de su grupo de tablas, y omiten los grupos de las notas cuando guardan el archivo.
 La extensión de VS Code anterior a la `4.2.0`, el plugin de Obsidian anterior a la `1.2.0` y el plugin de JetBrains anterior a la `1.2.0` abren un diagrama que guardó una versión posterior, o que el agente editó en disco, sin los nombres lógicos de sus tablas y columnas, sin los vínculos con dominios de sus columnas y sin sus palabras, términos y dominios.
 Cuando guardan el archivo, los omiten.
 La extensión de VS Code anterior a la `4.0.0`, el plugin de Obsidian anterior a la `1.0.0` y el plugin de JetBrains anterior a la `1.0.0` también muestran un diagrama así sin sus iconos de clave principal, y descartan sus grupos de tablas y sus scripts del Esquema SQL al guardar el archivo.

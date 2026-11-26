@@ -93,7 +93,7 @@ Dokler je v iskalnem polju besedilo, [drevo](./explorer.md#the-tree) raziskovalc
 
 - Mape `Tables`, `Table Groups` in `Memos` so prikazane le, kadar vsebujejo zadetek, število ob vsaki mapi pa je število vrstic neposredno pod njo v rezultatih.
 - Pod mapo `Tables` so tabele, ki vsebujejo zadetek, razvrščene po imenu, nikoli po logičnem imenu. Pod vsako tabelo je najprej vrstica za vsak zadetek v njenem komentarju, nato mapa `Columns` s stolpci, ki vsebujejo zadetek, v vrstnem redu stolpcev, vsak z vrstico za vsak zadetek v svojem komentarju, nato pa mapa `Indexes` z indeksi, katerih ime se ujema. Mape `Foreign Keys` ni.
-- Pod mapo `Table Groups` so skupine, katerih ime se ujema, razvrščene po imenu, brez svojih tabel. Najdena tabela je prikazana pod mapo `Tables`.
+- Pod mapo `Table Groups` so skupine, katerih ime se ujema, razvrščene po imenu, brez svojih tabel in beležk. Najdena tabela je prikazana pod mapo `Tables`, najdena beležka pa pod mapo `Memos`.
 - Pod mapo `Memos` so beležke, ki vsebujejo zadetek, v vrstnem redu dokumenta, vsaka prikazana s svojo prvo vrstico in z vrstico za vsak zadetek v njej.
 
 Zadetek v imenu je poudarjen v vrstici tega imena, zato je ime, ki iskalni niz vsebuje dvakrat, ena vrstica z dvema poudarkoma. Zadetek v logičnem imenu tabele ali stolpca je prav tako v vrstici te tabele ali stolpca, nikoli v svoji vrstici.  
@@ -127,7 +127,7 @@ Prehod na zadetek zapre okno Lastnosti tabele, če je odprto, nato pa:
 
 - Pri imenu, logičnem imenu ali komentarju tabele ali stolpca izbere samo to tabelo, jo postavi v ospredje in fokus premakne na celico, ki vsebuje zadetek. Zadetek v komentarju, skritem z [možnostjo pogleda tabel](./table-related-functions.md#table-view-options), namesto tega premakne fokus na ime ob njem. Kjer [prikaz imen](./logical-names.md#name-view) ne izriše celice za ime ali logično ime, fokus preide na celico, izrisano na njenem mestu: na ime v prikazu `Physical Names`, na logično ime v prikazu `Logical Names`.
 - Pri imenu indeksa izbere samo tabelo indeksa in jo postavi v ospredje, fokus pa premakne na ime tabele ali v prikazih `Logical Names` in `Both Names` na njeno logično ime, razen če je celica s fokusom že v tej tabeli. Imena indeksov na platnu niso narisana.
-- Pri imenu skupine tabel izbere samo skupino in jo skupaj z njenimi tabelami postavi v ospredje.
+- Pri imenu skupine tabel izbere samo skupino in jo skupaj z njenimi tabelami in beležkami postavi v ospredje.
 - Pri beležki izbere samo beležko in jo postavi v ospredje.
 
 Platno se pomakne le, kadar cilj prehoda še ni dobro viden, povečava pa se nikoli ne spremeni – glejte razdelek [Kam pripelje skok](./table-related-functions.md#where-a-jump-lands).

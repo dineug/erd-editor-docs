@@ -51,18 +51,18 @@ See [ErdEditorElement](./erd-editor-element.md) for the rest of the API.
 
 ```html
 <script type="module">
-  import 'https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js';
+  import 'https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js';
 
   const editor = document.createElement('erd-editor');
   editor.style.cssText = 'display: block; width: 100%; height: 100vh;';
   document.body.appendChild(editor);
 </script>
 <!-- or -->
-<script type="module" src="https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js"></script>
+<script type="module" src="https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js"></script>
 ```
 
 `esm.run` resolves the package's external dependencies for you, so this works without a bundler.
-Each entry is reached by its path after the version: `…/erd-editor.js` defines the editor, and `…/erd-viewer.js` the viewer, which fetches each display language but English from the CDN once a page asks for it. The bare package URL, `https://esm.run/@dineug/erd-editor@5.1.0`, serves the root, which defines no element.
+Each entry is reached by its path after the version: `…/erd-editor.js` defines the editor, and `…/erd-viewer.js` the viewer, which fetches each display language but English from the CDN once a page asks for it. The bare package URL, `https://esm.run/@dineug/erd-editor@5.1.1`, serves the root, which defines no element.
 An unversioned URL always serves the latest release. Pin a version, as above, if you do not want a major upgrade to reach your page unannounced.
 `5.0.0` is itself one: a page that has to stay on 4.x pins `@4.2.0` — see [Upgrading from 4.x](#upgrading-from-4x).
 
@@ -75,7 +75,7 @@ It is what the `unpkg` and `jsdelivr` fields point at, so the bare package URL o
 
 ```html
 <erd-editor></erd-editor>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.1"></script>
 <script>
   const editor = document.querySelector('erd-editor');
   editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
@@ -88,7 +88,7 @@ Since `5.0.0` a second file, `dist/erd-viewer.umd.js`, defines `<erd-viewer>` an
 
 ```html
 <erd-viewer src="diagram.erd.json" style="display: block; height: 480px"></erd-viewer>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0/dist/erd-viewer.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.1/dist/erd-viewer.umd.js"></script>
 ```
 
 Neither file defines the other's tag, and each leaves no global on the page but its own and `window.Konva`.
@@ -100,7 +100,7 @@ A page that cannot load a script of its own can frame the hosted viewer at erd-e
 ```html
 <erd-editor system-dark-mode enable-theme-builder enable-locale-picker enable-welcome-screen></erd-editor>
 <script type="module">
-  import 'https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js';
+  import 'https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js';
 
   const editor = document.querySelector('erd-editor');
 </script>
@@ -123,7 +123,7 @@ Reading `editor.value` and `editor.runtimeValue` still works, and both keep the 
 
 ### Server-side rendering
 
-Every entry but `engine.js` and `peer.js` needs a DOM, so it throws in Node. `erd-editor.js` and `erd-viewer.js` define their element at module scope, and the package root, which since `5.0.0` defines nothing, still builds both element classes as it loads.
+Every entry these pages describe but `engine.js` and `peer.js` needs a DOM, so it throws in Node. `erd-editor.js` and `erd-viewer.js` define their element at module scope, and the package root, which since `5.0.0` defines nothing, still builds both element classes as it loads.
 In Next.js, Nuxt, SvelteKit, or Astro, reach the element's entry from a client-only path, and a named import from the root, such as `setExportFileCallback` or `toImage`, from the same path.
 
 ```js
@@ -251,7 +251,7 @@ A page under a strict Content Security Policy needs these directives for the ele
 
 ## Entry Points
 
-The package has five entries:
+These pages describe five of the package's entries:
 
 | Entry | What it is |
 | --- | --- |
@@ -371,7 +371,7 @@ No polyfills are bundled. Add your own if you need to reach older browsers.
    import { setExportFileCallback } from '@dineug/erd-editor';
   ```
 
-- On a CDN the same holds for `https://esm.run/@dineug/erd-editor`, which now serves the root and defines nothing: import `https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js`. The bare jsDelivr and unpkg URLs still serve the script-tag build, which defines `<erd-editor>` as before. An unversioned URL now serves the latest 5.x release; pin `@4.2.0` to stay on 4.x — see [CDN](#cdn) and [Script tag](#script-tag).
+- On a CDN the same holds for `https://esm.run/@dineug/erd-editor`, which now serves the root and defines nothing: import `https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js`. The bare jsDelivr and unpkg URLs still serve the script-tag build, which defines `<erd-editor>` as before. An unversioned URL now serves the latest 5.x release; pin `@4.2.0` to stay on 4.x — see [CDN](#cdn) and [Script tag](#script-tag).
 - The root defines nothing but still needs a DOM, so with server-side rendering a named import from it, such as `setExportFileCallback`, stays on the client-only path beside the element's entry — see [Server-side rendering](#server-side-rendering).
 - `window.ErdEditor` gains `ErdEditorElement` and `defineErdEditor`. The viewer's script-tag build puts `ErdViewerElement` and `defineErdViewer` on `window.ErdViewer`, and neither global carries `toImage`.
 - A `readonly` editor opens as a reader. Its six tabs, the Explorer, Quick Search and presence stay, and every control that would edit the diagram is gone rather than disabled: the toolbar shows the database name as text, the Settings tab shows its settings with every control disabled under a `Read only` badge, and the floating toolbar keeps only the zoom, the Name View, zen mode and the compass, so `Hand` and `Select` are gone and a drag pans. A press selects nothing: the one selection is the outline a jump from the Explorer or Quick Search puts round what it reaches, which a still click clears, and the select-all shortcuts select nothing. Turning `readonly` on ends what stood open, such as the selection, the hand tool, a cell editor, a drag, Map Columns, Auto Layout's `Force` preview and Time Travel, and keeps the scroll, the zoom, the tab and the Name View — see [readonly](./erd-editor-element.md#readonly).

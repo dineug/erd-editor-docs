@@ -51,18 +51,18 @@ editor.addEventListener('change', () => {
 
 ```html
 <script type="module">
-  import 'https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js';
+  import 'https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js';
 
   const editor = document.createElement('erd-editor');
   editor.style.cssText = 'display: block; width: 100%; height: 100vh;';
   document.body.appendChild(editor);
 </script>
 <!-- or -->
-<script type="module" src="https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js"></script>
+<script type="module" src="https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js"></script>
 ```
 
 يحلّ `esm.run` التبعيات الخارجية للحزمة نيابةً عنك، لذا يعمل هذا دون أداة تجميع.
-يصل كل مدخل بمساره بعد رقم الإصدار: فـ`…/erd-editor.js` يعرّف المحرر، و`…/erd-viewer.js` يعرّف العارض، الذي يجلب من CDN كل لغة عرض غير الإنجليزية حين تطلبها صفحة. أما عنوان الحزمة المجرد `https://esm.run/@dineug/erd-editor@5.1.0` فيقدّم الجذر الذي لا يعرّف أي عنصر.
+يصل كل مدخل بمساره بعد رقم الإصدار: فـ`…/erd-editor.js` يعرّف المحرر، و`…/erd-viewer.js` يعرّف العارض، الذي يجلب من CDN كل لغة عرض غير الإنجليزية حين تطلبها صفحة. أما عنوان الحزمة المجرد `https://esm.run/@dineug/erd-editor@5.1.1` فيقدّم الجذر الذي لا يعرّف أي عنصر.
 يقدّم عنوان URL غير المحدد بإصدار أحدث إصدار دائمًا. حدّد إصدارًا بعينه، كما في الأعلى، إذا كنت لا تريد أن تصل ترقية رئيسية إلى صفحتك دون سابق إنذار.
 والإصدار `5.0.0` نفسه ترقية من هذا النوع: فالصفحة التي يجب أن تبقى على الإصدار 4.x تحدّد `@4.2.0` في العنوان، راجع [الترقية من الإصدار 4.x](#upgrading-from-4x).
 
@@ -75,7 +75,7 @@ editor.addEventListener('change', () => {
 
 ```html
 <erd-editor></erd-editor>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.1"></script>
 <script>
   const editor = document.querySelector('erd-editor');
   editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
@@ -88,7 +88,7 @@ editor.addEventListener('change', () => {
 
 ```html
 <erd-viewer src="diagram.erd.json" style="display: block; height: 480px"></erd-viewer>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0/dist/erd-viewer.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.1/dist/erd-viewer.umd.js"></script>
 ```
 
 لا يعرّف أي من الملفين وسم الآخر، ولا يترك أي منهما على الصفحة متغيرًا عامًا سوى متغيره و`window.Konva`.
@@ -100,7 +100,7 @@ editor.addEventListener('change', () => {
 ```html
 <erd-editor system-dark-mode enable-theme-builder enable-locale-picker enable-welcome-screen></erd-editor>
 <script type="module">
-  import 'https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js';
+  import 'https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js';
 
   const editor = document.querySelector('erd-editor');
 </script>
@@ -123,7 +123,7 @@ erd-editor {
 
 ### العرض من جانب الخادم {#server-side-rendering}
 
-تحتاج كل نقطة دخول عدا `engine.js` و`peer.js` إلى DOM، لذا تُطلِق استثناءً في Node. يعرّف `erd-editor.js` و`erd-viewer.js` عنصريهما على مستوى الوحدة، أما جذر الحزمة، الذي لا يعرّف شيئًا منذ الإصدار `5.0.0`، فلا يزال يبني فئتَي العنصرين أثناء تحميله.
+تحتاج كل نقطة دخول تصفها هذه الصفحات عدا `engine.js` و`peer.js` إلى DOM، لذا تُطلِق استثناءً في Node. يعرّف `erd-editor.js` و`erd-viewer.js` عنصريهما على مستوى الوحدة، أما جذر الحزمة، الذي لا يعرّف شيئًا منذ الإصدار `5.0.0`، فلا يزال يبني فئتَي العنصرين أثناء تحميله.
 في Next.js أو Nuxt أو SvelteKit أو Astro، استورد نقطة دخول العنصر من مسار لا يُنفَّذ إلا في جانب العميل، وكذلك أي استيراد مسمّى من الجذر، مثل `setExportFileCallback` أو `toImage`، من المسار نفسه.
 
 ```js
@@ -251,7 +251,7 @@ declare global {
 
 ## نقاط الدخول {#entry-points}
 
-للحزمة خمس نقاط دخول:
+تصف هذه الصفحات خمسًا من نقاط دخول الحزمة:
 
 | نقطة الدخول | ما هي |
 | --- | --- |
@@ -371,7 +371,7 @@ Chrome 91+ وEdge 94+ وFirefox 93+ وSafari 16.4+ — وهو خط الأساس 
    import { setExportFileCallback } from '@dineug/erd-editor';
   ```
 
-- على CDN ينطبق الأمر نفسه على `https://esm.run/@dineug/erd-editor`، الذي يقدّم الآن الجذر ولا يعرّف شيئًا: استورد `https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js`. وعنوانا jsDelivr وunpkg المجردان لا يزالان يقدّمان نسخة الوسم script، التي تعرّف `<erd-editor>` كما كانت. ويقدّم العنوان غير المحدد بإصدار الآن أحدث إصدار من 5.x؛ حدّد `@4.2.0` للبقاء على الإصدار 4.x، راجع [CDN](#cdn) و[الوسم script](#script-tag).
+- على CDN ينطبق الأمر نفسه على `https://esm.run/@dineug/erd-editor`، الذي يقدّم الآن الجذر ولا يعرّف شيئًا: استورد `https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js`. وعنوانا jsDelivr وunpkg المجردان لا يزالان يقدّمان نسخة الوسم script، التي تعرّف `<erd-editor>` كما كانت. ويقدّم العنوان غير المحدد بإصدار الآن أحدث إصدار من 5.x؛ حدّد `@4.2.0` للبقاء على الإصدار 4.x، راجع [CDN](#cdn) و[الوسم script](#script-tag).
 - لا يعرّف الجذر شيئًا لكنه لا يزال يحتاج إلى DOM، لذا يبقى الاستيراد المسمّى منه، مثل `setExportFileCallback`، في العرض من جانب الخادم على المسار الخاص بجانب العميل إلى جوار نقطة دخول العنصر، راجع [العرض من جانب الخادم](#server-side-rendering).
 - يكتسب `window.ErdEditor` العنصرين `ErdEditorElement` و`defineErdEditor`. وتضع نسخة الوسم script للعارض `ErdViewerElement` و`defineErdViewer` على `window.ErdViewer`، ولا يحمل أيٌّ من المتغيرين العامين `toImage`.
 - يُفتح المحرر `readonly` قارئًا. تبقى علامات تبويبه الست والمستكشف والبحث السريع والحضور، ويُحذف كل عنصر تحكم كان سيعدّل المخطط بدلًا من تعطيله: يعرض شريط الأدوات اسم قاعدة البيانات نصًا، وتعرض علامة تبويب الإعدادات إعداداتها وكل عنصر تحكم فيها معطّل تحت الشارة `Read only`، ويحتفظ شريط الأدوات العائم بالتكبير وعرض الأسماء ووضع الزن والبوصلة فقط، فتزول `Hand` و`Select` ويحرّك السحب العرض. ولا يحدد الضغط شيئًا: التحديد الوحيد هو الإطار الذي يضعه الانتقال من المستكشف أو البحث السريع حول ما يصل إليه، وتمحوه نقرة ثابتة، ولا يحدد اختصارا تحديد الكل شيئًا. ويُنهي تفعيل `readonly` ما كان مفتوحًا، مثل التحديد وأداة اليد ومحرر الخلية والسحب و`Map Columns` ومعاينة `Force` في التخطيط التلقائي والسفر عبر الزمن، ويُبقي التمرير والتكبير وعلامة التبويب وعرض الأسماء، راجع [readonly](./erd-editor-element.md#readonly).

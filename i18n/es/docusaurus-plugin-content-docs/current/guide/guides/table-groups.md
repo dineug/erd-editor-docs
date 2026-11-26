@@ -1,15 +1,18 @@
 ---
 sidebar_position: 6
-description: Reúne tablas relacionadas en un recuadro con nombre y color dibujado detrás de ellas; crea grupos, dales nombre y color, muévelos, cambia su tamaño y elimínalos, ve a ellos desde el explorador, cambia qué tablas contienen, ocúltalos y mantenlos en la disposición automática, el Esquema SQL y DBML.
+description: Reúne tablas y notas relacionadas en un recuadro con nombre y color dibujado detrás de ellas; crea grupos, dales nombre y color, muévelos, cambia su tamaño y elimínalos, ve a ellos desde el explorador, cambia qué tablas y notas contienen, ocúltalos y mantenlos en la disposición automática, el Esquema SQL y DBML.
 ---
 
 # Grupos de tablas
 
-Un grupo de tablas es un recuadro con nombre y color que se dibuja detrás de tablas relacionadas en el lienzo ERD para mostrar qué tablas van juntas.  
-Una tabla está como máximo en un grupo. Los grupos se guardan con el diagrama, junto con el grupo en el que está cada tabla.
+Un grupo de tablas es un recuadro con nombre y color que se dibuja detrás de tablas y notas relacionadas en el lienzo ERD para mostrar cuáles van juntas.  
+Una tabla o una nota está como máximo en un grupo. Los grupos se guardan con el diagrama, junto con el grupo en el que está cada tabla y cada nota.
 
 El recuadro tiene en su parte superior una barra de título con un icono de grupo, el nombre del grupo en negrita y, mientras el puntero está sobre el grupo, una `x` que lo elimina; consulta [Eliminar un grupo](#removing-a-group). Un grupo sin nombre muestra `unnamed`, y un nombre demasiado largo para la barra se corta con `…`.  
-El recuadro siempre contiene sus tablas: conserva el tamaño que se le dio, pero se amplía para mantener dentro cada tabla con `24px` de margen a su alrededor y la barra de título encima. Una tabla que crece amplía el recuadro con ella, y lo mismo ocurre con una tabla que se suelta cerca de un borde con su centro todavía dentro del recuadro. Mientras se arrastran tablas, el recuadro ni crece ni se encoge. La ampliación no se guarda: el recuadro vuelve a su propio tamaño en cuanto la tabla ya no necesita el espacio.
+El recuadro siempre contiene sus tablas y notas: conserva el tamaño que se le dio, pero se amplía para mantener dentro cada tabla y cada nota con `24px` de margen a su alrededor y la barra de título encima. Una tabla o una nota que crece amplía el recuadro con ella, y lo mismo ocurre con una que se suelta cerca de un borde con su centro todavía dentro del recuadro. Mientras se arrastran tablas o notas, el recuadro ni crece ni se encoge. La ampliación no se guarda: el recuadro vuelve a su propio tamaño en cuanto ninguna tabla ni nota necesita el espacio.
+
+Las notas ocultas con [Opciones de vista](./table-related-functions.md#table-view-options) → `Memos` se quedan en sus grupos: mover un grupo las mueve con él, eliminarlo las saca de él y deshacer cualquiera de las dos cosas las devuelve.  
+Solo las notas visibles amplían el recuadro y detienen un borde al cambiar su tamaño, y solo ellas se incluyen en un grupo dibujado, se seleccionan con `Select tables` y se enumeran bajo el grupo en el explorador.
 
 Los grupos se dibujan detrás de todo lo demás en el lienzo: tablas, notas y líneas de relación.  
 Donde los grupos se superponen, el último sobre el que se ha pulsado o el último añadido se dibuja delante, y el cuerpo de un grupo nunca tapa la barra de título de otro. El orden no se guarda, así que un diagrama que se vuelve a abrir apila sus grupos en el orden en que se añadieron.  
@@ -31,7 +34,7 @@ El botón y el atajo activan o desactivan el dibujo, así que pulsar cualquiera 
 Mientras el dibujo está preparado, el cursor es una cruz, y una pulsación inicia el recuadro dondequiera que caiga, incluso sobre una tabla, en lugar de seleccionar o mover lo que hay debajo. La barra de herramientas del lienzo marca entonces su botón `New Table Group`, y no la mano ni el puntero.
 
 Al soltar se añade un grupo en ese recuadro, nunca menor de `160px` de ancho y `100px` de alto, barra de título incluida, por corto que sea el arrastre. Un clic sin arrastrar añade un grupo de `480px` de ancho y `320px` de alto con su esquina superior izquierda en el punto del clic.  
-Toda tabla sin grupo cuyo centro quede dentro del nuevo recuadro se une al grupo. Una tabla que ya está en otro grupo se queda en él.
+Toda tabla y toda nota visible sin grupo cuyo centro quede dentro del nuevo recuadro se une al grupo. Una tabla o una nota que ya está en otro grupo se queda en él.
 
 El botón central del ratón sigue desplazando la vista del lienzo y deja el dibujo preparado. Lo siguiente termina el dibujo sin añadir ningún grupo:
 
@@ -42,15 +45,15 @@ El botón central del ratón sigue desplazando la vista del lienzo y deja el dib
 
 ### Agrupar las tablas seleccionadas {#grouping-selected-tables}
 
-Selecciona una o varias tablas y pulsa `T` y luego `G`, o elige `Group selected tables` en el menú contextual de una tabla o `Group Selected Tables` en la búsqueda rápida, que lo incluye mientras hay una tabla seleccionada.  
-El nuevo grupo se dibuja alrededor de las tablas seleccionadas con `24px` de margen por cada lado y la barra de título encima. Cada tabla seleccionada se une a él y sale del grupo en el que estuviera, y el grupo que deja se mantiene, aunque ahora esté vacío. Las notas de la selección se omiten.
+Selecciona una o varias tablas, y las notas que quieras con ellas, y pulsa `T` y luego `G`, o elige `Group selected tables` en el menú contextual de una tabla o de una nota o `Group Selected Tables` en la búsqueda rápida. El menú de una nota y la búsqueda rápida lo ofrecen solo mientras hay una tabla seleccionada.  
+El nuevo grupo se dibuja alrededor de las tablas y notas seleccionadas con `24px` de margen por cada lado y la barra de título encima. Cada tabla y cada nota seleccionada se une a él y sale del grupo en el que estuviera, y el grupo que deja se mantiene, aunque ahora esté vacío.
 
 `T` y luego `G` consiste en dos pulsaciones sin tecla modificadora, con `G` en menos de un segundo tras `T`. Sin ninguna tabla seleccionada no hace nada, y en un campo de texto, como el campo Buscar del explorador, escribe las dos letras.
 
 ![Agrupar categories y products con T y luego G, llamar al grupo Catalog y luego darle color violeta desde su menú para que ambos encabezados tomen el color](/img/demo-table-group-selected.webp)
 
 En ambos casos, el nuevo grupo no tiene nombre ni color. Queda seleccionado él solo, y su editor de nombre se abre sobre la barra de título para que puedas escribir un nombre enseguida; consulta [Dar nombre a un grupo](#naming-a-group).  
-El grupo y las tablas que incorpora son un paso de deshacer, y el nombre que escribes es otro.
+El grupo y las tablas y notas que incorpora son un paso de deshacer, y el nombre que escribes es otro.
 
 ## Dar nombre a un grupo {#naming-a-group}
 
@@ -71,8 +74,10 @@ Como con las tablas y las notas, el selector aplica el color a todas las tablas,
 
 Un grupo con color dibuja su barra de título y su contorno en ese color, y su cuerpo, en un matiz más pálido de ese color. Un grupo sin color usa los grises neutros del tema.  
 Cada tabla de un grupo con color lleva el color del grupo en todo su encabezado y conserva su propio color en el borde izquierdo, de modo que se ven ambos.  
-El texto y los botones de ese encabezado se vuelven blancos, o negros sobre un color claro en el que el negro se lee mucho mejor, igual que el nombre, el icono y la `x` de la barra de título del grupo. Entre las muestras predefinidas del selector, Orange, Amber, Yellow y Lime llevan negro, y el resto, blanco.  
-Una tabla conserva su propio encabezado mientras su grupo no tiene color, mientras los grupos están ocultos, con un zoom del `70%` o inferior, en el que las tablas se reducen a su nombre, y en la pestaña Visualización.
+Cada nota de un grupo con color lleva el color del grupo en toda la banda de encabezado sobre su texto y conserva su propio color en la franja de su borde superior, de modo que se ven ambos.  
+El texto y los botones de ese encabezado se vuelven blancos, o negros sobre un color claro en el que el negro se lee mucho mejor, igual que la `x` de una nota y el nombre, el icono y la `x` de la barra de título del grupo. Entre las muestras predefinidas del selector, Orange, Amber, Yellow y Lime llevan negro, y el resto, blanco.  
+Una tabla conserva su propio encabezado mientras su grupo no tiene color, mientras los grupos están ocultos, con un zoom del `70%` o inferior, en el que las tablas se reducen a su nombre, y en la pestaña Visualización.  
+Una nota conserva su propio encabezado mientras su grupo no tiene color o mientras los grupos están ocultos. Las notas nunca se reducen, así que una nota lleva la banda con cualquier zoom.
 
 Un cambio de color se registra en el [historial de deshacer](./undo-redo.md#one-gesture-one-step) igual que en las tablas y las notas.
 
@@ -80,107 +85,110 @@ Un cambio de color se registra en el [historial de deshacer](./undo-redo.md#one-
 
 Haz clic en la barra de título de un grupo para seleccionar solo ese grupo, o haz `Ctrl + click` (Windows/Linux) o `⌘ + click` (Mac) para añadirlo a la selección.  
 Al pulsar sobre la barra de título de un grupo que ya está seleccionado se mantiene toda la selección, así que un arrastre a continuación la mueve entera.  
-Al pulsar sobre la barra de título, o al hacer clic con el botón derecho en el grupo, el grupo pasa delante de los demás grupos, y sus tablas, delante de todas las demás tablas y notas.
+Al pulsar sobre la barra de título, o al hacer clic con el botón derecho en el grupo, el grupo pasa delante de los demás grupos, y sus tablas y notas, delante de todas las demás tablas y notas.
 
 Para el botón izquierdo del ratón, el cuerpo, la zona bajo la barra de título, es el lienzo: al arrastrarlo se desplaza la vista, `Ctrl + drag` (Windows/Linux) o `⌘ + drag` (Mac) dibuja un cuadro de selección y un clic anula la selección. Las tablas, notas y líneas de relación que hay sobre el cuerpo responden al puntero como siempre.
 
-Un cuadro de selección incluye un grupo solo cuando abarca todo el recuadro del grupo, así que un cuadro dibujado dentro de un grupo selecciona tablas sin el grupo; consulta [Selección múltiple](./table-related-functions.md#multiple-selection).  
+Un cuadro de selección incluye un grupo solo cuando abarca todo el recuadro del grupo, así que un cuadro dibujado dentro de un grupo selecciona tablas y notas sin el grupo; consulta [Selección múltiple](./table-related-functions.md#multiple-selection).  
 `Ctrl + A` (Windows/Linux) o `⌘ + A` (Mac) nunca selecciona un grupo.
 
-`Select tables` en el menú contextual del grupo sustituye la selección por las tablas del grupo, dejando fuera el propio grupo, de modo que el siguiente comando solo afecta a las tablas.  
-Úsalo antes de comandos que actúan solo sobre tablas, como copiar o [centrarse en tablas](./table-related-functions.md#focusing-on-tables), que omiten un grupo seleccionado.
+`Select tables` en el menú contextual del grupo sustituye la selección por las tablas y las notas visibles del grupo, dejando fuera el propio grupo, de modo que el siguiente comando afecte solo a ellas.  
+Úsalo antes de comandos que omiten un grupo seleccionado, como copiar o [centrarse en tablas](./table-related-functions.md#focusing-on-tables).
 
 El contorno de un grupo seleccionado toma el color de selección. En una [sesión colaborativa](../../api/advanced/collaborative-editing.md), un grupo que selecciona otro participante aparece rodeado del color de ese participante.
 
 ## Ir a un grupo {#going-to-a-group}
 
-El [explorador](./explorer.md#the-tree) enumera los grupos en su carpeta `Table Groups`, por nombre, cada uno con sus tablas debajo. La búsqueda rápida no enumera grupos.
+El [explorador](./explorer.md#the-tree) enumera los grupos en su carpeta `Table Groups`, por nombre, cada uno con sus tablas y notas visibles debajo. La búsqueda rápida no enumera grupos.
 
 Elegir la fila de un grupo en el explorador, una coincidencia de [Buscar y reemplazar](./find-and-replace.md#going-to-a-match) en el nombre de un grupo o la fila de un grupo en la lista del [visor de diferencias](./table-related-functions.md#the-change-tree) lleva a ese grupo.  
-Esto hace visible el recuadro del grupo, tomando como referencia su barra de título cuando el recuadro es más alto que el lienzo; consulta [Dónde termina un salto](./table-related-functions.md#where-a-jump-lands). Después selecciona solo el grupo y lo trae al frente con sus tablas, como al pulsar sobre su barra de título.  
+Esto hace visible el recuadro del grupo, tomando como referencia su barra de título cuando el recuadro es más alto que el lienzo; consulta [Dónde termina un salto](./table-related-functions.md#where-a-jump-lands). Después selecciona solo el grupo y lo trae al frente con sus tablas y notas, como al pulsar sobre su barra de título.  
 Mientras los grupos están [ocultos](#hiding-groups), o una vez eliminado el grupo, ir a él no hace nada.  
 En el visor de diferencias, cada lado va al grupo solo si su propio documento lo contiene y lo muestra; consulta [Ir a un cambio](./table-related-functions.md#going-to-a-change).
 
 ## Mover un grupo y cambiar su tamaño {#moving-and-resizing-a-group}
 
-Arrastra un grupo por su barra de título para moverlo con todas sus tablas.  
-Si el grupo forma parte de una selección mayor, toda la selección se mueve con él, y una tabla que está seleccionada y además en el grupo se mueve una sola vez.  
+Arrastra un grupo por su barra de título para moverlo con todas sus tablas y notas.  
+Si el grupo forma parte de una selección mayor, toda la selección se mueve con él, y una tabla o una nota que está seleccionada y además en el grupo se mueve una sola vez.  
 El arrastre solo empieza cuando el puntero se ha movido un poco, así que un clic o un doble clic en la barra de título sigue siendo un clic. `Alt + drag` en una barra de título mueve el grupo igual que un arrastre normal; un grupo nunca se duplica.  
-El movimiento, con todas las tablas que lleva, es un paso de deshacer.
+El movimiento, con todas las tablas y notas que lleva, es un paso de deshacer.
 
-Arrastrar una tabla sola mueve únicamente esa tabla, y puede meterla en un grupo o sacarla de él; consulta [Añadir y quitar tablas](#adding-and-removing-tables).
+Arrastrar una tabla o una nota sola mueve únicamente esa tabla o esa nota, y puede meterla en un grupo o sacarla de él; consulta [Añadir y quitar tablas](#adding-and-removing-tables).
 
 Todos los grupos tienen controladores de tamaño en sus cuatro bordes y sus cuatro esquinas, estén seleccionados o no, como una nota.  
 Arrastra uno con el botón izquierdo del ratón: el recuadro sigue al puntero, y el nuevo tamaño se guarda al soltar, como un paso de deshacer.  
-No se puede reducir un grupo a menos de `160px` por `100px`, ni hacerlo más pequeño que sus tablas con sus `24px` de margen y la barra de título. El borde se detiene ahí por mucho que se aleje el puntero.
+No se puede reducir un grupo a menos de `160px` por `100px`, ni hacerlo más pequeño que sus tablas y notas visibles con sus `24px` de margen y la barra de título. El borde se detiene ahí por mucho que se aleje el puntero.
 
 ## Añadir y quitar tablas {#adding-and-removing-tables}
 
-Una tabla entra en un grupo o sale de él según dónde la sueltes.  
-Cuando arrastras tablas y las sueltas, cada tabla arrastrada que no va con un grupo seleccionado se evalúa por su centro. Entra en el grupo superior cuyo recuadro contiene su centro, o sale de su grupo si su centro no queda en el recuadro de ningún grupo. El grupo superior es el que se dibuja delante.  
-Un grupo que el arrastre deja en su sitio conserva el recuadro que tenía al empezar el arrastre, así que una tabla que se desplaza un poco dentro de su propio grupo se queda en él, y para salir hay que arrastrarla hasta que su centro quede fuera de ese recuadro.  
-Mientras arrastras, se marca con un contorno cada grupo en el que, al soltar, entraría una tabla.
+Una tabla o una nota entra en un grupo, o sale de él, según dónde la sueltes.  
+Cuando arrastras tablas o notas y las sueltas, cada tabla y cada nota arrastrada que no va con un grupo seleccionado se evalúa por su centro. Entra en el grupo superior cuyo recuadro contiene su centro, o sale de su grupo si su centro no queda en el recuadro de ningún grupo. El grupo superior es el que se dibuja delante.  
+Un grupo que el arrastre deja en su sitio conserva el recuadro que tenía al empezar el arrastre, así que una tabla o una nota que se desplaza un poco dentro de su propio grupo se queda en él, y para salir hay que arrastrarla hasta que su centro quede fuera de ese recuadro.  
+Mientras arrastras, se marca con un contorno cada grupo en el que, al soltar, entraría una tabla o una nota.
 
-Si sueltas antes de que pasen unos `200ms` desde el último movimiento, el cambio de grupo forma parte del paso de deshacer del arrastre, así que un solo deshacer devuelve las tablas a donde estaban y a los grupos en los que estaban. Tras una pausa más larga antes de soltar, el cambio de grupo es un paso aparte; consulta [Un gesto, un paso](./undo-redo.md#one-gesture-one-step).  
+Si sueltas antes de que pasen unos `200ms` desde el último movimiento, el cambio de grupo forma parte del paso de deshacer del arrastre, así que un solo deshacer devuelve las tablas y notas a donde estaban y a los grupos en los que estaban. Tras una pausa más larga antes de soltar, el cambio de grupo es un paso aparte; consulta [Un gesto, un paso](./undo-redo.md#one-gesture-one-step).  
 Un clic, o un arrastre de unos pocos píxeles, no cambia ningún grupo, y nada cambia de grupo mientras los grupos están ocultos.
 
-Las otras formas de cambiar qué tablas contiene un grupo:
+Las otras formas de cambiar qué tablas y notas contiene un grupo:
 
-- `Remove from group` en el menú contextual de una tabla saca cada tabla seleccionada de su grupo. Se muestra mientras alguna tabla seleccionada está en un grupo, incluso con los grupos ocultos, y es un paso de deshacer.
-- `Group selected tables` mueve las tablas seleccionadas a un nuevo grupo; consulta [Agrupar las tablas seleccionadas](#grouping-selected-tables).
-- Eliminar un grupo deja sus tablas sin grupo.
+- `Remove from group` en el menú contextual de una tabla o de una nota saca cada tabla y cada nota seleccionada de su grupo. Se muestra mientras alguna tabla o nota seleccionada está en un grupo, incluso con los grupos ocultos, y es un paso de deshacer.
+- `Group selected tables` mueve las tablas seleccionadas, y las notas seleccionadas con ellas, a un nuevo grupo; consulta [Agrupar las tablas seleccionadas](#grouping-selected-tables).
+- Eliminar un grupo deja sus tablas y notas sin grupo.
 
-Una tabla pegada o duplicada con `Alt` no está en ningún grupo, aunque quede dentro del recuadro de un grupo. Al arrastrarla después, se aplica la regla de dónde se suelta.
+Una tabla o una nota pegada o duplicada con `Alt` no está en ningún grupo, aunque quede dentro del recuadro de un grupo. Al arrastrarla después, se aplica la regla de dónde se suelta.
+
+![Arrastrar una nota al grupo Billing para que su encabezado tome el verde azulado del grupo y el recuadro se amplíe para rodearla, mover el grupo con la nota y luego sacar la nota con Remove from group en su menú](/img/demo-table-group-memo.webp)
 
 ## Eliminar un grupo {#removing-a-group}
 
-Eliminar un grupo nunca elimina sus tablas: se quedan donde están, sin grupo.
+Eliminar un grupo nunca elimina sus tablas ni sus notas: se quedan donde están, sin grupo.
 
 - La `x` del final de la barra de título, que se muestra mientras el puntero está sobre el grupo, elimina solo ese grupo.
 - `Delete` en el menú contextual del grupo elimina el grupo. Cuando el grupo es uno de varios elementos seleccionados, la opción indica `Delete selected` y elimina todo lo seleccionado: tablas, notas y grupos.
 - Con grupos seleccionados, `Delete` o `Backspace` elimina los grupos seleccionados junto con las tablas y notas seleccionadas, igual que `Ctrl + Backspace` y `Ctrl + Delete` (Windows/Linux) o `⌘ + Backspace` y `⌘ + Delete` (Mac); consulta [Eliminación de tablas y notas](./table-related-functions.md#table-and-memo-deletion).
 
-Cada eliminación es un paso de deshacer, que recupera el grupo con sus tablas dentro.
+Cada eliminación es un paso de deshacer, que recupera el grupo con sus tablas y notas dentro.
 
 ## El menú del grupo {#the-group-menu}
 
 Haz clic con el botón derecho en la barra de título, el cuerpo o el borde de un grupo para abrir su menú. En un Mac también lo abre `Ctrl + click`, y en una pantalla táctil, una pulsación larga.  
 El clic derecho selecciona primero el grupo, solo él salvo que ya forme parte de la selección, así que `Color` y `Delete selected` afectan al resto de la selección solo cuando el grupo estaba en ella.
 
-- `Select tables`: selecciona solo las tablas del grupo; consulta [Seleccionar grupos](#selecting-groups).
+- `Select tables`: selecciona solo las tablas y las notas visibles del grupo; consulta [Seleccionar grupos](#selecting-groups).
 - `Rename`: abre el editor de nombre; consulta [Dar nombre a un grupo](#naming-a-group).
 - `Color`: abre el selector de color; consulta [Dar color a un grupo](#coloring-a-group).
 - `Remove color`: se muestra mientras algo seleccionado tiene color.
 - `Delete`, o `Delete selected` cuando el grupo es uno de varios elementos seleccionados, con la tecla `Delete` indicada a la derecha; consulta [Eliminar un grupo](#removing-a-group).
 
-El menú contextual de una tabla añade `Group selected tables` y `Remove from group` después de `Color` y `Remove color`, antes de su opción Delete, y el menú contextual del lienzo añade `New Table Group`.  
+El menú contextual de una tabla o de una nota añade `Group selected tables` y `Remove from group` después de `Color` y `Remove color`, antes de su opción Delete, y el menú contextual del lienzo añade `New Table Group`.  
 `Group selected tables` muestra sus teclas, `T` y luego `G`, a la derecha, y `New Table Group` muestra `Alt + G` (Windows/Linux) o `⌥ + G` (Mac).
 
 ## Ocultar grupos {#hiding-groups}
 
 `View Option` → `Table Groups` en el menú contextual del lienzo muestra u oculta todos los grupos. Está marcado de forma predeterminada; consulta [Opciones de vista de tabla](./table-related-functions.md#table-view-options).  
-Si se desmarca, los recuadros de grupo y los colores de grupo de los encabezados de las tablas desaparecen del lienzo, del minimapa y de las imágenes exportadas, y las barras de desplazamiento y el minimapa dejan de reservar espacio para los grupos. Nada se mueve ni cambia de tamaño, y cada tabla se queda en su grupo.  
+Si se desmarca, los recuadros de grupo desaparecen del lienzo, del minimapa y de las imágenes exportadas, y las barras de desplazamiento y el minimapa dejan de reservar espacio para los grupos. Las tablas y las notas pierden los colores de grupo de sus encabezados. Nada se mueve ni cambia de tamaño, y cada tabla y cada nota se queda en su grupo.  
 Al ocultar los grupos se anula su selección, se termina un dibujo de `New Table Group` y se cierra el editor de nombre que esté abierto, como al hacer clic en otra parte; consulta [Dar nombre a un grupo](#naming-a-group).
 
 Mientras los grupos están ocultos:
 
 - `New Table Group` y `Group selected tables` no se ofrecen en los menús, ni `New Table Group` y `Group Selected Tables` en la búsqueda rápida, y la barra de herramientas del lienzo omite su botón `New Table Group`. `Remove from group` se sigue ofreciendo.
 - Ni `Alt + G` (Windows/Linux) o `⌥ + G` (Mac) ni `T` y luego `G` hacen nada.
-- Arrastrar tablas no cambia ningún grupo, y un cuadro de selección no incluye ningún grupo.
+- Arrastrar tablas o notas no cambia ningún grupo, y un cuadro de selección no incluye ningún grupo.
 - El explorador omite su carpeta `Table Groups`, y Buscar y reemplazar ni encuentra ni reemplaza nombres de grupo, aunque `Table group names` esté activado.
-- La [disposición automática](#auto-layout) sigue manteniendo juntas las tablas de cada grupo, la pestaña Esquema SQL sigue ofreciendo los [grupos entre los que elegir](#schema-sql-by-group), DBML los sigue escribiendo e [Importar y añadir](./file-import-export.md#import-and-add) sigue colocando lo añadido debajo de los recuadros ocultos.
+- La [disposición automática](#auto-layout) sigue manteniendo juntas las tablas y notas de cada grupo, la pestaña Esquema SQL sigue ofreciendo los [grupos entre los que elegir](#schema-sql-by-group), DBML los sigue escribiendo e [Importar y añadir](./file-import-export.md#import-and-add) sigue colocando lo añadido debajo de los recuadros ocultos.
 
 La elección se guarda en el documento y se registra en el [historial de deshacer](./undo-redo.md#what-the-history-records), como los demás interruptores de Opciones de vista. En un editor de solo lectura se queda en esa pantalla; consulta [Editores de solo lectura](#read-only-editors).
 
 ## Disposición automática {#auto-layout}
 
-La [disposición automática](./table-related-functions.md#auto-layout), con cualquiera de sus disposiciones, mantiene juntas las tablas de cada grupo, se muestren o no los grupos.
+La [disposición automática](./table-related-functions.md#auto-layout), con cualquiera de sus disposiciones, mantiene juntas las tablas y notas de cada grupo, se muestren o no los grupos.
 
-- `Force` mueve cada grupo con sus tablas como un solo recuadro, dentro del cual las tablas conservan su sitio, y mantiene el recuadro de cada grupo a un mínimo de `100px` de los demás grupos y de las tablas sin grupo. La vista previa muestra cada grupo donde va a quedar.
-- `Flow`, `Tree - vertical` y `Tree - horizontal` disponen las tablas de cada grupo dentro del grupo y colocan los grupos según las relaciones entre ellos, con las tablas sin grupo dispuestas a su alrededor.
+- `Force` mueve cada grupo con sus tablas y notas como un solo recuadro, dentro del cual cada una conserva su sitio, y mantiene el recuadro de cada grupo a un mínimo de `100px` de los demás grupos y de las tablas sin grupo. La vista previa muestra cada grupo donde va a quedar.
+- `Flow`, `Tree - vertical` y `Tree - horizontal` disponen las tablas de cada grupo dentro del grupo, con sus notas visibles reunidas junto a ellas, y colocan los grupos según las relaciones entre ellos, con las tablas sin grupo dispuestas a su alrededor.
 
-Después, cada grupo que contiene tablas se ajusta a ellas: su recuadro pasa a ser el que las abarca, con `24px` de margen y la barra de título. Un grupo sin tablas conserva su posición y su tamaño.  
-Las tablas y los grupos se colocan en un solo paso de deshacer.
+Después, cada grupo que contiene tablas se ajusta a ellas y a sus notas visibles: su recuadro pasa a ser el que las abarca, con `24px` de margen y la barra de título. Un grupo sin tablas conserva su posición y su tamaño, y las notas que contiene se quedan donde están.  
+Una nota oculta se mueve con las tablas de su grupo, pero no ocupa espacio.  
+Las tablas, las notas y los grupos se colocan en un solo paso de deshacer.
 
 Una importación de DBML ajusta cada grupo a sus tablas del mismo modo, dondequiera que se coloquen; consulta [DBML](./file-import-export.md#dbml).
 
@@ -192,10 +200,10 @@ La elección pertenece a la ventana del editor y no se guarda en el documento.
 
 ## Importar, exportar y copiar {#import-export-and-copying}
 
-- DBML conserva los grupos en ambos sentidos. Una importación de DBML convierte cada bloque `TableGroup` en un grupo —consulta [DBML](./file-import-export.md#dbml)— y el destino `DBML` del Generador de código escribe un bloque `TableGroup` por cada grupo que contiene alguna tabla; consulta [Generador de código](./code-generator.md#language).
-- Un archivo JSON conserva sus grupos. Ningún otro formato los lleva: las importaciones de SQL, GraphQL y AML no traen ninguno, y el Esquema SQL y los demás destinos del Generador de código no escriben ninguno.
-- [Importar y añadir](./file-import-export.md#import-and-add) trae los grupos de un archivo como grupos nuevos que contienen sus tablas, y los selecciona junto con las tablas nuevas mientras se muestran los grupos, así que al arrastrar el bloque añadido se mueven también sus grupos.
-- Una [imagen exportada](./file-import-export.md#image) dibuja los grupos visibles detrás de las tablas, con los colores de grupo en sus encabezados.
+- DBML conserva los grupos en ambos sentidos, con sus tablas pero no con sus notas. Una importación de DBML convierte cada bloque `TableGroup` en un grupo —consulta [DBML](./file-import-export.md#dbml)— y el destino `DBML` del Generador de código escribe un bloque `TableGroup` por cada grupo que contiene alguna tabla; consulta [Generador de código](./code-generator.md#language).
+- Un archivo JSON conserva sus grupos, con las tablas y las notas de cada uno. Ningún otro formato los lleva: las importaciones de SQL, GraphQL y AML no traen ninguno, y el Esquema SQL y los demás destinos del Generador de código no escriben ninguno.
+- [Importar y añadir](./file-import-export.md#import-and-add) trae los grupos de un archivo como grupos nuevos que contienen sus tablas y notas, y los selecciona junto con las tablas nuevas y las notas visibles mientras se muestran los grupos, así que al arrastrar el bloque añadido se mueven también sus grupos.
+- Una [imagen exportada](./file-import-export.md#image) dibuja los grupos visibles detrás de las tablas y notas, con los colores de grupo en sus encabezados.
 - Copiar y pegar, o duplicar con `Alt`, nunca copia un grupo; consulta [Copiar y pegar tablas y notas](./table-related-functions.md#copyingpasting-tables-and-memos) y [Añadir y quitar tablas](#adding-and-removing-tables).
 
 ## Editores de solo lectura {#read-only-editors}
@@ -204,9 +212,9 @@ En un editor [`readonly`](../../api/erd-editor-element.md#readonly), los grupos 
 
 - [Ir a un grupo](#going-to-a-group) lo selecciona, y es la única forma de que un grupo quede seleccionado allí. Una pulsación en una barra de título no selecciona nada ni mueve nada: arrastrada, desplaza el lienzo, y un clic sin movimiento quita la selección que dejó un salto.
 - No hay controladores de tamaño ni `x`, y un doble clic en la barra de título no abre el editor de nombre.
-- Un clic derecho en un grupo no abre ningún menú, y el menú de la tabla contiene solo `Table Properties`.
+- Un clic derecho en un grupo o en una nota no abre ningún menú, y el menú de la tabla contiene solo `Table Properties`.
 - El menú del lienzo no tiene `New Table Group`, y la búsqueda rápida no muestra ninguno de los dos comandos de grupo. Un dibujo de `New Table Group` termina cuando el editor pasa a ser de solo lectura.
 - La [barra de herramientas del lienzo](./table-related-functions.md#canvas-toolbar) conserva solo sus controles de vista, así que no tiene botón `New Table Group`, y ni `Alt + G` (Windows/Linux) o `⌥ + G` (Mac) ni `T` y luego `G` hacen nada.
-- Un arrastre de tablas o de un grupo en curso cuando el editor pasa a ser de solo lectura se detiene donde está y no cambia ningún grupo, y un cambio de tamaño de un grupo en curso termina sin cambiar el tamaño.
+- Un arrastre de tablas, notas o un grupo en curso cuando el editor pasa a ser de solo lectura se detiene donde está y no cambia ningún grupo, y un cambio de tamaño de un grupo en curso termina sin cambiar el tamaño.
 - `View Option` → `Table Groups` muestra u oculta los grupos solo en esa pantalla, como hace allí toda opción de vista: el documento, los colaboradores y el historial de deshacer conservan la elección como estaba, y cuando el editor vuelve a ser editable se restablece la elección del documento.
 - La elección `Tables` de la pestaña Esquema SQL sigue funcionando.

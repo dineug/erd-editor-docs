@@ -39,7 +39,7 @@ interface ErdViewerElement extends HTMLElement {
 ```
 
 Import `@dineug/erd-editor/erd-viewer.js` definiuje `<erd-viewer>` i pozostawia `<erd-editor>` niezdefiniowany. Import głównego modułu pakietu nie definiuje żadnego z nich: eksportuje klasę `ErdViewerElement` i `defineErdViewer()`, które definiuje znacznik tam, gdzie je wywołasz, więc strona może też zdefiniować klasę pod własnym znacznikiem – zobacz sekcję [Rejestrowanie elementów](./installation.md#registering-the-elements).  
-Każdy punkt wejścia poza `engine.js` i `peer.js` wymaga drzewa DOM, ten również, więc strona renderowana po stronie serwera importuje go po stronie klienta – zobacz sekcję [Renderowanie po stronie serwera](./installation.md#server-side-rendering).  
+Każdy punkt wejścia opisany na tych stronach poza `engine.js` i `peer.js` wymaga drzewa DOM, ten również, więc strona renderowana po stronie serwera importuje go po stronie klienta – zobacz sekcję [Renderowanie po stronie serwera](./installation.md#server-side-rendering).  
 Import punktu wejścia dodaje `erd-viewer` do `HTMLElementTagNameMap`, więc `document.createElement('erd-viewer')` i `document.querySelector('erd-viewer')` mają typ `ErdViewerElement` bez rzutowania.
 
 Podobnie jak edytor, przeglądarka renderuje się w zamkniętym shadow root, więc `viewer.shadowRoot` ma wartość `null`, a style strony nie przedostają się do środka ani na zewnątrz; stylizuj ją za pomocą [setTheme](#settheme) i właściwości niestandardowych `--erd-editor-*`. Kilka przeglądarek na jednej stronie zachowuje każda własny dokument, widok, motyw i język.  
@@ -52,7 +52,7 @@ Kompilacja dla znacznika script, `dist/erd-viewer.umd.js`, zawiera samą przegl�
 
 ```html
 <erd-viewer src="diagram.erd.json" style="display: block; height: 480px"></erd-viewer>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0/dist/erd-viewer.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.1/dist/erd-viewer.umd.js"></script>
 ```
 
 ## src {#src}

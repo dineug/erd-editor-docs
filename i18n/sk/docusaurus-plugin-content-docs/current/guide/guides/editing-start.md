@@ -55,16 +55,17 @@ Kým je možnosť View Option → `Memos` vypnutá, poznámky sú skryté, polo�
 Poznámka je voľný text na plátne. Kliknite do jej tela a píšte; text sa ukladá spolu s dokumentom.  
 Kláves `Escape` zatvorí editor poznámky, pričom zachová to, čo ste napísali, a poznámku ponechá vybratú, a druhé stlačenie klávesu `Escape` zruší výber.  
 Veľkosť poznámky zmeníte ťahaním jej okraja. Tlačidlo `x` v jej hlavičke, ktoré sa zobrazuje, kým je ukazovateľ nad poznámkou, ju odstráni.  
-Kliknutie pravým tlačidlom na poznámku otvorí namiesto editora jej ponuku s položkami `Color`, `Remove color`, kým má niektorý vybratý objekt farbu, a `Delete`, ktorá sa zobrazí ako `Delete selected`, kým je poznámka jedným z dvoch alebo viacerých vybratých objektov. Vybratá poznámka sa odstraňuje aj klávesmi, ktoré odstraňujú tabuľky – pozrite si časť [Odstraňovanie tabuliek a poznámok](./table-related-functions.md#table-and-memo-deletion).
+Kliknutie pravým tlačidlom na poznámku otvorí namiesto editora jej ponuku s položkami `Color`, `Remove color`, kým má niektorý vybratý objekt farbu, `Group selected tables`, kým výber obsahuje tabuľku a skupiny tabuliek sú zobrazené, `Remove from group`, kým vybratá tabuľka alebo poznámka patrí do skupiny, a `Delete`, ktorá sa zobrazí ako `Delete selected`, kým je poznámka jedným z dvoch alebo viacerých vybratých objektov. Vybratá poznámka sa odstraňuje aj klávesmi, ktoré odstraňujú tabuľky – pozrite si časť [Odstraňovanie tabuliek a poznámok](./table-related-functions.md#table-and-memo-deletion).  
+Podobne ako tabuľka sa aj poznámka pridá do [skupiny tabuliek](./table-groups.md) alebo ju opustí podľa toho, kam ju pustíte. Vyberie ju z nej aj položka `Remove from group` a položka `Group selected tables` ju vloží do novej skupiny spolu s tabuľkami, ktoré sú vybraté s ňou – pozrite si časť [Pridávanie a odstraňovanie tabuliek](./table-groups.md#adding-and-removing-tables).
 
 ![Pridanie poznámky pomocou Alt + M, napísanie textu a zmena jej veľkosti ťahaním okraja](/img/demo-memo.webp)
 
 ## Vytvorenie skupiny tabuliek {#table-group-creation}
 
-Skupina tabuliek je rámec, ktorý obsahuje tabuľky, a môžete jej dať názov a farbu. Vytvorte ju jedným z dvoch spôsobov:
+Skupina tabuliek je rámec, ktorý obsahuje tabuľky a poznámky, a môžete jej dať názov a farbu. Vytvorte ju jedným z dvoch spôsobov:
 
-- Vyberte položku `New Table Group` z kontextovej ponuky alebo z rýchleho vyhľadávania, kliknite na tlačidlo `New Table Group` na [paneli nástrojov plátna](./table-related-functions.md#canvas-toolbar), prípadne stlačte `Alt + G` (Windows/Linux) alebo `⌥ + G` (Mac) a potom ťahaním nakreslite rámec na plátne. Každá tabuľka, ktorej stred leží vnútri rámca, sa pridá do novej skupiny, pokiaľ už nepatrí do inej skupiny – pozrite si časť [Nakreslenie skupiny](./table-groups.md#drawing-a-group).
-- Vyberte tabuľky a z kontextovej ponuky tabuľky vyberte položku `Group selected tables` alebo z rýchleho vyhľadávania položku `Group Selected Tables`, prípadne stlačte `T` a potom `G` – pozrite si časť [Zoskupenie vybratých tabuliek](./table-groups.md#grouping-selected-tables).
+- Vyberte položku `New Table Group` z kontextovej ponuky alebo z rýchleho vyhľadávania, kliknite na tlačidlo `New Table Group` na [paneli nástrojov plátna](./table-related-functions.md#canvas-toolbar), prípadne stlačte `Alt + G` (Windows/Linux) alebo `⌥ + G` (Mac) a potom ťahaním nakreslite rámec na plátne. Každá tabuľka a každá zobrazená poznámka, ktorej stred leží vnútri rámca, sa pridá do novej skupiny, pokiaľ už nepatrí do inej skupiny – pozrite si časť [Nakreslenie skupiny](./table-groups.md#drawing-a-group).
+- Vyberte tabuľky, k nim podľa potreby aj poznámky, a z kontextovej ponuky tabuľky alebo poznámky vyberte položku `Group selected tables` alebo z rýchleho vyhľadávania položku `Group Selected Tables`, prípadne stlačte `T` a potom `G` – pozrite si časť [Zoskupenie vybratých tabuliek](./table-groups.md#grouping-selected-tables).
 
 Pomenovanie, nastavenie farby, presun, zmenu veľkosti a všetko ostatné opisuje stránka [Skupiny tabuliek](./table-groups.md).
 

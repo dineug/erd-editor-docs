@@ -19,7 +19,7 @@ VS Code、Obsidian 和 JetBrains 插件只在编辑改变了 `value` 时才写�
 从 `4.2.0` 起，存储形式还会省略不含任何内容的部分：实体或其 `ui` 中值为 `''` 的每个文本字段（表的 `name`、`comment` 和 `ui.color`，列的 `name`、`comment`、`dataType` 和 `default`，索引的 `name`，备注的 `value` 和 `ui.color`，表分组的 `name` 和 `color`）、不含任何条目的每个 `doc` 列表和集合，以及所有集合都为空时的 `collections` 本身。只含空白的文本按原样写出，但逻辑名除外，此时它会被省略；在 id 之外的值全部为空或只含空白的词根、术语或域也除外，它会被整个省略。每个 id、实体内的每个列表以及每个数字（包括 `0`）仍会写出。`doc` 总会写出，因此新文档的文件包含 `$schema`、`version`、其设置和 `"doc": {}`。  
 与每个 v3 版本一样，解析时会把缺失的文本字段读作 `''`，把缺失的集合读作空集合；而存储形式只在 `doc` 列表所对应的集合不含任何内容时才省略该列表（参见 [Doc](#doc)）。因此，`4.2.0` 之前的编辑器也能打开这些文件，而自行读取文件的程序也必须以同样的方式读取缺失的内容。较早发布版本保存的文件在下次保存后，其空文本、空列表和空集合都会被省略，这一变化只发生一次，此后每次保存的字节都完全相同。
 
-存储形式会把每项锁定的设置按其锁定的值写出（参见 [`lockSettings`](#settings)），只在有脚本包含文本时写出 `settings.ddlScripts`，并且只在表的 `groupId` 指向文件会写出的表分组时写出它。从 `4.2.0` 起，它还只在所写的值不是 `'physical'` 时写出 `settings.nameViewMode`，在可能时以七个条目写出 `settings.columnOrder`（参见 [Settings](#settings)），并且只在表的 `nameDerived` 为 `true` 时写出它。  
+存储形式会把每项锁定的设置按其锁定的值写出（参见 [`lockSettings`](#settings)），只在有脚本包含文本时写出 `settings.ddlScripts`，并且只在表的（从 `5.1.1` 起也包括备注的）`groupId` 指向文件会写出的表分组时写出它。从 `4.2.0` 起，它还只在所写的值不是 `'physical'` 时写出 `settings.nameViewMode`，在可能时以七个条目写出 `settings.columnOrder`（参见 [Settings](#settings)），并且只在表的 `nameDerived` 为 `true` 时写出它。  
 它只在存在表分组时写出 `doc.tableGroupIds` 和 `tableGroupEntities`，只在 `logicalName` 含有空白以外的文本时写出它，只在列的 `domainId` 指向文件会写出的域时写出它，并且只在每个词典含有文件会写出的行时写出该词典。
 
 在 `4.0.0` 之前保存的文件保存的是当时编辑器所持有的完整文档，包括其已删除的实体和每次加载时推算出的内容。加载时会读取它，保留每个表和备注在叠放顺序中的位置（参见 [Doc](#doc)），并重新推算其余内容，下次保存时只会写出存储形式。
@@ -394,6 +394,7 @@ const OrderType = {
 type Memo = {
   id: string;
   value?: string;
+  groupId?: string;
   ui: MemoUI;
 };
 
@@ -407,6 +408,9 @@ type MemoUI = {
 ```
 
 从 `4.0.0` 起，表与备注[共用同一个叠放顺序](../../guide/guides/table-related-functions.md#移动多个表)，因此把表移到最前面可能会让它位于备注之上。加载时会把每个备注放在每个表之上，如 [Doc](#doc) 所述。`4.0.0` 之前保存的文件中的备注会保留其保存的 `zIndex`，该值与表的 `zIndex` 来自同一个计数器，因此较早发布版本绘制在所有表之上的备注，打开时可能会位于在它之后被移到最前面的表之下。
+
+从 `5.1.1` 起，备注带有 `groupId`，即它所属的[表分组](../../guide/guides/table-groups.md)的 id，与表相同。`groupId` 缺失或为空（`5.1.1` 之前保存的每个文件都是如此），或者它所指的分组不在 `doc.tableGroupIds` 中，都表示不属于任何分组；存储形式只在它指向被保留的分组时才写出它。  
+`5.1.1` 之前的编辑器会在加载文档时丢弃每个备注的 `groupId`，因此在其中保存会让每个备注都离开其分组，不过 `4.0.0` 或更高版本的编辑器仍会保留表所属的分组，参见[混用不同版本](./collaborative-editing.md#mixing-releases)。
 
 ### Collection: tableGroupEntities
 
@@ -426,7 +430,7 @@ type TableGroupUI = {
 };
 ```
 
-从 `4.0.0` 起，文档可以包含[表分组](../../guide/guides/table-groups.md)：绘制在表后面、带有名称和颜色的矩形。表通过自身的 `groupId` 加入分组，因此分组不保存成员列表。与 `doc.tableGroupIds` 一样，存储形式只在存在分组时才写出该集合，不带该集合的文档（例如 `4.0.0` 之前保存的文档）没有任何分组。`Show.hideTableGroup` 会隐藏它们。  
+从 `4.0.0` 起，文档可以包含[表分组](../../guide/guides/table-groups.md)：绘制在表和备注后面、带有名称和颜色的矩形。表通过自身的 `groupId` 加入分组，从 `5.1.1` 起备注也是如此，因此分组不保存成员列表。与 `doc.tableGroupIds` 一样，存储形式只在存在分组时才写出该集合，不带该集合的文档（例如 `4.0.0` 之前保存的文档）没有任何分组。`Show.hideTableGroup` 会隐藏它们。  
 `4.0.0` 之前的编辑器会在加载文档时丢弃分组以及每个表的 `groupId`，因此在其中保存会丢失所有分组。
 
 ### 词典行 {#dictionary-rows}
@@ -525,6 +529,8 @@ type Domain = {
 从 `4.0.0` 起，该 schema 只描述存储形式。每个带命名字段的对象都是封闭的（`additionalProperties: false`），存储形式总会写出的每个字段都是必需的，上面类型中标注为 `?` 的每个字段会列出但不是必需的，其他字段则一个都没有列出。因此它会拒绝 `4.0.0` 之前保存的文件（带有 `meta`、宽度、`zIndex`、`ignoreSaveSettings` 等内容），直到 `4.0.0` 或更高版本的编辑器再次保存该文件为止。由 `3.2.0` 或更高版本保存的文件已经写明了此 schema 的 URL，该 URL 指向 `main` 分支，因此按它进行校验的编辑器现在就会将该文件标记出来。`3.0.0` 或 `3.1.0` 保存的文件，以及 v2 文档，都没有写明 `$schema`。
 
 从 `4.2.0` 起，schema 不再要求实体的文本字段、任何 `doc` 列表、任何集合或 `collections` 本身，存储形式会在它们不含任何内容时将其省略。它仍接受 `4.0.0` 或 `4.1.0` 保存的文件。它列出了新字段：`nameViewMode`，只接受 `"logical"` 和 `"both"`；表的 `logicalName` 和 `nameDerived`，后者只接受 `true`；列的 `logicalName` 和 `domainId`；以及三个词典，每个都带有其标题行和由字符串组成的行。`canvasType` 列出了 Dictionary 标签页，`columnOrder` 接受七个或九个整数，`show`、`columnOrder`、`lockSettings` 和 `options` 的描述中列出了新的位。
+
+从 `5.1.1` 起，它还列出了备注的 `groupId`，在 `5.1.1` 之前取得的 schema 副本会拒绝该字段。
 
 ```json
 {
@@ -939,6 +945,10 @@ type Domain = {
           "value": {
             "type": "string"
           },
+          "groupId": {
+            "description": "Id of the table group in doc.tableGroupIds the memo belongs to; absent means none",
+            "type": "string"
+          },
           "ui": {
             "type": "object",
             "properties": {
@@ -967,7 +977,7 @@ type Domain = {
       }
     },
     "tableGroupEntities": {
-      "description": "Named, coloured rectangles drawn behind tables; a table joins one through its groupId. Written while a group exists; absent means none",
+      "description": "Named, coloured rectangles drawn behind tables and memos; a table or a memo joins one through its groupId. Written while a group exists; absent means none",
       "type": "object",
       "additionalProperties": {
         "type": "object",

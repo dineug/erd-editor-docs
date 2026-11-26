@@ -39,7 +39,7 @@ interface ErdViewerElement extends HTMLElement {
 ```
 
 Uvoz `@dineug/erd-editor/erd-viewer.js` definira `<erd-viewer>` in pusti `<erd-editor>` nedefiniran. Uvoz korena paketa ne definira nobenega: izvaža razred `ErdViewerElement` in `defineErdViewer()`, ki definira oznako tam, kjer ga pokličete, zato lahko stran razred definira tudi pod lastno oznako – glejte razdelek [Registracija elementov](./installation.md#registering-the-elements).  
-Vsaka vstopna točka razen `engine.js` in `peer.js` potrebuje DOM, tudi ta, zato stran, upodobljena na strežniku, uvozi to na odjemalcu – glejte razdelek [Upodabljanje na strežniku](./installation.md#server-side-rendering).  
+Vsaka vstopna točka, ki jo te strani opisujejo, razen `engine.js` in `peer.js` potrebuje DOM, tudi ta, zato stran, upodobljena na strežniku, uvozi to na odjemalcu – glejte razdelek [Upodabljanje na strežniku](./installation.md#server-side-rendering).  
 Uvoz vstopne točke doda `erd-viewer` v `HTMLElementTagNameMap`, zato sta `document.createElement('erd-viewer')` in `document.querySelector('erd-viewer')` tipizirana kot `ErdViewerElement` brez pretvorbe.
 
 Tako kot urejevalnik se pregledovalnik upodablja v zaprt senčni koren, zato je `viewer.shadowRoot` enak `null`, slogi strani pa ne uhajajo noter ali ven; oblikujte ga prek [setTheme](#settheme) in lastnih CSS spremenljivk `--erd-editor-*`. Več pregledovalnikov na eni strani ima vsak svoj dokument, pogled, temo in jezik.  
@@ -52,7 +52,7 @@ Izvedba z oznako script, `dist/erd-viewer.umd.js`, vsebuje samo pregledovalnik z
 
 ```html
 <erd-viewer src="diagram.erd.json" style="display: block; height: 480px"></erd-viewer>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0/dist/erd-viewer.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.1/dist/erd-viewer.umd.js"></script>
 ```
 
 ## src {#src}

@@ -1,11 +1,11 @@
 # scenes
 
 **Parent context:** `../AGENTS.md`
-**Generated:** 2026-11-03 · **Updated:** 2026-11-03
+**Generated:** 2026-11-03 · **Updated:** 2026-11-26
 
 ## Purpose
 
-One module per recorded output, 72 scenes (70 clips, 2 stills), plus 7 shared
+One module per recorded output, 73 scenes (71 clips, 2 stills), plus 7 shared
 `_*-helpers.mjs`. `run.mjs` loads every `.mjs` here not starting with `_` and flattens its
 default export, so a file may export an array of scenes. Today each exports one.
 
@@ -14,10 +14,10 @@ default export, so a file may export an array of scenes. Today each exports one.
 | Helper | Provides | Used by |
 |------|----------|---------|
 | `_io-settings-helpers.mjs` | `SHOP_SHOW` (423: the default Show, 431, minus `columnDefault`), `seedShopRing(d, { settings = {}, width = 960, zoom = 0.8 } = {})` (5 shop tables in a ring, top-right cell left free for the minimap), `menuItemBox(d, label)`, `waitMenuItem(d, label, timeout = 3000)`, `labelPoint(box)`, `hoverMenuPath(d, labels, { pause = 380, lastPause = pause } = {})` (walks a submenu path without crossing a sibling row and does not click the last item), `cellBox(d, tableName, columnName, cell)`, `settingsRowBox(d, label)` | `demo-code-generator`, `demo-derive-physical-names`, `demo-display-language`, `demo-domains`, `demo-export`, `demo-import-and-add`, `demo-import-json`, `demo-import-sql`, `demo-name-view`, `demo-relationship-data-type-sync`, `demo-schema-sql-logical-names`, `demo-schema-sql-options`, `demo-settings-comment-width`, `demo-settings-locks`, `demo-table-group-selected`, `still-settings-relationship-data-type-sync` |
-| `_misc-helpers.mjs` | `waitDom(d, selector, { index = 0, timeout = 3000 } = {})`, `menuItemBox(d, label)`, `waitMenuItem(d, label, timeout = 3000)`, `diffTreeRows(d)` (the tree is virtualized since 4.1.0), `toolbarButtonBox(d, title)`, `timeline()`, `glide(d, waypoints, duration = 700)`, `closeButtonBox(d)`, `themeSwatch(d, group, name)`. Its header also names the social card, which does not import it | `demo-dictionary-import`, `demo-diff-viewer`, `demo-display-language`, `demo-explorer`, `demo-logical-names`, `demo-name-view`, `demo-overview`, `demo-settings-column-order`, `demo-settings-comment-width`, `demo-settings-locks`, `demo-table-group`, `demo-table-group-selected`, `demo-theme-builder`, `demo-welcome-screen`, `relationship.mjs` |
+| `_misc-helpers.mjs` | `waitDom(d, selector, { index = 0, timeout = 3000 } = {})`, `menuItemBox(d, label)`, `waitMenuItem(d, label, timeout = 3000)`, `diffTreeRows(d)` (the tree is virtualized since 4.1.0), `toolbarButtonBox(d, title)`, `timeline()`, `glide(d, waypoints, duration = 700)`, `closeButtonBox(d)`, `themeSwatch(d, group, name)`. Its header also names the social card, which does not import it | `demo-dictionary-import`, `demo-diff-viewer`, `demo-display-language`, `demo-explorer`, `demo-logical-names`, `demo-name-view`, `demo-overview`, `demo-settings-column-order`, `demo-settings-comment-width`, `demo-settings-locks`, `demo-table-group`, `demo-table-group-memo`, `demo-table-group-selected`, `demo-theme-builder`, `demo-welcome-screen`, `relationship.mjs` |
 | `_relationship-editing-helpers.mjs` | `SHOW_COMPACT` (`1 \| 4 \| 32 \| 128 \| 256`: the default minus Default and column Comment), `seedShop(d, { settings, ...options })`, `relationshipId(d, parentName, childName)`, `routePoint(d, parentName, childName, fraction = 0.5)`, `hoverPoint(d, parentName, childName, fraction = 0.5)` (3 px off the line, inside its 8 px hit band), `menuItemBox(d, text)`, `curveTo(d, via, to, duration = 800)`, `glideTo(d, to, duration = 800, bend)` | The 8 clips on `relationship-editing.md`, and `demo-explorer` |
 | `_table-editing-b-helpers.mjs` | `nameCell(d, table, column, dx = 34)`, `tableHeader(d, table, dx = 40)`, `columnNames(d, table)`, `installSheet(d, { editorWidth, columns, cells = [], active = [0, 0], headerRow = false })` (narrows `#app` and paints a "Sheet1" grid beside it that copies and pastes TSV through the real clipboard), `sheetCell(d, r, c)`, `sheetData(d)`, `keysAt(d, x)` (centres the keycaps on x) | `demo-column-move`, `demo-column-multi-move`, `demo-column-remove`, `demo-copy-column-multi`, `demo-copy-column-to-sheet`, `demo-copy-sheet-column` |
-| `_table-related-a-helpers.mjs` | `memo(id, value, { x, y, width = 180, height = 90, color = '' })`, `seedShop(d, { tables, memos = [], settings = {}, patch, sql } = {})` (the keys of `tables` become `only`), `memoBox(d, id)`, `grip(box, dx = 70)`, `easeInOut`, `easeOut`, `curveTo(d, ctrl, to, duration = 900, ease = easeInOut)`, `glideTo(d, to, duration, ease = easeInOut)` (holds the wall-clock duration) | `table-color`, `table-copy-paste`, `table-duplicate`, `table-multiple-move`, `table-remove`, `table-select`, `view-options`, `demo-table-group`, `demo-table-group-selected`, `demo-explorer` |
+| `_table-related-a-helpers.mjs` | `memo(id, value, { x, y, width = 180, height = 90, color = '' })`, `seedShop(d, { tables, memos = [], settings = {}, patch, sql } = {})` (the keys of `tables` become `only`), `memoBox(d, id)`, `grip(box, dx = 70)`, `easeInOut`, `easeOut`, `curveTo(d, ctrl, to, duration = 900, ease = easeInOut)`, `glideTo(d, to, duration, ease = easeInOut)` (holds the wall-clock duration) | `table-color`, `table-copy-paste`, `table-duplicate`, `table-multiple-move`, `table-remove`, `table-select`, `view-options`, `demo-table-group`, `demo-table-group-memo`, `demo-table-group-selected`, `demo-explorer` |
 | `_table-related-b-helpers.mjs` | `textBox(d, selector, text, index = 0)`, `waitFor(d, fn, { timeout = 5000, gap = 50 } = {})`, `glide(d, points, duration = 800)`, `settings(d)`, `timer()`, `menuItemBox(d, name)` | `demo-automatic-table-placement`, `demo-canvas-navigation`, `demo-canvas-toolbar`, `demo-database`, `demo-find-and-replace`, `demo-table-properties`, `demo-zoom`, `view-options` |
 | `_vsc-helpers.mjs` | Visualization, search and code generator helpers. DOM: `waitDom` (5000 ms timeout), `clickDom`, `waitMenuItem(d, label, { scope = '', timeout = 4000 } = {})`, `tabSelector(title)`. Graph mode: `graphTables`, `graphDots`, `graphClearPoint`, `graphSafeMoveTo`, `graphRouteMoveTo`, `graphPreviewBox`, `graphDrag`, `graphStepOff`, `watchGraphHovers`, `graphHoverLog`. Canvas: `canvasSafeMoveTo`, `tablePart`. Also `syncPointer(d, x, y)`, `dropStrayColumns(doc)` and `timer()` | `demo-visualization`, `demo-visualization-flow`, `demo-visualization-focus`, `demo-visualization-steps`, `demo-dictionary-import`, `demo-dictionary-editing`, `demo-dictionary-checks`, `demo-derive-physical-names`, `demo-code-generator`, `demo-domains`, `demo-find-and-replace`, `demo-name-view`, `demo-quick-search`, `demo-schema-sql-logical-names`, `demo-schema-sql-options` |
 
@@ -86,13 +86,22 @@ Scenes that deviate from the README skeleton:
 - A comment above `export default` or at the top of the file names the docs section and
   the clip's steps (`memo.mjs`: "Editing Start > Memo Creation: Alt+M, …"). The docs alt
   text narrates the same steps.
-- 66 scenes call `d.shot(label)` at their steps. For seeds, 50 scenes use `shop.sql`, 18
+- 67 scenes call `d.shot(label)` at their steps. For seeds, 51 scenes use `shop.sql`, 18
   only an inline `SQL` string, `demo-visualization` uses `sakila.sql`, and the last three
   keep the empty document (table above).
 - `settings.show` is a bitmask of `Show`, defined in the checkout's
   `packages/erd-editor-schema/src/v3/schema/settings.ts`: `tableComment` 1,
   `columnComment` 2, `columnDataType` 4, `columnDefault` 8, `columnPrimaryKey` 32,
   `columnNotNull` 128, `relationship` 256, and more.
+- Pointer paths stay off what changes the cursor or lights up on the way. A memo is gripped
+  and right-clicked in its header band, below the colour strip along its top (a hand) and clear
+  of its text (an I-beam) and its remove icon, and a path that has to cross the strip does so
+  between two pointer events: `table-remove.mjs` and `demo-table-group-memo.mjs`, whose comments
+  give the points and say to check the frames again after changing one. A menu row is reached
+  down the menu's left padding, left of every row, so no other row lights up and no submenu
+  opens: `view-options.mjs`, `demo-diff-viewer.mjs`, `hoverMenuPath` in
+  `_io-settings-helpers.mjs`, and the local `pickMenuItem` of `demo-table-group-selected.mjs`
+  and `demo-table-group-memo.mjs`.
 
 ## Dependencies
 
@@ -109,7 +118,7 @@ Scenes that deviate from the README skeleton:
   | `guides/table-editing.md` | `demo-table-edit`, `demo-table-tab`, `demo-column-options`, `demo-column-pk`, `demo-column-select`, `demo-column-move`, `demo-column-multi-move`, `demo-column-remove`, `demo-copy-column-multi`, `demo-copy-column-to-sheet`, `demo-copy-sheet-column`, `demo-data-type-autocomplete` |
   | `guides/table-related-functions.md` | `demo-table-select`, `demo-table-multiple-move`, `demo-table-copy-paste`, `demo-table-duplicate`, `demo-table-remove`, `demo-table-color`, `demo-table-properties`, `demo-view-options`, `demo-database`, `demo-zoom`, `demo-canvas-navigation`, `demo-canvas-toolbar`, `demo-automatic-table-placement`, `demo-diff-viewer`, `demo-data-type-autocomplete` |
   | `guides/relationship-editing.md` | `demo-relationship-type`, `demo-relationship-hover`, `demo-relationship-remove`, `demo-relationship-n-m`, `demo-identifying-relationship`, `demo-referential-actions`, `demo-map-columns`, `demo-connector-routing` |
-  | `guides/table-groups.md` | `demo-table-group`, `demo-table-group-selected` |
+  | `guides/table-groups.md` | `demo-table-group`, `demo-table-group-selected`, `demo-table-group-memo` |
   | `guides/logical-names.md` | `demo-logical-names`, `demo-name-view`, `demo-domains` |
   | `guides/dictionary.md` | `demo-dictionary-import`, `demo-dictionary-editing`, `demo-dictionary-checks`, `demo-derive-physical-names` |
   | `guides/schema-sql.md` | `demo-schema-sql-options`, `demo-schema-sql-logical-names` |

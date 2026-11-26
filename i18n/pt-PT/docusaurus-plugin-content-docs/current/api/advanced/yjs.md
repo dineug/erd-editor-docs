@@ -265,6 +265,7 @@ As definições que o seu leitor altera ficam no seu ecrã, como em qualquer edi
 A ligação guarda o diagrama em dois nomes do `Y.Doc`: `erd:snapshot`, um mapa que contém um instantâneo do documento, e `erd:log`, uma matriz dos lotes de ações do editor desde então. Um fornecedor de persistência guarda ambos com o resto do `Y.Doc`.
 
 O instantâneo contém o [runtimeValue](../erd-editor-element.md#runtimevalue) do documento, incluindo as entidades removidas, os seus registos de colaboração e a versão, e até que ponto as edições de cada autor estão compactadas nele. Uma inicialização escreve-o, e cada compactação de um compactador também.  
+Uma inicialização ou uma compactação feita com um `@dineug/erd-editor` anterior à `5.1.1` escreve um instantâneo sem nenhuma nota em nenhum grupo de tabelas — consulte [Misturar versões](./collaborative-editing.md#mixing-releases).  
 Cada entrada do registo é um lote tal como o editor o enviou, com os seus metadados, que transportam o id do editor e a alcunha de quem o enviou.  
 As deslocações, os zooms, as mudanças de separador, a presença e a negociação dos registos nunca são registados. Todas as outras alterações que o editor envia são, incluindo uma mudança de vista de nomes feita sob o seu [bloqueio](../../guide/guides/settings.md#lock), que todos os outros clientes descartam.  
 Uma linguagem do Gerador de código, um formato de nome ou um tipo de delimitador alterado sob o seu bloqueio nunca é enviado, pelo que fica no ecrã desse editor e nunca chega à sala.

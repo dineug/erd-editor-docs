@@ -1,11 +1,11 @@
 ---
 sidebar_position: 4
-description: Alla verktyg som MCP-servern för erd-editor erbjuder – läsning av ett dokument en sida i taget, ordlistornas kontroller, de 67 redigeringsverktygen, erd_batch och hur ett resultat och ett nekande ser ut.
+description: Alla verktyg som MCP-servern för erd-editor erbjuder – läsning av ett dokument en sida i taget, ordlistornas kontroller, SVG-exporten, de 68 redigeringsverktygen, erd_batch och hur ett resultat och ett nekande ser ut.
 ---
 
 # Verktyg
 
-Servern erbjuder 77 verktyg: fem sessionsverktyg, fyra läsverktyg, 67 redigeringsverktyg med ett per redigeringsoperation och `erd_batch`, som kör flera redigeringsverktyg som en enda redigering.
+Servern erbjuder 79 verktyg: fem sessionsverktyg, fyra läsverktyg, `erd_export_svg`, som ritar ett dokument som en SVG-bild, 68 redigeringsverktyg med ett per redigeringsoperation och `erd_batch`, som kör flera redigeringsverktyg som en enda redigering.
 
 Alla verktyg utom `erd_list_documents` tar dokumentets `path` som första argument, och tabellerna nedan utelämnar det.
 Ett argument som är märkt med `?` är valfritt.
@@ -26,14 +26,14 @@ Se [Live och headless](./live-and-headless.md) för vad sparande och ångring g�
 
 | Verktyg | Argument | Vad det gör |
 | --- | --- | --- |
-| `erd_list` | `query?`, `offset?`, `limit?`, `namesOnly?` | Inställningarna och antalen, sedan en sida tabeller med deras index och relationer, varje tabell med sitt id, sin position och storlek på arbetsytan, sitt antal kolumner, sitt logiska namn om den har ett och sin tabellgrupp om den ingår i en. Utom vid sökning följer tabellgrupperna, anteckningarna och därefter domänerna, termerna och orden efter tabellerna. |
-| `erd_get` | `tableIds?`, `tableNames?`, `relationshipIds?`, `indexIds?`, `memoIds?`, `tableGroupIds?`, `wordIds?`, `termIds?`, `domainIds?` | De angivna entiteterna i sin helhet: tabeller med sina kolumner och sin tabellgrupp, relationer med sina kolumner samt `onDelete` och `onUpdate`, index med sina kolumner, anteckningar med sin text, tabellgrupper med sina tabeller samt ord, termer och domäner med alla sina fält. |
+| `erd_list` | `query?`, `offset?`, `limit?`, `namesOnly?` | Inställningarna och antalen, sedan en sida tabeller med deras index och relationer, varje tabell med sitt id, sin position och storlek på arbetsytan, sitt antal kolumner, sitt logiska namn om den har ett och sin tabellgrupp om den ingår i en. Utom vid sökning följer tabellgrupperna, anteckningarna, var och en med sin tabellgrupp om den ingår i en, och därefter domänerna, termerna och orden efter tabellerna. |
+| `erd_get` | `tableIds?`, `tableNames?`, `relationshipIds?`, `indexIds?`, `memoIds?`, `tableGroupIds?`, `wordIds?`, `termIds?`, `domainIds?` | De angivna entiteterna i sin helhet: tabeller med sina kolumner och sin tabellgrupp, relationer med sina kolumner samt `onDelete` och `onUpdate`, index med sina kolumner, anteckningar med sin text och sin tabellgrupp, tabellgrupper med sina tabeller och anteckningar samt ord, termer och domäner med alla sina fält. |
 | `erd_read` | `format`, `vendor?`, `statements?`, `header?`, `logicalNameAsComment?`, `tableIds?`, `tableNames?`, `groupNames?` | Hela dokumentet på en gång i ett av fyra format, eller DDL-koden för bara vissa tabeller eller tabellgrupper. |
 | `erd_list_checks` | `level?`, `tableIds?`, `tableNames?`, `offset?`, `limit?` | Det som ordlistorna med ord, termer och domäner anmärker på, så som bladet `Checks` på fliken Ordlista i editorn listar det, en sida i taget. Verktyget ändrar ingenting – se [Ordlistornas kontroller](#dictionary-checks). |
 
 En agent hittar id:n med `erd_list`, läser kolumner, ordlisterader och andra detaljer med `erd_get` och skickar dessa id:n till redigeringsverktygen.
 En tabells storlek i `erd_list` är den ruta som tabellen tar upp på arbetsytan: höjden exakt, bredden ungefärlig.
-En tabellgrupp listas med den rektangel som den lagrar, tillsammans med sitt namn, sin färg och hur många tabeller den innehåller.
+En tabellgrupp listas med den rektangel som den lagrar, tillsammans med sitt namn, sin färg och hur många tabeller och anteckningar den innehåller.
 Varje relation listas en gång, tillsammans med en av sina två tabeller.
 En ordlisterad listas med sitt id, sitt `name` och det som den ger ett fysiskt namn eller en kolumn: en domäns `dataType`, en terms `physicalName` och `domainId` och ett ords `abbreviation`. Varje ordlista listar sina rader i den ordning som dess blad visar.
 De inställningar som `erd_list` och `erd_read` rapporterar är de som filen sparar – se [Inställningar](#settings).
@@ -45,7 +45,7 @@ Varje kolumn har sitt `domainId`, och det har även varje term: en tom sträng n
 
 | `format` | Vad det svarar med |
 | --- | --- |
-| `snapshot` | Kompakt JSON med varje entitet och dess id, tabellgrupper och raderna med ord, termer och domäner inräknade, samt inställningarna med skripten för Schema SQL. Det utelämnar det som skiljer sig mellan olika betraktare: uppmätta bredder, staplingsordningen, vyn, fliken och namnvisningen. Blir stort för ett stort schema. |
+| `snapshot` | Kompakt JSON med varje entitet och dess id, tabellgrupper med sina tabeller och anteckningar och raderna med ord, termer och domäner inräknade, samt inställningarna med skripten för Schema SQL. Det utelämnar det som skiljer sig mellan olika betraktare: uppmätta bredder, staplingsordningen, vyn, fliken och namnvisningen. Blir stort för ett stort schema. |
 | `sql` | DDL-kod för en av de åtta databaserna `Databricks`, `MariaDB`, `MSSQL`, `MySQL`, `Oracle`, `PostgreSQL`, `Snowflake` eller `SQLite`. Standardvärdet för `vendor` är den databas som dokumentet är inställt på. DDL-koden för hela dokumentet innehåller dess skript före och efter tabellerna. Med `tableIds`, `tableNames` eller `groupNames` bara de tabellerna, med de sekundärnycklar som de innehåller och utan skript. Sekundärnycklar skrivs med sina åtgärder för ON DELETE och ON UPDATE, utom de som måldatabasen utelämnar – se [ON DELETE och ON UPDATE](../guide/guides/relationship-editing.md#on-delete-and-on-update). |
 | `json` | Hela dokumentet exakt som en sparning skriver filen, inklusive redigeringar som editorn ännu inte har sparat – se [Lagringsform](../api/advanced/schema.md#storage-form). |
 | `scripts` | Enbart dokumentets skript före och efter tabellerna, som `{"before":"…","after":"…"}`, vart och ett tomt när det inte är angivet, oavsett hur stort schemat är. |
@@ -103,6 +103,37 @@ Varje kontroll anger sin `level`, sin `code` och `kind` och `id` för sitt objek
 
 Hur varje kontroll läser ett namn beskrivs i [Vad varje kontroll hittar](../guide/guides/dictionary.md#what-each-check-finds).
 
+## SVG-export {#svg-export}
+
+| Verktyg | Argument | Vad det gör |
+| --- | --- | --- |
+| `erd_export_svg` | `output?`, `darkMode?`, `background?` | Ritar dokumentet som en SVG-bild och skriver den till den `.svg`-fil som `output` anger, eller, utan `output`, svarar med SVG-texten. Det ändrar inget dokument. |
+
+Servern ritar bilden själv, så verktyget kräver bara server `1.2.1` eller senare och fungerar med vilken version av tillägget eller pluginet ERD Editor som helst som ansluter.
+Liksom `toImage()` ritar verktyget den bild som dialogrutan `Export image` i editorn sparar som SVG, men utifrån enbart dokumentet: hela diagrammet i 100 %, utan det som View Option döljer i dokumentet, i de förinställda färgerna, med tabeller och kolumner namngivna i den namnvisning som dokumentet har och diagrammets egna ord på engelska – se [Vad den ritar](../api/to-image.md#what-it-draws).
+Servern mäter text utan editorns teckensnitt, så en tabell kan bli något bredare än editorn ritar den.
+Det finns ingen PNG och ingen kopiering till Urklipp.
+
+- `darkMode`: `true` ritar det mörka temat; `false`, som är standard, det ljusa. Inget tema från en editors skärm når bilden.
+- `background`: `true`, som är standard, målar arbetsytans färg bakom diagrammet; `false` lämnar bakgrunden genomskinlig.
+- `output`: filen som ska skrivas, absolut eller relativ till serverns arbetskatalog, med ett namn som slutar på `.svg` oavsett skiftläge, i en mapp som redan finns. En fil som redan finns där ersätts via en temporär fil bredvid den, och en symbolisk länk följs till den fil den leder till.
+
+Exporten läser dokumentet så som läsverktygen gör: det som finns i editorn som betjänar det, ändringar som inte har sparats ännu inräknade, och annars filen. Liksom en läsning öppnar den aldrig dokumentet i en editor.
+Svarets `mode` anger vilket: `live`, `headless` eller, när en editor med hubben avstängd har dokumentet, `blocked`, med en notering om att filen på disken ritades utan de ändringar som inte har sparats ännu i den editorn – se [Live och headless](./live-and-headless.md).
+
+Med `output` är svaret en rad JSON: `mode`, dokumentets `path`, den skrivna `output`, dess storlek i `bytes`, SVG-bildens `width` och `height` samt `notes` när det finns några.
+
+```json
+{"mode":"headless","path":"/work/shop.erd.json","output":"/work/docs/shop.svg","bytes":48213,"width":1210,"height":764}
+```
+
+Utan `output` är svaret SVG-texten, sedan `{"mode":"…"}` med eventuella noteringar. En SVG över 40 000 tecken, det mesta som ett svar returnerar, nekas med `tooLarge`: skicka `output` för att få den skriven till en fil i stället.
+
+`output` kontrolleras innan dokumentet läses, så ett nekat `output` kostar ingen ritning: ett tomt `output`, ett namn som inte slutar på `.svg`, ett `output` som anger en mapp och en länk som inte leder till någon fil eller leder till en fil vars namn inte slutar på `.svg` nekas med `invalidPath`, och en fil i en mapp som inte finns nekas med `notFound`. En skrivskyddad fil nekas med `readonly` när bilden har ritats, och lämnas som den var.
+
+En export skapar inget steg i ångrahistoriken och lämnar inget att spara, och `erd_batch` nekar den, så som den nekar ett läsverktyg.
+Ett stort diagram tar några sekunder att rita, och servern ritar en export i taget.
+
 ## Redigeringsverktyg {#edit-tools}
 
 Id:n kommer från `erd_list` och `erd_get`, eller från `createdIds` i det anrop som skapade entiteten.
@@ -121,7 +152,7 @@ Ett nytt id består av 25 gemena bokstäver och siffror, som `03h17be2plxpj5n59t
 | `erd_change_table_color` | `tableId`, `color` | Anger färgen för en tabell. |
 | `erd_move_table` | `tableId`, `x`, `y` | Flyttar en tabell till en position på arbetsytan. |
 | `erd_move_tables` | `positions` | Flyttar flera tabeller i en redigering, som ett enda `erd_undo` ångrar. `positions` innehåller `{ tableId, x, y }` per tabell, varje tabell högst en gång. |
-| `erd_sort_tables` | | Placerar alla tabeller i rader över arbetsytan, de med färst kolumner först, så som `erd_import_sql`, `erd_import_graphql`, `erd_import_dbml` och `erd_import_aml` placerar dem. Tabellerna i en tabellgrupp hålls samman, och varje grupps ruta anpassas runt dem. |
+| `erd_sort_tables` | | Placerar alla tabeller i rader över arbetsytan, de med färst kolumner först, så som `erd_import_sql`, `erd_import_graphql`, `erd_import_dbml` och `erd_import_aml` placerar dem. Tabellerna i en tabellgrupp hålls samman, följda av dess anteckningar medan anteckningar visas, och varje grupps ruta anpassas runt dem. Medan anteckningar är dolda flyttas en grupps anteckningar med dess tabeller. En anteckning utan grupp, eller i en grupp som inte innehåller någon tabell, stannar där den är. |
 
 ### Kolumner {#columns}
 
@@ -190,28 +221,33 @@ Id:t för en indexkolumn är en post i den kolumnlista för indexet som `erd_get
 | `erd_move_memo` | `memoId`, `x`, `y` | Flyttar en anteckning till en position på arbetsytan. |
 | `erd_resize_memo` | `memoId`, `width`, `height` | Ändrar storlek på en anteckning. Bredden måste vara minst ungefär `116` pixlar och höjden minst `100`. Verktyget skapar inget steg i ångrahistoriken, eftersom editorn bara registrerar en storleksändring av en anteckning när den görs genom att dra. |
 
+En anteckning kan ingå i en tabellgrupp, som den flyttas med – se [Tabellgrupper](#table-groups).
+
 När anteckningar är dolda med [View Option](../guide/guides/table-related-functions.md#table-view-options) → `Memos` lägger `erd_add_memo` ändå till en, och den förblir dold tills anteckningar visas igen.
 `erd_list` och `erd_get` listar även dolda anteckningar.
 
 ### Tabellgrupper {#table-groups}
 
-En tabellgrupp är en namngiven ruta som ritas bakom gruppens tabeller, och dess färg syns på rutan och tvärs över tabellhuvudena i gruppens tabeller – se [Tabellgrupper](../guide/guides/table-groups.md).
-En tabell ingår i högst en grupp. `erd_move_table`, `erd_move_tables` och `erd_move_table_group` ändrar aldrig vilka tabeller en grupp innehåller, var de än placerar en tabell, medan en tabell i editorn går med i eller lämnar en grupp där den släpps – se [Lägga till och ta bort tabeller](../guide/guides/table-groups.md#adding-and-removing-tables). `erd_add_table_group` och `erd_set_table_group` lägger tabeller i en grupp, och `erd_remove_table_group` lämnar dess tabeller utan grupp.
-En grupp lagrar en rektangel, minst `160` pixlar bred och `100` hög, namnlisten inräknad, och editorn ritar rutan förstorad så att den rymmer var och en av gruppens tabeller.
+En tabellgrupp är en namngiven ruta som ritas bakom gruppens tabeller och anteckningar, och dess färg syns på rutan och tvärs över huvudena i gruppens tabeller och anteckningar – se [Tabellgrupper](../guide/guides/table-groups.md).
+En tabell eller anteckning ingår i högst en grupp. `erd_move_table`, `erd_move_tables`, `erd_move_memo` och `erd_move_table_group` ändrar aldrig vad en grupp innehåller, var de än placerar en tabell eller en anteckning, medan en tabell eller anteckning i editorn går med i eller lämnar en grupp där den släpps – se [Lägga till och ta bort tabeller](../guide/guides/table-groups.md#adding-and-removing-tables). `erd_add_table_group` lägger tabeller och anteckningar i en grupp, `erd_set_table_group` tabeller och `erd_set_memo_group` anteckningar, och `erd_remove_table_group` lämnar dess tabeller och anteckningar utan grupp.
+En grupp lagrar en rektangel, minst `160` pixlar bred och `100` hög, namnlisten inräknad, och editorn ritar rutan förstorad så att den rymmer var och en av gruppens tabeller och, medan anteckningar visas, var och en av dess anteckningar.
 
 | Verktyg | Argument | Vad det gör |
 | --- | --- | --- |
-| `erd_add_table_group` | `name`, `color?`, `x?`, `y?`, `width?`, `height?`, `tableIds?` | Lägger till en grupp och returnerar dess id i `createdIds`. Skicka antingen `tableIds` eller en rektangel, `x`, `y`, `width` och `height` tillsammans. Med `tableIds` lämnar varje tabell den grupp den eventuellt låg i, och rektangeln anpassas runt tabellerna så som [Gruppera markerade tabeller](../guide/guides/table-groups.md#grouping-selected-tables) anpassar den. En rektangel tar in varje tabell utan grupp vars mittpunkt ligger inom den, så som [att rita en grupp](../guide/guides/table-groups.md#drawing-a-group) gör. Ett tomt `name` lämnar gruppen namnlös. Ett enda `erd_undo` tar bort gruppen och lägger tillbaka varje tabell i den grupp den låg i. |
-| `erd_remove_table_group` | `groupId` | Tar bort en grupp. Dess tabeller stannar där de är, utan grupp. |
+| `erd_add_table_group` | `name`, `color?`, `x?`, `y?`, `width?`, `height?`, `tableIds?`, `memoIds?` | Lägger till en grupp och returnerar dess id i `createdIds`. Skicka antingen `tableIds`, med eventuella `memoIds` bredvid, eller en rektangel, `x`, `y`, `width` och `height` tillsammans. Med `tableIds` lämnar varje tabell och anteckning den grupp den eventuellt låg i, och rektangeln anpassas runt dem, runt anteckningarna bara medan anteckningar visas, så som [Gruppera markerade tabeller](../guide/guides/table-groups.md#grouping-selected-tables) anpassar den. En rektangel tar in varje tabell och varje synlig anteckning utan grupp vars mittpunkt ligger inom den, så som [att rita en grupp](../guide/guides/table-groups.md#drawing-a-group) gör. Ett tomt `name` lämnar gruppen namnlös. Ett enda `erd_undo` tar bort gruppen och lägger tillbaka varje tabell och anteckning i den grupp den låg i. |
+| `erd_remove_table_group` | `groupId` | Tar bort en grupp. Dess tabeller och anteckningar stannar där de är, utan grupp. |
 | `erd_change_table_group_name` | `groupId`, `value` | Byter namn på en grupp. En tom sträng gör den namnlös. |
 | `erd_change_table_group_color` | `groupId`, `color` | Anger färgen för en grupp. |
-| `erd_move_table_group` | `groupId`, `x`, `y` | Flyttar en grupp så att dess rektangel börjar i den punkten, med tabellerna förskjutna lika långt, så som att dra i gruppens namnlist gör. En förflyttning under 20 pixlar, vågrätt och lodrätt sammanlagt, skapar inget steg i ångrahistoriken. Sedan server `1.2.0` når flytten editorn som de punkter som gruppen och dess tabeller slutar på, så med VS Code-tillägget `4.3.0` eller senare eller Obsidian- eller JetBrains-pluginet `1.3.0` eller senare slutar en flytt av gruppen eller av en av dess tabeller som görs där samtidigt på en av de två positionerna, aldrig på deras summa – se [Redigeringar som görs samtidigt](./live-and-headless.md#edits-made-at-the-same-moment). |
-| `erd_resize_table_group` | `groupId`, `x?`, `y?`, `width`, `height` | Anger rektangeln för en grupp, medan dess tabeller stannar där de är. Utelämnas `x` och `y` behålls hörnet. En rektangel som inte skulle rymma gruppens tabeller med deras utfyllnad nekas, med ett meddelande som anger den ruta den måste rymma. |
+| `erd_move_table_group` | `groupId`, `x`, `y` | Flyttar en grupp så att dess rektangel börjar i den punkten, med tabellerna och anteckningarna, dolda anteckningar inräknade, förskjutna lika långt, så som att dra i gruppens namnlist gör. En förflyttning under 20 pixlar, vågrätt och lodrätt sammanlagt, skapar inget steg i ångrahistoriken. Sedan server `1.2.0` når flytten editorn som de punkter som gruppen och dess tabeller slutar på, så med VS Code-tillägget `4.3.0` eller senare eller Obsidian- eller JetBrains-pluginet `1.3.0` eller senare slutar en flytt av gruppen eller av en av dess tabeller som görs där samtidigt på en av de två positionerna, aldrig på deras summa – se [Redigeringar som görs samtidigt](./live-and-headless.md#edits-made-at-the-same-moment). Sedan server `1.2.1` går de punkter som dess anteckningar slutar på med i samma batch. |
+| `erd_resize_table_group` | `groupId`, `x?`, `y?`, `width`, `height` | Anger rektangeln för en grupp, medan dess tabeller och anteckningar stannar där de är. Utelämnas `x` och `y` behålls hörnet. En rektangel som inte skulle rymma gruppens tabeller och synliga anteckningar med deras utfyllnad nekas, med ett meddelande som anger den ruta den måste rymma. |
 | `erd_set_table_group` | `tableIds`, `groupId` | Lägger tabeller i en grupp, där var och en lämnar den grupp den eventuellt låg i. Ett `groupId` som är `null` eller en tom sträng tar ut dem ur alla grupper. |
+| `erd_set_memo_group` | `memoIds`, `groupId` | Lägger anteckningar i en grupp, där var och en lämnar den grupp den eventuellt låg i och stannar där den är. Ett `groupId` som är `null` eller en tom sträng tar ut dem ur alla grupper. |
 
 När grupper är dolda med `View Option` → `Table Groups` lägger de här verktygen ändå till och ändrar grupper, som förblir dolda tills grupper visas – se [Dölja grupper](../guide/guides/table-groups.md#hiding-groups).
-`erd_sort_tables` håller samman varje grupps tabeller, `erd_import_dbml` och `erd_import_json` tar med grupper – se [Import](#import) – och `erd_read` skriver DDL-koden för valda grupper med `groupNames`.
+Anteckningar som är dolda med View Option → `Memos` stannar kvar i sina grupper och flyttas med dem, och `erd_set_memo_group` och `memoIds` i `erd_add_table_group` lägger dem i en grupp precis som synliga anteckningar.
+`erd_sort_tables` håller samman varje grupps tabeller och anteckningar, `erd_import_dbml` och `erd_import_json` tar med grupper – se [Import](#import) – och `erd_read` skriver DDL-koden för valda grupper med `groupNames`.
 En version av ERD Editor som kom före tabellgrupperna tar bort en fils grupper när den sparar filen, så som VS Code-tillägget före `4.0.0` och Obsidian- och JetBrains-pluginen före `1.0.0` gör – se [Uppdatera](./installation.md#updating).
+En version som kom innan anteckningar kunde ingå i tabellgrupper, VS Code-tillägget före `4.3.1` och Obsidian- och JetBrains-pluginen före `1.3.1`, varken visar eller behåller vilken grupp en anteckning ingår i, så den sparar filen med varje anteckning utan grupp, och det gör även en server före `1.2.1` som skriver filen på disken – se [Uppdatera](./installation.md#updating).
 
 ### Ordlistor {#dictionaries}
 
@@ -304,14 +340,14 @@ I en editor med VS Code-tillägget `4.3.0` eller senare eller Obsidian- eller Je
 - Relationer och index kommer bara in mellan de tabeller som importen tar med, så en sekundärnyckel till en tabell som texten inte deklarerar faller bort.
 - `erd_import_sql`, `erd_import_graphql` och `erd_import_aml` lägger till tabeller med deras relationer och index, och `erd_import_dbml` även dess tabellgrupper. `erd_import_json` lägger till tabeller, relationer, index, anteckningar och tabellgrupper, aldrig dess inställningar, och nekar en tom text. Dess tabeller och kolumner tar med sina logiska namn, men ingen kolumn kopplas till en domän, och inga av JSON-dokumentets ord, termer eller domäner kommer in.
 
-Ett JSON-dokument behåller sin egen layout, tabellgrupperna inräknade: där det placerar sina tabeller med `replace` och inuti det tillagda blocket med `append`.
+Ett JSON-dokument behåller sin egen layout, tabellgrupperna inräknade, med de tabeller och anteckningar som var och en innehåller: där det placerar sina tabeller med `replace` och inuti det tillagda blocket med `append`.
 Tabellerna från SQL, GraphQL, DBML och AML placeras i rader, de med färst kolumner först och varje grupps tabeller samlade, så som `erd_sort_tables` placerar dem, aldrig med `Flow` så som editorns egen import lägger ut dem när den kan. De fyra verktygen nekar en tom text i båda lägena.
 
 ## erd_batch {#erd_batch}
 
 `erd_batch` kör flera redigeringsverktyg i ordning som en enda redigering, allt eller inget.
 
-- `operations` innehåller upp till 100 poster, var och en `{ tool, as?, args? }`, där `tool` är ett redigeringsverktyg och `args` är verktygets argument utan `path`. Ett läsverktyg, som `erd_list_checks`, nekas.
+- `operations` innehåller upp till 100 poster, var och en `{ tool, as?, args? }`, där `tool` är ett redigeringsverktyg och `args` är verktygets argument utan `path`. Ett läsverktyg, som `erd_list_checks`, nekas, och det gör även `erd_export_svg`.
 - Operationerna prövas först på en kopia av dokumentet. En nekad operation nämns, som `operations[1] erd_remove_table: …`, och ingenting tillämpas.
 - Ett enda `erd_undo` ångrar hela batchen, utom de operationer som det inte kan ångra, vilka `undoNote` i resultatet nämner: operationer med ett verktyg som inte skapar något steg i ångrahistoriken, som `erd_set_database`, och operationer som ändrade dokumentet utan att skapa något, som en kort förflyttning med `erd_move_table_group`. En batch som inte skapade något steg i ångrahistoriken alls hoppas över av `erd_undo`. `historyEntries` i resultatet räknar stegen i editorns historik inuti batchen, inte anrop till `erd_undo`.
 - I en live-session tar editorn emot hela batchen eller ingenting av den.
@@ -391,21 +427,21 @@ Ett nekande är ett felresultat med en kod och ett meddelande som säger vad du 
 
 | `code` | Orsak |
 | --- | --- |
-| `notFound` | Ett id pekar inte på något befintligt, eller så finns filen inte. |
+| `notFound` | Ett id pekar inte på något befintligt, filen finns inte eller mappen för `output` i `erd_export_svg` finns inte. |
 | `invalidArgs` | Ett argument saknas eller har fel värde. |
-| `invalidPath` | Sökvägen är inte ett ERD-dokument. I Windows även en sökväg med ett namn som Windows inte lagrar så som det är skrivet, eller en sökväg som leder till ett dokument som en editor har under en annan sökväg, som meddelandet anger. |
+| `invalidPath` | Sökvägen är inte ett ERD-dokument, eller `output` i `erd_export_svg` är inte en `.svg`-fil – se [SVG-export](#svg-export). I Windows även en sökväg med ett namn som Windows inte lagrar så som det är skrivet, eller en sökväg som leder till ett dokument som en editor har under en annan sökväg, som meddelandet anger. |
 | `invalidDocument` | Filen är inte ett dokument som editorn kan läsa. |
-| `tooLarge` | En läsning ryms inte i ett svar. |
+| `tooLarge` | En läsning, eller en SVG som begärs utan `output`, ryms inte i ett svar. |
 | `blocked` | En editor med hubben avstängd har dokumentet. Meddelandet anger hur du slår på den: i VS Code litar du på arbetsområdet och slår på `dineug.erd-editor.agentHub.enabled`, eller läser in fönstret igen; i Obsidian slår du på Coding agents, eller läser in Obsidian igen; i en JetBrains-IDE slår du på Coding agents, eller startar om IDE:n om inställningen är på. |
 | `hubDisabled` | En JetBrains-IDE har dokumentet bara i ett projekt som den inte litar på. Läsningar fungerar fortfarande; lita på projektet för att låta agenten redigera. |
 | `conflict` | Filen ändrades på disken under anropet. Ingenting skrevs. |
 | `hubAppeared`, `hubGone` | En editor började betjäna ett dokument som agenten redigerade på disken, eller så körs editorn som betjänade det fortfarande men dess låsfil och anslutning är borta. Ingenting skrevs. |
 | `notSaved` | `erd_save` kunde inte spara editorns dokument. |
-| `readonly` | Editorn har dokumentet skrivskyddat, till exempel en fil som den inte kan skriva till eller inte kan läsa som ett diagram. Utan editor är själva filen skrivskyddad, till exempel en Perforce- eller TFVC-fil som inte är utcheckad. Ingenting skrevs. |
+| `readonly` | Editorn har dokumentet skrivskyddat, till exempel en fil som den inte kan skriva till eller inte kan läsa som ett diagram. Utan editor är själva filen skrivskyddad, till exempel en Perforce- eller TFVC-fil som inte är utcheckad. Med `erd_export_svg` är den `.svg`-fil som dess `output` anger skrivskyddad. Ingenting skrevs. |
 | `protocolMismatch` | Tillägget eller pluginet ERD Editor i editorn och servern använder olika protokollversioner, till exempel servern i version `1.0.0` eller senare med ett VS Code-tillägg i version `3.x`. Även läsningar nekas, och meddelandet anger vilken sida som ska uppdateras – se [Uppdatera](./installation.md#updating). |
 | `hubUnreachable`, `timeout`, `disconnected` | En editors hubb tog inte emot anslutningen, svarade inte inom 30 sekunder eller kopplade ned under anropet. I Windows betyder `hubUnreachable` också att Windows höll agenten borta från hubben: editorn körs med fler behörigheter än agenten, som när editorn startades som administratör men inte agenten, eller så körs agenten i en sandlåda. |
 
 Andra koder är ovanligare, och varje nekande har ett meddelande som säger vad som hände.
 
-Redigeringsverktygen, `erd_batch` och de fyra läsverktygen nekar ett argument som de inte deklarerar, eller ett av fel typ, med ett JSON-RPC-fel av typen invalid params (`-32602`) innan de rör dokumentet, så ett felstavat argument ignoreras aldrig i tysthet.
+Redigeringsverktygen, `erd_batch`, de fyra läsverktygen och `erd_export_svg` nekar ett argument som de inte deklarerar, eller ett av fel typ, med ett JSON-RPC-fel av typen invalid params (`-32602`) innan de rör dokumentet, så ett felstavat argument ignoreras aldrig i tysthet.
 De fem sessionsverktygen ignorerar argument som de inte känner till.

@@ -51,7 +51,7 @@ Tabele in stolpci iz datoteke JSON ohranijo svoja logična imena, vsako fizično
 Tabela z imenom, ki ga diagram že ima, se doda kot druga tabela s tem imenom in se z obstoječo ne združi. Relacije in indeksi prihajajo samo iz datoteke, zato tuji ključ na tabelo, ki je datoteka ne določa, ni povezan s tabelo, ki je že v diagramu.
 
 Dodani blok pristane tik pod vsem, kar vsebuje diagram, poravnan z njegovim levim robom, v praznem diagramu pa v zgornjem levem kotu. Upoštevajo se tudi beležke in skupine tabel, skrite z [možnostmi pogleda](./table-related-functions.md#table-view-options), saj so še vedno na svojem mestu.  
-Znotraj bloka datoteka JSON ohrani lastno razporeditev, vključno s skupinami tabel. Drugi formati se razporedijo tako, kot jih razporedi ukaz `Import`, s postavitvijo `Flow` ali v vrstice po enakih pravilih, okvir vsake skupine tabel pa se prilagodi njenim tabelam. Dodane tabele in beležke se postavijo v ospredje, nad vse, kar je že tam.
+Znotraj bloka datoteka JSON ohrani lastno razporeditev, vključno s skupinami tabel, beležka v eni od njih pa pristane v novi kopiji te skupine. Drugi formati se razporedijo tako, kot jih razporedi ukaz `Import`, s postavitvijo `Flow` ali v vrstice po enakih pravilih, okvir vsake skupine tabel pa se prilagodi njenim tabelam. Dodane tabele in beležke se postavijo v ospredje, nad vse, kar je že tam.
 
 Ko blok pristane, je izbrano samo dodano: nove tabele ter nove beležke in skupine tabel, če so prikazane. Če ste se medtem premaknili na drug zavihek, urejevalnik preklopi nazaj na zavihek ERD, preden blok pristane. Pogled se nato pri trenutni povečavi pomakne do bloka, razen če je ta že dobro viden – glejte razdelek [Kam pripelje skok](./table-related-functions.md#where-a-jump-lands). Ena razveljavitev prekliče celotno dodajanje.  
 Datoteka, ki je razčlenjevalnik ne more prebrati, ali datoteka, ki nima ne tabele ne beležke, ne doda ničesar.
@@ -205,7 +205,7 @@ Ime datoteke se mora končati s končnico `.aml`.
 
 GraphQL, DBML in AML so formati za izmenjavo v obe smeri: vsak je tudi cilj [generatorja kode](./code-generator.md).  
 DBML in AML prenašata ON DELETE in ON UPDATE vsake relacije v obe smeri – glejte stran [Generator kode](./code-generator.md#on-delete-and-on-update). GraphQL ne prenaša nobenega od njiju, zato sta po uvozu GraphQL obe nastavitvi `Not set`.  
-DBML v obe smeri prenaša tudi barve tabel, brez morebitne prosojnosti, in vsako skupino tabel, ki vsebuje vsaj eno tabelo. Skupina brez imena se vrne kot `group_1`, `group_2` in tako naprej, ponovljeno ime skupine pa se vrne z dodanim `_2`, `_3` in tako naprej. AML prenaša barvo tabele samo kot najbližje od svojih imen barv, zato se `#FF8800` zapiše kot `orange` in vrne kot `#f97316`, skupin pa ne prenaša. GraphQL ne prenaša ne barv ne skupin.  
+DBML v obe smeri prenaša tudi barve tabel, brez morebitne prosojnosti, in vsako skupino tabel, ki vsebuje vsaj eno tabelo, z njenimi tabelami, a ne z njenimi beležkami – glejte razdelek [Uvoz, izvoz in kopiranje](./table-groups.md#import-export-and-copying). Skupina brez imena se vrne kot `group_1`, `group_2` in tako naprej, ponovljeno ime skupine pa se vrne z dodanim `_2`, `_3` in tako naprej. AML prenaša barvo tabele samo kot najbližje od svojih imen barv, zato se `#FF8800` zapiše kot `orange` in vrne kot `#f97316`, skupin pa ne prenaša. GraphQL ne prenaša ne barv ne skupin.  
 Nobeden od teh treh formatov ne prenaša logičnih imen, povezav z domenami ali slovarjev, v nobeno smer: generator kode zapiše fizično ime in podatkovni tip vsake tabele in stolpca, nikoli logičnega imena ali domene.
 
 ## Izvoz {#exporting}
@@ -254,3 +254,5 @@ Slika se izriše v procesu v ozadju, če ga gostitelj poganja, tako da je urejev
 
 Ko se pogovorno okno odpre, ima fokus gumb `PNG`, tipka `Tab` pa ostane znotraj okna. Tipka `Escape`, gumb `x` ali klik na zatemnjeno območje okoli okna ga zapre.  
 Dokler je okno odprto, bližnjice platna, vključno z razveljavitvijo in uveljavitvijo, ter kopiranje in lepljenje ne naredijo ničesar. `Ctrl + K` (Windows/Linux) ali `⌘ + K` (Mac) ga zapre in odpre hitro iskanje. `Ctrl + F` (Windows/Linux) ali `⌘ + F` (Mac) ga zapre in postavi kazalko v iskalno polje [raziskovalca](./explorer.md#opening-and-closing), pri čemer raziskovalec odpre, če je zaprt, nikoli pa ga ne zapre. V urejevalniku, ki je preozek za prikaz raziskovalca, bližnjica pogovorno okno vseeno zapre, vendar namesto premika kazalke prikaže pojavno obvestilo.
+
+Agent za kodiranje nariše diagram kot sliko SVG z orodjem `erd_export_svg`, in sicer iz dokumenta, ne iz vašega zaslona – glejte razdelek [Izvoz SVG](../../mcp/tools.md#svg-export).

@@ -55,16 +55,17 @@ View Option → `Memos` kapalıyken notlar gizlidir, `New Memo` öğesi hiçbir 
 Not, tuval üzerindeki serbest metinli bir yazıdır. Gövdesine tıklayın ve yazın; metin belgeyle birlikte kaydedilir.  
 `Escape` tuşu, yazdıklarınızı koruyup notu seçili bırakarak not düzenleyicisini kapatır, `Escape` tuşuna ikinci kez basmak ise seçimi temizler.  
 Yeniden boyutlandırmak için notun kenarlığını sürükleyin. İşaretçi notun üzerindeyken başlığında gösterilen `x` notu siler.  
-Bir nota sağ tıklamak not düzenleyicisini değil notun menüsünü açar: `Color`, seçili bir öğenin rengi olduğu sürece `Remove color` ve `Delete`; not seçili iki ya da daha fazla öğeden biri olduğu sürece bu satırda `Delete selected` yazar. Seçili bir not, tabloları silen tuşlarla da silinir. [Tablo ve not silme](./table-related-functions.md#table-and-memo-deletion) bölümüne bakın.
+Bir nota sağ tıklamak not düzenleyicisini değil notun menüsünü açar: `Color`, seçili bir öğenin rengi olduğu sürece `Remove color`, seçimde bir tablo bulunduğu ve tablo grupları gösterildiği sürece `Group selected tables`, seçili bir tablo veya not bir grupta olduğu sürece `Remove from group` ve `Delete`; not seçili iki ya da daha fazla öğeden biri olduğu sürece bu satırda `Delete selected` yazar. Seçili bir not, tabloları silen tuşlarla da silinir. [Tablo ve not silme](./table-related-functions.md#table-and-memo-deletion) bölümüne bakın.  
+Bir tablo gibi bir not da bıraktığınız yerde bir [tablo grubuna](./table-groups.md) katılır veya gruptan ayrılır. `Remove from group` öğesi de onu gruptan çıkarır, `Group selected tables` öğesi ise onu yanında seçili tablolarla birlikte yeni bir gruba koyar. [Tablo ekleme ve çıkarma](./table-groups.md#adding-and-removing-tables) bölümüne bakın.
 
 ![Alt + M ile not ekleme, bir metin yazma ve notu yeniden boyutlandırmak için kenarlığını sürükleme](/img/demo-memo.webp)
 
 ## Tablo grubu oluşturma {#table-group-creation}
 
-Tablo grubu, tabloları tutan ve ad ile renk verebileceğiniz bir kutudur. İki yoldan biriyle bir grup oluşturun:
+Tablo grubu, tabloları ve notları tutan ve ad ile renk verebileceğiniz bir kutudur. İki yoldan biriyle bir grup oluşturun:
 
-- Bağlam menüsünden veya Hızlı aramadan `New Table Group` öğesini seçin, [tuval araç çubuğundaki](./table-related-functions.md#canvas-toolbar) `New Table Group` düğmesine tıklayın ya da `Alt + G` (Windows/Linux) veya `⌥ + G` (Mac) tuşlarına basın, ardından tuval üzerinde bir kutu sürükleyin. Merkezi kutunun içinde kalan her tablo, zaten başka bir grupta değilse yeni gruba katılır. [Grup çizme](./table-groups.md#drawing-a-group) bölümüne bakın.
-- Tabloları seçin ve bir tablonun bağlam menüsünden `Group selected tables` öğesini ya da Hızlı aramadan `Group Selected Tables` öğesini seçin veya `T`, ardından `G` tuşuna basın. [Seçili tabloları gruplama](./table-groups.md#grouping-selected-tables) bölümüne bakın.
+- Bağlam menüsünden veya Hızlı aramadan `New Table Group` öğesini seçin, [tuval araç çubuğundaki](./table-related-functions.md#canvas-toolbar) `New Table Group` düğmesine tıklayın ya da `Alt + G` (Windows/Linux) veya `⌥ + G` (Mac) tuşlarına basın, ardından tuval üzerinde bir kutu sürükleyin. Merkezi kutunun içinde kalan her tablo ve gösterilen her not, zaten başka bir grupta değilse yeni gruba katılır. [Grup çizme](./table-groups.md#drawing-a-group) bölümüne bakın.
+- Tabloları ve onlarla birlikte gruplanacak notları seçin ve bir tablonun veya notun bağlam menüsünden `Group selected tables` öğesini ya da Hızlı aramadan `Group Selected Tables` öğesini seçin veya `T`, ardından `G` tuşuna basın. [Seçili tabloları gruplama](./table-groups.md#grouping-selected-tables) bölümüne bakın.
 
 Adlandırma, renklendirme, taşıma, yeniden boyutlandırma ve geri kalan her şey [Tablo grupları](./table-groups.md) sayfasında anlatılır.
 

@@ -265,6 +265,7 @@ Okuyucusunun değiştirdiği ayarlar, her salt okunur düzenleyicide olduğu gib
 Bağlama diyagramı `Y.Doc`'un iki adında tutar: belgenin anlık görüntüsünü tutan bir eşleme olan `erd:snapshot` ve bundan sonraki düzenleyici eylem paketlerinin bir dizisi olan `erd:log`. Kalıcı depolama sağlayıcısı her ikisini de `Y.Doc`'un geri kalanıyla birlikte saklar.
 
 Anlık görüntü belgenin [runtimeValue](../erd-editor-element.md#runtimevalue) değerini, kaldırılan varlıklar dahil, ortak çalışma kayıtlarını ve sürümünü ve her yazanın düzenlemelerinin ona ne kadar katlandığını tutar. Bir başlatma bunu yazar ve bir sıkıştırıcının her katlaması da yazar.  
+`5.1.1` sürümünden önceki bir `@dineug/erd-editor` ile yapılan bir başlatma veya katlama, hiçbir notu hiçbir tablo grubunda olmayan bir anlık görüntü yazar. [Sürümleri karıştırma](./collaborative-editing.md#mixing-releases) bölümüne bakın.  
 Her günlük girdisi, düzenleyicinin gönderdiği hâliyle bir pakettir ve göndericinin düzenleyici kimliğini ve takma adını taşıyan meta verisi de dahildir.  
 Kaydırmalar, yakınlaştırmalar, sekme geçişleri, anlık durum bilgisi ve kayıt el sıkışması asla günlüğe yazılmaz. Düzenleyicinin gönderdiği diğer her değişiklik yazılır; [kilidi](../../guide/guides/settings.md#lock) altında yapılan ve diğer her istemcinin attığı bir Ad görünümü geçişi de bunların arasındadır.  
 Kilidi altında değiştirilen bir Kod oluşturucu dili, ad biçimi veya tırnak türü asla gönderilmez, bu yüzden yalnızca o düzenleyicinin ekranında kalır ve odaya asla ulaşmaz.

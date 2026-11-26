@@ -14,7 +14,7 @@ description: MCP 服务器如何在编辑器（VS Code、Obsidian 或 JetBrains 
 | --- | --- |
 | 某个编辑器的工作区、仓库或已打开的项目包含该文档，或者该编辑器已打开该文档 | **实时模式。** 必要时在 ERD Editor 中打开文档，加入编辑会话，并在那里应用变更。编辑会立即显示，并像编辑器保存你自己的编辑那样被保存，参见[保存](#saving)。 |
 | 没有编辑器 | **无头模式。** 加载文件、应用变更，并在应答之前替换该文件，因此结果中会注明 `saved: true`，`erd_save` 无事可做。 |
-| hub 已关闭的编辑器 | **拒绝编辑。** 仍可从磁盘读取。绕过打开的编辑器写入文件的变更可能会在其下次保存时被覆盖，因此服务器不写入任何内容。 |
+| hub 已关闭的编辑器 | **拒绝编辑。** 读取和 `erd_export_svg` 仍可从磁盘进行。绕过打开的编辑器写入文件的变更可能会在其下次保存时被覆盖，因此服务器不向该文档写入任何内容。 |
 | hub 已开启、但所用协议与服务器不同的编辑器：对于服务器 `1.0.0` 或更高版本，即 VS Code 扩展 `3.x`、Obsidian 插件 `0.x`，或者 JetBrains 插件 `0.9.0` 或 `0.10.0`；对于 `1.0.0` 之前的服务器，即扩展 `4.0.0` 或更高版本，或者插件 `1.0.0` 或更高版本 | **拒绝编辑**，读取也不例外，以 `protocolMismatch` 被拒绝。消息会指出需要更新的一方：扩展或插件，或者服务器，参见[更新](./installation.md#更新)。 |
 | 在 Windows 上，以同一文件的另一条路径持有该文档的编辑器：智能体通过本机的网络共享或映射驱动器指定该文档（例如 `\\localhost\C$\…`），而编辑器以其驱动器路径持有它，或者反过来 | **拒绝编辑**，读取也不例外，以 `invalidPath` 被拒绝。消息会指出编辑器持有该文档所用的路径；请用该路径再次调用。 |
 | 在 Windows 上，Windows 不允许智能体访问的编辑器：智能体未以管理员身份运行时以管理员身份启动的编辑器，或者智能体在沙箱中运行时的任何编辑器 | **拒绝编辑**，读取也不例外，以 `hubUnreachable` 被拒绝，并附带一条说明原因的消息。请以相同的权限运行编辑器和智能体，例如不使用管理员权限重新启动编辑器。 |
@@ -27,15 +27,17 @@ description: MCP 服务器如何在编辑器（VS Code、Obsidian 或 JetBrains 
 因此，位于 VS Code 工作区文件夹内的 Obsidian 仓库中的文档会交给 Obsidian，除非 VS Code 已打开它而 Obsidian 没有。
 
 对同一文档的调用按照到达服务器的顺序逐个执行。对不同文档的调用则并行执行。
+`erd_export_svg` 只在读取文档时占用其顺位，因此对该文档的后续调用不必等待绘制完成，而服务器一次只绘制一个导出，即使是两个不同的文档也是如此，参见 [SVG 导出](./tools.md#svg-export)。
 
 ## 实时模式
 
 智能体会像又一位协作者一样加入编辑器。
 它的编辑会同时到达打开该文档的每个编辑器，它的焦点也会像协作者的焦点一样绘制在它正在编辑的表和单元格上，参见 [focusTracker](../api/advanced/collaborative-editing.md#focustracker)。
 
-读取从不会打开编辑器。文档尚未打开时，编辑会在 ERD Editor 中打开它，且不会夺取键盘焦点。
+读取从不会打开编辑器，`erd_export_svg` 也不会，它绘制的是编辑器所持有的内容，包括尚未保存的编辑。文档尚未打开时，编辑会在 ERD Editor 中打开它，且不会夺取键盘焦点。
 
 装有 `4.2.0` 之前的 VS Code 扩展，或 `1.2.0` 之前的 Obsidian 或 JetBrains 插件的编辑器，仍会实时接收智能体的编辑，但既不会显示也不会保留智能体写入的逻辑名、域关联和词典行，参见[更新](./installation.md#更新)。
+同样，装有 `4.3.1` 之前的扩展或 `1.3.1` 之前的插件的编辑器，既不会显示也不会保留备注属于哪个表分组：智能体放入分组的备注在那里不属于任何分组，编辑器在保存时会把备注所属的分组从文件中略去，尽管智能体的调用会成功。
 
 对于 VS Code 扩展 `4.3.0` 或更高版本，或 Obsidian 或 JetBrains 插件 `1.3.0` 或更高版本，无论服务器是哪个版本，以 `replace` 模式进行的导入，以及对其执行的 `erd_undo` 或 `erd_redo`，都会结束你在编辑器中正在绘制的关系，参见[创建关系](../guide/guides/editing-start.md#创建关系)。
 在这些版本之前，绘制会保持选定状态，点击某个表时可能会添加一条来自已不在图中的表的关系。
@@ -53,11 +55,11 @@ description: MCP 服务器如何在编辑器（VS Code、Obsidian 或 JetBrains 
 数据库更改，无论是你的还是智能体的 `erd_set_database`，同样按到达的顺序应用，因此同一时刻进行的两次更改可能让编辑器和智能体处于不同的数据库。
 
 你的拖动以及智能体的 `erd_move_table`、`erd_move_tables`、`erd_move_memo`、`erd_move_table_group` 和 `erd_sort_tables`，都以它们最终到达的点传送，因此对同一个表、备注或表分组的两次移动，最终落在其中一次放置的位置，绝不会是两者相加的位置。
-`erd_move_table_group` 会在一个批次中发送分组及其每个表的点，与拖动分组标题栏时相同。
+`erd_move_table_group` 会在一个批次中发送分组及其每个表的点，与拖动分组标题栏时相同，从服务器 `1.2.1` 起还包括其每个备注的点。
 调整大小会同时写入位置和大小，因此同一时刻对同一个备注或表分组进行的移动和调整大小（例如你拖动该备注时智能体执行 `erd_resize_memo`），在两侧最终都得到同一个矩形：调整大小所得的矩形；或者当移动胜出时，移动的点加上调整大小的尺寸。
 不足 20 像素、不产生 Undo 记录的移动，同样以其最终到达的点发出，因此它可能胜过对方的移动，无论它是很短的 `erd_move_table_group`，还是你的一次很短的拖动（例如点击时把表推动了几个像素）。
 
-较旧的版本仍然可以连接，因为服务器 `1.2.0` 使用 hub 协议 2，`1.0.0` 至 `1.1.1` 也是如此。
+较旧的版本仍然可以连接，因为服务器 `1.2.0` 及更高版本使用 hub 协议 2，`1.0.0` 至 `1.1.1` 也是如此。
 服务器早于 `1.2.0`，或扩展早于 `4.3.0`、插件早于 `1.3.0` 时，同一时刻对同一个表、备注或表分组进行的移动或调整大小，可能让编辑器和智能体得到不同的位置。
 较旧的编辑器把你的拖动作为移动的距离发送，早于 `1.2.0` 的服务器对 `erd_move_table_group` 也是这样发送的。
 另一侧会把该距离加到它所持有的点上。
@@ -97,7 +99,7 @@ JetBrains IDE 会在编辑停止后不到一秒写入它们，关闭标签页时
 
 有几种编辑不会在编辑器中产生 Undo 记录：[设置工具](./tools.md#settings)中的 `erd_set_database` 和 `erd_set_database_name`，以及 `erd_resize_memo`。
 将分组移动总计不足 20 像素（横向与纵向的距离相加）的 `erd_move_table_group` 也不会产生 Undo 记录，不过分组会停留在移动后的位置。
-不改变任何内容的调用同样不会产生 Undo 记录：`erd_set_column_primary_key`、`erd_set_column_unique`、`erd_set_column_not_null`、`erd_set_column_auto_increment`、`erd_set_index_unique` 或 `erd_set_index_column_order` 所设置的值与文档已有的值相同；`erd_add_index_column` 添加索引中已有的列；`erd_set_table_group` 指定的表已在该分组中（或者 `groupId` 为 `null` 时，表已不在任何分组中）；`erd_move_table_group` 移动到分组已在的位置；`erd_resize_table_group` 设置的矩形与分组已有的矩形相同；在没有任何表的文档上调用 `erd_sort_tables`；`erd_set_table_logical_name` 或 `erd_set_column_logical_name` 设置的逻辑名与表或列已有的逻辑名相同，且由其生成物理名不会改变任何内容；`erd_set_column_domain` 指定的域正是该列已关联的域，且该列已具有该域的类型，[关系数据类型同步](../guide/guides/settings.md#关系数据类型同步)也不会沿关系修改任何列的类型；`erd_update_word`、`erd_update_term` 或 `erd_update_domain` 传入的只有该行已有的值，除非为没有物理名的术语传入了其 `name`，且其词根能组合出一个物理名；`erd_derive_physical_names` 所涵盖的每个带有逻辑名的名称都已是[词典](./tools.md#dictionaries)给出的名称，并且已标记为由词典生成；或者 `mode` 为 `append`、却没有带来任何表的导入（对于 `erd_import_json`，则是既没有带来表，也没有带来备注）。
+不改变任何内容的调用同样不会产生 Undo 记录：`erd_set_column_primary_key`、`erd_set_column_unique`、`erd_set_column_not_null`、`erd_set_column_auto_increment`、`erd_set_index_unique` 或 `erd_set_index_column_order` 所设置的值与文档已有的值相同；`erd_add_index_column` 添加索引中已有的列；`erd_set_table_group` 指定的表已在该分组中（或者 `groupId` 为 `null` 时，表已不在任何分组中）；`erd_set_memo_group` 指定的备注已在该分组中（或者已不在任何分组中）；`erd_move_table_group` 移动到分组已在的位置；`erd_resize_table_group` 设置的矩形与分组已有的矩形相同；在没有任何表的文档上调用 `erd_sort_tables`；`erd_set_table_logical_name` 或 `erd_set_column_logical_name` 设置的逻辑名与表或列已有的逻辑名相同，且由其生成物理名不会改变任何内容；`erd_set_column_domain` 指定的域正是该列已关联的域，且该列已具有该域的类型，[关系数据类型同步](../guide/guides/settings.md#关系数据类型同步)也不会沿关系修改任何列的类型；`erd_update_word`、`erd_update_term` 或 `erd_update_domain` 传入的只有该行已有的值，除非为没有物理名的术语传入了其 `name`，且其词根能组合出一个物理名；`erd_derive_physical_names` 所涵盖的每个带有逻辑名的名称都已是[词典](./tools.md#dictionaries)给出的名称，并且已标记为由词典生成；或者 `mode` 为 `append`、却没有带来任何表的导入（对于 `erd_import_json`，则是既没有带来表，也没有带来备注）。
 `erd_undo` 会跳过这些编辑，并在结果中列出它们。
 其他编辑，例如 `erd_change_relationship_type`、`erd_change_relationship_on_delete`、`erd_change_relationship_on_update`、`erd_change_table_group_name`、`erd_change_table_group_color` 和 `erd_set_ddl_script`，即使所设置的值与文档已有的值相同，也会产生 Undo 记录。
 
@@ -120,7 +122,7 @@ JetBrains IDE 会在编辑停止后不到一秒写入它们，关闭标签页时
 仍在运行、但锁文件已消失且连接在未关闭该文档的情况下就已断开的编辑器，会以 `hubGone` 拒绝下一次编辑。
 消息会说明如何释放该文档：在 VS Code 中，重新加载该窗口，或者关闭它，让智能体直接编辑文件；在 Obsidian 中，重新开启 ERD Editor 插件，或者关闭该窗口；在 JetBrains IDE 中，重新开启该插件，或者退出 IDE。
 
-在两种情况下，读取会改为读取磁盘上的文件，并附带一条说明：尚未在编辑器中保存的编辑不包含在内。这两种情况是：持有该文档的编辑器的 hub 已关闭时，以及上面的 `hubGone` 情况。
+在两种情况下，读取或 `erd_export_svg` 会改为读取磁盘上的文件，并附带一条说明：尚未在编辑器中保存的编辑不包含在内。这两种情况是：持有该文档的编辑器的 hub 已关闭时，以及上面的 `hubGone` 情况。
 无法连接到编辑器 hub 的读取会像编辑一样，以 `hubUnreachable` 被拒绝。
 
 ## 无头模式
@@ -133,7 +135,7 @@ JetBrains IDE 会在编辑停止后不到一秒写入它们，关闭标签页时
 在两次调用之间发生变化的文件只会被重新加载，而智能体在此之前的 Undo 历史记录会被丢弃。
 
 只读文件会保持原样，编辑会以 `readonly` 被拒绝：所有者没有写入权限的文件，或者在 Windows 上带有只读属性的文件，例如尚未签出的 Perforce 或 TFVC 文件。
-请使其可写，然后再次调用。读取仍然有效。
+请使其可写，然后再次调用。读取和 `erd_export_svg` 仍然有效。
 
 如果在智能体编辑磁盘上的文件期间，有编辑器开始为该文档提供服务，那一次编辑会以 `hubAppeared` 被拒绝，不写入任何内容。下一次调用会通过该编辑器进行编辑。
 
@@ -142,7 +144,7 @@ JetBrains IDE 会在编辑停止后不到一秒写入它们，关闭标签页时
 - 拥有不同于其文件夹的独立权限的文档会被就地写入而不是被替换，以便保留这些权限，临时文件随后会被删除。在写入期间读取该文档的程序可能会读到无法解析的文本。
 - 被其他程序打开占用的文件无法被替换，因此服务器会在最多两秒内重试。每次重试都会先重新查找编辑器，而在此期间开始为该文档提供服务的编辑器会以 `hubAppeared` 拒绝写入，如果其 hub 已关闭则以 `blocked` 拒绝。如果两秒后文件仍被占用，则不写入任何内容，重新加载文件，调用会失败，并附带一条引用系统错误的消息。
 
-`1.1.0` 之前的服务器读取文档时不包含其逻辑名、列的域关联以及其中的词根、术语和域，因此它写入文件的第一次编辑就会将这些内容略去。请更新服务器，参见[更新](./installation.md#更新)。
+`1.1.0` 之前的服务器读取文档时不包含其逻辑名、列的域关联以及其中的词根、术语和域，因此它写入文件的第一次编辑就会将这些内容略去。`1.2.1` 之前的服务器同样读取文档时不包含其备注所属的表分组，因此它写入文件的第一次编辑会让每个备注都离开其分组。请更新服务器，参见[更新](./installation.md#更新)。
 
 ## 拒绝编辑
 
@@ -151,7 +153,7 @@ Obsidian 仓库窗口在 Coding agents 关闭时，以及其 hub 无法监听时
 JetBrains IDE 在 Coding agents 关闭时、其 hub 无法监听时，以及 IDE 退出期间，会在 hub 关闭的状态下保留其锁文件。
 
 对这类文档的编辑会以 `blocked` 被拒绝，因为打开的编辑器下次保存时可能会覆盖写入文件的变更。
-仍可从磁盘上的文件读取。
+读取仍可从磁盘上的文件进行，`erd_export_svg` 也是如此，其结果会指明模式为 `blocked`。
 
 若要让智能体编辑，请按照消息针对该编辑器给出的说明重新开启 hub：在 VS Code 中，信任该工作区并开启该设置，或者重新加载窗口；在 Obsidian 中，开启 Coding agents，或者重新加载 Obsidian；在 JetBrains IDE 中，开启 Coding agents，如果它已经开启，则重启 IDE。
 

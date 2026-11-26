@@ -55,16 +55,17 @@ Mientras Opciones de vista → `Memos` está desactivado, las notas están ocult
 Una nota es una anotación de texto libre en el lienzo. Haz clic en su cuerpo y escribe; el texto se guarda con el documento.  
 `Escape` cierra el editor de la nota, conserva lo que has escrito y deja la nota seleccionada, y un segundo `Escape` anula la selección.  
 Arrastra su borde para cambiar su tamaño. La `x` de su encabezado, que se muestra mientras el puntero está sobre la nota, la elimina.  
-Un clic derecho sobre una nota abre su menú en lugar del editor: `Color`, `Remove color` mientras algún elemento seleccionado tiene color, y `Delete`, que indica `Delete selected` mientras la nota es uno de dos o más elementos seleccionados. Una nota seleccionada también se elimina con las teclas que eliminan tablas; consulta [Eliminación de tablas y notas](./table-related-functions.md#table-and-memo-deletion).
+Un clic derecho sobre una nota abre su menú en lugar del editor: `Color`, `Remove color` mientras algún elemento seleccionado tiene color, `Group selected tables` mientras la selección contiene una tabla y se muestran los grupos de tablas, `Remove from group` mientras una tabla o una nota seleccionada está en un grupo, y `Delete`, que indica `Delete selected` mientras la nota es uno de dos o más elementos seleccionados. Una nota seleccionada también se elimina con las teclas que eliminan tablas; consulta [Eliminación de tablas y notas](./table-related-functions.md#table-and-memo-deletion).  
+Igual que una tabla, una nota se une a un [grupo de tablas](./table-groups.md), o sale de él, donde la sueltas. `Remove from group` también la saca, y `Group selected tables` la mete en un grupo nuevo con las tablas seleccionadas junto con ella; consulta [Añadir y quitar tablas](./table-groups.md#adding-and-removing-tables).
 
 ![Añadir una nota con Alt + M, escribir un texto y arrastrar su borde para cambiar su tamaño](/img/demo-memo.webp)
 
 ## Creación de grupos de tablas {#table-group-creation}
 
-Un grupo de tablas es un recuadro que contiene tablas, y puedes darle un nombre y un color. Crea uno de una de estas dos formas:
+Un grupo de tablas es un recuadro que contiene tablas y notas, y puedes darle un nombre y un color. Crea uno de una de estas dos formas:
 
-- Elige `New Table Group` en el menú contextual o en la búsqueda rápida, haz clic en el botón `New Table Group` de la [barra de herramientas del lienzo](./table-related-functions.md#canvas-toolbar) o pulsa `Alt + G` (Windows/Linux) o `⌥ + G` (Mac), y después arrastra un recuadro sobre el lienzo. Cada tabla cuyo centro quede dentro del recuadro se une al nuevo grupo, salvo que ya esté en otro grupo; consulta [Dibujar un grupo](./table-groups.md#drawing-a-group).
-- Selecciona tablas y elige `Group selected tables` en el menú contextual de una tabla o `Group Selected Tables` en la búsqueda rápida, o pulsa `T` y luego `G`; consulta [Agrupar las tablas seleccionadas](./table-groups.md#grouping-selected-tables).
+- Elige `New Table Group` en el menú contextual o en la búsqueda rápida, haz clic en el botón `New Table Group` de la [barra de herramientas del lienzo](./table-related-functions.md#canvas-toolbar) o pulsa `Alt + G` (Windows/Linux) o `⌥ + G` (Mac), y después arrastra un recuadro sobre el lienzo. Cada tabla y cada nota visible cuyo centro quede dentro del recuadro se une al nuevo grupo, salvo que ya esté en otro grupo; consulta [Dibujar un grupo](./table-groups.md#drawing-a-group).
+- Selecciona tablas, y las notas que quieras con ellas, y elige `Group selected tables` en el menú contextual de una tabla o de una nota o `Group Selected Tables` en la búsqueda rápida, o pulsa `T` y luego `G`; consulta [Agrupar las tablas seleccionadas](./table-groups.md#grouping-selected-tables).
 
 Cómo darles nombre y color, moverlos, cambiar su tamaño y todo lo demás se explica en [Grupos de tablas](./table-groups.md).
 

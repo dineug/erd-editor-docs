@@ -157,6 +157,7 @@ const data = replicationStore.value;
 Od različice `4.0.0` je lastnost `value` oblika za shranjevanje: dokument, kakršnega hrani datoteka, isto besedilo, ki ga vrne lastnost [value](../erd-editor-element.md#value) elementa.  
 Vsebuje samo žive entitete v stalnem vrstnem redu, brez odstranjenih, brez vrstnega reda prekrivanja in brez vsega, kar nalaganje znova izpelje, kot so širine, ki jih izmeri funkcija [toWidth](#towidth).  
 Od različice `4.2.0` vsebuje tudi logična imena, podatek, ali je bilo posamezno ime izpeljano iz slovarjev, povezave z domenami ter besede, izraze in domene z zavihka [Slovar](../../guide/guides/dictionary.md).  
+Od različice `5.1.1` vsebuje tudi skupino tabel, v kateri je vsaka beležka.  
 Od različice `4.2.0` izpusti tudi vsako prazno besedilno polje entitete, vsak seznam v `doc` in vsako kolekcijo, ki ne vsebuje ničesar, ter samo polje `collections`, kadar so vse kolekcije prazne.  
 Zamaknjena je za dva presledka, vsaka vrstica slovarja je v svoji vrstici besedila, konča pa se z znakom za novo vrstico, zato isti dokument vedno da enake bajte.  
 Za njeno vsebino glejte razdelek [Oblika za shranjevanje](./schema.md#storage-form).
@@ -305,6 +306,10 @@ Vse urejevalnike v seji in repliko obdržite na različici `5.1.0` ali novejši,
 
 Od različice `5.1.0` urejevalnik spremembo jezika generatorja kode, zapisa imen ali vrste narekovajev pošlje samo, dokler je zaklep te nastavitve izklopljen, in sicer z oznako `shared: true` v njenih podatkih, replika pa uporabi vsako tako označeno spremembo, tako kot urejevalniki; glejte stran [Sodelovalno urejanje](./collaborative-editing.md).  
 Neoznačeno spremembo, ki jo urejevalnik pred različico `5.1.0` pošlje ne glede na zaklep, replika uporabi samo, dokler je ta nastavitev pri njej odklenjena, dokler je zaklenjena, pa jo zavrže (glejte razdelek [on@change](#onchange)).
+
+Od različice `5.1.1` med ohranjena dejanja spada tudi dejanje `memo.changeGroup`, ki beležko postavi v [skupino tabel](../../guide/guides/table-groups.md) ali jo iz nje vzame, lastnost `value` pa zapiše skupino, v kateri je vsaka beležka (glejte razdelek [Oblika za shranjevanje](./schema.md#storage-form)).  
+Različica `5.1.1` ne spremeni nobenega izvoza modula `@dineug/erd-editor/engine.js`.  
+Shramba iz starejše izdaje dejanje `memo.changeGroup` in polje `groupId` vsake beležke izpusti, zato ne shrani nobene beležke v skupini, urejevalnik pred različico `5.1.1` v seji pa lahko beležke še vedno vzame iz njihovih skupin na repliki različice `5.1.1`; glejte razdelek [Mešanje izdaj](./collaborative-editing.md#mixing-releases).
 
 Od različice `4.0.0` obe metodi uporabita tudi dejanje `editor.mergeLWW`, ki prenaša registre sodelovanja, s katerimi urejevalnik odgovori, ko se seji pridruži drug urejevalnik, zato replika sočasne spremembe razreši tako kot urejevalniki.  
 Ne spremeni niti enega bajta lastnosti `value` in ne sproži dogodka `change`.  

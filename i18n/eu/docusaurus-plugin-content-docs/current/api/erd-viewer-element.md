@@ -39,7 +39,7 @@ interface ErdViewerElement extends HTMLElement {
 ```
 
 `@dineug/erd-editor/erd-viewer.js` inportatzeak `<erd-viewer>` definitzen du eta `<erd-editor>` definitu gabe uzten du. Paketearen erroa inportatzeak ez du bat ere definitzen: `ErdViewerElement` klasea eta `defineErdViewer()` esportatzen ditu, zeinak deitzen duzun tokian definitzen duen etiketa; beraz, orri batek klasea bere etiketa propio baten pean ere defini dezake. Ikus [Elementuak erregistratzea](./installation.md#registering-the-elements).  
-`engine.js` eta `peer.js` ez diren sarrera guztiek DOM bat behar dute, hau ere bai; beraz, zerbitzarian errendatutako orri batek bezeroan inportatzen du. Ikus [Zerbitzari aldeko errendatzea](./installation.md#server-side-rendering).  
+Orri hauek deskribatzen dituzten sarrera guztiek, `engine.js` eta `peer.js` izan ezik, DOM bat behar dute, hau ere bai; beraz, zerbitzarian errendatutako orri batek bezeroan inportatzen du. Ikus [Zerbitzari aldeko errendatzea](./installation.md#server-side-rendering).  
 Sarrera inportatzeak `erd-viewer` gehitzen du `HTMLElementTagNameMap` interfazera; beraz, `document.createElement('erd-viewer')` eta `document.querySelector('erd-viewer')` deiak `ErdViewerElement` motakoak dira mota-bihurketarik gabe.
 
 Editorea bezala, ikustaileak shadow root itxi batean errendatzen du; beraz, `viewer.shadowRoot` `null` da eta orriaren estiloak ez dira barrura ez kanpora iragazten; eman estiloa [setTheme](#settheme) eta `--erd-editor-*` propietate pertsonalizatuen bidez. Orri bateko hainbat ikustailek bakoitzak bere dokumentua, ikuspegia, gaia eta hizkuntza mantentzen ditu.  
@@ -52,7 +52,7 @@ Script etiketako konpilazioak, `dist/erd-viewer.umd.js`, ikustailea bakarrik dar
 
 ```html
 <erd-viewer src="diagram.erd.json" style="display: block; height: 480px"></erd-viewer>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0/dist/erd-viewer.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.1/dist/erd-viewer.umd.js"></script>
 ```
 
 ## src {#src}

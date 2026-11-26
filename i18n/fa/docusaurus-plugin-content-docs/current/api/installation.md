@@ -51,18 +51,18 @@ editor.addEventListener('change', () => {
 
 ```html
 <script type="module">
-  import 'https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js';
+  import 'https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js';
 
   const editor = document.createElement('erd-editor');
   editor.style.cssText = 'display: block; width: 100%; height: 100vh;';
   document.body.appendChild(editor);
 </script>
 <!-- or -->
-<script type="module" src="https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js"></script>
+<script type="module" src="https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js"></script>
 ```
 
 `esm.run` وابستگی‌های خارجی بسته را برای شما مسیریابی می‌کند، بنابراین این روش بدون باندلر کار می‌کند.
-هر نقطهٔ ورود با مسیرش پس از نسخه به دست می‌آید: `…/erd-editor.js` ویرایشگر را تعریف می‌کند و `…/erd-viewer.js` نمایشگر را، که هر زبان نمایش جز انگلیسی را وقتی صفحه بخواهد از CDN دریافت می‌کند. نشانی بدون مسیر بسته، `https://esm.run/@dineug/erd-editor@5.1.0`، ریشه را ارائه می‌دهد که هیچ عنصری تعریف نمی‌کند.
+هر نقطهٔ ورود با مسیرش پس از نسخه به دست می‌آید: `…/erd-editor.js` ویرایشگر را تعریف می‌کند و `…/erd-viewer.js` نمایشگر را، که هر زبان نمایش جز انگلیسی را وقتی صفحه بخواهد از CDN دریافت می‌کند. نشانی بدون مسیر بسته، `https://esm.run/@dineug/erd-editor@5.1.1`، ریشه را ارائه می‌دهد که هیچ عنصری تعریف نمی‌کند.
 نشانی بدون نسخه همیشه آخرین نسخه را ارائه می‌دهد. اگر نمی‌خواهید یک ارتقای نسخهٔ اصلی بدون اطلاع قبلی به صفحهٔ شما برسد، نسخه را ثابت کنید، مانند بالا.
 خود `5.0.0` نیز یک ارتقای نسخهٔ اصلی است: صفحه‌ای که باید روی 4.x بماند، `@4.2.0` را ثابت می‌کند؛ [ارتقا از 4.x](#upgrading-from-4x) را ببینید.
 
@@ -75,7 +75,7 @@ editor.addEventListener('change', () => {
 
 ```html
 <erd-editor></erd-editor>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.1"></script>
 <script>
   const editor = document.querySelector('erd-editor');
   editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
@@ -88,7 +88,7 @@ editor.addEventListener('change', () => {
 
 ```html
 <erd-viewer src="diagram.erd.json" style="display: block; height: 480px"></erd-viewer>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0/dist/erd-viewer.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.1/dist/erd-viewer.umd.js"></script>
 ```
 
 هیچ‌یک از این دو فایل تگ دیگری را تعریف نمی‌کند و هر کدام جز global خودش و `window.Konva` چیزی روی صفحه باقی نمی‌گذارد.
@@ -100,7 +100,7 @@ editor.addEventListener('change', () => {
 ```html
 <erd-editor system-dark-mode enable-theme-builder enable-locale-picker enable-welcome-screen></erd-editor>
 <script type="module">
-  import 'https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js';
+  import 'https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js';
 
   const editor = document.querySelector('erd-editor');
 </script>
@@ -123,7 +123,7 @@ erd-editor {
 
 ### رندر سمت سرور {#server-side-rendering}
 
-هر نقطهٔ ورود جز `engine.js` و `peer.js` به DOM نیاز دارد، بنابراین در Node خطا می‌دهد. `erd-editor.js` و `erd-viewer.js` عنصر خود را در سطح ماژول تعریف می‌کنند و ریشهٔ بسته، که از نسخهٔ `5.0.0` چیزی تعریف نمی‌کند، همچنان هنگام بارگذاری هر دو کلاس عنصر را می‌سازد.
+هر نقطهٔ ورودی که این صفحه‌ها توصیف می‌کنند، جز `engine.js` و `peer.js`، به DOM نیاز دارد، بنابراین در Node خطا می‌دهد. `erd-editor.js` و `erd-viewer.js` عنصر خود را در سطح ماژول تعریف می‌کنند و ریشهٔ بسته، که از نسخهٔ `5.0.0` چیزی تعریف نمی‌کند، همچنان هنگام بارگذاری هر دو کلاس عنصر را می‌سازد.
 در Next.js، Nuxt، SvelteKit یا Astro، نقطهٔ ورود عنصر را از مسیری که فقط در سمت کلاینت اجرا می‌شود به دست آورید، و یک import نام‌دار از ریشه، مانند `setExportFileCallback` یا `toImage`، را از همان مسیر.
 
 ```js
@@ -251,7 +251,7 @@ Vite، webpack 5 و Rspack ورکرها را به‌صورت فایل در کن�
 
 ## نقاط ورود {#entry-points}
 
-بسته پنج نقطهٔ ورود دارد:
+این صفحه‌ها پنج نقطهٔ ورود بسته را توصیف می‌کنند:
 
 | نقطهٔ ورود | چیست |
 | --- | --- |
@@ -371,7 +371,7 @@ Chrome 91+، Edge 94+، Firefox 93+، Safari 16.4+ — خط پایهٔ ES2022 ک
    import { setExportFileCallback } from '@dineug/erd-editor';
   ```
 
-- در یک CDN همین در مورد `https://esm.run/@dineug/erd-editor` صدق می‌کند، که اکنون ریشه را ارائه می‌دهد و چیزی تعریف نمی‌کند: `https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js` را وارد کنید. نشانی‌های بدون مسیر jsDelivr و unpkg همچنان بیلد تگ script را ارائه می‌دهند، که `<erd-editor>` را مانند قبل تعریف می‌کند. نشانی بدون نسخه اکنون آخرین نسخهٔ 5.x را ارائه می‌دهد؛ برای ماندن روی 4.x، `@4.2.0` را ثابت کنید؛ [CDN](#cdn) و [تگ script](#script-tag) را ببینید.
+- در یک CDN همین در مورد `https://esm.run/@dineug/erd-editor` صدق می‌کند، که اکنون ریشه را ارائه می‌دهد و چیزی تعریف نمی‌کند: `https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js` را وارد کنید. نشانی‌های بدون مسیر jsDelivr و unpkg همچنان بیلد تگ script را ارائه می‌دهند، که `<erd-editor>` را مانند قبل تعریف می‌کند. نشانی بدون نسخه اکنون آخرین نسخهٔ 5.x را ارائه می‌دهد؛ برای ماندن روی 4.x، `@4.2.0` را ثابت کنید؛ [CDN](#cdn) و [تگ script](#script-tag) را ببینید.
 - ریشه چیزی تعریف نمی‌کند اما همچنان به DOM نیاز دارد، بنابراین در رندر سمت سرور یک import نام‌دار از آن، مانند `setExportFileCallback`، در کنار نقطهٔ ورود عنصر در مسیر فقط-کلاینت می‌ماند — [رندر سمت سرور](#server-side-rendering) را ببینید.
 - `window.ErdEditor` دو عضو `ErdEditorElement` و `defineErdEditor` را می‌گیرد. بیلد تگ script نمایشگر `ErdViewerElement` و `defineErdViewer` را روی `window.ErdViewer` می‌گذارد و هیچ‌یک از دو global تابع `toImage` را ندارد.
 - ویرایشگر `readonly` به‌صورت یک خواننده باز می‌شود. شش زبانه، کاوشگر، جست‌وجوی سریع و حضور دیگران می‌مانند و هر کنترلی که نمودار را ویرایش می‌کرد به‌جای غیرفعال شدن حذف می‌شود: نوار ابزار نام پایگاه داده را به‌صورت متن نشان می‌دهد، زبانهٔ تنظیمات تنظیم‌هایش را با هر کنترل غیرفعال زیر نشان `Read only` نشان می‌دهد و نوار ابزار شناور فقط بزرگ‌نمایی، نمایش نام‌ها، حالت ذن و قطب‌نما را نگه می‌دارد، بنابراین `Hand` و `Select` حذف می‌شوند و کشیدن بوم را جابه‌جا می‌کند. فشردن چیزی را انتخاب نمی‌کند: تنها انتخاب، خط دورنمایی است که پرش از کاوشگر یا جست‌وجوی سریع دور چیزی که به آن می‌رسد می‌گذارد و یک کلیک بی‌حرکت آن را پاک می‌کند، و کلیدهای انتخاب همه چیزی را انتخاب نمی‌کنند. روشن کردن `readonly` آنچه را باز بود می‌بندد، مانند انتخاب، ابزار دست، ویرایشگر خانه، یک کشیدن، Map Columns، پیش‌نمایش `Force` در چیدمان خودکار و سفر در زمان، و پیمایش، بزرگ‌نمایی، زبانه و نمایش نام‌ها را نگه می‌دارد — [readonly](./erd-editor-element.md#readonly) را ببینید.

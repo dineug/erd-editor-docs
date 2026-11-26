@@ -51,18 +51,18 @@ editor.addEventListener('change', () => {
 
 ```html
 <script type="module">
-  import 'https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js';
+  import 'https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js';
 
   const editor = document.createElement('erd-editor');
   editor.style.cssText = 'display: block; width: 100%; height: 100vh;';
   document.body.appendChild(editor);
 </script>
 <!-- or -->
-<script type="module" src="https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js"></script>
+<script type="module" src="https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js"></script>
 ```
 
 `esm.run`이 패키지의 외부 의존성을 대신 해석해 주므로 번들러 없이도 동작합니다.
-각 진입점은 버전 뒤의 경로로 가져옵니다. `…/erd-editor.js`는 에디터를, `…/erd-viewer.js`는 뷰어를 정의하며, 뷰어는 영어를 제외한 각 표시 언어를 페이지가 요청할 때 CDN에서 가져옵니다. 패키지 기본 URL인 `https://esm.run/@dineug/erd-editor@5.1.0`은 루트를 제공하며, 루트는 엘리먼트를 정의하지 않습니다.
+각 진입점은 버전 뒤의 경로로 가져옵니다. `…/erd-editor.js`는 에디터를, `…/erd-viewer.js`는 뷰어를 정의하며, 뷰어는 영어를 제외한 각 표시 언어를 페이지가 요청할 때 CDN에서 가져옵니다. 패키지 기본 URL인 `https://esm.run/@dineug/erd-editor@5.1.1`은 루트를 제공하며, 루트는 엘리먼트를 정의하지 않습니다.
 버전이 없는 URL은 항상 최신 릴리스를 제공합니다. 메이저 업그레이드가 예고 없이 페이지에 반영되는 것을 원하지 않는다면 위처럼 버전을 고정하세요.
 `5.0.0` 자체가 메이저 업그레이드입니다. 4.x에 머물러야 하는 페이지는 `@4.2.0`으로 고정하세요. [4.x에서 업그레이드](#upgrading-from-4x) 항목을 참고하세요.
 
@@ -75,7 +75,7 @@ editor.addEventListener('change', () => {
 
 ```html
 <erd-editor></erd-editor>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.1"></script>
 <script>
   const editor = document.querySelector('erd-editor');
   editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
@@ -88,7 +88,7 @@ editor.addEventListener('change', () => {
 
 ```html
 <erd-viewer src="diagram.erd.json" style="display: block; height: 480px"></erd-viewer>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0/dist/erd-viewer.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.1/dist/erd-viewer.umd.js"></script>
 ```
 
 어느 파일도 상대의 태그를 정의하지 않으며, 각 파일은 자신의 전역과 `window.Konva` 외에는 페이지에 전역을 남기지 않습니다.
@@ -100,7 +100,7 @@ exports 맵은 여전히 ES 모듈을 가리키므로 npm으로 설치하면 번
 ```html
 <erd-editor system-dark-mode enable-theme-builder enable-locale-picker enable-welcome-screen></erd-editor>
 <script type="module">
-  import 'https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js';
+  import 'https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js';
 
   const editor = document.querySelector('erd-editor');
 </script>
@@ -123,7 +123,7 @@ erd-editor {
 
 ### 서버 사이드 렌더링
 
-`engine.js`와 `peer.js`를 제외한 모든 진입점은 DOM이 필요하므로 Node에서는 에러가 발생합니다. `erd-editor.js`와 `erd-viewer.js`는 모듈 스코프에서 엘리먼트를 정의하고, `5.0.0`부터 아무것도 정의하지 않는 패키지 루트도 로드하면서 두 엘리먼트 클래스를 만듭니다.
+이 문서들이 설명하는 진입점 중 `engine.js`와 `peer.js`를 제외한 모든 진입점은 DOM이 필요하므로 Node에서는 에러가 발생합니다. `erd-editor.js`와 `erd-viewer.js`는 모듈 스코프에서 엘리먼트를 정의하고, `5.0.0`부터 아무것도 정의하지 않는 패키지 루트도 로드하면서 두 엘리먼트 클래스를 만듭니다.
 Next.js, Nuxt, SvelteKit, Astro에서는 엘리먼트의 진입점을 클라이언트에서만 실행되는 경로에서 import하고, `setExportFileCallback`이나 `toImage`처럼 루트에서 이름으로 가져오는 import도 같은 경로에서 하세요.
 
 ```js
@@ -251,7 +251,7 @@ CSP가 엄격한 페이지에는 엘리먼트를 위해 다음 지시문이 필�
 
 ## 진입점
 
-이 패키지에는 진입점이 다섯 개 있습니다.
+이 문서들은 패키지의 진입점 다섯 개를 설명합니다.
 
 | 진입점 | 설명 |
 | --- | --- |
@@ -371,7 +371,7 @@ Chrome 91+, Edge 94+, Firefox 93+, Safari 16.4+ — 배포되는 번들이 빌�
    import { setExportFileCallback } from '@dineug/erd-editor';
   ```
 
-- CDN에서도 마찬가지입니다. `https://esm.run/@dineug/erd-editor`는 이제 루트를 제공하며 아무것도 정의하지 않습니다. `https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js`를 import하세요. 버전 없는 jsDelivr와 unpkg의 패키지 기본 URL은 여전히 script 태그 빌드를 제공하며, 이 빌드는 전과 같이 `<erd-editor>`를 정의합니다. 버전이 없는 URL은 이제 최신 5.x 릴리스를 제공하므로, 4.x에 머물려면 `@4.2.0`으로 고정하세요. [CDN](#cdn)과 [script 태그](#script-태그) 항목을 참고하세요.
+- CDN에서도 마찬가지입니다. `https://esm.run/@dineug/erd-editor`는 이제 루트를 제공하며 아무것도 정의하지 않습니다. `https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js`를 import하세요. 버전 없는 jsDelivr와 unpkg의 패키지 기본 URL은 여전히 script 태그 빌드를 제공하며, 이 빌드는 전과 같이 `<erd-editor>`를 정의합니다. 버전이 없는 URL은 이제 최신 5.x 릴리스를 제공하므로, 4.x에 머물려면 `@4.2.0`으로 고정하세요. [CDN](#cdn)과 [script 태그](#script-태그) 항목을 참고하세요.
 - 루트는 아무것도 정의하지 않지만 여전히 DOM이 필요하므로, 서버 사이드 렌더링에서는 `setExportFileCallback`처럼 루트에서 이름으로 가져오는 import도 엘리먼트의 진입점과 함께 클라이언트에서만 실행되는 경로에 두세요. [서버 사이드 렌더링](#서버-사이드-렌더링) 항목을 참고하세요.
 - `window.ErdEditor`에 `ErdEditorElement`와 `defineErdEditor`가 추가됩니다. 뷰어의 script 태그 빌드는 `ErdViewerElement`와 `defineErdViewer`를 `window.ErdViewer`에 올리며, 어느 전역에도 `toImage`는 없습니다.
 - `readonly` 에디터는 읽는 사람을 위한 모습으로 열립니다. 여섯 개의 탭, 탐색기, 빠른 검색, 프레즌스는 남고, 다이어그램을 편집하는 컨트롤은 비활성화되는 대신 사라집니다. 툴바는 데이터베이스 이름을 텍스트로 보여 주고, 설정 탭은 `Read only` 배지 아래에서 모든 컨트롤이 비활성화된 채로 설정을 보여 주며, 떠 있는 툴바에는 확대/축소, 이름 표시, Zen 모드, 나침반만 남으므로 `Hand`와 `Select`는 없어지고 드래그는 화면을 이동시킵니다. 누르기는 아무것도 선택하지 않습니다. 유일한 선택은 탐색기나 빠른 검색에서 이동했을 때 도착한 대상 둘레에 생기는 외곽선이며, 움직이지 않는 클릭이 이를 지우고, 모두 선택 단축키는 아무것도 선택하지 않습니다. `readonly`를 켜면 선택, 손 도구, 셀 편집기, 드래그, Map Columns, 자동 배치의 `Force` 미리보기, Time Travel처럼 열려 있던 것이 끝나고, 스크롤, 확대/축소, 탭, 이름 표시는 유지됩니다. [readonly](./erd-editor-element.md#readonly) 문서를 참고하세요.

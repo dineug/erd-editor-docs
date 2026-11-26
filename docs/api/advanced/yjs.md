@@ -265,6 +265,7 @@ The settings its reader changes stay on its screen, as on any read-only editor.
 The binding keeps the diagram in two names of the `Y.Doc`: `erd:snapshot`, a map that holds a snapshot of the document, and `erd:log`, an array of the editor's action batches since it. A persistence provider stores both with the rest of the `Y.Doc`.
 
 The snapshot holds the document's [runtimeValue](../erd-editor-element.md#runtimevalue), removed entities included, its collaboration registers and version, and how far each writer's edits are folded into it. A seed writes it, and so does every fold of a compactor.  
+A seed or a fold made on an `@dineug/erd-editor` before `5.1.1` writes a snapshot with no memo in any table group — see [Mixing Releases](./collaborative-editing.md#mixing-releases).  
 Each log entry is one batch as the editor sent it, its meta included, which carries the sender's editor id and nickname.  
 Scrolls, zooms, tab switches, presence, and the register handshake are never logged. Every other change the editor sends is, a Name View switch made under its [lock](../../guide/guides/settings.md#lock) among them, which every other client drops.  
 A Code Generator language, name case, or bracket type changed under its lock is never sent, so it stays on that editor's screen and never reaches the room.

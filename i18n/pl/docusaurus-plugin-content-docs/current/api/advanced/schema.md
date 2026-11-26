@@ -19,7 +19,7 @@ VS Code, aplikacja Obsidian i wtyczka JetBrains zapisują plik tylko wtedy, gdy 
 Od wersji `4.2.0` postać zapisu pomija też to, co niczego nie zawiera: każde pole tekstowe, które encja lub jej obiekt `ui` przechowuje jako `''` (pola `name`, `comment` i `ui.color` tabeli, pola `name`, `comment`, `dataType` i `default` kolumny, pole `name` indeksu, pola `value` i `ui.color` notatki oraz pola `name` i `color` grupy tabel), każdą listę `doc` i kolekcję bez żadnego wpisu, a także samo pole `collections`, gdy wszystkie kolekcje są puste. Tekst złożony wyłącznie ze spacji jest zapisywany w przechowywanej postaci, z wyjątkiem nazwy logicznej, która jest wtedy pomijana, oraz słowa, terminu lub domeny, których wszystkie wartości poza identyfikatorem są puste lub składają się tylko ze spacji: taki wpis jest pomijany w całości. Każdy identyfikator, każda lista wewnątrz encji i każda liczba, łącznie z `0`, są nadal zapisywane. Pole `doc` jest zapisywane zawsze, więc plik nowego dokumentu zawiera `$schema`, `version`, jego ustawienia i `"doc": {}`.  
 Parsowanie odczytuje brakujące pole tekstowe jako `''`, a brakującą kolekcję jako pustą, tak jak robi to każda wersja v3, a postać zapisu pomija listę `doc` tylko wtedy, gdy jej kolekcja niczego nie zawiera (zobacz sekcję [Doc](#doc)). Dlatego edytor w wersji starszej niż `4.2.0` również otwiera takie pliki, a program, który sam odczytuje plik, musi w ten sam sposób interpretować brakujące elementy. Plik zapisany przez wcześniejszą wersję po następnym zapisie nie zawiera już pustych pól tekstowych, list ani kolekcji – to jednorazowa zmiana – a od tej pory zapisuje się bajt w bajt tak samo.
 
-Postać zapisu zapisuje każde zablokowane ustawienie z jego zablokowaną wartością (zobacz [`lockSettings`](#settings)), pole `settings.ddlScripts` tylko wtedy, gdy któryś skrypt zawiera tekst, a pole `groupId` tabeli tylko wtedy, gdy wskazuje grupę tabel zapisywaną w pliku. Od wersji `4.2.0` zapisuje też pole `settings.nameViewMode` tylko wtedy, gdy zapisywana wartość jest inna niż `'physical'`, pole `settings.columnOrder` jako siedem wpisów, gdy to możliwe (zobacz sekcję [Settings](#settings)), a pole `nameDerived` tabeli tylko wtedy, gdy ma wartość `true`.  
+Postać zapisu zapisuje każde zablokowane ustawienie z jego zablokowaną wartością (zobacz [`lockSettings`](#settings)), pole `settings.ddlScripts` tylko wtedy, gdy któryś skrypt zawiera tekst, a pole `groupId` tabeli lub, od wersji `5.1.1`, notatki tylko wtedy, gdy wskazuje grupę tabel zapisywaną w pliku. Od wersji `4.2.0` zapisuje też pole `settings.nameViewMode` tylko wtedy, gdy zapisywana wartość jest inna niż `'physical'`, pole `settings.columnOrder` jako siedem wpisów, gdy to możliwe (zobacz sekcję [Settings](#settings)), a pole `nameDerived` tabeli tylko wtedy, gdy ma wartość `true`.  
 Zapisuje `doc.tableGroupIds` i `tableGroupEntities` tylko wtedy, gdy istnieje grupa tabel, pole `logicalName` tylko wtedy, gdy zawiera tekst inny niż same spacje, pole `domainId` kolumny tylko wtedy, gdy wskazuje domenę zapisywaną w pliku, a każdy słownik tylko wtedy, gdy zawiera wiersz zapisywany w pliku.
 
 Plik zapisany przed wersją `4.0.0` zawiera cały dokument w takiej postaci, w jakiej przechowywał go wtedy edytor, łącznie z usuniętymi encjami i tym, co wyliczało każde wczytanie. Wczytanie odczytuje go, zachowuje miejsce każdej tabeli i notatki w stosie warstw (zobacz sekcję [Doc](#doc)) i wylicza resztę ponownie, a następny zapis zapisuje już tylko postać zapisu.
@@ -394,6 +394,7 @@ const OrderType = {
 type Memo = {
   id: string;
   value?: string;
+  groupId?: string;
   ui: MemoUI;
 };
 
@@ -407,6 +408,9 @@ type MemoUI = {
 ```
 
 Od wersji `4.0.0` tabele i notatki [współdzielą jeden stos warstw](../../guide/guides/table-related-functions.md#moving-multiple-tables), więc przeniesienie tabeli na wierzch może umieścić ją nad notatką. Wczytanie umieszcza każdą notatkę nad każdą tabelą, jak opisano w sekcji [Doc](#doc). Notatka w pliku zapisanym przed wersją `4.0.0` zachowuje zapisaną wartość `zIndex`, która pochodziła z tego samego licznika co wartości tabel, więc notatka, którą wcześniejsza wersja rysowała nad wszystkimi tabelami, może otworzyć się pod tabelą przeniesioną na wierzch później niż ona.
+
+Od wersji `5.1.1` notatka ma pole `groupId`, czyli identyfikator [grupy tabel](../../guide/guides/table-groups.md), do której należy, tak jak tabela. Brakujące lub puste pole `groupId`, jak w każdym pliku zapisanym przed wersją `5.1.1`, albo takie, które nie wskazuje żadnej grupy z `doc.tableGroupIds`, oznacza brak grupy, a postać zapisu zapisuje je tylko wtedy, gdy wskazuje zachowaną grupę.  
+Edytor w wersji starszej niż `5.1.1` przy wczytywaniu dokumentu pomija pole `groupId` każdej notatki, więc zapis w tym edytorze wyjmuje każdą notatkę z jej grupy, choć edytor od wersji `4.0.0` zachowuje grupy tabel – zobacz sekcję [Mieszanie wersji](./collaborative-editing.md#mixing-releases).
 
 ### Kolekcja: tableGroupEntities {#collection-tablegroupentities}
 
@@ -426,7 +430,7 @@ type TableGroupUI = {
 };
 ```
 
-Od wersji `4.0.0` dokument może zawierać [grupy tabel](../../guide/guides/table-groups.md): nazwane, kolorowe prostokąty rysowane za tabelami. Tabela dołącza do grupy przez własne pole `groupId`, więc grupa nie przechowuje listy członków. Postać zapisu zawiera tę kolekcję, podobnie jak `doc.tableGroupIds`, tylko wtedy, gdy istnieje grupa, a dokument bez niej, taki jak zapisany przed wersją `4.0.0`, nie ma grup. `Show.hideTableGroup` je ukrywa.  
+Od wersji `4.0.0` dokument może zawierać [grupy tabel](../../guide/guides/table-groups.md): nazwane, kolorowe prostokąty rysowane za tabelami i notatkami. Tabela, a od wersji `5.1.1` także notatka, dołącza do grupy przez własne pole `groupId`, więc grupa nie przechowuje listy członków. Postać zapisu zawiera tę kolekcję, podobnie jak `doc.tableGroupIds`, tylko wtedy, gdy istnieje grupa, a dokument bez niej, taki jak zapisany przed wersją `4.0.0`, nie ma grup. `Show.hideTableGroup` je ukrywa.  
 Edytor w wersji starszej niż `4.0.0` przy wczytywaniu dokumentu pomija grupy i pole `groupId` każdej tabeli, więc zapis w tym edytorze powoduje utratę wszystkich grup.
 
 ### Wiersze słowników {#dictionary-rows}
@@ -525,6 +529,8 @@ Umieść pole `$schema` na początku pliku `.erd.json`, a edytory obsługujące 
 Od wersji `4.0.0` schemat opisuje wyłącznie postać zapisu. Każdy obiekt z nazwanymi polami jest zamknięty (`additionalProperties: false`), każde pole, które postać zapisu zawsze zawiera, jest wymagane, każde pole oznaczone w powyższych typach znakiem `?` jest wymienione, ale nie jest wymagane, a żadne inne pole nie jest wymienione. Schemat odrzuca więc plik zapisany przed wersją `4.0.0`, z jego polem `meta`, szerokościami, `zIndex`, `ignoreSaveSettings` i resztą, dopóki edytor w wersji `4.0.0` lub nowszej nie zapisze tego pliku ponownie. Plik zapisany przez wersję `3.2.0` lub nowszą już wskazuje adres URL tego schematu, który prowadzi do gałęzi `main`, więc edytor walidujący względem niego teraz zgłasza błędy w tym pliku. Plik zapisany przez wersję `3.0.0` lub `3.1.0` albo dokument v2 nie zawiera pola `$schema`.
 
 Od wersji `4.2.0` schemat nie wymaga już pól tekstowych encji, żadnej listy `doc`, żadnej kolekcji ani samego pola `collections`, które postać zapisu pomija, gdy niczego nie zawierają. Nadal przyjmuje plik zapisany przez wersję `4.0.0` lub `4.1.0`. Wymienia nowe pola: pole `nameViewMode`, które przyjmuje tylko `"logical"` i `"both"`; pola `logicalName` i `nameDerived` tabeli, z których drugie przyjmuje tylko `true`; pola `logicalName` i `domainId` kolumny; oraz trzy słowniki, każdy z nagłówkiem i wierszami ciągów znaków. Pole `canvasType` wymienia kartę Słownik, pole `columnOrder` przyjmuje siedem lub dziewięć liczb całkowitych, a opisy pól `show`, `columnOrder`, `lockSettings` i `options` wymieniają nowe bity.
+
+Od wersji `5.1.1` schemat wymienia też pole `groupId` notatki, które kopia schematu pobrana przed wersją `5.1.1` odrzuca.
 
 ```json
 {
@@ -939,6 +945,10 @@ Od wersji `4.2.0` schemat nie wymaga już pól tekstowych encji, żadnej listy `
           "value": {
             "type": "string"
           },
+          "groupId": {
+            "description": "Id of the table group in doc.tableGroupIds the memo belongs to; absent means none",
+            "type": "string"
+          },
           "ui": {
             "type": "object",
             "properties": {
@@ -967,7 +977,7 @@ Od wersji `4.2.0` schemat nie wymaga już pól tekstowych encji, żadnej listy `
       }
     },
     "tableGroupEntities": {
-      "description": "Named, coloured rectangles drawn behind tables; a table joins one through its groupId. Written while a group exists; absent means none",
+      "description": "Named, coloured rectangles drawn behind tables and memos; a table or a memo joins one through its groupId. Written while a group exists; absent means none",
       "type": "object",
       "additionalProperties": {
         "type": "object",

@@ -14,7 +14,7 @@ To, co serwer znajdzie, decyduje, dokąd trafia zmiana.
 | --- | --- |
 | Edytor, którego obszar roboczy, sejf lub otwarty projekt zawiera dokument albo w którym dokument jest otwarty | **Live.** W razie potrzeby otwiera dokument w ERD Editor, dołącza do sesji edycji i tam stosuje zmianę. Zmiany pojawiają się od razu i są zapisywane tak, jak edytor zapisuje twoje – zobacz sekcję [Zapisywanie](#saving). |
 | Brak edytora | **Headless.** Wczytuje plik, stosuje zmianę i zastępuje plik, zanim zwróci odpowiedź, więc wynik podaje `saved: true`, a narzędzie `erd_save` nie ma nic do zrobienia. |
-| Edytor z wyłączonym hubem | **Odrzucenie.** Odczyty nadal działają, ale korzystają z dysku. Zmianę zapisaną w pliku otwartym w edytorze mógłby nadpisać następny zapis tego edytora, więc serwer niczego nie zapisuje. |
+| Edytor z wyłączonym hubem | **Odrzucenie.** Odczyty i `erd_export_svg` nadal działają, ale korzystają z dysku. Zmianę zapisaną w pliku otwartym w edytorze mógłby nadpisać następny zapis tego edytora, więc serwer niczego nie zapisuje w dokumencie. |
 | Edytor z włączonym hubem, który jednak używa innego protokołu niż serwer: przy serwerze w wersji `1.0.0` lub nowszej rozszerzenie VS Code w wersji `3.x`, wtyczka Obsidian w wersji `0.x` lub wtyczka JetBrains w wersji `0.9.0` albo `0.10.0`; przy serwerze w wersji starszej niż `1.0.0` rozszerzenie w wersji `4.0.0` lub nowszej albo wtyczka w wersji `1.0.0` lub nowszej | **Odrzucenie**, także odczytów, z kodem `protocolMismatch`. Komunikat wskazuje stronę, którą trzeba zaktualizować: rozszerzenie lub wtyczkę albo serwer – zobacz sekcję [Aktualizacja](./installation.md#updating). |
 | W systemie Windows edytor, który ma dokument pod inną ścieżką prowadzącą do tego samego pliku: agent wskazał go przez udział sieciowy lub zmapowany dysk tego komputera, np. `\\localhost\C$\…`, a edytor ma go pod ścieżką z literą dysku, albo odwrotnie | **Odrzucenie**, także odczytów, z kodem `invalidPath`. Komunikat podaje ścieżkę, pod którą edytor ma dokument; wywołaj ponownie z tą ścieżką. |
 | W systemie Windows edytor, do którego Windows nie dopuszcza agenta: edytor uruchomiony jako administrator, gdy agent nie został tak uruchomiony, albo dowolny edytor, gdy agent działa w piaskownicy | **Odrzucenie**, także odczytów, z kodem `hubUnreachable` i komunikatem, który podaje przyczynę. Uruchom edytor i agenta z tymi samymi uprawnieniami, na przykład uruchamiając edytor ponownie bez uprawnień administratora. |
@@ -27,15 +27,17 @@ Przy remisie, na przykład gdy dokument jest otwarty w dwóch edytorach, wygrywa
 Dlatego dokument w sejfie aplikacji Obsidian znajdującym się w folderze obszaru roboczego VS Code trafia do aplikacji Obsidian, chyba że jest otwarty w VS Code, a w aplikacji Obsidian nie.
 
 Wywołania dotyczące jednego dokumentu są wykonywane pojedynczo, w kolejności, w jakiej dotarły do serwera. Wywołania dotyczące różnych dokumentów są wykonywane równolegle.
+Narzędzie `erd_export_svg` czeka na swoją kolej tylko po to, by odczytać dokument, więc późniejsze wywołanie dotyczące dokumentu nie czeka na rysowanie, a serwer wykonuje naraz tylko jeden eksport, nawet gdy dotyczą one dwóch różnych dokumentów – zobacz sekcję [Eksport SVG](./tools.md#svg-export).
 
 ## Live {#live}
 
 Agent dołącza do edytora jak kolejny współpracownik.
 Jego zmiany od razu docierają do każdego edytora, w którym otwarty jest dokument, a jego fokus jest rysowany na edytowanej przez niego tabeli i komórce, tak jak fokus współpracownika – zobacz sekcję [focusTracker](../api/advanced/collaborative-editing.md#focustracker).
 
-Odczyt nigdy nie otwiera edytora. Zmiana otwiera dokument w ERD Editor, jeśli nie jest on jeszcze otwarty, bez przejmowania fokusu klawiatury.
+Odczyt nigdy nie otwiera edytora, podobnie jak narzędzie `erd_export_svg`, które rysuje to, co zawiera edytor, łącznie ze zmianami jeszcze niezapisanymi. Zmiana otwiera dokument w ERD Editor, jeśli nie jest on jeszcze otwarty, bez przejmowania fokusu klawiatury.
 
 Edytor z rozszerzeniem VS Code w wersji starszej niż `4.2.0` albo z wtyczką Obsidian lub JetBrains w wersji starszej niż `1.2.0` nadal przyjmuje zmiany agenta na żywo, ale ani nie wyświetla, ani nie zachowuje nazw logicznych, powiązań z domeną i wierszy słowników zapisywanych przez agenta – zobacz sekcję [Aktualizacja](./installation.md#updating).
+Podobnie edytor z rozszerzeniem w wersji starszej niż `4.3.1` lub wtyczką w wersji starszej niż `1.3.1` ani nie wyświetla, ani nie zachowuje tego, do której grupy tabel należy notatka: notatka, którą agent umieszcza w grupie, nie należy tam do żadnej, a edytor pomija grupę notatki w pliku przy zapisie, choć wywołanie agenta kończy się powodzeniem.
 
 Przy rozszerzeniu VS Code w wersji `4.3.0` lub nowszej albo wtyczce Obsidian lub JetBrains w wersji `1.3.0` lub nowszej import w trybie `replace` oraz cofnięcie lub ponowienie takiego importu wywołaniem `erd_undo` lub `erd_redo` kończą rysowanie relacji, którą tworzysz w edytorze, niezależnie od wersji serwera – zobacz sekcję [Tworzenie relacji](../guide/guides/editing-start.md#relationship-creation).
 Przed tymi wersjami rysowanie pozostawało aktywne, a kliknięcie tabeli mogło dodać relację z tabeli, której nie było już w diagramie.
@@ -53,11 +55,11 @@ Zmiana kolejności kolumn, twoja lub `erd_move_column` albo `erd_move_index_colu
 Zmiana bazy danych, twoja lub `erd_set_database` agenta, również jest stosowana w kolejności nadejścia, więc dwie wykonane w tej samej chwili mogą pozostawić edytor i agenta przy różnych bazach danych.
 
 Twoje przeciągnięcie oraz `erd_move_table`, `erd_move_tables`, `erd_move_memo`, `erd_move_table_group` i `erd_sort_tables` agenta są przesyłane jako punkty, w których się kończą, więc dwa przesunięcia jednej tabeli, notatki lub grupy tabel kończą się tam, gdzie umieściło ją jedno z nich, a nigdy w sumie obu.
-Narzędzie `erd_move_table_group` wysyła punkt grupy i każdej z jej tabel w jednym pakiecie, tak jak przeciągnięcie paska tytułu grupy.
+Narzędzie `erd_move_table_group` wysyła punkt grupy i każdej z jej tabel w jednym pakiecie, tak jak przeciągnięcie paska tytułu grupy, a od wersji serwera `1.2.1` także punkt każdej z jej notatek.
 Zmiana rozmiaru zapisuje położenie i rozmiar razem, więc przesunięcie i zmiana rozmiaru jednej notatki lub grupy tabel wykonane w tej samej chwili, na przykład `erd_resize_memo` podczas przeciągania tej notatki, kończą się jednym prostokątem po obu stronach: tym ze zmiany rozmiaru albo, gdy wygrywa przesunięcie, punktem przesunięcia z rozmiarem ze zmiany rozmiaru.
 Przesunięcie o mniej niż 20 pikseli, które nie tworzy wpisu w historii cofania, również jest wysyłane jako punkt, w którym się kończy, więc może wygrać z przesunięciem drugiej strony, czy to krótkie przesunięcie narzędziem `erd_move_table_group`, czy twoje krótkie przeciągnięcie, na przykład kliknięcie, które przesuwa tabelę o kilka pikseli.
 
-Starsze wersje nadal się łączą, ponieważ serwer w wersji `1.2.0` posługuje się protokołem huba w wersji 2, tak jak wersje od `1.0.0` do `1.1.1`.
+Starsze wersje nadal się łączą, ponieważ serwer w wersji `1.2.0` lub nowszej posługuje się protokołem huba w wersji 2, tak jak wersje od `1.0.0` do `1.1.1`.
 Przy serwerze w wersji starszej niż `1.2.0`, rozszerzeniu w wersji starszej niż `4.3.0` lub wtyczce w wersji starszej niż `1.3.0` przesunięcie lub zmiana rozmiaru jednej tabeli, notatki lub grupy tabel wykonane w tej samej chwili mogą pozostawić edytor i agenta z różnymi położeniami.
 Starszy edytor wysyła twoje przeciągnięcie jako przebytą odległość, a serwer w wersji starszej niż `1.2.0` w ten sam sposób wysyła przesunięcie narzędziem `erd_move_table_group`.
 Druga strona dodaje tę odległość do punktu, który przechowuje.
@@ -97,7 +99,7 @@ Polecenie [Cofnij](../guide/guides/undo-redo.md) samego edytora działa odwrotni
 
 Kilka zmian nie tworzy wpisu w historii cofania edytora: `erd_set_database` i `erd_set_database_name` spośród [narzędzi ustawień](./tools.md#settings) oraz `erd_resize_memo`.
 Nie tworzy go też wywołanie `erd_move_table_group`, które przesuwa grupę łącznie o mniej niż 20 pikseli, licząc razem przesunięcie w poziomie i w pionie, choć grupa pozostaje tam, gdzie została przesunięta.
-Nie tworzy go również wywołanie, które niczego nie zmienia: `erd_set_column_primary_key`, `erd_set_column_unique`, `erd_set_column_not_null`, `erd_set_column_auto_increment`, `erd_set_index_unique` lub `erd_set_index_column_order` ustawiające wartość, którą dokument już ma; `erd_add_index_column` z kolumną, która już jest w indeksie; `erd_set_table_group` z tabelami, które już są w tej grupie (lub już nie należą do żadnej, przy argumencie `groupId` o wartości `null`); `erd_move_table_group` do punktu, w którym grupa już się znajduje; `erd_resize_table_group` do prostokąta, który grupa już ma; `erd_sort_tables` w dokumencie bez tabel; `erd_set_table_logical_name` lub `erd_set_column_logical_name` z nazwą logiczną, którą tabela lub kolumna już ma, gdy generowanie na jej podstawie niczego by nie zmieniło; `erd_set_column_domain` z domeną, z którą kolumna jest już powiązana, gdy kolumna ma już typ tej domeny, a [Synchronizacja typu danych w relacjach](../guide/guides/settings.md#relationship-datatype-sync) nie zmieniłaby typu żadnej kolumny wzdłuż jej relacji; `erd_update_word`, `erd_update_term` lub `erd_update_domain` wyłącznie z wartościami, które wiersz już ma, chyba że terminowi bez nazwy fizycznej przekazano argument `name`, a jego słowa składają się na nazwę fizyczną; `erd_derive_physical_names`, gdy każda objęta nim nazwa z nazwą logiczną ma już wartość, którą nadają jej [słowniki](./tools.md#dictionaries), i jest oznaczona jako wygenerowana; albo import z argumentem `mode` o wartości `append`, który nie dodaje żadnej tabeli (w przypadku `erd_import_json` żadnej tabeli ani notatki).
+Nie tworzy go również wywołanie, które niczego nie zmienia: `erd_set_column_primary_key`, `erd_set_column_unique`, `erd_set_column_not_null`, `erd_set_column_auto_increment`, `erd_set_index_unique` lub `erd_set_index_column_order` ustawiające wartość, którą dokument już ma; `erd_add_index_column` z kolumną, która już jest w indeksie; `erd_set_table_group` z tabelami, które już są w tej grupie (lub już nie należą do żadnej, przy argumencie `groupId` o wartości `null`); `erd_set_memo_group` z notatkami, które już są w tej grupie (lub już nie należą do żadnej); `erd_move_table_group` do punktu, w którym grupa już się znajduje; `erd_resize_table_group` do prostokąta, który grupa już ma; `erd_sort_tables` w dokumencie bez tabel; `erd_set_table_logical_name` lub `erd_set_column_logical_name` z nazwą logiczną, którą tabela lub kolumna już ma, gdy generowanie na jej podstawie niczego by nie zmieniło; `erd_set_column_domain` z domeną, z którą kolumna jest już powiązana, gdy kolumna ma już typ tej domeny, a [Synchronizacja typu danych w relacjach](../guide/guides/settings.md#relationship-datatype-sync) nie zmieniłaby typu żadnej kolumny wzdłuż jej relacji; `erd_update_word`, `erd_update_term` lub `erd_update_domain` wyłącznie z wartościami, które wiersz już ma, chyba że terminowi bez nazwy fizycznej przekazano argument `name`, a jego słowa składają się na nazwę fizyczną; `erd_derive_physical_names`, gdy każda objęta nim nazwa z nazwą logiczną ma już wartość, którą nadają jej [słowniki](./tools.md#dictionaries), i jest oznaczona jako wygenerowana; albo import z argumentem `mode` o wartości `append`, który nie dodaje żadnej tabeli (w przypadku `erd_import_json` żadnej tabeli ani notatki).
 Narzędzie `erd_undo` pomija takie wywołania i wymienia je w swoim wyniku.
 Inne zmiany, takie jak `erd_change_relationship_type`, `erd_change_relationship_on_delete`, `erd_change_relationship_on_update`, `erd_change_table_group_name`, `erd_change_table_group_color` i `erd_set_ddl_script`, tworzą wpis nawet wtedy, gdy ustawiają wartość, którą dokument już ma.
 
@@ -120,7 +122,7 @@ Zamknięty diagram w folderze obsługiwanym przez edytor pozostaje przy edytorze
 Edytor, który nadal działa, ale którego plik blokady zniknął, a połączenie zostało zamknięte, choć edytor nie zamknął dokumentu, odrzuca następną zmianę z kodem `hubGone`.
 Komunikat podaje, co zwalnia dokument: w VS Code przeładuj to okno albo je zamknij, aby agent mógł edytować plik bezpośrednio; w aplikacji Obsidian ponownie włącz wtyczkę ERD Editor albo zamknij to okno; w IDE JetBrains ponownie włącz wtyczkę albo zamknij IDE.
 
-W dwóch przypadkach odczyt korzysta zamiast tego z pliku na dysku, z uwagą, że brakuje w nim zmian jeszcze niezapisanych w edytorze: gdy edytor, do którego należy dokument, ma wyłączony hub, oraz w opisanym wyżej przypadku `hubGone`.
+W dwóch przypadkach odczyt lub `erd_export_svg` korzysta zamiast tego z pliku na dysku, z uwagą, że brakuje w nim zmian jeszcze niezapisanych w edytorze: gdy edytor, do którego należy dokument, ma wyłączony hub, oraz w opisanym wyżej przypadku `hubGone`.
 Odczyt, który nie może połączyć się z hubem edytora, jest odrzucany z kodem `hubUnreachable`, tak jak zmiana.
 
 ## Headless {#headless}
@@ -133,7 +135,7 @@ Jeśli tak, nic nie jest zapisywane, plik jest wczytywany ponownie, a wywołanie
 Plik, który zmienił się między dwoma wywołaniami, jest po prostu wczytywany ponownie, a historia cofania agenta sprzed tego momentu przepada.
 
 Plik tylko do odczytu pozostaje nietknięty, a edycja jest odrzucana z kodem `readonly`: chodzi o plik bez uprawnienia do zapisu dla właściciela lub, w systemie Windows, z atrybutem tylko do odczytu, na przykład plik Perforce lub TFVC, który nie został wyewidencjonowany.
-Umożliw zapis do pliku, a potem wywołaj ponownie. Odczyty nadal działają.
+Umożliw zapis do pliku, a potem wywołaj ponownie. Odczyty i `erd_export_svg` nadal działają.
 
 Jeśli edytor zacznie obsługiwać dokument, gdy agent edytuje go na dysku, ta jedna zmiana jest odrzucana z kodem `hubAppeared` i nic nie zostaje zapisane. Następne wywołanie wprowadza zmianę przez edytor.
 
@@ -142,7 +144,7 @@ W systemie Windows obowiązują jeszcze dwie reguły:
 - Dokument z własnymi uprawnieniami, innymi niż uprawnienia jego folderu, jest zapisywany w miejscu, a nie zastępowany, aby je zachował, a plik tymczasowy jest potem usuwany. Program, który odczytuje dokument podczas tego zapisu, może natrafić na tekst, którego nie da się sparsować.
 - Pliku, który inny program ma otwarty, nie można zastąpić, więc serwer ponawia próby przez maksymalnie dwie sekundy. Każda próba najpierw ponownie szuka edytora, a edytor, który w międzyczasie zaczął obsługiwać dokument, odrzuca zapis z kodem `hubAppeared` albo, gdy jego hub jest wyłączony, z kodem `blocked`. Jeśli po dwóch sekundach plik nadal jest zajęty, nic nie jest zapisywane, plik jest wczytywany ponownie, a wywołanie kończy się niepowodzeniem z komunikatem cytującym błąd systemowy.
 
-Serwer w wersji starszej niż `1.1.0` odczytuje dokument bez jego nazw logicznych, powiązań jego kolumn z domenami oraz jego słów, terminów i domen, więc pierwsza zmiana, którą zapisze w pliku, je pomija. Zaktualizuj serwer – zobacz sekcję [Aktualizacja](./installation.md#updating).
+Serwer w wersji starszej niż `1.1.0` odczytuje dokument bez jego nazw logicznych, powiązań jego kolumn z domenami oraz jego słów, terminów i domen, więc pierwsza zmiana, którą zapisze w pliku, je pomija. Serwer w wersji starszej niż `1.2.1` w ten sam sposób odczytuje go bez informacji o tym, do których grup tabel należą jego notatki, więc pierwsza zmiana, którą zapisze w pliku, wyjmuje każdą notatkę z jej grupy. Zaktualizuj serwer – zobacz sekcję [Aktualizacja](./installation.md#updating).
 
 ## Odrzucenie {#refused}
 
@@ -151,7 +153,7 @@ Okno sejfu aplikacji Obsidian utrzymuje swój plik blokady przy wyłączonym hub
 IDE JetBrains utrzymuje swój plik blokady przy wyłączonym hubie, gdy opcja Coding agents jest wyłączona, gdy jego hub nie mógł rozpocząć nasłuchiwania oraz gdy IDE kończy działanie.
 
 Zmiana takiego dokumentu jest odrzucana z kodem `blocked`, ponieważ otwarty edytor mógłby przy następnym zapisie nadpisać zmianę zapisaną w pliku.
-Odczyty nadal działają, ale korzystają z pliku na dysku.
+Odczyty nadal działają, ale korzystają z pliku na dysku, podobnie jak `erd_export_svg`, którego wynik podaje wtedy tryb `blocked`.
 
 Aby agent mógł edytować, ponownie włącz hub zgodnie z komunikatem dla danego edytora: w VS Code zaufaj obszarowi roboczemu i włącz ustawienie albo przeładuj okno; w aplikacji Obsidian włącz opcję Coding agents albo przeładuj aplikację Obsidian; w IDE JetBrains włącz opcję Coding agents albo, jeśli jest już włączona, uruchom ponownie IDE.
 

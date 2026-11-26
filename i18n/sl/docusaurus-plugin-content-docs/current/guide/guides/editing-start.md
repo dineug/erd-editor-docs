@@ -55,16 +55,17 @@ Dokler je možnost View Option → `Memos` izklopljena, so beležke skrite, post
 Beležka je zapis s prostim besedilom na platnu. Kliknite v njeno notranjost in tipkajte; besedilo se shrani z dokumentom.  
 Tipka `Escape` konča urejanje beležke, pri čemer ohrani, kar ste vnesli, in pusti beležko izbrano, drugi pritisk tipke `Escape` pa počisti izbor.  
 Povlecite njen rob, da spremenite velikost. Znak `x` v njeni glavi, ki je prikazan, dokler je kazalec nad beležko, jo izbriše.  
-Klik z desno tipko miške na beležko namesto urejanja odpre njen meni: `Color`, `Remove color`, dokler ima kateri od izbranih elementov barvo, in `Delete`, ki se glasi `Delete selected`, dokler je beležka eden od dveh ali več izbranih elementov. Izbrana beležka se izbriše tudi s tipkami, ki brišejo tabele – glejte razdelek [Brisanje tabel in beležk](./table-related-functions.md#table-and-memo-deletion).
+Klik z desno tipko miške na beležko namesto urejanja odpre njen meni: `Color`, `Remove color`, dokler ima kateri od izbranih elementov barvo, `Group selected tables`, dokler izbor vsebuje tabelo in so skupine tabel prikazane, `Remove from group`, dokler je kakšna izbrana tabela ali beležka v skupini, in `Delete`, ki se glasi `Delete selected`, dokler je beležka eden od dveh ali več izbranih elementov. Izbrana beležka se izbriše tudi s tipkami, ki brišejo tabele – glejte razdelek [Brisanje tabel in beležk](./table-related-functions.md#table-and-memo-deletion).  
+Tako kot tabela se tudi beležka pridruži [skupini tabel](./table-groups.md) ali jo zapusti glede na to, kam jo spustite. Iz skupine jo odstrani tudi postavka `Remove from group`, postavka `Group selected tables` pa jo postavi v novo skupino skupaj s tabelami, izbranimi hkrati z njo – glejte razdelek [Dodajanje in odstranjevanje tabel](./table-groups.md#adding-and-removing-tables).
 
 ![Dodajanje beležke z Alt + M, vnos besedila in vlečenje roba za spremembo velikosti](/img/demo-memo.webp)
 
 ## Ustvarjanje skupine tabel {#table-group-creation}
 
-Skupina tabel je okvir, ki vsebuje tabele, dodelite pa ji lahko ime in barvo. Ustvarite jo na enega od dveh načinov:
+Skupina tabel je okvir, ki vsebuje tabele in beležke, dodelite pa ji lahko ime in barvo. Ustvarite jo na enega od dveh načinov:
 
-- Izberite `New Table Group` v priročnem meniju ali v hitrem iskanju, kliknite gumb `New Table Group` v [orodni vrstici platna](./table-related-functions.md#canvas-toolbar) ali pritisnite `Alt + G` (Windows/Linux) ali `⌥ + G` (Mac), nato pa povlecite okvir po platnu. Vsaka tabela, katere središče leži znotraj okvira, se pridruži novi skupini, razen če je že v drugi skupini – glejte razdelek [Risanje skupine](./table-groups.md#drawing-a-group).
-- Izberite tabele in v priročnem meniju tabele izberite `Group selected tables` ali v hitrem iskanju `Group Selected Tables` ali pa pritisnite `T` in nato `G` – glejte razdelek [Združevanje izbranih tabel v skupino](./table-groups.md#grouping-selected-tables).
+- Izberite `New Table Group` v priročnem meniju ali v hitrem iskanju, kliknite gumb `New Table Group` v [orodni vrstici platna](./table-related-functions.md#canvas-toolbar) ali pritisnite `Alt + G` (Windows/Linux) ali `⌥ + G` (Mac), nato pa povlecite okvir po platnu. Vsaka tabela in vsaka prikazana beležka, katere središče leži znotraj okvira, se pridruži novi skupini, razen če je že v drugi skupini – glejte razdelek [Risanje skupine](./table-groups.md#drawing-a-group).
+- Izberite tabele in po potrebi še beležke zraven njih ter v priročnem meniju tabele ali beležke izberite `Group selected tables` ali v hitrem iskanju `Group Selected Tables` ali pa pritisnite `T` in nato `G` – glejte razdelek [Združevanje izbranih tabel v skupino](./table-groups.md#grouping-selected-tables).
 
 Poimenovanje, barvanje, premikanje, spreminjanje velikosti in vse drugo je opisano na strani [Skupine tabel](./table-groups.md).
 

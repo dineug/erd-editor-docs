@@ -1,11 +1,11 @@
 ---
 sidebar_position: 4
-description: Every tool the erd-editor MCP server offers — reading a document a page at a time, the dictionary checks, the 67 edit tools, erd_batch, and what a result and a refusal look like.
+description: Every tool the erd-editor MCP server offers — reading a document a page at a time, the dictionary checks, the SVG export, the 68 edit tools, erd_batch, and what a result and a refusal look like.
 ---
 
 # Tools
 
-The server offers 77 tools: five session tools, four read tools, 67 edit tools, one per editing operation, and `erd_batch`, which runs several edit tools as one edit.
+The server offers 79 tools: five session tools, four read tools, `erd_export_svg`, which draws a document as an SVG image, 68 edit tools, one per editing operation, and `erd_batch`, which runs several edit tools as one edit.
 
 Every tool but `erd_list_documents` takes the document's `path` as its first argument, and the tables below leave it out.
 An argument marked `?` is optional.
@@ -26,14 +26,14 @@ See [Live and Headless](./live-and-headless.md) for what saving and undo do in e
 
 | Tool | Arguments | What it does |
 | --- | --- | --- |
-| `erd_list` | `query?`, `offset?`, `limit?`, `namesOnly?` | The settings and counts, then a page of tables with their indexes and relationships, each table with its id, position and size on the canvas, column count, logical name if it has one, and table group if it is in one. Unless it searches, the table groups, the memos, and then the domains, terms, and words follow the tables. |
-| `erd_get` | `tableIds?`, `tableNames?`, `relationshipIds?`, `indexIds?`, `memoIds?`, `tableGroupIds?`, `wordIds?`, `termIds?`, `domainIds?` | The entities named, in full: tables with their columns and their table group, relationships with their columns and their `onDelete` and `onUpdate`, indexes with their columns, memos with their text, table groups with their tables, and words, terms, and domains with every field. |
+| `erd_list` | `query?`, `offset?`, `limit?`, `namesOnly?` | The settings and counts, then a page of tables with their indexes and relationships, each table with its id, position and size on the canvas, column count, logical name if it has one, and table group if it is in one. Unless it searches, the table groups, the memos, each with its table group if it is in one, and then the domains, terms, and words follow the tables. |
+| `erd_get` | `tableIds?`, `tableNames?`, `relationshipIds?`, `indexIds?`, `memoIds?`, `tableGroupIds?`, `wordIds?`, `termIds?`, `domainIds?` | The entities named, in full: tables with their columns and their table group, relationships with their columns and their `onDelete` and `onUpdate`, indexes with their columns, memos with their text and their table group, table groups with their tables and memos, and words, terms, and domains with every field. |
 | `erd_read` | `format`, `vendor?`, `statements?`, `header?`, `logicalNameAsComment?`, `tableIds?`, `tableNames?`, `groupNames?` | The whole document at once in one of four formats, or the DDL of just some tables or table groups. |
 | `erd_list_checks` | `level?`, `tableIds?`, `tableNames?`, `offset?`, `limit?` | What the word, term, and domain dictionaries find wrong, as the `Checks` sheet of the editor's Dictionary tab lists it, a page at a time. It changes nothing — see [Dictionary Checks](#dictionary-checks). |
 
 An agent finds ids with `erd_list`, reads columns, dictionary rows, and other details with `erd_get`, and passes those ids to the edit tools.
 A table's size in `erd_list` is the box it takes on the canvas: the height exact, the width approximate.
-A table group is listed by the rect it stores, with its name, its color, and how many tables it holds.
+A table group is listed by the rect it stores, with its name, its color, and how many tables and memos it holds.
 Each relationship is listed once, with one of its two tables.
 A dictionary row is listed by its id, its `name`, and what it gives a physical name or a column: the `dataType` of a domain, the `physicalName` and `domainId` of a term, and the `abbreviation` of a word. Each dictionary lists its rows in the order its sheet shows.
 The settings `erd_list` and `erd_read` report are those the file saves — see [Settings](#settings).
@@ -45,7 +45,7 @@ Every column carries its `domainId`, and so does every term: an empty string for
 
 | `format` | What it answers |
 | --- | --- |
-| `snapshot` | Compact JSON with every entity and its id, table groups and the word, term, and domain rows included, and the settings with the Schema SQL scripts. It leaves out what differs from one viewer to another: measured widths, the stacking order, the view, the tab, and the Name View. Large on a big schema. |
+| `snapshot` | Compact JSON with every entity and its id, table groups with their tables and memos, and the word, term, and domain rows included, and the settings with the Schema SQL scripts. It leaves out what differs from one viewer to another: measured widths, the stacking order, the view, the tab, and the Name View. Large on a big schema. |
 | `sql` | DDL for one of the eight databases, `Databricks`, `MariaDB`, `MSSQL`, `MySQL`, `Oracle`, `PostgreSQL`, `Snowflake`, or `SQLite`. `vendor` defaults to the database the document is set to. The DDL of the whole document includes its before and after scripts. With `tableIds`, `tableNames`, or `groupNames`, only those tables, with the foreign keys they hold, and no scripts. Foreign keys carry their ON DELETE and ON UPDATE actions, except those the target database leaves out — see [ON DELETE and ON UPDATE](../guide/guides/relationship-editing.md#on-delete-and-on-update). |
 | `json` | The whole document exactly as a save writes the file, any edits the editor has not saved yet included — see [Storage Form](../api/advanced/schema.md#storage-form). |
 | `scripts` | The document's before and after scripts alone, as `{"before":"…","after":"…"}`, each empty when unset, however large the schema. |
@@ -103,6 +103,37 @@ Each check gives its `level`, its `code`, and the `kind` and `id` of its target:
 
 How each check reads a name is in [What Each Check Finds](../guide/guides/dictionary.md#what-each-check-finds).
 
+## SVG Export
+
+| Tool | Arguments | What it does |
+| --- | --- | --- |
+| `erd_export_svg` | `output?`, `darkMode?`, `background?` | Draws the document as an SVG image and writes it to the `.svg` file `output` names, or, without `output`, answers the SVG text. It changes no document. |
+
+The server draws the image itself, so it needs only server `1.2.1` or later and works with any ERD Editor extension or plugin release that connects.
+Like `toImage()`, it draws the image the editor's `Export image` dialog saves as an SVG, but from the document alone: the whole diagram at 100%, leaving out what View Option hides in the document, in the preset colors, with tables and columns named in the Name View the document holds and the diagram's own words in English — see [What It Draws](../api/to-image.md#what-it-draws).
+The server measures text without the editor's fonts, so a table can come out a little wider than the editor draws it.
+There is no PNG and no copy to the clipboard.
+
+- `darkMode`: `true` draws the dark theme; `false`, the default, the light one. No theme of an editor's screen reaches the image.
+- `background`: `true`, the default, paints the canvas color behind the diagram; `false` leaves it transparent.
+- `output`: the file to write, absolute or relative to the server's working directory, with a name ending in `.svg` in any case, in a folder that already exists. A file already there is replaced through a temporary file beside it, and a symbolic link is followed to the file it leads to.
+
+The export reads the document as the read tools do: what the editor that serves it holds, edits not yet saved included, or else the file. Like a read, it never opens the document in an editor.
+Its answer's `mode` says which: `live`, `headless`, or, when an editor with its hub off holds the document, `blocked`, with a note that the file on disk was drawn without the edits not yet saved in that editor — see [Live and Headless](./live-and-headless.md).
+
+With `output`, the answer is one line of JSON: the `mode`, the document's `path`, the `output` written, its size in `bytes`, the SVG's `width` and `height`, and `notes` when there are any.
+
+```json
+{"mode":"headless","path":"/work/shop.erd.json","output":"/work/docs/shop.svg","bytes":48213,"width":1210,"height":764}
+```
+
+Without `output`, the answer is the SVG text, then `{"mode":"…"}` with any notes. An SVG over 40,000 characters, the most one answer returns, is refused with `tooLarge`: pass `output` to have it written to a file instead.
+
+`output` is checked before the document is read, so a refused one costs no drawing: an empty one, a name that does not end in `.svg`, one that names a folder, and a link that leads to no file or to one whose name does not end in `.svg` are refused with `invalidPath`, and one in a folder that does not exist with `notFound`. A read-only file is refused with `readonly` once the image is drawn, and left as it was.
+
+An export makes no undo entry and leaves nothing to save, and `erd_batch` refuses it, as it refuses a read tool.
+A large diagram takes a few seconds to draw, and the server draws one export at a time.
+
 ## Edit Tools
 
 Ids come from `erd_list` and `erd_get`, or from the `createdIds` of the call that made the entity.
@@ -121,7 +152,7 @@ A new id is 25 lowercase letters and digits, such as `03h17be2plxpj5n59tqag7ogj`
 | `erd_change_table_color` | `tableId`, `color` | Sets the color of a table. |
 | `erd_move_table` | `tableId`, `x`, `y` | Moves a table to a position on the canvas. |
 | `erd_move_tables` | `positions` | Moves several tables in one edit, which one `erd_undo` reverts. `positions` holds `{ tableId, x, y }` per table, each table at most once. |
-| `erd_sort_tables` | | Places every table in rows across the canvas, fewest columns first, as `erd_import_sql`, `erd_import_graphql`, `erd_import_dbml`, and `erd_import_aml` place them. The tables of a table group stay together, and each group's box is fitted round them. |
+| `erd_sort_tables` | | Places every table in rows across the canvas, fewest columns first, as `erd_import_sql`, `erd_import_graphql`, `erd_import_dbml`, and `erd_import_aml` place them. The tables of a table group stay together, followed by its memos while memos are shown, and each group's box is fitted round them. While memos are hidden, a group's memos move with its tables. A memo in no group, or in a group that holds no table, stays where it is. |
 
 ### Columns
 
@@ -190,28 +221,33 @@ An index column id is an entry of the index's column list that `erd_get` gives, 
 | `erd_move_memo` | `memoId`, `x`, `y` | Moves a memo to a position on the canvas. |
 | `erd_resize_memo` | `memoId`, `width`, `height` | Resizes a memo. The width must be at least about `116` pixels and the height at least `100`. It makes no undo entry, since the editor records a memo resize only from a drag. |
 
+A memo can be in one table group, which it moves with — see [Table Groups](#table-groups).
+
 While memos are hidden with [View Option](../guide/guides/table-related-functions.md#table-view-options) → `Memos`, `erd_add_memo` still adds one, and it stays hidden until memos are shown again.
 `erd_list` and `erd_get` list hidden memos too.
 
 ### Table Groups
 
-A table group is a named box drawn behind its tables, and its color shows on the box and across the headers of its tables — see [Table Groups](../guide/guides/table-groups.md).
-A table is in one group at most. `erd_move_table`, `erd_move_tables`, and `erd_move_table_group` never change which tables a group holds, wherever they place a table, while in the editor a table joins or leaves a group where it is dropped — see [Adding and Removing Tables](../guide/guides/table-groups.md#adding-and-removing-tables). `erd_add_table_group` and `erd_set_table_group` put tables in a group, and `erd_remove_table_group` leaves its tables in none.
-A group stores a rect, at least `160` pixels wide and `100` high, title bar included, and the editor draws the box grown to hold each of its tables.
+A table group is a named box drawn behind its tables and memos, and its color shows on the box and across the headers of its tables and memos — see [Table Groups](../guide/guides/table-groups.md).
+A table or a memo is in one group at most. `erd_move_table`, `erd_move_tables`, `erd_move_memo`, and `erd_move_table_group` never change what a group holds, wherever they place a table or a memo, while in the editor a table or a memo joins or leaves a group where it is dropped — see [Adding and Removing Tables](../guide/guides/table-groups.md#adding-and-removing-tables). `erd_add_table_group` puts tables and memos in a group, `erd_set_table_group` tables and `erd_set_memo_group` memos, and `erd_remove_table_group` leaves its tables and memos in none.
+A group stores a rect, at least `160` pixels wide and `100` high, title bar included, and the editor draws the box grown to hold each of its tables and, while memos are shown, each of its memos.
 
 | Tool | Arguments | What it does |
 | --- | --- | --- |
-| `erd_add_table_group` | `name`, `color?`, `x?`, `y?`, `width?`, `height?`, `tableIds?` | Adds a group and returns its id in `createdIds`. Pass either `tableIds` or a rect, `x`, `y`, `width`, and `height` together. With `tableIds`, each table leaves any group it was in, and the rect is fitted round them as [grouping selected tables](../guide/guides/table-groups.md#grouping-selected-tables) fits it. A rect takes in every table in no group whose center lies inside it, as [drawing a group](../guide/guides/table-groups.md#drawing-a-group) does. An empty `name` leaves the group unnamed. One `erd_undo` removes the group and puts each table back in the group it was in. |
-| `erd_remove_table_group` | `groupId` | Removes a group. Its tables stay where they are, in no group. |
+| `erd_add_table_group` | `name`, `color?`, `x?`, `y?`, `width?`, `height?`, `tableIds?`, `memoIds?` | Adds a group and returns its id in `createdIds`. Pass either `tableIds`, with any `memoIds` beside them, or a rect, `x`, `y`, `width`, and `height` together. With `tableIds`, each table and memo leaves any group it was in, and the rect is fitted round them, the memos only while memos are shown, as [grouping selected tables](../guide/guides/table-groups.md#grouping-selected-tables) fits it. A rect takes in every table and every shown memo in no group whose center lies inside it, as [drawing a group](../guide/guides/table-groups.md#drawing-a-group) does. An empty `name` leaves the group unnamed. One `erd_undo` removes the group and puts each table and memo back in the group it was in. |
+| `erd_remove_table_group` | `groupId` | Removes a group. Its tables and memos stay where they are, in no group. |
 | `erd_change_table_group_name` | `groupId`, `value` | Renames a group. An empty string leaves it unnamed. |
 | `erd_change_table_group_color` | `groupId`, `color` | Sets the color of a group. |
-| `erd_move_table_group` | `groupId`, `x`, `y` | Moves a group so its rect starts at that point, with its tables by the same step, as dragging its title bar does. A move under 20 pixels, across and down added together, makes no undo entry. Since server `1.2.0` the move reaches the editor as the points the group and its tables end at, so with the VS Code extension `4.3.0` or later or the Obsidian or JetBrains plugin `1.3.0` or later, a move of the group or one of its tables made there at the same moment ends on one of the two positions, never their sum — see [Edits Made at the Same Moment](./live-and-headless.md#edits-made-at-the-same-moment). |
-| `erd_resize_table_group` | `groupId`, `x?`, `y?`, `width`, `height` | Sets the rect of a group, its tables staying where they are. `x` and `y` left out keep its corner. A rect that would not hold the group's tables with their padding is refused, with a message naming the box it must hold. |
+| `erd_move_table_group` | `groupId`, `x`, `y` | Moves a group so its rect starts at that point, with its tables and memos, hidden memos included, by the same step, as dragging its title bar does. A move under 20 pixels, across and down added together, makes no undo entry. Since server `1.2.0` the move reaches the editor as the points the group and its tables end at, so with the VS Code extension `4.3.0` or later or the Obsidian or JetBrains plugin `1.3.0` or later, a move of the group or one of its tables made there at the same moment ends on one of the two positions, never their sum — see [Edits Made at the Same Moment](./live-and-headless.md#edits-made-at-the-same-moment). Since server `1.2.1` the points its memos end at go in the same batch. |
+| `erd_resize_table_group` | `groupId`, `x?`, `y?`, `width`, `height` | Sets the rect of a group, its tables and memos staying where they are. `x` and `y` left out keep its corner. A rect that would not hold the group's tables and shown memos with their padding is refused, with a message naming the box it must hold. |
 | `erd_set_table_group` | `tableIds`, `groupId` | Puts tables in a group, each leaving any group it was in. A `groupId` of `null` or an empty string takes them out of every group. |
+| `erd_set_memo_group` | `memoIds`, `groupId` | Puts memos in a group, each leaving any group it was in and staying where it is. A `groupId` of `null` or an empty string takes them out of every group. |
 
 While groups are hidden with `View Option` → `Table Groups`, these tools still add and change groups, which stay hidden until groups are shown — see [Hiding Groups](../guide/guides/table-groups.md#hiding-groups).
-`erd_sort_tables` keeps each group's tables together, `erd_import_dbml` and `erd_import_json` bring groups — see [Import](#import) — and `erd_read` writes the DDL of chosen groups with `groupNames`.
+Memos hidden with View Option → `Memos` stay in their groups and move with them, and `erd_set_memo_group` and the `memoIds` of `erd_add_table_group` put them in a group as they do shown ones.
+`erd_sort_tables` keeps each group's tables and memos together, `erd_import_dbml` and `erd_import_json` bring groups — see [Import](#import) — and `erd_read` writes the DDL of chosen groups with `groupNames`.
 A release of ERD Editor that predates table groups drops a file's groups when it saves the file, as the VS Code extension before `4.0.0` and the Obsidian and JetBrains plugins before `1.0.0` do — see [Updating](./installation.md#updating).
+A release from before memos joined table groups, the VS Code extension before `4.3.1` and the Obsidian and JetBrains plugins before `1.3.1`, neither shows nor keeps which group a memo is in, so it saves the file with every memo in no group, and so does a server before `1.2.1` that writes the file on disk — see [Updating](./installation.md#updating).
 
 ### Dictionaries
 
@@ -304,14 +340,14 @@ In an editor with the VS Code extension `4.3.0` or later or the Obsidian or JetB
 - Relationships and indexes come only between the tables the import brings, so a foreign key to a table the text does not declare is dropped.
 - `erd_import_sql`, `erd_import_graphql`, and `erd_import_aml` add tables with their relationships and indexes, and `erd_import_dbml` its table groups too. `erd_import_json` adds tables, relationships, indexes, memos, and table groups, never its settings, and refuses an empty text. Its tables and columns bring their logical names, but no column links a domain, and none of the JSON's words, terms, or domains comes in.
 
-A JSON document keeps its own arrangement, its table groups included: where it places its tables with `replace`, and inside the added block with `append`.
+A JSON document keeps its own arrangement, its table groups included, with the tables and memos each one holds: where it places its tables with `replace`, and inside the added block with `append`.
 The tables of SQL, GraphQL, DBML, and AML are set out in rows, fewest columns first with each group's tables together, as `erd_sort_tables` places them, never by `Flow` as the editor's own Import lays them out when it can. Those four tools refuse an empty text in either mode.
 
 ## erd_batch
 
 `erd_batch` runs several edit tools in order as one edit, all or none.
 
-- `operations` holds up to 100 entries, each `{ tool, as?, args? }`, where `tool` is an edit tool and `args` are the tool's arguments without `path`. A read tool, such as `erd_list_checks`, is refused.
+- `operations` holds up to 100 entries, each `{ tool, as?, args? }`, where `tool` is an edit tool and `args` are the tool's arguments without `path`. A read tool, such as `erd_list_checks`, is refused, and so is `erd_export_svg`.
 - The operations are tried on a copy of the document first. A refused one is named, such as `operations[1] erd_remove_table: …`, and nothing is applied.
 - One `erd_undo` reverts the whole batch, apart from the operations it cannot revert, which the result's `undoNote` names: those of a tool that makes no undo entry, such as `erd_set_database`, and those that changed the document without making one, such as a short `erd_move_table_group`. A batch that made no undo entry at all is passed over by `erd_undo`. `historyEntries` in the result counts the editor's history entries inside it, not `erd_undo` calls.
 - In a live session the editor takes the whole batch or none of it.
@@ -391,21 +427,21 @@ A refusal is an error result carrying a code and a message that says what to do:
 
 | `code` | Why |
 | --- | --- |
-| `notFound` | An id names nothing live, or the file does not exist. |
+| `notFound` | An id names nothing live, the file does not exist, or the folder of the `output` of `erd_export_svg` does not exist. |
 | `invalidArgs` | An argument is missing or has the wrong value. |
-| `invalidPath` | The path is not an ERD document. On Windows, also a path with a name Windows does not store as written, or one that reaches a document an editor holds under another path, which the message names. |
+| `invalidPath` | The path is not an ERD document, or the `output` of `erd_export_svg` is not an `.svg` file — see [SVG Export](#svg-export). On Windows, also a path with a name Windows does not store as written, or one that reaches a document an editor holds under another path, which the message names. |
 | `invalidDocument` | The file is not a document the editor can read. |
-| `tooLarge` | A read does not fit in one answer. |
+| `tooLarge` | A read, or an SVG asked for without `output`, does not fit in one answer. |
 | `blocked` | An editor with its hub off holds the document. The message says how to turn it on: in VS Code, trust the workspace and turn on `dineug.erd-editor.agentHub.enabled`, or reload the window; in Obsidian, turn on Coding agents, or reload Obsidian; in a JetBrains IDE, turn on Coding agents, or restart the IDE if it is on. |
 | `hubDisabled` | A JetBrains IDE holds the document only in a project it does not trust. Reads still work; trust the project to let the agent edit. |
 | `conflict` | The file changed on disk during the call. Nothing was written. |
 | `hubAppeared`, `hubGone` | An editor started serving a document the agent was editing on disk, or the editor that served it still runs but its lock file and connection are gone. Nothing was written. |
 | `notSaved` | `erd_save` could not save the editor's document. |
-| `readonly` | The editor holds the document read-only, such as a file it cannot write or cannot read as a diagram. With no editor, the file itself is read-only, such as a Perforce or TFVC file that is not checked out. Nothing was written. |
+| `readonly` | The editor holds the document read-only, such as a file it cannot write or cannot read as a diagram. With no editor, the file itself is read-only, such as a Perforce or TFVC file that is not checked out. With `erd_export_svg`, the `.svg` file its `output` names is read-only. Nothing was written. |
 | `protocolMismatch` | The editor's ERD Editor extension or plugin and the server speak different protocol versions, such as server `1.0.0` or later with a `3.x` VS Code extension. Reads are refused too, and the message names the side to update — see [Updating](./installation.md#updating). |
 | `hubUnreachable`, `timeout`, `disconnected` | An editor's hub did not accept the connection, did not answer within 30 seconds, or hung up during the call. On Windows, `hubUnreachable` also means Windows kept the agent out of the hub: the editor runs with more rights than the agent, as when it was started as administrator and the agent was not, or the agent runs in a sandbox. |
 
 Other codes are rarer, and every refusal carries a message saying what happened.
 
-The edit tools, `erd_batch`, and the four read tools refuse an argument they do not declare, or one of the wrong type, with a JSON-RPC invalid params error (`-32602`) before touching the document, so a misspelled argument is never silently dropped.
+The edit tools, `erd_batch`, the four read tools, and `erd_export_svg` refuse an argument they do not declare, or one of the wrong type, with a JSON-RPC invalid params error (`-32602`) before touching the document, so a misspelled argument is never silently dropped.
 The five session tools ignore arguments they do not know.

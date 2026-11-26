@@ -93,7 +93,7 @@ Gdy pole wyszukiwania zawiera tekst, [drzewo](./explorer.md#the-tree) Eksplorato
 
 - Foldery `Tables`, `Table Groups` i `Memos` są widoczne tylko wtedy, gdy zawierają dopasowanie, a licznik każdego folderu to liczba wierszy bezpośrednio pod nim w wynikach.
 - W folderze `Tables` znajdują się tabele zawierające dopasowanie, uporządkowane według nazwy, nigdy według nazwy logicznej. Pod każdą tabelą znajduje się wiersz dla każdego dopasowania w jej komentarzu, potem folder `Columns` z kolumnami zawierającymi dopasowanie, w kolejności kolumn, każda z wierszem dla każdego dopasowania w jej komentarzu, a potem folder `Indexes` z indeksami, których nazwa pasuje. Nie ma folderu `Foreign Keys`.
-- W folderze `Table Groups` znajdują się grupy, których nazwa pasuje, uporządkowane według nazwy, bez należących do nich tabel. Znaleziona tabela jest widoczna w folderze `Tables`.
+- W folderze `Table Groups` znajdują się grupy, których nazwa pasuje, uporządkowane według nazwy, bez należących do nich tabel i notatek. Znaleziona tabela jest widoczna w folderze `Tables`, a znaleziona notatka w folderze `Memos`.
 - W folderze `Memos` znajdują się notatki zawierające dopasowanie, w kolejności w dokumencie, każda przedstawiona swoją pierwszą linią i z wierszem dla każdego zawartego w niej dopasowania.
 
 Dopasowanie w nazwie jest wyróżnione we własnym wierszu tej nazwy, więc nazwa, która zawiera wyszukiwany tekst dwa razy, to jeden wiersz z dwoma wyróżnieniami. Dopasowanie w nazwie logicznej tabeli lub kolumny również trafia do wiersza tej tabeli lub kolumny, nigdy do osobnego wiersza.  
@@ -127,7 +127,7 @@ Przejście do dopasowania zamyka Właściwości tabeli, jeśli są otwarte, a na
 
 - W przypadku nazwy, nazwy logicznej lub komentarza tabeli albo kolumny zaznacza tylko tę tabelę, przenosi ją na wierzch i ustawia fokus na komórce zawierającej dopasowanie. Dopasowanie w komentarzu ukrytym przez [opcję widoku tabeli](./table-related-functions.md#table-view-options) ustawia zamiast tego fokus na nazwie obok niego. Tam, gdzie [Widok nazw](./logical-names.md#name-view) nie wyświetla komórki nazwy lub nazwy logicznej, fokus trafia na komórkę wyświetlaną w jej miejscu: na nazwę w widoku `Physical Names`, a na nazwę logiczną w widoku `Logical Names`.
 - W przypadku nazwy indeksu zaznacza tylko tabelę tego indeksu i przenosi ją na wierzch, z fokusem na nazwie tabeli, a w widokach `Logical Names` i `Both Names` na jej nazwie logicznej, chyba że komórka z fokusem jest już w tej tabeli. Nazwy indeksów nie są rysowane na kanwie.
-- W przypadku nazwy grupy tabel zaznacza tylko tę grupę i przenosi ją na wierzch razem z jej tabelami.
+- W przypadku nazwy grupy tabel zaznacza tylko tę grupę i przenosi ją na wierzch razem z jej tabelami i notatkami.
 - W przypadku notatki zaznacza tylko tę notatkę i przenosi ją na wierzch.
 
 Kanwa przewija się tylko wtedy, gdy cel przejścia nie jest jeszcze dobrze widoczny, a powiększenie nigdy się nie zmienia – zobacz sekcję [Dokąd prowadzi przejście](./table-related-functions.md#where-a-jump-lands).

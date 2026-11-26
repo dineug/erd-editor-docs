@@ -14,7 +14,7 @@ What the server finds decides where the edit goes.
 | --- | --- |
 | An editor whose workspace, vault, or open project contains the document, or that has it open | **Live.** Opens the document in the ERD Editor if needed, joins the editing session, and applies the change there. Edits appear at once and are saved as the editor saves your own — see [Saving](#saving). |
 | No editor | **Headless.** Loads the file, applies the change, and replaces the file before it answers, so the result says `saved: true` and `erd_save` has nothing to do. |
-| An editor with its hub off | **Refused.** Reads still work, from disk. A change written to the file under an open editor could be overwritten by its next save, so the server writes nothing. |
+| An editor with its hub off | **Refused.** Reads and `erd_export_svg` still work, from disk. A change written to the file under an open editor could be overwritten by its next save, so the server writes nothing to the document. |
 | An editor whose hub is on but speaks a protocol other than the server's: with server `1.0.0` or later, a VS Code extension `3.x`, an Obsidian plugin `0.x`, or a JetBrains plugin `0.9.0` or `0.10.0`; with a server before `1.0.0`, the extension `4.0.0` or later, or a plugin `1.0.0` or later | **Refused**, reads included, with `protocolMismatch`. The message names the side to update: the extension or plugin, or the server — see [Updating](./installation.md#updating). |
 | On Windows, an editor that holds the document under another path to the same file: the agent named it through a network share or a mapped drive of this computer, such as `\\localhost\C$\…`, and the editor holds it by its drive path, or the other way round | **Refused**, reads included, with `invalidPath`. The message names the path the editor holds the document by; call again with that path. |
 | On Windows, an editor Windows keeps the agent out of: one started as administrator when the agent was not, or any editor when the agent runs in a sandbox | **Refused**, reads included, with `hubUnreachable` and a message that says why. Run the editor and the agent with the same rights, for example by starting the editor again without administrator rights. |
@@ -27,15 +27,17 @@ A tie, such as two editors that both have it open, goes to the one whose lock fi
 So a document in an Obsidian vault inside a VS Code workspace folder goes to Obsidian, unless VS Code has it open and Obsidian does not.
 
 Calls on one document run one at a time, in the order they reached the server. Calls on different documents run side by side.
+`erd_export_svg` takes its turn only to read the document, so a later call on the document does not wait for the drawing, and the server draws one export at a time, even of two documents — see [SVG Export](./tools.md#svg-export).
 
 ## Live
 
 The agent joins the editor like one more collaborator.
 Its edits reach every editor open on the document at once, and its focus is drawn on the table and cell it is editing, as a collaborator's is — see [focusTracker](../api/advanced/collaborative-editing.md#focustracker).
 
-A read never opens an editor. An edit opens the document in the ERD Editor when it is not open yet, without taking the keyboard focus.
+A read never opens an editor, and neither does `erd_export_svg`, which draws what the editor holds, edits not yet saved included. An edit opens the document in the ERD Editor when it is not open yet, without taking the keyboard focus.
 
 An editor with a VS Code extension before `4.2.0`, or an Obsidian or JetBrains plugin before `1.2.0`, still takes the agent's edits live, but it neither shows nor keeps the logical names, domain links, and dictionary rows the agent writes — see [Updating](./installation.md#updating).
+Likewise, one with an extension before `4.3.1` or a plugin before `1.3.1` neither shows nor keeps which table group a memo is in: a memo the agent puts in a group is in none there, and the editor leaves the memo's group out of the file when it saves, though the agent's call succeeds.
 
 With the VS Code extension `4.3.0` or later, or the Obsidian or JetBrains plugin `1.3.0` or later, an import in `replace` mode, and an `erd_undo` or `erd_redo` of one, end a relationship you are drawing in the editor, whatever the server's release — see [Relationship Creation](../guide/guides/editing-start.md#relationship-creation).
 Before those releases the draw stayed armed, and a click on a table could add a relationship from a table no longer in the diagram.
@@ -53,11 +55,11 @@ A column reorder, yours or the agent's `erd_move_column` or `erd_move_index_colu
 A database change, yours or the agent's `erd_set_database`, is applied in the order it arrives too, so two made at the same moment can leave the editor and the agent on different databases.
 
 Your drag and the agent's `erd_move_table`, `erd_move_tables`, `erd_move_memo`, `erd_move_table_group`, and `erd_sort_tables` travel as the points they end at, so two moves of one table, memo, or table group end where one of them put it, never at the two added together.
-`erd_move_table_group` sends the point of the group and of each of its tables in one batch, as a drag of the group's title bar does.
+`erd_move_table_group` sends the point of the group and of each of its tables in one batch, as a drag of the group's title bar does, and since server `1.2.1` the point of each of its memos too.
 A resize writes the position and the size together, so a move and a resize of one memo or table group made at the same moment, such as `erd_resize_memo` while you drag that memo, end on one rect on both sides: the resize's, or, when the move wins, the move's point with the resize's size.
 A move under 20 pixels, which makes no undo entry, also goes out as the point it ends at, so it can win over the other side's move, whether it is a short `erd_move_table_group` or a short drag of yours, such as a click that nudges a table a few pixels.
 
-Older releases still connect, since server `1.2.0` speaks hub protocol 2, as `1.0.0` to `1.1.1` do.
+Older releases still connect, since server `1.2.0` and later speak hub protocol 2, as `1.0.0` to `1.1.1` do.
 With a server before `1.2.0`, or an extension before `4.3.0` or a plugin before `1.3.0`, a move or resize of one table, memo, or table group made at the same moment can leave the editor and the agent with different positions.
 An older editor sends your drag as the distance moved, and a server before `1.2.0` sends `erd_move_table_group` that way too.
 The other side adds that distance to the point it holds.
@@ -97,7 +99,7 @@ The editor's own [Undo](../guide/guides/undo-redo.md) works the other way round:
 
 A few edits make no undo entry in the editor: `erd_set_database` and `erd_set_database_name` among the [settings tools](./tools.md#settings), and `erd_resize_memo`.
 Neither does an `erd_move_table_group` that moves the group less than 20 pixels in all, across and down added together, though the group stays where it moved.
-A call that changes nothing makes none either: `erd_set_column_primary_key`, `erd_set_column_unique`, `erd_set_column_not_null`, `erd_set_column_auto_increment`, `erd_set_index_unique`, or `erd_set_index_column_order` setting a value the document already holds; `erd_add_index_column` with a column already in the index; `erd_set_table_group` with tables already in that group (or already in none, with `groupId` `null`); `erd_move_table_group` to the point where the group already stands; `erd_resize_table_group` to the rect the group already has; `erd_sort_tables` on a document with no table; `erd_set_table_logical_name` or `erd_set_column_logical_name` with the logical name the table or column already holds, when deriving from it would change nothing; `erd_set_column_domain` with the domain the column already links, when the column already has that domain's type and [Relationship DataType Sync](../guide/guides/settings.md#relationship-datatype-sync) would retype no column along its relationships; `erd_update_word`, `erd_update_term`, or `erd_update_domain` with only values the row already holds, unless a term that holds no physical name is passed its `name` and its words compose one; `erd_derive_physical_names` when every name it covers that has a logical name already holds what the [dictionaries](./tools.md#dictionaries) give it and is marked derived; or an import with `mode` `append` that brings no table (for `erd_import_json`, no table and no memo).
+A call that changes nothing makes none either: `erd_set_column_primary_key`, `erd_set_column_unique`, `erd_set_column_not_null`, `erd_set_column_auto_increment`, `erd_set_index_unique`, or `erd_set_index_column_order` setting a value the document already holds; `erd_add_index_column` with a column already in the index; `erd_set_table_group` with tables already in that group (or already in none, with `groupId` `null`); `erd_set_memo_group` with memos already in that group (or already in none); `erd_move_table_group` to the point where the group already stands; `erd_resize_table_group` to the rect the group already has; `erd_sort_tables` on a document with no table; `erd_set_table_logical_name` or `erd_set_column_logical_name` with the logical name the table or column already holds, when deriving from it would change nothing; `erd_set_column_domain` with the domain the column already links, when the column already has that domain's type and [Relationship DataType Sync](../guide/guides/settings.md#relationship-datatype-sync) would retype no column along its relationships; `erd_update_word`, `erd_update_term`, or `erd_update_domain` with only values the row already holds, unless a term that holds no physical name is passed its `name` and its words compose one; `erd_derive_physical_names` when every name it covers that has a logical name already holds what the [dictionaries](./tools.md#dictionaries) give it and is marked derived; or an import with `mode` `append` that brings no table (for `erd_import_json`, no table and no memo).
 `erd_undo` passes over these and names them in its result.
 Other edits, such as `erd_change_relationship_type`, `erd_change_relationship_on_delete`, `erd_change_relationship_on_update`, `erd_change_table_group_name`, `erd_change_table_group_color`, and `erd_set_ddl_script`, make an entry even when they set a value the document already holds.
 
@@ -120,7 +122,7 @@ A closed diagram inside a folder the editor serves stays with the editor, and th
 An editor that still runs, but whose lock file is gone and whose connection closed without its closing the document, refuses the next edit with `hubGone`.
 The message says what frees the document: in VS Code, reload that window, or close it to let the agent edit the file directly; in Obsidian, turn the ERD Editor plugin back on, or close that window; in a JetBrains IDE, turn the plugin back on, or quit the IDE.
 
-A read goes to the file on disk instead, with a note that edits not yet saved in the editor are missing, in two cases: when the editor holding the document has its hub off, and in the `hubGone` case above.
+A read, or `erd_export_svg`, goes to the file on disk instead, with a note that edits not yet saved in the editor are missing, in two cases: when the editor holding the document has its hub off, and in the `hubGone` case above.
 A read that cannot connect to an editor's hub is refused with `hubUnreachable`, as an edit is.
 
 ## Headless
@@ -133,7 +135,7 @@ If it did, nothing is written, the file is loaded again, and the call is refused
 A file that changed between two calls is simply loaded again, and the agent's undo history before that is dropped.
 
 A read-only file is left as it is, and the edit is refused with `readonly`: a file without write permission for its owner, or with the read-only attribute on Windows, such as a Perforce or TFVC file that is not checked out.
-Make it writable, then call again. Reads still work.
+Make it writable, then call again. Reads and `erd_export_svg` still work.
 
 If an editor starts serving the document while the agent edits it on disk, that one edit is refused with `hubAppeared` and nothing is written. The next call edits through the editor.
 
@@ -142,7 +144,7 @@ On Windows two more rules apply:
 - A document with permissions of its own, unlike its folder's, is written in place instead of replaced, so that it keeps them, and the temporary file is removed afterwards. A program that reads the document during that write can find text that does not parse.
 - A file that another program holds open cannot be replaced, so the server tries again for up to two seconds. Each try first looks for an editor again, and an editor that started serving the document meanwhile refuses the write with `hubAppeared`, or with `blocked` when its hub is off. If the file is still held after two seconds, nothing is written, the file is loaded again, and the call fails with a message that quotes the system error.
 
-A server before `1.1.0` reads a document without its logical names, its columns' domain links, and its words, terms, and domains, so the first edit it writes to the file leaves them out. Update the server — see [Updating](./installation.md#updating).
+A server before `1.1.0` reads a document without its logical names, its columns' domain links, and its words, terms, and domains, so the first edit it writes to the file leaves them out. A server before `1.2.1` likewise reads it without its memos' table groups, so the first edit it writes to the file takes every memo out of its group. Update the server — see [Updating](./installation.md#updating).
 
 ## Refused
 
@@ -151,7 +153,7 @@ An Obsidian vault window keeps its lock file with its hub off when Coding agents
 A JetBrains IDE keeps its lock file with its hub off when Coding agents is turned off, when its hub could not listen, and while the IDE exits.
 
 An edit to such a document is refused with `blocked`, because the open editor could overwrite a change written to the file on its next save.
-Reads still work, from the file on disk.
+Reads still work, from the file on disk, and so does `erd_export_svg`, whose result then names the mode `blocked`.
 
 To let the agent edit, turn the hub back on, as the message says for that editor: in VS Code, trust the workspace and turn the setting on, or reload the window; in Obsidian, turn Coding agents on, or reload Obsidian; in a JetBrains IDE, turn Coding agents on, or restart the IDE if it is already on.
 

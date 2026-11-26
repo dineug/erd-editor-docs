@@ -51,18 +51,18 @@ editor.addEventListener('change', () => {
 
 ```html
 <script type="module">
-  import 'https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js';
+  import 'https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js';
 
   const editor = document.createElement('erd-editor');
   editor.style.cssText = 'display: block; width: 100%; height: 100vh;';
   document.body.appendChild(editor);
 </script>
 <!-- or -->
-<script type="module" src="https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js"></script>
+<script type="module" src="https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js"></script>
 ```
 
 `esm.run` 會為您解析此套件的外部相依套件，因此不需要打包工具也能運作。
-每個進入點都以版本之後的路徑取得：`…/erd-editor.js` 定義編輯器，`…/erd-viewer.js` 定義檢視器，檢視器在頁面要求某種顯示語言時，會從 CDN 擷取除英文以外的每種顯示語言。僅含套件名稱的 URL `https://esm.run/@dineug/erd-editor@5.1.0` 提供的是根目錄，它不會定義任何元素。
+每個進入點都以版本之後的路徑取得：`…/erd-editor.js` 定義編輯器，`…/erd-viewer.js` 定義檢視器，檢視器在頁面要求某種顯示語言時，會從 CDN 擷取除英文以外的每種顯示語言。僅含套件名稱的 URL `https://esm.run/@dineug/erd-editor@5.1.1` 提供的是根目錄，它不會定義任何元素。
 未指定版本的 URL 一律提供最新版本。若不希望主要版本升級在未事先告知的情況下套用到您的頁面，就如上所示固定版本。
 `5.0.0` 本身就是一次主要版本升級：必須停留在 4.x 的頁面則固定為 `@4.2.0`，請參閱[從 4.x 升級](#upgrading-from-4x)。
 
@@ -75,7 +75,7 @@ editor.addEventListener('change', () => {
 
 ```html
 <erd-editor></erd-editor>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.1"></script>
 <script>
   const editor = document.querySelector('erd-editor');
   editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
@@ -88,7 +88,7 @@ editor.addEventListener('change', () => {
 
 ```html
 <erd-viewer src="diagram.erd.json" style="display: block; height: 480px"></erd-viewer>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0/dist/erd-viewer.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.1/dist/erd-viewer.umd.js"></script>
 ```
 
 兩個檔案都不會定義對方的標籤，且各自除了自己的全域變數和 `window.Konva` 之外，不會在頁面上留下任何全域變數。
@@ -100,7 +100,7 @@ exports 對應表仍會讓打包工具指向 ES 模組，因此從 npm 安裝時
 ```html
 <erd-editor system-dark-mode enable-theme-builder enable-locale-picker enable-welcome-screen></erd-editor>
 <script type="module">
-  import 'https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js';
+  import 'https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js';
 
   const editor = document.querySelector('erd-editor');
 </script>
@@ -123,7 +123,7 @@ erd-editor {
 
 ### 伺服器端轉譯 {#server-side-rendering}
 
-除了 `engine.js` 和 `peer.js` 之外，每個進入點都需要 DOM，因此在 Node 中會擲回例外狀況。`erd-editor.js` 和 `erd-viewer.js` 會在模組範圍內定義各自的元素，而自 `5.0.0` 起不定義任何東西的套件根目錄，載入時仍會建立兩個元素類別。
+這些頁面所描述的進入點中，除了 `engine.js` 和 `peer.js` 之外，每一個都需要 DOM，因此在 Node 中會擲回例外狀況。`erd-editor.js` 和 `erd-viewer.js` 會在模組範圍內定義各自的元素，而自 `5.0.0` 起不定義任何東西的套件根目錄，載入時仍會建立兩個元素類別。
 在 Next.js、Nuxt、SvelteKit 或 Astro 中，從僅在用戶端執行的路徑載入元素的進入點，並從同一路徑對根目錄進行具名匯入，例如 `setExportFileCallback` 或 `toImage`。
 
 ```js
@@ -251,7 +251,7 @@ Vite、webpack 5 和 Rspack 會將 worker 輸出為您的區塊旁的檔案。es
 
 ## 進入點 {#entry-points}
 
-此套件有五個進入點：
+這些頁面描述了此套件的五個進入點：
 
 | 進入點 | 說明 |
 | --- | --- |
@@ -371,7 +371,7 @@ Chrome 91+、Edge 94+、Firefox 93+、Safari 16.4+：這是已發佈的打包檔
    import { setExportFileCallback } from '@dineug/erd-editor';
   ```
 
-- 在 CDN 上同樣如此：`https://esm.run/@dineug/erd-editor` 現在提供的是根目錄，不定義任何東西，請改為匯入 `https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js`。僅含套件名稱的 jsDelivr 和 unpkg URL 仍提供 script 標籤建置版本，它如先前一樣定義 `<erd-editor>`。未指定版本的 URL 現在提供最新的 5.x 版本；若要停留在 4.x，就固定為 `@4.2.0`，請參閱 [CDN](#cdn) 和 [script 標籤](#script-tag)。
+- 在 CDN 上同樣如此：`https://esm.run/@dineug/erd-editor` 現在提供的是根目錄，不定義任何東西，請改為匯入 `https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js`。僅含套件名稱的 jsDelivr 和 unpkg URL 仍提供 script 標籤建置版本，它如先前一樣定義 `<erd-editor>`。未指定版本的 URL 現在提供最新的 5.x 版本；若要停留在 4.x，就固定為 `@4.2.0`，請參閱 [CDN](#cdn) 和 [script 標籤](#script-tag)。
 - 根目錄不定義任何東西，但仍需要 DOM，因此在伺服器端轉譯時，從它進行的具名匯入（例如 `setExportFileCallback`）要與元素的進入點一起放在僅在用戶端執行的路徑上，請參閱[伺服器端轉譯](#server-side-rendering)。
 - `window.ErdEditor` 新增 `ErdEditorElement` 和 `defineErdEditor`。檢視器的 script 標籤建置版本會將 `ErdViewerElement` 和 `defineErdViewer` 放到 `window.ErdViewer` 上，且兩個全域變數都不帶有 `toImage`。
 - `readonly` 編輯器會以讀者的身分開啟。它的六個索引標籤、物件總管、快速搜尋和協作者的游標與選取範圍仍在，而每個會編輯圖表的控制項都直接移除，而不是停用：工具列將資料庫名稱顯示為文字，「設定」索引標籤在 `Read only` 徽章之下顯示其設定且每個控制項都已停用，浮動工具列只保留縮放、「名稱顯示」、禪模式和指南針，因此 `Hand` 和 `Select` 都不見了，而拖曳會平移。按下不會選取任何東西：唯一的選取範圍是從物件總管或快速搜尋跳至目標時，在其到達的項目周圍畫出的外框，單擊（不移動）會將其清除，而全選快速鍵不會選取任何東西。開啟 `readonly` 會結束原本開著的內容，例如選取範圍、手形工具、儲存格編輯器、拖曳、Map Columns、自動版面配置的 `Force` 預覽和 Time Travel，並保留捲動、縮放、索引標籤和「名稱顯示」，請參閱 [readonly](./erd-editor-element.md#readonly)。

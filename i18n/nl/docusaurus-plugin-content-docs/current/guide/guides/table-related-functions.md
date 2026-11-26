@@ -7,7 +7,7 @@ description: Selecteer, verplaats, kopieer, dupliceer en verwijder tabellen en m
 
 Alles wat je met tabellen en memo's doet zodra ze bestaan — selecteren, verplaatsen, kopiëren, verwijderen, kleuren en instellen wat het canvas toont — en daarnaast de bediening van het canvas eromheen.  
 Eerst komen de opdrachten voor tabellen en memo's; daarna Tabeleigenschappen, het focussen op tabellen, indexen en alternatieve sleutels, Automatische indeling en het databasesysteem; daarna het canvas zelf: de canvaswerkbalk, zoomen, pannen en waar een sprong terechtkomt, en de Verschilweergave; en als laatste wat een editor in alleen-lezenmodus van dit alles behoudt.  
-Tabelgroepen, de kaders die tabellen bundelen, hebben een eigen pagina — zie [Tabelgroepen](./table-groups.md).  
+Tabelgroepen, de kaders die tabellen en memo's bundelen, hebben een eigen pagina — zie [Tabelgroepen](./table-groups.md).  
 Dat geldt ook voor logische namen en de naamweergave, die bepaalt welke namen de tabellen tonen — zie [Logische namen](./logical-names.md).
 
 ## Meervoudige selectie {#multiple-selection}
@@ -21,7 +21,7 @@ Er zijn drie manieren:
 Memo's worden op dezelfde manier geselecteerd, en beide sneltoetsen voor alles selecteren nemen alle tabellen en memo's tegelijk mee. Memo's die met View Option → `Memos` zijn verborgen, vallen buiten alles selecteren en buiten een selectiekader — zie [Weergaveopties voor tabellen](#table-view-options).  
 [Tabelgroepen](./table-groups.md#selecting-groups) voeg je aan de selectie toe met `Ctrl + click` (Windows/Linux) of `⌘ + click` (Mac) op hun titelbalk, maar alles selecteren neemt er nooit een mee.  
 `Ctrl + A` wijkt voor een tekstcursor, dus terwijl je een cel bewerkt, selecteert de sneltoets de tekst in plaats van het diagram.  
-Een selectiekader markeert een tabel of memo wanneer het kader het midden ervan bedekt, niet wanneer het alleen een rand raakt. Een tabelgroep wordt alleen meegenomen als het selectiekader het volledige kader van de groep omsluit, dus een selectiekader dat binnen een groep wordt getekend, pikt er tabellen uit zonder de groep.  
+Een selectiekader markeert een tabel of memo wanneer het kader het midden ervan bedekt, niet wanneer het alleen een rand raakt. Een tabelgroep wordt alleen meegenomen als het selectiekader het volledige kader van de groep omsluit, dus een selectiekader dat binnen een groep wordt getekend, pikt er tabellen en memo's uit zonder de groep.  
 Een klik met de rechtermuisknop op iets wat al geselecteerd is, behoudt de hele selectie, zodat menu-items zoals `Color`, `Group selected tables` en `Delete selected` op de hele selectie werken. Een klik met de rechtermuisknop op een andere tabel, memo of tabelgroep selecteert alleen dat element, ook als je `Ctrl` of `⌘` ingedrukt houdt, en een klik met de rechtermuisknop op een relatie of op een leeg deel van het canvas heft de selectie op.  
 `Escape` heft de selectie op. Terwijl een editor voor een cel, memo of tabelgroepnaam open is, of terwijl een relatie of een `New Table Group` wordt getekend, beëindigt de eerste `Escape` dat en heft een tweede de selectie op.  
 Een editor in alleen-lezenmodus heeft geen van deze manieren om te selecteren: daar selecteert alleen een sprong — zie [Editors in alleen-lezenmodus](#read-only-editors).
@@ -41,10 +41,10 @@ Alleen de linkermuisknop verplaatst tabellen en memo's. Een klik met de rechterm
 
 ![Een van twee geselecteerde tabellen slepen verplaatst ze allebei, en de relatie volgt](/img/demo-table-multiple-move.webp)
 
-Een geselecteerde [tabelgroep](./table-groups.md) beweegt ook mee, met de tabellen erin, en een tabel die zowel geselecteerd is als in een bewegende groep zit, wordt één keer verplaatst.  
-De plek waar je een tabel neerzet, kan de tabel in of uit een groep verplaatsen — zie [Tabellen toevoegen en verwijderen](./table-groups.md#adding-and-removing-tables).
+Een geselecteerde [tabelgroep](./table-groups.md) beweegt ook mee, met de tabellen en memo's erin, en een tabel of memo die zowel geselecteerd is als in een bewegende groep zit, wordt één keer verplaatst.  
+De plek waar je een tabel of memo neerzet, kan die in of uit een groep verplaatsen — zie [Tabellen toevoegen en verwijderen](./table-groups.md#adding-and-removing-tables).
 
-Tabellen en memo's delen één stapelvolgorde. Een druk op een tabel of memo, met de linker- of de rechtermuisknop, brengt die vóór alle andere tabellen en memo's, en een druk op de titelbalk van een tabelgroep, of een klik met de rechtermuisknop op het vlak ervan, brengt de tabellen van de groep naar voren.  
+Tabellen en memo's delen één stapelvolgorde. Een druk op een tabel of memo, met de linker- of de rechtermuisknop, brengt die vóór alle andere tabellen en memo's, en een druk op de titelbalk van een tabelgroep, of een klik met de rechtermuisknop op het vlak ervan, brengt de tabellen en memo's van de groep naar voren.  
 De volgorde wordt niet opgeslagen: een opnieuw geopend diagram stapelt de tabellen in de volgorde waarin het bestand ze vermeldt, met alle memo's erboven.
 
 ## Tabellen en memo's kopiëren/plakken {#copyingpasting-tables-and-memos}
@@ -57,7 +57,7 @@ Elke gekopieerde kolom behoudt haar logische naam, en van elke tabel- en kolomna
 Een geplakte kolom behoudt haar domeinkoppeling alleen als aan twee voorwaarden is voldaan: het diagram waarin ze terechtkomt, bevat precies dat domein, niet alleen een domein met dezelfde naam, en het domein heeft nog het gegevenstype waarmee de kolom is gekopieerd. Anders komt de kolom zonder domein terecht en behoudt ze het type waarmee ze is gekopieerd — zie [Een kolom koppelen](./dictionary.md#linking-a-column).  
 Indexen en relaties gaan ook mee: een index wordt in zijn geheel naar de gekopieerde tabel gekopieerd, en een relatie wordt met haar type en haar ON DELETE- en ON UPDATE-acties gekopieerd wanneer beide tabellen die ze verbindt in de gekopieerde set zitten. Een halve relatie wordt weggelaten in plaats van terug te blijven wijzen naar het origineel.  
 De geplakte kopieën worden de nieuwe selectie, en als je dezelfde kopie opnieuw plakt, verschuift die telkens `50px` verder, zodat herhaalde plakacties niet op elkaar komen te liggen.  
-Een kopie behoudt haar [tabelgroep](./table-groups.md) niet: de geplakte tabel zit in geen enkele groep, ook niet als die binnen het kader van een groep terechtkomt, en een geselecteerde groep wordt niet gekopieerd.  
+Een kopie behoudt haar [tabelgroep](./table-groups.md) niet: de geplakte tabel of memo zit in geen enkele groep, ook niet als die binnen het kader van een groep terechtkomt, en een geselecteerde groep wordt niet gekopieerd.  
 Terwijl View Option → `Memos` de memo's verbergt, voegt plakken de meegebrachte memo's nog steeds toe, verborgen en niet geselecteerd, zodat alleen de geplakte tabellen de selectie worden.
 
 ![Twee gerelateerde tabellen kopiëren en twee keer plakken, inclusief de relatie](/img/demo-table-copy-paste.webp)
@@ -89,7 +89,7 @@ Sneltoetsen:
 
 De contextmenu's verwijderen ook. Het laatste item in het menu van een tabel of memo toont `Delete selected` zolang die tabel of memo een van twee of meer geselecteerde elementen is, en verwijdert de hele selectie. Anders toont het `Delete` en verwijdert het alleen die tabel of memo. Op de rij van een geselecteerde kolom toont het menu van een tabel in plaats daarvan `Delete column` of `Delete columns`, zoals in [Kolommen verwijderen](./table-editing.md#column-deletion).
 
-Wanneer je een tabel verwijdert, worden haar relaties en indexen meeverwijderd. Wanneer je een tabelgroep verwijdert, blijven de tabellen ervan bestaan, zonder groep — zie [Een groep verwijderen](./table-groups.md#removing-a-group).  
+Wanneer je een tabel verwijdert, worden haar relaties en indexen meeverwijderd. Wanneer je een tabelgroep verwijdert, blijven de tabellen en memo's ervan bestaan, zonder groep — zie [Een groep verwijderen](./table-groups.md#removing-a-group).  
 Er is geen bevestiging, elke verwijdering is één stap in de geschiedenis, en in een editor met `readonly` wordt niets verwijderd.  
 Ingedrukt gehouden verwijderen `Delete` en `Backspace` maar één keer, en ze verwijderen nooit een relatie — zie [Relaties bewerken](./relationship-editing.md#deletion). Terwijl je typt in een cel, een memo of een ander tekstveld, bewerken ze in plaats daarvan de tekst.  
 Het tabblad Instellingen toont de twee toetsen als `Delete Selection` — zie [Sneltoetsen](./settings.md#shortcuts).
@@ -98,7 +98,7 @@ Het tabblad Instellingen toont de twee toetsen als `Delete Selection` — zie [S
 
 Je kunt kleuren toewijzen om op categorie onderscheid te maken.  
 Een tabel draagt haar kleur langs de linkerrand, en een memo langs de bovenkant. Klik met de linkermuisknop op die rand of strook, of kies `Color` in het contextmenu van de tabel of memo, om de kleurkiezer bij de aanwijzer te openen. De kleur wordt toegepast op elke geselecteerde tabel, memo en tabelgroep, niet alleen op het element waarop je hebt geklikt.  
-Een tabelgroep kleur je via `Color` in het eigen menu van de groep, en een tabel in een gekleurde groep draagt de kleur van de groep over haar kop, terwijl ze haar eigen kleur op de linkerrand houdt — zie [Een groep kleuren](./table-groups.md#coloring-a-group).
+Een tabelgroep kleur je via `Color` in het eigen menu van de groep, en een tabel of memo in een gekleurde groep draagt de kleur van de groep over de kop, terwijl de tabel of memo de eigen kleur op de linkerrand of langs de bovenkant houdt — zie [Een groep kleuren](./table-groups.md#coloring-a-group).
 
 ![De vooraf ingestelde kleur Blue kiezen via de kleurstrook van een memo voor twee geselecteerde tabellen en de memo, daarna de kleur verwijderen met No color](/img/demo-table-color.webp)
 
@@ -143,9 +143,9 @@ Welke namen de tabellen tonen, is geen weergaveoptie: `Name View`, direct na `Vi
 `Domain` geeft elke kolom een cel, geplaatst volgens de [kolomvolgorde](./settings.md#adjusting-column-order), met de naam van het domein waaraan de kolom is gekoppeld. Een kolom die aan geen domein is gekoppeld dat op het blad `Domains` staat, toont daar de tijdelijke aanduiding `domain`, gedimd. De cel verschijnt in elke naamweergave. Zolang `Domain` uitstaat, toont de weergave `Logical Names` in plaats daarvan de naam van een gekoppeld domein in de typecel — zie [De domeincel](./logical-names.md#the-domain-cell).  
 `Alternate Key` markeert de kolommen van elke alternatieve sleutel, zoals `AK1.1` — zie [Alternatieve sleutels](#alternate-keys).  
 `Referential Actions` toont de labels `D:` en `U:` die de ON DELETE- en ON UPDATE-acties van een relatie op haar verbindingslijn bij de kindtabel plaatsen — zie [Een verbindingslijn lezen](./relationship-editing.md#reading-a-connector). Als je deze optie uitschakelt, worden alleen die labels verborgen en worden geen tabellen of verbindingslijnen verplaatst.  
-`Table Groups` toont de [tabelgroepen](./table-groups.md) en de groepskleuren op de koppen van hun tabellen. Als je deze optie uitschakelt, worden ze verborgen op het canvas, op de minimap en in geëxporteerde afbeeldingen, wordt geen tabel verplaatst en blijft elke tabel in haar groep — zie [Groepen verbergen](./table-groups.md#hiding-groups). Ook verdwijnt de map `Table Groups` uit de [Verkenner](./explorer.md#the-tree) en `New Table Group` van de [canvaswerkbalk](#canvas-toolbar), en vindt de zoekfunctie van de Verkenner geen groepsnamen meer.  
-`Memos` toont de memo's. Als je deze optie uitschakelt, wordt elke memo verborgen op het canvas, op de minimap en in geëxporteerde afbeeldingen, en worden geen tabellen of verbindingslijnen verplaatst. Verborgen memo's nemen geen ruimte in, dus de schuifbalken, de minimap en het kompas `Go to content` laten ze buiten beschouwing.  
-Als je de memo's verbergt, worden ze gedeselecteerd en wordt een geopende memo-editor gesloten. De [Verkenner](./explorer.md#the-tree) laat de map `Memos` weg, en de functie [Zoeken en vervangen](./find-and-replace.md) ervan en het voorvoegsel `:` van Snel zoeken doorzoeken ze niet. Zolang ze verborgen zijn, verdwijnt `New Memo` uit het contextmenu, de [canvaswerkbalk](#canvas-toolbar), Snel zoeken en het [welkomstscherm](./editing-start.md#welcome-screen), en voegt `Alt + M` geen memo toe. Plakken of [Importeren en toevoegen](./file-import-export.md#import-and-add) voegt de meegebrachte memo's nog steeds toe, verborgen en niet geselecteerd.  
+`Table Groups` toont de [tabelgroepen](./table-groups.md) en de groepskleuren op de koppen van hun tabellen en memo's. Als je deze optie uitschakelt, worden de groepen en hun kleuren verborgen op het canvas en in geëxporteerde afbeeldingen, verdwijnen de kaders van de minimap, wordt geen tabel of memo verplaatst en blijft elke tabel en memo in zijn groep — zie [Groepen verbergen](./table-groups.md#hiding-groups). Ook verdwijnt de map `Table Groups` uit de [Verkenner](./explorer.md#the-tree) en `New Table Group` van de [canvaswerkbalk](#canvas-toolbar), en vindt de zoekfunctie van de Verkenner geen groepsnamen meer.  
+`Memos` toont de memo's. Als je deze optie uitschakelt, wordt elke memo verborgen op het canvas, op de minimap en in geëxporteerde afbeeldingen, en worden geen tabellen of verbindingslijnen verplaatst. Verborgen memo's nemen geen ruimte in, dus de schuifbalken, de minimap, het kompas `Go to content` en de kaders van de [tabelgroepen](./table-groups.md) laten ze buiten beschouwing, al blijven ze in hun groep.  
+Als je de memo's verbergt, worden ze gedeselecteerd en wordt een geopende memo-editor gesloten. De [Verkenner](./explorer.md#the-tree) laat de map `Memos` en de memo's onder zijn tabelgroepen weg, en de functie [Zoeken en vervangen](./find-and-replace.md) ervan en het voorvoegsel `:` van Snel zoeken doorzoeken ze niet. Zolang ze verborgen zijn, verdwijnt `New Memo` uit het contextmenu, de [canvaswerkbalk](#canvas-toolbar), Snel zoeken en het [welkomstscherm](./editing-start.md#welcome-screen), en voegt `Alt + M` geen memo toe. Plakken of [Importeren en toevoegen](./file-import-export.md#import-and-add) voegt de meegebrachte memo's nog steeds toe, verborgen en niet geselecteerd.  
 In een editor in alleen-lezenmodus werken de schakelaars nog steeds, maar alleen op dat scherm: ze worden niet opgeslagen, niet in de ongedaanmakingsgeschiedenis vastgelegd en niet gedeeld, en ze gaan terug naar die van het bestand als de editor weer bewerkbaar wordt — zie [Editors in alleen-lezenmodus](./settings.md#read-only-editors) bij Instellingen.
 
 ![Items van View Option in- en uitschakelen terwijl de tabellen zich opnieuw schikken, een samengestelde unieke index markeren als AK1.1 en AK1.2 met Alternate Key, daarna Memos uit- en weer inschakelen](/img/demo-view-options.webp)
@@ -233,9 +233,9 @@ Het voorbeeld wordt ingekaderd op het diagram zoals het was toen de indeling beg
 
 De andere drie worden in één keer berekend, buiten de hoofdthread, dus er valt niets te volgen: er verschijnt een melding terwijl de indeling wordt berekend, en de uiteindelijke rangschikking wordt gecentreerd op het gebied dat het diagram al beslaat. `Cancel` of `Escape` laat een indeling vallen waarop je niet langer wacht, en een host die geen shared worker draait, eindigt met `Could not place tables` — zie [Web Workers](../../api/installation.md#web-workers). Een indeling die niet binnen 60 seconden terugkomt, eindigt op dezelfde manier.
 
-Welke je ook kiest, tabellen en tabelgroepen worden verplaatst en memo's blijven waar ze zijn. De tabellen worden geplaatst op de breedte die ze hebben in de naamweergave waarin je kijkt. Een relatie van een tabel naar zichzelf wordt genegeerd, en meerdere relaties tussen dezelfde twee tabellen tellen als één.  
-Elke indeling houdt de tabellen van elke groep bij elkaar, of de groepen nu worden weergegeven of niet, en past elke groep met tabellen om die tabellen heen aan — zie [Tabelgroepen](./table-groups.md#auto-layout).  
-Het resultaat komt als één stap in de geschiedenis terecht, dus één keer ongedaan maken zet elke tabel en groep terug waar die stond.  
+Welke je ook kiest, tabellen, tabelgroepen en de memo's in groepen met tabellen worden verplaatst, en elke andere memo blijft waar die is. De tabellen worden geplaatst op de breedte die ze hebben in de naamweergave waarin je kijkt. Een relatie van een tabel naar zichzelf wordt genegeerd, en meerdere relaties tussen dezelfde twee tabellen tellen als één.  
+Elke indeling houdt de tabellen en memo's van elke groep bij elkaar, of de groepen nu worden weergegeven of niet, en past elke groep met tabellen aan om die tabellen en de getoonde memo's heen — zie [Tabelgroepen](./table-groups.md#auto-layout).  
+Het resultaat komt als één stap in de geschiedenis terecht, dus één keer ongedaan maken zet elke tabel, memo en groep terug waar die stond.  
 Een editor in alleen-lezenmodus biedt geen `Auto Layout` aan. Eén die nog loopt wanneer de editor in alleen-lezenmodus gaat, eindigt daar: het voorbeeld `Force` sluit met zijn melding en behoudt geen van zijn posities, en een indeling die nog wordt berekend, wordt met zijn melding weggegooid, dus er verplaatst geen tabel, noch toen noch als de editor weer bewerkbaar is.
 
 ![Een stapel tabellen opruimen met de automatische indeling Flow uit het contextmenu van het canvas, die ze van links naar rechts langs hun relaties op een rij zet](/img/demo-automatic-table-placement.webp)
@@ -311,7 +311,7 @@ Slepen met de middelste muisknop selecteert, verplaatst en klikt niets, en behou
 Een druk met de middelste muisknop op de schuifbalken, de minimap, de canvaswerkbalk of een geopende cel- of memo-editor pant niet.
 
 De minimap in de rechterbovenhoek toont het diagram met aan elke kant een scherm aan ruimte, het bereik van de schuifbalken, naar buiten afgerond op een grof raster, dus hoe verder je uitzoomt, hoe kleiner het diagram erin staat. Klik erop om de weergave naar dat punt te verplaatsen, of sleep de rechthoek van het weergavegebied om te pannen. Als je uitzoomt, wordt de rechthoek van het weergavegebied groter en beslaat die meer van de kaart.  
-De minimap tekent elke tabel in de kleur van die tabel, en elke weergegeven tabelgroep als een kader in de kleur van de groep achter de tabellen ervan.  
+De minimap tekent elke tabel in de kleur van die tabel, en elke weergegeven tabelgroep als een kader in de kleur van de groep achter de tabellen en memo's ervan, dat om de getoonde memo's heen reikt zoals het kader op het canvas.  
 De schuifbalken langs de rechter- en onderrand beschrijven hetzelfde bereik, dat loopt van het diagram net buiten de ene kant van het scherm tot net buiten de andere, dus het is ten minste een scherm langer dan het getekende diagram, en nog langer zolang de weergave er voorbij staat. Buiten de zen-modus verschijnen beide schuifbalken zodra het document een tabel, een weergegeven memo of een weergegeven tabelgroep bevat, ook als alles op het scherm past. Een document zonder een van deze, zoals een document waarvan de enige memo's met View Option → `Memos` zijn verborgen, toont geen van beide, en geen minimap.  
 Het schuifblokje van een schuifbalk of de rechthoek van het weergavegebied in de minimap slepen is de enige panbeweging die stopt: die gaat niet verder dan de tabellen net buiten beeld, of dan waar het slepen begon als dat verder naar buiten lag.
 
@@ -364,7 +364,7 @@ Een editor in alleen-lezenmodus biedt ook `Diff Viewer` aan, en de weergave werk
 
 Tabellen, kolommen, indexen, refererende sleutels, memo's en tabelgroepen worden allemaal vergeleken.  
 Elk element wordt eerst gekoppeld op zijn id, dus bij vergelijking met een eerdere versie van hetzelfde bestand, die de id's behoudt, blijft een hernoemde tabel, kolom, index of tabelgroep één element, vermeld als hernoemd.  
-Wat overblijft, wordt één op één gekoppeld op wat het behoudt: een tabel of tabelgroep op de naam, inclusief hoofdlettergebruik; een kolom of index op de tabel en de naam; een refererende sleutel op de twee tabellen en de kolomparen; en een memo op de tekst, daarna op de positie. Een index zonder naam wordt gekoppeld op de kolommen, hun volgorde en richting en of de index uniek is, en een tabelgroep zonder naam op de groep waarmee die de meeste tabellen gemeen heeft.  
+Wat overblijft, wordt één op één gekoppeld op wat het behoudt: een tabel of tabelgroep op de naam, inclusief hoofdlettergebruik; een kolom of index op de tabel en de naam; een refererende sleutel op de twee tabellen en de kolomparen; en een memo op de tekst, daarna op de positie. Een index zonder naam wordt gekoppeld op de kolommen, hun volgorde en richting en of de index uniek is, en een tabelgroep zonder naam op de groep waarmee die de meeste tabellen en memo's gemeen heeft.  
 Bij vergelijking met een bestand van elders, zoals een diagram dat via een SQL-import opnieuw is opgebouwd, verschijnt een hernoemde tabel dus als één verwijderde en één toegevoegde tabel.
 
 Wat als wijziging telt:
@@ -373,8 +373,8 @@ Wat als wijziging telt:
 - Een kolom: naam, opmerking, gegevenstype, standaardwaarde, automatisch ophogen, primaire sleutel, Uniek, NOT NULL en de plaats in de tabel. Alleen de kolommen buiten de volgorde die beide documenten delen, tellen als verplaatst, dus een kolom toevoegen, verwijderen of verplaatsen markeert de andere niet.
 - Een index: naam, UNIQUE en kolommen, met hun volgorde en richting.
 - Een refererende sleutel: kolomparen, relatietype en ON DELETE- en ON UPDATE-acties.
-- Een memo: tekst, positie, grootte en kleur.
-- Een tabelgroep: naam, de tabellen die de groep bevat, kleur, positie en grootte.
+- Een memo: tekst, tabelgroep, positie, grootte en kleur.
+- Een tabelgroep: naam, de tabellen en memo's die de groep bevat, kleur, positie en grootte.
 
 Een tabel, memo of groep die alleen is verplaatst, van grootte is veranderd of een andere kleur heeft gekregen, telt dus als gewijzigd. Posities en groottes worden in hele pixels vergeleken, en de stapelvolgorde en de plek waar een verbindingslijn een tabel raakt, tellen nooit mee.  
 Logische namen, domeinkoppelingen en de woorden, termen en domeinen van het tabblad [Woordenboek](./dictionary.md) worden niet vergeleken, dus een wijziging die alleen daarin zit, wordt niet vermeld en niet gemarkeerd. Een gegevenstype dat door een domein is gewijzigd, telt wel, als wijziging van het gegevenstype van de kolom.
@@ -393,7 +393,7 @@ Elke rij eindigt op een letter, en bij een rij gemarkeerd met `A`, `D`, `M` of `
 - `R`, hernoemd, in blauw: in beide, met een nieuwe naam. Een naamswijziging gaat boven elke andere wijziging, die de knopinfo nog wel vermeldt.
 - `~`, in amber, staat aan het einde van elke map en van een tabel die alleen wordt vermeld vanwege wijzigingen erbinnen; hun namen houden de gebruikelijke kleur.
 
-Houd de aanwijzer boven de naam van een rij voor de knopinfo: de status, `Added`, `Deleted`, `Modified`, `Renamed` of `Changed inside`, daarna één regel per wijziging, zoals `Name: users → members` of `NN: ✗ → ✓`. Een tekst wordt aangehaald met de eerste regel, afgekapt na 40 tekens, en een lege waarde toont `—`. De knopinfo van een toegevoegd of verwijderd element bevat alleen de status.
+Houd de aanwijzer boven de naam van een rij voor de knopinfo: de status, `Added`, `Deleted`, `Modified`, `Renamed` of `Changed inside`, daarna één regel per wijziging, zoals `Name: users → members` of `NN: ✗ → ✓`. Een tekst wordt aangehaald met de eerste regel, afgekapt na 40 tekens, en een lege waarde toont `—`. Een memo die is verplaatst naar een groep met de naam Billing, heeft in zijn knopinfo de regel `Table group: — → Billing`, en de knopinfo van de groep krijgt een regel als `Memos: — → "note"`, waarin de memo's worden genoemd met hun eerste regels tussen dubbele aanhalingstekens. De knopinfo van een toegevoegd of verwijderd element bevat alleen de status.
 
 `Filter by name`, boven de boomstructuur, houdt de rijen over waarvan de huidige of opgeslagen naam, of de huidige of opgeslagen logische naam, bevat wat je typt, zonder onderscheid tussen hoofdletters en kleine letters, in elke naamweergave. Een tabel waarvan de naam overeenkomt, houdt al haar rijen, en een tabel waarvoor dat niet geldt, houdt alleen de overeenkomende rijen. Een filter zonder overeenkomsten laat de boom leeg.  
 Als de twee documenten helemaal niet verschillen, toont de boom `No changes`.
@@ -419,7 +419,7 @@ De twee kanten kleuren tekst, omlijningen en verbindingslijnen, en vullen niets 
 - Een kolom die is toegevoegd of verwijderd in een tabel die beide documenten bevatten, kleurt haar hele rij, en een verplaatste kolom kleurt haar hele rij amber. Binnen een toegevoegde of verwijderde tabel wordt niets afzonderlijk gemarkeerd.
 - De tekst van een gewijzigde cel wordt amber: de opmerking van een tabel, de opmerking, het gegevenstype, de standaardwaarde, automatisch ophogen, Uniek of NOT NULL van een kolom, of de tekst van een memo. Een wijziging van de primaire sleutel kleurt het sleutelpictogram van de kolom amber.
 - Bij een hernoemde tabel, kolom of tabelgroep staat de naam in blauw.
-- Een tabel, memo of tabelgroep met een wijziging die geen eigen cel heeft, zoals een verplaatsing, een nieuwe grootte of kleur, of een wijziging van groep of van de tabellen van een groep, krijgt een amberkleurige omlijning.
+- Een tabel, memo of tabelgroep met een wijziging die geen eigen cel heeft, zoals een verplaatsing, een nieuwe grootte of kleur, of een wijziging van groep of van de tabellen of memo's van een groep, krijgt een amberkleurige omlijning.
 - Een toegevoegde, verwijderde of gewijzigde refererende sleutel tekent zijn verbindingslijn in die kleur. Als je de aanwijzer erboven houdt, of als een rij die laat oplichten, wordt die in plaats daarvan getekend in de gebruikelijke kleur bij aanwijzen.
 - Een indexwijziging markeert aan geen van beide kanten iets; die is alleen in de boom te zien.
 

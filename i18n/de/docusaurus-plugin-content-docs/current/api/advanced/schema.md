@@ -19,7 +19,7 @@ VS Code, Obsidian und das JetBrains-Plugin schreiben eine Datei nur, wenn eine �
 Seit `4.2.0` lässt die Speicherform außerdem weg, was nichts enthält: jedes Textfeld, das eine Entität oder ihr `ui` als `''` enthält (bei einer Tabelle `name`, `comment` und `ui.color`, bei einer Spalte `name`, `comment`, `dataType` und `default`, bei einem Index `name`, bei einer Notiz `value` und `ui.color`, bei einer Tabellengruppe `name` und `color`), jede Liste in `doc` und jede Collection, die keinen Eintrag enthält, sowie `collections` selbst, sobald jede Collection leer ist. Text, der nur aus Leerraum besteht, wird so geschrieben, wie er vorliegt, außer bei einem logischen Namen, der dann entfällt; ein Wort, ein Begriff oder eine Domäne, deren Werte nach der ID alle leer sind oder nur aus Leerraum bestehen, entfällt ganz. Jede ID, jede Liste innerhalb einer Entität und jede Zahl, `0` eingeschlossen, wird weiterhin geschrieben. `doc` wird immer geschrieben, daher enthält die Datei eines neuen Dokuments `$schema`, `version`, seine Einstellungen und `"doc": {}`.  
 Beim Parsen wird ein fehlendes Textfeld als `''` und eine fehlende Collection als leer gelesen, wie es jede v3-Version tut, und die Speicherform lässt eine Liste in `doc` nur weg, solange ihre Collection nichts enthält (siehe [Doc](#doc)). Daher öffnet auch ein Editor vor `4.2.0` diese Dateien, und ein Programm, das eine Datei selbst liest, muss Fehlendes auf dieselbe Weise lesen. Eine Datei, die eine frühere Version gespeichert hat, kommt aus ihrem nächsten Speichern ohne ihren leeren Text, ihre leeren Listen und Collections zurück, eine einmalige Änderung, und wird von da an Byte für Byte gleich gespeichert.
 
-Die Speicherform schreibt jede gesperrte Einstellung mit ihrem gesperrten Wert (siehe [`lockSettings`](#settings)), `settings.ddlScripts` nur, solange ein Skript Text enthält, und das Feld `groupId` einer Tabelle nur, solange es eine Tabellengruppe benennt, die die Datei schreibt. Seit `4.2.0` schreibt sie außerdem `settings.nameViewMode` nur, solange der geschriebene Wert nicht `'physical'` ist, `settings.columnOrder` nach Möglichkeit mit sieben Einträgen (siehe [Settings](#settings)) und das Feld `nameDerived` einer Tabelle nur, solange es `true` ist.  
+Die Speicherform schreibt jede gesperrte Einstellung mit ihrem gesperrten Wert (siehe [`lockSettings`](#settings)), `settings.ddlScripts` nur, solange ein Skript Text enthält, und das Feld `groupId` einer Tabelle oder, seit `5.1.1`, einer Notiz nur, solange es eine Tabellengruppe benennt, die die Datei schreibt. Seit `4.2.0` schreibt sie außerdem `settings.nameViewMode` nur, solange der geschriebene Wert nicht `'physical'` ist, `settings.columnOrder` nach Möglichkeit mit sieben Einträgen (siehe [Settings](#settings)) und das Feld `nameDerived` einer Tabelle nur, solange es `true` ist.  
 Sie schreibt `doc.tableGroupIds` und `tableGroupEntities` nur, solange eine Tabellengruppe existiert, ein Feld `logicalName` nur, solange es anderen Text als Leerraum enthält, das Feld `domainId` einer Spalte nur, solange es eine Domäne benennt, die die Datei schreibt, und jedes Wörterbuch nur, solange es eine Zeile enthält, die die Datei schreibt.
 
 Eine Datei, die vor `4.0.0` gespeichert wurde, enthält das gesamte Dokument, wie ein Editor es damals hielt, einschließlich seiner entfernten Entitäten und dessen, was jedes Laden ermittelt. Ein Laden liest sie, behält den Platz jeder Tabelle und jeder Notiz in der Stapelreihenfolge (siehe [Doc](#doc)) und ermittelt den Rest neu, und das nächste Speichern schreibt nur die Speicherform.
@@ -394,6 +394,7 @@ const OrderType = {
 type Memo = {
   id: string;
   value?: string;
+  groupId?: string;
   ui: MemoUI;
 };
 
@@ -407,6 +408,9 @@ type MemoUI = {
 ```
 
 Seit `4.0.0` teilen sich Tabellen und Notizen [einen gemeinsamen Stapel](../../guide/guides/table-related-functions.md#moving-multiple-tables), sodass eine Tabelle, die in den Vordergrund geholt wird, über einer Notiz liegen kann. Beim Laden wird jede Notiz über alle Tabellen gelegt, wie unter [Doc](#doc) beschrieben. Eine Notiz in einer vor `4.0.0` gespeicherten Datei behält ihren gespeicherten `zIndex`, der aus demselben Zähler stammte wie der der Tabellen, sodass eine Notiz, die eine frühere Version über allen Tabellen gezeichnet hat, beim Öffnen unter einer Tabelle liegen kann, die nach ihr in den Vordergrund geholt wurde.
+
+Seit `5.1.1` trägt eine Notiz das Feld `groupId`, die ID der [Tabellengruppe](../../guide/guides/table-groups.md), zu der sie gehört, wie eine Tabelle. Ein fehlendes oder leeres Feld `groupId`, wie in jeder vor `5.1.1` gespeicherten Datei, oder eines, das keine Gruppe in `doc.tableGroupIds` benennt, bedeutet keine Gruppe, und die Speicherform schreibt es nur, solange es eine beibehaltene Gruppe benennt.  
+Ein Editor vor `5.1.1` verwirft beim Laden eines Dokuments das Feld `groupId` jeder Notiz, sodass beim Speichern dort jede Notiz aus ihrer Gruppe genommen wird, wobei ein Editor ab `4.0.0` die Gruppen der Tabellen beibehält – siehe [Gemischte Versionen](./collaborative-editing.md#mixing-releases).
 
 ### Collection: tableGroupEntities {#collection-tablegroupentities}
 
@@ -426,7 +430,7 @@ type TableGroupUI = {
 };
 ```
 
-Seit `4.0.0` kann ein Dokument [Tabellengruppen](../../guide/guides/table-groups.md) enthalten: benannte, farbige Rechtecke, die hinter Tabellen gezeichnet werden. Eine Tabelle tritt einer Gruppe über ihr eigenes Feld `groupId` bei, daher enthält eine Gruppe keine Liste ihrer Mitglieder. Die Speicherform schreibt die Collection, wie `doc.tableGroupIds`, nur, solange eine Gruppe existiert, und ein Dokument ohne sie, etwa eines, das vor `4.0.0` gespeichert wurde, hat keine Gruppen. `Show.hideTableGroup` blendet sie aus.  
+Seit `4.0.0` kann ein Dokument [Tabellengruppen](../../guide/guides/table-groups.md) enthalten: benannte, farbige Rechtecke, die hinter Tabellen und Notizen gezeichnet werden. Eine Tabelle, seit `5.1.1` auch eine Notiz, tritt einer Gruppe über ihr eigenes Feld `groupId` bei, daher enthält eine Gruppe keine Liste ihrer Mitglieder. Die Speicherform schreibt die Collection, wie `doc.tableGroupIds`, nur, solange eine Gruppe existiert, und ein Dokument ohne sie, etwa eines, das vor `4.0.0` gespeichert wurde, hat keine Gruppen. `Show.hideTableGroup` blendet sie aus.  
 Ein Editor vor `4.0.0` verwirft beim Laden eines Dokuments die Gruppen und das Feld `groupId` jeder Tabelle, sodass beim Speichern dort jede Gruppe verloren geht.
 
 ### Wörterbuchzeilen {#dictionary-rows}
@@ -525,6 +529,8 @@ Setzen Sie `$schema` an den Anfang einer Datei `.erd.json`, dann validieren Edit
 Seit `4.0.0` beschreibt das Schema nur die Speicherform. Jedes Objekt mit benannten Feldern ist geschlossen (`additionalProperties: false`), jedes Feld, das die Speicherform immer schreibt, ist erforderlich, jedes oben mit `?` markierte Feld ist aufgeführt, aber nicht erforderlich, und kein anderes Feld ist aufgeführt. Daher lehnt es eine vor `4.0.0` gespeicherte Datei mit ihrem `meta`, ihren Breiten, `zIndex`, `ignoreSaveSettings` und dem Rest ab, bis ein Editor der Version `4.0.0` oder neuer diese Datei erneut speichert. Eine Datei, die von `3.2.0` oder neuer gespeichert wurde, nennt bereits die URL dieses Schemas, die auf den Branch `main` zeigt, sodass ein Editor, der dagegen validiert, die Datei jetzt beanstandet. Eine von `3.0.0` oder `3.1.0` gespeicherte Datei oder ein v2-Dokument nennt kein `$schema`.
 
 Seit `4.2.0` verlangt das Schema weder die Textfelder einer Entität noch eine Liste in `doc`, eine Collection oder `collections` selbst, die die Speicherform weglässt, solange sie nichts enthalten. Es akzeptiert weiterhin eine von `4.0.0` oder `4.1.0` gespeicherte Datei. Es benennt die neuen Felder: `nameViewMode`, das nur `"logical"` und `"both"` annimmt; `logicalName` und `nameDerived` einer Tabelle, wobei `nameDerived` nur `true` annimmt; `logicalName` und `domainId` einer Spalte; und die drei Wörterbücher, jedes mit seiner Kopfzeile und Zeilen aus Zeichenketten. `canvasType` führt die Registerkarte Wörterbuch auf, `columnOrder` akzeptiert sieben oder neun ganze Zahlen, und die Beschreibungen von `show`, `columnOrder`, `lockSettings` und `options` nennen die neuen Bits.
+
+Seit `5.1.1` nennt es außerdem das Feld `groupId` einer Notiz; eine vor `5.1.1` angefertigte Kopie des Schemas lehnt dieses Feld ab.
 
 ```json
 {
@@ -939,6 +945,10 @@ Seit `4.2.0` verlangt das Schema weder die Textfelder einer Entität noch eine L
           "value": {
             "type": "string"
           },
+          "groupId": {
+            "description": "Id of the table group in doc.tableGroupIds the memo belongs to; absent means none",
+            "type": "string"
+          },
           "ui": {
             "type": "object",
             "properties": {
@@ -967,7 +977,7 @@ Seit `4.2.0` verlangt das Schema weder die Textfelder einer Entität noch eine L
       }
     },
     "tableGroupEntities": {
-      "description": "Named, coloured rectangles drawn behind tables; a table joins one through its groupId. Written while a group exists; absent means none",
+      "description": "Named, coloured rectangles drawn behind tables and memos; a table or a memo joins one through its groupId. Written while a group exists; absent means none",
       "type": "object",
       "additionalProperties": {
         "type": "object",

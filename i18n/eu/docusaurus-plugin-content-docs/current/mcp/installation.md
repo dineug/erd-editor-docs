@@ -56,6 +56,7 @@ VS Code leiho batek bere lan-eremuko karpetetako diagramak eta bertan irekitako 
 `3.0.0` bertsiotik `3.1.0` bertsiora arteko luzapen batek eta `1.0.0` edo berriagoa den zerbitzariak elkar ukatzen dute, eta `3.0.0` bertsioa baino lehenagoko luzapen batek ez die agenteei zerbitzurik ematen.
 `4.0.0` edo `4.1.0` bertsioko luzapen bat konektatu egiten da, baina ez ditu erakusten ez gordetzen agenteak idazten dituen izen logikoak, domeinu-loturak eta hiztegietako errenkadak.
 `4.3.0` bertsioa baino lehenagoko luzapen batekin, zuk eta agenteak une berean mugitzen edo tamainaz aldatzen duzuen taula, ohar edo taula-talde bat leku desberdinetan amaitu daiteke zuretzat eta agentearentzat. Ikus [Eguneratzea](#updating).
+`4.3.1` bertsioa baino lehenagoko luzapen batek ez du erakusten ez gordetzen oharra zer taula-taldetan dagoen.
 
 Luzapena `.erd`, `.erd.json`, `.vuerd` edo `.vuerd.json` fitxategiak dituen lan-eremu batean abiarazten da; beraz, agente batek diagrama horiek eskura ditzake zuk bat ireki aurretik.
 Horietako bat ere ez duen lan-eremu batean, diagrama bat irekitzen duzunean abiarazten da, eta ordura arte agenteak diskoan editatzen du.
@@ -74,6 +75,7 @@ Obsidian biltegi baten leihoak bere biltegiko diagramak zerbitzatzen ditu.
 `1.0.0` bertsioa baino lehenagoko plugin batek eta `1.0.0` edo berriagoa den zerbitzariak elkar ukatzen dute.
 `1.0.0` edo `1.1.0` bertsioko plugin bat konektatu egiten da, baina ez ditu erakusten ez gordetzen agenteak idazten dituen izen logikoak, domeinu-loturak eta hiztegietako errenkadak.
 `1.3.0` bertsioa baino lehenagoko plugin batekin, zuk eta agenteak une berean mugitzen edo tamainaz aldatzen duzuen taula, ohar edo taula-talde bat leku desberdinetan amaitu daiteke zuretzat eta agentearentzat. Ikus [Eguneratzea](#updating).
+`1.3.1` bertsioa baino lehenagoko plugin batek ez du erakusten ez gordetzen oharra zer taula-taldetan dagoen.
 
 Biltegi baten leihoak plugina kargatzen den unetik ematen die zerbitzua agenteei; beraz, agente batek biltegiko diagramak eskura ditzake zuk bat ireki aurretik.
 Ez dago fidatzeko urratsik.
@@ -102,6 +104,7 @@ JetBrains IDE batek bertan irekitako proiektu guztietako diagramak zerbitzatzen 
 `0.9.0` edo `0.10.0` bertsioko plugin batek eta `1.0.0` edo berriagoa den zerbitzariak elkar ukatzen dute, eta `0.9.0` bertsioa baino lehenagoko plugin batek ez die agenteei zerbitzurik ematen.
 `1.0.0` edo `1.1.0` bertsioko plugin bat konektatu egiten da, baina ez ditu erakusten ez gordetzen agenteak idazten dituen izen logikoak, domeinu-loturak eta hiztegietako errenkadak.
 `1.3.0` bertsioa baino lehenagoko plugin batekin, zuk eta agenteak une berean mugitzen edo tamainaz aldatzen duzuen taula, ohar edo taula-talde bat leku desberdinetan amaitu daiteke zuretzat eta agentearentzat. Ikus [Eguneratzea](#updating).
+`1.3.1` bertsioa baino lehenagoko plugin batek ez du erakusten ez gordetzen oharra zer taula-taldetan dagoen.
 
 IDEak lehen proiektua irekitzen den unetik ematen die zerbitzua agenteei; beraz, agente batek proiektu bateko diagramak eskura ditzake zuk bat ireki aurretik.
 
@@ -153,7 +156,14 @@ Baina zuk eta agenteak une berean taula, ohar edo taula-talde berari egindako mu
 Alde bat zaharragoa bada, editorea eta agentea kokapen desberdinekin amai daitezke, eta agenteak bere kokapenetik irakurtzen eta editatzen jarraitzen du, geroko mugimendu batek biak puntu batean jarri arte edo agenteak dokumentura berriro sartu arte. Ikus [Une berean egindako edizioak](./live-and-headless.md#edits-made-at-the-same-moment).
 Bertsio hauetako batek ere ez du aldatzen fitxategi batek duena.
 
+`1.2.1` zerbitzariak ere 2. protokoloa erabiltzen du. Bi tresna gehitzen ditu, `erd_set_memo_group` eta `erd_export_svg`, eta `erd_add_table_group` tresnaren `memoIds` argumentua, eta ez du bat ere kentzen edo izenez aldatzen. Ikus [Taula-taldeak](./tools.md#table-groups) eta [SVG esportazioa](./tools.md#svg-export).
+Taula-taldeetako oharrek `1.2.1` edo berriagoa den zerbitzaria behar dute eta, dokumentua irekita dagoen tokian, VS Code luzapenaren `4.3.1` edo berriagoa edo Obsidian edo JetBrains pluginaren `1.3.1` edo berriagoa.
+Konektatzen den luzapen edo plugin zaharrago batek ez du aintzat hartzen ohar bakoitza zein taldetan dagoen, agentearen deia ondo ateratzen bada ere, eta oharren taldeak kanpoan uzten ditu fitxategia gordetzean.
+`1.2.1` bertsioa baino lehenagoko zerbitzari batek ez dauka haietarako tresnarik eta ohar guztiak talderik gabekotzat irakurtzen ditu, eta diskoan editatzen duen fitxategia ohar guztiak taldetik kanpo utzita idazten du berriro. Ikus [Editorerik gabe](./live-and-headless.md#headless).
+`erd_export_svg` tresnak `1.2.1` edo berriagoa den zerbitzaria besterik ez du behar, konektatzen den luzapen edo plugin bertsio edozeinekin, zerbitzariak berak marrazten baitu irudia.
+
 Eguneratu ERD Editor diagramak irekitzen diren leku guztietan ere.
+`4.3.1` bertsioa baino lehenagoko VS Code luzapenak, `1.3.1` bertsioa baino lehenagoko Obsidian pluginak eta `1.3.1` bertsioa baino lehenagoko JetBrains pluginak bertsio berriago batek gorde duen edo agenteak diskoan editatu duen diagrama bat irekitzen dute ohar guztiak beren taula-taldetik kanpo daudela, eta oharren taldeak kanpoan uzten dituzte fitxategia gordetzean.
 `4.2.0` bertsioa baino lehenagoko VS Code luzapenak, `1.2.0` bertsioa baino lehenagoko Obsidian pluginak eta `1.2.0` bertsioa baino lehenagoko JetBrains pluginak bertsio berriago batek gorde duen edo agenteak diskoan editatu duen diagrama bat irekitzen dute, haren taulen eta zutabeen izen logikoak, haren zutabeen domeinu-loturak eta haren hitzak, terminoak eta domeinuak gabe.
 Fitxategia gordetzean, kanpoan uzten dituzte.
 `4.0.0` bertsioa baino lehenagoko VS Code luzapenak, `1.0.0` bertsioa baino lehenagoko Obsidian pluginak eta `1.0.0` bertsioa baino lehenagoko JetBrains pluginak, gainera, halako diagrama bat haren gako nagusien ikonorik gabe erakusten dute, eta fitxategia gordetzean haren taula-taldeak eta SQL eskemaren scriptak galtzen dituzte.

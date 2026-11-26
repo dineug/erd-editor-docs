@@ -55,16 +55,17 @@ Selama View Option → `Memos` nonaktif, memo disembunyikan, tidak ada yang mena
 Memo adalah catatan teks bebas di kanvas. Klik badannya lalu ketik; teksnya disimpan bersama dokumen.  
 `Escape` menutup editor memo, mempertahankan apa yang Anda ketik dan membiarkan memo tetap dipilih, dan `Escape` kedua mengosongkan pilihan.  
 Seret tepinya untuk mengubah ukurannya. `x` di headernya, yang ditampilkan selama penunjuk berada di atas memo, menghapusnya.  
-Klik kanan pada memo membuka menunya, bukan editor: `Color`, `Remove color` selama item yang dipilih memiliki warna, dan `Delete`, yang bertuliskan `Delete selected` selama memo tersebut merupakan salah satu dari dua item yang dipilih atau lebih. Memo yang dipilih juga dihapus dengan tombol yang menghapus tabel — lihat [Penghapusan tabel dan memo](./table-related-functions.md#table-and-memo-deletion).
+Klik kanan pada memo membuka menunya, bukan editor: `Color`, `Remove color` selama item yang dipilih memiliki warna, `Group selected tables` selama pilihan memuat tabel dan grup tabel ditampilkan, `Remove from group` selama tabel atau memo yang dipilih berada di grup, dan `Delete`, yang bertuliskan `Delete selected` selama memo tersebut merupakan salah satu dari dua item yang dipilih atau lebih. Memo yang dipilih juga dihapus dengan tombol yang menghapus tabel — lihat [Penghapusan tabel dan memo](./table-related-functions.md#table-and-memo-deletion).  
+Seperti tabel, memo bergabung ke atau meninggalkan [grup tabel](./table-groups.md) di tempat memo dilepaskan. `Remove from group` juga mengeluarkannya, dan `Group selected tables` memasukkannya ke grup baru bersama tabel yang dipilih bersamanya — lihat [Menambahkan dan mengeluarkan tabel](./table-groups.md#adding-and-removing-tables).
 
 ![Menambahkan memo dengan Alt + M, mengetik catatan, dan menyeret tepinya untuk mengubah ukurannya](/img/demo-memo.webp)
 
 ## Pembuatan grup tabel {#table-group-creation}
 
-Grup tabel adalah kotak yang memuat tabel, dan Anda dapat memberinya nama dan warna. Buat grup dengan salah satu dari dua cara:
+Grup tabel adalah kotak yang memuat tabel dan memo, dan Anda dapat memberinya nama dan warna. Buat grup dengan salah satu dari dua cara:
 
-- Pilih `New Table Group` dari menu konteks atau Pencarian Cepat, klik tombol `New Table Group` di [bilah alat kanvas](./table-related-functions.md#canvas-toolbar), atau tekan `Alt + G` (Windows/Linux) atau `⌥ + G` (Mac), lalu seret sebuah kotak di atas kanvas. Setiap tabel yang titik tengahnya terletak di dalam kotak bergabung ke grup baru, kecuali jika tabel itu sudah berada di grup lain — lihat [Menggambar grup](./table-groups.md#drawing-a-group).
-- Pilih tabel, lalu pilih `Group selected tables` dari menu konteks tabel atau `Group Selected Tables` dari Pencarian Cepat, atau tekan `T` lalu `G` — lihat [Mengelompokkan tabel yang dipilih](./table-groups.md#grouping-selected-tables).
+- Pilih `New Table Group` dari menu konteks atau Pencarian Cepat, klik tombol `New Table Group` di [bilah alat kanvas](./table-related-functions.md#canvas-toolbar), atau tekan `Alt + G` (Windows/Linux) atau `⌥ + G` (Mac), lalu seret sebuah kotak di atas kanvas. Setiap tabel dan setiap memo yang ditampilkan, yang titik tengahnya terletak di dalam kotak, bergabung ke grup baru, kecuali jika tabel atau memo itu sudah berada di grup lain — lihat [Menggambar grup](./table-groups.md#drawing-a-group).
+- Pilih tabel, beserta memo yang menyertainya jika ada, lalu pilih `Group selected tables` dari menu konteks tabel atau memo, atau `Group Selected Tables` dari Pencarian Cepat, atau tekan `T` lalu `G` — lihat [Mengelompokkan tabel yang dipilih](./table-groups.md#grouping-selected-tables).
 
 Pemberian nama, pemberian warna, pemindahan, pengubahan ukuran, dan lainnya dibahas di [Grup tabel](./table-groups.md).
 

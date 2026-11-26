@@ -1,11 +1,11 @@
 ---
 sidebar_position: 4
-description: Všetky nástroje servera MCP erd-editor – čítanie dokumentu po stránkach, kontroly slovníkov, 67 nástrojov na úpravy, erd_batch a podoba výsledku a odmietnutia.
+description: Všetky nástroje servera MCP erd-editor – čítanie dokumentu po stránkach, kontroly slovníkov, export SVG, 68 nástrojov na úpravy, erd_batch a podoba výsledku a odmietnutia.
 ---
 
 # Nástroje
 
-Server ponúka 77 nástrojov: päť nástrojov relácie, štyri nástroje na čítanie, 67 nástrojov na úpravy, jeden pre každú operáciu úprav, a nástroj `erd_batch`, ktorý spustí niekoľko nástrojov na úpravy ako jednu úpravu.
+Server ponúka 79 nástrojov: päť nástrojov relácie, štyri nástroje na čítanie, nástroj `erd_export_svg`, ktorý nakreslí dokument ako obrázok SVG, 68 nástrojov na úpravy, jeden pre každú operáciu úprav, a nástroj `erd_batch`, ktorý spustí niekoľko nástrojov na úpravy ako jednu úpravu.
 
 Každý nástroj okrem `erd_list_documents` prijíma ako prvý argument `path` dokumentu a tabuľky nižšie ho vynechávajú.
 Argument označený `?` je voliteľný.
@@ -26,14 +26,14 @@ Informácie o tom, čo v jednotlivých režimoch robí ukladanie a vrátenie sp�
 
 | Nástroj | Argumenty | Čo robí |
 | --- | --- | --- |
-| `erd_list` | `query?`, `offset?`, `limit?`, `namesOnly?` | Nastavenia a počty, potom stránka tabuliek s ich indexmi a vzťahmi, každá tabuľka s identifikátorom, polohou a veľkosťou na plátne, počtom stĺpcov, logickým názvom, ak ho má, a skupinou tabuliek, ak do nejakej patrí. Ak nevyhľadáva, za tabuľkami nasledujú skupiny tabuliek, poznámky a potom domény, termíny a slová. |
-| `erd_get` | `tableIds?`, `tableNames?`, `relationshipIds?`, `indexIds?`, `memoIds?`, `tableGroupIds?`, `wordIds?`, `termIds?`, `domainIds?` | Uvedené entity v plnom rozsahu: tabuľky s ich stĺpcami a skupinou tabuliek, vzťahy s ich stĺpcami a hodnotami `onDelete` a `onUpdate`, indexy s ich stĺpcami, poznámky s ich textom, skupiny tabuliek s ich tabuľkami a slová, termíny a domény so všetkými poľami. |
+| `erd_list` | `query?`, `offset?`, `limit?`, `namesOnly?` | Nastavenia a počty, potom stránka tabuliek s ich indexmi a vzťahmi, každá tabuľka s identifikátorom, polohou a veľkosťou na plátne, počtom stĺpcov, logickým názvom, ak ho má, a skupinou tabuliek, ak do nejakej patrí. Ak nevyhľadáva, za tabuľkami nasledujú skupiny tabuliek, poznámky, každá so svojou skupinou tabuliek, ak do nejakej patrí, a potom domény, termíny a slová. |
+| `erd_get` | `tableIds?`, `tableNames?`, `relationshipIds?`, `indexIds?`, `memoIds?`, `tableGroupIds?`, `wordIds?`, `termIds?`, `domainIds?` | Uvedené entity v plnom rozsahu: tabuľky s ich stĺpcami a skupinou tabuliek, vzťahy s ich stĺpcami a hodnotami `onDelete` a `onUpdate`, indexy s ich stĺpcami, poznámky s ich textom a skupinou tabuliek, skupiny tabuliek s ich tabuľkami a poznámkami a slová, termíny a domény so všetkými poľami. |
 | `erd_read` | `format`, `vendor?`, `statements?`, `header?`, `logicalNameAsComment?`, `tableIds?`, `tableNames?`, `groupNames?` | Celý dokument naraz v jednom zo štyroch formátov alebo kód DDL iba niektorých tabuliek alebo skupín tabuliek. |
 | `erd_list_checks` | `level?`, `tableIds?`, `tableNames?`, `offset?`, `limit?` | Problémy, ktoré nachádzajú slovníky slov, termínov a domén, tak ako ich uvádza hárok `Checks` na karte Slovník editora, po stránkach. Nič nemení – pozrite si časť [Kontroly slovníkov](#dictionary-checks). |
 
 Agent nájde identifikátory pomocou `erd_list`, stĺpce, riadky slovníkov a ďalšie podrobnosti prečíta pomocou `erd_get` a tieto identifikátory odovzdá nástrojom na úpravy.
 Veľkosť tabuľky v `erd_list` je plocha, ktorú tabuľka zaberá na plátne: výška je presná, šírka približná.
-Skupina tabuliek sa uvádza obdĺžnikom, ktorý ukladá, s názvom, farbou a počtom tabuliek, ktoré obsahuje.
+Skupina tabuliek sa uvádza obdĺžnikom, ktorý ukladá, s názvom, farbou a počtom tabuliek a poznámok, ktoré obsahuje.
 Každý vzťah sa uvádza raz, pri jednej z jeho dvoch tabuliek.
 Riadok slovníka sa uvádza svojím identifikátorom, hodnotou `name` a tým, čo dáva fyzickému názvu alebo stĺpcu: hodnotou `dataType` pri doméne, hodnotami `physicalName` a `domainId` pri termíne a hodnotou `abbreviation` pri slove. Každý slovník uvádza svoje riadky v poradí, v akom ich zobrazuje jeho hárok.
 Nastavenia, ktoré hlásia `erd_list` a `erd_read`, sú tie, ktoré sa ukladajú do súboru – pozrite si časť [Nastavenia](#settings).
@@ -45,7 +45,7 @@ Nástroj `erd_read` prijíma jeden zo štyroch formátov:
 
 | `format` | Čo vráti |
 | --- | --- |
-| `snapshot` | Kompaktný JSON so všetkými entitami a ich identifikátormi vrátane skupín tabuliek a riadkov slov, termínov a domén a s nastaveniami vrátane skriptov karty Schéma SQL. Vynecháva to, čo sa líši podľa toho, kto dokument zobrazuje: namerané šírky, poradie prekrývania, zobrazenie, kartu a Zobrazenie názvov. Pri veľkej schéme je rozsiahly. |
+| `snapshot` | Kompaktný JSON so všetkými entitami a ich identifikátormi vrátane skupín tabuliek s ich tabuľkami a poznámkami a riadkov slov, termínov a domén a s nastaveniami vrátane skriptov karty Schéma SQL. Vynecháva to, čo sa líši podľa toho, kto dokument zobrazuje: namerané šírky, poradie prekrývania, zobrazenie, kartu a Zobrazenie názvov. Pri veľkej schéme je rozsiahly. |
 | `sql` | Kód DDL pre jednu z ôsmich databáz: `Databricks`, `MariaDB`, `MSSQL`, `MySQL`, `Oracle`, `PostgreSQL`, `Snowflake` alebo `SQLite`. Predvolená hodnota argumentu `vendor` je databáza, na ktorú je dokument nastavený. Kód DDL celého dokumentu obsahuje jeho skripty pred tabuľkami a za tabuľkami. S argumentmi `tableIds`, `tableNames` alebo `groupNames` iba tieto tabuľky s cudzími kľúčmi, ktoré obsahujú, a bez skriptov. Cudzie kľúče nesú svoje akcie ON DELETE a ON UPDATE okrem tých, ktoré cieľová databáza vynecháva – pozrite si časť [ON DELETE a ON UPDATE](../guide/guides/relationship-editing.md#on-delete-and-on-update). |
 | `json` | Celý dokument presne tak, ako ho uloženie zapíše do súboru, vrátane úprav, ktoré editor ešte neuložil – pozrite si časť [Úložná forma](../api/advanced/schema.md#storage-form). |
 | `scripts` | Iba skripty dokumentu pred tabuľkami a za tabuľkami v tvare `{"before":"…","after":"…"}`, každý prázdny, ak nie je nastavený, bez ohľadu na veľkosť schémy. |
@@ -103,6 +103,37 @@ Každá kontrola uvádza svoje polia `level` a `code` a polia `kind` a `id` svoj
 
 Ako jednotlivé kontroly čítajú názov, opisuje časť [Čo zisťujú jednotlivé kontroly](../guide/guides/dictionary.md#what-each-check-finds).
 
+## Export SVG {#svg-export}
+
+| Nástroj | Argumenty | Čo robí |
+| --- | --- | --- |
+| `erd_export_svg` | `output?`, `darkMode?`, `background?` | Nakreslí dokument ako obrázok SVG a zapíše ho do súboru `.svg`, ktorý uvádza argument `output`, alebo bez argumentu `output` vráti text SVG. Nezmení žiadny dokument. |
+
+Server kreslí obrázok sám, takže vyžaduje iba server vo verzii `1.2.1` alebo novšej a funguje s ktorýmkoľvek vydaním rozšírenia alebo doplnku ERD Editor, ktoré sa pripojí.
+Rovnako ako `toImage()` kreslí obrázok, ktorý v editore uloží dialógové okno `Export image` ako SVG, ale iba z dokumentu: celý diagram pri 100 %, bez toho, čo v dokumente skrýva View Option, v prednastavených farbách, s tabuľkami a stĺpcami pomenovanými v Zobrazení názvov, ktoré dokument obsahuje, a so slovami, ktoré diagram kreslí sám, v angličtine – pozrite si časť [Čo kreslí](../api/to-image.md#what-it-draws).
+Server meria text bez písiem editora, takže tabuľka môže vyjsť o niečo širšia, než ju kreslí editor.
+Nie je k dispozícii PNG ani kopírovanie do schránky.
+
+- `darkMode`: `true` nakreslí tmavý motív; `false`, predvolená hodnota, svetlý. Žiadny motív obrazovky editora sa do obrázka nedostane.
+- `background`: `true`, predvolená hodnota, vyplní pozadie za diagramom farbou plátna; `false` ho nechá priehľadné.
+- `output`: súbor, ktorý sa má zapísať, s absolútnou cestou alebo cestou vzhľadom na pracovný adresár servera, s názvom končiacim na `.svg` bez ohľadu na veľkosť písmen, v priečinku, ktorý už existuje. Súbor, ktorý tam už je, sa nahradí cez dočasný súbor vedľa neho a symbolický odkaz sa sleduje až k súboru, na ktorý vedie.
+
+Export číta dokument tak, ako ho čítajú nástroje na čítanie: to, čo má editor, ktorý ho obsluhuje, vrátane neuložených úprav, alebo inak súbor. Rovnako ako čítanie nikdy neotvorí dokument v editore.
+Pole `mode` jeho odpovede uvádza, ktorý z týchto prípadov nastal: `live`, `headless` alebo, keď dokument spravuje editor s vypnutým hubom, `blocked`, s upozornením, že sa nakreslil súbor na disku bez úprav, ktoré v tomto editore ešte nie sú uložené – pozrite si stránku [Live a Headless](./live-and-headless.md).
+
+S argumentom `output` je odpoveďou jeden riadok JSON: `mode`, `path` dokumentu, zapísaný `output`, jeho veľkosť v `bytes`, `width` a `height` SVG a `notes`, ak nejaké sú.
+
+```json
+{"mode":"headless","path":"/work/shop.erd.json","output":"/work/docs/shop.svg","bytes":48213,"width":1210,"height":764}
+```
+
+Bez argumentu `output` je odpoveďou text SVG a potom `{"mode":"…"}` s prípadnými upozorneniami. Obrázok SVG dlhší ako 40 000 znakov, čo je najviac, koľko vráti jedna odpoveď, sa odmietne s kódom `tooLarge`: zadajte argument `output`, aby sa namiesto toho zapísal do súboru.
+
+Argument `output` sa kontroluje pred čítaním dokumentu, takže pri odmietnutom argumente sa nič nekreslí: s kódom `invalidPath` sa odmietne prázdny argument, názov, ktorý nekončí na `.svg`, názov označujúci priečinok a odkaz, ktorý nevedie na žiadny súbor alebo vedie na súbor, ktorého názov nekončí na `.svg`, a s kódom `notFound` cesta v priečinku, ktorý neexistuje. Súbor iba na čítanie sa odmietne s kódom `readonly` až po nakreslení obrázka a zostane taký, aký bol.
+
+Export nevytvára záznam v histórii zmien a nezanecháva nič na uloženie a nástroj `erd_batch` ho odmietne rovnako ako nástroj na čítanie.
+Veľký diagram sa kreslí niekoľko sekúnd a server kreslí naraz iba jeden export.
+
 ## Nástroje na úpravy {#edit-tools}
 
 Identifikátory pochádzajú z `erd_list` a `erd_get` alebo z poľa `createdIds` volania, ktoré entitu vytvorilo.
@@ -121,7 +152,7 @@ Hodnoty `x` a `y` sú ľavý a horný okraj na plátne v pixeloch a farba je hex
 | `erd_change_table_color` | `tableId`, `color` | Nastaví farbu tabuľky. |
 | `erd_move_table` | `tableId`, `x`, `y` | Presunie tabuľku na danú polohu na plátne. |
 | `erd_move_tables` | `positions` | Presunie niekoľko tabuliek v jednej úprave, ktorú vráti späť jedno volanie `erd_undo`. Pole `positions` obsahuje `{ tableId, x, y }` pre každú tabuľku, každú tabuľku najviac raz. |
-| `erd_sort_tables` | | Rozmiestni všetky tabuľky v riadkoch po plátne, najprv tie s najmenším počtom stĺpcov, rovnako ako ich rozmiestňujú `erd_import_sql`, `erd_import_graphql`, `erd_import_dbml` a `erd_import_aml`. Tabuľky skupiny tabuliek zostanú pohromade a rámec každej skupiny sa prispôsobí okolo nich. |
+| `erd_sort_tables` | | Rozmiestni všetky tabuľky v riadkoch po plátne, najprv tie s najmenším počtom stĺpcov, rovnako ako ich rozmiestňujú `erd_import_sql`, `erd_import_graphql`, `erd_import_dbml` a `erd_import_aml`. Tabuľky skupiny tabuliek zostanú pohromade, za nimi jej poznámky, kým sú poznámky zobrazené, a rámec každej skupiny sa prispôsobí okolo nich. Kým sú poznámky skryté, poznámky skupiny sa presúvajú spolu s jej tabuľkami. Poznámka mimo skupiny alebo v skupine, ktorá neobsahuje žiadnu tabuľku, zostane tam, kde je. |
 
 ### Stĺpce {#columns}
 
@@ -190,28 +221,33 @@ Identifikátor stĺpca indexu je položka zoznamu stĺpcov indexu, ktorý vráti
 | `erd_move_memo` | `memoId`, `x`, `y` | Presunie poznámku na danú polohu na plátne. |
 | `erd_resize_memo` | `memoId`, `width`, `height` | Zmení veľkosť poznámky. Šírka musí byť aspoň približne `116` pixelov a výška aspoň `100`. Nevytvára záznam v histórii zmien, pretože editor zaznamenáva zmenu veľkosti poznámky iba pri ťahaní. |
 
+Poznámka môže byť v jednej skupine tabuliek a presúva sa s ňou – pozrite si časť [Skupiny tabuliek](#table-groups).
+
 Kým sú poznámky skryté cez [View Option](../guide/guides/table-related-functions.md#table-view-options) → `Memos`, nástroj `erd_add_memo` poznámku napriek tomu pridá a tá zostane skrytá, kým sa poznámky znova nezobrazia.
 Nástroje `erd_list` a `erd_get` uvádzajú aj skryté poznámky.
 
 ### Skupiny tabuliek {#table-groups}
 
-Skupina tabuliek je pomenovaný rámec nakreslený za jej tabuľkami a jej farba sa zobrazuje na rámci a na hlavičkách jej tabuliek – pozrite si stránku [Skupiny tabuliek](../guide/guides/table-groups.md).
-Tabuľka patrí najviac do jednej skupiny. Nástroje `erd_move_table`, `erd_move_tables` a `erd_move_table_group` nikdy nezmenia, ktoré tabuľky skupina obsahuje, nech tabuľku umiestnia kamkoľvek, zatiaľ čo v editore sa tabuľka pripojí k skupine alebo ju opustí podľa toho, kde sa pustí – pozrite si časť [Pridávanie a odstraňovanie tabuliek](../guide/guides/table-groups.md#adding-and-removing-tables). Nástroje `erd_add_table_group` a `erd_set_table_group` vkladajú tabuľky do skupiny a `erd_remove_table_group` ponechá jej tabuľky mimo akejkoľvek skupiny.
-Skupina ukladá obdĺžnik so šírkou aspoň `160` pixelov a výškou aspoň `100` vrátane záhlavia a editor nakreslí rámec zväčšený tak, aby obsiahol každú z jej tabuliek.
+Skupina tabuliek je pomenovaný rámec nakreslený za jej tabuľkami a poznámkami a jej farba sa zobrazuje na rámci a na hlavičkách jej tabuliek a poznámok – pozrite si stránku [Skupiny tabuliek](../guide/guides/table-groups.md).
+Tabuľka alebo poznámka patrí najviac do jednej skupiny. Nástroje `erd_move_table`, `erd_move_tables`, `erd_move_memo` a `erd_move_table_group` nikdy nezmenia, čo skupina obsahuje, nech tabuľku alebo poznámku umiestnia kamkoľvek, zatiaľ čo v editore sa tabuľka alebo poznámka pridá do skupiny alebo ju opustí podľa toho, kam sa pustí – pozrite si časť [Pridávanie a odstraňovanie tabuliek](../guide/guides/table-groups.md#adding-and-removing-tables). Nástroj `erd_add_table_group` vkladá do skupiny tabuľky a poznámky, `erd_set_table_group` tabuľky a `erd_set_memo_group` poznámky a `erd_remove_table_group` ponechá jej tabuľky a poznámky mimo akejkoľvek skupiny.
+Skupina ukladá obdĺžnik so šírkou aspoň `160` pixelov a výškou aspoň `100` vrátane záhlavia a editor nakreslí rámec zväčšený tak, aby obsiahol každú z jej tabuliek a, kým sú poznámky zobrazené, každú z jej poznámok.
 
 | Nástroj | Argumenty | Čo robí |
 | --- | --- | --- |
-| `erd_add_table_group` | `name`, `color?`, `x?`, `y?`, `width?`, `height?`, `tableIds?` | Pridá skupinu a vráti jej identifikátor v poli `createdIds`. Zadajte buď `tableIds`, alebo obdĺžnik, teda `x`, `y`, `width` a `height` spolu. S argumentom `tableIds` každá tabuľka opustí skupinu, v ktorej bola, a obdĺžnik sa okolo nich prispôsobí rovnako ako pri [zoskupení vybratých tabuliek](../guide/guides/table-groups.md#grouping-selected-tables). Obdĺžnik zahrnie každú tabuľku, ktorá nepatrí do žiadnej skupiny a ktorej stred leží v ňom, rovnako ako [nakreslenie skupiny](../guide/guides/table-groups.md#drawing-a-group). Prázdny argument `name` ponechá skupinu bez názvu. Jedno volanie `erd_undo` skupinu odstráni a každú tabuľku vráti do skupiny, v ktorej bola. |
-| `erd_remove_table_group` | `groupId` | Odstráni skupinu. Jej tabuľky zostanú na svojom mieste, bez skupiny. |
+| `erd_add_table_group` | `name`, `color?`, `x?`, `y?`, `width?`, `height?`, `tableIds?`, `memoIds?` | Pridá skupinu a vráti jej identifikátor v poli `createdIds`. Zadajte buď `tableIds`, prípadne s argumentom `memoIds` vedľa nich, alebo obdĺžnik, teda `x`, `y`, `width` a `height` spolu. S argumentom `tableIds` každá tabuľka a poznámka opustí skupinu, v ktorej bola, a obdĺžnik sa okolo nich prispôsobí, pri poznámkach iba kým sú poznámky zobrazené, rovnako ako pri [zoskupení vybratých tabuliek](../guide/guides/table-groups.md#grouping-selected-tables). Obdĺžnik zahrnie každú tabuľku a každú zobrazenú poznámku, ktoré nepatria do žiadnej skupiny a ktorých stred leží v ňom, rovnako ako [nakreslenie skupiny](../guide/guides/table-groups.md#drawing-a-group). Prázdny argument `name` ponechá skupinu bez názvu. Jedno volanie `erd_undo` skupinu odstráni a každú tabuľku a poznámku vráti do skupiny, v ktorej bola. |
+| `erd_remove_table_group` | `groupId` | Odstráni skupinu. Jej tabuľky a poznámky zostanú na svojom mieste, bez skupiny. |
 | `erd_change_table_group_name` | `groupId`, `value` | Premenuje skupinu. Prázdny reťazec ju ponechá bez názvu. |
 | `erd_change_table_group_color` | `groupId`, `color` | Nastaví farbu skupiny. |
-| `erd_move_table_group` | `groupId`, `x`, `y` | Presunie skupinu tak, aby jej obdĺžnik začínal v danom bode, a jej tabuľky o rovnakú vzdialenosť, rovnako ako presunutie myšou za jej záhlavie. Presun, pri ktorom je súčet vodorovného a zvislého posunu menší ako 20 pixelov, nevytvorí záznam v histórii zmien. Od verzie servera `1.2.0` presun dorazí do editora ako body, v ktorých skupina a jej tabuľky skončia, takže s rozšírením pre VS Code vo verzii `4.3.0` alebo novšej alebo s doplnkom pre Obsidian či JetBrains vo verzii `1.3.0` alebo novšej presun skupiny alebo jednej z jej tabuliek urobený tam v tom istom okamihu skončí na jednej z dvoch polôh, nikdy na ich súčte – pozrite si časť [Úpravy urobené v tom istom okamihu](./live-and-headless.md#edits-made-at-the-same-moment). |
-| `erd_resize_table_group` | `groupId`, `x?`, `y?`, `width`, `height` | Nastaví obdĺžnik skupiny, pričom jej tabuľky zostanú na svojom mieste. Ak sa `x` a `y` vynechajú, roh skupiny sa zachová. Obdĺžnik, ktorý by neobsiahol tabuľky skupiny aj s ich odsadením, sa odmietne so správou, ktorá uvedie oblasť, ktorú musí obsiahnuť. |
+| `erd_move_table_group` | `groupId`, `x`, `y` | Presunie skupinu tak, aby jej obdĺžnik začínal v danom bode, a jej tabuľky a poznámky, vrátane skrytých poznámok, o rovnakú vzdialenosť, rovnako ako presunutie myšou za jej záhlavie. Presun, pri ktorom je súčet vodorovného a zvislého posunu menší ako 20 pixelov, nevytvorí záznam v histórii zmien. Od verzie servera `1.2.0` presun dorazí do editora ako body, v ktorých skupina a jej tabuľky skončia, takže s rozšírením pre VS Code vo verzii `4.3.0` alebo novšej alebo s doplnkom pre Obsidian či JetBrains vo verzii `1.3.0` alebo novšej presun skupiny alebo jednej z jej tabuliek urobený tam v tom istom okamihu skončí na jednej z dvoch polôh, nikdy na ich súčte – pozrite si časť [Úpravy urobené v tom istom okamihu](./live-and-headless.md#edits-made-at-the-same-moment). Od verzie servera `1.2.1` idú v tej istej dávke aj body, v ktorých skončia jej poznámky. |
+| `erd_resize_table_group` | `groupId`, `x?`, `y?`, `width`, `height` | Nastaví obdĺžnik skupiny, pričom jej tabuľky a poznámky zostanú na svojom mieste. Ak sa `x` a `y` vynechajú, roh skupiny sa zachová. Obdĺžnik, ktorý by neobsiahol tabuľky a zobrazené poznámky skupiny aj s ich odsadením, sa odmietne so správou, ktorá uvedie oblasť, ktorú musí obsiahnuť. |
 | `erd_set_table_group` | `tableIds`, `groupId` | Vloží tabuľky do skupiny, pričom každá opustí skupinu, v ktorej bola. Argument `groupId` s hodnotou `null` alebo prázdny reťazec ich vyradí zo všetkých skupín. |
+| `erd_set_memo_group` | `memoIds`, `groupId` | Vloží poznámky do skupiny, pričom každá opustí skupinu, v ktorej bola, a zostane tam, kde je. Argument `groupId` s hodnotou `null` alebo prázdny reťazec ich vyradí zo všetkých skupín. |
 
 Kým sú skupiny skryté cez `View Option` → `Table Groups`, tieto nástroje skupiny napriek tomu pridávajú a menia a tie zostanú skryté, kým sa skupiny nezobrazia – pozrite si časť [Skrytie skupín](../guide/guides/table-groups.md#hiding-groups).
-Nástroj `erd_sort_tables` drží tabuľky každej skupiny pohromade, `erd_import_dbml` a `erd_import_json` prinášajú skupiny – pozrite si časť [Import](#import) – a `erd_read` zapíše pomocou `groupNames` kód DDL vybraných skupín.
+Poznámky skryté cez View Option → `Memos` zostanú vo svojich skupinách a presúvajú sa s nimi. Nástroj `erd_set_memo_group` aj argument `memoIds` nástroja `erd_add_table_group` ich do skupiny vložia rovnako ako zobrazené poznámky.
+Nástroj `erd_sort_tables` drží tabuľky a poznámky každej skupiny pohromade, `erd_import_dbml` a `erd_import_json` prinášajú skupiny – pozrite si časť [Import](#import) – a `erd_read` zapíše pomocou `groupNames` kód DDL vybraných skupín.
 Verzia ERD Editor, ktorá vznikla pred zavedením skupín tabuliek, pri uložení súboru zahodí jeho skupiny, ako to robia rozšírenie pre VS Code pred verziou `4.0.0` a doplnky pre Obsidian a IDE od JetBrains pred verziou `1.0.0` – pozrite si časť [Aktualizácia](./installation.md#updating).
+Verzia z obdobia, keď poznámky ešte nemohli patriť do skupín tabuliek, teda rozšírenie pre VS Code staršie ako verzia `4.3.1` a doplnky pre Obsidian a JetBrains staršie ako verzia `1.3.1`, nezobrazuje ani neuchováva, v ktorej skupine je poznámka, takže súbor uloží so všetkými poznámkami mimo skupín, a rovnako aj server starší ako verzia `1.2.1`, ktorý zapisuje súbor na disk – pozrite si časť [Aktualizácia](./installation.md#updating).
 
 ### Slovníky {#dictionaries}
 
@@ -304,14 +340,14 @@ Režim `append` pridá import do dokumentu rovnako ako položka [Importovať a p
 - Vzťahy a indexy pribudnú iba v rámci tabuliek, ktoré prinesie import, takže cudzí kľúč na tabuľku, ktorú text nedeklaruje, sa zahodí.
 - `erd_import_sql`, `erd_import_graphql` a `erd_import_aml` pridajú tabuľky s ich vzťahmi a indexmi a `erd_import_dbml` navyše aj skupiny tabuliek. `erd_import_json` pridá tabuľky, vzťahy, indexy, poznámky a skupiny tabuliek, nikdy však nie svoje nastavenia, a prázdny text odmietne. Jeho tabuľky a stĺpce prinesú svoje logické názvy, žiadny stĺpec však nie je prepojený s doménou a z JSON sa neprenesie žiadne slovo, termín ani doména.
 
-Dokument JSON si zachová vlastné rozmiestnenie vrátane skupín tabuliek: s režimom `replace` tam, kde svoje tabuľky umiestňuje, a s režimom `append` vo vnútri pridaného bloku.
+Dokument JSON si zachová vlastné rozmiestnenie vrátane skupín tabuliek s tabuľkami a poznámkami, ktoré každá z nich obsahuje: s režimom `replace` tam, kde svoje tabuľky umiestňuje, a s režimom `append` vo vnútri pridaného bloku.
 Tabuľky zo SQL, GraphQL, DBML a AML sa rozmiestnia v riadkoch, najprv tie s najmenším počtom stĺpcov a tabuľky každej skupiny pohromade, rovnako ako ich rozmiestňuje `erd_sort_tables`, nikdy nie rozložením `Flow`, ktorým ich rozloží import priamo v editore, keď je to možné. Tieto štyri nástroje odmietnu prázdny text v oboch režimoch.
 
 ## erd_batch {#erd_batch}
 
 Nástroj `erd_batch` spustí niekoľko nástrojov na úpravy postupne ako jednu úpravu, buď všetky, alebo žiadny.
 
-- Pole `operations` obsahuje až 100 položiek, každú v tvare `{ tool, as?, args? }`, kde `tool` je nástroj na úpravy a `args` sú argumenty nástroja bez `path`. Nástroj na čítanie, napríklad `erd_list_checks`, sa odmietne.
+- Pole `operations` obsahuje až 100 položiek, každú v tvare `{ tool, as?, args? }`, kde `tool` je nástroj na úpravy a `args` sú argumenty nástroja bez `path`. Nástroj na čítanie, napríklad `erd_list_checks`, sa odmietne a rovnako aj nástroj `erd_export_svg`.
 - Operácie sa najprv vyskúšajú na kópii dokumentu. Odmietnutá operácia sa uvedie, napríklad `operations[1] erd_remove_table: …`, a nepoužije sa nič.
 - Jedno volanie `erd_undo` vráti späť celú dávku okrem operácií, ktoré vrátiť späť nedokáže a ktoré uvádza pole `undoNote` vo výsledku: operácie nástroja, ktorý nevytvára záznam v histórii zmien, napríklad `erd_set_database`, a operácie, ktoré zmenili dokument bez vytvorenia záznamu, napríklad krátky presun pomocou `erd_move_table_group`. Dávku, ktorá nevytvorila vôbec žiadny záznam v histórii zmien, `erd_undo` preskočí. Pole `historyEntries` vo výsledku počíta záznamy histórie editora v rámci dávky, nie volania `erd_undo`.
 - V relácii naživo editor prijme buď celú dávku, alebo nič z nej.
@@ -391,21 +427,21 @@ Odmietnutie je chybový výsledok s kódom a správou, ktorá hovorí, čo treba
 
 | `code` | Dôvod |
 | --- | --- |
-| `notFound` | Identifikátor neoznačuje nič existujúce alebo súbor neexistuje. |
+| `notFound` | Identifikátor neoznačuje nič existujúce, súbor neexistuje alebo neexistuje priečinok argumentu `output` nástroja `erd_export_svg`. |
 | `invalidArgs` | Argument chýba alebo má nesprávnu hodnotu. |
-| `invalidPath` | Cesta neoznačuje dokument ERD. V systéme Windows aj cesta s názvom, ktorý Windows neuloží tak, ako je napísaný, alebo cesta, ktorá vedie k dokumentu, ktorý editor spravuje pod inou cestou, ktorú uvádza správa. |
+| `invalidPath` | Cesta neoznačuje dokument ERD alebo argument `output` nástroja `erd_export_svg` nie je súbor `.svg` – pozrite si časť [Export SVG](#svg-export). V systéme Windows aj cesta s názvom, ktorý Windows neuloží tak, ako je napísaný, alebo cesta, ktorá vedie k dokumentu, ktorý editor spravuje pod inou cestou, ktorú uvádza správa. |
 | `invalidDocument` | Súbor nie je dokument, ktorý editor dokáže prečítať. |
-| `tooLarge` | Čítanie sa nezmestí do jednej odpovede. |
+| `tooLarge` | Čítanie alebo obrázok SVG vyžiadaný bez argumentu `output` sa nezmestí do jednej odpovede. |
 | `blocked` | Dokument spravuje editor s vypnutým hubom. Správa uvádza, ako ho zapnúť: vo VS Code dôverujte pracovnému priestoru a zapnite nastavenie `dineug.erd-editor.agentHub.enabled` alebo znova načítajte okno; v aplikácii Obsidian zapnite možnosť Coding agents alebo aplikáciu Obsidian znova načítajte; v IDE od JetBrains zapnite možnosť Coding agents alebo reštartujte IDE, ak je už zapnutá. |
 | `hubDisabled` | IDE od JetBrains spravuje dokument iba v rámci projektu, ktorému nedôveruje. Čítanie stále funguje; aby mohol agent upravovať, dôverujte projektu. |
 | `conflict` | Súbor sa počas volania zmenil na disku. Nič sa nezapísalo. |
 | `hubAppeared`, `hubGone` | Editor začal obsluhovať dokument, ktorý agent upravoval na disku, alebo editor, ktorý ho obsluhoval, stále beží, ale jeho súbor zámku a pripojenie zmizli. Nič sa nezapísalo. |
 | `notSaved` | Nástroj `erd_save` nedokázal uložiť dokument editora. |
-| `readonly` | Editor spravuje dokument v režime iba na čítanie, napríklad súbor, do ktorého nemôže zapisovať alebo ktorý nedokáže prečítať ako diagram. Bez editora je iba na čítanie samotný súbor, napríklad súbor Perforce alebo TFVC, ktorý nie je otvorený na úpravy (check-out). Nič sa nezapísalo. |
+| `readonly` | Editor spravuje dokument v režime iba na čítanie, napríklad súbor, do ktorého nemôže zapisovať alebo ktorý nedokáže prečítať ako diagram. Bez editora je iba na čítanie samotný súbor, napríklad súbor Perforce alebo TFVC, ktorý nie je otvorený na úpravy (check-out). Pri nástroji `erd_export_svg` je iba na čítanie súbor `.svg`, ktorý uvádza jeho argument `output`. Nič sa nezapísalo. |
 | `protocolMismatch` | Rozšírenie alebo doplnok ERD Editor v editore a server používajú rôzne verzie protokolu, napríklad server vo verzii `1.0.0` alebo novšej s rozšírením pre VS Code vo verzii `3.x`. Odmietne sa aj čítanie a správa uvedie stranu, ktorú treba aktualizovať – pozrite si časť [Aktualizácia](./installation.md#updating). |
 | `hubUnreachable`, `timeout`, `disconnected` | Hub editora neprijal pripojenie, neodpovedal do 30 sekúnd alebo počas volania ukončil spojenie. V systéme Windows kód `hubUnreachable` znamená aj to, že Windows nepustil agenta k hubu: editor beží s vyššími právami ako agent, napríklad keď bol spustený ako správca a agent nie, alebo agent beží v izolovanom prostredí (sandbox). |
 
 Ostatné kódy sú zriedkavejšie a každé odmietnutie obsahuje správu, ktorá hovorí, čo sa stalo.
 
-Nástroje na úpravy, `erd_batch` a štyri nástroje na čítanie odmietnu argument, ktorý nedeklarujú, alebo argument nesprávneho typu chybou JSON-RPC invalid params (`-32602`) ešte predtým, ako sa dotknú dokumentu, takže nesprávne napísaný argument sa nikdy potichu nezahodí.
+Nástroje na úpravy, `erd_batch`, štyri nástroje na čítanie a `erd_export_svg` odmietnu argument, ktorý nedeklarujú, alebo argument nesprávneho typu chybou JSON-RPC invalid params (`-32602`) ešte predtým, ako sa dotknú dokumentu, takže nesprávne napísaný argument sa nikdy potichu nezahodí.
 Päť nástrojov relácie ignoruje argumenty, ktoré nepoznajú.

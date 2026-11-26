@@ -56,6 +56,7 @@ Una finestra di VS Code gestisce i diagrammi delle cartelle della sua area di la
 Un’estensione dalla `3.0.0` alla `3.1.0` e il server `1.0.0` o successivo si rifiutano a vicenda, e un’estensione precedente alla versione `3.0.0` non serve gli agenti.
 Un’estensione `4.0.0` o `4.1.0` si connette, ma non mostra né conserva i nomi logici, i collegamenti ai domini e le righe dei dizionari che l’agente scrive.
 Con un’estensione precedente alla versione `4.3.0`, una tabella, un memo o un gruppo di tabelle che l’utente e l’agente spostano o ridimensionano nello stesso istante possono finire in posizioni diverse per ciascuno dei due — vedere [Aggiornamento](#updating).
+Un’estensione precedente alla versione `4.3.1` non mostra né conserva il gruppo di tabelle di cui fa parte un memo.
 
 L’estensione si avvia in un’area di lavoro che contiene file `.erd`, `.erd.json`, `.vuerd` o `.vuerd.json`, quindi un agente raggiunge quei diagrammi prima ancora che se ne apra uno.
 In un’area di lavoro che non ne contiene nessuno si avvia all’apertura di un diagramma, e fino ad allora l’agente modifica su disco.
@@ -74,6 +75,7 @@ Una finestra di un vault di Obsidian gestisce i diagrammi del suo vault.
 Un plugin precedente alla versione `1.0.0` e il server `1.0.0` o successivo si rifiutano a vicenda.
 Un plugin `1.0.0` o `1.1.0` si connette, ma non mostra né conserva i nomi logici, i collegamenti ai domini e le righe dei dizionari che l’agente scrive.
 Con un plugin precedente alla versione `1.3.0`, una tabella, un memo o un gruppo di tabelle che l’utente e l’agente spostano o ridimensionano nello stesso istante possono finire in posizioni diverse per ciascuno dei due — vedere [Aggiornamento](#updating).
+Un plugin precedente alla versione `1.3.1` non mostra né conserva il gruppo di tabelle di cui fa parte un memo.
 
 Una finestra del vault serve gli agenti dal momento in cui il plugin viene caricato, quindi un agente raggiunge i diagrammi del vault prima ancora che se ne apra uno.
 Non c’è alcun passaggio di attendibilità.
@@ -102,6 +104,7 @@ Un IDE JetBrains gestisce i diagrammi di ogni progetto aperto al suo interno e q
 Un plugin `0.9.0` o `0.10.0` e il server `1.0.0` o successivo si rifiutano a vicenda, e un plugin precedente alla versione `0.9.0` non serve gli agenti.
 Un plugin `1.0.0` o `1.1.0` si connette, ma non mostra né conserva i nomi logici, i collegamenti ai domini e le righe dei dizionari che l’agente scrive.
 Con un plugin precedente alla versione `1.3.0`, una tabella, un memo o un gruppo di tabelle che l’utente e l’agente spostano o ridimensionano nello stesso istante possono finire in posizioni diverse per ciascuno dei due — vedere [Aggiornamento](#updating).
+Un plugin precedente alla versione `1.3.1` non mostra né conserva il gruppo di tabelle di cui fa parte un memo.
 
 L’IDE serve gli agenti dal momento in cui si apre il primo progetto, quindi un agente raggiunge i diagrammi di un progetto prima ancora che se ne apra uno.
 
@@ -153,7 +156,14 @@ Ma uno spostamento o un ridimensionamento che l’utente e l’agente fanno nell
 Se uno dei due lati è meno recente, l’editor e l’agente possono finire con posizioni diverse, e l’agente continua a leggere e modificare dalla propria finché uno spostamento successivo non porta entrambi sullo stesso punto o l’agente si unisce di nuovo al documento — vedere [Modifiche fatte nello stesso istante](./live-and-headless.md#edits-made-at-the-same-moment).
 Nessuna di queste versioni cambia ciò che contiene un file.
 
+Il server `1.2.1` usa anch’esso il protocollo 2. Aggiunge due strumenti, `erd_set_memo_group` ed `erd_export_svg`, e l’argomento `memoIds` di `erd_add_table_group`, e non ne rimuove né rinomina alcuno — vedere [Gruppi di tabelle](./tools.md#table-groups) ed [Esportazione SVG](./tools.md#svg-export).
+I memo nei gruppi di tabelle richiedono il server `1.2.1` o successivo e, ovunque il documento sia aperto, l’estensione per VS Code `4.3.1` o successiva o il plugin per Obsidian o per JetBrains `1.3.1` o successivo.
+Un’estensione o un plugin precedente che si connette ignora il gruppo di cui fa parte un memo, anche se la chiamata dell’agente va a buon fine, e quando salva il file omette i gruppi dei memo.
+Un server precedente alla versione `1.2.1` non ha strumenti per i memo nei gruppi e legge ogni memo come senza gruppo, e un file che modifica su disco viene riscritto con ogni memo fuori dal proprio gruppo — vedere [Headless](./live-and-headless.md#headless).
+`erd_export_svg` richiede solo il server `1.2.1` o successivo, con qualsiasi versione dell’estensione o del plugin che si connetta, poiché il server disegna l’immagine da sé.
+
 Aggiornare anche ERD Editor ovunque vengano aperti i diagrammi.
+L’estensione per VS Code precedente alla versione `4.3.1`, il plugin per Obsidian precedente alla versione `1.3.1` e il plugin per JetBrains precedente alla versione `1.3.1` aprono un diagramma salvato da una versione successiva, o modificato su disco dall’agente, con ogni memo fuori dal proprio gruppo di tabelle, e quando salvano il file omettono i gruppi dei memo.
 L’estensione per VS Code precedente alla versione `4.2.0`, il plugin per Obsidian precedente alla versione `1.2.0` e il plugin per JetBrains precedente alla versione `1.2.0` aprono un diagramma salvato da una versione successiva, o modificato su disco dall’agente, senza i nomi logici delle sue tabelle e colonne, i collegamenti ai domini delle sue colonne e le sue parole, i suoi termini e i suoi domini.
 Quando salvano il file, li omettono.
 L’estensione per VS Code precedente alla versione `4.0.0`, il plugin per Obsidian precedente alla versione `1.0.0` e il plugin per JetBrains precedente alla versione `1.0.0` mostrano anche un diagramma del genere senza le icone della chiave primaria, e ne scartano i gruppi di tabelle e gli script Schema SQL quando salvano il file.

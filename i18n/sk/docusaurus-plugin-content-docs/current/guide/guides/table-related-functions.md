@@ -7,7 +7,7 @@ description: Výber, presúvanie, kopírovanie, duplikovanie a odstraňovanie ta
 
 Všetko, čo s tabuľkami a poznámkami robíte, keď už existujú – výber, presúvanie, kopírovanie, odstraňovanie, nastavenie farby a toho, čo plátno zobrazuje –, a k tomu ovládacie prvky plátna okolo nich.  
 Najprv prídu na rad príkazy pre tabuľky a poznámky; potom Vlastnosti tabuľky, zameranie na tabuľky, indexy a alternatívne kľúče, automatické rozloženie a databázový systém; potom samotné plátno: panel nástrojov plátna, priblíženie, posúvanie a miesto, kam vedie skok, a prehliadač rozdielov; a nakoniec to, čo si z toho všetkého ponecháva editor iba na čítanie.  
-Skupiny tabuliek, teda rámce, ktoré zoskupujú tabuľky, majú vlastnú stránku – pozrite si stránku [Skupiny tabuliek](./table-groups.md).  
+Skupiny tabuliek, teda rámce, ktoré zoskupujú tabuľky a poznámky, majú vlastnú stránku – pozrite si stránku [Skupiny tabuliek](./table-groups.md).  
 Vlastnú stránku majú aj logické názvy a Zobrazenie názvov, ktoré určuje, aké názvy tabuľky zobrazujú – pozrite si stránku [Logické názvy](./logical-names.md).
 
 ## Viacnásobný výber {#multiple-selection}
@@ -21,7 +21,7 @@ Podporuje tri spôsoby:
 Poznámky sa vyberajú rovnako a obe klávesové skratky na výber všetkého vyberú naraz všetky tabuľky a poznámky. Poznámky skryté cez View Option → `Memos` sa vynechávajú z výberu všetkého aj z výberového rámca – pozrite si časť [Možnosti zobrazenia tabuliek](#table-view-options).  
 [Skupiny tabuliek](./table-groups.md#selecting-groups) sa do výberu pridávajú pomocou `Ctrl + click` (Windows/Linux) alebo `⌘ + click` (Mac) na ich záhlavie, výber všetkého však nikdy žiadnu z nich nevyberie.  
 Klávesová skratka `Ctrl + A` ustupuje textovému kurzoru, takže počas úpravy bunky vyberie text, a nie diagram.  
-Výberový rámec označí tabuľku alebo poznámku, keď prekryje jej stred, nie keď sa iba dotkne jej okraja. Skupinu tabuliek vyberie, iba keď obklopí celý rámec skupiny, takže rámec nakreslený vnútri skupiny vyberie tabuľky bez skupiny.  
+Výberový rámec označí tabuľku alebo poznámku, keď prekryje jej stred, nie keď sa iba dotkne jej okraja. Skupinu tabuliek vyberie, iba keď obklopí celý rámec skupiny, takže rámec nakreslený vnútri skupiny vyberie tabuľky a poznámky bez skupiny.  
 Kliknutie pravým tlačidlom na niečo, čo už je vybraté, zachová celý výber, takže položky ponuky, napríklad `Color`, `Group selected tables` a `Delete selected`, sa použijú na celý výber. Kliknutie pravým tlačidlom na akúkoľvek inú tabuľku, poznámku alebo skupinu tabuliek vyberie iba ju, aj keď držíte `Ctrl` alebo `⌘`, a kliknutie pravým tlačidlom na vzťah alebo na prázdne plátno zruší výber.  
 Kláves `Escape` zruší výber. Keď je otvorený editor bunky, poznámky alebo názvu skupiny tabuliek alebo keď sa kreslí vzťah či skupina pomocou `New Table Group`, prvé stlačenie klávesu `Escape` to ukončí a druhé zruší výber.  
 Editor iba na čítanie nemá žiadny z týchto spôsobov výberu: vyberá tam iba skok – pozrite si časť [Editory iba na čítanie](#read-only-editors).
@@ -41,10 +41,10 @@ Tabuľky a poznámky presúva iba ľavé tlačidlo myši. Kliknutie pravým tla�
 
 ![Presunutie jednej z dvoch vybratých tabuliek presunie obe a vzťah ich nasleduje](/img/demo-table-multiple-move.webp)
 
-Presúva sa aj vybratá [skupina tabuliek](./table-groups.md) spolu so svojimi tabuľkami a tabuľka, ktorá je vybratá a zároveň patrí do presúvanej skupiny, sa presunie iba raz.  
-Podľa toho, kam tabuľku pustíte, sa môže presunúť do skupiny alebo zo skupiny – pozrite si časť [Pridávanie a odstraňovanie tabuliek](./table-groups.md#adding-and-removing-tables).
+Presúva sa aj vybratá [skupina tabuliek](./table-groups.md) spolu so svojimi tabuľkami a poznámkami a tabuľka alebo poznámka, ktorá je vybratá a zároveň patrí do presúvanej skupiny, sa presunie iba raz.  
+Podľa toho, kam tabuľku alebo poznámku pustíte, sa môže presunúť do skupiny alebo zo skupiny – pozrite si časť [Pridávanie a odstraňovanie tabuliek](./table-groups.md#adding-and-removing-tables).
 
-Tabuľky a poznámky majú spoločné poradie prekrývania. Stlačenie ľavého alebo pravého tlačidla na tabuľke alebo poznámke ju presunie pred všetky ostatné tabuľky a poznámky a stlačenie na záhlaví skupiny tabuliek alebo kliknutie pravým tlačidlom na jej telo presunie jej tabuľky dopredu.  
+Tabuľky a poznámky majú spoločné poradie prekrývania. Stlačenie ľavého alebo pravého tlačidla na tabuľke alebo poznámke ju presunie pred všetky ostatné tabuľky a poznámky a stlačenie na záhlaví skupiny tabuliek alebo kliknutie pravým tlačidlom na jej plochu presunie jej tabuľky a poznámky dopredu.  
 Poradie sa neukladá: znova otvorený diagram usporiada tabuľky v poradí, v akom sú uvedené v súbore, a všetky poznámky nad nimi.
 
 ## Kopírovanie/prilepovanie tabuliek a poznámok {#copyingpasting-tables-and-memos}
@@ -57,7 +57,7 @@ Každý skopírovaný stĺpec si zachová svoj logický názov a každý názov 
 Prilepený stĺpec si zachová prepojenie s doménou, iba ak platia dve podmienky: diagram, do ktorého sa prilepí, obsahuje práve túto doménu, nielen doménu s rovnakým názvom, a doména má stále typ údajov, s ktorým bol stĺpec skopírovaný. Inak sa stĺpec prilepí bez domény a ponechá si typ, s ktorým bol skopírovaný – pozrite si časť [Prepojenie stĺpca](./dictionary.md#linking-a-column).  
 Skopírujú sa aj indexy a vzťahy: index sa skopíruje celý do skopírovanej tabuľky a vzťah sa skopíruje spolu so svojím typom a akciami ON DELETE a ON UPDATE, ak sú obe tabuľky, ktoré spája, v kopírovanej množine. Vzťah, z ktorého by sa skopírovala iba polovica, sa vynechá a nezostane odkazovať späť na originál.  
 Prilepené kópie sa stanú novým výberom a každé ďalšie prilepenie tej istej kópie ju posunie o ďalších `50px`, takže opakované prilepenia sa neukladajú jedno na druhé.  
-Kópia si nezachová svoju [skupinu tabuliek](./table-groups.md): prilepená tabuľka nepatrí do žiadnej skupiny, ani keď sa ocitne vnútri rámca skupiny, a vybratá skupina sa neskopíruje.  
+Kópia si nezachová svoju [skupinu tabuliek](./table-groups.md): prilepená tabuľka alebo poznámka nepatrí do žiadnej skupiny, ani keď sa ocitne vnútri rámca skupiny, a vybratá skupina sa neskopíruje.  
 Kým View Option → `Memos` skrýva poznámky, prilepenie aj tak pridá poznámky, ktoré obsahuje, skryté a nevybraté, takže výberom sa stanú iba prilepené tabuľky.
 
 ![Skopírovanie dvoch súvisiacich tabuliek a ich dvojnásobné prilepenie vrátane vzťahu](/img/demo-table-copy-paste.webp)
@@ -89,7 +89,7 @@ Klávesové skratky:
 
 Odstraňovať možno aj z kontextových ponúk. Posledná položka ponuky tabuľky alebo poznámky znie `Delete selected`, keď je táto tabuľka alebo poznámka jedným z dvoch alebo viacerých vybratých objektov, a odstráni celý výber. Inak znie `Delete` a odstráni iba túto tabuľku alebo poznámku. Nad riadkom vybratého stĺpca znie táto položka v ponuke tabuľky namiesto toho `Delete column` alebo `Delete columns`, ako v časti [Odstraňovanie stĺpcov](./table-editing.md#column-deletion).
 
-Odstránením tabuľky sa spolu s ňou odstránia aj jej vzťahy a indexy. Odstránením skupiny tabuliek sa jej tabuľky zachovajú, bez skupiny – pozrite si časť [Odstránenie skupiny](./table-groups.md#removing-a-group).  
+Odstránením tabuľky sa spolu s ňou odstránia aj jej vzťahy a indexy. Odstránením skupiny tabuliek sa jej tabuľky a poznámky zachovajú, bez skupiny – pozrite si časť [Odstránenie skupiny](./table-groups.md#removing-a-group).  
 Nevyžaduje sa žiadne potvrdenie, každé odstránenie je jeden krok histórie zmien a v editore s atribútom `readonly` sa nič neodstráni.  
 Pri podržaní odstránia klávesy `Delete` a `Backspace` iba raz a nikdy neodstránia vzťah – pozrite si stránku [Úprava vzťahov](./relationship-editing.md#deletion). Keď píšete do bunky, poznámky alebo iného textového poľa, namiesto toho upravujú text.  
 Na karte Nastavenia sú oba klávesy uvedené ako `Delete Selection` – pozrite si časť [Klávesové skratky](./settings.md#shortcuts).
@@ -98,7 +98,7 @@ Na karte Nastavenia sú oba klávesy uvedené ako `Delete Selection` – pozrite
 
 Farby môžete priradiť na rozlíšenie podľa kategórií.  
 Tabuľka má svoju farbu pozdĺž ľavého okraja a poznámka pozdĺž hornej strany. Kliknite ľavým tlačidlom na tento okraj alebo pruh alebo vyberte položku `Color` v kontextovej ponuke tabuľky alebo poznámky, čím otvoríte výber farby pri ukazovateli. Farba sa použije na každú vybratú tabuľku, poznámku a skupinu tabuliek, nielen na tú, na ktorú ste klikli.  
-Farba skupiny tabuliek sa nastavuje položkou `Color` v jej vlastnej ponuke a tabuľka vo farebnej skupine má farbu skupiny na celej hlavičke, pričom na ľavom okraji si ponecháva vlastnú farbu – pozrite si časť [Nastavenie farby skupiny](./table-groups.md#coloring-a-group).
+Farba skupiny tabuliek sa nastavuje položkou `Color` v jej vlastnej ponuke a tabuľka alebo poznámka vo farebnej skupine má farbu skupiny na celej hlavičke, pričom na ľavom okraji alebo pri hornom okraji si ponecháva vlastnú farbu – pozrite si časť [Nastavenie farby skupiny](./table-groups.md#coloring-a-group).
 
 ![Výber prednastavenej farby Blue z farebného pruhu poznámky pre dve vybraté tabuľky a poznámku, potom odstránenie farby pomocou No color](/img/demo-table-color.webp)
 
@@ -143,9 +143,9 @@ To, aké názvy tabuľky zobrazujú, nie je možnosť zobrazenia: položka `Name
 Možnosť `Domain` dá každému stĺpcu bunku umiestnenú podľa [poradia stĺpcov](./settings.md#adjusting-column-order) s názvom domény, s ktorou je stĺpec prepojený. Stĺpec, ktorý nie je prepojený so žiadnou doménou uvedenou v hárku `Domains`, tam zobrazuje stlmený zástupný text `domain`. Bunka sa zobrazuje vo všetkých zobrazeniach. Kým je možnosť `Domain` vypnutá, zobrazenie `Logical Names` namiesto toho zobrazuje názov prepojenej domény v bunke typu – pozrite si časť [Bunka domény](./logical-names.md#the-domain-cell).  
 Možnosť `Alternate Key` označí stĺpce každého alternatívneho kľúča, napríklad ako `AK1.1` – pozrite si časť [Alternatívne kľúče](#alternate-keys).  
 Možnosť `Referential Actions` zobrazuje popisky `D:` a `U:`, ktoré akcie ON DELETE a ON UPDATE vzťahu umiestňujú na koniec jeho spojnice pri podradenej tabuľke – pozrite si časť [Čítanie spojnice](./relationship-editing.md#reading-a-connector). Jej vypnutím sa skryjú iba tieto popisky a nepresunie sa žiadna tabuľka ani spojnica.  
-Možnosť `Table Groups` zobrazuje [skupiny tabuliek](./table-groups.md) a farby skupín na hlavičkách ich tabuliek. Jej vypnutím sa skupiny skryjú na plátne, v minimape a v exportoch obrázkov, žiadna tabuľka sa nepresunie a každá tabuľka zostane vo svojej skupine – pozrite si časť [Skrytie skupín](./table-groups.md#hiding-groups). Zároveň sa z [prieskumníka](./explorer.md#the-tree) odstráni priečinok `Table Groups` a z [panela nástrojov plátna](#canvas-toolbar) tlačidlo `New Table Group` a vyhľadávanie v prieskumníkovi prestane nachádzať názvy skupín.  
-Možnosť `Memos` zobrazuje poznámky. Jej vypnutím sa skryjú všetky poznámky na plátne, v minimape a v exportoch obrázkov a nepresunie sa žiadna tabuľka ani spojnica. Skryté poznámky nezaberajú miesto, takže posúvacie pruhy, minimapa a kompas `Go to content` ich vynechávajú.  
-Skrytím poznámok sa zruší ich výber a zatvorí sa otvorený editor poznámky. [Prieskumník](./explorer.md#the-tree) vynechá svoj priečinok `Memos` a jeho [hľadanie a nahrádzanie](./find-and-replace.md) ani predpona `:` v rýchlom vyhľadávaní ich neprehľadávajú. Kým sú skryté, položka `New Memo` zmizne z kontextovej ponuky, [panela nástrojov plátna](#canvas-toolbar), rýchleho vyhľadávania a [uvítacej obrazovky](./editing-start.md#welcome-screen) a `Alt + M` nepridá žiadnu poznámku. Prilepenie alebo príkaz [Importovať a pridať](./file-import-export.md#import-and-add) aj tak pridá poznámky, ktoré obsahuje, skryté a nevybraté.  
+Možnosť `Table Groups` zobrazuje [skupiny tabuliek](./table-groups.md) a farby skupín na hlavičkách ich tabuliek a poznámok. Jej vypnutím sa skupiny a ich farby skryjú na plátne a v exportoch obrázkov, rámce zmiznú z minimapy, žiadna tabuľka ani poznámka sa nepresunie a každá tabuľka a poznámka zostane vo svojej skupine – pozrite si časť [Skrytie skupín](./table-groups.md#hiding-groups). Zároveň sa z [prieskumníka](./explorer.md#the-tree) odstráni priečinok `Table Groups` a z [panela nástrojov plátna](#canvas-toolbar) tlačidlo `New Table Group` a vyhľadávanie v prieskumníkovi prestane nachádzať názvy skupín.  
+Možnosť `Memos` zobrazuje poznámky. Jej vypnutím sa skryjú všetky poznámky na plátne, v minimape a v exportoch obrázkov a nepresunie sa žiadna tabuľka ani spojnica. Skryté poznámky nezaberajú miesto, takže posúvacie pruhy, minimapa, kompas `Go to content` a rámce [skupín tabuliek](./table-groups.md) ich vynechávajú, hoci zostávajú vo svojich skupinách.  
+Skrytím poznámok sa zruší ich výber a zatvorí sa otvorený editor poznámky. [Prieskumník](./explorer.md#the-tree) vynechá svoj priečinok `Memos` aj poznámky pod svojimi skupinami tabuliek a jeho [hľadanie a nahrádzanie](./find-and-replace.md) ani predpona `:` v rýchlom vyhľadávaní ich neprehľadávajú. Kým sú skryté, položka `New Memo` zmizne z kontextovej ponuky, [panela nástrojov plátna](#canvas-toolbar), rýchleho vyhľadávania a [uvítacej obrazovky](./editing-start.md#welcome-screen) a `Alt + M` nepridá žiadnu poznámku. Prilepenie alebo príkaz [Importovať a pridať](./file-import-export.md#import-and-add) aj tak pridá poznámky, ktoré obsahuje, skryté a nevybraté.  
 V editore iba na čítanie prepínače stále fungujú, ale iba na tej obrazovke: neukladajú sa, nezaznamenávajú sa v histórii vrátenia späť ani sa nezdieľajú a keď sa editor znova prepne na úpravy, vrátia sa na hodnoty súboru – pozrite si časť [Editory iba na čítanie](./settings.md#read-only-editors) v Nastaveniach.
 
 ![Prepínanie položiek View Option, pri ktorom sa tabuľky prekresľujú, označenie zloženého jedinečného indexu ako AK1.1 a AK1.2 pomocou Alternate Key, potom vypnutie a zapnutie Memos](/img/demo-view-options.webp)
@@ -233,9 +233,9 @@ Tlačidlo `Apply` zachová polohy v stave, v akom sú v danej chvíli, a keď sa
 
 Ostatné tri sa vypočítajú naraz mimo hlavného vlákna, takže nie je čo sledovať: počas výpočtu rozloženia sa zobrazuje upozornenie a hotové usporiadanie sa vycentruje na oblasť, ktorú diagram už zaberá. Tlačidlo `Cancel` alebo kláves `Escape` zahodí rozloženie, na ktoré už nečakáte, a v hostiteľskej aplikácii, ktorá nespúšťa shared worker, skončí rozloženie oznámením `Could not place tables` – pozrite si časť [Web Workers](../../api/installation.md#web-workers). Rovnako skončí aj rozloženie, ktoré sa nevráti do 60 sekúnd.
 
-Nech vyberiete ktorékoľvek, presunú sa tabuľky a skupiny tabuliek a poznámky zostanú na svojom mieste. Tabuľky sa umiestnia v šírkach, aké majú v Zobrazení názvov, na ktoré sa pozeráte. Vzťah tabuľky so sebou samou sa ignoruje a viac vzťahov medzi tými istými dvoma tabuľkami sa počíta ako jeden.  
-Každé rozloženie drží tabuľky každej skupiny pohromade bez ohľadu na to, či sú skupiny zobrazené, a každú skupinu, ktorá obsahuje tabuľky, prispôsobí tak, aby ich obklopovala – pozrite si stránku [Skupiny tabuliek](./table-groups.md#auto-layout).  
-Výsledok sa zapíše ako jediný záznam histórie, takže jedno vrátenie späť vráti každú tabuľku a skupinu na pôvodné miesto.  
+Nech vyberiete ktorékoľvek, presunú sa tabuľky, skupiny tabuliek a poznámky v skupinách, ktoré obsahujú tabuľky, a každá iná poznámka zostane na svojom mieste. Tabuľky sa umiestnia v šírkach, aké majú v Zobrazení názvov, na ktoré sa pozeráte. Vzťah tabuľky so sebou samou sa ignoruje a viac vzťahov medzi tými istými dvoma tabuľkami sa počíta ako jeden.  
+Každé rozloženie drží tabuľky a poznámky každej skupiny pohromade bez ohľadu na to, či sú skupiny zobrazené, a každú skupinu, ktorá obsahuje tabuľky, prispôsobí tak, aby obklopovala jej tabuľky a zobrazené poznámky – pozrite si stránku [Skupiny tabuliek](./table-groups.md#auto-layout).  
+Výsledok sa zapíše ako jediný záznam histórie, takže jedno vrátenie späť vráti každú tabuľku, poznámku a skupinu na pôvodné miesto.  
 Editor iba na čítanie `Auto Layout` neponúka. Ten, ktorý ešte beží, keď sa editor prepne do režimu iba na čítanie, sa tam skončí: ukážka `Force` sa zatvorí spolu s oznámením a nezachová žiadnu zo svojich pozícií a rozloženie, ktoré sa ešte počíta, sa zahodí spolu s oznámením, takže sa nepresunie žiadna tabuľka, ani vtedy, ani keď sa editor znova prepne na úpravy.
 
 ![Upratanie kopy tabuliek automatickým rozložením Flow z kontextovej ponuky plátna, ktoré ich zoradí zľava doprava pozdĺž ich vzťahov](/img/demo-automatic-table-placement.webp)
@@ -311,7 +311,7 @@ Ak chcete posúvať zobrazenie z ľubovoľného miesta na plátne, ťahajte stre
 Stlačenie stredného tlačidla na posúvacích pruhoch, minimape, paneli nástrojov plátna alebo v otvorenom editore bunky alebo poznámky zobrazenie neposúva.
 
 Minimapa v pravom hornom rohu zobrazuje diagram s okrajom veľkým ako jedna obrazovka na každej jeho strane, teda dosah posúvacích pruhov, zaokrúhlený smerom von na hrubú mriežku, takže čím viac oddialite, tým menší je v nej diagram. Kliknutím do nej presuniete zobrazenie na dané miesto a ťahaním obdĺžnika zobrazovacej oblasti posúvate zobrazenie. Pri oddiaľovaní sa obdĺžnik zobrazovacej oblasti zväčšuje a pokrýva väčšiu časť mapy.  
-Každú tabuľku vykresľuje vo farbe tabuľky a každú zobrazenú skupinu tabuliek ako rámec vo farbe skupiny za jej tabuľkami.  
+Každú tabuľku vykresľuje vo farbe tabuľky a každú zobrazenú skupinu tabuliek ako rámec vo farbe skupiny za jej tabuľkami a poznámkami, ktorý siaha okolo jej zobrazených poznámok rovnako ako rámec na plátne.  
 Posúvacie pruhy pozdĺž pravého a dolného okraja opisujú ten istý rozsah pohybu, ktorý siaha od polohy, keď je diagram tesne za jednou stranou obrazovky, po polohu, keď je tesne za druhou, takže je aspoň o jednu obrazovku dlhší ako vykreslený diagram, a ešte dlhší, kým je zobrazenie posunuté za diagram. Mimo režimu Zen sa oba posúvacie pruhy zobrazujú vždy, keď dokument obsahuje tabuľku, zobrazenú poznámku alebo zobrazenú skupinu tabuliek, aj keď sa všetko zmestí na obrazovku. Dokument bez nich, napríklad taký, ktorého jediné poznámky sú skryté cez View Option → `Memos`, nezobrazuje ani jeden z nich, ani minimapu.  
 Ťahanie jazdca posúvacieho pruhu alebo obdĺžnika zobrazovacej oblasti v minimape je jediné posúvanie, ktoré sa zastaví: nedostane sa ďalej, ako sú tabuľky tesne za okrajom obrazovky, alebo ako miesto, kde ťahanie začalo, ak bolo ďalej.
 
@@ -364,7 +364,7 @@ Editor iba na čítanie ponúka `Diff Viewer` tiež a zobrazenie tam funguje ako
 
 Porovnávajú sa tabuľky, stĺpce, indexy, cudzie kľúče, poznámky aj skupiny tabuliek.  
 Každá položka sa najprv páruje podľa svojho identifikátora (id), takže pri porovnaní so staršou verziou toho istého súboru, ktorá identifikátory zachováva, je premenovaná tabuľka, stĺpec, index alebo skupina tabuliek stále jedna položka, uvedená ako premenovaná.  
-Zvyšné položky sa párujú jedna k jednej podľa toho, čo si zachovávajú: tabuľka alebo skupina tabuliek podľa názvu vrátane veľkosti písmen; stĺpec alebo index podľa tabuľky a názvu; cudzí kľúč podľa svojich dvoch tabuliek a párov stĺpcov; a poznámka podľa textu, potom podľa polohy. Index bez názvu sa páruje podľa stĺpcov, ich poradia a smeru a podľa toho, či je jedinečný, a skupina tabuliek bez názvu podľa najväčšieho počtu spoločných tabuliek.  
+Zvyšné položky sa párujú jedna k jednej podľa toho, čo si zachovávajú: tabuľka alebo skupina tabuliek podľa názvu vrátane veľkosti písmen; stĺpec alebo index podľa tabuľky a názvu; cudzí kľúč podľa svojich dvoch tabuliek a párov stĺpcov; a poznámka podľa textu, potom podľa polohy. Index bez názvu sa páruje podľa stĺpcov, ich poradia a smeru a podľa toho, či je jedinečný, a skupina tabuliek bez názvu podľa najväčšieho počtu spoločných tabuliek a poznámok.  
 Pri porovnaní so súborom z iného zdroja, napríklad s diagramom znova vytvoreným importom SQL, sa preto premenovaná tabuľka zobrazí ako jedna odstránená a jedna pridaná.
 
 Čo sa počíta ako zmena:
@@ -373,8 +373,8 @@ Pri porovnaní so súborom z iného zdroja, napríklad s diagramom znova vytvore
 - Stĺpec: názov, komentár, typ údajov, predvolená hodnota, Automatický prírastok, primárny kľúč, Jedinečný, NOT NULL a jeho miesto v tabuľke. Ako presunuté sa počítajú iba stĺpce mimo poradia, ktoré majú oba dokumenty spoločné, takže pridanie, odstránenie alebo presunutie jedného stĺpca neoznačí ostatné.
 - Index: názov, UNIQUE a stĺpce s ich poradím a smerom.
 - Cudzí kľúč: páry stĺpcov, typ vzťahu a akcie ON DELETE a ON UPDATE.
-- Poznámka: text, poloha, veľkosť a farba.
-- Skupina tabuliek: názov, tabuľky, ktoré obsahuje, farba, poloha a veľkosť.
+- Poznámka: text, skupina tabuliek, poloha, veľkosť a farba.
+- Skupina tabuliek: názov, tabuľky a poznámky, ktoré obsahuje, farba, poloha a veľkosť.
 
 Tabuľka, poznámka alebo skupina, ktorá bola iba presunutá alebo jej bola zmenená veľkosť či farba, sa teda počíta ako zmenená. Polohy a veľkosti sa porovnávajú v celých pixeloch a poradie prekrývania ani miesto, kde sa spojnica stretáva s tabuľkou, sa nikdy nepočítajú.  
 Logické názvy, prepojenia s doménami a slová, termíny a domény na karte [Slovník](./dictionary.md) sa neporovnávajú, takže zmena iba v nich sa neuvádza ani neoznačuje. Typ údajov, ktorý zmenila doména, sa však počíta ako zmena typu údajov stĺpca.
@@ -393,7 +393,7 @@ Každý riadok končí písmenom a riadok označený `A`, `D`, `M` alebo `R` má
 - `R`, premenovaný, modrou: v oboch, s novým názvom. Premenovanie má prednosť pred akoukoľvek inou zmenou, ktorú však bublinový popis stále uvádza.
 - `~`, jantárovou, je na konci každého priečinka a tabuľky uvedenej iba pre zmeny v jej vnútri; ich názvy si zachovávajú obvyklú farbu.
 
-Keď podržíte ukazovateľ nad názvom riadka, zobrazí sa jeho bublinový popis: stav `Added`, `Deleted`, `Modified`, `Renamed` alebo `Changed inside`, potom jeden riadok pre každú zmenu, napríklad `Name: users → members` alebo `NN: ✗ → ✓`. Text sa cituje svojím prvým riadkom skráteným po 40 znakoch a prázdna hodnota sa zobrazí ako `—`. Bublinový popis pridanej alebo odstránenej položky obsahuje iba jej stav.
+Keď podržíte ukazovateľ nad názvom riadka, zobrazí sa jeho bublinový popis: stav `Added`, `Deleted`, `Modified`, `Renamed` alebo `Changed inside`, potom jeden riadok pre každú zmenu, napríklad `Name: users → members` alebo `NN: ✗ → ✓`. Text sa cituje svojím prvým riadkom skráteným po 40 znakoch a prázdna hodnota sa zobrazí ako `—`. Poznámka presunutá do skupiny s názvom Billing má v bublinovom popise riadok `Table group: — → Billing` a bublinový popis skupiny získa riadok, napríklad `Memos: — → "note"`, ktorý pomenúva jej poznámky podľa ich prvých riadkov v dvojitých úvodzovkách. Bublinový popis pridanej alebo odstránenej položky obsahuje iba jej stav.
 
 Pole `Filter by name` nad stromom ponechá riadky, ktorých aktuálny alebo uložený názov alebo aktuálny alebo uložený logický názov obsahuje zadaný text, bez ohľadu na veľkosť písmen, a to v každom zobrazení. Tabuľka, ktorej názov sa zhoduje, si ponechá všetky svoje riadky, a tabuľka, ktorej názov sa nezhoduje, zostane iba so zhodnými riadkami. Filter, ktorému nič nezodpovedá, ponechá strom prázdny.  
 Keď sa tieto dva dokumenty vôbec nelíšia, v strome sa zobrazí `No changes`.
@@ -419,7 +419,7 @@ Obe strany farbia text, obrysy a spojnice a nič nevypĺňajú. Pridané je zele
 - Pridaný alebo odstránený stĺpec v tabuľke, ktorú obsahujú oba dokumenty, zafarbí celý svoj riadok a presunutý stĺpec zafarbí celý svoj riadok jantárovou. Vnútri pridanej alebo odstránenej tabuľky sa nič neoznačuje samostatne.
 - Text zmenenej bunky sa zafarbí jantárovou: komentár tabuľky, komentár stĺpca, typ údajov, predvolená hodnota, Automatický prírastok, Jedinečný alebo NOT NULL, prípadne text poznámky. Zmena primárneho kľúča zafarbí ikonu kľúča stĺpca jantárovou.
 - Premenovaná tabuľka, stĺpec alebo skupina tabuliek má názov modrou.
-- Tabuľka, poznámka alebo skupina tabuliek so zmenou, ktorá nemá vlastnú bunku, napríklad presun, nová veľkosť alebo farba či zmena skupiny alebo tabuliek skupiny, má jantárový obrys.
+- Tabuľka, poznámka alebo skupina tabuliek so zmenou, ktorá nemá vlastnú bunku, napríklad presun, nová veľkosť alebo farba či zmena skupiny alebo tabuliek či poznámok skupiny, má jantárový obrys.
 - Pridaný, odstránený alebo zmenený cudzí kľúč vykreslí svoju spojnicu v príslušnej farbe. Pri podržaní ukazovateľa nad ňou alebo pri zvýraznení z riadka sa namiesto toho vykreslí obvyklou farbou pre podržanie ukazovateľa.
 - Zmena indexu neoznačí nič na žiadnej strane; zobrazuje sa iba v strome.
 

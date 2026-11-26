@@ -55,16 +55,17 @@ Enquanto Opções de vista → `Memos` está desativada, as notas ficam ocultas,
 Uma nota é uma anotação de texto livre na tela. Clique no seu corpo e escreva; o texto é guardado com o documento.  
 A tecla `Escape` fecha o editor da nota, mantendo o que escreveu e deixando a nota selecionada, e um segundo `Escape` limpa a seleção.  
 Arraste o seu bordo para a redimensionar. O `x` no seu cabeçalho, mostrado enquanto o ponteiro está sobre a nota, elimina-a.  
-Clicar com o botão direito numa nota abre o respetivo menu em vez do editor: `Color`, `Remove color` enquanto um elemento selecionado tem uma cor, e `Delete`, que indica `Delete selected` enquanto a nota é um de dois ou mais elementos selecionados. Uma nota selecionada também é eliminada com as teclas que eliminam tabelas — consulte [Eliminação de tabelas e notas](./table-related-functions.md#table-and-memo-deletion).
+Clicar com o botão direito numa nota abre o respetivo menu em vez do editor: `Color`, `Remove color` enquanto um elemento selecionado tem uma cor, `Group selected tables` enquanto a seleção contém uma tabela e os grupos de tabelas estão visíveis, `Remove from group` enquanto uma tabela ou nota selecionada está num grupo, e `Delete`, que indica `Delete selected` enquanto a nota é um de dois ou mais elementos selecionados. Uma nota selecionada também é eliminada com as teclas que eliminam tabelas — consulte [Eliminação de tabelas e notas](./table-related-functions.md#table-and-memo-deletion).  
+Tal como uma tabela, uma nota junta-se a um [grupo de tabelas](./table-groups.md) ou sai dele consoante o sítio onde a larga. A opção `Remove from group` também a retira, e a opção `Group selected tables` coloca-a num novo grupo com as tabelas selecionadas juntamente com ela — consulte [Adicionar e remover tabelas](./table-groups.md#adding-and-removing-tables).
 
 ![Adicionar uma nota com Alt + M, escrever uma anotação e arrastar o seu bordo para a redimensionar](/img/demo-memo.webp)
 
 ## Criação de grupos de tabelas {#table-group-creation}
 
-Um grupo de tabelas é uma caixa que contém tabelas, à qual pode dar um nome e uma cor. Crie um de uma destas duas formas:
+Um grupo de tabelas é uma caixa que contém tabelas e notas, à qual pode dar um nome e uma cor. Crie um de uma destas duas formas:
 
-- Escolha a opção `New Table Group` no menu de contexto ou na pesquisa rápida, clique no botão `New Table Group` da [barra de ferramentas da tela](./table-related-functions.md#canvas-toolbar) ou prima `Alt + G` (Windows/Linux) ou `⌥ + G` (Mac), e depois arraste uma caixa sobre a tela. Cada tabela cujo centro fique dentro da caixa junta-se ao novo grupo, a menos que já esteja noutro grupo — consulte [Desenhar um grupo](./table-groups.md#drawing-a-group).
-- Selecione tabelas e escolha a opção `Group selected tables` no menu de contexto de uma tabela ou a entrada `Group Selected Tables` na pesquisa rápida, ou prima `T` e depois `G` — consulte [Agrupar as tabelas selecionadas](./table-groups.md#grouping-selected-tables).
+- Escolha a opção `New Table Group` no menu de contexto ou na pesquisa rápida, clique no botão `New Table Group` da [barra de ferramentas da tela](./table-related-functions.md#canvas-toolbar) ou prima `Alt + G` (Windows/Linux) ou `⌥ + G` (Mac), e depois arraste uma caixa sobre a tela. Cada tabela e cada nota visível cujo centro fique dentro da caixa junta-se ao novo grupo, a menos que já esteja noutro grupo — consulte [Desenhar um grupo](./table-groups.md#drawing-a-group).
+- Selecione tabelas, e as notas que as acompanhem, e escolha a opção `Group selected tables` no menu de contexto de uma tabela ou de uma nota ou a entrada `Group Selected Tables` na pesquisa rápida, ou prima `T` e depois `G` — consulte [Agrupar as tabelas selecionadas](./table-groups.md#grouping-selected-tables).
 
 A atribuição de nome e de cor, a movimentação, o redimensionamento e o resto são explicados em [Grupos de tabelas](./table-groups.md).
 

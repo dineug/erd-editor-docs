@@ -14,7 +14,7 @@ description: MCP 伺服器如何決定是在編輯器（VS Code、Obsidian 或 J
 | --- | --- |
 | 工作區、儲存庫或已開啟的專案包含該文件的編輯器，或已開啟該文件的編輯器 | **即時**。必要時在 ERD Editor 中開啟文件，加入編輯工作階段，並在其中套用變更。編輯會立即出現，並會像您自己的編輯一樣由編輯器儲存，請參閱[儲存](#saving)。 |
 | 沒有編輯器 | **無介面**。載入檔案、套用變更，並在回應之前取代該檔案，因此結果會顯示 `saved: true`，而 `erd_save` 無事可做。 |
-| hub 已關閉的編輯器 | **拒絕**。讀取仍可運作，會從磁碟讀取。在編輯器開啟該檔案時寫入檔案的變更，可能會被該編輯器的下一次儲存覆寫，因此伺服器不會寫入任何內容。 |
+| hub 已關閉的編輯器 | **拒絕**。讀取和 `erd_export_svg` 仍可運作，會從磁碟讀取。在編輯器開啟該檔案時寫入檔案的變更，可能會被該編輯器的下一次儲存覆寫，因此伺服器不會對文件寫入任何內容。 |
 | hub 已開啟，但使用的協定與伺服器不同的編輯器：搭配伺服器 `1.0.0` 或更新版本時，為 `3.x` 的 VS Code 擴充功能、`0.x` 的 Obsidian 外掛程式，或 `0.9.0` 或 `0.10.0` 的 JetBrains 外掛程式；搭配 `1.0.0` 之前的伺服器時，為 `4.0.0` 或更新版本的擴充功能，或 `1.0.0` 或更新版本的外掛程式 | **拒絕**，包括讀取，錯誤碼為 `protocolMismatch`。訊息會指出需要更新的一方：擴充功能或外掛程式，或是伺服器，請參閱[更新](./installation.md#updating)。 |
 | 在 Windows 上，以同一檔案的另一個路徑持有該文件的編輯器：代理程式透過這台電腦的網路共用或對應的網路磁碟機指定該文件，例如 `\\localhost\C$\…`，而編輯器以其磁碟機路徑持有它，或反之亦然 | **拒絕**，包括讀取，錯誤碼為 `invalidPath`。訊息會指出編輯器持有該文件所用的路徑；請以該路徑再呼叫一次。 |
 | 在 Windows 上，Windows 不讓代理程式存取的編輯器：在代理程式並非以系統管理員身分執行時以系統管理員身分啟動的編輯器，或代理程式在沙箱中執行時的任何編輯器 | **拒絕**，包括讀取，錯誤碼為 `hubUnreachable`，並附上說明原因的訊息。請以相同的權限執行編輯器和代理程式，例如不以系統管理員權限重新啟動編輯器。 |
@@ -27,15 +27,17 @@ description: MCP 伺服器如何決定是在編輯器（VS Code、Obsidian 或 J
 因此，位於 VS Code 工作區資料夾內的 Obsidian 儲存庫中的文件會交給 Obsidian，除非 VS Code 已開啟該文件而 Obsidian 沒有。
 
 對同一份文件的呼叫會依其送達伺服器的順序逐一執行。對不同文件的呼叫則會同時執行。
+`erd_export_svg` 只有讀取文件的部分需要依序輪流執行，因此對該文件的後續呼叫不必等待繪製完成，而伺服器一次只繪製一個匯出，即使是兩份不同的文件也一樣，請參閱 [SVG 匯出](./tools.md#svg-export)。
 
 ## 即時 {#live}
 
 代理程式會像多一位協作者一樣加入編輯器。
 它的編輯會立即送達每個開啟該文件的編輯器，而它的焦點會像協作者的焦點一樣，繪製在它正在編輯的資料表和儲存格上，請參閱 [focusTracker](../api/advanced/collaborative-editing.md#focustracker)。
 
-讀取絕不會開啟編輯器。文件尚未開啟時，編輯會在 ERD Editor 中開啟該文件，且不會奪走鍵盤焦點。
+讀取絕不會開啟編輯器，`erd_export_svg` 也不會，它繪製的是編輯器所持有的內容，包括尚未儲存的編輯。文件尚未開啟時，編輯會在 ERD Editor 中開啟該文件，且不會奪走鍵盤焦點。
 
 VS Code 擴充功能為 `4.2.0` 之前版本，或 Obsidian 或 JetBrains 外掛程式為 `1.2.0` 之前版本的編輯器，仍會即時接收代理程式的編輯，但既不會顯示也不會保留代理程式寫入的邏輯名稱、定義域連結和字典列，請參閱[更新](./installation.md#updating)。
+同樣地，擴充功能為 `4.3.1` 之前版本，或外掛程式為 `1.3.1` 之前版本的編輯器，既不會顯示也不會保留備忘錄屬於哪個資料表群組：代理程式放入群組的備忘錄在那裡不屬於任何群組，且編輯器儲存時會將備忘錄的群組省略（儘管代理程式的呼叫會成功）。
 
 使用 VS Code 擴充功能 `4.3.0` 或更新版本，或 Obsidian 或 JetBrains 外掛程式 `1.3.0` 或更新版本時，無論伺服器是哪個版本，`replace` 模式的匯入，以及對它的 `erd_undo` 或 `erd_redo`，都會結束您在編輯器中正在繪製的關聯，請參閱[建立關聯](../guide/guides/editing-start.md#relationship-creation)。
 在這些版本之前，繪製狀態會維持，而按一下資料表可能會從已不在圖表中的資料表新增關聯。
@@ -53,11 +55,11 @@ VS Code 擴充功能為 `4.2.0` 之前版本，或 Obsidian 或 JetBrains 外掛
 資料庫變更（您的操作或代理程式的 `erd_set_database`）同樣依送達順序套用，因此在同一時刻進行的兩次變更，可能讓編輯器和代理程式停在不同的資料庫。
 
 您的拖曳和代理程式的 `erd_move_table`、`erd_move_tables`、`erd_move_memo`、`erd_move_table_group` 與 `erd_sort_tables` 都以其結束的位置送出，因此對同一個資料表、備忘錄或資料表群組的兩次移動，最後會落在其中一次所放置的位置，絕不會是兩者相加。
-`erd_move_table_group` 會在一個批次中送出群組及其每個資料表的位置，如同拖曳群組標題列。
+`erd_move_table_group` 會在一個批次中送出群組及其每個資料表的位置，如同拖曳群組標題列，而自伺服器 `1.2.1` 起，也會送出其每個備忘錄的位置。
 調整大小會同時寫入位置和大小，因此對同一個備忘錄或資料表群組在同一時刻進行的移動和調整大小（例如在您拖曳該備忘錄時代理程式執行 `erd_resize_memo`），在兩端最後會是同一個矩形：調整大小的矩形，或在移動勝出時，移動的位置加上調整大小的大小。
 不到 20 像素、不會產生復原步驟的移動，也以其結束的位置送出，因此它可能勝過對方的移動，無論是短距離的 `erd_move_table_group`，還是您短距離的拖曳（例如輕推資料表幾像素的點擊）。
 
-較舊的版本仍可連線，因為伺服器 `1.2.0` 使用 hub 協定 2，`1.0.0` 到 `1.1.1` 也是如此。
+較舊的版本仍可連線，因為伺服器 `1.2.0` 和更新版本使用 hub 協定 2，`1.0.0` 到 `1.1.1` 也是如此。
 使用 `1.2.0` 之前的伺服器，或 `4.3.0` 之前的擴充功能，或 `1.3.0` 之前的外掛程式時，在同一時刻對同一個資料表、備忘錄或資料表群組進行的移動或調整大小，可能讓編輯器和代理程式得到不同的位置。
 較舊的編輯器會將您的拖曳以移動的距離送出，`1.2.0` 之前的伺服器也以這種方式送出 `erd_move_table_group`。
 另一端會把該距離加到它所持有的位置上。
@@ -97,7 +99,7 @@ JetBrains IDE 會在編輯停止後不到一秒內寫入這些編輯，而關閉
 
 有幾種編輯不會在編輯器中產生復原步驟：[設定工具](./tools.md#settings)中的 `erd_set_database` 和 `erd_set_database_name`，以及 `erd_resize_memo`。
 將群組總共移動不到 20 像素（水平與垂直距離相加）的 `erd_move_table_group` 也不會產生復原步驟，不過群組會停留在移動後的位置。
-未變更任何內容的呼叫也不會產生復原步驟：`erd_set_column_primary_key`、`erd_set_column_unique`、`erd_set_column_not_null`、`erd_set_column_auto_increment`、`erd_set_index_unique` 或 `erd_set_index_column_order` 設定的值與文件已有的值相同；`erd_add_index_column` 加入的欄位已在索引中；`erd_set_table_group` 指定的資料表已在該群組中（或在 `groupId` 為 `null` 時，已不在任何群組中）；`erd_move_table_group` 移動到群組已在的位置；`erd_resize_table_group` 調整成群組已有的矩形；在沒有任何資料表的文件上呼叫 `erd_sort_tables`；`erd_set_table_logical_name` 或 `erd_set_column_logical_name` 設定的邏輯名稱與資料表或欄位已有的相同，且依其產生名稱不會變更任何內容；`erd_set_column_domain` 指定的定義域是欄位已連結的定義域，且欄位已具有該定義域的類型，[關聯資料類型同步](../guide/guides/settings.md#relationship-datatype-sync)也不會沿著其關聯重新設定任何欄位的類型；`erd_update_word`、`erd_update_term` 或 `erd_update_domain` 只傳入該列已有的值，除非對尚無物理名稱的術語傳入其 `name`，且其詞彙可組成一個物理名稱；`erd_derive_physical_names` 所涵蓋的每個具有邏輯名稱的名稱，都已是[字典](./tools.md#dictionaries)所提供的名稱且已標示為由字典產生；或 `mode` 為 `append` 且未帶入任何資料表的匯入（對 `erd_import_json` 而言，是未帶入任何資料表也未帶入任何備忘錄）。
+未變更任何內容的呼叫也不會產生復原步驟：`erd_set_column_primary_key`、`erd_set_column_unique`、`erd_set_column_not_null`、`erd_set_column_auto_increment`、`erd_set_index_unique` 或 `erd_set_index_column_order` 設定的值與文件已有的值相同；`erd_add_index_column` 加入的欄位已在索引中；`erd_set_table_group` 指定的資料表已在該群組中（或在 `groupId` 為 `null` 時，已不在任何群組中）；`erd_set_memo_group` 指定的備忘錄已在該群組中（或已不在任何群組中）；`erd_move_table_group` 移動到群組已在的位置；`erd_resize_table_group` 調整成群組已有的矩形；在沒有任何資料表的文件上呼叫 `erd_sort_tables`；`erd_set_table_logical_name` 或 `erd_set_column_logical_name` 設定的邏輯名稱與資料表或欄位已有的相同，且依其產生名稱不會變更任何內容；`erd_set_column_domain` 指定的定義域是欄位已連結的定義域，且欄位已具有該定義域的類型，[關聯資料類型同步](../guide/guides/settings.md#relationship-datatype-sync)也不會沿著其關聯重新設定任何欄位的類型；`erd_update_word`、`erd_update_term` 或 `erd_update_domain` 只傳入該列已有的值，除非對尚無物理名稱的術語傳入其 `name`，且其詞彙可組成一個物理名稱；`erd_derive_physical_names` 所涵蓋的每個具有邏輯名稱的名稱，都已是[字典](./tools.md#dictionaries)所提供的名稱且已標示為由字典產生；或 `mode` 為 `append` 且未帶入任何資料表的匯入（對 `erd_import_json` 而言，是未帶入任何資料表也未帶入任何備忘錄）。
 `erd_undo` 會略過這些編輯，並在其結果中列出它們。
 其他編輯，例如 `erd_change_relationship_type`、`erd_change_relationship_on_delete`、`erd_change_relationship_on_update`、`erd_change_table_group_name`、`erd_change_table_group_color` 和 `erd_set_ddl_script`，即使設定的值與文件已有的值相同，也會產生復原步驟。
 
@@ -120,7 +122,7 @@ JetBrains IDE 會在編輯停止後不到一秒內寫入這些編輯，而關閉
 仍在執行，但鎖定檔案已消失，且連線在其尚未關閉該文件時就已中斷的編輯器，會以 `hubGone` 拒絕下一次編輯。
 訊息會說明如何釋放該文件：在 VS Code 中，重新載入該視窗，或關閉它讓代理程式直接編輯檔案；在 Obsidian 中，重新開啟 ERD Editor 外掛程式，或關閉該視窗；在 JetBrains IDE 中，重新開啟該外掛程式，或結束 IDE。
 
-在兩種情況下，讀取會改為讀取磁碟上的檔案，並附上一則說明，指出尚未在編輯器中儲存的編輯不會包含在內：持有該文件的編輯器的 hub 已關閉時，以及上述 `hubGone` 的情況。
+在兩種情況下，讀取或 `erd_export_svg` 會改為讀取磁碟上的檔案，並附上一則說明，指出尚未在編輯器中儲存的編輯不會包含在內：持有該文件的編輯器的 hub 已關閉時，以及上述 `hubGone` 的情況。
 無法連線到編輯器 hub 的讀取，會與編輯一樣以 `hubUnreachable` 被拒絕。
 
 ## 無介面 {#headless}
@@ -133,7 +135,7 @@ JetBrains IDE 會在編輯停止後不到一秒內寫入這些編輯，而關閉
 在兩次呼叫之間變更的檔案只會重新載入，而代理程式在此之前的復原歷程記錄會被捨棄。
 
 唯讀檔案會保持原樣，且編輯會以 `readonly` 被拒絕：擁有者沒有寫入權限的檔案，或在 Windows 上具有唯讀屬性的檔案，例如尚未簽出的 Perforce 或 TFVC 檔案。
-請將檔案設為可寫入，然後再呼叫一次。讀取仍可運作。
+請將檔案設為可寫入，然後再呼叫一次。讀取和 `erd_export_svg` 仍可運作。
 
 若在代理程式編輯磁碟上的文件期間，有編輯器開始為該文件提供服務，該次編輯會以 `hubAppeared` 被拒絕，且不會寫入任何內容。下一次呼叫會透過該編輯器進行編輯。
 
@@ -142,7 +144,7 @@ JetBrains IDE 會在編輯停止後不到一秒內寫入這些編輯，而關閉
 - 具有與其資料夾不同之專屬權限的文件會就地寫入，而不是被取代，以保留這些權限，且暫存檔案會在之後移除。在寫入期間讀取該文件的程式，可能會讀到無法剖析的文字。
 - 被其他程式開啟佔用的檔案無法被取代，因此伺服器會在最多兩秒內重試。每次重試都會先重新尋找編輯器，而在此期間開始為該文件提供服務的編輯器會以 `hubAppeared` 拒絕寫入，若其 hub 已關閉則以 `blocked` 拒絕。若兩秒後檔案仍被佔用，則不會寫入任何內容，檔案會重新載入，且該呼叫會失敗，並附上引述系統錯誤的訊息。
 
-`1.1.0` 之前的伺服器讀取文件時不會包含其邏輯名稱、其欄位的定義域連結，以及其詞彙、術語和定義域，因此它寫入檔案的第一次編輯會將這些內容省略。請依照[更新](./installation.md#updating)中的說明更新伺服器。
+`1.1.0` 之前的伺服器讀取文件時不會包含其邏輯名稱、其欄位的定義域連結，以及其詞彙、術語和定義域，因此它寫入檔案的第一次編輯會將這些內容省略。`1.2.1` 之前的伺服器讀取文件時，同樣不會包含其備忘錄的資料表群組，因此它寫入檔案的第一次編輯會讓每個備忘錄離開其群組。請依照[更新](./installation.md#updating)中的說明更新伺服器。
 
 ## 拒絕 {#refused}
 
@@ -151,7 +153,7 @@ Obsidian 儲存庫視窗在 Coding agents 關閉時，以及其 hub 無法監聽
 JetBrains IDE 在 Coding agents 關閉時、其 hub 無法監聽時，以及 IDE 結束期間，會在 hub 關閉的狀態下保留其鎖定檔案。
 
 對這類文件的編輯會以 `blocked` 被拒絕，因為開啟中的編輯器可能會在下一次儲存時，覆寫寫入檔案的變更。
-讀取仍可運作，會從磁碟上的檔案讀取。
+讀取仍可運作，會從磁碟上的檔案讀取，`erd_export_svg` 也是如此，其結果會指出模式為 `blocked`。
 
 若要讓代理程式編輯，請依照訊息針對該編輯器的說明重新開啟 hub：在 VS Code 中，信任該工作區並開啟該設定，或重新載入視窗；在 Obsidian 中，開啟 Coding agents，或重新載入 Obsidian；在 JetBrains IDE 中，開啟 Coding agents，或在其已開啟時重新啟動 IDE。
 

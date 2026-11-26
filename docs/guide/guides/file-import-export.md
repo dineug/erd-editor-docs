@@ -51,7 +51,7 @@ A JSON file's tables and columns keep their logical names, and each physical nam
 A table whose name the diagram already has is added as a second table with that name, not merged with it. Relationships and indexes come only from the file, so a foreign key to a table the file does not define is not linked to a table already in the diagram.
 
 The added block lands just below everything the diagram holds, lined up with its left edge, or at the top left of an empty diagram. Memos and table groups hidden with [View Option](./table-related-functions.md#table-view-options) count as well, since they still stand there.  
-Inside the block, a JSON file keeps its own arrangement, its table groups included. The other formats are placed as `Import` places them, by `Flow` or in rows under the same rules, and each table group's box is fitted round its tables. The added tables and memos stack above everything already there.
+Inside the block, a JSON file keeps its own arrangement, its table groups included, and a memo in one of its groups lands in the new copy of that group. The other formats are placed as `Import` places them, by `Flow` or in rows under the same rules, and each table group's box is fitted round its tables. The added tables and memos stack above everything already there.
 
 Once the block lands, only what was added is selected: the new tables, plus the new memos and table groups while they are shown. If you have moved to another tab meanwhile, the editor switches back to the ERD tab before the block lands. The view then scrolls to the block at the current zoom, unless it already shows well — see [Where a Jump Lands](./table-related-functions.md#where-a-jump-lands). One undo takes back the whole addition.  
 A file the parser cannot read, or one with no table and no memo, adds nothing.
@@ -205,7 +205,7 @@ The file name must end in `.aml`.
 
 GraphQL, DBML, and AML are round-trip formats: each is also a [Code Generator](./code-generator.md) target.  
 DBML and AML carry each relationship's ON DELETE and ON UPDATE both ways — see [Code Generator](./code-generator.md#on-delete-and-on-update). GraphQL carries neither, so a GraphQL import leaves both `Not set`.  
-DBML also carries table colors, less any transparency, and each table group that holds a table, both ways. A group with no name comes back as `group_1`, `group_2`, and so on, and a repeated group name comes back with `_2`, `_3`, and so on added. AML carries a table color only as the nearest of its color names, so `#FF8800` is written as `orange` and comes back as `#f97316`, and it carries no groups. GraphQL carries neither colors nor groups.  
+DBML also carries table colors, less any transparency, and each table group that holds a table, both ways, with its tables but not its memos — see [Import, Export, and Copying](./table-groups.md#import-export-and-copying). A group with no name comes back as `group_1`, `group_2`, and so on, and a repeated group name comes back with `_2`, `_3`, and so on added. AML carries a table color only as the nearest of its color names, so `#FF8800` is written as `orange` and comes back as `#f97316`, and it carries no groups. GraphQL carries neither colors nor groups.  
 None of the three carries logical names, domain links, or the dictionaries, either way: the Code Generator writes each table's and column's physical name and data type, never a logical name or a domain.
 
 ## Exporting
@@ -254,3 +254,5 @@ The image is drawn in a background worker where the host runs one, so the editor
 
 `PNG` has the focus when the dialog opens, and `Tab` stays inside the dialog. `Escape`, the `x` button, or a click on the dimmed area around it closes it.  
 While it is open, the canvas shortcuts, undo and redo included, and copy and paste do nothing. `Ctrl + K` (Windows/Linux) or `⌘ + K` (Mac) closes it and opens Quick Search. `Ctrl + F` (Windows/Linux) or `⌘ + F` (Mac) closes it and puts the caret in the Find field of the [Explorer](./explorer.md#opening-and-closing), opening the Explorer if it is closed, never closing it. In an editor too narrow to show the Explorer, it still closes the dialog but shows a toast instead of moving the caret.
+
+A coding agent draws the diagram as an SVG with `erd_export_svg`, from the document rather than from your screen — see [SVG Export](../../mcp/tools.md#svg-export).

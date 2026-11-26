@@ -7,7 +7,7 @@ description: Select, move, copy, duplicate, and delete tables and memos, set col
 
 Everything you do to tables and memos once they exist — selecting, moving, copying, deleting, coloring, and setting what the canvas shows — plus the canvas controls around them.  
 The table and memo commands come first; then table properties, focusing on tables, indexes and alternate keys, auto layout, and the database vendor; then the canvas itself: the canvas toolbar, zoom, panning and where a jump lands, and the diff viewer; and last what a read-only editor keeps of all this.  
-Table groups, the boxes that gather tables, have a page of their own — see [Table Groups](./table-groups.md).  
+Table groups, the boxes that gather tables and memos, have a page of their own — see [Table Groups](./table-groups.md).  
 So do logical names and the Name View, which decides the names the tables show — see [Logical Names](./logical-names.md).
 
 ## Multiple Selection
@@ -21,7 +21,7 @@ Supports three methods:
 Memos are selected the same way, and either select-all shortcut takes every table and memo at once. Memos hidden with View Option → `Memos` are left out of select all and of a selection box — see [Table View Options](#table-view-options).  
 [Table groups](./table-groups.md#selecting-groups) are added to the selection with `Ctrl + click` (Windows/Linux) or `⌘ + click` (Mac) on their title bar, but select all never takes one.  
 `Ctrl + A` gives way to a caret, so it selects the text rather than the diagram while you are editing a cell.  
-A selection box marks a table or memo when it covers the middle of it, not when it merely touches an edge. It takes a table group only when it encloses the group's whole box, so a box drawn inside a group picks out tables without the group.  
+A selection box marks a table or memo when it covers the middle of it, not when it merely touches an edge. It takes a table group only when it encloses the group's whole box, so a box drawn inside a group picks out tables and memos without the group.  
 A right-click on something already selected keeps the whole selection, so menu rows such as `Color`, `Group selected tables`, and `Delete selected` act on all of it. A right-click on any other table, memo, or table group selects that alone, even with `Ctrl` or `⌘` held, and a right-click on a relationship or on empty canvas clears the selection.  
 `Escape` clears the selection. While a cell, memo, or table group name editor is open, or a relationship or a `New Table Group` is being drawn, the first `Escape` ends that and a second one clears the selection.  
 A read-only editor has none of these ways to select: only a jump selects there — see [Read-only Editors](#read-only-editors).
@@ -41,10 +41,10 @@ Only the left mouse button moves tables and memos. A right-click picks what the 
 
 ![Dragging one of two selected tables moves both, and the relationship follows](/img/demo-table-multiple-move.webp)
 
-A selected [table group](./table-groups.md) moves too, carrying its tables, and a table that is both selected and in a moving group moves once.  
-Where you drop a table can move it into or out of a group — see [Adding and Removing Tables](./table-groups.md#adding-and-removing-tables).
+A selected [table group](./table-groups.md) moves too, carrying its tables and memos, and a table or memo that is both selected and in a moving group moves once.  
+Where you drop a table or memo can move it into or out of a group — see [Adding and Removing Tables](./table-groups.md#adding-and-removing-tables).
 
-Tables and memos share one stacking order. Pressing a table or memo, with the left or the right button, brings it in front of every other table and memo, and pressing a table group's title bar, or right-clicking its body, brings its tables to the front.  
+Tables and memos share one stacking order. Pressing a table or memo, with the left or the right button, brings it in front of every other table and memo, and pressing a table group's title bar, or right-clicking its body, brings its tables and memos to the front.  
 The order is not saved: a reopened diagram stacks its tables in the order the file lists them, with every memo above them.
 
 ## Copying/Pasting Tables and Memos
@@ -57,7 +57,7 @@ Each copied column keeps its logical name, and each table and column name keeps 
 A pasted column keeps its domain link only when two things hold: the diagram it lands in lists that very domain, not just one of the same name, and the domain still has the data type the column was copied with. Otherwise the column lands with no domain and keeps the type it was copied with — see [Linking a Column](./dictionary.md#linking-a-column).  
 Indexes and relationships come along too: an index is copied whole onto the copied table, and a relationship is copied with its type and its ON DELETE and ON UPDATE actions when both of the tables it joins are in the copied set. Half a relationship is dropped rather than left pointing back at the original.  
 The pasted copies become the new selection, and pasting the same copy again offsets it by a further `50px` each time, so repeated pastes do not stack on top of one another.  
-A copy does not keep its [table group](./table-groups.md): the pasted table is in no group, even when it lands inside a group's box, and a selected group is not copied.  
+A copy does not keep its [table group](./table-groups.md): the pasted table or memo is in no group, even when it lands inside a group's box, and a selected group is not copied.  
 While View Option → `Memos` hides the memos, a paste still adds the memos it carries, hidden and unselected, so only the pasted tables become the selection.
 
 ![Copying two related tables and pasting them twice, relationship included](/img/demo-table-copy-paste.webp)
@@ -89,7 +89,7 @@ Shortcuts:
 
 The context menus delete too. The last row of a table's or a memo's menu reads `Delete selected` while that table or memo is one of two or more selected items, and removes the whole selection. Otherwise it reads `Delete` and removes that table or memo alone. Over the row of a selected column, a table's menu reads `Delete column` or `Delete columns` instead, as in [Column Deletion](./table-editing.md#column-deletion).
 
-Removing a table removes its relationships and indexes with it. Removing a table group keeps its tables, in no group — see [Removing a Group](./table-groups.md#removing-a-group).  
+Removing a table removes its relationships and indexes with it. Removing a table group keeps its tables and memos, in no group — see [Removing a Group](./table-groups.md#removing-a-group).  
 There is no confirmation, each removal is one undo step, and in a `readonly` editor nothing is removed.  
 Held down, `Delete` and `Backspace` remove only once, and they never remove a relationship — see [Relationship Editing](./relationship-editing.md#deletion). While you type in a cell, a memo, or any other text field, they edit the text instead.  
 Settings lists the two keys as `Delete Selection` — see [Shortcuts](./settings.md#shortcuts).
@@ -98,7 +98,7 @@ Settings lists the two keys as `Delete Selection` — see [Shortcuts](./settings
 
 You can designate colors to differentiate by category.  
 A table wears its color down its left edge, and a memo along its top. Click that edge or strip with the left button, or choose `Color` in the table's or memo's context menu, to open the color picker at the pointer. The color is applied to every selected table, memo, and table group, not only the one you clicked.  
-A table group is colored from `Color` in its own menu, and a table in a colored group wears the group's color across its header while keeping its own color on its left edge — see [Coloring a Group](./table-groups.md#coloring-a-group).
+A table group is colored from `Color` in its own menu, and a table or memo in a colored group wears the group's color across its header while keeping its own color on its left edge or along its top — see [Coloring a Group](./table-groups.md#coloring-a-group).
 
 ![Picking the Blue preset from a memo's color strip for two selected tables and the memo, then taking the color off with No color](/img/demo-table-color.webp)
 
@@ -143,9 +143,9 @@ Which names the tables show is not a view option: `Name View`, right after `View
 `Domain` gives each column a cell, placed by the [column order](./settings.md#adjusting-column-order), with the name of the domain the column links. A column that links no domain the `Domains` sheet lists shows the `domain` placeholder there, dimmed. The cell shows in every Name View. While `Domain` is off, `Logical Names` shows a linked domain's name in the type cell instead — see [The Domain Cell](./logical-names.md#the-domain-cell).  
 `Alternate Key` marks the columns of each alternate key, such as `AK1.1` — see [Alternate Keys](#alternate-keys).  
 `Referential Actions` shows the `D:` and `U:` labels that a relationship's ON DELETE and ON UPDATE actions put at the child end of its connector — see [Reading a Connector](./relationship-editing.md#reading-a-connector). Turning it off hides only those labels and moves no table or connector.  
-`Table Groups` shows the [table groups](./table-groups.md) and the group colors on their tables' headers. Turning it off hides them on the canvas, the minimap, and image exports, moves no table, and keeps every table in its group — see [Hiding Groups](./table-groups.md#hiding-groups). It also takes the `Table Groups` folder out of the [Explorer](./explorer.md#the-tree) and `New Table Group` off the [canvas toolbar](#canvas-toolbar), and the Explorer's search stops finding group names.  
-`Memos` shows the memos. Turning it off hides every memo on the canvas, the minimap, and image exports, and moves no table or connector. Hidden memos take up no room, so the scrollbars, the minimap, and the `Go to content` compass leave them out.  
-Hiding the memos deselects them and closes an open memo editor. The [Explorer](./explorer.md#the-tree) drops its `Memos` folder, and its [Find and Replace](./find-and-replace.md) search and quick search's `:` do not search them. While they are hidden, `New Memo` leaves the context menu, the [canvas toolbar](#canvas-toolbar), quick search, and the [welcome screen](./editing-start.md#welcome-screen), and `Alt + M` adds no memo. A paste or [Import and Add](./file-import-export.md#import-and-add) still adds the memos it carries, hidden and unselected.  
+`Table Groups` shows the [table groups](./table-groups.md) and the group colors on their tables' and memos' headers. Turning it off hides the groups and their colors on the canvas and in image exports, takes the boxes off the minimap, moves no table or memo, and keeps every table and memo in its group — see [Hiding Groups](./table-groups.md#hiding-groups). It also takes the `Table Groups` folder out of the [Explorer](./explorer.md#the-tree) and `New Table Group` off the [canvas toolbar](#canvas-toolbar), and the Explorer's search stops finding group names.  
+`Memos` shows the memos. Turning it off hides every memo on the canvas, the minimap, and image exports, and moves no table or connector. Hidden memos take up no room, so the scrollbars, the minimap, the `Go to content` compass, and the [table group](./table-groups.md) boxes leave them out, though they stay in their groups.  
+Hiding the memos deselects them and closes an open memo editor. The [Explorer](./explorer.md#the-tree) drops its `Memos` folder and the memos under its table groups, and its [Find and Replace](./find-and-replace.md) search and quick search's `:` do not search them. While they are hidden, `New Memo` leaves the context menu, the [canvas toolbar](#canvas-toolbar), quick search, and the [welcome screen](./editing-start.md#welcome-screen), and `Alt + M` adds no memo. A paste or [Import and Add](./file-import-export.md#import-and-add) still adds the memos it carries, hidden and unselected.  
 In a read-only editor the toggles still work, on that screen alone: they are not saved, recorded in the undo history, or shared, and they go back to the file's as the editor turns writable again — see [Read-only Editors](./settings.md#read-only-editors) in Settings.
 
 ![Toggling View Option entries as the tables reflow, marking a composite unique index AK1.1 and AK1.2 with Alternate Key, then turning Memos off and on](/img/demo-view-options.webp)
@@ -233,9 +233,9 @@ The preview is framed on the diagram as it stood when the layout started, so tab
 
 The other three are worked out in one go, off the main thread, so there is nothing to watch: a notice shows while the layout is computed, and the finished arrangement is centered on what the diagram already covers. `Cancel` or `Escape` drops a layout you are no longer waiting for, and a host that runs no shared worker ends in `Could not place tables` — see [Web Workers](../../api/installation.md#web-workers). A layout that has not come back within 60 seconds ends the same way.
 
-Whichever you pick, tables and table groups are moved, and memos stay where they are. The tables are placed at the widths they take in the Name View you are looking at. A relationship from a table to itself is ignored, and several relationships between the same two tables count once.  
-Every layout keeps each group's tables together, whether or not the groups are shown, and fits each group that holds tables around them — see [Table Groups](./table-groups.md#auto-layout).  
-The result lands as a single history entry, so one undo puts every table and group back where it was.  
+Whichever you pick, tables, table groups, and the memos in groups that hold tables are moved, and every other memo stays where it is. The tables are placed at the widths they take in the Name View you are looking at. A relationship from a table to itself is ignored, and several relationships between the same two tables count once.  
+Every layout keeps each group's tables and memos together, whether or not the groups are shown, and fits each group that holds tables around its tables and shown memos — see [Table Groups](./table-groups.md#auto-layout).  
+The result lands as a single history entry, so one undo puts every table, memo, and group back where it was.  
 A read-only editor offers no `Auto Layout`. One still running when the editor turns read-only ends there: the `Force` preview closes with its notice and keeps none of its positions, and a layout still being computed is dropped with its notice, so no table moves, then or once the editor is writable again.
 
 ![Tidying a heap of tables with the Flow auto layout from the canvas context menu, which lines them up left to right along their relationships](/img/demo-automatic-table-placement.webp)
@@ -311,7 +311,7 @@ A middle drag selects, moves, and clicks nothing, and keeps the selection. It cl
 A middle press on the scrollbars, the minimap, the canvas toolbar, or an open cell or memo editor does not pan.
 
 The minimap in the top-right corner maps the diagram with a screen's worth of room on every side of it, the reach of the scrollbars, snapped outward to a coarse grid, so the further you zoom out, the smaller the diagram sits in it. Click it to move the view to that point, or drag the viewport rectangle to pan. As you zoom out, the viewport rectangle grows to cover more of the map.  
-It draws each table in the table's color, and each shown table group as a box in the group's color behind its tables.  
+It draws each table in the table's color, and each shown table group as a box in the group's color behind its tables and memos, reaching round its shown memos as the box on the canvas does.  
 The scrollbars along the right and bottom edges describe the same travel, which runs from the diagram sitting just off one side of the screen to just off the other, so it is at least a screen longer than the diagram as drawn, and longer still while the view stands past it. Outside zen mode, both scrollbars show whenever the document holds a table, a shown memo, or a shown table group, even when all of it fits on screen. A document with none of these, such as one whose only memos are hidden with View Option → `Memos`, shows neither, and no minimap.  
 Dragging a scrollbar thumb or the minimap's viewport rectangle is the one pan that stops: it goes no further than the tables just off screen, or than where the drag started if that was further out.
 
@@ -364,7 +364,7 @@ A read-only editor offers `Diff Viewer` too, and the view works there as in any 
 
 Tables, columns, indexes, foreign keys, memos, and table groups are all compared.  
 Each item is paired first by its id, so against an earlier version of the same file, which keeps the ids, a renamed table, column, index, or table group is still one item, listed as renamed.  
-What is left pairs one to one by what it keeps: a table or a table group by its name, case included; a column or an index by its table and its name; a foreign key by its two tables and its column pairs; and a memo by its text, then its position. An index with no name pairs by its columns, their order and direction, and whether it is unique, and a table group with no name by the most tables it shares.  
+What is left pairs one to one by what it keeps: a table or a table group by its name, case included; a column or an index by its table and its name; a foreign key by its two tables and its column pairs; and a memo by its text, then its position. An index with no name pairs by its columns, their order and direction, and whether it is unique, and a table group with no name by the most tables and memos it shares.  
 So against a file from elsewhere, such as a diagram rebuilt by SQL import, a renamed table shows as one removed and one added.
 
 What counts as a change:
@@ -373,8 +373,8 @@ What counts as a change:
 - A column: its name, comment, data type, default, Auto Increment, primary key, Unique, Not Null, and its place in the table. Only the columns outside the order both documents share count as moved, so adding, removing, or moving one column does not mark the others.
 - An index: its name, UNIQUE, and its columns, with their order and direction.
 - A foreign key: its column pairs, relationship type, and ON DELETE and ON UPDATE actions.
-- A memo: its text, position, size, and color.
-- A table group: its name, the tables it holds, color, position, and size.
+- A memo: its text, table group, position, size, and color.
+- A table group: its name, the tables and memos it holds, color, position, and size.
 
 So a table, memo, or group that was only moved, resized, or recolored counts as changed. Positions and sizes are compared in whole pixels, and stacking order and where a connector meets a table never count.  
 Logical names, domain links, and the [Dictionary](./dictionary.md) tab's words, terms, and domains are not compared, so a change to them alone is neither listed nor marked. A data type that a domain changed does count, as a change of the column's data type.
@@ -393,7 +393,7 @@ Each row ends on a letter, and a row marked `A`, `D`, `M`, or `R` has its name i
 - `R`, renamed, in blue: in both, with a new name. A rename outranks any other change, which the tooltip still lists.
 - `~`, in amber, ends every folder and a table listed only for what changed inside it; their names keep the usual color.
 
-Hover a row's name for its tooltip: the status, `Added`, `Deleted`, `Modified`, `Renamed`, or `Changed inside`, then one line per change, such as `Name: users → members` or `NN: ✗ → ✓`. A text is quoted by its first line, cut after 40 characters, and an empty value reads `—`. An added or removed item's tooltip is its status alone.
+Hover a row's name for its tooltip: the status, `Added`, `Deleted`, `Modified`, `Renamed`, or `Changed inside`, then one line per change, such as `Name: users → members` or `NN: ✗ → ✓`. A text is quoted by its first line, cut after 40 characters, and an empty value reads `—`. A memo moved into a group named Billing has the line `Table group: — → Billing` in its tooltip, and the group's tooltip gains a line such as `Memos: — → "note"`, naming its memos by their first lines in double quotes. An added or removed item's tooltip is its status alone.
 
 `Filter by name`, above the tree, keeps the rows whose current or saved name, or current or saved logical name, contains what you type, ignoring case, in every Name View. A table whose name matches keeps all its rows, and one that does not stays with only the rows that match. A filter that matches nothing leaves the tree empty.  
 When the two documents do not differ at all, the tree reads `No changes`.
@@ -419,7 +419,7 @@ The two sides color text, outlines, and connectors, and fill nothing. Added is g
 - A column added or removed in a table both documents hold colors its whole row, and a column that moved turns its whole row amber. Nothing inside an added or removed table is marked on its own.
 - A changed cell's text turns amber: a table's comment, a column's comment, data type, default, Auto Increment, Unique, or Not Null, or a memo's text. A primary key change turns the column's key icon amber.
 - A renamed table, column, or table group has its name in blue.
-- A table, memo, or table group with a change that has no cell of its own, such as a move, a new size or color, or a change of group or of a group's tables, is outlined in amber.
+- A table, memo, or table group with a change that has no cell of its own, such as a move, a new size or color, or a change of group or of a group's tables or memos, is outlined in amber.
 - A foreign key added, removed, or changed draws its connector in that color. Hovering it, or a row's light, draws it in the usual hover color instead.
 - An index change marks nothing on either side; it shows in the tree only.
 

@@ -39,7 +39,7 @@ interface ErdViewerElement extends HTMLElement {
 ```
 
 Importar `@dineug/erd-editor/erd-viewer.js` define `<erd-viewer>` e deixa `<erd-editor>` indefinido. Importar a raiz do pacote não define nenhum dos dois: ela exporta a classe `ErdViewerElement` e `defineErdViewer()`, que define a tag onde você a chama, então uma página também pode definir a classe sob uma tag própria — consulte [Registrar os elementos](./installation.md#registering-the-elements).  
-Todo ponto de entrada, exceto `engine.js` e `peer.js`, precisa de um DOM, este também, então uma página renderizada no servidor o importa no cliente — consulte [Renderização no lado do servidor](./installation.md#server-side-rendering).  
+Todo ponto de entrada que estas páginas descrevem, exceto `engine.js` e `peer.js`, precisa de um DOM, este também, então uma página renderizada no servidor o importa no cliente — consulte [Renderização no lado do servidor](./installation.md#server-side-rendering).  
 Importar o ponto de entrada adiciona `erd-viewer` a `HTMLElementTagNameMap`, então `document.createElement('erd-viewer')` e `document.querySelector('erd-viewer')` são tipados como `ErdViewerElement` sem conversão (cast).
 
 Como o editor, o visualizador renderiza em um shadow root fechado, então `viewer.shadowRoot` é `null` e os estilos da página não vazam para dentro nem para fora; estilize-o por [setTheme](#settheme) e pelas propriedades personalizadas `--erd-editor-*`. Vários visualizadores em uma página mantêm cada um o seu documento, a sua área visível, o seu tema e o seu idioma.  
@@ -52,7 +52,7 @@ O build da tag script, `dist/erd-viewer.umd.js`, contém apenas o visualizador c
 
 ```html
 <erd-viewer src="diagram.erd.json" style="display: block; height: 480px"></erd-viewer>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0/dist/erd-viewer.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.1/dist/erd-viewer.umd.js"></script>
 ```
 
 ## src {#src}

@@ -176,7 +176,7 @@ Sejak `5.1.0`, dua editor yang mengubah satu nama atau field pada saat yang sama
 
 Sejak `5.1.0`, posisi tabel, posisi dan ukuran memo atau grup tabel, serta titik asal dan tingkat zoom area pandang diberi versi dengan cara yang sama, dan apa yang menggerakkannya keluar sebagai titik akhirnya:
 
-- seretan sebagai satu `table.moveTo`, `memo.moveTo`, atau `tableGroup.moveTo` per entitas yang dipindahkan, dalam satu batch, sehingga seretan grup membawa titik tabel-tabelnya bersama titik grup;
+- seretan sebagai satu `table.moveTo`, `memo.moveTo`, atau `tableGroup.moveTo` per entitas yang dipindahkan, dalam satu batch, sehingga seretan grup membawa titik tabel-tabelnya, dan sejak `5.1.1` titik memonya, bersama titik grup;
 - pembatalan atau pengulangan sebuah seretan sebagai titik tempat aksi itu menempatkan setiap entitas;
 - geseran sebagai `settings.scrollTo`, dan zoom sebagai `settings.changeZoomLevel`;
 - perubahan ukuran memo atau grup tabel sebagai posisi dan ukurannya bersama.
@@ -253,6 +253,19 @@ Editor `5.1.0` tidak mengirim tipe aksi baru, sehingga editor dan replika dari s
 - Pemuatan yang mengganti dokumen, seperti `value` yang ditetapkan, `clear()`, atau impor yang mengganti, mengakhiri hubungan yang sedang digambar di setiap editor `5.1.0`, baik yang membuatnya maupun setiap yang menerimanya. Editor lama mempertahankan penggambarannya tetap aktif melaluinya.
 
 Pastikan setiap editor dalam sesi, dan setiap [replicationStore](./remote-storage.md#dispatch-dispatchsync) yang menyimpan dokumennya, menggunakan `5.1.0` atau yang lebih baru, agar edit yang dibuat pada saat yang sama berakhir sama di mana-mana, di luar pengecualian yang disebut [Pengeditan pada saat yang sama](#concurrent-edits); `4.2.0` atau yang lebih baru tetap yang mempertahankan nama logis dan kamus. [Server MCP](../../mcp/live-and-headless.md#edits-made-at-the-same-moment) sebelum `1.2.0` dihitung sebagai editor sebelum `5.1.0` di sini, dan editor sebelum `5.1.0` sama sekali tidak dapat diikat ke room [Yjs](./yjs.md).
+
+Sejak `5.1.1`, memo yang bergabung ke atau meninggalkan [grup tabel](../../guide/guides/table-groups.md) dibawa oleh tipe aksi baru, `memo.changeGroup`, dan relay yang meneruskan aksi apa adanya tidak memerlukan apa pun yang baru untuknya. Aksi ini dikirim untuk memo yang dilepaskan ke dalam atau ke luar grup, grup baru yang digambar mengelilingi memo yang ditampilkan dan tidak berada di grup mana pun, `Group selected tables` dengan memo yang dipilih di samping tabel, `Remove from group` dengan memo di dalam pilihan, setiap memo dari grup yang dihapus, panggilan grup memo oleh agen pemrograman lewat [server MCP](../../mcp/tools.md#table-groups), serta pembatalan dan pengulangan masing-masing. Penambahan lewat `Import and Add` atau `setSchemaJSON` yang grupnya memuat memo juga mengirimkannya, begitu pula pengulangannya, sedangkan pembatalannya hanya menghapus memo-memo itu.
+
+Editor atau replika dari sebelum `5.1.1` mengabaikan `memo.changeGroup`, dan penguraiannya membuang `groupId` setiap memo, sehingga tidak pernah melihat memo di dalam grup, meskipun seretan grup di editor `5.1.1` tetap memindahkan memo grup itu di sana, karena editor itu juga mengirim `memo.moveTo` untuk masing-masing memo. Edit-nya sendiri tidak mengetahui grup memo, dengan dampak berikut pada editor yang lebih baru:
+
+- Memo yang diseretnya ke dalam kotak grup tetap berada di luar grup, dan memo anggota yang diseretnya ke luar kotak tetap berada di dalam grup, dengan kotak meregang untuk memuatnya.
+- Seretan grupnya, seperti `Auto Layout`-nya, memindahkan grup dan tabelnya tetapi membiarkan memo grup itu di tempatnya, dan kotak meregang untuk memuat memo yang ditampilkan di sana.
+- `Import and Add` di editor itu tidak memasukkan memo ke grup yang ditambahkannya.
+- Grup yang dihapusnya membuat `groupId` setiap memonya tetap menunjuk grup itu: memo-memo itu terbaca tidak berada di grup mana pun, dan pembatalannya atas penghapusan itu mengembalikan memo-memo itu ke grup.
+- Pembatalannya atas pemuatan, impor, atau `clear()` memuat salinan dokumennya sendiri di setiap editor, dan salinan itu tidak memiliki memo di grup mana pun.
+
+Dokumen yang disimpan dari salah satunya tidak memiliki memo di grup mana pun, meskipun editor dari `4.0.0` ke atas tetap mempertahankan grup tempat tabelnya berada.  
+Pastikan setiap editor dalam sesi, dan setiap [replicationStore](./remote-storage.md#dispatch-dispatchsync) yang menyimpan dokumennya, menggunakan `5.1.1` atau yang lebih baru agar memo tetap berada di grup tabelnya; `5.1.0` atau yang lebih baru tetap yang menentukan hasil edit yang dibuat pada saat yang sama. [Server MCP](../../mcp/installation.md#updating) sebelum `1.2.1` juga tidak melihat maupun mempertahankan grup tabel mana yang memuat sebuah memo.
 
 ## SharedStoreConfig {#sharedstoreconfig}
 

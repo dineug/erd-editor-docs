@@ -39,7 +39,7 @@ interface ErdViewerElement extends HTMLElement {
 ```
 
 `@dineug/erd-editor/erd-viewer.js` を読み込むと `<erd-viewer>` が定義され、`<erd-editor>` は未定義のままです。パッケージのルートを読み込んでもどちらも定義されません。ルートはクラス `ErdViewerElement` と、呼び出した場所でタグを定義する `defineErdViewer()` をエクスポートするため、ページは独自のタグでこのクラスを定義することもできます。[要素の登録](./installation.md#registering-the-elements)を参照してください。  
-`engine.js` と `peer.js` 以外のエントリーはどれも DOM が必要で、このエントリーも同じです。そのため、サーバーサイドレンダリングのページでは、クライアント側で読み込みます。[サーバーサイドレンダリング](./installation.md#サーバーサイドレンダリング)を参照してください。  
+これらのページで説明するエントリーのうち `engine.js` と `peer.js` 以外はどれも DOM が必要で、このエントリーも同じです。そのため、サーバーサイドレンダリングのページでは、クライアント側で読み込みます。[サーバーサイドレンダリング](./installation.md#サーバーサイドレンダリング)を参照してください。  
 このエントリーを読み込むと `erd-viewer` が `HTMLElementTagNameMap` に追加されるため、`document.createElement('erd-viewer')` と `document.querySelector('erd-viewer')` は、キャストなしで `ErdViewerElement` の型になります。
 
 エディタと同じく、ビューアーは closed shadow root に描画するため、`viewer.shadowRoot` は `null` で、ページのスタイルが内側に入ることも外に漏れることもありません。スタイルは [setTheme](#settheme) と `--erd-editor-*` カスタムプロパティで指定します。1 つのページに複数のビューアーがあっても、それぞれが自分のドキュメント、表示位置、テーマ、言語を保ちます。  
@@ -52,7 +52,7 @@ interface ErdViewerElement extends HTMLElement {
 
 ```html
 <erd-viewer src="diagram.erd.json" style="display: block; height: 480px"></erd-viewer>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0/dist/erd-viewer.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.1/dist/erd-viewer.umd.js"></script>
 ```
 
 ## src {#src}

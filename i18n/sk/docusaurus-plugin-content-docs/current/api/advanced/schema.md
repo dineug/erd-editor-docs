@@ -19,7 +19,7 @@ VS Code, Obsidian a doplnok pre JetBrains zapisujú súbor iba vtedy, keď úpra
 Od verzie `4.2.0` úložná forma vynecháva aj to, čo nič neobsahuje: každé textové pole, ktoré entita alebo jej pole `ui` obsahuje ako `''` (pri tabuľke `name`, `comment` a `ui.color`, pri stĺpci `name`, `comment`, `dataType` a `default`, pri indexe `name`, pri poznámke `value` a `ui.color`, pri skupine tabuliek `name` a `color`), každý zoznam v objekte `doc` a každú kolekciu bez jedinej položky, ako aj samotné pole `collections`, keď sú všetky kolekcie prázdne. Text zložený iba z medzier sa zapíše tak, ako je, okrem logického názvu, ktorý sa vtedy vynechá, a okrem slova, termínu alebo domény, ktorých hodnoty okrem identifikátora sú všetky prázdne alebo zložené iba z medzier a ktoré sa vynechajú celé. Každý identifikátor, každý zoznam vnútri entity a každé číslo vrátane `0` sa naďalej zapisuje. Objekt `doc` sa zapisuje vždy, takže súbor nového dokumentu obsahuje `$schema`, `version`, jeho nastavenia a `"doc": {}`.  
 Pri parsovaní sa chýbajúce textové pole načíta ako `''` a chýbajúca kolekcia ako prázdna, ako to robí každá verzia pracujúca s formátom v3, a úložná forma vynechá zoznam v objekte `doc` iba vtedy, keď jeho kolekcia nič neobsahuje (pozrite si časť [Doc](#doc)). Editor starší ako verzia `4.2.0` preto otvorí aj tieto súbory a program, ktorý súbor číta sám, musí chýbajúce údaje čítať rovnako. Súbor uložený staršou verziou sa pri najbližšom uložení zapíše s vynechanými prázdnymi textami, zoznamami a kolekciami, čo je jednorazová zmena, a odvtedy sa ukladá bajt po bajte rovnako.
 
-Úložná forma zapisuje každé zamknuté nastavenie s jeho zamknutou hodnotou (pozrite si pole [`lockSettings`](#settings)), pole `settings.ddlScripts` iba vtedy, keď niektorý skript obsahuje text, a pole `groupId` tabuľky iba vtedy, keď označuje skupinu tabuliek, ktorú súbor zapisuje. Od verzie `4.2.0` zapisuje aj pole `settings.nameViewMode` iba vtedy, keď hodnota, ktorú zapisuje, nie je `'physical'`, pole `settings.columnOrder` so siedmimi položkami tam, kde je to možné (pozrite si časť [Settings](#settings)), a pole `nameDerived` tabuľky iba vtedy, keď má hodnotu `true`.  
+Úložná forma zapisuje každé zamknuté nastavenie s jeho zamknutou hodnotou (pozrite si pole [`lockSettings`](#settings)), pole `settings.ddlScripts` iba vtedy, keď niektorý skript obsahuje text, a pole `groupId` tabuľky alebo od verzie `5.1.1` poznámky iba vtedy, keď označuje skupinu tabuliek, ktorú súbor zapisuje. Od verzie `4.2.0` zapisuje aj pole `settings.nameViewMode` iba vtedy, keď hodnota, ktorú zapisuje, nie je `'physical'`, pole `settings.columnOrder` so siedmimi položkami tam, kde je to možné (pozrite si časť [Settings](#settings)), a pole `nameDerived` tabuľky iba vtedy, keď má hodnotu `true`.  
 Zapisuje `doc.tableGroupIds` a `tableGroupEntities` iba vtedy, keď existuje skupina tabuliek, pole `logicalName` iba vtedy, keď obsahuje iný text ako medzery, pole `domainId` stĺpca iba vtedy, keď označuje doménu, ktorú súbor zapisuje, a každý slovník iba vtedy, keď obsahuje riadok, ktorý súbor zapisuje.
 
 Súbor uložený pred verziou `4.0.0` obsahuje celý dokument tak, ako ho vtedy držal editor, vrátane odstránených entít a toho, čo odvodí každé načítanie. Načítanie ho prečíta, ponechá miesto každej tabuľky a poznámky v poradí prekrývania (pozrite si časť [Doc](#doc)), zvyšok odvodí znova a nasledujúce uloženie zapíše iba úložnú formu.
@@ -394,6 +394,7 @@ const OrderType = {
 type Memo = {
   id: string;
   value?: string;
+  groupId?: string;
   ui: MemoUI;
 };
 
@@ -407,6 +408,9 @@ type MemoUI = {
 ```
 
 Od verzie `4.0.0` tabuľky a poznámky [zdieľajú jedno poradie prekrývania](../../guide/guides/table-related-functions.md#moving-multiple-tables), takže tabuľka sa po presunutí dopredu môže dostať nad poznámku. Načítanie zaradí každú poznámku nad každú tabuľku, ako opisuje časť [Doc](#doc). Poznámka v súbore uloženom pred verziou `4.0.0` si ponechá uložený `zIndex`, ktorý pochádzal z rovnakého počítadla ako pri tabuľkách, takže poznámka, ktorú staršia verzia vykreslila nad všetkými tabuľkami, sa môže otvoriť pod tabuľkou, ktorá bola po nej presunutá dopredu.
+
+Od verzie `5.1.1` má poznámka pole `groupId`, identifikátor [skupiny tabuliek](../../guide/guides/table-groups.md), do ktorej patrí, rovnako ako tabuľka. Chýbajúce alebo prázdne pole `groupId`, ako v každom súbore uloženom pred verziou `5.1.1`, alebo také, ktoré neoznačuje žiadnu skupinu v `doc.tableGroupIds`, znamená, že poznámka nemá skupinu, a úložná forma ho zapisuje iba vtedy, keď označuje zachovanú skupinu.  
+Editor starší ako verzia `5.1.1` pri načítaní dokumentu zahodí pole `groupId` každej poznámky, takže uložením v ňom sa každá poznámka vyradí zo svojej skupiny, hoci editor od verzie `4.0.0` ponecháva skupiny tabuliek – pozrite si časť [Kombinovanie verzií](./collaborative-editing.md#mixing-releases).
 
 ### Kolekcia: tableGroupEntities {#collection-tablegroupentities}
 
@@ -426,7 +430,7 @@ type TableGroupUI = {
 };
 ```
 
-Od verzie `4.0.0` môže dokument obsahovať [skupiny tabuliek](../../guide/guides/table-groups.md): pomenované farebné obdĺžniky vykreslené za tabuľkami. Tabuľka sa k skupine pripojí prostredníctvom vlastného poľa `groupId`, takže skupina neobsahuje zoznam členov. Úložná forma zapisuje kolekciu, podobne ako `doc.tableGroupIds`, iba vtedy, keď existuje nejaká skupina, a dokument bez tejto kolekcie, napríklad uložený pred verziou `4.0.0`, nemá žiadne skupiny. Príznak `Show.hideTableGroup` ich skryje.  
+Od verzie `4.0.0` môže dokument obsahovať [skupiny tabuliek](../../guide/guides/table-groups.md): pomenované farebné obdĺžniky vykreslené za tabuľkami a poznámkami. Tabuľka a od verzie `5.1.1` aj poznámka sa k skupine pripojí prostredníctvom vlastného poľa `groupId`, takže skupina neobsahuje zoznam členov. Úložná forma zapisuje kolekciu, podobne ako `doc.tableGroupIds`, iba vtedy, keď existuje nejaká skupina, a dokument bez tejto kolekcie, napríklad uložený pred verziou `4.0.0`, nemá žiadne skupiny. Príznak `Show.hideTableGroup` ich skryje.  
 Editor starší ako verzia `4.0.0` pri načítaní dokumentu zahodí skupiny aj pole `groupId` každej tabuľky, takže uložením v ňom sa stratia všetky skupiny.
 
 ### Riadky slovníkov {#dictionary-rows}
@@ -525,6 +529,8 @@ Uveďte pole `$schema` na začiatku súboru `.erd.json` a editory, ktoré rozume
 Od verzie `4.0.0` schéma opisuje iba úložnú formu. Každý objekt s pomenovanými poľami je uzavretý (`additionalProperties: false`), každé pole, ktoré úložná forma vždy zapisuje, je povinné, každé pole označené `?` v typoch vyššie je uvedené, ale nie je povinné, a žiadne iné pole nie je uvedené. Preto odmietne súbor uložený pred verziou `4.0.0` s jeho `meta`, šírkami, `zIndex`, `ignoreSaveSettings` a ďalšími poľami, kým tento súbor znova neuloží editor vo verzii `4.0.0` alebo novšej. Súbor uložený verziou `3.2.0` alebo novšou už uvádza adresu URL tejto schémy, ktorá odkazuje na vetvu `main`, takže editor, ktorý podľa nej overuje, teraz súbor označí ako chybný. Súbor uložený verziou `3.0.0` či `3.1.0` alebo dokument vo formáte v2 neuvádza `$schema`.
 
 Od verzie `4.2.0` schéma už nevyžaduje textové polia entít, zoznamy v objekte `doc`, kolekcie ani samotné pole `collections`, ktoré úložná forma vynecháva, kým nič neobsahujú. Naďalej prijíma súbor uložený verziou `4.0.0` alebo `4.1.0`. Uvádza nové polia: `nameViewMode`, ktoré prijíma iba `"logical"` a `"both"`; `logicalName` a `nameDerived` tabuľky, pričom `nameDerived` prijíma iba `true`; `logicalName` a `domainId` stĺpca; a tri slovníky, každý s hlavičkou a riadkami reťazcov. `canvasType` uvádza kartu Slovník, `columnOrder` prijíma sedem alebo deväť celých čísel a popisy polí `show`, `columnOrder`, `lockSettings` a `options` uvádzajú nové bity.
+
+Od verzie `5.1.1` uvádza aj pole `groupId` poznámky, ktoré kópia schémy získaná pred verziou `5.1.1` odmietne.
 
 ```json
 {
@@ -939,6 +945,10 @@ Od verzie `4.2.0` schéma už nevyžaduje textové polia entít, zoznamy v objek
           "value": {
             "type": "string"
           },
+          "groupId": {
+            "description": "Id of the table group in doc.tableGroupIds the memo belongs to; absent means none",
+            "type": "string"
+          },
           "ui": {
             "type": "object",
             "properties": {
@@ -967,7 +977,7 @@ Od verzie `4.2.0` schéma už nevyžaduje textové polia entít, zoznamy v objek
       }
     },
     "tableGroupEntities": {
-      "description": "Named, coloured rectangles drawn behind tables; a table joins one through its groupId. Written while a group exists; absent means none",
+      "description": "Named, coloured rectangles drawn behind tables and memos; a table or a memo joins one through its groupId. Written while a group exists; absent means none",
       "type": "object",
       "additionalProperties": {
         "type": "object",

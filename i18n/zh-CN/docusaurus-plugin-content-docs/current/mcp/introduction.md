@@ -18,10 +18,11 @@ VS Code 会让智能体的变更在智能体或你保存之前一直保持未保
 ## 智能体能做什么
 
 - 在对话中构建或修改 schema：表、列及所有列选项、关系及其基数和 ON DELETE 与 ON UPDATE 操作、索引、备注、颜色，以及在画布上的位置。参见[关系](./tools.md#关系)。
-- 将表归入[表分组](../guide/guides/table-groups.md)：围绕它指定的表或在画布的某个区域上添加分组，然后重命名分组、为其着色、连同其中的表一起移动、调整其大小、把表放入或移出分组，或者删除分组，删除后其中的表会留在原处。参见[表分组](./tools.md#表分组)。
+- 将表和备注归入[表分组](../guide/guides/table-groups.md)：围绕它指定的表和备注或在画布的某个区域上添加分组，然后重命名分组、为其着色、连同其中的表和备注一起移动、调整其大小、把表或备注放入或移出分组，或者删除分组，删除后其中的表和备注会留在原处。参见[表分组](./tools.md#表分组)。
 - 用编辑器 [Dictionary](../guide/guides/dictionary.md) 标签页中的词根和术语为表和列命名，并将列关联到其中的域，由域赋予列数据类型。它会设置表和列的[逻辑名](../guide/guides/logical-names.md)，词典会像在编辑器中一样由逻辑名生成物理名，但手动填写的物理名会保留，除非它为空。它可以添加、修改和删除域、词根和术语，并在词根或术语改变后，为一列、一个表或整个文档重新生成物理名。它会列出该标签页的 `Checks` 工作表发现的问题：禁用词、未登记的词根和同义词；同一词典中两行共用的名称；指向文档中未列出的域的关联；与其术语给出的物理名不同的物理名；以及与其域的数据类型不一致的列。参见[词典](./tools.md#dictionaries)和[词典检查](./tools.md#dictionary-checks)。
 - 用从 SQL DDL、GraphQL SDL、DBML 或 AML 解析出的 schema，或者用另一个 `.erd.json` 文档替换当前文档。也可以像编辑器的 [`Import and Add`](../guide/guides/file-import-export.md#import-and-add) 那样，把该 schema 或文档添加到图的下方，并保留图中已有的一切。无论哪种方式，DBML 的 `TableGroup` 都会成为表分组。替换文档的 schema 会保留文档的词典，替换文档的另一个文档会带来它自己的词典，而添加则不会带来任何词典。参见[导入](./tools.md#导入)。
 - 以 id 列表、完整实体或保存时写出的 `.erd.json` 文本的形式读回图，包括其逻辑名和词典行。也可以以八种数据库中任意一种的 DDL 的形式读回图，DDL 可使用 [Schema SQL](../guide/guides/schema-sql.md) 标签页中的 `Statements` 与 `Header` 选项及其 [`Write logical names into empty comments`](../guide/guides/schema-sql.md#logical-names-as-comments) 开关。在包含数千个表的 schema 上，它每次只读取一页、几个表，或几个表分组中的表。参见[读取文档](./tools.md#reading-a-document)。
+- 将图绘制为 SVG 图像，如同编辑器的 [`Export image`](../guide/guides/file-import-export.md#image) 对话框那样，以便让你文档中的图保持最新：写入 `.svg` 文件或作为文本回复，浅色或深色，带背景或不带背景，并且在 hub 已开启的编辑器持有该图时，包含尚未在其中保存的编辑。参见 [SVG 导出](./tools.md#svg-export)。
 - 设置数据库、数据库名称，以及 Schema SQL 中写在各表之前和之后的[脚本](../guide/guides/schema-sql.md#before-and-after-scripts)，例如写在表之前的 `CREATE EXTENSION` 或写在表之后的 `GRANT`。`erd_read` 可以单独给出这些脚本，也可以在整个文档的 DDL 中一并给出。参见[设置](./tools.md#settings)。
 - 把多次编辑作为一次编辑执行，要么全部生效，要么全部不生效，一次 Undo 即可撤回。参见 [erd_batch](./tools.md#erd_batch)。
 - 对它自己的编辑执行 Undo 与 Redo，而绝不会动你的编辑。
@@ -43,7 +44,7 @@ VS Code 会让智能体的变更在智能体或你保存之前一直保持未保
 
 - **实时模式**：某个编辑器的工作区、仓库或某个已打开的项目包含该文档，或者该编辑器已打开该文档。服务器加入该编辑器的编辑会话，编辑落在编辑器中：在 VS Code 中处于未保存状态，在 Obsidian 和 JetBrains IDE 中则像你自己的编辑一样被保存。
 - **无头模式**：没有编辑器。服务器加载文件、应用编辑，然后把文件写回。
-- **拒绝编辑**：有编辑器持有该文档，但其 hub 已关闭。服务器会从磁盘读取，但不写入任何内容，因为打开的编辑器下次保存时可能会覆盖该文件。hub 已开启的 JetBrains IDE 也会拒绝修改仅由其不信任的项目持有的文档，不过智能体仍然可以读取该文档。如果编辑器的 hub 已开启，但其 ERD Editor 扩展或插件所用的 hub 协议与服务器不同，则针对该文档的每次调用都会以 `protocolMismatch` 被拒绝，读取也不例外，并附带一条指出需要更新哪一方的消息，参见[更新](./installation.md#更新)。
+- **拒绝编辑**：有编辑器持有该文档，但其 hub 已关闭。服务器会从磁盘读取，并为 `erd_export_svg` 绘制该文件，但不向该文档写入任何内容，因为打开的编辑器下次保存时可能会覆盖该文件。hub 已开启的 JetBrains IDE 也会拒绝修改仅由其不信任的项目持有的文档，不过智能体仍然可以读取该文档。如果编辑器的 hub 已开启，但其 ERD Editor 扩展或插件所用的 hub 协议与服务器不同，则针对该文档的每次调用都会以 `protocolMismatch` 被拒绝，读取也不例外，并附带一条指出需要更新哪一方的消息，参见[更新](./installation.md#更新)。
 
 详情参见[实时与无头模式](./live-and-headless.md)。
 
@@ -68,5 +69,10 @@ VS Code 会让智能体的变更在智能体或你保存之前一直保持未保
 
 对于同一个名称或字段，或者同一个表、备注或表分组的位置或大小，你与智能体在同一时刻进行的编辑，在服务器为 `1.2.0` 或更高版本，且文档打开之处的编辑器为 VS Code 扩展 `4.3.0` 或更高版本或 Obsidian 或 JetBrains 插件 `1.3.0` 或更高版本时，在编辑器中和对智能体来说最终结果一致。
 颜色、数据库以及表或索引中列的顺序是例外，参见[同一时刻进行的编辑](./live-and-headless.md#edits-made-at-the-same-moment)。
+
+表分组中的备注需要服务器 `1.2.1` 或更高版本，并且在打开该文档的任何地方，都需要 VS Code 扩展 `4.3.1` 或更高版本，或 Obsidian 或 JetBrains 插件 `1.3.1` 或更高版本。
+上面发布版本中更早的扩展或插件仍允许智能体实时编辑，但它会忽略备注属于哪个分组，并在保存文件时略去备注所属的分组。
+`1.2.1` 之前的服务器在磁盘上编辑文件时，写回的文件中每个备注都不属于任何分组，参见[更新](./installation.md#更新)。
+`erd_export_svg` 需要服务器 `1.2.1` 或更高版本，搭配上面的任何发布版本都可以。
 
 下一步：[安装](./installation.md)。

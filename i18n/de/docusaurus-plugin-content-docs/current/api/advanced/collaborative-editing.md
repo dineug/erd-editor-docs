@@ -176,7 +176,7 @@ Seit `5.1.0` enden zwei Editoren, die im selben Moment denselben Namen oder dass
 
 Seit `5.1.0` werden die Position einer Tabelle, die Position und Größe einer Notiz oder Tabellengruppe sowie der Ursprung und die Zoomstufe der Ansicht auf dieselbe Weise mit Versionen versehen, und was sie bewegt, wird als das Ziel gesendet, an dem sie enden:
 
-- ein Ziehen als ein `table.moveTo`, `memo.moveTo` oder `tableGroup.moveTo` je bewegter Entität in einem Stapel, sodass ein Ziehen einer Gruppe die Punkte ihrer Tabellen mit dem der Gruppe mitführt;
+- ein Ziehen als ein `table.moveTo`, `memo.moveTo` oder `tableGroup.moveTo` je bewegter Entität in einem Stapel, sodass ein Ziehen einer Gruppe die Punkte ihrer Tabellen und seit `5.1.1` ihrer Notizen mit dem der Gruppe mitführt;
 - das Rückgängigmachen oder Wiederholen eines Ziehens als der Punkt, an den es jede Entität setzt;
 - ein Verschieben der Ansicht als `settings.scrollTo` und ein Zoomen als `settings.changeZoomLevel`;
 - eine Größenänderung einer Notiz oder Tabellengruppe als ihre Position und Größe zusammen.
@@ -253,6 +253,19 @@ Ein Editor der Version `5.1.0` sendet keinen neuen Aktionstyp, sodass Editoren u
 - Ein Laden, das das Dokument ersetzt, etwa ein zugewiesenes `value`, `clear()` oder ein ersetzender Import, beendet in jedem Editor der Version `5.1.0` das Ziehen einer Beziehung, sowohl in dem, der es vorgenommen hat, als auch in jedem, der es empfängt. Ein älterer Editor hält sein Ziehen dabei aktiv.
 
 Halten Sie jeden Editor einer Sitzung und jeden [replicationStore](./remote-storage.md#dispatch-dispatchsync), der ihr Dokument speichert, auf `5.1.0` oder neuer, damit im selben Moment vorgenommene Bearbeitungen überall gleich enden, abgesehen von den Ausnahmen, die [Gleichzeitige Bearbeitungen](#concurrent-edits) nennt; `4.2.0` oder neuer erhält weiterhin die logischen Namen und Wörterbücher. Ein [MCP-Server](../../mcp/live-and-headless.md#edits-made-at-the-same-moment) vor `1.2.0` zählt hier als Editor vor `5.1.0`, und ein Editor vor `5.1.0` lässt sich überhaupt nicht an einen [Yjs](./yjs.md)-Raum binden.
+
+Seit `5.1.1` wird es über einen neuen Aktionstyp, `memo.changeGroup`, übertragen, wenn eine Notiz in eine [Tabellengruppe](../../guide/guides/table-groups.md) aufgenommen wird oder sie verlässt, und ein Relay, das Aktionen unverändert weiterleitet, braucht dafür nichts Neues. Er wird gesendet für eine Notiz, die beim Ablegen in eine Gruppe hinein- oder aus ihr herausbewegt wird, für eine neue Gruppe, die um eingeblendete Notizen ohne Gruppe gezeichnet wird, für `Group selected tables`, wenn neben den Tabellen auch Notizen ausgewählt sind, für `Remove from group`, wenn die Auswahl Notizen enthält, für jede Notiz einer entfernten Gruppe, für die Aufrufe eines Coding-Agenten zu Notizgruppen über den [MCP-Server](../../mcp/tools.md#table-groups) und für das Rückgängigmachen und Wiederholen von jedem davon. Auch ein Anhängen per `Import and Add` oder `setSchemaJSON`, dessen Gruppen Notizen enthalten, sendet ihn, ebenso dessen Wiederholen, während sein Rückgängigmachen nur diese Notizen entfernt.
+
+Ein Editor oder Replikat vor `5.1.1` ignoriert `memo.changeGroup`, und sein Parsen verwirft das Feld `groupId` jeder Notiz, sodass er nie eine Notiz in einer Gruppe sieht, auch wenn das Ziehen einer Gruppe in einem Editor der Version `5.1.1` die Notizen der Gruppe dort weiterhin mitbewegt, da dieser für jede von ihnen zusätzlich ein `memo.moveTo` sendet. Seine eigenen Bearbeitungen wissen nichts von den Gruppen der Notizen, mit diesen Folgen für die neueren Editoren:
+
+- Eine Notiz, die er in den Rahmen einer Gruppe zieht, bleibt außerhalb der Gruppe, und eine Notiz der Gruppe, die er aus dem Rahmen herauszieht, bleibt in ihr, wobei sich der Rahmen dehnt, um sie zu halten.
+- Sein Ziehen einer Gruppe bewegt, wie sein `Auto Layout`, die Gruppe und ihre Tabellen, lässt die Notizen der Gruppe aber dort stehen, wo sie sind, und der Rahmen dehnt sich, um die eingeblendeten dort zu halten.
+- Ein `Import and Add` in ihm nimmt keine Notiz in die Gruppen auf, die dabei hinzukommen.
+- Eine Gruppe, die er entfernt, lässt das Feld `groupId` jeder ihrer Notizen weiter auf sie zeigen: Die Notizen gelten als in keiner Gruppe, und sein Rückgängigmachen des Entfernens nimmt sie wieder in die Gruppe auf.
+- Sein Rückgängigmachen eines Ladens, eines Imports oder von `clear()` lädt seine eigene Kopie des Dokuments in jeden Editor, und diese Kopie hat keine Notiz in einer Gruppe.
+
+Ein in einem solchen Editor gespeichertes Dokument hat keine Notiz in einer Gruppe, auch wenn ein Editor ab `4.0.0` die Gruppen der Tabellen beibehält.  
+Halten Sie jeden Editor einer Sitzung und jeden [replicationStore](./remote-storage.md#dispatch-dispatchsync), der ihr Dokument speichert, auf `5.1.1` oder neuer, damit Notizen in ihren Tabellengruppen bleiben; `5.1.0` oder neuer gleicht weiterhin zeitgleich vorgenommene Bearbeitungen ab. Auch ein [MCP-Server](../../mcp/installation.md#updating) vor `1.2.1` sieht nicht, in welcher Tabellengruppe eine Notiz ist, und behält es auch nicht.
 
 ## SharedStoreConfig {#sharedstoreconfig}
 

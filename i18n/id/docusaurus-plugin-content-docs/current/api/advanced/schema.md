@@ -19,7 +19,7 @@ VS Code, Obsidian, dan plugin JetBrains menulis file hanya saat sebuah perubahan
 Sejak `4.2.0`, bentuk penyimpanan juga menghilangkan apa yang tidak berisi apa pun: setiap field teks yang dimiliki entitas atau `ui`-nya sebagai `''` (`name`, `comment`, dan `ui.color` tabel, `name`, `comment`, `dataType`, dan `default` kolom, `name` indeks, `value` dan `ui.color` memo, `name` dan `color` grup tabel), setiap daftar `doc` dan koleksi yang tidak memuat entri apa pun, serta `collections` itu sendiri begitu setiap koleksi kosong. Teks yang hanya berisi spasi ditulis sebagaimana adanya, kecuali nama logis, yang dalam hal itu dihilangkan, dan kata, istilah, atau domain yang semua nilainya selain id kosong atau hanya berisi spasi, yang dihilangkan seluruhnya. Setiap id, setiap daftar di dalam entitas, dan setiap angka, termasuk `0`, tetap ditulis. `doc` selalu ditulis, sehingga file dokumen baru memuat `$schema`, `version`, pengaturannya, dan `"doc": {}`.  
 Penguraian membaca field teks yang tidak ada sebagai `''` dan koleksi yang tidak ada sebagai kosong, seperti yang dilakukan setiap rilis v3, dan bentuk penyimpanan hanya menghilangkan daftar `doc` selama koleksinya tidak berisi apa pun (lihat [Doc](#doc)). Jadi, editor sebelum `4.2.0` juga membuka file ini, dan program yang membaca file sendiri harus membaca apa yang tidak ada dengan cara yang sama. File yang disimpan rilis sebelumnya kembali dari penyimpanan berikutnya dengan teks, daftar, dan koleksi kosongnya dihilangkan, sebuah perubahan yang terjadi sekali, lalu disimpan sama persis byte demi byte sejak saat itu.
 
-Bentuk penyimpanan menulis setiap pengaturan yang terkunci pada nilai terkuncinya (lihat [`lockSettings`](#settings)), `settings.ddlScripts` hanya selama sebuah skrip berisi teks, dan `groupId` sebuah tabel hanya selama menunjuk grup tabel yang ditulis file. Sejak `4.2.0`, bentuk ini juga menulis `settings.nameViewMode` hanya selama nilai yang ditulisnya bukan `'physical'`, `settings.columnOrder` dalam tujuh entri jika memungkinkan (lihat [Settings](#settings)), dan `nameDerived` sebuah tabel hanya selama bernilai `true`.  
+Bentuk penyimpanan menulis setiap pengaturan yang terkunci pada nilai terkuncinya (lihat [`lockSettings`](#settings)), `settings.ddlScripts` hanya selama sebuah skrip berisi teks, dan `groupId` sebuah tabel atau, sejak `5.1.1`, sebuah memo hanya selama menunjuk grup tabel yang ditulis file. Sejak `4.2.0`, bentuk ini juga menulis `settings.nameViewMode` hanya selama nilai yang ditulisnya bukan `'physical'`, `settings.columnOrder` dalam tujuh entri jika memungkinkan (lihat [Settings](#settings)), dan `nameDerived` sebuah tabel hanya selama bernilai `true`.  
 Bentuk ini menulis `doc.tableGroupIds` dan `tableGroupEntities` hanya selama ada grup tabel, `logicalName` hanya selama berisi teks selain spasi, `domainId` sebuah kolom hanya selama menunjuk domain yang ditulis file, dan setiap kamus hanya selama memuat baris yang ditulis file.
 
 File yang disimpan sebelum `4.0.0` memuat seluruh dokumen sebagaimana dipegang editor saat itu, termasuk entitas yang dihapus dan apa yang dihitung setiap pemuatan. Pemuatan membacanya, mempertahankan tempat setiap tabel dan memo dalam tumpukan (lihat [Doc](#doc)) dan menghitung ulang sisanya, dan penyimpanan berikutnya hanya menulis bentuk penyimpanan.
@@ -394,6 +394,7 @@ const OrderType = {
 type Memo = {
   id: string;
   value?: string;
+  groupId?: string;
   ui: MemoUI;
 };
 
@@ -407,6 +408,9 @@ type MemoUI = {
 ```
 
 Sejak `4.0.0`, tabel dan memo [berbagi satu tumpukan](../../guide/guides/table-related-functions.md#moving-multiple-tables), sehingga membawa tabel ke depan dapat menempatkannya di atas memo. Pemuatan menempatkan setiap memo di atas setiap tabel, seperti yang dijelaskan [Doc](#doc). Memo dalam file yang disimpan sebelum `4.0.0` mempertahankan `zIndex` yang disimpannya, yang berasal dari penghitung yang sama dengan milik tabel, sehingga memo yang digambar rilis sebelumnya di atas setiap tabel dapat terbuka di bawah tabel yang dibawa ke depan setelahnya.
+
+Sejak `5.1.1`, memo membawa `groupId`, yaitu id [grup tabel](../../guide/guides/table-groups.md) tempat memo itu berada, seperti tabel. `groupId` yang tidak ada atau kosong, seperti di setiap file yang disimpan sebelum `5.1.1`, atau yang tidak menunjuk grup mana pun di `doc.tableGroupIds`, berarti tidak ada grup, dan bentuk penyimpanan hanya menuliskannya selama field itu menunjuk grup yang dipertahankan.  
+Editor sebelum `5.1.1` membuang `groupId` setiap memo saat memuat dokumen, sehingga menyimpan di sana mengeluarkan setiap memo dari grupnya, meskipun editor dari `4.0.0` ke atas tetap mempertahankan grup tempat tabel berada — lihat [Mencampur rilis](./collaborative-editing.md#mixing-releases).
 
 ### Koleksi: tableGroupEntities {#collection-tablegroupentities}
 
@@ -426,7 +430,7 @@ type TableGroupUI = {
 };
 ```
 
-Sejak `4.0.0`, dokumen dapat memuat [grup tabel](../../guide/guides/table-groups.md): persegi panjang bernama dan berwarna yang digambar di belakang tabel. Tabel bergabung ke sebuah grup melalui `groupId`-nya sendiri, sehingga grup tidak memuat daftar anggota. Bentuk penyimpanan menulis koleksi ini, seperti `doc.tableGroupIds`, hanya selama ada grup, dan dokumen tanpa koleksi ini, seperti yang disimpan sebelum `4.0.0`, tidak memiliki grup. `Show.hideTableGroup` menyembunyikannya.  
+Sejak `4.0.0`, dokumen dapat memuat [grup tabel](../../guide/guides/table-groups.md): persegi panjang bernama dan berwarna yang digambar di belakang tabel dan memo. Tabel, dan sejak `5.1.1` memo, bergabung ke sebuah grup melalui `groupId`-nya sendiri, sehingga grup tidak memuat daftar anggota. Bentuk penyimpanan menulis koleksi ini, seperti `doc.tableGroupIds`, hanya selama ada grup, dan dokumen tanpa koleksi ini, seperti yang disimpan sebelum `4.0.0`, tidak memiliki grup. `Show.hideTableGroup` menyembunyikannya.  
 Editor sebelum `4.0.0` membuang grup dan `groupId` setiap tabel saat memuat dokumen, sehingga menyimpan di sana menghilangkan setiap grup.
 
 ### Baris kamus {#dictionary-rows}
@@ -525,6 +529,8 @@ Letakkan `$schema` di bagian atas file `.erd.json`, dan editor yang memahami JSO
 Sejak `4.0.0`, skema hanya menggambarkan bentuk penyimpanan. Setiap objek dengan field bernama bersifat tertutup (`additionalProperties: false`), setiap field yang selalu ditulis bentuk penyimpanan bersifat wajib, setiap field yang ditandai `?` pada tipe di atas disebutkan tetapi tidak wajib, dan tidak ada field lain yang disebutkan. Jadi, skema menolak file yang disimpan sebelum `4.0.0`, dengan `meta`, lebar, `zIndex`, `ignoreSaveSettings`, dan seterusnya, hingga editor `4.0.0` atau yang lebih baru menyimpan file tersebut lagi. File yang disimpan oleh `3.2.0` atau yang lebih baru sudah menyebutkan URL skema ini, yang menunjuk ke cabang `main`, sehingga editor yang memvalidasi terhadapnya kini menandai file tersebut. File yang disimpan oleh `3.0.0` atau `3.1.0`, atau dokumen v2, tidak menyebutkan `$schema`.
 
 Sejak `4.2.0`, skema tidak lagi mewajibkan field teks entitas, daftar `doc` mana pun, koleksi mana pun, atau `collections` itu sendiri, yang dihilangkan bentuk penyimpanan selama tidak berisi apa pun. Skema tetap menerima file yang disimpan oleh `4.0.0` atau `4.1.0`. Skema menyebutkan field baru: `nameViewMode`, yang hanya menerima `"logical"` dan `"both"`; `logicalName` tabel dan `nameDerived`-nya, yang hanya menerima `true`; `logicalName` dan `domainId` kolom; serta ketiga kamus, masing-masing dengan header dan baris string-nya. `canvasType` mencantumkan tab Kamus, `columnOrder` menerima tujuh atau sembilan bilangan bulat, dan deskripsi `show`, `columnOrder`, `lockSettings`, dan `options` menyebutkan bit barunya.
+
+Sejak `5.1.1`, skema juga menyebutkan `groupId` sebuah memo, yang ditolak oleh salinan skema yang diambil sebelum `5.1.1`.
 
 ```json
 {
@@ -939,6 +945,10 @@ Sejak `4.2.0`, skema tidak lagi mewajibkan field teks entitas, daftar `doc` mana
           "value": {
             "type": "string"
           },
+          "groupId": {
+            "description": "Id of the table group in doc.tableGroupIds the memo belongs to; absent means none",
+            "type": "string"
+          },
           "ui": {
             "type": "object",
             "properties": {
@@ -967,7 +977,7 @@ Sejak `4.2.0`, skema tidak lagi mewajibkan field teks entitas, daftar `doc` mana
       }
     },
     "tableGroupEntities": {
-      "description": "Named, coloured rectangles drawn behind tables; a table joins one through its groupId. Written while a group exists; absent means none",
+      "description": "Named, coloured rectangles drawn behind tables and memos; a table or a memo joins one through its groupId. Written while a group exists; absent means none",
       "type": "object",
       "additionalProperties": {
         "type": "object",

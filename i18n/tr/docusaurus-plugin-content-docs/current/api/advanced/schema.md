@@ -19,7 +19,7 @@ VS Code, Obsidian ve JetBrains eklentisi bir dosyayı yalnızca bir düzenleme `
 `4.2.0` sürümünden itibaren depolama biçimi hiçbir şey tutmayanları da dışarıda bırakır: bir varlığın veya onun `ui` alanının `''` olarak tuttuğu her metin alanı (bir tablonun `name`, `comment` ve `ui.color` alanları, bir sütunun `name`, `comment`, `dataType` ve `default` alanları, bir dizinin `name` alanı, bir notun `value` ve `ui.color` alanları, bir tablo grubunun `name` ve `color` alanları), hiçbir kayıt tutmayan her `doc` listesi ve koleksiyon, tüm koleksiyonlar boş olduğunda da `collections` alanının kendisi. Yalnızca boşluklardan oluşan metin tutulduğu gibi yazılır; bunun istisnaları, bu durumda dışarıda bırakılan mantıksal ad ile kimliği dışındaki değerlerinin tümü boş olan veya yalnızca boşluklardan oluşan ve tamamen dışarıda bırakılan sözcük, terim veya değer alanıdır. Her kimlik, bir varlığın içindeki her liste ve `0` dahil her sayı yine yazılır. `doc` her zaman yazılır, bu yüzden yeni bir belgenin dosyası `$schema`, `version`, ayarlarını ve `"doc": {}` değerini tutar.  
 Ayrıştırma, her v3 sürümünün yaptığı gibi eksik bir metin alanını `''`, eksik bir koleksiyonu da boş olarak okur ve depolama biçimi bir `doc` listesini yalnızca koleksiyonu hiçbir şey tutmadığı sürece dışarıda bırakır ([Doc](#doc) bölümüne bakın). Bu yüzden `4.2.0` sürümünden önceki bir düzenleyici de bu dosyaları açar ve bir dosyayı kendisi okuyan bir program da eksik olanı aynı şekilde okumalıdır. Önceki bir sürümün kaydettiği bir dosya, bir sonraki kaydetmede boş metinleri, listeleri ve koleksiyonları dışarıda bırakılmış olarak geri gelir; bu bir kez yapılan bir değişikliktir ve dosya o andan itibaren bayt bayt aynı kaydedilir.
 
-Depolama biçimi kilitli her ayarı kilitli değeriyle ([`lockSettings`](#settings) bölümüne bakın), `settings.ddlScripts` alanını yalnızca bir betik metin içerirken, bir tablonun `groupId` alanını ise yalnızca dosyanın yazdığı bir tablo grubunu belirttiği sürece yazar. `4.2.0` sürümünden itibaren `settings.nameViewMode` alanını yalnızca yazdığı değer `'physical'` olmadığı sürece, `settings.columnOrder` alanını mümkün olduğunda yedi kayıtla ([Settings](#settings) bölümüne bakın), bir tablonun `nameDerived` alanını ise yalnızca `true` olduğu sürece yazar.  
+Depolama biçimi kilitli her ayarı kilitli değeriyle ([`lockSettings`](#settings) bölümüne bakın), `settings.ddlScripts` alanını yalnızca bir betik metin içerirken, bir tablonun veya `5.1.1` sürümünden itibaren bir notun `groupId` alanını ise yalnızca dosyanın yazdığı bir tablo grubunu belirttiği sürece yazar. `4.2.0` sürümünden itibaren `settings.nameViewMode` alanını yalnızca yazdığı değer `'physical'` olmadığı sürece, `settings.columnOrder` alanını mümkün olduğunda yedi kayıtla ([Settings](#settings) bölümüne bakın), bir tablonun `nameDerived` alanını ise yalnızca `true` olduğu sürece yazar.  
 `doc.tableGroupIds` ve `tableGroupEntities` alanlarını yalnızca bir tablo grubu varken, bir `logicalName` alanını yalnızca boşluk dışında metin içerdiği sürece, bir sütunun `domainId` alanını yalnızca dosyanın yazdığı bir değer alanını belirttiği sürece, her sözlüğü de yalnızca dosyanın yazdığı bir satırı tuttuğu sürece yazar.
 
 `4.0.0` sürümünden önce kaydedilmiş bir dosya, belgenin o zaman bir düzenleyicinin tuttuğu hâliyle tamamını tutar; kaldırılmış varlıkları ve her yüklemenin hesapladıklarını da içerir. Bir yükleme onu okur, her tablonun ve notun katman sırasındaki yerini korur ([Doc](#doc) bölümüne bakın), gerisini yeniden hesaplar ve sonraki kaydetme yalnızca depolama biçimini yazar.
@@ -394,6 +394,7 @@ const OrderType = {
 type Memo = {
   id: string;
   value?: string;
+  groupId?: string;
   ui: MemoUI;
 };
 
@@ -407,6 +408,9 @@ type MemoUI = {
 ```
 
 `4.0.0` sürümünden itibaren tablolar ve notlar [tek bir katman sırasını paylaşır](../../guide/guides/table-related-functions.md#moving-multiple-tables), bu yüzden bir tabloyu öne getirmek onu bir notun üstüne yerleştirebilir. Bir yükleme, [Doc](#doc) bölümünde anlatıldığı gibi her notu her tablonun üstüne yerleştirir. `4.0.0` sürümünden önce kaydedilmiş bir dosyadaki bir not, kaydettiği `zIndex` değerini korur; bu değer tablolarınkiyle aynı sayaçtan geldiği için önceki bir sürümün her tablonun üstüne çizdiği bir not, kendisinden sonra öne getirilmiş bir tablonun altında açılabilir.
+
+`5.1.1` sürümünden itibaren bir not, bir tablo gibi, ait olduğu [tablo grubunun](../../guide/guides/table-groups.md) kimliği olan `groupId` alanını taşır. Eksik veya boş bir `groupId` (`5.1.1` sürümünden önce kaydedilmiş her dosyada olduğu gibi) ya da `doc.tableGroupIds` içinde hiçbir grubu belirtmeyen bir `groupId` grup olmadığı anlamına gelir ve depolama biçimi bu alanı yalnızca korunan bir grubu belirttiği sürece yazar.  
+`5.1.1` sürümünden önceki bir düzenleyici bir belgeyi yüklerken her notun `groupId` alanını atar, bu yüzden orada kaydetmek her notu grubundan çıkarır; ancak `4.0.0` ve sonrasındaki bir düzenleyici tabloların gruplarını korur. [Sürümleri karıştırma](./collaborative-editing.md#mixing-releases) bölümüne bakın.
 
 ### Koleksiyon: tableGroupEntities {#collection-tablegroupentities}
 
@@ -426,7 +430,7 @@ type TableGroupUI = {
 };
 ```
 
-`4.0.0` sürümünden itibaren bir belge [tablo grupları](../../guide/guides/table-groups.md) tutabilir: tabloların arkasına çizilen, adı ve rengi olan dikdörtgenler. Bir tablo bir gruba kendi `groupId` alanı aracılığıyla katılır, bu yüzden bir grup üye listesi tutmaz. Depolama biçimi bu koleksiyonu, `doc.tableGroupIds` gibi, yalnızca bir grup varken yazar ve `4.0.0` sürümünden önce kaydedilmiş bir belge gibi bu koleksiyonu içermeyen bir belgede grup yoktur. `Show.hideTableGroup` bayrağı grupları gizler.  
+`4.0.0` sürümünden itibaren bir belge [tablo grupları](../../guide/guides/table-groups.md) tutabilir: tabloların ve notların arkasına çizilen, adı ve rengi olan dikdörtgenler. Bir tablo ve `5.1.1` sürümünden itibaren bir not bir gruba kendi `groupId` alanı aracılığıyla katılır, bu yüzden bir grup üye listesi tutmaz. Depolama biçimi bu koleksiyonu, `doc.tableGroupIds` gibi, yalnızca bir grup varken yazar ve `4.0.0` sürümünden önce kaydedilmiş bir belge gibi bu koleksiyonu içermeyen bir belgede grup yoktur. `Show.hideTableGroup` bayrağı grupları gizler.  
 `4.0.0` sürümünden önceki bir düzenleyici bir belgeyi yüklerken grupları ve her tablonun `groupId` alanını atar, bu yüzden orada kaydedildiğinde tüm gruplar kaybolur.
 
 ### Sözlük satırları {#dictionary-rows}
@@ -525,6 +529,8 @@ Bir `.erd.json` dosyasının en üstüne `$schema` ekleyin; VS Code gibi JSON Sc
 `4.0.0` sürümünden itibaren şema yalnızca depolama biçimini tanımlar. Adlandırılmış alanları olan her nesne kapalıdır (`additionalProperties: false`), depolama biçiminin her zaman yazdığı her alan zorunludur, yukarıdaki türlerde `?` ile işaretlenen her alan adlandırılır ancak zorunlu değildir ve başka hiçbir alan adlandırılmaz. Bu yüzden `meta`, genişlikler, `zIndex`, `ignoreSaveSettings` vb. içeren, `4.0.0` sürümünden önce kaydedilmiş bir dosyayı `4.0.0` veya sonraki bir sürümdeki bir düzenleyici o dosyayı yeniden kaydedene kadar reddeder. `3.2.0` veya sonraki bir sürümle kaydedilmiş bir dosya, `main` dalını gösteren bu şemanın URL'sini zaten belirtir, bu yüzden bu şemaya göre doğrulama yapan bir düzenleyici dosyayı artık geçersiz olarak işaretler. `3.0.0` veya `3.1.0` ile kaydedilmiş bir dosya ya da bir v2 belgesi hiçbir `$schema` belirtmez.
 
 `4.2.0` sürümünden itibaren şema, depolama biçiminin hiçbir şey tutmadıkları sürece dışarıda bıraktığı, bir varlığın metin alanlarını, herhangi bir `doc` listesini, herhangi bir koleksiyonu veya `collections` alanının kendisini artık zorunlu tutmaz. `4.0.0` veya `4.1.0` ile kaydedilmiş bir dosyayı yine kabul eder. Yeni alanları adlandırır: yalnızca `"logical"` ve `"both"` değerlerini alan `nameViewMode`; bir tablonun `logicalName` alanı ile yalnızca `true` değerini alan `nameDerived` alanı; bir sütunun `logicalName` ve `domainId` alanları ve her biri başlığı ve dizelerden oluşan satırlarıyla üç sözlük. `canvasType` Sözlük sekmesini listeler, `columnOrder` yedi veya dokuz tam sayı alır ve `show`, `columnOrder`, `lockSettings` ve `options` açıklamaları yeni bitleri adlandırır.
+
+`5.1.1` sürümünden itibaren bir notun `groupId` alanını da adlandırır; `5.1.1` sürümünden önce alınmış bir şema kopyası bu alanı reddeder.
 
 ```json
 {
@@ -939,6 +945,10 @@ Bir `.erd.json` dosyasının en üstüne `$schema` ekleyin; VS Code gibi JSON Sc
           "value": {
             "type": "string"
           },
+          "groupId": {
+            "description": "Id of the table group in doc.tableGroupIds the memo belongs to; absent means none",
+            "type": "string"
+          },
           "ui": {
             "type": "object",
             "properties": {
@@ -967,7 +977,7 @@ Bir `.erd.json` dosyasının en üstüne `$schema` ekleyin; VS Code gibi JSON Sc
       }
     },
     "tableGroupEntities": {
-      "description": "Named, coloured rectangles drawn behind tables; a table joins one through its groupId. Written while a group exists; absent means none",
+      "description": "Named, coloured rectangles drawn behind tables and memos; a table or a memo joins one through its groupId. Written while a group exists; absent means none",
       "type": "object",
       "additionalProperties": {
         "type": "object",

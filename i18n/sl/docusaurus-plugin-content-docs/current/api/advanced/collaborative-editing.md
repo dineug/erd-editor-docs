@@ -176,7 +176,7 @@ Od različice `5.1.0` dva urejevalnika, ki v istem trenutku spremenita isto ime 
 
 Od različice `5.1.0` so na enak način opremljeni z različico tudi položaj tabele, položaj in velikost beležke ali skupine tabel ter izhodišče in stopnja povečave pogleda, tisto, kar jih premika, pa se pošlje kot mesto, kjer se konča:
 
-- vlečenje kot eno dejanje `table.moveTo`, `memo.moveTo` ali `tableGroup.moveTo` na premaknjeno entiteto, v enem paketu, tako da vlečenje skupine nosi točke njenih tabel skupaj s točko skupine;
+- vlečenje kot eno dejanje `table.moveTo`, `memo.moveTo` ali `tableGroup.moveTo` na premaknjeno entiteto, v enem paketu, tako da vlečenje skupine nosi točke njenih tabel, od različice `5.1.1` pa tudi njenih beležk, skupaj s točko skupine;
 - razveljavitev ali uveljavitev vlečenja kot točka, na katero postavi vsako entiteto;
 - pomik kot `settings.scrollTo`, povečava pa kot `settings.changeZoomLevel`;
 - sprememba velikosti beležke ali skupine tabel kot njen položaj in velikost skupaj.
@@ -253,6 +253,19 @@ Urejevalnik različice `5.1.0` ne pošilja nobene nove vrste dejanj, zato urejev
 - Nalaganje, ki zamenja dokument, na primer prirejena lastnost `value`, `clear()` ali uvoz z zamenjavo, v vsakem urejevalniku različice `5.1.0` konča risanje relacije, v tistem, ki ga je naredil, in v vsakem, ki ga prejme. Starejši urejevalnik ohrani risanje vklopljeno tudi po njem.
 
 Vse urejevalnike v seji in vsako shrambo [replicationStore](./remote-storage.md#dispatch-dispatchsync), ki shranjuje njen dokument, ohranjajte na različici `5.1.0` ali novejši, da spremembe, narejene v istem trenutku, povsod končajo enako, razen pri izjemah, ki jih navaja razdelek [Sočasne spremembe](#concurrent-edits); različica `4.2.0` ali novejša je še vedno tista, ki ohrani logična imena in slovarje. [Strežnik MCP](../../mcp/live-and-headless.md#edits-made-at-the-same-moment) pred različico `1.2.0` se tu šteje za urejevalnik pred različico `5.1.0`, urejevalnika pred različico `5.1.0` pa sploh ni mogoče povezati s sobo [Yjs](./yjs.md).
+
+Od različice `5.1.1` pridružitev beležke [skupini tabel](../../guide/guides/table-groups.md) ali njen izstop iz nje potuje z novo vrsto dejanja `memo.changeGroup`, posrednik, ki dejanja posreduje nespremenjena, pa zanjo ne potrebuje ničesar novega. Pošlje se za beležko, spuščeno v skupino ali iz skupine, za novo skupino, narisano okoli prikazanih beležk brez skupine, za postavko `Group selected tables`, kadar so poleg tabel izbrane tudi beležke, za postavko `Remove from group`, kadar so v izboru beležke, za vsako beležko odstranjene skupine, za klice, s katerimi agent za kodiranje prek [strežnika MCP](../../mcp/tools.md#table-groups) spreminja skupine beležk, ter za razveljavitev in uveljavitev vsakega od naštetih. Pošlje ga tudi dodajanje z ukazom `Import and Add` ali z metodo `setSchemaJSON`, katerega skupine vsebujejo beležke, in prav tako njegova uveljavitev, njegova razveljavitev pa te beležke samo odstrani.
+
+Urejevalnik ali replika iz časa pred različico `5.1.1` dejanje `memo.changeGroup` prezre, njegovo razčlenjevanje pa izpusti polje `groupId` vseh beležk, zato nikoli ne vidi beležke v skupini, čeprav vlečenje skupine v urejevalniku različice `5.1.1` tam še vedno premakne beležke skupine, saj ta urejevalnik za vsako od njih pošlje tudi dejanje `memo.moveTo`. Njegove lastne spremembe o skupinah beležk ne vedo ničesar, kar ima te posledice v novejših urejevalnikih:
+
+- Beležka, ki jo povleče v okvir skupine, ostane zunaj skupine, članica skupine, ki jo povleče iz okvira, pa ostane v njej, pri čemer se okvir raztegne, da jo zajame.
+- Njegovo vlečenje skupine, tako kot njegov ukaz `Auto Layout`, premakne skupino in njene tabele, beležke skupine pa pusti tam, kjer stojijo, in okvir se raztegne, da zajame prikazane med njimi.
+- Njegov ukaz `Import and Add` ne postavi nobene beležke v skupine, ki jih doda.
+- Skupina, ki jo odstrani, pusti polje `groupId` vsake svoje beležke, ki jo še vedno navaja: beležke se berejo, kot da niso v nobeni skupini, njegova razveljavitev odstranitve pa jih vrne v skupino.
+- Njegova razveljavitev nalaganja, uvoza ali klica `clear()` v vsakem urejevalniku naloži njegovo lastno kopijo dokumenta, v njej pa nobena beležka ni v nobeni skupini.
+
+Dokument, shranjen iz takega urejevalnika, nima nobene beležke v nobeni skupini, čeprav tak urejevalnik od različice `4.0.0` naprej ohrani skupine njegovih tabel.  
+Vse urejevalnike v seji in vsako shrambo [replicationStore](./remote-storage.md#dispatch-dispatchsync), ki shranjuje njen dokument, ohranjajte na različici `5.1.1` ali novejši, da beležke ostanejo v svojih skupinah tabel; različica `5.1.0` ali novejša je še vedno tista, ki razreši spremembe, narejene v istem trenutku. [Strežnik MCP](../../mcp/installation.md#updating) pred različico `1.2.1` prav tako ne vidi in ne ohrani, v kateri skupini tabel je beležka.
 
 ## SharedStoreConfig {#sharedstoreconfig}
 

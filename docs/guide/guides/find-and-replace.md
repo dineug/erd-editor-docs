@@ -93,7 +93,7 @@ While the Find field holds text, the Explorer's [tree](./explorer.md#the-tree) s
 
 - `Tables`, `Table Groups`, and `Memos` show only when they hold a match, and each folder's count is the number of rows directly under it in the results.
 - Under `Tables` come the tables that hold a match, by name, never by logical name. Under each table come a row for each match in its comment, then a `Columns` folder with the columns that hold a match, in column order, each with a row for each match in its comment, then an `Indexes` folder with the indexes whose name matches. There is no `Foreign Keys` folder.
-- Under `Table Groups` come the groups whose name matches, by name, without their tables. A table found shows under `Tables`.
+- Under `Table Groups` come the groups whose name matches, by name, without their tables or memos. A table found shows under `Tables`, and a memo under `Memos`.
 - Under `Memos` come the memos that hold a match, in document order, each shown by its first line and with a row for each match in it.
 
 A match in a name is highlighted in that name's own row, so a name that holds the query twice is one row with two highlights. A match in a table's or column's logical name goes on that table's or column's row as well, never on a row of its own.  
@@ -127,7 +127,7 @@ Going to a match closes Table Properties if it is open, then:
 
 - For a table's or column's name, logical name, or comment, it selects the table alone, brings it to the front, and puts the focused cell on the cell that holds the match. A match in a comment hidden by a [table view option](./table-related-functions.md#table-view-options) puts the focused cell on the name beside it instead. Where the [Name View](./logical-names.md#name-view) draws no cell for the name or the logical name, the focused cell goes on the one drawn in its place: the name in `Physical Names`, the logical name in `Logical Names`.
 - For an index name, it selects the index's table alone and brings it to the front, with the focused cell on the table's name, or its logical name in `Logical Names` and `Both Names`, unless it is already in that table. Index names are not drawn on the canvas.
-- For a table group name, it selects the group alone and brings it to the front with its tables.
+- For a table group name, it selects the group alone and brings it to the front with its tables and memos.
 - For a memo, it selects the memo alone and brings it to the front.
 
 The canvas scrolls only when what it goes to does not already show well, and the zoom never changes — see [Where a Jump Lands](./table-related-functions.md#where-a-jump-lands).

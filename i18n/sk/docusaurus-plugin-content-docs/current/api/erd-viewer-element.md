@@ -39,7 +39,7 @@ interface ErdViewerElement extends HTMLElement {
 ```
 
 Import `@dineug/erd-editor/erd-viewer.js` definuje `<erd-viewer>` a nechá `<erd-editor>` nedefinovaný. Import koreňa balíka nedefinuje ani jeden z nich: exportuje triedu `ErdViewerElement` a `defineErdViewer()`, ktorá definuje značku tam, kde ju zavoláte, takže stránka môže triedu definovať aj pod vlastnou značkou – pozrite si časť [Registrácia elementov](./installation.md#registering-the-elements).  
-Každý vstupný bod okrem `engine.js` a `peer.js` potrebuje DOM, aj tento, takže stránka vykresľovaná na strane servera ho importuje na klientovi – pozrite si časť [Vykresľovanie na strane servera](./installation.md#server-side-rendering).  
+Každý vstupný bod, ktorý tieto stránky opisujú, okrem `engine.js` a `peer.js` potrebuje DOM, aj tento, takže stránka vykresľovaná na strane servera ho importuje na klientovi – pozrite si časť [Vykresľovanie na strane servera](./installation.md#server-side-rendering).  
 Import vstupného bodu pridá `erd-viewer` do `HTMLElementTagNameMap`, takže `document.createElement('erd-viewer')` a `document.querySelector('erd-viewer')` majú typ `ErdViewerElement` bez pretypovania.
 
 Rovnako ako editor sa prehliadač vykresľuje do uzavretého shadow root, takže `viewer.shadowRoot` je `null` a štýly stránky doň ani z neho neprenikajú; štýlujte ho cez [setTheme](#settheme) a vlastné vlastnosti `--erd-editor-*`. Viacero prehliadačov na jednej stránke si každý uchováva vlastný dokument, zobrazenie, motív a jazyk.  
@@ -52,7 +52,7 @@ Zostavenie pre značku script, `dist/erd-viewer.umd.js`, obsahuje samotný prehl
 
 ```html
 <erd-viewer src="diagram.erd.json" style="display: block; height: 480px"></erd-viewer>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0/dist/erd-viewer.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.1/dist/erd-viewer.umd.js"></script>
 ```
 
 ## src {#src}

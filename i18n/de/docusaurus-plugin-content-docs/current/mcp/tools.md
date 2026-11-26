@@ -1,11 +1,11 @@
 ---
 sidebar_position: 4
-description: Alle Tools, die der MCP-Server von erd-editor bietet – ein Dokument seitenweise lesen, die Wörterbuchprüfungen, die 67 Bearbeitungs-Tools, erd_batch und wie ein Ergebnis und eine Ablehnung aussehen.
+description: Alle Tools, die der MCP-Server von erd-editor bietet – ein Dokument seitenweise lesen, die Wörterbuchprüfungen, der SVG-Export, die 68 Bearbeitungs-Tools, erd_batch und wie ein Ergebnis und eine Ablehnung aussehen.
 ---
 
 # Tools
 
-Der Server bietet 77 Tools: fünf Sitzungs-Tools, vier Lese-Tools, 67 Bearbeitungs-Tools, je eines pro Bearbeitungsvorgang, und `erd_batch`, das mehrere Bearbeitungs-Tools als eine Änderung ausführt.
+Der Server bietet 79 Tools: fünf Sitzungs-Tools, vier Lese-Tools, `erd_export_svg`, das ein Dokument als SVG-Bild zeichnet, 68 Bearbeitungs-Tools, je eines pro Bearbeitungsvorgang, und `erd_batch`, das mehrere Bearbeitungs-Tools als eine Änderung ausführt.
 
 Jedes Tool außer `erd_list_documents` erhält als erstes Argument den `path` des Dokuments, und die Tabellen unten führen ihn nicht auf.
 Ein mit `?` gekennzeichnetes Argument ist optional.
@@ -26,14 +26,14 @@ Was Speichern und Rückgängigmachen im jeweiligen Modus bewirken, wird in [Live
 
 | Tool | Argumente | Was es tut |
 | --- | --- | --- |
-| `erd_list` | `query?`, `offset?`, `limit?`, `namesOnly?` | Die Einstellungen und Anzahlen, dann eine Seite mit Tabellen samt ihren Indizes und Beziehungen, jede Tabelle mit ihrer ID, Position und Größe auf der Zeichenfläche, Spaltenanzahl, ihrem logischen Namen, falls sie einen hat, und Tabellengruppe, falls sie in einer ist. Sofern es nicht sucht, folgen auf die Tabellen die Tabellengruppen, die Notizen und dann die Domänen, Begriffe und Wörter. |
-| `erd_get` | `tableIds?`, `tableNames?`, `relationshipIds?`, `indexIds?`, `memoIds?`, `tableGroupIds?`, `wordIds?`, `termIds?`, `domainIds?` | Die genannten Entitäten vollständig: Tabellen mit ihren Spalten und ihrer Tabellengruppe, Beziehungen mit ihren Spalten sowie `onDelete` und `onUpdate`, Indizes mit ihren Spalten, Notizen mit ihrem Text, Tabellengruppen mit ihren Tabellen sowie Wörter, Begriffe und Domänen mit jedem Feld. |
+| `erd_list` | `query?`, `offset?`, `limit?`, `namesOnly?` | Die Einstellungen und Anzahlen, dann eine Seite mit Tabellen samt ihren Indizes und Beziehungen, jede Tabelle mit ihrer ID, Position und Größe auf der Zeichenfläche, Spaltenanzahl, ihrem logischen Namen, falls sie einen hat, und Tabellengruppe, falls sie in einer ist. Sofern es nicht sucht, folgen auf die Tabellen die Tabellengruppen, die Notizen, jede mit ihrer Tabellengruppe, falls sie in einer ist, und dann die Domänen, Begriffe und Wörter. |
+| `erd_get` | `tableIds?`, `tableNames?`, `relationshipIds?`, `indexIds?`, `memoIds?`, `tableGroupIds?`, `wordIds?`, `termIds?`, `domainIds?` | Die genannten Entitäten vollständig: Tabellen mit ihren Spalten und ihrer Tabellengruppe, Beziehungen mit ihren Spalten sowie `onDelete` und `onUpdate`, Indizes mit ihren Spalten, Notizen mit ihrem Text und ihrer Tabellengruppe, Tabellengruppen mit ihren Tabellen und Notizen sowie Wörter, Begriffe und Domänen mit jedem Feld. |
 | `erd_read` | `format`, `vendor?`, `statements?`, `header?`, `logicalNameAsComment?`, `tableIds?`, `tableNames?`, `groupNames?` | Das ganze Dokument auf einmal in einem von vier Formaten oder die DDL nur einiger Tabellen oder Tabellengruppen. |
 | `erd_list_checks` | `level?`, `tableIds?`, `tableNames?`, `offset?`, `limit?` | Was die Wörterbücher der Wörter, Begriffe und Domänen als fehlerhaft finden, so wie das Blatt `Checks` der Registerkarte Wörterbuch des Editors es auflistet, seitenweise. Es ändert nichts – siehe [Wörterbuchprüfungen](#dictionary-checks). |
 
 Ein Agent findet IDs mit `erd_list`, liest Spalten, Wörterbuchzeilen und weitere Details mit `erd_get` und übergibt diese IDs an die Bearbeitungs-Tools.
 Die Größe einer Tabelle in `erd_list` ist der Rahmen, den sie auf der Zeichenfläche einnimmt: die Höhe exakt, die Breite ungefähr.
-Eine Tabellengruppe wird mit dem Rechteck aufgeführt, das sie speichert, sowie mit ihrem Namen, ihrer Farbe und der Zahl der Tabellen, die sie enthält.
+Eine Tabellengruppe wird mit dem Rechteck aufgeführt, das sie speichert, sowie mit ihrem Namen, ihrer Farbe und der Zahl der Tabellen und Notizen, die sie enthält.
 Jede Beziehung wird einmal aufgeführt, bei einer ihrer beiden Tabellen.
 Eine Wörterbuchzeile wird mit ihrer ID, ihrem `name` und dem aufgeführt, was sie einem physischen Namen oder einer Spalte gibt: dem `dataType` einer Domäne, dem `physicalName` und der `domainId` eines Begriffs und der `abbreviation` eines Worts. Jedes Wörterbuch listet seine Zeilen in der Reihenfolge auf, die sein Blatt zeigt.
 Die Einstellungen, die `erd_list` und `erd_read` melden, sind die, die die Datei speichert – siehe [Einstellungen](#settings).
@@ -45,7 +45,7 @@ Jede Spalte trägt ihre `domainId`, ebenso jeder Begriff: eine leere Zeichenkett
 
 | `format` | Was es liefert |
 | --- | --- |
-| `snapshot` | Kompaktes JSON mit jeder Entität und ihrer ID, Tabellengruppen und die Zeilen der Wörter, Begriffe und Domänen eingeschlossen, und den Einstellungen mit den Skripten von Schema SQL. Es lässt weg, was sich von Betrachter zu Betrachter unterscheidet: gemessene Breiten, die Stapelreihenfolge, die Ansicht, die Registerkarte und die Namensansicht. Bei einem großen Schema umfangreich. |
+| `snapshot` | Kompaktes JSON mit jeder Entität und ihrer ID, Tabellengruppen mit ihren Tabellen und Notizen und die Zeilen der Wörter, Begriffe und Domänen eingeschlossen, und den Einstellungen mit den Skripten von Schema SQL. Es lässt weg, was sich von Betrachter zu Betrachter unterscheidet: gemessene Breiten, die Stapelreihenfolge, die Ansicht, die Registerkarte und die Namensansicht. Bei einem großen Schema umfangreich. |
 | `sql` | DDL für eine der acht Datenbanken `Databricks`, `MariaDB`, `MSSQL`, `MySQL`, `Oracle`, `PostgreSQL`, `Snowflake` oder `SQLite`. `vendor` ist standardmäßig die Datenbank, auf die das Dokument eingestellt ist. Die DDL des ganzen Dokuments enthält seine Skripte vor und nach den Tabellen. Mit `tableIds`, `tableNames` oder `groupNames` nur diese Tabellen, mit den Fremdschlüsseln, die sie enthalten, und ohne Skripte. Fremdschlüssel enthalten ihre Aktionen für ON DELETE und ON UPDATE, außer denen, die die Zieldatenbank weglässt – siehe [ON DELETE und ON UPDATE](../guide/guides/relationship-editing.md#on-delete-and-on-update). |
 | `json` | Das ganze Dokument genau so, wie ein Speichern die Datei schreibt, einschließlich aller Änderungen, die der Editor noch nicht gespeichert hat – siehe [Speicherform](../api/advanced/schema.md#storage-form). |
 | `scripts` | Nur die Skripte vor und nach den Tabellen des Dokuments, als `{"before":"…","after":"…"}`, jedes leer, wenn es nicht gesetzt ist, wie groß das Schema auch sein mag. |
@@ -103,6 +103,37 @@ Jede Prüfung nennt `level`, `code` sowie `kind` und `id` ihres Objekts: `table`
 
 Wie jede Prüfung einen Namen liest, steht in [Was jede Prüfung findet](../guide/guides/dictionary.md#what-each-check-finds).
 
+## SVG-Export {#svg-export}
+
+| Tool | Argumente | Was es tut |
+| --- | --- | --- |
+| `erd_export_svg` | `output?`, `darkMode?`, `background?` | Zeichnet das Dokument als SVG-Bild und schreibt es in die Datei `.svg`, die `output` nennt, oder gibt ohne `output` den SVG-Text zurück. Es ändert kein Dokument. |
+
+Der Server zeichnet das Bild selbst, daher ist dafür nur die Server-Version `1.2.1` oder neuer nötig, und das Tool funktioniert mit jeder Version der Erweiterung oder des Plugins für ERD Editor, die sich verbindet.
+Wie `toImage()` zeichnet es das Bild, das der Dialog `Export image` des Editors als SVG speichert, aber allein aus dem Dokument: das ganze Diagramm bei 100 %, ohne das, was die Ansichtsoptionen im Dokument ausblenden, in den Farben des Presets, mit den Namen von Tabellen und Spalten in der Namensansicht, die das Dokument enthält, und mit den eigenen Wörtern des Diagramms auf Englisch – siehe [Was gezeichnet wird](../api/to-image.md#what-it-draws).
+Der Server misst Text ohne die Schriften des Editors, sodass eine Tabelle etwas breiter ausfallen kann, als der Editor sie zeichnet.
+Es gibt kein PNG und kein Kopieren in die Zwischenablage.
+
+- `darkMode`: `true` zeichnet das dunkle Design; `false`, der Standard, das helle. Kein Design der Anzeige eines Editors erreicht das Bild.
+- `background`: `true`, der Standard, malt die Farbe der Zeichenfläche hinter das Diagramm; `false` lässt den Hintergrund transparent.
+- `output`: die Datei, die geschrieben wird, absolut oder relativ zum Arbeitsverzeichnis des Servers, mit einem Namen, der in beliebiger Groß-/Kleinschreibung auf `.svg` endet, in einem Ordner, der bereits existiert. Eine bereits vorhandene Datei wird über eine temporäre Datei neben ihr ersetzt, und eine symbolische Verknüpfung wird bis zu der Datei verfolgt, auf die sie zeigt.
+
+Der Export liest das Dokument wie die Lese-Tools: was der Editor, der es bedient, hält, noch nicht gespeicherte Änderungen eingeschlossen, oder sonst die Datei. Wie ein Lesevorgang öffnet er das Dokument nie in einem Editor.
+Der Wert von `mode` in seiner Antwort gibt an, welcher Fall vorliegt: `live`, `headless` oder, wenn ein Editor mit ausgeschaltetem Hub das Dokument hält, `blocked`, mit einem Hinweis, dass die Datei auf dem Datenträger ohne die in diesem Editor noch nicht gespeicherten Änderungen gezeichnet wurde – siehe [Live und Headless](./live-and-headless.md).
+
+Mit `output` ist die Antwort eine JSON-Zeile: der `mode`, der `path` des Dokuments, die geschriebene Datei als `output`, ihre Größe in `bytes`, die `width` und `height` des SVG und `notes`, wenn es welche gibt.
+
+```json
+{"mode":"headless","path":"/work/shop.erd.json","output":"/work/docs/shop.svg","bytes":48213,"width":1210,"height":764}
+```
+
+Ohne `output` ist die Antwort der SVG-Text, dann `{"mode":"…"}` mit etwaigen Hinweisen. Ein SVG mit mehr als 40.000 Zeichen, dem Höchstwert, den eine Antwort zurückgibt, wird mit `tooLarge` abgelehnt: Übergeben Sie `output`, damit es stattdessen in eine Datei geschrieben wird.
+
+`output` wird geprüft, bevor das Dokument gelesen wird, sodass eine abgelehnte Angabe kein Zeichnen kostet: Eine leere, ein Name, der nicht auf `.svg` endet, einer, der einen Ordner nennt, und eine symbolische Verknüpfung, die zu keiner Datei oder zu einer Datei führt, deren Name nicht auf `.svg` endet, werden mit `invalidPath` abgelehnt, und eine in einem Ordner, der nicht existiert, mit `notFound`. Eine schreibgeschützte Datei wird mit `readonly` abgelehnt, sobald das Bild gezeichnet ist, und bleibt unverändert.
+
+Ein Export erzeugt keinen Rückgängig-Eintrag und hinterlässt nichts zu speichern, und `erd_batch` lehnt ihn ab, wie es ein Lese-Tool ablehnt.
+Ein großes Diagramm braucht einige Sekunden zum Zeichnen, und der Server zeichnet immer nur einen Export gleichzeitig.
+
 ## Bearbeitungs-Tools {#edit-tools}
 
 IDs stammen aus `erd_list` und `erd_get` oder aus den `createdIds` des Aufrufs, der die Entität erstellt hat.
@@ -121,7 +152,7 @@ Eine neue ID besteht aus 25 Kleinbuchstaben und Ziffern, etwa `03h17be2plxpj5n59
 | `erd_change_table_color` | `tableId`, `color` | Legt die Farbe einer Tabelle fest. |
 | `erd_move_table` | `tableId`, `x`, `y` | Verschiebt eine Tabelle an eine Position auf der Zeichenfläche. |
 | `erd_move_tables` | `positions` | Verschiebt mehrere Tabellen in einer Änderung, die ein einziges `erd_undo` rückgängig macht. `positions` enthält `{ tableId, x, y }` pro Tabelle, jede Tabelle höchstens einmal. |
-| `erd_sort_tables` | | Ordnet alle Tabellen in Zeilen über die Zeichenfläche an, die mit den wenigsten Spalten zuerst, so wie `erd_import_sql`, `erd_import_graphql`, `erd_import_dbml` und `erd_import_aml` sie anordnen. Die Tabellen einer Tabellengruppe bleiben zusammen, und der Rahmen jeder Gruppe wird um sie herum angepasst. |
+| `erd_sort_tables` | | Ordnet alle Tabellen in Zeilen über die Zeichenfläche an, die mit den wenigsten Spalten zuerst, so wie `erd_import_sql`, `erd_import_graphql`, `erd_import_dbml` und `erd_import_aml` sie anordnen. Die Tabellen einer Tabellengruppe bleiben zusammen, gefolgt von ihren Notizen, solange Notizen eingeblendet sind, und der Rahmen jeder Gruppe wird um sie herum angepasst. Solange Notizen ausgeblendet sind, bewegen sich die Notizen einer Gruppe mit ihren Tabellen. Eine Notiz ohne Gruppe oder in einer Gruppe ohne Tabelle bleibt, wo sie ist. |
 
 ### Spalten {#columns}
 
@@ -190,28 +221,33 @@ Die ID einer Indexspalte ist ein Eintrag der Spaltenliste des Index, die `erd_ge
 | `erd_move_memo` | `memoId`, `x`, `y` | Verschiebt eine Notiz an eine Position auf der Zeichenfläche. |
 | `erd_resize_memo` | `memoId`, `width`, `height` | Ändert die Größe einer Notiz. Die Breite muss mindestens etwa `116` Pixel und die Höhe mindestens `100` betragen. Es erzeugt keinen Rückgängig-Eintrag, da der Editor eine Größenänderung einer Notiz nur beim Ziehen aufzeichnet. |
 
+Eine Notiz kann in einer Tabellengruppe sein, mit der sie sich bewegt – siehe [Tabellengruppen](#table-groups).
+
 Solange Notizen über [View Option](../guide/guides/table-related-functions.md#table-view-options) → `Memos` ausgeblendet sind, fügt `erd_add_memo` trotzdem eine hinzu, und sie bleibt ausgeblendet, bis Notizen wieder eingeblendet werden.
 `erd_list` und `erd_get` listen auch ausgeblendete Notizen auf.
 
 ### Tabellengruppen {#table-groups}
 
-Eine Tabellengruppe ist ein benannter Rahmen, der hinter ihren Tabellen gezeichnet wird, und ihre Farbe erscheint auf dem Rahmen und quer über die Tabellenköpfe ihrer Tabellen – siehe [Tabellengruppen](../guide/guides/table-groups.md).
-Eine Tabelle gehört höchstens zu einer Gruppe. `erd_move_table`, `erd_move_tables` und `erd_move_table_group` ändern nie, welche Tabellen eine Gruppe enthält, wohin sie eine Tabelle auch setzen, während im Editor eine Tabelle dort, wo sie abgelegt wird, einer Gruppe beitritt oder sie verlässt – siehe [Tabellen hinzufügen und entfernen](../guide/guides/table-groups.md#adding-and-removing-tables). `erd_add_table_group` und `erd_set_table_group` fügen Tabellen einer Gruppe hinzu, und `erd_remove_table_group` lässt ihre Tabellen ohne Gruppe zurück.
-Eine Gruppe speichert ein Rechteck, mindestens `160` Pixel breit und `100` hoch, die Titelleiste eingeschlossen, und der Editor zeichnet den Rahmen so vergrößert, dass er jede ihrer Tabellen aufnimmt.
+Eine Tabellengruppe ist ein benannter Rahmen, der hinter ihren Tabellen und Notizen gezeichnet wird, und ihre Farbe erscheint auf dem Rahmen und quer über die Tabellenköpfe ihrer Tabellen und die Kopfbänder ihrer Notizen – siehe [Tabellengruppen](../guide/guides/table-groups.md).
+Eine Tabelle oder eine Notiz gehört höchstens zu einer Gruppe. `erd_move_table`, `erd_move_tables`, `erd_move_memo` und `erd_move_table_group` ändern nie, was eine Gruppe enthält, wohin sie eine Tabelle oder eine Notiz auch setzen, während im Editor eine Tabelle oder eine Notiz dort, wo sie abgelegt wird, in eine Gruppe aufgenommen wird oder ihre Gruppe verlässt – siehe [Tabellen hinzufügen und entfernen](../guide/guides/table-groups.md#adding-and-removing-tables). `erd_add_table_group` fügt Tabellen und Notizen einer Gruppe hinzu, `erd_set_table_group` Tabellen und `erd_set_memo_group` Notizen, und `erd_remove_table_group` lässt ihre Tabellen und Notizen ohne Gruppe zurück.
+Eine Gruppe speichert ein Rechteck, mindestens `160` Pixel breit und `100` hoch, die Titelleiste eingeschlossen, und der Editor zeichnet den Rahmen so vergrößert, dass er jede ihrer Tabellen und, solange Notizen eingeblendet sind, jede ihrer Notizen aufnimmt.
 
 | Tool | Argumente | Was es tut |
 | --- | --- | --- |
-| `erd_add_table_group` | `name`, `color?`, `x?`, `y?`, `width?`, `height?`, `tableIds?` | Fügt eine Gruppe hinzu und gibt ihre ID in `createdIds` zurück. Übergeben Sie entweder `tableIds` oder ein Rechteck, also `x`, `y`, `width` und `height` zusammen. Mit `tableIds` verlässt jede Tabelle eine etwaige bisherige Gruppe, und das Rechteck wird so um sie herum angepasst, wie es beim [Gruppieren ausgewählter Tabellen](../guide/guides/table-groups.md#grouping-selected-tables) geschieht. Ein Rechteck nimmt jede Tabelle ohne Gruppe auf, deren Mittelpunkt darin liegt, wie beim [Zeichnen einer Gruppe](../guide/guides/table-groups.md#drawing-a-group). Ein leerer Wert von `name` lässt die Gruppe unbenannt. Ein einziges `erd_undo` entfernt die Gruppe und setzt jede Tabelle in die Gruppe zurück, in der sie war. |
-| `erd_remove_table_group` | `groupId` | Entfernt eine Gruppe. Ihre Tabellen bleiben, wo sie sind, ohne Gruppe. |
+| `erd_add_table_group` | `name`, `color?`, `x?`, `y?`, `width?`, `height?`, `tableIds?`, `memoIds?` | Fügt eine Gruppe hinzu und gibt ihre ID in `createdIds` zurück. Übergeben Sie entweder `tableIds`, mit beliebigen `memoIds` daneben, oder ein Rechteck, also `x`, `y`, `width` und `height` zusammen. Mit `tableIds` verlässt jede Tabelle und Notiz eine etwaige bisherige Gruppe, und das Rechteck wird um sie herum angepasst, die Notizen nur, solange Notizen eingeblendet sind, so wie es beim [Gruppieren ausgewählter Tabellen](../guide/guides/table-groups.md#grouping-selected-tables) geschieht. Ein Rechteck nimmt jede Tabelle und jede eingeblendete Notiz ohne Gruppe auf, deren Mittelpunkt darin liegt, wie beim [Zeichnen einer Gruppe](../guide/guides/table-groups.md#drawing-a-group). Ein leerer Wert von `name` lässt die Gruppe unbenannt. Ein einziges `erd_undo` entfernt die Gruppe und setzt jede Tabelle und Notiz in die Gruppe zurück, in der sie war. |
+| `erd_remove_table_group` | `groupId` | Entfernt eine Gruppe. Ihre Tabellen und Notizen bleiben, wo sie sind, ohne Gruppe. |
 | `erd_change_table_group_name` | `groupId`, `value` | Benennt eine Gruppe um. Eine leere Zeichenkette lässt sie unbenannt. |
 | `erd_change_table_group_color` | `groupId`, `color` | Legt die Farbe einer Gruppe fest. |
-| `erd_move_table_group` | `groupId`, `x`, `y` | Verschiebt eine Gruppe so, dass ihr Rechteck an diesem Punkt beginnt, und ihre Tabellen um denselben Versatz mit, wie beim Ziehen ihrer Titelleiste. Eine Verschiebung um weniger als 20 Pixel, waagerecht und senkrecht zusammengerechnet, erzeugt keinen Rückgängig-Eintrag. Seit dem Server `1.2.0` erreicht die Verschiebung den Editor als die Punkte, an denen die Gruppe und ihre Tabellen enden; mit der Erweiterung für VS Code `4.3.0` oder neuer oder dem Plugin für Obsidian oder JetBrains `1.3.0` oder neuer endet daher eine zeitgleich dort vorgenommene Verschiebung der Gruppe oder einer ihrer Tabellen bei einer der beiden Positionen, nie bei ihrer Summe – siehe [Zeitgleich vorgenommene Bearbeitungen](./live-and-headless.md#edits-made-at-the-same-moment). |
-| `erd_resize_table_group` | `groupId`, `x?`, `y?`, `width`, `height` | Legt das Rechteck einer Gruppe fest, wobei ihre Tabellen bleiben, wo sie sind. Ohne `x` und `y` bleibt ihre Ecke erhalten. Ein Rechteck, das die Tabellen der Gruppe samt ihrem Innenabstand nicht aufnehmen würde, wird abgelehnt, mit einer Meldung, die den Rahmen nennt, den es aufnehmen muss. |
+| `erd_move_table_group` | `groupId`, `x`, `y` | Verschiebt eine Gruppe so, dass ihr Rechteck an diesem Punkt beginnt, und ihre Tabellen und Notizen, ausgeblendete Notizen eingeschlossen, um denselben Versatz mit, wie beim Ziehen ihrer Titelleiste. Eine Verschiebung um weniger als 20 Pixel, waagerecht und senkrecht zusammengerechnet, erzeugt keinen Rückgängig-Eintrag. Seit dem Server `1.2.0` erreicht die Verschiebung den Editor als die Punkte, an denen die Gruppe und ihre Tabellen enden; mit der Erweiterung für VS Code `4.3.0` oder neuer oder dem Plugin für Obsidian oder JetBrains `1.3.0` oder neuer endet daher eine zeitgleich dort vorgenommene Verschiebung der Gruppe oder einer ihrer Tabellen bei einer der beiden Positionen, nie bei ihrer Summe – siehe [Zeitgleich vorgenommene Bearbeitungen](./live-and-headless.md#edits-made-at-the-same-moment). Seit dem Server `1.2.1` gehen die Punkte, an denen ihre Notizen enden, im selben Stapel mit. |
+| `erd_resize_table_group` | `groupId`, `x?`, `y?`, `width`, `height` | Legt das Rechteck einer Gruppe fest, wobei ihre Tabellen und Notizen bleiben, wo sie sind. Ohne `x` und `y` bleibt ihre Ecke erhalten. Ein Rechteck, das die Tabellen und eingeblendeten Notizen der Gruppe samt ihrem Innenabstand nicht aufnehmen würde, wird abgelehnt, mit einer Meldung, die den Rahmen nennt, den es aufnehmen muss. |
 | `erd_set_table_group` | `tableIds`, `groupId` | Fügt Tabellen einer Gruppe hinzu, wobei jede eine etwaige bisherige Gruppe verlässt. Der Wert `null` oder eine leere Zeichenkette für `groupId` nimmt sie aus jeder Gruppe heraus. |
+| `erd_set_memo_group` | `memoIds`, `groupId` | Fügt Notizen einer Gruppe hinzu, wobei jede eine etwaige bisherige Gruppe verlässt und bleibt, wo sie ist. Der Wert `null` oder eine leere Zeichenkette für `groupId` nimmt sie aus jeder Gruppe heraus. |
 
 Solange Gruppen über `View Option` → `Table Groups` ausgeblendet sind, fügen diese Tools trotzdem Gruppen hinzu und ändern sie, und diese bleiben ausgeblendet, bis Gruppen eingeblendet werden – siehe [Gruppen ausblenden](../guide/guides/table-groups.md#hiding-groups).
-`erd_sort_tables` hält die Tabellen jeder Gruppe zusammen, `erd_import_dbml` und `erd_import_json` bringen Gruppen mit – siehe [Import](#import) – und `erd_read` schreibt mit `groupNames` die DDL ausgewählter Gruppen.
+Mit View Option → `Memos` ausgeblendete Notizen bleiben in ihren Gruppen und bewegen sich mit ihnen, und `erd_set_memo_group` und die `memoIds` von `erd_add_table_group` fügen sie einer Gruppe hinzu wie eingeblendete.
+`erd_sort_tables` hält die Tabellen und Notizen jeder Gruppe zusammen, `erd_import_dbml` und `erd_import_json` bringen Gruppen mit – siehe [Import](#import) – und `erd_read` schreibt mit `groupNames` die DDL ausgewählter Gruppen.
 Eine Version von ERD Editor, die noch keine Tabellengruppen kennt, verwirft beim Speichern einer Datei deren Gruppen, wie es die Erweiterung für VS Code vor `4.0.0` und die Plugins für Obsidian und JetBrains vor `1.0.0` tun – siehe [Aktualisieren](./installation.md#updating).
+Eine Version aus der Zeit, bevor Notizen zu Tabellengruppen gehören konnten, also die Erweiterung für VS Code vor `4.3.1` und die Plugins für Obsidian und JetBrains vor `1.3.1`, zeigt nicht an, in welcher Gruppe eine Notiz ist, behält es auch nicht und speichert die Datei daher mit jeder Notiz ohne Gruppe, ebenso ein Server vor `1.2.1`, der die Datei auf dem Datenträger schreibt – siehe [Aktualisieren](./installation.md#updating).
 
 ### Wörterbücher {#dictionaries}
 
@@ -304,14 +340,14 @@ In einem Editor mit der Erweiterung für VS Code `4.3.0` oder neuer oder dem Plu
 - Beziehungen und Indizes kommen nur zwischen den Tabellen hinzu, die der Import mitbringt, daher wird ein Fremdschlüssel auf eine Tabelle, die der Text nicht deklariert, verworfen.
 - `erd_import_sql`, `erd_import_graphql` und `erd_import_aml` fügen Tabellen mit ihren Beziehungen und Indizes hinzu, und `erd_import_dbml` auch seine Tabellengruppen. `erd_import_json` fügt Tabellen, Beziehungen, Indizes, Notizen und Tabellengruppen hinzu, nie seine Einstellungen, und lehnt einen leeren Text ab. Seine Tabellen und Spalten bringen ihre logischen Namen mit, aber keine Spalte ist mit einer Domäne verknüpft, und von den Wörtern, Begriffen und Domänen des JSON kommt nichts hinzu.
 
-Ein JSON-Dokument behält seine eigene Anordnung, seine Tabellengruppen eingeschlossen: mit `replace` dort, wo es seine Tabellen platziert, und mit `append` innerhalb des hinzugefügten Blocks.
+Ein JSON-Dokument behält seine eigene Anordnung, seine Tabellengruppen eingeschlossen, mit den Tabellen und Notizen, die jede enthält: mit `replace` dort, wo es seine Tabellen platziert, und mit `append` innerhalb des hinzugefügten Blocks.
 Die Tabellen aus SQL, GraphQL, DBML und AML werden in Zeilen angeordnet, die mit den wenigsten Spalten zuerst und die Tabellen jeder Gruppe zusammen, so wie `erd_sort_tables` sie platziert, nie per `Flow`, wie sie der Import des Editors selbst nach Möglichkeit anordnet. Diese vier Tools lehnen in beiden Modi einen leeren Text ab.
 
 ## erd_batch {#erd_batch}
 
 `erd_batch` führt mehrere Bearbeitungs-Tools der Reihe nach als eine Änderung aus, alle oder keines.
 
-- `operations` enthält bis zu 100 Einträge, jeder `{ tool, as?, args? }`, wobei `tool` ein Bearbeitungs-Tool ist und `args` die Argumente des Tools ohne `path` sind. Ein Lese-Tool wie `erd_list_checks` wird abgelehnt.
+- `operations` enthält bis zu 100 Einträge, jeder `{ tool, as?, args? }`, wobei `tool` ein Bearbeitungs-Tool ist und `args` die Argumente des Tools ohne `path` sind. Ein Lese-Tool wie `erd_list_checks` wird abgelehnt, ebenso `erd_export_svg`.
 - Die Operationen werden zuerst an einer Kopie des Dokuments erprobt. Eine abgelehnte wird genannt, etwa `operations[1] erd_remove_table: …`, und nichts wird angewendet.
 - Ein einziges `erd_undo` macht den ganzen Stapel rückgängig, abgesehen von den Operationen, die es nicht rückgängig machen kann und die `undoNote` im Ergebnis nennt: die eines Tools, das keinen Rückgängig-Eintrag erzeugt, etwa `erd_set_database`, und die, die das Dokument geändert haben, ohne einen zu erzeugen, etwa ein kurzes `erd_move_table_group`. Einen Stapel, der überhaupt keinen Rückgängig-Eintrag erzeugt hat, überspringt `erd_undo`. `historyEntries` im Ergebnis zählt die Verlaufseinträge des Editors darin, nicht Aufrufe von `erd_undo`.
 - In einer Live-Sitzung übernimmt der Editor den ganzen Stapel oder nichts davon.
@@ -391,21 +427,21 @@ Eine Ablehnung ist ein Fehlerergebnis mit einem Code und einer Meldung, die sagt
 
 | `code` | Grund |
 | --- | --- |
-| `notFound` | Eine ID bezeichnet nichts Vorhandenes, oder die Datei existiert nicht. |
+| `notFound` | Eine ID bezeichnet nichts Vorhandenes, die Datei existiert nicht, oder der Ordner von `output` bei `erd_export_svg` existiert nicht. |
 | `invalidArgs` | Ein Argument fehlt oder hat den falschen Wert. |
-| `invalidPath` | Der Pfad ist kein ERD-Dokument. Unter Windows auch ein Pfad mit einem Namen, den Windows nicht so speichert, wie er geschrieben ist, oder einer, der ein Dokument erreicht, das ein Editor unter einem anderen Pfad hält, den die Meldung nennt. |
+| `invalidPath` | Der Pfad ist kein ERD-Dokument, oder `output` bei `erd_export_svg` ist keine Datei `.svg` – siehe [SVG-Export](#svg-export). Unter Windows auch ein Pfad mit einem Namen, den Windows nicht so speichert, wie er geschrieben ist, oder einer, der ein Dokument erreicht, das ein Editor unter einem anderen Pfad hält, den die Meldung nennt. |
 | `invalidDocument` | Die Datei ist kein Dokument, das der Editor lesen kann. |
-| `tooLarge` | Ein Lesevorgang passt nicht in eine Antwort. |
+| `tooLarge` | Ein Lesevorgang oder ein SVG, das ohne `output` angefordert wurde, passt nicht in eine Antwort. |
 | `blocked` | Ein Editor mit ausgeschaltetem Hub hält das Dokument. Die Meldung sagt, wie der Hub eingeschaltet wird: Vertrauen Sie in VS Code dem Arbeitsbereich und schalten Sie `dineug.erd-editor.agentHub.enabled` ein, oder laden Sie das Fenster neu; schalten Sie in Obsidian Coding agents ein, oder laden Sie Obsidian neu; schalten Sie in einer JetBrains-IDE Coding agents ein, oder starten Sie die IDE neu, wenn Coding agents eingeschaltet ist. |
 | `hubDisabled` | Eine JetBrains-IDE hält das Dokument nur in einem Projekt, dem sie nicht vertraut. Lesevorgänge funktionieren weiterhin; vertrauen Sie dem Projekt, damit der Agent Änderungen vornehmen kann. |
 | `conflict` | Die Datei hat sich während des Aufrufs auf dem Datenträger geändert. Es wurde nichts geschrieben. |
 | `hubAppeared`, `hubGone` | Ein Editor hat begonnen, ein Dokument zu bedienen, das der Agent auf dem Datenträger bearbeitete, oder der Editor, der es bediente, läuft noch, aber seine Sperrdatei und Verbindung sind verschwunden. Es wurde nichts geschrieben. |
 | `notSaved` | `erd_save` konnte das Dokument des Editors nicht speichern. |
-| `readonly` | Der Editor hält das Dokument schreibgeschützt, etwa eine Datei, die er nicht schreiben oder nicht als Diagramm lesen kann. Ohne Editor ist die Datei selbst schreibgeschützt, etwa eine nicht ausgecheckte Datei in Perforce oder TFVC. Es wurde nichts geschrieben. |
+| `readonly` | Der Editor hält das Dokument schreibgeschützt, etwa eine Datei, die er nicht schreiben oder nicht als Diagramm lesen kann. Ohne Editor ist die Datei selbst schreibgeschützt, etwa eine nicht ausgecheckte Datei in Perforce oder TFVC. Bei `erd_export_svg` ist die Datei `.svg`, die sein `output` nennt, schreibgeschützt. Es wurde nichts geschrieben. |
 | `protocolMismatch` | Die Erweiterung oder das Plugin ERD Editor des Editors und der Server sprechen unterschiedliche Protokollversionen, etwa Server `1.0.0` oder neuer mit einer Erweiterung für VS Code in Version `3.x`. Auch Lesevorgänge werden abgelehnt, und die Meldung nennt die Seite, die aktualisiert werden muss – siehe [Aktualisieren](./installation.md#updating). |
 | `hubUnreachable`, `timeout`, `disconnected` | Der Hub eines Editors hat die Verbindung nicht angenommen, nicht innerhalb von 30 Sekunden geantwortet oder sie während des Aufrufs getrennt. Unter Windows bedeutet `hubUnreachable` auch, dass Windows den Agenten vom Hub ferngehalten hat: Der Editor läuft mit mehr Rechten als der Agent, etwa wenn er als Administrator gestartet wurde und der Agent nicht, oder der Agent läuft in einer Sandbox. |
 
 Andere Codes sind seltener, und jede Ablehnung enthält eine Meldung, die sagt, was passiert ist.
 
-Die Bearbeitungs-Tools, `erd_batch` und die vier Lese-Tools lehnen ein Argument, das sie nicht deklarieren, oder eines mit falschem Typ mit einem JSON-RPC-Fehler für ungültige Parameter (`-32602`) ab, bevor sie das Dokument berühren, sodass ein falsch geschriebenes Argument nie stillschweigend verworfen wird.
+Die Bearbeitungs-Tools, `erd_batch`, die vier Lese-Tools und `erd_export_svg` lehnen ein Argument, das sie nicht deklarieren, oder eines mit falschem Typ mit einem JSON-RPC-Fehler für ungültige Parameter (`-32602`) ab, bevor sie das Dokument berühren, sodass ein falsch geschriebenes Argument nie stillschweigend verworfen wird.
 Die fünf Sitzungs-Tools ignorieren Argumente, die sie nicht kennen.

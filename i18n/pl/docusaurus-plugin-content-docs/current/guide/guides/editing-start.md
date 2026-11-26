@@ -55,16 +55,17 @@ Gdy pozycja View Option → `Memos` jest wyłączona, notatki są ukryte, pozycj
 Notatka to swobodny tekst umieszczony na kanwie. Kliknij wewnątrz notatki i wpisuj tekst; jest on zapisywany razem z dokumentem.  
 Klawisz `Escape` zamyka edytor notatki, zachowując wpisany tekst i pozostawiając notatkę zaznaczoną, a drugie naciśnięcie klawisza `Escape` anuluje zaznaczenie.  
 Przeciągnij krawędź notatki, aby zmienić jej rozmiar. Przycisk `x` w nagłówku, widoczny, gdy wskaźnik znajduje się nad notatką, usuwa ją.  
-Kliknięcie notatki prawym przyciskiem myszy otwiera jej menu, a nie edytor: pozycje `Color`, `Remove color`, gdy któryś z zaznaczonych elementów ma kolor, oraz `Delete`, która brzmi `Delete selected`, gdy notatka jest jednym z co najmniej dwóch zaznaczonych elementów. Zaznaczoną notatkę usuwają też te same klawisze, które usuwają tabele – zobacz sekcję [Usuwanie tabel i notatek](./table-related-functions.md#table-and-memo-deletion).
+Kliknięcie notatki prawym przyciskiem myszy otwiera jej menu, a nie edytor: pozycje `Color`, `Remove color`, gdy któryś z zaznaczonych elementów ma kolor, `Group selected tables`, gdy zaznaczenie zawiera tabelę i grupy tabel są widoczne, `Remove from group`, gdy zaznaczona tabela lub notatka należy do grupy, oraz `Delete`, która brzmi `Delete selected`, gdy notatka jest jednym z co najmniej dwóch zaznaczonych elementów. Zaznaczoną notatkę usuwają też te same klawisze, które usuwają tabele – zobacz sekcję [Usuwanie tabel i notatek](./table-related-functions.md#table-and-memo-deletion).  
+Podobnie jak tabela, notatka dołącza do [grupy tabel](./table-groups.md) albo ją opuszcza zależnie od miejsca, w którym ją upuścisz. Wyjmuje ją też pozycja `Remove from group`, a pozycja `Group selected tables` umieszcza ją w nowej grupie razem z tabelami zaznaczonymi wraz z nią – zobacz sekcję [Dodawanie i usuwanie tabel](./table-groups.md#adding-and-removing-tables).
 
 ![Dodawanie notatki skrótem Alt + M, wpisywanie tekstu i przeciąganie jej krawędzi w celu zmiany rozmiaru](/img/demo-memo.webp)
 
 ## Tworzenie grupy tabel {#table-group-creation}
 
-Grupa tabel to ramka zawierająca tabele, której możesz nadać nazwę i kolor. Utwórz ją na jeden z dwóch sposobów:
+Grupa tabel to ramka zawierająca tabele i notatki, której możesz nadać nazwę i kolor. Utwórz ją na jeden z dwóch sposobów:
 
-- Wybierz `New Table Group` w menu kontekstowym lub w Szybkim wyszukiwaniu, kliknij przycisk `New Table Group` na [pasku narzędzi kanwy](./table-related-functions.md#canvas-toolbar) albo naciśnij `Alt + G` (Windows/Linux) lub `⌥ + G` (Mac), a następnie przeciągnij po kanwie, aby narysować ramkę. Każda tabela, której środek leży wewnątrz ramki, dołącza do nowej grupy, chyba że należy już do innej grupy – zobacz sekcję [Rysowanie grupy](./table-groups.md#drawing-a-group).
-- Zaznacz tabele i wybierz `Group selected tables` w menu kontekstowym tabeli lub `Group Selected Tables` w Szybkim wyszukiwaniu albo naciśnij `T`, a potem `G` – zobacz sekcję [Grupowanie zaznaczonych tabel](./table-groups.md#grouping-selected-tables).
+- Wybierz `New Table Group` w menu kontekstowym lub w Szybkim wyszukiwaniu, kliknij przycisk `New Table Group` na [pasku narzędzi kanwy](./table-related-functions.md#canvas-toolbar) albo naciśnij `Alt + G` (Windows/Linux) lub `⌥ + G` (Mac), a następnie przeciągnij po kanwie, aby narysować ramkę. Każda tabela i każda widoczna notatka, której środek leży wewnątrz ramki, dołącza do nowej grupy, chyba że należy już do innej grupy – zobacz sekcję [Rysowanie grupy](./table-groups.md#drawing-a-group).
+- Zaznacz tabele i ewentualnie notatki, które mają do nich dołączyć, a następnie wybierz `Group selected tables` w menu kontekstowym tabeli lub notatki bądź `Group Selected Tables` w Szybkim wyszukiwaniu albo naciśnij `T`, a potem `G` – zobacz sekcję [Grupowanie zaznaczonych tabel](./table-groups.md#grouping-selected-tables).
 
 Nazywanie, kolorowanie, przenoszenie, zmianę rozmiaru i pozostałe operacje opisano na stronie [Grupy tabel](./table-groups.md).
 

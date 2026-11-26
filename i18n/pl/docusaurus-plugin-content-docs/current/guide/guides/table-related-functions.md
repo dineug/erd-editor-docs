@@ -7,7 +7,7 @@ description: Zaznaczanie, przenoszenie, kopiowanie, duplikowanie i usuwanie tabe
 
 Wszystko, co robisz z tabelami i notatkami, gdy już istnieją – zaznaczanie, przenoszenie, kopiowanie, usuwanie, kolorowanie i ustawianie tego, co pokazuje kanwa – oraz otaczające je elementy sterowania kanwą.  
 Najpierw opisano polecenia dotyczące tabel i notatek; potem właściwości tabeli, skupianie widoku na tabelach, indeksy i klucze alternatywne, automatyczny układ i system bazy danych; potem samą kanwę: pasek narzędzi kanwy, powiększenie, przesuwanie widoku i to, dokąd prowadzi przejście, oraz podgląd różnic; a na końcu to, co z tego wszystkiego zachowuje edytor tylko do odczytu.  
-Grupy tabel, czyli ramki skupiające tabele, mają własną stronę – zobacz stronę [Grupy tabel](./table-groups.md).  
+Grupy tabel, czyli ramki skupiające tabele i notatki, mają własną stronę – zobacz stronę [Grupy tabel](./table-groups.md).  
 Własną stronę mają też nazwy logiczne i Widok nazw, który określa, jakie nazwy pokazują tabele – zobacz stronę [Nazwy logiczne](./logical-names.md).
 
 ## Zaznaczanie wielu elementów {#multiple-selection}
@@ -21,7 +21,7 @@ Dostępne są trzy sposoby:
 Notatki zaznacza się w ten sam sposób, a każdy z obu skrótów zaznaczania wszystkiego obejmuje naraz wszystkie tabele i notatki. Notatki ukryte za pomocą View Option → `Memos` są pomijane przy zaznaczaniu wszystkiego i przez ramkę zaznaczenia – zobacz sekcję [Opcje widoku tabel](#table-view-options).  
 [Grupy tabel](./table-groups.md#selecting-groups) dodaje się do zaznaczenia skrótem `Ctrl + click` (Windows/Linux) lub `⌘ + click` (Mac) na ich pasku tytułu, ale zaznaczanie wszystkiego nigdy nie obejmuje żadnej z nich.  
 Skrót `Ctrl + A` ustępuje kursorowi tekstowemu, więc podczas edycji komórki zaznacza tekst, a nie diagram.  
-Ramka zaznaczenia dodaje tabelę lub notatkę do zaznaczenia, gdy zakrywa jej środek, a nie gdy tylko dotyka jej krawędzi. Grupę tabel zaznacza tylko wtedy, gdy obejmuje całą ramkę grupy, więc ramka narysowana wewnątrz grupy wybiera tabele bez grupy.  
+Ramka zaznaczenia dodaje tabelę lub notatkę do zaznaczenia, gdy zakrywa jej środek, a nie gdy tylko dotyka jej krawędzi. Grupę tabel zaznacza tylko wtedy, gdy obejmuje całą ramkę grupy, więc ramka narysowana wewnątrz grupy wybiera tabele i notatki bez grupy.  
 Kliknięcie prawym przyciskiem myszy czegoś, co jest już zaznaczone, zachowuje całe zaznaczenie, więc pozycje menu takie jak `Color`, `Group selected tables` i `Delete selected` działają na całość. Kliknięcie prawym przyciskiem myszy dowolnej innej tabeli, notatki lub grupy tabel zaznacza tylko ten element, nawet przy przytrzymanym klawiszu `Ctrl` lub `⌘`, a kliknięcie prawym przyciskiem myszy relacji lub pustej kanwy anuluje zaznaczenie.  
 Klawisz `Escape` anuluje zaznaczenie. Gdy otwarty jest edytor komórki, notatki lub nazwy grupy tabel albo trwa rysowanie relacji lub grupy poleceniem `New Table Group`, pierwsze naciśnięcie klawisza `Escape` kończy tę czynność, a drugie anuluje zaznaczenie.  
 Edytor tylko do odczytu nie ma żadnego z tych sposobów zaznaczania: zaznacza tam tylko przejście – zobacz sekcję [Edytory tylko do odczytu](#read-only-editors).
@@ -41,10 +41,10 @@ Tabele i notatki przenosi tylko lewy przycisk myszy. Kliknięcie prawym przycisk
 
 ![Przeciągnięcie jednej z dwóch zaznaczonych tabel przenosi obie, a relacja podąża za nimi](/img/demo-table-multiple-move.webp)
 
-Zaznaczona [grupa tabel](./table-groups.md) również się przesuwa, przenosząc swoje tabele, a tabela, która jest zarówno zaznaczona, jak i należy do przenoszonej grupy, przesuwa się tylko raz.  
-Miejsce, w którym upuścisz tabelę, może przenieść ją do grupy lub z niej usunąć – zobacz sekcję [Dodawanie i usuwanie tabel](./table-groups.md#adding-and-removing-tables).
+Zaznaczona [grupa tabel](./table-groups.md) również się przesuwa, przenosząc swoje tabele i notatki, a tabela lub notatka, która jest zarówno zaznaczona, jak i należy do przenoszonej grupy, przesuwa się tylko raz.  
+Miejsce, w którym upuścisz tabelę lub notatkę, może przenieść ją do grupy lub z niej usunąć – zobacz sekcję [Dodawanie i usuwanie tabel](./table-groups.md#adding-and-removing-tables).
 
-Tabele i notatki mają wspólną kolejność warstw. Naciśnięcie tabeli lub notatki lewym albo prawym przyciskiem przenosi ją na wierzch, przed wszystkie inne tabele i notatki, a naciśnięcie paska tytułu grupy tabel lub kliknięcie prawym przyciskiem myszy jej wnętrza przenosi jej tabele na wierzch.  
+Tabele i notatki mają wspólną kolejność warstw. Naciśnięcie tabeli lub notatki lewym albo prawym przyciskiem przenosi ją na wierzch, przed wszystkie inne tabele i notatki, a naciśnięcie paska tytułu grupy tabel lub kliknięcie prawym przyciskiem myszy jej wnętrza przenosi jej tabele i notatki na wierzch.  
 Kolejność nie jest zapisywana: ponownie otwarty diagram układa tabele w kolejności, w jakiej wymienia je plik, a wszystkie notatki nad nimi.
 
 ## Kopiowanie/wklejanie tabel i notatek {#copyingpasting-tables-and-memos}
@@ -57,7 +57,7 @@ Każda skopiowana kolumna zachowuje swoją nazwę logiczną, a każda nazwa tabe
 Wklejona kolumna zachowuje powiązanie z domeną tylko wtedy, gdy spełnione są dwa warunki: diagram, do którego trafia, ma na liście dokładnie tę domenę, a nie tylko domenę o tej samej nazwie, a domena nadal ma typ danych, z którym kolumnę skopiowano. W przeciwnym razie kolumna trafia do diagramu bez domeny i zachowuje typ, z którym ją skopiowano – zobacz sekcję [Powiązanie kolumny z domeną](./dictionary.md#linking-a-column).  
 Kopiowane są też indeksy i relacje: indeks trafia w całości do skopiowanej tabeli, a relacja jest kopiowana wraz z typem i akcjami ON DELETE i ON UPDATE, gdy obie łączone przez nią tabele należą do kopiowanego zestawu. Relacja skopiowana tylko w połowie jest pomijana, zamiast wskazywać z powrotem na oryginał.  
 Wklejone kopie stają się nowym zaznaczeniem, a każde kolejne wklejenie tej samej kopii przesuwa ją o następne `50px`, więc powtarzane wklejenia nie nakładają się na siebie.  
-Kopia nie zachowuje swojej [grupy tabel](./table-groups.md): wklejona tabela nie należy do żadnej grupy, nawet jeśli znajdzie się w obrębie ramki grupy, a zaznaczona grupa nie jest kopiowana.  
+Kopia nie zachowuje swojej [grupy tabel](./table-groups.md): wklejona tabela lub notatka nie należy do żadnej grupy, nawet jeśli znajdzie się w obrębie ramki grupy, a zaznaczona grupa nie jest kopiowana.  
 Gdy View Option → `Memos` ukrywa notatki, wklejenie nadal dodaje zawarte w nim notatki, ukryte i niezaznaczone, więc nowym zaznaczeniem stają się tylko wklejone tabele.
 
 ![Kopiowanie dwóch powiązanych tabel i dwukrotne wklejanie ich razem z relacją](/img/demo-table-copy-paste.webp)
@@ -89,7 +89,7 @@ Skróty klawiaturowe:
 
 Usuwać można też z menu kontekstowych. Ostatnia pozycja menu tabeli lub notatki brzmi `Delete selected`, gdy ta tabela lub notatka jest jednym z co najmniej dwóch zaznaczonych elementów, i usuwa całe zaznaczenie. W przeciwnym razie brzmi `Delete` i usuwa tylko tę tabelę lub notatkę. Otwarte na wierszu zaznaczonej kolumny menu tabeli zawiera zamiast tego pozycję `Delete column` lub `Delete columns`, jak opisano w sekcji [Usuwanie kolumn](./table-editing.md#column-deletion).
 
-Usunięcie tabeli usuwa razem z nią jej relacje i indeksy. Usunięcie grupy tabel zachowuje jej tabele, już poza grupą – zobacz sekcję [Usuwanie grupy](./table-groups.md#removing-a-group).  
+Usunięcie tabeli usuwa razem z nią jej relacje i indeksy. Usunięcie grupy tabel zachowuje jej tabele i notatki, już poza grupą – zobacz sekcję [Usuwanie grupy](./table-groups.md#removing-a-group).  
 Nie ma potwierdzenia, każde usunięcie stanowi jeden krok cofania, a w edytorze z atrybutem `readonly` nic nie jest usuwane.  
 Przytrzymane klawisze `Delete` i `Backspace` usuwają tylko raz i nigdy nie usuwają relacji – zobacz stronę [Edycja relacji](./relationship-editing.md#deletion). Podczas pisania w komórce, notatce lub dowolnym innym polu tekstowym edytują zamiast tego tekst.  
 W Ustawieniach oba klawisze figurują jako `Delete Selection` – zobacz sekcję [Skróty klawiaturowe](./settings.md#shortcuts).
@@ -98,7 +98,7 @@ W Ustawieniach oba klawisze figurują jako `Delete Selection` – zobacz sekcję
 
 Możesz przypisywać kolory, aby rozróżniać elementy według kategorii.  
 Tabela pokazuje swój kolor wzdłuż lewej krawędzi, a notatka – na pasku u góry. Kliknij tę krawędź lub pasek lewym przyciskiem albo wybierz `Color` w menu kontekstowym tabeli lub notatki, aby otworzyć selektor kolorów przy wskaźniku. Kolor zostaje zastosowany do każdej zaznaczonej tabeli, notatki i grupy tabel, a nie tylko do klikniętego elementu.  
-Grupę tabel koloruje się pozycją `Color` w jej własnym menu, a tabela w kolorowej grupie ma kolor grupy na całym nagłówku, zachowując własny kolor na lewej krawędzi – zobacz sekcję [Kolorowanie grupy](./table-groups.md#coloring-a-group).
+Grupę tabel koloruje się pozycją `Color` w jej własnym menu, a tabela lub notatka w kolorowej grupie ma kolor grupy na całym nagłówku, zachowując własny kolor na lewej krawędzi lub na górnym pasku – zobacz sekcję [Kolorowanie grupy](./table-groups.md#coloring-a-group).
 
 ![Wybór koloru predefiniowanego Blue z paska koloru notatki dla dwóch zaznaczonych tabel i notatki, a potem usunięcie koloru za pomocą No color](/img/demo-table-color.webp)
 
@@ -143,9 +143,9 @@ To, jakie nazwy pokazują tabele, nie jest opcją widoku: pozycja `Name View`, t
 Opcja `Domain` dodaje każdej kolumnie komórkę, umieszczoną zgodnie z [kolejnością kolumn](./settings.md#adjusting-column-order), z nazwą domeny, z którą kolumna jest powiązana. Kolumna, która nie jest powiązana z żadną domeną z arkusza `Domains`, pokazuje w niej przyciemniony tekst zastępczy `domain`. Komórka jest widoczna niezależnie od Widoku nazw. Gdy opcja `Domain` jest wyłączona, widok `Logical Names` pokazuje zamiast tego nazwę powiązanej domeny w komórce typu – zobacz sekcję [Komórka domeny](./logical-names.md#the-domain-cell).  
 Opcja `Alternate Key` oznacza kolumny każdego klucza alternatywnego, na przykład `AK1.1` – zobacz sekcję [Klucze alternatywne](#alternate-keys).  
 Opcja `Referential Actions` pokazuje etykiety `D:` i `U:`, które akcje ON DELETE i ON UPDATE relacji umieszczają na końcu jej łącznika przy tabeli podrzędnej – zobacz sekcję [Odczytywanie łącznika](./relationship-editing.md#reading-a-connector). Jej wyłączenie ukrywa tylko te etykiety i nie przesuwa żadnej tabeli ani łącznika.  
-Opcja `Table Groups` pokazuje [grupy tabel](./table-groups.md) i kolory grup na nagłówkach ich tabel. Jej wyłączenie ukrywa je na kanwie, minimapie i w eksportowanych obrazach, nie przesuwa żadnej tabeli i pozostawia każdą tabelę w jej grupie – zobacz sekcję [Ukrywanie grup](./table-groups.md#hiding-groups). Usuwa też folder `Table Groups` z [Eksploratora](./explorer.md#the-tree) i przycisk `New Table Group` z [paska narzędzi kanwy](#canvas-toolbar), a wyszukiwanie w Eksploratorze przestaje znajdować nazwy grup.  
-Opcja `Memos` pokazuje notatki. Jej wyłączenie ukrywa wszystkie notatki na kanwie, minimapie i w eksportowanych obrazach oraz nie przesuwa żadnej tabeli ani łącznika. Ukryte notatki nie zajmują miejsca, więc paski przewijania, minimapa i kompas `Go to content` je pomijają.  
-Ukrycie notatek anuluje ich zaznaczenie i zamyka otwarty edytor notatki. [Eksplorator](./explorer.md#the-tree) usuwa swój folder `Memos`, a jego wyszukiwanie [Znajdź i zamień](./find-and-replace.md) i prefiks `:` szybkiego wyszukiwania ich nie przeszukują. Gdy są ukryte, polecenie `New Memo` znika z menu kontekstowego, [paska narzędzi kanwy](#canvas-toolbar), szybkiego wyszukiwania i [ekranu powitalnego](./editing-start.md#welcome-screen), a skrót `Alt + M` nie dodaje notatki. Wklejenie lub operacja [Importuj i dodaj](./file-import-export.md#import-and-add) nadal dodaje zawarte w nich notatki, ukryte i niezaznaczone.  
+Opcja `Table Groups` pokazuje [grupy tabel](./table-groups.md) i kolory grup na nagłówkach ich tabel i notatek. Jej wyłączenie ukrywa grupy i ich kolory na kanwie i w eksportowanych obrazach, zdejmuje ramki z minimapy, nie przesuwa żadnej tabeli ani notatki i pozostawia każdą tabelę i notatkę w jej grupie – zobacz sekcję [Ukrywanie grup](./table-groups.md#hiding-groups). Usuwa też folder `Table Groups` z [Eksploratora](./explorer.md#the-tree) i przycisk `New Table Group` z [paska narzędzi kanwy](#canvas-toolbar), a wyszukiwanie w Eksploratorze przestaje znajdować nazwy grup.  
+Opcja `Memos` pokazuje notatki. Jej wyłączenie ukrywa wszystkie notatki na kanwie, minimapie i w eksportowanych obrazach oraz nie przesuwa żadnej tabeli ani łącznika. Ukryte notatki nie zajmują miejsca, więc paski przewijania, minimapa, kompas `Go to content` i ramki [grup tabel](./table-groups.md) je pomijają, choć notatki pozostają w swoich grupach.  
+Ukrycie notatek anuluje ich zaznaczenie i zamyka otwarty edytor notatki. [Eksplorator](./explorer.md#the-tree) usuwa swój folder `Memos` i notatki pod swoimi grupami tabel, a jego wyszukiwanie [Znajdź i zamień](./find-and-replace.md) i prefiks `:` szybkiego wyszukiwania ich nie przeszukują. Gdy są ukryte, polecenie `New Memo` znika z menu kontekstowego, [paska narzędzi kanwy](#canvas-toolbar), szybkiego wyszukiwania i [ekranu powitalnego](./editing-start.md#welcome-screen), a skrót `Alt + M` nie dodaje notatki. Wklejenie lub operacja [Importuj i dodaj](./file-import-export.md#import-and-add) nadal dodaje zawarte w nich notatki, ukryte i niezaznaczone.  
 W edytorze tylko do odczytu przełączniki nadal działają, ale tylko na tym ekranie: nie są zapisywane, rejestrowane w historii cofania ani współdzielone, a gdy edytor znów umożliwi zapis, wracają do wartości z pliku – zobacz sekcję [Edytory tylko do odczytu](./settings.md#read-only-editors) w Ustawieniach.
 
 ![Przełączanie pozycji Opcji widoku przy zmieniającym się układzie tabel, oznaczanie złożonego indeksu unikatowego jako AK1.1 i AK1.2 za pomocą Alternate Key, a potem wyłączanie i włączanie Memos](/img/demo-view-options.webp)
@@ -233,9 +233,9 @@ Przycisk `Apply` zachowuje położenia z danej chwili, a gdy układ się ustabil
 
 Pozostałe trzy są obliczane za jednym razem, poza wątkiem głównym, więc nie ma czego oglądać: podczas obliczania układu wyświetla się komunikat, a gotowe rozmieszczenie jest wyśrodkowane na obszarze, który diagram już zajmuje. Przycisk `Cancel` lub klawisz `Escape` porzuca układ, na który już nie czekasz, a w hoście, który nie uruchamia żadnego shared workera, układ kończy się komunikatem `Could not place tables` – zobacz sekcję [Web Workers](../../api/installation.md#web-workers). Tak samo kończy się układ, który nie wróci w ciągu 60 sekund.
 
-Niezależnie od wybranego układu przenoszone są tabele i grupy tabel, a notatki pozostają na miejscu. Tabele są rozmieszczane z szerokościami, jakie mają w bieżącym Widoku nazw. Relacja zwrotna jest ignorowana, a kilka relacji między tymi samymi dwiema tabelami liczy się jako jedna.  
-Każdy układ utrzymuje tabele każdej grupy razem, niezależnie od tego, czy grupy są widoczne, i dopasowuje każdą grupę zawierającą tabele tak, aby je obejmowała – zobacz stronę [Grupy tabel](./table-groups.md#auto-layout).  
-Wynik trafia do historii jako jeden wpis, więc jedno cofnięcie przywraca każdą tabelę i grupę na jej poprzednie miejsce.  
+Niezależnie od wybranego układu przenoszone są tabele, grupy tabel i notatki w grupach zawierających tabele, a każda inna notatka pozostaje na miejscu. Tabele są rozmieszczane z szerokościami, jakie mają w bieżącym Widoku nazw. Relacja zwrotna jest ignorowana, a kilka relacji między tymi samymi dwiema tabelami liczy się jako jedna.  
+Każdy układ utrzymuje tabele i notatki każdej grupy razem, niezależnie od tego, czy grupy są widoczne, i dopasowuje każdą grupę zawierającą tabele tak, aby obejmowała jej tabele i widoczne notatki – zobacz stronę [Grupy tabel](./table-groups.md#auto-layout).  
+Wynik trafia do historii jako jeden wpis, więc jedno cofnięcie przywraca każdą tabelę, notatkę i grupę na jej poprzednie miejsce.  
 Edytor tylko do odczytu nie oferuje `Auto Layout`. Układ trwający w chwili, gdy edytor przechodzi w tryb tylko do odczytu, kończy się tam: podgląd `Force` zamyka się wraz ze swoim komunikatem i nie zachowuje żadnych swoich położeń, a układ wciąż obliczany jest odrzucany wraz ze swoim komunikatem, więc żadna tabela się nie przesuwa, ani wtedy, ani gdy edytor znów umożliwi zapis.
 
 ![Porządkowanie stosu tabel automatycznym układem Flow z menu kontekstowego kanwy, który ustawia je od lewej do prawej wzdłuż ich relacji](/img/demo-automatic-table-placement.webp)
@@ -311,7 +311,7 @@ Przeciąganie środkowym przyciskiem niczego nie zaznacza, nie przenosi ani nie 
 Naciśnięcie środkowym przyciskiem na paskach przewijania, minimapie, pasku narzędzi kanwy lub otwartym edytorze komórki albo notatki nie przesuwa widoku.
 
 Minimapa w prawym górnym rogu przedstawia diagram z zapasem miejsca o wielkości ekranu z każdej strony, czyli zasięg pasków przewijania, zaokrąglony na zewnątrz do grubej siatki, więc im bardziej pomniejszasz widok, tym mniejszy jest na niej diagram. Kliknij ją, aby przenieść widok w to miejsce, albo przeciągnij prostokąt obszaru widoku, aby przesunąć widok. W miarę pomniejszania prostokąt obszaru widoku rośnie i obejmuje większą część mapy.  
-Minimapa rysuje każdą tabelę w jej kolorze, a każdą widoczną grupę tabel jako ramkę w kolorze grupy za jej tabelami.  
+Minimapa rysuje każdą tabelę w jej kolorze, a każdą widoczną grupę tabel jako ramkę w kolorze grupy za jej tabelami i notatkami, rozciągającą się wokół jej widocznych notatek, tak jak ramka na kanwie.  
 Paski przewijania wzdłuż prawej i dolnej krawędzi opisują ten sam zakres ruchu, który rozciąga się od położenia, w którym diagram znajduje się tuż za jedną krawędzią ekranu, do położenia tuż za drugą, więc jest co najmniej o ekran dłuższy niż narysowany diagram, a jeszcze dłuższy, gdy widok znajduje się poza nim. Poza trybem zen oba paski przewijania są widoczne zawsze, gdy dokument zawiera tabelę, widoczną notatkę lub widoczną grupę tabel, nawet jeśli wszystko mieści się na ekranie. Dokument bez żadnego z tych elementów, na przykład taki, którego jedyne notatki są ukryte za pomocą View Option → `Memos`, nie pokazuje żadnego z pasków ani minimapy.  
 Przeciąganie uchwytu paska przewijania lub prostokąta obszaru widoku na minimapie to jedyne przesuwanie widoku, które ma granicę: nie sięga dalej niż do tabel tuż poza ekranem albo do miejsca, w którym zaczęło się przeciąganie, jeśli było ono dalej.
 
@@ -364,7 +364,7 @@ Edytor tylko do odczytu również oferuje `Diff Viewer`, a widok działa tam jak
 
 Porównywane są tabele, kolumny, indeksy, klucze obce, notatki i grupy tabel.  
 Każdy element jest najpierw łączony w parę według identyfikatora, więc przy porównaniu z wcześniejszą wersją tego samego pliku, która zachowuje identyfikatory, tabela, kolumna, indeks lub grupa tabel o zmienionej nazwie nadal jest jednym elementem, wymienionym jako element o zmienionej nazwie.  
-Pozostałe elementy są łączone w pary jeden do jednego według tego, co zachowują: tabela lub grupa tabel według nazwy z uwzględnieniem wielkości liter; kolumna lub indeks według swojej tabeli i nazwy; klucz obcy według swoich dwóch tabel i par kolumn; notatka według tekstu, a potem położenia. Indeks bez nazwy jest łączony w parę według kolumn, ich kolejności i kierunku oraz tego, czy jest unikatowy, a grupa tabel bez nazwy według największej liczby wspólnych tabel.  
+Pozostałe elementy są łączone w pary jeden do jednego według tego, co zachowują: tabela lub grupa tabel według nazwy z uwzględnieniem wielkości liter; kolumna lub indeks według swojej tabeli i nazwy; klucz obcy według swoich dwóch tabel i par kolumn; notatka według tekstu, a potem położenia. Indeks bez nazwy jest łączony w parę według kolumn, ich kolejności i kierunku oraz tego, czy jest unikatowy, a grupa tabel bez nazwy według największej liczby wspólnych tabel i notatek.  
 Dlatego przy porównaniu z plikiem z innego źródła, na przykład z diagramem odtworzonym przez import kodu SQL, tabela o zmienionej nazwie jest pokazywana jako jedna usunięta i jedna dodana.
 
 Co liczy się jako zmiana:
@@ -373,8 +373,8 @@ Co liczy się jako zmiana:
 - Kolumna: nazwa, komentarz, typ danych, wartość domyślna, Autoinkrementacja, klucz podstawowy, Unikatowość, NOT NULL i pozycja w tabeli. Za przeniesione uznaje się tylko kolumny spoza kolejności wspólnej dla obu dokumentów, więc dodanie, usunięcie lub przeniesienie jednej kolumny nie powoduje oznaczenia pozostałych.
 - Indeks: nazwa, UNIQUE i kolumny wraz z ich kolejnością i kierunkiem.
 - Klucz obcy: pary kolumn, typ relacji oraz akcje ON DELETE i ON UPDATE.
-- Notatka: tekst, położenie, rozmiar i kolor.
-- Grupa tabel: nazwa, zawarte w niej tabele, kolor, położenie i rozmiar.
+- Notatka: tekst, grupa tabel, położenie, rozmiar i kolor.
+- Grupa tabel: nazwa, zawarte w niej tabele i notatki, kolor, położenie i rozmiar.
 
 Dlatego tabela, notatka lub grupa, którą tylko przeniesiono albo której zmieniono rozmiar lub kolor, liczy się jako zmieniona. Położenia i rozmiary są porównywane w pełnych pikselach, a kolejność warstw i miejsce, w którym łącznik styka się z tabelą, nigdy nie mają znaczenia.  
 Nazwy logiczne, powiązania z domeną oraz słowa, terminy i domeny z karty [Słownik](./dictionary.md) nie są porównywane, więc sama ich zmiana nie jest ani wymieniana, ani oznaczana. Liczy się natomiast typ danych zmieniony przez domenę – jako zmiana typu danych kolumny.
@@ -393,7 +393,7 @@ Każdy wiersz kończy się literą, a wiersz oznaczony literą `A`, `D`, `M` lub
 - `R`, o zmienionej nazwie, na niebiesko: w obu, z nową nazwą. Zmiana nazwy ma pierwszeństwo przed każdą inną zmianą, którą podpowiedź nadal wymienia.
 - `~`, w kolorze bursztynowym, kończy każdy folder i tabelę wymienioną tylko z powodu zmian w jej wnętrzu; ich nazwy zachowują zwykły kolor.
 
-Najedź wskaźnikiem na nazwę wiersza, aby zobaczyć podpowiedź: status `Added`, `Deleted`, `Modified`, `Renamed` lub `Changed inside`, a potem po jednej linii na każdą zmianę, na przykład `Name: users → members` lub `NN: ✗ → ✓`. Tekst jest przytaczany w postaci pierwszej linii, obciętej po 40 znakach, a pusta wartość jest wyświetlana jako `—`. Podpowiedź dodanego lub usuniętego elementu zawiera tylko jego status.
+Najedź wskaźnikiem na nazwę wiersza, aby zobaczyć podpowiedź: status `Added`, `Deleted`, `Modified`, `Renamed` lub `Changed inside`, a potem po jednej linii na każdą zmianę, na przykład `Name: users → members` lub `NN: ✗ → ✓`. Tekst jest przytaczany w postaci pierwszej linii, obciętej po 40 znakach, a pusta wartość jest wyświetlana jako `—`. Notatka przeniesiona do grupy o nazwie Billing ma w podpowiedzi linię `Table group: — → Billing`, a podpowiedź grupy zyskuje linię w rodzaju `Memos: — → "note"`, która wymienia jej notatki, podając ich pierwsze linie w podwójnym cudzysłowie. Podpowiedź dodanego lub usuniętego elementu zawiera tylko jego status.
 
 Pole `Filter by name` nad drzewem zostawia wiersze, których bieżąca lub zapisana nazwa albo bieżąca lub zapisana nazwa logiczna zawiera wpisany tekst, bez uwzględniania wielkości liter, niezależnie od Widoku nazw. Tabela, której nazwa pasuje, zachowuje wszystkie swoje wiersze, a tabela, której nazwa nie pasuje, zachowuje tylko pasujące wiersze. Filtr, który niczego nie dopasowuje, pozostawia drzewo puste.  
 Gdy oba dokumenty w ogóle się nie różnią, drzewo pokazuje komunikat `No changes`.
@@ -419,7 +419,7 @@ Obie strony kolorują tekst, obrysy i łączniki i niczego nie wypełniają. Dod
 - Dodana lub usunięta kolumna w tabeli obecnej w obu dokumentach koloruje cały swój wiersz, a przeniesiona kolumna zmienia kolor całego swojego wiersza na bursztynowy. Nic wewnątrz dodanej lub usuniętej tabeli nie jest oznaczane osobno.
 - Tekst zmienionej komórki zmienia kolor na bursztynowy: komentarza tabeli, komentarza kolumny, typu danych, wartości domyślnej, Autoinkrementacji, Unikatowości lub NOT NULL albo tekstu notatki. Zmiana klucza podstawowego zmienia kolor ikony klucza kolumny na bursztynowy.
 - Tabela, kolumna lub grupa tabel o zmienionej nazwie ma nazwę w kolorze niebieskim.
-- Tabela, notatka lub grupa tabel ze zmianą, która nie ma własnej komórki, taką jak przeniesienie, nowy rozmiar lub kolor albo zmiana grupy lub tabel w grupie, ma bursztynowy obrys.
+- Tabela, notatka lub grupa tabel ze zmianą, która nie ma własnej komórki, taką jak przeniesienie, nowy rozmiar lub kolor, zmiana grupy albo zmiana tabel lub notatek grupy, ma bursztynowy obrys.
 - Dodany, usunięty lub zmieniony klucz obcy rysuje swój łącznik w odpowiednim kolorze. Najechanie na niego wskaźnikiem lub podświetlenie z wiersza rysuje go zamiast tego w zwykłym kolorze najechania.
 - Zmiana indeksu niczego nie oznacza po żadnej ze stron; jest widoczna tylko w drzewie.
 

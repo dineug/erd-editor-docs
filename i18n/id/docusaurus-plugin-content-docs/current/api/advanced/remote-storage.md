@@ -157,6 +157,7 @@ const data = replicationStore.value;
 Sejak `4.0.0`, `value` adalah bentuk penyimpanan: dokumen sebagaimana tersimpan di file, teks yang sama dengan yang dikembalikan [value](../erd-editor-element.md#value) milik elemen.  
 Isinya hanya entitas yang masih ada, dalam urutan tetap, tanpa entitas yang dihapus, urutan tumpukan, atau apa pun yang dihitung kembali oleh pemuatan, seperti lebar yang diukur [toWidth](#towidth).  
 Sejak `4.2.0`, isinya juga mencakup nama logis, keterangan apakah setiap nama dihasilkan dari kamus, tautan domain, serta kata, istilah, dan domain di tab [Kamus](../../guide/guides/dictionary.md).  
+Sejak `5.1.1`, isinya juga mencakup grup tabel tempat setiap memo berada.  
 Sejak `4.2.0` pula, nilai ini tidak menyertakan setiap field teks entitas yang kosong, setiap daftar `doc` dan koleksi yang tidak berisi apa pun, serta `collections` itu sendiri jika setiap koleksi kosong.  
 Teksnya diindentasi dua spasi, dengan setiap baris kamus pada baris teksnya sendiri, dan diakhiri baris baru, sehingga dokumen yang sama selalu menghasilkan byte yang sama.  
 Lihat [Bentuk penyimpanan](./schema.md#storage-form) untuk mengetahui isinya.
@@ -305,6 +306,10 @@ Jaga setiap editor dalam sesi, dan replika, tetap di `5.1.0` atau yang lebih bar
 
 Sejak `5.1.0`, editor mengirim perubahan bahasa Generator Kode, konvensi penamaan, atau tipe tanda kutip hanya selama penguncian pengaturan itu nonaktif, ditandai `shared: true` di payload-nya, dan replika menerapkan setiap perubahan yang bertanda itu, seperti yang dilakukan editor; lihat [Pengeditan kolaboratif](./collaborative-editing.md).  
 Replika menerapkan perubahan tanpa tanda, yang dikirim editor sebelum `5.1.0` apa pun penguncian miliknya, hanya selama pengaturan itu tidak terkunci di sisinya, dan membuangnya selama pengaturan itu terkunci (lihat [on@change](#onchange)).
+
+Sejak `5.1.1`, aksi yang dipertahankan juga mencakup `memo.changeGroup`, yang memasukkan memo ke [grup tabel](../../guide/guides/table-groups.md) atau mengeluarkannya, dan `value` menulis grup tempat setiap memo berada (lihat [Bentuk penyimpanan](./schema.md#storage-form)).  
+`5.1.1` tidak mengubah ekspor mana pun dari `@dineug/erd-editor/engine.js`.  
+Store dari rilis sebelumnya membuang `memo.changeGroup` dan `groupId` setiap memo, sehingga tidak menyimpan memo di grup mana pun, dan editor sebelum `5.1.1` di dalam sesi masih dapat mengeluarkan memo dari grupnya di replika `5.1.1`; lihat [Mencampur rilis](./collaborative-editing.md#mixing-releases).
 
 Sejak `4.0.0`, kedua metode juga menerapkan `editor.mergeLWW`, yang membawa register kolaborasi yang dikirim sebuah editor sebagai jawaban saat editor lain bergabung ke sesi, sehingga replika menentukan hasil perubahan serentak dengan cara yang sama seperti editor.  
 Aksi ini tidak mengubah satu byte pun dari `value` dan tidak memicu `change`.  

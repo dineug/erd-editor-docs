@@ -1,11 +1,11 @@
 ---
 sidebar_position: 4
-description: Vsa orodja, ki jih ponuja strežnik MCP erd-editor – branje dokumenta po straneh, preverjanja slovarjev, 67 orodij za urejanje, erd_batch ter videz rezultata in zavrnitve.
+description: Vsa orodja, ki jih ponuja strežnik MCP erd-editor – branje dokumenta po straneh, preverjanja slovarjev, izvoz SVG, 68 orodij za urejanje, erd_batch ter videz rezultata in zavrnitve.
 ---
 
 # Orodja
 
-Strežnik ponuja 77 orodij: pet orodij seje, štiri orodja za branje, 67 orodij za urejanje, po eno za vsako operacijo urejanja, in `erd_batch`, ki izvede več orodij za urejanje kot eno spremembo.
+Strežnik ponuja 79 orodij: pet orodij seje, štiri orodja za branje, `erd_export_svg`, ki nariše dokument kot sliko SVG, 68 orodij za urejanje, po eno za vsako operacijo urejanja, in `erd_batch`, ki izvede več orodij za urejanje kot eno spremembo.
 
 Vsako orodje razen `erd_list_documents` sprejme kot prvi argument `path`, pot do dokumenta, spodnje tabele pa ta argument izpuščajo.
 Argument, označen z `?`, je neobvezen.
@@ -26,14 +26,14 @@ Za to, kaj v posameznem načinu naredita shranjevanje in razveljavitev, glejte s
 
 | Orodje | Argumenti | Kaj naredi |
 | --- | --- | --- |
-| `erd_list` | `query?`, `offset?`, `limit?`, `namesOnly?` | Nastavitve in števila, nato stran tabel z njihovimi indeksi in relacijami, vsaka tabela z identifikatorjem, položajem in velikostjo na platnu, številom stolpcev, logičnim imenom, če ga ima, in skupino tabel, če je v kateri. Razen pri iskanju tabelam sledijo skupine tabel, beležke ter nato domene, izrazi in besede. |
-| `erd_get` | `tableIds?`, `tableNames?`, `relationshipIds?`, `indexIds?`, `memoIds?`, `tableGroupIds?`, `wordIds?`, `termIds?`, `domainIds?` | Navedene entitete v celoti: tabele z njihovimi stolpci in skupino tabel, relacije z njihovimi stolpci ter vrednostma `onDelete` in `onUpdate`, indeksi z njihovimi stolpci, beležke z besedilom, skupine tabel z njihovimi tabelami ter besede, izrazi in domene z vsemi polji. |
+| `erd_list` | `query?`, `offset?`, `limit?`, `namesOnly?` | Nastavitve in števila, nato stran tabel z njihovimi indeksi in relacijami, vsaka tabela z identifikatorjem, položajem in velikostjo na platnu, številom stolpcev, logičnim imenom, če ga ima, in skupino tabel, če je v kateri. Razen pri iskanju tabelam sledijo skupine tabel, beležke, vsaka s skupino tabel, če je v kateri, ter nato domene, izrazi in besede. |
+| `erd_get` | `tableIds?`, `tableNames?`, `relationshipIds?`, `indexIds?`, `memoIds?`, `tableGroupIds?`, `wordIds?`, `termIds?`, `domainIds?` | Navedene entitete v celoti: tabele z njihovimi stolpci in skupino tabel, relacije z njihovimi stolpci ter vrednostma `onDelete` in `onUpdate`, indeksi z njihovimi stolpci, beležke z besedilom in skupino tabel, skupine tabel z njihovimi tabelami in beležkami ter besede, izrazi in domene z vsemi polji. |
 | `erd_read` | `format`, `vendor?`, `statements?`, `header?`, `logicalNameAsComment?`, `tableIds?`, `tableNames?`, `groupNames?` | Celoten dokument naenkrat v enem od štirih formatov ali DDL samo nekaterih tabel ali skupin tabel. |
 | `erd_list_checks` | `level?`, `tableIds?`, `tableNames?`, `offset?`, `limit?` | Težave, ki jih najdejo slovarji besed, izrazov in domen, kakor jih navaja list `Checks` na zavihku Slovar urejevalnika, po straneh. Ničesar ne spremeni – glejte razdelek [Preverjanja slovarjev](#dictionary-checks). |
 
 Agent poišče identifikatorje z orodjem `erd_list`, stolpce, vrstice slovarjev in druge podrobnosti prebere z orodjem `erd_get`, te identifikatorje pa poda orodjem za urejanje.
 Velikost tabele v orodju `erd_list` je okvir, ki ga tabela zaseda na platnu: višina je natančna, širina približna.
-Skupina tabel se navede s pravokotnikom, ki ga hrani, z imenom, barvo in številom tabel, ki jih vsebuje.
+Skupina tabel se navede s pravokotnikom, ki ga hrani, z imenom, barvo in številom tabel in beležk, ki jih vsebuje.
 Vsaka relacija se navede enkrat, pri eni od svojih dveh tabel.
 Vrstica slovarja se navede z identifikatorjem, poljem `name` in tistim, kar da fizičnemu imenu ali stolpcu: poljem `dataType` pri domeni, poljema `physicalName` in `domainId` pri izrazu ter poljem `abbreviation` pri besedi. Vsak slovar navede svoje vrstice v vrstnem redu, ki ga prikazuje njegov list.
 Nastavitve, ki jih navajata orodji `erd_list` in `erd_read`, so tiste, ki se shranijo v datoteko – glejte razdelek [Nastavitve](#settings).
@@ -45,7 +45,7 @@ Orodje `erd_read` sprejme enega od štirih formatov:
 
 | `format` | Kaj vrne |
 | --- | --- |
-| `snapshot` | Kompakten JSON z vsemi entitetami in njihovimi identifikatorji, vključno s skupinami tabel ter vrsticami besed, izrazov in domen, ter nastavitve s skripti Sheme SQL. Izpusti, kar se razlikuje od enega gledalca do drugega: izmerjene širine, vrstni red prekrivanja, pogled, zavihek in prikaz imen. Pri veliki shemi je obsežen. |
+| `snapshot` | Kompakten JSON z vsemi entitetami in njihovimi identifikatorji, vključno s skupinami tabel z njihovimi tabelami in beležkami ter vrsticami besed, izrazov in domen, ter nastavitve s skripti Sheme SQL. Izpusti, kar se razlikuje od enega gledalca do drugega: izmerjene širine, vrstni red prekrivanja, pogled, zavihek in prikaz imen. Pri veliki shemi je obsežen. |
 | `sql` | DDL za eno od osmih zbirk podatkov: `Databricks`, `MariaDB`, `MSSQL`, `MySQL`, `Oracle`, `PostgreSQL`, `Snowflake` ali `SQLite`. Privzeta vrednost argumenta `vendor` je zbirka podatkov, nastavljena v dokumentu. DDL celotnega dokumenta vključuje njegove skripte pred tabelami in za njimi. Z argumenti `tableIds`, `tableNames` ali `groupNames` samo te tabele s tujimi ključi, ki jih vsebujejo, in brez skriptov. Tuji ključi vključujejo svoja dejanja ON DELETE in ON UPDATE, razen tistih, ki jih ciljna zbirka podatkov izpusti – glejte razdelek [ON DELETE in ON UPDATE](../guide/guides/relationship-editing.md#on-delete-and-on-update). |
 | `json` | Celoten dokument natanko tako, kot shranjevanje zapiše datoteko, vključno s spremembami, ki jih urejevalnik še ni shranil – glejte razdelek [Oblika za shranjevanje](../api/advanced/schema.md#storage-form). |
 | `scripts` | Samo skripta dokumenta pred tabelami in za njimi, v obliki `{"before":"…","after":"…"}`, vsak prazen, če ni nastavljen, ne glede na to, kako velika je shema. |
@@ -103,6 +103,37 @@ Vsako preverjanje navede svoji polji `level` in `code` ter polji `kind` in `id` 
 
 Kako posamezno preverjanje bere ime, je opisano v razdelku [Kaj najde posamezno preverjanje](../guide/guides/dictionary.md#what-each-check-finds).
 
+## Izvoz SVG {#svg-export}
+
+| Orodje | Argumenti | Kaj naredi |
+| --- | --- | --- |
+| `erd_export_svg` | `output?`, `darkMode?`, `background?` | Nariše dokument kot sliko SVG in jo zapiše v datoteko `.svg`, ki jo navaja `output`, ali pa brez `output` odgovori z besedilom SVG. Ne spremeni nobenega dokumenta. |
+
+Strežnik sliko nariše sam, zato potrebuje samo strežnik `1.2.1` ali novejši in deluje z vsako izdajo razširitve ali vtičnika ERD Editor, ki se poveže.
+Tako kot metoda `toImage()` nariše sliko, ki jo pogovorno okno `Export image` urejevalnika shrani kot SVG, vendar samo iz dokumenta: celoten diagram pri 100 %, brez tistega, kar skrijejo možnosti pogleda v dokumentu, v prednastavljenih barvah, s tabelami in stolpci, poimenovanimi v prikazu imen, ki ga dokument hrani, in z besedami samega diagrama v angleščini – glejte razdelek [Kaj nariše](../api/to-image.md#what-it-draws).
+Strežnik besedilo meri brez pisav urejevalnika, zato je lahko tabela nekoliko širša, kot jo nariše urejevalnik.
+Slike PNG in kopiranja v odložišče ni.
+
+- `darkMode`: `true` nariše temno temo; `false`, privzeta vrednost, svetlo. Nobena tema zaslona urejevalnika ne doseže slike.
+- `background`: `true`, privzeta vrednost, za diagramom pobarva barvo platna; `false` pusti ozadje prosojno.
+- `output`: datoteka, ki se zapiše, absolutna ali glede na delovno mapo strežnika, z imenom, ki se konča z `.svg` ne glede na velikost črk, v mapi, ki že obstaja. Datoteka, ki je tam že, se zamenja prek začasne datoteke ob njej, simbolni povezavi pa se sledi do datoteke, na katero vodi.
+
+Izvoz prebere dokument tako kot orodja za branje: tisto, kar hrani urejevalnik, ki ga streže, vključno s spremembami, ki še niso shranjene, ali pa datoteko. Tako kot branje nikoli ne odpre dokumenta v urejevalniku.
+Za kateri primer gre, pove polje `mode` v njegovem odgovoru: `live`, `headless` ali, kadar dokument hrani urejevalnik z izklopljenim središčem, `blocked`, z opombo, da je bila datoteka na disku narisana brez sprememb, ki še niso shranjene v tem urejevalniku – glejte stran [V živo in brez vmesnika](./live-and-headless.md).
+
+Z `output` je odgovor ena vrstica JSON: `mode`, `path` dokumenta, zapisani `output`, njegova velikost v `bytes`, `width` in `height` slike SVG ter `notes`, kadar jih je kaj.
+
+```json
+{"mode":"headless","path":"/work/shop.erd.json","output":"/work/docs/shop.svg","bytes":48213,"width":1210,"height":764}
+```
+
+Brez `output` je odgovor besedilo SVG, nato `{"mode":"…"}` z morebitnimi opombami. Slika SVG z več kot 40.000 znaki, kolikor jih odgovor največ vrne, se zavrne s kodo `tooLarge`: podajte `output`, da se namesto tega zapiše v datoteko.
+
+`output` se preveri, preden se dokument prebere, zato zavrnjen ne stane nobenega risanja: prazen `output`, ime, ki se ne konča z `.svg`, ime, ki označuje mapo, ter povezava, ki ne vodi do nobene datoteke ali do datoteke z imenom, ki se ne konča z `.svg`, se zavrnejo s kodo `invalidPath`, `output` v mapi, ki ne obstaja, pa s kodo `notFound`. Datoteka samo za branje se zavrne s kodo `readonly`, ko je slika narisana, in ostane taka, kot je bila.
+
+Izvoz ne ustvari vnosa za razveljavitev in ne pusti ničesar za shranjevanje, `erd_batch` pa ga zavrne, tako kot zavrne orodje za branje.
+Risanje velikega diagrama traja nekaj sekund, strežnik pa riše en izvoz naenkrat.
+
 ## Orodja za urejanje {#edit-tools}
 
 Identifikatorji prihajajo iz orodij `erd_list` in `erd_get` ali iz polja `createdIds` klica, ki je entiteto ustvaril.
@@ -121,7 +152,7 @@ Nov identifikator sestavlja 25 malih črk in števk, kot je `03h17be2plxpj5n59tq
 | `erd_change_table_color` | `tableId`, `color` | Nastavi barvo tabele. |
 | `erd_move_table` | `tableId`, `x`, `y` | Premakne tabelo na položaj na platnu. |
 | `erd_move_tables` | `positions` | Premakne več tabel v eni spremembi, ki jo razveljavi en klic `erd_undo`. `positions` vsebuje `{ tableId, x, y }` za vsako tabelo, vsako tabelo največ enkrat. |
-| `erd_sort_tables` | | Razporedi vse tabele v vrstice po platnu, najprej tiste z najmanj stolpci, tako kot jih razporedijo `erd_import_sql`, `erd_import_graphql`, `erd_import_dbml` in `erd_import_aml`. Tabele skupine tabel ostanejo skupaj, okvir vsake skupine pa se prilagodi okoli njih. |
+| `erd_sort_tables` | | Razporedi vse tabele v vrstice po platnu, najprej tiste z najmanj stolpci, tako kot jih razporedijo `erd_import_sql`, `erd_import_graphql`, `erd_import_dbml` in `erd_import_aml`. Tabele skupine tabel ostanejo skupaj, sledijo pa jim njene beležke, dokler so beležke prikazane, okvir vsake skupine pa se prilagodi okoli njih. Dokler so beležke skrite, se beležke skupine premaknejo z njenimi tabelami. Beležka brez skupine ali v skupini, ki nima nobene tabele, ostane, kjer je. |
 
 ### Stolpci {#columns}
 
@@ -190,28 +221,33 @@ Identifikator stolpca indeksa je vnos na seznamu stolpcev indeksa, ki ga vrne `e
 | `erd_move_memo` | `memoId`, `x`, `y` | Premakne beležko na položaj na platnu. |
 | `erd_resize_memo` | `memoId`, `width`, `height` | Spremeni velikost beležke. Širina mora biti vsaj približno `116` slikovnih pik, višina pa vsaj `100`. Ne ustvari vnosa za razveljavitev, ker urejevalnik spremembo velikosti beležke zabeleži samo pri vlečenju. |
 
+Beležka je lahko v eni skupini tabel, s katero se premika – glejte razdelek [Skupine tabel](#table-groups).
+
 Dokler so beležke skrite z [View Option](../guide/guides/table-related-functions.md#table-view-options) → `Memos`, `erd_add_memo` beležko še vedno doda, ta pa ostane skrita, dokler se beležke znova ne prikažejo.
 `erd_list` in `erd_get` navajata tudi skrite beležke.
 
 ### Skupine tabel {#table-groups}
 
-Skupina tabel je poimenovan okvir, narisan za njenimi tabelami, njena barva pa je vidna na okviru in čez glave njenih tabel – glejte stran [Skupine tabel](../guide/guides/table-groups.md).
-Tabela je v največ eni skupini. `erd_move_table`, `erd_move_tables` in `erd_move_table_group` nikoli ne spremenijo, katere tabele vsebuje skupina, ne glede na to, kam postavijo tabelo, medtem ko se v urejevalniku tabela pridruži skupini ali jo zapusti glede na to, kam jo spustite – glejte razdelek [Dodajanje in odstranjevanje tabel](../guide/guides/table-groups.md#adding-and-removing-tables). `erd_add_table_group` in `erd_set_table_group` dodata tabele v skupino, `erd_remove_table_group` pa njene tabele pusti brez skupine.
-Skupina hrani pravokotnik, širok vsaj `160` slikovnih pik in visok vsaj `100`, vključno z naslovno vrstico, urejevalnik pa okvir nariše povečan tako, da zajame vsako od njenih tabel.
+Skupina tabel je poimenovan okvir, narisan za njenimi tabelami in beležkami, njena barva pa je vidna na okviru in čez glave njenih tabel in beležk – glejte stran [Skupine tabel](../guide/guides/table-groups.md).
+Tabela ali beležka je v največ eni skupini. `erd_move_table`, `erd_move_tables`, `erd_move_memo` in `erd_move_table_group` nikoli ne spremenijo, kaj vsebuje skupina, ne glede na to, kam postavijo tabelo ali beležko, medtem ko se v urejevalniku tabela ali beležka pridruži skupini ali jo zapusti glede na to, kam jo spustite – glejte razdelek [Dodajanje in odstranjevanje tabel](../guide/guides/table-groups.md#adding-and-removing-tables). `erd_add_table_group` doda tabele in beležke v skupino, `erd_set_table_group` tabele in `erd_set_memo_group` beležke, `erd_remove_table_group` pa njene tabele in beležke pusti brez skupine.
+Skupina hrani pravokotnik, širok vsaj `160` slikovnih pik in visok vsaj `100`, vključno z naslovno vrstico, urejevalnik pa okvir nariše povečan tako, da zajame vsako od njenih tabel in, dokler so beležke prikazane, vsako od njenih beležk.
 
 | Orodje | Argumenti | Kaj naredi |
 | --- | --- | --- |
-| `erd_add_table_group` | `name`, `color?`, `x?`, `y?`, `width?`, `height?`, `tableIds?` | Doda skupino in vrne njen identifikator v `createdIds`. Podajte bodisi `tableIds` bodisi pravokotnik: `x`, `y`, `width` in `height` skupaj. Z argumentom `tableIds` vsaka tabela zapusti skupino, v kateri je bila, pravokotnik pa se prilagodi okoli tabel tako, kot ga prilagodi [združevanje izbranih tabel v skupino](../guide/guides/table-groups.md#grouping-selected-tables). Pravokotnik zajame vse tabele brez skupine, katerih središče leži v njem, tako kot [risanje skupine](../guide/guides/table-groups.md#drawing-a-group). Prazen argument `name` pusti skupino brez imena. En klic `erd_undo` odstrani skupino in vsako tabelo vrne v skupino, v kateri je bila. |
-| `erd_remove_table_group` | `groupId` | Odstrani skupino. Njene tabele ostanejo, kjer so, brez skupine. |
+| `erd_add_table_group` | `name`, `color?`, `x?`, `y?`, `width?`, `height?`, `tableIds?`, `memoIds?` | Doda skupino in vrne njen identifikator v `createdIds`. Podajte bodisi `tableIds`, po potrebi z argumentom `memoIds` ob njem, bodisi pravokotnik: `x`, `y`, `width` in `height` skupaj. Z argumentom `tableIds` vsaka tabela in beležka zapusti skupino, v kateri je bila, pravokotnik pa se prilagodi okoli njih, okoli beležk le, kadar so beležke prikazane, tako kot ga prilagodi [združevanje izbranih tabel v skupino](../guide/guides/table-groups.md#grouping-selected-tables). Pravokotnik zajame vse tabele in vse prikazane beležke brez skupine, katerih središče leži v njem, tako kot [risanje skupine](../guide/guides/table-groups.md#drawing-a-group). Prazen argument `name` pusti skupino brez imena. En klic `erd_undo` odstrani skupino in vsako tabelo in beležko vrne v skupino, v kateri je bila. |
+| `erd_remove_table_group` | `groupId` | Odstrani skupino. Njene tabele in beležke ostanejo, kjer so, brez skupine. |
 | `erd_change_table_group_name` | `groupId`, `value` | Preimenuje skupino. Prazen niz jo pusti brez imena. |
 | `erd_change_table_group_color` | `groupId`, `color` | Nastavi barvo skupine. |
-| `erd_move_table_group` | `groupId`, `x`, `y` | Premakne skupino tako, da se njen pravokotnik začne v tej točki, njene tabele pa se premaknejo za enako razdaljo, tako kot pri vlečenju njene naslovne vrstice. Premik pod 20 slikovnih pik, vodoravno in navpično skupaj, ne ustvari vnosa za razveljavitev. Od strežnika različice `1.2.0` premik v urejevalnik pride kot točke, v katerih se skupina in njene tabele končajo, zato se z razširitvijo za VS Code različice `4.3.0` ali novejše ali vtičnikom za Obsidian ali JetBrains različice `1.3.0` ali novejše premik skupine ali ene od njenih tabel, narejen tam v istem trenutku, konča na enem od obeh položajev, nikoli pri njuni vsoti – glejte razdelek [Spremembe, narejene v istem trenutku](./live-and-headless.md#edits-made-at-the-same-moment). |
-| `erd_resize_table_group` | `groupId`, `x?`, `y?`, `width`, `height` | Nastavi pravokotnik skupine, njene tabele pa ostanejo, kjer so. Če sta `x` in `y` izpuščena, njen kot ostane nespremenjen. Pravokotnik, ki ne bi zajel tabel skupine z njihovim notranjim odmikom, se zavrne s sporočilom, ki navede okvir, ki ga mora zajeti. |
+| `erd_move_table_group` | `groupId`, `x`, `y` | Premakne skupino tako, da se njen pravokotnik začne v tej točki, njene tabele in beležke, vključno s skritimi, pa se premaknejo za enako razdaljo, tako kot pri vlečenju njene naslovne vrstice. Premik pod 20 slikovnih pik, vodoravno in navpično skupaj, ne ustvari vnosa za razveljavitev. Od strežnika različice `1.2.0` premik v urejevalnik pride kot točke, v katerih se skupina in njene tabele končajo, zato se z razširitvijo za VS Code različice `4.3.0` ali novejše ali vtičnikom za Obsidian ali JetBrains različice `1.3.0` ali novejše premik skupine ali ene od njenih tabel, narejen tam v istem trenutku, konča na enem od obeh položajev, nikoli pri njuni vsoti – glejte razdelek [Spremembe, narejene v istem trenutku](./live-and-headless.md#edits-made-at-the-same-moment). Od strežnika različice `1.2.1` se v istem paketu pošljejo tudi točke, v katerih se končajo njene beležke. |
+| `erd_resize_table_group` | `groupId`, `x?`, `y?`, `width`, `height` | Nastavi pravokotnik skupine, njene tabele in beležke pa ostanejo, kjer so. Če sta `x` in `y` izpuščena, njen kot ostane nespremenjen. Pravokotnik, ki ne bi zajel tabel in prikazanih beležk skupine z njihovim notranjim odmikom, se zavrne s sporočilom, ki navede okvir, ki ga mora zajeti. |
 | `erd_set_table_group` | `tableIds`, `groupId` | Doda tabele v skupino, pri čemer vsaka zapusti skupino, v kateri je bila. `groupId` z vrednostjo `null` ali prazen niz jih odstrani iz vseh skupin. |
+| `erd_set_memo_group` | `memoIds`, `groupId` | Doda beležke v skupino, pri čemer vsaka zapusti skupino, v kateri je bila, in ostane, kjer je. `groupId` z vrednostjo `null` ali prazen niz jih odstrani iz vseh skupin. |
 
 Dokler so skupine skrite z `View Option` → `Table Groups`, ta orodja še vedno dodajajo in spreminjajo skupine, ki ostanejo skrite, dokler se skupine ne prikažejo – glejte razdelek [Skrivanje skupin](../guide/guides/table-groups.md#hiding-groups).
-`erd_sort_tables` ohrani tabele vsake skupine skupaj, `erd_import_dbml` in `erd_import_json` prineseta skupine – glejte razdelek [Uvoz](#import) – `erd_read` pa z argumentom `groupNames` zapiše DDL izbranih skupin.
+Beležke, skrite z View Option → `Memos`, ostanejo v svojih skupinah in se premikajo z njimi, `erd_set_memo_group` in `memoIds` orodja `erd_add_table_group` pa jih dodata v skupino tako kot prikazane.
+`erd_sort_tables` ohrani tabele in beležke vsake skupine skupaj, `erd_import_dbml` in `erd_import_json` prineseta skupine – glejte razdelek [Uvoz](#import) – `erd_read` pa z argumentom `groupNames` zapiše DDL izbranih skupin.
 Izdaja ERD Editor, ki še ne pozna skupin tabel, ob shranjevanju datoteke zavrže njene skupine, kot to storijo razširitev za VS Code pred različico `4.0.0` ter vtičnika za Obsidian in JetBrains pred različico `1.0.0` – glejte razdelek [Posodabljanje](./installation.md#updating).
+Izdaja iz časa, preden so se beležke lahko pridružile skupinam tabel, razširitev za VS Code pred različico `4.3.1` ter vtičnika za Obsidian in JetBrains pred različico `1.3.1`, niti ne prikaže niti ne ohrani, v kateri skupini je beležka, zato datoteko shrani z vsemi beležkami brez skupine, enako pa stori tudi strežnik pred različico `1.2.1`, ki datoteko zapiše na disk – glejte razdelek [Posodabljanje](./installation.md#updating).
 
 ### Slovarji {#dictionaries}
 
@@ -304,14 +340,14 @@ V urejevalniku z razširitvijo za VS Code različice `4.3.0` ali novejše ali vt
 - Relacije in indeksi se ustvarijo samo med tabelami, ki jih prinese uvoz, zato se tuji ključ do tabele, ki je besedilo ne deklarira, zavrže.
 - `erd_import_sql`, `erd_import_graphql` in `erd_import_aml` dodajo tabele z njihovimi relacijami in indeksi, `erd_import_dbml` pa tudi skupine tabel. `erd_import_json` doda tabele, relacije, indekse, beležke in skupine tabel, nikoli pa njegovih nastavitev, in zavrne prazno besedilo. Njegove tabele in stolpci prinesejo svoja logična imena, vendar noben stolpec ni povezan z domeno in nobena od besed, izrazov ali domen iz besedila JSON ne pride v dokument.
 
-Dokument JSON ohrani svojo razporeditev, vključno s skupinami tabel: z `replace` tam, kamor postavi svoje tabele, z `append` pa znotraj dodanega bloka.
+Dokument JSON ohrani svojo razporeditev, vključno s skupinami tabel s tabelami in beležkami, ki jih vsaka vsebuje: z `replace` tam, kamor postavi svoje tabele, z `append` pa znotraj dodanega bloka.
 Tabele iz SQL, GraphQL, DBML in AML se razporedijo v vrstice, najprej tiste z najmanj stolpci in s tabelami vsake skupine skupaj, tako kot jih razporedi `erd_sort_tables`, nikoli s postavitvijo `Flow`, kot jih razporedi ukaz Uvozi v urejevalniku, kadar je to mogoče. Ta štiri orodja v obeh načinih zavrnejo prazno besedilo.
 
 ## erd_batch {#erd_batch}
 
 `erd_batch` izvede več orodij za urejanje po vrsti kot eno spremembo, vse ali nič.
 
-- `operations` vsebuje do 100 vnosov, vsak v obliki `{ tool, as?, args? }`, pri čemer je `tool` orodje za urejanje, `args` pa argumenti orodja brez `path`. Orodje za branje, kot je `erd_list_checks`, se zavrne.
+- `operations` vsebuje do 100 vnosov, vsak v obliki `{ tool, as?, args? }`, pri čemer je `tool` orodje za urejanje, `args` pa argumenti orodja brez `path`. Orodje za branje, kot je `erd_list_checks`, se zavrne, prav tako `erd_export_svg`.
 - Operacije se najprej preizkusijo na kopiji dokumenta. Zavrnjena operacija se navede, na primer `operations[1] erd_remove_table: …`, in nobena operacija se ne izvede.
 - En klic `erd_undo` razveljavi celoten paket, razen operacij, ki jih ne more razveljaviti in jih navede `undoNote` v rezultatu: operacij orodja, ki ne ustvari vnosa za razveljavitev, kot je `erd_set_database`, in operacij, ki so spremenile dokument, ne da bi ustvarile tak vnos, kot je kratek klic `erd_move_table_group`. Paket, ki ni ustvaril nobenega vnosa za razveljavitev, `erd_undo` preskoči. `historyEntries` v rezultatu šteje vnose v zgodovini urejevalnika znotraj paketa, ne klicev `erd_undo`.
 - V seji v živo urejevalnik sprejme ves paket ali nič od njega.
@@ -391,21 +427,21 @@ Zavrnitev je rezultat napake s kodo in sporočilom, ki pove, kaj storiti:
 
 | `code` | Zakaj |
 | --- | --- |
-| `notFound` | Identifikator ne označuje ničesar, kar trenutno obstaja, ali pa datoteka ne obstaja. |
+| `notFound` | Identifikator ne označuje ničesar, kar trenutno obstaja, datoteka ne obstaja ali pa mapa argumenta `output` orodja `erd_export_svg` ne obstaja. |
 | `invalidArgs` | Argument manjka ali ima napačno vrednost. |
-| `invalidPath` | Pot ni dokument ERD. V sistemu Windows tudi pot z imenom, ki ga Windows ne shrani tako, kot je zapisano, ali pot, ki pripelje do dokumenta, ki ga ima urejevalnik pod drugo potjo, sporočilo pa jo navede. |
+| `invalidPath` | Pot ni dokument ERD ali pa `output` orodja `erd_export_svg` ni datoteka `.svg` – glejte razdelek [Izvoz SVG](#svg-export). V sistemu Windows tudi pot z imenom, ki ga Windows ne shrani tako, kot je zapisano, ali pot, ki pripelje do dokumenta, ki ga ima urejevalnik pod drugo potjo, sporočilo pa jo navede. |
 | `invalidDocument` | Datoteka ni dokument, ki ga urejevalnik lahko prebere. |
-| `tooLarge` | Branje ne gre v en odgovor. |
+| `tooLarge` | Branje ali SVG, zahtevan brez `output`, ne gre v en odgovor. |
 | `blocked` | Urejevalnik z izklopljenim središčem ima dokument. Sporočilo pove, kako ga vklopiti: v VS Code zaupajte delovnemu prostoru in vklopite `dineug.erd-editor.agentHub.enabled` ali znova naložite okno; v aplikaciji Obsidian vklopite Coding agents ali znova naložite aplikacijo Obsidian; v razvojnem okolju JetBrains vklopite Coding agents ali, če je ta nastavitev že vklopljena, znova zaženite razvojno okolje. |
 | `hubDisabled` | Razvojno okolje JetBrains ima dokument samo v projektu, ki mu ne zaupa. Branje še vedno deluje; zaupajte projektu, da bo agent lahko urejal. |
 | `conflict` | Datoteka se je med klicem spremenila na disku. Nič ni bilo zapisano. |
 | `hubAppeared`, `hubGone` | Urejevalnik je začel streči dokument, ki ga je agent urejal na disku, ali pa urejevalnik, ki ga je stregel, še vedno teče, vendar njegove zaklepne datoteke in povezave ni več. Nič ni bilo zapisano. |
 | `notSaved` | Orodje `erd_save` ni moglo shraniti dokumenta urejevalnika. |
-| `readonly` | Urejevalnik ima dokument samo za branje, npr. datoteko, v katero ne more pisati ali je ne more prebrati kot diagram. Brez urejevalnika je samo za branje datoteka sama, npr. datoteka v sistemu Perforce ali TFVC, ki ni izvlečena za urejanje. Nič ni bilo zapisano. |
+| `readonly` | Urejevalnik ima dokument samo za branje, npr. datoteko, v katero ne more pisati ali je ne more prebrati kot diagram. Brez urejevalnika je samo za branje datoteka sama, npr. datoteka v sistemu Perforce ali TFVC, ki ni izvlečena za urejanje. Pri `erd_export_svg` je samo za branje datoteka `.svg`, ki jo navaja njegov `output`. Nič ni bilo zapisano. |
 | `protocolMismatch` | Razširitev ali vtičnik ERD Editor v urejevalniku in strežnik uporabljata vsak svojo različico protokola, npr. strežnik različice `1.0.0` ali novejše z razširitvijo za VS Code različice `3.x`. Zavrne se tudi branje, sporočilo pa navede stran, ki jo je treba posodobiti – glejte razdelek [Posodabljanje](./installation.md#updating). |
 | `hubUnreachable`, `timeout`, `disconnected` | Središče urejevalnika ni sprejelo povezave, ni odgovorilo v 30 sekundah ali je med klicem prekinilo povezavo. V sistemu Windows `hubUnreachable` pomeni tudi, da je Windows agentu preprečil dostop do središča: urejevalnik teče z več pravicami kot agent, na primer ko je bil zagnan kot skrbnik, agent pa ne, ali pa agent teče v peskovniku. |
 
 Druge kode so redkejše, vsaka zavrnitev pa vsebuje sporočilo, ki pove, kaj se je zgodilo.
 
-Orodja za urejanje, `erd_batch` in štiri orodja za branje zavrnejo argument, ki ga ne deklarirajo, ali argument napačnega tipa, z napako JSON-RPC zaradi neveljavnih parametrov (`-32602`), še preden se dotaknejo dokumenta, zato se napačno zapisan argument nikoli tiho ne izpusti.
+Orodja za urejanje, `erd_batch`, štiri orodja za branje in `erd_export_svg` zavrnejo argument, ki ga ne deklarirajo, ali argument napačnega tipa, z napako JSON-RPC zaradi neveljavnih parametrov (`-32602`), še preden se dotaknejo dokumenta, zato se napačno zapisan argument nikoli tiho ne izpusti.
 Pet orodij seje prezre argumente, ki jih ne poznajo.

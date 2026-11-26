@@ -56,6 +56,7 @@ Jendela VS Code melayani diagram di folder workspace-nya dan setiap diagram yang
 Ekstensi `3.0.0` hingga `3.1.0` dan server `1.0.0` atau yang lebih baru saling menolak, dan ekstensi sebelum `3.0.0` tidak melayani agen.
 Ekstensi `4.0.0` atau `4.1.0` terhubung, tetapi tidak menampilkan maupun mempertahankan nama logis, tautan domain, dan baris kamus yang ditulis agen.
 Dengan ekstensi sebelum `4.3.0`, tabel, memo, atau grup tabel yang Anda dan agen pindahkan atau ubah ukurannya pada saat yang sama dapat berakhir di tempat yang berbeda bagi masing-masing — lihat [Memperbarui](#updating).
+Ekstensi sebelum `4.3.1` tidak menampilkan maupun mempertahankan grup tabel mana yang berisi sebuah memo.
 
 Ekstensi mulai berjalan di workspace yang berisi file `.erd`, `.erd.json`, `.vuerd`, atau `.vuerd.json`, sehingga agen dapat menjangkau diagram tersebut sebelum Anda membuka diagram apa pun.
 Di workspace yang tidak berisi satu pun file tersebut, ekstensi mulai berjalan saat Anda membuka diagram, dan hingga saat itu agen mengedit di disk.
@@ -74,6 +75,7 @@ Jendela vault Obsidian melayani diagram di vault-nya.
 Plugin sebelum `1.0.0` dan server `1.0.0` atau yang lebih baru saling menolak.
 Plugin `1.0.0` atau `1.1.0` terhubung, tetapi tidak menampilkan maupun mempertahankan nama logis, tautan domain, dan baris kamus yang ditulis agen.
 Dengan plugin sebelum `1.3.0`, tabel, memo, atau grup tabel yang Anda dan agen pindahkan atau ubah ukurannya pada saat yang sama dapat berakhir di tempat yang berbeda bagi masing-masing — lihat [Memperbarui](#updating).
+Plugin sebelum `1.3.1` tidak menampilkan maupun mempertahankan grup tabel mana yang berisi sebuah memo.
 
 Jendela vault melayani agen sejak plugin dimuat, sehingga agen dapat menjangkau diagram vault sebelum Anda membuka diagram apa pun.
 Tidak ada langkah pemberian kepercayaan.
@@ -102,6 +104,7 @@ IDE JetBrains melayani diagram dari setiap proyek yang terbuka di dalamnya, sert
 Plugin `0.9.0` atau `0.10.0` dan server `1.0.0` atau yang lebih baru saling menolak, dan plugin sebelum `0.9.0` tidak melayani agen.
 Plugin `1.0.0` atau `1.1.0` terhubung, tetapi tidak menampilkan maupun mempertahankan nama logis, tautan domain, dan baris kamus yang ditulis agen.
 Dengan plugin sebelum `1.3.0`, tabel, memo, atau grup tabel yang Anda dan agen pindahkan atau ubah ukurannya pada saat yang sama dapat berakhir di tempat yang berbeda bagi masing-masing — lihat [Memperbarui](#updating).
+Plugin sebelum `1.3.1` tidak menampilkan maupun mempertahankan grup tabel mana yang berisi sebuah memo.
 
 IDE melayani agen sejak proyek pertama dibuka, sehingga agen dapat menjangkau diagram proyek sebelum Anda membuka diagram apa pun.
 
@@ -153,7 +156,14 @@ Namun perpindahan atau perubahan ukuran yang Anda dan agen lakukan pada saat yan
 Jika salah satu sisi lebih lama, editor dan agen dapat berakhir dengan posisi yang berbeda, dan agen terus membaca serta mengedit dari posisinya sendiri hingga perpindahan berikutnya menempatkan keduanya pada satu titik atau agen bergabung ke dokumen lagi — lihat [Pengeditan pada saat yang sama](./live-and-headless.md#edits-made-at-the-same-moment).
 Tidak satu pun rilis ini mengubah isi sebuah file.
 
+Server `1.2.1` juga menggunakan protokol 2. Server ini menambah dua alat, `erd_set_memo_group` dan `erd_export_svg`, serta argumen `memoIds` milik `erd_add_table_group`, dan tidak menghapus atau mengganti nama apa pun — lihat [Grup tabel](./tools.md#table-groups) dan [Ekspor SVG](./tools.md#svg-export).
+Memo dalam grup tabel memerlukan server `1.2.1` atau yang lebih baru dan, di mana pun dokumen dibuka, ekstensi VS Code `4.3.1` atau yang lebih baru atau plugin Obsidian atau JetBrains `1.3.1` atau yang lebih baru.
+Ekstensi atau plugin versi sebelumnya yang terhubung mengabaikan grup mana yang berisi sebuah memo, meskipun panggilan agen berhasil, dan tidak menyertakan grup memo saat menyimpan file.
+Server sebelum `1.2.1` tidak memiliki alat untuk itu dan membaca setiap memo sebagai tidak berada di grup mana pun, dan file yang dieditnya di disk ditulis kembali dengan setiap memo di luar grupnya — lihat [Headless](./live-and-headless.md#headless).
+`erd_export_svg` hanya memerlukan server `1.2.1` atau yang lebih baru, dengan rilis ekstensi atau plugin mana pun yang terhubung, karena server menggambar gambarnya sendiri.
+
 Perbarui juga ERD Editor di mana pun diagram dibuka.
+Ekstensi VS Code sebelum `4.3.1`, plugin Obsidian sebelum `1.3.1`, dan plugin JetBrains sebelum `1.3.1` membuka diagram yang disimpan oleh rilis yang lebih baru, atau yang diedit agen di disk, dengan setiap memo di luar grup tabelnya, dan tidak menyertakan grup memo saat menyimpan file.
 Ekstensi VS Code sebelum `4.2.0`, plugin Obsidian sebelum `1.2.0`, dan plugin JetBrains sebelum `1.2.0` membuka diagram yang disimpan oleh rilis yang lebih baru, atau yang diedit agen di disk, tanpa nama logis tabel dan kolomnya, tautan domain kolomnya, serta kata, istilah, dan domainnya.
 Saat menyimpan file, rilis tersebut tidak menyertakannya.
 Ekstensi VS Code sebelum `4.0.0`, plugin Obsidian sebelum `1.0.0`, dan plugin JetBrains sebelum `1.0.0` juga menampilkan diagram seperti itu tanpa ikon kunci utamanya, dan membuang grup tabel serta skrip Skema SQL di dalamnya saat menyimpan file.

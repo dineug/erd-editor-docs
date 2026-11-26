@@ -1,11 +1,11 @@
 ---
 sidebar_position: 4
-description: erd-editor MCP 서버가 제공하는 모든 도구. 문서를 한 페이지씩 읽는 방법, 사전 검사, 67개의 편집 도구, erd_batch, 결과와 거부의 형태.
+description: erd-editor MCP 서버가 제공하는 모든 도구. 문서를 한 페이지씩 읽는 방법, 사전 검사, SVG 내보내기, 68개의 편집 도구, erd_batch, 결과와 거부의 형태.
 ---
 
 # 도구
 
-서버는 77개의 도구를 제공합니다. 세션 도구 5개, 읽기 도구 4개, 편집 작업마다 하나씩인 편집 도구 67개, 그리고 여러 편집 도구를 하나의 편집으로 실행하는 `erd_batch`입니다.
+서버는 79개의 도구를 제공합니다. 세션 도구 5개, 읽기 도구 4개, 문서를 SVG 이미지로 그리는 `erd_export_svg`, 편집 작업마다 하나씩인 편집 도구 68개, 그리고 여러 편집 도구를 하나의 편집으로 실행하는 `erd_batch`입니다.
 
 `erd_list_documents`를 제외한 모든 도구는 첫 번째 인자로 문서의 `path`를 받으며, 아래 표에서는 생략합니다.
 `?`가 붙은 인자는 선택 사항입니다.
@@ -26,14 +26,14 @@ description: erd-editor MCP 서버가 제공하는 모든 도구. 문서를 한 
 
 | 도구 | 인자 | 동작 |
 | --- | --- | --- |
-| `erd_list` | `query?`, `offset?`, `limit?`, `namesOnly?` | 설정과 개수, 그다음 테이블 한 페이지를 인덱스, 관계와 함께 돌려줍니다. 각 테이블에는 id, 캔버스 위의 위치와 크기, 컬럼 수, 논리명이 있다면 그 논리명, 그리고 그룹에 속해 있다면 그 테이블 그룹이 함께 나옵니다. 검색 중이 아니라면 테이블 뒤에 테이블 그룹, 메모, 그다음 도메인, 용어, 단어가 나옵니다. |
-| `erd_get` | `tableIds?`, `tableNames?`, `relationshipIds?`, `indexIds?`, `memoIds?`, `tableGroupIds?`, `wordIds?`, `termIds?`, `domainIds?` | 지정한 엔티티 전체를 돌려줍니다. 테이블은 컬럼, 테이블 그룹과 함께, 관계는 그 컬럼과 `onDelete`, `onUpdate`와 함께, 인덱스는 그 컬럼과 함께, 메모는 텍스트와 함께, 테이블 그룹은 그 테이블과 함께, 단어, 용어, 도메인은 모든 필드와 함께 나옵니다. |
+| `erd_list` | `query?`, `offset?`, `limit?`, `namesOnly?` | 설정과 개수, 그다음 테이블 한 페이지를 인덱스, 관계와 함께 돌려줍니다. 각 테이블에는 id, 캔버스 위의 위치와 크기, 컬럼 수, 논리명이 있다면 그 논리명, 그리고 그룹에 속해 있다면 그 테이블 그룹이 함께 나옵니다. 검색 중이 아니라면 테이블 뒤에 테이블 그룹, 메모(그룹에 속해 있다면 그 테이블 그룹과 함께), 그다음 도메인, 용어, 단어가 나옵니다. |
+| `erd_get` | `tableIds?`, `tableNames?`, `relationshipIds?`, `indexIds?`, `memoIds?`, `tableGroupIds?`, `wordIds?`, `termIds?`, `domainIds?` | 지정한 엔티티 전체를 돌려줍니다. 테이블은 컬럼, 테이블 그룹과 함께, 관계는 그 컬럼과 `onDelete`, `onUpdate`와 함께, 인덱스는 그 컬럼과 함께, 메모는 텍스트와 테이블 그룹과 함께, 테이블 그룹은 그 테이블과 메모와 함께, 단어, 용어, 도메인은 모든 필드와 함께 나옵니다. |
 | `erd_read` | `format`, `vendor?`, `statements?`, `header?`, `logicalNameAsComment?`, `tableIds?`, `tableNames?`, `groupNames?` | 문서 전체를 네 가지 형식 중 하나로 한 번에 돌려주거나, 일부 테이블이나 테이블 그룹의 DDL만 돌려줍니다. |
 | `erd_list_checks` | `level?`, `tableIds?`, `tableNames?`, `offset?`, `limit?` | 단어 사전, 용어 사전, 도메인 사전이 찾아낸 문제를 에디터 사전 탭의 `Checks` 시트가 나열하는 대로 한 페이지씩 돌려줍니다. 아무것도 바꾸지 않습니다. [사전 검사](#dictionary-checks) 항목을 참고하세요. |
 
 에이전트는 `erd_list`로 id를 찾고, `erd_get`으로 컬럼, 사전 행, 그 밖의 세부 내용을 읽은 뒤, 그 id를 편집 도구에 넘깁니다.
 `erd_list`의 테이블 크기는 캔버스에서 차지하는 상자의 크기입니다. 높이는 정확하고 너비는 근삿값입니다.
-테이블 그룹은 그룹이 저장하는 영역으로 나열되며, 이름, 색상, 담고 있는 테이블 수가 함께 나옵니다.
+테이블 그룹은 그룹이 저장하는 영역으로 나열되며, 이름, 색상, 담고 있는 테이블과 메모의 수가 함께 나옵니다.
 각 관계는 두 테이블 중 한쪽에 한 번만 나열됩니다.
 사전 행은 id, `name`, 그리고 물리명이나 컬럼에 주는 값과 함께 나열됩니다. 도메인은 `dataType`, 용어는 `physicalName`과 `domainId`, 단어는 `abbreviation`입니다. 각 사전은 그 시트가 보여 주는 순서대로 행을 나열합니다.
 `erd_list`와 `erd_read`가 알려 주는 설정은 파일이 저장하는 설정입니다. [설정](#설정) 항목을 참고하세요.
@@ -45,7 +45,7 @@ description: erd-editor MCP 서버가 제공하는 모든 도구. 문서를 한 
 
 | `format` | 응답 내용 |
 | --- | --- |
-| `snapshot` | 테이블 그룹과 단어, 용어, 도메인 행을 포함한 모든 엔티티와 그 id, 그리고 Schema SQL 스크립트를 포함한 설정을 담은 간결한 JSON입니다. 측정된 너비, 쌓임 순서, 화면, 탭, 이름 표시처럼 보는 사람마다 달라지는 것은 빠집니다. 스키마가 크면 커집니다. |
+| `snapshot` | 그 테이블과 메모를 담은 테이블 그룹과 단어, 용어, 도메인 행을 포함한 모든 엔티티와 그 id, 그리고 Schema SQL 스크립트를 포함한 설정을 담은 간결한 JSON입니다. 측정된 너비, 쌓임 순서, 화면, 탭, 이름 표시처럼 보는 사람마다 달라지는 것은 빠집니다. 스키마가 크면 커집니다. |
 | `sql` | 8가지 데이터베이스 `Databricks`, `MariaDB`, `MSSQL`, `MySQL`, `Oracle`, `PostgreSQL`, `Snowflake`, `SQLite` 중 하나의 DDL입니다. `vendor`의 기본값은 문서에 설정된 데이터베이스입니다. 문서 전체의 DDL에는 문서의 앞뒤 스크립트가 포함됩니다. `tableIds`, `tableNames`, `groupNames`를 주면 해당 테이블만, 그 테이블이 가진 foreign key와 함께, 스크립트 없이 돌려줍니다. foreign key에는 ON DELETE와 ON UPDATE 동작이 함께 작성되며, 대상 데이터베이스가 생략하는 동작은 빠집니다. [ON DELETE와 ON UPDATE](../guide/guides/relationship-editing.md#on-delete와-on-update) 문서를 참고하세요. |
 | `json` | 저장할 때 파일에 쓰이는 그대로의 문서 전체이며, 에디터가 아직 저장하지 않은 편집도 포함됩니다. [저장 형태](../api/advanced/schema.md#storage-form) 문서를 참고하세요. |
 | `scripts` | 스키마의 크기와 상관없이 문서의 앞뒤 스크립트만 `{"before":"…","after":"…"}` 형태로 돌려주며, 설정되지 않은 스크립트는 비어 있습니다. |
@@ -103,6 +103,37 @@ description: erd-editor MCP 서버가 제공하는 모든 도구. 문서를 한 
 
 각 검사가 이름을 읽는 방식은 [검사별로 찾는 내용](../guide/guides/dictionary.md#what-each-check-finds) 문서를 참고하세요.
 
+## SVG 내보내기 {#svg-export}
+
+| 도구 | 인자 | 동작 |
+| --- | --- | --- |
+| `erd_export_svg` | `output?`, `darkMode?`, `background?` | 문서를 SVG 이미지로 그려 `output`이 지정하는 `.svg` 파일에 쓰거나, `output`이 없으면 SVG 텍스트로 응답합니다. 어떤 문서도 바꾸지 않습니다. |
+
+서버가 이미지를 직접 그리므로 서버 `1.2.1` 이상만 있으면 되며, 연결되는 어떤 ERD Editor 확장이나 플러그인 릴리스와도 동작합니다.
+`toImage()`처럼 에디터의 `Export image` 대화 상자가 SVG로 저장하는 이미지를 그리지만, 문서만으로 그립니다. 다이어그램 전체를 100%로 그리고, 문서에서 View Option이 숨기는 것은 제외하며, 프리셋 색상을 쓰고, 테이블과 컬럼은 문서가 가진 이름 표시로 표기하고, 다이어그램이 스스로 그리는 단어는 영어입니다. [그리는 내용](../api/to-image.md#what-it-draws) 문서를 참고하세요.
+서버는 에디터의 글꼴 없이 텍스트를 측정하므로, 테이블이 에디터가 그리는 것보다 조금 넓게 나올 수 있습니다.
+PNG는 없으며 클립보드로 복사하는 기능도 없습니다.
+
+- `darkMode`: `true`는 다크 테마로, 기본값인 `false`는 라이트 테마로 그립니다. 에디터 화면의 테마는 이미지에 전혀 반영되지 않습니다.
+- `background`: 기본값인 `true`는 다이어그램 뒤에 캔버스 색상을 칠하고, `false`는 투명하게 둡니다.
+- `output`: 쓸 파일입니다. 절대 경로이거나 서버의 작업 디렉터리 기준 상대 경로이며, 이름은 대소문자와 상관없이 `.svg`로 끝나야 하고, 폴더는 이미 있어야 합니다. 이미 있는 파일은 그 옆의 임시 파일을 거쳐 교체되며, 심볼릭 링크는 따라가서 그 링크가 가리키는 파일에 씁니다.
+
+내보내기는 읽기 도구처럼 문서를 읽습니다. 문서를 담당하는 에디터가 담고 있는 내용을 아직 저장되지 않은 편집까지 포함해 읽고, 에디터가 없으면 파일을 읽습니다. 읽기와 마찬가지로 에디터에서 문서를 열지 않습니다.
+응답의 `mode`가 어느 쪽인지 알려 줍니다. `live`, `headless`, 또는 허브가 꺼진 에디터가 문서를 담고 있으면 `blocked`이며, 이때는 디스크의 파일을 그렸기 때문에 그 에디터에서 아직 저장되지 않은 편집이 빠졌다는 안내가 함께 나옵니다. [라이브와 헤드리스](./live-and-headless.md) 문서를 참고하세요.
+
+`output`을 주면 응답은 JSON 한 줄입니다. `mode`, 문서의 `path`, 쓴 `output`, `bytes` 단위의 크기, SVG의 `width`와 `height`, 그리고 안내가 있으면 `notes`입니다.
+
+```json
+{"mode":"headless","path":"/work/shop.erd.json","output":"/work/docs/shop.svg","bytes":48213,"width":1210,"height":764}
+```
+
+`output`이 없으면 응답은 SVG 텍스트이고, 그 뒤에 `{"mode":"…"}`와 안내가 있으면 그 안내가 이어집니다. 한 번의 응답이 돌려줄 수 있는 최대인 40,000자를 넘는 SVG는 `tooLarge`로 거부되며, 대신 `output`을 주어 파일로 쓰게 하세요.
+
+`output`은 문서를 읽기 전에 확인하므로, 거부된 `output`은 그리는 비용이 들지 않습니다. 빈 `output`, `.svg`로 끝나지 않는 이름, 폴더를 가리키는 이름, 파일이 없는 곳을 가리키거나 이름이 `.svg`로 끝나지 않는 파일을 가리키는 링크는 `invalidPath`로 거부되고, 없는 폴더에 있는 `output`은 `notFound`로 거부됩니다. 읽기 전용 파일은 이미지를 그린 뒤에 `readonly`로 거부되며 그대로 남습니다.
+
+내보내기는 Undo 항목을 만들지 않고 저장할 것도 남기지 않으며, `erd_batch`는 읽기 도구를 거부하듯 이것도 거부합니다.
+큰 다이어그램은 그리는 데 몇 초가 걸리며, 서버는 한 번에 하나의 내보내기만 그립니다.
+
 ## 편집 도구
 
 id는 `erd_list`와 `erd_get`에서, 또는 엔티티를 만든 호출의 `createdIds`에서 얻습니다.
@@ -121,7 +152,7 @@ id는 `erd_list`와 `erd_get`에서, 또는 엔티티를 만든 호출의 `creat
 | `erd_change_table_color` | `tableId`, `color` | 테이블 색상을 설정합니다. |
 | `erd_move_table` | `tableId`, `x`, `y` | 테이블을 캔버스의 한 위치로 옮깁니다. |
 | `erd_move_tables` | `positions` | 여러 테이블을 한 번의 편집으로 옮기며, `erd_undo` 한 번으로 되돌립니다. `positions`에는 테이블마다 `{ tableId, x, y }`를 담으며, 각 테이블은 한 번만 올 수 있습니다. |
-| `erd_sort_tables` | | `erd_import_sql`, `erd_import_graphql`, `erd_import_dbml`, `erd_import_aml`이 테이블을 배치하는 방식대로, 컬럼이 적은 테이블부터 모든 테이블을 캔버스에 여러 줄로 배치합니다. 테이블 그룹의 테이블은 한데 모이고, 각 그룹의 박스는 그 테이블에 맞춰집니다. |
+| `erd_sort_tables` | | `erd_import_sql`, `erd_import_graphql`, `erd_import_dbml`, `erd_import_aml`이 테이블을 배치하는 방식대로, 컬럼이 적은 테이블부터 모든 테이블을 캔버스에 여러 줄로 배치합니다. 테이블 그룹의 테이블은 한데 모이며, 메모가 표시되는 동안에는 그 그룹의 메모가 그 뒤를 따르고, 각 그룹의 박스는 그것들에 맞춰집니다. 메모가 숨겨진 동안에는 그룹의 메모가 그 테이블과 함께 움직입니다. 어느 그룹에도 속하지 않은 메모와, 테이블을 하나도 담지 않은 그룹의 메모는 제자리에 남습니다. |
 
 ### 컬럼
 
@@ -190,28 +221,33 @@ id는 `erd_list`와 `erd_get`에서, 또는 엔티티를 만든 호출의 `creat
 | `erd_move_memo` | `memoId`, `x`, `y` | 메모를 캔버스의 한 위치로 옮깁니다. |
 | `erd_resize_memo` | `memoId`, `width`, `height` | 메모 크기를 바꿉니다. 너비는 약 `116`픽셀 이상, 높이는 `100` 이상이어야 합니다. 에디터는 드래그로 바꾼 메모 크기만 기록하므로, Undo 항목을 만들지 않습니다. |
 
+메모는 하나의 테이블 그룹에 속할 수 있으며, 그 그룹과 함께 움직입니다. [테이블 그룹](#테이블-그룹) 항목을 참고하세요.
+
 [View Option](../guide/guides/table-related-functions.md#테이블-보기-옵션) → `Memos`로 메모를 숨긴 동안에도 `erd_add_memo`는 메모를 추가하며, 추가된 메모는 메모를 다시 표시할 때까지 숨겨져 있습니다.
 `erd_list`와 `erd_get`은 숨겨진 메모도 나열합니다.
 
 ### 테이블 그룹
 
-테이블 그룹은 그 테이블 뒤에 그려지는 이름이 있는 박스이며, 그룹의 색상은 박스와 그 테이블들의 헤더 전체에 표시됩니다. [테이블 그룹](../guide/guides/table-groups.md) 문서를 참고하세요.
-테이블은 최대 하나의 그룹에만 속합니다. 에디터에서는 테이블을 놓는 위치에 따라 테이블이 그룹에 들어가거나 빠지지만, `erd_move_table`, `erd_move_tables`, `erd_move_table_group`은 테이블을 어디에 놓든 그룹이 담는 테이블을 절대 바꾸지 않습니다. [테이블 추가와 제거](../guide/guides/table-groups.md#테이블-추가와-제거) 문서를 참고하세요. 테이블을 그룹에 넣는 것은 `erd_add_table_group`과 `erd_set_table_group`이며, `erd_remove_table_group`은 그 테이블을 어느 그룹에도 속하지 않게 둡니다.
-그룹은 제목 표시줄을 포함해 너비 `160`픽셀 이상, 높이 `100`픽셀 이상인 영역을 저장하며, 에디터는 그 박스를 각 테이블을 담도록 늘려서 그립니다.
+테이블 그룹은 그 테이블과 메모 뒤에 그려지는 이름이 있는 박스이며, 그룹의 색상은 박스와 그 테이블과 메모의 헤더 전체에 표시됩니다. [테이블 그룹](../guide/guides/table-groups.md) 문서를 참고하세요.
+테이블과 메모는 최대 하나의 그룹에 속합니다. 에디터에서는 테이블이나 메모를 놓는 위치에 따라 그룹에 들어가거나 빠지지만, `erd_move_table`, `erd_move_tables`, `erd_move_memo`, `erd_move_table_group`은 테이블이나 메모를 어디에 놓든 그룹이 담는 것을 절대 바꾸지 않습니다. [테이블 추가와 제거](../guide/guides/table-groups.md#테이블-추가와-제거) 문서를 참고하세요. `erd_add_table_group`은 테이블과 메모를 그룹에 넣고, `erd_set_table_group`은 테이블을, `erd_set_memo_group`은 메모를 그룹에 넣으며, `erd_remove_table_group`은 그 테이블과 메모를 어느 그룹에도 속하지 않게 둡니다.
+그룹은 제목 표시줄을 포함해 너비 `160`픽셀 이상, 높이 `100`픽셀 이상인 영역을 저장하며, 에디터는 그 박스를 각 테이블과, 메모가 표시되는 동안에는 각 메모를 담도록 늘려서 그립니다.
 
 | 도구 | 인자 | 동작 |
 | --- | --- | --- |
-| `erd_add_table_group` | `name`, `color?`, `x?`, `y?`, `width?`, `height?`, `tableIds?` | 그룹을 추가하고 그 id를 `createdIds`로 돌려줍니다. `tableIds`와 영역 중 하나를 주며, 영역은 `x`, `y`, `width`, `height`를 함께 줍니다. `tableIds`를 주면 각 테이블은 원래 속해 있던 그룹에서 빠지고, 영역은 [선택한 테이블 그룹화](../guide/guides/table-groups.md#선택한-테이블-그룹화)에서처럼 그 테이블에 맞춰집니다. 영역을 주면 [그룹 그리기](../guide/guides/table-groups.md#그룹-그리기)에서처럼 어느 그룹에도 속하지 않은 테이블 중 중앙이 영역 안에 있는 테이블을 모두 담습니다. `name`이 빈 문자열이면 이름이 없는 그룹이 됩니다. `erd_undo` 한 번으로 그룹을 삭제하고 각 테이블을 원래 속해 있던 그룹으로 되돌립니다. |
-| `erd_remove_table_group` | `groupId` | 그룹을 삭제합니다. 그 테이블은 어느 그룹에도 속하지 않은 채 제자리에 남습니다. |
+| `erd_add_table_group` | `name`, `color?`, `x?`, `y?`, `width?`, `height?`, `tableIds?`, `memoIds?` | 그룹을 추가하고 그 id를 `createdIds`로 돌려줍니다. `tableIds`와 영역 중 하나를 주며, `tableIds`에는 `memoIds`를 함께 줄 수 있고, 영역은 `x`, `y`, `width`, `height`를 함께 줍니다. `tableIds`를 주면 각 테이블과 메모는 원래 속해 있던 그룹에서 빠지고, 영역은 [선택한 테이블 그룹화](../guide/guides/table-groups.md#선택한-테이블-그룹화)에서처럼 그 테이블과 메모에 맞춰지되 메모는 표시되는 동안에만 맞춰집니다. 영역을 주면 [그룹 그리기](../guide/guides/table-groups.md#그룹-그리기)에서처럼 어느 그룹에도 속하지 않은 테이블과 표시된 메모 중 중앙이 영역 안에 있는 것을 모두 담습니다. `name`이 빈 문자열이면 이름이 없는 그룹이 됩니다. `erd_undo` 한 번으로 그룹을 삭제하고 각 테이블과 메모를 원래 속해 있던 그룹으로 되돌립니다. |
+| `erd_remove_table_group` | `groupId` | 그룹을 삭제합니다. 그 테이블과 메모는 어느 그룹에도 속하지 않은 채 제자리에 남습니다. |
 | `erd_change_table_group_name` | `groupId`, `value` | 그룹 이름을 바꿉니다. 빈 문자열을 주면 이름이 없는 그룹이 됩니다. |
 | `erd_change_table_group_color` | `groupId`, `color` | 그룹 색상을 설정합니다. |
-| `erd_move_table_group` | `groupId`, `x`, `y` | 제목 표시줄을 드래그할 때처럼, 그룹의 영역이 그 지점에서 시작하도록 그룹을 옮기며 그 테이블도 같은 거리만큼 옮깁니다. 가로와 세로로 움직인 거리를 합해 20픽셀이 안 되는 이동은 Undo 항목을 만들지 않습니다. 서버 `1.2.0`부터는 이동이 그룹과 그 테이블이 끝나는 지점으로 에디터에 전달되므로, `4.3.0` 이상의 VS Code 확장이나 `1.3.0` 이상의 Obsidian 또는 JetBrains 플러그인에서는 그곳에서 같은 순간에 그룹이나 그 테이블 하나를 옮기면 두 위치의 합이 아니라 둘 중 한 위치로 끝납니다. [같은 순간에 한 편집](./live-and-headless.md#edits-made-at-the-same-moment) 문서를 참고하세요. |
-| `erd_resize_table_group` | `groupId`, `x?`, `y?`, `width`, `height` | 그룹의 영역을 설정하며, 그 테이블은 제자리에 남습니다. `x`와 `y`를 생략하면 그룹의 모서리가 유지됩니다. 그룹의 테이블을 여유 공간과 함께 담지 못하는 영역은 거부되며, 메시지에 영역이 담아야 하는 박스가 표시됩니다. |
+| `erd_move_table_group` | `groupId`, `x`, `y` | 제목 표시줄을 드래그할 때처럼, 그룹의 영역이 그 지점에서 시작하도록 그룹을 옮기며 그 테이블과, 숨겨진 메모를 포함한 메모도 같은 거리만큼 옮깁니다. 가로와 세로로 움직인 거리를 합해 20픽셀이 안 되는 이동은 Undo 항목을 만들지 않습니다. 서버 `1.2.0`부터는 이동이 그룹과 그 테이블이 끝나는 지점으로 에디터에 전달되므로, `4.3.0` 이상의 VS Code 확장이나 `1.3.0` 이상의 Obsidian 또는 JetBrains 플러그인에서는 그곳에서 같은 순간에 그룹이나 그 테이블 하나를 옮기면 두 위치의 합이 아니라 둘 중 한 위치로 끝납니다. [같은 순간에 한 편집](./live-and-headless.md#edits-made-at-the-same-moment) 문서를 참고하세요. 서버 `1.2.1`부터는 그 메모가 끝나는 지점도 같은 묶음으로 전달됩니다. |
+| `erd_resize_table_group` | `groupId`, `x?`, `y?`, `width`, `height` | 그룹의 영역을 설정하며, 그 테이블과 메모는 제자리에 남습니다. `x`와 `y`를 생략하면 그룹의 모서리가 유지됩니다. 그룹의 테이블과 표시된 메모를 여유 공간과 함께 담지 못하는 영역은 거부되며, 메시지에 영역이 담아야 하는 박스가 표시됩니다. |
 | `erd_set_table_group` | `tableIds`, `groupId` | 테이블을 그룹에 넣으며, 각 테이블은 원래 속해 있던 그룹에서 빠집니다. `groupId`를 `null`이나 빈 문자열로 주면 테이블을 모든 그룹에서 뺍니다. |
+| `erd_set_memo_group` | `memoIds`, `groupId` | 메모를 그룹에 넣으며, 각 메모는 원래 속해 있던 그룹에서 빠지고 제자리에 남습니다. `groupId`를 `null`이나 빈 문자열로 주면 메모를 모든 그룹에서 뺍니다. |
 
 `View Option` → `Table Groups`로 그룹을 숨긴 동안에도 이 도구들은 그룹을 추가하고 변경하며, 그룹은 다시 표시할 때까지 숨겨져 있습니다. [그룹 숨기기](../guide/guides/table-groups.md#그룹-숨기기) 문서를 참고하세요.
-`erd_sort_tables`는 각 그룹의 테이블을 한데 모아 두고, `erd_import_dbml`과 `erd_import_json`은 그룹을 가져옵니다. [가져오기](#가져오기) 항목을 참고하세요. `erd_read`는 `groupNames`로 고른 그룹의 DDL을 작성합니다.
+View Option → `Memos`로 숨긴 메모는 그룹에 그대로 속하며 그룹과 함께 움직이고, `erd_set_memo_group`과 `erd_add_table_group`의 `memoIds`는 표시된 메모와 마찬가지로 그 메모를 그룹에 넣습니다.
+`erd_sort_tables`는 각 그룹의 테이블과 메모를 한데 모아 두고, `erd_import_dbml`과 `erd_import_json`은 그룹을 가져옵니다. [가져오기](#가져오기) 항목을 참고하세요. `erd_read`는 `groupNames`로 고른 그룹의 DDL을 작성합니다.
 `4.0.0` 이전의 VS Code 확장과 `1.0.0` 이전의 Obsidian, JetBrains 플러그인처럼 테이블 그룹이 도입되기 전의 ERD Editor 릴리스는 파일을 저장할 때 그 파일의 그룹을 버립니다. [업데이트](./installation.md#업데이트) 문서를 참고하세요.
+메모가 테이블 그룹에 속할 수 있게 되기 전의 릴리스인 `4.3.1` 이전의 VS Code 확장과 `1.3.1` 이전의 Obsidian, JetBrains 플러그인은 메모가 어느 그룹에 속하는지 표시하지도 유지하지도 않으므로 모든 메모를 어느 그룹에도 속하지 않게 한 채 파일을 저장하며, 디스크의 파일을 쓰는 `1.2.1` 이전의 서버도 마찬가지입니다. [업데이트](./installation.md#업데이트) 문서를 참고하세요.
 
 ### 사전 {#dictionaries}
 
@@ -304,14 +340,14 @@ id는 `erd_list`와 `erd_get`에서, 또는 엔티티를 만든 호출의 `creat
 - 관계와 인덱스는 가져온 테이블 사이의 것만 들어오므로, 텍스트가 선언하지 않은 테이블을 가리키는 foreign key는 버려집니다.
 - `erd_import_sql`, `erd_import_graphql`, `erd_import_aml`은 테이블을 관계, 인덱스와 함께 추가하고, `erd_import_dbml`은 테이블 그룹도 추가합니다. `erd_import_json`은 테이블, 관계, 인덱스, 메모, 테이블 그룹을 추가하지만 설정은 절대 추가하지 않으며, 빈 텍스트는 거부합니다. 테이블과 컬럼은 논리명을 가져오지만, 어떤 컬럼도 도메인에 연결되지 않으며, JSON의 단어, 용어, 도메인은 하나도 들어오지 않습니다.
 
-JSON 문서는 테이블 그룹을 포함해 자체 배치를 유지합니다. `replace`에서는 JSON이 테이블을 놓은 자리 그대로, `append`에서는 추가된 블록 안에서 그 배치를 유지합니다.
+JSON 문서는 테이블 그룹과 각 그룹이 담은 테이블과 메모를 포함해 자체 배치를 유지합니다. `replace`에서는 JSON이 테이블을 놓은 자리 그대로, `append`에서는 추가된 블록 안에서 그 배치를 유지합니다.
 SQL, GraphQL, DBML, AML의 테이블은 `erd_sort_tables`가 배치하는 방식대로 컬럼이 적은 테이블부터, 각 그룹의 테이블을 한데 모아 여러 줄로 배치되며, 에디터 자체의 Import가 가능할 때 하는 것처럼 `Flow`로 배치되는 일은 없습니다. 이 네 도구는 어느 모드에서든 빈 텍스트를 거부합니다.
 
 ## erd_batch
 
 `erd_batch`는 여러 편집 도구를 순서대로, 전부 적용하거나 전혀 적용하지 않는 하나의 편집으로 실행합니다.
 
-- `operations`에는 최대 100개의 항목을 담으며, 각 항목은 `{ tool, as?, args? }`이고, `tool`은 편집 도구, `args`는 `path`를 뺀 도구의 인자입니다. `erd_list_checks` 같은 읽기 도구는 거부됩니다.
+- `operations`에는 최대 100개의 항목을 담으며, 각 항목은 `{ tool, as?, args? }`이고, `tool`은 편집 도구, `args`는 `path`를 뺀 도구의 인자입니다. `erd_list_checks` 같은 읽기 도구는 거부되며, `erd_export_svg`도 거부됩니다.
 - 작업은 먼저 문서의 복사본에서 시도됩니다. 거부된 작업은 `operations[1] erd_remove_table: …`처럼 이름이 표시되며, 아무것도 적용되지 않습니다.
 - `erd_undo` 한 번으로 묶음 전체를 되돌리지만, 되돌릴 수 없는 작업은 예외이며 결과의 `undoNote`가 그 작업의 이름을 알려 줍니다. `erd_set_database`처럼 Undo 항목을 만들지 않는 도구의 작업과, 짧은 `erd_move_table_group`처럼 Undo 항목을 만들지 않고 문서를 바꾼 작업입니다. Undo 항목을 하나도 만들지 않은 묶음은 `erd_undo`가 건너뜁니다. 결과의 `historyEntries`는 `erd_undo` 호출 횟수가 아니라 묶음 안의 에디터 히스토리 항목 수를 셉니다.
 - 라이브 세션에서는 에디터가 묶음 전체를 받아들이거나 전혀 받아들이지 않습니다.
@@ -391,21 +427,21 @@ SQL, GraphQL, DBML, AML의 테이블은 `erd_sort_tables`가 배치하는 방식
 
 | `code` | 이유 |
 | --- | --- |
-| `notFound` | id가 가리키는 대상이 현재 문서에 없거나, 파일이 존재하지 않습니다. |
+| `notFound` | id가 가리키는 대상이 현재 문서에 없거나, 파일이 존재하지 않거나, `erd_export_svg`의 `output` 폴더가 존재하지 않습니다. |
 | `invalidArgs` | 인자가 빠졌거나 값이 잘못되었습니다. |
-| `invalidPath` | 경로가 ERD 문서가 아닙니다. Windows에서는 Windows가 적힌 그대로 저장하지 않는 이름이 들어간 경로이거나, 에디터가 다른 경로로 담고 있는 문서를 가리키는 경로일 때도 해당하며, 메시지에 그 다른 경로가 표시됩니다. |
+| `invalidPath` | 경로가 ERD 문서가 아니거나, `erd_export_svg`의 `output`이 `.svg` 파일이 아닙니다. [SVG 내보내기](#svg-export) 항목을 참고하세요. Windows에서는 Windows가 적힌 그대로 저장하지 않는 이름이 들어간 경로이거나, 에디터가 다른 경로로 담고 있는 문서를 가리키는 경로일 때도 해당하며, 메시지에 그 다른 경로가 표시됩니다. |
 | `invalidDocument` | 파일이 에디터가 읽을 수 있는 문서가 아닙니다. |
-| `tooLarge` | 읽기 결과가 한 번의 응답에 담기지 않습니다. |
+| `tooLarge` | 읽기 결과나 `output` 없이 요청한 SVG가 한 번의 응답에 담기지 않습니다. |
 | `blocked` | 허브가 꺼진 에디터가 문서를 담고 있습니다. 메시지에 허브를 켜는 방법이 나옵니다. VS Code에서는 워크스페이스를 신뢰하고 `dineug.erd-editor.agentHub.enabled`를 켜거나 창을 다시 로드하고, Obsidian에서는 Coding agents를 켜거나 Obsidian을 다시 로드하고, JetBrains IDE에서는 Coding agents를 켜거나, 켜져 있다면 IDE를 다시 시작합니다. |
 | `hubDisabled` | JetBrains IDE가 신뢰하지 않는 프로젝트에서만 문서를 담고 있습니다. 읽기는 그대로 동작하며, 에이전트가 편집하게 하려면 프로젝트를 신뢰하세요. |
 | `conflict` | 호출 중에 디스크의 파일이 바뀌었습니다. 아무것도 쓰지 않았습니다. |
 | `hubAppeared`, `hubGone` | 에이전트가 디스크에서 편집하던 문서를 에디터가 담당하기 시작했거나, 문서를 담당하던 에디터가 아직 실행 중이지만 잠금 파일과 연결이 사라졌습니다. 아무것도 쓰지 않았습니다. |
 | `notSaved` | `erd_save`가 에디터의 문서를 저장하지 못했습니다. |
-| `readonly` | 쓸 수 없거나 다이어그램으로 읽을 수 없는 파일처럼, 에디터가 문서를 읽기 전용으로 담고 있습니다. 에디터가 없으면 체크아웃하지 않은 Perforce 또는 TFVC 파일처럼 파일 자체가 읽기 전용입니다. 아무것도 쓰지 않았습니다. |
+| `readonly` | 쓸 수 없거나 다이어그램으로 읽을 수 없는 파일처럼, 에디터가 문서를 읽기 전용으로 담고 있습니다. 에디터가 없으면 체크아웃하지 않은 Perforce 또는 TFVC 파일처럼 파일 자체가 읽기 전용입니다. `erd_export_svg`에서는 `output`이 지정하는 `.svg` 파일이 읽기 전용입니다. 아무것도 쓰지 않았습니다. |
 | `protocolMismatch` | 서버 `1.0.0` 이상과 `3.x` VS Code 확장처럼, 에디터의 ERD Editor 확장이나 플러그인과 서버가 서로 다른 프로토콜 버전을 사용합니다. 읽기도 거부되며, 메시지에 업데이트할 쪽이 표시됩니다. [업데이트](./installation.md#업데이트) 문서를 참고하세요. |
 | `hubUnreachable`, `timeout`, `disconnected` | 에디터의 허브가 연결을 받아들이지 않았거나, 30초 안에 응답하지 않았거나, 호출 중에 연결을 끊었습니다. Windows에서 `hubUnreachable`은 Windows가 에이전트의 허브 접근을 막았다는 뜻이기도 합니다. 에디터를 관리자 권한으로 실행했는데 에이전트는 그렇지 않은 경우처럼 에디터가 에이전트보다 높은 권한으로 실행되거나, 에이전트가 샌드박스에서 실행되는 경우입니다. |
 
 그 밖의 코드는 드물게 나오며, 모든 거부에는 무슨 일이 있었는지 알려 주는 메시지가 담깁니다.
 
-편집 도구, `erd_batch`, 네 가지 읽기 도구는 선언하지 않은 인자나 타입이 잘못된 인자를 문서를 건드리기 전에 JSON-RPC invalid params 오류(`-32602`)로 거부하므로, 철자가 틀린 인자가 조용히 버려지는 일은 없습니다.
+편집 도구, `erd_batch`, 네 가지 읽기 도구, `erd_export_svg`는 선언하지 않은 인자나 타입이 잘못된 인자를 문서를 건드리기 전에 JSON-RPC invalid params 오류(`-32602`)로 거부하므로, 철자가 틀린 인자가 조용히 버려지는 일은 없습니다.
 세션 도구 5개는 모르는 인자를 무시합니다.

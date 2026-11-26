@@ -19,7 +19,7 @@ VS Code, Obsidian och JetBrains-pluginet skriver en fil bara när en redigering 
 Sedan `4.2.0` utelämnar lagringsformen också det som inte innehåller något: varje textfält som en entitet eller dess `ui` har som `''` (en tabells `name`, `comment` och `ui.color`, en kolumns `name`, `comment`, `dataType` och `default`, ett index `name`, en antecknings `value` och `ui.color`, en tabellgrupps `name` och `color`), varje lista i `doc` och varje samling som saknar poster samt själva `collections` när alla samlingar är tomma. Text som bara består av blanksteg skrivs som den är, utom i ett logiskt namn, som då utelämnas, och i ett ord, en term eller en domän vars värden efter id:t alla är tomma eller bara består av blanksteg, som utelämnas i sin helhet. Varje id, varje lista inuti en entitet och varje tal, även `0`, skrivs fortfarande. `doc` skrivs alltid, så filen för ett nytt dokument innehåller `$schema`, `version`, dess inställningar och `"doc": {}`.  
 Vid tolkning läses ett saknat textfält som `''` och en saknad samling som tom, som i alla v3-versioner, och lagringsformen utelämnar en lista i `doc` bara när dess samling inte innehåller något (se [Doc](#doc)). Därför öppnar även en editor från före `4.2.0` de här filerna, och ett program som självt läser en fil måste läsa det som saknas på samma sätt. En fil som en tidigare version har sparat kommer tillbaka från sin nästa sparning med sin tomma text och sina tomma listor och samlingar utelämnade, en ändring som görs en gång, och sparas därefter likadant byte för byte.
 
-Lagringsformen skriver varje låst inställning med dess låsta värde (se [`lockSettings`](#settings)), `settings.ddlScripts` bara när ett skript innehåller text och en tabells `groupId` bara när det anger en tabellgrupp som filen skriver. Sedan `4.2.0` skriver den också `settings.nameViewMode` bara när värdet den skriver inte är `'physical'`, `settings.columnOrder` med sju poster där det går (se [Settings](#settings)) och en tabells `nameDerived` bara när det är `true`.  
+Lagringsformen skriver varje låst inställning med dess låsta värde (se [`lockSettings`](#settings)), `settings.ddlScripts` bara när ett skript innehåller text och en tabells eller, sedan `5.1.1`, en antecknings `groupId` bara när det anger en tabellgrupp som filen skriver. Sedan `4.2.0` skriver den också `settings.nameViewMode` bara när värdet den skriver inte är `'physical'`, `settings.columnOrder` med sju poster där det går (se [Settings](#settings)) och en tabells `nameDerived` bara när det är `true`.  
 Den skriver `doc.tableGroupIds` och `tableGroupEntities` bara när det finns en tabellgrupp, ett `logicalName` bara när det innehåller annan text än blanksteg, en kolumns `domainId` bara när det anger en domän som filen skriver och varje ordlista bara när den innehåller en rad som filen skriver.
 
 En fil som sparades före `4.0.0` innehåller hela dokumentet så som en editor då hade det, inklusive dess borttagna entiteter och det som varje inläsning räknar fram. En inläsning läser den, behåller varje tabells och antecknings plats i stapeln (se [Doc](#doc)) och räknar fram resten på nytt, och nästa sparning skriver bara lagringsformen.
@@ -394,6 +394,7 @@ const OrderType = {
 type Memo = {
   id: string;
   value?: string;
+  groupId?: string;
   ui: MemoUI;
 };
 
@@ -407,6 +408,9 @@ type MemoUI = {
 ```
 
 Sedan `4.0.0` [delar tabeller och anteckningar på samma stapel](../../guide/guides/table-related-functions.md#moving-multiple-tables), så en tabell som läggs överst kan hamna över en anteckning. En inläsning lägger varje anteckning ovanför varje tabell, som [Doc](#doc) beskriver. En anteckning i en fil som sparats före `4.0.0` behåller det `zIndex` som den sparade, vilket kom från samma räknare som tabellernas, så en anteckning som en tidigare version ritade över alla tabeller kan öppnas under en tabell som lades överst efter den.
+
+Sedan `5.1.1` har en anteckning `groupId`, id:t för den [tabellgrupp](../../guide/guides/table-groups.md) som den tillhör, liksom en tabell. Ett saknat eller tomt `groupId`, som i varje fil som sparats före `5.1.1`, eller ett som inte anger någon grupp i `doc.tableGroupIds`, betyder ingen grupp, och lagringsformen skriver det bara när det anger en bevarad grupp.  
+En editor från före `5.1.1` tar bort varje antecknings `groupId` när den läser in ett dokument, så om dokumentet sparas där tas varje anteckning ur sin grupp, men en sådan editor från `4.0.0` och senare behåller tabellernas grupper – se [Blanda versioner](./collaborative-editing.md#mixing-releases).
 
 ### Samling: tableGroupEntities {#collection-tablegroupentities}
 
@@ -426,7 +430,7 @@ type TableGroupUI = {
 };
 ```
 
-Sedan `4.0.0` kan ett dokument innehålla [tabellgrupper](../../guide/guides/table-groups.md): namngivna, färgade rektanglar som ritas bakom tabellerna. En tabell går med i en grupp via sitt eget `groupId`, så en grupp innehåller ingen lista över medlemmar. Lagringsformen skriver samlingen, liksom `doc.tableGroupIds`, bara när det finns en grupp, och ett dokument utan den, till exempel ett som sparats före `4.0.0`, har inga grupper. `Show.hideTableGroup` döljer dem.  
+Sedan `4.0.0` kan ett dokument innehålla [tabellgrupper](../../guide/guides/table-groups.md): namngivna, färgade rektanglar som ritas bakom tabeller och anteckningar. En tabell, och sedan `5.1.1` en anteckning, går med i en grupp via sitt eget `groupId`, så en grupp innehåller ingen lista över medlemmar. Lagringsformen skriver samlingen, liksom `doc.tableGroupIds`, bara när det finns en grupp, och ett dokument utan den, till exempel ett som sparats före `4.0.0`, har inga grupper. `Show.hideTableGroup` döljer dem.  
 En editor från före `4.0.0` tar bort grupperna och varje tabells `groupId` när den läser in ett dokument, så alla grupper går förlorade om dokumentet sparas där.
 
 ### Ordlistornas rader {#dictionary-rows}
@@ -525,6 +529,8 @@ Lägg `$schema` överst i en `.erd.json`-fil, så validerar editorer som först�
 Sedan `4.0.0` beskriver schemat endast lagringsformen. Varje objekt med namngivna fält är stängt (`additionalProperties: false`), varje fält som lagringsformen alltid skriver är obligatoriskt, varje fält som är märkt med `?` i typerna ovan namnges men är inte obligatoriskt och inget annat fält namnges. Det avvisar därför en fil som sparats före `4.0.0`, med dess `meta`, bredder, `zIndex`, `ignoreSaveSettings` och resten, tills en editor i version `4.0.0` eller senare sparar filen igen. En fil som sparats av `3.2.0` eller senare anger redan URL:en till det här schemat, som pekar på grenen `main`, så en editor som validerar mot det flaggar filen nu. En fil som sparats av `3.0.0` eller `3.1.0`, eller ett v2-dokument, anger inget `$schema`.
 
 Sedan `4.2.0` kräver schemat inte längre en entitets textfält, någon lista i `doc`, någon samling eller själva `collections`, som lagringsformen utelämnar när de inte innehåller något. Det accepterar fortfarande en fil som sparats av `4.0.0` eller `4.1.0`. Det namnger de nya fälten: `nameViewMode`, som bara accepterar `"logical"` och `"both"`; en tabells `logicalName` och `nameDerived`, som bara accepterar `true`; en kolumns `logicalName` och `domainId`; och de tre ordlistorna, var och en med sin rubrikrad och sina rader av strängar. `canvasType` listar fliken Ordlista, `columnOrder` accepterar sju eller nio heltal och beskrivningarna av `show`, `columnOrder`, `lockSettings` och `options` namnger de nya bitarna.
+
+Sedan `5.1.1` namnger det också en antecknings `groupId`, som en kopia av schemat från före `5.1.1` avvisar.
 
 ```json
 {
@@ -939,6 +945,10 @@ Sedan `4.2.0` kräver schemat inte längre en entitets textfält, någon lista i
           "value": {
             "type": "string"
           },
+          "groupId": {
+            "description": "Id of the table group in doc.tableGroupIds the memo belongs to; absent means none",
+            "type": "string"
+          },
           "ui": {
             "type": "object",
             "properties": {
@@ -967,7 +977,7 @@ Sedan `4.2.0` kräver schemat inte längre en entitets textfält, någon lista i
       }
     },
     "tableGroupEntities": {
-      "description": "Named, coloured rectangles drawn behind tables; a table joins one through its groupId. Written while a group exists; absent means none",
+      "description": "Named, coloured rectangles drawn behind tables and memos; a table or a memo joins one through its groupId. Written while a group exists; absent means none",
       "type": "object",
       "additionalProperties": {
         "type": "object",

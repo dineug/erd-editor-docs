@@ -157,6 +157,7 @@ const data = replicationStore.value;
 Sinds `4.0.0` is `value` de opslagvorm: het document zoals een bestand het bevat, dezelfde tekst die de eigenschap [value](../erd-editor-element.md#value) van het element teruggeeft.  
 De opslagvorm bevat alleen de niet-verwijderde entiteiten, in een vaste volgorde, zonder de verwijderde, zonder de stapelvolgorde en zonder alles wat bij het laden opnieuw wordt bepaald, zoals de breedtes die [toWidth](#towidth) meet.  
 Sinds `4.2.0` bevat de opslagvorm ook de logische namen, of elke naam uit de woordenboeken is afgeleid, de domeinkoppelingen en de woorden, termen en domeinen van het tabblad [Woordenboek](../../guide/guides/dictionary.md).  
+Sinds `5.1.1` bevat ze ook de tabelgroep waarin elke memo zit.  
 Ook laat de opslagvorm sinds `4.2.0` elk leeg tekstveld van een entiteit weg, elke lijst in `doc` en elke collectie die niets bevat, en `collections` zelf wanneer elke collectie leeg is.  
 De tekst is met twee spaties ingesprongen, met elke woordenboekrij op een eigen regel, en eindigt met een regeleinde, zodat hetzelfde document altijd dezelfde bytes oplevert.  
 Zie [Opslagvorm](./schema.md#storage-form) voor wat erin staat.
@@ -305,6 +306,10 @@ Houd elke editor in de sessie, en de replica, op `5.1.0` of later opdat bewerkin
 
 Sinds `5.1.0` verstuurt een editor een wijziging van de taal van de Codegenerator, een naamnotatie of het type aanhalingstekens alleen terwijl de vergrendeling van die instelling uitstaat, gemarkeerd met `shared: true` in de payload, en past de replica elke gemarkeerde toe, zoals de editors dat doen; zie [Gezamenlijk bewerken](./collaborative-editing.md).  
 Een niet-gemarkeerde, die een editor van vóór `5.1.0` ongeacht de vergrendeling verstuurt, past de replica alleen toe terwijl die instelling aan haar kant ontgrendeld is, en ze laat die vallen terwijl de instelling vergrendeld is (zie [on@change](#onchange)).
+
+Sinds `5.1.1` hoort bij de behouden acties ook `memo.changeGroup`, dat een memo in een [tabelgroep](../../guide/guides/table-groups.md) zet of eruit haalt, en schrijft `value` de groep waarin elke memo zit (zie [Opslagvorm](./schema.md#storage-form)).  
+`5.1.1` wijzigt geen enkele export van `@dineug/erd-editor/engine.js`.  
+Een store uit een eerdere versie laat `memo.changeGroup` en de `groupId` van elke memo vallen, dus hij slaat geen memo in een groep op, en een editor van vóór `5.1.1` in de sessie kan op een replica van `5.1.1` nog steeds memo's uit hun groepen halen; zie [Versies combineren](./collaborative-editing.md#mixing-releases).
 
 Sinds `4.0.0` passen beide methoden ook `editor.mergeLWW` toe, dat de samenwerkingsregisters bevat waarmee een editor antwoordt wanneer een andere editor zich bij de sessie aansluit, zodat de replica gelijktijdige bewerkingen op dezelfde manier afhandelt als de editors.  
 Dat wijzigt geen enkele byte van `value` en leidt niet tot `change`.  

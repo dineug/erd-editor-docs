@@ -39,7 +39,7 @@ interface ErdViewerElement extends HTMLElement {
 ```
 
 Import av `@dineug/erd-editor/erd-viewer.js` definierar `<erd-viewer>` och lämnar `<erd-editor>` odefinierad. Import av paketets rot definierar ingetdera: den exporterar klassen `ErdViewerElement` och `defineErdViewer()`, som definierar taggen där du anropar den, så en sida kan också definiera klassen under en egen tagg – se [Registrera elementen](./installation.md#registering-the-elements).  
-Varje ingångspunkt utom `engine.js` och `peer.js` behöver en DOM, den här också, så en sida som renderas på servern importerar den på klienten – se [Rendering på serversidan](./installation.md#server-side-rendering).  
+Varje ingångspunkt som de här sidorna beskriver utom `engine.js` och `peer.js` behöver en DOM, den här också, så en sida som renderas på servern importerar den på klienten – se [Rendering på serversidan](./installation.md#server-side-rendering).  
 Import av ingångspunkten lägger till `erd-viewer` i `HTMLElementTagNameMap`, så `document.createElement('erd-viewer')` och `document.querySelector('erd-viewer')` får typen `ErdViewerElement` utan typomvandling.
 
 Liksom editorn renderar visaren i en stängd shadow root, så `viewer.shadowRoot` är `null` och sidans stilar läcker varken in eller ut; stila den genom [setTheme](#settheme) och de anpassade egenskaperna `--erd-editor-*`. Flera visare på en sida behåller var och en sitt eget dokument, sin egen vy, sitt eget tema och sitt eget språk.  
@@ -52,7 +52,7 @@ Builden för script-taggen, `dist/erd-viewer.umd.js`, innehåller enbart visaren
 
 ```html
 <erd-viewer src="diagram.erd.json" style="display: block; height: 480px"></erd-viewer>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0/dist/erd-viewer.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.1/dist/erd-viewer.umd.js"></script>
 ```
 
 ## src {#src}

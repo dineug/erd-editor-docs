@@ -55,16 +55,17 @@ View Option → `Memos` 关闭期间，备注会被隐藏，任何地方都不�
 备注是画布上的自由文本笔记。在其正文区域点击后即可输入，内容会随文档一起保存。  
 `Escape` 会关闭备注编辑器，保留已输入的内容，并让该备注保持选中状态，再按一次 `Escape` 则会清除选中状态。  
 拖动边框可调整其大小。标题栏中的 `x` 会在指针位于备注上方时显示，点击即可将其删除。  
-右键点击备注打开的是它的菜单，而不是编辑器：其中有 `Color`、`Remove color`（某个选中的对象带有颜色时显示）和 `Delete`（该备注是两个或更多选中对象之一时显示为 `Delete selected`）。选中的备注同样可以用删除表的按键删除，参见[删除表与备注](./table-related-functions.md#删除表与备注)。
+右键点击备注打开的是它的菜单，而不是编辑器：其中有 `Color`、`Remove color`（某个选中的对象带有颜色时显示）、`Group selected tables`（选中范围中含有表且显示表分组时显示）、`Remove from group`（选中的表或备注位于分组中时显示）和 `Delete`（该备注是两个或更多选中对象之一时显示为 `Delete selected`）。选中的备注同样可以用删除表的按键删除，参见[删除表与备注](./table-related-functions.md#删除表与备注)。  
+与表一样，备注在哪里放下，决定了它加入还是离开[表分组](./table-groups.md)。`Remove from group` 同样可以把它移出，`Group selected tables` 则会把它与一同选中的表放入一个新分组，参见[添加与移除表](./table-groups.md#adding-and-removing-tables)。
 
 ![按 Alt + M 添加备注，输入内容后拖动边框调整其大小](/img/demo-memo.webp)
 
 ## 创建表分组
 
-表分组是一个容纳表的框，可以为它设置名称和颜色。可以通过以下两种方式之一创建：
+表分组是一个容纳表和备注的框，可以为它设置名称和颜色。可以通过以下两种方式之一创建：
 
-- 从右键菜单或快速搜索中选择 `New Table Group`、点击[画布工具栏](./table-related-functions.md#canvas-toolbar)中的 `New Table Group` 按钮，或者按 `Alt + G` (Windows/Linux) 或 `⌥ + G` (Mac)，然后在画布上拖出一个框。中心位于框内的每个表都会加入新的分组，已属于其他分组的表除外，参见[绘制分组](./table-groups.md#drawing-a-group)。
-- 选中若干表，然后在表的右键菜单中选择 `Group selected tables` 或在快速搜索中选择 `Group Selected Tables`，也可以先按 `T` 再按 `G`，参见[为选中的表分组](./table-groups.md#grouping-selected-tables)。
+- 从右键菜单或快速搜索中选择 `New Table Group`、点击[画布工具栏](./table-related-functions.md#canvas-toolbar)中的 `New Table Group` 按钮，或者按 `Alt + G` (Windows/Linux) 或 `⌥ + G` (Mac)，然后在画布上拖出一个框。中心位于框内的每个表和每个显示的备注都会加入新的分组，已属于其他分组的除外，参见[绘制分组](./table-groups.md#drawing-a-group)。
+- 选中若干表，以及任何要与它们一同分组的备注，然后在表或备注的右键菜单中选择 `Group selected tables` 或在快速搜索中选择 `Group Selected Tables`，也可以先按 `T` 再按 `G`，参见[为选中的表分组](./table-groups.md#grouping-selected-tables)。
 
 命名、着色、移动、调整大小等其他操作，参见[表分组](./table-groups.md)。
 

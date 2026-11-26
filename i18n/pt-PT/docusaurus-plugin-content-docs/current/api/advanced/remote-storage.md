@@ -157,6 +157,7 @@ const data = replicationStore.value;
 A partir da `4.0.0`, o `value` é a forma de armazenamento: o documento tal como um ficheiro o contém, o mesmo texto que o [value](../erd-editor-element.md#value) do elemento devolve.  
 Contém só as entidades ativas, numa ordem fixa, sem as removidas, a ordem de sobreposição ou qualquer coisa que um carregamento volte a calcular, como as larguras que [toWidth](#towidth) mede.  
 A partir da `4.2.0`, contém também os nomes lógicos, a indicação de se cada nome foi derivado dos dicionários, os vínculos aos domínios e as palavras, os termos e os domínios do separador [Dicionário](../../guide/guides/dictionary.md).  
+A partir da `5.1.1`, contém também o grupo de tabelas em que cada nota está.  
 Também deixa de fora, a partir da `4.2.0`, cada campo de texto vazio de uma entidade, cada lista de `doc` e cada coleção que não contenha nada e o próprio `collections` quando todas as coleções estão vazias.  
 Tem uma indentação de dois espaços, com cada linha de um dicionário numa linha de texto própria, e termina com uma quebra de linha, pelo que o mesmo documento dá sempre os mesmos bytes.  
 Consulte [Forma de armazenamento](./schema.md#storage-form) para saber o que contém.
@@ -305,6 +306,10 @@ Mantenha todos os editores da sessão, e a réplica, na `5.1.0` ou posterior par
 
 A partir da `5.1.0`, um editor envia uma mudança da linguagem do Gerador de código, de um formato do nome ou do tipo de delimitador apenas enquanto o bloqueio dessa definição está desativado, marcada com `shared: true` no seu conteúdo, e a réplica aplica todas as marcadas, tal como os editores; consulte [Edição colaborativa](./collaborative-editing.md).  
 A réplica aplica uma não marcada, que um editor anterior à `5.1.0` envia seja qual for o bloqueio, apenas enquanto essa definição está desbloqueada do seu lado, e descarta-a enquanto a definição está bloqueada (consulte [on@change](#onchange)).
+
+A partir da `5.1.1`, as ações mantidas incluem também `memo.changeGroup`, que coloca uma nota num [grupo de tabelas](../../guide/guides/table-groups.md) ou a tira dele, e `value` escreve o grupo em que cada nota está (consulte [Forma de armazenamento](./schema.md#storage-form)).  
+A `5.1.1` não altera nenhuma exportação de `@dineug/erd-editor/engine.js`.  
+Um armazenamento de uma versão anterior descarta `memo.changeGroup` e o `groupId` de todas as notas, pelo que não guarda nenhuma nota num grupo, e um editor anterior à `5.1.1` na sessão ainda pode tirar notas dos seus grupos numa réplica `5.1.1`; consulte [Misturar versões](./collaborative-editing.md#mixing-releases).
 
 A partir da `4.0.0`, ambos os métodos aplicam também o `editor.mergeLWW`, que transporta os registos de colaboração com que um editor responde quando outro se junta à sessão, pelo que a réplica resolve as edições simultâneas da mesma forma que os editores.  
 Não altera nenhum byte do `value` nem dispara nenhum `change`.  

@@ -56,6 +56,7 @@ Een VS Code-venster bedient de diagrammen in zijn werkruimtemappen en elk diagra
 Een extensie van `3.0.0` tot en met `3.1.0` en server `1.0.0` of later weigeren elkaar, en een extensie vóór `3.0.0` bedient geen agents.
 Een extensie `4.0.0` of `4.1.0` maakt verbinding, maar toont noch behoudt de logische namen, domeinkoppelingen en woordenboekrijen die de agent schrijft.
 Met een extensie vóór `4.3.0` kan een tabel, memo of tabelgroep die jij en de agent op hetzelfde moment verplaatsen of waarvan jullie de grootte wijzigen, voor ieder van jullie op een andere plaats eindigen — zie [Bijwerken](#updating).
+Een extensie vóór `4.3.1` toont noch behoudt in welke tabelgroep een memo zit.
 
 De extensie start in een werkruimte die `.erd`-, `.erd.json`-, `.vuerd`- of `.vuerd.json`-bestanden bevat, zodat een agent die diagrammen bereikt voordat je er een opent.
 In een werkruimte zonder zulke bestanden start de extensie wanneer je een diagram opent, en tot dan bewerkt de agent op schijf.
@@ -74,6 +75,7 @@ Een venster van een Obsidian-kluis bedient de diagrammen in die kluis.
 Een plug-in vóór `1.0.0` en server `1.0.0` of later weigeren elkaar.
 Een plug-in `1.0.0` of `1.1.0` maakt verbinding, maar toont noch behoudt de logische namen, domeinkoppelingen en woordenboekrijen die de agent schrijft.
 Met een plug-in vóór `1.3.0` kan een tabel, memo of tabelgroep die jij en de agent op hetzelfde moment verplaatsen of waarvan jullie de grootte wijzigen, voor ieder van jullie op een andere plaats eindigen — zie [Bijwerken](#updating).
+Een plug-in vóór `1.3.1` toont noch behoudt in welke tabelgroep een memo zit.
 
 Een kluisvenster bedient agents vanaf het moment dat de plug-in wordt geladen, zodat een agent de diagrammen van de kluis bereikt voordat je er een opent.
 Er is geen vertrouwensstap.
@@ -102,6 +104,7 @@ Een JetBrains-IDE bedient de diagrammen van elk project dat erin geopend is, en 
 Een plug-in `0.9.0` of `0.10.0` en server `1.0.0` of later weigeren elkaar, en een plug-in vóór `0.9.0` bedient geen agents.
 Een plug-in `1.0.0` of `1.1.0` maakt verbinding, maar toont noch behoudt de logische namen, domeinkoppelingen en woordenboekrijen die de agent schrijft.
 Met een plug-in vóór `1.3.0` kan een tabel, memo of tabelgroep die jij en de agent op hetzelfde moment verplaatsen of waarvan jullie de grootte wijzigen, voor ieder van jullie op een andere plaats eindigen — zie [Bijwerken](#updating).
+Een plug-in vóór `1.3.1` toont noch behoudt in welke tabelgroep een memo zit.
 
 De IDE bedient agents vanaf het moment dat het eerste project wordt geopend, zodat een agent de diagrammen van een project bereikt voordat je er een opent.
 
@@ -153,7 +156,14 @@ Maar een verplaatsing of formaatwijziging die jij en de agent op hetzelfde momen
 Als een van beide kanten ouder is, kunnen de editor en de agent met verschillende posities eindigen, en de agent blijft vanuit zijn eigen positie lezen en bewerken totdat een latere verplaatsing beide op één punt zet of de agent zich opnieuw bij het document aansluit — zie [Bewerkingen op hetzelfde moment](./live-and-headless.md#edits-made-at-the-same-moment).
 Geen van deze versies wijzigt wat een bestand bevat.
 
+Server `1.2.1` spreekt ook protocol 2. Hij voegt twee tools toe, `erd_set_memo_group` en `erd_export_svg`, en het argument `memoIds` van `erd_add_table_group`, en verwijdert of hernoemt er geen — zie [Tabelgroepen](./tools.md#table-groups) en [SVG-export](./tools.md#svg-export).
+Memo's in tabelgroepen vereisen server `1.2.1` of later en, overal waar het document is geopend, de VS Code-extensie `4.3.1` of later of de Obsidian- of JetBrains-plug-in `1.3.1` of later.
+Een eerdere extensie of plug-in die verbinding maakt, negeert in welke groep een memo zit, al slaagt de aanroep van de agent, en laat de groepen van de memo's weg wanneer ze het bestand opslaat.
+Een server vóór `1.2.1` heeft er geen tools voor en leest elke memo alsof hij in geen enkele groep zit, en een bestand dat hij op schijf bewerkt, wordt teruggeschreven met elke memo buiten zijn groep — zie [Headless](./live-and-headless.md#headless).
+`erd_export_svg` vereist alleen server `1.2.1` of later, met elke versie van de extensie of plug-in die verbinding maakt, omdat de server de afbeelding zelf tekent.
+
 Werk ERD Editor ook bij overal waar de diagrammen worden geopend.
+De VS Code-extensie vóór `4.3.1`, de Obsidian-plug-in vóór `1.3.1` en de JetBrains-plug-in vóór `1.3.1` openen een diagram dat een latere versie heeft opgeslagen, of dat de agent op schijf heeft bewerkt, met elke memo buiten zijn tabelgroep, en laten de groepen van de memo's weg wanneer ze het bestand opslaan.
 De VS Code-extensie vóór `4.2.0`, de Obsidian-plug-in vóór `1.2.0` en de JetBrains-plug-in vóór `1.2.0` openen een diagram dat een latere versie heeft opgeslagen, of dat de agent op schijf heeft bewerkt, zonder de logische namen van de tabellen en kolommen, de domeinkoppelingen van de kolommen en de woorden, termen en domeinen ervan.
 Wanneer ze het bestand opslaan, laten ze die weg.
 De VS Code-extensie vóór `4.0.0`, de Obsidian-plug-in vóór `1.0.0` en de JetBrains-plug-in vóór `1.0.0` tonen zo'n diagram bovendien zonder de pictogrammen voor primaire sleutels, en laten de tabelgroepen en Schema SQL-scripts ervan weg wanneer ze het bestand opslaan.

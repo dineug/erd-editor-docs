@@ -39,7 +39,7 @@ interface ErdViewerElement extends HTMLElement {
 ```
 
 `@dineug/erd-editor/erd-viewer.js` dosyasını içe aktarmak `<erd-viewer>` öğesini tanımlar ve `<erd-editor>` öğesini tanımsız bırakır. Paket kökünü içe aktarmak ikisini de tanımlamaz: `ErdViewerElement` sınıfını ve etiketi çağırdığınız yerde tanımlayan `defineErdViewer()` işlevini dışa aktarır, böylece bir sayfa sınıfı kendi etiketi altında da tanımlayabilir. [Öğeleri kaydetme](./installation.md#registering-the-elements) bölümüne bakın.  
-`engine.js` ve `peer.js` dışındaki her giriş noktası bir DOM gerektirir, bu da dahil, bu yüzden sunucu tarafında işlenen bir sayfa onu istemcide içe aktarır. [Sunucu tarafında işleme](./installation.md#server-side-rendering) bölümüne bakın.  
+Bu sayfaların anlattığı giriş noktalarından `engine.js` ve `peer.js` dışındaki her biri bir DOM gerektirir, bu da dahil, bu yüzden sunucu tarafında işlenen bir sayfa onu istemcide içe aktarır. [Sunucu tarafında işleme](./installation.md#server-side-rendering) bölümüne bakın.  
 Giriş noktasını içe aktarmak `erd-viewer` öğesini `HTMLElementTagNameMap` arayüzüne ekler, bu yüzden `document.createElement('erd-viewer')` ve `document.querySelector('erd-viewer')` çağrıları tür dönüştürmeye gerek kalmadan `ErdViewerElement` olarak türlenir.
 
 Düzenleyici gibi görüntüleyici de kapalı bir gölge köke (shadow root) çizer, bu yüzden `viewer.shadowRoot` değeri `null` olur ve sayfa stilleri içeri ya da dışarı sızmaz; onu [setTheme](#settheme) ve `--erd-editor-*` özel özellikleriyle biçimlendirin. Bir sayfadaki birkaç görüntüleyicinin her biri kendi belgesini, görünümünü, temasını ve dilini tutar.  
@@ -52,7 +52,7 @@ Script etiketi derlemesi, `dist/erd-viewer.umd.js`, yalnızca görüntüleyiciyi
 
 ```html
 <erd-viewer src="diagram.erd.json" style="display: block; height: 480px"></erd-viewer>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0/dist/erd-viewer.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.1/dist/erd-viewer.umd.js"></script>
 ```
 
 ## src {#src}

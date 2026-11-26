@@ -51,18 +51,18 @@ Zvyšok API opisuje stránka [ErdEditorElement](./erd-editor-element.md).
 
 ```html
 <script type="module">
-  import 'https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js';
+  import 'https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js';
 
   const editor = document.createElement('erd-editor');
   editor.style.cssText = 'display: block; width: 100%; height: 100vh;';
   document.body.appendChild(editor);
 </script>
 <!-- or -->
-<script type="module" src="https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js"></script>
+<script type="module" src="https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js"></script>
 ```
 
 Služba `esm.run` za vás rozrieši externé závislosti balíka, takže tento spôsob funguje bez bundlera.
-Každý vstupný bod sa dosiahne cestou za verziou: `…/erd-editor.js` definuje editor a `…/erd-viewer.js` prehliadač, ktorý stiahne každý jazyk zobrazenia okrem angličtiny z CDN, až keď si ho stránka vyžiada. Adresa URL samotného balíka, `https://esm.run/@dineug/erd-editor@5.1.0`, poskytuje koreň, ktorý nedefinuje žiadny element.
+Každý vstupný bod sa dosiahne cestou za verziou: `…/erd-editor.js` definuje editor a `…/erd-viewer.js` prehliadač, ktorý stiahne každý jazyk zobrazenia okrem angličtiny z CDN, až keď si ho stránka vyžiada. Adresa URL samotného balíka, `https://esm.run/@dineug/erd-editor@5.1.1`, poskytuje koreň, ktorý nedefinuje žiadny element.
 Adresa URL bez verzie vždy poskytuje najnovšie vydanie. Ak nechcete, aby sa na vašu stránku bez ohlásenia dostala nová hlavná verzia, pripnite si verziu, ako je uvedené vyššie.
 Verzia `5.0.0` je práve takou novou hlavnou verziou: stránka, ktorá musí zostať na verzii 4.x, si pripne `@4.2.0` – pozrite si časť [Prechod z verzie 4.x](#upgrading-from-4x).
 
@@ -75,7 +75,7 @@ Práve naň odkazujú polia `unpkg` a `jsdelivr`, takže ho na oboch CDN poskytu
 
 ```html
 <erd-editor></erd-editor>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.1"></script>
 <script>
   const editor = document.querySelector('erd-editor');
   editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
@@ -88,7 +88,7 @@ Od verzie `5.0.0` druhý súbor, `dist/erd-viewer.umd.js`, definuje `<erd-viewer
 
 ```html
 <erd-viewer src="diagram.erd.json" style="display: block; height: 480px"></erd-viewer>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0/dist/erd-viewer.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.1/dist/erd-viewer.umd.js"></script>
 ```
 
 Ani jeden súbor nedefinuje značku toho druhého a každý nechá na stránke iba svoj vlastný globálny objekt a `window.Konva`.
@@ -100,7 +100,7 @@ Stránka, ktorá nemôže načítať vlastný skript, môže namiesto toho vlož
 ```html
 <erd-editor system-dark-mode enable-theme-builder enable-locale-picker enable-welcome-screen></erd-editor>
 <script type="module">
-  import 'https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js';
+  import 'https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js';
 
   const editor = document.querySelector('erd-editor');
 </script>
@@ -123,7 +123,7 @@ Pridanie atribútu `readonly` na tomto mieste otvorí editor ako čitateľa: pri
 
 ### Vykresľovanie na strane servera {#server-side-rendering}
 
-Každý vstupný bod okrem `engine.js` a `peer.js` potrebuje DOM, takže v prostredí Node vyvolá výnimku. `erd-editor.js` a `erd-viewer.js` definujú svoj element na úrovni modulu a koreň balíka, ktorý od verzie `5.0.0` nedefinuje nič, pri načítaní stále vytvára triedy oboch elementov.
+Každý vstupný bod, ktorý tieto stránky opisujú, okrem `engine.js` a `peer.js` potrebuje DOM, takže v prostredí Node vyvolá výnimku. `erd-editor.js` a `erd-viewer.js` definujú svoj element na úrovni modulu a koreň balíka, ktorý od verzie `5.0.0` nedefinuje nič, pri načítaní stále vytvára triedy oboch elementov.
 V rámcoch Next.js, Nuxt, SvelteKit alebo Astro importujte vstupný bod elementu z kódu, ktorý beží iba na klientovi, a pomenovaný import z koreňa, napríklad `setExportFileCallback` alebo `toImage`, z toho istého kódu.
 
 ```js
@@ -251,7 +251,7 @@ Stránka s prísnou politikou Content Security Policy potrebuje pre elementy tie
 
 ## Vstupné body {#entry-points}
 
-Balík má päť vstupných bodov:
+Tieto stránky opisujú päť vstupných bodov balíka:
 
 | Vstupný bod | Čo to je |
 | --- | --- |
@@ -371,7 +371,7 @@ Verzia `5.0.0` je novou hlavnou verziou. Pri prechode stránky z verzie 4.x skon
    import { setExportFileCallback } from '@dineug/erd-editor';
   ```
 
-- Na CDN platí to isté pre `https://esm.run/@dineug/erd-editor`, ktorá teraz poskytuje koreň a nič nedefinuje: importujte `https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js`. Holé adresy jsDelivr a unpkg naďalej poskytujú zostavenie pre značku script, ktoré definuje `<erd-editor>` ako predtým. Adresa URL bez verzie teraz poskytuje najnovšie vydanie 5.x; pripnite `@4.2.0`, ak chcete zostať na verzii 4.x – pozrite si časti [CDN](#cdn) a [Značka script](#script-tag).
+- Na CDN platí to isté pre `https://esm.run/@dineug/erd-editor`, ktorá teraz poskytuje koreň a nič nedefinuje: importujte `https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js`. Holé adresy jsDelivr a unpkg naďalej poskytujú zostavenie pre značku script, ktoré definuje `<erd-editor>` ako predtým. Adresa URL bez verzie teraz poskytuje najnovšie vydanie 5.x; pripnite `@4.2.0`, ak chcete zostať na verzii 4.x – pozrite si časti [CDN](#cdn) a [Značka script](#script-tag).
 - Koreň nedefinuje nič, ale stále potrebuje DOM, takže pri vykresľovaní na strane servera zostáva pomenovaný import z neho, napríklad `setExportFileCallback`, v kóde, ktorý beží iba na klientovi, vedľa vstupného bodu elementu – pozrite si časť [Vykresľovanie na strane servera](#server-side-rendering).
 - Objekt `window.ErdEditor` získal `ErdEditorElement` a `defineErdEditor`. Zostavenie prehliadača pre značku script vkladá `ErdViewerElement` a `defineErdViewer` do objektu `window.ErdViewer` a ani jeden globálny objekt neobsahuje `toImage`.
 - Editor s `readonly` sa otvorí ako čitateľ. Zostanú jeho šesť kariet, prieskumník, rýchle vyhľadávanie a prítomnosť a každý ovládací prvok, ktorý by upravoval diagram, zmizne namiesto toho, aby bol vypnutý: panel nástrojov zobrazuje názov databázy ako text, karta Nastavenia zobrazuje svoje nastavenia so všetkými ovládacími prvkami vypnutými pod odznakom `Read only` a plávajúci panel nástrojov si ponecháva iba priblíženie, Zobrazenie názvov, režim Zen a kompas, takže `Hand` a `Select` zmizli a ťahanie posúva plátno. Stlačenie nič nevyberie: jediným výberom je obrys, ktorý skok z prieskumníka alebo rýchleho vyhľadávania vloží okolo toho, k čomu sa dostane, a nehybné kliknutie ho zruší, a skratky na výber všetkého nič nevyberú. Zapnutie `readonly` ukončí všetko, čo bolo otvorené, napríklad výber, nástroj Ruka, editor bunky, ťahanie, Map Columns, náhľad `Force` automatického rozloženia a Time Travel, a ponechá posunutie, priblíženie, kartu a Zobrazenie názvov – pozrite si časť [readonly](./erd-editor-element.md#readonly).

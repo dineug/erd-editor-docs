@@ -176,7 +176,7 @@ Od verzie `5.1.0` dva editory, ktoré zmenia jeden názov alebo pole v tom istom
 
 Od verzie `5.1.0` sa poloha tabuľky, poloha a veľkosť poznámky alebo skupiny tabuliek a počiatok zobrazenia a úroveň priblíženia verzujú rovnako a to, čo ich posúva, sa odosiela ako miesto, kde skončí:
 
-- ťahanie ako jedna akcia `table.moveTo`, `memo.moveTo` alebo `tableGroup.moveTo` na každú presunutú entitu, v jednej dávke, takže ťahanie skupiny nesie body jej tabuliek spolu s bodom skupiny;
+- ťahanie ako jedna akcia `table.moveTo`, `memo.moveTo` alebo `tableGroup.moveTo` na každú presunutú entitu, v jednej dávke, takže ťahanie skupiny nesie body jej tabuliek a od verzie `5.1.1` aj jej poznámok spolu s bodom skupiny;
 - vrátenie späť alebo opätovné vykonanie ťahania ako bod, na ktorý každú entitu umiestni;
 - posunutie ako `settings.scrollTo` a priblíženie ako `settings.changeZoomLevel`;
 - zmena veľkosti poznámky alebo skupiny tabuliek ako jej poloha a veľkosť spolu.
@@ -253,6 +253,19 @@ Editor verzie `5.1.0` neposiela žiadny nový typ akcie, takže editory a replik
 - Načítanie, ktoré nahradí dokument, napríklad priradená hodnota `value`, `clear()` alebo nahrádzajúci import, ukončí kreslenie vzťahu v každom editore verzie `5.1.0`, v tom, ktorý ho urobil, aj v každom, ktorý ho prijme. Starší editor ponechá kreslenie vzťahu aktívne aj po ňom.
 
 Všetky editory v relácii a každé úložisko [replicationStore](./remote-storage.md#dispatch-dispatchsync), ktoré ukladá jej dokument, udržiavajte vo verzii `5.1.0` alebo novšej, aby úpravy urobené v tom istom okamihu skončili všade rovnako, s výnimkou tých, ktoré uvádza časť [Súbežné úpravy](#concurrent-edits); logické názvy a slovníky naďalej zachováva verzia `4.2.0` alebo novšia. [Server MCP](../../mcp/live-and-headless.md#edits-made-at-the-same-moment) starší ako verzia `1.2.0` sa tu počíta ako editor spred verzie `5.1.0` a editor spred verzie `5.1.0` sa nedá previazať s miestnosťou [Yjs](./yjs.md) vôbec.
+
+Od verzie `5.1.1` sa pridanie poznámky do [skupiny tabuliek](../../guide/guides/table-groups.md) alebo jej odchod zo skupiny prenáša novým typom akcie `memo.changeGroup` a pri preposielaní akcií bez zmeny preň netreba nič nové. Odosiela sa pre poznámku pustenú do skupiny alebo zo skupiny, pre novú skupinu nakreslenú okolo zobrazených poznámok bez skupiny, pre položku `Group selected tables` s poznámkami vybratými popri tabuľkách, pre položku `Remove from group` s poznámkami vo výbere, pre každú poznámku odstránenej skupiny, pre volania programovacieho agenta týkajúce sa skupín poznámok cez [server MCP](../../mcp/tools.md#table-groups) a pre vrátenie späť a opätovné vykonanie každej z týchto zmien. Akciu odosiela aj pridanie cez položku `Import and Add` alebo metódu `setSchemaJSON`, ktorého skupiny obsahujú poznámky, a rovnako aj jeho opätovné vykonanie, zatiaľ čo jeho vrátenie späť iba odstráni tieto poznámky.
+
+Editor alebo replika spred verzie `5.1.1` akciu `memo.changeGroup` ignoruje a pri parsovaní zahodí pole `groupId` každej poznámky, takže poznámku v skupine nikdy nevidí, hoci ťahanie skupiny v editore verzie `5.1.1` aj tam stále presunie poznámky skupiny, pretože pre každú z nich odošle aj akciu `memo.moveTo`. Jeho vlastné úpravy o skupinách poznámok nič nevedia, čo má v novších editoroch tieto následky:
+
+- Poznámka, ktorú presunie do rámca skupiny, zostane mimo skupiny, a keď presunie poznámku patriacu do skupiny mimo rámca, poznámka v skupine zostane a rámec sa roztiahne, aby ju zahrnul.
+- Jeho ťahanie skupiny, rovnako ako jeho príkaz `Auto Layout`, presunie skupinu a jej tabuľky, ale poznámky skupiny nechá tam, kde stoja, a rámec sa roztiahne, aby tam zahrnul tie z nich, ktoré sú zobrazené.
+- Položka `Import and Add` v ňom nevloží do pridaných skupín žiadnu poznámku.
+- Keď odstráni skupinu, pole `groupId` každej jej poznámky ju naďalej označuje: poznámky sa považujú za poznámky bez skupiny, a keď odstránenie vráti späť, poznámky sa do skupiny vrátia.
+- Keď vráti späť načítanie, import alebo volanie `clear()`, načíta v každom editore svoju vlastnú kópiu dokumentu a táto kópia nemá žiadnu poznámku v žiadnej skupine.
+
+Dokument uložený takým editorom alebo replikou nemá žiadnu poznámku v žiadnej skupine, hoci editor od verzie `4.0.0` ponecháva skupiny jeho tabuliek.  
+Všetky editory v relácii a každé úložisko [replicationStore](./remote-storage.md#dispatch-dispatchsync), ktoré ukladá jej dokument, udržiavajte vo verzii `5.1.1` alebo novšej, aby poznámky zostali vo svojich skupinách tabuliek; o úpravách urobených v tom istom okamihu naďalej rozhoduje verzia `5.1.0` alebo novšia. [Server MCP](../../mcp/installation.md#updating) starší ako verzia `1.2.1` rovnako nevidí ani neuchováva, v ktorej skupine tabuliek poznámka je.
 
 ## SharedStoreConfig {#sharedstoreconfig}
 

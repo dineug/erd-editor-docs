@@ -14,7 +14,7 @@ Wat de server vindt, bepaalt waar de bewerking terechtkomt.
 | --- | --- |
 | Een editor waarvan de werkruimte, de kluis of een geopend project het document bevat, of die het geopend heeft | **Live.** Opent het document zo nodig in de ERD Editor, neemt deel aan de bewerkingssessie en past de wijziging daar toe. Bewerkingen verschijnen direct en worden opgeslagen zoals de editor die van jou opslaat — zie [Opslaan](#saving). |
 | Geen editor | **Headless.** Laadt het bestand, past de wijziging toe en vervangt het bestand voordat er een antwoord komt, dus het resultaat vermeldt `saved: true` en `erd_save` hoeft niets te doen. |
-| Een editor met uitgeschakelde hub | **Geweigerd.** Lezen werkt nog, vanaf schijf. Een wijziging die naar het bestand wordt geschreven terwijl een editor het geopend heeft, kan worden overschreven wanneer die editor de volgende keer opslaat, dus de server schrijft niets. |
+| Een editor met uitgeschakelde hub | **Geweigerd.** Lezen en `erd_export_svg` werken nog, vanaf schijf. Een wijziging die naar het bestand wordt geschreven terwijl een editor het geopend heeft, kan worden overschreven wanneer die editor de volgende keer opslaat, dus de server schrijft niets naar het document. |
 | Een editor waarvan de hub aanstaat maar die een ander protocol gebruikt dan de server: bij server `1.0.0` of later een VS Code-extensie `3.x`, een Obsidian-plug-in `0.x` of een JetBrains-plug-in `0.9.0` of `0.10.0`; bij een server vóór `1.0.0` de extensie `4.0.0` of later, of een plug-in `1.0.0` of later | **Geweigerd**, leesopdrachten inbegrepen, met `protocolMismatch`. Het bericht noemt de kant die moet worden bijgewerkt: de extensie of plug-in, of de server — zie [Bijwerken](./installation.md#updating). |
 | Op Windows een editor die het document beheert onder een ander pad naar hetzelfde bestand: de agent heeft het genoemd via een netwerkshare of een toegewezen station van deze computer, zoals `\\localhost\C$\…`, en de editor beheert het onder het pad met stationsletter, of andersom | **Geweigerd**, leesopdrachten inbegrepen, met `invalidPath`. Het bericht noemt het pad waaronder de editor het document beheert; roep opnieuw aan met dat pad. |
 | Op Windows een editor waartoe Windows de agent geen toegang geeft: een editor die als administrator is gestart terwijl de agent dat niet was, of elke editor wanneer de agent in een sandbox draait | **Geweigerd**, leesopdrachten inbegrepen, met `hubUnreachable` en een bericht dat zegt waarom. Laat de editor en de agent met dezelfde rechten draaien, bijvoorbeeld door de editor opnieuw te starten zonder administratorrechten. |
@@ -27,15 +27,17 @@ Bij een gelijkspel, zoals twee editors die het allebei geopend hebben, wint de e
 Een document in een Obsidian-kluis binnen een werkruimtemap van VS Code gaat dus naar Obsidian, tenzij VS Code het geopend heeft en Obsidian niet.
 
 Aanroepen voor één document worden één voor één uitgevoerd, in de volgorde waarin ze de server bereikten. Aanroepen voor verschillende documenten worden naast elkaar uitgevoerd.
+`erd_export_svg` gebruikt zijn beurt alleen om het document te lezen, dus een latere aanroep voor het document wacht niet op het tekenen, en de server tekent één export tegelijk, ook van twee documenten — zie [SVG-export](./tools.md#svg-export).
 
 ## Live {#live}
 
 De agent voegt zich bij de editor als nog een medebewerker.
 Zijn bewerkingen bereiken direct elke editor waarin het document geopend is, en zijn focus wordt getekend op de tabel en de cel die hij bewerkt, zoals die van een medebewerker — zie [focusTracker](../api/advanced/collaborative-editing.md#focustracker).
 
-Een leesopdracht opent nooit een editor. Een bewerking opent het document in de ERD Editor als het nog niet geopend is, zonder de toetsenbordfocus over te nemen.
+Een leesopdracht opent nooit een editor, en `erd_export_svg` ook niet, die tekent wat de editor beheert, met de nog niet opgeslagen bewerkingen erbij. Een bewerking opent het document in de ERD Editor als het nog niet geopend is, zonder de toetsenbordfocus over te nemen.
 
 Een editor met een VS Code-extensie vóór `4.2.0`, of een Obsidian- of JetBrains-plug-in vóór `1.2.0`, verwerkt de bewerkingen van de agent nog steeds live, maar toont noch behoudt de logische namen, domeinkoppelingen en woordenboekrijen die de agent schrijft — zie [Bijwerken](./installation.md#updating).
+Een editor met een extensie vóór `4.3.1` of een plug-in vóór `1.3.1` toont en behoudt evenmin in welke tabelgroep een memo zit: een memo die de agent in een groep plaatst, zit daar in geen enkele groep, en de editor laat de groep van de memo weg uit het bestand wanneer hij opslaat, al slaagt de aanroep van de agent.
 
 Met de VS Code-extensie `4.3.0` of later, of de Obsidian- of JetBrains-plug-in `1.3.0` of later, beëindigen een import in de modus `replace` en een `erd_undo` of `erd_redo` ervan een relatie die je in de editor tekent, welke versie de server ook heeft — zie [Relaties maken](../guide/guides/editing-start.md#relationship-creation).
 Vóór die versies bleef het tekenen actief, en een klik op een tabel kon een relatie toevoegen vanuit een tabel die niet meer in het diagram stond.
@@ -53,11 +55,11 @@ Een herschikking van kolommen, die van jou of `erd_move_column` of `erd_move_ind
 Een wijziging van het databasesysteem, die van jou of `erd_set_database` van de agent, wordt ook toegepast in de volgorde waarin ze aankomt, dus twee op hetzelfde moment kunnen de editor en de agent op verschillende databasesystemen achterlaten.
 
 Je sleepbeweging en `erd_move_table`, `erd_move_tables`, `erd_move_memo`, `erd_move_table_group` en `erd_sort_tables` van de agent worden verstuurd als de punten waar ze eindigen, dus twee verplaatsingen van één tabel, memo of tabelgroep eindigen waar een van de twee hem neerzette, nooit op de twee bij elkaar opgeteld.
-`erd_move_table_group` verstuurt het punt van de groep en van elk van haar tabellen in één batch, zoals het slepen van de titelbalk van de groep doet.
+`erd_move_table_group` verstuurt het punt van de groep en van elk van haar tabellen in één batch, zoals het slepen van de titelbalk van de groep doet, en sinds server `1.2.1` ook het punt van elk van haar memo's.
 Een formaatwijziging schrijft de positie en de grootte samen, dus een verplaatsing en een formaatwijziging van één memo of tabelgroep op hetzelfde moment, zoals `erd_resize_memo` terwijl jij die memo sleept, eindigen aan beide kanten op één rechthoek: die van de formaatwijziging, of, wanneer de verplaatsing wint, het punt van de verplaatsing met de grootte van de formaatwijziging.
 Een verplaatsing van minder dan 20 pixels, die geen stap in de geschiedenis oplevert, gaat ook uit als het punt waar ze eindigt, dus ze kan winnen van de verplaatsing van de andere kant, of het nu een korte `erd_move_table_group` is of een korte sleepbeweging van jou, zoals een klik die een tabel een paar pixels verschuift.
 
-Oudere versies maken nog steeds verbinding, omdat server `1.2.0` hubprotocol 2 spreekt, zoals `1.0.0` tot `1.1.1` doen.
+Oudere versies maken nog steeds verbinding, omdat server `1.2.0` en later hubprotocol 2 spreken, zoals `1.0.0` tot `1.1.1` doen.
 Met een server vóór `1.2.0`, of een extensie vóór `4.3.0` of een plug-in vóór `1.3.0`, kan een verplaatsing of formaatwijziging van één tabel, memo of tabelgroep op hetzelfde moment de editor en de agent met verschillende posities achterlaten.
 Een oudere editor verstuurt je sleepbeweging als de afgelegde afstand, en een server vóór `1.2.0` verstuurt `erd_move_table_group` ook zo.
 De andere kant telt die afstand op bij het punt dat hij heeft.
@@ -97,7 +99,7 @@ Als de editor het document sluit na de laatste bewerking van de agent, bevat de 
 
 Een paar bewerkingen leveren in de editor geen stap in de geschiedenis op: `erd_set_database` en `erd_set_database_name` uit de [tools voor instellingen](./tools.md#settings), en `erd_resize_memo`.
 Ook een `erd_move_table_group` die de groep in totaal minder dan 20 pixels verplaatst, horizontaal en verticaal bij elkaar opgeteld, levert er geen op, al blijft de groep staan waar hij naartoe is verplaatst.
-Een aanroep die niets verandert, levert er ook geen op: `erd_set_column_primary_key`, `erd_set_column_unique`, `erd_set_column_not_null`, `erd_set_column_auto_increment`, `erd_set_index_unique` of `erd_set_index_column_order` die een waarde instelt die het document al heeft; `erd_add_index_column` met een kolom die al in de index zit; `erd_set_table_group` met tabellen die al in die groep zitten (of al in geen enkele, met `groupId` `null`); `erd_move_table_group` naar het punt waar de groep al staat; `erd_resize_table_group` naar de rechthoek die de groep al heeft; `erd_sort_tables` op een document zonder tabel; `erd_set_table_logical_name` of `erd_set_column_logical_name` met de logische naam die de tabel of kolom al heeft, als afleiden daaruit niets zou veranderen; `erd_set_column_domain` met het domein waaraan de kolom al is gekoppeld, als de kolom al het type van dat domein heeft en [Gegevenstypen via relaties synchroniseren](../guide/guides/settings.md#relationship-datatype-sync) langs haar relaties geen enkele kolom een ander type zou geven; `erd_update_word`, `erd_update_term` of `erd_update_domain` met alleen waarden die de rij al bevat, tenzij een term zonder fysieke naam zijn `name` krijgt en de woorden ervan er een samenstellen; `erd_derive_physical_names` als elke naam die de aanroep bestrijkt en die een logische naam heeft, al bevat wat de [woordenboeken](./tools.md#dictionaries) hem geven en als afgeleid is gemarkeerd; of een import met `mode` `append` die geen tabel meebrengt (bij `erd_import_json` geen tabel en geen memo).
+Een aanroep die niets verandert, levert er ook geen op: `erd_set_column_primary_key`, `erd_set_column_unique`, `erd_set_column_not_null`, `erd_set_column_auto_increment`, `erd_set_index_unique` of `erd_set_index_column_order` die een waarde instelt die het document al heeft; `erd_add_index_column` met een kolom die al in de index zit; `erd_set_table_group` met tabellen die al in die groep zitten (of al in geen enkele, met `groupId` `null`); `erd_set_memo_group` met memo's die al in die groep zitten (of al in geen enkele); `erd_move_table_group` naar het punt waar de groep al staat; `erd_resize_table_group` naar de rechthoek die de groep al heeft; `erd_sort_tables` op een document zonder tabel; `erd_set_table_logical_name` of `erd_set_column_logical_name` met de logische naam die de tabel of kolom al heeft, als afleiden daaruit niets zou veranderen; `erd_set_column_domain` met het domein waaraan de kolom al is gekoppeld, als de kolom al het type van dat domein heeft en [Gegevenstypen via relaties synchroniseren](../guide/guides/settings.md#relationship-datatype-sync) langs haar relaties geen enkele kolom een ander type zou geven; `erd_update_word`, `erd_update_term` of `erd_update_domain` met alleen waarden die de rij al bevat, tenzij een term zonder fysieke naam zijn `name` krijgt en de woorden ervan er een samenstellen; `erd_derive_physical_names` als elke naam die de aanroep bestrijkt en die een logische naam heeft, al bevat wat de [woordenboeken](./tools.md#dictionaries) hem geven en als afgeleid is gemarkeerd; of een import met `mode` `append` die geen tabel meebrengt (bij `erd_import_json` geen tabel en geen memo).
 `erd_undo` slaat deze over en noemt ze in zijn resultaat.
 Andere bewerkingen, zoals `erd_change_relationship_type`, `erd_change_relationship_on_delete`, `erd_change_relationship_on_update`, `erd_change_table_group_name`, `erd_change_table_group_color` en `erd_set_ddl_script`, leveren wel een stap op, ook wanneer ze een waarde instellen die het document al heeft.
 
@@ -120,7 +122,7 @@ Een gesloten diagram in een map die de editor bedient, blijft bij de editor, en 
 Een editor die nog draait, maar waarvan het lockbestand weg is en waarvan de verbinding is verbroken zonder dat hij het document heeft gesloten, weigert de volgende bewerking met `hubGone`.
 Het bericht zegt wat het document vrijgeeft: laad in VS Code dat venster opnieuw, of sluit het zodat de agent het bestand direct kan bewerken; schakel in Obsidian de ERD Editor-plug-in weer in, of sluit dat venster; schakel in een JetBrains-IDE de plug-in weer in, of sluit de IDE af.
 
-Een leesopdracht gaat in twee gevallen in plaats daarvan naar het bestand op schijf, met een notitie dat bewerkingen ontbreken die nog niet in de editor zijn opgeslagen: als de editor die het document beheert een uitgeschakelde hub heeft, en in het geval `hubGone` hierboven.
+Een leesopdracht, of `erd_export_svg`, gaat in twee gevallen in plaats daarvan naar het bestand op schijf, met een notitie dat bewerkingen ontbreken die nog niet in de editor zijn opgeslagen: als de editor die het document beheert een uitgeschakelde hub heeft, en in het geval `hubGone` hierboven.
 Een leesopdracht die geen verbinding kan maken met de hub van een editor, wordt geweigerd met `hubUnreachable`, net als een bewerking.
 
 ## Headless {#headless}
@@ -133,7 +135,7 @@ Zo ja, dan wordt er niets geschreven, wordt het bestand opnieuw geladen en wordt
 Een bestand dat tussen twee aanroepen is gewijzigd, wordt gewoon opnieuw geladen, en de geschiedenis van de agent van vóór dat moment vervalt.
 
 Een alleen-lezenbestand blijft zoals het is, en de bewerking wordt geweigerd met `readonly`: een bestand zonder schrijfrechten voor de eigenaar, of met het attribuut alleen-lezen op Windows, zoals een Perforce- of TFVC-bestand dat niet is uitgecheckt.
-Maak het beschrijfbaar en roep daarna opnieuw aan. Lezen werkt nog.
+Maak het beschrijfbaar en roep daarna opnieuw aan. Lezen en `erd_export_svg` werken nog.
 
 Als een editor het document gaat bedienen terwijl de agent het op schijf bewerkt, wordt die ene bewerking geweigerd met `hubAppeared` en wordt er niets geschreven. De volgende aanroep bewerkt via de editor.
 
@@ -142,7 +144,7 @@ Op Windows gelden nog twee regels:
 - Een document met eigen machtigingen, anders dan die van zijn map, wordt ter plaatse geschreven in plaats van vervangen, zodat het die behoudt, en het tijdelijke bestand wordt daarna verwijderd. Een programma dat het document tijdens het schrijven leest, kan tekst aantreffen die niet te parseren is.
 - Een bestand dat een ander programma geopend houdt, kan niet worden vervangen, dus probeert de server het maximaal twee seconden opnieuw. Elke poging zoekt eerst opnieuw naar een editor, en een editor die intussen het document is gaan bedienen, weigert het schrijven met `hubAppeared`, of met `blocked` als zijn hub uitgeschakeld is. Als het bestand na twee seconden nog steeds geopend is, wordt er niets geschreven, wordt het bestand opnieuw geladen en mislukt de aanroep met een bericht dat de systeemfout citeert.
 
-Een server vóór `1.1.0` leest een document zonder de logische namen, de domeinkoppelingen van de kolommen en de woorden, termen en domeinen ervan, dus de eerste bewerking die hij naar het bestand schrijft, laat ze weg. Werk de server bij — zie [Bijwerken](./installation.md#updating).
+Een server vóór `1.1.0` leest een document zonder de logische namen, de domeinkoppelingen van de kolommen en de woorden, termen en domeinen ervan, dus de eerste bewerking die hij naar het bestand schrijft, laat ze weg. Een server vóór `1.2.1` leest het evenzo zonder de tabelgroepen van de memo's, dus de eerste bewerking die hij naar het bestand schrijft, haalt elke memo uit zijn groep. Werk de server bij — zie [Bijwerken](./installation.md#updating).
 
 ## Geweigerd {#refused}
 
@@ -151,7 +153,7 @@ Een Obsidian-kluisvenster behoudt zijn lockbestand met uitgeschakelde hub wannee
 Een JetBrains-IDE behoudt zijn lockbestand met uitgeschakelde hub wanneer Coding agents is uitgeschakeld, wanneer zijn hub niet kon luisteren en terwijl de IDE afsluit.
 
 Een bewerking van zo'n document wordt geweigerd met `blocked`, omdat de geopende editor een wijziging die naar het bestand is geschreven, bij de volgende keer opslaan zou kunnen overschrijven.
-Lezen werkt nog, vanaf het bestand op schijf.
+Lezen werkt nog, vanaf het bestand op schijf, en `erd_export_svg` ook, waarvan het resultaat dan de modus `blocked` noemt.
 
 Schakel de hub weer in om de agent te laten bewerken, zoals het bericht voor die editor aangeeft: vertrouw in VS Code de werkruimte en schakel de instelling in, of laad het venster opnieuw; schakel in Obsidian Coding agents in, of laad Obsidian opnieuw; schakel in een JetBrains-IDE Coding agents in, of start de IDE opnieuw als Coding agents al is ingeschakeld.
 

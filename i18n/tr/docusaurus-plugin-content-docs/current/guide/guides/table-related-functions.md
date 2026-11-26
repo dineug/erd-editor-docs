@@ -7,7 +7,7 @@ description: Tabloları ve notları seçme, taşıma, kopyalama, çoğaltma ve s
 
 Tablolar ve notlar oluşturulduktan sonra onlarla yaptığınız her şey – seçme, taşıma, kopyalama, silme, renklendirme ve tuvalin neyi göstereceğini ayarlama – ile çevrelerindeki tuval denetimleri.  
 Önce tablo ve not komutları gelir; ardından Tablo özellikleri, tablolara odaklanma, dizinler ve alternatif anahtarlar, Otomatik düzen ve veritabanı sistemi; ardından tuvalin kendisi: tuval araç çubuğu, yakınlaştırma, kaydırma ile atlamanın varış noktası ve Fark görüntüleyici; en son da salt okunur bir düzenleyicinin bunların hepsinden neyi koruduğu.  
-Tabloları bir araya toplayan kutular olan tablo gruplarının kendi sayfası vardır. [Tablo grupları](./table-groups.md) sayfasına bakın.  
+Tabloları ve notları bir araya toplayan kutular olan tablo gruplarının kendi sayfası vardır. [Tablo grupları](./table-groups.md) sayfasına bakın.  
 Tabloların göstereceği adlara karar veren Ad görünümünün ve mantıksal adların da kendi sayfası vardır. [Mantıksal adlar](./logical-names.md) sayfasına bakın.
 
 ## Çoklu seçim {#multiple-selection}
@@ -21,7 +21,7 @@ Tabloların göstereceği adlara karar veren Ad görünümünün ve mantıksal a
 Notlar da aynı şekilde seçilir ve tümünü seçme kısayollarının ikisi de her tabloyu ve notu tek seferde seçer. View Option → `Memos` ile gizlenen notlar tümünü seçmede ve seçim kutusunda yer almaz. [Tablo görünüm seçenekleri](#table-view-options) bölümüne bakın.  
 [Tablo grupları](./table-groups.md#selecting-groups), başlık çubuklarında `Ctrl + click` (Windows/Linux) veya `⌘ + click` (Mac) ile seçime eklenir, ancak tümünü seçme hiçbir zaman grup seçmez.  
 `Ctrl + A` tuşları metin imlecine öncelik tanır, bu yüzden bir hücreyi düzenlerken diyagram yerine metni seçer.  
-Seçim kutusu bir tabloyu veya notu ortasını kapladığında işaretler, kenarına değmesi tek başına yetmez. Bir tablo grubunu ise yalnızca grubun kutusunun tamamını içine aldığında seçer, bu yüzden bir grubun içinde çizilen kutu grubu dışarıda bırakarak tabloları seçer.  
+Seçim kutusu bir tabloyu veya notu ortasını kapladığında işaretler, kenarına değmesi tek başına yetmez. Bir tablo grubunu ise yalnızca grubun kutusunun tamamını içine aldığında seçer, bu yüzden bir grubun içinde çizilen kutu grubu dışarıda bırakarak tabloları ve notları seçer.  
 Zaten seçili bir öğeye sağ tıklamak seçimin tamamını korur, bu yüzden `Color`, `Group selected tables` ve `Delete selected` gibi menü satırları seçimin tümüne uygulanır. Başka bir tabloya, nota veya tablo grubuna sağ tıklamak `Ctrl` veya `⌘` tuşu basılıyken bile yalnızca onu seçer, bir ilişkiye ya da tuvalin boş alanına sağ tıklamak ise seçimi kaldırır.  
 `Escape` tuşu seçimi kaldırır. Bir hücre düzenleyicisi, not düzenleyicisi veya tablo grubu ad alanı açıkken ya da bir ilişki veya `New Table Group` çizimi sürerken `Escape` tuşuna ilk basış bunu sonlandırır, ikinci basış ise seçimi kaldırır.  
 Salt okunur bir düzenleyicide bu seçme yollarının hiçbiri yoktur: orada yalnızca bir atlama seçer. [Salt okunur düzenleyiciler](#read-only-editors) bölümüne bakın.
@@ -41,10 +41,10 @@ Tabloları ve notları yalnızca farenin sol düğmesi taşır. Sağ tıklama ba
 
 ![Seçili iki tablodan birini sürüklemek ikisini birden taşır ve ilişki de onlarla birlikte gider](/img/demo-table-multiple-move.webp)
 
-Seçili bir [tablo grubu](./table-groups.md) da tablolarını taşıyarak hareket eder, hem seçili olan hem de taşınan bir grupta bulunan bir tablo ise yalnızca bir kez taşınır.  
-Bir tabloyu bıraktığınız yer onu bir gruba sokabilir veya gruptan çıkarabilir. [Tablo ekleme ve çıkarma](./table-groups.md#adding-and-removing-tables) bölümüne bakın.
+Seçili bir [tablo grubu](./table-groups.md) da tablolarını ve notlarını taşıyarak hareket eder, hem seçili olan hem de taşınan bir grupta bulunan bir tablo veya not ise yalnızca bir kez taşınır.  
+Bir tabloyu veya notu bıraktığınız yer onu bir gruba sokabilir veya gruptan çıkarabilir. [Tablo ekleme ve çıkarma](./table-groups.md#adding-and-removing-tables) bölümüne bakın.
 
-Tablolar ve notlar tek bir katman sırasını paylaşır. Bir tabloya veya nota farenin sol ya da sağ düğmesiyle basmak onu diğer tüm tabloların ve notların önüne getirir, bir tablo grubunun başlık çubuğuna basmak veya gövdesine sağ tıklamak ise grubun tablolarını öne getirir.  
+Tablolar ve notlar tek bir katman sırasını paylaşır. Bir tabloya veya nota farenin sol ya da sağ düğmesiyle basmak onu diğer tüm tabloların ve notların önüne getirir, bir tablo grubunun başlık çubuğuna basmak veya gövdesine sağ tıklamak ise grubun tablolarını ve notlarını öne getirir.  
 Bu sıra kaydedilmez: Yeniden açılan bir diyagram tablolarını dosyada listelendikleri sırayla dizer ve tüm notları onların üstüne yerleştirir.
 
 ## Tabloları ve notları kopyalama/yapıştırma {#copyingpasting-tables-and-memos}
@@ -57,7 +57,7 @@ Kopyalanan her sütun mantıksal adını korur; her tablo ve sütun adı da söz
 Yapıştırılan bir sütun, değer alanı bağlantısını yalnızca iki koşul sağlandığında korur: Yapıştırıldığı diyagram yalnızca aynı adlı bir değer alanını değil, tam olarak o değer alanını listeler ve değer alanı hâlâ sütunun kopyalandığı andaki veri türüne sahiptir. Aksi hâlde sütun değer alanı olmadan gelir ve kopyalandığı andaki türü korur. [Sütunu bağlama](./dictionary.md#linking-a-column) bölümüne bakın.  
 Dizinler ve ilişkiler de birlikte gelir: Bir dizin kopyalanan tabloya bütünüyle kopyalanır, bir ilişki ise bağladığı tabloların ikisi de kopyalanan kümede olduğunda türü ve ON DELETE ile ON UPDATE eylemleriyle birlikte kopyalanır. Yarım kalan bir ilişki özgün tabloyu gösterir hâlde bırakılmaz, atılır.  
 Yapıştırılan kopyalar yeni seçim olur ve aynı kopyayı yeniden yapıştırmak onu her seferinde `50px` daha öteye yerleştirir, böylece art arda yapılan yapıştırmalar üst üste binmez.  
-Kopya, ait olduğu [tablo grubunu](./table-groups.md) korumaz: Yapıştırılan tablo bir grubun kutusunun içine düşse bile hiçbir grupta yer almaz ve seçili bir grup kopyalanmaz.  
+Kopya, ait olduğu [tablo grubunu](./table-groups.md) korumaz: Yapıştırılan tablo veya not bir grubun kutusunun içine düşse bile hiçbir grupta yer almaz ve seçili bir grup kopyalanmaz.  
 View Option → `Memos` notları gizlediği sürece, yapıştırma taşıdığı notları yine de gizli ve seçilmemiş olarak ekler, böylece seçim yalnızca yapıştırılan tablolardan oluşur.
 
 ![İlişkili iki tabloyu kopyalama ve ilişkisiyle birlikte iki kez yapıştırma](/img/demo-table-copy-paste.webp)
@@ -89,7 +89,7 @@ Kısayollar:
 
 Bağlam menüleri de siler. Bir tablonun veya notun menüsünün son satırında, o tablo veya not seçili iki ya da daha fazla öğeden biri olduğu sürece `Delete selected` yazar ve bu satır seçimin tamamını kaldırır. Aksi hâlde satırda `Delete` yazar ve yalnızca o tabloyu veya notu kaldırır. Seçili bir sütunun satırı üzerinde ise tablonun menüsünde, [Sütun silme](./table-editing.md#column-deletion) bölümündeki gibi, bunun yerine `Delete column` veya `Delete columns` yazar.
 
-Bir tabloyu kaldırmak ilişkilerini ve dizinlerini de onunla birlikte kaldırır. Bir tablo grubunu kaldırmak tablolarını korur ve bu tablolar hiçbir grupta yer almaz. [Grubu kaldırma](./table-groups.md#removing-a-group) bölümüne bakın.  
+Bir tabloyu kaldırmak ilişkilerini ve dizinlerini de onunla birlikte kaldırır. Bir tablo grubunu kaldırmak tablolarını ve notlarını korur ve bunlar hiçbir grupta yer almaz. [Grubu kaldırma](./table-groups.md#removing-a-group) bölümüne bakın.  
 Onay istenmez, her kaldırma tek bir geri alma adımıdır ve `readonly` bir düzenleyicide hiçbir şey kaldırılmaz.  
 `Delete` ve `Backspace` tuşları basılı tutulduğunda yalnızca bir kez kaldırır ve hiçbir zaman bir ilişkiyi kaldırmaz. [İlişki düzenleme](./relationship-editing.md#deletion) bölümüne bakın. Bir hücreye, nota veya başka herhangi bir metin alanına yazarken bu tuşlar bunun yerine metni düzenler.  
 Ayarlar bu iki tuşu `Delete Selection` adıyla listeler. [Kısayollar](./settings.md#shortcuts) bölümüne bakın.
@@ -98,7 +98,7 @@ Ayarlar bu iki tuşu `Delete Selection` adıyla listeler. [Kısayollar](./settin
 
 Kategoriye göre ayırt etmek için renk atayabilirsiniz.  
 Tablo rengini sol kenarı boyunca, not ise üst kenarı boyunca taşır. Renk seçiciyi işaretçinin bulunduğu yerde açmak için bu kenara veya şeride farenin sol düğmesiyle tıklayın ya da tablonun veya notun bağlam menüsünden `Color` öğesini seçin. Renk yalnızca tıkladığınız öğeye değil, seçili tüm tablolara, notlara ve tablo gruplarına uygulanır.  
-Bir tablo grubu kendi menüsündeki `Color` öğesiyle renklendirilir ve renkli bir gruptaki tablo, sol kenarında kendi rengini korurken tablo başlığı boyunca grubun rengini taşır. [Grubu renklendirme](./table-groups.md#coloring-a-group) bölümüne bakın.
+Bir tablo grubu kendi menüsündeki `Color` öğesiyle renklendirilir ve renkli bir gruptaki tablo veya not, sol ya da üst kenarında kendi rengini korurken başlığı boyunca grubun rengini taşır. [Grubu renklendirme](./table-groups.md#coloring-a-group) bölümüne bakın.
 
 ![Seçili iki tablo ve not için notun renk şeridinden Blue hazır rengini seçme, ardından rengi No color ile kaldırma](/img/demo-table-color.webp)
 
@@ -143,9 +143,9 @@ Tabloların hangi adları göstereceği bir görünüm seçeneği değildir: Tuv
 `Domain`, her sütuna [sütun sırasına](./settings.md#adjusting-column-order) göre yerleştirilen ve sütunun bağlı olduğu değer alanının adını içeren bir hücre verir. `Domains` sayfasının listelediği hiçbir değer alanına bağlı olmayan bir sütun orada soluk `domain` yer tutucusunu gösterir. Hücre her Ad görünümünde görünür. `Domain` kapalıyken `Logical Names` görünümü bunun yerine bağlı bir değer alanının adını tür hücresinde gösterir. [Değer alanı hücresi](./logical-names.md#the-domain-cell) bölümüne bakın.  
 `Alternate Key` her alternatif anahtarın sütunlarını `AK1.1` gibi işaretlerle gösterir. [Alternatif anahtarlar](#alternate-keys) bölümüne bakın.  
 `Referential Actions`, bir ilişkinin ON DELETE ve ON UPDATE eylemlerinin bağlantı çizgisinin alt tablo ucuna koyduğu `D:` ve `U:` etiketlerini gösterir. [Bağlantı çizgisini okuma](./relationship-editing.md#reading-a-connector) bölümüne bakın. Kapatmak yalnızca bu etiketleri gizler ve hiçbir tabloyu ya da bağlantı çizgisini taşımaz.  
-`Table Groups`, [tablo gruplarını](./table-groups.md) ve tablolarının başlıklarındaki grup renklerini gösterir. Kapatmak bunları tuvalde, mini haritada ve görüntü dışa aktarmalarında gizler, hiçbir tabloyu taşımaz ve her tabloyu kendi grubunda tutar. [Grupları gizleme](./table-groups.md#hiding-groups) bölümüne bakın. Ayrıca `Table Groups` klasörünü [Gezginden](./explorer.md#the-tree), `New Table Group` düğmesini de [tuval araç çubuğundan](#canvas-toolbar) kaldırır ve Gezginin araması artık grup adlarını bulmaz.  
-`Memos` notları gösterir. Kapatmak tuvaldeki, mini haritadaki ve görüntü dışa aktarmalarındaki tüm notları gizler ve hiçbir tabloyu ya da bağlantı çizgisini taşımaz. Gizli notlar yer kaplamaz, bu yüzden kaydırma çubukları, mini harita ve `Go to content` pusulası onları hesaba katmaz.  
-Notları gizlemek onların seçimini kaldırır ve açık bir not düzenleyicisini kapatır. [Gezgin](./explorer.md#the-tree) `Memos` klasörünü kaldırır, Gezginin [Bul ve değiştir](./find-and-replace.md) araması ve Hızlı aramanın `:` öneki de bu notlarda arama yapmaz. Notlar gizliyken `New Memo` öğesi bağlam menüsünden, [tuval araç çubuğundan](#canvas-toolbar), Hızlı aramadan ve [karşılama ekranından](./editing-start.md#welcome-screen) kalkar ve `Alt + M` not eklemez. Yapıştırma veya [İçe aktar ve ekle](./file-import-export.md#import-and-add) taşıdığı notları yine de gizli ve seçilmemiş olarak ekler.  
+`Table Groups`, [tablo gruplarını](./table-groups.md) ve tablolarının ve notlarının başlıklarındaki grup renklerini gösterir. Kapatmak grupları ve renklerini tuvalde ve görüntü dışa aktarmalarında gizler, kutuları mini haritadan kaldırır, hiçbir tabloyu veya notu taşımaz ve her tabloyu ve notu kendi grubunda tutar. [Grupları gizleme](./table-groups.md#hiding-groups) bölümüne bakın. Ayrıca `Table Groups` klasörünü [Gezginden](./explorer.md#the-tree), `New Table Group` düğmesini de [tuval araç çubuğundan](#canvas-toolbar) kaldırır ve Gezginin araması artık grup adlarını bulmaz.  
+`Memos` notları gösterir. Kapatmak tuvaldeki, mini haritadaki ve görüntü dışa aktarmalarındaki tüm notları gizler ve hiçbir tabloyu ya da bağlantı çizgisini taşımaz. Gizli notlar yer kaplamaz, bu yüzden kaydırma çubukları, mini harita ve `Go to content` pusulası ile [tablo grubu](./table-groups.md) kutuları onları hesaba katmaz, ancak notlar gruplarında kalır.  
+Notları gizlemek onların seçimini kaldırır ve açık bir not düzenleyicisini kapatır. [Gezgin](./explorer.md#the-tree) `Memos` klasörünü ve tablo gruplarının altındaki notları kaldırır, Gezginin [Bul ve değiştir](./find-and-replace.md) araması ve Hızlı aramanın `:` öneki de bu notlarda arama yapmaz. Notlar gizliyken `New Memo` öğesi bağlam menüsünden, [tuval araç çubuğundan](#canvas-toolbar), Hızlı aramadan ve [karşılama ekranından](./editing-start.md#welcome-screen) kalkar ve `Alt + M` not eklemez. Yapıştırma veya [İçe aktar ve ekle](./file-import-export.md#import-and-add) taşıdığı notları yine de gizli ve seçilmemiş olarak ekler.  
 Salt okunur bir düzenleyicide aç/kapat düğmeleri yine çalışır, ancak yalnızca o ekranda: kaydedilmezler, geri alma geçmişine işlenmezler ya da paylaşılmazlar ve düzenleyici yeniden yazılabilir olduğunda dosyanınkilere dönerler. Ayarlardaki [Salt okunur düzenleyiciler](./settings.md#read-only-editors) bölümüne bakın.
 
 ![Tablolar yeniden yerleşirken Görünüm seçenekleri girdilerini açıp kapatma, Alternate Key ile bileşik bir benzersiz dizini AK1.1 ve AK1.2 olarak işaretleme, ardından Memos seçeneğini kapatıp açma](/img/demo-view-options.webp)
@@ -233,9 +233,9 @@ Tuvalin bağlam menüsünden veya Hızlı aramadan `Auto Layout` öğesini açı
 
 Diğer üçü ana iş parçacığının dışında tek seferde hesaplanır, bu yüzden izlenecek bir şey yoktur: Düzen hesaplanırken bir bilgi kutusu görünür ve tamamlanan yerleşim, diyagramın zaten kapladığı alanın ortasına yerleştirilir. `Cancel` veya `Escape` artık beklemediğiniz bir düzeni iptal eder, paylaşımlı worker çalıştırmayan bir ana uygulamada ise sonuç `Could not place tables` olur. [Web Worker'lar](../../api/installation.md#web-workers) bölümüne bakın. 60 saniye içinde dönmeyen bir düzen de aynı şekilde sona erer.
 
-Hangisini seçerseniz seçin tablolar ve tablo grupları taşınır, notlar ise yerinde kalır. Tablolar, baktığınız Ad görünümünde aldıkları genişliklerle yerleştirilir. Bir tablodan kendisine giden ilişki yok sayılır ve aynı iki tablo arasındaki birden çok ilişki bir kez sayılır.  
-Her düzen, gruplar gösterilsin ya da gösterilmesin her grubun tablolarını bir arada tutar ve tablo içeren her grubu tablolarının çevresine oturtur. [Tablo grupları](./table-groups.md#auto-layout) bölümüne bakın.  
-Sonuç tek bir geçmiş kaydı olarak eklenir, bu yüzden tek bir geri alma her tabloyu ve grubu eski yerine döndürür.  
+Hangisini seçerseniz seçin tablolar, tablo grupları ve tablo içeren gruplardaki notlar taşınır, diğer her not ise yerinde kalır. Tablolar, baktığınız Ad görünümünde aldıkları genişliklerle yerleştirilir. Bir tablodan kendisine giden ilişki yok sayılır ve aynı iki tablo arasındaki birden çok ilişki bir kez sayılır.  
+Her düzen, gruplar gösterilsin ya da gösterilmesin her grubun tablolarını ve notlarını bir arada tutar ve tablo içeren her grubu tablolarının ve gösterilen notlarının çevresine oturtur. [Tablo grupları](./table-groups.md#auto-layout) bölümüne bakın.  
+Sonuç tek bir geçmiş kaydı olarak eklenir, bu yüzden tek bir geri alma her tabloyu, notu ve grubu eski yerine döndürür.  
 Salt okunur bir düzenleyici `Auto Layout` sunmaz. Düzenleyici salt okunur olurken hâlâ süren biri orada sona erer: `Force` önizlemesi bildirimiyle birlikte kapanır ve konumlarından hiçbirini korumaz, hâlâ hesaplanmakta olan bir düzen ise bildirimiyle birlikte bırakılır; böylece o sırada da düzenleyici yeniden yazılabilir olduğunda da hiçbir tablo taşınmaz.
 
 ![Tuvalin bağlam menüsünden Otomatik düzenin Flow seçeneğiyle bir yığın tabloyu ilişkileri boyunca soldan sağa dizerek toparlama](/img/demo-automatic-table-placement.webp)
@@ -311,7 +311,7 @@ Orta düğmeyle sürükleme hiçbir şeyi seçmez, taşımaz veya tıklamaz ve s
 Kaydırma çubuklarında, mini haritada, tuval araç çubuğunda veya açık bir hücre ya da not düzenleyicisinde orta düğmeye basmak kaydırma yapmaz.
 
 Sağ üst köşedeki mini harita diyagramı, her yanında bir ekranlık boşluk bırakarak, yani kaydırma çubuklarının erişebildiği alanı kaba bir ızgaraya dışa doğru yuvarlayarak gösterir, bu yüzden ne kadar uzaklaştırırsanız diyagram haritada o kadar küçük kalır. Görünümü o noktaya taşımak için haritaya tıklayın ya da kaydırmak için görünüm alanı dikdörtgenini sürükleyin. Uzaklaştırdıkça görünüm alanı dikdörtgeni haritanın daha fazlasını kaplayacak şekilde büyür.  
-Her tabloyu tablonun renginde, gösterilen her tablo grubunu da tablolarının arkasında grubun renginde bir kutu olarak çizer.  
+Her tabloyu tablonun renginde, gösterilen her tablo grubunu da tuvaldeki kutu gibi gösterilen notlarının çevresine uzanan, tablolarının ve notlarının arkasında grubun renginde bir kutu olarak çizer.  
 Sağ ve alt kenarlardaki kaydırma çubukları aynı hareket aralığını gösterir. Bu aralık, diyagramın ekranın bir yanının hemen dışında durduğu konumdan öbür yanının hemen dışında durduğu konuma kadar uzanır, bu yüzden çizilen diyagramdan en az bir ekran daha uzundur ve görünüm diyagramın ötesindeyken daha da uzar. Zen modu dışında, belgede bir tablo, gösterilen bir not veya gösterilen bir tablo grubu olduğu sürece, hepsi ekrana sığsa bile iki kaydırma çubuğu da görünür. Bunların hiçbirini içermeyen bir belge, örneğin yalnızca View Option → `Memos` ile gizlenmiş notlar içeren bir belge, kaydırma çubuklarının hiçbirini ve mini haritayı göstermez.  
 Kaydırma çubuğu tutamacını veya mini haritanın görünüm alanı dikdörtgenini sürüklemek, bir sınırda duran tek kaydırmadır: Ekranın hemen dışındaki tablolardan ya da sürükleme daha dışarıda başladıysa başladığı yerden öteye gitmez.
 
@@ -364,7 +364,7 @@ Salt okunur bir düzenleyici de `Diff Viewer` sunar ve görünüm orada her düz
 
 Tabloların, sütunların, dizinlerin, yabancı anahtarların, notların ve tablo gruplarının tümü karşılaştırılır.  
 Her öğe önce kimliğine göre eşleştirilir, bu yüzden kimlikleri koruyan aynı dosyanın daha eski bir sürümüyle karşılaştırıldığında yeniden adlandırılmış bir tablo, sütun, dizin veya tablo grubu yine tek bir öğedir ve yeniden adlandırılmış olarak listelenir.  
-Geriye kalanlar koruduklarına göre bire bir eşleşir: tablo veya tablo grubu büyük/küçük harf ayrımıyla adına göre; sütun veya dizin tablosuna ve adına göre; yabancı anahtar iki tablosuna ve sütun çiftlerine göre; not ise önce metnine, sonra konumuna göre. Adı olmayan bir dizin sütunlarına, bunların sırasına ve yönüne ve benzersiz olup olmadığına göre, adı olmayan bir tablo grubu ise en çok tabloyu paylaştığı grupla eşleşir.  
+Geriye kalanlar koruduklarına göre bire bir eşleşir: tablo veya tablo grubu büyük/küçük harf ayrımıyla adına göre; sütun veya dizin tablosuna ve adına göre; yabancı anahtar iki tablosuna ve sütun çiftlerine göre; not ise önce metnine, sonra konumuna göre. Adı olmayan bir dizin sütunlarına, bunların sırasına ve yönüne ve benzersiz olup olmadığına göre, adı olmayan bir tablo grubu ise en çok tabloyu ve notu paylaştığı grupla eşleşir.  
 Bu yüzden SQL içe aktarmayla yeniden oluşturulmuş bir diyagram gibi başka bir kaynaktan gelen bir dosyayla karşılaştırıldığında, yeniden adlandırılmış bir tablo bir kaldırılmış ve bir eklenmiş tablo olarak görünür.
 
 Değişiklik sayılanlar:
@@ -373,8 +373,8 @@ Değişiklik sayılanlar:
 - Sütun: adı, açıklaması, veri türü, varsayılan değeri, Otomatik artırma, birincil anahtar, Benzersiz, NULL olamaz ve tablodaki yeri. Yalnızca iki belgenin ortak sırasının dışında kalan sütunlar taşınmış sayılır, bu yüzden bir sütunu eklemek, kaldırmak veya taşımak diğerlerini işaretlemez.
 - Dizin: adı, UNIQUE ve sıra ile yönleriyle birlikte sütunları.
 - Yabancı anahtar: sütun çiftleri, ilişki türü ve ON DELETE ile ON UPDATE eylemleri.
-- Not: metni, konumu, boyutu ve rengi.
-- Tablo grubu: adı, tuttuğu tablolar, rengi, konumu ve boyutu.
+- Not: metni, tablo grubu, konumu, boyutu ve rengi.
+- Tablo grubu: adı, tuttuğu tablolar ve notlar, rengi, konumu ve boyutu.
 
 Bu yüzden yalnızca taşınmış, yeniden boyutlandırılmış veya yeniden renklendirilmiş bir tablo, not ya da grup değişmiş sayılır. Konumlar ve boyutlar tam piksel olarak karşılaştırılır, katman sırası ve bir bağlantı çizgisinin tabloya değdiği yer ise hiçbir zaman hesaba katılmaz.  
 Mantıksal adlar, değer alanı bağlantıları ve [Sözlük](./dictionary.md) sekmesinin sözcükleri, terimleri ve değer alanları karşılaştırılmaz, bu yüzden yalnızca bunlarda yapılan bir değişiklik ne listelenir ne de işaretlenir. Bir değer alanının değiştirdiği veri türü ise sütunun veri türündeki bir değişiklik olarak sayılır.
@@ -393,7 +393,7 @@ Her satır bir harfle biter ve `A`, `D`, `M` veya `R` ile işaretlenmiş bir sat
 - `R`, yeniden adlandırıldı, mavi: ikisinde de var, yeni bir adla. Yeniden adlandırma diğer tüm değişikliklerden önce gelir, ancak araç ipucu onları yine de listeler.
 - `~`, kehribar renginde, her klasörün ve yalnızca içindeki değişiklikler nedeniyle listelenen tablonun sonunda yer alır; bunların adları olağan renklerini korur.
 
-Araç ipucunu görmek için bir satırın adının üzerine gelin: önce durum, yani `Added`, `Deleted`, `Modified`, `Renamed` veya `Changed inside`, ardından her değişiklik için bir satır, örneğin `Name: users → members` veya `NN: ✗ → ✓`. Bir metin, 40 karakterden sonra kesilerek ilk satırıyla alıntılanır ve boş bir değerin yerinde `—` yazar. Eklenmiş veya kaldırılmış bir öğenin araç ipucu yalnızca durumudur.
+Araç ipucunu görmek için bir satırın adının üzerine gelin: önce durum, yani `Added`, `Deleted`, `Modified`, `Renamed` veya `Changed inside`, ardından her değişiklik için bir satır, örneğin `Name: users → members` veya `NN: ✗ → ✓`. Bir metin, 40 karakterden sonra kesilerek ilk satırıyla alıntılanır ve boş bir değerin yerinde `—` yazar. Billing adlı bir gruba taşınan bir notun araç ipucunda `Table group: — → Billing` satırı bulunur ve grubun araç ipucuna `Memos: — → "note"` gibi bir satır eklenir; bu satır notları ilk satırlarıyla, çift tırnak içinde adlandırır. Eklenmiş veya kaldırılmış bir öğenin araç ipucu yalnızca durumudur.
 
 Ağacın üstündeki `Filter by name` alanı, her Ad görünümünde büyük/küçük harf ayrımı yapmadan, geçerli veya kaydedilmiş adı ya da geçerli veya kaydedilmiş mantıksal adı yazdığınız metni içeren satırları tutar. Adı eşleşen bir tablo tüm satırlarını korur, eşleşmeyen bir tabloda ise yalnızca eşleşen satırlar kalır. Hiçbir şeyle eşleşmeyen bir süzgeç ağacı boş bırakır.  
 İki belge hiç farklı değilse ağaçta `No changes` yazar.
@@ -419,7 +419,7 @@ Her taraf, o tarafta ölçülerek [Atlamanın varış noktası](#where-a-jump-la
 - İki belgede de bulunan bir tabloda eklenmiş veya kaldırılmış bir sütun tüm satırını renklendirir, taşınmış bir sütun ise tüm satırını kehribar rengine boyar. Eklenmiş veya kaldırılmış bir tablonun içindeki hiçbir şey ayrıca işaretlenmez.
 - Değişmiş bir hücrenin metni kehribar rengine döner: tablonun açıklaması, sütunun açıklaması, veri türü, varsayılan değeri, Otomatik artırma, Benzersiz veya NULL olamaz hücresi ya da notun metni. Birincil anahtar değişikliği sütunun anahtar simgesini kehribar rengine çevirir.
 - Yeniden adlandırılmış bir tablonun, sütunun veya tablo grubunun adı mavi olur.
-- Taşınma, yeni bir boyut ya da renk, grubun değişmesi veya bir grubun tablolarının değişmesi gibi kendi hücresi olmayan bir değişiklik içeren tablo, not veya tablo grubunun dış çizgisi kehribar rengiyle çizilir.
+- Taşınma, yeni bir boyut ya da renk, grubun değişmesi veya bir grubun tablolarının ya da notlarının değişmesi gibi kendi hücresi olmayan bir değişiklik içeren tablo, not veya tablo grubunun dış çizgisi kehribar rengiyle çizilir.
 - Eklenmiş, kaldırılmış veya değişmiş bir yabancı anahtar bağlantı çizgisini o renkte çizer. Üzerine gelmek ya da bir satırın vurgusu onu bunun yerine olağan üzerine gelme renginde çizer.
 - Dizin değişikliği iki tarafta da hiçbir şeyi işaretlemez; yalnızca ağaçta görünür.
 

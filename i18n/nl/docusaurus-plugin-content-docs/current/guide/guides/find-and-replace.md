@@ -93,7 +93,7 @@ Zolang het zoekveld tekst bevat, toont de [boomstructuur](./explorer.md#the-tree
 
 - `Tables`, `Table Groups` en `Memos` worden alleen getoond als ze een overeenkomst bevatten, en het getal bij elke map is het aantal rijen direct eronder in de resultaten.
 - Onder `Tables` staan de tabellen die een overeenkomst bevatten, gesorteerd op naam, nooit op logische naam. Onder elke tabel staan een rij voor elke overeenkomst in de opmerking ervan, daarna een map `Columns` met de kolommen die een overeenkomst bevatten, in kolomvolgorde, elk met een rij voor elke overeenkomst in de opmerking ervan, en daarna een map `Indexes` met de indexen waarvan de naam overeenkomt. Er is geen map `Foreign Keys`.
-- Onder `Table Groups` staan de groepen waarvan de naam overeenkomt, gesorteerd op naam, zonder hun tabellen. Een gevonden tabel staat onder `Tables`.
+- Onder `Table Groups` staan de groepen waarvan de naam overeenkomt, gesorteerd op naam, zonder hun tabellen of memo's. Een gevonden tabel staat onder `Tables` en een memo onder `Memos`.
 - Onder `Memos` staan de memo's die een overeenkomst bevatten, in documentvolgorde, elk getoond met de eerste regel ervan en met een rij voor elke overeenkomst erin.
 
 Een overeenkomst in een naam wordt gemarkeerd in de eigen rij van die naam, dus een naam die de zoekopdracht twee keer bevat, is één rij met twee markeringen. Een overeenkomst in de logische naam van een tabel of kolom komt ook op de rij van die tabel of kolom, nooit op een eigen rij.  
@@ -127,7 +127,7 @@ Naar een overeenkomst gaan sluit Tabeleigenschappen als die open is, en daarna:
 
 - Bij de naam, logische naam of opmerking van een tabel of kolom wordt alleen die tabel geselecteerd en naar voren gebracht, en komt de gefocuste cel op de cel die de overeenkomst bevat. Bij een overeenkomst in een opmerking die door een [weergaveoptie voor tabellen](./table-related-functions.md#table-view-options) is verborgen, komt de gefocuste cel in plaats daarvan op de naam ernaast. Waar de [naamweergave](./logical-names.md#name-view) geen cel voor de naam of de logische naam toont, komt de gefocuste cel op de cel die op haar plaats wordt getoond: de naam in `Physical Names`, de logische naam in `Logical Names`.
 - Bij een indexnaam wordt alleen de tabel van de index geselecteerd en naar voren gebracht, met de gefocuste cel op de naam van de tabel, of op haar logische naam in `Logical Names` en `Both Names`, tenzij de gefocuste cel al in die tabel staat. Indexnamen worden niet op het canvas getekend.
-- Bij een tabelgroepnaam wordt alleen de groep geselecteerd en samen met zijn tabellen naar voren gebracht.
+- Bij een tabelgroepnaam wordt alleen de groep geselecteerd en samen met zijn tabellen en memo's naar voren gebracht.
 - Bij een memo wordt alleen die memo geselecteerd en naar voren gebracht.
 
 Het canvas scrolt alleen als het doel niet al goed in beeld is, en het zoomniveau verandert nooit — zie [Waar een sprong terechtkomt](./table-related-functions.md#where-a-jump-lands).

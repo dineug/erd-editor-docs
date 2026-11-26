@@ -93,7 +93,7 @@ Kým pole hľadania obsahuje text, [strom](./explorer.md#the-tree) prieskumníka
 
 - Priečinky `Tables`, `Table Groups` a `Memos` sa zobrazia, iba keď obsahujú zhodu, a počet pri každom priečinku je počet riadkov priamo pod ním vo výsledkoch.
 - Pod priečinkom `Tables` sú tabuľky, ktoré obsahujú zhodu, zoradené podľa názvu, nikdy nie podľa logického názvu. Pod každou tabuľkou je riadok pre každú zhodu v jej komentári, potom priečinok `Columns` so stĺpcami, ktoré obsahujú zhodu, v poradí stĺpcov, každý s riadkom pre každú zhodu v jeho komentári, a potom priečinok `Indexes` s indexmi, ktorých názov sa zhoduje. Priečinok `Foreign Keys` tu nie je.
-- Pod priečinkom `Table Groups` sú skupiny, ktorých názov sa zhoduje, zoradené podľa názvu, bez svojich tabuliek. Nájdená tabuľka sa zobrazí pod priečinkom `Tables`.
+- Pod priečinkom `Table Groups` sú skupiny, ktorých názov sa zhoduje, zoradené podľa názvu, bez svojich tabuliek a poznámok. Nájdená tabuľka sa zobrazí pod priečinkom `Tables` a nájdená poznámka pod priečinkom `Memos`.
 - Pod priečinkom `Memos` sú poznámky, ktoré obsahujú zhodu, v poradí podľa dokumentu, každá zobrazená svojím prvým riadkom a s riadkom pre každú zhodu v nej.
 
 Zhoda v názve je zvýraznená priamo v riadku daného názvu, takže názov, ktorý obsahuje hľadaný text dvakrát, je jeden riadok s dvoma zvýrazneniami. Zhoda v logickom názve tabuľky alebo stĺpca sa tiež zobrazí v riadku danej tabuľky alebo stĺpca, nikdy nie vo vlastnom riadku.  
@@ -127,7 +127,7 @@ Prechod na zhodu zatvorí panel Vlastnosti tabuľky, ak je otvorený, a potom:
 
 - Pri názve, logickom názve alebo komentári tabuľky či stĺpca vyberie iba túto tabuľku, presunie ju dopredu a nastaví aktívnu bunku na bunku, ktorá obsahuje zhodu. Zhoda v komentári skrytom [možnosťou zobrazenia tabuliek](./table-related-functions.md#table-view-options) namiesto toho nastaví aktívnu bunku na názov vedľa neho. Tam, kde [Zobrazenie názvov](./logical-names.md#name-view) pre názov alebo logický názov nevykresľuje žiadnu bunku, sa aktívna bunka presunie na bunku vykreslenú na jeho mieste: na názov v zobrazení `Physical Names` a na logický názov v zobrazení `Logical Names`.
 - Pri názve indexu vyberie iba tabuľku indexu a presunie ju dopredu, pričom aktívna bunka bude na názve tabuľky, prípadne na jej logickom názve v zobrazeniach `Logical Names` a `Both Names`, pokiaľ už nie je v tejto tabuľke. Názvy indexov sa na plátne nevykresľujú.
-- Pri názve skupiny tabuliek vyberie iba túto skupinu a presunie ju dopredu spolu s jej tabuľkami.
+- Pri názve skupiny tabuliek vyberie iba túto skupinu a presunie ju dopredu spolu s jej tabuľkami a poznámkami.
 - Pri poznámke vyberie iba túto poznámku a presunie ju dopredu.
 
 Plátno sa posunie, iba keď cieľ prechodu ešte nie je dobre viditeľný, a priblíženie sa nikdy nemení – pozrite si časť [Kam vedie skok](./table-related-functions.md#where-a-jump-lands).

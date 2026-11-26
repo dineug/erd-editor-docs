@@ -93,7 +93,7 @@ Enquanto o campo Localizar contém texto, a [árvore](./explorer.md#the-tree) do
 
 - `Tables`, `Table Groups` e `Memos` só aparecem quando contêm uma correspondência, e o contador de cada pasta é o número de linhas logo abaixo dela nos resultados.
 - Sob `Tables` vêm as tabelas que contêm uma correspondência, ordenadas por nome, nunca por nome lógico. Sob cada tabela vêm uma linha para cada correspondência no comentário dela, depois uma pasta `Columns` com as colunas que contêm uma correspondência, na ordem das colunas, cada uma com uma linha para cada correspondência no comentário dela, e depois uma pasta `Indexes` com os índices cujo nome corresponde. Não há pasta `Foreign Keys`.
-- Sob `Table Groups` vêm os grupos cujo nome corresponde, ordenados por nome, sem suas tabelas. Uma tabela encontrada aparece sob `Tables`.
+- Sob `Table Groups` vêm os grupos cujo nome corresponde, ordenados por nome, sem suas tabelas nem notas. Uma tabela encontrada aparece sob `Tables`, e uma nota, sob `Memos`.
 - Sob `Memos` vêm as notas que contêm uma correspondência, na ordem do documento, cada uma exibida pela primeira linha do texto e com uma linha para cada correspondência que contém.
 
 Uma correspondência em um nome é realçada na própria linha desse nome, então um nome que contém o termo de pesquisa duas vezes é uma única linha com dois realces. Uma correspondência no nome lógico de uma tabela ou coluna também fica na linha dessa tabela ou coluna, nunca em uma linha própria.  
@@ -127,7 +127,7 @@ Ir para uma correspondência fecha o painel Propriedades da tabela, se estiver a
 
 - Para o nome, o nome lógico ou o comentário de uma tabela ou coluna, seleciona apenas a tabela, a traz para a frente e põe a célula em foco na célula que contém a correspondência. Uma correspondência em um comentário oculto por uma [opção de exibição da tabela](./table-related-functions.md#table-view-options) põe a célula em foco no nome ao lado dele, em vez disso. Onde a [exibição de nomes](./logical-names.md#name-view) não desenha nenhuma célula para o nome ou o nome lógico, a célula em foco vai para a que é desenhada no lugar dela: o nome na exibição `Physical Names`, o nome lógico na exibição `Logical Names`.
 - Para o nome de um índice, seleciona apenas a tabela do índice e a traz para a frente, com a célula em foco no nome da tabela, ou no nome lógico dela nas exibições `Logical Names` e `Both Names`, a menos que a célula em foco já esteja nessa tabela. Os nomes de índices não são desenhados no canvas.
-- Para o nome de um grupo de tabelas, seleciona apenas o grupo e o traz para a frente com suas tabelas.
+- Para o nome de um grupo de tabelas, seleciona apenas o grupo e o traz para a frente com suas tabelas e notas.
 - Para uma nota, seleciona apenas a nota e a traz para a frente.
 
 O canvas só rola quando o destino ainda não aparece bem, e o zoom nunca muda — consulte [Onde um salto termina](./table-related-functions.md#where-a-jump-lands).

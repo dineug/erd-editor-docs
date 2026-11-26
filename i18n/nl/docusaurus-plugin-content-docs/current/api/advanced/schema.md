@@ -19,7 +19,7 @@ VS Code, Obsidian en de JetBrains-plug-in schrijven een bestand alleen wanneer e
 Sinds `4.2.0` laat de opslagvorm ook weg wat niets bevat: elk tekstveld dat een entiteit of haar `ui` als `''` bevat (van een tabel `name`, `comment` en `ui.color`, van een kolom `name`, `comment`, `dataType` en `default`, van een index `name`, van een memo `value` en `ui.color`, van een tabelgroep `name` en `color`), elke lijst in `doc` en elke collectie die geen enkel item bevat, en `collections` zelf zodra elke collectie leeg is. Tekst die alleen uit spaties bestaat, wordt geschreven zoals hij is opgeslagen, behalve een logische naam, die dan wordt weggelaten, en een woord, term of domein waarvan de waarden na de id allemaal leeg zijn of alleen uit spaties bestaan, dat in zijn geheel wordt weggelaten. Elke id, elke lijst binnen een entiteit en elk getal, `0` inbegrepen, wordt nog steeds geschreven. `doc` wordt altijd geschreven, dus het bestand van een nieuw document bevat `$schema`, `version`, de instellingen en `"doc": {}`.  
 Het parseren leest een ontbrekend tekstveld als `''` en een ontbrekende collectie als leeg, zoals elke v3-versie doet, en de opslagvorm laat een lijst in `doc` alleen weg zolang de collectie ervan niets bevat (zie [Doc](#doc)). Daardoor opent ook een editor vóór `4.2.0` deze bestanden, en een programma dat zelf een bestand leest, moet wat ontbreekt op dezelfde manier lezen. Een bestand dat een eerdere versie heeft opgeslagen, komt bij de volgende keer opslaan terug zonder zijn lege tekst, lijsten en collecties, een wijziging die eenmalig is, en wordt vanaf dan telkens byte voor byte hetzelfde opgeslagen.
 
-De opslagvorm schrijft elke vergrendelde instelling met haar vergrendelde waarde (zie [`lockSettings`](#settings)), `settings.ddlScripts` alleen zolang een script tekst bevat en de `groupId` van een tabel alleen zolang die een tabelgroep noemt die het bestand schrijft. Sinds `4.2.0` schrijft ze ook `settings.nameViewMode` alleen zolang de waarde die ze schrijft niet `'physical'` is, `settings.columnOrder` met zeven elementen waar dat kan (zie [Settings](#settings)) en de `nameDerived` van een tabel alleen zolang die `true` is.  
+De opslagvorm schrijft elke vergrendelde instelling met haar vergrendelde waarde (zie [`lockSettings`](#settings)), `settings.ddlScripts` alleen zolang een script tekst bevat en de `groupId` van een tabel of, sinds `5.1.1`, van een memo alleen zolang die een tabelgroep noemt die het bestand schrijft. Sinds `4.2.0` schrijft ze ook `settings.nameViewMode` alleen zolang de waarde die ze schrijft niet `'physical'` is, `settings.columnOrder` met zeven elementen waar dat kan (zie [Settings](#settings)) en de `nameDerived` van een tabel alleen zolang die `true` is.  
 Ze schrijft `doc.tableGroupIds` en `tableGroupEntities` alleen zolang er een tabelgroep bestaat, een `logicalName` alleen zolang die andere tekst dan spaties bevat, de `domainId` van een kolom alleen zolang die een domein noemt dat het bestand schrijft, en elk woordenboek alleen zolang het een rij bevat die het bestand schrijft.
 
 Een bestand dat vóór `4.0.0` is opgeslagen, bevat het hele document zoals een editor het toen vasthield, met zijn verwijderde entiteiten en alles wat bij elke keer laden wordt afgeleid. Bij het laden wordt het gelezen, blijft de plaats van elke tabel en memo in de stapel behouden (zie [Doc](#doc)) en wordt de rest opnieuw afgeleid, en bij de volgende keer opslaan wordt alleen de opslagvorm geschreven.
@@ -394,6 +394,7 @@ const OrderType = {
 type Memo = {
   id: string;
   value?: string;
+  groupId?: string;
   ui: MemoUI;
 };
 
@@ -407,6 +408,9 @@ type MemoUI = {
 ```
 
 Sinds `4.0.0` staan tabellen en memo's in [één gedeelde stapel](../../guide/guides/table-related-functions.md#moving-multiple-tables), dus als je een tabel naar voren brengt, kan die boven een memo komen te liggen. Bij het laden komt elke memo boven elke tabel te liggen, zoals [Doc](#doc) beschrijft. Een memo in een bestand dat vóór `4.0.0` is opgeslagen, behoudt de opgeslagen `zIndex`, die uit dezelfde teller kwam als die van de tabellen, dus een memo die een eerdere versie boven elke tabel tekende, kan openen onder een tabel die daarna naar voren is gebracht.
+
+Sinds `5.1.1` heeft een memo een `groupId`, de id van de [tabelgroep](../../guide/guides/table-groups.md) waartoe hij behoort, net als een tabel. Een ontbrekende of lege `groupId`, zoals in elk bestand dat vóór `5.1.1` is opgeslagen, of een die geen groep in `doc.tableGroupIds` noemt, geldt als geen groep, en de opslagvorm schrijft hem alleen zolang hij een behouden groep noemt.  
+Een editor van vóór `5.1.1` laat de `groupId` van elke memo weg wanneer hij een document laadt, dus als daar wordt opgeslagen, haalt dat elke memo uit zijn groep, al behoudt een editor van `4.0.0` of later de groepen van de tabellen — zie [Versies combineren](./collaborative-editing.md#mixing-releases).
 
 ### Collectie: tableGroupEntities {#collection-tablegroupentities}
 
@@ -426,7 +430,7 @@ type TableGroupUI = {
 };
 ```
 
-Sinds `4.0.0` kan een document [tabelgroepen](../../guide/guides/table-groups.md) bevatten: rechthoeken met een naam en een kleur, die achter tabellen worden getekend. Een tabel wordt lid van een groep via haar eigen `groupId`, dus een groep bevat geen lijst met leden. De opslagvorm schrijft de collectie, net als `doc.tableGroupIds`, alleen zolang er een groep bestaat, en een document zonder de collectie, zoals een document dat vóór `4.0.0` is opgeslagen, heeft geen groepen. `Show.hideTableGroup` verbergt ze.  
+Sinds `4.0.0` kan een document [tabelgroepen](../../guide/guides/table-groups.md) bevatten: rechthoeken met een naam en een kleur, die achter tabellen en memo's worden getekend. Een tabel, en sinds `5.1.1` een memo, wordt lid van een groep via de eigen `groupId`, dus een groep bevat geen lijst met leden. De opslagvorm schrijft de collectie, net als `doc.tableGroupIds`, alleen zolang er een groep bestaat, en een document zonder de collectie, zoals een document dat vóór `4.0.0` is opgeslagen, heeft geen groepen. `Show.hideTableGroup` verbergt ze.  
 Een editor vóór `4.0.0` laat de groepen en de `groupId` van elke tabel weg wanneer hij een document laadt, dus als daar wordt opgeslagen, gaat elke groep verloren.
 
 ### Woordenboekrijen {#dictionary-rows}
@@ -525,6 +529,8 @@ Zet `$schema` bovenaan een `.erd.json`-bestand, dan valideren editors die JSON S
 Sinds `4.0.0` beschrijft het schema alleen de opslagvorm. Elk object met benoemde velden is gesloten (`additionalProperties: false`), elk veld dat de opslagvorm altijd schrijft, is verplicht, elk veld dat in de typen hierboven met `?` is gemarkeerd, wordt genoemd maar is niet verplicht, en geen enkel ander veld wordt genoemd. Daarom weigert het schema een bestand dat vóór `4.0.0` is opgeslagen, met zijn `meta`, breedtes, `zIndex`, `ignoreSaveSettings` en de rest, totdat een editor van `4.0.0` of later dat bestand opnieuw opslaat. Een bestand dat door `3.2.0` of later is opgeslagen, noemt al de URL van dit schema, die naar de branch `main` wijst, dus een editor die ertegen valideert, markeert het bestand nu. Een bestand dat door `3.0.0` of `3.1.0` is opgeslagen, of een v2-document, noemt geen `$schema`.
 
 Sinds `4.2.0` vereist het schema niet langer de tekstvelden van een entiteit, een lijst in `doc`, een collectie of `collections` zelf, die de opslagvorm weglaat zolang ze niets bevatten. Het accepteert nog steeds een bestand dat door `4.0.0` of `4.1.0` is opgeslagen. Het noemt de nieuwe velden: `nameViewMode`, dat alleen `"logical"` en `"both"` accepteert; de `logicalName` en `nameDerived` van een tabel, waarbij `nameDerived` alleen `true` accepteert; de `logicalName` en `domainId` van een kolom; en de drie woordenboeken, elk met een koprij en rijen van strings. `canvasType` vermeldt het tabblad Woordenboek, `columnOrder` accepteert zeven of negen gehele getallen, en de beschrijvingen van `show`, `columnOrder`, `lockSettings` en `options` noemen de nieuwe bits.
+
+Sinds `5.1.1` noemt het ook de `groupId` van een memo, die door een kopie van het schema van vóór `5.1.1` wordt geweigerd.
 
 ```json
 {
@@ -939,6 +945,10 @@ Sinds `4.2.0` vereist het schema niet langer de tekstvelden van een entiteit, ee
           "value": {
             "type": "string"
           },
+          "groupId": {
+            "description": "Id of the table group in doc.tableGroupIds the memo belongs to; absent means none",
+            "type": "string"
+          },
           "ui": {
             "type": "object",
             "properties": {
@@ -967,7 +977,7 @@ Sinds `4.2.0` vereist het schema niet langer de tekstvelden van een entiteit, ee
       }
     },
     "tableGroupEntities": {
-      "description": "Named, coloured rectangles drawn behind tables; a table joins one through its groupId. Written while a group exists; absent means none",
+      "description": "Named, coloured rectangles drawn behind tables and memos; a table or a memo joins one through its groupId. Written while a group exists; absent means none",
       "type": "object",
       "additionalProperties": {
         "type": "object",

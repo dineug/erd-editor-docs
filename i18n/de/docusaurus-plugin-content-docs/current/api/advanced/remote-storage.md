@@ -157,6 +157,7 @@ const data = replicationStore.value;
 Seit `4.0.0` ist `value` die Speicherform: das Dokument so, wie eine Datei es enthält, derselbe Text, den die Eigenschaft [value](../erd-editor-element.md#value) des Elements zurückgibt.  
 Die Speicherform enthält nur die nicht entfernten Entitäten in fester Reihenfolge, ohne die entfernten, ohne die Stapelreihenfolge und ohne alles, was ein Ladevorgang erneut ermittelt, etwa die Breiten, die [toWidth](#towidth) misst.  
 Seit `4.2.0` enthält sie außerdem die logischen Namen, die Angabe, ob jeder Name aus den Wörterbüchern abgeleitet wurde, die Domänenverknüpfungen sowie die Wörter, Begriffe und Domänen der Registerkarte [Wörterbuch](../../guide/guides/dictionary.md).  
+Seit `5.1.1` enthält sie außerdem die Tabellengruppe, in der jede Notiz ist.  
 Seit `4.2.0` lässt sie außerdem jedes leere Textfeld einer Entität weg, jede Liste in `doc` und jede Collection, die nichts enthält, sowie `collections` selbst, wenn jede Collection leer ist.  
 Sie ist mit zwei Leerzeichen eingerückt, schreibt jede Wörterbuchzeile in eine eigene Textzeile und endet mit einem Zeilenumbruch, sodass dasselbe Dokument immer dieselben Bytes ergibt.  
 Zu ihrem Inhalt siehe [Speicherform](./schema.md#storage-form).
@@ -305,6 +306,10 @@ Halten Sie jeden Editor der Sitzung und das Replikat auf `5.1.0` oder neuer, dam
 
 Seit `5.1.0` sendet ein Editor eine Änderung der Sprache des Codegenerators, einer Schreibweise oder des Begrenzertyps nur, solange die Sperre dieser Einstellung ausgeschaltet ist, mit `shared: true` in ihrer Payload markiert, und das Replikat wendet jede markierte an, wie die Editoren; siehe [Gemeinsame Bearbeitung](./collaborative-editing.md).  
 Eine unmarkierte, die ein Editor vor `5.1.0` unabhängig von der Sperre sendet, wendet das Replikat nur an, solange diese Einstellung auf seiner Seite entsperrt ist, und verwirft sie, solange die Einstellung gesperrt ist (siehe [on@change](#onchange)).
+
+Seit `5.1.1` gehört zu den behaltenen Aktionen auch `memo.changeGroup`, das eine Notiz in eine [Tabellengruppe](../../guide/guides/table-groups.md) aufnimmt oder aus ihr nimmt, und `value` schreibt die Gruppe, in der jede Notiz ist (siehe [Speicherform](./schema.md#storage-form)).  
+`5.1.1` ändert keinen Export von `@dineug/erd-editor/engine.js`.  
+Ein Store aus einer früheren Version verwirft `memo.changeGroup` und das Feld `groupId` jeder Notiz, sodass er keine Notiz in einer Gruppe speichert, und ein Editor vor `5.1.1` in der Sitzung kann auf einem Replikat der Version `5.1.1` weiterhin Notizen aus ihren Gruppen nehmen; siehe [Gemischte Versionen](./collaborative-editing.md#mixing-releases).
 
 Seit `4.0.0` wenden beide Methoden außerdem die Aktion `editor.mergeLWW` an, die die Kollaborationsregister überträgt, mit denen ein Editor antwortet, wenn ein anderer der Sitzung beitritt, sodass das Replikat gleichzeitige Änderungen so abgleicht wie die Editoren.  
 Sie ändert kein Byte von `value` und löst kein Ereignis `change` aus.  

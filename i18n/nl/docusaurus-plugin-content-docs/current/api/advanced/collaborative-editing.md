@@ -176,7 +176,7 @@ Sinds `5.1.0` komen twee editors die op hetzelfde moment één naam of veld wijz
 
 Sinds `5.1.0` worden de positie van een tabel, de positie en grootte van een memo of tabelgroep, en de oorsprong en het zoomniveau van de weergave op dezelfde manier van een versie voorzien, en wat ze verplaatst, wordt verstuurd als de plek waar ze eindigen:
 
-- een sleepbeweging als één `table.moveTo`, `memo.moveTo` of `tableGroup.moveTo` per verplaatste entiteit, in één batch, zodat het slepen van een groep de punten van haar tabellen meeneemt met die van de groep;
+- een sleepbeweging als één `table.moveTo`, `memo.moveTo` of `tableGroup.moveTo` per verplaatste entiteit, in één batch, zodat het slepen van een groep de punten van zijn tabellen, en sinds `5.1.1` die van zijn memo's, meeneemt met die van de groep;
 - het ongedaan maken of opnieuw uitvoeren van een sleepbeweging als het punt waarop het elke entiteit zet;
 - een pan als `settings.scrollTo` en een zoom als `settings.changeZoomLevel`;
 - het wijzigen van de grootte van een memo of tabelgroep als haar positie en grootte samen.
@@ -253,6 +253,19 @@ Een editor van `5.1.0` verstuurt geen nieuw actietype, dus editors en replica's 
 - Een laadactie die het document vervangt, zoals een toegewezen `value`, `clear()` of een vervangende import, sluit het tekenen van een relatie af op elke editor van `5.1.0`, zowel op de editor die de laadactie maakte als op elke editor die haar ontvangt. Een oudere editor houdt zijn tekenactie daarbij actief.
 
 Houd elke editor in een sessie, en elke [replicationStore](./remote-storage.md#dispatch-dispatchsync) die het document ervan opslaat, op `5.1.0` of later, zodat bewerkingen op hetzelfde moment overal op hetzelfde uitkomen, afgezien van de uitzonderingen die [Gelijktijdige bewerkingen](#concurrent-edits) noemt; `4.2.0` of later blijft wat logische namen en woordenboeken behoudt. Een [MCP-server](../../mcp/live-and-headless.md#edits-made-at-the-same-moment) van vóór `1.2.0` telt hier als een editor van vóór `5.1.0`, en een editor van vóór `5.1.0` kan helemaal niet aan een room van [Yjs](./yjs.md) worden gebonden.
+
+Sinds `5.1.1` gaat een wijziging waarbij een memo in een [tabelgroep](../../guide/guides/table-groups.md) komt of hem verlaat, via een nieuw actietype, `memo.changeGroup`, en een relay die acties ongewijzigd doorstuurt, heeft daarvoor niets nieuws nodig. Het wordt verstuurd voor een memo die in of buiten een groep wordt neergezet, een nieuwe groep die rond getoonde memo's zonder groep wordt getekend, `Group selected tables` met memo's die naast de tabellen zijn geselecteerd, `Remove from group` met memo's in de selectie, elke memo van een verwijderde groep, de aanroepen van een codeeragent via de [MCP-server](../../mcp/tools.md#table-groups) die de groep van memo's wijzigen, en het ongedaan maken en opnieuw uitvoeren van elk daarvan. Een toevoeging via `Import and Add` of `setSchemaJSON` waarvan de groepen memo's bevatten, verstuurt het ook, en het opnieuw uitvoeren daarvan ook, terwijl het ongedaan maken alleen die memo's verwijdert.
+
+Een editor of replica van vóór `5.1.1` negeert `memo.changeGroup`, en bij het parseren laat hij de `groupId` van elke memo weg, dus hij ziet nooit een memo in een groep, al verplaatst het slepen van een groep door een editor van `5.1.1` de memo's van die groep daar nog wel, omdat het ook voor elk daarvan een `memo.moveTo` verstuurt. Zijn eigen bewerkingen weten niets van de groepen van memo's, met deze gevolgen voor de nieuwere editors:
+
+- Een memo die hij naar het kader van een groep sleept, blijft buiten de groep, en een lidmemo die hij uit het kader sleept, blijft erin, waarbij het kader uitrekt om hem te omvatten.
+- Het slepen van een groep op die editor verplaatst, net als zijn `Auto Layout`, de groep en zijn tabellen, maar laat de memo's van de groep staan waar ze staan, en het kader rekt uit om de getoonde memo's daar te omvatten.
+- Een `Import and Add` op die editor zet geen memo in de groepen die hij toevoegt.
+- Een groep die hij verwijdert, laat de `groupId` van elk van zijn memo's die groep noemen: de memo's gelden dan als memo's zonder groep, en als hij het verwijderen ongedaan maakt, zet dat ze weer in de groep.
+- Wanneer hij een laadactie, een import of `clear()` ongedaan maakt, laadt hij zijn eigen kopie van het document op elke editor, en die kopie heeft geen memo in een groep.
+
+Een document dat vanuit zo'n editor is opgeslagen, heeft geen memo in een groep, al behoudt een editor van `4.0.0` of later de groepen van de tabellen.  
+Houd elke editor in een sessie, en elke [replicationStore](./remote-storage.md#dispatch-dispatchsync) die het document ervan opslaat, op `5.1.1` of later om memo's in hun tabelgroepen te houden; `5.1.0` of later blijft wat bewerkingen op hetzelfde moment regelt. Een [MCP-server](../../mcp/installation.md#updating) van vóór `1.2.1` ziet en behoudt evenzo niet in welke tabelgroep een memo zit.
 
 ## SharedStoreConfig {#sharedstoreconfig}
 

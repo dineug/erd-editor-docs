@@ -93,7 +93,7 @@ Bilatu eremuak testua duen bitartean, Arakatzailearen [zuhaitzak](./explorer.md#
 
 - `Tables`, `Table Groups` eta `Memos` karpetak bat-etortzeren bat dutenean bakarrik agertzen dira, eta karpeta bakoitzak erakusten duen kopurua emaitzetan zuzenean haren azpian dauden errenkaden kopurua da.
 - `Tables` karpetaren azpian bat-etortzeren bat duten taulak daude, izenaren arabera ordenatuta, inoiz ez izen logikoaren arabera. Taula bakoitzaren azpian errenkada bat dago haren iruzkineko bat-etortze bakoitzeko; ondoren, `Columns` karpeta bat, bat-etortzeren bat duten zutabeekin, zutabeen ordenan, bakoitza bere iruzkineko bat-etortze bakoitzeko errenkada batekin; eta ondoren, `Indexes` karpeta bat, izena bat datorren indizeekin. Ez dago `Foreign Keys` karpetarik.
-- `Table Groups` karpetaren azpian izena bat datorren taldeak daude, izenaren arabera ordenatuta, beren taularik gabe. Aurkitutako taula bat `Tables` karpetaren azpian agertzen da.
+- `Table Groups` karpetaren azpian izena bat datorren taldeak daude, izenaren arabera ordenatuta, beren taularik eta oharrik gabe. Aurkitutako taula bat `Tables` karpetaren azpian agertzen da, eta ohar bat `Memos` karpetaren azpian.
 - `Memos` karpetaren azpian bat-etortzeren bat duten oharrak daude, dokumentuko ordenan, bakoitza bere lehen lerroarekin erakutsita eta bere bat-etortze bakoitzeko errenkada batekin.
 
 Izen bateko bat-etortzea izen horren beraren errenkadan nabarmentzen da; beraz, bilaketa-testua bi aldiz duen izen bat bi nabarmentze dituen errenkada bakarra da. Taula edo zutabe baten izen logikoko bat-etortze bat taula edo zutabe horren errenkadan ere jartzen da, inoiz ez bere errenkada propioan.  
@@ -127,7 +127,7 @@ Bat-etortze batera joateak Taularen propietateak panela ixten du, irekita badago
 
 - Taula edo zutabe baten izena, izen logikoa edo iruzkina bada, taula bakarrik hautatzen du, aurrera ekartzen du, eta fokuratutako gelaxka bat-etortzea duen gelaxkan jartzen du. [Taulen ikuspegi-aukera](./table-related-functions.md#table-view-options) batek ezkutatutako iruzkin bateko bat-etortzeak, aldiz, fokuratutako gelaxka ondoko izenean jartzen du. [Izenen ikuspegiak](./logical-names.md#name-view) izenarentzat edo izen logikoarentzat gelaxkarik marrazten ez duen lekuan, fokuratutako gelaxka haren lekuan marrazten denera joaten da: izenera `Physical Names` ikuspegian, eta izen logikora `Logical Names` ikuspegian.
 - Indize baten izena bada, indizearen taula bakarrik hautatzen du eta aurrera ekartzen du, eta fokuratutako gelaxka taularen izenean jartzen du, edo haren izen logikoan `Logical Names` eta `Both Names` ikuspegietan, gelaxka hori dagoeneko taula horretan ez badago. Indizeen izenak ez dira oihalean marrazten.
-- Taula-talde baten izena bada, taldea bakarrik hautatzen du eta aurrera ekartzen du bere taulekin.
+- Taula-talde baten izena bada, taldea bakarrik hautatzen du eta aurrera ekartzen du bere taulekin eta oharrekin.
 - Ohar bat bada, oharra bakarrik hautatzen du eta aurrera ekartzen du.
 
 Oihala helburua dagoeneko ondo ikusten ez denean bakarrik korritzen da, eta zooma ez da inoiz aldatzen. Ikus [Jauziaren helmuga](./table-related-functions.md#where-a-jump-lands).

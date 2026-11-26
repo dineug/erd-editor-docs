@@ -96,7 +96,7 @@ Varje typ av rad visar:
 - En kolumn: en nyckelikon för en primärnyckel- eller sekundärnyckelkolumn, färgad så som tabellens egen nyckelcell färgar en primärnyckel, en sekundärnyckel eller båda, och en listikon för alla andra kolumner. Sedan dess namn och, nedtonat, dess datatyp följd av `PK`, `FK` eller båda, som `id` `BIGINT PK` eller `user_id` `BIGINT FK`. Typen som visas är alltid kolumnens datatyp, aldrig dess [domän](./logical-names.md#the-domain-cell), oavsett namnvisning.
 - Ett index: en indexikon och dess namn. Sedan, nedtonat, `UNIQUE` för ett unikt index och dess kolumner inom parentes i indexordning, med `DESC` efter en fallande kolumn, som `orders_user_idx` `UNIQUE (user_id DESC, total)`, eller bara `(total)`.
 - En sekundärnyckel: listas bara under barntabellen, den som innehåller sekundärnyckelkolumnerna, och bara medan föräldratabellen finns i diagrammet. Dess nyckelikon får relationslinjens färg: färgen för primärnyckel och sekundärnyckel för en [identifierande relation](./relationship-editing.md#identifying-relationships), annars färgen för sekundärnyckel. Den visar barntabellens nyckelkolumner, kommaseparerade, sedan, nedtonat, `→` med föräldratabellen och dess kolumner, som `user_id` `→ users(id)`.
-- En tabellgrupp: en punkt i gruppens färg, grå för en grupp utan färg, och dess namn. Dess tabeller listas under den efter namn, och var och en går till sin tabell. En grupp utan tabeller har inget att fälla ut.
+- En tabellgrupp: en punkt i gruppens färg, grå för en grupp utan färg, och dess namn. Dess tabeller listas under den efter namn, sedan dess anteckningar i dokumentets ordning, och var och en går till sin tabell eller anteckning. Dessa anteckningar listas också under `Memos`. En grupp listar ingen anteckning medan View Option → `Memos` döljer anteckningarna, och en grupp utan tabeller och utan synliga anteckningar har inget att fälla ut.
 - En anteckning: en klisterlappsikon och anteckningens första rad.
 
 Tabellrader, tabellerna som listas under en grupp och kolumnrader följer namnvisningen – se [Utanför arbetsytan](./logical-names.md#beyond-the-canvas). I `Both Names` visar till exempel en kolumnrad `Total Amount` `total` `NUMERIC`: det logiska namnet och sedan namnet och datatypen, båda nedtonade.  
@@ -119,8 +119,8 @@ Klicka på en rad, eller tryck på `Enter` eller `Space` medan tangentbordsfokus
 - En kolumnrad markerar enbart sin tabell och placerar den fokuserade cellen på kolumnens namn, eller i `Logical Names` på det logiska namnet som ritas i dess ställe.
 - En indexrad markerar sin tabell, som en tabellrad gör. Själva indexet pekas inte ut; index redigeras i panelen [Tabellegenskaper](./table-related-functions.md#indexes).
 - En sekundärnyckelrad visar relationens båda tabeller tillsammans i vyn, eller barntabellen när de två ligger för långt ifrån varandra för att visas tillsammans. Den markerar enbart barntabellen med dess sekundärnyckelkolumner, med den fokuserade cellen på den första av dem, och lyser upp relationslinjen – se [Läsa en relationslinje](./relationship-editing.md#reading-a-connector).
-- En tabellgruppsrad visar gruppens ruta i vyn, med namnlisten som huvuddel, markerar enbart gruppen och lägger den överst tillsammans med dess tabeller.
-- En anteckningsrad markerar enbart anteckningen och lägger den överst.
+- En tabellgruppsrad visar gruppens ruta i vyn, med namnlisten som huvuddel, markerar enbart gruppen och lägger den överst tillsammans med dess tabeller och anteckningar.
+- En anteckningsrad, eller en anteckning som listas under en grupp, markerar enbart anteckningen och lägger den överst.
 
 Vyn flyttas enligt den regel som alla hopp delar: zoomen ändras aldrig, och arbetsytan rullar bara när det du går till inte redan syns väl – se [Var ett hopp hamnar](./table-related-functions.md#where-a-jump-lands).  
 Att gå till en rad stänger först panelen Tabellegenskaper om den är öppen, och startar eller slutför aldrig ritningen av en relation.  

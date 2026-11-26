@@ -265,6 +265,7 @@ De inställningar som dess läsare ändrar stannar på dess skärm, som i varje 
 Bindningen lagrar diagrammet under två namn i `Y.Doc`: `erd:snapshot`, en map som innehåller en ögonblicksbild av dokumentet, och `erd:log`, en array med editorns åtgärdsbatchar sedan dess. En provider för beständig lagring sparar båda tillsammans med resten av `Y.Doc`.
 
 Ögonblicksbilden innehåller dokumentets [runtimeValue](../erd-editor-element.md#runtimevalue), borttagna entiteter inräknade, dess register för gemensam redigering och version, och hur långt varje skrivares redigeringar är ihopslagna i den. En initiering skriver den, och det gör även varje ihopslagning av en komprimerare.  
+En initiering eller ihopslagning som görs med en version av `@dineug/erd-editor` från före `5.1.1` skriver en ögonblicksbild där ingen anteckning ingår i någon tabellgrupp – se [Blanda versioner](./collaborative-editing.md#mixing-releases).  
 Varje loggpost är en batch så som editorn skickade den, dess meta inräknad, som bär avsändarens editor-id och smeknamn.  
 Rullningar, zoomningar, flikbyten, närvaro och registrens handskakning loggas aldrig. Varje annan ändring som editorn skickar loggas, däribland ett byte av namnvisning som görs under dess [lås](../../guide/guides/settings.md#lock), vilket alla andra klienter släpper.  
 Ett språk, ett skiftläge för namn eller en typ av citattecken i kodgeneratorn som ändras under sitt lås skickas aldrig, så det stannar på den editorns skärm och når aldrig rummet.

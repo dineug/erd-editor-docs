@@ -56,6 +56,7 @@ Okno VS Code obsluhuje diagramy v priečinkoch svojho pracovného priestoru a ka
 Rozšírenie od verzie `3.0.0` po verziu `3.1.0` a server vo verzii `1.0.0` alebo novšej sa navzájom odmietnu a rozšírenie pred verziou `3.0.0` neobsluhuje žiadnych agentov.
 Rozšírenie vo verzii `4.0.0` alebo `4.1.0` sa pripojí, ale logické názvy, prepojenia s doménami a riadky slovníkov, ktoré agent zapíše, nezobrazuje ani neuchováva.
 S rozšírením starším ako verzia `4.3.0` môže tabuľka, poznámka alebo skupina tabuliek, ktorú vy a agent v tom istom okamihu presuniete alebo ktorej zmeníte veľkosť, skončiť pre každého z vás na inom mieste – pozrite si časť [Aktualizácia](#updating).
+Rozšírenie staršie ako verzia `4.3.1` nezobrazuje ani neuchováva, v ktorej skupine tabuliek je poznámka.
 
 Rozšírenie sa spustí v pracovnom priestore, ktorý obsahuje súbory `.erd`, `.erd.json`, `.vuerd` alebo `.vuerd.json`, takže agent sa k týmto diagramom dostane ešte predtým, ako niektorý z nich otvoríte.
 V pracovnom priestore bez takýchto súborov sa spustí, keď otvoríte diagram, a dovtedy agent vykonáva úpravy na disku.
@@ -74,6 +75,7 @@ Okno trezoru aplikácie Obsidian obsluhuje diagramy vo svojom trezore.
 Doplnok pred verziou `1.0.0` a server vo verzii `1.0.0` alebo novšej sa navzájom odmietnu.
 Doplnok vo verzii `1.0.0` alebo `1.1.0` sa pripojí, ale logické názvy, prepojenia s doménami a riadky slovníkov, ktoré agent zapíše, nezobrazuje ani neuchováva.
 S doplnkom starším ako verzia `1.3.0` môže tabuľka, poznámka alebo skupina tabuliek, ktorú vy a agent v tom istom okamihu presuniete alebo ktorej zmeníte veľkosť, skončiť pre každého z vás na inom mieste – pozrite si časť [Aktualizácia](#updating).
+Doplnok starší ako verzia `1.3.1` nezobrazuje ani neuchováva, v ktorej skupine tabuliek je poznámka.
 
 Okno trezoru obsluhuje agentov od chvíle, keď sa doplnok načíta, takže agent sa k diagramom trezoru dostane ešte predtým, ako niektorý z nich otvoríte.
 Nie je tu žiadny krok udelenia dôvery.
@@ -102,6 +104,7 @@ IDE od JetBrains obsluhuje diagramy každého projektu, ktorý je v ňom otvoren
 Doplnok vo verzii `0.9.0` alebo `0.10.0` a server vo verzii `1.0.0` alebo novšej sa navzájom odmietnu a doplnok pred verziou `0.9.0` neobsluhuje žiadnych agentov.
 Doplnok vo verzii `1.0.0` alebo `1.1.0` sa pripojí, ale logické názvy, prepojenia s doménami a riadky slovníkov, ktoré agent zapíše, nezobrazuje ani neuchováva.
 S doplnkom starším ako verzia `1.3.0` môže tabuľka, poznámka alebo skupina tabuliek, ktorú vy a agent v tom istom okamihu presuniete alebo ktorej zmeníte veľkosť, skončiť pre každého z vás na inom mieste – pozrite si časť [Aktualizácia](#updating).
+Doplnok starší ako verzia `1.3.1` nezobrazuje ani neuchováva, v ktorej skupine tabuliek je poznámka.
 
 IDE obsluhuje agentov od chvíle, keď sa otvorí prvý projekt, takže agent sa k diagramom projektu dostane ešte predtým, ako niektorý z nich otvoríte.
 
@@ -153,7 +156,14 @@ Presun alebo zmena veľkosti tej istej tabuľky, poznámky alebo skupiny tabulie
 Ak je ktorákoľvek strana staršia, editor a agent môžu skončiť s rôznymi polohami a agent pokračuje v čítaní a úpravách zo svojej vlastnej, kým obe polohy nezjednotí neskorší presun alebo kým sa agent znova nepripojí k dokumentu – pozrite si časť [Úpravy urobené v tom istom okamihu](./live-and-headless.md#edits-made-at-the-same-moment).
 Žiadna z týchto verzií nemení to, čo súbor obsahuje.
 
+Server vo verzii `1.2.1` takisto používa protokol verzie 2. Pridáva dva nástroje, `erd_set_memo_group` a `erd_export_svg`, a argument `memoIds` nástroja `erd_add_table_group` a žiadny nástroj neodstraňuje ani nepremenúva – pozrite si časti [Skupiny tabuliek](./tools.md#table-groups) a [Export SVG](./tools.md#svg-export).
+Poznámky v skupinách tabuliek vyžadujú server vo verzii `1.2.1` alebo novšej a všade, kde je dokument otvorený, rozšírenie pre VS Code vo verzii `4.3.1` alebo novšej alebo doplnok pre Obsidian či JetBrains vo verzii `1.3.1` alebo novšej.
+Staršie rozšírenie alebo doplnok, ktoré sa pripojí, ignoruje, v ktorej skupine je poznámka, hoci volanie agenta uspeje, a pri uložení súboru skupiny poznámok vynechá.
+Server starší ako verzia `1.2.1` pre ne nemá nástroje, číta každú poznámku ako poznámku mimo skupiny a súbor, ktorý upraví na disku, sa zapíše späť s každou poznámkou mimo jej skupiny – pozrite si časť [Headless](./live-and-headless.md#headless).
+Nástroj `erd_export_svg` vyžaduje iba server vo verzii `1.2.1` alebo novšej s ktorýmkoľvek vydaním rozšírenia alebo doplnku, ktoré sa pripojí, pretože obrázok kreslí samotný server.
+
 ERD Editor aktualizujte aj všade, kde sa diagramy otvárajú.
+Rozšírenie pre VS Code pred verziou `4.3.1`, doplnok pre Obsidian pred verziou `1.3.1` a doplnok pre JetBrains pred verziou `1.3.1` otvoria diagram, ktorý uložila novšia verzia alebo ktorý agent upravil na disku, s každou poznámkou mimo jej skupiny tabuliek a pri uložení súboru skupiny poznámok vynechajú.
 Rozšírenie pre VS Code pred verziou `4.2.0`, doplnok pre Obsidian pred verziou `1.2.0` a doplnok pre JetBrains pred verziou `1.2.0` otvoria diagram, ktorý uložila novšia verzia alebo ktorý agent upravil na disku, bez logických názvov jeho tabuliek a stĺpcov, bez prepojení jeho stĺpcov s doménami a bez jeho slov, termínov a domén.
 Pri uložení súboru ich vynechajú.
 Rozšírenie pre VS Code pred verziou `4.0.0`, doplnok pre Obsidian pred verziou `1.0.0` a doplnok pre JetBrains pred verziou `1.0.0` navyše zobrazujú taký diagram bez ikon primárneho kľúča a pri uložení súboru zahodia jeho skupiny tabuliek a skripty karty Schéma SQL.

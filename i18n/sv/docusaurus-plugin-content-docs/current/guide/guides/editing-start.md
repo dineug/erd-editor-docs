@@ -55,16 +55,17 @@ Medan View Option → `Memos` är av döljs anteckningarna, ingenting erbjuder `
 En anteckning är en lapp med fri text på arbetsytan. Klicka i anteckningens textyta och skriv; texten sparas med dokumentet.  
 `Escape` stänger anteckningens redigeringsfält, behåller det du har skrivit och lämnar anteckningen markerad, och ett andra tryck på `Escape` avmarkerar allt.  
 Dra i anteckningens kant för att ändra storlek på den. `x` i dess huvud, som visas medan pekaren hålls över anteckningen, tar bort den.  
-Ett högerklick på en anteckning öppnar dess meny i stället för redigeringsfältet: `Color`, `Remove color` medan ett markerat objekt har en färg, och `Delete`, som visar `Delete selected` medan anteckningen är ett av två eller fler markerade objekt. En markerad anteckning tas också bort med de tangenter som tar bort tabeller – se [Ta bort tabeller och anteckningar](./table-related-functions.md#table-and-memo-deletion).
+Ett högerklick på en anteckning öppnar dess meny i stället för redigeringsfältet: `Color`, `Remove color` medan ett markerat objekt har en färg, `Group selected tables` medan markeringen innehåller en tabell och tabellgrupper visas, `Remove from group` medan en markerad tabell eller anteckning ingår i en grupp, och `Delete`, som visar `Delete selected` medan anteckningen är ett av två eller fler markerade objekt. En markerad anteckning tas också bort med de tangenter som tar bort tabeller – se [Ta bort tabeller och anteckningar](./table-related-functions.md#table-and-memo-deletion).  
+Liksom en tabell går en anteckning med i eller lämnar en [tabellgrupp](./table-groups.md) där du släpper den. `Remove from group` tar också ut den, och `Group selected tables` lägger den i en ny grupp tillsammans med de tabeller som är markerade samtidigt – se [Lägga till och ta bort tabeller](./table-groups.md#adding-and-removing-tables).
 
 ![En anteckning läggs till med Alt + M, en text skrivs in och anteckningens kant dras för att ändra storleken](/img/demo-memo.webp)
 
 ## Skapa tabellgrupper {#table-group-creation}
 
-En tabellgrupp är en ruta som rymmer tabeller, och du kan ge den ett namn och en färg. Skapa en på något av två sätt:
+En tabellgrupp är en ruta som rymmer tabeller och anteckningar, och du kan ge den ett namn och en färg. Skapa en på något av två sätt:
 
-- Välj `New Table Group` i snabbmenyn eller snabbsökningen, klicka på knappen `New Table Group` i [arbetsytans verktygsfält](./table-related-functions.md#canvas-toolbar) eller tryck på `Alt + G` (Windows/Linux) eller `⌥ + G` (Mac) och dra sedan upp en ruta på arbetsytan. Varje tabell vars mitt ligger inuti rutan går med i den nya gruppen, om den inte redan ingår i en annan grupp – se [Rita en grupp](./table-groups.md#drawing-a-group).
-- Markera tabeller och välj `Group selected tables` i en tabells snabbmeny eller `Group Selected Tables` i snabbsökningen, eller tryck på `T` och sedan `G` – se [Gruppera markerade tabeller](./table-groups.md#grouping-selected-tables).
+- Välj `New Table Group` i snabbmenyn eller snabbsökningen, klicka på knappen `New Table Group` i [arbetsytans verktygsfält](./table-related-functions.md#canvas-toolbar) eller tryck på `Alt + G` (Windows/Linux) eller `⌥ + G` (Mac) och dra sedan upp en ruta på arbetsytan. Varje tabell och varje synlig anteckning vars mitt ligger inuti rutan går med i den nya gruppen, om den inte redan ingår i en annan grupp – se [Rita en grupp](./table-groups.md#drawing-a-group).
+- Markera tabeller, och eventuella anteckningar som ska följa med, och välj `Group selected tables` i en tabells eller en antecknings snabbmeny eller `Group Selected Tables` i snabbsökningen, eller tryck på `T` och sedan `G` – se [Gruppera markerade tabeller](./table-groups.md#grouping-selected-tables).
 
 Namngivning, färgläggning, flyttning, storleksändring och resten beskrivs i [Tabellgrupper](./table-groups.md).
 

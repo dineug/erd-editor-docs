@@ -56,6 +56,7 @@ Bir VS Code penceresi, çalışma alanı klasörlerindeki diyagramlara ve kendis
 `3.0.0` sürümünden `3.1.0` sürümüne kadar olan bir uzantı ile sunucunun `1.0.0` veya sonraki bir sürümü birbirini reddeder, `3.0.0` sürümünden önceki bir uzantı ise hiçbir ajana hizmet vermez.
 `4.0.0` veya `4.1.0` sürümlü bir uzantı bağlanır, ancak ajanın yazdığı mantıksal adları, değer alanı bağlantılarını ve sözlük satırlarını ne gösterir ne de korur.
 `4.3.0` sürümünden önceki bir uzantıyla, sizin ve ajanın aynı anda taşıdığı ya da yeniden boyutlandırdığı bir tablo, not veya tablo grubu, ikiniz için farklı yerlerde bitebilir. [Güncelleme](#updating) bölümüne bakın.
+`4.3.1` sürümünden önceki bir uzantı, bir notun hangi tablo grubunda olduğunu ne gösterir ne de korur.
 
 Uzantı, `.erd`, `.erd.json`, `.vuerd` veya `.vuerd.json` dosyaları içeren bir çalışma alanında başlar, bu yüzden ajan bu diyagramlara siz birini açmadan önce erişir.
 Bunlardan hiçbirini içermeyen bir çalışma alanında uzantı bir diyagram açtığınızda başlar ve o zamana kadar ajan dosyaları diskte düzenler.
@@ -74,6 +75,7 @@ Bir Obsidian kasa penceresi, kasasındaki diyagramlara hizmet verir.
 `1.0.0` sürümünden önceki bir eklenti ile sunucunun `1.0.0` veya sonraki bir sürümü birbirini reddeder.
 `1.0.0` veya `1.1.0` sürümlü bir eklenti bağlanır, ancak ajanın yazdığı mantıksal adları, değer alanı bağlantılarını ve sözlük satırlarını ne gösterir ne de korur.
 `1.3.0` sürümünden önceki bir eklentiyle, sizin ve ajanın aynı anda taşıdığı ya da yeniden boyutlandırdığı bir tablo, not veya tablo grubu, ikiniz için farklı yerlerde bitebilir. [Güncelleme](#updating) bölümüne bakın.
+`1.3.1` sürümünden önceki bir eklenti, bir notun hangi tablo grubunda olduğunu ne gösterir ne de korur.
 
 Bir kasa penceresi, eklenti yüklendiği andan itibaren ajanlara hizmet verir, bu yüzden ajan kasanın diyagramlarına siz birini açmadan önce erişir.
 Güvenme adımı yoktur.
@@ -102,6 +104,7 @@ Bir JetBrains IDE'si, içinde açık olan her projenin diyagramlarına ve içind
 `0.9.0` veya `0.10.0` sürümlü bir eklenti ile sunucunun `1.0.0` veya sonraki bir sürümü birbirini reddeder, `0.9.0` sürümünden önceki bir eklenti ise hiçbir ajana hizmet vermez.
 `1.0.0` veya `1.1.0` sürümlü bir eklenti bağlanır, ancak ajanın yazdığı mantıksal adları, değer alanı bağlantılarını ve sözlük satırlarını ne gösterir ne de korur.
 `1.3.0` sürümünden önceki bir eklentiyle, sizin ve ajanın aynı anda taşıdığı ya da yeniden boyutlandırdığı bir tablo, not veya tablo grubu, ikiniz için farklı yerlerde bitebilir. [Güncelleme](#updating) bölümüne bakın.
+`1.3.1` sürümünden önceki bir eklenti, bir notun hangi tablo grubunda olduğunu ne gösterir ne de korur.
 
 IDE, ilk proje açıldığı andan itibaren ajanlara hizmet verir, bu yüzden ajan bir projenin diyagramlarına siz birini açmadan önce erişir.
 
@@ -153,7 +156,14 @@ Ancak sizin ve ajanın aynı tablo, not veya tablo grubunda aynı anda yaptığ�
 Taraflardan biri daha eskiyse düzenleyici ve ajan farklı konumlarla bitebilir ve ajan, sonraki bir taşıma ikisini aynı noktaya getirene veya ajan belgeye yeniden katılana kadar kendi konumundan okumaya ve düzenlemeye devam eder. [Aynı anda yapılan düzenlemeler](./live-and-headless.md#edits-made-at-the-same-moment) bölümüne bakın.
 Bu sürümlerin hiçbiri bir dosyanın tuttuklarını değiştirmez.
 
+`1.2.1` sürümlü sunucu da protokol 2'yi kullanır. `erd_set_memo_group` ve `erd_export_svg` olmak üzere iki araç ile `erd_add_table_group` aracının `memoIds` argümanını ekler, hiçbirini kaldırmaz veya yeniden adlandırmaz. [Tablo grupları](./tools.md#table-groups) ve [SVG dışa aktarma](./tools.md#svg-export) bölümlerine bakın.
+Tablo gruplarındaki notlar, sunucunun `1.2.1` veya sonraki bir sürümünü ve belgenin açık olduğu her yerde VS Code uzantısının `4.3.1` veya sonraki bir sürümünü ya da Obsidian veya JetBrains eklentisinin `1.3.1` veya sonraki bir sürümünü gerektirir.
+Bağlanan daha eski bir uzantı veya eklenti, ajanın çağrısı başarılı olsa da bir notun hangi grupta olduğunu yok sayar ve dosyayı kaydettiğinde notların gruplarını dışarıda bırakır.
+`1.2.1` sürümünden önceki bir sunucuda bunlar için araç bulunmaz; bu sunucu her notu hiçbir grupta değilmiş gibi okur ve diskte düzenlediği bir dosya her not grubunun dışında olacak şekilde geri yazılır. [Headless](./live-and-headless.md#headless) bölümüne bakın.
+`erd_export_svg`, görüntüyü sunucu kendisi çizdiği için yalnızca sunucunun `1.2.1` veya sonraki bir sürümünü gerektirir; bağlanan herhangi bir uzantı veya eklenti sürümüyle çalışır.
+
 Diyagramların açıldığı her yerde ERD Editor sürümünü de güncelleyin.
+VS Code uzantısının `4.3.1` sürümünden önceki, Obsidian eklentisinin `1.3.1` sürümünden önceki ve JetBrains eklentisinin `1.3.1` sürümünden önceki sürümleri, daha yeni bir sürümün kaydettiği ya da ajanın diskte düzenlediği bir diyagramı her not tablo grubunun dışında olacak şekilde açar ve dosyayı kaydettiklerinde notların gruplarını dışarıda bırakır.
 VS Code uzantısının `4.2.0` sürümünden önceki, Obsidian eklentisinin `1.2.0` sürümünden önceki ve JetBrains eklentisinin `1.2.0` sürümünden önceki sürümleri, daha yeni bir sürümün kaydettiği ya da ajanın diskte düzenlediği bir diyagramı tablolarının ve sütunlarının mantıksal adları, sütunlarının değer alanı bağlantıları ve sözcükleri, terimleri ve değer alanları olmadan açar.
 Bu sürümler dosyayı kaydettiklerinde bunları dışarıda bırakır.
 VS Code uzantısının `4.0.0` sürümünden önceki, Obsidian eklentisinin `1.0.0` sürümünden önceki ve JetBrains eklentisinin `1.0.0` sürümünden önceki sürümleri ayrıca böyle bir diyagramı birincil anahtar simgeleri olmadan gösterir ve dosyayı kaydettiklerinde dosyanın tablo gruplarını ve Şema SQL betiklerini atar.

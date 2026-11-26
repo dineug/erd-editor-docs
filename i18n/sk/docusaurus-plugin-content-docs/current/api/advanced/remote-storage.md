@@ -157,6 +157,7 @@ const data = replicationStore.value;
 Od verzie `4.0.0` je vlastnosť `value` úložnou formou: dokumentom tak, ako ho uchováva súbor, rovnakým textom, aký vracia vlastnosť [value](../erd-editor-element.md#value) elementu.  
 Obsahuje iba aktuálne entity v pevnom poradí, bez odstránených entít, bez poradia prekrývania a bez čohokoľvek, čo načítanie znova vypočíta, napríklad šírok, ktoré meria funkcia [toWidth](#towidth).  
 Od verzie `4.2.0` obsahuje aj logické názvy, informáciu o tom, či bol každý názov odvodený zo slovníkov, prepojenia s doménami a slová, termíny a domény z karty [Slovník](../../guide/guides/dictionary.md).  
+Od verzie `5.1.1` obsahuje aj skupinu tabuliek, v ktorej je každá poznámka.  
 Od verzie `4.2.0` zároveň vynecháva každé prázdne textové pole entity, každý zoznam v objekte `doc` a každú kolekciu, ktoré nič neobsahujú, a samotné pole `collections`, keď sú všetky kolekcie prázdne.  
 Je odsadená o dve medzery, s každým riadkom slovníka na samostatnom riadku, a končí znakom nového riadka, takže rovnaký dokument vždy dá rovnaké bajty.  
 Informácie o tom, čo obsahuje, nájdete v časti [Úložná forma](./schema.md#storage-form).
@@ -305,6 +306,10 @@ Aby úpravy urobené v tom istom okamihu skončili rovnako, majte všetky editor
 
 Od verzie `5.1.0` posiela editor zmenu jazyka na karte Generátor kódu, štýlu názvov alebo typu úvodzoviek iba vtedy, keď je zamknutie daného nastavenia vypnuté, s označením `shared: true` v údajoch akcie, a replika aplikuje každú takto označenú zmenu, rovnako ako editory; pozrite si stránku [Spoločné úpravy](./collaborative-editing.md).  
 Neoznačenú zmenu, ktorú posiela editor starší ako verzia `5.1.0` bez ohľadu na zamknutie, replika aplikuje iba vtedy, keď je dané nastavenie na jej strane odomknuté, a kým je zamknuté, zahodí ju (pozrite si časť [on@change](#onchange)).
+
+Od verzie `5.1.1` patrí medzi ponechané akcie aj akcia `memo.changeGroup`, ktorá pridá poznámku do [skupiny tabuliek](../../guide/guides/table-groups.md) alebo ju z nej vyradí, a vlastnosť `value` zapisuje skupinu, v ktorej je každá poznámka (pozrite si časť [Úložná forma](./schema.md#storage-form)).  
+Verzia `5.1.1` nemení žiadny export vstupného bodu `@dineug/erd-editor/engine.js`.  
+Úložisko zo staršej verzie zahodí akciu `memo.changeGroup` aj pole `groupId` každej poznámky, takže neuloží žiadnu poznámku v skupine, a editor starší ako verzia `5.1.1` môže v relácii stále vyradiť poznámky z ich skupín aj v replike verzie `5.1.1`; pozrite si časť [Kombinovanie verzií](./collaborative-editing.md#mixing-releases).
 
 Od verzie `4.0.0` aplikujú obe metódy aj akciu `editor.mergeLWW`, ktorá nesie registre spolupráce, ktorými editor odpovedá, keď sa k relácii pripojí ďalší editor, takže replika zosúlaďuje súbežné úpravy rovnako ako editory.  
 Nezmení ani jeden bajt hodnoty `value` a nevyvolá žiadnu udalosť `change`.  

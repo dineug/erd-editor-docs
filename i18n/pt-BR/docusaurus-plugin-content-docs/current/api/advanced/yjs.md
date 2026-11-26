@@ -265,6 +265,7 @@ As configurações que quem o lê altera ficam na sua tela, como em qualquer edi
 O vínculo mantém o diagrama em dois nomes do `Y.Doc`: `erd:snapshot`, um mapa que contém um instantâneo do documento, e `erd:log`, um array dos lotes de ações do editor desde então. Um provider de persistência armazena ambos com o resto do `Y.Doc`.
 
 O instantâneo contém o [runtimeValue](../erd-editor-element.md#runtimevalue) do documento, inclusive as entidades removidas, seus registros de colaboração e sua versão, e até onde as edições de cada escritor estão condensadas nele. Uma inicialização o escreve, e cada condensação de um compactador também.  
+Uma inicialização ou uma condensação feita em um `@dineug/erd-editor` anterior à `5.1.1` escreve um instantâneo sem nenhuma nota em nenhum grupo de tabelas — consulte [Misturar versões](./collaborative-editing.md#mixing-releases).  
 Cada entrada do registro é um lote como o editor o enviou, com seus metadados, que trazem o id do editor e o apelido de quem enviou.  
 Rolagens, zooms, trocas de aba, presença e o handshake dos registros nunca são registrados. Todas as outras alterações que o editor envia são registradas, inclusive uma troca da exibição de nomes feita sob o seu [bloqueio](../../guide/guides/settings.md#lock), que todos os outros clientes descartam.  
 Uma linguagem do Gerador de código, um estilo de nome ou um tipo de delimitador alterado sob o seu bloqueio nunca é enviado, de modo que fica na tela daquele editor e nunca chega à sala.

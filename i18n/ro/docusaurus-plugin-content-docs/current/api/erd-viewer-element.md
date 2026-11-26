@@ -39,7 +39,7 @@ interface ErdViewerElement extends HTMLElement {
 ```
 
 Importul `@dineug/erd-editor/erd-viewer.js` definește `<erd-viewer>` și lasă `<erd-editor>` nedefinit. Importul rădăcinii pachetului nu definește niciunul: exportă clasa `ErdViewerElement` și `defineErdViewer()`, care definește eticheta acolo unde o apelați, așa că o pagină poate defini clasa și sub o etichetă proprie (consultați [Înregistrarea elementelor](./installation.md#registering-the-elements)).  
-Fiecare punct de intrare în afară de `engine.js` și `peer.js` are nevoie de un DOM, și acesta la fel, așa că o pagină redată pe server îl importă pe client (consultați [Redare pe server](./installation.md#server-side-rendering)).  
+Fiecare punct de intrare descris în aceste pagini, în afară de `engine.js` și `peer.js`, are nevoie de un DOM, și acesta la fel, așa că o pagină redată pe server îl importă pe client (consultați [Redare pe server](./installation.md#server-side-rendering)).  
 Importul punctului de intrare adaugă `erd-viewer` în `HTMLElementTagNameMap`, așa că `document.createElement('erd-viewer')` și `document.querySelector('erd-viewer')` sunt tipizate `ErdViewerElement` fără conversie explicită.
 
 Ca editorul, viewerul se redă într-un shadow root închis, așa că `viewer.shadowRoot` este `null`, iar stilurile paginii nu pătrund înăuntru și nu ies afară; îl stilizați prin [setTheme](#settheme) și prin proprietățile personalizate `--erd-editor-*`. Mai multe viewere pe aceeași pagină își păstrează fiecare propriul document, propria vizualizare, temă și limbă.  
@@ -52,7 +52,7 @@ Versiunea pentru eticheta script, `dist/erd-viewer.umd.js`, conține doar viewer
 
 ```html
 <erd-viewer src="diagram.erd.json" style="display: block; height: 480px"></erd-viewer>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0/dist/erd-viewer.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.1/dist/erd-viewer.umd.js"></script>
 ```
 
 ## src {#src}

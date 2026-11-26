@@ -176,7 +176,7 @@ A partir da `5.1.0`, dois editores que alteram o mesmo nome ou campo no mesmo in
 
 A partir da `5.1.0`, a posição de uma tabela, a posição e o tamanho de uma nota ou de um grupo de tabelas, e a origem e o nível de zoom da vista são versionados do mesmo modo, e o que os move sai como o ponto onde terminam:
 
-- um arrastamento como um `table.moveTo`, `memo.moveTo` ou `tableGroup.moveTo` por entidade movida, num só lote, pelo que o arrastamento de um grupo transporta os pontos das suas tabelas juntamente com o do grupo;
+- um arrastamento como um `table.moveTo`, `memo.moveTo` ou `tableGroup.moveTo` por entidade movida, num só lote, pelo que o arrastamento de um grupo transporta os pontos das suas tabelas, e a partir da `5.1.1` os das suas notas, juntamente com o do grupo;
 - a anulação ou o refazer de um arrastamento como o ponto onde coloca cada entidade;
 - um deslocamento como `settings.scrollTo` e um zoom como `settings.changeZoomLevel`;
 - o redimensionamento de uma nota ou de um grupo de tabelas como a sua posição e o seu tamanho em conjunto.
@@ -253,6 +253,19 @@ Um editor `5.1.0` não envia nenhum tipo de ação novo, pelo que editores e ré
 - Um carregamento que substitui o documento, como um `value` atribuído, `clear()` ou uma importação de substituição, termina uma relação em desenho em todos os editores `5.1.0`, naquele que o fez e em cada um dos que o recebem. Um editor mais antigo mantém o desenho preparado ao longo dele.
 
 Mantenha todos os editores de uma sessão, e qualquer [replicationStore](./remote-storage.md#dispatch-dispatchsync) que guarde o seu documento, na `5.1.0` ou posterior, para que as edições feitas no mesmo instante terminem iguais em todo o lado, à parte as exceções que [Edições simultâneas](#concurrent-edits) refere; a `4.2.0` ou posterior continua a ser o que mantém os nomes lógicos e os dicionários. Um [servidor MCP](../../mcp/live-and-headless.md#edits-made-at-the-same-moment) anterior à `1.2.0` conta aqui como um editor anterior à `5.1.0`, e um editor anterior à `5.1.0` não pode de todo ser ligado a uma sala [Yjs](./yjs.md).
+
+A partir da `5.1.1`, uma nota que se junta a um [grupo de tabelas](../../guide/guides/table-groups.md) ou que sai dele viaja num novo tipo de ação, `memo.changeGroup`, e um retransmissor que reencaminha as ações tal como estão não precisa de nada novo para isso. É enviado para uma nota largada num grupo ou fora dele, um novo grupo desenhado à volta de notas visíveis que não estão em nenhum grupo, `Group selected tables` com notas selecionadas junto às tabelas, `Remove from group` com notas na seleção, cada nota de um grupo removido, as chamadas de grupo de notas de um agente de programação através do [servidor MCP](../../mcp/tools.md#table-groups), e a anulação e o refazer de cada um deles. Uma adição por `Import and Add` ou `setSchemaJSON` cujos grupos contêm notas também o envia, tal como o seu refazer, ao passo que a sua anulação apenas remove essas notas.
+
+Um editor ou uma réplica anterior à `5.1.1` ignora `memo.changeGroup`, e a sua análise descarta o `groupId` de todas as notas, pelo que nunca vê uma nota num grupo, embora o arrastamento de um grupo num editor `5.1.1` continue a mover aí as notas do grupo, uma vez que envia também um `memo.moveTo` para cada uma delas. As suas próprias edições nada sabem dos grupos das notas, com estes efeitos nos editores mais recentes:
+
+- Uma nota que arrasta para a caixa de um grupo continua fora do grupo, e uma nota do grupo que arrasta para fora da caixa continua nele, estendendo-se a caixa para a conter.
+- O seu arrastamento de um grupo, tal como o seu `Auto Layout`, move o grupo e as suas tabelas, mas deixa as notas do grupo onde estão, e a caixa estende-se para conter aí as visíveis.
+- Uma importação com `Import and Add` feita nele não coloca nenhuma nota nos grupos que adiciona.
+- Um grupo que remove deixa o `groupId` de cada uma das suas notas a indicá-lo: as notas são lidas como não estando em nenhum grupo, e a sua anulação da remoção volta a colocá-las no grupo.
+- A sua anulação de um carregamento, de uma importação ou de `clear()` carrega a sua própria cópia do documento em todos os editores, e essa cópia não tem nenhuma nota em nenhum grupo.
+
+Um documento guardado a partir dele não tem nenhuma nota em nenhum grupo, embora um da `4.0.0` em diante mantenha os grupos das suas tabelas.  
+Mantenha todos os editores de uma sessão, e qualquer [replicationStore](./remote-storage.md#dispatch-dispatchsync) que guarde o seu documento, na `5.1.1` ou posterior para manter as notas nos seus grupos de tabelas; a `5.1.0` ou posterior continua a ser o que resolve as edições feitas no mesmo instante. Um [servidor MCP](../../mcp/installation.md#updating) anterior à `1.2.1` também não vê nem mantém o grupo de tabelas em que está uma nota.
 
 ## SharedStoreConfig {#sharedstoreconfig}
 

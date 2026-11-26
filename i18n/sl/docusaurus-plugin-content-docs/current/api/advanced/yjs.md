@@ -265,6 +265,7 @@ Metoda [seed](#seed) ni zavrnjena: element samo za branje inicializira prazno so
 Vezava hrani diagram v dveh imenih `Y.Doc`: `erd:snapshot`, preslikavi, ki hrani posnetek dokumenta, in `erd:log`, polju paketov dejanj urejevalnika od njega naprej. Ponudnik trajne shrambe shrani oboje skupaj s preostankom `Y.Doc`.
 
 Posnetek hrani [runtimeValue](../erd-editor-element.md#runtimevalue) dokumenta, vključno z odstranjenimi entitetami, njegove registre sodelovanja in različico ter to, do kod so spremembe posameznega pisca strnjene vanj. Zapiše ga inicializacija, pa tudi vsaka strnitev strnjevalnika.  
+Posnetek, ki ga zapiše inicializacija ali strnitev, narejena s paketom `@dineug/erd-editor` pred različico `5.1.1`, nima nobene beležke v nobeni skupini tabel – glejte razdelek [Mešanje izdaj](./collaborative-editing.md#mixing-releases).  
 Vsak vnos v dnevniku je en paket, kot ga je poslal urejevalnik, skupaj z metapodatki, ki nosijo identifikator urejevalnika in vzdevek pošiljatelja.  
 Pomiki, povečave, preklopi zavihkov, prisotnost in izmenjava registrov se nikoli ne beležijo. Beleži se vsaka druga sprememba, ki jo pošlje urejevalnik, med njimi preklop prikaza imen, narejen pod njegovim [zaklepom](../../guide/guides/settings.md#lock), ki ga vsak drug odjemalec zavrže.  
 Jezik generatorja kode, zapis imen ali vrsta narekovajev, spremenjeni pod njihovim zaklepom, se nikoli ne pošljejo, zato ostanejo na zaslonu tistega urejevalnika in nikoli ne dosežejo sobe.

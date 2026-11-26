@@ -19,7 +19,7 @@ VS Code, Obsidian și pluginul pentru JetBrains scriu un fișier doar când o ed
 Începând cu versiunea `4.2.0`, forma de stocare omite și ceea ce nu conține nimic: fiecare câmp de text pe care o entitate sau câmpul ei `ui` îl conține ca `''` (câmpurile `name`, `comment` și `ui.color` ale unui tabel, `name`, `comment`, `dataType` și `default` ale unei coloane, `name` al unui index, `value` și `ui.color` ale unei note, `name` și `color` ale unui grup de tabele), fiecare listă `doc` și fiecare colecție care nu conține nicio intrare, precum și obiectul `collections` însuși odată ce toate colecțiile sunt goale. Un text format doar din spații albe este scris așa cum este, cu excepția unui nume logic, care este atunci omis, și a unui cuvânt, termen sau domeniu ale cărui valori de după ID sunt toate goale sau formate doar din spații albe, care este omis în întregime. Fiecare ID, fiecare listă din interiorul unei entități și fiecare număr, inclusiv `0`, sunt scrise în continuare. Câmpul `doc` este scris întotdeauna, așa că fișierul unui document nou conține `$schema`, `version`, setările sale și `"doc": {}`.  
 Parsarea citește un câmp de text lipsă ca `''` și o colecție lipsă ca goală, la fel ca orice versiune v3, iar forma de stocare omite o listă `doc` doar cât timp colecția ei nu conține nimic (consultați [Doc](#doc)). Astfel, și un editor anterior versiunii `4.2.0` deschide aceste fișiere, iar un program care citește singur un fișier trebuie să citească în același mod ceea ce lipsește. Un fișier salvat de o versiune anterioară revine de la următoarea salvare cu textele, listele și colecțiile goale omise, o modificare care se face o singură dată, și de atunci se salvează octet cu octet la fel.
 
-Forma de stocare scrie fiecare setare blocată cu valoarea ei blocată (consultați [`lockSettings`](#settings)), câmpul `settings.ddlScripts` doar cât timp un script conține text, iar câmpul `groupId` al unui tabel doar cât timp numește un grup de tabele pe care fișierul îl scrie. Începând cu versiunea `4.2.0`, scrie și câmpul `settings.nameViewMode` doar cât timp valoarea pe care o scrie nu este `'physical'`, câmpul `settings.columnOrder` cu șapte intrări acolo unde este posibil (consultați [Settings](#settings)), iar câmpul `nameDerived` al unui tabel doar cât timp este `true`.  
+Forma de stocare scrie fiecare setare blocată cu valoarea ei blocată (consultați [`lockSettings`](#settings)), câmpul `settings.ddlScripts` doar cât timp un script conține text, iar câmpul `groupId` al unui tabel sau, începând cu versiunea `5.1.1`, al unei note doar cât timp numește un grup de tabele pe care fișierul îl scrie. Începând cu versiunea `4.2.0`, scrie și câmpul `settings.nameViewMode` doar cât timp valoarea pe care o scrie nu este `'physical'`, câmpul `settings.columnOrder` cu șapte intrări acolo unde este posibil (consultați [Settings](#settings)), iar câmpul `nameDerived` al unui tabel doar cât timp este `true`.  
 Scrie `doc.tableGroupIds` și `tableGroupEntities` doar cât timp există un grup de tabele, un câmp `logicalName` doar cât timp conține alt text decât spații albe, câmpul `domainId` al unei coloane doar cât timp numește un domeniu pe care fișierul îl scrie, iar fiecare dicționar doar cât timp conține un rând pe care fișierul îl scrie.
 
 Un fișier salvat înainte de versiunea `4.0.0` conține întregul document așa cum îl păstra atunci un editor, inclusiv entitățile eliminate și ceea ce deduce fiecare încărcare. O încărcare îl citește, păstrează locul fiecărui tabel și al fiecărei note în stivă (consultați [Doc](#doc)) și deduce din nou restul, iar următoarea salvare scrie doar forma de stocare.
@@ -394,6 +394,7 @@ const OrderType = {
 type Memo = {
   id: string;
   value?: string;
+  groupId?: string;
   ui: MemoUI;
 };
 
@@ -407,6 +408,9 @@ type MemoUI = {
 ```
 
 Începând cu versiunea `4.0.0`, tabelele și notele [împart aceeași stivă](../../guide/guides/table-related-functions.md#moving-multiple-tables), așa că aducerea unui tabel în prim-plan îl poate plasa peste o notă. O încărcare plasează fiecare notă deasupra fiecărui tabel, așa cum se descrie în [Doc](#doc). O notă dintr-un fișier salvat înainte de versiunea `4.0.0` își păstrează valoarea `zIndex` salvată, care provenea din același contor ca valorile tabelelor, așa că o notă pe care o versiune anterioară a desenat-o peste toate tabelele se poate deschide sub un tabel adus în prim-plan după ea.
+
+Începând cu versiunea `5.1.1`, o notă are câmpul `groupId`, ID-ul [grupului de tabele](../../guide/guides/table-groups.md) căruia îi aparține, la fel ca un tabel. Un câmp `groupId` lipsă sau gol, ca în orice fișier salvat înainte de versiunea `5.1.1`, ori unul care nu numește niciun grup din `doc.tableGroupIds`, înseamnă că nota nu are grup, iar forma de stocare îl scrie doar cât timp numește un grup păstrat.  
+Un editor anterior versiunii `5.1.1` renunță la câmpul `groupId` al fiecărei note când încarcă un document, așa că o salvare acolo scoate fiecare notă din grupul ei, deși un editor din versiunea `4.0.0` încoace păstrează grupurile tabelelor (consultați [Combinarea versiunilor](./collaborative-editing.md#mixing-releases)).
 
 ### Colecție: tableGroupEntities {#collection-tablegroupentities}
 
@@ -426,7 +430,7 @@ type TableGroupUI = {
 };
 ```
 
-Începând cu versiunea `4.0.0`, un document poate conține [grupuri de tabele](../../guide/guides/table-groups.md): dreptunghiuri denumite și colorate, desenate în spatele tabelelor. Un tabel intră într-un grup prin propriul câmp `groupId`, așa că un grup nu conține o listă de membri. Forma de stocare scrie colecția, la fel ca `doc.tableGroupIds`, doar cât timp există un grup, iar un document fără ea, de exemplu unul salvat înainte de versiunea `4.0.0`, nu are grupuri. Indicatorul `Show.hideTableGroup` le ascunde.  
+Începând cu versiunea `4.0.0`, un document poate conține [grupuri de tabele](../../guide/guides/table-groups.md): dreptunghiuri denumite și colorate, desenate în spatele tabelelor și al notelor. Un tabel și, începând cu versiunea `5.1.1`, o notă intră într-un grup prin propriul câmp `groupId`, așa că un grup nu conține o listă de membri. Forma de stocare scrie colecția, la fel ca `doc.tableGroupIds`, doar cât timp există un grup, iar un document fără ea, de exemplu unul salvat înainte de versiunea `4.0.0`, nu are grupuri. Indicatorul `Show.hideTableGroup` le ascunde.  
 Un editor anterior versiunii `4.0.0` renunță la grupuri și la câmpul `groupId` al fiecărui tabel când încarcă un document, așa că o salvare acolo pierde toate grupurile.
 
 ### Rândurile dicționarelor {#dictionary-rows}
@@ -525,6 +529,8 @@ Puneți câmpul `$schema` la începutul unui fișier `.erd.json`, iar editoarele
 Începând cu versiunea `4.0.0`, schema descrie doar forma de stocare. Fiecare obiect cu câmpuri denumite este închis (`additionalProperties: false`), fiecare câmp pe care forma de stocare îl scrie întotdeauna este obligatoriu, fiecare câmp marcat cu `?` în tipurile de mai sus este numit, dar nu este obligatoriu, iar niciun alt câmp nu este numit. Așadar refuză un fișier salvat înainte de versiunea `4.0.0`, cu câmpul său `meta`, lățimile, `zIndex`, `ignoreSaveSettings` și celelalte, până când un editor cu versiunea `4.0.0` sau o versiune ulterioară salvează din nou acel fișier. Un fișier salvat de versiunea `3.2.0` sau de o versiune ulterioară numește deja URL-ul acestei scheme, care indică ramura `main`, așa că un editor care validează pe baza ei semnalează acum fișierul. Un fișier salvat de versiunea `3.0.0` sau `3.1.0`, ori un document v2, nu conține niciun câmp `$schema`.
 
 Începând cu versiunea `4.2.0`, schema nu mai cere câmpurile de text ale unei entități, nicio listă `doc`, nicio colecție și nici obiectul `collections` însuși, pe care forma de stocare le omite cât timp nu conțin nimic. Acceptă în continuare un fișier salvat de versiunea `4.0.0` sau `4.1.0`. Numește noile câmpuri: `nameViewMode`, care acceptă doar `"logical"` și `"both"`; câmpurile `logicalName` și `nameDerived` ale unui tabel, acesta din urmă acceptând doar `true`; câmpurile `logicalName` și `domainId` ale unei coloane; precum și cele trei dicționare, fiecare cu antetul său și rânduri de șiruri de caractere. Câmpul `canvasType` listează fila Dicționar, `columnOrder` acceptă șapte sau nouă numere întregi, iar descrierile `show`, `columnOrder`, `lockSettings` și `options` numesc noii biți.
+
+Începând cu versiunea `5.1.1`, numește și câmpul `groupId` al unei note, pe care o copie a schemei luată înainte de versiunea `5.1.1` îl refuză.
 
 ```json
 {
@@ -939,6 +945,10 @@ Puneți câmpul `$schema` la începutul unui fișier `.erd.json`, iar editoarele
           "value": {
             "type": "string"
           },
+          "groupId": {
+            "description": "Id of the table group in doc.tableGroupIds the memo belongs to; absent means none",
+            "type": "string"
+          },
           "ui": {
             "type": "object",
             "properties": {
@@ -967,7 +977,7 @@ Puneți câmpul `$schema` la începutul unui fișier `.erd.json`, iar editoarele
       }
     },
     "tableGroupEntities": {
-      "description": "Named, coloured rectangles drawn behind tables; a table joins one through its groupId. Written while a group exists; absent means none",
+      "description": "Named, coloured rectangles drawn behind tables and memos; a table or a memo joins one through its groupId. Written while a group exists; absent means none",
       "type": "object",
       "additionalProperties": {
         "type": "object",

@@ -19,7 +19,7 @@ VS Code editoreak, Obsidian aplikazioak eta JetBrains pluginak edizio batek `val
 `4.2.0` bertsiotik aurrera, biltegiratze-formak ezer ez duena ere kanpoan uzten du: entitate batek edo haren `ui` eremuak `''` gisa duen testu-eremu bakoitza (taula baten `name`, `comment` eta `ui.color`, zutabe baten `name`, `comment`, `dataType` eta `default`, indize baten `name`, ohar baten `value` eta `ui.color`, taula-talde baten `name` eta `color`), sarrerarik ez duen `doc` zerrenda eta bilduma bakoitza, eta `collections` bera, bilduma guztiak hutsik daudenean. Zuriunez soilik osatutako testua dagoen bezala idazten da, bi salbuespenekin: izen logiko bat, orduan kanpoan uzten dena, eta id-az gaindiko balio guztiak hutsik edo zuriunez soilik dituen hitz, termino edo domeinu bat, osorik kanpoan uzten dena. Id guztiak, entitate baten barruko zerrenda guztiak eta zenbaki guztiak, `0` barne, idazten dira oraindik. `doc` eremua beti idazten da; beraz, dokumentu berri baten fitxategiak `$schema`, `version`, bere ezarpenak eta `"doc": {}` ditu.  
 Analisi batek falta den testu-eremu bat `''` gisa irakurtzen du, eta falta den bilduma bat huts gisa, v3 bertsio guztiek egiten duten bezala, eta biltegiratze-formak `doc` zerrenda bat kanpoan uzten du haren bildumak ezer ez duen bitartean soilik (ikus [Doc](#doc)). Beraz, `4.2.0` bertsioa baino lehenagoko editore batek ere irekitzen ditu fitxategi hauek, eta fitxategi bat berak irakurtzen duen programa batek modu berean irakurri behar du falta dena. Aurreko bertsio batek gordetako fitxategi bat hurrengo gordetzean testu, zerrenda eta bilduma hutsak kanpoan utzita itzultzen da, behin bakarrik egiten den aldaketa bat, eta handik aurrera bytez byte gordetzen da.
 
-Biltegiratze-formak ezarpen blokeatu bakoitza bere balio blokeatuan idazten du (ikus [`lockSettings`](#settings)), `settings.ddlScripts` script batek testua duen bitartean soilik, eta taula baten `groupId` fitxategiak idazten duen taula-talde bat izendatzen duen bitartean soilik. `4.2.0` bertsiotik aurrera, halaber, `settings.nameViewMode` idazten duen balioa `'physical'` ez den bitartean soilik idazten du, `settings.columnOrder` zazpi sarreratan, ahal den lekuan (ikus [Settings](#settings)), eta taula baten `nameDerived` `true` den bitartean soilik.  
+Biltegiratze-formak ezarpen blokeatu bakoitza bere balio blokeatuan idazten du (ikus [`lockSettings`](#settings)), `settings.ddlScripts` script batek testua duen bitartean soilik, eta taula baten edo, `5.1.1` bertsiotik aurrera, ohar baten `groupId` fitxategiak idazten duen taula-talde bat izendatzen duen bitartean soilik. `4.2.0` bertsiotik aurrera, halaber, `settings.nameViewMode` idazten duen balioa `'physical'` ez den bitartean soilik idazten du, `settings.columnOrder` zazpi sarreratan, ahal den lekuan (ikus [Settings](#settings)), eta taula baten `nameDerived` `true` den bitartean soilik.  
 `doc.tableGroupIds` eta `tableGroupEntities` taula-talde bat dagoen bitartean soilik idazten ditu, `logicalName` bat zuriuneez bestelako testua duen bitartean soilik, zutabe baten `domainId` fitxategiak idazten duen domeinu bat izendatzen duen bitartean soilik, eta hiztegi bakoitza fitxategiak idazten duen errenkada bat duen bitartean soilik.
 
 `4.0.0` bertsioa baino lehen gordetako fitxategi batek dokumentu osoa du editoreak orduan zuen bezala, kendutako entitateak eta karga bakoitzak kalkulatzen duena barne. Karga batek irakurri egiten du, taula eta ohar bakoitzaren tokia pilan mantentzen du (ikus [Doc](#doc)) eta gainerakoa berriro kalkulatzen du, eta hurrengo gordetzeak biltegiratze-forma soilik idazten du.
@@ -394,6 +394,7 @@ const OrderType = {
 type Memo = {
   id: string;
   value?: string;
+  groupId?: string;
   ui: MemoUI;
 };
 
@@ -407,6 +408,9 @@ type MemoUI = {
 ```
 
 `4.0.0` bertsiotik aurrera, taulek eta oharrek [pila bakarra partekatzen dute](../../guide/guides/table-related-functions.md#moving-multiple-tables); beraz, taula bat aurrera ekartzeak ohar baten gainean jar dezake. Karga batek ohar guztiak taula guztien gainean jartzen ditu, [Doc](#doc) atalean azaltzen den bezala. `4.0.0` bertsioa baino lehen gordetako fitxategi bateko ohar batek gorde zuen `zIndex` balioa mantentzen du, taulen kontagailu beretik zetorrena; beraz, aurreko bertsio batek taula guztien gainean marraztutako ohar bat haren ondoren aurrera ekarritako taula baten azpian ireki daiteke.
+
+`5.1.1` bertsiotik aurrera, ohar batek `groupId` eremua du: kide den [taula-taldearen](../../guide/guides/table-groups.md) id-a, taula batek bezala. Falta den edo hutsik dagoen `groupId` batek, `5.1.1` bertsioa baino lehen gordetako fitxategi guztietan bezala, edo `doc.tableGroupIds` eremuko talderik izendatzen ez duen batek, ez duela talderik esan nahi du, eta biltegiratze-formak mantendutako talde bat izendatzen duen bitartean soilik idazten du.  
+`5.1.1` baino lehenagoko editore batek ohar bakoitzaren `groupId` baztertzen du dokumentu bat kargatzean; beraz, han gordetzean ohar guztiak taldetik ateratzen dira, nahiz eta `4.0.0` bertsiotik aurrerakoak taulen taldeak mantentzen dituen. Ikus [Bertsioak nahastea](./collaborative-editing.md#mixing-releases).
 
 ### Bilduma: tableGroupEntities {#collection-tablegroupentities}
 
@@ -426,7 +430,7 @@ type TableGroupUI = {
 };
 ```
 
-`4.0.0` bertsiotik aurrera, dokumentu batek [taula-taldeak](../../guide/guides/table-groups.md) izan ditzake: taulen atzean marraztutako laukizuzen izendun eta koloredunak. Taula bat bere `groupId` eremuaren bidez sartzen da talde batean; beraz, talde batek ez du kideen zerrendarik. Biltegiratze-formak bilduma, `doc.tableGroupIds` bezala, talde bat dagoen bitartean soilik idazten du, eta hura ez duen dokumentu batek, `4.0.0` bertsioa baino lehen gordetako bat adibidez, ez du talderik. `Show.hideTableGroup` banderak ezkutatzen ditu.  
+`4.0.0` bertsiotik aurrera, dokumentu batek [taula-taldeak](../../guide/guides/table-groups.md) izan ditzake: taulen eta oharren atzean marraztutako laukizuzen izendun eta koloredunak. Taula bat, eta `5.1.1` bertsiotik aurrera ohar bat, bere `groupId` eremuaren bidez sartzen da talde batean; beraz, talde batek ez du kideen zerrendarik. Biltegiratze-formak bilduma, `doc.tableGroupIds` bezala, talde bat dagoen bitartean soilik idazten du, eta hura ez duen dokumentu batek, `4.0.0` bertsioa baino lehen gordetako bat adibidez, ez du talderik. `Show.hideTableGroup` banderak ezkutatzen ditu.  
 `4.0.0` bertsioa baino lehenagoko editore batek alde batera uzten ditu taldeak eta taula guztien `groupId` eremua dokumentu bat kargatzean; beraz, han gordetzean talde guztiak galtzen dira.
 
 ### Hiztegien errenkadak {#dictionary-rows}
@@ -525,6 +529,8 @@ Jarri `$schema` eremua `.erd.json` fitxategi baten hasieran, eta JSON Schema ule
 `4.0.0` bertsiotik aurrera, eskemak biltegiratze-forma soilik deskribatzen du. Izendun eremuak dituen objektu oro itxita dago (`additionalProperties: false`), biltegiratze-formak beti idazten duen eremu oro derrigorrezkoa da, goiko moten arabera `?` marka duen eremu oro aipatu egiten da baina ez da derrigorrezkoa, eta beste eremurik ez da aipatzen. Beraz, `4.0.0` bertsioa baino lehen gordetako fitxategi bat ukatzen du, bere `meta` objektuarekin, zabalerekin, `zIndex` eta `ignoreSaveSettings` eremuekin eta gainerakoekin, `4.0.0` edo berriagoa den editore batek fitxategi hori berriro gorde arte. `3.2.0` edo bertsio berriago batek gordetako fitxategi batek dagoeneko eskema honen URLa aipatzen du, `main` adarrera seinalatzen duena; beraz, haren arabera balidatzen duen editore batek orain markatzen du fitxategia. `3.0.0` edo `3.1.0` bertsioek gordetako fitxategi batek, edo v2 dokumentu batek, ez du `$schema` eremurik aipatzen.
 
 `4.2.0` bertsiotik aurrera, eskemak ez ditu jada derrigorrezkotzat hartzen entitate baten testu-eremuak, `doc` zerrendarik, bildumarik edo `collections` bera, biltegiratze-formak ezer ez duten bitartean kanpoan uzten baititu. `4.0.0` edo `4.1.0` bertsioek gordetako fitxategi bat onartzen du oraindik. Eremu berriak aipatzen ditu: `nameViewMode`, `"logical"` eta `"both"` soilik onartzen dituena; taula baten `logicalName` eta `nameDerived`, azken honek `true` soilik onartzen duela; zutabe baten `logicalName` eta `domainId`; eta hiru hiztegiak, bakoitza bere goiburuarekin eta kate-errenkadekin. `canvasType` eremuak Hiztegia fitxa zerrendatzen du, `columnOrder` eremuak zazpi edo bederatzi osoko zenbaki onartzen ditu, eta `show`, `columnOrder`, `lockSettings` eta `options` eremuen deskribapenek bit berriak izendatzen dituzte.
+
+`5.1.1` bertsiotik aurrera, ohar baten `groupId` ere izendatzen du, eta `5.1.1` baino lehen hartutako eskemaren kopia batek baztertu egiten du.
 
 ```json
 {
@@ -939,6 +945,10 @@ Jarri `$schema` eremua `.erd.json` fitxategi baten hasieran, eta JSON Schema ule
           "value": {
             "type": "string"
           },
+          "groupId": {
+            "description": "Id of the table group in doc.tableGroupIds the memo belongs to; absent means none",
+            "type": "string"
+          },
           "ui": {
             "type": "object",
             "properties": {
@@ -967,7 +977,7 @@ Jarri `$schema` eremua `.erd.json` fitxategi baten hasieran, eta JSON Schema ule
       }
     },
     "tableGroupEntities": {
-      "description": "Named, coloured rectangles drawn behind tables; a table joins one through its groupId. Written while a group exists; absent means none",
+      "description": "Named, coloured rectangles drawn behind tables and memos; a table or a memo joins one through its groupId. Written while a group exists; absent means none",
       "type": "object",
       "additionalProperties": {
         "type": "object",

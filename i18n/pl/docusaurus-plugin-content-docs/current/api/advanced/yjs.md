@@ -265,6 +265,7 @@ Ustawienia zmieniane przez jego czytelnika pozostają na jego ekranie, jak w ka�
 Powiązanie trzyma diagram pod dwiema nazwami `Y.Doc`: `erd:snapshot`, mapą zawierającą migawkę dokumentu, i `erd:log`, tablicą pakietów akcji edytora zapisanych od tej migawki. Dostawca trwałego przechowywania zapisuje oba razem z resztą `Y.Doc`.
 
 Migawka zawiera [runtimeValue](../erd-editor-element.md#runtimevalue) dokumentu, w tym usunięte encje, jego rejestry współpracy i wersję oraz informację, jak daleko edycje każdego autora są w niej złożone. Zapisuje ją inicjowanie, a także każde złożenie kompaktora.  
+Inicjowanie lub złożenie wykonane w pakiecie `@dineug/erd-editor` sprzed wersji `5.1.1` zapisuje migawkę bez żadnej notatki w żadnej grupie tabel – zobacz sekcję [Mieszanie wersji](./collaborative-editing.md#mixing-releases).  
 Każdy wpis dziennika to jeden pakiet w postaci, w jakiej wysłał go edytor, razem z metadanymi, które zawierają identyfikator edytora nadawcy i jego pseudonim.  
 Przewinięcia, powiększenia, przełączenia kart, obecność i uzgadnianie rejestrów nigdy nie trafiają do dziennika. Każda inna zmiana wysłana przez edytor trafia, w tym przełączenie Widoku nazw wykonane przy włączonej [blokadzie](../../guide/guides/settings.md#lock), które każdy inny klient odrzuca.  
 Język Generatora kodu, styl nazw lub typ cudzysłowu zmienione przy włączonej blokadzie nie są nigdy wysyłane, więc pozostają na ekranie tego edytora i nie docierają do pokoju.

@@ -55,16 +55,17 @@ Cât timp opțiunea View Option → `Memos` este dezactivată, notele sunt ascun
 O notă este o însemnare cu text liber pe pânză. Faceți clic în corpul ei și tastați; textul se salvează odată cu documentul.  
 `Escape` închide editorul notei, păstrând ce ați tastat și lăsând nota selectată, iar o a doua apăsare pe `Escape` deselectează tot.  
 Glisați-i marginea pentru a o redimensiona. Butonul `x` din antetul ei, afișat cât timp indicatorul se află deasupra notei, o șterge.  
-Un clic dreapta pe o notă deschide meniul ei, nu editorul: `Color`, `Remove color` cât timp vreun element selectat are o culoare și `Delete`, care afișează `Delete selected` cât timp nota se numără printre două sau mai multe elemente selectate. O notă selectată se șterge și cu tastele care șterg tabelele (consultați [Ștergerea tabelelor și notelor](./table-related-functions.md#table-and-memo-deletion)).
+Un clic dreapta pe o notă deschide meniul ei, nu editorul: `Color`, `Remove color` cât timp vreun element selectat are o culoare, elementul `Group selected tables` cât timp selecția conține un tabel și grupurile de tabele sunt afișate, elementul `Remove from group` cât timp un tabel sau o notă selectată se află într-un grup și `Delete`, care afișează `Delete selected` cât timp nota se numără printre două sau mai multe elemente selectate. O notă selectată se șterge și cu tastele care șterg tabelele (consultați [Ștergerea tabelelor și notelor](./table-related-functions.md#table-and-memo-deletion)).  
+La fel ca un tabel, o notă intră într-un [grup de tabele](./table-groups.md) sau îl părăsește în locul unde o lăsați. Elementul `Remove from group` o scoate și el, iar elementul `Group selected tables` o pune într-un grup nou împreună cu tabelele selectate alături de ea (consultați [Adăugarea și eliminarea tabelelor](./table-groups.md#adding-and-removing-tables)).
 
 ![Adăugarea unei note cu Alt + M, tastarea textului și glisarea marginii ei pentru a o redimensiona](/img/demo-memo.webp)
 
 ## Crearea grupurilor de tabele {#table-group-creation}
 
-Un grup de tabele este un chenar care conține tabele și căruia îi puteți da un nume și o culoare. Creați unul în oricare dintre aceste două moduri:
+Un grup de tabele este un chenar care conține tabele și note și căruia îi puteți da un nume și o culoare. Creați unul în oricare dintre aceste două moduri:
 
-- Alegeți `New Table Group` din meniul contextual sau din căutarea rapidă, faceți clic pe butonul `New Table Group` din [bara de instrumente a pânzei](./table-related-functions.md#canvas-toolbar) ori apăsați `Alt + G` (Windows/Linux) sau `⌥ + G` (Mac), apoi trasați un chenar pe pânză prin glisare. Fiecare tabel al cărui centru se află în interiorul chenarului intră în noul grup, dacă nu face deja parte din alt grup (consultați [Trasarea unui grup](./table-groups.md#drawing-a-group)).
-- Selectați tabele, apoi alegeți `Group selected tables` din meniul contextual al unui tabel sau `Group Selected Tables` din căutarea rapidă ori apăsați `T` apoi `G` (consultați [Gruparea tabelelor selectate](./table-groups.md#grouping-selected-tables)).
+- Alegeți `New Table Group` din meniul contextual sau din căutarea rapidă, faceți clic pe butonul `New Table Group` din [bara de instrumente a pânzei](./table-related-functions.md#canvas-toolbar) ori apăsați `Alt + G` (Windows/Linux) sau `⌥ + G` (Mac), apoi trasați un chenar pe pânză prin glisare. Fiecare tabel și fiecare notă afișată cu centrul în interiorul chenarului intră în noul grup, dacă nu face deja parte din alt grup (consultați [Trasarea unui grup](./table-groups.md#drawing-a-group)).
+- Selectați tabele, împreună cu orice note care să le însoțească, apoi alegeți `Group selected tables` din meniul contextual al unui tabel sau al unei note, `Group Selected Tables` din căutarea rapidă ori apăsați `T` apoi `G` (consultați [Gruparea tabelelor selectate](./table-groups.md#grouping-selected-tables)).
 
 Denumirea, colorarea, mutarea, redimensionarea și celelalte operații sunt descrise în [Grupuri de tabele](./table-groups.md).
 

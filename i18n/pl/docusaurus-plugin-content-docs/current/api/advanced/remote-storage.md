@@ -157,6 +157,7 @@ const data = replicationStore.value;
 Od wersji `4.0.0` właściwość `value` jest postacią zapisu: to dokument w takiej postaci, w jakiej zawiera go plik, czyli ten sam tekst, który zwraca właściwość [value](../erd-editor-element.md#value) elementu.  
 Zawiera tylko nieusunięte encje, w ustalonej kolejności, bez encji usuniętych, kolejności warstw ani niczego, co wczytanie wylicza ponownie, na przykład szerokości mierzonych przez funkcję [toWidth](#towidth).  
 Od wersji `4.2.0` zawiera też nazwy logiczne, informację, czy każdą nazwę wygenerowano na podstawie słowników, powiązania z domenami oraz słowa, terminy i domeny karty [Słownik](../../guide/guides/dictionary.md).  
+Od wersji `5.1.1` zawiera też grupę tabel, w której jest każda notatka.  
 Od wersji `4.2.0` pomija też każde puste pole tekstowe encji, każdą pustą listę `doc` i każdą pustą kolekcję, a także samo pole `collections`, gdy wszystkie kolekcje są puste.  
 Ma wcięcia o szerokości dwóch spacji, zapisuje każdy wiersz słownika w osobnej linii i kończy się znakiem nowego wiersza, więc ten sam dokument zawsze daje te same bajty.  
 Informacje o tym, co zawiera, znajdziesz w sekcji [Postać zapisu](./schema.md#storage-form).
@@ -305,6 +306,10 @@ Aby edycje wykonane w tej samej chwili kończyły tak samo, poza wyjątkami wymi
 
 Od wersji `5.1.0` edytor wysyła zmianę języka Generatora kodu, stylu nazw lub typu cudzysłowu tylko wtedy, gdy blokada tego ustawienia jest wyłączona, z oznaczeniem `shared: true` w ładunku, a replika stosuje każdą tak oznaczoną zmianę, tak jak edytory; zobacz stronę [Wspólna edycja](./collaborative-editing.md).  
 Replika stosuje zmianę bez oznaczenia, którą edytor w wersji starszej niż `5.1.0` wysyła niezależnie od blokady, tylko wtedy, gdy to ustawienie jest po jej stronie odblokowane, a gdy jest zablokowane, pomija ją (zobacz sekcję [on@change](#onchange)).
+
+Od wersji `5.1.1` zachowywane akcje obejmują też `memo.changeGroup`, która umieszcza notatkę w [grupie tabel](../../guide/guides/table-groups.md) lub ją z niej wyjmuje, a `value` zapisuje grupę, w której jest każda notatka (zobacz sekcję [Postać zapisu](./schema.md#storage-form)).  
+Wersja `5.1.1` nie zmienia żadnego eksportu modułu `@dineug/erd-editor/engine.js`.  
+Magazyn z wcześniejszej wersji pomija `memo.changeGroup` i pole `groupId` każdej notatki, więc nie zapisuje żadnej notatki w grupie, a edytor sprzed wersji `5.1.1` w sesji nadal może wyjmować notatki z ich grup w replice w wersji `5.1.1`; zobacz sekcję [Mieszanie wersji](./collaborative-editing.md#mixing-releases).
 
 Od wersji `4.0.0` obie metody stosują też akcję `editor.mergeLWW`, która przenosi rejestry współpracy wysyłane przez edytor w odpowiedzi na dołączenie innego edytora do sesji, więc replika uzgadnia równoczesne zmiany tak samo jak edytory.  
 Nie zmienia ani jednego bajtu `value` i nie wywołuje zdarzenia `change`.  

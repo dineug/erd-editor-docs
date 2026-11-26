@@ -56,6 +56,7 @@ A VS Code window serves the diagrams in its workspace folders and any diagram op
 An extension from `3.0.0` to `3.1.0` and server `1.0.0` or later refuse each other, and an extension before `3.0.0` serves no agents.
 An extension `4.0.0` or `4.1.0` connects, but neither shows nor keeps the logical names, domain links, and dictionary rows the agent writes.
 With an extension before `4.3.0`, a table, memo, or table group that you and the agent move or resize at the same moment can end in different places for each of you — see [Updating](#updating).
+An extension before `4.3.1` neither shows nor keeps which table group a memo is in.
 
 The extension starts in a workspace that contains `.erd`, `.erd.json`, `.vuerd`, or `.vuerd.json` files, so an agent reaches those diagrams before you open one.
 In a workspace with none of them it starts when you open a diagram, and until then the agent edits on disk.
@@ -74,6 +75,7 @@ An Obsidian vault window serves the diagrams in its vault.
 A plugin before `1.0.0` and server `1.0.0` or later refuse each other.
 A plugin `1.0.0` or `1.1.0` connects, but neither shows nor keeps the logical names, domain links, and dictionary rows the agent writes.
 With a plugin before `1.3.0`, a table, memo, or table group that you and the agent move or resize at the same moment can end in different places for each of you — see [Updating](#updating).
+A plugin before `1.3.1` neither shows nor keeps which table group a memo is in.
 
 A vault window serves agents from the moment the plugin loads, so an agent reaches the vault's diagrams before you open one.
 There is no trust step.
@@ -102,6 +104,7 @@ A JetBrains IDE serves the diagrams of every project open in it, and any diagram
 A plugin `0.9.0` or `0.10.0` and server `1.0.0` or later refuse each other, and a plugin before `0.9.0` serves no agents.
 A plugin `1.0.0` or `1.1.0` connects, but neither shows nor keeps the logical names, domain links, and dictionary rows the agent writes.
 With a plugin before `1.3.0`, a table, memo, or table group that you and the agent move or resize at the same moment can end in different places for each of you — see [Updating](#updating).
+A plugin before `1.3.1` neither shows nor keeps which table group a memo is in.
 
 The IDE serves agents from the moment the first project opens, so an agent reaches a project's diagrams before you open one.
 
@@ -153,7 +156,14 @@ But a move or resize that you and the agent make at the same moment to the same 
 With either side older, the editor and the agent can end with different positions, and the agent goes on reading and editing from its own until a later move puts both on one point or the agent joins the document again — see [Edits Made at the Same Moment](./live-and-headless.md#edits-made-at-the-same-moment).
 None of these releases changes what a file holds.
 
+Server `1.2.1` speaks protocol 2 too. It adds two tools, `erd_set_memo_group` and `erd_export_svg`, and the `memoIds` argument of `erd_add_table_group`, and removes or renames none — see [Table Groups](./tools.md#table-groups) and [SVG Export](./tools.md#svg-export).
+Memos in table groups need server `1.2.1` or later and, wherever the document is open, the VS Code extension `4.3.1` or later or the Obsidian or JetBrains plugin `1.3.1` or later.
+An earlier extension or plugin that connects ignores which group a memo is in, though the agent's call succeeds, and leaves the memos' groups out when it saves the file.
+A server before `1.2.1` has no tools for them and reads every memo as in no group, and a file it edits on disk is written back with every memo out of its group — see [Headless](./live-and-headless.md#headless).
+`erd_export_svg` needs only server `1.2.1` or later, with any extension or plugin release that connects, since the server draws the image itself.
+
 Update ERD Editor wherever the diagrams are opened, too.
+The VS Code extension before `4.3.1`, the Obsidian plugin before `1.3.1`, and the JetBrains plugin before `1.3.1` open a diagram that a later release saved, or that the agent edited on disk, with every memo out of its table group, and leave the memos' groups out when they save the file.
 The VS Code extension before `4.2.0`, the Obsidian plugin before `1.2.0`, and the JetBrains plugin before `1.2.0` open a diagram that a later release saved, or that the agent edited on disk, without its tables' and columns' logical names, its columns' domain links, and its words, terms, and domains.
 When they save the file, they leave them out.
 The VS Code extension before `4.0.0`, the Obsidian plugin before `1.0.0`, and the JetBrains plugin before `1.0.0` also show such a diagram without its primary key icons, and drop its table groups and Schema SQL scripts when they save the file.

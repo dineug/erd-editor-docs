@@ -19,7 +19,7 @@ VS Code、Obsidian 和 JetBrains 外掛程式只有在編輯變更了 `value` �
 自 `4.2.0` 起，儲存形式也會省略沒有任何內容的部分：實體或其 `ui` 以 `''` 保存的每個文字屬性（資料表的 `name`、`comment` 和 `ui.color`，欄位的 `name`、`comment`、`dataType` 和 `default`，索引的 `name`，備忘錄的 `value` 和 `ui.color`，資料表群組的 `name` 和 `color`）、沒有任何項目的每個 `doc` 清單和集合，以及在每個集合都為空時的 `collections` 本身。只有空白字元的文字會依保存的原樣寫出，但邏輯名稱例外，此時會被省略；而 id 之外的值全都為空或只有空白字元的詞彙、術語或定義域，則會整個被省略。每個 id、實體中的每個清單，以及每個數字（包括 `0`）仍會寫出。`doc` 一律會寫出，因此新文件的檔案包含 `$schema`、`version`、其設定和 `"doc": {}`。  
 剖析時會將缺少的文字屬性讀作 `''`，將缺少的集合讀作空的，每個 v3 版本都是如此，而儲存形式只在 `doc` 清單的集合沒有任何內容時才會省略該清單（請參閱 [Doc](#doc)）。因此，`4.2.0` 之前的編輯器也能開啟這些檔案，而自行讀取檔案的程式也必須以相同方式讀取缺少的部分。較早版本儲存的檔案在下一次儲存時，其空的文字、清單和集合會被省略，這項變更只會發生一次，此後每次儲存都會逐位元組相同。
 
-儲存形式會將每個鎖定的設定以其鎖定的值寫出（請參閱 [`lockSettings`](#settings)），只在有指令碼包含文字時寫出 `settings.ddlScripts`，並且只在資料表的 `groupId` 指向檔案會寫出的資料表群組時寫出它。自 `4.2.0` 起，它也只在所寫出的值不是 `'physical'` 時寫出 `settings.nameViewMode`，在可行時以七個項目寫出 `settings.columnOrder`（請參閱 [Settings](#settings)），並且只在資料表的 `nameDerived` 為 `true` 時寫出它。  
+儲存形式會將每個鎖定的設定以其鎖定的值寫出（請參閱 [`lockSettings`](#settings)），只在有指令碼包含文字時寫出 `settings.ddlScripts`，並且只在資料表的（自 `5.1.1` 起也包括備忘錄的）`groupId` 指向檔案會寫出的資料表群組時寫出它。自 `4.2.0` 起，它也只在所寫出的值不是 `'physical'` 時寫出 `settings.nameViewMode`，在可行時以七個項目寫出 `settings.columnOrder`（請參閱 [Settings](#settings)），並且只在資料表的 `nameDerived` 為 `true` 時寫出它。  
 它只在有資料表群組存在時寫出 `doc.tableGroupIds` 和 `tableGroupEntities`，只在 `logicalName` 包含空白字元以外的文字時寫出它，只在欄位的 `domainId` 指向檔案會寫出的定義域時寫出它，並且只在字典包含檔案會寫出的列時寫出該字典。
 
 `4.0.0` 之前儲存的檔案保存的是編輯器當時所持有的完整文件，包括其已移除的實體和每次載入所推算出的內容。載入時會讀取它，保留每個資料表和備忘錄在堆疊中的位置（請參閱 [Doc](#doc)），並重新推算其餘內容，而下一次儲存則只會寫出儲存形式。
@@ -394,6 +394,7 @@ const OrderType = {
 type Memo = {
   id: string;
   value?: string;
+  groupId?: string;
   ui: MemoUI;
 };
 
@@ -407,6 +408,9 @@ type MemoUI = {
 ```
 
 自 `4.0.0` 起，資料表和備忘錄[共用同一個堆疊](../../guide/guides/table-related-functions.md#moving-multiple-tables)，因此將資料表移到最前面時，可能會讓它位於備忘錄之上。載入時會將每個備忘錄放在所有資料表之上，如 [Doc](#doc) 所述。`4.0.0` 之前儲存的檔案中的備忘錄會保留它所儲存的 `zIndex`，該值與資料表的 `zIndex` 來自同一個計數器，因此較早版本繪製在所有資料表之上的備忘錄，開啟時可能會位於在它之後才移到最前面的資料表之下。
+
+自 `5.1.1` 起，備忘錄與資料表一樣會帶有 `groupId`，也就是它所屬[資料表群組](../../guide/guides/table-groups.md)的 id。缺少或為空的 `groupId`（如 `5.1.1` 之前儲存的每個檔案），或未指向 `doc.tableGroupIds` 中任何群組的 `groupId`，都表示不屬於任何群組，而儲存形式只在它指向保留下來的群組時才會寫出它。  
+`5.1.1` 之前的編輯器在載入文件時會捨棄每個備忘錄的 `groupId`，因此在其中儲存會讓每個備忘錄離開其群組，不過 `4.0.0` 或更新版本的編輯器仍會保留資料表的群組，請參閱[混用不同版本](./collaborative-editing.md#mixing-releases)。
 
 ### 集合：tableGroupEntities {#collection-tablegroupentities}
 
@@ -426,7 +430,7 @@ type TableGroupUI = {
 };
 ```
 
-自 `4.0.0` 起，文件可以包含[資料表群組](../../guide/guides/table-groups.md)：繪製在資料表後方、具有名稱和顏色的矩形。資料表透過自身的 `groupId` 加入群組，因此群組不會保存成員清單。與 `doc.tableGroupIds` 一樣，儲存形式只在有群組存在時才會寫出此集合，而沒有此集合的文件（例如 `4.0.0` 之前儲存的文件）沒有任何群組。`Show.hideTableGroup` 會隱藏它們。  
+自 `4.0.0` 起，文件可以包含[資料表群組](../../guide/guides/table-groups.md)：繪製在資料表和備忘錄後方、具有名稱和顏色的矩形。資料表（自 `5.1.1` 起還有備忘錄）透過自身的 `groupId` 加入群組，因此群組不會保存成員清單。與 `doc.tableGroupIds` 一樣，儲存形式只在有群組存在時才會寫出此集合，而沒有此集合的文件（例如 `4.0.0` 之前儲存的文件）沒有任何群組。`Show.hideTableGroup` 會隱藏它們。  
 `4.0.0` 之前的編輯器在載入文件時會捨棄群組和每個資料表的 `groupId`，因此在其中儲存會遺失所有群組。
 
 ### 字典列 {#dictionary-rows}
@@ -525,6 +529,8 @@ type Domain = {
 自 `4.0.0` 起，此結構描述只描述儲存形式。每個具有具名屬性的物件都是封閉的（`additionalProperties: false`），儲存形式一律會寫出的每個屬性都是必要的，上方型別中標示為 `?` 的每個屬性都會列出但不是必要的，其他屬性則一個都不會列出。所以它會拒絕 `4.0.0` 之前儲存的檔案（其中帶有 `meta`、寬度、`zIndex`、`ignoreSaveSettings` 等），直到 `4.0.0` 或更新版本的編輯器重新儲存該檔案為止。`3.2.0` 或更新版本所儲存的檔案已經指定了此結構描述的 URL，而該 URL 指向 `main` 分支，因此依據它進行驗證的編輯器現在就會標示出該檔案的問題。`3.0.0` 或 `3.1.0` 所儲存的檔案，或 v2 文件，都不會指定 `$schema`。
 
 自 `4.2.0` 起，此結構描述不再將實體的文字屬性、任何 `doc` 清單、任何集合或 `collections` 本身列為必要，這些在沒有內容時都會被儲存形式省略。它仍接受 `4.0.0` 或 `4.1.0` 所儲存的檔案。它列出了新的屬性：只接受 `"logical"` 和 `"both"` 的 `nameViewMode`；資料表的 `logicalName` 和只接受 `true` 的 `nameDerived`；欄位的 `logicalName` 和 `domainId`；以及三個字典，每個都有其標頭和由字串組成的列。`canvasType` 列出了「字典」索引標籤，`columnOrder` 接受七個或九個整數，而 `show`、`columnOrder`、`lockSettings` 和 `options` 的說明也列出了新的位元。
+
+自 `5.1.1` 起，它也列出備忘錄的 `groupId`，而在 `5.1.1` 之前取得的結構描述副本會拒絕它。
 
 ```json
 {
@@ -939,6 +945,10 @@ type Domain = {
           "value": {
             "type": "string"
           },
+          "groupId": {
+            "description": "Id of the table group in doc.tableGroupIds the memo belongs to; absent means none",
+            "type": "string"
+          },
           "ui": {
             "type": "object",
             "properties": {
@@ -967,7 +977,7 @@ type Domain = {
       }
     },
     "tableGroupEntities": {
-      "description": "Named, coloured rectangles drawn behind tables; a table joins one through its groupId. Written while a group exists; absent means none",
+      "description": "Named, coloured rectangles drawn behind tables and memos; a table or a memo joins one through its groupId. Written while a group exists; absent means none",
       "type": "object",
       "additionalProperties": {
         "type": "object",

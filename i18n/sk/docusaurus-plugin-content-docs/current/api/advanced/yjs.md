@@ -265,6 +265,7 @@ Volanie [seed](#seed) sa neodmietne: element iba na čítanie inicializuje práz
 Väzba uchováva diagram pod dvoma názvami dokumentu `Y.Doc`: `erd:snapshot` je mapa, ktorá obsahuje snímku stavu dokumentu, a `erd:log` je pole dávok akcií editora od jej vytvorenia. Poskytovateľ trvalého ukladania uloží oboje spolu so zvyškom `Y.Doc`.
 
 Snímka stavu obsahuje [runtimeValue](../erd-editor-element.md#runtimevalue) dokumentu vrátane odstránených entít, jeho registre spolupráce a verziu a to, nakoľko sú úpravy každého zapisovateľa v nej zlúčené. Zapíše ju inicializácia aj každé zlúčenie zhutňovača.  
+Inicializácia alebo zlúčenie urobené balíkom `@dineug/erd-editor` spred verzie `5.1.1` zapíše snímku stavu bez poznámky v akejkoľvek skupine tabuliek – pozrite si časť [Kombinovanie verzií](./collaborative-editing.md#mixing-releases).  
 Každý záznam denníka je jedna dávka tak, ako ju editor odoslal, vrátane jej metaúdajov, ktoré nesú identifikátor editora odosielateľa a jeho prezývku.  
 Posúvania, priblíženia, prepnutia kariet, prítomnosť a výmena registrov sa do denníka nikdy nezapisujú. Každá iná zmena, ktorú editor odošle, sa zapíše, vrátane prepnutia Zobrazenia názvov urobeného pod jeho [zamknutím](../../guide/guides/settings.md#lock), ktoré každý ďalší klient zahodí.  
 Jazyk Generátora kódu, štýl názvov alebo typ úvodzoviek zmenené pod jeho zamknutím sa nikdy neodošlú, takže zostanú na obrazovke daného editora a do miestnosti sa nedostanú.

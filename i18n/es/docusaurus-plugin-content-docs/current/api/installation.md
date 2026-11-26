@@ -51,18 +51,18 @@ Consulta [ErdEditorElement](./erd-editor-element.md) para el resto de la API.
 
 ```html
 <script type="module">
-  import 'https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js';
+  import 'https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js';
 
   const editor = document.createElement('erd-editor');
   editor.style.cssText = 'display: block; width: 100%; height: 100vh;';
   document.body.appendChild(editor);
 </script>
 <!-- or -->
-<script type="module" src="https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js"></script>
+<script type="module" src="https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js"></script>
 ```
 
 `esm.run` resuelve por ti las dependencias externas del paquete, así que esto funciona sin bundler.
-Cada entrada se alcanza por su ruta tras la versión: `…/erd-editor.js` define el editor y `…/erd-viewer.js` el visor, que descarga de la CDN cada idioma de la interfaz salvo el inglés cuando una página lo pide. La URL del paquete a secas, `https://esm.run/@dineug/erd-editor@5.1.0`, sirve la raíz, que no define ningún elemento.
+Cada entrada se alcanza por su ruta tras la versión: `…/erd-editor.js` define el editor y `…/erd-viewer.js` el visor, que descarga de la CDN cada idioma de la interfaz salvo el inglés cuando una página lo pide. La URL del paquete a secas, `https://esm.run/@dineug/erd-editor@5.1.1`, sirve la raíz, que no define ningún elemento.
 Una URL sin número de versión siempre sirve la versión más reciente. Fija una versión, como arriba, si no quieres que una actualización mayor llegue a tu página sin previo aviso.
 La propia `5.0.0` es una actualización mayor: una página que tenga que seguir en la 4.x fija `@4.2.0`; consulta [Actualizar desde 4.x](#upgrading-from-4x).
 
@@ -75,7 +75,7 @@ Los campos `unpkg` y `jsdelivr` apuntan a ella, así que la URL del paquete a se
 
 ```html
 <erd-editor></erd-editor>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.1"></script>
 <script>
   const editor = document.querySelector('erd-editor');
   editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
@@ -88,7 +88,7 @@ Desde la `5.0.0`, un segundo archivo, `dist/erd-viewer.umd.js`, define `<erd-vie
 
 ```html
 <erd-viewer src="diagram.erd.json" style="display: block; height: 480px"></erd-viewer>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0/dist/erd-viewer.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.1/dist/erd-viewer.umd.js"></script>
 ```
 
 Ninguno de los dos archivos define la etiqueta del otro, y cada uno no deja en la página ningún global salvo el suyo y `window.Konva`.
@@ -100,7 +100,7 @@ Una página que no puede cargar un script propio puede enmarcar el visor alojado
 ```html
 <erd-editor system-dark-mode enable-theme-builder enable-locale-picker enable-welcome-screen></erd-editor>
 <script type="module">
-  import 'https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js';
+  import 'https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js';
 
   const editor = document.querySelector('erd-editor');
 </script>
@@ -123,7 +123,7 @@ Leer `editor.value` y `editor.runtimeValue` sigue funcionando, y ambos conservan
 
 ### Renderizado del lado del servidor {#server-side-rendering}
 
-Todas las entradas salvo `engine.js` y `peer.js` necesitan un DOM, así que lanzan una excepción en Node. `erd-editor.js` y `erd-viewer.js` definen su elemento en el ámbito del módulo, y la raíz del paquete, que desde la `5.0.0` no define nada, sigue construyendo las clases de ambos elementos al cargarse.
+Todas las entradas que describen estas páginas, salvo `engine.js` y `peer.js`, necesitan un DOM, así que lanzan una excepción en Node. `erd-editor.js` y `erd-viewer.js` definen su elemento en el ámbito del módulo, y la raíz del paquete, que desde la `5.0.0` no define nada, sigue construyendo las clases de ambos elementos al cargarse.
 En Next.js, Nuxt, SvelteKit o Astro, llega a la entrada del elemento desde código que solo se ejecute en el cliente, y desde el mismo código una importación con nombre de la raíz, como `setExportFileCallback` o `toImage`.
 
 ```js
@@ -251,7 +251,7 @@ Una página bajo una política de seguridad de contenido estricta necesita estas
 
 ## Puntos de entrada {#entry-points}
 
-El paquete tiene cinco entradas:
+Estas páginas describen cinco de las entradas del paquete:
 
 | Entrada | Qué es |
 | --- | --- |
@@ -371,7 +371,7 @@ La `5.0.0` es una versión mayor. Comprueba cada uno de estos puntos al migrar u
    import { setExportFileCallback } from '@dineug/erd-editor';
   ```
 
-- En una CDN ocurre lo mismo con `https://esm.run/@dineug/erd-editor`, que ahora sirve la raíz y no define nada: importa `https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js`. Las URL a secas de jsDelivr y unpkg siguen sirviendo la compilación de etiqueta script, que define `<erd-editor>` como antes. Una URL sin versión ahora sirve la última versión 5.x; fija `@4.2.0` para quedarte en la 4.x; consulta [CDN](#cdn) y [Etiqueta script](#script-tag).
+- En una CDN ocurre lo mismo con `https://esm.run/@dineug/erd-editor`, que ahora sirve la raíz y no define nada: importa `https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js`. Las URL a secas de jsDelivr y unpkg siguen sirviendo la compilación de etiqueta script, que define `<erd-editor>` como antes. Una URL sin versión ahora sirve la última versión 5.x; fija `@4.2.0` para quedarte en la 4.x; consulta [CDN](#cdn) y [Etiqueta script](#script-tag).
 - La raíz no define nada pero sigue necesitando un DOM, así que con renderizado del lado del servidor una importación con nombre de ella, como `setExportFileCallback`, se queda en el código solo de cliente junto a la entrada del elemento; consulta [Renderizado del lado del servidor](#server-side-rendering).
 - `window.ErdEditor` incorpora `ErdEditorElement` y `defineErdEditor`. La compilación de etiqueta script del visor pone `ErdViewerElement` y `defineErdViewer` en `window.ErdViewer`, y ninguno de los dos globales contiene `toImage`.
 - Un editor `readonly` se abre como un lector. Sus seis pestañas, el explorador, la búsqueda rápida y la presencia se quedan, y todo control que editaría el diagrama desaparece en lugar de desactivarse: la barra de herramientas muestra el nombre de la base de datos como texto, la pestaña Configuración muestra sus ajustes con todos los controles desactivados bajo un distintivo `Read only`, y la barra de herramientas flotante conserva solo el zoom, la vista de nombres, el modo zen y la brújula, así que `Hand` y `Select` desaparecen y un arrastre desplaza la vista. Una pulsación no selecciona nada: la única selección es el contorno que un salto desde el explorador o la búsqueda rápida pone alrededor de lo que alcanza, que un clic sin movimiento borra, y las combinaciones de seleccionar todo no seleccionan nada. Activar `readonly` termina lo que estaba abierto, como la selección, la herramienta Mano, un editor de celda, un arrastre, Map Columns, la vista previa `Force` de Auto Layout y Time Travel, y conserva el desplazamiento, el zoom, la pestaña y la vista de nombres; consulta [readonly](./erd-editor-element.md#readonly).

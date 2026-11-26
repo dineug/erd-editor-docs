@@ -157,6 +157,7 @@ const data = replicationStore.value;
 Sedan `4.0.0` är `value` lagringsformen: dokumentet så som en fil innehåller det, samma text som elementets [value](../erd-editor-element.md#value) returnerar.  
 Den innehåller bara de befintliga entiteterna, i en fast ordning, utan de borttagna entiteterna, staplingsordningen eller något som en inläsning räknar ut på nytt, till exempel bredderna som [toWidth](#towidth) mäter.  
 Sedan `4.2.0` innehåller den också de logiska namnen, om varje namn härleddes från ordlistorna, domänkopplingarna samt orden, termerna och domänerna på fliken [Ordlista](../../guide/guides/dictionary.md).  
+Sedan `5.1.1` innehåller den också den tabellgrupp som varje anteckning ingår i.  
 Den utelämnar också, sedan `4.2.0`, varje tomt textfält i en entitet, varje lista i `doc` och varje samling som inte innehåller något samt själva `collections` när alla samlingar är tomma.  
 Den är indragen med två blanksteg, med varje rad från ordlistorna på en egen textrad, och slutar med en radbrytning, så samma dokument ger alltid samma byte.  
 Se [Lagringsform](./schema.md#storage-form) för vad den innehåller.
@@ -305,6 +306,10 @@ Håll varje editor i sessionen, och repliken, på `5.1.0` eller senare för att 
 
 Sedan `5.1.0` skickar en editor en ändring av kodgeneratorns språk, ett skiftläge för namn eller typen av citattecken bara när den inställningens lås är av, markerad med `shared: true` i sin nyttolast, och repliken tillämpar varje markerad ändring, som editorerna gör; se [Gemensam redigering](./collaborative-editing.md).  
 Repliken tillämpar en omarkerad ändring, som en editor från före `5.1.0` skickar oavsett låset, bara medan den inställningen är upplåst hos den, och kastar den medan inställningen är låst (se [on@change](#onchange)).
+
+Sedan `5.1.1` ingår även `memo.changeGroup`, som lägger en anteckning i en [tabellgrupp](../../guide/guides/table-groups.md) eller tar den ur gruppen, bland de behållna åtgärderna, och `value` skriver den grupp som varje anteckning ingår i (se [Lagringsform](./schema.md#storage-form)).  
+`5.1.1` ändrar ingen export från `@dineug/erd-editor/engine.js`.  
+En store från en tidigare version tar bort `memo.changeGroup` och varje antecknings `groupId`, så den sparar ingen anteckning i en grupp, och en editor från före `5.1.1` i sessionen kan fortfarande ta ut anteckningar ur deras grupper på en replik med `5.1.1`; se [Blanda versioner](./collaborative-editing.md#mixing-releases).
 
 Sedan `4.0.0` tillämpar båda metoderna också `editor.mergeLWW`, som bär de samarbetsregister som en editor svarar med när en annan ansluter till sessionen, så repliken avgör samtidiga redigeringar på samma sätt som editorerna.  
 Den ändrar ingen byte i `value` och utlöser ingen `change`.  

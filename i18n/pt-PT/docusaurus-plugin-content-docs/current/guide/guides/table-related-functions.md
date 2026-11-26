@@ -7,7 +7,7 @@ description: Selecionar, mover, copiar, duplicar e eliminar tabelas e notas, con
 
 Tudo o que se faz com tabelas e notas depois de existirem — selecionar, mover, copiar, eliminar, atribuir cores e definir o que a tela mostra — e ainda os controlos da tela à sua volta.  
 Primeiro vêm os comandos de tabelas e notas; depois, as propriedades da tabela, focar em tabelas, os índices e as chaves alternativas, a disposição automática e a base de dados; depois, a própria tela: a barra de ferramentas da tela, o zoom, o deslocamento da vista e onde termina um salto, e o visualizador de diferenças; e, por último, o que um editor só de leitura mantém de tudo isto.  
-Os grupos de tabelas, as caixas que reúnem tabelas, têm uma página própria — consulte [Grupos de tabelas](./table-groups.md).  
+Os grupos de tabelas, as caixas que reúnem tabelas e notas, têm uma página própria — consulte [Grupos de tabelas](./table-groups.md).  
 O mesmo acontece com os nomes lógicos e a vista de nomes, que decide os nomes que as tabelas mostram — consulte [Nomes lógicos](./logical-names.md).
 
 ## Seleção múltipla {#multiple-selection}
@@ -21,7 +21,7 @@ São suportados três métodos:
 As notas selecionam-se da mesma forma, e qualquer um dos dois atalhos para selecionar tudo seleciona todas as tabelas e notas de uma vez. As notas ocultadas com Opções de vista → `Memos` não são abrangidas por selecionar tudo nem por um retângulo de seleção — consulte [Opções de vista das tabelas](#table-view-options).  
 Os [grupos de tabelas](./table-groups.md#selecting-groups) são adicionados à seleção com `Ctrl + click` (Windows/Linux) ou `⌘ + click` (Mac) na respetiva barra de título, mas selecionar tudo nunca inclui nenhum.  
 `Ctrl + A` cede o lugar ao cursor de texto, pelo que seleciona o texto, e não o diagrama, enquanto está a editar uma célula.  
-Um retângulo de seleção marca uma tabela ou nota quando cobre o seu centro, e não quando apenas toca num bordo. Só abrange um grupo de tabelas quando envolve toda a caixa do grupo, pelo que um retângulo desenhado dentro de um grupo seleciona tabelas sem o grupo.  
+Um retângulo de seleção marca uma tabela ou nota quando cobre o seu centro, e não quando apenas toca num bordo. Só abrange um grupo de tabelas quando envolve toda a caixa do grupo, pelo que um retângulo desenhado dentro de um grupo seleciona tabelas e notas sem o grupo.  
 Um clique com o botão direito em algo já selecionado mantém toda a seleção, pelo que opções do menu como `Color`, `Group selected tables` e `Delete selected` atuam sobre toda ela. Um clique com o botão direito em qualquer outra tabela, nota ou grupo de tabelas seleciona apenas esse elemento, mesmo com `Ctrl` ou `⌘` premido, e um clique com o botão direito numa relação ou numa zona vazia da tela limpa a seleção.  
 `Escape` limpa a seleção. Enquanto estiver aberto o editor de uma célula, de uma nota ou do nome de um grupo de tabelas, ou enquanto se desenha uma relação ou um grupo com `New Table Group`, o primeiro `Escape` termina essa ação e um segundo limpa a seleção.  
 Um editor só de leitura não tem nenhuma destas formas de selecionar: só um salto seleciona aí — consulte [Editores só de leitura](#read-only-editors).
@@ -41,10 +41,10 @@ Só o botão esquerdo do rato move tabelas e notas. Um clique com o botão direi
 
 ![Arrastar uma de duas tabelas selecionadas move ambas, e a relação acompanha-as](/img/demo-table-multiple-move.webp)
 
-Um [grupo de tabelas](./table-groups.md) selecionado também se move, levando as suas tabelas, e uma tabela que esteja simultaneamente selecionada e num grupo em movimento move-se uma só vez.  
-O local onde larga uma tabela pode colocá-la num grupo ou retirá-la dele — consulte [Adicionar e remover tabelas](./table-groups.md#adding-and-removing-tables).
+Um [grupo de tabelas](./table-groups.md) selecionado também se move, levando as suas tabelas e notas, e uma tabela ou nota que esteja simultaneamente selecionada e num grupo em movimento move-se uma só vez.  
+O local onde larga uma tabela ou nota pode colocá-la num grupo ou retirá-la dele — consulte [Adicionar e remover tabelas](./table-groups.md#adding-and-removing-tables).
 
-As tabelas e as notas partilham uma única ordem de sobreposição. Premir o botão do rato sobre uma tabela ou nota, seja o esquerdo ou o direito, trá-la para a frente de todas as outras tabelas e notas, e premir o botão sobre a barra de título de um grupo de tabelas, ou clicar com o botão direito no seu corpo, traz as suas tabelas para a frente.  
+As tabelas e as notas partilham uma única ordem de sobreposição. Premir o botão do rato sobre uma tabela ou nota, seja o esquerdo ou o direito, trá-la para a frente de todas as outras tabelas e notas, e premir o botão sobre a barra de título de um grupo de tabelas, ou clicar com o botão direito no seu corpo, traz as suas tabelas e notas para a frente.  
 A ordem não é guardada: um diagrama reaberto sobrepõe as tabelas pela ordem em que o ficheiro as lista, com todas as notas por cima delas.
 
 ## Copiar e colar tabelas e notas {#copyingpasting-tables-and-memos}
@@ -57,7 +57,7 @@ Cada coluna copiada mantém o seu nome lógico, e cada nome de tabela e de colun
 Uma coluna colada só mantém o seu vínculo ao domínio quando se verificam duas condições: o diagrama em que é colada contém esse mesmo domínio, e não apenas um com o mesmo nome, e o domínio ainda tem o tipo de dados com que a coluna foi copiada. Caso contrário, a coluna fica sem domínio e mantém o tipo com que foi copiada — consulte [Vincular uma coluna](./dictionary.md#linking-a-column).  
 Os índices e as relações também acompanham a cópia: um índice é copiado por inteiro para a tabela copiada, e uma relação é copiada com o seu tipo e as suas ações ON DELETE e ON UPDATE quando as duas tabelas que liga estão no conjunto copiado. Meia relação é descartada, em vez de ficar a apontar para o original.  
 As cópias coladas passam a ser a nova seleção, e colar a mesma cópia outra vez desloca-a mais `50px` de cada vez, pelo que colagens repetidas não ficam empilhadas umas sobre as outras.  
-Uma cópia não mantém o seu [grupo de tabelas](./table-groups.md): a tabela colada não fica em nenhum grupo, mesmo quando cai dentro da caixa de um grupo, e um grupo selecionado não é copiado.  
+Uma cópia não mantém o seu [grupo de tabelas](./table-groups.md): a tabela ou nota colada não fica em nenhum grupo, mesmo quando cai dentro da caixa de um grupo, e um grupo selecionado não é copiado.  
 Enquanto Opções de vista → `Memos` oculta as notas, uma colagem continua a adicionar as notas que contém, ocultas e não selecionadas, pelo que só as tabelas coladas passam a ser a seleção.
 
 ![Copiar duas tabelas relacionadas e colá-las duas vezes, com a relação incluída](/img/demo-table-copy-paste.webp)
@@ -89,7 +89,7 @@ Atalhos:
 
 Os menus de contexto também eliminam. A última opção do menu de uma tabela ou de uma nota indica `Delete selected` enquanto essa tabela ou nota é um de dois ou mais elementos selecionados, e remove toda a seleção. Caso contrário, indica `Delete` e remove apenas essa tabela ou nota. Sobre a linha de uma coluna selecionada, o menu de uma tabela indica antes `Delete column` ou `Delete columns`, como em [Eliminação de colunas](./table-editing.md#column-deletion).
 
-Remover uma tabela remove também as suas relações e índices. Remover um grupo de tabelas mantém as suas tabelas, sem grupo — consulte [Remover um grupo](./table-groups.md#removing-a-group).  
+Remover uma tabela remove também as suas relações e índices. Remover um grupo de tabelas mantém as suas tabelas e notas, sem grupo — consulte [Remover um grupo](./table-groups.md#removing-a-group).  
 Não há confirmação, cada remoção é um passo de anulação e, num editor `readonly`, nada é removido.  
 Mantidas premidas, as teclas `Delete` e `Backspace` removem uma só vez e nunca removem uma relação — consulte [Edição de relações](./relationship-editing.md#deletion). Enquanto escreve numa célula, numa nota ou em qualquer outro campo de texto, editam antes o texto.  
 O separador Definições apresenta as duas teclas como `Delete Selection` — consulte [Atalhos](./settings.md#shortcuts).
@@ -98,7 +98,7 @@ O separador Definições apresenta as duas teclas como `Delete Selection` — co
 
 Pode atribuir cores para diferenciar por categoria.  
 Uma tabela mostra a sua cor ao longo do bordo esquerdo, e uma nota ao longo do topo. Clique nesse bordo ou nessa faixa com o botão esquerdo, ou escolha a opção `Color` no menu de contexto da tabela ou da nota, para abrir o seletor de cores junto ao ponteiro. A cor é aplicada a todas as tabelas, notas e grupos de tabelas selecionados, e não apenas àquele em que clicou.  
-A cor de um grupo de tabelas atribui-se com a opção `Color` do seu próprio menu, e uma tabela num grupo com cor mostra a cor do grupo em todo o cabeçalho, mantendo a sua própria cor no bordo esquerdo — consulte [Atribuir uma cor a um grupo](./table-groups.md#coloring-a-group).
+A cor de um grupo de tabelas atribui-se com a opção `Color` do seu próprio menu, e uma tabela ou nota num grupo com cor mostra a cor do grupo em todo o cabeçalho, mantendo a sua própria cor no bordo esquerdo ou ao longo do topo — consulte [Atribuir uma cor a um grupo](./table-groups.md#coloring-a-group).
 
 ![Escolher a cor predefinida Blue na faixa de cor de uma nota para duas tabelas selecionadas e a nota e, depois, retirar a cor com No color](/img/demo-table-color.webp)
 
@@ -143,9 +143,9 @@ Os nomes que as tabelas mostram não são uma opção de vista: a entrada `Name 
 A opção `Domain` dá a cada coluna uma célula, posicionada pela [ordem das colunas](./settings.md#adjusting-column-order), com o nome do domínio a que a coluna está vinculada. Uma coluna que não está vinculada a nenhum domínio que a folha `Domains` contenha mostra aí o marcador de posição `domain`, esbatido. A célula aparece em todas as vistas de nomes. Enquanto a opção `Domain` está desativada, a vista `Logical Names` mostra, em vez disso, o nome de um domínio vinculado na célula do tipo — consulte [A célula Domínio](./logical-names.md#the-domain-cell).  
 A opção `Alternate Key` marca as colunas de cada chave alternativa, como `AK1.1` — consulte [Chaves alternativas](#alternate-keys).  
 A opção `Referential Actions` mostra as etiquetas `D:` e `U:` que as ações ON DELETE e ON UPDATE de uma relação colocam na extremidade filha do seu conector — consulte [Como ler um conector](./relationship-editing.md#reading-a-connector). Desativá-la oculta apenas essas etiquetas e não move nenhuma tabela nem conector.  
-A opção `Table Groups` mostra os [grupos de tabelas](./table-groups.md) e as cores dos grupos nos cabeçalhos das suas tabelas. Desativá-la oculta-os na tela, no minimapa e nas exportações de imagem, não move nenhuma tabela e mantém cada tabela no seu grupo — consulte [Ocultar grupos](./table-groups.md#hiding-groups). Também retira a pasta `Table Groups` do [explorador](./explorer.md#the-tree) e o botão `New Table Group` da [barra de ferramentas da tela](#canvas-toolbar), e a pesquisa do explorador deixa de encontrar nomes de grupos.  
-A opção `Memos` mostra as notas. Desativá-la oculta todas as notas na tela, no minimapa e nas exportações de imagem, e não move nenhuma tabela nem conector. As notas ocultas não ocupam espaço, pelo que as barras de deslocamento, o minimapa e a bússola `Go to content` não as têm em conta.  
-Ocultar as notas retira-as da seleção e fecha um editor de nota aberto. O [explorador](./explorer.md#the-tree) deixa de mostrar a pasta `Memos`, e a sua pesquisa [Localizar e substituir](./find-and-replace.md) e o prefixo `:` da pesquisa rápida não as pesquisam. Enquanto estão ocultas, a opção `New Memo` sai do menu de contexto, da [barra de ferramentas da tela](#canvas-toolbar), da pesquisa rápida e do [ecrã de boas-vindas](./editing-start.md#welcome-screen), e `Alt + M` não adiciona nenhuma nota. Uma colagem ou um [Importar e adicionar](./file-import-export.md#import-and-add) continua a adicionar as notas que contém, ocultas e não selecionadas.  
+A opção `Table Groups` mostra os [grupos de tabelas](./table-groups.md) e as cores dos grupos nos cabeçalhos das suas tabelas e notas. Desativá-la oculta os grupos e as suas cores na tela e nas exportações de imagem, retira as caixas do minimapa, não move nenhuma tabela nem nota e mantém cada tabela e cada nota no seu grupo — consulte [Ocultar grupos](./table-groups.md#hiding-groups). Também retira a pasta `Table Groups` do [explorador](./explorer.md#the-tree) e o botão `New Table Group` da [barra de ferramentas da tela](#canvas-toolbar), e a pesquisa do explorador deixa de encontrar nomes de grupos.  
+A opção `Memos` mostra as notas. Desativá-la oculta todas as notas na tela, no minimapa e nas exportações de imagem, e não move nenhuma tabela nem conector. As notas ocultas não ocupam espaço, pelo que as barras de deslocamento, o minimapa, a bússola `Go to content` e as caixas dos [grupos de tabelas](./table-groups.md) não as têm em conta, embora continuem nos seus grupos.  
+Ocultar as notas retira-as da seleção e fecha um editor de nota aberto. O [explorador](./explorer.md#the-tree) deixa de mostrar a pasta `Memos` e as notas sob os seus grupos de tabelas, e a sua pesquisa [Localizar e substituir](./find-and-replace.md) e o prefixo `:` da pesquisa rápida não as pesquisam. Enquanto estão ocultas, a opção `New Memo` sai do menu de contexto, da [barra de ferramentas da tela](#canvas-toolbar), da pesquisa rápida e do [ecrã de boas-vindas](./editing-start.md#welcome-screen), e `Alt + M` não adiciona nenhuma nota. Uma colagem ou um [Importar e adicionar](./file-import-export.md#import-and-add) continua a adicionar as notas que contém, ocultas e não selecionadas.  
 Num editor só de leitura, os interruptores continuam a funcionar, mas apenas nesse ecrã: não são guardados, registados no histórico de anulação nem partilhados, e voltam aos do ficheiro quando o editor volta a ser editável — consulte [Editores só de leitura](./settings.md#read-only-editors) em Definições.
 
 ![Alternar as entradas do menu Opções de vista enquanto as tabelas se reorganizam, marcar um índice único composto como AK1.1 e AK1.2 com Alternate Key e, depois, desativar e voltar a ativar Memos](/img/demo-view-options.webp)
@@ -233,9 +233,9 @@ A pré-visualização é enquadrada no diagrama tal como estava quando a disposi
 
 As outras três são calculadas de uma só vez, fora da thread principal, pelo que não há nada para observar: aparece um aviso enquanto a disposição é calculada, e a disposição final é centrada naquilo que o diagrama já ocupa. `Cancel` ou `Escape` descarta uma disposição de que já não está à espera, e um host que não executa nenhum worker partilhado termina em `Could not place tables` — consulte [Web Workers](../../api/installation.md#web-workers). Uma disposição que não tenha regressado no espaço de 60 segundos termina da mesma forma.
 
-Seja qual for a escolhida, as tabelas e os grupos de tabelas são movidos, e as notas ficam onde estão. As tabelas são posicionadas com as larguras que ocupam na vista de nomes que está a ver. Uma relação de uma tabela consigo própria é ignorada, e várias relações entre as mesmas duas tabelas contam uma só vez.  
-Todas as disposições mantêm juntas as tabelas de cada grupo, quer os grupos estejam visíveis quer não, e ajustam cada grupo que contenha tabelas à volta delas — consulte [Grupos de tabelas](./table-groups.md#auto-layout).  
-O resultado fica numa única entrada do histórico, pelo que uma anulação repõe todas as tabelas e grupos onde estavam.  
+Seja qual for a escolhida, as tabelas, os grupos de tabelas e as notas dos grupos que contêm tabelas são movidos, e todas as outras notas ficam onde estão. As tabelas são posicionadas com as larguras que ocupam na vista de nomes que está a ver. Uma relação de uma tabela consigo própria é ignorada, e várias relações entre as mesmas duas tabelas contam uma só vez.  
+Todas as disposições mantêm juntas as tabelas e as notas de cada grupo, quer os grupos estejam visíveis quer não, e ajustam cada grupo que contenha tabelas à volta das suas tabelas e notas visíveis — consulte [Grupos de tabelas](./table-groups.md#auto-layout).  
+O resultado fica numa única entrada do histórico, pelo que uma anulação repõe todas as tabelas, notas e grupos onde estavam.  
 Um editor só de leitura não oferece `Auto Layout`. Uma disposição que ainda decorra quando o editor passa a só de leitura termina aí: a pré-visualização `Force` fecha-se com o seu aviso e não guarda nenhuma das suas posições, e uma disposição ainda a ser calculada é descartada com o seu aviso, pelo que nenhuma tabela se move, nessa altura nem quando o editor voltar a ser editável.
 
 ![Arrumar um monte de tabelas com a disposição automática Flow a partir do menu de contexto da tela, que as alinha da esquerda para a direita ao longo das suas relações](/img/demo-automatic-table-placement.webp)
@@ -311,7 +311,7 @@ Um arrasto com o botão do meio não seleciona, não move nem clica em nada, e m
 Premir o botão do meio sobre as barras de deslocamento, o minimapa, a barra de ferramentas da tela ou um editor de célula ou de nota aberto não desloca a vista.
 
 O minimapa no canto superior direito representa o diagrama com o espaço de um ecrã à sua volta em todos os lados, o alcance das barras de deslocamento, ajustado para fora a uma grelha grosseira, pelo que, quanto mais reduzir, mais pequeno fica o diagrama nele. Clique nele para mover a vista para esse ponto, ou arraste o retângulo da área visível para deslocar a vista. À medida que reduz, o retângulo da área visível cresce para cobrir mais do mapa.  
-Desenha cada tabela com a cor da tabela, e cada grupo de tabelas visível como uma caixa com a cor do grupo por trás das suas tabelas.  
+Desenha cada tabela com a cor da tabela, e cada grupo de tabelas visível como uma caixa com a cor do grupo por trás das suas tabelas e notas, estendendo-se à volta das suas notas visíveis, tal como faz a caixa na tela.  
 As barras de deslocamento ao longo dos bordos direito e inferior descrevem o mesmo percurso, que vai do diagrama logo fora de um dos lados do ecrã até logo fora do outro, pelo que é pelo menos um ecrã mais longo do que o diagrama tal como está desenhado, e ainda mais longo enquanto a vista estiver para lá dele. Fora do modo zen, as duas barras de deslocamento aparecem sempre que o documento contém uma tabela, uma nota visível ou um grupo de tabelas visível, mesmo quando tudo cabe no ecrã. Um documento sem nenhum destes, como um cujas únicas notas estão ocultas com Opções de vista → `Memos`, não mostra nenhuma delas, nem o minimapa.  
 Arrastar o cursor de uma barra de deslocamento ou o retângulo da área visível do minimapa é o único deslocamento da vista que para: não vai além das tabelas logo fora do ecrã, ou além do ponto onde o arrasto começou, se este estava mais longe.
 
@@ -364,7 +364,7 @@ Um editor só de leitura também oferece `Diff Viewer`, e a vista funciona aí c
 
 As tabelas, colunas, índices, chaves externas, notas e grupos de tabelas são todos comparados.  
 Cada item é emparelhado primeiro pelo seu id, pelo que, face a uma versão anterior do mesmo ficheiro, que mantém os ids, uma tabela, coluna, índice ou grupo de tabelas com o nome alterado continua a ser um único item, indicado como tendo mudado de nome.  
-O que resta emparelha um a um por aquilo que mantém: uma tabela ou um grupo de tabelas pelo nome, distinguindo maiúsculas de minúsculas; uma coluna ou um índice pela tabela e pelo nome; uma chave externa pelas suas duas tabelas e pelos seus pares de colunas; e uma nota pelo texto e, depois, pela posição. Um índice sem nome emparelha pelas suas colunas, pela ordem e direção destas e por ser ou não único, e um grupo de tabelas sem nome pelo maior número de tabelas em comum.  
+O que resta emparelha um a um por aquilo que mantém: uma tabela ou um grupo de tabelas pelo nome, distinguindo maiúsculas de minúsculas; uma coluna ou um índice pela tabela e pelo nome; uma chave externa pelas suas duas tabelas e pelos seus pares de colunas; e uma nota pelo texto e, depois, pela posição. Um índice sem nome emparelha pelas suas colunas, pela ordem e direção destas e por ser ou não único, e um grupo de tabelas sem nome pelo maior número de tabelas e notas em comum.  
 Assim, face a um ficheiro de outra origem, como um diagrama reconstruído por importação de SQL, uma tabela com o nome alterado aparece como uma eliminada e uma adicionada.
 
 O que conta como alteração:
@@ -373,8 +373,8 @@ O que conta como alteração:
 - Uma coluna: o nome, o comentário, o tipo de dados, o valor predefinido, Incremento automático, chave primária, Único, Não nulo e a sua posição na tabela. Só as colunas fora da ordem que os dois documentos partilham contam como movidas, pelo que adicionar, remover ou mover uma coluna não marca as outras.
 - Um índice: o nome, UNIQUE e as suas colunas, com a ordem e a direção destas.
 - Uma chave externa: os pares de colunas, o tipo de relação e as ações ON DELETE e ON UPDATE.
-- Uma nota: o texto, a posição, o tamanho e a cor.
-- Um grupo de tabelas: o nome, as tabelas que contém, a cor, a posição e o tamanho.
+- Uma nota: o texto, o grupo de tabelas, a posição, o tamanho e a cor.
+- Um grupo de tabelas: o nome, as tabelas e as notas que contém, a cor, a posição e o tamanho.
 
 Assim, uma tabela, nota ou grupo que apenas mudou de posição, de tamanho ou de cor conta como alterado. As posições e os tamanhos são comparados em píxeis inteiros, e a ordem de sobreposição e o ponto onde um conector encontra uma tabela nunca contam.  
 Os nomes lógicos, os vínculos a domínios e as palavras, os termos e os domínios do separador [Dicionário](./dictionary.md) não são comparados, pelo que uma alteração apenas a estes não é listada nem marcada. Um tipo de dados que um domínio alterou conta, como uma alteração do tipo de dados da coluna.
@@ -393,7 +393,7 @@ Cada linha termina numa letra, e uma linha marcada com `A`, `D`, `M` ou `R` tem 
 - `R`, com o nome alterado, a azul: nos dois, com um novo nome. Uma mudança de nome prevalece sobre qualquer outra alteração, que a dica continua a listar.
 - `~`, a âmbar, termina todas as pastas e uma tabela listada apenas pelo que mudou dentro dela; os seus nomes mantêm a cor habitual.
 
-Passe o ponteiro sobre o nome de uma linha para ver a sua dica: o estado, `Added`, `Deleted`, `Modified`, `Renamed` ou `Changed inside`, e, depois, uma linha por alteração, como `Name: users → members` ou `NN: ✗ → ✓`. Um texto é citado pela primeira linha, cortada após 40 caracteres, e um valor vazio mostra `—`. A dica de um item adicionado ou eliminado é apenas o seu estado.
+Passe o ponteiro sobre o nome de uma linha para ver a sua dica: o estado, `Added`, `Deleted`, `Modified`, `Renamed` ou `Changed inside`, e, depois, uma linha por alteração, como `Name: users → members` ou `NN: ✗ → ✓`. Um texto é citado pela primeira linha, cortada após 40 caracteres, e um valor vazio mostra `—`. Uma nota movida para um grupo chamado Billing tem a linha `Table group: — → Billing` na sua dica, e a dica do grupo ganha uma linha como `Memos: — → "note"`, que nomeia as suas notas pelas primeiras linhas, entre aspas duplas. A dica de um item adicionado ou eliminado é apenas o seu estado.
 
 O campo `Filter by name`, acima da árvore, mantém as linhas cujo nome atual ou guardado, ou cujo nome lógico atual ou guardado, contém o que escrever, sem distinguir maiúsculas de minúsculas, em todas as vistas de nomes. Uma tabela cujo nome corresponde mantém todas as suas linhas, e uma cujo nome não corresponde fica apenas com as linhas que correspondem. Um filtro que não corresponde a nada deixa a árvore vazia.  
 Quando os dois documentos não diferem em nada, a árvore mostra `No changes`.
@@ -419,7 +419,7 @@ Os dois lados dão cor ao texto, aos contornos e aos conectores, e não preenche
 - Uma coluna adicionada ou eliminada numa tabela que os dois documentos contêm dá cor a toda a sua linha, e uma coluna que mudou de posição põe toda a sua linha a âmbar. Nada dentro de uma tabela adicionada ou eliminada é marcado individualmente.
 - O texto de uma célula alterada fica a âmbar: o comentário de uma tabela, o comentário, o tipo de dados, o valor predefinido, Incremento automático, Único ou Não nulo de uma coluna, ou o texto de uma nota. Uma alteração da chave primária põe a âmbar o ícone de chave da coluna.
 - Uma tabela, coluna ou grupo de tabelas com o nome alterado tem o nome a azul.
-- Uma tabela, nota ou grupo de tabelas com uma alteração que não tem célula própria, como uma mudança de posição, um novo tamanho ou cor, ou uma mudança de grupo ou das tabelas de um grupo, é contornado a âmbar.
+- Uma tabela, nota ou grupo de tabelas com uma alteração que não tem célula própria, como uma mudança de posição, um novo tamanho ou cor, ou uma mudança de grupo ou das tabelas ou notas de um grupo, é contornado a âmbar.
 - Uma chave externa adicionada, eliminada ou alterada desenha o seu conector nessa cor. Passar o ponteiro sobre ele, ou a iluminação de uma linha, desenha-o antes na cor habitual de passagem do ponteiro.
 - Uma alteração de índice não marca nada em nenhum dos lados; só aparece na árvore.
 

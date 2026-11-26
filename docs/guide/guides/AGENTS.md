@@ -1,7 +1,7 @@
 # guides
 
 **Parent context:** `../AGENTS.md`
-**Generated:** 2026-11-03 · **Updated:** 2026-11-03
+**Generated:** 2026-11-03 · **Updated:** 2026-11-26
 
 ## Purpose
 
@@ -20,7 +20,7 @@ means `../erd-editor/packages/`.
 | `table-editing.md` | 3 · Columns: adding, the Tab key, DataType Autocomplete, the `Not Null`/`Unique`/`Auto Increment` options, selecting, moving, deleting, Copying/Pasting Columns, Column Primary Key. Source: `engine/modules/table-column/`, `utils/table-clipboard/` |
 | `logical-names.md` | 4 · Name View (`Physical Names`, `Logical Names`, `Both Names`), Switching the View, Writing a Logical Name, Completing Term Names, The Domain Cell, Beyond the Canvas (where else names follow the view). Source: `components/erd/nameViewOptions.ts`, `components/erd/readerNameView.ts`, `engine/modules/dictionary/derive.ts` |
 | `table-related-functions.md` | 5 · The canvas catch-all: selecting, moving, copying, duplicating, deleting and coloring tables and memos, Table View Options, Table Properties, Indexes, Alternate Keys, Auto Layout, Databases, Canvas Toolbar, Zoom In/Out, Getting Around the Canvas (Where a Jump Lands), Diff Viewer. Source: `components/erd/table-properties/`, `components/erd/automatic-table-placement/` and `services/elk-layout/`, `components/erd/floating-toolbar/` (the canvas toolbar), `components/erd/minimap/`, `components/erd/diff-viewer/` |
-| `table-groups.md` | 6 · Creating a group (Drawing a Group, Grouping Selected Tables), naming, coloring, selecting, going to, moving and resizing, adding and removing tables, removing, the group menu, Hiding Groups, and groups in Auto Layout, Schema SQL, DBML and copying. Source: `components/erd/table-group/`, `engine/modules/table-group/` |
+| `table-groups.md` | 6 · Creating a group (Drawing a Group, Grouping Selected Tables), naming, coloring, selecting, going to, moving and resizing, adding and removing tables and memos, removing, the group menu, Hiding Groups, and groups in Auto Layout, Schema SQL, DBML and copying. Memos join and leave a group as tables do, so each section names both, a member memo's header band is under Coloring a Group, and the intro says what hidden memos keep. Source: `components/erd/table-group/`, `components/erd/canvas/table-group/` (the box, the sash, the drop outline), `components/erd/canvas/memo/Memo.tsx` (the header band), `utils/tableGroup.ts` (membership, boxes, tints), `engine/modules/table-group/`, `engine/modules/memo/` (`memo.changeGroup`) |
 | `relationship-editing.md` | 7 · Deletion, Type Change, ON DELETE and ON UPDATE, Map Columns, N:M, Identifying Relationships, Foreign Key Column Names, Reading a Connector, Connector Routing. Source: `components/map-columns/`, `utils/draw-relationship/`, `utils/referentialAction.ts` |
 | `quick-search.md` | 8 · The command palette: what it lists per tab (with an H3 `Read-only Editors`), the `#`, `@` and `:` prefixes (Searching the Diagram), Searching in Korean. Source: `components/quick-search/` |
 | `explorer.md` | 9 · The tree docked left of the canvas: Opening and Closing, Beside the Canvas, When It Stands Aside, The Tree, Going to a Row, Keys in the Explorer, Dialogs Beside It. Source: `components/explorer/` |
@@ -43,12 +43,13 @@ means `../erd-editor/packages/`.
   `table-editing.md#copyingpasting-tables-and-memos` and `editing-start.md#duplicating-tables-and-memos`
   only point there. `table-related-functions.md#focusing-on-tables` is the entry point and
   `visualization.md#focusing-on-tables` the owner. `table-related-functions.md#auto-layout` owns
-  Auto Layout, and `table-groups.md#auto-layout` covers only what groups add. Edit the owner, and
-  keep each pointer to a sentence or two.
+  Auto Layout, and `table-groups.md#auto-layout` covers only what groups add. Memos in table
+  groups belong to `table-groups.md`, and the memo rows under a group to `explorer.md#the-tree`.
+  Edit the owner, and keep each pointer to a sentence or two.
 - **Anchors other pages depend on.** These are the most linked, counted as distinct linking pages
-  at 5.1.0: `settings.md#lock` (19), `logical-names.md#name-view` (19),
+  at 5.1.1: `settings.md#lock` (19), `logical-names.md#name-view` (19),
   `table-related-functions.md#table-view-options` (16), `relationship-editing.md#map-columns` (15),
-  `file-import-export.md#image` (13), `relationship-editing.md#on-delete-and-on-update` (12), and
+  `file-import-export.md#image` (14), `relationship-editing.md#on-delete-and-on-update` (12), and
   `dictionary.md#domains-and-data-types`, `logical-names.md#beyond-the-canvas` and
   `table-related-functions.md#where-a-jump-lands` (11 each). Every page but `embedding.md` has some
   inbound anchor links. Find them with the recipe in `../../AGENTS.md`. Slugs drop `/`:
@@ -66,7 +67,7 @@ means `../erd-editor/packages/`.
 
 ### Testing Requirements
 
-- Read the Source paths in Key Files at `v5.1.0` before you write a behavior, a default or a
+- Read the Source paths in Key Files at `v5.1.1` before you write a behavior, a default or a
   limit.
 - After you reorder pages, check that positions still run from 1 to 18:
   `grep -h '^sidebar_position' docs/guide/guides/*.md | sort -t: -k2 -n`.
@@ -95,7 +96,7 @@ scene named `demo-<name>` (recipe in `../AGENTS.md`):
   table-duplicate, table-remove, table-color, view-options, table-properties,
   automatic-table-placement, database, data-type-autocomplete, canvas-toolbar, zoom,
   canvas-navigation, diff-viewer
-- `table-groups.md`: table-group, table-group-selected
+- `table-groups.md`: table-group, table-group-selected, table-group-memo
 - `relationship-editing.md`: relationship-remove, relationship-type, referential-actions,
   map-columns, relationship-n-m, identifying-relationship, relationship-hover, connector-routing
 - `quick-search.md`: quick-search · `explorer.md`: explorer · `find-and-replace.md`:

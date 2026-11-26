@@ -1,11 +1,11 @@
 ---
 sidebar_position: 4
-description: "erd-editor MCP zerbitzariak eskaintzen dituen tresna guztiak: dokumentu bat orrialdez orrialde irakurtzea, hiztegiaren egiaztapenak, 67 edizio-tresnak, erd_batch, eta emaitza batek eta ukapen batek duten itxura."
+description: "erd-editor MCP zerbitzariak eskaintzen dituen tresna guztiak: dokumentu bat orrialdez orrialde irakurtzea, hiztegiaren egiaztapenak, SVG esportazioa, 68 edizio-tresnak, erd_batch, eta emaitza batek eta ukapen batek duten itxura."
 ---
 
 # Tresnak
 
-Zerbitzariak 77 tresna eskaintzen ditu: saioko bost tresna, lau irakurketa-tresna, 67 edizio-tresna, edizio-eragiketa bakoitzeko bat, eta `erd_batch` tresna, hainbat edizio-tresna edizio bakar gisa exekutatzen dituena.
+Zerbitzariak 79 tresna eskaintzen ditu: saioko bost tresna, lau irakurketa-tresna, `erd_export_svg` tresna, dokumentu bat SVG irudi gisa marrazten duena, 68 edizio-tresna, edizio-eragiketa bakoitzeko bat, eta `erd_batch` tresna, hainbat edizio-tresna edizio bakar gisa exekutatzen dituena.
 
 `erd_list_documents` tresna izan ezik, tresna guztiek dokumentuaren `path` bide-izena hartzen dute lehen argumentutzat, eta beheko tauletan ez da ageri.
 `?` ikurraz markatutako argumentua aukerakoa da.
@@ -26,14 +26,14 @@ Modu bakoitzean gordetzeak eta desegiteak zer egiten duten jakiteko, ikus [Zuzen
 
 | Tresna | Argumentuak | Zer egiten duen |
 | --- | --- | --- |
-| `erd_list` | `query?`, `offset?`, `limit?`, `namesOnly?` | Ezarpenak eta kopuruak, eta ondoren taulen orrialde bat, haien indize eta erlazioekin; taula bakoitza bere IDarekin, oihaleko kokapen eta tamainarekin, zutabe kopuruarekin, izen logikoarekin, baldin badu, eta, talde batean badago, bere taula-taldearekin. Bilaketarik egiten ez badu, taulen ondoren taula-taldeak, oharrak, eta gero domeinuak, terminoak eta hitzak datoz. |
-| `erd_get` | `tableIds?`, `tableNames?`, `relationshipIds?`, `indexIds?`, `memoIds?`, `tableGroupIds?`, `wordIds?`, `termIds?`, `domainIds?` | Izendatutako entitateak, osorik: taulak beren zutabe eta taula-taldearekin, erlazioak beren zutabeekin eta `onDelete` eta `onUpdate` balioekin, indizeak beren zutabeekin, oharrak beren testuarekin, taula-taldeak beren taulekin, eta hitzak, terminoak eta domeinuak beren eremu guztiekin. |
+| `erd_list` | `query?`, `offset?`, `limit?`, `namesOnly?` | Ezarpenak eta kopuruak, eta ondoren taulen orrialde bat, haien indize eta erlazioekin; taula bakoitza bere IDarekin, oihaleko kokapen eta tamainarekin, zutabe kopuruarekin, izen logikoarekin, baldin badu, eta, talde batean badago, bere taula-taldearekin. Bilaketarik egiten ez badu, taulen ondoren taula-taldeak, oharrak, bakoitza bere taula-taldearekin, baldin badu, eta gero domeinuak, terminoak eta hitzak datoz. |
+| `erd_get` | `tableIds?`, `tableNames?`, `relationshipIds?`, `indexIds?`, `memoIds?`, `tableGroupIds?`, `wordIds?`, `termIds?`, `domainIds?` | Izendatutako entitateak, osorik: taulak beren zutabe eta taula-taldearekin, erlazioak beren zutabeekin eta `onDelete` eta `onUpdate` balioekin, indizeak beren zutabeekin, oharrak beren testuarekin eta taula-taldearekin, taula-taldeak beren taulekin eta oharrekin, eta hitzak, terminoak eta domeinuak beren eremu guztiekin. |
 | `erd_read` | `format`, `vendor?`, `statements?`, `header?`, `logicalNameAsComment?`, `tableIds?`, `tableNames?`, `groupNames?` | Dokumentu osoa batera, lau formatuetako batean, edo taula edo taula-talde batzuen DDLa soilik. |
 | `erd_list_checks` | `level?`, `tableIds?`, `tableNames?`, `offset?`, `limit?` | Hitzen, terminoen eta domeinuen hiztegiek aurkitzen dituzten akatsak, editorearen Hiztegia fitxako `Checks` orriak zerrendatzen dituen bezala, orrialdez orrialde. Ez du ezer aldatzen. Ikus [Hiztegiaren egiaztapenak](#dictionary-checks). |
 
 Agente batek `erd_list` tresnarekin aurkitzen ditu IDak, `erd_get` tresnarekin irakurtzen ditu zutabeak, hiztegi-errenkadak eta beste xehetasun batzuk, eta ID horiek edizio-tresnei pasatzen dizkie.
 `erd_list` tresnan, taula baten tamaina oihalean hartzen duen laukia da: altuera zehatza, zabalera gutxi gorabeherakoa.
-Taula-talde bat gordetzen duen laukizuzenaren bidez zerrendatzen da, bere izenarekin, kolorearekin eta zenbat taula dituen adierazita.
+Taula-talde bat gordetzen duen laukizuzenaren bidez zerrendatzen da, bere izenarekin, kolorearekin eta zenbat taula eta ohar dituen adierazita.
 Erlazio bakoitza behin zerrendatzen da, bere bi tauletako batekin.
 Hiztegi-errenkada bat bere IDarekin, bere `name` eremuarekin eta izen fisiko bati edo zutabe bati ematen dionarekin zerrendatzen da: domeinu baten `dataType`, termino baten `physicalName` eta `domainId`, eta hitz baten `abbreviation`. Hiztegi bakoitzak bere errenkadak bere orriak erakusten dituen ordenan zerrendatzen ditu.
 `erd_list` eta `erd_read` tresnek jakinarazten dituzten ezarpenak fitxategiak gordetzen dituenak dira. Ikus [Ezarpenak](#settings).
@@ -45,7 +45,7 @@ Zutabe bakoitzak bere `domainId` du, eta termino bakoitzak ere bai: kate huts ba
 
 | `format` | Zer erantzuten duen |
 | --- | --- |
-| `snapshot` | JSON trinkoa, entitate guztiekin eta haien IDekin, taula-taldeak eta hitzen, terminoen eta domeinuen errenkadak barne, eta ezarpenekin, SQL eskemaren scriptekin batera. Ikusle batetik bestera aldatzen dena kanpoan uzten du: neurtutako zabalerak, pilatze-ordena, ikuspegia, fitxa eta Izenen ikuspegia. Handia da eskema handi batean. |
+| `snapshot` | JSON trinkoa, entitate guztiekin eta haien IDekin, taula-taldeak beren taula eta oharrekin, eta hitzen, terminoen eta domeinuen errenkadak barne, eta ezarpenekin, SQL eskemaren scriptekin batera. Ikusle batetik bestera aldatzen dena kanpoan uzten du: neurtutako zabalerak, pilatze-ordena, ikuspegia, fitxa eta Izenen ikuspegia. Handia da eskema handi batean. |
 | `sql` | Zortzi datu-baseetako baterako DDLa: `Databricks`, `MariaDB`, `MSSQL`, `MySQL`, `Oracle`, `PostgreSQL`, `Snowflake` edo `SQLite`. `vendor` argumentuaren balio lehenetsia dokumentuan ezarritako datu-basea da. Dokumentu osoaren DDLak bere aurreko eta ondorengo scriptak barne hartzen ditu. `tableIds`, `tableNames` edo `groupNames` argumentuekin, taula horiek soilik, dituzten gako arrotzekin, eta scriptik gabe. Gako arrotzek beren ON DELETE eta ON UPDATE ekintzak dituzte, helburuko datu-baseak kanpoan uzten dituenak izan ezik. Ikus [ON DELETE eta ON UPDATE](../guide/guides/relationship-editing.md#on-delete-and-on-update). |
 | `json` | Dokumentu osoa, gordetzean fitxategian idazten den bezala-bezala, editoreak oraindik gorde ez dituen edizioak barne. Ikus [Biltegiratze-forma](../api/advanced/schema.md#storage-form). |
 | `scripts` | Dokumentuaren aurreko eta ondorengo scriptak soilik, `{"before":"…","after":"…"}` gisa, bakoitza hutsik, ezarri gabe badago, eskema edozein tamainatakoa izanda ere. |
@@ -103,6 +103,37 @@ Egiaztapen bakoitzak bere `level`, bere `code`, eta bere helburuaren `kind` eta 
 
 Egiaztapen bakoitzak izen bat nola irakurtzen duen [Egiaztapen bakoitzak zer aurkitzen duen](../guide/guides/dictionary.md#what-each-check-finds) atalean azaltzen da.
 
+## SVG esportazioa {#svg-export}
+
+| Tresna | Argumentuak | Zer egiten duen |
+| --- | --- | --- |
+| `erd_export_svg` | `output?`, `darkMode?`, `background?` | Dokumentua SVG irudi gisa marrazten du eta `output` argumentuak izendatzen duen `.svg` fitxategian idazten du, edo, `output` gabe, SVG testua erantzuten du. Ez du dokumenturik aldatzen. |
+
+Zerbitzariak berak marrazten du irudia; beraz, `1.2.1` edo berriagoa den zerbitzaria besterik ez du behar, eta konektatzen den ERD Editor luzapen edo plugin bertsio edozeinekin funtzionatzen du.
+`toImage()` funtzioak bezala, editorearen `Export image` elkarrizketa-koadroak SVG gisa gordetzen duen irudia marrazten du, baina dokumentutik soilik abiatuta: diagrama osoa % 100ean, dokumentuak ezkutatzen duena View Option bidez kanpoan utzita, kolore aurrezarrietan, taulak eta zutabeak dokumentuak daukan Izenen ikuspegian izendatuta eta diagramaren beraren hitzak ingelesez. Ikus [Zer marrazten duen](../api/to-image.md#what-it-draws).
+Zerbitzariak testua editorearen letra-tipoak gabe neurtzen du; beraz, taula bat editoreak marrazten duena baino apur bat zabalagoa irten daiteke.
+Ez dago PNGrik, ezta arbelera kopiatzerik ere.
+
+- `darkMode`: `true` balioak gai iluna marrazten du; `false` balio lehenetsiak, argia. Editore baten pantailako ezein gairik ez da irudira iristen.
+- `background`: `true` balio lehenetsiak diagramaren atzean oihalaren kolorea margotzen du; `false` balioak gardena uzten du.
+- `output`: idatzi beharreko fitxategia, absolutua edo zerbitzariaren laneko direktorioarekiko erlatiboa, `.svg` amaiera duen izenarekin, maiuskulaz zein minuskulaz, lehendik dagoen karpeta batean. Lehendik dagoen fitxategi bat haren ondoko aldi baterako fitxategi baten bidez ordezten da, eta esteka sinboliko bati jarraitzen zaio daraman fitxategiraino.
+
+Esportazioak dokumentua irakurketa-tresnek bezala irakurtzen du: hura zerbitzatzen duen editoreak daukana, oraindik gorde gabeko edizioak barne, edo bestela fitxategia. Irakurketa batek bezala, ez du inoiz dokumentua editore batean irekitzen.
+Haren erantzunaren `mode` eremuak zein den adierazten du: `live`, `headless` edo, agente-gunea desaktibatuta duen editore batek dokumentua daukanean, `blocked`, diskoko fitxategia editore horretan oraindik gorde gabeko edizioak gabe marraztu dela dioen azalpen batekin. Ikus [Zuzenean eta editorerik gabe](./live-and-headless.md).
+
+`output` argumentuarekin, erantzuna JSON lerro bakarra da: `mode`, dokumentuaren `path`, idatzitako `output`, haren tamaina `bytes` eremuan, SVGaren `width` eta `height`, eta `notes`, baldin badaude.
+
+```json
+{"mode":"headless","path":"/work/shop.erd.json","output":"/work/docs/shop.svg","bytes":48213,"width":1210,"height":764}
+```
+
+`output` gabe, erantzuna SVG testua da, eta ondoren `{"mode":"…"}`, azalpenak badaude, haiekin batera. Erantzun batek gehienez 40.000 karaktere itzultzen ditu, eta hortik gorako SVG bat `tooLarge` kodearekin ukatzen da: pasatu `output`, horren ordez fitxategi batean idatz dadin.
+
+`output` dokumentua irakurri aurretik egiaztatzen da; beraz, ukatutako batek ez du marrazketarik kostatzen: huts bat, `.svg` amaierarik ez duen izen bat, karpeta bat izendatzen duen bat, eta inongo fitxategitara ez daraman edo `.svg` amaierarik gabeko izena duen fitxategi batera daraman esteka bat `invalidPath` kodearekin ukatzen dira, eta lehendik ez dagoen karpeta batekoa `notFound` kodearekin. Irakurtzeko soilik den fitxategi bat irudia marraztu ondoren ukatzen da `readonly` kodearekin, eta dagoen bezala uzten da.
+
+Esportazio batek ez du desegite-urratsik sortzen eta ez du gordetzeko ezer uzten, eta `erd_batch` tresnak ukatu egiten du, irakurketa-tresnak ukatzen dituen bezala.
+Diagrama handi bat marrazteak segundo batzuk behar ditu, eta zerbitzariak esportazioak banan-banan marrazten ditu.
+
 ## Edizio-tresnak {#edit-tools}
 
 IDak `erd_list` eta `erd_get` tresnetatik datoz, edo entitatea sortu zuen deiaren `createdIds` eremutik.
@@ -121,7 +152,7 @@ ID berri bat 25 letra xehe eta digituz osatuta dago, adibidez `03h17be2plxpj5n59
 | `erd_change_table_color` | `tableId`, `color` | Taula baten kolorea ezartzen du. |
 | `erd_move_table` | `tableId`, `x`, `y` | Taula bat oihaleko kokapen batera mugitzen du. |
 | `erd_move_tables` | `positions` | Hainbat taula edizio bakarrean mugitzen ditu, eta `erd_undo` dei bakar batek desegiten du. `positions` argumentuak `{ tableId, x, y }` bat du taula bakoitzeko, taula bakoitza gehienez behin. |
-| `erd_sort_tables` | | Taula guztiak errenkadetan kokatzen ditu oihalean zehar, zutabe gutxien dituztenak lehenik, `erd_import_sql`, `erd_import_graphql`, `erd_import_dbml` eta `erd_import_aml` tresnek kokatzen dituzten bezala. Taula-talde bateko taulak elkarrekin geratzen dira, eta talde bakoitzaren laukia haien inguruan doitzen da. |
+| `erd_sort_tables` | | Taula guztiak errenkadetan kokatzen ditu oihalean zehar, zutabe gutxien dituztenak lehenik, `erd_import_sql`, `erd_import_graphql`, `erd_import_dbml` eta `erd_import_aml` tresnek kokatzen dituzten bezala. Taula-talde bateko taulak elkarrekin geratzen dira, haien ondoren haren oharrak, oharrak erakusten diren bitartean, eta talde bakoitzaren laukia haien inguruan doitzen da. Oharrak ezkutatuta dauden bitartean, talde bateko oharrak haren taulekin mugitzen dira. Talderik gabeko ohar bat, edo taularik ez duen talde bateko ohar bat, dagoen lekuan geratzen da. |
 
 ### Zutabeak {#columns}
 
@@ -190,28 +221,33 @@ Indize-zutabe baten IDa `erd_get` tresnak ematen duen indizearen zutabe-zerrenda
 | `erd_move_memo` | `memoId`, `x`, `y` | Ohar bat oihaleko kokapen batera mugitzen du. |
 | `erd_resize_memo` | `memoId`, `width`, `height` | Ohar baten tamaina aldatzen du. Zabalerak gutxienez `116` pixel ingurukoa izan behar du, eta altuerak gutxienez `100`. Ez du desegite-urratsik sortzen, editoreak oharren tamaina-aldaketa arrastatze batetik soilik erregistratzen baitu. |
 
+Ohar bat taula-talde batean egon daiteke, eta harekin mugitzen da. Ikus [Taula-taldeak](#table-groups).
+
 Oharrak [View Option](../guide/guides/table-related-functions.md#table-view-options) → `Memos` bidez ezkutatuta dauden bitartean, `erd_add_memo` tresnak ohar bat gehitzen du hala ere, eta ezkutuan geratzen da oharrak berriro erakusten diren arte.
 `erd_list` eta `erd_get` tresnek ezkutuko oharrak ere zerrendatzen dituzte.
 
 ### Taula-taldeak {#table-groups}
 
-Taula-talde bat bere taulen atzean marraztutako lauki izendun bat da, eta haren kolorea laukian eta bere taulen goiburuetan zehar ikusten da. Ikus [Taula-taldeak](../guide/guides/table-groups.md).
-Taula bat gehienez talde batean dago. `erd_move_table`, `erd_move_tables` eta `erd_move_table_group` tresnek ez dute inoiz aldatzen talde batek zer taula dituen, taula bat edonon kokatuta ere; editorean, aldiz, taula bat askatzen den lekuaren arabera sartzen da talde batean edo ateratzen da talde batetik. Ikus [Taulak gehitzea eta kentzea](../guide/guides/table-groups.md#adding-and-removing-tables). `erd_add_table_group` eta `erd_set_table_group` tresnek taulak talde batean sartzen dituzte, eta `erd_remove_table_group` tresnak taldearen taulak talderik gabe uzten ditu.
-Talde batek laukizuzen bat gordetzen du, gutxienez `160` pixel zabal eta `100` garai, titulu-barra barne, eta editoreak laukia bere taula bakoitza hartzeko handituta marrazten du.
+Taula-talde bat bere taulen eta oharren atzean marraztutako lauki izendun bat da, eta haren kolorea laukian eta bere taulen goiburuetan eta oharren goiburu-bandetan zehar ikusten da. Ikus [Taula-taldeak](../guide/guides/table-groups.md).
+Taula edo ohar bat gehienez talde batean dago. `erd_move_table`, `erd_move_tables`, `erd_move_memo` eta `erd_move_table_group` tresnek ez dute inoiz aldatzen talde batek zer duen, taula edo ohar bat edonon kokatuta ere; editorean, aldiz, taula edo ohar bat askatzen den lekuaren arabera sartzen da talde batean edo ateratzen da talde batetik. Ikus [Taulak gehitzea eta kentzea](../guide/guides/table-groups.md#adding-and-removing-tables). `erd_add_table_group` tresnak taulak eta oharrak sartzen ditu talde batean, `erd_set_table_group` tresnak taulak eta `erd_set_memo_group` tresnak oharrak, eta `erd_remove_table_group` tresnak taldearen taulak eta oharrak talderik gabe uzten ditu.
+Talde batek laukizuzen bat gordetzen du, gutxienez `160` pixel zabal eta `100` garai, titulu-barra barne, eta editoreak laukia bere taula bakoitza eta, oharrak erakusten diren bitartean, bere ohar bakoitza hartzeko handituta marrazten du.
 
 | Tresna | Argumentuak | Zer egiten duen |
 | --- | --- | --- |
-| `erd_add_table_group` | `name`, `color?`, `x?`, `y?`, `width?`, `height?`, `tableIds?` | Talde bat gehitzen du eta haren IDa `createdIds` eremuan itzultzen du. Pasatu `tableIds` edo laukizuzen bat, `x`, `y`, `width` eta `height` batera. `tableIds` argumentuarekin, taula bakoitza zegoen taldetik ateratzen da, eta laukizuzena haien inguruan doitzen da, [hautatutako taulak taldekatzea](../guide/guides/table-groups.md#grouping-selected-tables) ekintzak doitzen duen bezala. Laukizuzen batek talderik gabeko taula guztiak hartzen ditu, baldin eta haien zentroa laukizuzenaren barruan badago, [talde bat marraztea](../guide/guides/table-groups.md#drawing-a-group) ekintzak egiten duen bezala. `name` argumentu hutsak taldea izenik gabe uzten du. `erd_undo` dei batek taldea kentzen du eta taula bakoitza zegoen taldera itzultzen du. |
-| `erd_remove_table_group` | `groupId` | Talde bat kentzen du. Haren taulak dauden lekuan geratzen dira, talderik gabe. |
+| `erd_add_table_group` | `name`, `color?`, `x?`, `y?`, `width?`, `height?`, `tableIds?`, `memoIds?` | Talde bat gehitzen du eta haren IDa `createdIds` eremuan itzultzen du. Pasatu `tableIds`, nahi izanez gero `memoIds` ere haiekin batera, edo laukizuzen bat, `x`, `y`, `width` eta `height` batera. `tableIds` argumentuarekin, taula eta ohar bakoitza zegoen taldetik ateratzen da, eta laukizuzena haien inguruan doitzen da, oharren kasuan oharrak erakusten diren bitartean soilik, [hautatutako taulak taldekatzea](../guide/guides/table-groups.md#grouping-selected-tables) ekintzak doitzen duen bezala. Laukizuzen batek zentroa bere barruan duen talderik gabeko taula eta erakutsitako ohar oro hartzen du, [talde bat marraztea](../guide/guides/table-groups.md#drawing-a-group) ekintzak egiten duen bezala. `name` argumentu hutsak taldea izenik gabe uzten du. `erd_undo` dei batek taldea kentzen du eta taula eta ohar bakoitza zegoen taldera itzultzen du. |
+| `erd_remove_table_group` | `groupId` | Talde bat kentzen du. Haren taulak eta oharrak dauden lekuan geratzen dira, talderik gabe. |
 | `erd_change_table_group_name` | `groupId`, `value` | Talde baten izena aldatzen du. Kate huts batek izenik gabe uzten du. |
 | `erd_change_table_group_color` | `groupId`, `color` | Talde baten kolorea ezartzen du. |
-| `erd_move_table_group` | `groupId`, `x`, `y` | Talde bat mugitzen du haren laukizuzena puntu horretan has dadin, bere taulekin batera desplazamendu berean, haren titulu-barra arrastatzeak egiten duen bezala. 20 pixel baino gutxiagoko mugimendu batek, horizontala eta bertikala batuta, ez du desegite-urratsik sortzen. Zerbitzariaren `1.2.0` bertsiotik aurrera, mugimendua editorera taldea eta haren taulak amaitzen diren puntu gisa iristen da; beraz, VS Code luzapenaren `4.3.0` edo berriagoarekin, edo Obsidian edo JetBrains pluginaren `1.3.0` edo berriagoarekin, bertan une berean taldeari edo haren taula bati egindako mugimendu bat bi kokapenetako batean amaitzen da, inoiz ez haien baturan. Ikus [Une berean egindako edizioak](./live-and-headless.md#edits-made-at-the-same-moment). |
-| `erd_resize_table_group` | `groupId`, `x?`, `y?`, `width`, `height` | Talde baten laukizuzena ezartzen du, haren taulak dauden lekuan geratzen direla. `x` eta `y` adierazten ez badira, izkina mantentzen da. Taldearen taulak beren barne-tartearekin hartuko ez lituzkeen laukizuzena ukatu egiten da, hartu behar duen laukia adierazten duen mezu batekin. |
+| `erd_move_table_group` | `groupId`, `x`, `y` | Talde bat mugitzen du haren laukizuzena puntu horretan has dadin, bere taulekin eta oharrekin, ezkutuko oharrak barne, batera desplazamendu berean, haren titulu-barra arrastatzeak egiten duen bezala. 20 pixel baino gutxiagoko mugimendu batek, horizontala eta bertikala batuta, ez du desegite-urratsik sortzen. Zerbitzariaren `1.2.0` bertsiotik aurrera, mugimendua editorera taldea eta haren taulak amaitzen diren puntu gisa iristen da; beraz, VS Code luzapenaren `4.3.0` edo berriagoarekin, edo Obsidian edo JetBrains pluginaren `1.3.0` edo berriagoarekin, bertan une berean taldeari edo haren taula bati egindako mugimendu bat bi kokapenetako batean amaitzen da, inoiz ez haien baturan. Ikus [Une berean egindako edizioak](./live-and-headless.md#edits-made-at-the-same-moment). Zerbitzariaren `1.2.1` bertsiotik aurrera, haren oharrak amaitzen diren puntuak sorta berean doaz. |
+| `erd_resize_table_group` | `groupId`, `x?`, `y?`, `width`, `height` | Talde baten laukizuzena ezartzen du, haren taulak eta oharrak dauden lekuan geratzen direla. `x` eta `y` adierazten ez badira, izkina mantentzen da. Taldearen taulak eta erakutsitako oharrak beren barne-tartearekin hartuko ez lituzkeen laukizuzena ukatu egiten da, hartu behar duen laukia adierazten duen mezu batekin. |
 | `erd_set_table_group` | `tableIds`, `groupId` | Taulak talde batean sartzen ditu, bakoitza zegoen taldetik ateraz. `groupId` argumentua `null` edo kate hutsa bada, talde guztietatik ateratzen ditu. |
+| `erd_set_memo_group` | `memoIds`, `groupId` | Oharrak talde batean sartzen ditu, bakoitza zegoen taldetik ateraz eta dagoen lekuan geratuz. `groupId` argumentua `null` edo kate hutsa bada, talde guztietatik ateratzen ditu. |
 
 Taldeak `View Option` → `Table Groups` bidez ezkutatuta dauden bitartean, tresna hauek taldeak gehitzen eta aldatzen dituzte hala ere, eta ezkutuan geratzen dira taldeak erakusten diren arte. Ikus [Taldeak ezkutatzea](../guide/guides/table-groups.md#hiding-groups).
-`erd_sort_tables` tresnak talde bakoitzeko taulak elkarrekin mantentzen ditu, `erd_import_dbml` eta `erd_import_json` tresnek taldeak ekartzen dituzte (ikus [Inportazioa](#import)), eta `erd_read` tresnak aukeratutako taldeen DDLa idazten du `groupNames` argumentuarekin.
+View Option → `Memos` bidez ezkutatutako oharrak beren taldeetan geratzen dira eta haiekin mugitzen dira, eta `erd_set_memo_group` tresnak eta `erd_add_table_group` tresnaren `memoIds` argumentuak talde batean sartzen dituzte, erakutsitakoak bezala.
+`erd_sort_tables` tresnak talde bakoitzeko taulak eta oharrak elkarrekin mantentzen ditu, `erd_import_dbml` eta `erd_import_json` tresnek taldeak ekartzen dituzte (ikus [Inportazioa](#import)), eta `erd_read` tresnak aukeratutako taldeen DDLa idazten du `groupNames` argumentuarekin.
 Taula-taldeak baino lehenagoko ERD Editor bertsio batek fitxategi baten taldeak kentzen ditu fitxategia gordetzean, `4.0.0` bertsioa baino lehenagoko VS Code luzapenak eta `1.0.0` bertsioa baino lehenagoko Obsidian eta JetBrains pluginek egiten duten bezala. Ikus [Eguneratzea](./installation.md#updating).
+Oharrak taula-taldeetan sartu baino lehenagoko bertsio batek, hau da, `4.3.1` bertsioa baino lehenagoko VS Code luzapenak eta `1.3.1` bertsioa baino lehenagoko Obsidian eta JetBrains pluginek, ez du erakusten ez gordetzen oharra zer taldetan dagoen; beraz, fitxategia ohar guztiak talderik gabe utzita gordetzen du, eta diskoan fitxategia idazten duen `1.2.1` bertsioa baino lehenagoko zerbitzari batek ere bai. Ikus [Eguneratzea](./installation.md#updating).
 
 ### Hiztegiak {#dictionaries}
 
@@ -304,14 +340,14 @@ VS Code luzapenaren `4.3.0` edo berriagoa, edo Obsidian edo JetBrains pluginaren
 - Erlazioak eta indizeak inportazioak ekartzen dituen taulen artean soilik sartzen dira; beraz, testuak deklaratzen ez duen taula baterako gako arrotz bat baztertu egiten da.
 - `erd_import_sql`, `erd_import_graphql` eta `erd_import_aml` tresnek taulak gehitzen dituzte beren erlazio eta indizeekin, eta `erd_import_dbml` tresnak bere taula-taldeak ere bai. `erd_import_json` tresnak taulak, erlazioak, indizeak, oharrak eta taula-taldeak gehitzen ditu, inoiz ez bere ezarpenak, eta testu hutsa ukatu egiten du. Haren taulek eta zutabeek beren izen logikoak ekartzen dituzte, baina zutabe batek ere ez du domeinurik lotzen, eta JSONaren hitz, termino edo domeinuetako bat ere ez da sartzen.
 
-JSON dokumentu batek bere antolaketa mantentzen du, taula-taldeak barne: taulak kokatzen dituen lekuan `replace` moduarekin, eta gehitutako blokearen barruan `append` moduarekin.
+JSON dokumentu batek bere antolaketa mantentzen du, taula-taldeak barne, bakoitzak dituen taula eta oharrekin: taulak kokatzen dituen lekuan `replace` moduarekin, eta gehitutako blokearen barruan `append` moduarekin.
 SQL, GraphQL, DBML eta AML formatuetako taulak errenkadetan antolatzen dira, zutabe gutxien dituztenak lehenik eta talde bakoitzeko taulak elkarrekin, `erd_sort_tables` tresnak kokatzen dituen bezala, eta inoiz ez `Flow` bidez, editorearen beraren inportazioak ahal duenean antolatzen dituen bezala. Lau tresna horiek testu hutsa ukatzen dute bi moduetan.
 
 ## erd_batch {#erd_batch}
 
 `erd_batch` tresnak hainbat edizio-tresna exekutatzen ditu ordenan, edizio bakar gisa: denak ala bat ere ez.
 
-- `operations` argumentuak gehienez 100 sarrera ditu, bakoitza `{ tool, as?, args? }` formakoa; `tool` edizio-tresna bat da, eta `args` tresnaren argumentuak dira, `path` gabe. Irakurketa-tresna bat, adibidez `erd_list_checks`, ukatu egiten da.
+- `operations` argumentuak gehienez 100 sarrera ditu, bakoitza `{ tool, as?, args? }` formakoa; `tool` edizio-tresna bat da, eta `args` tresnaren argumentuak dira, `path` gabe. Irakurketa-tresna bat, adibidez `erd_list_checks`, ukatu egiten da, eta `erd_export_svg` ere bai.
 - Eragiketak lehenik dokumentuaren kopia batean probatzen dira. Ukatutako eragiketa izendatu egiten da, adibidez `operations[1] erd_remove_table: …`, eta ez da ezer aplikatzen.
 - `erd_undo` dei batek sorta osoa desegiten du, desegin ezin dituen eragiketak izan ezik, emaitzaren `undoNote` eremuak aipatzen dituenak: desegite-urratsik sortzen ez duen tresna batenak, adibidez `erd_set_database`, eta dokumentua urratsik sortu gabe aldatu dutenak, adibidez `erd_move_table_group` labur bat. Desegite-urratsik batere sortu ez duen sorta `erd_undo` tresnak saltatu egiten du. Emaitzako `historyEntries` eremuak sortaren barruko editorearen historiako sarrerak zenbatzen ditu, ez `erd_undo` deiak.
 - Zuzeneko saio batean, editoreak sorta osoa onartzen du edo ezer ere ez.
@@ -391,21 +427,21 @@ Ukapen bat kode bat eta zer egin adierazten duen mezu bat dituen errore-emaitza 
 
 | `code` | Zergatik |
 | --- | --- |
-| `notFound` | ID batek ez du entitate bizirik izendatzen, edo fitxategia ez da existitzen. |
+| `notFound` | ID batek ez du entitate bizirik izendatzen, fitxategia ez da existitzen, edo `erd_export_svg` tresnaren `output` argumentuaren karpeta ez da existitzen. |
 | `invalidArgs` | Argumentu bat falta da edo balio okerra du. |
-| `invalidPath` | Bide-izena ez da ERD dokumentu bat. Windows sisteman, baita Windowsek idatzita dagoen bezala gordetzen ez duen izena duen bide-izena ere, edo editore batek beste bide-izen batekin daukan dokumentu batera iristen dena, mezuak aipatzen duena. |
+| `invalidPath` | Bide-izena ez da ERD dokumentu bat, edo `erd_export_svg` tresnaren `output` argumentua ez da `.svg` fitxategi bat. Ikus [SVG esportazioa](#svg-export). Windows sisteman, baita Windowsek idatzita dagoen bezala gordetzen ez duen izena duen bide-izena ere, edo editore batek beste bide-izen batekin daukan dokumentu batera iristen dena, mezuak aipatzen duena. |
 | `invalidDocument` | Fitxategia ez da editoreak irakur dezakeen dokumentu bat. |
-| `tooLarge` | Irakurketa bat ez da erantzun bakar batean sartzen. |
+| `tooLarge` | Irakurketa bat, edo `output` gabe eskatutako SVG bat, ez da erantzun bakar batean sartzen. |
 | `blocked` | Agente-gunea desaktibatuta duen editore batek dauka dokumentua. Mezuak nola aktibatu adierazten du: VS Code editorean, jo lan-eremua fidagarritzat eta aktibatu `dineug.erd-editor.agentHub.enabled` ezarpena, edo birkargatu leihoa; Obsidian aplikazioan, aktibatu Coding agents aukera, edo birkargatu Obsidian; JetBrains IDE batean, aktibatu Coding agents aukera, edo berrabiarazi IDEa aktibatuta badago. |
 | `hubDisabled` | JetBrains IDE batek fidagarritzat jotzen ez duen proiektu batean soilik dauka dokumentua. Irakurketek funtzionatzen dute oraindik; jo proiektua fidagarritzat agenteak edita dezan. |
 | `conflict` | Fitxategia diskoan aldatu da deiak iraun bitartean. Ez da ezer idatzi. |
 | `hubAppeared`, `hubGone` | Agenteak diskoan editatzen ari zen dokumentu bat zerbitzatzen hasi da editore bat, edo hura zerbitzatzen zuen editorea martxan dago oraindik, baina haren blokeo-fitxategia eta konexioa desagertu dira. Ez da ezer idatzi. |
 | `notSaved` | `erd_save` tresnak ezin izan du editorearen dokumentua gorde. |
-| `readonly` | Editoreak irakurtzeko soilik dauka dokumentua, adibidez idatzi ezin duen edo diagrama gisa irakurri ezin duen fitxategi bat. Editorerik gabe, fitxategia bera da irakurtzeko soilik, adibidez editatzeko atera ez den Perforce edo TFVC fitxategi bat. Ez da ezer idatzi. |
+| `readonly` | Editoreak irakurtzeko soilik dauka dokumentua, adibidez idatzi ezin duen edo diagrama gisa irakurri ezin duen fitxategi bat. Editorerik gabe, fitxategia bera da irakurtzeko soilik, adibidez editatzeko atera ez den Perforce edo TFVC fitxategi bat. `erd_export_svg` tresnarekin, haren `output` argumentuak izendatzen duen `.svg` fitxategia da irakurtzeko soilik. Ez da ezer idatzi. |
 | `protocolMismatch` | Editorearen ERD Editor luzapenak edo pluginak eta zerbitzariak protokolo-bertsio desberdinak erabiltzen dituzte, adibidez `1.0.0` bertsioko edo berriagoko zerbitzaria `3.x` bertsioko VS Code luzapen batekin. Irakurketak ere ukatzen dira, eta mezuak eguneratu beharreko aldea aipatzen du. Ikus [Eguneratzea](./installation.md#updating). |
 | `hubUnreachable`, `timeout`, `disconnected` | Editore baten guneak ez du konexioa onartu, ez du 30 segundoren barruan erantzun, edo deian zehar eten du konexioa. Windows sisteman, `hubUnreachable` kodeak esan nahi du, halaber, Windowsek agentea gunetik kanpo utzi duela: editorea agenteak baino eskubide gehiagorekin exekutatzen da, adibidez editorea administratzaile gisa abiarazi denean eta agentea ez, edo agentea isolamendu-ingurune batean exekutatzen da. |
 
 Beste kode batzuk ez dira hain ohikoak, eta ukapen orok gertatu dena adierazten duen mezu bat du.
 
-Edizio-tresnek, `erd_batch` tresnak eta lau irakurketa-tresnek deklaratzen ez duten argumentu bat edo mota okerreko bat ukatzen dute, JSON-RPC invalid params errore batekin (`-32602`), dokumentua ukitu aurretik; beraz, gaizki idatzitako argumentu bat ez da inoiz isilean baztertzen.
+Edizio-tresnek, `erd_batch` tresnak, lau irakurketa-tresnek eta `erd_export_svg` tresnak deklaratzen ez duten argumentu bat edo mota okerreko bat ukatzen dute, JSON-RPC invalid params errore batekin (`-32602`), dokumentua ukitu aurretik; beraz, gaizki idatzitako argumentu bat ez da inoiz isilean baztertzen.
 Saioko bost tresnek ez dituzte aintzat hartzen ezagutzen ez dituzten argumentuak.

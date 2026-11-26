@@ -157,6 +157,7 @@ const data = replicationStore.value;
 Începând cu versiunea `4.0.0`, proprietatea `value` este forma de stocare: documentul așa cum îl conține un fișier, același text pe care îl returnează proprietatea [value](../erd-editor-element.md#value) a elementului.  
 Conține doar entitățile existente, într-o ordine fixă, fără cele eliminate, fără ordinea de suprapunere și fără nimic din ce o încărcare recalculează, de exemplu lățimile pe care le măsoară funcția [toWidth](#towidth).  
 Începând cu versiunea `4.2.0`, conține și numele logice, informația dacă fiecare nume a fost derivat din dicționare, legăturile cu domeniile, precum și cuvintele, termenii și domeniile din fila [Dicționar](../../guide/guides/dictionary.md).  
+Începând cu versiunea `5.1.1`, conține și grupul de tabele în care se află fiecare notă.  
 Tot începând cu versiunea `4.2.0`, omite fiecare câmp de text gol al unei entități, fiecare listă `doc` și fiecare colecție care nu conține nimic, precum și obiectul `collections` însuși când toate colecțiile sunt goale.  
 Textul are o indentare de două spații, cu fiecare rând al dicționarelor pe o linie separată, și se termină cu un caracter de linie nouă, astfel încât același document produce mereu aceiași octeți.  
 Consultați [Forma de stocare](./schema.md#storage-form) pentru a vedea ce conține.
@@ -305,6 +306,10 @@ Păstrați toate editoarele din sesiune, precum și replica, pe versiunea `5.1.0
 
 Începând cu versiunea `5.1.0`, un editor trimite o schimbare a limbajului generatorului de cod, a unui stil de denumire sau a tipului de delimitator doar cât timp blocarea acelei setări este dezactivată, marcată cu `shared: true` în conținutul acțiunii, iar replica le aplică pe toate cele marcate, ca editoarele; consultați [Editare colaborativă](./collaborative-editing.md).  
 Replica aplică o schimbare nemarcată, pe care o trimite un editor anterior versiunii `5.1.0` indiferent de blocare, doar cât timp acea setare este deblocată în replică și o elimină cât timp setarea este blocată (consultați [on@change](#onchange)).
+
+Începând cu versiunea `5.1.1`, acțiunile păstrate includ și `memo.changeGroup`, care pune o notă într-un [grup de tabele](../../guide/guides/table-groups.md) sau o scoate din el, iar `value` scrie grupul în care se află fiecare notă (consultați [Forma de stocare](./schema.md#storage-form)).  
+Versiunea `5.1.1` nu modifică niciun export din `@dineug/erd-editor/engine.js`.  
+Un store dintr-o versiune anterioară elimină `memo.changeGroup` și câmpul `groupId` al fiecărei note, așa că nu salvează nicio notă într-un grup, iar un editor anterior versiunii `5.1.1` din sesiune poate în continuare să scoată notele din grupurile lor pe o replică `5.1.1` (consultați [Combinarea versiunilor](./collaborative-editing.md#mixing-releases)).
 
 Începând cu versiunea `4.0.0`, ambele metode aplică și acțiunea `editor.mergeLWW`, care transportă registrele de colaborare cu care un editor răspunde când un altul se alătură sesiunii, astfel încât replica rezolvă editările simultane la fel ca editoarele.  
 Aceasta nu modifică niciun octet din `value` și nu declanșează niciun eveniment `change`.  

@@ -93,7 +93,7 @@ Mientras el campo Buscar contiene texto, el [árbol](./explorer.md#the-tree) del
 
 - `Tables`, `Table Groups` y `Memos` solo se muestran cuando contienen una coincidencia, y el recuento de cada carpeta es el número de filas que tiene directamente debajo en los resultados.
 - Bajo `Tables` aparecen las tablas que contienen una coincidencia, ordenadas por nombre, nunca por nombre lógico. Bajo cada tabla aparecen una fila por cada coincidencia de su comentario, después una carpeta `Columns` con las columnas que contienen una coincidencia, en orden de columnas, cada una con una fila por cada coincidencia de su comentario, y después una carpeta `Indexes` con los índices cuyo nombre coincide. No hay carpeta `Foreign Keys`.
-- Bajo `Table Groups` aparecen los grupos cuyo nombre coincide, ordenados por nombre, sin sus tablas. Una tabla encontrada se muestra bajo `Tables`.
+- Bajo `Table Groups` aparecen los grupos cuyo nombre coincide, ordenados por nombre, sin sus tablas ni sus notas. Una tabla encontrada se muestra bajo `Tables`, y una nota, bajo `Memos`.
 - Bajo `Memos` aparecen las notas que contienen una coincidencia, en el orden del documento, cada una representada por su primera línea y con una fila por cada coincidencia que contiene.
 
 Una coincidencia en un nombre se resalta en la propia fila de ese nombre, así que un nombre que contiene la consulta dos veces es una sola fila con dos resaltados. Una coincidencia en el nombre lógico de una tabla o columna también va en la fila de esa tabla o columna, nunca en una fila propia.  
@@ -127,7 +127,7 @@ Ir a una coincidencia cierra el panel Propiedades de la tabla si está abierto y
 
 - Para el nombre, el nombre lógico o el comentario de una tabla o columna, selecciona solo la tabla, la trae al frente y deja la celda con el foco en la celda que contiene la coincidencia. Una coincidencia en un comentario oculto por una [opción de vista de tabla](./table-related-functions.md#table-view-options) deja, en cambio, la celda con el foco en el nombre que tiene al lado. Donde la [vista de nombres](./logical-names.md#name-view) no dibuja ninguna celda para el nombre o el nombre lógico, la celda con el foco va a la que se dibuja en su lugar: el nombre en `Physical Names` y el nombre lógico en `Logical Names`.
 - Para un nombre de índice, selecciona solo la tabla del índice y la trae al frente, con la celda con el foco en el nombre de la tabla, o en su nombre lógico en `Logical Names` y `Both Names`, salvo que ya esté en esa tabla. Los nombres de índice no se dibujan en el lienzo.
-- Para un nombre de grupo de tablas, selecciona solo el grupo y lo trae al frente con sus tablas.
+- Para un nombre de grupo de tablas, selecciona solo el grupo y lo trae al frente con sus tablas y notas.
 - Para una nota, selecciona solo la nota y la trae al frente.
 
 El lienzo solo se desplaza cuando aquello a lo que va no se ve ya bien, y el zoom nunca cambia; consulta [Dónde termina un salto](./table-related-functions.md#where-a-jump-lands).

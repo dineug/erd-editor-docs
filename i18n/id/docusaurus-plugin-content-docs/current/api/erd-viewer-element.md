@@ -39,7 +39,7 @@ interface ErdViewerElement extends HTMLElement {
 ```
 
 Mengimpor `@dineug/erd-editor/erd-viewer.js` mendefinisikan `<erd-viewer>` dan membiarkan `<erd-editor>` tidak terdefinisi. Mengimpor root paket tidak mendefinisikan salah satunya: root mengekspor kelas `ErdViewerElement` dan `defineErdViewer()`, yang mendefinisikan tag di tempat Anda memanggilnya, sehingga halaman juga dapat mendefinisikan kelas ini di bawah tag buatannya sendiri — lihat [Mendaftarkan elemen](./installation.md#registering-the-elements).  
-Setiap titik masuk kecuali `engine.js` dan `peer.js` memerlukan DOM, titik masuk ini juga, sehingga halaman yang di-render di server mengimpornya di sisi klien — lihat [Rendering sisi server](./installation.md#server-side-rendering).  
+Setiap titik masuk yang dijelaskan halaman-halaman ini kecuali `engine.js` dan `peer.js` memerlukan DOM, titik masuk ini juga, sehingga halaman yang di-render di server mengimpornya di sisi klien — lihat [Rendering sisi server](./installation.md#server-side-rendering).  
 Mengimpor titik masuk ini menambahkan `erd-viewer` ke `HTMLElementTagNameMap`, sehingga `document.createElement('erd-viewer')` dan `document.querySelector('erd-viewer')` bertipe `ErdViewerElement` tanpa cast.
 
 Seperti editor, viewer di-render ke dalam shadow root tertutup, sehingga `viewer.shadowRoot` bernilai `null` dan gaya halaman tidak bocor masuk maupun keluar; beri gaya melalui [setTheme](#settheme) dan custom property `--erd-editor-*`. Beberapa viewer dalam satu halaman masing-masing memegang dokumen, tampilan, tema, dan bahasanya sendiri.  
@@ -52,7 +52,7 @@ Build tag script, `dist/erd-viewer.umd.js`, hanya memuat viewer dengan semua dep
 
 ```html
 <erd-viewer src="diagram.erd.json" style="display: block; height: 480px"></erd-viewer>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0/dist/erd-viewer.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.1/dist/erd-viewer.umd.js"></script>
 ```
 
 ## src {#src}

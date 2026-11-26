@@ -55,16 +55,17 @@ Zolang View Option → `Memos` uitstaat, zijn memo's verborgen, wordt `New Memo`
 Een memo is een notitie met vrije tekst op het canvas. Klik in het tekstvak en typ; de tekst wordt met het document opgeslagen.  
 `Escape` sluit de memo-editor, behoudt wat je hebt getypt en laat de memo geselecteerd, en een tweede `Escape` heft de selectie op.  
 Sleep aan de rand om de grootte ervan te wijzigen. De `x` in de kop, die wordt getoond zolang de aanwijzer zich boven de memo bevindt, verwijdert de memo.  
-Een klik met de rechtermuisknop op een memo opent het menu ervan in plaats van de editor: `Color`, `Remove color` zolang een geselecteerd item een kleur heeft en `Delete`, dat `Delete selected` toont zolang de memo een van twee of meer geselecteerde items is. Een geselecteerde memo wordt ook verwijderd met de toetsen die tabellen verwijderen — zie [Tabellen en memo's verwijderen](./table-related-functions.md#table-and-memo-deletion).
+Een klik met de rechtermuisknop op een memo opent het menu ervan in plaats van de editor: `Color`, `Remove color` zolang een geselecteerd item een kleur heeft, `Group selected tables` zolang de selectie een tabel bevat en tabelgroepen worden getoond, `Remove from group` zolang een geselecteerde tabel of memo in een groep zit, en `Delete`, dat `Delete selected` toont zolang de memo een van twee of meer geselecteerde items is. Een geselecteerde memo wordt ook verwijderd met de toetsen die tabellen verwijderen — zie [Tabellen en memo's verwijderen](./table-related-functions.md#table-and-memo-deletion).  
+Net als bij een tabel bepaalt de plek waar je een memo neerzet, of hij in een [tabelgroep](./table-groups.md) komt of die verlaat. `Remove from group` haalt hem er ook uit, en `Group selected tables` zet hem in een nieuwe groep met de tabellen die samen met hem zijn geselecteerd — zie [Tabellen toevoegen en verwijderen](./table-groups.md#adding-and-removing-tables).
 
 ![Een memo toevoegen met Alt + M, een notitie typen en aan de rand slepen om de grootte te wijzigen](/img/demo-memo.webp)
 
 ## Tabelgroepen maken {#table-group-creation}
 
-Een tabelgroep is een kader dat tabellen bevat, en je kunt het een naam en een kleur geven. Maak er een op een van twee manieren:
+Een tabelgroep is een kader dat tabellen en memo's bevat, en je kunt het een naam en een kleur geven. Maak er een op een van twee manieren:
 
-- Kies `New Table Group` in het contextmenu of in Snel zoeken, klik op de knop `New Table Group` op de [canvaswerkbalk](./table-related-functions.md#canvas-toolbar) of druk op `Alt + G` (Windows/Linux) of `⌥ + G` (Mac), en sleep daarna een kader over het canvas. Elke tabel waarvan het midden binnen het kader ligt, komt in de nieuwe groep, tenzij ze al in een andere groep zit — zie [Een groep tekenen](./table-groups.md#drawing-a-group).
-- Selecteer tabellen en kies `Group selected tables` in het contextmenu van een tabel of `Group Selected Tables` in Snel zoeken, of druk op `T` en daarna `G` — zie [Geselecteerde tabellen groeperen](./table-groups.md#grouping-selected-tables).
+- Kies `New Table Group` in het contextmenu of in Snel zoeken, klik op de knop `New Table Group` op de [canvaswerkbalk](./table-related-functions.md#canvas-toolbar) of druk op `Alt + G` (Windows/Linux) of `⌥ + G` (Mac), en sleep daarna een kader over het canvas. Elke tabel en elke getoonde memo waarvan het midden binnen het kader ligt, komt in de nieuwe groep, tenzij die al in een andere groep zit — zie [Een groep tekenen](./table-groups.md#drawing-a-group).
+- Selecteer tabellen, en eventuele memo's erbij, en kies `Group selected tables` in het contextmenu van een tabel of een memo of `Group Selected Tables` in Snel zoeken, of druk op `T` en daarna `G` — zie [Geselecteerde tabellen groeperen](./table-groups.md#grouping-selected-tables).
 
 Een naam geven, kleuren, verplaatsen, de grootte wijzigen en de rest staan beschreven in [Tabelgroepen](./table-groups.md).
 

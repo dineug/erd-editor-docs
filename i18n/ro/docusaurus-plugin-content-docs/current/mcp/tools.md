@@ -1,11 +1,11 @@
 ---
 sidebar_position: 4
-description: "Toate instrumentele oferite de serverul MCP erd-editor: citirea unui document câte o pagină, verificările dicționarelor, cele 67 de instrumente de editare, erd_batch și cum arată un rezultat și un refuz."
+description: "Toate instrumentele oferite de serverul MCP erd-editor: citirea unui document câte o pagină, verificările dicționarelor, exportul SVG, cele 68 de instrumente de editare, erd_batch și cum arată un rezultat și un refuz."
 ---
 
 # Instrumente
 
-Serverul oferă 77 de instrumente: cinci instrumente de sesiune, patru instrumente de citire, 67 de instrumente de editare, câte unul pentru fiecare operație de editare, și `erd_batch`, care rulează mai multe instrumente de editare ca o singură editare.
+Serverul oferă 79 de instrumente: cinci instrumente de sesiune, patru instrumente de citire, `erd_export_svg`, care desenează un document ca imagine SVG, 68 de instrumente de editare, câte unul pentru fiecare operație de editare, și `erd_batch`, care rulează mai multe instrumente de editare ca o singură editare.
 
 Toate instrumentele, cu excepția instrumentului `erd_list_documents`, primesc ca prim argument calea documentului, `path`, iar tabelele de mai jos o omit.
 Un argument marcat cu `?` este opțional.
@@ -26,14 +26,14 @@ Pentru ce fac salvarea și anularea în fiecare mod, consultați [În direct și
 
 | Instrument | Argumente | Ce face |
 | --- | --- | --- |
-| `erd_list` | `query?`, `offset?`, `limit?`, `namesOnly?` | Setările și contoarele, apoi o pagină de tabele cu indexurile și relațiile lor, fiecare tabel cu ID-ul, poziția și dimensiunea sa pe pânză, numărul de coloane, numele logic, dacă are unul, și grupul de tabele, dacă face parte dintr-unul. În afara unei căutări, după tabele urmează grupurile de tabele, notele, apoi domeniile, termenii și cuvintele. |
-| `erd_get` | `tableIds?`, `tableNames?`, `relationshipIds?`, `indexIds?`, `memoIds?`, `tableGroupIds?`, `wordIds?`, `termIds?`, `domainIds?` | Entitățile indicate, în întregime: tabelele cu coloanele și grupul lor de tabele, relațiile cu coloanele lor și cu `onDelete` și `onUpdate`, indexurile cu coloanele lor, notele cu textul lor, grupurile de tabele cu tabelele lor, precum și cuvintele, termenii și domeniile cu toate câmpurile lor. |
+| `erd_list` | `query?`, `offset?`, `limit?`, `namesOnly?` | Setările și contoarele, apoi o pagină de tabele cu indexurile și relațiile lor, fiecare tabel cu ID-ul, poziția și dimensiunea sa pe pânză, numărul de coloane, numele logic, dacă are unul, și grupul de tabele, dacă face parte dintr-unul. În afara unei căutări, după tabele urmează grupurile de tabele, notele, fiecare cu grupul de tabele, dacă face parte dintr-unul, apoi domeniile, termenii și cuvintele. |
+| `erd_get` | `tableIds?`, `tableNames?`, `relationshipIds?`, `indexIds?`, `memoIds?`, `tableGroupIds?`, `wordIds?`, `termIds?`, `domainIds?` | Entitățile indicate, în întregime: tabelele cu coloanele și grupul lor de tabele, relațiile cu coloanele lor și cu `onDelete` și `onUpdate`, indexurile cu coloanele lor, notele cu textul lor și grupul lor de tabele, grupurile de tabele cu tabelele și notele lor, precum și cuvintele, termenii și domeniile cu toate câmpurile lor. |
 | `erd_read` | `format`, `vendor?`, `statements?`, `header?`, `logicalNameAsComment?`, `tableIds?`, `tableNames?`, `groupNames?` | Întregul document dintr-odată, într-unul dintre cele patru formate, sau doar codul DDL al unor tabele sau grupuri de tabele. |
 | `erd_list_checks` | `level?`, `tableIds?`, `tableNames?`, `offset?`, `limit?` | Problemele pe care le detectează dicționarele de cuvinte, termeni și domenii, așa cum le listează foaia `Checks` a filei Dicționar din editor, câte o pagină. Nu modifică nimic (consultați [Verificările dicționarelor](#dictionary-checks)). |
 
 Un agent găsește ID-urile cu `erd_list`, citește coloanele, rândurile dicționarelor și alte detalii cu `erd_get` și transmite acele ID-uri instrumentelor de editare.
 Dimensiunea unui tabel în `erd_list` este chenarul pe care îl ocupă pe pânză: înălțimea exactă, lățimea aproximativă.
-Un grup de tabele este listat prin dreptunghiul pe care îl stochează, cu numele, culoarea și numărul de tabele pe care le conține.
+Un grup de tabele este listat prin dreptunghiul pe care îl stochează, cu numele, culoarea și numărul de tabele și de note pe care le conține.
 Fiecare relație este listată o singură dată, la unul dintre cele două tabele ale sale.
 Un rând de dicționar este listat prin ID-ul său, câmpul `name` și ceea ce dă unui nume fizic sau unei coloane: câmpul `dataType` al unui domeniu, câmpurile `physicalName` și `domainId` ale unui termen și câmpul `abbreviation` al unui cuvânt. Fiecare dicționar își listează rândurile în ordinea în care le afișează foaia sa.
 Setările raportate de `erd_list` și `erd_read` sunt cele salvate în fișier (consultați [Setări](#settings)).
@@ -45,7 +45,7 @@ Instrumentul `erd_read` acceptă unul dintre cele patru formate:
 
 | `format` | Ce returnează |
 | --- | --- |
-| `snapshot` | JSON compact cu fiecare entitate și ID-ul ei, inclusiv grupurile de tabele și rândurile de cuvinte, termeni și domenii, și setările cu scripturile filei Schemă SQL. Omite ceea ce diferă de la un utilizator la altul: lățimile măsurate, ordinea de suprapunere, vizualizarea, fila și modul de afișare a numelor. Voluminos pentru o schemă mare. |
+| `snapshot` | JSON compact cu fiecare entitate și ID-ul ei, inclusiv grupurile de tabele cu tabelele și notele lor și rândurile de cuvinte, termeni și domenii, și setările cu scripturile filei Schemă SQL. Omite ceea ce diferă de la un utilizator la altul: lățimile măsurate, ordinea de suprapunere, vizualizarea, fila și modul de afișare a numelor. Voluminos pentru o schemă mare. |
 | `sql` | Cod DDL pentru unul dintre cele opt sisteme de baze de date: `Databricks`, `MariaDB`, `MSSQL`, `MySQL`, `Oracle`, `PostgreSQL`, `Snowflake` sau `SQLite`. Argumentul `vendor` are ca valoare implicită baza de date setată pentru document. Codul DDL al întregului document include scripturile înainte și după tabele. Cu `tableIds`, `tableNames` sau `groupNames`, doar acele tabele, cu cheile străine pe care le conțin, și fără scripturi. Cheile străine includ acțiunile lor ON DELETE și ON UPDATE, cu excepția celor pe care baza de date țintă le omite (consultați [ON DELETE și ON UPDATE](../guide/guides/relationship-editing.md#on-delete-and-on-update)). |
 | `json` | Întregul document exact așa cum o salvare scrie fișierul, inclusiv editările pe care editorul nu le-a salvat încă (consultați [Forma de stocare](../api/advanced/schema.md#storage-form)). |
 | `scripts` | Doar scripturile înainte și după tabele ale documentului, sub forma `{"before":"…","after":"…"}`, fiecare gol când nu este setat, oricât de mare ar fi schema. |
@@ -103,6 +103,37 @@ Fiecare verificare indică `level`, `code`, precum și `kind` și `id` ale eleme
 
 Modul în care fiecare verificare citește un nume este descris în [Ce detectează fiecare verificare](../guide/guides/dictionary.md#what-each-check-finds).
 
+## Export SVG {#svg-export}
+
+| Instrument | Argumente | Ce face |
+| --- | --- | --- |
+| `erd_export_svg` | `output?`, `darkMode?`, `background?` | Desenează documentul ca imagine SVG și o scrie în fișierul `.svg` indicat de `output` sau, fără `output`, răspunde cu textul SVG. Nu modifică niciun document. |
+
+Serverul desenează imaginea el însuși, așa că necesită doar serverul `1.2.1` sau o versiune ulterioară și funcționează cu orice versiune de extensie sau de plugin ERD Editor care se conectează.
+La fel ca metoda `toImage()`, desenează imaginea pe care caseta de dialog `Export image` a editorului o salvează ca SVG, dar doar pe baza documentului: întreaga diagramă la 100%, fără ceea ce View Option ascunde în document, cu culorile predefinite, cu tabelele și coloanele denumite în modul de afișare a numelor pe care îl deține documentul și cu cuvintele proprii ale diagramei în engleză (consultați [Ce desenează](../api/to-image.md#what-it-draws)).
+Serverul măsoară textul fără fonturile editorului, așa că un tabel poate ieși ceva mai lat decât îl desenează editorul.
+Nu există PNG și nici copiere în clipboard.
+
+- `darkMode`: `true` desenează tema întunecată; `false`, valoarea implicită, pe cea luminoasă. Nicio temă a ecranului unui editor nu ajunge în imagine.
+- `background`: `true`, valoarea implicită, pictează culoarea pânzei în spatele diagramei; `false` o lasă transparentă.
+- `output`: fișierul de scris, cu cale absolută sau relativă la directorul de lucru al serverului, cu un nume care se termină în `.svg`, indiferent de majuscule, într-un folder care există deja. Un fișier aflat deja acolo este înlocuit printr-un fișier temporar de lângă el, iar o legătură simbolică este urmată până la fișierul către care duce.
+
+Exportul citește documentul așa cum o fac instrumentele de citire: ce deține editorul care îl deservește, inclusiv editările încă nesalvate, sau altfel fișierul. Ca o citire, nu deschide niciodată documentul într-un editor.
+Câmpul `mode` din răspunsul său indică care dintre ele: `live`, `headless` sau, când un editor cu hubul dezactivat deține documentul, `blocked`, cu o mențiune că a fost desenat fișierul de pe disc, fără editările încă nesalvate din acel editor (consultați [În direct și fără interfață](./live-and-headless.md)).
+
+Cu `output`, răspunsul este o singură linie JSON: `mode`, calea documentului în `path`, fișierul scris în `output`, dimensiunea acestuia în `bytes`, lățimea și înălțimea SVG-ului în `width` și `height` și, când există, `notes`.
+
+```json
+{"mode":"headless","path":"/work/shop.erd.json","output":"/work/docs/shop.svg","bytes":48213,"width":1210,"height":764}
+```
+
+Fără `output`, răspunsul este textul SVG, apoi `{"mode":"…"}` cu eventualele note. Un SVG de peste 40.000 de caractere, maximul pe care îl returnează un răspuns, este refuzat cu `tooLarge`: transmiteți `output` pentru a fi scris în schimb într-un fișier.
+
+Argumentul `output` este verificat înainte de citirea documentului, așa că unul refuzat nu costă niciun desen: unul gol, un nume care nu se termină în `.svg`, unul care indică un folder și o legătură care nu duce la niciun fișier sau duce la unul al cărui nume nu se termină în `.svg` sunt refuzate cu `invalidPath`, iar unul dintr-un folder care nu există, cu `notFound`. Un fișier doar în citire este refuzat cu `readonly` după ce imaginea a fost desenată și este lăsat așa cum era.
+
+Un export nu creează niciun pas de anulare și nu lasă nimic de salvat, iar `erd_batch` îl refuză, așa cum refuză un instrument de citire.
+O diagramă mare se desenează în câteva secunde, iar serverul desenează câte un export pe rând.
+
 ## Instrumente de editare {#edit-tools}
 
 ID-urile provin din `erd_list` și `erd_get` sau din câmpul `createdIds` al apelului care a creat entitatea.
@@ -121,7 +152,7 @@ Un ID nou are 25 de litere mici și cifre, de exemplu `03h17be2plxpj5n59tqag7ogj
 | `erd_change_table_color` | `tableId`, `color` | Setează culoarea unui tabel. |
 | `erd_move_table` | `tableId`, `x`, `y` | Mută un tabel într-o poziție de pe pânză. |
 | `erd_move_tables` | `positions` | Mută mai multe tabele într-o singură editare, pe care o anulează un singur apel `erd_undo`. `positions` conține `{ tableId, x, y }` pentru fiecare tabel, fiecare tabel cel mult o dată. |
-| `erd_sort_tables` | | Plasează toate tabelele pe pânză, pe rânduri, începând cu cele cu cele mai puține coloane, așa cum le plasează `erd_import_sql`, `erd_import_graphql`, `erd_import_dbml` și `erd_import_aml`. Tabelele unui grup de tabele rămân împreună, iar chenarul fiecărui grup este ajustat în jurul lor. |
+| `erd_sort_tables` | | Plasează toate tabelele pe pânză, pe rânduri, începând cu cele cu cele mai puține coloane, așa cum le plasează `erd_import_sql`, `erd_import_graphql`, `erd_import_dbml` și `erd_import_aml`. Tabelele unui grup de tabele rămân împreună, urmate de notele lui cât timp notele sunt afișate, iar chenarul fiecărui grup este ajustat în jurul lor. Cât timp notele sunt ascunse, notele unui grup se mută împreună cu tabelele lui. O notă care nu face parte din niciun grup sau care face parte dintr-un grup fără tabele rămâne unde este. |
 
 ### Coloane {#columns}
 
@@ -190,28 +221,33 @@ ID-ul unei coloane de index este o intrare din lista de coloane a indexului pe c
 | `erd_move_memo` | `memoId`, `x`, `y` | Mută o notă într-o poziție de pe pânză. |
 | `erd_resize_memo` | `memoId`, `width`, `height` | Redimensionează o notă. Lățimea trebuie să fie de cel puțin aproximativ `116` pixeli, iar înălțimea de cel puțin `100`. Nu creează niciun pas de anulare, deoarece editorul înregistrează redimensionarea unei note doar în urma unei glisări. |
 
+O notă poate face parte dintr-un singur grup de tabele, împreună cu care se mută (consultați [Grupuri de tabele](#table-groups)).
+
 Cât timp notele sunt ascunse cu [View Option](../guide/guides/table-related-functions.md#table-view-options) → `Memos`, `erd_add_memo` adaugă totuși una, iar aceasta rămâne ascunsă până când notele sunt afișate din nou.
 `erd_list` și `erd_get` listează și notele ascunse.
 
 ### Grupuri de tabele {#table-groups}
 
-Un grup de tabele este un chenar cu nume, afișat în spatele tabelelor sale, iar culoarea lui apare pe chenar și pe antetele tabelelor sale (consultați [Grupuri de tabele](../guide/guides/table-groups.md)).
-Un tabel face parte din cel mult un grup. `erd_move_table`, `erd_move_tables` și `erd_move_table_group` nu schimbă niciodată ce tabele conține un grup, oriunde ar plasa un tabel, în timp ce în editor un tabel intră într-un grup sau iese din el acolo unde este lăsat (consultați [Adăugarea și eliminarea tabelelor](../guide/guides/table-groups.md#adding-and-removing-tables)). `erd_add_table_group` și `erd_set_table_group` pun tabele într-un grup, iar `erd_remove_table_group` lasă tabelele grupului în afara oricărui grup.
-Un grup stochează un dreptunghi cu o lățime de cel puțin `160` de pixeli și o înălțime de cel puțin `100`, inclusiv bara de titlu, iar editorul afișează chenarul mărit astfel încât să cuprindă fiecare dintre tabelele sale.
+Un grup de tabele este un chenar cu nume, afișat în spatele tabelelor și notelor sale, iar culoarea lui apare pe chenar și pe antetele tabelelor și notelor sale (consultați [Grupuri de tabele](../guide/guides/table-groups.md)).
+Un tabel sau o notă face parte din cel mult un grup. `erd_move_table`, `erd_move_tables`, `erd_move_memo` și `erd_move_table_group` nu schimbă niciodată ce conține un grup, oriunde ar plasa un tabel sau o notă, în timp ce în editor un tabel sau o notă intră într-un grup sau iese din el acolo unde este lăsat (consultați [Adăugarea și eliminarea tabelelor](../guide/guides/table-groups.md#adding-and-removing-tables)). `erd_add_table_group` pune tabele și note într-un grup, `erd_set_table_group` pune tabele, `erd_set_memo_group` pune note, iar `erd_remove_table_group` lasă tabelele și notele grupului în afara oricărui grup.
+Un grup stochează un dreptunghi cu o lățime de cel puțin `160` de pixeli și o înălțime de cel puțin `100`, inclusiv bara de titlu, iar editorul afișează chenarul mărit astfel încât să cuprindă fiecare dintre tabelele sale și, cât timp notele sunt afișate, fiecare dintre notele sale.
 
 | Instrument | Argumente | Ce face |
 | --- | --- | --- |
-| `erd_add_table_group` | `name`, `color?`, `x?`, `y?`, `width?`, `height?`, `tableIds?` | Adaugă un grup și returnează ID-ul acestuia în `createdIds`. Transmiteți fie `tableIds`, fie un dreptunghi: `x`, `y`, `width` și `height` împreună. Cu `tableIds`, fiecare tabel iese din grupul în care se afla, iar dreptunghiul este ajustat în jurul lor, așa cum îl ajustează [gruparea tabelelor selectate](../guide/guides/table-groups.md#grouping-selected-tables). Un dreptunghi preia fiecare tabel care nu face parte din niciun grup și al cărui centru se află în interiorul lui, așa cum face [trasarea unui grup](../guide/guides/table-groups.md#drawing-a-group). Un argument `name` gol lasă grupul fără nume. Un singur apel `erd_undo` elimină grupul și readuce fiecare tabel în grupul în care se afla. |
-| `erd_remove_table_group` | `groupId` | Elimină un grup. Tabelele sale rămân unde sunt, în afara oricărui grup. |
+| `erd_add_table_group` | `name`, `color?`, `x?`, `y?`, `width?`, `height?`, `tableIds?`, `memoIds?` | Adaugă un grup și returnează ID-ul acestuia în `createdIds`. Transmiteți fie `tableIds`, cu eventualele `memoIds` alături, fie un dreptunghi: `x`, `y`, `width` și `height` împreună. Cu `tableIds`, fiecare tabel și fiecare notă iese din grupul în care se afla, iar dreptunghiul este ajustat în jurul lor, notele doar cât timp notele sunt afișate, așa cum îl ajustează [gruparea tabelelor selectate](../guide/guides/table-groups.md#grouping-selected-tables). Un dreptunghi preia fiecare tabel și fiecare notă afișată care nu face parte din niciun grup și al cărei centru se află în interiorul lui, așa cum face [trasarea unui grup](../guide/guides/table-groups.md#drawing-a-group). Un argument `name` gol lasă grupul fără nume. Un singur apel `erd_undo` elimină grupul și readuce fiecare tabel și fiecare notă în grupul în care se afla. |
+| `erd_remove_table_group` | `groupId` | Elimină un grup. Tabelele și notele sale rămân unde sunt, în afara oricărui grup. |
 | `erd_change_table_group_name` | `groupId`, `value` | Redenumește un grup. Un șir de caractere gol îl lasă fără nume. |
 | `erd_change_table_group_color` | `groupId`, `color` | Setează culoarea unui grup. |
-| `erd_move_table_group` | `groupId`, `x`, `y` | Mută un grup astfel încât dreptunghiul său să înceapă în acel punct, împreună cu tabelele sale, deplasate cu aceeași distanță, așa cum face glisarea barei sale de titlu. O mutare de sub 20 de pixeli, adunând deplasarea pe orizontală și pe verticală, nu creează niciun pas de anulare. Începând cu versiunea `1.2.0` a serverului, mutarea ajunge în editor ca punctele în care se încheie grupul și tabelele sale, așa că, cu extensia pentru VS Code `4.3.0` sau o versiune ulterioară ori cu pluginul pentru Obsidian sau JetBrains `1.3.0` sau o versiune ulterioară, o mutare a grupului sau a unuia dintre tabelele sale făcută acolo în același moment ajunge la una dintre cele două poziții, niciodată la suma lor (consultați [Editări făcute în același moment](./live-and-headless.md#edits-made-at-the-same-moment)). |
-| `erd_resize_table_group` | `groupId`, `x?`, `y?`, `width`, `height` | Setează dreptunghiul unui grup, tabelele sale rămânând unde sunt. Dacă `x` și `y` sunt omise, colțul său se păstrează. Un dreptunghi care nu ar cuprinde tabelele grupului cu spațiul lor de margine este refuzat, cu un mesaj care indică chenarul pe care trebuie să-l cuprindă. |
+| `erd_move_table_group` | `groupId`, `x`, `y` | Mută un grup astfel încât dreptunghiul său să înceapă în acel punct, împreună cu tabelele și notele sale, inclusiv notele ascunse, deplasate cu aceeași distanță, așa cum face glisarea barei sale de titlu. O mutare de sub 20 de pixeli, adunând deplasarea pe orizontală și pe verticală, nu creează niciun pas de anulare. Începând cu versiunea `1.2.0` a serverului, mutarea ajunge în editor ca punctele în care se încheie grupul și tabelele sale, așa că, cu extensia pentru VS Code `4.3.0` sau o versiune ulterioară ori cu pluginul pentru Obsidian sau JetBrains `1.3.0` sau o versiune ulterioară, o mutare a grupului sau a unuia dintre tabelele sale făcută acolo în același moment ajunge la una dintre cele două poziții, niciodată la suma lor (consultați [Editări făcute în același moment](./live-and-headless.md#edits-made-at-the-same-moment)). Începând cu versiunea `1.2.1` a serverului, punctele în care se încheie notele sale pleacă în același lot. |
+| `erd_resize_table_group` | `groupId`, `x?`, `y?`, `width`, `height` | Setează dreptunghiul unui grup, tabelele și notele sale rămânând unde sunt. Dacă `x` și `y` sunt omise, colțul său se păstrează. Un dreptunghi care nu ar cuprinde tabelele și notele afișate ale grupului cu spațiul lor de margine este refuzat, cu un mesaj care indică chenarul pe care trebuie să-l cuprindă. |
 | `erd_set_table_group` | `tableIds`, `groupId` | Pune tabele într-un grup, fiecare ieșind din grupul în care se afla. Un argument `groupId` egal cu `null` sau cu un șir de caractere gol le scoate din orice grup. |
+| `erd_set_memo_group` | `memoIds`, `groupId` | Pune note într-un grup, fiecare ieșind din grupul în care se afla și rămânând unde este. Un argument `groupId` egal cu `null` sau cu un șir de caractere gol le scoate din orice grup. |
 
 Cât timp grupurile sunt ascunse cu `View Option` → `Table Groups`, aceste instrumente adaugă și modifică totuși grupuri, care rămân ascunse până când grupurile sunt afișate (consultați [Ascunderea grupurilor](../guide/guides/table-groups.md#hiding-groups)).
-`erd_sort_tables` păstrează împreună tabelele fiecărui grup, `erd_import_dbml` și `erd_import_json` aduc grupuri (consultați [Import](#import)), iar `erd_read` scrie codul DDL al grupurilor alese cu `groupNames`.
+Notele ascunse cu View Option → `Memos` rămân în grupurile lor și se mută împreună cu ele, iar `erd_set_memo_group` și `memoIds` din `erd_add_table_group` le pun într-un grup așa cum le pun pe cele afișate.
+`erd_sort_tables` păstrează împreună tabelele și notele fiecărui grup, `erd_import_dbml` și `erd_import_json` aduc grupuri (consultați [Import](#import)), iar `erd_read` scrie codul DDL al grupurilor alese cu `groupNames`.
 O versiune de ERD Editor anterioară grupurilor de tabele elimină grupurile unui fișier atunci când salvează fișierul, așa cum fac extensia pentru VS Code anterioară versiunii `4.0.0` și pluginurile pentru Obsidian și JetBrains anterioare versiunii `1.0.0` (consultați [Actualizarea](./installation.md#updating)).
+O versiune dinaintea intrării notelor în grupurile de tabele, adică extensia pentru VS Code anterioară versiunii `4.3.1` și pluginurile pentru Obsidian și JetBrains anterioare versiunii `1.3.1`, nici nu afișează, nici nu păstrează grupul în care se află o notă, așa că salvează fișierul cu fiecare notă în afara oricărui grup, la fel ca un server anterior versiunii `1.2.1` care scrie fișierul pe disc (consultați [Actualizarea](./installation.md#updating)).
 
 ### Dicționare {#dictionaries}
 
@@ -304,14 +340,14 @@ Modul `append` adaugă importul la document, așa cum o face funcția [Import ș
 - Relațiile și indexurile sunt preluate doar între tabelele pe care le aduce importul, așa că o cheie străină către un tabel pe care textul nu îl declară este eliminată.
 - `erd_import_sql`, `erd_import_graphql` și `erd_import_aml` adaugă tabele cu relațiile și indexurile lor, iar `erd_import_dbml` adaugă în plus grupurile sale de tabele. `erd_import_json` adaugă tabele, relații, indexuri, note și grupuri de tabele, niciodată setările sale, și refuză un text gol. Tabelele și coloanele sale își aduc numele logice, dar nicio coloană nu este legată de un domeniu și nu intră niciunul dintre cuvintele, termenii sau domeniile din JSON.
 
-Un document JSON își păstrează propria aranjare, inclusiv grupurile de tabele: cu `replace`, acolo unde își plasează tabelele, iar cu `append`, în interiorul blocului adăugat.
+Un document JSON își păstrează propria aranjare, inclusiv grupurile de tabele, cu tabelele și notele pe care le conține fiecare: cu `replace`, acolo unde își plasează tabelele, iar cu `append`, în interiorul blocului adăugat.
 Tabelele din SQL, GraphQL, DBML și AML sunt dispuse pe rânduri, începând cu cele cu cele mai puține coloane și cu tabelele fiecărui grup împreună, așa cum le plasează `erd_sort_tables`, niciodată prin `Flow`, cum le aranjează, atunci când poate, importul propriu al editorului. Aceste patru instrumente refuză un text gol în oricare dintre moduri.
 
 ## erd_batch {#erd_batch}
 
 `erd_batch` rulează mai multe instrumente de editare, în ordine, ca o singură editare: toate sau niciunul.
 
-- `operations` conține până la 100 de intrări, fiecare de forma `{ tool, as?, args? }`, unde `tool` este un instrument de editare, iar `args` sunt argumentele instrumentului fără `path`. Un instrument de citire, de exemplu `erd_list_checks`, este refuzat.
+- `operations` conține până la 100 de intrări, fiecare de forma `{ tool, as?, args? }`, unde `tool` este un instrument de editare, iar `args` sunt argumentele instrumentului fără `path`. Un instrument de citire, de exemplu `erd_list_checks`, este refuzat, la fel și `erd_export_svg`.
 - Operațiile sunt încercate mai întâi pe o copie a documentului. O operație refuzată este indicată, de exemplu `operations[1] erd_remove_table: …`, și nu se aplică nimic.
 - Un singur apel `erd_undo` anulează întregul lot, cu excepția operațiilor pe care nu le poate anula, indicate de câmpul `undoNote` al rezultatului: cele ale unui instrument care nu creează niciun pas de anulare, de exemplu `erd_set_database`, și cele care au modificat documentul fără să creeze unul, de exemplu un `erd_move_table_group` scurt. Un lot care nu a creat niciun pas de anulare este omis de `erd_undo`. `historyEntries` din rezultat numără intrările din istoricul editorului din cadrul lotului, nu apelurile `erd_undo`.
 - Într-o sesiune în direct, editorul preia fie întregul lot, fie nimic din el.
@@ -391,21 +427,21 @@ Un refuz este un rezultat de eroare care conține un cod și un mesaj care spune
 
 | `code` | Motiv |
 | --- | --- |
-| `notFound` | Un ID nu desemnează nimic existent sau fișierul nu există. |
+| `notFound` | Un ID nu desemnează nimic existent, fișierul nu există sau folderul argumentului `output` al instrumentului `erd_export_svg` nu există. |
 | `invalidArgs` | Un argument lipsește sau are o valoare greșită. |
-| `invalidPath` | Calea nu este un document ERD. Pe Windows, și o cale cu un nume pe care Windows nu îl stochează așa cum este scris, sau una care ajunge la un document deținut de un editor sub o altă cale, pe care o indică mesajul. |
+| `invalidPath` | Calea nu este un document ERD sau argumentul `output` al instrumentului `erd_export_svg` nu este un fișier `.svg` (consultați [Export SVG](#svg-export)). Pe Windows, și o cale cu un nume pe care Windows nu îl stochează așa cum este scris, sau una care ajunge la un document deținut de un editor sub o altă cale, pe care o indică mesajul. |
 | `invalidDocument` | Fișierul nu este un document pe care editorul îl poate citi. |
-| `tooLarge` | O citire nu încape într-un singur răspuns. |
+| `tooLarge` | O citire sau un SVG cerut fără `output` nu încape într-un singur răspuns. |
 | `blocked` | Documentul este deținut de un editor cu hubul dezactivat. Mesajul spune cum îl activați: în VS Code, marcați spațiul de lucru drept de încredere și activați setarea `dineug.erd-editor.agentHub.enabled` sau reîncărcați fereastra; în Obsidian, activați opțiunea Coding agents sau reîncărcați Obsidian; într-un IDE JetBrains, activați opțiunea Coding agents sau reporniți IDE-ul dacă opțiunea este activată. |
 | `hubDisabled` | Un IDE JetBrains deține documentul doar într-un proiect pe care nu îl consideră de încredere. Citirile funcționează în continuare; marcați proiectul drept de încredere pentru a permite agentului să editeze. |
 | `conflict` | Fișierul s-a modificat pe disc în timpul apelului. Nu s-a scris nimic. |
 | `hubAppeared`, `hubGone` | Un editor a început să deservească un document pe care agentul îl edita pe disc, sau editorul care îl deservea încă rulează, dar fișierul său de blocare și conexiunea au dispărut. Nu s-a scris nimic. |
 | `notSaved` | `erd_save` nu a putut salva documentul editorului. |
-| `readonly` | Editorul deține documentul doar în citire, de exemplu un fișier în care nu poate scrie sau pe care nu îl poate citi ca diagramă. Fără editor, fișierul însuși este doar în citire, de exemplu un fișier Perforce sau TFVC pentru care nu s-a făcut check-out. Nu s-a scris nimic. |
+| `readonly` | Editorul deține documentul doar în citire, de exemplu un fișier în care nu poate scrie sau pe care nu îl poate citi ca diagramă. Fără editor, fișierul însuși este doar în citire, de exemplu un fișier Perforce sau TFVC pentru care nu s-a făcut check-out. Cu `erd_export_svg`, fișierul `.svg` indicat de `output` este doar în citire. Nu s-a scris nimic. |
 | `protocolMismatch` | Extensia sau pluginul ERD Editor al editorului și serverul folosesc versiuni de protocol diferite, de exemplu serverul în versiunea `1.0.0` sau o versiune ulterioară, cu o extensie pentru VS Code `3.x`. Și citirile sunt refuzate, iar mesajul indică partea care trebuie actualizată (consultați [Actualizarea](./installation.md#updating)). |
 | `hubUnreachable`, `timeout`, `disconnected` | Hubul unui editor nu a acceptat conexiunea, nu a răspuns în 30 de secunde sau a închis conexiunea în timpul apelului. Pe Windows, `hubUnreachable` înseamnă și că Windows a împiedicat accesul agentului la hub: editorul rulează cu mai multe drepturi decât agentul, ca atunci când a fost pornit ca administrator, iar agentul nu, sau agentul rulează într-un mediu izolat (sandbox). |
 
 Alte coduri sunt mai rare, iar fiecare refuz conține un mesaj care spune ce s-a întâmplat.
 
-Instrumentele de editare, `erd_batch` și cele patru instrumente de citire refuză un argument pe care nu îl declară, sau unul de tip greșit, cu o eroare JSON-RPC de tip invalid params (`-32602`) înainte de a atinge documentul, așa că un argument scris greșit nu este niciodată ignorat în tăcere.
+Instrumentele de editare, `erd_batch`, cele patru instrumente de citire și `erd_export_svg` refuză un argument pe care nu îl declară, sau unul de tip greșit, cu o eroare JSON-RPC de tip invalid params (`-32602`) înainte de a atinge documentul, așa că un argument scris greșit nu este niciodată ignorat în tăcere.
 Cele cinci instrumente de sesiune ignoră argumentele pe care nu le cunosc.

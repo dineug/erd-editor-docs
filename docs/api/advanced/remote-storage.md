@@ -157,6 +157,7 @@ const data = replicationStore.value;
 Since `4.0.0`, `value` is the storage form: the document as a file holds it, the same text the element's [value](../erd-editor-element.md#value) returns.  
 It holds the live entities alone, in a fixed order, without the removed ones, the stacking order, or anything a load works out again, such as the widths [toWidth](#towidth) measures.  
 Since `4.2.0` it also holds the logical names, whether each name was derived from the dictionaries, the domain links, and the words, terms, and domains of the [Dictionary](../../guide/guides/dictionary.md) tab.  
+Since `5.1.1` it also holds the table group each memo is in.  
 It also leaves out, since `4.2.0`, each empty text field of an entity, each `doc` list and collection that holds nothing, and `collections` itself when every collection is empty.  
 It is indented two spaces, with each dictionary row on a line of its own, and ends with a newline, so the same document always gives the same bytes.  
 See [Storage Form](./schema.md#storage-form) for what it holds.
@@ -305,6 +306,10 @@ Keep every editor in the session, and the replica, on `5.1.0` or later for edits
 
 Since `5.1.0` an editor sends a change of the Code Generator language, a name case, or the bracket type only while that setting's lock is off, marked `shared: true` in its payload, and the replica applies every marked one, as the editors do; see [Collaborative Editing](./collaborative-editing.md).  
 The replica applies an unmarked one, which an editor before `5.1.0` sends whatever the lock, only while that setting is unlocked on its side, and drops it while the setting is locked (see [on@change](#onchange)).
+
+Since `5.1.1` the kept actions also include `memo.changeGroup`, which puts a memo in a [table group](../../guide/guides/table-groups.md) or takes it out, and `value` writes the group each memo is in (see [Storage Form](./schema.md#storage-form)).  
+`5.1.1` changes no export of `@dineug/erd-editor/engine.js`.  
+A store from an earlier release drops `memo.changeGroup` and every memo's `groupId`, so it saves no memo in a group, and an editor before `5.1.1` in the session can still take memos out of their groups on a `5.1.1` replica; see [Mixing Releases](./collaborative-editing.md#mixing-releases).
 
 Since `4.0.0` both methods also apply `editor.mergeLWW`, which carries the collaboration registers an editor answers with when another one joins the session, so the replica settles concurrent edits the way the editors do.  
 It changes no byte of `value` and fires no `change`.  

@@ -19,7 +19,7 @@ VS Code, Obsidian y el plugin de JetBrains escriben un archivo solo cuando una e
 Desde la `4.2.0`, la forma de almacenamiento también deja fuera lo que no contiene nada: cada campo de texto que una entidad o su `ui` contiene como `''` (el `name`, el `comment` y el `ui.color` de una tabla; el `name`, el `comment`, el `dataType` y el `default` de una columna; el `name` de un índice; el `value` y el `ui.color` de una nota; el `name` y el `color` de un grupo de tablas), cada lista de `doc` y cada colección que no contiene ninguna entrada, y el propio objeto `collections` en cuanto todas las colecciones están vacías. El texto formado solo por espacios en blanco se escribe tal como está, salvo un nombre lógico, que entonces se deja fuera, y una palabra, un término o un dominio cuyos valores además de su id están todos vacíos o son solo espacios en blanco, que se deja fuera entero. Se siguen escribiendo todos los ids, todas las listas dentro de una entidad y todos los números, `0` incluido. `doc` se escribe siempre, así que el archivo de un documento nuevo contiene `$schema`, `version`, sus ajustes y `"doc": {}`.  
 El análisis lee un campo de texto que falta como `''` y una colección que falta como vacía, como hacen todas las versiones v3, y la forma de almacenamiento solo deja fuera una lista de `doc` mientras su colección no contiene nada (consulta [Doc](#doc)). Así, un editor anterior a la `4.2.0` también abre estos archivos, y un programa que lea un archivo por su cuenta debe leer del mismo modo lo que falta. Un archivo que guardó una versión anterior queda, tras su siguiente guardado, sin su texto, sus listas y sus colecciones vacíos, un cambio que se hace una sola vez, y a partir de entonces se guarda byte a byte igual.
 
-La forma de almacenamiento escribe cada ajuste bloqueado con su valor bloqueado (consulta [`lockSettings`](#settings)), `settings.ddlScripts` solo mientras un script contiene texto y el `groupId` de una tabla solo mientras nombra un grupo de tablas que el archivo escribe. Desde la `4.2.0`, también escribe `settings.nameViewMode` solo mientras el valor que escribe no es `'physical'`, `settings.columnOrder` en siete entradas donde es posible (consulta [Ajustes](#settings)) y el `nameDerived` de una tabla solo mientras es `true`.  
+La forma de almacenamiento escribe cada ajuste bloqueado con su valor bloqueado (consulta [`lockSettings`](#settings)), `settings.ddlScripts` solo mientras un script contiene texto y el `groupId` de una tabla o, desde la `5.1.1`, de una nota solo mientras nombra un grupo de tablas que el archivo escribe. Desde la `4.2.0`, también escribe `settings.nameViewMode` solo mientras el valor que escribe no es `'physical'`, `settings.columnOrder` en siete entradas donde es posible (consulta [Ajustes](#settings)) y el `nameDerived` de una tabla solo mientras es `true`.  
 Escribe `doc.tableGroupIds` y `tableGroupEntities` solo mientras existe un grupo de tablas, un `logicalName` solo mientras contiene texto distinto de espacios en blanco, el `domainId` de una columna solo mientras nombra un dominio que el archivo escribe y cada diccionario solo mientras contiene una fila que el archivo escribe.
 
 Un archivo guardado antes de la `4.0.0` contiene el documento entero tal como lo mantenía entonces un editor, con sus entidades eliminadas y lo que cada carga calcula. Una carga lo lee, conserva el lugar de cada tabla y nota en la pila (consulta [Doc](#doc)) y vuelve a calcular el resto, y el siguiente guardado escribe solo la forma de almacenamiento.
@@ -394,6 +394,7 @@ const OrderType = {
 type Memo = {
   id: string;
   value?: string;
+  groupId?: string;
   ui: MemoUI;
 };
 
@@ -407,6 +408,9 @@ type MemoUI = {
 ```
 
 Desde la `4.0.0`, las tablas y las notas [comparten una misma pila](../../guide/guides/table-related-functions.md#moving-multiple-tables), así que traer una tabla al frente puede colocarla sobre una nota. Una carga pone todas las notas por encima de todas las tablas, como se describe en [Doc](#doc). Una nota de un archivo guardado antes de la `4.0.0` conserva el `zIndex` que guardó, que procedía del mismo contador que el de las tablas, así que una nota que una versión anterior dibujó sobre todas las tablas puede abrirse debajo de una tabla traída al frente después de ella.
+
+Desde la `5.1.1`, una nota lleva `groupId`, el id del [grupo de tablas](../../guide/guides/table-groups.md) al que pertenece, como una tabla. Un `groupId` que falta o está vacío, como en todo archivo guardado antes de la `5.1.1`, o que no nombra ningún grupo de `doc.tableGroupIds`, significa que no pertenece a ninguno, y la forma de almacenamiento solo lo escribe mientras nombra un grupo conservado.  
+Un editor anterior a la `5.1.1` descarta el `groupId` de cada nota al cargar un documento, así que al guardar allí todas las notas salen de su grupo, aunque uno de la `4.0.0` en adelante conserva los grupos de las tablas; consulta [Mezclar versiones](./collaborative-editing.md#mixing-releases).
 
 ### Colección: tableGroupEntities {#collection-tablegroupentities}
 
@@ -426,7 +430,7 @@ type TableGroupUI = {
 };
 ```
 
-Desde la `4.0.0`, un documento puede contener [grupos de tablas](../../guide/guides/table-groups.md): rectángulos con nombre y color que se dibujan detrás de las tablas. Una tabla se une a uno mediante su propio `groupId`, así que un grupo no contiene ninguna lista de miembros. La forma de almacenamiento escribe la colección, como `doc.tableGroupIds`, solo mientras existe un grupo, y un documento sin ella, como uno guardado antes de la `4.0.0`, no tiene grupos. `Show.hideTableGroup` los oculta.  
+Desde la `4.0.0`, un documento puede contener [grupos de tablas](../../guide/guides/table-groups.md): rectángulos con nombre y color que se dibujan detrás de las tablas y las notas. Una tabla, y desde la `5.1.1` una nota, se une a uno mediante su propio `groupId`, así que un grupo no contiene ninguna lista de miembros. La forma de almacenamiento escribe la colección, como `doc.tableGroupIds`, solo mientras existe un grupo, y un documento sin ella, como uno guardado antes de la `4.0.0`, no tiene grupos. `Show.hideTableGroup` los oculta.  
 Un editor anterior a la `4.0.0` descarta los grupos y el `groupId` de cada tabla al cargar un documento, así que al guardar allí se pierden todos los grupos.
 
 ### Filas de los diccionarios {#dictionary-rows}
@@ -525,6 +529,8 @@ Pon `$schema` al principio de un archivo `.erd.json` y los editores que entiende
 Desde la `4.0.0`, el esquema describe solo la forma de almacenamiento. Todo objeto con campos con nombre está cerrado (`additionalProperties: false`), todo campo que la forma de almacenamiento escribe siempre es obligatorio, cada campo marcado con `?` en los tipos de arriba se nombra pero no es obligatorio, y no se nombra ningún otro campo. Por eso rechaza un archivo guardado antes de la `4.0.0`, con su `meta`, sus anchos, su `zIndex`, su `ignoreSaveSettings` y lo demás, hasta que un editor de la `4.0.0` o posterior vuelva a guardar ese archivo. Un archivo guardado por la `3.2.0` o posterior ya nombra la URL de este esquema, que apunta a la rama `main`, así que un editor que valida con él señala ahora el archivo. Un archivo guardado por la `3.0.0` o la `3.1.0`, o un documento v2, no nombra ningún `$schema`.
 
 Desde la `4.2.0`, el esquema ya no exige los campos de texto de una entidad, ni ninguna lista de `doc`, ni ninguna colección, ni el propio objeto `collections`, que la forma de almacenamiento deja fuera mientras no contienen nada. Sigue aceptando un archivo guardado por la `4.0.0` o la `4.1.0`. Nombra los campos nuevos: `nameViewMode`, que solo admite `"logical"` y `"both"`; el `logicalName` de una tabla y su `nameDerived`, que solo admite `true`; el `logicalName` y el `domainId` de una columna, y los tres diccionarios, cada uno con su encabezado y sus filas de cadenas. `canvasType` lista la pestaña Diccionario, `columnOrder` admite siete o nueve enteros, y las descripciones de `show`, `columnOrder`, `lockSettings` y `options` nombran los bits nuevos.
+
+Desde la `5.1.1`, también nombra el `groupId` de una nota, que rechaza una copia del esquema tomada antes de la `5.1.1`.
 
 ```json
 {
@@ -939,6 +945,10 @@ Desde la `4.2.0`, el esquema ya no exige los campos de texto de una entidad, ni 
           "value": {
             "type": "string"
           },
+          "groupId": {
+            "description": "Id of the table group in doc.tableGroupIds the memo belongs to; absent means none",
+            "type": "string"
+          },
           "ui": {
             "type": "object",
             "properties": {
@@ -967,7 +977,7 @@ Desde la `4.2.0`, el esquema ya no exige los campos de texto de una entidad, ni 
       }
     },
     "tableGroupEntities": {
-      "description": "Named, coloured rectangles drawn behind tables; a table joins one through its groupId. Written while a group exists; absent means none",
+      "description": "Named, coloured rectangles drawn behind tables and memos; a table or a memo joins one through its groupId. Written while a group exists; absent means none",
       "type": "object",
       "additionalProperties": {
         "type": "object",

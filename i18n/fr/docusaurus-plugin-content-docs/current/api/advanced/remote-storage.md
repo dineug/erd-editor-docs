@@ -157,6 +157,7 @@ const data = replicationStore.value;
 Depuis la version `4.0.0`, `value` est la forme de stockage : le document tel qu’un fichier le contient, le même texte que renvoie le [value](../erd-editor-element.md#value) de l’élément.  
 Il ne contient que les entités actives, dans un ordre fixe, sans les entités supprimées, l’ordre d’empilement ni rien de ce qu’un chargement recalcule, comme les largeurs que mesure [toWidth](#towidth).  
 Depuis la version `4.2.0`, il contient aussi les noms logiques, l’indication que chaque nom a été dérivé ou non des dictionnaires, les liens de domaine, ainsi que les mots, les termes et les domaines de l’onglet [Dictionnaire](../../guide/guides/dictionary.md).  
+Depuis la version `5.1.1`, il contient aussi le groupe de tables de chaque mémo.  
 Il omet aussi, depuis la version `4.2.0`, chaque champ de texte vide d’une entité, chaque liste de `doc` et chaque collection qui ne contient rien, et `collections` lui-même quand toutes les collections sont vides.  
 Il est indenté de deux espaces, avec chaque ligne de dictionnaire sur sa propre ligne de texte, et se termine par un saut de ligne, de sorte que le même document donne toujours les mêmes octets.  
 Pour son contenu, voir [Forme de stockage](./schema.md#storage-form).
@@ -305,6 +306,10 @@ Pour que les modifications faites au même moment aboutissent au même résultat
 
 Depuis la version `5.1.0`, un éditeur n’envoie une modification du langage du générateur de code, d’une casse des noms ou du type de délimiteur que tant que le verrou de ce paramètre est désactivé, marquée `shared: true` dans sa charge utile, et la réplique applique chaque modification marquée, comme le font les éditeurs (voir [Édition collaborative](./collaborative-editing.md)).  
 La réplique n’applique une modification non marquée, qu’envoie un éditeur antérieur à la version `5.1.0` quel que soit le verrou, que tant que ce paramètre est déverrouillé de son côté, et l’écarte tant qu’il est verrouillé (voir [on@change](#onchange)).
+
+Depuis la version `5.1.1`, les actions conservées comprennent aussi `memo.changeGroup`, qui place un mémo dans un [groupe de tables](../../guide/guides/table-groups.md) ou l’en retire, et `value` écrit le groupe de chaque mémo (voir [Forme de stockage](./schema.md#storage-form)).  
+La version `5.1.1` ne change aucun export de `@dineug/erd-editor/engine.js`.  
+Un store d’une version antérieure écarte `memo.changeGroup` et le `groupId` de chaque mémo, si bien qu’il n’enregistre aucun mémo dans un groupe, et un éditeur antérieur à la version `5.1.1` de la session peut encore sortir des mémos de leurs groupes sur une réplique `5.1.1` (voir [Combiner des versions](./collaborative-editing.md#mixing-releases)).
 
 Depuis la version `4.0.0`, les deux méthodes appliquent aussi `editor.mergeLWW`, qui transporte les registres de collaboration par lesquels un éditeur répond quand un autre rejoint la session, si bien que la réplique départage les modifications concurrentes comme le font les éditeurs.  
 Cette action ne modifie aucun octet de `value` et ne déclenche aucun `change`.  

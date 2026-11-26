@@ -19,7 +19,7 @@ VS Code, Obsidian and the JetBrains plugin write a file only when an edit change
 Since `4.2.0` the storage form also leaves out what holds nothing: each text field an entity or its `ui` holds as `''` (a table's `name`, `comment` and `ui.color`, a column's `name`, `comment`, `dataType` and `default`, an index's `name`, a memo's `value` and `ui.color`, a table group's `name` and `color`), each `doc` list and collection that holds no entry, and `collections` itself once every collection is empty. Text of only blanks is written as held, except a logical name, which is then left out, and a word, term or domain whose values past its id are all empty or only blanks, which is left out whole. Every id, every list inside an entity and every number, `0` included, is still written. `doc` is always written, so a new document's file holds `$schema`, `version`, its settings and `"doc": {}`.  
 A parse reads a missing text field as `''` and a missing collection as empty, as every v3 release does, and the storage form leaves a `doc` list out only while its collection holds nothing (see [Doc](#doc)). So an editor before `4.2.0` opens these files too, and a program that reads a file itself must read what is missing the same way. A file an earlier release saved comes back from its next save with its empty text, lists and collections left out, a change made once, and saves byte for byte from then on.
 
-The storage form writes each locked setting at its locked value (see [`lockSettings`](#settings)), `settings.ddlScripts` only while a script holds text, and a table's `groupId` only while it names a table group the file writes. Since `4.2.0` it also writes `settings.nameViewMode` only while the value it writes is not `'physical'`, `settings.columnOrder` in seven entries where it can be (see [Settings](#settings)), and a table's `nameDerived` only while it is `true`.  
+The storage form writes each locked setting at its locked value (see [`lockSettings`](#settings)), `settings.ddlScripts` only while a script holds text, and a table's or, since `5.1.1`, a memo's `groupId` only while it names a table group the file writes. Since `4.2.0` it also writes `settings.nameViewMode` only while the value it writes is not `'physical'`, `settings.columnOrder` in seven entries where it can be (see [Settings](#settings)), and a table's `nameDerived` only while it is `true`.  
 It writes `doc.tableGroupIds` and `tableGroupEntities` only while a table group exists, a `logicalName` only while it holds text other than blanks, a column's `domainId` only while it names a domain the file writes, and each dictionary only while it holds a row the file writes.
 
 A file saved before `4.0.0` holds the whole document as an editor then held it, its removed entities and what each load works out included. A load reads it, keeps each table's and memo's place in the stack (see [Doc](#doc)) and works out the rest again, and the next save writes only the storage form.
@@ -394,6 +394,7 @@ const OrderType = {
 type Memo = {
   id: string;
   value?: string;
+  groupId?: string;
   ui: MemoUI;
 };
 
@@ -407,6 +408,9 @@ type MemoUI = {
 ```
 
 Since `4.0.0` tables and memos [share one stack](../../guide/guides/table-related-functions.md#moving-multiple-tables), so bringing a table to the front can put it over a memo. A load puts every memo above every table, as [Doc](#doc) describes. A memo in a file saved before `4.0.0` keeps the `zIndex` it saved, which came from the same counter as the tables', so a memo an earlier release drew over every table can open under a table brought to the front after it.
+
+Since `5.1.1` a memo carries `groupId`, the id of the [table group](../../guide/guides/table-groups.md) it belongs to, as a table does. A missing or empty `groupId`, as in every file saved before `5.1.1`, or one that names no group in `doc.tableGroupIds`, means none, and the storage form writes it only while it names a kept group.  
+An editor before `5.1.1` drops every memo's `groupId` when it loads a document, so saving there takes every memo out of its group, though one from `4.0.0` on keeps the tables' groups — see [Mixing Releases](./collaborative-editing.md#mixing-releases).
 
 ### Collection: tableGroupEntities
 
@@ -426,7 +430,7 @@ type TableGroupUI = {
 };
 ```
 
-Since `4.0.0` a document can hold [table groups](../../guide/guides/table-groups.md): named, colored rectangles drawn behind tables. A table joins one through its own `groupId`, so a group holds no list of members. The storage form writes the collection, like `doc.tableGroupIds`, only while a group exists, and a document without it, such as one saved before `4.0.0`, has no groups. `Show.hideTableGroup` hides them.  
+Since `4.0.0` a document can hold [table groups](../../guide/guides/table-groups.md): named, colored rectangles drawn behind tables and memos. A table, and since `5.1.1` a memo, joins one through its own `groupId`, so a group holds no list of members. The storage form writes the collection, like `doc.tableGroupIds`, only while a group exists, and a document without it, such as one saved before `4.0.0`, has no groups. `Show.hideTableGroup` hides them.  
 An editor before `4.0.0` drops the groups and every table's `groupId` when it loads a document, so saving there loses every group.
 
 ### Dictionary Rows
@@ -525,6 +529,8 @@ Put `$schema` at the top of an `.erd.json` file and editors that understand JSON
 Since `4.0.0` the schema describes the storage form alone. Every object with named fields is closed (`additionalProperties: false`), every field the storage form always writes is required, each field marked `?` in the types above is named but not required, and no other field is named. So it refuses a file saved before `4.0.0`, with its `meta`, widths, `zIndex`, `ignoreSaveSettings` and the rest, until an editor of `4.0.0` or later saves that file again. A file saved by `3.2.0` or later already names this schema's URL, which points at the `main` branch, so an editor that validates against it flags the file now. A file saved by `3.0.0` or `3.1.0`, or a v2 document, names no `$schema`.
 
 Since `4.2.0` the schema no longer requires an entity's text fields, any `doc` list, any collection or `collections` itself, which the storage form leaves out while they hold nothing. It still accepts a file saved by `4.0.0` or `4.1.0`. It names the new fields: `nameViewMode`, which takes only `"logical"` and `"both"`; a table's `logicalName` and `nameDerived`, which takes only `true`; a column's `logicalName` and `domainId`; and the three dictionaries, each with its header and rows of strings. `canvasType` lists the Dictionary tab, `columnOrder` takes seven or nine integers, and the `show`, `columnOrder`, `lockSettings` and `options` descriptions name the new bits.
+
+Since `5.1.1` it also names a memo's `groupId`, which a copy of the schema taken before `5.1.1` refuses.
 
 ```json
 {
@@ -939,6 +945,10 @@ Since `4.2.0` the schema no longer requires an entity's text fields, any `doc` l
           "value": {
             "type": "string"
           },
+          "groupId": {
+            "description": "Id of the table group in doc.tableGroupIds the memo belongs to; absent means none",
+            "type": "string"
+          },
           "ui": {
             "type": "object",
             "properties": {
@@ -967,7 +977,7 @@ Since `4.2.0` the schema no longer requires an entity's text fields, any `doc` l
       }
     },
     "tableGroupEntities": {
-      "description": "Named, coloured rectangles drawn behind tables; a table joins one through its groupId. Written while a group exists; absent means none",
+      "description": "Named, coloured rectangles drawn behind tables and memos; a table or a memo joins one through its groupId. Written while a group exists; absent means none",
       "type": "object",
       "additionalProperties": {
         "type": "object",

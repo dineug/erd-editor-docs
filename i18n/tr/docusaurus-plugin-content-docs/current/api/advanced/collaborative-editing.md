@@ -176,7 +176,7 @@ Her düzenleyici ve replika, her ad ve hemen her diğer alan için onu ayarlayan
 
 `5.1.0` sürümünden itibaren bir tablonun konumu, bir notun veya tablo grubunun konumu ve boyutu ile görünümün başlangıç noktası ve yakınlaştırma düzeyi aynı şekilde sürümlenir ve bunları hareket ettiren şey, vardığı yer olarak gönderilir:
 
-- bir sürükleme, taşınan her varlık için tek bir `table.moveTo`, `memo.moveTo` veya `tableGroup.moveTo` olarak, tek pakette; böylece bir grup sürükleme, grubun noktasıyla birlikte tablolarının noktalarını da taşır;
+- bir sürükleme, taşınan her varlık için tek bir `table.moveTo`, `memo.moveTo` veya `tableGroup.moveTo` olarak, tek pakette; böylece bir grup sürükleme, grubun noktasıyla birlikte tablolarının ve `5.1.1` sürümünden itibaren notlarının noktalarını da taşır;
 - bir sürüklemenin geri alınması veya yinelenmesi, her varlığı yerleştirdiği nokta olarak;
 - bir kaydırma `settings.scrollTo`, bir yakınlaştırma `settings.changeZoomLevel` olarak;
 - bir not veya tablo grubunun yeniden boyutlandırılması, konumu ve boyutuyla birlikte.
@@ -253,6 +253,19 @@ Bir oturumdaki her düzenleyiciyi ve oturumun belgesini depolayan her [replicati
 - Belgeyi değiştiren bir yükleme, örneğin atanan bir `value`, `clear()` ya da değiştiren bir içe aktarma, her `5.1.0` sürümlü düzenleyicide, yani onu yapanda ve alan her düzenleyicide, çizilmekte olan bir ilişkinin çizimini bitirir. Eski bir düzenleyici ilişki çizimini bu yükleme boyunca hazır tutar.
 
 Bir oturumdaki her düzenleyiciyi ve oturumun belgesini depolayan her [replicationStore](./remote-storage.md#dispatch-dispatchsync) deposunu, aynı anda yapılan düzenlemelerin [Eşzamanlı düzenlemeler](#concurrent-edits) bölümünün adlandırdığı istisnalar dışında her yerde aynı sonuçla bitmesi için `5.1.0` veya sonraki bir sürümde tutun; mantıksal adları ve sözlükleri koruyan ise hâlâ `4.2.0` veya sonraki sürümdür. `1.2.0` sürümünden önceki bir [MCP sunucusu](../../mcp/live-and-headless.md#edits-made-at-the-same-moment) burada `5.1.0` sürümünden önceki bir düzenleyici sayılır ve `5.1.0` sürümünden önceki bir düzenleyici bir [Yjs](./yjs.md) odasına hiç bağlanamaz.
+
+`5.1.1` sürümünden itibaren bir notun bir [tablo grubuna](../../guide/guides/table-groups.md) katılması veya gruptan ayrılması yeni bir eylem türüyle, `memo.changeGroup` ile taşınır ve eylemleri olduğu gibi ileten bir aktarıcının bunun için yeni bir şeye ihtiyacı yoktur. Bu eylem şu durumlarda gönderilir: bir grubun içine veya dışına bırakılan not, grubu olmayan gösterilen notların çevresine çizilen yeni grup, tabloların yanında notların da seçili olduğu `Group selected tables`, seçimde notlar varken `Remove from group`, kaldırılan bir grubun her notu, bir kodlama ajanının [MCP sunucusu](../../mcp/tools.md#table-groups) üzerinden yaptığı not grubu çağrıları ve bunların her birinin geri alınması ve yinelenmesi. Grupları not içeren bir `Import and Add` veya `setSchemaJSON` eklemesi de bunu gönderir, yinelenmesi de gönderir; geri alınması ise yalnızca bu notları kaldırır.
+
+`5.1.1` sürümünden önceki bir düzenleyici veya replika `memo.changeGroup` eylemini yok sayar ve ayrıştırması her notun `groupId` alanını atar, bu yüzden hiçbir notu bir grupta görmez; yine de `5.1.1` sürümlü bir düzenleyicinin grup sürüklemesi, her not için bir `memo.moveTo` da gönderdiğinden grubun notlarını orada da taşır. Kendi düzenlemeleri notların gruplarından habersizdir ve bu durum daha yeni düzenleyicilerde şu etkileri doğurur:
+
+- Bir grubun kutusuna sürüklediği not gruptan dışarıda kalır, kutunun dışına sürüklediği gruptaki bir not ise grupta kalır ve kutu onu tutacak şekilde genişler.
+- Grup sürüklemesi, `Auto Layout` gibi, grubu ve tablolarını taşır ama grubun notlarını bulundukları yerde bırakır; kutu, gösterilen notları orada tutacak şekilde genişler.
+- Üzerinde yapılan bir `Import and Add`, eklediği gruplara hiçbir not koymaz.
+- Kaldırdığı bir grup, her notunun `groupId` alanını o grubu adlandırır halde bırakır: notlar grupsuz okunur ve kaldırmanın bu düzenleyicide geri alınması onları gruba geri koyar.
+- Bir yüklemenin, bir içe aktarmanın veya `clear()` işleminin bu düzenleyicide geri alınması, belgenin kendi kopyasını her düzenleyicide yükler ve bu kopyada hiçbir not hiçbir grupta değildir.
+
+Bunlardan birinden kaydedilen bir belgede hiçbir not hiçbir grupta değildir, ancak `4.0.0` veya sonraki bir sürümdeki bir düzenleyici tabloların gruplarını korur.  
+Notları tablo gruplarında tutmak için bir oturumdaki her düzenleyiciyi ve oturumun belgesini depolayan her [replicationStore](./remote-storage.md#dispatch-dispatchsync) deposunu `5.1.1` veya sonraki bir sürümde tutun; aynı anda yapılan düzenlemeleri çözümleyen ise hâlâ `5.1.0` veya sonraki sürümdür. `1.2.1` sürümünden önceki bir [MCP sunucusu](../../mcp/installation.md#updating) de bir notun hangi tablo grubunda olduğunu benzer şekilde ne görür ne de korur.
 
 ## SharedStoreConfig {#sharedstoreconfig}
 

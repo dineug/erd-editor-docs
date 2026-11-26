@@ -93,7 +93,7 @@ Medan sökfältet innehåller text visar utforskarens [träd](./explorer.md#the-
 
 - `Tables`, `Table Groups` och `Memos` visas bara när de innehåller en träff, och siffran vid varje mapp anger antalet rader direkt under den i resultaten.
 - Under `Tables` kommer de tabeller som innehåller en träff, sorterade efter namn, aldrig efter logiskt namn. Under varje tabell kommer en rad för varje träff i dess kommentar, sedan en mapp `Columns` med de kolumner som innehåller en träff, i kolumnordning, var och en med en rad för varje träff i dess kommentar, och sedan en mapp `Indexes` med de index vars namn matchar. Det finns ingen mapp `Foreign Keys`.
-- Under `Table Groups` kommer de grupper vars namn matchar, i namnordning, utan sina tabeller. En tabell som hittas visas under `Tables`.
+- Under `Table Groups` kommer de grupper vars namn matchar, i namnordning, utan sina tabeller eller anteckningar. En tabell som hittas visas under `Tables`, och en anteckning under `Memos`.
 - Under `Memos` kommer de anteckningar som innehåller en träff, i dokumentordning, var och en visad med sin första rad och med en rad för varje träff i den.
 
 En träff i ett namn framhävs på namnets egen rad, så ett namn som innehåller sökfrågan två gånger blir en rad med två framhävningar. En träff i en tabells eller kolumns logiska namn hamnar också på den tabellens eller kolumnens rad, aldrig på en egen rad.  
@@ -127,7 +127,7 @@ Att gå till en träff stänger panelen Tabellegenskaper om den är öppen, och 
 
 - För en tabells eller kolumns namn, logiska namn eller kommentar markeras bara tabellen, den läggs överst och den fokuserade cellen hamnar på cellen som innehåller träffen. En träff i en kommentar som döljs av ett [visningsalternativ för tabeller](./table-related-functions.md#table-view-options) placerar i stället den fokuserade cellen på namnet bredvid den. Där [namnvisningen](./logical-names.md#name-view) inte ritar någon cell för namnet eller det logiska namnet hamnar den fokuserade cellen på den som ritas i dess ställe: namnet i `Physical Names`, det logiska namnet i `Logical Names`.
 - För ett indexnamn markeras bara indexets tabell och läggs överst, och den fokuserade cellen hamnar på tabellens namn, eller dess logiska namn i `Logical Names` och `Both Names`, om den inte redan finns i den tabellen. Indexnamn ritas inte på arbetsytan.
-- För ett tabellgruppsnamn markeras bara gruppen och läggs överst med sina tabeller.
+- För ett tabellgruppsnamn markeras bara gruppen och läggs överst med sina tabeller och anteckningar.
 - För en anteckning markeras bara anteckningen och läggs överst.
 
 Arbetsytan rullar bara när det du går till inte redan syns väl, och zoomen ändras aldrig – se [Var ett hopp hamnar](./table-related-functions.md#where-a-jump-lands).

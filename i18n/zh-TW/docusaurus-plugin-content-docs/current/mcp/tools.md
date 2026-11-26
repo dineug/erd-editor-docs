@@ -1,11 +1,11 @@
 ---
 sidebar_position: 4
-description: erd-editor MCP 伺服器提供的每個工具：逐頁讀取文件、字典檢查、67 個編輯工具、erd_batch，以及結果與拒絕的樣子。
+description: erd-editor MCP 伺服器提供的每個工具：逐頁讀取文件、字典檢查、SVG 匯出、68 個編輯工具、erd_batch，以及結果與拒絕的樣子。
 ---
 
 # 工具
 
-伺服器提供 77 個工具：五個工作階段工具、四個讀取工具、67 個編輯工具（每種編輯操作各一個），以及將多個編輯工具當作一次編輯執行的 `erd_batch`。
+伺服器提供 79 個工具：五個工作階段工具、四個讀取工具、將文件繪製成 SVG 影像的 `erd_export_svg`、68 個編輯工具（每種編輯操作各一個），以及將多個編輯工具當作一次編輯執行的 `erd_batch`。
 
 除了 `erd_list_documents` 之外，每個工具都以文件的 `path` 作為第一個引數，下方的表格會將其省略。
 標有 `?` 的引數為選用。
@@ -26,14 +26,14 @@ description: erd-editor MCP 伺服器提供的每個工具：逐頁讀取文件�
 
 | 工具 | 引數 | 作用 |
 | --- | --- | --- |
-| `erd_list` | `query?`, `offset?`, `limit?`, `namesOnly?` | 設定與數量，接著是一頁資料表及其索引與關聯，每個資料表附有其 id、在畫布上的位置與大小、欄位數、邏輯名稱（若有），以及所屬的資料表群組（若有）。除非是在搜尋，否則資料表之後會依序接著資料表群組、備忘錄，然後是定義域、術語和詞彙。 |
-| `erd_get` | `tableIds?`, `tableNames?`, `relationshipIds?`, `indexIds?`, `memoIds?`, `tableGroupIds?`, `wordIds?`, `termIds?`, `domainIds?` | 所指定實體的完整內容：資料表附有其欄位與所屬資料表群組，關聯附有其欄位及其 `onDelete` 與 `onUpdate`，索引附有其欄位，備忘錄附有其文字，資料表群組附有其資料表，詞彙、術語和定義域則附有其所有屬性。 |
+| `erd_list` | `query?`, `offset?`, `limit?`, `namesOnly?` | 設定與數量，接著是一頁資料表及其索引與關聯，每個資料表附有其 id、在畫布上的位置與大小、欄位數、邏輯名稱（若有），以及所屬的資料表群組（若有）。除非是在搜尋，否則資料表之後會依序接著資料表群組、備忘錄（每個備忘錄附有其所屬的資料表群組，若有），然後是定義域、術語和詞彙。 |
+| `erd_get` | `tableIds?`, `tableNames?`, `relationshipIds?`, `indexIds?`, `memoIds?`, `tableGroupIds?`, `wordIds?`, `termIds?`, `domainIds?` | 所指定實體的完整內容：資料表附有其欄位與所屬資料表群組，關聯附有其欄位及其 `onDelete` 與 `onUpdate`，索引附有其欄位，備忘錄附有其文字與所屬資料表群組，資料表群組附有其資料表和備忘錄，詞彙、術語和定義域則附有其所有屬性。 |
 | `erd_read` | `format`, `vendor?`, `statements?`, `header?`, `logicalNameAsComment?`, `tableIds?`, `tableNames?`, `groupNames?` | 以四種格式中的一種一次讀取整份文件，或僅讀取部分資料表或資料表群組的 DDL。 |
 | `erd_list_checks` | `level?`, `tableIds?`, `tableNames?`, `offset?`, `limit?` | 詞彙、術語和定義域字典找出的問題，與編輯器「字典」索引標籤的 `Checks` 工作表所列出的相同，一次一頁。它不會變更任何內容，請參閱[字典檢查](#dictionary-checks)。 |
 
 代理程式會使用 `erd_list` 找出 id，使用 `erd_get` 讀取欄位、字典列和其他詳細資料，再將這些 id 傳給編輯工具。
 `erd_list` 中資料表的大小是它在畫布上所佔的方框：高度是精確值，寬度是近似值。
-資料表群組以其儲存的矩形列出，並附有其名稱、顏色和所含資料表的數量。
+資料表群組以其儲存的矩形列出，並附有其名稱、顏色和所含資料表和備忘錄的數量。
 每個關聯只會列出一次，隨其兩個資料表中的一個列出。
 字典列會以其 id、`name`，以及其為物理名稱或欄位提供的內容列出：定義域的 `dataType`、術語的 `physicalName` 和 `domainId`，以及詞彙的 `abbreviation`。每個字典都會依其工作表顯示的順序列出其各列。
 `erd_list` 和 `erd_read` 回報的設定是檔案所儲存的設定，請參閱[設定](#settings)。
@@ -45,7 +45,7 @@ description: erd-editor MCP 伺服器提供的每個工具：逐頁讀取文件�
 
 | `format` | 傳回內容 |
 | --- | --- |
-| `snapshot` | 精簡的 JSON，包含每個實體及其 id（含資料表群組，以及詞彙、術語和定義域的各列），以及設定與結構描述 SQL 指令碼。它會省略因檢視者而異的內容：測量出的寬度、堆疊順序、檢視、索引標籤和「名稱顯示」。結構描述龐大時，內容也會很大。 |
+| `snapshot` | 精簡的 JSON，包含每個實體及其 id（含資料表群組及其資料表和備忘錄，以及詞彙、術語和定義域的各列），以及設定與結構描述 SQL 指令碼。它會省略因檢視者而異的內容：測量出的寬度、堆疊順序、檢視、索引標籤和「名稱顯示」。結構描述龐大時，內容也會很大。 |
 | `sql` | 八種資料庫之一的 DDL：`Databricks`、`MariaDB`、`MSSQL`、`MySQL`、`Oracle`、`PostgreSQL`、`Snowflake` 或 `SQLite`。`vendor` 預設為文件所設定的資料庫。整份文件的 DDL 包含其前置與後置指令碼。使用 `tableIds`、`tableNames` 或 `groupNames` 時，僅包含這些資料表及其所含的外鍵，且不含指令碼。外鍵會帶有其 ON DELETE 和 ON UPDATE 動作，但目標資料庫會省略的動作除外，請參閱 [ON DELETE 與 ON UPDATE](../guide/guides/relationship-editing.md#on-delete-and-on-update)。 |
 | `json` | 與儲存時寫入檔案的內容完全相同的整份文件，包含編輯器尚未儲存的任何編輯，請參閱[儲存形式](../api/advanced/schema.md#storage-form)。 |
 | `scripts` | 僅包含文件的前置與後置指令碼，格式為 `{"before":"…","after":"…"}`，未設定者為空，不論結構描述有多大。 |
@@ -103,6 +103,37 @@ description: erd-editor MCP 伺服器提供的每個工具：逐頁讀取文件�
 
 關於各項檢查如何讀取名稱，請參閱[各項檢查找出的問題](../guide/guides/dictionary.md#what-each-check-finds)。
 
+## SVG 匯出 {#svg-export}
+
+| 工具 | 引數 | 作用 |
+| --- | --- | --- |
+| `erd_export_svg` | `output?`, `darkMode?`, `background?` | 將文件繪製成 SVG 影像，並寫入 `output` 所指定的 `.svg` 檔案；未傳入 `output` 時，則以 SVG 文字回應。它不會變更任何文件。 |
+
+伺服器自行繪製影像，因此只需要 `1.2.1` 或更新版本的伺服器，並可搭配任何可連線的 ERD Editor 擴充功能或外掛程式版本。
+與 `toImage()` 相同，它繪製的是編輯器 `Export image` 對話方塊儲存為 SVG 的影像，但只依文件本身繪製：整個圖表以 100% 繪製，省略文件中以檢視選項隱藏的內容，使用預設集的顏色，資料表和欄位依文件所保存的「名稱顯示」命名，且圖表本身的字詞為英文，請參閱[繪製的內容](../api/to-image.md#what-it-draws)。
+伺服器測量文字時不使用編輯器的字型，因此資料表可能比編輯器繪製的稍寬一些。
+沒有 PNG，也不會複製到剪貼簿。
+
+- `darkMode`：`true` 繪製深色佈景主題；`false`（預設值）繪製淺色佈景主題。編輯器畫面的任何佈景主題都不會影響影像。
+- `background`：`true`（預設值）會在圖表後方填上畫布顏色；`false` 則保持透明。
+- `output`：要寫入的檔案，可為絕對路徑或相對於伺服器工作目錄的路徑，名稱須以 `.svg` 結尾（不論大小寫），且所在資料夾須已存在。已存在的檔案會透過其旁邊的暫存檔取代，符號連結則會跟隨至其指向的檔案。
+
+匯出讀取文件的方式與讀取工具相同：為其提供服務的編輯器所持有的內容（包括尚未儲存的編輯），否則讀取檔案。與讀取相同，它絕不會在編輯器中開啟文件。
+其回應中的 `mode` 會指出是哪一種：`live`、`headless`，或在 hub 已關閉的編輯器持有該文件時為 `blocked`，並附上一則說明，指出所繪製的是磁碟上的檔案，不包含該編輯器中尚未儲存的編輯，請參閱[即時與無介面](./live-and-headless.md)。
+
+使用 `output` 時，回應為一行 JSON：`mode`、文件的 `path`、寫入的 `output`、以 `bytes` 表示的大小、SVG 的 `width` 和 `height`，以及有任何說明時的 `notes`。
+
+```json
+{"mode":"headless","path":"/work/shop.erd.json","output":"/work/docs/shop.svg","bytes":48213,"width":1210,"height":764}
+```
+
+未使用 `output` 時，回應為 SVG 文字，後面接著 `{"mode":"…"}` 和任何說明。超過 40,000 個字元（單次回應最多可傳回的量）的 SVG 會以 `tooLarge` 拒絕：請傳入 `output`，改為將其寫入檔案。
+
+`output` 會在讀取文件之前先檢查，因此 `output` 被拒絕時不會進行任何繪製：空的 `output`、名稱不以 `.svg` 結尾的、指向資料夾的，以及指向不存在的檔案、或指向名稱不以 `.svg` 結尾之檔案的連結，會以 `invalidPath` 拒絕；所在資料夾不存在的則以 `notFound` 拒絕。唯讀檔案會在影像繪製完成後以 `readonly` 拒絕，且維持原樣。
+
+匯出不會產生復原步驟，也沒有任何內容需要儲存，且 `erd_batch` 會拒絕它，如同拒絕讀取工具一樣。
+大型圖表需要幾秒鐘才能繪製完成，而伺服器一次只繪製一個匯出。
+
 ## 編輯工具 {#edit-tools}
 
 id 來自 `erd_list` 和 `erd_get`，或來自建立該實體之呼叫的 `createdIds`。
@@ -121,7 +152,7 @@ id 來自 `erd_list` 和 `erd_get`，或來自建立該實體之呼叫的 `creat
 | `erd_change_table_color` | `tableId`, `color` | 設定資料表的顏色。 |
 | `erd_move_table` | `tableId`, `x`, `y` | 將資料表移到畫布上的某個位置。 |
 | `erd_move_tables` | `positions` | 以一次編輯移動多個資料表，一次 `erd_undo` 即可還原。`positions` 為每個資料表包含一個 `{ tableId, x, y }`，每個資料表最多出現一次。 |
-| `erd_sort_tables` | | 將所有資料表在畫布上排成數列，欄位最少的排在最前面，排列方式與 `erd_import_sql`、`erd_import_graphql`、`erd_import_dbml` 和 `erd_import_aml` 相同。同一資料表群組的資料表會保持在一起，且每個群組的方框會調整為剛好包住這些資料表。 |
+| `erd_sort_tables` | | 將所有資料表在畫布上排成數列，欄位最少的排在最前面，排列方式與 `erd_import_sql`、`erd_import_graphql`、`erd_import_dbml` 和 `erd_import_aml` 相同。同一資料表群組的資料表會保持在一起，在備忘錄顯示時，其後接著該群組的備忘錄，且每個群組的方框會調整為剛好包住它們。備忘錄隱藏時，群組的備忘錄會隨其資料表一起移動。不屬於任何群組、或所屬群組不含任何資料表的備忘錄會留在原處。 |
 
 ### 欄位 {#columns}
 
@@ -190,28 +221,33 @@ id 來自 `erd_list` 和 `erd_get`，或來自建立該實體之呼叫的 `creat
 | `erd_move_memo` | `memoId`, `x`, `y` | 將備忘錄移到畫布上的某個位置。 |
 | `erd_resize_memo` | `memoId`, `width`, `height` | 調整備忘錄的大小。寬度至少須約 `116` 像素，高度至少須 `100`。此工具不會產生復原步驟，因為編輯器只會記錄透過拖曳進行的備忘錄大小調整。 |
 
+備忘錄可以屬於一個資料表群組，並隨該群組一起移動，請參閱[資料表群組](#table-groups)。
+
 當備忘錄透過 [View Option](../guide/guides/table-related-functions.md#table-view-options) → `Memos` 隱藏時，`erd_add_memo` 仍會新增備忘錄，且新增的備忘錄會保持隱藏，直到備忘錄再次顯示為止。
 `erd_list` 和 `erd_get` 也會列出隱藏的備忘錄。
 
 ### 資料表群組 {#table-groups}
 
-資料表群組是繪製在其資料表後方的具名方框，其顏色會顯示在方框上，也會橫跨其資料表的表頭，請參閱[資料表群組](../guide/guides/table-groups.md)。
-一個資料表最多只屬於一個群組。無論 `erd_move_table`、`erd_move_tables` 和 `erd_move_table_group` 將資料表放在何處，都不會改變群組所含的資料表；而在編輯器中，資料表會依其放置的位置加入或離開群組，請參閱[加入與移出資料表](../guide/guides/table-groups.md#adding-and-removing-tables)。`erd_add_table_group` 和 `erd_set_table_group` 會將資料表放入群組，而 `erd_remove_table_group` 會使其資料表不屬於任何群組。
-群組會儲存一個矩形，寬至少 `160` 像素、高至少 `100`（含標題列），而編輯器繪製的方框會擴大到足以容納其中的每個資料表。
+資料表群組是繪製在其資料表和備忘錄後方的具名方框，其顏色會顯示在方框上，也會橫跨其資料表和備忘錄的表頭，請參閱[資料表群組](../guide/guides/table-groups.md)。
+一個資料表或備忘錄最多只屬於一個群組。無論 `erd_move_table`、`erd_move_tables`、`erd_move_memo` 和 `erd_move_table_group` 將資料表或備忘錄放在何處，都不會改變群組所含的內容；而在編輯器中，資料表或備忘錄會依其放開的位置加入或離開群組，請參閱[加入與移出資料表](../guide/guides/table-groups.md#adding-and-removing-tables)。`erd_add_table_group` 會將資料表和備忘錄放入群組，`erd_set_table_group` 放入資料表，`erd_set_memo_group` 放入備忘錄，而 `erd_remove_table_group` 會使其資料表和備忘錄不屬於任何群組。
+群組會儲存一個矩形，寬至少 `160` 像素、高至少 `100`（含標題列），而編輯器繪製的方框會擴大到足以容納其中的每個資料表，以及在備忘錄顯示時其中的每個備忘錄。
 
 | 工具 | 引數 | 作用 |
 | --- | --- | --- |
-| `erd_add_table_group` | `name`, `color?`, `x?`, `y?`, `width?`, `height?`, `tableIds?` | 新增群組，並在 `createdIds` 中傳回其 id。傳入 `tableIds` 或矩形（同時傳入 `x`、`y`、`width` 和 `height`），兩者擇一。使用 `tableIds` 時，每個資料表會離開其原本所屬的群組，且矩形會像[將所選資料表組成群組](../guide/guides/table-groups.md#grouping-selected-tables)時一樣調整為包住這些資料表。矩形會納入中心點位於其內、且不屬於任何群組的每個資料表，如同[繪製群組](../guide/guides/table-groups.md#drawing-a-group)時一樣。空的 `name` 會讓群組維持未命名。一次 `erd_undo` 會移除該群組，並將每個資料表放回其原本所屬的群組。 |
-| `erd_remove_table_group` | `groupId` | 移除群組。其資料表會留在原處，不屬於任何群組。 |
+| `erd_add_table_group` | `name`, `color?`, `x?`, `y?`, `width?`, `height?`, `tableIds?`, `memoIds?` | 新增群組，並在 `createdIds` 中傳回其 id。傳入 `tableIds`（可另外附上 `memoIds`）或矩形（同時傳入 `x`、`y`、`width` 和 `height`），兩者擇一。使用 `tableIds` 時，每個資料表和備忘錄會離開其原本所屬的群組，且矩形會像[將所選資料表組成群組](../guide/guides/table-groups.md#grouping-selected-tables)時一樣調整為包住它們，其中備忘錄僅在備忘錄顯示時才計入。矩形會納入中心點位於其內、且不屬於任何群組的每個資料表和每個顯示的備忘錄，如同[繪製群組](../guide/guides/table-groups.md#drawing-a-group)時一樣。空的 `name` 會讓群組維持未命名。一次 `erd_undo` 會移除該群組，並將每個資料表和備忘錄放回其原本所屬的群組。 |
+| `erd_remove_table_group` | `groupId` | 移除群組。其資料表和備忘錄會留在原處，不屬於任何群組。 |
 | `erd_change_table_group_name` | `groupId`, `value` | 重新命名群組。空字串會讓群組變為未命名。 |
 | `erd_change_table_group_color` | `groupId`, `color` | 設定群組的顏色。 |
-| `erd_move_table_group` | `groupId`, `x`, `y` | 移動群組，使其矩形從該點開始，其資料表也會以相同的位移一起移動，如同拖曳其標題列一樣。水平與垂直位移相加不到 20 像素的移動不會產生復原步驟。自伺服器 `1.2.0` 起，此移動會以群組及其資料表結束的位置送達編輯器，因此使用 VS Code 擴充功能 `4.3.0` 或更新版本，或 Obsidian 或 JetBrains 外掛程式 `1.3.0` 或更新版本時，在該處於同一時刻對群組或其中一個資料表進行的移動，最後會落在兩個位置其中之一，絕不會是兩者之和，請參閱[同一時刻進行的編輯](./live-and-headless.md#edits-made-at-the-same-moment)。 |
-| `erd_resize_table_group` | `groupId`, `x?`, `y?`, `width`, `height` | 設定群組的矩形，其資料表會留在原處。省略 `x` 和 `y` 時會保留原本的角落位置。無法容納群組的資料表及其留白的矩形會被拒絕，並附上訊息指出它必須容納的方框。 |
+| `erd_move_table_group` | `groupId`, `x`, `y` | 移動群組，使其矩形從該點開始，其資料表和備忘錄（包括隱藏的備忘錄）也會以相同的位移一起移動，如同拖曳其標題列一樣。水平與垂直位移相加不到 20 像素的移動不會產生復原步驟。自伺服器 `1.2.0` 起，此移動會以群組及其資料表結束的位置送達編輯器，因此使用 VS Code 擴充功能 `4.3.0` 或更新版本，或 Obsidian 或 JetBrains 外掛程式 `1.3.0` 或更新版本時，在該處於同一時刻對群組或其中一個資料表進行的移動，最後會落在兩個位置其中之一，絕不會是兩者之和，請參閱[同一時刻進行的編輯](./live-and-headless.md#edits-made-at-the-same-moment)。自伺服器 `1.2.1` 起，其備忘錄結束的位置會在同一個批次中送出。 |
+| `erd_resize_table_group` | `groupId`, `x?`, `y?`, `width`, `height` | 設定群組的矩形，其資料表和備忘錄會留在原處。省略 `x` 和 `y` 時會保留原本的角落位置。無法容納群組的資料表和顯示的備忘錄及其留白的矩形會被拒絕，並附上訊息指出它必須容納的方框。 |
 | `erd_set_table_group` | `tableIds`, `groupId` | 將資料表放入群組，每個資料表都會離開其原本所屬的群組。`groupId` 為 `null` 或空字串時，會將這些資料表移出所有群組。 |
+| `erd_set_memo_group` | `memoIds`, `groupId` | 將備忘錄放入群組，每個備忘錄都會離開其原本所屬的群組，並留在原處。`groupId` 為 `null` 或空字串時，會將這些備忘錄移出所有群組。 |
 
 當群組透過 `View Option` → `Table Groups` 隱藏時，這些工具仍會新增和變更群組，而這些群組會保持隱藏，直到群組顯示為止，請參閱[隱藏群組](../guide/guides/table-groups.md#hiding-groups)。
-`erd_sort_tables` 會讓每個群組的資料表保持在一起，`erd_import_dbml` 和 `erd_import_json` 會帶入群組（請參閱[匯入](#import)），而 `erd_read` 會透過 `groupNames` 寫出所選群組的 DDL。
+以 View Option → `Memos` 隱藏的備忘錄仍留在其群組中並隨群組移動，而 `erd_set_memo_group` 和 `erd_add_table_group` 的 `memoIds` 會像處理顯示的備忘錄一樣將其放入群組。
+`erd_sort_tables` 會讓每個群組的資料表和備忘錄保持在一起，`erd_import_dbml` 和 `erd_import_json` 會帶入群組（請參閱[匯入](#import)），而 `erd_read` 會透過 `groupNames` 寫出所選群組的 DDL。
 早於資料表群組推出的 ERD Editor 版本在儲存檔案時會捨棄檔案中的群組，`4.0.0` 之前的 VS Code 擴充功能，以及 `1.0.0` 之前的 Obsidian 和 JetBrains 外掛程式都是如此，請參閱[更新](./installation.md#updating)。
+早於備忘錄加入資料表群組的版本，也就是 `4.3.1` 之前的 VS Code 擴充功能，以及 `1.3.1` 之前的 Obsidian 和 JetBrains 外掛程式，既不會顯示也不會保留備忘錄屬於哪個群組，因此儲存檔案時每個備忘錄都不屬於任何群組，`1.2.1` 之前寫入磁碟上檔案的伺服器也是如此，請參閱[更新](./installation.md#updating)。
 
 ### 字典 {#dictionaries}
 
@@ -304,14 +340,14 @@ id 來自 `erd_list` 和 `erd_get`，或來自建立該實體之呼叫的 `creat
 - 關聯和索引只會建立在匯入所帶入的資料表之間，因此指向文字中未宣告之資料表的外鍵會被捨棄。
 - `erd_import_sql`、`erd_import_graphql` 和 `erd_import_aml` 會加入資料表及其關聯與索引，`erd_import_dbml` 還會加入其資料表群組。`erd_import_json` 會加入資料表、關聯、索引、備忘錄和資料表群組，但絕不會加入其設定，且會拒絕空文字。其資料表和欄位會帶入其邏輯名稱，但沒有任何欄位會連結定義域，JSON 中的詞彙、術語和定義域也都不會帶入。
 
-JSON 文件會保留其本身的排列方式（包括其資料表群組）：使用 `replace` 時保留其放置資料表的位置，使用 `append` 時則在加入的區塊內保留。
+JSON 文件會保留其本身的排列方式（包括其資料表群組，以及每個群組所含的資料表和備忘錄）：使用 `replace` 時保留其放置資料表的位置，使用 `append` 時則在加入的區塊內保留。
 SQL、GraphQL、DBML 和 AML 的資料表會排成數列，欄位最少的排在最前面，且每個群組的資料表會在一起，排列方式與 `erd_sort_tables` 相同，絕不會像編輯器本身的匯入在可行時那樣以 `Flow` 配置。這四個工具在兩種模式下都會拒絕空文字。
 
 ## erd_batch {#erd_batch}
 
 `erd_batch` 會依序將多個編輯工具當作一次編輯執行，全部套用或全都不套用。
 
-- `operations` 最多包含 100 個項目，每個項目為 `{ tool, as?, args? }`，其中 `tool` 是編輯工具，`args` 是不含 `path` 的工具引數。讀取工具（例如 `erd_list_checks`）會被拒絕。
+- `operations` 最多包含 100 個項目，每個項目為 `{ tool, as?, args? }`，其中 `tool` 是編輯工具，`args` 是不含 `path` 的工具引數。讀取工具（例如 `erd_list_checks`）會被拒絕，`erd_export_svg` 也是。
 - 這些操作會先在文件的副本上試行。被拒絕的操作會被指出，例如 `operations[1] erd_remove_table: …`，且不會套用任何操作。
 - 一次 `erd_undo` 會還原整個批次，但無法還原的操作除外，結果中的 `undoNote` 會列出這些操作：不會產生復原步驟的工具所執行的操作（例如 `erd_set_database`），以及變更了文件卻未產生復原步驟的操作（例如位移很短的 `erd_move_table_group`）。完全沒有產生復原步驟的批次會被 `erd_undo` 略過。結果中的 `historyEntries` 計算的是批次內編輯器歷程記錄的筆數，而非 `erd_undo` 呼叫次數。
 - 在即時工作階段中，編輯器會接受整個批次，或完全不接受。
@@ -391,21 +427,21 @@ SQL、GraphQL、DBML 和 AML 的資料表會排成數列，欄位最少的排在
 
 | `code` | 原因 |
 | --- | --- |
-| `notFound` | id 未指向任何現存的項目，或檔案不存在。 |
+| `notFound` | id 未指向任何現存的項目、檔案不存在，或 `erd_export_svg` 的 `output` 所在資料夾不存在。 |
 | `invalidArgs` | 缺少引數，或引數的值有誤。 |
-| `invalidPath` | 路徑不是 ERD 文件。在 Windows 上，也包括含有 Windows 不會依原樣儲存之名稱的路徑，以及指向某個編輯器以另一個路徑持有之文件的路徑，訊息中會指出該路徑。 |
+| `invalidPath` | 路徑不是 ERD 文件，或 `erd_export_svg` 的 `output` 不是 `.svg` 檔案，請參閱 [SVG 匯出](#svg-export)。在 Windows 上，也包括含有 Windows 不會依原樣儲存之名稱的路徑，以及指向某個編輯器以另一個路徑持有之文件的路徑，訊息中會指出該路徑。 |
 | `invalidDocument` | 檔案不是編輯器能讀取的文件。 |
-| `tooLarge` | 讀取的內容無法在單次回應中容納。 |
+| `tooLarge` | 讀取的內容，或未使用 `output` 要求的 SVG，無法在單次回應中容納。 |
 | `blocked` | 文件由 hub 已關閉的編輯器持有。訊息會說明如何開啟 hub：在 VS Code 中，信任工作區並開啟 `dineug.erd-editor.agentHub.enabled`，或重新載入視窗；在 Obsidian 中，開啟 Coding agents，或重新載入 Obsidian；在 JetBrains IDE 中，開啟 Coding agents，若已開啟則重新啟動 IDE。 |
 | `hubDisabled` | JetBrains IDE 僅在其不信任的專案中持有該文件。讀取仍可運作；信任該專案即可讓代理程式進行編輯。 |
 | `conflict` | 呼叫期間檔案在磁碟上被變更。未寫入任何內容。 |
 | `hubAppeared`, `hubGone` | 某個編輯器開始為代理程式正在磁碟上編輯的文件提供服務，或為該文件提供服務的編輯器仍在執行，但其鎖定檔案和連線已消失。未寫入任何內容。 |
 | `notSaved` | `erd_save` 無法儲存編輯器的文件。 |
-| `readonly` | 編輯器以唯讀方式持有該文件，例如無法寫入或無法讀取為圖表的檔案。沒有編輯器時，則是檔案本身為唯讀，例如尚未簽出的 Perforce 或 TFVC 檔案。未寫入任何內容。 |
+| `readonly` | 編輯器以唯讀方式持有該文件，例如無法寫入或無法讀取為圖表的檔案。沒有編輯器時，則是檔案本身為唯讀，例如尚未簽出的 Perforce 或 TFVC 檔案。使用 `erd_export_svg` 時，則是其 `output` 所指定的 `.svg` 檔案為唯讀。未寫入任何內容。 |
 | `protocolMismatch` | 編輯器的 ERD Editor 擴充功能或外掛程式與伺服器使用不同的協定版本，例如 `1.0.0` 或更新版本的伺服器搭配 `3.x` 的 VS Code 擴充功能。讀取也會被拒絕，且訊息會指出需要更新的一方，請參閱[更新](./installation.md#updating)。 |
 | `hubUnreachable`, `timeout`, `disconnected` | 編輯器的 hub 未接受連線、未在 30 秒內回應，或在呼叫期間中斷連線。在 Windows 上，`hubUnreachable` 也表示 Windows 阻止代理程式連上 hub：編輯器以高於代理程式的權限執行（例如編輯器以系統管理員身分啟動，而代理程式不是），或代理程式在沙箱中執行。 |
 
 其他代碼較少見，且每次拒絕都會附帶說明發生了什麼事的訊息。
 
-編輯工具、`erd_batch` 和四個讀取工具會在觸及文件之前，以 JSON-RPC 的 invalid params 錯誤（`-32602`）拒絕未宣告的引數或型別錯誤的引數，因此拼錯的引數絕不會被默默捨棄。
+編輯工具、`erd_batch`、四個讀取工具和 `erd_export_svg` 會在觸及文件之前，以 JSON-RPC 的 invalid params 錯誤（`-32602`）拒絕未宣告的引數或型別錯誤的引數，因此拼錯的引數絕不會被默默捨棄。
 五個工作階段工具會忽略它們無法辨識的引數。

@@ -55,16 +55,17 @@ Mentre View Option → `Memos` è disattivato, i memo sono nascosti, `New Memo` 
 Un memo è una nota a testo libero sull’area di disegno. Fare clic nel suo corpo e digitare; il testo viene salvato con il documento.  
 `Escape` chiude l’editor del memo, mantenendo il testo digitato e lasciando il memo selezionato, e un secondo `Escape` annulla la selezione.  
 Trascinarne il bordo per ridimensionarlo. La `x` nella sua intestazione, visibile mentre il puntatore si trova sul memo, lo elimina.  
-Un clic con il pulsante destro su un memo apre il suo menu anziché l’editor: `Color`, `Remove color` mentre un elemento selezionato ha un colore, e `Delete`, che diventa `Delete selected` mentre il memo è uno di due o più elementi selezionati. Un memo selezionato viene eliminato anche con i tasti che eliminano le tabelle — vedere [Eliminazione di tabelle e memo](./table-related-functions.md#table-and-memo-deletion).
+Un clic con il pulsante destro su un memo apre il suo menu anziché l’editor: `Color`, `Remove color` mentre un elemento selezionato ha un colore, `Group selected tables` mentre la selezione contiene una tabella e i gruppi di tabelle sono visibili, `Remove from group` mentre una tabella o un memo selezionato fa parte di un gruppo, e `Delete`, che diventa `Delete selected` mentre il memo è uno di due o più elementi selezionati. Un memo selezionato viene eliminato anche con i tasti che eliminano le tabelle — vedere [Eliminazione di tabelle e memo](./table-related-functions.md#table-and-memo-deletion).  
+Come una tabella, un memo entra in un [gruppo di tabelle](./table-groups.md) o lo lascia in base al punto in cui lo si rilascia. Anche `Remove from group` lo toglie dal gruppo, e `Group selected tables` lo inserisce in un nuovo gruppo insieme alle tabelle selezionate con esso — vedere [Aggiungere e rimuovere tabelle](./table-groups.md#adding-and-removing-tables).
 
 ![Aggiunta di un memo con Alt + M, digitazione di una nota e trascinamento del bordo per ridimensionarlo](/img/demo-memo.webp)
 
 ## Creazione di gruppi di tabelle {#table-group-creation}
 
-Un gruppo di tabelle è un riquadro che contiene tabelle, a cui è possibile assegnare un nome e un colore. Crearne uno in uno dei due modi seguenti:
+Un gruppo di tabelle è un riquadro che contiene tabelle e memo, a cui è possibile assegnare un nome e un colore. Crearne uno in uno dei due modi seguenti:
 
-- Scegliere `New Table Group` dal menu contestuale o dalla Ricerca rapida, fare clic sul pulsante `New Table Group` della [barra degli strumenti dell’area di disegno](./table-related-functions.md#canvas-toolbar) oppure premere `Alt + G` (Windows/Linux) o `⌥ + G` (Mac), quindi trascinare un riquadro sull’area di disegno. Ogni tabella il cui centro si trova all’interno del riquadro entra nel nuovo gruppo, a meno che non faccia già parte di un altro gruppo — vedere [Disegnare un gruppo](./table-groups.md#drawing-a-group).
-- Selezionare le tabelle e scegliere `Group selected tables` dal menu contestuale di una tabella o `Group Selected Tables` dalla Ricerca rapida, oppure premere `T` e poi `G` — vedere [Raggruppare le tabelle selezionate](./table-groups.md#grouping-selected-tables).
+- Scegliere `New Table Group` dal menu contestuale o dalla Ricerca rapida, fare clic sul pulsante `New Table Group` della [barra degli strumenti dell’area di disegno](./table-related-functions.md#canvas-toolbar) oppure premere `Alt + G` (Windows/Linux) o `⌥ + G` (Mac), quindi trascinare un riquadro sull’area di disegno. Ogni tabella e ogni memo visibile il cui centro si trova all’interno del riquadro entra nel nuovo gruppo, a meno che non faccia già parte di un altro gruppo — vedere [Disegnare un gruppo](./table-groups.md#drawing-a-group).
+- Selezionare le tabelle, e gli eventuali memo da raggruppare con esse, e scegliere `Group selected tables` dal menu contestuale di una tabella o di un memo o `Group Selected Tables` dalla Ricerca rapida, oppure premere `T` e poi `G` — vedere [Raggruppare le tabelle selezionate](./table-groups.md#grouping-selected-tables).
 
 L’assegnazione del nome e del colore, lo spostamento, il ridimensionamento e tutto il resto sono descritti in [Gruppi di tabelle](./table-groups.md).
 

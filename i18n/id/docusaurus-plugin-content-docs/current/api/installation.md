@@ -51,18 +51,18 @@ Lihat [ErdEditorElement](./erd-editor-element.md) untuk bagian API lainnya.
 
 ```html
 <script type="module">
-  import 'https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js';
+  import 'https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js';
 
   const editor = document.createElement('erd-editor');
   editor.style.cssText = 'display: block; width: 100%; height: 100vh;';
   document.body.appendChild(editor);
 </script>
 <!-- or -->
-<script type="module" src="https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js"></script>
+<script type="module" src="https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js"></script>
 ```
 
 `esm.run` me-resolve dependensi eksternal paket untuk Anda, sehingga cara ini berfungsi tanpa bundler.
-Setiap titik masuk dijangkau dengan path-nya setelah versi: `…/erd-editor.js` mendefinisikan editor, dan `…/erd-viewer.js` viewer, yang mengambil setiap bahasa tampilan selain bahasa Inggris dari CDN begitu sebuah halaman memintanya. URL paket polos, `https://esm.run/@dineug/erd-editor@5.1.0`, menyajikan root, yang tidak mendefinisikan elemen apa pun.
+Setiap titik masuk dijangkau dengan path-nya setelah versi: `…/erd-editor.js` mendefinisikan editor, dan `…/erd-viewer.js` viewer, yang mengambil setiap bahasa tampilan selain bahasa Inggris dari CDN begitu sebuah halaman memintanya. URL paket polos, `https://esm.run/@dineug/erd-editor@5.1.1`, menyajikan root, yang tidak mendefinisikan elemen apa pun.
 URL tanpa versi selalu menyajikan rilis terbaru. Sematkan versi, seperti di atas, jika Anda tidak ingin peningkatan versi mayor sampai ke halaman Anda tanpa pemberitahuan.
 `5.0.0` sendiri merupakan peningkatan versi mayor: halaman yang harus tetap di 4.x menyematkan `@4.2.0` — lihat [Migrasi dari 4.x](#upgrading-from-4x).
 
@@ -75,7 +75,7 @@ Build inilah yang dirujuk oleh field `unpkg` dan `jsdelivr`, sehingga URL paket 
 
 ```html
 <erd-editor></erd-editor>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.1"></script>
 <script>
   const editor = document.querySelector('erd-editor');
   editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
@@ -88,7 +88,7 @@ Sejak `5.0.0`, file kedua, `dist/erd-viewer.umd.js`, mendefinisikan `<erd-viewer
 
 ```html
 <erd-viewer src="diagram.erd.json" style="display: block; height: 480px"></erd-viewer>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0/dist/erd-viewer.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.1/dist/erd-viewer.umd.js"></script>
 ```
 
 Tidak ada file yang mendefinisikan tag milik file lainnya, dan masing-masing tidak meninggalkan global di halaman selain miliknya sendiri dan `window.Konva`.
@@ -100,7 +100,7 @@ Halaman yang tidak dapat memuat script sendiri dapat membingkai viewer yang di-h
 ```html
 <erd-editor system-dark-mode enable-theme-builder enable-locale-picker enable-welcome-screen></erd-editor>
 <script type="module">
-  import 'https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js';
+  import 'https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js';
 
   const editor = document.querySelector('erd-editor');
 </script>
@@ -123,7 +123,7 @@ Membaca `editor.value` dan `editor.runtimeValue` tetap berfungsi, dan keduanya m
 
 ### Rendering sisi server {#server-side-rendering}
 
-Setiap titik masuk kecuali `engine.js` dan `peer.js` memerlukan DOM, sehingga melempar kesalahan di Node. `erd-editor.js` dan `erd-viewer.js` mendefinisikan elemennya di cakupan modul, dan root paket, yang sejak `5.0.0` tidak mendefinisikan apa pun, tetap membangun kedua kelas elemen saat dimuat.
+Setiap titik masuk yang dijelaskan halaman-halaman ini kecuali `engine.js` dan `peer.js` memerlukan DOM, sehingga melempar kesalahan di Node. `erd-editor.js` dan `erd-viewer.js` mendefinisikan elemennya di cakupan modul, dan root paket, yang sejak `5.0.0` tidak mendefinisikan apa pun, tetap membangun kedua kelas elemen saat dimuat.
 Di Next.js, Nuxt, SvelteKit, atau Astro, akses titik masuk elemen dari jalur khusus klien, dan impor bernama dari root, seperti `setExportFileCallback` atau `toImage`, dari jalur yang sama.
 
 ```js
@@ -251,7 +251,7 @@ Halaman dengan Content Security Policy yang ketat memerlukan direktif berikut un
 
 ## Titik masuk {#entry-points}
 
-Paket ini memiliki lima titik masuk:
+Halaman-halaman ini menjelaskan lima di antara titik masuk paket:
 
 | Titik masuk | Isinya |
 | --- | --- |
@@ -371,7 +371,7 @@ Tidak ada polyfill yang dibundel. Tambahkan polyfill sendiri jika Anda perlu men
    import { setExportFileCallback } from '@dineug/erd-editor';
   ```
 
-- Di CDN, hal yang sama berlaku untuk `https://esm.run/@dineug/erd-editor`, yang kini menyajikan root dan tidak mendefinisikan apa pun: impor `https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js`. URL jsDelivr dan unpkg polos tetap menyajikan build tag script, yang mendefinisikan `<erd-editor>` seperti sebelumnya. URL tanpa versi kini menyajikan rilis 5.x terbaru; sematkan `@4.2.0` untuk tetap di 4.x — lihat [CDN](#cdn) dan [Tag script](#script-tag).
+- Di CDN, hal yang sama berlaku untuk `https://esm.run/@dineug/erd-editor`, yang kini menyajikan root dan tidak mendefinisikan apa pun: impor `https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js`. URL jsDelivr dan unpkg polos tetap menyajikan build tag script, yang mendefinisikan `<erd-editor>` seperti sebelumnya. URL tanpa versi kini menyajikan rilis 5.x terbaru; sematkan `@4.2.0` untuk tetap di 4.x — lihat [CDN](#cdn) dan [Tag script](#script-tag).
 - Root tidak mendefinisikan apa pun tetapi tetap memerlukan DOM, sehingga pada rendering sisi server, impor bernama darinya, seperti `setExportFileCallback`, tetap berada di jalur khusus klien di samping titik masuk elemen — lihat [Rendering sisi server](#server-side-rendering).
 - `window.ErdEditor` mendapat `ErdEditorElement` dan `defineErdEditor`. Build tag script viewer menaruh `ErdViewerElement` dan `defineErdViewer` di `window.ErdViewer`, dan tidak ada global yang membawa `toImage`.
 - Editor `readonly` terbuka sebagai pembaca. Keenam tabnya, Penjelajah, Pencarian Cepat, dan presence tetap ada, dan setiap kontrol yang akan mengedit diagram dihilangkan, bukan dinonaktifkan: bilah alat menampilkan nama database sebagai teks, tab Pengaturan menampilkan pengaturannya dengan setiap kontrol dinonaktifkan di bawah lencana `Read only`, dan bilah alat mengambang hanya mempertahankan zoom, Tampilan Nama, mode Zen, dan kompas, sehingga `Hand` dan `Select` hilang dan seretan menggeser kanvas. Penekanan tidak memilih apa pun: satu-satunya pilihan adalah garis tepi yang diletakkan lompatan dari Penjelajah atau Pencarian Cepat di sekeliling apa yang dicapainya, yang dihapus klik diam, dan kombinasi tombol pilih semua tidak memilih apa pun. Menyalakan `readonly` mengakhiri apa yang sedang terbuka, seperti pilihan, alat tangan, editor sel, seretan, Petakan Kolom, pratinjau `Force` milik Tata Letak Otomatis, dan Perjalanan Waktu, dan mempertahankan guliran, zoom, tab, dan Tampilan Nama — lihat [readonly](./erd-editor-element.md#readonly).

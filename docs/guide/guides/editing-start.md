@@ -55,16 +55,17 @@ While View Option → `Memos` is off, memos are hidden, nothing offers `New Memo
 A memo is a free-text note on the canvas. Click into its body and type; the text is saved with the document.  
 `Escape` closes the memo editor, keeping what you typed and leaving the memo selected, and a second `Escape` clears the selection.  
 Drag its border to resize it. The `x` in its header, shown while the pointer is over the memo, deletes it.  
-Right-clicking a memo opens its menu rather than the editor: `Color`, `Remove color` while a selected item has a color, and `Delete`, which reads `Delete selected` while the memo is one of two or more selected items. A selected memo is also deleted with the keys that delete tables — see [Table and Memo Deletion](./table-related-functions.md#table-and-memo-deletion).
+Right-clicking a memo opens its menu rather than the editor: `Color`, `Remove color` while a selected item has a color, `Group selected tables` while the selection holds a table and table groups are shown, `Remove from group` while a selected table or memo is in a group, and `Delete`, which reads `Delete selected` while the memo is one of two or more selected items. A selected memo is also deleted with the keys that delete tables — see [Table and Memo Deletion](./table-related-functions.md#table-and-memo-deletion).  
+Like a table, a memo joins or leaves a [table group](./table-groups.md) where you drop it. `Remove from group` also takes it out, and `Group selected tables` puts it in a new group with the tables selected beside it — see [Adding and Removing Tables](./table-groups.md#adding-and-removing-tables).
 
 ![Adding a memo with Alt + M, typing a note, and dragging its border to resize it](/img/demo-memo.webp)
 
 ## Table Group Creation
 
-A table group is a box that holds tables, and you can give it a name and a color. Create one in either of two ways:
+A table group is a box that holds tables and memos, and you can give it a name and a color. Create one in either of two ways:
 
-- Choose `New Table Group` from the context menu or Quick Search, click the `New Table Group` button on the [canvas toolbar](./table-related-functions.md#canvas-toolbar), or press `Alt + G` (Windows/Linux) or `⌥ + G` (Mac), then drag a box over the canvas. Each table whose center lies inside the box joins the new group, unless it is already in another group — see [Drawing a Group](./table-groups.md#drawing-a-group).
-- Select tables and choose `Group selected tables` from a table's context menu or `Group Selected Tables` from Quick Search, or press `T` then `G` — see [Grouping Selected Tables](./table-groups.md#grouping-selected-tables).
+- Choose `New Table Group` from the context menu or Quick Search, click the `New Table Group` button on the [canvas toolbar](./table-related-functions.md#canvas-toolbar), or press `Alt + G` (Windows/Linux) or `⌥ + G` (Mac), then drag a box over the canvas. Each table and each shown memo whose center lies inside the box joins the new group, unless it is already in another group — see [Drawing a Group](./table-groups.md#drawing-a-group).
+- Select tables, and any memos to go with them, and choose `Group selected tables` from a table's or a memo's context menu or `Group Selected Tables` from Quick Search, or press `T` then `G` — see [Grouping Selected Tables](./table-groups.md#grouping-selected-tables).
 
 Naming, coloring, moving, resizing, and the rest are covered in [Table Groups](./table-groups.md).
 

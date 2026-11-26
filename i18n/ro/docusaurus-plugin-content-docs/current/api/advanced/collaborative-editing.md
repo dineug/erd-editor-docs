@@ -176,7 +176,7 @@ Fiecare editor și fiecare replică păstrează, pentru fiecare nume și pentru 
 
 Începând cu versiunea `5.1.0`, poziția unui tabel, poziția și dimensiunea unei note sau a unui grup de tabele, precum și originea și nivelul de zoom ale vizualizării sunt versionate în același mod, iar ceea ce le mută pleacă sub forma locului în care ajung:
 
-- o tragere ca un singur `table.moveTo`, `memo.moveTo` sau `tableGroup.moveTo` pentru fiecare entitate mutată, într-un singur lot, astfel încât tragerea unui grup poartă punctele tabelelor sale împreună cu cel al grupului;
+- o tragere ca un singur `table.moveTo`, `memo.moveTo` sau `tableGroup.moveTo` pentru fiecare entitate mutată, într-un singur lot, astfel încât tragerea unui grup poartă punctele tabelelor sale și, începând cu versiunea `5.1.1`, ale notelor sale împreună cu cel al grupului;
 - anularea sau refacerea unei trageri ca punctul în care aceasta pune fiecare entitate;
 - o derulare ca `settings.scrollTo`, iar un zoom ca `settings.changeZoomLevel`;
 - redimensionarea unei note sau a unui grup de tabele ca poziția și dimensiunea sa, împreună.
@@ -253,6 +253,19 @@ Un editor `5.1.0` nu trimite niciun tip nou de acțiune, așa că editoarele și
 - O încărcare care înlocuiește documentul, cum ar fi atribuirea proprietății `value`, `clear()` sau un import cu înlocuire, încheie trasarea unei relații pe fiecare editor `5.1.0`, atât pe cel care a făcut-o, cât și pe fiecare editor care o primește. Un editor mai vechi își păstrează trasarea activă pe parcursul ei.
 
 Păstrați fiecare editor dintr-o sesiune, precum și orice store [replicationStore](./remote-storage.md#dispatch-dispatchsync) care îi stochează documentul, la versiunea `5.1.0` sau la o versiune ulterioară, astfel încât editările făcute în același moment să ajungă la fel peste tot, cu excepția celor numite în secțiunea [Editări simultane](#concurrent-edits); versiunea `4.2.0` sau una ulterioară este în continuare cea care păstrează numele logice și dicționarele. Un [server MCP](../../mcp/live-and-headless.md#edits-made-at-the-same-moment) anterior versiunii `1.2.0` se numără aici printre editoarele anterioare versiunii `5.1.0`, iar un editor anterior versiunii `5.1.0` nu poate fi legat deloc de o cameră [Yjs](./yjs.md).
+
+Începând cu versiunea `5.1.1`, intrarea unei note într-un [grup de tabele](../../guide/guides/table-groups.md) sau părăsirea acestuia circulă printr-un tip nou de acțiune, `memo.changeGroup`, iar un releu care transmite acțiunile ca atare nu are nevoie de nimic nou pentru el. Se trimite pentru o notă lăsată într-un grup sau în afara lui, pentru un grup nou trasat în jurul unor note afișate care nu aparțin niciunui grup, pentru elementul `Group selected tables` cu note selectate alături de tabele, pentru elementul `Remove from group` cu note în selecție, pentru fiecare notă a unui grup eliminat, pentru apelurile prin care un agent de programare schimbă grupul notelor cu ajutorul [serverului MCP](../../mcp/tools.md#table-groups), precum și pentru anularea și refacerea fiecăreia dintre acestea. O adăugare prin `Import and Add` sau `setSchemaJSON` ale cărei grupuri conțin note o trimite și ea, la fel și refacerea ei, în timp ce anularea ei doar elimină acele note.
+
+Un editor sau o replică anterioară versiunii `5.1.1` ignoră `memo.changeGroup`, iar parsarea sa elimină câmpul `groupId` al fiecărei note, așa că nu vede niciodată o notă într-un grup, deși tragerea unui grup într-un editor `5.1.1` mută în continuare și acolo notele grupului, pentru că trimite și un `memo.moveTo` pentru fiecare dintre ele. Propriile sale editări nu știu nimic despre grupurile notelor, cu următoarele efecte asupra editoarelor mai noi:
+
+- O notă pe care o trage în chenarul unui grup rămâne în afara grupului, iar o notă membră pe care o trage în afara chenarului rămâne în grup, chenarul extinzându-se în jurul ei.
+- Tragerea unui grup făcută pe el, la fel ca o comandă `Auto Layout` rulată pe el, mută grupul și tabelele lui, dar lasă notele grupului pe loc, iar chenarul se extinde pentru a le cuprinde acolo pe cele afișate.
+- Un import făcut cu `Import and Add` pe el nu pune nicio notă în grupurile pe care le adaugă.
+- Un grup pe care îl elimină lasă câmpul `groupId` al fiecărei note a sale numindu-l: notele apar ca fiind fără grup, iar anularea eliminării, făcută pe el, le pune înapoi în grup.
+- Anularea unei încărcări, a unui import sau a unui apel `clear()` pe el încarcă propria lui copie a documentului pe toate editoarele, iar acea copie nu are nicio notă în vreun grup.
+
+Un document salvat de un astfel de editor nu are nicio notă în vreun grup, deși unul din versiunea `4.0.0` încoace îi păstrează grupurile tabelelor.  
+Păstrați fiecare editor dintr-o sesiune, precum și orice store [replicationStore](./remote-storage.md#dispatch-dispatchsync) care îi stochează documentul, la versiunea `5.1.1` sau la o versiune ulterioară pentru a păstra notele în grupurile lor de tabele; versiunea `5.1.0` sau una ulterioară rămâne cea care rezolvă editările făcute în același moment. Un [server MCP](../../mcp/installation.md#updating) anterior versiunii `1.2.1` nu vede și nu păstrează nici el în ce grup de tabele se află o notă.
 
 ## SharedStoreConfig {#sharedstoreconfig}
 

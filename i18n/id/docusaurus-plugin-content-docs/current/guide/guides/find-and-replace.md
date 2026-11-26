@@ -93,7 +93,7 @@ Selama kotak Temukan berisi teks, [pohon](./explorer.md#the-tree) Penjelajah men
 
 - `Tables`, `Table Groups`, dan `Memos` hanya tampil jika memuat kecocokan, dan angka pada setiap folder adalah jumlah baris tepat di bawahnya dalam hasil.
 - Di bawah `Tables` tercantum tabel yang memuat kecocokan, menurut nama, tidak pernah menurut nama logis. Di bawah setiap tabel tercantum satu baris untuk setiap kecocokan di komentarnya, lalu folder `Columns` berisi kolom yang memuat kecocokan, sesuai urutan kolom, masing-masing dengan satu baris untuk setiap kecocokan di komentarnya, lalu folder `Indexes` berisi indeks yang namanya cocok. Tidak ada folder `Foreign Keys`.
-- Di bawah `Table Groups` tercantum grup yang namanya cocok, menurut nama, tanpa tabel-tabelnya. Tabel yang ditemukan tampil di bawah `Tables`.
+- Di bawah `Table Groups` tercantum grup yang namanya cocok, menurut nama, tanpa tabel maupun memonya. Tabel yang ditemukan tampil di bawah `Tables`, dan memo di bawah `Memos`.
 - Di bawah `Memos` tercantum memo yang memuat kecocokan, sesuai urutan dokumen, masing-masing ditampilkan dengan baris pertamanya dan dengan satu baris untuk setiap kecocokan di dalamnya.
 
 Kecocokan dalam nama disorot di baris nama itu sendiri, sehingga nama yang memuat kueri dua kali menjadi satu baris dengan dua sorotan. Kecocokan dalam nama logis tabel atau kolom juga ditempatkan pada baris tabel atau kolom tersebut, tidak pernah pada barisnya sendiri.  
@@ -127,7 +127,7 @@ Menuju kecocokan menutup Properti Tabel jika sedang terbuka, lalu:
 
 - Untuk nama, nama logis, atau komentar tabel atau kolom, tindakan ini hanya memilih tabel tersebut, membawanya ke depan, dan menempatkan sel yang difokuskan pada sel yang memuat kecocokan. Kecocokan dalam komentar yang disembunyikan oleh [opsi tampilan tabel](./table-related-functions.md#table-view-options) menempatkan sel yang difokuskan pada nama di sebelahnya sebagai gantinya. Jika [Tampilan Nama](./logical-names.md#name-view) tidak menampilkan sel untuk nama atau nama logis, sel yang difokuskan ditempatkan pada sel yang ditampilkan di tempatnya: nama dalam tampilan `Physical Names`, nama logis dalam tampilan `Logical Names`.
 - Untuk nama indeks, tindakan ini hanya memilih tabel indeks tersebut dan membawanya ke depan, dengan sel yang difokuskan pada nama tabel, atau nama logisnya dalam tampilan `Logical Names` dan `Both Names`, kecuali jika sel itu sudah berada di tabel tersebut. Nama indeks tidak digambar di kanvas.
-- Untuk nama grup tabel, tindakan ini hanya memilih grup tersebut dan membawanya ke depan bersama tabel-tabelnya.
+- Untuk nama grup tabel, tindakan ini hanya memilih grup tersebut dan membawanya ke depan bersama tabel dan memonya.
 - Untuk memo, tindakan ini hanya memilih memo tersebut dan membawanya ke depan.
 
 Kanvas hanya bergulir jika tujuannya belum tampil dengan baik, dan zoom tidak pernah berubah — lihat [Tempat lompatan berakhir](./table-related-functions.md#where-a-jump-lands).

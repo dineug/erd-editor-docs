@@ -1,7 +1,7 @@
 # demos
 
 **Parent context:** `../AGENTS.md`
-**Generated:** 2026-11-03 · **Updated:** 2026-11-03
+**Generated:** 2026-11-03 · **Updated:** 2026-11-26
 
 ## Purpose
 
@@ -16,14 +16,14 @@ scene, the gesture list). This file adds what the code does beyond it.
 |------|-------------|
 | `run.mjs` | CLI entry. Loads the scenes, finds or starts the dev server, records the selected scenes one at a time, and stops a server it started |
 | `README.md` | Human guide to the recorder. Keep it in step with `run.mjs` and `lib/` |
-| `seeds/shop.sql` | The only local seed. MySQL DDL for 8 tables (`members`, `addresses`, `categories`, `products`, `orders`, `order_items`, `payments`, `reviews`) with column and table `COMMENT`s, plus 8 `ALTER TABLE … FOREIGN KEY` relationships. 50 of the 72 scenes seed from it, directly or through a helper's `seedShop`/`seedShopRing` |
+| `seeds/shop.sql` | The only local seed. MySQL DDL for 8 tables (`members`, `addresses`, `categories`, `products`, `orders`, `order_items`, `payments`, `reviews`) with column and table `COMMENT`s, plus 8 `ALTER TABLE … FOREIGN KEY` relationships. 51 of the 73 scenes seed from it, directly or through a helper's `seedShop`/`seedShopRing` |
 
 ## Subdirectories
 
 | Directory | Purpose |
 |-----------|---------|
 | `lib/` | Recorder, seeding and the injected pointer/keycap overlay (see `lib/AGENTS.md`) |
-| `scenes/` | 72 scenes and 7 `_*-helpers.mjs` files (see `scenes/AGENTS.md`) |
+| `scenes/` | 73 scenes and 7 `_*-helpers.mjs` files (see `scenes/AGENTS.md`) |
 | `seeds/` | Seed fixtures for `readSeed`, `shop.sql` only. It has no AGENTS.md; see Key Files |
 | `.out/` | Ignored scratch, never committed: `<name>/` per scene, `.capture.lock` while a capture runs, and an optional `bin/ffmpeg` link |
 
@@ -32,7 +32,7 @@ scene, the gesture list). This file adds what the code does beyond it.
 ### Working In This Directory
 
 - **Don't run a recording unasked.** Every recorded scene overwrites a tracked file in
-  `static/img/` (ffmpeg `-y`), and a run with no names re-records all 70 clips and both
+  `static/img/` (ffmpeg `-y`), and a run with no names re-records all 71 clips and both
   stills. Name the scenes you mean, then check `git status static/img`.
 - **CLI.** `node scripts/demos/run.mjs [--debug] [--list] [name …]`, from any directory,
   since paths resolve from the script's own location.
@@ -80,18 +80,23 @@ scene, the gesture list). This file adds what the code does beyond it.
   fills the viewport, so nearly every clip frames the top toolbar and the floating
   toolbar, and scenes park the pointer by the toolbars' extents (`undo-redo.mjs`: "it
   reaches x 752 since 4.2.0"). The 3.9.0, 4.2.0 and 5.0.0 updates re-recorded every
-  clip. The 5.1.0 commit recorded none: "no UI chrome or English string changed".
+  clip. The 5.1.0 commit recorded none: "no UI chrome or English string changed". The 5.1.1
+  update changed neither, but a memo's menu over a selection that holds a table gained
+  `Group selected tables`, so it re-recorded `demo-table-remove` (its scene now also keeps the
+  pointer off the memo's text and moves down the menu's left padding) and added
+  `demo-table-group-memo`. Check the menus a clip opens, too.
 - **Record from the version the docs describe.** A clip shows whatever the checkout
   serves. Before recording, check that `git -C ../erd-editor diff --stat vX.Y.Z --
   packages/erd-editor ':!*.md'` prints nothing for the documented tag. `describe --tags`
-  alone isn't enough: it prints `v5.1.0-1-g…` today, for a commit that only changed Markdown.
-- **Editing `seeds/shop.sql` restages 50 scenes.** They pin tables and reach columns by
+  alone isn't enough: once the checkout is ahead of the tag it prints `vX.Y.Z-N-g…`, even when
+  the commits after the tag changed only Markdown.
+- **Editing `seeds/shop.sql` restages 51 scenes.** They pin tables and reach columns by
   name (`d.columnBox('members', 'created_at')`), so a renamed or reordered column moves
   boxes and breaks lookups. Debug every affected scene after a change.
 
 ### Testing Requirements
 
-- No test suite. Check a change in this order: `--list` (72 names, or more if you added
+- No test suite. Check a change in this order: `--list` (73 names, or more if you added
   scenes), then `--debug <name>` and its shots, then a recording and its `review.png`,
   then the docs page that embeds the clip in `pnpm dev`.
 - After a change to `run.mjs` or `lib/`, debug one canvas scene and one DOM-heavy scene,

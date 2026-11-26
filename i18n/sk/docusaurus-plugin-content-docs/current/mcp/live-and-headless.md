@@ -14,7 +14,7 @@ To, čo server nájde, rozhoduje o tom, kam úprava smeruje.
 | --- | --- |
 | Editor, ktorého pracovný priestor, trezor alebo otvorený projekt obsahuje dokument alebo ktorý ho má otvorený | **Live.** V prípade potreby otvorí dokument v editore ERD Editor, pripojí sa k relácii úprav a vykoná v nej zmenu. Úpravy sa zobrazia okamžite a ukladajú sa tak, ako editor ukladá vaše vlastné – pozrite si časť [Ukladanie](#saving). |
 | Žiadny editor | **Headless.** Načíta súbor, vykoná zmenu a súbor nahradí ešte pred odpoveďou, takže výsledok uvádza `saved: true` a nástroj `erd_save` nemá čo robiť. |
-| Editor s vypnutým hubom | **Odmietnuté.** Čítanie stále funguje, a to z disku. Zmenu zapísanú do súboru, ktorý má otvorený editor, by mohlo prepísať ďalšie uloženie editora, preto server nezapíše nič. |
+| Editor s vypnutým hubom | **Odmietnuté.** Čítanie a nástroj `erd_export_svg` stále fungujú, a to z disku. Zmenu zapísanú do súboru, ktorý má otvorený editor, by mohlo prepísať ďalšie uloženie editora, preto server do dokumentu nezapíše nič. |
 | Editor so zapnutým hubom, ktorý však používa iný protokol ako server: so serverom vo verzii `1.0.0` alebo novšej rozšírenie pre VS Code vo verzii `3.x`, doplnok pre Obsidian vo verzii `0.x` alebo doplnok pre JetBrains vo verzii `0.9.0` alebo `0.10.0`; so serverom starším ako verzia `1.0.0` rozšírenie vo verzii `4.0.0` alebo novšej alebo doplnok vo verzii `1.0.0` alebo novšej | **Odmietnuté** vrátane čítania, s kódom `protocolMismatch`. Správa uvádza stranu, ktorú treba aktualizovať: buď rozšírenie či doplnok, alebo server – pozrite si časť [Aktualizácia](./installation.md#updating). |
 | V systéme Windows editor, ktorý spravuje dokument pod inou cestou k tomu istému súboru: agent ho zadal cez sieťové zdieľanie alebo namapovanú jednotku tohto počítača, napríklad `\\localhost\C$\…`, a editor ho spravuje pod cestou s písmenom jednotky, alebo naopak | **Odmietnuté** vrátane čítania, s kódom `invalidPath`. Správa uvádza cestu, pod ktorou editor dokument spravuje; zavolajte znova s touto cestou. |
 | V systéme Windows editor, ku ktorému Windows agenta nepustí: editor spustený ako správca, zatiaľ čo agent nie, alebo akýkoľvek editor, keď agent beží v izolovanom prostredí (sandbox) | **Odmietnuté** vrátane čítania, s kódom `hubUnreachable` a so správou, ktorá uvádza dôvod. Spustite editor aj agenta s rovnakými právami, napríklad tak, že editor znova spustíte bez správcovských práv. |
@@ -27,15 +27,17 @@ Pri rovnosti, napríklad keď ho majú otvorený dva editory, pripadne dokument 
 Dokument v trezore aplikácie Obsidian vo vnútri priečinka pracovného priestoru VS Code teda pripadne aplikácii Obsidian, ibaže ho má otvorený VS Code a Obsidian nie.
 
 Volania pre jeden dokument prebiehajú jedno po druhom v poradí, v akom dorazili na server. Volania pre rôzne dokumenty prebiehajú súbežne.
+Nástroj `erd_export_svg` zaberá svoje miesto v poradí iba počas čítania dokumentu, takže neskoršie volanie pre ten istý dokument nečaká na kreslenie, a server kreslí naraz iba jeden export, aj keď ide o dva rôzne dokumenty – pozrite si časť [Export SVG](./tools.md#svg-export).
 
 ## Live {#live}
 
 Agent sa k editoru pripojí ako ďalší spolupracovník.
 Jeho úpravy sa okamžite dostanú do každého editora, v ktorom je dokument otvorený, a jeho fokus sa vykreslí na tabuľke a bunke, ktoré upravuje, rovnako ako fokus spolupracovníka – pozrite si časť [focusTracker](../api/advanced/collaborative-editing.md#focustracker).
 
-Čítanie nikdy neotvorí editor. Úprava otvorí dokument v editore ERD Editor, ak ešte nie je otvorený, a nezoberie pritom fokus klávesnice.
+Čítanie nikdy neotvorí editor a rovnako ani nástroj `erd_export_svg`, ktorý kreslí to, čo editor spravuje, vrátane neuložených úprav. Úprava otvorí dokument v editore ERD Editor, ak ešte nie je otvorený, a nezoberie pritom fokus klávesnice.
 
 Editor s rozšírením pre VS Code starším ako verzia `4.2.0` alebo s doplnkom pre Obsidian či JetBrains starším ako verzia `1.2.0` naďalej prijíma úpravy agenta naživo, ale logické názvy, prepojenia s doménami a riadky slovníkov, ktoré agent zapíše, nezobrazuje ani neuchováva – pozrite si časť [Aktualizácia](./installation.md#updating).
+Rovnako ani editor s rozšírením starším ako verzia `4.3.1` alebo s doplnkom starším ako verzia `1.3.1` nezobrazuje ani neuchováva, v ktorej skupine tabuliek je poznámka: poznámka, ktorú agent vloží do skupiny, v ňom v žiadnej skupine nie je a editor pri uložení skupinu poznámky v súbore vynechá, hoci volanie agenta uspeje.
 
 S rozšírením pre VS Code vo verzii `4.3.0` alebo novšej alebo s doplnkom pre Obsidian či JetBrains vo verzii `1.3.0` alebo novšej import v režime `replace` a jeho vrátenie späť nástrojom `erd_undo` či opätovné vykonanie nástrojom `erd_redo` ukončia vaše kreslenie vzťahu v editore bez ohľadu na verziu servera – pozrite si časť [Vytvorenie vzťahu](../guide/guides/editing-start.md#relationship-creation).
 Pred týmito verziami kreslenie zostalo aktívne a kliknutie na tabuľku mohlo pridať vzťah z tabuľky, ktorá už v diagrame nebola.
@@ -53,11 +55,11 @@ Zmena poradia stĺpcov, vaša alebo agentova nástrojom `erd_move_column` či `e
 Zmena databázy, vaša alebo agentova nástrojom `erd_set_database`, sa tiež aplikuje v poradí, v akom dorazí, takže dve urobené v tom istom okamihu môžu nechať editor a agenta na rôznych databázach.
 
 Vaše ťahanie a agentove volania nástrojov `erd_move_table`, `erd_move_tables`, `erd_move_memo`, `erd_move_table_group` a `erd_sort_tables` sa prenášajú ako body, v ktorých končia, takže dva presuny jednej tabuľky, poznámky alebo skupiny tabuliek skončia tam, kam ju umiestnil jeden z nich, nikdy na súčte oboch.
-Nástroj `erd_move_table_group` odošle bod skupiny a každej z jej tabuliek v jednej dávke, rovnako ako ťahanie za záhlavie skupiny.
+Nástroj `erd_move_table_group` odošle bod skupiny a každej z jej tabuliek v jednej dávke, rovnako ako ťahanie za záhlavie skupiny, a od verzie servera `1.2.1` aj bod každej z jej poznámok.
 Zmena veľkosti zapíše polohu a veľkosť spolu, takže presun a zmena veľkosti jednej poznámky alebo skupiny tabuliek urobené v tom istom okamihu, napríklad nástroj `erd_resize_memo`, kým túto poznámku ťaháte, skončia na jednom obdĺžniku na oboch stranách: zo zmeny veľkosti alebo, keď vyhrá presun, s bodom presunu a veľkosťou zo zmeny veľkosti.
 Presun menší ako 20 pixelov, ktorý nevytvorí záznam v histórii zmien, sa tiež odošle ako bod, v ktorom končí, takže môže zvíťaziť nad presunom druhej strany, či už ide o krátky presun nástrojom `erd_move_table_group`, alebo o krátke ťahanie z vašej strany, napríklad kliknutie, ktoré posunie tabuľku o niekoľko pixelov.
 
-Staršie verzie sa naďalej pripájajú, keďže server vo verzii `1.2.0` používa protokol hubu verzie 2, rovnako ako verzie `1.0.0` až `1.1.1`.
+Staršie verzie sa naďalej pripájajú, keďže server vo verzii `1.2.0` a novší používa protokol hubu verzie 2, rovnako ako verzie `1.0.0` až `1.1.1`.
 So serverom starším ako verzia `1.2.0`, rozšírením starším ako verzia `4.3.0` alebo doplnkom starším ako verzia `1.3.0` môže presun alebo zmena veľkosti jednej tabuľky, poznámky alebo skupiny tabuliek urobená v tom istom okamihu nechať editor a agenta s rôznymi polohami.
 Starší editor odošle vaše ťahanie ako prejdenú vzdialenosť a server starší ako verzia `1.2.0` tak odošle aj presun nástrojom `erd_move_table_group`.
 Druhá strana túto vzdialenosť pripočíta k bodu, ktorý uchováva.
@@ -97,7 +99,7 @@ Vlastné [vrátenie späť](../guide/guides/undo-redo.md) v editore funguje naop
 
 Niekoľko úprav nevytvára v editore žiadny záznam v histórii zmien: `erd_set_database` a `erd_set_database_name` spomedzi [nástrojov nastavení](./tools.md#settings) a `erd_resize_memo`.
 Nevytvára ho ani volanie `erd_move_table_group`, ktoré presunie skupinu celkovo o menej ako 20 pixelov, pričom sa sčíta posun vodorovne a zvislo, hoci skupina zostane tam, kam sa presunula.
-Nevytvára ho ani volanie, ktoré nič nezmení: `erd_set_column_primary_key`, `erd_set_column_unique`, `erd_set_column_not_null`, `erd_set_column_auto_increment`, `erd_set_index_unique` alebo `erd_set_index_column_order`, ak nastavuje hodnotu, ktorú dokument už obsahuje; `erd_add_index_column` so stĺpcom, ktorý už v indexe je; `erd_set_table_group` s tabuľkami, ktoré už v danej skupine sú (alebo už nie sú v žiadnej, s hodnotou `null` argumentu `groupId`); `erd_move_table_group` do bodu, kde skupina už je; `erd_resize_table_group` na obdĺžnik, ktorý skupina už má; `erd_sort_tables` pri dokumente bez tabuliek; `erd_set_table_logical_name` alebo `erd_set_column_logical_name` s logickým názvom, ktorý tabuľka alebo stĺpec už má, keď by odvodenie z neho nič nezmenilo; `erd_set_column_domain` s doménou, s ktorou je stĺpec už prepojený, keď už stĺpec má typ tejto domény a [synchronizácia typu údajov vo vzťahoch](../guide/guides/settings.md#relationship-datatype-sync) by nezmenila typ žiadneho stĺpca pozdĺž jeho vzťahov; `erd_update_word`, `erd_update_term` alebo `erd_update_domain` iba s hodnotami, ktoré riadok už obsahuje, s výnimkou prípadu, keď sa termínu bez fyzického názvu odovzdá argument `name` a jeho slová zložia fyzický názov; `erd_derive_physical_names`, keď každý názov, na ktorý sa vzťahuje a ktorý má logický názov, už obsahuje to, čo mu dávajú [slovníky](./tools.md#dictionaries), a je označený ako odvodený; alebo import s hodnotou `append` argumentu `mode`, ktorý neprinesie žiadnu tabuľku (pri `erd_import_json` žiadnu tabuľku ani poznámku).
+Nevytvára ho ani volanie, ktoré nič nezmení: `erd_set_column_primary_key`, `erd_set_column_unique`, `erd_set_column_not_null`, `erd_set_column_auto_increment`, `erd_set_index_unique` alebo `erd_set_index_column_order`, ak nastavuje hodnotu, ktorú dokument už obsahuje; `erd_add_index_column` so stĺpcom, ktorý už v indexe je; `erd_set_table_group` s tabuľkami, ktoré už v danej skupine sú (alebo už nie sú v žiadnej, s hodnotou `null` argumentu `groupId`); `erd_set_memo_group` s poznámkami, ktoré už v danej skupine sú (alebo už nie sú v žiadnej); `erd_move_table_group` do bodu, kde skupina už je; `erd_resize_table_group` na obdĺžnik, ktorý skupina už má; `erd_sort_tables` pri dokumente bez tabuliek; `erd_set_table_logical_name` alebo `erd_set_column_logical_name` s logickým názvom, ktorý tabuľka alebo stĺpec už má, keď by odvodenie z neho nič nezmenilo; `erd_set_column_domain` s doménou, s ktorou je stĺpec už prepojený, keď už stĺpec má typ tejto domény a [synchronizácia typu údajov vo vzťahoch](../guide/guides/settings.md#relationship-datatype-sync) by nezmenila typ žiadneho stĺpca pozdĺž jeho vzťahov; `erd_update_word`, `erd_update_term` alebo `erd_update_domain` iba s hodnotami, ktoré riadok už obsahuje, s výnimkou prípadu, keď sa termínu bez fyzického názvu odovzdá argument `name` a jeho slová zložia fyzický názov; `erd_derive_physical_names`, keď každý názov, na ktorý sa vzťahuje a ktorý má logický názov, už obsahuje to, čo mu dávajú [slovníky](./tools.md#dictionaries), a je označený ako odvodený; alebo import s hodnotou `append` argumentu `mode`, ktorý neprinesie žiadnu tabuľku (pri `erd_import_json` žiadnu tabuľku ani poznámku).
 Nástroj `erd_undo` tieto volania preskočí a vo svojom výsledku ich vymenuje.
 Iné úpravy, napríklad `erd_change_relationship_type`, `erd_change_relationship_on_delete`, `erd_change_relationship_on_update`, `erd_change_table_group_name`, `erd_change_table_group_color` a `erd_set_ddl_script`, vytvoria záznam aj vtedy, keď nastavia hodnotu, ktorú dokument už obsahuje.
 
@@ -120,7 +122,7 @@ Zatvorený diagram v priečinku, ktorý editor obsluhuje, zostáva pri editore a
 Editor, ktorý stále beží, ale jeho súbor zámku zmizol a jeho spojenie sa ukončilo bez toho, aby zatvoril dokument, odmietne ďalšiu úpravu s kódom `hubGone`.
 Správa uvádza, čo dokument uvoľní: vo VS Code znova načítajte dané okno alebo ho zatvorte, aby agent mohol upravovať súbor priamo; v aplikácii Obsidian znova zapnite doplnok ERD Editor alebo zatvorte dané okno; v IDE od JetBrains znova zapnite doplnok alebo IDE ukončite.
 
-Čítanie namiesto toho siahne po súbore na disku s upozornením, že úpravy, ktoré editor ešte neuložil, chýbajú, a to v dvoch prípadoch: keď má editor, ktorý dokument spravuje, vypnutý hub, a v prípade `hubGone` uvedenom vyššie.
+Čítanie alebo nástroj `erd_export_svg` namiesto toho siahne po súbore na disku s upozornením, že úpravy, ktoré editor ešte neuložil, chýbajú, a to v dvoch prípadoch: keď má editor, ktorý dokument spravuje, vypnutý hub, a v prípade `hubGone` uvedenom vyššie.
 Čítanie, ktoré sa nedokáže pripojiť k hubu editora, sa odmietne s kódom `hubUnreachable`, rovnako ako úprava.
 
 ## Headless {#headless}
@@ -133,7 +135,7 @@ Ak áno, nič sa nezapíše, súbor sa načíta znova a volanie sa odmietne s k�
 Súbor, ktorý sa zmenil medzi dvoma volaniami, sa jednoducho načíta znova a história zmien agenta spred tohto okamihu sa zahodí.
 
 Súbor iba na čítanie sa ponechá tak, ako je, a úprava sa odmietne s kódom `readonly`: súbor bez povolenia na zápis pre jeho vlastníka alebo v systéme Windows s atribútom iba na čítanie, napríklad súbor Perforce alebo TFVC, ktorý nie je otvorený na úpravy (check-out).
-Povoľte zápis do súboru a potom zavolajte znova. Čítanie stále funguje.
+Povoľte zápis do súboru a potom zavolajte znova. Čítanie a nástroj `erd_export_svg` stále fungujú.
 
 Ak editor začne obsluhovať dokument, kým ho agent upravuje na disku, táto jedna úprava sa odmietne s kódom `hubAppeared` a nič sa nezapíše. Ďalšie volanie už upravuje prostredníctvom editora.
 
@@ -142,7 +144,7 @@ V systéme Windows platia ešte dve pravidlá:
 - Dokument s vlastnými povoleniami, odlišnými od povolení jeho priečinka, sa namiesto nahradenia zapíše na mieste, aby si ich zachoval, a dočasný súbor sa potom odstráni. Program, ktorý dokument počas tohto zápisu číta, môže nájsť text, ktorý sa nedá syntakticky spracovať.
 - Súbor, ktorý má otvorený iný program, nemožno nahradiť, preto to server skúša znova až dve sekundy. Každý pokus najprv znova hľadá editor a editor, ktorý medzitým začal dokument obsluhovať, odmietne zápis s kódom `hubAppeared` alebo, ak má vypnutý hub, s kódom `blocked`. Ak je súbor po dvoch sekundách stále otvorený, nič sa nezapíše, súbor sa načíta znova a volanie zlyhá so správou, ktorá cituje systémovú chybu.
 
-Server pred verziou `1.1.0` číta dokument bez jeho logických názvov, bez prepojení jeho stĺpcov s doménami a bez jeho slov, termínov a domén, takže prvá úprava, ktorú zapíše do súboru, ich vynechá. Aktualizujte server – pozrite si časť [Aktualizácia](./installation.md#updating).
+Server pred verziou `1.1.0` číta dokument bez jeho logických názvov, bez prepojení jeho stĺpcov s doménami a bez jeho slov, termínov a domén, takže prvá úprava, ktorú zapíše do súboru, ich vynechá. Server pred verziou `1.2.1` ho podobne číta bez zaradenia jeho poznámok do skupín tabuliek, takže prvá úprava, ktorú zapíše do súboru, vyradí každú poznámku z jej skupiny. Aktualizujte server – pozrite si časť [Aktualizácia](./installation.md#updating).
 
 ## Odmietnuté {#refused}
 
@@ -151,7 +153,7 @@ Okno trezoru aplikácie Obsidian si ponechá súbor zámku s vypnutým hubom, ke
 IDE od JetBrains si ponechá súbor zámku s vypnutým hubom, keď je vypnutá možnosť Coding agents, keď jeho hub nemohol začať prijímať pripojenia a počas ukončovania IDE.
 
 Úprava takého dokumentu sa odmietne s kódom `blocked`, pretože otvorený editor by mohol pri ďalšom uložení prepísať zmenu zapísanú do súboru.
-Čítanie stále funguje, a to zo súboru na disku.
+Čítanie stále funguje, a to zo súboru na disku, a rovnako aj nástroj `erd_export_svg`, ktorého výsledok potom uvádza režim `blocked`.
 
 Aby agent mohol upravovať, znova zapnite hub tak, ako to pre daný editor uvádza správa: vo VS Code dôverujte pracovnému priestoru a zapnite nastavenie alebo znova načítajte okno; v aplikácii Obsidian zapnite možnosť Coding agents alebo aplikáciu Obsidian znova načítajte; v IDE od JetBrains zapnite možnosť Coding agents alebo reštartujte IDE, ak je už zapnutá.
 

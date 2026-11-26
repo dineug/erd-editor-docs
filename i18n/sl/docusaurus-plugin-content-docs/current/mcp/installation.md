@@ -56,6 +56,7 @@ Okno VS Code streže diagrame v mapah svojega delovnega prostora in vsak diagram
 Razširitev od različice `3.0.0` do `3.1.0` in strežnik različice `1.0.0` ali novejše se med seboj zavračata, razširitev pred različico `3.0.0` pa ne streže nobenemu agentu.
 Razširitev različice `4.0.0` ali `4.1.0` se poveže, vendar logičnih imen, povezav z domeno in vrstic slovarjev, ki jih zapiše agent, niti ne prikaže niti ne ohrani.
 Z razširitvijo pred različico `4.3.0` se lahko tabela, beležka ali skupina tabel, ki jo vi in agent premaknete ali ji spremenite velikost v istem trenutku, pri vsakem od vas konča na drugem mestu – glejte razdelek [Posodabljanje](#updating).
+Razširitev pred različico `4.3.1` niti ne prikaže niti ne ohrani, v kateri skupini tabel je beležka.
 
 Razširitev se zažene v delovnem prostoru, ki vsebuje datoteke `.erd`, `.erd.json`, `.vuerd` ali `.vuerd.json`, zato agent do teh diagramov dostopa, še preden odprete katerega od njih.
 V delovnem prostoru brez takih datotek se zažene, ko odprete diagram, do takrat pa agent ureja na disku.
@@ -74,6 +75,7 @@ Okno trezorja v aplikaciji Obsidian streže diagrame v svojem trezorju.
 Vtičnik pred različico `1.0.0` in strežnik različice `1.0.0` ali novejše se med seboj zavračata.
 Vtičnik različice `1.0.0` ali `1.1.0` se poveže, vendar logičnih imen, povezav z domeno in vrstic slovarjev, ki jih zapiše agent, niti ne prikaže niti ne ohrani.
 Z vtičnikom pred različico `1.3.0` se lahko tabela, beležka ali skupina tabel, ki jo vi in agent premaknete ali ji spremenite velikost v istem trenutku, pri vsakem od vas konča na drugem mestu – glejte razdelek [Posodabljanje](#updating).
+Vtičnik pred različico `1.3.1` niti ne prikaže niti ne ohrani, v kateri skupini tabel je beležka.
 
 Okno trezorja streže agentom od trenutka, ko se vtičnik naloži, zato agent do diagramov trezorja dostopa, še preden odprete katerega od njih.
 Koraka zaupanja ni.
@@ -102,6 +104,7 @@ Razvojno okolje JetBrains streže diagrame vseh projektov, ki so v njem odprti, 
 Vtičnik različice `0.9.0` ali `0.10.0` in strežnik različice `1.0.0` ali novejše se med seboj zavračata, vtičnik pred različico `0.9.0` pa ne streže nobenemu agentu.
 Vtičnik različice `1.0.0` ali `1.1.0` se poveže, vendar logičnih imen, povezav z domeno in vrstic slovarjev, ki jih zapiše agent, niti ne prikaže niti ne ohrani.
 Z vtičnikom pred različico `1.3.0` se lahko tabela, beležka ali skupina tabel, ki jo vi in agent premaknete ali ji spremenite velikost v istem trenutku, pri vsakem od vas konča na drugem mestu – glejte razdelek [Posodabljanje](#updating).
+Vtičnik pred različico `1.3.1` niti ne prikaže niti ne ohrani, v kateri skupini tabel je beležka.
 
 Razvojno okolje streže agentom od trenutka, ko se odpre prvi projekt, zato agent do diagramov projekta dostopa, še preden odprete katerega od njih.
 
@@ -153,7 +156,14 @@ Vendar se premik ali sprememba velikosti iste tabele, beležke ali skupine tabel
 Če je katera koli stran starejša, se lahko urejevalnik in agent končata z različnimi položaji, agent pa še naprej bere in ureja na podlagi svojega, dokler oba ne pristaneta na isti točki zaradi poznejšega premika ali dokler se agent znova ne pridruži dokumentu – glejte razdelek [Spremembe, narejene v istem trenutku](./live-and-headless.md#edits-made-at-the-same-moment).
 Nobena od teh izdaj ne spremeni tistega, kar vsebuje datoteka.
 
+Strežnik `1.2.1` prav tako podpira protokol 2. Doda dve orodji, `erd_set_memo_group` in `erd_export_svg`, ter argument `memoIds` orodja `erd_add_table_group`, ne odstrani pa in ne preimenuje nobenega – glejte razdelka [Skupine tabel](./tools.md#table-groups) in [Izvoz SVG](./tools.md#svg-export).
+Beležke v skupinah tabel potrebujejo strežnik `1.2.1` ali novejši in, kjer koli je dokument odprt, razširitev za VS Code različice `4.3.1` ali novejše ali vtičnik za Obsidian ali JetBrains različice `1.3.1` ali novejše.
+Starejša razširitev ali starejši vtičnik, ki se poveže, prezre, v kateri skupini je beležka, čeprav agentov klic uspe, in pri shranjevanju datoteke izpusti skupine beležk.
+Strežnik pred različico `1.2.1` zanje nima orodij in vsako beležko prebere kot beležko brez skupine, datoteka, ki jo uredi na disku, pa se zapiše nazaj z vsemi beležkami zunaj njihovih skupin – glejte razdelek [Brez vmesnika](./live-and-headless.md#headless).
+`erd_export_svg` potrebuje samo strežnik `1.2.1` ali novejši, z vsako izdajo razširitve ali vtičnika, ki se poveže, saj sliko nariše strežnik sam.
+
 ERD Editor posodobite tudi povsod, kjer se diagrami odpirajo.
+Razširitev za VS Code pred različico `4.3.1`, vtičnik za Obsidian pred različico `1.3.1` in vtičnik za JetBrains pred različico `1.3.1` odprejo diagram, ki ga je shranila novejša izdaja ali ga je agent uredil na disku, z vsemi beležkami zunaj njihovih skupin tabel in pri shranjevanju datoteke izpustijo skupine beležk.
 Razširitev za VS Code pred različico `4.2.0`, vtičnik za Obsidian pred različico `1.2.0` in vtičnik za JetBrains pred različico `1.2.0` odprejo diagram, ki ga je shranila novejša izdaja ali ga je agent uredil na disku, brez logičnih imen njegovih tabel in stolpcev, povezav njegovih stolpcev z domeno ter njegovih besed, izrazov in domen.
 Ko datoteko shranijo, jih izpustijo.
 Razširitev za VS Code pred različico `4.0.0`, vtičnik za Obsidian pred različico `1.0.0` in vtičnik za JetBrains pred različico `1.0.0` tak diagram prikažejo tudi brez ikon primarnih ključev, ko datoteko shranijo, pa iz nje odstranijo skupine tabel in skripte Sheme SQL.

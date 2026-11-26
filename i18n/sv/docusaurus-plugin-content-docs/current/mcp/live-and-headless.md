@@ -14,7 +14,7 @@ Det som servern hittar avgör vart redigeringen går.
 | --- | --- |
 | En editor vars arbetsområde, valv eller öppna projekt innehåller dokumentet, eller som har det öppet | **Live.** Öppnar dokumentet i ERD Editor vid behov, ansluter till redigeringssessionen och tillämpar ändringen där. Redigeringarna visas direkt och sparas på samma sätt som editorn sparar dina egna – se [Spara](#saving). |
 | Ingen editor | **Headless.** Läser in filen, tillämpar ändringen och ersätter filen innan den svarar, så resultatet anger `saved: true` och `erd_save` har ingenting att göra. |
-| En editor med hubben avstängd | **Nekad.** Läsningar fungerar fortfarande, från disken. En ändring som skrivs till filen medan en editor har den öppen kan skrivas över när editorn sparar nästa gång, så servern skriver ingenting. |
+| En editor med hubben avstängd | **Nekad.** Läsningar och `erd_export_svg` fungerar fortfarande, från disken. En ändring som skrivs till filen medan en editor har den öppen kan skrivas över när editorn sparar nästa gång, så servern skriver ingenting till dokumentet. |
 | En editor vars hubb är på men som använder ett annat protokoll än serverns: med servern i version `1.0.0` eller senare ett VS Code-tillägg `3.x`, ett Obsidian-plugin `0.x` eller ett JetBrains-plugin `0.9.0` eller `0.10.0`; med en server före `1.0.0` tillägget `4.0.0` eller senare, eller ett plugin `1.0.0` eller senare | **Nekad**, även för läsningar, med `protocolMismatch`. Meddelandet anger vilken sida som ska uppdateras: tillägget eller pluginet, eller servern – se [Uppdatera](./installation.md#updating). |
 | En editor i Windows som har dokumentet under en annan sökväg till samma fil: agenten angav det via en nätverksresurs eller en mappad enhet på den här datorn, som `\\localhost\C$\…`, och editorn har det under dess enhetssökväg, eller tvärtom | **Nekad**, även för läsningar, med `invalidPath`. Meddelandet anger den sökväg som editorn har dokumentet under; anropa igen med den sökvägen. |
 | En editor i Windows som Windows håller agenten borta från: en som startades som administratör men inte agenten, eller vilken editor som helst när agenten körs i en sandlåda | **Nekad**, även för läsningar, med `hubUnreachable` och ett meddelande som anger varför. Kör editorn och agenten med samma behörigheter, till exempel genom att starta editorn igen utan administratörsbehörighet. |
@@ -27,15 +27,17 @@ Vid oavgjort, som när två editorer båda har det öppet, går dokumentet till 
 Ett dokument i ett Obsidian-valv inuti en arbetsområdesmapp i VS Code går alltså till Obsidian, om inte VS Code har det öppet och Obsidian inte har det.
 
 Anrop mot ett och samma dokument körs ett i taget, i den ordning de nådde servern. Anrop mot olika dokument körs parallellt.
+`erd_export_svg` använder sin tur bara till att läsa dokumentet, så ett senare anrop mot dokumentet väntar inte på att bilden ritas, och servern ritar en export i taget, även av två dokument – se [SVG-export](./tools.md#svg-export).
 
 ## Live {#live}
 
 Agenten ansluter till editorn som ytterligare en medarbetare.
 Dess redigeringar når direkt varje editor som har dokumentet öppet, och dess fokus ritas ut på tabellen och cellen som den redigerar, precis som en medarbetares – se [focusTracker](../api/advanced/collaborative-editing.md#focustracker).
 
-En läsning öppnar aldrig en editor. En redigering öppnar dokumentet i ERD Editor när det ännu inte är öppet, utan att ta tangentbordsfokus.
+En läsning öppnar aldrig en editor, och det gör inte heller `erd_export_svg`, som ritar det som editorn har, redigeringar som ännu inte har sparats inräknade. En redigering öppnar dokumentet i ERD Editor när det ännu inte är öppet, utan att ta tangentbordsfokus.
 
 En editor med ett VS Code-tillägg före `4.2.0`, eller ett Obsidian- eller JetBrains-plugin före `1.2.0`, tar fortfarande emot agentens redigeringar live, men den varken visar eller behåller de logiska namn, domänkopplingar och rader i ordlistorna som agenten skriver – se [Uppdatera](./installation.md#updating).
+På samma sätt gäller att en editor med ett tillägg före `4.3.1` eller ett plugin före `1.3.1` varken visar eller behåller vilken tabellgrupp en anteckning ingår i: en anteckning som agenten lägger i en grupp ingår inte i någon grupp där, och editorn utelämnar anteckningens grupp ur filen när den sparar, trots att agentens anrop lyckas.
 
 Med VS Code-tillägget `4.3.0` eller senare, eller Obsidian- eller JetBrains-pluginet `1.3.0` eller senare, avslutar en import i läget `replace`, och ett `erd_undo` eller `erd_redo` av en sådan, en relation som du ritar i editorn, oavsett serverns version – se [Skapa relationer](../guide/guides/editing-start.md#relationship-creation).
 Före de versionerna förblev ritandet aktivt, och ett klick på en tabell kunde lägga till en relation från en tabell som inte längre fanns i diagrammet.
@@ -53,11 +55,11 @@ En omordning av kolumner, din eller agentens `erd_move_column` eller `erd_move_i
 En ändring av databasen, din eller agentens `erd_set_database`, tillämpas också i den ordning den kommer, så två som görs samtidigt kan lämna editorn och agenten på olika databaser.
 
 Din dragning och agentens `erd_move_table`, `erd_move_tables`, `erd_move_memo`, `erd_move_table_group` och `erd_sort_tables` skickas som de punkter de slutar på, så två flyttar av samma tabell, anteckning eller tabellgrupp slutar där en av dem placerade den, aldrig på de två sammanlagda.
-`erd_move_table_group` skickar punkten för gruppen och för var och en av dess tabeller i en batch, som en dragning av gruppens namnlist gör.
+`erd_move_table_group` skickar punkten för gruppen och för var och en av dess tabeller i en batch, som en dragning av gruppens namnlist gör, och sedan server `1.2.1` även punkten för var och en av dess anteckningar.
 En storleksändring skriver positionen och storleken tillsammans, så en flytt och en storleksändring av samma anteckning eller tabellgrupp som görs samtidigt, som `erd_resize_memo` medan du drar den anteckningen, slutar på en rektangel på båda sidor: storleksändringens eller, när flytten vinner, flyttens punkt med storleksändringens storlek.
 En flytt under 20 pixlar, som inte ger något steg i ångrahistoriken, går också ut som den punkt den slutar på, så den kan vinna över den andra sidans flytt, vare sig det är en kort `erd_move_table_group` eller en kort dragning som du gör, som ett klick som knuffar en tabell några pixlar.
 
-Äldre versioner ansluter fortfarande, eftersom server `1.2.0` talar hubbprotokoll 2, som `1.0.0` till `1.1.1` gör.
+Äldre versioner ansluter fortfarande, eftersom server `1.2.0` och senare talar hubbprotokoll 2, som `1.0.0` till `1.1.1` gör.
 Med en server före `1.2.0`, eller ett tillägg före `4.3.0` eller ett plugin före `1.3.0`, kan en flytt eller storleksändring av en tabell, anteckning eller tabellgrupp som görs samtidigt lämna editorn och agenten med olika positioner.
 En äldre editor skickar din dragning som det flyttade avståndet, och en server före `1.2.0` skickar `erd_move_table_group` på det sättet också.
 Den andra sidan adderar det avståndet till den punkt den håller.
@@ -97,7 +99,7 @@ Editorns eget kommando [Ångra](../guide/guides/undo-redo.md) fungerar tvärtom:
 
 Några redigeringar skapar inget steg i editorns ångrahistorik: `erd_set_database` och `erd_set_database_name` bland [inställningsverktygen](./tools.md#settings), samt `erd_resize_memo`.
 Det gör inte heller ett anrop till `erd_move_table_group` som flyttar gruppen mindre än 20 pixlar totalt, vågrätt och lodrätt sammanlagt, även om gruppen stannar kvar där den flyttades.
-Ett anrop som inte ändrar något skapar inte heller något steg: `erd_set_column_primary_key`, `erd_set_column_unique`, `erd_set_column_not_null`, `erd_set_column_auto_increment`, `erd_set_index_unique` eller `erd_set_index_column_order` som anger ett värde som dokumentet redan har; `erd_add_index_column` med en kolumn som redan finns i indexet; `erd_set_table_group` med tabeller som redan finns i den gruppen (eller som redan saknar grupp, med `groupId` `null`); `erd_move_table_group` till den punkt där gruppen redan står; `erd_resize_table_group` till den rektangel som gruppen redan har; `erd_sort_tables` på ett dokument utan tabeller; `erd_set_table_logical_name` eller `erd_set_column_logical_name` med det logiska namn som tabellen eller kolumnen redan har, när en härledning från det inte skulle ändra något; `erd_set_column_domain` med den domän som kolumnen redan är kopplad till, när kolumnen redan har den domänens typ och [Synkronisera datatyp i relationer](../guide/guides/settings.md#relationship-datatype-sync) inte skulle ändra typ på någon kolumn längs dess relationer; `erd_update_word`, `erd_update_term` eller `erd_update_domain` med bara värden som raden redan har, om inte `name` anges för en term som saknar fysiskt namn och termens ord bildar ett; `erd_derive_physical_names` när varje namn som anropet omfattar och som har ett logiskt namn redan har det som [ordlistorna](./tools.md#dictionaries) ger det och är märkt som härlett; eller en import med `mode` `append` som inte tillför någon tabell (för `erd_import_json` ingen tabell och ingen anteckning).
+Ett anrop som inte ändrar något skapar inte heller något steg: `erd_set_column_primary_key`, `erd_set_column_unique`, `erd_set_column_not_null`, `erd_set_column_auto_increment`, `erd_set_index_unique` eller `erd_set_index_column_order` som anger ett värde som dokumentet redan har; `erd_add_index_column` med en kolumn som redan finns i indexet; `erd_set_table_group` med tabeller som redan finns i den gruppen (eller som redan saknar grupp, med `groupId` `null`); `erd_set_memo_group` med anteckningar som redan finns i den gruppen (eller som redan saknar grupp); `erd_move_table_group` till den punkt där gruppen redan står; `erd_resize_table_group` till den rektangel som gruppen redan har; `erd_sort_tables` på ett dokument utan tabeller; `erd_set_table_logical_name` eller `erd_set_column_logical_name` med det logiska namn som tabellen eller kolumnen redan har, när en härledning från det inte skulle ändra något; `erd_set_column_domain` med den domän som kolumnen redan är kopplad till, när kolumnen redan har den domänens typ och [Synkronisera datatyp i relationer](../guide/guides/settings.md#relationship-datatype-sync) inte skulle ändra typ på någon kolumn längs dess relationer; `erd_update_word`, `erd_update_term` eller `erd_update_domain` med bara värden som raden redan har, om inte `name` anges för en term som saknar fysiskt namn och termens ord bildar ett; `erd_derive_physical_names` när varje namn som anropet omfattar och som har ett logiskt namn redan har det som [ordlistorna](./tools.md#dictionaries) ger det och är märkt som härlett; eller en import med `mode` `append` som inte tillför någon tabell (för `erd_import_json` ingen tabell och ingen anteckning).
 `erd_undo` hoppar över dessa och nämner dem i sitt resultat.
 Andra redigeringar, som `erd_change_relationship_type`, `erd_change_relationship_on_delete`, `erd_change_relationship_on_update`, `erd_change_table_group_name`, `erd_change_table_group_color` och `erd_set_ddl_script`, skapar ett steg även när de anger ett värde som dokumentet redan har.
 
@@ -120,7 +122,7 @@ Ett stängt diagram i en mapp som editorn betjänar stannar hos editorn, och age
 En editor som fortfarande körs, men vars låsfil är borta och vars anslutning stängdes utan att den stängde dokumentet, nekar nästa redigering med `hubGone`.
 Meddelandet anger vad som frigör dokumentet: i VS Code läser du in det fönstret igen, eller stänger det så att agenten kan redigera filen direkt; i Obsidian slår du på pluginet ERD Editor igen, eller stänger det fönstret; i en JetBrains-IDE slår du på pluginet igen, eller avslutar IDE:n.
 
-En läsning går i stället till filen på disken, med en notering om att redigeringar som ännu inte har sparats i editorn saknas, i två fall: när editorn som har dokumentet har hubben avstängd, och i fallet med `hubGone` ovan.
+En läsning, eller `erd_export_svg`, går i stället till filen på disken, med en notering om att redigeringar som ännu inte har sparats i editorn saknas, i två fall: när editorn som har dokumentet har hubben avstängd, och i fallet med `hubGone` ovan.
 En läsning som inte kan ansluta till en editors hubb nekas med `hubUnreachable`, precis som en redigering.
 
 ## Headless {#headless}
@@ -133,7 +135,7 @@ Om den har det skrivs ingenting, filen läses in igen och anropet nekas med `con
 En fil som har ändrats mellan två anrop läses helt enkelt in igen, och agentens ångrahistorik fram till dess rensas.
 
 En skrivskyddad fil lämnas som den är, och redigeringen nekas med `readonly`: en fil utan skrivbehörighet för sin ägare, eller med skrivskyddsattributet i Windows, som en Perforce- eller TFVC-fil som inte är utcheckad.
-Gör den skrivbar och anropa sedan igen. Läsningar fungerar fortfarande.
+Gör den skrivbar och anropa sedan igen. Läsningar och `erd_export_svg` fungerar fortfarande.
 
 Om en editor börjar betjäna dokumentet medan agenten redigerar det på disken nekas just den redigeringen med `hubAppeared` och ingenting skrivs. Nästa anrop redigerar via editorn.
 
@@ -142,7 +144,7 @@ I Windows gäller ytterligare två regler:
 - Ett dokument med egna behörigheter, som skiljer sig från mappens, skrivs på plats i stället för att ersättas, så att det behåller dem, och den temporära filen tas bort efteråt. Ett program som läser dokumentet under den skrivningen kan hitta text som inte går att tolka.
 - En fil som ett annat program håller öppen kan inte ersättas, så servern försöker igen i upp till två sekunder. Varje försök letar först efter en editor igen, och en editor som har börjat betjäna dokumentet under tiden nekar skrivningen med `hubAppeared`, eller med `blocked` när dess hubb är avstängd. Om filen fortfarande hålls öppen efter två sekunder skrivs ingenting, filen läses in igen och anropet misslyckas med ett meddelande som citerar systemfelet.
 
-En server före `1.1.0` läser ett dokument utan dess logiska namn, kolumnernas domänkopplingar och dokumentets ord, termer och domäner, så den första redigering som den skriver till filen utelämnar dem. Uppdatera servern – se [Uppdatera](./installation.md#updating).
+En server före `1.1.0` läser ett dokument utan dess logiska namn, kolumnernas domänkopplingar och dokumentets ord, termer och domäner, så den första redigering som den skriver till filen utelämnar dem. En server före `1.2.1` läser det på samma sätt utan anteckningarnas tabellgrupper, så den första redigering som den skriver till filen tar ut varje anteckning ur sin grupp. Uppdatera servern – se [Uppdatera](./installation.md#updating).
 
 ## Nekad {#refused}
 
@@ -151,7 +153,7 @@ Ett valvfönster i Obsidian behåller sin låsfil med hubben avstängd när inst
 En JetBrains-IDE behåller sin låsfil med hubben avstängd när inställningen Coding agents är av, när dess hubb inte kunde lyssna och medan IDE:n avslutas.
 
 En redigering av ett sådant dokument nekas med `blocked`, eftersom den öppna editorn kan skriva över en ändring som har skrivits till filen nästa gång den sparar.
-Läsningar fungerar fortfarande, från filen på disken.
+Läsningar fungerar fortfarande, från filen på disken, och det gör även `erd_export_svg`, vars resultat då anger läget `blocked`.
 
 För att låta agenten redigera slår du på hubben igen, så som meddelandet anger för den editorn: i VS Code litar du på arbetsområdet och slår på inställningen, eller läser in fönstret igen; i Obsidian slår du på Coding agents, eller läser in Obsidian igen; i en JetBrains-IDE slår du på Coding agents, eller startar om IDE:n om inställningen redan är på.
 

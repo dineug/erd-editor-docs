@@ -33,7 +33,7 @@ The history lives in memory for the current session. It is not stored in the doc
 Recorded:
 
 - Tables and memos: add, remove, move, and color; a table's name, logical name, and comment; a memo's text and size.
-- Table groups: add, remove, move, resize, name, color, and which group each table is in — see [Table Groups](./table-groups.md).
+- Table groups: add, remove, move, resize, name, color, and which group each table and memo is in — see [Table Groups](./table-groups.md).
 - Columns: add, remove, reorder, logical name, the domain each is linked to, and every column option.
 - The physical names the dictionaries derive, and whether each name is your own or the dictionaries': one undo puts a name and that state back together — see [Names of Your Own](./dictionary.md#names-of-your-own).
 - `Derive Physical Name Again` and `Derive Physical Names Again` — see [Derive Physical Names Again](./dictionary.md#derive-physical-names-again).
@@ -89,10 +89,10 @@ Picking a term from the list under a logical name cell is one step: the logical 
 Picking a domain in a column's Domain cell is one step, together with the data type it gives the column and what [Relationship DataType Sync](./settings.md#relationship-datatype-sync) carries along the relationships. Picking `None`, which unlinks the column, is one step too — see [The Domain Cell](./logical-names.md#the-domain-cell). Typing a data type other than its domain's into a linked column unlinks the column in the step of that input.  
 `Derive Physical Name Again` or `Derive Physical Names Again` is one step, however many names, domain links, and data types it changes. It records no step only when it changes nothing. Giving a name of your own back to the dictionaries is a change, even when the name already holds what they give.
 
-Creating a [table group](./table-groups.md), by drawing it or by grouping the selected tables with `Group selected tables` or `T` then `G`, is one step together with every table it takes in. Removing a group is one step, and undoing it brings the group back with its tables in it.  
-Dragging a group by its title bar moves the group and all its tables in one step. Tables dropped into or out of a group change group in the same step as their drag when you let go within about `200ms` of the last movement, so one undo puts them back where they were and in the groups they were in. After a longer pause before letting go, the change of group is a step of its own, and the first undo takes back only that.  
+Creating a [table group](./table-groups.md), by drawing it or by grouping the selected tables with `Group selected tables` or `T` then `G`, is one step together with every table and memo it takes in. Removing a group is one step, and undoing it brings the group back with its tables and memos in it. `Remove from group` is one step too, however many tables and memos it takes out.  
+Dragging a group by its title bar moves the group and all its tables and memos in one step. Tables and memos dropped into or out of a group change group in the same step as their drag when you let go within about `200ms` of the last movement, so one undo puts them back where they were and in the groups they were in. After a longer pause before letting go, the change of group is a step of its own, and the first undo takes back only that.  
 Resizing a group by an edge or a corner is recorded once, when you let go.  
-Applying [Auto Layout](./table-related-functions.md#auto-layout) is one step, the groups it fits round their tables included.
+Applying [Auto Layout](./table-related-functions.md#auto-layout) is one step, the memos it moves and the groups it fits round their tables and shown memos included.
 
 `Replace All` in [Find and Replace](./find-and-replace.md#replacing) is one step too, however many table names, column names, logical names, index names, table group names, comments, and memos it changes, the physical names and domain links the logical names derive included. When it changes nothing, as when `Preserve Case` writes every match back as it was, it records no step.  
 A single `Replace` is one step, including what a logical name derives and the scroll to the next match when that match needs one. When it writes its match back as it was, it records only that scroll, or nothing when there is none.  

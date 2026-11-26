@@ -7,7 +7,7 @@ description: Selectați, mutați, copiați, duplicați și ștergeți tabele și
 
 Tot ce faceți cu tabelele și notele odată ce există – selectarea, mutarea, copierea, ștergerea, colorarea și alegerea a ceea ce afișează pânza – precum și controalele pânzei din jurul lor.  
 Mai întâi vin comenzile pentru tabele și note; apoi proprietățile tabelului, focalizarea pe tabele, indexurile și cheile alternative, aranjarea automată și sistemul de baze de date; apoi pânza însăși: bara de instrumente a pânzei, zoomul, deplasarea pânzei și locul unde ajunge un salt, precum și vizualizatorul de diferențe; iar la final ce păstrează din toate acestea un editor doar în citire.  
-Grupurile de tabele, chenarele care adună tabele, au o pagină proprie (consultați [Grupuri de tabele](./table-groups.md)).  
+Grupurile de tabele, chenarele care adună tabele și note, au o pagină proprie (consultați [Grupuri de tabele](./table-groups.md)).  
 O pagină proprie au și numele logice și modul de afișare a numelor, care stabilește ce nume afișează tabelele (consultați [Nume logice](./logical-names.md)).
 
 ## Selecție multiplă {#multiple-selection}
@@ -21,7 +21,7 @@ Sunt acceptate trei metode:
 Notele se selectează la fel, iar oricare dintre cele două comenzi rapide de selectare totală preia deodată toate tabelele și notele. Notele ascunse cu View Option → `Memos` sunt excluse din selectarea totală și din caseta de selecție (consultați [Opțiuni de afișare a tabelelor](#table-view-options)).  
 [Grupurile de tabele](./table-groups.md#selecting-groups) se adaugă la selecție cu `Ctrl + click` (Windows/Linux) sau `⌘ + click` (Mac) pe bara lor de titlu, dar selectarea totală nu include niciodată vreun grup.  
 `Ctrl + A` cedează în fața cursorului de text, așa că selectează textul, nu diagrama, cât timp editați o celulă.  
-Caseta de selecție marchează un tabel sau o notă când îi acoperă mijlocul, nu atunci când doar îi atinge o margine. Ea preia un grup de tabele numai când cuprinde întregul chenar al grupului, așa că o casetă trasată în interiorul unui grup selectează tabele fără grup.  
+Caseta de selecție marchează un tabel sau o notă când îi acoperă mijlocul, nu atunci când doar îi atinge o margine. Ea preia un grup de tabele numai când cuprinde întregul chenar al grupului, așa că o casetă trasată în interiorul unui grup selectează tabele și note fără grup.  
 Un clic dreapta pe ceva deja selectat păstrează întreaga selecție, așa că elementele de meniu, de exemplu `Color`, `Group selected tables` și `Delete selected`, acționează asupra întregii selecții. Un clic dreapta pe orice alt tabel, notă sau grup de tabele selectează doar acel element, chiar și cu `Ctrl` sau `⌘` ținut apăsat, iar un clic dreapta pe o relație sau pe o zonă goală a pânzei deselectează tot.  
 `Escape` deselectează tot. Cât timp este deschis editorul unei celule, al unei note sau al numelui unui grup de tabele ori se trasează o relație sau un grup cu `New Table Group`, prima apăsare pe `Escape` încheie acțiunea respectivă, iar o a doua apăsare deselectează tot.  
 Un editor doar în citire nu are niciuna dintre aceste modalități de selectare: acolo selectează doar un salt (consultați [Editoare doar în citire](#read-only-editors)).
@@ -41,10 +41,10 @@ Doar butonul stâng al mouse-ului mută tabelele și notele. Un clic dreapta ale
 
 ![Glisarea unuia dintre cele două tabele selectate le mută pe amândouă, iar relația le urmează](/img/demo-table-multiple-move.webp)
 
-Un [grup de tabele](./table-groups.md) selectat se mută și el, împreună cu tabelele sale, iar un tabel care este atât selectat, cât și într-un grup în mișcare se mută o singură dată.  
-Locul unde lăsați un tabel îl poate muta într-un grup sau în afara unuia (consultați [Adăugarea și eliminarea tabelelor](./table-groups.md#adding-and-removing-tables)).
+Un [grup de tabele](./table-groups.md) selectat se mută și el, împreună cu tabelele și notele sale, iar un tabel sau o notă care este atât selectat, cât și într-un grup în mișcare se mută o singură dată.  
+Locul unde lăsați un tabel sau o notă poate muta elementul într-un grup sau în afara unuia (consultați [Adăugarea și eliminarea tabelelor](./table-groups.md#adding-and-removing-tables)).
 
-Tabelele și notele au o ordine de suprapunere comună. O apăsare pe un tabel sau pe o notă, cu butonul stâng sau cu cel drept, aduce elementul în fața tuturor celorlalte tabele și note, iar o apăsare pe bara de titlu a unui grup de tabele sau un clic dreapta pe corpul grupului îi aduce tabelele în prim-plan.  
+Tabelele și notele au o ordine de suprapunere comună. O apăsare pe un tabel sau pe o notă, cu butonul stâng sau cu cel drept, aduce elementul în fața tuturor celorlalte tabele și note, iar o apăsare pe bara de titlu a unui grup de tabele sau un clic dreapta pe corpul grupului îi aduce tabelele și notele în prim-plan.  
 Ordinea nu se salvează: o diagramă redeschisă își suprapune tabelele în ordinea în care le listează fișierul, cu toate notele deasupra lor.
 
 ## Copierea/lipirea tabelelor și notelor {#copyingpasting-tables-and-memos}
@@ -57,7 +57,7 @@ Fiecare coloană copiată își păstrează numele logic, iar fiecare nume de ta
 O coloană lipită își păstrează legătura cu domeniul doar când sunt îndeplinite două condiții: diagrama în care ajunge listează exact acel domeniu, nu doar unul cu același nume, iar domeniul are încă tipul de date cu care a fost copiată coloana. Altfel, coloana ajunge fără domeniu și păstrează tipul cu care a fost copiată (consultați [Legarea unei coloane](./dictionary.md#linking-a-column)).  
 Indexurile și relațiile sunt preluate și ele: un index se copiază integral pe tabelul copiat, iar o relație se copiază cu tipul ei și cu acțiunile ON DELETE și ON UPDATE atunci când ambele tabele pe care le leagă sunt în setul copiat. O relație inclusă doar pe jumătate este omisă, în loc să rămână îndreptată înapoi spre original.  
 Copiile lipite devin noua selecție, iar lipirea repetată a aceleiași copii o decalează de fiecare dată cu încă un pas de `50px`, astfel încât lipirile repetate nu se suprapun.  
-O copie nu își păstrează [grupul de tabele](./table-groups.md): tabelul lipit nu face parte din niciun grup, chiar dacă ajunge în interiorul chenarului unui grup, iar un grup selectat nu se copiază.  
+O copie nu își păstrează [grupul de tabele](./table-groups.md): tabelul sau nota lipită nu face parte din niciun grup, chiar dacă ajunge în interiorul chenarului unui grup, iar un grup selectat nu se copiază.  
 Cât timp View Option → `Memos` ascunde notele, o lipire adaugă totuși notele pe care le conține, ascunse și neselectate, așa că doar tabelele lipite devin noua selecție.
 
 ![Copierea a două tabele înrudite și lipirea lor de două ori, inclusiv relația](/img/demo-table-copy-paste.webp)
@@ -89,7 +89,7 @@ Comenzi rapide:
 
 Și meniurile contextuale șterg. Ultimul rând din meniul unui tabel sau al unei note afișează `Delete selected` cât timp acel tabel sau acea notă se numără printre două sau mai multe elemente selectate și elimină atunci întreaga selecție. Altfel, afișează `Delete` și elimină doar acel tabel sau acea notă. Pe rândul unei coloane selectate, meniul tabelului afișează în schimb `Delete column` sau `Delete columns`, ca în [Ștergerea coloanelor](./table-editing.md#column-deletion).
 
-Eliminarea unui tabel elimină odată cu el relațiile și indexurile sale. Eliminarea unui grup de tabele păstrează tabelele acestuia, fără grup (consultați [Eliminarea unui grup](./table-groups.md#removing-a-group)).  
+Eliminarea unui tabel elimină odată cu el relațiile și indexurile sale. Eliminarea unui grup de tabele păstrează tabelele și notele acestuia, fără grup (consultați [Eliminarea unui grup](./table-groups.md#removing-a-group)).  
 Nu se cere confirmare, fiecare eliminare este un singur pas de anulare, iar într-un editor `readonly` nu se elimină nimic.  
 Ținute apăsat, tastele `Delete` și `Backspace` elimină o singură dată și nu elimină niciodată o relație (consultați [Editarea relațiilor](./relationship-editing.md#deletion)). Cât timp tastați într-o celulă, într-o notă sau în orice alt câmp de text, ele editează în schimb textul.  
 Setările listează cele două taste sub numele `Delete Selection` (consultați [Comenzi rapide](./settings.md#shortcuts)).
@@ -98,7 +98,7 @@ Setările listează cele două taste sub numele `Delete Selection` (consultați 
 
 Puteți atribui culori pentru a face distincția pe categorii.  
 Un tabel își poartă culoarea de-a lungul marginii stângi, iar o notă de-a lungul marginii de sus. Faceți clic cu butonul stâng pe acea margine sau bandă ori alegeți `Color` din meniul contextual al tabelului sau al notei pentru a deschide selectorul de culori în dreptul indicatorului. Culoarea se aplică tuturor tabelelor, notelor și grupurilor de tabele selectate, nu doar elementului pe care ați făcut clic.  
-Un grup de tabele se colorează din elementul `Color` al propriului meniu, iar un tabel dintr-un grup colorat poartă culoarea grupului pe antetul său, păstrându-și propria culoare pe marginea stângă (consultați [Colorarea unui grup](./table-groups.md#coloring-a-group)).
+Un grup de tabele se colorează din elementul `Color` al propriului meniu, iar un tabel sau o notă dintr-un grup colorat poartă culoarea grupului pe antetul său, păstrându-și propria culoare pe marginea stângă, respectiv de-a lungul marginii de sus (consultați [Colorarea unui grup](./table-groups.md#coloring-a-group)).
 
 ![Alegerea culorii predefinite Blue din banda de culoare a unei note pentru două tabele selectate și notă, apoi eliminarea culorii cu No color](/img/demo-table-color.webp)
 
@@ -143,9 +143,9 @@ Numele afișate de tabele nu sunt o opțiune de afișare: elementul `Name View`,
 Opțiunea `Domain` dă fiecărei coloane o celulă, plasată conform [ordinii coloanelor](./settings.md#adjusting-column-order), cu numele domeniului de care este legată coloana. O coloană care nu este legată de niciun domeniu listat în foaia `Domains` afișează acolo textul substituent `domain`, estompat. Celula apare în orice mod de afișare. Cât timp opțiunea `Domain` este dezactivată, modul `Logical Names` afișează în schimb numele unui domeniu legat în celula tipului (consultați [Celula Domeniu](./logical-names.md#the-domain-cell)).  
 Opțiunea `Alternate Key` marchează coloanele fiecărei chei alternative, de exemplu `AK1.1` (consultați [Chei alternative](#alternate-keys)).  
 Opțiunea `Referential Actions` afișează etichetele `D:` și `U:` pe care acțiunile ON DELETE și ON UPDATE ale unei relații le plasează la capătul conectorului dinspre tabelul copil (consultați [Citirea unui conector](./relationship-editing.md#reading-a-connector)). Dezactivarea ei ascunde doar acele etichete și nu mută niciun tabel sau conector.  
-Opțiunea `Table Groups` afișează [grupurile de tabele](./table-groups.md) și culorile grupurilor pe anteturile tabelelor lor. Dezactivarea ei le ascunde pe pânză, pe minihartă și în exporturile de imagini, nu mută niciun tabel și păstrează fiecare tabel în grupul său (consultați [Ascunderea grupurilor](./table-groups.md#hiding-groups)). De asemenea, elimină folderul `Table Groups` din [explorator](./explorer.md#the-tree) și butonul `New Table Group` de pe [bara de instrumente a pânzei](#canvas-toolbar), iar căutarea din explorator nu mai găsește numele grupurilor.  
-Opțiunea `Memos` afișează notele. Dezactivarea ei ascunde toate notele pe pânză, pe minihartă și în exporturile de imagini și nu mută niciun tabel sau conector. Notele ascunse nu ocupă spațiu, așa că barele de derulare, miniharta și busola `Go to content` nu țin cont de ele.  
-Ascunderea notelor le deselectează și închide editorul unei note, dacă este deschis. [Exploratorul](./explorer.md#the-tree) renunță la folderul `Memos`, iar funcția sa [Găsire și înlocuire](./find-and-replace.md) și prefixul `:` al căutării rapide nu caută în ele. Cât timp sunt ascunse, elementul `New Memo` dispare din meniul contextual, de pe [bara de instrumente a pânzei](#canvas-toolbar), din căutarea rapidă și de pe [ecranul de bun venit](./editing-start.md#welcome-screen), iar `Alt + M` nu adaugă nicio notă. O lipire sau o operație [Import și adăugare](./file-import-export.md#import-and-add) adaugă totuși notele pe care le conține, ascunse și neselectate.  
+Opțiunea `Table Groups` afișează [grupurile de tabele](./table-groups.md) și culorile grupurilor pe anteturile tabelelor și notelor lor. Dezactivarea ei ascunde grupurile și culorile lor pe pânză și în exporturile de imagini, scoate chenarele de pe minihartă, nu mută niciun tabel sau nicio notă și păstrează fiecare tabel și fiecare notă în grupul său (consultați [Ascunderea grupurilor](./table-groups.md#hiding-groups)). De asemenea, elimină folderul `Table Groups` din [explorator](./explorer.md#the-tree) și butonul `New Table Group` de pe [bara de instrumente a pânzei](#canvas-toolbar), iar căutarea din explorator nu mai găsește numele grupurilor.  
+Opțiunea `Memos` afișează notele. Dezactivarea ei ascunde toate notele pe pânză, pe minihartă și în exporturile de imagini și nu mută niciun tabel sau conector. Notele ascunse nu ocupă spațiu, așa că barele de derulare, miniharta, busola `Go to content` și chenarele [grupurilor de tabele](./table-groups.md) nu țin cont de ele, deși ele rămân în grupurile lor.  
+Ascunderea notelor le deselectează și închide editorul unei note, dacă este deschis. [Exploratorul](./explorer.md#the-tree) renunță la folderul `Memos` și la notele de sub grupurile sale de tabele, iar funcția sa [Găsire și înlocuire](./find-and-replace.md) și prefixul `:` al căutării rapide nu caută în ele. Cât timp sunt ascunse, elementul `New Memo` dispare din meniul contextual, de pe [bara de instrumente a pânzei](#canvas-toolbar), din căutarea rapidă și de pe [ecranul de bun venit](./editing-start.md#welcome-screen), iar `Alt + M` nu adaugă nicio notă. O lipire sau o operație [Import și adăugare](./file-import-export.md#import-and-add) adaugă totuși notele pe care le conține, ascunse și neselectate.  
 Într-un editor doar în citire, comutatoarele funcționează în continuare, dar doar pe acel ecran: nu sunt salvate, înregistrate în istoricul anulărilor sau partajate și revin la cele ale fișierului când editorul devine din nou editabil (consultați [Editoare doar în citire](./settings.md#read-only-editors) din Setări).
 
 ![Comutarea elementelor din View Option în timp ce tabelele se rearanjează, marcarea unui index unic compus cu AK1.1 și AK1.2 prin Alternate Key, apoi dezactivarea și reactivarea opțiunii Memos](/img/demo-view-options.webp)
@@ -233,9 +233,9 @@ Previzualizarea este încadrată pe diagramă așa cum era aceasta la pornirea a
 
 Celelalte trei se calculează dintr-odată, în afara firului principal, așa că nu există nimic de urmărit: un mesaj apare cât timp se calculează aranjarea, iar aranjamentul final este centrat pe zona pe care o acoperă deja diagrama. `Cancel` sau `Escape` renunță la o aranjare pe care nu o mai așteptați, iar, într-o aplicație gazdă care nu rulează niciun worker partajat, aranjarea se încheie cu mesajul `Could not place tables` (consultați [Web Workers](../../api/installation.md#web-workers)). O aranjare care nu a returnat un rezultat în 60 de secunde se încheie la fel.
 
-Indiferent de alegere, tabelele și grupurile de tabele sunt mutate, iar notele rămân unde sunt. Tabelele sunt plasate la lățimile pe care le au în modul de afișare a numelor pe care îl vedeți. O relație a unui tabel cu el însuși este ignorată, iar mai multe relații între aceleași două tabele contează o singură dată.  
-Fiecare aranjare păstrează împreună tabelele fiecărui grup, indiferent dacă grupurile sunt afișate sau nu, și ajustează fiecare grup care conține tabele în jurul acestora (consultați [Grupuri de tabele](./table-groups.md#auto-layout)).  
-Rezultatul este înregistrat ca o singură intrare în istoric, așa că o singură anulare readuce fiecare tabel și grup unde era.  
+Indiferent de alegere, tabelele, grupurile de tabele și notele din grupurile care conțin tabele sunt mutate, iar orice altă notă rămâne unde este. Tabelele sunt plasate la lățimile pe care le au în modul de afișare a numelor pe care îl vedeți. O relație a unui tabel cu el însuși este ignorată, iar mai multe relații între aceleași două tabele contează o singură dată.  
+Fiecare aranjare păstrează împreună tabelele și notele fiecărui grup, indiferent dacă grupurile sunt afișate sau nu, și ajustează fiecare grup care conține tabele în jurul tabelelor și notelor sale afișate (consultați [Grupuri de tabele](./table-groups.md#auto-layout)).  
+Rezultatul este înregistrat ca o singură intrare în istoric, așa că o singură anulare readuce fiecare tabel, notă și grup unde era.  
 Un editor doar în citire nu oferă `Auto Layout`. Cel aflat încă în desfășurare în momentul în care editorul devine doar în citire se încheie acolo: previzualizarea `Force` se închide odată cu mesajul ei și nu păstrează nicio poziție, iar o aranjare încă în calcul este abandonată odată cu mesajul ei, așa că niciun tabel nu se mută, nici atunci, nici după ce editorul devine din nou editabil.
 
 ![Ordonarea unei grămezi de tabele cu aranjarea automată Flow din meniul contextual al pânzei, care le aliniază de la stânga la dreapta de-a lungul relațiilor](/img/demo-automatic-table-placement.webp)
@@ -311,7 +311,7 @@ O glisare cu butonul din mijloc nu selectează, nu mută și nu apasă nimic și
 O apăsare cu butonul din mijloc pe barele de derulare, pe minihartă, pe bara de instrumente a pânzei sau pe un editor deschis de celulă sau de notă nu deplasează pânza.
 
 Miniharta din colțul din dreapta sus reprezintă diagrama cu spațiu cât un ecran pe fiecare parte a ei, adică întinderea barelor de derulare, rotunjită spre exterior la o grilă grosieră, așa că, cu cât micșorați mai mult, cu atât diagrama apare mai mică în ea. Faceți clic pe ea pentru a muta vizualizarea în acel punct sau glisați dreptunghiul zonei de vizualizare pentru a deplasa vizualizarea. Pe măsură ce micșorați, dreptunghiul zonei de vizualizare crește pentru a acoperi o parte mai mare din hartă.  
-Ea desenează fiecare tabel în culoarea tabelului și fiecare grup de tabele afișat ca un chenar în culoarea grupului, în spatele tabelelor sale.  
+Ea desenează fiecare tabel în culoarea tabelului și fiecare grup de tabele afișat ca un chenar în culoarea grupului, așezat în spatele tabelelor și notelor sale și extins în jurul notelor sale afișate, la fel ca chenarul de pe pânză.  
 Barele de derulare de-a lungul marginilor din dreapta și de jos descriu aceeași cursă, care merge de la diagrama aflată chiar dincolo de o margine a ecranului până la diagrama aflată chiar dincolo de marginea opusă, așa că este cu cel puțin un ecran mai lungă decât diagrama desenată și și mai lungă cât timp vizualizarea se află dincolo de diagramă. În afara modului Zen, ambele bare de derulare apar ori de câte ori documentul conține un tabel, o notă afișată sau un grup de tabele afișat, chiar și când totul încape pe ecran. Un document fără niciunul dintre acestea, de exemplu unul ale cărui singure note sunt ascunse cu View Option → `Memos`, nu afișează nicio bară de derulare și nici minihartă.  
 Glisarea cursorului unei bare de derulare sau a dreptunghiului zonei de vizualizare din minihartă este singura deplasare care se oprește: nu merge mai departe de tabelele aflate chiar în afara ecranului sau de punctul de pornire al glisării, dacă acesta era mai departe.
 
@@ -364,7 +364,7 @@ Un editor doar în citire oferă și el `Diff Viewer`, iar vizualizarea funcțio
 
 Se compară tabelele, coloanele, indexurile, cheile străine, notele și grupurile de tabele.  
 Fiecare element este asociat mai întâi după ID, așa că, față de o versiune anterioară a aceluiași fișier, care păstrează ID-urile, un tabel, o coloană, un index sau un grup de tabele redenumit rămâne un singur element, listat ca redenumit.  
-Elementele rămase se asociază unu la unu după ceea ce păstrează: un tabel sau un grup de tabele după nume, ținând cont de majuscule; o coloană sau un index după tabel și nume; o cheie străină după cele două tabele și perechile de coloane; iar o notă după text, apoi după poziție. Un index fără nume se asociază după coloane, ordinea și direcția acestora și după faptul că este sau nu unic, iar un grup de tabele fără nume după cel mai mare număr de tabele comune.  
+Elementele rămase se asociază unu la unu după ceea ce păstrează: un tabel sau un grup de tabele după nume, ținând cont de majuscule; o coloană sau un index după tabel și nume; o cheie străină după cele două tabele și perechile de coloane; iar o notă după text, apoi după poziție. Un index fără nume se asociază după coloane, ordinea și direcția acestora și după faptul că este sau nu unic, iar un grup de tabele fără nume după cel mai mare număr de tabele și note comune.  
 Astfel, față de un fișier de altă proveniență, de exemplu o diagramă refăcută prin import SQL, un tabel redenumit apare ca un tabel eliminat și unul adăugat.
 
 Ce contează ca modificare:
@@ -373,8 +373,8 @@ Ce contează ca modificare:
 - O coloană: numele, comentariul, tipul de date, valoarea implicită, autoincrementarea, cheia primară, indicatorii unic și non-NULL și locul în tabel. Doar coloanele din afara ordinii comune ambelor documente contează ca mutate, așa că adăugarea, eliminarea sau mutarea unei coloane nu le marchează pe celelalte.
 - Un index: numele, UNIQUE și coloanele, cu ordinea și direcția lor.
 - O cheie străină: perechile de coloane, tipul de relație și acțiunile ON DELETE și ON UPDATE.
-- O notă: textul, poziția, dimensiunea și culoarea.
-- Un grup de tabele: numele, tabelele pe care le conține, culoarea, poziția și dimensiunea.
+- O notă: textul, grupul de tabele, poziția, dimensiunea și culoarea.
+- Un grup de tabele: numele, tabelele și notele pe care le conține, culoarea, poziția și dimensiunea.
 
 Astfel, un tabel, o notă sau un grup care a fost doar mutat, redimensionat sau recolorat contează ca modificat. Pozițiile și dimensiunile se compară în pixeli întregi, iar ordinea de suprapunere și punctul în care un conector întâlnește un tabel nu contează niciodată.  
 Numele logice, legăturile cu domeniile și cuvintele, termenii și domeniile din fila [Dicționar](./dictionary.md) nu se compară, așa că o modificare doar a acestora nu este nici listată, nici marcată. Un tip de date modificat de un domeniu contează totuși, ca modificare a tipului de date al coloanei.
@@ -393,7 +393,7 @@ Fiecare rând se termină cu o literă, iar un rând marcat cu `A`, `D`, `M` sau
 - `R`, redenumit, în albastru: în ambele, cu un nume nou. O redenumire are prioritate față de orice altă modificare, pe care sfatul ecran o listează totuși.
 - `~`, în chihlimbar, încheie fiecare folder și fiecare tabel listat doar pentru modificările din interiorul lui; numele lor își păstrează culoarea obișnuită.
 
-Treceți cu indicatorul peste numele unui rând pentru a-i vedea sfatul ecran: starea, `Added`, `Deleted`, `Modified`, `Renamed` sau `Changed inside`, apoi câte o linie pentru fiecare modificare, de exemplu `Name: users → members` sau `NN: ✗ → ✓`. Un text este citat prin prima sa linie, tăiată după 40 de caractere, iar o valoare goală apare ca `—`. Sfatul ecran al unui element adăugat sau eliminat conține doar starea.
+Treceți cu indicatorul peste numele unui rând pentru a-i vedea sfatul ecran: starea, `Added`, `Deleted`, `Modified`, `Renamed` sau `Changed inside`, apoi câte o linie pentru fiecare modificare, de exemplu `Name: users → members` sau `NN: ✗ → ✓`. Un text este citat prin prima sa linie, tăiată după 40 de caractere, iar o valoare goală apare ca `—`. O notă mutată într-un grup numit Billing are în sfatul ecran linia `Table group: — → Billing`, iar sfatul ecran al grupului primește o linie precum `Memos: — → "note"`, care numește notele grupului după primele lor linii, între ghilimele duble. Sfatul ecran al unui element adăugat sau eliminat conține doar starea.
 
 Câmpul `Filter by name`, deasupra arborelui, păstrează rândurile al căror nume curent sau salvat ori nume logic curent sau salvat conține ce tastați, indiferent de majuscule, în orice mod de afișare a numelor. Un tabel al cărui nume se potrivește își păstrează toate rândurile, iar unul al cărui nume nu se potrivește rămâne doar cu rândurile care se potrivesc. Un filtru care nu se potrivește cu nimic lasă arborele gol.  
 Când cele două documente nu diferă deloc, arborele afișează `No changes`.
@@ -419,7 +419,7 @@ Cele două părți colorează textul, contururile și conectorii și nu umplu ni
 - O coloană adăugată sau eliminată într-un tabel prezent în ambele documente își colorează întregul rând, iar o coloană care s-a mutat își colorează întregul rând în chihlimbar. Nimic din interiorul unui tabel adăugat sau eliminat nu este marcat separat.
 - Textul unei celule modificate devine chihlimbar: comentariul unui tabel, comentariul, tipul de date, valoarea implicită sau indicatorii de autoincrementare, unic ori non-NULL ai unei coloane ori textul unei note. O modificare a cheii primare colorează în chihlimbar pictograma cheii coloanei.
 - Un tabel, o coloană sau un grup de tabele redenumit are numele în albastru.
-- Un tabel, o notă sau un grup de tabele cu o modificare care nu are o celulă proprie, de exemplu o mutare, o dimensiune sau o culoare nouă ori o schimbare de grup sau a tabelelor unui grup, este conturat în chihlimbar.
+- Un tabel, o notă sau un grup de tabele cu o modificare care nu are o celulă proprie, de exemplu o mutare, o dimensiune sau o culoare nouă ori o schimbare de grup sau a tabelelor ori notelor unui grup, este conturat în chihlimbar.
 - O cheie străină adăugată, eliminată sau modificată își desenează conectorul în culoarea respectivă. Trecerea indicatorului peste el sau evidențierea declanșată de un rând îl desenează în schimb în culoarea obișnuită de evidențiere la trecerea indicatorului.
 - O modificare de index nu marchează nimic pe niciuna dintre părți; apare doar în arbore.
 

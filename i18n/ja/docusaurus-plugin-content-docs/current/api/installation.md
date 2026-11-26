@@ -51,18 +51,18 @@ editor.addEventListener('change', () => {
 
 ```html
 <script type="module">
-  import 'https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js';
+  import 'https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js';
 
   const editor = document.createElement('erd-editor');
   editor.style.cssText = 'display: block; width: 100%; height: 100vh;';
   document.body.appendChild(editor);
 </script>
 <!-- or -->
-<script type="module" src="https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js"></script>
+<script type="module" src="https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js"></script>
 ```
 
 `esm.run` がパッケージの外部依存を解決してくれるため、バンドラーなしでも動作します。
-各エントリーには、バージョンの後ろのパスで到達します。`…/erd-editor.js` はエディタを、`…/erd-viewer.js` はビューアーを定義し、ビューアーは英語以外の各表示言語を、ページが求めたときに CDN から取得します。パッケージ名だけの URL `https://esm.run/@dineug/erd-editor@5.1.0` はルートを配信し、ルートは要素を定義しません。
+各エントリーには、バージョンの後ろのパスで到達します。`…/erd-editor.js` はエディタを、`…/erd-viewer.js` はビューアーを定義し、ビューアーは英語以外の各表示言語を、ページが求めたときに CDN から取得します。パッケージ名だけの URL `https://esm.run/@dineug/erd-editor@5.1.1` はルートを配信し、ルートは要素を定義しません。
 バージョンを指定しない URL は常に最新のリリースを配信します。メジャーアップグレードが予告なくページに反映されるのを避けたい場合は、上のようにバージョンを固定します。
 `5.0.0` 自体がメジャーアップグレードです。4.x にとどまる必要があるページは `@4.2.0` に固定します。[4.x からのアップグレード](#upgrading-from-4x)を参照してください。
 
@@ -75,7 +75,7 @@ editor.addEventListener('change', () => {
 
 ```html
 <erd-editor></erd-editor>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.1"></script>
 <script>
   const editor = document.querySelector('erd-editor');
   editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
@@ -88,7 +88,7 @@ editor.addEventListener('change', () => {
 
 ```html
 <erd-viewer src="diagram.erd.json" style="display: block; height: 480px"></erd-viewer>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0/dist/erd-viewer.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.1/dist/erd-viewer.umd.js"></script>
 ```
 
 どちらのファイルも、もう一方のタグは定義せず、ページに残すグローバルは自身のものと `window.Konva` だけです。
@@ -100,7 +100,7 @@ exports マップは引き続き ES モジュールを指しているため、np
 ```html
 <erd-editor system-dark-mode enable-theme-builder enable-locale-picker enable-welcome-screen></erd-editor>
 <script type="module">
-  import 'https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js';
+  import 'https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js';
 
   const editor = document.querySelector('erd-editor');
 </script>
@@ -123,7 +123,7 @@ erd-editor {
 
 ### サーバーサイドレンダリング
 
-`engine.js` と `peer.js` 以外のエントリーはどれも DOM が必要で、Node では例外が発生します。`erd-editor.js` と `erd-viewer.js` はモジュールスコープで要素を定義し、`5.0.0` から何も定義しないパッケージのルートも、読み込み時に両方の要素クラスを構築します。
+これらのページで説明するエントリーのうち `engine.js` と `peer.js` 以外はどれも DOM が必要で、Node では例外が発生します。`erd-editor.js` と `erd-viewer.js` はモジュールスコープで要素を定義し、`5.0.0` から何も定義しないパッケージのルートも、読み込み時に両方の要素クラスを構築します。
 Next.js、Nuxt、SvelteKit、Astro では、要素のエントリーをクライアント側でのみ実行される経路から読み込み、ルートからの名前付きインポート（`setExportFileCallback` や `toImage` など）も同じ経路から読み込みます。
 
 ```js
@@ -251,7 +251,7 @@ webpack の実験的な `experiments.outputModule` では、各ワーカーが�
 
 ## エントリーポイント
 
-パッケージには 5 つのエントリーがあります。
+これらのページでは、パッケージのエントリーのうち 5 つを説明します。
 
 | エントリー | 内容 |
 | --- | --- |
@@ -371,7 +371,7 @@ Chrome 91+、Edge 94+、Firefox 93+、Safari 16.4+ に対応しています。�
    import { setExportFileCallback } from '@dineug/erd-editor';
   ```
 
-- CDN でも同じです。`https://esm.run/@dineug/erd-editor` はルートを配信するようになり、何も定義しません。`https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js` をインポートしてください。パッケージ名だけの jsDelivr と unpkg の URL は、これまでどおり script タグのビルドを配信し、`<erd-editor>` を定義します。バージョンを指定しない URL は最新の 5.x リリースを配信するようになりました。4.x にとどまるには `@4.2.0` に固定します。[CDN](#cdn) と [script タグ](#script-タグ)を参照してください。
+- CDN でも同じです。`https://esm.run/@dineug/erd-editor` はルートを配信するようになり、何も定義しません。`https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js` をインポートしてください。パッケージ名だけの jsDelivr と unpkg の URL は、これまでどおり script タグのビルドを配信し、`<erd-editor>` を定義します。バージョンを指定しない URL は最新の 5.x リリースを配信するようになりました。4.x にとどまるには `@4.2.0` に固定します。[CDN](#cdn) と [script タグ](#script-タグ)を参照してください。
 - ルートは何も定義しませんが、引き続き DOM が必要です。そのため、サーバーサイドレンダリングでは、ルートからの名前付きインポート（`setExportFileCallback` など）を、要素のエントリーと並べて、クライアント側でのみ実行される経路に置きます。[サーバーサイドレンダリング](#サーバーサイドレンダリング)を参照してください。
 - `window.ErdEditor` に `ErdEditorElement` と `defineErdEditor` が加わりました。ビューアーの script タグのビルドは `ErdViewerElement` と `defineErdViewer` を `window.ErdViewer` に置き、どちらのグローバルにも `toImage` は入っていません。
 - `readonly` のエディタは閲覧用として開きます。6 つのタブ、エクスプローラー、クイック検索、他の参加者の表示は残り、ダイアグラムを編集するコントロールは、無効になるのではなく取り除かれます。ツールバーにはデータベース名がテキストで表示され、設定タブは `Read only` のバッジのもとで、すべてのコントロールを無効にして設定を表示し、フローティングツールバーに残るのは拡大・縮小、名前の表示、Zen モード、コンパスだけなので、`Hand` と `Select` はなくなり、ドラッグは表示位置の移動になります。押下は何も選択しません。唯一の選択は、エクスプローラーやクイック検索からの移動が到達先の周りに付ける外枠で、動かさずにクリックすると解除され、すべてを選択するショートカットは何も選択しません。`readonly` をオンにすると、選択、ハンドツール、セルのエディタ、ドラッグ、Map Columns、自動レイアウトの `Force` のプレビュー、Time Travel のように開いていたものが終了し、スクロール、拡大・縮小、タブ、名前の表示は保たれます。[readonly](./erd-editor-element.md#readonly) を参照してください。

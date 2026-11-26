@@ -39,7 +39,7 @@ interface ErdViewerElement extends HTMLElement {
 ```
 
 ייבוא של `@dineug/erd-editor/erd-viewer.js` מגדיר את `<erd-viewer>` ומשאיר את `<erd-editor>` לא מוגדר. ייבוא שורש החבילה אינו מגדיר אף אחד מהם: הוא מייצא את המחלקה `ErdViewerElement` ואת `defineErdViewer()`, שמגדירה את התגית במקום שבו קוראים לה, כך שדף יכול גם להגדיר את המחלקה תחת תגית משלו – ראו [רישום האלמנטים](./installation.md#registering-the-elements).  
-כל נקודת כניסה מלבד `engine.js` ו-`peer.js` צריכה DOM, גם זו, ולכן דף שמרונדר בצד השרת מייבא אותה בצד הלקוח – ראו [רינדור בצד השרת](./installation.md#server-side-rendering).  
+כל נקודת כניסה שהדפים האלה מתארים, מלבד `engine.js` ו-`peer.js`, צריכה DOM, גם זו, ולכן דף שמרונדר בצד השרת מייבא אותה בצד הלקוח – ראו [רינדור בצד השרת](./installation.md#server-side-rendering).  
 ייבוא נקודת הכניסה מוסיף את `erd-viewer` ל-`HTMLElementTagNameMap`, ולכן `document.createElement('erd-viewer')` ו-`document.querySelector('erd-viewer')` מוגדרים כ-`ErdViewerElement` בלי המרת טיפוס.
 
 כמו העורך, המציג מרנדר לתוך shadow root סגור, ולכן `viewer.shadowRoot` הוא `null` וסגנונות הדף אינם דולפים פנימה או החוצה; מעצבים אותו באמצעות [setTheme](#settheme) ומשתני ה-CSS `--erd-editor-*`. כמה מציגים בדף אחד שומרים כל אחד מסמך, תצוגה, ערכת נושא ושפה משלו.  
@@ -52,7 +52,7 @@ interface ErdViewerElement extends HTMLElement {
 
 ```html
 <erd-viewer src="diagram.erd.json" style="display: block; height: 480px"></erd-viewer>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0/dist/erd-viewer.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.1/dist/erd-viewer.umd.js"></script>
 ```
 
 ## src {#src}

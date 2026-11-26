@@ -14,7 +14,7 @@ O que o servidor encontra decide para onde vai a edição.
 | --- | --- |
 | Um editor cuja área de trabalho, cofre ou projeto aberto contém o documento, ou que o tem aberto | **Em direto.** Abre o documento no ERD Editor, se necessário, junta-se à sessão de edição e aplica lá a alteração. As edições aparecem de imediato e são guardadas tal como o editor guarda as edições feitas por si — consulte [Guardar](#saving). |
 | Nenhum editor | **Headless.** Carrega o ficheiro, aplica a alteração e substitui o ficheiro antes de responder, pelo que o resultado indica `saved: true` e `erd_save` não tem nada para fazer. |
-| Um editor com o hub desativado | **Recusado.** As leituras continuam a funcionar, a partir do disco. Uma alteração escrita no ficheiro enquanto um editor o tem aberto poderia ser substituída da próxima vez que esse editor guardar, por isso o servidor não escreve nada. |
+| Um editor com o hub desativado | **Recusado.** As leituras e o `erd_export_svg` continuam a funcionar, a partir do disco. Uma alteração escrita no ficheiro enquanto um editor o tem aberto poderia ser substituída da próxima vez que esse editor guardar, por isso o servidor não escreve nada no documento. |
 | Um editor com o hub ativado, mas que utiliza um protocolo que não é o do servidor: com o servidor `1.0.0` ou posterior, uma extensão do VS Code `3.x`, um plugin do Obsidian `0.x` ou um plugin da JetBrains `0.9.0` ou `0.10.0`; com um servidor anterior à `1.0.0`, a extensão `4.0.0` ou posterior, ou um plugin `1.0.0` ou posterior | **Recusado**, incluindo as leituras, com `protocolMismatch`. A mensagem indica o lado a atualizar: a extensão ou o plugin, ou o servidor — consulte [Atualizar](./installation.md#updating). |
 | No Windows, um editor que detém o documento sob outro caminho para o mesmo ficheiro: o agente indicou-o através de uma partilha de rede ou de uma unidade mapeada deste computador, como `\\localhost\C$\…`, e o editor detém-no pelo caminho da unidade, ou o contrário | **Recusado**, incluindo as leituras, com `invalidPath`. A mensagem indica o caminho pelo qual o editor detém o documento; volte a chamar com esse caminho. |
 | No Windows, um editor a que o Windows não deixa o agente aceder: um iniciado como administrador quando o agente não o foi, ou qualquer editor quando o agente é executado numa sandbox | **Recusado**, incluindo as leituras, com `hubUnreachable` e uma mensagem que diz porquê. Execute o editor e o agente com os mesmos direitos, por exemplo, iniciando de novo o editor sem direitos de administrador. |
@@ -27,15 +27,17 @@ Um empate, como dois editores que o têm ambos aberto, resolve-se a favor daquel
 Assim, um documento num cofre do Obsidian dentro de uma pasta da área de trabalho do VS Code vai para o Obsidian, a menos que o VS Code o tenha aberto e o Obsidian não.
 
 As chamadas sobre um mesmo documento são executadas uma de cada vez, pela ordem em que chegaram ao servidor. As chamadas sobre documentos diferentes são executadas em paralelo.
+`erd_export_svg` só ocupa a sua vez enquanto lê o documento, pelo que uma chamada posterior sobre o documento não espera pelo desenho, e o servidor desenha uma exportação de cada vez, mesmo de dois documentos — consulte [Exportação SVG](./tools.md#svg-export).
 
 ## Em direto {#live}
 
 O agente junta-se ao editor como mais um colaborador.
 As edições do agente chegam de imediato a todos os editores abertos no documento, e o seu foco é mostrado na tabela e na célula que está a editar, como o de um colaborador — consulte [focusTracker](../api/advanced/collaborative-editing.md#focustracker).
 
-Uma leitura nunca abre um editor. Uma edição abre o documento no ERD Editor quando ainda não está aberto, sem ficar com o foco do teclado.
+Uma leitura nunca abre um editor, nem o `erd_export_svg`, que desenha o que o editor tem, incluindo as edições ainda não guardadas. Uma edição abre o documento no ERD Editor quando ainda não está aberto, sem ficar com o foco do teclado.
 
 Um editor com uma extensão do VS Code anterior à `4.2.0`, ou com um plugin do Obsidian ou da JetBrains anterior à `1.2.0`, continua a receber as edições do agente em direto, mas não mostra nem mantém os nomes lógicos, os vínculos a domínios e as linhas dos dicionários que o agente escreve — consulte [Atualizar](./installation.md#updating).
+Do mesmo modo, um editor com uma extensão anterior à `4.3.1` ou um plugin anterior à `1.3.1` não mostra nem mantém o grupo de tabelas a que uma nota pertence: uma nota que o agente põe num grupo fica aí sem grupo, e o editor deixa o grupo da nota fora do ficheiro quando guarda, embora a chamada do agente tenha êxito.
 
 Com a extensão do VS Code `4.3.0` ou posterior, ou o plugin do Obsidian ou da JetBrains `1.3.0` ou posterior, uma importação no modo `replace`, e um `erd_undo` ou `erd_redo` de uma, terminam uma relação que está a desenhar no editor, seja qual for a versão do servidor — consulte [Criação de relações](../guide/guides/editing-start.md#relationship-creation).
 Antes dessas versões, o desenho continuava preparado, e um clique numa tabela podia adicionar uma relação a partir de uma tabela que já não estava no diagrama.
@@ -53,11 +55,11 @@ Uma reordenação de colunas, feita por si ou pelo `erd_move_column` ou `erd_mov
 Uma mudança da base de dados, feita por si ou pelo `erd_set_database` do agente, também é aplicada pela ordem em que chega, pelo que duas feitas no mesmo instante podem deixar o editor e o agente em bases de dados diferentes.
 
 O seu arrastamento e os `erd_move_table`, `erd_move_tables`, `erd_move_memo`, `erd_move_table_group` e `erd_sort_tables` do agente viajam como os pontos onde terminam, pelo que dois movimentos da mesma tabela, nota ou grupo de tabelas terminam onde um deles a pôs, nunca na soma dos dois.
-O `erd_move_table_group` envia o ponto do grupo e o de cada uma das suas tabelas num só lote, tal como o arrastamento da barra de título do grupo.
+O `erd_move_table_group` envia o ponto do grupo e o de cada uma das suas tabelas num só lote, tal como o arrastamento da barra de título do grupo, e desde o servidor `1.2.1` também o ponto de cada uma das suas notas.
 Um redimensionamento escreve a posição e o tamanho em conjunto, pelo que um movimento e um redimensionamento da mesma nota ou do mesmo grupo de tabelas feitos no mesmo instante, como o `erd_resize_memo` enquanto arrasta essa nota, terminam num só retângulo nos dois lados: o do redimensionamento ou, quando o movimento ganha, o ponto do movimento com o tamanho do redimensionamento.
 Um movimento inferior a 20 píxeis, que não cria nenhuma entrada de anulação, também sai como o ponto onde termina, pelo que pode ganhar ao movimento do outro lado, seja um `erd_move_table_group` curto ou um arrastamento curto seu, como um clique que desloca uma tabela alguns píxeis.
 
-As versões mais antigas continuam a ligar-se, uma vez que o servidor `1.2.0` utiliza o protocolo 2 do hub, tal como as versões da `1.0.0` à `1.1.1`.
+As versões mais antigas continuam a ligar-se, uma vez que o servidor `1.2.0` e posteriores utilizam o protocolo 2 do hub, tal como as versões da `1.0.0` à `1.1.1`.
 Com um servidor anterior à `1.2.0`, ou uma extensão anterior à `4.3.0` ou um plugin anterior à `1.3.0`, um movimento ou redimensionamento da mesma tabela, nota ou grupo de tabelas feito no mesmo instante pode deixar o editor e o agente com posições diferentes.
 Um editor mais antigo envia o seu arrastamento como a distância percorrida, e um servidor anterior à `1.2.0` envia o `erd_move_table_group` da mesma forma.
 O outro lado soma essa distância ao ponto que tem.
@@ -97,7 +99,7 @@ A [anulação](../guide/guides/undo-redo.md) do próprio editor funciona ao cont
 
 Algumas edições não criam entrada de anulação no editor: `erd_set_database` e `erd_set_database_name`, entre as [ferramentas de definições](./tools.md#settings), e `erd_resize_memo`.
 Também não a cria um `erd_move_table_group` que mova o grupo menos de 20 píxeis no total, somando o movimento na horizontal e na vertical, embora o grupo fique onde foi movido.
-Uma chamada que não altera nada também não cria nenhuma: `erd_set_column_primary_key`, `erd_set_column_unique`, `erd_set_column_not_null`, `erd_set_column_auto_increment`, `erd_set_index_unique` ou `erd_set_index_column_order` a definir um valor que o documento já tem; `erd_add_index_column` com uma coluna que já está no índice; `erd_set_table_group` com tabelas que já estão nesse grupo (ou já em nenhum, com `groupId` `null`); `erd_move_table_group` para o ponto onde o grupo já está; `erd_resize_table_group` para o retângulo que o grupo já tem; `erd_sort_tables` num documento sem tabelas; `erd_set_table_logical_name` ou `erd_set_column_logical_name` com o nome lógico que a tabela ou a coluna já tem, quando derivar a partir dele não alteraria nada; `erd_set_column_domain` com o domínio a que a coluna já está vinculada, quando a coluna já tem o tipo desse domínio e a definição [Sincronização do tipo de dados nas relações](../guide/guides/settings.md#relationship-datatype-sync) não alteraria o tipo de nenhuma coluna ao longo das suas relações; `erd_update_word`, `erd_update_term` ou `erd_update_domain` apenas com valores que a linha já tem, a menos que um termo sem nome físico receba o seu `name` e as suas palavras componham um; `erd_derive_physical_names` quando todos os nomes que abrange e que têm um nome lógico já contêm o que os [dicionários](./tools.md#dictionaries) lhes dão e estão marcados como derivados; ou uma importação com `mode` `append` que não traz nenhuma tabela (no caso de `erd_import_json`, nenhuma tabela e nenhuma nota).
+Uma chamada que não altera nada também não cria nenhuma: `erd_set_column_primary_key`, `erd_set_column_unique`, `erd_set_column_not_null`, `erd_set_column_auto_increment`, `erd_set_index_unique` ou `erd_set_index_column_order` a definir um valor que o documento já tem; `erd_add_index_column` com uma coluna que já está no índice; `erd_set_table_group` com tabelas que já estão nesse grupo (ou já em nenhum, com `groupId` `null`); `erd_set_memo_group` com notas que já estão nesse grupo (ou já em nenhum); `erd_move_table_group` para o ponto onde o grupo já está; `erd_resize_table_group` para o retângulo que o grupo já tem; `erd_sort_tables` num documento sem tabelas; `erd_set_table_logical_name` ou `erd_set_column_logical_name` com o nome lógico que a tabela ou a coluna já tem, quando derivar a partir dele não alteraria nada; `erd_set_column_domain` com o domínio a que a coluna já está vinculada, quando a coluna já tem o tipo desse domínio e a definição [Sincronização do tipo de dados nas relações](../guide/guides/settings.md#relationship-datatype-sync) não alteraria o tipo de nenhuma coluna ao longo das suas relações; `erd_update_word`, `erd_update_term` ou `erd_update_domain` apenas com valores que a linha já tem, a menos que um termo sem nome físico receba o seu `name` e as suas palavras componham um; `erd_derive_physical_names` quando todos os nomes que abrange e que têm um nome lógico já contêm o que os [dicionários](./tools.md#dictionaries) lhes dão e estão marcados como derivados; ou uma importação com `mode` `append` que não traz nenhuma tabela (no caso de `erd_import_json`, nenhuma tabela e nenhuma nota).
 `erd_undo` ignora-as e indica-as pelo nome no seu resultado.
 Outras edições, como `erd_change_relationship_type`, `erd_change_relationship_on_delete`, `erd_change_relationship_on_update`, `erd_change_table_group_name`, `erd_change_table_group_color` e `erd_set_ddl_script`, criam uma entrada mesmo quando definem um valor que o documento já tem.
 
@@ -120,7 +122,7 @@ Um diagrama fechado dentro de uma pasta que o editor serve fica com o editor, e 
 Um editor que continua em execução, mas cujo ficheiro de bloqueio desapareceu e cuja ligação foi fechada sem que este tenha fechado o documento, recusa a edição seguinte com `hubGone`.
 A mensagem diz o que liberta o documento: no VS Code, recarregue essa janela, ou feche-a para permitir que o agente edite o ficheiro diretamente; no Obsidian, volte a ativar o plugin ERD Editor, ou feche essa janela; num IDE da JetBrains, volte a ativar o plugin, ou saia do IDE.
 
-Em vez disso, uma leitura vai ao ficheiro no disco, com uma indicação de que faltam as edições ainda não guardadas no editor, em dois casos: quando o editor que detém o documento tem o hub desativado e no caso `hubGone` acima.
+Em vez disso, uma leitura, ou o `erd_export_svg`, vai ao ficheiro no disco, com uma indicação de que faltam as edições ainda não guardadas no editor, em dois casos: quando o editor que detém o documento tem o hub desativado e no caso `hubGone` acima.
 Uma leitura que não se consegue ligar ao hub de um editor é recusada com `hubUnreachable`, tal como uma edição.
 
 ## Headless {#headless}
@@ -133,7 +135,7 @@ Se tiver mudado, nada é escrito, o ficheiro é carregado novamente e a chamada 
 Um ficheiro que mudou entre duas chamadas é simplesmente carregado de novo, e o histórico de anulação do agente anterior a isso é descartado.
 
 Um ficheiro só de leitura fica como está, e a edição é recusada com `readonly`: um ficheiro sem permissão de escrita para o seu proprietário, ou com o atributo só de leitura no Windows, como um ficheiro do Perforce ou do TFVC sem check-out.
-Permita a escrita no ficheiro e depois volte a chamar. As leituras continuam a funcionar.
+Permita a escrita no ficheiro e depois volte a chamar. As leituras e o `erd_export_svg` continuam a funcionar.
 
 Se um editor começar a servir o documento enquanto o agente o edita no disco, só essa edição é recusada com `hubAppeared` e nada é escrito. A chamada seguinte edita através do editor.
 
@@ -142,7 +144,7 @@ No Windows, aplicam-se mais duas regras:
 - Um documento com permissões próprias, diferentes das da sua pasta, é escrito no próprio ficheiro em vez de ser substituído, para que as mantenha, e o ficheiro temporário é removido a seguir. Um programa que leia o documento durante essa escrita pode encontrar texto que não é possível analisar.
 - Um ficheiro que outro programa tem aberto não pode ser substituído, por isso o servidor tenta novamente durante um máximo de dois segundos. Cada tentativa começa por procurar de novo um editor, e um editor que entretanto começou a servir o documento recusa a escrita com `hubAppeared`, ou com `blocked` quando tem o hub desativado. Se o ficheiro ainda estiver aberto ao fim de dois segundos, nada é escrito, o ficheiro é carregado novamente e a chamada falha com uma mensagem que cita o erro do sistema.
 
-Um servidor anterior à `1.1.0` lê um documento sem os respetivos nomes lógicos, sem os vínculos a domínios das suas colunas e sem as suas palavras, termos e domínios, pelo que a primeira edição que escreve no ficheiro os deixa de fora. Atualize o servidor — consulte [Atualizar](./installation.md#updating).
+Um servidor anterior à `1.1.0` lê um documento sem os respetivos nomes lógicos, sem os vínculos a domínios das suas colunas e sem as suas palavras, termos e domínios, pelo que a primeira edição que escreve no ficheiro os deixa de fora. Um servidor anterior à `1.2.1` lê-o do mesmo modo sem os grupos de tabelas das suas notas, pelo que a primeira edição que escreve no ficheiro tira todas as notas do seu grupo. Atualize o servidor — consulte [Atualizar](./installation.md#updating).
 
 ## Recusado {#refused}
 
@@ -151,7 +153,7 @@ Uma janela de cofre do Obsidian mantém o seu ficheiro de bloqueio com o hub des
 Um IDE da JetBrains mantém o seu ficheiro de bloqueio com o hub desativado quando a definição Coding agents está desativada, quando o hub não conseguiu ficar à escuta e enquanto o IDE está a terminar.
 
 Uma edição de um documento destes é recusada com `blocked`, porque o editor aberto poderia substituir, da próxima vez que guardar, uma alteração escrita no ficheiro.
-As leituras continuam a funcionar, a partir do ficheiro no disco.
+As leituras continuam a funcionar, a partir do ficheiro no disco, e o `erd_export_svg` também, cujo resultado indica então o modo `blocked`.
 
 Para permitir que o agente edite, volte a ativar o hub, tal como a mensagem indica para esse editor: no VS Code, confie na área de trabalho e ative a definição, ou recarregue a janela; no Obsidian, ative a definição Coding agents, ou recarregue o Obsidian; num IDE da JetBrains, ative a definição Coding agents, ou reinicie o IDE se esta já estiver ativada.
 

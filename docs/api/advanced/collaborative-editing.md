@@ -176,7 +176,7 @@ Since `5.1.0` two editors that change one name or field at the same moment, apar
 
 Since `5.1.0` a table's position, a memo's or table group's position and size, and the view's origin and zoom level are versioned the same way, and what moves them goes out as where it ends:
 
-- a drag as one `table.moveTo`, `memo.moveTo`, or `tableGroup.moveTo` per entity moved, in one batch, so a group drag carries its tables' points with the group's;
+- a drag as one `table.moveTo`, `memo.moveTo`, or `tableGroup.moveTo` per entity moved, in one batch, so a group drag carries its tables' points, and since `5.1.1` its memos', with the group's;
 - the undo or redo of a drag as the point it puts each entity at;
 - a pan as `settings.scrollTo`, and a zoom as `settings.changeZoomLevel`;
 - a memo or table group resize as its position and size together.
@@ -253,6 +253,19 @@ A `5.1.0` editor sends no new action type, so editors and replicas from before `
 - A load that replaces the document, such as an assigned `value`, `clear()`, or a replacing import, ends a relationship being drawn on every `5.1.0` editor, the one that made it and each one that receives it. An older editor keeps its draw armed through it.
 
 Keep every editor in a session, and any [replicationStore](./remote-storage.md#dispatch-dispatchsync) that stores its document, on `5.1.0` or later, so that edits made at the same moment end alike everywhere, apart from the exceptions [Concurrent Edits](#concurrent-edits) names; `4.2.0` or later is still what keeps logical names and dictionaries. An [MCP server](../../mcp/live-and-headless.md#edits-made-at-the-same-moment) before `1.2.0` counts as an editor before `5.1.0` here, and an editor before `5.1.0` cannot be bound to a [Yjs](./yjs.md) room at all.
+
+Since `5.1.1` a memo joining or leaving a [table group](../../guide/guides/table-groups.md) travels on a new action type, `memo.changeGroup`, and a relay that passes actions through verbatim needs nothing new for it. It is sent for a memo dropped into or out of a group, a new group drawn around shown memos in no group, `Group selected tables` with memos selected beside the tables, `Remove from group` with memos in the selection, each memo of a removed group, a coding agent's memo-group calls through the [MCP server](../../mcp/tools.md#table-groups), and the undo and redo of each. An `Import and Add` or `setSchemaJSON` append whose groups hold memos sends it too, and so does its redo, while its undo only removes those memos.
+
+An editor or replica from before `5.1.1` ignores `memo.changeGroup`, and its parse drops every memo's `groupId`, so it never sees a memo in a group, though a `5.1.1` editor's group drag still moves the group's memos there, since it also sends a `memo.moveTo` for each of them. Its own edits know nothing of memos' groups, with these effects on the newer editors:
+
+- A memo it drags into a group's box stays out of the group, and a member memo it drags out of the box stays in, the box stretching to hold it.
+- Its group drag, like its `Auto Layout`, moves the group and its tables but leaves the group's memos where they stand, and the box stretches to hold the shown ones there.
+- An `Import and Add` on it puts no memo in the groups it adds.
+- A group it removes leaves each of its memos' `groupId` naming it: the memos read as in no group, and its undo of the removal puts them back in the group.
+- Its undo of a load, an import, or `clear()` loads its own copy of the document on every editor, and that copy has no memo in any group.
+
+A document saved from one has no memo in any group, though one from `4.0.0` on keeps its tables' groups.  
+Keep every editor in a session, and any [replicationStore](./remote-storage.md#dispatch-dispatchsync) that stores its document, on `5.1.1` or later to keep memos in their table groups; `5.1.0` or later is still what settles edits made at the same moment. An [MCP server](../../mcp/installation.md#updating) before `1.2.1` likewise neither sees nor keeps which table group a memo is in.
 
 ## SharedStoreConfig
 

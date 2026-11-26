@@ -39,7 +39,7 @@ interface ErdViewerElement extends HTMLElement {
 ```
 
 Importer `@dineug/erd-editor/erd-viewer.js` définit `<erd-viewer>` et laisse `<erd-editor>` indéfini. Importer la racine du paquet ne définit ni l’un ni l’autre : elle exporte la classe `ErdViewerElement` et `defineErdViewer()`, qui définit la balise là où vous l’appelez, si bien qu’une page peut aussi définir la classe sous une balise de son choix (voir [Enregistrer les éléments](./installation.md#registering-the-elements)).  
-Tous les points d’entrée sauf `engine.js` et `peer.js` ont besoin d’un DOM, celui-ci aussi, si bien qu’une page rendue côté serveur l’importe côté client (voir [Rendu côté serveur](./installation.md#server-side-rendering)).  
+Tous les points d’entrée que décrivent ces pages, sauf `engine.js` et `peer.js`, ont besoin d’un DOM, celui-ci aussi, si bien qu’une page rendue côté serveur l’importe côté client (voir [Rendu côté serveur](./installation.md#server-side-rendering)).  
 Importer le point d’entrée ajoute `erd-viewer` à `HTMLElementTagNameMap`, si bien que `document.createElement('erd-viewer')` et `document.querySelector('erd-viewer')` sont typés `ErdViewerElement` sans transtypage.
 
 Comme l’éditeur, la visionneuse s’affiche dans un shadow root fermé : `viewer.shadowRoot` vaut donc `null`, et les styles de la page n’y entrent pas et n’en sortent pas ; stylez-la avec [setTheme](#settheme) et les propriétés personnalisées `--erd-editor-*`. Plusieurs visionneuses sur une même page conservent chacune leur propre document, leur propre vue, leur propre thème et leur propre langue.  
@@ -52,7 +52,7 @@ Le build pour balise script, `dist/erd-viewer.umd.js`, ne contient que la vision
 
 ```html
 <erd-viewer src="diagram.erd.json" style="display: block; height: 480px"></erd-viewer>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0/dist/erd-viewer.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.1/dist/erd-viewer.umd.js"></script>
 ```
 
 ## src {#src}

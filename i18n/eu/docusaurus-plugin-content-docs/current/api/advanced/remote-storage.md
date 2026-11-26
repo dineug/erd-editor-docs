@@ -157,6 +157,7 @@ const data = replicationStore.value;
 `4.0.0` bertsiotik aurrera, `value` biltegiratze-forma da: fitxategi batek gordetzen duen dokumentua, elementuaren [value](../erd-editor-element.md#value) propietateak itzultzen duen testu bera.  
 Entitate biziak soilik ditu, ordena finko batean, kendutakoak, pilatze-ordena eta karga batek berriro kalkulatzen duen ezer gabe, hala nola [toWidth](#towidth) funtzioak neurtzen dituen zabalerak.  
 `4.2.0` bertsiotik aurrera, izen logikoak, izen bakoitza hiztegietatik eratorria den ala ez, domeinu-loturak, eta [Hiztegia](../../guide/guides/dictionary.md) fitxako hitzak, terminoak eta domeinuak ere baditu.  
+`5.1.1` bertsiotik aurrera, ohar bakoitza zein taula-taldetan dagoen ere badu.  
 `4.2.0` bertsiotik aurrera, kanpoan uzten ditu, halaber, entitate baten testu-eremu huts bakoitza, ezer ez duen `doc` zerrenda eta bilduma bakoitza, eta `collections` bera, bilduma guztiak hutsik daudenean.  
 Bi zuriuneko koska du, hiztegiko errenkada bakoitza bere lerroan, eta lerro-jauzi batekin amaitzen da; beraz, dokumentu berak beti byte berak ematen ditu.  
 Zer duen jakiteko, ikus [Biltegiratze-forma](./schema.md#storage-form).
@@ -305,6 +306,10 @@ Mantendu saioko editore guztiak, eta erreplika, `5.1.0` bertsioan edo berriagoan
 
 `5.1.0` bertsiotik aurrera, editore batek Kode-sortzailearen lengoaiaren, izenen idazkera baten edo mugatzaile motaren aldaketa bat dagokion ezarpenaren blokeoa desaktibatuta dagoen bitartean soilik bidaltzen du, bere karga-datuetan `shared: true` markarekin, eta erreplikak marka duten guztiak aplikatzen ditu, editoreek bezala; ikus [Elkarlaneko edizioa](./collaborative-editing.md).  
 Markarik gabekoa, `5.1.0` baino lehenagoko editore batek blokeoa edozein dela ere bidaltzen duena, ezarpena bere aldean desblokeatuta dagoen bitartean soilik aplikatzen du erreplikak, eta baztertu egiten du ezarpena blokeatuta dagoen bitartean (ikus [on@change](#onchange)).
+
+`5.1.1` bertsiotik aurrera, gordetako ekintzen artean `memo.changeGroup` ere badago, oharra [taula-talde](../../guide/guides/table-groups.md) batean sartzen edo handik ateratzen duena, eta `value` balioak ohar bakoitza zein taldetan dagoen idazten du (ikus [Biltegiratze-forma](./schema.md#storage-form)).  
+`5.1.1` bertsioak ez du aldatzen `@dineug/erd-editor/engine.js` moduluaren esportaziorik.  
+Aurreko bertsio bateko biltegi batek `memo.changeGroup` eta ohar bakoitzaren `groupId` baztertzen ditu; beraz, ez du oharrik talde batean gordetzen, eta saioko `5.1.1` baino lehenagoko editore batek oraindik oharrak taldeetatik atera ditzake `5.1.1` bertsioko erreplika batean; ikus [Bertsioak nahastea](./collaborative-editing.md#mixing-releases).
 
 `4.0.0` bertsiotik aurrera, bi metodoek `editor.mergeLWW` ere aplikatzen dute; ekintza horrek beste editore bat saiora sartzen denean editore batek erantzun gisa bidaltzen dituen elkarlaneko erregistroak daramatza, eta, horri esker, erreplikak editoreek bezala ebazten ditu aldi bereko edizioak.  
 Ez du `value` propietatearen byte bakar bat ere aldatzen, eta ez du `change` gertaerarik abiarazten.  

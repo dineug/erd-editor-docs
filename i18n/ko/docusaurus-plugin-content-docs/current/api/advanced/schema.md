@@ -19,7 +19,7 @@ VS Code, Obsidian, JetBrains 플러그인은 편집으로 `value`가 바뀔 때�
 `4.2.0`부터 저장 형태는 아무것도 담지 않은 것도 제외합니다. 엔티티나 그 `ui`가 `''`로 가진 각 텍스트 필드(테이블의 `name`, `comment`, `ui.color`, 컬럼의 `name`, `comment`, `dataType`, `default`, 인덱스의 `name`, 메모의 `value`와 `ui.color`, 테이블 그룹의 `name`과 `color`), 항목이 하나도 없는 각 `doc` 목록과 컬렉션, 그리고 모든 컬렉션이 비면 `collections` 자체가 여기에 해당합니다. 공백만 있는 텍스트는 가진 그대로 기록됩니다. 다만 논리명은 이때 제외되며, id 외의 값이 모두 비어 있거나 공백뿐인 단어, 용어, 도메인은 통째로 제외됩니다. 모든 id, 엔티티 안의 모든 목록, `0`을 포함한 모든 숫자는 여전히 기록됩니다. `doc`은 항상 기록되므로, 새 문서의 파일에는 `$schema`, `version`, 설정, `"doc": {}`이 담깁니다.  
 파싱할 때는 모든 v3 릴리스와 마찬가지로 없는 텍스트 필드를 `''`로, 없는 컬렉션을 비어 있는 것으로 읽으며, 저장 형태는 컬렉션에 아무것도 없는 동안에만 `doc` 목록을 제외합니다([Doc](#doc) 참고). 따라서 `4.2.0` 이전 에디터도 이 파일을 열 수 있으며, 파일을 직접 읽는 프로그램도 없는 것을 같은 방식으로 읽어야 합니다. 이전 릴리스가 저장한 파일은 다음 저장에서 비어 있는 텍스트, 목록, 컬렉션이 제외된 형태로 돌아오며, 이 변경은 한 번만 일어나고 그 뒤로는 바이트 단위까지 같게 저장됩니다.
 
-저장 형태는 잠긴 설정을 잠긴 값으로 기록하고([`lockSettings`](#settings) 참고), `settings.ddlScripts`는 스크립트에 텍스트가 있을 때만, 테이블의 `groupId`는 파일이 기록하는 테이블 그룹을 가리킬 때만 기록합니다. `4.2.0`부터는 `settings.nameViewMode`를 기록하는 값이 `'physical'`이 아닐 때만, `settings.columnOrder`를 가능한 경우 7개 항목으로([Settings](#settings) 참고), 테이블의 `nameDerived`를 `true`일 때만 함께 기록합니다.  
+저장 형태는 잠긴 설정을 잠긴 값으로 기록하고([`lockSettings`](#settings) 참고), `settings.ddlScripts`는 스크립트에 텍스트가 있을 때만, 테이블의 `groupId`(`5.1.1`부터는 메모의 `groupId`도)는 파일이 기록하는 테이블 그룹을 가리킬 때만 기록합니다. `4.2.0`부터는 `settings.nameViewMode`를 기록하는 값이 `'physical'`이 아닐 때만, `settings.columnOrder`를 가능한 경우 7개 항목으로([Settings](#settings) 참고), 테이블의 `nameDerived`를 `true`일 때만 함께 기록합니다.  
 `doc.tableGroupIds`와 `tableGroupEntities`는 테이블 그룹이 있을 때만, `logicalName`은 공백 외의 텍스트가 있을 때만, 컬럼의 `domainId`는 파일이 기록하는 도메인을 가리킬 때만, 각 사전은 파일이 기록하는 행이 있을 때만 기록합니다.
 
 `4.0.0` 이전에 저장된 파일에는 그 당시 에디터가 가지고 있던 문서 전체가 담겨 있으며, 삭제된 엔티티와 불러올 때마다 계산하는 것도 포함됩니다. 불러올 때는 이를 읽고 각 테이블과 메모의 쌓임 위치를 유지하며([Doc](#doc) 참고) 나머지는 다시 계산하고, 다음 저장에서는 저장 형태만 기록합니다.
@@ -394,6 +394,7 @@ const OrderType = {
 type Memo = {
   id: string;
   value?: string;
+  groupId?: string;
   ui: MemoUI;
 };
 
@@ -407,6 +408,9 @@ type MemoUI = {
 ```
 
 `4.0.0`부터 테이블과 메모는 [하나의 쌓임 순서를 공유](../../guide/guides/table-related-functions.md#여러-테이블-이동)하므로, 테이블을 맨 앞으로 가져오면 메모 위에 놓일 수 있습니다. [Doc](#doc)에서 설명하듯이 불러올 때 모든 메모가 모든 테이블 위에 놓입니다. `4.0.0` 이전에 저장된 파일의 메모는 저장된 `zIndex`를 유지하는데, 이 값은 테이블과 같은 카운터에서 나왔으므로 이전 릴리스가 모든 테이블 위에 그리던 메모가 그 뒤에 맨 앞으로 가져온 테이블 아래에서 열릴 수 있습니다.
+
+`5.1.1`부터 메모는 테이블처럼 자신이 속한 [테이블 그룹](../../guide/guides/table-groups.md)의 id인 `groupId`를 가집니다. `groupId`가 없거나 비어 있거나(`5.1.1` 이전에 저장된 모든 파일처럼) `doc.tableGroupIds`에 없는 그룹을 가리키면 그룹이 없는 것이며, 저장 형태는 남아 있는 그룹을 가리킬 때만 이 필드를 기록합니다.  
+`5.1.1` 이전 에디터는 문서를 불러올 때 모든 메모의 `groupId`를 버리므로, 그 에디터에서 저장하면 모든 메모가 그룹에서 빠지지만, `4.0.0` 이상의 에디터는 테이블의 그룹은 유지합니다. [릴리스 혼용](./collaborative-editing.md#릴리스-혼용) 문서를 참고하세요.
 
 ### Collection: tableGroupEntities
 
@@ -426,7 +430,7 @@ type TableGroupUI = {
 };
 ```
 
-`4.0.0`부터 문서는 [테이블 그룹](../../guide/guides/table-groups.md), 즉 테이블 뒤에 그려지는 이름과 색상이 있는 박스를 가질 수 있습니다. 테이블은 자신의 `groupId`로 그룹에 속하므로, 그룹은 구성원 목록을 가지지 않습니다. 저장 형태는 `doc.tableGroupIds`와 마찬가지로 그룹이 있을 때만 이 컬렉션을 기록하며, `4.0.0` 이전에 저장된 문서처럼 이 컬렉션이 없는 문서에는 그룹이 없습니다. `Show.hideTableGroup`은 그룹을 숨깁니다.  
+`4.0.0`부터 문서는 [테이블 그룹](../../guide/guides/table-groups.md), 즉 테이블과 메모 뒤에 그려지는 이름과 색상이 있는 박스를 가질 수 있습니다. 테이블은, `5.1.1`부터는 메모도, 자신의 `groupId`로 그룹에 속하므로, 그룹은 구성원 목록을 가지지 않습니다. 저장 형태는 `doc.tableGroupIds`와 마찬가지로 그룹이 있을 때만 이 컬렉션을 기록하며, `4.0.0` 이전에 저장된 문서처럼 이 컬렉션이 없는 문서에는 그룹이 없습니다. `Show.hideTableGroup`은 그룹을 숨깁니다.  
 `4.0.0` 이전 에디터는 문서를 불러올 때 그룹과 모든 테이블의 `groupId`를 버리므로, 그 에디터에서 저장하면 모든 그룹이 사라집니다.
 
 ### 사전 행 {#dictionary-rows}
@@ -525,6 +529,8 @@ type Domain = {
 `4.0.0`부터 스키마는 저장 형태만 기술합니다. 이름이 있는 필드를 가진 모든 객체는 닫혀 있고(`additionalProperties: false`), 저장 형태가 항상 기록하는 필드는 모두 필수이며, 위 타입에서 `?`가 표시된 각 필드는 명시되지만 필수는 아니고, 그 밖의 필드는 명시되지 않습니다. 따라서 `4.0.0` 이전에 저장된 파일은 `meta`, 너비, `zIndex`, `ignoreSaveSettings` 등을 가지고 있으므로 `4.0.0` 이상의 에디터가 그 파일을 다시 저장하기 전까지 거부됩니다. `3.2.0` 이상에서 저장한 파일은 `main` 브랜치를 가리키는 이 스키마의 URL을 이미 지정하고 있으므로, 이 스키마로 검증하는 에디터는 이제 그 파일에 오류를 표시합니다. `3.0.0`이나 `3.1.0`에서 저장한 파일과 v2 문서는 `$schema`를 지정하지 않습니다.
 
 `4.2.0`부터 스키마는 엔티티의 텍스트 필드, `doc` 목록, 컬렉션, `collections` 자체를 더 이상 필수로 요구하지 않습니다. 저장 형태는 이들이 아무것도 담지 않은 동안 이들을 제외합니다. `4.0.0`이나 `4.1.0`이 저장한 파일도 여전히 받습니다. 새 필드도 명시합니다. `"logical"`과 `"both"`만 받는 `nameViewMode`, 테이블의 `logicalName`과 `true`만 받는 `nameDerived`, 컬럼의 `logicalName`과 `domainId`, 그리고 각각 헤더와 문자열 행을 가진 세 사전입니다. `canvasType`은 사전 탭을 나열하고, `columnOrder`는 7개 또는 9개의 정수를 받으며, `show`, `columnOrder`, `lockSettings`, `options`의 설명은 새 비트를 명시합니다.
+
+`5.1.1`부터는 메모의 `groupId`도 명시하며, `5.1.1` 이전에 받은 스키마 사본은 이를 거부합니다.
 
 ```json
 {
@@ -939,6 +945,10 @@ type Domain = {
           "value": {
             "type": "string"
           },
+          "groupId": {
+            "description": "Id of the table group in doc.tableGroupIds the memo belongs to; absent means none",
+            "type": "string"
+          },
           "ui": {
             "type": "object",
             "properties": {
@@ -967,7 +977,7 @@ type Domain = {
       }
     },
     "tableGroupEntities": {
-      "description": "Named, coloured rectangles drawn behind tables; a table joins one through its groupId. Written while a group exists; absent means none",
+      "description": "Named, coloured rectangles drawn behind tables and memos; a table or a memo joins one through its groupId. Written while a group exists; absent means none",
       "type": "object",
       "additionalProperties": {
         "type": "object",

@@ -176,7 +176,7 @@ Sedan `5.1.0` slutar två editorer som ändrar ett namn eller ett fält samtidig
 
 Sedan `5.1.0` versioneras en tabells position, en antecknings eller tabellgrupps position och storlek samt vyns ursprung och zoomnivå på samma sätt, och det som flyttar dem skickas som var de hamnar:
 
-- ett drag som en enda `table.moveTo`, `memo.moveTo` eller `tableGroup.moveTo` per flyttad entitet, i en batch, så att ett gruppdrag bär sina tabellers punkter tillsammans med gruppens;
+- ett drag som en enda `table.moveTo`, `memo.moveTo` eller `tableGroup.moveTo` per flyttad entitet, i en batch, så att ett gruppdrag bär sina tabellers punkter, och sedan `5.1.1` även sina anteckningars, tillsammans med gruppens;
 - en ångring eller omgörning av ett drag som den punkt som den lägger varje entitet på;
 - en panorering som `settings.scrollTo` och en zoomning som `settings.changeZoomLevel`;
 - en storleksändring av en anteckning eller tabellgrupp som dess position och storlek tillsammans.
@@ -253,6 +253,19 @@ En editor med `5.1.0` skickar ingen ny åtgärdstyp, så editorer och repliker f
 - En inläsning som ersätter dokumentet, till exempel ett tilldelat `value`, `clear()` eller en ersättande import, avslutar ritandet av en relation i varje editor med `5.1.0`, både den som gjorde den och varje editor som tar emot den. En äldre editor behåller sitt ritläge aktivt genom den.
 
 Håll alla editorer i en session, och varje [replicationStore](./remote-storage.md#dispatch-dispatchsync) som lagrar dess dokument, på `5.1.0` eller senare, så att redigeringar som görs samtidigt slutar lika överallt, bortsett från undantagen som [Samtidiga redigeringar](#concurrent-edits) nämner; `4.2.0` eller senare är fortfarande det som behåller logiska namn och ordlistor. En [MCP-server](../../mcp/live-and-headless.md#edits-made-at-the-same-moment) före `1.2.0` räknas här som en editor före `5.1.0`, och en editor före `5.1.0` kan inte alls bindas till ett [Yjs](./yjs.md)-rum.
+
+Sedan `5.1.1` skickas det med en ny åtgärdstyp, `memo.changeGroup`, när en anteckning går med i eller lämnar en [tabellgrupp](../../guide/guides/table-groups.md), och ett relä som skickar åtgärder vidare oförändrade behöver inget nytt för den. Den skickas för en anteckning som släpps i eller utanför en grupp, för en ny grupp som ritas runt synliga anteckningar som inte ingår i någon grupp, för `Group selected tables` med anteckningar markerade tillsammans med tabellerna, för `Remove from group` med anteckningar i markeringen, för varje anteckning i en borttagen grupp, för en kodagents anrop som ändrar anteckningars grupper via [MCP-servern](../../mcp/tools.md#table-groups) och för ångring och omgörning av vart och ett av dem. Ett tillägg med `Import and Add` eller `setSchemaJSON` vars grupper innehåller anteckningar skickar den också, och det gör även dess omgörning, medan dess ångring bara tar bort de anteckningarna.
+
+En editor eller replik från före `5.1.1` ignorerar `memo.changeGroup`, och dess tolkning tar bort varje antecknings `groupId`, så att den aldrig ser en anteckning i en grupp, även om ett gruppdrag i en editor med `5.1.1` fortfarande flyttar gruppens anteckningar där, eftersom det också skickar en `memo.moveTo` för var och en av dem. Dess egna redigeringar vet ingenting om anteckningarnas grupper, med de här följderna för de nyare editorerna:
+
+- En anteckning som den drar in i en grupps ruta förblir utanför gruppen, och en anteckning i gruppen som den drar ut ur rutan stannar kvar i gruppen, medan rutan sträcks ut så att den rymmer anteckningen.
+- Dess gruppdrag, liksom dess `Auto Layout`, flyttar gruppen och dess tabeller men låter gruppens anteckningar stå kvar där de är, och rutan sträcks ut så att den rymmer de synliga anteckningarna där.
+- En `Import and Add` i den lägger ingen anteckning i de grupper som den lägger till.
+- När den tar bort en grupp anger `groupId` för var och en av gruppens anteckningar fortfarande gruppen: anteckningarna räknas som om de inte ingick i någon grupp, och när den ångrar borttagningen läggs de tillbaka i gruppen.
+- När den ångrar en inläsning, en import eller `clear()` läser den in sin egen kopia av dokumentet i alla editorer, och den kopian har ingen anteckning i någon grupp.
+
+Ett dokument som sparas från en sådan editor har ingen anteckning i någon grupp, men en sådan editor från `4.0.0` och senare behåller tabellernas grupper.  
+Håll alla editorer i en session, och varje [replicationStore](./remote-storage.md#dispatch-dispatchsync) som lagrar dess dokument, på `5.1.1` eller senare för att behålla anteckningarna i sina tabellgrupper; `5.1.0` eller senare är fortfarande det som avgör redigeringar som görs samtidigt. En [MCP-server](../../mcp/installation.md#updating) före `1.2.1` varken ser eller behåller på samma sätt vilken tabellgrupp en anteckning ingår i.
 
 ## SharedStoreConfig {#sharedstoreconfig}
 

@@ -39,7 +39,7 @@ interface ErdViewerElement extends HTMLElement {
 ```
 
 Импорт `@dineug/erd-editor/erd-viewer.js` определяет `<erd-viewer>` и оставляет `<erd-editor>` неопределенным. Импорт корня пакета не определяет ни одного из них: он экспортирует класс `ErdViewerElement` и `defineErdViewer()`, которая определяет тег там, где вы ее вызываете, поэтому страница может определить этот класс и под собственным тегом — см. [Регистрация элементов](./installation.md#registering-the-elements).  
-Каждой точке входа, кроме `engine.js` и `peer.js`, нужен DOM, и этой тоже, поэтому страница, отрисованная на сервере, импортирует ее на клиенте — см. [Серверный рендеринг](./installation.md#server-side-rendering).  
+Каждой точке входа из описанных на этих страницах, кроме `engine.js` и `peer.js`, нужен DOM, и этой тоже, поэтому страница, отрисованная на сервере, импортирует ее на клиенте — см. [Серверный рендеринг](./installation.md#server-side-rendering).  
 Импорт точки входа добавляет `erd-viewer` в `HTMLElementTagNameMap`, поэтому `document.createElement('erd-viewer')` и `document.querySelector('erd-viewer')` типизируются как `ErdViewerElement` без приведения типа.
 
 Как и редактор, просмотрщик отрисовывается в закрытом теневом корне, поэтому `viewer.shadowRoot` равен `null`, а стили страницы не проникают ни внутрь, ни наружу; оформляйте его через [setTheme](#settheme) и пользовательские свойства `--erd-editor-*`. Несколько просмотрщиков на одной странице хранят каждый свой документ, вид, тему и язык.  
@@ -52,7 +52,7 @@ interface ErdViewerElement extends HTMLElement {
 
 ```html
 <erd-viewer src="diagram.erd.json" style="display: block; height: 480px"></erd-viewer>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0/dist/erd-viewer.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.1/dist/erd-viewer.umd.js"></script>
 ```
 
 ## src {#src}

@@ -55,16 +55,17 @@ View Option → `Memos` desaktibatuta dagoen bitartean, oharrak ezkutatuta daude
 Oharra oihaleko testu libreko oharpen bat da. Egin klik haren gorputzean eta idatzi; testua dokumentuarekin gordetzen da.  
 `Escape` teklak ohar-editorea ixten du, idatzitakoa mantenduz eta oharra hautatuta utziz, eta bigarren `Escape` sakatze batek hautapena kentzen du.  
 Arrastatu haren ertza tamaina aldatzeko. Erakuslea oharraren gainean dagoen bitartean goiburuan agertzen den `x` ikurrak oharra ezabatzen du.  
-Ohar batean eskuineko klik egiteak haren menua irekitzen du, ez editorea: `Color`, `Remove color` hautatutako elementu batek kolorea duen bitartean, eta `Delete`, oharra hautatutako bi elementu edo gehiagoren artean dagoen bitartean `Delete selected` dioena. Hautatutako ohar bat taulak ezabatzen dituzten teklekin ere ezabatzen da. Ikus [Taulak eta oharrak ezabatzea](./table-related-functions.md#table-and-memo-deletion).
+Ohar batean eskuineko klik egiteak haren menua irekitzen du, ez editorea: `Color`, `Remove color` hautatutako elementu batek kolorea duen bitartean, `Group selected tables` hautapenak taula bat duen eta taula-taldeak erakusten diren bitartean, `Remove from group` hautatutako taula edo ohar bat talde batean dagoen bitartean, eta `Delete`, oharra hautatutako bi elementu edo gehiagoren artean dagoen bitartean `Delete selected` dioena. Hautatutako ohar bat taulak ezabatzen dituzten teklekin ere ezabatzen da. Ikus [Taulak eta oharrak ezabatzea](./table-related-functions.md#table-and-memo-deletion).  
+Taula bat bezala, ohar bat [taula-talde](./table-groups.md) batean sartzen edo taldetik ateratzen da askatzen duzun lekuaren arabera. `Remove from group` aukerak ere taldetik ateratzen du, eta `Group selected tables` aukerak talde berri batean sartzen du, haren ondoan hautatutako taulekin batera. Ikus [Taulak gehitzea eta kentzea](./table-groups.md#adding-and-removing-tables).
 
 ![Ohar bat Alt + M lasterbidearekin gehitzea, testu bat idaztea eta haren ertza arrastatzea tamaina aldatzeko](/img/demo-memo.webp)
 
 ## Taula-taldeak sortzea {#table-group-creation}
 
-Taula-taldea taulak biltzen dituen koadro bat da, eta izena eta kolorea eman dakizkioke. Sortu bat bi modu hauetako batean:
+Taula-taldea taulak eta oharrak biltzen dituen koadro bat da, eta izena eta kolorea eman dakizkioke. Sortu bat bi modu hauetako batean:
 
-- Aukeratu `New Table Group` laster-menuan edo Bilaketa azkarrean, egin klik [oihaleko tresna-barrako](./table-related-functions.md#canvas-toolbar) `New Table Group` botoian, edo sakatu `Alt + G` (Windows/Linux) edo `⌥ + G` (Mac); ondoren, arrastatu koadro bat oihalaren gainean. Erdigunea koadroaren barruan duen taula bakoitza talde berrian sartzen da, dagoeneko beste talde batean ez badago. Ikus [Talde bat marraztea](./table-groups.md#drawing-a-group).
-- Hautatu taulak eta aukeratu `Group selected tables` taula baten laster-menuan edo `Group Selected Tables` Bilaketa azkarrean, edo sakatu `T` eta ondoren `G`. Ikus [Hautatutako taulak taldekatzea](./table-groups.md#grouping-selected-tables).
+- Aukeratu `New Table Group` laster-menuan edo Bilaketa azkarrean, egin klik [oihaleko tresna-barrako](./table-related-functions.md#canvas-toolbar) `New Table Group` botoian, edo sakatu `Alt + G` (Windows/Linux) edo `⌥ + G` (Mac); ondoren, arrastatu koadro bat oihalaren gainean. Erdigunea koadroaren barruan duen taula bakoitza eta erakutsitako ohar bakoitza talde berrian sartzen da, dagoeneko beste talde batean ez badago. Ikus [Talde bat marraztea](./table-groups.md#drawing-a-group).
+- Hautatu taulak, eta haiekin batera joango diren oharrak, eta aukeratu `Group selected tables` taula baten edo ohar baten laster-menuan edo `Group Selected Tables` Bilaketa azkarrean, edo sakatu `T` eta ondoren `G`. Ikus [Hautatutako taulak taldekatzea](./table-groups.md#grouping-selected-tables).
 
 Izena ematea, koloreztatzea, mugitzea, tamaina aldatzea eta gainerakoa [Taula-taldeak](./table-groups.md) orrian azaltzen dira.
 

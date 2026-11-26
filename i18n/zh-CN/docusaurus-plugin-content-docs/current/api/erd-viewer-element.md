@@ -39,7 +39,7 @@ interface ErdViewerElement extends HTMLElement {
 ```
 
 导入 `@dineug/erd-editor/erd-viewer.js` 会定义 `<erd-viewer>`，而 `<erd-editor>` 仍未定义。导入包的根入口则两者都不定义：它导出类 `ErdViewerElement` 和 `defineErdViewer()`，后者在你调用的位置定义该标签，因此页面也可以用自己的标签来定义这个类，参见[注册元素](./installation.md#registering-the-elements)。  
-除 `engine.js` 与 `peer.js` 之外的每个入口都需要 DOM，这个入口也不例外，因此服务端渲染的页面应在客户端导入它，参见[服务端渲染](./installation.md#服务端渲染)。  
+这些页面所介绍的入口中，除 `engine.js` 与 `peer.js` 之外的每个入口都需要 DOM，这个入口也不例外，因此服务端渲染的页面应在客户端导入它，参见[服务端渲染](./installation.md#服务端渲染)。  
 导入该入口会把 `erd-viewer` 加入 `HTMLElementTagNameMap`，因此 `document.createElement('erd-viewer')` 和 `document.querySelector('erd-viewer')` 无需类型断言就是 `ErdViewerElement` 类型。
 
 与编辑器一样，查看器渲染在一个封闭的 shadow root 中，因此 `viewer.shadowRoot` 为 `null`，页面样式不会渗入或渗出；请通过 [setTheme](#settheme) 和 `--erd-editor-*` 自定义属性来设置它的样式。同一页面上的多个查看器各自保持自己的文档、视图、主题和语言。  
@@ -52,7 +52,7 @@ script 标签构建 `dist/erd-viewer.umd.js` 只包含查看器及其全部依�
 
 ```html
 <erd-viewer src="diagram.erd.json" style="display: block; height: 480px"></erd-viewer>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0/dist/erd-viewer.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.1/dist/erd-viewer.umd.js"></script>
 ```
 
 ## src {#src}

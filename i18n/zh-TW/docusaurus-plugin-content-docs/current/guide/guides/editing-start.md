@@ -55,16 +55,17 @@ View Option → `Memos` 關閉期間，備忘錄會被隱藏，任何地方都�
 備忘錄是畫布上的自由文字筆記。在備忘錄的主體中按一下並輸入文字；文字會隨文件一起儲存。  
 `Escape` 會關閉備忘錄編輯器，保留已輸入的內容並讓備忘錄保持選取狀態，再按一次 `Escape` 則會清除選取範圍。  
 拖曳其邊框即可調整大小。標題列中的 `x` 會在指標停留在備忘錄上時顯示，可用來刪除備忘錄。  
-在備忘錄上按滑鼠右鍵會開啟其選單，而不是編輯器：`Color`、`Remove color`（在某個選取的項目設有顏色時出現）和 `Delete`（當此備忘錄是兩個以上的選取項目之一時，會顯示為 `Delete selected`）。選取的備忘錄也可以使用刪除資料表的按鍵刪除，請參閱[刪除資料表與備忘錄](./table-related-functions.md#table-and-memo-deletion)。
+在備忘錄上按滑鼠右鍵會開啟其選單，而不是編輯器：`Color`、`Remove color`（在某個選取的項目設有顏色時出現）、`Group selected tables`（在選取範圍包含資料表且顯示資料表群組時出現）、`Remove from group`（在選取的資料表或備忘錄屬於某個群組時出現），以及 `Delete`（當此備忘錄是兩個以上的選取項目之一時，會顯示為 `Delete selected`）。選取的備忘錄也可以使用刪除資料表的按鍵刪除，請參閱[刪除資料表與備忘錄](./table-related-functions.md#table-and-memo-deletion)。  
+與資料表一樣，備忘錄會依放開的位置加入或離開[資料表群組](./table-groups.md)。`Remove from group` 也能將它移出，而 `Group selected tables` 會將它與一同選取的資料表放入新群組，請參閱[加入與移出資料表](./table-groups.md#adding-and-removing-tables)。
 
 ![使用 Alt + M 新增備忘錄、輸入筆記，並拖曳其邊框調整大小](/img/demo-memo.webp)
 
 ## 建立資料表群組 {#table-group-creation}
 
-資料表群組是容納資料表的方框，可以為其設定名稱和顏色。以下列兩種方式之一建立群組：
+資料表群組是容納資料表和備忘錄的方框，可以為其設定名稱和顏色。以下列兩種方式之一建立群組：
 
-- 從右鍵選單或快速搜尋中選擇 `New Table Group`、按一下[畫布工具列](./table-related-functions.md#canvas-toolbar)上的 `New Table Group` 按鈕，或按 `Alt + G` (Windows/Linux) 或 `⌥ + G` (Mac)，然後在畫布上拖曳出一個方框。中心位於方框內的每個資料表都會加入新群組，已屬於其他群組的資料表除外，請參閱[繪製群組](./table-groups.md#drawing-a-group)。
-- 選取資料表，然後從資料表的右鍵選單中選擇 `Group selected tables`、從快速搜尋中選擇 `Group Selected Tables`，或先按 `T` 再按 `G`，請參閱[將所選資料表組成群組](./table-groups.md#grouping-selected-tables)。
+- 從右鍵選單或快速搜尋中選擇 `New Table Group`、按一下[畫布工具列](./table-related-functions.md#canvas-toolbar)上的 `New Table Group` 按鈕，或按 `Alt + G` (Windows/Linux) 或 `⌥ + G` (Mac)，然後在畫布上拖曳出一個方框。中心位於方框內的每個資料表和每個顯示的備忘錄都會加入新群組，已屬於其他群組者除外，請參閱[繪製群組](./table-groups.md#drawing-a-group)。
+- 選取資料表（以及要一併加入的備忘錄），然後從資料表或備忘錄的右鍵選單中選擇 `Group selected tables`、從快速搜尋中選擇 `Group Selected Tables`，或先按 `T` 再按 `G`，請參閱[將所選資料表組成群組](./table-groups.md#grouping-selected-tables)。
 
 命名、設定顏色、移動、調整大小等其餘操作，都在[資料表群組](./table-groups.md)中說明。
 

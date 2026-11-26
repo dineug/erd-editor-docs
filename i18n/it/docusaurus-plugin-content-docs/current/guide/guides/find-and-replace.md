@@ -93,7 +93,7 @@ Mentre il campo Trova contiene del testo, l’[albero](./explorer.md#the-tree) d
 
 - `Tables`, `Table Groups` e `Memos` compaiono solo quando contengono una corrispondenza e il conteggio di ogni cartella è il numero di righe direttamente sotto di essa nei risultati.
 - Sotto `Tables` compaiono le tabelle che contengono una corrispondenza, in ordine di nome, mai di nome logico. Sotto ogni tabella compaiono una riga per ogni corrispondenza nel suo commento, poi una cartella `Columns` con le colonne che contengono una corrispondenza, nell’ordine delle colonne, ciascuna con una riga per ogni corrispondenza nel suo commento, poi una cartella `Indexes` con gli indici il cui nome corrisponde. Non c’è una cartella `Foreign Keys`.
-- Sotto `Table Groups` compaiono i gruppi il cui nome corrisponde, in ordine di nome, senza le loro tabelle. Una tabella trovata compare sotto `Tables`.
+- Sotto `Table Groups` compaiono i gruppi il cui nome corrisponde, in ordine di nome, senza le loro tabelle né i loro memo. Una tabella trovata compare sotto `Tables`, e un memo sotto `Memos`.
 - Sotto `Memos` compaiono i memo che contengono una corrispondenza, nell’ordine del documento, ciascuno indicato dalla sua prima riga e con una riga per ogni corrispondenza al suo interno.
 
 Una corrispondenza in un nome è evidenziata nella riga di quel nome, quindi un nome che contiene due volte il testo di ricerca è una sola riga con due evidenziazioni. Anche una corrispondenza nel nome logico di una tabella o di una colonna compare nella riga di quella tabella o colonna, mai in una riga propria.  
@@ -127,7 +127,7 @@ Andare a una corrispondenza chiude il pannello Proprietà tabella, se è aperto,
 
 - Per il nome, il nome logico o il commento di una tabella o di una colonna, seleziona solo la tabella, la porta in primo piano e sposta il focus sulla cella che contiene la corrispondenza. Una corrispondenza in un commento nascosto da un’[opzione di visualizzazione delle tabelle](./table-related-functions.md#table-view-options) sposta invece il focus sul nome accanto. Dove la [Visualizzazione nomi](./logical-names.md#name-view) non disegna alcuna cella per il nome o per il nome logico, il focus va su quella disegnata al suo posto: il nome in `Physical Names`, il nome logico in `Logical Names`.
 - Per il nome di un indice, seleziona solo la tabella dell’indice e la porta in primo piano, con il focus sul nome della tabella, o sul suo nome logico in `Logical Names` e `Both Names`, a meno che il focus non sia già in quella tabella. I nomi degli indici non sono disegnati nell’area di disegno.
-- Per il nome di un gruppo di tabelle, seleziona solo il gruppo e lo porta in primo piano con le sue tabelle.
+- Per il nome di un gruppo di tabelle, seleziona solo il gruppo e lo porta in primo piano con le sue tabelle e i suoi memo.
 - Per un memo, seleziona solo il memo e lo porta in primo piano.
 
 L’area di disegno scorre solo quando la destinazione non è già ben visibile e lo zoom non cambia mai — vedere [Dove porta un salto](./table-related-functions.md#where-a-jump-lands).

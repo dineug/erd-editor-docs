@@ -7,7 +7,7 @@ description: Markera, flytta, kopiera, duplicera och ta bort tabeller och anteck
 
 Allt du gör med tabeller och anteckningar när de väl finns – markera, flytta, kopiera, ta bort, färglägga och ställa in vad arbetsytan visar – samt arbetsytans kontroller runt dem.  
 Först kommer kommandona för tabeller och anteckningar; sedan panelen Tabellegenskaper, fokusering på tabeller, index och alternativa nycklar, automatisk layout och databassystemet; därefter själva arbetsytan: arbetsytans verktygsfält, zoom, panorering och var ett hopp hamnar samt diff-visaren; och sist vad en skrivskyddad editor behåller av allt detta.  
-Tabellgrupper, rutorna som samlar tabeller, har en egen sida – se [Tabellgrupper](./table-groups.md).  
+Tabellgrupper, rutorna som samlar tabeller och anteckningar, har en egen sida – se [Tabellgrupper](./table-groups.md).  
 Det gör även logiska namn och namnvisningen, som avgör vilka namn tabellerna visar – se [Logiska namn](./logical-names.md).
 
 ## Markera flera objekt {#multiple-selection}
@@ -21,7 +21,7 @@ Det finns tre sätt:
 Anteckningar markeras på samma sätt, och båda kortkommandona för att markera alla tar med varje tabell och anteckning på en gång. Anteckningar som döljs med View Option → `Memos` tas inte med när du markerar alla eller drar en markeringsram – se [Visningsalternativ för tabeller](#table-view-options).  
 [Tabellgrupper](./table-groups.md#selecting-groups) läggs till i markeringen med `Ctrl + click` (Windows/Linux) eller `⌘ + click` (Mac) på namnlisten, men när du markerar alla tas aldrig någon grupp med.  
 `Ctrl + A` ger företräde åt textmarkören, så medan du redigerar en cell markerar kortkommandot texten i stället för diagrammet.  
-En markeringsram markerar en tabell eller anteckning när den täcker dess mitt, inte när den bara nuddar en kant. Den tar med en tabellgrupp bara när den omsluter gruppens hela ruta, så en ram som dras inuti en grupp markerar tabeller utan gruppen.  
+En markeringsram markerar en tabell eller anteckning när den täcker dess mitt, inte när den bara nuddar en kant. Den tar med en tabellgrupp bara när den omsluter gruppens hela ruta, så en ram som dras inuti en grupp markerar tabeller och anteckningar utan gruppen.  
 Ett högerklick på något som redan är markerat behåller hela markeringen, så menyalternativ som `Color`, `Group selected tables` och `Delete selected` verkar på allt som är markerat. Ett högerklick på någon annan tabell, anteckning eller tabellgrupp markerar enbart den, även med `Ctrl` eller `⌘` nedtryckt, och ett högerklick på en relation eller på tom arbetsyta avmarkerar allt.  
 `Escape` avmarkerar allt. Medan en cell, en anteckning eller namnet på en tabellgrupp redigeras, eller medan en relation eller en `New Table Group` ritas, avslutar ett första tryck på `Escape` detta, och ett andra tryck avmarkerar allt.  
 En skrivskyddad editor har inget av de här sätten att markera: bara ett hopp markerar där – se [Skrivskyddade editorer](#read-only-editors).
@@ -41,10 +41,10 @@ Bara vänster musknapp flyttar tabeller och anteckningar. Ett högerklick välje
 
 ![Om du drar en av två markerade tabeller flyttas båda, och relationen följer med](/img/demo-table-multiple-move.webp)
 
-En markerad [tabellgrupp](./table-groups.md) flyttas också och tar med sig sina tabeller, och en tabell som både är markerad och ligger i en grupp som dras flyttas en enda gång.  
-Beroende på var du släpper en tabell kan den flyttas in i eller ut ur en grupp – se [Lägga till och ta bort tabeller](./table-groups.md#adding-and-removing-tables).
+En markerad [tabellgrupp](./table-groups.md) flyttas också och tar med sig sina tabeller och anteckningar, och en tabell eller anteckning som både är markerad och ligger i en grupp som dras flyttas en enda gång.  
+Beroende på var du släpper en tabell eller anteckning kan den flyttas in i eller ut ur en grupp – se [Lägga till och ta bort tabeller](./table-groups.md#adding-and-removing-tables).
 
-Tabeller och anteckningar delar en och samma staplingsordning. Ett tryck på en tabell eller anteckning, med vänster eller höger knapp, lägger den framför alla andra tabeller och anteckningar, och ett tryck på en tabellgrupps namnlist, eller ett högerklick på dess yta, lägger gruppens tabeller överst.  
+Tabeller och anteckningar delar en och samma staplingsordning. Ett tryck på en tabell eller anteckning, med vänster eller höger knapp, lägger den framför alla andra tabeller och anteckningar, och ett tryck på en tabellgrupps namnlist, eller ett högerklick på dess yta, lägger gruppens tabeller och anteckningar överst.  
 Ordningen sparas inte: ett diagram som öppnas igen staplar sina tabeller i den ordning filen listar dem, med alla anteckningar ovanpå.
 
 ## Kopiera/klistra in tabeller och anteckningar {#copyingpasting-tables-and-memos}
@@ -57,7 +57,7 @@ Varje kopierad kolumn behåller sitt logiska namn, och varje tabell- och kolumnn
 En inklistrad kolumn behåller sin domänkoppling bara när två villkor är uppfyllda: diagrammet som den hamnar i listar just den domänen, inte bara en med samma namn, och domänen har fortfarande den datatyp som kolumnen kopierades med. Annars hamnar kolumnen utan domän och behåller den typ som den kopierades med – se [Koppla en kolumn](./dictionary.md#linking-a-column).  
 Index och relationer följer också med: ett index kopieras i sin helhet till den kopierade tabellen, och en relation kopieras med sin typ och sina åtgärder för ON DELETE och ON UPDATE när båda tabellerna som den förbinder ingår i det som kopieras. En halv relation utelämnas i stället för att lämnas kvar och peka tillbaka på originalet.  
 De inklistrade kopiorna blir den nya markeringen, och om du klistrar in samma kopia igen förskjuts den ytterligare `50px` varje gång, så att upprepade inklistringar inte hamnar ovanpå varandra.  
-En kopia behåller inte sin [tabellgrupp](./table-groups.md): den inklistrade tabellen ligger inte i någon grupp, även när den hamnar inuti en grupps ruta, och en markerad grupp kopieras inte.  
+En kopia behåller inte sin [tabellgrupp](./table-groups.md): den inklistrade tabellen eller anteckningen ligger inte i någon grupp, även när den hamnar inuti en grupps ruta, och en markerad grupp kopieras inte.  
 Medan View Option → `Memos` döljer anteckningarna lägger en inklistring ändå till de anteckningar den innehåller, dolda och omarkerade, så att bara de inklistrade tabellerna blir markeringen.
 
 ![Två relaterade tabeller kopieras och klistras in två gånger, relationen inräknad](/img/demo-table-copy-paste.webp)
@@ -89,7 +89,7 @@ Kortkommandon:
 
 Snabbmenyerna kan också ta bort. Det sista menyalternativet i menyn för en tabell eller en anteckning visar `Delete selected` när tabellen eller anteckningen är ett av två eller fler markerade objekt, och tar då bort hela markeringen. Annars visar det `Delete` och tar enbart bort den tabellen eller anteckningen. Över raden för en markerad kolumn visar tabellens meny i stället `Delete column` eller `Delete columns`, som i [Ta bort kolumner](./table-editing.md#column-deletion).
 
-När du tar bort en tabell tas dess relationer och index bort med den. När du tar bort en tabellgrupp behålls dess tabeller, utan grupp – se [Ta bort en grupp](./table-groups.md#removing-a-group).  
+När du tar bort en tabell tas dess relationer och index bort med den. När du tar bort en tabellgrupp behålls dess tabeller och anteckningar, utan grupp – se [Ta bort en grupp](./table-groups.md#removing-a-group).  
 Det finns ingen bekräftelse, varje borttagning ångras i ett steg, och i en editor med `readonly` tas ingenting bort.  
 När de hålls ned tar `Delete` och `Backspace` bort bara en gång, och de tar aldrig bort en relation – se [Redigera relationer](./relationship-editing.md#deletion). Medan du skriver i en cell, en anteckning eller något annat textfält redigerar de i stället texten.  
 Under fliken Inställningar listas de två tangenterna som `Delete Selection` – se [Kortkommandon](./settings.md#shortcuts).
@@ -98,7 +98,7 @@ Under fliken Inställningar listas de två tangenterna som `Delete Selection` �
 
 Du kan tilldela färger för att särskilja efter kategori.  
 En tabell bär sin färg längs vänsterkanten och en anteckning längs överkanten. Klicka på kanten eller remsan med vänster knapp, eller välj `Color` i tabellens eller anteckningens snabbmeny, för att öppna färgväljaren vid pekaren. Färgen tillämpas på varje markerad tabell, anteckning och tabellgrupp, inte bara på den du klickade på.  
-En tabellgrupp färgläggs med `Color` i gruppens egen meny, och en tabell i en färglagd grupp bär gruppens färg över sitt tabellhuvud men behåller sin egen färg på vänsterkanten – se [Färglägga en grupp](./table-groups.md#coloring-a-group).
+En tabellgrupp färgläggs med `Color` i gruppens egen meny, och en tabell eller anteckning i en färglagd grupp bär gruppens färg över sitt huvud men behåller sin egen färg på vänsterkanten respektive längs överkanten – se [Färglägga en grupp](./table-groups.md#coloring-a-group).
 
 ![Den förinställda färgen Blue väljs från en antecknings färgremsa för två markerade tabeller och anteckningen, och sedan tas färgen bort med No color](/img/demo-table-color.webp)
 
@@ -143,9 +143,9 @@ Vilka namn tabellerna visar är inget visningsalternativ: `Name View`, direkt ef
 `Domain` ger varje kolumn en cell, placerad enligt [kolumnordningen](./settings.md#adjusting-column-order), med namnet på den domän som kolumnen är kopplad till. En kolumn som inte är kopplad till någon domän som bladet `Domains` listar visar där platshållaren `domain`, nedtonad. Cellen visas i varje namnvisning. Medan `Domain` är av visar `Logical Names` i stället en kopplad domäns namn i typcellen – se [Domäncellen](./logical-names.md#the-domain-cell).  
 `Alternate Key` märker kolumnerna i varje alternativ nyckel, till exempel `AK1.1` – se [Alternativa nycklar](#alternate-keys).  
 `Referential Actions` visar etiketterna `D:` och `U:` som en relations åtgärder för ON DELETE och ON UPDATE sätter vid barnänden av dess relationslinje – se [Läsa en relationslinje](./relationship-editing.md#reading-a-connector). Om du slår av alternativet döljs bara de etiketterna, och ingen tabell eller relationslinje flyttas.  
-`Table Groups` visar [tabellgrupperna](./table-groups.md) och gruppfärgerna på deras tabellers tabellhuvuden. Om du slår av alternativet döljs de på arbetsytan, i minikartan och i bildexporter, ingen tabell flyttas och varje tabell stannar i sin grupp – se [Dölja grupper](./table-groups.md#hiding-groups). Det tar också bort mappen `Table Groups` från [utforskaren](./explorer.md#the-tree) och `New Table Group` från [arbetsytans verktygsfält](#canvas-toolbar), och utforskarens sökning slutar hitta gruppnamn.  
-`Memos` visar anteckningarna. Om du slår av alternativet döljs varje anteckning på arbetsytan, i minikartan och i bildexporter, och ingen tabell eller relationslinje flyttas. Dolda anteckningar tar ingen plats, så rullningslisterna, minikartan och kompassen `Go to content` bortser från dem.  
-Om du döljer anteckningarna avmarkeras de, och ett öppet redigeringsfält för en anteckning stängs. [Utforskaren](./explorer.md#the-tree) tar bort sin mapp `Memos`, och varken dess sökning med [Sök och ersätt](./find-and-replace.md) eller snabbsökningens `:` söker i dem. Medan de är dolda försvinner `New Memo` från snabbmenyn, [arbetsytans verktygsfält](#canvas-toolbar), snabbsökningen och [välkomstskärmen](./editing-start.md#welcome-screen), och `Alt + M` lägger inte till någon anteckning. En inklistring eller [Importera och lägg till](./file-import-export.md#import-and-add) lägger ändå till de anteckningar den innehåller, dolda och omarkerade.  
+`Table Groups` visar [tabellgrupperna](./table-groups.md) och gruppfärgerna på deras tabellers och anteckningars huvuden. Om du slår av alternativet döljs grupperna och deras färger på arbetsytan och i bildexporter, rutorna tas bort från minikartan, ingen tabell eller anteckning flyttas och varje tabell och anteckning stannar i sin grupp – se [Dölja grupper](./table-groups.md#hiding-groups). Det tar också bort mappen `Table Groups` från [utforskaren](./explorer.md#the-tree) och `New Table Group` från [arbetsytans verktygsfält](#canvas-toolbar), och utforskarens sökning slutar hitta gruppnamn.  
+`Memos` visar anteckningarna. Om du slår av alternativet döljs varje anteckning på arbetsytan, i minikartan och i bildexporter, och ingen tabell eller relationslinje flyttas. Dolda anteckningar tar ingen plats, så rullningslisterna, minikartan, kompassen `Go to content` och rutorna för [tabellgrupper](./table-groups.md) bortser från dem, men de stannar kvar i sina grupper.  
+Om du döljer anteckningarna avmarkeras de, och ett öppet redigeringsfält för en anteckning stängs. [Utforskaren](./explorer.md#the-tree) tar bort sin mapp `Memos` och anteckningarna under sina tabellgrupper, och varken dess sökning med [Sök och ersätt](./find-and-replace.md) eller snabbsökningens `:` söker i dem. Medan de är dolda försvinner `New Memo` från snabbmenyn, [arbetsytans verktygsfält](#canvas-toolbar), snabbsökningen och [välkomstskärmen](./editing-start.md#welcome-screen), och `Alt + M` lägger inte till någon anteckning. En inklistring eller [Importera och lägg till](./file-import-export.md#import-and-add) lägger ändå till de anteckningar den innehåller, dolda och omarkerade.  
 I en skrivskyddad editor fungerar växlarna fortfarande, men bara på den skärmen: de sparas inte, registreras inte i ångrahistoriken och delas inte, och de går tillbaka till filens värden när editorn blir skrivbar igen – se [Skrivskyddade editorer](./settings.md#read-only-editors) i Inställningar.
 
 ![Alternativ i View Option slås på och av medan tabellerna ordnas om, ett sammansatt unikt index märks AK1.1 och AK1.2 med Alternate Key, och sedan slås Memos av och på](/img/demo-view-options.webp)
@@ -233,9 +233,9 @@ Förhandsgranskningen är inramad kring diagrammet så som det såg ut när layo
 
 De andra tre beräknas i ett svep, utanför huvudtråden, så det finns inget att titta på: ett meddelande visas medan layouten beräknas, och den färdiga placeringen centreras på det område som diagrammet redan täcker. `Cancel` eller `Escape` avbryter en layout som du inte längre väntar på, och i ett värdprogram som inte kör någon shared worker slutar layouten med `Could not place tables` – se [Web Workers](../../api/installation.md#web-workers). En layout som inte har kommit tillbaka inom 60 sekunder slutar på samma sätt.
 
-Vilken du än väljer flyttas tabeller och tabellgrupper, medan anteckningar stannar där de är. Tabellerna placeras med de bredder som de har i den namnvisning du tittar på. En relation från en tabell till sig själv ignoreras, och flera relationer mellan samma två tabeller räknas som en.  
-Varje layout håller ihop varje grupps tabeller, oavsett om grupperna visas eller inte, och anpassar varje grupp som innehåller tabeller så att den omsluter dem – se [Tabellgrupper](./table-groups.md#auto-layout).  
-Resultatet blir ett enda steg i historiken, så en enda ångring flyttar tillbaka varje tabell och grupp dit den var.  
+Vilken du än väljer flyttas tabeller, tabellgrupper och anteckningarna i grupper som innehåller tabeller, medan alla andra anteckningar stannar där de är. Tabellerna placeras med de bredder som de har i den namnvisning du tittar på. En relation från en tabell till sig själv ignoreras, och flera relationer mellan samma två tabeller räknas som en.  
+Varje layout håller ihop varje grupps tabeller och anteckningar, oavsett om grupperna visas eller inte, och anpassar varje grupp som innehåller tabeller så att den omsluter sina tabeller och synliga anteckningar – se [Tabellgrupper](./table-groups.md#auto-layout).  
+Resultatet blir ett enda steg i historiken, så en enda ångring flyttar tillbaka varje tabell, anteckning och grupp dit den var.  
 En skrivskyddad editor erbjuder ingen `Auto Layout`. En som fortfarande pågår när editorn blir skrivskyddad avslutas där: förhandsgranskningen `Force` stängs med sitt meddelande och behåller inga av sina positioner, och en layout som fortfarande beräknas kastas tillsammans med sitt meddelande, så ingen tabell flyttas, varken då eller när editorn blir skrivbar igen.
 
 ![En hög med tabeller städas upp med den automatiska layouten Flow från arbetsytans snabbmeny, som ställer upp dem från vänster till höger längs deras relationer](/img/demo-automatic-table-placement.webp)
@@ -311,7 +311,7 @@ En dragning med mittenknappen markerar, flyttar och klickar ingenting, och behå
 Ett tryck med mittenknappen på rullningslisterna, minikartan, arbetsytans verktygsfält eller ett öppet redigeringsfält för en cell eller anteckning panorerar inte.
 
 Minikartan i det övre högra hörnet avbildar diagrammet med en skärms utrymme på varje sida om det, rullningslisternas räckvidd, avrundat utåt till ett grovt rutnät, så ju mer du zoomar ut, desto mindre blir diagrammet i den. Klicka på den för att flytta vyn till den punkten, eller dra rektangeln för visningsområdet för att panorera. När du zoomar ut växer rektangeln för visningsområdet och täcker mer av kartan.  
-Den ritar varje tabell i tabellens färg, och varje synlig tabellgrupp som en ruta i gruppens färg bakom dess tabeller.  
+Den ritar varje tabell i tabellens färg, och varje synlig tabellgrupp som en ruta i gruppens färg bakom dess tabeller och anteckningar, och rutan sträcks ut runt gruppens synliga anteckningar som rutan på arbetsytan gör.  
 Rullningslisterna längs höger- och nederkanten beskriver samma rörelseomfång, som sträcker sig från läget där diagrammet ligger precis utanför ena sidan av skärmen till läget precis utanför den andra, så det är minst en skärm längre än det ritade diagrammet, och ännu längre medan vyn står bortom det. Utanför zenläget visas båda rullningslisterna så snart dokumentet innehåller en tabell, en synlig anteckning eller en synlig tabellgrupp, även när allt får plats på skärmen. Ett dokument utan något av detta, till exempel ett vars enda anteckningar är dolda med View Option → `Memos`, visar ingen av dem och ingen minikarta.  
 Att dra i en rullningslists rullningsruta eller i minikartans rektangel för visningsområdet är den enda panorering som stannar: den går inte längre än till tabellerna precis utanför skärmen, eller till där dragningen började om det var längre ut.
 
@@ -364,7 +364,7 @@ En skrivskyddad editor erbjuder också `Diff Viewer`, och vyn fungerar där som 
 
 Tabeller, kolumner, index, sekundärnycklar, anteckningar och tabellgrupper jämförs alla.  
 Varje objekt paras först ihop efter sitt id, så mot en tidigare version av samma fil, som behåller id:n, är en tabell, en kolumn, ett index eller en tabellgrupp som har bytt namn fortfarande ett objekt, listat som omdöpt.  
-Det som återstår paras ihop ett mot ett efter det som det behåller: en tabell eller en tabellgrupp efter sitt namn, med hänsyn till skiftläge; en kolumn eller ett index efter sin tabell och sitt namn; en sekundärnyckel efter sina två tabeller och sina kolumnpar; och en anteckning efter sin text och sedan sin position. Ett index utan namn paras ihop efter sina kolumner, deras ordning och riktning och om det är unikt, och en tabellgrupp utan namn efter den grupp som den delar flest tabeller med.  
+Det som återstår paras ihop ett mot ett efter det som det behåller: en tabell eller en tabellgrupp efter sitt namn, med hänsyn till skiftläge; en kolumn eller ett index efter sin tabell och sitt namn; en sekundärnyckel efter sina två tabeller och sina kolumnpar; och en anteckning efter sin text och sedan sin position. Ett index utan namn paras ihop efter sina kolumner, deras ordning och riktning och om det är unikt, och en tabellgrupp utan namn efter den grupp som den delar flest tabeller och anteckningar med.  
 Mot en fil från annat håll, till exempel ett diagram som byggts om med SQL-import, visas en omdöpt tabell därför som en borttagen och en tillagd.
 
 Vad som räknas som en ändring:
@@ -373,8 +373,8 @@ Vad som räknas som en ändring:
 - En kolumn: dess namn, kommentar, datatyp, standardvärde, Automatisk uppräkning, primärnyckel, Unik, Inte null och dess plats i tabellen. Bara de kolumner som ligger utanför den ordning som båda dokumenten delar räknas som flyttade, så om en kolumn läggs till, tas bort eller flyttas märks inte de andra.
 - Ett index: dess namn, UNIQUE och dess kolumner, med deras ordning och riktning.
 - En sekundärnyckel: dess kolumnpar, relationstyp och åtgärder för ON DELETE och ON UPDATE.
-- En anteckning: dess text, position, storlek och färg.
-- En tabellgrupp: dess namn, tabellerna den innehåller, färg, position och storlek.
+- En anteckning: dess text, tabellgrupp, position, storlek och färg.
+- En tabellgrupp: dess namn, tabellerna och anteckningarna den innehåller, färg, position och storlek.
 
 En tabell, anteckning eller grupp som bara har flyttats, fått ny storlek eller fått ny färg räknas alltså som ändrad. Positioner och storlekar jämförs i hela pixlar, och staplingsordningen och var en relationslinje möter en tabell räknas aldrig.  
 Logiska namn, domänkopplingar och orden, termerna och domänerna på fliken [Ordlista](./dictionary.md) jämförs inte, så en ändring av enbart dem varken listas eller märks. En datatyp som en domän har ändrat räknas däremot, som en ändring av kolumnens datatyp.
@@ -393,7 +393,7 @@ Varje rad slutar med en bokstav, och en rad märkt `A`, `D`, `M` eller `R` har s
 - `R`, omdöpt, i blått: i båda, med ett nytt namn. Ett namnbyte går före alla andra ändringar, som knappbeskrivningen ändå listar.
 - `~`, i bärnstensgult, avslutar varje mapp och varje tabell som listas bara för det som har ändrats inuti den; deras namn behåller den vanliga färgen.
 
-Håll pekaren över en rads namn för att se dess knappbeskrivning: statusen, `Added`, `Deleted`, `Modified`, `Renamed` eller `Changed inside`, och sedan en rad per ändring, till exempel `Name: users → members` eller `NN: ✗ → ✓`. En text citeras med sin första rad, avkortad efter 40 tecken, och ett tomt värde visas som `—`. Knappbeskrivningen för ett tillagt eller borttaget objekt är enbart dess status.
+Håll pekaren över en rads namn för att se dess knappbeskrivning: statusen, `Added`, `Deleted`, `Modified`, `Renamed` eller `Changed inside`, och sedan en rad per ändring, till exempel `Name: users → members` eller `NN: ✗ → ✓`. En text citeras med sin första rad, avkortad efter 40 tecken, och ett tomt värde visas som `—`. En anteckning som har flyttats in i en grupp med namnet Billing har raden `Table group: — → Billing` i sin knappbeskrivning, och gruppens knappbeskrivning får en rad som `Memos: — → "note"`, där anteckningarna namnges med sina första rader inom dubbla citattecken. Knappbeskrivningen för ett tillagt eller borttaget objekt är enbart dess status.
 
 `Filter by name`, ovanför trädet, behåller de rader vars aktuella eller sparade namn, eller aktuella eller sparade logiska namn, innehåller det du skriver, utan hänsyn till skiftläge, i varje namnvisning. En tabell vars namn matchar behåller alla sina rader, och en som inte gör det behåller bara de rader som matchar. Ett filter som inte matchar något lämnar trädet tomt.  
 När de två dokumenten inte skiljer sig åt alls visar trädet `No changes`.
@@ -419,7 +419,7 @@ De två sidorna färgar text, konturer och relationslinjer, och fyller ingenting
 - En tillagd eller borttagen kolumn i en tabell som finns i båda dokumenten färgar hela sin rad, och en kolumn som har flyttats gör hela sin rad bärnstensgul. Ingenting inuti en tillagd eller borttagen tabell märks för sig.
 - Texten i en ändrad cell blir bärnstensgul: en tabells kommentar, en kolumns kommentar, datatyp, standardvärde, Automatisk uppräkning, Unik eller Inte null, eller en antecknings text. En ändring av primärnyckeln gör kolumnens nyckelikon bärnstensgul.
 - En omdöpt tabell, kolumn eller tabellgrupp har sitt namn i blått.
-- En tabell, anteckning eller tabellgrupp med en ändring som saknar egen cell, till exempel en flytt, en ny storlek eller färg, eller ett byte av grupp eller av en grupps tabeller, får en bärnstensgul kontur.
+- En tabell, anteckning eller tabellgrupp med en ändring som saknar egen cell, till exempel en flytt, en ny storlek eller färg, eller ett byte av grupp eller av en grupps tabeller eller anteckningar, får en bärnstensgul kontur.
 - En tillagd, borttagen eller ändrad sekundärnyckel ritar sin relationslinje i den färgen. När du håller pekaren över den, eller när en rad lyser upp den, ritas den i stället i den vanliga hovringsfärgen.
 - En indexändring märker ingenting på någon av sidorna; den visas bara i trädet.
 

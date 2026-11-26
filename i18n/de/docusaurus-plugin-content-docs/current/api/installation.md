@@ -51,18 +51,18 @@ Zur übrigen API siehe [ErdEditorElement](./erd-editor-element.md).
 
 ```html
 <script type="module">
-  import 'https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js';
+  import 'https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js';
 
   const editor = document.createElement('erd-editor');
   editor.style.cssText = 'display: block; width: 100%; height: 100vh;';
   document.body.appendChild(editor);
 </script>
 <!-- or -->
-<script type="module" src="https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js"></script>
+<script type="module" src="https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js"></script>
 ```
 
 `esm.run` löst die externen Abhängigkeiten des Pakets für Sie auf, daher funktioniert dies ohne Bundler.
-Jeder Einstiegspunkt wird über seinen Pfad hinter der Version erreicht: `…/erd-editor.js` definiert den Editor und `…/erd-viewer.js` den Viewer, der jede Anzeigesprache außer Englisch erst vom CDN holt, wenn eine Seite sie anfordert. Die einfache Paket-URL `https://esm.run/@dineug/erd-editor@5.1.0` liefert den Stamm, der kein Element definiert.
+Jeder Einstiegspunkt wird über seinen Pfad hinter der Version erreicht: `…/erd-editor.js` definiert den Editor und `…/erd-viewer.js` den Viewer, der jede Anzeigesprache außer Englisch erst vom CDN holt, wenn eine Seite sie anfordert. Die einfache Paket-URL `https://esm.run/@dineug/erd-editor@5.1.1` liefert den Stamm, der kein Element definiert.
 Eine URL ohne Versionsangabe liefert immer die neueste Version. Fixieren Sie eine Version, wie oben, wenn Sie nicht möchten, dass ein Major-Upgrade Ihre Seite unangekündigt erreicht.
 `5.0.0` ist selbst ein solches: Eine Seite, die bei 4.x bleiben muss, fixiert `@4.2.0` – siehe [Upgrade von 4.x](#upgrading-from-4x).
 
@@ -75,7 +75,7 @@ Auf ihn verweisen die Felder `unpkg` und `jsdelivr`, daher liefert ihn die einfa
 
 ```html
 <erd-editor></erd-editor>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.1"></script>
 <script>
   const editor = document.querySelector('erd-editor');
   editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
@@ -88,7 +88,7 @@ Seit `5.0.0` definiert eine zweite Datei, `dist/erd-viewer.umd.js`, `<erd-viewer
 
 ```html
 <erd-viewer src="diagram.erd.json" style="display: block; height: 480px"></erd-viewer>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0/dist/erd-viewer.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.1/dist/erd-viewer.umd.js"></script>
 ```
 
 Keine der beiden Dateien definiert das Tag der anderen, und jede hinterlässt auf der Seite kein globales Objekt außer ihrem eigenen und `window.Konva`.
@@ -100,7 +100,7 @@ Eine Seite, die kein eigenes Skript laden kann, kann stattdessen den gehosteten 
 ```html
 <erd-editor system-dark-mode enable-theme-builder enable-locale-picker enable-welcome-screen></erd-editor>
 <script type="module">
-  import 'https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js';
+  import 'https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js';
 
   const editor = document.querySelector('erd-editor');
 </script>
@@ -123,7 +123,7 @@ Das Lesen von `editor.value` und `editor.runtimeValue` funktioniert weiterhin, u
 
 ### Serverseitiges Rendering {#server-side-rendering}
 
-Jeder Einstiegspunkt außer `engine.js` und `peer.js` benötigt ein DOM und wirft daher in Node einen Fehler. `erd-editor.js` und `erd-viewer.js` definieren ihr Element auf Modulebene, und der Paketstamm, der seit `5.0.0` nichts definiert, baut beim Laden weiterhin beide Elementklassen auf.
+Jeder auf diesen Seiten beschriebene Einstiegspunkt außer `engine.js` und `peer.js` benötigt ein DOM und wirft daher in Node einen Fehler. `erd-editor.js` und `erd-viewer.js` definieren ihr Element auf Modulebene, und der Paketstamm, der seit `5.0.0` nichts definiert, baut beim Laden weiterhin beide Elementklassen auf.
 Erreichen Sie in Next.js, Nuxt, SvelteKit oder Astro den Einstiegspunkt des Elements über einen Codepfad, der nur im Client ausgeführt wird, und einen benannten Import aus dem Stamm, etwa `setExportFileCallback` oder `toImage`, über denselben Pfad.
 
 ```js
@@ -251,7 +251,7 @@ Eine Seite unter einer strengen Content Security Policy braucht diese Direktiven
 
 ## Einstiegspunkte {#entry-points}
 
-Das Paket hat fünf Einstiegspunkte:
+Diese Seiten beschreiben fünf der Einstiegspunkte des Pakets:
 
 | Einstiegspunkt | Was er ist |
 | --- | --- |
@@ -371,7 +371,7 @@ Es werden keine Polyfills mitgebündelt. Fügen Sie eigene hinzu, wenn Sie älte
    import { setExportFileCallback } from '@dineug/erd-editor';
   ```
 
-- Auf einem CDN gilt dasselbe für `https://esm.run/@dineug/erd-editor`, das nun den Stamm liefert und nichts definiert: Importieren Sie `https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js`. Die einfachen URLs von jsDelivr und unpkg liefern weiterhin den Build für das Script-Tag, der `<erd-editor>` wie zuvor definiert. Eine URL ohne Versionsangabe liefert nun die neueste 5.x-Version; fixieren Sie `@4.2.0`, um bei 4.x zu bleiben – siehe [CDN](#cdn) und [Script-Tag](#script-tag).
+- Auf einem CDN gilt dasselbe für `https://esm.run/@dineug/erd-editor`, das nun den Stamm liefert und nichts definiert: Importieren Sie `https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js`. Die einfachen URLs von jsDelivr und unpkg liefern weiterhin den Build für das Script-Tag, der `<erd-editor>` wie zuvor definiert. Eine URL ohne Versionsangabe liefert nun die neueste 5.x-Version; fixieren Sie `@4.2.0`, um bei 4.x zu bleiben – siehe [CDN](#cdn) und [Script-Tag](#script-tag).
 - Der Stamm definiert nichts, braucht aber weiterhin ein DOM, daher bleibt bei serverseitigem Rendering ein benannter Import daraus, etwa `setExportFileCallback`, neben dem Einstiegspunkt des Elements auf dem Pfad nur für den Client – siehe [Serverseitiges Rendering](#server-side-rendering).
 - `window.ErdEditor` erhält `ErdEditorElement` und `defineErdEditor`. Der Script-Tag-Build des Viewers legt `ErdViewerElement` und `defineErdViewer` auf `window.ErdViewer`, und keines der beiden Globals enthält `toImage`.
 - Ein `readonly`-Editor öffnet sich als Leser. Seine sechs Registerkarten, der Explorer, die Schnellsuche und die Präsenz bleiben, und jedes Bedienelement, das das Diagramm bearbeiten würde, fehlt, statt deaktiviert zu sein: Die Symbolleiste zeigt den Namen der Datenbank als Text, die Registerkarte Einstellungen zeigt ihre Einstellungen mit deaktivierten Bedienelementen unter einem Badge `Read only`, und die schwebende Symbolleiste behält nur den Zoom, die Namensansicht, den Zen-Modus und den Kompass, sodass `Hand` und `Select` entfallen und ein Ziehen die Zeichenfläche verschiebt. Ein Druck wählt nichts aus: Die einzige Auswahl ist der Umriss, den ein Sprung aus dem Explorer oder der Schnellsuche um das legt, was er erreicht, den ein Klick ohne Bewegung aufhebt, und die Tastenkombinationen zum Alles-Auswählen wählen nichts aus. Das Einschalten von `readonly` beendet, was offen stand, etwa die Auswahl, das Hand-Werkzeug, einen Zelleneditor, ein Ziehen, Map Columns, die Vorschau `Force` von Auto Layout und Time Travel, und behält das Scrollen, den Zoom, die Registerkarte und die Namensansicht – siehe [readonly](./erd-editor-element.md#readonly).

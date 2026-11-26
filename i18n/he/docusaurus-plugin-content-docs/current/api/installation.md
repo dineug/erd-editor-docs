@@ -51,18 +51,18 @@ editor.addEventListener('change', () => {
 
 ```html
 <script type="module">
-  import 'https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js';
+  import 'https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js';
 
   const editor = document.createElement('erd-editor');
   editor.style.cssText = 'display: block; width: 100%; height: 100vh;';
   document.body.appendChild(editor);
 </script>
 <!-- or -->
-<script type="module" src="https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js"></script>
+<script type="module" src="https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js"></script>
 ```
 
 `esm.run` מאתר בעצמו את התלויות החיצוניות של החבילה, ולכן הקוד הזה עובד בלי bundler.
-כל נקודת כניסה מושגת לפי הנתיב שאחרי הגרסה: `…/erd-editor.js` מגדיר את העורך, ו-`…/erd-viewer.js` את המציג, שמוריד מה-CDN כל שפת תצוגה מלבד אנגלית ברגע שדף מבקש אותה. כתובת החבילה החשופה, `https://esm.run/@dineug/erd-editor@5.1.0`, מגישה את השורש, שאינו מגדיר אלמנט.
+כל נקודת כניסה מושגת לפי הנתיב שאחרי הגרסה: `…/erd-editor.js` מגדיר את העורך, ו-`…/erd-viewer.js` את המציג, שמוריד מה-CDN כל שפת תצוגה מלבד אנגלית ברגע שדף מבקש אותה. כתובת החבילה החשופה, `https://esm.run/@dineug/erd-editor@5.1.1`, מגישה את השורש, שאינו מגדיר אלמנט.
 כתובת URL ללא גרסה מגישה תמיד את הגרסה האחרונה. יש לקבע גרסה, כמו למעלה, כדי ששדרוג לגרסה ראשית חדשה לא יגיע לדף בלי הודעה מראש.
 גרסה `5.0.0` היא בעצמה שדרוג כזה: דף שצריך להישאר בגרסה 4 מקבע את `@4.2.0` – ראו [שדרוג מגרסה 4](#upgrading-from-4x).
 
@@ -75,7 +75,7 @@ editor.addEventListener('change', () => {
 
 ```html
 <erd-editor></erd-editor>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.1"></script>
 <script>
   const editor = document.querySelector('erd-editor');
   editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
@@ -88,7 +88,7 @@ editor.addEventListener('change', () => {
 
 ```html
 <erd-viewer src="diagram.erd.json" style="display: block; height: 480px"></erd-viewer>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0/dist/erd-viewer.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.1/dist/erd-viewer.umd.js"></script>
 ```
 
 אף אחד משני הקבצים אינו מגדיר את התגית של השני, וכל אחד מהם אינו משאיר בדף משתנה גלובלי מלבד שלו ו-`window.Konva`.
@@ -100,7 +100,7 @@ editor.addEventListener('change', () => {
 ```html
 <erd-editor system-dark-mode enable-theme-builder enable-locale-picker enable-welcome-screen></erd-editor>
 <script type="module">
-  import 'https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js';
+  import 'https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js';
 
   const editor = document.querySelector('erd-editor');
 </script>
@@ -123,7 +123,7 @@ erd-editor {
 
 ### רינדור בצד השרת {#server-side-rendering}
 
-כל נקודת כניסה מלבד `engine.js` ו-`peer.js` דורשת DOM, ולכן היא זורקת שגיאה ב-Node. `erd-editor.js` ו-`erd-viewer.js` מגדירים את האלמנט שלהם ברמת המודול, ושורש החבילה, שמאז גרסה `5.0.0` אינו מגדיר דבר, עדיין בונה את שתי מחלקות האלמנט בזמן שהוא נטען.
+כל נקודת כניסה שהדפים האלה מתארים, מלבד `engine.js` ו-`peer.js`, דורשת DOM, ולכן היא זורקת שגיאה ב-Node. `erd-editor.js` ו-`erd-viewer.js` מגדירים את האלמנט שלהם ברמת המודול, ושורש החבילה, שמאז גרסה `5.0.0` אינו מגדיר דבר, עדיין בונה את שתי מחלקות האלמנט בזמן שהוא נטען.
 ב-Next.js, Nuxt, SvelteKit או Astro, יש לייבא את נקודת הכניסה של האלמנט מנתיב קוד שרץ בצד הלקוח, וייבוא בשם מהשורש, כמו `setExportFileCallback` או `toImage`, מאותו נתיב.
 
 ```js
@@ -251,7 +251,7 @@ Vite, webpack 5 ו-Rspack מוציאים את ה-workers כקבצים לצד ש�
 
 ## נקודות כניסה {#entry-points}
 
-לחבילה יש חמש נקודות כניסה:
+הדפים האלה מתארים חמש מנקודות הכניסה של החבילה:
 
 | נקודת כניסה | מה היא |
 | --- | --- |
@@ -371,7 +371,7 @@ Chrome 91 ומעלה, Edge 94 ומעלה, Firefox 93 ומעלה, Safari 16.4 ו�
    import { setExportFileCallback } from '@dineug/erd-editor';
   ```
 
-- ב-CDN אותו דבר נכון לגבי `https://esm.run/@dineug/erd-editor`, שמגיש כעת את השורש ואינו מגדיר דבר: יש לייבא את `https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js`. כתובות jsDelivr ו-unpkg החשופות עדיין מגישות את ה-build של תגית script, שמגדיר את `<erd-editor>` כמקודם. כתובת URL ללא גרסה מגישה כעת את הגרסה האחרונה של גרסה 5; כדי להישאר בגרסה 4, יש לקבע את `@4.2.0` – ראו [CDN](#cdn) ו-[תגית script](#script-tag).
+- ב-CDN אותו דבר נכון לגבי `https://esm.run/@dineug/erd-editor`, שמגיש כעת את השורש ואינו מגדיר דבר: יש לייבא את `https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js`. כתובות jsDelivr ו-unpkg החשופות עדיין מגישות את ה-build של תגית script, שמגדיר את `<erd-editor>` כמקודם. כתובת URL ללא גרסה מגישה כעת את הגרסה האחרונה של גרסה 5; כדי להישאר בגרסה 4, יש לקבע את `@4.2.0` – ראו [CDN](#cdn) ו-[תגית script](#script-tag).
 - השורש אינו מגדיר דבר אבל עדיין צריך DOM, ולכן ברינדור בצד השרת ייבוא בשם ממנו, כמו `setExportFileCallback`, נשאר בנתיב הצד-לקוח לצד נקודת הכניסה של האלמנט – ראו [רינדור בצד השרת](#server-side-rendering).
 - ל-`window.ErdEditor` נוספים `ErdEditorElement` ו-`defineErdEditor`. ה-build של המציג בתגית script מציב את `ErdViewerElement` ואת `defineErdViewer` על `window.ErdViewer`, ואף אחד משני המשתנים הגלובליים אינו נושא את `toImage`.
 - עורך `readonly` נפתח כקורא. ששת הכרטיסיות שלו, הסייר, החיפוש המהיר והנוכחות של שותפים נשארים, וכל פקד שהיה עורך את התרשים מושמט ולא מושבת: סרגל הכלים מציג את שם מסד הנתונים כטקסט, כרטיסיית הגדרות מציגה את ההגדרות שלה עם כל הפקדים מושבתים תחת התג `Read only`, וסרגל הכלים הצף שומר רק את הזום, את תצוגת השמות, את מצב זן ואת המצפן, כך ש-`Hand` ו-`Select` נעלמים וגרירה מזיזה את התצוגה. לחיצה אינה בוחרת דבר: הבחירה היחידה היא המתאר שמעבר מהסייר או מהחיפוש המהיר מניח סביב מה שהוא מגיע אליו, ולחיצה ללא תנועה מנקה אותו, וצירופי המקשים לבחירת הכול אינם בוחרים דבר. הפעלת `readonly` מסיימת את מה שעמד פתוח, כמו הבחירה, כלי היד, עורך תא, גרירה, `Map Columns`, התצוגה המקדימה של `Force` בפריסה האוטומטית ומסע בזמן, ושומרת את הגלילה, הזום, הכרטיסייה ותצוגת השמות – ראו [readonly](./erd-editor-element.md#readonly).

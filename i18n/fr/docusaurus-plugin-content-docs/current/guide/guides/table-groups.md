@@ -1,15 +1,18 @@
 ---
 sidebar_position: 6
-description: Rassembler des tables liées dans un cadre nommé et coloré affiché derrière elles ; créer, nommer, colorer, déplacer, redimensionner et supprimer des groupes, y accéder depuis l’explorateur, changer les tables qu’ils contiennent, les masquer et les conserver dans la disposition automatique, le Schéma SQL et le DBML.
+description: Rassembler des tables et des mémos liés dans un cadre nommé et coloré affiché derrière eux ; créer, nommer, colorer, déplacer, redimensionner et supprimer des groupes, y accéder depuis l’explorateur, changer les tables et les mémos qu’ils contiennent, les masquer et les conserver dans la disposition automatique, le Schéma SQL et le DBML.
 ---
 
 # Groupes de tables
 
-Un groupe de tables est un cadre nommé et coloré affiché derrière des tables liées sur le canevas ERD, pour montrer quelles tables vont ensemble.  
-Une table appartient à un groupe au plus. Les groupes sont enregistrés avec le diagramme, de même que le groupe auquel appartient chaque table.
+Un groupe de tables est un cadre nommé et coloré affiché derrière des tables et des mémos liés sur le canevas ERD, pour montrer ce qui va ensemble.  
+Une table ou un mémo appartient à un groupe au plus. Les groupes sont enregistrés avec le diagramme, de même que le groupe auquel appartient chaque table et chaque mémo.
 
 Le cadre porte en haut une barre de titre qui contient une icône de groupe, le nom du groupe en gras et, tant que le pointeur survole le groupe, un `x` qui le supprime (voir [Supprimer un groupe](#removing-a-group)). Un groupe sans nom affiche `unnamed`, et un nom trop long pour la barre est tronqué par `…`.  
-Le cadre contient toujours ses tables : il garde la taille qui lui a été donnée, mais s’étire pour maintenir chaque table à l’intérieur avec une marge de `24px` autour d’elle et la barre de titre au-dessus. Une table qui s’agrandit étire le cadre avec elle, de même qu’une table déposée près d’un bord avec son centre encore à l’intérieur du cadre. Pendant le glissement de tables, le cadre ne s’agrandit ni ne rétrécit. L’étirement n’est pas enregistré : le cadre reprend sa propre taille dès que la table n’a plus besoin de cette place.
+Le cadre contient toujours ses tables et ses mémos : il garde la taille qui lui a été donnée, mais s’étire pour maintenir chaque table et chaque mémo à l’intérieur avec une marge de `24px` autour d’eux et la barre de titre au-dessus. Une table ou un mémo qui s’agrandit étire le cadre avec lui, de même qu’une table ou un mémo déposé près d’un bord avec son centre encore à l’intérieur du cadre. Pendant le glissement de tables ou de mémos, le cadre ne s’agrandit ni ne rétrécit. L’étirement n’est pas enregistré : le cadre reprend sa propre taille dès que ni table ni mémo n’a plus besoin de cette place.
+
+Les mémos masqués avec [View Option](./table-related-functions.md#table-view-options) → `Memos` restent dans leurs groupes : déplacer un groupe les emporte, supprimer un groupe les en fait sortir, et annuler l’un ou l’autre les remet en place.  
+Seuls les mémos affichés étirent le cadre et arrêtent un bord lors du redimensionnement, et eux seuls sont pris par un groupe tracé, sélectionnés par `Select tables` et listés sous le groupe dans l’explorateur.
 
 Les groupes sont affichés derrière tout le reste du canevas : tables, mémos et lignes de relation.  
 Là où des groupes se chevauchent, celui sur lequel vous avez appuyé ou que vous avez ajouté en dernier s’affiche devant, et le corps d’un groupe ne recouvre jamais la barre de titre d’un autre groupe. Cet ordre n’est pas enregistré, si bien qu’un diagramme rouvert empile ses groupes dans l’ordre de leur ajout.  
@@ -31,7 +34,7 @@ Le bouton et le raccourci activent ou désactivent le tracé, si bien qu’appuy
 Tant que le tracé est actif, le curseur prend la forme d’un réticule, et un appui commence le cadre là où il se produit, même sur une table, au lieu de sélectionner ou de déplacer ce qui se trouve dessous. La barre d’outils du canevas met alors en évidence son bouton `New Table Group`, et non la main ou le pointeur.
 
 Le relâchement ajoute un groupe dans ce cadre, d’au moins `160px` de large et `100px` de haut, barre de titre comprise, si court que soit le glissement. Un clic sans glissement ajoute un groupe de `480px` de large et `320px` de haut dont le coin supérieur gauche se trouve à l’endroit du clic.  
-Toute table sans groupe dont le centre se trouve dans le nouveau cadre rejoint le groupe. Une table qui appartient déjà à un autre groupe y reste.
+Toute table et tout mémo affiché sans groupe dont le centre se trouve dans le nouveau cadre rejoint le groupe. Une table ou un mémo qui appartient déjà à un autre groupe y reste.
 
 Le bouton central de la souris déplace toujours la vue du canevas et laisse le tracé actif. Les actions suivantes mettent fin au tracé sans ajouter de groupe :
 
@@ -42,15 +45,15 @@ Le bouton central de la souris déplace toujours la vue du canevas et laisse le 
 
 ### Grouper les tables sélectionnées {#grouping-selected-tables}
 
-Sélectionnez une ou plusieurs tables et appuyez sur `T` puis `G`, ou choisissez `Group selected tables` dans le menu contextuel d’une table ou `Group Selected Tables` dans la recherche rapide, qui propose cette commande tant qu’une table est sélectionnée.  
-Le nouveau groupe est tracé autour des tables sélectionnées avec une marge de `24px` de chaque côté et la barre de titre au-dessus. Chaque table sélectionnée le rejoint en quittant le groupe où elle se trouvait, et le groupe qu’elle quitte demeure, même s’il est désormais vide. Les mémos de la sélection sont ignorés.
+Sélectionnez une ou plusieurs tables, et au besoin des mémos pour les accompagner, puis appuyez sur `T` puis `G`, ou choisissez `Group selected tables` dans le menu contextuel d’une table ou d’un mémo ou `Group Selected Tables` dans la recherche rapide. Le menu d’un mémo et la recherche rapide ne proposent cette commande que tant qu’une table est sélectionnée.  
+Le nouveau groupe est tracé autour des tables et des mémos sélectionnés avec une marge de `24px` de chaque côté et la barre de titre au-dessus. Chaque table et chaque mémo sélectionné le rejoint en quittant le groupe où il se trouvait, et le groupe qu’il quitte demeure, même s’il est désormais vide.
 
 `T` puis `G` correspond à deux appuis sans touche de modification, `G` en moins d’une seconde après `T`. Sans table sélectionnée, ce raccourci ne fait rien, et dans un champ de texte, comme le champ Rechercher de l’explorateur, il saisit les deux lettres.
 
 ![Regroupement de categories et products avec T puis G, attribution du nom Catalog au groupe, puis coloration en violet depuis son menu, si bien que les deux en-têtes prennent la couleur](/img/demo-table-group-selected.webp)
 
 Dans les deux cas, le nouveau groupe n’a ni nom ni couleur. Il est le seul sélectionné, et son éditeur de nom s’ouvre sur la barre de titre pour que vous puissiez saisir un nom immédiatement (voir [Nommer un groupe](#naming-a-group)).  
-Le groupe et les tables qu’il accueille forment une seule étape d’annulation, et le nom que vous saisissez en forme une autre.
+Le groupe et les tables et mémos qu’il accueille forment une seule étape d’annulation, et le nom que vous saisissez en forme une autre.
 
 ## Nommer un groupe {#naming-a-group}
 
@@ -71,8 +74,10 @@ Comme pour les tables et les mémos, le sélecteur colore chaque table, mémo et
 
 Un groupe coloré affiche sa barre de titre et son contour dans cette couleur, et son corps dans une teinte pâle de celle-ci. Un groupe sans couleur utilise les gris neutres du thème.  
 Chaque table d’un groupe coloré porte la couleur du groupe sur tout son en-tête et garde sa propre couleur sur son bord gauche, de sorte que les deux sont visibles.  
-Le texte et les boutons d’un tel en-tête passent en blanc, ou en noir sur une couleur claire où le noir est bien plus lisible, tout comme le nom, l’icône et le `x` de la barre de titre du groupe. Parmi les pastilles prédéfinies du sélecteur, Orange, Ambre, Jaune et Vert citron prennent le noir, et les autres le blanc.  
-Une table garde son propre en-tête lorsque son groupe n’a pas de couleur, lorsque les groupes sont masqués, à un zoom de `70%` ou moins, où les tables se réduisent à leur nom, et dans l’onglet Visualisation.
+Chaque mémo d’un groupe coloré porte la couleur du groupe sur le bandeau d’en-tête situé au-dessus de son texte et garde sa propre couleur sur le liseré de couleur qui court le long de son bord supérieur, de sorte que les deux sont visibles.  
+Le texte et les boutons d’un tel en-tête passent en blanc, ou en noir sur une couleur claire où le noir est bien plus lisible, tout comme le `x` d’un mémo et le nom, l’icône et le `x` de la barre de titre du groupe. Parmi les pastilles prédéfinies du sélecteur, Orange, Ambre, Jaune et Vert citron prennent le noir, et les autres le blanc.  
+Une table garde son propre en-tête lorsque son groupe n’a pas de couleur, lorsque les groupes sont masqués, à un zoom de `70%` ou moins, où les tables se réduisent à leur nom, et dans l’onglet Visualisation.  
+Un mémo garde son propre en-tête lorsque son groupe n’a pas de couleur ou lorsque les groupes sont masqués. Les mémos ne se réduisent jamais, si bien qu’un mémo porte le bandeau à tous les niveaux de zoom.
 
 Un changement de couleur est enregistré dans l’[historique d’annulation](./undo-redo.md#one-gesture-one-step), comme pour les tables et les mémos.
 
@@ -80,107 +85,110 @@ Un changement de couleur est enregistré dans l’[historique d’annulation](./
 
 Cliquez sur la barre de titre d’un groupe pour sélectionner ce seul groupe, ou utilisez `Ctrl + click` (Windows/Linux) ou `⌘ + click` (Mac) pour l’ajouter à la sélection.  
 Un appui sur la barre de titre d’un groupe déjà sélectionné conserve toute la sélection, si bien qu’un glissement la déplace ensuite entièrement.  
-Un appui sur la barre de titre, ou un clic droit sur le groupe, fait passer le groupe devant les autres groupes et ses tables devant toutes les autres tables et tous les mémos.
+Un appui sur la barre de titre, ou un clic droit sur le groupe, fait passer le groupe devant les autres groupes et ses tables et mémos devant toutes les autres tables et tous les autres mémos.
 
 Pour le bouton gauche de la souris, le corps, c’est-à-dire la zone située sous la barre de titre, se comporte comme le canevas : le faire glisser déplace la vue, `Ctrl + drag` (Windows/Linux) ou `⌘ + drag` (Mac) trace un rectangle de sélection, et un clic efface la sélection. Les tables, mémos et lignes de relation situés sur le corps réagissent au pointeur comme d’habitude.
 
-Un rectangle de sélection ne prend un groupe que s’il englobe entièrement le cadre du groupe, si bien qu’un rectangle tracé à l’intérieur d’un groupe sélectionne des tables sans le groupe (voir [Sélection multiple](./table-related-functions.md#multiple-selection)).  
+Un rectangle de sélection ne prend un groupe que s’il englobe entièrement le cadre du groupe, si bien qu’un rectangle tracé à l’intérieur d’un groupe sélectionne des tables et des mémos sans le groupe (voir [Sélection multiple](./table-related-functions.md#multiple-selection)).  
 `Ctrl + A` (Windows/Linux) ou `⌘ + A` (Mac) ne sélectionne jamais de groupe.
 
-`Select tables` dans le menu contextuel du groupe remplace la sélection par les tables du groupe, sans le groupe lui-même, si bien que la commande suivante n’atteint que les tables.  
-Utilisez cette entrée avant les commandes qui n’agissent que sur des tables, comme la copie ou le fait de [se concentrer sur des tables](./table-related-functions.md#focusing-on-tables), qui ignorent un groupe sélectionné.
+`Select tables` dans le menu contextuel du groupe remplace la sélection par les tables et les mémos affichés du groupe, sans le groupe lui-même, si bien que la commande suivante n’atteint qu’eux.  
+Utilisez cette entrée avant les commandes qui ignorent un groupe sélectionné, comme la copie ou le fait de [se concentrer sur des tables](./table-related-functions.md#focusing-on-tables).
 
 Le contour d’un groupe sélectionné prend la couleur de sélection. Dans une [session collaborative](../../api/advanced/collaborative-editing.md), un groupe sélectionné par un autre participant est entouré de la couleur de ce participant.
 
 ## Aller à un groupe {#going-to-a-group}
 
-L’[explorateur](./explorer.md#the-tree) liste les groupes dans son dossier `Table Groups`, par nom, chacun avec ses tables en dessous. La recherche rapide ne liste aucun groupe.
+L’[explorateur](./explorer.md#the-tree) liste les groupes dans son dossier `Table Groups`, par nom, chacun avec ses tables et ses mémos affichés en dessous. La recherche rapide ne liste aucun groupe.
 
 Choisir la ligne d’un groupe dans l’explorateur, une correspondance de [Rechercher et remplacer](./find-and-replace.md#going-to-a-match) dans le nom d’un groupe, ou la ligne d’un groupe dans la liste de la [visionneuse de différences](./table-related-functions.md#the-change-tree) mène à ce groupe.  
-La vue se déplace alors pour montrer le cadre du groupe, en se calant sur sa barre de titre lorsque le cadre est plus haut que le canevas (voir [Où aboutit un saut](./table-related-functions.md#where-a-jump-lands)). Le groupe devient ensuite le seul sélectionné et passe au premier plan avec ses tables, comme lors d’un appui sur sa barre de titre.  
+La vue se déplace alors pour montrer le cadre du groupe, en se calant sur sa barre de titre lorsque le cadre est plus haut que le canevas (voir [Où aboutit un saut](./table-related-functions.md#where-a-jump-lands)). Le groupe devient ensuite le seul sélectionné et passe au premier plan avec ses tables et ses mémos, comme lors d’un appui sur sa barre de titre.  
 Lorsque les groupes sont [masqués](#hiding-groups), ou une fois le groupe supprimé, aller à ce groupe est sans effet.  
 Dans la visionneuse de différences, chaque côté ne va au groupe que si son propre document le contient et l’affiche (voir [Aller à une modification](./table-related-functions.md#going-to-a-change)).
 
 ## Déplacer et redimensionner un groupe {#moving-and-resizing-a-group}
 
-Faites glisser un groupe par sa barre de titre pour le déplacer avec toutes ses tables.  
-Si le groupe fait partie d’une sélection plus large, toute la sélection se déplace avec lui, et une table à la fois sélectionnée et membre du groupe ne se déplace qu’une fois.  
+Faites glisser un groupe par sa barre de titre pour le déplacer avec toutes ses tables et tous ses mémos.  
+Si le groupe fait partie d’une sélection plus large, toute la sélection se déplace avec lui, et une table ou un mémo à la fois sélectionné et membre du groupe ne se déplace qu’une fois.  
 Le glissement ne commence qu’une fois que le pointeur s’est un peu déplacé, si bien qu’un clic ou un double-clic sur la barre de titre reste un clic. `Alt + drag` sur une barre de titre déplace le groupe comme un glissement ordinaire ; un groupe n’est jamais dupliqué.  
-Le déplacement, avec toutes les tables qu’il emporte, constitue une seule étape d’annulation.
+Le déplacement, avec toutes les tables et tous les mémos qu’il emporte, constitue une seule étape d’annulation.
 
-Faire glisser une table seule ne déplace que cette table, et peut la faire entrer dans un groupe ou en sortir (voir [Ajouter et retirer des tables](#adding-and-removing-tables)).
+Faire glisser une table ou un mémo seul ne déplace que cette table ou ce mémo, et peut le faire entrer dans un groupe ou en sortir (voir [Ajouter et retirer des tables](#adding-and-removing-tables)).
 
 Chaque groupe, sélectionné ou non, a des poignées de redimensionnement sur ses quatre bords et ses quatre coins, comme un mémo.  
 Faites-en glisser une avec le bouton gauche de la souris : le cadre suit le pointeur, et la nouvelle taille est enregistrée lorsque vous relâchez, en une seule étape d’annulation.  
-Un groupe ne peut pas être rendu plus petit que `160px` sur `100px`, ni plus petit que ses tables avec leur marge de `24px` et la barre de titre. Le bord s’arrête là, aussi loin que le pointeur aille.
+Un groupe ne peut pas être rendu plus petit que `160px` sur `100px`, ni plus petit que ses tables et ses mémos affichés avec leur marge de `24px` et la barre de titre. Le bord s’arrête là, aussi loin que le pointeur aille.
 
 ## Ajouter et retirer des tables {#adding-and-removing-tables}
 
-Une table rejoint ou quitte un groupe selon l’endroit où vous la déposez.  
-Lorsque vous faites glisser des tables puis relâchez, chaque table déplacée qui n’est pas emportée par un groupe sélectionné est évaluée d’après son centre. Elle rejoint le groupe du dessus dont le cadre contient son centre, ou quitte son groupe si son centre ne se trouve dans le cadre d’aucun groupe. Le groupe du dessus est celui qui s’affiche devant.  
-Un groupe que le glissement laisse en place garde le cadre qu’il avait au début du glissement, si bien qu’une table légèrement déplacée au sein de son propre groupe y reste, et qu’il faut la faire glisser jusqu’à ce que son centre soit hors de ce cadre pour qu’elle le quitte.  
-Pendant le glissement, chaque groupe dans lequel le dépôt ferait entrer une table est entouré d’un contour.
+Une table ou un mémo rejoint ou quitte un groupe selon l’endroit où vous le déposez.  
+Lorsque vous faites glisser des tables ou des mémos puis relâchez, chaque table et chaque mémo déplacé qui n’est pas emporté par un groupe sélectionné est évalué d’après son centre. Il rejoint le groupe du dessus dont le cadre contient son centre, ou quitte son groupe si son centre ne se trouve dans le cadre d’aucun groupe. Le groupe du dessus est celui qui s’affiche devant.  
+Un groupe que le glissement laisse en place garde le cadre qu’il avait au début du glissement, si bien qu’une table ou un mémo légèrement déplacé au sein de son propre groupe y reste, et qu’il faut le faire glisser jusqu’à ce que son centre soit hors de ce cadre pour qu’il le quitte.  
+Pendant le glissement, chaque groupe dans lequel le dépôt ferait entrer une table ou un mémo est entouré d’un contour.
 
-Si vous relâchez moins de `200ms` environ après le dernier mouvement, le changement de groupe fait partie de l’étape d’annulation du glissement, si bien qu’une seule annulation remet les tables à leur place et dans les groupes où elles se trouvaient. Après une pause plus longue avant de relâcher, le changement de groupe constitue une étape distincte (voir [Un geste, une étape](./undo-redo.md#one-gesture-one-step)).  
-Un clic, ou un glissement de quelques pixels, ne change rien aux groupes, et aucune table ne change de groupe lorsque les groupes sont masqués.
+Si vous relâchez moins de `200ms` environ après le dernier mouvement, le changement de groupe fait partie de l’étape d’annulation du glissement, si bien qu’une seule annulation remet les tables et les mémos à leur place et dans les groupes où ils se trouvaient. Après une pause plus longue avant de relâcher, le changement de groupe constitue une étape distincte (voir [Un geste, une étape](./undo-redo.md#one-gesture-one-step)).  
+Un clic, ou un glissement de quelques pixels, ne change rien aux groupes, et aucune table ni aucun mémo ne change de groupe lorsque les groupes sont masqués.
 
-Les autres façons de changer les tables que contient un groupe :
+Les autres façons de changer les tables et les mémos que contient un groupe :
 
-- `Remove from group` dans le menu contextuel d’une table retire chaque table sélectionnée de son groupe. Cette entrée s’affiche lorsqu’une table sélectionnée appartient à un groupe, même lorsque les groupes sont masqués, et constitue une seule étape d’annulation.
-- `Group selected tables` place les tables sélectionnées dans un nouveau groupe (voir [Grouper les tables sélectionnées](#grouping-selected-tables)).
-- Supprimer un groupe laisse ses tables sans groupe.
+- `Remove from group` dans le menu contextuel d’une table ou d’un mémo retire chaque table et chaque mémo sélectionné de son groupe. Cette entrée s’affiche lorsqu’une table ou un mémo sélectionné appartient à un groupe, même lorsque les groupes sont masqués, et constitue une seule étape d’annulation.
+- `Group selected tables` place les tables sélectionnées, et les mémos sélectionnés avec elles, dans un nouveau groupe (voir [Grouper les tables sélectionnées](#grouping-selected-tables)).
+- Supprimer un groupe laisse ses tables et ses mémos sans groupe.
 
-Une table collée ou dupliquée avec `Alt` n’appartient à aucun groupe, même lorsqu’elle arrive dans le cadre d’un groupe. La faire glisser ensuite applique la règle de dépôt.
+Une table ou un mémo collé ou dupliqué avec `Alt` n’appartient à aucun groupe, même lorsqu’il arrive dans le cadre d’un groupe. Le faire glisser ensuite applique la règle de dépôt.
+
+![Glissement d’un mémo dans le groupe Billing, si bien que l’en-tête du mémo prend le bleu sarcelle du groupe et que le cadre s’étire autour de lui, déplacement du groupe avec le mémo, puis sortie du mémo avec Remove from group dans son menu](/img/demo-table-group-memo.webp)
 
 ## Supprimer un groupe {#removing-a-group}
 
-Supprimer un groupe ne supprime jamais ses tables : elles restent où elles sont, sans groupe.
+Supprimer un groupe ne supprime jamais ses tables ni ses mémos : ils restent où ils sont, sans groupe.
 
 - Le `x` au bout de la barre de titre, qui s’affiche tant que le pointeur survole le groupe, supprime ce seul groupe.
 - `Delete` dans le menu contextuel du groupe supprime le groupe. Lorsque le groupe fait partie de plusieurs éléments sélectionnés, l’entrée devient `Delete selected` et supprime tout ce qui est sélectionné : tables, mémos et groupes.
 - Lorsque des groupes sont sélectionnés, `Delete` ou `Backspace` supprime les groupes sélectionnés ainsi que les tables et mémos sélectionnés, tout comme `Ctrl + Backspace` et `Ctrl + Delete` (Windows/Linux) ou `⌘ + Backspace` et `⌘ + Delete` (Mac) (voir [Suppression de tables et de mémos](./table-related-functions.md#table-and-memo-deletion)).
 
-Chaque suppression constitue une seule étape d’annulation, qui fait revenir le groupe avec ses tables.
+Chaque suppression constitue une seule étape d’annulation, qui fait revenir le groupe avec ses tables et ses mémos.
 
 ## Le menu du groupe {#the-group-menu}
 
 Cliquez avec le bouton droit sur la barre de titre, le corps ou le bord d’un groupe pour ouvrir son menu. Sur Mac, `Ctrl + click` l’ouvre aussi, de même qu’un appui long sur un écran tactile.  
 Le clic droit sélectionne d’abord le groupe, seul sauf s’il fait déjà partie de la sélection, si bien que `Color` et `Delete selected` n’atteignent le reste de la sélection que si le groupe en faisait partie.
 
-- `Select tables` : sélectionne uniquement les tables du groupe (voir [Sélectionner des groupes](#selecting-groups)).
+- `Select tables` : sélectionne uniquement les tables et les mémos affichés du groupe (voir [Sélectionner des groupes](#selecting-groups)).
 - `Rename` : ouvre l’éditeur de nom (voir [Nommer un groupe](#naming-a-group)).
 - `Color` : ouvre le sélecteur de couleur (voir [Colorer un groupe](#coloring-a-group)).
 - `Remove color` : affiché lorsqu’un élément sélectionné a une couleur.
 - `Delete`, ou `Delete selected` lorsque le groupe fait partie de plusieurs éléments sélectionnés, avec la touche `Delete` indiquée à droite (voir [Supprimer un groupe](#removing-a-group)).
 
-Le menu contextuel d’une table ajoute `Group selected tables` et `Remove from group` après `Color` et `Remove color`, avant son entrée Delete, et le menu contextuel du canevas ajoute `New Table Group`.  
+Le menu contextuel d’une table ou d’un mémo ajoute `Group selected tables` et `Remove from group` après `Color` et `Remove color`, avant son entrée Delete, et le menu contextuel du canevas ajoute `New Table Group`.  
 `Group selected tables` affiche ses touches, `T` puis `G`, à droite, et `New Table Group` affiche `Alt + G` (Windows/Linux) ou `⌥ + G` (Mac).
 
 ## Masquer les groupes {#hiding-groups}
 
 `View Option` → `Table Groups` dans le menu contextuel du canevas affiche ou masque tous les groupes. Cette option est cochée par défaut (voir [Options d’affichage des tables](./table-related-functions.md#table-view-options)).  
-Une fois l’option décochée, les cadres des groupes et les couleurs de groupe sur les en-têtes de table disparaissent du canevas, de la minicarte et des images exportées, et les barres de défilement et la minicarte ne réservent plus de place aux groupes. Rien n’est déplacé ni redimensionné, et chaque table reste dans son groupe.  
+Une fois l’option décochée, les cadres des groupes disparaissent du canevas, de la minicarte et des images exportées, et les barres de défilement et la minicarte ne réservent plus de place aux groupes. Les tables et les mémos perdent les couleurs de groupe sur leurs en-têtes. Rien n’est déplacé ni redimensionné, et chaque table et chaque mémo reste dans son groupe.  
 Masquer les groupes les désélectionne, met fin à un tracé `New Table Group` et ferme un éditeur de nom ouvert comme le fait un clic ailleurs (voir [Nommer un groupe](#naming-a-group)).
 
 Lorsque les groupes sont masqués :
 
 - `New Table Group` et `Group selected tables` ne sont pas proposés dans les menus, ni `New Table Group` et `Group Selected Tables` dans la recherche rapide, et la barre d’outils du canevas n’affiche pas son bouton `New Table Group`. `Remove from group` reste proposé.
 - `Alt + G` (Windows/Linux) ou `⌥ + G` (Mac) et `T` puis `G` sont sans effet.
-- Faire glisser des tables ne change rien aux groupes, et un rectangle de sélection ne prend aucun groupe.
+- Faire glisser des tables ou des mémos ne change rien aux groupes, et un rectangle de sélection ne prend aucun groupe.
 - L’explorateur n’affiche pas son dossier `Table Groups`, et la fonction Rechercher et remplacer ne trouve ni ne remplace les noms de groupe, même avec `Table group names` activé.
-- La [disposition automatique](#auto-layout) garde toujours ensemble les tables de chaque groupe, l’onglet Schéma SQL propose toujours les [groupes au choix](#schema-sql-by-group), le DBML les écrit toujours, et [Importer et ajouter](./file-import-export.md#import-and-add) place toujours les éléments ajoutés sous les cadres masqués.
+- La [disposition automatique](#auto-layout) garde toujours ensemble les tables et les mémos de chaque groupe, l’onglet Schéma SQL propose toujours les [groupes au choix](#schema-sql-by-group), le DBML les écrit toujours, et [Importer et ajouter](./file-import-export.md#import-and-add) place toujours les éléments ajoutés sous les cadres masqués.
 
 Ce choix est enregistré dans le document et consigné dans l’[historique d’annulation](./undo-redo.md#what-the-history-records), comme les autres options d’affichage. Dans un éditeur en lecture seule, il reste en revanche sur cet écran (voir [Éditeurs en lecture seule](#read-only-editors)).
 
 ## Disposition automatique {#auto-layout}
 
-Chaque mode de [disposition automatique](./table-related-functions.md#auto-layout) garde ensemble les tables de chaque groupe, que les groupes soient affichés ou non.
+Chaque mode de [disposition automatique](./table-related-functions.md#auto-layout) garde ensemble les tables et les mémos de chaque groupe, que les groupes soient affichés ou non.
 
-- `Force` déplace chaque groupe avec ses tables comme un seul cadre, les tables gardant leur place à l’intérieur, et maintient le cadre de chaque groupe à `100px` au moins des autres groupes et des tables sans groupe. L’aperçu montre chaque groupe à sa destination.
-- `Flow`, `Tree - vertical` et `Tree - horizontal` disposent les tables de chaque groupe à l’intérieur du groupe et placent les groupes selon les relations qui les relient, les tables sans groupe étant disposées autour d’eux.
+- `Force` déplace chaque groupe avec ses tables et ses mémos comme un seul cadre, chacun gardant sa place à l’intérieur, et maintient le cadre de chaque groupe à `100px` au moins des autres groupes et des tables sans groupe. L’aperçu montre chaque groupe à sa destination.
+- `Flow`, `Tree - vertical` et `Tree - horizontal` disposent les tables de chaque groupe à l’intérieur du groupe, avec ses mémos affichés rangés à côté d’elles, et placent les groupes selon les relations qui les relient, les tables sans groupe étant disposées autour d’eux.
 
-Ensuite, chaque groupe qui contient des tables est ajusté à celles-ci : son cadre devient le rectangle qui les englobe, avec une marge de `24px` et la barre de titre. Un groupe sans tables garde sa place et sa taille.  
-Les tables et les groupes sont placés en une seule étape d’annulation.
+Ensuite, chaque groupe qui contient des tables est ajusté à celles-ci et à ses mémos affichés : son cadre devient le rectangle qui les englobe, avec une marge de `24px` et la barre de titre. Un groupe sans tables garde sa place et sa taille, et les mémos qu’il contient restent où ils sont.  
+Un mémo masqué se déplace avec les tables de son groupe mais ne prend aucune place.  
+Les tables, les mémos et les groupes sont placés en une seule étape d’annulation.
 
 Une importation DBML ajuste de la même façon chaque groupe autour de ses tables, où qu’elles soient placées (voir [DBML](./file-import-export.md#dbml)).
 
@@ -192,10 +200,10 @@ Ce choix est propre à la fenêtre de l’éditeur et n’est pas enregistré da
 
 ## Importation, exportation et copie {#import-export-and-copying}
 
-- Le DBML transporte les groupes dans les deux sens. Une importation DBML transforme chaque bloc `TableGroup` en groupe (voir [DBML](./file-import-export.md#dbml)), et la cible `DBML` du générateur de code écrit un bloc `TableGroup` pour chaque groupe qui contient une table (voir [Générateur de code](./code-generator.md#language)).
-- Un fichier JSON conserve ses groupes. Aucun autre format ne les transporte : les importations SQL, GraphQL et AML n’en apportent aucun, et le Schéma SQL et les autres cibles du générateur de code n’en écrivent aucun.
-- [Importer et ajouter](./file-import-export.md#import-and-add) importe les groupes d’un fichier comme de nouveaux groupes contenant leurs tables, et les sélectionne avec les nouvelles tables lorsque les groupes sont affichés, si bien que faire glisser le bloc ajouté emporte ses groupes.
-- Une [image exportée](./file-import-export.md#image) montre les groupes affichés derrière les tables, avec les couleurs de groupe sur leurs en-têtes.
+- Le DBML transporte les groupes dans les deux sens, avec leurs tables mais pas leurs mémos. Une importation DBML transforme chaque bloc `TableGroup` en groupe (voir [DBML](./file-import-export.md#dbml)), et la cible `DBML` du générateur de code écrit un bloc `TableGroup` pour chaque groupe qui contient une table (voir [Générateur de code](./code-generator.md#language)).
+- Un fichier JSON conserve ses groupes, avec les tables et les mémos de chacun. Aucun autre format ne les transporte : les importations SQL, GraphQL et AML n’en apportent aucun, et le Schéma SQL et les autres cibles du générateur de code n’en écrivent aucun.
+- [Importer et ajouter](./file-import-export.md#import-and-add) importe les groupes d’un fichier comme de nouveaux groupes contenant leurs tables et leurs mémos, et les sélectionne avec les nouvelles tables et les nouveaux mémos affichés lorsque les groupes sont affichés, si bien que faire glisser le bloc ajouté emporte ses groupes.
+- Une [image exportée](./file-import-export.md#image) montre les groupes affichés derrière les tables et les mémos, avec les couleurs de groupe sur leurs en-têtes.
 - Le copier-coller, ou la duplication avec `Alt`, ne copie jamais de groupe (voir [Copier-coller des tables et des mémos](./table-related-functions.md#copyingpasting-tables-and-memos) et [Ajouter et retirer des tables](#adding-and-removing-tables)).
 
 ## Éditeurs en lecture seule {#read-only-editors}
@@ -204,9 +212,9 @@ Dans un éditeur [`readonly`](../../api/erd-editor-element.md#readonly), les gro
 
 - [Aller à un groupe](#going-to-a-group) le sélectionne, et c’est la seule façon de sélectionner un groupe à cet endroit. Un appui sur une barre de titre ne sélectionne rien et ne déplace rien : glissé, il déplace la vue du canevas, et un clic immobile retire la sélection qu’un saut a laissée.
 - Il n’y a ni poignées de redimensionnement ni `x`, et un double-clic sur la barre de titre n’ouvre pas d’éditeur de nom.
-- Un clic droit sur un groupe n’ouvre aucun menu, et le menu de table ne contient que `Table Properties`.
+- Un clic droit sur un groupe ou un mémo n’ouvre aucun menu, et le menu de table ne contient que `Table Properties`.
 - Le menu du canevas n’a pas de `New Table Group`, et la recherche rapide ne liste aucune des deux commandes de groupe. Un tracé `New Table Group` prend fin lorsque l’éditeur passe en lecture seule.
 - La [barre d’outils du canevas](./table-related-functions.md#canvas-toolbar) ne conserve que ses commandes d’affichage, si bien qu’elle n’a pas de bouton `New Table Group`, et `Alt + G` (Windows/Linux) ou `⌥ + G` (Mac) et `T` puis `G` sont sans effet.
-- Un glissement de tables ou d’un groupe en cours quand l’éditeur passe en lecture seule s’arrête là où il est et ne change aucun groupe, et un redimensionnement de groupe en cours prend fin sans changer la taille.
+- Un glissement de tables, de mémos ou d’un groupe en cours quand l’éditeur passe en lecture seule s’arrête là où il est et ne change aucun groupe, et un redimensionnement de groupe en cours prend fin sans changer la taille.
 - `View Option` → `Table Groups` affiche ou masque les groupes sur cet écran seulement, comme toute option d’affichage à cet endroit : le document, les collaborateurs et l’historique d’annulation gardent le choix tel qu’il était, et redonner la modification à l’éditeur remet le choix du document.
 - Le choix `Tables` de l’onglet Schéma SQL fonctionne toujours.

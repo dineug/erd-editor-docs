@@ -176,7 +176,7 @@ Editore eta erreplika bakoitzak, izen bakoitzeko eta ia beste eremu guztietako, 
 
 `5.1.0` bertsiotik aurrera, taula baten kokapena, oharraren edo taula-taldearen kokapena eta tamaina, eta ikuspegiaren jatorria eta zoom-maila modu berean daude erregistro-bertsioekin kudeatuta, eta horiek mugitzen dituena amaitzen den leku gisa bidaltzen da:
 
-- arrastatze bat, mugitutako entitate bakoitzeko `table.moveTo`, `memo.moveTo` edo `tableGroup.moveTo` bakar gisa, sorta batean; beraz, talde-arrastatze batek taulen puntuak taldearenekin batera darama;
+- arrastatze bat, mugitutako entitate bakoitzeko `table.moveTo`, `memo.moveTo` edo `tableGroup.moveTo` bakar gisa, sorta batean; beraz, talde-arrastatze batek taulen puntuak, eta `5.1.1` bertsiotik aurrera haren oharrenak, taldearenekin batera daramatza;
 - arrastatze baten desegitea edo berregitea, entitate bakoitza jartzen duen puntu gisa;
 - korritze bat `settings.scrollTo` gisa, eta zoom bat `settings.changeZoomLevel` gisa;
 - ohar baten edo taula-talde baten tamaina-aldaketa, bere kokapena eta tamaina batera.
@@ -253,6 +253,19 @@ Mantendu saio bateko editore guztiak, eta haren dokumentua gordetzen duen edozei
 - Dokumentua ordezten duen karga batek, esaterako esleitutako `value` balio batek, `clear()` dei batek edo ordezten duen inportazio batek, marrazten ari den erlazioa amaitzen du `5.1.0` bertsioko editore guztietan, hura egin duen editorean eta hura jasotzen duen bakoitzean. Editore zaharrago batek marrazketa aktibatuta mantentzen du karga horretan zehar.
 
 Mantendu saio bateko editore guztiak, eta haren dokumentua gordetzen duen edozein [replicationStore](./remote-storage.md#dispatch-dispatchsync), `5.1.0` bertsioan edo berriago batean, aldi berean egindako edizioek leku guztietan berdin amaitu dezaten, [Aldi bereko edizioak](#concurrent-edits) atalak izendatzen dituen salbuespenak kenduta; izen logikoak eta hiztegiak mantentzen dituena `4.2.0` bertsioa edo berriagoa da oraindik. `1.2.0` bertsioa baino lehenagoko [MCP zerbitzari](../../mcp/live-and-headless.md#edits-made-at-the-same-moment) bat `5.1.0` bertsioa baino lehenagoko editore gisa zenbatzen da hemen, eta `5.1.0` bertsioa baino lehenagoko editore bat ezin da batere [Yjs](./yjs.md) gela batera lotu.
+
+`5.1.1` bertsiotik aurrera, [taula-talde](../../guide/guides/table-groups.md) batean sartzen edo handik ateratzen den oharra ekintza mota berri batean doa, `memo.changeGroup` ekintzan, eta ekintzak dauden-daudenean pasatzen dituen birbidaltzaile batek ez du ezer berririk behar horretarako. Hauetan bidaltzen da: talde baten koadroan edo koadrotik kanpo askatutako oharra, talderik gabeko erakutsitako oharren inguruan marraztutako talde berri bat, `Group selected tables` aukera, taulekin batera oharrak hautatuta daudenean, `Remove from group` aukera, hautapenean oharrak daudenean, kendutako talde baten ohar bakoitza, kodetze-agente baten ohar-taldeen deiak [MCP zerbitzariaren](../../mcp/tools.md#table-groups) bidez, eta horietako bakoitzaren desegitea eta berregitea. Bere taldeek oharrak dituzten `Import and Add` batek edo `setSchemaJSON` gehitze batek ere bidaltzen du, eta haren berregiteak ere; haren desegiteak, ordea, ohar horiek kentzen ditu soilik.
+
+`5.1.1` baino lehenagoko editore batek edo erreplika batek ez du aintzat hartzen `memo.changeGroup` ekintza, eta bere analisiak ohar bakoitzaren `groupId` baztertzen du; beraz, ez du inoiz oharrik talde batean ikusten, nahiz eta `5.1.1` bertsioko editore baten talde-arrastatzeak han ere taldeko oharrak mugitzen dituen, haietako bakoitzarentzat `memo.moveTo` bat ere bidaltzen baitu. Bere edizioek ez dakite ezer oharren taldeei buruz, eta ondorio hauek dituzte editore berrietan:
+
+- Talde baten koadrora arrastatzen duen ohar bat taldetik kanpo geratzen da, eta koadrotik kanpo arrastatzen duen taldeko ohar bat bere taldean geratzen da, koadroa hura hartzeko handituz.
+- Bere talde-arrastatzeak, bere `Auto Layout` aukerak bezala, taldea eta haren taulak mugitzen ditu, baina taldeko oharrak dauden tokian uzten ditu, eta koadroa handitu egiten da han erakutsitako oharrak hartzeko.
+- Bere `Import and Add` batek ez du oharrik sartzen gehitzen dituen taldeetan.
+- Kentzen duen talde baten ohar bakoitzaren `groupId` eremuak hura izendatzen jarraitzen du: oharrak talderik gabekotzat irakurtzen dira, eta editore horrek kentzea desegiten duenean, taldean berriro jartzen ditu.
+- Karga, inportazio edo `clear()` bat desegiten duenean, dokumentuaren bere kopia kargatzen du editore guztietan, eta kopia horrek ez du oharrik talde batean.
+
+Haietako batean gordetako dokumentu batek ez du oharrik talde batean, nahiz eta `4.0.0` bertsiotik aurrerakoak taulen taldeak mantentzen dituen.  
+Mantendu saio bateko editore guztiak, eta haren dokumentua gordetzen duen edozein [replicationStore](./remote-storage.md#dispatch-dispatchsync), `5.1.1` bertsioan edo berriago batean, oharrak beren taula-taldeetan mantentzeko; aldi berean egindako edizioak ebazten dituena `5.1.0` bertsioa edo berriagoa da oraindik. `1.2.1` bertsioa baino lehenagoko [MCP zerbitzari](../../mcp/installation.md#updating) batek ere ez du ikusten, ezta mantentzen ere, ohar bat zein taula-taldetan dagoen.
 
 ## SharedStoreConfig {#sharedstoreconfig}
 

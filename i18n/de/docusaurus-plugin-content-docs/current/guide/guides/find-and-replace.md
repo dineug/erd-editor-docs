@@ -93,7 +93,7 @@ Solange das Suchfeld Text enthält, zeigt der [Baum](./explorer.md#the-tree) des
 
 - `Tables`, `Table Groups` und `Memos` werden nur angezeigt, wenn sie einen Treffer enthalten, und die Zahl an jedem Ordner gibt an, wie viele Zeilen in den Ergebnissen direkt darunter stehen.
 - Unter `Tables` stehen die Tabellen, die einen Treffer enthalten, nach Namen, nie nach logischem Namen. Unter jeder Tabelle stehen eine Zeile für jeden Treffer in ihrem Kommentar, dann ein Ordner `Columns` mit den Spalten, die einen Treffer enthalten, in Spaltenreihenfolge, jede mit einer Zeile für jeden Treffer in ihrem Kommentar, dann ein Ordner `Indexes` mit den Indizes, deren Name passt. Einen Ordner `Foreign Keys` gibt es nicht.
-- Unter `Table Groups` stehen die Gruppen, deren Name passt, nach Namen, ohne ihre Tabellen. Eine gefundene Tabelle erscheint unter `Tables`.
+- Unter `Table Groups` stehen die Gruppen, deren Name passt, nach Namen, ohne ihre Tabellen oder Notizen. Eine gefundene Tabelle erscheint unter `Tables` und eine Notiz unter `Memos`.
 - Unter `Memos` stehen die Notizen, die einen Treffer enthalten, in Dokumentreihenfolge, jede mit ihrer ersten Zeile dargestellt und mit einer Zeile für jeden Treffer darin.
 
 Ein Treffer in einem Namen wird in der eigenen Zeile dieses Namens hervorgehoben, sodass ein Name, der den Suchbegriff zweimal enthält, eine Zeile mit zwei Hervorhebungen ist. Ein Treffer im logischen Namen einer Tabelle oder Spalte erscheint ebenfalls in der Zeile dieser Tabelle oder Spalte, nie in einer eigenen Zeile.  
@@ -127,7 +127,7 @@ Der Wechsel zu einem Treffer schließt die Tabelleneigenschaften, falls sie geö
 
 - Bei einem Namen, logischen Namen oder Kommentar einer Tabelle oder Spalte wählt er ausschließlich die Tabelle aus, holt sie in den Vordergrund und setzt die fokussierte Zelle auf die Zelle, die den Treffer enthält. Ein Treffer in einem Kommentar, der durch eine [Ansichtsoption für Tabellen](./table-related-functions.md#table-view-options) ausgeblendet ist, setzt die fokussierte Zelle stattdessen auf den Namen daneben. Wo die [Namensansicht](./logical-names.md#name-view) keine Zelle für den Namen oder den logischen Namen zeigt, kommt die fokussierte Zelle auf die Zelle, die an ihrer Stelle gezeigt wird: den Namen in der Ansicht `Physical Names`, den logischen Namen in der Ansicht `Logical Names`.
 - Bei einem Indexnamen wählt er ausschließlich die Tabelle des Index aus, holt sie in den Vordergrund und setzt die fokussierte Zelle auf den Namen der Tabelle oder, in den Ansichten `Logical Names` und `Both Names`, auf ihren logischen Namen, sofern die fokussierte Zelle nicht bereits in dieser Tabelle liegt. Indexnamen werden auf der Zeichenfläche nicht dargestellt.
-- Bei einem Tabellengruppennamen wählt er ausschließlich die Gruppe aus und holt sie mit ihren Tabellen in den Vordergrund.
+- Bei einem Tabellengruppennamen wählt er ausschließlich die Gruppe aus und holt sie mit ihren Tabellen und Notizen in den Vordergrund.
 - Bei einer Notiz wählt er ausschließlich die Notiz aus und holt sie in den Vordergrund.
 
 Die Zeichenfläche scrollt nur, wenn das Ziel nicht bereits gut sichtbar ist, und der Zoom ändert sich nie – siehe [Wohin ein Sprung führt](./table-related-functions.md#where-a-jump-lands).

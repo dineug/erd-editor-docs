@@ -1,15 +1,18 @@
 ---
 sidebar_position: 6
-description: Gather related tables in a named, colored box behind them; create, name, color, move, resize, and remove groups, go to them from the Explorer, change which tables they hold, hide them, and carry them through Auto Layout, Schema SQL, and DBML.
+description: Gather related tables and memos in a named, colored box behind them; create, name, color, move, resize, and remove groups, go to them from the Explorer, change which tables and memos they hold, hide them, and carry them through Auto Layout, Schema SQL, and DBML.
 ---
 
 # Table Groups
 
-A table group is a named, colored box drawn behind related tables on the ERD canvas, to show which tables belong together.  
-A table is in one group at most. Groups are saved with the diagram, along with which group each table is in.
+A table group is a named, colored box drawn behind related tables and memos on the ERD canvas, to show which belong together.  
+A table or memo is in one group at most. Groups are saved with the diagram, along with which group each table and memo is in.
 
 The box has a title bar along its top, holding a group icon, the group's name in bold, and, while the pointer is over the group, an `x` that removes it — see [Removing a Group](#removing-a-group). A group with no name reads `unnamed`, and a name too long for the bar is cut short with `…`.  
-The box always holds its tables: it keeps the size it was given, but stretches to keep each table inside with `24px` of room around it and the title bar above. A table that grows stretches the box with it, and so does a table dropped near an edge with its center still inside the box. While tables are being dragged, the box neither grows nor shrinks. The stretch is not saved: the box goes back to its own size once the table no longer needs the room.
+The box always holds its tables and memos: it keeps the size it was given, but stretches to keep each table and memo inside with `24px` of room around it and the title bar above. A table or memo that grows stretches the box with it, and so does one dropped near an edge with its center still inside the box. While tables or memos are being dragged, the box neither grows nor shrinks. The stretch is not saved: the box goes back to its own size once no table or memo needs the room.
+
+Memos hidden with [View Option](./table-related-functions.md#table-view-options) → `Memos` stay in their groups: moving a group carries them, removing it takes them out of it, and undoing either puts them back.  
+Only the shown memos stretch the box and stop a resize edge, and only they are taken in by a drawn group, selected by `Select tables`, and listed under the group in the Explorer.
 
 Groups are drawn behind everything else on the canvas: tables, memos, and relationship lines.  
 Where groups overlap, the one pressed or added last is drawn in front, and no group's body ever covers another group's title bar. The order is not saved, so a reopened diagram stacks its groups in the order they were added.  
@@ -31,7 +34,7 @@ The button and the shortcut toggle the draw, so pressing either while it is arme
 While the draw is armed, the cursor is a crosshair, and a press starts the box wherever it lands, even over a table, rather than selecting or moving what is under it. The canvas toolbar then marks its `New Table Group` button, and neither the hand nor the pointer.
 
 Releasing adds a group in that box, never smaller than `160px` wide and `100px` tall, title bar included, however short the drag. A click without dragging adds a group `480px` wide and `320px` tall with its top-left corner at the click.  
-Every table in no group whose center lies inside the new box joins the group. A table already in another group stays there.
+Every table and shown memo in no group whose center lies inside the new box joins the group. A table or memo already in another group stays there.
 
 The middle mouse button still pans the canvas and leaves the draw armed. These end the draw without adding a group:
 
@@ -42,15 +45,15 @@ The middle mouse button still pans the canvas and leaves the draw armed. These e
 
 ### Grouping Selected Tables
 
-Select one or more tables and press `T` then `G`, or choose `Group selected tables` from a table's context menu or `Group Selected Tables` from Quick Search, which lists it while a table is selected.  
-The new group is drawn round the selected tables with `24px` of room on every side and the title bar above. Every selected table joins it, leaving any group it was in, and the group it left stays, even if it is now empty. Memos in the selection are passed over.
+Select one or more tables, and any memos to go with them, and press `T` then `G`, or choose `Group selected tables` from a table's or a memo's context menu or `Group Selected Tables` from Quick Search. A memo's menu and Quick Search offer it only while a table is selected.  
+The new group is drawn round the selected tables and memos with `24px` of room on every side and the title bar above. Every selected table and memo joins it, leaving any group it was in, and the group it left stays, even if it is now empty.
 
 `T` then `G` is two presses with no modifier, `G` within a second of `T`. With no table selected it does nothing, and in a text field, such as the Explorer's Find field, it types the two letters.
 
 ![Grouping categories and products with T then G, naming the group Catalog, then coloring it violet from its menu so both headers take the color](/img/demo-table-group-selected.webp)
 
 Either way, the new group has no name and no color. It is selected on its own, and its name editor opens over the title bar so you can type a name at once — see [Naming a Group](#naming-a-group).  
-The group and the tables it takes in are one undo step, and the name you type is another.
+The group and the tables and memos it takes in are one undo step, and the name you type is another.
 
 ## Naming a Group
 
@@ -71,8 +74,10 @@ As with tables and memos, the picker colors every selected table, memo, and grou
 
 A colored group draws its title bar and outline in the color and its body in a pale tint of it. A group with no color uses the theme's neutral grays.  
 Every table in a colored group wears the group's color across its header and keeps its own color on its left edge, so both show.  
-The text and buttons on such a header turn white, or black on a light color where black reads far better, as do the name, icon, and `x` on the group's title bar. Among the picker's preset swatches, Orange, Amber, Yellow, and Lime take black, and the rest take white.  
-A table keeps its own header while its group has no color, while groups are hidden, at `70%` zoom and below, where tables collapse to their name, and on the Visualization tab.
+Every memo in a colored group wears the group's color across the header band above its text and keeps its own color on the strip along its top, so both show.  
+The text and buttons on such a header turn white, or black on a light color where black reads far better, as do a memo's `x` and the name, icon, and `x` on the group's title bar. Among the picker's preset swatches, Orange, Amber, Yellow, and Lime take black, and the rest take white.  
+A table keeps its own header while its group has no color, while groups are hidden, at `70%` zoom and below, where tables collapse to their name, and on the Visualization tab.  
+A memo keeps its own header while its group has no color or while groups are hidden. Memos never collapse, so a memo wears the band at every zoom.
 
 A color change is recorded in the [undo history](./undo-redo.md#one-gesture-one-step) as it is for tables and memos.
 
@@ -80,107 +85,110 @@ A color change is recorded in the [undo history](./undo-redo.md#one-gesture-one-
 
 Click a group's title bar to select the group on its own, or `Ctrl + click` (Windows/Linux) or `⌘ + click` (Mac) to add it to the selection.  
 Pressing the title bar of a group that is already selected keeps the whole selection, so a drag then moves all of it.  
-Pressing the title bar, or right-clicking the group, brings the group in front of the other groups and its tables in front of every other table and memo.
+Pressing the title bar, or right-clicking the group, brings the group in front of the other groups and its tables and memos in front of every other table and memo.
 
 The body, the area under the title bar, is the canvas to the left mouse button: dragging it pans, `Ctrl + drag` (Windows/Linux) or `⌘ + drag` (Mac) draws a selection box, and a click clears the selection. The tables, memos, and relationship lines over the body answer to the pointer as usual.
 
-A selection box takes a group only when it encloses the group's whole box, so a box drawn inside a group picks out tables without the group — see [Multiple Selection](./table-related-functions.md#multiple-selection).  
+A selection box takes a group only when it encloses the group's whole box, so a box drawn inside a group picks out tables and memos without the group — see [Multiple Selection](./table-related-functions.md#multiple-selection).  
 `Ctrl + A` (Windows/Linux) or `⌘ + A` (Mac) never selects a group.
 
-`Select tables` in the group's context menu replaces the selection with the group's tables, leaving the group itself out, so the next command reaches only the tables.  
-Use it before commands that act on tables alone, such as copying or [focusing on tables](./table-related-functions.md#focusing-on-tables), which pass over a selected group.
+`Select tables` in the group's context menu replaces the selection with the group's tables and shown memos, leaving the group itself out, so the next command reaches only them.  
+Use it before commands that pass over a selected group, such as copying or [focusing on tables](./table-related-functions.md#focusing-on-tables).
 
 A selected group's outline turns the selection color. In a [collaborative session](../../api/advanced/collaborative-editing.md), a group another participant selects is ringed in that participant's color.
 
 ## Going to a Group
 
-The [Explorer](./explorer.md#the-tree) lists the groups in its `Table Groups` folder, by name, each with its tables under it. Quick Search lists no groups.
+The [Explorer](./explorer.md#the-tree) lists the groups in its `Table Groups` folder, by name, each with its tables and shown memos under it. Quick Search lists no groups.
 
 Choosing a group row in the Explorer, a [Find and Replace](./find-and-replace.md#going-to-a-match) match in a group's name, or a group row in the [Diff Viewer](./table-related-functions.md#the-change-tree)'s list goes to that group.  
-It brings the group's box into view, going by its title bar when the box is taller than the canvas — see [Where a Jump Lands](./table-related-functions.md#where-a-jump-lands). It then selects the group alone and brings it to the front with its tables, as pressing its title bar does.  
+It brings the group's box into view, going by its title bar when the box is taller than the canvas — see [Where a Jump Lands](./table-related-functions.md#where-a-jump-lands). It then selects the group alone and brings it to the front with its tables and memos, as pressing its title bar does.  
 While groups are [hidden](#hiding-groups), or once the group has been removed, going to it does nothing.  
 In the Diff Viewer each side goes to the group only where its own document holds and shows it — see [Going to a Change](./table-related-functions.md#going-to-a-change).
 
 ## Moving and Resizing a Group
 
-Drag a group by its title bar to move it with all of its tables.  
-If the group is part of a larger selection, the whole selection moves with it, and a table that is both selected and in the group moves once.  
+Drag a group by its title bar to move it with all of its tables and memos.  
+If the group is part of a larger selection, the whole selection moves with it, and a table or memo that is both selected and in the group moves once.  
 The drag starts only once the pointer has moved a short way, so a click or double-click on the title bar stays a click. `Alt + drag` on a title bar moves the group as a plain drag does; a group is never duplicated.  
-The move, with every table it carries, is one undo step.
+The move, with every table and memo it carries, is one undo step.
 
-Dragging a table on its own moves only that table, and can move it into or out of a group — see [Adding and Removing Tables](#adding-and-removing-tables).
+Dragging a table or memo on its own moves only that table or memo, and can move it into or out of a group — see [Adding and Removing Tables](#adding-and-removing-tables).
 
 Every group has resize handles on its four edges and four corners, selected or not, as a memo does.  
 Drag one with the left mouse button: the box follows the pointer, and the new size is saved when you let go, as one undo step.  
-A group cannot be made smaller than `160px` by `100px`, nor smaller than its tables with their `24px` of room and the title bar. The edge stops there however far the pointer goes.
+A group cannot be made smaller than `160px` by `100px`, nor smaller than its tables and shown memos with their `24px` of room and the title bar. The edge stops there however far the pointer goes.
 
 ## Adding and Removing Tables
 
-A table joins or leaves a group where you drop it.  
-When you drag tables and let go, each dragged table that is not carried by a selected group is judged by its center. It joins the topmost group whose box holds its center, or leaves its group if its center lies in no group's box. The topmost group is the one drawn in front.  
-A group the drag leaves in place keeps the box it had when the drag began, so a table nudged within its own group stays in it, and has to be dragged until its center is outside that box to leave.  
-While you drag, each group the drop would put a table in is outlined.
+A table or memo joins or leaves a group where you drop it.  
+When you drag tables or memos and let go, each dragged table and memo that is not carried by a selected group is judged by its center. It joins the topmost group whose box holds its center, or leaves its group if its center lies in no group's box. The topmost group is the one drawn in front.  
+A group the drag leaves in place keeps the box it had when the drag began, so a table or memo nudged within its own group stays in it, and has to be dragged until its center is outside that box to leave.  
+While you drag, each group the drop would put a table or memo in is outlined.
 
-When you let go within about `200ms` of the last movement, the change of group is part of the drag's undo step, so one undo puts the tables back where they were and in the groups they were in. After a longer pause before letting go, the change of group is a step of its own — see [One Gesture, One Step](./undo-redo.md#one-gesture-one-step).  
+When you let go within about `200ms` of the last movement, the change of group is part of the drag's undo step, so one undo puts the tables and memos back where they were and in the groups they were in. After a longer pause before letting go, the change of group is a step of its own — see [One Gesture, One Step](./undo-redo.md#one-gesture-one-step).  
 A click, or a drag of a few pixels, changes no group, and nothing changes group while groups are hidden.
 
-The other ways to change which tables a group holds:
+The other ways to change which tables and memos a group holds:
 
-- `Remove from group` in a table's context menu takes every selected table out of its group. It shows while a selected table is in a group, even while groups are hidden, and is one undo step.
-- `Group selected tables` moves the selected tables into a new group — see [Grouping Selected Tables](#grouping-selected-tables).
-- Removing a group leaves its tables in no group.
+- `Remove from group` in a table's or a memo's context menu takes every selected table and memo out of its group. It shows while a selected table or memo is in a group, even while groups are hidden, and is one undo step.
+- `Group selected tables` moves the selected tables, and the memos selected with them, into a new group — see [Grouping Selected Tables](#grouping-selected-tables).
+- Removing a group leaves its tables and memos in no group.
 
-A table pasted or duplicated with `Alt` is in no group, even when it lands inside a group's box. Dragging it afterwards applies the drop rule.
+A table or memo pasted or duplicated with `Alt` is in no group, even when it lands inside a group's box. Dragging it afterwards applies the drop rule.
+
+![Dragging a memo into the Billing group so its header takes the group's teal and the box stretches round it, moving the group with the memo along, then taking the memo out with Remove from group in its menu](/img/demo-table-group-memo.webp)
 
 ## Removing a Group
 
-Removing a group never removes its tables: they stay where they are, in no group.
+Removing a group never removes its tables or memos: they stay where they are, in no group.
 
 - The `x` at the end of the title bar, which shows while the pointer is over the group, removes that group alone.
 - `Delete` in the group's context menu removes the group. When the group is one of several selected items, the row reads `Delete selected` and removes everything selected: tables, memos, and groups.
 - With groups selected, `Delete` or `Backspace` removes the selected groups along with any selected tables and memos, as do `Ctrl + Backspace` and `Ctrl + Delete` (Windows/Linux) or `⌘ + Backspace` and `⌘ + Delete` (Mac) — see [Table and Memo Deletion](./table-related-functions.md#table-and-memo-deletion).
 
-Each removal is one undo step, which brings the group back with its tables in it.
+Each removal is one undo step, which brings the group back with its tables and memos in it.
 
 ## The Group Menu
 
 Right-click a group's title bar, body, or edge to open its menu. On a Mac, `Ctrl + click` opens it too, and so does a long press on a touch screen.  
 The right-click selects the group first, alone unless it is already part of the selection, so `Color` and `Delete selected` reach the rest of the selection only when the group was in it.
 
-- `Select tables`: selects the group's tables alone — see [Selecting Groups](#selecting-groups).
+- `Select tables`: selects the group's tables and shown memos alone — see [Selecting Groups](#selecting-groups).
 - `Rename`: opens the name editor — see [Naming a Group](#naming-a-group).
 - `Color`: opens the color picker — see [Coloring a Group](#coloring-a-group).
 - `Remove color`: shown while something selected has a color.
 - `Delete`, or `Delete selected` when the group is one of several selected items, with the `Delete` key shown on the right — see [Removing a Group](#removing-a-group).
 
-A table's context menu adds `Group selected tables` and `Remove from group` after `Color` and `Remove color`, before its Delete row, and the canvas context menu adds `New Table Group`.  
+A table's or a memo's context menu adds `Group selected tables` and `Remove from group` after `Color` and `Remove color`, before its Delete row, and the canvas context menu adds `New Table Group`.  
 `Group selected tables` shows its keys, `T` then `G`, on the right, and `New Table Group` shows `Alt + G` (Windows/Linux) or `⌥ + G` (Mac).
 
 ## Hiding Groups
 
 `View Option` → `Table Groups` in the canvas context menu shows or hides every group. It is checked by default — see [Table View Options](./table-related-functions.md#table-view-options).  
-Unchecked, the group boxes and the group colors on table headers disappear from the canvas, the minimap, and exported images, and the scrollbars and minimap no longer make room for the groups. Nothing moves or resizes, and every table stays in its group.  
+Unchecked, the group boxes disappear from the canvas, the minimap, and exported images, and the scrollbars and minimap no longer make room for the groups. Tables and memos lose the group colors on their headers. Nothing moves or resizes, and every table and memo stays in its group.  
 Hiding the groups deselects them, ends a `New Table Group` draw, and closes an open name editor as clicking elsewhere does — see [Naming a Group](#naming-a-group).
 
 While groups are hidden:
 
 - `New Table Group` and `Group selected tables` are not offered in the menus, nor `New Table Group` and `Group Selected Tables` in Quick Search, and the canvas toolbar leaves out its `New Table Group` button. `Remove from group` is still offered.
 - `Alt + G` (Windows/Linux) or `⌥ + G` (Mac) and `T` then `G` do nothing.
-- Dragging tables changes no group, and a selection box takes no group.
+- Dragging tables or memos changes no group, and a selection box takes no group.
 - The Explorer leaves out its `Table Groups` folder, and Find and Replace neither finds nor replaces group names, even with `Table group names` on.
-- [Auto Layout](#auto-layout) still keeps each group's tables together, the Schema SQL tab still offers the [groups to choose from](#schema-sql-by-group), DBML still writes them, and [Import and Add](./file-import-export.md#import-and-add) still lands below the hidden boxes.
+- [Auto Layout](#auto-layout) still keeps each group's tables and memos together, the Schema SQL tab still offers the [groups to choose from](#schema-sql-by-group), DBML still writes them, and [Import and Add](./file-import-export.md#import-and-add) still lands below the hidden boxes.
 
 The choice is saved in the document and recorded in the [undo history](./undo-redo.md#what-the-history-records), like the other View Option toggles. In a read-only editor it stays on that screen instead — see [Read-only Editors](#read-only-editors).
 
 ## Auto Layout
 
-Every [Auto Layout](./table-related-functions.md#auto-layout) keeps each group's tables together, whether or not groups are shown.
+Every [Auto Layout](./table-related-functions.md#auto-layout) keeps each group's tables and memos together, whether or not groups are shown.
 
-- `Force` moves each group with its tables as one box, the tables keeping their places inside it, and keeps each group's box at least `100px` from other groups and from tables in no group. The preview shows each group where it is going.
-- `Flow`, `Tree - vertical`, and `Tree - horizontal` lay out each group's tables inside the group and place the groups by the relationships between them, with the tables in no group laid out around them.
+- `Force` moves each group with its tables and memos as one box, each keeping its place inside it, and keeps each group's box at least `100px` from other groups and from tables in no group. The preview shows each group where it is going.
+- `Flow`, `Tree - vertical`, and `Tree - horizontal` lay out each group's tables inside the group, with its shown memos packed beside them, and place the groups by the relationships between them, with the tables in no group laid out around them.
 
-Afterwards each group that holds tables is fitted to them: its box becomes their bounds with `24px` of room and the title bar. A group with no tables keeps its place and size.  
-The tables and groups land as one undo step.
+Afterwards each group that holds tables is fitted to them and its shown memos: its box becomes their bounds with `24px` of room and the title bar. A group with no tables keeps its place and size, and the memos in it stay where they are.  
+A hidden memo moves with its group's tables but takes no room.  
+The tables, memos, and groups land as one undo step.
 
 A DBML import fits each group round its tables in the same way, wherever they are placed — see [DBML](./file-import-export.md#dbml).
 
@@ -192,10 +200,10 @@ The choice belongs to the editor window and is not saved in the document.
 
 ## Import, Export, and Copying
 
-- DBML carries groups both ways. A DBML import turns each `TableGroup` block into a group — see [DBML](./file-import-export.md#dbml) — and the Code Generator's `DBML` writes a `TableGroup` block for each group that holds a table — see [Code Generator](./code-generator.md#language).
-- A JSON file keeps its groups. No other format carries them: SQL, GraphQL, and AML imports bring none, and Schema SQL and the other Code Generator targets write none.
-- [Import and Add](./file-import-export.md#import-and-add) brings a file's groups in as new groups holding their tables, and selects them with the new tables while groups are shown, so dragging the added block carries its groups along.
-- An [exported image](./file-import-export.md#image) draws the shown groups behind the tables, with the group colors on their headers.
+- DBML carries groups both ways, with their tables but not their memos. A DBML import turns each `TableGroup` block into a group — see [DBML](./file-import-export.md#dbml) — and the Code Generator's `DBML` writes a `TableGroup` block for each group that holds a table — see [Code Generator](./code-generator.md#language).
+- A JSON file keeps its groups, with the tables and memos in each. No other format carries them: SQL, GraphQL, and AML imports bring none, and Schema SQL and the other Code Generator targets write none.
+- [Import and Add](./file-import-export.md#import-and-add) brings a file's groups in as new groups holding their tables and memos, and selects them with the new tables and shown memos while groups are shown, so dragging the added block carries its groups along.
+- An [exported image](./file-import-export.md#image) draws the shown groups behind the tables and memos, with the group colors on their headers.
 - Copying and pasting, or duplicating with `Alt`, never copies a group — see [Copying/Pasting Tables and Memos](./table-related-functions.md#copyingpasting-tables-and-memos) and [Adding and Removing Tables](#adding-and-removing-tables).
 
 ## Read-only Editors
@@ -204,9 +212,9 @@ In a [`readonly`](../../api/erd-editor-element.md#readonly) editor, groups are d
 
 - [Going to a group](#going-to-a-group) selects it, and that is the only way a group is selected there. A press on a title bar selects nothing and moves nothing: dragged, it pans the canvas, and a click that does not move takes off the selection a jump left.
 - There are no resize handles and no `x`, and a double-click on the title bar opens no name editor.
-- A right-click on a group opens no menu, and the table menu holds `Table Properties` alone.
+- A right-click on a group or a memo opens no menu, and the table menu holds `Table Properties` alone.
 - The canvas menu has no `New Table Group`, and Quick Search lists neither group command. A `New Table Group` draw ends when the editor turns read-only.
 - The [canvas toolbar](./table-related-functions.md#canvas-toolbar) keeps only its view controls, so it has no `New Table Group` button, and `Alt + G` (Windows/Linux) or `⌥ + G` (Mac) and `T` then `G` do nothing.
-- A drag of tables or of a group under way when the editor turns read-only stops where it is and changes no group, and a group resize under way ends without changing the size.
+- A drag of tables, memos, or a group under way when the editor turns read-only stops where it is and changes no group, and a group resize under way ends without changing the size.
 - `View Option` → `Table Groups` shows or hides the groups on that screen alone, as every View Option does there: the document, collaborators, and the undo history keep the choice as it was, and turning the editor writable again puts the document's choice back.
 - The Schema SQL tab's `Tables` choice still works.

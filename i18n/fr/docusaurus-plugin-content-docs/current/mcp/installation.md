@@ -56,6 +56,7 @@ Une fenêtre VS Code prend en charge les diagrammes de ses dossiers d’espace d
 Une extension de la version `3.0.0` à la version `3.1.0` et le serveur `1.0.0` ou version ultérieure se refusent mutuellement, et une extension antérieure à la version `3.0.0` ne prend en charge aucun agent.
 Une extension `4.0.0` ou `4.1.0` se connecte, mais n’affiche ni ne conserve les noms logiques, les liens de domaine et les lignes des dictionnaires qu’écrit l’agent.
 Avec une extension antérieure à la version `4.3.0`, une table, un mémo ou un groupe de tables que vous et l’agent déplacez ou redimensionnez au même moment peut se retrouver à des endroits différents pour chacun de vous (voir [Mettre à jour](#updating)).
+Une extension antérieure à la version `4.3.1` n’affiche ni ne conserve le groupe de tables dans lequel se trouve un mémo.
 
 L’extension démarre dans un espace de travail qui contient des fichiers `.erd`, `.erd.json`, `.vuerd` ou `.vuerd.json`, si bien qu’un agent atteint ces diagrammes avant que vous n’en ouvriez un.
 Dans un espace de travail qui n’en contient aucun, elle démarre lorsque vous ouvrez un diagramme, et jusque-là l’agent modifie les fichiers sur le disque.
@@ -74,6 +75,7 @@ Une fenêtre de coffre Obsidian prend en charge les diagrammes de son coffre.
 Un plugin antérieur à la version `1.0.0` et le serveur `1.0.0` ou version ultérieure se refusent mutuellement.
 Un plugin `1.0.0` ou `1.1.0` se connecte, mais n’affiche ni ne conserve les noms logiques, les liens de domaine et les lignes des dictionnaires qu’écrit l’agent.
 Avec un plugin antérieur à la version `1.3.0`, une table, un mémo ou un groupe de tables que vous et l’agent déplacez ou redimensionnez au même moment peut se retrouver à des endroits différents pour chacun de vous (voir [Mettre à jour](#updating)).
+Un plugin antérieur à la version `1.3.1` n’affiche ni ne conserve le groupe de tables dans lequel se trouve un mémo.
 
 Une fenêtre de coffre prend en charge les agents dès le chargement du plugin, si bien qu’un agent atteint les diagrammes du coffre avant que vous n’en ouvriez un.
 Il n’y a pas d’étape d’approbation.
@@ -102,6 +104,7 @@ Un IDE JetBrains prend en charge les diagrammes de chaque projet qui y est ouver
 Un plugin `0.9.0` ou `0.10.0` et le serveur `1.0.0` ou version ultérieure se refusent mutuellement, et un plugin antérieur à la version `0.9.0` ne prend en charge aucun agent.
 Un plugin `1.0.0` ou `1.1.0` se connecte, mais n’affiche ni ne conserve les noms logiques, les liens de domaine et les lignes des dictionnaires qu’écrit l’agent.
 Avec un plugin antérieur à la version `1.3.0`, une table, un mémo ou un groupe de tables que vous et l’agent déplacez ou redimensionnez au même moment peut se retrouver à des endroits différents pour chacun de vous (voir [Mettre à jour](#updating)).
+Un plugin antérieur à la version `1.3.1` n’affiche ni ne conserve le groupe de tables dans lequel se trouve un mémo.
 
 L’IDE prend en charge les agents dès l’ouverture du premier projet, si bien qu’un agent atteint les diagrammes d’un projet avant que vous n’en ouvriez un.
 
@@ -153,7 +156,14 @@ Mais un déplacement ou un redimensionnement que vous et l’agent faites au mê
 Si l’un des deux côtés est plus ancien, l’éditeur et l’agent peuvent se retrouver avec des positions différentes, et l’agent continue de lire et de modifier à partir de la sienne jusqu’à ce qu’un déplacement ultérieur place les deux sur un même point ou que l’agent rejoigne à nouveau le document (voir [Modifications faites au même moment](./live-and-headless.md#edits-made-at-the-same-moment)).
 Aucune de ces versions ne change ce que contient un fichier.
 
+Le serveur `1.2.1` parle aussi le protocole 2. Il ajoute deux outils, `erd_set_memo_group` et `erd_export_svg`, ainsi que l’argument `memoIds` de `erd_add_table_group`, et n’en supprime ni n’en renomme aucun (voir [Groupes de tables](./tools.md#table-groups) et [Exportation SVG](./tools.md#svg-export)).
+Les mémos dans des groupes de tables nécessitent le serveur `1.2.1` ou version ultérieure et, partout où le document est ouvert, l’extension VS Code `4.3.1` ou version ultérieure ou le plugin Obsidian ou JetBrains `1.3.1` ou version ultérieure.
+Une extension ou un plugin antérieur qui se connecte ignore le groupe dans lequel se trouve un mémo, bien que l’appel de l’agent réussisse, et omet les groupes des mémos lorsqu’il enregistre le fichier.
+Un serveur antérieur à la version `1.2.1` n’a aucun outil pour eux et lit chaque mémo comme n’étant dans aucun groupe, et un fichier qu’il modifie sur le disque est réécrit avec tous les mémos hors de leur groupe (voir [Sans interface](./live-and-headless.md#headless)).
+`erd_export_svg` nécessite seulement le serveur `1.2.1` ou version ultérieure, avec n’importe quelle version de l’extension ou du plugin qui se connecte, puisque le serveur dessine lui-même l’image.
+
 Mettez aussi à jour ERD Editor partout où les diagrammes sont ouverts.
+L’extension VS Code antérieure à la version `4.3.1`, le plugin Obsidian antérieur à la version `1.3.1` et le plugin JetBrains antérieur à la version `1.3.1` ouvrent un diagramme qu’une version ultérieure a enregistré, ou que l’agent a modifié sur le disque, avec tous les mémos hors de leur groupe de tables, et omettent les groupes des mémos lorsqu’ils enregistrent le fichier.
 L’extension VS Code antérieure à la version `4.2.0`, le plugin Obsidian antérieur à la version `1.2.0` et le plugin JetBrains antérieur à la version `1.2.0` ouvrent un diagramme qu’une version ultérieure a enregistré, ou que l’agent a modifié sur le disque, sans les noms logiques de ses tables et de ses colonnes, sans les liens de domaine de ses colonnes et sans ses mots, ses termes et ses domaines.
 Lorsqu’ils enregistrent le fichier, ils les omettent.
 L’extension VS Code antérieure à la version `4.0.0`, le plugin Obsidian antérieur à la version `1.0.0` et le plugin JetBrains antérieur à la version `1.0.0` affichent en outre un tel diagramme sans ses icônes de clé primaire, et en suppriment les groupes de tables et les scripts de Schéma SQL lorsqu’ils enregistrent le fichier.

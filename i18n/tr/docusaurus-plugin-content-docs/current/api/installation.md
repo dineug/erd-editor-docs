@@ -51,18 +51,18 @@ API'nin geri kalanı için [ErdEditorElement](./erd-editor-element.md) sayfasın
 
 ```html
 <script type="module">
-  import 'https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js';
+  import 'https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js';
 
   const editor = document.createElement('erd-editor');
   editor.style.cssText = 'display: block; width: 100%; height: 100vh;';
   document.body.appendChild(editor);
 </script>
 <!-- or -->
-<script type="module" src="https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js"></script>
+<script type="module" src="https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js"></script>
 ```
 
 `esm.run` paketin harici bağımlılıklarını sizin yerinize çözümler, bu yüzden bu yöntem paketleyici olmadan çalışır.
-Her giriş noktasına, sürümden sonraki yolla erişilir: `…/erd-editor.js` düzenleyiciyi, `…/erd-viewer.js` ise görüntüleyiciyi tanımlar; görüntüleyici, bir sayfa istediğinde İngilizce dışındaki her görüntüleme dilini CDN'den getirir. Yalın paket URL'si, `https://esm.run/@dineug/erd-editor@5.1.0`, hiçbir öğe tanımlamayan kökü sunar.
+Her giriş noktasına, sürümden sonraki yolla erişilir: `…/erd-editor.js` düzenleyiciyi, `…/erd-viewer.js` ise görüntüleyiciyi tanımlar; görüntüleyici, bir sayfa istediğinde İngilizce dışındaki her görüntüleme dilini CDN'den getirir. Yalın paket URL'si, `https://esm.run/@dineug/erd-editor@5.1.1`, hiçbir öğe tanımlamayan kökü sunar.
 Sürüm belirtilmeyen URL her zaman en son sürümü sunar. Bir ana sürüm yükseltmesinin sayfanıza habersizce ulaşmasını istemiyorsanız yukarıdaki gibi sürümü sabitleyin.
 `5.0.0` sürümünün kendisi de böyle bir yükseltmedir: 4.x sürümünde kalması gereken bir sayfa `@4.2.0` sürümünü sabitler. [4.x sürümünden yükseltme](#upgrading-from-4x) bölümüne bakın.
 
@@ -75,7 +75,7 @@ Sürüm belirtilmeyen URL her zaman en son sürümü sunar. Bir ana sürüm yük
 
 ```html
 <erd-editor></erd-editor>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.1"></script>
 <script>
   const editor = document.querySelector('erd-editor');
   editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
@@ -88,7 +88,7 @@ Yüklemek `<erd-editor>` öğesini tanımlar. `window.ErdEditor` nesnesi iki dos
 
 ```html
 <erd-viewer src="diagram.erd.json" style="display: block; height: 480px"></erd-viewer>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0/dist/erd-viewer.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.1/dist/erd-viewer.umd.js"></script>
 ```
 
 İki dosyadan hiçbiri diğerinin etiketini tanımlamaz ve her biri sayfada kendi global nesnesi ile `window.Konva` dışında hiçbir global bırakmaz.
@@ -100,7 +100,7 @@ Kendi script'ini yükleyemeyen bir sayfa, bunun yerine barındırılan görünt�
 ```html
 <erd-editor system-dark-mode enable-theme-builder enable-locale-picker enable-welcome-screen></erd-editor>
 <script type="module">
-  import 'https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js';
+  import 'https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js';
 
   const editor = document.querySelector('erd-editor');
 </script>
@@ -123,7 +123,7 @@ Buraya `readonly` özniteliğini eklemek düzenleyiciyi bir okuyucu olarak açar
 
 ### Sunucu tarafında işleme {#server-side-rendering}
 
-`engine.js` ve `peer.js` dışındaki her giriş noktası bir DOM gerektirir, bu yüzden Node'da hata fırlatır. `erd-editor.js` ve `erd-viewer.js` öğelerini modül kapsamında tanımlar; `5.0.0` sürümünden itibaren hiçbir şey tanımlamayan paket kökü ise yüklenirken yine de her iki öğe sınıfını oluşturur.
+Bu sayfaların anlattığı giriş noktalarından `engine.js` ve `peer.js` dışındaki her biri bir DOM gerektirir, bu yüzden Node'da hata fırlatır. `erd-editor.js` ve `erd-viewer.js` öğelerini modül kapsamında tanımlar; `5.0.0` sürümünden itibaren hiçbir şey tanımlamayan paket kökü ise yüklenirken yine de her iki öğe sınıfını oluşturur.
 Next.js, Nuxt, SvelteKit veya Astro'da öğenin giriş noktasına, kökten yapılan adlandırılmış bir içe aktarmaya ise, örneğin `setExportFileCallback` veya `toImage`, aynı yoldan, yalnızca istemcide çalışan bir yoldan erişin.
 
 ```js
@@ -251,7 +251,7 @@ Katı bir İçerik Güvenliği Politikası altındaki bir sayfa, öğeler için 
 
 ## Giriş noktaları {#entry-points}
 
-Paketin beş giriş noktası vardır:
+Bu sayfalar paketin giriş noktalarından beşini anlatır:
 
 | Giriş noktası | Ne olduğu |
 | --- | --- |
@@ -371,7 +371,7 @@ Pakete hiçbir polyfill dahil değildir. Daha eski tarayıcıları desteklemeniz
    import { setExportFileCallback } from '@dineug/erd-editor';
   ```
 
-- Bir CDN'de aynısı `https://esm.run/@dineug/erd-editor` için de geçerlidir; bu URL artık kökü sunar ve hiçbir şey tanımlamaz: `https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js` adresini içe aktarın. Yalın jsDelivr ve unpkg URL'leri script etiketi derlemesini sunmaya devam eder, bu derleme `<erd-editor>` öğesini eskisi gibi tanımlar. Sürüm belirtilmeyen bir URL artık en son 5.x sürümünü sunar; 4.x sürümünde kalmak için `@4.2.0` sürümünü sabitleyin. [CDN](#cdn) ve [Script etiketi](#script-tag) bölümlerine bakın.
+- Bir CDN'de aynısı `https://esm.run/@dineug/erd-editor` için de geçerlidir; bu URL artık kökü sunar ve hiçbir şey tanımlamaz: `https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js` adresini içe aktarın. Yalın jsDelivr ve unpkg URL'leri script etiketi derlemesini sunmaya devam eder, bu derleme `<erd-editor>` öğesini eskisi gibi tanımlar. Sürüm belirtilmeyen bir URL artık en son 5.x sürümünü sunar; 4.x sürümünde kalmak için `@4.2.0` sürümünü sabitleyin. [CDN](#cdn) ve [Script etiketi](#script-tag) bölümlerine bakın.
 - Kök hiçbir şey tanımlamaz ama yine de bir DOM gerektirir, bu yüzden sunucu tarafında işlemede kökten yapılan, örneğin `setExportFileCallback` gibi adlandırılmış bir içe aktarma, öğenin giriş noktasının yanında yalnızca istemci yolunda kalır. [Sunucu tarafında işleme](#server-side-rendering) bölümüne bakın.
 - `window.ErdEditor` nesnesine `ErdEditorElement` ve `defineErdEditor` eklenir. Görüntüleyicinin script etiketi derlemesi `ErdViewerElement` ve `defineErdViewer` işlevlerini `window.ErdViewer` üzerine koyar ve hiçbir global `toImage` taşımaz.
 - Bir `readonly` düzenleyici bir okuyucu olarak açılır. Altı sekmesi, Gezgin, Hızlı arama ve varlık bilgisi kalır; diyagramı düzenleyecek her kontrol devre dışı bırakılmak yerine kalkar: Araç çubuğu veritabanı adını metin olarak gösterir, Ayarlar sekmesi ayarlarını bir `Read only` rozeti altında her kontrolü devre dışı olarak gösterir ve kayan araç çubuğu yalnızca yakınlaştırmayı, Ad görünümünü, Zen modunu ve pusulayı korur; bu yüzden `Hand` ve `Select` kalkar ve sürükleme tuvali kaydırır. Bir basış hiçbir şey seçmez: tek seçim, Gezgin ya da Hızlı aramadan yapılan bir atlamanın ulaştığı öğenin çevresine koyduğu ve hareketsiz bir tıklamanın temizlediği dış çizgidir, hepsini seç kısayolları da hiçbir şey seçmez. `readonly` ayarlamak açık duranları sona erdirir, örneğin seçimi, el aracını, bir hücre düzenleyicisini, bir sürüklemeyi, Map Columns'u, Otomatik düzenin `Force` önizlemesini ve Time Travel'ı; kaydırmayı, yakınlaştırmayı, sekmeyi ve Ad görünümünü ise korur. [readonly](./erd-editor-element.md#readonly) bölümüne bakın.

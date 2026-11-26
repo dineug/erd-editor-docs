@@ -51,18 +51,18 @@ Za preostali API glejte stran [ErdEditorElement](./erd-editor-element.md).
 
 ```html
 <script type="module">
-  import 'https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js';
+  import 'https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js';
 
   const editor = document.createElement('erd-editor');
   editor.style.cssText = 'display: block; width: 100%; height: 100vh;';
   document.body.appendChild(editor);
 </script>
 <!-- or -->
-<script type="module" src="https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js"></script>
+<script type="module" src="https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js"></script>
 ```
 
 Storitev `esm.run` namesto vas razreši zunanje odvisnosti paketa, zato to deluje brez združevalnika.
-Do vsake vstopne točke pridete s potjo za različico: `…/erd-editor.js` definira urejevalnik, `…/erd-viewer.js` pa pregledovalnik, ki vsak jezik prikaza razen angleščine pridobi iz CDN, ko ga stran zahteva. Goli URL paketa, `https://esm.run/@dineug/erd-editor@5.1.0`, vrne koren, ki ne definira nobenega elementa.
+Do vsake vstopne točke pridete s potjo za različico: `…/erd-editor.js` definira urejevalnik, `…/erd-viewer.js` pa pregledovalnik, ki vsak jezik prikaza razen angleščine pridobi iz CDN, ko ga stran zahteva. Goli URL paketa, `https://esm.run/@dineug/erd-editor@5.1.1`, vrne koren, ki ne definira nobenega elementa.
 URL brez različice vedno vrne najnovejšo izdajo. Fiksirajte različico, kot zgoraj, če ne želite, da bi nadgradnja na novo glavno različico nenapovedano dosegla vašo stran.
 Tudi različica `5.0.0` je taka nadgradnja: stran, ki mora ostati na različici 4.x, fiksira `@4.2.0` – glejte razdelek [Nadgradnja z različice 4.x](#upgrading-from-4x).
 
@@ -75,7 +75,7 @@ Nanjo kažeta polji `unpkg` in `jsdelivr`, zato jo vrne goli URL paketa na kater
 
 ```html
 <erd-editor></erd-editor>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.1"></script>
 <script>
   const editor = document.querySelector('erd-editor');
   editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
@@ -88,7 +88,7 @@ Od različice `5.0.0` druga datoteka, `dist/erd-viewer.umd.js`, definira `<erd-v
 
 ```html
 <erd-viewer src="diagram.erd.json" style="display: block; height: 480px"></erd-viewer>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0/dist/erd-viewer.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.1/dist/erd-viewer.umd.js"></script>
 ```
 
 Nobena datoteka ne definira oznake druge, vsaka pa na strani ne pusti nobenega globalnega objekta razen svojega in `window.Konva`.
@@ -100,7 +100,7 @@ Stran, ki ne more naložiti lastne skripte, lahko namesto tega vstavi gostovani 
 ```html
 <erd-editor system-dark-mode enable-theme-builder enable-locale-picker enable-welcome-screen></erd-editor>
 <script type="module">
-  import 'https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js';
+  import 'https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js';
 
   const editor = document.querySelector('erd-editor');
 </script>
@@ -123,7 +123,7 @@ Branje lastnosti `editor.value` in `editor.runtimeValue` še vedno deluje, obe p
 
 ### Upodabljanje na strežniku {#server-side-rendering}
 
-Vsaka vstopna točka razen `engine.js` in `peer.js` potrebuje DOM, zato v okolju Node vrže napako. `erd-editor.js` in `erd-viewer.js` definirata svoj element na ravni modula, koren paketa, ki od različice `5.0.0` ne definira ničesar, pa ob nalaganju še vedno zgradi oba razreda elementov.
+Vsaka vstopna točka, ki jo te strani opisujejo, razen `engine.js` in `peer.js` potrebuje DOM, zato v okolju Node vrže napako. `erd-editor.js` in `erd-viewer.js` definirata svoj element na ravni modula, koren paketa, ki od različice `5.0.0` ne definira ničesar, pa ob nalaganju še vedno zgradi oba razreda elementov.
 V ogrodjih Next.js, Nuxt, SvelteKit ali Astro vstopno točko elementa uvozite iz kode, ki se izvaja samo v odjemalcu, imenovan uvoz iz korena, na primer `setExportFileCallback` ali `toImage`, pa iz iste kode.
 
 ```js
@@ -251,7 +251,7 @@ Stran s strogim pravilnikom Content Security Policy za elementa potrebuje te dir
 
 ## Vstopne točke {#entry-points}
 
-Paket ima pet vstopnih točk:
+Te strani opisujejo pet vstopnih točk paketa:
 
 | Vstopna točka | Kaj je |
 | --- | --- |
@@ -371,7 +371,7 @@ Različica `5.0.0` je glavna izdaja. Ko stran prenašate z različice 4.x, preve
    import { setExportFileCallback } from '@dineug/erd-editor';
   ```
 
-- Na CDN velja enako za `https://esm.run/@dineug/erd-editor`, ki zdaj vrne koren in ne definira ničesar: uvozite `https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js`. Goli URL-ji jsDelivr in unpkg še vedno vrnejo gradnjo z oznako script, ki definira `<erd-editor>` kot prej. URL brez različice zdaj vrne najnovejšo izdajo 5.x; za ostanek na 4.x fiksirajte `@4.2.0` – glejte razdelka [CDN](#cdn) in [Oznaka script](#script-tag).
+- Na CDN velja enako za `https://esm.run/@dineug/erd-editor`, ki zdaj vrne koren in ne definira ničesar: uvozite `https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js`. Goli URL-ji jsDelivr in unpkg še vedno vrnejo gradnjo z oznako script, ki definira `<erd-editor>` kot prej. URL brez različice zdaj vrne najnovejšo izdajo 5.x; za ostanek na 4.x fiksirajte `@4.2.0` – glejte razdelka [CDN](#cdn) in [Oznaka script](#script-tag).
 - Koren ne definira ničesar, vendar še vedno potrebuje DOM, zato pri upodabljanju na strežniku imenovan uvoz iz njega, na primer `setExportFileCallback`, ostane na poti samo za odjemalca ob vstopni točki elementa – glejte razdelek [Upodabljanje na strežniku](#server-side-rendering).
 - `window.ErdEditor` dobi `ErdEditorElement` in `defineErdEditor`. Gradnja pregledovalnika z oznako script da `ErdViewerElement` in `defineErdViewer` na `window.ErdViewer`, nobeden od obeh globalnih objektov pa ne vsebuje `toImage`.
 - Urejevalnik `readonly` se odpre kot bralnik. Njegovih šest zavihkov, raziskovalec, hitro iskanje in prisotnost ostanejo, vsak kontrolnik, ki bi urejal diagram, pa je izginil in ne onemogočen: orodna vrstica prikazuje ime zbirke podatkov kot besedilo, zavihek Nastavitve prikazuje svoje nastavitve z vsemi onemogočenimi kontrolniki pod značko `Read only`, lebdeča orodna vrstica pa ohrani samo povečavo, prikaz imen, način zen in kompas, zato `Hand` in `Select` izgineta, vlečenje pa premika pogled. Pritisk ne izbere ničesar: edina izbira je obris, ki ga skok iz raziskovalca ali hitrega iskanja nariše okoli tistega, kar doseže, in ga miren klik počisti, tipke za izbiro vsega pa ničesar ne izberejo. Vklop `readonly` konča, kar je bilo odprto, na primer izbiro, orodje Roka, urejevalnik celice, vlečenje, Map Columns, predogled `Force` funkcije Auto Layout in Time Travel, ohrani pa pomik, povečavo, zavihek in prikaz imen – glejte [readonly](./erd-editor-element.md#readonly).

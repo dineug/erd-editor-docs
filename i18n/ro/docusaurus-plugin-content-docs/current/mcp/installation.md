@@ -56,6 +56,7 @@ O fereastră VS Code deservește diagramele din folderele spațiului său de luc
 O extensie de la versiunea `3.0.0` până la versiunea `3.1.0` și versiunea `1.0.0` sau o versiune ulterioară a serverului se refuză reciproc, iar o extensie anterioară versiunii `3.0.0` nu deservește niciun agent.
 O extensie în versiunea `4.0.0` sau `4.1.0` se conectează, dar nici nu afișează, nici nu păstrează numele logice, legăturile cu domeniile și rândurile dicționarelor pe care le scrie agentul.
 Cu o extensie anterioară versiunii `4.3.0`, un tabel, o notă sau un grup de tabele pe care dumneavoastră și agentul le mutați sau le redimensionați în același moment pot ajunge în locuri diferite la dumneavoastră și la agent (consultați [Actualizarea](#updating)).
+O extensie anterioară versiunii `4.3.1` nu afișează și nu păstrează grupul în care se află o notă.
 
 Extensia pornește într-un spațiu de lucru care conține fișiere `.erd`, `.erd.json`, `.vuerd` sau `.vuerd.json`, așa că un agent ajunge la acele diagrame înainte să deschideți vreuna.
 Într-un spațiu de lucru fără niciunul dintre ele, pornește când deschideți o diagramă, iar până atunci agentul editează pe disc.
@@ -74,6 +75,7 @@ Fereastra unui seif Obsidian deservește diagramele din seiful respectiv.
 Un plugin anterior versiunii `1.0.0` și versiunea `1.0.0` sau o versiune ulterioară a serverului se refuză reciproc.
 Un plugin în versiunea `1.0.0` sau `1.1.0` se conectează, dar nici nu afișează, nici nu păstrează numele logice, legăturile cu domeniile și rândurile dicționarelor pe care le scrie agentul.
 Cu un plugin anterior versiunii `1.3.0`, un tabel, o notă sau un grup de tabele pe care dumneavoastră și agentul le mutați sau le redimensionați în același moment pot ajunge în locuri diferite la dumneavoastră și la agent (consultați [Actualizarea](#updating)).
+Un plugin anterior versiunii `1.3.1` nu afișează și nu păstrează grupul în care se află o notă.
 
 Fereastra unui seif deservește agenții din momentul în care se încarcă pluginul, așa că un agent ajunge la diagramele seifului înainte să deschideți vreuna.
 Nu există niciun pas de acordare a încrederii.
@@ -102,6 +104,7 @@ Un IDE JetBrains deservește diagramele fiecărui proiect deschis în el și ori
 Un plugin în versiunea `0.9.0` sau `0.10.0` și versiunea `1.0.0` sau o versiune ulterioară a serverului se refuză reciproc, iar un plugin anterior versiunii `0.9.0` nu deservește niciun agent.
 Un plugin în versiunea `1.0.0` sau `1.1.0` se conectează, dar nici nu afișează, nici nu păstrează numele logice, legăturile cu domeniile și rândurile dicționarelor pe care le scrie agentul.
 Cu un plugin anterior versiunii `1.3.0`, un tabel, o notă sau un grup de tabele pe care dumneavoastră și agentul le mutați sau le redimensionați în același moment pot ajunge în locuri diferite la dumneavoastră și la agent (consultați [Actualizarea](#updating)).
+Un plugin anterior versiunii `1.3.1` nu afișează și nu păstrează grupul în care se află o notă.
 
 IDE-ul deservește agenții din momentul în care se deschide primul proiect, așa că un agent ajunge la diagramele unui proiect înainte să deschideți vreuna.
 
@@ -153,7 +156,14 @@ Dar o mutare sau o redimensionare pe care dumneavoastră și agentul o faceți �
 Dacă oricare dintre părți este mai veche, editorul și agentul pot ajunge cu poziții diferite, iar agentul continuă să citească și să editeze de la propria poziție până când o mutare ulterioară pune ambele părți pe același punct sau agentul se alătură din nou documentului (consultați [Editări făcute în același moment](./live-and-headless.md#edits-made-at-the-same-moment)).
 Niciuna dintre aceste versiuni nu schimbă ce conține un fișier.
 
+Serverul `1.2.1` vorbește și el protocolul 2. Adaugă două instrumente, `erd_set_memo_group` și `erd_export_svg`, precum și argumentul `memoIds` al instrumentului `erd_add_table_group`, și nu elimină și nu redenumește nimic (consultați [Grupuri de tabele](./tools.md#table-groups) și [Export SVG](./tools.md#svg-export)).
+Notele din grupurile de tabele necesită serverul `1.2.1` sau o versiune ulterioară și, oriunde este deschis documentul, extensia pentru VS Code `4.3.1` sau o versiune ulterioară ori pluginul pentru Obsidian sau JetBrains `1.3.1` sau o versiune ulterioară.
+O extensie sau un plugin mai vechi care se conectează ignoră grupul în care se află o notă, deși apelul agentului reușește, și omite grupurile notelor când salvează fișierul.
+Un server anterior versiunii `1.2.1` nu are instrumente pentru ele și citește fiecare notă ca fiind în afara oricărui grup, iar un fișier pe care îl editează pe disc este rescris cu fiecare notă în afara grupului ei (consultați [Fără interfață](./live-and-headless.md#headless)).
+`erd_export_svg` necesită doar serverul `1.2.1` sau o versiune ulterioară, cu orice versiune de extensie sau de plugin care se conectează, deoarece serverul desenează imaginea el însuși.
+
 Actualizați, de asemenea, ERD Editor oriunde sunt deschise diagramele.
+Extensia pentru VS Code anterioară versiunii `4.3.1`, pluginul pentru Obsidian anterior versiunii `1.3.1` și pluginul pentru JetBrains anterior versiunii `1.3.1` deschid o diagramă salvată de o versiune ulterioară, sau editată de agent pe disc, cu fiecare notă în afara grupului ei de tabele și omit grupurile notelor când salvează fișierul.
 Extensia pentru VS Code anterioară versiunii `4.2.0`, pluginul pentru Obsidian anterior versiunii `1.2.0` și pluginul pentru JetBrains anterior versiunii `1.2.0` deschid o diagramă salvată de o versiune ulterioară, sau editată de agent pe disc, fără numele logice ale tabelelor și coloanelor, fără legăturile coloanelor cu domeniile și fără cuvintele, termenii și domeniile ei.
 Când salvează fișierul, le omit.
 Extensia pentru VS Code anterioară versiunii `4.0.0`, pluginul pentru Obsidian anterior versiunii `1.0.0` și pluginul pentru JetBrains anterior versiunii `1.0.0` afișează, de asemenea, o astfel de diagramă fără pictogramele de cheie primară și elimină grupurile de tabele și scripturile filei Schemă SQL ale diagramei când salvează fișierul.

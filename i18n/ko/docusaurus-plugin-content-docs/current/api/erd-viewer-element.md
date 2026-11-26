@@ -39,7 +39,7 @@ interface ErdViewerElement extends HTMLElement {
 ```
 
 `@dineug/erd-editor/erd-viewer.js`를 import하면 `<erd-viewer>`가 정의되고 `<erd-editor>`는 정의되지 않은 채로 남습니다. 패키지 루트를 import하면 둘 다 정의되지 않습니다. 루트는 `ErdViewerElement` 클래스와, 호출한 곳에서 태그를 정의하는 `defineErdViewer()`를 export하므로, 페이지는 직접 정한 태그로 클래스를 정의할 수도 있습니다. [엘리먼트 등록](./installation.md#registering-the-elements)을 참고하세요.  
-`engine.js`와 `peer.js`를 제외한 모든 진입점은 DOM이 필요하며 이 진입점도 마찬가지이므로, 서버에서 렌더링하는 페이지는 클라이언트에서 import합니다. [서버 사이드 렌더링](./installation.md#서버-사이드-렌더링) 항목을 참고하세요.  
+이 문서들이 설명하는 진입점 중 `engine.js`와 `peer.js`를 제외한 모든 진입점은 DOM이 필요하며 이 진입점도 마찬가지이므로, 서버에서 렌더링하는 페이지는 클라이언트에서 import합니다. [서버 사이드 렌더링](./installation.md#서버-사이드-렌더링) 항목을 참고하세요.  
 진입점을 import하면 `HTMLElementTagNameMap`에 `erd-viewer`가 추가되므로, `document.createElement('erd-viewer')`와 `document.querySelector('erd-viewer')`는 캐스팅 없이 `ErdViewerElement` 타입이 됩니다.
 
 에디터처럼 뷰어도 closed shadow root에 렌더링되므로 `viewer.shadowRoot`는 `null`이고 페이지 스타일이 안팎으로 새지 않습니다. 스타일은 [setTheme](#settheme)과 `--erd-editor-*` 커스텀 프로퍼티로 지정하세요. 한 페이지의 여러 뷰어는 각각 자신의 문서, 화면, 테마, 언어를 유지합니다.  
@@ -52,7 +52,7 @@ script 태그 빌드인 `dist/erd-viewer.umd.js`는 모든 의존성과 함께 �
 
 ```html
 <erd-viewer src="diagram.erd.json" style="display: block; height: 480px"></erd-viewer>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0/dist/erd-viewer.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.1/dist/erd-viewer.umd.js"></script>
 ```
 
 ## src {#src}

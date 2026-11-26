@@ -14,7 +14,7 @@ Düzenlemenin nereye gideceğini sunucunun bulduğu şey belirler.
 | --- | --- |
 | Çalışma alanı, kasası veya açık projesi belgeyi içeren ya da belgeyi açmış olan bir düzenleyici | **Canlı.** Gerekirse belgeyi ERD Editor ile açar, düzenleme oturumuna katılır ve değişikliği orada uygular. Düzenlemeler hemen görünür ve düzenleyicinin sizinkileri kaydettiği gibi kaydedilir. [Kaydetme](#saving) bölümüne bakın. |
 | Düzenleyici yok | **Headless.** Dosyayı yükler, değişikliği uygular ve yanıt vermeden önce dosyayı yenisiyle değiştirir; bu yüzden sonuçta `saved: true` yazar ve `erd_save` aracının yapacağı bir şey yoktur. |
-| Hub'ı kapalı bir düzenleyici | **Reddedilir.** Okumalar diskten yine de çalışır. Açık bir düzenleyici varken dosyaya yazılan bir değişikliğin üzerine düzenleyicinin bir sonraki kaydetmesiyle yazılabilir, bu yüzden sunucu hiçbir şey yazmaz. |
+| Hub'ı kapalı bir düzenleyici | **Reddedilir.** Okumalar ve `erd_export_svg` diskten yine de çalışır. Açık bir düzenleyici varken dosyaya yazılan bir değişikliğin üzerine düzenleyicinin bir sonraki kaydetmesiyle yazılabilir, bu yüzden sunucu belgeye hiçbir şey yazmaz. |
 | Hub'ı açık olan ancak sunucununkinden farklı bir protokol kullanan bir düzenleyici: sunucunun `1.0.0` veya sonraki bir sürümüyle `3.x` sürümlü bir VS Code uzantısı, `0.x` sürümlü bir Obsidian eklentisi ya da `0.9.0` veya `0.10.0` sürümlü bir JetBrains eklentisi; `1.0.0` sürümünden önceki bir sunucuyla uzantının `4.0.0` veya sonraki bir sürümü ya da eklentinin `1.0.0` veya sonraki bir sürümü | **Reddedilir**, okumalar dahil, `protocolMismatch` koduyla. İleti güncellenmesi gereken tarafı belirtir: uzantı veya eklenti ya da sunucu. [Güncelleme](./installation.md#updating) bölümüne bakın. |
 | Windows'ta, belgeyi aynı dosyaya giden başka bir yolla tutan bir düzenleyici: Ajan belgeyi bu bilgisayarın `\\localhost\C$\…` gibi bir ağ paylaşımı veya eşlenmiş sürücüsü üzerinden belirtmiştir ve düzenleyici belgeyi sürücü yoluyla tutar ya da tam tersi | **Reddedilir**, okumalar dahil, `invalidPath` koduyla. İleti, düzenleyicinin belgeyi tuttuğu yolu belirtir; o yolla yeniden çağırın. |
 | Windows'ta, Windows'un ajanı uzak tuttuğu bir düzenleyici: ajan yönetici olarak başlatılmamışken yönetici olarak başlatılmış bir düzenleyici ya da ajan bir korumalı alanda çalışırken herhangi bir düzenleyici | **Reddedilir**, okumalar dahil, `hubUnreachable` koduyla ve nedenini söyleyen bir iletiyle. Düzenleyiciyi ve ajanı aynı haklarla çalıştırın, örneğin düzenleyiciyi yönetici hakları olmadan yeniden başlatarak. |
@@ -27,15 +27,17 @@ Belgeyi açmış iki düzenleyici gibi bir eşitlik durumunda, kilit dosyası en
 Böylece bir VS Code çalışma alanı klasörünün içindeki bir Obsidian kasasında bulunan bir belge, VS Code'un onu açmış, Obsidian'ın ise açmamış olduğu durum dışında Obsidian'a gider.
 
 Aynı belge üzerindeki çağrılar, sunucuya ulaştıkları sırayla birer birer çalışır. Farklı belgeler üzerindeki çağrılar eş zamanlı çalışır.
+`erd_export_svg` yalnızca belgeyi okumak için sırasını bekler; bu yüzden belge üzerindeki sonraki bir çağrı çizimi beklemez ve sunucu, iki belgeninki bile olsa, aynı anda tek bir dışa aktarmayı çizer. [SVG dışa aktarma](./tools.md#svg-export) bölümüne bakın.
 
 ## Canlı {#live}
 
 Ajan düzenleyiciye bir ortak çalışan daha gibi katılır.
 Düzenlemeleri belgenin açık olduğu her düzenleyiciye hemen ulaşır ve odağı, bir ortak çalışanınki gibi düzenlediği tablo ve hücre üzerinde gösterilir. [focusTracker](../api/advanced/collaborative-editing.md#focustracker) bölümüne bakın.
 
-Bir okuma hiçbir zaman bir düzenleyici açmaz. Bir düzenleme, belge henüz açık değilse onu klavye odağını almadan ERD Editor ile açar.
+Bir okuma hiçbir zaman bir düzenleyici açmaz, `erd_export_svg` de açmaz; o, düzenleyicinin tuttuğunu, henüz kaydedilmemiş düzenlemeler dahil, çizer. Bir düzenleme, belge henüz açık değilse onu klavye odağını almadan ERD Editor ile açar.
 
 `4.2.0` sürümünden önceki bir VS Code uzantısına ya da `1.2.0` sürümünden önceki bir Obsidian veya JetBrains eklentisine sahip bir düzenleyici ajanın düzenlemelerini yine canlı olarak alır, ancak ajanın yazdığı mantıksal adları, değer alanı bağlantılarını ve sözlük satırlarını ne gösterir ne de korur. [Güncelleme](./installation.md#updating) bölümüne bakın.
+Benzer şekilde, `4.3.1` sürümünden önceki bir uzantıya ya da `1.3.1` sürümünden önceki bir eklentiye sahip bir düzenleyici bir notun hangi tablo grubunda olduğunu ne gösterir ne de korur: ajanın bir gruba koyduğu not orada hiçbir grupta değildir ve ajanın çağrısı başarılı olsa da düzenleyici kaydederken notun grubunu dosyadan çıkarır.
 
 VS Code uzantısının `4.3.0` veya sonraki bir sürümüyle ya da Obsidian veya JetBrains eklentisinin `1.3.0` veya sonraki bir sürümüyle, sunucunun sürümü ne olursa olsun, `replace` modundaki bir içe aktarma ile bunun bir `erd_undo` veya `erd_redo` işlemi, düzenleyicide çizmekte olduğunuz bir ilişkiyi sona erdirir. [İlişki oluşturma](../guide/guides/editing-start.md#relationship-creation) bölümüne bakın.
 Bu sürümlerden önce çizim hazır kalırdı ve bir tabloya tıklamak, artık diyagramda olmayan bir tablodan bir ilişki ekleyebilirdi.
@@ -53,11 +55,11 @@ Bir sütun yeniden sıralaması, sizinki ya da ajanın `erd_move_column` veya `e
 Bir veritabanı değişikliği, sizinki ya da ajanın `erd_set_database` çağrısı, o da geldiği sırayla uygulanır; bu nedenle aynı anda yapılan ikisi düzenleyiciyi ve ajanı farklı veritabanlarında bırakabilir.
 
 Sizin sürüklemeniz ile ajanın `erd_move_table`, `erd_move_tables`, `erd_move_memo`, `erd_move_table_group` ve `erd_sort_tables` çağrıları bittikleri noktalar olarak iletilir; bu nedenle bir tablonun, notun veya tablo grubunun iki taşıması, birinin onu koyduğu yerde biter, asla ikisinin toplamında bitmez.
-`erd_move_table_group`, grubun başlık çubuğunu sürüklemenin yaptığı gibi grubun ve her tablosunun noktasını tek bir pakette gönderir.
+`erd_move_table_group`, grubun başlık çubuğunu sürüklemenin yaptığı gibi grubun ve her tablosunun noktasını tek bir pakette gönderir ve sunucunun `1.2.1` sürümünden itibaren her notunun noktasını da gönderir.
 Bir yeniden boyutlandırma konumu ve boyutu birlikte yazar; bu nedenle bir notun veya tablo grubunun aynı anda yapılan bir taşıması ile bir yeniden boyutlandırması, örneğin siz o notu sürüklerken `erd_resize_memo`, iki tarafta da tek bir dikdörtgenle biter: yeniden boyutlandırmanınkiyle ya da taşıma kazanırsa taşımanın noktası ve yeniden boyutlandırmanın boyutuyla.
 Geri alma kaydı oluşturmayan 20 pikselin altındaki bir taşıma da bittiği nokta olarak gider; bu nedenle, ister kısa bir `erd_move_table_group` ister sizin bir tabloyu birkaç piksel oynatan bir tıklama gibi kısa bir sürüklemeniz olsun, diğer tarafın taşımasına karşı kazanabilir.
 
-`1.2.0` sürümlü sunucu da `1.0.0` sürümünden `1.1.1` sürümüne kadarki sürümler gibi hub protokolü 2'yi kullandığından, eski sürümler yine bağlanır.
+`1.2.0` ve sonraki sürümlü sunucular da `1.0.0` sürümünden `1.1.1` sürümüne kadarki sürümler gibi hub protokolü 2'yi kullandığından, eski sürümler yine bağlanır.
 `1.2.0` sürümünden önceki bir sunucuyla ya da `4.3.0` sürümünden önceki bir uzantı veya `1.3.0` sürümünden önceki bir eklentiyle, bir tablonun, notun veya tablo grubunun aynı anda yapılan bir taşıması ya da yeniden boyutlandırması düzenleyiciyi ve ajanı farklı konumlarla bırakabilir.
 Eski bir düzenleyici sürüklemenizi alınan mesafe olarak gönderir ve `1.2.0` sürümünden önceki bir sunucu `erd_move_table_group` çağrısını da öyle gönderir.
 Diğer taraf bu mesafeyi tuttuğu noktaya ekler.
@@ -97,7 +99,7 @@ Düzenleyicinin kendi [Geri al](../guide/guides/undo-redo.md) komutu tam tersi �
 
 Birkaç düzenleme düzenleyicide geri alma kaydı oluşturmaz: [ayar araçlarından](./tools.md#settings) `erd_set_database` ve `erd_set_database_name` ile `erd_resize_memo`.
 Grubu, yatay ve dikey kayma toplandığında 20 pikselden az taşıyan bir `erd_move_table_group` çağrısı da kayıt oluşturmaz, ancak grup taşındığı yerde kalır.
-Hiçbir şeyi değiştirmeyen bir çağrı da kayıt oluşturmaz: belgenin zaten sahip olduğu bir değeri ayarlayan `erd_set_column_primary_key`, `erd_set_column_unique`, `erd_set_column_not_null`, `erd_set_column_auto_increment`, `erd_set_index_unique` veya `erd_set_index_column_order`; dizinde zaten bulunan bir sütunla `erd_add_index_column`; zaten o grupta olan (ya da `groupId` değeri `null` iken zaten hiçbir grupta olmayan) tablolarla `erd_set_table_group`; grubun zaten durduğu noktaya `erd_move_table_group`; grubun zaten sahip olduğu dikdörtgene `erd_resize_table_group`; hiç tablosu olmayan bir belgede `erd_sort_tables`; tablonun veya sütunun zaten sahip olduğu mantıksal adla ve ondan türetme hiçbir şeyi değiştirmeyecekken `erd_set_table_logical_name` veya `erd_set_column_logical_name`; sütunun zaten bağlı olduğu değer alanıyla, sütun o değer alanının türüne zaten sahipken ve [İlişkilerde veri türü eşitleme](../guide/guides/settings.md#relationship-datatype-sync) ilişkiler boyunca hiçbir sütunun türünü değiştirmeyecekken `erd_set_column_domain`; fiziksel adı olmayan bir terime `name` değeri verilip sözcükleri bir fiziksel ad oluşturmadıkça, yalnızca satırın zaten sahip olduğu değerlerle `erd_update_word`, `erd_update_term` veya `erd_update_domain`; kapsadığı ve mantıksal adı olan her ad [sözlüklerin](./tools.md#dictionaries) ona verdiğini zaten taşıyor ve türetilmiş olarak işaretliyken `erd_derive_physical_names`; ya da `mode` değeri `append` olan ve hiç tablo getirmeyen (`erd_import_json` için ne tablo ne de not getirmeyen) bir içe aktarma.
+Hiçbir şeyi değiştirmeyen bir çağrı da kayıt oluşturmaz: belgenin zaten sahip olduğu bir değeri ayarlayan `erd_set_column_primary_key`, `erd_set_column_unique`, `erd_set_column_not_null`, `erd_set_column_auto_increment`, `erd_set_index_unique` veya `erd_set_index_column_order`; dizinde zaten bulunan bir sütunla `erd_add_index_column`; zaten o grupta olan (ya da `groupId` değeri `null` iken zaten hiçbir grupta olmayan) tablolarla `erd_set_table_group`; zaten o grupta olan (ya da zaten hiçbir grupta olmayan) notlarla `erd_set_memo_group`; grubun zaten durduğu noktaya `erd_move_table_group`; grubun zaten sahip olduğu dikdörtgene `erd_resize_table_group`; hiç tablosu olmayan bir belgede `erd_sort_tables`; tablonun veya sütunun zaten sahip olduğu mantıksal adla ve ondan türetme hiçbir şeyi değiştirmeyecekken `erd_set_table_logical_name` veya `erd_set_column_logical_name`; sütunun zaten bağlı olduğu değer alanıyla, sütun o değer alanının türüne zaten sahipken ve [İlişkilerde veri türü eşitleme](../guide/guides/settings.md#relationship-datatype-sync) ilişkiler boyunca hiçbir sütunun türünü değiştirmeyecekken `erd_set_column_domain`; fiziksel adı olmayan bir terime `name` değeri verilip sözcükleri bir fiziksel ad oluşturmadıkça, yalnızca satırın zaten sahip olduğu değerlerle `erd_update_word`, `erd_update_term` veya `erd_update_domain`; kapsadığı ve mantıksal adı olan her ad [sözlüklerin](./tools.md#dictionaries) ona verdiğini zaten taşıyor ve türetilmiş olarak işaretliyken `erd_derive_physical_names`; ya da `mode` değeri `append` olan ve hiç tablo getirmeyen (`erd_import_json` için ne tablo ne de not getirmeyen) bir içe aktarma.
 `erd_undo` aracı bunları atlar ve sonucunda belirtir.
 `erd_change_relationship_type`, `erd_change_relationship_on_delete`, `erd_change_relationship_on_update`, `erd_change_table_group_name`, `erd_change_table_group_color` ve `erd_set_ddl_script` gibi diğer düzenlemeler, belgenin zaten sahip olduğu bir değeri ayarladıklarında bile kayıt oluşturur.
 
@@ -120,7 +122,7 @@ Düzenleyicinin hizmet verdiği bir klasörün içindeki kapatılmış bir diyag
 Hâlâ çalışan, ancak kilit dosyası ortadan kalkmış ve belgeyi kapatmadan bağlantısı kapanmış bir düzenleyici, bir sonraki düzenlemeyi `hubGone` koduyla reddeder.
 İleti belgeyi neyin serbest bıraktığını söyler: VS Code'da o pencereyi yeniden yükleyin ya da ajanın dosyayı doğrudan düzenlemesi için kapatın; Obsidian'da ERD Editor eklentisini yeniden etkinleştirin ya da o pencereyi kapatın; bir JetBrains IDE'sinde eklentiyi yeniden etkinleştirin ya da IDE'den çıkın.
 
-İki durumda okuma bunun yerine, düzenleyicide henüz kaydedilmemiş düzenlemelerin eksik olduğunu belirten bir bilgi notuyla diskteki dosyaya gider: belgeyi tutan düzenleyicinin hub'ı kapalı olduğunda ve yukarıdaki `hubGone` durumunda.
+İki durumda okuma ya da `erd_export_svg` bunun yerine, düzenleyicide henüz kaydedilmemiş düzenlemelerin eksik olduğunu belirten bir bilgi notuyla diskteki dosyaya gider: belgeyi tutan düzenleyicinin hub'ı kapalı olduğunda ve yukarıdaki `hubGone` durumunda.
 Bir düzenleyicinin hub'ına bağlanamayan bir okuma, bir düzenleme gibi `hubUnreachable` koduyla reddedilir.
 
 ## Headless {#headless}
@@ -133,7 +135,7 @@ Değiştiyse hiçbir şey yazılmaz, dosya yeniden yüklenir ve çağrı `confli
 İki çağrı arasında değişen bir dosya ise basitçe yeniden yüklenir ve ajanın o andan önceki geri alma geçmişi atılır.
 
 Salt okunur bir dosya olduğu gibi bırakılır ve düzenleme `readonly` koduyla reddedilir: sahibi için yazma izni olmayan ya da Windows'ta salt okunur özniteliğine sahip bir dosya, örneğin kullanıma alınmamış (check out edilmemiş) bir Perforce veya TFVC dosyası.
-Dosyayı yazılabilir yapın, ardından yeniden çağırın. Okumalar yine de çalışır.
+Dosyayı yazılabilir yapın, ardından yeniden çağırın. Okumalar ve `erd_export_svg` yine de çalışır.
 
 Ajan belgeyi diskte düzenlerken bir düzenleyici belgeye hizmet vermeye başlarsa, o tek düzenleme `hubAppeared` koduyla reddedilir ve hiçbir şey yazılmaz. Bir sonraki çağrı düzenleyici üzerinden düzenler.
 
@@ -142,7 +144,7 @@ Windows'ta iki kural daha geçerlidir:
 - Klasörününkinden farklı, kendine ait izinleri olan bir belge, bu izinleri koruması için yenisiyle değiştirilmek yerine yerinde yazılır ve geçici dosya ardından kaldırılır. Bu yazma sırasında belgeyi okuyan bir program ayrıştırılamayan bir metinle karşılaşabilir.
 - Başka bir programın açık tuttuğu bir dosya yenisiyle değiştirilemez, bu yüzden sunucu en fazla iki saniye boyunca yeniden dener. Her deneme önce yeniden bir düzenleyici arar ve bu arada belgeye hizmet vermeye başlayan bir düzenleyici yazmayı `hubAppeared` koduyla, hub'ı kapalıysa `blocked` koduyla reddeder. Dosya iki saniye sonra hâlâ tutuluyorsa hiçbir şey yazılmaz, dosya yeniden yüklenir ve çağrı sistem hatasını aktaran bir iletiyle başarısız olur.
 
-`1.1.0` sürümünden önceki bir sunucu bir belgeyi mantıksal adları, sütunlarının değer alanı bağlantıları ve sözcükleri, terimleri ve değer alanları olmadan okur; bu yüzden dosyaya yazdığı ilk düzenleme bunları dışarıda bırakır. Sunucuyu güncelleyin. [Güncelleme](./installation.md#updating) bölümüne bakın.
+`1.1.0` sürümünden önceki bir sunucu bir belgeyi mantıksal adları, sütunlarının değer alanı bağlantıları ve sözcükleri, terimleri ve değer alanları olmadan okur; bu yüzden dosyaya yazdığı ilk düzenleme bunları dışarıda bırakır. `1.2.1` sürümünden önceki bir sunucu da belgeyi notlarının tablo grupları olmadan okur; bu yüzden dosyaya yazdığı ilk düzenleme her notu grubunun dışına çıkarır. Sunucuyu güncelleyin. [Güncelleme](./installation.md#updating) bölümüne bakın.
 
 ## Reddedilme {#refused}
 
@@ -151,7 +153,7 @@ Bir Obsidian kasa penceresi, Coding agents ayarı kapatıldığında ve hub'ı d
 Bir JetBrains IDE'si, Coding agents ayarı kapatıldığında, hub'ı dinlemeye başlayamadığında ve IDE kapanırken, hub'ı kapalıyken kilit dosyasını tutar.
 
 Böyle bir belgeye yapılan düzenleme `blocked` koduyla reddedilir, çünkü açık düzenleyici dosyaya yazılan bir değişikliğin üzerine bir sonraki kaydetmesinde yazabilir.
-Okumalar diskteki dosyadan yine de çalışır.
+Okumalar diskteki dosyadan yine de çalışır, `erd_export_svg` de öyle; sonucu o zaman `blocked` modunu bildirir.
 
 Ajanın düzenleme yapabilmesi için hub'ı, iletinin o düzenleyici için söylediği gibi yeniden açın: VS Code'da çalışma alanına güvenin ve ayarı açın ya da pencereyi yeniden yükleyin; Obsidian'da Coding agents ayarını açın ya da Obsidian'ı yeniden yükleyin; bir JetBrains IDE'sinde Coding agents ayarını açın ya da zaten açıksa IDE'yi yeniden başlatın.
 

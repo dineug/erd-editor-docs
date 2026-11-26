@@ -19,7 +19,7 @@ VS Code, Obsidian et le plugin JetBrains n’écrivent un fichier que lorsqu’u
 Depuis la version `4.2.0`, la forme de stockage omet aussi ce qui ne contient rien : chaque champ de texte qu’une entité ou son `ui` contient sous la forme `''` (le `name`, le `comment` et le `ui.color` d’une table, le `name`, le `comment`, le `dataType` et le `default` d’une colonne, le `name` d’un index, le `value` et le `ui.color` d’un mémo, le `name` et le `color` d’un groupe de tables), chaque liste de `doc` et chaque collection qui ne contient aucune entrée, et `collections` lui-même dès que toutes les collections sont vides. Un texte composé uniquement de blancs est écrit tel qu’il est détenu, sauf un nom logique, qui est alors omis, et un mot, un terme ou un domaine dont les valeurs au-delà de l’id sont toutes vides ou composées uniquement de blancs, qui est omis en entier. Chaque id, chaque liste à l’intérieur d’une entité et chaque nombre, `0` compris, sont toujours écrits. `doc` est toujours écrit, si bien que le fichier d’un nouveau document contient `$schema`, `version`, ses paramètres et `"doc": {}`.  
 L’analyse lit un champ de texte absent comme `''` et une collection absente comme vide, comme le fait toute version v3, et la forme de stockage n’omet une liste de `doc` que tant que sa collection ne contient rien (voir [Doc](#doc)). Ainsi, un éditeur antérieur à la version `4.2.0` ouvre lui aussi ces fichiers, et un programme qui lit lui-même un fichier doit lire ce qui manque de la même façon. Un fichier enregistré par une version antérieure ressort de son prochain enregistrement avec ses textes, listes et collections vides omis, un changement fait une seule fois, puis s’enregistre octet pour octet à partir de là.
 
-La forme de stockage écrit chaque paramètre verrouillé à sa valeur verrouillée (voir [`lockSettings`](#settings)), `settings.ddlScripts` seulement tant qu’un script contient du texte, et le `groupId` d’une table seulement tant qu’il désigne un groupe de tables que le fichier écrit. Depuis la version `4.2.0`, elle écrit aussi `settings.nameViewMode` seulement tant que la valeur qu’elle écrit n’est pas `'physical'`, `settings.columnOrder` en sept entrées lorsque c’est possible (voir [Settings](#settings)), et le `nameDerived` d’une table seulement tant qu’il vaut `true`.  
+La forme de stockage écrit chaque paramètre verrouillé à sa valeur verrouillée (voir [`lockSettings`](#settings)), `settings.ddlScripts` seulement tant qu’un script contient du texte, et le `groupId` d’une table ou, depuis la version `5.1.1`, d’un mémo seulement tant qu’il désigne un groupe de tables que le fichier écrit. Depuis la version `4.2.0`, elle écrit aussi `settings.nameViewMode` seulement tant que la valeur qu’elle écrit n’est pas `'physical'`, `settings.columnOrder` en sept entrées lorsque c’est possible (voir [Settings](#settings)), et le `nameDerived` d’une table seulement tant qu’il vaut `true`.  
 Elle n’écrit `doc.tableGroupIds` et `tableGroupEntities` que tant qu’un groupe de tables existe, un `logicalName` que tant qu’il contient autre chose que des blancs, le `domainId` d’une colonne que tant qu’il désigne un domaine que le fichier écrit, et chaque dictionnaire que tant qu’il contient une ligne que le fichier écrit.
 
 Un fichier enregistré avant la version `4.0.0` contient le document entier tel qu’un éditeur le détenait alors, entités supprimées et résultats de chaque chargement compris. Un chargement le lit, conserve la place de chaque table et de chaque mémo dans la pile (voir [Doc](#doc)) et recalcule le reste, et l’enregistrement suivant n’écrit que la forme de stockage.
@@ -394,6 +394,7 @@ const OrderType = {
 type Memo = {
   id: string;
   value?: string;
+  groupId?: string;
   ui: MemoUI;
 };
 
@@ -407,6 +408,9 @@ type MemoUI = {
 ```
 
 Depuis la version `4.0.0`, tables et mémos [partagent une même pile](../../guide/guides/table-related-functions.md#moving-multiple-tables), si bien que mettre une table au premier plan peut la placer au-dessus d’un mémo. Un chargement place chaque mémo au-dessus de toutes les tables, comme le décrit [Doc](#doc). Un mémo d’un fichier enregistré avant la version `4.0.0` conserve le `zIndex` qu’il a enregistré, issu du même compteur que celui des tables, si bien qu’un mémo qu’une version antérieure affichait au-dessus de toutes les tables peut s’ouvrir sous une table mise au premier plan après lui.
+
+Depuis la version `5.1.1`, un mémo porte `groupId`, l’id du [groupe de tables](../../guide/guides/table-groups.md) auquel il appartient, comme une table. Un `groupId` absent ou vide, comme dans tout fichier enregistré avant la version `5.1.1`, ou qui ne désigne aucun groupe de `doc.tableGroupIds`, signifie l’absence de groupe, et la forme de stockage ne l’écrit que tant qu’il désigne un groupe conservé.  
+Un éditeur antérieur à la version `5.1.1` supprime le `groupId` de chaque mémo au chargement d’un document, si bien qu’un enregistrement dans cet éditeur sort chaque mémo de son groupe, alors qu’un éditeur à partir de la version `4.0.0` conserve les groupes des tables (voir [Combiner des versions](./collaborative-editing.md#mixing-releases)).
 
 ### Collection : tableGroupEntities {#collection-tablegroupentities}
 
@@ -426,7 +430,7 @@ type TableGroupUI = {
 };
 ```
 
-Depuis la version `4.0.0`, un document peut contenir des [groupes de tables](../../guide/guides/table-groups.md) : des rectangles nommés et colorés, tracés derrière les tables. Une table en rejoint un par son propre `groupId`, si bien qu’un groupe ne contient aucune liste de membres. La forme de stockage n’écrit la collection, comme `doc.tableGroupIds`, que tant qu’un groupe existe, et un document qui en est dépourvu, comme un document enregistré avant la version `4.0.0`, n’a aucun groupe. `Show.hideTableGroup` les masque.  
+Depuis la version `4.0.0`, un document peut contenir des [groupes de tables](../../guide/guides/table-groups.md) : des rectangles nommés et colorés, tracés derrière les tables et les mémos. Une table, et depuis la version `5.1.1` un mémo, en rejoint un par son propre `groupId`, si bien qu’un groupe ne contient aucune liste de membres. La forme de stockage n’écrit la collection, comme `doc.tableGroupIds`, que tant qu’un groupe existe, et un document qui en est dépourvu, comme un document enregistré avant la version `4.0.0`, n’a aucun groupe. `Show.hideTableGroup` les masque.  
 Un éditeur antérieur à la version `4.0.0` supprime les groupes et le `groupId` de chaque table au chargement d’un document, si bien qu’un enregistrement dans cet éditeur perd tous les groupes.
 
 ### Lignes des dictionnaires {#dictionary-rows}
@@ -525,6 +529,8 @@ Placez `$schema` en tête d’un fichier `.erd.json` : les éditeurs qui compre
 Depuis la version `4.0.0`, le schéma ne décrit que la forme de stockage. Tout objet à champs nommés est fermé (`additionalProperties: false`), tout champ que la forme de stockage écrit toujours est obligatoire, chaque champ marqué `?` dans les types ci-dessus est nommé mais pas obligatoire, et aucun autre champ n’est nommé. Il refuse donc un fichier enregistré avant la version `4.0.0`, avec son `meta`, ses largeurs, ses `zIndex`, son `ignoreSaveSettings` et le reste, jusqu’à ce qu’un éditeur en version `4.0.0` ou ultérieure réenregistre ce fichier. Un fichier enregistré par la version `3.2.0` ou ultérieure nomme déjà l’URL de ce schéma, qui pointe vers la branche `main`, si bien qu’un éditeur qui valide le fichier avec ce schéma le signale désormais. Un fichier enregistré par la version `3.0.0` ou `3.1.0`, ou un document v2, ne nomme aucun `$schema`.
 
 Depuis la version `4.2.0`, le schéma n’exige plus ni les champs de texte d’une entité, ni les listes de `doc`, ni les collections, ni `collections` lui-même, que la forme de stockage omet tant qu’ils ne contiennent rien. Il accepte toujours un fichier enregistré par la version `4.0.0` ou `4.1.0`. Il nomme les nouveaux champs : `nameViewMode`, qui n’accepte que `"logical"` et `"both"` ; le `logicalName` et le `nameDerived` d’une table, ce dernier n’acceptant que `true` ; le `logicalName` et le `domainId` d’une colonne ; et les trois dictionnaires, chacun avec son en-tête et ses lignes de chaînes. `canvasType` liste l’onglet Dictionnaire, `columnOrder` accepte sept ou neuf entiers, et les descriptions de `show`, `columnOrder`, `lockSettings` et `options` nomment les nouveaux bits.
+
+Depuis la version `5.1.1`, il nomme aussi le `groupId` d’un mémo, qu’une copie du schéma prise avant la version `5.1.1` refuse.
 
 ```json
 {
@@ -939,6 +945,10 @@ Depuis la version `4.2.0`, le schéma n’exige plus ni les champs de texte d’
           "value": {
             "type": "string"
           },
+          "groupId": {
+            "description": "Id of the table group in doc.tableGroupIds the memo belongs to; absent means none",
+            "type": "string"
+          },
           "ui": {
             "type": "object",
             "properties": {
@@ -967,7 +977,7 @@ Depuis la version `4.2.0`, le schéma n’exige plus ni les champs de texte d’
       }
     },
     "tableGroupEntities": {
-      "description": "Named, coloured rectangles drawn behind tables; a table joins one through its groupId. Written while a group exists; absent means none",
+      "description": "Named, coloured rectangles drawn behind tables and memos; a table or a memo joins one through its groupId. Written while a group exists; absent means none",
       "type": "object",
       "additionalProperties": {
         "type": "object",

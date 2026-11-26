@@ -265,6 +265,7 @@ Irakurleak aldatzen dituen ezarpenak bere pantailan geratzen dira, irakurtzeko s
 Loturak diagrama `Y.Doc`-aren bi izenetan gordetzen du: `erd:snapshot`, dokumentuaren argazkia duen mapa bat, eta `erd:log`, ordutik editoreak bidalitako ekintza-sorten array bat. Iraunkortasun-hornitzaile batek biak gordetzen ditu `Y.Doc`-aren gainerakoarekin.
 
 Argazkiak dokumentuaren [runtimeValue](../erd-editor-element.md#runtimevalue) balioa du, kendutako entitateak barne, bere elkarlan-erregistroak eta erregistro-bertsioa, eta idazle bakoitzaren edizioak zenbateraino dauden bertan bilduta. Hasieraketa batek idazten du, eta trinkotzaile baten bilketa guztiek ere bai.  
+`5.1.1` baino lehenagoko `@dineug/erd-editor` batean egindako hasieraketa batek edo bilketa batek ohar bat ere taula-talde batean ez duen argazki bat idazten du. Ikus [Bertsioak nahastea](./collaborative-editing.md#mixing-releases).  
 Erregistroko sarrera bakoitza editoreak bidali zuen bezalako sorta bat da, bere meta barne, bidaltzailearen editore-identifikatzailea eta ezizena daramatzana.  
 Korritzeak, zoomak, fitxa-aldaketak, presentzia eta erregistroen esku-ematea ez dira inoiz erregistratzen. Editoreak bidaltzen duen beste aldaketa guztia bai, bere [blokeoaren](../../guide/guides/settings.md#lock) azpian egindako Izenen ikuspegiaren aldaketa barne, beste bezero guztiek baztertzen dutena.  
 Bere blokeoaren azpian aldatutako Kode-sortzailearen lengoaia, izenen idazkera edo mugatzaile mota ez da inoiz bidaltzen; beraz, editore horren pantailan geratzen da eta ez da inoiz gelara iristen.

@@ -7,7 +7,7 @@ description: Memilih, memindahkan, menyalin, menduplikasi, dan menghapus tabel d
 
 Semua yang Anda lakukan pada tabel dan memo setelah keduanya ada — memilih, memindahkan, menyalin, menghapus, memberi warna, dan mengatur apa yang ditampilkan kanvas — beserta kontrol kanvas di sekitarnya.  
 Perintah tabel dan memo dibahas lebih dahulu; lalu Properti Tabel, memfokuskan tabel, indeks dan kunci alternatif, Tata Letak Otomatis, dan vendor database; lalu kanvas itu sendiri: bilah alat kanvas, zoom, penggeseran dan tempat lompatan berakhir, serta Penampil Perbedaan; dan terakhir apa yang dipertahankan editor hanya baca dari semua ini.  
-Grup tabel, yaitu kotak yang menghimpun tabel, memiliki halamannya sendiri — lihat [Grup tabel](./table-groups.md).  
+Grup tabel, yaitu kotak yang menghimpun tabel dan memo, memiliki halamannya sendiri — lihat [Grup tabel](./table-groups.md).  
 Begitu pula nama logis dan Tampilan Nama, yang menentukan nama yang ditampilkan tabel — lihat [Nama logis](./logical-names.md).
 
 ## Pemilihan jamak {#multiple-selection}
@@ -21,7 +21,7 @@ Mendukung tiga cara:
 Memo dipilih dengan cara yang sama, dan kedua pintasan pilih semua sama-sama mengambil semua tabel dan memo sekaligus. Memo yang disembunyikan dengan View Option → `Memos` tidak ikut dalam pilih semua maupun kotak seleksi — lihat [Opsi tampilan tabel](#table-view-options).  
 [Grup tabel](./table-groups.md#selecting-groups) ditambahkan ke pilihan dengan `Ctrl + click` (Windows/Linux) atau `⌘ + click` (Mac) pada bilah judulnya, tetapi pilih semua tidak pernah mengambil grup.  
 `Ctrl + A` mengalah pada kursor teks, sehingga pintasan ini memilih teks, bukan diagram, selama Anda mengedit sel.  
-Kotak seleksi menandai tabel atau memo saat kotak itu menutupi bagian tengahnya, bukan saat hanya menyentuh tepinya. Kotak seleksi mengambil grup tabel hanya jika melingkupi seluruh kotak grup, sehingga kotak yang digambar di dalam grup memilih tabel tanpa grupnya.  
+Kotak seleksi menandai tabel atau memo saat kotak itu menutupi bagian tengahnya, bukan saat hanya menyentuh tepinya. Kotak seleksi mengambil grup tabel hanya jika melingkupi seluruh kotak grup, sehingga kotak yang digambar di dalam grup memilih tabel dan memo tanpa grupnya.  
 Klik kanan pada sesuatu yang sudah dipilih mempertahankan seluruh pilihan, sehingga item menu seperti `Color`, `Group selected tables`, dan `Delete selected` berlaku pada semuanya. Klik kanan pada tabel, memo, atau grup tabel lain memilih objek itu saja, bahkan saat `Ctrl` atau `⌘` ditahan, dan klik kanan pada hubungan atau pada area kanvas yang kosong mengosongkan pilihan.  
 `Escape` mengosongkan pilihan. Selama editor sel, memo, atau nama grup tabel terbuka, atau hubungan maupun `New Table Group` sedang digambar, `Escape` pertama mengakhirinya dan `Escape` kedua mengosongkan pilihan.  
 Editor hanya baca tidak memiliki satu pun cara memilih ini: hanya lompatan yang memilih di sana — lihat [Editor hanya baca](#read-only-editors).
@@ -41,10 +41,10 @@ Hanya tombol kiri mouse yang memindahkan tabel dan memo. Klik kanan memilih obje
 
 ![Menyeret salah satu dari dua tabel yang dipilih memindahkan keduanya, dan hubungannya ikut bergerak](/img/demo-table-multiple-move.webp)
 
-[Grup tabel](./table-groups.md) yang dipilih juga ikut berpindah beserta tabel-tabelnya, dan tabel yang dipilih sekaligus berada dalam grup yang berpindah hanya berpindah satu kali.  
-Tempat Anda melepaskan tabel dapat memasukkannya ke grup atau mengeluarkannya dari grup — lihat [Menambahkan dan mengeluarkan tabel](./table-groups.md#adding-and-removing-tables).
+[Grup tabel](./table-groups.md) yang dipilih juga ikut berpindah beserta tabel dan memonya, dan tabel atau memo yang dipilih sekaligus berada dalam grup yang berpindah hanya berpindah satu kali.  
+Tempat Anda melepaskan tabel atau memo dapat memasukkannya ke grup atau mengeluarkannya dari grup — lihat [Menambahkan dan mengeluarkan tabel](./table-groups.md#adding-and-removing-tables).
 
-Tabel dan memo berbagi satu urutan tumpukan. Menekan tabel atau memo, dengan tombol kiri atau kanan, membawanya ke depan semua tabel dan memo lainnya, dan menekan bilah judul grup tabel, atau mengeklik kanan badannya, membawa tabel-tabelnya ke depan.  
+Tabel dan memo berbagi satu urutan tumpukan. Menekan tabel atau memo, dengan tombol kiri atau kanan, membawanya ke depan semua tabel dan memo lainnya, dan menekan bilah judul grup tabel, atau mengeklik kanan badannya, membawa tabel dan memonya ke depan.  
 Urutan ini tidak disimpan: diagram yang dibuka kembali menumpuk tabelnya sesuai urutan pencantumannya di file, dengan semua memo di atasnya.
 
 ## Menyalin/menempel tabel dan memo {#copyingpasting-tables-and-memos}
@@ -57,7 +57,7 @@ Setiap kolom yang disalin mempertahankan nama logisnya, dan setiap nama tabel da
 Kolom yang ditempel mempertahankan tautan domainnya hanya jika dua hal terpenuhi: diagram tujuannya memuat domain yang persis sama, bukan sekadar domain dengan nama yang sama, dan domain tersebut masih memiliki tipe data yang sama seperti saat kolom disalin. Jika tidak, kolom ditempel tanpa domain dan mempertahankan tipe saat disalin — lihat [Menautkan kolom](./dictionary.md#linking-a-column).  
 Indeks dan hubungan juga ikut tersalin: indeks disalin utuh ke tabel salinan, dan hubungan disalin beserta tipenya serta tindakan ON DELETE dan ON UPDATE-nya jika kedua tabel yang dihubungkannya termasuk dalam kumpulan yang disalin. Hubungan yang hanya tersalin separuh dibuang alih-alih dibiarkan menunjuk kembali ke aslinya.  
 Salinan yang ditempel menjadi pilihan baru, dan menempel salinan yang sama lagi menggesernya `50px` lebih jauh setiap kali, sehingga tempelan berulang tidak bertumpuk satu sama lain.  
-Salinan tidak mempertahankan [grup tabel](./table-groups.md) asalnya: tabel yang ditempel tidak berada dalam grup mana pun, bahkan saat mendarat di dalam kotak grup, dan grup yang dipilih tidak disalin.  
+Salinan tidak mempertahankan [grup tabel](./table-groups.md) asalnya: tabel atau memo yang ditempel tidak berada dalam grup mana pun, bahkan saat mendarat di dalam kotak grup, dan grup yang dipilih tidak disalin.  
 Selama View Option → `Memos` menyembunyikan memo, penempelan tetap menambahkan memo yang dibawanya, dalam keadaan tersembunyi dan tidak dipilih, sehingga hanya tabel yang ditempel yang menjadi pilihan.
 
 ![Menyalin dua tabel yang saling terhubung dan menempelkannya dua kali, termasuk hubungannya](/img/demo-table-copy-paste.webp)
@@ -89,7 +89,7 @@ Pintasan:
 
 Menu konteks juga dapat menghapus. Item terakhir di menu tabel atau memo bertuliskan `Delete selected` selama tabel atau memo itu merupakan salah satu dari dua item atau lebih yang dipilih, dan menghapus seluruh pilihan. Jika tidak, item itu bertuliskan `Delete` dan hanya menghapus tabel atau memo tersebut. Di atas baris kolom yang dipilih, menu tabel justru bertuliskan `Delete column` atau `Delete columns`, seperti di [Penghapusan kolom](./table-editing.md#column-deletion).
 
-Menghapus tabel juga menghapus hubungan dan indeksnya. Menghapus grup tabel mempertahankan tabel-tabelnya, tanpa grup — lihat [Menghapus grup](./table-groups.md#removing-a-group).  
+Menghapus tabel juga menghapus hubungan dan indeksnya. Menghapus grup tabel mempertahankan tabel dan memonya, tanpa grup — lihat [Menghapus grup](./table-groups.md#removing-a-group).  
 Tidak ada konfirmasi, setiap penghapusan merupakan satu langkah pembatalan, dan di editor `readonly` tidak ada yang dihapus.  
 Saat ditahan, `Delete` dan `Backspace` hanya menghapus satu kali, dan tidak pernah menghapus hubungan — lihat [Pengeditan hubungan](./relationship-editing.md#deletion). Selama Anda mengetik di sel, memo, atau kotak teks lain, kedua tombol ini justru mengedit teks.  
 Pengaturan mencantumkan kedua tombol ini sebagai `Delete Selection` — lihat [Pintasan](./settings.md#shortcuts).
@@ -98,7 +98,7 @@ Pengaturan mencantumkan kedua tombol ini sebagai `Delete Selection` — lihat [P
 
 Anda dapat menetapkan warna untuk membedakan menurut kategori.  
 Tabel menampilkan warnanya di sepanjang tepi kirinya, dan memo di sepanjang bagian atasnya. Klik tepi atau pita itu dengan tombol kiri, atau pilih `Color` di menu konteks tabel atau memo, untuk membuka pemilih warna di posisi penunjuk. Warna diterapkan ke semua tabel, memo, dan grup tabel yang dipilih, bukan hanya yang Anda klik.  
-Grup tabel diberi warna dari `Color` di menunya sendiri, dan tabel di dalam grup berwarna menampilkan warna grup di seluruh headernya sambil tetap mempertahankan warnanya sendiri di tepi kiri — lihat [Memberi warna grup](./table-groups.md#coloring-a-group).
+Grup tabel diberi warna dari `Color` di menunya sendiri, dan tabel atau memo di dalam grup berwarna menampilkan warna grup di seluruh headernya sambil tetap mempertahankan warnanya sendiri di tepi kiri atau di sepanjang tepi atasnya — lihat [Memberi warna grup](./table-groups.md#coloring-a-group).
 
 ![Memilih prasetel Biru dari pita warna memo untuk dua tabel yang dipilih dan memo tersebut, lalu menghapus warnanya dengan No color](/img/demo-table-color.webp)
 
@@ -143,9 +143,9 @@ Nama yang ditampilkan tabel bukan opsi tampilan: `Name View`, tepat setelah `Vie
 `Domain` memberi setiap kolom sebuah sel, yang ditempatkan menurut [urutan kolom](./settings.md#adjusting-column-order), berisi nama domain yang ditautkan kolom tersebut. Kolom yang tidak tertaut ke domain mana pun yang tercantum di lembar `Domains` menampilkan placeholder `domain` di sana, dalam keadaan diredupkan. Sel ini tampil di ketiga tampilan. Selama `Domain` nonaktif, tampilan `Logical Names` justru menampilkan nama domain yang tertaut di sel tipe — lihat [Sel Domain](./logical-names.md#the-domain-cell).  
 `Alternate Key` menandai kolom setiap kunci alternatif, misalnya `AK1.1` — lihat [Kunci alternatif](#alternate-keys).  
 `Referential Actions` menampilkan label `D:` dan `U:` yang dipasang tindakan ON DELETE dan ON UPDATE suatu hubungan di ujung konektornya pada sisi tabel anak — lihat [Membaca konektor](./relationship-editing.md#reading-a-connector). Menonaktifkannya hanya menyembunyikan label tersebut dan tidak memindahkan tabel maupun konektor.  
-`Table Groups` menampilkan [grup tabel](./table-groups.md) dan warna grup di header tabel-tabelnya. Menonaktifkannya menyembunyikan grup di kanvas, minimap, dan ekspor gambar, tidak memindahkan tabel apa pun, dan mempertahankan setiap tabel di grupnya — lihat [Menyembunyikan grup](./table-groups.md#hiding-groups). Opsi ini juga mengeluarkan folder `Table Groups` dari [Penjelajah](./explorer.md#the-tree) dan `New Table Group` dari [bilah alat kanvas](#canvas-toolbar), dan pencarian Penjelajah berhenti menemukan nama grup.  
-`Memos` menampilkan memo. Menonaktifkannya menyembunyikan semua memo di kanvas, minimap, dan ekspor gambar, serta tidak memindahkan tabel maupun konektor. Memo yang tersembunyi tidak memakan ruang, sehingga bilah gulir, minimap, dan kompas `Go to content` tidak memperhitungkannya.  
-Menyembunyikan memo membatalkan pilihannya dan menutup editor memo yang terbuka. [Penjelajah](./explorer.md#the-tree) menghilangkan folder `Memos`, dan pencarian [Temukan dan Ganti](./find-and-replace.md) di dalamnya serta `:` di Pencarian Cepat tidak mencari memo. Selama memo tersembunyi, `New Memo` hilang dari menu konteks, [bilah alat kanvas](#canvas-toolbar), Pencarian Cepat, dan [layar sambutan](./editing-start.md#welcome-screen), dan `Alt + M` tidak menambahkan memo. Penempelan atau [Impor dan Tambahkan](./file-import-export.md#import-and-add) tetap menambahkan memo yang dibawanya, dalam keadaan tersembunyi dan tidak dipilih.  
+`Table Groups` menampilkan [grup tabel](./table-groups.md) dan warna grup di header tabel dan memonya. Menonaktifkannya menyembunyikan grup beserta warnanya di kanvas dan ekspor gambar, mengeluarkan kotaknya dari minimap, tidak memindahkan tabel atau memo apa pun, dan mempertahankan setiap tabel dan memo di grupnya — lihat [Menyembunyikan grup](./table-groups.md#hiding-groups). Opsi ini juga mengeluarkan folder `Table Groups` dari [Penjelajah](./explorer.md#the-tree) dan `New Table Group` dari [bilah alat kanvas](#canvas-toolbar), dan pencarian Penjelajah berhenti menemukan nama grup.  
+`Memos` menampilkan memo. Menonaktifkannya menyembunyikan semua memo di kanvas, minimap, dan ekspor gambar, serta tidak memindahkan tabel maupun konektor. Memo yang tersembunyi tidak memakan ruang, sehingga bilah gulir, minimap, kompas `Go to content`, dan kotak [grup tabel](./table-groups.md) tidak memperhitungkannya, meskipun memo tetap berada di grupnya.  
+Menyembunyikan memo membatalkan pilihannya dan menutup editor memo yang terbuka. [Penjelajah](./explorer.md#the-tree) menghilangkan folder `Memos` dan memo di bawah grup tabelnya, dan pencarian [Temukan dan Ganti](./find-and-replace.md) di dalamnya serta `:` di Pencarian Cepat tidak mencari memo. Selama memo tersembunyi, `New Memo` hilang dari menu konteks, [bilah alat kanvas](#canvas-toolbar), Pencarian Cepat, dan [layar sambutan](./editing-start.md#welcome-screen), dan `Alt + M` tidak menambahkan memo. Penempelan atau [Impor dan Tambahkan](./file-import-export.md#import-and-add) tetap menambahkan memo yang dibawanya, dalam keadaan tersembunyi dan tidak dipilih.  
 Di editor hanya baca, sakelar tetap berfungsi, hanya di layar itu: sakelar tidak disimpan, dicatat di riwayat pembatalan, atau dibagikan, dan kembali ke nilai file saat editor dapat menulis lagi — lihat [Editor hanya baca](./settings.md#read-only-editors) di Pengaturan.
 
 ![Mengaktifkan dan menonaktifkan entri View Option sementara tampilan tabel menyesuaikan diri, menandai indeks unik komposit dengan AK1.1 dan AK1.2 melalui Alternate Key, lalu menonaktifkan dan mengaktifkan kembali Memos](/img/demo-view-options.webp)
@@ -233,9 +233,9 @@ Pratinjau dibingkai pada diagram sebagaimana keadaannya saat tata letak dimulai,
 
 Tiga tata letak lainnya dihitung sekaligus, di luar thread utama, sehingga tidak ada yang perlu diamati: pemberitahuan tampil selama tata letak dihitung, dan susunan yang selesai dipusatkan pada area yang sudah ditempati diagram. `Cancel` atau `Escape` membuang tata letak yang tidak lagi Anda tunggu, dan host yang tidak menjalankan shared worker berakhir dengan `Could not place tables` — lihat [Web Worker](../../api/installation.md#web-workers). Tata letak yang belum kembali dalam 60 detik berakhir dengan cara yang sama.
 
-Apa pun yang Anda pilih, tabel dan grup tabel dipindahkan, sedangkan memo tetap di tempatnya. Tabel ditempatkan dengan lebar yang dimilikinya dalam Tampilan Nama yang sedang Anda lihat. Hubungan dari suatu tabel ke dirinya sendiri diabaikan, dan beberapa hubungan antara dua tabel yang sama dihitung satu kali.  
-Setiap tata letak menjaga tabel setiap grup tetap bersama, baik grup ditampilkan maupun tidak, dan menyesuaikan setiap grup yang berisi tabel agar melingkupi tabel-tabelnya — lihat [Grup tabel](./table-groups.md#auto-layout).  
-Hasilnya tercatat sebagai satu entri riwayat, sehingga satu kali pembatalan mengembalikan setiap tabel dan grup ke tempat semula.  
+Apa pun yang Anda pilih, tabel, grup tabel, dan memo di grup yang berisi tabel dipindahkan, sedangkan setiap memo lainnya tetap di tempatnya. Tabel ditempatkan dengan lebar yang dimilikinya dalam Tampilan Nama yang sedang Anda lihat. Hubungan dari suatu tabel ke dirinya sendiri diabaikan, dan beberapa hubungan antara dua tabel yang sama dihitung satu kali.  
+Setiap tata letak menjaga tabel dan memo setiap grup tetap bersama, baik grup ditampilkan maupun tidak, dan menyesuaikan setiap grup yang berisi tabel agar melingkupi tabel dan memo yang ditampilkannya — lihat [Grup tabel](./table-groups.md#auto-layout).  
+Hasilnya tercatat sebagai satu entri riwayat, sehingga satu kali pembatalan mengembalikan setiap tabel, memo, dan grup ke tempat semula.  
 Editor hanya baca tidak menawarkan `Auto Layout`. Tata Letak Otomatis yang masih berjalan saat editor menjadi hanya baca berakhir di sana: pratinjau `Force` ditutup bersama pemberitahuannya dan tidak mempertahankan posisinya, dan tata letak yang masih dihitung dibuang bersama pemberitahuannya, sehingga tidak ada tabel yang bergerak, saat itu maupun setelah editor dapat menulis lagi.
 
 ![Merapikan tumpukan tabel dengan Tata Letak Otomatis Flow dari menu konteks kanvas, yang menjajarkannya dari kiri ke kanan mengikuti hubungannya](/img/demo-automatic-table-placement.webp)
@@ -311,7 +311,7 @@ Seretan tombol tengah tidak memilih, memindahkan, atau mengeklik apa pun, dan me
 Penekanan tombol tengah pada bilah gulir, minimap, bilah alat kanvas, atau editor sel atau memo yang terbuka tidak menggeser.
 
 Minimap di sudut kanan atas memetakan diagram dengan ruang selebar satu layar di setiap sisinya, yaitu jangkauan bilah gulir, yang dibulatkan ke luar mengikuti grid kasar, sehingga makin jauh Anda memperkecil, makin kecil diagram di dalamnya. Klik minimap untuk memindahkan area pandang ke titik itu, atau seret persegi area pandang untuk menggeser. Saat Anda memperkecil, persegi area pandang membesar untuk mencakup lebih banyak bagian peta.  
-Minimap menggambar setiap tabel dengan warna tabel itu, dan setiap grup tabel yang ditampilkan sebagai kotak dengan warna grup di belakang tabel-tabelnya.  
+Minimap menggambar setiap tabel dengan warna tabel itu, dan setiap grup tabel yang ditampilkan sebagai kotak dengan warna grup di belakang tabel dan memonya, meluas mengelilingi memo yang ditampilkannya seperti kotak di kanvas.  
 Bilah gulir di sepanjang tepi kanan dan bawah menggambarkan jangkauan yang sama, yang membentang dari diagram yang berada tepat di luar satu sisi layar hingga tepat di luar sisi lainnya, sehingga jangkauan ini setidaknya satu layar lebih panjang daripada diagram yang digambar, dan lebih panjang lagi selama area pandang berada melewatinya. Di luar mode Zen, kedua bilah gulir tampil setiap kali dokumen berisi tabel, memo yang ditampilkan, atau grup tabel yang ditampilkan, bahkan saat semuanya muat di layar. Dokumen tanpa satu pun dari hal tersebut, misalnya dokumen yang satu-satunya memonya disembunyikan dengan View Option → `Memos`, tidak menampilkan kedua bilah gulir maupun minimap.  
 Menyeret kenop bilah gulir atau persegi area pandang minimap adalah satu-satunya penggeseran yang berhenti: penggeseran ini tidak melampaui tabel yang berada tepat di luar layar, atau tempat seretan dimulai jika tempat itu lebih jauh di luar.
 
@@ -364,7 +364,7 @@ Editor hanya baca juga menawarkan `Diff Viewer`, dan tampilannya bekerja di sana
 
 Tabel, kolom, indeks, kunci asing, memo, dan grup tabel semuanya dibandingkan.  
 Setiap item dipasangkan terlebih dahulu berdasarkan id-nya, sehingga terhadap versi sebelumnya dari file yang sama, yang mempertahankan id, tabel, kolom, indeks, atau grup tabel yang diganti namanya tetap menjadi satu item, yang dicantumkan sebagai diganti nama.  
-Sisanya dipasangkan satu lawan satu berdasarkan apa yang dipertahankannya: tabel atau grup tabel berdasarkan namanya, termasuk huruf besar-kecilnya; kolom atau indeks berdasarkan tabel dan namanya; kunci asing berdasarkan kedua tabelnya dan pasangan kolomnya; dan memo berdasarkan teksnya, lalu posisinya. Indeks tanpa nama dipasangkan berdasarkan kolomnya, urutan dan arahnya, serta apakah indeks itu unik, dan grup tabel tanpa nama berdasarkan tabel bersama yang paling banyak.  
+Sisanya dipasangkan satu lawan satu berdasarkan apa yang dipertahankannya: tabel atau grup tabel berdasarkan namanya, termasuk huruf besar-kecilnya; kolom atau indeks berdasarkan tabel dan namanya; kunci asing berdasarkan kedua tabelnya dan pasangan kolomnya; dan memo berdasarkan teksnya, lalu posisinya. Indeks tanpa nama dipasangkan berdasarkan kolomnya, urutan dan arahnya, serta apakah indeks itu unik, dan grup tabel tanpa nama berdasarkan tabel dan memo bersama yang paling banyak.  
 Jadi, terhadap file dari tempat lain, misalnya diagram yang dibangun ulang melalui impor SQL, tabel yang diganti namanya tampil sebagai satu tabel yang dihapus dan satu tabel yang ditambahkan.
 
 Yang dihitung sebagai perubahan:
@@ -373,8 +373,8 @@ Yang dihitung sebagai perubahan:
 - Kolom: nama, komentar, tipe data, nilai default, Kenaikan otomatis, kunci utama, Unik, Tidak boleh NULL, dan posisinya di tabel. Hanya kolom di luar urutan yang sama-sama dimiliki kedua dokumen yang dihitung sebagai dipindahkan, sehingga menambahkan, menghapus, atau memindahkan satu kolom tidak menandai kolom lainnya.
 - Indeks: nama, UNIQUE, dan kolomnya, beserta urutan dan arahnya.
 - Kunci asing: pasangan kolom, tipe hubungan, serta tindakan ON DELETE dan ON UPDATE-nya.
-- Memo: teks, posisi, ukuran, dan warnanya.
-- Grup tabel: nama, tabel yang dikandungnya, warna, posisi, dan ukurannya.
+- Memo: teks, grup tabel, posisi, ukuran, dan warnanya.
+- Grup tabel: nama, tabel dan memo yang dikandungnya, warna, posisi, dan ukurannya.
 
 Jadi, tabel, memo, atau grup yang hanya dipindahkan, diubah ukurannya, atau diubah warnanya dihitung sebagai berubah. Posisi dan ukuran dibandingkan dalam piksel bulat, dan urutan tumpukan serta titik pertemuan konektor dengan tabel tidak pernah dihitung.  
 Nama logis, tautan domain, serta kata, istilah, dan domain di tab [Kamus](./dictionary.md) tidak dibandingkan, sehingga perubahan yang hanya mengenai hal-hal tersebut tidak dicantumkan maupun ditandai. Tipe data yang diubah oleh domain tetap dihitung, sebagai perubahan tipe data kolom.
@@ -393,7 +393,7 @@ Setiap baris diakhiri sebuah huruf, dan baris bertanda `A`, `D`, `M`, atau `R` m
 - `R`, diganti nama, berwarna biru: ada di keduanya, dengan nama baru. Penggantian nama mengungguli perubahan lain apa pun, yang tetap dicantumkan di tooltip.
 - `~`, berwarna ambar, mengakhiri setiap folder dan tabel yang dicantumkan hanya karena ada yang berubah di dalamnya; namanya tetap berwarna seperti biasa.
 
-Arahkan penunjuk ke nama baris untuk melihat tooltipnya: statusnya, `Added`, `Deleted`, `Modified`, `Renamed`, atau `Changed inside`, lalu satu baris per perubahan, misalnya `Name: users → members` atau `NN: ✗ → ✓`. Teks dikutip dari baris pertamanya, dipotong setelah 40 karakter, dan nilai kosong bertuliskan `—`. Tooltip item yang ditambahkan atau dihapus hanya berisi statusnya.
+Arahkan penunjuk ke nama baris untuk melihat tooltipnya: statusnya, `Added`, `Deleted`, `Modified`, `Renamed`, atau `Changed inside`, lalu satu baris per perubahan, misalnya `Name: users → members` atau `NN: ✗ → ✓`. Teks dikutip dari baris pertamanya, dipotong setelah 40 karakter, dan nilai kosong bertuliskan `—`. Memo yang dipindahkan ke grup bernama Billing memiliki baris `Table group: — → Billing` di tooltipnya, dan tooltip grup itu bertambah satu baris seperti `Memos: — → "note"`, yang menyebut memonya berdasarkan baris pertamanya dalam tanda kutip ganda. Tooltip item yang ditambahkan atau dihapus hanya berisi statusnya.
 
 `Filter by name`, di atas pohon, mempertahankan baris yang nama saat ini atau nama tersimpannya, atau nama logis saat ini atau nama logis tersimpannya, mengandung apa yang Anda ketik, tanpa membedakan huruf besar dan kecil, di Tampilan Nama mana pun. Tabel yang namanya cocok mempertahankan semua barisnya, dan tabel yang namanya tidak cocok tetap ada dengan hanya baris yang cocok. Filter yang tidak cocok dengan apa pun membuat pohon kosong.  
 Jika kedua dokumen sama sekali tidak berbeda, pohon bertuliskan `No changes`.
@@ -419,7 +419,7 @@ Kedua sisi mewarnai teks, garis tepi, dan konektor, dan tidak mengisi warna apa 
 - Kolom yang ditambahkan atau dihapus pada tabel yang dimiliki kedua dokumen mewarnai seluruh barisnya, dan kolom yang dipindahkan membuat seluruh barisnya berwarna ambar. Tidak ada isi tabel yang ditambahkan atau dihapus yang ditandai tersendiri.
 - Sel yang berubah menampilkan teksnya dengan warna ambar: komentar tabel, komentar kolom, tipe data, nilai default, Kenaikan otomatis, Unik, atau Tidak boleh NULL, atau teks memo. Perubahan kunci utama membuat ikon kunci kolom berwarna ambar.
 - Tabel, kolom, atau grup tabel yang diganti namanya menampilkan namanya dengan warna biru.
-- Tabel, memo, atau grup tabel dengan perubahan yang tidak memiliki sel tersendiri, misalnya perpindahan, ukuran atau warna baru, atau perubahan grup atau tabel dalam grup, diberi garis tepi berwarna ambar.
+- Tabel, memo, atau grup tabel dengan perubahan yang tidak memiliki sel tersendiri, misalnya perpindahan, ukuran atau warna baru, atau perubahan grup atau tabel atau memo dalam grup, diberi garis tepi berwarna ambar.
 - Kunci asing yang ditambahkan, dihapus, atau diubah menggambar konektornya dengan warna tersebut. Mengarahkan penunjuk ke konektor itu, atau sorotan dari baris, justru menggambarnya dengan warna biasa saat penunjuk diarahkan.
 - Perubahan indeks tidak menandai apa pun di kedua sisi; perubahan ini hanya tampil di pohon.
 

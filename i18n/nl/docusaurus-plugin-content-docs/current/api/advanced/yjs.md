@@ -265,6 +265,7 @@ De instellingen die zijn lezer wijzigt blijven op zijn scherm staan, zoals bij e
 De binding bewaart het diagram onder twee namen van de `Y.Doc`: `erd:snapshot`, een map met een snapshot van het document, en `erd:log`, een array met de actiebatches van de editor sindsdien. Een persistentieprovider slaat beide op met de rest van de `Y.Doc`.
 
 De snapshot bevat de [runtimeValue](../erd-editor-element.md#runtimevalue) van het document, verwijderde entiteiten inbegrepen, zijn registers voor gezamenlijk bewerken en versie, en hoe ver de bewerkingen van elke schrijver erin zijn samengevoegd. Een seed schrijft hem, en elke samenvoeging van een compactor ook.  
+Een seed of een samenvoeging door een `@dineug/erd-editor` van vóór `5.1.1` schrijft een snapshot zonder memo in een tabelgroep — zie [Versies combineren](./collaborative-editing.md#mixing-releases).  
 Elk item in het logboek is één batch zoals de editor hem verstuurde, zijn meta inbegrepen, die de editor-id en bijnaam van de afzender bevat.  
 Scrolls, zooms, tabwisselingen, aanwezigheid en de registerhandshake worden nooit gelogd. Elke andere wijziging die de editor verstuurt wel, een wissel van naamweergave onder haar [vergrendeling](../../guide/guides/settings.md#lock) daarbij inbegrepen, die elke andere client laat vallen.  
 Een taal van de Codegenerator, naamnotatie of type aanhalingstekens die onder zijn vergrendeling is gewijzigd wordt nooit verstuurd, dus hij blijft op het scherm van die editor staan en bereikt de room nooit.

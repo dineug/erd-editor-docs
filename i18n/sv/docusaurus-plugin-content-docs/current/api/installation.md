@@ -51,18 +51,18 @@ Se [ErdEditorElement](./erd-editor-element.md) för resten av API:t.
 
 ```html
 <script type="module">
-  import 'https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js';
+  import 'https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js';
 
   const editor = document.createElement('erd-editor');
   editor.style.cssText = 'display: block; width: 100%; height: 100vh;';
   document.body.appendChild(editor);
 </script>
 <!-- or -->
-<script type="module" src="https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js"></script>
+<script type="module" src="https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js"></script>
 ```
 
 `esm.run` löser upp paketets externa beroenden åt dig, så det här fungerar utan bundler.
-Varje ingångspunkt nås med sin sökväg efter versionen: `…/erd-editor.js` definierar editorn och `…/erd-viewer.js` visaren, som hämtar varje visningsspråk utom engelska från CDN:et första gången en sida ber om det. Paketets rena URL, `https://esm.run/@dineug/erd-editor@5.1.0`, levererar roten, som inte definierar något element.
+Varje ingångspunkt nås med sin sökväg efter versionen: `…/erd-editor.js` definierar editorn och `…/erd-viewer.js` visaren, som hämtar varje visningsspråk utom engelska från CDN:et första gången en sida ber om det. Paketets rena URL, `https://esm.run/@dineug/erd-editor@5.1.1`, levererar roten, som inte definierar något element.
 En URL utan version levererar alltid den senaste versionen. Ange en fast version, som ovan, om du inte vill att en uppgradering till en ny huvudversion ska nå din sida utan förvarning.
 `5.0.0` är i sig en sådan: en sida som måste stanna på 4.x anger `@4.2.0` – se [Uppgradera från 4.x](#upgrading-from-4x).
 
@@ -75,7 +75,7 @@ Det är den som fälten `unpkg` och `jsdelivr` pekar på, så paketets rena URL 
 
 ```html
 <erd-editor></erd-editor>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.1"></script>
 <script>
   const editor = document.querySelector('erd-editor');
   editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
@@ -88,7 +88,7 @@ Sedan `5.0.0` definierar en andra fil, `dist/erd-viewer.umd.js`, `<erd-viewer>` 
 
 ```html
 <erd-viewer src="diagram.erd.json" style="display: block; height: 480px"></erd-viewer>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0/dist/erd-viewer.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.1/dist/erd-viewer.umd.js"></script>
 ```
 
 Ingen av filerna definierar den andras tagg, och var och en lämnar ingen global på sidan utom sin egen och `window.Konva`.
@@ -100,7 +100,7 @@ En sida som inte kan läsa in ett eget skript kan i stället rama in den värdba
 ```html
 <erd-editor system-dark-mode enable-theme-builder enable-locale-picker enable-welcome-screen></erd-editor>
 <script type="module">
-  import 'https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js';
+  import 'https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js';
 
   const editor = document.querySelector('erd-editor');
 </script>
@@ -123,7 +123,7 @@ Att läsa `editor.value` och `editor.runtimeValue` fungerar fortfarande, och bå
 
 ### Rendering på serversidan {#server-side-rendering}
 
-Varje ingångspunkt utom `engine.js` och `peer.js` behöver en DOM, så den kastar ett fel i Node. `erd-editor.js` och `erd-viewer.js` definierar sitt element på modulnivå, och paketets rot, som sedan `5.0.0` inte definierar något, bygger fortfarande båda elementklasserna när den läses in.
+Varje ingångspunkt som de här sidorna beskriver utom `engine.js` och `peer.js` behöver en DOM, så den kastar ett fel i Node. `erd-editor.js` och `erd-viewer.js` definierar sitt element på modulnivå, och paketets rot, som sedan `5.0.0` inte definierar något, bygger fortfarande båda elementklasserna när den läses in.
 I Next.js, Nuxt, SvelteKit eller Astro når du elementets ingångspunkt från en kodväg som bara körs på klienten, och en namngiven import från roten, som `setExportFileCallback` eller `toImage`, från samma kodväg.
 
 ```js
@@ -251,7 +251,7 @@ En sida under en strikt Content Security Policy behöver de här direktiven för
 
 ## Ingångspunkter {#entry-points}
 
-Paketet har fem ingångspunkter:
+De här sidorna beskriver fem av paketets ingångspunkter:
 
 | Ingångspunkt | Vad den är |
 | --- | --- |
@@ -371,7 +371,7 @@ Inga polyfills ingår. Lägg till egna om du behöver nå äldre webbläsare.
    import { setExportFileCallback } from '@dineug/erd-editor';
   ```
 
-- På ett CDN gäller detsamma för `https://esm.run/@dineug/erd-editor`, som nu levererar roten och inte definierar något: importera `https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js`. De rena URL:erna på jsDelivr och unpkg levererar fortfarande builden för script-taggen, som definierar `<erd-editor>` som förut. En URL utan version levererar nu den senaste 5.x-versionen; ange `@4.2.0` för att stanna på 4.x – se [CDN](#cdn) och [Script-tagg](#script-tag).
+- På ett CDN gäller detsamma för `https://esm.run/@dineug/erd-editor`, som nu levererar roten och inte definierar något: importera `https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js`. De rena URL:erna på jsDelivr och unpkg levererar fortfarande builden för script-taggen, som definierar `<erd-editor>` som förut. En URL utan version levererar nu den senaste 5.x-versionen; ange `@4.2.0` för att stanna på 4.x – se [CDN](#cdn) och [Script-tagg](#script-tag).
 - Roten definierar inget men behöver fortfarande en DOM, så vid rendering på serversidan ligger en namngiven import från den, som `setExportFileCallback`, kvar på den kodväg som bara körs på klienten bredvid elementets ingångspunkt – se [Rendering på serversidan](#server-side-rendering).
 - `window.ErdEditor` får `ErdEditorElement` och `defineErdEditor`. Visarens build för script-taggen lägger `ErdViewerElement` och `defineErdViewer` på `window.ErdViewer`, och ingen av globalerna innehåller `toImage`.
 - En `readonly` editor öppnas som en läsare. Dess sex flikar, utforskaren, snabbsökningen och närvaron finns kvar, och varje kontroll som skulle redigera diagrammet är borta i stället för inaktiverad: verktygsfältet visar databasens namn som text, fliken Inställningar visar sina inställningar med varje kontroll inaktiverad under etiketten `Read only`, och det flytande verktygsfältet behåller bara zoomen, namnvisningen, zenläget och kompassen, så `Hand` och `Select` är borta och ett drag panorerar. Ett tryck markerar ingenting: den enda markeringen är den kontur som ett hopp från utforskaren eller snabbsökningen lägger runt det som det når, och som ett stilla klick tar bort, och kortkommandona för att markera allt markerar ingenting. Att slå på `readonly` avslutar det som stod öppet, som markeringen, handverktyget, en cellredigerare, ett drag, Map Columns, förhandsvisningen `Force` i Auto Layout och Time Travel, och behåller rullningen, zoomningen, fliken och namnvisningen – se [readonly](./erd-editor-element.md#readonly).

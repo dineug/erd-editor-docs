@@ -19,7 +19,7 @@ VS Code, Obsidian in vtičnik za JetBrains zapišejo datoteko samo, ko se zaradi
 Od različice `4.2.0` oblika za shranjevanje izpusti tudi tisto, kar ne vsebuje ničesar: vsako besedilno polje, ki ga entiteta ali njeno polje `ui` vsebuje kot `''` (pri tabeli `name`, `comment` in `ui.color`, pri stolpcu `name`, `comment`, `dataType` in `default`, pri indeksu `name`, pri beležki `value` in `ui.color`, pri skupini tabel `name` in `color`), vsak seznam v `doc` in vsako kolekcijo, ki ne vsebuje nobenega vnosa, ter samo polje `collections`, ko so vse kolekcije prazne. Besedilo iz samih presledkov se zapiše takšno, kot je shranjeno, razen pri logičnem imenu, ki se takrat izpusti, in pri besedi, izrazu ali domeni, katere vrednosti poleg identifikatorja so vse prazne ali iz samih presledkov, saj se ta izpusti v celoti. Vsak identifikator, vsak seznam znotraj entitete in vsako število, tudi `0`, se še vedno zapiše. Polje `doc` se zapiše vedno, zato datoteka novega dokumenta vsebuje `$schema`, `version`, njegove nastavitve in `"doc": {}`.  
 Razčlenjevanje manjkajoče besedilno polje prebere kot `''`, manjkajočo kolekcijo pa kot prazno, tako kot vsaka izdaja v3, oblika za shranjevanje pa seznam v `doc` izpusti samo, dokler njegova kolekcija ne vsebuje ničesar (glejte razdelek [Doc](#doc)). Zato te datoteke odpre tudi urejevalnik pred različico `4.2.0`, program, ki datoteko bere sam, pa mora manjkajoče prebrati na enak način. Datoteka, ki jo je shranila starejša izdaja, se ob naslednjem shranjevanju zapiše brez praznega besedila ter praznih seznamov in kolekcij, kar je enkratna sprememba, od takrat naprej pa se shranjuje bajtno enako.
 
-Oblika za shranjevanje zapiše vsako zaklenjeno nastavitev z njeno zaklenjeno vrednostjo (glejte polje [`lockSettings`](#settings)), `settings.ddlScripts` samo, dokler kateri od skriptov vsebuje besedilo, polje `groupId` tabele pa samo, dokler navaja skupino tabel, ki jo datoteka zapiše. Od različice `4.2.0` zapiše tudi `settings.nameViewMode` samo, dokler vrednost, ki jo zapiše, ni `'physical'`, `settings.columnOrder` s sedmimi vnosi, kjer je to mogoče (glejte razdelek [Settings](#settings)), in polje `nameDerived` tabele samo, dokler je `true`.  
+Oblika za shranjevanje zapiše vsako zaklenjeno nastavitev z njeno zaklenjeno vrednostjo (glejte polje [`lockSettings`](#settings)), `settings.ddlScripts` samo, dokler kateri od skriptov vsebuje besedilo, polje `groupId` tabele ali, od različice `5.1.1`, beležke pa samo, dokler navaja skupino tabel, ki jo datoteka zapiše. Od različice `4.2.0` zapiše tudi `settings.nameViewMode` samo, dokler vrednost, ki jo zapiše, ni `'physical'`, `settings.columnOrder` s sedmimi vnosi, kjer je to mogoče (glejte razdelek [Settings](#settings)), in polje `nameDerived` tabele samo, dokler je `true`.  
 Zapiše `doc.tableGroupIds` in `tableGroupEntities` samo, dokler obstaja skupina tabel, polje `logicalName` samo, dokler vsebuje besedilo, ki ni iz samih presledkov, polje `domainId` stolpca samo, dokler navaja domeno, ki jo datoteka zapiše, vsak slovar pa samo, dokler vsebuje vrstico, ki jo datoteka zapiše.
 
 Datoteka, shranjena pred različico `4.0.0`, vsebuje celoten dokument, kot ga je takrat hranil urejevalnik, vključno z odstranjenimi entitetami in vsem, kar izračuna vsako nalaganje. Nalaganje jo prebere, ohrani mesto vsake tabele in beležke v vrstnem redu prekrivanja (glejte razdelek [Doc](#doc)) in vse drugo znova izračuna, naslednje shranjevanje pa zapiše samo obliko za shranjevanje.
@@ -394,6 +394,7 @@ const OrderType = {
 type Memo = {
   id: string;
   value?: string;
+  groupId?: string;
   ui: MemoUI;
 };
 
@@ -407,6 +408,9 @@ type MemoUI = {
 ```
 
 Od različice `4.0.0` si tabele in beležke [delijo en sklad](../../guide/guides/table-related-functions.md#moving-multiple-tables), zato lahko postavitev tabele v ospredje to tabelo postavi nad beležko. Nalaganje postavi vsako beležko nad vse tabele, kot je opisano v razdelku [Doc](#doc). Beležka v datoteki, shranjeni pred različico `4.0.0`, ohrani shranjeno vrednost `zIndex`, ki je izhajala iz istega števca kot vrednosti tabel, zato se beležka, ki jo je starejša izdaja izrisala nad vsemi tabelami, lahko odpre pod tabelo, ki je bila pozneje postavljena v ospredje.
+
+Od različice `5.1.1` ima beležka polje `groupId`, identifikator [skupine tabel](../../guide/guides/table-groups.md), ki ji pripada, tako kot tabela. Manjkajoče ali prazno polje `groupId`, kot v vsaki datoteki, shranjeni pred različico `5.1.1`, ali polje, ki ne navaja nobene skupine v `doc.tableGroupIds`, pomeni, da beležka ni v nobeni skupini, oblika za shranjevanje pa ga zapiše samo, dokler navaja ohranjeno skupino.  
+Urejevalnik pred različico `5.1.1` ob nalaganju dokumenta izpusti polje `groupId` vseh beležk, zato se ob shranjevanju tam vse beležke odstranijo iz svojih skupin, čeprav urejevalnik od različice `4.0.0` naprej ohrani skupine tabel – glejte razdelek [Mešanje izdaj](./collaborative-editing.md#mixing-releases).
 
 ### Kolekcija: tableGroupEntities {#collection-tablegroupentities}
 
@@ -426,7 +430,7 @@ type TableGroupUI = {
 };
 ```
 
-Od različice `4.0.0` lahko dokument vsebuje [skupine tabel](../../guide/guides/table-groups.md): poimenovane, obarvane pravokotnike, izrisane za tabelami. Tabela se pridruži skupini prek lastnega polja `groupId`, zato skupina nima seznama članov. Oblika za shranjevanje zapiše kolekcijo, tako kot `doc.tableGroupIds`, samo, dokler obstaja kakšna skupina, dokument brez nje, na primer dokument, shranjen pred različico `4.0.0`, pa nima skupin. Zastavica `Show.hideTableGroup` jih skrije.  
+Od različice `4.0.0` lahko dokument vsebuje [skupine tabel](../../guide/guides/table-groups.md): poimenovane, obarvane pravokotnike, izrisane za tabelami in beležkami. Tabela, od različice `5.1.1` pa tudi beležka, se pridruži skupini prek lastnega polja `groupId`, zato skupina nima seznama članov. Oblika za shranjevanje zapiše kolekcijo, tako kot `doc.tableGroupIds`, samo, dokler obstaja kakšna skupina, dokument brez nje, na primer dokument, shranjen pred različico `4.0.0`, pa nima skupin. Zastavica `Show.hideTableGroup` jih skrije.  
 Urejevalnik pred različico `4.0.0` ob nalaganju dokumenta izpusti skupine in polje `groupId` vseh tabel, zato se ob shranjevanju tam izgubijo vse skupine.
 
 ### Vrstice slovarjev {#dictionary-rows}
@@ -525,6 +529,8 @@ Polje `$schema` postavite na vrh datoteke `.erd.json` in urejevalniki, ki razume
 Od različice `4.0.0` shema opisuje samo obliko za shranjevanje. Vsak objekt z imenovanimi polji je zaprt (`additionalProperties: false`), vsako polje, ki ga oblika za shranjevanje vedno zapiše, je obvezno, vsako polje, označeno z `?` v zgornjih tipih, je navedeno, vendar ni obvezno, nobeno drugo polje pa ni navedeno. Zato zavrne datoteko, shranjeno pred različico `4.0.0`, z objektom `meta`, širinami, poljem `zIndex`, poljem `ignoreSaveSettings` in vsem drugim, dokler je urejevalnik različice `4.0.0` ali novejše znova ne shrani. Datoteka, ki jo je shranila različica `3.2.0` ali novejša, že navaja URL te sheme, ki kaže na vejo `main`, zato jo urejevalnik, ki preverja veljavnost po njej, zdaj označi kot neveljavno. Datoteka, ki jo je shranila različica `3.0.0` ali `3.1.0`, ali dokument v2 ne navaja polja `$schema`.
 
 Od različice `4.2.0` shema ne zahteva več besedilnih polj entitete niti nobenega seznama v `doc`, nobene kolekcije ali samega polja `collections`, ki jih oblika za shranjevanje izpusti, dokler ne vsebujejo ničesar. Še vedno sprejme datoteko, ki jo je shranila različica `4.0.0` ali `4.1.0`. Navaja nova polja: `nameViewMode`, ki sprejme samo `"logical"` in `"both"`; polji `logicalName` in `nameDerived` tabele, pri čemer slednje sprejme samo `true`; polji `logicalName` in `domainId` stolpca; ter tri slovarje, vsakega z glavo in vrsticami nizov. Polje `canvasType` navaja zavihek Slovar, `columnOrder` sprejme sedem ali devet celih števil, opisi polj `show`, `columnOrder`, `lockSettings` in `options` pa navajajo nove bite.
+
+Od različice `5.1.1` shema navaja tudi polje `groupId` beležke, ki ga kopija sheme, vzeta pred različico `5.1.1`, zavrne.
 
 ```json
 {
@@ -939,6 +945,10 @@ Od različice `4.2.0` shema ne zahteva več besedilnih polj entitete niti nobene
           "value": {
             "type": "string"
           },
+          "groupId": {
+            "description": "Id of the table group in doc.tableGroupIds the memo belongs to; absent means none",
+            "type": "string"
+          },
           "ui": {
             "type": "object",
             "properties": {
@@ -967,7 +977,7 @@ Od različice `4.2.0` shema ne zahteva več besedilnih polj entitete niti nobene
       }
     },
     "tableGroupEntities": {
-      "description": "Named, coloured rectangles drawn behind tables; a table joins one through its groupId. Written while a group exists; absent means none",
+      "description": "Named, coloured rectangles drawn behind tables and memos; a table or a memo joins one through its groupId. Written while a group exists; absent means none",
       "type": "object",
       "additionalProperties": {
         "type": "object",

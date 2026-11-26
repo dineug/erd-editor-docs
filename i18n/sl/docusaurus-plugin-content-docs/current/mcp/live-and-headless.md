@@ -14,7 +14,7 @@ Od tega, kaj strežnik najde, je odvisno, kam gre sprememba.
 | --- | --- |
 | Urejevalnik, katerega delovni prostor, trezor ali odprt projekt vsebuje dokument ali ki ima dokument odprt | **V živo.** Po potrebi odpre dokument v urejevalniku ERD Editor, se pridruži seji urejanja in tam izvede spremembo. Spremembe se prikažejo takoj in se shranijo tako, kot urejevalnik shranjuje vaše – glejte razdelek [Shranjevanje](#saving). |
 | Ni urejevalnika | **Brez vmesnika.** Naloži datoteko, izvede spremembo in zamenja datoteko, preden odgovori, zato rezultat navaja `saved: true`, orodje `erd_save` pa nima česa narediti. |
-| Urejevalnik z izklopljenim središčem | **Zavrnjeno.** Branje še vedno deluje, in sicer z diska. Sprememba, ki bi se mimo odprtega urejevalnika zapisala v datoteko, bi se lahko ob njegovem naslednjem shranjevanju prepisala, zato strežnik ne zapiše ničesar. |
+| Urejevalnik z izklopljenim središčem | **Zavrnjeno.** Branje in `erd_export_svg` še vedno delujeta, in sicer z diska. Sprememba, ki bi se mimo odprtega urejevalnika zapisala v datoteko, bi se lahko ob njegovem naslednjem shranjevanju prepisala, zato strežnik ne zapiše ničesar v dokument. |
 | Urejevalnik z vklopljenim središčem, ki pa uporablja drug protokol kot strežnik: pri strežniku različice `1.0.0` ali novejše razširitev za VS Code različice `3.x`, vtičnik za Obsidian različice `0.x` ali vtičnik za JetBrains različice `0.9.0` ali `0.10.0`; pri strežniku pred različico `1.0.0` razširitev različice `4.0.0` ali novejše ali vtičnik različice `1.0.0` ali novejše | **Zavrnjeno**, vključno z branjem, s kodo `protocolMismatch`. Sporočilo navede stran, ki jo je treba posodobiti: razširitev ali vtičnik ali pa strežnik – glejte razdelek [Posodabljanje](./installation.md#updating). |
 | V sistemu Windows urejevalnik, ki ima dokument pod drugo potjo do iste datoteke: agent ga je navedel prek omrežne skupne rabe ali preslikanega pogona tega računalnika, kot je `\\localhost\C$\…`, urejevalnik pa ga ima pod potjo s črko pogona, ali obratno | **Zavrnjeno**, vključno z branjem, s kodo `invalidPath`. Sporočilo navede pot, pod katero ima urejevalnik dokument; pokličite znova s to potjo. |
 | V sistemu Windows urejevalnik, do katerega Windows agentu ne dovoli dostopa: urejevalnik, ki je bil zagnan kot skrbnik, agent pa ne, ali kateri koli urejevalnik, ko agent teče v peskovniku | **Zavrnjeno**, vključno z branjem, s kodo `hubUnreachable` in sporočilom, ki pove, zakaj. Urejevalnik in agenta zaženite z enakimi pravicami, na primer tako, da urejevalnik znova zaženete brez skrbniških pravic. |
@@ -27,15 +27,17 @@ Pri izenačenju, na primer ko imata dokument odprt dva urejevalnika, ima prednos
 Dokument v trezorju aplikacije Obsidian znotraj mape delovnega prostora VS Code zato pripade aplikaciji Obsidian, razen če ga ima VS Code odprtega, Obsidian pa ne.
 
 Klici za isti dokument se izvajajo eden za drugim, v vrstnem redu, v katerem so prispeli do strežnika. Klici za različne dokumente se izvajajo vzporedno.
+Orodje `erd_export_svg` je na vrsti samo med branjem dokumenta, zato poznejši klic za ta dokument ne čaka na risanje, strežnik pa riše en izvoz naenkrat, tudi pri dveh dokumentih – glejte razdelek [Izvoz SVG](./tools.md#svg-export).
 
 ## V živo {#live}
 
 Agent se urejevalniku pridruži kot še en sodelavec.
 Njegove spremembe takoj dosežejo vsak urejevalnik, v katerem je dokument odprt, njegov fokus pa se prikaže na tabeli in celici, ki ju ureja, tako kot fokus sodelavca – glejte razdelek [focusTracker](../api/advanced/collaborative-editing.md#focustracker).
 
-Branje nikoli ne odpre urejevalnika. Sprememba odpre dokument v urejevalniku ERD Editor, če še ni odprt, ne da bi prevzela fokus tipkovnice.
+Branje nikoli ne odpre urejevalnika, prav tako ne `erd_export_svg`, ki nariše tisto, kar urejevalnik vsebuje, vključno s spremembami, ki še niso shranjene. Sprememba odpre dokument v urejevalniku ERD Editor, če še ni odprt, ne da bi prevzela fokus tipkovnice.
 
 Urejevalnik z razširitvijo za VS Code pred različico `4.2.0` ali vtičnikom za Obsidian ali JetBrains pred različico `1.2.0` še vedno sprejema spremembe agenta v živo, vendar logičnih imen, povezav z domeno in vrstic slovarjev, ki jih zapiše agent, niti ne prikaže niti ne ohrani – glejte razdelek [Posodabljanje](./installation.md#updating).
+Podobno urejevalnik z razširitvijo pred različico `4.3.1` ali vtičnikom pred različico `1.3.1` niti ne prikaže niti ne ohrani, v kateri skupini tabel je beležka: beležka, ki jo agent doda v skupino, je tam brez skupine, urejevalnik pa pri shranjevanju skupino beležke izpusti v datoteki, čeprav agentov klic uspe.
 
 Z razširitvijo za VS Code različice `4.3.0` ali novejše ali vtičnikom za Obsidian ali JetBrains različice `1.3.0` ali novejše uvoz v načinu `replace` ter `erd_undo` ali `erd_redo` takšnega uvoza končajo risanje relacije, ki jo rišete v urejevalniku, ne glede na izdajo strežnika – glejte razdelek [Ustvarjanje relacije](../guide/guides/editing-start.md#relationship-creation).
 Pred temi izdajami je risanje ostalo vklopljeno, klik na tabelo pa je lahko dodal relacijo iz tabele, ki je ni bilo več v diagramu.
@@ -53,11 +55,11 @@ Premik stolpca, vaš ali agentov `erd_move_column` ali `erd_move_index_column`, 
 Sprememba zbirke podatkov, vaša ali agentova `erd_set_database`, se prav tako uveljavi v vrstnem redu prihoda, zato lahko dve, narejeni v istem trenutku, pustita urejevalnik in agenta pri različnih zbirkah podatkov.
 
 Vaše vlečenje ter agentovi `erd_move_table`, `erd_move_tables`, `erd_move_memo`, `erd_move_table_group` in `erd_sort_tables` potujejo kot točke, v katerih se končajo, zato se dva premika iste tabele, beležke ali skupine tabel končata tam, kamor jo je postavil eden od njiju, nikoli pri vsoti obeh.
-Orodje `erd_move_table_group` v enem paketu pošlje točko skupine in vsake njene tabele, tako kot vlečenje naslovne vrstice skupine.
+Orodje `erd_move_table_group` v enem paketu pošlje točko skupine in vsake njene tabele, tako kot vlečenje naslovne vrstice skupine, od strežnika različice `1.2.1` pa tudi točko vsake njene beležke.
 Sprememba velikosti zapiše položaj in velikost skupaj, zato se premik in sprememba velikosti iste beležke ali skupine tabel, narejena v istem trenutku, na primer `erd_resize_memo`, medtem ko vlečete to beležko, končata na enem pravokotniku na obeh straneh: na pravokotniku spremembe velikosti ali, kadar zmaga premik, na točki premika z velikostjo iz spremembe velikosti.
 Premik pod 20 slikovnih pik, ki ne ustvari vnosa za razveljavitev, prav tako odide kot točka, v kateri se konča, zato lahko zmaga nad premikom druge strani, naj bo to kratek `erd_move_table_group` ali kratko vaše vlečenje, na primer klik, ki tabelo premakne za nekaj slikovnih pik.
 
-Starejše izdaje se še vedno povežejo, saj strežnik `1.2.0` podpira protokol središča 2, tako kot različice od `1.0.0` do `1.1.1`.
+Starejše izdaje se še vedno povežejo, saj strežnik `1.2.0` in novejši podpirajo protokol središča 2, tako kot različice od `1.0.0` do `1.1.1`.
 Pri strežniku pred različico `1.2.0` ali razširitvi pred različico `4.3.0` ali vtičniku pred različico `1.3.0` lahko premik ali sprememba velikosti iste tabele, beležke ali skupine tabel, narejena v istem trenutku, pusti urejevalnik in agenta z različnimi položaji.
 Starejši urejevalnik pošlje vaše vlečenje kot prepotovano razdaljo, strežnik pred različico `1.2.0` pa na ta način pošlje tudi `erd_move_table_group`.
 Druga stran to razdaljo prišteje točki, ki jo hrani.
@@ -97,7 +99,7 @@ Lastna [razveljavitev](../guide/guides/undo-redo.md) urejevalnika deluje obratno
 
 Nekaj sprememb v urejevalniku ne ustvari vnosa za razveljavitev: `erd_set_database` in `erd_set_database_name` med [orodji za nastavitve](./tools.md#settings) ter `erd_resize_memo`.
 Prav tako ga ne ustvari klic `erd_move_table_group`, ki skupino premakne za manj kot 20 slikovnih pik, pri čemer se vodoravni in navpični premik seštejeta, čeprav skupina ostane tam, kamor se je premaknila.
-Vnosa ne ustvari niti klic, ki ničesar ne spremeni: `erd_set_column_primary_key`, `erd_set_column_unique`, `erd_set_column_not_null`, `erd_set_column_auto_increment`, `erd_set_index_unique` ali `erd_set_index_column_order`, ki nastavi vrednost, ki jo dokument že ima; `erd_add_index_column` s stolpcem, ki je že v indeksu; `erd_set_table_group` s tabelami, ki so že v tej skupini (ali že v nobeni, z vrednostjo `null` argumenta `groupId`); `erd_move_table_group` na točko, kjer skupina že stoji; `erd_resize_table_group` na pravokotnik, ki ga skupina že ima; `erd_sort_tables` pri dokumentu brez tabel; `erd_set_table_logical_name` ali `erd_set_column_logical_name` z logičnim imenom, ki ga tabela ali stolpec že ima, kadar izpeljava iz njega ne bi ničesar spremenila; `erd_set_column_domain` z domeno, s katero je stolpec že povezan, kadar stolpec že ima tip te domene in [sinhronizacija tipa podatkov v relacijah](../guide/guides/settings.md#relationship-datatype-sync) ne bi spremenila tipa nobenega stolpca po njegovih relacijah; `erd_update_word`, `erd_update_term` ali `erd_update_domain` samo z vrednostmi, ki jih vrstica že ima, razen če izraz, ki nima fizičnega imena, prejme argument `name` in njegove besede sestavijo fizično ime; `erd_derive_physical_names`, kadar vsako ime, ki ga zajame in ima logično ime, že vsebuje to, kar mu dajo [slovarji](./tools.md#dictionaries), in je označeno kot izpeljano; ali uvoz z vrednostjo `append` argumenta `mode`, ki ne prinese nobene tabele (pri `erd_import_json` nobene tabele in nobene beležke).
+Vnosa ne ustvari niti klic, ki ničesar ne spremeni: `erd_set_column_primary_key`, `erd_set_column_unique`, `erd_set_column_not_null`, `erd_set_column_auto_increment`, `erd_set_index_unique` ali `erd_set_index_column_order`, ki nastavi vrednost, ki jo dokument že ima; `erd_add_index_column` s stolpcem, ki je že v indeksu; `erd_set_table_group` s tabelami, ki so že v tej skupini (ali že v nobeni, z vrednostjo `null` argumenta `groupId`); `erd_set_memo_group` z beležkami, ki so že v tej skupini (ali že v nobeni); `erd_move_table_group` na točko, kjer skupina že stoji; `erd_resize_table_group` na pravokotnik, ki ga skupina že ima; `erd_sort_tables` pri dokumentu brez tabel; `erd_set_table_logical_name` ali `erd_set_column_logical_name` z logičnim imenom, ki ga tabela ali stolpec že ima, kadar izpeljava iz njega ne bi ničesar spremenila; `erd_set_column_domain` z domeno, s katero je stolpec že povezan, kadar stolpec že ima tip te domene in [sinhronizacija tipa podatkov v relacijah](../guide/guides/settings.md#relationship-datatype-sync) ne bi spremenila tipa nobenega stolpca po njegovih relacijah; `erd_update_word`, `erd_update_term` ali `erd_update_domain` samo z vrednostmi, ki jih vrstica že ima, razen če izraz, ki nima fizičnega imena, prejme argument `name` in njegove besede sestavijo fizično ime; `erd_derive_physical_names`, kadar vsako ime, ki ga zajame in ima logično ime, že vsebuje to, kar mu dajo [slovarji](./tools.md#dictionaries), in je označeno kot izpeljano; ali uvoz z vrednostjo `append` argumenta `mode`, ki ne prinese nobene tabele (pri `erd_import_json` nobene tabele in nobene beležke).
 Orodje `erd_undo` jih preskoči in jih navede v svojem rezultatu.
 Druge spremembe, kot so `erd_change_relationship_type`, `erd_change_relationship_on_delete`, `erd_change_relationship_on_update`, `erd_change_table_group_name`, `erd_change_table_group_color` in `erd_set_ddl_script`, ustvarijo vnos tudi takrat, ko nastavijo vrednost, ki jo dokument že ima.
 
@@ -120,7 +122,7 @@ Zaprt diagram v mapi, ki jo urejevalnik streže, ostane pri urejevalniku, nasled
 Urejevalnik, ki še vedno teče, vendar njegove zaklepne datoteke ni več in se je njegova povezava zaprla, ne da bi zaprl dokument, zavrne naslednjo spremembo s kodo `hubGone`.
 Sporočilo pove, kaj sprosti dokument: v VS Code znova naložite to okno ali ga zaprite, da bo agent lahko neposredno urejal datoteko; v aplikaciji Obsidian znova vklopite vtičnik ERD Editor ali zaprite to okno; v razvojnem okolju JetBrains znova vklopite vtičnik ali zaprite razvojno okolje.
 
-Branje namesto tega poteka iz datoteke na disku, z opombo, da manjkajo spremembe, ki v urejevalniku še niso shranjene, in sicer v dveh primerih: ko je središče urejevalnika, ki ima dokument, izklopljeno, in v zgornjem primeru `hubGone`.
+Branje ali `erd_export_svg` namesto tega poteka iz datoteke na disku, z opombo, da manjkajo spremembe, ki v urejevalniku še niso shranjene, in sicer v dveh primerih: ko je središče urejevalnika, ki ima dokument, izklopljeno, in v zgornjem primeru `hubGone`.
 Branje, ki se ne more povezati s središčem urejevalnika, se zavrne s kodo `hubUnreachable`, tako kot sprememba.
 
 ## Brez vmesnika {#headless}
@@ -133,7 +135,7 @@ Pred tem zadnjim korakom strežnik preveri, ali se je datoteka med klicem na dis
 Datoteka, ki se je spremenila med dvema klicema, se preprosto znova naloži, zgodovina razveljavitev agenta pred tem pa se zavrže.
 
 Datoteka samo za branje ostane nespremenjena, sprememba pa se zavrne s kodo `readonly`: to je datoteka, pri kateri lastnik nima dovoljenja za pisanje, ali v sistemu Windows datoteka z atributom samo za branje, na primer datoteka v sistemu Perforce ali TFVC, ki ni izvlečena.
-Omogočite pisanje vanjo in nato pokličite znova. Branje še vedno deluje.
+Omogočite pisanje vanjo in nato pokličite znova. Branje in `erd_export_svg` še vedno delujeta.
 
 Če urejevalnik začne streči dokument, medtem ko ga agent ureja na disku, se ta ena sprememba zavrne s kodo `hubAppeared` in se nič ne zapiše. Naslednji klic ureja prek urejevalnika.
 
@@ -142,7 +144,7 @@ V sistemu Windows veljata še dve pravili:
 - Dokument z lastnimi dovoljenji, drugačnimi od dovoljenj njegove mape, se namesto zamenjave zapiše na mestu, da jih obdrži, začasna datoteka pa se nato odstrani. Program, ki med tem zapisovanjem bere dokument, lahko naleti na besedilo, ki ga ni mogoče razčleniti.
 - Datoteke, ki jo ima odprto drug program, ni mogoče zamenjati, zato strežnik poskuša znova največ dve sekundi. Vsak poskus najprej znova poišče urejevalnik, urejevalnik, ki je medtem začel streči dokument, pa zapis zavrne s kodo `hubAppeared` ali, ko je njegovo središče izklopljeno, s kodo `blocked`. Če je datoteka po dveh sekundah še vedno zasedena, se nič ne zapiše, datoteka se znova naloži, klic pa ne uspe s sporočilom, ki navaja sistemsko napako.
 
-Strežnik pred različico `1.1.0` prebere dokument brez njegovih logičnih imen, povezav njegovih stolpcev z domeno ter njegovih besed, izrazov in domen, zato jih prva sprememba, ki jo zapiše v datoteko, izpusti. Posodobite strežnik – glejte razdelek [Posodabljanje](./installation.md#updating).
+Strežnik pred različico `1.1.0` prebere dokument brez njegovih logičnih imen, povezav njegovih stolpcev z domeno ter njegovih besed, izrazov in domen, zato jih prva sprememba, ki jo zapiše v datoteko, izpusti. Strežnik pred različico `1.2.1` ga prav tako prebere brez skupin tabel njegovih beležk, zato prva sprememba, ki jo zapiše v datoteko, vsako beležko vzame iz njene skupine. Posodobite strežnik – glejte razdelek [Posodabljanje](./installation.md#updating).
 
 ## Zavrnjeno {#refused}
 
@@ -151,7 +153,7 @@ Okno trezorja v aplikaciji Obsidian obdrži svojo zaklepno datoteko z izklopljen
 Razvojno okolje JetBrains obdrži svojo zaklepno datoteko z izklopljenim središčem, ko je nastavitev Coding agents izklopljena, ko njegovo središče ni moglo začeti poslušati in medtem ko se razvojno okolje zapira.
 
 Sprememba takega dokumenta se zavrne s kodo `blocked`, ker bi odprt urejevalnik ob naslednjem shranjevanju lahko prepisal spremembo, zapisano v datoteko.
-Branje še vedno deluje, in sicer iz datoteke na disku.
+Branje še vedno deluje, in sicer iz datoteke na disku, prav tako `erd_export_svg`, katerega rezultat tedaj navede način `blocked`.
 
 Da bo agent lahko urejal, znova vklopite središče, kot za ta urejevalnik pove sporočilo: v VS Code zaupajte delovnemu prostoru in vklopite nastavitev ali znova naložite okno; v aplikaciji Obsidian vklopite Coding agents ali znova naložite aplikacijo Obsidian; v razvojnem okolju JetBrains vklopite Coding agents ali, če je ta nastavitev že vklopljena, znova zaženite razvojno okolje.
 

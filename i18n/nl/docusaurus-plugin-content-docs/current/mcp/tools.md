@@ -1,11 +1,11 @@
 ---
 sidebar_position: 4
-description: Elke tool die de MCP-server van erd-editor biedt — een document pagina voor pagina lezen, de woordenboekcontroles, de 67 bewerkingstools, erd_batch en hoe een resultaat en een weigering eruitzien.
+description: Elke tool die de MCP-server van erd-editor biedt — een document pagina voor pagina lezen, de woordenboekcontroles, de SVG-export, de 68 bewerkingstools, erd_batch en hoe een resultaat en een weigering eruitzien.
 ---
 
 # Tools
 
-De server biedt 77 tools: vijf sessietools, vier leestools, 67 bewerkingstools, één per soort bewerking, en `erd_batch`, die meerdere bewerkingstools als één bewerking uitvoert.
+De server biedt 79 tools: vijf sessietools, vier leestools, `erd_export_svg`, die een document als SVG-afbeelding tekent, 68 bewerkingstools, één per soort bewerking, en `erd_batch`, die meerdere bewerkingstools als één bewerking uitvoert.
 
 Elke tool behalve `erd_list_documents` krijgt het `path` van het document als eerste argument, en de tabellen hieronder laten het weg.
 Een argument met `?` is optioneel.
@@ -26,14 +26,14 @@ Zie [Live en headless](./live-and-headless.md) voor wat opslaan en ongedaan make
 
 | Tool | Argumenten | Wat het doet |
 | --- | --- | --- |
-| `erd_list` | `query?`, `offset?`, `limit?`, `namesOnly?` | De instellingen en aantallen, daarna een pagina tabellen met hun indexen en relaties, elke tabel met haar id, positie en grootte op het canvas, aantal kolommen, logische naam als ze er een heeft en tabelgroep als ze in een groep zit. Tenzij er wordt gezocht, volgen na de tabellen de tabelgroepen, de memo's en daarna de domeinen, termen en woorden. |
-| `erd_get` | `tableIds?`, `tableNames?`, `relationshipIds?`, `indexIds?`, `memoIds?`, `tableGroupIds?`, `wordIds?`, `termIds?`, `domainIds?` | De genoemde entiteiten, volledig: tabellen met hun kolommen en hun tabelgroep, relaties met hun kolommen en hun `onDelete` en `onUpdate`, indexen met hun kolommen, memo's met hun tekst, tabelgroepen met hun tabellen, en woorden, termen en domeinen met elk veld. |
+| `erd_list` | `query?`, `offset?`, `limit?`, `namesOnly?` | De instellingen en aantallen, daarna een pagina tabellen met hun indexen en relaties, elke tabel met haar id, positie en grootte op het canvas, aantal kolommen, logische naam als ze er een heeft en tabelgroep als ze in een groep zit. Tenzij er wordt gezocht, volgen na de tabellen de tabelgroepen, de memo's, elk met zijn tabelgroep als hij in een groep zit, en daarna de domeinen, termen en woorden. |
+| `erd_get` | `tableIds?`, `tableNames?`, `relationshipIds?`, `indexIds?`, `memoIds?`, `tableGroupIds?`, `wordIds?`, `termIds?`, `domainIds?` | De genoemde entiteiten, volledig: tabellen met hun kolommen en hun tabelgroep, relaties met hun kolommen en hun `onDelete` en `onUpdate`, indexen met hun kolommen, memo's met hun tekst en hun tabelgroep, tabelgroepen met hun tabellen en memo's, en woorden, termen en domeinen met elk veld. |
 | `erd_read` | `format`, `vendor?`, `statements?`, `header?`, `logicalNameAsComment?`, `tableIds?`, `tableNames?`, `groupNames?` | Het hele document in één keer in een van vier formaten, of de DDL van alleen enkele tabellen of tabelgroepen. |
 | `erd_list_checks` | `level?`, `tableIds?`, `tableNames?`, `offset?`, `limit?` | Wat er volgens de woordenboeken met woorden, termen en domeinen niet klopt, zoals het blad `Checks` van het tabblad Woordenboek van de editor het toont, pagina voor pagina. Wijzigt niets — zie [Woordenboekcontroles](#dictionary-checks). |
 
 Een agent vindt id's met `erd_list`, leest kolommen, woordenboekrijen en andere details met `erd_get` en geeft die id's door aan de bewerkingstools.
 De grootte van een tabel in `erd_list` is het kader dat ze op het canvas inneemt: de hoogte exact, de breedte bij benadering.
-Een tabelgroep wordt vermeld met de rechthoek die hij opslaat, met zijn naam, zijn kleur en het aantal tabellen dat hij bevat.
+Een tabelgroep wordt vermeld met de rechthoek die hij opslaat, met zijn naam, zijn kleur en het aantal tabellen en memo's dat hij bevat.
 Elke relatie wordt één keer vermeld, bij een van haar twee tabellen.
 Een woordenboekrij wordt vermeld met haar id, haar `name` en wat ze aan een fysieke naam of een kolom geeft: het `dataType` van een domein, de `physicalName` en `domainId` van een term en de `abbreviation` van een woord. Elk woordenboek vermeldt zijn rijen in de volgorde die zijn blad toont.
 De instellingen die `erd_list` en `erd_read` rapporteren, zijn die welke het bestand opslaat — zie [Instellingen](#settings).
@@ -45,7 +45,7 @@ Elke kolom heeft haar `domainId`, en elke term ook: een lege string als er geen 
 
 | `format` | Wat het teruggeeft |
 | --- | --- |
-| `snapshot` | Compacte JSON met elke entiteit en haar id, tabelgroepen en de rijen met woorden, termen en domeinen inbegrepen, en de instellingen met de Schema SQL-scripts. Laat weg wat per kijker verschilt: gemeten breedtes, de stapelvolgorde, de weergave, het tabblad en de naamweergave. Groot bij een groot schema. |
+| `snapshot` | Compacte JSON met elke entiteit en haar id, tabelgroepen met hun tabellen en memo's, en de rijen met woorden, termen en domeinen inbegrepen, en de instellingen met de Schema SQL-scripts. Laat weg wat per kijker verschilt: gemeten breedtes, de stapelvolgorde, de weergave, het tabblad en de naamweergave. Groot bij een groot schema. |
 | `sql` | DDL voor een van de acht databases: `Databricks`, `MariaDB`, `MSSQL`, `MySQL`, `Oracle`, `PostgreSQL`, `Snowflake` of `SQLite`. `vendor` is standaard de database waarop het document is ingesteld. De DDL van het hele document bevat de scripts vóór en na de tabellen. Met `tableIds`, `tableNames` of `groupNames` alleen die tabellen, met de refererende sleutels die ze bevatten, en geen scripts. Refererende sleutels krijgen hun ON DELETE- en ON UPDATE-acties mee, behalve die welke de doeldatabase weglaat — zie [ON DELETE en ON UPDATE](../guide/guides/relationship-editing.md#on-delete-and-on-update). |
 | `json` | Het hele document precies zoals opslaan het bestand schrijft, inclusief bewerkingen die de editor nog niet heeft opgeslagen — zie [Opslagvorm](../api/advanced/schema.md#storage-form). |
 | `scripts` | Alleen de scripts vóór en na de tabellen van het document, als `{"before":"…","after":"…"}`, elk leeg als het niet is ingesteld, hoe groot het schema ook is. |
@@ -103,6 +103,37 @@ Elke controle geeft haar `level`, haar `code` en de `kind` en `id` van haar obje
 
 Hoe elke controle een naam leest, staat in [Wat elke controle vindt](../guide/guides/dictionary.md#what-each-check-finds).
 
+## SVG-export {#svg-export}
+
+| Tool | Argumenten | Wat het doet |
+| --- | --- | --- |
+| `erd_export_svg` | `output?`, `darkMode?`, `background?` | Tekent het document als SVG-afbeelding en schrijft die naar het `.svg`-bestand dat `output` noemt, of geeft zonder `output` de SVG-tekst terug. Wijzigt geen document. |
+
+De server tekent de afbeelding zelf, dus de tool vereist alleen server `1.2.1` of later en werkt met elke versie van de ERD Editor-extensie of -plug-in die verbinding maakt.
+Net als `toImage()` tekent hij de afbeelding die het dialoogvenster `Export image` van de editor als SVG opslaat, maar uitsluitend op basis van het document: het hele diagram op 100%, zonder wat View Option in het document verbergt, in de vooraf ingestelde kleuren, met tabellen en kolommen benoemd in de naamweergave die het document heeft en de eigen woorden van het diagram in het Engels — zie [Wat het tekent](../api/to-image.md#what-it-draws).
+De server meet tekst zonder de lettertypen van de editor, dus een tabel kan iets breder uitvallen dan de editor haar tekent.
+Er is geen PNG en geen kopie naar het klembord.
+
+- `darkMode`: `true` tekent het donkere thema; `false`, de standaardwaarde, het lichte. Geen thema van het scherm van een editor bereikt de afbeelding.
+- `background`: `true`, de standaardwaarde, schildert de kleur van het canvas achter het diagram; `false` laat het transparant.
+- `output`: het bestand dat wordt geschreven, absoluut of relatief ten opzichte van de werkmap van de server, met een naam die op `.svg` eindigt, ongeacht hoofd- of kleine letters, in een map die al bestaat. Een bestand dat er al staat, wordt vervangen via een tijdelijk bestand ernaast, en een symbolische koppeling wordt gevolgd naar het bestand waar ze naartoe leidt.
+
+De export leest het document zoals de leestools dat doen: wat de editor die het bedient beheert, met de nog niet opgeslagen bewerkingen erbij, of anders het bestand. Net als een leesopdracht opent hij het document nooit in een editor.
+Het `mode` in het antwoord zegt welke: `live`, `headless` of, wanneer een editor met uitgeschakelde hub het document beheert, `blocked`, met een notitie dat het bestand op schijf is getekend zonder de nog niet opgeslagen bewerkingen in die editor — zie [Live en headless](./live-and-headless.md).
+
+Met `output` is het antwoord één regel JSON: het `mode`, het `path` van het document, de geschreven `output`, de grootte ervan in `bytes`, de `width` en `height` van de SVG en `notes` als die er zijn.
+
+```json
+{"mode":"headless","path":"/work/shop.erd.json","output":"/work/docs/shop.svg","bytes":48213,"width":1210,"height":764}
+```
+
+Zonder `output` is het antwoord de SVG-tekst, gevolgd door `{"mode":"…"}` met eventuele notities. Een SVG van meer dan 40.000 tekens, het maximum dat één antwoord teruggeeft, wordt geweigerd met `tooLarge`: geef `output` door om hem in plaats daarvan naar een bestand te laten schrijven.
+
+`output` wordt gecontroleerd voordat het document wordt gelezen, dus een geweigerde kost geen tekenwerk: een lege, een naam die niet op `.svg` eindigt, een die een map noemt en een koppeling die naar geen bestand leidt of naar een bestand waarvan de naam niet op `.svg` eindigt, worden geweigerd met `invalidPath`, en een in een map die niet bestaat met `notFound`. Een alleen-lezenbestand wordt geweigerd met `readonly` zodra de afbeelding is getekend, en blijft zoals het was.
+
+Een export levert geen stap in de geschiedenis op en laat niets op te slaan achter, en `erd_batch` weigert hem, zoals hij een leestool weigert.
+Een groot diagram heeft een paar seconden nodig om te worden getekend, en de server tekent één export tegelijk.
+
 ## Bewerkingstools {#edit-tools}
 
 Id's komen uit `erd_list` en `erd_get`, of uit de `createdIds` van de aanroep die de entiteit heeft aangemaakt.
@@ -121,7 +152,7 @@ Een nieuwe id bestaat uit 25 kleine letters en cijfers, zoals `03h17be2plxpj5n59
 | `erd_change_table_color` | `tableId`, `color` | Stelt de kleur van een tabel in. |
 | `erd_move_table` | `tableId`, `x`, `y` | Verplaatst een tabel naar een positie op het canvas. |
 | `erd_move_tables` | `positions` | Verplaatst meerdere tabellen in één bewerking, die één `erd_undo` ongedaan maakt. `positions` bevat `{ tableId, x, y }` per tabel, elke tabel hooguit één keer. |
-| `erd_sort_tables` | | Plaatst alle tabellen in rijen over het canvas, die met de minste kolommen eerst, zoals `erd_import_sql`, `erd_import_graphql`, `erd_import_dbml` en `erd_import_aml` ze plaatsen. De tabellen van een tabelgroep blijven bij elkaar, en het kader van elke groep wordt eromheen passend gemaakt. |
+| `erd_sort_tables` | | Plaatst alle tabellen in rijen over het canvas, die met de minste kolommen eerst, zoals `erd_import_sql`, `erd_import_graphql`, `erd_import_dbml` en `erd_import_aml` ze plaatsen. De tabellen van een tabelgroep blijven bij elkaar, gevolgd door zijn memo's zolang memo's worden getoond, en het kader van elke groep wordt eromheen passend gemaakt. Zolang memo's verborgen zijn, bewegen de memo's van een groep mee met zijn tabellen. Een memo in geen enkele groep, of in een groep zonder tabel, blijft waar hij is. |
 
 ### Kolommen {#columns}
 
@@ -190,28 +221,33 @@ De id van een indexkolom is die van een item in de kolomlijst van de index, zoal
 | `erd_move_memo` | `memoId`, `x`, `y` | Verplaatst een memo naar een positie op het canvas. |
 | `erd_resize_memo` | `memoId`, `width`, `height` | Wijzigt de grootte van een memo. De breedte moet minstens ongeveer `116` pixels zijn en de hoogte minstens `100`. Levert geen stap in de geschiedenis op, omdat de editor het wijzigen van de grootte van een memo alleen bij slepen vastlegt. |
 
+Een memo kan in één tabelgroep zitten, en verplaatst zich met die groep mee — zie [Tabelgroepen](#table-groups).
+
 Zolang memo's verborgen zijn met [View Option](../guide/guides/table-related-functions.md#table-view-options) → `Memos`, voegt `erd_add_memo` er toch een toe, en die blijft verborgen tot memo's weer worden getoond.
 `erd_list` en `erd_get` vermelden ook verborgen memo's.
 
 ### Tabelgroepen {#table-groups}
 
-Een tabelgroep is een kader met een naam dat achter zijn tabellen wordt getekend, en zijn kleur is te zien op het kader en over de koppen van zijn tabellen — zie [Tabelgroepen](../guide/guides/table-groups.md).
-Een tabel zit in hooguit één groep. `erd_move_table`, `erd_move_tables` en `erd_move_table_group` veranderen nooit welke tabellen een groep bevat, waar ze een tabel ook neerzetten, terwijl in de editor een tabel bij een groep komt of eruit gaat afhankelijk van waar ze wordt neergezet — zie [Tabellen toevoegen en verwijderen](../guide/guides/table-groups.md#adding-and-removing-tables). `erd_add_table_group` en `erd_set_table_group` plaatsen tabellen in een groep, en `erd_remove_table_group` laat zijn tabellen in geen enkele groep achter.
-Een groep slaat een rechthoek op van minstens `160` pixels breed en `100` hoog, titelbalk inbegrepen, en de editor tekent het kader zo vergroot dat elk van zijn tabellen erin past.
+Een tabelgroep is een kader met een naam dat achter zijn tabellen en memo's wordt getekend, en zijn kleur is te zien op het kader en over de koppen van zijn tabellen en memo's — zie [Tabelgroepen](../guide/guides/table-groups.md).
+Een tabel of een memo zit in hooguit één groep. `erd_move_table`, `erd_move_tables`, `erd_move_memo` en `erd_move_table_group` veranderen nooit wat een groep bevat, waar ze een tabel of een memo ook neerzetten, terwijl in de editor een tabel of een memo bij een groep komt of eruit gaat afhankelijk van waar hij wordt neergezet — zie [Tabellen toevoegen en verwijderen](../guide/guides/table-groups.md#adding-and-removing-tables). `erd_add_table_group` plaatst tabellen en memo's in een groep, `erd_set_table_group` tabellen en `erd_set_memo_group` memo's, en `erd_remove_table_group` laat zijn tabellen en memo's in geen enkele groep achter.
+Een groep slaat een rechthoek op van minstens `160` pixels breed en `100` hoog, titelbalk inbegrepen, en de editor tekent het kader zo vergroot dat elk van zijn tabellen en, zolang memo's worden getoond, elk van zijn memo's erin past.
 
 | Tool | Argumenten | Wat het doet |
 | --- | --- | --- |
-| `erd_add_table_group` | `name`, `color?`, `x?`, `y?`, `width?`, `height?`, `tableIds?` | Voegt een groep toe en geeft de id ervan terug in `createdIds`. Geef ofwel `tableIds` door, ofwel een rechthoek: `x`, `y`, `width` en `height` samen. Met `tableIds` verlaat elke tabel de groep waarin ze zat, en wordt de rechthoek om de tabellen heen passend gemaakt zoals bij [Geselecteerde tabellen groeperen](../guide/guides/table-groups.md#grouping-selected-tables). Een rechthoek neemt elke tabel zonder groep op waarvan het midden erbinnen ligt, zoals bij [Een groep tekenen](../guide/guides/table-groups.md#drawing-a-group). Een lege `name` laat de groep zonder naam. Eén `erd_undo` verwijdert de groep en zet elke tabel terug in de groep waarin ze zat. |
-| `erd_remove_table_group` | `groupId` | Verwijdert een groep. De tabellen ervan blijven waar ze zijn, zonder groep. |
+| `erd_add_table_group` | `name`, `color?`, `x?`, `y?`, `width?`, `height?`, `tableIds?`, `memoIds?` | Voegt een groep toe en geeft de id ervan terug in `createdIds`. Geef ofwel `tableIds` door, met eventuele `memoIds` ernaast, ofwel een rechthoek: `x`, `y`, `width` en `height` samen. Met `tableIds` verlaat elke tabel en memo de groep waarin hij zat, en wordt de rechthoek eromheen passend gemaakt, om de memo's alleen zolang memo's worden getoond, zoals bij [Geselecteerde tabellen groeperen](../guide/guides/table-groups.md#grouping-selected-tables). Een rechthoek neemt elke tabel en elke getoonde memo zonder groep op waarvan het midden erbinnen ligt, zoals bij [Een groep tekenen](../guide/guides/table-groups.md#drawing-a-group). Een lege `name` laat de groep zonder naam. Eén `erd_undo` verwijdert de groep en zet elke tabel en memo terug in de groep waarin hij zat. |
+| `erd_remove_table_group` | `groupId` | Verwijdert een groep. De tabellen en memo's ervan blijven waar ze zijn, zonder groep. |
 | `erd_change_table_group_name` | `groupId`, `value` | Wijzigt de naam van een groep. Een lege string laat de groep zonder naam. |
 | `erd_change_table_group_color` | `groupId`, `color` | Stelt de kleur van een groep in. |
-| `erd_move_table_group` | `groupId`, `x`, `y` | Verplaatst een groep zodat de rechthoek op dat punt begint, met de tabellen ervan over dezelfde afstand, zoals slepen aan de titelbalk doet. Een verplaatsing van minder dan 20 pixels, horizontaal en verticaal bij elkaar opgeteld, levert geen stap in de geschiedenis op. Sinds server `1.2.0` bereikt de verplaatsing de editor als de punten waar de groep en haar tabellen eindigen, dus met de VS Code-extensie `4.3.0` of later of de Obsidian- of JetBrains-plug-in `1.3.0` of later eindigt een verplaatsing van de groep of een van haar tabellen die daar op hetzelfde moment is gemaakt, op een van de twee posities, nooit op hun som — zie [Bewerkingen op hetzelfde moment](./live-and-headless.md#edits-made-at-the-same-moment). |
-| `erd_resize_table_group` | `groupId`, `x?`, `y?`, `width`, `height` | Stelt de rechthoek van een groep in, terwijl de tabellen ervan blijven waar ze zijn. Als `x` en `y` worden weggelaten, blijft de hoek behouden. Een rechthoek waarin de tabellen van de groep met hun marge niet passen, wordt geweigerd, met een bericht dat het kader noemt dat erin moet passen. |
+| `erd_move_table_group` | `groupId`, `x`, `y` | Verplaatst een groep zodat de rechthoek op dat punt begint, met de tabellen en memo's ervan, ook verborgen memo's, over dezelfde afstand, zoals slepen aan de titelbalk doet. Een verplaatsing van minder dan 20 pixels, horizontaal en verticaal bij elkaar opgeteld, levert geen stap in de geschiedenis op. Sinds server `1.2.0` bereikt de verplaatsing de editor als de punten waar de groep en haar tabellen eindigen, dus met de VS Code-extensie `4.3.0` of later of de Obsidian- of JetBrains-plug-in `1.3.0` of later eindigt een verplaatsing van de groep of een van haar tabellen die daar op hetzelfde moment is gemaakt, op een van de twee posities, nooit op hun som — zie [Bewerkingen op hetzelfde moment](./live-and-headless.md#edits-made-at-the-same-moment). Sinds server `1.2.1` gaan de punten waar haar memo's eindigen in dezelfde batch mee. |
+| `erd_resize_table_group` | `groupId`, `x?`, `y?`, `width`, `height` | Stelt de rechthoek van een groep in, terwijl de tabellen en memo's ervan blijven waar ze zijn. Als `x` en `y` worden weggelaten, blijft de hoek behouden. Een rechthoek waarin de tabellen en getoonde memo's van de groep met hun marge niet passen, wordt geweigerd, met een bericht dat het kader noemt dat erin moet passen. |
 | `erd_set_table_group` | `tableIds`, `groupId` | Plaatst tabellen in een groep, waarbij elke tabel de groep verlaat waarin ze zat. Een `groupId` van `null` of een lege string haalt ze uit elke groep. |
+| `erd_set_memo_group` | `memoIds`, `groupId` | Plaatst memo's in een groep, waarbij elke memo de groep verlaat waarin hij zat en blijft waar hij is. Een `groupId` van `null` of een lege string haalt ze uit elke groep. |
 
 Zolang groepen verborgen zijn met `View Option` → `Table Groups`, voegen deze tools nog steeds groepen toe en wijzigen ze groepen, die verborgen blijven tot groepen worden getoond — zie [Groepen verbergen](../guide/guides/table-groups.md#hiding-groups).
-`erd_sort_tables` houdt de tabellen van elke groep bij elkaar, `erd_import_dbml` en `erd_import_json` brengen groepen mee — zie [Importeren](#import) — en `erd_read` schrijft met `groupNames` de DDL van gekozen groepen.
+Memo's die verborgen zijn met View Option → `Memos` blijven in hun groepen en bewegen met die groepen mee, en `erd_set_memo_group` en de `memoIds` van `erd_add_table_group` plaatsen ze in een groep zoals ze dat met getoonde memo's doen.
+`erd_sort_tables` houdt de tabellen en memo's van elke groep bij elkaar, `erd_import_dbml` en `erd_import_json` brengen groepen mee — zie [Importeren](#import) — en `erd_read` schrijft met `groupNames` de DDL van gekozen groepen.
 Een versie van ERD Editor van vóór de tabelgroepen laat de groepen van een bestand vallen wanneer ze het bestand opslaat, zoals de VS Code-extensie vóór `4.0.0` en de Obsidian- en JetBrains-plug-ins vóór `1.0.0` doen — zie [Bijwerken](./installation.md#updating).
+Een versie van vóór het moment waarop memo's in tabelgroepen konden komen, de VS Code-extensie vóór `4.3.1` en de Obsidian- en JetBrains-plug-ins vóór `1.3.1`, toont noch behoudt in welke groep een memo zit, dus ze slaat het bestand op zonder enige memo in een groep, en een server vóór `1.2.1` die het bestand op schijf schrijft, doet dat ook — zie [Bijwerken](./installation.md#updating).
 
 ### Woordenboeken {#dictionaries}
 
@@ -304,14 +340,14 @@ In een editor met de VS Code-extensie `4.3.0` of later of de Obsidian- of JetBra
 - Relaties en indexen worden alleen overgenomen tussen de tabellen die de import meebrengt, dus een refererende sleutel naar een tabel die de tekst niet declareert, vervalt.
 - `erd_import_sql`, `erd_import_graphql` en `erd_import_aml` voegen tabellen toe met hun relaties en indexen, en `erd_import_dbml` daarnaast de tabelgroepen. `erd_import_json` voegt tabellen, relaties, indexen, memo's en tabelgroepen toe, nooit de instellingen ervan, en weigert een lege tekst. De tabellen en kolommen ervan brengen hun logische namen mee, maar geen enkele kolom wordt aan een domein gekoppeld, en geen van de woorden, termen of domeinen van de JSON komt mee.
 
-Een JSON-document behoudt zijn eigen indeling, inclusief zijn tabelgroepen: op de plek waar het zijn tabellen plaatst met `replace`, en binnen het toegevoegde blok met `append`.
+Een JSON-document behoudt zijn eigen indeling, inclusief zijn tabelgroepen met de tabellen en memo's van elke groep: op de plek waar het zijn tabellen plaatst met `replace`, en binnen het toegevoegde blok met `append`.
 De tabellen van SQL, GraphQL, DBML en AML worden in rijen gezet, die met de minste kolommen eerst en de tabellen van elke groep bij elkaar, zoals `erd_sort_tables` ze plaatst, nooit volgens `Flow` zoals de eigen import van de editor ze indeelt wanneer dat kan. Die vier tools weigeren een lege tekst in beide modi.
 
 ## erd_batch {#erd_batch}
 
 `erd_batch` voert meerdere bewerkingstools op volgorde uit als één bewerking, alles of niets.
 
-- `operations` bevat maximaal 100 items, elk `{ tool, as?, args? }`, waarbij `tool` een bewerkingstool is en `args` de argumenten van de tool zijn zonder `path`. Een leestool, zoals `erd_list_checks`, wordt geweigerd.
+- `operations` bevat maximaal 100 items, elk `{ tool, as?, args? }`, waarbij `tool` een bewerkingstool is en `args` de argumenten van de tool zijn zonder `path`. Een leestool, zoals `erd_list_checks`, wordt geweigerd, en `erd_export_svg` ook.
 - De operaties worden eerst op een kopie van het document geprobeerd. Een geweigerde operatie wordt genoemd, zoals `operations[1] erd_remove_table: …`, en er wordt niets toegepast.
 - Eén `erd_undo` maakt de hele batch ongedaan, behalve de operaties die hij niet ongedaan kan maken en die de `undoNote` van het resultaat noemt: die van een tool die geen stap in de geschiedenis oplevert, zoals `erd_set_database`, en die het document hebben gewijzigd zonder er een op te leveren, zoals een korte `erd_move_table_group`. Een batch die helemaal geen stap in de geschiedenis heeft opgeleverd, wordt door `erd_undo` overgeslagen. `historyEntries` in het resultaat telt de stappen in de geschiedenis van de editor binnen de batch, niet het aantal aanroepen van `erd_undo`.
 - In een live sessie neemt de editor de hele batch over of niets ervan.
@@ -391,21 +427,21 @@ Een weigering is een foutresultaat met een code en een bericht dat zegt wat je m
 
 | `code` | Waarom |
 | --- | --- |
-| `notFound` | Een id verwijst naar niets wat nog bestaat, of het bestand bestaat niet. |
+| `notFound` | Een id verwijst naar niets wat nog bestaat, het bestand bestaat niet, of de map van de `output` van `erd_export_svg` bestaat niet. |
 | `invalidArgs` | Een argument ontbreekt of heeft een verkeerde waarde. |
-| `invalidPath` | Het pad is geen ERD-document. Op Windows ook een pad met een naam die Windows niet opslaat zoals hij geschreven is, of een pad dat uitkomt bij een document dat een editor onder een ander pad beheert, dat het bericht noemt. |
+| `invalidPath` | Het pad is geen ERD-document, of de `output` van `erd_export_svg` is geen `.svg`-bestand — zie [SVG-export](#svg-export). Op Windows ook een pad met een naam die Windows niet opslaat zoals hij geschreven is, of een pad dat uitkomt bij een document dat een editor onder een ander pad beheert, dat het bericht noemt. |
 | `invalidDocument` | Het bestand is geen document dat de editor kan lezen. |
-| `tooLarge` | Een leesopdracht past niet in één antwoord. |
+| `tooLarge` | Een leesopdracht, of een SVG die zonder `output` is opgevraagd, past niet in één antwoord. |
 | `blocked` | Een editor met uitgeschakelde hub beheert het document. Het bericht zegt hoe je de hub inschakelt: vertrouw in VS Code de werkruimte en schakel `dineug.erd-editor.agentHub.enabled` in, of laad het venster opnieuw; schakel in Obsidian Coding agents in, of laad Obsidian opnieuw; schakel in een JetBrains-IDE Coding agents in, of start de IDE opnieuw als Coding agents al is ingeschakeld. |
 | `hubDisabled` | Een JetBrains-IDE beheert het document alleen in een project dat hij niet vertrouwt. Lezen werkt nog; vertrouw het project om de agent te laten bewerken. |
 | `conflict` | Het bestand is tijdens de aanroep op schijf gewijzigd. Er is niets geschreven. |
 | `hubAppeared`, `hubGone` | Een editor is een document gaan bedienen dat de agent op schijf aan het bewerken was, of de editor die het bediende draait nog, maar zijn lockbestand en verbinding zijn verdwenen. Er is niets geschreven. |
 | `notSaved` | `erd_save` kon het document van de editor niet opslaan. |
-| `readonly` | De editor beheert het document in alleen-lezenmodus, zoals een bestand waarnaar hij niet kan schrijven of dat hij niet als diagram kan lezen. Zonder editor is het bestand zelf alleen-lezen, zoals een Perforce- of TFVC-bestand dat niet is uitgecheckt. Er is niets geschreven. |
+| `readonly` | De editor beheert het document in alleen-lezenmodus, zoals een bestand waarnaar hij niet kan schrijven of dat hij niet als diagram kan lezen. Zonder editor is het bestand zelf alleen-lezen, zoals een Perforce- of TFVC-bestand dat niet is uitgecheckt. Bij `erd_export_svg` is het `.svg`-bestand dat zijn `output` noemt, alleen-lezen. Er is niets geschreven. |
 | `protocolMismatch` | De ERD Editor-extensie of -plug-in van de editor en de server gebruiken verschillende protocolversies, zoals server `1.0.0` of later met een VS Code-extensie van versie `3.x`. Ook leesopdrachten worden geweigerd, en het bericht noemt de kant die moet worden bijgewerkt — zie [Bijwerken](./installation.md#updating). |
 | `hubUnreachable`, `timeout`, `disconnected` | De hub van een editor accepteerde de verbinding niet, antwoordde niet binnen 30 seconden of verbrak de verbinding tijdens de aanroep. Op Windows betekent `hubUnreachable` ook dat Windows de agent van de hub heeft geweerd: de editor draait met meer rechten dan de agent, zoals wanneer hij als administrator is gestart en de agent niet, of de agent draait in een sandbox. |
 
 Andere codes komen minder vaak voor, en elke weigering bevat een bericht dat zegt wat er is gebeurd.
 
-De bewerkingstools, `erd_batch` en de vier leestools weigeren een argument dat ze niet declareren, of een van het verkeerde type, met een JSON-RPC-fout voor ongeldige parameters (`-32602`) voordat ze het document aanraken, zodat een verkeerd gespeld argument nooit stilzwijgend wordt genegeerd.
+De bewerkingstools, `erd_batch`, de vier leestools en `erd_export_svg` weigeren een argument dat ze niet declareren, of een van het verkeerde type, met een JSON-RPC-fout voor ongeldige parameters (`-32602`) voordat ze het document aanraken, zodat een verkeerd gespeld argument nooit stilzwijgend wordt genegeerd.
 De vijf sessietools negeren argumenten die ze niet kennen.

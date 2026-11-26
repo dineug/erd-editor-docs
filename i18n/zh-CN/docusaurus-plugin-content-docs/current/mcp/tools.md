@@ -1,11 +1,11 @@
 ---
 sidebar_position: 4
-description: erd-editor MCP 服务器提供的所有工具：一次一页地读取文档、词典检查、67 个编辑工具、erd_batch，以及结果与拒绝的格式。
+description: erd-editor MCP 服务器提供的所有工具：一次一页地读取文档、词典检查、SVG 导出、68 个编辑工具、erd_batch，以及结果与拒绝的格式。
 ---
 
 # 工具
 
-服务器提供 77 个工具：五个会话工具、四个读取工具、67 个编辑工具（每种编辑操作一个），以及把多个编辑工具作为一次编辑执行的 `erd_batch`。
+服务器提供 79 个工具：五个会话工具、四个读取工具、将文档绘制为 SVG 图像的 `erd_export_svg`、68 个编辑工具（每种编辑操作一个），以及把多个编辑工具作为一次编辑执行的 `erd_batch`。
 
 除 `erd_list_documents` 外，每个工具都以文档的 `path` 作为第一个参数，下面的表格中省略了它。
 标有 `?` 的参数是可选的。
@@ -26,14 +26,14 @@ description: erd-editor MCP 服务器提供的所有工具：一次一页地读�
 
 | 工具 | 参数 | 作用 |
 | --- | --- | --- |
-| `erd_list` | `query?`, `offset?`, `limit?`, `namesOnly?` | 先是设置与数量统计，然后是一页表，并带有它们的索引与关系；每个表附带其 id、在画布上的位置和大小、列数、逻辑名（如果有的话），以及它所属的表分组（如果属于某个分组）。除非是在搜索，否则表之后依次是表分组、备注，然后是域、术语和词根。 |
-| `erd_get` | `tableIds?`, `tableNames?`, `relationshipIds?`, `indexIds?`, `memoIds?`, `tableGroupIds?`, `wordIds?`, `termIds?`, `domainIds?` | 完整返回所指定的实体：表附带其列及其所属的表分组，关系附带其列及其 `onDelete` 和 `onUpdate`，索引附带其列，备注附带其文本，表分组附带其中的表，词根、术语和域则附带其所有字段。 |
+| `erd_list` | `query?`, `offset?`, `limit?`, `namesOnly?` | 先是设置与数量统计，然后是一页表，并带有它们的索引与关系；每个表附带其 id、在画布上的位置和大小、列数、逻辑名（如果有的话），以及它所属的表分组（如果属于某个分组）。除非是在搜索，否则表之后依次是表分组、备注（每个备注附带其所属的表分组，如果属于某个分组），然后是域、术语和词根。 |
+| `erd_get` | `tableIds?`, `tableNames?`, `relationshipIds?`, `indexIds?`, `memoIds?`, `tableGroupIds?`, `wordIds?`, `termIds?`, `domainIds?` | 完整返回所指定的实体：表附带其列及其所属的表分组，关系附带其列及其 `onDelete` 和 `onUpdate`，索引附带其列，备注附带其文本及其所属的表分组，表分组附带其中的表和备注，词根、术语和域则附带其所有字段。 |
 | `erd_read` | `format`, `vendor?`, `statements?`, `header?`, `logicalNameAsComment?`, `tableIds?`, `tableNames?`, `groupNames?` | 以四种格式之一一次性返回整个文档，或者只返回部分表或部分表分组的 DDL。 |
 | `erd_list_checks` | `level?`, `tableIds?`, `tableNames?`, `offset?`, `limit?` | 词根、术语和域这三个词典所发现的问题，与编辑器 Dictionary 标签页的 `Checks` 工作表所列出的相同，一次一页。它不会更改任何内容，参见[词典检查](#dictionary-checks)。 |
 
 智能体用 `erd_list` 查找 id，用 `erd_get` 读取列、词典行及其他详细信息，再把这些 id 传给编辑工具。
 `erd_list` 中表的大小是它在画布上占据的方框：高度是精确的，宽度是近似的。
-表分组按其存储的矩形列出，并附带其名称、颜色以及其中所含表的数量。
+表分组按其存储的矩形列出，并附带其名称、颜色以及其中所含表和备注的数量。
 每条关系只列出一次，随其两个表中的一个列出。
 词典行按其 id、`name` 以及它为物理名或列提供的内容列出：域的 `dataType`、术语的 `physicalName` 和 `domainId`，以及词根的 `abbreviation`。每个词典都按其工作表中显示的顺序列出各行。
 `erd_list` 和 `erd_read` 报告的设置是文件所保存的设置，参见[设置](#settings)。
@@ -45,7 +45,7 @@ description: erd-editor MCP 服务器提供的所有工具：一次一页地读�
 
 | `format` | 返回内容 |
 | --- | --- |
-| `snapshot` | 包含每个实体及其 id 的紧凑 JSON，其中包括表分组和词根、术语、域的各行，以及设置和 Schema SQL 脚本。它省略因查看者而异的内容：测量出的宽度、叠放顺序、视图、标签页和名称显示。schema 较大时体积也较大。 |
+| `snapshot` | 包含每个实体及其 id 的紧凑 JSON，其中包括带有其中的表和备注的表分组，以及词根、术语、域的各行，以及设置和 Schema SQL 脚本。它省略因查看者而异的内容：测量出的宽度、叠放顺序、视图、标签页和名称显示。schema 较大时体积也较大。 |
 | `sql` | 八种数据库之一的 DDL：`Databricks`、`MariaDB`、`MSSQL`、`MySQL`、`Oracle`、`PostgreSQL`、`Snowflake` 或 `SQLite`。`vendor` 默认为文档所设置的数据库。整个文档的 DDL 包含其前置脚本和后置脚本。指定 `tableIds`、`tableNames` 或 `groupNames` 时，只返回这些表，以及它们持有的外键，不包含脚本。外键会带有其 ON DELETE 与 ON UPDATE 操作，目标数据库省略的操作除外，参见 [ON DELETE 与 ON UPDATE](../guide/guides/relationship-editing.md#on-delete-and-on-update)。 |
 | `json` | 与保存时写出的文件完全相同的整个文档，包括编辑器尚未保存的编辑，参见[存储形式](../api/advanced/schema.md#storage-form)。 |
 | `scripts` | 只返回文档的前置脚本和后置脚本，形式为 `{"before":"…","after":"…"}`，未设置的脚本为空，无论 schema 有多大。 |
@@ -103,6 +103,37 @@ description: erd-editor MCP 服务器提供的所有工具：一次一页地读�
 
 每项检查如何读取名称，参见[各项检查发现的问题](../guide/guides/dictionary.md#what-each-check-finds)。
 
+## SVG 导出 {#svg-export}
+
+| 工具 | 参数 | 作用 |
+| --- | --- | --- |
+| `erd_export_svg` | `output?`, `darkMode?`, `background?` | 将文档绘制为 SVG 图像，并写入 `output` 所指定的 `.svg` 文件；不带 `output` 时，则以 SVG 文本作为回复。它不会更改任何文档。 |
+
+图像由服务器自己绘制，因此它只需要服务器 `1.2.1` 或更高版本，并且适用于任何能够连接的 ERD Editor 扩展或插件版本。
+与 `toImage()` 一样，它绘制的是编辑器 `Export image` 对话框保存为 SVG 的图像，但只依据文档本身：整张图以 100% 绘制，不包含 View Option 在文档中隐藏的内容，使用预设颜色，表和列按文档所持有的名称显示来命名，图中自带的文字为英文，参见[它绘制什么](../api/to-image.md#what-it-draws)。
+服务器在没有编辑器字体的情况下测量文本，因此表可能比编辑器绘制的略宽一些。
+没有 PNG，也不能复制到剪贴板。
+
+- `darkMode`：`true` 绘制深色主题；`false`（默认值）绘制浅色主题。编辑器屏幕上的任何主题都不会传到图像中。
+- `background`：`true`（默认值）会在图的后面铺上画布颜色；`false` 则保持透明。
+- `output`：要写入的文件，可以是绝对路径，也可以相对于服务器的工作目录，名称以 `.svg` 结尾（不区分大小写），所在文件夹必须已经存在。已有的同名文件会通过其旁边的临时文件替换，符号链接会被跟随到它所指向的文件。
+
+导出读取文档的方式与读取工具相同：优先读取为其提供服务的编辑器所持有的内容，包括尚未保存的编辑，否则读取文件。与读取一样，它绝不会在编辑器中打开该文档。
+其回复中的 `mode` 会指明是哪一种：`live`、`headless`，或者在 hub 已关闭的编辑器持有该文档时为 `blocked`，并附带一条说明：绘制的是磁盘上的文件，不含该编辑器中尚未保存的编辑，参见[实时与无头模式](./live-and-headless.md)。
+
+带 `output` 时，回复是一行 JSON：`mode`、文档的 `path`、写入的 `output`、以 `bytes` 表示的大小、SVG 的 `width` 和 `height`，以及存在说明时的 `notes`。
+
+```json
+{"mode":"headless","path":"/work/shop.erd.json","output":"/work/docs/shop.svg","bytes":48213,"width":1210,"height":764}
+```
+
+不带 `output` 时，回复为 SVG 文本，随后是 `{"mode":"…"}` 以及可能有的说明。超过 40,000 个字符（一次回复所能返回的上限）的 SVG 会以 `tooLarge` 被拒绝：请传入 `output`，改为将其写入文件。
+
+`output` 会在读取文档之前检查，因此被拒绝的 `output` 不会浪费一次绘制：空的 `output`、名称不以 `.svg` 结尾的 `output`、指向文件夹的 `output`，以及指向不存在的文件或指向名称不以 `.svg` 结尾的文件的链接，会以 `invalidPath` 被拒绝，位于不存在的文件夹中的 `output` 则以 `notFound` 被拒绝。只读文件会在图像绘制完成后以 `readonly` 被拒绝，并保持原样。
+
+导出不会产生 Undo 记录，也没有需要保存的内容，`erd_batch` 会拒绝它，就像拒绝读取工具一样。
+较大的图需要几秒钟来绘制，并且服务器一次只绘制一个导出。
+
 ## 编辑工具
 
 id 来自 `erd_list` 和 `erd_get`，或者来自创建该实体的那次调用的 `createdIds`。
@@ -121,7 +152,7 @@ id 来自 `erd_list` 和 `erd_get`，或者来自创建该实体的那次调用�
 | `erd_change_table_color` | `tableId`, `color` | 设置表的颜色。 |
 | `erd_move_table` | `tableId`, `x`, `y` | 将表移动到画布上的某个位置。 |
 | `erd_move_tables` | `positions` | 在一次编辑中移动多个表，一次 `erd_undo` 即可撤回。`positions` 中每个表对应一个 `{ tableId, x, y }`，每个表最多出现一次。 |
-| `erd_sort_tables` | | 将所有表按行排列在画布上，列数最少的在前，与 `erd_import_sql`、`erd_import_graphql`、`erd_import_dbml` 和 `erd_import_aml` 放置表的方式相同。表分组中的表会聚在一起，每个分组的框都会调整为恰好围住其中的表。 |
+| `erd_sort_tables` | | 将所有表按行排列在画布上，列数最少的在前，与 `erd_import_sql`、`erd_import_graphql`、`erd_import_dbml` 和 `erd_import_aml` 放置表的方式相同。表分组中的表会聚在一起，在备注显示期间，其备注紧随其后，每个分组的框都会调整为恰好围住它们。备注隐藏期间，分组的备注会随其表一起移动。不属于任何分组的备注，或所属分组不含任何表的备注，会留在原处。 |
 
 ### 列
 
@@ -190,28 +221,33 @@ id 来自 `erd_list` 和 `erd_get`，或者来自创建该实体的那次调用�
 | `erd_move_memo` | `memoId`, `x`, `y` | 将备注移动到画布上的某个位置。 |
 | `erd_resize_memo` | `memoId`, `width`, `height` | 调整备注的大小。宽度必须至少约为 `116` 像素，高度必须至少为 `100` 像素。它不产生 Undo 记录，因为编辑器只在拖动调整备注大小时才会记录。 |
 
+备注可以属于一个表分组，并随该分组一起移动，参见[表分组](#表分组)。
+
 通过 [View Option](../guide/guides/table-related-functions.md#table-view-options) → `Memos` 隐藏备注期间，`erd_add_memo` 仍会添加备注，该备注会保持隐藏，直到备注再次显示。
 `erd_list` 和 `erd_get` 同样会列出隐藏的备注。
 
 ### 表分组
 
-表分组是绘制在其中各表后面、带有名称的框，其颜色会显示在框上以及其中各表的表头上，参见[表分组](../guide/guides/table-groups.md)。
-一个表最多属于一个分组。无论 `erd_move_table`、`erd_move_tables` 和 `erd_move_table_group` 把表放在哪里，都不会改变分组所容纳的表；而在编辑器中，表在哪里放下，决定了它加入还是离开某个分组，参见[添加与移除表](../guide/guides/table-groups.md#adding-and-removing-tables)。`erd_add_table_group` 和 `erd_set_table_group` 会把表放入分组，`erd_remove_table_group` 则让其中的表不再属于任何分组。
-分组存储一个矩形，宽至少 `160` 像素、高至少 `100` 像素（含标题栏），编辑器绘制的框会撑大到足以容纳其中的每个表。
+表分组是绘制在其中各表和备注后面、带有名称的框，其颜色会显示在框上，以及其中各表的表头和各备注的标题带上，参见[表分组](../guide/guides/table-groups.md)。
+一个表或备注最多属于一个分组。无论 `erd_move_table`、`erd_move_tables`、`erd_move_memo` 和 `erd_move_table_group` 把表或备注放在哪里，都不会改变分组所容纳的内容；而在编辑器中，表或备注在哪里放下，决定了它加入还是离开某个分组，参见[添加与移除表](../guide/guides/table-groups.md#adding-and-removing-tables)。`erd_add_table_group` 会把表和备注放入分组，`erd_set_table_group` 放入表，`erd_set_memo_group` 放入备注，`erd_remove_table_group` 则让其中的表和备注不再属于任何分组。
+分组存储一个矩形，宽至少 `160` 像素、高至少 `100` 像素（含标题栏），编辑器绘制的框会撑大到足以容纳其中的每个表，并且在备注显示期间，还容纳其中的每个备注。
 
 | 工具 | 参数 | 作用 |
 | --- | --- | --- |
-| `erd_add_table_group` | `name`, `color?`, `x?`, `y?`, `width?`, `height?`, `tableIds?` | 添加一个分组，并在 `createdIds` 中返回其 id。请传入 `tableIds`，或者同时传入构成矩形的 `x`、`y`、`width` 和 `height`，两者择一。传入 `tableIds` 时，每个表都会离开其原来所在的分组，矩形会像[为选中的表分组](../guide/guides/table-groups.md#grouping-selected-tables)时那样调整为恰好围住这些表。传入矩形时，中心位于矩形内、且不属于任何分组的每个表都会加入该分组，与[绘制分组](../guide/guides/table-groups.md#drawing-a-group)时相同。`name` 为空时，分组没有名称。一次 `erd_undo` 会删除该分组，并让每个表回到其原来所在的分组。 |
-| `erd_remove_table_group` | `groupId` | 删除分组。其中的表留在原处，不再属于任何分组。 |
+| `erd_add_table_group` | `name`, `color?`, `x?`, `y?`, `width?`, `height?`, `tableIds?`, `memoIds?` | 添加一个分组，并在 `createdIds` 中返回其 id。请传入 `tableIds`（可以另带 `memoIds`），或者同时传入构成矩形的 `x`、`y`、`width` 和 `height`，两者择一。传入 `tableIds` 时，每个表和备注都会离开其原来所在的分组，矩形会像[为选中的表分组](../guide/guides/table-groups.md#grouping-selected-tables)时那样调整为恰好围住它们，其中的备注只在备注显示期间计入。传入矩形时，中心位于矩形内、且不属于任何分组的每个表和每个显示的备注都会加入该分组，与[绘制分组](../guide/guides/table-groups.md#drawing-a-group)时相同。`name` 为空时，分组没有名称。一次 `erd_undo` 会删除该分组，并让每个表和备注回到其原来所在的分组。 |
+| `erd_remove_table_group` | `groupId` | 删除分组。其中的表和备注留在原处，不再属于任何分组。 |
 | `erd_change_table_group_name` | `groupId`, `value` | 重命名分组。空字符串会让分组没有名称。 |
 | `erd_change_table_group_color` | `groupId`, `color` | 设置分组的颜色。 |
-| `erd_move_table_group` | `groupId`, `x`, `y` | 移动分组，使其矩形从该点开始，其中的表也移动相同的距离，与拖动其标题栏时相同。移动总计不足 20 像素（横向与纵向的距离相加）时不产生 Undo 记录。从服务器 `1.2.0` 起，该移动会以分组及其表最终到达的点传到编辑器，因此对于 VS Code 扩展 `4.3.0` 或更高版本，或 Obsidian 或 JetBrains 插件 `1.3.0` 或更高版本，在那里于同一时刻对该分组或其中某个表进行的移动，最终落在两个位置之一，绝不会是两者之和，参见[同一时刻进行的编辑](./live-and-headless.md#edits-made-at-the-same-moment)。 |
-| `erd_resize_table_group` | `groupId`, `x?`, `y?`, `width`, `height` | 设置分组的矩形，其中的表保持原位。省略 `x` 和 `y` 时保留其左上角的位置。无法连同四周留白容纳分组中各表的矩形会被拒绝，消息会指出矩形必须容纳的范围。 |
+| `erd_move_table_group` | `groupId`, `x`, `y` | 移动分组，使其矩形从该点开始，其中的表和备注（包括隐藏的备注）也移动相同的距离，与拖动其标题栏时相同。移动总计不足 20 像素（横向与纵向的距离相加）时不产生 Undo 记录。从服务器 `1.2.0` 起，该移动会以分组及其表最终到达的点传到编辑器，因此对于 VS Code 扩展 `4.3.0` 或更高版本，或 Obsidian 或 JetBrains 插件 `1.3.0` 或更高版本，在那里于同一时刻对该分组或其中某个表进行的移动，最终落在两个位置之一，绝不会是两者之和，参见[同一时刻进行的编辑](./live-and-headless.md#edits-made-at-the-same-moment)。从服务器 `1.2.1` 起，其备注最终到达的点也放在同一个批次中发送。 |
+| `erd_resize_table_group` | `groupId`, `x?`, `y?`, `width`, `height` | 设置分组的矩形，其中的表和备注保持原位。省略 `x` 和 `y` 时保留其左上角的位置。无法连同四周留白容纳分组中各表和显示的备注的矩形会被拒绝，消息会指出矩形必须容纳的范围。 |
 | `erd_set_table_group` | `tableIds`, `groupId` | 把表放入分组，每个表都会离开其原来所在的分组。`groupId` 为 `null` 或空字符串时，会把这些表移出所有分组。 |
+| `erd_set_memo_group` | `memoIds`, `groupId` | 把备注放入分组，每个备注都会离开其原来所在的分组，并留在原处。`groupId` 为 `null` 或空字符串时，会把这些备注移出所有分组。 |
 
 通过 `View Option` → `Table Groups` 隐藏分组期间，这些工具仍会添加和修改分组，这些分组会保持隐藏，直到分组再次显示，参见[隐藏分组](../guide/guides/table-groups.md#hiding-groups)。
-`erd_sort_tables` 会让每个分组中的表聚在一起，`erd_import_dbml` 和 `erd_import_json` 会带入分组（参见[导入](#导入)），`erd_read` 则可以通过 `groupNames` 写出所选分组的 DDL。
+通过 View Option → `Memos` 隐藏的备注仍留在其分组中并随分组一起移动，`erd_set_memo_group` 和 `erd_add_table_group` 的 `memoIds` 会像对显示的备注那样把它们放入分组。
+`erd_sort_tables` 会让每个分组中的表和备注聚在一起，`erd_import_dbml` 和 `erd_import_json` 会带入分组（参见[导入](#导入)），`erd_read` 则可以通过 `groupNames` 写出所选分组的 DDL。
 支持表分组之前的 ERD Editor 发布版本在保存文件时会丢掉文件中的分组，`4.0.0` 之前的 VS Code 扩展以及 `1.0.0` 之前的 Obsidian 和 JetBrains 插件都是如此，参见[更新](./installation.md#更新)。
+在备注加入表分组之前的发布版本，即 `4.3.1` 之前的 VS Code 扩展以及 `1.3.1` 之前的 Obsidian 和 JetBrains 插件，既不会显示也不会保留备注属于哪个分组，因此保存文件时每个备注都不属于任何分组，在磁盘上写入文件的 `1.2.1` 之前的服务器也是如此，参见[更新](./installation.md#更新)。
 
 ### 词典 {#dictionaries}
 
@@ -304,14 +340,14 @@ Dictionary 标签页出现之前的 ERD Editor 发布版本在保存文件时会
 - 关系和索引只会在导入带来的表之间建立，因此指向文本中未声明的表的外键会被丢弃。
 - `erd_import_sql`、`erd_import_graphql` 和 `erd_import_aml` 会添加表及其关系和索引，`erd_import_dbml` 还会添加其表分组。`erd_import_json` 会添加表、关系、索引、备注和表分组，但绝不会添加其设置，并且会拒绝空文本。其中的表和列会带入它们的逻辑名，但没有任何列会关联域，JSON 中的词根、术语和域也都不会载入。
 
-JSON 文档会保留自身的排列，包括其中的表分组：使用 `replace` 时保留其放置表的位置，使用 `append` 时则在添加的内容块内部保留。
+JSON 文档会保留自身的排列，包括其中的表分组及各分组所含的表和备注：使用 `replace` 时保留其放置表的位置，使用 `append` 时则在添加的内容块内部保留。
 SQL、GraphQL、DBML 和 AML 中的表会按行排列，列数最少的在前，每个分组中的表聚在一起，与 `erd_sort_tables` 放置表的方式相同，而绝不会像编辑器自身的 Import 在可行时那样按 `Flow` 排布。这四个工具在两种模式下都会拒绝空文本。
 
 ## erd_batch
 
 `erd_batch` 按顺序把多个编辑工具作为一次编辑执行，要么全部生效，要么全部不生效。
 
-- `operations` 最多包含 100 个条目，每个条目为 `{ tool, as?, args? }`，其中 `tool` 是一个编辑工具，`args` 是该工具去掉 `path` 后的参数。读取工具（例如 `erd_list_checks`）会被拒绝。
+- `operations` 最多包含 100 个条目，每个条目为 `{ tool, as?, args? }`，其中 `tool` 是一个编辑工具，`args` 是该工具去掉 `path` 后的参数。读取工具（例如 `erd_list_checks`）会被拒绝，`erd_export_svg` 也会被拒绝。
 - 这些操作会先在文档的副本上试运行。被拒绝的操作会被指明，例如 `operations[1] erd_remove_table: …`，并且不会应用任何内容。
 - 一次 `erd_undo` 即可撤回整个批处理，但无法撤回的操作除外，结果中的 `undoNote` 会列出它们：所用工具不产生 Undo 记录的操作，例如 `erd_set_database`；以及改变了文档却没有产生 Undo 记录的操作，例如移动距离很短的 `erd_move_table_group`。完全没有产生 Undo 记录的批处理会被 `erd_undo` 跳过。结果中的 `historyEntries` 统计的是其中编辑器历史记录的条数，而不是 `erd_undo` 的调用次数。
 - 在实时会话中，编辑器要么接受整个批处理，要么完全不接受。
@@ -391,21 +427,21 @@ SQL、GraphQL、DBML 和 AML 中的表会按行排列，列数最少的在前，
 
 | `code` | 原因 |
 | --- | --- |
-| `notFound` | 某个 id 没有对应任何现存的实体，或者文件不存在。 |
+| `notFound` | 某个 id 没有对应任何现存的实体，文件不存在，或者 `erd_export_svg` 的 `output` 所在的文件夹不存在。 |
 | `invalidArgs` | 缺少某个参数，或者参数的值不正确。 |
-| `invalidPath` | 该路径不是 ERD 文档。在 Windows 上，还包括含有 Windows 无法按原样存储的名称的路径，或者指向某个编辑器以另一条路径持有的文档的路径，消息会指出那条路径。 |
+| `invalidPath` | 该路径不是 ERD 文档，或者 `erd_export_svg` 的 `output` 不是 `.svg` 文件，参见 [SVG 导出](#svg-export)。在 Windows 上，还包括含有 Windows 无法按原样存储的名称的路径，或者指向某个编辑器以另一条路径持有的文档的路径，消息会指出那条路径。 |
 | `invalidDocument` | 该文件不是编辑器可以读取的文档。 |
-| `tooLarge` | 一次读取无法放入一次返回中。 |
+| `tooLarge` | 一次读取，或者未带 `output` 请求的 SVG，无法放入一次返回中。 |
 | `blocked` | 持有该文档的编辑器的 hub 已关闭。消息会说明如何开启它：在 VS Code 中，信任该工作区并开启 `dineug.erd-editor.agentHub.enabled`，或者重新加载窗口；在 Obsidian 中，开启 Coding agents，或者重新加载 Obsidian；在 JetBrains IDE 中，开启 Coding agents，如果它已开启，则重启 IDE。 |
 | `hubDisabled` | JetBrains IDE 仅在其不信任的项目中持有该文档。读取仍然有效；信任该项目即可让智能体编辑。 |
 | `conflict` | 文件在调用期间在磁盘上发生了变化。未写入任何内容。 |
 | `hubAppeared`, `hubGone` | 有编辑器开始为智能体正在磁盘上编辑的文档提供服务，或者为该文档提供服务的编辑器仍在运行，但其锁文件和连接已消失。未写入任何内容。 |
 | `notSaved` | `erd_save` 无法保存编辑器中的文档。 |
-| `readonly` | 编辑器以只读方式持有该文档，例如它无法写入或无法作为图读取的文件。没有编辑器时，则是文件本身为只读，例如尚未签出的 Perforce 或 TFVC 文件。未写入任何内容。 |
+| `readonly` | 编辑器以只读方式持有该文档，例如它无法写入或无法作为图读取的文件。没有编辑器时，则是文件本身为只读，例如尚未签出的 Perforce 或 TFVC 文件。对于 `erd_export_svg`，则是其 `output` 所指定的 `.svg` 文件为只读。未写入任何内容。 |
 | `protocolMismatch` | 编辑器的 ERD Editor 扩展或插件与服务器所用的协议版本不同，例如服务器 `1.0.0` 或更高版本搭配 VS Code 扩展 `3.x`。读取同样会被拒绝，消息会指出需要更新的一方，参见[更新](./installation.md#更新)。 |
 | `hubUnreachable`, `timeout`, `disconnected` | 编辑器的 hub 没有接受连接、没有在 30 秒内应答，或者在调用期间断开了连接。在 Windows 上，`hubUnreachable` 还表示 Windows 不允许智能体访问该 hub：编辑器以高于智能体的权限运行（例如编辑器以管理员身份启动而智能体没有），或者智能体在沙箱中运行。 |
 
 其他代码较为少见，而且每次拒绝都会附带一条说明发生了什么的消息。
 
-编辑工具、`erd_batch` 以及四个读取工具会在接触文档之前，以 JSON-RPC 的 invalid params 错误（`-32602`）拒绝它们未声明的参数或类型错误的参数，因此拼错的参数绝不会被悄悄丢弃。
+编辑工具、`erd_batch`、四个读取工具以及 `erd_export_svg` 会在接触文档之前，以 JSON-RPC 的 invalid params 错误（`-32602`）拒绝它们未声明的参数或类型错误的参数，因此拼错的参数绝不会被悄悄丢弃。
 五个会话工具会忽略它们不认识的参数。

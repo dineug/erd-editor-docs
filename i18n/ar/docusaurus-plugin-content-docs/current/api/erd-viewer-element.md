@@ -39,7 +39,7 @@ interface ErdViewerElement extends HTMLElement {
 ```
 
 يعرّف استيراد `@dineug/erd-editor/erd-viewer.js` الوسم `<erd-viewer>` ويترك `<erd-editor>` غير معرَّف. أما استيراد جذر الحزمة فلا يعرّف أيًّا منهما: فهو يصدّر الفئة `ErdViewerElement` والدالة `defineErdViewer()` التي تعرّف الوسم في الموضع الذي تستدعيها فيه، لذا يمكن للصفحة أيضًا أن تعرّف الفئة تحت وسم خاص بها، راجع [تسجيل العناصر](./installation.md#registering-the-elements).  
-وتحتاج كل نقطة دخول عدا `engine.js` و`peer.js` إلى DOM، وهذه أيضًا، لذا تستورده الصفحة المعروضة من جانب الخادم في جانب العميل، راجع [العرض من جانب الخادم](./installation.md#server-side-rendering).  
+وتحتاج كل نقطة دخول تصفها هذه الصفحات عدا `engine.js` و`peer.js` إلى DOM، وهذه أيضًا، لذا تستورده الصفحة المعروضة من جانب الخادم في جانب العميل، راجع [العرض من جانب الخادم](./installation.md#server-side-rendering).  
 ويدمج استيراد نقطة الدخول `erd-viewer` في `HTMLElementTagNameMap`، فيكون نوع `document.createElement('erd-viewer')` و`document.querySelector('erd-viewer')` هو `ErdViewerElement` دون تحويل صريح للنوع.
 
 وكالمحرر، يرسم العارض داخل جذر ظل مغلق، لذا فإن `viewer.shadowRoot` يساوي `null` ولا تتسرب أنماط الصفحة إليه ولا منه؛ نسّقه عبر [setTheme](#settheme) وخصائص CSS المخصصة `--erd-editor-*`. وتحتفظ عدة عارضات في صفحة واحدة كلٌّ منها بمستندها وعرضها ونسقها ولغتها.  
@@ -52,7 +52,7 @@ interface ErdViewerElement extends HTMLElement {
 
 ```html
 <erd-viewer src="diagram.erd.json" style="display: block; height: 480px"></erd-viewer>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0/dist/erd-viewer.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.1/dist/erd-viewer.umd.js"></script>
 ```
 
 ## src {#src}

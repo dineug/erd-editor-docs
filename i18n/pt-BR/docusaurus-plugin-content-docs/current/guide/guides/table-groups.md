@@ -1,15 +1,18 @@
 ---
 sidebar_position: 6
-description: Reunir tabelas relacionadas em uma caixa com nome e cor desenhada atrás delas; criar, nomear, colorir, mover, redimensionar e remover grupos, ir até eles pelo explorador, alterar quais tabelas eles contêm, ocultá-los e preservá-los no layout automático, no Esquema SQL e no DBML.
+description: Reunir tabelas e notas relacionadas em uma caixa com nome e cor desenhada atrás delas; criar, nomear, colorir, mover, redimensionar e remover grupos, ir até eles pelo explorador, alterar quais tabelas e notas eles contêm, ocultá-los e preservá-los no layout automático, no Esquema SQL e no DBML.
 ---
 
 # Grupos de tabelas
 
-Um grupo de tabelas é uma caixa com nome e cor, desenhada atrás de tabelas relacionadas no canvas ERD, para mostrar quais tabelas formam um conjunto.  
-Uma tabela fica em no máximo um grupo. Os grupos são salvos com o diagrama, junto com o grupo em que cada tabela está.
+Um grupo de tabelas é uma caixa com nome e cor, desenhada atrás de tabelas e notas relacionadas no canvas ERD, para mostrar quais formam um conjunto.  
+Uma tabela ou nota fica em no máximo um grupo. Os grupos são salvos com o diagrama, junto com o grupo em que cada tabela e cada nota está.
 
 A caixa tem uma barra de título na parte superior, com um ícone de grupo, o nome do grupo em negrito e, enquanto o ponteiro está sobre o grupo, um `x` que o remove — consulte [Remover um grupo](#removing-a-group). Um grupo sem nome mostra `unnamed`, e um nome longo demais para a barra é cortado com `…`.  
-A caixa sempre contém suas tabelas: ela mantém o tamanho que recebeu, mas se estende para manter cada tabela dentro dela, com `24px` de espaço ao redor e a barra de título acima. Uma tabela que cresce estende a caixa junto, e o mesmo acontece com uma tabela solta perto de uma borda com o centro ainda dentro da caixa. Enquanto tabelas estão sendo arrastadas, a caixa não cresce nem encolhe. A extensão não é salva: a caixa volta ao próprio tamanho assim que a tabela deixa de precisar do espaço.
+A caixa sempre contém suas tabelas e notas: ela mantém o tamanho que recebeu, mas se estende para manter cada tabela e cada nota dentro dela, com `24px` de espaço ao redor e a barra de título acima. Uma tabela ou nota que cresce estende a caixa junto, e o mesmo acontece com uma tabela ou nota solta perto de uma borda com o centro ainda dentro da caixa. Enquanto tabelas ou notas estão sendo arrastadas, a caixa não cresce nem encolhe. A extensão não é salva: a caixa volta ao próprio tamanho assim que nenhuma tabela ou nota precisa do espaço.
+
+As notas ocultas com [View Option](./table-related-functions.md#table-view-options) → `Memos` permanecem em seus grupos: mover um grupo as leva junto, removê-lo as tira dele, e desfazer qualquer um dos dois as devolve.  
+Só as notas exibidas estendem a caixa e travam uma borda de redimensionamento, e só elas são incluídas por um grupo desenhado, selecionadas por `Select tables` e listadas sob o grupo no explorador.
 
 Os grupos são desenhados atrás de todo o resto no canvas: tabelas, notas e linhas de relacionamento.  
 Onde grupos se sobrepõem, o último pressionado ou adicionado é desenhado na frente, e o corpo de um grupo nunca cobre a barra de título de outro grupo. A ordem não é salva, então um diagrama reaberto empilha seus grupos na ordem em que foram adicionados.  
@@ -31,7 +34,7 @@ O botão e o atalho alternam o desenho, então pressionar qualquer um deles enqu
 Enquanto o desenho está preparado, o cursor é uma cruz, e um pressionamento inicia a caixa onde quer que ocorra, mesmo sobre uma tabela, em vez de selecionar ou mover o que está embaixo. A barra de ferramentas do canvas então marca o botão `New Table Group`, e não a ferramenta mão nem o ponteiro.
 
 Soltar adiciona um grupo nessa caixa, nunca menor que `160px` de largura e `100px` de altura, incluindo a barra de título, por mais curto que seja o arrasto. Um clique sem arrastar adiciona um grupo de `480px` de largura e `320px` de altura com o canto superior esquerdo no ponto do clique.  
-Toda tabela sem grupo cujo centro fique dentro da nova caixa entra no grupo. Uma tabela que já está em outro grupo permanece nele.
+Toda tabela e toda nota exibida que não está em nenhum grupo e cujo centro fica dentro da nova caixa entra no grupo. Uma tabela ou nota que já está em outro grupo permanece nele.
 
 O botão do meio do mouse continua deslocando a área visível do canvas e mantém o desenho preparado. Estas ações encerram o desenho sem adicionar um grupo:
 
@@ -42,15 +45,15 @@ O botão do meio do mouse continua deslocando a área visível do canvas e mant�
 
 ### Agrupar tabelas selecionadas {#grouping-selected-tables}
 
-Selecione uma ou mais tabelas e pressione `T` e depois `G`, ou escolha `Group selected tables` no menu de contexto de uma tabela ou `Group Selected Tables` na pesquisa rápida, que o lista enquanto há uma tabela selecionada.  
-O novo grupo é desenhado ao redor das tabelas selecionadas, com `24px` de espaço em todos os lados e a barra de título acima. Toda tabela selecionada entra nele, saindo de qualquer grupo em que estivesse, e o grupo que ela deixou permanece, mesmo que agora esteja vazio. As notas na seleção são ignoradas.
+Selecione uma ou mais tabelas, e, se quiser, notas para acompanhá-las, e pressione `T` e depois `G`, ou escolha `Group selected tables` no menu de contexto de uma tabela ou de uma nota ou `Group Selected Tables` na pesquisa rápida. O menu de uma nota e a pesquisa rápida só o oferecem enquanto há uma tabela selecionada.  
+O novo grupo é desenhado ao redor das tabelas e notas selecionadas, com `24px` de espaço em todos os lados e a barra de título acima. Toda tabela e toda nota selecionada entra nele, saindo de qualquer grupo em que estivesse, e o grupo que ela deixou permanece, mesmo que agora esteja vazio.
 
 `T` e depois `G` são dois pressionamentos sem tecla modificadora, com `G` em até um segundo após `T`. Sem nenhuma tabela selecionada, a sequência não faz nada, e em um campo de texto, como o campo Localizar do explorador, ela digita as duas letras.
 
 ![Agrupamento de categories e products com T e depois G, nomeação do grupo como Catalog e, depois, aplicação da cor violeta pelo menu do grupo, para que os dois cabeçalhos recebam a cor](/img/demo-table-group-selected.webp)
 
 De qualquer maneira, o novo grupo não tem nome nem cor. Ele é selecionado sozinho, e seu editor de nome se abre sobre a barra de título para que você possa digitar um nome imediatamente — consulte [Nomear um grupo](#naming-a-group).  
-O grupo e as tabelas que ele recebe são uma única etapa de desfazer, e o nome que você digita é outra.
+O grupo e as tabelas e notas que ele recebe são uma única etapa de desfazer, e o nome que você digita é outra.
 
 ## Nomear um grupo {#naming-a-group}
 
@@ -71,8 +74,10 @@ Como acontece com tabelas e notas, o seletor colore todas as tabelas, notas e gr
 
 Um grupo colorido desenha a barra de título e o contorno nessa cor e o corpo em um tom claro dela. Um grupo sem cor usa os cinzas neutros do tema.  
 Toda tabela em um grupo colorido exibe a cor do grupo em todo o cabeçalho e mantém a própria cor na borda esquerda, de modo que as duas aparecem.  
-O texto e os botões desse cabeçalho ficam brancos, ou pretos sobre uma cor clara em que o preto fica muito mais legível, assim como o nome, o ícone e o `x` na barra de título do grupo. Entre as amostras predefinidas do seletor, Orange, Amber, Yellow e Lime usam preto, e as demais usam branco.  
-Uma tabela mantém o próprio cabeçalho enquanto seu grupo não tem cor, enquanto os grupos estão ocultos, com zoom de `70%` ou menos, em que as tabelas se reduzem ao nome, e na aba Visualização.
+Toda nota em um grupo colorido exibe a cor do grupo na faixa do cabeçalho acima do texto e mantém a própria cor na faixa ao longo do topo, de modo que as duas aparecem.  
+O texto e os botões desse cabeçalho ficam brancos, ou pretos sobre uma cor clara em que o preto fica muito mais legível, assim como o `x` de uma nota e o nome, o ícone e o `x` na barra de título do grupo. Entre as amostras predefinidas do seletor, Orange, Amber, Yellow e Lime usam preto, e as demais usam branco.  
+Uma tabela mantém o próprio cabeçalho enquanto seu grupo não tem cor, enquanto os grupos estão ocultos, com zoom de `70%` ou menos, em que as tabelas se reduzem ao nome, e na aba Visualização.  
+Uma nota mantém o próprio cabeçalho enquanto seu grupo não tem cor ou enquanto os grupos estão ocultos. As notas nunca se reduzem, então uma nota exibe a faixa em qualquer zoom.
 
 Uma mudança de cor é registrada no [histórico de desfazer](./undo-redo.md#one-gesture-one-step), como acontece com tabelas e notas.
 
@@ -80,107 +85,110 @@ Uma mudança de cor é registrada no [histórico de desfazer](./undo-redo.md#one
 
 Clique na barra de título de um grupo para selecionar só esse grupo, ou use `Ctrl + click` (Windows/Linux) ou `⌘ + click` (Mac) para adicioná-lo à seleção.  
 Pressionar a barra de título de um grupo que já está selecionado mantém toda a seleção, então um arrasto em seguida move a seleção inteira.  
-Pressionar a barra de título, ou clicar com o botão direito no grupo, traz o grupo para a frente dos outros grupos e suas tabelas para a frente de todas as outras tabelas e notas.
+Pressionar a barra de título, ou clicar com o botão direito no grupo, traz o grupo para a frente dos outros grupos e suas tabelas e notas para a frente de todas as outras tabelas e notas.
 
 Para o botão esquerdo do mouse, o corpo, a área abaixo da barra de título, é o próprio canvas: arrastá-lo desloca a área visível, `Ctrl + drag` (Windows/Linux) ou `⌘ + drag` (Mac) desenha um retângulo de seleção e um clique limpa a seleção. As tabelas, notas e linhas de relacionamento sobre o corpo respondem ao ponteiro normalmente.
 
-Um retângulo de seleção só inclui um grupo quando envolve a caixa inteira do grupo, então um retângulo desenhado dentro de um grupo seleciona tabelas sem o grupo — consulte [Seleção múltipla](./table-related-functions.md#multiple-selection).  
+Um retângulo de seleção só inclui um grupo quando envolve a caixa inteira do grupo, então um retângulo desenhado dentro de um grupo seleciona tabelas e notas sem o grupo — consulte [Seleção múltipla](./table-related-functions.md#multiple-selection).  
 `Ctrl + A` (Windows/Linux) ou `⌘ + A` (Mac) nunca seleciona um grupo.
 
-`Select tables` no menu de contexto do grupo substitui a seleção pelas tabelas do grupo, deixando o próprio grupo de fora, de modo que o próximo comando alcança só as tabelas.  
-Use-o antes de comandos que atuam só em tabelas, como copiar ou [focar em tabelas](./table-related-functions.md#focusing-on-tables), que ignoram um grupo selecionado.
+`Select tables` no menu de contexto do grupo substitui a seleção pelas tabelas e notas exibidas do grupo, deixando o próprio grupo de fora, de modo que o próximo comando alcança só elas.  
+Use-o antes de comandos que ignoram um grupo selecionado, como copiar ou [focar em tabelas](./table-related-functions.md#focusing-on-tables).
 
 O contorno de um grupo selecionado passa a ter a cor de seleção. Em uma [sessão colaborativa](../../api/advanced/collaborative-editing.md), um grupo que outro participante seleciona fica circundado na cor desse participante.
 
 ## Ir para um grupo {#going-to-a-group}
 
-O [explorador](./explorer.md#the-tree) lista os grupos na pasta `Table Groups`, por nome, cada um com suas tabelas abaixo. A pesquisa rápida não lista grupos.
+O [explorador](./explorer.md#the-tree) lista os grupos na pasta `Table Groups`, por nome, cada um com suas tabelas e notas exibidas abaixo. A pesquisa rápida não lista grupos.
 
 Escolher a linha de um grupo no explorador, uma correspondência de [Localizar e substituir](./find-and-replace.md#going-to-a-match) no nome de um grupo ou a linha de um grupo na lista do [visualizador de diferenças](./table-related-functions.md#the-change-tree) leva a esse grupo.  
-Isso traz a caixa do grupo para a área visível, tomando a barra de título como referência quando a caixa é mais alta que o canvas — consulte [Onde um salto termina](./table-related-functions.md#where-a-jump-lands). Em seguida, seleciona só o grupo e o traz para a frente com suas tabelas, como acontece ao pressionar a barra de título.  
+Isso traz a caixa do grupo para a área visível, tomando a barra de título como referência quando a caixa é mais alta que o canvas — consulte [Onde um salto termina](./table-related-functions.md#where-a-jump-lands). Em seguida, seleciona só o grupo e o traz para a frente com suas tabelas e notas, como acontece ao pressionar a barra de título.  
 Enquanto os grupos estão [ocultos](#hiding-groups), ou depois que o grupo foi removido, ir para ele não faz nada.  
 No visualizador de diferenças, cada lado só vai para o grupo quando o próprio documento o contém e o mostra — consulte [Ir para uma alteração](./table-related-functions.md#going-to-a-change).
 
 ## Mover e redimensionar um grupo {#moving-and-resizing-a-group}
 
-Arraste um grupo pela barra de título para movê-lo com todas as suas tabelas.  
-Se o grupo faz parte de uma seleção maior, toda a seleção se move com ele, e uma tabela que está selecionada e também no grupo se move uma única vez.  
+Arraste um grupo pela barra de título para movê-lo com todas as suas tabelas e notas.  
+Se o grupo faz parte de uma seleção maior, toda a seleção se move com ele, e uma tabela ou nota que está selecionada e também no grupo se move uma única vez.  
 O arrasto só começa depois que o ponteiro se move um pouco, então um clique ou clique duplo na barra de título continua sendo um clique. `Alt + drag` em uma barra de título move o grupo como um arrasto comum; um grupo nunca é duplicado.  
-A movimentação, com todas as tabelas que ela leva, é uma única etapa de desfazer.
+A movimentação, com todas as tabelas e notas que ela leva, é uma única etapa de desfazer.
 
-Arrastar uma tabela sozinha move apenas essa tabela e pode colocá-la em um grupo ou tirá-la dele — consulte [Adicionar e remover tabelas](#adding-and-removing-tables).
+Arrastar uma tabela ou nota sozinha move apenas essa tabela ou nota e pode colocá-la em um grupo ou tirá-la dele — consulte [Adicionar e remover tabelas](#adding-and-removing-tables).
 
 Todo grupo tem alças de redimensionamento nas quatro bordas e nos quatro cantos, selecionado ou não, como uma nota.  
 Arraste uma delas com o botão esquerdo do mouse: a caixa segue o ponteiro, e o novo tamanho é salvo quando você solta, como uma única etapa de desfazer.  
-Um grupo não pode ficar menor que `160px` por `100px`, nem menor que suas tabelas com seus `24px` de espaço e a barra de título. A borda para ali, por mais longe que o ponteiro vá.
+Um grupo não pode ficar menor que `160px` por `100px`, nem menor que suas tabelas e notas exibidas com seus `24px` de espaço e a barra de título. A borda para ali, por mais longe que o ponteiro vá.
 
 ## Adicionar e remover tabelas {#adding-and-removing-tables}
 
-Uma tabela entra em um grupo ou sai dele conforme o lugar onde você a solta.  
-Quando você arrasta tabelas e solta, cada tabela arrastada que não é levada por um grupo selecionado é avaliada pelo centro. Ela entra no grupo mais acima cuja caixa contém seu centro, ou sai do grupo se o centro não está na caixa de nenhum grupo. O grupo mais acima é o que está desenhado na frente.  
-Um grupo que o arrasto deixa no lugar mantém a caixa que tinha quando o arrasto começou, então uma tabela deslocada um pouco dentro do próprio grupo permanece nele e, para sair, precisa ser arrastada até que o centro fique fora dessa caixa.  
-Enquanto você arrasta, cada grupo que receberia uma tabela ao soltar fica contornado.
+Uma tabela ou nota entra em um grupo ou sai dele conforme o lugar onde você a solta.  
+Quando você arrasta tabelas ou notas e solta, cada tabela e cada nota arrastada que não é levada por um grupo selecionado é avaliada pelo centro. Ela entra no grupo mais acima cuja caixa contém seu centro, ou sai do grupo se o centro não está na caixa de nenhum grupo. O grupo mais acima é o que está desenhado na frente.  
+Um grupo que o arrasto deixa no lugar mantém a caixa que tinha quando o arrasto começou, então uma tabela ou nota deslocada um pouco dentro do próprio grupo permanece nele e, para sair, precisa ser arrastada até que o centro fique fora dessa caixa.  
+Enquanto você arrasta, cada grupo que receberia uma tabela ou nota ao soltar fica contornado.
 
-Quando você solta em até cerca de `200ms` após o último movimento, a mudança de grupo faz parte da etapa de desfazer do arrasto, então um único desfazer traz as tabelas de volta para onde estavam e para os grupos em que estavam. Após uma pausa maior antes de soltar, a mudança de grupo é uma etapa própria — consulte [Um gesto, uma etapa](./undo-redo.md#one-gesture-one-step).  
+Quando você solta em até cerca de `200ms` após o último movimento, a mudança de grupo faz parte da etapa de desfazer do arrasto, então um único desfazer traz as tabelas e notas de volta para onde estavam e para os grupos em que estavam. Após uma pausa maior antes de soltar, a mudança de grupo é uma etapa própria — consulte [Um gesto, uma etapa](./undo-redo.md#one-gesture-one-step).  
 Um clique, ou um arrasto de poucos pixels, não muda nenhum grupo, e nada muda de grupo enquanto os grupos estão ocultos.
 
-As outras maneiras de alterar quais tabelas um grupo contém:
+As outras maneiras de alterar quais tabelas e notas um grupo contém:
 
-- `Remove from group` no menu de contexto de uma tabela tira todas as tabelas selecionadas do respectivo grupo. Ele aparece enquanto uma tabela selecionada está em um grupo, mesmo enquanto os grupos estão ocultos, e é uma única etapa de desfazer.
-- `Group selected tables` move as tabelas selecionadas para um novo grupo — consulte [Agrupar tabelas selecionadas](#grouping-selected-tables).
-- Remover um grupo deixa suas tabelas sem grupo.
+- `Remove from group` no menu de contexto de uma tabela ou de uma nota tira todas as tabelas e notas selecionadas do respectivo grupo. Ele aparece enquanto uma tabela ou nota selecionada está em um grupo, mesmo enquanto os grupos estão ocultos, e é uma única etapa de desfazer.
+- `Group selected tables` move as tabelas selecionadas, e as notas selecionadas com elas, para um novo grupo — consulte [Agrupar tabelas selecionadas](#grouping-selected-tables).
+- Remover um grupo deixa suas tabelas e notas sem grupo.
 
-Uma tabela colada ou duplicada com `Alt` fica sem grupo, mesmo quando cai dentro da caixa de um grupo. Arrastá-la depois aplica a regra de soltar.
+Uma tabela ou nota colada ou duplicada com `Alt` fica sem grupo, mesmo quando cai dentro da caixa de um grupo. Arrastá-la depois aplica a regra de soltar.
+
+![Arrasto de uma nota para o grupo Billing, de modo que o cabeçalho da nota recebe o azul-petróleo do grupo e a caixa se estende ao redor dela, movimentação do grupo com a nota junto e, depois, retirada da nota com Remove from group no menu dela](/img/demo-table-group-memo.webp)
 
 ## Remover um grupo {#removing-a-group}
 
-Remover um grupo nunca remove suas tabelas: elas ficam onde estão, sem grupo.
+Remover um grupo nunca remove suas tabelas nem notas: elas ficam onde estão, sem grupo.
 
 - O `x` no fim da barra de título, que aparece enquanto o ponteiro está sobre o grupo, remove só esse grupo.
 - `Delete` no menu de contexto do grupo remove o grupo. Quando o grupo é um de vários itens selecionados, o item do menu passa a ser `Delete selected` e remove tudo o que está selecionado: tabelas, notas e grupos.
 - Com grupos selecionados, `Delete` ou `Backspace` remove os grupos selecionados junto com as tabelas e notas que estiverem selecionadas, assim como `Ctrl + Backspace` e `Ctrl + Delete` (Windows/Linux) ou `⌘ + Backspace` e `⌘ + Delete` (Mac) — consulte [Exclusão de tabelas e notas](./table-related-functions.md#table-and-memo-deletion).
 
-Cada remoção é uma única etapa de desfazer, que traz o grupo de volta com suas tabelas dentro.
+Cada remoção é uma única etapa de desfazer, que traz o grupo de volta com suas tabelas e notas dentro.
 
 ## O menu do grupo {#the-group-menu}
 
 Clique com o botão direito na barra de título, no corpo ou na borda de um grupo para abrir o menu dele. No Mac, `Ctrl + click` também o abre, assim como um toque longo em uma tela sensível ao toque.  
 O clique com o botão direito primeiro seleciona o grupo, sozinho, a menos que ele já faça parte da seleção, então `Color` e `Delete selected` só alcançam o resto da seleção quando o grupo estava nela.
 
-- `Select tables`: seleciona só as tabelas do grupo — consulte [Selecionar grupos](#selecting-groups).
+- `Select tables`: seleciona só as tabelas e notas exibidas do grupo — consulte [Selecionar grupos](#selecting-groups).
 - `Rename`: abre o editor de nome — consulte [Nomear um grupo](#naming-a-group).
 - `Color`: abre o seletor de cores — consulte [Colorir um grupo](#coloring-a-group).
 - `Remove color`: aparece enquanto algo selecionado tem cor.
 - `Delete`, ou `Delete selected` quando o grupo é um de vários itens selecionados, com a tecla `Delete` mostrada à direita — consulte [Remover um grupo](#removing-a-group).
 
-O menu de contexto de uma tabela ganha `Group selected tables` e `Remove from group` depois de `Color` e `Remove color`, antes do item Delete, e o menu de contexto do canvas ganha `New Table Group`.  
+O menu de contexto de uma tabela ou de uma nota ganha `Group selected tables` e `Remove from group` depois de `Color` e `Remove color`, antes do item Delete, e o menu de contexto do canvas ganha `New Table Group`.  
 `Group selected tables` mostra suas teclas, `T` e depois `G`, à direita, e `New Table Group` mostra `Alt + G` (Windows/Linux) ou `⌥ + G` (Mac).
 
 ## Ocultar grupos {#hiding-groups}
 
 `View Option` → `Table Groups` no menu de contexto do canvas mostra ou oculta todos os grupos. Ele vem marcado por padrão — consulte [Opções de exibição da tabela](./table-related-functions.md#table-view-options).  
-Com ele desmarcado, as caixas dos grupos e as cores de grupo nos cabeçalhos das tabelas desaparecem do canvas, do minimapa e das imagens exportadas, e as barras de rolagem e o minimapa deixam de reservar espaço para os grupos. Nada se move nem muda de tamanho, e toda tabela permanece em seu grupo.  
+Com ele desmarcado, as caixas dos grupos desaparecem do canvas, do minimapa e das imagens exportadas, e as barras de rolagem e o minimapa deixam de reservar espaço para os grupos. As tabelas e notas perdem as cores de grupo nos cabeçalhos. Nada se move nem muda de tamanho, e toda tabela e toda nota permanece em seu grupo.  
 Ocultar os grupos os retira da seleção, encerra um desenho de `New Table Group` e fecha um editor de nome aberto, como faz um clique em outro lugar — consulte [Nomear um grupo](#naming-a-group).
 
 Enquanto os grupos estão ocultos:
 
 - `New Table Group` e `Group selected tables` não são oferecidos nos menus, nem `New Table Group` e `Group Selected Tables` na pesquisa rápida, e a barra de ferramentas do canvas omite o botão `New Table Group`. `Remove from group` continua sendo oferecido.
 - `Alt + G` (Windows/Linux) ou `⌥ + G` (Mac) e a sequência `T` e depois `G` não fazem nada.
-- Arrastar tabelas não muda nenhum grupo, e um retângulo de seleção não inclui nenhum grupo.
+- Arrastar tabelas ou notas não muda nenhum grupo, e um retângulo de seleção não inclui nenhum grupo.
 - O explorador omite a pasta `Table Groups`, e Localizar e substituir não localiza nem substitui nomes de grupos, mesmo com `Table group names` ativado.
-- O [layout automático](#auto-layout) continua mantendo juntas as tabelas de cada grupo, a aba Esquema SQL continua oferecendo os [grupos para escolher](#schema-sql-by-group), o DBML continua escrevendo os grupos e [Importar e adicionar](./file-import-export.md#import-and-add) continua colocando o conteúdo importado abaixo das caixas ocultas.
+- O [layout automático](#auto-layout) continua mantendo juntas as tabelas e notas de cada grupo, a aba Esquema SQL continua oferecendo os [grupos para escolher](#schema-sql-by-group), o DBML continua escrevendo os grupos e [Importar e adicionar](./file-import-export.md#import-and-add) continua colocando o conteúdo importado abaixo das caixas ocultas.
 
 A escolha é salva no documento e registrada no [histórico de desfazer](./undo-redo.md#what-the-history-records), como os outros botões de alternância do menu Opções de exibição. Em um editor somente leitura, ela fica naquela tela — consulte [Editores somente leitura](#read-only-editors).
 
 ## Layout automático {#auto-layout}
 
-Todo [layout automático](./table-related-functions.md#auto-layout) mantém juntas as tabelas de cada grupo, estejam os grupos visíveis ou não.
+Todo [layout automático](./table-related-functions.md#auto-layout) mantém juntas as tabelas e notas de cada grupo, estejam os grupos visíveis ou não.
 
-- `Force` move cada grupo com suas tabelas como uma única caixa, com as tabelas mantendo suas posições dentro dela, e mantém a caixa de cada grupo a pelo menos `100px` de outros grupos e de tabelas sem grupo. A pré-visualização mostra cada grupo no lugar para onde ele vai.
-- `Flow`, `Tree - vertical` e `Tree - horizontal` organizam as tabelas de cada grupo dentro do grupo e posicionam os grupos de acordo com os relacionamentos entre eles, com as tabelas sem grupo organizadas ao redor.
+- `Force` move cada grupo com suas tabelas e notas como uma única caixa, cada uma mantendo sua posição dentro dela, e mantém a caixa de cada grupo a pelo menos `100px` de outros grupos e de tabelas sem grupo. A pré-visualização mostra cada grupo no lugar para onde ele vai.
+- `Flow`, `Tree - vertical` e `Tree - horizontal` organizam as tabelas de cada grupo dentro do grupo, com suas notas exibidas acomodadas ao lado delas, e posicionam os grupos de acordo com os relacionamentos entre eles, com as tabelas sem grupo organizadas ao redor.
 
-Depois, cada grupo que contém tabelas é ajustado a elas: sua caixa passa a corresponder aos limites delas, mais `24px` de espaço e a barra de título. Um grupo sem tabelas mantém a posição e o tamanho.  
-As tabelas e os grupos são posicionados em uma única etapa de desfazer.
+Depois, cada grupo que contém tabelas é ajustado a elas e às suas notas exibidas: sua caixa passa a corresponder aos limites delas, mais `24px` de espaço e a barra de título. Um grupo sem tabelas mantém a posição e o tamanho, e as notas que há nele permanecem onde estão.  
+Uma nota oculta se move com as tabelas do seu grupo, mas não ocupa espaço.  
+As tabelas, as notas e os grupos são posicionados em uma única etapa de desfazer.
 
 Uma importação de DBML ajusta cada grupo ao redor de suas tabelas da mesma forma, onde quer que elas sejam posicionadas — consulte [DBML](./file-import-export.md#dbml).
 
@@ -192,10 +200,10 @@ A escolha pertence à janela do editor e não é salva no documento.
 
 ## Importar, exportar e copiar {#import-export-and-copying}
 
-- O DBML preserva os grupos nos dois sentidos. Uma importação de DBML transforma cada bloco `TableGroup` em um grupo — consulte [DBML](./file-import-export.md#dbml) — e o destino `DBML` do Gerador de código escreve um bloco `TableGroup` para cada grupo que contém uma tabela — consulte [Gerador de código](./code-generator.md#language).
-- Um arquivo JSON mantém seus grupos. Nenhum outro formato os preserva: as importações de SQL, GraphQL e AML não trazem nenhum, e o Esquema SQL e os outros destinos do Gerador de código não escrevem nenhum.
-- [Importar e adicionar](./file-import-export.md#import-and-add) traz os grupos de um arquivo como novos grupos que contêm suas tabelas e os seleciona junto com as novas tabelas enquanto os grupos estão visíveis, então arrastar o bloco adicionado leva seus grupos junto.
-- Uma [imagem exportada](./file-import-export.md#image) desenha os grupos visíveis atrás das tabelas, com as cores de grupo nos cabeçalhos delas.
+- O DBML preserva os grupos nos dois sentidos, com suas tabelas, mas não com suas notas. Uma importação de DBML transforma cada bloco `TableGroup` em um grupo — consulte [DBML](./file-import-export.md#dbml) — e o destino `DBML` do Gerador de código escreve um bloco `TableGroup` para cada grupo que contém uma tabela — consulte [Gerador de código](./code-generator.md#language).
+- Um arquivo JSON mantém seus grupos, com as tabelas e notas de cada um. Nenhum outro formato os preserva: as importações de SQL, GraphQL e AML não trazem nenhum, e o Esquema SQL e os outros destinos do Gerador de código não escrevem nenhum.
+- [Importar e adicionar](./file-import-export.md#import-and-add) traz os grupos de um arquivo como novos grupos que contêm suas tabelas e notas e os seleciona junto com as novas tabelas e notas exibidas enquanto os grupos estão visíveis, então arrastar o bloco adicionado leva seus grupos junto.
+- Uma [imagem exportada](./file-import-export.md#image) desenha os grupos visíveis atrás das tabelas e notas, com as cores de grupo nos cabeçalhos delas.
 - Copiar e colar, ou duplicar com `Alt`, nunca copia um grupo — consulte [Copiar e colar tabelas e notas](./table-related-functions.md#copyingpasting-tables-and-memos) e [Adicionar e remover tabelas](#adding-and-removing-tables).
 
 ## Editores somente leitura {#read-only-editors}
@@ -204,9 +212,9 @@ Em um editor [`readonly`](../../api/erd-editor-element.md#readonly), os grupos s
 
 - [Ir para um grupo](#going-to-a-group) o seleciona, e essa é a única forma de um grupo ser selecionado ali. Pressionar uma barra de título não seleciona nem move nada: arrastada, ela desloca o canvas, e um clique sem movimento tira a seleção que um salto deixou.
 - Não há alças de redimensionamento nem `x`, e um clique duplo na barra de título não abre o editor de nome.
-- Um clique com o botão direito em um grupo não abre nenhum menu, e o menu da tabela contém só `Table Properties`.
+- Um clique com o botão direito em um grupo ou em uma nota não abre nenhum menu, e o menu da tabela contém só `Table Properties`.
 - O menu do canvas não tem `New Table Group` e a pesquisa rápida não lista nenhum dos dois comandos de grupo. Um desenho de `New Table Group` termina quando o editor passa a ser somente leitura.
 - A [barra de ferramentas do canvas](./table-related-functions.md#canvas-toolbar) mantém apenas os controles de exibição, então não tem o botão `New Table Group`, e `Alt + G` (Windows/Linux) ou `⌥ + G` (Mac) e a sequência `T` e depois `G` não fazem nada.
-- Um arrasto de tabelas ou de um grupo em andamento quando o editor passa a ser somente leitura para onde está e não altera nenhum grupo, e um redimensionamento de grupo em andamento termina sem alterar o tamanho.
+- Um arrasto de tabelas, notas ou de um grupo em andamento quando o editor passa a ser somente leitura para onde está e não altera nenhum grupo, e um redimensionamento de grupo em andamento termina sem alterar o tamanho.
 - `View Option` → `Table Groups` mostra ou oculta os grupos apenas naquela tela, como toda View Option faz ali: o documento, os colaboradores e o histórico de desfazer mantêm a escolha como estava, e, quando o editor volta a ser editável, a escolha do documento é restaurada.
 - A escolha `Tables` da aba Esquema SQL continua funcionando.

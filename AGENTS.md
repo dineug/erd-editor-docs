@@ -1,6 +1,6 @@
 # erd-editor-docs
 
-**Generated:** 2026-11-03 · **Updated:** 2026-11-03
+**Generated:** 2026-11-03 · **Updated:** 2026-11-26
 
 ## Purpose
 
@@ -36,7 +36,7 @@ per-locale search tokenizers. This file adds what an agent needs on top of it.
 | `i18n/` | The 24 translations plus per-locale UI strings (see `i18n/AGENTS.md`) |
 | `scripts/` | The per-locale build runner and the Playwright demo recorder (see `scripts/AGENTS.md`) |
 | `src/` | The landing page, its feature cards and the global CSS (see `src/AGENTS.md`) |
-| `static/` | Copied to the site root as is. `img/` holds what `scripts/demos` records (70 `demo-*.webp` clips plus the `social-card.png` and `settings-relationship-data-type-sync.png` stills), along with the MCP page's `coding-agents.webp`, the homepage's `erd-editor-vscode.png`, `logo.svg`, `favicon.ico` and an unreferenced `vuerd.png`. Also `robots.txt` and `.nojekyll`. It has no AGENTS.md because the file would be published |
+| `static/` | Copied to the site root as is. `img/` holds what `scripts/demos` records (71 `demo-*.webp` clips plus the `social-card.png` and `settings-relationship-data-type-sync.png` stills), along with the MCP page's `coding-agents.webp`, the homepage's `erd-editor-vscode.png`, `logo.svg`, `favicon.ico` and an unreferenced `vuerd.png`. Also `robots.txt` and `.nojekyll`. It has no AGENTS.md because the file would be published |
 
 Generated or ignored, never edited: `build/`, `.docusaurus/`, `node_modules/`,
 `scripts/demos/.out/` (recorder scratch), `.omc/`.

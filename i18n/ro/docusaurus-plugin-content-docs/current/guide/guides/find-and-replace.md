@@ -93,7 +93,7 @@ Cât timp câmpul Găsire conține text, [arborele](./explorer.md#the-tree) expl
 
 - Folderele `Tables`, `Table Groups` și `Memos` apar doar când conțin o potrivire, iar contorul fiecărui folder este numărul de rânduri aflate direct sub el în rezultate.
 - Sub folderul `Tables` apar tabelele care conțin o potrivire, ordonate după nume, niciodată după numele logic. Sub fiecare tabel apar câte un rând pentru fiecare potrivire din comentariul său, apoi un folder `Columns` cu coloanele care conțin o potrivire, în ordinea coloanelor, fiecare cu câte un rând pentru fiecare potrivire din comentariul său, apoi un folder `Indexes` cu indexurile al căror nume se potrivește. Nu există un folder `Foreign Keys`.
-- Sub folderul `Table Groups` apar grupurile al căror nume se potrivește, ordonate după nume, fără tabelele lor. Un tabel găsit apare sub folderul `Tables`.
+- Sub folderul `Table Groups` apar grupurile al căror nume se potrivește, ordonate după nume, fără tabelele sau notele lor. Un tabel găsit apare sub folderul `Tables`, iar o notă sub folderul `Memos`.
 - Sub folderul `Memos` apar notele care conțin o potrivire, în ordinea din document, fiecare afișată prin primul său rând și cu câte un rând pentru fiecare potrivire din ea.
 
 O potrivire dintr-un nume este evidențiată chiar în rândul acelui nume, așa că un nume care conține de două ori textul căutat este un singur rând cu două evidențieri. O potrivire din numele logic al unui tabel sau al unei coloane apare tot pe rândul acelui tabel sau al acelei coloane, niciodată pe un rând propriu.  
@@ -127,7 +127,7 @@ Saltul la o potrivire închide panoul Proprietăți tabel dacă este deschis, ap
 
 - Pentru numele, numele logic sau comentariul unui tabel ori al unei coloane, selectează doar tabelul, îl aduce în prim-plan și mută celula activă pe celula care conține potrivirea. O potrivire dintr-un comentariu ascuns de o [opțiune de afișare a tabelelor](./table-related-functions.md#table-view-options) mută în schimb celula activă pe numele de lângă el. Acolo unde [modul de afișare a numelor](./logical-names.md#name-view) nu desenează nicio celulă pentru nume sau pentru numele logic, celula activă ajunge pe cea desenată în locul ei: numele în modul `Physical Names`, numele logic în modul `Logical Names`.
 - Pentru numele unui index, selectează doar tabelul indexului și îl aduce în prim-plan, cu celula activă pe numele tabelului sau, în modurile `Logical Names` și `Both Names`, pe numele lui logic, cu excepția cazului în care celula activă se află deja în acel tabel. Numele indexurilor nu sunt desenate pe pânză.
-- Pentru numele unui grup de tabele, selectează doar grupul și îl aduce în prim-plan împreună cu tabelele sale.
+- Pentru numele unui grup de tabele, selectează doar grupul și îl aduce în prim-plan împreună cu tabelele și notele sale.
 - Pentru o notă, selectează doar nota și o aduce în prim-plan.
 
 Pânza se derulează doar când ținta saltului nu este deja bine vizibilă, iar zoomul nu se schimbă niciodată (consultați [Unde ajunge un salt](./table-related-functions.md#where-a-jump-lands)).

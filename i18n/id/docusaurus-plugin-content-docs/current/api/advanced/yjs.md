@@ -265,6 +265,7 @@ Pengaturan yang diubah pembacanya tetap berada di layarnya, seperti pada setiap 
 Pengikatan menyimpan diagram di dua nama `Y.Doc`: `erd:snapshot`, map yang memegang cuplikan dokumen, dan `erd:log`, array batch aksi editor sejak cuplikan itu. Provider persistensi menyimpan keduanya bersama bagian `Y.Doc` lainnya.
 
 Cuplikan memuat [runtimeValue](../erd-editor-element.md#runtimevalue) dokumen, termasuk entitas yang dihapus, register kolaborasi dan versinya, serta seberapa jauh edit setiap penulis telah dilebur ke dalamnya. Seed menulisnya, begitu pula setiap peleburan pemadat.  
+Seed atau peleburan yang dibuat pada `@dineug/erd-editor` sebelum `5.1.1` menulis cuplikan tanpa memo di grup tabel mana pun — lihat [Mencampur rilis](./collaborative-editing.md#mixing-releases).  
 Setiap entri log adalah satu batch seperti yang dikirim editor, beserta metanya, yang membawa id editor dan nama panggilan pengirim.  
 Guliran, zoom, pergantian tab, kehadiran, dan handshake register tidak pernah dicatat. Setiap perubahan lain yang dikirim editor dicatat, termasuk pergantian Tampilan Nama yang dibuat di bawah [penguncian](../../guide/guides/settings.md#lock)-nya, yang dibuang setiap klien lain.  
 Bahasa Generator Kode, konvensi penamaan, atau tipe tanda kutip yang diubah di bawah penguncian tidak pernah dikirim, sehingga tetap berada di layar editor itu dan tidak pernah sampai ke room.

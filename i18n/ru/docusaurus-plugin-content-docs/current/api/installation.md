@@ -51,18 +51,18 @@ editor.addEventListener('change', () => {
 
 ```html
 <script type="module">
-  import 'https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js';
+  import 'https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js';
 
   const editor = document.createElement('erd-editor');
   editor.style.cssText = 'display: block; width: 100%; height: 100vh;';
   document.body.appendChild(editor);
 </script>
 <!-- or -->
-<script type="module" src="https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js"></script>
+<script type="module" src="https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js"></script>
 ```
 
 Сервис `esm.run` сам разрешает внешние зависимости пакета, поэтому такой вариант работает без сборщика.
-Каждая точка входа выбирается путем после версии: `…/erd-editor.js` определяет редактор, а `…/erd-viewer.js` — просмотрщик, который загружает с CDN каждый язык интерфейса, кроме английского, когда страница его запрашивает. URL без точки входа, `https://esm.run/@dineug/erd-editor@5.1.0`, отдает корень, который не определяет ни одного элемента.
+Каждая точка входа выбирается путем после версии: `…/erd-editor.js` определяет редактор, а `…/erd-viewer.js` — просмотрщик, который загружает с CDN каждый язык интерфейса, кроме английского, когда страница его запрашивает. URL без точки входа, `https://esm.run/@dineug/erd-editor@5.1.1`, отдает корень, который не определяет ни одного элемента.
 URL без версии всегда отдает последнюю версию. Закрепите версию, как выше, если не хотите, чтобы новая мажорная версия попала на страницу без предупреждения.
 Версия `5.0.0` — как раз такая: страница, которой нужно остаться на 4.x, закрепляет версию `@4.2.0` — см. [Переход с версии 4.x](#upgrading-from-4x).
 
@@ -75,7 +75,7 @@ URL без версии всегда отдает последнюю верси�
 
 ```html
 <erd-editor></erd-editor>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.1"></script>
 <script>
   const editor = document.querySelector('erd-editor');
   editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
@@ -88,7 +88,7 @@ URL без версии всегда отдает последнюю верси�
 
 ```html
 <erd-viewer src="diagram.erd.json" style="display: block; height: 480px"></erd-viewer>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0/dist/erd-viewer.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.1/dist/erd-viewer.umd.js"></script>
 ```
 
 Ни один из файлов не определяет тег другого, и каждый оставляет на странице только свой глобальный объект и `window.Konva`.
@@ -100,7 +100,7 @@ URL без версии всегда отдает последнюю верси�
 ```html
 <erd-editor system-dark-mode enable-theme-builder enable-locale-picker enable-welcome-screen></erd-editor>
 <script type="module">
-  import 'https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js';
+  import 'https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js';
 
   const editor = document.querySelector('erd-editor');
 </script>
@@ -123,7 +123,7 @@ erd-editor {
 
 ### Серверный рендеринг {#server-side-rendering}
 
-Каждая точка входа, кроме `engine.js` и `peer.js`, требует DOM, поэтому в Node она выбрасывает исключение. `erd-editor.js` и `erd-viewer.js` определяют свой элемент на уровне модуля, а корень пакета, который с версии `5.0.0` ничего не определяет, при загрузке все равно создает оба класса элементов.
+Каждая точка входа из описанных на этих страницах, кроме `engine.js` и `peer.js`, требует DOM, поэтому в Node она выбрасывает исключение. `erd-editor.js` и `erd-viewer.js` определяют свой элемент на уровне модуля, а корень пакета, который с версии `5.0.0` ничего не определяет, при загрузке все равно создает оба класса элементов.
 В Next.js, Nuxt, SvelteKit или Astro загружайте точку входа элемента из кода, который выполняется только на клиенте, и именованный импорт из корня, например `setExportFileCallback` или `toImage`, — из того же кода.
 
 ```js
@@ -251,7 +251,7 @@ Vite, webpack 5 и Rspack выводят воркеры файлами рядо�
 
 ## Точки входа {#entry-points}
 
-В пакете пять точек входа:
+На этих страницах описаны пять точек входа пакета:
 
 | Точка входа | Что это |
 | --- | --- |
@@ -371,7 +371,7 @@ Chrome 91+, Edge 94+, Firefox 93+, Safari 16.4+ — базовый уровен�
    import { setExportFileCallback } from '@dineug/erd-editor';
   ```
 
-- То же относится к CDN: `https://esm.run/@dineug/erd-editor` теперь отдает корень и ничего не определяет, поэтому импортируйте `https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js`. URL jsDelivr и unpkg с одним лишь именем пакета по-прежнему отдают сборку для тега script, которая определяет `<erd-editor>`, как и раньше. URL без версии теперь отдает последнюю версию 5.x; чтобы остаться на 4.x, закрепите версию `@4.2.0` — см. [CDN](#cdn) и [Тег script](#script-tag).
+- То же относится к CDN: `https://esm.run/@dineug/erd-editor` теперь отдает корень и ничего не определяет, поэтому импортируйте `https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js`. URL jsDelivr и unpkg с одним лишь именем пакета по-прежнему отдают сборку для тега script, которая определяет `<erd-editor>`, как и раньше. URL без версии теперь отдает последнюю версию 5.x; чтобы остаться на 4.x, закрепите версию `@4.2.0` — см. [CDN](#cdn) и [Тег script](#script-tag).
 - Корень ничего не определяет, но ему по-прежнему нужен DOM, поэтому при серверном рендеринге именованный импорт из него, например `setExportFileCallback`, остается в коде только для клиента рядом с точкой входа элемента — см. [Серверный рендеринг](#server-side-rendering).
 - В `window.ErdEditor` появляются `ErdEditorElement` и `defineErdEditor`. Сборка просмотрщика для тега script помещает `ErdViewerElement` и `defineErdViewer` в `window.ErdViewer`, и ни один из глобальных объектов не содержит `toImage`.
 - Редактор с `readonly` открывается как читатель. Его шесть вкладок, Обозреватель, быстрый поиск и присутствие остаются, а каждый элемент управления, который изменял бы диаграмму, исчезает, а не отключается: панель инструментов показывает название СУБД текстом, вкладка «Настройки» показывает свои настройки с отключенными элементами управления под меткой `Read only`, а плавающая панель инструментов сохраняет только масштаб, режим отображения имен, режим дзен и компас, так что `Hand` и `Select` исчезают, а перетаскивание перемещает холст. Нажатие ничего не выделяет: единственное выделение — это контур, который переход из Обозревателя или быстрого поиска рисует вокруг того, к чему он ведет, и его снимает короткий щелчок без движения, а сочетания клавиш выделения всего ничего не выделяют. Включение `readonly` завершает все, что было открыто, например выделение, инструмент «Рука», редактор ячейки, перетаскивание, `Map Columns`, предварительный просмотр `Force` в Автоматическом размещении и Time Travel, и сохраняет прокрутку, масштаб, вкладку и режим отображения имен — см. [readonly](./erd-editor-element.md#readonly).

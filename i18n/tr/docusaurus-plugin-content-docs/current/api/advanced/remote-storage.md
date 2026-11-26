@@ -157,6 +157,7 @@ const data = replicationStore.value;
 `4.0.0` sürümünden itibaren `value` depolama biçimidir: belgenin bir dosyada tutulduğu hâli, yani öğenin [value](../erd-editor-element.md#value) özelliğinin döndürdüğü metnin aynısı.  
 Yalnızca canlı varlıkları sabit bir sırayla tutar; kaldırılan varlıkları, katman sırasını ve [toWidth](#towidth) işlevinin ölçtüğü genişlikler gibi bir yüklemenin yeniden hesapladığı hiçbir şeyi içermez.  
 `4.2.0` sürümünden itibaren mantıksal adları, her adın sözlüklerden türetilip türetilmediğini, değer alanı bağlantılarını ve [Sözlük](../../guide/guides/dictionary.md) sekmesinin sözcüklerini, terimlerini ve değer alanlarını da tutar.  
+`5.1.1` sürümünden itibaren her notun hangi tablo grubunda olduğunu da tutar.  
 `4.2.0` sürümünden itibaren bir varlığın her boş metin alanını, hiçbir şey tutmayan her `doc` listesini ve koleksiyonu ve tüm koleksiyonlar boş olduğunda `collections` alanının kendisini de dışarıda bırakır.  
 İki boşlukla girintilenir, her sözlük satırını ayrı bir satırda tutar ve bir satır sonuyla biter; böylece aynı belge her zaman aynı baytları verir.  
 Neleri tuttuğu için [Depolama biçimi](./schema.md#storage-form) bölümüne bakın.
@@ -305,6 +306,10 @@ Aynı anda yapılan düzenlemelerin aynı sonuçla bitmesi için, [Eşzamanlı d
 
 `5.1.0` sürümünden itibaren bir düzenleyici Kod oluşturucu dilinin, bir ad biçiminin veya tırnak türünün değişikliğini yalnızca o ayarın kilidi devre dışıyken, eylem verisinde `shared: true` işaretiyle gönderir ve replika, düzenleyicilerin yaptığı gibi işaretli olanların hepsini uygular; [Ortak düzenleme](./collaborative-editing.md) sayfasına bakın.  
 Replika, `5.1.0` sürümünden önceki bir düzenleyicinin kilidi ne olursa olsun gönderdiği işaretsiz bir değişikliği yalnızca ayar kendi tarafında kilitli değilken uygular, ayar kilitliyken atar ([on@change](#onchange) bölümüne bakın).
+
+`5.1.1` sürümünden itibaren tutulan eylemler arasında bir notu bir [tablo grubuna](../../guide/guides/table-groups.md) koyan veya gruptan çıkaran `memo.changeGroup` da vardır ve `value` her notun hangi grupta olduğunu yazar ([Depolama biçimi](./schema.md#storage-form) bölümüne bakın).  
+`5.1.1` sürümü, `@dineug/erd-editor/engine.js` dosyasının hiçbir dışa aktarımını değiştirmez.  
+Önceki bir sürümün deposu `memo.changeGroup` eylemini ve her notun `groupId` alanını atar, bu yüzden hiçbir notu bir grupta kaydetmez ve oturumdaki `5.1.1` sürümünden önceki bir düzenleyici, `5.1.1` sürümlü bir replikada notları gruplarından hâlâ çıkarabilir; [Sürümleri karıştırma](./collaborative-editing.md#mixing-releases) bölümüne bakın.
 
 `4.0.0` sürümünden itibaren her iki yöntem, başka bir düzenleyici oturuma katıldığında bir düzenleyicinin yanıt olarak gönderdiği ortak çalışma kayıtlarını taşıyan `editor.mergeLWW` eylemini de uygular; böylece replika eşzamanlı düzenlemeleri düzenleyicilerin yaptığı gibi çözümler.  
 Bu eylem `value` değerinin hiçbir baytını değiştirmez ve `change` olayını tetiklemez.  

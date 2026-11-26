@@ -51,18 +51,18 @@ APIaren gainerakorako, ikus [ErdEditorElement](./erd-editor-element.md).
 
 ```html
 <script type="module">
-  import 'https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js';
+  import 'https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js';
 
   const editor = document.createElement('erd-editor');
   editor.style.cssText = 'display: block; width: 100%; height: 100vh;';
   document.body.appendChild(editor);
 </script>
 <!-- or -->
-<script type="module" src="https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js"></script>
+<script type="module" src="https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js"></script>
 ```
 
 `esm.run` zerbitzuak paketearen kanpoko mendekotasunak ebazten ditu zure ordez; beraz, honek paketatzailerik gabe funtzionatzen du.
-Sarrera bakoitza bertsioaren ondorengo bidearen bidez lortzen da: `…/erd-editor.js` bidez editorea definitzen da, eta `…/erd-viewer.js` bidez ikustailea, zeinak ingelesa ez diren bistaratze-hizkuntza bakoitza CDNtik eskuratzen baitu orri batek eskatzen duenean. Paketaren URL soilak, `https://esm.run/@dineug/erd-editor@5.1.0`, erroa zerbitzatzen du, eta honek ez du elementurik definitzen.
+Sarrera bakoitza bertsioaren ondorengo bidearen bidez lortzen da: `…/erd-editor.js` bidez editorea definitzen da, eta `…/erd-viewer.js` bidez ikustailea, zeinak ingelesa ez diren bistaratze-hizkuntza bakoitza CDNtik eskuratzen baitu orri batek eskatzen duenean. Paketaren URL soilak, `https://esm.run/@dineug/erd-editor@5.1.1`, erroa zerbitzatzen du, eta honek ez du elementurik definitzen.
 Bertsiorik gabeko URLak beti azken bertsioa zerbitzatzen du. Finkatu bertsio bat, goian bezala, ez baduzu nahi eguneratze nagusi bat abisurik gabe zure orrira iristea.
 `5.0.0` bertsioa bera da horietako bat: 4.x bertsioan geratu behar duen orri batek `@4.2.0` bertsioa finkatzen du. Ikus [4.x bertsiotik eguneratzea](#upgrading-from-4x).
 
@@ -75,7 +75,7 @@ Bertsiorik gabeko URLak beti azken bertsioa zerbitzatzen du. Finkatu bertsio bat
 
 ```html
 <erd-editor></erd-editor>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.1"></script>
 <script>
   const editor = document.querySelector('erd-editor');
   editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
@@ -88,7 +88,7 @@ Hura kargatzeak `<erd-editor>` definitzen du. `window.ErdEditor` objektuak fitxa
 
 ```html
 <erd-viewer src="diagram.erd.json" style="display: block; height: 480px"></erd-viewer>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0/dist/erd-viewer.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.1/dist/erd-viewer.umd.js"></script>
 ```
 
 Fitxategi batek ere ez du besteren etiketa definitzen, eta bakoitzak ez du orrian bere globala eta `window.Konva` baizik uzten.
@@ -100,7 +100,7 @@ Bere script propioa kargatu ezin duen orri batek erd-editor.io/embed helbideko i
 ```html
 <erd-editor system-dark-mode enable-theme-builder enable-locale-picker enable-welcome-screen></erd-editor>
 <script type="module">
-  import 'https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js';
+  import 'https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js';
 
   const editor = document.querySelector('erd-editor');
 </script>
@@ -123,7 +123,7 @@ Hemen `readonly` atributua gehitzeak editorea irakurle gisa irekitzen du: `value
 
 ### Zerbitzari aldeko errendatzea {#server-side-rendering}
 
-`engine.js` eta `peer.js` ez diren sarrera guztiek DOM bat behar dute; beraz, Node ingurunean errore bat jaurtitzen dute. `erd-editor.js` eta `erd-viewer.js` sarrerek beren elementua modulu-esparruan definitzen dute, eta paketearen erroak, `5.0.0` bertsiotik aurrera ezer definitzen ez duenak, bi elementu-klaseak eraikitzen ditu kargatzen den bitartean.
+Orri hauek deskribatzen dituzten sarrera guztiek, `engine.js` eta `peer.js` izan ezik, DOM bat behar dute; beraz, Node ingurunean errore bat jaurtitzen dute. `erd-editor.js` eta `erd-viewer.js` sarrerek beren elementua modulu-esparruan definitzen dute, eta paketearen erroak, `5.0.0` bertsiotik aurrera ezer definitzen ez duenak, bi elementu-klaseak eraikitzen ditu kargatzen den bitartean.
 Next.js, Nuxt, SvelteKit edo Astro esparruetan, lortu elementuaren sarrera bezeroan soilik exekutatzen den bide batetik, eta erroko izendun inportazio bat, hala nola `setExportFileCallback` edo `toImage`, bide beretik.
 
 ```js
@@ -251,7 +251,7 @@ Eduki-segurtasuneko politika zorrotza duen orri batek direktiba hauek behar ditu
 
 ## Sarrera-puntuak {#entry-points}
 
-Paketeak bost sarrera ditu:
+Orri hauek paketearen bost sarrera deskribatzen dituzte:
 
 | Sarrera | Zer den |
 | --- | --- |
@@ -371,7 +371,7 @@ Ez da polyfillik paketatzen. Gehitu zureak, nabigatzaile zaharragoetara iritsi b
    import { setExportFileCallback } from '@dineug/erd-editor';
   ```
 
-- CDN batean gauza bera gertatzen da `https://esm.run/@dineug/erd-editor` helbidearekin, zeinak orain erroa zerbitzatzen duen eta ezer definitzen ez duen: inportatu `https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js`. jsDelivr eta unpkg zerbitzuen URL soilek script etiketako konpilazioa zerbitzatzen jarraitzen dute, lehen bezala `<erd-editor>` definitzen duena. Bertsiorik gabeko URL batek orain azken 5.x bertsioa zerbitzatzen du; finkatu `@4.2.0` 4.x bertsioan geratzeko. Ikus [CDN](#cdn) eta [Script etiketa](#script-tag).
+- CDN batean gauza bera gertatzen da `https://esm.run/@dineug/erd-editor` helbidearekin, zeinak orain erroa zerbitzatzen duen eta ezer definitzen ez duen: inportatu `https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js`. jsDelivr eta unpkg zerbitzuen URL soilek script etiketako konpilazioa zerbitzatzen jarraitzen dute, lehen bezala `<erd-editor>` definitzen duena. Bertsiorik gabeko URL batek orain azken 5.x bertsioa zerbitzatzen du; finkatu `@4.2.0` 4.x bertsioan geratzeko. Ikus [CDN](#cdn) eta [Script etiketa](#script-tag).
 - Erroak ezer definitzen ez badu ere DOM bat behar du; beraz, zerbitzari aldeko errendatzearekin, haren izendun inportazio bat, hala nola `setExportFileCallback`, bezeroan soilik exekutatzen den bidean geratzen da elementuaren sarreraren ondoan. Ikus [Zerbitzari aldeko errendatzea](#server-side-rendering).
 - `window.ErdEditor` objektuak `ErdEditorElement` eta `defineErdEditor` irabazten ditu. Ikustailearen script etiketako konpilazioak `ErdViewerElement` eta `defineErdViewer` jartzen ditu `window.ErdViewer` objektuan, eta bietako globalak ez du `toImage` daramanik.
 - `readonly` editore bat irakurle gisa irekitzen da. Haren sei fitxak, Arakatzailea, Bilaketa azkarra eta presentzia geratzen dira, eta diagrama editatuko lukeen kontrol oro desgaitu beharrean desagertzen da: tresna-barrak datu-basearen izena testu gisa erakusten du, Ezarpenak fitxak bere ezarpenak erakusten ditu kontrol guztiak desgaituta `Read only` etiketa baten azpian, eta tresna-barra flotatzaileak zooma, Izenen ikuspegia, zen modua eta iparrorratza baino ez ditu mantentzen; beraz, `Hand` eta `Select` desagertu dira eta arrastatze batek ikuspegia mugitzen du. Sakatzeak ez du ezer hautatzen: hautapen bakarra Arakatzailetik edo Bilaketa azkarretik egindako jauzi batek iristen den elementuaren inguruan jartzen duen ingerada da, klik geldi batek garbitzen duena, eta dena hautatzeko lasterbideek ez dute ezer hautatzen. `readonly` aktibatzeak irekita zegoena amaitzen du, hala nola hautapena, esku-tresna, gelaxka-editorea, arrastatze bat, Map Columns, Antolaketa automatikoaren `Force` aurreikuspena eta Time Travel, eta korritzea, zooma, fitxa eta Izenen ikuspegia mantentzen ditu. Ikus [readonly](./erd-editor-element.md#readonly).

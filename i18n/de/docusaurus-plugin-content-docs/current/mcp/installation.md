@@ -56,6 +56,7 @@ Ein Fenster von VS Code bedient die Diagramme in seinen Arbeitsbereichsordnern u
 Eine Erweiterung von `3.0.0` bis `3.1.0` und der Server `1.0.0` oder neuer lehnen einander ab, und eine Erweiterung vor `3.0.0` bedient keine Agenten.
 Eine Erweiterung `4.0.0` oder `4.1.0` verbindet sich, zeigt die logischen Namen, Domänenverknüpfungen und Wörterbuchzeilen, die der Agent schreibt, aber weder an, noch behält sie sie.
 Mit einer Erweiterung vor `4.3.0` kann eine Tabelle, Notiz oder Tabellengruppe, die Sie und der Agent zeitgleich verschieben oder in der Größe ändern, bei Ihnen beiden an unterschiedlichen Stellen enden – siehe [Aktualisieren](#updating).
+Eine Erweiterung vor `4.3.1` zeigt nicht an, in welcher Tabellengruppe eine Notiz ist, und behält es auch nicht.
 
 Die Erweiterung startet in einem Arbeitsbereich, der Dateien mit der Endung `.erd`, `.erd.json`, `.vuerd` oder `.vuerd.json` enthält, sodass ein Agent diese Diagramme erreicht, bevor Sie eines öffnen.
 In einem Arbeitsbereich ohne solche Dateien startet sie, wenn Sie ein Diagramm öffnen, und bis dahin arbeitet der Agent auf dem Datenträger.
@@ -74,6 +75,7 @@ Ein Vault-Fenster von Obsidian bedient die Diagramme in seinem Vault.
 Ein Plugin vor `1.0.0` und der Server `1.0.0` oder neuer lehnen einander ab.
 Ein Plugin `1.0.0` oder `1.1.0` verbindet sich, zeigt die logischen Namen, Domänenverknüpfungen und Wörterbuchzeilen, die der Agent schreibt, aber weder an, noch behält es sie.
 Mit einem Plugin vor `1.3.0` kann eine Tabelle, Notiz oder Tabellengruppe, die Sie und der Agent zeitgleich verschieben oder in der Größe ändern, bei Ihnen beiden an unterschiedlichen Stellen enden – siehe [Aktualisieren](#updating).
+Ein Plugin vor `1.3.1` zeigt nicht an, in welcher Tabellengruppe eine Notiz ist, und behält es auch nicht.
 
 Ein Vault-Fenster bedient Agenten ab dem Moment, in dem das Plugin geladen wird, sodass ein Agent die Diagramme des Vaults erreicht, bevor Sie eines öffnen.
 Einen Vertrauensschritt gibt es nicht.
@@ -102,6 +104,7 @@ Eine JetBrains-IDE bedient die Diagramme jedes darin geöffneten Projekts und je
 Ein Plugin `0.9.0` oder `0.10.0` und der Server `1.0.0` oder neuer lehnen einander ab, und ein Plugin vor `0.9.0` bedient keine Agenten.
 Ein Plugin `1.0.0` oder `1.1.0` verbindet sich, zeigt die logischen Namen, Domänenverknüpfungen und Wörterbuchzeilen, die der Agent schreibt, aber weder an, noch behält es sie.
 Mit einem Plugin vor `1.3.0` kann eine Tabelle, Notiz oder Tabellengruppe, die Sie und der Agent zeitgleich verschieben oder in der Größe ändern, bei Ihnen beiden an unterschiedlichen Stellen enden – siehe [Aktualisieren](#updating).
+Ein Plugin vor `1.3.1` zeigt nicht an, in welcher Tabellengruppe eine Notiz ist, und behält es auch nicht.
 
 Die IDE bedient Agenten ab dem Moment, in dem das erste Projekt geöffnet wird, sodass ein Agent die Diagramme eines Projekts erreicht, bevor Sie eines öffnen.
 
@@ -153,7 +156,14 @@ Aber eine Verschiebung oder Größenänderung, die Sie und der Agent zeitgleich 
 Ist eine der beiden Seiten älter, können der Editor und der Agent mit unterschiedlichen Positionen enden, und der Agent liest und bearbeitet weiter von seiner eigenen, bis eine spätere Verschiebung beide auf einen Punkt setzt oder der Agent dem Dokument erneut beitritt – siehe [Zeitgleich vorgenommene Bearbeitungen](./live-and-headless.md#edits-made-at-the-same-moment).
 Keine dieser Versionen ändert, was eine Datei enthält.
 
+Der Server `1.2.1` spricht ebenfalls Protokoll 2. Er fügt zwei Tools hinzu, `erd_set_memo_group` und `erd_export_svg`, sowie das Argument `memoIds` von `erd_add_table_group` und entfernt oder benennt keines um – siehe [Tabellengruppen](./tools.md#table-groups) und [SVG-Export](./tools.md#svg-export).
+Notizen in Tabellengruppen brauchen den Server `1.2.1` oder neuer und überall dort, wo das Dokument geöffnet ist, die Erweiterung für VS Code `4.3.1` oder neuer oder das Plugin für Obsidian oder JetBrains `1.3.1` oder neuer.
+Eine ältere Erweiterung oder ein älteres Plugin, die sich verbinden, ignorieren, in welcher Gruppe eine Notiz ist, obwohl der Aufruf des Agenten gelingt, und lassen die Gruppen der Notizen beim Speichern der Datei weg.
+Ein Server vor `1.2.1` hat keine Tools dafür und liest jede Notiz so, als wäre sie in keiner Gruppe, und eine Datei, die er auf dem Datenträger bearbeitet, wird mit jeder Notiz außerhalb ihrer Gruppe zurückgeschrieben – siehe [Headless](./live-and-headless.md#headless).
+`erd_export_svg` braucht nur den Server `1.2.1` oder neuer, mit jeder Version der Erweiterung oder des Plugins, die sich verbindet, da der Server das Bild selbst zeichnet.
+
 Aktualisieren Sie ERD Editor außerdem überall dort, wo die Diagramme geöffnet werden.
+Die Erweiterung für VS Code vor `4.3.1`, das Plugin für Obsidian vor `1.3.1` und das Plugin für JetBrains vor `1.3.1` öffnen ein Diagramm, das eine neuere Version gespeichert oder das der Agent auf dem Datenträger bearbeitet hat, mit jeder Notiz außerhalb ihrer Tabellengruppe und lassen die Gruppen der Notizen beim Speichern der Datei weg.
 Die Erweiterung für VS Code vor `4.2.0`, das Plugin für Obsidian vor `1.2.0` und das Plugin für JetBrains vor `1.2.0` öffnen ein Diagramm, das eine neuere Version gespeichert oder das der Agent auf dem Datenträger bearbeitet hat, ohne die logischen Namen seiner Tabellen und Spalten, die Domänenverknüpfungen seiner Spalten und seine Wörter, Begriffe und Domänen.
 Wenn sie die Datei speichern, lassen sie diese weg.
 Die Erweiterung für VS Code vor `4.0.0`, das Plugin für Obsidian vor `1.0.0` und das Plugin für JetBrains vor `1.0.0` zeigen ein solches Diagramm außerdem ohne seine Primärschlüsselsymbole an und verwerfen beim Speichern der Datei seine Tabellengruppen und die Skripte von Schema SQL.

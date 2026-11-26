@@ -176,7 +176,7 @@ Depuis la version `5.1.0`, deux éditeurs qui changent au même moment un même 
 
 Depuis la version `5.1.0`, la position d’une table, la position et la taille d’un mémo ou d’un groupe de tables, ainsi que l’origine et le niveau de zoom de la vue reçoivent une version de la même façon, et ce qui les déplace est envoyé sous la forme du point d’arrivée :
 
-- un glissement sous la forme d’un `table.moveTo`, `memo.moveTo` ou `tableGroup.moveTo` par entité déplacée, dans un même lot, si bien que le glissement d’un groupe porte les points de ses tables avec celui du groupe ;
+- un glissement sous la forme d’un `table.moveTo`, `memo.moveTo` ou `tableGroup.moveTo` par entité déplacée, dans un même lot, si bien que le glissement d’un groupe porte les points de ses tables, et depuis la version `5.1.1` ceux de ses mémos, avec celui du groupe ;
 - l’annulation ou le rétablissement d’un glissement sous la forme du point où il remet chaque entité ;
 - un déplacement de la vue sous la forme de `settings.scrollTo`, et un zoom sous la forme de `settings.changeZoomLevel` ;
 - le redimensionnement d’un mémo ou d’un groupe de tables sous la forme de sa position et de sa taille ensemble.
@@ -253,6 +253,19 @@ Un éditeur en version `5.1.0` n’envoie aucun nouveau type d’action, si bien
 - Un chargement qui remplace le document, comme un `value` affecté, `clear()` ou une importation qui remplace, termine le tracé d’une relation sur chaque éditeur en `5.1.0`, celui qui l’a fait et chacun de ceux qui le reçoivent. Un éditeur plus ancien garde son tracé actif pendant ce chargement.
 
 Gardez chaque éditeur d’une session, ainsi que tout [replicationStore](./remote-storage.md#dispatch-dispatchsync) qui stocke son document, en version `5.1.0` ou ultérieure, afin que les modifications faites au même moment aboutissent au même résultat partout, hors les exceptions que nomme [Modifications concurrentes](#concurrent-edits) ; la version `4.2.0` ou ultérieure reste ce qui conserve les noms logiques et les dictionnaires. Un [serveur MCP](../../mcp/live-and-headless.md#edits-made-at-the-same-moment) antérieur à la version `1.2.0` compte ici comme un éditeur antérieur à la version `5.1.0`, et un éditeur antérieur à la version `5.1.0` ne peut pas du tout être lié à une salle [Yjs](./yjs.md).
+
+Depuis la version `5.1.1`, l’entrée d’un mémo dans un [groupe de tables](../../guide/guides/table-groups.md) ou sa sortie voyage sous un nouveau type d’action, `memo.changeGroup`, et un relais qui fait suivre les actions telles quelles n’a besoin de rien de nouveau pour lui. Il est envoyé pour un mémo déposé dans un groupe ou hors de celui-ci, pour un nouveau groupe tracé autour de mémos affichés qui n’ont pas de groupe, pour `Group selected tables` avec des mémos sélectionnés à côté des tables, pour `Remove from group` avec des mémos dans la sélection, pour chaque mémo d’un groupe supprimé, pour les appels d’un agent de codage qui placent des mémos dans un groupe ou les en retirent par le [serveur MCP](../../mcp/tools.md#table-groups), et pour l’annulation et le rétablissement de chacun. Un ajout par `Import and Add` ou `setSchemaJSON` dont les groupes contiennent des mémos l’envoie aussi, tout comme son rétablissement, alors que son annulation ne fait que retirer ces mémos.
+
+Un éditeur ou une réplique antérieurs à la version `5.1.1` ignore `memo.changeGroup`, et son analyse supprime le `groupId` de chaque mémo, si bien qu’il ne voit jamais un mémo dans un groupe, bien que le glissement d’un groupe dans un éditeur `5.1.1` y déplace encore les mémos du groupe, puisqu’il envoie aussi un `memo.moveTo` pour chacun d’eux. Ses propres modifications ignorent les groupes des mémos, avec ces effets sur les éditeurs plus récents :
+
+- Un mémo qu’il fait glisser dans le cadre d’un groupe reste hors du groupe, et un mémo du groupe qu’il fait glisser hors du cadre y reste, le cadre s’étirant pour le contenir.
+- Son glissement d’un groupe, comme son `Auto Layout`, déplace le groupe et ses tables mais laisse les mémos du groupe où ils sont, et le cadre s’étire pour contenir ceux qui sont affichés.
+- Un `Import and Add` fait sur lui ne place aucun mémo dans les groupes qu’il ajoute.
+- Un groupe qu’il supprime laisse le `groupId` de chacun de ses mémos le désignant : les mémos sont lus comme n’étant dans aucun groupe, et son annulation de la suppression les remet dans le groupe.
+- Son annulation d’un chargement, d’une importation ou de `clear()` charge sa propre copie du document sur tous les éditeurs, et cette copie n’a aucun mémo dans un groupe.
+
+Un document enregistré depuis un tel éditeur n’a aucun mémo dans un groupe, bien qu’un éditeur à partir de la version `4.0.0` conserve les groupes de ses tables.  
+Gardez chaque éditeur d’une session, ainsi que tout [replicationStore](./remote-storage.md#dispatch-dispatchsync) qui stocke son document, en version `5.1.1` ou ultérieure pour garder les mémos dans leurs groupes de tables ; la version `5.1.0` ou ultérieure reste ce qui règle les modifications faites au même moment. Un [serveur MCP](../../mcp/installation.md#updating) antérieur à la version `1.2.1` ne voit pas non plus dans quel groupe de tables se trouve un mémo et ne le conserve pas.
 
 ## SharedStoreConfig {#sharedstoreconfig}
 

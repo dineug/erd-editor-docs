@@ -96,7 +96,7 @@ Each kind of row shows:
 - A column: a key icon for a primary key or foreign key column, colored as the table's own key cell colors a primary key, a foreign key, or both, and a list icon for any other column. Then its name and, muted, its data type followed by `PK`, `FK`, or both, such as `id` `BIGINT PK` or `user_id` `BIGINT FK`. The type it shows is always the column's data type, never its [domain](./logical-names.md#the-domain-cell), whatever the Name View.
 - An index: an index icon and its name. Then, muted, `UNIQUE` for a unique index and its columns in parentheses in index order, with `DESC` after a descending one, such as `orders_user_idx` `UNIQUE (user_id DESC, total)`, or just `(total)`.
 - A foreign key: listed only under the child table, the one holding the foreign key columns, and only while the parent table is in the diagram. Its key icon takes the connector's color: the primary key and foreign key color for an [identifying relationship](./relationship-editing.md#identifying-relationships), the foreign key color otherwise. It shows the child's key columns, comma-separated, then, muted, `→` with the parent table and its columns, such as `user_id` `→ users(id)`.
-- A table group: a dot in the group's color, grey for a group with no color, and its name. Its tables are listed under it by name, and each goes to its table. A group with no tables has nothing to unfold.
+- A table group: a dot in the group's color, grey for a group with no color, and its name. Its tables are listed under it by name, then its memos in the document's order, and each goes to its table or memo. Those memos are listed under `Memos` as well. A group lists no memo while View Option → `Memos` hides the memos, and a group with no tables and no shown memos has nothing to unfold.
 - A memo: a sticky-note icon and the memo's first line.
 
 Table rows, the tables listed under a group, and column rows follow the Name View — see [Beyond the Canvas](./logical-names.md#beyond-the-canvas). In `Both Names`, for example, a column row reads `Total Amount` `total` `NUMERIC`: the logical name, then the name and the data type, both muted.  
@@ -119,8 +119,8 @@ Click a row, or press `Enter` or `Space` with the keyboard on it, to go to what 
 - A column row selects its table alone and puts the focused cell on the column's name, or in `Logical Names` on the logical name drawn in its place.
 - An index row selects its table, as a table row does. The index itself is not singled out; indexes are edited in [Table Properties](./table-related-functions.md#indexes).
 - A foreign key row brings both tables of the relationship into view together, or the child table when the two are too far apart to show together. It selects the child table alone with its foreign key columns, the focused cell on the first of them, and lights the relationship's connector — see [Reading a Connector](./relationship-editing.md#reading-a-connector).
-- A table group row brings the group's box into view by its title bar, selects the group alone, and brings it to the front with its tables.
-- A memo row selects the memo alone and brings it to the front.
+- A table group row brings the group's box into view by its title bar, selects the group alone, and brings it to the front with its tables and memos.
+- A memo row, or a memo listed under a group, selects the memo alone and brings it to the front.
 
 The view moves by the rule every go-to shares: the zoom never changes, and the canvas scrolls only when what you go to does not already show well — see [Where a Jump Lands](./table-related-functions.md#where-a-jump-lands).  
 Going to a row closes Table Properties first if it is open, and never starts or finishes a relationship being drawn.  

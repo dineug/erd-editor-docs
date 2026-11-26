@@ -19,7 +19,7 @@ VS Code、Obsidian、JetBrains のプラグインは、編集によって `value
 `4.2.0` からは、保存形式は何も持たないものも含めません。対象は、エンティティまたはその `ui` が `''` として持つ各テキストフィールド（テーブルの `name`、`comment`、`ui.color`、カラムの `name`、`comment`、`dataType`、`default`、インデックスの `name`、メモの `value` と `ui.color`、テーブルグループの `name` と `color`）、エントリーを 1 つも持たない `doc` の各リストと各コレクション、そしてすべてのコレクションが空になったときの `collections` 自体です。空白だけのテキストは保持しているとおりに書き出されます。ただし、空白だけの論理名は含まれず、id 以外の値がすべて空か空白だけの単語、用語、ドメインは行全体が含まれません。すべての id、エンティティ内のすべてのリスト、`0` を含むすべての数値は引き続き書き出されます。`doc` は常に書き出されるため、新しいドキュメントのファイルは `$schema`、`version`、設定、`"doc": {}` を持ちます。  
 パースでは、すべての v3 のリリースと同じく、ないテキストフィールドは `''` として、ないコレクションは空として読み込まれます。また、保存形式が `doc` のリストを含めないのは、そのコレクションが何も持たない間だけです（[Doc](#doc) を参照）。そのため、`4.2.0` より前のエディタもこれらのファイルを開けます。ファイルを自分で読み込むプログラムも、ないものを同じように読み取る必要があります。以前のリリースで保存したファイルは、次に保存したときに空のテキスト、リスト、コレクションが取り除かれた形で戻ります。この変化は一度だけで、それ以降は 1 バイトも違わずに保存されます。
 
-保存形式は、ロックされた設定をそれぞれロックされた値で書き出し（[`lockSettings`](#settings) を参照）、`settings.ddlScripts` はスクリプトにテキストがある間だけ、テーブルの `groupId` はファイルが書き出すテーブルグループを指している間だけ書き出します。`4.2.0` からは、`settings.nameViewMode` は書き出す値が `'physical'` でない間だけ、`settings.columnOrder` は可能な場合は 7 つのエントリーで（[Settings](#settings) を参照）、テーブルの `nameDerived` は `true` の間だけ書き出します。  
+保存形式は、ロックされた設定をそれぞれロックされた値で書き出し（[`lockSettings`](#settings) を参照）、`settings.ddlScripts` はスクリプトにテキストがある間だけ、テーブルの `groupId`（`5.1.1` からはメモの `groupId` も）はファイルが書き出すテーブルグループを指している間だけ書き出します。`4.2.0` からは、`settings.nameViewMode` は書き出す値が `'physical'` でない間だけ、`settings.columnOrder` は可能な場合は 7 つのエントリーで（[Settings](#settings) を参照）、テーブルの `nameDerived` は `true` の間だけ書き出します。  
 `doc.tableGroupIds` と `tableGroupEntities` はテーブルグループが存在する間だけ、`logicalName` は空白以外のテキストを持つ間だけ、カラムの `domainId` はファイルに書き出すドメインを指している間だけ、各辞書はファイルに書き出す行を持つ間だけ書き出します。
 
 `4.0.0` より前に保存したファイルは、当時のエディタが保持していたとおりのドキュメント全体を、削除したエンティティや読み込みのたびに導き出される内容も含めて保持しています。読み込むときにそれを読み取り、各テーブルとメモの重なり順の位置を保持し（[Doc](#doc) を参照）、残りは改めて導き出し、次の保存では保存形式だけを書き出します。
@@ -394,6 +394,7 @@ const OrderType = {
 type Memo = {
   id: string;
   value?: string;
+  groupId?: string;
   ui: MemoUI;
 };
 
@@ -407,6 +408,9 @@ type MemoUI = {
 ```
 
 `4.0.0` からは、テーブルとメモは [1 つの重なり順を共有する](../../guide/guides/table-related-functions.md#複数テーブルの移動)ため、テーブルを前面に移すとメモの上に重なることがあります。[Doc](#doc) で説明しているとおり、読み込むときにはすべてのメモをすべてのテーブルの上に重ねます。`4.0.0` より前に保存したファイルのメモは、保存した `zIndex` を保ちます。この値はテーブルと同じカウンタから振られていたため、以前のリリースですべてのテーブルの上に描かれていたメモが、その後に前面に移したテーブルの下で開くことがあります。
+
+`5.1.1` からは、メモもテーブルと同じく、属する[テーブルグループ](../../guide/guides/table-groups.md)の id である `groupId` を持ちます。`groupId` がないか空の場合（`5.1.1` より前に保存したすべてのファイルがそうです）や、`doc.tableGroupIds` にないグループを指している場合はグループに属していないことを表し、保存形式は、残るグループを指している間だけ書き出します。  
+`5.1.1` より前のエディタは、ドキュメントを読み込むときにすべてのメモの `groupId` を取り除くため、そこで保存するとすべてのメモがグループから外れます。ただし `4.0.0` 以降のものは、テーブルのグループを保ちます。[リリースの混在](./collaborative-editing.md#リリースの混在)を参照してください。
 
 ### Collection: tableGroupEntities
 
@@ -426,7 +430,7 @@ type TableGroupUI = {
 };
 ```
 
-`4.0.0` からは、ドキュメントは[テーブルグループ](../../guide/guides/table-groups.md)、つまりテーブルの背後に描かれる、名前と色の付いた枠を保持できます。テーブルは自身の `groupId` によってグループに加わるため、グループはメンバーのリストを持ちません。保存形式は、`doc.tableGroupIds` と同じく、グループが存在する間だけこのコレクションを書き出します。`4.0.0` より前に保存したドキュメントのように、このコレクションがないドキュメントにはグループはありません。`Show.hideTableGroup` はグループを非表示にします。  
+`4.0.0` からは、ドキュメントは[テーブルグループ](../../guide/guides/table-groups.md)、つまりテーブルとメモの背後に描かれる、名前と色の付いた枠を保持できます。テーブルは、`5.1.1` からはメモも、自身の `groupId` によってグループに加わるため、グループはメンバーのリストを持ちません。保存形式は、`doc.tableGroupIds` と同じく、グループが存在する間だけこのコレクションを書き出します。`4.0.0` より前に保存したドキュメントのように、このコレクションがないドキュメントにはグループはありません。`Show.hideTableGroup` はグループを非表示にします。  
 `4.0.0` より前のエディタは、ドキュメントを読み込むときにグループとすべてのテーブルの `groupId` を取り除くため、そのエディタで保存するとすべてのグループが失われます。
 
 ### 辞書の行 {#dictionary-rows}
@@ -525,6 +529,8 @@ type Domain = {
 `4.0.0` からは、スキーマは保存形式だけを表します。名前付きのフィールドを持つオブジェクトはすべて閉じられ（`additionalProperties: false`）、保存形式が常に書き出すフィールドはすべて必須で、上の型で `?` を付けた各フィールドは定義されていますが必須ではなく、それ以外のフィールドは定義されていません。そのため、`4.0.0` より前に保存したファイルは、`meta`、幅、`zIndex`、`ignoreSaveSettings` などを持つため、`4.0.0` 以降のエディタで保存し直すまで受け付けません。`3.2.0` 以降で保存したファイルはすでにこのスキーマの URL を指定しており、その URL は `main` ブランチを指しているため、このスキーマで検証するエディタでは、そのファイルに問題が報告されるようになりました。`3.0.0` や `3.1.0` で保存したファイルと v2 のドキュメントは `$schema` を指定していません。
 
 `4.2.0` からは、スキーマはエンティティのテキストフィールド、`doc` のリスト、コレクション、`collections` 自体を必須としなくなりました。保存形式は、これらが何も持たない間は含めません。`4.0.0` や `4.1.0` で保存したファイルも引き続き受け付けます。新しいフィールドも定義しています。`"logical"` と `"both"` だけを受け付ける `nameViewMode`、テーブルの `logicalName` と、`true` だけを受け付ける `nameDerived`、カラムの `logicalName` と `domainId`、そしてそれぞれヘッダーと文字列の行を持つ 3 つの辞書です。`canvasType` には辞書タブが加わり、`columnOrder` は 7 つまたは 9 つの整数を受け付け、`show`、`columnOrder`、`lockSettings`、`options` の説明には新しいビットが記されています。
+
+`5.1.1` からは、スキーマはメモの `groupId` も定義します。`5.1.1` より前に取得したスキーマのコピーは、これを受け付けません。
 
 ```json
 {
@@ -939,6 +945,10 @@ type Domain = {
           "value": {
             "type": "string"
           },
+          "groupId": {
+            "description": "Id of the table group in doc.tableGroupIds the memo belongs to; absent means none",
+            "type": "string"
+          },
           "ui": {
             "type": "object",
             "properties": {
@@ -967,7 +977,7 @@ type Domain = {
       }
     },
     "tableGroupEntities": {
-      "description": "Named, coloured rectangles drawn behind tables; a table joins one through its groupId. Written while a group exists; absent means none",
+      "description": "Named, coloured rectangles drawn behind tables and memos; a table or a memo joins one through its groupId. Written while a group exists; absent means none",
       "type": "object",
       "additionalProperties": {
         "type": "object",

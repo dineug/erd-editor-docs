@@ -56,6 +56,7 @@ Okno VS Code obsługuje diagramy w folderach swojego obszaru roboczego oraz każ
 Rozszerzenie od wersji `3.0.0` do `3.1.0` i serwer w wersji `1.0.0` lub nowszej odrzucają się nawzajem, a rozszerzenie w wersji starszej niż `3.0.0` nie obsługuje agentów.
 Rozszerzenie w wersji `4.0.0` lub `4.1.0` łączy się z serwerem, ale ani nie wyświetla, ani nie zachowuje nazw logicznych, powiązań z domeną i wierszy słowników zapisywanych przez agenta.
 Przy rozszerzeniu w wersji starszej niż `4.3.0` tabela, notatka lub grupa tabel, które ty i agent przesuwacie lub których rozmiar zmieniacie w tej samej chwili, mogą u każdego z was zakończyć się w innym miejscu – zobacz sekcję [Aktualizacja](#updating).
+Rozszerzenie w wersji starszej niż `4.3.1` ani nie pokazuje, ani nie zachowuje tego, do której grupy tabel należy notatka.
 
 Rozszerzenie uruchamia się w obszarze roboczym, który zawiera pliki `.erd`, `.erd.json`, `.vuerd` lub `.vuerd.json`, więc agent ma dostęp do tych diagramów, zanim którykolwiek otworzysz.
 W obszarze roboczym bez żadnego z nich uruchamia się, gdy otworzysz diagram, a do tego czasu agent wprowadza zmiany na dysku.
@@ -74,6 +75,7 @@ Okno sejfu aplikacji Obsidian obsługuje diagramy ze swojego sejfu.
 Wtyczka w wersji starszej niż `1.0.0` i serwer w wersji `1.0.0` lub nowszej odrzucają się nawzajem.
 Wtyczka w wersji `1.0.0` lub `1.1.0` łączy się z serwerem, ale ani nie wyświetla, ani nie zachowuje nazw logicznych, powiązań z domeną i wierszy słowników zapisywanych przez agenta.
 Przy wtyczce w wersji starszej niż `1.3.0` tabela, notatka lub grupa tabel, które ty i agent przesuwacie lub których rozmiar zmieniacie w tej samej chwili, mogą u każdego z was zakończyć się w innym miejscu – zobacz sekcję [Aktualizacja](#updating).
+Wtyczka w wersji starszej niż `1.3.1` ani nie pokazuje, ani nie zachowuje tego, do której grupy tabel należy notatka.
 
 Okno sejfu obsługuje agentów od chwili załadowania wtyczki, więc agent ma dostęp do diagramów sejfu, zanim którykolwiek otworzysz.
 Nie ma tu etapu nadawania zaufania.
@@ -102,6 +104,7 @@ IDE JetBrains obsługuje diagramy każdego otwartego w nim projektu oraz każdy 
 Wtyczka w wersji `0.9.0` lub `0.10.0` i serwer w wersji `1.0.0` lub nowszej odrzucają się nawzajem, a wtyczka w wersji starszej niż `0.9.0` nie obsługuje agentów.
 Wtyczka w wersji `1.0.0` lub `1.1.0` łączy się z serwerem, ale ani nie wyświetla, ani nie zachowuje nazw logicznych, powiązań z domeną i wierszy słowników zapisywanych przez agenta.
 Przy wtyczce w wersji starszej niż `1.3.0` tabela, notatka lub grupa tabel, które ty i agent przesuwacie lub których rozmiar zmieniacie w tej samej chwili, mogą u każdego z was zakończyć się w innym miejscu – zobacz sekcję [Aktualizacja](#updating).
+Wtyczka w wersji starszej niż `1.3.1` ani nie pokazuje, ani nie zachowuje tego, do której grupy tabel należy notatka.
 
 IDE obsługuje agentów od chwili otwarcia pierwszego projektu, więc agent ma dostęp do diagramów projektu, zanim którykolwiek otworzysz.
 
@@ -153,7 +156,14 @@ Jednak przesunięcie lub zmiana rozmiaru tej samej tabeli, notatki lub grupy tab
 Gdy któraś ze stron jest starsza, edytor i agent mogą zakończyć z różnymi położeniami, a agent dalej czyta i edytuje na podstawie własnego położenia, dopóki późniejsze przesunięcie nie ustawi obu na jednym punkcie albo agent nie dołączy ponownie do dokumentu – zobacz sekcję [Edycje wykonane w tej samej chwili](./live-and-headless.md#edits-made-at-the-same-moment).
 Żadna z tych wersji nie zmienia tego, co zawiera plik.
 
+Serwer w wersji `1.2.1` również posługuje się protokołem w wersji 2. Dodaje dwa narzędzia, `erd_set_memo_group` i `erd_export_svg`, oraz argument `memoIds` narzędzia `erd_add_table_group`, a żadnego nie usuwa ani nie zmienia jego nazwy – zobacz sekcje [Grupy tabel](./tools.md#table-groups) i [Eksport SVG](./tools.md#svg-export).
+Notatki w grupach tabel wymagają serwera w wersji `1.2.1` lub nowszej oraz, wszędzie tam, gdzie dokument jest otwarty, rozszerzenia VS Code w wersji `4.3.1` lub nowszej albo wtyczki Obsidian lub JetBrains w wersji `1.3.1` lub nowszej.
+Wcześniejsza wersja rozszerzenia lub wtyczki, która się łączy, ignoruje to, do której grupy należy notatka, choć wywołanie agenta kończy się powodzeniem, i pomija grupy notatek przy zapisywaniu pliku.
+Serwer w wersji starszej niż `1.2.1` nie ma narzędzi do ich obsługi i odczytuje każdą notatkę jako nienależącą do żadnej grupy, a plik, który edytuje na dysku, jest zapisywany z każdą notatką poza jej grupą – zobacz sekcję [Headless](./live-and-headless.md#headless).
+Narzędzie `erd_export_svg` wymaga tylko serwera w wersji `1.2.1` lub nowszej, z dowolną wersją rozszerzenia lub wtyczki, która się łączy, ponieważ serwer rysuje obraz samodzielnie.
+
 Aktualizuj też ERD Editor wszędzie tam, gdzie otwiera się diagramy.
+Rozszerzenie VS Code w wersji starszej niż `4.3.1`, wtyczka Obsidian w wersji starszej niż `1.3.1` i wtyczka JetBrains w wersji starszej niż `1.3.1` otwierają diagram, który zapisała nowsza wersja albo który agent edytował na dysku, z każdą notatką poza jej grupą tabel, a gdy zapisują plik, pomijają grupy notatek.
 Rozszerzenie VS Code w wersji starszej niż `4.2.0`, wtyczka Obsidian w wersji starszej niż `1.2.0` i wtyczka JetBrains w wersji starszej niż `1.2.0` otwierają diagram, który zapisała nowsza wersja albo który agent edytował na dysku, bez nazw logicznych jego tabel i kolumn, powiązań jego kolumn z domenami oraz jego słów, terminów i domen.
 Gdy zapisują plik, pomijają je.
 Rozszerzenie VS Code w wersji starszej niż `4.0.0`, wtyczka Obsidian w wersji starszej niż `1.0.0` i wtyczka JetBrains w wersji starszej niż `1.0.0` wyświetlają też taki diagram bez ikon klucza podstawowego, a podczas zapisywania pliku usuwają z niego grupy tabel i skrypty Schematu SQL.

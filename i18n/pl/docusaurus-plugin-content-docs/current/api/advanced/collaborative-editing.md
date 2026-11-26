@@ -176,7 +176,7 @@ Od wersji `5.1.0` dwa edytory, które zmieniają tę samą nazwę lub pole w tej
 
 Od wersji `5.1.0` pozycja tabeli, pozycja i rozmiar notatki lub grupy tabel oraz początek widoku i poziom powiększenia są wersjonowane w ten sam sposób, a to, co je przesuwa, wychodzi jako miejsce, w którym się kończy:
 
-- przeciągnięcie jako jedno `table.moveTo`, `memo.moveTo` lub `tableGroup.moveTo` na każdą przesuniętą encję, w jednym pakiecie, więc przeciągnięcie grupy niesie punkty jej tabel razem z punktem grupy;
+- przeciągnięcie jako jedno `table.moveTo`, `memo.moveTo` lub `tableGroup.moveTo` na każdą przesuniętą encję, w jednym pakiecie, więc przeciągnięcie grupy niesie punkty jej tabel, a od wersji `5.1.1` także jej notatek, razem z punktem grupy;
 - cofnięcie lub ponowienie przeciągnięcia jako punkt, w którym umieszcza każdą encję;
 - przesunięcie widoku jako `settings.scrollTo`, a powiększenie jako `settings.changeZoomLevel`;
 - zmiana rozmiaru notatki lub grupy tabel jako jej pozycja i rozmiar razem.
@@ -253,6 +253,19 @@ Edytor w wersji `5.1.0` nie wysyła żadnego nowego typu akcji, więc edytory i 
 - Wczytanie zastępujące dokument, takie jak przypisane `value`, `clear()` lub import zastępujący, kończy rysowanie relacji w każdym edytorze w wersji `5.1.0`, zarówno w tym, który je wykonał, jak i w każdym, który je otrzymuje. Starszy edytor zachowuje przy nim włączone rysowanie.
 
 Wszystkie edytory w sesji oraz każdy magazyn [replicationStore](./remote-storage.md#dispatch-dispatchsync), który przechowuje jej dokument, utrzymuj w wersji `5.1.0` lub nowszej, aby edycje wykonane w tej samej chwili kończyły tak samo wszędzie, poza wyjątkami, które wymienia sekcja [Równoczesne edycje](#concurrent-edits); wersja `4.2.0` lub nowsza nadal jest tym, co zachowuje nazwy logiczne i słowniki. [Serwer MCP](../../mcp/live-and-headless.md#edits-made-at-the-same-moment) sprzed wersji `1.2.0` liczy się tu jako edytor sprzed wersji `5.1.0`, a edytora sprzed wersji `5.1.0` w ogóle nie można powiązać z pokojem [Yjs](./yjs.md).
+
+Od wersji `5.1.1` dołączenie notatki do [grupy tabel](../../guide/guides/table-groups.md) lub opuszczenie przez nią grupy przesyłane jest nowym typem akcji, `memo.changeGroup`, a pośrednik przekazujący akcje bez zmian nie potrzebuje do tego niczego nowego. Ta akcja jest wysyłana dla notatki upuszczonej w grupie lub poza nią, dla nowej grupy narysowanej wokół widocznych notatek bez grupy, dla pozycji `Group selected tables` przy notatkach zaznaczonych obok tabel, dla pozycji `Remove from group` przy notatkach w zaznaczeniu, dla każdej notatki usuwanej grupy, dla wywołań agenta kodującego dotyczących grup notatek przez [serwer MCP](../../mcp/tools.md#table-groups) oraz dla cofnięcia i ponowienia każdej z tych zmian. Wysyła ją także dodanie przez `Import and Add` lub `setSchemaJSON`, którego grupy zawierają notatki, i jego ponowienie, a jego cofnięcie tylko usuwa te notatki.
+
+Edytor lub replika sprzed wersji `5.1.1` ignoruje `memo.changeGroup`, a jego parsowanie pomija pole `groupId` każdej notatki, więc nigdy nie widzi notatki w grupie, choć przeciągnięcie grupy w edytorze w wersji `5.1.1` nadal przesuwa tam notatki grupy, ponieważ wysyła też `memo.moveTo` dla każdej z nich. Jego własne zmiany nic nie wiedzą o grupach notatek, co ma następujące skutki w nowszych edytorach:
+
+- Notatka, którą przeciągnie do ramki grupy, pozostaje poza grupą, a wyciągnięta przez niego z ramki notatka należąca do grupy pozostaje w grupie, przy czym ramka rozciąga się, by ją objąć.
+- Jego przeciągnięcie grupy, podobnie jak `Auto Layout`, przesuwa grupę i jej tabele, ale zostawia notatki grupy tam, gdzie stoją, a ramka rozciąga się, by objąć te z nich, które są widoczne.
+- Operacja `Import and Add` wykonana w nim nie umieszcza żadnej notatki w dodawanych grupach.
+- Gdy usuwa grupę, pole `groupId` każdej z jej notatek nadal wskazuje tę grupę: notatki są traktowane jako niebędące w żadnej grupie, a cofnięcie przez niego usunięcia przywraca je do grupy.
+- Cofnięcie przez niego wczytania, importu lub wywołania `clear()` wczytuje w każdym edytorze jego własną kopię dokumentu, a ta kopia nie ma żadnej notatki w żadnej grupie.
+
+Dokument zapisany w takim edytorze nie ma żadnej notatki w żadnej grupie, choć edytor od wersji `4.0.0` zachowuje grupy tabel.  
+Wszystkie edytory w sesji oraz każdy magazyn [replicationStore](./remote-storage.md#dispatch-dispatchsync), który przechowuje jej dokument, utrzymuj w wersji `5.1.1` lub nowszej, aby notatki pozostawały w swoich grupach tabel; wersja `5.1.0` lub nowsza nadal jest tym, co rozstrzyga edycje wykonane w tej samej chwili. [Serwer MCP](../../mcp/installation.md#updating) sprzed wersji `1.2.1` również nie widzi ani nie zachowuje tego, w jakiej grupie tabel jest notatka.
 
 ## SharedStoreConfig {#sharedstoreconfig}
 

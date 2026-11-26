@@ -201,7 +201,7 @@ editor.setAttribute('enable-welcome-screen', 'true');
 
 以 JSON 字符串的形式获取当前文档，采用编辑器定义的 [schema](./advanced/schema.md)。  
 从 `4.0.0` 起，它是存储形式，即文件所保存形式的文档，也就是 `json` 导出写出的内容以及官方宿主保存的内容。它只包含现存的实体，不含已删除的实体、叠放顺序，以及编辑器自行推算的内容，例如测量得到的宽度、键标记和关系的连接线锚点。其中的实体按固定顺序排列键，以两个空格缩进，并以换行符结尾，因此同一个文档总是得到相同的字节。  
-从 `4.2.0` 起，它还会省略空的内容：空的 `doc` 列表、空的集合、不含任何内容的词典行，以及实体中为空的文本字段，例如名称、注释、数据类型、默认值或颜色。实体内部的列表（例如表的 `columnIds`）即使为空也仍会写出。新文档的 `doc` 为 `{}`，并且没有 `collections`，因此应把缺失的字段、列表或集合读作空。它包含表和列的逻辑名以及标明名称是否由词典生成的标记、列的域关联，以及词根、术语和域；每个词典都先写出一个由字段名组成的标题行，再按工作表中的顺序写出其各行，每行占一行。参见[存储形式](./advanced/schema.md#storage-form)。  
+从 `4.2.0` 起，它还会省略空的内容：空的 `doc` 列表、空的集合、不含任何内容的词典行，以及实体中为空的文本字段，例如名称、注释、数据类型、默认值或颜色。实体内部的列表（例如表的 `columnIds`）即使为空也仍会写出。新文档的 `doc` 为 `{}`，并且没有 `collections`，因此应把缺失的字段、列表或集合读作空。它包含表和列的逻辑名以及标明名称是否由词典生成的标记、列的域关联，以及词根、术语和域；每个词典都先写出一个由字段名组成的标题行，再按工作表中的顺序写出其各行，每行占一行。从 `5.1.1` 起，它还包含每个备注所属的表分组。参见[存储形式](./advanced/schema.md#storage-form)。  
 [锁定](../guide/guides/settings.md#锁定)处于开启状态的每项设置，都按其锁定的值写出，而不是按屏幕上显示的值写出。`Viewport` 锁定掌管 `originX`、`originY` 和 `zoomLevel`，`Canvas Type`、`Language`、`Table Name Case`、`Column Name Case`、`Bracket Type` 以及从 `4.2.0` 起的 `Name View` 则各自掌管对应的设置。名称显示写为 `nameViewMode`，并且只在其不为 `'physical'` 时才写出。其他所有设置都按其当前的值写出，`lockSettings` 总会写出。各个位的说明参见 [Settings](./advanced/schema.md#settings)；`Name View` 锁定的位含义相反。  
 从 `5.0.0` 起，[只读](#readonly)编辑器的阅读者所更改的设置，无论是否锁定，也都按文档的值写出，因为它们只保留在该屏幕上。  
 新文档的所有锁定都处于开启状态，无论是元素在被赋予值之前显示的文档，还是从空白值加载的文档。在相应的锁定关闭之前，其 `value` 会一直把原点写为 `0, 0`、缩放级别写为 `1`、标签页写为 ERD 标签页，写出默认的 Code Generator 语言、名称大小写和括号类型，并且从 `4.2.0` 起把名称显示写为 `Physical Names`。  
@@ -221,7 +221,7 @@ const data = editor.value;
 它接受存储形式、[runtimeValue](#runtimevalue)，或较早发布版本保存的文件。  
 空字符串或非字符串的值不会报错，而是加载一个新文档，因此赋值前需要先做好校验。  
 该新文档就是 `setInitialValue('')` 所开始的文档：内容为空、采用默认设置，并且从 `4.0.0` 起所有锁定都处于开启状态。在 `3.10.x` 中，它既不保存滚动位置也不保存缩放级别；在此之前，两者都会保存。  
-shared store 会把这次加载连同新文档的完整 JSON 一起中继给协作者，因此每个协作者（包括使用较旧发布版本的协作者）都会加载它，不过 `4.2.0` 之前的编辑器会丢掉它不认识的内容，例如逻辑名、域关联和词典，参见[混用不同版本](./advanced/collaborative-editing.md#mixing-releases)。  
+shared store 会把这次加载连同新文档的完整 JSON 一起中继给协作者，因此每个协作者（包括使用较旧发布版本的协作者）都会加载它，不过 `4.2.0` 之前的编辑器会丢掉它不认识的内容，例如逻辑名、域关联和词典，而 `5.1.1` 之前的编辑器还会丢掉备注所属的表分组，参见[混用不同版本](./advanced/collaborative-editing.md#mixing-releases)。  
 从 `4.0.0` 起，所加载文档的锁定，以及 `value` 随后写出的锁定值，都来自文本；视图会落在文本所指定的位置，如果那里没有绘制图的任何部分，则落在图上。对于文本锁定的其他各项设置（标签页、Code Generator 的语言、名称大小写、括号类型，以及从 `4.2.0` 起的名称显示），编辑器会继续显示加载之前所显示的内容。文本未锁定的设置则采用文本中的值。`4.2.0` 之前保存的文件不会写明 `Name View` 锁定，除非有 `4.2.0` 的编辑器在其中关闭了该锁定，因此这样的文件加载后，名称显示锁定在 `Physical Names`，编辑器则保持其原先显示的名称显示。[setInitialValue](#setinitialvalue) 则会采用文本中的每一个值；一个锁定都没有写明的文本，也请参见该节。  
 不是 JSON 的文本（例如残留合并冲突标记的文件）同样不会报错：文档会被清空，设置保持原样，解析错误则会输出到控制台。  
 在 `readonly` 生效期间会被忽略，要在只读编辑器中加载文档需使用 [setInitialValue](#setinitialvalue)。
@@ -234,7 +234,7 @@ editor.value = 'json...';
 
 从 `4.0.0` 起，以 JSON 字符串的形式获取该编辑器所持有形式的文档。它没有 setter，因此在严格模式的代码中为其赋值会抛出错误。  
 它包含 [value](#value) 所省略的内容：已删除的实体及其顺序、叠放顺序、测量得到的宽度、键标记、每个关系的标志（是否为识别关系，以及其父端的绘制方式）和连接线锚点，以及序列。  
-从 `4.2.0` 起，它还会保留 `value` 所省略的空内容：实体中为空的文本，例如名称、注释、数据类型、默认值、颜色或备注文本；`doc` 列表 `tableIds`、`relationshipIds`、`indexIds` 和 `memoIds`，以及从 `tableEntities` 到 `memoEntities` 的集合，即使为空也会写出；文档持有分组或已删除的分组时的表分组列表和集合；以及词典及其 `doc` 列表，只要其中任何一个持有条目。它保留只含空白的逻辑名、指向已删除的域的关联、从词典工作表中删除的行，以及不含任何内容的行。与 `value` 中一样，值为 `''` 的逻辑名、域关联或表的分组，以及表中处于关闭状态的名称生成标记，都会被省略。  
+从 `4.2.0` 起，它还会保留 `value` 所省略的空内容：实体中为空的文本，例如名称、注释、数据类型、默认值、颜色或备注文本；`doc` 列表 `tableIds`、`relationshipIds`、`indexIds` 和 `memoIds`，以及从 `tableEntities` 到 `memoEntities` 的集合，即使为空也会写出；文档持有分组或已删除的分组时的表分组列表和集合；以及词典及其 `doc` 列表，只要其中任何一个持有条目。它保留只含空白的逻辑名、指向已删除的域的关联、从词典工作表中删除的行，以及不含任何内容的行。与 `value` 中一样，值为 `''` 的逻辑名、域关联，表的（从 `5.1.1` 起也包括备注的）分组，以及表中处于关闭状态的名称生成标记，都会被省略。  
 每个词典与文件中一样是一个标题行加各行，但其标题行在 `"name"` 之后紧接着写出 `"order"`，即每行的排序键，并且各行按编辑器持有它们的顺序排列（包括已删除的行），而不是工作表的顺序。要得到工作表的顺序，取其 `doc` 列表所列出的各行，按 `order` 排序（按码元顺序比较），排序键相同的行再按 `id` 排序。  
 其设置按 `value` 写出的方式写出，每个锁定的设置按其锁定的值。它以两个空格缩进，每个词典行单独占一行，并且与 `value` 不同，末尾没有换行符。  
 可以用它通过 [setInitialValue](#setinitialvalue)，为加入已在进行中的会话的另一个编辑器（例如协作者，或同一文档的第二个视图）载入初始文档。这样，会话之后发来的对删除操作的 Undo 会在那里完整地恢复该实体；而用 `value` 载入初始文档的编辑器不持有任何已删除的实体，恢复出来的会是一个空的、没有名称的表，或者从 `4.2.0` 起是一个空的词典行。参见[协同编辑](./advanced/collaborative-editing.md)。  
@@ -373,7 +373,7 @@ editor.destroy();
 从 `3.10.0` 起，`search` 可以重新定义，并新增了 `findReplace`。在此之前，`search` 是固定的。从 `4.0.0` 起，新增了 `removeSelection`。从 `4.1.0` 起，新增了 `addTableGroup` 和 `groupSelectedTables`。  
 绑定的值必须是 `ShortcutOption[]`。单纯的字符串会被忽略，因此要写成 `{ addTable: [{ shortcut: 'Alt+KeyN' }] }`，而不是 `{ addTable: 'Alt+KeyN' }`。  
 空数组也会被接受，并且不绑定任何按键：`setKeyBindingMap({ findReplace: [] })` 会把 `Ctrl + F` (Windows/Linux) 或 `⌘ + F` (Mac) 留给页面处理，`{ search: [] }` 对 `Ctrl + K` (Windows/Linux) 或 `⌘ + K` (Mac) 也是如此。工具栏的 `Search` 按钮仍可打开快速搜索，工具栏的 `Explorer` 按钮仍可打开和关闭资源管理器，快速搜索和画布右键菜单中的 `Toggle Explorer` 也仍可打开其搜索或将其关闭；对于留空的名称，这些位置都不会显示快捷键。`{ removeSelection: [] }` 会把 `Delete` 和 `Backspace` 留给页面处理，此时表、备注和表分组菜单中的删除条目（`Delete`、`Delete selected`、`Delete column`、`Delete columns`）都不会显示快捷键。  
-从 `4.1.0` 起，`{ addTableGroup: [] }` 会把 `Alt + G` (Windows/Linux) 或 `⌥ + G` (Mac) 留给页面处理，`{ groupSelectedTables: [] }` 则会把先按 `T` 再按 `G` 留给页面处理。画布工具栏、画布右键菜单和快速搜索中的 `New Table Group`，表菜单中的 `Group selected tables`，以及快速搜索中的 `Group Selected Tables` 仍然可用，只是不显示快捷键。画布工具栏的 `New Table`、`New Memo` 和 `New Table Group` 按钮的提示会标出 `addTable`、`addMemo` 和 `addTableGroup` 的第一个组合键；对于留空的绑定，则只显示按钮名称。  
+从 `4.1.0` 起，`{ addTableGroup: [] }` 会把 `Alt + G` (Windows/Linux) 或 `⌥ + G` (Mac) 留给页面处理，`{ groupSelectedTables: [] }` 则会把先按 `T` 再按 `G` 留给页面处理。画布工具栏、画布右键菜单和快速搜索中的 `New Table Group`，表菜单以及（从 `5.1.1` 起）备注菜单中的 `Group selected tables`，以及快速搜索中的 `Group Selected Tables` 仍然可用，只是不显示快捷键。画布工具栏的 `New Table`、`New Memo` 和 `New Table Group` 按钮的提示会标出 `addTable`、`addMemo` 和 `addTableGroup` 的第一个组合键；对于留空的绑定，则只显示按钮名称。  
 从 `4.2.0` 起，`addColumn` 和 `removeColumn` 还为 Dictionary 标签页的网格提供行组合键（见下文），因此改绑其中任何一个，这些组合键也会随之改变。`{ addColumn: [] }` 会让网格没有用于插入行的组合键，此时网格菜单中的两个插入条目都不显示快捷键；`{ removeColumn: [] }` 会让网格没有用于删除行的组合键，此时该菜单中的删除条目和 `Delete Rows` 的提示都不显示快捷键。  
 该调用是部分合并：未写出的名称保持默认值，调用两次也会保留先前的更改。没有用于读取当前绑定的 getter：[createKeyBindingMap](#createkeybindingmap) 返回的是默认值，而不是经 `setKeyBindingMap` 更改后的内容。
 
@@ -447,10 +447,10 @@ editor.setKeyBindingMap({
 
 `selectAllTable`、`handTool`、`removeSelection`，以及从 `4.1.0` 起的 `groupSelectedTables`，都会让位于光标：只要焦点位于 input、textarea 或 `contenteditable` 中，`$mod + A` 就会选中文本，`Space` 就会输入空格，`Delete` 和 `Backspace` 就会删除文本，先按 `T` 再按 `G` 就会输入这两个字母，都不会传到画布上。这些按键的默认行为都不会被阻止。改绑到其他快捷键后行为同样如此。
 
-从 `4.0.0` 起，`removeSelection`（`Delete` 或 `Backspace`）会在 ERD 标签页上删除选中的对象，算作一步 Undo，并且不会要求确认。当唯一选中的对象是获得焦点的表、其中选中了一列或多列，并且当前缩放会绘制其各行时，它会删除这些列；否则它会删除所有选中的表、备注和表分组，分组中的表会保留。参见[删除表与备注](../guide/guides/table-related-functions.md#删除表与备注)。  
+从 `4.0.0` 起，`removeSelection`（`Delete` 或 `Backspace`）会在 ERD 标签页上删除选中的对象，算作一步 Undo，并且不会要求确认。当唯一选中的对象是获得焦点的表、其中选中了一列或多列，并且当前缩放会绘制其各行时，它会删除这些列；否则它会删除所有选中的表、备注和表分组，分组中的表和备注会保留。参见[删除表与备注](../guide/guides/table-related-functions.md#删除表与备注)。  
 按住按键不放时只会删除一次，单元格、备注或表分组名称编辑器打开期间不会删除任何内容。在文本框以及会拦下绑定的面板和标签页（参见 [createKeyBindingMap](#createkeybindingmap)）之外，只要编辑器获得焦点，这次按键在每个标签页上都会被阻止默认行为，焦点位于工具栏按钮上时也是如此；在只读编辑器中同样会被阻止，但不会删除任何内容。
 
-从 `4.1.0` 起，`addTableGroup`（`Alt+KeyG`）会在 ERD 标签页上进入 `New Table Group` 绘制状态，此后在画布上按下鼠标左键即会绘制分组；再按一次则结束绘制状态，与画布工具栏的 `New Table Group` 按钮相同。`groupSelectedTables`（`KeyT KeyG`，即先按 `T` 再按 `G`）会把选中的表放入一个新分组并打开其名称编辑器，与表右键菜单中的 `Group selected tables` 相同。没有选中任何表时它不会添加任何内容；选中的备注或表分组不计算在内。参见[绘制分组](../guide/guides/table-groups.md#drawing-a-group)和[为选中的表分组](../guide/guides/table-groups.md#grouping-selected-tables)。  
+从 `4.1.0` 起，`addTableGroup`（`Alt+KeyG`）会在 ERD 标签页上进入 `New Table Group` 绘制状态，此后在画布上按下鼠标左键即会绘制分组；再按一次则结束绘制状态，与画布工具栏的 `New Table Group` 按钮相同。`groupSelectedTables`（`KeyT KeyG`，即先按 `T` 再按 `G`）会把选中的表（从 `5.1.1` 起还有与它们一同选中的备注）放入一个新分组并打开其名称编辑器，与表或备注右键菜单中的 `Group selected tables` 相同。没有选中任何表时它不会添加任何内容；仅选中备注或选中表分组都不计算在内。参见[绘制分组](../guide/guides/table-groups.md#drawing-a-group)和[为选中的表分组](../guide/guides/table-groups.md#grouping-selected-tables)。  
 两者只在菜单提供分组的情况下起作用：在 `readonly` 生效期间、View Option 中的 `Table Groups` 隐藏分组期间，或单元格、备注或表分组名称编辑器打开期间，它们都不起作用。与其他画布绑定一样，它们仅作用于 ERD 标签页，并且在快速搜索、表属性、Diff Viewer、Time Travel、自动布局预览、`Export image` 或 `Map Columns` 打开期间不起作用。在它们不起作用的地方，这次按键仍会被阻止默认行为，`groupSelectedTables` 让位于光标时除外。`addTableGroup` 还会像 `focusView` 和 `zenMode` 一样被停止传播，因此页面中冒泡阶段的 `keydown` 监听器永远收不到它。
 
 从 `4.2.0` 起，在 [Dictionary](../guide/guides/dictionary.md#adding-and-deleting-rows) 标签页上，`addColumn` 的每个单次按键组合键都会在选中范围下方插入与选中范围所覆盖行数相同的行，同时再按住 `Shift` 的同一组合键会在上方插入这些行，`removeColumn` 的每个单次按键组合键则会删除选中范围所覆盖的行：在默认设置下分别为 `Alt+Enter`、`Alt+Shift+Enter`，以及 `Alt+Backspace` 或 `Alt+Delete`。它们在 `Domains`、`Words` 和 `Terms` 工作表的网格中、没有打开任何单元格编辑时起作用。本身已包含 `Shift` 的 `addColumn` 组合键不会产生在上方插入的组合键，绑定到这两个名称之一的序列也不会为网格提供任何组合键。  
@@ -1082,7 +1082,7 @@ editor.setSchemaAML('AML...');
 
 从 `4.0.0` 起，加载 `.erd.json` 文档，例如 [value](#value) 返回的文本。  
 在默认的 `mode: 'replace'` 下，它会像为 `value` 赋值那样加载文档：记录到 Undo 历史记录中，发出 `change`，以相同的方式采用文档的锁定，并且从 `4.2.0` 起用文档中的词根、术语和域取代编辑器中的词根、术语和域。与 `value` 不同，空字符串或非字符串的值会被忽略，而不是开始一个新文档。不是 JSON 的文本会清空文档，与 `value` 相同。  
-`mode: 'append'` 会以新的 id 把文档中的表、关系、索引、备注和表分组添加到图的下方，保持它们彼此之间的相对位置，并略去文档的设置，与 [Import and Add](../guide/guides/file-import-export.md#import-and-add) 对 `json` 文件的处理相同。从 `4.2.0` 起，它会保留表和列的逻辑名以及标明名称是否由词典生成的标记，但不会带入文档的词根、术语和域，因此其中的列都不会关联任何域。无法读取的文本，或既没有表也没有备注的文档，不会添加任何内容。否则，它会像 [setSchemaSQL](#setschemasql) 的追加那样落下，其中新的备注和表分组会与表一同成为选中对象，二者各自仅在处于显示状态时才会被选中。  
+`mode: 'append'` 会以新的 id 把文档中的表、关系、索引、备注和表分组添加到图的下方，保持它们彼此之间的相对位置，并略去文档的设置，与 [Import and Add](../guide/guides/file-import-export.md#import-and-add) 对 `json` 文件的处理相同。每个新的表分组包含其表的副本，从 `5.1.1` 起还包含其备注的副本。从 `4.2.0` 起，它会保留表和列的逻辑名以及标明名称是否由词典生成的标记，但不会带入文档的词根、术语和域，因此其中的列都不会关联任何域。无法读取的文本，或既没有表也没有备注的文档，不会添加任何内容。否则，它会像 [setSchemaSQL](#setschemasql) 的追加那样落下，其中新的备注和表分组会与表一同成为选中对象，二者各自仅在处于显示状态时才会被选中。  
 它会在文档落下之后返回，并且在 `readonly` 生效期间会被忽略。
 
 ```js
@@ -1164,7 +1164,8 @@ const sharedStore = editor.getSharedStore({
 空值或非字符串的值会与空白文档进行比较。  
 它与画布右键菜单中的 [Diff Viewer](../guide/guides/table-related-functions.md#diff-viewer) 是同一个视图。  
 从 `4.1.0` 起，它首先按 id 为两个文档中的内容配对，然后才按各自保留下来的内容配对，例如表的名称或备注的文本，参见[比较的内容](../guide/guides/table-related-functions.md#what-is-compared)。因此，与同一文档的较早版本（例如其文件的某个 Git 修订版本）比较时，重命名会显示为一个已重命名的项；与 id 不同的文档比较时，则会显示为一次删除和一次添加。该查看器会在两个文档旁边以树的形式列出变更内容，并以颜色标记变更，而不是填充单元格。  
-从 `4.2.0` 起，两个文档都会以该编辑器当前的名称显示打开，无论传入的文档保存的是哪一种，树也按该名称显示来称呼表和列，参见[画布之外](../guide/guides/logical-names.md#beyond-the-canvas)。逻辑名、域关联和词典不参与比较，因此只对它们做出的更改不会显示为任何变更。
+从 `4.2.0` 起，两个文档都会以该编辑器当前的名称显示打开，无论传入的文档保存的是哪一种，树也按该名称显示来称呼表和列，参见[画布之外](../guide/guides/logical-names.md#beyond-the-canvas)。逻辑名、域关联和词典不参与比较，因此只对它们做出的更改不会显示为任何变更。  
+从 `5.1.1` 起，它还会比较每个备注所属的表分组以及每个表分组包含的备注，参见[比较的内容](../guide/guides/table-related-functions.md#what-is-compared)。
 
 ```js
 editor.setDiffValue('prev json...');

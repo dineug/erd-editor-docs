@@ -39,7 +39,7 @@ interface ErdViewerElement extends HTMLElement {
 ```
 
 وارد کردن `@dineug/erd-editor/erd-viewer.js` تگ `<erd-viewer>` را تعریف می‌کند و `<erd-editor>` را تعریف‌نشده می‌گذارد. وارد کردن ریشهٔ بسته هیچ‌کدام را تعریف نمی‌کند: کلاس `ErdViewerElement` و `defineErdViewer()` را صادر می‌کند، که تگ را همان‌جا که فراخوانی کنید تعریف می‌کند، بنابراین صفحه می‌تواند کلاس را زیر تگی از خودش هم تعریف کند — [ثبت عنصرها](./installation.md#registering-the-elements) را ببینید.  
-هر نقطهٔ ورود جز `engine.js` و `peer.js` به DOM نیاز دارد، این یکی هم، بنابراین صفحهٔ رندرشده در سمت سرور آن را در سمت کلاینت وارد می‌کند — [رندر سمت سرور](./installation.md#server-side-rendering) را ببینید.  
+هر نقطهٔ ورودی که این صفحه‌ها توصیف می‌کنند، جز `engine.js` و `peer.js`، به DOM نیاز دارد، این یکی هم، بنابراین صفحهٔ رندرشده در سمت سرور آن را در سمت کلاینت وارد می‌کند — [رندر سمت سرور](./installation.md#server-side-rendering) را ببینید.  
 وارد کردن این نقطهٔ ورود `erd-viewer` را به `HTMLElementTagNameMap` اضافه می‌کند، بنابراین `document.createElement('erd-viewer')` و `document.querySelector('erd-viewer')` بدون cast از نوع `ErdViewerElement` هستند.
 
 نمایشگر، مانند ویرایشگر، درون یک shadow root بسته رندر می‌شود، بنابراین `viewer.shadowRoot` برابر `null` است و استایل‌های صفحه نه به درون نفوذ می‌کنند و نه به بیرون؛ آن را با [setTheme](#settheme) و خاصیت‌های سفارشی `--erd-editor-*` استایل دهید. چند نمایشگر در یک صفحه هر کدام سند، نما، طرح زمینه و زبان خود را نگه می‌دارند.  
@@ -52,7 +52,7 @@ interface ErdViewerElement extends HTMLElement {
 
 ```html
 <erd-viewer src="diagram.erd.json" style="display: block; height: 480px"></erd-viewer>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0/dist/erd-viewer.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.1/dist/erd-viewer.umd.js"></script>
 ```
 
 ## src {#src}

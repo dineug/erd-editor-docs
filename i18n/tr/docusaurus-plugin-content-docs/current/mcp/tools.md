@@ -1,11 +1,11 @@
 ---
 sidebar_position: 4
-description: erd-editor MCP sunucusunun sunduğu tüm araçlar – belgeyi sayfa sayfa okuma, sözlük denetimleri, 67 düzenleme aracı, erd_batch ve bir sonuçla bir reddin neye benzediği.
+description: erd-editor MCP sunucusunun sunduğu tüm araçlar – belgeyi sayfa sayfa okuma, sözlük denetimleri, SVG dışa aktarma, 68 düzenleme aracı, erd_batch ve bir sonuçla bir reddin neye benzediği.
 ---
 
 # Araçlar
 
-Sunucu 77 araç sunar: beş oturum aracı, dört okuma aracı, her düzenleme işlemi için bir tane olmak üzere 67 düzenleme aracı ve birkaç düzenleme aracını tek bir düzenleme olarak çalıştıran `erd_batch`.
+Sunucu 79 araç sunar: beş oturum aracı, dört okuma aracı, belgeyi SVG görüntüsü olarak çizen `erd_export_svg`, her düzenleme işlemi için bir tane olmak üzere 68 düzenleme aracı ve birkaç düzenleme aracını tek bir düzenleme olarak çalıştıran `erd_batch`.
 
 `erd_list_documents` dışındaki her araç ilk argüman olarak belgenin `path` değerini alır ve aşağıdaki tablolarda bu argüman yer almaz.
 `?` ile işaretlenen bir argüman isteğe bağlıdır.
@@ -26,14 +26,14 @@ Kaydetmenin ve geri almanın her modda ne yaptığı için [Canlı ve headless](
 
 | Araç | Argümanlar | Ne yapar |
 | --- | --- | --- |
-| `erd_list` | `query?`, `offset?`, `limit?`, `namesOnly?` | Ayarlar ve sayılar, ardından dizinleri ve ilişkileriyle birlikte bir sayfa tablo; her tablo için kimliği, tuval üzerindeki konumu ve boyutu, sütun sayısı, varsa mantıksal adı ve bir tablo grubundaysa tablo grubu. Arama yapmıyorsa tablolardan sonra tablo grupları, notlar ve ardından değer alanları, terimler ve sözcükler gelir. |
-| `erd_get` | `tableIds?`, `tableNames?`, `relationshipIds?`, `indexIds?`, `memoIds?`, `tableGroupIds?`, `wordIds?`, `termIds?`, `domainIds?` | Belirtilen varlıklar, eksiksiz olarak: sütunları ve tablo gruplarıyla tablolar, sütunları ile `onDelete` ve `onUpdate` değerleriyle ilişkiler, sütunlarıyla dizinler, metinleriyle notlar, tablolarıyla tablo grupları ve tüm alanlarıyla sözcükler, terimler ve değer alanları. |
+| `erd_list` | `query?`, `offset?`, `limit?`, `namesOnly?` | Ayarlar ve sayılar, ardından dizinleri ve ilişkileriyle birlikte bir sayfa tablo; her tablo için kimliği, tuval üzerindeki konumu ve boyutu, sütun sayısı, varsa mantıksal adı ve bir tablo grubundaysa tablo grubu. Arama yapmıyorsa tablolardan sonra tablo grupları, her biri bir tablo grubundaysa o grubuyla birlikte notlar ve ardından değer alanları, terimler ve sözcükler gelir. |
+| `erd_get` | `tableIds?`, `tableNames?`, `relationshipIds?`, `indexIds?`, `memoIds?`, `tableGroupIds?`, `wordIds?`, `termIds?`, `domainIds?` | Belirtilen varlıklar, eksiksiz olarak: sütunları ve tablo gruplarıyla tablolar, sütunları ile `onDelete` ve `onUpdate` değerleriyle ilişkiler, sütunlarıyla dizinler, metinleri ve tablo gruplarıyla notlar, tabloları ve notlarıyla tablo grupları ve tüm alanlarıyla sözcükler, terimler ve değer alanları. |
 | `erd_read` | `format`, `vendor?`, `statements?`, `header?`, `logicalNameAsComment?`, `tableIds?`, `tableNames?`, `groupNames?` | Dört biçimden birinde belgenin tamamı tek seferde ya da yalnızca bazı tabloların veya tablo gruplarının DDL'i. |
 | `erd_list_checks` | `level?`, `tableIds?`, `tableNames?`, `offset?`, `limit?` | Sözcük, terim ve değer alanı sözlüklerinin ortaya çıkardığı sorunlar, düzenleyicinin Sözlük sekmesindeki `Checks` sayfasının listelediği biçimde ve sayfa sayfa. Hiçbir şeyi değiştirmez. [Sözlük denetimleri](#dictionary-checks) bölümüne bakın. |
 
 Bir ajan kimlikleri `erd_list` ile bulur, sütunları, sözlük satırlarını ve diğer ayrıntıları `erd_get` ile okur ve bu kimlikleri düzenleme araçlarına aktarır.
 Bir tablonun `erd_list` içindeki boyutu, tuval üzerinde kapladığı kutudur: Yükseklik kesin, genişlik yaklaşıktır.
-Bir tablo grubu, sakladığı dikdörtgenle, adıyla, rengiyle ve kaç tablo içerdiğiyle listelenir.
+Bir tablo grubu, sakladığı dikdörtgenle, adıyla, rengiyle ve kaç tablo ile not içerdiğiyle listelenir.
 Her ilişki, iki tablosundan biriyle birlikte bir kez listelenir.
 Bir sözlük satırı kimliğiyle, `name` değeriyle ve bir fiziksel ada ya da bir sütuna verdiğiyle listelenir: bir değer alanının `dataType` değeri, bir terimin `physicalName` ve `domainId` değerleri ve bir sözcüğün `abbreviation` değeri. Her sözlük satırlarını, sayfasının gösterdiği sırayla listeler.
 `erd_list` ve `erd_read` araçlarının bildirdiği ayarlar, dosyanın kaydettiği ayarlardır. [Ayarlar](#settings) bölümüne bakın.
@@ -45,7 +45,7 @@ Her sütun `domainId` değerini taşır, her terim de öyle: Değer alanı yoksa
 
 | `format` | Verdiği yanıt |
 | --- | --- |
-| `snapshot` | Tablo grupları ile sözcük, terim ve değer alanı satırları dahil her varlığı kimliğiyle ve ayarları Şema SQL betikleriyle birlikte içeren kompakt JSON. Bir görüntüleyenden diğerine değişen şeyleri içermez: ölçülen genişlikler, katman sırası, görünüm, sekme ve Ad görünümü. Büyük bir şemada boyutu büyüktür. |
+| `snapshot` | Tabloları ve notlarıyla tablo grupları ile sözcük, terim ve değer alanı satırları dahil her varlığı kimliğiyle ve ayarları Şema SQL betikleriyle birlikte içeren kompakt JSON. Bir görüntüleyenden diğerine değişen şeyleri içermez: ölçülen genişlikler, katman sırası, görünüm, sekme ve Ad görünümü. Büyük bir şemada boyutu büyüktür. |
 | `sql` | Sekiz veritabanından biri için DDL: `Databricks`, `MariaDB`, `MSSQL`, `MySQL`, `Oracle`, `PostgreSQL`, `Snowflake` veya `SQLite`. `vendor` verilmezse varsayılan olarak belgede ayarlı veritabanı kullanılır. Belgenin tamamının DDL'i, tablolardan önceki ve sonraki betikleri içerir. `tableIds`, `tableNames` veya `groupNames` ile yalnızca bu tablolar, tuttukları yabancı anahtarlarla birlikte ve betikler olmadan. Yabancı anahtarlar ON DELETE ve ON UPDATE eylemlerini taşır, hedef veritabanının dışarıda bıraktıkları hariç. [ON DELETE ve ON UPDATE](../guide/guides/relationship-editing.md#on-delete-and-on-update) bölümüne bakın. |
 | `json` | Belgenin tamamı, tam olarak bir kaydetme işleminin dosyaya yazdığı biçimde, düzenleyicinin henüz kaydetmediği düzenlemeler dahil. [Depolama biçimi](../api/advanced/schema.md#storage-form) bölümüne bakın. |
 | `scripts` | Şemanın boyutu ne olursa olsun yalnızca belgenin tablolardan önceki ve sonraki betikleri, `{"before":"…","after":"…"}` biçiminde. Ayarlanmamış betik boş gelir. |
@@ -103,6 +103,37 @@ Her denetim `level` ve `code` değerlerini ve hedefinin `kind` ve `id` değerler
 
 Her denetimin bir adı nasıl okuduğu [Her denetimin buldukları](../guide/guides/dictionary.md#what-each-check-finds) bölümünde anlatılır.
 
+## SVG dışa aktarma {#svg-export}
+
+| Araç | Argümanlar | Ne yapar |
+| --- | --- | --- |
+| `erd_export_svg` | `output?`, `darkMode?`, `background?` | Belgeyi bir SVG görüntüsü olarak çizer ve `output` ile belirtilen `.svg` dosyasına yazar; `output` yoksa SVG metnini yanıt olarak verir. Hiçbir belgeyi değiştirmez. |
+
+Görüntüyü sunucu kendisi çizer; bu yüzden yalnızca sunucunun `1.2.1` veya sonraki bir sürümünü gerektirir ve bağlanan herhangi bir ERD Editor uzantısı veya eklentisi sürümüyle çalışır.
+`toImage()` gibi, düzenleyicinin `Export image` iletişim kutusunun SVG olarak kaydettiği görüntüyü çizer, ancak yalnızca belgeden hareketle: diyagramın tamamı %100'de, belgede View Option ile gizlenenler dışarıda bırakılarak, hazır ayar renkleriyle, tablolar ve sütunlar belgenin tuttuğu Ad görünümünde adlandırılarak ve diyagramın kendi sözcükleri İngilizce olarak. [Ne çizer](../api/to-image.md#what-it-draws) bölümüne bakın.
+Sunucu metni düzenleyicinin yazı tipleri olmadan ölçer; bu yüzden bir tablo, düzenleyicinin çizdiğinden biraz daha geniş çıkabilir.
+PNG ve panoya kopyalama yoktur.
+
+- `darkMode`: `true` koyu temayı çizer; varsayılan olan `false` açık temayı. Bir düzenleyicinin ekranındaki hiçbir tema görüntüye ulaşmaz.
+- `background`: varsayılan olan `true` diyagramın arkasını tuval rengiyle boyar; `false` onu saydam bırakır.
+- `output`: yazılacak dosya; mutlak ya da sunucunun çalışma dizinine göre göreli olabilir, adı büyük veya küçük harfle `.svg` ile bitmelidir ve zaten var olan bir klasörde olmalıdır. Orada zaten bulunan bir dosya, yanındaki geçici bir dosya aracılığıyla değiştirilir ve sembolik bağlantı, gösterdiği dosyaya kadar izlenir.
+
+Dışa aktarma belgeyi okuma araçlarının yaptığı gibi okur: belgeye hizmet veren düzenleyicinin tuttuğunu, henüz kaydedilmemiş düzenlemeler dahil, ya da aksi hâlde dosyayı. Bir okuma gibi, belgeyi hiçbir zaman bir düzenleyicide açmaz.
+Yanıtındaki `mode` hangisi olduğunu söyler: `live`, `headless` ya da hub'ı kapalı bir düzenleyici belgeyi tuttuğunda `blocked`; bu son durumda bir not, diskteki dosyanın o düzenleyicide henüz kaydedilmemiş düzenlemeler olmadan çizildiğini bildirir. [Canlı ve headless](./live-and-headless.md) sayfasına bakın.
+
+`output` ile yanıt tek satırlık bir JSON'dur: `mode`, belgenin `path` değeri, yazılan `output`, `bytes` olarak boyutu, SVG'nin `width` ve `height` değerleri ve varsa `notes`.
+
+```json
+{"mode":"headless","path":"/work/shop.erd.json","output":"/work/docs/shop.svg","bytes":48213,"width":1210,"height":764}
+```
+
+`output` olmadan yanıt SVG metni, ardından varsa notlarla birlikte `{"mode":"…"}` olur. Tek bir yanıtın döndürebileceği en fazla uzunluk olan 40.000 karakteri aşan bir SVG `tooLarge` koduyla reddedilir: bunun yerine dosyaya yazılması için `output` verin.
+
+`output`, belge okunmadan önce denetlenir; bu yüzden reddedilen bir `output` hiçbir çizime mal olmaz: boş bir `output`, `.svg` ile bitmeyen bir ad, bir klasörü gösteren bir ad ve hiçbir dosyaya ya da adı `.svg` ile bitmeyen bir dosyaya giden bir bağlantı `invalidPath` koduyla, var olmayan bir klasördeki bir `output` ise `notFound` koduyla reddedilir. Salt okunur bir dosya, görüntü çizildikten sonra `readonly` koduyla reddedilir ve olduğu gibi bırakılır.
+
+Bir dışa aktarma geri alma kaydı oluşturmaz ve kaydedilecek hiçbir şey bırakmaz; `erd_batch` da, bir okuma aracını reddettiği gibi onu reddeder.
+Büyük bir diyagramın çizilmesi birkaç saniye sürer ve sunucu aynı anda tek bir dışa aktarmayı çizer.
+
 ## Düzenleme araçları {#edit-tools}
 
 Kimlikler `erd_list` ve `erd_get` araçlarından ya da varlığı oluşturan çağrının `createdIds` alanından gelir.
@@ -121,7 +152,7 @@ Yeni bir kimlik, `03h17be2plxpj5n59tqag7ogj` gibi 25 küçük harf ve rakamdan o
 | `erd_change_table_color` | `tableId`, `color` | Bir tablonun rengini ayarlar. |
 | `erd_move_table` | `tableId`, `x`, `y` | Bir tabloyu tuval üzerinde bir konuma taşır. |
 | `erd_move_tables` | `positions` | Birkaç tabloyu, tek bir `erd_undo` çağrısının geri aldığı tek bir düzenlemede taşır. `positions`, her tablo için bir `{ tableId, x, y }` içerir ve her tablo en fazla bir kez yer alır. |
-| `erd_sort_tables` | | `erd_import_sql`, `erd_import_graphql`, `erd_import_dbml` ve `erd_import_aml` araçlarının yerleştirdiği gibi, tüm tabloları en az sütunlu olan önce gelecek şekilde tuval boyunca satırlara yerleştirir. Bir tablo grubunun tabloları bir arada kalır ve her grubun kutusu bunların çevresine oturtulur. |
+| `erd_sort_tables` | | `erd_import_sql`, `erd_import_graphql`, `erd_import_dbml` ve `erd_import_aml` araçlarının yerleştirdiği gibi, tüm tabloları en az sütunlu olan önce gelecek şekilde tuval boyunca satırlara yerleştirir. Bir tablo grubunun tabloları bir arada kalır, notlar gösterilirken bunların ardından grubun notları gelir ve her grubun kutusu bunların çevresine oturtulur. Notlar gizliyken bir grubun notları tablolarıyla birlikte taşınır. Hiçbir grupta olmayan ya da hiç tablo içermeyen bir gruptaki bir not olduğu yerde kalır. |
 
 ### Sütunlar {#columns}
 
@@ -190,28 +221,33 @@ Bir dizin sütunu kimliği, tablo sütununun kimliği değil, `erd_get` aracın�
 | `erd_move_memo` | `memoId`, `x`, `y` | Bir notu tuval üzerinde bir konuma taşır. |
 | `erd_resize_memo` | `memoId`, `width`, `height` | Bir notu yeniden boyutlandırır. Genişlik en az yaklaşık `116` piksel, yükseklik en az `100` olmalıdır. Düzenleyici bir notun yeniden boyutlandırılmasını yalnızca sürüklemeyle yapıldığında kaydettiği için bu araç geri alma kaydı oluşturmaz. |
 
+Bir not, birlikte taşındığı bir tablo grubunda bulunabilir. [Tablo grupları](#table-groups) bölümüne bakın.
+
 Notlar [View Option](../guide/guides/table-related-functions.md#table-view-options) → `Memos` ile gizliyken `erd_add_memo` yine de bir not ekler ve bu not, notlar yeniden gösterilene kadar gizli kalır.
 `erd_list` ve `erd_get` gizli notları da listeler.
 
 ### Tablo grupları {#table-groups}
 
-Tablo grubu, tablolarının arkasına çizilen adlandırılmış bir kutudur ve rengi hem kutuda hem de tablolarının başlıkları boyunca görünür. [Tablo grupları](../guide/guides/table-groups.md) sayfasına bakın.
-Bir tablo en fazla bir grupta bulunur. `erd_move_table`, `erd_move_tables` ve `erd_move_table_group`, bir tabloyu nereye yerleştirirlerse yerleştirsinler bir grubun hangi tabloları içerdiğini asla değiştirmez; düzenleyicide ise bir tablo bırakıldığı yere göre bir gruba katılır ya da gruptan ayrılır. [Tablo ekleme ve çıkarma](../guide/guides/table-groups.md#adding-and-removing-tables) bölümüne bakın. `erd_add_table_group` ve `erd_set_table_group` tabloları bir gruba koyar, `erd_remove_table_group` ise grubun tablolarını grupsuz bırakır.
-Bir grup, başlık çubuğu dahil en az `160` piksel genişliğinde ve `100` yüksekliğinde bir dikdörtgen saklar ve düzenleyici kutuyu, tablolarının her birini içine alacak şekilde büyüterek çizer.
+Tablo grubu, tablolarının ve notlarının arkasına çizilen adlandırılmış bir kutudur ve rengi hem kutuda hem de tablolarının ve notlarının başlıkları boyunca görünür. [Tablo grupları](../guide/guides/table-groups.md) sayfasına bakın.
+Bir tablo veya bir not en fazla bir grupta bulunur. `erd_move_table`, `erd_move_tables`, `erd_move_memo` ve `erd_move_table_group`, bir tabloyu veya notu nereye yerleştirirlerse yerleştirsinler bir grubun neleri içerdiğini asla değiştirmez; düzenleyicide ise bir tablo veya not bırakıldığı yere göre bir gruba katılır ya da gruptan ayrılır. [Tablo ekleme ve çıkarma](../guide/guides/table-groups.md#adding-and-removing-tables) bölümüne bakın. `erd_add_table_group` tabloları ve notları, `erd_set_table_group` tabloları, `erd_set_memo_group` de notları bir gruba koyar; `erd_remove_table_group` ise grubun tablolarını ve notlarını grupsuz bırakır.
+Bir grup, başlık çubuğu dahil en az `160` piksel genişliğinde ve `100` yüksekliğinde bir dikdörtgen saklar ve düzenleyici kutuyu, tablolarının her birini ve notlar gösterilirken notlarının her birini içine alacak şekilde büyüterek çizer.
 
 | Araç | Argümanlar | Ne yapar |
 | --- | --- | --- |
-| `erd_add_table_group` | `name`, `color?`, `x?`, `y?`, `width?`, `height?`, `tableIds?` | Bir grup ekler ve kimliğini `createdIds` içinde döndürür. Ya `tableIds` ya da `x`, `y`, `width` ve `height` değerlerinin birlikte verildiği bir dikdörtgen verin. `tableIds` ile her tablo bulunduğu gruptan ayrılır ve dikdörtgen, [seçili tabloları gruplamanın](../guide/guides/table-groups.md#grouping-selected-tables) yaptığı gibi tabloların çevresine oturtulur. Bir dikdörtgen, [grup çizmenin](../guide/guides/table-groups.md#drawing-a-group) yaptığı gibi, merkezi kendi içinde kalan ve hiçbir grupta olmayan her tabloyu içine alır. Boş bir `name` grubu adsız bırakır. Tek bir `erd_undo` grubu kaldırır ve her tabloyu önceki grubuna geri koyar. |
-| `erd_remove_table_group` | `groupId` | Bir grubu kaldırır. Grubun tabloları oldukları yerde, hiçbir grupta olmadan kalır. |
+| `erd_add_table_group` | `name`, `color?`, `x?`, `y?`, `width?`, `height?`, `tableIds?`, `memoIds?` | Bir grup ekler ve kimliğini `createdIds` içinde döndürür. Ya `tableIds` ve yanında isteğe bağlı `memoIds` ya da `x`, `y`, `width` ve `height` değerlerinin birlikte verildiği bir dikdörtgen verin. `tableIds` ile her tablo ve not bulunduğu gruptan ayrılır ve dikdörtgen, [seçili tabloları gruplamanın](../guide/guides/table-groups.md#grouping-selected-tables) yaptığı gibi bunların çevresine oturtulur; notlar yalnızca gösterilirken hesaba katılır. Bir dikdörtgen, [grup çizmenin](../guide/guides/table-groups.md#drawing-a-group) yaptığı gibi, merkezi kendi içinde kalan ve hiçbir grupta olmayan her tabloyu ve her gösterilen notu içine alır. Boş bir `name` grubu adsız bırakır. Tek bir `erd_undo` grubu kaldırır ve her tabloyu ve notu önceki grubuna geri koyar. |
+| `erd_remove_table_group` | `groupId` | Bir grubu kaldırır. Grubun tabloları ve notları oldukları yerde, hiçbir grupta olmadan kalır. |
 | `erd_change_table_group_name` | `groupId`, `value` | Bir grubu yeniden adlandırır. Boş bir dize grubu adsız bırakır. |
 | `erd_change_table_group_color` | `groupId`, `color` | Bir grubun rengini ayarlar. |
-| `erd_move_table_group` | `groupId`, `x`, `y` | Bir grubu, dikdörtgeni o noktadan başlayacak şekilde taşır ve başlık çubuğunu sürüklemenin yaptığı gibi tablolarını da aynı mesafe kadar taşır. Yatay ve dikey uzaklıkların toplamı 20 pikselin altında kalan bir taşıma geri alma kaydı oluşturmaz. Sunucunun `1.2.0` sürümünden itibaren taşıma düzenleyiciye grubun ve tablolarının bittiği noktalar olarak ulaşır; bu nedenle VS Code uzantısının `4.3.0` veya sonraki bir sürümüyle ya da Obsidian veya JetBrains eklentisinin `1.3.0` veya sonraki bir sürümüyle, orada aynı anda yapılan grup taşıması veya tablolarından birinin taşıması iki konumdan birinde biter, asla toplamlarında bitmez. [Aynı anda yapılan düzenlemeler](./live-and-headless.md#edits-made-at-the-same-moment) bölümüne bakın. |
-| `erd_resize_table_group` | `groupId`, `x?`, `y?`, `width`, `height` | Bir grubun dikdörtgenini ayarlar, grubun tabloları yerinde kalır. `x` ve `y` verilmezse grubun köşesi korunur. Grubun tablolarını iç boşluklarıyla birlikte içine almayacak bir dikdörtgen, içine alması gereken kutuyu belirten bir iletiyle reddedilir. |
+| `erd_move_table_group` | `groupId`, `x`, `y` | Bir grubu, dikdörtgeni o noktadan başlayacak şekilde taşır ve başlık çubuğunu sürüklemenin yaptığı gibi tablolarını ve notlarını, gizli notlar dahil, aynı mesafe kadar taşır. Yatay ve dikey uzaklıkların toplamı 20 pikselin altında kalan bir taşıma geri alma kaydı oluşturmaz. Sunucunun `1.2.0` sürümünden itibaren taşıma düzenleyiciye grubun ve tablolarının bittiği noktalar olarak ulaşır; bu nedenle VS Code uzantısının `4.3.0` veya sonraki bir sürümüyle ya da Obsidian veya JetBrains eklentisinin `1.3.0` veya sonraki bir sürümüyle, orada aynı anda yapılan grup taşıması veya tablolarından birinin taşıması iki konumdan birinde biter, asla toplamlarında bitmez. [Aynı anda yapılan düzenlemeler](./live-and-headless.md#edits-made-at-the-same-moment) bölümüne bakın. Sunucunun `1.2.1` sürümünden itibaren notlarının bittiği noktalar da aynı pakette gider. |
+| `erd_resize_table_group` | `groupId`, `x?`, `y?`, `width`, `height` | Bir grubun dikdörtgenini ayarlar, grubun tabloları ve notları yerinde kalır. `x` ve `y` verilmezse grubun köşesi korunur. Grubun tablolarını ve gösterilen notlarını iç boşluklarıyla birlikte içine almayacak bir dikdörtgen, içine alması gereken kutuyu belirten bir iletiyle reddedilir. |
 | `erd_set_table_group` | `tableIds`, `groupId` | Tabloları bir gruba koyar, her tablo bulunduğu gruptan ayrılır. `null` veya boş dize olan bir `groupId` onları tüm gruplardan çıkarır. |
+| `erd_set_memo_group` | `memoIds`, `groupId` | Notları bir gruba koyar, her not bulunduğu gruptan ayrılır ve olduğu yerde kalır. `null` veya boş dize olan bir `groupId` onları tüm gruplardan çıkarır. |
 
 Gruplar `View Option` → `Table Groups` ile gizliyken bu araçlar yine de grup ekler ve grupları değiştirir; bu gruplar, gruplar gösterilene kadar gizli kalır. [Grupları gizleme](../guide/guides/table-groups.md#hiding-groups) bölümüne bakın.
-`erd_sort_tables` her grubun tablolarını bir arada tutar, `erd_import_dbml` ve `erd_import_json` grupları getirir ([İçe aktarma](#import) bölümüne bakın) ve `erd_read`, `groupNames` ile seçilen grupların DDL'ini yazar.
+View Option → `Memos` ile gizlenen notlar gruplarında kalır ve onlarla birlikte taşınır; `erd_set_memo_group` ve `erd_add_table_group` aracının `memoIds` argümanı onları gösterilen notlar gibi bir gruba koyar.
+`erd_sort_tables` her grubun tablolarını ve notlarını bir arada tutar, `erd_import_dbml` ve `erd_import_json` grupları getirir ([İçe aktarma](#import) bölümüne bakın) ve `erd_read`, `groupNames` ile seçilen grupların DDL'ini yazar.
 Tablo grupları gelmeden önce çıkmış bir ERD Editor sürümü, dosyayı kaydederken dosyanın gruplarını siler; `4.0.0` sürümünden önceki VS Code uzantısı ile `1.0.0` sürümünden önceki Obsidian ve JetBrains eklentileri böyle yapar. [Güncelleme](./installation.md#updating) bölümüne bakın.
+Notlar tablo gruplarına katılmadan önceki bir sürüm, yani `4.3.1` sürümünden önceki VS Code uzantısı ile `1.3.1` sürümünden önceki Obsidian ve JetBrains eklentileri, bir notun hangi grupta olduğunu ne gösterir ne de korur; bu yüzden dosyayı her not hiçbir grupta olmayacak şekilde kaydeder, diskteki dosyayı yazan `1.2.1` sürümünden önceki bir sunucu da öyle yapar. [Güncelleme](./installation.md#updating) bölümüne bakın.
 
 ### Sözlükler {#dictionaries}
 
@@ -304,14 +340,14 @@ VS Code uzantısının `4.3.0` veya sonraki bir sürümüne ya da Obsidian veya 
 - İlişkiler ve dizinler yalnızca içe aktarmanın getirdiği tablolar arasında gelir, bu nedenle metnin tanımlamadığı bir tabloya giden yabancı anahtar atılır.
 - `erd_import_sql`, `erd_import_graphql` ve `erd_import_aml` tabloları ilişkileri ve dizinleriyle birlikte ekler, `erd_import_dbml` ise tablo gruplarını da ekler. `erd_import_json` tabloları, ilişkileri, dizinleri, notları ve tablo gruplarını ekler, ayarlarını asla eklemez ve boş bir metni reddeder. Tabloları ve sütunları mantıksal adlarını getirir, ancak hiçbir sütun bir değer alanına bağlanmaz ve JSON'un sözcüklerinden, terimlerinden veya değer alanlarından hiçbiri gelmez.
 
-Bir JSON belgesi, tablo grupları dahil kendi yerleşimini korur: `replace` ile tablolarını yerleştirdiği yerde, `append` ile eklenen bloğun içinde.
+Bir JSON belgesi, tablo grupları dahil ve her grubun tuttuğu tablolar ve notlarla birlikte kendi yerleşimini korur: `replace` ile tablolarını yerleştirdiği yerde, `append` ile eklenen bloğun içinde.
 SQL, GraphQL, DBML ve AML metinlerinden gelen tablolar, `erd_sort_tables` aracının yerleştirdiği gibi, en az sütunlu olanlar önce ve her grubun tabloları bir arada olacak şekilde satırlar hâlinde dizilir; düzenleyicinin kendi Import işlevinin mümkün olduğunda kullandığı `Flow` ile asla yerleştirilmez. Bu dört araç her iki modda da boş bir metni reddeder.
 
 ## erd_batch {#erd_batch}
 
 `erd_batch`, birkaç düzenleme aracını sırayla, ya hepsi ya hiçbiri ilkesiyle tek bir düzenleme olarak çalıştırır.
 
-- `operations`, her biri `{ tool, as?, args? }` biçiminde en fazla 100 girdi içerir; burada `tool` bir düzenleme aracı, `args` ise aracın `path` dışındaki argümanlarıdır. `erd_list_checks` gibi bir okuma aracı reddedilir.
+- `operations`, her biri `{ tool, as?, args? }` biçiminde en fazla 100 girdi içerir; burada `tool` bir düzenleme aracı, `args` ise aracın `path` dışındaki argümanlarıdır. `erd_list_checks` gibi bir okuma aracı reddedilir, `erd_export_svg` de öyle.
 - İşlemler önce belgenin bir kopyası üzerinde denenir. Reddedilen işlem `operations[1] erd_remove_table: …` gibi adıyla belirtilir ve hiçbir şey uygulanmaz.
 - Tek bir `erd_undo`, geri alamadığı işlemler dışında toplu işlemin tamamını geri alır ve sonucun `undoNote` alanı bu işlemleri belirtir: `erd_set_database` gibi geri alma kaydı oluşturmayan bir aracın işlemleri ve kısa bir `erd_move_table_group` gibi kayıt oluşturmadan belgeyi değiştiren işlemler. `erd_undo`, hiç geri alma kaydı oluşturmayan bir toplu işlemi atlar. Sonuçtaki `historyEntries`, `erd_undo` çağrılarını değil, toplu işlemin içindeki düzenleyici geçmiş kayıtlarını sayar.
 - Canlı bir oturumda düzenleyici toplu işlemin ya tamamını alır ya da hiçbir kısmını almaz.
@@ -391,21 +427,21 @@ Bir ret, bir kod ve ne yapılacağını söyleyen bir ileti taşıyan bir hata s
 
 | `code` | Nedeni |
 | --- | --- |
-| `notFound` | Bir kimlik şu anda var olan hiçbir şeye karşılık gelmez ya da dosya yoktur. |
+| `notFound` | Bir kimlik şu anda var olan hiçbir şeye karşılık gelmez, dosya yoktur ya da `erd_export_svg` aracının `output` değerinin klasörü yoktur. |
 | `invalidArgs` | Bir argüman eksiktir ya da yanlış bir değere sahiptir. |
-| `invalidPath` | Yol bir ERD belgesi değildir. Windows'ta ayrıca Windows'un yazıldığı gibi saklamadığı bir ad içeren bir yol ya da bir düzenleyicinin başka bir yol altında tuttuğu bir belgeye ulaşan bir yol; ileti bu diğer yolu belirtir. |
+| `invalidPath` | Yol bir ERD belgesi değildir ya da `erd_export_svg` aracının `output` değeri bir `.svg` dosyası değildir. [SVG dışa aktarma](#svg-export) bölümüne bakın. Windows'ta ayrıca Windows'un yazıldığı gibi saklamadığı bir ad içeren bir yol ya da bir düzenleyicinin başka bir yol altında tuttuğu bir belgeye ulaşan bir yol; ileti bu diğer yolu belirtir. |
 | `invalidDocument` | Dosya, düzenleyicinin okuyabileceği bir belge değildir. |
-| `tooLarge` | Bir okuma tek bir yanıta sığmaz. |
+| `tooLarge` | Bir okuma ya da `output` olmadan istenen bir SVG tek bir yanıta sığmaz. |
 | `blocked` | Belgeyi, hub'ı kapalı bir düzenleyici tutar. İleti hub'ın nasıl açılacağını söyler: VS Code'da çalışma alanına güvenin ve `dineug.erd-editor.agentHub.enabled` ayarını açın ya da pencereyi yeniden yükleyin; Obsidian'da Coding agents ayarını açın ya da Obsidian'ı yeniden yükleyin; bir JetBrains IDE'sinde Coding agents ayarını açın ya da açıksa IDE'yi yeniden başlatın. |
 | `hubDisabled` | Bir JetBrains IDE'si belgeyi yalnızca güvenmediği bir projede tutar. Okumalar yine de çalışır; ajanın düzenleme yapabilmesi için projeye güvenin. |
 | `conflict` | Dosya çağrı sırasında diskte değişti. Hiçbir şey yazılmadı. |
 | `hubAppeared`, `hubGone` | Bir düzenleyici, ajanın diskte düzenlediği bir belgeye hizmet vermeye başladı ya da belgeye hizmet veren düzenleyici hâlâ çalışıyor ancak kilit dosyası ve bağlantısı ortadan kalktı. Hiçbir şey yazılmadı. |
 | `notSaved` | `erd_save` düzenleyicinin belgesini kaydedemedi. |
-| `readonly` | Düzenleyici belgeyi salt okunur tutar; örneğin yazamadığı ya da diyagram olarak okuyamadığı bir dosya. Düzenleyici yoksa dosyanın kendisi salt okunurdur; örneğin kullanıma alınmamış (check out edilmemiş) bir Perforce veya TFVC dosyası. Hiçbir şey yazılmadı. |
+| `readonly` | Düzenleyici belgeyi salt okunur tutar; örneğin yazamadığı ya da diyagram olarak okuyamadığı bir dosya. Düzenleyici yoksa dosyanın kendisi salt okunurdur; örneğin kullanıma alınmamış (check out edilmemiş) bir Perforce veya TFVC dosyası. `erd_export_svg` ile, `output` değerinin belirttiği `.svg` dosyası salt okunurdur. Hiçbir şey yazılmadı. |
 | `protocolMismatch` | Düzenleyicinin ERD Editor uzantısı veya eklentisi ile sunucu farklı protokol sürümleri kullanır; örneğin `1.0.0` veya sonraki bir sürümü kullanan sunucu ile `3.x` sürümlü bir VS Code uzantısı. Okumalar da reddedilir ve ileti güncellenmesi gereken tarafı belirtir. [Güncelleme](./installation.md#updating) bölümüne bakın. |
 | `hubUnreachable`, `timeout`, `disconnected` | Bir düzenleyicinin hub'ı bağlantıyı kabul etmedi, 30 saniye içinde yanıt vermedi ya da çağrı sırasında bağlantıyı kesti. Windows'ta `hubUnreachable` ayrıca Windows'un ajanı hub'dan uzak tuttuğu anlamına gelir: Düzenleyici ajandan daha fazla hakla çalışır (örneğin düzenleyici yönetici olarak başlatılmış, ajan ise başlatılmamışsa) ya da ajan bir korumalı alanda çalışır. |
 
 Diğer kodlar daha seyrektir ve her ret, ne olduğunu söyleyen bir ileti taşır.
 
-Düzenleme araçları, `erd_batch` ve dört okuma aracı, bildirmedikleri bir argümanı ya da yanlış türde bir argümanı belgeye dokunmadan önce bir JSON-RPC geçersiz parametre hatasıyla (`-32602`) reddeder, böylece yanlış yazılmış bir argüman asla sessizce yok sayılmaz.
+Düzenleme araçları, `erd_batch`, dört okuma aracı ve `erd_export_svg`, bildirmedikleri bir argümanı ya da yanlış türde bir argümanı belgeye dokunmadan önce bir JSON-RPC geçersiz parametre hatasıyla (`-32602`) reddeder, böylece yanlış yazılmış bir argüman asla sessizce yok sayılmaz.
 Beş oturum aracı bilmedikleri argümanları yok sayar.

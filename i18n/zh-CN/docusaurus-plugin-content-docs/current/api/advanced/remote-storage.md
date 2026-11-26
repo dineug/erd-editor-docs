@@ -157,6 +157,7 @@ const data = replicationStore.value;
 从 `4.0.0` 起，`value` 是存储形式，即文件所保存的文档形式，与元素的 [value](../erd-editor-element.md#value) 返回的文本相同。  
 它只包含现存的实体，并按固定顺序排列，不包含已删除的实体、叠放顺序，以及加载时会重新推算的任何内容，例如 [toWidth](#towidth) 测量的宽度。  
 从 `4.2.0` 起，它还包含逻辑名、每个名称是否由词典生成、域关联，以及 [Dictionary](../../guide/guides/dictionary.md) 标签页中的词根、术语和域。  
+从 `5.1.1` 起，它还包含每个备注所属的表分组。  
 从 `4.2.0` 起，它还会省略实体中每个空的文本字段、不含任何内容的每个 `doc` 列表和集合，以及所有集合都为空时的 `collections` 本身。  
 它以两个空格缩进，每个词典行单独占一行，并以换行符结尾，因此同一文档总是得到相同的字节。  
 关于它包含的内容，参见[存储形式](./schema.md#storage-form)。
@@ -305,6 +306,10 @@ replicationStore.dispatchSync(actions); // sync
 
 从 `5.1.0` 起，编辑器只在 Code Generator 的语言、某种名称大小写或括号类型对应的锁定关闭时才发送对它们的更改，并在其载荷中标记 `shared: true`，副本会像编辑器一样应用每一项带标记的更改，参见[协同编辑](./collaborative-editing.md)。  
 `5.1.0` 之前的编辑器无论锁定如何都会发送不带标记的更改，副本只在该设置在其一侧未锁定时才应用它，在该设置被锁定时丢弃它（参见 [on@change](#onchange)）。
+
+从 `5.1.1` 起，保留的操作还包括 `memo.changeGroup`，它把备注放入[表分组](../../guide/guides/table-groups.md)或移出，而 `value` 会写出每个备注所属的分组（参见[存储形式](./schema.md#storage-form)）。  
+`5.1.1` 没有改变 `@dineug/erd-editor/engine.js` 的任何导出。  
+较早发布版本的存储会丢弃 `memo.changeGroup` 和每个备注的 `groupId`，因此它保存的备注都不属于任何分组，而且会话中 `5.1.1` 之前的编辑器仍可能让 `5.1.1` 副本上的备注离开其分组；参见[混用不同版本](./collaborative-editing.md#mixing-releases)。
 
 从 `4.0.0` 起，两个方法还会应用 `editor.mergeLWW`，它携带的是另一个编辑器加入会话时，某个编辑器作为回应发送的协同寄存器，因此副本裁定并发编辑结果的方式与编辑器相同。  
 它不会改变 `value` 的任何字节，也不会触发 `change`。  

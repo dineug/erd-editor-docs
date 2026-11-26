@@ -1,11 +1,11 @@
 ---
 sidebar_position: 4
-description: Semua alat yang disediakan server MCP erd-editor — membaca dokumen halaman demi halaman, pemeriksaan kamus, 67 alat edit, erd_batch, serta bentuk hasil dan penolakan.
+description: Semua alat yang disediakan server MCP erd-editor — membaca dokumen halaman demi halaman, pemeriksaan kamus, ekspor SVG, 68 alat edit, erd_batch, serta bentuk hasil dan penolakan.
 ---
 
 # Alat
 
-Server menyediakan 77 alat: lima alat sesi, empat alat baca, 67 alat edit, satu untuk setiap operasi pengeditan, dan `erd_batch`, yang menjalankan beberapa alat edit sebagai satu perubahan.
+Server menyediakan 79 alat: lima alat sesi, empat alat baca, `erd_export_svg`, yang menggambar dokumen sebagai gambar SVG, 68 alat edit, satu untuk setiap operasi pengeditan, dan `erd_batch`, yang menjalankan beberapa alat edit sebagai satu perubahan.
 
 Setiap alat kecuali `erd_list_documents` menerima `path` dokumen sebagai argumen pertamanya, dan tabel di bawah tidak mencantumkannya.
 Argumen yang ditandai `?` bersifat opsional.
@@ -26,14 +26,14 @@ Lihat [Live dan headless](./live-and-headless.md) untuk mengetahui apa yang dila
 
 | Alat | Argumen | Fungsi |
 | --- | --- | --- |
-| `erd_list` | `query?`, `offset?`, `limit?`, `namesOnly?` | Pengaturan dan jumlah, lalu satu halaman tabel beserta indeks dan hubungannya, setiap tabel dengan id, posisi dan ukurannya di kanvas, jumlah kolom, nama logisnya jika ada, serta grup tabelnya jika tabel berada dalam grup. Kecuali saat melakukan pencarian, grup tabel, memo, lalu domain, istilah, dan kata menyusul setelah tabel. |
-| `erd_get` | `tableIds?`, `tableNames?`, `relationshipIds?`, `indexIds?`, `memoIds?`, `tableGroupIds?`, `wordIds?`, `termIds?`, `domainIds?` | Entitas yang disebutkan, secara lengkap: tabel beserta kolom dan grup tabelnya, hubungan beserta kolomnya serta `onDelete` dan `onUpdate`, indeks beserta kolomnya, memo beserta teksnya, grup tabel beserta tabelnya, serta kata, istilah, dan domain beserta setiap field-nya. |
+| `erd_list` | `query?`, `offset?`, `limit?`, `namesOnly?` | Pengaturan dan jumlah, lalu satu halaman tabel beserta indeks dan hubungannya, setiap tabel dengan id, posisi dan ukurannya di kanvas, jumlah kolom, nama logisnya jika ada, serta grup tabelnya jika tabel berada dalam grup. Kecuali saat melakukan pencarian, grup tabel, memo beserta grup tabelnya jika berada dalam grup, lalu domain, istilah, dan kata menyusul setelah tabel. |
+| `erd_get` | `tableIds?`, `tableNames?`, `relationshipIds?`, `indexIds?`, `memoIds?`, `tableGroupIds?`, `wordIds?`, `termIds?`, `domainIds?` | Entitas yang disebutkan, secara lengkap: tabel beserta kolom dan grup tabelnya, hubungan beserta kolomnya serta `onDelete` dan `onUpdate`, indeks beserta kolomnya, memo beserta teks dan grup tabelnya, grup tabel beserta tabel dan memonya, serta kata, istilah, dan domain beserta setiap field-nya. |
 | `erd_read` | `format`, `vendor?`, `statements?`, `header?`, `logicalNameAsComment?`, `tableIds?`, `tableNames?`, `groupNames?` | Seluruh dokumen sekaligus dalam salah satu dari empat format, atau DDL dari beberapa tabel atau grup tabel saja. |
 | `erd_list_checks` | `level?`, `tableIds?`, `tableNames?`, `offset?`, `limit?` | Apa yang ditemukan salah oleh kamus kata, istilah, dan domain, seperti yang dicantumkan lembar `Checks` di tab Kamus editor, halaman demi halaman. Alat ini tidak mengubah apa pun — lihat [Pemeriksaan kamus](#dictionary-checks). |
 
 Agen menemukan id dengan `erd_list`, membaca kolom, baris kamus, dan detail lainnya dengan `erd_get`, lalu meneruskan id tersebut ke alat edit.
 Ukuran tabel di `erd_list` adalah kotak yang ditempatinya di kanvas: tingginya tepat, lebarnya perkiraan.
-Grup tabel dicantumkan menurut persegi panjang yang disimpannya, beserta nama, warna, dan jumlah tabel yang dimuatnya.
+Grup tabel dicantumkan menurut persegi panjang yang disimpannya, beserta nama, warna, dan jumlah tabel dan memo yang dimuatnya.
 Setiap hubungan dicantumkan sekali, bersama salah satu dari kedua tabelnya.
 Baris kamus dicantumkan menurut id-nya, `name`-nya, dan apa yang diberikannya kepada nama fisik atau kolom: `dataType` milik domain, `physicalName` dan `domainId` milik istilah, serta `abbreviation` milik kata. Setiap kamus mencantumkan barisnya dalam urutan yang ditampilkan lembarnya.
 Pengaturan yang dilaporkan `erd_list` dan `erd_read` adalah pengaturan yang disimpan file — lihat [Pengaturan](#settings).
@@ -45,7 +45,7 @@ Setiap kolom membawa `domainId`-nya, begitu pula setiap istilah: string kosong j
 
 | `format` | Isi jawaban |
 | --- | --- |
-| `snapshot` | JSON ringkas berisi setiap entitas beserta id-nya, termasuk grup tabel dan baris kata, istilah, dan domain, serta pengaturan beserta skrip Skema SQL. Format ini tidak menyertakan hal yang berbeda dari satu penampil ke penampil lain: lebar terukur, urutan tumpukan, area pandang, tab, dan Tampilan Nama. Ukurannya besar pada skema yang besar. |
+| `snapshot` | JSON ringkas berisi setiap entitas beserta id-nya, termasuk grup tabel beserta tabel dan memonya, dan baris kata, istilah, dan domain, serta pengaturan beserta skrip Skema SQL. Format ini tidak menyertakan hal yang berbeda dari satu penampil ke penampil lain: lebar terukur, urutan tumpukan, area pandang, tab, dan Tampilan Nama. Ukurannya besar pada skema yang besar. |
 | `sql` | DDL untuk salah satu dari delapan database, `Databricks`, `MariaDB`, `MSSQL`, `MySQL`, `Oracle`, `PostgreSQL`, `Snowflake`, atau `SQLite`. `vendor` secara default adalah database yang diatur pada dokumen. DDL seluruh dokumen menyertakan skrip sebelum dan setelah tabel milik dokumen tersebut. Dengan `tableIds`, `tableNames`, atau `groupNames`, hanya tabel tersebut, beserta kunci asing yang dimilikinya, dan tanpa skrip. Kunci asing menyertakan tindakan ON DELETE dan ON UPDATE masing-masing, kecuali tindakan yang dihilangkan oleh database target — lihat [ON DELETE dan ON UPDATE](../guide/guides/relationship-editing.md#on-delete-and-on-update). |
 | `json` | Seluruh dokumen persis seperti yang ditulis ke file saat disimpan, termasuk perubahan yang belum disimpan editor — lihat [Bentuk penyimpanan](../api/advanced/schema.md#storage-form). |
 | `scripts` | Hanya skrip sebelum dan setelah tabel milik dokumen, sebagai `{"before":"…","after":"…"}`, masing-masing kosong jika belum diatur, sebesar apa pun skemanya. |
@@ -103,6 +103,37 @@ Setiap pemeriksaan memberikan `level`, `code`, serta `kind` dan `id` sasarannya:
 
 Cara setiap pemeriksaan membaca nama dijelaskan di [Apa yang ditemukan setiap pemeriksaan](../guide/guides/dictionary.md#what-each-check-finds).
 
+## Ekspor SVG {#svg-export}
+
+| Alat | Argumen | Fungsi |
+| --- | --- | --- |
+| `erd_export_svg` | `output?`, `darkMode?`, `background?` | Menggambar dokumen sebagai gambar SVG dan menulisnya ke file `.svg` yang disebutkan `output`, atau, tanpa `output`, menjawab dengan teks SVG. Alat ini tidak mengubah dokumen mana pun. |
+
+Server menggambar gambarnya sendiri, sehingga hanya memerlukan server `1.2.1` atau yang lebih baru dan berfungsi dengan rilis ekstensi atau plugin ERD Editor mana pun yang terhubung.
+Seperti `toImage()`, alat ini menggambar gambar yang disimpan dialog `Export image` milik editor sebagai SVG, tetapi dari dokumen saja: seluruh diagram pada 100%, tanpa apa yang disembunyikan View Option di dokumen, dalam warna preset, dengan tabel dan kolom bernama menurut Tampilan Nama yang dimiliki dokumen dan kata-kata milik diagram itu sendiri dalam bahasa Inggris — lihat [Apa yang digambarnya](../api/to-image.md#what-it-draws).
+Server mengukur teks tanpa font milik editor, sehingga sebuah tabel dapat tampil sedikit lebih lebar daripada yang digambar editor.
+Tidak ada PNG dan tidak ada penyalinan ke papan klip.
+
+- `darkMode`: `true` menggambar tema gelap; `false`, yang menjadi default, tema terang. Tema pada layar editor mana pun tidak sampai ke gambar.
+- `background`: `true`, yang menjadi default, mengisi latar di belakang diagram dengan warna kanvas; `false` membiarkannya transparan.
+- `output`: file yang ditulis, absolut atau relatif terhadap direktori kerja server, dengan nama berakhiran `.svg` dalam huruf besar atau kecil, di folder yang sudah ada. File yang sudah ada di sana diganti melalui file sementara di sebelahnya, dan symbolic link diikuti hingga file yang ditujunya.
+
+Ekspor membaca dokumen seperti yang dilakukan alat baca: apa yang dipegang editor yang melayaninya, termasuk perubahan yang belum disimpan, atau jika tidak, file. Seperti pembacaan, ekspor tidak pernah membuka dokumen di editor.
+`mode` pada jawabannya menyebutkan yang mana: `live`, `headless`, atau, saat editor dengan hub nonaktif memegang dokumen, `blocked`, dengan catatan bahwa file di disk digambar tanpa perubahan yang belum disimpan di editor itu — lihat [Live dan headless](./live-and-headless.md).
+
+Dengan `output`, jawabannya satu baris JSON: `mode`, `path` dokumen, `output` yang ditulis, ukurannya dalam `bytes`, `width` dan `height` SVG, serta `notes` jika ada.
+
+```json
+{"mode":"headless","path":"/work/shop.erd.json","output":"/work/docs/shop.svg","bytes":48213,"width":1210,"height":764}
+```
+
+Tanpa `output`, jawabannya teks SVG, lalu `{"mode":"…"}` beserta catatan jika ada. SVG yang lebih dari 40.000 karakter, jumlah terbanyak yang dapat dikembalikan satu jawaban, ditolak dengan `tooLarge`: berikan `output` agar SVG ditulis ke file sebagai gantinya.
+
+`output` diperiksa sebelum dokumen dibaca, sehingga `output` yang ditolak tidak memakan biaya penggambaran: `output` yang kosong, nama yang tidak berakhiran `.svg`, `output` yang menyebutkan sebuah folder, dan link yang tidak mengarah ke file mana pun atau mengarah ke file yang namanya tidak berakhiran `.svg` ditolak dengan `invalidPath`, dan `output` di folder yang tidak ada ditolak dengan `notFound`. File hanya baca ditolak dengan `readonly` setelah gambar selesai digambar, dan dibiarkan seperti semula.
+
+Ekspor tidak membuat entri pembatalan dan tidak menyisakan apa pun untuk disimpan, dan `erd_batch` menolaknya, seperti menolak alat baca.
+Diagram yang besar memerlukan beberapa detik untuk digambar, dan server menggambar satu ekspor pada satu waktu.
+
 ## Alat edit {#edit-tools}
 
 Id berasal dari `erd_list` dan `erd_get`, atau dari `createdIds` milik panggilan yang membuat entitas tersebut.
@@ -121,7 +152,7 @@ Id baru terdiri dari 25 huruf kecil dan angka, seperti `03h17be2plxpj5n59tqag7og
 | `erd_change_table_color` | `tableId`, `color` | Mengatur warna tabel. |
 | `erd_move_table` | `tableId`, `x`, `y` | Memindahkan tabel ke suatu posisi di kanvas. |
 | `erd_move_tables` | `positions` | Memindahkan beberapa tabel dalam satu perubahan, yang dapat dikembalikan dengan satu `erd_undo`. `positions` memuat `{ tableId, x, y }` per tabel, setiap tabel paling banyak sekali. |
-| `erd_sort_tables` | | Menempatkan setiap tabel dalam beberapa baris di kanvas, dimulai dari tabel dengan kolom paling sedikit, seperti cara `erd_import_sql`, `erd_import_graphql`, `erd_import_dbml`, dan `erd_import_aml` menempatkannya. Tabel dalam satu grup tabel tetap berdekatan, dan kotak setiap grup disesuaikan di sekeliling tabelnya. |
+| `erd_sort_tables` | | Menempatkan setiap tabel dalam beberapa baris di kanvas, dimulai dari tabel dengan kolom paling sedikit, seperti cara `erd_import_sql`, `erd_import_graphql`, `erd_import_dbml`, dan `erd_import_aml` menempatkannya. Tabel dalam satu grup tabel tetap berdekatan, disusul memonya selama memo ditampilkan, dan kotak setiap grup disesuaikan di sekelilingnya. Selama memo disembunyikan, memo grup ikut bergerak bersama tabelnya. Memo yang tidak berada di grup mana pun, atau di grup yang tidak memuat tabel, tetap di tempatnya. |
 
 ### Kolom {#columns}
 
@@ -190,28 +221,33 @@ Id kolom indeks adalah entri dalam daftar kolom indeks yang diberikan `erd_get`,
 | `erd_move_memo` | `memoId`, `x`, `y` | Memindahkan memo ke suatu posisi di kanvas. |
 | `erd_resize_memo` | `memoId`, `width`, `height` | Mengubah ukuran memo. Lebarnya harus setidaknya sekitar `116` piksel dan tingginya setidaknya `100`. Alat ini tidak membuat entri pembatalan, karena editor hanya mencatat perubahan ukuran memo dari penyeretan. |
 
+Sebuah memo dapat berada di satu grup tabel dan ikut bergerak bersama grup itu — lihat [Grup tabel](#table-groups).
+
 Selama memo disembunyikan dengan [View Option](../guide/guides/table-related-functions.md#table-view-options) → `Memos`, `erd_add_memo` tetap menambahkan memo, dan memo tersebut tetap tersembunyi hingga memo ditampilkan kembali.
 `erd_list` dan `erd_get` juga mencantumkan memo yang tersembunyi.
 
 ### Grup tabel {#table-groups}
 
-Grup tabel adalah kotak bernama yang digambar di belakang tabelnya, dan warnanya tampil pada kotak tersebut dan di sepanjang header tabelnya — lihat [Grup tabel](../guide/guides/table-groups.md).
-Sebuah tabel paling banyak berada di satu grup. `erd_move_table`, `erd_move_tables`, dan `erd_move_table_group` tidak pernah mengubah tabel mana yang dimuat suatu grup, di mana pun alat tersebut menempatkan tabel, sedangkan di editor, tabel bergabung dengan atau keluar dari grup di tempat tabel itu dilepaskan — lihat [Menambahkan dan mengeluarkan tabel](../guide/guides/table-groups.md#adding-and-removing-tables). `erd_add_table_group` dan `erd_set_table_group` memasukkan tabel ke grup, dan `erd_remove_table_group` membuat tabelnya tidak berada di grup mana pun.
-Grup menyimpan persegi panjang, dengan lebar setidaknya `160` piksel dan tinggi setidaknya `100`, termasuk bilah judul, dan editor menggambar kotak yang diperbesar agar memuat setiap tabelnya.
+Grup tabel adalah kotak bernama yang digambar di belakang tabel dan memonya, dan warnanya tampil pada kotak tersebut dan di sepanjang header tabel dan memonya — lihat [Grup tabel](../guide/guides/table-groups.md).
+Setiap tabel atau memo paling banyak berada di satu grup. `erd_move_table`, `erd_move_tables`, `erd_move_memo`, dan `erd_move_table_group` tidak pernah mengubah apa yang dimuat suatu grup, di mana pun alat tersebut menempatkan tabel atau memo, sedangkan di editor, tabel atau memo bergabung dengan atau keluar dari grup di tempat tabel atau memo itu dilepaskan — lihat [Menambahkan dan mengeluarkan tabel](../guide/guides/table-groups.md#adding-and-removing-tables). `erd_add_table_group` memasukkan tabel dan memo ke grup, `erd_set_table_group` memasukkan tabel dan `erd_set_memo_group` memasukkan memo, dan `erd_remove_table_group` membuat tabel dan memonya tidak berada di grup mana pun.
+Grup menyimpan persegi panjang, dengan lebar setidaknya `160` piksel dan tinggi setidaknya `100`, termasuk bilah judul, dan editor menggambar kotak yang diperbesar agar memuat setiap tabelnya dan, selama memo ditampilkan, setiap memonya.
 
 | Alat | Argumen | Fungsi |
 | --- | --- | --- |
-| `erd_add_table_group` | `name`, `color?`, `x?`, `y?`, `width?`, `height?`, `tableIds?` | Menambahkan grup dan mengembalikan id-nya di `createdIds`. Berikan `tableIds` atau persegi panjang, yaitu `x`, `y`, `width`, dan `height` sekaligus. Dengan `tableIds`, setiap tabel keluar dari grup yang sebelumnya ditempatinya, dan persegi panjang disesuaikan di sekeliling tabel-tabel itu seperti saat [mengelompokkan tabel yang dipilih](../guide/guides/table-groups.md#grouping-selected-tables). Persegi panjang mencakup setiap tabel tanpa grup yang titik tengahnya berada di dalamnya, seperti saat [menggambar grup](../guide/guides/table-groups.md#drawing-a-group). `name` kosong membuat grup tidak bernama. Satu `erd_undo` menghapus grup dan mengembalikan setiap tabel ke grup yang sebelumnya ditempatinya. |
-| `erd_remove_table_group` | `groupId` | Menghapus grup. Tabelnya tetap di tempatnya, tanpa grup. |
+| `erd_add_table_group` | `name`, `color?`, `x?`, `y?`, `width?`, `height?`, `tableIds?`, `memoIds?` | Menambahkan grup dan mengembalikan id-nya di `createdIds`. Berikan `tableIds`, beserta `memoIds` jika ada, atau persegi panjang, yaitu `x`, `y`, `width`, dan `height` sekaligus. Dengan `tableIds`, setiap tabel dan memo keluar dari grup yang sebelumnya ditempatinya, dan persegi panjang disesuaikan di sekeliling tabel dan memo itu, memo hanya selama memo ditampilkan, seperti saat [mengelompokkan tabel yang dipilih](../guide/guides/table-groups.md#grouping-selected-tables). Persegi panjang mencakup setiap tabel dan setiap memo yang ditampilkan tanpa grup yang titik tengahnya berada di dalamnya, seperti saat [menggambar grup](../guide/guides/table-groups.md#drawing-a-group). `name` kosong membuat grup tidak bernama. Satu `erd_undo` menghapus grup dan mengembalikan setiap tabel dan memo ke grup yang sebelumnya ditempatinya. |
+| `erd_remove_table_group` | `groupId` | Menghapus grup. Tabel dan memonya tetap di tempatnya, tanpa grup. |
 | `erd_change_table_group_name` | `groupId`, `value` | Mengganti nama grup. String kosong membuatnya tidak bernama. |
 | `erd_change_table_group_color` | `groupId`, `color` | Mengatur warna grup. |
-| `erd_move_table_group` | `groupId`, `x`, `y` | Memindahkan grup sehingga persegi panjangnya dimulai di titik tersebut, dengan tabelnya ikut bergeser sejauh yang sama, seperti saat menyeret bilah judulnya. Perpindahan di bawah 20 piksel, dihitung dari jumlah jarak horizontal dan vertikal, tidak membuat entri pembatalan. Sejak server `1.2.0`, perpindahan itu sampai ke editor sebagai titik akhir grup dan tabelnya, sehingga dengan ekstensi VS Code `4.3.0` atau yang lebih baru atau plugin Obsidian atau JetBrains `1.3.0` atau yang lebih baru, perpindahan grup atau salah satu tabelnya yang dilakukan di sana pada saat yang sama berakhir di salah satu dari dua posisi, tidak pernah jumlahnya — lihat [Pengeditan pada saat yang sama](./live-and-headless.md#edits-made-at-the-same-moment). |
-| `erd_resize_table_group` | `groupId`, `x?`, `y?`, `width`, `height` | Mengatur persegi panjang grup, sementara tabelnya tetap di tempatnya. Jika `x` dan `y` tidak diberikan, sudutnya tetap. Persegi panjang yang tidak dapat memuat tabel grup beserta padding-nya ditolak, dengan pesan yang menyebutkan kotak yang harus dimuatnya. |
+| `erd_move_table_group` | `groupId`, `x`, `y` | Memindahkan grup sehingga persegi panjangnya dimulai di titik tersebut, dengan tabel dan memonya, termasuk memo yang disembunyikan, ikut bergeser sejauh yang sama, seperti saat menyeret bilah judulnya. Perpindahan di bawah 20 piksel, dihitung dari jumlah jarak horizontal dan vertikal, tidak membuat entri pembatalan. Sejak server `1.2.0`, perpindahan itu sampai ke editor sebagai titik akhir grup dan tabelnya, sehingga dengan ekstensi VS Code `4.3.0` atau yang lebih baru atau plugin Obsidian atau JetBrains `1.3.0` atau yang lebih baru, perpindahan grup atau salah satu tabelnya yang dilakukan di sana pada saat yang sama berakhir di salah satu dari dua posisi, tidak pernah jumlahnya — lihat [Pengeditan pada saat yang sama](./live-and-headless.md#edits-made-at-the-same-moment). Sejak server `1.2.1`, titik akhir memonya dikirim dalam batch yang sama. |
+| `erd_resize_table_group` | `groupId`, `x?`, `y?`, `width`, `height` | Mengatur persegi panjang grup, sementara tabel dan memonya tetap di tempatnya. Jika `x` dan `y` tidak diberikan, sudutnya tetap. Persegi panjang yang tidak dapat memuat tabel dan memo yang ditampilkan milik grup beserta padding-nya ditolak, dengan pesan yang menyebutkan kotak yang harus dimuatnya. |
 | `erd_set_table_group` | `tableIds`, `groupId` | Memasukkan tabel ke grup, dan setiap tabel keluar dari grup yang sebelumnya ditempatinya. `groupId` berupa `null` atau string kosong mengeluarkan tabel dari semua grup. |
+| `erd_set_memo_group` | `memoIds`, `groupId` | Memasukkan memo ke grup, dan setiap memo keluar dari grup yang sebelumnya ditempatinya serta tetap di tempatnya. `groupId` berupa `null` atau string kosong mengeluarkan memo dari semua grup. |
 
 Selama grup disembunyikan dengan `View Option` → `Table Groups`, alat-alat ini tetap menambahkan dan mengubah grup, yang tetap tersembunyi hingga grup ditampilkan — lihat [Menyembunyikan grup](../guide/guides/table-groups.md#hiding-groups).
-`erd_sort_tables` menjaga tabel setiap grup tetap berdekatan, `erd_import_dbml` dan `erd_import_json` membawa grup — lihat [Impor](#import) — dan `erd_read` menulis DDL grup yang dipilih dengan `groupNames`.
+Memo yang disembunyikan dengan View Option → `Memos` tetap berada di grupnya dan ikut bergerak bersamanya, dan `erd_set_memo_group` serta `memoIds` milik `erd_add_table_group` memasukkannya ke grup seperti memo yang ditampilkan.
+`erd_sort_tables` menjaga tabel dan memo setiap grup tetap berdekatan, `erd_import_dbml` dan `erd_import_json` membawa grup — lihat [Impor](#import) — dan `erd_read` menulis DDL grup yang dipilih dengan `groupNames`.
 Rilis ERD Editor dari sebelum adanya grup tabel membuang grup dalam file saat menyimpan file tersebut, seperti ekstensi VS Code sebelum `4.0.0` serta plugin Obsidian dan JetBrains sebelum `1.0.0` — lihat [Memperbarui](./installation.md#updating).
+Rilis dari sebelum memo bergabung ke grup tabel, yaitu ekstensi VS Code sebelum `4.3.1` serta plugin Obsidian dan JetBrains sebelum `1.3.1`, tidak menampilkan maupun mempertahankan grup mana yang berisi sebuah memo, sehingga menyimpan file dengan setiap memo tanpa grup, begitu pula server sebelum `1.2.1` yang menulis file di disk — lihat [Memperbarui](./installation.md#updating).
 
 ### Kamus {#dictionaries}
 
@@ -304,14 +340,14 @@ Di editor dengan ekstensi VS Code `4.3.0` atau yang lebih baru atau plugin Obsid
 - Hubungan dan indeks hanya masuk di antara tabel yang dibawa impor, sehingga kunci asing ke tabel yang tidak dideklarasikan teks dibuang.
 - `erd_import_sql`, `erd_import_graphql`, dan `erd_import_aml` menambahkan tabel beserta hubungan dan indeksnya, dan `erd_import_dbml` juga menambahkan grup tabelnya. `erd_import_json` menambahkan tabel, hubungan, indeks, memo, dan grup tabel, tidak pernah pengaturannya, dan menolak teks kosong. Tabel dan kolomnya membawa nama logisnya, tetapi tidak ada kolom yang tertaut ke domain, dan tidak satu pun kata, istilah, atau domain dari JSON yang masuk.
 
-Dokumen JSON mempertahankan tata letaknya sendiri, termasuk grup tabelnya: di tempat dokumen itu menempatkan tabelnya dengan `replace`, dan di dalam blok yang ditambahkan dengan `append`.
+Dokumen JSON mempertahankan tata letaknya sendiri, termasuk grup tabelnya, beserta tabel dan memo yang dimuat masing-masing: di tempat dokumen itu menempatkan tabelnya dengan `replace`, dan di dalam blok yang ditambahkan dengan `append`.
 Tabel dari SQL, GraphQL, DBML, dan AML disusun dalam beberapa baris, dimulai dari tabel dengan kolom paling sedikit dan tabel setiap grup tetap berdekatan, seperti cara `erd_sort_tables` menempatkannya, tidak pernah dengan `Flow`, yang dipakai fitur Impor milik editor untuk menata tabel jika memungkinkan. Keempat alat tersebut menolak teks kosong di kedua mode.
 
 ## erd_batch {#erd_batch}
 
 `erd_batch` menjalankan beberapa alat edit secara berurutan sebagai satu perubahan, semua atau tidak sama sekali.
 
-- `operations` memuat hingga 100 entri, masing-masing `{ tool, as?, args? }`, dengan `tool` berupa alat edit dan `args` berisi argumen alat tanpa `path`. Alat baca, seperti `erd_list_checks`, ditolak.
+- `operations` memuat hingga 100 entri, masing-masing `{ tool, as?, args? }`, dengan `tool` berupa alat edit dan `args` berisi argumen alat tanpa `path`. Alat baca, seperti `erd_list_checks`, ditolak, begitu pula `erd_export_svg`.
 - Operasi dicoba terlebih dahulu pada salinan dokumen. Operasi yang ditolak disebutkan, misalnya `operations[1] erd_remove_table: …`, dan tidak ada yang diterapkan.
 - Satu `erd_undo` mengembalikan seluruh batch, kecuali operasi yang tidak dapat dikembalikannya, yang disebutkan oleh `undoNote` di hasil: operasi dari alat yang tidak membuat entri pembatalan, seperti `erd_set_database`, dan operasi yang mengubah dokumen tanpa membuatnya, seperti `erd_move_table_group` yang pendek. Batch yang sama sekali tidak membuat entri pembatalan dilewati oleh `erd_undo`. `historyEntries` di hasil menghitung entri riwayat editor di dalamnya, bukan panggilan `erd_undo`.
 - Dalam sesi live, editor menerima seluruh batch atau tidak sama sekali.
@@ -391,21 +427,21 @@ Penolakan adalah hasil kesalahan yang berisi kode dan pesan yang menjelaskan apa
 
 | `code` | Alasan |
 | --- | --- |
-| `notFound` | Id tidak merujuk ke apa pun yang masih ada, atau file tidak ada. |
+| `notFound` | Id tidak merujuk ke apa pun yang masih ada, file tidak ada, atau folder `output` milik `erd_export_svg` tidak ada. |
 | `invalidArgs` | Argumen tidak ada atau memiliki nilai yang salah. |
-| `invalidPath` | Jalur bukan dokumen ERD. Di Windows, juga jalur dengan nama yang tidak disimpan Windows persis seperti yang ditulis, atau jalur yang mencapai dokumen yang dipegang editor melalui jalur lain, yang disebutkan dalam pesan. |
+| `invalidPath` | Jalur bukan dokumen ERD, atau `output` milik `erd_export_svg` bukan file `.svg` — lihat [Ekspor SVG](#svg-export). Di Windows, juga jalur dengan nama yang tidak disimpan Windows persis seperti yang ditulis, atau jalur yang mencapai dokumen yang dipegang editor melalui jalur lain, yang disebutkan dalam pesan. |
 | `invalidDocument` | File bukan dokumen yang dapat dibaca editor. |
-| `tooLarge` | Pembacaan tidak muat dalam satu jawaban. |
+| `tooLarge` | Pembacaan, atau SVG yang diminta tanpa `output`, tidak muat dalam satu jawaban. |
 | `blocked` | Editor dengan hub nonaktif memegang dokumen tersebut. Pesan menjelaskan cara mengaktifkannya: di VS Code, percayai workspace dan aktifkan `dineug.erd-editor.agentHub.enabled`, atau muat ulang jendela; di Obsidian, aktifkan Coding agents, atau muat ulang Obsidian; di IDE JetBrains, aktifkan Coding agents, atau mulai ulang IDE jika sudah aktif. |
 | `hubDisabled` | IDE JetBrains memegang dokumen hanya di proyek yang tidak dipercayainya. Pembacaan tetap berfungsi; percayai proyek agar agen dapat mengedit. |
 | `conflict` | File berubah di disk selama panggilan. Tidak ada yang ditulis. |
 | `hubAppeared`, `hubGone` | Editor mulai melayani dokumen yang sedang diedit agen di disk, atau editor yang melayaninya masih berjalan tetapi file kunci dan koneksinya hilang. Tidak ada yang ditulis. |
 | `notSaved` | `erd_save` tidak dapat menyimpan dokumen editor. |
-| `readonly` | Editor memegang dokumen dalam keadaan hanya baca, misalnya file yang tidak dapat ditulisnya atau tidak dapat dibacanya sebagai diagram. Tanpa editor, file itu sendiri bersifat hanya baca, misalnya file Perforce atau TFVC yang belum di-checkout. Tidak ada yang ditulis. |
+| `readonly` | Editor memegang dokumen dalam keadaan hanya baca, misalnya file yang tidak dapat ditulisnya atau tidak dapat dibacanya sebagai diagram. Tanpa editor, file itu sendiri bersifat hanya baca, misalnya file Perforce atau TFVC yang belum di-checkout. Dengan `erd_export_svg`, file `.svg` yang disebutkan `output`-nya bersifat hanya baca. Tidak ada yang ditulis. |
 | `protocolMismatch` | Ekstensi atau plugin ERD Editor di editor dan server menggunakan versi protokol yang berbeda, misalnya server `1.0.0` atau yang lebih baru dengan ekstensi VS Code `3.x`. Pembacaan juga ditolak, dan pesan menyebutkan sisi yang perlu diperbarui — lihat [Memperbarui](./installation.md#updating). |
 | `hubUnreachable`, `timeout`, `disconnected` | Hub editor tidak menerima koneksi, tidak menjawab dalam 30 detik, atau memutus koneksi selama panggilan. Di Windows, `hubUnreachable` juga berarti Windows menghalangi agen mengakses hub: editor berjalan dengan hak akses lebih tinggi daripada agen, seperti saat editor dijalankan sebagai administrator sedangkan agen tidak, atau agen berjalan di sandbox. |
 
 Kode lain lebih jarang muncul, dan setiap penolakan menyertakan pesan yang menjelaskan apa yang terjadi.
 
-Alat edit, `erd_batch`, dan empat alat baca menolak argumen yang tidak dideklarasikannya, atau argumen dengan tipe yang salah, dengan kesalahan invalid params JSON-RPC (`-32602`) sebelum menyentuh dokumen, sehingga argumen yang salah eja tidak pernah dibuang diam-diam.
+Alat edit, `erd_batch`, empat alat baca, dan `erd_export_svg` menolak argumen yang tidak dideklarasikannya, atau argumen dengan tipe yang salah, dengan kesalahan invalid params JSON-RPC (`-32602`) sebelum menyentuh dokumen, sehingga argumen yang salah eja tidak pernah dibuang diam-diam.
 Lima alat sesi mengabaikan argumen yang tidak dikenalnya.

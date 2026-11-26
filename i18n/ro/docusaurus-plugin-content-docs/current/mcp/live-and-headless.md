@@ -14,7 +14,7 @@ Ceea ce găsește serverul determină unde ajunge editarea.
 | --- | --- |
 | Un editor al cărui spațiu de lucru, seif sau proiect deschis conține documentul sau care îl are deschis | **În direct.** Deschide documentul în ERD Editor dacă este nevoie, se alătură sesiunii de editare și aplică modificarea acolo. Editările apar imediat și sunt salvate așa cum editorul le salvează pe ale dumneavoastră (consultați [Salvarea](#saving)). |
 | Niciun editor | **Fără interfață.** Încarcă fișierul, aplică modificarea și înlocuiește fișierul înainte de a răspunde, așa că rezultatul indică `saved: true`, iar instrumentul `erd_save` nu are nimic de făcut. |
-| Un editor cu hubul dezactivat | **Refuzat.** Citirile funcționează în continuare, de pe disc. O modificare scrisă în fișier cât timp un editor îl are deschis ar putea fi suprascrisă la următoarea salvare a acestuia, așa că serverul nu scrie nimic. |
+| Un editor cu hubul dezactivat | **Refuzat.** Citirile și `erd_export_svg` funcționează în continuare, de pe disc. O modificare scrisă în fișier cât timp un editor îl are deschis ar putea fi suprascrisă la următoarea salvare a acestuia, așa că serverul nu scrie nimic în document. |
 | Un editor al cărui hub este activat, dar folosește un alt protocol decât cel al serverului: cu versiunea `1.0.0` sau o versiune ulterioară a serverului, o extensie pentru VS Code `3.x`, un plugin pentru Obsidian `0.x` sau un plugin pentru JetBrains `0.9.0` sau `0.10.0`; cu un server anterior versiunii `1.0.0`, extensia `4.0.0` sau o versiune ulterioară ori un plugin `1.0.0` sau o versiune ulterioară | **Refuzat**, inclusiv citirile, cu codul `protocolMismatch`. Mesajul indică partea care trebuie actualizată: extensia sau pluginul ori serverul (consultați [Actualizarea](./installation.md#updating)). |
 | Pe Windows, un editor care deține documentul printr-o altă cale către același fișier: agentul l-a indicat printr-o partajare de rețea sau printr-o unitate de rețea mapată a acestui computer, de exemplu `\\localhost\C$\…`, iar editorul îl deține prin calea cu litera unității, sau invers | **Refuzat**, inclusiv citirile, cu codul `invalidPath`. Mesajul indică calea prin care editorul deține documentul; apelați din nou cu acea cale. |
 | Pe Windows, un editor la care Windows nu permite accesul agentului: unul pornit ca administrator când agentul nu a fost pornit astfel sau orice editor când agentul rulează într-un mediu izolat (sandbox) | **Refuzat**, inclusiv citirile, cu codul `hubUnreachable` și un mesaj care explică motivul. Rulați editorul și agentul cu aceleași drepturi, de exemplu repornind editorul fără drepturi de administrator. |
@@ -27,15 +27,17 @@ La egalitate, de exemplu când două editoare îl au amândouă deschis, câști
 Astfel, un document dintr-un seif Obsidian aflat într-un folder al spațiului de lucru VS Code revine lui Obsidian, cu excepția cazului în care VS Code îl are deschis, iar Obsidian nu.
 
 Apelurile asupra aceluiași document rulează pe rând, în ordinea în care au ajuns la server. Apelurile asupra unor documente diferite rulează în paralel.
+`erd_export_svg` așteaptă rândul doar pentru a citi documentul, așa că un apel ulterior asupra documentului nu așteaptă desenarea, iar serverul desenează câte un export pe rând, chiar și pentru două documente (consultați [Export SVG](./tools.md#svg-export)).
 
 ## În direct {#live}
 
 Agentul se alătură editorului ca încă un colaborator.
 Editările sale ajung imediat în fiecare editor în care documentul este deschis, iar focusul său este desenat pe tabelul și celula pe care le editează, la fel ca al unui colaborator (consultați [focusTracker](../api/advanced/collaborative-editing.md#focustracker)).
 
-O citire nu deschide niciodată un editor. O editare deschide documentul în ERD Editor dacă nu este încă deschis, fără a prelua focusul tastaturii.
+O citire nu deschide niciodată un editor, și nici `erd_export_svg`, care desenează ce deține editorul, inclusiv editările încă nesalvate. O editare deschide documentul în ERD Editor dacă nu este încă deschis, fără a prelua focusul tastaturii.
 
 Un editor cu o extensie pentru VS Code anterioară versiunii `4.2.0` sau cu un plugin pentru Obsidian ori JetBrains anterior versiunii `1.2.0` preia în continuare în direct editările agentului, dar nici nu afișează, nici nu păstrează numele logice, legăturile cu domeniile și rândurile dicționarelor pe care le scrie agentul (consultați [Actualizarea](./installation.md#updating)).
+La fel, un editor cu o extensie anterioară versiunii `4.3.1` sau cu un plugin anterior versiunii `1.3.1` nici nu afișează, nici nu păstrează grupul în care se află o notă: o notă pe care agentul o introduce într-un grup nu se află în niciun grup acolo, iar editorul omite grupul notei din fișier când salvează, deși apelul agentului reușește.
 
 Cu extensia pentru VS Code `4.3.0` sau o versiune ulterioară, ori cu pluginul pentru Obsidian sau JetBrains `1.3.0` sau o versiune ulterioară, un import în modul `replace` și un `erd_undo` sau `erd_redo` al unuia încheie o relație pe care o trasați în editor, indiferent de versiunea serverului (consultați [Crearea relațiilor](../guide/guides/editing-start.md#relationship-creation)).
 Înainte de acele versiuni, trasarea rămânea activă, iar un clic pe un tabel putea adăuga o relație de la un tabel care nu mai era în diagramă.
@@ -53,11 +55,11 @@ O reordonare a coloanelor, a dumneavoastră sau `erd_move_column` ori `erd_move_
 O schimbare a bazei de date, a dumneavoastră sau `erd_set_database` al agentului, se aplică tot în ordinea în care sosește, așa că două schimbări făcute în același moment pot lăsa editorul și agentul pe baze de date diferite.
 
 Tragerea dumneavoastră și `erd_move_table`, `erd_move_tables`, `erd_move_memo`, `erd_move_table_group` și `erd_sort_tables` ale agentului circulă ca punctele în care se încheie, așa că două mutări ale aceluiași tabel, ale aceleiași note sau ale aceluiași grup de tabele ajung acolo unde l-a pus una dintre ele, niciodată la suma celor două.
-`erd_move_table_group` trimite punctul grupului și pe cel al fiecăruia dintre tabelele sale într-un singur lot, așa cum face tragerea barei de titlu a grupului.
+`erd_move_table_group` trimite punctul grupului și pe cel al fiecăruia dintre tabelele sale într-un singur lot, așa cum face tragerea barei de titlu a grupului, iar, începând cu versiunea `1.2.1` a serverului, și punctul fiecăreia dintre notele sale.
 O redimensionare scrie poziția și dimensiunea împreună, așa că o mutare și o redimensionare ale aceleiași note sau ale aceluiași grup de tabele făcute în același moment, de exemplu `erd_resize_memo` în timp ce trageți acea notă, ajung la același dreptunghi pe ambele părți: cel al redimensionării sau, când câștigă mutarea, punctul mutării cu dimensiunea redimensionării.
 O mutare sub 20 de pixeli, care nu creează nicio intrare de anulare, pleacă și ea ca punctul în care se încheie, așa că poate câștiga în fața mutării celeilalte părți, fie că este un `erd_move_table_group` scurt, fie o tragere scurtă a dumneavoastră, de exemplu un clic care mișcă un tabel cu câțiva pixeli.
 
-Versiunile mai vechi se conectează în continuare, deoarece serverul `1.2.0` vorbește protocolul 2 al hubului, ca versiunile de la `1.0.0` până la `1.1.1`.
+Versiunile mai vechi se conectează în continuare, deoarece serverul `1.2.0` și cele ulterioare vorbesc protocolul 2 al hubului, ca versiunile de la `1.0.0` până la `1.1.1`.
 Cu un server anterior versiunii `1.2.0`, o extensie anterioară versiunii `4.3.0` sau un plugin anterior versiunii `1.3.0`, o mutare sau o redimensionare a aceluiași tabel, a aceleiași note sau a aceluiași grup de tabele făcută în același moment poate lăsa editorul și agentul cu poziții diferite.
 Un editor mai vechi trimite tragerea dumneavoastră ca distanța parcursă, iar un server anterior versiunii `1.2.0` trimite la fel și `erd_move_table_group`.
 Cealaltă parte adaugă acea distanță la punctul pe care îl deține.
@@ -97,7 +99,7 @@ Instrumentul `erd_undo` anulează ultima editare făcută de agent, niciodată p
 
 Câteva editări nu creează niciun pas de anulare în editor: `erd_set_database` și `erd_set_database_name`, dintre [instrumentele pentru setări](./tools.md#settings), și `erd_resize_memo`.
 Același lucru este valabil pentru un apel `erd_move_table_group` care mută grupul cu mai puțin de 20 de pixeli în total, adunând deplasarea pe orizontală și pe verticală, deși grupul rămâne acolo unde a fost mutat.
-De asemenea, un apel care nu modifică nimic nu creează niciun pas de anulare: `erd_set_column_primary_key`, `erd_set_column_unique`, `erd_set_column_not_null`, `erd_set_column_auto_increment`, `erd_set_index_unique` sau `erd_set_index_column_order` care setează o valoare pe care documentul o are deja; `erd_add_index_column` cu o coloană aflată deja în index; `erd_set_table_group` cu tabele aflate deja în acel grup (sau deja în niciun grup, cu `groupId` `null`); `erd_move_table_group` către punctul în care grupul se află deja; `erd_resize_table_group` la dreptunghiul pe care grupul îl are deja; `erd_sort_tables` pe un document fără niciun tabel; `erd_set_table_logical_name` sau `erd_set_column_logical_name` cu numele logic pe care tabelul sau coloana îl are deja, când derivarea din acesta nu ar modifica nimic; `erd_set_column_domain` cu domeniul de care coloana este deja legată, când coloana are deja tipul acelui domeniu, iar setarea [Sincronizare tip de date în relații](../guide/guides/settings.md#relationship-datatype-sync) nu ar schimba tipul niciunei coloane de-a lungul relațiilor; `erd_update_word`, `erd_update_term` sau `erd_update_domain` doar cu valori pe care rândul le are deja, cu excepția cazului în care unui termen care nu are niciun nume fizic i se transmite argumentul `name`, iar cuvintele sale compun unul; `erd_derive_physical_names` când fiecare nume pe care îl acoperă și care are un nume logic conține deja ce îi dau [dicționarele](./tools.md#dictionaries) și este marcat ca derivat; sau un import cu `mode` `append` care nu aduce niciun tabel (pentru `erd_import_json`, niciun tabel și nicio notă).
+De asemenea, un apel care nu modifică nimic nu creează niciun pas de anulare: `erd_set_column_primary_key`, `erd_set_column_unique`, `erd_set_column_not_null`, `erd_set_column_auto_increment`, `erd_set_index_unique` sau `erd_set_index_column_order` care setează o valoare pe care documentul o are deja; `erd_add_index_column` cu o coloană aflată deja în index; `erd_set_table_group` cu tabele aflate deja în acel grup (sau deja în niciun grup, cu `groupId` `null`); `erd_set_memo_group` cu note aflate deja în acel grup (sau deja în niciun grup); `erd_move_table_group` către punctul în care grupul se află deja; `erd_resize_table_group` la dreptunghiul pe care grupul îl are deja; `erd_sort_tables` pe un document fără niciun tabel; `erd_set_table_logical_name` sau `erd_set_column_logical_name` cu numele logic pe care tabelul sau coloana îl are deja, când derivarea din acesta nu ar modifica nimic; `erd_set_column_domain` cu domeniul de care coloana este deja legată, când coloana are deja tipul acelui domeniu, iar setarea [Sincronizare tip de date în relații](../guide/guides/settings.md#relationship-datatype-sync) nu ar schimba tipul niciunei coloane de-a lungul relațiilor; `erd_update_word`, `erd_update_term` sau `erd_update_domain` doar cu valori pe care rândul le are deja, cu excepția cazului în care unui termen care nu are niciun nume fizic i se transmite argumentul `name`, iar cuvintele sale compun unul; `erd_derive_physical_names` când fiecare nume pe care îl acoperă și care are un nume logic conține deja ce îi dau [dicționarele](./tools.md#dictionaries) și este marcat ca derivat; sau un import cu `mode` `append` care nu aduce niciun tabel (pentru `erd_import_json`, niciun tabel și nicio notă).
 Instrumentul `erd_undo` le omite și le menționează în rezultatul său.
 Alte editări, de exemplu `erd_change_relationship_type`, `erd_change_relationship_on_delete`, `erd_change_relationship_on_update`, `erd_change_table_group_name`, `erd_change_table_group_color` și `erd_set_ddl_script`, creează un pas de anulare chiar și atunci când setează o valoare pe care documentul o are deja.
 
@@ -120,7 +122,7 @@ O diagramă închisă dintr-un folder deservit de editor rămâne la editor, iar
 Un editor care încă rulează, dar al cărui fișier de blocare a dispărut și a cărui conexiune s-a închis fără ca el să fi închis documentul, refuză următoarea editare cu codul `hubGone`.
 Mesajul spune ce eliberează documentul: în VS Code, reîncărcați acea fereastră sau închideți-o pentru a-i permite agentului să editeze direct fișierul; în Obsidian, reactivați pluginul ERD Editor sau închideți acea fereastră; într-un IDE JetBrains, reactivați pluginul sau ieșiți din IDE.
 
-În schimb, o citire se face din fișierul de pe disc, cu o mențiune că lipsesc editările încă nesalvate în editor, în două cazuri: când editorul care deține documentul are hubul dezactivat și în cazul `hubGone` de mai sus.
+În schimb, o citire sau `erd_export_svg` se face din fișierul de pe disc, cu o mențiune că lipsesc editările încă nesalvate în editor, în două cazuri: când editorul care deține documentul are hubul dezactivat și în cazul `hubGone` de mai sus.
 O citire care nu se poate conecta la hubul unui editor este refuzată cu codul `hubUnreachable`, la fel ca o editare.
 
 ## Fără interfață {#headless}
@@ -133,7 +135,7 @@ Dacă da, nu se scrie nimic, fișierul este încărcat din nou, iar apelul este 
 Un fișier care s-a modificat între două apeluri este doar încărcat din nou, iar istoricul anulărilor agentului de dinainte de acel moment este eliminat.
 
 Un fișier doar în citire este lăsat așa cum este, iar editarea este refuzată cu codul `readonly`: un fișier fără permisiune de scriere pentru proprietarul său sau, pe Windows, cu atributul doar în citire, de exemplu un fișier Perforce sau TFVC pentru care nu s-a făcut check-out.
-Permiteți scrierea în fișier, apoi apelați din nou. Citirile funcționează în continuare.
+Permiteți scrierea în fișier, apoi apelați din nou. Citirile și `erd_export_svg` funcționează în continuare.
 
 Dacă un editor începe să deservească documentul în timp ce agentul îl editează pe disc, doar acea editare este refuzată cu codul `hubAppeared` și nu se scrie nimic. Următorul apel editează prin intermediul editorului.
 
@@ -142,7 +144,7 @@ Pe Windows se aplică încă două reguli:
 - Un document cu permisiuni proprii, diferite de cele ale folderului său, este suprascris direct în loc să fie înlocuit, astfel încât să le păstreze, iar fișierul temporar este eliminat după aceea. Un program care citește documentul în timpul acestei scrieri poate găsi un text care nu poate fi parsat.
 - Un fișier pe care un alt program îl ține deschis nu poate fi înlocuit, așa că serverul reîncearcă timp de până la două secunde. Fiecare încercare caută mai întâi din nou un editor, iar un editor care a început între timp să deservească documentul refuză scrierea cu codul `hubAppeared` sau cu codul `blocked` când are hubul dezactivat. Dacă fișierul este încă ținut deschis după două secunde, nu se scrie nimic, fișierul este încărcat din nou, iar apelul eșuează cu un mesaj care citează eroarea sistemului.
 
-Un server anterior versiunii `1.1.0` citește un document fără numele logice, fără legăturile coloanelor cu domeniile și fără cuvintele, termenii și domeniile sale, așa că prima editare pe care o scrie în fișier le omite. Actualizați serverul (consultați [Actualizarea](./installation.md#updating)).
+Un server anterior versiunii `1.1.0` citește un document fără numele logice, fără legăturile coloanelor cu domeniile și fără cuvintele, termenii și domeniile sale, așa că prima editare pe care o scrie în fișier le omite. De asemenea, un server anterior versiunii `1.2.1` îl citește fără grupurile de tabele ale notelor sale, așa că prima editare pe care o scrie în fișier scoate fiecare notă din grupul ei. Actualizați serverul (consultați [Actualizarea](./installation.md#updating)).
 
 ## Refuzat {#refused}
 
@@ -151,7 +153,7 @@ O fereastră de seif Obsidian își păstrează fișierul de blocare cu hubul de
 Un IDE JetBrains își păstrează fișierul de blocare cu hubul dezactivat când opțiunea Coding agents este dezactivată, când hubul său nu a putut asculta conexiuni și în timp ce IDE-ul se închide.
 
 O editare a unui astfel de document este refuzată cu codul `blocked`, deoarece editorul deschis ar putea suprascrie, la următoarea salvare, o modificare scrisă în fișier.
-Citirile funcționează în continuare, din fișierul de pe disc.
+Citirile funcționează în continuare, din fișierul de pe disc, la fel și `erd_export_svg`, al cărui rezultat indică atunci modul `blocked`.
 
 Pentru a-i permite agentului să editeze, reactivați hubul, așa cum spune mesajul pentru acel editor: în VS Code, marcați spațiul de lucru drept de încredere și activați setarea sau reîncărcați fereastra; în Obsidian, activați opțiunea Coding agents sau reîncărcați Obsidian; într-un IDE JetBrains, activați opțiunea Coding agents sau reporniți IDE-ul dacă opțiunea este deja activată.
 

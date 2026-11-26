@@ -7,7 +7,7 @@ description: Izbiranje, premikanje, kopiranje, podvajanje in brisanje tabel in b
 
 Vse, kar počnete s tabelami in beležkami, ko že obstajajo – izbiranje, premikanje, kopiranje, brisanje, barvanje in nastavljanje tega, kaj prikazuje platno –, ter kontrolniki platna okoli njih.  
 Najprej so na vrsti ukazi za tabele in beležke; nato lastnosti tabele, osredotočanje na tabele, indeksi in alternativni ključi, samodejna postavitev in vrsta zbirke podatkov; nato še samo platno: orodna vrstica platna, povečava, premikanje pogleda in to, kam pripelje skok, ter pregledovalnik razlik; na koncu pa to, kar od vsega tega ohrani urejevalnik samo za branje.  
-Skupine tabel, okvirji, ki združujejo tabele, imajo svojo stran – glejte stran [Skupine tabel](./table-groups.md).  
+Skupine tabel, okvirji, ki združujejo tabele in beležke, imajo svojo stran – glejte stran [Skupine tabel](./table-groups.md).  
 Svojo stran imajo tudi logična imena in prikaz imen, ki določa, katera imena prikazujejo tabele – glejte stran [Logična imena](./logical-names.md).
 
 ## Večkratni izbor {#multiple-selection}
@@ -21,7 +21,7 @@ Podprti so trije načini:
 Beležke izbirate na enak način, vsaka od obeh bližnjic za izbor vsega pa naenkrat zajame vse tabele in beležke. Beležke, skrite z View Option → `Memos`, so izpuščene iz izbora vsega in iz okvira izbora – glejte razdelek [Možnosti pogleda tabel](#table-view-options).  
 [Skupine tabel](./table-groups.md#selecting-groups) dodate v izbor s `Ctrl + click` (Windows/Linux) ali `⌘ + click` (Mac) na njihovo naslovno vrstico, izbor vsega pa nikoli ne zajame nobene skupine.  
 Bližnjica `Ctrl + A` se umakne kazalki, zato med urejanjem celice izbere besedilo in ne diagrama.  
-Okvir izbora označi tabelo ali beležko, ko prekrije njeno sredino, in ne že takrat, ko se le dotakne njenega roba. Skupino tabel zajame samo, če obkroža celoten okvir skupine, zato okvir, narisan znotraj skupine, izbere tabele brez skupine.  
+Okvir izbora označi tabelo ali beležko, ko prekrije njeno sredino, in ne že takrat, ko se le dotakne njenega roba. Skupino tabel zajame samo, če obkroža celoten okvir skupine, zato okvir, narisan znotraj skupine, izbere tabele in beležke, skupine pa ne.  
 Klik z desno tipko miške na nekaj, kar je že izbrano, ohrani celoten izbor, zato postavke menija, kot so `Color`, `Group selected tables` in `Delete selected`, delujejo na celoten izbor. Klik z desno tipko miške na katero koli drugo tabelo, beležko ali skupino tabel izbere samo to, tudi če držite `Ctrl` ali `⌘`, klik z desno tipko miške na relacijo ali na prazno platno pa počisti izbor.  
 Tipka `Escape` počisti izbor. Medtem ko je odprto urejanje celice, urejanje beležke ali polje za ime skupine tabel oziroma medtem ko rišete relacijo ali skupino z `New Table Group`, prvi pritisk tipke `Escape` to konča, drugi pa počisti izbor.  
 Urejevalnik samo za branje nima nobenega od teh načinov izbiranja: tam izbere samo skok – glejte razdelek [Urejevalniki samo za branje](#read-only-editors).
@@ -41,10 +41,10 @@ Tabele in beležke premika samo levi gumb miške. Klik z desno tipko miške dolo
 
 ![Vlečenje ene od dveh izbranih tabel premakne obe, relacija pa jima sledi](/img/demo-table-multiple-move.webp)
 
-Premakne se tudi izbrana [skupina tabel](./table-groups.md) in s seboj ponese svoje tabele, tabela, ki je izbrana in hkrati v skupini, ki se premika, pa se premakne samo enkrat.  
-Glede na to, kam spustite tabelo, se ta lahko premakne v skupino ali iz nje – glejte razdelek [Dodajanje in odstranjevanje tabel](./table-groups.md#adding-and-removing-tables).
+Premakne se tudi izbrana [skupina tabel](./table-groups.md) in s seboj ponese svoje tabele in beležke, tabela ali beležka, ki je izbrana in hkrati v skupini, ki se premika, pa se premakne samo enkrat.  
+Glede na to, kam spustite tabelo ali beležko, se ta lahko premakne v skupino ali iz nje – glejte razdelek [Dodajanje in odstranjevanje tabel](./table-groups.md#adding-and-removing-tables).
 
-Tabele in beležke imajo skupen vrstni red prekrivanja. Pritisk na tabelo ali beležko, z levim ali desnim gumbom, jo postavi pred vse druge tabele in beležke, pritisk na naslovno vrstico skupine tabel ali klik z desno tipko miške na njeno notranjost pa postavi njene tabele v ospredje.  
+Tabele in beležke imajo skupen vrstni red prekrivanja. Pritisk na tabelo ali beležko, z levim ali desnim gumbom, jo postavi pred vse druge tabele in beležke, pritisk na naslovno vrstico skupine tabel ali klik z desno tipko miške na njeno notranjost pa postavi njene tabele in beležke v ospredje.  
 Vrstni red se ne shrani: ponovno odprt diagram zloži tabele v vrstnem redu, v katerem jih navaja datoteka, vse beležke pa nad njimi.
 
 ## Kopiranje/lepljenje tabel in beležk {#copyingpasting-tables-and-memos}
@@ -57,7 +57,7 @@ Vsak kopirani stolpec ohrani svoje logično ime, vsako ime tabele in stolpca pa 
 Prilepljeni stolpec ohrani povezavo z domeno samo, kadar veljata dve stvari: diagram, v katerega pristane, navaja prav to domeno, ne le domene z enakim imenom, in domena ima še vedno podatkovni tip, s katerim je bil stolpec kopiran. Sicer stolpec pristane brez povezave z domeno in ohrani tip, s katerim je bil kopiran – glejte razdelek [Povezovanje stolpca z domeno](./dictionary.md#linking-a-column).  
 Skupaj z njimi se kopirajo tudi indeksi in relacije: indeks se v celoti kopira na kopirano tabelo, relacija pa se kopira s svojo vrsto in dejanji ON DELETE in ON UPDATE, če sta obe tabeli, ki ju povezuje, v kopiranem naboru. Polovična relacija se izpusti, namesto da bi še naprej kazala na izvirnik.  
 Prilepljene kopije postanejo novi izbor, ponovno lepljenje iste kopije pa jo vsakič zamakne za dodatnih `50px`, tako da se ponovljene kopije ne nalagajo druga na drugo.  
-Kopija ne ohrani svoje [skupine tabel](./table-groups.md): prilepljena tabela ni v nobeni skupini, tudi če pristane znotraj okvirja skupine, izbrana skupina pa se ne kopira.  
+Kopija ne ohrani svoje [skupine tabel](./table-groups.md): prilepljena tabela ali beležka ni v nobeni skupini, tudi če pristane znotraj okvirja skupine, izbrana skupina pa se ne kopira.  
 Medtem ko View Option → `Memos` skriva beležke, lepljenje še vedno doda beležke, ki jih prinaša, skrite in neizbrane, tako da izbor postanejo samo prilepljene tabele.
 
 ![Kopiranje dveh povezanih tabel in njuno dvakratno lepljenje, skupaj z relacijo](/img/demo-table-copy-paste.webp)
@@ -89,7 +89,7 @@ Bližnjice:
 
 Brišete lahko tudi prek priročnih menijev. Zadnja postavka menija tabele ali beležke se glasi `Delete selected`, kadar je ta tabela ali beležka eden od dveh ali več izbranih elementov, in odstrani celoten izbor. Sicer se glasi `Delete` in odstrani samo to tabelo ali beležko. Nad vrstico izbranega stolpca se postavka v meniju tabele namesto tega glasi `Delete column` ali `Delete columns`, kot v razdelku [Brisanje stolpcev](./table-editing.md#column-deletion).
 
-Ko odstranite tabelo, se z njo odstranijo tudi njene relacije in indeksi. Ko odstranite skupino tabel, njene tabele ostanejo, vendar brez skupine – glejte razdelek [Odstranjevanje skupine](./table-groups.md#removing-a-group).  
+Ko odstranite tabelo, se z njo odstranijo tudi njene relacije in indeksi. Ko odstranite skupino tabel, njene tabele in beležke ostanejo, vendar brez skupine – glejte razdelek [Odstranjevanje skupine](./table-groups.md#removing-a-group).  
 Potrditve ni, vsaka odstranitev je en korak razveljavitve, v urejevalniku z lastnostjo `readonly` pa se ne odstrani ničesar.  
 Če tipki `Delete` in `Backspace` držite, odstranita samo enkrat, relacije pa ne odstranita nikoli – glejte stran [Urejanje relacij](./relationship-editing.md#deletion). Medtem ko tipkate v celico, beležko ali katero koli drugo besedilno polje, namesto tega urejata besedilo.  
 V nastavitvah sta obe tipki navedeni kot `Delete Selection` – glejte razdelek [Bližnjice](./settings.md#shortcuts).
@@ -98,7 +98,7 @@ V nastavitvah sta obe tipki navedeni kot `Delete Selection` – glejte razdelek 
 
 Barve lahko dodelite za razlikovanje po kategorijah.  
 Tabela kaže svojo barvo na levem robu, beležka pa na vrhu. Kliknite ta rob ali trak z levim gumbom ali v priročnem meniju tabele ali beležke izberite `Color`, da se ob kazalcu odpre izbirnik barv. Barva se uporabi za vse izbrane tabele, beležke in skupine tabel, ne le za tisto, ki ste jo kliknili.  
-Skupino tabel obarvate s postavko `Color` v njenem lastnem meniju, tabela v obarvani skupini pa ima barvo skupine čez glavo in na levem robu obdrži svojo barvo – glejte razdelek [Barvanje skupine](./table-groups.md#coloring-a-group).
+Skupino tabel obarvate s postavko `Color` v njenem lastnem meniju, tabela ali beležka v obarvani skupini pa ima barvo skupine čez glavo in obdrži svojo barvo na levem robu oziroma ob zgornjem robu – glejte razdelek [Barvanje skupine](./table-groups.md#coloring-a-group).
 
 ![Izbira prednastavljene barve Blue na barvnem traku beležke za dve izbrani tabeli in beležko, nato odstranitev barve z No color](/img/demo-table-color.webp)
 
@@ -143,9 +143,9 @@ Katera imena prikazujejo tabele, ni možnost pogleda: postavka `Name View`, tako
 Možnost `Domain` vsakemu stolpcu doda celico, katere mesto določa [vrstni red stolpcev](./settings.md#adjusting-column-order), z imenom domene, s katero je stolpec povezan. Stolpec, ki ni povezan z nobeno domeno, ki jo navaja list `Domains`, tam prikaže zatemnjeno nadomestno besedilo `domain`. Celica se prikaže v vsakem prikazu imen. Dokler je možnost `Domain` izklopljena, prikaz `Logical Names` namesto tega prikaže ime povezane domene v celici tipa – glejte razdelek [Celica domene](./logical-names.md#the-domain-cell).  
 Možnost `Alternate Key` označi stolpce vsakega alternativnega ključa z oznakami, kot je `AK1.1` – glejte razdelek [Alternativni ključi](#alternate-keys).  
 Možnost `Referential Actions` prikaže oznaki `D:` in `U:`, ki ju dejanji ON DELETE in ON UPDATE relacije postavita na konec njene povezovalne črte pri podrejeni tabeli – glejte razdelek [Branje povezovalne črte](./relationship-editing.md#reading-a-connector). Če jo izklopite, se skrijeta samo ti oznaki, nobena tabela ali povezovalna črta pa se ne premakne.  
-Možnost `Table Groups` prikaže [skupine tabel](./table-groups.md) in barve skupin na glavah njihovih tabel. Izklop jih skrije na platnu, na mini zemljevidu in v izvoženih slikah, ne premakne nobene tabele in vsako tabelo ohrani v njeni skupini – glejte razdelek [Skrivanje skupin](./table-groups.md#hiding-groups). Odstrani tudi mapo `Table Groups` iz [raziskovalca](./explorer.md#the-tree) in gumb `New Table Group` iz [orodne vrstice platna](#canvas-toolbar), iskanje v raziskovalcu pa ne najde več imen skupin.  
-Možnost `Memos` prikaže beležke. Izklop skrije vse beležke na platnu, na mini zemljevidu in v izvoženih slikah ter ne premakne nobene tabele ali povezovalne črte. Skrite beležke ne zavzemajo prostora, zato jih drsna trakova, mini zemljevid in kompas `Go to content` ne upoštevajo.  
-Skrivanje beležk prekliče njihov izbor in zapre odprto urejanje beležke. [Raziskovalec](./explorer.md#the-tree) odstrani svojo mapo `Memos`, [iskanje in zamenjava](./find-and-replace.md) v njem in predpona `:` hitrega iskanja pa jih ne preiskujeta. Medtem ko so skrite, ukaz `New Memo` izgine iz priročnega menija, [orodne vrstice platna](#canvas-toolbar), hitrega iskanja in [pozdravnega zaslona](./editing-start.md#welcome-screen), `Alt + M` pa ne doda beležke. Lepljenje ali ukaz [Uvozi in dodaj](./file-import-export.md#import-and-add) še vedno doda beležke, ki jih prinaša, skrite in neizbrane.  
+Možnost `Table Groups` prikaže [skupine tabel](./table-groups.md) in barve skupin na glavah njihovih tabel in beležk. Izklop skrije skupine in njihove barve na platnu in v izvoženih slikah, odstrani okvirje z mini zemljevida, ne premakne nobene tabele ali beležke ter vsako tabelo in beležko ohrani v njeni skupini – glejte razdelek [Skrivanje skupin](./table-groups.md#hiding-groups). Odstrani tudi mapo `Table Groups` iz [raziskovalca](./explorer.md#the-tree) in gumb `New Table Group` iz [orodne vrstice platna](#canvas-toolbar), iskanje v raziskovalcu pa ne najde več imen skupin.  
+Možnost `Memos` prikaže beležke. Izklop skrije vse beležke na platnu, na mini zemljevidu in v izvoženih slikah ter ne premakne nobene tabele ali povezovalne črte. Skrite beležke ne zavzemajo prostora, zato jih drsna trakova, mini zemljevid, kompas `Go to content` in okvirji [skupin tabel](./table-groups.md) ne upoštevajo, čeprav ostanejo v svojih skupinah.  
+Skrivanje beležk prekliče njihov izbor in zapre odprto urejanje beležke. [Raziskovalec](./explorer.md#the-tree) odstrani svojo mapo `Memos` in beležke pod svojimi skupinami tabel, [iskanje in zamenjava](./find-and-replace.md) v njem in predpona `:` hitrega iskanja pa jih ne preiskujeta. Medtem ko so skrite, ukaz `New Memo` izgine iz priročnega menija, [orodne vrstice platna](#canvas-toolbar), hitrega iskanja in [pozdravnega zaslona](./editing-start.md#welcome-screen), `Alt + M` pa ne doda beležke. Lepljenje ali ukaz [Uvozi in dodaj](./file-import-export.md#import-and-add) še vedno doda beležke, ki jih prinaša, skrite in neizbrane.  
 V urejevalniku samo za branje stikala še vedno delujejo, vendar samo na tistem zaslonu: niso shranjena, zabeležena v zgodovino razveljavitev ali deljena, ko pa je urejevalnik spet mogoče urejati, se vrnejo na vrednosti datoteke – glejte razdelek [Urejevalniki samo za branje](./settings.md#read-only-editors) v Nastavitvah.
 
 ![Preklapljanje postavk View Option, ob katerem se tabele prerazporedijo, označevanje sestavljenega enoličnega indeksa kot AK1.1 in AK1.2 z Alternate Key, nato izklop in vklop Memos](/img/demo-view-options.webp)
@@ -233,9 +233,9 @@ Gumb `Apply` ohrani položaje, kakršni so v tistem trenutku, postavitev pa se u
 
 Druge tri se izračunajo v enem koraku, zunaj glavne niti, zato ni česa opazovati: med izračunom postavitve je prikazano obvestilo, končna razporeditev pa se usredini na območje, ki ga diagram že zaseda. Gumb `Cancel` ali tipka `Escape` opusti postavitev, na katero ne čakate več, pri gostitelju, ki ne poganja procesa shared worker, pa se postavitev konča s sporočilom `Could not place tables` – glejte razdelek [Web Workers](../../api/installation.md#web-workers). Enako se konča postavitev, ki se ne vrne v 60 sekundah.
 
-Ne glede na to, katero izberete, se premaknejo tabele in skupine tabel, beležke pa ostanejo, kjer so. Tabele se razporedijo pri širinah, ki jih imajo v prikazu imen, ki ga gledate. Rekurzivna relacija se ne upošteva, več relacij med istima dvema tabelama pa šteje kot ena.  
-Vsaka postavitev ohrani tabele vsake skupine skupaj, ne glede na to, ali so skupine prikazane, in vsako skupino, ki vsebuje tabele, prilagodi okoli njih – glejte stran [Skupine tabel](./table-groups.md#auto-layout).  
-Rezultat se zapiše kot en sam vnos v zgodovini, zato ena razveljavitev vrne vse tabele in skupine tja, kjer so bile.  
+Ne glede na to, katero izberete, se premaknejo tabele, skupine tabel in beležke v skupinah, ki vsebujejo tabele, vse druge beležke pa ostanejo, kjer so. Tabele se razporedijo pri širinah, ki jih imajo v prikazu imen, ki ga gledate. Rekurzivna relacija se ne upošteva, več relacij med istima dvema tabelama pa šteje kot ena.  
+Vsaka postavitev ohrani tabele in beležke vsake skupine skupaj, ne glede na to, ali so skupine prikazane, in vsako skupino, ki vsebuje tabele, prilagodi okoli njenih tabel in prikazanih beležk – glejte stran [Skupine tabel](./table-groups.md#auto-layout).  
+Rezultat se zapiše kot en sam vnos v zgodovini, zato ena razveljavitev vrne vse tabele, beležke in skupine tja, kjer so bile.  
 Urejevalnik samo za branje ne ponuja ukaza `Auto Layout`. Tisti, ki še teče, ko urejevalnik postane samo za branje, se tam konča: predogled `Force` se zapre skupaj z obvestilom in ne obdrži nobenega svojega položaja, postavitev, ki se še izračunava, pa se zavrže skupaj z obvestilom, zato se nobena tabela ne premakne, ne takrat ne potem, ko je urejevalnik spet mogoče urejati.
 
 ![Urejanje kupa tabel s samodejno postavitvijo Tok iz priročnega menija platna, ki jih poravna od leve proti desni vzdolž njihovih relacij](/img/demo-automatic-table-placement.webp)
@@ -311,7 +311,7 @@ Vlečenje s srednjim gumbom ničesar ne izbere, ne premakne in ne klikne ter ohr
 Pritisk srednjega gumba na drsna trakova, mini zemljevid, orodno vrstico platna ali v odprto urejanje celice ali beležke ne premakne pogleda.
 
 Mini zemljevid v zgornjem desnem kotu prikazuje diagram s prostorom velikosti zaslona na vsaki strani, kar je doseg drsnih trakov, pri čemer se to območje zaokroži navzven na grobo mrežo, zato je diagram v njem tem manjši, čim bolj pomanjšate pogled. Kliknite nanj, da pogled premaknete na tisto točko, ali povlecite pravokotnik vidnega območja, da premikate pogled. Ko pomanjšujete pogled, pravokotnik vidnega območja raste in pokriva večji del zemljevida.  
-Vsako tabelo nariše v barvi tabele, vsako prikazano skupino tabel pa kot okvir v barvi skupine za njenimi tabelami.  
+Vsako tabelo nariše v barvi tabele, vsako prikazano skupino tabel pa kot okvir v barvi skupine za njenimi tabelami in beležkami, pri čemer sega okoli njenih prikazanih beležk, tako kot okvir na platnu.  
 Drsna trakova ob desnem in spodnjem robu opisujeta enak razpon premikanja, ki sega od položaja, ko je diagram tik zunaj ene strani zaslona, do položaja, ko je tik zunaj druge, zato je vsaj za en zaslon daljši od narisanega diagrama in še daljši, kadar je pogled onkraj njega. Zunaj načina zen se oba drsna trakova prikažeta vedno, ko dokument vsebuje tabelo, prikazano beležko ali prikazano skupino tabel, tudi če je vse to v celoti na zaslonu. Dokument brez vsega tega, na primer dokument, katerega edine beležke so skrite z View Option → `Memos`, ne prikaže nobenega od njiju in tudi ne mini zemljevida.  
 Vlečenje drsnika drsnega traku ali pravokotnika vidnega območja na mini zemljevidu je edino premikanje pogleda, ki se ustavi: ne seže dlje od tabel tik zunaj zaslona ali dlje od mesta, kjer se je vlečenje začelo, če je bilo to še bolj zunaj.
 
@@ -364,7 +364,7 @@ Urejevalnik samo za branje ponuja tudi `Diff Viewer`, pogled pa tam deluje kot v
 
 Primerjajo se tabele, stolpci, indeksi, tuji ključi, beležke in skupine tabel.  
 Vsak element se najprej poveže v par po identifikatorju, zato je pri primerjavi s starejšo različico iste datoteke, ki ohrani identifikatorje, preimenovana tabela, stolpec, indeks ali skupina tabel še vedno en element, naveden kot preimenovan.  
-Preostali elementi se povežejo v pare ena na ena po tem, kar ohranijo: tabela ali skupina tabel po imenu, vključno z velikostjo črk; stolpec ali indeks po svoji tabeli in imenu; tuji ključ po svojih dveh tabelah in parih stolpcev; beležka pa po besedilu, nato po položaju. Indeks brez imena se poveže po stolpcih, njihovem vrstnem redu in smeri ter po tem, ali je enoličen, skupina tabel brez imena pa po največjem številu skupnih tabel.  
+Preostali elementi se povežejo v pare ena na ena po tem, kar ohranijo: tabela ali skupina tabel po imenu, vključno z velikostjo črk; stolpec ali indeks po svoji tabeli in imenu; tuji ključ po svojih dveh tabelah in parih stolpcev; beležka pa po besedilu, nato po položaju. Indeks brez imena se poveže po stolpcih, njihovem vrstnem redu in smeri ter po tem, ali je enoličen, skupina tabel brez imena pa po največjem številu skupnih tabel in beležk.  
 Pri primerjavi z datoteko od drugod, na primer z diagramom, ponovno zgrajenim z uvozom SQL, se zato preimenovana tabela prikaže kot ena odstranjena in ena dodana.
 
 Kaj šteje kot sprememba:
@@ -373,8 +373,8 @@ Kaj šteje kot sprememba:
 - Stolpec: ime, komentar, podatkovni tip, privzeta vrednost, Samodejno povečevanje, primarni ključ, Enolično, Ni NULL in mesto v tabeli. Kot premaknjeni štejejo samo stolpci zunaj vrstnega reda, ki je skupen obema dokumentoma, zato dodajanje, odstranitev ali premik enega stolpca ne označi drugih.
 - Indeks: ime, UNIQUE in stolpci, z njihovim vrstnim redom in smerjo.
 - Tuji ključ: pari stolpcev, vrsta relacije ter dejanji ON DELETE in ON UPDATE.
-- Beležka: besedilo, položaj, velikost in barva.
-- Skupina tabel: ime, tabele, ki jih vsebuje, barva, položaj in velikost.
+- Beležka: besedilo, skupina tabel, položaj, velikost in barva.
+- Skupina tabel: ime, tabele in beležke, ki jih vsebuje, barva, položaj in velikost.
 
 Zato kot spremenjena šteje tabela, beležka ali skupina, ki se je samo premaknila ali ki se ji je spremenila samo velikost ali barva. Položaji in velikosti se primerjajo v celih slikovnih pikah, vrstni red prekrivanja in mesto, kjer se povezovalna črta stika s tabelo, pa ne štejeta nikoli.  
 Logična imena, povezave z domeno ter besede, izrazi in domene na zavihku [Slovar](./dictionary.md) se ne primerjajo, zato sprememba samo teh ni niti navedena niti označena. Podatkovni tip, ki ga je spremenila domena, pa šteje, in sicer kot sprememba podatkovnega tipa stolpca.
@@ -393,7 +393,7 @@ Vsaka vrstica se konča s črko, vrstica z oznako `A`, `D`, `M` ali `R` pa ima i
 - `R`, preimenovano, v modri barvi: v obeh, z novim imenom. Preimenovanje ima prednost pred vsemi drugimi spremembami, ki jih opis orodja še vedno navaja.
 - `~`, v jantarni barvi, je na koncu vsake mape in vsake tabele, navedene samo zaradi sprememb v njej; njihova imena ohranijo običajno barvo.
 
-Premaknite kazalec nad ime vrstice, da se prikaže njen opis orodja: stanje, `Added`, `Deleted`, `Modified`, `Renamed` ali `Changed inside`, nato po ena vrstica za vsako spremembo, na primer `Name: users → members` ali `NN: ✗ → ✓`. Besedilo se navede s prvo vrstico, odrezano po 40 znakih, prazna vrednost pa je prikazana kot `—`. Opis orodja dodanega ali odstranjenega elementa vsebuje samo stanje.
+Premaknite kazalec nad ime vrstice, da se prikaže njen opis orodja: stanje, `Added`, `Deleted`, `Modified`, `Renamed` ali `Changed inside`, nato po ena vrstica za vsako spremembo, na primer `Name: users → members` ali `NN: ✗ → ✓`. Besedilo se navede s prvo vrstico, odrezano po 40 znakih, prazna vrednost pa je prikazana kot `—`. Beležka, premaknjena v skupino z imenom Billing, ima v opisu orodja vrstico `Table group: — → Billing`, opis orodja skupine pa dobi vrstico, kot je `Memos: — → "note"`, v kateri so njene beležke navedene s prvimi vrsticami v dvojnih narekovajih. Opis orodja dodanega ali odstranjenega elementa vsebuje samo stanje.
 
 Polje `Filter by name` nad drevesom ohrani vrstice, katerih trenutno ali shranjeno ime ali trenutno ali shranjeno logično ime vsebuje, kar vtipkate, ne glede na velikost črk in v vsakem prikazu imen. Tabela, katere ime se ujema, ohrani vse svoje vrstice, tabela, katere ime se ne ujema, pa ostane le z vrsticami, ki se ujemajo. Filter, ki se ne ujema z ničimer, pusti drevo prazno.  
 Kadar se dokumenta sploh ne razlikujeta, drevo prikaže `No changes`.
@@ -419,7 +419,7 @@ Obe strani obarvata besedilo, obrobe in povezovalne črte, ničesar pa ne zapoln
 - Stolpec, ki je dodan ali odstranjen v tabeli, ki jo vsebujeta oba dokumenta, obarva celotno svojo vrstico, premaknjen stolpec pa obarva celotno svojo vrstico v jantarno barvo. Nič znotraj dodane ali odstranjene tabele ni označeno posebej.
 - Besedilo spremenjene celice se obarva jantarno: komentar tabele, pri stolpcu komentar, podatkovni tip, privzeta vrednost, Samodejno povečevanje, Enolično ali Ni NULL, pri beležki pa besedilo. Sprememba primarnega ključa obarva ikono ključa stolpca jantarno.
 - Preimenovana tabela, stolpec ali skupina tabel ima ime v modri barvi.
-- Tabela, beležka ali skupina tabel s spremembo, ki nima svoje celice, na primer s premikom, novo velikostjo ali barvo ali spremembo skupine ali tabel skupine, dobi jantarno obrobo.
+- Tabela, beležka ali skupina tabel s spremembo, ki nima svoje celice, na primer s premikom, novo velikostjo ali barvo ali spremembo skupine ali tabel in beležk skupine, dobi jantarno obrobo.
 - Dodan, odstranjen ali spremenjen tuji ključ nariše svojo povezovalno črto v ustrezni barvi. Ko je kazalec nad njo ali ko jo osvetli vrstica, se namesto tega nariše v običajni barvi ob lebdenju.
 - Sprememba indeksa ne označi ničesar na nobeni strani; vidna je samo v drevesu.
 

@@ -14,7 +14,7 @@ Apa yang ditemukan server menentukan ke mana perubahan diarahkan.
 | --- | --- |
 | Editor yang workspace, vault, atau proyek terbukanya memuat dokumen, atau yang sedang membuka dokumen tersebut | **Live.** Membuka dokumen di ERD Editor jika perlu, bergabung ke sesi pengeditan, dan menerapkan perubahan di sana. Perubahan langsung muncul dan disimpan seperti editor menyimpan perubahan Anda sendiri — lihat [Menyimpan](#saving). |
 | Tidak ada editor | **Headless.** Memuat file, menerapkan perubahan, dan mengganti file sebelum menjawab, sehingga hasilnya menyatakan `saved: true` dan `erd_save` tidak perlu melakukan apa pun. |
-| Editor dengan hub nonaktif | **Ditolak.** Pembacaan tetap berfungsi, dari disk. Perubahan yang ditulis ke file selagi editor terbuka dapat ditimpa oleh penyimpanan berikutnya dari editor tersebut, sehingga server tidak menulis apa pun. |
+| Editor dengan hub nonaktif | **Ditolak.** Pembacaan dan `erd_export_svg` tetap berfungsi, dari disk. Perubahan yang ditulis ke file selagi editor terbuka dapat ditimpa oleh penyimpanan berikutnya dari editor tersebut, sehingga server tidak menulis apa pun ke dokumen. |
 | Editor yang hub-nya aktif tetapi menggunakan protokol yang berbeda dari protokol server: dengan server `1.0.0` atau yang lebih baru, ekstensi VS Code `3.x`, plugin Obsidian `0.x`, atau plugin JetBrains `0.9.0` atau `0.10.0`; dengan server sebelum `1.0.0`, ekstensi `4.0.0` atau yang lebih baru, atau plugin `1.0.0` atau yang lebih baru | **Ditolak**, termasuk pembacaan, dengan `protocolMismatch`. Pesan menyebutkan sisi yang perlu diperbarui: ekstensi atau plugin, atau server — lihat [Memperbarui](./installation.md#updating). |
 | Di Windows, editor yang memegang dokumen melalui jalur lain ke file yang sama: agen menyebutnya melalui folder berbagi jaringan atau drive yang dipetakan di komputer ini, seperti `\\localhost\C$\…`, sedangkan editor memegangnya melalui jalur drive-nya, atau sebaliknya | **Ditolak**, termasuk pembacaan, dengan `invalidPath`. Pesan menyebutkan jalur yang digunakan editor untuk memegang dokumen; panggil lagi dengan jalur tersebut. |
 | Di Windows, editor yang tidak dapat diakses agen karena dihalangi Windows: editor yang dijalankan sebagai administrator sedangkan agen tidak, atau editor mana pun saat agen berjalan di sandbox | **Ditolak**, termasuk pembacaan, dengan `hubUnreachable` dan pesan yang menjelaskan alasannya. Jalankan editor dan agen dengan hak akses yang sama, misalnya dengan menjalankan kembali editor tanpa hak administrator. |
@@ -27,15 +27,17 @@ Jika seri, seperti saat dua editor sama-sama membukanya, yang diutamakan adalah 
 Jadi, dokumen di vault Obsidian yang berada di dalam folder workspace VS Code diarahkan ke Obsidian, kecuali jika VS Code membukanya sedangkan Obsidian tidak.
 
 Panggilan pada satu dokumen dijalankan satu per satu, sesuai urutan kedatangannya di server. Panggilan pada dokumen yang berbeda dijalankan secara bersamaan.
+`erd_export_svg` hanya mengambil gilirannya untuk membaca dokumen, sehingga panggilan berikutnya pada dokumen tidak menunggu penggambaran, dan server menggambar satu ekspor pada satu waktu, bahkan untuk dua dokumen — lihat [Ekspor SVG](./tools.md#svg-export).
 
 ## Live {#live}
 
 Agen bergabung ke editor seperti satu kolaborator tambahan.
 Perubahannya langsung sampai ke setiap editor yang membuka dokumen, dan fokusnya digambar pada tabel dan sel yang sedang dieditnya, seperti fokus kolaborator — lihat [focusTracker](../api/advanced/collaborative-editing.md#focustracker).
 
-Pembacaan tidak pernah membuka editor. Perubahan membuka dokumen di ERD Editor saat dokumen belum terbuka, tanpa mengambil alih fokus keyboard.
+Pembacaan tidak pernah membuka editor, begitu pula `erd_export_svg`, yang menggambar apa yang dipegang editor, termasuk perubahan yang belum disimpan. Perubahan membuka dokumen di ERD Editor saat dokumen belum terbuka, tanpa mengambil alih fokus keyboard.
 
 Editor dengan ekstensi VS Code sebelum `4.2.0`, atau plugin Obsidian atau JetBrains sebelum `1.2.0`, tetap menerima perubahan agen secara live, tetapi tidak menampilkan maupun mempertahankan nama logis, tautan domain, dan baris kamus yang ditulis agen — lihat [Memperbarui](./installation.md#updating).
+Demikian pula, editor dengan ekstensi sebelum `4.3.1` atau plugin sebelum `1.3.1` tidak menampilkan maupun mempertahankan grup tabel mana yang berisi sebuah memo: memo yang dimasukkan agen ke sebuah grup tidak berada di grup mana pun di sana, dan editor tidak menyertakan grup memo itu di file saat menyimpan, meskipun panggilan agen berhasil.
 
 Dengan ekstensi VS Code `4.3.0` atau yang lebih baru, atau plugin Obsidian atau JetBrains `1.3.0` atau yang lebih baru, impor dalam mode `replace`, beserta `erd_undo` atau `erd_redo`-nya, mengakhiri hubungan yang sedang Anda gambar di editor, apa pun rilis servernya — lihat [Pembuatan hubungan](../guide/guides/editing-start.md#relationship-creation).
 Sebelum rilis tersebut, penggambaran tetap aktif, dan klik pada tabel dapat menambahkan hubungan dari tabel yang tidak lagi ada di diagram.
@@ -53,11 +55,11 @@ Perubahan urutan kolom, oleh Anda atau `erd_move_column` atau `erd_move_index_co
 Perubahan database, oleh Anda atau `erd_set_database` milik agen, juga diterapkan menurut urutan tibanya, sehingga dua yang dibuat pada saat yang sama dapat membuat editor dan agen berada pada database yang berbeda.
 
 Seretan Anda dan `erd_move_table`, `erd_move_tables`, `erd_move_memo`, `erd_move_table_group`, dan `erd_sort_tables` milik agen dikirim sebagai titik akhirnya, sehingga dua perpindahan satu tabel, memo, atau grup tabel berakhir di tempat salah satunya menaruhnya, tidak pernah di jumlah keduanya.
-`erd_move_table_group` mengirim titik grup dan setiap tabelnya dalam satu batch, seperti seretan bilah judul grup.
+`erd_move_table_group` mengirim titik grup dan setiap tabelnya dalam satu batch, seperti seretan bilah judul grup, dan sejak server `1.2.1` titik setiap memonya juga.
 Perubahan ukuran menulis posisi dan ukuran bersamaan, sehingga perpindahan dan perubahan ukuran satu memo atau grup tabel yang dibuat pada saat yang sama, seperti `erd_resize_memo` saat Anda menyeret memo itu, berakhir pada satu persegi panjang di kedua sisi: milik perubahan ukuran, atau, saat perpindahan menang, titik perpindahan dengan ukuran dari perubahan ukuran.
 Perpindahan di bawah 20 piksel, yang tidak membuat entri pembatalan, juga dikirim sebagai titik akhirnya, sehingga dapat mengalahkan perpindahan sisi lain, baik `erd_move_table_group` yang pendek maupun seretan pendek Anda, seperti klik yang menggeser tabel beberapa piksel.
 
-Rilis lama tetap terhubung, karena server `1.2.0` menggunakan protokol hub 2, seperti `1.0.0` hingga `1.1.1`.
+Rilis lama tetap terhubung, karena server `1.2.0` dan yang lebih baru menggunakan protokol hub 2, seperti `1.0.0` hingga `1.1.1`.
 Dengan server sebelum `1.2.0`, atau ekstensi sebelum `4.3.0` atau plugin sebelum `1.3.0`, perpindahan atau perubahan ukuran satu tabel, memo, atau grup tabel yang dibuat pada saat yang sama dapat membuat editor dan agen memiliki posisi yang berbeda.
 Editor lama mengirim seretan Anda sebagai jarak yang ditempuh, dan server sebelum `1.2.0` mengirim `erd_move_table_group` dengan cara itu juga.
 Sisi lainnya menambahkan jarak itu ke titik yang dipegangnya.
@@ -97,7 +99,7 @@ Perintah [Batalkan](../guide/guides/undo-redo.md) milik editor sendiri bekerja s
 
 Beberapa perubahan tidak membuat entri pembatalan di editor: `erd_set_database` dan `erd_set_database_name` di antara [alat pengaturan](./tools.md#settings), serta `erd_resize_memo`.
 `erd_move_table_group` yang memindahkan grup kurang dari 20 piksel secara total, dengan jarak horizontal dan vertikal dijumlahkan, juga tidak membuatnya, meskipun grup tetap berada di posisi barunya.
-Panggilan yang tidak mengubah apa pun juga tidak membuatnya: `erd_set_column_primary_key`, `erd_set_column_unique`, `erd_set_column_not_null`, `erd_set_column_auto_increment`, `erd_set_index_unique`, atau `erd_set_index_column_order` yang mengatur nilai yang sudah dimiliki dokumen; `erd_add_index_column` dengan kolom yang sudah ada di indeks; `erd_set_table_group` dengan tabel yang sudah berada di grup tersebut (atau yang sudah tidak berada di grup mana pun, dengan `groupId` `null`); `erd_move_table_group` ke titik tempat grup sudah berada; `erd_resize_table_group` ke persegi panjang yang sudah dimiliki grup; `erd_sort_tables` pada dokumen tanpa tabel; `erd_set_table_logical_name` atau `erd_set_column_logical_name` dengan nama logis yang sudah dimiliki tabel atau kolom, jika menghasilkan nama darinya tidak akan mengubah apa pun; `erd_set_column_domain` dengan domain yang sudah ditautkan kolom, jika kolom sudah memiliki tipe domain tersebut dan [Sinkronisasi tipe data hubungan](../guide/guides/settings.md#relationship-datatype-sync) tidak akan mengubah tipe kolom mana pun di sepanjang hubungannya; `erd_update_word`, `erd_update_term`, atau `erd_update_domain` dengan hanya nilai yang sudah dimiliki baris, kecuali jika istilah yang tidak memiliki nama fisik diberi `name` dan kata-katanya menyusun nama fisik; `erd_derive_physical_names` jika setiap nama dalam cakupannya yang memiliki nama logis sudah berisi apa yang diberikan [kamus](./tools.md#dictionaries) kepadanya dan ditandai sebagai dihasilkan; atau impor dengan `mode` `append` yang tidak membawa tabel (untuk `erd_import_json`, tidak membawa tabel maupun memo).
+Panggilan yang tidak mengubah apa pun juga tidak membuatnya: `erd_set_column_primary_key`, `erd_set_column_unique`, `erd_set_column_not_null`, `erd_set_column_auto_increment`, `erd_set_index_unique`, atau `erd_set_index_column_order` yang mengatur nilai yang sudah dimiliki dokumen; `erd_add_index_column` dengan kolom yang sudah ada di indeks; `erd_set_table_group` dengan tabel yang sudah berada di grup tersebut (atau yang sudah tidak berada di grup mana pun, dengan `groupId` `null`); `erd_set_memo_group` dengan memo yang sudah berada di grup tersebut (atau yang sudah tidak berada di grup mana pun); `erd_move_table_group` ke titik tempat grup sudah berada; `erd_resize_table_group` ke persegi panjang yang sudah dimiliki grup; `erd_sort_tables` pada dokumen tanpa tabel; `erd_set_table_logical_name` atau `erd_set_column_logical_name` dengan nama logis yang sudah dimiliki tabel atau kolom, jika menghasilkan nama darinya tidak akan mengubah apa pun; `erd_set_column_domain` dengan domain yang sudah ditautkan kolom, jika kolom sudah memiliki tipe domain tersebut dan [Sinkronisasi tipe data hubungan](../guide/guides/settings.md#relationship-datatype-sync) tidak akan mengubah tipe kolom mana pun di sepanjang hubungannya; `erd_update_word`, `erd_update_term`, atau `erd_update_domain` dengan hanya nilai yang sudah dimiliki baris, kecuali jika istilah yang tidak memiliki nama fisik diberi `name` dan kata-katanya menyusun nama fisik; `erd_derive_physical_names` jika setiap nama dalam cakupannya yang memiliki nama logis sudah berisi apa yang diberikan [kamus](./tools.md#dictionaries) kepadanya dan ditandai sebagai dihasilkan; atau impor dengan `mode` `append` yang tidak membawa tabel (untuk `erd_import_json`, tidak membawa tabel maupun memo).
 `erd_undo` melewati perubahan ini dan menyebutkannya dalam hasilnya.
 Perubahan lain, seperti `erd_change_relationship_type`, `erd_change_relationship_on_delete`, `erd_change_relationship_on_update`, `erd_change_table_group_name`, `erd_change_table_group_color`, dan `erd_set_ddl_script`, membuat entri bahkan saat mengatur nilai yang sudah dimiliki dokumen.
 
@@ -120,7 +122,7 @@ Diagram tertutup yang berada di dalam folder yang dilayani editor tetap ditangan
 Editor yang masih berjalan, tetapi file kuncinya hilang dan koneksinya tertutup tanpa editor menutup dokumen, menolak perubahan berikutnya dengan `hubGone`.
 Pesan menjelaskan apa yang membebaskan dokumen: di VS Code, muat ulang jendela tersebut, atau tutup jendela itu agar agen dapat mengedit file secara langsung; di Obsidian, aktifkan kembali plugin ERD Editor, atau tutup jendela tersebut; di IDE JetBrains, aktifkan kembali plugin, atau keluar dari IDE.
 
-Sebagai gantinya, pembacaan diarahkan ke file di disk, dengan catatan bahwa perubahan yang belum disimpan di editor tidak disertakan, dalam dua kasus: saat editor yang memegang dokumen memiliki hub nonaktif, dan dalam kasus `hubGone` di atas.
+Sebagai gantinya, pembacaan, atau `erd_export_svg`, diarahkan ke file di disk, dengan catatan bahwa perubahan yang belum disimpan di editor tidak disertakan, dalam dua kasus: saat editor yang memegang dokumen memiliki hub nonaktif, dan dalam kasus `hubGone` di atas.
 Pembacaan yang tidak dapat terhubung ke hub editor ditolak dengan `hubUnreachable`, sama seperti perubahan.
 
 ## Headless {#headless}
@@ -133,7 +135,7 @@ Jika ya, tidak ada yang ditulis, file dimuat ulang, dan panggilan ditolak dengan
 File yang berubah di antara dua panggilan cukup dimuat ulang, dan riwayat pembatalan agen sebelum itu dibuang.
 
 File hanya baca dibiarkan apa adanya, dan perubahan ditolak dengan `readonly`: file tanpa izin tulis untuk pemiliknya, atau dengan atribut hanya baca di Windows, seperti file Perforce atau TFVC yang belum di-checkout.
-Jadikan file dapat ditulis, lalu panggil lagi. Pembacaan tetap berfungsi.
+Jadikan file dapat ditulis, lalu panggil lagi. Pembacaan dan `erd_export_svg` tetap berfungsi.
 
 Jika editor mulai melayani dokumen selama agen mengeditnya di disk, satu perubahan itu ditolak dengan `hubAppeared` dan tidak ada yang ditulis. Panggilan berikutnya mengedit melalui editor.
 
@@ -142,7 +144,7 @@ Di Windows, dua aturan tambahan berlaku:
 - Dokumen yang memiliki izin sendiri, berbeda dari izin foldernya, ditulis di tempat alih-alih diganti, agar izin tersebut tetap terjaga, dan file sementara dihapus sesudahnya. Program yang membaca dokumen selama penulisan itu dapat menemukan teks yang tidak dapat diurai.
 - File yang sedang dibuka oleh program lain tidak dapat diganti, sehingga server mencoba lagi hingga dua detik. Setiap percobaan terlebih dahulu mencari editor lagi, dan editor yang mulai melayani dokumen sementara itu menolak penulisan dengan `hubAppeared`, atau dengan `blocked` saat hub-nya nonaktif. Jika file masih dibuka setelah dua detik, tidak ada yang ditulis, file dimuat ulang, dan panggilan gagal dengan pesan yang mengutip kesalahan sistem.
 
-Server sebelum `1.1.0` membaca dokumen tanpa nama logis, tautan domain kolom, serta kata, istilah, dan domainnya, sehingga pengeditan pertama yang ditulisnya ke file tidak menyertakan semua itu. Perbarui server — lihat [Memperbarui](./installation.md#updating).
+Server sebelum `1.1.0` membaca dokumen tanpa nama logis, tautan domain kolom, serta kata, istilah, dan domainnya, sehingga pengeditan pertama yang ditulisnya ke file tidak menyertakan semua itu. Server sebelum `1.2.1` juga membacanya tanpa grup tabel milik memo, sehingga pengeditan pertama yang ditulisnya ke file mengeluarkan setiap memo dari grupnya. Perbarui server — lihat [Memperbarui](./installation.md#updating).
 
 ## Ditolak {#refused}
 
@@ -151,7 +153,7 @@ Jendela vault Obsidian menyimpan file kuncinya dengan hub nonaktif saat Coding a
 IDE JetBrains menyimpan file kuncinya dengan hub nonaktif saat Coding agents dinonaktifkan, saat hub-nya tidak dapat mendengarkan koneksi, dan selama IDE sedang ditutup.
 
 Perubahan pada dokumen seperti itu ditolak dengan `blocked`, karena editor yang terbuka dapat menimpa perubahan yang ditulis ke file pada penyimpanan berikutnya.
-Pembacaan tetap berfungsi, dari file di disk.
+Pembacaan tetap berfungsi, dari file di disk, begitu pula `erd_export_svg`, yang hasilnya lalu menyebut mode `blocked`.
 
 Agar agen dapat mengedit, aktifkan kembali hub, seperti yang dijelaskan pesan untuk editor tersebut: di VS Code, percayai workspace dan aktifkan pengaturan tersebut, atau muat ulang jendela; di Obsidian, aktifkan Coding agents, atau muat ulang Obsidian; di IDE JetBrains, aktifkan Coding agents, atau mulai ulang IDE jika sudah aktif.
 

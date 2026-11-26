@@ -56,6 +56,7 @@ Ett VS Code-fönster betjänar diagrammen i sina arbetsområdesmappar och alla d
 Ett tillägg från `3.0.0` till `3.1.0` och servern i version `1.0.0` eller senare nekar varandra, och ett tillägg före `3.0.0` betjänar inga agenter.
 Ett tillägg i version `4.0.0` eller `4.1.0` ansluter, men varken visar eller behåller de logiska namn, domänkopplingar och rader i ordlistorna som agenten skriver.
 Med ett tillägg före `4.3.0` kan en tabell, anteckning eller tabellgrupp som du och agenten flyttar eller ändrar storlek på samtidigt sluta på olika platser för var och en av er – se [Uppdatera](#updating).
+Ett tillägg före `4.3.1` varken visar eller behåller vilken tabellgrupp en anteckning ingår i.
 
 Tillägget startar i ett arbetsområde som innehåller filer med filändelsen `.erd`, `.erd.json`, `.vuerd` eller `.vuerd.json`, så en agent når de diagrammen innan du öppnar något av dem.
 I ett arbetsområde utan sådana filer startar det när du öppnar ett diagram, och fram till dess redigerar agenten på disken.
@@ -74,6 +75,7 @@ Ett valvfönster i Obsidian betjänar diagrammen i sitt valv.
 Ett plugin före `1.0.0` och servern i version `1.0.0` eller senare nekar varandra.
 Ett plugin i version `1.0.0` eller `1.1.0` ansluter, men varken visar eller behåller de logiska namn, domänkopplingar och rader i ordlistorna som agenten skriver.
 Med ett plugin före `1.3.0` kan en tabell, anteckning eller tabellgrupp som du och agenten flyttar eller ändrar storlek på samtidigt sluta på olika platser för var och en av er – se [Uppdatera](#updating).
+Ett plugin före `1.3.1` varken visar eller behåller vilken tabellgrupp en anteckning ingår i.
 
 Ett valvfönster betjänar agenter från det ögonblick pluginet läses in, så en agent når valvets diagram innan du öppnar något av dem.
 Det finns inget förtroendesteg.
@@ -102,6 +104,7 @@ En JetBrains-IDE betjänar diagrammen i alla projekt som är öppna i den och al
 Ett plugin i version `0.9.0` eller `0.10.0` och servern i version `1.0.0` eller senare nekar varandra, och ett plugin före `0.9.0` betjänar inga agenter.
 Ett plugin i version `1.0.0` eller `1.1.0` ansluter, men varken visar eller behåller de logiska namn, domänkopplingar och rader i ordlistorna som agenten skriver.
 Med ett plugin före `1.3.0` kan en tabell, anteckning eller tabellgrupp som du och agenten flyttar eller ändrar storlek på samtidigt sluta på olika platser för var och en av er – se [Uppdatera](#updating).
+Ett plugin före `1.3.1` varken visar eller behåller vilken tabellgrupp en anteckning ingår i.
 
 IDE:n betjänar agenter från det ögonblick det första projektet öppnas, så en agent når ett projekts diagram innan du öppnar något av dem.
 
@@ -153,7 +156,14 @@ Men en flytt eller storleksändring som du och agenten gör samtidigt av samma t
 Med någon av sidorna äldre kan editorn och agenten sluta med olika positioner, och agenten fortsätter läsa och redigera från sin egen tills en senare flytt sätter båda på samma punkt eller agenten ansluter till dokumentet igen – se [Redigeringar som görs samtidigt](./live-and-headless.md#edits-made-at-the-same-moment).
 Ingen av de här versionerna ändrar vad en fil innehåller.
 
+Server `1.2.1` talar också protokoll 2. Den lägger till två verktyg, `erd_set_memo_group` och `erd_export_svg`, och argumentet `memoIds` i `erd_add_table_group`, och tar inte bort eller byter namn på något – se [Tabellgrupper](./tools.md#table-groups) och [SVG-export](./tools.md#svg-export).
+Anteckningar i tabellgrupper kräver server `1.2.1` eller senare och, överallt där dokumentet är öppet, VS Code-tillägget `4.3.1` eller senare eller Obsidian- eller JetBrains-pluginet `1.3.1` eller senare.
+Ett tidigare tillägg eller plugin som ansluter ignorerar vilken grupp en anteckning ingår i, trots att agentens anrop lyckas, och utelämnar anteckningarnas grupper när det sparar filen.
+En server före `1.2.1` har inga verktyg för dem och läser varje anteckning som om den inte ingick i någon grupp, och en fil som den redigerar på disken skrivs tillbaka med varje anteckning utan grupp – se [Headless](./live-and-headless.md#headless).
+`erd_export_svg` kräver bara server `1.2.1` eller senare, med vilken version av tillägget eller pluginet som helst som ansluter, eftersom servern ritar bilden själv.
+
 Uppdatera också ERD Editor överallt där diagrammen öppnas.
+VS Code-tillägget före `4.3.1`, Obsidian-pluginet före `1.3.1` och JetBrains-pluginet före `1.3.1` öppnar ett diagram som en senare version har sparat, eller som agenten har redigerat på disken, med varje anteckning utan tabellgrupp, och utelämnar anteckningarnas grupper när de sparar filen.
 VS Code-tillägget före `4.2.0`, Obsidian-pluginet före `1.2.0` och JetBrains-pluginet före `1.2.0` öppnar ett diagram som en senare version har sparat, eller som agenten har redigerat på disken, utan tabellernas och kolumnernas logiska namn, kolumnernas domänkopplingar och diagrammets ord, termer och domäner.
 När de sparar filen utelämnar de dem.
 VS Code-tillägget före `4.0.0`, Obsidian-pluginet före `1.0.0` och JetBrains-pluginet före `1.0.0` visar också ett sådant diagram utan dess primärnyckelikoner och tar bort dess tabellgrupper och Schema SQL-skript när de sparar filen.

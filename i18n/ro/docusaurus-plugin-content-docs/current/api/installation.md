@@ -51,18 +51,18 @@ Pentru restul API-ului, consultați [ErdEditorElement](./erd-editor-element.md).
 
 ```html
 <script type="module">
-  import 'https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js';
+  import 'https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js';
 
   const editor = document.createElement('erd-editor');
   editor.style.cssText = 'display: block; width: 100%; height: 100vh;';
   document.body.appendChild(editor);
 </script>
 <!-- or -->
-<script type="module" src="https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js"></script>
+<script type="module" src="https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js"></script>
 ```
 
 Serviciul `esm.run` rezolvă în locul dumneavoastră dependențele externe ale pachetului, așa că acest cod funcționează fără bundler.
-Fiecare punct de intrare se atinge prin calea sa de după versiune: `…/erd-editor.js` definește editorul, iar `…/erd-viewer.js` viewerul, care preia de la CDN fiecare limbă de afișare în afară de engleză abia când o pagină o cere. URL-ul simplu al pachetului, `https://esm.run/@dineug/erd-editor@5.1.0`, servește rădăcina, care nu definește niciun element.
+Fiecare punct de intrare se atinge prin calea sa de după versiune: `…/erd-editor.js` definește editorul, iar `…/erd-viewer.js` viewerul, care preia de la CDN fiecare limbă de afișare în afară de engleză abia când o pagină o cere. URL-ul simplu al pachetului, `https://esm.run/@dineug/erd-editor@5.1.1`, servește rădăcina, care nu definește niciun element.
 Un URL fără versiune servește întotdeauna cea mai recentă versiune. Fixați o versiune, ca mai sus, dacă nu doriți ca o actualizare majoră să ajungă neanunțată pe pagina dumneavoastră.
 Versiunea `5.0.0` este ea însăși una: o pagină care trebuie să rămână pe 4.x fixează `@4.2.0` (consultați [Actualizarea de la 4.x](#upgrading-from-4x)).
 
@@ -75,7 +75,7 @@ Spre ea indică câmpurile `unpkg` și `jsdelivr`, așa că URL-ul simplu al pac
 
 ```html
 <erd-editor></erd-editor>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.1"></script>
 <script>
   const editor = document.querySelector('erd-editor');
   editor.setInitialValue(localStorage.getItem('my-diagram') ?? '');
@@ -88,7 +88,7 @@ Spre ea indică câmpurile `unpkg` și `jsdelivr`, așa că URL-ul simplu al pac
 
 ```html
 <erd-viewer src="diagram.erd.json" style="display: block; height: 480px"></erd-viewer>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0/dist/erd-viewer.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.1/dist/erd-viewer.umd.js"></script>
 ```
 
 Niciunul dintre fișiere nu definește eticheta celuilalt, iar fiecare nu lasă pe pagină niciun global în afară de al său și de `window.Konva`.
@@ -100,7 +100,7 @@ O pagină care nu poate încărca un script propriu poate încadra viewerul găz
 ```html
 <erd-editor system-dark-mode enable-theme-builder enable-locale-picker enable-welcome-screen></erd-editor>
 <script type="module">
-  import 'https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js';
+  import 'https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js';
 
   const editor = document.querySelector('erd-editor');
 </script>
@@ -123,7 +123,7 @@ Citirea proprietăților `editor.value` și `editor.runtimeValue` funcționează
 
 ### Redare pe server {#server-side-rendering}
 
-Fiecare punct de intrare în afară de `engine.js` și `peer.js` are nevoie de un DOM, așa că aruncă o excepție în Node. `erd-editor.js` și `erd-viewer.js` își definesc elementul la nivelul modulului, iar rădăcina pachetului, care începând cu versiunea `5.0.0` nu definește nimic, construiește totuși ambele clase de elemente când se încarcă.
+Fiecare punct de intrare descris în aceste pagini, în afară de `engine.js` și `peer.js`, are nevoie de un DOM, așa că aruncă o excepție în Node. `erd-editor.js` și `erd-viewer.js` își definesc elementul la nivelul modulului, iar rădăcina pachetului, care începând cu versiunea `5.0.0` nu definește nimic, construiește totuși ambele clase de elemente când se încarcă.
 În Next.js, Nuxt, SvelteKit sau Astro, ajungeți la punctul de intrare al elementului dintr-un cod care rulează doar pe client, și tot de acolo la un import numit din rădăcină, cum ar fi `setExportFileCallback` sau `toImage`.
 
 ```js
@@ -251,7 +251,7 @@ O pagină aflată sub o politică strictă de securitate a conținutului (CSP) a
 
 ## Puncte de intrare {#entry-points}
 
-Pachetul are cinci puncte de intrare:
+Aceste pagini descriu cinci dintre punctele de intrare ale pachetului:
 
 | Punct de intrare | Ce este |
 | --- | --- |
@@ -371,7 +371,7 @@ Versiunea `5.0.0` este o versiune majoră. Verificați fiecare dintre aceste pun
    import { setExportFileCallback } from '@dineug/erd-editor';
   ```
 
-- Pe un CDN, același lucru este valabil pentru `https://esm.run/@dineug/erd-editor`, care acum servește rădăcina și nu definește nimic: importați `https://esm.run/@dineug/erd-editor@5.1.0/erd-editor.js`. URL-urile simple jsDelivr și unpkg servesc în continuare versiunea pentru eticheta script, care definește `<erd-editor>` ca înainte. Un URL fără versiune servește acum cea mai recentă versiune 5.x; fixați `@4.2.0` pentru a rămâne pe 4.x (consultați [CDN](#cdn) și [Eticheta script](#script-tag)).
+- Pe un CDN, același lucru este valabil pentru `https://esm.run/@dineug/erd-editor`, care acum servește rădăcina și nu definește nimic: importați `https://esm.run/@dineug/erd-editor@5.1.1/erd-editor.js`. URL-urile simple jsDelivr și unpkg servesc în continuare versiunea pentru eticheta script, care definește `<erd-editor>` ca înainte. Un URL fără versiune servește acum cea mai recentă versiune 5.x; fixați `@4.2.0` pentru a rămâne pe 4.x (consultați [CDN](#cdn) și [Eticheta script](#script-tag)).
 - Rădăcina nu definește nimic, dar tot are nevoie de un DOM, așa că la redarea pe server un import numit din ea, cum ar fi `setExportFileCallback`, rămâne pe calea doar pentru client, alături de punctul de intrare al elementului (consultați [Redare pe server](#server-side-rendering)).
 - `window.ErdEditor` primește `ErdEditorElement` și `defineErdEditor`. Versiunea pentru eticheta script a viewerului pune `ErdViewerElement` și `defineErdViewer` pe `window.ErdViewer`, iar niciun global nu conține `toImage`.
 - Un editor `readonly` se deschide ca un cititor. Cele șase file, exploratorul, Quick Search și prezența rămân, iar fiecare control care ar edita diagrama dispare în loc să fie dezactivat: bara de instrumente afișează numele bazei de date ca text, fila Setări își arată setările cu fiecare control dezactivat sub o insignă `Read only`, iar bara de instrumente plutitoare păstrează doar zoomul, Name View, modul Zen și busola, așa că `Hand` și `Select` dispar, iar o tragere deplasează pânza. O apăsare nu selectează nimic: singura selecție este conturul pe care îl pune un salt din Explorer sau din Quick Search în jurul a ceea ce ajunge acolo, pe care îl șterge un clic fără mișcare, iar tastele de selectare a tuturor nu selectează nimic. Activarea `readonly` încheie ce era deschis, cum ar fi selecția, instrumentul mână, un editor de celulă, o tragere, Map Columns, previzualizarea `Force` din Auto Layout și Time Travel, și păstrează derularea, zoomul, fila și Name View (consultați [readonly](./erd-editor-element.md#readonly)).

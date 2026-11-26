@@ -39,7 +39,7 @@ interface ErdViewerElement extends HTMLElement {
 ```
 
 匯入 `@dineug/erd-editor/erd-viewer.js` 會定義 `<erd-viewer>`，並讓 `<erd-editor>` 保持未定義。匯入套件根目錄則兩者都不定義：它匯出類別 `ErdViewerElement` 和 `defineErdViewer()`，後者會在您呼叫之處定義該標籤，因此頁面也可以將該類別定義在您自己的標籤下，請參閱[註冊元素](./installation.md#registering-the-elements)。  
-除了 `engine.js` 和 `peer.js` 之外，每個進入點都需要 DOM，這一個也不例外，因此伺服器端轉譯的頁面要在用戶端匯入它，請參閱[伺服器端轉譯](./installation.md#server-side-rendering)。  
+這些頁面所描述的進入點中，除了 `engine.js` 和 `peer.js` 之外，每一個都需要 DOM，這一個也不例外，因此伺服器端轉譯的頁面要在用戶端匯入它，請參閱[伺服器端轉譯](./installation.md#server-side-rendering)。  
 匯入此進入點會將 `erd-viewer` 加入 `HTMLElementTagNameMap`，因此 `document.createElement('erd-viewer')` 和 `document.querySelector('erd-viewer')` 不需要轉型就具有 `ErdViewerElement` 型別。
 
 與編輯器一樣，檢視器會轉譯到封閉模式的 shadow root 中，因此 `viewer.shadowRoot` 為 `null`，頁面樣式也不會滲入或滲出；請透過 [setTheme](#settheme) 和 `--erd-editor-*` 自訂屬性來設定其樣式。同一頁面上的多個檢視器各自保有自己的文件、檢視、佈景主題和語言。  
@@ -52,7 +52,7 @@ script 標籤建置版本 `dist/erd-viewer.umd.js` 只包含檢視器及其所�
 
 ```html
 <erd-viewer src="diagram.erd.json" style="display: block; height: 480px"></erd-viewer>
-<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.0/dist/erd-viewer.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dineug/erd-editor@5.1.1/dist/erd-viewer.umd.js"></script>
 ```
 
 ## src {#src}

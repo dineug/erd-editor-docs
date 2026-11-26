@@ -1,7 +1,7 @@
 # docs
 
 **Parent context:** `../AGENTS.md`
-**Generated:** 2026-11-03 · **Updated:** 2026-11-03
+**Generated:** 2026-11-03 · **Updated:** 2026-11-26
 
 ## Purpose
 
@@ -64,6 +64,24 @@ from one section to another. Each subdirectory's file holds its own pages.
     and the `code` table in `mcp/tools.md#dictionary-checks` (its `Type` on the sheet column).
   - MCP release floors: the update paragraph in `guide/introduction.md` restates
     `mcp/installation.md#updating`.
+  - Memos in table groups: `guide/guides/table-groups.md` is the guide home (joining and leaving a
+    group, the header band, hidden memos, `Select tables`, Auto Layout, import, export and copying).
+    The other guide pages say "tables and memos" where a group holds both and link there, and
+    `guide/guides/explorer.md#the-tree` holds the memo rows under a group. `api/advanced/schema.md`
+    is the home of a memo's `groupId` in the file, and `mcp/tools.md#table-groups` of the agent's
+    side. Candidates: `grep -rln --exclude=AGENTS.md "table-groups.md" docs` (19 pages).
+  - The Diff Viewer: `guide/guides/table-related-functions.md#what-is-compared`, `#the-change-tree`
+    and `#marks-on-the-two-sides` are the home, including what a memo's table group adds to the
+    comparison. `api/erd-editor-element.md#setdiffvalue` gives it one sentence and links
+    `#what-is-compared`.
+  - Older releases save every memo out of its table group: an editor before `5.1.1`, the VS Code
+    extension before `4.3.1`, the Obsidian or JetBrains plugin before `1.3.1`, and a server before
+    `1.2.1` editing the file on disk. `api/advanced/collaborative-editing.md#mixing-releases` (its
+    `5.1.1` block), `mcp/installation.md#updating` (the floors) and the update paragraph in
+    `guide/introduction.md` (without version numbers) state it. `schema.md`, `remote-storage.md`,
+    `yjs.md`, `erd-editor-element.md` and the other three `mcp/` pages give it a sentence and a
+    link. Candidates, 10 pages:
+    `` grep -rlE --exclude=AGENTS.md 'before `(5\.1\.1|1\.2\.1|4\.3\.1|1\.3\.1)`|before memos' docs ``.
   - The VS Code, JetBrains and Obsidian store URLs are in `guide/introduction.md`, `mcp/introduction.md`,
     `mcp/installation.md`, and in `docusaurus.config.ts` twice (the navbar's `Editors` dropdown and
     the footer's `Editors` column). The Google Workspace one is only in the introduction and those
@@ -73,10 +91,10 @@ from one section to another. Each subdirectory's file holds its own pages.
 
 ### Testing Requirements
 
-- Check facts at the tag the docs follow, which the pins name (`@dineug/erd-editor@5.1.0` →
-  `v5.1.0`). Read the source there with `git -C ../erd-editor show v5.1.0:<path>` or
-  `git -C ../erd-editor diff v5.1.0 -- <path>`, because the checkout can be ahead of the tag
-  (`describe --tags` prints `v5.1.0-1-g…` today).
+- Check facts at the tag the docs follow, which the pins name (`@dineug/erd-editor@5.1.1` →
+  `v5.1.1`). Read the source there with `git -C ../erd-editor show v5.1.1:<path>` or
+  `git -C ../erd-editor diff v5.1.1 -- <path>`, because the checkout can be ahead of the tag
+  (`describe --tags` then prints `v5.1.1-N-g…` instead of `v5.1.1`).
 - After `pnpm build en`, look in the output for `Docusaurus found broken anchors!`. It lists each
   link a renamed heading broke, and the build still succeeds.
 
@@ -86,8 +104,8 @@ from one section to another. Each subdirectory's file holds its own pages.
   With no `title`, `id` or `slug`, the file name is the URL and the H1 is the sidebar label. All 24
   translations copy `sidebar_position`, so reordering pages means editing all 25 copies.
 - No page uses an admonition (`:::`) or a blockquote. A caveat is a plain sentence.
-- A cross-reference ends a sentence as `— see [Heading](./page.md#anchor)`: 372 times in `guide/`,
-  100 in `api/`, 54 in `mcp/`.
+- A cross-reference ends a sentence as `— see [Heading](./page.md#anchor)`: 375 times in `guide/`,
+  103 in `api/`, 63 in `mcp/`.
 - Hard breaks are a per-page choice. `api/installation.md`, `guide/guides/settings.md` and the four
   `mcp/` pages have none. Match the page: `grep -c '[^ ]  $' <page>`.
 - UI labels, values and setting names go in backticks, spelled as the editor's English strings in

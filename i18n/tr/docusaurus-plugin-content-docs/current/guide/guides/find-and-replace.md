@@ -93,7 +93,7 @@ Bul alanında metin olduğu sürece Gezginin [ağacı](./explorer.md#the-tree) t
 
 - `Tables`, `Table Groups` ve `Memos` klasörleri yalnızca eşleşme içerdiklerinde görünür ve her klasörün gösterdiği sayı, sonuçlarda doğrudan altındaki satırların sayısıdır.
 - `Tables` klasörünün altında eşleşme içeren tablolar, hiçbir zaman mantıksal ada göre değil, ada göre sıralanır. Her tablonun altında açıklamasındaki her eşleşme için bir satır, ardından eşleşme içeren sütunların sütun sırasıyla yer aldığı ve her sütunun altında açıklamasındaki her eşleşme için bir satır bulunan bir `Columns` klasörü, ardından adı eşleşen dizinlerin yer aldığı bir `Indexes` klasörü gelir. `Foreign Keys` klasörü yoktur.
-- `Table Groups` klasörünün altında adı eşleşen gruplar, tabloları olmadan, ada göre sıralanır. Bulunan bir tablo `Tables` klasörünün altında görünür.
+- `Table Groups` klasörünün altında adı eşleşen gruplar, tabloları ve notları olmadan, ada göre sıralanır. Bulunan bir tablo `Tables` klasörünün altında, bir not da `Memos` klasörünün altında görünür.
 - `Memos` klasörünün altında eşleşme içeren notlar belge sırasıyla yer alır. Her not ilk satırıyla gösterilir ve içindeki her eşleşme için bir satırı vardır.
 
 Bir addaki eşleşme o adın kendi satırında vurgulanır, bu yüzden arama metnini iki kez içeren bir ad, iki vurgusu olan tek bir satırdır. Bir tablonun veya sütunun mantıksal adındaki eşleşme de o tablonun veya sütunun satırında yer alır, hiçbir zaman kendine ait bir satırda değil.  
@@ -127,7 +127,7 @@ Bir eşleşmeye gitmek, açıksa Tablo özelliklerini kapatır, ardından:
 
 - Bir tablonun veya sütunun adı, mantıksal adı ya da açıklaması için tabloyu tek başına seçer, öne getirir ve odaktaki hücreyi eşleşmeyi içeren hücreye taşır. Bir [tablo görünüm seçeneğiyle](./table-related-functions.md#table-view-options) gizlenmiş bir açıklamadaki eşleşme, odaktaki hücreyi bunun yerine yanındaki ada taşır. [Ad görünümü](./logical-names.md#name-view) ad veya mantıksal ad için hücre göstermediğinde odaktaki hücre onun yerine gösterilen hücreye gelir: `Physical Names` görünümünde ad, `Logical Names` görünümünde mantıksal ad.
 - Dizin adı için dizinin tablosunu tek başına seçer ve öne getirir, odaktaki hücre zaten o tabloda değilse tablonun adına, `Logical Names` ve `Both Names` görünümlerinde ise mantıksal adına gelir. Dizin adları tuvalde çizilmez.
-- Tablo grubu adı için grubu tek başına seçer ve tablolarıyla birlikte öne getirir.
+- Tablo grubu adı için grubu tek başına seçer ve tablolarıyla ve notlarıyla birlikte öne getirir.
 - Not için notu tek başına seçer ve öne getirir.
 
 Tuval yalnızca gidilen öğe zaten iyi görünmüyorsa kaydırılır ve yakınlaştırma hiçbir zaman değişmez. [Atlamanın varış noktası](./table-related-functions.md#where-a-jump-lands) bölümüne bakın.

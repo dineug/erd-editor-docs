@@ -1,11 +1,11 @@
 ---
 sidebar_position: 4
-description: Wszystkie narzędzia serwera MCP erd-editor – odczytywanie dokumentu strona po stronie, kontrole słowników, 67 narzędzi edycji, erd_batch oraz postać wyniku i odrzucenia.
+description: Wszystkie narzędzia serwera MCP erd-editor – odczytywanie dokumentu strona po stronie, kontrole słowników, eksport SVG, 68 narzędzi edycji, erd_batch oraz postać wyniku i odrzucenia.
 ---
 
 # Narzędzia
 
-Serwer udostępnia 77 narzędzi: pięć narzędzi sesji, cztery narzędzia odczytu, 67 narzędzi edycji, po jednym na każdą operację edycji, oraz narzędzie `erd_batch`, które uruchamia kilka narzędzi edycji jako jedną zmianę.
+Serwer udostępnia 79 narzędzi: pięć narzędzi sesji, cztery narzędzia odczytu, narzędzie `erd_export_svg`, które rysuje dokument jako obraz SVG, 68 narzędzi edycji, po jednym na każdą operację edycji, oraz narzędzie `erd_batch`, które uruchamia kilka narzędzi edycji jako jedną zmianę.
 
 Każde narzędzie oprócz `erd_list_documents` przyjmuje jako pierwszy argument ścieżkę dokumentu `path`, a poniższe tabele go pomijają.
 Argument oznaczony znakiem `?` jest opcjonalny.
@@ -26,14 +26,14 @@ Informacje o tym, co w każdym z trybów robią zapisywanie i cofanie, znajdzies
 
 | Narzędzie | Argumenty | Co robi |
 | --- | --- | --- |
-| `erd_list` | `query?`, `offset?`, `limit?`, `namesOnly?` | Ustawienia i liczby elementów, a następnie strona tabel z ich indeksami i relacjami, każda tabela z identyfikatorem, położeniem i rozmiarem na kanwie, liczbą kolumn, nazwą logiczną, jeśli ją ma, oraz grupą tabel, jeśli do jakiejś należy. Jeśli narzędzie nie wyszukuje, po tabelach następują grupy tabel, notatki, a potem domeny, terminy i słowa. |
-| `erd_get` | `tableIds?`, `tableNames?`, `relationshipIds?`, `indexIds?`, `memoIds?`, `tableGroupIds?`, `wordIds?`, `termIds?`, `domainIds?` | Wskazane encje w całości: tabele z kolumnami i grupą tabel, relacje z kolumnami oraz wartościami `onDelete` i `onUpdate`, indeksy z kolumnami, notatki z tekstem, grupy tabel z tabelami oraz słowa, terminy i domeny ze wszystkimi polami. |
+| `erd_list` | `query?`, `offset?`, `limit?`, `namesOnly?` | Ustawienia i liczby elementów, a następnie strona tabel z ich indeksami i relacjami, każda tabela z identyfikatorem, położeniem i rozmiarem na kanwie, liczbą kolumn, nazwą logiczną, jeśli ją ma, oraz grupą tabel, jeśli do jakiejś należy. Jeśli narzędzie nie wyszukuje, po tabelach następują grupy tabel, notatki, każda z grupą tabel, jeśli do jakiejś należy, a potem domeny, terminy i słowa. |
+| `erd_get` | `tableIds?`, `tableNames?`, `relationshipIds?`, `indexIds?`, `memoIds?`, `tableGroupIds?`, `wordIds?`, `termIds?`, `domainIds?` | Wskazane encje w całości: tabele z kolumnami i grupą tabel, relacje z kolumnami oraz wartościami `onDelete` i `onUpdate`, indeksy z kolumnami, notatki z tekstem i grupą tabel, grupy tabel z tabelami i notatkami oraz słowa, terminy i domeny ze wszystkimi polami. |
 | `erd_read` | `format`, `vendor?`, `statements?`, `header?`, `logicalNameAsComment?`, `tableIds?`, `tableNames?`, `groupNames?` | Cały dokument naraz w jednym z czterech formatów albo kod DDL tylko wybranych tabel lub grup tabel. |
 | `erd_list_checks` | `level?`, `tableIds?`, `tableNames?`, `offset?`, `limit?` | Nieprawidłowości wykryte przez słowniki słów, terminów i domen, w takiej postaci, w jakiej wyświetla je arkusz `Checks` karty Słownik w edytorze, strona po stronie. Niczego nie zmienia – zobacz sekcję [Kontrole słowników](#dictionary-checks). |
 
 Agent znajduje identyfikatory za pomocą narzędzia `erd_list`, odczytuje kolumny, wiersze słowników i inne szczegóły za pomocą narzędzia `erd_get` i przekazuje te identyfikatory narzędziom edycji.
 Rozmiar tabeli w wyniku `erd_list` to obszar, który zajmuje ona na kanwie: wysokość jest dokładna, a szerokość przybliżona.
-Grupa tabel jest wymieniana z zapisanym w niej prostokątem, nazwą, kolorem i liczbą zawartych w niej tabel.
+Grupa tabel jest wymieniana z zapisanym w niej prostokątem, nazwą, kolorem i liczbą zawartych w niej tabel i notatek.
 Każda relacja jest wymieniana raz, przy jednej ze swoich dwóch tabel.
 Wiersz słownika jest wymieniany z identyfikatorem, polem `name` i tym, co daje nazwie fizycznej lub kolumnie: polem `dataType` domeny, polami `physicalName` i `domainId` terminu oraz polem `abbreviation` słowa. Każdy słownik wymienia swoje wiersze w kolejności, w jakiej pokazuje je jego arkusz.
 Ustawienia, które podają narzędzia `erd_list` i `erd_read`, to te zapisywane w pliku – zobacz sekcję [Ustawienia](#settings).
@@ -45,7 +45,7 @@ Narzędzie `erd_read` przyjmuje jeden z czterech formatów:
 
 | `format` | Co zwraca |
 | --- | --- |
-| `snapshot` | Zwięzły kod JSON z każdą encją i jej identyfikatorem, łącznie z grupami tabel oraz wierszami słów, terminów i domen, oraz z ustawieniami wraz ze skryptami Schematu SQL. Pomija to, co różni się zależnie od osoby oglądającej: zmierzone szerokości, kolejność warstw, widok, kartę i Widok nazw. Przy dużym schemacie bywa obszerny. |
+| `snapshot` | Zwięzły kod JSON z każdą encją i jej identyfikatorem, łącznie z grupami tabel wraz z ich tabelami i notatkami oraz wierszami słów, terminów i domen, oraz z ustawieniami wraz ze skryptami Schematu SQL. Pomija to, co różni się zależnie od osoby oglądającej: zmierzone szerokości, kolejność warstw, widok, kartę i Widok nazw. Przy dużym schemacie bywa obszerny. |
 | `sql` | Kod DDL dla jednej z ośmiu baz danych: `Databricks`, `MariaDB`, `MSSQL`, `MySQL`, `Oracle`, `PostgreSQL`, `Snowflake` lub `SQLite`. Domyślną wartością argumentu `vendor` jest baza danych ustawiona w dokumencie. Kod DDL całego dokumentu zawiera jego skrypty przed tabelami i po nich. Z argumentem `tableIds`, `tableNames` lub `groupNames` obejmuje tylko te tabele, z kluczami obcymi, które zawierają, i bez skryptów. Klucze obce mają swoje akcje ON DELETE i ON UPDATE, z wyjątkiem tych, które docelowa baza danych pomija – zobacz sekcję [ON DELETE i ON UPDATE](../guide/guides/relationship-editing.md#on-delete-and-on-update). |
 | `json` | Cały dokument dokładnie w takiej postaci, w jakiej trafia do pliku przy zapisie, łącznie ze zmianami, których edytor jeszcze nie zapisał – zobacz sekcję [Postać zapisu](../api/advanced/schema.md#storage-form). |
 | `scripts` | Wyłącznie skrypty dokumentu przed tabelami i po nich, w postaci `{"before":"…","after":"…"}`, każdy pusty, jeśli nie jest ustawiony, bez względu na wielkość schematu. |
@@ -103,6 +103,37 @@ Pole `name` to nazwa obiektu, w przypadku tabeli lub kolumny jej nazwa fizyczna,
 
 To, jak każda kontrola odczytuje nazwę, opisano w sekcji [Co wykrywa każda kontrola](../guide/guides/dictionary.md#what-each-check-finds).
 
+## Eksport SVG {#svg-export}
+
+| Narzędzie | Argumenty | Co robi |
+| --- | --- | --- |
+| `erd_export_svg` | `output?`, `darkMode?`, `background?` | Rysuje dokument jako obraz SVG i zapisuje go do pliku `.svg` wskazanego przez `output` albo, bez `output`, zwraca w odpowiedzi tekst SVG. Nie zmienia żadnego dokumentu. |
+
+Serwer rysuje obraz samodzielnie, więc narzędzie wymaga tylko serwera w wersji `1.2.1` lub nowszej i działa z każdą wersją rozszerzenia lub wtyczki ERD Editor, która się z nim łączy.
+Tak jak `toImage()`, rysuje obraz, który zapisuje jako SVG okno dialogowe `Export image` edytora, ale wyłącznie na podstawie dokumentu: cały diagram w skali 100%, bez tego, co View Option ukrywa w dokumencie, w predefiniowanych kolorach, z tabelami i kolumnami nazwanymi w Widoku nazw, który zawiera dokument, i ze słowami rysowanymi przez sam diagram po angielsku – zobacz sekcję [Co rysuje](../api/to-image.md#what-it-draws).
+Serwer mierzy tekst bez czcionek edytora, więc tabela może wyjść nieco szersza, niż rysuje ją edytor.
+Nie ma formatu PNG ani kopiowania do schowka.
+
+- `darkMode`: `true` rysuje ciemny motyw, a `false`, wartość domyślna, jasny. Żaden motyw z ekranu edytora nie trafia do obrazu.
+- `background`: `true`, wartość domyślna, maluje kolor kanwy za diagramem, a `false` pozostawia tło przezroczyste.
+- `output`: plik do zapisania, ścieżka bezwzględna lub względna wobec katalogu roboczego serwera, z nazwą kończącą się na `.svg` bez względu na wielkość liter, w folderze, który już istnieje. Istniejący tam plik jest zastępowany za pośrednictwem pliku tymczasowego utworzonego obok niego, a dowiązanie symboliczne jest rozwiązywane do pliku, do którego prowadzi.
+
+Eksport odczytuje dokument tak jak narzędzia odczytu: to, co zawiera obsługujący go edytor, łącznie ze zmianami jeszcze niezapisanymi, a w przeciwnym razie plik. Tak jak odczyt, nigdy nie otwiera dokumentu w edytorze.
+Pole `mode` jego odpowiedzi mówi, które z tych źródeł zostało użyte: `live`, `headless` albo, gdy dokument jest otwarty w edytorze z wyłączonym hubem, `blocked`, wraz z uwagą, że narysowano plik z dysku bez zmian jeszcze niezapisanych w tym edytorze – zobacz stronę [Tryby Live i Headless](./live-and-headless.md).
+
+Z argumentem `output` odpowiedzią jest jeden wiersz JSON: `mode`, `path` dokumentu, zapisany `output`, jego rozmiar w polu `bytes`, wartości `width` i `height` obrazu SVG oraz `notes`, jeśli występują.
+
+```json
+{"mode":"headless","path":"/work/shop.erd.json","output":"/work/docs/shop.svg","bytes":48213,"width":1210,"height":764}
+```
+
+Bez argumentu `output` odpowiedzią jest tekst SVG, a po nim `{"mode":"…"}` wraz z ewentualnymi uwagami. Obraz SVG dłuższy niż 40 000 znaków, czyli najwięcej, ile zwraca jedna odpowiedź, jest odrzucany z kodem `tooLarge`: przekaż `output`, aby zamiast tego zapisać go do pliku.
+
+Argument `output` jest sprawdzany przed odczytem dokumentu, więc odrzucony nie kosztuje rysowania: pusty, nazwa niekończąca się na `.svg`, nazwa wskazująca folder oraz dowiązanie, które prowadzi do nieistniejącego pliku albo do pliku o nazwie niekończącej się na `.svg`, są odrzucane z kodem `invalidPath`, a plik w nieistniejącym folderze z kodem `notFound`. Plik tylko do odczytu jest odrzucany z kodem `readonly` po narysowaniu obrazu i pozostaje bez zmian.
+
+Eksport nie tworzy wpisu w historii cofania i niczego nie zostawia do zapisania, a `erd_batch` go odrzuca, tak jak odrzuca narzędzie odczytu.
+Rysowanie dużego diagramu trwa kilka sekund, a serwer wykonuje naraz tylko jeden eksport.
+
 ## Narzędzia edycji {#edit-tools}
 
 Identyfikatory pochodzą z narzędzi `erd_list` i `erd_get` albo z pola `createdIds` wywołania, które utworzyło encję.
@@ -121,7 +152,7 @@ Argumenty `x` i `y` to lewa i górna krawędź na kanwie w pikselach, a kolor to
 | `erd_change_table_color` | `tableId`, `color` | Ustawia kolor tabeli. |
 | `erd_move_table` | `tableId`, `x`, `y` | Przenosi tabelę na podaną pozycję na kanwie. |
 | `erd_move_tables` | `positions` | Przenosi kilka tabel w jednej zmianie, którą cofa jedno wywołanie `erd_undo`. Argument `positions` zawiera `{ tableId, x, y }` dla każdej tabeli, przy czym każda tabela występuje najwyżej raz. |
-| `erd_sort_tables` | | Rozmieszcza wszystkie tabele w wierszach na kanwie, zaczynając od tych z najmniejszą liczbą kolumn, tak jak rozmieszczają je narzędzia `erd_import_sql`, `erd_import_graphql`, `erd_import_dbml` i `erd_import_aml`. Tabele grupy tabel pozostają razem, a ramka każdej grupy zostaje do nich dopasowana. |
+| `erd_sort_tables` | | Rozmieszcza wszystkie tabele w wierszach na kanwie, zaczynając od tych z najmniejszą liczbą kolumn, tak jak rozmieszczają je narzędzia `erd_import_sql`, `erd_import_graphql`, `erd_import_dbml` i `erd_import_aml`. Tabele grupy tabel pozostają razem, a po nich następują jej notatki, dopóki notatki są widoczne, a ramka każdej grupy zostaje do nich dopasowana. Gdy notatki są ukryte, notatki grupy przesuwają się razem z jej tabelami. Notatka nienależąca do żadnej grupy albo należąca do grupy bez tabel pozostaje na swoim miejscu. |
 
 ### Kolumny {#columns}
 
@@ -190,28 +221,33 @@ Identyfikator kolumny indeksu to pozycja na liście kolumn indeksu, którą poda
 | `erd_move_memo` | `memoId`, `x`, `y` | Przenosi notatkę na podaną pozycję na kanwie. |
 | `erd_resize_memo` | `memoId`, `width`, `height` | Zmienia rozmiar notatki. Szerokość musi wynosić co najmniej około `116` pikseli, a wysokość co najmniej `100`. Nie tworzy wpisu w historii cofania, ponieważ edytor rejestruje zmianę rozmiaru notatki tylko przy przeciąganiu. |
 
+Notatka może należeć do jednej grupy tabel i przesuwa się razem z nią – zobacz sekcję [Grupy tabel](#table-groups).
+
 Gdy notatki są ukryte za pomocą [View Option](../guide/guides/table-related-functions.md#table-view-options) → `Memos`, narzędzie `erd_add_memo` nadal dodaje notatkę, która pozostaje ukryta, dopóki notatki nie zostaną ponownie pokazane.
 Narzędzia `erd_list` i `erd_get` wymieniają również ukryte notatki.
 
 ### Grupy tabel {#table-groups}
 
-Grupa tabel to nazwana ramka rysowana za jej tabelami, a jej kolor widać na ramce i na nagłówkach jej tabel – zobacz stronę [Grupy tabel](../guide/guides/table-groups.md).
-Tabela należy najwyżej do jednej grupy. Narzędzia `erd_move_table`, `erd_move_tables` i `erd_move_table_group` nigdy nie zmieniają tego, które tabele należą do grupy, niezależnie od tego, gdzie umieszczą tabelę, natomiast w edytorze tabela dołącza do grupy lub ją opuszcza w zależności od miejsca, w którym zostanie upuszczona – zobacz sekcję [Dodawanie i usuwanie tabel](../guide/guides/table-groups.md#adding-and-removing-tables). Narzędzia `erd_add_table_group` i `erd_set_table_group` umieszczają tabele w grupie, a `erd_remove_table_group` pozostawia jej tabele poza jakąkolwiek grupą.
-Grupa przechowuje prostokąt o szerokości co najmniej `160` pikseli i wysokości co najmniej `100`, łącznie z paskiem tytułu, a edytor rysuje ramkę powiększoną tak, aby mieściła każdą z jej tabel.
+Grupa tabel to nazwana ramka rysowana za jej tabelami i notatkami, a jej kolor widać na ramce i na nagłówkach jej tabel i notatek – zobacz stronę [Grupy tabel](../guide/guides/table-groups.md).
+Tabela lub notatka należy najwyżej do jednej grupy. Narzędzia `erd_move_table`, `erd_move_tables`, `erd_move_memo` i `erd_move_table_group` nigdy nie zmieniają tego, co należy do grupy, niezależnie od tego, gdzie umieszczą tabelę lub notatkę, natomiast w edytorze tabela lub notatka dołącza do grupy lub ją opuszcza w zależności od miejsca, w którym zostanie upuszczona – zobacz sekcję [Dodawanie i usuwanie tabel](../guide/guides/table-groups.md#adding-and-removing-tables). Narzędzie `erd_add_table_group` umieszcza w grupie tabele i notatki, `erd_set_table_group` tabele, a `erd_set_memo_group` notatki, natomiast `erd_remove_table_group` pozostawia jej tabele i notatki poza jakąkolwiek grupą.
+Grupa przechowuje prostokąt o szerokości co najmniej `160` pikseli i wysokości co najmniej `100`, łącznie z paskiem tytułu, a edytor rysuje ramkę powiększoną tak, aby mieściła każdą z jej tabel oraz, dopóki notatki są widoczne, każdą z jej notatek.
 
 | Narzędzie | Argumenty | Co robi |
 | --- | --- | --- |
-| `erd_add_table_group` | `name`, `color?`, `x?`, `y?`, `width?`, `height?`, `tableIds?` | Dodaje grupę i zwraca jej identyfikator w polu `createdIds`. Przekaż albo `tableIds`, albo prostokąt, czyli `x`, `y`, `width` i `height` razem. Z argumentem `tableIds` każda tabela opuszcza grupę, do której należała, a prostokąt zostaje dopasowany do tych tabel tak, jak dopasowuje go [grupowanie zaznaczonych tabel](../guide/guides/table-groups.md#grouping-selected-tables). Prostokąt obejmuje każdą tabelę nienależącą do żadnej grupy, jeśli jej środek leży w jego obrębie, tak jak [rysowanie grupy](../guide/guides/table-groups.md#drawing-a-group). Pusta wartość `name` pozostawia grupę bez nazwy. Jedno wywołanie `erd_undo` usuwa grupę i przywraca każdą tabelę do grupy, w której była. |
-| `erd_remove_table_group` | `groupId` | Usuwa grupę. Jej tabele pozostają na swoich miejscach, poza jakąkolwiek grupą. |
+| `erd_add_table_group` | `name`, `color?`, `x?`, `y?`, `width?`, `height?`, `tableIds?`, `memoIds?` | Dodaje grupę i zwraca jej identyfikator w polu `createdIds`. Przekaż albo `tableIds`, z ewentualnymi `memoIds` obok nich, albo prostokąt, czyli `x`, `y`, `width` i `height` razem. Z argumentem `tableIds` każda tabela i notatka opuszcza grupę, do której należała, a prostokąt zostaje dopasowany do nich, do notatek tylko dopóki są widoczne, tak jak dopasowuje go [grupowanie zaznaczonych tabel](../guide/guides/table-groups.md#grouping-selected-tables). Prostokąt obejmuje każdą tabelę i każdą widoczną notatkę, które nie należą do żadnej grupy i których środek leży w jego obrębie, tak jak [rysowanie grupy](../guide/guides/table-groups.md#drawing-a-group). Pusta wartość `name` pozostawia grupę bez nazwy. Jedno wywołanie `erd_undo` usuwa grupę i przywraca każdą tabelę i notatkę do grupy, w której była. |
+| `erd_remove_table_group` | `groupId` | Usuwa grupę. Jej tabele i notatki pozostają na swoich miejscach, poza jakąkolwiek grupą. |
 | `erd_change_table_group_name` | `groupId`, `value` | Zmienia nazwę grupy. Pusty ciąg znaków pozostawia ją bez nazwy. |
 | `erd_change_table_group_color` | `groupId`, `color` | Ustawia kolor grupy. |
-| `erd_move_table_group` | `groupId`, `x`, `y` | Przenosi grupę tak, aby jej prostokąt zaczynał się w podanym punkcie, i przesuwa jej tabele o tyle samo, tak jak przeciąganie jej paska tytułu. Przesunięcie o mniej niż 20 pikseli, licząc łącznie w poziomie i w pionie, nie tworzy wpisu w historii cofania. Od wersji serwera `1.2.0` przesunięcie dociera do edytora jako punkty docelowe grupy i jej tabel, więc przy rozszerzeniu VS Code w wersji `4.3.0` lub nowszej albo wtyczce Obsidian lub JetBrains w wersji `1.3.0` lub nowszej przesunięcie grupy lub jednej z jej tabel wykonane tam w tej samej chwili kończy się na jednej z tych dwóch pozycji, nigdy na ich sumie – zobacz sekcję [Edycje wykonane w tej samej chwili](./live-and-headless.md#edits-made-at-the-same-moment). |
-| `erd_resize_table_group` | `groupId`, `x?`, `y?`, `width`, `height` | Ustawia prostokąt grupy, a jej tabele pozostają na swoich miejscach. Pominięcie `x` i `y` zachowuje jego narożnik. Prostokąt, który nie pomieściłby tabel grupy wraz z ich marginesem, jest odrzucany z komunikatem podającym obszar, który musi pomieścić. |
+| `erd_move_table_group` | `groupId`, `x`, `y` | Przenosi grupę tak, aby jej prostokąt zaczynał się w podanym punkcie, i przesuwa jej tabele i notatki, także ukryte, o tyle samo, tak jak przeciąganie jej paska tytułu. Przesunięcie o mniej niż 20 pikseli, licząc łącznie w poziomie i w pionie, nie tworzy wpisu w historii cofania. Od wersji serwera `1.2.0` przesunięcie dociera do edytora jako punkty docelowe grupy i jej tabel, więc przy rozszerzeniu VS Code w wersji `4.3.0` lub nowszej albo wtyczce Obsidian lub JetBrains w wersji `1.3.0` lub nowszej przesunięcie grupy lub jednej z jej tabel wykonane tam w tej samej chwili kończy się na jednej z tych dwóch pozycji, nigdy na ich sumie – zobacz sekcję [Edycje wykonane w tej samej chwili](./live-and-headless.md#edits-made-at-the-same-moment). Od wersji serwera `1.2.1` punkty docelowe jej notatek trafiają do tego samego pakietu. |
+| `erd_resize_table_group` | `groupId`, `x?`, `y?`, `width`, `height` | Ustawia prostokąt grupy, a jej tabele i notatki pozostają na swoich miejscach. Pominięcie `x` i `y` zachowuje jego narożnik. Prostokąt, który nie pomieściłby tabel i widocznych notatek grupy wraz z ich marginesem, jest odrzucany z komunikatem podającym obszar, który musi pomieścić. |
 | `erd_set_table_group` | `tableIds`, `groupId` | Umieszcza tabele w grupie, a każda z nich opuszcza grupę, do której należała. Argument `groupId` z wartością `null` lub pustym ciągiem znaków wyjmuje je ze wszystkich grup. |
+| `erd_set_memo_group` | `memoIds`, `groupId` | Umieszcza notatki w grupie, a każda z nich opuszcza grupę, do której należała, i pozostaje na swoim miejscu. Argument `groupId` z wartością `null` lub pustym ciągiem znaków wyjmuje je ze wszystkich grup. |
 
 Gdy grupy są ukryte za pomocą `View Option` → `Table Groups`, te narzędzia nadal dodają i zmieniają grupy, które pozostają ukryte, dopóki grupy nie zostaną pokazane – zobacz sekcję [Ukrywanie grup](../guide/guides/table-groups.md#hiding-groups).
-Narzędzie `erd_sort_tables` utrzymuje tabele każdej grupy razem, `erd_import_dbml` i `erd_import_json` wczytują grupy – zobacz sekcję [Import](#import) – a `erd_read` generuje kod DDL wybranych grup za pomocą argumentu `groupNames`.
+Notatki ukryte za pomocą View Option → `Memos` pozostają w swoich grupach i przesuwają się razem z nimi, a `erd_set_memo_group` i argument `memoIds` narzędzia `erd_add_table_group` umieszczają je w grupie tak samo jak notatki widoczne.
+Narzędzie `erd_sort_tables` utrzymuje tabele i notatki każdej grupy razem, `erd_import_dbml` i `erd_import_json` wczytują grupy – zobacz sekcję [Import](#import) – a `erd_read` generuje kod DDL wybranych grup za pomocą argumentu `groupNames`.
 Wersja ERD Editor wydana przed wprowadzeniem grup tabel usuwa grupy z pliku przy jego zapisywaniu, tak jak rozszerzenie VS Code w wersji starszej niż `4.0.0` oraz wtyczki Obsidian i JetBrains w wersji starszej niż `1.0.0` – zobacz sekcję [Aktualizacja](./installation.md#updating).
+Wersja ERD Editor wydana, zanim notatki mogły należeć do grup tabel, czyli rozszerzenie VS Code w wersji starszej niż `4.3.1` oraz wtyczki Obsidian i JetBrains w wersji starszej niż `1.3.1`, nie pokazuje ani nie zachowuje tego, do której grupy należy notatka, więc zapisuje plik z każdą notatką poza jakąkolwiek grupą, tak samo jak serwer w wersji starszej niż `1.2.1`, który zapisuje plik na dysku – zobacz sekcję [Aktualizacja](./installation.md#updating).
 
 ### Słowniki {#dictionaries}
 
@@ -304,14 +340,14 @@ Tryb `append` dodaje importowaną zawartość do dokumentu, tak jak operacja [Im
 - Relacje i indeksy obejmują tylko tabele wnoszone przez import, więc klucz obcy do tabeli, której tekst nie deklaruje, jest pomijany.
 - `erd_import_sql`, `erd_import_graphql` i `erd_import_aml` dodają tabele wraz z ich relacjami i indeksami, a `erd_import_dbml` także swoje grupy tabel. `erd_import_json` dodaje tabele, relacje, indeksy, notatki i grupy tabel, ale nigdy swoich ustawień, i odrzuca pusty tekst. Jego tabele i kolumny wnoszą swoje nazwy logiczne, ale żadna kolumna nie jest powiązana z domeną i do dokumentu nie trafia żadne słowo, termin ani domena z kodu JSON.
 
-Dokument JSON zachowuje własny układ, łącznie z grupami tabel: w trybie `replace` w miejscach, w których umieszcza swoje tabele, a w trybie `append` wewnątrz dodanego bloku.
+Dokument JSON zachowuje własny układ, łącznie z grupami tabel wraz z tabelami i notatkami, które każda z nich zawiera: w trybie `replace` w miejscach, w których umieszcza swoje tabele, a w trybie `append` wewnątrz dodanego bloku.
 Tabele z kodu SQL, GraphQL, DBML i AML są rozmieszczane w wierszach, od tych z najmniejszą liczbą kolumn, z tabelami każdej grupy razem, tak jak rozmieszcza je `erd_sort_tables`, a nigdy w układzie `Flow`, w którym import samego edytora układa je, gdy jest to możliwe. Te cztery narzędzia odrzucają pusty tekst w obu trybach.
 
 ## erd_batch {#erd_batch}
 
 Narzędzie `erd_batch` uruchamia kolejno kilka narzędzi edycji jako jedną zmianę, na zasadzie „wszystko albo nic”.
 
-- Argument `operations` zawiera do 100 pozycji, każdą w postaci `{ tool, as?, args? }`, gdzie `tool` to narzędzie edycji, a `args` to argumenty narzędzia bez `path`. Narzędzie odczytu, takie jak `erd_list_checks`, jest odrzucane.
+- Argument `operations` zawiera do 100 pozycji, każdą w postaci `{ tool, as?, args? }`, gdzie `tool` to narzędzie edycji, a `args` to argumenty narzędzia bez `path`. Narzędzie odczytu, takie jak `erd_list_checks`, jest odrzucane, podobnie jak narzędzie `erd_export_svg`.
 - Operacje są najpierw wykonywane na próbę na kopii dokumentu. Odrzucona operacja jest wskazywana, na przykład `operations[1] erd_remove_table: …`, i nic nie zostaje zastosowane.
 - Jedno wywołanie `erd_undo` cofa cały pakiet, z wyjątkiem operacji, których nie może cofnąć, a które wymienia pole `undoNote` wyniku: operacji wykonanych narzędziem, które nie tworzy wpisu w historii cofania, na przykład `erd_set_database`, oraz operacji, które zmieniły dokument bez utworzenia takiego wpisu, na przykład krótkiego przesunięcia za pomocą `erd_move_table_group`. Narzędzie `erd_undo` pomija pakiet, który nie utworzył żadnego wpisu w historii cofania. Pole `historyEntries` w wyniku liczy wpisy w historii edytora w obrębie pakietu, a nie wywołania `erd_undo`.
 - W sesji w trybie Live edytor przyjmuje cały pakiet albo żadnej jego części.
@@ -391,21 +427,21 @@ Odrzucenie to wynik błędu zawierający kod i komunikat z informacją, co zrobi
 
 | `code` | Przyczyna |
 | --- | --- |
-| `notFound` | Identyfikator nie wskazuje niczego, co obecnie istnieje, albo plik nie istnieje. |
+| `notFound` | Identyfikator nie wskazuje niczego, co obecnie istnieje, plik nie istnieje albo nie istnieje folder argumentu `output` narzędzia `erd_export_svg`. |
 | `invalidArgs` | Brakuje argumentu lub ma on niewłaściwą wartość. |
-| `invalidPath` | Ścieżka nie prowadzi do dokumentu ERD. W systemie Windows także ścieżka z nazwą, której Windows nie zapisuje w podanej postaci, lub ścieżka prowadząca do dokumentu, który edytor ma pod inną ścieżką, podaną w komunikacie. |
+| `invalidPath` | Ścieżka nie prowadzi do dokumentu ERD albo argument `output` narzędzia `erd_export_svg` nie wskazuje pliku `.svg` – zobacz sekcję [Eksport SVG](#svg-export). W systemie Windows także ścieżka z nazwą, której Windows nie zapisuje w podanej postaci, lub ścieżka prowadząca do dokumentu, który edytor ma pod inną ścieżką, podaną w komunikacie. |
 | `invalidDocument` | Plik nie jest dokumentem, który edytor potrafi odczytać. |
-| `tooLarge` | Odczyt nie mieści się w jednej odpowiedzi. |
+| `tooLarge` | Odczyt lub obraz SVG żądany bez argumentu `output` nie mieści się w jednej odpowiedzi. |
 | `blocked` | Dokument należy do edytora z wyłączonym hubem. Komunikat podaje, jak go włączyć: w VS Code zaufaj obszarowi roboczemu i włącz ustawienie `dineug.erd-editor.agentHub.enabled` albo przeładuj okno; w aplikacji Obsidian włącz opcję Coding agents albo przeładuj aplikację Obsidian; w IDE JetBrains włącz opcję Coding agents albo, jeśli jest już włączona, uruchom ponownie IDE. |
 | `hubDisabled` | W IDE JetBrains dokument należy tylko do projektu, któremu IDE nie ufa. Odczyty nadal działają; zaufaj projektowi, aby agent mógł edytować. |
 | `conflict` | Plik zmienił się na dysku w trakcie wywołania. Nic nie zostało zapisane. |
 | `hubAppeared`, `hubGone` | Edytor zaczął obsługiwać dokument, który agent edytował na dysku, albo edytor, który go obsługiwał, nadal działa, ale jego plik blokady i połączenie zniknęły. Nic nie zostało zapisane. |
 | `notSaved` | Narzędzie `erd_save` nie mogło zapisać dokumentu edytora. |
-| `readonly` | Edytor ma dokument w trybie tylko do odczytu, np. plik, którego nie może zapisać lub nie potrafi odczytać jako diagramu. Gdy nie ma edytora, sam plik jest tylko do odczytu, np. plik Perforce lub TFVC, który nie został wyewidencjonowany. Nic nie zostało zapisane. |
+| `readonly` | Edytor ma dokument w trybie tylko do odczytu, np. plik, którego nie może zapisać lub nie potrafi odczytać jako diagramu. Gdy nie ma edytora, sam plik jest tylko do odczytu, np. plik Perforce lub TFVC, który nie został wyewidencjonowany. W przypadku `erd_export_svg` tylko do odczytu jest plik `.svg` wskazany przez `output`. Nic nie zostało zapisane. |
 | `protocolMismatch` | Rozszerzenie lub wtyczka ERD Editor w edytorze i serwer używają różnych wersji protokołu, np. serwer w wersji `1.0.0` lub nowszej z rozszerzeniem VS Code w wersji `3.x`. Odczyty również są odrzucane, a komunikat wskazuje stronę, którą trzeba zaktualizować – zobacz sekcję [Aktualizacja](./installation.md#updating). |
 | `hubUnreachable`, `timeout`, `disconnected` | Hub edytora nie przyjął połączenia, nie odpowiedział w ciągu 30 sekund lub rozłączył się w trakcie wywołania. W systemie Windows `hubUnreachable` oznacza także, że Windows nie dopuścił agenta do huba: edytor działa z wyższymi uprawnieniami niż agent, np. gdy został uruchomiony jako administrator, a agent nie, albo agent działa w piaskownicy. |
 
 Inne kody występują rzadziej, a każde odrzucenie zawiera komunikat z informacją, co się stało.
 
-Narzędzia edycji, `erd_batch` i cztery narzędzia odczytu odrzucają argument, którego nie deklarują, lub argument niewłaściwego typu błędem JSON-RPC invalid params (`-32602`), zanim dotkną dokumentu, więc argument z literówką nigdy nie jest po cichu pomijany.
+Narzędzia edycji, `erd_batch`, cztery narzędzia odczytu i `erd_export_svg` odrzucają argument, którego nie deklarują, lub argument niewłaściwego typu błędem JSON-RPC invalid params (`-32602`), zanim dotkną dokumentu, więc argument z literówką nigdy nie jest po cichu pomijany.
 Pięć narzędzi sesji ignoruje argumenty, których nie znają.

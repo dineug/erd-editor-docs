@@ -51,7 +51,7 @@ Tabel dan kolom dari file JSON mempertahankan nama logisnya, dan setiap nama fis
 Tabel yang namanya sudah ada di diagram ditambahkan sebagai tabel kedua dengan nama tersebut, bukan digabungkan dengannya. Hubungan dan indeks hanya berasal dari file, sehingga kunci asing ke tabel yang tidak didefinisikan file tidak ditautkan ke tabel yang sudah ada di diagram.
 
 Blok yang ditambahkan ditempatkan tepat di bawah semua isi diagram, sejajar dengan tepi kirinya, atau di kiri atas jika diagram kosong. Memo dan grup tabel yang disembunyikan dengan [opsi tampilan](./table-related-functions.md#table-view-options) juga ikut dihitung, karena keduanya masih berada di tempatnya.  
-Di dalam blok, file JSON mempertahankan susunannya sendiri, termasuk grup tabelnya. Format lainnya ditempatkan seperti yang dilakukan `Import`, dengan `Flow` atau dalam baris berdasarkan aturan yang sama, dan kotak setiap grup tabel disesuaikan mengelilingi tabelnya. Tabel dan memo yang ditambahkan ditumpuk di atas semua yang sudah ada.
+Di dalam blok, file JSON mempertahankan susunannya sendiri, termasuk grup tabelnya, dan memo di salah satu grupnya mendarat di salinan baru grup itu. Format lainnya ditempatkan seperti yang dilakukan `Import`, dengan `Flow` atau dalam baris berdasarkan aturan yang sama, dan kotak setiap grup tabel disesuaikan mengelilingi tabelnya. Tabel dan memo yang ditambahkan ditumpuk di atas semua yang sudah ada.
 
 Begitu blok ditempatkan, hanya yang ditambahkan yang dipilih: tabel baru, serta memo dan grup tabel baru selama keduanya ditampilkan. Jika Anda berpindah ke tab lain sementara itu, editor kembali ke tab ERD sebelum blok ditempatkan. Area pandang kemudian bergulir ke blok pada tingkat zoom saat ini, kecuali jika area pandang sudah menampilkannya dengan baik — lihat [Tempat lompatan berakhir](./table-related-functions.md#where-a-jump-lands). Satu kali pembatalan menarik kembali seluruh penambahan.  
 File yang tidak dapat dibaca parser, atau file tanpa tabel dan tanpa memo, tidak menambahkan apa pun.
@@ -205,7 +205,7 @@ Nama file harus berakhiran `.aml`.
 
 GraphQL, DBML, dan AML adalah format dua arah: masing-masing juga merupakan target [Generator Kode](./code-generator.md).  
 DBML dan AML membawa ON DELETE dan ON UPDATE setiap hubungan dalam dua arah — lihat [Generator Kode](./code-generator.md#on-delete-and-on-update). GraphQL tidak membawa keduanya, sehingga impor GraphQL membiarkan keduanya `Not set`.  
-DBML juga membawa warna tabel, tanpa transparansinya, dan setiap grup tabel yang berisi tabel, dalam dua arah. Grup tanpa nama kembali sebagai `group_1`, `group_2`, dan seterusnya, dan nama grup yang berulang kembali dengan tambahan `_2`, `_3`, dan seterusnya. AML membawa warna tabel hanya sebagai nama warnanya yang terdekat, sehingga `#FF8800` ditulis sebagai `orange` dan kembali sebagai `#f97316`, dan AML tidak membawa grup. GraphQL tidak membawa warna maupun grup.  
+DBML juga membawa warna tabel, tanpa transparansinya, dan setiap grup tabel yang berisi tabel, dalam dua arah, dengan tabelnya tetapi tanpa memonya — lihat [Impor, ekspor, dan penyalinan](./table-groups.md#import-export-and-copying). Grup tanpa nama kembali sebagai `group_1`, `group_2`, dan seterusnya, dan nama grup yang berulang kembali dengan tambahan `_2`, `_3`, dan seterusnya. AML membawa warna tabel hanya sebagai nama warnanya yang terdekat, sehingga `#FF8800` ditulis sebagai `orange` dan kembali sebagai `#f97316`, dan AML tidak membawa grup. GraphQL tidak membawa warna maupun grup.  
 Ketiganya tidak membawa nama logis, tautan domain, maupun kamus, ke arah mana pun: Generator Kode menulis nama fisik dan tipe data setiap tabel dan kolom, tidak pernah nama logis atau domain.
 
 ## Mengekspor {#exporting}
@@ -254,3 +254,5 @@ Gambar dirender di worker latar belakang jika host menjalankannya, sehingga edit
 
 `PNG` mendapat fokus saat dialog dibuka, dan `Tab` tetap berada di dalam dialog. `Escape`, tombol `x`, atau klik pada area yang diredupkan di sekitarnya menutup dialog.  
 Selama dialog terbuka, pintasan kanvas, termasuk Batalkan dan Ulangi, serta salin dan tempel tidak melakukan apa pun. `Ctrl + K` (Windows/Linux) atau `⌘ + K` (Mac) menutup dialog dan membuka Pencarian Cepat. `Ctrl + F` (Windows/Linux) atau `⌘ + F` (Mac) menutup dialog dan menempatkan kursor teks di kotak Temukan pada [Penjelajah](./explorer.md#opening-and-closing), dan membuka Penjelajah jika tertutup, tidak pernah menutupnya. Di editor yang terlalu sempit untuk menampilkan Penjelajah, pintasan ini tetap menutup dialog tetapi menampilkan notifikasi alih-alih memindahkan kursor teks.
+
+Agen pemrograman menggambar diagram sebagai SVG dengan `erd_export_svg`, dari dokumen dan bukan dari layar Anda — lihat [Ekspor SVG](../../mcp/tools.md#svg-export).

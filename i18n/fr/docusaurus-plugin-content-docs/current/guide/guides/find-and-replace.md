@@ -93,7 +93,7 @@ Tant que le champ Rechercher contient du texte, l’[arborescence](./explorer.md
 
 - `Tables`, `Table Groups` et `Memos` n’apparaissent que lorsqu’ils contiennent une correspondance, et le nombre affiché sur chaque dossier est le nombre de lignes directement sous lui dans les résultats.
 - Sous `Tables` viennent les tables qui contiennent une correspondance, triées par nom, jamais par nom logique. Sous chaque table viennent une ligne pour chaque correspondance de son commentaire, puis un dossier `Columns` avec les colonnes qui contiennent une correspondance, dans l’ordre des colonnes, chacune avec une ligne pour chaque correspondance de son commentaire, puis un dossier `Indexes` avec les index dont le nom correspond. Il n’y a pas de dossier `Foreign Keys`.
-- Sous `Table Groups` viennent les groupes dont le nom correspond, triés par nom, sans leurs tables. Une table trouvée apparaît sous `Tables`.
+- Sous `Table Groups` viennent les groupes dont le nom correspond, triés par nom, sans leurs tables ni leurs mémos. Une table trouvée apparaît sous `Tables`, et un mémo sous `Memos`.
 - Sous `Memos` viennent les mémos qui contiennent une correspondance, dans l’ordre du document, chacun représenté par sa première ligne de texte et accompagné d’une ligne pour chaque correspondance qu’il contient.
 
 Une correspondance dans un nom est mise en évidence dans la ligne de ce nom, si bien qu’un nom qui contient deux fois la requête forme une seule ligne avec deux mises en évidence. Une correspondance dans le nom logique d’une table ou d’une colonne apparaît elle aussi sur la ligne de cette table ou de cette colonne, jamais sur une ligne à part.  
@@ -127,7 +127,7 @@ Aller à une correspondance ferme la boîte de dialogue Propriétés de la table
 
 - Pour le nom, le nom logique ou le commentaire d’une table ou d’une colonne, sélectionne la table seule, la met au premier plan et place la cellule active sur la cellule qui contient la correspondance. Une correspondance dans un commentaire masqué par une [option d’affichage des tables](./table-related-functions.md#table-view-options) place plutôt la cellule active sur le nom voisin. Là où l’[affichage des noms](./logical-names.md#name-view) ne dessine aucune cellule pour le nom ou le nom logique, la cellule active va sur celle qui est dessinée à sa place : le nom dans la vue `Physical Names`, le nom logique dans la vue `Logical Names`.
 - Pour un nom d’index, sélectionne la table de l’index seule et la met au premier plan, en plaçant la cellule active sur le nom de la table, ou sur son nom logique dans les vues `Logical Names` et `Both Names`, sauf si elle est déjà dans cette table. Les noms d’index ne sont pas dessinés sur le canevas.
-- Pour un nom de groupe de tables, sélectionne le groupe seul et le met au premier plan avec ses tables.
+- Pour un nom de groupe de tables, sélectionne le groupe seul et le met au premier plan avec ses tables et ses mémos.
 - Pour un mémo, sélectionne le mémo seul et le met au premier plan.
 
 Le canevas ne défile que si l’élément visé n’est pas déjà bien visible, et le zoom ne change jamais (voir [Où aboutit un saut](./table-related-functions.md#where-a-jump-lands)).

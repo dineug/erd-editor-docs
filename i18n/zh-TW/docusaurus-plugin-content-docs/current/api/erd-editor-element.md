@@ -201,7 +201,7 @@ editor.setAttribute('enable-welcome-screen', 'true');
 
 以 JSON 字串取得目前的文件，格式為編輯器所定義的[結構描述](./advanced/schema.md)。  
 自 `4.0.0` 起，它是儲存形式，也就是檔案所保存的文件形式，這也是 `json` 匯出所寫出和官方主應用程式所儲存的內容。它只保存現存的實體，不含已移除的實體、堆疊順序，以及編輯器自行計算出的資訊，例如測得的寬度、鍵標記和關聯錨點。其實體的鍵依固定順序排列，以兩個空格縮排，並以換行字元結尾，因此同一份文件一律會產生相同的位元組。  
-自 `4.2.0` 起，它也會省略空的內容：空的 `doc` 清單、空的集合、不含任何內容的字典列，以及實體中空的文字屬性，例如名稱、註解、資料類型、預設值或顏色。實體內的清單（例如資料表的 `columnIds`）即使為空也仍會寫出。新文件的 `doc` 為 `{}`，且沒有 `collections`，因此請將缺少的屬性、清單或集合視為空的。它保存資料表和欄位的邏輯名稱與標示名稱是否由字典產生的旗標、欄位的定義域連結，以及詞彙、術語和定義域；每個字典都寫成一個由屬性名稱組成的標頭，後接其各列，每列佔一行，依工作表中的順序排列。請參閱[儲存形式](./advanced/schema.md#storage-form)。  
+自 `4.2.0` 起，它也會省略空的內容：空的 `doc` 清單、空的集合、不含任何內容的字典列，以及實體中空的文字屬性，例如名稱、註解、資料類型、預設值或顏色。實體內的清單（例如資料表的 `columnIds`）即使為空也仍會寫出。新文件的 `doc` 為 `{}`，且沒有 `collections`，因此請將缺少的屬性、清單或集合視為空的。它保存資料表和欄位的邏輯名稱與標示名稱是否由字典產生的旗標、欄位的定義域連結，以及詞彙、術語和定義域；每個字典都寫成一個由屬性名稱組成的標頭，後接其各列，每列佔一行，依工作表中的順序排列。自 `5.1.1` 起，它也包含每個備忘錄所屬的資料表群組。請參閱[儲存形式](./advanced/schema.md#storage-form)。  
 [鎖定](../guide/guides/settings.md#lock)為開啟的每項設定，都會以其鎖定的值寫出，而非畫面上顯示的值。`Viewport` 鎖定保存 `originX`、`originY` 和 `zoomLevel`，`Canvas Type`、`Language`、`Table Name Case`、`Column Name Case`、`Bracket Type`，以及自 `4.2.0` 起的 `Name View`，則各自保存其對應的設定。「名稱顯示」會寫成 `nameViewMode`，且只在其值不是 `'physical'` 時寫出。其他所有設定都會依目前狀態寫出，且一律會寫出 `lockSettings`。關於各個位元，請參閱 [Settings](./advanced/schema.md#settings)；`Name View` 鎖定的位元含義正好相反。  
 自 `5.0.0` 起，[唯讀](#readonly)編輯器的讀者所變更的設定，無論是否鎖定，也都會以文件的值寫出，因為它們只會留在該畫面上。  
 新文件的所有鎖定都是開啟的，不論是元素在被賦予值之前顯示的文件，或是從空白值載入的文件。在關閉對應的鎖定之前，其 `value` 會將原點保持在 `0, 0`、縮放比例保持在 `1`，並維持 ERD 索引標籤、預設的程式碼產生器語言、名稱大小寫和引號類型，以及自 `4.2.0` 起的 `Physical Names`。  
@@ -221,7 +221,7 @@ const data = editor.value;
 它接受儲存形式、[runtimeValue](#runtimevalue)，或舊版本儲存的檔案。  
 空白字串或任何非字串的值，都會載入新文件，而不會引發錯誤，因此請在指派前先檢查該值。  
 該新文件與 `setInitialValue('')` 建立的文件相同：內容為空、使用預設設定，且自 `4.0.0` 起所有鎖定皆為開啟。在 `3.10.x` 中，它既不儲存捲動位置也不儲存縮放比例，更早的版本則兩者都會儲存。  
-共用存放區會以新文件的完整 JSON 將這次載入轉送給協作者，因此每個對等端（包括舊版本）都會載入它，不過 `4.2.0` 之前的編輯器會捨棄其無法辨識的內容，例如邏輯名稱、定義域連結和字典，請參閱[混用不同版本](./advanced/collaborative-editing.md#mixing-releases)。  
+共用存放區會以新文件的完整 JSON 將這次載入轉送給協作者，因此每個對等端（包括舊版本）都會載入它，不過 `4.2.0` 之前的編輯器會捨棄其無法辨識的內容，例如邏輯名稱、定義域連結和字典，而 `5.1.1` 之前的編輯器還會捨棄備忘錄的資料表群組，請參閱[混用不同版本](./advanced/collaborative-editing.md#mixing-releases)。  
 自 `4.0.0` 起，所載入文件的鎖定，以及 `value` 之後寫出的鎖定的值，都來自該文字，檢視會落在文字所指定的位置，若該處未繪製任何圖表內容，則落在圖表上。對於文字所鎖定的其他各項設定（索引標籤、程式碼產生器語言、名稱大小寫、引號類型，以及自 `4.2.0` 起的「名稱顯示」），編輯器會持續顯示載入前所顯示的內容。文字未鎖定的設定則採用文字中的值。在 `4.2.0` 之前儲存的檔案不會指定 `Name View` 鎖定，除非有 `4.2.0` 的編輯器在其中關閉了該鎖定，因此這類檔案載入時，「名稱顯示」會鎖定在 `Physical Names`，而編輯器會維持其原先顯示的「名稱顯示」。[setInitialValue](#setinitialvalue) 則會採用文字所保存的所有值；關於未指定任何鎖定的文字，也請參閱該節。  
 非 JSON 的文字（例如殘留合併衝突標記的檔案）也不會引發錯誤：文件會被清空，其設定維持原樣，剖析錯誤則會記錄到主控台。  
 設定 `readonly` 期間它會被忽略；若要載入到唯讀編輯器，請使用 [setInitialValue](#setinitialvalue)。
@@ -234,7 +234,7 @@ editor.value = 'json...';
 
 自 `4.0.0` 起，以 JSON 字串取得此編輯器所保存的文件。它沒有 setter，因此在嚴格模式的程式碼中指派它會擲回錯誤。  
 它包含 [value](#value) 所省略的內容：已移除的實體及其順序、堆疊順序、測得的寬度、鍵標記、每個關聯的旗標（是否為識別關聯，以及其父端的繪製方式）與錨點，以及序列。  
-自 `4.2.0` 起，它也會保留 `value` 所省略的空內容：實體中空的文字，例如名稱、註解、資料類型、預設值、顏色或備忘錄文字；`doc` 清單 `tableIds`、`relationshipIds`、`indexIds` 和 `memoIds`，以及集合 `tableEntities` 到 `memoEntities`，即使為空也會寫出；文件持有群組或已移除的群組時的資料表群組清單與集合；以及任一者持有項目時的每個字典及其 `doc` 清單。它會保留只有空白字元的邏輯名稱、指向已移除定義域的連結、從字典工作表中移除的列，以及不含任何內容的列。如同 `value`，值為 `''` 的邏輯名稱、定義域連結或資料表群組，以及資料表中為關閉狀態的「名稱由字典產生」旗標，都會省略。  
+自 `4.2.0` 起，它也會保留 `value` 所省略的空內容：實體中空的文字，例如名稱、註解、資料類型、預設值、顏色或備忘錄文字；`doc` 清單 `tableIds`、`relationshipIds`、`indexIds` 和 `memoIds`，以及集合 `tableEntities` 到 `memoEntities`，即使為空也會寫出；文件持有群組或已移除的群組時的資料表群組清單與集合；以及任一者持有項目時的每個字典及其 `doc` 清單。它會保留只有空白字元的邏輯名稱、指向已移除定義域的連結、從字典工作表中移除的列，以及不含任何內容的列。如同 `value`，值為 `''` 的邏輯名稱、定義域連結、資料表的群組（自 `5.1.1` 起也包括備忘錄的群組），以及資料表中為關閉狀態的「名稱由字典產生」旗標，都會省略。  
 每個字典如檔案中一樣是標頭加上各列，但其標頭會在 `"name"` 之後緊接著列出 `"order"`（每列的排序鍵），且其各列依編輯器持有的順序排列（包括已移除的列），而不是工作表中的順序。要取得工作表中的順序，請取其 `doc` 清單所指名的列，依 `order` 以碼元順序比較排序，鍵相同的列再依 `id` 排序。  
 其設定的寫法與 `value` 相同，每個鎖定的設定都以其鎖定的值寫出。它以兩個空格縮排，每個字典列各佔一行，且與 `value` 不同的是，它不以換行字元結尾。  
 透過 [setInitialValue](#setinitialvalue)，以它初始化要加入已在執行中工作階段的另一個編輯器，例如協作者或同一份文件的第二個檢視。如此一來，當工作階段之後傳來某次移除的復原時，就能在該處完整還原該實體，而以 `value` 初始化的編輯器不保存任何已移除的實體，只會改為還原一個空白、未命名的資料表，或自 `4.2.0` 起還原一個空的字典列。請參閱[協作編輯](./advanced/collaborative-editing.md)。  
@@ -373,7 +373,7 @@ editor.destroy();
 自 `3.10.0` 起，`search` 可以重新定義，並新增了 `findReplace`。在此之前，`search` 是固定的。自 `4.0.0` 起，新增了 `removeSelection`。自 `4.1.0` 起，新增了 `addTableGroup` 和 `groupSelectedTables`。  
 按鍵繫結的值必須是 `ShortcutOption[]`。單純的字串會被忽略，因此請寫成 `{ addTable: [{ shortcut: 'Alt+KeyN' }] }`，而不是 `{ addTable: 'Alt+KeyN' }`。  
 空陣列也會被接受，且不會繫結任何按鍵：`setKeyBindingMap({ findReplace: [] })` 會將 `Ctrl + F` (Windows/Linux) 或 `⌘ + F` (Mac) 留給頁面，`{ search: [] }` 對 `Ctrl + K` (Windows/Linux) 或 `⌘ + K` (Mac) 也是如此。工具列的 `Search` 按鈕仍會開啟快速搜尋，工具列的 `Explorer` 按鈕仍會開啟和關閉物件總管，快速搜尋和畫布的右鍵選單中的 `Toggle Explorer` 也仍會開啟其搜尋或將其關閉；對於留空的名稱，這些位置都不會顯示快速鍵。`{ removeSelection: [] }` 會將 `Delete` 和 `Backspace` 留給頁面，此時資料表、備忘錄和資料表群組選單中的刪除項目（`Delete`、`Delete selected`、`Delete column`、`Delete columns`）都不會顯示快速鍵。  
-自 `4.1.0` 起，`{ addTableGroup: [] }` 會將 `Alt + G` (Windows/Linux) 或 `⌥ + G` (Mac) 留給頁面，`{ groupSelectedTables: [] }` 則會將先按 `T` 再按 `G` 留給頁面。畫布工具列、畫布的右鍵選單和快速搜尋中的 `New Table Group`、資料表選單中的 `Group selected tables`，以及快速搜尋中的 `Group Selected Tables` 仍可使用，只是不會顯示快速鍵。畫布工具列的 `New Table`、`New Memo` 和 `New Table Group` 按鈕的工具提示，會列出 `addTable`、`addMemo` 和 `addTableGroup` 的第一個按鍵組合，按鍵繫結留空時則只列出按鈕名稱。  
+自 `4.1.0` 起，`{ addTableGroup: [] }` 會將 `Alt + G` (Windows/Linux) 或 `⌥ + G` (Mac) 留給頁面，`{ groupSelectedTables: [] }` 則會將先按 `T` 再按 `G` 留給頁面。畫布工具列、畫布的右鍵選單和快速搜尋中的 `New Table Group`、資料表選單（自 `5.1.1` 起還有備忘錄選單）中的 `Group selected tables`，以及快速搜尋中的 `Group Selected Tables` 仍可使用，只是不會顯示快速鍵。畫布工具列的 `New Table`、`New Memo` 和 `New Table Group` 按鈕的工具提示，會列出 `addTable`、`addMemo` 和 `addTableGroup` 的第一個按鍵組合，按鍵繫結留空時則只列出按鈕名稱。  
 自 `4.2.0` 起，`addColumn` 和 `removeColumn` 也會為「字典」索引標籤的網格提供其列按鍵組合（如下所述），因此重新對應其中任一個，這些按鍵組合也會隨之改變。`{ addColumn: [] }` 會讓網格沒有插入列的按鍵組合，此時網格選單的兩個插入項目都不會顯示快速鍵；`{ removeColumn: [] }` 會讓網格沒有刪除列的按鍵組合，此時選單的刪除項目和 `Delete Rows` 的工具提示都不會顯示快速鍵。  
 此呼叫是部分合併：未指定的名稱會保留預設值，呼叫兩次也會保留先前的變更。目前的按鍵繫結沒有 getter：[createKeyBindingMap](#createkeybindingmap) 傳回的是預設值，而不是 `setKeyBindingMap` 變更後的內容。
 
@@ -447,10 +447,10 @@ editor.setKeyBindingMap({
 
 `selectAllTable`、`handTool`、`removeSelection` 和 `groupSelectedTables`（自 `4.1.0` 起）都會讓位給插入點：焦點位於輸入框、文字區域或 `contenteditable` 元素中時，`$mod + A` 會選取文字，`Space` 會輸入空格，`Delete` 和 `Backspace` 會清除文字，先按 `T` 再按 `G` 會輸入這兩個字母，而不會傳到畫布。這些按鍵都不會被阻止預設動作。無論將它們重新對應到哪個按鍵，行為都相同。
 
-自 `4.0.0` 起，`removeSelection`（`Delete` 或 `Backspace`）會在 ERD 索引標籤上移除選取範圍，算作一個復原步驟，且不會詢問確認。當只有焦點資料表被選取、其一或多個欄位被選取，且目前的縮放比例會繪製其列時，它會移除這些欄位；否則會移除所有選取的資料表、備忘錄和資料表群組，但保留群組中的資料表。請參閱[刪除資料表與備忘錄](../guide/guides/table-related-functions.md#table-and-memo-deletion)。  
+自 `4.0.0` 起，`removeSelection`（`Delete` 或 `Backspace`）會在 ERD 索引標籤上移除選取範圍，算作一個復原步驟，且不會詢問確認。當只有焦點資料表被選取、其一或多個欄位被選取，且目前的縮放比例會繪製其列時，它會移除這些欄位；否則會移除所有選取的資料表、備忘錄和資料表群組，但保留群組中的資料表和備忘錄。請參閱[刪除資料表與備忘錄](../guide/guides/table-related-functions.md#table-and-memo-deletion)。  
 按住不放的按鍵只會移除一次，且儲存格、備忘錄或資料表群組名稱編輯器開啟期間不會移除任何內容。在輸入框和會攔下按鍵繫結的面板與索引標籤（請參閱 [createKeyBindingMap](#createkeybindingmap)）之外，只要編輯器擁有焦點，無論在哪個索引標籤，此按鍵都會被阻止預設動作，焦點位於工具列按鈕上時也是如此，唯讀編輯器中亦然，只是不會移除任何內容。
 
-自 `4.1.0` 起，`addTableGroup`（`Alt+KeyG`）會在 ERD 索引標籤上進入 `New Table Group` 的繪製狀態，之後在畫布上按下滑鼠主要按鍵即可繪製群組，再按一次則會結束繪製狀態，與畫布工具列的 `New Table Group` 按鈕相同。`groupSelectedTables`（`KeyT KeyG`，也就是先按 `T` 再按 `G`）會將選取的資料表放入新群組並開啟其名稱編輯器，與資料表右鍵選單中的 `Group selected tables` 相同。未選取任何資料表時，它不會加入任何內容；選取的備忘錄或資料表群組不列入計算。請參閱[繪製群組](../guide/guides/table-groups.md#drawing-a-group)和[將所選資料表組成群組](../guide/guides/table-groups.md#grouping-selected-tables)。  
+自 `4.1.0` 起，`addTableGroup`（`Alt+KeyG`）會在 ERD 索引標籤上進入 `New Table Group` 的繪製狀態，之後在畫布上按下滑鼠主要按鍵即可繪製群組，再按一次則會結束繪製狀態，與畫布工具列的 `New Table Group` 按鈕相同。`groupSelectedTables`（`KeyT KeyG`，也就是先按 `T` 再按 `G`）會將選取的資料表（自 `5.1.1` 起還有與它們一同選取的備忘錄）放入新群組並開啟其名稱編輯器，與資料表或備忘錄右鍵選單中的 `Group selected tables` 相同。未選取任何資料表時，它不會加入任何內容；單獨選取的備忘錄或選取的資料表群組不列入計算。請參閱[繪製群組](../guide/guides/table-groups.md#drawing-a-group)和[將所選資料表組成群組](../guide/guides/table-groups.md#grouping-selected-tables)。  
 兩者只在選單提供群組功能時才會作用：設定 `readonly` 期間、`Table Groups` 檢視選項隱藏群組期間，或儲存格、備忘錄或資料表群組名稱編輯器開啟期間都不會作用。與其他畫布按鍵繫結相同，它們只在 ERD 索引標籤上作用，且在快速搜尋、「資料表屬性」、差異檢視器、時光旅行、自動版面配置預覽、`Export image` 或 `Map Columns` 開啟期間不會作用。在它們不會作用的情況下，按鍵仍會被阻止預設動作，除非 `groupSelectedTables` 讓位給插入點。`addTableGroup` 也會停止傳播（`focusView` 和 `zenMode` 也是如此），因此頁面上冒泡階段的 `keydown` 監聽器絕不會收到它。
 
 自 `4.2.0` 起，在[字典](../guide/guides/dictionary.md#adding-and-deleting-rows)索引標籤上，`addColumn` 的每個單次按鍵組合都會在選取範圍下方插入與選取範圍所涵蓋列數相同的列，同時再按住 `Shift` 的同一按鍵組合會改為在上方插入這些列，而 `removeColumn` 的每個單次按鍵組合會刪除選取範圍所涵蓋的列：預設設定下分別為 `Alt+Enter`、`Alt+Shift+Enter`，以及 `Alt+Backspace` 或 `Alt+Delete`。它們會在 `Domains`、`Words` 和 `Terms` 工作表的網格中、沒有開啟任何儲存格編輯時作用。本身已包含 `Shift` 的 `addColumn` 按鍵組合不會產生在上方插入的按鍵組合，而繫結到這兩個名稱之一的按鍵序列不會為網格提供任何按鍵組合。  
@@ -1082,7 +1082,7 @@ editor.setSchemaAML('AML...');
 
 自 `4.0.0` 起，載入 `.erd.json` 文件，例如 [value](#value) 傳回的文字。  
 在預設的 `mode: 'replace'` 下，它會以與指派 `value` 相同的方式載入文件：會記錄在歷程記錄清單中、觸發 `change`，並以相同方式採用文件的鎖定，且自 `4.2.0` 起，文件的詞彙、術語和定義域會取代編輯器原有的詞彙、術語和定義域。與 `value` 不同，空字串或非字串的值會被忽略，而不會建立新文件。非 JSON 的文字會清空文件，與 `value` 相同。  
-`mode: 'append'` 會以新的 id 將文件的資料表、關聯、索引、備忘錄和資料表群組加到圖表下方，保留它們彼此之間的相對位置，並省略文件的設定，與[匯入並加入](../guide/guides/file-import-export.md#import-and-add)處理 `json` 檔案的方式相同。自 `4.2.0` 起，它會保留資料表和欄位的邏輯名稱與標示名稱是否由字典產生的旗標，但不會帶入文件的詞彙、術語和定義域，因此其欄位都不會連結到定義域。無法讀取的文字，或沒有任何資料表和備忘錄的文件，都不會加入任何內容。否則，它會以與 [setSchemaSQL](#setschemasql) 附加相同的方式完成放置，新的備忘錄和資料表群組會與其資料表一起被選取，各類型僅在顯示時才會被選取。  
+`mode: 'append'` 會以新的 id 將文件的資料表、關聯、索引、備忘錄和資料表群組加到圖表下方，保留它們彼此之間的相對位置，並省略文件的設定，與[匯入並加入](../guide/guides/file-import-export.md#import-and-add)處理 `json` 檔案的方式相同。每個新的資料表群組會包含其資料表的副本，自 `5.1.1` 起也包含其備忘錄的副本。自 `4.2.0` 起，它會保留資料表和欄位的邏輯名稱與標示名稱是否由字典產生的旗標，但不會帶入文件的詞彙、術語和定義域，因此其欄位都不會連結到定義域。無法讀取的文字，或沒有任何資料表和備忘錄的文件，都不會加入任何內容。否則，它會以與 [setSchemaSQL](#setschemasql) 附加相同的方式完成放置，新的備忘錄和資料表群組會與其資料表一起被選取，各類型僅在顯示時才會被選取。  
 它會在文件完成放置後傳回，且設定 `readonly` 期間會被忽略。
 
 ```js
@@ -1164,7 +1164,8 @@ const sharedStore = editor.getSharedStore({
 空白值或任何非字串的值，都會與空白文件進行比較。  
 它與畫布右鍵選單中的[差異檢視器](../guide/guides/table-related-functions.md#diff-viewer)是相同的覆疊畫面。  
 自 `4.1.0` 起，它會先依 id 配對兩份文件中的內容，之後才依各自保存的內容配對，例如資料表名稱或備忘錄文字，請參閱[比較的內容](../guide/guides/table-related-functions.md#what-is-compared)。因此，與同一份文件的較早版本（例如其檔案的 Git 修訂版本）比較時，重新命名會顯示為一個已重新命名的項目；與 id 不同的文件比較時，則會顯示為一項移除和一項新增。檢視器會在兩份文件旁以樹狀結構列出變更的內容，並以顏色標示變更，而不是填滿儲存格。  
-自 `4.2.0` 起，無論傳入的文件儲存的是哪種顯示方式，兩份文件都會以此編輯器所顯示的「名稱顯示」開啟，樹狀結構也會依此顯示資料表和欄位的名稱，請參閱[畫布以外的地方](../guide/guides/logical-names.md#beyond-the-canvas)。邏輯名稱、定義域連結和字典都不會被比較，因此只變更這些內容時，不會顯示任何變更。
+自 `4.2.0` 起，無論傳入的文件儲存的是哪種顯示方式，兩份文件都會以此編輯器所顯示的「名稱顯示」開啟，樹狀結構也會依此顯示資料表和欄位的名稱，請參閱[畫布以外的地方](../guide/guides/logical-names.md#beyond-the-canvas)。邏輯名稱、定義域連結和字典都不會被比較，因此只變更這些內容時，不會顯示任何變更。  
+自 `5.1.1` 起，它也會比較每個備忘錄所屬的資料表群組和每個資料表群組所含的備忘錄，請參閱[比較的內容](../guide/guides/table-related-functions.md#what-is-compared)。
 
 ```js
 editor.setDiffValue('prev json...');

@@ -55,16 +55,17 @@ Tant que View Option → `Memos` est désactivé, les mémos sont masqués, rien
 Un mémo est une note en texte libre sur le canevas. Cliquez dans son corps et saisissez votre texte ; le texte est enregistré avec le document.  
 `Escape` ferme l’éditeur du mémo en conservant ce que vous avez saisi et en laissant le mémo sélectionné, et un second `Escape` efface la sélection.  
 Faites glisser sa bordure pour le redimensionner. Le `x` de son en-tête, affiché tant que le pointeur survole le mémo, le supprime.  
-Un clic droit sur un mémo ouvre son menu plutôt que l’éditeur : `Color`, `Remove color` tant qu’un élément sélectionné a une couleur, et `Delete`, qui devient `Delete selected` lorsque le mémo fait partie de deux éléments sélectionnés ou plus. Un mémo sélectionné se supprime aussi avec les touches qui suppriment les tables (voir [Suppression de tables et de mémos](./table-related-functions.md#table-and-memo-deletion)).
+Un clic droit sur un mémo ouvre son menu plutôt que l’éditeur : `Color`, `Remove color` tant qu’un élément sélectionné a une couleur, `Group selected tables` tant que la sélection contient une table et que les groupes de tables sont affichés, `Remove from group` tant qu’une table ou un mémo sélectionné est dans un groupe, et `Delete`, qui devient `Delete selected` lorsque le mémo fait partie de deux éléments sélectionnés ou plus. Un mémo sélectionné se supprime aussi avec les touches qui suppriment les tables (voir [Suppression de tables et de mémos](./table-related-functions.md#table-and-memo-deletion)).  
+Comme une table, un mémo rejoint ou quitte un [groupe de tables](./table-groups.md) là où vous le déposez. `Remove from group` l’en retire aussi, et `Group selected tables` le place dans un nouveau groupe avec les tables sélectionnées en même temps que lui (voir [Ajouter et retirer des tables](./table-groups.md#adding-and-removing-tables)).
 
 ![Ajout d’un mémo avec Alt + M, saisie d’une note et redimensionnement en faisant glisser sa bordure](/img/demo-memo.webp)
 
 ## Création de groupes de tables {#table-group-creation}
 
-Un groupe de tables est un cadre qui contient des tables, et vous pouvez lui donner un nom et une couleur. Créez-en un de l’une des deux façons suivantes :
+Un groupe de tables est un cadre qui contient des tables et des mémos, et vous pouvez lui donner un nom et une couleur. Créez-en un de l’une des deux façons suivantes :
 
-- Choisissez `New Table Group` dans le menu contextuel ou la recherche rapide, cliquez sur le bouton `New Table Group` de la [barre d’outils du canevas](./table-related-functions.md#canvas-toolbar) ou appuyez sur `Alt + G` (Windows/Linux) ou `⌥ + G` (Mac), puis tracez un cadre sur le canevas. Chaque table dont le centre se trouve dans le cadre rejoint le nouveau groupe, sauf si elle fait déjà partie d’un autre groupe (voir [Tracer un groupe](./table-groups.md#drawing-a-group)).
-- Sélectionnez des tables et choisissez `Group selected tables` dans le menu contextuel d’une table ou `Group Selected Tables` dans la recherche rapide, ou appuyez sur `T` puis `G` (voir [Grouper les tables sélectionnées](./table-groups.md#grouping-selected-tables)).
+- Choisissez `New Table Group` dans le menu contextuel ou la recherche rapide, cliquez sur le bouton `New Table Group` de la [barre d’outils du canevas](./table-related-functions.md#canvas-toolbar) ou appuyez sur `Alt + G` (Windows/Linux) ou `⌥ + G` (Mac), puis tracez un cadre sur le canevas. Chaque table et chaque mémo affiché dont le centre se trouve dans le cadre rejoint le nouveau groupe, sauf s’il fait déjà partie d’un autre groupe (voir [Tracer un groupe](./table-groups.md#drawing-a-group)).
+- Sélectionnez des tables, et éventuellement des mémos avec elles, et choisissez `Group selected tables` dans le menu contextuel d’une table ou d’un mémo ou `Group Selected Tables` dans la recherche rapide, ou appuyez sur `T` puis `G` (voir [Grouper les tables sélectionnées](./table-groups.md#grouping-selected-tables)).
 
 Le nommage, la couleur, le déplacement, le redimensionnement et le reste sont décrits dans [Groupes de tables](./table-groups.md).
 

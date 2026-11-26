@@ -19,7 +19,7 @@ VS Code, Obsidian e il plugin JetBrains scrivono un file solo quando una modific
 Dalla versione `4.2.0` la forma di archiviazione esclude anche ciò che non contiene nulla: ogni campo di testo che un’entità o il suo `ui` contiene come `''` (`name`, `comment` e `ui.color` di una tabella, `name`, `comment`, `dataType` e `default` di una colonna, `name` di un indice, `value` e `ui.color` di un memo, `name` e `color` di un gruppo di tabelle), ogni elenco di `doc` e ogni collezione che non contiene alcun elemento, e `collections` stesso quando ogni collezione è vuota. Un testo composto solo da spazi viene scritto così com’è, tranne un nome logico, che in quel caso viene escluso, e una parola, un termine o un dominio i cui valori oltre all’id sono tutti vuoti o composti solo da spazi, che viene escluso per intero. Ogni id, ogni elenco all’interno di un’entità e ogni numero, `0` compreso, viene comunque scritto. `doc` viene sempre scritto, quindi il file di un nuovo documento contiene `$schema`, `version`, le sue impostazioni e `"doc": {}`.  
 L’analisi legge un campo di testo mancante come `''` e una collezione mancante come vuota, come fa ogni versione v3, e la forma di archiviazione esclude un elenco di `doc` solo mentre la sua collezione non contiene nulla (vedere [Doc](#doc)). Così anche un editor precedente alla versione `4.2.0` apre questi file, e un programma che legge da sé un file deve leggere allo stesso modo ciò che manca. Un file salvato da una versione precedente esce dal salvataggio successivo senza il testo, gli elenchi e le collezioni vuoti, una modifica che avviene una sola volta, e da quel momento in poi si salva identico byte per byte.
 
-La forma di archiviazione scrive ogni impostazione bloccata con il suo valore bloccato (vedere [`lockSettings`](#settings)), `settings.ddlScripts` solo mentre uno script contiene testo, e il `groupId` di una tabella solo mentre indica un gruppo di tabelle che il file scrive. Dalla versione `4.2.0` scrive inoltre `settings.nameViewMode` solo mentre il valore che scrive non è `'physical'`, `settings.columnOrder` in sette elementi dove possibile (vedere [Settings](#settings)) e il `nameDerived` di una tabella solo mentre è `true`.  
+La forma di archiviazione scrive ogni impostazione bloccata con il suo valore bloccato (vedere [`lockSettings`](#settings)), `settings.ddlScripts` solo mentre uno script contiene testo, e il `groupId` di una tabella o, dalla versione `5.1.1`, di un memo solo mentre indica un gruppo di tabelle che il file scrive. Dalla versione `4.2.0` scrive inoltre `settings.nameViewMode` solo mentre il valore che scrive non è `'physical'`, `settings.columnOrder` in sette elementi dove possibile (vedere [Settings](#settings)) e il `nameDerived` di una tabella solo mentre è `true`.  
 Scrive `doc.tableGroupIds` e `tableGroupEntities` solo mentre esiste un gruppo di tabelle, un `logicalName` solo mentre contiene caratteri diversi dagli spazi, il `domainId` di una colonna solo mentre indica un dominio che il file scrive, e ogni dizionario solo mentre contiene una riga che il file scrive.
 
 Un file salvato prima della versione `4.0.0` contiene l’intero documento così come lo manteneva allora un editor, comprese le entità rimosse e ciò che ogni caricamento ricava. Un caricamento lo legge, conserva la posizione di ogni tabella e memo nella pila (vedere [Doc](#doc)) e ricava di nuovo il resto, e il salvataggio successivo scrive solo la forma di archiviazione.
@@ -394,6 +394,7 @@ const OrderType = {
 type Memo = {
   id: string;
   value?: string;
+  groupId?: string;
   ui: MemoUI;
 };
 
@@ -407,6 +408,9 @@ type MemoUI = {
 ```
 
 Dalla versione `4.0.0` tabelle e memo [condividono un’unica pila](../../guide/guides/table-related-functions.md#moving-multiple-tables), quindi portare una tabella in primo piano può metterla sopra un memo. Un caricamento mette ogni memo sopra ogni tabella, come descritto in [Doc](#doc). Un memo in un file salvato prima della versione `4.0.0` conserva lo `zIndex` salvato, che proveniva dallo stesso contatore di quello delle tabelle, quindi un memo che una versione precedente disegnava sopra ogni tabella può aprirsi sotto una tabella portata in primo piano dopo di esso.
+
+Dalla versione `5.1.1` un memo ha un `groupId`, l’id del [gruppo di tabelle](../../guide/guides/table-groups.md) a cui appartiene, come una tabella. Un `groupId` mancante o vuoto, come in ogni file salvato prima della versione `5.1.1`, o che indica un gruppo non presente in `doc.tableGroupIds`, significa nessun gruppo, e la forma di archiviazione lo scrive solo mentre indica un gruppo conservato.  
+Un editor precedente alla versione `5.1.1` scarta il `groupId` di ogni memo quando carica un documento, quindi salvando in quell’editor si toglie ogni memo dal proprio gruppo, anche se uno dalla versione `4.0.0` in poi conserva i gruppi delle tabelle — vedere [Combinare versioni diverse](./collaborative-editing.md#mixing-releases).
 
 ### Collezione: tableGroupEntities {#collection-tablegroupentities}
 
@@ -426,7 +430,7 @@ type TableGroupUI = {
 };
 ```
 
-Dalla versione `4.0.0` un documento può contenere [gruppi di tabelle](../../guide/guides/table-groups.md): rettangoli con nome e colore disegnati dietro le tabelle. Una tabella entra in un gruppo tramite il proprio `groupId`, quindi un gruppo non contiene alcun elenco di membri. La forma di archiviazione scrive la collezione, come `doc.tableGroupIds`, solo mentre esiste un gruppo, e un documento che non la contiene, come uno salvato prima della versione `4.0.0`, non ha gruppi. `Show.hideTableGroup` li nasconde.  
+Dalla versione `4.0.0` un documento può contenere [gruppi di tabelle](../../guide/guides/table-groups.md): rettangoli con nome e colore disegnati dietro le tabelle e i memo. Una tabella, e dalla versione `5.1.1` un memo, entra in un gruppo tramite il proprio `groupId`, quindi un gruppo non contiene alcun elenco di membri. La forma di archiviazione scrive la collezione, come `doc.tableGroupIds`, solo mentre esiste un gruppo, e un documento che non la contiene, come uno salvato prima della versione `4.0.0`, non ha gruppi. `Show.hideTableGroup` li nasconde.  
 Un editor precedente alla versione `4.0.0` scarta i gruppi e il `groupId` di ogni tabella quando carica un documento, quindi salvando in quell’editor si perde ogni gruppo.
 
 ### Righe dei dizionari {#dictionary-rows}
@@ -525,6 +529,8 @@ Inserendo `$schema` all’inizio di un file `.erd.json`, gli editor che supporta
 Dalla versione `4.0.0` lo schema descrive solo la forma di archiviazione. Ogni oggetto con campi denominati è chiuso (`additionalProperties: false`), ogni campo che la forma di archiviazione scrive sempre è obbligatorio, ogni campo contrassegnato con `?` nei tipi sopra vi compare ma non è obbligatorio, e non vi compare alcun altro campo. Rifiuta quindi un file salvato prima della versione `4.0.0`, con il suo `meta`, le larghezze, lo `zIndex`, `ignoreSaveSettings` e il resto, finché un editor della versione `4.0.0` o successiva non salva di nuovo quel file. Un file salvato con la versione `3.2.0` o successiva indica già l’URL di questo schema, che punta al branch `main`, quindi un editor che esegue la convalida rispetto a esso ora segnala il file. Un file salvato con la `3.0.0` o la `3.1.0`, o un documento v2, non indica alcun `$schema`.
 
 Dalla versione `4.2.0` lo schema non richiede più i campi di testo di un’entità, alcun elenco di `doc`, alcuna collezione né `collections` stesso, che la forma di archiviazione esclude mentre non contengono nulla. Accetta ancora un file salvato con la `4.0.0` o la `4.1.0`. Indica i nuovi campi: `nameViewMode`, che accetta solo `"logical"` e `"both"`; `logicalName` di una tabella e il suo `nameDerived`, che accetta solo `true`; `logicalName` e `domainId` di una colonna; e i tre dizionari, ciascuno con la propria intestazione e righe di stringhe. `canvasType` elenca la scheda Dizionario, `columnOrder` accetta sette o nove interi, e le descrizioni di `show`, `columnOrder`, `lockSettings` e `options` indicano i nuovi bit.
+
+Dalla versione `5.1.1` indica anche il `groupId` di un memo, che una copia dello schema ottenuta prima della versione `5.1.1` rifiuta.
 
 ```json
 {
@@ -939,6 +945,10 @@ Dalla versione `4.2.0` lo schema non richiede più i campi di testo di un’enti
           "value": {
             "type": "string"
           },
+          "groupId": {
+            "description": "Id of the table group in doc.tableGroupIds the memo belongs to; absent means none",
+            "type": "string"
+          },
           "ui": {
             "type": "object",
             "properties": {
@@ -967,7 +977,7 @@ Dalla versione `4.2.0` lo schema non richiede più i campi di testo di un’enti
       }
     },
     "tableGroupEntities": {
-      "description": "Named, coloured rectangles drawn behind tables; a table joins one through its groupId. Written while a group exists; absent means none",
+      "description": "Named, coloured rectangles drawn behind tables and memos; a table or a memo joins one through its groupId. Written while a group exists; absent means none",
       "type": "object",
       "additionalProperties": {
         "type": "object",
